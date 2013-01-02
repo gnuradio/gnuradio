@@ -70,14 +70,14 @@ gr_tagged_stream_to_pdu::work(int noutput_items,
     get_tags_in_range(d_tags, 0, abs_N, abs_N+1);
     bool found_length_tag(false);
     for(d_tags_itr = d_tags.begin(); (d_tags_itr != d_tags.end()) && (!found_length_tag); d_tags_itr++){
-      if( pmt::pmt_equal( (*d_tags_itr).key, pdu_length_tag ) ){
+      if( pmt::equal( (*d_tags_itr).key, pdu_length_tag ) ){
           if( (*d_tags_itr).offset != abs_N ){
               throw std::runtime_error("expected next pdu length tag on a different item...");
               }
               found_length_tag = true;
-              d_pdu_length = pmt::pmt_to_long( (*d_tags_itr).value );
+              d_pdu_length = pmt::to_long( (*d_tags_itr).value );
               d_pdu_remain = d_pdu_length;
-              d_pdu_meta = pmt::pmt_make_dict();
+              d_pdu_meta = pmt::make_dict();
               break;
           } // if have length tag
       } // iter over tags
@@ -91,8 +91,8 @@ gr_tagged_stream_to_pdu::work(int noutput_items,
   // copy any tags in this range into our meta object
   get_tags_in_range(d_tags, 0, abs_N, abs_N+ncopy);
   for(d_tags_itr = d_tags.begin(); d_tags_itr != d_tags.end(); d_tags_itr++){
-    if( ! pmt_equal( (*d_tags_itr).key, pdu_length_tag ) ){
-        d_pdu_meta = pmt_dict_add(d_pdu_meta, (*d_tags_itr).key, (*d_tags_itr).value);
+    if( ! equal( (*d_tags_itr).key, pdu_length_tag ) ){
+        d_pdu_meta = dict_add(d_pdu_meta, (*d_tags_itr).key, (*d_tags_itr).value);
         }
     }
 
@@ -122,11 +122,11 @@ gr_tagged_stream_to_pdu::work(int noutput_items,
 
 void gr_tagged_stream_to_pdu::send_message(){
 
-    if(pmt::pmt_length(d_pdu_vector) != d_pdu_length){
+    if(pmt::length(d_pdu_vector) != d_pdu_length){
         throw std::runtime_error("msg length not correct");
     }
 
-    pmt::pmt_t msg = pmt::pmt_cons( d_pdu_meta, d_pdu_vector );
+    pmt::pmt_t msg = pmt::cons( d_pdu_meta, d_pdu_vector );
     message_port_pub( pdu_port_id, msg );
 
     d_pdu_meta = pmt::PMT_NIL;

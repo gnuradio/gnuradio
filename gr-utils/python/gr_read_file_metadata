@@ -40,7 +40,7 @@ def main(filename, detached=False):
 
         # Convert from string to PMT (should be a dictionary)
         try:
-            header = pmt.pmt_deserialize_str(header_str)
+            header = pmt.deserialize_str(header_str)
         except RuntimeError:
             sys.stderr.write("Could not deserialize header: invalid or corrupt data file.\n")
             sys.exit(1)
@@ -54,7 +54,7 @@ def main(filename, detached=False):
                 break
 
             try:
-                extra = pmt.pmt_deserialize_str(extra_str)
+                extra = pmt.deserialize_str(extra_str)
             except RuntimeError:
                 sys.stderr.write("Could not deserialize extras: invalid or corrupt data file.\n")
                 sys.exit(1)

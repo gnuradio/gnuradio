@@ -59,7 +59,7 @@ namespace gr {
       // at least 1 estimator has to look back
       set_history(2);
 
-      d_key = pmt::pmt_string_to_symbol("snr");
+      d_key = pmt::string_to_symbol("snr");
     }
 
     probe_mpsk_snr_est_c_impl::~probe_mpsk_snr_est_c_impl()

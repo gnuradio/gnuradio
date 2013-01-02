@@ -68,10 +68,10 @@ public:
          boost::bind(&tcp_connection::handle_read, this, boost::asio::placeholders::error, boost::asio::placeholders::bytes_transferred));
   }
   void send(pmt::pmt_t vector){
-    size_t len = pmt::pmt_length(vector);
+    size_t len = pmt::length(vector);
     size_t offset(0);
     boost::array<char, 10000> txbuf;
-    memcpy(&txbuf[0], pmt::pmt_uniform_vector_elements(vector, offset), len);
+    memcpy(&txbuf[0], pmt::uniform_vector_elements(vector, offset), len);
     boost::asio::async_write(socket_, boost::asio::buffer(txbuf, len),
         boost::bind(&tcp_connection::handle_write, shared_from_this(),
           boost::asio::placeholders::error,
@@ -161,8 +161,8 @@ class GR_CORE_API gr_socket_pdu : public gr_stream_pdu_base
 
   void handle_udp_read(const boost::system::error_code& error/*error*/, size_t bytes_transferred){
     if(!error){
-        pmt::pmt_t vector = pmt::pmt_init_u8vector(bytes_transferred, (const uint8_t*)&rxbuf[0]);
-        pmt::pmt_t pdu = pmt::pmt_cons( pmt::PMT_NIL, vector);
+        pmt::pmt_t vector = pmt::init_u8vector(bytes_transferred, (const uint8_t*)&rxbuf[0]);
+        pmt::pmt_t pdu = pmt::cons( pmt::PMT_NIL, vector);
         
         message_port_pub( pmt::mp("pdus"), pdu );
     
@@ -178,8 +178,8 @@ class GR_CORE_API gr_socket_pdu : public gr_stream_pdu_base
   void handle_tcp_read(const boost::system::error_code& error/*error*/, size_t bytes_transferred){
     if(!error)
     {
-        pmt::pmt_t vector = pmt::pmt_init_u8vector(bytes_transferred, (const uint8_t*)&rxbuf[0]);
-        pmt::pmt_t pdu = pmt::pmt_cons( pmt::PMT_NIL, vector);
+        pmt::pmt_t vector = pmt::init_u8vector(bytes_transferred, (const uint8_t*)&rxbuf[0]);
+        pmt::pmt_t pdu = pmt::cons( pmt::PMT_NIL, vector);
 
         message_port_pub( pmt::mp("pdus"), pdu );
 

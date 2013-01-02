@@ -73,7 +73,7 @@ public:
 inline bool gr_msg_endpoint::operator==(const gr_msg_endpoint &other) const
 {
   return (d_basic_block == other.d_basic_block &&
-	  pmt::pmt_equal(d_port, other.d_port));
+	  pmt::equal(d_port, other.d_port));
 }
 
 

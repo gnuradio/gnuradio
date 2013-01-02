@@ -31,84 +31,84 @@
 namespace pmt {
 
 static void
-pmt_write_list_tail(pmt_t obj, std::ostream &port)
+write_list_tail(pmt_t obj, std::ostream &port)
 {
-  pmt_write(pmt_car(obj), port); // write the car
-  obj = pmt_cdr(obj);		 // step to cdr
+  write(car(obj), port); // write the car
+  obj = cdr(obj);		 // step to cdr
 
-  if (pmt_is_null(obj))		 // ()
+  if (is_null(obj))		 // ()
     port << ")";
 
-  else if (pmt_is_pair(obj)){	 // normal list
+  else if (is_pair(obj)){	 // normal list
     port << " ";
-    pmt_write_list_tail(obj, port);
+    write_list_tail(obj, port);
   }
   else {			 // dotted pair
     port << " . ";
-    pmt_write(obj, port);
+    write(obj, port);
     port << ")";
   }
 }
 
 void
-pmt_write(pmt_t obj, std::ostream &port)
+write(pmt_t obj, std::ostream &port)
 {
-  if (pmt_is_bool(obj)){
-    if (pmt_is_true(obj))
+  if (is_bool(obj)){
+    if (is_true(obj))
       port << "#t";
     else
       port << "#f";
   }
-  else if (pmt_is_symbol(obj)){
-    port << pmt_symbol_to_string(obj);
+  else if (is_symbol(obj)){
+    port << symbol_to_string(obj);
   }
-  else if (pmt_is_number(obj)){
-    if (pmt_is_integer(obj))
-      port << pmt_to_long(obj);
-    else if (pmt_is_uint64(obj))
-      port << pmt_to_uint64(obj);
-    else if (pmt_is_real(obj))
-      port << pmt_to_double(obj);
-    else if (pmt_is_complex(obj)){
-      std::complex<double> c = pmt_to_complex(obj);
+  else if (is_number(obj)){
+    if (is_integer(obj))
+      port << to_long(obj);
+    else if (is_uint64(obj))
+      port << to_uint64(obj);
+    else if (is_real(obj))
+      port << to_double(obj);
+    else if (is_complex(obj)){
+      std::complex<double> c = to_complex(obj);
       port << c.real() << '+' << c.imag() << 'i';
     }
     else
       goto error;
   }
-  else if (pmt_is_null(obj)){
+  else if (is_null(obj)){
     port << "()";
   }
-  else if (pmt_is_pair(obj)){
+  else if (is_pair(obj)){
     port << "(";
-    pmt_write_list_tail(obj, port);
+    write_list_tail(obj, port);
   }
-  else if (pmt_is_tuple(obj)){
+  else if (is_tuple(obj)){
     port << "{";
-    size_t len = pmt_length(obj);
+    size_t len = length(obj);
     if (len > 0){
-      port << pmt_tuple_ref(obj, 0);
+      port << tuple_ref(obj, 0);
       for (size_t i = 1; i < len; i++)
-	port << " " << pmt_tuple_ref(obj, i);
+	port << " " << tuple_ref(obj, i);
     }
     port << "}";
   }
-  else if (pmt_is_vector(obj)){
+  else if (is_vector(obj)){
     port << "#(";
-    size_t len = pmt_length(obj);
+    size_t len = length(obj);
     if (len > 0){
-      port << pmt_vector_ref(obj, 0);
+      port << vector_ref(obj, 0);
       for (size_t i = 1; i < len; i++)
-	port << " " << pmt_vector_ref(obj, i);
+	port << " " << vector_ref(obj, i);
     }
     port << ")";
   }
-  else if (pmt_is_dict(obj)){
+  else if (is_dict(obj)){
     // FIXME
     // port << "#<dict " << obj << ">";
     port << "#<dict>";
   }
-  else if (pmt_is_uniform_vector(obj)){
+  else if (is_uniform_vector(obj)){
     // FIXME
     // port << "#<uniform-vector " << obj << ">";
     port << "#<uniform-vector>";
@@ -123,12 +123,12 @@ pmt_write(pmt_t obj, std::ostream &port)
 
 std::ostream& operator<<(std::ostream &os, pmt_t obj)
 {
-  pmt_write(obj, os);
+  write(obj, os);
   return os;
 }
 
 std::string
-pmt_write_string(pmt_t obj)
+write_string(pmt_t obj)
 {
   std::ostringstream s;
   s << obj;
@@ -136,33 +136,33 @@ pmt_write_string(pmt_t obj)
 }
 
 pmt_t
-pmt_read(std::istream &port)
+read(std::istream &port)
 {
-  throw pmt_notimplemented("notimplemented: pmt_read", PMT_NIL);
+  throw notimplemented("notimplemented: pmt::read", PMT_NIL);
 }
 
 void
-pmt_serialize(pmt_t obj, std::ostream &sink)
+serialize(pmt_t obj, std::ostream &sink)
 {
-  throw pmt_notimplemented("notimplemented: pmt_serialize", obj);
+  throw notimplemented("notimplemented: pmt::serialize", obj);
 }
 
 /*!
  * \brief Create obj from portable byte-serial representation
  */
 pmt_t
-pmt_deserialize(std::istream &source)
+deserialize(std::istream &source)
 {
-  throw pmt_notimplemented("notimplemented: pmt_deserialize", PMT_NIL);
+  throw notimplemented("notimplemented: pmt::deserialize", PMT_NIL);
 }
 
 } /* namespace pmt */
 
 
 void
-pmt::pmt_print(pmt_t v)
+pmt::print(pmt_t v)
 {
-  std::cout << pmt_write_string(v) << std::endl;
+  std::cout << write_string(v) << std::endl;
 }
 
 

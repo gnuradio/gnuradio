@@ -104,7 +104,7 @@ public:
   void post(pmt::pmt_t which_port, pmt::pmt_t msg)
   {
     (rpcextractor_base<T,double>::_source->*rpcextractor_base<T,double>::_func)
-      (pmt::pmt_to_double(msg));
+      (pmt::to_double(msg));
   }
 };
 
@@ -119,7 +119,7 @@ public:
   void post(pmt::pmt_t which_port, pmt::pmt_t msg)
   {
     (rpcextractor_base<T,float>::_source->*rpcextractor_base<T,float>::_func)
-      (pmt::pmt_to_double(msg));
+      (pmt::to_double(msg));
   }
 };
 
@@ -134,7 +134,7 @@ public:
   void post(pmt::pmt_t which_port, pmt::pmt_t msg)
   {
     (rpcextractor_base<T,long>::_source->*rpcextractor_base<T,long>::_func)
-      (pmt::pmt_to_long(msg));
+      (pmt::to_long(msg));
   }
 };
 
@@ -149,7 +149,7 @@ public:
   void post(pmt::pmt_t which_port, pmt::pmt_t msg)
   {
     (rpcextractor_base<T,int>::_source->*rpcextractor_base<T,int>::_func)
-      (pmt::pmt_to_long(msg));
+      (pmt::to_long(msg));
   }
 };
 
@@ -164,7 +164,7 @@ public:
   void post(pmt::pmt_t which_port, pmt::pmt_t msg)
   {
     (rpcextractor_base<T,bool>::_source->*rpcextractor_base<T,bool>::_func)
-      (pmt::pmt_to_bool(msg));
+      (pmt::to_bool(msg));
   }
 };
 
@@ -180,7 +180,7 @@ public:
   void post(pmt::pmt_t which_port, pmt::pmt_t msg)
   {
     (rpcextractor_base<T,std::complex<double> >::
-     _source->*rpcextractor_base<T,std::complex<double> >::_func)(pmt::pmt_to_complex(msg));
+     _source->*rpcextractor_base<T,std::complex<double> >::_func)(pmt::to_complex(msg));
   }
 };
 
@@ -196,7 +196,7 @@ public:
   void post(pmt::pmt_t which_port, pmt::pmt_t msg)
   {
     (rpcextractor_base<T,std::string>::
-     _source->*rpcextractor_base<T,std::string>::_func)(pmt::pmt_symbol_to_string(msg)); 
+     _source->*rpcextractor_base<T,std::string>::_func)(pmt::symbol_to_string(msg)); 
   }
 };
 
@@ -214,8 +214,8 @@ public:
 
   pmt::pmt_t retrieve()
   {
-    return pmt::pmt_from_uint64((rpcinserter_base<T,uint64_t>::
-				 _source->*rpcinserter_base<T,uint64_t>::_func)());
+    return pmt::from_uint64((rpcinserter_base<T,uint64_t>::
+			     _source->*rpcinserter_base<T,uint64_t>::_func)());
   }
 };
 
@@ -237,7 +237,7 @@ public:
     std::vector< std::complex<float> >
       vec((rpcinserter_base<T,std::vector<std::complex<float> > >::
 	   _source->*rpcinserter_base<T,std::vector< std::complex<float> > >::_func)()); 
-    return pmt::pmt_init_c32vector(vec.size(), &vec[0]);
+    return pmt::init_c32vector(vec.size(), &vec[0]);
   }
 };
 
@@ -258,7 +258,7 @@ public:
   {
     std::vector< float > vec((rpcinserter_base<T,std::vector<float> >::
 	      _source->*rpcinserter_base<T,std::vector< float> >::_func)()); 
-    return pmt::pmt_init_f32vector(vec.size(), &vec[0]);
+    return pmt::init_f32vector(vec.size(), &vec[0]);
   }
 };
 

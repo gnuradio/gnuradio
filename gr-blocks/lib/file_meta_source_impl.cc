@@ -92,7 +92,7 @@ namespace gr {
 
       do_update();
 
-      pmt_t hdr = PMT_NIL, extras = PMT_NIL;
+      pmt::pmt_t hdr = pmt::PMT_NIL, extras = pmt::PMT_NIL;
       if(read_header(hdr, extras)) {
 	parse_header(hdr, 0, d_tags);
 	parse_extras(extras, 0, d_tags);
@@ -122,7 +122,7 @@ namespace gr {
     }
 
     bool
-    file_meta_source_impl::read_header(pmt_t &hdr, pmt_t &extras)
+    file_meta_source_impl::read_header(pmt::pmt_t &hdr, pmt::pmt_t &extras)
     {
       // Select which file handle to read from.
       FILE *fp;
@@ -153,14 +153,14 @@ namespace gr {
 
       // Convert to string or the char array gets confused by the \0
       str.insert(0, hdr_buffer, METADATA_HEADER_SIZE);
-      hdr = pmt_deserialize_str(str);
+      hdr = pmt::deserialize_str(str);
       delete [] hdr_buffer;
 
       uint64_t seg_start, extra_len;
-      pmt_t r, dump;
-      if(pmt_dict_has_key(hdr, pmt_string_to_symbol("strt"))) {
-	r = pmt_dict_ref(hdr, pmt_string_to_symbol("strt"), dump);
-	seg_start = pmt_to_uint64(r);
+      pmt::pmt_t r, dump;
+      if(pmt::dict_has_key(hdr, pmt::string_to_symbol("strt"))) {
+	r = pmt::dict_ref(hdr, pmt::string_to_symbol("strt"), dump);
+	seg_start = pmt::to_uint64(r);
 	extra_len = seg_start - METADATA_HEADER_SIZE;
       }
 
@@ -185,7 +185,7 @@ namespace gr {
 
 	str.clear();
 	str.insert(0, hdr_buffer, extra_len);
-	extras = pmt_deserialize_str(str);
+	extras = pmt::deserialize_str(str);
 	delete [] hdr_buffer;
       }
 
@@ -193,16 +193,16 @@ namespace gr {
     }
 
     void
-    file_meta_source_impl::parse_header(pmt_t hdr, uint64_t offset,
+    file_meta_source_impl::parse_header(pmt::pmt_t hdr, uint64_t offset,
 					std::vector<gr_tag_t> &tags)
     {
-      pmt_t r, key;
+      pmt::pmt_t r, key;
 
       // GET SAMPLE RATE
-      key = pmt_string_to_symbol("rx_rate");
-      if(pmt_dict_has_key(hdr, key)) {
-	r = pmt_dict_ref(hdr, key, PMT_NIL);
-	d_samp_rate = pmt_to_double(r);
+      key = pmt::string_to_symbol("rx_rate");
+      if(pmt::dict_has_key(hdr, key)) {
+	r = pmt::dict_ref(hdr, key, pmt::PMT_NIL);
+	d_samp_rate = pmt::to_double(r);
 
 	gr_tag_t t;
 	t.offset = offset;
@@ -216,9 +216,9 @@ namespace gr {
       }
 
       // GET TIME STAMP
-      key = pmt_string_to_symbol("rx_time");
-      if(pmt_dict_has_key(hdr, key)) {
-	d_time_stamp = pmt_dict_ref(hdr, key, PMT_NIL);
+      key = pmt::string_to_symbol("rx_time");
+      if(pmt::dict_has_key(hdr, key)) {
+	d_time_stamp = pmt::dict_ref(hdr, key, pmt::PMT_NIL);
 
 	gr_tag_t t;
 	t.offset = offset;
@@ -232,16 +232,16 @@ namespace gr {
       }
 
       // GET ITEM SIZE OF DATA
-      if(pmt_dict_has_key(hdr, pmt_string_to_symbol("size"))) {
-	d_itemsize = pmt_to_long(pmt_dict_ref(hdr, pmt_string_to_symbol("size"), PMT_NIL));
+      if(pmt::dict_has_key(hdr, pmt::string_to_symbol("size"))) {
+	d_itemsize = pmt::to_long(pmt::dict_ref(hdr, pmt::string_to_symbol("size"), pmt::PMT_NIL));
       }
       else {
 	throw std::runtime_error("file_meta_source: Could not extract item size.\n");
       }
 
       // GET SEGMENT SIZE
-      if(pmt_dict_has_key(hdr, pmt_string_to_symbol("bytes"))) {
-	d_seg_size = pmt_to_uint64(pmt_dict_ref(hdr, pmt_string_to_symbol("bytes"), PMT_NIL));
+      if(pmt::dict_has_key(hdr, pmt::string_to_symbol("bytes"))) {
+	d_seg_size = pmt::to_uint64(pmt::dict_ref(hdr, pmt::string_to_symbol("bytes"), pmt::PMT_NIL));
 
 	// Convert from bytes to items
 	d_seg_size /= d_itemsize;
@@ -252,16 +252,16 @@ namespace gr {
     }
 
     void
-    file_meta_source_impl::parse_extras(pmt_t extras, uint64_t offset,
+    file_meta_source_impl::parse_extras(pmt::pmt_t extras, uint64_t offset,
 					std::vector<gr_tag_t> &tags)
     {
-      pmt_t item, key, val;
+      pmt::pmt_t item, key, val;
 
-      size_t nitems = pmt_length(extras);
+      size_t nitems = pmt::length(extras);
       for(size_t i = 0; i < nitems; i++) {
-	item = pmt_nth(i, extras);
-	key = pmt_car(item);
-	val = pmt_cdr(item);
+	item = pmt::nth(i, extras);
+	key = pmt::car(item);
+	val = pmt::cdr(item);
 
 	gr_tag_t t;
 	t.offset = offset;
@@ -367,7 +367,7 @@ namespace gr {
       // We've reached the end of a segment; parse the next header and get
       // the new tags to send and set the next segment size.
       if(d_seg_size == 0) {
-	pmt_t hdr=PMT_NIL, extras=PMT_NIL;
+	pmt::pmt_t hdr=pmt::PMT_NIL, extras=pmt::PMT_NIL;
 	if(read_header(hdr, extras)) {
 	  parse_header(hdr, nitems_written(0), d_tags);
 	  parse_extras(extras, nitems_written(0), d_tags);

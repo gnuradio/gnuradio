@@ -25,9 +25,9 @@
 #include <boost/make_shared.hpp>
 #include "gr_uhd_common.h"
 
-static const pmt::pmt_t SOB_KEY = pmt::pmt_string_to_symbol("tx_sob");
-static const pmt::pmt_t EOB_KEY = pmt::pmt_string_to_symbol("tx_eob");
-static const pmt::pmt_t TIME_KEY = pmt::pmt_string_to_symbol("tx_time");
+static const pmt::pmt_t SOB_KEY = pmt::string_to_symbol("tx_sob");
+static const pmt::pmt_t EOB_KEY = pmt::string_to_symbol("tx_eob");
+static const pmt::pmt_t TIME_KEY = pmt::string_to_symbol("tx_time");
 
 #include <uhd/convert.hpp>
 inline gr_io_signature_sptr args_to_io_sig(const uhd::stream_args_t &args){
@@ -374,23 +374,23 @@ public:
             }
 
             //handle end of burst with a mini end of burst packet
-            else if (pmt::pmt_equal(key, EOB_KEY)){
-                _metadata.end_of_burst = pmt::pmt_to_bool(value);
+            else if (pmt::equal(key, EOB_KEY)){
+                _metadata.end_of_burst = pmt::to_bool(value);
                 ninput_items = 1;
                 return;
             }
 
             //set the start of burst flag in the metadata
-            else if (pmt::pmt_equal(key, SOB_KEY)){
-                _metadata.start_of_burst = pmt::pmt_to_bool(value);
+            else if (pmt::equal(key, SOB_KEY)){
+                _metadata.start_of_burst = pmt::to_bool(value);
             }
 
             //set the time specification in the metadata
-            else if (pmt::pmt_equal(key, TIME_KEY)){
+            else if (pmt::equal(key, TIME_KEY)){
                 _metadata.has_time_spec = true;
                 _metadata.time_spec = uhd::time_spec_t(
-                    pmt::pmt_to_uint64(pmt::pmt_tuple_ref(value, 0)),
-                    pmt::pmt_to_double(pmt::pmt_tuple_ref(value, 1))
+                    pmt::to_uint64(pmt::tuple_ref(value, 0)),
+                    pmt::to_double(pmt::tuple_ref(value, 1))
                 );
             }
         }

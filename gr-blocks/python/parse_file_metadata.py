@@ -66,14 +66,14 @@ def parse_header(p, VERBOSE=False):
 
     info = dict()
 
-    if(pmt.pmt_is_dict(p) is False):
+    if(pmt.is_dict(p) is False):
         sys.stderr.write("Header is not a PMT dictionary: invalid or corrupt data file.\n")
         sys.exit(1)
 
     # GET FILE FORMAT VERSION NUMBER
-    if(pmt.pmt_dict_has_key(p, pmt.pmt_string_to_symbol("version"))):
-        r = pmt.pmt_dict_ref(p, pmt.pmt_string_to_symbol("version"), dump)
-        version = pmt.pmt_to_long(r)
+    if(pmt.dict_has_key(p, pmt.string_to_symbol("version"))):
+        r = pmt.dict_ref(p, pmt.string_to_symbol("version"), dump)
+        version = pmt.to_long(r)
         if(VERBOSE):
             print "Version Number: {0}".format(version)
     else:
@@ -81,9 +81,9 @@ def parse_header(p, VERBOSE=False):
         sys.exit(1)
 
     # EXTRACT SAMPLE RATE
-    if(pmt.pmt_dict_has_key(p, pmt.pmt_string_to_symbol("rx_rate"))):
-        r = pmt.pmt_dict_ref(p, pmt.pmt_string_to_symbol("rx_rate"), dump)
-        samp_rate = pmt.pmt_to_double(r)
+    if(pmt.dict_has_key(p, pmt.string_to_symbol("rx_rate"))):
+        r = pmt.dict_ref(p, pmt.string_to_symbol("rx_rate"), dump)
+        samp_rate = pmt.to_double(r)
         info["rx_rate"] = samp_rate
         if(VERBOSE):
             print "Sample Rate: {0:.2f} sps".format(samp_rate)
@@ -92,12 +92,12 @@ def parse_header(p, VERBOSE=False):
         sys.exit(1)
 
     # EXTRACT TIME STAMP
-    if(pmt.pmt_dict_has_key(p, pmt.pmt_string_to_symbol("rx_time"))):
-        r = pmt.pmt_dict_ref(p, pmt.pmt_string_to_symbol("rx_time"), dump)
-        pmt_secs = pmt.pmt_tuple_ref(r, 0)
-        pmt_fracs = pmt.pmt_tuple_ref(r, 1)
-        secs = float(pmt.pmt_to_uint64(pmt_secs))
-        fracs = pmt.pmt_to_double(pmt_fracs)
+    if(pmt.dict_has_key(p, pmt.string_to_symbol("rx_time"))):
+        r = pmt.dict_ref(p, pmt.string_to_symbol("rx_time"), dump)
+        secs = pmt.tuple_ref(r, 0)
+        fracs = pmt.tuple_ref(r, 1)
+        secs = float(pmt.to_uint64(secs))
+        fracs = pmt.to_double(fracs)
         t = secs + fracs
         info["rx_time"] = t
         if(VERBOSE):
@@ -107,9 +107,9 @@ def parse_header(p, VERBOSE=False):
         sys.exit(1)
 
     # EXTRACT ITEM SIZE
-    if(pmt.pmt_dict_has_key(p, pmt.pmt_string_to_symbol("size"))):
-        r = pmt.pmt_dict_ref(p, pmt.pmt_string_to_symbol("size"), dump)
-        dsize = pmt.pmt_to_long(r)
+    if(pmt.dict_has_key(p, pmt.string_to_symbol("size"))):
+        r = pmt.dict_ref(p, pmt.string_to_symbol("size"), dump)
+        dsize = pmt.to_long(r)
         info["size"] = dsize
         if(VERBOSE):
             print "Item size: {0}".format(dsize)
@@ -118,9 +118,9 @@ def parse_header(p, VERBOSE=False):
         sys.exit(1)
 
     # EXTRACT DATA TYPE
-    if(pmt.pmt_dict_has_key(p, pmt.pmt_string_to_symbol("type"))):
-        r = pmt.pmt_dict_ref(p, pmt.pmt_string_to_symbol("type"), dump)
-        dtype = pmt.pmt_to_long(r)
+    if(pmt.dict_has_key(p, pmt.string_to_symbol("type"))):
+        r = pmt.dict_ref(p, pmt.string_to_symbol("type"), dump)
+        dtype = pmt.to_long(r)
         stype = ftype_to_string[dtype]
         info["type"] = stype
         if(VERBOSE):
@@ -130,9 +130,9 @@ def parse_header(p, VERBOSE=False):
         sys.exit(1)
 
     # EXTRACT COMPLEX
-    if(pmt.pmt_dict_has_key(p, pmt.pmt_string_to_symbol("cplx"))):
-        r = pmt.pmt_dict_ref(p, pmt.pmt_string_to_symbol("cplx"), dump)
-        cplx = pmt.pmt_to_bool(r)
+    if(pmt.dict_has_key(p, pmt.string_to_symbol("cplx"))):
+        r = pmt.dict_ref(p, pmt.string_to_symbol("cplx"), dump)
+        cplx = pmt.to_bool(r)
         info["cplx"] = cplx
         if(VERBOSE):
             print "Complex? {0}".format(cplx)
@@ -141,9 +141,9 @@ def parse_header(p, VERBOSE=False):
         sys.exit(1)
 
     # EXTRACT WHERE CURRENT SEGMENT STARTS
-    if(pmt.pmt_dict_has_key(p, pmt.pmt_string_to_symbol("strt"))):
-        r = pmt.pmt_dict_ref(p, pmt.pmt_string_to_symbol("strt"), dump)
-        seg_start = pmt.pmt_to_uint64(r)
+    if(pmt.dict_has_key(p, pmt.string_to_symbol("strt"))):
+        r = pmt.dict_ref(p, pmt.string_to_symbol("strt"), dump)
+        seg_start = pmt.to_uint64(r)
         info["hdr_len"] = seg_start
         info["extra_len"] = seg_start - HEADER_LENGTH
         info["has_extra"] = info["extra_len"] > 0
@@ -156,9 +156,9 @@ def parse_header(p, VERBOSE=False):
         sys.exit(1)
 
     # EXTRACT SIZE OF DATA
-    if(pmt.pmt_dict_has_key(p, pmt.pmt_string_to_symbol("bytes"))):
-        r = pmt.pmt_dict_ref(p, pmt.pmt_string_to_symbol("bytes"), dump)
-        nbytes = pmt.pmt_to_uint64(r)
+    if(pmt.dict_has_key(p, pmt.string_to_symbol("bytes"))):
+        r = pmt.dict_ref(p, pmt.string_to_symbol("bytes"), dump)
+        nbytes = pmt.to_uint64(r)
 
         nitems = nbytes/dsize
         info["nitems"] = nitems
@@ -175,19 +175,18 @@ def parse_header(p, VERBOSE=False):
 
 # IF THERE IS EXTRA DATA, PULL OUT THE DICTIONARY AND PARSE IT
 def parse_extra_dict(p, info, VERBOSE=False):
-    if(pmt.pmt_is_dict(p) is False):
+    if(pmt.is_dict(p) is False):
         sys.stderr.write("Extra header is not a PMT dictionary: invalid or corrupt data file.\n")
         sys.exit(1)
 
-    items = pmt.pmt_dict_items(p)
-    nitems = pmt.pmt_length(items)
+    items = pmt.dict_items(p)
+    nitems = pmt.length(items)
     for i in xrange(nitems):
-        item = pmt.pmt_nth(i, items)
-        key = pmt.pmt_symbol_to_string(pmt.pmt_car(item))
-        val = pmt.pmt_cdr(item)
+        item = pmt.nth(i, items)
+        key = pmt.symbol_to_string(pmt.car(item))
+        val = pmt.cdr(item)
         info[key] = val
         if(VERBOSE):
-            print "{0}: ".format(key)
-            pmt.pmt_print(val)
+            print "{0}: {1}".format(key, val)
 
     return info

@@ -61,8 +61,8 @@ namespace gr {
 
       std::stringstream str;
       str << name() << unique_id();
-      d_me = pmt::pmt_string_to_symbol(str.str());
-      d_key = pmt::pmt_string_to_symbol("snr");
+      d_me = pmt::string_to_symbol(str.str());
+      d_key = pmt::string_to_symbol("snr");
     }
 
     mpsk_snr_est_cc_impl::~mpsk_snr_est_cc_impl()
@@ -93,7 +93,7 @@ namespace gr {
 	d_snr_est->update(x, &in[index]);
 
 	// Issue a tag with the SNR data
-	pmt::pmt_t pmt_snr = pmt::pmt_from_double(d_snr_est->snr());
+	pmt::pmt_t pmt_snr = pmt::from_double(d_snr_est->snr());
 	add_item_tag(0,            // stream ID
 		     nwritten,     // tag's sample number
 		     d_key,        // snr key

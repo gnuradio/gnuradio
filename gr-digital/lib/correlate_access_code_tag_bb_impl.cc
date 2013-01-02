@@ -61,8 +61,8 @@ namespace gr {
 
       std::stringstream str;
       str << name() << unique_id();
-      d_me = pmt::pmt_string_to_symbol(str.str());
-      d_key = pmt::pmt_string_to_symbol(tag_name);
+      d_me = pmt::string_to_symbol(str.str());
+      d_key = pmt::string_to_symbol(tag_name);
     }
 
     correlate_access_code_tag_bb_impl::~correlate_access_code_tag_bb_impl()

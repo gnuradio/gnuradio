@@ -175,28 +175,28 @@ public:
     return message_port_is_hier_in(port_id) || message_port_is_hier_out(port_id);
     }
   bool message_port_is_hier_in(pmt::pmt_t port_id){
-    return pmt::pmt_list_has(hier_message_ports_in, port_id);
+    return pmt::list_has(hier_message_ports_in, port_id);
     }
   bool message_port_is_hier_out(pmt::pmt_t port_id){
-    return pmt::pmt_list_has(hier_message_ports_out, port_id);
+    return pmt::list_has(hier_message_ports_out, port_id);
     }
 
   pmt::pmt_t hier_message_ports_in;
   pmt::pmt_t hier_message_ports_out;
 
   void message_port_register_hier_in(pmt::pmt_t port_id){
-    if(pmt::pmt_list_has(hier_message_ports_in, port_id))
+    if(pmt::list_has(hier_message_ports_in, port_id))
         throw std::invalid_argument("hier msg in port by this name already registered");
     if(msg_queue.find(port_id) != msg_queue.end())
         throw std::invalid_argument("block already has a primitive input port by this name");
-    hier_message_ports_in = pmt::pmt_list_add(hier_message_ports_in, port_id);
+    hier_message_ports_in = pmt::list_add(hier_message_ports_in, port_id);
     }
   void message_port_register_hier_out(pmt::pmt_t port_id){
-    if(pmt::pmt_list_has(hier_message_ports_out, port_id))
+    if(pmt::list_has(hier_message_ports_out, port_id))
         throw std::invalid_argument("hier msg out port by this name already registered");
-    if(pmt::pmt_dict_has_key(message_subscribers, port_id))
+    if(pmt::dict_has_key(message_subscribers, port_id))
         throw std::invalid_argument("block already has a primitive output port by this name");
-    hier_message_ports_out = pmt::pmt_list_add(hier_message_ports_out, port_id);
+    hier_message_ports_out = pmt::list_add(hier_message_ports_out, port_id);
     }
 
 };

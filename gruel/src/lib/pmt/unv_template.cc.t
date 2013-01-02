@@ -29,7 +29,7 @@ pmt_@TAG@vector::pmt_@TAG@vector(size_t k, const @TYPE@ *data)
 pmt_@TAG@vector::ref(size_t k) const
 {
   if (k >= length())
-    throw pmt_out_of_range("pmt_@TAG@vector_ref", pmt_from_long(k));
+    throw out_of_range("pmt_@TAG@vector_ref", from_long(k));
   return d_v[k];
 }
 
@@ -37,7 +37,7 @@ void
 pmt_@TAG@vector::set(size_t k, @TYPE@ x)
 {
   if (k >= length())
-    throw pmt_out_of_range("pmt_@TAG@vector_set", pmt_from_long(k));
+    throw out_of_range("pmt_@TAG@vector_set", from_long(k));
   d_v[k] = x;
 }
 
@@ -70,59 +70,59 @@ pmt_@TAG@vector::uniform_writable_elements(size_t &len)
 }
 
 bool
-pmt_is_@TAG@vector(pmt_t obj)
+is_@TAG@vector(pmt_t obj)
 {
   return obj->is_@TAG@vector();
 }
 
 pmt_t
-pmt_make_@TAG@vector(size_t k, @TYPE@ fill)
+make_@TAG@vector(size_t k, @TYPE@ fill)
 {
   return pmt_t(new pmt_@TAG@vector(k, fill));
 }
 
 pmt_t
-pmt_init_@TAG@vector(size_t k, const @TYPE@ *data)
+init_@TAG@vector(size_t k, const @TYPE@ *data)
 {
   return pmt_t(new pmt_@TAG@vector(k, data));
 }
 
 pmt_t
-pmt_init_@TAG@vector(size_t k, const std::vector< @TYPE@ > &data)
+init_@TAG@vector(size_t k, const std::vector< @TYPE@ > &data)
 {
   
   return pmt_t(new pmt_@TAG@vector(k, &data[0]));
 }
 
 @TYPE@
-pmt_@TAG@vector_ref(pmt_t vector, size_t k)
+@TAG@vector_ref(pmt_t vector, size_t k)
 {
   if (!vector->is_@TAG@vector())
-    throw pmt_wrong_type("pmt_@TAG@vector_ref", vector);
+    throw wrong_type("pmt_@TAG@vector_ref", vector);
   return _@TAG@vector(vector)->ref(k);
 }
 
 void
-pmt_@TAG@vector_set(pmt_t vector, size_t k, @TYPE@ obj)
+@TAG@vector_set(pmt_t vector, size_t k, @TYPE@ obj)
 {
   if (!vector->is_@TAG@vector())
-    throw pmt_wrong_type("pmt_@TAG@vector_set", vector);
+    throw wrong_type("pmt_@TAG@vector_set", vector);
   _@TAG@vector(vector)->set(k, obj);
 }
 
 const @TYPE@ *
-pmt_@TAG@vector_elements(pmt_t vector, size_t &len)
+@TAG@vector_elements(pmt_t vector, size_t &len)
 {
   if (!vector->is_@TAG@vector())
-    throw pmt_wrong_type("pmt_@TAG@vector_elements", vector);
+    throw wrong_type("pmt_@TAG@vector_elements", vector);
   return _@TAG@vector(vector)->elements(len);
 }
 
 const std::vector< @TYPE@ >
-pmt_@TAG@vector_elements(pmt_t vector)
+@TAG@vector_elements(pmt_t vector)
 {
   if (!vector->is_@TAG@vector())
-    throw pmt_wrong_type("pmt_@TAG@vector_elements", vector);
+    throw wrong_type("pmt_@TAG@vector_elements", vector);
   size_t len;
   const @TYPE@ *array = _@TAG@vector(vector)->elements(len);
   const std::vector< @TYPE@ > vec(array, array+len);
@@ -131,10 +131,10 @@ pmt_@TAG@vector_elements(pmt_t vector)
 
 
 @TYPE@ *
-pmt_@TAG@vector_writable_elements(pmt_t vector, size_t &len)
+@TAG@vector_writable_elements(pmt_t vector, size_t &len)
 {
   if (!vector->is_@TAG@vector())
-    throw pmt_wrong_type("pmt_@TAG@vector_writable_elements", vector);
+    throw wrong_type("pmt_@TAG@vector_writable_elements", vector);
   return _@TAG@vector(vector)->writable_elements(len);
 }
 

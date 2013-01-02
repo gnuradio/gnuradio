@@ -81,8 +81,8 @@ gr_tagged_file_sink::work (int noutput_items,
 
   uint64_t start_N = nitems_read(0);
   uint64_t end_N = start_N + (uint64_t)(noutput_items);
-  pmt::pmt_t bkey = pmt::pmt_string_to_symbol("burst");
-  pmt::pmt_t tkey = pmt::pmt_string_to_symbol("rx_time"); // use gr_tags::key_time
+  pmt::pmt_t bkey = pmt::string_to_symbol("burst");
+  pmt::pmt_t tkey = pmt::string_to_symbol("rx_time"); // use gr_tags::key_time
 
   std::vector<gr_tag_t> all_tags;
   get_tags_in_range(all_tags, 0, start_N, end_N);
@@ -98,8 +98,8 @@ gr_tagged_file_sink::work (int noutput_items,
     const gr_tag_t tag = time_tags_outer[0];
     uint64_t offset = tag.offset;
     pmt::pmt_t time = tag.value;
-    uint64_t tsecs = pmt::pmt_to_uint64(pmt::pmt_tuple_ref(time, 0));
-    double tfrac = pmt::pmt_to_double(pmt::pmt_tuple_ref(time, 1));
+    uint64_t tsecs = pmt::to_uint64(pmt::tuple_ref(time, 0));
+    double tfrac = pmt::to_double(pmt::tuple_ref(time, 1));
     double delta = (double)offset / d_sample_rate;
     d_timeval = (double)tsecs + tfrac + delta;
     d_last_N = offset;
@@ -109,8 +109,8 @@ gr_tagged_file_sink::work (int noutput_items,
   while(idx < noutput_items) {
     if(d_state == NOT_IN_BURST) {
       while(vitr != all_tags.end()) {
-	if((pmt::pmt_eqv((*vitr).key, bkey)) &&
-	   pmt::pmt_is_true((*vitr).value)) {
+	if((pmt::eqv((*vitr).key, bkey)) &&
+	   pmt::is_true((*vitr).value)) {
 
 	  uint64_t N = (*vitr).offset;
 	  idx = (int)(N - start_N);
@@ -130,8 +130,8 @@ gr_tagged_file_sink::work (int noutput_items,
 
 	    // Get time based on last time tag from USRP
 	    pmt::pmt_t time = tag.value;
-	    uint64_t tsecs = pmt::pmt_to_uint64(pmt::pmt_tuple_ref(time, 0));
-	    double tfrac = pmt::pmt_to_double(pmt::pmt_tuple_ref(time, 1));
+	    uint64_t tsecs = pmt::to_uint64(pmt::tuple_ref(time, 0));
+	    double tfrac = pmt::to_double(pmt::tuple_ref(time, 1));
 
 	    // Get new time from last time tag + difference in time to when
 	    // burst tag occured based on the sample rate
@@ -187,8 +187,8 @@ gr_tagged_file_sink::work (int noutput_items,
     }
     else {  // In burst
       while(vitr != all_tags.end()) {
-	if((pmt::pmt_eqv((*vitr).key, bkey)) &&
-	   pmt::pmt_is_false((*vitr).value)) {
+	if((pmt::eqv((*vitr).key, bkey)) &&
+	   pmt::is_false((*vitr).value)) {
 	  uint64_t N = (*vitr).offset;
 	  idx_stop = (int)N - start_N;
 

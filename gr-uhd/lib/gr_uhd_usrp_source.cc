@@ -28,9 +28,9 @@
 #include <boost/make_shared.hpp>
 #include "gr_uhd_common.h"
 
-static const pmt::pmt_t TIME_KEY = pmt::pmt_string_to_symbol("rx_time");
-static const pmt::pmt_t RATE_KEY = pmt::pmt_string_to_symbol("rx_rate");
-static const pmt::pmt_t FREQ_KEY = pmt::pmt_string_to_symbol("rx_freq");
+static const pmt::pmt_t TIME_KEY = pmt::string_to_symbol("rx_time");
+static const pmt::pmt_t RATE_KEY = pmt::string_to_symbol("rx_rate");
+static const pmt::pmt_t FREQ_KEY = pmt::string_to_symbol("rx_freq");
 
 #include <uhd/convert.hpp>
 inline gr_io_signature_sptr args_to_io_sig(const uhd::stream_args_t &args){
@@ -69,7 +69,7 @@ public:
         if (stream_args.cpu_format == "sc16") _type = boost::make_shared<uhd::io_type_t>(uhd::io_type_t::COMPLEX_INT16);
         std::stringstream str;
         str << name() << unique_id();
-        _id = pmt::pmt_string_to_symbol(str.str());
+        _id = pmt::string_to_symbol(str.str());
         _dev = uhd::usrp::multi_usrp::make(device_addr);
     }
 
@@ -363,15 +363,15 @@ public:
             if (_tag_now){
                 _tag_now = false;
                 //create a timestamp pmt for the first sample
-                const pmt::pmt_t val = pmt::pmt_make_tuple(
-                    pmt::pmt_from_uint64(_metadata.time_spec.get_full_secs()),
-                    pmt::pmt_from_double(_metadata.time_spec.get_frac_secs())
+                const pmt::pmt_t val = pmt::make_tuple(
+                    pmt::from_uint64(_metadata.time_spec.get_full_secs()),
+                    pmt::from_double(_metadata.time_spec.get_frac_secs())
                 );
                 //create a tag set for each channel
                 for (size_t i = 0; i < _nchan; i++){
                     this->add_item_tag(i, nitems_written(0), TIME_KEY, val, _id);
-                    this->add_item_tag(i, nitems_written(0), RATE_KEY, pmt::pmt_from_double(_samp_rate), _id);
-                    this->add_item_tag(i, nitems_written(0), FREQ_KEY, pmt::pmt_from_double(_center_freq), _id);
+                    this->add_item_tag(i, nitems_written(0), RATE_KEY, pmt::from_double(_samp_rate), _id);
+                    this->add_item_tag(i, nitems_written(0), FREQ_KEY, pmt::from_double(_center_freq), _id);
                 }
             }
             break;

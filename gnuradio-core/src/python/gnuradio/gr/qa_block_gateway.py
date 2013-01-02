@@ -112,8 +112,8 @@ class tag_source(gr.sync_block):
 
         #make a new tag on the middle element every time work is called
         count = self.nitems_written(0) + num_output_items/2
-        key = pmt.pmt_string_to_symbol("example_key")
-        value = pmt.pmt_string_to_symbol("example_value")
+        key = pmt.string_to_symbol("example_key")
+        value = pmt.string_to_symbol("example_value")
         self.add_item_tag(0, count, key, value)
 
         return num_output_items
@@ -138,9 +138,9 @@ class tag_sink(gr.sync_block):
         tags = self.get_tags_in_range(0, nread, nread+num_input_items)
         for tag in tags:
             #print tag.offset
-            #print pmt.pmt_symbol_to_string(tag.key)
-            #print pmt.pmt_symbol_to_string(tag.value)
-            self.key = pmt.pmt_symbol_to_string(tag.key)
+            #print pmt.symbol_to_string(tag.key)
+            #print pmt.symbol_to_string(tag.value)
+            self.key = pmt.symbol_to_string(tag.key)
 
         return num_input_items
 

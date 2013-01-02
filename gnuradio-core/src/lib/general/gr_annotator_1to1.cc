@@ -79,8 +79,8 @@ gr_annotator_1to1::work (int noutput_items,
   }
 
   // Storing the current noutput_items as the value to the "noutput_items" key
-  pmt::pmt_t srcid = pmt::pmt_string_to_symbol(str.str());
-  pmt::pmt_t key = pmt::pmt_string_to_symbol("seq");
+  pmt::pmt_t srcid = pmt::string_to_symbol(str.str());
+  pmt::pmt_t key = pmt::string_to_symbol("seq");
 
   // Work does nothing to the data stream; just copy all inputs to outputs
   // Adds a new tag when the number of items read is a multiple of d_when
@@ -92,7 +92,7 @@ gr_annotator_1to1::work (int noutput_items,
     // the 1-to-1 propagation policy.
     for(int i = 0; i < std::min(noutputs, ninputs); i++) {
       if(abs_N % d_when == 0) {
-	pmt::pmt_t value = pmt::pmt_from_uint64(d_tag_counter++);
+	pmt::pmt_t value = pmt::from_uint64(d_tag_counter++);
 	add_item_tag(i, abs_N, key, value, srcid);
       }
 

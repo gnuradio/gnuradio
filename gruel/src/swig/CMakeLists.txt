@@ -34,7 +34,7 @@ GR_SWIG_MAKE(pmt_swig pmt_swig.i)
 
 GR_SWIG_INSTALL(
     TARGETS pmt_swig
-    DESTINATION ${GR_PYTHON_DIR}/gruel/pmt
+    DESTINATION ${GR_PYTHON_DIR}/pmt
     COMPONENT "gruel_python"
 )
 

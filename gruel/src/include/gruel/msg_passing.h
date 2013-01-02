@@ -95,7 +95,7 @@ namespace gruel {
   /*!
    * \brief send message to msg_accepter
    *
-   * \param accepter is the target of the send.  precond: pmt_is_msg_accepter(accepter)
+   * \param accepter is the target of the send.  precond: pmt::is_msg_accepter(accepter)
    * \param which_port A pmt symbol describing the port by name.
    * \param msg is the message to send.  It's usually a pmt tuple.
    *
@@ -108,7 +108,7 @@ namespace gruel {
   static inline pmt::pmt_t
   send(pmt::pmt_t accepter, const pmt::pmt_t &which_port, const pmt::pmt_t &msg)
   {
-    return send(pmt_msg_accepter_ref(accepter), which_port, msg);
+    return send(pmt::msg_accepter_ref(accepter), which_port, msg);
   }
 
 } /* namespace gruel */

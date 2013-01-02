@@ -46,11 +46,11 @@ class test_file_metadata(gr_unittest.TestCase):
 
         detached = False
         samp_rate = 200000
-        key = pmt.pmt_intern("samp_rate")
-        val = pmt.pmt_from_double(samp_rate)
-        extras = pmt.pmt_make_dict()
-        extras = pmt.pmt_dict_add(extras, key, val)
-        extras_str = pmt.pmt_serialize_str(extras)
+        key = pmt.intern("samp_rate")
+        val = pmt.from_double(samp_rate)
+        extras = pmt.make_dict()
+        extras = pmt.dict_add(extras, key, val)
+        extras_str = pmt.serialize_str(extras)
 
         data = sig_source_c(samp_rate, 1000, 1, N)
         src  = gr.vector_source_c(data)
@@ -70,7 +70,7 @@ class test_file_metadata(gr_unittest.TestCase):
             self.assertFalse()
 
         try:
-            header = pmt.pmt_deserialize_str(header_str)
+            header = pmt.deserialize_str(header_str)
         except RuntimeError:
             self.assertFalse()
 
@@ -82,14 +82,14 @@ class test_file_metadata(gr_unittest.TestCase):
         handle.close()
 
         try:
-            extra = pmt.pmt_deserialize_str(extra_str)
+            extra = pmt.deserialize_str(extra_str)
         except RuntimeError:
             self.assertFalse()
 
         extra_info = parse_file_metadata.parse_extra_dict(extra, info, False)
 
         self.assertEqual(info['rx_rate'], samp_rate)
-        self.assertEqual(pmt.pmt_to_double(extra_info['samp_rate']), samp_rate)
+        self.assertEqual(pmt.to_double(extra_info['samp_rate']), samp_rate)
 
 
         # Test file metadata source
@@ -108,10 +108,10 @@ class test_file_metadata(gr_unittest.TestCase):
         # were generated and received correctly.
         tags = tsnk.current_tags()
         for t in tags:
-            if(pmt.pmt_eq(t.key, pmt.pmt_intern("samp_rate"))):
-                self.assertEqual(pmt.pmt_to_double(t.value), samp_rate)
-            elif(pmt.pmt_eq(t.key, pmt.pmt_intern("rx_rate"))):
-                self.assertEqual(pmt.pmt_to_double(t.value), samp_rate)
+            if(pmt.eq(t.key, pmt.intern("samp_rate"))):
+                self.assertEqual(pmt.to_double(t.value), samp_rate)
+            elif(pmt.eq(t.key, pmt.intern("rx_rate"))):
+                self.assertEqual(pmt.to_double(t.value), samp_rate)
 
         # Test that the data portion was extracted and received correctly.
         self.assertComplexTuplesAlmostEqual(vsnk.data(), ssnk.data(), 5)
@@ -125,11 +125,11 @@ class test_file_metadata(gr_unittest.TestCase):
 
         detached = True
         samp_rate = 200000
-        key = pmt.pmt_intern("samp_rate")
-        val = pmt.pmt_from_double(samp_rate)
-        extras = pmt.pmt_make_dict()
-        extras = pmt.pmt_dict_add(extras, key, val)
-        extras_str = pmt.pmt_serialize_str(extras)
+        key = pmt.intern("samp_rate")
+        val = pmt.from_double(samp_rate)
+        extras = pmt.make_dict()
+        extras = pmt.dict_add(extras, key, val)
+        extras_str = pmt.serialize_str(extras)
 
         data = sig_source_c(samp_rate, 1000, 1, N)
         src  = gr.vector_source_c(data)
@@ -150,7 +150,7 @@ class test_file_metadata(gr_unittest.TestCase):
             self.assertFalse()
 
         try:
-            header = pmt.pmt_deserialize_str(header_str)
+            header = pmt.deserialize_str(header_str)
         except RuntimeError:
             self.assertFalse()
 
@@ -161,14 +161,14 @@ class test_file_metadata(gr_unittest.TestCase):
         handle.close()
 
         try:
-            extra = pmt.pmt_deserialize_str(extra_str)
+            extra = pmt.deserialize_str(extra_str)
         except RuntimeError:
             self.assertFalse()
 
         extra_info = parse_file_metadata.parse_extra_dict(extra, info, False)
 
         self.assertEqual(info['rx_rate'], samp_rate)
-        self.assertEqual(pmt.pmt_to_double(extra_info['samp_rate']), samp_rate)
+        self.assertEqual(pmt.to_double(extra_info['samp_rate']), samp_rate)
 
 
         # Test file metadata source
@@ -187,10 +187,10 @@ class test_file_metadata(gr_unittest.TestCase):
         # were generated and received correctly.
         tags = tsnk.current_tags()
         for t in tags:
-            if(pmt.pmt_eq(t.key, pmt.pmt_intern("samp_rate"))):
-                self.assertEqual(pmt.pmt_to_double(t.value), samp_rate)
-            elif(pmt.pmt_eq(t.key, pmt.pmt_intern("rx_rate"))):
-                self.assertEqual(pmt.pmt_to_double(t.value), samp_rate)
+            if(pmt.eq(t.key, pmt.intern("samp_rate"))):
+                self.assertEqual(pmt.to_double(t.value), samp_rate)
+            elif(pmt.eq(t.key, pmt.intern("rx_rate"))):
+                self.assertEqual(pmt.to_double(t.value), samp_rate)
 
         # Test that the data portion was extracted and received correctly.
         self.assertComplexTuplesAlmostEqual(vsnk.data(), ssnk.data(), 5)
