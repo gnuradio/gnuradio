@@ -43,11 +43,11 @@ gr_pdu_itemsize(gr_pdu_vector_type type){
 bool
 gr_pdu_type_matches(gr_pdu_vector_type type, pmt::pmt_t v){
   switch(type){
-  case BYTE:
+  case pdu_byte:
     return pmt::is_u8vector(v);
-  case FLOAT:
+  case pdu_float:
     return pmt::is_f32vector(v);
-  case COMPLEX:
+  case pdu_complex:
     return pmt::is_c32vector(v);
   default:
     throw std::runtime_error("bad type!");
@@ -57,11 +57,11 @@ gr_pdu_type_matches(gr_pdu_vector_type type, pmt::pmt_t v){
 pmt::pmt_t
 gr_pdu_make_vector(gr_pdu_vector_type type, const uint8_t* buf, size_t items){
   switch(type){
-  case BYTE:
+  case pdu_byte:
     return pmt::init_u8vector(items, buf);
-  case FLOAT:
+  case pdu_float:
     return pmt::init_f32vector(items, (const float*)buf);
-  case COMPLEX:
+  case pdu_complex:
     return pmt::init_c32vector(items, (const gr_complex*)buf);
   default:
     throw std::runtime_error("bad type!");
@@ -70,10 +70,10 @@ gr_pdu_make_vector(gr_pdu_vector_type type, const uint8_t* buf, size_t items){
 
 gr_pdu_vector_type type_from_pmt(pmt::pmt_t vector){
   if(is_u8vector(vector))
-    return BYTE;
+    return pdu_byte;
   if(is_f32vector(vector))
-    return FLOAT;
+    return pdu_float;
   if(is_c32vector(vector))
-    return COMPLEX;
+    return pdu_complex;
   throw std::runtime_error("bad type!");
 }
