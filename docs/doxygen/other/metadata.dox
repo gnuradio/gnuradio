@@ -298,7 +298,7 @@ The file sink example can be switched to use a signal source instead
 of a UHD source, but no extra tagged data is used in this mode.
 
 The file source example pushes the data stream to a new raw file while
-a tag debugger block prints out any tags observed in the metedata
+a tag debugger block prints out any tags observed in the metadata
 file. A QT GUI time sink is used to look at the signal as well.
 
 The versions with 'vector' in the name are similar except they use
