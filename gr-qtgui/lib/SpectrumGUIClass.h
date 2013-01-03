@@ -47,57 +47,57 @@ public:
 		   const double newStartFrequency,
 		   const double newStopFrequency);
   ~SpectrumGUIClass();
-  void Reset();
+  void reset();
 
-  void OpenSpectrumWindow(QWidget*,
+  void openSpectrumWindow(QWidget*,
 			  const bool frequency=true, const bool waterfall=true,
 			  const bool time=true, const bool constellation=true);
-  void SetDisplayTitle(const std::string);
+  void setDisplayTitle(const std::string);
 
-  bool GetWindowOpenFlag();
-  void SetWindowOpenFlag(const bool);
+  bool getWindowOpenFlag();
+  void setWindowOpenFlag(const bool);
 
-  void SetFrequencyRange(const double, const double, const double);
-  double GetStartFrequency();
-  double GetStopFrequency();
-  double GetCenterFrequency();
+  void setFrequencyRange(const double, const double, const double);
+  double getStartFrequency();
+  double getStopFrequency();
+  double getCenterFrequency();
 
-  void UpdateWindow(const bool, const float*,
+  void updateWindow(const bool, const float*,
 		    const uint64_t, const float*,
 		    const uint64_t, const float*,
 		    const uint64_t,
 		    const gruel::high_res_timer_type, const bool);
 
-  float GetPowerValue();
-  void SetPowerValue(const float);
+  float getPowerValue();
+  void setPowerValue(const float);
 
-  int GetWindowType();
-  void SetWindowType(const int);
+  int getWindowType();
+  void setWindowType(const int);
 
-  int GetFFTSize();
-  int GetFFTSizeIndex();
-  void SetFFTSize(const int);
+  int getFFTSize();
+  int getFFTSizeIndex();
+  void setFFTSize(const int);
 
-  gruel::high_res_timer_type GetLastGUIUpdateTime();
-  void SetLastGUIUpdateTime(const gruel::high_res_timer_type);
+  gruel::high_res_timer_type getLastGUIUpdateTime();
+  void setLastGUIUpdateTime(const gruel::high_res_timer_type);
 
-  unsigned int GetPendingGUIUpdateEvents();
-  void IncrementPendingGUIUpdateEvents();
-  void DecrementPendingGUIUpdateEvents();
-  void ResetPendingGUIUpdateEvents();
+  unsigned int getPendingGUIUpdateEvents();
+  void incrementPendingGUIUpdateEvents();
+  void decrementPendingGUIUpdateEvents();
+  void resetPendingGUIUpdateEvents();
 
   static const long MAX_FFT_SIZE;
   static const long MIN_FFT_SIZE;
 
   QWidget* qwidget();
 
-  void SetTimeDomainAxis(double min, double max);
-  void SetConstellationAxis(double xmin, double xmax,
+  void setTimeDomainAxis(double min, double max);
+  void setConstellationAxis(double xmin, double xmax,
 			    double ymin, double ymax);
-  void SetConstellationPenSize(int size);
-  void SetFrequencyAxis(double min, double max);
+  void setConstellationPenSize(int size);
+  void setFrequencyAxis(double min, double max);
 
-  void SetUpdateTime(double t);
+  void setUpdateTime(double t);
 
 protected:
 

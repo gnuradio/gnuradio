@@ -105,7 +105,7 @@ WaterfallDisplayForm::newData(const QEvent *updateEvent)
       _max_val = *max_val;
   }
 
-  getPlot()->PlotNewData(dataPoints, numDataPoints,
+  getPlot()->plotNewData(dataPoints, numDataPoints,
 			 d_update_time, dataTimestamp, 0);
 }
 
@@ -163,7 +163,7 @@ WaterfallDisplayForm::setFrequencyRange(const double centerfreq,
   double units = pow(10, (units10-fmod(units10, 3.0)));
   int iunit = static_cast<int>(units3);
 
-  getPlot()->SetFrequencyRange(centerfreq, bandwidth,
+  getPlot()->setFrequencyRange(centerfreq, bandwidth,
 			       units, strunits[iunit]);
 }
 
@@ -172,7 +172,7 @@ WaterfallDisplayForm::setColorMap(const int newType,
 				  const QColor lowColor,
 				  const QColor highColor)
 {
-  getPlot()->SetIntensityColorMapType(0, newType,
+  getPlot()->setIntensityColorMapType(0, newType,
 				      lowColor, highColor);
 }
 
@@ -180,7 +180,7 @@ void
 WaterfallDisplayForm::setIntensityRange(const double minIntensity,
 					const double maxIntensity)
 {
-  getPlot()->SetIntensityRange(minIntensity, maxIntensity);
+  getPlot()->setIntensityRange(minIntensity, maxIntensity);
 }
 
 void
@@ -189,5 +189,5 @@ WaterfallDisplayForm::autoScale()
   double min_int = _min_val - 5;
   double max_int = _max_val + 10;
 
-  getPlot()->SetIntensityRange(min_int, max_int);
+  getPlot()->setIntensityRange(min_int, max_int);
 }

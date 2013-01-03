@@ -172,7 +172,7 @@ ConstellationDisplayPlot::replot()
 
 
 void
-ConstellationDisplayPlot::PlotNewData(const std::vector<double*> realDataPoints,
+ConstellationDisplayPlot::plotNewData(const std::vector<double*> realDataPoints,
 				      const std::vector<double*> imagDataPoints,
 				      const int64_t numDataPoints,
 				      const double timeInterval)
@@ -208,7 +208,7 @@ ConstellationDisplayPlot::PlotNewData(const std::vector<double*> realDataPoints,
 }
 
 void
-ConstellationDisplayPlot::PlotNewData(const double* realDataPoints,
+ConstellationDisplayPlot::plotNewData(const double* realDataPoints,
 				      const double* imagDataPoints,
 				      const int64_t numDataPoints,
 				      const double timeInterval)
@@ -217,7 +217,7 @@ ConstellationDisplayPlot::PlotNewData(const double* realDataPoints,
   std::vector<double*> vecImagDataPoints;
   vecRealDataPoints.push_back((double*)realDataPoints);
   vecImagDataPoints.push_back((double*)imagDataPoints);
-  PlotNewData(vecRealDataPoints, vecImagDataPoints,
+  plotNewData(vecRealDataPoints, vecImagDataPoints,
 	      numDataPoints, timeInterval);
 }
 

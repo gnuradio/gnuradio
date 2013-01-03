@@ -36,13 +36,13 @@ public:
   ConstellationDisplayPlot(int nplots, QWidget*);
   virtual ~ConstellationDisplayPlot();
 
-  void PlotNewData(const std::vector<double*> realDataPoints,
+  void plotNewData(const std::vector<double*> realDataPoints,
 		   const std::vector<double*> imagDataPoints,
 		   const int64_t numDataPoints,
 		   const double timeInterval);
 
   // Old method to be removed
-  void PlotNewData(const double* realDataPoints,
+  void plotNewData(const double* realDataPoints,
 		   const double* imagDataPoints,
 		   const int64_t numDataPoints,
 		   const double timeInterval);

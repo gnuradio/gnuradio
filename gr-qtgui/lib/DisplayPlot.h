@@ -257,14 +257,14 @@ public slots:
   // Because of the preprocessing of slots in QT, these are not
   // easily separated by the version check. Make one for each
   // version until it's worked out.
-  void OnPickerPointSelected(const QwtDoublePoint & p);
-  void OnPickerPointSelected6(const QPointF & p);
+  void onPickerPointSelected(const QwtDoublePoint & p);
+  void onPickerPointSelected6(const QPointF & p);
 
 signals:
   void plotPointSelected(const QPointF p);
 
 protected slots:
-  void LegendEntryChecked(QwtPlotItem *plotItem, bool on);
+  void legendEntryChecked(QwtPlotItem *plotItem, bool on);
 
 protected:
   int _nplots;

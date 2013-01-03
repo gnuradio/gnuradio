@@ -80,7 +80,7 @@ FreqDisplayForm::newData(const QEvent *updateEvent)
   const std::vector<double*> dataPoints = fevent->getPoints();
   const uint64_t numDataPoints = fevent->getNumDataPoints();
 
-  getPlot()->PlotNewData(dataPoints, numDataPoints,
+  getPlot()->plotNewData(dataPoints, numDataPoints,
 			 0, 0, 0, d_update_time);
 }
 
@@ -139,7 +139,7 @@ FreqDisplayForm::setFrequencyRange(const double centerfreq,
   double units = pow(10, (units10-fmod(units10, 3.0)));
   int iunit = static_cast<int>(units3);
 
-  getPlot()->SetFrequencyRange(centerfreq, bandwidth,
+  getPlot()->setFrequencyRange(centerfreq, bandwidth,
 			       units, strunits[iunit]);
 }
 

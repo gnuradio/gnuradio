@@ -390,14 +390,14 @@ DisplayPlot::resizeSlot( QSize *s )
   resize(s->width()-10, s->height()-10);
 }
 
-void DisplayPlot::LegendEntryChecked(QwtPlotItem* plotItem, bool on)
+void DisplayPlot::legendEntryChecked(QwtPlotItem* plotItem, bool on)
 {
   plotItem->setVisible(!on);
   replot();
 }
 
 void
-DisplayPlot::OnPickerPointSelected(const QwtDoublePoint & p)
+DisplayPlot::onPickerPointSelected(const QwtDoublePoint & p)
 {
   QPointF point = p;
   //fprintf(stderr,"OnPickerPointSelected %f %f\n", point.x(), point.y());
@@ -405,7 +405,7 @@ DisplayPlot::OnPickerPointSelected(const QwtDoublePoint & p)
 }
 
 void
-DisplayPlot::OnPickerPointSelected6(const QPointF & p)
+DisplayPlot::onPickerPointSelected6(const QPointF & p)
 {
   QPointF point = p;
   //fprintf(stderr,"OnPickerPointSelected %f %f\n", point.x(), point.y());

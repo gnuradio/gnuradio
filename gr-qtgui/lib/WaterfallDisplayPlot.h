@@ -41,57 +41,57 @@ class WaterfallDisplayPlot: public DisplayPlot
 {
   Q_OBJECT
 
-  Q_PROPERTY ( int intensity_color_map_type1 READ GetIntensityColorMapType1 WRITE SetIntensityColorMapType1 )
-  Q_PROPERTY ( QColor low_intensity_color READ GetUserDefinedLowIntensityColor WRITE SetUserDefinedLowIntensityColor )
-  Q_PROPERTY ( QColor high_intensity_color READ GetUserDefinedHighIntensityColor WRITE SetUserDefinedHighIntensityColor )
+  Q_PROPERTY ( int intensity_color_map_type1 READ getIntensityColorMapType1 WRITE setIntensityColorMapType1 )
+  Q_PROPERTY ( QColor low_intensity_color READ getUserDefinedLowIntensityColor WRITE setUserDefinedLowIntensityColor )
+  Q_PROPERTY ( QColor high_intensity_color READ getUserDefinedHighIntensityColor WRITE setUserDefinedHighIntensityColor )
   
 
 public:
   WaterfallDisplayPlot(int nplots, QWidget*);
   virtual ~WaterfallDisplayPlot();
 
-  void Reset();
+  void resetAxis();
 
-  void SetFrequencyRange(const double, const double,
+  void setFrequencyRange(const double, const double,
 			 const double units=1000.0,
 			 const std::string &strunits = "kHz");
-  double GetStartFrequency() const;
-  double GetStopFrequency() const;
+  double getStartFrequency() const;
+  double getStopFrequency() const;
 
-  void PlotNewData(const std::vector<double*> dataPoints,
+  void plotNewData(const std::vector<double*> dataPoints,
 		   const int64_t numDataPoints,
 		   const double timePerFFT,
 		   const gruel::high_res_timer_type timestamp,
 		   const int droppedFrames);
 
   // to be removed
-  void PlotNewData(const double* dataPoints,
+  void plotNewData(const double* dataPoints,
 		   const int64_t numDataPoints,
 		   const double timePerFFT,
 		   const gruel::high_res_timer_type timestamp,
 		   const int droppedFrames);
 
-  void SetIntensityRange(const double minIntensity, const double maxIntensity);
+  void setIntensityRange(const double minIntensity, const double maxIntensity);
 
   void replot(void);
 
-  int GetIntensityColorMapType(int) const;
-  int GetIntensityColorMapType1() const;
-  const QColor GetUserDefinedLowIntensityColor() const;
-  const QColor GetUserDefinedHighIntensityColor() const;
+  int getIntensityColorMapType(int) const;
+  int getIntensityColorMapType1() const;
+  const QColor getUserDefinedLowIntensityColor() const;
+  const QColor getUserDefinedHighIntensityColor() const;
 
 public slots:
-  void SetIntensityColorMapType(const int, const int, const QColor, const QColor);
-  void SetIntensityColorMapType1(int);
-  void SetUserDefinedLowIntensityColor(QColor);
-  void SetUserDefinedHighIntensityColor(QColor);
+  void setIntensityColorMapType(const int, const int, const QColor, const QColor);
+  void setIntensityColorMapType1(int);
+  void setUserDefinedLowIntensityColor(QColor);
+  void setUserDefinedHighIntensityColor(QColor);
 
 signals:
-  void UpdatedLowerIntensityLevel(const double);
-  void UpdatedUpperIntensityLevel(const double);
+  void updatedLowerIntensityLevel(const double);
+  void updatedUpperIntensityLevel(const double);
 
 private:
-  void _UpdateIntensityRangeDisplay();
+  void _updateIntensityRangeDisplay();
 
   double _startFrequency;
   double _stopFrequency;

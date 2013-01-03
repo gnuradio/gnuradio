@@ -47,8 +47,8 @@ SpectrumDisplayForm::SpectrumDisplayForm(QWidget* parent)
   _timeDomainDisplayPlot->setLineLabel(1, "imag");
 
   AvgLineEdit->setRange(0, 500);                 // Set range of Average box value from 0 to 500
-  MinHoldCheckBox_toggled( false );
-  MaxHoldCheckBox_toggled( false );
+  minHoldCheckBox_toggled( false );
+  maxHoldCheckBox_toggled( false );
   
   WaterfallMaximumIntensitySlider->setRange(-200, 0);
   WaterfallMinimumIntensitySlider->setRange(-200, 0);
@@ -60,24 +60,24 @@ SpectrumDisplayForm::SpectrumDisplayForm(QWidget* parent)
   _noiseFloorAmplitude = -HUGE_VAL;
 
   connect(_waterfallDisplayPlot, SIGNAL(UpdatedLowerIntensityLevel(const double)),
-  	  _frequencyDisplayPlot, SLOT(SetLowerIntensityLevel(const double)));
+  	  _frequencyDisplayPlot, SLOT(setLowerIntensityLevel(const double)));
   connect(_waterfallDisplayPlot, SIGNAL(UpdatedUpperIntensityLevel(const double)),
-   	  _frequencyDisplayPlot, SLOT(SetUpperIntensityLevel(const double)));
+   	  _frequencyDisplayPlot, SLOT(setUpperIntensityLevel(const double)));
 
-  _frequencyDisplayPlot->SetLowerIntensityLevel(-200);
-  _frequencyDisplayPlot->SetUpperIntensityLevel(-200);
+  _frequencyDisplayPlot->setLowerIntensityLevel(-200);
+  _frequencyDisplayPlot->setUpperIntensityLevel(-200);
 
   // Load up the acceptable FFT sizes...
   FFTSizeComboBox->clear();
   for(long fftSize = SpectrumGUIClass::MIN_FFT_SIZE; fftSize <= SpectrumGUIClass::MAX_FFT_SIZE; fftSize *= 2){
     FFTSizeComboBox->insertItem(FFTSizeComboBox->count(), QString("%1").arg(fftSize));
   }
-  Reset();
+  reset();
 
-  ToggleTabFrequency(false);
-  ToggleTabWaterfall(false);
-  ToggleTabTime(false);
-  ToggleTabConstellation(false);
+  toggleTabFrequency(false);
+  toggleTabWaterfall(false);
+  toggleTabTime(false);
+  toggleTabConstellation(false);
 
   _historyEntry = 0;
   _historyEntryCount = 0;
@@ -121,17 +121,17 @@ SpectrumDisplayForm::~SpectrumDisplayForm()
 }
 
 void
-SpectrumDisplayForm::setSystem( SpectrumGUIClass * newSystem,
-				const uint64_t numFFTDataPoints,
-				const uint64_t numTimeDomainDataPoints )
+SpectrumDisplayForm::setSystem(SpectrumGUIClass * newSystem,
+			       const uint64_t numFFTDataPoints,
+			       const uint64_t numTimeDomainDataPoints)
 {
-  ResizeBuffers(numFFTDataPoints, numTimeDomainDataPoints);
+  resizeBuffers(numFFTDataPoints, numTimeDomainDataPoints);
 
-  if(newSystem != NULL){
+  if(newSystem != NULL) {
     _system = newSystem;
     _systemSpecifiedFlag = true;
   }
-  else{
+  else {
     _systemSpecifiedFlag = false;
   }
 }
@@ -143,7 +143,10 @@ SpectrumDisplayForm::setSystem( SpectrumGUIClass * newSystem,
  * Doing the "FFT shift" to put 0Hz at the center of the plot
  * I feel like this might want to be part of the sink block
  **********************************************************************/
-static void fftshift_and_sum(double *outFFT, const float *inFFT, uint64_t num_points, double &sum_mean, double &peak_ampl, int &peak_bin) {
+static void fftshift_and_sum(double *outFFT, const float *inFFT,
+			     uint64_t num_points, double &sum_mean,
+			     double &peak_ampl, int &peak_bin)
+{
   const float* inptr = inFFT+num_points/2;
   double* outptr = outFFT;
 
@@ -152,7 +155,7 @@ static void fftshift_and_sum(double *outFFT, const float *inFFT, uint64_t num_po
   peak_bin = 0;
 
   // Run this twice to perform the fftshift operation on the data here as well
-  for(uint64_t point = 0; point < num_points/2; point++){
+  for(uint64_t point = 0; point < num_points/2; point++) {
     float pt = (*inptr);
     *outptr = pt;
     if(*outptr > peak_ampl) {
@@ -168,7 +171,7 @@ static void fftshift_and_sum(double *outFFT, const float *inFFT, uint64_t num_po
   // This loop takes the first half of the input data and puts it in the 
   // second half of the plotted data
   inptr = inFFT;
-  for(uint64_t point = 0; point < num_points/2; point++){
+  for(uint64_t point = 0; point < num_points/2; point++) {
     float pt = (*inptr);
     *outptr = pt;
     if(*outptr > peak_ampl) {
@@ -201,7 +204,7 @@ SpectrumDisplayForm::newFrequencyData( const SpectrumUpdateEvent* spectrumUpdate
   timeDomainDataPoints.push_back(imagTimeDomainDataPoints);
 
   // REMEMBER: The dataTimestamp is NOT valid when the repeat data flag is true...
-  ResizeBuffers(numFFTDataPoints, numTimeDomainDataPoints);
+  resizeBuffers(numFFTDataPoints, numTimeDomainDataPoints);
 
   const double fftBinSize = (_stopFrequency-_startFrequency) /
     static_cast<double>(numFFTDataPoints);
@@ -214,7 +217,7 @@ SpectrumDisplayForm::newFrequencyData( const SpectrumUpdateEvent* spectrumUpdate
 
   // Don't update the averaging history if this is repeated data
   if(!repeatDataFlag){
-    _AverageHistory(_realFFTDataPoints);
+    _averageHistory(_realFFTDataPoints);
 
     // Only use the local info if we are not repeating data
     _peakAmplitude = peak_ampl;
@@ -244,17 +247,17 @@ SpectrumDisplayForm::newFrequencyData( const SpectrumUpdateEvent* spectrumUpdate
   if(lastOfMultipleUpdatesFlag){
     int tabindex = SpectrumTypeTab->currentIndex();
     if(tabindex == d_plot_fft) {
-      _frequencyDisplayPlot->PlotNewData(_averagedValues, numFFTDataPoints,
+      _frequencyDisplayPlot->plotNewData(_averagedValues, numFFTDataPoints,
 					 _noiseFloorAmplitude, _peakFrequency,
 					 _peakAmplitude, d_update_time);
     }
     if(tabindex == d_plot_time) {
-      _timeDomainDisplayPlot->PlotNewData(timeDomainDataPoints,
+      _timeDomainDisplayPlot->plotNewData(timeDomainDataPoints,
 					  numTimeDomainDataPoints,
 					  d_update_time);
     }
     if(tabindex == d_plot_constellation) {
-      _constellationDisplayPlot->PlotNewData(realTimeDomainDataPoints,
+      _constellationDisplayPlot->plotNewData(realTimeDomainDataPoints,
 					     imagTimeDomainDataPoints,
 					     numTimeDomainDataPoints,
 					     d_update_time);
@@ -263,7 +266,7 @@ SpectrumDisplayForm::newFrequencyData( const SpectrumUpdateEvent* spectrumUpdate
     // Don't update the repeated data for the waterfall
     if(!repeatDataFlag){
       if(tabindex == d_plot_waterfall) {
-	_waterfallDisplayPlot->PlotNewData(_realFFTDataPoints, numFFTDataPoints,
+	_waterfallDisplayPlot->plotNewData(_realFFTDataPoints, numFFTDataPoints,
 					   d_update_time, dataTimestamp,
 					   spectrumUpdateEvent->getDroppedFFTFrames());
       }
@@ -271,8 +274,8 @@ SpectrumDisplayForm::newFrequencyData( const SpectrumUpdateEvent* spectrumUpdate
 
     // Tell the system the GUI has been updated
     if(_systemSpecifiedFlag){
-      _system->SetLastGUIUpdateTime(generatedTimestamp);
-      _system->DecrementPendingGUIUpdateEvents();
+      _system->setLastGUIUpdateTime(generatedTimestamp);
+      _system->decrementPendingGUIUpdateEvents();
     }
   }
 }
@@ -303,40 +306,40 @@ SpectrumDisplayForm::customEvent( QEvent * e)
 {
   if(e->type() == QEvent::User+3){
     if(_systemSpecifiedFlag){
-      WindowComboBox->setCurrentIndex(_system->GetWindowType());
-      FFTSizeComboBox->setCurrentIndex(_system->GetFFTSizeIndex());
+      WindowComboBox->setCurrentIndex(_system->getWindowType());
+      FFTSizeComboBox->setCurrentIndex(_system->getFFTSizeIndex());
     }
 
     waterfallMinimumIntensityChangedCB(WaterfallMinimumIntensitySlider->value());
     waterfallMaximumIntensityChangedCB(WaterfallMaximumIntensitySlider->value());
 
     // Clear any previous display
-    Reset();
+    reset();
   }
-  else if(e->type() == SpectrumUpdateEventType){
+  else if(e->type() == SpectrumUpdateEventType) {
     SpectrumUpdateEvent* spectrumUpdateEvent = (SpectrumUpdateEvent*)e;
     newFrequencyData(spectrumUpdateEvent);
   }
-  else if(e->type() == SpectrumWindowCaptionEventType){
+  else if(e->type() == SpectrumWindowCaptionEventType) {
     setWindowTitle(((SpectrumWindowCaptionEvent*)e)->getLabel());
   }
-  else if(e->type() == SpectrumWindowResetEventType){
-    Reset();
+  else if(e->type() == SpectrumWindowResetEventType) {
+    reset();
     if(_systemSpecifiedFlag){
-      _system->ResetPendingGUIUpdateEvents();
+      _system->resetPendingGUIUpdateEvents();
     }
   }
-  else if(e->type() == SpectrumFrequencyRangeEventType){
+  else if(e->type() == SpectrumFrequencyRangeEventType) {
     _startFrequency = ((SpectrumFrequencyRangeEvent*)e)->GetStartFrequency();
     _stopFrequency = ((SpectrumFrequencyRangeEvent*)e)->GetStopFrequency();
     _centerFrequency  = ((SpectrumFrequencyRangeEvent*)e)->GetCenterFrequency();
 
-    UseRFFrequenciesCB(UseRFFrequenciesCheckBox->isChecked());
+    useRFFrequenciesCB(UseRFFrequenciesCheckBox->isChecked());
   }
 }
 
 void
-SpectrumDisplayForm::UpdateGuiTimer()
+SpectrumDisplayForm::updateGuiTimer()
 {
   // This is called by the displayTimer and redraws the canvases of
   // all of the plots.
@@ -348,55 +351,55 @@ SpectrumDisplayForm::UpdateGuiTimer()
 
 
 void
-SpectrumDisplayForm::AvgLineEdit_valueChanged( int value )
+SpectrumDisplayForm::avgLineEdit_valueChanged( int value )
 {
-  SetAverageCount(value);
+  setAverageCount(value);
 }
 
 
 void
-SpectrumDisplayForm::MaxHoldCheckBox_toggled( bool newState )
+SpectrumDisplayForm::maxHoldCheckBox_toggled( bool newState )
 {
   MaxHoldResetBtn->setEnabled(newState);
-  _frequencyDisplayPlot->SetMaxFFTVisible(newState);
-  MaxHoldResetBtn_clicked();
+  _frequencyDisplayPlot->setMaxFFTVisible(newState);
+  maxHoldResetBtn_clicked();
 }
 
 
 void
-SpectrumDisplayForm::MinHoldCheckBox_toggled( bool newState )
+SpectrumDisplayForm::minHoldCheckBox_toggled( bool newState )
 {
   MinHoldResetBtn->setEnabled(newState);
-  _frequencyDisplayPlot->SetMinFFTVisible(newState);
-  MinHoldResetBtn_clicked();
+  _frequencyDisplayPlot->setMinFFTVisible(newState);
+  minHoldResetBtn_clicked();
 }
 
 
 void
-SpectrumDisplayForm::MinHoldResetBtn_clicked()
+SpectrumDisplayForm::minHoldResetBtn_clicked()
 {
-  _frequencyDisplayPlot->ClearMinData();
+  _frequencyDisplayPlot->clearMinData();
   _frequencyDisplayPlot->replot();
 }
 
 
 void
-SpectrumDisplayForm::MaxHoldResetBtn_clicked()
+SpectrumDisplayForm::maxHoldResetBtn_clicked()
 {
-  _frequencyDisplayPlot->ClearMaxData();
+  _frequencyDisplayPlot->clearMaxData();
   _frequencyDisplayPlot->replot();
 }
 
 
 void
-SpectrumDisplayForm::TabChanged(int index)
+SpectrumDisplayForm::tabChanged(int index)
 {
   // This might be dangerous to call this with NULL
   resizeEvent(NULL);
 }
 
 void
-SpectrumDisplayForm::SetFrequencyRange(const double newCenterFrequency,
+SpectrumDisplayForm::setFrequencyRange(const double newCenterFrequency,
 				       const double newStartFrequency,
 				       const double newStopFrequency)
 {
@@ -420,52 +423,52 @@ SpectrumDisplayForm::SetFrequencyRange(const double newCenterFrequency,
     _stopFrequency = newStopFrequency;
     _centerFrequency = newCenterFrequency;
 
-    _frequencyDisplayPlot->SetFrequencyRange(_centerFrequency, fdiff,
+    _frequencyDisplayPlot->setFrequencyRange(_centerFrequency, fdiff,
 					     units, strunits[iunit]);
-    _waterfallDisplayPlot->SetFrequencyRange(_centerFrequency, fdiff,
+    _waterfallDisplayPlot->setFrequencyRange(_centerFrequency, fdiff,
 					     units, strunits[iunit]);
-    _timeDomainDisplayPlot->SetSampleRate(_stopFrequency - _startFrequency,
+    _timeDomainDisplayPlot->setSampleRate(_stopFrequency - _startFrequency,
 					  units, strtime[iunit]);
   }
 }
 
 int
-SpectrumDisplayForm::GetAverageCount()
+SpectrumDisplayForm::getAverageCount()
 {
   return _historyVector->size();
 }
 
 void
-SpectrumDisplayForm::SetAverageCount(const int newCount)
+SpectrumDisplayForm::setAverageCount(const int newCount)
 {
-  if(newCount > -1){
-    if(newCount != static_cast<int>(_historyVector->size())){
+  if(newCount > -1) {
+    if(newCount != static_cast<int>(_historyVector->size())) {
       std::vector<double*>::iterator pos;
-      while(newCount < static_cast<int>(_historyVector->size())){
+      while(newCount < static_cast<int>(_historyVector->size())) {
 	pos = _historyVector->begin();
 	delete[] (*pos);
 	_historyVector->erase(pos);
       }
 
-      while(newCount > static_cast<int>(_historyVector->size())){
+      while(newCount > static_cast<int>(_historyVector->size())) {
 	_historyVector->push_back(new double[_numRealDataPoints]);
       }
-      AverageDataReset();
+      averageDataReset();
     }
   }
 }
 
 void
-SpectrumDisplayForm::_AverageHistory(const double* newBuffer)
+SpectrumDisplayForm::_averageHistory(const double* newBuffer)
 {
-  if(_numRealDataPoints > 0){
-    if(_historyVector->size() > 0){
+  if(_numRealDataPoints > 0) {
+    if(_historyVector->size() > 0) {
       memcpy(_historyVector->operator[](_historyEntry), newBuffer,
 	     _numRealDataPoints*sizeof(double));
 
       // Increment the next location to store data
       _historyEntryCount++;
-      if(_historyEntryCount > static_cast<int>(_historyVector->size())){
+      if(_historyEntryCount > static_cast<int>(_historyVector->size())) {
 	_historyEntryCount = _historyVector->size();
       }
       _historyEntry += 1;
@@ -473,26 +476,26 @@ SpectrumDisplayForm::_AverageHistory(const double* newBuffer)
 
       // Total up and then average the values
       double sum;
-      for(uint64_t location = 0; location < _numRealDataPoints; location++){
+      for(uint64_t location = 0; location < _numRealDataPoints; location++) {
 	sum = 0;
-	for(int number = 0; number < _historyEntryCount; number++){
+	for(int number = 0; number < _historyEntryCount; number++) {
 	  sum += _historyVector->operator[](number)[location];
 	}
  	_averagedValues[location] = sum/static_cast<double>(_historyEntryCount);
       }
     }
-    else{
+    else {
       memcpy(_averagedValues, newBuffer, _numRealDataPoints*sizeof(double));
     }
   }
 }
 
 void
-SpectrumDisplayForm::ResizeBuffers( const uint64_t numFFTDataPoints,
-				    const uint64_t /*numTimeDomainDataPoints*/ )
+SpectrumDisplayForm::resizeBuffers(const uint64_t numFFTDataPoints,
+				   const uint64_t /*numTimeDomainDataPoints*/)
 {
   // Convert from Complex to Real for certain Displays
-  if(_numRealDataPoints != numFFTDataPoints){
+  if(_numRealDataPoints != numFFTDataPoints) {
     _numRealDataPoints = numFFTDataPoints;
     delete[] _realFFTDataPoints;
     delete[] _averagedValues;
@@ -502,40 +505,40 @@ SpectrumDisplayForm::ResizeBuffers( const uint64_t numFFTDataPoints,
     memset(_realFFTDataPoints, 0x0, _numRealDataPoints*sizeof(double));
 
     const int historySize = _historyVector->size();
-    SetAverageCount(0); // Clear the existing history
-    SetAverageCount(historySize);
+    setAverageCount(0); // Clear the existing history
+    setAverageCount(historySize);
 
-    Reset();
+    reset();
   }
 }
 
 void
-SpectrumDisplayForm::Reset()
+SpectrumDisplayForm::reset()
 {
-  AverageDataReset();
+  averageDataReset();
 
-  _waterfallDisplayPlot->Reset();
+  _waterfallDisplayPlot->resetAxis();
 }
 
 
 void
-SpectrumDisplayForm::AverageDataReset()
+SpectrumDisplayForm::averageDataReset()
 {
   _historyEntry = 0;
   _historyEntryCount = 0;
 
   memset(_averagedValues, 0x0, _numRealDataPoints*sizeof(double));
 
-  MaxHoldResetBtn_clicked();
-  MinHoldResetBtn_clicked();
+  maxHoldResetBtn_clicked();
+  minHoldResetBtn_clicked();
 }
 
 
 void
-SpectrumDisplayForm::closeEvent( QCloseEvent *e )
+SpectrumDisplayForm::closeEvent(QCloseEvent *e)
 {
   if(_systemSpecifiedFlag){
-    _system->SetWindowOpenFlag(false);
+    _system->setWindowOpenFlag(false);
   }
 
   qApp->processEvents();
@@ -545,32 +548,32 @@ SpectrumDisplayForm::closeEvent( QCloseEvent *e )
 
 
 void
-SpectrumDisplayForm::WindowTypeChanged( int newItem )
+SpectrumDisplayForm::windowTypeChanged(int newItem)
 {
-  if(_systemSpecifiedFlag){
-   _system->SetWindowType(newItem);
+  if(_systemSpecifiedFlag) {
+   _system->setWindowType(newItem);
   }
 }
 
 
 void
-SpectrumDisplayForm::UseRFFrequenciesCB( bool useRFFlag )
+SpectrumDisplayForm::useRFFrequenciesCB(bool useRFFlag)
 {
-  SetFrequencyRange(_centerFrequency, _startFrequency, _stopFrequency);
+  setFrequencyRange(_centerFrequency, _startFrequency, _stopFrequency);
 }
 
 
 void
-SpectrumDisplayForm::waterfallMaximumIntensityChangedCB( double newValue )
+SpectrumDisplayForm::waterfallMaximumIntensityChangedCB(double newValue)
 {
-  if(newValue > WaterfallMinimumIntensitySlider->value()){
+  if(newValue > WaterfallMinimumIntensitySlider->value()) {
     WaterfallMaximumIntensityLabel->setText(QString("%1 dB").arg(newValue, 0, 'f', 0));
   }
   else{
     WaterfallMinimumIntensitySlider->setValue(newValue - 2);
   }
 
-  _waterfallDisplayPlot->SetIntensityRange(WaterfallMinimumIntensitySlider->value(),
+  _waterfallDisplayPlot->setIntensityRange(WaterfallMinimumIntensitySlider->value(),
 					   WaterfallMaximumIntensitySlider->value());
 }
 
@@ -585,21 +588,21 @@ SpectrumDisplayForm::waterfallMinimumIntensityChangedCB( double newValue )
     WaterfallMaximumIntensitySlider->setValue(newValue + 2);
   }
 
-  _waterfallDisplayPlot->SetIntensityRange(WaterfallMinimumIntensitySlider->value(),
+  _waterfallDisplayPlot->setIntensityRange(WaterfallMinimumIntensitySlider->value(),
 					   WaterfallMaximumIntensitySlider->value());
 }
 
 void
-SpectrumDisplayForm::FFTComboBoxSelectedCB( const QString &fftSizeString )
+SpectrumDisplayForm::fftComboBoxSelectedCB(const QString &fftSizeString)
 {
   if(_systemSpecifiedFlag){
-    _system->SetFFTSize(fftSizeString.toLong());
+    _system->setFFTSize(fftSizeString.toLong());
   }
 }
 
 
 void
-SpectrumDisplayForm::WaterfallAutoScaleBtnCB()
+SpectrumDisplayForm::waterfallAutoScaleBtnCB()
 {
   double minimumIntensity = _noiseFloorAmplitude - 5;
   if(minimumIntensity < WaterfallMinimumIntensitySlider->minValue()){
@@ -615,13 +618,13 @@ SpectrumDisplayForm::WaterfallAutoScaleBtnCB()
 }
 
 void
-SpectrumDisplayForm::WaterfallIntensityColorTypeChanged( int newType )
+SpectrumDisplayForm::waterfallIntensityColorTypeChanged( int newType )
 {
   QColor lowIntensityColor;
   QColor highIntensityColor;
   if(newType == INTENSITY_COLOR_MAP_TYPE_USER_DEFINED){
     // Select the Low Intensity Color
-    lowIntensityColor = _waterfallDisplayPlot->GetUserDefinedLowIntensityColor();
+    lowIntensityColor = _waterfallDisplayPlot->getUserDefinedLowIntensityColor();
     if(!lowIntensityColor.isValid()){
       lowIntensityColor = Qt::black;
     }
@@ -629,7 +632,7 @@ SpectrumDisplayForm::WaterfallIntensityColorTypeChanged( int newType )
     lowIntensityColor = QColorDialog::getColor(lowIntensityColor, this);
 
     // Select the High Intensity Color
-    highIntensityColor = _waterfallDisplayPlot->GetUserDefinedHighIntensityColor();
+    highIntensityColor = _waterfallDisplayPlot->getUserDefinedHighIntensityColor();
     if(!highIntensityColor.isValid()){
       highIntensityColor = Qt::white;
     }
@@ -637,11 +640,11 @@ SpectrumDisplayForm::WaterfallIntensityColorTypeChanged( int newType )
     highIntensityColor = QColorDialog::getColor(highIntensityColor, this);
   }
 
-  _waterfallDisplayPlot->SetIntensityColorMapType(0, newType, lowIntensityColor, highIntensityColor);
+  _waterfallDisplayPlot->setIntensityColorMapType(0, newType, lowIntensityColor, highIntensityColor);
 }
 
 void
-SpectrumDisplayForm::ToggleTabFrequency(const bool state)
+SpectrumDisplayForm::toggleTabFrequency(const bool state)
 {
   if(state == true) {
     if(d_plot_fft == -1) {
@@ -656,7 +659,7 @@ SpectrumDisplayForm::ToggleTabFrequency(const bool state)
 }
 
 void
-SpectrumDisplayForm::ToggleTabWaterfall(const bool state)
+SpectrumDisplayForm::toggleTabWaterfall(const bool state)
 {
   if(state == true) {
     if(d_plot_waterfall == -1) {
@@ -671,7 +674,7 @@ SpectrumDisplayForm::ToggleTabWaterfall(const bool state)
 }
 
 void
-SpectrumDisplayForm::ToggleTabTime(const bool state)
+SpectrumDisplayForm::toggleTabTime(const bool state)
 {
   if(state == true) {
     if(d_plot_time == -1) {
@@ -686,7 +689,7 @@ SpectrumDisplayForm::ToggleTabTime(const bool state)
 }
 
 void
-SpectrumDisplayForm::ToggleTabConstellation(const bool state)
+SpectrumDisplayForm::toggleTabConstellation(const bool state)
 {
   if(state == true) {
     if(d_plot_constellation == -1) {
@@ -702,32 +705,32 @@ SpectrumDisplayForm::ToggleTabConstellation(const bool state)
 
 
 void
-SpectrumDisplayForm::SetTimeDomainAxis(double min, double max)
+SpectrumDisplayForm::setTimeDomainAxis(double min, double max)
 {
   _timeDomainDisplayPlot->setYaxis(min, max);
 }
 
 void
-SpectrumDisplayForm::SetConstellationAxis(double xmin, double xmax,
+SpectrumDisplayForm::setConstellationAxis(double xmin, double xmax,
 						double ymin, double ymax)
 {
   _constellationDisplayPlot->set_axis(xmin, xmax, ymin, ymax);
 }
 
 void
-SpectrumDisplayForm::SetConstellationPenSize(int size)
+SpectrumDisplayForm::setConstellationPenSize(int size)
 {
   _constellationDisplayPlot->set_pen_size( size );
 }
 
 void
-SpectrumDisplayForm::SetFrequencyAxis(double min, double max)
+SpectrumDisplayForm::setFrequencyAxis(double min, double max)
 {
   _frequencyDisplayPlot->setYaxis(min, max);
 }
 
 void
-SpectrumDisplayForm::SetUpdateTime(double t)
+SpectrumDisplayForm::setUpdateTime(double t)
 {
   d_update_time = t;
   // QTimer class takes millisecond input

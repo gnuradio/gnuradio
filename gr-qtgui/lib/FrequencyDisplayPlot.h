@@ -32,83 +32,83 @@ class FrequencyDisplayPlot: public DisplayPlot
 {
   Q_OBJECT
 
-  Q_PROPERTY ( QColor min_fft_color READ GetMinFFTColor WRITE SetMinFFTColor )
-  Q_PROPERTY ( QColor max_fft_color READ GetMaxFFTColor WRITE SetMaxFFTColor )
-  Q_PROPERTY ( bool min_fft_visible READ GetMinFFTVisible WRITE SetMinFFTVisible )
-  Q_PROPERTY ( bool max_fft_visible READ GetMaxFFTVisible WRITE SetMaxFFTVisible )
-  Q_PROPERTY ( QColor marker_lower_intensity_color READ GetMarkerLowerIntensityColor WRITE SetMarkerLowerIntensityColor )
-  Q_PROPERTY ( bool marker_lower_intensity_visible READ GetMarkerLowerIntensityVisible WRITE SetMarkerLowerIntensityVisible )
-  Q_PROPERTY ( QColor marker_upper_intensity_color READ GetMarkerUpperIntensityColor WRITE SetMarkerUpperIntensityColor )
-  Q_PROPERTY ( bool marker_upper_intensity_visible READ GetMarkerUpperIntensityVisible WRITE SetMarkerUpperIntensityVisible )
-  Q_PROPERTY ( QColor marker_peak_amplitude_color READ GetMarkerPeakAmplitudeColor WRITE SetMarkerPeakAmplitudeColor )
-  Q_PROPERTY ( QColor marker_noise_floor_amplitude_color READ GetMarkerNoiseFloorAmplitudeColor WRITE SetMarkerNoiseFloorAmplitudeColor )
-  Q_PROPERTY ( bool marker_noise_floor_amplitude_visible READ GetMarkerNoiseFloorAmplitudeVisible WRITE SetMarkerNoiseFloorAmplitudeVisible )
-  Q_PROPERTY ( QColor marker_CF_color READ GetMarkerCFColor WRITE SetMarkerCFColor )
+  Q_PROPERTY ( QColor min_fft_color READ getMinFFTColor WRITE setMinFFTColor )
+  Q_PROPERTY ( QColor max_fft_color READ getMaxFFTColor WRITE setMaxFFTColor )
+  Q_PROPERTY ( bool min_fft_visible READ getMinFFTVisible WRITE setMinFFTVisible )
+  Q_PROPERTY ( bool max_fft_visible READ getMaxFFTVisible WRITE setMaxFFTVisible )
+  Q_PROPERTY ( QColor marker_lower_intensity_color READ getMarkerLowerIntensityColor WRITE setMarkerLowerIntensityColor )
+  Q_PROPERTY ( bool marker_lower_intensity_visible READ getMarkerLowerIntensityVisible WRITE setMarkerLowerIntensityVisible )
+  Q_PROPERTY ( QColor marker_upper_intensity_color READ getMarkerUpperIntensityColor WRITE setMarkerUpperIntensityColor )
+  Q_PROPERTY ( bool marker_upper_intensity_visible READ getMarkerUpperIntensityVisible WRITE setMarkerUpperIntensityVisible )
+  Q_PROPERTY ( QColor marker_peak_amplitude_color READ getMarkerPeakAmplitudeColor WRITE setMarkerPeakAmplitudeColor )
+  Q_PROPERTY ( QColor marker_noise_floor_amplitude_color READ getMarkerNoiseFloorAmplitudeColor WRITE setMarkerNoiseFloorAmplitudeColor )
+  Q_PROPERTY ( bool marker_noise_floor_amplitude_visible READ getMarkerNoiseFloorAmplitudeVisible WRITE setMarkerNoiseFloorAmplitudeVisible )
+  Q_PROPERTY ( QColor marker_CF_color READ getMarkerCFColor WRITE setMarkerCFColor )
 
 public:
   FrequencyDisplayPlot(int nplots, QWidget*);
   virtual ~FrequencyDisplayPlot();
 
-  void SetFrequencyRange(const double, const double,
+  void setFrequencyRange(const double, const double,
 			 const double units=1000.0,
 			 const std::string &strunits = "kHz");
-  double GetStartFrequency()const;
-  double GetStopFrequency()const;
+  double getStartFrequency()const;
+  double getStopFrequency()const;
 
-  void PlotNewData(const std::vector<double*> dataPoints,
+  void plotNewData(const std::vector<double*> dataPoints,
 		   const int64_t numDataPoints,
 		   const double noiseFloorAmplitude, const double peakFrequency,
 		   const double peakAmplitude, const double timeInterval);
 
   // Old method to be removed
-  void PlotNewData(const double* dataPoints,
+  void plotNewData(const double* dataPoints,
 		   const int64_t numDataPoints,
 		   const double noiseFloorAmplitude, const double peakFrequency,
 		   const double peakAmplitude, const double timeInterval);
 
-  void ClearMaxData();
-  void ClearMinData();
+  void clearMaxData();
+  void clearMinData();
 
   void replot();
 
   void setYaxis(double min, double max);
 
-  void SetTraceColour (QColor);
-  void SetBGColour (QColor c);
-  void ShowCFMarker (const bool);
+  void setTraceColour (QColor);
+  void setBGColour (QColor c);
+  void showCFMarker (const bool);
 
-  const bool GetMaxFFTVisible() const;
-  const bool GetMinFFTVisible() const;
-  const QColor GetMinFFTColor() const;
-  const QColor GetMaxFFTColor() const;
-  const QColor GetMarkerLowerIntensityColor () const;
-  const bool GetMarkerLowerIntensityVisible () const;
-  const QColor GetMarkerUpperIntensityColor () const;
-  const bool GetMarkerUpperIntensityVisible () const;
-  const QColor GetMarkerPeakAmplitudeColor () const;
-  const bool GetMarkerNoiseFloorAmplitudeVisible () const;
-  const QColor GetMarkerNoiseFloorAmplitudeColor () const;
-  const QColor GetMarkerCFColor () const;
+  const bool getMaxFFTVisible() const;
+  const bool getMinFFTVisible() const;
+  const QColor getMinFFTColor() const;
+  const QColor getMaxFFTColor() const;
+  const QColor getMarkerLowerIntensityColor () const;
+  const bool getMarkerLowerIntensityVisible () const;
+  const QColor getMarkerUpperIntensityColor () const;
+  const bool getMarkerUpperIntensityVisible () const;
+  const QColor getMarkerPeakAmplitudeColor () const;
+  const bool getMarkerNoiseFloorAmplitudeVisible () const;
+  const QColor getMarkerNoiseFloorAmplitudeColor () const;
+  const QColor getMarkerCFColor () const;
 
 public slots:
-  void SetMaxFFTVisible(const bool);
-  void SetMinFFTVisible(const bool);
-  void SetMinFFTColor (QColor c);
-  void SetMaxFFTColor (QColor c);
-  void SetMarkerLowerIntensityColor (QColor c);
-  void SetMarkerLowerIntensityVisible (bool visible);
-  void SetMarkerUpperIntensityColor (QColor c);
-  void SetMarkerUpperIntensityVisible (bool visible);
-  void SetMarkerPeakAmplitudeColor (QColor c);
-  void SetMarkerNoiseFloorAmplitudeVisible (bool visible);
-  void SetMarkerNoiseFloorAmplitudeColor (QColor c);
-  void SetMarkerCFColor (QColor c);
+  void setMaxFFTVisible(const bool);
+  void setMinFFTVisible(const bool);
+  void setMinFFTColor (QColor c);
+  void setMaxFFTColor (QColor c);
+  void setMarkerLowerIntensityColor (QColor c);
+  void setMarkerLowerIntensityVisible (bool visible);
+  void setMarkerUpperIntensityColor (QColor c);
+  void setMarkerUpperIntensityVisible (bool visible);
+  void setMarkerPeakAmplitudeColor (QColor c);
+  void setMarkerNoiseFloorAmplitudeVisible (bool visible);
+  void setMarkerNoiseFloorAmplitudeColor (QColor c);
+  void setMarkerCFColor (QColor c);
 
-  void SetLowerIntensityLevel(const double);
-  void SetUpperIntensityLevel(const double);
+  void setLowerIntensityLevel(const double);
+  void setUpperIntensityLevel(const double);
 
-  void OnPickerPointSelected(const QwtDoublePoint & p);
-  void OnPickerPointSelected6(const QPointF & p);
+  void onPickerPointSelected(const QwtDoublePoint & p);
+  void onPickerPointSelected6(const QPointF & p);
 
 private:
   void _resetXAxisPoints();
