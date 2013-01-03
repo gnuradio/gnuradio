@@ -60,11 +60,11 @@ DisplayPlot::DisplayPlot(int nplots, QWidget* parent)
 
 #if QWT_VERSION < 0x060000
   connect(_picker, SIGNAL(selected(const QwtDoublePoint &)),
-      this, SLOT(OnPickerPointSelected(const QwtDoublePoint &)));
+      this, SLOT(onPickerPointSelected(const QwtDoublePoint &)));
 #else
   _picker->setStateMachine(new QwtPickerDblClickPointMachine());
   connect(_picker, SIGNAL(selected(const QPointF &)),
-	  this, SLOT(OnPickerPointSelected6(const QPointF &)));
+	  this, SLOT(onPickerPointSelected6(const QPointF &)));
 #endif
 
   // Configure magnify on mouse wheel
@@ -83,7 +83,7 @@ DisplayPlot::DisplayPlot(int nplots, QWidget* parent)
   insertLegend(legendDisplay);
 
   connect(this, SIGNAL(legendChecked(QwtPlotItem *, bool)),
-	  this, SLOT(LegendEntryChecked(QwtPlotItem *, bool)));
+	  this, SLOT(legendEntryChecked(QwtPlotItem *, bool)));
 }
 
 DisplayPlot::~DisplayPlot()
@@ -400,7 +400,7 @@ void
 DisplayPlot::onPickerPointSelected(const QwtDoublePoint & p)
 {
   QPointF point = p;
-  //fprintf(stderr,"OnPickerPointSelected %f %f\n", point.x(), point.y());
+  //fprintf(stderr,"onPickerPointSelected %f %f\n", point.x(), point.y());
   emit plotPointSelected(point);
 }
 
@@ -408,6 +408,6 @@ void
 DisplayPlot::onPickerPointSelected6(const QPointF & p)
 {
   QPointF point = p;
-  //fprintf(stderr,"OnPickerPointSelected %f %f\n", point.x(), point.y());
+  //fprintf(stderr,"onPickerPointSelected %f %f\n", point.x(), point.y());
   emit plotPointSelected(point);
 }
