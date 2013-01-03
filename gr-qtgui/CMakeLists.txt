@@ -65,7 +65,7 @@ SET(GR_PKG_QTGUI_EXAMPLES_DIR ${GR_PKG_DATA_DIR}/examples/qt-gui)
 if(ENABLE_GR_QTGUI)
 
 # populate the environment with QT variables
-include(GrUseQt4)
+include(GrSetupQt4)
 
 ########################################################################
 # Setup CPack components
