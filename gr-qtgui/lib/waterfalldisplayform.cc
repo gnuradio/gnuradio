@@ -118,69 +118,57 @@ WaterfallDisplayForm::customEvent( QEvent * e)
 }
 
 int
-WaterfallDisplayForm::GetFFTSize() const
+WaterfallDisplayForm::getFFTSize() const
 {
   return _fftsize;
 }
 
 float
-WaterfallDisplayForm::GetFFTAverage() const
+WaterfallDisplayForm::getFFTAverage() const
 {
   return _fftavg;
 }
 
 gr::filter::firdes::win_type
-WaterfallDisplayForm::GetFFTWindowType() const
+WaterfallDisplayForm::getFFTWindowType() const
 {
   return _fftwintype;
 }
 
 void
-WaterfallDisplayForm::SetFFTSize(const int newsize)
+WaterfallDisplayForm::setFFTSize(const int newsize)
 {
   _fftsize = newsize;
 }
 
 void
-WaterfallDisplayForm::SetFFTAverage(const float newavg)
+WaterfallDisplayForm::setFFTAverage(const float newavg)
 {
   _fftavg = newavg;
 }
 
 void
-WaterfallDisplayForm::SetFFTWindowType(const gr::filter::firdes::win_type newwin)
+WaterfallDisplayForm::setFFTWindowType(const gr::filter::firdes::win_type newwin)
 {
   _fftwintype = newwin;
 }
 
 void
-WaterfallDisplayForm::SetFrequencyRange(const double newCenterFrequency,
-					const double newStartFrequency,
-					const double newStopFrequency)
+WaterfallDisplayForm::setFrequencyRange(const double centerfreq,
+					const double bandwidth)
 {
-  double fdiff = std::max(fabs(newStartFrequency), fabs(newStopFrequency));
+  std::string strunits[4] = {"Hz", "kHz", "MHz", "GHz"};
+  double units10 = floor(log10(bandwidth));
+  double units3  = std::max(floor(units10 / 3.0), 0.0);
+  double units = pow(10, (units10-fmod(units10, 3.0)));
+  int iunit = static_cast<int>(units3);
 
-  if(fdiff > 0) {
-    std::string strunits[4] = {"Hz", "kHz", "MHz", "GHz"};
-    double units10 = floor(log10(fdiff));
-    double units3  = std::max(floor(units10 / 3.0), 0.0);
-    double units = pow(10, (units10-fmod(units10, 3.0)));
-    int iunit = static_cast<int>(units3);
-
-    _startFrequency = newStartFrequency;
-    _stopFrequency = newStopFrequency;
-    double centerFrequency = newCenterFrequency;
-
-    getPlot()->SetFrequencyRange(_startFrequency,
-				 _stopFrequency,
-				 centerFrequency,
-				 true,
-				 units, strunits[iunit]);
-  }
+  getPlot()->SetFrequencyRange(centerfreq, bandwidth,
+			       units, strunits[iunit]);
 }
 
 void
-WaterfallDisplayForm::SetColorMap(const int newType,
+WaterfallDisplayForm::setColorMap(const int newType,
 				  const QColor lowColor,
 				  const QColor highColor)
 {
@@ -189,14 +177,14 @@ WaterfallDisplayForm::SetColorMap(const int newType,
 }
 
 void
-WaterfallDisplayForm::SetIntensityRange(const double minIntensity,
+WaterfallDisplayForm::setIntensityRange(const double minIntensity,
 					const double maxIntensity)
 {
   getPlot()->SetIntensityRange(minIntensity, maxIntensity);
 }
 
 void
-WaterfallDisplayForm::AutoScale()
+WaterfallDisplayForm::autoScale()
 {
   double min_int = _min_val - 5;
   double max_int = _max_val + 10;

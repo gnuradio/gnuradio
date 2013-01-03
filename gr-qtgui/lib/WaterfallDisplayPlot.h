@@ -53,7 +53,6 @@ public:
   void Reset();
 
   void SetFrequencyRange(const double, const double,
-			 const double, const bool,
 			 const double units=1000.0,
 			 const std::string &strunits = "kHz");
   double GetStartFrequency() const;
@@ -107,8 +106,6 @@ private:
 #endif
 
   gruel::high_res_timer_type _lastReplot;
-
-  bool _useCenterFrequencyFlag;
 
   std::vector<int> _intensityColorMapType;
   QColor _userDefinedLowIntensityColor;

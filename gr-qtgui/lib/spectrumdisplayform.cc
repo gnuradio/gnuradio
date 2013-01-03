@@ -422,10 +422,7 @@ SpectrumDisplayForm::SetFrequencyRange(const double newCenterFrequency,
 
     _frequencyDisplayPlot->SetFrequencyRange(_centerFrequency, fdiff,
 					     units, strunits[iunit]);
-    _waterfallDisplayPlot->SetFrequencyRange(_startFrequency,
-					     _stopFrequency,
-					     _centerFrequency,
-					     UseRFFrequenciesCheckBox->isChecked(),
+    _waterfallDisplayPlot->SetFrequencyRange(_centerFrequency, fdiff,
 					     units, strunits[iunit]);
     _timeDomainDisplayPlot->SetSampleRate(_stopFrequency - _startFrequency,
 					  units, strtime[iunit]);

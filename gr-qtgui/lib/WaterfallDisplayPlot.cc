@@ -140,9 +140,8 @@ WaterfallDisplayPlot::WaterfallDisplayPlot(int nplots, QWidget* parent)
   : DisplayPlot(nplots, parent)
 {
   _zoomer = NULL;  // need this for proper init
-  _startFrequency = 0;
-  _stopFrequency = 4000;
-  _useCenterFrequencyFlag = false;
+  _startFrequency = -1;
+  _stopFrequency = 1;
 
   resize(parent->width(), parent->height());
   _numPoints = 1024;
@@ -224,33 +223,24 @@ WaterfallDisplayPlot::Reset()
   setAxisScale(QwtPlot::xBottom, _startFrequency, _stopFrequency);
 
   // Load up the new base zoom settings
-  QwtDoubleRect newSize = _zoomer->zoomBase();
-  newSize.setLeft(_startFrequency);
-  newSize.setWidth(_stopFrequency-_startFrequency);
-  _zoomer->zoom(newSize);
-  _zoomer->setZoomBase(newSize);
+  QwtDoubleRect zbase = _zoomer->zoomBase();
+  zbase.setLeft(_startFrequency);
+  zbase.setRight(_stopFrequency);
+  _zoomer->zoom(zbase);
+  _zoomer->setZoomBase(zbase);
+  _zoomer->setZoomBase(true);
   _zoomer->zoom(0);
 }
 
 void
-WaterfallDisplayPlot::SetFrequencyRange(const double constStartFreq,
-					const double constStopFreq,
-					const double constCenterFreq,
-					const bool useCenterFrequencyFlag,
+WaterfallDisplayPlot::SetFrequencyRange(const double centerfreq,
+					const double bandwidth,
 					const double units, const std::string &strunits)
 {
-  double startFreq = constStartFreq / units;
-  double stopFreq = constStopFreq / units;
-  double centerFreq = constCenterFreq / units;
+  double startFreq  = (centerfreq - bandwidth/2.0f) / units;
+  double stopFreq   = (centerfreq + bandwidth/2.0f) / units;
 
   _xAxisMultiplier = units;
-
-  _useCenterFrequencyFlag = useCenterFrequencyFlag;
-
-  if(_useCenterFrequencyFlag) {
-    startFreq = (startFreq + centerFreq);
-    stopFreq = (stopFreq + centerFreq);
-  }
 
   bool reset = false;
   if((startFreq != _startFrequency) || (stopFreq != _stopFrequency))
