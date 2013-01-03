@@ -77,7 +77,7 @@ private:
 FrequencyDisplayPlot::FrequencyDisplayPlot(int nplots, QWidget* parent)
   : DisplayPlot(nplots, parent)
 {
-  _startFrequency = -10;
+  _startFrequency = -1;
   _stopFrequency = 1;
 
   _numPoints = 1024;
