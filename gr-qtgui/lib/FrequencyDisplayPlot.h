@@ -50,7 +50,6 @@ public:
   virtual ~FrequencyDisplayPlot();
 
   void SetFrequencyRange(const double, const double,
-			 const double, const bool,
 			 const double units=1000.0,
 			 const std::string &strunits = "kHz");
   double GetStartFrequency()const;
@@ -153,8 +152,6 @@ private:
   double _peakAmplitude;
 
   double _noiseFloorAmplitude;
-
-  bool _useCenterFrequencyFlag;
 };
 
 #endif /* FREQUENCY_DISPLAY_PLOT_HPP */

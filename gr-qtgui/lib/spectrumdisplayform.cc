@@ -420,10 +420,7 @@ SpectrumDisplayForm::SetFrequencyRange(const double newCenterFrequency,
     _stopFrequency = newStopFrequency;
     _centerFrequency = newCenterFrequency;
 
-    _frequencyDisplayPlot->SetFrequencyRange(_startFrequency,
-					     _stopFrequency,
-					     _centerFrequency,
-					     UseRFFrequenciesCheckBox->isChecked(),
+    _frequencyDisplayPlot->SetFrequencyRange(_centerFrequency, fdiff,
 					     units, strunits[iunit]);
     _waterfallDisplayPlot->SetFrequencyRange(_startFrequency,
 					     _stopFrequency,

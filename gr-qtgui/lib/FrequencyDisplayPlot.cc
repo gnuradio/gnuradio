@@ -77,10 +77,8 @@ private:
 FrequencyDisplayPlot::FrequencyDisplayPlot(int nplots, QWidget* parent)
   : DisplayPlot(nplots, parent)
 {
-  _startFrequency = 0;
-  _stopFrequency = 4000;
-
-  _useCenterFrequencyFlag = false;
+  _startFrequency = -10;
+  _stopFrequency = 1;
 
   _numPoints = 1024;
   _minFFTPoints = new double[_numPoints];
@@ -235,23 +233,14 @@ FrequencyDisplayPlot::setYaxis(double min, double max)
 }
 
 void
-FrequencyDisplayPlot::SetFrequencyRange(const double constStartFreq,
-					const double constStopFreq,
-					const double constCenterFreq,
-					const bool useCenterFrequencyFlag,
+FrequencyDisplayPlot::SetFrequencyRange(const double centerfreq,
+					const double bandwidth,
 					const double units, const std::string &strunits)
 {
-  double startFreq = constStartFreq / units;
-  double stopFreq = constStopFreq / units;
-  double centerFreq = constCenterFreq / units;
+  double startFreq  = (centerfreq - bandwidth/2.0f) / units;
+  double stopFreq   = (centerfreq + bandwidth/2.0f) / units;
 
   _xAxisMultiplier = units;
-  _useCenterFrequencyFlag = useCenterFrequencyFlag;
-
-  if(_useCenterFrequencyFlag){
-    startFreq = (startFreq + centerFreq);
-    stopFreq = (stopFreq + centerFreq);
-  }
 
   bool reset = false;
   if((startFreq != _startFrequency) || (stopFreq != _stopFrequency))
@@ -261,7 +250,7 @@ FrequencyDisplayPlot::SetFrequencyRange(const double constStartFreq,
     _startFrequency = startFreq;
     _stopFrequency = stopFreq;
 
-    if((axisScaleDraw(QwtPlot::xBottom) != NULL) && (_zoomer != NULL)){
+    if((axisScaleDraw(QwtPlot::xBottom) != NULL) && (_zoomer != NULL)) {
       double display_units = ceil(log10(units)/2.0);
       setAxisScaleDraw(QwtPlot::xBottom, new FreqDisplayScaleDraw(display_units));
       setAxisTitle(QwtPlot::xBottom, QString("Frequency (%1)").arg(strunits.c_str()));
@@ -292,14 +281,15 @@ void
 FrequencyDisplayPlot::replot()
 {
   _markerNoiseFloorAmplitude->setYValue(_noiseFloorAmplitude);
+  _markerPeakAmplitude->setXValue(_peakFrequency + _startFrequency);
 
   // Make sure to take into account the start frequency
-  if(_useCenterFrequencyFlag){
-    _markerPeakAmplitude->setXValue((_peakFrequency/1000.0) + _startFrequency);
-  }
-  else{
-    _markerPeakAmplitude->setXValue(_peakFrequency + _startFrequency);
-  }
+//  if(_useCenterFrequencyFlag){
+//    _markerPeakAmplitude->setXValue((_peakFrequency/1000.0) + _startFrequency);
+//  }
+//  else{
+//    _markerPeakAmplitude->setXValue(_peakFrequency + _startFrequency);
+//  }
   _markerPeakAmplitude->setYValue(_peakAmplitude);
 
   QwtPlot::replot();
@@ -439,6 +429,7 @@ FrequencyDisplayPlot::_resetXAxisPoints()
   zbase.setRight(_stopFrequency);
   _zoomer->zoom(zbase);
   _zoomer->setZoomBase(zbase);
+  _zoomer->setZoomBase(true);
   _zoomer->zoom(0);
 }
 
