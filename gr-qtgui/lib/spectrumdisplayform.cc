@@ -59,9 +59,9 @@ SpectrumDisplayForm::SpectrumDisplayForm(QWidget* parent)
 
   _noiseFloorAmplitude = -HUGE_VAL;
 
-  connect(_waterfallDisplayPlot, SIGNAL(UpdatedLowerIntensityLevel(const double)),
+  connect(_waterfallDisplayPlot, SIGNAL(updatedLowerIntensityLevel(const double)),
   	  _frequencyDisplayPlot, SLOT(setLowerIntensityLevel(const double)));
-  connect(_waterfallDisplayPlot, SIGNAL(UpdatedUpperIntensityLevel(const double)),
+  connect(_waterfallDisplayPlot, SIGNAL(updatedUpperIntensityLevel(const double)),
    	  _frequencyDisplayPlot, SLOT(setUpperIntensityLevel(const double)));
 
   _frequencyDisplayPlot->setLowerIntensityLevel(-200);
@@ -84,7 +84,7 @@ SpectrumDisplayForm::SpectrumDisplayForm(QWidget* parent)
 
   // Create a timer to update plots at the specified rate
   displayTimer = new QTimer(this);
-  connect(displayTimer, SIGNAL(timeout()), this, SLOT(UpdateGuiTimer()));
+  connect(displayTimer, SIGNAL(timeout()), this, SLOT(updateGuiTimer()));
 
   // Connect double click signals up
   connect(_frequencyDisplayPlot, SIGNAL(plotPointSelected(const QPointF)),

@@ -46,7 +46,7 @@ WaterfallDisplayForm::WaterfallDisplayForm(int nplots, QWidget* parent)
 
   QAction *autoscale_act = new QAction("Auto Scale", this);
   autoscale_act->setStatusTip(tr("Autoscale intensity range"));
-  connect(autoscale_act, SIGNAL(triggered()), this, SLOT(AutoScale()));
+  connect(autoscale_act, SIGNAL(triggered()), this, SLOT(autoScale()));
 
   FFTSizeMenu *sizemenu = new FFTSizeMenu(this);
   FFTAverageMenu *avgmenu = new FFTAverageMenu(this);
@@ -58,13 +58,13 @@ WaterfallDisplayForm::WaterfallDisplayForm(int nplots, QWidget* parent)
   _menu->addMenu(colormenu);
   _menu->addAction(autoscale_act);
   connect(sizemenu, SIGNAL(whichTrigger(int)),
-	  this, SLOT(SetFFTSize(const int)));
+	  this, SLOT(setFFTSize(const int)));
   connect(avgmenu, SIGNAL(whichTrigger(float)),
-	  this, SLOT(SetFFTAverage(const float)));
+	  this, SLOT(setFFTAverage(const float)));
   connect(winmenu, SIGNAL(whichTrigger(gr::filter::firdes::win_type)),
-	  this, SLOT(SetFFTWindowType(const gr::filter::firdes::win_type)));
+	  this, SLOT(setFFTWindowType(const gr::filter::firdes::win_type)));
   connect(colormenu, SIGNAL(whichTrigger(const int, const QColor&, const QColor&)),
-	  this, SLOT(SetColorMap(const int, const QColor&, const QColor&)));
+	  this, SLOT(setColorMap(const int, const QColor&, const QColor&)));
 
   Reset();
 
