@@ -21,15 +21,17 @@
 # Setup the include and linker paths
 ########################################################################
 include_directories(
-    ${GR_WAVELET_INCLUDE_DIRS}
     ${CMAKE_CURRENT_SOURCE_DIR}
     ${CMAKE_CURRENT_BINARY_DIR}
+    ${GR_WAVELET_INCLUDE_DIRS}
     ${GNURADIO_CORE_INCLUDE_DIRS}
+    ${GRUEL_INCLUDE_DIRS}
     ${Boost_INCLUDE_DIRS}
     ${GSL_INCLUDE_DIRS}
 )
 
-link_directories(${WAVELET_LIBRARY_DIRS})
+# is this correct?
+link_directories(${GR_WAVELET_LIBRARY_DIRS})
 link_directories(${Boost_LIBRARY_DIRS})
 link_directories(${GSL_LIBRARY_DIRS})
 add_definitions(${GSL_DEFINITIONS})

@@ -27,12 +27,15 @@ set(GR_SWIG_INCLUDE_DIRS
     ${GR_TRELLIS_INCLUDE_DIRS}
     ${GR_DIGITAL_INCLUDE_DIRS}
     ${GNURADIO_CORE_SWIG_INCLUDE_DIRS}
+    ${GRUEL_INCLUDE_DIRS}
+    ${Boost_INCLUDE_DIRS}
 )
 
 set(GR_SWIG_LIBRARIES gnuradio-trellis gnuradio-digital)
 
 if(ENABLE_GR_CTRLPORT)
   ADD_DEFINITIONS(-DGR_CTRLPORT)
+  list(APPEND GR_SWIG_INCLUDE_DIRS ${ICE_INCLUDE_DIR})
 endif(ENABLE_GR_CTRLPORT)
 
 # Setup swig docs to depend on includes and pull in from build directory

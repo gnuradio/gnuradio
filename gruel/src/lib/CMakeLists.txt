@@ -64,10 +64,11 @@ GR_INCLUDE_SUBDIRECTORY(pmt)
 ########################################################################
 # Setup the include and linker paths
 ########################################################################
-include_directories(${GRUEL_INCLUDE_DIRS})
-include_directories(${CMAKE_CURRENT_SOURCE_DIR})
-
-include_directories(${Boost_INCLUDE_DIRS})
+include_directories(
+	${CMAKE_CURRENT_SOURCE_DIR}
+	${GRUEL_INCLUDE_DIRS}
+	${Boost_INCLUDE_DIRS}
+)
 link_directories(${Boost_LIBRARY_DIRS})
 
 ########################################################################
