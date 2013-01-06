@@ -1,4 +1,4 @@
-# Copyright 2011 Free Software Foundation, Inc.
+# Copyright 2012,2013 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -18,33 +18,26 @@
 # Boston, MA 02110-1301, USA.
 
 ########################################################################
-# Setup swig generation
+# Install header files
 ########################################################################
-include(GrPython)
-include(GrSwig)
-
-set(GR_SWIG_INCLUDE_DIRS
-    ${GR_VOCODER_INCLUDE_DIRS}
-    ${GNURADIO_CORE_SWIG_INCLUDE_DIRS}
-)
-
-set(GR_SWIG_DOC_FILE ${CMAKE_CURRENT_BINARY_DIR}/vocoder_swig_doc.i)
-set(GR_SWIG_DOC_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/../include)
-
-set(GR_SWIG_LIBRARIES gnuradio-vocoder)
-
-GR_SWIG_MAKE(vocoder_swig vocoder_swig.i)
-
-GR_SWIG_INSTALL(
-    TARGETS vocoder_swig
-    DESTINATION ${GR_PYTHON_DIR}/gnuradio/vocoder
-    COMPONENT "vocoder_python"
-)
-
-install(
-    FILES
-    vocoder_swig.i
-    ${CMAKE_CURRENT_BINARY_DIR}/vocoder_swig_doc.i
-    DESTINATION ${GR_INCLUDE_DIR}/gnuradio/swig
-    COMPONENT "vocoder_swig"
+install(FILES
+    api.h
+    alaw_decode_bs.h
+    alaw_encode_sb.h
+    codec2_decode_ps.h
+    codec2_encode_sp.h
+    cvsd_decode_bs.h
+    cvsd_encode_sb.h
+    g721_decode_bs.h
+    g721_encode_sb.h
+    g723_24_decode_bs.h
+    g723_24_encode_sb.h
+    g723_40_decode_bs.h
+    g723_40_encode_sb.h
+    gsm_fr_decode_ps.h
+    gsm_fr_encode_sp.h
+    ulaw_decode_bs.h
+    ulaw_encode_sb.h
+    DESTINATION ${GR_INCLUDE_DIR}/gnuradio/vocoder
+    COMPONENT "vocoder_devel"
 )

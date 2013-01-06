@@ -32,10 +32,12 @@ GR_REGISTER_COMPONENT("gr-vocoder" ENABLE_GR_VOCODER
     ENABLE_GR_FFT
     ENABLE_GR_BLOCKS
     ENABLE_GR_FILTER
+    ENABLE_GR_ANALOG
 )
 
 GR_SET_GLOBAL(GR_VOCODER_INCLUDE_DIRS
     ${CMAKE_CURRENT_SOURCE_DIR}/include
+    ${CMAKE_CURRENT_BINARY_DIR}/include
 )
 
 SET(GR_PKG_VOCODER_EXAMPLES_DIR ${GR_PKG_DATA_DIR}/examples/vocoder)
@@ -89,8 +91,8 @@ CPACK_COMPONENT("vocoder_swig"
 ########################################################################
 # Add subdirectories
 ########################################################################
+add_subdirectory(include/vocoder)
 add_subdirectory(lib)
-add_subdirectory(include)
 add_subdirectory(doc)
 if(ENABLE_PYTHON)
     add_subdirectory(swig)

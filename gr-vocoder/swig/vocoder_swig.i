@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2011 Free Software Foundation, Inc.
+ * Copyright 2011,2013 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -20,24 +20,62 @@
  * Boston, MA 02110-1301, USA.
  */
 
+#define VOCODER_API
+
 %include "gnuradio.i"
 
 //load generated python docstrings
 %include "vocoder_swig_doc.i"
 
-%include "vocoder_alaw_decode_bs.i"
-%include "vocoder_alaw_encode_sb.i"
-%include "vocoder_codec2_decode_ps.i"
-%include "vocoder_codec2_encode_sp.i"
-%include "vocoder_cvsd_decode_bs.i"
-%include "vocoder_cvsd_encode_sb.i"
-%include "vocoder_g721_decode_bs.i"
-%include "vocoder_g721_encode_sb.i"
-%include "vocoder_g723_24_decode_bs.i"
-%include "vocoder_g723_24_encode_sb.i"
-%include "vocoder_g723_40_decode_bs.i"
-%include "vocoder_g723_40_encode_sb.i"
-%include "vocoder_gsm_fr_decode_ps.i"
-%include "vocoder_gsm_fr_encode_sp.i"
-%include "vocoder_ulaw_decode_bs.i"
-%include "vocoder_ulaw_encode_sb.i"
+%{
+#include "vocoder/alaw_decode_bs.h"
+#include "vocoder/alaw_encode_sb.h"
+#include "vocoder/codec2_decode_ps.h"
+#include "vocoder/codec2_encode_sp.h"
+#include "vocoder/cvsd_decode_bs.h"
+#include "vocoder/cvsd_encode_sb.h"
+#include "vocoder/g721_decode_bs.h"
+#include "vocoder/g721_encode_sb.h"
+#include "vocoder/g723_24_decode_bs.h"
+#include "vocoder/g723_24_encode_sb.h"
+#include "vocoder/g723_40_decode_bs.h"
+#include "vocoder/g723_40_encode_sb.h"
+#include "vocoder/gsm_fr_decode_ps.h"
+#include "vocoder/gsm_fr_encode_sp.h"
+#include "vocoder/ulaw_decode_bs.h"
+#include "vocoder/ulaw_encode_sb.h"
+%}
+
+%include "vocoder/alaw_decode_bs.h"
+%include "vocoder/alaw_encode_sb.h"
+%include "vocoder/codec2_decode_ps.h"
+%include "vocoder/codec2_encode_sp.h"
+%include "vocoder/cvsd_decode_bs.h"
+%include "vocoder/cvsd_encode_sb.h"
+%include "vocoder/g721_decode_bs.h"
+%include "vocoder/g721_encode_sb.h"
+%include "vocoder/g723_24_decode_bs.h"
+%include "vocoder/g723_24_encode_sb.h"
+%include "vocoder/g723_40_decode_bs.h"
+%include "vocoder/g723_40_encode_sb.h"
+%include "vocoder/gsm_fr_decode_ps.h"
+%include "vocoder/gsm_fr_encode_sp.h"
+%include "vocoder/ulaw_decode_bs.h"
+%include "vocoder/ulaw_encode_sb.h"
+
+GR_SWIG_BLOCK_MAGIC2(vocoder, alaw_decode_bs);
+GR_SWIG_BLOCK_MAGIC2(vocoder, alaw_encode_sb);
+GR_SWIG_BLOCK_MAGIC2(vocoder, codec2_decode_ps);
+GR_SWIG_BLOCK_MAGIC2(vocoder, codec2_encode_sp);
+GR_SWIG_BLOCK_MAGIC2(vocoder, cvsd_decode_bs);
+GR_SWIG_BLOCK_MAGIC2(vocoder, cvsd_encode_sb);
+GR_SWIG_BLOCK_MAGIC2(vocoder, g721_decode_bs);
+GR_SWIG_BLOCK_MAGIC2(vocoder, g721_encode_sb);
+GR_SWIG_BLOCK_MAGIC2(vocoder, g723_24_decode_bs);
+GR_SWIG_BLOCK_MAGIC2(vocoder, g723_24_encode_sb);
+GR_SWIG_BLOCK_MAGIC2(vocoder, g723_40_decode_bs);
+GR_SWIG_BLOCK_MAGIC2(vocoder, g723_40_encode_sb);
+GR_SWIG_BLOCK_MAGIC2(vocoder, gsm_fr_decode_ps);
+GR_SWIG_BLOCK_MAGIC2(vocoder, gsm_fr_encode_sp);
+GR_SWIG_BLOCK_MAGIC2(vocoder, ulaw_decode_bs);
+GR_SWIG_BLOCK_MAGIC2(vocoder, ulaw_encode_sb);
