@@ -45,6 +45,11 @@ struct GR_CORE_API gr_tag_t{
     ){
         return x.offset < y.offset;
     }
+
+    inline bool operator == (const gr_tag_t &t) const
+    {
+      return (t.key == key) && (t.value == value) && (t.srcid == srcid) && (t.offset == offset);
+    }
 };
 
 #endif /*INCLUDED_GR_TAGS_H*/
