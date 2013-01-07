@@ -71,7 +71,7 @@ public:
 
   virtual QwtText label(double value) const
   {
-    double secs = double(value * GetSecondsPerLine());
+    double secs = double(value * getSecondsPerLine());
     return QwtText(QString("").sprintf("%.1f", secs));
   }
 
@@ -111,7 +111,7 @@ public:
     updateDisplay();
   }
 
-  void SetUnitType(const std::string &type)
+  void setUnitType(const std::string &type)
   {
     _unitType = type;
   }
@@ -121,9 +121,9 @@ protected:
   virtual QwtText trackerText( QPoint const &p ) const
   {
     QwtDoublePoint dp = QwtPlotZoomer::invTransform(p);
-    double secs = double(dp.y() * GetSecondsPerLine());
+    double secs = double(dp.y() * getSecondsPerLine());
     QwtText t(QString("%1 %2, %3 s")
- 	          .arg(dp.x(), 0, 'f', GetFrequencyPrecision())
+ 	          .arg(dp.x(), 0, 'f', getFrequencyPrecision())
 	          .arg(_unitType.c_str())
               .arg(secs, 0, 'f', 2));
     return t;
@@ -140,9 +140,8 @@ WaterfallDisplayPlot::WaterfallDisplayPlot(int nplots, QWidget* parent)
   : DisplayPlot(nplots, parent)
 {
   _zoomer = NULL;  // need this for proper init
-  _startFrequency = 0;
-  _stopFrequency = 4000;
-  _useCenterFrequencyFlag = false;
+  _startFrequency = -1;
+  _stopFrequency = 1;
 
   resize(parent->width(), parent->height());
   _numPoints = 1024;
@@ -183,7 +182,7 @@ WaterfallDisplayPlot::WaterfallDisplayPlot(int nplots, QWidget* parent)
     d_spectrogram[i]->attach(this);
 
     _intensityColorMapType.push_back(colormaps[i%colormaps.size()]);
-    SetIntensityColorMapType(i, _intensityColorMapType[i],
+    setIntensityColorMapType(i, _intensityColorMapType[i],
 			     QColor("white"), QColor("white"));    
   }
 
@@ -204,7 +203,7 @@ WaterfallDisplayPlot::WaterfallDisplayPlot(int nplots, QWidget* parent)
   _zoomer->setRubberBandPen(c);
   _zoomer->setTrackerPen(c);
 
-  _UpdateIntensityRangeDisplay();
+  _updateIntensityRangeDisplay();
 
   _xAxisMultiplier = 1;
 }
@@ -214,43 +213,34 @@ WaterfallDisplayPlot::~WaterfallDisplayPlot()
 }
 
 void
-WaterfallDisplayPlot::Reset()
+WaterfallDisplayPlot::resetAxis()
 {
   for(int i = 0; i < _nplots; i++) {
-    d_data[i]->ResizeData(_startFrequency, _stopFrequency, _numPoints);
-    d_data[i]->Reset();
+    d_data[i]->resizeData(_startFrequency, _stopFrequency, _numPoints);
+    d_data[i]->reset();
   }
 
   setAxisScale(QwtPlot::xBottom, _startFrequency, _stopFrequency);
 
   // Load up the new base zoom settings
-  QwtDoubleRect newSize = _zoomer->zoomBase();
-  newSize.setLeft(_startFrequency);
-  newSize.setWidth(_stopFrequency-_startFrequency);
-  _zoomer->zoom(newSize);
-  _zoomer->setZoomBase(newSize);
+  QwtDoubleRect zbase = _zoomer->zoomBase();
+  zbase.setLeft(_startFrequency);
+  zbase.setRight(_stopFrequency);
+  _zoomer->zoom(zbase);
+  _zoomer->setZoomBase(zbase);
+  _zoomer->setZoomBase(true);
   _zoomer->zoom(0);
 }
 
 void
-WaterfallDisplayPlot::SetFrequencyRange(const double constStartFreq,
-					const double constStopFreq,
-					const double constCenterFreq,
-					const bool useCenterFrequencyFlag,
+WaterfallDisplayPlot::setFrequencyRange(const double centerfreq,
+					const double bandwidth,
 					const double units, const std::string &strunits)
 {
-  double startFreq = constStartFreq / units;
-  double stopFreq = constStopFreq / units;
-  double centerFreq = constCenterFreq / units;
+  double startFreq  = (centerfreq - bandwidth/2.0f) / units;
+  double stopFreq   = (centerfreq + bandwidth/2.0f) / units;
 
   _xAxisMultiplier = units;
-
-  _useCenterFrequencyFlag = useCenterFrequencyFlag;
-
-  if(_useCenterFrequencyFlag) {
-    startFreq = (startFreq + centerFreq);
-    stopFreq = (stopFreq + centerFreq);
-  }
 
   bool reset = false;
   if((startFreq != _startFrequency) || (stopFreq != _stopFrequency))
@@ -266,30 +256,30 @@ WaterfallDisplayPlot::SetFrequencyRange(const double constStartFreq,
       setAxisTitle(QwtPlot::xBottom, QString("Frequency (%1)").arg(strunits.c_str()));
 
       if(reset) {
-	Reset();
+	resetAxis();
       }
 
-      ((WaterfallZoomer*)_zoomer)->SetFrequencyPrecision(display_units);
-      ((WaterfallZoomer*)_zoomer)->SetUnitType(strunits);
+      ((WaterfallZoomer*)_zoomer)->setFrequencyPrecision(display_units);
+      ((WaterfallZoomer*)_zoomer)->setUnitType(strunits);
     }
   }
 }
 
 
 double
-WaterfallDisplayPlot::GetStartFrequency() const
+WaterfallDisplayPlot::getStartFrequency() const
 {
   return _startFrequency;
 }
 
 double
-WaterfallDisplayPlot::GetStopFrequency() const
+WaterfallDisplayPlot::getStopFrequency() const
 {
   return _stopFrequency;
 }
 
 void
-WaterfallDisplayPlot::PlotNewData(const std::vector<double*> dataPoints,
+WaterfallDisplayPlot::plotNewData(const std::vector<double*> dataPoints,
 				  const int64_t numDataPoints,
 				  const double timePerFFT,
 				  const gruel::high_res_timer_type timestamp,
@@ -300,7 +290,7 @@ WaterfallDisplayPlot::PlotNewData(const std::vector<double*> dataPoints,
       if(numDataPoints != _numPoints){
 	_numPoints = numDataPoints;
 
-	Reset();
+	resetAxis();
 
 	for(int i = 0; i < _nplots; i++) {
 	  d_spectrogram[i]->invalidateCache();
@@ -316,15 +306,15 @@ WaterfallDisplayPlot::PlotNewData(const std::vector<double*> dataPoints,
 
       for(int i = 0; i < _nplots; i++) {
 	d_data[i]->addFFTData(dataPoints[i], numDataPoints, droppedFrames);
-	d_data[i]->IncrementNumLinesToUpdate();
+	d_data[i]->incrementNumLinesToUpdate();
       }
 
       QwtTimeScaleDraw* timeScale = (QwtTimeScaleDraw*)axisScaleDraw(QwtPlot::yLeft);
-      timeScale->SetSecondsPerLine(timePerFFT);
-      timeScale->SetZeroTime(timestamp);
+      timeScale->setSecondsPerLine(timePerFFT);
+      timeScale->setZeroTime(timestamp);
 
-      ((WaterfallZoomer*)_zoomer)->SetSecondsPerLine(timePerFFT);
-      ((WaterfallZoomer*)_zoomer)->SetZeroTime(timestamp);
+      ((WaterfallZoomer*)_zoomer)->setSecondsPerLine(timePerFFT);
+      ((WaterfallZoomer*)_zoomer)->setZeroTime(timestamp);
 
       for(int i = 0; i < _nplots; i++) {
 	d_spectrogram[i]->invalidateCache();
@@ -337,7 +327,7 @@ WaterfallDisplayPlot::PlotNewData(const std::vector<double*> dataPoints,
 }
 
 void
-WaterfallDisplayPlot::PlotNewData(const double* dataPoints,
+WaterfallDisplayPlot::plotNewData(const double* dataPoints,
 				  const int64_t numDataPoints,
 				  const double timePerFFT,
 				  const gruel::high_res_timer_type timestamp,
@@ -345,12 +335,12 @@ WaterfallDisplayPlot::PlotNewData(const double* dataPoints,
 {
   std::vector<double*> vecDataPoints;
   vecDataPoints.push_back((double*)dataPoints);
-  PlotNewData(vecDataPoints, numDataPoints, timePerFFT,
+  plotNewData(vecDataPoints, numDataPoints, timePerFFT,
 	      timestamp, droppedFrames);
 }
 
 void
-WaterfallDisplayPlot::SetIntensityRange(const double minIntensity,
+WaterfallDisplayPlot::setIntensityRange(const double minIntensity,
 					const double maxIntensity)
 {
   for(int i = 0; i < _nplots; i++) {
@@ -360,10 +350,10 @@ WaterfallDisplayPlot::SetIntensityRange(const double minIntensity,
     d_data[i]->setInterval(Qt::ZAxis, QwtInterval(minIntensity, maxIntensity));
 #endif
 
-    emit UpdatedLowerIntensityLevel(minIntensity);
-    emit UpdatedUpperIntensityLevel(maxIntensity);
+    emit updatedLowerIntensityLevel(minIntensity);
+    emit updatedUpperIntensityLevel(maxIntensity);
 
-    _UpdateIntensityRangeDisplay();
+    _updateIntensityRangeDisplay();
   }
 }
 
@@ -395,13 +385,13 @@ WaterfallDisplayPlot::replot()
 }
 
 int
-WaterfallDisplayPlot::GetIntensityColorMapType(int which) const
+WaterfallDisplayPlot::getIntensityColorMapType(int which) const
 {
   return _intensityColorMapType[which];
 }
 
 void
-WaterfallDisplayPlot::SetIntensityColorMapType(const int which,
+WaterfallDisplayPlot::setIntensityColorMapType(const int which,
 					       const int newType,
 					       const QColor lowColor,
 					       const QColor highColor)
@@ -465,48 +455,48 @@ WaterfallDisplayPlot::SetIntensityColorMapType(const int which,
     default: break;
     }
 
-    _UpdateIntensityRangeDisplay();
+    _updateIntensityRangeDisplay();
   }
 }
 
 void
-WaterfallDisplayPlot::SetIntensityColorMapType1(int newType)
+WaterfallDisplayPlot::setIntensityColorMapType1(int newType)
 {
-  SetIntensityColorMapType(0, newType, _userDefinedLowIntensityColor, _userDefinedHighIntensityColor);
+  setIntensityColorMapType(0, newType, _userDefinedLowIntensityColor, _userDefinedHighIntensityColor);
 }
 
 int
-WaterfallDisplayPlot::GetIntensityColorMapType1() const
+WaterfallDisplayPlot::getIntensityColorMapType1() const
 {
-  return GetIntensityColorMapType(0);
+  return getIntensityColorMapType(0);
 }
 
 void
-WaterfallDisplayPlot::SetUserDefinedLowIntensityColor(QColor c)
+WaterfallDisplayPlot::setUserDefinedLowIntensityColor(QColor c)
 {
   _userDefinedLowIntensityColor = c;
 }
 
 const QColor
-WaterfallDisplayPlot::GetUserDefinedLowIntensityColor() const
+WaterfallDisplayPlot::getUserDefinedLowIntensityColor() const
 {
   return _userDefinedLowIntensityColor;
 }
 
 void
-WaterfallDisplayPlot::SetUserDefinedHighIntensityColor(QColor c)
+WaterfallDisplayPlot::setUserDefinedHighIntensityColor(QColor c)
 {
   _userDefinedHighIntensityColor = c;
 }
 
 const QColor
-WaterfallDisplayPlot::GetUserDefinedHighIntensityColor() const
+WaterfallDisplayPlot::getUserDefinedHighIntensityColor() const
 {
   return _userDefinedHighIntensityColor;
 }
 
 void
-WaterfallDisplayPlot::_UpdateIntensityRangeDisplay()
+WaterfallDisplayPlot::_updateIntensityRangeDisplay()
 {
   QwtScaleWidget *rightAxis = axisWidget(QwtPlot::yRight);
   rightAxis->setTitle("Intensity (dB)");

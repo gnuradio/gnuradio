@@ -46,7 +46,7 @@ WaterfallDisplayForm::WaterfallDisplayForm(int nplots, QWidget* parent)
 
   QAction *autoscale_act = new QAction("Auto Scale", this);
   autoscale_act->setStatusTip(tr("Autoscale intensity range"));
-  connect(autoscale_act, SIGNAL(triggered()), this, SLOT(AutoScale()));
+  connect(autoscale_act, SIGNAL(triggered()), this, SLOT(autoScale()));
 
   FFTSizeMenu *sizemenu = new FFTSizeMenu(this);
   FFTAverageMenu *avgmenu = new FFTAverageMenu(this);
@@ -58,13 +58,13 @@ WaterfallDisplayForm::WaterfallDisplayForm(int nplots, QWidget* parent)
   _menu->addMenu(colormenu);
   _menu->addAction(autoscale_act);
   connect(sizemenu, SIGNAL(whichTrigger(int)),
-	  this, SLOT(SetFFTSize(const int)));
+	  this, SLOT(setFFTSize(const int)));
   connect(avgmenu, SIGNAL(whichTrigger(float)),
-	  this, SLOT(SetFFTAverage(const float)));
+	  this, SLOT(setFFTAverage(const float)));
   connect(winmenu, SIGNAL(whichTrigger(gr::filter::firdes::win_type)),
-	  this, SLOT(SetFFTWindowType(const gr::filter::firdes::win_type)));
+	  this, SLOT(setFFTWindowType(const gr::filter::firdes::win_type)));
   connect(colormenu, SIGNAL(whichTrigger(const int, const QColor&, const QColor&)),
-	  this, SLOT(SetColorMap(const int, const QColor&, const QColor&)));
+	  this, SLOT(setColorMap(const int, const QColor&, const QColor&)));
 
   Reset();
 
@@ -105,7 +105,7 @@ WaterfallDisplayForm::newData(const QEvent *updateEvent)
       _max_val = *max_val;
   }
 
-  getPlot()->PlotNewData(dataPoints, numDataPoints,
+  getPlot()->plotNewData(dataPoints, numDataPoints,
 			 d_update_time, dataTimestamp, 0);
 }
 
@@ -118,88 +118,76 @@ WaterfallDisplayForm::customEvent( QEvent * e)
 }
 
 int
-WaterfallDisplayForm::GetFFTSize() const
+WaterfallDisplayForm::getFFTSize() const
 {
   return _fftsize;
 }
 
 float
-WaterfallDisplayForm::GetFFTAverage() const
+WaterfallDisplayForm::getFFTAverage() const
 {
   return _fftavg;
 }
 
 gr::filter::firdes::win_type
-WaterfallDisplayForm::GetFFTWindowType() const
+WaterfallDisplayForm::getFFTWindowType() const
 {
   return _fftwintype;
 }
 
 void
-WaterfallDisplayForm::SetFFTSize(const int newsize)
+WaterfallDisplayForm::setFFTSize(const int newsize)
 {
   _fftsize = newsize;
 }
 
 void
-WaterfallDisplayForm::SetFFTAverage(const float newavg)
+WaterfallDisplayForm::setFFTAverage(const float newavg)
 {
   _fftavg = newavg;
 }
 
 void
-WaterfallDisplayForm::SetFFTWindowType(const gr::filter::firdes::win_type newwin)
+WaterfallDisplayForm::setFFTWindowType(const gr::filter::firdes::win_type newwin)
 {
   _fftwintype = newwin;
 }
 
 void
-WaterfallDisplayForm::SetFrequencyRange(const double newCenterFrequency,
-					const double newStartFrequency,
-					const double newStopFrequency)
+WaterfallDisplayForm::setFrequencyRange(const double centerfreq,
+					const double bandwidth)
 {
-  double fdiff = std::max(fabs(newStartFrequency), fabs(newStopFrequency));
+  std::string strunits[4] = {"Hz", "kHz", "MHz", "GHz"};
+  double units10 = floor(log10(bandwidth));
+  double units3  = std::max(floor(units10 / 3.0), 0.0);
+  double units = pow(10, (units10-fmod(units10, 3.0)));
+  int iunit = static_cast<int>(units3);
 
-  if(fdiff > 0) {
-    std::string strunits[4] = {"Hz", "kHz", "MHz", "GHz"};
-    double units10 = floor(log10(fdiff));
-    double units3  = std::max(floor(units10 / 3.0), 0.0);
-    double units = pow(10, (units10-fmod(units10, 3.0)));
-    int iunit = static_cast<int>(units3);
-
-    _startFrequency = newStartFrequency;
-    _stopFrequency = newStopFrequency;
-    double centerFrequency = newCenterFrequency;
-
-    getPlot()->SetFrequencyRange(_startFrequency,
-				 _stopFrequency,
-				 centerFrequency,
-				 true,
-				 units, strunits[iunit]);
-  }
+  getPlot()->setFrequencyRange(centerfreq, bandwidth,
+			       units, strunits[iunit]);
 }
 
 void
-WaterfallDisplayForm::SetColorMap(const int newType,
+WaterfallDisplayForm::setColorMap(const int newType,
 				  const QColor lowColor,
 				  const QColor highColor)
 {
-  getPlot()->SetIntensityColorMapType(0, newType,
+  getPlot()->setIntensityColorMapType(0, newType,
 				      lowColor, highColor);
 }
 
 void
-WaterfallDisplayForm::SetIntensityRange(const double minIntensity,
+WaterfallDisplayForm::setIntensityRange(const double minIntensity,
 					const double maxIntensity)
 {
-  getPlot()->SetIntensityRange(minIntensity, maxIntensity);
+  getPlot()->setIntensityRange(minIntensity, maxIntensity);
 }
 
 void
-WaterfallDisplayForm::AutoScale()
+WaterfallDisplayForm::autoScale()
 {
   double min_int = _min_val - 5;
   double max_int = _max_val + 10;
 
-  getPlot()->SetIntensityRange(min_int, max_int);
+  getPlot()->setIntensityRange(min_int, max_int);
 }

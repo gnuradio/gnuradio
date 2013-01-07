@@ -36,13 +36,13 @@ public:
   TimeDomainDisplayPlot(int nplots, QWidget*);
   virtual ~TimeDomainDisplayPlot();
 
-  void PlotNewData(const std::vector<double*> dataPoints,
+  void plotNewData(const std::vector<double*> dataPoints,
 		   const int64_t numDataPoints, const double timeInterval);
 
   void replot();
 
 public slots:
-  void SetSampleRate(double sr, double units,
+  void setSampleRate(double sr, double units,
 		     const std::string &strunits);
 
 private:

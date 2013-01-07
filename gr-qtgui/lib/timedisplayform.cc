@@ -68,7 +68,7 @@ TimeDisplayForm::newData(const QEvent* updateEvent)
   const std::vector<double*> dataPoints = tevent->getTimeDomainPoints();
   const uint64_t numDataPoints = tevent->getNumTimeDomainDataPoints();
 
-  getPlot()->PlotNewData(dataPoints,
+  getPlot()->plotNewData(dataPoints,
 			 numDataPoints,
 			 d_update_time);
 }
@@ -91,7 +91,7 @@ TimeDisplayForm::setSampleRate(const double samprate)
     double units = pow(10, (units10-fmod(units10, 3.0)));
     int iunit = static_cast<int>(units3);
 
-    getPlot()->SetSampleRate(samprate, units, strtime[iunit]);
+    getPlot()->setSampleRate(samprate, units, strtime[iunit]);
   }
   else {
     throw std::runtime_error("TimeDisplayForm: samprate must be > 0.\n");

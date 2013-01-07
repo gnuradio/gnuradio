@@ -121,11 +121,11 @@ namespace gr {
 					d_center_freq,
 					-d_bandwidth/2.0,
 					d_bandwidth/2.0);
-      d_main_gui->SetDisplayTitle(d_name);
-      d_main_gui->SetFFTSize(d_fftsize);
-      d_main_gui->SetWindowType((int)d_wintype);
+      d_main_gui->setDisplayTitle(d_name);
+      d_main_gui->setWindowType((int)d_wintype);
+      set_fft_size(d_fftsize);
 
-      d_main_gui->OpenSpectrumWindow(d_parent,
+      d_main_gui->openSpectrumWindow(d_parent,
 				     d_plotfreq, d_plotwaterfall,
 				     d_plottime, d_plotconst);
 
@@ -157,7 +157,7 @@ namespace gr {
     sink_f_impl::set_fft_size(const int fftsize)
     {
       d_fftsize = fftsize;
-      d_main_gui->SetFFTSize(fftsize);
+      d_main_gui->setFFTSize(fftsize);
     }
 
     int
@@ -172,7 +172,7 @@ namespace gr {
     {
       d_center_freq = centerfreq;
       d_bandwidth = bandwidth;
-      d_main_gui->SetFrequencyRange(d_center_freq,
+      d_main_gui->setFrequencyRange(d_center_freq,
 				    -d_bandwidth/2.0,
 				    d_bandwidth/2.0);
     }
@@ -180,27 +180,27 @@ namespace gr {
     void
     sink_f_impl::set_fft_power_db(double min, double max)
     {
-      d_main_gui->SetFrequencyAxis(min, max);
+      d_main_gui->setFrequencyAxis(min, max);
     }
 
     /*
     void
     sink_f_impl::set_time_domain_axis(double min, double max)
     {
-      d_main_gui->SetTimeDomainAxis(min, max);
+      d_main_gui->setTimeDomainAxis(min, max);
     }
 
     void
     sink_f_impl::set_constellation_axis(double xmin, double xmax,
 					double ymin, double ymax)
     {
-      d_main_gui->SetConstellationAxis(xmin, xmax, ymin, ymax);
+      d_main_gui->setConstellationAxis(xmin, xmax, ymin, ymax);
     }
 
     void
     sink_f_impl::set_constellation_pen_size(int size)
     {
-      d_main_gui->SetConstellationPenSize(size);
+      d_main_gui->setConstellationPenSize(size);
     }
     */
 
@@ -208,7 +208,7 @@ namespace gr {
     sink_f_impl::set_update_time(double t)
     {
       d_update_time = t;
-      d_main_gui->SetUpdateTime(d_update_time);
+      d_main_gui->setUpdateTime(d_update_time);
     }
 
     void
@@ -234,7 +234,7 @@ namespace gr {
     sink_f_impl::windowreset()
     {
       filter::firdes::win_type newwintype;
-      newwintype = (filter::firdes::win_type)d_main_gui->GetWindowType();
+      newwintype = (filter::firdes::win_type)d_main_gui->getWindowType();
       if(d_wintype != newwintype) {
 	d_wintype = newwintype;
 	buildwindow();
@@ -253,7 +253,7 @@ namespace gr {
     void
     sink_f_impl::fftresize()
     {
-      int newfftsize = d_main_gui->GetFFTSize();
+      int newfftsize = d_main_gui->getFFTSize();
 
       if(newfftsize != d_fftsize) {
 
@@ -306,7 +306,7 @@ namespace gr {
 	  j += resid;
 	  fft(d_magbuf, d_residbuf, d_fftsize);
       
-	  d_main_gui->UpdateWindow(true, d_magbuf, d_fftsize,
+	  d_main_gui->updateWindow(true, d_magbuf, d_fftsize,
 				   (float*)d_residbuf, d_fftsize, NULL, 0,
 				   currentTime, true);
 	}

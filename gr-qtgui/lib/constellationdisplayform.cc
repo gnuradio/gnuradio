@@ -69,7 +69,7 @@ ConstellationDisplayForm::newData(const QEvent* updateEvent)
   const std::vector<double*> imagDataPoints = tevent->getImagPoints();
   const uint64_t numDataPoints = tevent->getNumDataPoints();
 
-  getPlot()->PlotNewData(realDataPoints,
+  getPlot()->plotNewData(realDataPoints,
 			 imagDataPoints,
 			 numDataPoints,
 			 d_update_time);

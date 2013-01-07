@@ -117,11 +117,9 @@ namespace gr {
       }
 
       d_main_gui = new WaterfallDisplayForm(d_nconnections, d_parent);
-      d_main_gui->SetFFTSize(d_fftsize);
-      d_main_gui->SetFFTWindowType(d_wintype);
-      d_main_gui->SetFrequencyRange(d_center_freq,
-				    d_center_freq - d_bandwidth/2.0,
-				    d_center_freq + d_bandwidth/2.0);
+      d_main_gui->setFFTWindowType(d_wintype);
+      set_fft_size(d_fftsize);
+      set_frequency_range(d_center_freq, d_bandwidth);
 
       // initialize update time to 10 times a second
       set_update_time(0.1);
@@ -152,7 +150,7 @@ namespace gr {
     waterfall_sink_c_impl::set_fft_size(const int fftsize)
     {
       d_fftsize = fftsize;
-      d_main_gui->SetFFTSize(fftsize);
+      d_main_gui->setFFTSize(fftsize);
     }
 
     int
@@ -165,7 +163,7 @@ namespace gr {
     waterfall_sink_c_impl::set_fft_average(const float fftavg)
     {
       d_fftavg = fftavg;
-      d_main_gui->SetFFTAverage(fftavg);
+      d_main_gui->setFFTAverage(fftavg);
     }
 
     float
@@ -180,9 +178,7 @@ namespace gr {
     {
       d_center_freq = centerfreq;
       d_bandwidth = bandwidth;
-      d_main_gui->SetFrequencyRange(d_center_freq,
-				    -d_bandwidth/2.0,
-				    d_bandwidth/2.0);
+      d_main_gui->setFrequencyRange(d_center_freq, d_bandwidth);
     }
 
     void
@@ -264,7 +260,7 @@ namespace gr {
     waterfall_sink_c_impl::windowreset()
     {
       filter::firdes::win_type newwintype;
-      newwintype = d_main_gui->GetFFTWindowType();
+      newwintype = d_main_gui->getFFTWindowType();
       if(d_wintype != newwintype) {
         d_wintype = newwintype;
         buildwindow();
@@ -283,8 +279,8 @@ namespace gr {
     void
     waterfall_sink_c_impl::fftresize()
     {
-      int newfftsize = d_main_gui->GetFFTSize();
-      d_fftavg = d_main_gui->GetFFTAverage();
+      int newfftsize = d_main_gui->getFFTSize();
+      d_fftavg = d_main_gui->getFFTAverage();
 
       if(newfftsize != d_fftsize) {
 
