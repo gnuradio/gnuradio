@@ -35,10 +35,10 @@ class test_cvsd_vocoder (gr_unittest.TestCase):
         self.tb = None
 
     def test001_module_load (self):
-        raw_enc = cvsd_encode_sb();
-        raw_dec = cvsd_decode_bs();
-        hb_enc = cvsd_encode_fb();
-        hb_dec = cvsd_decode_bf();
+        raw_enc = cvsd_encode_sb()
+        raw_dec = cvsd_decode_bs()
+        hb_enc = cvsd_encode_fb()
+        hb_dec = cvsd_decode_bf()
 
 
     """ Disable for now

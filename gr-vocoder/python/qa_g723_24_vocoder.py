@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2011 Free Software Foundation, Inc.
+# Copyright 2011,2013 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -32,8 +32,15 @@ class test_g723_24_vocoder (gr_unittest.TestCase):
         self.tb = None
 
     def test001_module_load (self):
-        enc = g723_24_encode_sb();
-        dec = g723_24_decode_bs();
+        data = (0,16,36,40,68,104,148,220,320,512)
+        src = gr.vector_source_s(data)
+        enc = g723_24_encode_sb()
+        dec = g723_24_decode_bs()
+        snk = gr.vector_sink_s()
+        self.tb.connect(src, enc, dec, snk)
+        self.tb.run()
+        actual_result = snk.data()
+        self.assertEqual(data, actual_result)
 
 if __name__ == '__main__':
     gr_unittest.run(test_g723_24_vocoder, "test_g723_24_vocoder.xml")

@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2011 Free Software Foundation, Inc.
+# Copyright 2011,2013 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -32,8 +32,16 @@ class test_ulaw_vocoder (gr_unittest.TestCase):
         self.tb = None
 
     def test001_module_load (self):
-        enc = ulaw_encode_sb();
-        dec = ulaw_decode_bs();
+        data = (8,24,40,56,72,88,104,120,132,148,164,180,
+                196,212,228,244,260,276,292,308,324,340)
+        src = gr.vector_source_s(data)
+        enc = ulaw_encode_sb()
+        dec = ulaw_decode_bs()
+        snk = gr.vector_sink_s()
+        self.tb.connect(src, enc, dec, snk)
+        self.tb.run()
+        actual_result = snk.data()
+        self.assertEqual(data, actual_result)
 
 if __name__ == '__main__':
     gr_unittest.run(test_ulaw_vocoder, "test_ulaw_vocoder.xml")
