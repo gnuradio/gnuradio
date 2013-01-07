@@ -58,7 +58,6 @@ GR_REGISTER_COMPONENT("gr-shd" ENABLE_GR_SHD
 
 GR_SET_GLOBAL(GR_SHD_INCLUDE_DIRS
     ${CMAKE_CURRENT_SOURCE_DIR}/include
-    ${SHD_INCLUDE_DIRS}
 )
 
 ########################################################################

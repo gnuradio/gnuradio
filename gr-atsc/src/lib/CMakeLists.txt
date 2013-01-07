@@ -21,15 +21,15 @@
 # Setup the include and linker paths
 ########################################################################
 include_directories(
-    ${GNURADIO_CORE_INCLUDE_DIRS}
+    ${GR_ATSC_INCLUDE_DIRS}
     ${GR_FILTER_INCLUDE_DIRS}
     ${GR_ANALOG_INCLUDE_DIRS}
     ${GR_FEC_INCLUDE_DIRS}
-    ${GR_ATSC_INCLUDE_DIRS}
-    ${CMAKE_CURRENT_BINARY_DIR}
+    ${GNURADIO_CORE_INCLUDE_DIRS}
+    ${GRUEL_INCLUDE_DIRS}
+    ${Boost_INCLUDE_DIRS}
 )
 
-include_directories(${Boost_INCLUDE_DIRS})
 link_directories(${Boost_LIBRARY_DIRS})
 
 ########################################################################
@@ -212,7 +212,12 @@ include(GrSwig)
 
 set(GR_SWIG_INCLUDE_DIRS
     ${GR_ATSC_INCLUDE_DIRS}
+    ${GR_FILTER_INCLUDE_DIRS}
+    ${GR_ANALOG_INCLUDE_DIRS}
+    ${GR_FEC_INCLUDE_DIRS}
     ${GNURADIO_CORE_SWIG_INCLUDE_DIRS}
+    ${GRUEL_INCLUDE_DIRS}
+    ${Boost_INCLUDE_DIRS}
 )
 
 # add Doxygen docs to python

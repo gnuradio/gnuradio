@@ -536,7 +536,7 @@
    <sender>MaxHoldCheckBox</sender>
    <signal>toggled(bool)</signal>
    <receiver>SpectrumDisplayForm</receiver>
-   <slot>MaxHoldCheckBox_toggled(bool)</slot>
+   <slot>maxHoldCheckBox_toggled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
      <x>22</x>
@@ -552,7 +552,7 @@
    <sender>MaxHoldResetBtn</sender>
    <signal>clicked()</signal>
    <receiver>SpectrumDisplayForm</receiver>
-   <slot>MaxHoldResetBtn_clicked()</slot>
+   <slot>maxHoldResetBtn_clicked()</slot>
    <hints>
     <hint type="sourcelabel">
      <x>107</x>
@@ -568,7 +568,7 @@
    <sender>MinHoldCheckBox</sender>
    <signal>toggled(bool)</signal>
    <receiver>SpectrumDisplayForm</receiver>
-   <slot>MinHoldCheckBox_toggled(bool)</slot>
+   <slot>minHoldCheckBox_toggled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
      <x>22</x>
@@ -584,7 +584,7 @@
    <sender>MinHoldResetBtn</sender>
    <signal>clicked()</signal>
    <receiver>SpectrumDisplayForm</receiver>
-   <slot>MinHoldResetBtn_clicked()</slot>
+   <slot>minHoldResetBtn_clicked()</slot>
    <hints>
     <hint type="sourcelabel">
      <x>107</x>
@@ -600,7 +600,7 @@
    <sender>WindowComboBox</sender>
    <signal>activated(int)</signal>
    <receiver>SpectrumDisplayForm</receiver>
-   <slot>WindowTypeChanged(int)</slot>
+   <slot>windowTypeChanged(int)</slot>
    <hints>
     <hint type="sourcelabel">
      <x>20</x>
@@ -616,7 +616,7 @@
    <sender>UseRFFrequenciesCheckBox</sender>
    <signal>toggled(bool)</signal>
    <receiver>SpectrumDisplayForm</receiver>
-   <slot>UseRFFrequenciesCB(bool)</slot>
+   <slot>useRFFrequenciesCB(bool)</slot>
    <hints>
     <hint type="sourcelabel">
      <x>20</x>
@@ -664,7 +664,7 @@
    <sender>FFTSizeComboBox</sender>
    <signal>activated(QString)</signal>
    <receiver>SpectrumDisplayForm</receiver>
-   <slot>FFTComboBoxSelectedCB(QString)</slot>
+   <slot>fftComboBoxSelectedCB(QString)</slot>
    <hints>
     <hint type="sourcelabel">
      <x>20</x>
@@ -680,7 +680,7 @@
    <sender>WaterfallAutoScaleBtn</sender>
    <signal>clicked()</signal>
    <receiver>SpectrumDisplayForm</receiver>
-   <slot>WaterfallAutoScaleBtnCB()</slot>
+   <slot>waterfallAutoScaleBtnCB()</slot>
    <hints>
     <hint type="sourcelabel">
      <x>22</x>
@@ -696,7 +696,7 @@
    <sender>WaterfallIntensityComboBox</sender>
    <signal>activated(int)</signal>
    <receiver>SpectrumDisplayForm</receiver>
-   <slot>WaterfallIntensityColorTypeChanged(int)</slot>
+   <slot>waterfallIntensityColorTypeChanged(int)</slot>
    <hints>
     <hint type="sourcelabel">
      <x>92</x>
@@ -712,7 +712,7 @@
    <sender>SpectrumTypeTab</sender>
    <signal>currentChanged(int)</signal>
    <receiver>SpectrumDisplayForm</receiver>
-   <slot>TabChanged(int)</slot>
+   <slot>tabChanged(int)</slot>
    <hints>
     <hint type="sourcelabel">
      <x>314</x>
@@ -728,7 +728,7 @@
    <sender>AvgLineEdit</sender>
    <signal>valueChanged(int)</signal>
    <receiver>SpectrumDisplayForm</receiver>
-   <slot>AvgLineEdit_valueChanged(int)</slot>
+   <slot>avgLineEdit_valueChanged(int)</slot>
    <hints>
     <hint type="sourcelabel">
      <x>604</x>

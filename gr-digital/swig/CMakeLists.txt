@@ -24,16 +24,21 @@ include(GrPython)
 include(GrSwig)
 
 set(GR_SWIG_INCLUDE_DIRS
-    ${GR_ANALOG_INCLUDE_DIRS}
     ${GR_DIGITAL_INCLUDE_DIRS}
+    ${GR_BLOCKS_INCLUDE_DIRS}
+    ${GR_ANALOG_INCLUDE_DIRS}
+    ${GR_FFT_INCLUDE_DIRS}
     ${GR_FILTER_INCLUDE_DIRS}
     ${GNURADIO_CORE_SWIG_INCLUDE_DIRS}
+    ${GRUEL_INCLUDE_DIRS}
+    ${Boost_INCLUDE_DIRS}
 )
 
 set(GR_SWIG_LIBRARIES gnuradio-digital gnuradio-filter)
 
 if(ENABLE_GR_CTRLPORT)
   ADD_DEFINITIONS(-DGR_CTRLPORT)
+  list(APPEND GR_SWIG_INCLUDE_DIRS ${ICE_INCLUDE_DIR})
 endif(ENABLE_GR_CTRLPORT)
 
 # Setup swig docs to depend on includes and pull in from build directory

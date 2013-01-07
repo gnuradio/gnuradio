@@ -40,22 +40,22 @@ public:
   {
   }
 
-  virtual unsigned int GetFrequencyPrecision() const
+  virtual unsigned int getFrequencyPrecision() const
   {
     return _frequencyPrecision;
   }
 
-  virtual void SetFrequencyPrecision(const unsigned int newPrecision)
+  virtual void setFrequencyPrecision(const unsigned int newPrecision)
   {
     _frequencyPrecision = newPrecision;
   }
 
-  virtual double GetCenterFrequency() const
+  virtual double getCenterFrequency() const
   {
     return _centerFrequency;
   }
 
-  virtual void SetCenterFrequency(const double newFreq)
+  virtual void setCenterFrequency(const double newFreq)
   {
     _centerFrequency = newFreq;
   }
@@ -80,22 +80,22 @@ public:
   {    
   }
 
-  virtual gruel::high_res_timer_type GetZeroTime() const
+  virtual gruel::high_res_timer_type getZeroTime() const
   {
     return _zeroTime;
   }
   
-  virtual void SetZeroTime(const gruel::high_res_timer_type newTime)
+  virtual void setZeroTime(const gruel::high_res_timer_type newTime)
   {
     _zeroTime = newTime - gruel::high_res_timer_epoch();
   }
 
-  virtual void SetSecondsPerLine(const double newTime)
+  virtual void setSecondsPerLine(const double newTime)
   {
     _secondsPerLine = newTime;
   }
 
-  virtual double GetSecondsPerLine() const
+  virtual double getSecondsPerLine() const
   {
     return _secondsPerLine;
   }
@@ -122,7 +122,7 @@ public:
 
   virtual QwtText label(double value) const
   {
-    return QString("%1").arg(value, 0, 'f', GetFrequencyPrecision());
+    return QString("%1").arg(value, 0, 'f', getFrequencyPrecision());
   }
 
   virtual void initiateUpdate(void)

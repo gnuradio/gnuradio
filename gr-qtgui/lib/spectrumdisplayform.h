@@ -45,53 +45,53 @@ class SpectrumDisplayForm : public QWidget, public Ui::SpectrumDisplayForm
   SpectrumDisplayForm(QWidget* parent = 0);
   ~SpectrumDisplayForm();
 
-  void setSystem( SpectrumGUIClass * newSystem, const uint64_t numFFTDataPoints,
-		  const uint64_t numTimeDomainDataPoints );
+  void setSystem(SpectrumGUIClass * newSystem, const uint64_t numFFTDataPoints,
+		 const uint64_t numTimeDomainDataPoints);
 
-  int GetAverageCount();
-  void SetAverageCount( const int newCount );
-  void Reset();
-  void AverageDataReset();
-  void ResizeBuffers( const uint64_t numFFTDataPoints,
-		      const uint64_t numTimeDomainDataPoints );
+  int getAverageCount();
+  void setAverageCount(const int newCount);
+  void reset();
+  void averageDataReset();
+  void resizeBuffers(const uint64_t numFFTDataPoints,
+		     const uint64_t numTimeDomainDataPoints);
 
 public slots:
-  void resizeEvent( QResizeEvent * e );
-  void customEvent( QEvent * e );
-  void AvgLineEdit_valueChanged( int valueString );
-  void MaxHoldCheckBox_toggled( bool newState );
-  void MinHoldCheckBox_toggled( bool newState );
-  void MinHoldResetBtn_clicked();
-  void MaxHoldResetBtn_clicked();
-  void TabChanged(int index);
+  void resizeEvent(QResizeEvent * e);
+  void customEvent(QEvent * e);
+  void avgLineEdit_valueChanged(int valueString);
+  void maxHoldCheckBox_toggled(bool newState);
+  void minHoldCheckBox_toggled(bool newState);
+  void minHoldResetBtn_clicked();
+  void maxHoldResetBtn_clicked();
+  void tabChanged(int index);
 
-  void SetFrequencyRange( const double newCenterFrequency,
-			  const double newStartFrequency,
-			  const double newStopFrequency );
-  void closeEvent( QCloseEvent * e );
-  void WindowTypeChanged( int newItem );
-  void UseRFFrequenciesCB( bool useRFFlag );
+  void setFrequencyRange(const double newCenterFrequency,
+			 const double newStartFrequency,
+			 const double newStopFrequency);
+  void closeEvent(QCloseEvent * e);
+  void windowTypeChanged(int newItem);
+  void useRFFrequenciesCB(bool useRFFlag);
   void waterfallMaximumIntensityChangedCB(double);
   void waterfallMinimumIntensityChangedCB(double);
-  void WaterfallIntensityColorTypeChanged(int);
-  void WaterfallAutoScaleBtnCB();
-  void FFTComboBoxSelectedCB(const QString&);
+  void waterfallIntensityColorTypeChanged(int);
+  void waterfallAutoScaleBtnCB();
+  void fftComboBoxSelectedCB(const QString&);
 
-  void ToggleTabFrequency(const bool state);
-  void ToggleTabWaterfall(const bool state);
-  void ToggleTabTime(const bool state);
-  void ToggleTabConstellation(const bool state);
+  void toggleTabFrequency(const bool state);
+  void toggleTabWaterfall(const bool state);
+  void toggleTabTime(const bool state);
+  void toggleTabConstellation(const bool state);
 
-  void SetTimeDomainAxis(double min, double max);
-  void SetConstellationAxis(double xmin, double xmax,
+  void setTimeDomainAxis(double min, double max);
+  void setConstellationAxis(double xmin, double xmax,
 			    double ymin, double ymax);
-  void SetConstellationPenSize(int size);
-  void SetFrequencyAxis(double min, double max);
-  void SetUpdateTime(double t);
+  void setConstellationPenSize(int size);
+  void setFrequencyAxis(double min, double max);
+  void setUpdateTime(double t);
 
 private slots:
-  void newFrequencyData( const SpectrumUpdateEvent* );
-  void UpdateGuiTimer();
+  void newFrequencyData(const SpectrumUpdateEvent*);
+  void updateGuiTimer();
 
   void onFFTPlotPointSelected(const QPointF p);
   void onWFallPlotPointSelected(const QPointF p);
@@ -102,7 +102,7 @@ signals:
   void plotPointSelected(const QPointF p, int type);
 
 private:
-  void _AverageHistory( const double * newBuffer );
+  void _averageHistory(const double * newBuffer);
 
   int _historyEntryCount;
   int _historyEntry;

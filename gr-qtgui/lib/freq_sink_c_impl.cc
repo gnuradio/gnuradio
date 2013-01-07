@@ -121,11 +121,10 @@ namespace gr {
       }
 
       d_main_gui = new FreqDisplayForm(d_nconnections, d_parent);
-      d_main_gui->setFFTSize(d_fftsize);
       d_main_gui->setFFTWindowType(d_wintype);
-      d_main_gui->setFrequencyRange(d_center_freq,
-				    d_center_freq - d_bandwidth/2.0,
-				    d_center_freq + d_bandwidth/2.0);
+
+      set_fft_size(d_fftsize);
+      set_frequency_range(d_center_freq, d_bandwidth);
 
       // initialize update time to 10 times a second
       set_update_time(0.1);
@@ -184,9 +183,7 @@ namespace gr {
     {
       d_center_freq = centerfreq;
       d_bandwidth = bandwidth;
-      d_main_gui->setFrequencyRange(d_center_freq,
-				    -d_bandwidth/2.0,
-				    d_bandwidth/2.0);
+      d_main_gui->setFrequencyRange(d_center_freq, d_bandwidth);
     }
 
     void

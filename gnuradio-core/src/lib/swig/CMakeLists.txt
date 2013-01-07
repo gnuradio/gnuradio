@@ -21,22 +21,21 @@
 include(GrPython)
 include(GrSwig)
 
-include_directories(${Boost_INCLUDE_DIRS})
-link_directories(${Boost_LIBRARY_DIRS})
-
 set(GR_SWIG_INCLUDE_DIRS
     ${CMAKE_CURRENT_BINARY_DIR}
-    ${GRUEL_INCLUDE_DIRS}
     ${GNURADIO_CORE_SWIG_INCLUDE_DIRS}
+    ${GRUEL_INCLUDE_DIRS}
+    ${Boost_INCLUDE_DIRS}
 )
 set(GR_SWIG_LIBRARIES gnuradio-core)
 
 if(ENABLE_GR_CTRLPORT)
   list(APPEND GR_SWIG_FLAGS -DGR_CTRLPORT)
-  list(APPEND GR_SWIG_LIBRARIES
-    ${ICE_LIBRARIES}
-    )
+  list(APPEND GR_SWIG_LIBRARIES ${ICE_LIBRARIES})
+  list(APPEND GR_SWIG_INCLUDE_DIRS ${ICE_INCLUDE_DIR})
 endif(ENABLE_GR_CTRLPORT)
+
+link_directories(${Boost_LIBRARY_DIRS})
 
 ########################################################################
 # Build and install the swig targets

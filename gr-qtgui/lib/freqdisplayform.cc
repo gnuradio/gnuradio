@@ -80,7 +80,7 @@ FreqDisplayForm::newData(const QEvent *updateEvent)
   const std::vector<double*> dataPoints = fevent->getPoints();
   const uint64_t numDataPoints = fevent->getNumDataPoints();
 
-  getPlot()->PlotNewData(dataPoints, numDataPoints,
+  getPlot()->plotNewData(dataPoints, numDataPoints,
 			 0, 0, 0, d_update_time);
 }
 
@@ -130,29 +130,17 @@ FreqDisplayForm::setFFTWindowType(const gr::filter::firdes::win_type newwin)
 }
 
 void
-FreqDisplayForm::setFrequencyRange(const double newCenterFrequency,
-				   const double newStartFrequency,
-				   const double newStopFrequency)
+FreqDisplayForm::setFrequencyRange(const double centerfreq,
+				   const double bandwidth)
 {
-  double fdiff = std::max(fabs(newStartFrequency), fabs(newStopFrequency));
+  std::string strunits[4] = {"Hz", "kHz", "MHz", "GHz"};
+  double units10 = floor(log10(bandwidth));
+  double units3  = std::max(floor(units10 / 3.0), 0.0);
+  double units = pow(10, (units10-fmod(units10, 3.0)));
+  int iunit = static_cast<int>(units3);
 
-  if(fdiff > 0) {
-    std::string strunits[4] = {"Hz", "kHz", "MHz", "GHz"};
-    double units10 = floor(log10(fdiff));
-    double units3  = std::max(floor(units10 / 3.0), 0.0);
-    double units = pow(10, (units10-fmod(units10, 3.0)));
-    int iunit = static_cast<int>(units3);
-
-    _startFrequency = newStartFrequency;
-    _stopFrequency = newStopFrequency;
-    double centerFrequency = newCenterFrequency;
-
-    getPlot()->SetFrequencyRange(_startFrequency,
-				 _stopFrequency,
-				 centerFrequency,
-				 true,
-				 units, strunits[iunit]);
-  }
+  getPlot()->setFrequencyRange(centerfreq, bandwidth,
+			       units, strunits[iunit]);
 }
 
 void

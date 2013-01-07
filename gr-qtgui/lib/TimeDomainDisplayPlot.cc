@@ -43,12 +43,12 @@ public:
   {
   }
 
-  virtual unsigned int GetTimePrecision() const
+  virtual unsigned int getTimePrecision() const
   {
     return _timePrecision;
   }
 
-  virtual void SetTimePrecision(const unsigned int newPrecision)
+  virtual void setTimePrecision(const unsigned int newPrecision)
   {
     _timePrecision = newPrecision;
   }
@@ -74,7 +74,7 @@ public:
     updateDisplay();
   }
 
-  void SetUnitType(const std::string &type)
+  void setUnitType(const std::string &type)
   {
     _unitType = type;
   }
@@ -84,7 +84,7 @@ protected:
   virtual QwtText trackerText( const QPoint& p ) const
   {
     QwtDoublePoint dp = QwtPlotZoomer::invTransform(p);
-    QwtText t(QString("%1 %2, %3 V").arg(dp.x(), 0, 'f', GetTimePrecision()).
+    QwtText t(QString("%1 %2, %3 V").arg(dp.x(), 0, 'f', getTimePrecision()).
 	      arg(_unitType.c_str()).
 	      arg(dp.y(), 0, 'f', 4));
 
@@ -176,7 +176,7 @@ TimeDomainDisplayPlot::replot()
 }
 
 void
-TimeDomainDisplayPlot::PlotNewData(const std::vector<double*> dataPoints,
+TimeDomainDisplayPlot::plotNewData(const std::vector<double*> dataPoints,
 				   const int64_t numDataPoints,
 				   const double timeInterval)
 {
@@ -231,7 +231,7 @@ void TimeDomainDisplayPlot::_resetXAxisPoints()
 }
 
 void
-TimeDomainDisplayPlot::SetSampleRate(double sr, double units,
+TimeDomainDisplayPlot::setSampleRate(double sr, double units,
 				     const std::string &strunits)
 {
   double newsr = sr/units;
@@ -244,8 +244,8 @@ TimeDomainDisplayPlot::SetSampleRate(double sr, double units,
     //double display_units = ceil(log10(units)/2.0);
     double display_units = 4;
     setAxisTitle(QwtPlot::xBottom, QString("Time (%1)").arg(strunits.c_str()));
-    ((TimeDomainDisplayZoomer*)_zoomer)->SetTimePrecision(display_units);
-    ((TimeDomainDisplayZoomer*)_zoomer)->SetUnitType(strunits);
+    ((TimeDomainDisplayZoomer*)_zoomer)->setTimePrecision(display_units);
+    ((TimeDomainDisplayZoomer*)_zoomer)->setUnitType(strunits);
   }
 }
 

@@ -52,9 +52,8 @@ public slots:
   void setFFTAverage(const float);
   void setFFTWindowType(const gr::filter::firdes::win_type);
 
-  void setFrequencyRange(const double newCenterFrequency,
-			 const double newStartFrequency,
-			 const double newStopFrequency);
+  void setFrequencyRange(const double centerfreq,
+			 const double bandwidth);
   void setYaxis(double min, double max);
 
 private slots:
@@ -63,9 +62,6 @@ private slots:
 private:
   uint64_t _numRealDataPoints;
   QIntValidator* _intValidator;
-
-  double _startFrequency;
-  double _stopFrequency;
 
   int _fftsize;
   float _fftavg;

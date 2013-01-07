@@ -15,10 +15,10 @@ public:
   WaterfallData(const double, const double, const uint64_t, const unsigned int);
   virtual ~WaterfallData();
 
-  virtual void Reset();
-  virtual void Copy(const WaterfallData*);
+  virtual void reset();
+  virtual void copy(const WaterfallData*);
 
-  virtual void ResizeData(const double, const double, const uint64_t);
+  virtual void resizeData(const double, const double, const uint64_t);
 
   virtual QwtRasterData *copy() const;
 
@@ -29,15 +29,15 @@ public:
 
   virtual double value(double x, double y) const;
 
-  virtual uint64_t GetNumFFTPoints()const;
+  virtual uint64_t getNumFFTPoints()const;
   virtual void addFFTData(const double*, const uint64_t, const int);
 
-  virtual double* GetSpectrumDataBuffer()const;
-  virtual void SetSpectrumDataBuffer(const double*);
+  virtual double* getSpectrumDataBuffer()const;
+  virtual void setSpectrumDataBuffer(const double*);
 
-  virtual int GetNumLinesToUpdate()const;
-  virtual void SetNumLinesToUpdate(const int);
-  virtual void IncrementNumLinesToUpdate();
+  virtual int getNumLinesToUpdate()const;
+  virtual void setNumLinesToUpdate(const int);
+  virtual void incrementNumLinesToUpdate();
 
 protected:
 
