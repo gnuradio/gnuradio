@@ -119,10 +119,6 @@ include_directories(
     ${Boost_INCLUDE_DIRS}
 )
 
-# what are the following?
-# include_directories(${BLOCKS_INCLUDE_DIRS})
-# link_directories(${BLOCKS_LIBRARY_DIRS})
-
 link_directories(${Boost_LIBRARY_DIRS})
 
 ########################################################################
