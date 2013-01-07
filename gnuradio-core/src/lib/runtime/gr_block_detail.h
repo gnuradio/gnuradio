@@ -95,14 +95,23 @@ class GR_CORE_API gr_block_detail {
   /*!
    * \brief  Adds a new tag to the given output stream.
    *
-   * This takes the input parameters and builds a PMT tuple
-   * from it. It then calls gr_buffer::add_item_tag(pmt::pmt_t t),
+   * Calls gr_buffer::add_item_tag(),
    * which appends the tag onto its deque.
    *
    * \param which_output  an integer of which output stream to attach the tag
    * \param tag the tag object to add
    */
   void add_item_tag(unsigned int which_output, const gr_tag_t &tag);
+
+  /*!
+   * \brief  Removes a tag from the given input stream.
+   *
+   * Calls gr_buffer::remove_item_tag(), which removes the tag from its deque.
+   *
+   * \param which_input  an integer of which input stream to remove the tag from
+   * \param tag the tag object to add
+   */
+  void remove_item_tag(unsigned int which_input, const gr_tag_t &tag);
 
   /*!
    * \brief Given a [start,end), returns a vector of all tags in the range.
