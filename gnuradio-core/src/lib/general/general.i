@@ -70,6 +70,7 @@
 #include <gr_agc_cc.h>
 #include <gr_agc2_ff.h>
 #include <gr_agc2_cc.h>
+#include <gr_random_pdu.h>
 #include <gr_rms_cf.h>
 #include <gr_rms_ff.h>
 #include <gr_nlog10_ff.h>
@@ -194,6 +195,7 @@
 %include "gr_agc_cc.i"
 %include "gr_agc2_ff.i"
 %include "gr_agc2_cc.i"
+%include "gr_random_pdu.i"
 %include "gr_rms_cf.i"
 %include "gr_rms_ff.i"
 %include "gr_nlog10_ff.i"

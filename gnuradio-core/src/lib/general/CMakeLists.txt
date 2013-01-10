@@ -259,6 +259,7 @@ set(gr_core_general_triple_threats
     gr_pwr_squelch_cc
     gr_pwr_squelch_ff
     gr_quadrature_demod_cf
+    gr_random_pdu
     gr_rail_ff
     gr_regenerate_bb
     gr_remez
