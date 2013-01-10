@@ -45,6 +45,7 @@
         <block>gr_tagged_stream_to_pdu</block>
         <block>gr_tuntap_pdu</block>
         <block>gr_socket_pdu</block>
+        <block>gr_random_pdu</block>
     </cat>
 	<cat>
 		<name>Operators</name>
