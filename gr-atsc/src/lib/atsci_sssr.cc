@@ -158,7 +158,7 @@ atsci_sssr::update (sssr::sample_t sample_in,	 // input
     int	best_correlation_value;
     best_correlation_index = d_integrator.find_max (&best_correlation_value);
     d_seg_locked = best_correlation_value >= MIN_SEG_LOCK_CORRELATION_VALUE;
-    std::cout << "best = " << best_correlation_value << " min is " << MIN_SEG_LOCK_CORRELATION_VALUE << std::endl;
+    //std::cout << "best = " << best_correlation_value << " min is " << MIN_SEG_LOCK_CORRELATION_VALUE << std::endl;
     d_timing_adjust = d_quad_output[best_correlation_index];
 
     d_symbol_index = SYMBOL_INDEX_OFFSET - 1 - best_correlation_index;
