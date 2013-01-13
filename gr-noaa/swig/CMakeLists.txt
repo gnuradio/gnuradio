@@ -1,4 +1,4 @@
-# Copyright 2011 Free Software Foundation, Inc.
+# Copyright 2011,2012 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -46,17 +46,7 @@ GR_SWIG_INSTALL(
 install(
     FILES
     noaa_swig.i
-    noaa_hrpt_decoder.i
-    noaa_hrpt_deframer.i
-    noaa_hrpt_pll_cf.i
     ${CMAKE_CURRENT_BINARY_DIR}/noaa_swig_doc.i
     DESTINATION ${GR_INCLUDE_DIR}/gnuradio/swig
     COMPONENT "noaa_swig"
-)
-
-GR_PYTHON_INSTALL(
-    FILES
-    __init__.py
-    DESTINATION ${GR_PYTHON_DIR}/gnuradio/noaa
-    COMPONENT "noaa_python"
 )

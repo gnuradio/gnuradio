@@ -1,4 +1,4 @@
-# Copyright 2011,2012 Free Software Foundation, Inc.
+# Copyright 2012 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -18,31 +18,33 @@
 # Boston, MA 02110-1301, USA.
 
 ########################################################################
-# Setup the include and linker paths
+# Setup python install
 ########################################################################
-include_directories(
-    ${GR_NOAA_INCLUDE_DIRS}
-    ${GNURADIO_CORE_INCLUDE_DIRS}
-    ${GRUEL_INCLUDE_DIRS}
-    ${Boost_INCLUDE_DIRS}
+include(GrPython)
+
+GR_PYTHON_INSTALL(
+    FILES
+    __init__.py
+    DESTINATION ${GR_PYTHON_DIR}/gnuradio/noaa
+    COMPONENT "noaa_python"
 )
 
-link_directories(${Boost_LIBRARY_DIRS})
+########################################################################
+# Handle the unit tests
+########################################################################
+if(ENABLE_TESTING)
 
-########################################################################
-# Setup library
-########################################################################
-list(APPEND noaa_sources
-    hrpt_decoder_impl.cc
-    hrpt_deframer_impl.cc
-    hrpt_pll_cf_impl.cc
+list(APPEND GR_TEST_PYTHON_DIRS
+    ${CMAKE_BINARY_DIR}/gr-noaa/python
+    ${CMAKE_BINARY_DIR}/gr-noaa/swig
 )
 
-list(APPEND noaa_libs
-    gnuradio-core
-    ${Boost_LIBRARIES}
-)
+list(APPEND GR_TEST_TARGET_DEPS gnuradio-noaa)
 
-add_library(gnuradio-noaa SHARED ${noaa_sources})
-target_link_libraries(gnuradio-noaa ${noaa_libs})
-GR_LIBRARY_FOO(gnuradio-noaa RUNTIME_COMPONENT "noaa_runtime" DEVEL_COMPONENT "noaa_devel")
+include(GrTest)
+file(GLOB py_qa_test_files "qa_*.py")
+foreach(py_qa_test_file ${py_qa_test_files})
+    get_filename_component(py_qa_test_name ${py_qa_test_file} NAME_WE)
+    GR_ADD_TEST(${py_qa_test_name} ${PYTHON_EXECUTABLE} ${PYTHON_DASH_B} ${py_qa_test_file})
+endforeach(py_qa_test_file)
+endif(ENABLE_TESTING)

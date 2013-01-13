@@ -1,4 +1,4 @@
-# Copyright 2011,2012 Free Software Foundation, Inc.
+# Copyright 2012,2013 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -18,31 +18,14 @@
 # Boston, MA 02110-1301, USA.
 
 ########################################################################
-# Setup the include and linker paths
+# Install header files
 ########################################################################
-include_directories(
-    ${GR_NOAA_INCLUDE_DIRS}
-    ${GNURADIO_CORE_INCLUDE_DIRS}
-    ${GRUEL_INCLUDE_DIRS}
-    ${Boost_INCLUDE_DIRS}
+install(FILES
+    api.h
+    hrpt_decoder.h
+    hrpt_deframer.h
+    hrpt.h
+    hrpt_pll_cf.h
+    DESTINATION ${GR_INCLUDE_DIR}/gnuradio/noaa
+    COMPONENT "noaa_devel"
 )
-
-link_directories(${Boost_LIBRARY_DIRS})
-
-########################################################################
-# Setup library
-########################################################################
-list(APPEND noaa_sources
-    hrpt_decoder_impl.cc
-    hrpt_deframer_impl.cc
-    hrpt_pll_cf_impl.cc
-)
-
-list(APPEND noaa_libs
-    gnuradio-core
-    ${Boost_LIBRARIES}
-)
-
-add_library(gnuradio-noaa SHARED ${noaa_sources})
-target_link_libraries(gnuradio-noaa ${noaa_libs})
-GR_LIBRARY_FOO(gnuradio-noaa RUNTIME_COMPONENT "noaa_runtime" DEVEL_COMPONENT "noaa_devel")

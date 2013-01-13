@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2009 Free Software Foundation, Inc.
+ * Copyright 2009,2012 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -20,13 +20,28 @@
  * Boston, MA 02110-1301, USA.
  */
 
-GR_SWIG_BLOCK_MAGIC(noaa,hrpt_deframer)
+#ifndef INCLUDED_NOAA_HRPT_DECODER_H
+#define INCLUDED_NOAA_HRPT_DECODER_H
 
-noaa_hrpt_deframer_sptr
-noaa_make_hrpt_deframer();
+#include <noaa/api.h>
+#include <gr_sync_block.h>
 
-class noaa_hrpt_deframer : public gr_block
-{
-private:
-  noaa_hrpt_deframer();
-};
+namespace gr {
+  namespace noaa {
+
+    class NOAA_API hrpt_decoder : virtual public gr_sync_block
+    {
+    public:
+      // gr::noaa::hrpt_decoder::sptr
+      typedef boost::shared_ptr<hrpt_decoder> sptr;
+
+      /*!
+       * \brief Make NOAA HRPT Decoder
+       */
+      static sptr make(bool verbose, bool output_files);
+    };
+
+  } /* namespace noaa */
+} /* namespace gr */
+
+#endif /* INCLUDED_NOAA_HRPT_DECODER_H */

@@ -1,4 +1,4 @@
-# Copyright 2011 Free Software Foundation, Inc.
+# Copyright 2011,2012 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -33,7 +33,12 @@ GR_REGISTER_COMPONENT("gr-noaa" ENABLE_GR_NOAA
 )
 
 GR_SET_GLOBAL(GR_NOAA_INCLUDE_DIRS
-    ${CMAKE_CURRENT_SOURCE_DIR}/lib
+    ${CMAKE_CURRENT_SOURCE_DIR}/include
+    ${CMAKE_CURRENT_BINARY_DIR}/include
+)
+
+GR_SET_GLOBAL(GR_NOAA_SWIG_INCLUDE_DIRS
+    ${CMAKE_CURRENT_SOURCE_DIR}/swig
 )
 
 SET(GR_PKG_NOAA_EXAMPLES_DIR ${GR_PKG_DATA_DIR}/examples/noaa)
@@ -80,9 +85,11 @@ CPACK_COMPONENT("noaa_swig"
 ########################################################################
 # Add subdirectories
 ########################################################################
+add_subdirectory(include/noaa)
 add_subdirectory(lib)
 if(ENABLE_PYTHON)
     add_subdirectory(swig)
+    add_subdirectory(python)
     add_subdirectory(grc)
     add_subdirectory(examples)
 endif(ENABLE_PYTHON)

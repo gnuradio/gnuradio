@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2009 Free Software Foundation, Inc.
+ * Copyright 2009,2012 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -20,18 +20,29 @@
  * Boston, MA 02110-1301, USA.
  */
 
-GR_SWIG_BLOCK_MAGIC(noaa,hrpt_pll_cf)
+#ifndef INCLUDED_NOAA_HRPT_PLL_CF_H
+#define INCLUDED_NOAA_HRPT_PLL_CF_H
 
-noaa_hrpt_pll_cf_sptr
-noaa_make_hrpt_pll_cf(float alpha, float beta, float max_offset);
+#include <noaa/api.h>
+#include <gr_sync_block.h>
 
-class noaa_hrpt_pll_cf : public gr_sync_block
-{
-private:
-  noaa_hrpt_pll_cf();
+namespace gr {
+  namespace noaa {
 
-public:
-  void set_alpha(float alpha);
-  void set_beta(float beta);
-  void set_max_offset(float min_freq);
-};
+    class NOAA_API hrpt_pll_cf : virtual public gr_sync_block
+    {
+    public:
+      // gr::noaa::hrpt_pll_cf::sptr
+      typedef boost::shared_ptr<hrpt_pll_cf> sptr;
+
+      static sptr make(float alpha, float beta, float max_offset);
+
+      virtual void set_alpha(float alpha) = 0;
+      virtual void set_beta(float beta) = 0;
+      virtual void set_max_offset(float max_offset) = 0;
+    };
+
+  } /* namespace noaa */
+} /* namespace gr */
+
+#endif /* INCLUDED_NOAA_HRPT_PLL_CF_H */
