@@ -25,6 +25,7 @@
 
 #include <atsc_api.h>
 #include <atsci_syminfo.h>
+#include <vector>
 
 /*!
  * \brief abstract base class for ATSC equalizer
@@ -53,6 +54,10 @@ public:
   // CREATORS
   atsci_equalizer ();
   virtual ~atsci_equalizer ();
+
+  virtual std::vector<double> taps () {
+    return std::vector<double>();
+  }
 
   // MANIPULATORS
 
