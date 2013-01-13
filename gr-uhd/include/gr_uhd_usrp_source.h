@@ -59,9 +59,9 @@ class uhd_usrp_source;
  * RX Stream tagging:
  *
  * The following tag keys will be produced by the work function:
- *  - pmt::pmt_string_to_symbol("rx_time")
- *  - pmt::pmt_string_to_symbol("rx_rate")
- *  - pmt::pmt_string_to_symbol("rx_freq")
+ *  - pmt::string_to_symbol("rx_time")
+ *  - pmt::string_to_symbol("rx_rate")
+ *  - pmt::string_to_symbol("rx_freq")
  *
  * The timstamp tag value is a pmt tuple of the following:
  * (uint64 seconds, and double fractional seconds).
@@ -94,7 +94,7 @@ GR_UHD_API boost::shared_ptr<uhd_usrp_source> uhd_make_usrp_source(
  * RX Stream tagging:
  *
  * The following tag keys will be produced by the work function:
- *  - pmt::pmt_string_to_symbol("rx_time")
+ *  - pmt::string_to_symbol("rx_time")
  *
  * The timstamp tag value is a pmt tuple of the following:
  * (uint64 seconds, and double fractional seconds).

@@ -83,7 +83,7 @@ received by \b dbg on port \a print. Note here how we are just using
 strings to define the ports, not PMT symbols. This is a convenience to
 the user to be able to more easily type in the port names (for
 reference, you can create a PMT symbol in Python using the 
-pmt::pmt_intern function as pmt.pmt_intern("string")).
+pmt::intern function as pmt.intern("string")).
 
 Users can also query blocks for the names of their input and output
 ports using the following API calls:
@@ -157,13 +157,13 @@ void
 gr_message_debug::print(pmt::pmt_t msg)
 {
   std::cout << "***** MESSAGE DEBUG PRINT ********\n";
-  pmt::pmt_print(msg);
+  pmt::print(msg);
   std::cout << "**********************************\n";
 }
 \endcode
 
 The function simply takes in the PMT message and prints it. The method
-pmt::pmt_print is a function in the PMT library to print the
+pmt::print is a function in the PMT library to print the
 PMT in a friendly, (mostly) pretty manner.
 
 The gr_tagged_stream_to_pdu block only defines a single
@@ -196,11 +196,11 @@ gr_tagged_stream_to_pdu::send_message function that is shown below.
 void
 gr_tagged_stream_to_pdu::send_meassage()
 {
-  if(pmt::pmt_length(d_pdu_vector) != d_pdu_length) {
+  if(pmt::length(d_pdu_vector) != d_pdu_length) {
     throw std::runtime_error("msg length not correct");
   }
 
-  pmt::pmt_t msg = pmt::pmt_cons(d_pdu_meta,
+  pmt::pmt_t msg = pmt::cons(d_pdu_meta,
                                  d_pdu_vector);
   message_port_pub(pdu_port_id, msg);
 
@@ -247,9 +247,9 @@ flowgraph. These PDUs could come from another block or flowgraph, but
 here, we will create and insert them by hand.
 
 \code
-  port = pmt.pmt_intern("pdus")
-  msg = pmt.pmt_cons(pmt.PMT_NIL,
-                     pmt.pmt_make_u8vector(16, 0xFF))
+  port = pmt.intern("pdus")
+  msg = pmt.cons(pmt.PMT_NIL,
+                 pmt.make_u8vector(16, 0xFF))
   src.to_basic_block()._post(port, msg)
 \endcode
 

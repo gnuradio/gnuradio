@@ -59,9 +59,9 @@ class uhd_usrp_sink;
  * TX Stream tagging:
  *
  * The following tag keys will be consumed by the work function:
- *  - pmt::pmt_string_to_symbol("tx_sob")
- *  - pmt::pmt_string_to_symbol("tx_eob")
- *  - pmt::pmt_string_to_symbol("tx_time")
+ *  - pmt::string_to_symbol("tx_sob")
+ *  - pmt::string_to_symbol("tx_eob")
+ *  - pmt::string_to_symbol("tx_time")
  *
  * The sob and eob (start and end of burst) tag values are pmt booleans.
  * When present, burst tags should be set to true (pmt::PMT_T).
@@ -92,9 +92,9 @@ GR_UHD_API boost::shared_ptr<uhd_usrp_sink> uhd_make_usrp_sink(
  * TX Stream tagging:
  *
  * The following tag keys will be consumed by the work function:
- *  - pmt::pmt_string_to_symbol("tx_sob")
- *  - pmt::pmt_string_to_symbol("tx_eob")
- *  - pmt::pmt_string_to_symbol("tx_time")
+ *  - pmt::string_to_symbol("tx_sob")
+ *  - pmt::string_to_symbol("tx_eob")
+ *  - pmt::string_to_symbol("tx_time")
  *
  * The sob and eob (start and end of burst) tag values are pmt booleans.
  * When present, burst tags should be set to true (pmt::PMT_T).

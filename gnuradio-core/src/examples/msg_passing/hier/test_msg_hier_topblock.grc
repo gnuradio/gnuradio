@@ -72,7 +72,7 @@
     </param>
     <param>
       <key>msg</key>
-      <value>pmt.pmt_intern("UPDATED2")</value>
+      <value>pmt.intern("UPDATED2")</value>
     </param>
     <param>
       <key>period</key>
@@ -99,7 +99,7 @@
     </param>
     <param>
       <key>msg</key>
-      <value>pmt.pmt_intern("UPDATED")</value>
+      <value>pmt.intern("UPDATED")</value>
     </param>
     <param>
       <key>period</key>

@@ -125,8 +125,8 @@ class hier_block2(object):
         self.primitive_msg_disconnect(src.to_basic_block(), srcport, dst.to_basic_block(), dstport);
 
     def message_port_register_hier_in(self, portname):
-        self.primitive_message_port_register_hier_in(pmt.pmt_intern(portname));
+        self.primitive_message_port_register_hier_in(pmt.intern(portname));
 
     def message_port_register_hier_out(self, portname):
-        self.primitive_message_port_register_hier_out(pmt.pmt_intern(portname));
+        self.primitive_message_port_register_hier_out(pmt.intern(portname));
 
