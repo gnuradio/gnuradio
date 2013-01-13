@@ -1,6 +1,5 @@
-/* -*- c++ -*- */
 /*
- * Copyright 2005 Free Software Foundation, Inc.
+ * Copyright 2012 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -20,11 +19,15 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifdef HAVE_CONFIG_H
-#include "config.h"
+#ifndef INCLUDED_COMEDI_API_H
+#define INCLUDED_COMEDI_API_H
+
+#include <gruel/attributes.h>
+
+#ifdef gnuradio_comedi_EXPORTS
+#  define COMEDI_API __GR_ATTR_EXPORT
+#else
+#  define COMEDI_API __GR_ATTR_IMPORT
 #endif
 
-#include <gri_comedi.h>
-#include <algorithm>
-
-
+#endif /* INCLUDED_COMEDI_API_H */

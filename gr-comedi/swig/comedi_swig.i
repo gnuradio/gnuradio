@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2005 Free Software Foundation, Inc.
+ * Copyright 2005,2009,2012 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -20,9 +20,20 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef INCLUDED_GRI_COMEDI_H
-#define INCLUDED_GRI_COMEDI_H
+#define COMEDI_API
 
-#include <stdio.h>
+%include "gnuradio.i"
 
-#endif /* INCLUDED_GRI_COMEDI_H */
+//load generated python docstrings
+%include "comedi_swig_doc.i"
+
+%{
+#include "comedi/sink_s.h"
+#include "comedi/source_s.h"
+%}
+
+%include "comedi/sink_s.h"
+%include "comedi/source_s.h"
+
+GR_SWIG_BLOCK_MAGIC2(comedi, sink_s);
+GR_SWIG_BLOCK_MAGIC2(comedi, source_s);
