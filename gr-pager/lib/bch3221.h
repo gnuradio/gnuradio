@@ -1,5 +1,6 @@
+/* -*- c++ -*- */
 /*
- * Copyright 2006 Free Software Foundation, Inc.
+ * Copyright 2006,2012 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -19,13 +20,17 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef INCLUDED_PAGERI_BCH3221_H
-#define INCLUDED_PAGERI_BCH3221_H
+#ifndef INCLUDED_PAGER_BCH3221_H
+#define INCLUDED_PAGER_BCH3221_H
 
-#include <gr_types.h>
+namespace gr {
+  namespace pager {
 
-// Perform BCH (32,21) error correction on supplied data
-// Return number of errors found/corrected (0, 1, or 2)
-int pageri_bch3221(gr_int32 &data);
+    // Perform BCH (32,21) error correction on supplied data
+    // Return number of errors found/corrected (0, 1, or 2)
+    int bch3221(int &data);
 
-#endif /* INCLUDED_PAGERI_BCH3221_H */
+  } /* namespace pager */
+} /* namespace gr */
+
+#endif /* INCLUDED_PAGER_BCH3221_H */

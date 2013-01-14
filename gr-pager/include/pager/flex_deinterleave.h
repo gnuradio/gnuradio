@@ -1,5 +1,6 @@
+/* -*- c++ -*- */
 /*
- * Copyright 2006 Free Software Foundation, Inc.
+ * Copyright 2006,2012 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -19,20 +20,32 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
-#include <pager_flex_frame.h>
+#ifndef INCLUDED_PAGER_FLEX_DEINTERLEAVE_H
+#define INCLUDED_PAGER_FLEX_DEINTERLEAVE_H
 
-pager_flex_frame_sptr pager_make_flex_frame()
-{
-    return pager_flex_frame_sptr(new pager_flex_frame());
-}
+#include <pager/api.h>
+#include <gr_sync_decimator.h>
 
-pager_flex_frame::pager_flex_frame()
-{
-}
+namespace gr {
+  namespace pager {
+    
+    /*!
+     * \brief flex deinterleave description
+     * \ingroup pager_blk
+     */
+    class PAGER_API flex_deinterleave : virtual public gr_sync_decimator
+    {
+    public:
+      // gr::pager::flex_deinterleave::sptr
+      typedef boost::shared_ptr<flex_deinterleave> sptr;
 
-pager_flex_frame::~pager_flex_frame()
-{
-}
+      /*!
+       * \brief Make flex deinterleaver
+       */
+      static sptr make();
+    };
+
+  } /* namespace pager */
+} /* namespace gr */
+
+#endif /* INCLUDED_PAGER_FLEX_DEINTERLEAVE_H */

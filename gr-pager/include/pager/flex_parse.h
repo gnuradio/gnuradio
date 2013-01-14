@@ -1,5 +1,6 @@
+/* -*- c++ -*- */
 /*
- * Copyright 2006,2007 Free Software Foundation, Inc.
+ * Copyright 2006,2012 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -19,39 +20,33 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include "pageri_flex_modes.h"
+#ifndef INCLUDED_PAGER_FLEX_PARSE_H
+#define INCLUDED_PAGER_FLEX_PARSE_H
 
-const flex_mode_t flex_modes[] =
-{
-    { 0x870C78F3, 1600, 2 },
-    { 0xB0684F97, 1600, 4 },
-//  { 0xUNKNOWN,  3200, 2 },
-    { 0xDEA0215F, 3200, 4 },
-    { 0x4C7CB383, 3200, 4 }
-};
+#include <pager/api.h>
+#include <gr_sync_block.h>
+#include <gr_msg_queue.h>
+#include <sstream>
 
-const int num_flex_modes = sizeof(flex_modes)/sizeof(flex_modes[0]);
+namespace gr {
+  namespace pager {
 
-unsigned char flex_bcd[17] = "0123456789 U -][";
+#define FIELD_DELIM ((unsigned char)128)
 
-const char *flex_page_desc[] =
-{
-    "ENC",
-    "UNK",
-    "TON",
-    "NUM",
-    "SPN",
-    "ALN",
-    "BIN",
-    "NNM"
-};
+    /*!
+     * \brief flex parse description
+     * \ingroup pager_blk
+     */
+    class PAGER_API flex_parse : virtual public gr_sync_block
+    {
+    public:
+      // gr::pager::flex_parse::sptr
+      typedef boost::shared_ptr<flex_parse> sptr;
 
-int find_flex_mode(gr_int32 sync_code)
-{
-    for (int i = 0; i < num_flex_modes; i++)
-	if (flex_modes[i].sync == sync_code)
-	    return i;
+      static sptr make(gr_msg_queue_sptr queue, float freq);
+    };
 
-    // Not found
-    return -1;
-}
+  } /* namespace pager */
+} /* namespace gr */
+
+#endif /* INCLUDED_PAGER_FLEX_PARSE_H */

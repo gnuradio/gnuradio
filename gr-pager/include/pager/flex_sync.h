@@ -1,5 +1,6 @@
+/* -*- c++ -*- */
 /*
- * Copyright 2005,2006,2009,2012 Free Software Foundation, Inc.
+ * Copyright 2006 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -19,29 +20,30 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#define PAGER_API
+#ifndef INCLUDED_PAGER_FLEX_SYNC_H
+#define INCLUDED_PAGER_FLEX_SYNC_H
 
-%include "gnuradio.i"
+#include <pager/api.h>
+#include <gr_block.h>
 
-//load generated python docstrings
-%include "pager_swig_doc.i"
+namespace gr {
+  namespace pager {
 
-%{
-#include "pager/flex_frame.h"
-#include "pager/slicer_fb.h"
-#include "pager/flex_sync.h"
-#include "pager/flex_deinterleave.h"
-#include "pager/flex_parse.h"
-%}
+    /*!
+     * \brief flex sync description
+     * \ingroup pager_blk
+     */
+    class PAGER_API flex_sync : virtual public gr_block
+    {
+    public:
+      // gr::pager::flex_sync::sptr
+      typedef boost::shared_ptr<flex_sync> sptr;
 
-%include "pager/flex_frame.h"
-%include "pager/slicer_fb.h"
-%include "pager/flex_sync.h"
-%include "pager/flex_deinterleave.h"
-%include "pager/flex_parse.h"
+      static sptr make();
 
-GR_SWIG_BLOCK_MAGIC2(pager, flex_frame);
-GR_SWIG_BLOCK_MAGIC2(pager, slicer_fb);
-GR_SWIG_BLOCK_MAGIC2(pager, flex_sync);
-GR_SWIG_BLOCK_MAGIC2(pager, flex_deinterleave);
-GR_SWIG_BLOCK_MAGIC2(pager, flex_parse);
+    };
+
+  } /* namespace pager */
+} /* namespace gr */
+
+#endif /* INCLUDED_PAGER_FLEX_SYNC_H */

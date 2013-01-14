@@ -1,4 +1,4 @@
-# Copyright 2011 Free Software Foundation, Inc.
+# Copyright 2012,2013 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -18,35 +18,15 @@
 # Boston, MA 02110-1301, USA.
 
 ########################################################################
-# Setup swig generation
+# Install header files
 ########################################################################
-include(GrPython)
-include(GrSwig)
-
-set(GR_SWIG_INCLUDE_DIRS
-    ${GR_PAGER_INCLUDE_DIRS}
-    ${GNURADIO_CORE_SWIG_INCLUDE_DIRS}
-    ${GRUEL_INCLUDE_DIRS}
-    ${Boost_INCLUDE_DIRS}
-)
-
-set(GR_SWIG_DOC_FILE ${CMAKE_CURRENT_BINARY_DIR}/pager_swig_doc.i)
-set(GR_SWIG_DOC_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/../lib)
-
-set(GR_SWIG_LIBRARIES gnuradio-pager)
-
-GR_SWIG_MAKE(pager_swig pager_swig.i)
-
-GR_SWIG_INSTALL(
-    TARGETS pager_swig
-    DESTINATION ${GR_PYTHON_DIR}/gnuradio/pager
-    COMPONENT "pager_python"
-)
-
-install(
-    FILES
-    pager_swig.i
-    ${CMAKE_CURRENT_BINARY_DIR}/pager_swig_doc.i
-    DESTINATION ${GR_INCLUDE_DIR}/gnuradio/swig
-    COMPONENT "pager_swig"
+install(FILES
+    api.h
+    flex_frame.h
+    slicer_fb.h
+    flex_deinterleave.h
+    flex_parse.h
+    flex_sync.h
+    DESTINATION ${GR_INCLUDE_DIR}/gnuradio/noaa
+    COMPONENT "noaa_devel"
 )

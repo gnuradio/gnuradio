@@ -21,7 +21,7 @@
 #
 
 from gnuradio import gr, gr_unittest
-import pager_swig
+import pager_swig as pager
 
 class test_pager(gr_unittest.TestCase):
 

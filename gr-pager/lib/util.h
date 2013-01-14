@@ -1,5 +1,6 @@
+/* -*- c++ -*- */
 /*
- * Copyright 2005,2006,2009,2012 Free Software Foundation, Inc.
+ * Copyright 2006,2012 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -19,29 +20,18 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#define PAGER_API
+#ifndef INCLUDED_PAGER_UTIL_H
+#define INCLUDED_PAGER_UTIL_H
 
-%include "gnuradio.i"
+#include <stdint.h>
 
-//load generated python docstrings
-%include "pager_swig_doc.i"
+namespace gr {
+  namespace pager {
 
-%{
-#include "pager/flex_frame.h"
-#include "pager/slicer_fb.h"
-#include "pager/flex_sync.h"
-#include "pager/flex_deinterleave.h"
-#include "pager/flex_parse.h"
-%}
+    unsigned char reverse_bits8(unsigned char val);
+    int32_t reverse_bits32(int32_t val);
 
-%include "pager/flex_frame.h"
-%include "pager/slicer_fb.h"
-%include "pager/flex_sync.h"
-%include "pager/flex_deinterleave.h"
-%include "pager/flex_parse.h"
+  } /* namespace pager */
+} /* namespace gr */
 
-GR_SWIG_BLOCK_MAGIC2(pager, flex_frame);
-GR_SWIG_BLOCK_MAGIC2(pager, slicer_fb);
-GR_SWIG_BLOCK_MAGIC2(pager, flex_sync);
-GR_SWIG_BLOCK_MAGIC2(pager, flex_deinterleave);
-GR_SWIG_BLOCK_MAGIC2(pager, flex_parse);
+#endif /* INCLUDED_PAGER_UTIL_H */

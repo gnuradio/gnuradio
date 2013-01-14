@@ -1,5 +1,6 @@
+/* -*- c++ -*- */
 /*
- * Copyright 2006 Free Software Foundation, Inc.
+ * Copyright 2006,2012 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -23,14 +24,25 @@
 #include "config.h"
 #endif
 
-#include <pageri_bch3221.h>
+#include "flex_frame_impl.h"
 
-// Corrects supplied data word according to BCH3221 encoding and
-// returns the number of errors detected/corrected.
-//
-// Not implemented yet
+namespace gr {
+  namespace pager {
 
-int pageri_bch3221(gr_int32 &data)
-{
-    return 0;
-}
+    flex_frame::sptr
+    flex_frame::make()
+    {
+      return flex_frame::sptr
+	(new flex_frame_impl());
+    }
+
+    flex_frame_impl::flex_frame_impl()
+    {
+    }
+
+    flex_frame_impl::~flex_frame_impl()
+    {
+    }
+
+  } /* namespace pager */
+} /* namespace gr */

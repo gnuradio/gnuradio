@@ -1,5 +1,6 @@
+/* -*- c++ -*- */
 /*
- * Copyright 2006 Free Software Foundation, Inc.
+ * Copyright 2006,2007,2012 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -18,30 +19,35 @@
  * the Free Software Foundation, Inc., 51 Franklin Street,
  * Boston, MA 02110-1301, USA.
  */
-#ifndef INCLUDED_PAGER_FLEX_FRAME_H
-#define INCLUDED_PAGER_FLEX_FRAME_H
 
-#include <pager_api.h>
-#include <boost/shared_ptr.hpp>
+#ifndef INCLUDED_PAGER_SLICER_FB_H
+#define INCLUDED_PAGER_SLICER_FB_H
 
-class pager_flex_frame;
-typedef boost::shared_ptr<pager_flex_frame> pager_flex_frame_sptr;
+#include <pager/api.h>
+#include <gr_sync_block.h>
 
-/*!
- * \brief public constructor for pager_flex_frame
- */
-PAGER_API pager_flex_frame_sptr pager_make_flex_frame();
+namespace gr {
+  namespace pager {
+    
+    /*!
+     * \brief slicer description
+     * \ingroup pager_blk
+     */
+    class PAGER_API slicer_fb : virtual public gr_sync_block
+    {
+    public:
+      // gr::pager::slicer_fb::sptr
+      typedef boost::shared_ptr<slicer_fb> sptr;
 
-/*!
- * \brief flex_frame.
- */
-class PAGER_API pager_flex_frame {
-    // Constructor is private to force use of shared_ptr
-    pager_flex_frame();
-    friend PAGER_API pager_flex_frame_sptr pager_make_flex_frame();
+      /*!
+       * \brief Make a pager slicer
+       */
+      static sptr make(float alpha);
 
-public:
-    ~pager_flex_frame();
-};
+      virtual float dc_offset() const = 0;
+    };
 
-#endif /* INCLUDED_PAGER_FLEX_FRAME_H */
+  } /* namespace pager */
+} /* namespace gr */
+
+#endif /* INCLUDED_PAGER_SLICER_FB_H */

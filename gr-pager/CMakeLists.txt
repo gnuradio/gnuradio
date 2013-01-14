@@ -34,8 +34,15 @@ GR_REGISTER_COMPONENT("gr-pager" ENABLE_GR_PAGER
 )
 
 GR_SET_GLOBAL(GR_PAGER_INCLUDE_DIRS
-    ${CMAKE_CURRENT_SOURCE_DIR}/lib
+    ${CMAKE_CURRENT_SOURCE_DIR}/include
+    ${CMAKE_CURRENT_BINARY_DIR}/include
 )
+
+GR_SET_GLOBAL(GR_PAGER_SWIG_INCLUDE_DIRS
+    ${CMAKE_CURRENT_SOURCE_DIR}/swig
+)
+
+SET(GR_PKG_PAGER_EXAMPLES_DIR ${GR_PKG_DATA_DIR}/examples/pager)
 
 ########################################################################
 # Begin conditional configuration
@@ -79,6 +86,7 @@ CPACK_COMPONENT("pager_swig"
 ########################################################################
 # Add subdirectories
 ########################################################################
+add_subdirectory(include/pager)
 add_subdirectory(lib)
 if(ENABLE_PYTHON)
     add_subdirectory(python)

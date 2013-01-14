@@ -1,5 +1,6 @@
+/* -*- c++ -*- */
 /*
- * Copyright 2006 Free Software Foundation, Inc.
+ * Copyright 2006,2012 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -19,19 +20,22 @@
  * Boston, MA 02110-1301, USA.
  */
 
-class pager_flex_frame;
-typedef boost::shared_ptr<pager_flex_frame> pager_flex_frame_sptr;
-%template(pager_flex_frame_sptr) boost::shared_ptr<pager_flex_frame>;
+#ifndef INCLUDED_PAGER_FLEX_FRAME_IMPL_H
+#define INCLUDED_PAGER_FLEX_FRAME_IMPL_H
 
-%rename(flex_frame) pager_make_flex_frame;
-pager_flex_frame_sptr pager_make_flex_frame();
+#include <pager/flex_frame.h>
 
-/*!
- * \brief flex_frame.
- */
-class pager_flex_frame {
-    pager_flex_frame();
+namespace gr {
+  namespace pager {
 
-public:
-};
+    class flex_frame_impl : public flex_frame
+    {
+    public:
+      flex_frame_impl();
+      ~flex_frame_impl();
+    };
 
+  } /* namespace pager */
+} /* namespace gr */
+
+#endif /* INCLUDED_PAGER_FLEX_FRAME_IMPL_H */

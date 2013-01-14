@@ -32,15 +32,15 @@ link_directories(${Boost_LIBRARY_DIRS})
 ########################################################################
 # Setup library
 ########################################################################
-list(APPEND gr_pager_sources
-    pager_flex_frame.cc
-    pager_slicer_fb.cc
-    pager_flex_sync.cc
-    pager_flex_deinterleave.cc
-    pager_flex_parse.cc
-    pageri_bch3221.cc
-    pageri_flex_modes.cc
-    pageri_util.cc
+list(APPEND pager_sources
+    flex_deinterleave_impl.cc
+    flex_frame_impl.cc
+    flex_parse_impl.cc
+    flex_sync_impl.cc
+    slicer_fb_impl.cc
+    bch3221.cc
+    flex_modes.cc
+    util.cc
 )
 
 list(APPEND pager_libs
@@ -48,23 +48,6 @@ list(APPEND pager_libs
     ${Boost_LIBRARIES}
 )
 
-add_library(gnuradio-pager SHARED ${gr_pager_sources})
+add_library(gnuradio-pager SHARED ${pager_sources})
 target_link_libraries(gnuradio-pager ${pager_libs})
 GR_LIBRARY_FOO(gnuradio-pager RUNTIME_COMPONENT "pager_runtime" DEVEL_COMPONENT "pager_devel")
-
-########################################################################
-# Install header files
-########################################################################
-install(FILES
-    pager_api.h
-    pager_slicer_fb.h
-    pager_flex_sync.h
-    pager_flex_deinterleave.h
-    pager_flex_parse.h
-    pager_flex_frame.h
-    pageri_bch3221.h
-    pageri_flex_modes.h
-    pageri_util.h
-    DESTINATION ${GR_INCLUDE_DIR}/gnuradio
-    COMPONENT "pager_devel"
-)
