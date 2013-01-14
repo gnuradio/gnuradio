@@ -1,3 +1,7 @@
 *~
 *.pyc
 *.pyo
+build_next
+build_master
+build
+gr-digital/examples/demod/*.py
