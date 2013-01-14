@@ -37,6 +37,9 @@ public:
   virtual void reset ();
   virtual int ntaps () const;
   virtual int npretaps () const;
+  std::vector<double> taps () {
+    return d_taps;
+  }
 
 protected:
   FILE *trainingfile;

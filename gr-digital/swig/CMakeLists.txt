@@ -105,11 +105,13 @@ execute_process(
 )
 
 set(GR_SWIG_INCLUDE_DIRS
-    ${GR_ANALOG_INCLUDE_DIRS}
-    ${GR_DIGITAL_INCLUDE_DIRS}
-    ${GNURADIO_CORE_SWIG_INCLUDE_DIRS}
     ${CMAKE_CURRENT_BINARY_DIR}
     ${CMAKE_CURRENT_BINARY_DIR}/../include
+    ${GR_DIGITAL_INCLUDE_DIRS}
+    ${GR_ANALOG_INCLUDE_DIRS}
+    ${GNURADIO_CORE_SWIG_INCLUDE_DIRS}
+    ${GRUEL_INCLUDE_DIRS}
+    ${Boost_INCLUDE_DIRS}
 )
 
 # Setup swig docs to depend on includes and pull in from build directory

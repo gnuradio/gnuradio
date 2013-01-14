@@ -225,6 +225,7 @@ class atsc_equalizer : public gr_sync_block
 
 public:
   void reset();
+  std::vector<double> taps();
 };
 
 // ----------------------------------------------------------------

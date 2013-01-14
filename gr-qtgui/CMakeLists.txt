@@ -1,4 +1,4 @@
-# Copyright 2010-2011 Free Software Foundation, Inc.
+# Copyright 2010-2011,2013 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -64,7 +64,8 @@ SET(GR_PKG_QTGUI_EXAMPLES_DIR ${GR_PKG_DATA_DIR}/examples/qt-gui)
 ########################################################################
 if(ENABLE_GR_QTGUI)
 
-include(${QT_USE_FILE}) #sets up the environment
+# populate the environment with QT variables
+include(GrSetupQt4)
 
 ########################################################################
 # Setup CPack components

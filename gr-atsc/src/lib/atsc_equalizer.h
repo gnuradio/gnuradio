@@ -25,6 +25,7 @@
 #include <atsc_api.h>
 #include <gr_sync_block.h>
 #include <atsci_equalizer.h>
+#include <vector>
 
 class atsc_equalizer;
 typedef boost::shared_ptr<atsc_equalizer> atsc_equalizer_sptr;
@@ -46,6 +47,10 @@ class ATSC_API atsc_equalizer : public gr_sync_block
 
 public:
   void forecast (int noutput_items, gr_vector_int &ninput_items_required);
+
+  std::vector<double> taps() {
+    return d_equalizer->taps();
+  }
 
   int work (int noutput_items,
 	    gr_vector_const_void_star &input_items,

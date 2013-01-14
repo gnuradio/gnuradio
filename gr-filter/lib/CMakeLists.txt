@@ -90,12 +90,13 @@ expand_cc(rational_resampler_base_XXX_impl ccc ccf fcc fff fsf scc)
 # Setup the include and linker paths
 ########################################################################
 include_directories(
-    ${GR_FILTER_INCLUDE_DIRS}
     ${CMAKE_CURRENT_SOURCE_DIR}
     ${CMAKE_CURRENT_BINARY_DIR}
-    ${VOLK_INCLUDE_DIRS}
-    ${GNURADIO_CORE_INCLUDE_DIRS}
+    ${GR_FILTER_INCLUDE_DIRS}
     ${GR_FFT_INCLUDE_DIRS}
+    ${GNURADIO_CORE_INCLUDE_DIRS}
+    ${VOLK_INCLUDE_DIRS}
+    ${GRUEL_INCLUDE_DIRS}
     ${Boost_INCLUDE_DIRS}
 )
 
