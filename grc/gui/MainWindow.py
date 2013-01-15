@@ -180,6 +180,9 @@ class MainWindow(gtk.Window):
 			if file_path: Messages.send_end_load()
 		except Exception, e: #return on failure
 			Messages.send_fail_load(e)
+			if isinstance(e, KeyError) and str(e) == "'options'":
+				# This error is unrecoverable, so crash gracefully
+				exit(-1)
 			return
 		#add this page to the notebook
 		self.notebook.append_page(page, page.get_tab())
