@@ -384,6 +384,14 @@ WaterfallDisplayPlot::replot()
   QwtPlot::replot();
 }
 
+void
+WaterfallDisplayPlot::clearData()
+{
+  for(int i = 0; i < _nplots; i++) {
+    d_data[i]->reset();
+  }
+}
+
 int
 WaterfallDisplayPlot::getIntensityColorMapType(int which) const
 {

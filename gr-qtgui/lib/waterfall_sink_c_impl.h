@@ -81,6 +81,8 @@ namespace gr {
       QWidget*  qwidget();
       PyObject* pyqwidget();
 
+      void clear_data();
+
       void set_fft_size(const int fftsize);
       int fft_size() const;
       void set_fft_average(const float fftavg);

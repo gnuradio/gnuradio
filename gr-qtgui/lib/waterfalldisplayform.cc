@@ -191,3 +191,9 @@ WaterfallDisplayForm::autoScale()
 
   getPlot()->setIntensityRange(min_int, max_int);
 }
+
+void
+WaterfallDisplayForm::clearData()
+{
+  getPlot()->clearData();
+}

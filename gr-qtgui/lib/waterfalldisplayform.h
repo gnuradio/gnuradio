@@ -44,6 +44,8 @@ class WaterfallDisplayForm : public DisplayForm
   int getFFTSize() const;
   float getFFTAverage() const;
   gr::filter::firdes::win_type getFFTWindowType() const;
+						       
+  void clearData();
 
 public slots:
   void customEvent(QEvent *e);

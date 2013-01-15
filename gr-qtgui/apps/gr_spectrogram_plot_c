@@ -85,6 +85,7 @@ class my_top_block(gr.top_block):
         self.gui_snk = qtgui.waterfall_sink_c(self._psd_size, gr.firdes.WIN_BLACKMAN_hARRIS,
                                               self._center_freq, self._samp_rate,
                                               "GNU Radio Spectrogram Plot")
+
         n = 0
         self.srcs = list()
         for f in filelist:
@@ -112,6 +113,7 @@ class my_top_block(gr.top_block):
     def reset(self, newstart, newnsamps):
         self.stop()
         self.wait()
+        self.gui_snk.clear_data()
 
         self._start = newstart
         self._nsamps = newnsamps

@@ -147,6 +147,12 @@ namespace gr {
     }
 
     void
+    waterfall_sink_f_impl::clear_data()
+    {
+      d_main_gui->clearData();
+    }
+
+    void
     waterfall_sink_f_impl::set_fft_size(const int fftsize)
     {
       d_fftsize = fftsize;
