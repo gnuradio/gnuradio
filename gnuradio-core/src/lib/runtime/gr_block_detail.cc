@@ -156,8 +156,8 @@ gr_block_detail::add_item_tag(unsigned int which_output, const gr_tag_t &tag)
 void
 gr_block_detail::remove_item_tag(unsigned int which_input, const gr_tag_t &tag)
 {
-  if(!pmt_is_symbol(tag.key)) {
-    throw pmt_wrong_type("gr_block_detail::add_item_tag key", tag.key);
+  if(!pmt::is_symbol(tag.key)) {
+    throw pmt::wrong_type("gr_block_detail::add_item_tag key", tag.key);
   }
   else {
     // Add tag to gr_buffer's deque tags
