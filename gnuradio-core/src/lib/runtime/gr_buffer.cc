@@ -234,6 +234,18 @@ gr_buffer::add_item_tag(const gr_tag_t &tag)
 }
 
 void
+gr_buffer::remove_item_tag(const gr_tag_t &tag)
+{
+  gruel::scoped_lock guard(*mutex());
+  for (std::deque<gr_tag_t>::iterator it = d_item_tags.begin(); it != d_item_tags.end(); ++it) {
+    if (*it == tag) {
+      d_item_tags.erase(it);
+      break;
+    }
+  }
+}
+
+void
 gr_buffer::prune_tags(uint64_t max_time)
 {
   /* NOTE: this function _should_ lock the mutex before editing
