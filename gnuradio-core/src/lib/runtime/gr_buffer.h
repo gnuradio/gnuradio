@@ -103,6 +103,15 @@ class GR_CORE_API gr_buffer {
   void add_item_tag(const gr_tag_t &tag);
 
   /*!
+   * \brief  Removes an existing tag from the buffer.
+   *
+   * If no such tag is found, does nothing.
+   *
+   * \param tag        the tag that needs to be removed
+   */
+  void remove_item_tag(const gr_tag_t &tag);
+
+  /*!
    * \brief  Removes all tags before \p max_time from buffer
    *
    * \param max_time        the time (item number) to trim up until.
