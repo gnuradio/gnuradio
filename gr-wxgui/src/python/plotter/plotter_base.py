@@ -88,9 +88,9 @@ class plotter_base(wx.glcanvas.GLCanvas, common.mutex):
 		"""
 		attribList = (wx.glcanvas.WX_GL_DOUBLEBUFFER, wx.glcanvas.WX_GL_RGBA)
 		wx.glcanvas.GLCanvas.__init__(self, parent, attribList=attribList);
-                self.use_persistence=False
-                self.persist_alpha=2.0/15
-                self.clear_accum=True
+		self.use_persistence=False
+		self.persist_alpha=2.0/15
+		self.clear_accum=True
 		self._gl_init_flag = False
 		self._resized_flag = True
 		self._init_fcns = list()
@@ -100,12 +100,12 @@ class plotter_base(wx.glcanvas.GLCanvas, common.mutex):
 		self.Bind(wx.EVT_SIZE, self._on_size)
 		self.Bind(wx.EVT_ERASE_BACKGROUND, lambda e: None)
 
-        def set_use_persistence(self,enable):
-                self.use_persistence=enable
-                self.clear_accum=True
+	def set_use_persistence(self,enable):
+		self.use_persistence=enable
+		self.clear_accum=True
 
-        def set_persist_alpha(self,analog_alpha):
-                self.persist_alpha=analog_alpha
+	def set_persist_alpha(self,analog_alpha):
+		self.persist_alpha=analog_alpha
 
 	def new_gl_cache(self, draw_fcn, draw_pri=50):
 		"""
@@ -141,7 +141,7 @@ class plotter_base(wx.glcanvas.GLCanvas, common.mutex):
 		"""
 		self.lock()
 		self._resized_flag = True
-                self.clear_accum=True
+		self.clear_accum=True
 		self.unlock()
 
 	def _on_paint(self, event):
@@ -153,12 +153,14 @@ class plotter_base(wx.glcanvas.GLCanvas, common.mutex):
 		"""
 		self.lock()
 		self.SetCurrent()
-		#check if gl was initialized
+
+		# check if gl was initialized
 		if not self._gl_init_flag:
 			GL.glClearColor(*BACKGROUND_COLOR_SPEC)
 			for fcn in self._init_fcns: fcn()
 			self._gl_init_flag = True
-		#check for a change in window size
+
+		# check for a change in window size
 		if self._resized_flag:
 			self.width, self.height = self.GetSize()
 			GL.glMatrixMode(GL.GL_PROJECTION)
@@ -169,35 +171,28 @@ class plotter_base(wx.glcanvas.GLCanvas, common.mutex):
 			GL.glViewport(0, 0, self.width, self.height)
 			for cache in self._gl_caches: cache.changed(True)
 			self._resized_flag = False
-		#clear, draw functions, swap
+
+		# clear buffer
 		GL.glClear(GL.GL_COLOR_BUFFER_BIT)
 
-                if False:
-                  GL.glEnable (GL.GL_LINE_SMOOTH)
-                  GL.glEnable (GL.GL_POLYGON_SMOOTH)
-                  GL.glEnable (GL.GL_BLEND)
-                  GL.glBlendFunc (GL.GL_SRC_ALPHA, GL.GL_ONE_MINUS_SRC_ALPHA)
-                  GL.glHint (GL.GL_LINE_SMOOTH_HINT, GL.GL_NICEST) #GL.GL_DONT_CARE)
-                  GL.glHint(GL.GL_POLYGON_SMOOTH_HINT, GL.GL_NICEST)
-                  #GL.glLineWidth (1.5)
-
-                  GL.glEnable(GL.GL_MULTISAMPLE) #Enable Multisampling anti-aliasing
-
-
+		# draw functions
 		for fcn in self._draw_fcns: fcn[1]()
 
-                if self.use_persistence:
-                  if self.clear_accum:
-                    #GL.glClear(GL.GL_ACCUM_BUFFER_BIT)
-                    try:
-                        GL.glAccum(GL.GL_LOAD, 1.0)
-                    except:
-						pass
-                    self.clear_accum=False
+		# apply persistence
+		if self.use_persistence:
+			if self.clear_accum:
+				#GL.glClear(GL.GL_ACCUM_BUFFER_BIT)
+				try:
+					GL.glAccum(GL.GL_LOAD, 1.0)
+				except:
+					pass
+				self.clear_accum=False
 
-                  GL.glAccum(GL.GL_MULT, 1.0-self.persist_alpha)
-                  GL.glAccum(GL.GL_ACCUM, self.persist_alpha)
-                  GL.glAccum(GL.GL_RETURN, 1.0)
+			GL.glAccum(GL.GL_MULT, 1.0-self.persist_alpha)
+			GL.glAccum(GL.GL_ACCUM, self.persist_alpha)
+			GL.glAccum(GL.GL_RETURN, 1.0)
+
+		# show result
 		self.SwapBuffers()
 		self.unlock()
 
