@@ -172,25 +172,28 @@ class plotter_base(wx.glcanvas.GLCanvas, common.mutex):
 			for cache in self._gl_caches: cache.changed(True)
 			self._resized_flag = False
 
-		# clear buffer
-		GL.glClear(GL.GL_COLOR_BUFFER_BIT)
+		# clear buffer if needed
+		if self.clear_accum or not self.use_persistence:
+			GL.glClear(GL.GL_COLOR_BUFFER_BIT)
+			self.clear_accum=False
+
+		# apply fading
+		if self.use_persistence:
+			GL.glEnable(GL.GL_BLEND)
+			GL.glBlendFunc(GL.GL_SRC_ALPHA, GL.GL_ONE_MINUS_SRC_ALPHA)
+
+			GL.glBegin(GL.GL_QUADS)
+			GL.glColor4f(1,1,1,self.persist_alpha)
+			GL.glVertex2f(0, self.height)
+			GL.glVertex2f(self.width, self.height)
+			GL.glVertex2f(self.width, 0)
+			GL.glVertex2f(0, 0)
+			GL.glEnd()
+
+			GL.glDisable(GL.GL_BLEND)
 
 		# draw functions
 		for fcn in self._draw_fcns: fcn[1]()
-
-		# apply persistence
-		if self.use_persistence:
-			if self.clear_accum:
-				#GL.glClear(GL.GL_ACCUM_BUFFER_BIT)
-				try:
-					GL.glAccum(GL.GL_LOAD, 1.0)
-				except:
-					pass
-				self.clear_accum=False
-
-			GL.glAccum(GL.GL_MULT, 1.0-self.persist_alpha)
-			GL.glAccum(GL.GL_ACCUM, self.persist_alpha)
-			GL.glAccum(GL.GL_RETURN, 1.0)
 
 		# show result
 		self.SwapBuffers()
