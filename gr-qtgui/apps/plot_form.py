@@ -59,10 +59,17 @@ class dialog_box(QtGui.QWidget):
         self.connect(self.end_edit, QtCore.SIGNAL("returnPressed()"),
                      self.update_points)
 
+        self.auto_scale = QtGui.QCheckBox("Auto Scale", self)
+        if(self.top_block._auto_scale):
+            self.auto_scale.setChecked(self.top_block._auto_scale)
+        self.connect(self.auto_scale, QtCore.SIGNAL("stateChanged(int)"),
+                     self.set_auto_scale)
+
         self.layout = QtGui.QGridLayout(self)
         self.layout.addWidget(top_block.get_gui(), 1,0,1,2)
         self.layout.addLayout(self.start_form, 2,0,1,1)
         self.layout.addLayout(self.end_form, 2,1,1,1)
+        self.layout.addWidget(self.auto_scale, 1,3,1,1)
 
         # Create a save action
         self.save_act = QtGui.QAction("Save", self)
@@ -125,3 +132,8 @@ class dialog_box(QtGui.QWidget):
         else:
             qpix.save(filename, "JPEG");
 
+    def set_auto_scale(self, state):
+        if(state):
+            self.top_block.auto_scale(True)
+        else:
+            self.top_block.auto_scale(False)

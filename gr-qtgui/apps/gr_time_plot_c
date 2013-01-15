@@ -49,6 +49,8 @@ def read_samples(filename, start, in_size):
     fhandle = open(filename, 'r')
     fhandle.seek(start*gr.sizeof_gr_complex, 0)
     data = scipy.fromfile(fhandle, dtype=scipy.complex64, count=in_size)
+    data_min = 1.1*float(min(data.real.min(), data.imag.min()))
+    data_max = 1.1*float(max(data.real.max(), data.imag.max()))
     data = data.tolist()
     fhandle.close()
 
@@ -56,10 +58,11 @@ def read_samples(filename, start, in_size):
         print "Warning: read in {0} samples but asked for {1} samples.".format(
             len(data), in_size)
 
-    return data
+    return data, data_min, data_max
 
 class my_top_block(gr.top_block):
-    def __init__(self, filelist, samp_rate, start, nsamples, max_nsamples):
+    def __init__(self, filelist, samp_rate, start, nsamples, max_nsamples,
+                 auto_scale):
         gr.top_block.__init__(self)
 
         self._filelist = filelist
@@ -67,6 +70,7 @@ class my_top_block(gr.top_block):
         self._start = start
         self._max_nsamps = max_nsamples
         self._nsigs = len(self._filelist)
+        self._auto_scale = auto_scale
 
         if(nsamples is None):
             self._nsamps = max_nsamples
@@ -80,8 +84,15 @@ class my_top_block(gr.top_block):
                                          "GNU Radio Time Plot", self._nsigs)
         n = 0
         self.srcs = list()
+        self._data_min = sys.maxint
+        self._data_max = -sys.maxint - 1
         for f in filelist:
-            data = read_samples(f, self._start, self._nsamps)
+            data,_min,_max = read_samples(f, self._start, self._nsamps)
+            if(_min < self._data_min):
+                self._data_min = _min
+            if(_max > self._data_max):
+                self._data_max = _max
+
             self.srcs.append(gr.vector_source_c(data))
 
             # Set default labels based on file names
@@ -96,7 +107,9 @@ class my_top_block(gr.top_block):
         for i,s in enumerate(self.srcs[1:]):
             self.connect(s, (self.gui_snk, i+1))
 
-        self.gui_snk.set_update_time(0);
+        self.gui_snk.set_update_time(0)
+
+        self.auto_scale(self._auto_scale)
 
         # Get Python Qt references
         pyQt  = self.gui_snk.pyqwidget()
@@ -111,8 +124,15 @@ class my_top_block(gr.top_block):
 
         self._start = newstart
 
+        self._data_min = sys.maxint
+        self._data_max = -sys.maxint - 1
         for s,f in zip(self.srcs, self._filelist):
-            data = read_samples(f, self._start, newnsamps)
+            data,_min,_max = read_samples(f, self._start, newnsamps)
+            if(_min < self._data_min):
+                self._data_min = _min
+            if(_max > self._data_max):
+                self._data_max = _max
+
             s.set_data(data)
             if(len(data) < newnsamps):
                 newnsamps = len(data)
@@ -120,7 +140,16 @@ class my_top_block(gr.top_block):
         self._nsamps = newnsamps
         self.gui_snk.set_nsamps(self._nsamps)
 
+        self.auto_scale(self._auto_scale)
+
         self.start()
+
+    def auto_scale(self, state):
+        if(state):
+            self.gui_snk.set_y_axis(self._data_min, self._data_max)
+            self._auto_scale = True
+        else:
+            self._auto_scale = False
 
 def main():
     description = "Plots a list of files on a scope plot. Files are a binary list of complex floats."
@@ -132,6 +161,8 @@ def main():
                       help="Starting sample number [default=%default]")
     parser.add_option("-r", "--sample-rate", type="eng_float", default=1.0,
                       help="Set the sample rate of the signal [default=%default]")
+    parser.add_option("", "--auto-scale", action="store_false", default=True,
+                      help="Set plot to auto-scale on signal [default=%default]")
     (options, args) = parser.parse_args()
 
     if(len(args) < 1):
@@ -151,7 +182,8 @@ def main():
     max_nsamples = min(filesizes)
 
     tb = my_top_block(filelist, options.sample_rate,
-                      options.start, nsamples, max_nsamples);
+                      options.start, nsamples, max_nsamples,
+                      options.auto_scale)
 
     main_box = dialog_box(tb, 'GNU Radio Time Plot')
     main_box.show()
