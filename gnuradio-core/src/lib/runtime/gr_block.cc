@@ -187,6 +187,13 @@ gr_block::add_item_tag(unsigned int which_output,
 }
 
 void
+gr_block::remove_item_tag(unsigned int which_input,
+		       const gr_tag_t &tag)
+{
+  d_detail->remove_item_tag(which_input, tag);
+}
+
+void
 gr_block::get_tags_in_range(std::vector<gr_tag_t> &v,
 			    unsigned int which_output,
 			    uint64_t start, uint64_t end)

@@ -39,10 +39,19 @@ Is the library path environment variable set correctly?
 	d.run()
 	exit(-1)
 
-from gnuradio import gr
 from optparse import OptionParser
+import os
 
 if __name__ == "__main__":
+	if ('GR_DONT_LOAD_PREFS' in os.environ.keys() and
+		(not 'GRC_BLOCKS_PATH' in os.environ.keys() or len(os.environ['GRC_BLOCKS_PATH']) == 0)):
+		d = gtk.MessageDialog(
+			type=gtk.MESSAGE_ERROR,
+			buttons=gtk.BUTTONS_CLOSE,
+			message_format="""Can't find block definitions. Use config.conf or GRC_BLOCKS_PATH. """)
+		d.set_title("No block definitions available.")
+		d.run()
+		exit(-1)
 	usage = 'usage: %prog [options] [saved flow graphs]'
 	version = """
 GNU Radio Companion %s

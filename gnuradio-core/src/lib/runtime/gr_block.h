@@ -416,6 +416,42 @@ class GR_CORE_API gr_block : public gr_basic_block {
   void add_item_tag(unsigned int which_output, const gr_tag_t &tag);
 
   /*!
+   * \brief  Removes a tag from the given input buffer.
+   *
+   * \param which_input an integer of which input stream to remove the tag from
+   * \param abs_offset   a uint64 number of the absolute item number
+   *                     assicated with the tag. Can get from nitems_written.
+   * \param key          the tag key as a PMT symbol
+   * \param value        any PMT holding any value for the given key
+   * \param srcid        optional source ID specifier; defaults to PMT_F
+   *
+   * If no such tag is found, does nothing.
+   */
+  inline void remove_item_tag(unsigned int which_input,
+		    uint64_t abs_offset,
+		    const pmt::pmt_t &key,
+		    const pmt::pmt_t &value,
+		    const pmt::pmt_t &srcid=pmt::PMT_F)
+  {
+      gr_tag_t tag;
+      tag.offset = abs_offset;
+      tag.key = key;
+      tag.value = value;
+      tag.srcid = srcid;
+      this->remove_item_tag(which_input, tag);
+  }
+
+ /*!
+   * \brief  Removes a tag from the given input buffer.
+   *
+   * If no such tag is found, does nothing.
+   *
+   * \param which_input an integer of which input stream to remove the tag from
+   * \param tag the tag object to remove
+   */
+  void remove_item_tag(unsigned int which_input, const gr_tag_t &tag);
+
+  /*!
    * \brief Given a [start,end), returns a vector of all tags in the range.
    *
    * Range of counts is from start to end-1.
