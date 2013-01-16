@@ -67,8 +67,8 @@ class dialog_box(QtGui.QWidget):
 
         self.layout = QtGui.QGridLayout(self)
         self.layout.addWidget(top_block.get_gui(), 1,0,1,2)
-        self.layout.addLayout(self.start_form, 2,0,1,1)
-        self.layout.addLayout(self.end_form, 2,1,1,1)
+        self.layout.addLayout(self.start_form, 3,0,1,1)
+        self.layout.addLayout(self.end_form, 3,1,1,1)
         self.layout.addWidget(self.auto_scale, 1,3,1,1)
 
         # Create a save action
@@ -89,9 +89,26 @@ class dialog_box(QtGui.QWidget):
         self.menu.addAction(self.exit_act)
 
         self.layout.addWidget(self.menu, 0,0,1,2)
-        
+
+        self.posbar = QtGui.QSlider(QtCore.Qt.Horizontal, self)
+        self.posbar.setMaximum(self.top_block._max_nsamps)
+        self.posbar.setPageStep(self.top_block._nsamps)
+        self.connect(self.posbar, QtCore.SIGNAL("valueChanged(int)"),
+                     self.update_position)
+        self.layout.addWidget(self.posbar, 2,0,1,2)
+
         self.resize(800, 500)
 
+    def update_position(self, value):
+        self._start = value
+        self._end = value + self.posbar.pageStep()
+
+        self.start_edit.setText("{0}".format(self._start))
+        self.end_edit.setText("{0}".format(self._end))
+
+        if(value != self.top_block._max_nsamps):
+            self.top_block.reset(self._start, self.posbar.pageStep())
+        
     def update_points(self):
         newstart = self.start_edit.text().toUInt()[0]
         newend = self.end_edit.text().toUInt()[0]

@@ -21,6 +21,7 @@ include(GrPython)
 
 GR_PYTHON_INSTALL(
     FILES
+    plot_time_base.py
     plot_form.py
     DESTINATION ${GR_PYTHON_DIR}/gnuradio/qtgui
     COMPONENT "qtgui_python"
