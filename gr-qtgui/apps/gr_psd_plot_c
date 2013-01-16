@@ -60,7 +60,7 @@ def read_samples_and_pad(filename, start, in_size, min_size):
 
 class my_top_block(gr.top_block):
     def __init__(self, filelist, fc, samp_rate, psdsize, start,
-                 nsamples, max_nsamples, avg=1.0):
+                 nsamples, max_nsamples, avg=1.0, auto_scale=True):
         gr.top_block.__init__(self)
 
         self._filelist = filelist
@@ -71,6 +71,7 @@ class my_top_block(gr.top_block):
         self._max_nsamps = max_nsamples
         self._nsigs = len(self._filelist)
         self._avg = avg
+        self._auto_scale = auto_scale
 
         if(nsamples is None):
             self._nsamps = max_nsamples
@@ -125,6 +126,13 @@ class my_top_block(gr.top_block):
 
         self.start()
 
+    def auto_scale(self, state):
+        if(state):
+            self.gui_snk.set_y_axis(self._data_min, self._data_max)
+            self._auto_scale = True
+        else:
+            self._auto_scale = False
+
 def main():
     description = "Plots the PSDs of a list of files. Files are a binary list of complex floats."
     parser = OptionParser(option_class=eng_option, description=description,
@@ -141,6 +149,8 @@ def main():
                       help="Set the sample rate of the signal [default=%default]")
     parser.add_option("-a", "--average", type="float", default=1.0,
                       help="Set amount of averaging (smaller=more averaging) [default=%default]")
+    parser.add_option("", "--no-auto-scale", action="store_true", default=False,
+                      help="Do not auto-scale the plot [default=%default]")
     (options, args) = parser.parse_args()
 
     if(len(args) < 1):
@@ -163,7 +173,9 @@ def main():
                       options.center_frequency, options.sample_rate,
                       options.psd_size,
                       options.start, nsamples, max_nsamples,
-                      options.average);
+                      options.average,
+                      False)
+                      #not options.no_auto_scale)
 
     main_box = dialog_box(tb, 'GNU Radio PSD Plot')
     main_box.show()
