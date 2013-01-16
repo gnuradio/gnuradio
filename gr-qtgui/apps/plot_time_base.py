@@ -41,88 +41,10 @@ except ImportError:
 
 try:
     from gnuradio.qtgui.plot_form import *
+    from gnuradio.qtgui.plot_base import *
 except ImportError:
     from plot_form import *
-
-def read_samples(filename, start, in_size, dtype, dtype_size):
-    # Read in_size number of samples from file
-    fhandle = open(filename, 'r')
-    fhandle.seek(start*dtype_size, 0)
-    data = scipy.fromfile(fhandle, dtype=dtype, count=in_size)
-    data_min = 1.1*data.min()
-    data_max = 1.1*data.max()
-    data = data.tolist()
-    fhandle.close()
-
-    if(len(data) < in_size):
-        print "Warning: read in {0} samples but asked for {1} samples.".format(
-            len(data), in_size)
-
-    return data, data_min, data_max
-
-def read_samples_f(filename, start, in_size):
-    return read_samples(filename, start, in_size, scipy.float32, gr.sizeof_float)
-
-def read_samples_i(filename, start, in_size):
-    return read_samples(filename, start, in_size, scipy.int32, gr.sizeof_int)
-
-def read_samples_s(filename, start, in_size):
-    return read_samples(filename, start, in_size, scipy.int16, gr.sizeof_short)
-
-def read_samples_b(filename, start, in_size):
-    return read_samples(filename, start, in_size, scipy.uint8, gr.sizeof_char)
-
-def read_samples_c(filename, start, in_size):
-    # Complex samples are handled differently
-    fhandle = open(filename, 'r')
-    fhandle.seek(start*gr.sizeof_gr_complex, 0)
-    data = scipy.fromfile(fhandle, dtype=scipy.complex64, count=in_size)
-    data_min = 1.1*float(min(data.real.min(), data.imag.min()))
-    data_max = 1.1*float(max(data.real.max(), data.imag.max()))
-    data = data.tolist()
-    fhandle.close()
-
-    if(len(data) < in_size):
-        print "Warning: read in {0} samples but asked for {1} samples.".format(
-            len(data), in_size)
-
-    return data, data_min, data_max
-
-class source_ints_to_float(gr.hier_block2):
-    def __init__(self, data):
-	gr.hier_block2.__init__(self, "ints_to_floats",
-				gr.io_signature(0, 0, 0),
-				gr.io_signature(1, 1, gr.sizeof_float))
-        self.src = gr.vector_source_i(data)
-        self.cvt = blocks.int_to_float()
-        self.connect(self.src, self.cvt, self)
-
-    def set_data(self, data):
-        self.src.set_data(data)
-
-class source_shorts_to_float(gr.hier_block2):
-    def __init__(self, data):
-	gr.hier_block2.__init__(self, "shorts_to_floats",
-				gr.io_signature(0, 0, 0),
-				gr.io_signature(1, 1, gr.sizeof_float))
-        self.src = gr.vector_source_s(data)
-        self.cvt = blocks.short_to_float()
-        self.connect(self.src, self.cvt, self)
-
-    def set_data(self, data):
-        self.src.set_data(data)
-
-class source_chars_to_float(gr.hier_block2):
-    def __init__(self, data):
-	gr.hier_block2.__init__(self, "chars_to_floats",
-				gr.io_signature(0, 0, 0),
-				gr.io_signature(1, 1, gr.sizeof_float))
-        self.src = gr.vector_source_b(data)
-        self.cvt = blocks.char_to_float()
-        self.connect(self.src, self.cvt, self)
-
-    def set_data(self, data):
-        self.src.set_data(data)
+    from plot_base import *
 
 class plot_base(gr.top_block):
     def __init__(self, filelist, samp_rate, start,
@@ -242,12 +164,3 @@ def setup_options(desc):
         sys.exit(0)
     return (options,args)
 
-def find_max_nsamples(filelist):
-    # Find the smallest number of samples in all files and use that as
-    # a maximum value possible.
-    filesizes = []
-    for f in filelist:
-        if(os.path.exists(f)):
-            filesizes.append(os.path.getsize(f) / gr.sizeof_gr_complex)
-    max_nsamples = min(filesizes)
-    return max_nsamples
