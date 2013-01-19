@@ -62,7 +62,7 @@ def main():
                      options.start, options.nsamples, max_nsamples,
                      not options.no_auto_scale)
 
-    main_box = plot_base.dialog_box(tb, 'GNU Radio Time Plot')
+    main_box = plot_base.dialog_box(tb, 'GNU Radio Time Plot', True)
     main_box.show()
 
     tb.run()

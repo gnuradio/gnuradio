@@ -62,6 +62,11 @@ class plot_base(gr.top_block):
         self._nsamps = nsamples
         self._auto_scale = False
 
+        self._y_min = -200
+        self._y_max = 400
+        self._y_range = 130
+        self._y_value = 10
+
         self.qapp = QtGui.QApplication(sys.argv)
 
     def setup(self):
@@ -102,6 +107,10 @@ class plot_base(gr.top_block):
         
     def is_setup(self):
         return self._is_setup
+
+    def set_y_axis(self, y_min, y_max):
+        self.gui_snk.set_y_axis(y_min, y_max)
+        return y_min, y_max
 
     def get_gui(self):
         if(self.is_setup()):

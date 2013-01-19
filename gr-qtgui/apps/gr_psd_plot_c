@@ -43,7 +43,7 @@ class psd_plot_c(plot_base.plot_base):
                                      psdsize, start, nsamples,
                                      max_nsamples, avg)
 
-        self.read_samples = plot_base.read_samples_and_pad_c
+        self.read_samples = plot_base.read_samples_c
         self.dsize = gr.sizeof_gr_complex
         self.src_type = gr.vector_source_c
         self.gui_snk = qtgui.freq_sink_c(self._psd_size, gr.firdes.WIN_BLACKMAN_hARRIS,
@@ -64,7 +64,7 @@ def main():
                     options.start, options.nsamples, max_nsamples,
                     options.average)
 
-    main_box = plot_base.dialog_box(tb, 'GNU Radio PSD Plot')
+    main_box = plot_base.dialog_box(tb, 'GNU Radio PSD Plot', False)
     main_box.show()
 
     tb.run()
