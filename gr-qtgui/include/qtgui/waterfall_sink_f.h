@@ -83,6 +83,8 @@ namespace gr {
 
       virtual void set_frequency_range(const double centerfreq,
 				       const double bandwidth) = 0;
+      virtual void set_intensity_range(const double min,
+				       const double max) = 0;
 
       virtual void set_update_time(double t) = 0;
       virtual void set_title(const std::string &title) = 0;

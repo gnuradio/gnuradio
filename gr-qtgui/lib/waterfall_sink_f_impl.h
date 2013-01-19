@@ -91,6 +91,7 @@ namespace gr {
       float fft_average() const;
 
       void set_frequency_range(const double centerfreq, const double bandwidth);
+      void set_intensity_range(const double min, const double max);
 
       void set_update_time(double t);
       void set_title(const std::string &title);

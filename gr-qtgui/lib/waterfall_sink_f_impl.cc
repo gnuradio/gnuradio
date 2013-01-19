@@ -191,6 +191,13 @@ namespace gr {
     }
 
     void
+    waterfall_sink_f_impl::set_intensity_range(const double min,
+					       const double max)
+    {
+      d_main_gui->setIntensityRange(min, max);
+    }
+
+    void
     waterfall_sink_f_impl::set_update_time(double t)
     {
       //convert update time to ticks
