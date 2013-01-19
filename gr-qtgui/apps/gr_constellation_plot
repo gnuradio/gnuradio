@@ -41,22 +41,10 @@ except ImportError:
 
 try:
     from gnuradio.qtgui.plot_form import *
+    from gnuradio.qtgui.plot_base import *
 except ImportError:
     from plot_form import *
-
-def read_samples(filename, start, in_size):
-    # Read in_size number of samples from file
-    fhandle = open(filename, 'r')
-    fhandle.seek(start*gr.sizeof_gr_complex, 0)
-    data = scipy.fromfile(fhandle, dtype=scipy.complex64, count=in_size)
-    data = data.tolist()
-    fhandle.close()
-
-    if(len(data) < in_size):
-        print "Warning: read in {0} samples but asked for {1} samples.".format(
-            len(data), in_size)
-
-    return data
+    from plot_base import *
 
 class my_top_block(gr.top_block):
     def __init__(self, filelist, start, nsamples, max_nsamples):
@@ -66,11 +54,13 @@ class my_top_block(gr.top_block):
         self._start = start
         self._max_nsamps = max_nsamples
         self._nsigs = len(self._filelist)
+        self._nsamps = nsamples
 
-        if(nsamples is None):
-            self._nsamps = max_nsamples
-        else:
-            self._nsamps = nsamples
+        self._y_min = -20
+        self._y_max = 20
+        self._y_range = 4
+        self._y_value = 2
+        self.gui_y_axis = None
 
         self.qapp = QtGui.QApplication(sys.argv)
 
@@ -81,7 +71,7 @@ class my_top_block(gr.top_block):
         n = 0
         self.srcs = list()
         for f in filelist:
-            data = read_samples(f, self._start, self._nsamps)
+            data,_min,_max = read_samples_c(f, self._start, self._nsamps)
             self.srcs.append(gr.vector_source_c(data))
 
             # Set default labels based on file names
@@ -109,7 +99,7 @@ class my_top_block(gr.top_block):
         self._start = newstart
 
         for s,f in zip(self.srcs, self._filelist):
-            data = read_samples(f, self._start, newnsamps)
+            data,_min,_max = read_samples_c(f, self._start, newnsamps)
             s.set_data(data)
             if(len(data) < newnsamps):
                 newnsamps = len(data)
@@ -119,12 +109,18 @@ class my_top_block(gr.top_block):
 
         self.start()
 
+    def set_y_axis(self, y_min, y_max):
+        y_min = -y_max
+        self.gui_snk.set_y_axis(y_min, y_max)
+        self.gui_snk.set_x_axis(y_min, y_max)
+        return y_min, y_max
+
 def main():
     description = "Plots the constellations of a list of files."
     parser = OptionParser(option_class=eng_option, description=description,
                           conflict_handler="resolve")
-    parser.add_option("-N", "--nsamples", type="int", default=None,
-                      help="Set the number of samples to display [default=prints entire file]")
+    parser.add_option("-N", "--nsamples", type="int", default=1000000,
+                      help="Set the number of samples to display [default=%default]")
     parser.add_option("-S", "--start", type="int", default=0,
                       help="Starting sample number [default=%default]")
     (options, args) = parser.parse_args()
