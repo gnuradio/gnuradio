@@ -62,7 +62,7 @@ namespace gr {
       static sptr make(int fftsize, int wintype,
 		       double fc, double bw,
 		       const std::string &name,
-		       int nconnections,
+		       int nconnections=1,
 		       QWidget *parent=NULL);
 
       virtual void exec_() = 0;
