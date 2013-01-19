@@ -40,7 +40,6 @@ class plot_time_c(plot_base.plot_base):
     def __init__(self, filelist, samp_rate,
                  start, nsamples, max_nsamples,
                  auto_scale):
-        print auto_scale
         plot_base.plot_base.__init__(self, filelist, samp_rate,
                                      start, nsamples, max_nsamples,
                                      auto_scale)
@@ -62,7 +61,8 @@ def main():
                      options.start, options.nsamples, max_nsamples,
                      not options.no_auto_scale)
 
-    main_box = plot_base.dialog_box(tb, 'GNU Radio Time Plot', True)
+    extras = {'autoscale': True, 'stem': True}
+    main_box = plot_base.dialog_box(tb, 'GNU Radio Time Plot', extras)
     main_box.show()
 
     tb.run()

@@ -28,10 +28,9 @@ except ImportError:
     sys.exit(1)
 
 class dialog_box(QtGui.QWidget):
-    def __init__(self, top_block, title='', doautoscale=False):
+    def __init__(self, top_block, title='', extras=None):
         QtGui.QWidget.__init__(self, None)
-
-        self._do_autoscale = doautoscale
+        
         self._start = 0
         self._end = 0
         self._y_min = 0
@@ -45,13 +44,30 @@ class dialog_box(QtGui.QWidget):
         self.layout = QtGui.QGridLayout(self)
         self.layout.addWidget(top_block.get_gui(), 1,2,1,2)
 
-        if(self._do_autoscale):
-            self.auto_scale = QtGui.QCheckBox("Auto Scale", self)
-            if(self.top_block._auto_scale):
-                self.auto_scale.setChecked(self.top_block._auto_scale)
-            self.connect(self.auto_scale, QtCore.SIGNAL("stateChanged(int)"),
-                         self.set_auto_scale)
-            self.layout.addWidget(self.auto_scale, 1,4,1,1)
+        # Use 'extras' dictionary to set up any extra tools
+        if(extras):
+            self._do_autoscale = extras['autoscale']
+            self._do_stem = extras['stem']
+            self.extras_layout = QtGui.QVBoxLayout()
+            self.layout.addLayout(self.extras_layout, 1,4,1,1)
+
+            if(self._do_autoscale):
+                self.auto_scale = QtGui.QCheckBox("Auto Scale", self)
+                if(self.top_block._auto_scale):
+                    self.auto_scale.setChecked(self.top_block._auto_scale)
+                self.connect(self.auto_scale, QtCore.SIGNAL("stateChanged(int)"),
+                             self.set_auto_scale)
+                self.extras_layout.addWidget(self.auto_scale)
+
+            if(self._do_stem):
+                self.stem = QtGui.QCheckBox("Stem", self)
+                self.connect(self.stem, QtCore.SIGNAL("stateChanged(int)"),
+                             self.toggle_stem)
+                self.extras_layout.addWidget(self.stem)
+
+            spacer = QtGui.QSpacerItem(1, 1, QtGui.QSizePolicy.Minimum,
+                                       QtGui.QSizePolicy.Expanding)
+            self.extras_layout.addItem(spacer)
 
         # Create a save action
         self.save_act = QtGui.QAction("Save", self)
@@ -222,3 +238,6 @@ class dialog_box(QtGui.QWidget):
             self.top_block.auto_scale(True)
         else:
             self.top_block.auto_scale(False)
+
+    def toggle_stem(self, state):
+        self.top_block.gui_snk.toggle_stem_plot()
