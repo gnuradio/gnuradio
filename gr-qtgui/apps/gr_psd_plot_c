@@ -38,7 +38,7 @@ except ImportError:
 
 class psd_plot_c(plot_base.plot_base):
     def __init__(self, filelist, fc, samp_rate, psdsize, start,
-                 nsamples, max_nsamples, avg=1.0, auto_scale=True):
+                 nsamples, max_nsamples, avg=1.0):
         plot_base.plot_base.__init__(self, filelist, fc, samp_rate,
                                      psdsize, start, nsamples,
                                      max_nsamples, avg)

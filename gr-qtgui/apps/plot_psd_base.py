@@ -67,6 +67,8 @@ class plot_base(gr.top_block):
         self._y_range = 130
         self._y_value = 10
 
+        self._is_setup = False
+
         self.qapp = QtGui.QApplication(sys.argv)
 
     def setup(self):
@@ -158,4 +160,3 @@ def setup_options(desc):
         parser.print_help()
         sys.exit(0)
     return (options,args)
-
