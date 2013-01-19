@@ -249,4 +249,22 @@ TimeDomainDisplayPlot::setSampleRate(double sr, double units,
   }
 }
 
+void
+TimeDomainDisplayPlot::stemPlot(bool trig)
+{
+  if(trig) {
+    for(int i = 0; i < _nplots; i++) {
+      _plot_curve[i]->setStyle(QwtPlotCurve::Sticks);
+      setLineMarker(i, QwtSymbol::Ellipse);
+    }
+  }
+  else {
+    for(int i = 0; i < _nplots; i++) {
+      _plot_curve[i]->setStyle(QwtPlotCurve::Lines);
+      setLineMarker(i, QwtSymbol::NoSymbol);
+    }
+  }
+  replot();
+}
+
 #endif /* TIME_DOMAIN_DISPLAY_PLOT_C */

@@ -79,8 +79,10 @@ namespace gr {
       void set_samp_rate(const double samp_rate);
 
       void set_size(int width, int height);
-
+      
       int nsamps() const;
+
+      void toggle_stem_plot();
 
       void reset();
 

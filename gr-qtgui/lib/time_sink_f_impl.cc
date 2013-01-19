@@ -227,6 +227,12 @@ namespace gr {
     }
 
     void
+    time_sink_f_impl::toggle_stem_plot()
+    {
+      d_main_gui->setStem();
+    }
+
+    void
     time_sink_f_impl::reset()
     {
       d_index = 0;
