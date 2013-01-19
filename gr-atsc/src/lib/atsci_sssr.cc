@@ -29,6 +29,7 @@
 #include <gr_math.h>
 #include <stdio.h>
 #include <boost/math/special_functions/sign.hpp>
+#include <iostream>
 
 /*
  * ----------------------------------------------------------------
@@ -142,7 +143,11 @@ atsci_sssr::update (sssr::sample_t sample_in,	 // input
   double qo = d_quad_filter.update (sample_in);
   d_quad_output[d_counter] = qo;
 
-  int bit = boost::math::signbit (sample_in) ^ 1;	// slice on sign: + => 1, - => 0
+  int bit = boost::math::signbit (sample_in);
+  if (bit != 0)
+    bit = 0;
+  else
+    bit = 1;
   int corr_out = d_correlator.update (bit);
   int weight = sipp (corr_out);
   int corr_value = d_integrator.update (weight, d_counter);
@@ -153,6 +158,7 @@ atsci_sssr::update (sssr::sample_t sample_in,	 // input
     int	best_correlation_value;
     best_correlation_index = d_integrator.find_max (&best_correlation_value);
     d_seg_locked = best_correlation_value >= MIN_SEG_LOCK_CORRELATION_VALUE;
+    //std::cout << "best = " << best_correlation_value << " min is " << MIN_SEG_LOCK_CORRELATION_VALUE << std::endl;
     d_timing_adjust = d_quad_output[best_correlation_index];
 
     d_symbol_index = SYMBOL_INDEX_OFFSET - 1 - best_correlation_index;

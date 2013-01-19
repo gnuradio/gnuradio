@@ -494,8 +494,9 @@ class FlowGraph(Element):
 		Move a selected element to the new coordinate.
 		Auto-scroll the scroll bars at the boundaries.
 		"""
-		#to perform a movement, the mouse must be pressed, no pending events
-		if gtk.events_pending() or not self.mouse_pressed: return
+		#to perform a movement, the mouse must be pressed
+		# (no longer checking pending events via gtk.events_pending() - always true in Windows)
+		if not self.mouse_pressed: return
 		#perform autoscrolling
 		width, height = self.get_size()
 		x, y = coordinate

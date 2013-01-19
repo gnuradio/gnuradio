@@ -44,7 +44,7 @@ atsc_make_bit_timing_loop()
 atsc_bit_timing_loop::atsc_bit_timing_loop()
   : gr_block("atsc_bit_timing_loop",
 		  gr_make_io_signature(1, 1, sizeof(float)),
-		  gr_make_io_signature(2, 2, sizeof(float))),
+             gr_make_io_signature3(2, 3, sizeof(float), sizeof(float), sizeof(float))),
 		  d_interp(ratio_of_rx_clock_to_symbol_freq), d_next_input(0),
 		  d_rx_clock_to_symbol_freq (ratio_of_rx_clock_to_symbol_freq),
 		  d_si(0)
@@ -82,6 +82,7 @@ atsc_bit_timing_loop::work (int noutput_items,
   const float *in = (const float *) input_items[0];
   float *out_sample = (float *) output_items[0];
   atsc::syminfo *out_tag = (atsc::syminfo *) output_items[1];
+  float *out_timing_error = (float *) output_items[2];
 
   assert(sizeof(float) == sizeof(atsc::syminfo));
 
@@ -110,12 +111,15 @@ atsc_bit_timing_loop::work (int noutput_items,
     }
 
     d_sssr.update (interp_sample, &seg_locked, &symbol_index, &timing_adjustment);
+    if (output_items.size() == 3) {
+      out_timing_error[k] = timing_adjustment;
+    }
     out_sample[k] = interp_sample;
     tag.valid = seg_locked;
     tag.symbol_num = symbol_index;
     out_tag[k] = tag;
 
   }
-
+  
   return k;
 }
