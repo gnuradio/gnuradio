@@ -25,6 +25,7 @@ description here (python/__init__.py).
 
 # import swig generated symbols into the howto namespace
 from howto_swig import *
+from square3_ff import square3_ff
 
 # import any pure python here
 #
