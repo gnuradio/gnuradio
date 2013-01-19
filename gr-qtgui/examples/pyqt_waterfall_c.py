@@ -146,9 +146,11 @@ class my_top_block(gr.top_block):
 
         Rs = 8000
         f1 = 100
-        f2 = 200
+        f2 = 2000
 
         npts = 2048
+
+        taps = filter.firdes.complex_band_pass_2(1, Rs, 1500, 2500, 100, 60)
 
         self.qapp = QtGui.QApplication(sys.argv)
         ss = open('dark.qss')
@@ -161,13 +163,15 @@ class my_top_block(gr.top_block):
         src  = blocks.add_cc()
         channel = channels.channel_model(0.01)
         thr = gr.throttle(gr.sizeof_gr_complex, 100*npts)
-        self.snk1 = qtgui.waterfall_sink_c(npts, filter.firdes.WIN_BLACKMAN_hARRIS,
+        filt = filter.fft_filter_ccc(1, taps)
+        self.snk1 = qtgui.waterfall_sink_c(npts, gr.firdes.WIN_BLACKMAN_hARRIS,
                                            0, Rs,
-                                           "Complex Waterfall Example")
+                                           "Complex Waterfall Example", 2)
 
         self.connect(src1, (src,0))
         self.connect(src2, (src,1))
         self.connect(src,  channel, thr, (self.snk1, 0))
+        self.connect(thr, filt, (self.snk1, 1))
 
         self.ctrl_win = control_box()
         self.ctrl_win.attach_signal1(src1)

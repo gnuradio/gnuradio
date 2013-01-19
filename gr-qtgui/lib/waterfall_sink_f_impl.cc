@@ -36,17 +36,20 @@ namespace gr {
     waterfall_sink_f::make(int fftsize, int wintype,
 			   double fc, double bw,
 			   const std::string &name,
+			   int nconnections,
 			   QWidget *parent)
     {
       return gnuradio::get_initial_sptr
 	(new waterfall_sink_f_impl(fftsize, wintype,
 				   fc, bw, name,
+				   nconnections,
 				   parent));
     }
 
     waterfall_sink_f_impl::waterfall_sink_f_impl(int fftsize, int wintype,
 						 double fc, double bw,
 						 const std::string &name,
+						 int nconnections,
 						 QWidget *parent)
       : gr_sync_block("waterfall_sink_f",
 		      gr_make_io_signature(1, -1, sizeof(float)),
@@ -54,7 +57,7 @@ namespace gr {
 	d_fftsize(fftsize), d_fftavg(1.0),
 	d_wintype((filter::firdes::win_type)(wintype)),
 	d_center_freq(fc), d_bandwidth(bw), d_name(name),
-	d_nconnections(1), d_parent(parent)
+	d_nconnections(nconnections), d_parent(parent)
     {
       d_main_gui = NULL;
 

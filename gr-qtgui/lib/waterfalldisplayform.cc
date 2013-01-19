@@ -44,6 +44,31 @@ WaterfallDisplayForm::WaterfallDisplayForm(int nplots, QWidget* parent)
   _min_val =  1000;
   _max_val = -1000;
 
+  // We don't use the normal menus that are part of the displayform.
+  // Clear them out to get rid of their resources.
+  for(int i = 0; i < nplots; i++) {
+    _lines_menu[i]->clear();
+  }
+  _line_title_act.clear();
+  _line_color_menu.clear();
+  _line_width_menu.clear();
+  _line_style_menu.clear();
+  _line_marker_menu.clear();
+  _marker_alpha_menu.clear();
+
+  // Now create our own menus
+  for(int i = 0; i < nplots; i++) {
+    ColorMapMenu *colormap = new ColorMapMenu(i, this);
+    connect(colormap, SIGNAL(whichTrigger(int, const int, const QColor&, const QColor&)),
+	    this, SLOT(setColorMap(int, const int, const QColor&, const QColor&)));
+    _lines_menu[i]->addMenu(colormap);
+
+    _marker_alpha_menu.push_back(new MarkerAlphaMenu(i, this));
+    connect(_marker_alpha_menu[i], SIGNAL(whichTrigger(int, int)),
+	    this, SLOT(setAlpha(int, int)));
+    _lines_menu[i]->addMenu(_marker_alpha_menu[i]);
+  }
+
   QAction *autoscale_act = new QAction("Auto Scale", this);
   autoscale_act->setStatusTip(tr("Autoscale intensity range"));
   connect(autoscale_act, SIGNAL(triggered()), this, SLOT(autoScale()));
@@ -51,11 +76,9 @@ WaterfallDisplayForm::WaterfallDisplayForm(int nplots, QWidget* parent)
   FFTSizeMenu *sizemenu = new FFTSizeMenu(this);
   FFTAverageMenu *avgmenu = new FFTAverageMenu(this);
   FFTWindowMenu *winmenu = new FFTWindowMenu(this);
-  ColorMapMenu *colormenu = new ColorMapMenu(this);
   _menu->addMenu(sizemenu);
   _menu->addMenu(avgmenu);
   _menu->addMenu(winmenu);
-  _menu->addMenu(colormenu);
   _menu->addAction(autoscale_act);
   connect(sizemenu, SIGNAL(whichTrigger(int)),
 	  this, SLOT(setFFTSize(const int)));
@@ -63,8 +86,6 @@ WaterfallDisplayForm::WaterfallDisplayForm(int nplots, QWidget* parent)
 	  this, SLOT(setFFTAverage(const float)));
   connect(winmenu, SIGNAL(whichTrigger(gr::filter::firdes::win_type)),
 	  this, SLOT(setFFTWindowType(const gr::filter::firdes::win_type)));
-  connect(colormenu, SIGNAL(whichTrigger(const int, const QColor&, const QColor&)),
-	  this, SLOT(setColorMap(const int, const QColor&, const QColor&)));
 
   Reset();
 
@@ -168,12 +189,19 @@ WaterfallDisplayForm::setFrequencyRange(const double centerfreq,
 }
 
 void
-WaterfallDisplayForm::setColorMap(const int newType,
+WaterfallDisplayForm::setColorMap(int which,
+				  const int newType,
 				  const QColor lowColor,
 				  const QColor highColor)
 {
-  getPlot()->setIntensityColorMapType(0, newType,
+  getPlot()->setIntensityColorMapType(which, newType,
 				      lowColor, highColor);
+}
+
+void
+WaterfallDisplayForm::setAlpha(int which, int alpha)
+{
+  getPlot()->setAlpha(which, alpha);
 }
 
 void

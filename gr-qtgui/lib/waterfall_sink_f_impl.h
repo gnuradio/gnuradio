@@ -71,9 +71,10 @@ namespace gr {
 
     public:
       waterfall_sink_f_impl(int size, int wintype,
-		       double fc, double bw,
-		       const std::string &name,
-		       QWidget *parent=NULL);
+			    double fc, double bw,
+			    const std::string &name,
+			    int nconnections,
+			    QWidget *parent=NULL);
       ~waterfall_sink_f_impl();
 
       bool check_topology(int ninputs, int noutputs);

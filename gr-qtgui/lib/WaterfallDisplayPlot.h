@@ -81,6 +81,8 @@ public:
   const QColor getUserDefinedLowIntensityColor() const;
   const QColor getUserDefinedHighIntensityColor() const;
 
+  void setAlpha(int which, int alpha);
+
 public slots:
   void setIntensityColorMapType(const int, const int, const QColor, const QColor);
   void setIntensityColorMapType1(int);

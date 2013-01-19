@@ -44,7 +44,7 @@ class WaterfallDisplayForm : public DisplayForm
   int getFFTSize() const;
   float getFFTAverage() const;
   gr::filter::firdes::win_type getFFTWindowType() const;
-						       
+
   void clearData();
 
 public slots:
@@ -60,7 +60,10 @@ public slots:
   void setIntensityRange(const double minIntensity,
 			 const double maxIntensity);
 
-  void setColorMap(const int newType,
+  void setAlpha(int which, int alpha);
+
+  void setColorMap(int which,
+		   const int newType,
 		   const QColor lowColor,
 		   const QColor highColor);
 

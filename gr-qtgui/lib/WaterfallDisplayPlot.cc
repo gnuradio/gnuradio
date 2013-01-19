@@ -154,13 +154,6 @@ WaterfallDisplayPlot::WaterfallDisplayPlot(int nplots, QWidget* parent)
 
   _lastReplot = 0;
 
-  QList<int> colormaps;
-  colormaps << INTENSITY_COLOR_MAP_TYPE_MULTI_COLOR 
-	    << INTENSITY_COLOR_MAP_TYPE_WHITE_HOT
-	    << INTENSITY_COLOR_MAP_TYPE_BLACK_HOT
-	    << INTENSITY_COLOR_MAP_TYPE_INCANDESCENT
-	    << INTENSITY_COLOR_MAP_TYPE_USER_DEFINED;
-
   for(int i = 0; i < _nplots; i++) {
     d_data.push_back(new WaterfallData(_startFrequency, _stopFrequency,
 				       _numPoints, 200));
@@ -181,10 +174,15 @@ WaterfallDisplayPlot::WaterfallDisplayPlot(int nplots, QWidget* parent)
 
     d_spectrogram[i]->attach(this);
 
-    _intensityColorMapType.push_back(colormaps[i%colormaps.size()]);
+    _intensityColorMapType.push_back(INTENSITY_COLOR_MAP_TYPE_MULTI_COLOR);
     setIntensityColorMapType(i, _intensityColorMapType[i],
 			     QColor("white"), QColor("white"));    
+
+    setAlpha(i, 255/_nplots);
   }
+
+  // Set bottom plot with no transparency as a base
+  setAlpha(0, 255);
 
   // LeftButton for the zooming
   // MidButton for the panning
@@ -392,6 +390,7 @@ WaterfallDisplayPlot::clearData()
   }
 }
 
+
 int
 WaterfallDisplayPlot::getIntensityColorMapType(int which) const
 {
@@ -501,6 +500,12 @@ const QColor
 WaterfallDisplayPlot::getUserDefinedHighIntensityColor() const
 {
   return _userDefinedHighIntensityColor;
+}
+
+void
+WaterfallDisplayPlot::setAlpha(int which, int alpha)
+{
+  d_spectrogram[which]->setAlpha(alpha);
 }
 
 void

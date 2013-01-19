@@ -359,11 +359,13 @@ public:
     d_act.push_back(new QAction("Low", this));
     d_act.push_back(new QAction("Medium", this));
     d_act.push_back(new QAction("High", this));
+    d_act.push_back(new QAction("Off", this));
 
     connect(d_act[0], SIGNAL(triggered()), this, SLOT(getNone()));
     connect(d_act[1], SIGNAL(triggered()), this, SLOT(getLow()));
     connect(d_act[2], SIGNAL(triggered()), this, SLOT(getMedium()));
     connect(d_act[3], SIGNAL(triggered()), this, SLOT(getHigh()));
+    connect(d_act[4], SIGNAL(triggered()), this, SLOT(getOff()));
 
     QListIterator<QAction*> i(d_act);
     while(i.hasNext()) {
@@ -396,6 +398,7 @@ public slots:
   void getLow()    { emit whichTrigger(d_which, 200); }
   void getMedium() { emit whichTrigger(d_which, 125); }
   void getHigh()   { emit whichTrigger(d_which, 50); }
+  void getOff()    { emit whichTrigger(d_which, 0); }
 
 private:
   QList<QAction *> d_act;
@@ -864,8 +867,8 @@ class ColorMapMenu: public QMenu
   Q_OBJECT
 
 public:
-  ColorMapMenu(QWidget *parent)
-    : QMenu("Color Map", parent)
+  ColorMapMenu(int which, QWidget *parent)
+    : QMenu("Color Map", parent), d_which(which)
   {
     d_act.push_back(new QAction("Multi-Color", this));
     d_act.push_back(new QAction("White Hot", this));
@@ -907,15 +910,16 @@ public:
    }
 
  signals:
-  void whichTrigger(const int type, const QColor &min_color=QColor(),
+  void whichTrigger(int which, const int type,
+		    const QColor &min_color=QColor(),
 		    const QColor &max_color=QColor());
 
  public slots:
-  void getMultiColor() { emit whichTrigger(INTENSITY_COLOR_MAP_TYPE_MULTI_COLOR); }
-  void getWhiteHot() { emit whichTrigger(INTENSITY_COLOR_MAP_TYPE_WHITE_HOT); }
-  void getBlackHot() { emit whichTrigger(INTENSITY_COLOR_MAP_TYPE_BLACK_HOT); }
-  void getIncandescent() { emit whichTrigger(INTENSITY_COLOR_MAP_TYPE_INCANDESCENT); }
-  //void getOther(const QString &min_str, const QString &max_str)
+  void getMultiColor() { emit whichTrigger(d_which, INTENSITY_COLOR_MAP_TYPE_MULTI_COLOR); }
+  void getWhiteHot() { emit whichTrigger(d_which, INTENSITY_COLOR_MAP_TYPE_WHITE_HOT); }
+  void getBlackHot() { emit whichTrigger(d_which, INTENSITY_COLOR_MAP_TYPE_BLACK_HOT); }
+  void getIncandescent() { emit whichTrigger(d_which, INTENSITY_COLOR_MAP_TYPE_INCANDESCENT); }
+  //void getOther(d_which, const QString &min_str, const QString &max_str)
   void getOther()
   {
     QMessageBox::information(this, "Set low and high intensities",
@@ -924,7 +928,7 @@ public:
     d_min_value = QColorDialog::getColor(d_min_value, this);
     d_max_value = QColorDialog::getColor(d_max_value, this);
 
-    emit whichTrigger(INTENSITY_COLOR_MAP_TYPE_USER_DEFINED,
+    emit whichTrigger(d_which, INTENSITY_COLOR_MAP_TYPE_USER_DEFINED,
 		      d_min_value, d_max_value);
   }
 
@@ -932,6 +936,62 @@ private:
   QList<QAction *> d_act;
   OtherDualAction *d_other;
   QColor d_max_value, d_min_value;
+  int d_which;
+};
+
+
+/********************************************************************/
+
+
+class PopupMenu: public QAction
+{
+  Q_OBJECT
+
+public:
+  PopupMenu(QString desc, QWidget *parent)
+    : QAction(desc, parent)
+  {
+    d_diag = new QDialog(parent);
+    d_diag->setModal(true);
+
+    d_text = new QLineEdit();
+
+    QGridLayout *layout = new QGridLayout(d_diag);
+    QPushButton *btn_ok = new QPushButton(tr("OK"));
+    QPushButton *btn_cancel = new QPushButton(tr("Cancel"));
+
+    layout->addWidget(d_text, 0, 0, 1, 2);
+    layout->addWidget(btn_ok, 1, 0);
+    layout->addWidget(btn_cancel, 1, 1);
+
+    connect(btn_ok, SIGNAL(clicked()), this, SLOT(getText()));
+    connect(btn_cancel, SIGNAL(clicked()), d_diag, SLOT(close()));
+
+    connect(this, SIGNAL(triggered()), this, SLOT(getTextDiag()));
+  }
+
+  ~PopupMenu()
+  {}
+
+signals:
+  void whichTrigger(const QString data);
+
+public slots:
+  void getTextDiag()
+  {
+    d_diag->show();
+  }
+
+private slots:
+  void getText()
+  { 
+    emit whichTrigger(d_text->text());
+    d_diag->accept();
+  }
+
+private:
+  QDialog *d_diag;
+  QLineEdit *d_text;
 };
 
 
