@@ -522,7 +522,8 @@ class notebook(_chooser_base):
 		self._add_widget(self._notebook)
 
 	def _handle(self, event): self[INT_KEY] = self._notebook.GetSelection()
-	def _update(self, i): self._notebook.SetSelection(i)
+	# SetSelection triggers a page change event (deprecated, breaks on Windows) and ChangeSelection does not
+	def _update(self, i): self._notebook.ChangeSelection(i)
 
 # ----------------------------------------------------------------
 # Stand-alone test application
