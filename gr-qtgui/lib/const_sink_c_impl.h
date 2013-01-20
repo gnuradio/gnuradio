@@ -82,6 +82,7 @@ namespace gr {
       void set_size(int width, int height);
 
       int nsamps() const;
+      void enable_menu(bool en);
       void reset();
 
       int work(int noutput_items,

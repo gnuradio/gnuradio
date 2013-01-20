@@ -102,7 +102,7 @@ class plot_base(gr.top_block):
             self.connect(s, (self.gui_snk, i+1))
 
         self.gui_snk.set_update_time(0)
-
+        self.gui_snk.enable_menu(False)
         self.auto_scale(self._auto_scale)
 
         # Get Python Qt references

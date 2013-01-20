@@ -79,8 +79,8 @@ namespace gr {
 
       virtual void set_size(int width, int height) = 0;
 
+      virtual void enable_menu(bool en=true) = 0;
       virtual void toggle_stem_plot() = 0;
-
       virtual int nsamps() const = 0;
       virtual void reset() = 0;
 

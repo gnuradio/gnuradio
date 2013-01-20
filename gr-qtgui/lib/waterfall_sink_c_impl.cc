@@ -249,6 +249,12 @@ namespace gr {
     }
 
     void
+    waterfall_sink_c_impl::enable_menu(bool en)
+    {
+      d_main_gui->enableMenu(en);
+    }
+
+    void
     waterfall_sink_c_impl::fft(float *data_out, const gr_complex *data_in, int size)
     {
       if(d_window.size()) {

@@ -82,8 +82,8 @@ namespace gr {
 
       int nsamps() const;
 
+      void enable_menu(bool en);
       void toggle_stem_plot();
-
       void reset();
 
       int work(int noutput_items,

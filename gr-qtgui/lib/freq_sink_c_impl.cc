@@ -244,6 +244,12 @@ namespace gr {
     }
 
     void
+    freq_sink_c_impl::enable_menu(bool en)
+    {
+      d_main_gui->enableMenu(en);
+    }
+
+    void
     freq_sink_c_impl::reset()
     {
       d_index = 0;

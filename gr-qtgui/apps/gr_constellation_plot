@@ -85,6 +85,8 @@ class my_top_block(gr.top_block):
         for i,s in enumerate(self.srcs[1:]):
             self.connect(s, (self.gui_snk, i+1))
 
+        self.gui_snk.enable_menu(False)
+
         # Get Python Qt references
         pyQt  = self.gui_snk.pyqwidget()
         self.pyWin = sip.wrapinstance(pyQt, QtGui.QWidget)

@@ -44,6 +44,8 @@ class DisplayForm : public QWidget
   virtual DisplayPlot* getPlot() = 0;
   void Reset();
 
+  void enableMenu(bool en=true);
+
 public slots:
   void resizeEvent( QResizeEvent * e );
   void mousePressEvent( QMouseEvent * e);
@@ -87,6 +89,7 @@ protected:
 
   QwtPlotGrid *_grid;
 
+  bool   _menu_on;
   QMenu *_menu;
 
   QAction *_stop_act;

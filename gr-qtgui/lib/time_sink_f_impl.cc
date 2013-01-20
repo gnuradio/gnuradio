@@ -233,6 +233,12 @@ namespace gr {
     }
 
     void
+    time_sink_f_impl::enable_menu(bool en)
+    {
+      d_main_gui->enableMenu(en);
+    }
+
+    void
     time_sink_f_impl::reset()
     {
       d_index = 0;

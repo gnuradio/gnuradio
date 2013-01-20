@@ -96,6 +96,8 @@ namespace gr {
 
       virtual void set_size(int width, int height) = 0;
 
+      virtual void enable_menu(bool en=true) = 0;
+
       QApplication *d_qApplication;
     };
 

@@ -47,6 +47,7 @@ DisplayForm::DisplayForm(int nplots, QWidget* parent)
   _grid_state = false;
 
   // Create a pop-up menu for manipulating the figure
+  _menu_on = true;
   _menu = new QMenu(this);
   _menu->addAction(_stop_act);
   _menu->addAction(_grid_act);
@@ -130,7 +131,7 @@ DisplayForm::resizeEvent( QResizeEvent *e )
 void
 DisplayForm::mousePressEvent( QMouseEvent * e)
 {
-  if(e->button() == Qt::RightButton) {
+  if((e->button() == Qt::RightButton) && (_menu_on)) {
     QwtPlotLayout *plt = _displayPlot->plotLayout();
     QRectF cvs = plt->canvasRect();
     
@@ -177,6 +178,11 @@ DisplayForm::Reset()
 {
 }
 
+void
+DisplayForm::enableMenu(bool en)
+{
+  _menu_on = en;
+}
 
 void
 DisplayForm::closeEvent( QCloseEvent *e )

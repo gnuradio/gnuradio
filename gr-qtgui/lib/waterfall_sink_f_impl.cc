@@ -249,6 +249,12 @@ namespace gr {
     }
 
     void
+    waterfall_sink_f_impl::enable_menu(bool en)
+    {
+      d_main_gui->enableMenu(en);
+    }
+
+    void
     waterfall_sink_f_impl::fft(float *data_out, const float *data_in, int size)
     {
       // float to complex conversion
