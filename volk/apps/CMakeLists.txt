@@ -18,7 +18,7 @@
 ########################################################################
 # Setup profiler
 ########################################################################
-if(Boost_FOUND AND UNIX) #uses mkdir and $HOME
+if(Boost_FOUND)
 
 if(MSVC)
     include_directories(${CMAKE_SOURCE_DIR}/msvc)
@@ -46,4 +46,4 @@ install(
     COMPONENT "volk"
 )
 
-endif(Boost_FOUND AND UNIX)
+endif(Boost_FOUND)
