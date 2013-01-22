@@ -182,11 +182,12 @@ class plot_form(QtGui.QWidget):
             self.connect(self._label_edit[-1], QtCore.SIGNAL("returnPressed()"),
                          self.update_line_label)
 
-            width = self.top_block.gui_snk.line_width(n)
+            width_val = QtGui.QIntValidator(1, 20, self)
             self._size_edit.append(QtGui.QLineEdit(self))
+            self._size_edit[-1].setValidator(width_val)
             self._size_edit[-1].setMinimumWidth(100)
             self._size_edit[-1].setMaximumWidth(100)
-            self._size_edit[-1].setText(QtCore.QString("%1").arg(width))
+            self._size_edit[-1].setText(QtCore.QString("%1").arg(1))
             self._line_forms[-1].addRow("Width:", self._size_edit[-1])
             self.connect(self._size_edit[-1], QtCore.SIGNAL("returnPressed()"),
                          self.update_line_size)
