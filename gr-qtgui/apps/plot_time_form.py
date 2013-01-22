@@ -67,9 +67,9 @@ class plot_time_form(plot_form):
     def toggle_stem(self, state):
         self.top_block.gui_snk.toggle_stem_plot()
         if(state):
-            index = self._qwtmarkers.keys().index('Circle')
+            index = self._qwtmarkers['Circle']+1
         else:
-            index = self._qwtmarkers.keys().index('None')
+            index = self._qwtmarkers['None']+1
         for n in xrange(self.top_block._nsigs):
             self._marker_edit[n].setCurrentIndex(index)
 
