@@ -64,22 +64,21 @@ round_down (unsigned int n, unsigned int multiple)
 // on is done.
 //
 static int
-min_available_space (gr_block_detail *d, int output_multiple)
+min_available_space (gr_block_detail *d, int output_multiple, int min_noutput_items)
 {
-  int	min_space = std::numeric_limits<int>::max();
-
+  int min_space = std::numeric_limits<int>::max();
+  if (min_noutput_items == 0)
+    min_noutput_items = 1;
   for (int i = 0; i < d->noutputs (); i++){
     gruel::scoped_lock guard(*d->output(i)->mutex());
-#if 0
-    int n = round_down(d->output(i)->space_available(), output_multiple);
-#else
-    int n = round_down(std::min(d->output(i)->space_available(),
-				d->output(i)->bufsize()/2),
-		       output_multiple);
-#endif
-    if (n == 0){			// We're blocked on output.
-      if (d->output(i)->done()){	// Downstream is done, therefore we're done.
-	return -1;
+    int avail_n = round_down(d->output(i)->space_available(), output_multiple);
+    int best_n = round_down(d->output(i)->bufsize()/2, output_multiple);
+    if (best_n < min_noutput_items)
+      throw std::runtime_error("Buffer too small for min_noutput_items");
+    int n = std::min(avail_n, best_n);
+    if (n < min_noutput_items){  // We're blocked on output.
+      if (d->output(i)->done()){ // Downstream is done, therefore we're done.
+        return -1;
       }
       return 0;
     }
@@ -205,7 +204,7 @@ gr_block_executor::run_one_iteration()
     d_start_nitems_read.resize(0);
 
     // determine the minimum available output space
-    noutput_items = min_available_space (d, m->output_multiple ());
+    noutput_items = min_available_space (d, m->output_multiple (), m->min_noutput_items ());
     noutput_items = std::min(noutput_items, max_noutput_items);
     LOG(*d_log << " source\n  noutput_items = " << noutput_items << std::endl);
     if (noutput_items == -1)		// we're done
@@ -286,7 +285,7 @@ gr_block_executor::run_one_iteration()
     }
 
     // determine the minimum available output space
-    noutput_items = min_available_space (d, m->output_multiple ());
+    noutput_items = min_available_space (d, m->output_multiple (), m->min_noutput_items ());
     if (ENABLE_LOGGING){
       *d_log << " regular ";
       if (m->relative_rate() >= 1.0)
