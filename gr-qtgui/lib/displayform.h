@@ -63,6 +63,14 @@ public slots:
   void setLineMarker(int which, QwtSymbol::Style style);
   void setMarkerAlpha(int which, int alpha);
 
+  QString title();
+  QString lineLabel(int which);
+  QString lineColor(int which);
+  int lineWidth(int which);
+  Qt::PenStyle lineStyle(int which);
+  QwtSymbol::Style lineMarker(int which);
+  int markerAlpha(int which);
+
   void setStop(bool on);
   void setStop();
 

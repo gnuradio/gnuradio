@@ -88,21 +88,31 @@ namespace gr {
       int fft_size() const;
       void set_fft_average(const float fftavg);
       float fft_average() const;
+      void set_fft_window(const gr::filter::firdes::win_type win);
+      gr::filter::firdes::win_type fft_window();
 
       void set_frequency_range(const double centerfreq, const double bandwidth);
       void set_intensity_range(const double min, const double max);
 
       void set_update_time(double t);
       void set_title(const std::string &title);
-      void set_line_label(const std::string &label);
-      void set_line_color(const std::string &color);
-      void set_line_width(int width);
-      void set_line_style(Qt::PenStyle style);
-      void set_line_marker(QwtSymbol::Style marker);
+      void set_line_label(int which, const std::string &label);
+      void set_line_alpha(int which, double alpha);
+      void set_color_map(int which, const int color);
+
+      std::string title();
+      std::string line_label(int which);
+      double line_alpha(int which);
+      int color_map(int which);
 
       void set_size(int width, int height);
 
+      void auto_scale();
+      double min_intensity(int which);
+      double max_intensity(int which);
+
       void enable_menu(bool en);
+      void enable_grid(bool en);
 
       int work(int noutput_items,
 	       gr_vector_const_void_star &input_items,

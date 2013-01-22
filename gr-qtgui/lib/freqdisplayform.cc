@@ -114,6 +114,7 @@ void
 FreqDisplayForm::setFFTSize(const int newsize)
 {
   _fftsize = newsize;
+  getPlot()->replot();
 }
 
 void
@@ -127,6 +128,7 @@ void
 FreqDisplayForm::setFFTWindowType(const gr::filter::firdes::win_type newwin)
 {
   _fftwintype = newwin;
+  getPlot()->replot();
 }
 
 void

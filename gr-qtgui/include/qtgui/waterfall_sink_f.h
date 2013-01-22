@@ -27,7 +27,7 @@
 #include <qtgui/api.h>
 #include <gr_sync_block.h>
 #include <qapplication.h>
-#include <qwt_symbol.h>
+#include <filter/firdes.h>
 
 namespace gr {
   namespace qtgui {
@@ -80,6 +80,8 @@ namespace gr {
       virtual int fft_size() const = 0;
       virtual void set_fft_average(const float fftavg) = 0;
       virtual float fft_average() const = 0;
+      virtual void set_fft_window(const gr::filter::firdes::win_type win) = 0;
+      virtual gr::filter::firdes::win_type fft_window() = 0;
 
       virtual void set_frequency_range(const double centerfreq,
 				       const double bandwidth) = 0;
@@ -88,15 +90,23 @@ namespace gr {
 
       virtual void set_update_time(double t) = 0;
       virtual void set_title(const std::string &title) = 0;
-      virtual void set_line_label(const std::string &line) = 0;
-      virtual void set_line_color(const std::string &color) = 0;
-      virtual void set_line_width(int width) = 0;
-      virtual void set_line_style(Qt::PenStyle style) = 0;
-      virtual void set_line_marker(QwtSymbol::Style marker) = 0;
+      virtual void set_line_label(int which, const std::string &line) = 0;
+      virtual void set_line_alpha(int which, double alpha) = 0;
+      virtual void set_color_map(int which, const int color) = 0;
+
+      virtual std::string title() = 0;
+      virtual std::string line_label(int which) = 0;
+      virtual double line_alpha(int which) = 0;
+      virtual int color_map(int which) = 0;
 
       virtual void set_size(int width, int height) = 0;
 
+      virtual void auto_scale() = 0;
+      virtual double min_intensity(int which) = 0;
+      virtual double max_intensity(int which) = 0;
+
       virtual void enable_menu(bool en=true) = 0;
+      virtual void enable_grid(bool en=true) = 0;
 
       QApplication *d_qApplication;
     };

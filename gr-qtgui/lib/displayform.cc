@@ -154,7 +154,7 @@ DisplayForm::mousePressEvent( QMouseEvent * e)
 
       // Update the line titles if changed externally
       for(int i = 0; i < _nplots; i++) {
-	_lines_menu[i]->setTitle(_displayPlot->lineLabel(i));
+	_lines_menu[i]->setTitle(_displayPlot->getLineLabel(i));
       }
       _menu->exec(e->globalPos());
     }
@@ -244,6 +244,48 @@ DisplayForm::setMarkerAlpha(int which, int alpha)
 {
   _displayPlot->setMarkerAlpha(which, alpha);
   _displayPlot->replot();
+}
+
+QString
+DisplayForm::title()
+{
+  return _displayPlot->title().text();
+}
+
+QString
+DisplayForm::lineLabel(int which)
+{
+  return _displayPlot->getLineLabel(which);
+}
+
+QString
+DisplayForm::lineColor(int which)
+{
+  return _displayPlot->getLineColor(which).name();
+}
+
+int
+DisplayForm::lineWidth(int which)
+{
+  return _displayPlot->getLineWidth(which);
+}
+
+Qt::PenStyle
+DisplayForm::lineStyle(int which)
+{
+  return _displayPlot->getLineStyle(which);
+}
+
+QwtSymbol::Style
+DisplayForm::lineMarker(int which)
+{
+  return _displayPlot->getLineMarker(which);
+}
+
+int
+DisplayForm::markerAlpha(int which)
+{
+  return _displayPlot->getMarkerAlpha(which);
 }
 
 void

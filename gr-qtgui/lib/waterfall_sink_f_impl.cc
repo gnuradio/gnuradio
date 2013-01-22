@@ -120,7 +120,7 @@ namespace gr {
       }
 
       d_main_gui = new WaterfallDisplayForm(d_nconnections, d_parent);
-      d_main_gui->setFFTWindowType(d_wintype);
+      set_fft_window(d_wintype);
       set_fft_size(d_fftsize);
       set_frequency_range(d_center_freq, d_bandwidth);
 
@@ -158,7 +158,6 @@ namespace gr {
     void
     waterfall_sink_f_impl::set_fft_size(const int fftsize)
     {
-      d_fftsize = fftsize;
       d_main_gui->setFFTSize(fftsize);
     }
 
@@ -171,7 +170,6 @@ namespace gr {
     void
     waterfall_sink_f_impl::set_fft_average(const float fftavg)
     {
-      d_fftavg = fftavg;
       d_main_gui->setFFTAverage(fftavg);
     }
 
@@ -179,6 +177,18 @@ namespace gr {
     waterfall_sink_f_impl::fft_average() const
     {
       return d_fftavg;
+    }
+
+    void
+    waterfall_sink_f_impl::set_fft_window(const filter::firdes::win_type win)
+    {
+      d_main_gui->setFFTWindowType(win);
+    }
+
+    filter::firdes::win_type
+    waterfall_sink_f_impl::fft_window()
+    {
+      return d_wintype;
     }
 
     void
@@ -213,33 +223,21 @@ namespace gr {
     }
 
     void
-    waterfall_sink_f_impl::set_line_label(const std::string &label)
+    waterfall_sink_f_impl::set_line_label(int which, const std::string &label)
     {
-      d_main_gui->setLineLabel(0, label.c_str());
+      d_main_gui->setLineLabel(which, label.c_str());
     }
 
     void
-    waterfall_sink_f_impl::set_line_color(const std::string &color)
+    waterfall_sink_f_impl::set_color_map(int which, const int color)
     {
-      d_main_gui->setLineColor(0, color.c_str());
+      d_main_gui->setColorMap(which, color);
     }
 
     void
-    waterfall_sink_f_impl::set_line_width(int width)
+    waterfall_sink_f_impl::set_line_alpha(int which, double alpha)
     {
-      d_main_gui->setLineWidth(0, width);
-    }
-
-    void
-    waterfall_sink_f_impl::set_line_style(Qt::PenStyle style)
-    {
-      d_main_gui->setLineStyle(0, style);
-    }
-
-    void
-    waterfall_sink_f_impl::set_line_marker(QwtSymbol::Style marker)
-    {
-      d_main_gui->setLineMarker(0, marker);
+      d_main_gui->setAlpha(which, (int)(255.0*alpha));
     }
 
     void
@@ -248,10 +246,58 @@ namespace gr {
       d_main_gui->resize(QSize(width, height));
     }
 
+    std::string
+    waterfall_sink_f_impl::title()
+    {
+      return d_main_gui->title().toStdString();
+    }
+
+    std::string
+    waterfall_sink_f_impl::line_label(int which)
+    {
+      return d_main_gui->lineLabel(which).toStdString();
+    }
+
+    int
+    waterfall_sink_f_impl::color_map(int which)
+    {
+      return d_main_gui->getColorMap(which);
+    }
+
+    double
+    waterfall_sink_f_impl::line_alpha(int which)
+    {
+      return (double)(d_main_gui->getAlpha(which))/255.0;
+    }
+
+    void
+    waterfall_sink_f_impl::auto_scale()
+    {
+      d_main_gui->autoScale();
+    }
+
+    double
+    waterfall_sink_f_impl::min_intensity(int which)
+    {
+      return d_main_gui->getMinIntensity(which);
+    }
+
+    double
+    waterfall_sink_f_impl::max_intensity(int which)
+    {
+      return d_main_gui->getMaxIntensity(which);
+    }
+
     void
     waterfall_sink_f_impl::enable_menu(bool en)
     {
       d_main_gui->enableMenu(en);
+    }
+
+    void
+    waterfall_sink_f_impl::enable_grid(bool en)
+    {
+      d_main_gui->setGrid(en);
     }
 
     void

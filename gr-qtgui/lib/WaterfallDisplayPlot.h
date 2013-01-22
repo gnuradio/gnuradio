@@ -72,6 +72,8 @@ public:
 		   const int droppedFrames);
 
   void setIntensityRange(const double minIntensity, const double maxIntensity);
+  double getMinIntensity(int which) const;
+  double getMaxIntensity(int which) const;
 
   void replot(void);
   void clearData();
@@ -81,6 +83,7 @@ public:
   const QColor getUserDefinedLowIntensityColor() const;
   const QColor getUserDefinedHighIntensityColor() const;
 
+  int  getAlpha(int which);
   void setAlpha(int which, int alpha);
 
 public slots:

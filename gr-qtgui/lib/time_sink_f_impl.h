@@ -73,16 +73,26 @@ namespace gr {
       void set_line_label(int which, const std::string &label);
       void set_line_color(int which, const std::string &color);
       void set_line_width(int which, int width);
-      void set_line_style(int which, Qt::PenStyle style);
-      void set_line_marker(int which, QwtSymbol::Style marker);
+      void set_line_style(int which, int style);
+      void set_line_marker(int which, int marker);
       void set_nsamps(const int newsize);
       void set_samp_rate(const double samp_rate);
+      void set_line_alpha(int which, double alpha);
+
+      std::string title();
+      std::string line_label(int which);
+      std::string line_color(int which);
+      int line_width(int which);
+      int line_style(int which);
+      int line_marker(int which);
+      double line_alpha(int which);
 
       void set_size(int width, int height);
 
       int nsamps() const;
 
       void enable_menu(bool en);
+      void enable_grid(bool en);
       void toggle_stem_plot();
       void reset();
 

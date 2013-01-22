@@ -113,7 +113,7 @@ DisplayPlot::setLineLabel(int which, QString label)
 }
 
 QString
-DisplayPlot::lineLabel(int which)
+DisplayPlot::getLineLabel(int which)
 {
   return _plot_curve[which]->title().text();
 }

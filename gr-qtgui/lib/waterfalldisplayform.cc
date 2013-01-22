@@ -156,6 +156,30 @@ WaterfallDisplayForm::getFFTWindowType() const
   return _fftwintype;
 }
 
+int
+WaterfallDisplayForm::getColorMap(int which)
+{
+  return getPlot()->getIntensityColorMapType(which);
+}
+
+int
+WaterfallDisplayForm::getAlpha(int which)
+{
+  return getPlot()->getAlpha(which);
+}
+
+double
+WaterfallDisplayForm::getMinIntensity(int which)
+{
+  return getPlot()->getMinIntensity(which);
+}
+
+double
+WaterfallDisplayForm::getMaxIntensity(int which)
+{
+  return getPlot()->getMaxIntensity(which);
+}
+
 void
 WaterfallDisplayForm::setFFTSize(const int newsize)
 {
@@ -186,6 +210,7 @@ WaterfallDisplayForm::setFrequencyRange(const double centerfreq,
 
   getPlot()->setFrequencyRange(centerfreq, bandwidth,
 			       units, strunits[iunit]);
+  getPlot()->replot();
 }
 
 void
@@ -196,12 +221,14 @@ WaterfallDisplayForm::setColorMap(int which,
 {
   getPlot()->setIntensityColorMapType(which, newType,
 				      lowColor, highColor);
+  getPlot()->replot();
 }
 
 void
 WaterfallDisplayForm::setAlpha(int which, int alpha)
 {
   getPlot()->setAlpha(which, alpha);
+  getPlot()->replot();
 }
 
 void
@@ -209,6 +236,7 @@ WaterfallDisplayForm::setIntensityRange(const double minIntensity,
 					const double maxIntensity)
 {
   getPlot()->setIntensityRange(minIntensity, maxIntensity);
+  getPlot()->replot();
 }
 
 void
@@ -218,6 +246,7 @@ WaterfallDisplayForm::autoScale()
   double max_int = _max_val + 10;
 
   getPlot()->setIntensityRange(min_int, max_int);
+  getPlot()->replot();
 }
 
 void
