@@ -54,6 +54,7 @@ class plot_base(gr.top_block):
 
         self._filelist = filelist
         self._samp_rate = samp_rate
+        self._center_freq = 0
         self._start = start
         self._max_nsamps = max_nsamples
         self._nsigs = len(self._filelist)

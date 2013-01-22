@@ -88,6 +88,9 @@ class plot_base(gr.top_block):
 
             self.srcs.append(self.src_type(data))
 
+            # Set default labels based on file names
+            fname = f.split("/")[-1]
+            self.gui_snk.set_line_label(n, "{0}".format(fname))
             n += 1
 
         self.connect(self.srcs[0], self.skip)

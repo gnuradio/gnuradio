@@ -48,7 +48,7 @@ class spectrogram_plot_c(plot_base.plot_base):
         self.src_type = gr.vector_source_c
         self.gui_snk = qtgui.waterfall_sink_c(self._psd_size, gr.firdes.WIN_BLACKMAN_hARRIS,
                                               self._center_freq, self._samp_rate,
-                                              "GNU Radio Spectrogram Plot", 1)
+                                              "GNU Radio Spectrogram Plot", self._nsigs)
         self.setup()
 
 def main():
@@ -64,8 +64,7 @@ def main():
                             options.start, options.nsamples, max_nsamples,
                             options.average);
 
-    extras = {'autoscale': False, 'stem': False}
-    main_box = plot_base.dialog_box(tb, 'GNU Radio Time Plot', extras)
+    main_box = plot_base.plot_spectrogram_form(tb, 'GNU Radio Spectrogram Plot')
     main_box.show()
 
     tb.run()

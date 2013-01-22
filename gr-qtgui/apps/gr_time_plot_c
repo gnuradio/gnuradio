@@ -48,6 +48,7 @@ class plot_time_c(plot_base.plot_base):
         self.src_type = gr.vector_source_c
         self.gui_snk = qtgui.time_sink_c(self._nsamps, self._samp_rate,
                                          "GNU Radio Time Plot", self._nsigs)
+        self._nsigs *= 2 # complex plots have real/imag
         self.setup()
 
 def main():
@@ -61,8 +62,7 @@ def main():
                      options.start, options.nsamples, max_nsamples,
                      not options.no_auto_scale)
 
-    extras = {'autoscale': True, 'stem': True}
-    main_box = plot_base.dialog_box(tb, 'GNU Radio Time Plot', extras)
+    main_box = plot_base.plot_time_form(tb, 'GNU Radio Time Plot')
     main_box.show()
 
     tb.run()

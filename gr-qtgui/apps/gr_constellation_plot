@@ -40,10 +40,10 @@ except ImportError:
     sys.exit(1)
 
 try:
-    from gnuradio.qtgui.plot_form import *
+    from gnuradio.qtgui.plot_constellation_form import *
     from gnuradio.qtgui.plot_base import *
 except ImportError:
-    from plot_form import *
+    from plot_constellation_form import *
     from plot_base import *
 
 class my_top_block(gr.top_block):
@@ -51,10 +51,13 @@ class my_top_block(gr.top_block):
         gr.top_block.__init__(self)
 
         self._filelist = filelist
+        self._samp_rate = 0
+        self._center_freq = 0
         self._start = start
         self._max_nsamps = max_nsamples
         self._nsigs = len(self._filelist)
         self._nsamps = nsamples
+        self._auto_scale = True
 
         self._y_min = -20
         self._y_max = 20
@@ -70,9 +73,16 @@ class my_top_block(gr.top_block):
                                           self._nsigs)
         n = 0
         self.srcs = list()
+        self._data_min = sys.maxint
+        self._data_max = -sys.maxint - 1
         for f in filelist:
             data,_min,_max = read_samples_c(f, self._start, self._nsamps)
             self.srcs.append(gr.vector_source_c(data))
+
+            if(_min < self._data_min):
+                self._data_min = _min
+            if(_max > self._data_max):
+                self._data_max = _max
 
             # Set default labels based on file names
             fname = f.split("/")[-1]
@@ -117,6 +127,21 @@ class my_top_block(gr.top_block):
         self.gui_snk.set_x_axis(y_min, y_max)
         return y_min, y_max
 
+    def auto_scale(self, state):
+        if(state > 0):
+            self.set_y_axis(self._data_min, self._data_max)
+            self._auto_scale = True
+            self._y_value = self._data_max
+            self._y_range = self._data_max - self._data_min
+            self._y_min = 10*self._data_min
+            self._y_max = 10*self._data_max
+
+            if(self.gui_y_axis):
+                self.gui_y_axis(self._data_min, self._data_max)
+        else:
+            self._auto_scale = False
+
+
 def main():
     description = "Plots the constellations of a list of files."
     parser = OptionParser(option_class=eng_option, description=description,
@@ -146,7 +171,9 @@ def main():
     tb = my_top_block(filelist,
                       options.start, nsamples, max_nsamples);
 
-    main_box = dialog_box(tb, 'GNU Radio Constellation Plot')
+    main_box = plot_constellation_form(tb, 'GNU Radio Constellation Plot')
+    for n in xrange(tb._nsigs):
+        main_box._style_edit[n].setCurrentIndex(0)
     main_box.show()
 
     tb.run()
