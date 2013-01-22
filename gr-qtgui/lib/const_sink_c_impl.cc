@@ -29,6 +29,7 @@
 #include <string.h>
 #include <volk/volk.h>
 #include <fft/fft.h>
+#include <qwt_symbol.h>
 
 namespace gr {
   namespace qtgui {
@@ -172,21 +173,69 @@ namespace gr {
     }
 
     void
-    const_sink_c_impl::set_line_style(int which, Qt::PenStyle style)
+    const_sink_c_impl::set_line_style(int which, int style)
     {
-      d_main_gui->setLineStyle(which, style);
+      d_main_gui->setLineStyle(which, (Qt::PenStyle)style);
     }
 
     void
-    const_sink_c_impl::set_line_marker(int which, QwtSymbol::Style marker)
+    const_sink_c_impl::set_line_marker(int which, int marker)
     {
-      d_main_gui->setLineMarker(which, marker);
+      d_main_gui->setLineMarker(which, (QwtSymbol::Style)marker);
+    }
+
+    void
+    const_sink_c_impl::set_line_alpha(int which, double alpha)
+    {
+      d_main_gui->setMarkerAlpha(which, (int)(255.0*alpha));
     }
 
     void
     const_sink_c_impl::set_size(int width, int height)
     {
       d_main_gui->resize(QSize(width, height));
+    }
+
+    std::string
+    const_sink_c_impl::title()
+    {
+      return d_main_gui->title().toStdString();
+    }
+
+    std::string
+    const_sink_c_impl::line_label(int which)
+    {
+      return d_main_gui->lineLabel(which).toStdString();
+    }
+
+    std::string
+    const_sink_c_impl::line_color(int which)
+    {
+      return d_main_gui->lineColor(which).toStdString();
+    }
+
+    int
+    const_sink_c_impl::line_width(int which)
+    {
+      return d_main_gui->lineWidth(which);
+    }
+
+    int
+    const_sink_c_impl::line_style(int which)
+    {
+      return d_main_gui->lineStyle(which);
+    }
+
+    int
+    const_sink_c_impl::line_marker(int which)
+    {
+      return d_main_gui->lineMarker(which);
+    }
+
+    double
+    const_sink_c_impl::line_alpha(int which)
+    {
+      return (double)(d_main_gui->markerAlpha(which))/255.0;
     }
 
     void
@@ -226,6 +275,12 @@ namespace gr {
     const_sink_c_impl::nsamps() const
     {
       return d_size;
+    }
+
+    void
+    const_sink_c_impl::enable_menu(bool en)
+    {
+      d_main_gui->enableMenu(en);
     }
 
     void

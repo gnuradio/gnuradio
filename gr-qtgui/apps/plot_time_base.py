@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2012 Free Software Foundation, Inc.
+# Copyright 2013 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -20,7 +20,7 @@
 # Boston, MA 02110-1301, USA.
 #
 
-from gnuradio import gr
+from gnuradio import gr, blocks
 from gnuradio.eng_option import eng_option
 from optparse import OptionParser
 import os, sys
@@ -40,54 +40,61 @@ except ImportError:
     sys.exit(1)
 
 try:
-    from gnuradio.qtgui.plot_constellation_form import *
+    from gnuradio.qtgui.plot_form import *
     from gnuradio.qtgui.plot_base import *
 except ImportError:
-    from plot_constellation_form import *
+    from plot_form import *
     from plot_base import *
 
-class my_top_block(gr.top_block):
-    def __init__(self, filelist, start, nsamples, max_nsamples):
+class plot_base(gr.top_block):
+    def __init__(self, filelist, samp_rate, start,
+                 nsamples, max_nsamples,
+                 auto_scale):
         gr.top_block.__init__(self)
 
         self._filelist = filelist
-        self._samp_rate = 0
+        self._samp_rate = samp_rate
         self._center_freq = 0
         self._start = start
         self._max_nsamps = max_nsamples
         self._nsigs = len(self._filelist)
+        self._auto_scale = auto_scale
         self._nsamps = nsamples
-        self._auto_scale = True
+        self._is_setup = False
 
         self._y_min = -20
         self._y_max = 20
-        self._y_range = 4
-        self._y_value = 2
+        self._y_range = 2
+        self._y_value = 1
         self.gui_y_axis = None
 
         self.qapp = QtGui.QApplication(sys.argv)
 
-        self.skip = gr.skiphead(gr.sizeof_gr_complex, self._start)
-        self.gui_snk = qtgui.const_sink_c(self._nsamps,
-                                          "GNU Radio Constellation Plot",
-                                          self._nsigs)
+    def setup(self):
+        self.skip = gr.skiphead(self.dsize, self._start)
+
         n = 0
         self.srcs = list()
         self._data_min = sys.maxint
         self._data_max = -sys.maxint - 1
-        for f in filelist:
-            data,_min,_max = read_samples_c(f, self._start, self._nsamps)
-            self.srcs.append(gr.vector_source_c(data))
-
+        for f in self._filelist:
+            data,_min,_max = self.read_samples(f, self._start, self._nsamps)
             if(_min < self._data_min):
                 self._data_min = _min
             if(_max > self._data_max):
                 self._data_max = _max
 
+            self.srcs.append(self.src_type(data))
+
             # Set default labels based on file names
             fname = f.split("/")[-1]
-            self.gui_snk.set_line_label(n, "{0}".format(fname))
-            n += 1
+            if(type(self.gui_snk) == qtgui.time_sink_c_sptr):
+                self.gui_snk.set_line_label(n, "Re{{{0}}}".format(fname))
+                self.gui_snk.set_line_label(n+1, "Im{{{0}}}".format(fname))
+                n += 2
+            else:
+                self.gui_snk.set_line_label(n, "{0}".format(fname))
+                n += 1
 
         self.connect(self.srcs[0], self.skip)
         self.connect(self.skip, (self.gui_snk, 0))
@@ -95,14 +102,28 @@ class my_top_block(gr.top_block):
         for i,s in enumerate(self.srcs[1:]):
             self.connect(s, (self.gui_snk, i+1))
 
+        self.gui_snk.set_update_time(0)
         self.gui_snk.enable_menu(False)
+        self.auto_scale(self._auto_scale)
 
         # Get Python Qt references
         pyQt  = self.gui_snk.pyqwidget()
         self.pyWin = sip.wrapinstance(pyQt, QtGui.QWidget)
 
+        self._is_setup = True
+        
+    def is_setup(self):
+        return self._is_setup
+
+    def set_y_axis(self, y_min, y_max):
+        self.gui_snk.set_y_axis(y_min, y_max)
+        return y_min, y_max
+
     def get_gui(self):
-        return self.pyWin
+        if(self.is_setup()):
+            return self.pyWin
+        else:
+            return None
 
     def reset(self, newstart, newnsamps):
         self.stop()
@@ -110,26 +131,29 @@ class my_top_block(gr.top_block):
 
         self._start = newstart
 
+        self._data_min = sys.maxint
+        self._data_max = -sys.maxint - 1
         for s,f in zip(self.srcs, self._filelist):
-            data,_min,_max = read_samples_c(f, self._start, newnsamps)
+            data,_min,_max = self.read_samples(f, self._start, newnsamps)
+            if(_min < self._data_min):
+                self._data_min = _min
+            if(_max > self._data_max):
+                self._data_max = _max
+
             s.set_data(data)
             if(len(data) < newnsamps):
                 newnsamps = len(data)
+
+        self.auto_scale(self._auto_scale)
 
         self._nsamps = newnsamps
         self.gui_snk.set_nsamps(self._nsamps)
 
         self.start()
 
-    def set_y_axis(self, y_min, y_max):
-        y_min = -y_max
-        self.gui_snk.set_y_axis(y_min, y_max)
-        self.gui_snk.set_x_axis(y_min, y_max)
-        return y_min, y_max
-
     def auto_scale(self, state):
         if(state > 0):
-            self.set_y_axis(self._data_min, self._data_max)
+            self.gui_snk.set_y_axis(self._data_min, self._data_max)
             self._auto_scale = True
             self._y_value = self._data_max
             self._y_range = self._data_max - self._data_min
@@ -141,47 +165,20 @@ class my_top_block(gr.top_block):
         else:
             self._auto_scale = False
 
-
-def main():
-    description = "Plots the constellations of a list of files."
-    parser = OptionParser(option_class=eng_option, description=description,
+def setup_options(desc):
+    parser = OptionParser(option_class=eng_option, description=desc,
                           conflict_handler="resolve")
     parser.add_option("-N", "--nsamples", type="int", default=1000000,
                       help="Set the number of samples to display [default=%default]")
     parser.add_option("-S", "--start", type="int", default=0,
                       help="Starting sample number [default=%default]")
-    (options, args) = parser.parse_args()
-
+    parser.add_option("-r", "--sample-rate", type="eng_float", default=1.0,
+                      help="Set the sample rate of the signal [default=%default]")
+    parser.add_option("", "--no-auto-scale", action="store_true", default=False,
+                      help="Do not auto-scale the plot [default=%default]")
+    (options,args) = parser.parse_args()
     if(len(args) < 1):
         parser.print_help()
         sys.exit(0)
+    return (options,args)
 
-    filelist = list(args)
-
-    nsamples = options.nsamples
-
-    # Find the smallest number of samples in all files and use that as
-    # a maximum value possible.
-    filesizes = []
-    for f in filelist:
-        if(os.path.exists(f)):
-            filesizes.append(os.path.getsize(f) / gr.sizeof_gr_complex)
-    max_nsamples = min(filesizes)
-
-    tb = my_top_block(filelist,
-                      options.start, nsamples, max_nsamples);
-
-    main_box = plot_constellation_form(tb, 'GNU Radio Constellation Plot')
-    for n in xrange(tb._nsigs):
-        main_box._style_edit[n].setCurrentIndex(0)
-    main_box.show()
-
-    tb.run()
-    tb.qapp.exec_()
-
-if __name__ == "__main__":
-    try:
-        main()
-    except KeyboardInterrupt:
-        pass
-        

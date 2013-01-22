@@ -72,13 +72,19 @@ public:
 		   const int droppedFrames);
 
   void setIntensityRange(const double minIntensity, const double maxIntensity);
+  double getMinIntensity(int which) const;
+  double getMaxIntensity(int which) const;
 
   void replot(void);
+  void clearData();
 
   int getIntensityColorMapType(int) const;
   int getIntensityColorMapType1() const;
   const QColor getUserDefinedLowIntensityColor() const;
   const QColor getUserDefinedHighIntensityColor() const;
+
+  int  getAlpha(int which);
+  void setAlpha(int which, int alpha);
 
 public slots:
   void setIntensityColorMapType(const int, const int, const QColor, const QColor);

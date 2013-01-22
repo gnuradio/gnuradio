@@ -28,6 +28,7 @@
 #include <gr_io_signature.h>
 #include <string.h>
 #include <volk/volk.h>
+#include <qwt_symbol.h>
 
 namespace gr {
   namespace qtgui {
@@ -121,7 +122,7 @@ namespace gr {
       }
 
       d_main_gui = new FreqDisplayForm(d_nconnections, d_parent);
-      d_main_gui->setFFTWindowType(d_wintype);
+      set_fft_window(d_wintype);
       set_fft_size(d_fftsize);
       set_frequency_range(d_center_freq, d_bandwidth/2.0);
 
@@ -153,7 +154,6 @@ namespace gr {
     void
     freq_sink_f_impl::set_fft_size(const int fftsize)
     {
-      d_fftsize = fftsize;
       d_main_gui->setFFTSize(fftsize);
     }
 
@@ -166,7 +166,6 @@ namespace gr {
     void
     freq_sink_f_impl::set_fft_average(const float fftavg)
     {
-      d_fftavg = fftavg;
       d_main_gui->setFFTAverage(fftavg);
     }
 
@@ -174,6 +173,18 @@ namespace gr {
     freq_sink_f_impl::fft_average() const
     {
       return d_fftavg;
+    }
+
+    void
+    freq_sink_f_impl::set_fft_window(const filter::firdes::win_type win)
+    {
+      d_main_gui->setFFTWindowType(win);
+    }
+
+    filter::firdes::win_type
+    freq_sink_f_impl::fft_window()
+    {
+      return d_wintype;
     }
 
     void
@@ -225,22 +236,81 @@ namespace gr {
     }
 
     void
-    freq_sink_f_impl::set_line_style(int which, Qt::PenStyle style)
+    freq_sink_f_impl::set_line_style(int which, int style)
     {
-      d_main_gui->setLineStyle(which, style);
+      d_main_gui->setLineStyle(which, (Qt::PenStyle)style);
     }
 
     void
-    freq_sink_f_impl::set_line_marker(int which, QwtSymbol::Style marker)
+    freq_sink_f_impl::set_line_marker(int which, int marker)
     {
-      d_main_gui->setLineMarker(which, marker);
+      d_main_gui->setLineMarker(which, (QwtSymbol::Style)marker);
     }
 
+    void
+    freq_sink_f_impl::set_line_alpha(int which, double alpha)
+    {
+      d_main_gui->setMarkerAlpha(which, (int)(255.0*alpha));
+    }
 
     void
     freq_sink_f_impl::set_size(int width, int height)
     {
       d_main_gui->resize(QSize(width, height));
+    }
+
+    std::string
+    freq_sink_f_impl::title()
+    {
+      return d_main_gui->title().toStdString();
+    }
+
+    std::string
+    freq_sink_f_impl::line_label(int which)
+    {
+      return d_main_gui->lineLabel(which).toStdString();
+    }
+
+    std::string
+    freq_sink_f_impl::line_color(int which)
+    {
+      return d_main_gui->lineColor(which).toStdString();
+    }
+
+    int
+    freq_sink_f_impl::line_width(int which)
+    {
+      return d_main_gui->lineWidth(which);
+    }
+
+    int
+    freq_sink_f_impl::line_style(int which)
+    {
+      return d_main_gui->lineStyle(which);
+    }
+
+    int
+    freq_sink_f_impl::line_marker(int which)
+    {
+      return d_main_gui->lineMarker(which);
+    }
+
+    double
+    freq_sink_f_impl::line_alpha(int which)
+    {
+      return (double)(d_main_gui->markerAlpha(which))/255.0;
+    }
+
+    void
+    freq_sink_f_impl::enable_menu(bool en)
+    {
+      d_main_gui->enableMenu(en);
+    }
+
+    void
+    freq_sink_f_impl::enable_grid(bool en)
+    {
+      d_main_gui->setGrid(en);
     }
 
     void

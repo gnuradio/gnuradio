@@ -179,6 +179,7 @@ public slots:
   void setYaxis(double min, double max);
   void setXaxis(double min, double max);
   void setLineLabel(int which, QString label);
+  QString getLineLabel(int which);
   void setLineColor(int which, QColor color);
   QColor getLineColor(int which) const;
   void setLineWidth(int which, int width);
@@ -249,8 +250,6 @@ public slots:
   void setAxesLabelFontSize(int fs);
 
   void setStop(bool on);
-
-  QString lineLabel(int which);
 
   void resizeSlot(QSize *s);
 

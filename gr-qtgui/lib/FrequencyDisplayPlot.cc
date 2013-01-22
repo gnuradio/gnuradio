@@ -107,10 +107,16 @@ FrequencyDisplayPlot::FrequencyDisplayPlot(int nplots, QWidget* parent)
 
     _plot_curve.push_back(new QwtPlotCurve(QString("Data %1").arg(i)));
     _plot_curve[i]->attach(this);
+
+    QwtSymbol *symbol = new QwtSymbol(QwtSymbol::NoSymbol, QBrush(default_colors[i]),
+				      QPen(default_colors[i]), QSize(7,7));
+
 #if QWT_VERSION < 0x060000
     _plot_curve[i]->setRawData(_xAxisPoints, _dataPoints[i], _numPoints);
+    _plot_curve[i]->setSymbol(*symbol);
 #else
     _plot_curve[i]->setRawSamples(_xAxisPoints, _dataPoints[i], _numPoints);
+    _plot_curve[i]->setSymbol(symbol);
 #endif
     setLineColor(i, default_colors[i]);
   }

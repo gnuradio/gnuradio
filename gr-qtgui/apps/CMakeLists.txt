@@ -21,7 +21,15 @@ include(GrPython)
 
 GR_PYTHON_INSTALL(
     FILES
+    plot_base.py
+    plot_psd_base.py
+    plot_spectrogram_base.py
+    plot_time_base.py
     plot_form.py
+    plot_constellation_form.py
+    plot_psd_form.py
+    plot_spectrogram_form.py
+    plot_time_form.py
     DESTINATION ${GR_PYTHON_DIR}/gnuradio/qtgui
     COMPONENT "qtgui_python"
 )

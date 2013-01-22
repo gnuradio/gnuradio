@@ -48,6 +48,7 @@ public slots:
   void setSampleRate(const double samprate);
   void setYaxis(double min, double max);
   void setNPoints(const int);
+  void setStem(bool trig=false);
 
 private slots:
   void newData(const QEvent*);
@@ -59,6 +60,8 @@ private:
   double _stopFrequency;
 
   int d_npoints;
+
+  bool d_stem;
 };
 
 #endif /* TIME_DISPLAY_FORM_H */

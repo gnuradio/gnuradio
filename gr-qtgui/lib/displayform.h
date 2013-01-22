@@ -44,6 +44,8 @@ class DisplayForm : public QWidget
   virtual DisplayPlot* getPlot() = 0;
   void Reset();
 
+  void enableMenu(bool en=true);
+
 public slots:
   void resizeEvent( QResizeEvent * e );
   void mousePressEvent( QMouseEvent * e);
@@ -60,6 +62,14 @@ public slots:
   void setLineStyle(int which, Qt::PenStyle style);
   void setLineMarker(int which, QwtSymbol::Style style);
   void setMarkerAlpha(int which, int alpha);
+
+  QString title();
+  QString lineLabel(int which);
+  QString lineColor(int which);
+  int lineWidth(int which);
+  Qt::PenStyle lineStyle(int which);
+  QwtSymbol::Style lineMarker(int which);
+  int markerAlpha(int which);
 
   void setStop(bool on);
   void setStop();
@@ -87,6 +97,7 @@ protected:
 
   QwtPlotGrid *_grid;
 
+  bool   _menu_on;
   QMenu *_menu;
 
   QAction *_stop_act;

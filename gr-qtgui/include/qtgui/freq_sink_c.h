@@ -27,7 +27,7 @@
 #include <qtgui/api.h>
 #include <gr_sync_block.h>
 #include <qapplication.h>
-#include <qwt_symbol.h>
+#include <filter/firdes.h>
 
 namespace gr {
   namespace qtgui {
@@ -62,7 +62,7 @@ namespace gr {
       static sptr make(int fftsize, int wintype,
 		       double fc, double bw,
 		       const std::string &name,
-		       int nconnections,
+		       int nconnections=1,
 		       QWidget *parent=NULL);
 
       virtual void exec_() = 0;
@@ -72,20 +72,34 @@ namespace gr {
       virtual int fft_size() const = 0;
       virtual void set_fft_average(const float fftavg) = 0;
       virtual float fft_average() const = 0;
+      virtual void set_fft_window(const gr::filter::firdes::win_type win) = 0;
+      virtual gr::filter::firdes::win_type fft_window() = 0;
 
       virtual void set_frequency_range(const double centerfreq, const double bandwidth) = 0;
       virtual void set_y_axis(double min, double max) = 0;
 
       virtual void set_update_time(double t) = 0;
+
       virtual void set_title(const std::string &title) = 0;
       virtual void set_line_label(int which, const std::string &label) = 0;
       virtual void set_line_color(int which, const std::string &color) = 0;
       virtual void set_line_width(int which, int width) = 0;
-      virtual void set_line_style(int which, Qt::PenStyle style) = 0;
-      virtual void set_line_marker(int which, QwtSymbol::Style marker) = 0;
+      virtual void set_line_style(int which, int style) = 0;
+      virtual void set_line_marker(int which, int marker) = 0;
+      virtual void set_line_alpha(int which, double alpha) = 0;
+
+      virtual std::string title() = 0;
+      virtual std::string line_label(int which) = 0;
+      virtual std::string line_color(int which) = 0;
+      virtual int line_width(int which) = 0;
+      virtual int line_style(int which) = 0;
+      virtual int line_marker(int which) = 0;
+      virtual double line_alpha(int which) = 0;
 
       virtual void set_size(int width, int height) = 0;
 
+      virtual void enable_menu(bool en=true) = 0;
+      virtual void enable_grid(bool en=true) = 0;
       virtual void reset() = 0;
 
       QApplication *d_qApplication;

@@ -140,7 +140,7 @@ class my_top_block(gr.top_block):
 
         Rs = 8000
         f1 = 100
-        f2 = 200
+        f2 = 2000
 
         npts = 2048
 
@@ -152,11 +152,12 @@ class my_top_block(gr.top_block):
         thr = gr.throttle(gr.sizeof_float, 100*npts)
         self.snk1 = qtgui.waterfall_sink_f(npts, filter.firdes.WIN_BLACKMAN_hARRIS,
                                            0, Rs,
-                                           "Real Waterfall Example")
+                                           "Real Waterfall Example", 2)
 
         self.connect(src1, (src,0))
         self.connect(src2, (src,1))
         self.connect(src,  thr, (self.snk1, 0))
+        self.connect(src1, (self.snk1, 1))
 
         self.ctrl_win = control_box()
         self.ctrl_win.attach_signal1(src1)

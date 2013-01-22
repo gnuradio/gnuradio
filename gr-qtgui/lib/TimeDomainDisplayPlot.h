@@ -41,6 +41,8 @@ public:
 
   void replot();
 
+  void stemPlot(bool trig);
+
 public slots:
   void setSampleRate(double sr, double units,
 		     const std::string &strunits);

@@ -28,6 +28,8 @@
 TimeDisplayForm::TimeDisplayForm(int nplots, QWidget* parent)
   : DisplayForm(nplots, parent)
 {
+  d_stem = false;
+
   _intValidator = new QIntValidator(this);
   _intValidator->setBottom(0);
 
@@ -40,6 +42,11 @@ TimeDisplayForm::TimeDisplayForm(int nplots, QWidget* parent)
   _menu->addAction(nptsmenu);
   connect(nptsmenu, SIGNAL(whichTrigger(int)),
 	  this, SLOT(setNPoints(const int)));
+
+  QAction *stemmenu = new QAction("Stem Plot", this);
+  _menu->addAction(stemmenu);
+  connect(stemmenu, SIGNAL(triggered(bool)),
+	  this, SLOT(setStem(bool)));
 
   Reset();
 
@@ -114,4 +121,11 @@ void
 TimeDisplayForm::setNPoints(const int npoints)
 {
   d_npoints = npoints;
+}
+
+void
+TimeDisplayForm::setStem(bool trig)
+{
+  d_stem ^= 1;
+  getPlot()->stemPlot(d_stem);
 }

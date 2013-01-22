@@ -40,22 +40,6 @@ namespace pt = boost::posix_time;
 #include <QDebug>
 
 /***********************************************************************
- * Create a time label HH:MM:SS.SSS from an input time
- **********************************************************************/
-static QString
-make_time_label(double secs)
-{
-  std::string time_str = pt::to_simple_string(pt::from_time_t(time_t(secs)));
-
-  // lops off the YYYY-mmm-DD part of the string
-  size_t ind =  time_str.find(" ");
-  if(ind != std::string::npos)
-    time_str = time_str.substr(ind);
-
-  return QString("").sprintf("%s.%03ld", time_str.c_str(), long(std::fmod(secs*1000, 1000)));
-}
-
-/***********************************************************************
  * Text scale widget to provide Y (time) axis text
  **********************************************************************/
 class QwtTimeScaleDraw: public QwtScaleDraw, public TimeScaleData
@@ -154,13 +138,6 @@ WaterfallDisplayPlot::WaterfallDisplayPlot(int nplots, QWidget* parent)
 
   _lastReplot = 0;
 
-  QList<int> colormaps;
-  colormaps << INTENSITY_COLOR_MAP_TYPE_MULTI_COLOR 
-	    << INTENSITY_COLOR_MAP_TYPE_WHITE_HOT
-	    << INTENSITY_COLOR_MAP_TYPE_BLACK_HOT
-	    << INTENSITY_COLOR_MAP_TYPE_INCANDESCENT
-	    << INTENSITY_COLOR_MAP_TYPE_USER_DEFINED;
-
   for(int i = 0; i < _nplots; i++) {
     d_data.push_back(new WaterfallData(_startFrequency, _stopFrequency,
 				       _numPoints, 200));
@@ -181,10 +158,15 @@ WaterfallDisplayPlot::WaterfallDisplayPlot(int nplots, QWidget* parent)
 
     d_spectrogram[i]->attach(this);
 
-    _intensityColorMapType.push_back(colormaps[i%colormaps.size()]);
+    _intensityColorMapType.push_back(INTENSITY_COLOR_MAP_TYPE_MULTI_COLOR);
     setIntensityColorMapType(i, _intensityColorMapType[i],
 			     QColor("white"), QColor("white"));    
+
+    setAlpha(i, 255/_nplots);
   }
+
+  // Set bottom plot with no transparency as a base
+  setAlpha(0, 255);
 
   // LeftButton for the zooming
   // MidButton for the panning
@@ -357,6 +339,30 @@ WaterfallDisplayPlot::setIntensityRange(const double minIntensity,
   }
 }
 
+double
+WaterfallDisplayPlot::getMinIntensity(int which) const
+{
+#if QWT_VERSION < 0x060000
+  QwtDoubleInterval r = d_data[which]->range();
+#else
+  QwtInterval r = d_data[which]->interval(Qt::ZAxis);
+#endif
+
+  return r.minValue();
+}
+
+double
+WaterfallDisplayPlot::getMaxIntensity(int which) const
+{
+#if QWT_VERSION < 0x060000
+  QwtDoubleInterval r = d_data[which]->range();
+#else
+  QwtInterval r = d_data[which]->interval(Qt::ZAxis);
+#endif
+
+  return r.maxValue();
+}
+
 void
 WaterfallDisplayPlot::replot()
 {
@@ -383,6 +389,15 @@ WaterfallDisplayPlot::replot()
 
   QwtPlot::replot();
 }
+
+void
+WaterfallDisplayPlot::clearData()
+{
+  for(int i = 0; i < _nplots; i++) {
+    d_data[i]->reset();
+  }
+}
+
 
 int
 WaterfallDisplayPlot::getIntensityColorMapType(int which) const
@@ -493,6 +508,18 @@ const QColor
 WaterfallDisplayPlot::getUserDefinedHighIntensityColor() const
 {
   return _userDefinedHighIntensityColor;
+}
+
+int
+WaterfallDisplayPlot::getAlpha(int which)
+{
+  return d_spectrogram[which]->alpha();
+}
+
+void
+WaterfallDisplayPlot::setAlpha(int which, int alpha)
+{
+  d_spectrogram[which]->setAlpha(alpha);
 }
 
 void

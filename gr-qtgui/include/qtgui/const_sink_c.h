@@ -27,8 +27,7 @@
 #include <qtgui/api.h>
 #include <gr_sync_block.h>
 #include <qapplication.h>
-#include <qwt_symbol.h>
-
+#include <filter/firdes.h>
 namespace gr {
   namespace qtgui {
     
@@ -55,7 +54,7 @@ namespace gr {
        */
       static sptr make(int size,
 		       const std::string &name,
-		       int nconnections,
+		       int nconnections=1,
 		       QWidget *parent=NULL);
 
       virtual void exec_() = 0;
@@ -69,12 +68,22 @@ namespace gr {
       virtual void set_line_label(int which, const std::string &label) = 0;
       virtual void set_line_color(int which, const std::string &color) = 0;
       virtual void set_line_width(int which, int width) = 0;
-      virtual void set_line_style(int which, Qt::PenStyle style) = 0;
-      virtual void set_line_marker(int which, QwtSymbol::Style marker) = 0;
+      virtual void set_line_style(int which, int style) = 0;
+      virtual void set_line_marker(int which, int marker) = 0;
       virtual void set_nsamps(const int newsize) = 0;
+      virtual void set_line_alpha(int which, double alpha) = 0;
+
+      virtual std::string title() = 0;
+      virtual std::string line_label(int which) = 0;
+      virtual std::string line_color(int which) = 0;
+      virtual int line_width(int which) = 0;
+      virtual int line_style(int which) = 0;
+      virtual int line_marker(int which) = 0;
+      virtual double line_alpha(int which) = 0;
 
       virtual void set_size(int width, int height) = 0;
 
+      virtual void enable_menu(bool en=true) = 0;
       virtual int nsamps() const = 0;
       virtual void reset() = 0;
 
