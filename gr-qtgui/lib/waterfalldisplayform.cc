@@ -127,7 +127,7 @@ WaterfallDisplayForm::newData(const QEvent *updateEvent)
   }
 
   getPlot()->plotNewData(dataPoints, numDataPoints,
-			 d_update_time, dataTimestamp, 0);
+			 _time_per_slice, dataTimestamp, 0);
 }
 
 void
@@ -207,6 +207,9 @@ WaterfallDisplayForm::setFrequencyRange(const double centerfreq,
   double units3  = std::max(floor(units10 / 3.0), 0.0);
   double units = pow(10, (units10-fmod(units10, 3.0)));
   int iunit = static_cast<int>(units3);
+
+  _samp_rate = bandwidth;
+  _time_per_slice = (1.0/bandwidth)*_fftsize;
 
   getPlot()->setFrequencyRange(centerfreq, bandwidth,
 			       units, strunits[iunit]);

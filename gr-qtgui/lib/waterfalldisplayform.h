@@ -81,6 +81,8 @@ private:
   uint64_t _numRealDataPoints;
   QIntValidator* _intValidator;
 
+  double _samp_rate;
+  double _time_per_slice;
   int _fftsize;
   float _fftavg;
   gr::filter::firdes::win_type _fftwintype;
