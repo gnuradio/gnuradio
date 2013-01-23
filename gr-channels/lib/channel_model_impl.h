@@ -49,8 +49,6 @@ namespace gr {
 
       std::vector<gr_complex> d_taps;
 
-      void setup_rpc();
-
     public:
       channel_model_impl(double noise_voltage,
 			 double frequency_offset,
@@ -59,6 +57,8 @@ namespace gr {
 			 double noise_seed);
       
       ~channel_model_impl();
+
+      void setup_rpc();
 
       void set_noise_voltage(double noise_voltage);
       void set_frequency_offset(double frequency_offset);

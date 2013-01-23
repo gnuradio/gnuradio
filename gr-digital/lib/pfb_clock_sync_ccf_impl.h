@@ -58,8 +58,6 @@ namespace gr {
       float d_error;
       int   d_out_idx;
 
-      void setup_rpc();
-
       void create_diff_taps(const std::vector<float> &newtaps,
 			    std::vector<float> &difftaps);
 
@@ -71,6 +69,8 @@ namespace gr {
 			      float max_rate_deviation=1.5,
 			      int osps=1);
       ~pfb_clock_sync_ccf_impl();
+
+      void setup_rpc();
 
       void update_gains();
 
@@ -100,19 +100,8 @@ namespace gr {
       float beta() const;
       float clock_rate() const;
 
-      /*!
-       * \brief Returns the current error of the control loop.
-       */
       float error() const;
-  
-      /*!
-       * \brief Returns the current rate of the control loop.
-       */
       float rate() const;
-
-      /*!
-       * \brief Returns the current phase arm of the control loop.
-       */
       float phase() const;
 
       /*******************************************************************

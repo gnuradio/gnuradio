@@ -310,6 +310,21 @@ namespace gr {
        * \brief Returns the current clock rate
        */
       virtual float clock_rate() const = 0;
+
+      /*!
+       * \brief Returns the current error of the control loop.
+       */
+      virtual float error() const = 0;
+  
+      /*!
+       * \brief Returns the current rate of the control loop.
+       */
+      virtual float rate() const = 0;
+
+      /*!
+       * \brief Returns the current phase arm of the control loop.
+       */
+      virtual float phase() const = 0;
     };
 
   } /* namespace digital */

@@ -40,18 +40,7 @@ gr_ctrlport_probe2_c::gr_ctrlport_probe2_c(const std::string &id,
   : gr_sync_block("probe2_c",
 		  gr_make_io_signature(1, 1, sizeof(gr_complex)),
 		  gr_make_io_signature(0, 0, 0)),
-    d_len(len),
-    d_const_rpc(d_name, id.c_str(), this, unique_id(), &gr_ctrlport_probe2_c::get,
-		pmt::make_c32vector(0,-2),
-		pmt::make_c32vector(0,2),
-		pmt::make_c32vector(0,0), 
-		"volts", desc.c_str(), RPC_PRIVLVL_MIN, DISPXYSCATTER),
-    d_len_get_rpc(d_name, "length", this, unique_id(), &gr_ctrlport_probe2_c::length,
-		  pmt::mp(1), pmt::mp(10*len), pmt::mp(len),
-		  "samples", "get vector length", RPC_PRIVLVL_MIN, DISPNULL),
-    d_len_set_rpc(d_name, "length", this, unique_id(), &gr_ctrlport_probe2_c::set_length,
-		  pmt::mp(1), pmt::mp(10*len), pmt::mp(len),
-		  "samples", "set vector length", RPC_PRIVLVL_MIN, DISPNULL)
+    d_id(id), d_desc(desc), d_len(len)
 {
   set_length(len);
 }
@@ -136,4 +125,31 @@ gr_ctrlport_probe2_c::work(int noutput_items,
   mutex_buffer.unlock();
     
   return noutput_items;
+}
+
+void
+gr_ctrlport_probe2_c::setup_rpc()
+{
+#ifdef GR_CTRLPORT
+  int len = static_cast<int>(d_len);
+  d_rpc_vars.push_back(
+    rpcbasic_sptr(new rpcbasic_register_get<gr_ctrlport_probe2_c, std::vector<std::complex<float> > >(
+      alias(), d_id.c_str(), &gr_ctrlport_probe2_c::get,
+      pmt::make_c32vector(0,-2),
+      pmt::make_c32vector(0,2),
+      pmt::make_c32vector(0,0), 
+      "volts", d_desc.c_str(), RPC_PRIVLVL_MIN, DISPXYSCATTER)));
+
+  d_rpc_vars.push_back(
+    rpcbasic_sptr(new rpcbasic_register_get<gr_ctrlport_probe2_c, int>(
+      alias(), "length", &gr_ctrlport_probe2_c::length,
+      pmt::mp(1), pmt::mp(10*len), pmt::mp(len),
+      "samples", "get vector length", RPC_PRIVLVL_MIN, DISPNULL)));
+
+  d_rpc_vars.push_back(
+    rpcbasic_sptr(new rpcbasic_register_set<gr_ctrlport_probe2_c, int>(
+      alias(), "length", &gr_ctrlport_probe2_c::set_length,
+      pmt::mp(1), pmt::mp(10*len), pmt::mp(len),
+      "samples", "set vector length", RPC_PRIVLVL_MIN, DISPNULL)));
+#endif /* GR_CTRLPORT */
 }

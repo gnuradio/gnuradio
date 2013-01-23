@@ -44,13 +44,15 @@ class GR_CORE_API gr_ctrlport_probe_c : public gr_sync_block
 
   boost::shared_mutex ptrlock;
 
+  std::string d_id;
+  std::string d_desc;
   const gr_complex* d_ptr;
   size_t d_ptrLen;
 
-  rpcbasic_register_get<gr_ctrlport_probe_c, std::vector<std::complex<float> >  > d_const_rpc;
-
  public:
   ~gr_ctrlport_probe_c();
+
+  void setup_rpc();
 
   std::vector<gr_complex> get();
 

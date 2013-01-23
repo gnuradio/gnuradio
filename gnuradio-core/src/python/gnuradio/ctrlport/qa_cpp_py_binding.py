@@ -135,7 +135,7 @@ class test_cpp_py_binding(gr_unittest.TestCase):
         self.src = gr.vector_source_c(data)
         self.p1 = gr.ctrlport_probe_c("aaa","C++ exported variable")
         self.p2 = gr.ctrlport_probe_c("bbb","C++ exported variable")
-        probe_name = self.p2.name() + str(self.p2.unique_id())
+        probe_name = self.p2.alias()
 
         self.tb.connect(self.src, self.p1)
         self.tb.connect(self.src, self.p2)

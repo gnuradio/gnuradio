@@ -65,8 +65,6 @@ namespace gr {
 	d_max_dev(max_rate_deviation),
 	d_osps(osps), d_error(0), d_out_idx(0)
     {
-      setup_rpc();
-
       d_nfilters = filter_size;
       d_sps = floor(sps);
 
@@ -461,42 +459,42 @@ namespace gr {
 #ifdef GR_CTRLPORT
       // Getters
       add_rpc_variable(
-          rpcbasic_sptr(new rpcbasic_register_get<pfb_clock_sync_ccf_impl, float>(
-	      d_name, "error", this, unique_id(),
-	      &pfb_clock_sync_ccf_impl::error,
+          rpcbasic_sptr(new rpcbasic_register_get<pfb_clock_sync_ccf, float>(
+	      alias(), "error",
+	      &pfb_clock_sync_ccf::error,
 	      pmt::mp(-2.0f), pmt::mp(2.0f), pmt::mp(0.0f),
 	      "", "Error signal of loop",
 	      RPC_PRIVLVL_MIN, DISPTIMESERIESF)));
     
       add_rpc_variable(
-          rpcbasic_sptr(new rpcbasic_register_get<pfb_clock_sync_ccf_impl, float>(
-	      d_name, "rate", this, unique_id(),
-	      &pfb_clock_sync_ccf_impl::rate,
+          rpcbasic_sptr(new rpcbasic_register_get<pfb_clock_sync_ccf, float>(
+	      alias(), "rate",
+	      &pfb_clock_sync_ccf::rate,
 	      pmt::mp(-2.0f), pmt::mp(2.0f), pmt::mp(0.0f),
 	      "", "Rate change of phase",
 	      RPC_PRIVLVL_MIN, DISPTIMESERIESF)));
 
       add_rpc_variable(
-          rpcbasic_sptr(new rpcbasic_register_get<pfb_clock_sync_ccf_impl, float>(
-	      d_name, "phase", this, unique_id(),
-	      &pfb_clock_sync_ccf_impl::phase,
+          rpcbasic_sptr(new rpcbasic_register_get<pfb_clock_sync_ccf, float>(
+	      alias(), "phase",
+	      &pfb_clock_sync_ccf::phase,
 	      pmt::mp(0), pmt::mp((int)d_nfilters), pmt::mp(0),
 	      "", "Current filter phase arm",
 	      RPC_PRIVLVL_MIN, DISPTIMESERIESF)));
 
       add_rpc_variable(
-          rpcbasic_sptr(new rpcbasic_register_get<pfb_clock_sync_ccf_impl, float>(
-	      d_name, "loop bw", this, unique_id(),
-	      &pfb_clock_sync_ccf_impl::loop_bandwidth,
+          rpcbasic_sptr(new rpcbasic_register_get<pfb_clock_sync_ccf, float>(
+	      alias(), "loop bw",
+	      &pfb_clock_sync_ccf::loop_bandwidth,
 	      pmt::mp(0.0f), pmt::mp(1.0f), pmt::mp(0.0f),
 	      "", "Loop bandwidth",
 	      RPC_PRIVLVL_MIN, DISPNULL)));
 
       // Setters
       add_rpc_variable(
-          rpcbasic_sptr(new rpcbasic_register_set<pfb_clock_sync_ccf_impl, float>(
-	      d_name, "loop bw", this, unique_id(),
-	      &pfb_clock_sync_ccf_impl::set_loop_bandwidth,
+          rpcbasic_sptr(new rpcbasic_register_set<pfb_clock_sync_ccf, float>(
+	      alias(), "loop bw",
+	      &pfb_clock_sync_ccf::set_loop_bandwidth,
 	      pmt::mp(0.0f), pmt::mp(1.0f), pmt::mp(0.0f),
 	      "", "Loop bandwidth",
 	      RPC_PRIVLVL_MIN, DISPNULL)));

@@ -41,12 +41,7 @@ gr_ctrlport_probe_c::gr_ctrlport_probe_c(const std::string &id,
   : gr_sync_block("probe_c",
 		  gr_make_io_signature(1, 1, sizeof(gr_complex)),
 		  gr_make_io_signature(0, 0, 0)),
-    d_ptr(NULL), d_ptrLen(0),
-    d_const_rpc(d_name, id.c_str(), this, unique_id(), &gr_ctrlport_probe_c::get, 
-		pmt::make_c32vector(0,-2),
-		pmt::make_c32vector(0,2),
-		pmt::make_c32vector(0,0), 
-		"volts", desc.c_str(), RPC_PRIVLVL_MIN, DISPXYSCATTER)
+    d_id(id), d_desc(desc), d_ptr(NULL), d_ptrLen(0)
 {
 }
 
@@ -83,4 +78,18 @@ gr_ctrlport_probe_c::work(int noutput_items,
   ptrlock.unlock();
     
   return noutput_items;
+}
+
+void
+gr_ctrlport_probe_c::setup_rpc()
+{
+#ifdef GR_CTRLPORT
+  d_rpc_vars.push_back(
+    rpcbasic_sptr(new rpcbasic_register_get<gr_ctrlport_probe_c, std::vector<std::complex<float> > >(
+      alias(), d_id.c_str(), &gr_ctrlport_probe_c::get, 
+      pmt::make_c32vector(0,-2),
+      pmt::make_c32vector(0,2),
+      pmt::make_c32vector(0,0), 
+      "volts", d_desc.c_str(), RPC_PRIVLVL_MIN, DISPXYSCATTER)));
+#endif /* GR_CTRLPORT */
 }

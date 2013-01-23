@@ -42,6 +42,8 @@ class GR_CORE_API gr_ctrlport_probe2_c : public gr_sync_block
 
   gr_ctrlport_probe2_c(const std::string &id, const std::string &desc, int len);
 
+  std::string d_id;
+  std::string d_desc;
   size_t d_len;
   boost::shared_mutex mutex_buffer;
   mutable boost::mutex mutex_notify;
@@ -49,12 +51,10 @@ class GR_CORE_API gr_ctrlport_probe2_c : public gr_sync_block
 
   std::vector<gr_complex> d_buffer;
 
-  rpcbasic_register_get<gr_ctrlport_probe2_c, std::vector<std::complex<float> >  > d_const_rpc;
-  rpcbasic_register_get<gr_ctrlport_probe2_c, int> d_len_get_rpc;
-  rpcbasic_register_set<gr_ctrlport_probe2_c, int> d_len_set_rpc;
-
  public:
   ~gr_ctrlport_probe2_c();
+
+  void setup_rpc();
 
   void forecast(int noutput_items, gr_vector_int &ninput_items_required);
 

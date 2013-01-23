@@ -43,7 +43,7 @@ class GR_CORE_API gr_nop : public gr_block
   gr_nop (size_t sizeof_stream_item);
 
   std::vector<boost::any> d_rpc_vars;
-  void set_rpc();
+  void setup_rpc();
 
 protected:
   int	d_nmsgs_recvd;

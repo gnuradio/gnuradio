@@ -112,7 +112,7 @@ class test_cpp_py_binding_set(gr_unittest.TestCase):
         self.src = gr.vector_source_c(data, True)
         self.p = gr.nop(gr.sizeof_gr_complex)
         self.p.set_ctrlport_test(0);
-        probe_info = "{0}{1}".format(self.p.name(), self.p.unique_id())
+        probe_info = self.p.alias()
 
         self.tb.connect(self.src, self.p)
 
