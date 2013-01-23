@@ -474,6 +474,23 @@ gr_hier_block2_detail::flatten_aux(gr_flat_flowgraph_sptr sfg) const
   gr_edge_viter_t p;
   gr_msg_edge_viter_t q,u;
 
+  // For every block (gr_block and gr_hier_block2), set up the RPC
+  // interface.
+  for(p = edges.begin(); p != edges.end(); p++) {
+    gr_basic_block_sptr b;
+    b = p->src().block();
+    if(!b->is_rpc_set()) {
+      b->setup_rpc();
+      b->rpc_set();
+    }
+
+    b = p->dst().block();
+    if(!b->is_rpc_set()) {
+      b->setup_rpc();
+      b->rpc_set();
+    }
+  }
+
   if (GR_HIER_BLOCK2_DETAIL_DEBUG)
     std::cout << "Flattening stream connections: " << std::endl;
 

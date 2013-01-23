@@ -42,8 +42,6 @@ gr_top_block::gr_top_block(const std::string &name)
 		   gr_make_io_signature(0,0,0))
 
 {
-  setup_rpc();
-
   d_impl = new gr_top_block_impl(this);
 }
 
@@ -123,7 +121,7 @@ gr_top_block::setup_rpc()
   // Getters
   add_rpc_variable(
       rpcbasic_sptr(new rpcbasic_register_get<gr_top_block, int>(
-	 d_name, "max nouptut_items", this, unique_id(),
+	 alias(), "max nouptut_items",
 	 &gr_top_block::max_noutput_items,
 	 pmt::mp(0), pmt::mp(8192), pmt::mp(8192),
 	 "items", "Max number of output items",
@@ -132,7 +130,7 @@ gr_top_block::setup_rpc()
   // Setters
   add_rpc_variable(
       rpcbasic_sptr(new rpcbasic_register_set<gr_top_block, int>(
-	 d_name, "max noutput_items", this, unique_id(),
+	 alias(), "max noutput_items",
 	 &gr_top_block::set_max_noutput_items,
 	 pmt::mp(0), pmt::mp(8192), pmt::mp(8192),
 	 "items", "Max number of output items",

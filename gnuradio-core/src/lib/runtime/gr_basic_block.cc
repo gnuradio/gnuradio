@@ -49,6 +49,7 @@ gr_basic_block::gr_basic_block(const std::string &name,
     d_symbolic_id(global_block_registry.block_register(this)),
     d_symbol_name(global_block_registry.register_symbolic_name(this)),
     d_color(WHITE),
+    d_rpc_set(false),
     message_subscribers(pmt::make_dict())
 {
   s_ncurrently_allocated++;

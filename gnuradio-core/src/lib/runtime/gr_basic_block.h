@@ -97,6 +97,7 @@ class GR_CORE_API gr_basic_block : public gr_msg_accepter, public boost::enable_
   std::string          d_symbol_name;
   std::string          d_symbol_alias;
   vcolor               d_color;
+  bool                 d_rpc_set;
 
   msg_queue_map_t msg_queue;
   std::vector<boost::any> d_rpc_vars; // container for all RPC variables
@@ -244,6 +245,19 @@ class GR_CORE_API gr_basic_block : public gr_msg_accepter, public boost::enable_
      * (rpcbasic_sptr(...)) and stored using add_rpc_variable.
      */
     virtual void setup_rpc() {};
+
+    /*!
+     * \brief Ask if this block has been registered to the RPC.
+     *
+     * We can only register a block once, so we use this to protect us
+     * from calling it multiple times.
+     */
+    bool is_rpc_set() { return d_rpc_set; }
+
+    /*!
+     * \brief When the block is registered with the RPC, set this.
+     */
+    void rpc_set() { d_rpc_set = true; }
   
   /*!
    * \brief Confirm that ninputs and noutputs is an acceptable combination.

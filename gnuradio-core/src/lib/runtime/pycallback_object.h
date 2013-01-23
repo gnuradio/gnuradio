@@ -77,11 +77,8 @@ public:
 		    myType min, myType max, myType deflt,
 		    DisplayType dtype) :
     d_callback(NULL),
-    d_rpc(name, functionbase.c_str(), this, pycallback_object_count++,
-	  &pycallback_object::get, pmt_assist<myType>::make(min),
-	  pmt_assist<myType>::make(max),  pmt_assist<myType>::make(deflt),
-	  units.c_str(), desc.c_str(), RPC_PRIVLVL_MIN, dtype)
-    //pmt::mp(min), pmt::mp(max), pmt::mp(deflt), units.c_str(), desc.c_str(), RPC_PRIVLVL_MIN, dtype)
+    d_functionbase(functionbase), d_units(units), d_desc(desc),
+    d_min(min), d_max(max), d_deflt(deflt), d_dtype(dtype)
   {
     d_callback = NULL;
   }
@@ -121,9 +118,23 @@ public:
     d_callback = cb;
   }
   
+  void setup_rpc()
+  {
+#ifdef GR_CTRLPORT
+    add_rpc_variable(
+      rpcbasic_sptr(new rpcbasic_register_get<pycallback_object, myType>(
+        alias(), d_functionbase.c_str(),
+	&pycallback_object::get, pmt_assist<myType>::make(d_min),
+	pmt_assist<myType>::make(d_max), pmt_assist<myType>::make(d_deflt),
+	d_units.c_str(), d_desc.c_str(), RPC_PRIVLVL_MIN, d_dtype)));
+#endif /* GR_CTRLPORT */
+  }
+
 private:
   PyObject* d_callback;
-  rpcbasic_register_get<pycallback_object, myType> d_rpc;
+  std::string d_functionbase, d_units, d_desc;
+  myType d_min, d_max, d_deflt;
+  DisplayType d_dtype;
 
   myType pyCast(PyObject* obj) {
     printf("TYPE NOT IMPLEMENTED!\n");

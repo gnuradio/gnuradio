@@ -30,6 +30,7 @@
 #include <rpcmanager.h>
 #include <rpcserver_selector.h>
 #include <rpcserver_base.h>
+#include <gr_block_registry.h>
 
 // Base classes
 template<typename T, typename Tto> class rpcextractor_base
@@ -282,9 +283,8 @@ typedef boost::shared_ptr<rpcbasic_base> rpcbasic_sptr;
 template<typename T, typename Tto>
 struct rpcbasic_register_set : public rpcbasic_base
 {
-  rpcbasic_register_set(const std::string& namebase,
-			const char* functionbase, T* obj,
-			const unsigned int serial,
+  rpcbasic_register_set(const std::string& block_alias,
+			const char* functionbase,
 			void (T::*function)(Tto), 
 			const pmt::pmt_t &min, const pmt::pmt_t &max, const pmt::pmt_t &def,
 			const char* units_ = "", 
@@ -299,13 +299,15 @@ struct rpcbasic_register_set : public rpcbasic_base
     d_desc = desc_;
     d_minpriv = minpriv_;
     d_display = display_;
+    d_object = dynamic_cast<T*>(global_block_registry.block_lookup(pmt::intern(block_alias)).get());
 #ifdef RPCSERVER_ENABLED
     callbackregister_base::configureCallback_t
-      extractor(new rpcbasic_extractor<T,Tto>(obj, function), 
+      extractor(new rpcbasic_extractor<T,Tto>(d_object, function), 
 		minpriv_, std::string(units_),
 		display_, std::string(desc_), min, max, def);
     std::ostringstream oss(std::ostringstream::out);
-    oss << namebase << serial << "::" << functionbase; d_id = oss.str();
+    oss << block_alias << "::" << functionbase;
+    d_id = oss.str();
     //std::cerr << "REGISTERING SET: " << d_id << "  " << desc_ << std::endl;
     rpcmanager::get()->i()->registerConfigureCallback(d_id, extractor);
 #endif
@@ -341,6 +343,7 @@ private:
   std::string d_units, d_desc;
   priv_lvl_t d_minpriv;
   DisplayType d_display;
+  T *d_object;
 };
 
 
@@ -349,9 +352,8 @@ class rpcbasic_register_get : public rpcbasic_base
 {
 public:
   // primary constructor to allow for T get() functions
-  rpcbasic_register_get(const std::string& namebase,
-			const char* functionbase, T* obj,
-			const int serial,
+  rpcbasic_register_get(const std::string& block_alias,
+			const char* functionbase,
 			Tfrom (T::*function)(), 
 			const pmt::pmt_t &min, const pmt::pmt_t &max, const pmt::pmt_t &def,
 			const char* units_ = "", 
@@ -366,12 +368,13 @@ public:
     d_desc = desc_;
     d_minpriv = minpriv_;
     d_display = display_;
+    d_object = dynamic_cast<T*>(global_block_registry.block_lookup(pmt::intern(block_alias)).get());
 #ifdef RPCSERVER_ENABLED
     callbackregister_base::queryCallback_t
-      inserter(new rpcbasic_inserter<T,Tfrom>(obj, function), 
+      inserter(new rpcbasic_inserter<T,Tfrom>(d_object, function), 
 	       minpriv_, std::string(units_), display_, std::string(desc_), min, max, def);
     std::ostringstream oss(std::ostringstream::out);
-    oss << namebase << serial << "::" << functionbase;
+    oss << block_alias << "::" << functionbase;
     d_id = oss.str();
     //std::cerr << "REGISTERING GET: " << d_id << "  " << desc_ << std::endl;
     rpcmanager::get()->i()->registerQueryCallback(d_id, inserter);
@@ -379,9 +382,8 @@ public:
   }
 	
   // alternate constructor to allow for T get() const functions
-  rpcbasic_register_get(const std::string& namebase,
-			const char* functionbase, T* obj,
-			const int serial,
+  rpcbasic_register_get(const std::string& block_alias,
+			const char* functionbase,
 			Tfrom (T::*function)() const, 
 			const pmt::pmt_t &min, const pmt::pmt_t &max, const pmt::pmt_t &def,
 			const char* units_ = "", 
@@ -396,12 +398,13 @@ public:
     d_desc = desc_;
     d_minpriv = minpriv_;
     d_display = display_;
+    d_object = dynamic_cast<T*>(global_block_registry.block_lookup(pmt::intern(block_alias)).get());
 #ifdef RPCSERVER_ENABLED
     callbackregister_base::queryCallback_t
-      inserter(new rpcbasic_inserter<T,Tfrom>(obj, (Tfrom (T::*)())function), 
+      inserter(new rpcbasic_inserter<T,Tfrom>(d_object, (Tfrom (T::*)())function), 
 	       minpriv_, std::string(units_), display_, std::string(desc_), min, max, def);
     std::ostringstream oss(std::ostringstream::out);
-    oss << namebase << serial << "::" << functionbase;
+    oss << block_alias << "::" << functionbase;
     d_id = oss.str();
     //std::cerr << "REGISTERING GET CONST: " << d_id << "   " << desc_ << "   " << display_ << std::endl;
     rpcmanager::get()->i()->registerQueryCallback(d_id, inserter);
@@ -437,6 +440,7 @@ private:
   std::string d_units, d_desc;
   priv_lvl_t d_minpriv;
   DisplayType d_display;
+  T *d_object;
 };
 
 /*
