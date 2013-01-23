@@ -1,6 +1,7 @@
 #ifndef GR_BLOCK_REGISTRY_H
 #define GR_BLOCK_REGISTRY_H
 
+#include <gr_core_api.h>
 #include <map>
 
 #ifndef GR_BASIC_BLOCK_H
@@ -8,7 +9,7 @@ class gr_basic_block;
 class gr_block;
 #endif
 
-class gr_block_registry {
+class GR_CORE_API gr_block_registry {
     public:
         gr_block_registry();
 
@@ -36,7 +37,7 @@ class gr_block_registry {
  
 };
 
-extern gr_block_registry global_block_registry;
+GR_CORE_API extern gr_block_registry global_block_registry;
 
 #endif
 
