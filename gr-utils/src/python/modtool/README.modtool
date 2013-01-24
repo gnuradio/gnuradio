@@ -1,0 +1,8 @@
+gr_modtool: Swiss Army Knife for editing GNU Radio modules and -components.
+
+Adding a new subcommand
+=======================
+
+* Add a new file called modtool_SUBCOMMAND
+* Have a look at the other subcommands, it must inherit from ModTool
+* Add that file to __init__.py and CMakeLists.txt
