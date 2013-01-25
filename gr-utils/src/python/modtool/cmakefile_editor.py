@@ -5,7 +5,7 @@ import re
 ### CMakeFile.txt editor class ###############################################
 class CMakeFileEditor(object):
     """A tool for editing CMakeLists.txt files. """
-    def __init__(self, filename, separator=' ', indent='    '):
+    def __init__(self, filename, separator='\n    ', indent='    '):
         self.filename = filename
         self.cfile = open(filename, 'r').read()
         self.separator = separator

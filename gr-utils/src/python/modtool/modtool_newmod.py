@@ -51,7 +51,7 @@ class ModToolNewModule(ModTool):
         * Open all files, rename howto and HOWTO to the module name
         * Rename files and directories that contain the word howto
         """
-        print "Creating out-of-tree module in %s..." % self._dir
+        print "Creating out-of-tree module in %s..." % self._dir,
         try:
             shutil.copytree('/home/braun/.usrlocal/share/gnuradio/modtool/gr-newmod', self._dir)
             os.chdir(self._dir)

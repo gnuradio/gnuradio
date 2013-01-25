@@ -287,8 +287,8 @@ import numpy
 #set $deciminterp = ', <+interpolation+>'
 #else if $blocktype == 'decimator'
 #set $deciminterp = ', <+decimation+>'
-#set $deciminterp = ''
 #else
+#set $deciminterp = ''
 #end if
 from gnuradio import gr
 
@@ -297,7 +297,7 @@ class ${blockname}(${parenttype}):
     docstring for block ${blockname}
     """
     def __init__(self#if $arglist == '' then '' else ', '#$arglist):
-        gr.${parenttype}.__init__(self,
+        ${parenttype}.__init__(self,
 #if $blocktype == 'hier'
             "$blockname",
             gr.io_signature(${inputsig}),  # Input signature
@@ -324,8 +324,6 @@ class ${blockname}(${parenttype}):
         \#self.consume_each(len(input_items[0]))
         return len(output_items[0])
 #stop
-#else
-    def work(self, input_items, output_items):
 #end if
 
     def work(self, input_items, output_items):

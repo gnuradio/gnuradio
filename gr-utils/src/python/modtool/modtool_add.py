@@ -272,7 +272,7 @@ class ModToolAdd(ModTool):
         self._write_tpl('block_python', 'python', fname_py)
         append_re_line_sequence(self._file['pyinit'],
                                 '(^from.*import.*\n|# import any pure.*\n)',
-                                'from %s import *' % self._info['blockname'])
+                                'from %s import %s' % (self._info['blockname'], self._info['blockname']))
         if self.options.skip_cmakefiles:
             return
         ed = CMakeFileEditor(self._file['cmpython'])
