@@ -117,6 +117,14 @@ set(GRC_BLOCKS_DIR      ${GR_PKG_DATA_DIR}/grc/blocks)
 set(SYSCONFDIR          "${CMAKE_INSTALL_PREFIX}/${GR_CONF_DIR}" CACHE PATH "System configuration directory")
 set(GR_PREFSDIR         ${SYSCONFDIR}/${CMAKE_PROJECT_NAME}/conf.d)
 
+OPTION(ENABLE_PERFORMANCE_COUNTERS "Enable block performance counters" OFF)
+if(ENABLE_PERFORMANCE_COUNTERS)
+  message(STATUS "ADDING PERF COUNTERS")
+  add_definitions(-DGR_PERFORMANCE_COUNTERS)
+else(ENABLE_PERFORMANCE_COUNTERS)
+  message(STATUS "NO PERF COUNTERS")
+endif(ENABLE_PERFORMANCE_COUNTERS)
+
 ########################################################################
 # Variables replaced when configuring the package config files
 ########################################################################

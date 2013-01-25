@@ -269,6 +269,83 @@ gr_block::unset_processor_affinity()
   }
 }
 
+float
+gr_block::pc_noutput_items()
+{
+  if(d_detail) {
+    return d_detail->pc_noutput_items();
+  }
+  else {
+    return 0;
+  }
+}
+
+float
+gr_block::pc_nproduced()
+{
+  if(d_detail) {
+    return d_detail->pc_nproduced();
+  }
+  else {
+    return 0;
+  }
+}
+
+float
+gr_block::pc_input_buffers_full(int which)
+{
+  if(d_detail) {
+    return d_detail->pc_input_buffers_full(static_cast<size_t>(which));
+  }
+  else {
+    return 0;
+  }
+}
+
+std::vector<float>
+gr_block::pc_input_buffers_full()
+{
+  if(d_detail) {
+    return d_detail->pc_input_buffers_full();
+  }
+  else {
+    return std::vector<float>(1,0);
+  }
+}
+
+float
+gr_block::pc_output_buffers_full(int which)
+{
+  if(d_detail) {
+    return d_detail->pc_output_buffers_full(static_cast<size_t>(which));
+  }
+  else {
+    return 0;
+  }
+}
+
+std::vector<float>
+gr_block::pc_output_buffers_full()
+{
+  if(d_detail) {
+    return d_detail->pc_output_buffers_full();
+  }
+  else {
+    return std::vector<float>(1,0);
+  }
+}
+
+float
+gr_block::pc_work_time()
+{
+  if(d_detail) {
+    return d_detail->pc_work_time();
+  }
+  else {
+    return 0;
+  }
+}
+
 std::ostream&
 operator << (std::ostream& os, const gr_block *m)
 {

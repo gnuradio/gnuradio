@@ -420,9 +420,18 @@ gr_block_executor::run_one_iteration()
     for (int i = 0; i < d->ninputs(); i++)
       d_start_nitems_read[i] = d->nitems_read(i);
 
+#ifdef GR_PERFORMANCE_COUNTERS
+    d->start_perf_counters();
+#endif /* GR_PERFORMANCE_COUNTERS */
+    
     // Do the actual work of the block
     int n = m->general_work (noutput_items, d_ninput_items,
 			     d_input_items, d_output_items);
+
+#ifdef GR_PERFORMANCE_COUNTERS
+    d->stop_perf_counters(noutput_items, n);
+#endif /* GR_PERFORMANCE_COUNTERS */
+
     LOG(*d_log << "  general_work: noutput_items = " << noutput_items
 	<< " result = " << n << std::endl);
 

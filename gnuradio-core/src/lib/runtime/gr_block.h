@@ -358,6 +358,44 @@ class GR_CORE_API gr_block : public gr_basic_block {
       d_min_output_buffer[port] = min_output_buffer; 
   }
 
+  // --------------- Performance counter functions -------------
+
+  /*!
+   * \brief Gets average noutput_items performance counter.
+   */
+  float pc_noutput_items();
+
+  /*!
+   * \brief Gets average num items produced performance counter.
+   */
+  float pc_nproduced();
+
+  /*!
+   * \brief Gets average average fullness of \p which input buffer.
+   */
+  float pc_input_buffers_full(int which);
+
+  /*!
+   * \brief Gets average fullness of all input buffers.
+   */
+  std::vector<float> pc_input_buffers_full();
+
+  /*!
+   * \brief Gets average fullness of \p which input buffer.
+   */
+  float pc_output_buffers_full(int which);
+
+  /*!
+   * \brief Gets average fullness of all output buffers.
+   */
+  std::vector<float> pc_output_buffers_full();
+
+  /*!
+   * \brief Gets average clock cycles spent in work.
+   */
+  float pc_work_time();
+
+
   // ----------------------------------------------------------------------------
   // Functions to handle thread affinity
 
