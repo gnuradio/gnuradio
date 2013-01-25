@@ -30,11 +30,33 @@ GR_PYTHON_INSTALL(FILES
     modtool_makexml.py
     modtool_newmod.py
     modtool_rm.py
-    newmod_tarfile.py
     parser_cc_block.py
     templates.py
     util_functions.py
     DESTINATION ${GR_PYTHON_DIR}/gnuradio/modtool
+    COMPONENT "utils"
+)
+
+set(GR_PKG_MODTOOL_DATA_DIR ${GR_PKG_DATA_DIR}/modtool)
+install(DIRECTORY gr-newmod
+    DESTINATION ${GR_PKG_MODTOOL_DATA_DIR}
+    COMPONENT "utils"
+)
+
+
+########################################################################
+# Create and install the modtool conf file
+########################################################################
+file(TO_NATIVE_PATH ${CMAKE_INSTALL_PREFIX}/${GR_PKG_MODTOOL_DATA_DIR}/gr-newmod newmoddir)
+
+configure_file(
+    ${CMAKE_CURRENT_SOURCE_DIR}/modtool.conf.in
+    ${CMAKE_CURRENT_BINARY_DIR}/modtool.conf
+@ONLY)
+
+install(
+    FILES ${CMAKE_CURRENT_BINARY_DIR}/modtool.conf
+    DESTINATION ${GR_PREFSDIR}
     COMPONENT "utils"
 )
 
