@@ -1,3 +1,23 @@
+#
+# Copyright 2013 Free Software Foundation, Inc.
+#
+# This file is part of GNU Radio
+#
+# GNU Radio is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 3, or (at your option)
+# any later version.
+#
+# GNU Radio is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with GNU Radio; see the file COPYING.  If not, write to
+# the Free Software Foundation, Inc., 51 Franklin Street,
+# Boston, MA 02110-1301, USA.
+#
 """ Create a whole new out-of-tree module """
 
 import shutil
@@ -6,7 +26,6 @@ import re
 from optparse import OptionGroup
 from modtool_base import ModTool
 
-### New out-of-tree-mod module ###############################################
 class ModToolNewModule(ModTool):
     """ Create a new out-of-tree module """
     name = 'newmod'
@@ -36,7 +55,6 @@ class ModToolNewModule(ModTool):
         self._dir = options.directory
         if self._dir == '.':
             self._dir = './gr-%s' % self._info['modname']
-        print 'Module directory is "%s".' % self._dir
         try:
             os.stat(self._dir)
         except OSError:
@@ -56,6 +74,7 @@ class ModToolNewModule(ModTool):
             shutil.copytree('/home/braun/.usrlocal/share/gnuradio/modtool/gr-newmod', self._dir)
             os.chdir(self._dir)
         except OSError:
+            print 'FAILED'
             print 'Could not create directory %s. Quitting.' % self._dir
             exit(2)
         for root, dirs, files in os.walk('.'):

@@ -1,3 +1,23 @@
+#
+# Copyright 2013 Free Software Foundation, Inc.
+#
+# This file is part of GNU Radio
+#
+# GNU Radio is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 3, or (at your option)
+# any later version.
+#
+# GNU Radio is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with GNU Radio; see the file COPYING.  If not, write to
+# the Free Software Foundation, Inc., 51 Franklin Street,
+# Boston, MA 02110-1301, USA.
+#
 """ Remove blocks module """
 
 import os
@@ -10,7 +30,6 @@ from util_functions import remove_pattern_from_file
 from modtool_base import ModTool
 from cmakefile_editor import CMakeFileEditor
 
-### Remove module ###########################################################
 class ModToolRemove(ModTool):
     """ Remove block (delete files and remove Makefile entries) """
     name = 'remove'

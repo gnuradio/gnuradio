@@ -1,30 +1,30 @@
+#
+# Copyright 2013 Free Software Foundation, Inc.
+#
+# This file is part of GNU Radio
+#
+# GNU Radio is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 3, or (at your option)
+# any later version.
+#
+# GNU Radio is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with GNU Radio; see the file COPYING.  If not, write to
+# the Free Software Foundation, Inc., 51 Franklin Street,
+# Boston, MA 02110-1301, USA.
+#
 """ The help module """
 
-from modtool_base import ModTool
-from modtool_info import ModToolInfo
-from modtool_add import ModToolAdd
-from modtool_rm import ModToolRemove
-from modtool_newmod import ModToolNewModule
-from modtool_disable import ModToolDisable
-from modtool_makexml import ModToolMakeXML
-from util_functions import get_command_from_argv
+from gnuradio.modtool import *
+from util_functions import get_command_from_argv, get_class_dict
 from templates import Templates
 
-def get_class_dict():
-    " Return a dictionary of the available commands in the form command->class "
-    classdict = {}
-    for g in globals().values():
-        try:
-            if issubclass(g, ModTool):
-                classdict[g.name] = g
-                for a in g.aliases:
-                    classdict[a] = g
-        except (TypeError, AttributeError):
-            pass
-    return classdict
 
-
-### Help module ##############################################################
 def print_class_descriptions():
     ''' Go through all ModTool* classes and print their name,
         alias and description. '''
