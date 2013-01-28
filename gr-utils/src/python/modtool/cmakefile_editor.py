@@ -30,34 +30,27 @@ class CMakeFileEditor(object):
         self.separator = separator
         self.indent = indent
 
-    def get_entry_value(self, entry, to_ignore=''):
-        """ Get the value of an entry.
-        to_ignore is the part of the entry you don't care about. """
-        regexp = '%s\(%s([^()]+)\)' % (entry, to_ignore)
-        mobj = re.search(regexp, self.cfile, flags=re.MULTILINE)
-        if mobj is None:
-            return None
-        value = mobj.groups()[0].strip()
-        return value
-
-    def append_value(self, entry, value, to_ignore=''):
+    def append_value(self, entry, value, to_ignore_start='', to_ignore_end=''):
         """ Add a value to an entry. """
-        regexp = re.compile('(%s\([^()]*?)\s*?(\s?%s)\)' % (entry, to_ignore),
+        regexp = re.compile('(%s\(%s[^()]*?)\s*?(\s?%s)\)' % (entry, to_ignore_start, to_ignore_end),
                             re.MULTILINE)
         substi = r'\1' + self.separator + value + r'\2)'
-        self.cfile = regexp.sub(substi, self.cfile, count=1)
+        (self.cfile, nsubs) = regexp.subn(substi, self.cfile, count=1)
+        return nsubs
 
-    def remove_value(self, entry, value, to_ignore=''):
+    def remove_value(self, entry, value, to_ignore_start='', to_ignore_end=''):
         """Remove a value from an entry."""
-        regexp = '^\s*(%s\(\s*%s[^()]*?\s*)%s\s*([^()]*\))' % (entry, to_ignore, value)
+        regexp = '^\s*(%s\(\s*%s[^()]*?\s*)%s\s*([^()]*%s\s*\))' % (entry, to_ignore_start, value, to_ignore_end)
         regexp = re.compile(regexp, re.MULTILINE)
-        self.cfile = re.sub(regexp, r'\1\2', self.cfile, count=1)
+        (self.cfile, nsubs) = re.subn(regexp, r'\1\2', self.cfile, count=1)
+        return nsubs
 
     def delete_entry(self, entry, value_pattern=''):
         """Remove an entry from the current buffer."""
         regexp = '%s\s*\([^()]*%s[^()]*\)[^\n]*\n' % (entry, value_pattern)
         regexp = re.compile(regexp, re.MULTILINE)
-        self.cfile = re.sub(regexp, '', self.cfile, count=1)
+        (self.cfile, nsubs) = re.sub(regexp, '', self.cfile, count=1)
+        return nsubs
 
     def write(self):
         """ Write the changes back to the file. """
@@ -82,7 +75,14 @@ class CMakeFileEditor(object):
         return filenames
 
     def disable_file(self, fname):
-        """ Comment out a file """
+        """ Comment out a file.
+        Example:
+        add_library(
+            file1.cc
+        )
+
+        Here, file1.cc becomes #file1.cc with disable_file('file1.cc').
+        """
         starts_line = False
         for line in self.cfile.splitlines():
             if len(line.strip()) == 0 or line.strip()[0] == '#':
@@ -109,8 +109,5 @@ class CMakeFileEditor(object):
     def check_for_glob(self, globstr):
         """ Returns true if a glob as in globstr is found in the cmake file """
         glob_re = r'GLOB\s[a-z_]+\s"%s"' % globstr.replace('*', '\*')
-        if re.search(glob_re, self.cfile, flags=re.MULTILINE|re.IGNORECASE) is not None: 
-            return True
-        else:
-            return False
+        return re.search(glob_re, self.cfile, flags=re.MULTILINE|re.IGNORECASE) is not None
 
