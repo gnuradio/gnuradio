@@ -25,7 +25,10 @@ include(GrPlatform) #define LIB_SUFFIX
 include_directories(${Boost_INCLUDE_DIR})
 link_directories(${Boost_LIBRARY_DIRS})
 
-add_library(gnuradio-howto SHARED )
+list(APPEND howto_sources
+)
+
+add_library(gnuradio-howto SHARED ${howto_sources})
 target_link_libraries(gnuradio-howto ${Boost_LIBRARIES} ${GRUEL_LIBRARIES} ${GNURADIO_CORE_LIBRARIES})
 set_target_properties(gnuradio-howto PROPERTIES DEFINE_SYMBOL "gnuradio_howto_EXPORTS")
 
@@ -46,8 +49,8 @@ include(GrTest)
 include_directories(${CPPUNIT_INCLUDE_DIRS})
 
 list(APPEND test_howto_sources
-  ${CMAKE_CURRENT_SOURCE_DIR}/test_howto.cc
-  ${CMAKE_CURRENT_SOURCE_DIR}/qa_howto.cc
+    ${CMAKE_CURRENT_SOURCE_DIR}/test_howto.cc
+    ${CMAKE_CURRENT_SOURCE_DIR}/qa_howto.cc
 )
 
 add_executable(test-howto ${test_howto_sources})
