@@ -83,7 +83,7 @@ class ModToolRemove(ModTool):
                 elif ext == '.cc':
                     ed.remove_value('list',
                                     '\$\{CMAKE_CURRENT_SOURCE_DIR\}/%s' % filename,
-                                    'APPEND test_%s_sources' % self._info['modname'])
+                                    to_ignore_start='APPEND test_%s_sources' % self._info['modname'])
             else:
                 filebase = os.path.splitext(filename)[0]
                 ed.delete_entry('add_executable', filebase)

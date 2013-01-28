@@ -81,7 +81,7 @@ class ModToolAdd(ModTool):
         if ((self._skip_subdirs['lib'] and self._info['lang'] == 'cpp')
              or (self._skip_subdirs['python'] and self._info['lang'] == 'python')):
             print "Missing or skipping relevant subdir."
-            sys.exit(1)
+            exit(1)
 
         if self._info['blockname'] is None:
             if len(self.args) >= 2:
@@ -90,7 +90,7 @@ class ModToolAdd(ModTool):
                 self._info['blockname'] = raw_input("Enter name of block/code (without module name prefix): ")
         if not re.match('[a-zA-Z0-9_]+', self._info['blockname']):
             print 'Invalid block name.'
-            sys.exit(2)
+            exit(2)
         print "Block/code identifier: " + self._info['blockname']
         self._info['fullblockname'] = self._info['modname'] + '_' + self._info['blockname']
         self._info['license'] = self.setup_choose_license()
@@ -143,22 +143,17 @@ class ModToolAdd(ModTool):
         )
         has_grc = False
         if self._info['lang'] == 'cpp':
-            print "Traversing lib..."
             self._run_lib()
             has_grc = has_swig
         else: # Python
-            print "Traversing python..."
             self._run_python()
             if self._info['blocktype'] != 'noblock':
                 has_grc = True
         if has_swig:
-            print "Traversing swig..."
             self._run_swig()
         if self._add_py_qa:
-            print "Adding Python QA..."
             self._run_python_qa()
         if has_grc and not self._skip_subdirs['grc']:
-            print "Traversing grc..."
             self._run_grc()
 
     def _run_lib(self):
@@ -178,7 +173,7 @@ class ModToolAdd(ModTool):
                 try:
                     append_re_line_sequence(self._file['cmlib'],
                                             '\$\{CMAKE_CURRENT_SOURCE_DIR\}/qa_%s.cc.*\n' % self._info['modname'],
-                                            '  ${CMAKE_CURRENT_SOURCE_DIR}/qa_%s.cc' % self._info['blockname'])
+                                            '    ${CMAKE_CURRENT_SOURCE_DIR}/qa_%s.cc' % self._info['blockname'])
                     append_re_line_sequence(self._file['qalib'],
                                             '#include.*\n',
                                             '#include "%s"' % fname_qa_h)
@@ -226,10 +221,11 @@ class ModToolAdd(ModTool):
             self._write_tpl('block_cpp36', 'lib',                    fname_cc)
         if not self.options.skip_cmakefiles:
             ed = CMakeFileEditor(self._file['cmlib'])
-            ed.append_value('add_library', fname_cc)
+            if not ed.append_value('list', fname_cc, to_ignore_start='APPEND %s_sources' % self._info['modname']):
+                ed.append_value('add_library', fname_cc)
             ed.write()
             ed = CMakeFileEditor(self._file['cminclude'])
-            ed.append_value('install', fname_h, 'DESTINATION[^()]+')
+            ed.append_value('install', fname_h, to_ignore_end='DESTINATION[^()]+')
             ed.write()
         if self._add_cc_qa:
             if self._info['version'] == '37':
@@ -295,7 +291,7 @@ class ModToolAdd(ModTool):
         if self.options.skip_cmakefiles:
             return
         ed = CMakeFileEditor(self._file['cmpython'])
-        ed.append_value('GR_PYTHON_INSTALL', fname_py, 'DESTINATION[^()]+')
+        ed.append_value('GR_PYTHON_INSTALL', fname_py, to_ignore_end='DESTINATION[^()]+')
         ed.write()
 
     def _run_grc(self):
@@ -310,6 +306,6 @@ class ModToolAdd(ModTool):
         if self.options.skip_cmakefiles or ed.check_for_glob('*.xml'):
             return
         print "Editing grc/CMakeLists.txt..."
-        ed.append_value('install', fname_grc, 'DESTINATION[^()]+')
+        ed.append_value('install', fname_grc, to_ignore_end='DESTINATION[^()]+')
         ed.write()
 

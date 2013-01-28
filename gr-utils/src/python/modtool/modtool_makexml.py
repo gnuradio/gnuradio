@@ -122,7 +122,7 @@ class ModToolMakeXML(ModTool):
             ed = CMakeFileEditor(self._file['cmgrc'])
             if re.search(fname_xml, ed.cfile) is None and not ed.check_for_glob('*.xml'):
                 print "Adding GRC bindings to grc/CMakeLists.txt..."
-                ed.append_value('install', fname_xml, 'DESTINATION[^()]+')
+                ed.append_value('install', fname_xml, to_ignore_end='DESTINATION[^()]+')
                 ed.write()
 
     def _parse_cc_h(self, fname_cc):
