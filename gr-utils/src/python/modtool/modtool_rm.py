@@ -37,24 +37,10 @@ class ModToolRemove(ModTool):
     def __init__(self):
         ModTool.__init__(self)
 
-    def setup_parser(self):
-        " Initialise the option parser for 'gr_modtool.py rm' "
-        parser = ModTool.setup_parser(self)
-        parser.usage = '%prog rm [options]. \n Call %prog without any options to run it interactively.'
-        ogroup = OptionGroup(parser, "Remove module options")
-        ogroup.add_option("-p", "--pattern", type="string", default=None,
-                help="Filter possible choices for blocks to be deleted.")
-        ogroup.add_option("-y", "--yes", action="store_true", default=False,
-                help="Answer all questions with 'yes'.")
-        parser.add_option_group(ogroup)
-        return parser
-
     def setup(self):
         ModTool.setup(self)
         options = self.options
-        if options.pattern is not None:
-            self._info['pattern'] = options.pattern
-        elif options.block_name is not None:
+        if options.block_name is not None:
             self._info['pattern'] = options.block_name
         elif len(self.args) >= 2:
             self._info['pattern'] = self.args[1]
@@ -62,7 +48,6 @@ class ModToolRemove(ModTool):
             self._info['pattern'] = raw_input('Which blocks do you want to delete? (Regex): ')
         if len(self._info['pattern']) == 0:
             self._info['pattern'] = '.'
-        self._info['yes'] = options.yes
 
     def run(self):
         """ Go, go, go! """
@@ -108,7 +93,7 @@ class ModToolRemove(ModTool):
             return regexp
         # Go, go, go!
         if not self._skip_subdirs['lib']:
-            self._run_subdir('lib', ('*.cc', '*.h'), ('add_library',),
+            self._run_subdir('lib', ('*.cc', '*.h'), ('add_library', 'list'),
                              cmakeedit_func=_remove_cc_test_case)
         if not self._skip_subdirs['include']:
             incl_files_deleted = self._run_subdir(self._info['includedir'], ('*.h',), ('install',))

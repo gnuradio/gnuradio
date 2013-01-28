@@ -35,7 +35,7 @@ class ModToolNewModule(ModTool):
         ModTool.__init__(self)
 
     def setup_parser(self):
-        " Initialise the option parser for 'gr_modtool.py newmod' "
+        " Initialise the option parser for 'gr_modtool newmod' "
         parser = ModTool.setup_parser(self)
         parser.usage = '%prog rm [options]. \n Call %prog without any options to run it interactively.'
         ogroup = OptionGroup(parser, "New out-of-tree module options")

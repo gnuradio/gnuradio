@@ -21,7 +21,7 @@
 """ The help module """
 
 from gnuradio.modtool import *
-from util_functions import get_command_from_argv, get_class_dict
+from util_functions import get_command_from_argv
 from templates import Templates
 
 
@@ -51,7 +51,7 @@ class ModToolHelp(ModTool):
         pass
 
     def run(self):
-        cmd_dict = get_class_dict()
+        cmd_dict = get_class_dict(globals().values())
         cmds = cmd_dict.keys()
         cmds.remove(self.name)
         for a in self.aliases:

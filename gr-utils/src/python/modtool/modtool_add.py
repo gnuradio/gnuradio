@@ -45,7 +45,6 @@ class ModToolAdd(ModTool):
 
     def setup_parser(self):
         parser = ModTool.setup_parser(self)
-        parser.usage = '%prog add [options]. \n Call %prog without any options to run it interactively.'
         ogroup = OptionGroup(parser, "Add module options")
         ogroup.add_option("-t", "--block-type", type="choice",
                 choices=self._block_types, default=None, help="One of %s." % ', '.join(self._block_types))

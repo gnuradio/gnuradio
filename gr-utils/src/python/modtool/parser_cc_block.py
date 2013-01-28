@@ -121,12 +121,13 @@ class ParserCCBlock(object):
                 if not in_string:
                     if c[i] == ')':
                         if parens_count == 0:
-                            if read_state == 'type':
+                            if read_state == 'type' and len(this_type):
                                 raise ValueError(
                                         'Found closing parentheses before finishing last argument (this is how far I got: %s)'
                                         % str(param_list)
                                 )
-                            param_list.append((this_type, this_name, this_defv))
+                            if len(this_type):
+                                param_list.append((this_type, this_name, this_defv))
                             end_of_list = True
                             break
                         else:

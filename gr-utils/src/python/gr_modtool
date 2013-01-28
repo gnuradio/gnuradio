@@ -24,24 +24,9 @@
 import sys
 from gnuradio.modtool import *
 
-def get_class_dict():
-    " Return a dictionary of the available commands in the form command->class "
-    classdict = {}
-    for g in globals().values():
-        try:
-            if issubclass(g, ModTool):
-                classdict[g.name] = g
-                for a in g.aliases:
-                    classdict[a] = g
-        except (TypeError, AttributeError):
-            pass
-    return classdict
-
-
-### Main code ################################################################
 def main():
     """ Here we go. Parse command, choose class and run. """
-    cmd_dict = get_class_dict()
+    cmd_dict = get_class_dict(globals().values())
     command = get_command_from_argv(cmd_dict.keys())
     if command is None:
         print 'Usage:' + templates.Templates['usage']
@@ -51,9 +36,6 @@ def main():
     modtool.run()
 
 if __name__ == '__main__':
-    if not ((sys.version_info[0] > 2) or
-            (sys.version_info[0] == 2 and sys.version_info[1] >= 7)):
-        print "Using Python < 2.7 is not recommended for gr_modtool."
     try:
         main()
     except KeyboardInterrupt:

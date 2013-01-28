@@ -34,7 +34,7 @@ class ModToolInfo(ModTool):
         ModTool.__init__(self)
 
     def setup_parser(self):
-        " Initialise the option parser for 'gr_modtool.py info' "
+        " Initialise the option parser for 'gr_modtool info' "
         parser = ModTool.setup_parser(self)
         parser.usage = '%prog info [options]. \n Call %prog without any options to run it interactively.'
         ogroup = OptionGroup(parser, "Info options")

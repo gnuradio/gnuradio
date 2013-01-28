@@ -49,7 +49,7 @@ class CMakeFileEditor(object):
         """Remove an entry from the current buffer."""
         regexp = '%s\s*\([^()]*%s[^()]*\)[^\n]*\n' % (entry, value_pattern)
         regexp = re.compile(regexp, re.MULTILINE)
-        (self.cfile, nsubs) = re.sub(regexp, '', self.cfile, count=1)
+        (self.cfile, nsubs) = re.subn(regexp, '', self.cfile, count=1)
         return nsubs
 
     def write(self):

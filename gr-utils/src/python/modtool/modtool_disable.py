@@ -35,24 +35,10 @@ class ModToolDisable(ModTool):
     def __init__(self):
         ModTool.__init__(self)
 
-    def setup_parser(self):
-        " Initialise the option parser for 'gr_modtool.py rm' "
-        parser = ModTool.setup_parser(self)
-        parser.usage = '%prog disable [options]. \n Call %prog without any options to run it interactively.'
-        ogroup = OptionGroup(parser, "Disable module options")
-        ogroup.add_option("-p", "--pattern", type="string", default=None,
-                help="Filter possible choices for blocks to be disabled.")
-        ogroup.add_option("-y", "--yes", action="store_true", default=False,
-                help="Answer all questions with 'yes'.")
-        parser.add_option_group(ogroup)
-        return parser
-
     def setup(self):
         ModTool.setup(self)
         options = self.options
-        if options.pattern is not None:
-            self._info['pattern'] = options.pattern
-        elif options.block_name is not None:
+        if options.block_name is not None:
             self._info['pattern'] = options.block_name
         elif len(self.args) >= 2:
             self._info['pattern'] = self.args[1]
@@ -60,7 +46,6 @@ class ModToolDisable(ModTool):
             self._info['pattern'] = raw_input('Which blocks do you want to disable? (Regex): ')
         if len(self._info['pattern']) == 0:
             self._info['pattern'] = '.'
-        self._info['yes'] = options.yes
 
     def run(self):
         """ Go, go, go! """
@@ -123,7 +108,7 @@ class ModToolDisable(ModTool):
             swigfile = re.sub('(GR_SWIG_BLOCK_MAGIC2?.+'+blockname+'.+;)', r'//\1', swigfile)
             open(self._file['swig'], 'w').write(swigfile)
             return False
-        # List of special rules: 0: subdir, 1: filename re match, 2: function
+        # List of special rules: 0: subdir, 1: filename re match, 2: callback
         special_treatments = (
                 ('python', 'qa.+py$', _handle_py_qa),
                 ('python', '^(?!qa).+py$', _handle_py_mod),

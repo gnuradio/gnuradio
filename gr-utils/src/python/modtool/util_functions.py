@@ -18,10 +18,12 @@
 # the Free Software Foundation, Inc., 51 Franklin Street,
 # Boston, MA 02110-1301, USA.
 #
-""" Utility functions for gr_modtool.py """
+""" Utility functions for gr_modtool """
 
 import re
 import sys
+
+# None of these must depend on other modtool stuff!
 
 def get_command_from_argv(possible_cmds):
     """ Read the requested command from argv. This can't be done with optparse,
@@ -38,7 +40,7 @@ def get_command_from_argv(possible_cmds):
     return None
 
 def append_re_line_sequence(filename, linepattern, newline):
-    """Detects the re 'linepattern' in the file. After its last occurrence,
+    """ Detects the re 'linepattern' in the file. After its last occurrence,
     paste 'newline'. If the pattern does not exist, append the new line
     to the file. Then, write. """
     oldfile = open(filename, 'r').read()
@@ -98,19 +100,6 @@ def get_modname():
         return modname
     except AttributeError:
         return None
-
-def get_class_dict():
-    " Return a dictionary of the available commands in the form command->class "
-    classdict = {}
-    for g in globals().values():
-        try:
-            if issubclass(g, ModTool):
-                classdict[g.name] = g
-                for a in g.aliases:
-                    classdict[a] = g
-        except (TypeError, AttributeError):
-            pass
-    return classdict
 
 def is_number(s):
     " Return True if the string s contains a number. "

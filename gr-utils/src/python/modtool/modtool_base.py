@@ -28,6 +28,7 @@ from optparse import OptionParser, OptionGroup
 from util_functions import get_modname
 from templates import Templates
 
+
 class ModTool(object):
     """ Base class for all modtool command classes. """
     def __init__(self):
@@ -47,15 +48,17 @@ class ModTool(object):
     def setup_parser(self):
         """ Init the option parser. If derived classes need to add options,
         override this and call the parent function. """
-        parser = OptionParser(usage=Templates['usage'], add_help_option=False)
+        parser = OptionParser(add_help_option=False)
+        parser.usage = '%prog ' + self.name + ' [options] <PATTERN> \n' + \
+                       ' Call "%prog ' + self.name + '" without any options to run it interactively.'
         ogroup = OptionGroup(parser, "General options")
         ogroup.add_option("-h", "--help", action="help", help="Displays this help message.")
         ogroup.add_option("-d", "--directory", type="string", default=".",
-                help="Base directory of the module.")
+                help="Base directory of the module. Defaults to the cwd.")
         ogroup.add_option("-n", "--module-name", type="string", default=None,
-                help="Name of the GNU Radio module. If possible, this gets detected from CMakeLists.txt.")
+                help="Use this to override the current module's name (is normally autodetected).")
         ogroup.add_option("-N", "--block-name", type="string", default=None,
-                help="Name of the block, minus the module name prefix.")
+                help="Name of the block, where applicable.")
         ogroup.add_option("--skip-lib", action="store_true", default=False,
                 help="Don't do anything in the lib/ subdirectory.")
         ogroup.add_option("--skip-swig", action="store_true", default=False,
@@ -64,6 +67,8 @@ class ModTool(object):
                 help="Don't do anything in the python/ subdirectory.")
         ogroup.add_option("--skip-grc", action="store_true", default=False,
                 help="Don't do anything in the grc/ subdirectory.")
+        ogroup.add_option("-y", "--yes", action="store_true", default=False,
+                help="Answer all questions with 'yes'. This can overwrite and delete your files, so be careful.")
         parser.add_option_group(ogroup)
         return parser
 
@@ -74,7 +79,6 @@ class ModTool(object):
         if not self._check_directory(self._dir):
             print "No GNU Radio module found in the given directory. Quitting."
             sys.exit(1)
-        print "Operating in directory " + self._dir
         if options.module_name is not None:
             self._info['modname'] = options.module_name
         else:
@@ -96,6 +100,7 @@ class ModTool(object):
         self._info['blockname'] = options.block_name
         self.options = options
         self._setup_files()
+        self._info['yes'] = options.yes
 
     def _setup_files(self):
         """ Initialise the self._file[] dictionary """
@@ -155,4 +160,17 @@ class ModTool(object):
     def run(self):
         """ Override this. """
         pass
+
+def get_class_dict(the_globals):
+    " Return a dictionary of the available commands in the form command->class "
+    classdict = {}
+    for g in the_globals:
+        try:
+            if issubclass(g, ModTool):
+                classdict[g.name] = g
+                for a in g.aliases:
+                    classdict[a] = g
+        except (TypeError, AttributeError):
+            pass
+    return classdict
 

@@ -30,6 +30,7 @@ from modtool_base import ModTool
 from parser_cc_block import ParserCCBlock
 from grc_xml_generator import GRCXMLGenerator
 from cmakefile_editor import CMakeFileEditor
+from util_functions import ask_yes_no
 
 class ModToolMakeXML(ModTool):
     """ Make XML file for GRC block bindings """
@@ -38,24 +39,10 @@ class ModToolMakeXML(ModTool):
     def __init__(self):
         ModTool.__init__(self)
 
-    def setup_parser(self):
-        " Initialise the option parser for 'gr_modtool.py makexml' "
-        parser = ModTool.setup_parser(self)
-        parser.usage = '%prog makexml [options]. \n Call %prog without any options to run it interactively.'
-        ogroup = OptionGroup(parser, "Make XML module options")
-        ogroup.add_option("-p", "--pattern", type="string", default=None,
-                help="Filter possible choices for blocks to be parsed.")
-        ogroup.add_option("-y", "--yes", action="store_true", default=False,
-                help="Answer all questions with 'yes'. This can overwrite existing files!")
-        parser.add_option_group(ogroup)
-        return parser
-
     def setup(self):
         ModTool.setup(self)
         options = self.options
-        if options.pattern is not None:
-            self._info['pattern'] = options.pattern
-        elif options.block_name is not None:
+        if options.block_name is not None:
             self._info['pattern'] = options.block_name
         elif len(self.args) >= 2:
             self._info['pattern'] = self.args[1]
@@ -63,7 +50,6 @@ class ModToolMakeXML(ModTool):
             self._info['pattern'] = raw_input('Which blocks do you want to parse? (Regex): ')
         if len(self._info['pattern']) == 0:
             self._info['pattern'] = '.'
-        self._info['yes'] = options.yes
 
     def run(self):
         """ Go, go, go! """
@@ -109,8 +95,11 @@ class ModToolMakeXML(ModTool):
                                'default': '2',
                                'in_constructor': False})
         if os.path.isfile(os.path.join('grc', fname_xml)):
-            # TODO add an option to keep
-            print "Warning: Overwriting existing GRC file."
+            if not self._info['yes']:
+                if not ask_yes_no('Overwrite existing GRC file?', False):
+                    return
+            else:
+                print "Warning: Overwriting existing GRC file."
         grc_generator = GRCXMLGenerator(
                 modname=self._info['modname'],
                 blockname=blockname,
@@ -166,5 +155,4 @@ class ModToolMakeXML(ModTool):
             print "Can't open some of the files necessary to parse %s." % fname_cc
             sys.exit(1)
         return (parser.read_params(), parser.read_io_signature(), blockname)
-
 

@@ -490,9 +490,9 @@ Templates['grc_xml'] = '''<?xml version="1.0"?>
 
 # Usage
 Templates['usage'] = '''
-gr_modtool.py <command> [options] -- Run <command> with the given options.
-gr_modtool.py help -- Show a list of commands.
-gr_modtool.py help <command> -- Shows the help for a given command. '''
+gr_modtool <command> [options] -- Run <command> with the given options.
+gr_modtool help -- Show a list of commands.
+gr_modtool help <command> -- Shows the help for a given command. '''
 
 # SWIG string
 Templates['swig_block_magic'] = """#if $version == '37'
