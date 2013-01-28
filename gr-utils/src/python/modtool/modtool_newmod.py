@@ -24,6 +24,7 @@ import shutil
 import os
 import re
 from optparse import OptionGroup
+from gnuradio import gr
 from modtool_base import ModTool
 
 class ModToolNewModule(ModTool):
@@ -38,6 +39,8 @@ class ModToolNewModule(ModTool):
         parser = ModTool.setup_parser(self)
         parser.usage = '%prog rm [options]. \n Call %prog without any options to run it interactively.'
         ogroup = OptionGroup(parser, "New out-of-tree module options")
+        ogroup.add_option("--srcdir", type="string",
+                help="Source directory for the module template.")
         parser.add_option_group(ogroup)
         return parser
 
@@ -62,6 +65,12 @@ class ModToolNewModule(ModTool):
         else:
             print 'The given directory exists.'
             exit(2)
+        if options.srcdir is None:
+            options.srcdir = '/usr/local/share/gnuradio/modtool/gr-newmod',
+        self._srcdir = gr.prefs().get_string('modtool', 'newmod_path', options.srcdir)
+        if not os.path.isdir(self._srcdir):
+            print 'Error: Could not find gr-newmod source dir.'
+            exit(2)
 
     def run(self):
         """
@@ -71,10 +80,10 @@ class ModToolNewModule(ModTool):
         """
         print "Creating out-of-tree module in %s..." % self._dir,
         try:
-            shutil.copytree('/home/braun/.usrlocal/share/gnuradio/modtool/gr-newmod', self._dir)
+            shutil.copytree(self._srcdir, self._dir)
             os.chdir(self._dir)
         except OSError:
-            print 'FAILED'
+            print 'Failed.'
             print 'Could not create directory %s. Quitting.' % self._dir
             exit(2)
         for root, dirs, files in os.walk('.'):
