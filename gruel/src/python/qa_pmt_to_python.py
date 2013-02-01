@@ -1,5 +1,6 @@
+#!/usr/bin/env python
 #
-# Copyright 2011 Free Software Foundation, Inc.
+# Copyright 2013 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -19,13 +20,15 @@
 # Boston, MA 02110-1301, USA.
 #
 
-# The presence of this file turns this directory into a Python package
+import unittest
+import pmt
 
-'''
-The GNU Radio Utility Etcetera Library's Polymorphic Types for Python.
-'''
+class test_gruel_pmt_to_python(unittest.TestCase):
 
-from pmt_swig import *
-from pmt_to_python import pmt_to_python as to_python
-from pmt_to_python import python_to_pmt as to_pmt
+    def test01 (self):
+        b = pmt.pmt_from_double(123765)
+        self.assertEqual(pmt.to_python(b), 123765)
+        t = pmt.to_pmt(range(5))
 
+if __name__ == '__main__':
+    unittest.main()
