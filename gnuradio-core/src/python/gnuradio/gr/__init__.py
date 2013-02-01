@@ -29,6 +29,7 @@ from exceptions import *
 from hier_block2 import *
 from top_block import *
 from gateway import basic_block, sync_block, decim_block, interp_block
+from tag_utils import tag_to_python, tag_to_pmt
 
 # create a couple of aliases
 serial_to_parallel = stream_to_vector
