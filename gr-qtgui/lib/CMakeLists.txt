@@ -24,6 +24,7 @@ set(qtgui_moc_hdrs
     spectrumdisplayform.h
     displayform.h
     timedisplayform.h
+    timerasterdisplayform.h
     freqdisplayform.h
     constellationdisplayform.h
     waterfalldisplayform.h
@@ -31,6 +32,7 @@ set(qtgui_moc_hdrs
     DisplayPlot.h
     FrequencyDisplayPlot.h
     TimeDomainDisplayPlot.h
+    TimeRasterDisplayPlot.h
     WaterfallDisplayPlot.h
     ConstellationDisplayPlot.h
 )
@@ -50,22 +52,28 @@ set(qtgui_srcs
     DisplayPlot.cc
     FrequencyDisplayPlot.cc
     TimeDomainDisplayPlot.cc
+    TimeRasterDisplayPlot.cc
+    timeRasterGlobalData.cc
     WaterfallDisplayPlot.cc
     waterfallGlobalData.cc
     ConstellationDisplayPlot.cc
     spectrumdisplayform.cc
     displayform.cc
     timedisplayform.cc
+    timerasterdisplayform.cc
     freqdisplayform.cc
     constellationdisplayform.cc
     waterfalldisplayform.cc
     SpectrumGUIClass.cc
     spectrumUpdateEvents.cc
     plot_waterfall.cc
+    plot_raster.cc
     sink_c_impl.cc
     sink_f_impl.cc
     time_sink_c_impl.cc
     time_sink_f_impl.cc
+    time_raster_sink_b_impl.cc
+    time_raster_sink_f_impl.cc
     freq_sink_c_impl.cc
     freq_sink_f_impl.cc
     const_sink_c_impl.cc
@@ -125,13 +133,17 @@ install(FILES
     DisplayPlot.h
     FrequencyDisplayPlot.h
     TimeDomainDisplayPlot.h
+    TimeRasterDisplayPlot.h
+    timeRasterGlobalData.h
     WaterfallDisplayPlot.h
     waterfallGlobalData.h
     ConstellationDisplayPlot.h
     plot_waterfall.h
+    plot_raster.h
     spectrumdisplayform.h
     displayform.h
     timedisplayform.h
+    timerasterdisplayform.h
     freqdisplayform.h
     constellationdisplayform.h
     waterfalldisplayform.h

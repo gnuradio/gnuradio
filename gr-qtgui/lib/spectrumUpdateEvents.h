@@ -212,4 +212,31 @@ private:
 };
 
 
+/********************************************************************/
+
+
+class TimeRasterUpdateEvent: public QEvent
+{
+public:
+  TimeRasterUpdateEvent(const std::vector<double*> dataPoints,
+			const uint64_t numDataPoints);
+  ~TimeRasterUpdateEvent();
+
+  int which() const;
+  const std::vector<double*> getPoints() const;
+  uint64_t getNumDataPoints() const;
+  bool getRepeatDataFlag() const;
+
+  static QEvent::Type Type()
+  { return QEvent::Type(SpectrumUpdateEventType); }
+
+protected:
+
+private:
+  size_t _nplots;
+  std::vector<double*> _dataPoints;
+  uint64_t _numDataPoints;
+};
+
+
 #endif /* SPECTRUM_UPDATE_EVENTS_H */

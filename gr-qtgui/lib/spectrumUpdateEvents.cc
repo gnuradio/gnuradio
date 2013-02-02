@@ -373,4 +373,48 @@ WaterfallUpdateEvent::getDataTimestamp() const
   return _dataTimestamp;
 }
 
+
+/***************************************************************************/
+
+
+TimeRasterUpdateEvent::TimeRasterUpdateEvent(const std::vector<double*> dataPoints,
+					     const uint64_t numDataPoints)
+  : QEvent(QEvent::Type(SpectrumUpdateEventType))
+{
+  if(numDataPoints < 1) {
+    _numDataPoints = 1;
+  }
+  else {
+    _numDataPoints = numDataPoints;
+  }
+
+  _nplots = dataPoints.size();
+  for(size_t i = 0; i < _nplots; i++) {
+    _dataPoints.push_back(new double[_numDataPoints]);
+    if(numDataPoints > 0) {
+      memcpy(_dataPoints[i], dataPoints[i],
+	     _numDataPoints*sizeof(double));
+    }
+  }
+}
+
+TimeRasterUpdateEvent::~TimeRasterUpdateEvent()
+{
+  for(size_t i = 0; i < _nplots; i++) {
+    delete[] _dataPoints[i];
+  }
+}
+
+const std::vector<double*>
+TimeRasterUpdateEvent::getPoints() const
+{
+  return _dataPoints;
+}
+
+uint64_t
+TimeRasterUpdateEvent::getNumDataPoints() const
+{
+  return _numDataPoints;
+}
+
 #endif /* SPECTRUM_UPDATE_EVENTS_C */

@@ -36,6 +36,8 @@
 #include "qtgui/sink_f.h"
 #include "qtgui/time_sink_c.h"
 #include "qtgui/time_sink_f.h"
+#include "qtgui/time_raster_sink_b.h"
+#include "qtgui/time_raster_sink_f.h"
 #include "qtgui/freq_sink_c.h"
 #include "qtgui/freq_sink_f.h"
 #include "qtgui/const_sink_c.h"
@@ -47,6 +49,8 @@
 %include "qtgui/sink_f.h"
 %include "qtgui/time_sink_c.h"
 %include "qtgui/time_sink_f.h"
+%include "qtgui/time_raster_sink_b.h"
+%include "qtgui/time_raster_sink_f.h"
 %include "qtgui/freq_sink_c.h"
 %include "qtgui/freq_sink_f.h"
 %include "qtgui/const_sink_c.h"
@@ -57,6 +61,8 @@ GR_SWIG_BLOCK_MAGIC2(qtgui, sink_c);
 GR_SWIG_BLOCK_MAGIC2(qtgui, sink_f);
 GR_SWIG_BLOCK_MAGIC2(qtgui, time_sink_c);
 GR_SWIG_BLOCK_MAGIC2(qtgui, time_sink_f);
+GR_SWIG_BLOCK_MAGIC2(qtgui, time_raster_sink_b);
+GR_SWIG_BLOCK_MAGIC2(qtgui, time_raster_sink_f);
 GR_SWIG_BLOCK_MAGIC2(qtgui, freq_sink_c);
 GR_SWIG_BLOCK_MAGIC2(qtgui, freq_sink_f);
 GR_SWIG_BLOCK_MAGIC2(qtgui, const_sink_c);

@@ -24,6 +24,8 @@ install(FILES
     api.h
     time_sink_c.h
     time_sink_f.h
+    time_raster_sink_b.h
+    time_raster_sink_f.h
     freq_sink_c.h
     freq_sink_f.h
     const_sink_c.h
