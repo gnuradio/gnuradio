@@ -67,5 +67,13 @@ class test_qtgui(gr_unittest.TestCase):
     def test09(self):
         self.qtsnk = qtgui.const_sink_c(1024, "Test", 1)
 
+    def test10(self):
+        self.qtsnk = qtgui.time_raster_sink_b(1024, 100, 100.5,
+                                              [], [], "Test", 1)
+
+    def test11(self):
+        self.qtsnk = qtgui.time_raster_sink_f(1024, 100, 100.5,
+                                              [], [], "Test", 1)
+
 if __name__ == '__main__':
     gr_unittest.run(test_qtgui, "test_qtgui.xml")
