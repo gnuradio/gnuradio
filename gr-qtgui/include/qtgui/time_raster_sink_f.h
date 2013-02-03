@@ -64,7 +64,7 @@ namespace gr {
 		       const std::vector<float> &mult,
 		       const std::vector<float> &offset,
 		       const std::string &name,
-		       int nconnections,
+		       int nconnections=1,
 		       QWidget *parent=NULL);
 
       virtual void exec_() = 0;
