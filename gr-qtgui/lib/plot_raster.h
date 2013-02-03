@@ -65,6 +65,8 @@ public:
 
     virtual int rtti() const;
 
+    virtual QwtInterval interval(Qt::Axis ax) const;
+  
     virtual void draw(QPainter *p,
 		      const QwtScaleMap &xMap,
 		      const QwtScaleMap &yMap,

@@ -312,6 +312,12 @@ QImage PlotTimeRaster::renderImage(const QwtScaleMap &xMap,
   return image;
 }
 
+QwtInterval
+PlotTimeRaster::interval(Qt::Axis ax) const
+{
+  return d_data->data->interval(ax);
+}
+
 /*!
   \brief Draw the raster
 
