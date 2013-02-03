@@ -35,6 +35,7 @@
 		<block>qtgui_time_sink_x</block>
 		<block>qtgui_const_sink_x</block>
 		<block>qtgui_waterfall_sink_x</block>
+		<block>qtgui_time_raster_sink_x</block>
 	</cat>
 	<cat>
 		<name>QT GUI Widgets</name>
