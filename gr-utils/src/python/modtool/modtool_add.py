@@ -246,6 +246,7 @@ class ModToolAdd(ModTool):
         if self._info['version'] == '36':
             mod_block_sep = '_'
         swig_block_magic_str = get_template('swig_block_magic', **self._info)
+        open(self._file['swig'], 'a').write(swig_block_magic_str)
         include_str = '#include "%s%s%s.h"' % (
                 self._info['modname'],
                 mod_block_sep,
@@ -257,7 +258,6 @@ class ModToolAdd(ModTool):
             regexp = re.compile('^%\{\n', re.MULTILINE)
             oldfile = regexp.sub('%%{\n%s\n' % include_str, oldfile, count=1)
             open(self._file['swig'], 'w').write(oldfile)
-        open(self._file['swig'], 'a').write(swig_block_magic_str)
 
     def _run_python_qa(self):
         """ Do everything that needs doing in the subdir 'python' to add

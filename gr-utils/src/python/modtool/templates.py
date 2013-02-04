@@ -502,8 +502,8 @@ Templates['swig_block_magic'] = """#if $version == '37'
 #set $mod_block_sep = '_'
 #set $block_magic_version = ''
 #end if
-%include "${modname}${mod_block_sep}${blockname}.h"
 GR_SWIG_BLOCK_MAGIC${block_magic_version}($modname, $blockname);
+%include "${modname}${mod_block_sep}${blockname}.h"
 """
 
 ## Old stuff
