@@ -283,6 +283,7 @@ typedef boost::shared_ptr<rpcbasic_base> rpcbasic_sptr;
 template<typename T, typename Tto>
 struct rpcbasic_register_set : public rpcbasic_base
 {
+  // Function used to add a 'set' RPC call using a gr_basic_block's alias.
   rpcbasic_register_set(const std::string& block_alias,
 			const char* functionbase,
 			void (T::*function)(Tto), 
@@ -307,6 +308,38 @@ struct rpcbasic_register_set : public rpcbasic_base
 		display_, std::string(desc_), min, max, def);
     std::ostringstream oss(std::ostringstream::out);
     oss << block_alias << "::" << functionbase;
+    d_id = oss.str();
+    //std::cerr << "REGISTERING SET: " << d_id << "  " << desc_ << std::endl;
+    rpcmanager::get()->i()->registerConfigureCallback(d_id, extractor);
+#endif
+  }
+
+  // Function used to add a 'set' RPC call using a name and the object
+  rpcbasic_register_set(const std::string& name,
+			const char* functionbase,
+                        T* obj,
+			void (T::*function)(Tto), 
+			const pmt::pmt_t &min, const pmt::pmt_t &max, const pmt::pmt_t &def,
+			const char* units_ = "", 
+			const char* desc_ = "",
+			priv_lvl_t minpriv_ = RPC_PRIVLVL_MIN,
+			DisplayType display_ = DISPNULL)
+  {
+    d_min = min;
+    d_max = max;
+    d_def = def;
+    d_units = units_;
+    d_desc = desc_;
+    d_minpriv = minpriv_;
+    d_display = display_;
+    d_object = obj;
+#ifdef RPCSERVER_ENABLED
+    callbackregister_base::configureCallback_t
+      extractor(new rpcbasic_extractor<T,Tto>(d_object, function), 
+		minpriv_, std::string(units_),
+		display_, std::string(desc_), min, max, def);
+    std::ostringstream oss(std::ostringstream::out);
+    oss << name << "::" << functionbase;
     d_id = oss.str();
     //std::cerr << "REGISTERING SET: " << d_id << "  " << desc_ << std::endl;
     rpcmanager::get()->i()->registerConfigureCallback(d_id, extractor);
@@ -351,6 +384,7 @@ template<typename T, typename Tfrom>
 class rpcbasic_register_get : public rpcbasic_base
 {
 public:
+  // Function used to add a 'set' RPC call using a gr_basic_block's alias.
   // primary constructor to allow for T get() functions
   rpcbasic_register_get(const std::string& block_alias,
 			const char* functionbase,
@@ -380,6 +414,7 @@ public:
     rpcmanager::get()->i()->registerQueryCallback(d_id, inserter);
 #endif
   }
+
 	
   // alternate constructor to allow for T get() const functions
   rpcbasic_register_get(const std::string& block_alias,
@@ -405,6 +440,70 @@ public:
 	       minpriv_, std::string(units_), display_, std::string(desc_), min, max, def);
     std::ostringstream oss(std::ostringstream::out);
     oss << block_alias << "::" << functionbase;
+    d_id = oss.str();
+    //std::cerr << "REGISTERING GET CONST: " << d_id << "   " << desc_ << "   " << display_ << std::endl;
+    rpcmanager::get()->i()->registerQueryCallback(d_id, inserter);
+#endif
+  }
+
+  // Function used to add a 'set' RPC call using a name and the object
+  // primary constructor to allow for T get() functions
+  rpcbasic_register_get(const std::string& name,
+			const char* functionbase,
+                        T* obj,
+			Tfrom (T::*function)(), 
+			const pmt::pmt_t &min, const pmt::pmt_t &max, const pmt::pmt_t &def,
+			const char* units_ = "", 
+			const char* desc_ = "",
+			priv_lvl_t minpriv_ = RPC_PRIVLVL_MIN,
+			DisplayType display_ = DISPNULL)
+  {
+    d_min = min;
+    d_max = max;
+    d_def = def;
+    d_units = units_;
+    d_desc = desc_;
+    d_minpriv = minpriv_;
+    d_display = display_;
+    d_object = obj;
+#ifdef RPCSERVER_ENABLED
+    callbackregister_base::queryCallback_t
+      inserter(new rpcbasic_inserter<T,Tfrom>(d_object, function), 
+	       minpriv_, std::string(units_), display_, std::string(desc_), min, max, def);
+    std::ostringstream oss(std::ostringstream::out);
+    oss << name << "::" << functionbase;
+    d_id = oss.str();
+    //std::cerr << "REGISTERING GET: " << d_id << "  " << desc_ << std::endl;
+    rpcmanager::get()->i()->registerQueryCallback(d_id, inserter);
+#endif
+  }
+
+	
+  // alternate constructor to allow for T get() const functions
+  rpcbasic_register_get(const std::string& name,
+			const char* functionbase,
+                        T* obj,
+			Tfrom (T::*function)() const, 
+			const pmt::pmt_t &min, const pmt::pmt_t &max, const pmt::pmt_t &def,
+			const char* units_ = "", 
+			const char* desc_ = "",
+			priv_lvl_t minpriv_ = RPC_PRIVLVL_MIN,
+			DisplayType display_ = DISPNULL)
+  { 
+    d_min = min;
+    d_max = max;
+    d_def = def;
+    d_units = units_;
+    d_desc = desc_;
+    d_minpriv = minpriv_;
+    d_display = display_;
+    d_object = obj;
+#ifdef RPCSERVER_ENABLED
+    callbackregister_base::queryCallback_t
+      inserter(new rpcbasic_inserter<T,Tfrom>(d_object, (Tfrom (T::*)())function), 
+	       minpriv_, std::string(units_), display_, std::string(desc_), min, max, def);
+    std::ostringstream oss(std::ostringstream::out);
+    oss << name << "::" << functionbase;
     d_id = oss.str();
     //std::cerr << "REGISTERING GET CONST: " << d_id << "   " << desc_ << "   " << display_ << std::endl;
     rpcmanager::get()->i()->registerQueryCallback(d_id, inserter);
