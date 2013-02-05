@@ -574,15 +574,14 @@ public:
 
   rpcbasic_register_variable(const std::string& namebase,
 			     const char* functionbase,
-			     const int serial,
 			     Tfrom *variable,
 			     const pmt::pmt_t &min, const pmt::pmt_t &max, const pmt::pmt_t &def,
 			     const char* units_ = "",
 			     const char* desc_ = "",
 			     priv_lvl_t minpriv_ = RPC_PRIVLVL_MIN,
 			     DisplayType display_=DISPNULL) :
-    d_rpc_reg(namebase,functionbase,this,serial,&rpcbasic_register_variable::get,
-	      min,max,def,units_,desc_,minpriv_,display_),
+    d_rpc_reg(namebase, functionbase, this, &rpcbasic_register_variable::get,
+	      min, max, def, units_, desc_, minpriv_, display_),
     d_variable(variable)
   {
     //std::cerr << "REGISTERING VAR: " << serial << " " << desc_ << std::endl;
