@@ -33,6 +33,7 @@ from exceptions import *
 from hier_block2 import *
 from top_block import *
 from gateway import basic_block, sync_block, decim_block, interp_block
+from tag_utils import tag_to_python, tag_to_pmt
 
 # Force the preference database to be initialized
 from prefs import prefs
