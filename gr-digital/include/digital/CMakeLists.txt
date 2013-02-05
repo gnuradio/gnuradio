@@ -58,7 +58,7 @@ macro(expand_h root)
     )
 
   #install rules for the generated h files
-  list(APPEND digital_generated_includes ${expanded_files_h})
+  list(APPEND generated_includes ${expanded_files_h})
 endmacro(expand_h)
 
 ########################################################################
@@ -74,7 +74,7 @@ add_custom_target(digital_generated_includes DEPENDS
 # Install header files
 ########################################################################
 install(FILES
-    ${digital_generated_includes}
+    ${generated_includes}
     api.h
     constellation.h
     crc32.h

@@ -58,7 +58,7 @@ macro(expand_h root)
     )
 
   #install rules for the generated h files
-  list(APPEND filter_generated_includes ${expanded_files_h})
+  list(APPEND generated_includes ${expanded_files_h})
 endmacro(expand_h)
 
 ########################################################################
@@ -77,7 +77,7 @@ add_custom_target(filter_generated_includes DEPENDS
 # Install header files
 ########################################################################
 install(FILES
-    ${filter_generated_includes}
+    ${generated_includes}
     api.h
     adaptive_fir.h
     firdes.h
