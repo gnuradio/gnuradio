@@ -81,7 +81,6 @@ install(
 
 GR_PYTHON_INSTALL(
     FILES
-    ${CMAKE_CURRENT_SOURCE_DIR}/DataPlotter.py
     ${CMAKE_CURRENT_SOURCE_DIR}/GrDataPlotter.py
     ${CMAKE_CURRENT_SOURCE_DIR}/monitor.py
     DESTINATION ${GR_PYTHON_DIR}/gnuradio/ctrlport/
@@ -90,7 +89,6 @@ GR_PYTHON_INSTALL(
 
 GR_PYTHON_INSTALL(
     FILES
-    ${CMAKE_CURRENT_SOURCE_DIR}/ctrlport-monitor
     ${CMAKE_CURRENT_SOURCE_DIR}/gr-ctrlport-monitor
     ${CMAKE_CURRENT_SOURCE_DIR}/gr-ctrlport-curses
     DESTINATION ${GR_RUNTIME_DIR}
