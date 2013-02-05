@@ -26,7 +26,7 @@ import pmt
 class test_gruel_pmt_to_python(unittest.TestCase):
 
     def test01 (self):
-        b = pmt.pmt_from_double(123765)
+        b = pmt.from_double(123765)
         self.assertEqual(pmt.to_python(b), 123765)
         t = pmt.to_pmt(range(5))
 

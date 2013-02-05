@@ -24,63 +24,63 @@ import numpy
 #define missing
 def pmt_to_tuple(p):
     elems = list()
-    for i in range(pmt.pmt_length(p)):
-        elem = pmt.pmt_tuple_ref(p, i)
+    for i in range(pmt.length(p)):
+        elem = pmt.tuple_ref(p, i)
         elems.append(pmt_to_python(elem))
     return tuple(elems)
 
 def pmt_from_tuple(p):
     args = map(python_to_pmt, p)
-    return pmt.pmt_make_tuple(*args)
+    return pmt.make_tuple(*args)
 
 def pmt_to_vector(p):
     v = list()
-    for i in range(pmt.pmt_length(p)):
-        elem = pmt.pmt_vector_ref(p, i)
+    for i in range(pmt.length(p)):
+        elem = pmt.vector_ref(p, i)
         v.append(pmt_to_python(elem))
     return v
 
 def pmt_from_vector(p):
-    v = pmt.pmt_make_vector(len(p), pmt.PMT_NIL)
+    v = pmt.make_vector(len(p), pmt.PMT_NIL)
     for i, elem in enumerate(p):
-        pmt.pmt_vector_set(v, i, python_to_pmt(elem))
+        pmt.vector_set(v, i, python_to_pmt(elem))
     return v
 
 def pmt_to_dict(p):
     d = dict()
-    items = pmt.pmt_dict_items(p)
-    for i in range(pmt.pmt_length(items)):
-        pair = pmt.pmt_nth(i, items)
-        k = pmt.pmt_car(pair)
-        v = pmt.pmt_cdr(pair)
+    items = pmt.dict_items(p)
+    for i in range(pmt.length(items)):
+        pair = pmt.nth(i, items)
+        k = pmt.car(pair)
+        v = pmt.cdr(pair)
         d[pmt_to_python(k)] = pmt_to_python(v)
     return d
 
 def pmt_from_dict(p):
-    d = pmt.pmt_make_dict()
+    d = pmt.make_dict()
     for k, v in p.iteritems():
         #dict is immutable -> therefore pmt_dict_add returns the new dict
-        d = pmt.pmt_dict_add(d, python_to_pmt(k), python_to_pmt(v))
+        d = pmt.dict_add(d, python_to_pmt(k), python_to_pmt(v))
     return d
 
 def numpy_to_blob(p):
     p = p.view(numpy.uint8)
-    b = pmt.pmt_make_blob(len(p))
-    pmt.pmt_blob_data(b)[:] = p
+    b = pmt.make_blob(len(p))
+    pmt.blob_data(b)[:] = p
     return b
 
 THE_TABLE = ( #python type, check pmt type, to python, from python
-    (None, pmt.pmt_is_null, lambda x: None, lambda x: pmt.PMT_NIL),
-    (bool, pmt.pmt_is_bool, pmt.pmt_to_bool, pmt.pmt_from_bool),
-    (str, pmt.pmt_is_symbol, pmt.pmt_symbol_to_string, pmt.pmt_string_to_symbol),
-    (int, pmt.pmt_is_integer, pmt.pmt_to_long, pmt.pmt_from_long),
-    (long, pmt.pmt_is_uint64, lambda x: long(pmt.pmt_to_uint64(x)), pmt.pmt_from_uint64),
-    (float, pmt.pmt_is_real, pmt.pmt_to_double, pmt.pmt_from_double),
-    (complex, pmt.pmt_is_complex, pmt.pmt_to_complex, pmt.pmt_from_complex),
-    (tuple, pmt.pmt_is_tuple, pmt_to_tuple, pmt_from_tuple),
-    (list, pmt.pmt_is_vector, pmt_to_vector, pmt_from_vector),
-    (dict, pmt.pmt_is_dict, pmt_to_dict, pmt_from_dict),
-    (numpy.ndarray, pmt.pmt_is_blob, pmt.pmt_blob_data, numpy_to_blob),
+    (None, pmt.is_null, lambda x: None, lambda x: pmt.PMT_NIL),
+    (bool, pmt.is_bool, pmt.to_bool, pmt.from_bool),
+    (str, pmt.is_symbol, pmt.symbol_to_string, pmt.string_to_symbol),
+    (int, pmt.is_integer, pmt.to_long, pmt.from_long),
+    (long, pmt.is_uint64, lambda x: long(pmt.to_uint64(x)), pmt.from_uint64),
+    (float, pmt.is_real, pmt.to_double, pmt.from_double),
+    (complex, pmt.is_complex, pmt.to_complex, pmt.from_complex),
+    (tuple, pmt.is_tuple, pmt_to_tuple, pmt_from_tuple),
+    (list, pmt.is_vector, pmt_to_vector, pmt_from_vector),
+    (dict, pmt.is_dict, pmt_to_dict, pmt_from_dict),
+    (numpy.ndarray, pmt.is_blob, pmt.blob_data, numpy_to_blob),
 )
 
 def pmt_to_python(p):
