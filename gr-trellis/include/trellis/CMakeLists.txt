@@ -58,7 +58,7 @@ macro(expand_h root)
     )
 
   #install rules for the generated h files
-  list(APPEND generated_includes ${expanded_files_h})
+  list(APPEND trellis_generated_includes ${expanded_files_h})
 endmacro(expand_h)
 
 ########################################################################
@@ -78,7 +78,6 @@ expand_h(pccc_decoder_combined_XX   fb fs fi cb cs ci)
 add_custom_target(trellis_generated_includes DEPENDS
     ${generated_includes}
 )
-MESSAGE(STATUS "GENERATED INCLUDES: ${trellis_generated_includes}")
 
 ########################################################################
 # Install header files

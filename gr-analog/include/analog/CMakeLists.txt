@@ -58,7 +58,7 @@ macro(expand_h root)
     )
 
   #install rules for the generated h files
-  list(APPEND generated_includes ${expanded_files_h})
+  list(APPEND analog_generated_includes ${expanded_files_h})
 endmacro(expand_h)
 
 ########################################################################

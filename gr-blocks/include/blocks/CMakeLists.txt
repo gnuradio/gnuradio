@@ -58,7 +58,7 @@ macro(expand_h root)
     )
 
   #install rules for the generated h files
-  list(APPEND generated_includes ${expanded_files_h})
+  list(APPEND blocks_generated_includes ${expanded_files_h})
 endmacro(expand_h)
 
 ########################################################################
@@ -87,7 +87,7 @@ add_custom_target(blocks_generated_includes DEPENDS
 # Install header files
 ########################################################################
 install(FILES
-    ${generated_includes}
+    ${blocks_generated_includes}
     api.h
     add_ff.h
     char_to_float.h
