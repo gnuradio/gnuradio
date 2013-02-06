@@ -50,12 +50,7 @@ class top_block_gui(gr.top_block):
 
 	def SetIcon(self, *args, **kwargs): self._frame.SetIcon(*args, **kwargs)
 
-	def Run(self, start=True, max_nouts=0):
-		"""
-		Setup the wx gui elements.
-		Start the gr top block.
-		Block with the wx main loop.
-		"""
+        def Start(self, start=True, max_nouts=0):
 		#set minimal window size
 		self._frame.SetSizeHints(*self._size)
 		#create callback for quit
@@ -76,5 +71,16 @@ class top_block_gui(gr.top_block):
 				self.start(max_nouts)
 			else:
 				self.start()
+
+	def Run(self, start=True, max_nouts=0):
+		"""
+		Setup the wx gui elements.
+		Start the gr top block.
+		Block with the wx main loop.
+		"""
 		#blocking main loop
+                self.Start(start, max_nouts)
+		self._app.MainLoop()
+
+        def Wait(self):
 		self._app.MainLoop()
