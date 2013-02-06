@@ -286,7 +286,11 @@ if __name__ == '__main__':
 		#if $flow_graph.get_option('max_nouts')
 	tb.Run($flow_graph.get_option('run'), $flow_graph.get_option('max_nouts'))
 		#else
-	tb.Run($flow_graph.get_option('run'))
+	tb.Start($flow_graph.get_option('run'))
+        #for $m in $monitors
+        (tb.$m.get_id()).start()
+        #end for
+        tb.Wait()
 		#end if
 	#elif $generate_options == 'qt_gui'
 	qapp = Qt.QApplication(sys.argv)
@@ -299,6 +303,9 @@ if __name__ == '__main__':
 		#end if
 	#end if
 	tb.show()
+        #for $m in $monitors
+        (tb.$m.get_id()).start()
+        #end for
 	qapp.exec_()
 	tb.stop()
 	tb = None #to clean up Qt widgets
@@ -311,15 +318,22 @@ if __name__ == '__main__':
 			#else
 	tb.start()
 			#end if
+        #for $m in $monitors
+        (tb.$m.get_id()).start()
+        #end for
 	raw_input('Press Enter to quit: ')
 	tb.stop()
 		#elif $run_options == 'run'
 			#if $flow_graph.get_option('max_nouts')
-	tb.run($flow_graph.get_option('max_nouts'))
+	tb.start($flow_graph.get_option('max_nouts'))
 			#else
-	tb.run()
+	tb.start()
 			#end if
 		#end if
+        #for $m in $monitors
+        (tb.$m.get_id()).start()
+        #end for
+        tb.wait()
 	#end if
 #end if
 

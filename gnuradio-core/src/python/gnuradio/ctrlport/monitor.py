@@ -27,7 +27,6 @@ class monitor:
     def __init__(self):
         print "ControlPort Monitor running."
         self.started = False
-        self.start()
         atexit.register(self.shutdown)
 
     def __del__(self):

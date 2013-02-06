@@ -107,6 +107,7 @@ Add a Misc->Throttle block to your flow graph to avoid CPU congestion.''')
 		imports = self._flow_graph.get_imports()
 		variables = self._flow_graph.get_variables()
 		parameters = self._flow_graph.get_parameters()
+                monitors = self._flow_graph.get_monitors()
 		#list of blocks not including variables and imports and parameters and disabled
 		def _get_block_sort_text(block):
 			code = block.get_make().replace(block.get_id(), ' ')
@@ -146,6 +147,7 @@ Add a Misc->Throttle block to your flow graph to avoid CPU congestion.''')
 			'flow_graph': self._flow_graph,
 			'variables': variables,
 			'parameters': parameters,
+                        'monitors': monitors,
 			'blocks': blocks,
 			'connections': connections,
 			'messages': messages,

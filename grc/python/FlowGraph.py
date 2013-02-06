@@ -24,6 +24,7 @@ import re
 
 _variable_matcher = re.compile('^(variable\w*)$')
 _parameter_matcher = re.compile('^(parameter)$')
+_monitors_searcher = re.compile('(monitor)')
 
 class FlowGraph(_FlowGraph, _GUIFlowGraph):
 
@@ -136,6 +137,13 @@ class FlowGraph(_FlowGraph, _GUIFlowGraph):
 		"""
 		parameters = filter(lambda b: _parameter_matcher.match(b.get_key()), self.get_enabled_blocks())
 		return parameters
+
+	def get_monitors(self):
+		"""
+		Get a list of all ControlPort monitors
+		"""
+		monitors = filter(lambda b: _monitors_searcher.search(b.get_key()), self.get_enabled_blocks())
+                return monitors
 
 	def rewrite(self):
 		"""
