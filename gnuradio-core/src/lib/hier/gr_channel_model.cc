@@ -59,7 +59,7 @@ gr_channel_model::gr_channel_model(double noise_voltage,
   d_multipath = gr_make_fir_filter_ccc(1, d_taps);
 
   d_noise_adder = gr_make_add_cc();
-  d_noise = gr_make_noise_source_c(GR_GAUSSIAN, noise_voltage, noise_seed);
+  d_noise = gr_make_fastnoise_source_c(GR_GAUSSIAN, noise_voltage, noise_seed, 1024*8);
   d_freq_offset = gr_make_sig_source_c(1, GR_SIN_WAVE, frequency_offset, 1.0, 0.0);
   d_mixer_offset = gr_make_multiply_cc();
 
