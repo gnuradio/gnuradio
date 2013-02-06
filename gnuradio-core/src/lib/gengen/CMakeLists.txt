@@ -145,7 +145,7 @@ install(FILES
 
 if(ENABLE_PYTHON)
     install(FILES
-        ${generated_gengen_swigs}
+       ${generated_gengen_swigs}
         ${CMAKE_CURRENT_SOURCE_DIR}/gr_endianness.i
         ${CMAKE_CURRENT_SOURCE_DIR}/gengen.i
         ${CMAKE_CURRENT_BINARY_DIR}/gengen_generated.i

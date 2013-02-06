@@ -40,6 +40,10 @@
 #include "analog/feedforward_agc_cc.h"
 #include "analog/fmdet_cf.h"
 #include "analog/frequency_modulator_fc.h"
+#include "analog/fastnoise_source_s.h"
+#include "analog/fastnoise_source_i.h"
+#include "analog/fastnoise_source_f.h"
+#include "analog/fastnoise_source_c.h"
 #include "analog/noise_source_s.h"
 #include "analog/noise_source_i.h"
 #include "analog/noise_source_f.h"
@@ -78,6 +82,10 @@
 %include "analog/feedforward_agc_cc.h"
 %include "analog/fmdet_cf.h"
 %include "analog/frequency_modulator_fc.h"
+%include "analog/fastnoise_source_s.h"
+%include "analog/fastnoise_source_i.h"
+%include "analog/fastnoise_source_f.h"
+%include "analog/fastnoise_source_c.h"
 %include "analog/noise_source_s.h"
 %include "analog/noise_source_i.h"
 %include "analog/noise_source_f.h"
@@ -113,6 +121,10 @@ GR_SWIG_BLOCK_MAGIC2(analog, dpll_bb);
 GR_SWIG_BLOCK_MAGIC2(analog, feedforward_agc_cc);
 GR_SWIG_BLOCK_MAGIC2(analog, fmdet_cf);
 GR_SWIG_BLOCK_MAGIC2(analog, frequency_modulator_fc);
+GR_SWIG_BLOCK_MAGIC2(analog, fastnoise_source_s);
+GR_SWIG_BLOCK_MAGIC2(analog, fastnoise_source_i);
+GR_SWIG_BLOCK_MAGIC2(analog, fastnoise_source_f);
+GR_SWIG_BLOCK_MAGIC2(analog, fastnoise_source_c);
 GR_SWIG_BLOCK_MAGIC2(analog, noise_source_s);
 GR_SWIG_BLOCK_MAGIC2(analog, noise_source_i);
 GR_SWIG_BLOCK_MAGIC2(analog, noise_source_f);

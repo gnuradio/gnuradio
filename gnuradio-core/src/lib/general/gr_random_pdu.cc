@@ -74,8 +74,8 @@ void gr_random_pdu::output_random(){
         }
 
     // send the vector
-    pmt::pmt_t vecpmt( pmt::pmt_make_blob( vec, len ) );
-    pmt::pmt_t pdu( pmt::pmt_cons( pmt::PMT_NIL, vecpmt ) );
+    pmt::pmt_t vecpmt( pmt::make_blob( vec, len ) );
+    pmt::pmt_t pdu( pmt::cons( pmt::PMT_NIL, vecpmt ) );
     message_port_pub( pmt::mp("pdus"), pdu );
     
     std::cout << "sending new random vector of length " << len << "\n";
