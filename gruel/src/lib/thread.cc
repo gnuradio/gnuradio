@@ -61,14 +61,14 @@ namespace gruel {
   thread_bind_to_processor(gr_thread_t thread, const std::vector<unsigned int> &mask)
   {
     //DWORD_PTR mask = (1 << n);
-    DWORD_PTR mask = 0;
+    DWORD_PTR dword_mask = 0;
 
     std::vector<unsigned int> _mask = mask;
     std::vector<unsigned int>::iterator itr;
     for(itr = _mask.begin(); itr != _mask.end(); itr++)
-      mask |= (1 << (*itr));
+      dword_mask |= (1 << (*itr));
 
-    DWORD_PTR ret = SetThreadAffinityMask(thread, mask);
+    DWORD_PTR ret = SetThreadAffinityMask(thread, dword_mask);
     if(ret == 0) {
       std::stringstream s;
       s << "thread_bind_to_processor failed with error: " << GetLastError() << std::endl;
@@ -79,14 +79,14 @@ namespace gruel {
   void
   thread_unbind()
   {
-    thread_bind_unbind(get_current_thread_id());
+    thread_unbind(get_current_thread_id());
   }
 
   void
   thread_unbind(gr_thread_t thread)
   {
-    DWORD_PTR mask = sizeof(DWORD_PTR) - 1;
-    DWORD_PTR ret = SetThreadAffinityMask(thread, mask);
+    DWORD_PTR dword_mask = sizeof(DWORD_PTR) - 1;
+    DWORD_PTR ret = SetThreadAffinityMask(thread, dword_mask);
     if(ret == 0) {
       std::stringstream s;
       s << "thread_unbind failed with error: " << GetLastError() << std::endl;

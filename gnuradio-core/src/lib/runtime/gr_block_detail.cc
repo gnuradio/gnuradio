@@ -26,6 +26,7 @@
 
 #include <gr_block_detail.h>
 #include <gr_buffer.h>
+#include <iostream>
 
 using namespace pmt;
 
