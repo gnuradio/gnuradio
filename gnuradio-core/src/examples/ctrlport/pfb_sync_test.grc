@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='ASCII'?>
 <flow_graph>
-  <timestamp>Tue Nov 27 16:02:43 2012</timestamp>
+  <timestamp>Wed Feb  6 17:02:42 2013</timestamp>
   <block>
     <key>options</key>
     <param>
@@ -464,29 +464,6 @@
     </param>
   </block>
   <block>
-    <key>monitor</key>
-    <param>
-      <key>id</key>
-      <value>monitor_0</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>en</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(229, 6)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
     <key>digital_pfb_clock_sync_xxx</key>
     <param>
       <key>id</key>
@@ -624,30 +601,22 @@
     </param>
   </block>
   <block>
-    <key>probe2_c</key>
+    <key>ctrlport_monitor</key>
     <param>
       <key>id</key>
-      <value>probe2_c_0</value>
+      <value>ctrlport_monitor_0</value>
     </param>
     <param>
       <key>_enabled</key>
       <value>True</value>
     </param>
     <param>
-      <key>name</key>
-      <value>constellation</value>
-    </param>
-    <param>
-      <key>desc</key>
-      <value>Constellation Points</value>
-    </param>
-    <param>
-      <key>len</key>
-      <value>1024</value>
+      <key>en</key>
+      <value>True</value>
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(912, 243)</value>
+      <value>(228, 5)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -693,12 +662,6 @@
   <connection>
     <source_block_id>digital_psk_mod_0</source_block_id>
     <sink_block_id>channels_channel_model_0</sink_block_id>
-    <source_key>0</source_key>
-    <sink_key>0</sink_key>
-  </connection>
-  <connection>
-    <source_block_id>channels_channel_model_0</source_block_id>
-    <sink_block_id>probe2_c_0</sink_block_id>
     <source_key>0</source_key>
     <sink_key>0</sink_key>
   </connection>
