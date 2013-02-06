@@ -78,6 +78,7 @@ install(FILES
     ${generated_includes}
     api.h
     cpm.h
+    noise_type.h
     agc.h
     agc2.h
     squelch_base_ff.h
