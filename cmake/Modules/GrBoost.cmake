@@ -34,9 +34,9 @@ set(BOOST_REQUIRED_COMPONENTS
     thread
 )
 
-if(UNIX AND EXISTS "/usr/lib64")
+if(UNIX AND NOT BOOST_ROOT AND EXISTS "/usr/lib64")
     list(APPEND BOOST_LIBRARYDIR "/usr/lib64") #fedora 64-bit fix
-endif(UNIX AND EXISTS "/usr/lib64")
+endif(UNIX AND NOT BOOST_ROOT AND EXISTS "/usr/lib64")
 
 if(MSVC)
     if (NOT DEFINED BOOST_ALL_DYN_LINK)
