@@ -24,7 +24,7 @@ import re
 
 _variable_matcher = re.compile('^(variable\w*)$')
 _parameter_matcher = re.compile('^(parameter)$')
-_monitors_searcher = re.compile('(monitor)')
+_monitors_searcher = re.compile('(ctrlport_monitor)')
 
 class FlowGraph(_FlowGraph, _GUIFlowGraph):
 

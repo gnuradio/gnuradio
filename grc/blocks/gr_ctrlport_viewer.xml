@@ -23,7 +23,7 @@
 
 <block>
   <name>CtrlPort Monitor</name>
-  <key>monitor</key>
+  <key>ctrlport_monitor</key>
   <category>Control Port</category>
   <import>from gnuradio.ctrlport.monitor import *</import>
   <make>not $en or monitor()</make>
