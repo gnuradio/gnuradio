@@ -27,7 +27,7 @@
 #include <blocks/add_cc.h>
 #include <blocks/multiply_cc.h>
 #include <analog/sig_source_c.h>
-#include <analog/noise_source_c.h>
+#include <analog/fastnoise_source_c.h>
 #include <channels/channel_model.h>
 #include <filter/fractional_interpolator_cc.h>
 #include <filter/fir_filter_ccc.h>
@@ -42,7 +42,7 @@ namespace gr {
       blocks::multiply_cc::sptr d_mixer_offset;
 
       analog::sig_source_c::sptr d_freq_offset;
-      analog::noise_source_c::sptr d_noise;
+      analog::fastnoise_source_c::sptr d_noise;
 
       filter::fractional_interpolator_cc::sptr d_timing_offset;
       filter::fir_filter_ccc::sptr d_multipath;

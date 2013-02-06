@@ -40,6 +40,7 @@
 #include <gr_endian_swap.h>
 #include <gr_firdes.h>
 #include <gr_delay.h>
+#include <gr_random_pdu.h>
 #include <gr_rms_cf.h>
 #include <gr_rms_ff.h>
 #include <gr_fake_channel_coder_pp.h>
@@ -89,6 +90,7 @@
 %include "gr_endian_swap.i"
 %include "gr_firdes.i"
 %include "gr_delay.i"
+%include "gr_random_pdu.i"
 %include "gr_rms_cf.i"
 %include "gr_rms_ff.i"
 %include "gr_fake_channel_coder_pp.i"

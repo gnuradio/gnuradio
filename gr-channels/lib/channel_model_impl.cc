@@ -62,8 +62,8 @@ namespace gr {
       d_multipath = filter::fir_filter_ccc::make(1, d_taps);
 
       d_noise_adder = blocks::add_cc::make();
-      d_noise = analog::noise_source_c::make(analog::GR_GAUSSIAN,
-					     noise_voltage, noise_seed);
+      d_noise = analog::fastnoise_source_c::make(analog::GR_GAUSSIAN,
+						 noise_voltage, noise_seed);
       d_freq_offset = analog::sig_source_c::make(1, analog::GR_SIN_WAVE,
 						 frequency_offset, 1.0, 0.0);
       d_mixer_offset = blocks::multiply_cc::make();

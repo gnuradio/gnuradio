@@ -65,6 +65,7 @@ endmacro(expand_h)
 # Invoke macro to generate various sources
 #######################################################################
 expand_h(noise_source_X     s i f c)
+expand_h(fastnoise_source_X s i f c)
 expand_h(sig_source_X       s i f c)
 
 add_custom_target(analog_generated_includes DEPENDS
@@ -78,6 +79,7 @@ install(FILES
     ${generated_includes}
     api.h
     cpm.h
+    noise_type.h
     agc.h
     agc2.h
     squelch_base_ff.h
