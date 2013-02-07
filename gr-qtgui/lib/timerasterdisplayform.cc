@@ -173,6 +173,12 @@ TimeRasterDisplayForm::setNumCols(QString cols)
 }
 
 void
+TimeRasterDisplayForm::setSampleRate(const QString &rate)
+{
+  getPlot()->setSampleRate(rate.toDouble());
+}
+
+void
 TimeRasterDisplayForm::setColorMap(int which,
 				   const int newType,
 				   const QColor lowColor,

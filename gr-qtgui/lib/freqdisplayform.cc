@@ -111,6 +111,12 @@ FreqDisplayForm::getFFTWindowType() const
 }
 
 void
+FreqDisplayForm::setSampleRate(const QString &samprate)
+{
+  setFrequencyRange(_center_freq, samprate.toDouble());
+}
+
+void
 FreqDisplayForm::setFFTSize(const int newsize)
 {
   _fftsize = newsize;
@@ -140,6 +146,9 @@ FreqDisplayForm::setFrequencyRange(const double centerfreq,
   double units3  = std::max(floor(units10 / 3.0), 0.0);
   double units = pow(10, (units10-fmod(units10, 3.0)));
   int iunit = static_cast<int>(units3);
+
+  _center_freq = centerfreq;
+  _samp_rate = bandwidth;
 
   getPlot()->setFrequencyRange(centerfreq, bandwidth,
 			       units, strunits[iunit]);

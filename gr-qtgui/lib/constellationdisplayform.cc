@@ -138,3 +138,7 @@ ConstellationDisplayForm::autoScale(bool en)
   getPlot()->setAutoScale(_autoscale_state);
   getPlot()->replot();
 }
+
+ConstellationDisplayForm::setSampleRate(const QString &samprate)
+{
+}

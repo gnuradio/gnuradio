@@ -54,6 +54,7 @@ public:
   void setNumRows(double rows);
   void setNumCols(double cols);
   void setAlpha(int which, int alpha);
+  void setSampleRate(double samprate);
 
   double numRows() const;
   double numCols() const;

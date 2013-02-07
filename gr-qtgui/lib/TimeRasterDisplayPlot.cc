@@ -287,6 +287,13 @@ TimeRasterDisplayPlot::setAlpha(int which, int alpha)
   d_raster[which]->setAlpha(alpha);
 }
 
+void
+TimeRasterDisplayPlot::setSampleRate(double samprate)
+{
+  d_samp_rate = samprate;
+  reset();
+}
+
 double
 TimeRasterDisplayPlot::numRows() const
 {

@@ -46,6 +46,7 @@ public slots:
   void customEvent(QEvent * e);
   void setNPoints(const int);
 
+  void setSampleRate(const QString &samprate);
   void setYaxis(double min, double max);
   void setXaxis(double min, double max);
   void autoScale();

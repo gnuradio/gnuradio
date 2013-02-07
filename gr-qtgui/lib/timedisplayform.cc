@@ -89,6 +89,12 @@ TimeDisplayForm::customEvent(QEvent * e)
 }
 
 void
+TimeDisplayForm::setSampleRate(const QString &samprate)
+{
+  setSampleRate(samprate.toDouble());
+}
+
+void
 TimeDisplayForm::setSampleRate(const double samprate)
 {
   if(samprate > 0) {

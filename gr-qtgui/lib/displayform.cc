@@ -98,6 +98,12 @@ DisplayForm::DisplayForm(int nplots, QWidget* parent)
     _menu->addMenu(_lines_menu[i]);
   }
 
+  _samp_rate_act = new PopupMenu("Sample Rate", this);
+  _samp_rate_act->setStatusTip(tr("Set Sample Rate"));
+  connect(_samp_rate_act, SIGNAL(whichTrigger(QString)),
+	  this, SLOT(setSampleRate(QString)));
+  _menu->addAction(_samp_rate_act);
+
   _autoscale_act = new QAction("Auto Scale On", this);
   _autoscale_act->setStatusTip(tr("Autoscale Plot"));
   connect(_autoscale_act, SIGNAL(triggered()), this, SLOT(autoScale()));
