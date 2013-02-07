@@ -393,7 +393,7 @@ FrequencyDisplayPlot::plotNewData(const double* dataPoints,
   plotNewData(vecDataPoints, numDataPoints, noiseFloorAmplitude,
 	      peakFrequency, peakAmplitude, timeInterval);
 }
-
+   
 void
 FrequencyDisplayPlot::clearMaxData()
 {

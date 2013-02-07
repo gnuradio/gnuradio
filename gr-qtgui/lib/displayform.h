@@ -71,6 +71,8 @@ public slots:
   QwtSymbol::Style lineMarker(int which);
   int markerAlpha(int which);
 
+  virtual void setSampleRate(const QString &rate) = 0;
+
   void setStop(bool on);
   void setStop();
 
@@ -117,6 +119,7 @@ protected:
   QList<LineMarkerMenu*> _line_marker_menu;
   QList<MarkerAlphaMenu*> _marker_alpha_menu;
 
+  PopupMenu *_samp_rate_act;
   QAction *_save_act;
 
   QTimer *d_displayTimer;
