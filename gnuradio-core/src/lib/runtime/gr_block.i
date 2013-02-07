@@ -66,6 +66,15 @@ class gr_block : public gr_basic_block {
   void set_min_output_buffer(long min_output_buffer);
   void set_min_output_buffer(int port, long min_output_buffer);
 
+  // Methods to access performance counters
+  float pc_noutput_items();
+  float pc_nproduced();
+  float pc_input_buffers_full(int which);
+  std::vector<float> pc_input_buffers_full();
+  float pc_output_buffers_full(int which);
+  std::vector<float> pc_output_buffers_full();
+  float pc_work_time();
+
   // Methods to manage processor affinity.
   void set_processor_affinity(const std::vector<unsigned int> &mask);
   void unset_processor_affinity();
