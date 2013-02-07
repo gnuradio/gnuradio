@@ -32,7 +32,7 @@ class affinity_set(gr.top_block):
 	self.gr_filt_1 = gr.fir_filter_ccc(1, 40000*[0.2+0.3j,])
 
 	self.gr_filt_0.set_processor_affinity([0,])
-	self.gr_filt_1.set_processor_affinity([1,2])
+	self.gr_filt_1.set_processor_affinity([0,1])
 		
 	##################################################
 	# Connections
