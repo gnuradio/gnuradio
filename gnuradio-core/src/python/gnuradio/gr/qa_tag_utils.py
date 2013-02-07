@@ -22,7 +22,11 @@
 
 from gnuradio import gr, gr_unittest
 import tag_utils
-import pmt
+
+try:
+    import pmt_swig as pmt
+except ImportError:
+    import pmt
 
 class test_tag_utils (gr_unittest.TestCase):
 
