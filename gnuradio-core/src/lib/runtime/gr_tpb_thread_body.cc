@@ -38,6 +38,13 @@ gr_tpb_thread_body::gr_tpb_thread_body(gr_block_sptr block, int max_noutput_item
   gr_block_executor::state s;
   pmt_t msg;
 
+  d->threaded = true;
+  d->thread = gruel::get_current_thread_id();
+
+  // Set thread affinity if it was set before fg was started.
+  if(block->processor_affinity().size() > 0) {
+    gruel::thread_bind_to_processor(d->thread, block->processor_affinity());
+  }
 
   while (1){
     boost::this_thread::interruption_point();

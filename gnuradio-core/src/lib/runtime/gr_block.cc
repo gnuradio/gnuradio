@@ -251,6 +251,24 @@ gr_block::is_set_max_noutput_items()
   return d_max_noutput_items_set;
 }
 
+void
+gr_block::set_processor_affinity(const std::vector<unsigned int> &mask)
+{
+  d_affinity = mask;
+  if(d_detail) {
+    d_detail->set_processor_affinity(d_affinity);
+  }
+}
+
+void
+gr_block::unset_processor_affinity()
+{
+  d_affinity.clear();
+  if(d_detail) {
+    d_detail->unset_processor_affinity();
+  }
+}
+
 std::ostream&
 operator << (std::ostream& os, const gr_block *m)
 {

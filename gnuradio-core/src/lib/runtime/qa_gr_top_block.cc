@@ -262,3 +262,24 @@ void qa_gr_top_block::t10_reconfig_max_output_buffer()
   // Wait for flowgraph to end on its own
   tb->wait();
 }
+
+void qa_gr_top_block::t11_set_block_affinity()
+{
+  gr_top_block_sptr tb = gr_make_top_block("top");
+  gr_block_sptr src (gr_make_null_source(sizeof(float)));
+  gr_block_sptr snk (gr_make_null_sink(sizeof(float)));
+
+  std::vector<unsigned int> set(1, 0), ret;
+  src->set_processor_affinity(set);
+
+  tb->connect(src, 0, snk, 0);
+  tb->start();
+  tb->stop();
+  tb->wait();
+
+  ret = src->processor_affinity();
+
+  // We only set the core affinity to 0 because we always know at
+  // least one thread core exists to use.
+  CPPUNIT_ASSERT_EQUAL(set[0], ret[0]);
+}

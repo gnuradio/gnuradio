@@ -26,6 +26,7 @@
 
 #include <gr_block_detail.h>
 #include <gr_buffer.h>
+#include <iostream>
 
 static long s_ncurrently_allocated = 0;
 
@@ -197,5 +198,26 @@ gr_block_detail::get_tags_in_range(std::vector<gr_tag_t> &v,
     if(pmt::eqv(key, itemkey)) {
       v.push_back(*itr);
     }
+  }
+}
+
+void
+gr_block_detail::set_processor_affinity(const std::vector<unsigned int> &mask)
+{
+  if(threaded) {
+    try {
+      gruel::thread_bind_to_processor(thread, mask);
+    }
+    catch (std::runtime_error e) {
+      std::cerr << "set_processor_affinity: invalid mask."  << std::endl;;
+    }
+  }
+}
+
+void
+gr_block_detail::unset_processor_affinity()
+{
+  if(threaded) {
+    gruel::thread_unbind(thread);
   }
 }

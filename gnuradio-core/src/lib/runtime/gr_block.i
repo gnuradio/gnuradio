@@ -66,6 +66,11 @@ class gr_block : public gr_basic_block {
   void set_min_output_buffer(long min_output_buffer);
   void set_min_output_buffer(int port, long min_output_buffer);
 
+  // Methods to manage processor affinity.
+  void set_processor_affinity(const std::vector<unsigned int> &mask);
+  void unset_processor_affinity();
+  std::vector<unsigned int> processor_affinity();
+
   // internal use
   gr_block_detail_sptr detail () const { return d_detail; }
   void set_detail (gr_block_detail_sptr detail) { d_detail = detail; }

@@ -77,6 +77,7 @@ link_directories(${Boost_LIBRARY_DIRS})
 list(APPEND gruel_sources
     realtime.cc
     sys_pri.cc
+    thread.cc
     thread_body_wrapper.cc
     thread_group.cc
 )

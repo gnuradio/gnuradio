@@ -20,6 +20,7 @@
 include(GrPython)
 
 GR_PYTHON_INSTALL(PROGRAMS
+  affinity_set.py
   plot_flops.py
   run_synthetic.py
   synthetic.py
