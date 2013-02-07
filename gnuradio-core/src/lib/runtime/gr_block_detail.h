@@ -27,6 +27,7 @@
 #include <gr_runtime_types.h>
 #include <gr_tpb_detail.h>
 #include <gr_tags.h>
+#include <gruel/high_res_timer.h>
 #include <stdexcept>
 
 /*!
@@ -169,6 +170,19 @@ class GR_CORE_API gr_block_detail {
 
   bool                               threaded;  // set if thread is currently running.
   gruel::gr_thread_t                 thread;    // portable thread handle
+
+  void start_perf_counters();
+  void stop_perf_counters(int noutput_items, int nproduced);
+
+  // Calls to get performance counter items
+  float pc_noutput_items();
+  float pc_nproduced();
+  float pc_input_buffers_full(size_t which);
+  std::vector<float> pc_input_buffers_full();
+  float pc_output_buffers_full(size_t which);
+  std::vector<float> pc_output_buffers_full();
+  float pc_work_time();
+ 
   gr_tpb_detail			     d_tpb;	// used by thread-per-block scheduler
   int				     d_produce_or;
 
@@ -181,6 +195,14 @@ class GR_CORE_API gr_block_detail {
   std::vector<gr_buffer_sptr>	     d_output;
   bool                               d_done;
 
+  // Performance counters
+  float d_avg_noutput_items;
+  float d_avg_nproduced;
+  std::vector<float> d_avg_input_buffers_full;
+  std::vector<float> d_avg_output_buffers_full;
+  gruel::high_res_timer_type d_start_of_work, d_end_of_work;
+  float d_avg_work_time;
+  
   gr_block_detail (unsigned int ninputs, unsigned int noutputs);
 
   friend struct gr_tpb_detail;

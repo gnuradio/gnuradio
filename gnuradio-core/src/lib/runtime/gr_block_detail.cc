@@ -40,7 +40,11 @@ gr_block_detail::gr_block_detail (unsigned int ninputs, unsigned int noutputs)
   : d_produce_or(0),
     d_ninputs (ninputs), d_noutputs (noutputs),
     d_input (ninputs), d_output (noutputs),
-    d_done (false)
+    d_done (false),
+    d_avg_noutput_items(0), d_avg_nproduced(0),
+    d_avg_input_buffers_full(ninputs, 0),
+    d_avg_output_buffers_full(noutputs, 0),
+    d_avg_work_time(0)
 {
   s_ncurrently_allocated++;
 }
@@ -220,4 +224,84 @@ gr_block_detail::unset_processor_affinity()
   if(threaded) {
     gruel::thread_unbind(thread);
   }
+}
+
+void
+gr_block_detail::start_perf_counters()
+{
+  d_start_of_work = gruel::high_res_timer_now();
+}
+
+void
+gr_block_detail::stop_perf_counters(int noutput_items, int nproduced)
+{
+  float alpha = 0.05;
+  float beta  = 1.0-alpha;
+
+  d_end_of_work = gruel::high_res_timer_now();
+  gruel::high_res_timer_type diff = d_end_of_work - d_start_of_work;
+  d_avg_work_time = beta*d_avg_work_time + alpha*diff;
+
+  d_avg_nproduced = beta*d_avg_nproduced + alpha*nproduced;
+  d_avg_noutput_items = beta*d_avg_noutput_items + alpha*noutput_items;
+
+  for(size_t i=0; i < d_input.size(); i++) {
+    float pfull = static_cast<float>(d_input[i]->items_available()) /
+      static_cast<float>(d_input[i]->max_possible_items_available());
+    d_avg_input_buffers_full[i] = beta*d_avg_input_buffers_full[i] + alpha*pfull;
+  }
+
+  for(size_t i=0; i < d_output.size(); i++) {
+    float pfull = 1.0f - static_cast<float>(d_output[i]->space_available()) /
+      static_cast<float>(d_output[i]->bufsize());
+    d_avg_output_buffers_full[i] = beta*d_avg_output_buffers_full[i] + alpha*pfull;
+  }
+}
+
+float
+gr_block_detail::pc_noutput_items()
+{
+  return d_avg_noutput_items;
+}
+
+float
+gr_block_detail::pc_nproduced()
+{
+  return d_avg_nproduced;
+}
+
+float
+gr_block_detail::pc_input_buffers_full(size_t which)
+{
+  if(which < d_avg_input_buffers_full.size())
+    return d_avg_input_buffers_full[which];
+  else
+    return 0;
+}
+
+std::vector<float>
+gr_block_detail::pc_input_buffers_full()
+{
+  return d_avg_input_buffers_full;
+}
+
+float
+gr_block_detail::pc_output_buffers_full(size_t which)
+{
+  if(which < d_avg_output_buffers_full.size())
+    return d_avg_output_buffers_full[which];
+  else
+    return 0;
+}
+
+std::vector<float>
+gr_block_detail::pc_output_buffers_full()
+{
+  return d_avg_output_buffers_full;
+}
+
+float
+gr_block_detail::pc_work_time()
+{
+  return d_avg_work_time;
 }
