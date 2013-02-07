@@ -89,7 +89,7 @@ gr_file_source::work (int noutput_items,
   if(d_fp == NULL)
     throw std::runtime_error("work with file not open");
 
-  boost::mutex::scoped_lock lock(fp_mutex); // hold for the rest of this function
+  gruel::scoped_lock lock(fp_mutex); // hold for the rest of this function
   while (size) {
     i = fread(o, d_itemsize, size, (FILE *) d_fp);
 
@@ -129,7 +129,7 @@ bool
 gr_file_source::seek (long seek_point, int whence)
 {
   // obtain exclusive access for duration of this function
-  boost::mutex::scoped_lock lock(fp_mutex);
+  gruel::scoped_lock lock(fp_mutex);
   return fseek((FILE *) d_fp, seek_point * d_itemsize, whence) == 0;
 }
 
@@ -137,7 +137,7 @@ void
 gr_file_source::open(const char *filename, bool repeat)
 {
   // obtain exclusive access for duration of this function
-  boost::mutex::scoped_lock     lock(fp_mutex);
+  gruel::scoped_lock     lock(fp_mutex);
 
   int fd;
 
@@ -166,7 +166,7 @@ void
 gr_file_source::close()
 {
   // obtain exclusive access for duration of this function
-  boost::mutex::scoped_lock lock(fp_mutex);
+  gruel::scoped_lock lock(fp_mutex);
 
   if(d_new_fp != NULL) {
     fclose(d_new_fp);
@@ -179,7 +179,7 @@ void
 gr_file_source::do_update()
 {
   if(d_updated) {
-    boost::mutex::scoped_lock lock(fp_mutex); // hold while in scope
+    gruel::scoped_lock lock(fp_mutex); // hold while in scope
 
     if(d_fp)
       fclose(d_fp);

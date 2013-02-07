@@ -312,11 +312,21 @@ QImage PlotTimeRaster::renderImage(const QwtScaleMap &xMap,
   return image;
 }
 
+#if QWT_VERSION < 0x060000
+QwtDoubleInterval
+PlotTimeRaster::interval(Qt::Axis ax) const
+{
+  return d_data->data->range();
+}
+
+#else
+
 QwtInterval
 PlotTimeRaster::interval(Qt::Axis ax) const
 {
   return d_data->data->interval(ax);
 }
+#endif
 
 /*!
   \brief Draw the raster

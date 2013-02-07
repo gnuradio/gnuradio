@@ -79,7 +79,7 @@ void TimeRasterData::copy(const TimeRasterData* rhs)
     d_data_size = d_totalitems + static_cast<int>(floor(d_cols));
     setBoundingRect(rhs->boundingRect());
     delete [] d_data;
-    _data = new double[d_data_size];
+    d_data = new double[d_data_size];
   }
 #else
   if((d_cols != rhs->getNumCols()) || (d_rows != rhs->getNumRows())) {
