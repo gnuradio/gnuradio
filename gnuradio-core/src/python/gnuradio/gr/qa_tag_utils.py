@@ -22,9 +22,7 @@
 
 from gnuradio import gr, gr_unittest
 import tag_utils
-
-try: from gruel import pmt
-except: import pmt
+import pmt
 
 class test_tag_utils (gr_unittest.TestCase):
 
