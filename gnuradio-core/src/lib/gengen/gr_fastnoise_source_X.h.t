@@ -39,6 +39,7 @@ typedef boost::shared_ptr<@NAME@> @NAME@_sptr;
  * \param ampl  a scaling factor for the output
  * \param seed seed for random generators. Note that for uniform and
  * Gaussian distributions, this should be a negative number.
+ * \param samples number of samples to pre-generate.
  */
 GR_CORE_API @NAME@_sptr
 gr_make_@BASE_NAME@ (gr_noise_type_t type, float ampl, long seed = 0, long samples=1024*16);
@@ -55,6 +56,7 @@ gr_make_@BASE_NAME@ (gr_noise_type_t type, float ampl, long seed = 0, long sampl
  * \param ampl  a scaling factor for the output
  * \param seed seed for random generators. Note that for uniform and
  * Gaussian distributions, this should be a negative number.
+ * \param samples number of samples to pre-generate.
  */
 class GR_CORE_API @NAME@ : public gr_sync_block {
   friend GR_CORE_API @NAME@_sptr
