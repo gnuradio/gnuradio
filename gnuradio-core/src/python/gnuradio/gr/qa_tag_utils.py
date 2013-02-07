@@ -22,7 +22,11 @@
 
 from gnuradio import gr, gr_unittest
 import tag_utils
-import pmt
+
+try:
+    import pmt_swig as pmt
+except ImportError:
+    import pmt
 
 class test_tag_utils (gr_unittest.TestCase):
 
@@ -36,9 +40,9 @@ class test_tag_utils (gr_unittest.TestCase):
     def test_001(self):
         t = gr.gr_tag_t()
         t.offset = 10
-        t.key = pmt.string_to_symbol('key')
-        t.value = pmt.from_long(23)
-        t.srcid = pmt.from_bool(False)
+        t.key = pmt.pmt_string_to_symbol('key')
+        t.value = pmt.pmt_from_long(23)
+        t.srcid = pmt.pmt_from_bool(False)
         pt = tag_utils.tag_to_python(t)
         self.assertEqual(pt.key, 'key')
         self.assertEqual(pt.value, 23)
