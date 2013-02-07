@@ -45,7 +45,6 @@ namespace gr {
     {
       set_a(a);
       set_b(b);
-      setup_rpc();
     }
 
     nop_impl::~nop_impl()

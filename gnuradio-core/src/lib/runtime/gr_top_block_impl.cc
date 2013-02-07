@@ -108,6 +108,8 @@ gr_top_block_impl::start(int max_noutput_items)
   d_ffg->validate();
   d_ffg->setup_connections();
 
+  d_ffg->enable_pc_rpc();
+
   d_scheduler = make_scheduler(d_ffg, d_max_noutput_items);
   d_state = RUNNING;
 }

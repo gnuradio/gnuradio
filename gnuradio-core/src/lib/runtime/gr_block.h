@@ -395,6 +395,24 @@ class GR_CORE_API gr_block : public gr_basic_block {
    */
   float pc_work_time();
 
+  /*!
+   * \brief Sets up export of perf. counters to ControlPort. Only
+   * called by the scheduler.
+   */
+  void setup_pc_rpc();
+
+  /*!
+   * \brief Checks if this block is already exporting perf. counters
+   * to ControlPort.
+   */
+  bool is_pc_rpc_set() { return d_pc_rpc_set; }
+
+  /*!
+   * \brief If the block calls this in its constructor, it's
+   * perf. counters will not be exported.
+   */
+  void no_pc_rpc() { d_pc_rpc_set = true; }
+
 
   // ----------------------------------------------------------------------------
   // Functions to handle thread affinity
@@ -432,6 +450,7 @@ class GR_CORE_API gr_block : public gr_basic_block {
   int                   d_max_noutput_items;         // value of max_noutput_items for this block
   tag_propagation_policy_t d_tag_propagation_policy; // policy for moving tags downstream
   std::vector<unsigned int> d_affinity;              // thread affinity proc. mask
+  bool                  d_pc_rpc_set;
 
  protected:
   gr_block (void){} //allows pure virtual interface sub-classes

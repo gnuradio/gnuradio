@@ -44,6 +44,7 @@ gr_block::gr_block (const std::string &name,
     d_max_noutput_items_set(false),
     d_max_noutput_items(0),
     d_tag_propagation_policy(TPP_ALL_TO_ALL),
+    d_pc_rpc_set(false),
     d_max_output_buffer(std::max(output_signature->max_streams(),1), -1),
     d_min_output_buffer(std::max(output_signature->max_streams(),1), -1)
 {
@@ -344,6 +345,43 @@ gr_block::pc_work_time()
   else {
     return 0;
   }
+}
+
+void
+gr_block::setup_pc_rpc()
+{
+  d_pc_rpc_set = true;
+#ifdef GR_CTRLPORT
+  d_rpc_vars.push_back(
+    rpcbasic_sptr(new rpcbasic_register_get<gr_block, float>(
+      alias(), "noutput_items", &gr_block::pc_noutput_items,
+      pmt::mp(0), pmt::mp(32768), pmt::mp(0),
+      "", "Average noutput items", RPC_PRIVLVL_MIN, DISPTIMESERIESF)));
+
+  d_rpc_vars.push_back(
+    rpcbasic_sptr(new rpcbasic_register_get<gr_block, float>(
+      alias(), "nproduced", &gr_block::pc_nproduced,
+      pmt::mp(0), pmt::mp(32768), pmt::mp(0),
+      "", "Average items produced", RPC_PRIVLVL_MIN, DISPTIMESERIESF)));
+
+  d_rpc_vars.push_back(
+    rpcbasic_sptr(new rpcbasic_register_get<gr_block, float>(
+      alias(), "work time", &gr_block::pc_work_time,
+      pmt::mp(0), pmt::mp(1e9), pmt::mp(0),
+      "", "Average clock cycles in call to work", RPC_PRIVLVL_MIN, DISPTIMESERIESF)));
+
+  d_rpc_vars.push_back(
+    rpcbasic_sptr(new rpcbasic_register_get<gr_block, std::vector<float> >(
+      alias(), "input \% full", &gr_block::pc_input_buffers_full,
+      pmt::make_c32vector(0,0), pmt::make_c32vector(0,1), pmt::make_c32vector(0,0),
+      "", "Average of how full input buffers are", RPC_PRIVLVL_MIN, DISPTIMESERIESF)));
+
+  d_rpc_vars.push_back(
+    rpcbasic_sptr(new rpcbasic_register_get<gr_block, std::vector<float> >(
+      alias(), "output \% full", &gr_block::pc_output_buffers_full,
+      pmt::make_c32vector(0,0), pmt::make_c32vector(0,1), pmt::make_c32vector(0,0),
+      "", "Average of how full output buffers are", RPC_PRIVLVL_MIN, DISPTIMESERIESF)));
+#endif /* GR_CTRLPORT */
 }
 
 std::ostream&

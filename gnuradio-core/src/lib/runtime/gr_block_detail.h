@@ -182,7 +182,7 @@ class GR_CORE_API gr_block_detail {
   float pc_output_buffers_full(size_t which);
   std::vector<float> pc_output_buffers_full();
   float pc_work_time();
- 
+
   gr_tpb_detail			     d_tpb;	// used by thread-per-block scheduler
   int				     d_produce_or;
 

@@ -60,6 +60,12 @@ public:
   void replace_endpoint(const gr_msg_endpoint &e, const gr_msg_endpoint &r, bool is_src);
   void clear_endpoint(const gr_msg_endpoint &e, bool is_src);
 
+  /*!
+   * Enables export of perf. counters to ControlPort on all blocks in
+   * the flowgraph.
+   */
+  void enable_pc_rpc();
+
 private:
   gr_flat_flowgraph();
 
