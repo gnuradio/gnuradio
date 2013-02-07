@@ -55,6 +55,7 @@ public slots:
   void setFrequencyRange(const double centerfreq,
 			 const double bandwidth);
   void setYaxis(double min, double max);
+  void autoScale();
 
 private slots:
   void newData(const QEvent *updateEvent);

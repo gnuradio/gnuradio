@@ -280,6 +280,8 @@ protected:
   bool _stop;
 
   QList<QColor> _trace_colors;
+
+  bool _autoscale_state;
 };
 
 #endif /* DOMAIN_DISPLAY_PLOT_H */

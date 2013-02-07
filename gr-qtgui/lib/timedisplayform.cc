@@ -129,3 +129,19 @@ TimeDisplayForm::setStem(bool trig)
   d_stem ^= 1;
   getPlot()->stemPlot(d_stem);
 }
+
+void
+TimeDisplayForm::autoScale()
+{
+  if(_autoscale_state == true) {
+    _autoscale_act->setText(tr("Auto Scale On"));
+    _autoscale_state = false;
+  }
+  else {
+    _autoscale_act->setText(tr("Auto Scale Off"));
+    _autoscale_state = true;
+  }
+
+  getPlot()->setAutoScale(_autoscale_state);
+  getPlot()->replot();
+}

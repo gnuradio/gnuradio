@@ -48,6 +48,7 @@ public slots:
 
   void setYaxis(double min, double max);
   void setXaxis(double min, double max);
+  void autoScale();
 
 private slots:
   void newData(const QEvent*);

@@ -69,9 +69,7 @@ WaterfallDisplayForm::WaterfallDisplayForm(int nplots, QWidget* parent)
     _lines_menu[i]->addMenu(_marker_alpha_menu[i]);
   }
 
-  QAction *autoscale_act = new QAction("Auto Scale", this);
-  autoscale_act->setStatusTip(tr("Autoscale intensity range"));
-  connect(autoscale_act, SIGNAL(triggered()), this, SLOT(autoScale()));
+  _autoscale_act->setText(tr("Auto Scale"));
 
   FFTSizeMenu *sizemenu = new FFTSizeMenu(this);
   FFTAverageMenu *avgmenu = new FFTAverageMenu(this);
@@ -79,7 +77,6 @@ WaterfallDisplayForm::WaterfallDisplayForm(int nplots, QWidget* parent)
   _menu->addMenu(sizemenu);
   _menu->addMenu(avgmenu);
   _menu->addMenu(winmenu);
-  _menu->addAction(autoscale_act);
   connect(sizemenu, SIGNAL(whichTrigger(int)),
 	  this, SLOT(setFFTSize(const int)));
   connect(avgmenu, SIGNAL(whichTrigger(float)),

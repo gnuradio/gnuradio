@@ -207,6 +207,22 @@ TimeDomainDisplayPlot::plotNewData(const std::vector<double*> dataPoints,
 	memcpy(_dataPoints[i], dataPoints[i], numDataPoints*sizeof(double));
       }
 
+      
+      if(_autoscale_state) {
+	double bottom=1e20, top=-1e20;
+	for(int n = 0; n < _nplots; n++) {
+	  for(int64_t point = 0; point < numDataPoints; point++) {
+	    if(dataPoints[n][point] < bottom) {
+	      bottom = dataPoints[n][point];
+	    }
+	    if(dataPoints[n][point] > top) {
+	      top = dataPoints[n][point];
+	    }
+	  }
+	}
+	_autoScale(bottom, top);
+      }      
+
       replot();
     }
   }
@@ -228,6 +244,19 @@ void TimeDomainDisplayPlot::_resetXAxisPoints()
   _zoomer->zoom(zbase);
   _zoomer->setZoomBase(zbase);
   _zoomer->zoom(0);
+}
+
+void
+TimeDomainDisplayPlot::_autoScale(double bottom, double top)
+{
+  // Auto scale the y-axis with a margin of 20%
+  setYaxis(bottom - fabs(bottom)*0.20, top + fabs(top)*0.20);
+}
+
+void
+TimeDomainDisplayPlot::setAutoScale(bool state)
+{
+  _autoscale_state = state;
 }
 
 void

@@ -56,9 +56,11 @@ public:
   void set_pen_size(int size);
 
 public slots:
-  // set axis
+  void setAutoScale(bool state);
 
 private:
+  void _autoScale(double bottom, double top);
+
   std::vector<double*> _realDataPoints;
   std::vector<double*> _imagDataPoints;
 

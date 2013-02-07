@@ -81,6 +81,7 @@ public slots:
 
 private slots:
   virtual void newData(const QEvent*) = 0;
+  virtual void autoScale() = 0;
   void updateGuiTimer();
 
   void onPlotPointSelected(const QPointF p);
@@ -104,6 +105,9 @@ protected:
   bool _stop_state;
   QAction *_grid_act;
   bool _grid_state;
+
+  QAction *_autoscale_act;
+  bool _autoscale_state;
 
   QList<QMenu*> _lines_menu;
   QList<LineTitleAction*> _line_title_act;

@@ -234,8 +234,10 @@ FrequencyDisplayPlot::setYaxis(double min, double max)
   // Set the axis max/min to the new values
   setAxisScale(QwtPlot::yLeft, _minYAxis, _maxYAxis);
 
-  // Reset the base zoom level to the new axis scale set here
-  _zoomer->setZoomBase();
+  // Reset the base zoom level to the new axis scale set here.
+  // But don't do it if we set the axis due to auto scaling.
+  if(!_autoscale_state)
+    _zoomer->setZoomBase();
 }
 
 void
@@ -345,21 +347,36 @@ FrequencyDisplayPlot::plotNewData(const std::vector<double*> dataPoints,
         memcpy(_dataPoints[i], dataPoints[i], numDataPoints*sizeof(double));
       }
       
-      for(int64_t point = 0; point < numDataPoints; point++){
-        if(dataPoints[0][point] < _minFFTPoints[point]) {
-          _minFFTPoints[point] = dataPoints[0][point];
-        }
-        if(dataPoints[0][point] > _maxFFTPoints[point]) {
-          _maxFFTPoints[point] = dataPoints[0][point];
-        }
+      double bottom=1e20, top=-1e20;
+      for(int n = 0; n < _nplots; n++) {
+	for(int64_t point = 0; point < numDataPoints; point++) {
+	  if(dataPoints[n][point] < _minFFTPoints[point]) {
+	    _minFFTPoints[point] = dataPoints[n][point];
+	  }
+	  if(dataPoints[n][point] > _maxFFTPoints[point]) {
+	    _maxFFTPoints[point] = dataPoints[n][point];
+	  }
+
+	  // Find overall top and bottom values in plot.
+	  // Used for autoscaling y-axis.
+	  if(dataPoints[n][point] < bottom) {
+	    bottom = dataPoints[n][point];
+	  }
+	  if(dataPoints[n][point] > top) {
+	    top = dataPoints[n][point];
+	  }
+	}
       }
+      
+      if(_autoscale_state)
+	_autoScale(bottom, top);
       
       _noiseFloorAmplitude = noiseFloorAmplitude;
       _peakFrequency = peakFrequency;
       _peakAmplitude = peakAmplitude;
       
       setUpperIntensityLevel(_peakAmplitude);
-      
+
       replot();
     }
   }
@@ -391,6 +408,19 @@ FrequencyDisplayPlot::clearMinData()
   for(int64_t number = 0; number < _numPoints; number++) {
     _minFFTPoints[number] = _maxYAxis;
   }
+}
+
+void
+FrequencyDisplayPlot::_autoScale(double bottom, double top)
+{
+  // Auto scale the y-axis with a margin of 10 dB on either side.
+  setYaxis(bottom - 10, top + 10);
+}
+
+void
+FrequencyDisplayPlot::setAutoScale(bool state)
+{
+  _autoscale_state = state;
 }
 
 void

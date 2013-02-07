@@ -47,8 +47,11 @@ public slots:
   void setSampleRate(double sr, double units,
 		     const std::string &strunits);
 
+  void setAutoScale(bool state);
+
 private:
   void _resetXAxisPoints();
+  void _autoScale(double bottom, double top);
 
   std::vector<double*> _dataPoints;
   double* _xAxisPoints;

@@ -110,8 +110,11 @@ public slots:
   void onPickerPointSelected(const QwtDoublePoint & p);
   void onPickerPointSelected6(const QPointF & p);
 
+  void setAutoScale(bool state);
+
 private:
   void _resetXAxisPoints();
+  void _autoScale(double bottom, double top);
 
   std::vector<double*> _dataPoints;
 

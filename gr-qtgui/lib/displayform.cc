@@ -98,6 +98,11 @@ DisplayForm::DisplayForm(int nplots, QWidget* parent)
     _menu->addMenu(_lines_menu[i]);
   }
 
+  _autoscale_act = new QAction("Auto Scale On", this);
+  _autoscale_act->setStatusTip(tr("Autoscale Plot"));
+  connect(_autoscale_act, SIGNAL(triggered()), this, SLOT(autoScale()));
+  _autoscale_state = false;
+  _menu->addAction(_autoscale_act);
 
   _save_act = new QAction("Save", this);
   _save_act->setStatusTip(tr("Save Figure"));

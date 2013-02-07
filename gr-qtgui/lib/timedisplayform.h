@@ -49,6 +49,7 @@ public slots:
   void setYaxis(double min, double max);
   void setNPoints(const int);
   void setStem(bool trig=false);
+  void autoScale();
 
 private slots:
   void newData(const QEvent*);

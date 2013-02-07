@@ -35,6 +35,8 @@ DisplayPlot::DisplayPlot(int nplots, QWidget* parent)
   qRegisterMetaType<QColorList>("QColorList");
   resize(parent->width(), parent->height());
 
+  _autoscale_state = false;
+
   // Disable polygon clipping
 #if QWT_VERSION < 0x060000
   QwtPainter::setDeviceClipping(false);
@@ -96,7 +98,8 @@ void
 DisplayPlot::setYaxis(double min, double max)
 {
   setAxisScale(QwtPlot::yLeft, min, max);
-  _zoomer->setZoomBase();
+  if(!_autoscale_state)
+    _zoomer->setZoomBase();
 }
 
 void
