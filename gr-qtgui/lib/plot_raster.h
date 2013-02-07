@@ -61,11 +61,12 @@ public:
 #if QWT_VERSION < 0x060000
     virtual QwtDoubleRect boundingRect() const;
     virtual QSize rasterHint(const QwtDoubleRect &) const;
+    virtual QwtDoubleInterval interval(Qt::Axis ax) const;
+#else
+    virtual QwtInterval interval(Qt::Axis ax) const;
 #endif
 
     virtual int rtti() const;
-
-    virtual QwtInterval interval(Qt::Axis ax) const;
   
     virtual void draw(QPainter *p,
 		      const QwtScaleMap &xMap,

@@ -33,6 +33,12 @@ TimeRasterDisplayForm::TimeRasterDisplayForm(int nplots,
 					     QWidget* parent)
   : DisplayForm(nplots, parent)
 {
+#if QWT_VERSION < 0x060000
+  std::cerr << "Warning: QWT5 has been found which has serious performance issues with raster plots."
+            << std::endl << "         Consider updating to QWT version 6 to use the time raster GUIs."
+            << std::endl << std::endl;
+#endif
+
   _layout = new QGridLayout(this);
   _displayPlot = new TimeRasterDisplayPlot(nplots, samp_rate, rows, cols, this);
   _layout->addWidget(_displayPlot, 0, 0);
