@@ -31,7 +31,7 @@ namespace gruel {
 
   typedef boost::thread                    thread;
   typedef boost::mutex                     mutex;
-  typedef boost::mutex::scoped_lock        scoped_lock;
+  typedef boost::unique_lock<boost::mutex> scoped_lock;
   typedef boost::condition_variable        condition_variable;
 
 } /* namespace gruel */
