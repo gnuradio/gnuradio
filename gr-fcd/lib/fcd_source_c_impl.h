@@ -22,7 +22,7 @@
 #define INCLUDED_FCD_SOURCE_C_IMPL_H
 
 #include <fcd_source_c.h>
-#include <gr_audio_source.h>
+#include <audio/source.h>
 
 class FCD_API fcd_source_c_impl : public fcd_source_c
 {

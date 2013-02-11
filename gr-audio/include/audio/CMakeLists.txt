@@ -1,4 +1,4 @@
-# Copyright 2011 Free Software Foundation, Inc.
+# Copyright 2011,2013 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -21,9 +21,9 @@
 # Install header files
 ########################################################################
 install(FILES
-    gr_audio_api.h
-    gr_audio_source.h
-    gr_audio_sink.h
-    DESTINATION ${GR_INCLUDE_DIR}/gnuradio
+    api.h
+    source.h
+    sink.h
+    DESTINATION ${GR_INCLUDE_DIR}/gnuradio/audio
     COMPONENT "audio_devel"
 )

@@ -22,8 +22,8 @@
 #ifndef INCLUDED_GR_AUDIO_REGISTRY_H
 #define INCLUDED_GR_AUDIO_REGISTRY_H
 
-#include <gr_audio_sink.h>
-#include <gr_audio_source.h>
+#include <audio/sink.h>
+#include <audio/source.h>
 #include <string>
 
 typedef audio_source::sptr(*source_factory_t)(int, const std::string &, bool);

@@ -1,5 +1,5 @@
 /*
- * Copyright 2011 Free Software Foundation, Inc.
+ * Copyright 2011,2013 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -39,7 +39,7 @@
 // Include header files for each block used in flowgraph
 #include <gr_top_block.h>
 #include <analog/sig_source_f.h>
-#include <gr_audio_sink.h>
+#include <audio/sink.h>
 
 using namespace gr;
 

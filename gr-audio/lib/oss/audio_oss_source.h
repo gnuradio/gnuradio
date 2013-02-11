@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2004-2011 Free Software Foundation, Inc.
+ * Copyright 2004-2011,2013 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -23,7 +23,7 @@
 #ifndef INCLUDED_AUDIO_OSS_SOURCE_H
 #define INCLUDED_AUDIO_OSS_SOURCE_H
 
-#include <gr_audio_source.h>
+#include <audio/source.h>
 #include <string>
 
 /*!

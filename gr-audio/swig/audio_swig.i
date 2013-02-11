@@ -1,5 +1,5 @@
 /*
- * Copyright 2011 Free Software Foundation, Inc.
+ * Copyright 2011,2013 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -34,15 +34,15 @@
 // block headers
 ////////////////////////////////////////////////////////////////////////
 %{
-#include <gr_audio_source.h>
-#include <gr_audio_sink.h>
+#include <audio/source.h>
+#include <audio/sink.h>
 %}
 
 ////////////////////////////////////////////////////////////////////////
 // block magic
 ////////////////////////////////////////////////////////////////////////
 GR_SWIG_BLOCK_MAGIC(audio,source)
-%include <gr_audio_source.h>
+%include <audio/source.h>
 
 GR_SWIG_BLOCK_MAGIC(audio,sink)
-%include <gr_audio_sink.h>
+%include <audio/sink.h>

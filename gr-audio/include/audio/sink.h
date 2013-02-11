@@ -1,5 +1,5 @@
 /*
- * Copyright 2011 Free Software Foundation, Inc.
+ * Copyright 2011,2013 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -19,23 +19,23 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef INCLUDED_GR_AUDIO_SOURCE_H
-#define INCLUDED_GR_AUDIO_SOURCE_H
+#ifndef INCLUDED_GR_AUDIO_SINK_H
+#define INCLUDED_GR_AUDIO_SINK_H
 
-#include <gr_audio_api.h>
+#include <audio/api.h>
 #include <gr_sync_block.h>
 
 /*!
- * \brief Creates a source from an audio device.
+ * \brief Creates a sink from an audio device.
  * \ingroup audio_blk
  */
-class GR_AUDIO_API audio_source : virtual public gr_sync_block{
+class GR_AUDIO_API audio_sink : virtual public gr_sync_block{
 public:
-    typedef boost::shared_ptr<audio_source> sptr;
+    typedef boost::shared_ptr<audio_sink> sptr;
 };
 
 /*!
- * Creates a source from an audio device at a specified
+ * Creates a sink from an audio device at a specified
  * sample_rate. The specific audio device to use can be specified as
  * the device_name parameter. Typical choices are:
  * \li pulse
@@ -48,10 +48,10 @@ public:
  *    - pulse, hw:0,0, plughw:0,0, surround51, /dev/dsp
  * \endxmlonly
  */
-GR_AUDIO_API audio_source::sptr audio_make_source(
+GR_AUDIO_API audio_sink::sptr audio_make_sink(
     int sampling_rate,
     const std::string device_name = "",
     bool ok_to_block = true
 );
 
-#endif /* INCLUDED_GR_AUDIO_SOURCE_H */
+#endif /* INCLUDED_GR_AUDIO_SINK_H */

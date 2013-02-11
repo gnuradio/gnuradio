@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2004-2011 Free Software Foundation, Inc.
+ * Copyright 2004-2011,2013 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -27,7 +27,7 @@
 #define ALSA_PCM_NEW_HW_PARAMS_API
 #define ALSA_PCM_NEW_SW_PARAMS_API
 
-#include <gr_audio_source.h>
+#include <audio/source.h>
 #include <string>
 #include <alsa/asoundlib.h>
 #include <stdexcept>
