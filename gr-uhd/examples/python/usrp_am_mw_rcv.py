@@ -20,8 +20,6 @@
 # Boston, MA 02110-1301, USA.
 #
 
-#FIX gain
-
 from gnuradio import gr, eng_notation, optfir
 from gnuradio import audio
 from gnuradio import uhd
@@ -140,10 +138,8 @@ class wfm_rx_block (stdgui2.std_top_block):
 
         if options.gain is None:
             g = self.u.get_gain_range()
-            if True:
-                # if no gain was specified, use the mid gain
-                options.gain = (g.start() + g.stop())/2.0
-                options.gain = g.stop()
+            # if no gain was specified, use the mid gain
+            options.gain = (g.start() + g.stop())/2.0
 
         if options.volume is None:
             v = self.volume_range()
