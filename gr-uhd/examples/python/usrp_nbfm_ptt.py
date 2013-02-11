@@ -369,7 +369,7 @@ class transmit_path(gr.hier_block2):
 # ////////////////////////////////////////////////////////////////////////
 
 class receive_path(gr.hier_block2):
-    def __init__(self, args, gain, audio_output):
+    def __init__(self, args, spec, antenna, gain, audio_output):
 	gr.hier_block2.__init__(self, "receive_path",
 				gr.io_signature(0, 0, 0), # Input signature
 				gr.io_signature(0, 0, 0)) # Output signature
