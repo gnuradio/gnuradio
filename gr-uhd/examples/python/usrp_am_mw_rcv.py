@@ -20,8 +20,6 @@
 # Boston, MA 02110-1301, USA.
 #
 
-#FIX gain
-
 from gnuradio import gr, eng_notation, optfir
 from gnuradio import audio
 from gnuradio import uhd
