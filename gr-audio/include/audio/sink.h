@@ -1,3 +1,4 @@
+/* -*- c++ -*- */
 /*
  * Copyright 2011,2013 Free Software Foundation, Inc.
  *
@@ -25,33 +26,38 @@
 #include <audio/api.h>
 #include <gr_sync_block.h>
 
-/*!
- * \brief Creates a sink from an audio device.
- * \ingroup audio_blk
- */
-class GR_AUDIO_API audio_sink : virtual public gr_sync_block{
-public:
-    typedef boost::shared_ptr<audio_sink> sptr;
-};
+namespace gr {
+  namespace audio {
 
-/*!
- * Creates a sink from an audio device at a specified
- * sample_rate. The specific audio device to use can be specified as
- * the device_name parameter. Typical choices are:
- * \li pulse
- * \li hw:0,0
- * \li plughw:0,0
- * \li surround51
- * \li /dev/dsp
- *
- * \xmlonly
- *    - pulse, hw:0,0, plughw:0,0, surround51, /dev/dsp
- * \endxmlonly
- */
-GR_AUDIO_API audio_sink::sptr audio_make_sink(
-    int sampling_rate,
-    const std::string device_name = "",
-    bool ok_to_block = true
-);
+    /*!
+     * \brief Creates a sink from an audio device.
+     * \ingroup audio_blk
+     */
+    class GR_AUDIO_API sink : virtual public gr_sync_block
+    {
+    public:
+      typedef boost::shared_ptr<sink> sptr;
+
+      /*!
+       * Creates a sink from an audio device at a specified
+       * sample_rate. The specific audio device to use can be
+       * specified as the device_name parameter. Typical choices are:
+       * \li pulse
+       * \li hw:0,0
+       * \li plughw:0,0
+       * \li surround51
+       * \li /dev/dsp
+       *
+       * \xmlonly
+       *    - pulse, hw:0,0, plughw:0,0, surround51, /dev/dsp
+       * \endxmlonly
+       */
+      static sptr make(int sampling_rate,
+                       const std::string device_name = "",
+                       bool ok_to_block = true);
+    };
+
+  } /* namespace audio */
+} /* namespace gr */
 
 #endif /* INCLUDED_GR_AUDIO_SINK_H */
