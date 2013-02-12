@@ -24,8 +24,8 @@
 #include "config.h"
 #endif
 
-#include "gr_audio_registry.h"
-#include <audio_oss_sink.h>
+#include "audio_registry.h"
+#include <oss_sink.h>
 #include <gr_io_signature.h>
 #include <gr_prefs.h>
 #include <sys/soundcard.h>

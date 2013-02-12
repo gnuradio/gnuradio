@@ -19,7 +19,7 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include "gr_audio_registry.h"
+#include "audio_registry.h"
 #include <boost/foreach.hpp>
 #include <gr_prefs.h>
 #include <stdexcept>

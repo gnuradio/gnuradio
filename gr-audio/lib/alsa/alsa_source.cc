@@ -24,14 +24,14 @@
 #include "config.h"
 #endif
 
-#include "gr_audio_registry.h"
-#include <audio_alsa_source.h>
+#include "audio_registry.h"
+#include <alsa_source.h>
+#include <alsa_impl.h>
 #include <gr_io_signature.h>
 #include <gr_prefs.h>
 #include <stdio.h>
 #include <iostream>
 #include <stdexcept>
-#include <gri_alsa.h>
 
 namespace gr {
   namespace audio {

@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2004 Free Software Foundation, Inc.
+ * Copyright 2005 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -20,25 +20,11 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef INCLUDED_GRI_ALSA_H
-#define INCLUDED_GRI_ALSA_H
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
 
-#include <stdio.h>
-#include <alsa/asoundlib.h>
-
-void
-gri_alsa_dump_hw_params (snd_pcm_t *pcm,
-			 snd_pcm_hw_params_t *hwparams,
-			 FILE *fp);
-
-bool
-gri_alsa_pick_acceptable_format (snd_pcm_t *pcm,
-				 snd_pcm_hw_params_t *hwparams,
-				 snd_pcm_format_t acceptable_formats[],
-				 unsigned nacceptable_formats,
-				 snd_pcm_format_t *selected_format,
-				 const char *error_msg_tag,
-				 bool verbose);
+#include <jack_impl.h>
+#include <algorithm>
 
 
-#endif /* INCLUDED_GRI_ALSA_H */

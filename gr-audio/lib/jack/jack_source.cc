@@ -24,14 +24,14 @@
 #include "config.h"
 #endif
 
-#include "gr_audio_registry.h"
-#include <audio_jack_source.h>
+#include "audio_registry.h"
+#include <jack_source.h>
+#include <jack_impl.h>
 #include <gr_io_signature.h>
 #include <gr_prefs.h>
 #include <stdio.h>
 #include <iostream>
 #include <stdexcept>
-#include <gri_jack.h>
 
 #ifndef NO_PTHREAD
 #include <pthread.h>
