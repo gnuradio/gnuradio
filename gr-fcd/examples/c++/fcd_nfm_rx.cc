@@ -94,7 +94,7 @@ int main(int argc, char **argv)
       analog::quadrature_demod_cf::make(rate/(2.0*pi*5000.0));
 
     // Audio sink
-    audio_sink::sptr sink = audio_make_sink(rate);
+    audio::sink::sptr sink = audio::sink::make(rate);
 
     // Connect blocks
     tb->connect(fcd, 0, filter, 0);

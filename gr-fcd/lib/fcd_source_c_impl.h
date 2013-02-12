@@ -42,7 +42,7 @@ private:
   friend FCD_API fcd_source_c_sptr
     fcd_make_source_c(const std::string device_name);
 
-  audio_source::sptr fcd;  /*!< The audio input source */
+  gr::audio::source::sptr fcd;  /*!< The audio input source */
   int d_freq_corr;         /*!< The frequency correction in ppm */
   int d_freq_req;          /*!< The latest requested frequency in Hz */
 };
