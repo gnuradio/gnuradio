@@ -58,7 +58,7 @@ int main(int argc, char **argv)
   analog::sig_source_f::sptr src1 = analog::sig_source_f::make(rate, analog::GR_SIN_WAVE, 440, ampl);
 
   // Construct an audio sink to accept audio tones
-  audio_sink::sptr sink = audio_make_sink(rate);
+  audio::sink::sptr sink = audio::sink::make(rate);
 
   // Connect output #0 of src0 to input #0 of sink (left channel)
   tb->connect(src0, 0, sink, 0);
