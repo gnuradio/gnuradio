@@ -1,4 +1,4 @@
-# Copyright 2011,2012 Free Software Foundation, Inc.
+# Copyright 2011 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -17,38 +17,30 @@
 # the Free Software Foundation, Inc., 51 Franklin Street,
 # Boston, MA 02110-1301, USA.
 
-########################################################################
-# Setup dependencies
-########################################################################
+if(DEFINED __INCLUDED_GR_PLATFORM_CMAKE)
+    return()
+endif()
+set(__INCLUDED_GR_PLATFORM_CMAKE TRUE)
 
 ########################################################################
-# Register component
+# Setup additional defines for OS types
 ########################################################################
-include(GrComponent)
-GR_REGISTER_COMPONENT("gr-utils" ENABLE_GR_UTILS
-    ENABLE_GR_CORE
-    ENABLE_PYTHON
-)
+if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
+    set(LINUX TRUE)
+endif()
+
+if(LINUX AND EXISTS "/etc/debian_version")
+    set(DEBIAN TRUE)
+endif()
+
+if(LINUX AND EXISTS "/etc/redhat-release")
+    set(REDHAT TRUE)
+endif()
 
 ########################################################################
-# Begin conditional configuration
+# when the library suffix should be 64 (applies to redhat linux family)
 ########################################################################
-if(ENABLE_GR_UTILS)
-
-########################################################################
-# Setup CPack components
-########################################################################
-include(GrPackage)
-CPACK_COMPONENT("utils"
-    DISPLAY_NAME "Utils"
-    DESCRIPTION  "Misc gnuradio python utilities"
-    DEPENDS      "core_python"
-)
-
-########################################################################
-# Add subdirectories
-########################################################################
-add_subdirectory(python)
-
-
-endif(ENABLE_GR_UTILS)
+if(NOT DEFINED LIB_SUFFIX AND REDHAT AND CMAKE_SYSTEM_PROCESSOR MATCHES "64$")
+    set(LIB_SUFFIX 64)
+endif()
+set(LIB_SUFFIX ${LIB_SUFFIX} CACHE STRING "lib directory suffix")

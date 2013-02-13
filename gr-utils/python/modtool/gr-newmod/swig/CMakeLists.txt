@@ -1,4 +1,4 @@
-# Copyright 2011,2012 Free Software Foundation, Inc.
+# Copyright 2011 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -18,37 +18,44 @@
 # Boston, MA 02110-1301, USA.
 
 ########################################################################
-# Setup dependencies
+# Include swig generation macros
 ########################################################################
+find_package(SWIG)
+find_package(PythonLibs)
+if(NOT SWIG_FOUND OR NOT PYTHONLIBS_FOUND)
+    return()
+endif()
+include(GrSwig)
+include(GrPython)
 
 ########################################################################
-# Register component
+# Setup swig generation
 ########################################################################
-include(GrComponent)
-GR_REGISTER_COMPONENT("gr-utils" ENABLE_GR_UTILS
-    ENABLE_GR_CORE
-    ENABLE_PYTHON
+foreach(incdir ${GNURADIO_CORE_INCLUDE_DIRS})
+    list(APPEND GR_SWIG_INCLUDE_DIRS ${incdir}/swig)
+endforeach(incdir)
+
+foreach(incdir ${GRUEL_INCLUDE_DIRS})
+    list(APPEND GR_SWIG_INCLUDE_DIRS ${incdir}/gruel/swig)
+endforeach(incdir)
+
+set(GR_SWIG_LIBRARIES gnuradio-howto)
+set(GR_SWIG_DOC_FILE ${CMAKE_CURRENT_BINARY_DIR}/howto_swig_doc.i)
+set(GR_SWIG_DOC_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/../include)
+
+GR_SWIG_MAKE(howto_swig howto_swig.i)
+
+########################################################################
+# Install the build swig module
+########################################################################
+GR_SWIG_INSTALL(TARGETS howto_swig DESTINATION ${GR_PYTHON_DIR}/howto)
+
+########################################################################
+# Install swig .i files for development
+########################################################################
+install(
+    FILES
+    howto_swig.i
+    ${CMAKE_CURRENT_BINARY_DIR}/howto_swig_doc.i
+    DESTINATION ${GR_INCLUDE_DIR}/howto/swig
 )
-
-########################################################################
-# Begin conditional configuration
-########################################################################
-if(ENABLE_GR_UTILS)
-
-########################################################################
-# Setup CPack components
-########################################################################
-include(GrPackage)
-CPACK_COMPONENT("utils"
-    DISPLAY_NAME "Utils"
-    DESCRIPTION  "Misc gnuradio python utilities"
-    DEPENDS      "core_python"
-)
-
-########################################################################
-# Add subdirectories
-########################################################################
-add_subdirectory(python)
-
-
-endif(ENABLE_GR_UTILS)
