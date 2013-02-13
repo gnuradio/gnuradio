@@ -42,7 +42,7 @@ class wfm_rx_block (gr.top_block):
                           help="set 1st station frequency to FREQ", metavar="FREQ")
         parser.add_option("", "--f2", type="eng_float", default=102.5e6,
                           help="set 2nd station freq to FREQ", metavar="FREQ")
-        parser.add_option("-g", "--gain", type="eng_float", default=40,
+        parser.add_option("-g", "--gain", type="eng_float", default=None,
                           help="set gain in dB (default is midpoint)")
         parser.add_option("-O", "--audio-output", type="string", default="default",
                           help="pcm device name.  E.g., hw:0,0 or surround51 or /dev/dsp")

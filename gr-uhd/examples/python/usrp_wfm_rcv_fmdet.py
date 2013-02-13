@@ -41,7 +41,7 @@ class wfm_rx_block (stdgui2.std_top_block):
                           help="select Rx Antenna where appropriate")
         parser.add_option("-f", "--freq", type="eng_float", default=100.1e6,
                           help="set frequency to FREQ", metavar="FREQ")
-        parser.add_option("-g", "--gain", type="eng_float", default=65,
+        parser.add_option("-g", "--gain", type="eng_float", default=None,
                           help="set gain in dB (default is midpoint)")
         parser.add_option("-s", "--squelch", type="eng_float", default=0,
                           help="set squelch level (default is 0)")
