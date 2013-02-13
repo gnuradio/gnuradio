@@ -53,7 +53,7 @@ class wfm_rx_block (stdgui2.std_top_block):
                           help="set gain in dB (default is maximum)")
         parser.add_option("-V", "--volume", type="eng_float", default=None,
                           help="set volume (default is midpoint)")
-        parser.add_option("-O", "--audio-output", type="string", default="",
+        parser.add_option("-O", "--audio-output", type="string", default="default",
                           help="pcm device name.  E.g., hw:0,0 or surround51 or /dev/dsp")
 
         (options, args) = parser.parse_args()
@@ -138,10 +138,8 @@ class wfm_rx_block (stdgui2.std_top_block):
 
         if options.gain is None:
             g = self.u.get_gain_range()
-            if True:
-                # if no gain was specified, use the mid gain
-                options.gain = (g.start() + g.stop())/2.0
-                options.gain = g.stop()
+            # if no gain was specified, use the mid gain
+            options.gain = (g.start() + g.stop())/2.0
 
         if options.volume is None:
             v = self.volume_range()
