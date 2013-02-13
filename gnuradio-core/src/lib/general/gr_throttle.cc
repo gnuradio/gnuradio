@@ -40,6 +40,10 @@ public:
         /* NOP */
     }
 
+    double sample_rate(){
+        return d_samps_per_us*1e6;
+    }
+
     void set_sample_rate(double rate){
         //changing the sample rate performs a reset of state params
         d_start = boost::get_system_time();
@@ -78,6 +82,21 @@ private:
     size_t d_itemsize;
     uint64_t d_total_samples;
     double d_samps_per_tick, d_samps_per_us;
+   
+    void setup_rpc(){
+#ifdef GR_CTRLPORT
+    d_rpc_vars.push_back(
+        rpcbasic_sptr(new rpcbasic_register_get<gr_throttle_impl, double>(
+            alias(), "sample_rate", &gr_throttle_impl::sample_rate,
+            pmt::mp(0.0), pmt::mp(100.0e6), pmt::mp(0.0),
+            "Hz", "Sample Rate", RPC_PRIVLVL_MIN, DISPTIMESERIESF)));
+    d_rpc_vars.push_back(
+        rpcbasic_sptr(new rpcbasic_register_set<gr_throttle_impl, double>(
+            alias(), "sample_rate", &gr_throttle_impl::set_sample_rate,
+            pmt::mp(0.0), pmt::mp(100.0e6), pmt::mp(0.0),
+            "Hz", "Sample Rate", RPC_PRIVLVL_MIN, DISPTIMESERIESF)));
+#endif
+        }
 };
 
 gr_throttle::sptr

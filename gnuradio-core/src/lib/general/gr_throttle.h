@@ -42,6 +42,7 @@ public:
     typedef boost::shared_ptr<gr_throttle> sptr;
 
     //! Sets the sample rate in samples per second
+    virtual double sample_rate() = 0;
     virtual void set_sample_rate(double rate) = 0;
 };
 
