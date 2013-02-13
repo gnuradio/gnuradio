@@ -60,6 +60,24 @@ class gateway_handler(gr_core.feval_ll):
         return 0
 
 ########################################################################
+# Handler that does callbacks from C++
+########################################################################
+class msg_handler(gr_core.feval_p):
+
+    #dont put a constructor, it wont work
+
+    def init(self, callback):
+        self._callback = callback
+
+    def eval(self, arg):
+        try: self._callback(arg)
+        except Exception as ex:
+            print("handler caught exception: %s"%ex)
+            import traceback; traceback.print_exc()
+            raise ex
+        return 0
+
+########################################################################
 # The guts that make this into a gr block
 ########################################################################
 class gateway_block(object):
@@ -90,6 +108,9 @@ class gateway_block(object):
         self.__gateway = block_gateway(
             self.__handler, name, gr_in_sig, gr_out_sig, work_type, factor)
         self.__message = self.__gateway.gr_block_message()
+
+        #dict to keep references to all message handlers
+        self.__msg_handlers = {}
 
         #register gr_block functions
         prefix = 'gr_block__'
@@ -170,6 +191,13 @@ class gateway_block(object):
 
     def start(self): return True
     def stop(self): return True
+
+    def set_msg_handler(self, which_port, handler_func):
+        handler = msg_handler()
+        handler.init(handler_func)
+        self.__gateway.set_msg_handler_feval(which_port, handler)
+        # Save handler object in class so it's not garbage collected
+        self.__msg_handlers[which_port] = handler
 
 ########################################################################
 # Wrappers for the user to inherit from
