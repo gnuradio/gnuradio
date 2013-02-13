@@ -105,8 +105,8 @@ if(AUDIO_UNIT_H AND AUDIO_TOOLBOX_H)
         "-framework Carbon"
     )
     list(APPEND gr_audio_sources
-        ${CMAKE_CURRENT_SOURCE_DIR}/osx/audio_osx_source.cc
-        ${CMAKE_CURRENT_SOURCE_DIR}/osx/audio_osx_sink.cc
+        ${CMAKE_CURRENT_SOURCE_DIR}/osx/osx_source.cc
+        ${CMAKE_CURRENT_SOURCE_DIR}/osx/osx_sink.cc
     )
 
 endif(AUDIO_UNIT_H AND AUDIO_TOOLBOX_H)
@@ -122,9 +122,9 @@ if(PORTAUDIO_FOUND)
     list(APPEND gr_audio_libs ${PORTAUDIO_LIBRARIES})
     add_definitions(${PORTAUDIO_DEFINITIONS})
     list(APPEND gr_audio_sources
-        ${CMAKE_CURRENT_SOURCE_DIR}/portaudio/gri_portaudio.cc
-        ${CMAKE_CURRENT_SOURCE_DIR}/portaudio/audio_portaudio_source.cc
-        ${CMAKE_CURRENT_SOURCE_DIR}/portaudio/audio_portaudio_sink.cc
+        ${CMAKE_CURRENT_SOURCE_DIR}/portaudio/portaudio_impl.cc
+        ${CMAKE_CURRENT_SOURCE_DIR}/portaudio/portaudio_source.cc
+        ${CMAKE_CURRENT_SOURCE_DIR}/portaudio/portaudio_sink.cc
     )
     list(APPEND gr_audio_confs ${CMAKE_CURRENT_SOURCE_DIR}/portaudio/gr-audio-portaudio.conf)
 

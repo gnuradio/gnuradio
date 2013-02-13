@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2006 Free Software Foundation, Inc.
+ * Copyright 2006,2013 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -20,13 +20,19 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef INCLUDED_GRI_PORTAUDIO_H
-#define INCLUDED_GRI_PORTAUDIO_H
+#ifndef INCLUDED_AUDIO_PORTAUDIO_IMPL_H
+#define INCLUDED_AUDIO_PORTAUDIO_IMPL_H
 
 #include <stdio.h>
 #include <portaudio.h>
 
-PaDeviceIndex gri_pa_find_device_by_name(const char *name);
-void gri_print_devices();
+namespace gr {
+  namespace audio {
 
-#endif /* INCLUDED_GRI_PORTAUDIO_H */
+    PaDeviceIndex pa_find_device_by_name(const char *name);
+    void print_devices();
+
+  } /* namespace audio */
+} /* namespace gr */
+
+#endif /* INCLUDED_AUDIO_PORTAUDIO_IMPL_H */

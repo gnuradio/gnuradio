@@ -20,9 +20,9 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef INCLUDED_GRI_JACK_H
-#define INCLUDED_GRI_JACK_H
+#ifndef INCLUDED_AUDIO_JACK_IMPL_H
+#define INCLUDED_AUDIO_JACK_IMPL_H
 
 #include <stdio.h>
 
-#endif /* INCLUDED_GRI_JACK_H */
+#endif /* INCLUDED_AUDIO_JACK_IMPL_H */
