@@ -46,9 +46,7 @@ class GrDataPlotterC(gr.top_block):
         self.thr = gr.throttle(gr.sizeof_gr_complex, rate)
         self.snk = qtgui.time_sink_c(self._npts, samp_rate,
                                      self._name, 1)
-
-        if(pmin is not None or not pmax is None):
-            self.snk.set_y_axis(pmin, pmax)
+        self.snk.enable_autoscale(True)
 
         self.connect(self.src, self.thr, (self.snk, 0))
 
@@ -121,9 +119,7 @@ class GrDataPlotterF(gr.top_block):
         self.thr = gr.throttle(gr.sizeof_float, rate)
         self.snk = qtgui.time_sink_f(self._npts, samp_rate,
                                      self._name, 1)
-
-        if(pmin is not None or not pmax is None):
-            self.snk.set_y_axis(pmin, pmax)
+        self.snk.enable_autoscale(True)
 
         self.connect(self.src, self.thr, (self.snk, 0))
 
@@ -191,10 +187,7 @@ class GrDataPlotterConst(gr.top_block):
         self.thr = gr.throttle(gr.sizeof_gr_complex, rate)
         self.snk = qtgui.const_sink_c(self._npts,
                                       self._name, 1)
-
-        if(pmin is not None or not pmax is None):
-            self.snk.set_x_axis(pmin, pmax)
-            self.snk.set_y_axis(pmin, pmax)
+        self.snk.enable_autoscale(True)
 
         self.connect(self.src, self.thr, (self.snk, 0))
 
@@ -268,9 +261,7 @@ class GrDataPlotterPsdC(gr.top_block):
         self.snk = qtgui.freq_sink_c(self._fftsize, self._wintype,
                                      self._fc, self._samp_rate,
                                      self._name, 1)
-
-        if(pmin is not None or not pmax is None):
-            self.snk.set_y_axis(pmin, pmax)
+        self.snk.enable_autoscale(True)
 
         self.connect(self.src, self.thr, (self.snk, 0))
 
@@ -343,9 +334,7 @@ class GrDataPlotterPsdF(gr.top_block):
         self.snk = qtgui.freq_sink_f(self._fftsize, self._wintype,
                                      self._fc, self._samp_rate,
                                      self._name, 1)
-
-        if(pmin is not None or not pmax is None):
-            self.snk.set_y_axis(pmin, pmax)
+        self.snk.enable_autoscale(True)
 
         self.connect(self.src, self.thr, (self.snk, 0))
 
