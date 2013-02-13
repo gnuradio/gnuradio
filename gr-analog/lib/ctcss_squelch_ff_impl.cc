@@ -115,11 +115,12 @@ namespace gr {
       d_goertzel_c.input(in);
       d_goertzel_r.input(in);
 
+      float rounder = 100000;
       float d_out_l, d_out_c, d_out_r;
       if(d_goertzel_c.ready()) {
-	d_out_l = abs(d_goertzel_l.output());
-	d_out_c = abs(d_goertzel_c.output());
-	d_out_r = abs(d_goertzel_r.output());
+	d_out_l = floor(rounder*abs(d_goertzel_l.output()))/rounder;
+	d_out_c = floor(rounder*abs(d_goertzel_c.output()))/rounder;
+	d_out_r = floor(rounder*abs(d_goertzel_r.output()))/rounder;
 
 	//printf("d_out_l=%f d_out_c=%f d_out_r=%f\n", d_out_l, d_out_c, d_out_r);
 	d_mute = (d_out_c < d_level || d_out_c < d_out_l || d_out_c < d_out_r);
