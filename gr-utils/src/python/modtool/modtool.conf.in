@@ -1,0 +1,6 @@
+# This file contains system wide configuration data for GNU Radio.
+# You may override any setting on a per-user basis by editing
+# ~/.gnuradio/config.conf
+
+[modtool]
+newmod_path = @newmoddir@

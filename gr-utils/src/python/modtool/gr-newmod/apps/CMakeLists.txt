@@ -17,43 +17,9 @@
 # the Free Software Foundation, Inc., 51 Franklin Street,
 # Boston, MA 02110-1301, USA.
 
-########################################################################
-# Install python files and apps
-########################################################################
 include(GrPython)
 
 GR_PYTHON_INSTALL(
-    FILES
-    plot_data.py
-    plot_fft_base.py
-    plot_psd_base.py
-    pyqt_plot.py
-    pyqt_filter.py
-    DESTINATION ${GR_PYTHON_DIR}/gnuradio
-    COMPONENT "utils"
-)
-
-GR_PYTHON_INSTALL(
     PROGRAMS
-    gr_modtool
-    gr_plot_char
-    gr_plot_const
-    gr_plot_fft
-    gr_plot_fft_c
-    gr_plot_fft_f
-    gr_plot_psd
-    gr_plot_psd_c
-    gr_plot_psd_f
-    gr_plot_float
-    gr_plot_int
-    gr_plot_iq
-    gr_plot_short
-    gr_plot_qt
-    gr_filter_design
-    gr_read_file_metadata
-    grcc
-    DESTINATION ${GR_RUNTIME_DIR}
-    COMPONENT "utils"
+    DESTINATION bin
 )
-
-add_subdirectory(modtool)

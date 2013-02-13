@@ -20,35 +20,16 @@
 ########################################################################
 # Setup dependencies
 ########################################################################
-
-########################################################################
-# Register component
-########################################################################
-include(GrComponent)
-GR_REGISTER_COMPONENT("gr-utils" ENABLE_GR_UTILS
-    ENABLE_GR_CORE
-    ENABLE_PYTHON
-)
+find_package(Doxygen)
 
 ########################################################################
 # Begin conditional configuration
 ########################################################################
-if(ENABLE_GR_UTILS)
-
-########################################################################
-# Setup CPack components
-########################################################################
-include(GrPackage)
-CPACK_COMPONENT("utils"
-    DISPLAY_NAME "Utils"
-    DESCRIPTION  "Misc gnuradio python utilities"
-    DEPENDS      "core_python"
-)
+if(ENABLE_DOXYGEN)
 
 ########################################################################
 # Add subdirectories
 ########################################################################
-add_subdirectory(src/python)
+add_subdirectory(doxygen)
 
-
-endif(ENABLE_GR_UTILS)
+endif(ENABLE_DOXYGEN)
