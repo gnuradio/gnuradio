@@ -288,6 +288,12 @@ namespace gr {
     }
 
     void
+    time_sink_c_impl::enable_autoscale(bool en)
+    {
+      d_main_gui->autoScale(en);
+    }
+
+    void
     time_sink_c_impl::toggle_stem_plot()
     {
       d_main_gui->setStem();

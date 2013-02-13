@@ -166,3 +166,19 @@ FreqDisplayForm::autoScale()
   getPlot()->setAutoScale(_autoscale_state);
   getPlot()->replot();
 }
+
+void
+FreqDisplayForm::autoScale(bool en)
+{
+  if(en) {
+    _autoscale_act->setText(tr("Auto Scale Off"));
+    _autoscale_state = true;
+  }
+  else {
+    _autoscale_act->setText(tr("Auto Scale On"));
+    _autoscale_state = false;
+  }
+
+  getPlot()->setAutoScale(_autoscale_state);
+  getPlot()->replot();
+}

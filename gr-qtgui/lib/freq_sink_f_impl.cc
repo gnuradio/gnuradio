@@ -314,6 +314,12 @@ namespace gr {
     }
 
     void
+    freq_sink_f_impl::enable_autoscale(bool en)
+    {
+      d_main_gui->autoScale(en);
+    }
+
+    void
     freq_sink_f_impl::reset()
     {
       d_index = 0;

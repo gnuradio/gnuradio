@@ -56,6 +56,7 @@ public slots:
 			 const double bandwidth);
   void setYaxis(double min, double max);
   void autoScale();
+  void autoScale(bool en);
 
 private slots:
   void newData(const QEvent *updateEvent);

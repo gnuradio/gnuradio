@@ -284,6 +284,12 @@ namespace gr {
     }
 
     void
+    const_sink_c_impl::enable_autoscale(bool en)
+    {
+      d_main_gui->autoScale(en);
+    }
+
+    void
     const_sink_c_impl::reset()
     {
       d_index = 0;

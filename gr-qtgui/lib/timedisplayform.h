@@ -50,6 +50,7 @@ public slots:
   void setNPoints(const int);
   void setStem(bool trig=false);
   void autoScale();
+  void autoScale(bool en);
 
 private slots:
   void newData(const QEvent*);
