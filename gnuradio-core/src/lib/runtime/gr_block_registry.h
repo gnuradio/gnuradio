@@ -2,6 +2,7 @@
 #define GR_BLOCK_REGISTRY_H
 
 #include <map>
+#include <gr_basic_block.h>
 
 #ifndef GR_BASIC_BLOCK_H
 class gr_basic_block;
