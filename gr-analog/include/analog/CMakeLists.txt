@@ -82,6 +82,7 @@ install(FILES
     noise_type.h
     agc.h
     agc2.h
+    noise_type.h
     squelch_base_ff.h
     agc_cc.h
     agc_ff.h
