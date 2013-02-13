@@ -31,8 +31,8 @@
 #include <gr_block_registry.h>
 
 gr_block::gr_block (const std::string &name,
-		    gr_io_signature_sptr input_signature,
-		    gr_io_signature_sptr output_signature)
+                    gr_io_signature_sptr input_signature,
+                    gr_io_signature_sptr output_signature)
   : gr_basic_block(name, input_signature, output_signature),
     d_output_multiple (1),
     d_output_multiple_set(false),
@@ -43,6 +43,7 @@ gr_block::gr_block (const std::string &name,
     d_fixed_rate(false),
     d_max_noutput_items_set(false),
     d_max_noutput_items(0),
+    d_min_noutput_items(0),
     d_tag_propagation_policy(TPP_ALL_TO_ALL),
     d_pc_rpc_set(false),
     d_max_output_buffer(std::max(output_signature->max_streams(),1), -1),
