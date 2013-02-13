@@ -463,9 +463,9 @@ class GR_CORE_API gr_block : public gr_basic_block {
   gr_block_detail_sptr	d_detail;		// implementation details
   unsigned              d_history;
   bool                  d_fixed_rate;
-  int                   d_min_noutput_items;
   bool                  d_max_noutput_items_set;     // if d_max_noutput_items is valid
   int                   d_max_noutput_items;         // value of max_noutput_items for this block
+  int                   d_min_noutput_items;
   tag_propagation_policy_t d_tag_propagation_policy; // policy for moving tags downstream
   std::vector<unsigned int> d_affinity;              // thread affinity proc. mask
   bool                  d_pc_rpc_set;
