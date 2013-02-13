@@ -71,7 +71,7 @@ gr_message_debug::print_verbose(pmt::pmt_t msg)
   size_t offset(0);
   const uint8_t* d = (const uint8_t*) uniform_vector_elements(vector, offset);
   for(size_t i=0; i<len; i+=16){
-    printf("%04x: ", i);
+    printf("%04x: ", ((unsigned int)i));
     for(size_t j=i; j<std::min(i+16,len); j++){
       printf("%02x ",d[j] );
     }
