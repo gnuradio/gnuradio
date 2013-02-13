@@ -69,6 +69,11 @@ set(Boost_ADDITIONAL_VERSIONS
 # Boost 1.52 disabled, see https://svn.boost.org/trac/boost/ticket/7669
 # Similar problems with Boost 1.46 and 1.47.
 
+OPTION(ENABLE_BAD_BOOST "Enable known bad versions of Boost" OFF)
+if(ENABLE_BAD_BOOST)
+  MESSAGE(STATUS "Enabling use of known bad versions of Boost.")
+endif(ENABLE_BAD_BOOST)
+
 # For any unsuitable Boost version, add the version number below in
 # the following format: XXYYZZ
 # Where:
@@ -76,12 +81,17 @@ set(Boost_ADDITIONAL_VERSIONS
 #     YY is the minor version number ('46' for 1.46)
 #     ZZ is the patcher version number (typically just '00')
 set(Boost_NOGO_VERSIONS
-    104600 104700 105200
-)
+  104600 104700 105200
+  )
 
 foreach(ver ${Boost_NOGO_VERSIONS})
   if(${Boost_VERSION} EQUAL ${ver})
-    MESSAGE(STATUS "Found incompatible Boost (version ${Boost_VERSION}). Disabling.")
-    set(Boost_FOUND FALSE)
+    if(NOT ENABLE_BAD_BOOST)
+      MESSAGE(STATUS "WARNING: Found a known bad version of Boost (v${Boost_VERSION}). Disabling.")
+      set(Boost_FOUND FALSE)
+    else(NOT ENABLE_BAD_BOOST)
+      MESSAGE(STATUS "WARNING: Found a known bad version of Boost (v${Boost_VERSION}). Continuing anyway.")
+      set(Boost_FOUND TRUE)
+    endif(NOT ENABLE_BAD_BOOST)
   endif(${Boost_VERSION} EQUAL ${ver})
 endforeach(ver)
