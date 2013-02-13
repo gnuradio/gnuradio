@@ -3,6 +3,7 @@
 
 #include <gr_core_api.h>
 #include <map>
+#include <gr_basic_block.h>
 
 #ifndef GR_BASIC_BLOCK_H
 class gr_basic_block;
