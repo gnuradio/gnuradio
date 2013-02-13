@@ -38,7 +38,7 @@ class message_generator(gr.sync_block):
         self.msg_list = msg_list
         self.msg_interval = msg_interval
         self.msg_ctr = 0
-        self.message_port_register_out(pmt.pmt_intern('out_port'))
+        self.message_port_register_out(pmt.intern('out_port'))
 
 
     def work(self, input_items, output_items):
@@ -46,7 +46,7 @@ class message_generator(gr.sync_block):
         while self.msg_ctr < len(self.msg_list) and \
                 (self.msg_ctr * self.msg_interval) < \
                 (self.nitems_read(0) + inLen):
-            self.message_port_pub(pmt.pmt_intern('out_port'),
+            self.message_port_pub(pmt.intern('out_port'),
                                   self.msg_list[self.msg_ctr])
             self.msg_ctr += 1
         return inLen
@@ -61,13 +61,13 @@ class message_consumer(gr.sync_block):
             out_sig = None
         )
         self.msg_list = []
-        self.message_port_register_in(pmt.pmt_intern('in_port'))
-        self.set_msg_handler(pmt.pmt_intern('in_port'),
+        self.message_port_register_in(pmt.intern('in_port'))
+        self.set_msg_handler(pmt.intern('in_port'),
                              self.handle_msg)
 
     def handle_msg(self, msg):
         # Create a new PMT from long value and put in list
-        self.msg_list.append(pmt.pmt_from_long(pmt.pmt_to_long(msg)))
+        self.msg_list.append(pmt.from_long(pmt.to_long(msg)))
 
 class test_python_message_passing(gr_unittest.TestCase):
     
@@ -82,7 +82,7 @@ class test_python_message_passing(gr_unittest.TestCase):
         msg_interval = 1000
         msg_list = []
         for i in range(num_msgs):
-            msg_list.append(pmt.pmt_from_long(i))
+            msg_list.append(pmt.from_long(i))
 
         # Create vector source with dummy data to trigger messages
         src_data = []
@@ -99,9 +99,9 @@ class test_python_message_passing(gr_unittest.TestCase):
         self.tb.msg_connect(msg_gen, 'out_port', msg_cons, 'in_port')
 
         # Verify that the messgae port query functions work
-        self.assertEqual(pmt.pmt_symbol_to_string(pmt.pmt_vector_ref(
+        self.assertEqual(pmt.symbol_to_string(pmt.vector_ref(
                     msg_gen.message_ports_out(), 0)), 'out_port')
-        self.assertEqual(pmt.pmt_symbol_to_string(pmt.pmt_vector_ref(
+        self.assertEqual(pmt.symbol_to_string(pmt.vector_ref(
                     msg_cons.message_ports_in(), 0)), 'in_port')
         
         # Run to verify message passing
@@ -116,7 +116,7 @@ class test_python_message_passing(gr_unittest.TestCase):
         # Verify that the message consumer got all the messages
         self.assertEqual(num_msgs, len(msg_cons.msg_list))
         for i in range(num_msgs):
-            self.assertTrue(pmt.pmt_equal(msg_list[i], msg_cons.msg_list[i]))
+            self.assertTrue(pmt.equal(msg_list[i], msg_cons.msg_list[i]))
         
 if __name__ == '__main__':
     gr_unittest.run(test_python_message_passing, 
