@@ -75,11 +75,12 @@ add_custom_target(analog_generated_includes DEPENDS
 # Install header files
 ########################################################################
 install(FILES
-    ${analog_generated_includes}
+    ${generated_includes}
     api.h
     cpm.h
     agc.h
     agc2.h
+    noise_type.h
     squelch_base_ff.h
     agc_cc.h
     agc_ff.h
