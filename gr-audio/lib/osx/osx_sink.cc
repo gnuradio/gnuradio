@@ -70,7 +70,7 @@ namespace gr {
       else if(channel_config == -1) {
         // no user input; try "device name" instead
         int l_n_channels = (int)strtol(device_name.data(), (char**)NULL, 10);
-        if(l_n_channels == 0 & errno) {
+        if((l_n_channels == 0) & errno) {
           std::cerr << "Error Converting Device Name: " << errno << std::endl;
           throw std::invalid_argument("audio_osx_sink::audio_osx_sink");
         }
@@ -149,7 +149,7 @@ namespace gr {
       // Set up a callback function to generate output to the output unit
 
       AURenderCallbackStruct input;
-      input.inputProc = (AURenderCallback)(audio_osx_sink::AUOutputCallback);
+      input.inputProc = (AURenderCallback)(osx_sink::AUOutputCallback);
       input.inputProcRefCon = this;
 
       err = AudioUnitSetProperty(d_OutputAU,
@@ -383,7 +383,7 @@ namespace gr {
                                UInt32 inNumberFrames,
                                AudioBufferList *ioData)
     {
-      audio_osx_sink* This = (audio_osx_sink*)inRefCon;
+      osx_sink* This = (osx_sink*)inRefCon;
       OSStatus err = noErr;
 
       gruel::scoped_lock l(*This->d_internal);

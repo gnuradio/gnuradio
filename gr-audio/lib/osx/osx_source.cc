@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2006-2011 Free Software Foundation, Inc.
+ * Copyright 2006-2011,2013 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio.
  *
@@ -40,8 +40,8 @@ namespace gr {
                                               const std::string &device_name,
                                               bool ok_to_block)
     {
-      return audio_source::sptr
-        (new audio_osx_source(sampling_rate, device_name, ok_to_block));
+      return source::sptr
+        (new osx_source(sampling_rate, device_name, ok_to_block));
     }
 
     void
@@ -75,21 +75,21 @@ namespace gr {
                       gr_make_io_signature(0, 0, 0),
                       gr_make_io_signature(0, 0, 0)),
         d_deviceSampleRate(0.0), d_outputSampleRate(0.0),
-    d_channel_config(0),
-    d_inputBufferSizeFrames(0), d_inputBufferSizeBytes(0),
-    d_outputBufferSizeFrames(0), d_outputBufferSizeBytes(0),
-    d_deviceBufferSizeFrames(0), d_deviceBufferSizeBytes(0),
-    d_leadSizeFrames(0), d_leadSizeBytes(0),
-    d_trailSizeFrames(0), d_trailSizeBytes(0),
-    d_extraBufferSizeFrames(0), d_extraBufferSizeBytes(0),
-    d_queueSampleCount(0), d_max_sample_count(0),
-    d_n_AvailableInputFrames(0), d_n_ActualInputFrames(0),
-    d_n_user_channels(0), d_n_max_channels(0), d_n_deviceChannels(0),
-    d_do_block(do_block), d_passThrough(false),
-    d_internal(0), d_cond_data(0),
-    d_buffers(0),
-    d_InputAU(0), d_InputBuffer(0), d_OutputBuffer(0),
-    d_AudioConverter(0)
+	d_channel_config(0),
+	d_inputBufferSizeFrames(0), d_inputBufferSizeBytes(0),
+	d_outputBufferSizeFrames(0), d_outputBufferSizeBytes(0),
+	d_deviceBufferSizeFrames(0), d_deviceBufferSizeBytes(0),
+	d_leadSizeFrames(0), d_leadSizeBytes(0),
+	d_trailSizeFrames(0), d_trailSizeBytes(0),
+	d_extraBufferSizeFrames(0), d_extraBufferSizeBytes(0),
+	d_queueSampleCount(0), d_max_sample_count(0),
+	d_n_AvailableInputFrames(0), d_n_ActualInputFrames(0),
+	d_n_user_channels(0), d_n_max_channels(0), d_n_deviceChannels(0),
+	d_do_block(do_block), d_passThrough(false),
+	d_internal(0), d_cond_data(0),
+	d_buffers(0),
+	d_InputAU(0), d_InputBuffer(0), d_OutputBuffer(0),
+	d_AudioConverter(0)
     {
       if(sample_rate <= 0) {
         std::cerr << "Invalid Sample Rate: " << sample_rate << std::endl;
@@ -105,7 +105,7 @@ namespace gr {
       else if (channel_config == -1) {
         // no user input; try "device name" instead
         int l_n_channels = (int)strtol(device_name.data(), (char **)NULL, 10);
-        if(l_n_channels == 0 & errno) {
+        if((l_n_channels == 0) & errno) {
           std::cerr << "Error Converting Device Name: " << errno << std::endl;
           throw std::invalid_argument("audio_osx_source::audio_osx_source");
         }
@@ -250,7 +250,7 @@ namespace gr {
 
       AURenderCallbackStruct AUCallBack;
 
-      AUCallBack.inputProc = (AURenderCallback)(audio_osx_source::AUInputCallback);
+      AUCallBack.inputProc = (AURenderCallback)(osx_source::AUInputCallback);
       AUCallBack.inputProcRefCon = this;
 
       err = AudioUnitSetProperty(d_InputAU,
@@ -804,7 +804,7 @@ namespace gr {
                                 AudioBufferList* ioData)
     {
       OSStatus err = noErr;
-      audio_osx_source* This = static_cast<audio_osx_source*>(inRefCon);
+      osx_source* This = static_cast<osx_source*>(inRefCon);
 
       gruel::scoped_lock l(*This->d_internal);
 
