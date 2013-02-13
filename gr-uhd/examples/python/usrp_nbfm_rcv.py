@@ -50,7 +50,7 @@ class my_top_block (stdgui2.std_top_block):
                           help="set gain in dB (default is midpoint)")
         parser.add_option("-V", "--volume", type="eng_float", default=None,
                           help="set volume (default is midpoint)")
-        parser.add_option("-O", "--audio-output", type="string", default="",
+        parser.add_option("-O", "--audio-output", type="string", default="default",
                           help="pcm device name.  E.g., hw:0,0 or surround51 or /dev/dsp")
         parser.add_option("-N", "--no-gui", action="store_true", default=False)
 
