@@ -18,37 +18,49 @@
 # Boston, MA 02110-1301, USA.
 
 ########################################################################
-# Setup dependencies
+# Setup library
 ########################################################################
+include(GrPlatform) #define LIB_SUFFIX
+
+include_directories(${Boost_INCLUDE_DIR})
+link_directories(${Boost_LIBRARY_DIRS})
+
+list(APPEND howto_sources
+)
+
+add_library(gnuradio-howto SHARED ${howto_sources})
+target_link_libraries(gnuradio-howto ${Boost_LIBRARIES} ${GRUEL_LIBRARIES} ${GNURADIO_CORE_LIBRARIES})
+set_target_properties(gnuradio-howto PROPERTIES DEFINE_SYMBOL "gnuradio_howto_EXPORTS")
 
 ########################################################################
-# Register component
+# Install built library files
 ########################################################################
-include(GrComponent)
-GR_REGISTER_COMPONENT("gr-utils" ENABLE_GR_UTILS
-    ENABLE_GR_CORE
-    ENABLE_PYTHON
+install(TARGETS gnuradio-howto
+    LIBRARY DESTINATION lib${LIB_SUFFIX} # .so/.dylib file
+    ARCHIVE DESTINATION lib${LIB_SUFFIX} # .lib file
+    RUNTIME DESTINATION bin              # .dll file
 )
 
 ########################################################################
-# Begin conditional configuration
+# Build and register unit test
 ########################################################################
-if(ENABLE_GR_UTILS)
+include(GrTest)
 
-########################################################################
-# Setup CPack components
-########################################################################
-include(GrPackage)
-CPACK_COMPONENT("utils"
-    DISPLAY_NAME "Utils"
-    DESCRIPTION  "Misc gnuradio python utilities"
-    DEPENDS      "core_python"
+include_directories(${CPPUNIT_INCLUDE_DIRS})
+
+list(APPEND test_howto_sources
+    ${CMAKE_CURRENT_SOURCE_DIR}/test_howto.cc
+    ${CMAKE_CURRENT_SOURCE_DIR}/qa_howto.cc
 )
 
-########################################################################
-# Add subdirectories
-########################################################################
-add_subdirectory(python)
+add_executable(test-howto ${test_howto_sources})
 
+target_link_libraries(
+  test-howto
+  ${GNURADIO_CORE_LIBRARIES}
+  ${Boost_LIBRARIES}
+  ${CPPUNIT_LIBRARIES}
+  gnuradio-howto
+)
 
-endif(ENABLE_GR_UTILS)
+GR_ADD_TEST(test_howto test-howto)

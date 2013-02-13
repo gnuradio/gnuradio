@@ -1,4 +1,4 @@
-# Copyright 2011,2012 Free Software Foundation, Inc.
+# Copyright 2011 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -18,37 +18,26 @@
 # Boston, MA 02110-1301, USA.
 
 ########################################################################
-# Setup dependencies
+# Include python install macros
 ########################################################################
+include(GrPython)
+if(NOT PYTHONINTERP_FOUND)
+    return()
+endif()
 
 ########################################################################
-# Register component
+# Install python sources
 ########################################################################
-include(GrComponent)
-GR_REGISTER_COMPONENT("gr-utils" ENABLE_GR_UTILS
-    ENABLE_GR_CORE
-    ENABLE_PYTHON
+GR_PYTHON_INSTALL(
+    FILES
+    __init__.py
+    DESTINATION ${GR_PYTHON_DIR}/howto
 )
 
 ########################################################################
-# Begin conditional configuration
+# Handle the unit tests
 ########################################################################
-if(ENABLE_GR_UTILS)
+include(GrTest)
 
-########################################################################
-# Setup CPack components
-########################################################################
-include(GrPackage)
-CPACK_COMPONENT("utils"
-    DISPLAY_NAME "Utils"
-    DESCRIPTION  "Misc gnuradio python utilities"
-    DEPENDS      "core_python"
-)
-
-########################################################################
-# Add subdirectories
-########################################################################
-add_subdirectory(python)
-
-
-endif(ENABLE_GR_UTILS)
+set(GR_TEST_TARGET_DEPS gnuradio-howto)
+set(GR_TEST_PYTHON_DIRS ${CMAKE_BINARY_DIR}/swig)

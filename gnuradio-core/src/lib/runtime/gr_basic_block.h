@@ -58,18 +58,6 @@ class GR_CORE_API gr_basic_block : public gr_msg_accepter, public boost::enable_
   typedef boost::function<void(pmt::pmt_t)> msg_handler_t;
   
  private:
-  /*
-   * This function is called by the runtime system to dispatch messages.
-   *
-   * The thread-safety guarantees mentioned in set_msg_handler are implemented
-   * by the callers of this method.
-   */
-  void dispatch_msg(pmt::pmt_t which_port, pmt::pmt_t msg)
-  {
-    // AA Update this
-    if (d_msg_handlers.find(which_port) != d_msg_handlers.end()) // Is there a handler?
-      d_msg_handlers[which_port](msg); // Yes, invoke it.
-  };
   
   //msg_handler_t	 d_msg_handler;
   typedef std::map<pmt::pmt_t , msg_handler_t, pmt::comperator> d_msg_handlers_t;
@@ -124,6 +112,19 @@ class GR_CORE_API gr_basic_block : public gr_msg_accepter, public boost::enable_
    */
   void set_color(vcolor color) { d_color = color; }
   vcolor color() const { return d_color; }
+
+  /*
+   * This function is called by the runtime system to dispatch messages.
+   *
+   * The thread-safety guarantees mentioned in set_msg_handler are implemented
+   * by the callers of this method.
+   */
+  virtual void dispatch_msg(pmt::pmt_t which_port, pmt::pmt_t msg)
+  {
+    // AA Update this
+    if (d_msg_handlers.find(which_port) != d_msg_handlers.end()) // Is there a handler?
+      d_msg_handlers[which_port](msg); // Yes, invoke it.
+  };
   
   // Message passing interface
   pmt::pmt_t message_subscribers;
