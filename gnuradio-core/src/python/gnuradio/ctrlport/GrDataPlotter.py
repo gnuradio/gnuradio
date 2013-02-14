@@ -390,6 +390,141 @@ class GrDataPlotterPsdF(gr.top_block):
             self.src.set_data(self._last_data)
 
 
+class GrTimeRasterF(gr.top_block):
+    def __init__(self, name, rate, pmin=None, pmax=None):
+        gr.top_block.__init__(self)
+
+        self._name = name
+        self._npts = 100
+        self._rows = 100
+        samp_rate = 1.0
+
+        self._last_data = self._npts*[0,]
+        self._data_len = 0
+
+        self.src = gr.vector_source_f([])
+        self.thr = gr.throttle(gr.sizeof_float, rate)
+        self.snk = qtgui.time_raster_sink_f(samp_rate, self._npts, self._rows,
+                                            [], [], self._name, 1)
+
+        self.connect(self.src, self.thr, (self.snk, 0))
+
+        self.py_window = sip.wrapinstance(self.snk.pyqwidget(), QtGui.QWidget)
+
+    def __del__(self):
+        pass
+
+    def qwidget(self):
+        return self.py_window
+
+    def name(self):
+        return self._name
+
+    def update(self, data):
+        # Ask GUI if there has been a change in nsamps
+        npts = int(self.snk.num_cols())
+        if(self._npts != npts):
+
+            # Adjust buffers to accomodate new settings
+            if(npts < self._npts):
+                if(self._data_len < npts):
+                    self._last_data = self._last_data[0:npts]
+                else:
+                    self._last_data = self._last_data[self._data_len-npts:self._data_len]
+                    self._data_len = npts
+            else:
+                self._last_data += (npts - self._npts)*[0,]
+            self._npts = npts
+            self.snk.reset()
+        
+        # Update the plot data depending on type
+        if(type(data) == list):
+            if(len(data) > self._npts):
+                self.src.set_data(data)
+                self._last_data = data[-self._npts:]
+            else:
+                newdata = self._last_data[-(self._npts-len(data)):]
+                newdata += data
+                self.src.set_data(newdata)
+                self._last_data = newdata
+
+        else: # single value update
+            if(self._data_len < self._npts):
+                self._last_data[self._data_len] = data
+                self._data_len += 1
+            else:
+                self._last_data = self._last_data[1:]
+                self._last_data.append(data)
+            self.src.set_data(self._last_data)
+
+class GrTimeRasterB(gr.top_block):
+    def __init__(self, name, rate, pmin=None, pmax=None):
+        gr.top_block.__init__(self)
+
+        self._name = name
+        self._npts = 100
+        self._rows = 100
+        samp_rate = 1.0
+
+        self._last_data = self._npts*[0,]
+        self._data_len = 0
+
+        self.src = gr.vector_source_b([])
+        self.thr = gr.throttle(gr.sizeof_char, rate)
+        self.snk = qtgui.time_raster_sink_b(samp_rate, self._npts, self._rows,
+                                            [], [], self._name, 1)
+
+        self.connect(self.src, self.thr, (self.snk, 0))
+
+        self.py_window = sip.wrapinstance(self.snk.pyqwidget(), QtGui.QWidget)
+
+    def __del__(self):
+        pass
+
+    def qwidget(self):
+        return self.py_window
+
+    def name(self):
+        return self._name
+
+    def update(self, data):
+        # Ask GUI if there has been a change in nsamps
+        npts = self.snk.num_cols()
+        if(self._npts != npts):
+
+            # Adjust buffers to accomodate new settings
+            if(npts < self._npts):
+                if(self._data_len < npts):
+                    self._last_data = self._last_data[0:npts]
+                else:
+                    self._last_data = self._last_data[self._data_len-npts:self._data_len]
+                    self._data_len = npts
+            else:
+                self._last_data += (npts - self._npts)*[0,]
+            self._npts = npts
+            self.snk.reset()
+        
+        # Update the plot data depending on type
+        if(type(data) == list):
+            if(len(data) > self._npts):
+                self.src.set_data(data)
+                self._last_data = data[-self._npts:]
+            else:
+                newdata = self._last_data[-(self._npts-len(data)):]
+                newdata += data
+                self.src.set_data(newdata)
+                self._last_data = newdata
+
+        else: # single value update
+            if(self._data_len < self._npts):
+                self._last_data[self._data_len] = data
+                self._data_len += 1
+            else:
+                self._last_data = self._last_data[1:]
+                self._last_data.append(data)
+            self.src.set_data(self._last_data)
+
+
 class GrDataPlotterValueTable:
     def __init__(self, uid, parent, x, y, xsize, ysize,
                  headers=['Statistic Key ( Source Block :: Stat Name )  ',
