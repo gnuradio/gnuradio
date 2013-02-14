@@ -231,8 +231,8 @@ TimeRasterData::addData(const double* data,
       d_nitems += cols;
     }
     else {
-      memmove(d_data, &d_data[cols], d_totalitems*sizeof(double));
       memcpy(&d_data[d_nitems], data, cols*sizeof(double));
+      memmove(d_data, &d_data[cols], d_totalitems*sizeof(double));
     }
   }
 }
