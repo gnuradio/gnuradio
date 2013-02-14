@@ -252,13 +252,30 @@ class GR_CORE_API gr_block : public gr_basic_block {
   void set_tag_propagation_policy(tag_propagation_policy_t p);
 
   /*!
+   * \brief Return the minimum number of output items this block can
+   * produce during a call to work.
+   *
+   * Should be 0 for most blocks.  Useful if we're dealing with packets and
+   * the block produces one packet per call to work.
+  */
+  int min_noutput_items() const { return d_min_noutput_items; }
+
+  /*!
+   * \brief Set the minimum number of output items this block can
+   * produce during a call to work.
+   *
+   * \param m the minimum noutput_items this block can produce.
+   */
+  void set_min_noutput_items(int m) { d_min_noutput_items = m; }
+
+  /*!
    * \brief Return the maximum number of output items this block will
    * handle during a call to work.
    */
   int max_noutput_items();
 
   /*!
-   * \brief Set the maximum number of ouput items htis block will
+   * \brief Set the maximum number of output items this block will
    * handle during a call to work.
    *
    * \param m the maximum noutput_items this block will handle.
@@ -448,6 +465,7 @@ class GR_CORE_API gr_block : public gr_basic_block {
   bool                  d_fixed_rate;
   bool                  d_max_noutput_items_set;     // if d_max_noutput_items is valid
   int                   d_max_noutput_items;         // value of max_noutput_items for this block
+  int                   d_min_noutput_items;
   tag_propagation_policy_t d_tag_propagation_policy; // policy for moving tags downstream
   std::vector<unsigned int> d_affinity;              // thread affinity proc. mask
   bool                  d_pc_rpc_set;

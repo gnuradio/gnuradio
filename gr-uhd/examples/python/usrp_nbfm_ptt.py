@@ -61,9 +61,9 @@ class ptt_block(stdgui2.std_top_block):
                            help="set rx gain [default=midpoint in dB]")
         parser.add_option ("", "--tx-gain", type="eng_float", default=None,
                            help="set tx gain [default=midpoint in dB]")
-        parser.add_option("-I", "--audio-input", type="string", default="",
+        parser.add_option("-I", "--audio-input", type="string", default="default",
                           help="pcm input device name.  E.g., hw:0,0 or /dev/dsp")
-        parser.add_option("-O", "--audio-output", type="string", default="",
+        parser.add_option("-O", "--audio-output", type="string", default="default",
                           help="pcm output device name.  E.g., hw:0,0 or /dev/dsp")
         parser.add_option ("-N", "--no-gui", action="store_true", default=False)
         (options, args) = parser.parse_args ()
@@ -372,7 +372,7 @@ class transmit_path(gr.hier_block2):
 # ////////////////////////////////////////////////////////////////////////
 
 class receive_path(gr.hier_block2):
-    def __init__(self, args, gain, audio_output):
+    def __init__(self, args, spec, antenna, gain, audio_output):
 	gr.hier_block2.__init__(self, "receive_path",
 				gr.io_signature(0, 0, 0), # Input signature
 				gr.io_signature(0, 0, 0)) # Output signature

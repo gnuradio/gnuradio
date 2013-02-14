@@ -24,6 +24,7 @@
 
 #include <gr_core_api.h>
 #include <gr_complex.h>
+#include <gruel/pmt.h>
 
 /*!
  * \brief base class for evaluating a function: double -> double
@@ -135,6 +136,34 @@ public:
   virtual ~gr_feval();
 
   virtual void calleval();	// invoke "eval"
+};
+
+/*!
+ * \brief base class for evaluating a function: pmt -> void
+ * \ingroup misc
+ *
+ * This class is designed to be subclassed in Python or C++
+ * and is callable from both places.  It uses SWIG's
+ * "director" feature to implement the magic.
+ * It's slow. Don't use it in a performance critical path.
+ *
+ * Override eval to define the behavior.
+ * Use calleval to invoke eval (this kludge is required to allow a
+ * python specific "shim" to be inserted.
+ */
+class GR_CORE_API gr_feval_p
+{
+protected:
+  /*!
+   * \brief override this to define the function
+   */
+  virtual void eval(pmt::pmt_t x);
+
+public:
+  gr_feval_p() {}
+  virtual ~gr_feval_p();
+
+  virtual void calleval(pmt::pmt_t x);	// invoke "eval"
 };
 
 /*!

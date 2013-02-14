@@ -188,6 +188,58 @@ public:
         gr_block::get_tags_in_range(tags, which_input, abs_start, abs_end, key);
         return tags;
     }
+
+    /* Message passing interface */
+    void gr_block__message_port_register_in(pmt::pmt_t port_id){
+        gr_basic_block::message_port_register_in(port_id);
+    }
+
+    void gr_block__message_port_register_out(pmt::pmt_t port_id){
+        gr_basic_block::message_port_register_out(port_id);
+    }
+
+    void gr_block__message_port_pub(pmt::pmt_t port_id, pmt::pmt_t msg){
+        gr_basic_block::message_port_pub(port_id, msg);
+    }
+
+    void gr_block__message_port_sub(pmt::pmt_t port_id, pmt::pmt_t target){
+        gr_basic_block::message_port_sub(port_id, target);
+    }
+
+    void gr_block__message_port_unsub(pmt::pmt_t port_id, pmt::pmt_t target){
+        gr_basic_block::message_port_unsub(port_id, target);
+    }
+    
+    pmt::pmt_t gr_block__message_ports_in(){
+        return gr_basic_block::message_ports_in();
+    }
+
+    pmt::pmt_t gr_block__message_ports_out(){
+        return gr_basic_block::message_ports_out();
+    }
+
+    void set_msg_handler_feval(pmt::pmt_t which_port, gr_feval_p *msg_handler)
+    {
+        if(msg_queue.find(which_port) == msg_queue.end()){ 
+	    throw std::runtime_error("attempt to set_msg_handler_feval() on bad input message port!"); 
+	}
+	d_msg_handlers_feval[which_port] = msg_handler;
+    }
+
+protected:
+    typedef std::map<pmt::pmt_t, gr_feval_p *, pmt::comperator> msg_handlers_feval_t;
+    msg_handlers_feval_t d_msg_handlers_feval;
+
+    void dispatch_msg(pmt::pmt_t which_port, pmt::pmt_t msg){
+        // Is there a handler?
+        if (d_msg_handlers_feval.find(which_port) != d_msg_handlers_feval.end()){
+    	    d_msg_handlers_feval[which_port]->calleval(msg); // Yes, invoke it.
+        }
+        else {
+	    // Pass to generic dispatcher if not found
+	    gr_basic_block::dispatch_msg(which_port, msg);
+        }
+    }
 };
 
 /*!

@@ -45,23 +45,28 @@
 
 // Directors are only supported in Python, Java and C#
 #ifdef SWIGPYTHON
+%include "pmt_swig.i"
+using namespace pmt;
 
 // Enable SWIG directors for these classes
 %feature("director") gr_py_feval_dd;
 %feature("director") gr_py_feval_cc;
 %feature("director") gr_py_feval_ll;
 %feature("director") gr_py_feval;
+%feature("director") gr_py_feval_p;
 
 %feature("nodirector") gr_py_feval_dd::calleval;
 %feature("nodirector") gr_py_feval_cc::calleval;
 %feature("nodirector") gr_py_feval_ll::calleval;
 %feature("nodirector") gr_py_feval::calleval;
+%feature("nodirector") gr_py_feval_p::calleval;
 
 
 %rename(feval_dd) gr_py_feval_dd;
 %rename(feval_cc) gr_py_feval_cc;
 %rename(feval_ll) gr_py_feval_ll;
 %rename(feval)    gr_py_feval;
+%rename(feval_p)  gr_py_feval_p;
 
 //%exception {
 //  try { $action }
@@ -136,12 +141,26 @@ public:
   virtual void calleval();
 };
 
+%ignore gr_feval_p;
+class gr_feval_p
+{
+protected:
+  virtual void eval(pmt_t x);
+
+public:
+  gr_feval_p() {}
+  virtual ~gr_feval_p();
+
+  virtual void calleval(pmt_t x);
+};
+
 /*
  * These are the ones to derive from in Python.  They have the magic shim
  * that ensures that we're holding the Python GIL when we enter Python land...
  */
 
 %inline %{
+#include <gruel/pmt.h>
 
 class gr_py_feval_dd : public gr_feval_dd
 {
@@ -180,6 +199,16 @@ class gr_py_feval : public gr_feval
   {
     ensure_py_gil_state _lock;
     eval();
+  }
+};
+
+class gr_py_feval_p : public gr_feval_p
+{
+ public:
+  void calleval(pmt::pmt_t x)
+  {
+    ensure_py_gil_state _lock;
+    eval(x);
   }
 };
 

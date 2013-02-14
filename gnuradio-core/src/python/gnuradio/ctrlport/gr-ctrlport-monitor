@@ -31,6 +31,23 @@ from gnuradio.ctrlport.IceRadioClient import *
 from gnuradio.ctrlport.GrDataPlotter import *
 from gnuradio.ctrlport import GNURadio
 
+class RateDialog(QtGui.QDialog):
+    def __init__(self, delay, parent=None):
+        super(RateDialog, self).__init__(parent)
+        self.gridLayout = QtGui.QGridLayout(self)
+        self.setWindowTitle("Update Delay (ms)");
+        self.delay = QtGui.QLineEdit(self);
+        self.delay.setText(str(delay));
+        self.buttonBox = QtGui.QDialogButtonBox(QtGui.QDialogButtonBox.Ok | QtGui.QDialogButtonBox.Cancel)
+        self.gridLayout.addWidget(self.delay);
+        self.gridLayout.addWidget(self.buttonBox);
+        self.buttonBox.accepted.connect(self.accept)
+        self.buttonBox.rejected.connect(self.reject)
+    def accept(self):
+        self.done(1);
+    def reject(self):
+        self.done(0);
+
 class MAINWindow(QtGui.QMainWindow):
     def minimumSizeHint(self):
         return Qtgui.QSize(800,600)
@@ -38,6 +55,7 @@ class MAINWindow(QtGui.QMainWindow):
     def __init__(self, radio, port, interface):
         
         super(MAINWindow, self).__init__()
+        self.updateRate = 2000;
         self.conns = []
         self.plots = []
         self.knobprops = []
@@ -65,8 +83,15 @@ class MAINWindow(QtGui.QMainWindow):
         icon = QtGui.QIcon(ctrlport.__path__[0] + "/icon.png" )
         self.setWindowIcon(icon)
 
+
+    def setUpdateRate(self,nur):
+        self.updateRate = int(nur);
+        for c in self.conns:
+            c.updateRate = self.updateRate;
+            c.timer.setInterval(self.updateRate);
+
     def newCon(self, radio=None, port=None):
-        child = MForm(radio, port, len(self.conns), self)
+        child = MForm(radio, port, len(self.conns), self.updateRate, self)
         if(child.radio is not None):
             child.setWindowTitle(str(child.radio))
             self.mdiArea.addSubWindow(child)
@@ -232,6 +257,9 @@ class MAINWindow(QtGui.QMainWindow):
                 statusTip="Close all the windows",
                 triggered=self.mdiArea.closeAllSubWindows)
 
+        self.urAct = QtGui.QAction("Update Rate", self, shortcut="F5",
+                statusTip="Change Update Rate",
+                triggered=self.updateRateShow)
 
         qks = QtGui.QKeySequence(QtCore.Qt.CTRL + QtCore.Qt.Key_T);
         self.tileAct = QtGui.QAction("&Tile", self,
@@ -269,6 +297,7 @@ class MAINWindow(QtGui.QMainWindow):
         self.fileMenu = self.menuBar().addMenu("&File")
         self.fileMenu.addAction(self.newConAct)
         self.fileMenu.addAction(self.newPlotAct)
+        self.fileMenu.addAction(self.urAct)
         self.fileMenu.addSeparator()
         self.fileMenu.addAction(self.exitAct)
 
@@ -282,10 +311,20 @@ class MAINWindow(QtGui.QMainWindow):
         self.helpMenu.addAction(self.aboutAct)
         self.helpMenu.addAction(self.aboutQtAct)
 
+    def updateRateShow(self):
+        askrate = RateDialog(self.updateRate, self);
+        if askrate.exec_():
+            ur = float(str(askrate.delay.text()));
+            self.setUpdateRate(ur);
+            return;
+        else:
+            return;
+
     def createToolBars(self):
         self.fileToolBar = self.addToolBar("File")
         self.fileToolBar.addAction(self.newConAct)
         self.fileToolBar.addAction(self.newPlotAct)
+        self.fileToolBar.addAction(self.urAct)
 
         self.fileToolBar = self.addToolBar("Window")
         self.fileToolBar.addAction(self.tileAct)
@@ -515,7 +554,7 @@ class MForm(QtGui.QWidget):
         self.parent.update(knobs, self.uid)
 
 
-    def __init__(self, radio=None, port=None, uid=0, parent=None):
+    def __init__(self, radio=None, port=None, uid=0, updateRate=2000, parent=None):
 
         super(MForm, self).__init__()
 
@@ -556,7 +595,8 @@ class MForm(QtGui.QWidget):
 
         # set up timer   
         self.connect(self.timer, QtCore.SIGNAL('timeout()'), self.update)
-        self.timer.start(1000)
+        self.updateRate = updateRate;
+        self.timer.start(self.updateRate)
 
         # set up context menu .. 
         self.table.treeWidget.setContextMenuPolicy(QtCore.Qt.CustomContextMenu)

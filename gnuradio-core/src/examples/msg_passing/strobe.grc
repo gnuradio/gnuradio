@@ -159,7 +159,7 @@
     </param>
     <param>
       <key>msg</key>
-      <value>pmt.pmtcons( pmt.PMT_NIL, pmt.make_u8vector(512,0) )</value>
+      <value>pmt.cons( pmt.PMT_NIL, pmt.make_u8vector(512,0) )</value>
     </param>
     <param>
       <key>period</key>

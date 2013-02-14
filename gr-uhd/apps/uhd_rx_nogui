@@ -233,7 +233,7 @@ def main():
     parser.add_option("-p", "--ctcss", type="float",
                       default=None, metavar="FREQ",
 		      help="set CTCSS squelch to FREQ [default=%default]")
-    parser.add_option("-O", "--audio-output", type="string", default="",
+    parser.add_option("-O", "--audio-output", type="string", default="default",
                       help="pcm device name.  E.g., hw:0,0 or surround51 or /dev/dsp")
     parser.add_option("", "--show-async-msg", action="store_true", default=False,
                       help="Show asynchronous message notifications from UHD [default=%default]")

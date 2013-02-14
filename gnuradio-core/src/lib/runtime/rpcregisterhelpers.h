@@ -221,6 +221,28 @@ public:
 };
 
 template<typename T>
+class rpcbasic_inserter<T,std::vector< int > >
+  : public virtual rpcinserter_base<T,std::vector< int > >
+{
+public:
+  rpcbasic_inserter(T* source, std::vector<int > (T::*func)() const)
+    : rpcinserter_base<T,std::vector<int > >(source, func)
+  {;}
+
+  rpcbasic_inserter(T* source, std::vector<int > (T::*func)())
+    : rpcinserter_base<T,std::vector<int > >(source, func)
+  {;}
+
+  pmt::pmt_t retrieve()
+  {
+    std::vector< int >
+      vec((rpcinserter_base<T,std::vector<int > >::
+	   _source->*rpcinserter_base<T,std::vector< int > >::_func)()); 
+    return pmt::init_s32vector(vec.size(), &vec[0]);
+  }
+};
+
+template<typename T>
 class rpcbasic_inserter<T,std::vector< std::complex<float> > >
   : public virtual rpcinserter_base<T,std::vector< std::complex<float> > >
 {
@@ -260,6 +282,26 @@ public:
     std::vector< float > vec((rpcinserter_base<T,std::vector<float> >::
 	      _source->*rpcinserter_base<T,std::vector< float> >::_func)()); 
     return pmt::init_f32vector(vec.size(), &vec[0]);
+  }
+};
+
+template<typename T> 
+class rpcbasic_inserter<T,std::vector< uint8_t> > 
+  : public virtual rpcinserter_base<T,std::vector< uint8_t > > {
+public:
+  rpcbasic_inserter(T* source, std::vector<uint8_t> (T::*func)() const) 
+    : rpcinserter_base<T,std::vector<uint8_t > >(source, func) 
+  {;}
+
+  rpcbasic_inserter(T* source, std::vector<uint8_t> (T::*func)()) 
+    : rpcinserter_base<T,std::vector<uint8_t> >(source, func) 
+  {;}
+
+  pmt::pmt_t retrieve() 
+  {
+    std::vector< uint8_t > vec((rpcinserter_base<T,std::vector<uint8_t> >::
+        _source->*rpcinserter_base<T,std::vector< uint8_t> >::_func)());
+    return pmt::init_u8vector(vec.size(), &vec[0]); 
   }
 };
 
@@ -552,25 +594,21 @@ private:
 template<typename Tfrom>
 class rpcbasic_register_variable : public rpcbasic_base
 {
-private:
+protected:
   rpcbasic_register_get< rpcbasic_register_variable<Tfrom>, Tfrom > d_rpc_reg;
   Tfrom *d_variable;
   Tfrom get() { return *d_variable; }
-
 public:
   // empty constructor which should never be called but needs to exist for ues in varous STL data structures
+  void setptr(Tfrom* _variable){  rpcbasic_register_variable<Tfrom>::d_variable = _variable; }
   rpcbasic_register_variable() :
-    d_rpc_reg("FAIL", "FAIL", this, -1, &rpcbasic_register_variable::get,
+    d_rpc_reg("FAIL", "FAIL", this, &rpcbasic_register_variable::get,
 	      pmt::PMT_NIL, pmt::PMT_NIL, pmt::PMT_NIL, DISPNULL,
 	      "FAIL", "FAIL", RPC_PRIVLVL_MIN),
     d_variable(NULL)
   {
-    std::cerr << "ERROR: rpcbasic_register_variable called with no args. "
-	      << "If this happens, someone has tried to use rpcbasic_register_variable incorrectly.\n";
-    assert(0);
+    throw std::runtime_error("ERROR: rpcbasic_register_variable called with no args. If this happens, someone has tried to use rpcbasic_register_variable incorrectly.");
   };
-
-  void set(Tfrom* _variable) { d_variable = _variable; }
 
   rpcbasic_register_variable(const std::string& namebase,
 			     const char* functionbase,
@@ -584,8 +622,38 @@ public:
 	      min, max, def, units_, desc_, minpriv_, display_),
     d_variable(variable)
   {
-    //std::cerr << "REGISTERING VAR: " << serial << " " << desc_ << std::endl;
+    //std::cerr << "REGISTERING VAR: " << " " << desc_ << std::endl;
   }
 };
+
+template<typename Tfrom> class rpcbasic_register_variable_rw : public rpcbasic_register_variable<Tfrom> {
+  private:
+    rpcbasic_register_set< rpcbasic_register_variable_rw<Tfrom>, Tfrom > d_rpc_regset;
+  public:
+    // empty constructor which should never be called but needs to exist for ues in varous STL data structures
+    rpcbasic_register_variable_rw()  :
+            d_rpc_regset("FAIL","FAIL",this,&rpcbasic_register_variable<Tfrom>::get,pmt::PMT_NIL,pmt::PMT_NIL,pmt::PMT_NIL,DISPNULL,"FAIL","FAIL",RPC_PRIVLVL_MIN)
+        {
+        throw std::runtime_error("ERROR: rpcbasic_register_variable_rw called with no args. if this happens someone used rpcbasic_register_variable_rw incorrectly.\n");
+        };
+    void set(Tfrom _variable){  *(rpcbasic_register_variable<Tfrom>::d_variable) = _variable; }
+    rpcbasic_register_variable_rw(
+        const std::string& namebase,
+        const char* functionbase,
+        Tfrom *variable,
+        const pmt::pmt_t &min, const pmt::pmt_t &max, const pmt::pmt_t &def,
+        const char* units_ = "",
+        const char* desc_ = "",
+        priv_lvl_t minpriv = RPC_PRIVLVL_MIN,
+        DisplayType display_=DISPNULL) :
+            rpcbasic_register_variable<Tfrom>(namebase,functionbase,variable,min,max,def,units_,desc_),
+            d_rpc_regset(namebase,functionbase,this,&rpcbasic_register_variable_rw::set,min,max,def,units_,desc_,minpriv,display_)
+         {
+        // no action
+        }
+};
+
+
+
 
 #endif
