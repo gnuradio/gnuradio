@@ -36,7 +36,7 @@ namespace gr {
      * Output signature is one or two streams of floats.
      * Output samples will be in the range [-1,1].
      */
-    class windows_source : public audio_source
+    class windows_source : public source
     {
       int         d_sampling_freq;
       std::string d_device_name;

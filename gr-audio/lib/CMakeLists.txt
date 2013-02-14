@@ -138,8 +138,8 @@ if(WIN32)
     include_directories(${CMAKE_CURRENT_SOURCE_DIR}/windows)
     list(APPEND gr_audio_libs winmm.lib)
     list(APPEND gr_audio_sources
-        ${CMAKE_CURRENT_SOURCE_DIR}/windows/audio_windows_source.cc
-        ${CMAKE_CURRENT_SOURCE_DIR}/windows/audio_windows_sink.cc
+        ${CMAKE_CURRENT_SOURCE_DIR}/windows/windows_source.cc
+        ${CMAKE_CURRENT_SOURCE_DIR}/windows/windows_sink.cc
     )
 
 endif(WIN32)

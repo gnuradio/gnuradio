@@ -42,7 +42,7 @@ namespace gr {
      * input signature is one or two streams of floats.
      * Input samples must be in the range [-1,1].
      */
-    class windows_sink : public audio_sink
+    class windows_sink : public sink
     {
       int         d_sampling_freq;
       std::string d_device_name;
