@@ -124,7 +124,6 @@ namespace gr {
 
       // initialize update time to 10 times a second
       set_update_time(0.1);
-      d_last_time = 0;
     }
 
     void
@@ -154,6 +153,7 @@ namespace gr {
       gruel::high_res_timer_type tps = gruel::high_res_timer_tps();
       d_update_time = t * tps;
       d_main_gui->setUpdateTime(t);
+      d_last_time = 0;
     }
 
     void
@@ -316,8 +316,11 @@ namespace gr {
 				   d_tmpflt, resid);
 	  }
       
-	  d_qApplication->postEvent(d_main_gui,
-	    new TimeRasterUpdateEvent(d_residbufs, d_icols));
+	  if(gruel::high_res_timer_now() - d_last_time > d_update_time) {
+	    d_last_time = gruel::high_res_timer_now();
+	    d_qApplication->postEvent(d_main_gui,
+				      new TimeRasterUpdateEvent(d_residbufs, d_icols));
+	  }
 
 	  d_index = 0;
 	  j += resid;
