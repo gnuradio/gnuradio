@@ -104,7 +104,6 @@ namespace gr {
       d_main_gui->setNPoints(d_size);
       // initialize update time to 10 times a second
       set_update_time(0.1);
-      d_last_time = 0;
     }
 
     void
@@ -146,6 +145,7 @@ namespace gr {
       gruel::high_res_timer_type tps = gruel::high_res_timer_tps();
       d_update_time = t * tps;
       d_main_gui->setUpdateTime(t);
+      d_last_time = 0;
     }
 
     void
