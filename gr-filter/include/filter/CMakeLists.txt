@@ -77,6 +77,7 @@ add_custom_target(filter_generated_includes DEPENDS
 # Install header files
 ########################################################################
 install(FILES
+    ${generated_includes}
     api.h
     firdes.h
     fir_filter.h
@@ -89,7 +90,6 @@ install(FILES
     pm_remez.h
     polyphase_filterbank.h
     single_pole_iir.h
-    ${generated_includes}
     adaptive_fir_ccc.h
     adaptive_fir_ccf.h
     dc_blocker_cc.h

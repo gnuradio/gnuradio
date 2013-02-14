@@ -88,6 +88,22 @@ gr_feval::calleval(void)
   eval();
 }
 
+// ----------------------------------------------------------------
+
+gr_feval_p::~gr_feval_p(){}
+
+void
+gr_feval_p::eval(pmt::pmt_t x)
+{
+  // nop
+}
+
+void
+gr_feval_p::calleval(pmt::pmt_t x)
+{
+  eval(x);
+}
+
 /*
  * Trivial examples showing C++ (transparently) calling Python
  */
