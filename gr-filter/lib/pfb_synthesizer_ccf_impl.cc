@@ -47,8 +47,8 @@ namespace gr {
       : gr_sync_interpolator("pfb_synthesizer_ccf",
 			     gr_make_io_signature(1, numchans, sizeof(gr_complex)),
 			     gr_make_io_signature(1, 1, sizeof(gr_complex)),
-			     numchans),
-	d_updated (false), d_numchans(numchans), d_state(0)
+			     (twox ? numchans/2 : numchans)),
+	d_updated(false), d_numchans(numchans), d_state(0)
     {
       // set up 2x multiplier; if twox==True, set to 2, otherwise to 1
       d_twox = (twox ? 2 : 1);
@@ -56,12 +56,12 @@ namespace gr {
 	throw std::invalid_argument("pfb_synthesizer_ccf: number of channels must be even for 2x oversampling.\n");
       }
 
-      d_filters = std::vector<kernel::fir_filter_with_buffer_ccf*>(d_twox*d_numchans);
-      d_channel_map.resize(d_twox*d_numchans);
+      d_filters = std::vector<kernel::fir_filter_with_buffer_ccf*>(d_numchans);
+      d_channel_map.resize(d_numchans);
 
       // Create a FIR filter for each channel and zero out the taps
-      std::vector<float> vtaps(0, d_twox*d_numchans);
-      for(unsigned int i = 0; i < d_twox*d_numchans; i++) {
+      std::vector<float> vtaps(0, d_numchans);
+      for(unsigned int i = 0; i < d_numchans; i++) {
 	d_filters[i] = new kernel::fir_filter_with_buffer_ccf(vtaps);
 	d_channel_map[i] = i;
       }
@@ -70,15 +70,15 @@ namespace gr {
       set_taps(taps);
 
       // Create the IFFT to handle the input channel rotations
-      d_fft = new fft::fft_complex(d_twox*d_numchans, false);
-      memset(d_fft->get_inbuf(), 0, d_twox*d_numchans*sizeof(gr_complex));
+      d_fft = new fft::fft_complex(d_numchans, false);
+      memset(d_fft->get_inbuf(), 0, d_numchans*sizeof(gr_complex));
 
       set_output_multiple(d_numchans);
     }
 
     pfb_synthesizer_ccf_impl::~pfb_synthesizer_ccf_impl()
     {
-      for(unsigned int i = 0; i < d_twox*d_numchans; i++) {
+      for(unsigned int i = 0; i < d_numchans; i++) {
 	delete d_filters[i];
       }
     }
@@ -137,11 +137,11 @@ namespace gr {
       unsigned int i,j;
       int state = 0;
 
-      unsigned int ntaps = taps.size();
+      unsigned int ntaps = 2*taps.size();
       d_taps_per_filter = (unsigned int)ceil((double)ntaps/(double)d_numchans);
 
       // Create d_numchan vectors to store each channel's taps
-      d_taps.resize(d_twox*d_numchans);
+      d_taps.resize(d_numchans);
 
       // Make a vector of the taps plus fill it out with 0's to fill
       // each polyphase filter with exactly d_taps_per_filter
@@ -152,29 +152,30 @@ namespace gr {
       }
 
       // Partition the filter
-      for(i = 0; i < d_numchans; i++) {
+      unsigned int halfchans = d_numchans/2;
+      for(i = 0; i < halfchans; i++) {
 	// Each channel uses all d_taps_per_filter with 0's if not enough taps to fill out
 	d_taps[i] = std::vector<float>(d_taps_per_filter, 0);
-	d_taps[d_numchans+i] = std::vector<float>(d_taps_per_filter, 0);
+	d_taps[halfchans+i] = std::vector<float>(d_taps_per_filter, 0);
 	state = 0;
 	for(j = 0; j < d_taps_per_filter; j++) {
 	  // add taps to channels in reverse order
 	  // Zero out every other tap
 	  if(state == 0) {
-	    d_taps[i][j] = tmp_taps[i + j*d_numchans];
-	    d_taps[d_numchans + i][j] = 0;
+	    d_taps[i][j] = tmp_taps[i + j*halfchans];
+	    d_taps[halfchans + i][j] = 0;
 	    state = 1;
 	  }
 	  else {
 	    d_taps[i][j] = 0;
-	    d_taps[d_numchans + i][j] = tmp_taps[i + j*d_numchans];
+	    d_taps[halfchans + i][j] = tmp_taps[i + j*halfchans];
 	    state = 0;
 	  }
 	}
 
 	// Build a filter for each channel and add it's taps to it
 	d_filters[i]->set_taps(d_taps[i]);
-	d_filters[d_numchans + i]->set_taps(d_taps[d_numchans + i]);
+	d_filters[halfchans + i]->set_taps(d_taps[halfchans + i]);
       }
     }
 
@@ -182,7 +183,7 @@ namespace gr {
     pfb_synthesizer_ccf_impl::print_taps()
     {
       unsigned int i, j;
-      for(i = 0; i < d_twox*d_numchans; i++) {
+      for(i = 0; i < d_numchans; i++) {
 	printf("filter[%d]: [", i);
 	for(j = 0; j < d_taps_per_filter; j++) {
 	  printf(" %.4e", d_taps[i][j]);
@@ -204,13 +205,13 @@ namespace gr {
 
       if(map.size() > 0) {
 	unsigned int max = (unsigned int)*std::max_element(map.begin(), map.end());
-	if(max >= d_twox*d_numchans) {
+	if(max >= d_numchans) {
 	  throw std::invalid_argument("gr_pfb_synthesizer_ccf::set_channel_map: map range out of bounds.\n");
 	}
 	d_channel_map = map;
 
 	// Zero out fft buffer so that unused channels are always 0
-	memset(d_fft->get_inbuf(), 0,d_twox*d_numchans*sizeof(gr_complex));
+	memset(d_fft->get_inbuf(), 0, d_numchans*sizeof(gr_complex));
       }
     }
 
@@ -258,7 +259,8 @@ namespace gr {
 
       // Algorithm for oversampling by 2x
       else {
-	for(n = 0; n < noutput_items/d_numchans; n++) {
+        unsigned int halfchans = d_numchans/2;
+	for(n = 0; n < noutput_items/halfchans; n++) {
 	  for(i = 0; i < ninputs; i++) {
 	    in = (gr_complex*)input_items[i];
 	    d_fft->get_inbuf()[d_channel_map[i]] = in[n];
@@ -270,13 +272,13 @@ namespace gr {
 	  // Output is sum of two filters, but the input buffer to the filters must be circularly
 	  // shifted by numchans every time through, done by using d_state to determine which IFFT
 	  // buffer position to pull from.
-	  for(i = 0; i < d_numchans; i++) {
-	    out[i]  = d_filters[i]->filter(d_fft->get_outbuf()[d_state*d_numchans+i]);
-	    out[i] += d_filters[d_numchans+i]->filter(d_fft->get_outbuf()[(d_state^1)*d_numchans+i]);
+	  for(i = 0; i < halfchans; i++) {
+	    out[i]  = d_filters[i]->filter(d_fft->get_outbuf()[d_state*halfchans+i]);
+	    out[i] += d_filters[halfchans+i]->filter(d_fft->get_outbuf()[(d_state^1)*halfchans+i]);
 	  }
 	  d_state ^= 1;
 
-	  out += d_numchans;
+	  out += halfchans;
 	}
       }
 
