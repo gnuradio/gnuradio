@@ -44,6 +44,7 @@ endif(ENABLE_GR_CTRLPORT)
 ########################################################################
 list(APPEND channels_sources
   channel_model_impl.cc
+  fading_model_impl.cc
 )
 
 list(APPEND channels_libs

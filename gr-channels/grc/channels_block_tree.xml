@@ -31,5 +31,6 @@
   <cat>
     <name>Channel Models</name>
     <block>channels_channel_model</block>
+    <block>channels_fading_model</block>
   </cat>
 </cat>
