@@ -56,9 +56,6 @@ public:
 
   virtual void addData(const double*, const int);
 
-  virtual double* getDataBuffer()const;
-  virtual void setDataBuffer(const double*);
-
   void incrementResidual();
 
 protected:

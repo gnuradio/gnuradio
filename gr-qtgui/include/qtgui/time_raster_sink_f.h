@@ -83,10 +83,15 @@ namespace gr {
       virtual void set_num_rows(double rows) = 0;
       virtual void set_num_cols(double cols) = 0;
 
+      virtual double num_rows() = 0;
+      virtual double num_cols() = 0;
+
       virtual void set_multiplier(const std::vector<float> &mult) = 0;
       virtual void set_offset(const std::vector<float> &offset) = 0;
 
       virtual void set_intensity_range(float min, float max) = 0;
+
+      virtual void reset() = 0;
 
       QApplication *d_qApplication;
     };

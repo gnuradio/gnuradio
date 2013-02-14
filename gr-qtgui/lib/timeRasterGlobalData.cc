@@ -65,7 +65,8 @@ TimeRasterData::~TimeRasterData()
 void TimeRasterData::reset()
 {
   d_resid = 0;
-  memset(d_data, 0x0, d_totalitems*sizeof(double));
+  d_nitems = 0;
+  memset(d_data, 0x0, d_data_size*sizeof(double));
 }
 
 void TimeRasterData::copy(const TimeRasterData* rhs)
@@ -93,7 +94,6 @@ void TimeRasterData::copy(const TimeRasterData* rhs)
 #endif
 
   reset();
-  setDataBuffer(rhs->getDataBuffer());
 
 #if QWT_VERSION < 0x060000
   setRange(rhs->range());
@@ -235,18 +235,6 @@ TimeRasterData::addData(const double* data,
       memcpy(&d_data[d_nitems], data, cols*sizeof(double));
     }
   }
-}
-
-double*
-TimeRasterData::getDataBuffer() const
-{
-  return d_data;
-}
-
-void
-TimeRasterData::setDataBuffer(const double* newData)
-{
-  memcpy(d_data, newData, d_totalitems*sizeof(double));
 }
 
 #endif /* TIMERASTER_GLOBAL_DATA_CPP */

@@ -208,6 +208,18 @@ namespace gr {
       d_main_gui->setNumCols(cols);
     }
 
+    double
+    time_raster_sink_f_impl::num_rows()
+    {
+      return d_main_gui->numRows();
+    }
+
+    double
+    time_raster_sink_f_impl::num_cols()
+    {
+      return d_main_gui->numCols();
+    }
+
     void
     time_raster_sink_f_impl::set_multiplier(const std::vector<float> &mult)
     {
@@ -250,6 +262,12 @@ namespace gr {
       d_main_gui->setIntensityRange(min, max);
     }
 
+    void
+    time_raster_sink_f_impl::reset()
+    {
+      d_index = 0;
+    }
+
     int
     time_raster_sink_f_impl::work(int noutput_items,
 				  gr_vector_const_void_star &input_items,
@@ -258,7 +276,7 @@ namespace gr {
       int n=0, j=0, idx=0;
       const float *in = (const float*)input_items[0];
 
-      unsigned int cols = d_main_gui->numCols();
+      double cols = d_main_gui->numCols();
       if(d_cols != cols) {
 	d_cols = cols;
 	d_index = 0;
