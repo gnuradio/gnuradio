@@ -72,10 +72,7 @@ TimeRasterDisplayForm::TimeRasterDisplayForm(int nplots,
     _lines_menu[i]->addMenu(_marker_alpha_menu[i]);
   }
 
-  QAction *autoscale_act = new QAction("Auto Scale", this);
-  autoscale_act->setStatusTip(tr("Autoscale intensity range"));
-  connect(autoscale_act, SIGNAL(triggered()), this, SLOT(autoScale()));
-  _menu->addAction(autoscale_act);
+  _autoscale_act->setText(tr("Auto Scale"));
 
   PopupMenu *colsmenu = new PopupMenu("Num. Columns", this);
   _menu->addAction(colsmenu);
