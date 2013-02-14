@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='ASCII'?>
 <flow_graph>
-  <timestamp>Wed Feb  6 17:01:06 2013</timestamp>
+  <timestamp>Thu Feb 14 15:27:16 2013</timestamp>
   <block>
     <key>options</key>
     <param>
@@ -154,76 +154,6 @@
     <param>
       <key>_coordinate</key>
       <value>(623, 64)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>gr_file_source</key>
-    <param>
-      <key>id</key>
-      <value>gr_file_source_0</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>file</key>
-      <value>/dev/urandom</value>
-    </param>
-    <param>
-      <key>type</key>
-      <value>byte</value>
-    </param>
-    <param>
-      <key>repeat</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>vlen</key>
-      <value>1</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(228, 56)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>gr_packed_to_unpacked_xx</key>
-    <param>
-      <key>id</key>
-      <value>gr_packed_to_unpacked_xx_0</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>type</key>
-      <value>byte</value>
-    </param>
-    <param>
-      <key>bits_per_chunk</key>
-      <value>8</value>
-    </param>
-    <param>
-      <key>endianness</key>
-      <value>gr.GR_MSB_FIRST</value>
-    </param>
-    <param>
-      <key>num_ports</key>
-      <value>1</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(408, 56)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -709,6 +639,111 @@
       <value>0</value>
     </param>
   </block>
+  <block>
+    <key>gr_file_source</key>
+    <param>
+      <key>id</key>
+      <value>gr_file_source_0</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>False</value>
+    </param>
+    <param>
+      <key>file</key>
+      <value>/dev/urandom</value>
+    </param>
+    <param>
+      <key>type</key>
+      <value>byte</value>
+    </param>
+    <param>
+      <key>repeat</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>vlen</key>
+      <value>1</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(228, 56)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>gr_vector_source_x</key>
+    <param>
+      <key>id</key>
+      <value>gr_vector_source_x_0</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>type</key>
+      <value>byte</value>
+    </param>
+    <param>
+      <key>vector</key>
+      <value>0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50</value>
+    </param>
+    <param>
+      <key>repeat</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>vlen</key>
+      <value>1</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(235, 126)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>gr_packed_to_unpacked_xx</key>
+    <param>
+      <key>id</key>
+      <value>gr_packed_to_unpacked_xx_0</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>type</key>
+      <value>byte</value>
+    </param>
+    <param>
+      <key>bits_per_chunk</key>
+      <value>8</value>
+    </param>
+    <param>
+      <key>endianness</key>
+      <value>gr.GR_MSB_FIRST</value>
+    </param>
+    <param>
+      <key>num_ports</key>
+      <value>1</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(408, 56)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
   <connection>
     <source_block_id>gr_packed_to_unpacked_xx_0</source_block_id>
     <sink_block_id>gr_throttle_0</sink_block_id>
@@ -766,6 +801,12 @@
   <connection>
     <source_block_id>digital_costas_loop_cc_0</source_block_id>
     <sink_block_id>probe2_c_0</sink_block_id>
+    <source_key>0</source_key>
+    <sink_key>0</sink_key>
+  </connection>
+  <connection>
+    <source_block_id>gr_vector_source_x_0</source_block_id>
+    <sink_block_id>gr_packed_to_unpacked_xx_0</sink_block_id>
     <source_key>0</source_key>
     <sink_key>0</sink_key>
   </connection>

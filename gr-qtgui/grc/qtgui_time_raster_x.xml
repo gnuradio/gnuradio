@@ -47,7 +47,7 @@ $(gui_hint()($win))</make>
 	<param>
 		<name>Sample Rate</name>
 		<key>samp_rate</key>
-		<value>1</value>
+		<value>samp_rate</value>
 		<type>real</type>
 	</param>
 	<param>
