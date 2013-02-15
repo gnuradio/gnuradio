@@ -51,7 +51,7 @@ namespace gr {
 
         int d_N; // number of sinusoids
         float d_fDTs;  // normalized maximum doppler frequency
-        float d_theta; // random walk variable (RWP)
+        double d_theta; // random walk variable (RWP)
         float d_theta_los;
         float d_step;  // maximum random walk step size
         uint64_t d_m;  // sample counter
@@ -80,10 +80,11 @@ namespace gr {
 
       virtual float fDTs(){ return d_fDTs; }
       virtual float K(){ return d_K; }
+      virtual float step(){ return d_step; }
 
       virtual void set_fDTs(float fDTs){ d_fDTs = fDTs;  d_step = powf(0.00125*fDTs, 1.1); }
       virtual void set_K(float K){ d_K = K; scale_los = sqrtf(d_K)/sqrtf(d_K+1); scale_nlos = (1/sqrtf(d_K+1)); }
-
+      virtual void set_step(float step){ d_step = step; }
 
     };
 

@@ -61,9 +61,11 @@ namespace gr {
 
       virtual float fDTs() = 0;
       virtual float K() = 0;
+      virtual float step() = 0;
 
       virtual void set_fDTs(float fDTs) = 0;
       virtual void set_K(float K) = 0;
+      virtual void set_step(float step) = 0;
 
     };
 
