@@ -121,14 +121,28 @@ namespace gr {
             "Ratio", "Rician factor (ratio of the specular power to the scattered power)",
             RPC_PRIVLVL_MIN, DISPTIMESERIESF)));
 
-        // do exports
+    add_rpc_variable(
+        rpcbasic_sptr(new rpcbasic_register_get<fading_model, float >(
+            alias(), "step",
+            &fading_model::step,
+            pmt::mp(0), pmt::mp(8), pmt::mp(4),
+            "radians", "Maximum step size for random walk angle per sample",
+            RPC_PRIVLVL_MIN, DISPTIMESERIESF)));
+    add_rpc_variable(
+        rpcbasic_sptr(new rpcbasic_register_set<fading_model, float >(
+            alias(), "step",
+            &fading_model::set_step,
+            pmt::mp(0), pmt::mp(1), pmt::mp(0.00001),
+            "radians", "Maximum step size for random walk angle per sample",
+            RPC_PRIVLVL_MIN, DISPTIMESERIESF)));
+
 #endif /* GR_CTRLPORT */
     }
 
     void 
     fading_model_impl::update_theta()
     {
-        d_theta = d_theta + (d_step*rv_2());
+        d_theta += (d_step*rv_2());
         if(d_theta > M_PI){
             d_theta = M_PI; d_step = -d_step;
         } else if(d_theta < -M_PI){
@@ -167,13 +181,13 @@ namespace gr {
             if(d_LOS){
 #if FASTSINCOS == 1
                 float los_i = gr_fxpt::cos(gr_fxpt::float_to_fixed(2*M_PI*d_fDTs*d_m*gr_fxpt::cos(gr_fxpt::float_to_fixed(d_theta_los)) + d_psi[0]));
-                float los_q = gr_fxpt::sin(gr_fxpt::float_to_fixed(2*M_PI*d_fDTs*d_m*gr_fxpt::cos(gr_fxpt::float_to_fixed(d_theta_los)) + d_phi[0]));
+                float los_q = gr_fxpt::sin(gr_fxpt::float_to_fixed(2*M_PI*d_fDTs*d_m*gr_fxpt::cos(gr_fxpt::float_to_fixed(d_theta_los)) + d_psi[0]));
 #elif FASTSINCOS == 2
                 float los_i = d_table.cos(2*M_PI*d_fDTs*d_m*d_table.cos(d_theta_los) + d_psi[0]);
-                float los_q = d_table.sin(2*M_PI*d_fDTs*d_m*d_table.cos(d_theta_los) + d_phi[0]);
+                float los_q = d_table.sin(2*M_PI*d_fDTs*d_m*d_table.cos(d_theta_los) + d_psi[0]);
 #else
                 float los_i = cos(2*M_PI*d_fDTs*d_m*cos(d_theta_los) + d_psi[0]);
-                float los_q = sin(2*M_PI*d_fDTs*d_m*cos(d_theta_los) + d_phi[0]);
+                float los_q = sin(2*M_PI*d_fDTs*d_m*cos(d_theta_los) + d_psi[0]);
 #endif
 
                 H = H*scale_nlos + gr_complex(los_i,los_q)*scale_los;
