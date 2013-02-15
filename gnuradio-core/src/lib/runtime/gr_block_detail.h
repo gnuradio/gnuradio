@@ -173,6 +173,7 @@ class GR_CORE_API gr_block_detail {
 
   void start_perf_counters();
   void stop_perf_counters(int noutput_items, int nproduced);
+  void reset_perf_counters();
 
   // Calls to get performance counter items
   float pc_noutput_items();
@@ -183,6 +184,14 @@ class GR_CORE_API gr_block_detail {
   std::vector<float> pc_output_buffers_full();
   float pc_work_time();
 
+  float pc_noutput_items_var();
+  float pc_nproduced_var();
+  float pc_input_buffers_full_var(size_t which);
+  std::vector<float> pc_input_buffers_full_var();
+  float pc_output_buffers_full_var(size_t which);
+  std::vector<float> pc_output_buffers_full_var();
+  float pc_work_time_var();
+ 
   gr_tpb_detail			     d_tpb;	// used by thread-per-block scheduler
   int				     d_produce_or;
 
@@ -197,11 +206,17 @@ class GR_CORE_API gr_block_detail {
 
   // Performance counters
   float d_avg_noutput_items;
+  float d_var_noutput_items;
   float d_avg_nproduced;
+  float d_var_nproduced;
   std::vector<float> d_avg_input_buffers_full;
+  std::vector<float> d_var_input_buffers_full;
   std::vector<float> d_avg_output_buffers_full;
+  std::vector<float> d_var_output_buffers_full;
   gruel::high_res_timer_type d_start_of_work, d_end_of_work;
   float d_avg_work_time;
+  float d_var_work_time;
+  float d_pc_counter;
   
   gr_block_detail (unsigned int ninputs, unsigned int noutputs);
 
