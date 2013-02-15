@@ -282,10 +282,32 @@ gr_block::pc_noutput_items()
 }
 
 float
+gr_block::pc_noutput_items_var()
+{
+  if(d_detail) {
+    return d_detail->pc_noutput_items_var();
+  }
+  else {
+    return 0;
+  }
+}
+
+float
 gr_block::pc_nproduced()
 {
   if(d_detail) {
     return d_detail->pc_nproduced();
+  }
+  else {
+    return 0;
+  }
+}
+
+float
+gr_block::pc_nproduced_var()
+{
+  if(d_detail) {
+    return d_detail->pc_nproduced_var();
   }
   else {
     return 0;
@@ -303,11 +325,33 @@ gr_block::pc_input_buffers_full(int which)
   }
 }
 
+float
+gr_block::pc_input_buffers_full_var(int which)
+{
+  if(d_detail) {
+    return d_detail->pc_input_buffers_full_var(static_cast<size_t>(which));
+  }
+  else {
+    return 0;
+  }
+}
+
 std::vector<float>
 gr_block::pc_input_buffers_full()
 {
   if(d_detail) {
     return d_detail->pc_input_buffers_full();
+  }
+  else {
+    return std::vector<float>(1,0);
+  }
+}
+
+std::vector<float>
+gr_block::pc_input_buffers_full_var()
+{
+  if(d_detail) {
+    return d_detail->pc_input_buffers_full_var();
   }
   else {
     return std::vector<float>(1,0);
@@ -325,11 +369,33 @@ gr_block::pc_output_buffers_full(int which)
   }
 }
 
+float
+gr_block::pc_output_buffers_full_var(int which)
+{
+  if(d_detail) {
+    return d_detail->pc_output_buffers_full_var(static_cast<size_t>(which));
+  }
+  else {
+    return 0;
+  }
+}
+
 std::vector<float>
 gr_block::pc_output_buffers_full()
 {
   if(d_detail) {
     return d_detail->pc_output_buffers_full();
+  }
+  else {
+    return std::vector<float>(1,0);
+  }
+}
+
+std::vector<float>
+gr_block::pc_output_buffers_full_var()
+{
+  if(d_detail) {
+    return d_detail->pc_output_buffers_full_var();
   }
   else {
     return std::vector<float>(1,0);
@@ -344,6 +410,25 @@ gr_block::pc_work_time()
   }
   else {
     return 0;
+  }
+}
+
+float
+gr_block::pc_work_time_var()
+{
+  if(d_detail) {
+    return d_detail->pc_work_time_var();
+  }
+  else {
+    return 0;
+  }
+}
+
+void
+gr_block::reset_perf_counters()
+{
+  if(d_detail) {
+    d_detail->reset_perf_counters();
   }
 }
 
