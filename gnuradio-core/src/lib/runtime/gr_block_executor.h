@@ -53,6 +53,10 @@ protected:
   std::vector<gr_tag_t>       d_returned_tags;
   int                           d_max_noutput_items;
 
+#ifdef GR_PERFORMANCE_COUNTERS
+  bool d_use_pc;
+#endif /* GR_PERFORMANCE_COUNTERS */
+
  public:
   gr_block_executor(gr_block_sptr block, int max_noutput_items=100000);
   ~gr_block_executor ();

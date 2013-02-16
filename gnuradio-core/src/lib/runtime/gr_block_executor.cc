@@ -166,6 +166,11 @@ gr_block_executor::gr_block_executor (gr_block_sptr block, int max_noutput_items
 	   << d_block << std::endl;
   }
 
+#ifdef GR_PERFORMANCE_COUNTERS
+  gr_prefs *prefs = gr_prefs::singleton();
+  d_use_pc = prefs->get_bool("PerfCounters", "on", false);
+#endif /* GR_PERFORMANCE_COUNTERS */
+
   d_block->start();			// enable any drivers, etc.
 }
 
@@ -180,8 +185,6 @@ gr_block_executor::~gr_block_executor ()
 gr_block_executor::state
 gr_block_executor::run_one_iteration()
 {
-  gr_prefs *prefs = gr_prefs::singleton();
-
   int			noutput_items;
   int			max_items_avail;
   int                   max_noutput_items = d_max_noutput_items;
@@ -423,7 +426,7 @@ gr_block_executor::run_one_iteration()
       d_start_nitems_read[i] = d->nitems_read(i);
 
 #ifdef GR_PERFORMANCE_COUNTERS
-    if(prefs->get_bool("PerfCounters", "on", false))
+    if(d_use_pc)
       d->start_perf_counters();
 #endif /* GR_PERFORMANCE_COUNTERS */
     
@@ -432,7 +435,7 @@ gr_block_executor::run_one_iteration()
 			     d_input_items, d_output_items);
 
 #ifdef GR_PERFORMANCE_COUNTERS
-    if(prefs->get_bool("PerfCounters", "on", false))
+    if(d_use_pc)
       d->stop_perf_counters(noutput_items, n);
 #endif /* GR_PERFORMANCE_COUNTERS */
 
