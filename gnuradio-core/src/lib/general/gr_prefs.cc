@@ -166,9 +166,9 @@ gr_prefs::get_bool(const std::string section, const std::string option, bool def
       return default_val;
     }
     std::transform(str.begin(), str.end(), str.begin(), ::tolower);
-    if(str == "true")
+    if((str == "true") || (str == "on") || (str == "1"))
       return true;
-    else if(str == "false")
+    else if((str == "false") || (str == "off") || (str == "0"))
       return false;
     else
       return default_val;
