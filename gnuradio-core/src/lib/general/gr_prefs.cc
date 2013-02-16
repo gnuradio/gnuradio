@@ -129,15 +129,27 @@ gr_prefs::has_option(const std::string section, const std::string option)
 const std::string
 gr_prefs::get_string(const std::string section, const std::string option, const std::string default_val)
 {
+  std::stringstream envname;
+  std::string secname=section, optname=option;
+
+  std::transform(section.begin(), section.end(), secname.begin(), ::toupper);
+  std::transform(option.begin(), option.end(), optname.begin(), ::toupper);
+  envname << "GR_CONF_" << secname << "_" << optname;
+
+  char *v = getenv(envname.str().c_str());
+  if(v) {
+    return std::string(v);
+  }
+
   if(has_option(section, option)) {
     std::string optname = "#" + option + "=";
     size_t sec = d_configs.find("[" + section + "]#");
     size_t opt = d_configs.find(optname, sec);
-    
+
     size_t start = opt + optname.size();
     size_t end = d_configs.find("#", start);
     size_t len = end - start;
-    
+
     return d_configs.substr(start, len);
   }
   else {
