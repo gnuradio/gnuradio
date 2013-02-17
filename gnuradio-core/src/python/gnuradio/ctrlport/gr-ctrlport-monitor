@@ -188,6 +188,10 @@ class MAINWindow(QtGui.QMainWindow):
             self.newPlotF(tag, uid, title, pmin, pmax)
         elif(knobprop.display == GNURadio.DisplayType.DISPTIMESERIESC):
             self.newPlotC(tag, uid, title, pmin, pmax)
+        elif(knobprop.display == GNURadio.DisplayType.DISPLOGTIMESERIESF):
+            self.newPlotF(tag, uid, title, pmin, pmax, True)
+        elif(knobprop.display == GNURadio.DisplayType.DISPLOGTIMESERIESC):
+            self.newPlotC(tag, uid, title, pmin, pmax, True)
 
     def createPlot(self, plot, uid, title):
         plot.start()
@@ -212,12 +216,14 @@ class MAINWindow(QtGui.QMainWindow):
         plot = GrDataPlotterConst(tag, 32e6, pmin, pmax)
         self.createPlot(plot, uid, title)
     
-    def newPlotF(self, tag, uid, title="", pmin=None, pmax=None):
+    def newPlotF(self, tag, uid, title="", pmin=None, pmax=None, logy=False):
         plot = GrDataPlotterF(tag, 32e6, pmin, pmax)
+        plot.semilogy(logy)
         self.createPlot(plot, uid, title)
 
-    def newPlotC(self, tag, uid, title="", pmin=None, pmax=None):
+    def newPlotC(self, tag, uid, title="", pmin=None, pmax=None, logy=False):
         plot = GrDataPlotterC(tag, 32e6, pmin, pmax)
+        plot.semilogy(logy)
         self.createPlot(plot, uid, title)
 
     def newPlotPsdF(self, tag, uid, title="", pmin=None, pmax=None):

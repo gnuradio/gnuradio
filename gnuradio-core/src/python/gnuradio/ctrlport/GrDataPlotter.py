@@ -64,6 +64,9 @@ class GrDataPlotterC(gr.top_block):
     def name(self):
         return self._name
 
+    def semilogy(self, en=True):
+        self.snk.enable_semilogy(en)
+
     def update(self, data):
         # Ask GUI if there has been a change in nsamps
         npts = self.snk.nsamps()
@@ -133,6 +136,9 @@ class GrDataPlotterF(gr.top_block):
 
     def name(self):
         return self._name
+
+    def semilogy(self, en=True):
+        self.snk.enable_semilogy(en)
 
     def update(self, data):
         # Ask GUI if there has been a change in nsamps
