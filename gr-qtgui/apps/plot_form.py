@@ -108,7 +108,7 @@ class plot_form(QtGui.QWidget):
         self.y_max_edit.setMinimumWidth(100)
         self.y_max_edit.setMaximumWidth(100)
         self.left_col_form.addRow("Y Max:", self.y_max_edit)
-        self.connect(self.y_max_edit, QtCore.SIGNAL("returnPressed()"),
+        self.connect(self.y_max_edit, QtCore.SIGNAL("editingFinished()"),
                      self.update_yaxis_pos)
 
         self.y_min_edit = QtGui.QLineEdit(self)
@@ -116,7 +116,7 @@ class plot_form(QtGui.QWidget):
         self.y_min_edit.setMinimumWidth(100)
         self.y_min_edit.setMaximumWidth(100)
         self.left_col_form.addRow("Y Min:", self.y_min_edit)
-        self.connect(self.y_min_edit, QtCore.SIGNAL("returnPressed()"),
+        self.connect(self.y_min_edit, QtCore.SIGNAL("editingFinished()"),
                      self.update_yaxis_pos)
 
         self.grid_check = QtGui.QCheckBox("Grid", self)
@@ -128,10 +128,11 @@ class plot_form(QtGui.QWidget):
 
         # Create a slider to move the plot's y-axis offset
         self.ybar = QtGui.QSlider(QtCore.Qt.Vertical, self)
-        self.ybar.setMinimum(self.top_block._y_min)
-        self.ybar.setMaximum(self.top_block._y_max)
-        self.ybar.setPageStep(self.top_block._y_range)
-        self.ybar.setValue(self.top_block._y_value)
+        self.ybar.setMinimum(1000*self.top_block._y_min)
+        self.ybar.setMaximum(1000*self.top_block._y_max)
+        self.ybar.setSingleStep(1000*(self.top_block._y_range/10))
+        self.ybar.setPageStep(1000*(self.top_block._y_range/2))
+        self.ybar.setValue(1000*self.top_block._y_value)
         self.connect(self.ybar, QtCore.SIGNAL("valueChanged(int)"),
                      self.update_yaxis_slider)
         self.layout.addWidget(self.ybar, 1,1,1,1)
@@ -334,6 +335,7 @@ class plot_form(QtGui.QWidget):
             self.top_block.set_y_axis(self._y_min, self._y_max)
 
     def update_yaxis_slider(self, value):
+        value = value/1000.0
         self.top_block._y_value = value
         self._y_min = value - self.top_block._y_range
         self._y_max = value

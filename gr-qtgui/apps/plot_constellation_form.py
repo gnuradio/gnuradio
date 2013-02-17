@@ -44,12 +44,22 @@ class plot_constellation_form(plot_form):
         self.right_col_layout.addLayout(self.right_col_form)
         self.layout.addLayout(self.right_col_layout, 1,4,1,1)
 
+        # Constellation resizing scales x and y together.
+        # Set the bar to go from 0.001 to max
+        self.ybar.setMinimum(1)
+        self.ybar.setMaximum(1000*self.top_block._y_max)
+        self.ybar.setSingleStep(1000*(max(self.top_block._y_range/10, 0.010)))
+        self.ybar.setPageStep(1000*(max(self.top_block._y_range/2, 0.010)))
+
         self.auto_scale = QtGui.QCheckBox("Auto Scale", self)
         if(self.top_block._auto_scale):
             self.auto_scale.setChecked(self.top_block._auto_scale)
+        self.set_auto_scale(self.top_block._auto_scale)
         self.connect(self.auto_scale, QtCore.SIGNAL("stateChanged(int)"),
                      self.set_auto_scale)
         self.right_col_layout.addWidget(self.auto_scale)
+
+        self.ybar.setValue(1000*self.top_block._y_value)
 
         self.add_line_control(self.right_col_layout)
         
