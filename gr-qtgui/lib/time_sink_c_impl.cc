@@ -294,9 +294,21 @@ namespace gr {
     }
 
     void
-    time_sink_c_impl::toggle_stem_plot()
+    time_sink_c_impl::enable_stem_plot(bool en)
     {
-      d_main_gui->setStem();
+      d_main_gui->setStem(en);
+    }
+
+    void
+    time_sink_c_impl::enable_semilogx(bool en)
+    {
+      d_main_gui->setSemilogx(en);
+    }
+
+    void
+    time_sink_c_impl::enable_semilogy(bool en)
+    {
+      d_main_gui->setSemilogy(en);
     }
 
     void

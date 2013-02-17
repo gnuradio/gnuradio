@@ -276,9 +276,9 @@ namespace gr {
     }
 
     void
-    time_sink_f_impl::toggle_stem_plot()
+    time_sink_f_impl::enable_stem_plot(bool en)
     {
-      d_main_gui->setStem();
+      d_main_gui->setStem(en);
     }
 
     void
@@ -297,6 +297,18 @@ namespace gr {
     time_sink_f_impl::enable_autoscale(bool en)
     {
       d_main_gui->autoScale(en);
+    }
+
+    void
+    time_sink_f_impl::enable_semilogx(bool en)
+    {
+      d_main_gui->setSemilogx(en);
+    }
+
+    void
+    time_sink_f_impl::enable_semilogy(bool en)
+    {
+      d_main_gui->setSemilogy(en);
     }
 
     void

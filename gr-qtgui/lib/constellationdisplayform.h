@@ -49,7 +49,6 @@ public slots:
   void setSampleRate(const QString &samprate);
   void setYaxis(double min, double max);
   void setXaxis(double min, double max);
-  void autoScale();
   void autoScale(bool en);
 
 private slots:

@@ -41,13 +41,15 @@ public:
 
   void replot();
 
-  void stemPlot(bool trig);
+  void stemPlot(bool en);
 
 public slots:
   void setSampleRate(double sr, double units,
 		     const std::string &strunits);
 
   void setAutoScale(bool state);
+  void setSemilogx(bool en);
+  void setSemilogy(bool en);
 
 private:
   void _resetXAxisPoints();
@@ -57,6 +59,9 @@ private:
   double* _xAxisPoints;
 
   double _sampleRate;
+
+  bool d_semilogx;
+  bool d_semilogy;
 };
 
 #endif /* TIME_DOMAIN_DISPLAY_PLOT_H */

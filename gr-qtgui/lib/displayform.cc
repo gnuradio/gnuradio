@@ -104,9 +104,11 @@ DisplayForm::DisplayForm(int nplots, QWidget* parent)
 	  this, SLOT(setSampleRate(QString)));
   _menu->addAction(_samp_rate_act);
 
-  _autoscale_act = new QAction("Auto Scale On", this);
+  _autoscale_act = new QAction("Auto Scale", this);
   _autoscale_act->setStatusTip(tr("Autoscale Plot"));
-  connect(_autoscale_act, SIGNAL(triggered()), this, SLOT(autoScale()));
+  _autoscale_act->setCheckable(true);
+  connect(_autoscale_act, SIGNAL(triggered(bool)),
+	  this, SLOT(autoScale(bool)));
   _autoscale_state = false;
   _menu->addAction(_autoscale_act);
 

@@ -56,7 +56,6 @@ public slots:
   void setFrequencyRange(const double centerfreq,
 			 const double bandwidth);
   void setYaxis(double min, double max);
-  void autoScale();
   void autoScale(bool en);
 
 private slots:

@@ -72,7 +72,9 @@ TimeRasterDisplayForm::TimeRasterDisplayForm(int nplots,
     _lines_menu[i]->addMenu(_marker_alpha_menu[i]);
   }
 
+  // One scales once when clicked, so no on/off toggling
   _autoscale_act->setText(tr("Auto Scale"));
+  _autoscale_act->setCheckable(false);
 
   PopupMenu *colsmenu = new PopupMenu("Num. Columns", this);
   _menu->addAction(colsmenu);
@@ -199,7 +201,7 @@ TimeRasterDisplayForm::setIntensityRange(const double minIntensity,
 }
 
 void
-TimeRasterDisplayForm::autoScale()
+TimeRasterDisplayForm::autoScale(bool en)
 {
   double min_int = _min_val;
   double max_int = _max_val;

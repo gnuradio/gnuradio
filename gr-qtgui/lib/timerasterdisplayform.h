@@ -70,7 +70,7 @@ public slots:
 
   void setAlpha(int which, int alpha);
 
-  void autoScale();
+  void autoScale(bool en=false);
 
 private slots:
   void newData(const QEvent *updateEvent);

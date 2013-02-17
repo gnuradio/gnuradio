@@ -83,7 +83,7 @@ public slots:
 
 private slots:
   virtual void newData(const QEvent*) = 0;
-  virtual void autoScale() = 0;
+  virtual void autoScale(bool) = 0;
   void updateGuiTimer();
 
   void onPlotPointSelected(const QPointF p);

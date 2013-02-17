@@ -72,7 +72,9 @@ WaterfallDisplayForm::WaterfallDisplayForm(int nplots, QWidget* parent)
     _lines_menu[i]->addMenu(_marker_alpha_menu[i]);
   }
 
+  // One scales once when clicked, so no on/off toggling
   _autoscale_act->setText(tr("Auto Scale"));
+  _autoscale_act->setCheckable(false);
 
   FFTSizeMenu *sizemenu = new FFTSizeMenu(this);
   FFTAverageMenu *avgmenu = new FFTAverageMenu(this);
@@ -250,7 +252,7 @@ WaterfallDisplayForm::setIntensityRange(const double minIntensity,
 }
 
 void
-WaterfallDisplayForm::autoScale()
+WaterfallDisplayForm::autoScale(bool en)
 {
   double min_int = _min_val - 5;
   double max_int = _max_val + 10;

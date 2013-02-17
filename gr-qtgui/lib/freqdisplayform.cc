@@ -161,30 +161,12 @@ FreqDisplayForm::setYaxis(double min, double max)
 }
 
 void
-FreqDisplayForm::autoScale()
-{
-  if(_autoscale_state == true) {
-    _autoscale_act->setText(tr("Auto Scale On"));
-    _autoscale_state = false;
-  }
-  else {
-    _autoscale_act->setText(tr("Auto Scale Off"));
-    _autoscale_state = true;
-  }
-
-  getPlot()->setAutoScale(_autoscale_state);
-  getPlot()->replot();
-}
-
-void
 FreqDisplayForm::autoScale(bool en)
 {
   if(en) {
-    _autoscale_act->setText(tr("Auto Scale Off"));
     _autoscale_state = true;
   }
   else {
-    _autoscale_act->setText(tr("Auto Scale On"));
     _autoscale_state = false;
   }
 

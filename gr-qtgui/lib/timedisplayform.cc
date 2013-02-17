@@ -29,6 +29,8 @@ TimeDisplayForm::TimeDisplayForm(int nplots, QWidget* parent)
   : DisplayForm(nplots, parent)
 {
   d_stem = false;
+  d_semilogx = false;
+  d_semilogy = false;
 
   _intValidator = new QIntValidator(this);
   _intValidator->setBottom(0);
@@ -44,9 +46,22 @@ TimeDisplayForm::TimeDisplayForm(int nplots, QWidget* parent)
 	  this, SLOT(setNPoints(const int)));
 
   QAction *stemmenu = new QAction("Stem Plot", this);
+  stemmenu->setCheckable(true);
   _menu->addAction(stemmenu);
   connect(stemmenu, SIGNAL(triggered(bool)),
 	  this, SLOT(setStem(bool)));
+
+  d_semilogxmenu = new QAction("Semilog X", this);
+  d_semilogxmenu->setCheckable(true);
+  _menu->addAction(d_semilogxmenu);
+  connect(d_semilogxmenu, SIGNAL(triggered(bool)),
+	  this, SLOT(setSemilogx(bool)));
+
+  d_semilogymenu = new QAction("Semilog Y", this);
+  d_semilogymenu->setCheckable(true);
+  _menu->addAction(d_semilogymenu);
+  connect(d_semilogymenu, SIGNAL(triggered(bool)),
+	  this, SLOT(setSemilogy(bool)));
 
   Reset();
 
@@ -130,40 +145,33 @@ TimeDisplayForm::setNPoints(const int npoints)
 }
 
 void
-TimeDisplayForm::setStem(bool trig)
+TimeDisplayForm::setStem(bool en)
 {
-  d_stem ^= 1;
+  d_stem = en;
   getPlot()->stemPlot(d_stem);
-}
-
-void
-TimeDisplayForm::autoScale()
-{
-  if(_autoscale_state == true) {
-    _autoscale_act->setText(tr("Auto Scale On"));
-    _autoscale_state = false;
-  }
-  else {
-    _autoscale_act->setText(tr("Auto Scale Off"));
-    _autoscale_state = true;
-  }
-
-  getPlot()->setAutoScale(_autoscale_state);
   getPlot()->replot();
 }
 
 void
 TimeDisplayForm::autoScale(bool en)
 {
-  if(en) {
-    _autoscale_act->setText(tr("Auto Scale Off"));
-    _autoscale_state = true;
-  }
-  else {
-    _autoscale_act->setText(tr("Auto Scale On"));
-    _autoscale_state = false;
-  }
-
+  _autoscale_state = en;
   getPlot()->setAutoScale(_autoscale_state);
+  getPlot()->replot();
+}
+
+void
+TimeDisplayForm::setSemilogx(bool en)
+{
+  d_semilogx = en;
+  getPlot()->setSemilogx(d_semilogx);
+  getPlot()->replot();
+}
+
+void
+TimeDisplayForm::setSemilogy(bool en)
+{
+  d_semilogy = en;
+  getPlot()->setSemilogy(d_semilogy);
   getPlot()->replot();
 }

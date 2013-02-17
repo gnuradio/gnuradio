@@ -49,9 +49,10 @@ public slots:
   void setSampleRate(const QString &samprate);
   void setYaxis(double min, double max);
   void setNPoints(const int);
-  void setStem(bool trig=false);
-  void autoScale();
+  void setStem(bool en);
   void autoScale(bool en);
+  void setSemilogx(bool en);
+  void setSemilogy(bool en);
 
 private slots:
   void newData(const QEvent*);
@@ -65,6 +66,11 @@ private:
   int d_npoints;
 
   bool d_stem;
+  bool d_semilogx;
+  bool d_semilogy;
+  
+  QAction *d_semilogxmenu;
+  QAction *d_semilogymenu;
 };
 
 #endif /* TIME_DISPLAY_FORM_H */
