@@ -88,10 +88,15 @@ namespace gr {
       void set_num_rows(double rows);
       void set_num_cols(double cols);
 
+      double num_rows();
+      double num_cols();
+
       void set_multiplier(const std::vector<float> &mult);
       void set_offset(const std::vector<float> &offset);
 
       void set_intensity_range(float min, float max);
+
+      void reset();
 
       int work(int noutput_items,
 	       gr_vector_const_void_star &input_items,

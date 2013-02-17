@@ -46,10 +46,12 @@ public slots:
   void customEvent(QEvent * e);
 
   void setSampleRate(const double samprate);
+  void setSampleRate(const QString &samprate);
   void setYaxis(double min, double max);
   void setNPoints(const int);
   void setStem(bool trig=false);
   void autoScale();
+  void autoScale(bool en);
 
 private slots:
   void newData(const QEvent*);

@@ -93,6 +93,7 @@ namespace gr {
 
       void enable_menu(bool en);
       void enable_grid(bool en);
+      void enable_autoscale(bool en);
       void toggle_stem_plot();
       void reset();
 

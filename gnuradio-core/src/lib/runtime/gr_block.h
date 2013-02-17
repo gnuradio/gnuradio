@@ -383,14 +383,29 @@ class GR_CORE_API gr_block : public gr_basic_block {
   float pc_noutput_items();
 
   /*!
+   * \brief Gets variance of noutput_items performance counter.
+   */
+  float pc_noutput_items_var();
+
+  /*!
    * \brief Gets average num items produced performance counter.
    */
   float pc_nproduced();
 
   /*!
-   * \brief Gets average average fullness of \p which input buffer.
+   * \brief Gets variance of  num items produced performance counter.
+   */
+  float pc_nproduced_var();
+
+  /*!
+   * \brief Gets average fullness of \p which input buffer.
    */
   float pc_input_buffers_full(int which);
+
+  /*!
+   * \brief Gets variance of fullness of \p which input buffer.
+   */
+  float pc_input_buffers_full_var(int which);
 
   /*!
    * \brief Gets average fullness of all input buffers.
@@ -398,19 +413,43 @@ class GR_CORE_API gr_block : public gr_basic_block {
   std::vector<float> pc_input_buffers_full();
 
   /*!
+   * \brief Gets variance of fullness of all input buffers.
+   */
+  std::vector<float> pc_input_buffers_full_var();
+
+  /*!
    * \brief Gets average fullness of \p which input buffer.
    */
   float pc_output_buffers_full(int which);
 
   /*!
+   * \brief Gets variance of fullness of \p which input buffer.
+   */
+  float pc_output_buffers_full_var(int which);
+
+  /*!
    * \brief Gets average fullness of all output buffers.
    */
   std::vector<float> pc_output_buffers_full();
+  /*!
+   * \brief Gets variance of fullness of all output buffers.
+   */
+  std::vector<float> pc_output_buffers_full_var();
 
   /*!
    * \brief Gets average clock cycles spent in work.
    */
   float pc_work_time();
+
+  /*!
+   * \brief Gets average clock cycles spent in work.
+   */
+  float pc_work_time_var();
+
+  /*!
+   * \brief Resets the performance counters
+   */
+  void reset_perf_counters();
 
   /*!
    * \brief Sets up export of perf. counters to ControlPort. Only

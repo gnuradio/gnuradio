@@ -93,15 +93,41 @@ private:
   double _rows;
 };
 
+class TimePrecisionClass
+{
+public:
+  TimePrecisionClass(const int timePrecision)
+  {
+    _timePrecision = timePrecision;
+  }
+
+  virtual ~TimePrecisionClass()
+  {
+  }
+
+  virtual unsigned int getTimePrecision() const
+  {
+    return _timePrecision;
+  }
+
+  virtual void setTimePrecision(const unsigned int newPrecision)
+  {
+    _timePrecision = newPrecision;
+  }
+protected:
+  unsigned int _timePrecision;
+};
 
 /***********************************************************************
  * Widget to provide mouse pointer coordinate text
  **********************************************************************/
-class TimeRasterZoomer: public QwtPlotZoomer, public TimeScaleData
+class TimeRasterZoomer: public QwtPlotZoomer, public TimePrecisionClass,
+			public TimeScaleData
 {
 public:
-  TimeRasterZoomer(QwtPlotCanvas* canvas, double rows, double cols)
-    : QwtPlotZoomer(canvas), TimeScaleData(),
+  TimeRasterZoomer(QwtPlotCanvas* canvas, double rows, double cols,
+		   const unsigned int timePrecision)
+    : QwtPlotZoomer(canvas), TimePrecisionClass(timePrecision), TimeScaleData(),
       d_rows(static_cast<double>(rows)), d_cols(static_cast<double>(cols))
   {
     setTrackerMode(QwtPicker::AlwaysOn);
@@ -139,8 +165,9 @@ protected:
     double x = dp.x() * getSecondsPerLine();
     //double y = dp.y() * getSecondsPerLine() * d_cols;
     double y = floor(d_rows - dp.y());
-    QwtText t(QString("%1 s, %2")
-	      .arg(x, 0, 'f', 2)
+    QwtText t(QString("%1 %2, %3")
+	      .arg(x, 0, 'f', getTimePrecision())
+	      .arg(_unitType.c_str())
               .arg(y, 0, 'f', 0));
     return t;
   }
@@ -171,13 +198,6 @@ TimeRasterDisplayPlot::TimeRasterDisplayPlot(int nplots,
   setAxisScaleDraw(QwtPlot::xBottom, new QwtXScaleDraw());
   setAxisScaleDraw(QwtPlot::yLeft, new QwtYScaleDraw());
 
-  double sec_per_samp = 1.0/d_samp_rate;
-  QwtYScaleDraw* yScale = (QwtYScaleDraw*)axisScaleDraw(QwtPlot::yLeft);
-  yScale->setRows(d_rows);
-
-  QwtXScaleDraw* xScale = (QwtXScaleDraw*)axisScaleDraw(QwtPlot::xBottom);
-  xScale->setSecondsPerLine(sec_per_samp);
-
   for(int i = 0; i < _nplots; i++) {
     d_data.push_back(new TimeRasterData(d_rows, d_cols));
     d_raster.push_back(new PlotTimeRaster("Raster"));
@@ -200,7 +220,7 @@ TimeRasterDisplayPlot::TimeRasterDisplayPlot(int nplots,
   // MidButton for the panning
   // RightButton: zoom out by 1
   // Ctrl+RighButton: zoom out to full size
-  _zoomer = new TimeRasterZoomer(canvas(), d_rows, d_cols);
+  _zoomer = new TimeRasterZoomer(canvas(), d_rows, d_cols, 0);
 #if QWT_VERSION < 0x060000
   _zoomer->setSelectionFlags(QwtPicker::RectSelection | QwtPicker::DragSelection);
 #endif
@@ -238,22 +258,32 @@ TimeRasterDisplayPlot::reset()
     d_data[i]->reset();
   }
 
-  setAxisScale(QwtPlot::xBottom, 0, d_rows);
-  setAxisScale(QwtPlot::yLeft, 0, d_cols);
+  // Update zoomer/picker text units
+  std::string strunits[4] = {"sec", "ms", "us", "ns"};
+  double units10 = floor(log10(d_samp_rate));
+  double units3  = std::max(floor(units10/3), 0.0);
+  double units = pow(10, (units10-fmod(units10, 3.0)));
+  int iunit = static_cast<int>(units3);
 
-  double sec_per_samp = 1.0/d_samp_rate;
+  double sec_per_samp = units/d_samp_rate;
+
   QwtYScaleDraw* yScale = (QwtYScaleDraw*)axisScaleDraw(QwtPlot::yLeft);
   yScale->setRows(d_rows);
 
   QwtXScaleDraw* xScale = (QwtXScaleDraw*)axisScaleDraw(QwtPlot::xBottom);
   xScale->setSecondsPerLine(sec_per_samp);
+  setAxisTitle(QwtPlot::xBottom, QString("Time (%1)")
+	       .arg(strunits[iunit].c_str()));
+  xScale->initiateUpdate();
 
   // Load up the new base zoom settings
   if(_zoomer) {
+    double display_units = 4;
     ((TimeRasterZoomer*)_zoomer)->setColumns(d_cols);
     ((TimeRasterZoomer*)_zoomer)->setRows(d_rows);
     ((TimeRasterZoomer*)_zoomer)->setSecondsPerLine(sec_per_samp);
-    //((TimeRasterZoomer*)_zoomer)-sSetUnitType(strunits);
+    ((TimeRasterZoomer*)_zoomer)->setTimePrecision(display_units);
+    ((TimeRasterZoomer*)_zoomer)->setUnitType(strunits[iunit]);
 
     QwtDoubleRect newSize = _zoomer->zoomBase();
     newSize.setLeft(0);
@@ -285,6 +315,13 @@ void
 TimeRasterDisplayPlot::setAlpha(int which, int alpha)
 {
   d_raster[which]->setAlpha(alpha);
+}
+
+void
+TimeRasterDisplayPlot::setSampleRate(double samprate)
+{
+  d_samp_rate = samprate;
+  reset();
 }
 
 double

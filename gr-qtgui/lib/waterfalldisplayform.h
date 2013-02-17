@@ -55,6 +55,7 @@ class WaterfallDisplayForm : public DisplayForm
 public slots:
   void customEvent(QEvent *e);
 
+  void setSampleRate(const QString &samprate);
   void setFFTSize(const int);
   void setFFTAverage(const float);
   void setFFTWindowType(const gr::filter::firdes::win_type);
@@ -81,7 +82,7 @@ private:
   uint64_t _numRealDataPoints;
   QIntValidator* _intValidator;
 
-  double _samp_rate;
+  double _samp_rate, _center_freq;
   double _time_per_slice;
   int _fftsize;
   float _fftavg;

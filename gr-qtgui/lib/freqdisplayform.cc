@@ -111,6 +111,12 @@ FreqDisplayForm::getFFTWindowType() const
 }
 
 void
+FreqDisplayForm::setSampleRate(const QString &samprate)
+{
+  setFrequencyRange(_center_freq, samprate.toDouble());
+}
+
+void
 FreqDisplayForm::setFFTSize(const int newsize)
 {
   _fftsize = newsize;
@@ -141,6 +147,9 @@ FreqDisplayForm::setFrequencyRange(const double centerfreq,
   double units = pow(10, (units10-fmod(units10, 3.0)));
   int iunit = static_cast<int>(units3);
 
+  _center_freq = centerfreq;
+  _samp_rate = bandwidth;
+
   getPlot()->setFrequencyRange(centerfreq, bandwidth,
 			       units, strunits[iunit]);
 }
@@ -161,6 +170,22 @@ FreqDisplayForm::autoScale()
   else {
     _autoscale_act->setText(tr("Auto Scale Off"));
     _autoscale_state = true;
+  }
+
+  getPlot()->setAutoScale(_autoscale_state);
+  getPlot()->replot();
+}
+
+void
+FreqDisplayForm::autoScale(bool en)
+{
+  if(en) {
+    _autoscale_act->setText(tr("Auto Scale Off"));
+    _autoscale_state = true;
+  }
+  else {
+    _autoscale_act->setText(tr("Auto Scale On"));
+    _autoscale_state = false;
   }
 
   getPlot()->setAutoScale(_autoscale_state);

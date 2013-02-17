@@ -23,6 +23,7 @@
 install(FILES
     api.h
     channel_model.h
+    fading_model.h
     DESTINATION ${GR_INCLUDE_DIR}/gnuradio/channels
     COMPONENT "channels_devel"
 )

@@ -58,6 +58,8 @@ public slots:
   void setNumRows(QString rows);
   void setNumCols(QString cols);
 
+  void setSampleRate(const QString &rate);
+
   void setIntensityRange(const double minIntensity,
 			 const double maxIntensity);
 

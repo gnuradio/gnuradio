@@ -20,13 +20,14 @@ qtgui.$(type.fcn)(
 	$name,
 	$nconnections,
 	)
+self.$(id).set_update_time($update_time)
 self._$(id)_win = sip.wrapinstance(self.$(id).pyqwidget(), Qt.QWidget)
 $(gui_hint()($win))</make>
         <callback>set_num_rows($nrows)</callback>
         <callback>set_num_cols($ncols)</callback>
         <callback>set_multiplier($mult)</callback>
         <callback>set_offset($offset)</callback>
-	<callback>set_update_time($t)</callback>
+	<callback>set_update_time($update_time)</callback>
 	<callback>set_title($which, $title)</callback>
 	<callback>set_color($which, $color)</callback>
 	<param>
@@ -46,7 +47,7 @@ $(gui_hint()($win))</make>
 	<param>
 		<name>Sample Rate</name>
 		<key>samp_rate</key>
-		<value>1</value>
+		<value>samp_rate</value>
 		<type>real</type>
 	</param>
 	<param>
@@ -81,10 +82,11 @@ $(gui_hint()($win))</make>
 		<hide>part</hide>
 	</param>
 	<param>
-		<name>Update Rate</name>
-		<key>rate</key>
-		<value>10</value>
+		<name>Update Period</name>
+		<key>update_time</key>
+		<value>0.10</value>
 		<type>real</type>
+		<hide>part</hide>
 	</param>
 	<param>
 		<name>GUI Hint</name>

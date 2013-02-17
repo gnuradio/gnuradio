@@ -122,7 +122,6 @@ namespace gr {
 
       // initialize update time to 10 times a second
       set_update_time(0.1);
-      d_last_time = 0;
     }
 
     void
@@ -152,6 +151,7 @@ namespace gr {
       gruel::high_res_timer_type tps = gruel::high_res_timer_tps();
       d_update_time = t * tps;
       d_main_gui->setUpdateTime(t);
+      d_last_time = 0;
     }
 
     void
@@ -208,6 +208,18 @@ namespace gr {
       d_main_gui->setNumCols(cols);
     }
 
+    double
+    time_raster_sink_f_impl::num_rows()
+    {
+      return d_main_gui->numRows();
+    }
+
+    double
+    time_raster_sink_f_impl::num_cols()
+    {
+      return d_main_gui->numCols();
+    }
+
     void
     time_raster_sink_f_impl::set_multiplier(const std::vector<float> &mult)
     {
@@ -250,6 +262,12 @@ namespace gr {
       d_main_gui->setIntensityRange(min, max);
     }
 
+    void
+    time_raster_sink_f_impl::reset()
+    {
+      d_index = 0;
+    }
+
     int
     time_raster_sink_f_impl::work(int noutput_items,
 				  gr_vector_const_void_star &input_items,
@@ -258,7 +276,7 @@ namespace gr {
       int n=0, j=0, idx=0;
       const float *in = (const float*)input_items[0];
 
-      unsigned int cols = d_main_gui->numCols();
+      double cols = d_main_gui->numCols();
       if(d_cols != cols) {
 	d_cols = cols;
 	d_index = 0;
@@ -294,8 +312,12 @@ namespace gr {
 				   d_tmpflt, resid);
 	  }
       
-	  d_qApplication->postEvent(d_main_gui,
-	    new TimeRasterUpdateEvent(d_residbufs, d_cols));
+	  // Update the plot if its time
+	  if(gruel::high_res_timer_now() - d_last_time > d_update_time) {
+	    d_last_time = gruel::high_res_timer_now();
+	    d_qApplication->postEvent(d_main_gui,
+				      new TimeRasterUpdateEvent(d_residbufs, d_cols));
+	  }
 
 	  d_index = 0;
 	  j += resid;

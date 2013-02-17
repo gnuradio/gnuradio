@@ -41,10 +41,17 @@ gr_block_detail::gr_block_detail (unsigned int ninputs, unsigned int noutputs)
     d_ninputs (ninputs), d_noutputs (noutputs),
     d_input (ninputs), d_output (noutputs),
     d_done (false),
-    d_avg_noutput_items(0), d_avg_nproduced(0),
+    d_avg_noutput_items(0), 
+    d_var_noutput_items(0),
+    d_avg_nproduced(0),
+    d_var_nproduced(0),
     d_avg_input_buffers_full(ninputs, 0),
+    d_var_input_buffers_full(ninputs, 0),
     d_avg_output_buffers_full(noutputs, 0),
-    d_avg_work_time(0)
+    d_var_output_buffers_full(noutputs, 0),
+    d_avg_work_time(0),
+    d_var_work_time(0),
+    d_pc_counter(0)
 {
   s_ncurrently_allocated++;
 }
@@ -235,27 +242,68 @@ gr_block_detail::start_perf_counters()
 void
 gr_block_detail::stop_perf_counters(int noutput_items, int nproduced)
 {
-  float alpha = 0.05;
-  float beta  = 1.0-alpha;
-
   d_end_of_work = gruel::high_res_timer_now();
   gruel::high_res_timer_type diff = d_end_of_work - d_start_of_work;
-  d_avg_work_time = beta*d_avg_work_time + alpha*diff;
 
-  d_avg_nproduced = beta*d_avg_nproduced + alpha*nproduced;
-  d_avg_noutput_items = beta*d_avg_noutput_items + alpha*noutput_items;
+  if(d_pc_counter == 0) {
+    d_avg_work_time = diff;
+    d_var_work_time = 0;
+    d_avg_nproduced = nproduced;
+    d_var_nproduced = 0;
+    d_avg_noutput_items = noutput_items;
+    d_var_noutput_items = 0;
+    for(size_t i=0; i < d_input.size(); i++) {
+      float pfull = static_cast<float>(d_input[i]->items_available()) /
+	static_cast<float>(d_input[i]->max_possible_items_available());
+      d_avg_input_buffers_full[i] = pfull;
+      d_var_input_buffers_full[i] = 0;
+    }
+    for(size_t i=0; i < d_output.size(); i++) {
+      float pfull = 1.0f - static_cast<float>(d_output[i]->space_available()) /
+	static_cast<float>(d_output[i]->bufsize());
+      d_avg_output_buffers_full[i] = pfull;
+      d_var_output_buffers_full[i] = 0;
+    }
+  }
+  else {
+    float d = diff - d_avg_work_time;
+    d_avg_work_time = d_avg_work_time + d/d_pc_counter;
+    d_var_work_time = d_var_work_time + d*d;
 
-  for(size_t i=0; i < d_input.size(); i++) {
-    float pfull = static_cast<float>(d_input[i]->items_available()) /
-      static_cast<float>(d_input[i]->max_possible_items_available());
-    d_avg_input_buffers_full[i] = beta*d_avg_input_buffers_full[i] + alpha*pfull;
+    d = nproduced - d_avg_nproduced;
+    d_avg_nproduced = d_avg_nproduced +	d/d_pc_counter;
+    d_var_nproduced = d_var_nproduced +	d*d;
+
+    d = noutput_items - d_avg_noutput_items;
+    d_avg_noutput_items = d_avg_noutput_items + d/d_pc_counter;
+    d_var_noutput_items = d_var_noutput_items + d*d;
+
+    for(size_t i=0; i < d_input.size(); i++) {
+      float pfull = static_cast<float>(d_input[i]->items_available()) /
+	static_cast<float>(d_input[i]->max_possible_items_available());
+      
+      d = pfull - d_avg_input_buffers_full[i];
+      d_avg_input_buffers_full[i] = d_avg_input_buffers_full[i] + d/d_pc_counter;
+      d_var_input_buffers_full[i] = d_var_input_buffers_full[i] + d*d;
+    }
+
+    for(size_t i=0; i < d_output.size(); i++) {
+      float pfull = 1.0f - static_cast<float>(d_output[i]->space_available()) /
+	static_cast<float>(d_output[i]->bufsize());
+
+      d = pfull - d_avg_output_buffers_full[i];
+      d_avg_output_buffers_full[i] = d_avg_output_buffers_full[i] + d/d_pc_counter;
+      d_var_output_buffers_full[i] = d_var_output_buffers_full[i] + d*d;
+    }
   }
 
-  for(size_t i=0; i < d_output.size(); i++) {
-    float pfull = 1.0f - static_cast<float>(d_output[i]->space_available()) /
-      static_cast<float>(d_output[i]->bufsize());
-    d_avg_output_buffers_full[i] = beta*d_avg_output_buffers_full[i] + alpha*pfull;
-  }
+  d_pc_counter++;
+}
+
+void
+gr_block_detail::reset_perf_counters()
+{
+  d_pc_counter = 0;
 }
 
 float
@@ -304,4 +352,59 @@ float
 gr_block_detail::pc_work_time()
 {
   return d_avg_work_time;
+}
+
+
+float
+gr_block_detail::pc_noutput_items_var()
+{
+  return d_var_noutput_items/(d_pc_counter-1);
+}
+
+float
+gr_block_detail::pc_nproduced_var()
+{
+  return d_var_nproduced/(d_pc_counter-1);
+}
+
+float
+gr_block_detail::pc_input_buffers_full_var(size_t which)
+{
+  if(which < d_avg_input_buffers_full.size())
+    return d_var_input_buffers_full[which]/(d_pc_counter-1);
+  else
+    return 0;
+}
+
+std::vector<float>
+gr_block_detail::pc_input_buffers_full_var()
+{
+  std::vector<float> var(d_avg_input_buffers_full.size(), 0);
+  for(size_t i = 0; i < d_avg_input_buffers_full.size(); i++)
+    var[i] = d_avg_input_buffers_full[i]/(d_pc_counter-1);
+  return var;
+}
+
+float
+gr_block_detail::pc_output_buffers_full_var(size_t which)
+{
+  if(which < d_avg_output_buffers_full.size())
+    return d_var_output_buffers_full[which]/(d_pc_counter-1);
+  else
+    return 0;
+}
+
+std::vector<float>
+gr_block_detail::pc_output_buffers_full_var()
+{
+  std::vector<float> var(d_avg_output_buffers_full.size(), 0);
+  for(size_t i = 0; i < d_avg_output_buffers_full.size(); i++)
+    var[i] = d_avg_output_buffers_full[i]/(d_pc_counter-1);
+  return var;
+}
+
+float
+gr_block_detail::pc_work_time_var()
+{
+  return d_var_work_time/(d_pc_counter-1);
 }

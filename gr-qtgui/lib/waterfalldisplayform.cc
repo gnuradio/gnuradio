@@ -37,6 +37,9 @@ WaterfallDisplayForm::WaterfallDisplayForm(int nplots, QWidget* parent)
   _layout->addWidget(_displayPlot, 0, 0);
   setLayout(_layout);
 
+  _center_freq = 0;
+  _samp_rate = 0;
+
   _numRealDataPoints = 1024;
   _fftsize = 1024;
   _fftavg = 1.0;
@@ -178,6 +181,12 @@ WaterfallDisplayForm::getMaxIntensity(int which)
 }
 
 void
+WaterfallDisplayForm::setSampleRate(const QString &samprate)
+{
+  setFrequencyRange(_center_freq, samprate.toDouble());
+}
+
+void
 WaterfallDisplayForm::setFFTSize(const int newsize)
 {
   _fftsize = newsize;
@@ -205,6 +214,7 @@ WaterfallDisplayForm::setFrequencyRange(const double centerfreq,
   double units = pow(10, (units10-fmod(units10, 3.0)));
   int iunit = static_cast<int>(units3);
 
+  _center_freq = centerfreq;
   _samp_rate = bandwidth;
   _time_per_slice = (1.0/bandwidth)*_fftsize;
 

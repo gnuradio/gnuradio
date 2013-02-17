@@ -48,6 +48,7 @@ class FreqDisplayForm : public DisplayForm
 public slots:
   void customEvent(QEvent *e);
 
+  void setSampleRate(const QString &samprate);
   void setFFTSize(const int);
   void setFFTAverage(const float);
   void setFFTWindowType(const gr::filter::firdes::win_type);
@@ -56,6 +57,7 @@ public slots:
 			 const double bandwidth);
   void setYaxis(double min, double max);
   void autoScale();
+  void autoScale(bool en);
 
 private slots:
   void newData(const QEvent *updateEvent);
@@ -64,6 +66,7 @@ private:
   uint64_t _numRealDataPoints;
   QIntValidator* _intValidator;
 
+  double _samp_rate, _center_freq;
   int _fftsize;
   float _fftavg;
   gr::filter::firdes::win_type _fftwintype;

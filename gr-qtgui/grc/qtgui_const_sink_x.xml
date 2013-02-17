@@ -16,12 +16,13 @@ qtgui.$(type.fcn)(
 	$name, \#name
 	$nconnections \#number of inputs
 )
+self.$(id).set_update_time($update_time)
 self.$(id).set_y_axis($ymin, $ymax)
 self.$(id).set_x_axis($xmin, $xmax)
 self._$(id)_win = sip.wrapinstance(self.$(id).pyqwidget(), Qt.QWidget)
 $(gui_hint()($win))</make>
         <callback>set_resize($width, $height)</callback>
-	<callback>set_update_time($t)</callback>
+	<callback>set_update_time($update_time)</callback>
 	<callback>set_title($which, $title)</callback>
 	<callback>set_color($which, $color)</callback>
 	<param>
@@ -77,6 +78,13 @@ $(gui_hint()($win))</make>
 		<key>nconnections</key>
 		<value>1</value>
 		<type>int</type>
+		<hide>part</hide>
+	</param>
+	<param>
+		<name>Update Period</name>
+		<key>update_time</key>
+		<value>0.10</value>
+		<type>real</type>
 		<hide>part</hide>
 	</param>
 	<param>

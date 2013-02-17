@@ -133,6 +133,12 @@ class MAINWindow(QtGui.QMainWindow):
         def newPlotterPsdCProxy():
             self.newPlotPsdC(key, uid, title)
 
+        def newPlotterRasterFProxy():
+            self.newPlotRasterF(key, uid, title, pmin, pmax)
+
+        def newPlotterRasterBProxy():
+            self.newPlotRasterB(key, uid, title, pmin, pmax)
+
         menu = QtGui.QMenu(self)
         menu.setTitle("Item Actions")
         menu.setTearOffEnabled(False)
@@ -140,14 +146,14 @@ class MAINWindow(QtGui.QMainWindow):
         # object properties
         menu.addAction("Properties", newUpdaterProxy)
 
-        # displays available if not complex
+        # displays available
         menu.addAction("Plot Time", newPlotterFProxy)
-        menu.addAction("Plot PSD", newPlotterPsdFProxy)
-
-        # displays available if complex
         menu.addAction("Plot Time (cpx)", newPlotterCProxy)
-        menu.addAction("Plot Constellation", newPlotterConstProxy)
+        menu.addAction("Plot PSD", newPlotterPsdFProxy)
         menu.addAction("Plot PSD cpx", newPlotterPsdCProxy)
+        menu.addAction("Plot Constellation", newPlotterConstProxy)
+        menu.addAction("Plot Raster (real)", newPlotterRasterFProxy)
+        #menu.addAction("Plot Raster (bits)", newPlotterRasterBProxy)
 
         menu.popup(QtGui.QCursor.pos())
 
@@ -220,6 +226,14 @@ class MAINWindow(QtGui.QMainWindow):
 
     def newPlotPsdC(self, tag, uid, title="", pmin=None, pmax=None):
         plot = GrDataPlotterPsdC(tag, 32e6, pmin, pmax)
+        self.createPlot(plot, uid, title)
+
+    def newPlotRasterF(self, tag, uid, title="", pmin=None, pmax=None):
+        plot = GrTimeRasterF(tag, 32e6, pmin, pmax)
+        self.createPlot(plot, uid, title)
+
+    def newPlotRasterB(self, tag, uid, title="", pmin=None, pmax=None):
+        plot = GrTimeRasterB(tag, 32e6, pmin, pmax)
         self.createPlot(plot, uid, title)
 
     def update(self, knobs, uid):
