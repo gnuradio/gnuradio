@@ -279,8 +279,20 @@ TimeDomainDisplayPlot::_resetXAxisPoints()
 void
 TimeDomainDisplayPlot::_autoScale(double bottom, double top)
 {
-  // Auto scale the y-axis with a margin of 20%
-  setYaxis(bottom - fabs(bottom)*0.20, top + fabs(top)*0.20);
+  // Auto scale the y-axis with a margin of 20% (10 dB for log scale)
+  double _bot = bottom - fabs(bottom)*0.20;
+  double _top = top + fabs(top)*0.20;
+  if(d_semilogy) {
+    if(bottom > 0) {
+      setYaxis(_bot-10, _top+10);
+    }
+    else {
+      setYaxis(1e-3, _top+10);
+    }
+  }
+  else {
+    setYaxis(_bot, _top);
+  }
 }
 
 void

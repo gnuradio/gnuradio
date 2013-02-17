@@ -156,6 +156,7 @@ void
 TimeDisplayForm::autoScale(bool en)
 {
   _autoscale_state = en;
+  _autoscale_act->setChecked(en);
   getPlot()->setAutoScale(_autoscale_state);
   getPlot()->replot();
 }
@@ -164,6 +165,7 @@ void
 TimeDisplayForm::setSemilogx(bool en)
 {
   d_semilogx = en;
+  d_semilogxmenu->setChecked(en);
   getPlot()->setSemilogx(d_semilogx);
   getPlot()->replot();
 }
@@ -172,6 +174,7 @@ void
 TimeDisplayForm::setSemilogy(bool en)
 {
   d_semilogy = en;
+  d_semilogymenu->setChecked(en);
   getPlot()->setSemilogy(d_semilogy);
   getPlot()->replot();
 }
