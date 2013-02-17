@@ -26,32 +26,35 @@
 #include <audio/source.h>
 #include <string>
 
-/*!
- * \brief audio source using winmm mmsystem (win32 only)
- * \ingroup audio_blk
- *
- * Output signature is one or two streams of floats.
- * Output samples will be in the range [-1,1].
- */
+namespace gr {
+  namespace audio {
 
-class audio_windows_source : public audio_source
-{
+    /*!
+     * \brief audio source using winmm mmsystem (win32 only)
+     * \ingroup audio_blk
+     *
+     * Output signature is one or two streams of floats.
+     * Output samples will be in the range [-1,1].
+     */
+    class windows_source : public source
+    {
+      int         d_sampling_freq;
+      std::string d_device_name;
+      int         d_fd;
+      short      *d_buffer;
+      int         d_chunk_size;
 
-  int    	d_sampling_freq;
-  std::string   d_device_name;
-  int		d_fd;
-  short        *d_buffer;
-  int		d_chunk_size;
+    public:
+      windows_source(int sampling_freq,
+                     const std::string device_name = "");
+      ~windows_source();
 
-public:
-  audio_windows_source (int sampling_freq, const std::string device_name = "");
+      int work(int noutput_items,
+               gr_vector_const_void_star & input_items,
+               gr_vector_void_star & output_items);
+    };
 
-  ~audio_windows_source ();
-
-  int
-  work (int noutput_items,
-	gr_vector_const_void_star & input_items,
-	gr_vector_void_star & output_items);
-};
+  } /* namespace audio */
+} /* namespace gr */
 
 #endif /* INCLUDED_AUDIO_WINDOWS_SOURCE_H */
