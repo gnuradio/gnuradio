@@ -25,6 +25,7 @@
 
 #include <gr_hier_block2_detail.h>
 #include <gr_io_signature.h>
+#include <gr_prefs.h>
 #include <stdexcept>
 #include <sstream>
 #include <boost/format.hpp>
@@ -474,20 +475,28 @@ gr_hier_block2_detail::flatten_aux(gr_flat_flowgraph_sptr sfg) const
   gr_edge_viter_t p;
   gr_msg_edge_viter_t q,u;
 
+  // Only run setup_rpc if ControlPort config param is enabled.
+  bool ctrlport_on = gr_prefs::singleton()->get_bool("ControlPort", "on", false);
+
   // For every block (gr_block and gr_hier_block2), set up the RPC
   // interface.
   for(p = edges.begin(); p != edges.end(); p++) {
     gr_basic_block_sptr b;
     b = p->src().block();
-    if(!b->is_rpc_set()) {
-      b->setup_rpc();
-      b->rpc_set();
+
+    if(ctrlport_on) {
+      if(!b->is_rpc_set()) {
+	b->setup_rpc();
+	b->rpc_set();
+      }
     }
 
     b = p->dst().block();
-    if(!b->is_rpc_set()) {
-      b->setup_rpc();
-      b->rpc_set();
+    if(ctrlport_on) {
+      if(!b->is_rpc_set()) {
+	b->setup_rpc();
+	b->rpc_set();
+      }
     }
   }
 

@@ -29,6 +29,7 @@
 #include <gr_flat_flowgraph.h>
 #include <gr_scheduler_sts.h>
 #include <gr_scheduler_tpb.h>
+#include <gr_prefs.h>
 
 #include <stdexcept>
 #include <iostream>
@@ -108,7 +109,9 @@ gr_top_block_impl::start(int max_noutput_items)
   d_ffg->validate();
   d_ffg->setup_connections();
 
-  d_ffg->enable_pc_rpc();
+  // Only export perf. counters if ControlPort config param is enabled.
+  if(gr_prefs::singleton()->get_bool("ControlPort", "on", false))
+    d_ffg->enable_pc_rpc();
 
   d_scheduler = make_scheduler(d_ffg, d_max_noutput_items);
   d_state = RUNNING;

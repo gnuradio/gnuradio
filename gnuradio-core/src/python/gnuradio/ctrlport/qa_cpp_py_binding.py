@@ -30,6 +30,7 @@ from gnuradio import gr, gr_unittest
 
 from gnuradio.ctrlport import GNURadio
 from gnuradio import ctrlport
+import os
 
 def get1():
     return "success"
@@ -69,6 +70,7 @@ class test_cpp_py_binding(gr_unittest.TestCase):
 
     def setUp(self):
         self.tb = gr.top_block()
+        os.environ['GR_CONF_CONTROLPORT_ON'] = 'True'
 
     def tearDown(self):
         self.tb = None
