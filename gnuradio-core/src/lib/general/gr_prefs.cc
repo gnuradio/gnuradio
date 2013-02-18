@@ -65,11 +65,12 @@ gr_prefs::~gr_prefs()
 std::vector<std::string>
 gr_prefs::_sys_prefs_filenames()
 {
+  std::vector<std::string> fnames;
+
   fs::path dir = gr_prefsdir();
   if(!fs::is_directory(dir))
-    std::runtime_error("gr_prefs: preference path does not exist.\n");
+    return fnames;
 
-  std::vector<std::string> fnames;
   fs::directory_iterator diritr(dir);
   while(diritr != fs::directory_iterator()) {
     fs::path p = *diritr++;
