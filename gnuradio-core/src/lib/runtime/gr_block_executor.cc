@@ -28,6 +28,7 @@
 #include <gr_block.h>
 #include <gr_block_detail.h>
 #include <gr_buffer.h>
+#include <gr_prefs.h>
 #include <boost/thread.hpp>
 #include <boost/format.hpp>
 #include <iostream>
@@ -164,6 +165,11 @@ gr_block_executor::gr_block_executor (gr_block_sptr block, int max_noutput_items
     *d_log << "gr_block_executor: "
 	   << d_block << std::endl;
   }
+
+#ifdef GR_PERFORMANCE_COUNTERS
+  gr_prefs *prefs = gr_prefs::singleton();
+  d_use_pc = prefs->get_bool("PerfCounters", "on", false);
+#endif /* GR_PERFORMANCE_COUNTERS */
 
   d_block->start();			// enable any drivers, etc.
 }
@@ -420,7 +426,8 @@ gr_block_executor::run_one_iteration()
       d_start_nitems_read[i] = d->nitems_read(i);
 
 #ifdef GR_PERFORMANCE_COUNTERS
-    d->start_perf_counters();
+    if(d_use_pc)
+      d->start_perf_counters();
 #endif /* GR_PERFORMANCE_COUNTERS */
     
     // Do the actual work of the block
@@ -428,7 +435,8 @@ gr_block_executor::run_one_iteration()
 			     d_input_items, d_output_items);
 
 #ifdef GR_PERFORMANCE_COUNTERS
-    d->stop_perf_counters(noutput_items, n);
+    if(d_use_pc)
+      d->stop_perf_counters(noutput_items, n);
 #endif /* GR_PERFORMANCE_COUNTERS */
 
     LOG(*d_log << "  general_work: noutput_items = " << noutput_items

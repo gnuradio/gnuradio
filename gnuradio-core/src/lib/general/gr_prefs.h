@@ -24,6 +24,7 @@
 
 #include <gr_core_api.h>
 #include <string>
+#include <gruel/thread.h>
 
 /*!
  * \brief Base class for representing user preferences a la windows INI files.
@@ -39,6 +40,7 @@ public:
   static gr_prefs *singleton();
   static void set_singleton(gr_prefs *p);
 
+  gr_prefs();
   virtual ~gr_prefs();
 
   /*!
@@ -78,6 +80,14 @@ public:
   virtual double get_double(const std::string section,
 			    const std::string option,
 			    double default_val);
+
+ protected:
+  virtual std::vector<std::string> _sys_prefs_filenames();
+  virtual void _read_files();
+
+ private:
+  gruel::mutex d_mutex;
+  std::string d_configs;
 };
 
 
