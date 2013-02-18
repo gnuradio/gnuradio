@@ -107,6 +107,19 @@ gr_prefs::_read_files()
   d_configs.erase(std::remove_if(d_configs.begin(), d_configs.end(), ::isspace), d_configs.end());
 }
 
+char *
+gr_prefs::option_to_env(std::string section, std::string option)
+{
+  std::stringstream envname;
+  std::string secname=section, optname=option;
+
+  std::transform(section.begin(), section.end(), secname.begin(), ::toupper);
+  std::transform(option.begin(), option.end(), optname.begin(), ::toupper);
+  envname << "GR_CONF_" << secname << "_" << optname;
+
+  return getenv(envname.str().c_str());
+}
+
 bool
 gr_prefs::has_section(const std::string section)
 {
@@ -117,6 +130,9 @@ gr_prefs::has_section(const std::string section)
 bool
 gr_prefs::has_option(const std::string section, const std::string option)
 {
+  if(option_to_env(section, option))
+    return true;
+
   if(has_section(section)) {
     size_t sec = d_configs.find("[" + section + "]#");
     size_t opt = d_configs.find("#" + option + "=", sec);
@@ -128,19 +144,12 @@ gr_prefs::has_option(const std::string section, const std::string option)
 }
 
 const std::string
-gr_prefs::get_string(const std::string section, const std::string option, const std::string default_val)
+gr_prefs::get_string(const std::string section, const std::string option,
+		     const std::string default_val)
 {
-  std::stringstream envname;
-  std::string secname=section, optname=option;
-
-  std::transform(section.begin(), section.end(), secname.begin(), ::toupper);
-  std::transform(option.begin(), option.end(), optname.begin(), ::toupper);
-  envname << "GR_CONF_" << secname << "_" << optname;
-
-  char *v = getenv(envname.str().c_str());
-  if(v) {
-    return std::string(v);
-  }
+  char *env = option_to_env(section, option);
+  if(env)
+    return std::string(env);
 
   if(has_option(section, option)) {
     std::string optname = "#" + option + "=";

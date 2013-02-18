@@ -84,6 +84,7 @@ public:
  protected:
   virtual std::vector<std::string> _sys_prefs_filenames();
   virtual void _read_files();
+  virtual char * option_to_env(std::string section, std::string option);
 
  private:
   gruel::mutex d_mutex;
