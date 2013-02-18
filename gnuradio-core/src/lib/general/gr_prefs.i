@@ -20,9 +20,6 @@
  * Boston, MA 02110-1301, USA.
  */
 
-// Generate SWIG directors for gr_prefs.
-%feature("director") gr_prefs;
-
 class gr_prefs
 {
 public:

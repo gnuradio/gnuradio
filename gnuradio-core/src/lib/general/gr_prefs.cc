@@ -25,6 +25,13 @@
 #endif
 
 #include <gr_prefs.h>
+#include <gr_constants.h>
+#include <algorithm>
+
+#include <boost/filesystem/operations.hpp>
+#include <boost/filesystem/path.hpp>
+#include <boost/filesystem/fstream.hpp>
+namespace fs = boost::filesystem;
 
 /*
  * Stub implementations
@@ -45,44 +52,166 @@ gr_prefs::set_singleton(gr_prefs *p)
   s_singleton = p;
 }
 
+gr_prefs::gr_prefs()
+{
+  _read_files();
+}
+
 gr_prefs::~gr_prefs()
 {
   // nop
 }
 
+std::vector<std::string>
+gr_prefs::_sys_prefs_filenames()
+{
+  std::vector<std::string> fnames;
+
+  fs::path dir = gr_prefsdir();
+  if(!fs::is_directory(dir))
+    return fnames;
+
+  fs::directory_iterator diritr(dir);
+  while(diritr != fs::directory_iterator()) {
+    fs::path p = *diritr++;
+    fnames.push_back(p.string());
+  }
+  std::sort(fnames.begin(), fnames.end());
+  return fnames;
+}
+
+void
+gr_prefs::_read_files()
+{
+  std::vector<std::string> filenames = _sys_prefs_filenames();
+  std::vector<std::string>::iterator sitr;
+  char tmp[1024];
+  for(sitr = filenames.begin(); sitr != filenames.end(); sitr++) {
+    fs::ifstream fin(*sitr);
+    while(!fin.eof()) {
+      fin.getline(tmp, 1024);
+      std::string t(tmp);
+      // ignore empty lines or lines of just comments
+      if((t.size() > 0) && (t[0] != '#')) {
+	// remove any comments in the line
+	size_t hash = t.find("#");
+
+	// Use hash marks at the end of each segment as a delimiter
+	d_configs += t.substr(0, hash) + '#';
+      }
+    }
+    fin.close();
+  }
+
+  // Remove all whitespace
+  d_configs.erase(std::remove_if(d_configs.begin(), d_configs.end(), ::isspace), d_configs.end());
+}
+
 bool
 gr_prefs::has_section(const std::string section)
 {
-  return false;
+  size_t t = d_configs.find("[" + section + "]#");
+  return t != std::string::npos;
 }
 
 bool
 gr_prefs::has_option(const std::string section, const std::string option)
 {
-  return false;
+  if(has_section(section)) {
+    size_t sec = d_configs.find("[" + section + "]#");
+    size_t opt = d_configs.find("#" + option + "=", sec);
+    return opt != std::string::npos;
+  }
+  else {
+    return false;
+  }
 }
 
 const std::string
 gr_prefs::get_string(const std::string section, const std::string option, const std::string default_val)
 {
-  return default_val;
+  std::stringstream envname;
+  std::string secname=section, optname=option;
+
+  std::transform(section.begin(), section.end(), secname.begin(), ::toupper);
+  std::transform(option.begin(), option.end(), optname.begin(), ::toupper);
+  envname << "GR_CONF_" << secname << "_" << optname;
+
+  char *v = getenv(envname.str().c_str());
+  if(v) {
+    return std::string(v);
+  }
+
+  if(has_option(section, option)) {
+    std::string optname = "#" + option + "=";
+    size_t sec = d_configs.find("[" + section + "]#");
+    size_t opt = d_configs.find(optname, sec);
+
+    size_t start = opt + optname.size();
+    size_t end = d_configs.find("#", start);
+    size_t len = end - start;
+
+    return d_configs.substr(start, len);
+  }
+  else {
+    return default_val;
+  }
 }
 
 bool
 gr_prefs::get_bool(const std::string section, const std::string option, bool default_val)
 {
-  return default_val;
+  if(has_option(section, option)) {
+    std::string str = get_string(section, option, "");
+    if(str == "") {
+      return default_val;
+    }
+    std::transform(str.begin(), str.end(), str.begin(), ::tolower);
+    if((str == "true") || (str == "on") || (str == "1"))
+      return true;
+    else if((str == "false") || (str == "off") || (str == "0"))
+      return false;
+    else
+      return default_val;
+  }
+  else {
+    return default_val;
+  }
 }
 
 long
 gr_prefs::get_long(const std::string section, const std::string option, long default_val)
 {
-  return default_val;
+  if(has_option(section, option)) {
+    std::string str = get_string(section, option, "");
+    if(str == "") {
+      return default_val;
+    }
+    std::stringstream sstr(str);
+    long n;
+    sstr >> n;
+    return n;
+  }
+  else {
+    return default_val;
+  }
 }
 
 double
 gr_prefs::get_double(const std::string section, const std::string option, double default_val)
 {
-  return default_val;
+  if(has_option(section, option)) {
+    std::string str = get_string(section, option, "");
+    if(str == "") {
+      return default_val;
+    }
+    std::stringstream sstr(str);
+    double n;
+    sstr >> n;
+    return n;
+  }
+  else {
+    return default_val;
+  }
 }
 
