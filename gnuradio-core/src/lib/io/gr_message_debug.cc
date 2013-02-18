@@ -59,10 +59,10 @@ gr_message_debug::store(pmt::pmt_t msg)
 }
 
 void
-gr_message_debug::print_verbose(pmt::pmt_t msg)
+gr_message_debug::print_pdu(pmt::pmt_t pdu)
 {
-  pmt::pmt_t meta = pmt::pmt_car(msg);
-  pmt::pmt_t vector = pmt::pmt_cdr(msg);
+  pmt::pmt_t meta = pmt::pmt_car(pdu);
+  pmt::pmt_t vector = pmt::pmt_cdr(pdu);
   std::cout << "* MESSAGE DEBUG PRINT PDU VERBOSE *\n";
   pmt::pmt_print(meta);
   size_t len = pmt::pmt_length(vector);
@@ -110,6 +110,9 @@ gr_message_debug::gr_message_debug()
   
   message_port_register_in(pmt::mp("store"));
   set_msg_handler(pmt::mp("store"), boost::bind(&gr_message_debug::store, this, _1));
+
+  message_port_register_in(pmt::mp("print_pdu"));
+  set_msg_handler(pmt::mp("print_pdu"), boost::bind(&gr_message_debug::print_pdu, this, _1));
 }
 
 gr_message_debug::~gr_message_debug()

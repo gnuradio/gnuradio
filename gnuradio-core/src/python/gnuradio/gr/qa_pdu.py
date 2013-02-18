@@ -46,7 +46,7 @@ class test_pdu(gr_unittest.TestCase):
         # Test that the right number of ports exist.
         pi = dbg.message_ports_in()
         po = dbg.message_ports_out()
-        self.assertEqual(pmt.pmt_length(pi), 2)
+        self.assertEqual(pmt.pmt_length(pi), 3)
         self.assertEqual(pmt.pmt_length(po), 0)
 
         pi = snk3.message_ports_in()
