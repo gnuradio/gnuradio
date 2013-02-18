@@ -35,7 +35,13 @@ def _extract(key):
 		module_name, constructor_name = key.split('_', 1)
 		module = __import__('gnuradio.'+module_name)
 		module = getattr(module, module_name)
-	except: return ''
+        except ImportError:
+                try:
+                        module_name, constructor_name = key.split('_', 1)
+                        module = __import__(module_name)
+                except: return ''
+	except:
+                return ''
 	pattern = constructor_name.replace('_', '_*').replace('x', '\w')
 	pattern_matcher = re.compile('^%s\w*$'%pattern)
 	matches = filter(lambda x: pattern_matcher.match(x), dir(module))
