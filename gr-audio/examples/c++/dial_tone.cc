@@ -1,5 +1,5 @@
 /*
- * Copyright 2011 Free Software Foundation, Inc.
+ * Copyright 2011,2013 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -39,7 +39,7 @@
 // Include header files for each block used in flowgraph
 #include <gr_top_block.h>
 #include <analog/sig_source_f.h>
-#include <gr_audio_sink.h>
+#include <audio/sink.h>
 
 using namespace gr;
 
@@ -58,7 +58,7 @@ int main(int argc, char **argv)
   analog::sig_source_f::sptr src1 = analog::sig_source_f::make(rate, analog::GR_SIN_WAVE, 440, ampl);
 
   // Construct an audio sink to accept audio tones
-  audio_sink::sptr sink = audio_make_sink(rate);
+  audio::sink::sptr sink = audio::sink::make(rate);
 
   // Connect output #0 of src0 to input #0 of sink (left channel)
   tb->connect(src0, 0, sink, 0);

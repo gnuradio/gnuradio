@@ -1,5 +1,6 @@
+/* -*- c++ -*- */
 /*
- * Copyright 2011,2013 Free Software Foundation, Inc.
+ * Copyright 2006,2013 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -19,21 +20,19 @@
  * Boston, MA 02110-1301, USA.
  */
 
+#ifndef INCLUDED_AUDIO_PORTAUDIO_IMPL_H
+#define INCLUDED_AUDIO_PORTAUDIO_IMPL_H
 
-#define GR_AUDIO_API
+#include <stdio.h>
+#include <portaudio.h>
 
-%include "gnuradio.i"
+namespace gr {
+  namespace audio {
 
-//load generated python docstrings
-%include "audio_swig_doc.i"
+    PaDeviceIndex pa_find_device_by_name(const char *name);
+    void print_devices();
 
-%{
-#include <audio/source.h>
-#include <audio/sink.h>
-%}
+  } /* namespace audio */
+} /* namespace gr */
 
-%include <audio/source.h>
-%include <audio/sink.h>
-
-GR_SWIG_BLOCK_MAGIC2(audio, source)
-GR_SWIG_BLOCK_MAGIC2(audio, sink)
+#endif /* INCLUDED_AUDIO_PORTAUDIO_IMPL_H */

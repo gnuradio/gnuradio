@@ -36,7 +36,7 @@
 #include <filter/firdes.h>
 #include <filter/fir_filter_ccf.h>
 #include <analog/quadrature_demod_cf.h>
-#include <gr_audio_sink.h>
+#include <audio/sink.h>
 #include <fcd_source_c.h>
 
 // other includes
@@ -94,7 +94,7 @@ int main(int argc, char **argv)
       analog::quadrature_demod_cf::make(rate/(2.0*pi*5000.0));
 
     // Audio sink
-    audio_sink::sptr sink = audio_make_sink(rate);
+    audio::sink::sptr sink = audio::sink::make(rate);
 
     // Connect blocks
     tb->connect(fcd, 0, filter, 0);

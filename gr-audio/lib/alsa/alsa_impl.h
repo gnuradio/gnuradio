@@ -1,5 +1,6 @@
+/* -*- c++ -*- */
 /*
- * Copyright 2011,2013 Free Software Foundation, Inc.
+ * Copyright 2004 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -19,21 +20,25 @@
  * Boston, MA 02110-1301, USA.
  */
 
+#ifndef INCLUDED_ALSA_IMPL_H
+#define INCLUDED_ALSA_IMPL_H
 
-#define GR_AUDIO_API
+#include <stdio.h>
+#include <alsa/asoundlib.h>
 
-%include "gnuradio.i"
+void
+gri_alsa_dump_hw_params (snd_pcm_t *pcm,
+			 snd_pcm_hw_params_t *hwparams,
+			 FILE *fp);
 
-//load generated python docstrings
-%include "audio_swig_doc.i"
+bool
+gri_alsa_pick_acceptable_format (snd_pcm_t *pcm,
+				 snd_pcm_hw_params_t *hwparams,
+				 snd_pcm_format_t acceptable_formats[],
+				 unsigned nacceptable_formats,
+				 snd_pcm_format_t *selected_format,
+				 const char *error_msg_tag,
+				 bool verbose);
 
-%{
-#include <audio/source.h>
-#include <audio/sink.h>
-%}
 
-%include <audio/source.h>
-%include <audio/sink.h>
-
-GR_SWIG_BLOCK_MAGIC2(audio, source)
-GR_SWIG_BLOCK_MAGIC2(audio, sink)
+#endif /* INCLUDED_GRI_ALSA_H */

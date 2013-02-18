@@ -1,5 +1,6 @@
+/* -*- c++ -*- */
 /*
- * Copyright 2011,2013 Free Software Foundation, Inc.
+ * Copyright 2005 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -19,21 +20,11 @@
  * Boston, MA 02110-1301, USA.
  */
 
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
 
-#define GR_AUDIO_API
+#include <jack_impl.h>
+#include <algorithm>
 
-%include "gnuradio.i"
 
-//load generated python docstrings
-%include "audio_swig_doc.i"
-
-%{
-#include <audio/source.h>
-#include <audio/sink.h>
-%}
-
-%include <audio/source.h>
-%include <audio/sink.h>
-
-GR_SWIG_BLOCK_MAGIC2(audio, source)
-GR_SWIG_BLOCK_MAGIC2(audio, sink)
