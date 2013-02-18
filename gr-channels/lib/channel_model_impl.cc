@@ -143,7 +143,7 @@ namespace gr {
 	  &channel_model::noise_voltage,
 	  pmt::mp(-10.0f), pmt::mp(10.0f), pmt::mp(0.0f),
 	  "", "Noise Voltage",
-	  RPC_PRIVLVL_MIN, DISPTIMESERIESF)));
+	  RPC_PRIVLVL_MIN, DISPSTRIPCHARTF)));
 
       add_rpc_variable(
         rpcbasic_sptr(new rpcbasic_register_get<channel_model, double>(
@@ -151,7 +151,7 @@ namespace gr {
 	   &channel_model::frequency_offset,
 	   pmt::mp(-1.0f), pmt::mp(1.0f), pmt::mp(0.0f),
 	   "Hz", "Frequency Offset",
-	   RPC_PRIVLVL_MIN, DISPTIMESERIESF)));
+	   RPC_PRIVLVL_MIN, DISPSTRIPCHARTF)));
 
       add_rpc_variable(
         rpcbasic_sptr(new rpcbasic_register_get<channel_model, double>(
@@ -159,7 +159,7 @@ namespace gr {
 	  &channel_model::timing_offset,
 	  pmt::mp(0.0), pmt::mp(2.0), pmt::mp(0.0),
 	  "", "Timing Offset",
-	  RPC_PRIVLVL_MIN, DISPTIMESERIESF)));
+	  RPC_PRIVLVL_MIN, DISPSTRIPCHARTF)));
 	  
       add_rpc_variable(
         rpcbasic_sptr(new rpcbasic_register_get<channel_model, std::vector<gr_complex> >(
@@ -169,7 +169,7 @@ namespace gr {
 	  pmt::make_c32vector(0,10),
 	  pmt::make_c32vector(0,0),
 	  "", "Multipath taps",
-	  RPC_PRIVLVL_MIN, DISPTIMESERIESC)));
+	  RPC_PRIVLVL_MIN, DISPSTRIPCHARTC)));
 
       add_rpc_variable(
         rpcbasic_sptr(new rpcbasic_register_set<channel_model, double>(

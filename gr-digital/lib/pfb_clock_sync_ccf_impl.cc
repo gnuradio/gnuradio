@@ -464,7 +464,7 @@ namespace gr {
 	      &pfb_clock_sync_ccf::error,
 	      pmt::mp(-2.0f), pmt::mp(2.0f), pmt::mp(0.0f),
 	      "", "Error signal of loop",
-	      RPC_PRIVLVL_MIN, DISPTIMESERIESF)));
+	      RPC_PRIVLVL_MIN, DISPSTRIPCHARTF)));
     
       add_rpc_variable(
           rpcbasic_sptr(new rpcbasic_register_get<pfb_clock_sync_ccf, float>(
@@ -472,7 +472,7 @@ namespace gr {
 	      &pfb_clock_sync_ccf::rate,
 	      pmt::mp(-2.0f), pmt::mp(2.0f), pmt::mp(0.0f),
 	      "", "Rate change of phase",
-	      RPC_PRIVLVL_MIN, DISPTIMESERIESF)));
+	      RPC_PRIVLVL_MIN, DISPSTRIPCHARTF)));
 
       add_rpc_variable(
           rpcbasic_sptr(new rpcbasic_register_get<pfb_clock_sync_ccf, float>(
@@ -480,7 +480,7 @@ namespace gr {
 	      &pfb_clock_sync_ccf::phase,
 	      pmt::mp(0), pmt::mp((int)d_nfilters), pmt::mp(0),
 	      "", "Current filter phase arm",
-	      RPC_PRIVLVL_MIN, DISPTIMESERIESF)));
+	      RPC_PRIVLVL_MIN, DISPSTRIPCHARTF)));
 
       add_rpc_variable(
           rpcbasic_sptr(new rpcbasic_register_get<pfb_clock_sync_ccf, float>(

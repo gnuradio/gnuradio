@@ -442,61 +442,61 @@ gr_block::setup_pc_rpc()
     rpcbasic_sptr(new rpcbasic_register_get<gr_block, float>(
       alias(), "avg noutput_items", &gr_block::pc_noutput_items,
       pmt::mp(0), pmt::mp(32768), pmt::mp(0),
-      "", "Average noutput items", RPC_PRIVLVL_MIN, DISPTIMESERIESF)));
+      "", "Average noutput items", RPC_PRIVLVL_MIN, DISPSTRIPCHARTF)));
 
   d_rpc_vars.push_back(
     rpcbasic_sptr(new rpcbasic_register_get<gr_block, float>(
       alias(), "var noutput_items", &gr_block::pc_noutput_items_var,
       pmt::mp(0), pmt::mp(32768), pmt::mp(0),
-      "", "Var. noutput items", RPC_PRIVLVL_MIN, DISPTIMESERIESF)));
+      "", "Var. noutput items", RPC_PRIVLVL_MIN, DISPSTRIPCHARTF)));
 
   d_rpc_vars.push_back(
     rpcbasic_sptr(new rpcbasic_register_get<gr_block, float>(
       alias(), "avg nproduced", &gr_block::pc_nproduced,
       pmt::mp(0), pmt::mp(32768), pmt::mp(0),
-      "", "Average items produced", RPC_PRIVLVL_MIN, DISPTIMESERIESF)));
+      "", "Average items produced", RPC_PRIVLVL_MIN, DISPSTRIPCHARTF)));
 
   d_rpc_vars.push_back(
     rpcbasic_sptr(new rpcbasic_register_get<gr_block, float>(
       alias(), "var nproduced", &gr_block::pc_nproduced_var,
       pmt::mp(0), pmt::mp(32768), pmt::mp(0),
-      "", "Var. items produced", RPC_PRIVLVL_MIN, DISPTIMESERIESF)));
+      "", "Var. items produced", RPC_PRIVLVL_MIN, DISPSTRIPCHARTF)));
 
   d_rpc_vars.push_back(
     rpcbasic_sptr(new rpcbasic_register_get<gr_block, float>(
       alias(), "avg work time", &gr_block::pc_work_time,
       pmt::mp(0), pmt::mp(1e9), pmt::mp(0),
-      "", "Average clock cycles in call to work", RPC_PRIVLVL_MIN, DISPTIMESERIESF)));
+      "", "Average clock cycles in call to work", RPC_PRIVLVL_MIN, DISPSTRIPCHARTF)));
 
   d_rpc_vars.push_back(
     rpcbasic_sptr(new rpcbasic_register_get<gr_block, float>(
       alias(), "var work time", &gr_block::pc_work_time_var,
       pmt::mp(0), pmt::mp(1e9), pmt::mp(0),
-      "", "Var. clock cycles in call to work", RPC_PRIVLVL_MIN, DISPTIMESERIESF)));
+      "", "Var. clock cycles in call to work", RPC_PRIVLVL_MIN, DISPSTRIPCHARTF)));
 
   d_rpc_vars.push_back(
     rpcbasic_sptr(new rpcbasic_register_get<gr_block, std::vector<float> >(
       alias(), "avg input \% full", &gr_block::pc_input_buffers_full,
       pmt::make_c32vector(0,0), pmt::make_c32vector(0,1), pmt::make_c32vector(0,0),
-      "", "Average of how full input buffers are", RPC_PRIVLVL_MIN, DISPTIMESERIESF)));
+      "", "Average of how full input buffers are", RPC_PRIVLVL_MIN, DISPSTRIPCHARTF)));
 
   d_rpc_vars.push_back(
     rpcbasic_sptr(new rpcbasic_register_get<gr_block, std::vector<float> >(
       alias(), "var input \% full", &gr_block::pc_input_buffers_full_var,
       pmt::make_c32vector(0,0), pmt::make_c32vector(0,1), pmt::make_c32vector(0,0),
-      "", "Var. of how full input buffers are", RPC_PRIVLVL_MIN, DISPTIMESERIESF)));
+      "", "Var. of how full input buffers are", RPC_PRIVLVL_MIN, DISPSTRIPCHARTF)));
 
   d_rpc_vars.push_back(
     rpcbasic_sptr(new rpcbasic_register_get<gr_block, std::vector<float> >(
       alias(), "avg output \% full", &gr_block::pc_output_buffers_full,
       pmt::make_c32vector(0,0), pmt::make_c32vector(0,1), pmt::make_c32vector(0,0),
-      "", "Average of how full output buffers are", RPC_PRIVLVL_MIN, DISPTIMESERIESF)));
+      "", "Average of how full output buffers are", RPC_PRIVLVL_MIN, DISPSTRIPCHARTF)));
 
   d_rpc_vars.push_back(
     rpcbasic_sptr(new rpcbasic_register_get<gr_block, std::vector<float> >(
       alias(), "var output \% full", &gr_block::pc_output_buffers_full_var,
       pmt::make_c32vector(0,0), pmt::make_c32vector(0,1), pmt::make_c32vector(0,0),
-      "", "Var. of how full output buffers are", RPC_PRIVLVL_MIN, DISPTIMESERIESF)));
+      "", "Var. of how full output buffers are", RPC_PRIVLVL_MIN, DISPSTRIPCHARTF)));
 #endif /* GR_CTRLPORT */
 }
 

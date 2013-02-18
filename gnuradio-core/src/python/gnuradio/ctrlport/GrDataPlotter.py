@@ -32,9 +32,10 @@ except ImportError:
     sys.exit(1)
 
 class GrDataPlotterC(gr.top_block):
-    def __init__(self, name, rate, pmin=None, pmax=None):
+    def __init__(self, name, rate, pmin=None, pmax=None, stripchart=False):
         gr.top_block.__init__(self)
 
+        self._stripchart = stripchart
         self._name = name
         self._npts = 500
         samp_rate = 1.0
@@ -84,33 +85,39 @@ class GrDataPlotterC(gr.top_block):
             self._npts = npts
             self.snk.reset()
         
-        # Update the plot data depending on type
-        if(type(data) == list):
-            data_r = data[0::2]
-            data_i = data[1::2]
-            data = [complex(r,i) for r,i in zip(data_r, data_i)]
-            if(len(data) > self._npts):
-                self.src.set_data(data)
-                self._last_data = data[-self._npts:]
-            else:
-                newdata = self._last_data[-(self._npts-len(data)):]
-                newdata += data
-                self.src.set_data(newdata)
-                self._last_data = newdata
+        if(self._stripchart):
+            # Update the plot data depending on type
+            if(type(data) == list):
+                data_r = data[0::2]
+                data_i = data[1::2]
+                data = [complex(r,i) for r,i in zip(data_r, data_i)]
+                if(len(data) > self._npts):
+                    self.src.set_data(data)
+                    self._last_data = data[-self._npts:]
+                else:
+                    newdata = self._last_data[-(self._npts-len(data)):]
+                    newdata += data
+                    self.src.set_data(newdata)
+                    self._last_data = newdata
 
-        else: # single value update
-            if(self._data_len < self._npts):
-                self._last_data[self._data_len] = data
-                self._data_len += 1
-            else:
-                self._last_data = self._last_data[1:]
-                self._last_data.append(data)
-            self.src.set_data(self._last_data)
+            else: # single value update
+                if(self._data_len < self._npts):
+                    self._last_data[self._data_len] = data
+                    self._data_len += 1
+                else:
+                    self._last_data = self._last_data[1:]
+                    self._last_data.append(data)
+                self.src.set_data(self._last_data)
+        else:
+            if(type(data) != list):
+                data = [data,]
+            self.src.set_data(data)
 
 class GrDataPlotterF(gr.top_block):
-    def __init__(self, name, rate, pmin=None, pmax=None):
+    def __init__(self, name, rate, pmin=None, pmax=None, stripchart=False):
         gr.top_block.__init__(self)
 
+        self._stripchart = stripchart
         self._name = name
         self._npts = 500
         samp_rate = 1.0
@@ -156,28 +163,32 @@ class GrDataPlotterF(gr.top_block):
                 self._last_data += (npts - self._npts)*[0,]
             self._npts = npts
             self.snk.reset()
-        
-        # Update the plot data depending on type
-        if(type(data) == list):
-            if(len(data) > self._npts):
-                self.src.set_data(data)
-                self._last_data = data[-self._npts:]
-            else:
-                newdata = self._last_data[-(self._npts-len(data)):]
-                newdata += data
-                self.src.set_data(newdata)
-                self._last_data = newdata
 
-        else: # single value update
-            if(self._data_len < self._npts):
-                self._last_data[self._data_len] = data
-                self._data_len += 1
-            else:
-                self._last_data = self._last_data[1:]
-                self._last_data.append(data)
-            self.src.set_data(self._last_data)
+        if(self._stripchart):
+            # Update the plot data depending on type
+            if(type(data) == list):
+                if(len(data) > self._npts):
+                    self.src.set_data(data)
+                    self._last_data = data[-self._npts:]
+                else:
+                    newdata = self._last_data[-(self._npts-len(data)):]
+                    newdata += data
+                    self.src.set_data(newdata)
+                    self._last_data = newdata
 
-
+            else: # single value update
+                if(self._data_len < self._npts):
+                    self._last_data[self._data_len] = data
+                    self._data_len += 1
+                else:
+                    self._last_data = self._last_data[1:]
+                    self._last_data.append(data)
+                self.src.set_data(self._last_data)
+        else:
+            if(type(data) != list):
+                data = [data,]
+            self.src.set_data(data)
+            
 class GrDataPlotterConst(gr.top_block):
     def __init__(self, name, rate, pmin=None, pmax=None):
         gr.top_block.__init__(self)

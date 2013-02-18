@@ -91,14 +91,14 @@ namespace gr {
 			&nop_impl::a,
 			pmt::mp(-128), pmt::mp(127), pmt::mp(0),
 			"", "Value of a",
-			RPC_PRIVLVL_MIN, DISPTIMESERIESF)));
+			RPC_PRIVLVL_MIN, DISPSTRIPCHARTF)));
 
       d_get_32i_rpcs.push_back(get_32i_sptr
 	 (new get_32i_t(d_name, "b", this, unique_id(),
 			&nop_impl::b,
 			pmt::mp(-128), pmt::mp(127), pmt::mp(0),
 			"", "Value of b",
-			RPC_PRIVLVL_MIN, DISPTIMESERIESF)));
+			RPC_PRIVLVL_MIN, DISPSTRIPCHARTF)));
 
       d_set_32i_rpcs.push_back(set_32i_sptr
 	 (new set_32i_t(d_name, "a", this, unique_id(),
