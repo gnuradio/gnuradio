@@ -38,9 +38,9 @@ link_directories(
 # Setup library
 ########################################################################
 list(APPEND gr_uhd_sources
-    gr_uhd_usrp_source.cc
-    gr_uhd_usrp_sink.cc
-    gr_uhd_amsg_source.cc
+    usrp_source_impl.cc
+    usrp_sink_impl.cc
+    amsg_source_impl.cc
 )
 
 list(APPEND uhd_libs

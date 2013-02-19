@@ -1,4 +1,4 @@
-# Copyright 2011 Free Software Foundation, Inc.
+# Copyright 2011,2013 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -21,10 +21,10 @@
 # Install header files
 ########################################################################
 install(FILES
-    gr_uhd_api.h
-    gr_uhd_usrp_source.h
-    gr_uhd_usrp_sink.h
-    gr_uhd_amsg_source.h
-    DESTINATION ${GR_INCLUDE_DIR}/gnuradio
+    api.h
+    usrp_source.h
+    usrp_sink.h
+    amsg_source.h
+    DESTINATION ${GR_INCLUDE_DIR}/gnuradio/gr_uhd
     COMPONENT "uhd_devel"
 )

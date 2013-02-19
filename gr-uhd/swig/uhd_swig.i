@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2010-2012 Free Software Foundation, Inc.
+ * Copyright 2010-2013 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -41,9 +41,9 @@
 // block headers
 ////////////////////////////////////////////////////////////////////////
 %{
-#include <gr_uhd_usrp_source.h>
-#include <gr_uhd_usrp_sink.h>
-#include <gr_uhd_amsg_source.h>
+#include <uhd/usrp_source.h>
+#include <uhd/usrp_sink.h>
+#include <uhd/amsg_source.h>
 %}
 
 ////////////////////////////////////////////////////////////////////////
@@ -99,14 +99,13 @@
 ////////////////////////////////////////////////////////////////////////
 // block magic
 ////////////////////////////////////////////////////////////////////////
-GR_SWIG_BLOCK_MAGIC(uhd,usrp_source)
-%include <gr_uhd_usrp_source.h>
+%include <uhd/usrp_source.h>
+%include <uhd/usrp_sink.h>
+%include <uhd/amsg_source.h>
 
-GR_SWIG_BLOCK_MAGIC(uhd,usrp_sink)
-%include <gr_uhd_usrp_sink.h>
-
-GR_SWIG_BLOCK_MAGIC(uhd,amsg_source)
-%include <gr_uhd_amsg_source.h>
+GR_SWIG_BLOCK_MAGIC2(uhd, usrp_source)
+GR_SWIG_BLOCK_MAGIC2(uhd, usrp_sink)
+GR_SWIG_BLOCK_MAGIC2(uhd, amsg_source)
 
 ////////////////////////////////////////////////////////////////////////
 // device discovery (no need to %include device.hpp)

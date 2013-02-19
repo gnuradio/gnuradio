@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2012-2013 Free Software Foundation, Inc.
+ * Copyright 2011-2013 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -20,33 +20,29 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef INCLUDED_GR_UHD_COMMON_H
-#define INCLUDED_GR_UHD_COMMON_H
-
-#include <uhd/version.hpp>
-#include <boost/format.hpp>
-#include <stdexcept>
+#include <uhd/amsg_source.h>
+#include <gruel/thread.h>
 
 namespace gr {
   namespace uhd {
 
-    static inline void check_abi(void)
+    class amsg_source_impl : public amsg_source
     {
-#ifdef UHD_VERSION_ABI_STRING
-      if(std::string(UHD_VERSION_ABI_STRING) == ::uhd::get_abi_string())
-        return;
+    public:
+      amsg_source_impl(const ::uhd::device_addr_t &device_addr,
+                       gr_msg_queue_sptr msgq);
+      ~amsg_source_impl();
 
-      throw std::runtime_error(str(boost::format(
-        "\nGR-UHD detected ABI compatibility mismatch with UHD library.\n"
-        "GR-UHD was build against ABI: %s,\n"
-        "but UHD library reports ABI: %s\n"
-        "Suggestion: install an ABI compatible version of UHD,\n"
-        "or rebuild GR-UHD component against this ABI version.\n"
-      ) % UHD_VERSION_ABI_STRING % ::uhd::get_abi_string()));
-#endif
-    }
+      void recv_loop();
+      void post(gr_message_sptr msg);
+
+    protected:
+      ::uhd::usrp::multi_usrp::sptr _dev;
+      gruel::thread _amsg_thread;
+      gr_msg_queue_sptr _msgq;
+      bool _running;
+    };
 
   } /* namespace uhd */
 } /* namespace gr */
 
-#endif /* INCLUDED_GR_UHD_COMMON_H */

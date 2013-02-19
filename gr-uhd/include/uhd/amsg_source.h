@@ -1,5 +1,6 @@
+/* -*- c++ -*- */
 /*
- * Copyright 2011 Free Software Foundation, Inc.
+ * Copyright 2011,2013 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -22,29 +23,37 @@
 #ifndef INCLUDED_GR_UHD_AMSG_SOURCE_H
 #define INCLUDED_GR_UHD_AMSG_SOURCE_H
 
-#include <gr_uhd_api.h>
+#include <uhd/api.h>
 #include <uhd/usrp/multi_usrp.hpp>
 #include <gr_msg_queue.h>
 
-class uhd_amsg_source;
+namespace gr {
+  namespace uhd {
 
-/*!
- * \brief Make a new USRP asynchronous message-based source block.
- * \ingroup uhd_blk
- */
-GR_UHD_API boost::shared_ptr<uhd_amsg_source> uhd_make_amsg_source(
-    const uhd::device_addr_t &device_addr,
-    gr_msg_queue_sptr msgq
-);
+    class uhd_amsg_source;
 
-class GR_UHD_API uhd_amsg_source{
-public:
-    /*!
-     * Convert a raw asynchronous message to an asynchronous metatdata object.
-     * \return The asynchronous metadata object.
-     */
-    static uhd::async_metadata_t msg_to_async_metadata_t(const gr_message_sptr msg);
+    class GR_UHD_API amsg_source
+    {
+    public:
+      // gr::uhd::amsg_source::sptr
+      typedef boost::shared_ptr<amsg_source> sptr;
+      
+      /*!
+       * \brief Make a new USRP asynchronous message-based source block.
+       * \ingroup uhd_blk
+       */
+      static sptr make(const ::uhd::device_addr_t &device_addr,
+                       gr_msg_queue_sptr msgq);
 
-};
+      /*!
+       * Convert a raw asynchronous message to an asynchronous metatdata object.
+       * \return The asynchronous metadata object.
+       */
+      static ::uhd::async_metadata_t
+        msg_to_async_metadata_t(const gr_message_sptr msg);
+    };
+
+  } /* namespace uhd */
+} /* namespace gr */
 
 #endif /* INCLUDED_GR_UHD_AMSG_SOURCE_H */
