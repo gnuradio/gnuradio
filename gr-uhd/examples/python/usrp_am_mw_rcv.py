@@ -21,6 +21,7 @@
 #
 
 from gnuradio import gr, eng_notation
+from gnuradio import blocks
 from gnuradio import filter
 from gnuradio import analog
 from gnuradio import audio

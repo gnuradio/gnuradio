@@ -150,7 +150,7 @@ class wfm_rx_sca_block (stdgui2.std_top_block):
                                                  demod_rate,         # sampling rate
                                                  max_sca_dev,        # cutoff freq
                                                  max_sca_dev/3,      # trans. band
-                                                 analog.firdes.WIN_HANN) # filter type
+                                                 filter.firdes.WIN_HANN) # filter type
 
         self.ddc = filter.freq_xlating_fir_filter_fcf(sca_chanfilt_decim, # decim rate
                                                       sca_chan_coeffs,    # taps

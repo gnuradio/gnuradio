@@ -20,7 +20,7 @@
 # Boston, MA 02110-1301, USA.
 #
 
-from gnuradio import gr, optfir, audio, uhd
+from gnuradio import gr, audio, uhd
 from gnuradio import blocks
 from gnuradio import filter
 from gnuradio import analog

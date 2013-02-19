@@ -20,9 +20,11 @@
 # Boston, MA 02110-1301, USA.
 #
 
-from gnuradio import gr, eng_notation, window
+from gnuradio import gr, eng_notation
 from gnuradio import blocks
 from gnuradio import audio
+from gnuradio import filter
+from gnuradio import fft
 from gnuradio import uhd
 from gnuradio.eng_option import eng_option
 from optparse import OptionParser
@@ -154,8 +156,8 @@ class my_top_block(gr.top_block):
 
 	s2v = blocks.stream_to_vector(gr.sizeof_gr_complex, self.fft_size)
 
-        mywindow = window.blackmanharris(self.fft_size)
-        fft = gr.fft_vcc(self.fft_size, True, mywindow)
+        mywindow = filter.window.blackmanharris(self.fft_size)
+        ffter = fft.fft_vcc(self.fft_size, True, mywindow)
         power = 0
         for tap in mywindow:
             power += tap*tap
@@ -186,8 +188,8 @@ class my_top_block(gr.top_block):
                                     dwell_delay)
 
         # FIXME leave out the log10 until we speed it up
-	#self.connect(self.u, s2v, fft, c2mag, log, stats)
-	self.connect(self.u, s2v, fft, c2mag, stats)
+	#self.connect(self.u, s2v, ffter, c2mag, log, stats)
+	self.connect(self.u, s2v, ffter, c2mag, stats)
 
         if options.gain is None:
             # if no gain was specified, use the mid-point in dB

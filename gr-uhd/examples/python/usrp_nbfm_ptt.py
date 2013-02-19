@@ -28,6 +28,7 @@ from optparse import OptionParser
 from gnuradio import gr, audio, uhd
 from gnuradio import analog
 from gnuradio import blocks
+from gnuradio import filter
 from gnuradio.eng_option import eng_option
 from gnuradio.wxgui import stdgui2, fftsink2, scopesink2, slider, form
 
@@ -304,20 +305,20 @@ class transmit_path(gr.hier_block2):
         self.audio = audio.source(int(self.audio_rate), audio_input)
         self.audio_amp = blocks.multiply_const_ff(self.audio_gain)
 
-        lpf = gr.firdes.low_pass (1,                  # gain
-                                  self.audio_rate,    # sampling rate
-                                  3800,               # low pass cutoff freq
-                                  300,                # width of trans. band
-                                  gr.firdes.WIN_HANN) # filter type
+        lpf = filter.firdes.low_pass(1,                  # gain
+                                     self.audio_rate,    # sampling rate
+                                     3800,               # low pass cutoff freq
+                                     300,                # width of trans. band
+                                     filter.firdes.WIN_HANN) # filter type
 
-        hpf = gr.firdes.high_pass (1,                 # gain
-                                  self.audio_rate,    # sampling rate
-                                  325,                # low pass cutoff freq
-                                  50,                 # width of trans. band
-                                  gr.firdes.WIN_HANN) # filter type
+        hpf = filter.firdes.high_pass(1,                  # gain
+                                      self.audio_rate,    # sampling rate
+                                      325,                # low pass cutoff freq
+                                      50,                 # width of trans. band
+                                      filter.firdes.WIN_HANN) # filter type
 
         audio_taps = convolve(array(lpf),array(hpf))
-        self.audio_filt = gr.fir_filter_fff(1,audio_taps)
+        self.audio_filt = filter.fir_filter_fff(1,audio_taps)
 
         self.pl = analog.ctcss_gen_f(self.audio_rate,123.0)
         self.add_pl = blocks.add_ff()
@@ -390,11 +391,11 @@ class receive_path(gr.hier_block2):
 
         # Create filter to get actual channel we want
         nfilts = 32
-        chan_coeffs = gr.firdes.low_pass (nfilts,             # gain
-                                          nfilts*dev_rate,    # sampling rate
-                                          13e3,               # low pass cutoff freq
-                                          4e3,                # width of trans. band
-                                          gr.firdes.WIN_HANN) # filter type
+        chan_coeffs = filter.firdes.low_pass(nfilts,             # gain
+                                             nfilts*dev_rate,    # sampling rate
+                                             13e3,               # low pass cutoff freq
+                                             4e3,                # width of trans. band
+                                             filter.firdes.WIN_HANN) # filter type
 
         rrate = self.quad_rate / dev_rate
         self.resamp = filter.pfb.arb_resampler_ccf(rrate, chan_coeffs, nfilts)

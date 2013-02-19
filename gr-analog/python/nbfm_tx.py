@@ -88,5 +88,6 @@ class ctcss_gen_f(gr.hier_block2):
 				gr.io_signature(0, 0, 0),               # Input signature
 				gr.io_signature(1, 1, gr.sizeof_float)) # Output signature
 
-        self.plgen = analog.sig_source_f(sample_rate, gr.GR_SIN_WAVE, tone_freq, 0.1, 0.0)
+        self.plgen = analog.sig_source_f(sample_rate, analog.GR_SIN_WAVE,
+                                         tone_freq, 0.1, 0.0)
 	self.connect(self.plgen, self)
