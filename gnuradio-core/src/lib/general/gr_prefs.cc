@@ -84,7 +84,6 @@ gr_prefs::_sys_prefs_filenames()
   // installed path config files.
   fs::path homedir = fs::path(gr_appdata_path());
   homedir /= ".gnuradio/config.conf";
-  std::cerr << "Checking path:" << homedir << std::endl;
   if(fs::exists(homedir)) {
     fnames.insert(fnames.begin(), homedir.string());
   }    
