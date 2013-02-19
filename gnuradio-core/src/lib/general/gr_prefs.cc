@@ -25,6 +25,7 @@
 #endif
 
 #include <gr_prefs.h>
+#include <gr_sys_paths.h>
 #include <gr_constants.h>
 #include <algorithm>
 
@@ -77,6 +78,17 @@ gr_prefs::_sys_prefs_filenames()
     fnames.push_back(p.string());
   }
   std::sort(fnames.begin(), fnames.end());
+
+  // Find if there is a ~/.gnuradio/config file and add this to the
+  // beginning of the file list to override any preferences in the
+  // installed path config files.
+  fs::path homedir = fs::path(gr_appdata_path());
+  homedir /= ".gnuradio/config.conf";
+  std::cerr << "Checking path:" << homedir << std::endl;
+  if(fs::exists(homedir)) {
+    fnames.insert(fnames.begin(), homedir.string());
+  }    
+
   return fnames;
 }
 
