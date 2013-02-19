@@ -1,0 +1,5 @@
+## Use this to create an endpoint used to export ControlPort.
+## For more details:
+##    http://doc.zeroc.com/display/Ice/Proxy+and+Endpoint+Syntax
+
+# ControlPort.Endpoints = tcp -t 300 -h 127.0.0.1 -p 23456

@@ -133,6 +133,7 @@ CPACK_COMPONENT("core_swig"
 
 install(
     FILES gnuradio-core.conf
+    ctrlport.conf.example
     DESTINATION ${GR_PREFSDIR}
     COMPONENT "core_runtime"
 )
@@ -175,14 +176,9 @@ SET(GR_PKG_CTRL_EXAMPLES_DIR ${GR_PKG_DATA_DIR}/examples/ctrlport)
 SET(GR_PKG_CTRL_SLICE_DIR ${GR_PKG_DATA_DIR}/ctrlport)
 file(TO_NATIVE_PATH ${CMAKE_INSTALL_PREFIX}/${GR_PKG_CTRL_SLICE_DIR} slicedir)
 
-configure_file(
-    ${CMAKE_CURRENT_SOURCE_DIR}/ctrlport.conf.in
-    ${CMAKE_CURRENT_BINARY_DIR}/ctrlport.conf
-@ONLY)
-
 install(
-    FILES ${CMAKE_CURRENT_BINARY_DIR}/ctrlport.conf
-    DESTINATION ${GR_PREFSDIR}
+    FILES ctrlport.conf.example
+    DESTINATION ${SYSCONFDIR}/${CMAKE_PROJECT_NAME}
     COMPONENT "core_runtime"
 )
 

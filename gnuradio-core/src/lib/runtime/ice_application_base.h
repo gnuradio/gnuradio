@@ -24,6 +24,7 @@
 #define ICE_APPLICATION_BASE_H
 
 #include <gr_core_api.h>
+#include <gr_prefs.h>
 #include <Ice/Ice.h>
 #include <boost/thread.hpp>
 #include <boost/thread/mutex.hpp>
@@ -110,39 +111,18 @@ ice_application_base<TserverBase, TserverClass>::ice_application_base(TserverCla
 template<typename TserverBase, typename TserverClass>
 void ice_application_base<TserverBase, TserverClass>::starticeexample()
 {
-  char derp[] = ""; char* argv[2]; argv[0]=derp;
-  char buf[1024]; buf[0] = 0;
-  const char iceconf[] = "--Ice.Config=";
-  FILE *fp;
+  char* argv[2];
+  argv[0] = (char*)"";
 
-  sprintf(buf, "/proc/%d/cmdline", getpid());
+  std::string conffile = gr_prefs::singleton()->get_string("ControlPort", "config", "");
 
-  if(NULL == (fp = fopen(buf, "r"))) {
-    fprintf(stderr, "Cannot open file %s\n", buf);
-    exit(EXIT_FAILURE);
-  }
-
-  unsigned int counter(0);
-  while(fread(buf, 1, 1, fp)) {
-    if(*buf == iceconf[counter]) {
-      if(++counter == sizeof(iceconf) - 1) {
-	int result = fread(buf, sizeof(buf), 1, fp);
-	if((result == 0) && (feof(fp) == 0)) {
-	  fprintf(stderr, "ICE file read failur %d\n", ferror(fp));
-	  clearerr(fp);
-	  exit(EXIT_FAILURE);
-	}
-	break;
-      }
-    }
-  }
-  fclose(fp);
-
-  if(buf[0]) {
+  if(conffile.size() > 0) {
+    std::stringstream iceconf;
     ice_application_common::d_have_ice_config = true; 
     ice_application_common::d_main_called = true;
-    d_application->main(0, argv, buf);
-  } 
+    iceconf << conffile;
+    d_application->main(0, argv, iceconf.str().c_str());
+  }
   else {
     ice_application_common::d_have_ice_config = false; 
     ice_application_common::d_main_called = true;

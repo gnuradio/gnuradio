@@ -1,4 +1,4 @@
-/*! \page page_filter filter Signal Processing Blocks
+/*! \page page_ctrlport ControlPort
 
 \section Introduction
 
@@ -33,6 +33,31 @@ installed by hand, GNU Radio assumes ICE is installed into
 /opt/Ice-3.4.2. If this is not the case, you can tell GNU Radio where
 to find ICE by passing to cmake the following:
 
-    -DICE_MANUAL_INSTALL_PATH=<your path here>
+    -DICE_MANUAL_INSTALL_PATH=\<your path here\>
+
+\section conf Configuration
+
+ControlPort is configured using two files. The first is the GNU Radio
+preferences configuration while the second file is specific to the
+type of transport engine used. Since we are focusing on using ICE, the
+configuration file is the ICE configuration file and format.
+
+The GNU Radio preferences file allows you to enable or disable
+ControlPort. If enabled and a configuration file is used, this file
+also specifies the location of the configuration file.
+
+\code
+  [ControlPort]
+  on = True
+  config = ctrlport.conf
+\endcode
+
+The 'ctrlport.conf' holds specific properties related to the transport
+engine. If using ICE, more information can be found here:
+http://doc.zeroc.com/display/Ice/Properties+and+Configuration
+
+An example ICE config file is installed with GNU Radio to show how to
+change the exposed endpoint of ControlPort. This file is installed
+as ${prefix}/etc/gnuradio/ctrlport.conf.example.
 
 */
