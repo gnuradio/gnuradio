@@ -77,7 +77,6 @@ public slots:
   void setStop();
 
   void setGrid(bool on);
-  void setGrid();
 
   void saveFigure();
 
