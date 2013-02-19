@@ -28,6 +28,7 @@
 #include <gr_block_detail.h>
 #include <gr_io_signature.h>
 #include <gr_buffer.h>
+#include <gr_prefs.h>
 #include <volk/volk.h>
 #include <iostream>
 #include <map>
@@ -405,11 +406,13 @@ void
 gr_flat_flowgraph::enable_pc_rpc()
 {
 #ifdef GR_PERFORMANCE_COUNTERS
-  gr_basic_block_viter_t p;
-  for(p = d_blocks.begin(); p != d_blocks.end(); p++) {
-    gr_block_sptr block = cast_to_block_sptr(*p);
-    if(!block->is_pc_rpc_set())
-      block->setup_pc_rpc();
+  if(gr_prefs::singleton()->get_bool("PerfCounters", "on", false)) {
+    gr_basic_block_viter_t p;
+    for(p = d_blocks.begin(); p != d_blocks.end(); p++) {
+      gr_block_sptr block = cast_to_block_sptr(*p);
+      if(!block->is_pc_rpc_set())
+	block->setup_pc_rpc();
+    }
   }
 #endif /* GR_PERFORMANCE_COUNTERS */
 }
