@@ -27,6 +27,8 @@ except ImportError:
     print "Error: Program requires PyQt4."
     sys.exit(1)
 
+import numpy
+
 class plot_form(QtGui.QWidget):
     def __init__(self, top_block, title=''):
         QtGui.QWidget.__init__(self, None)
@@ -127,12 +129,16 @@ class plot_form(QtGui.QWidget):
         self.gui_y_axis(top_block._y_value-top_block._y_range, top_block._y_value)
 
         # Create a slider to move the plot's y-axis offset
+        _ymax = numpy.int32(min(numpy.iinfo(numpy.int32).max, self.top_block._y_max))
+        _ymin = numpy.int32(max(numpy.iinfo(numpy.int32).min, self.top_block._y_min))
+        _yrng = numpy.int32(min(numpy.iinfo(numpy.int32).max, self.top_block._y_range))
+        _yval = numpy.int32(min(numpy.iinfo(numpy.int32).max, self.top_block._y_value))
         self.ybar = QtGui.QSlider(QtCore.Qt.Vertical, self)
-        self.ybar.setMinimum(1000*self.top_block._y_min)
-        self.ybar.setMaximum(1000*self.top_block._y_max)
-        self.ybar.setSingleStep(1000*(self.top_block._y_range/10))
-        self.ybar.setPageStep(1000*(self.top_block._y_range/2))
-        self.ybar.setValue(1000*self.top_block._y_value)
+        self.ybar.setMinimum(1000*_ymin)
+        self.ybar.setMaximum(1000*_ymax)
+        self.ybar.setSingleStep(1000*(_yrng/10))
+        self.ybar.setPageStep(1000*(_yrng/2))
+        self.ybar.setValue(1000*_yval)
         self.connect(self.ybar, QtCore.SIGNAL("valueChanged(int)"),
                      self.update_yaxis_slider)
         self.layout.addWidget(self.ybar, 1,1,1,1)

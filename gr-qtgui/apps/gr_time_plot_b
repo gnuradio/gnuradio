@@ -24,7 +24,7 @@ from gnuradio import gr
 import scipy
 
 try:
-    import gnuradio.qtgui.plot_tiome_base as plot_base
+    import gnuradio.qtgui.plot_time_base as plot_base
 except ImportError:
     import plot_time_base as plot_base
 
