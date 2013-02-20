@@ -126,6 +126,7 @@ link_directories(${Boost_LIBRARY_DIRS})
 ########################################################################
 list(APPEND gr_blocks_sources
     ${generated_sources}
+    count_bits.cc
     add_ff_impl.cc
     char_to_float_impl.cc
     char_to_short_impl.cc

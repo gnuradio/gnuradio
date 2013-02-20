@@ -152,6 +152,7 @@ list(APPEND digital_sources
     probe_mpsk_snr_est_c_impl.cc
     scrambler_bb_impl.cc
     simple_framer_impl.cc
+    simple_correlator_impl.cc
 )
 
 list(APPEND digital_libs
