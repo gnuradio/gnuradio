@@ -29,7 +29,7 @@
 #include "bch3221.h"
 #include "util.h"
 #include <gr_io_signature.h>
-#include <gr_count_bits.h>
+#include <blocks/count_bits.h>
 #include <cstdio>
 
 namespace gr {
@@ -100,12 +100,12 @@ namespace gr {
       int64_t val = d_sync[d_index];
       int32_t marker = ((val & 0x0000FFFFFFFF0000ULL)) >> 16;
 
-      if(gr_count_bits32(marker^FLEX_SYNC_MARKER) < 4) {
+      if(gr::blocks::count_bits32(marker^FLEX_SYNC_MARKER) < 4) {
         int32_t code = ((val & 0xFFFF000000000000ULL) >> 32) |
 	  (val & 0x000000000000FFFFULL);
 
         for(int i = 0; i < num_flex_modes; i++) {
-	  if(gr_count_bits32(code^flex_modes[i].sync) < 4) {
+	  if(gr::blocks::count_bits32(code^flex_modes[i].sync) < 4) {
 	    d_mode = i;
 	    return true;
 	  }

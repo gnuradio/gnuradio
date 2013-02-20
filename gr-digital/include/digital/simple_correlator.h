@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2004 Free Software Foundation, Inc.
+ * Copyright 2004,2013 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -20,12 +20,29 @@
  * Boston, MA 02110-1301, USA.
  */
 
-GR_SWIG_BLOCK_MAGIC(gr,simple_correlator);
+#ifndef INCLUDED_GR_SIMPLE_CORRELATOR_H
+#define INCLUDED_GR_SIMPLE_CORRELATOR_H
 
-gr_simple_correlator_sptr gr_make_simple_correlator (int payload_bytesize);
+#include <digital/api.h>
+#include <gr_block.h>
 
-class gr_simple_correlator : public gr_block
-{
- private:
-  gr_simple_correlator (int payload_bytesize);
-};
+namespace gr {
+  namespace digital {
+    
+    /*!
+     * \brief inverse of simple_framer (more or less)
+     * \ingroup sync_blk
+     */
+    class DIGITAL_API simple_correlator : virtual public gr_block
+    {
+    public:
+      // gr::digital::simple_correlator::sptr
+      typedef boost::shared_ptr<simple_correlator> sptr;
+
+      static sptr make(int payload_bytesize);
+    };
+
+  } /* namespace digital */
+} /* namespace gr */
+
+#endif /* INCLUDED_GR_SIMPLE_CORRELATOR_H */

@@ -83,8 +83,6 @@
 
 		<block>gr_mpsk_sync_cc</block>
 
-		<block>gr_simple_correlator</block>
-
 		<block>blks2_packet_decoder</block>
 		<block>blks2_packet_encoder</block>
 	</cat>

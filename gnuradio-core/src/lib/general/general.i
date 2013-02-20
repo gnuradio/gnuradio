@@ -32,7 +32,6 @@
 #include <gr_check_counting_s.h>
 #include <gr_lfsr_32k_source_s.h>
 #include <gr_check_lfsr_32k_s.h>
-#include <gr_simple_correlator.h>
 #include <gr_align_on_samplenumbers_ss.h>
 #include <gr_complex_to_xxx.h>
 #include <gr_complex_to_interleaved_short.h>
@@ -82,7 +81,6 @@
 %include "gr_check_counting_s.i"
 %include "gr_lfsr_32k_source_s.i"
 %include "gr_check_lfsr_32k_s.i"
-%include "gr_simple_correlator.i"
 %include "gr_align_on_samplenumbers_ss.i"
 %include "gr_complex_to_xxx.i"
 %include "gr_complex_to_interleaved_short.i"

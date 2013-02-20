@@ -6,9 +6,9 @@
  -->
 <block>
 	<name>Simple Correlator</name>
-	<key>gr_simple_correlator</key>
-	<import>from gnuradio import gr</import>
-	<make>gr.simple_correlator($payload_bytesize)</make>
+	<key>digital_simple_correlator</key>
+	<import>from gnuradio import digital</import>
+	<make>digital.simple_correlator($payload_bytesize)</make>
 	<param>
 		<name>Payload Byte Size</name>
 		<key>payload_bytesize</key>

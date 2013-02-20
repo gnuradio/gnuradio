@@ -89,6 +89,7 @@ add_custom_target(blocks_generated_includes DEPENDS
 install(FILES
     ${generated_includes}
     api.h
+    count_bits.h
     add_ff.h
     char_to_float.h
     char_to_short.h
