@@ -21,6 +21,8 @@
 #
 
 from gnuradio import gr, gr_unittest
+import blocks_swig as blocks
+import filter_swig as filter
 import digital_swig as digital
 
 class test_simple_correlator(gr_unittest.TestCase):
@@ -40,15 +42,15 @@ class test_simple_correlator(gr_unittest.TestCase):
 
         # Filter taps to expand the data to oversample by 8
         # Just using a RRC for some basic filter shape
-        taps = gr.firdes.root_raised_cosine(8, 8, 1.0, 0.5, 21)
+        taps = filter.firdes.root_raised_cosine(8, 8, 1.0, 0.5, 21)
         
         src = gr.vector_source_b(expected_result)
         frame = digital.simple_framer(4)
         unpack = gr.packed_to_unpacked_bb(1, gr.GR_MSB_FIRST)
-        expand = gr.interp_fir_filter_fff(8, taps)
-        b2f = gr.char_to_float()
-        mult2 = gr.multiply_const_ff(2)
-        sub1 = gr.add_const_ff(-1)
+        expand = filter.interp_fir_filter_fff(8, taps)
+        b2f = blocks.char_to_float()
+        mult2 = blocks.multiply_const_ff(2)
+        sub1 = blocks.add_const_ff(-1)
         op = digital.simple_correlator(4)
         dst = gr.vector_sink_b()
         self.tb.connect(src, frame, unpack, b2f, mult2, sub1, expand)

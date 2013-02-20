@@ -32,7 +32,7 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 #include <stdexcept>
-#include <gr_count_bits.h>
+#include <blocks/count_bits.h>
 #include <string.h>
 
 namespace gr {
@@ -130,7 +130,7 @@ static const int DEFAULT_THRESHOLD = 12;
 	      d_shift_reg = d_shift_reg << 1;
 
 	    // Compute popcnt of putative sync vector
-	    if(gr_count_bits64(d_shift_reg ^ d_sync_vector) <= d_threshold) {
+	    if(gr::blocks::count_bits64(d_shift_reg ^ d_sync_vector) <= d_threshold) {
 	      // Found it, set up for header decode
 	      enter_have_sync();
 	      break;

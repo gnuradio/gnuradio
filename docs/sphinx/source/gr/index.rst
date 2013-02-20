@@ -127,13 +127,6 @@ Information Coding and Decoding
    gnuradio.gr.fake_channel_encoder_pp
    gnuradio.gr.fake_channel_decoder_pp
 
-Synchronization
-^^^^^^^^^^^^^^^
-
-.. autosummary::
-   :nosignatures:
-
-   gnuradio.gr.simple_correlator
 
 Type Conversions
 ^^^^^^^^^^^^^^^^

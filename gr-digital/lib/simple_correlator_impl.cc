@@ -187,7 +187,7 @@ namespace gr {
             if(d_bbi >= d_bblen) {
               // printf("got whole packet\n");
               packit(d_pktbuf, d_bitbuf, d_bbi);
-              printf("seqno %3d\n", d_pktbuf[0]);
+              //printf("seqno %3d\n", d_pktbuf[0]);
               memcpy(out, &d_pktbuf[GRSF_PAYLOAD_OVERHEAD], d_payload_bytesize);
               enter_looking();
               consume_each(n + 1);

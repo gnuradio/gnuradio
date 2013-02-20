@@ -22,6 +22,7 @@
 ########################################################################
 include_directories(
     ${GR_PAGER_INCLUDE_DIRS}
+    ${GR_BLOCKS_INCLUDE_DIRS}
     ${GNURADIO_CORE_INCLUDE_DIRS}
     ${GRUEL_INCLUDE_DIRS}
     ${Boost_INCLUDE_DIRS}
@@ -45,6 +46,7 @@ list(APPEND pager_sources
 
 list(APPEND pager_libs
     gnuradio-core
+    gnuradio-blocks
     ${Boost_LIBRARIES}
 )
 

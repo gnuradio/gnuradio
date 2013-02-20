@@ -121,6 +121,7 @@ install(FILES
     probe_mpsk_snr_est_c.h
     scrambler_bb.h
     simple_framer.h
+    simple_correlator.h
     DESTINATION ${GR_INCLUDE_DIR}/gnuradio/digital
     COMPONENT "digital_devel"
 )

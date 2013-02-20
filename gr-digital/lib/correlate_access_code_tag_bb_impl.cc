@@ -27,7 +27,7 @@
 #include "correlate_access_code_tag_bb_impl.h"
 #include <gr_io_signature.h>
 #include <stdexcept>
-#include <gr_count_bits.h>
+#include <blocks/count_bits.h>
 #include <cstdio>
 #include <iostream>
 
@@ -109,7 +109,7 @@ namespace gr {
 	int new_flag = 0;
 
 	wrong_bits  = (d_data_reg ^ d_access_code) & d_mask;
-	nwrong = gr_count_bits64(wrong_bits);
+	nwrong = gr::blocks::count_bits64(wrong_bits);
 
 	// test for access code with up to threshold errors
 	new_flag = (nwrong <= d_threshold);

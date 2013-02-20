@@ -69,7 +69,6 @@ list(APPEND gnuradio_core_sources ${CMAKE_CURRENT_BINARY_DIR}/gr_constants.cc)
 ########################################################################
 list(APPEND gnuradio_core_sources
     ${CMAKE_CURRENT_SOURCE_DIR}/gr_circular_file.cc
-    ${CMAKE_CURRENT_SOURCE_DIR}/gr_count_bits.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/gr_fast_atan2f.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/gr_fxpt.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/gr_misc.cc
@@ -102,7 +101,6 @@ install(FILES
     ${CMAKE_CURRENT_SOURCE_DIR}/gr_core_api.h
     ${CMAKE_CURRENT_SOURCE_DIR}/gr_circular_file.h
     ${CMAKE_CURRENT_SOURCE_DIR}/gr_constants.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/gr_count_bits.h
     ${CMAKE_CURRENT_SOURCE_DIR}/gr_expj.h
     ${CMAKE_CURRENT_SOURCE_DIR}/gr_fxpt.h
     ${CMAKE_CURRENT_SOURCE_DIR}/gr_fxpt_nco.h
@@ -174,7 +172,6 @@ set(gr_core_general_triple_threats
     gr_remez
     gr_rms_cf
     gr_rms_ff
-    gr_simple_correlator
     gr_skiphead
     gr_stretch_ff
     gr_test
