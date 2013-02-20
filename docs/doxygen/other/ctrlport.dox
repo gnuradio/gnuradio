@@ -60,4 +60,221 @@ An example ICE config file is installed with GNU Radio to show how to
 change the exposed endpoint of ControlPort. This file is installed
 as ${prefix}/etc/gnuradio/ctrlport.conf.example.
 
+
+\section using Using ControlPort to Export Variables
+
+The ability to export variables from a block is inherited from
+gr_block. Then, when the flowgraph is started, the function
+<b>setup_rpc()</b> is called in turn for each block. If the block
+defines and exports variables using <b>setup_rpc()</b>, then they are
+now all available over ControlPort.
+
+The new block simply declares that it is overloading
+<b>setup_rpc()</b> in its header file. In the source file, it defines
+any setter and/or getting for a variable it wants.
+
+Say we have a class <b>gr::blocks::foo</b> that has variables <b>a</b>
+and <b>b</b> that we want to export. Specifically, we want to be able
+to read the values of both <b>a</b> and <b>b</b> and also set the
+value of <b>b</b>. The class <b>gr::blocks::foo</b> has setters and
+getters all set up. So our class declaration looks something like:
+
+\code
+namespace gr {
+  namespace blocks {
+
+    class foo_impl : public foo
+    {
+    private:
+      float  d_a, d_b;
+
+    public:
+      foo_impl(float a, float b);
+      ~foo_impl();
+
+      float a() const { return d_a; }
+      float b() const { return d_a; }
+      void set_a(float a) { d_a = a; }
+      void set_b(float b) { d_b = b; }
+      void setup_rpc();
+      int work(int noutput_items,
+	       gr_vector_const_void_star &input_items,
+	       gr_vector_void_star &output_items);
+    };
+
+  } /* namespace blocks */
+} /* namespace gr */
+\endcode
+
+The source code then sets up the class and fills in
+<b>setup_rpc()</b>.
+
+\code
+namespace gr {
+  namespace blocks {
+
+    foo_impl::foo_impl(float a, float b):
+      gr_sync_bloc(....),
+      d_a(a), d_b(b)
+    { }
+    
+    foo_impl::~foo_impl()
+    { }
+
+    void
+    foo_impl::setup_rpc()
+    {
+#ifdef GR_CTRLPORT
+      add_rpc_variable(
+        rpcbasic_sptr(new rpcbasic_register_get<foo, float>(
+          alias(), "a",
+          &foo::a,
+          pmt::mp(-2.0f), pmt::mp(2.0f), pmt::mp(0.0f),
+          "", "Get value of a", RPC_PRIVLVL_MIN,
+          DISPTIME | DISPOPTSTRIP)));
+
+      add_rpc_variable(
+        rpcbasic_sptr(new rpcbasic_register_get<foo, float>(
+          alias(), "b",
+          &foo::b,
+          pmt::mp(0.0f), pmt::mp(20.0f), pmt::mp(10.0f),
+          "", "Get value of b", RPC_PRIVLVL_MIN,
+          DISPTIME | DISPOPTSTRIP)));
+
+      add_rpc_variable(
+        rpcbasic_sptr(new rpcbasic_register_set<foo, float>(
+          alias(), "b",
+          &foo::set_b,
+          pmt::mp(0.0f), pmt::mp(20.0f), pmt::mp(10.0f),
+          "", "Set value of b", RPC_PRIVLVL_MIN,
+          DISPNULL)));
+#endif /* GR_CTRLPORT */
+    }
+
+    int
+    foo_impl::work(int noutput_items,
+                   gr_vector_const_void_star &input_items,
+                   gr_vector_void_star &output_items)
+    { .... }
+
+  } /* namespace blocks */
+} /* namespace gr */
+\endcode
+
+In the above example, we're ignoring some of the basic semantics of
+the class as a GNU Radio block and focus just on the call to set up
+the get and set functions over ControlPort. Each block has a function
+that allows us to add a new ControlPort interface object to a list,
+the <b>add_rpc_variable</b>. We don't care about that list anymore;
+that's for ControlPort to worry about. We just add new variables,
+either setters or getters.
+
+Without dissecting every piece of the above calls, notice that we use
+the public class, <b>gr::blocks::foo</b> as the class, not the
+implementation class. We also use the block's alias, which GNU Radio
+uses as a database entry to connect a block by name to the pointer in
+memory. This allows ControlPort to know where the object in memory is
+at any given time to access the setters and getters.
+
+The three PMTs specified are simply an expected minimum, maximum, and
+default value. None of these are strictly enforced and only serve as
+guides. The RPC_PRIVLVL_MIN is currently a placeholder for a
+privilege level setting. In many cases, reading <b>b</b> might be
+fine for everyone, but we want strong restrictions on who has the
+ability to set <b>b</b>.
+
+And finally, we can specify display options to hint at the right way
+to display this variable when remotely plotting it. More on that in
+the following section.
+
+Finally, note that we put \#ifdefs around the code. We always want
+<b>setup_rpc</b> to be there and callable, but if ControlPort was not
+built for GNU Radio, we cannot register any variables with it. This is
+just a nicety to allow us to set up our code for use with ControlPort
+without requiring it.
+
+
+\subsection alt_reg Alternative Registers
+
+If using the concept above, <b>setup_rpc</b> automatically gets called
+when the flowgraph is started. In most instances, this is all we ever
+need since there's nothing interesting going on until then. However,
+if not using a gr_block or needing access before we run the flowgraph,
+the above method won't work (it comes down to when the block's alias
+has meaning).
+
+There are alternate variable registration functions for the sets and
+gets. These take the form:
+
+\code
+  rpcbasic_register_get(const std::string& name,
+			const char* functionbase,
+                        T* obj,
+			Tfrom (T::*function)(), 
+			const pmt::pmt_t &min, const pmt::pmt_t &max, const pmt::pmt_t &def,
+			const char* units_ = "", 
+			const char* desc_ = "",
+			priv_lvl_t minpriv_ = RPC_PRIVLVL_MIN,
+			DisplayType display_ = DISPNULL)
+
+  rpcbasic_register_set(const std::string& name,
+			const char* functionbase,
+                        T* obj,
+			void (T::*function)(Tto), 
+			const pmt::pmt_t &min, const pmt::pmt_t &max, const pmt::pmt_t &def,
+			const char* units_ = "", 
+			const char* desc_ = "",
+			priv_lvl_t minpriv_ = RPC_PRIVLVL_MIN,
+			DisplayType display_ = DISPNULL)
+\endcode
+
+The only thing different about the above code is that instead of
+taking a single 'alias()' name, which provides us access to the
+objects pointer, we instead provide a unique name
+(<b>fucntionbase</b>) and a pointer to the object itself
+(<b>obj</b>). These are templated functions, so the class T is known
+from that.
+
+If using this method, the recommended way is to create a new function
+(not <b>setup_rpc</b>), register the variable using
+<b>add_rpc_variable</b> but with the different <b>register_get/set</b>
+shown here, and then call this function either in the object's
+constructor or make it a public member function to be called when you
+need it.
+
+
+\section disp Display Options
+
+When exporting a new RPC variable over ControlPort, one argument is a
+display options mask. These options are useful to a remote client to
+tell identify activities like default plotters and initial
+conditions. The gr-ctrlport-monitor application uses this heavily in
+determining how to plot ControlPort variables.
+
+The options mask is just a 32-bit value with options OR'd
+together. Certain options are only appropriate for certain types of
+plots. Options on plots where that option is not available will
+simply be ignored.
+
+The main caveat to be aware of is that the DISPXY plot type is
+specific to complex values. Therefore, DISPOPTCPLX is assumed.
+
+These options are specified in rpccallbackregister_base.h and are
+exposed through SWIG to live in the \b gr namespace.
+
+<b>Plot Types</b>
+\li <b>DISPNULL:</b> Nothing specified.
+\li <b>DISPTIME:</b> Time-domain plot.
+\li <b>DISPXY:</b> XY or constellation plot (complex only).
+\li <b>DISPPSD:</b> PSD plot.
+\li <b>DISPSPEC:</b> Spectrogram plot.
+\li <b>DISPRAST:</b> Time raster plot (non-complex only)
+
+<b>Plot Options</b>
+\li <b>DISPOPTCPLX:</b> Signal is complex.
+\li <b>DISPOPTLOG:</b> Start plot in semilog-y mode (time domain only).
+\li <b>DISPOPTSTEM:</b> Start plot in stem mode (time domain only).
+\li <b>DISPOPTSTRIP:</b> Run plot as a stripchart (time domain only).
+\li <b>DISPOPTSCATTER:</b> Do scatter plot instead of lines (XY plot only).
+
 */
