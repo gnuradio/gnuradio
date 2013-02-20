@@ -98,12 +98,12 @@ class test_cpp_py_binding(gr_unittest.TestCase):
 
         v5 = gr.RPC_get_vector_float("pyland", "fvec", "unit_5_float_vector",
                                      "Python Exported Float Vector", [], [], [],
-                                     gr.DISPTIMESERIESC)
+                                     gr.DISPTIME | gr.DISPOPTCPLX)
         v5.activate(get5)
 
         v6 = gr.RPC_get_vector_gr_complex("pyland", "cvec", "unit_6_gr_complex_vector",
                                           "Python Exported Complex Vector", [], [], [],
-                                          gr.DISPXYSCATTER)
+                                          gr.DISPXY | gr.DISPOPTSCATTER)
         v6.activate(get6)
 
         # print some variables locally

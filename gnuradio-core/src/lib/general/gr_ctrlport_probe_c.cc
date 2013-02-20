@@ -90,6 +90,7 @@ gr_ctrlport_probe_c::setup_rpc()
       pmt::make_c32vector(0,-2),
       pmt::make_c32vector(0,2),
       pmt::make_c32vector(0,0), 
-      "volts", d_desc.c_str(), RPC_PRIVLVL_MIN, DISPXYSCATTER)));
+      "volts", d_desc.c_str(), RPC_PRIVLVL_MIN,
+      DISPXY | DISPOPTSCATTER)));
 #endif /* GR_CTRLPORT */
 }

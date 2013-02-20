@@ -52,23 +52,23 @@ enum KnobType { KNOBBOOL, 	KNOBCHAR, 	KNOBINT, 	KNOBFLOAT,
 		KNOBVECCHAR, 	KNOBVECINT,	KNOBVECFLOAT, 	KNOBVECDOUBLE, 
 		KNOBVECSTRING, 	KNOBVECLONG };
 
-enum DisplayType {
-  DISPNULL, 
-  DISPTIMESERIESF,
-  DISPTIMESERIESC,
-  DISPXYSCATTER,
-  DISPXYLINE,
-  DISPLOGTIMESERIESF,
-  DISPLOGTIMESERIESC,
-  DISPSTRIPCHARTF,
-  DISPSTRIPCHARTC,
-};
+const int DISPNULL = 0x0000;
+const int DISPTIME = 0x0001;
+const int DISPXY   = 0x0002;
+const int DISPPSD  = 0x0004;
+const int DISPSPEC = 0x0008;
+const int DISPRAST = 0x0010;
+const int DISPOPTCPLX    = 0x0100;
+const int DISPOPTLOG     = 0x0200;
+const int DISPOPTSTEM    = 0x0400; 
+const int DISPOPTSTRIP   = 0x0800;
+const int DISPOPTSCATTER = 0x1000;
 
 struct KnobProp {
 	KnobType    type;
 	string      units;
 	string      description;
-        DisplayType display;
+        int         display;
 	Knob        min;
 	Knob        max;
 	Knob        defaultvalue;

@@ -71,17 +71,22 @@
 
 #ifdef GR_CTRLPORT
 
-enum DisplayType { 
-  DISPNULL, 
-  DISPTIMESERIESF,
-  DISPTIMESERIESC,
-  DISPXYSCATTER,
-  DISPXYLINE,
-  DISPLOGTIMESERIESF,
-  DISPLOGTIMESERIESC,
-  DISPSTRIPCHARTF,
-  DISPSTRIPCHARTC,
-};
+typedef uint32_t DisplayType;
+
+// DisplayType Plotting types
+const uint32_t DISPNULL = 0x0000;
+const uint32_t DISPTIME = 0x0001;
+const uint32_t DISPXY   = 0x0002;
+const uint32_t DISPPSD  = 0x0004;
+const uint32_t DISPSPEC = 0x0008;
+const uint32_t DISPRAST = 0x0010;
+
+// DisplayType Options
+const uint32_t DISPOPTCPLX    = 0x0100;
+const uint32_t DISPOPTLOG     = 0x0200;
+const uint32_t DISPOPTSTEM    = 0x0400;
+const uint32_t DISPOPTSTRIP   = 0x0800;
+const uint32_t DISPOPTSCATTER = 0x1000;
 
 enum priv_lvl_t {
   RPC_PRIVLVL_ALL = 0,

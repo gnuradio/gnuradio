@@ -115,17 +115,28 @@ class MAINWindow(QtGui.QMainWindow):
         else:
             pmax = 1.1*pmax
 
+        # Use display option mask of item to set up available plot
+        # types and default options.
+        disp = self.knobprops[uid][key].display
+        cplx = disp & gr.DISPOPTCPLX | disp & gr.DISPXY
+        strip = disp & gr.DISPOPTSTRIP
+        stem = disp & gr.DISPOPTSTEM
+        log = disp & gr.DISPOPTLOG
+        scatter = disp & gr.DISPOPTSCATTER
+
         def newUpdaterProxy():
             self.newUpdater(key, radio)
 
         def newPlotterFProxy():
-            self.newPlotF(key, uid, title, pmin, pmax)
+            self.newPlotF(key, uid, title, pmin, pmax,
+                          log, strip, stem)
 
         def newPlotterCProxy():
-            self.newPlotC(key, uid, title, pmin, pmax)
+            self.newPlotC(key, uid, title, pmin, pmax,
+                          log, strip, stem)
 
         def newPlotterConstProxy():
-            self.newPlotConst(key, uid, title, pmin, pmax)
+            self.newPlotConst(key, uid, title, pmin, pmax, scatter)
 
         def newPlotterPsdFProxy():
             self.newPlotPsdF(key, uid, title)
@@ -147,13 +158,15 @@ class MAINWindow(QtGui.QMainWindow):
         menu.addAction("Properties", newUpdaterProxy)
 
         # displays available
-        menu.addAction("Plot Time", newPlotterFProxy)
-        menu.addAction("Plot Time (cpx)", newPlotterCProxy)
-        menu.addAction("Plot PSD", newPlotterPsdFProxy)
-        menu.addAction("Plot PSD cpx", newPlotterPsdCProxy)
-        menu.addAction("Plot Constellation", newPlotterConstProxy)
-        menu.addAction("Plot Raster (real)", newPlotterRasterFProxy)
-        #menu.addAction("Plot Raster (bits)", newPlotterRasterBProxy)
+        if(cplx == 0):
+            menu.addAction("Plot Time", newPlotterFProxy)
+            menu.addAction("Plot PSD", newPlotterPsdFProxy)
+            menu.addAction("Plot Raster (real)", newPlotterRasterFProxy)
+            #menu.addAction("Plot Raster (bits)", newPlotterRasterBProxy)
+        else:
+            menu.addAction("Plot Time", newPlotterCProxy)
+            menu.addAction("Plot PSD", newPlotterPsdCProxy)
+            menu.addAction("Plot Constellation", newPlotterConstProxy)
 
         menu.popup(QtGui.QCursor.pos())
 
@@ -182,20 +195,27 @@ class MAINWindow(QtGui.QMainWindow):
         else:
             pmax = 1.1*pmax
 
-        if(knobprop.display == GNURadio.DisplayType.DISPXYSCATTER):
-            self.newPlotConst(tag, uid, title, pmin, pmax)
-        elif(knobprop.display == GNURadio.DisplayType.DISPTIMESERIESF):
-            self.newPlotF(tag, uid, title, pmin, pmax)
-        elif(knobprop.display == GNURadio.DisplayType.DISPTIMESERIESC):
-            self.newPlotC(tag, uid, title, pmin, pmax)
-        elif(knobprop.display == GNURadio.DisplayType.DISPLOGTIMESERIESF):
-            self.newPlotF(tag, uid, title, pmin, pmax, True)
-        elif(knobprop.display == GNURadio.DisplayType.DISPLOGTIMESERIESC):
-            self.newPlotC(tag, uid, title, pmin, pmax, True)
-        elif(knobprop.display == GNURadio.DisplayType.DISPSTRIPCHARTF):
-            self.newPlotC(tag, uid, title, pmin, pmax, False, True)
-        elif(knobprop.display == GNURadio.DisplayType.DISPSTRIPCHARTC):
-            self.newPlotC(tag, uid, title, pmin, pmax, False, True)
+        disp = knobprop.display
+        if(disp & gr.DISPTIME):
+            strip = disp & gr.DISPOPTSTRIP
+            stem = disp & gr.DISPOPTSTEM
+            log = disp & gr.DISPOPTLOG
+            if(disp & gr.DISPOPTCPLX == 0):
+                self.newPlotF(tag, uid, title, pmin, pmax,
+                              log, strip, stem)
+            else:
+                self.newPlotC(tag, uid, title, pmin, pmax,
+                              log, strip, stem)
+            
+        elif(disp & gr.DISPXY):
+            scatter = disp & gr.DISPOPTSCATTER
+            self.newPlotConst(tag, uid, title, pmin, pmax, scatter)
+            
+        elif(disp & gr.DISPPSD):
+            if(disp & gr.DISPOPTCPLX == 0):
+                self.newPlotPsdF(tag, uid, title)
+            else:
+                self.newPlotPsdC(tag, uid, title)
 
     def createPlot(self, plot, uid, title):
         plot.start()
@@ -216,20 +236,24 @@ class MAINWindow(QtGui.QMainWindow):
                     plots.remove(p)
                     break
 
-    def newPlotConst(self, tag, uid, title="", pmin=None, pmax=None):
+    def newPlotConst(self, tag, uid, title="", pmin=None, pmax=None,
+                     scatter=False):
         plot = GrDataPlotterConst(tag, 32e6, pmin, pmax)
+        plot.scatter(scatter)
         self.createPlot(plot, uid, title)
     
     def newPlotF(self, tag, uid, title="", pmin=None, pmax=None, 
-                 logy=False, stripchart=False):
+                 logy=False, stripchart=False, stem=False):
         plot = GrDataPlotterF(tag, 32e6, pmin, pmax, stripchart)
         plot.semilogy(logy)
+        plot.stem(stem)
         self.createPlot(plot, uid, title)
 
     def newPlotC(self, tag, uid, title="", pmin=None, pmax=None,
-                 logy=False, stripchart=False):
+                 logy=False, stripchart=False, stem=False):
         plot = GrDataPlotterC(tag, 32e6, pmin, pmax, stripchart)
         plot.semilogy(logy)
+        plot.stem(stem)
         self.createPlot(plot, uid, title)
 
     def newPlotPsdF(self, tag, uid, title="", pmin=None, pmax=None):

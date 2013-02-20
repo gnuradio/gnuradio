@@ -45,10 +45,10 @@ TimeDisplayForm::TimeDisplayForm(int nplots, QWidget* parent)
   connect(nptsmenu, SIGNAL(whichTrigger(int)),
 	  this, SLOT(setNPoints(const int)));
 
-  QAction *stemmenu = new QAction("Stem Plot", this);
-  stemmenu->setCheckable(true);
-  _menu->addAction(stemmenu);
-  connect(stemmenu, SIGNAL(triggered(bool)),
+  d_stemmenu = new QAction("Stem Plot", this);
+  d_stemmenu->setCheckable(true);
+  _menu->addAction(d_stemmenu);
+  connect(d_stemmenu, SIGNAL(triggered(bool)),
 	  this, SLOT(setStem(bool)));
 
   d_semilogxmenu = new QAction("Semilog X", this);
@@ -148,6 +148,7 @@ void
 TimeDisplayForm::setStem(bool en)
 {
   d_stem = en;
+  d_stemmenu->setChecked(en);
   getPlot()->stemPlot(d_stem);
   getPlot()->replot();
 }

@@ -69,6 +69,7 @@ private:
   bool d_semilogx;
   bool d_semilogy;
   
+  QAction *d_stemmenu;
   QAction *d_semilogxmenu;
   QAction *d_semilogymenu;
 };

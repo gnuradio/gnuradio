@@ -89,12 +89,14 @@ private:
         rpcbasic_sptr(new rpcbasic_register_get<gr_throttle_impl, double>(
             alias(), "sample_rate", &gr_throttle_impl::sample_rate,
             pmt::mp(0.0), pmt::mp(100.0e6), pmt::mp(0.0),
-            "Hz", "Sample Rate", RPC_PRIVLVL_MIN, DISPSTRIPCHARTF)));
+            "Hz", "Sample Rate", RPC_PRIVLVL_MIN,
+            DISPTIME | DISPOPTSTRIP)));
     d_rpc_vars.push_back(
         rpcbasic_sptr(new rpcbasic_register_set<gr_throttle_impl, double>(
             alias(), "sample_rate", &gr_throttle_impl::set_sample_rate,
             pmt::mp(0.0), pmt::mp(100.0e6), pmt::mp(0.0),
-            "Hz", "Sample Rate", RPC_PRIVLVL_MIN, DISPSTRIPCHARTF)));
+            "Hz", "Sample Rate", RPC_PRIVLVL_MIN,
+            DISPTIME | DISPOPTSTRIP)));
 #endif
         }
 };

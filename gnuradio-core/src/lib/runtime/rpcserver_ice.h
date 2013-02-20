@@ -162,7 +162,7 @@ private:
 	prop.description = p.second.description;
 	prop.min   = rpcpmtconverter::from_pmt(p.second.min, c);
 	prop.max   = rpcpmtconverter::from_pmt(p.second.max, c);
-	prop.display = static_cast<GNURadio::DisplayType>(p.second.display);
+	prop.display = static_cast<uint32_t>(p.second.display);
 	outknobs[p.first] = prop;
       }
       else {
@@ -197,7 +197,7 @@ private:
 	  prop.description = iter->second.description;
 	  prop.min   = rpcpmtconverter::from_pmt(iter->second.min, c);
 	  prop.max   = rpcpmtconverter::from_pmt(iter->second.max, c);
-	  prop.display = static_cast<GNURadio::DisplayType>(iter->second.display);
+	  prop.display = static_cast<uint32_t>(iter->second.display);
 	  //outknobs[iter->first] = prop;
 	  outknobs[p] = prop;
 	}
