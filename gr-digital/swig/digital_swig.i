@@ -81,6 +81,7 @@ enum snr_est_type_t {
 #include "digital_probe_mpsk_snr_est_c.h"
 #include "digital_scrambler_bb.h"
 #include "digital_simple_framer.h"
+#include "digital_simple_correlator.h"
 %}
 
 %include "digital_additive_scrambler_bb.i"
@@ -125,3 +126,4 @@ enum snr_est_type_t {
 %include "digital_probe_mpsk_snr_est_c.i"
 %include "digital_scrambler_bb.i"
 %include "digital_simple_framer.i"
+%include "digital_simple_correlator.i"
