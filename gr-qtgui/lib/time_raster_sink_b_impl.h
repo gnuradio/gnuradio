@@ -82,9 +82,21 @@ namespace gr {
       void set_line_width(int width);
       void set_line_style(Qt::PenStyle style);
       void set_line_marker(QwtSymbol::Style marker);
+      void set_line_alpha(int which, double alpha);
+      void set_color_map(int which, const int color);
+
+      std::string title();
+      std::string line_label(int which);
+      std::string line_color(int which);
+      int line_width(int which);
+      int line_style(int which);
+      int line_marker(int which);
+      double line_alpha(int which);
+      int color_map(int which);
 
       void set_size(int width, int height);
 
+      void set_samp_rate(const double samp_rate);
       void set_num_rows(double rows);
       void set_num_cols(double cols);
 
@@ -96,6 +108,9 @@ namespace gr {
 
       void set_intensity_range(float min, float max);
 
+      void enable_menu(bool en);
+      void enable_grid(bool en);
+      void enable_autoscale(bool en);
       void reset();
 
       int work(int noutput_items,

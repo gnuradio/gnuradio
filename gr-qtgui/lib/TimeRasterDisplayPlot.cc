@@ -336,6 +336,12 @@ TimeRasterDisplayPlot::numCols() const
   return d_cols;
 }
 
+int
+TimeRasterDisplayPlot::getAlpha(int which)
+{
+  return d_raster[which]->alpha();
+}
+
 void
 TimeRasterDisplayPlot::setPlotDimensions(const double rows, const double cols,
 					 const double units, const std::string &strunits)
@@ -396,6 +402,30 @@ TimeRasterDisplayPlot::setIntensityRange(const double minIntensity,
 
     _updateIntensityRangeDisplay();
   }
+}
+
+double
+TimeRasterDisplayPlot::getMinIntensity(int which) const
+{
+#if QWT_VERSION < 0x060000
+  QwtDoubleInterval r = d_data[which]->range();
+#else
+  QwtInterval r = d_data[which]->interval(Qt::ZAxis);
+#endif
+
+  return r.minValue();
+}
+
+double
+TimeRasterDisplayPlot::getMaxIntensity(int which) const
+{
+#if QWT_VERSION < 0x060000
+  QwtDoubleInterval r = d_data[which]->range();
+#else
+  QwtInterval r = d_data[which]->interval(Qt::ZAxis);
+#endif
+
+  return r.maxValue();
 }
 
 void

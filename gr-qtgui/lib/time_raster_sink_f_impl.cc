@@ -191,9 +191,28 @@ namespace gr {
     }
 
     void
+    time_raster_sink_f_impl::set_color_map(int which, const int color)
+    {
+      d_main_gui->setColorMap(which, color);
+    }
+
+    void
+    time_raster_sink_f_impl::set_line_alpha(int which, double alpha)
+    {
+      d_main_gui->setAlpha(which, (int)(255.0*alpha));
+    }
+
+    void
     time_raster_sink_f_impl::set_size(int width, int height)
     {
       d_main_gui->resize(QSize(width, height));
+    }
+
+    void
+    time_raster_sink_f_impl::set_samp_rate(const double samp_rate)
+    {
+      d_samp_rate = samp_rate;
+      d_main_gui->setSampleRate(d_samp_rate);
     }
 
     void
@@ -206,6 +225,54 @@ namespace gr {
     time_raster_sink_f_impl::set_num_cols(double cols)
     {
       d_main_gui->setNumCols(cols);
+    }
+
+    std::string
+    time_raster_sink_f_impl::title()
+    {
+      return d_main_gui->title().toStdString();
+    }
+
+    std::string
+    time_raster_sink_f_impl::line_label(int which)
+    {
+      return d_main_gui->lineLabel(which).toStdString();
+    }
+
+    std::string
+    time_raster_sink_f_impl::line_color(int which)
+    {
+      return d_main_gui->lineColor(which).toStdString();
+    }
+
+    int
+    time_raster_sink_f_impl::line_width(int which)
+    {
+      return d_main_gui->lineWidth(which);
+    }
+
+    int
+    time_raster_sink_f_impl::line_style(int which)
+    {
+      return d_main_gui->lineStyle(which);
+    }
+
+    int
+    time_raster_sink_f_impl::line_marker(int which)
+    {
+      return d_main_gui->lineMarker(which);
+    }
+
+    int
+    time_raster_sink_f_impl::color_map(int which)
+    {
+      return d_main_gui->getColorMap(which);
+    }
+
+    double
+    time_raster_sink_f_impl::line_alpha(int which)
+    {
+      return (double)(d_main_gui->markerAlpha(which))/255.0;
     }
 
     double
@@ -260,6 +327,24 @@ namespace gr {
     time_raster_sink_f_impl::set_intensity_range(float min, float max)
     {
       d_main_gui->setIntensityRange(min, max);
+    }
+
+    void
+    time_raster_sink_f_impl::enable_menu(bool en)
+    {
+      d_main_gui->enableMenu(en);
+    }
+
+    void
+    time_raster_sink_f_impl::enable_grid(bool en)
+    {
+      d_main_gui->setGrid(en);
+    }
+
+    void
+    time_raster_sink_f_impl::enable_autoscale(bool en)
+    {
+      d_main_gui->autoScale(en);
     }
 
     void

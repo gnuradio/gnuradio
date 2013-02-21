@@ -49,6 +49,11 @@ class TimeRasterDisplayForm : public DisplayForm
   double numRows();
   double numCols();
 
+  int getColorMap(int which);
+  int getAlpha(int which);
+  double getMinIntensity(int which);
+  double getMaxIntensity(int which);
+
 public slots:
   void customEvent(QEvent *e);
 
@@ -58,6 +63,7 @@ public slots:
   void setNumRows(QString rows);
   void setNumCols(QString cols);
 
+  void setSampleRate(const double samprate);
   void setSampleRate(const QString &rate);
 
   void setIntensityRange(const double minIntensity,
@@ -65,8 +71,8 @@ public slots:
 
   void setColorMap(int which,
 		   const int newType,
-		   const QColor lowColor,
-		   const QColor highColor);
+		   const QColor lowColor=QColor("white"),
+		   const QColor highColor=QColor("white"));
 
   void setAlpha(int which, int alpha);
 

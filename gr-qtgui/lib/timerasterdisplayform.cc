@@ -118,6 +118,31 @@ TimeRasterDisplayForm::numCols()
   return getPlot()->numCols();
 }
 
+int
+TimeRasterDisplayForm::getColorMap(int which)
+{
+  return getPlot()->getIntensityColorMapType(which);
+}
+
+int
+TimeRasterDisplayForm::getAlpha(int which)
+{
+  return getPlot()->getAlpha(which);
+}
+
+double
+TimeRasterDisplayForm::getMinIntensity(int which)
+{
+  return getPlot()->getMinIntensity(which);
+}
+
+double
+TimeRasterDisplayForm::getMaxIntensity(int which)
+{
+  return getPlot()->getMaxIntensity(which);
+}
+
+
 void
 TimeRasterDisplayForm::newData(const QEvent *updateEvent)
 {
@@ -151,30 +176,42 @@ void
 TimeRasterDisplayForm::setNumRows(double rows)
 {
   getPlot()->setNumRows(rows);
+  getPlot()->replot();
 }
 
 void
 TimeRasterDisplayForm::setNumRows(QString rows)
 {
   getPlot()->setNumRows(rows.toDouble());
+  getPlot()->replot();
 }
 
 void
 TimeRasterDisplayForm::setNumCols(double cols)
 {
   getPlot()->setNumCols(cols);
+  getPlot()->replot();
 }
 
 void
 TimeRasterDisplayForm::setNumCols(QString cols)
 {
   getPlot()->setNumCols(cols.toDouble());
+  getPlot()->replot();
+}
+
+void
+TimeRasterDisplayForm::setSampleRate(const double rate)
+{
+  getPlot()->setSampleRate(rate);
+  getPlot()->replot();
 }
 
 void
 TimeRasterDisplayForm::setSampleRate(const QString &rate)
 {
   getPlot()->setSampleRate(rate.toDouble());
+  getPlot()->replot();
 }
 
 void
@@ -185,12 +222,14 @@ TimeRasterDisplayForm::setColorMap(int which,
 {
   getPlot()->setIntensityColorMapType(which, newType,
 				      lowColor, highColor);
+  getPlot()->replot();
 }
 
 void
 TimeRasterDisplayForm::setAlpha(int which, int alpha)
 {
   getPlot()->setAlpha(which, alpha);
+  getPlot()->replot();
 }
 
 void
@@ -198,6 +237,7 @@ TimeRasterDisplayForm::setIntensityRange(const double minIntensity,
 					const double maxIntensity)
 {
   getPlot()->setIntensityRange(minIntensity, maxIntensity);
+  getPlot()->replot();
 }
 
 void
@@ -207,4 +247,5 @@ TimeRasterDisplayForm::autoScale(bool en)
   double max_int = _max_val;
 
   getPlot()->setIntensityRange(min_int, max_int);
+  getPlot()->replot();
 }

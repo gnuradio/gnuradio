@@ -25,11 +25,13 @@ GR_PYTHON_INSTALL(
     plot_psd_base.py
     plot_spectrogram_base.py
     plot_time_base.py
+    plot_time_raster_base.py
     plot_form.py
     plot_constellation_form.py
     plot_psd_form.py
     plot_spectrogram_form.py
     plot_time_form.py
+    plot_time_raster_form.py
     DESTINATION ${GR_PYTHON_DIR}/gnuradio/qtgui
     COMPONENT "qtgui_python"
 )
@@ -41,6 +43,7 @@ GR_PYTHON_INSTALL(
     gr_time_plot_i
     gr_time_plot_s
     gr_time_plot_b
+    gr_time_raster_b
     gr_psd_plot_c
     gr_psd_plot_f
     gr_psd_plot_i

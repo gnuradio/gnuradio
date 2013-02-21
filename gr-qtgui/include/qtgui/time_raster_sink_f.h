@@ -77,9 +77,21 @@ namespace gr {
       virtual void set_line_width(int width) = 0;
       virtual void set_line_style(Qt::PenStyle style) = 0;
       virtual void set_line_marker(QwtSymbol::Style marker) = 0;
+      virtual void set_line_alpha(int which, double alpha) = 0;
+      virtual void set_color_map(int which, const int color) = 0;
+
+      virtual std::string title() = 0;
+      virtual std::string line_label(int which) = 0;
+      virtual std::string line_color(int which) = 0;
+      virtual int line_width(int which) = 0;
+      virtual int line_style(int which) = 0;
+      virtual int line_marker(int which) = 0;
+      virtual double line_alpha(int which) = 0;
+      virtual int color_map(int which) = 0;
 
       virtual void set_size(int width, int height) = 0;
 
+      virtual void set_samp_rate(const double samp_rate) = 0;
       virtual void set_num_rows(double rows) = 0;
       virtual void set_num_cols(double cols) = 0;
 
@@ -91,6 +103,9 @@ namespace gr {
 
       virtual void set_intensity_range(float min, float max) = 0;
 
+      virtual void enable_menu(bool en) = 0;
+      virtual void enable_grid(bool en) = 0;
+      virtual void enable_autoscale(bool en) = 0;
       virtual void reset() = 0;
 
       QApplication *d_qApplication;

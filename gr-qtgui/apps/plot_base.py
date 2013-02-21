@@ -44,11 +44,13 @@ try:
     from gnuradio.qtgui.plot_psd_form import *
     from gnuradio.qtgui.plot_spectrogram_form import *
     from gnuradio.qtgui.plot_time_form import *
+    from gnuradio.qtgui.plot_time_raster_form import *
 except ImportError:
     from plot_constellation_form import *
     from plot_psd_form import *
     from plot_spectrogram_form import *
     from plot_time_form import *
+    from plot_time_raster_form import *
 
 def read_samples(filename, start, in_size, min_size, dtype, dtype_size):
     # Read in_size number of samples from file

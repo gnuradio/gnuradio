@@ -59,6 +59,8 @@ public:
   double numRows() const;
   double numCols() const;
 
+  int getAlpha(int which);
+
   void setPlotDimensions(const double rows, const double cols,
 			 const double units, const std::string &strunits);
   
@@ -77,6 +79,9 @@ public:
   void setIntensityColorMapType(const int, const int, const QColor, const QColor);
   const QColor getUserDefinedLowIntensityColor() const;
   const QColor getUserDefinedHighIntensityColor() const;
+
+  double getMinIntensity(int which) const;
+  double getMaxIntensity(int which) const;
 
 signals:
   void updatedLowerIntensityLevel(const double);
