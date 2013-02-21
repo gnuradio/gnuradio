@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2012 Free Software Foundation, Inc.
+ * Copyright 2012-2013 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -26,6 +26,8 @@
 
 //load generated python docstrings
 %include "blocks_swig_doc.i"
+
+%include <gr_endianness.h>
 
 %{
 #include "blocks/add_ff.h"
@@ -57,6 +59,7 @@
 #include "blocks/complex_to_arg.h"
 #include "blocks/conjugate_cc.h"
 #include "blocks/deinterleave.h"
+#include "blocks/delay.h"
 #include "blocks/divide_ff.h"
 #include "blocks/divide_ss.h"
 #include "blocks/divide_ii.h"
@@ -96,10 +99,15 @@
 #include "blocks/not_ss.h"
 #include "blocks/not_ii.h"
 #include "blocks/patterned_interleaver.h"
+#include "blocks/packed_to_unpacked_bb.h"
+#include "blocks/packed_to_unpacked_ss.h"
+#include "blocks/packed_to_unpacked_ii.h"
 #include "blocks/or_bb.h"
 #include "blocks/or_ss.h"
 #include "blocks/or_ii.h"
 #include "blocks/repeat.h"
+#include "blocks/rms_cf.h"
+#include "blocks/rms_ff.h"
 #include "blocks/short_to_char.h"
 #include "blocks/short_to_float.h"
 #include "blocks/stream_mux.h"
@@ -112,6 +120,9 @@
 #include "blocks/sub_ii.h"
 #include "blocks/sub_cc.h"
 #include "blocks/uchar_to_float.h"
+#include "blocks/unpacked_to_packed_bb.h"
+#include "blocks/unpacked_to_packed_ss.h"
+#include "blocks/unpacked_to_packed_ii.h"
 #include "blocks/vector_to_stream.h"
 #include "blocks/vector_to_streams.h"
 #include "blocks/xor_bb.h"
@@ -148,6 +159,7 @@
 %include "blocks/complex_to_arg.h"
 %include "blocks/conjugate_cc.h"
 %include "blocks/deinterleave.h"
+%include "blocks/delay.h"
 %include "blocks/file_source.h"
 %include "blocks/file_meta_sink.h"
 %include "blocks/file_meta_source.h"
@@ -187,10 +199,15 @@
 %include "blocks/not_ss.h"
 %include "blocks/not_ii.h"
 %include "blocks/patterned_interleaver.h"
+%include "blocks/packed_to_unpacked_bb.h"
+%include "blocks/packed_to_unpacked_ss.h"
+%include "blocks/packed_to_unpacked_ii.h"
 %include "blocks/or_bb.h"
 %include "blocks/or_ss.h"
 %include "blocks/or_ii.h"
 %include "blocks/repeat.h"
+%include "blocks/rms_cf.h"
+%include "blocks/rms_ff.h"
 %include "blocks/short_to_char.h"
 %include "blocks/short_to_float.h"
 %include "blocks/stream_mux.h"
@@ -203,6 +220,9 @@
 %include "blocks/sub_ii.h"
 %include "blocks/sub_cc.h"
 %include "blocks/uchar_to_float.h"
+%include "blocks/unpacked_to_packed_bb.h"
+%include "blocks/unpacked_to_packed_ss.h"
+%include "blocks/unpacked_to_packed_ii.h"
 %include "blocks/vector_to_stream.h"
 %include "blocks/vector_to_streams.h"
 %include "blocks/xor_bb.h"
@@ -238,6 +258,7 @@ GR_SWIG_BLOCK_MAGIC2(blocks, complex_to_mag_squared);
 GR_SWIG_BLOCK_MAGIC2(blocks, complex_to_arg);
 GR_SWIG_BLOCK_MAGIC2(blocks, conjugate_cc);
 GR_SWIG_BLOCK_MAGIC2(blocks, deinterleave);
+GR_SWIG_BLOCK_MAGIC2(blocks, delay);
 GR_SWIG_BLOCK_MAGIC2(blocks, divide_ff);
 GR_SWIG_BLOCK_MAGIC2(blocks, divide_ss);
 GR_SWIG_BLOCK_MAGIC2(blocks, divide_ii);
@@ -277,10 +298,15 @@ GR_SWIG_BLOCK_MAGIC2(blocks, not_bb);
 GR_SWIG_BLOCK_MAGIC2(blocks, not_ss);
 GR_SWIG_BLOCK_MAGIC2(blocks, not_ii);
 GR_SWIG_BLOCK_MAGIC2(blocks, patterned_interleaver);
+GR_SWIG_BLOCK_MAGIC2(blocks, packed_to_unpacked_bb);
+GR_SWIG_BLOCK_MAGIC2(blocks, packed_to_unpacked_ss);
+GR_SWIG_BLOCK_MAGIC2(blocks, packed_to_unpacked_ii);
 GR_SWIG_BLOCK_MAGIC2(blocks, or_bb);
 GR_SWIG_BLOCK_MAGIC2(blocks, or_ss);
 GR_SWIG_BLOCK_MAGIC2(blocks, or_ii);
 GR_SWIG_BLOCK_MAGIC2(blocks, repeat);
+GR_SWIG_BLOCK_MAGIC2(blocks, rms_cf);
+GR_SWIG_BLOCK_MAGIC2(blocks, rms_ff);
 GR_SWIG_BLOCK_MAGIC2(blocks, short_to_char);
 GR_SWIG_BLOCK_MAGIC2(blocks, short_to_float);
 GR_SWIG_BLOCK_MAGIC2(blocks, stream_mux);
@@ -293,6 +319,9 @@ GR_SWIG_BLOCK_MAGIC2(blocks, sub_ss);
 GR_SWIG_BLOCK_MAGIC2(blocks, sub_ii);
 GR_SWIG_BLOCK_MAGIC2(blocks, sub_cc);
 GR_SWIG_BLOCK_MAGIC2(blocks, uchar_to_float);
+GR_SWIG_BLOCK_MAGIC2(blocks, unpacked_to_packed_bb);
+GR_SWIG_BLOCK_MAGIC2(blocks, unpacked_to_packed_ss);
+GR_SWIG_BLOCK_MAGIC2(blocks, unpacked_to_packed_ii);
 GR_SWIG_BLOCK_MAGIC2(blocks, vector_to_stream);
 GR_SWIG_BLOCK_MAGIC2(blocks, vector_to_streams);
 GR_SWIG_BLOCK_MAGIC2(blocks, xor_bb);

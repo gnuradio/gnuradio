@@ -78,6 +78,8 @@ expand_h(not_XX             bb ss ii)
 expand_h(or_XX              bb ss ii)
 expand_h(sub_XX             ss ii ff cc)
 expand_h(xor_XX             bb ss ii)
+expand_h(packed_to_unpacked_XX bb ss ii)
+expand_h(unpacked_to_packed_XX bb ss ii)
 
 add_custom_target(blocks_generated_includes DEPENDS
     ${generated_includes}
@@ -90,6 +92,7 @@ install(FILES
     ${generated_includes}
     api.h
     count_bits.h
+    log2_const.h
     add_ff.h
     char_to_float.h
     char_to_short.h
@@ -102,6 +105,7 @@ install(FILES
     complex_to_arg.h
     conjugate_cc.h
     deinterleave.h
+    delay.h
     file_source.h
     file_meta_sink.h
     file_meta_source.h
@@ -123,6 +127,8 @@ install(FILES
     nlog10_ff.h
     patterned_interleaver.h
     repeat.h
+    rms_cf.h
+    rms_ff.h
     short_to_char.h
     short_to_float.h
     stream_mux.h

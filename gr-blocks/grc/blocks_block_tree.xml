@@ -49,6 +49,7 @@
 		<block>blocks_conjugate_cc</block>
 		<block>blocks_integrate_xx</block>
 		<block>blocks_nlog10_ff</block>
+                <block>blocks_rms_xx</block>
 	</cat>
 	<cat>
 		<name>Boolean Operations (New) </name>
@@ -82,7 +83,10 @@
 	</cat>
 	<cat>
 	        <name>Stream Operations (New) </name>
-		<block>blocks_deinterleave</block>
+                <block>blocks_delay</block>
+                <block>blocks_packed_to_unpacked_xx</block>
+                <block>blocks_unpacked_to_packed_xx</block>
+                <block>blocks_deinterleave</block>
 		<block>blocks_interleave</block>
 		<block>blocks_keep_m_in_n</block>
 		<block>blocks_keep_one_in_n</block>

@@ -104,6 +104,8 @@ expand_cc_h_impl(not_XX             bb ss ii)
 expand_cc_h_impl(or_XX              bb ss ii)
 expand_cc_h_impl(sub_XX             ss ii ff cc)
 expand_cc_h_impl(xor_XX             bb ss ii)
+expand_cc_h_impl(packed_to_unpacked_XX bb ss ii)
+expand_cc_h_impl(unpacked_to_packed_XX bb ss ii)
 
 ########################################################################
 # Setup the include and linker paths
@@ -139,6 +141,7 @@ list(APPEND gr_blocks_sources
     complex_to_arg_impl.cc
     conjugate_cc_impl.cc
     deinterleave_impl.cc
+    delay_impl.cc
     file_source_impl.cc
     file_meta_sink_impl.cc
     file_meta_source_impl.cc
@@ -163,6 +166,8 @@ list(APPEND gr_blocks_sources
     nlog10_ff_impl.cc
     patterned_interleaver_impl.cc
     repeat_impl.cc
+    rms_cf_impl.cc
+    rms_ff_impl.cc
     short_to_char_impl.cc
     short_to_float_impl.cc
     stream_mux_impl.cc

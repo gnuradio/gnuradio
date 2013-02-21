@@ -1,0 +1,42 @@
+<?xml version="1.0"?>
+<!--
+###################################################
+##RMS
+###################################################
+ -->
+<block>
+	<name>RMS</name>
+	<key>blocks_rms_xx</key>
+	<import>from gnuradio import blocks</import>
+	<make>blocks.rms_$(type.fcn)f($alpha)</make>
+	<callback>set_alpha($alpha)</callback>
+	<param>
+		<name>Input Type</name>
+		<key>type</key>
+		<type>enum</type>
+		<option>
+			<name>Complex</name>
+			<key>complex</key>
+			<opt>fcn:c</opt>
+		</option>
+		<option>
+			<name>Float</name>
+			<key>float</key>
+			<opt>fcn:f</opt>
+		</option>
+	</param>
+	<param>
+		<name>Alpha</name>
+		<key>alpha</key>
+                <value>0.0001</value>
+		<type>real</type>
+	</param>
+	<sink>
+		<name>in</name>
+		<type>$type</type>
+	</sink>
+	<source>
+		<name>out</name>
+		<type>float</type>
+	</source>
+</block>
