@@ -62,6 +62,18 @@ if(NOT CHEETAH_FOUND)
     message(FATAL_ERROR "Cheetah templates required to build VOLK")
 endif()
 
+if(MSVC)
+    if (NOT DEFINED BOOST_ALL_DYN_LINK)
+        set(BOOST_ALL_DYN_LINK TRUE)
+    endif()
+    set(BOOST_ALL_DYN_LINK "${BOOST_ALL_DYN_LINK}" CACHE BOOL "boost enable dynamic linking")
+    if(BOOST_ALL_DYN_LINK)
+        add_definitions(-DBOOST_ALL_DYN_LINK) #setup boost auto-linking in msvc
+    else(BOOST_ALL_DYN_LINK)
+        unset(BOOST_REQUIRED_COMPONENTS) #empty components list for static link
+    endif(BOOST_ALL_DYN_LINK)
+endif(MSVC)
+
 set(Boost_ADDITIONAL_VERSIONS
     "1.35.0" "1.35" "1.36.0" "1.36" "1.37.0" "1.37" "1.38.0" "1.38" "1.39.0" "1.39"
     "1.40.0" "1.40" "1.41.0" "1.41" "1.42.0" "1.42" "1.43.0" "1.43" "1.44.0" "1.44"
