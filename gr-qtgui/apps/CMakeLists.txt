@@ -43,6 +43,7 @@ GR_PYTHON_INSTALL(
     gr_time_plot_i
     gr_time_plot_s
     gr_time_plot_b
+    gr_time_raster_f
     gr_time_raster_b
     gr_psd_plot_c
     gr_psd_plot_f
