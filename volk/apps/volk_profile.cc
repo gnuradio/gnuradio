@@ -1,14 +1,18 @@
 #include "qa_utils.h"
-extern "C" {
+
 #include <volk/volk.h>
 #include <volk/volk_prefs.h>
-}
+
+#include <ciso646>
 #include <vector>
 #include <boost/foreach.hpp>
+#include <boost/filesystem.hpp>
 #include <iostream>
 #include <fstream>
 #include <sys/stat.h>
 #include <sys/types.h>
+
+namespace fs = boost::filesystem;
 
 int main(int argc, char *argv[]) {
 
@@ -123,25 +127,20 @@ int main(int argc, char *argv[]) {
     VOLK_PROFILE(volk_32f_s32f_multiply_32f_a, 1e-4, 1.0, 204600, 10000, &results);
     VOLK_PROFILE(volk_32f_s32f_multiply_32f_u, 1e-4, 0, 204600, 1000, &results);
 
-
-    char path[256];
+    char path[1024];
     get_config_path(path);
-    std::string config_path(path);
-    std::ofstream config;
-    std::cout << "filename: " << config_path << std::endl;
-    config.open(config_path.c_str());
+    const fs::path config_path(path);
+
+    if (not fs::exists(config_path.branch_path()))
+    {
+        std::cout << "Creating " << config_path.branch_path() << "..." << std::endl;
+        fs::create_directories(config_path.branch_path());
+    }
+
+    std::cout << "Writing " << config_path << "..." << std::endl;
+    std::ofstream config(config_path.string().c_str());
     if(!config.is_open()) { //either we don't have write access or we don't have the dir yet
-        std::string dir(getenv("HOME"));
-        dir += "/.volk";
-        if(mkdir(dir.c_str(), 0777) == -1) {
-            std::cout << "Error creating directory " << dir << std::endl;
-            return -1;
-        }
-        config.open(config_path.c_str());
-        if(!config.is_open()) {
-            std::cout << "Error opening file " << config_path << std::endl;
-            return -1;
-        }
+        std::cout << "Error opening file " << config_path << std::endl;
     }
 
     config << "\
