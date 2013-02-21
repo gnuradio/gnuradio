@@ -20,7 +20,7 @@
 		<optional>1</optional>
 	</sink>
 	<sink>
-		<name>print_pdu_verbose</name>
+		<name>print_pdu</name>
 		<type>message</type>
         <optional>1</optional>
 	</sink>

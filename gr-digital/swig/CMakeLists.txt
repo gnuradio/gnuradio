@@ -176,6 +176,7 @@ install(
     digital_probe_mpsk_snr_est_c.i
     digital_scrambler_bb.i
     digital_simple_framer.i
+    digital_simple_correlator.i
     DESTINATION ${GR_INCLUDE_DIR}/gnuradio/swig
     COMPONENT "digital_swig"
 )

@@ -36,7 +36,7 @@ serial_to_parallel = stream_to_vector
 parallel_to_serial = vector_to_stream
 
 # Force the preference database to be initialized
-from prefs import prefs
+prefs = gr_prefs.singleton
 
 #alias old gr_add_vXX and gr_multiply_vXX
 add_vcc = add_cc

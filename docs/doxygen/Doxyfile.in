@@ -633,7 +633,8 @@ EXCLUDE                = @abs_top_builddir@/docs/doxygen/html \
 			 @abs_top_builddir@/_CPack_Packages \
                          @abs_top_srcdir@/cmake \
 			 @abs_top_srcdir@/gr-qtgui/lib \
-                         @abs_top_srcdir@/gr-howto-write-a-block
+                         @abs_top_srcdir@/gr-howto-write-a-block \
+                         @abs_top_srcdir@/gr-utils/src/python/modtool/gr-newmod
 
 # The EXCLUDE_SYMLINKS tag can be used select whether or not files or
 # directories that are symbolic links (a Unix filesystem feature) are excluded
