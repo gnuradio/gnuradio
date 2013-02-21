@@ -87,8 +87,14 @@ def read_samples_s(filename, start, in_size, min_size=0):
                         scipy.int16, gr.sizeof_short)
 
 def read_samples_b(filename, start, in_size, min_size=0):
-    return read_samples(filename, start, in_size, min_size,
-                        scipy.uint8, gr.sizeof_char)
+    d,mn,mx = read_samples(filename, start, in_size, min_size,
+                           scipy.int8, gr.sizeof_char)
+
+    # Bit of a hack since we want to read the data as signed ints, but
+    # the gr.vector_source_b will only accept unsigned. We read in as
+    # signed, do our min/max and things on that, then convert here.
+    d = scipy.array(d, dtype=scipy.uint8).tolist()
+    return d,mn,mx
 
 def read_samples_c(filename, start, in_size, min_size=0):
     # Complex samples are handled differently
