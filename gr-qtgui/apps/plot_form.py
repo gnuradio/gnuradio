@@ -30,14 +30,14 @@ except ImportError:
 import numpy
 
 class plot_form(QtGui.QWidget):
-    def __init__(self, top_block, title=''):
+    def __init__(self, top_block, title='', scale=1):
         QtGui.QWidget.__init__(self, None)
         
         self._start = 0
         self._end = 0
         self._y_min = 0
         self._y_max = 0
-        self._pos_scale = 1
+        self._pos_scale = scale
 
         self.top_block = top_block
         self.top_block.gui_y_axis = self.gui_y_axis
@@ -131,7 +131,7 @@ class plot_form(QtGui.QWidget):
         self.ybar.setMaximum(self._pos_scale*_ymax)
         self.ybar.setSingleStep(self._pos_scale*(_yrng/10))
         self.ybar.setPageStep(self._pos_scale*(_yrng/2))
-        self.ybar.setValue(self._pos_scale*_yval)
+        self.ybar.setValue(self._pos_scale*_ymax)
         self.connect(self.ybar, QtCore.SIGNAL("valueChanged(int)"),
                      self.update_yaxis_slider)
         self.layout.addWidget(self.ybar, 1,1,1,1)
@@ -316,7 +316,7 @@ class plot_form(QtGui.QWidget):
         self.posbar.setValue(self._start)
 
     def update_xaxis_slider(self, value):
-        self._start = value/self._pos_scale
+        self._start = value
         self._end = value + self.posbar.pageStep()
 
         self.start_edit.setText("{0}".format(self._start))
@@ -334,10 +334,10 @@ class plot_form(QtGui.QWidget):
                 self._y_max = newmax
                 self.top_block._y_range = newmax - newmin
                 self.top_block.set_y_axis(self._y_min, self._y_max)
-                self.ybar.setValue(self._y_max)
+                self.ybar.setValue(self._y_max*self._pos_scale)
         else:
-            self.y_min_edit.setText("{0:.4f}".format(self._y_min))
-            self.y_max_edit.setText("{0:.4f}".format(self._y_max))
+            self.y_min_edit.setText("{0:.2f}".format(self._y_min))
+            self.y_max_edit.setText("{0:.2f}".format(self._y_max))
 
     def update_yaxis_slider(self, value):
         if(not self.top_block._auto_scale):
@@ -353,7 +353,7 @@ class plot_form(QtGui.QWidget):
         
                 self.gui_y_axis(self._y_min, self._y_max)
         else:
-            self.ybar.setValue(self._y_max)
+            self.ybar.setValue(self._y_max*self._pos_scale)
 
     def update_samp_rate(self):
         sr = self.samp_rate_edit.text().toDouble()[0]
@@ -363,11 +363,11 @@ class plot_form(QtGui.QWidget):
                              self.top_block._nsamps)
 
     def gui_y_axis(self, ymin, ymax):
-        self.y_min_edit.setText("{0:.4f}".format(ymin))
-        self.y_max_edit.setText("{0:.4f}".format(ymax))
+        self.y_min_edit.setText("{0:.2f}".format(ymin))
+        self.y_max_edit.setText("{0:.2f}".format(ymax))
         self._y_min = ymin
         self._y_max = ymax
-        self.ybar.setValue(ymax)
+        self.ybar.setValue(self._pos_scale*ymax)
 
     def set_grid_check(self, state):
         if(state):

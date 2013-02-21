@@ -36,8 +36,8 @@ except ImportError:
     from plot_form import plot_form
 
 class plot_constellation_form(plot_form):
-    def __init__(self, top_block, title=''):
-        plot_form.__init__(self, top_block, title)
+    def __init__(self, top_block, title='', scale=1):
+        plot_form.__init__(self, top_block, title, scale)
 
         self.right_col_layout = QtGui.QVBoxLayout()
         self.right_col_form = QtGui.QFormLayout()
@@ -47,9 +47,9 @@ class plot_constellation_form(plot_form):
         # Constellation resizing scales x and y together.
         # Set the bar to go from 0.001 to max
         self.ybar.setMinimum(1)
-        self.ybar.setMaximum(1000*self.top_block._y_max)
-        self.ybar.setSingleStep(1000*(max(self.top_block._y_range/10, 0.010)))
-        self.ybar.setPageStep(1000*(max(self.top_block._y_range/2, 0.010)))
+        self.ybar.setMaximum(self._pos_scale*self.top_block._y_max)
+        self.ybar.setSingleStep(self._pos_scale*(max(self.top_block._y_range/10, 0.010)))
+        self.ybar.setPageStep(self._pos_scale*(max(self.top_block._y_range/2, 0.010)))
 
         self.auto_scale = QtGui.QCheckBox("Auto Scale", self)
         if(self.top_block._auto_scale):
