@@ -41,9 +41,9 @@ namespace gr {
     rms_ff_impl::rms_ff_impl(double alpha)
       : gr_sync_block("rms_ff",
                       gr_make_io_signature(1, 1, sizeof(float)),
-                      gr_make_io_signature(1, 1, sizeof(float))),
-        d_iir(alpha)
+                      gr_make_io_signature(1, 1, sizeof(float)))
     {
+      set_alpha(alpha);
     }
 
     rms_ff_impl::~rms_ff_impl()
@@ -53,7 +53,9 @@ namespace gr {
     void
     rms_ff_impl::set_alpha(double alpha)
     {
-      d_iir.set_taps(alpha);
+      d_alpha = alpha;
+      d_beta = 1 - d_alpha;
+      d_avg = 0;
     }
 
     int
@@ -66,8 +68,8 @@ namespace gr {
 
       for(int i = 0; i < noutput_items; i++) {
         double mag_sqrd = in[i]*in[i];
-        double f = d_iir.filter(mag_sqrd);
-        out[i] = sqrt(f);
+        d_avg = d_beta*d_avg + d_alpha*mag_sqrd;
+        out[i] = sqrt(d_avg);
       }
 
       return noutput_items;
