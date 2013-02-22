@@ -72,7 +72,7 @@ class ofdm_sync_pnac(gr.hier_block2):
         self.crosscorr_filter = filter.fir_filter_ccc(1, kstime)
         
         # Create a delay line
-        self.delay = gr.delay(gr.sizeof_gr_complex, fft_length/2)
+        self.delay = blocks.delay(gr.sizeof_gr_complex, fft_length/2)
 
         # Correlation from ML Sync
         self.conjg = blocks.conjugate_cc();

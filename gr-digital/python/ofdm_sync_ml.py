@@ -58,7 +58,7 @@ class ofdm_sync_ml(gr.hier_block2):
         self.connect(self, self.input)
 
         # Create a delay line
-        self.delay = gr.delay(gr.sizeof_gr_complex, fft_length)
+        self.delay = blocks.delay(gr.sizeof_gr_complex, fft_length)
         self.connect(self.input, self.delay)
 
         # magnitude squared blocks

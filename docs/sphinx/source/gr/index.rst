@@ -108,15 +108,6 @@ Filters
    gnuradio.gr.pfb_decimator_ccf
    gnuradio.gr.pfb_interpolator_ccf
 
-Mathematics
-^^^^^^^^^^^
-
-.. autosummary::
-   :nosignatures:
-
-   gnuradio.gr.rms_cf
-   gnuradio.gr.rms_ff
-
 
 Information Coding and Decoding
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -142,12 +133,6 @@ Type Conversions
    gnuradio.gr.complex_to_mag_squared
    gnuradio.gr.complex_to_arg
    gnuradio.gr.unpack_k_bits_bb
-   gnuradio.gr.packed_to_unpacked_bb
-   gnuradio.gr.packed_to_unpacked_ii
-   gnuradio.gr.packed_to_unpacked_ss
-   gnuradio.gr.unpacked_to_packed_bb
-   gnuradio.gr.unpacked_to_packed_ii
-   gnuradio.gr.unpacked_to_packed_ss
 
 Signal Level Control (AGC)
 ^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -186,7 +171,6 @@ Miscellaneous Blocks
    :nosignatures:
 
    gnuradio.gr.copy
-   gnuradio.gr.delay
    gnuradio.gr.kludge_copy
    gnuradio.gr.nop
    gnuradio.gr.pa_2x2_phase_combiner

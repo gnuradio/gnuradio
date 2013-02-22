@@ -20,7 +20,7 @@ def run_test (fo,fi,interleaver,Kb,bitspersymbol,K,dimensionality,constellation,
     # TX
     src = gr.lfsr_32k_source_s()
     src_head = gr.head (gr.sizeof_short,Kb/16) # packet size in shorts
-    s2fsmi = gr.packed_to_unpacked_ss(bitspersymbol,gr.GR_MSB_FIRST) # unpack shorts to symbols compatible with the outer FSM input cardinality
+    s2fsmi = blocks.packed_to_unpacked_ss(bitspersymbol,gr.GR_MSB_FIRST) # unpack shorts to symbols compatible with the outer FSM input cardinality
     enc = trellis.sccc_encoder_ss(fo,0,fi,0,interleaver,K)
     mod = digital.chunks_to_symbols_sf(constellation,dimensionality)
 
@@ -32,7 +32,7 @@ def run_test (fo,fi,interleaver,Kb,bitspersymbol,K,dimensionality,constellation,
     metrics_in = trellis.metrics_f(fi.O(),dimensionality,constellation,digital.TRELLIS_EUCLIDEAN) # data preprocessing to generate metrics for innner SISO
     scale = blocks.multiply_const_ff(1.0/N0)
     dec = trellis.sccc_decoder_s(fo,0,-1,fi,0,-1,interleaver,K,IT,trellis.TRELLIS_MIN_SUM)
-    fsmi2s = gr.unpacked_to_packed_ss(bitspersymbol,gr.GR_MSB_FIRST) # pack FSM input symbols to shorts
+    fsmi2s = blocks.unpacked_to_packed_ss(bitspersymbol,gr.GR_MSB_FIRST) # pack FSM input symbols to shorts
     dst = gr.check_lfsr_32k_s()
 
     #tb.connect (src,src_head,s2fsmi,enc_out,inter,enc_in,mod)

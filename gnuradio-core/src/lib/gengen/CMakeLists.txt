@@ -90,8 +90,6 @@ expand_h_cc_i(gr_probe_signal_vX    b s i f c)
 expand_h_cc_i(gr_mute_XX                ss ii ff cc)
 expand_h_cc_i(gr_moving_average_XX      ss ii ff cc)
 
-expand_h_cc_i(gr_unpacked_to_packed_XX        bb ss ii)
-expand_h_cc_i(gr_packed_to_unpacked_XX        bb ss ii)
 expand_h_cc_i(gr_sample_and_hold_XX           bb ss ii ff)
 expand_h_cc_i(gr_argmax_XX                    fs is ss)
 expand_h_cc_i(gr_max_XX                       ff ii ss)

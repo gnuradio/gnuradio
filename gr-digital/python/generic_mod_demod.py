@@ -32,6 +32,11 @@ import digital_swig as digital
 import math
 
 try:
+    from gnuradio import blocks
+except ImportError:
+    import blocks_swig as blocks
+
+try:
     from gnuradio import filter
 except ImportError:
     import filter_swig as filter
@@ -126,7 +131,7 @@ class generic_mod(gr.hier_block2):
         
         # turn bytes into k-bit vectors
         self.bytes2chunks = \
-          gr.packed_to_unpacked_bb(self.bits_per_symbol(), gr.GR_MSB_FIRST)
+            blocks.packed_to_unpacked_bb(self.bits_per_symbol(), gr.GR_MSB_FIRST)
 
         if self.pre_diff_code:
             self.symbol_mapper = digital.map_bb(self._constellation.pre_diff_code())
@@ -149,13 +154,13 @@ class generic_mod(gr.hier_block2):
                                                        self.rrc_taps)
 
 	# Connect
-        blocks = [self, self.bytes2chunks]
+        self._blocks = [self, self.bytes2chunks]
         if self.pre_diff_code:
-            blocks.append(self.symbol_mapper)
+            self._blocks.append(self.symbol_mapper)
         if differential:
-            blocks.append(self.diffenc)
-        blocks += [self.chunks2symbols, self.rrc_filter, self]
-        self.connect(*blocks)
+            self._blocks.append(self.diffenc)
+        self._blocks += [self.chunks2symbols, self.rrc_filter, self]
+        self.connect(*self._blocks)
 
         if verbose:
             self._print_verbage()

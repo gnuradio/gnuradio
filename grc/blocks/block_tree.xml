@@ -49,7 +49,6 @@
 
 		<block>gr_max_xx</block>
 		<block>gr_argmax_xx</block>
-		<block>gr_rms_xx</block>
 
 		<block>gr_vector_insert_x</block>
 
@@ -73,8 +72,6 @@
 	</cat>
 	<cat>
 		<name>Misc Conversions</name>
-		<block>gr_unpacked_to_packed_xx</block>
-		<block>gr_packed_to_unpacked_xx</block>
 		<block>gr_unpack_k_bits_bb</block>
 		<block>gr_pack_k_bits_bb</block>
 	</cat>
@@ -127,7 +124,6 @@
 		<block>import</block>
 
 		<block>gr_throttle</block>
-		<block>gr_delay</block>
 
 		<block>blks2_selector</block>
 		<block>blks2_valve</block>

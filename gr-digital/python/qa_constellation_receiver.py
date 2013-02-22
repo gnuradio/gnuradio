@@ -150,7 +150,7 @@ class rec_test_tb(gr.top_block):
             self.src_data = tuple([rndm.randint(0,1) for i in range(0, data_length)])
         else:
             self.src_data = src_data
-        packer = gr.unpacked_to_packed_bb(1, gr.GR_MSB_FIRST)
+        packer = blocks.unpacked_to_packed_bb(1, gr.GR_MSB_FIRST)
         src = gr.vector_source_b(self.src_data)
         mod = generic_mod(constellation, differential=differential)
         # Channel

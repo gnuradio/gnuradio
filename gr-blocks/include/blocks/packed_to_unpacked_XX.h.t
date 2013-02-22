@@ -47,7 +47,7 @@ namespace gr {
      * processed. The right thing is done if bits_per_chunk is not a
      * power of two.
      *
-     * The combination of gr_packed_to_unpacked_XX_ followed by
+     * The combination of gr::blocks::packed_to_unpacked_XX_ followed by
      * gr_chunks_to_symbols_Xf or gr_chunks_to_symbols_Xc handles the
      * general case of mapping from a stream of bytes or shorts into
      * arbitrary float or complex symbols.

@@ -105,7 +105,6 @@ install(FILES
     ${CMAKE_CURRENT_SOURCE_DIR}/gr_fxpt.h
     ${CMAKE_CURRENT_SOURCE_DIR}/gr_fxpt_nco.h
     ${CMAKE_CURRENT_SOURCE_DIR}/gr_fxpt_vco.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/gr_log2_const.h
     ${CMAKE_CURRENT_SOURCE_DIR}/gr_math.h
     ${CMAKE_CURRENT_SOURCE_DIR}/gr_misc.h
     ${CMAKE_CURRENT_SOURCE_DIR}/gr_nco.h
@@ -152,7 +151,6 @@ set(gr_core_general_triple_threats
     gr_complex_to_interleaved_short
     gr_complex_to_xxx
     gr_copy
-    gr_delay
     gr_endian_swap
     gr_fake_channel_coder_pp
     gr_feval
@@ -170,8 +168,6 @@ set(gr_core_general_triple_threats
     gr_random_pdu
     gr_regenerate_bb
     gr_remez
-    gr_rms_cf
-    gr_rms_ff
     gr_skiphead
     gr_stretch_ff
     gr_test

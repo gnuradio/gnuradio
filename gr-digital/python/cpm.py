@@ -117,7 +117,7 @@ class cpm_mod(gr.hier_block2):
 	sensitivity = 2 * pi * h_numerator / h_denominator / samples_per_symbol
 
         # Unpack Bytes into bits_per_symbol groups
-        self.B2s = gr.packed_to_unpacked_bb(bits_per_symbol,gr.GR_MSB_FIRST)
+        self.B2s = blocks.packed_to_unpacked_bb(bits_per_symbol,gr.GR_MSB_FIRST)
  
  
 	# Turn it into symmetric PAM data.

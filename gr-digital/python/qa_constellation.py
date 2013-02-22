@@ -174,12 +174,12 @@ class mod_demod(gr.hier_block2):
         self.blocks = [self]
         # We expect a stream of unpacked bits.
         # First step is to pack them.
-        self.blocks.append(gr.unpacked_to_packed_bb(1, gr.GR_MSB_FIRST))
+        self.blocks.append(blocks.unpacked_to_packed_bb(1, gr.GR_MSB_FIRST))
         # Second step we unpack them such that we have k bits in each byte where
         # each constellation symbol hold k bits.
         self.blocks.append(
-            gr.packed_to_unpacked_bb(self.constellation.bits_per_symbol(),
-                                     gr.GR_MSB_FIRST))
+            blocks.packed_to_unpacked_bb(self.constellation.bits_per_symbol(),
+                                         gr.GR_MSB_FIRST))
         # Apply any pre-differential coding
         # Gray-coding is done here if we're also using differential coding.
         if self.constellation.apply_pre_diff_code():

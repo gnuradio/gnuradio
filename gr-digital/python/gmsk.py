@@ -25,6 +25,7 @@
 # See gnuradio-examples/python/digital for examples
 
 from gnuradio import gr
+from gnuradio import blocks
 from gnuradio import analog
 import modulation_utils
 import digital_swig as digital
@@ -97,7 +98,7 @@ class gmsk_mod(gr.hier_block2):
 
 	# Turn it into NRZ data.
 	#self.nrz = digital.bytes_to_syms()
-        self.unpack = gr.packed_to_unpacked_bb(1, gr.GR_MSB_FIRST)
+        self.unpack = blocks.packed_to_unpacked_bb(1, gr.GR_MSB_FIRST)
         self.nrz = digital.chunks_to_symbols_bf([-1, 1], 1)
 
 	# Form Gaussian filter

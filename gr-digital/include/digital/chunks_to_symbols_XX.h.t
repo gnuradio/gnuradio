@@ -41,15 +41,15 @@ namespace gr {
      *
      * out[n D + k] = symbol_table[in[n] D + k], k=0,1,...,D-1
      *
-     * The combination of gr_packed_to_unpacked_XX followed by
+     * The combination of gr::blocks::packed_to_unpacked_XX followed by
      * digital_chunks_to_symbols_XY handles the general case of mapping
      * from a stream of bytes or shorts into arbitrary float
      * or complex symbols.
      *
-     * \sa gr_packed_to_unpacked_bb, gr_unpacked_to_packed_bb,
-     * \sa gr_packed_to_unpacked_ss, gr_unpacked_to_packed_ss,
-     * \sa digital_chunks_to_symbols_bf, digital_chunks_to_symbols_bc.
-     * \sa digital_chunks_to_symbols_sf, digital_chunks_to_symbols_sc.
+     * \sa gr::blocks::packed_to_unpacked_bb, gr::blocks::unpacked_to_packed_bb,
+     * \sa gr::blocks::packed_to_unpacked_ss, gr::blocks::unpacked_to_packed_ss,
+     * \sa gr::digital::chunks_to_symbols_bf, gr::digital::chunks_to_symbols_bc.
+     * \sa gr::digital::chunks_to_symbols_sf, gr::digital::chunks_to_symbols_sc.
      */
 
     class DIGITAL_API @NAME@ : virtual public gr_sync_interpolator

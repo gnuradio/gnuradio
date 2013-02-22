@@ -46,7 +46,7 @@ class test_simple_correlator(gr_unittest.TestCase):
         
         src = gr.vector_source_b(expected_result)
         frame = digital.simple_framer(4)
-        unpack = gr.packed_to_unpacked_bb(1, gr.GR_MSB_FIRST)
+        unpack = blocks.packed_to_unpacked_bb(1, gr.GR_MSB_FIRST)
         expand = filter.interp_fir_filter_fff(8, taps)
         b2f = blocks.char_to_float()
         mult2 = blocks.multiply_const_ff(2)

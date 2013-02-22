@@ -169,7 +169,7 @@
     </param>
   </block>
   <block>
-    <key>gr_packed_to_unpacked_xx</key>
+    <key>blocks_packed_to_unpacked_xx</key>
     <param>
       <key>id</key>
       <value>p2u</value>

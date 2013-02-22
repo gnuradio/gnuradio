@@ -52,7 +52,7 @@ class ofdm_sync_pn(gr.hier_block2):
         # PN Sync
 
         # Create a delay line
-        self.delay = gr.delay(gr.sizeof_gr_complex, fft_length/2)
+        self.delay = blocks.delay(gr.sizeof_gr_complex, fft_length/2)
 
         # Correlation from ML Sync
         self.conjg = blocks.conjugate_cc();

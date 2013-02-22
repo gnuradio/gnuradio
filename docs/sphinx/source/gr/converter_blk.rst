@@ -9,9 +9,3 @@ gnuradio.gr: Type Conversions
 .. autooldblock:: gnuradio.gr.complex_to_mag_squared
 .. autooldblock:: gnuradio.gr.complex_to_arg
 .. autooldblock:: gnuradio.gr.unpack_k_bits_bb
-.. autooldblock:: gnuradio.gr.packed_to_unpacked_bb
-.. autooldblock:: gnuradio.gr.packed_to_unpacked_ii
-.. autooldblock:: gnuradio.gr.packed_to_unpacked_ss
-.. autooldblock:: gnuradio.gr.unpacked_to_packed_bb
-.. autooldblock:: gnuradio.gr.unpacked_to_packed_ii
-.. autooldblock:: gnuradio.gr.unpacked_to_packed_ss

@@ -51,7 +51,7 @@ class bert_transmit(gr.hier_block2):
                                         gray_coded, excess_bw,
                                         verbose, log)
 
-        self._pack = gr.unpacked_to_packed_bb(self._mod.bits_per_symbol(), gr.GR_MSB_FIRST)
+        self._pack = blocks.unpacked_to_packed_bb(self._mod.bits_per_symbol(), gr.GR_MSB_FIRST)
 
         self.connect(self._bits, self._scrambler, self._pack, self._mod, self)
 
