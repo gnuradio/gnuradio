@@ -1,8 +1,9 @@
 #include "qa_utils.h"
-extern "C" {
+
 #include <volk/volk.h>
 #include <volk/volk_prefs.h>
-}
+
+#include <ciso646>
 #include <vector>
 #include <boost/foreach.hpp>
 #include <boost/filesystem.hpp>
@@ -111,6 +112,7 @@ int main(int argc, char *argv[]) {
 
     char path[1024];
     volk_get_config_path(path);
+
     const fs::path config_path(path);
 
     if (not fs::exists(config_path.branch_path()))

@@ -1,6 +1,7 @@
 #ifndef SINCOSTABLE_H
 #define SINCOSTABLE_H
 
+#define _USE_MATH_DEFINES
 #include <math.h>
 
 class sincostable {

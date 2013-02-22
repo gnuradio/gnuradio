@@ -34,6 +34,7 @@
 #include <stdexcept>
 #include <string.h>
 #include <iostream>
+#include <vector>
 
 // public constructor that returns a shared_ptr
 
@@ -68,14 +69,15 @@ void gr_random_pdu::output_random(){
     int len = rvar();
 
     // fill it with random bytes
-    unsigned char vec[len];
+    std::vector<unsigned char> vec;
     for(int i=0; i<len; i++){
-        vec[i] = (unsigned char) bvar();
+        vec.push_back((unsigned char) bvar());
         }
 
     // send the vector
-    pmt::pmt_t vecpmt( pmt::make_blob( vec, len ) );
+    pmt::pmt_t vecpmt( pmt::make_blob( &vec[0], len ) );
     pmt::pmt_t pdu( pmt::cons( pmt::PMT_NIL, vecpmt ) );
+
     message_port_pub( pmt::mp("pdus"), pdu );
     
     std::cout << "sending new random vector of length " << len << "\n";
