@@ -325,6 +325,15 @@ gr_flat_flowgraph::setup_buffer_alignment(gr_block_sptr block)
   }
 }
 
+std::string
+gr_flat_flowgraph::edge_list()
+{
+  std::stringstream s;
+  for(gr_edge_viter_t e = d_edges.begin(); e != d_edges.end(); e++)
+     s << (*e) << std::endl;
+  return s.str();
+}
+
 void gr_flat_flowgraph::dump()
 {
   for (gr_edge_viter_t e = d_edges.begin(); e != d_edges.end(); e++)

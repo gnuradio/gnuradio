@@ -28,6 +28,7 @@
 #include <gr_top_block.h>
 #include <gr_top_block_impl.h>
 #include <gr_io_signature.h>
+#include <gr_prefs.h>
 #include <iostream>
 
 gr_top_block_sptr
@@ -57,6 +58,10 @@ void
 gr_top_block::start(int max_noutput_items)
 {
   d_impl->start(max_noutput_items);
+
+  if(gr_prefs::singleton()->get_bool("ControlPort", "on", false)) {
+    setup_rpc();
+  }  
 }
 
 void
@@ -88,6 +93,12 @@ void
 gr_top_block::unlock()
 {
   d_impl->unlock();
+}
+
+std::string
+gr_top_block::edge_list()
+{
+  return d_impl->edge_list();
 }
 
 void
@@ -125,6 +136,14 @@ gr_top_block::setup_rpc()
 	 &gr_top_block::max_noutput_items,
 	 pmt::mp(0), pmt::mp(8192), pmt::mp(8192),
 	 "items", "Max number of output items",
+	 RPC_PRIVLVL_MIN, DISPNULL)));
+
+  add_rpc_variable(
+      rpcbasic_sptr(new rpcbasic_register_get<gr_top_block, std::string>(
+	 alias(), "edge list",
+	 &gr_top_block::edge_list,
+	 pmt::mp(""), pmt::mp(""), pmt::mp(""),
+	 "edges", "List of edges in the graph",
 	 RPC_PRIVLVL_MIN, DISPNULL)));
 
   // Setters

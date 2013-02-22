@@ -56,6 +56,9 @@ public:
   // Unlock the top block at end of reconfiguration
   void unlock();
 
+  // Return a string list of edges
+  std::string edge_list();
+
   // Dump the flowgraph to stdout
   void dump();
 

@@ -112,6 +112,12 @@ public:
   virtual void unlock();
 
   /*!
+   * Returns a string that lists the edge connections in the flattened
+   * flowgraph.
+   */
+  std::string edge_list();
+
+  /*!
    * Displays flattened flowgraph edges and block connectivity
    */
   void dump();

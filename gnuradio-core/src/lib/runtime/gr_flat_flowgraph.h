@@ -50,6 +50,9 @@ public:
   // Merge applicable connections from existing flat flowgraph
   void merge_connections(gr_flat_flowgraph_sptr sfg);
 
+  // Return a string list of edges
+  std::string edge_list();
+
   void dump();
 
   /*!

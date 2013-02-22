@@ -182,6 +182,15 @@ gr_top_block_impl::restart()
   d_state = RUNNING;
 }
 
+std::string
+gr_top_block_impl::edge_list()
+{
+  if(d_ffg)
+    return d_ffg->edge_list();
+  else
+    return "";
+}
+
 void
 gr_top_block_impl::dump()
 {

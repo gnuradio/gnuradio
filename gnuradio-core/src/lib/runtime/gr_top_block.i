@@ -44,6 +44,7 @@ public:
   //void run() throw (std::runtime_error);
   void lock();
   void unlock() throw (std::runtime_error);
+  std::string edge_list();
   void dump();
 
   int max_noutput_items();

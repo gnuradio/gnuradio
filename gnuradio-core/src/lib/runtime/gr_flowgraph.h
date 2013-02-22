@@ -237,7 +237,7 @@ void gr_flowgraph::disconnect(gr_basic_block_sptr src_block, int src_port,
 inline std::ostream&
 operator <<(std::ostream &os, const gr_endpoint endp)
 {
-  os << endp.block() << ":" << endp.port();
+  os << endp.block()->alias() << ":" << endp.port();
   return os;
 }
 
