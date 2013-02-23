@@ -53,7 +53,7 @@ def main():
     sigs = list()
     fmtx = list()
     for fi in freqs:
-        s = analog.sig_source_f(fs, gr.GR_SIN_WAVE, fi, 1)
+        s = analog.sig_source_f(fs, analog.GR_SIN_WAVE, fi, 1)
         fm = analog.nbfm_tx(fs, 4*fs, max_dev=10000, tau=75e-6)
         sigs.append(s)
         fmtx.append(fm)
@@ -69,7 +69,7 @@ def main():
 
     noise_level = 0.01
     head = gr.head(gr.sizeof_gr_complex, N)
-    noise = analog.noise_source_c(gr.GR_GAUSSIAN, noise_level)
+    noise = analog.noise_source_c(analog.GR_GAUSSIAN, noise_level)
     addnoise = blocks.add_cc()
     snk_synth = gr.vector_sink_c()
 
