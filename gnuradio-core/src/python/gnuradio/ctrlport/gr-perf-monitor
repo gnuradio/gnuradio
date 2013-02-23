@@ -46,7 +46,7 @@ class MAINWindow(QtGui.QMainWindow):
 
         self.mdiArea = QtGui.QMdiArea()
         self.mdiArea.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOn)
-        #self.mdiArea.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOn)
+        self.mdiArea.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOn)
         self.setCentralWidget(self.mdiArea)
 
         self.mdiArea.subWindowActivated.connect(self.updateMenus)
