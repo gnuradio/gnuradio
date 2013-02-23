@@ -109,8 +109,10 @@ gr_top_block_impl::start(int max_noutput_items)
   d_ffg->validate();
   d_ffg->setup_connections();
 
-  // Only export perf. counters if ControlPort config param is enabled.
-  if(gr_prefs::singleton()->get_bool("ControlPort", "on", false))
+  // Only export perf. counters if ControlPort config param is enabled
+  // and if the PerfCounter option 'export' is turned on.
+  gr_prefs *p = gr_prefs::singleton();
+  if(p->get_bool("ControlPort", "on", false) && p->get_bool("PerfCounters", "export", false))
     d_ffg->enable_pc_rpc();
 
   d_scheduler = make_scheduler(d_ffg, d_max_noutput_items);
