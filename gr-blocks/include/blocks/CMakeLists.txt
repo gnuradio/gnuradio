@@ -126,6 +126,8 @@ install(FILES
     multiply_const_ff.h
     nlog10_ff.h
     patterned_interleaver.h
+    peak_detector2_fb.h
+    regenerate_bb.h
     repeat.h
     rms_cf.h
     rms_ff.h

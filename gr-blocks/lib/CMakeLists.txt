@@ -165,6 +165,8 @@ list(APPEND gr_blocks_sources
     multiply_const_ff_impl.cc
     nlog10_ff_impl.cc
     patterned_interleaver_impl.cc
+    peak_detector2_fb_impl.cc
+    regenerate_bb_impl.cc
     repeat_impl.cc
     rms_cf_impl.cc
     rms_ff_impl.cc
