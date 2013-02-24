@@ -24,11 +24,9 @@
 	<sink>
 		<name>in</name>
 		<type>byte</type>
-		<vlen>$vlen</vlen>
 	</sink>
 	<source>
 		<name>out</name>
 		<type>byte</type>
-		<vlen>$vlen</vlen>
 	</source>
 </block>

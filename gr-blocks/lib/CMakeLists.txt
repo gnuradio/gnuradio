@@ -177,6 +177,9 @@ list(APPEND gr_blocks_sources
     stream_to_vector_impl.cc
     streams_to_stream_impl.cc
     streams_to_vector_impl.cc
+    stretch_ff_impl.cc
+    threshold_ff_impl.cc
+    throttle_impl.cc
     uchar_array_to_float.cc
     uchar_to_float_impl.cc
     vector_to_stream_impl.cc
