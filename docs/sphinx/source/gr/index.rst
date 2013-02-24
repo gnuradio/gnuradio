@@ -140,8 +140,6 @@ Signal Level Control (AGC)
 .. autosummary::
    :nosignatures:
 
-   gnuradio.gr.peak_detector2_fb
-   gnuradio.gr.regenerate_bb
    gnuradio.gr.mute_cc
    gnuradio.gr.mute_ff
    gnuradio.gr.mute_ii
