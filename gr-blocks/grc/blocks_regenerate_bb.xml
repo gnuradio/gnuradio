@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<!--
+###################################################
+##Regenerate Block:
+##	char in/ char out
+###################################################
+ -->
+<block>
+	<name>Regenerate</name>
+	<key>blocks_regenerate_bb</key>
+	<import>from gnuradio import blocks</import>
+	<make>blocks.regenerate_bb($period, $max_regen)</make>
+	<param>
+		<name>Period</name>
+		<key>period</key>
+		<type>int</type>
+	</param>
+	<param>
+		<name>Max Regen Count</name>
+		<key>max_regen</key>
+		<value>500</value>
+		<type>int</type>
+	</param>
+	<sink>
+		<name>in</name>
+		<type>byte</type>
+	</sink>
+	<source>
+		<name>out</name>
+		<type>byte</type>
+	</source>
+</block>

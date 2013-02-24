@@ -165,6 +165,8 @@ list(APPEND gr_blocks_sources
     multiply_const_ff_impl.cc
     nlog10_ff_impl.cc
     patterned_interleaver_impl.cc
+    peak_detector2_fb_impl.cc
+    regenerate_bb_impl.cc
     repeat_impl.cc
     rms_cf_impl.cc
     rms_ff_impl.cc
@@ -175,6 +177,9 @@ list(APPEND gr_blocks_sources
     stream_to_vector_impl.cc
     streams_to_stream_impl.cc
     streams_to_vector_impl.cc
+    stretch_ff_impl.cc
+    threshold_ff_impl.cc
+    throttle_impl.cc
     uchar_array_to_float.cc
     uchar_to_float_impl.cc
     vector_to_stream_impl.cc
