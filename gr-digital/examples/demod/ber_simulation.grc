@@ -61,10 +61,10 @@
     </param>
   </block>
   <block>
-    <key>gr_throttle</key>
+    <key>blocks_throttle</key>
     <param>
       <key>id</key>
-      <value>gr_throttle</value>
+      <value>blocks_throttle</value>
     </param>
     <param>
       <key>_enabled</key>
@@ -648,7 +648,7 @@
     <sink_key>0</sink_key>
   </connection>
   <connection>
-    <source_block_id>gr_throttle</source_block_id>
+    <source_block_id>blocks_throttle</source_block_id>
     <sink_block_id>blks2_error_rate</sink_block_id>
     <source_key>0</source_key>
     <sink_key>0</sink_key>
@@ -667,7 +667,7 @@
   </connection>
   <connection>
     <source_block_id>random_source_x</source_block_id>
-    <sink_block_id>gr_throttle</sink_block_id>
+    <sink_block_id>blocks_throttle</sink_block_id>
     <source_key>0</source_key>
     <sink_key>0</sink_key>
   </connection>

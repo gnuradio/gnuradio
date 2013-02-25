@@ -40,10 +40,8 @@
 #include <gr_firdes.h>
 #include <gr_random_pdu.h>
 #include <gr_fake_channel_coder_pp.h>
-#include <gr_throttle.h>
 #include <gr_transcendental.h>
 #include <gr_vco_f.h>
-#include <gr_threshold_ff.h>
 #include <gr_pa_2x2_phase_combiner.h>
 #include <gr_kludge_copy.h>
 #include <gr_prefs.h>
@@ -54,7 +52,6 @@
 #include <gr_pack_k_bits_bb.h>
 #include <gr_feval.h>
 #include <gr_bin_statistics_f.h>
-#include <gr_stretch_ff.h>
 #include <gr_copy.h>
 #include <complex_vec_test.h>
 #include <gr_annotator_alltoall.h>
@@ -84,10 +81,8 @@
 %include "gr_firdes.i"
 %include "gr_random_pdu.i"
 %include "gr_fake_channel_coder_pp.i"
-%include "gr_throttle.i"
 %include "gr_transcendental.i"
 %include "gr_vco_f.i"
-%include "gr_threshold_ff.i"
 %include "gr_pa_2x2_phase_combiner.i"
 %include "gr_kludge_copy.i"
 %include "gr_prefs.i"
@@ -98,7 +93,6 @@
 %include "gr_pack_k_bits_bb.i"
 %include "gr_feval.i"
 %include "gr_bin_statistics_f.i"
-%include "gr_stretch_ff.i"
 %include "gr_copy.i"
 %include "complex_vec_test.i"
 %include "gr_annotator_alltoall.i"

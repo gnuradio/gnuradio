@@ -89,7 +89,6 @@
 		<block>gr_sample_and_hold_xx</block>
 
 		<block>gr_mute_xx</block>
-		<block>gr_threshold_ff</block>
 	</cat>
 	<cat>
 		<name>Filters</name>
@@ -121,8 +120,6 @@
 		<name>Misc</name>
 		<block>note</block>
 		<block>import</block>
-
-		<block>gr_throttle</block>
 
 		<block>blks2_selector</block>
 		<block>blks2_valve</block>

@@ -7,6 +7,7 @@
 
 from PyQt4 import Qt
 from gnuradio import analog
+from gnuradio import blocks
 from gnuradio import eng_notation
 from gnuradio import gr
 from gnuradio import qtgui
@@ -59,18 +60,18 @@ class howto_square_qt(gr.top_block, Qt.QWidget):
 		self.top_layout.addWidget(self._qtgui_time_sink_x_0_win)
 		self.howto_square_ff_0 = howto.square_ff()
 		self.howto_square2_ff_0 = howto.square2_ff()
-		self.gr_throttle_0 = gr.throttle(gr.sizeof_float*1, samp_rate)
+		self.blocks_throttle_0 = blocks.throttle(gr.sizeof_float*1, samp_rate)
 		self.analog_sig_source_x_0 = analog.sig_source_f(samp_rate, analog.GR_COS_WAVE, 1000, 1, 0)
 
 		##################################################
 		# Connections
 		##################################################
 		self.connect((self.howto_square2_ff_0, 0), (self.qtgui_time_sink_x_0, 0))
-		self.connect((self.gr_throttle_0, 0), (self.howto_square2_ff_0, 0))
-		self.connect((self.gr_throttle_0, 0), (self.howto_square_ff_0, 0))
-		self.connect((self.gr_throttle_0, 0), (self.qtgui_time_sink_x_0, 1))
+		self.connect((self.blocks_throttle_0, 0), (self.howto_square2_ff_0, 0))
+		self.connect((self.blocks_throttle_0, 0), (self.howto_square_ff_0, 0))
+		self.connect((self.blocks_throttle_0, 0), (self.qtgui_time_sink_x_0, 1))
 		self.connect((self.howto_square_ff_0, 0), (self.qtgui_time_sink_x_0, 2))
-		self.connect((self.analog_sig_source_x_0, 0), (self.gr_throttle_0, 0))
+		self.connect((self.analog_sig_source_x_0, 0), (self.blocks_throttle_0, 0))
 
 # QT sink close method reimplementation
 	def closeEvent(self, event):

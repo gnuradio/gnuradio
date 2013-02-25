@@ -22,6 +22,7 @@
 
 from gnuradio import gr, gru, eng_notation
 from gnuradio import analog
+from gnuradio import blocks
 from gnuradio.wxgui import stdgui2
 import wx
 import gnuradio.wxgui.plot as plot
@@ -631,7 +632,7 @@ class test_top_block(stdgui2.std_top_block):
 
         # We add this throttle block so that this demo doesn't suck down
         # all the CPU available.  You normally wouldn't use it...
-        self.thr = gr.throttle(gr.sizeof_gr_complex, input_rate)
+        self.thr = blocks.throttle(gr.sizeof_gr_complex, input_rate)
 
         scope = scope_sink_c(panel,"Secret Data",sample_rate=input_rate,
                              frame_decim=frame_decim,

@@ -45,7 +45,7 @@ class my_top_block(gr.top_block):
         frequency_offset = options.frequency_offset / options.fft_length
 
         self.src = gr.file_source(gr.sizeof_gr_complex, ifile)
-        #self.throttle = gr.throttle(gr.sizeof_gr_complex, options.sample_rate)
+        #self.throttle = blocks.throttle(gr.sizeof_gr_complex, options.sample_rate)
 
         self.channel = filter.channel_model(noise_voltage, frequency_offset,
                                         time_offset, noise_seed=-random.randint(0,100000))

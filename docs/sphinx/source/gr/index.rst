@@ -172,8 +172,6 @@ Miscellaneous Blocks
    gnuradio.gr.kludge_copy
    gnuradio.gr.nop
    gnuradio.gr.pa_2x2_phase_combiner
-   gnuradio.gr.threshold_ff
-   gnuradio.gr.throttle
    gnuradio.gr.channel_model
 
 Slicing and Dicing Streams

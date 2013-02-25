@@ -21,6 +21,7 @@
 #
 
 from gnuradio import gr
+from gnuradio import blocks
 import sys, time
 
 try:
@@ -44,7 +45,7 @@ class GrDataPlotterC(gr.top_block):
         self._data_len = 0
 
         self.src = gr.vector_source_c([])
-        self.thr = gr.throttle(gr.sizeof_gr_complex, rate)
+        self.thr = blocks.throttle(gr.sizeof_gr_complex, rate)
         self.snk = qtgui.time_sink_c(self._npts, samp_rate,
                                      self._name, 1)
         self.snk.enable_autoscale(True)
@@ -129,7 +130,7 @@ class GrDataPlotterF(gr.top_block):
         self._data_len = 0
 
         self.src = gr.vector_source_f([])
-        self.thr = gr.throttle(gr.sizeof_float, rate)
+        self.thr = blocks.throttle(gr.sizeof_float, rate)
         self.snk = qtgui.time_sink_f(self._npts, samp_rate,
                                      self._name, 1)
         self.snk.enable_autoscale(True)
@@ -207,7 +208,7 @@ class GrDataPlotterConst(gr.top_block):
         self._data_len = 0
 
         self.src = gr.vector_source_c([])
-        self.thr = gr.throttle(gr.sizeof_gr_complex, rate)
+        self.thr = blocks.throttle(gr.sizeof_gr_complex, rate)
         self.snk = qtgui.const_sink_c(self._npts,
                                       self._name, 1)
         self.snk.enable_autoscale(True)
@@ -286,7 +287,7 @@ class GrDataPlotterPsdC(gr.top_block):
         self._data_len = 0
 
         self.src = gr.vector_source_c([])
-        self.thr = gr.throttle(gr.sizeof_gr_complex, rate)
+        self.thr = blocks.throttle(gr.sizeof_gr_complex, rate)
         self.snk = qtgui.freq_sink_c(self._fftsize, self._wintype,
                                      self._fc, self._samp_rate,
                                      self._name, 1)
@@ -359,7 +360,7 @@ class GrDataPlotterPsdF(gr.top_block):
         self._data_len = 0
 
         self.src = gr.vector_source_f([])
-        self.thr = gr.throttle(gr.sizeof_float, rate)
+        self.thr = blocks.throttle(gr.sizeof_float, rate)
         self.snk = qtgui.freq_sink_f(self._fftsize, self._wintype,
                                      self._fc, self._samp_rate,
                                      self._name, 1)
@@ -432,7 +433,7 @@ class GrTimeRasterF(gr.top_block):
         self._data_len = 0
 
         self.src = gr.vector_source_f([])
-        self.thr = gr.throttle(gr.sizeof_float, rate)
+        self.thr = blocks.throttle(gr.sizeof_float, rate)
         self.snk = qtgui.time_raster_sink_f(samp_rate, self._npts, self._rows,
                                             [], [], self._name, 1)
 
@@ -499,7 +500,7 @@ class GrTimeRasterB(gr.top_block):
         self._data_len = 0
 
         self.src = gr.vector_source_b([])
-        self.thr = gr.throttle(gr.sizeof_char, rate)
+        self.thr = blocks.throttle(gr.sizeof_char, rate)
         self.snk = qtgui.time_raster_sink_b(samp_rate, self._npts, self._rows,
                                             [], [], self._name, 1)
 

@@ -160,7 +160,7 @@ class my_top_block(gr.top_block):
         src2 = analog.sig_source_c(Rs, analog.GR_SIN_WAVE, f2, 0.1, 0)
         src  = blocks.add_cc()
         channel = channels.channel_model(0.001)
-        thr = gr.throttle(gr.sizeof_gr_complex, 100*fftsize)
+        thr = blocks.throttle(gr.sizeof_gr_complex, 100*fftsize)
         self.snk1 = qtgui.sink_c(fftsize, filter.firdes.WIN_BLACKMAN_hARRIS,
                                  0, Rs,
                                  "Complex Signal Example",

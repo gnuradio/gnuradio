@@ -43,9 +43,9 @@ class test_stretch(gr_unittest.TestCase):
 
         src0 = gr.vector_source_f(data0, False)
         src1 = gr.vector_source_f(data1, False)
-        inter = gr.streams_to_vector(gr.sizeof_float, 2)
+        inter = blocks.streams_to_vector(gr.sizeof_float, 2)
         op = blocks.stretch_ff(0.1, 2)
-        deinter = gr.vector_to_streams(gr.sizeof_float, 2)
+        deinter = blocks.vector_to_streams(gr.sizeof_float, 2)
         dst0 = gr.vector_sink_f()
         dst1 = gr.vector_sink_f()
         

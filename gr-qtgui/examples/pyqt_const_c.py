@@ -156,7 +156,7 @@ class my_top_block(gr.top_block):
         src2 = analog.sig_source_c(Rs, analog.GR_SIN_WAVE, f2, 0.5, 0)
         src  = blocks.add_cc()
         channel = channels.channel_model(0.001)
-        thr = gr.throttle(gr.sizeof_gr_complex, 100*npts)
+        thr = blocks.throttle(gr.sizeof_gr_complex, 100*npts)
         self.snk1 = qtgui.const_sink_c(npts, "Constellation Example", 1)
 
         self.connect(src1, (src,0))
