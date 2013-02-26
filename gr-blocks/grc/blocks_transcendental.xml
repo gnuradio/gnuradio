@@ -6,9 +6,9 @@
  -->
 <block>
 	<name>Transcendental</name>
-	<key>gr_transcendental</key>
-	<import>from gnuradio import gr</import>
-	<make>gr.transcendental($name, "$type")</make>
+	<key>blocks_transcendental</key>
+	<import>from gnuradio import blocks</import>
+	<make>blocks.transcendental($name, "$type")</make>
 	<param>
 		<name>Type</name>
 		<key>type</key>

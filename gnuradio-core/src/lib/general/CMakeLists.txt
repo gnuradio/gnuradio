@@ -168,7 +168,6 @@ set(gr_core_general_triple_threats
     gr_remez
     gr_skiphead
     gr_test
-    gr_transcendental
     gr_vco_f
     gr_vector_map
     gr_unpack_k_bits_bb

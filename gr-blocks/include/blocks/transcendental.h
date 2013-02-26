@@ -1,5 +1,6 @@
+/* -*- c++ -*- */
 /*
- * Copyright 2011 Free Software Foundation, Inc.
+ * Copyright 2011,2013 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -22,28 +23,34 @@
 #ifndef INCLUDED_GR_TRANSCENDENTAL_H
 #define INCLUDED_GR_TRANSCENDENTAL_H
 
-#include <gr_core_api.h>
+#include <blocks/api.h>
 #include <gr_sync_block.h>
 #include <string>
 
-/*!
- * \brief A block that performs various transcendental math operations.
- *
- * Possible function names can be found in the cmath library.
- * IO may be either complex or real, double or single precision.
- *
- * Possible type strings: float, double, complex_float, complex_double
- *
- * output[i] = trans_fcn(input[i])
- */
-class GR_CORE_API gr_transcendental : virtual public gr_sync_block{
-public:
-    typedef boost::shared_ptr<gr_transcendental> sptr;
-};
+namespace gr {
+  namespace blocks {
 
-GR_CORE_API gr_transcendental::sptr gr_make_transcendental(
-    const std::string &name,
-    const std::string &type = "float"
-);
+    /*!
+     * \brief A block that performs various transcendental math operations.
+     *
+     * Possible function names can be found in the cmath library. IO
+     * may be either complex or real, double or single precision.
+     *
+     * Possible type strings: float, double, complex_float, complex_double
+     *
+     * output[i] = trans_fcn(input[i])
+     */
+    class BLOCKS_API transcendental : virtual public gr_sync_block
+    {
+    public:
+      // gr::blocks::transcendental::sptr
+      typedef boost::shared_ptr<transcendental> sptr;
+
+      static sptr make(const std::string &name,
+                       const std::string &type="float");
+    };
+
+  } /* namespace blocks */
+} /* namespace gr */
 
 #endif /* INCLUDED_GR_TRANSCENDENTAL_H */

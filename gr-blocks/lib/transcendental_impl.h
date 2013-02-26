@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2004,2012 Free Software Foundation, Inc.
+ * Copyright 2011,2013 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -20,39 +20,32 @@
  * Boston, MA 02110-1301, USA.
  */
 
-/* @WARNING@ */
+#ifndef INCLUDED_GR_TRANSCENDENTAL_IMPL_H
+#define INCLUDED_GR_TRANSCENDENTAL_IMPL_H
 
-#ifndef @GUARD_NAME@
-#define @GUARD_NAME@
-
-#include <analog/@BASE_NAME@.h>
-#include <gr_random.h>
+#include <blocks/transcendental.h>
 
 namespace gr {
-  namespace analog {
+  namespace blocks {
 
-    class @IMPL_NAME@ : public @BASE_NAME@
+    typedef int(*work_fcn_type)(int, gr_vector_const_void_star &, gr_vector_void_star &);
+
+    class transcendental_impl : public transcendental
     {
-      noise_type_t d_type;
-      float d_ampl;
-      gr_random d_rng;
+    private:
+      const work_fcn_type &_work_fcn;
 
     public:
-      @IMPL_NAME@(noise_type_t type, float ampl, long seed = 0);
-      ~@IMPL_NAME@();
-
-      void set_type(noise_type_t type);
-      void set_amplitude(float ampl);
-
-      noise_type_t type() const { return d_type; }
-      float amplitude() const { return d_ampl; }
+      transcendental_impl(const work_fcn_type &work_fcn,
+                          const size_t io_size);
+      ~transcendental_impl();
 
       int work(int noutput_items,
-	       gr_vector_const_void_star &input_items,
-	       gr_vector_void_star &output_items);
+               gr_vector_const_void_star &input_items,
+               gr_vector_void_star &output_items);
     };
 
-  } /* namespace filter */
+  } /* namespace blocks */
 } /* namespace gr */
 
-#endif /* @GUARD_NAME@ */
+#endif /* INCLUDED_GR_TRANSCENDENTAL_IMPL_H */

@@ -50,6 +50,7 @@
 		<block>blocks_integrate_xx</block>
 		<block>blocks_nlog10_ff</block>
                 <block>blocks_rms_xx</block>
+                <block>blocks_transcendental</block>
 	</cat>
 	<cat>
 		<name>Boolean Operations (New) </name>
@@ -102,7 +103,7 @@
 		<block>blocks_peak_detector2_fb</block>
 		<block>blocks_regenerate_bb</block>
 		<block>blocks_stretch_ff</block>
-                <block>blocks_threadhold_ff</block>
+                <block>blocks_threshold_ff</block>
 	</cat>
 	<cat>
 	        <name>Misc (New) </name>
