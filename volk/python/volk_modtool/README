@@ -37,3 +37,74 @@ kernel when VOLK modtool adds that kernel.  If QA or profiling
 requires a puppet kernel, the puppet kernel will follow the original
 kernel when VOLK modtool adds that original kernel.  VOLK modtool
 respects puppets.
+
+======================================================================
+
+Installing a new VOLK Library:
+
+Run the command "volk_modtool -i". This will ask you three questions:
+
+  name: // the name to give your VOLK library: volk_<name>
+  destination: // directory new source tree is built under -- must exists.
+               // It will create <directory>/volk_<name>
+  base: // the directory containing the original VOLK source code
+
+This will build a new skeleton directory in the destination provided
+with the name volk_<name>. It will contain the necessary structure to
+build:
+
+  mkdir build
+  cd build
+  cmake -DCMAKE_INSTALL_PREFIX=/opt/volk ../
+  make
+  sudo make install
+
+Right now, the library is empty and contains no kernels. Kernels can
+be added from another VOLK library using the '-a' option. If not
+specified, the kernel will be extracted from the base VOLK
+directory. Using the '-b' allows us to specify another VOLK library to
+use for this purpose.
+
+  volk_modtool -a -n 32fc_x2_conjugate_dot_prod_32fc
+
+This will put the code for the new kernel into
+<destination>/volk_<name>/kernels/volk_<name>/
+
+Other kernels must be added by hand. See the following webpages for
+more information about creating VOLK kernels:
+  http://gnuradio.org/doc/doxygen/volk_guide.html
+  http://gnuradio.org/redmine/projects/gnuradio/wiki/Volk
+
+
+======================================================================
+
+OPTIONS
+
+Options for Adding and Removing Kernels:
+  -a, --add_kernel
+       Add kernel from existing VOLK module. Uses the base VOLK module
+       unless -b is used. Use -n to specify the kernel name.
+       Requires: -n.
+       Optional: -b
+
+  -A, --add_all_kernels
+       Add all kernels from existing VOLK module. Uses the base VOLK
+       module unless -b is used.
+       Optional: -b
+
+  -x, --remove_kernel
+       Remove kernel from module. 
+       Required: -n.
+       Optional: -b
+
+Options for Listing Kernels:
+  -l, --list
+       Lists all kernels available in the base VOLK module.
+
+  -k, --kernels 
+       Lists all kernels in this VOLK module.
+
+  -r, --remote-list
+       Lists all kernels in another VOLK module that is specified
+       using the -b option.
+
