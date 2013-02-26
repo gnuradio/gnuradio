@@ -628,6 +628,12 @@ class GR_CORE_API gr_block : public gr_basic_block {
   std::vector<long>    d_max_output_buffer;
   std::vector<long>    d_min_output_buffer;
 
+  /*! Used by block's setters and work functions to make
+   * setting/resetting of parameters thread-safe.
+   *
+   * Used by calling gruel::scoped_lock l(d_setlock);
+   */ 
+  gruel::mutex d_setlock;
 
   // These are really only for internal use, but leaving them public avoids
   // having to work up an ever-varying list of friend GR_CORE_APIs
