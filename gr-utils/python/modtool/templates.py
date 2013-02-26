@@ -501,7 +501,7 @@ GR_SWIG_BLOCK_MAGIC($modname, $blockname);
 #else
 %include "${modname}/${blockname}.h"
 GR_SWIG_BLOCK_MAGIC2($modname, $blockname);
-#end
+#end if
 """
 
 ## Old stuff

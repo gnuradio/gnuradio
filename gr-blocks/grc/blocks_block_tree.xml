@@ -50,6 +50,7 @@
 		<block>blocks_integrate_xx</block>
 		<block>blocks_nlog10_ff</block>
                 <block>blocks_rms_xx</block>
+                <block>blocks_transcendental</block>
 	</cat>
 	<cat>
 		<name>Boolean Operations (New) </name>
