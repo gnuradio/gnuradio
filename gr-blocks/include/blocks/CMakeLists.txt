@@ -141,6 +141,7 @@ install(FILES
     stretch_ff.h
     threshold_ff.h
     throttle.h
+    transcendental.h
     uchar_to_float.h
     vector_to_stream.h
     vector_to_streams.h
