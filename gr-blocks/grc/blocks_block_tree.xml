@@ -102,7 +102,7 @@
 		<block>blocks_peak_detector2_fb</block>
 		<block>blocks_regenerate_bb</block>
 		<block>blocks_stretch_ff</block>
-                <block>blocks_threadhold_ff</block>
+                <block>blocks_threshold_ff</block>
 	</cat>
 	<cat>
 	        <name>Misc (New) </name>
