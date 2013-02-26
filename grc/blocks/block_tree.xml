@@ -45,8 +45,6 @@
     </cat>
 	<cat>
 		<name>Operators</name>
-		<block>gr_transcendental</block>
-
 		<block>gr_max_xx</block>
 		<block>gr_argmax_xx</block>
 
