@@ -484,9 +484,9 @@ class GR_CORE_API gr_block : public gr_basic_block {
   gr_block_detail_sptr	d_detail;		// implementation details
   unsigned              d_history;
   bool                  d_fixed_rate;
-  int                   d_min_noutput_items;
   bool                  d_max_noutput_items_set;     // if d_max_noutput_items is valid
   int                   d_max_noutput_items;         // value of max_noutput_items for this block
+  int                   d_min_noutput_items;
   tag_propagation_policy_t d_tag_propagation_policy; // policy for moving tags downstream
   std::vector<unsigned int> d_affinity;              // thread affinity proc. mask
 
@@ -609,6 +609,12 @@ class GR_CORE_API gr_block : public gr_basic_block {
   std::vector<long>    d_max_output_buffer;
   std::vector<long>    d_min_output_buffer;
 
+  /*! Used by block's setters and work functions to make
+   * setting/resetting of parameters thread-safe.
+   *
+   * Used by calling gruel::scoped_lock l(d_setlock);
+   */ 
+  gruel::mutex d_setlock;
 
   // These are really only for internal use, but leaving them public avoids
   // having to work up an ever-varying list of friend GR_CORE_APIs
