@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+<!--
+###################################################
+##Threshold
+###################################################
+ -->
+<block>
+	<name>Threshold</name>
+	<key>blocks_threshold_ff</key>
+	<import>from gnuradio import blocks</import>
+	<make>blocks.threshold_ff($low, $high, $init)</make>
+	<callback>set_hi($high)</callback>
+	<callback>set_lo($low)</callback>
+	<param>
+		<name>Low</name>
+		<key>low</key>
+		<value>-100</value>
+		<type>real</type>
+	</param>
+	<param>
+		<name>High</name>
+		<key>high</key>
+		<value>100</value>
+		<type>real</type>
+	</param>
+	<param>
+		<name>Initial State</name>
+		<key>init</key>
+		<value>0</value>
+		<type>real</type>
+	</param>
+	<sink>
+		<name>in</name>
+		<type>float</type>
+	</sink>
+	<source>
+		<name>out</name>
+		<type>float</type>
+	</source>
+</block>
