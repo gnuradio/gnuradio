@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2012 Free Software Foundation, Inc.
+# Copyright 2012,2013 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -24,7 +24,7 @@ from gnuradio import gr, ctrlport
 
 from PyQt4 import QtCore,Qt
 import PyQt4.QtGui as QtGui
-import sys, time
+import os, sys, time
 
 import Ice
 from gnuradio.ctrlport.IceRadioClient import *
@@ -83,6 +83,11 @@ class MAINWindow(QtGui.QMainWindow):
         icon = QtGui.QIcon(ctrlport.__path__[0] + "/icon.png" )
         self.setWindowIcon(icon)
 
+        # Locally turn off ControlPort export from GR.  This prevents
+        # our GR-based plotters from launching their own ControlPort
+        # instance (and possibly causing a port collision if one has
+        # been specified).
+        os.environ['GR_CONF_CONTROLPORT_ON'] = 'False'
 
     def setUpdateRate(self,nur):
         self.updateRate = int(nur);
@@ -631,7 +636,7 @@ class MForm(QtGui.QWidget):
         self.constupdatediv = 0
         self.tableupdatediv = 0
         plotsize=250
-            
+
         # make table
         self.table = GrDataPlotterValueTable(uid, self, 0, 0, 400, 200)
         sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Preferred, QtGui.QSizePolicy.Preferred)
