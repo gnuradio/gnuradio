@@ -27,6 +27,7 @@ import copy
 import math
 import wavelet_swig
 import analog_swig as analog
+import blocks_swig as blocks
 
 def sqr(x):
     return x*x
@@ -88,7 +89,7 @@ class test_classify(gr_unittest.TestCase):
         trg_data = copy.deepcopy(src_data)
 
         src = gr.vector_source_f(src_data, False, len(src_data))
-        st = gr.stretch_ff(-1.0/5.0, len(src_data))
+        st = blocks.stretch_ff(-1.0/5.0, len(src_data))
         dst = gr.vector_sink_f(len(src_data))
         self.tb.connect(src, st)
         self.tb.connect(st, dst)

@@ -149,7 +149,7 @@ class my_top_block(gr.top_block):
         src1 = analog.sig_source_f(Rs, analog.GR_SIN_WAVE, f1, 0.1, 0)
         src2 = analog.sig_source_f(Rs, analog.GR_SIN_WAVE, f2, 0.1, 0)
         src  = blocks.add_ff()
-        thr = gr.throttle(gr.sizeof_float, 100*npts)
+        thr = blocks.throttle(gr.sizeof_float, 100*npts)
         self.snk1 = qtgui.waterfall_sink_f(npts, filter.firdes.WIN_BLACKMAN_hARRIS,
                                            0, Rs,
                                            "Real Waterfall Example", 2)

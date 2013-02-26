@@ -99,5 +99,13 @@
 		<block>blocks_vector_to_stream</block>
 		<block>blocks_vector_to_streams</block>
 		<block>blocks_stream_to_vector_decimator</block>
+		<block>blocks_peak_detector2_fb</block>
+		<block>blocks_regenerate_bb</block>
+		<block>blocks_stretch_ff</block>
+                <block>blocks_threadhold_ff</block>
+	</cat>
+	<cat>
+	        <name>Misc (New) </name>
+                <block>blocks_throttle</block>
 	</cat>
 </cat>

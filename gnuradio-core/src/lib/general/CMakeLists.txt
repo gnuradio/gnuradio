@@ -163,16 +163,11 @@ set(gr_core_general_triple_threats
     gr_null_sink
     gr_null_source
     gr_pa_2x2_phase_combiner
-    gr_peak_detector2_fb
     gr_prefs
     gr_random_pdu
-    gr_regenerate_bb
     gr_remez
     gr_skiphead
-    gr_stretch_ff
     gr_test
-    gr_threshold_ff
-    gr_throttle
     gr_transcendental
     gr_vco_f
     gr_vector_map

@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+<!--
+###################################################
+##Stretch Block:
+##	float in / float out
+###################################################
+ -->
+<block>
+	<name>Stretch</name>
+	<key>blocks_stretch_ff</key>
+	<import>from gnuradio import blocks</import>
+	<make>blocks.stretch_ff($lo, $vlen)</make>
+	<param>
+		<name>Low</name>
+		<key>lo</key>
+		<type>real</type>
+	</param>
+	<param>
+		<name>Vec. Length</name>
+		<key>vlen</key>
+		<value>1</value>
+		<type>int</type>
+	</param>
+	<sink>
+		<name>in</name>
+		<type>float</type>
+		<vlen>$vlen</vlen>
+	</sink>
+	<source>
+		<name>out</name>
+		<type>float</type>
+		<vlen>$vlen</vlen>
+	</source>
+</block>

@@ -21,6 +21,7 @@
 # 
 
 from gnuradio import gr, digital
+from gnuradio import blocks
 from gnuradio import eng_notation
 import sys
 
@@ -215,7 +216,7 @@ class my_top_block(gr.top_block):
         self.to = 1.0
         self.channel = gr.channel_model(noise, self.fo, self.to)
 
-        self.thr = gr.throttle(gr.sizeof_char, self._sample_rate)
+        self.thr = blocks.throttle(gr.sizeof_char, self._sample_rate)
         self.snk_tx = qtgui.sink_c(fftsize, gr.firdes.WIN_BLACKMAN_hARRIS, 
                                    0, self._sample_rate*self.sps,
                                    "Tx", True, True, True, True)

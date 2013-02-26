@@ -6,9 +6,9 @@
  -->
 <block>
 	<name>Threshold</name>
-	<key>gr_threshold_ff</key>
-	<import>from gnuradio import gr</import>
-	<make>gr.threshold_ff($low, $high, $init)</make>
+	<key>blocks_threshold_ff</key>
+	<import>from gnuradio import blocks</import>
+	<make>blocks.threshold_ff($low, $high, $init)</make>
 	<callback>set_hi($high)</callback>
 	<callback>set_lo($low)</callback>
 	<param>

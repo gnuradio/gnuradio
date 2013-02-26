@@ -135,7 +135,7 @@ class ofdm_sync_ml(gr.hier_block2):
         # The output theta of the correlator above is multiplied with this correlation to
         # identify the proper peak and remove other products in this cross-correlation
         self.threshold_factor = 0.1
-        self.slice = gr.threshold_ff(self.threshold_factor, self.threshold_factor, 0)
+        self.slice = blocks.threshold_ff(self.threshold_factor, self.threshold_factor, 0)
         self.f2b = blocks.float_to_char()
         self.b2f = blocks.char_to_float()
         self.mul = blocks.multiply_ff()

@@ -86,8 +86,8 @@ class ofdm_sync_pn(gr.hier_block2):
 
         #ML measurements input to sampler block and detect
         self.sub1 = blocks.add_const_ff(-1)
-        self.pk_detect = gr.peak_detector_fb(0.20, 0.20, 30, 0.001)
-        #self.pk_detect = gr.peak_detector2_fb(9)
+        self.pk_detect = blocks.peak_detector_fb(0.20, 0.20, 30, 0.001)
+        #self.pk_detect = blocks.peak_detector2_fb(9)
 
         self.connect(self, self.input)
         

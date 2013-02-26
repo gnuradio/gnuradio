@@ -26,6 +26,7 @@ import histo_window
 import common
 from gnuradio import gr
 from gnuradio import analog
+from gnuradio import blocks
 from pubsub import pubsub
 from constants import *
 
@@ -97,7 +98,7 @@ class test_app_block (stdgui2.std_top_block):
 
         src2 = analog.sig_source_f(input_rate, analog.GR_SIN_WAVE, 2e3, 1)
         #src2 = analog.sig_source_f(input_rate, analog.GR_CONST_WAVE, 5.75e3, 1)
-        thr2 = gr.throttle(gr.sizeof_float, input_rate)
+        thr2 = blocks.throttle(gr.sizeof_float, input_rate)
         sink2 = histo_sink_f(panel, title="Data", num_bins=31, frame_size=1000)
         vbox.Add(sink2.win, 1, wx.EXPAND)
 

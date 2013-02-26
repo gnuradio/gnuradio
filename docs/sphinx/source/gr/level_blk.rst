@@ -2,8 +2,6 @@ gnuradio.gr: Signal Level Control (AGC)
 =======================================
 
 .. autooldblock:: gnuradio.gr.dpll_bb
-.. autooldblock:: gnuradio.gr.peak_detector2_fb
-.. autooldblock:: gnuradio.gr.regenerate_bb
 .. autooldblock:: gnuradio.gr.mute_cc
 .. autooldblock:: gnuradio.gr.mute_ff
 .. autooldblock:: gnuradio.gr.mute_ii

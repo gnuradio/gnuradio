@@ -140,8 +140,6 @@ Signal Level Control (AGC)
 .. autosummary::
    :nosignatures:
 
-   gnuradio.gr.peak_detector2_fb
-   gnuradio.gr.regenerate_bb
    gnuradio.gr.mute_cc
    gnuradio.gr.mute_ff
    gnuradio.gr.mute_ii
@@ -174,8 +172,6 @@ Miscellaneous Blocks
    gnuradio.gr.kludge_copy
    gnuradio.gr.nop
    gnuradio.gr.pa_2x2_phase_combiner
-   gnuradio.gr.threshold_ff
-   gnuradio.gr.throttle
    gnuradio.gr.channel_model
 
 Slicing and Dicing Streams
