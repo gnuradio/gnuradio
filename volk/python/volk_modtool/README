@@ -1,0 +1,39 @@
+The volk_modtool tool is installed along with VOLK as a way of helping
+to construct, add to, and interogate the VOLK library or companion
+libraries.
+
+volk_modtool is installed into $prefix/bin.
+
+VOLK modtool enables creating standalone (out-of-tree) VOLK modules
+and provides a few tools for sharing VOLK kernels between VOLK
+modules.  If you need to design or work with VOLK kernels away from
+the canonical VOLK library, this is the tool.  If you need to tailor
+your own VOLK library for whatever reason, this is the tool.
+
+The canonical VOLK library installs a volk.h and a libvolk.so.  Your
+own library will install volk_$name.h and libvolk_$name.so.  Ya Gronk?
+Good.
+
+There isn't a substantial difference between the canonical VOLK
+module and any other VOLK module.  They're all peers.  Any module
+created via VOLK modtool will come complete with a default
+volk_modtool.cfg file associating the module with the base from which
+it came, its distinctive $name and its destination (or path).  These
+values (created from user input if VOLK modtool runs without a
+user-supplied config file or a default config file) serve as default
+values for some VOLK modtool actions.  It's more or less intended for
+the user to change directories to the top level of a created VOLK
+module and then run volk_modtool to take advantage of the values
+stored in the default volk_modtool.cfg file.
+
+Apart from creating new VOLK modules, VOLK modtool allows you to list
+the names of kernels in other modules, list the names of kernels in
+the current module, add kernels from another module into the current
+module, and remove kernels from the current module.  When moving
+kernels between modules, VOLK modtool does its best to keep the qa
+and profiling code for those kernels intact.  If the base has a test
+or a profiling call for some kernel, those calls will follow the
+kernel when VOLK modtool adds that kernel.  If QA or profiling
+requires a puppet kernel, the puppet kernel will follow the original
+kernel when VOLK modtool adds that original kernel.  VOLK modtool
+respects puppets.
