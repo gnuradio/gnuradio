@@ -105,6 +105,10 @@
                 <block>blocks_threshold_ff</block>
 	</cat>
 	<cat>
+	        <name>Misc Conversions (New) </name>
+                <block>blocks_unpack_k_bits_bb</block>
+        </cat>
+	<cat>
 	        <name>Misc (New) </name>
                 <block>blocks_throttle</block>
 	</cat>

@@ -143,6 +143,7 @@ install(FILES
     throttle.h
     transcendental.h
     uchar_to_float.h
+    unpack_k_bits_bb.h
     vector_to_stream.h
     vector_to_streams.h
     DESTINATION ${GR_INCLUDE_DIR}/gnuradio/blocks
