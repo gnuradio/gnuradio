@@ -39,7 +39,6 @@
         <block>gr_message_strobe</block>
         <block>gr_pdu_to_tagged_stream</block>
         <block>gr_tagged_stream_to_pdu</block>
-        <block>gr_tuntap_pdu</block>
         <block>gr_socket_pdu</block>
         <block>gr_random_pdu</block>
     </cat>
