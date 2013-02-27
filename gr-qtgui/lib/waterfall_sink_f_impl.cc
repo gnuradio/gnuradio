@@ -84,6 +84,9 @@ namespace gr {
 
     waterfall_sink_f_impl::~waterfall_sink_f_impl()
     {
+      if(!d_main_gui->isClosed())
+        d_main_gui->close();
+
       for(int i = 0; i < d_nconnections; i++) {
 	fft::free(d_residbufs[i]);
 	fft::free(d_magbufs[i]);

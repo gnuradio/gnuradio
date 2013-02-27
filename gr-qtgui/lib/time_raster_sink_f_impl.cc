@@ -87,6 +87,9 @@ namespace gr {
 
     time_raster_sink_f_impl::~time_raster_sink_f_impl()
     {
+      if(!d_main_gui->isClosed())
+        d_main_gui->close();
+
       fft::free(d_tmpflt);
       for(int i = 0; i < d_nconnections; i++) {
 	fft::free(d_residbufs[i]);
