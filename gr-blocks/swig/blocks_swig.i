@@ -99,6 +99,7 @@
 #include "blocks/not_ss.h"
 #include "blocks/not_ii.h"
 #include "blocks/patterned_interleaver.h"
+#include "blocks/pack_k_bits_bb.h"
 #include "blocks/packed_to_unpacked_bb.h"
 #include "blocks/packed_to_unpacked_ss.h"
 #include "blocks/packed_to_unpacked_ii.h"
@@ -205,14 +206,15 @@
 %include "blocks/not_bb.h"
 %include "blocks/not_ss.h"
 %include "blocks/not_ii.h"
-%include "blocks/patterned_interleaver.h"
-%include "blocks/packed_to_unpacked_bb.h"
-%include "blocks/packed_to_unpacked_ss.h"
-%include "blocks/packed_to_unpacked_ii.h"
-%include "blocks/peak_detector2_fb.h"
 %include "blocks/or_bb.h"
 %include "blocks/or_ss.h"
 %include "blocks/or_ii.h"
+%include "blocks/pack_k_bits_bb.h"
+%include "blocks/packed_to_unpacked_bb.h"
+%include "blocks/packed_to_unpacked_ss.h"
+%include "blocks/packed_to_unpacked_ii.h"
+%include "blocks/patterned_interleaver.h"
+%include "blocks/peak_detector2_fb.h"
 %include "blocks/regenerate_bb.h"
 %include "blocks/repeat.h"
 %include "blocks/rms_cf.h"
@@ -312,6 +314,7 @@ GR_SWIG_BLOCK_MAGIC2(blocks, not_bb);
 GR_SWIG_BLOCK_MAGIC2(blocks, not_ss);
 GR_SWIG_BLOCK_MAGIC2(blocks, not_ii);
 GR_SWIG_BLOCK_MAGIC2(blocks, patterned_interleaver);
+GR_SWIG_BLOCK_MAGIC2(blocks, pack_k_bits_bb);
 GR_SWIG_BLOCK_MAGIC2(blocks, packed_to_unpacked_bb);
 GR_SWIG_BLOCK_MAGIC2(blocks, packed_to_unpacked_ss);
 GR_SWIG_BLOCK_MAGIC2(blocks, packed_to_unpacked_ii);

@@ -125,6 +125,7 @@ install(FILES
     multiply_const_cc.h
     multiply_const_ff.h
     nlog10_ff.h
+    pack_k_bits_bb.h
     patterned_interleaver.h
     peak_detector2_fb.h
     regenerate_bb.h
