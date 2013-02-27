@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2012 Free Software Foundation, Inc.
+ * Copyright 2013 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -20,21 +20,32 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef GR_PDU_H
-#define GR_PDU_H
+#ifndef INCLUDED_BLOCKS_TUNTAP_PDU_IMPL_H
+#define INCLUDED_BLOCKS_TUNTAP_PDU_IMPL_H
 
-#include <gr_core_api.h>
-#include <gr_complex.h>
-#include <gruel/pmt.h>
+#include <blocks/tuntap_pdu.h>
+#include "stream_pdu_base.h"
 
-#define PDU_PORT_ID     pmt::mp("pdus")
-#define PDU_LENGTH_TAG  pmt::mp("pdu_length")
-
-enum gr_pdu_vector_type { pdu_byte, pdu_float, pdu_complex };
-
-GR_CORE_API size_t gr_pdu_itemsize(gr_pdu_vector_type type);
-GR_CORE_API bool gr_pdu_type_matches(gr_pdu_vector_type type, pmt::pmt_t v);
-GR_CORE_API pmt::pmt_t gr_pdu_make_vector(gr_pdu_vector_type type, const uint8_t* buf, size_t items);
-GR_CORE_API gr_pdu_vector_type type_from_pmt(pmt::pmt_t vector);
-
+#if (defined(linux) || defined(__linux) || defined(__linux__))
+#include <linux/if_tun.h>
 #endif
+
+namespace gr {
+  namespace blocks {
+
+    class tuntap_pdu_impl : public tuntap_pdu, public stream_pdu_base
+    {
+#if (defined(linux) || defined(__linux) || defined(__linux__))
+    private:
+      std::string d_dev;
+      int tun_alloc(char *dev, int flags = IFF_TAP | IFF_NO_PI);
+
+    public:
+      tuntap_pdu_impl(std::string dev, int MTU);
+#endif
+    };
+
+  } /* namespace blocks */
+} /* namespace gr */
+
+#endif /* INCLUDED_BLOCKS_TUNTAP_PDU_IMPL_H */

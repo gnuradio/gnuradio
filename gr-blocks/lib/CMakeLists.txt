@@ -171,10 +171,12 @@ list(APPEND gr_blocks_sources
     short_to_char_impl.cc
     short_to_float_impl.cc
     stream_mux_impl.cc
+    stream_pdu_base.cc
     stream_to_streams_impl.cc
     stream_to_vector_impl.cc
     streams_to_stream_impl.cc
     streams_to_vector_impl.cc
+    tuntap_pdu_impl.cc
     uchar_array_to_float.cc
     uchar_to_float_impl.cc
     vector_to_stream_impl.cc

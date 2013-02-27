@@ -136,6 +136,7 @@ install(FILES
     stream_to_vector.h
     streams_to_stream.h
     streams_to_vector.h
+    tuntap_pdu.h
     uchar_to_float.h
     vector_to_stream.h
     vector_to_streams.h

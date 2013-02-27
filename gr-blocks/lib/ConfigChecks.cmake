@@ -56,7 +56,7 @@ CHECK_INCLUDE_FILE_CXX(windows.h HAVE_WINDOWS_H)
 IF(HAVE_WINDOWS_H)
     ADD_DEFINITIONS(-DHAVE_WINDOWS_H -DUSING_WINSOCK)
     MESSAGE(STATUS "Adding windows libs to gr blocks libs...")
-    LIST(APPEND gnuradio_core_libs WS2_32.lib WSock32.lib)
+    LIST(APPEND blocks_libs WS2_32.lib WSock32.lib)
 ENDIF(HAVE_WINDOWS_H)
 
 ########################################################################

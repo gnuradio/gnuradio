@@ -119,6 +119,7 @@
 #include "blocks/sub_ss.h"
 #include "blocks/sub_ii.h"
 #include "blocks/sub_cc.h"
+#include "blocks/tuntap_pdu.h"
 #include "blocks/uchar_to_float.h"
 #include "blocks/unpacked_to_packed_bb.h"
 #include "blocks/unpacked_to_packed_ss.h"
@@ -219,6 +220,7 @@
 %include "blocks/sub_ss.h"
 %include "blocks/sub_ii.h"
 %include "blocks/sub_cc.h"
+%include "blocks/tuntap_pdu.h"
 %include "blocks/uchar_to_float.h"
 %include "blocks/unpacked_to_packed_bb.h"
 %include "blocks/unpacked_to_packed_ss.h"
@@ -318,6 +320,7 @@ GR_SWIG_BLOCK_MAGIC2(blocks, sub_ff);
 GR_SWIG_BLOCK_MAGIC2(blocks, sub_ss);
 GR_SWIG_BLOCK_MAGIC2(blocks, sub_ii);
 GR_SWIG_BLOCK_MAGIC2(blocks, sub_cc);
+GR_SWIG_BLOCK_MAGIC2(blocks, tuntap_pdu);
 GR_SWIG_BLOCK_MAGIC2(blocks, uchar_to_float);
 GR_SWIG_BLOCK_MAGIC2(blocks, unpacked_to_packed_bb);
 GR_SWIG_BLOCK_MAGIC2(blocks, unpacked_to_packed_ss);

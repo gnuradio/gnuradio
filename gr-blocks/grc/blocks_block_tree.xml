@@ -99,4 +99,8 @@
 		<block>blocks_vector_to_stream</block>
 		<block>blocks_vector_to_streams</block>
 	</cat>
+	<cat>
+	        <name>Networking</name>
+		<block>blocks_tuntap_pdu</block>
+	</cat>
 </cat>
