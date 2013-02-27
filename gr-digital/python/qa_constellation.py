@@ -206,7 +206,7 @@ class mod_demod(gr.hier_block2):
             self.blocks.append(digital.map_bb(
                 mod_codes.invert_code(self.constellation.pre_diff_code())))
         # unpack the k bit vector into a stream of bits            
-        self.blocks.append(gr.unpack_k_bits_bb(
+        self.blocks.append(blocks.unpack_k_bits_bb(
                 self.constellation.bits_per_symbol()))
         # connect to block output
         check_index = len(self.blocks)

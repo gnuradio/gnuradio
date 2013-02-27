@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2012 Free Software Foundation, Inc.
+ * Copyright 2012-2013 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -23,34 +23,31 @@
 #ifndef INCLUDED_GR_PACK_K_BITS_BB_H
 #define	INCLUDED_GR_PACK_K_BITS_BB_H
 
-#include <gr_core_api.h>
+#include <blocks/api.h>
 #include <gr_sync_decimator.h>
 
-class gr_pack_k_bits_bb;
-typedef boost::shared_ptr<gr_pack_k_bits_bb> gr_pack_k_bits_bb_sptr;
-GR_CORE_API gr_pack_k_bits_bb_sptr gr_make_pack_k_bits_bb (unsigned k);
+namespace gr {
+  namespace blocks {
 
-class gr_pack_k_bits_bb;
+    /*!
+     * \brief Converts a stream of bytes with 1 bit in the LSB to a
+     * byte with k relevent bits.
+     * \ingroup converter_blk
+     */
+    class BLOCKS_API pack_k_bits_bb : virtual public gr_sync_decimator
+    {
+    public:
+      // gr::blocks::pack_k_bits_bb::sptr
+      typedef boost::shared_ptr<pack_k_bits_bb> sptr;
+      
+      /*!
+       * \brief Make a pack_k_bits block.
+       * \param k number of bits to be packed.
+       */
+      static sptr make(unsigned k);
+    };
 
-/*!
- * \brief Converts a stream of bytes with 1 bit in the LSB to a byte with  k relevent bits.
- * \ingroup converter_blk
- */
-class GR_CORE_API gr_pack_k_bits_bb : public gr_sync_decimator
-{
- private:
-  friend GR_CORE_API gr_pack_k_bits_bb_sptr gr_make_pack_k_bits_bb (unsigned k);
+  } /* namespace blocks */
+} /* namespace gr */
 
-  gr_pack_k_bits_bb (unsigned k);
-
-  unsigned d_k;    // number of relevent bits to pack from k input bytes
-  
- public:
-  ~gr_pack_k_bits_bb ();
-
-  int work (int noutput_items,
-	    gr_vector_const_void_star &input_items,
-	    gr_vector_void_star &output_items);
-};
-
-#endif
+#endif /* INCLUDED_GR_PACK_K_BITS_BB_H */

@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2005 Free Software Foundation, Inc.
+ * Copyright 2013 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -20,11 +20,32 @@
  * Boston, MA 02110-1301, USA.
  */
 
-GR_SWIG_BLOCK_MAGIC(gr,tuntap_pdu);
+#ifndef INCLUDED_BLOCKS_TUNTAP_PDU_IMPL_H
+#define INCLUDED_BLOCKS_TUNTAP_PDU_IMPL_H
 
-%{
-#include <gr_tuntap_pdu.h>
-%}
+#include <blocks/tuntap_pdu.h>
+#include "stream_pdu_base.h"
 
-%include "gr_tuntap_pdu.h"
+#if (defined(linux) || defined(__linux) || defined(__linux__))
+#include <linux/if_tun.h>
+#endif
 
+namespace gr {
+  namespace blocks {
+
+    class tuntap_pdu_impl : public tuntap_pdu, public stream_pdu_base
+    {
+#if (defined(linux) || defined(__linux) || defined(__linux__))
+    private:
+      std::string d_dev;
+      int tun_alloc(char *dev, int flags = IFF_TAP | IFF_NO_PI);
+
+    public:
+      tuntap_pdu_impl(std::string dev, int MTU);
+#endif
+    };
+
+  } /* namespace blocks */
+} /* namespace gr */
+
+#endif /* INCLUDED_BLOCKS_TUNTAP_PDU_IMPL_H */

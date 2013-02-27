@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2006,2010 Free Software Foundation, Inc.
+# Copyright 2006,2010,2013 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -21,6 +21,7 @@
 #
 
 from gnuradio import gr, gr_unittest
+import blocks_swig as blocks
 import random
 
 class test_unpack(gr_unittest.TestCase):
@@ -35,7 +36,7 @@ class test_unpack(gr_unittest.TestCase):
         src_data =         (1,0,1,1,0,1,1,0)
         expected_results = (1,0,1,1,0,1,1,0)
         src = gr.vector_source_b(src_data,False)
-        op = gr.unpack_k_bits_bb(1)
+        op = blocks.unpack_k_bits_bb(1)
         dst = gr.vector_sink_b()
         self.tb.connect(src, op, dst)
         self.tb.run()
@@ -45,12 +46,11 @@ class test_unpack(gr_unittest.TestCase):
         src_data =         (  2,  3,  0,  1)
         expected_results = (1,0,1,1,0,0,0,1)
         src = gr.vector_source_b(src_data,False)
-        op = gr.unpack_k_bits_bb(2)
+        op = blocks.unpack_k_bits_bb(2)
         dst = gr.vector_sink_b()
         self.tb.connect(src, op, dst)
         self.tb.run()
         self.assertEqual(expected_results, dst.data())
-
 
 if __name__ == '__main__':
    gr_unittest.run(test_unpack, "test_unpack.xml")

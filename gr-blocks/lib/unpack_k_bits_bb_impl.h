@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2006 Free Software Foundation, Inc.
+ * Copyright 2006,2013 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -20,15 +20,29 @@
  * Boston, MA 02110-1301, USA.
  */
 
-GR_SWIG_BLOCK_MAGIC(gr,unpack_k_bits_bb)
+#ifndef INCLUDED_GR_UNPACK_K_BITS_BB_IMPL_H
+#define	INCLUDED_GR_UNPACK_K_BITS_BB_IMPL_H
 
-gr_unpack_k_bits_bb_sptr gr_make_unpack_k_bits_bb (int k) throw(std::exception);
+#include <blocks/unpack_k_bits_bb.h>
 
-class gr_unpack_k_bits_bb : public gr_sync_interpolator
-{
- private:
-  gr_unpack_k_bits_bb (int k);
+namespace gr {
+  namespace blocks {
 
- public:
-  ~gr_unpack_k_bits_bb ();
-};
+    class unpack_k_bits_bb_impl : public unpack_k_bits_bb
+    {
+    private:
+      unsigned d_k;    // number of relevent bits to unpack into k output bytes
+
+    public:
+      unpack_k_bits_bb_impl(unsigned k);
+      ~unpack_k_bits_bb_impl();
+
+      int work(int noutput_items,
+               gr_vector_const_void_star &input_items,
+               gr_vector_void_star &output_items);
+    };
+
+  } /* namespace blocks */
+} /* namespace gr */
+
+#endif /* INCLUDED_GR_UNPACK_K_BITS_BB_IMPL_H */

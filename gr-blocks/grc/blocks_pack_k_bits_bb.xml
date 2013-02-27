@@ -6,9 +6,9 @@
  -->
 <block>
 	<name>Pack K Bits</name>
-	<key>gr_pack_k_bits_bb</key>
-	<import>from gnuradio import gr</import>
-	<make>gr.pack_k_bits_bb($k)</make>
+	<key>blocks_pack_k_bits_bb</key>
+	<import>from gnuradio import blocks</import>
+	<make>blocks.pack_k_bits_bb($k)</make>
 	<param>
 		<name>K</name>
 		<key>k</key>
