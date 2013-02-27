@@ -143,6 +143,7 @@ install(FILES
     threshold_ff.h
     throttle.h
     transcendental.h
+    tuntap_pdu.h
     uchar_to_float.h
     unpack_k_bits_bb.h
     vector_to_stream.h

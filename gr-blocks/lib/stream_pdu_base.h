@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2012 Free Software Foundation, Inc.
+ * Copyright 2013 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -20,21 +20,41 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef GR_PDU_H
-#define GR_PDU_H
+#ifndef INCLUDED_STREAM_PDU_BASE_H
+#define INCLUDED_STREAM_PDU_BASE_H
 
-#include <gr_core_api.h>
-#include <gr_complex.h>
+#include <gruel/thread.h>
 #include <gruel/pmt.h>
 
-#define PDU_PORT_ID     pmt::mp("pdus")
-#define PDU_LENGTH_TAG  pmt::mp("pdu_length")
+class gr_basic_block;
 
-enum gr_pdu_vector_type { pdu_byte, pdu_float, pdu_complex };
+namespace gr {
+  namespace blocks {
 
-GR_CORE_API size_t gr_pdu_itemsize(gr_pdu_vector_type type);
-GR_CORE_API bool gr_pdu_type_matches(gr_pdu_vector_type type, pmt::pmt_t v);
-GR_CORE_API pmt::pmt_t gr_pdu_make_vector(gr_pdu_vector_type type, const uint8_t* buf, size_t items);
-GR_CORE_API gr_pdu_vector_type type_from_pmt(pmt::pmt_t vector);
+    class stream_pdu_base
+    {
+    public:
+      stream_pdu_base(int MTU=10000);
+      ~stream_pdu_base();
 
-#endif
+    protected:
+      int d_fd;
+      bool d_started;
+      bool d_finished;
+      std::vector<uint8_t> d_rxbuf;
+      gruel::thread d_thread;
+
+      pmt::pmt_t d_port;
+      gr_basic_block *d_blk;
+
+      void run();
+      void send(pmt::pmt_t msg);
+      bool wait_ready();
+      void start_rxthread(gr_basic_block *blk, pmt::pmt_t rxport);
+      void stop_rxthread();
+    };
+ 
+  } /* namespace blocks */
+} /* namespace gr */
+
+#endif /* INCLUDED_STREAM_PDU_BASE_H */

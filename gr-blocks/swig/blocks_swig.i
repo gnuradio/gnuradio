@@ -126,6 +126,7 @@
 #include "blocks/threshold_ff.h"
 #include "blocks/throttle.h"
 #include "blocks/transcendental.h"
+#include "blocks/tuntap_pdu.h"
 #include "blocks/uchar_to_float.h"
 #include "blocks/unpack_k_bits_bb.h"
 #include "blocks/unpacked_to_packed_bb.h"
@@ -234,6 +235,7 @@
 %include "blocks/threshold_ff.h"
 %include "blocks/throttle.h"
 %include "blocks/transcendental.h"
+%include "blocks/tuntap_pdu.h"
 %include "blocks/uchar_to_float.h"
 %include "blocks/unpack_k_bits_bb.h"
 %include "blocks/unpacked_to_packed_bb.h"
@@ -341,6 +343,7 @@ GR_SWIG_BLOCK_MAGIC2(blocks, sub_cc);
 GR_SWIG_BLOCK_MAGIC2(blocks, threshold_ff);
 GR_SWIG_BLOCK_MAGIC2(blocks, throttle);
 GR_SWIG_BLOCK_MAGIC2(blocks, transcendental);
+GR_SWIG_BLOCK_MAGIC2(blocks, tuntap_pdu);
 GR_SWIG_BLOCK_MAGIC2(blocks, uchar_to_float);
 GR_SWIG_BLOCK_MAGIC2(blocks, unpack_k_bits_bb);
 GR_SWIG_BLOCK_MAGIC2(blocks, unpacked_to_packed_bb);

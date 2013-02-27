@@ -49,7 +49,7 @@ gr_pdu_to_tagged_stream::gr_pdu_to_tagged_stream (gr_pdu_vector_type t)
 		  gr_make_io_signature(1, 1, gr_pdu_itemsize(t))),
     d_vectortype(t), d_itemsize(gr_pdu_itemsize(t))
 {
-    message_port_register_in(pdu_port_id);
+    message_port_register_in(PDU_PORT_ID);
 }
 
 gr_pdu_to_tagged_stream::~gr_pdu_to_tagged_stream()
@@ -77,8 +77,8 @@ gr_pdu_to_tagged_stream::work(int noutput_items,
   if(noutput_items > 0){
 
     // grab a message if one exists
-    //pmt::pmt_t msg( delete_head_nowait( pdu_port_id ) );
-    pmt::pmt_t msg( delete_head_blocking( pdu_port_id ) );
+    //pmt::pmt_t msg( delete_head_nowait( PDU_PORT_ID ) );
+    pmt::pmt_t msg( delete_head_blocking( PDU_PORT_ID ) );
     if(msg.get() == NULL ){
         return nout;
         }
@@ -99,7 +99,7 @@ gr_pdu_to_tagged_stream::work(int noutput_items,
     uint64_t offset = nitems_written(0) + nout;
 
     // add a tag for pdu length
-    add_item_tag(0, offset, pdu_length_tag, pmt::pmt_from_long( pmt::pmt_length(vect) ), pmt::mp(alias()));
+    add_item_tag(0, offset, PDU_LENGTH_TAG, pmt::pmt_from_long( pmt::pmt_length(vect) ), pmt::mp(alias()));
 
     // if we recieved metadata add it as tags
     if( !pmt_eq(meta, pmt::PMT_NIL) ){
