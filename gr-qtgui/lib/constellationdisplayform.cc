@@ -110,13 +110,8 @@ ConstellationDisplayForm::setXaxis(double min, double max)
 void
 ConstellationDisplayForm::autoScale(bool en)
 {
-  if(en) {
-    _autoscale_state = true;
-  }
-  else {
-    _autoscale_state = false;
-  }
-
+  _autoscale_state = en;
+  _autoscale_act->setChecked(en);
   getPlot()->setAutoScale(_autoscale_state);
   getPlot()->replot();
 }
