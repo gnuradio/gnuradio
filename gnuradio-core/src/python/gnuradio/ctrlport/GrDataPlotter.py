@@ -107,15 +107,25 @@ class GrDataPlotParent(gr.top_block, QtGui.QWidget):
         e.acceptProposedAction()
 
     def dropEvent(self, e):
-        self.knobnames.append(str(e.mimeData().text()))
+        if(e.mimeData().hasFormat("text/plain")):
+            data = str(e.mimeData().text())
 
-        # create a new qwidget plot with the new data stream.
-        self._setup(len(self.knobnames))
+            #"PlotData:{0}:{1}".format(tag, iscomplex)
+            datalst = data.split(":::")
+            tag = datalst[0]
+            name = datalst[1]
+            cpx = datalst[2] != "0"
 
-        # emit that this plot has been updated with a new qwidget.
-        self.plotupdated.emit(self)
+            if(tag == "PlotData" and cpx == self._iscomplex):
+                self.knobnames.append(name)
 
-        e.acceptProposedAction()
+                # create a new qwidget plot with the new data stream.
+                self._setup(len(self.knobnames))
+
+                # emit that this plot has been updated with a new qwidget.
+                self.plotupdated.emit(self)
+
+                e.acceptProposedAction()
 
     def data_to_complex(self, data):
         if(self._iscomplex):

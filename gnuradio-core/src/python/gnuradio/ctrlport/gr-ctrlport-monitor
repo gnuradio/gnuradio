@@ -226,7 +226,18 @@ class MAINWindow(QtGui.QMainWindow):
         drag = QtGui.QDrag(self)
         mime_data = QtCore.QMimeData()
 
-        mime_data.setText(e.text(0))
+        tag = str(e.text(0))
+        tree = e.treeWidget().parent()
+        knobprop = self.knobprops[tree.uid][tag]
+        disp = knobprop.display
+        iscomplex = (disp & gr.DISPOPTCPLX) or (disp & gr.DISPXY)
+        
+        if(disp != gr.DISPNULL):
+            data = "PlotData:::{0}:::{1}".format(tag, iscomplex)
+        else:
+            data = "OtherData:::{0}:::{1}".format(tag, iscomplex)
+
+        mime_data.setText(data)
         drag.setMimeData(mime_data)
 
         drop = drag.start()
