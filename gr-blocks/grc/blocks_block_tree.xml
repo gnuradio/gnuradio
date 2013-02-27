@@ -114,4 +114,8 @@
 	        <name>Misc (New) </name>
                 <block>blocks_throttle</block>
 	</cat>
+	<cat>
+	        <name>Networking</name>
+		<block>blocks_tuntap_pdu</block>
+	</cat>
 </cat>
