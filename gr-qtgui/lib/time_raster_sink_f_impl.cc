@@ -164,33 +164,33 @@ namespace gr {
     }
 
     void
-    time_raster_sink_f_impl::set_line_label(const std::string &label)
+    time_raster_sink_f_impl::set_line_label(int which, const std::string &label)
     {
-      d_main_gui->setLineLabel(0, label.c_str());
+      d_main_gui->setLineLabel(which, label.c_str());
     }
 
     void
-    time_raster_sink_f_impl::set_line_color(const std::string &color)
+    time_raster_sink_f_impl::set_line_color(int which, const std::string &color)
     {
-      d_main_gui->setLineColor(0, color.c_str());
+      d_main_gui->setLineColor(which, color.c_str());
     }
 
     void
-    time_raster_sink_f_impl::set_line_width(int width)
+    time_raster_sink_f_impl::set_line_width(int which, int width)
     {
-      d_main_gui->setLineWidth(0, width);
+      d_main_gui->setLineWidth(which, width);
     }
 
     void
-    time_raster_sink_f_impl::set_line_style(Qt::PenStyle style)
+    time_raster_sink_f_impl::set_line_style(int which, Qt::PenStyle style)
     {
-      d_main_gui->setLineStyle(0, style);
+      d_main_gui->setLineStyle(which, style);
     }
 
     void
-    time_raster_sink_f_impl::set_line_marker(QwtSymbol::Style marker)
+    time_raster_sink_f_impl::set_line_marker(int which, QwtSymbol::Style marker)
     {
-      d_main_gui->setLineMarker(0, marker);
+      d_main_gui->setLineMarker(which, marker);
     }
 
     void
