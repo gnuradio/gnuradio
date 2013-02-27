@@ -164,6 +164,7 @@ list(APPEND gr_blocks_sources
     multiply_const_cc_impl.cc
     multiply_const_ff_impl.cc
     nlog10_ff_impl.cc
+    pack_k_bits_bb_impl.cc
     patterned_interleaver_impl.cc
     peak_detector2_fb_impl.cc
     regenerate_bb_impl.cc
@@ -183,6 +184,7 @@ list(APPEND gr_blocks_sources
     transcendental_impl.cc
     uchar_array_to_float.cc
     uchar_to_float_impl.cc
+    unpack_k_bits_bb_impl.cc
     vector_to_stream_impl.cc
     vector_to_streams_impl.cc
 )

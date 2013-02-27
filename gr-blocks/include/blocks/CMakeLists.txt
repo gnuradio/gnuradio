@@ -125,6 +125,7 @@ install(FILES
     multiply_const_cc.h
     multiply_const_ff.h
     nlog10_ff.h
+    pack_k_bits_bb.h
     patterned_interleaver.h
     peak_detector2_fb.h
     regenerate_bb.h
@@ -143,6 +144,7 @@ install(FILES
     throttle.h
     transcendental.h
     uchar_to_float.h
+    unpack_k_bits_bb.h
     vector_to_stream.h
     vector_to_streams.h
     DESTINATION ${GR_INCLUDE_DIR}/gnuradio/blocks
