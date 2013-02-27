@@ -132,7 +132,6 @@ Type Conversions
    gnuradio.gr.complex_to_mag
    gnuradio.gr.complex_to_mag_squared
    gnuradio.gr.complex_to_arg
-   gnuradio.gr.unpack_k_bits_bb
 
 Signal Level Control (AGC)
 ^^^^^^^^^^^^^^^^^^^^^^^^^^

@@ -303,7 +303,7 @@ class generic_demod(gr.hier_block2):
                 mod_codes.invert_code(self._constellation.pre_diff_code()))
 
         # unpack the k bit vector into a stream of bits
-        self.unpack = gr.unpack_k_bits_bb(self.bits_per_symbol())
+        self.unpack = blocks.unpack_k_bits_bb(self.bits_per_symbol())
 
         if verbose:
             self._print_verbage()
@@ -312,14 +312,14 @@ class generic_demod(gr.hier_block2):
             self._setup_logging()
         
         # Connect and Initialize base class
-        blocks = [self, self.agc, self.freq_recov,
-                  self.time_recov, self.receiver]
+        self._blocks = [self, self.agc, self.freq_recov,
+                        self.time_recov, self.receiver]
         if differential:
-            blocks.append(self.diffdec)
+            self._blocks.append(self.diffdec)
         if self.pre_diff_code:
-            blocks.append(self.symbol_mapper)
-        blocks += [self.unpack, self]
-        self.connect(*blocks)
+            self._blocks.append(self.symbol_mapper)
+        self._blocks += [self.unpack, self]
+        self.connect(*self._blocks)
 
     def samples_per_symbol(self):
         return self._samples_per_symbol

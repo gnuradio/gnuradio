@@ -47,8 +47,6 @@
 #include <gr_constants.h>
 #include <gr_test_types.h>
 #include <gr_test.h>
-#include <gr_unpack_k_bits_bb.h>
-#include <gr_pack_k_bits_bb.h>
 #include <gr_feval.h>
 #include <gr_bin_statistics_f.h>
 #include <gr_copy.h>
@@ -87,8 +85,6 @@
 %include "gr_constants.i"
 %include "gr_test_types.h"
 %include "gr_test.i"
-%include "gr_unpack_k_bits_bb.i"
-%include "gr_pack_k_bits_bb.i"
 %include "gr_feval.i"
 %include "gr_bin_statistics_f.i"
 %include "gr_copy.i"

@@ -69,11 +69,6 @@
 		<block>gr_burst_tagger</block>
 	</cat>
 	<cat>
-		<name>Misc Conversions</name>
-		<block>gr_unpack_k_bits_bb</block>
-		<block>gr_pack_k_bits_bb</block>
-	</cat>
-	<cat>
 		<name>Synchronizers</name>
 
 		<block>gr_mpsk_sync_cc</block>

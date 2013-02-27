@@ -77,7 +77,7 @@ class BitErrors(gr.hier_block2):
             intdump_decim = int(N_BITS)
         self.connect(self,
                      comp,
-                     gr.unpack_k_bits_bb(bits_per_byte),
+                     blocks.unpack_k_bits_bb(bits_per_byte),
                      blocks.uchar_to_float(),
                      blocks.integrate_ff(intdump_decim),
                      blocks.multiply_const_ff(1.0/N_BITS),

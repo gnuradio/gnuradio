@@ -170,8 +170,6 @@ set(gr_core_general_triple_threats
     gr_test
     gr_vco_f
     gr_vector_map
-    gr_unpack_k_bits_bb
-    gr_pack_k_bits_bb
     gr_annotator_alltoall
     gr_annotator_1to1
     gr_annotator_raw
