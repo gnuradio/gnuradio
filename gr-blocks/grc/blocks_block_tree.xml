@@ -32,10 +32,12 @@
 	        <name>Sources (New)</name>
 		<block>blocks_file_source</block>
 		<block>blocks_file_meta_source</block>
+		<block>blocks_pdu_to_tagged_stream</block>
 	</cat>
 	<cat>
 	        <name>Sinks (New)</name>
 		<block>blocks_file_meta_sink</block>
+		<block>blocks_tagged_stream_to_pdu</block>
 	</cat>
 	<cat>
 		<name>Math Operations (New) </name>
@@ -117,5 +119,6 @@
 	<cat>
 	        <name>Networking</name>
 		<block>blocks_tuntap_pdu</block>
+		<block>blocks_socket_pdu</block>
 	</cat>
 </cat>

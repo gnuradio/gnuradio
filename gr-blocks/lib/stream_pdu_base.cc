@@ -28,7 +28,7 @@
 #include <io.h>
 #endif
 
-#include <gr_pdu.h>
+#include <blocks/pdu.h>
 #include <gr_basic_block.h>
 #include "stream_pdu_base.h"
 #include <boost/format.hpp>
@@ -112,12 +112,12 @@ namespace gr {
     {
       pmt::pmt_t vector = pmt::cdr(msg);
       size_t offset(0);
-      size_t itemsize(::gr_pdu_itemsize(type_from_pmt(vector)));
+      size_t itemsize(pdu::itemsize(pdu::type_from_pmt(vector)));
       int len(pmt::length(vector)*itemsize);
     
       const int rv = write(d_fd, pmt::uniform_vector_elements(vector, offset), len);
       if (rv != len) {
-        std::cerr << boost::format("WARNING: gr_stream_pdu_base::send(pdu) write failed! (d_fd=%d, len=%d, rv=%d)")
+        std::cerr << boost::format("WARNING: stream_pdu_base::send(pdu) write failed! (d_fd=%d, len=%d, rv=%d)")
 	  % d_fd % len % rv << std::endl;
       }
     }

@@ -23,6 +23,7 @@
 #define BLOCKS_API
 
 %include "gnuradio.i"
+%include "blocks/pdu.h"
 
 //load generated python docstrings
 %include "blocks_swig_doc.i"
@@ -103,6 +104,7 @@
 #include "blocks/packed_to_unpacked_bb.h"
 #include "blocks/packed_to_unpacked_ss.h"
 #include "blocks/packed_to_unpacked_ii.h"
+#include "blocks/pdu_to_tagged_stream.h"
 #include "blocks/peak_detector2_fb.h"
 #include "blocks/or_bb.h"
 #include "blocks/or_ss.h"
@@ -113,6 +115,7 @@
 #include "blocks/rms_ff.h"
 #include "blocks/short_to_char.h"
 #include "blocks/short_to_float.h"
+#include "blocks/socket_pdu.h"
 #include "blocks/stream_mux.h"
 #include "blocks/stream_to_streams.h"
 #include "blocks/stream_to_vector.h"
@@ -123,6 +126,7 @@
 #include "blocks/sub_ss.h"
 #include "blocks/sub_ii.h"
 #include "blocks/sub_cc.h"
+#include "blocks/tagged_stream_to_pdu.h"
 #include "blocks/threshold_ff.h"
 #include "blocks/throttle.h"
 #include "blocks/transcendental.h"
@@ -215,6 +219,7 @@
 %include "blocks/packed_to_unpacked_ss.h"
 %include "blocks/packed_to_unpacked_ii.h"
 %include "blocks/patterned_interleaver.h"
+%include "blocks/pdu_to_tagged_stream.h"
 %include "blocks/peak_detector2_fb.h"
 %include "blocks/regenerate_bb.h"
 %include "blocks/repeat.h"
@@ -222,6 +227,7 @@
 %include "blocks/rms_ff.h"
 %include "blocks/short_to_char.h"
 %include "blocks/short_to_float.h"
+%include "blocks/socket_pdu.h"
 %include "blocks/stream_mux.h"
 %include "blocks/stream_to_streams.h"
 %include "blocks/stream_to_vector.h"
@@ -232,6 +238,7 @@
 %include "blocks/sub_ss.h"
 %include "blocks/sub_ii.h"
 %include "blocks/sub_cc.h"
+%include "blocks/tagged_stream_to_pdu.h"
 %include "blocks/threshold_ff.h"
 %include "blocks/throttle.h"
 %include "blocks/transcendental.h"
@@ -321,6 +328,7 @@ GR_SWIG_BLOCK_MAGIC2(blocks, packed_to_unpacked_bb);
 GR_SWIG_BLOCK_MAGIC2(blocks, packed_to_unpacked_ss);
 GR_SWIG_BLOCK_MAGIC2(blocks, packed_to_unpacked_ii);
 GR_SWIG_BLOCK_MAGIC2(blocks, peak_detector2_fb);
+GR_SWIG_BLOCK_MAGIC2(blocks, pdu_to_tagged_stream);
 GR_SWIG_BLOCK_MAGIC2(blocks, or_bb);
 GR_SWIG_BLOCK_MAGIC2(blocks, or_ss);
 GR_SWIG_BLOCK_MAGIC2(blocks, or_ii);
@@ -330,6 +338,7 @@ GR_SWIG_BLOCK_MAGIC2(blocks, rms_cf);
 GR_SWIG_BLOCK_MAGIC2(blocks, rms_ff);
 GR_SWIG_BLOCK_MAGIC2(blocks, short_to_char);
 GR_SWIG_BLOCK_MAGIC2(blocks, short_to_float);
+GR_SWIG_BLOCK_MAGIC2(blocks, socket_pdu);
 GR_SWIG_BLOCK_MAGIC2(blocks, stream_mux);
 GR_SWIG_BLOCK_MAGIC2(blocks, stream_to_streams);
 GR_SWIG_BLOCK_MAGIC2(blocks, stream_to_vector);
@@ -340,6 +349,7 @@ GR_SWIG_BLOCK_MAGIC2(blocks, sub_ff);
 GR_SWIG_BLOCK_MAGIC2(blocks, sub_ss);
 GR_SWIG_BLOCK_MAGIC2(blocks, sub_ii);
 GR_SWIG_BLOCK_MAGIC2(blocks, sub_cc);
+GR_SWIG_BLOCK_MAGIC2(blocks, tagged_stream_to_pdu);
 GR_SWIG_BLOCK_MAGIC2(blocks, threshold_ff);
 GR_SWIG_BLOCK_MAGIC2(blocks, throttle);
 GR_SWIG_BLOCK_MAGIC2(blocks, transcendental);

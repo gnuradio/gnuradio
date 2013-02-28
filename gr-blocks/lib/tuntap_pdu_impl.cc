@@ -26,7 +26,7 @@
 
 #include "tuntap_pdu_impl.h"
 #include <gr_io_signature.h>
-#include <gr_pdu.h>
+#include <blocks/pdu.h>
 #include <boost/format.hpp>
 
 #include <sys/types.h>

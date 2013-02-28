@@ -1,4 +1,4 @@
-# Copyright 2012 Free Software Foundation, Inc.
+# Copyright 2013 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -127,6 +127,8 @@ install(FILES
     nlog10_ff.h
     pack_k_bits_bb.h
     patterned_interleaver.h
+    pdu.h
+    pdu_to_tagged_stream.h
     peak_detector2_fb.h
     regenerate_bb.h
     repeat.h
@@ -134,12 +136,14 @@ install(FILES
     rms_ff.h
     short_to_char.h
     short_to_float.h
+    socket_pdu.h
     stream_mux.h
     stream_to_streams.h
     stream_to_vector.h
     streams_to_stream.h
     streams_to_vector.h
     stretch_ff.h
+    tagged_stream_to_pdu.h
     threshold_ff.h
     throttle.h
     transcendental.h
