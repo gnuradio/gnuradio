@@ -143,6 +143,7 @@ install(FILES
     streams_to_stream.h
     streams_to_vector.h
     stretch_ff.h
+    tagged_stream_to_pdu.h
     threshold_ff.h
     throttle.h
     transcendental.h

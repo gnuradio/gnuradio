@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+<!--
+###################################################
+## Tagged Stream to PDU Message
+###################################################
+ -->
+<block>
+	<name>Tagged Stream to PDU</name>
+	<key>blocks_tagged_stream_to_pdu</key>
+	<import>from gnuradio import blocks</import>
+	<make>blocks.tagged_stream_to_pdu($type.tv)</make>
+    <param>
+        <name>Item Type</name>
+        <key>type</key>
+        <type>enum</type>
+        <option>
+            <name>Byte</name>
+            <key>byte</key>
+            <opt>tv:blocks.byte_t</opt>
+        </option>
+        <option>
+            <name>Complex</name>
+            <key>complex</key>
+            <opt>tv:blocks.complex_t</opt>
+        </option>
+        <option>
+            <name>Float</name>
+            <key>float</key>
+            <opt>tv:blocks.float_t</opt>
+        </option>
+    </param>
+	<sink>
+		<name>in</name>
+		<type>$type</type>
+	</sink>
+	<source>
+		<name>pdus</name>
+		<type>message</type>
+	</source>
+</block>

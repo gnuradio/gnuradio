@@ -37,6 +37,7 @@
 	<cat>
 	        <name>Sinks (New)</name>
 		<block>blocks_file_meta_sink</block>
+		<block>blocks_tagged_stream_to_pdu</block>
 	</cat>
 	<cat>
 		<name>Math Operations (New) </name>

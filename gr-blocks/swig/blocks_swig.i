@@ -126,6 +126,7 @@
 #include "blocks/sub_ss.h"
 #include "blocks/sub_ii.h"
 #include "blocks/sub_cc.h"
+#include "blocks/tagged_stream_to_pdu.h"
 #include "blocks/threshold_ff.h"
 #include "blocks/throttle.h"
 #include "blocks/transcendental.h"
@@ -237,6 +238,7 @@
 %include "blocks/sub_ss.h"
 %include "blocks/sub_ii.h"
 %include "blocks/sub_cc.h"
+%include "blocks/tagged_stream_to_pdu.h"
 %include "blocks/threshold_ff.h"
 %include "blocks/throttle.h"
 %include "blocks/transcendental.h"
@@ -347,6 +349,7 @@ GR_SWIG_BLOCK_MAGIC2(blocks, sub_ff);
 GR_SWIG_BLOCK_MAGIC2(blocks, sub_ss);
 GR_SWIG_BLOCK_MAGIC2(blocks, sub_ii);
 GR_SWIG_BLOCK_MAGIC2(blocks, sub_cc);
+GR_SWIG_BLOCK_MAGIC2(blocks, tagged_stream_to_pdu);
 GR_SWIG_BLOCK_MAGIC2(blocks, threshold_ff);
 GR_SWIG_BLOCK_MAGIC2(blocks, throttle);
 GR_SWIG_BLOCK_MAGIC2(blocks, transcendental);
