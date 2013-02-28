@@ -25,6 +25,7 @@ from gnuradio import gr, ctrlport
 from PyQt4 import QtCore,Qt,Qwt5
 import PyQt4.QtGui as QtGui
 import sys, time, re, pprint
+import itertools
 import scipy
 
 import Ice
@@ -45,8 +46,8 @@ class MAINWindow(QtGui.QMainWindow):
         self.interface = interface
 
         self.mdiArea = QtGui.QMdiArea()
-        self.mdiArea.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOn)
-        self.mdiArea.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOn)
+        self.mdiArea.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarAsNeeded)
+        self.mdiArea.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAsNeeded)
         self.setCentralWidget(self.mdiArea)
 
         self.mdiArea.subWindowActivated.connect(self.updateMenus)
@@ -70,183 +71,21 @@ class MAINWindow(QtGui.QMainWindow):
         child = MForm(radio, port, len(self.conns), self)
         if(child.radio is not None):
             child.setWindowTitle(str(child.radio))
-            self.mdiArea.addSubWindow(child)
-            child.showMaximized()
+            horizbar = QtGui.QScrollArea()
+            horizbar.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarAsNeeded)
+            horizbar.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAsNeeded)
+            horizbar.setWidget(child)
+            self.mdiArea.addSubWindow(horizbar)
+            self.mdiArea.currentSubWindow().showMaximized()
+
         self.conns.append(child)
         self.plots.append([])
-
-    def propertiesMenu(self, key, radio, uid):
-        r = str(radio).split(" ")
-        title = "{0}:{1}".format(r[3], r[5])
-
-        props = radio.properties([key])
-        pmin = props[key].min.value
-        pmax = props[key].max.value
-        if pmin == []:
-            pmin = None
-        else:
-            pmin = 1.1*pmin
-        if pmax == []:
-            pmax = None
-        else:
-            pmax = 1.1*pmax
-
-        # Use display option mask of item to set up available plot
-        # types and default options.
-        disp = self.knobprops[uid][key].display
-        cplx = disp & gr.DISPOPTCPLX | disp & gr.DISPXY
-        strip = disp & gr.DISPOPTSTRIP
-        stem = disp & gr.DISPOPTSTEM
-        log = disp & gr.DISPOPTLOG
-        scatter = disp & gr.DISPOPTSCATTER
-
-        def newUpdaterProxy():
-            self.newUpdater(key, radio)
-
-        def newPlotterFProxy():
-            self.newPlotF(key, uid, title, pmin, pmax,
-                          log, strip, stem)
-
-        def newPlotterCProxy():
-            self.newPlotC(key, uid, title, pmin, pmax,
-                          log, strip, stem)
-
-        def newPlotterConstProxy():
-            self.newPlotConst(key, uid, title, pmin, pmax, scatter)
-
-        def newPlotterPsdFProxy():
-            self.newPlotPsdF(key, uid, title)
-
-        def newPlotterPsdCProxy():
-            self.newPlotPsdC(key, uid, title)
-
-        def newPlotterRasterFProxy():
-            self.newPlotRasterF(key, uid, title, pmin, pmax)
-
-        def newPlotterRasterBProxy():
-            self.newPlotRasterB(key, uid, title, pmin, pmax)
-
-        menu = QtGui.QMenu(self)
-        menu.setTitle("Item Actions")
-        menu.setTearOffEnabled(False)
-
-        # object properties
-        menu.addAction("Properties", newUpdaterProxy)
-
-        # displays available
-        if(cplx == 0):
-            menu.addAction("Plot Time", newPlotterFProxy)
-            menu.addAction("Plot PSD", newPlotterPsdFProxy)
-            menu.addAction("Plot Raster (real)", newPlotterRasterFProxy)
-            #menu.addAction("Plot Raster (bits)", newPlotterRasterBProxy)
-        else:
-            menu.addAction("Plot Time", newPlotterCProxy)
-            menu.addAction("Plot PSD", newPlotterPsdCProxy)
-            menu.addAction("Plot Constellation", newPlotterConstProxy)
-
-        menu.popup(QtGui.QCursor.pos())
 
     def newUpdater(self, key, radio):
         updater = UpdaterWindow(key, radio, None)
         updater.setWindowTitle("Updater: " + key)
         updater.setModal(False)
         updater.exec_()
-
-    def newSub(self, e):
-        tag = str(e.text(0))
-        tree = e.treeWidget().parent()
-        uid = tree.uid
-        knobprop = self.knobprops[uid][tag]
-
-        r = str(tree.radio).split(" ")
-        title = "{0}:{1}".format(r[3], r[5])
-        pmin = knobprop.min.value
-        pmax = knobprop.max.value
-        if pmin == []:
-            pmin = None
-        else:
-            pmin = 1.1*pmin
-        if pmax == []:
-            pmax = None
-        else:
-            pmax = 1.1*pmax
-
-        disp = knobprop.display
-        if(disp & gr.DISPTIME):
-            strip = disp & gr.DISPOPTSTRIP
-            stem = disp & gr.DISPOPTSTEM
-            log = disp & gr.DISPOPTLOG
-            if(disp & gr.DISPOPTCPLX == 0):
-                self.newPlotF(tag, uid, title, pmin, pmax,
-                              log, strip, stem)
-            else:
-                self.newPlotC(tag, uid, title, pmin, pmax,
-                              log, strip, stem)
-            
-        elif(disp & gr.DISPXY):
-            scatter = disp & gr.DISPOPTSCATTER
-            self.newPlotConst(tag, uid, title, pmin, pmax, scatter)
-            
-        elif(disp & gr.DISPPSD):
-            if(disp & gr.DISPOPTCPLX == 0):
-                self.newPlotPsdF(tag, uid, title)
-            else:
-                self.newPlotPsdC(tag, uid, title)
-
-    def createPlot(self, plot, uid, title):
-        plot.start()
-        self.plots[uid].append(plot)
-
-        self.mdiArea.addSubWindow(plot.qwidget())
-        plot.qwidget().setWindowTitle("{0}: {1}".format(title, plot.name()))
-        self.connect(plot.qwidget(),
-                     QtCore.SIGNAL('destroyed(QObject*)'),
-                     self.destroyPlot)
-        plot.qwidget().show()
-
-
-    def destroyPlot(self, obj):
-        for plots in self.plots:
-            for p in plots:
-                if p.qwidget() == obj:
-                    plots.remove(p)
-                    break
-
-    def newPlotConst(self, tag, uid, title="", pmin=None, pmax=None,
-                     scatter=False):
-        plot = GrDataPlotterConst(tag, 32e6, pmin, pmax)
-        plot.scatter(scatter)
-        self.createPlot(plot, uid, title)
-    
-    def newPlotF(self, tag, uid, title="", pmin=None, pmax=None, 
-                 logy=False, stripchart=False, stem=False):
-        plot = GrDataPlotterF(tag, 32e6, pmin, pmax, stripchart)
-        plot.semilogy(logy)
-        plot.stem(stem)
-        self.createPlot(plot, uid, title)
-
-    def newPlotC(self, tag, uid, title="", pmin=None, pmax=None,
-                 logy=False, stripchart=False, stem=False):
-        plot = GrDataPlotterC(tag, 32e6, pmin, pmax, stripchart)
-        plot.semilogy(logy)
-        plot.stem(stem)
-        self.createPlot(plot, uid, title)
-
-    def newPlotPsdF(self, tag, uid, title="", pmin=None, pmax=None):
-        plot = GrDataPlotterPsdF(tag, 32e6, pmin, pmax)
-        self.createPlot(plot, uid, title)
-
-    def newPlotPsdC(self, tag, uid, title="", pmin=None, pmax=None):
-        plot = GrDataPlotterPsdC(tag, 32e6, pmin, pmax)
-        self.createPlot(plot, uid, title)
-
-    def newPlotRasterF(self, tag, uid, title="", pmin=None, pmax=None):
-        plot = GrTimeRasterF(tag, 32e6, pmin, pmax)
-        self.createPlot(plot, uid, title)
-
-    def newPlotRasterB(self, tag, uid, title="", pmin=None, pmax=None):
-        plot = GrTimeRasterB(tag, 32e6, pmin, pmax)
-        self.createPlot(plot, uid, title)
 
     def update(self, knobs, uid):
         #sys.stderr.write("KNOB KEYS: {0}\n".format(knobs.keys()))
@@ -266,10 +105,6 @@ class MAINWindow(QtGui.QMainWindow):
         self.newConAct = QtGui.QAction("&New Connection",
                 self, shortcut=QtGui.QKeySequence.New,
                 statusTip="Create a new file", triggered=self.newCon)
-        #self.newAct = QtGui.QAction(QtGui.QIcon(':/images/new.png'), "&New Plot",
-        self.newPlotAct = QtGui.QAction("&New Plot",
-                self,
-                statusTip="Create a new file", triggered=self.newPlotF)
 
         self.exitAct = QtGui.QAction("E&xit", self, shortcut="Ctrl+Q",
                 statusTip="Exit the application",
@@ -319,7 +154,6 @@ class MAINWindow(QtGui.QMainWindow):
     def createMenus(self):
         self.fileMenu = self.menuBar().addMenu("&File")
         self.fileMenu.addAction(self.newConAct)
-        self.fileMenu.addAction(self.newPlotAct)
         self.fileMenu.addSeparator()
         self.fileMenu.addAction(self.exitAct)
 
@@ -336,7 +170,6 @@ class MAINWindow(QtGui.QMainWindow):
     def createToolBars(self):
         self.fileToolBar = self.addToolBar("File")
         self.fileToolBar.addAction(self.newConAct)
-        self.fileToolBar.addAction(self.newPlotAct)
 
         self.fileToolBar = self.addToolBar("Window")
         self.fileToolBar.addAction(self.tileAct)
@@ -470,11 +303,69 @@ class UpdaterWindow(QtGui.QDialog):
         self.done(0)
 
 
+def build_edge_graph(sources, sinks, edges):
+    '''
+    Starting from the sources, walks through all of the edges to find
+    the next connected block. The output is stored in 'allblocks'
+    where each row starts with a source and follows one path down
+    until it terminates in either a sink or as an input to a block
+    that is part of another chain.
+    '''
+    def find_edge(src, sinks, edges, row, col):
+        #print "\n\nAll blocks: "
+        #printer.pprint(allblocks)
+        #print "\nLooking for: ", src
+
+        src0 = src.split(":")[0]
+        if(src0 in sinks):
+            if(len(allblocks) <= row):
+                allblocks.append(col*[""])
+            allblocks[row].append(src)
+            return row+1
+
+        for edge in edges:
+            if(re.match(src0, edge)):
+                s = edge.split("->")[0]
+                b = edge.split("->")[1]
+                if(len(allblocks) <= row):
+                    allblocks.append(col*[""])
+                allblocks[row].append(s)
+                #print "Source: {0}     Sink: {1}".format(s, b)
+                row = find_edge(b, sinks, edges, row, col+1)
+        return row
+
+    # Recursively get all edges as a matrix of source->sink
+    n = 0
+    allblocks = []
+    for src in sources:
+        n = find_edge(src, sinks, edges, n, 0)
+
+    # Sort by longest list
+    allblocks = sorted(allblocks, key=len)
+    allblocks.reverse()
+
+    # Make all rows same length by padding '' in front of sort rows
+    maxrowlen = len(allblocks[0])
+    for i,a in enumerate(allblocks):
+        rowlen = len(a)
+        allblocks[i] = (maxrowlen-rowlen)*[''] + a
+
+    # Dedup rows
+    allblocks = sorted(allblocks)
+    allblocks = list(k for k,_ in itertools.groupby(allblocks))
+    allblocks.reverse()
+
+    for a in allblocks:
+        print a
+    print "\n\n"
+    return allblocks
+
+
 class MForm(QtGui.QWidget):
     def update(self):
         try:
             st = time.time()
-            knobs = self.radio.get(self.block_dict.keys())
+            knobs = self.radio.get([b[0] for b in self.block_dict])
 
             ft = time.time()
             latency = ft-st
@@ -518,8 +409,10 @@ class MForm(QtGui.QWidget):
     
     def updateItems(self, knobs):
         for b in self.block_dict:
-            self.block_dict[b].setText("{0:.4f}".format(knobs[b].value))
-
+            if(knobs[b[0]].ice_id.im_class == GNURadio.KnobVecF):
+                b[1].setText("{0:.4f}".format(knobs[b[0]].value[b[2]]))
+            else:
+                b[1].setText("{0:.4f}".format(knobs[b[0]].value))
 
     def __init__(self, radio=None, port=None, uid=0, parent=None):
 
@@ -548,7 +441,7 @@ class MForm(QtGui.QWidget):
         self.constupdatediv = 0
         self.tableupdatediv = 0
         plotsize=250
-            
+
 
         # Set up the graph of blocks
         input_name = lambda x: x+"::avg input % full"
@@ -556,8 +449,8 @@ class MForm(QtGui.QWidget):
         wtime_name = lambda x: x+"::avg work time"
         nout_name = lambda x: x+"::avg noutput_items"
         nprod_name = lambda x: x+"::avg nproduced"
-        
-        allblocks = []
+
+        tmplist = []
         knobs = self.radio.get([])
         for k in knobs:
             propname = k.split("::")
@@ -565,10 +458,10 @@ class MForm(QtGui.QWidget):
             keyname = propname[1]
             if(keyname == "edge list"):
                 edgelist = knobs[k].value
-            elif(blockname not in allblocks):
+            elif(blockname not in tmplist):
                 # only take gr_blocks (no hier_block2)
                 if(knobs.has_key(input_name(blockname))):
-                    allblocks.append(blockname)
+                    tmplist.append(blockname)
 
         edges = edgelist.split("\n")[0:-1]
         producers = []
@@ -590,71 +483,93 @@ class MForm(QtGui.QWidget):
         sinks = cons.difference(blocks)
 
         nblocks = len(prods) + len(cons)
-        nrows = max(len(sources), len(sinks))
-        ncols = int(scipy.ceil(nblocks/float(nrows)))
-        allblocks = []
-        for n in xrange(nrows):
-            allblocks.append(["",])
 
-        def find_edge(src, edges, i):
-            for edge in edges:
-                if(re.match(src, edge)):
-                    s = edge.split("->")[0]
-                    b = edge.split("->")[1]
-                    allblocks[nsrcs][i] = s
-                    allblocks[nsrcs].append(b)
-                    return b
-            return None
-
-        for nsrcs, src in enumerate(sources):
-            b = src
-            i = 0
-            while b:
-                b = find_edge(b, edges, i)
-                i += 1
-
-        printer = pprint.PrettyPrinter()
-        printer.pprint(allblocks)
+        allblocks = build_edge_graph(sources, sinks, edges)
+        nrows = len(allblocks)
+        ncols = len(allblocks[0])
 
         col_width = 120
 
-        self.block_dict = {}
+        self.block_dict = []
 
         for row, blockrow in enumerate(allblocks):
             for col, block in enumerate(blockrow):
+                print "row: {0}  col: {1}  block: {2}".format(row, col, block)
+                if(block == ''):
+                    continue
+                
                 bgroup = QtGui.QGroupBox(block)
                 playout = QtGui.QFormLayout()
                 bgroup.setLayout(playout)
-                self.layout.addWidget(bgroup, row, col)
+                self.layout.addWidget(bgroup, row, 2*col)
 
-                name = wtime_name(block.split(":")[0])
+                blockname = block.split(":")[0]
+
+                name = wtime_name(blockname)
                 wtime = knobs[name].value
                 newtime = QtGui.QLineEdit()
                 newtime.setMinimumWidth(col_width)
                 newtime.setText("{0:.4f}".format(wtime))
-                self.block_dict[name] = newtime
+                self.block_dict.append((name, newtime))
 
-                name = nout_name(block.split(":")[0])
+                name = nout_name(blockname)
                 nout = knobs[name].value
                 newnout = QtGui.QLineEdit()
                 newnout.setText("{0:.4f}".format(nout))
                 newnout.setMinimumWidth(col_width)
-                self.block_dict[name] = newnout
+                self.block_dict.append((name, newnout))
 
-                name = nprod_name(block.split(":")[0])
+                name = nprod_name(blockname)
                 nprod = knobs[name].value
                 newnprod = QtGui.QLineEdit()
                 newnprod.setMinimumWidth(col_width)
                 newnprod.setText("{0:.4f}".format(nprod))
-                self.block_dict[name] = newnprod
+                self.block_dict.append((name, newnprod))
 
                 playout.addRow("Work time", newtime)
                 playout.addRow("noutput_items", newnout)
                 playout.addRow("nproduced", newnprod)
-                #print dir(playout)
-                #playout.setMinimumSize(col_width*2)
 
-        # set up timer   
+                if blockname in blocks or blockname in sources:
+                    # Add a buffer between blocks
+                    buffgroup = QtGui.QGroupBox("Buffer")
+                    bufflayout = QtGui.QFormLayout()
+                    buffgroup.setLayout(bufflayout)
+                    self.layout.addWidget(buffgroup, row, 2*col+1)
+                
+                    i = int(block.split(":")[1])
+                    name = output_name(blockname)
+                    obuff = knobs[name].value
+                    for i,o in enumerate(obuff):
+                        newobuff = QtGui.QLineEdit()
+                        newobuff.setMinimumWidth(col_width)
+                        newobuff.setText("{0:.4f}".format(o))
+                        self.block_dict.append((name, newobuff, i))
+                        bufflayout.addRow("Out Buffer {0}".format(i),
+                                          newobuff)
+                
+                if blockname in blocks or blockname in sinks:
+                    item = self.layout.itemAtPosition(row, 2*col-1)
+                    if(item):
+                        buffgroup = item.widget()
+                        bufflayout = buffgroup.layout()
+                    else:
+                        buffgroup = QtGui.QGroupBox("Buffer")
+                        bufflayout = QtGui.QFormLayout()
+                        buffgroup.setLayout(bufflayout)
+                        self.layout.addWidget(buffgroup, row, 2*col-1)
+                
+                    i = int(block.split(":")[1])
+                    name = input_name(blockname)
+                    ibuff = knobs[name].value[i]
+                    newibuff = QtGui.QLineEdit()
+                    newibuff.setMinimumWidth(col_width)
+                    newibuff.setText("{0:.4f}".format(ibuff))
+                    self.block_dict.append((name, newibuff, i))
+                    bufflayout.addRow("In Buffer {0}".format(i),
+                                      newibuff)
+
+        # set up timer
         self.timer = QtCore.QTimer()
         self.connect(self.timer, QtCore.SIGNAL('timeout()'), self.update)
         self.timer.start(1000)
