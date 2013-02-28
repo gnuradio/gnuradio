@@ -113,6 +113,7 @@
 #include "blocks/rms_ff.h"
 #include "blocks/short_to_char.h"
 #include "blocks/short_to_float.h"
+#include "blocks/socket_pdu.h"
 #include "blocks/stream_mux.h"
 #include "blocks/stream_to_streams.h"
 #include "blocks/stream_to_vector.h"
@@ -222,6 +223,7 @@
 %include "blocks/rms_ff.h"
 %include "blocks/short_to_char.h"
 %include "blocks/short_to_float.h"
+%include "blocks/socket_pdu.h"
 %include "blocks/stream_mux.h"
 %include "blocks/stream_to_streams.h"
 %include "blocks/stream_to_vector.h"
@@ -330,6 +332,7 @@ GR_SWIG_BLOCK_MAGIC2(blocks, rms_cf);
 GR_SWIG_BLOCK_MAGIC2(blocks, rms_ff);
 GR_SWIG_BLOCK_MAGIC2(blocks, short_to_char);
 GR_SWIG_BLOCK_MAGIC2(blocks, short_to_float);
+GR_SWIG_BLOCK_MAGIC2(blocks, socket_pdu);
 GR_SWIG_BLOCK_MAGIC2(blocks, stream_mux);
 GR_SWIG_BLOCK_MAGIC2(blocks, stream_to_streams);
 GR_SWIG_BLOCK_MAGIC2(blocks, stream_to_vector);

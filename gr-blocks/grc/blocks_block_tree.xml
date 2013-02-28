@@ -116,5 +116,6 @@
 	<cat>
 	        <name>Networking</name>
 		<block>blocks_tuntap_pdu</block>
+		<block>blocks_socket_pdu</block>
 	</cat>
 </cat>

@@ -1,4 +1,4 @@
-# Copyright 2012 Free Software Foundation, Inc.
+# Copyright 2013 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -134,6 +134,7 @@ install(FILES
     rms_ff.h
     short_to_char.h
     short_to_float.h
+    socket_pdu.h
     stream_mux.h
     stream_to_streams.h
     stream_to_vector.h
