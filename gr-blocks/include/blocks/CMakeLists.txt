@@ -127,6 +127,7 @@ install(FILES
     nlog10_ff.h
     pack_k_bits_bb.h
     patterned_interleaver.h
+    pdu.h
     peak_detector2_fb.h
     regenerate_bb.h
     repeat.h

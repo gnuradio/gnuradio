@@ -166,6 +166,7 @@ list(APPEND gr_blocks_sources
     nlog10_ff_impl.cc
     pack_k_bits_bb_impl.cc
     patterned_interleaver_impl.cc
+    pdu.cc
     peak_detector2_fb_impl.cc
     regenerate_bb_impl.cc
     repeat_impl.cc
