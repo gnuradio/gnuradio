@@ -38,7 +38,6 @@
 //#include <gr_endianness.h>
 #include <gr_endian_swap.h>
 #include <gr_firdes.h>
-#include <gr_random_pdu.h>
 #include <gr_fake_channel_coder_pp.h>
 #include <gr_vco_f.h>
 #include <gr_pa_2x2_phase_combiner.h>
@@ -76,7 +75,6 @@
 //%include "gr_endianness.i"
 %include "gr_endian_swap.i"
 %include "gr_firdes.i"
-%include "gr_random_pdu.i"
 %include "gr_fake_channel_coder_pp.i"
 %include "gr_vco_f.i"
 %include "gr_pa_2x2_phase_combiner.i"

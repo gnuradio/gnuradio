@@ -37,10 +37,6 @@
         <name>Message Tools</name>
         <block>gr_message_debug</block>
         <block>gr_message_strobe</block>
-        <block>gr_pdu_to_tagged_stream</block>
-        <block>gr_tagged_stream_to_pdu</block>
-        <block>gr_socket_pdu</block>
-        <block>gr_random_pdu</block>
     </cat>
 	<cat>
 		<name>Operators</name>

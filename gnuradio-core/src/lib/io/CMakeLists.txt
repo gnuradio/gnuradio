@@ -38,8 +38,6 @@ list(APPEND gnuradio_core_sources
     ${CMAKE_CURRENT_SOURCE_DIR}/microtune_xxxx.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/ppio_ppdev.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/gri_wavfile.cc
-    ${CMAKE_CURRENT_SOURCE_DIR}/gr_pdu.cc
-    ${CMAKE_CURRENT_SOURCE_DIR}/gr_stream_pdu_base.cc
 )
 
 ########################################################################
@@ -61,8 +59,6 @@ install(FILES
     ${CMAKE_CURRENT_SOURCE_DIR}/microtune_xxxx.h
     ${CMAKE_CURRENT_SOURCE_DIR}/ppio_ppdev.h
     ${CMAKE_CURRENT_SOURCE_DIR}/gri_wavfile.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/gr_pdu.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/gr_stream_pdu_base.h
     DESTINATION ${GR_INCLUDE_DIR}/gnuradio
     COMPONENT "core_devel"
 )
@@ -93,7 +89,6 @@ set(gr_core_io_triple_threats
     gr_message_sink
     gr_message_source
     gr_message_burst_source
-    gr_pdu_to_tagged_stream
     microtune_xxxx_eval_board
     microtune_4702_eval_board
     microtune_4937_eval_board
@@ -104,8 +99,6 @@ set(gr_core_io_triple_threats
     gr_wavfile_source
     gr_wavfile_sink
     gr_tagged_file_sink
-    gr_tagged_stream_to_pdu
-    gr_socket_pdu
 )
 
 foreach(file_tt ${gr_core_io_triple_threats})

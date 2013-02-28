@@ -164,7 +164,6 @@ set(gr_core_general_triple_threats
     gr_null_source
     gr_pa_2x2_phase_combiner
     gr_prefs
-    gr_random_pdu
     gr_remez
     gr_skiphead
     gr_test
