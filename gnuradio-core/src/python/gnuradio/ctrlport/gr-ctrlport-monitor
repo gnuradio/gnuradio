@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2012 Free Software Foundation, Inc.
+# Copyright 2012,2013 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -24,7 +24,7 @@ from gnuradio import gr, ctrlport
 
 from PyQt4 import QtCore,Qt
 import PyQt4.QtGui as QtGui
-import sys, time
+import os, sys, time
 
 import Ice
 from gnuradio.ctrlport.IceRadioClient import *
@@ -55,7 +55,7 @@ class MAINWindow(QtGui.QMainWindow):
     def __init__(self, radio, port, interface):
         
         super(MAINWindow, self).__init__()
-        self.updateRate = 2000;
+        self.updateRate = 1000;
         self.conns = []
         self.plots = []
         self.knobprops = []
@@ -83,6 +83,11 @@ class MAINWindow(QtGui.QMainWindow):
         icon = QtGui.QIcon(ctrlport.__path__[0] + "/icon.png" )
         self.setWindowIcon(icon)
 
+        # Locally turn off ControlPort export from GR. This prevents
+        # our GR-based plotters from launching their own ControlPort
+        # instance (and possibly causing a port collision if one has
+        # been specified).
+        os.environ['GR_CONF_CONTROLPORT_ON'] = 'False'
 
     def setUpdateRate(self,nur):
         self.updateRate = int(nur);
@@ -217,17 +222,55 @@ class MAINWindow(QtGui.QMainWindow):
             else:
                 self.newPlotPsdC(tag, uid, title)
 
+    def startDrag(self, e):
+        drag = QtGui.QDrag(self)
+        mime_data = QtCore.QMimeData()
+
+        tag = str(e.text(0))
+        tree = e.treeWidget().parent()
+        knobprop = self.knobprops[tree.uid][tag]
+        disp = knobprop.display
+        iscomplex = (disp & gr.DISPOPTCPLX) or (disp & gr.DISPXY)
+        
+        if(disp != gr.DISPNULL):
+            data = "PlotData:::{0}:::{1}".format(tag, iscomplex)
+        else:
+            data = "OtherData:::{0}:::{1}".format(tag, iscomplex)
+
+        mime_data.setText(data)
+        drag.setMimeData(mime_data)
+
+        drop = drag.start()
+
     def createPlot(self, plot, uid, title):
         plot.start()
         self.plots[uid].append(plot)
 
-        self.mdiArea.addSubWindow(plot.qwidget())
-        plot.qwidget().setWindowTitle("{0}: {1}".format(title, plot.name()))
+        self.mdiArea.addSubWindow(plot)
+        plot.setWindowTitle("{0}: {1}".format(title, plot.name()))
         self.connect(plot.qwidget(),
                      QtCore.SIGNAL('destroyed(QObject*)'),
                      self.destroyPlot)
-        plot.qwidget().show()
 
+        # when the plot is updated via drag-and-drop, we need to be
+        # notified of the new qwidget that's created so we can
+        # properly destroy it.
+        plot.plotupdated.connect(self.plotUpdated)
+
+        plot.show()
+
+    def plotUpdated(self, q):
+        # the plot has been updated with a new qwidget; make sure this
+        # gets dies to the destroyPlot function.
+        for i, plots in enumerate(self.plots):
+            for p in plots:
+                if(p == q):
+                    #plots.remove(p)
+                    #plots.append(q)
+                    self.connect(q.qwidget(),
+                                 QtCore.SIGNAL('destroyed(QObject*)'),
+                                 self.destroyPlot)
+                    break
 
     def destroyPlot(self, obj):
         for plots in self.plots:
@@ -275,7 +318,9 @@ class MAINWindow(QtGui.QMainWindow):
     def update(self, knobs, uid):
         #sys.stderr.write("KNOB KEYS: {0}\n".format(knobs.keys()))
         for plot in self.plots[uid]:
-            data = knobs[plot.name()].value
+            data = []
+            for n in plot.knobnames:
+                data.append(knobs[n].value)
             plot.update(data)
             plot.stop()
             plot.wait()
@@ -639,7 +684,7 @@ class MForm(QtGui.QWidget):
         self.table.treeWidget.setEditTriggers(QtGui.QAbstractItemView.EditKeyPressed)
         self.table.treeWidget.setSortingEnabled(True)
         self.table.treeWidget.setDragEnabled(True)
-        
+
         # add things to layouts
         self.horizontalLayout.addWidget(self.table.treeWidget)
 
@@ -657,6 +702,11 @@ class MForm(QtGui.QWidget):
                      QtCore.SIGNAL('itemDoubleClicked(QTreeWidgetItem*, int)'),
                      self.parent.newSub);
 
+        # Allow drag/drop event from table item to plotter
+        self.connect(self.table.treeWidget,
+                     QtCore.SIGNAL('itemPressed(QTreeWidgetItem*, int)'),
+                     self.parent.startDrag)
+        
     def openMenu(self, pos):
         index = self.table.treeWidget.selectedIndexes()
         item = self.table.treeWidget.itemFromIndex(index[0])

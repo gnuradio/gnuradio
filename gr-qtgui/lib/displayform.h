@@ -43,6 +43,7 @@ class DisplayForm : public QWidget
 
   virtual DisplayPlot* getPlot() = 0;
   void Reset();
+  bool isClosed() const;
 
   void enableMenu(bool en=true);
 
@@ -91,6 +92,8 @@ signals:
   void plotPointSelected(const QPointF p, int type);
 
 protected:
+  bool _isclosed;
+
   int _nplots;
 
   QGridLayout *_layout;

@@ -39,14 +39,11 @@
         <block>gr_message_strobe</block>
         <block>gr_pdu_to_tagged_stream</block>
         <block>gr_tagged_stream_to_pdu</block>
-        <block>gr_tuntap_pdu</block>
         <block>gr_socket_pdu</block>
         <block>gr_random_pdu</block>
     </cat>
 	<cat>
 		<name>Operators</name>
-		<block>gr_transcendental</block>
-
 		<block>gr_max_xx</block>
 		<block>gr_argmax_xx</block>
 
@@ -71,11 +68,6 @@
 		<block>gr_burst_tagger</block>
 	</cat>
 	<cat>
-		<name>Misc Conversions</name>
-		<block>gr_unpack_k_bits_bb</block>
-		<block>gr_pack_k_bits_bb</block>
-	</cat>
-	<cat>
 		<name>Synchronizers</name>
 
 		<block>gr_mpsk_sync_cc</block>
@@ -86,11 +78,9 @@
 	<cat>
 		<name>Level Controls</name>
 		<block>gr_peak_detector_xb</block>
-		<block>gr_peak_detector2_fb</block>
 		<block>gr_sample_and_hold_xx</block>
 
 		<block>gr_mute_xx</block>
-		<block>gr_threshold_ff</block>
 	</cat>
 	<cat>
 		<name>Filters</name>
@@ -122,8 +112,6 @@
 		<name>Misc</name>
 		<block>note</block>
 		<block>import</block>
-
-		<block>gr_throttle</block>
 
 		<block>blks2_selector</block>
 		<block>blks2_valve</block>

@@ -41,8 +41,8 @@ namespace gr {
       @IMPL_NAME@(noise_type_t type, float ampl, long seed = 0);
       ~@IMPL_NAME@();
 
-      void set_type(noise_type_t type) { d_type = type; }
-      void set_amplitude(float ampl) { d_ampl = ampl; }
+      void set_type(noise_type_t type);
+      void set_amplitude(float ampl);
 
       noise_type_t type() const { return d_type; }
       float amplitude() const { return d_ampl; }

@@ -164,19 +164,29 @@ list(APPEND gr_blocks_sources
     multiply_const_cc_impl.cc
     multiply_const_ff_impl.cc
     nlog10_ff_impl.cc
+    pack_k_bits_bb_impl.cc
     patterned_interleaver_impl.cc
+    peak_detector2_fb_impl.cc
+    regenerate_bb_impl.cc
     repeat_impl.cc
     rms_cf_impl.cc
     rms_ff_impl.cc
     short_to_char_impl.cc
     short_to_float_impl.cc
     stream_mux_impl.cc
+    stream_pdu_base.cc
     stream_to_streams_impl.cc
     stream_to_vector_impl.cc
     streams_to_stream_impl.cc
     streams_to_vector_impl.cc
+    stretch_ff_impl.cc
+    threshold_ff_impl.cc
+    throttle_impl.cc
+    transcendental_impl.cc
+    tuntap_pdu_impl.cc
     uchar_array_to_float.cc
     uchar_to_float_impl.cc
+    unpack_k_bits_bb_impl.cc
     vector_to_stream_impl.cc
     vector_to_streams_impl.cc
 )

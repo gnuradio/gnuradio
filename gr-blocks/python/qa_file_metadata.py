@@ -35,6 +35,7 @@ def sig_source_c(samp_rate, freq, amp, N):
 class test_file_metadata(gr_unittest.TestCase):
 
     def setUp(self):
+        os.environ['GR_CONF_CONTROLPORT_ON'] = 'False'
         self.tb = gr.top_block()
 
     def tearDown(self):

@@ -76,11 +76,11 @@ namespace gr {
 
       void set_update_time(double t);
       void set_title(const std::string &title);
-      void set_line_label(const std::string &label);
-      void set_line_color(const std::string &color);
-      void set_line_width(int width);
-      void set_line_style(Qt::PenStyle style);
-      void set_line_marker(QwtSymbol::Style marker);
+      void set_line_label(int which, const std::string &label);
+      void set_line_color(int which, const std::string &color);
+      void set_line_width(int which, int width);
+      void set_line_style(int which, Qt::PenStyle style);
+      void set_line_marker(int which, QwtSymbol::Style marker);
       void set_line_alpha(int which, double alpha);
       void set_color_map(int which, const int color);
 

@@ -42,7 +42,7 @@ class standard_squelch(gr.hier_block2):
 
         self.sub = blocks.sub_ff();
         self.add = blocks.add_ff();
-        self.gate = gr.threshold_ff(0.3,0.43,0)
+        self.gate = blocks.threshold_ff(0.3,0.43,0)
         self.squelch_lpf = filter.single_pole_iir_filter_ff(1/(0.01*audio_rate))
 
         self.div = blocks.divide_ff()

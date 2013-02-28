@@ -26,6 +26,7 @@ import waterfall_window
 import common
 from gnuradio import gr, fft
 from gnuradio import analog
+from gnuradio import blocks
 from gnuradio.fft import logpwrfft
 from pubsub import pubsub
 from constants import *
@@ -150,7 +151,7 @@ class test_top_block(stdgui2.std_top_block):
 
         # We add these throttle blocks so that this demo doesn't
         # suck down all the CPU available.  Normally you wouldn't use these.
-        self.thr1 = gr.throttle(gr.sizeof_gr_complex, input_rate)
+        self.thr1 = blocks.throttle(gr.sizeof_gr_complex, input_rate)
 
         sink1 = waterfall_sink_c(panel, title="Complex Data", fft_size=fft_size,
 				 sample_rate=input_rate, baseband_freq=100e3)
@@ -159,7 +160,7 @@ class test_top_block(stdgui2.std_top_block):
 
         # generate a real sinusoid
         self.src2 = analog.sig_source_f(input_rate, analog.GR_SIN_WAVE, 5.75e3, 1000)
-        self.thr2 = gr.throttle(gr.sizeof_float, input_rate)
+        self.thr2 = blocks.throttle(gr.sizeof_float, input_rate)
         sink2 = waterfall_sink_f(panel, title="Real Data", fft_size=fft_size,
 				 sample_rate=input_rate, baseband_freq=100e3)
 	self.connect(self.src2, self.thr2, sink2)

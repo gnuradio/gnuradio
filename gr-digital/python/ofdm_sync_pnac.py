@@ -91,7 +91,7 @@ class ofdm_sync_pnac(gr.hier_block2):
         self.sample_and_hold = gr.sample_and_hold_ff()
 
         #ML measurements input to sampler block and detect
-        self.threshold = gr.threshold_ff(0,0,0)      # threshold detection might need to be tweaked
+        self.threshold = blocks.threshold_ff(0,0,0)      # threshold detection might need to be tweaked
         self.peaks = blocksx.float_to_char()
 
         self.connect(self, self.input)

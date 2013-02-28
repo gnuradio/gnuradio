@@ -21,6 +21,7 @@
 #
 
 from gnuradio import gr
+from gnuradio import blocks
 import sys
 
 try:
@@ -59,7 +60,7 @@ class my_top_block(gr.top_block):
         fs = 200
         src0 = gr.vector_source_b(data0, True)
         src1 = gr.vector_source_b(data1, True)
-        thr  = gr.throttle(gr.sizeof_char, 50000)
+        thr  = blocks.throttle(gr.sizeof_char, 50000)
         head = gr.head(gr.sizeof_char, 10000000)
         self.snk1 = qtgui.time_raster_sink_b(fs, nrows, ncols, [], [],
                                              "Time Raster Example", 2)

@@ -82,12 +82,12 @@ class my_top_block(gr.top_block):
             self.connect(self.source, self.resampler, self.rxpath)
 
         elif(options.from_file is not None):
-            self.thr = gr.throttle(gr.sizeof_gr_complex, options.bitrate)
+            self.thr = blocks.throttle(gr.sizeof_gr_complex, options.bitrate)
             self.source = gr.file_source(gr.sizeof_gr_complex, options.from_file)
             self.connect(self.source, self.thr, self.rxpath)
 
         else:
-            self.thr = gr.throttle(gr.sizeof_gr_complex, 1e6)
+            self.thr = blocks.throttle(gr.sizeof_gr_complex, 1e6)
             self.source = gr.null_source(gr.sizeof_gr_complex)
             self.connect(self.source, self.thr, self.rxpath)
 

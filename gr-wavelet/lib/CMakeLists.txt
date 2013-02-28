@@ -24,6 +24,7 @@ include_directories(
     ${CMAKE_CURRENT_SOURCE_DIR}
     ${CMAKE_CURRENT_BINARY_DIR}
     ${GR_WAVELET_INCLUDE_DIRS}
+    ${GR_BLOCKS_INCLUDE_DIRS}
     ${GNURADIO_CORE_INCLUDE_DIRS}
     ${GRUEL_INCLUDE_DIRS}
     ${Boost_INCLUDE_DIRS}
@@ -47,6 +48,7 @@ list(APPEND gr_wavelet_sources
 
 list(APPEND wavelet_libs
     gnuradio-core
+    gnuradio-blocks
     ${Boost_LIBRARIES}
     ${WAVELET_LIBRARIES}
     ${GSL_LIBRARIES}

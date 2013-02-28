@@ -22,6 +22,7 @@
 
 from gnuradio.filter import filter_design
 from gnuradio import gr, filter
+from gnuradio import blocks
 import sys
 
 try:
@@ -70,7 +71,7 @@ class my_top_block(gr.top_block):
         src  = blocks.add_cc()
         channel = channels.channel_model(0.01)
         self.filt = filter.fft_filter_ccc(1, self.filt_taps)
-        thr = gr.throttle(gr.sizeof_gr_complex, 100*npts)
+        thr = blocks.throttle(gr.sizeof_gr_complex, 100*npts)
         self.snk1 = qtgui.freq_sink_c(npts, filter.firdes.WIN_BLACKMAN_hARRIS,
                                       0, Rs,
                                       "Complex Freq Example", 1)

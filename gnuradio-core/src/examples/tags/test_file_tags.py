@@ -21,6 +21,7 @@
 #
 
 from gnuradio import gr
+from gnuradio import blocks
 import sys
 
 try:
@@ -36,7 +37,7 @@ def main():
     src = gr.vector_source_s(data, True)
     trigger = gr.vector_source_s(trig, True)
 
-    thr = gr.throttle(gr.sizeof_short, 10e3)
+    thr = blocks.throttle(gr.sizeof_short, 10e3)
     ann = gr.annotator_alltoall(1000000, gr.sizeof_short)
     tagger = gr.burst_tagger(gr.sizeof_short)
 

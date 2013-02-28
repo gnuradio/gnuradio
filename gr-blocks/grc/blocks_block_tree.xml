@@ -50,6 +50,7 @@
 		<block>blocks_integrate_xx</block>
 		<block>blocks_nlog10_ff</block>
                 <block>blocks_rms_xx</block>
+                <block>blocks_transcendental</block>
 	</cat>
 	<cat>
 		<name>Boolean Operations (New) </name>
@@ -84,8 +85,6 @@
 	<cat>
 	        <name>Stream Operations (New) </name>
                 <block>blocks_delay</block>
-                <block>blocks_packed_to_unpacked_xx</block>
-                <block>blocks_unpacked_to_packed_xx</block>
                 <block>blocks_deinterleave</block>
 		<block>blocks_interleave</block>
 		<block>blocks_keep_m_in_n</block>
@@ -99,5 +98,24 @@
 		<block>blocks_vector_to_stream</block>
 		<block>blocks_vector_to_streams</block>
 		<block>blocks_stream_to_vector_decimator</block>
+		<block>blocks_peak_detector2_fb</block>
+		<block>blocks_regenerate_bb</block>
+		<block>blocks_stretch_ff</block>
+                <block>blocks_threshold_ff</block>
+	</cat>
+	<cat>
+	        <name>Misc Conversions (New) </name>
+                <block>blocks_packed_to_unpacked_xx</block>
+                <block>blocks_unpacked_to_packed_xx</block>
+                <block>blocks_pack_k_bits_bb</block>
+                <block>blocks_unpack_k_bits_bb</block>
+        </cat>
+	<cat>
+	        <name>Misc (New) </name>
+                <block>blocks_throttle</block>
+	</cat>
+	<cat>
+	        <name>Networking</name>
+		<block>blocks_tuntap_pdu</block>
 	</cat>
 </cat>

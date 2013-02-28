@@ -1507,10 +1507,10 @@
     </param>
   </block>
   <block>
-    <key>gr_throttle</key>
+    <key>blocks_throttle</key>
     <param>
       <key>id</key>
-      <value>gr_throttle_0</value>
+      <value>blocks_throttle_0</value>
     </param>
     <param>
       <key>_enabled</key>
@@ -2152,7 +2152,7 @@
   </connection>
   <connection>
     <source_block_id>trellis_encoder_xx_0</source_block_id>
-    <sink_block_id>gr_throttle_0</sink_block_id>
+    <sink_block_id>blocks_throttle_0</sink_block_id>
     <source_key>0</source_key>
     <sink_key>0</sink_key>
   </connection>
@@ -2163,7 +2163,7 @@
     <sink_key>1</sink_key>
   </connection>
   <connection>
-    <source_block_id>gr_throttle_0</source_block_id>
+    <source_block_id>blocks_throttle_0</source_block_id>
     <sink_block_id>digital_chunks_to_symbols_xx_0</sink_block_id>
     <source_key>0</source_key>
     <sink_key>0</sink_key>

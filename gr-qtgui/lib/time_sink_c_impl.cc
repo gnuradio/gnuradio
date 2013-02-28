@@ -73,6 +73,9 @@ namespace gr {
 
     time_sink_c_impl::~time_sink_c_impl()
     {
+      if(!d_main_gui->isClosed())
+        d_main_gui->close();
+
       // d_main_gui is a qwidget destroyed with its parent
       for(int i = 0; i < d_nconnections; i++) {
 	fft::free(d_residbufs[i]);

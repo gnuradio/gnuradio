@@ -8,4 +8,3 @@ gnuradio.gr: Type Conversions
 .. autooldblock:: gnuradio.gr.complex_to_mag
 .. autooldblock:: gnuradio.gr.complex_to_mag_squared
 .. autooldblock:: gnuradio.gr.complex_to_arg
-.. autooldblock:: gnuradio.gr.unpack_k_bits_bb

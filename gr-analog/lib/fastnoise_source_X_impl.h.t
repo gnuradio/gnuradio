@@ -43,8 +43,8 @@ namespace gr {
       @IMPL_NAME@(noise_type_t type, float ampl, long seed, long samples);
       ~@IMPL_NAME@();
 
-      void set_type(noise_type_t type) { d_type = type; generate(); }
-      void set_amplitude(float ampl) { d_ampl = ampl; generate(); }
+      void set_type(noise_type_t type);
+      void set_amplitude(float ampl);
       void generate();
 
       noise_type_t type() const { return d_type; }

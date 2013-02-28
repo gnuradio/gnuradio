@@ -149,8 +149,8 @@ class test_app_flow_graph(stdgui2.std_top_block):
 
         # We add these throttle blocks so that this demo doesn't
         # suck down all the CPU available.  Normally you wouldn't use these.
-        thr1 = gr.throttle(gr.sizeof_float, input_rate)
-        thr2 = gr.throttle(gr.sizeof_gr_complex, input_rate)
+        thr1 = blocks.throttle(gr.sizeof_float, input_rate)
+        thr2 = blocks.throttle(gr.sizeof_gr_complex, input_rate)
 
         sink1 = number_sink_f(panel, unit='V',label="Real Data", avg_alpha=0.001,
 			      sample_rate=input_rate, minval=-1, maxval=1,

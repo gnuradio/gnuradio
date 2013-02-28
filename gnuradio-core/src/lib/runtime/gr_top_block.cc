@@ -138,13 +138,15 @@ gr_top_block::setup_rpc()
 	 "items", "Max number of output items",
 	 RPC_PRIVLVL_MIN, DISPNULL)));
 
-  add_rpc_variable(
-      rpcbasic_sptr(new rpcbasic_register_get<gr_top_block, std::string>(
-	 alias(), "edge list",
-	 &gr_top_block::edge_list,
-	 pmt::mp(""), pmt::mp(""), pmt::mp(""),
-	 "edges", "List of edges in the graph",
-	 RPC_PRIVLVL_MIN, DISPNULL)));
+  if(gr_prefs::singleton()->get_bool("ControlPort", "edges_list", false)) {
+    add_rpc_variable(
+        rpcbasic_sptr(new rpcbasic_register_get<gr_top_block, std::string>(
+	   alias(), "edge list",
+	   &gr_top_block::edge_list,
+           pmt::mp(""), pmt::mp(""), pmt::mp(""),
+           "edges", "List of edges in the graph",
+           RPC_PRIVLVL_MIN, DISPNULL)));
+  }
 
   // Setters
   add_rpc_variable(

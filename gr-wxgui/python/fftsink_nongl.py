@@ -613,7 +613,7 @@ class test_app_block (stdgui2.std_top_block):
 
         # We add these throttle blocks so that this demo doesn't
         # suck down all the CPU available.  Normally you wouldn't use these.
-        thr1 = gr.throttle(gr.sizeof_gr_complex, input_rate)
+        thr1 = blocks.throttle(gr.sizeof_gr_complex, input_rate)
 
         sink1 = fft_sink_c(panel, title="Complex Data", fft_size=fft_size,
                            sample_rate=input_rate, baseband_freq=100e3,
@@ -624,7 +624,7 @@ class test_app_block (stdgui2.std_top_block):
 
         #src2 = analog.sig_source_f(input_rate, analog.GR_SIN_WAVE, 100*2e3, 1)
         src2 = analog.sig_source_f(input_rate, analog.GR_CONST_WAVE, 100*5.75e3, 1)
-        thr2 = gr.throttle(gr.sizeof_float, input_rate)
+        thr2 = blocks.throttle(gr.sizeof_float, input_rate)
         sink2 = fft_sink_f(panel, title="Real Data", fft_size=fft_size*2,
                            sample_rate=input_rate, baseband_freq=100e3,
                            ref_level=0, y_per_div=20, y_divs=10)

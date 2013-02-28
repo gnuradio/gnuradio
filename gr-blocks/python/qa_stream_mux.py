@@ -22,10 +22,12 @@
 
 from gnuradio import gr, gr_unittest
 import blocks_swig
+import os
 
 class test_stream_mux (gr_unittest.TestCase):
 
     def setUp (self):
+        os.environ['GR_CONF_CONTROLPORT_ON'] = 'False'
         self.tb = gr.top_block ()
 
     def tearDown (self):

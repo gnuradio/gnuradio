@@ -6,6 +6,7 @@
 
 from gnuradio import eng_notation
 from gnuradio import gr
+from gnuradio import blocks
 from gnuradio.eng_option import eng_option
 from gnuradio.gr import firdes
 from optparse import OptionParser
@@ -25,7 +26,7 @@ class affinity_set(gr.top_block):
 	# Blocks
 	##################################################
         vec_len = 1
-	self.gr_throttle_0 = gr.throttle(gr.sizeof_gr_complex*vec_len, samp_rate)
+	self.blocks_throttle_0 = blocks.throttle(gr.sizeof_gr_complex*vec_len, samp_rate)
 	self.gr_null_source_0 = gr.null_source(gr.sizeof_gr_complex*vec_len)
 	self.gr_null_sink_0 = gr.null_sink(gr.sizeof_gr_complex*vec_len)
 	self.gr_filt_0 = gr.fir_filter_ccc(1, 40000*[0.2+0.3j,])
@@ -37,8 +38,8 @@ class affinity_set(gr.top_block):
 	##################################################
 	# Connections
 	##################################################
-	self.connect((self.gr_null_source_0, 0), (self.gr_throttle_0, 0))
-	self.connect((self.gr_throttle_0, 0), (self.gr_filt_0, 0))
+	self.connect((self.gr_null_source_0, 0), (self.blocks_throttle_0, 0))
+	self.connect((self.blocks_throttle_0, 0), (self.gr_filt_0, 0))
 	self.connect((self.gr_filt_0, 0), (self.gr_filt_1, 0))
 	self.connect((self.gr_filt_1, 0), (self.gr_null_sink_0, 0))
 

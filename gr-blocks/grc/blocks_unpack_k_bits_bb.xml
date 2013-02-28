@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<!--
+###################################################
+##Unpack K Bits
+###################################################
+ -->
+<block>
+	<name>Unpack K Bits</name>
+	<key>blocks_unpack_k_bits_bb</key>
+	<import>from gnuradio import blocks</import>
+	<make>blocks.unpack_k_bits_bb($k)</make>
+	<param>
+		<name>K</name>
+		<key>k</key>
+		<type>int</type>
+	</param>
+	<sink>
+		<name>in</name>
+		<type>byte</type>
+	</sink>
+	<source>
+		<name>out</name>
+		<type>byte</type>
+	</source>
+</block>

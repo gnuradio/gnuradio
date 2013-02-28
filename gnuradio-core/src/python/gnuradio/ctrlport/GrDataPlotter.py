@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2012 Free Software Foundation, Inc.
+# Copyright 2012,2013 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -21,6 +21,7 @@
 #
 
 from gnuradio import gr
+from gnuradio import blocks
 import sys, time
 
 try:
@@ -31,199 +32,243 @@ except ImportError:
     print "Error: Program requires PyQt4 and gr-qtgui."
     sys.exit(1)
 
-class GrDataPlotterC(gr.top_block):
-    def __init__(self, name, rate, pmin=None, pmax=None, stripchart=False):
-        gr.top_block.__init__(self)
+class GrDataPlotParent(gr.top_block, QtGui.QWidget):
+    # Setup signals
+    plotupdated = QtCore.pyqtSignal(QtGui.QWidget)
 
-        self._stripchart = stripchart
-        self._name = name
-        self._npts = 500
-        samp_rate = 1.0
-
-        self._last_data = self._npts*[0,]
-        self._data_len = 0
-
-        self.src = gr.vector_source_c([])
-        self.thr = gr.throttle(gr.sizeof_gr_complex, rate)
-        self.snk = qtgui.time_sink_c(self._npts, samp_rate,
-                                     self._name, 1)
-        self.snk.enable_autoscale(True)
-
-        self.connect(self.src, self.thr, (self.snk, 0))
-
-        self.snk.set_line_label(0, "Real")
-        self.snk.set_line_label(1, "Imag")
-
-        self.py_window = sip.wrapinstance(self.snk.pyqwidget(), QtGui.QWidget)
-
-    def __del__(self):
-        pass
-
-    def qwidget(self):
-        return self.py_window
-
-    def name(self):
-        return self._name
-
-    def semilogy(self, en=True):
-        self.snk.enable_semilogy(en)
-
-    def stem(self, en=True):
-        self.snk.enable_stem_plot(en)
-
-    def update(self, data):
-        # Ask GUI if there has been a change in nsamps
-        npts = self.snk.nsamps()
-        if(self._npts != npts):
-
-            # Adjust buffers to accomodate new settings
-            if(npts < self._npts):
-                if(self._data_len < npts):
-                    self._last_data = self._last_data[0:npts]
-                else:
-                    self._last_data = self._last_data[self._data_len-npts:self._data_len]
-                    self._data_len = npts
-            else:
-                self._last_data += (npts - self._npts)*[0,]
-            self._npts = npts
-            self.snk.reset()
-        
-        if(self._stripchart):
-            # Update the plot data depending on type
-            if(type(data) == list):
-                data_r = data[0::2]
-                data_i = data[1::2]
-                data = [complex(r,i) for r,i in zip(data_r, data_i)]
-                if(len(data) > self._npts):
-                    self.src.set_data(data)
-                    self._last_data = data[-self._npts:]
-                else:
-                    newdata = self._last_data[-(self._npts-len(data)):]
-                    newdata += data
-                    self.src.set_data(newdata)
-                    self._last_data = newdata
-
-            else: # single value update
-                if(self._data_len < self._npts):
-                    self._last_data[self._data_len] = data
-                    self._data_len += 1
-                else:
-                    self._last_data = self._last_data[1:]
-                    self._last_data.append(data)
-                self.src.set_data(self._last_data)
-        else:
-            if(type(data) != list):
-                data = [data,]
-            self.src.set_data(data)
-
-class GrDataPlotterF(gr.top_block):
-    def __init__(self, name, rate, pmin=None, pmax=None, stripchart=False):
-        gr.top_block.__init__(self)
-
-        self._stripchart = stripchart
-        self._name = name
-        self._npts = 500
-        samp_rate = 1.0
-
-        self._last_data = self._npts*[0,]
-        self._data_len = 0
-
-        self.src = gr.vector_source_f([])
-        self.thr = gr.throttle(gr.sizeof_float, rate)
-        self.snk = qtgui.time_sink_f(self._npts, samp_rate,
-                                     self._name, 1)
-        self.snk.enable_autoscale(True)
-
-        self.connect(self.src, self.thr, (self.snk, 0))
-
-        self.py_window = sip.wrapinstance(self.snk.pyqwidget(), QtGui.QWidget)
-
-    def __del__(self):
-        pass
-
-    def qwidget(self):
-        return self.py_window
-
-    def name(self):
-        return self._name
-
-    def semilogy(self, en=True):
-        self.snk.enable_semilogy(en)
-
-    def stem(self, en=True):
-        self.snk.enable_stem_plot(en)
-
-    def update(self, data):
-        # Ask GUI if there has been a change in nsamps
-        npts = self.snk.nsamps()
-        if(self._npts != npts):
-
-            # Adjust buffers to accomodate new settings
-            if(npts < self._npts):
-                if(self._data_len < npts):
-                    self._last_data = self._last_data[0:npts]
-                else:
-                    self._last_data = self._last_data[self._data_len-npts:self._data_len]
-                    self._data_len = npts
-            else:
-                self._last_data += (npts - self._npts)*[0,]
-            self._npts = npts
-            self.snk.reset()
-
-        if(self._stripchart):
-            # Update the plot data depending on type
-            if(type(data) == list):
-                if(len(data) > self._npts):
-                    self.src.set_data(data)
-                    self._last_data = data[-self._npts:]
-                else:
-                    newdata = self._last_data[-(self._npts-len(data)):]
-                    newdata += data
-                    self.src.set_data(newdata)
-                    self._last_data = newdata
-
-            else: # single value update
-                if(self._data_len < self._npts):
-                    self._last_data[self._data_len] = data
-                    self._data_len += 1
-                else:
-                    self._last_data = self._last_data[1:]
-                    self._last_data.append(data)
-                self.src.set_data(self._last_data)
-        else:
-            if(type(data) != list):
-                data = [data,]
-            self.src.set_data(data)
-            
-class GrDataPlotterConst(gr.top_block):
     def __init__(self, name, rate, pmin=None, pmax=None):
         gr.top_block.__init__(self)
+        QtGui.QWidget.__init__(self, None)
 
         self._name = name
         self._npts = 500
-        samp_rate = 1.0
+        self._rate = rate
+        self.knobnames = [name,]
 
-        self._last_data = self._npts*[0,]
-        self._data_len = 0
+        self.layout = QtGui.QVBoxLayout()
+        self.setLayout(self.layout)
 
-        self.src = gr.vector_source_c([])
-        self.thr = gr.throttle(gr.sizeof_gr_complex, rate)
-        self.snk = qtgui.const_sink_c(self._npts,
-                                      self._name, 1)
-        self.snk.enable_autoscale(True)
+        self.setAcceptDrops(True)
 
-        self.connect(self.src, self.thr, (self.snk, 0))
+    def _setup(self, nconnections):
+        self.stop()
+        self.wait()
+
+        if(self.layout.count() > 0):
+            # Remove and disconnect. Making sure no references to snk
+            # remain so that the plot gets deleted.
+            self.layout.removeWidget(self.py_window)
+            self.disconnect(self.thr, (self.snk, 0))
+            self.disconnect(self.src[0], self.thr)
+            for n in xrange(1, self._ncons):
+                self.disconnect(self.src[n], (self.snk,n))
+
+        self._ncons = nconnections
+        self._data_len = self._ncons*[0,]
+
+        self.thr = blocks.throttle(self._datasize, self._rate)
+        self.snk = self.get_qtsink()
+
+        self.connect(self.thr, (self.snk, 0))
+
+        self._last_data = []
+        self.src = []
+        for n in xrange(self._ncons):
+            self.set_line_label(n, self.knobnames[n])
+
+            self._last_data.append(int(self._npts)*[0,])
+            self.src.append(self.get_vecsource())
+
+            if(n == 0):
+                self.connect(self.src[n], self.thr)
+            else:
+                self.connect(self.src[n], (self.snk,n))
 
         self.py_window = sip.wrapinstance(self.snk.pyqwidget(), QtGui.QWidget)
 
+        self.layout.addWidget(self.py_window)
+
     def __del__(self):
         pass
+
+    def close(self):
+        self.snk.close()
 
     def qwidget(self):
         return self.py_window
 
     def name(self):
         return self._name
+
+    def semilogy(self, en=True):
+        self.snk.enable_semilogy(en)
+
+    def dragEnterEvent(self, e):
+        e.acceptProposedAction()
+
+    def dropEvent(self, e):
+        if(e.mimeData().hasFormat("text/plain")):
+            data = str(e.mimeData().text())
+
+            #"PlotData:{0}:{1}".format(tag, iscomplex)
+            datalst = data.split(":::")
+            tag = datalst[0]
+            name = datalst[1]
+            cpx = datalst[2] != "0"
+
+            if(tag == "PlotData" and cpx == self._iscomplex):
+                self.knobnames.append(name)
+
+                # create a new qwidget plot with the new data stream.
+                self._setup(len(self.knobnames))
+
+                # emit that this plot has been updated with a new qwidget.
+                self.plotupdated.emit(self)
+
+                e.acceptProposedAction()
+
+    def data_to_complex(self, data):
+        if(self._iscomplex):
+            data_r = data[0::2]
+            data_i = data[1::2]
+            data = [complex(r,i) for r,i in zip(data_r, data_i)]
+        return data
+
+    def update(self, data):
+        # Ask GUI if there has been a change in nsamps
+        npts = self.get_npts()
+        if(self._npts != npts):
+
+            # Adjust buffers to accomodate new settings
+            for n in xrange(self._ncons):
+                if(npts < self._npts):
+                    if(self._data_len[n] < npts):
+                        self._last_data[n] = self._last_data[n][0:npts]
+                    else:
+                        self._last_data[n] = self._last_data[n][self._data_len[n]-npts:self._data_len[n]]
+                        self._data_len[n] = npts
+                else:
+                    self._last_data[n] += (npts - self._npts)*[0,]
+            self._npts = npts
+            self.snk.reset()
+
+        if(self._stripchart):
+            # Update the plot data depending on type
+            for n in xrange(self._ncons):
+                if(type(data[n]) == list):
+                    data[n] = self.data_to_complex(data[n])
+                    if(len(data[n]) > self._npts):
+                        self.src[n].set_data(data[n])
+                        self._last_data[n] = data[n][-self._npts:]
+                    else:
+                        newdata = self._last_data[n][-(self._npts-len(data)):]
+                        newdata += data[n]
+                        self.src[n].set_data(newdata)
+                        self._last_data[n] = newdata
+
+                else: # single value update
+                    if(self._iscomplex):
+                        data[n] = complex(data[n][0], data[n][1])
+                    if(self._data_len[n] < self._npts):
+                        self._last_data[n][self._data_len[n]] = data[n]
+                        self._data_len[n] += 1
+                    else:
+                        self._last_data[n] = self._last_data[n][1:]
+                        self._last_data[n].append(data[n])
+                    self.src[n].set_data(self._last_data[n])
+        else:
+            for n in xrange(self._ncons):
+                if(type(data[n]) != list):
+                    data[n] = [data[n],]
+                data[n] = self.data_to_complex(data[n])
+                self.src[n].set_data(data[n])
+            
+
+
+class GrDataPlotterC(GrDataPlotParent):
+    def __init__(self, name, rate, pmin=None, pmax=None, stripchart=False):
+        GrDataPlotParent.__init__(self, name, rate, pmin, pmax)
+
+        self._stripchart = stripchart
+        self._datasize = gr.sizeof_gr_complex
+        self._iscomplex = True
+
+        self._setup(1)
+
+    def stem(self, en=True):
+        self.snk.enable_stem_plot(en)
+
+    def get_qtsink(self):
+        snk = qtgui.time_sink_c(self._npts, 1.0,
+                                self._name, self._ncons)
+        snk.enable_autoscale(True)
+        return snk
+
+    def get_vecsource(self):
+        return gr.vector_source_c([])
+
+    def get_npts(self):
+        self._npts = self.snk.nsamps()
+        return self._npts
+
+    def set_line_label(self, n, name):
+        self.snk.set_line_label(2*n+0, "Re{" + self.knobnames[n] + "}")
+        self.snk.set_line_label(2*n+1, "Im{" + self.knobnames[n] + "}")
+
+
+class GrDataPlotterF(GrDataPlotParent):
+    def __init__(self, name, rate, pmin=None, pmax=None, stripchart=False):
+        GrDataPlotParent.__init__(self, name, rate, pmin, pmax)
+
+        self._stripchart = stripchart
+        self._datasize = gr.sizeof_float
+        self._iscomplex = False
+
+        self._setup(1)
+
+    def stem(self, en=True):
+        self.snk.enable_stem_plot(en)
+
+    def get_qtsink(self):
+        snk = qtgui.time_sink_f(self._npts, 1.0,
+                                self._name, self._ncons)
+        snk.enable_autoscale(True)
+        return snk
+    
+    def get_vecsource(self):
+        return gr.vector_source_f([])
+
+    def get_npts(self):
+        self._npts = self.snk.nsamps()
+        return self._npts
+
+    def set_line_label(self, n, name):
+        self.snk.set_line_label(n, self.knobnames[n])
+            
+
+class GrDataPlotterConst(GrDataPlotParent):
+    def __init__(self, name, rate, pmin=None, pmax=None):
+        GrDataPlotParent.__init__(self, name, rate, pmin, pmax)
+
+        self._datasize = gr.sizeof_gr_complex
+        self._stripchart = False
+        self._iscomplex = True
+
+        self._setup(1)
+
+    def get_qtsink(self):
+        snk = qtgui.const_sink_c(self._npts,
+                                 self._name,
+                                 self._ncons)
+        snk.enable_autoscale(True)
+        return snk
+
+    def get_vecsource(self):
+        return gr.vector_source_c([])
+
+    def get_npts(self):
+        self._npts = self.snk.nsamps()
+        return self._npts
 
     def scatter(self, en=True):
         if(en):
@@ -231,327 +276,133 @@ class GrDataPlotterConst(gr.top_block):
         else:
             self.snk.set_line_style(0, 1)
 
-    def update(self, data):
-        # Ask GUI if there has been a change in nsamps
-        npts = self.snk.nsamps()
-        if(self._npts != npts):
-
-            # Adjust buffers to accomodate new settings
-            if(npts < self._npts):
-                if(self._data_len < npts):
-                    self._last_data = self._last_data[0:npts]
-                else:
-                    self._last_data = self._last_data[self._data_len-npts:self._data_len]
-                    self._data_len = npts
-            else:
-                self._last_data += (npts - self._npts)*[0,]
-            self._npts = npts
-            self.snk.reset()
-        
-        # Update the plot data depending on type
-        if(type(data) == list):
-            data_r = data[0::2]
-            data_i = data[1::2]
-            data = [complex(r,i) for r,i in zip(data_r, data_i)]
-            if(len(data) > self._npts):
-                self.src.set_data(data)
-                self._last_data = data[-self._npts:]
-            else:
-                newdata = self._last_data[-(self._npts-len(data)):]
-                newdata += data
-                self.src.set_data(newdata)
-                self._last_data = newdata
-
-        else: # single value update
-            if(self._data_len < self._npts):
-                self._last_data[self._data_len] = data
-                self._data_len += 1
-            else:
-                self._last_data = self._last_data[1:]
-                self._last_data.append(data)
-            self.src.set_data(self._last_data)
+    def set_line_label(self, n, name):
+        self.snk.set_line_label(n, self.knobnames[n])
 
 
-class GrDataPlotterPsdC(gr.top_block):
+class GrDataPlotterPsdC(GrDataPlotParent):
     def __init__(self, name, rate, pmin=None, pmax=None):
-        gr.top_block.__init__(self)
+        GrDataPlotParent.__init__(self, name, rate, pmin, pmax)
 
-        self._name = name
-        self._samp_rate = 1.0
-        self._fftsize = 2048
+        self._datasize = gr.sizeof_gr_complex
+        self._stripchart = True
+        self._iscomplex = True
+
+        self._npts = 2048
         self._wintype = gr.firdes.WIN_BLACKMAN_hARRIS
         self._fc = 0
-        
-        self._last_data = self._fftsize*[0,]
-        self._data_len = 0
 
-        self.src = gr.vector_source_c([])
-        self.thr = gr.throttle(gr.sizeof_gr_complex, rate)
-        self.snk = qtgui.freq_sink_c(self._fftsize, self._wintype,
-                                     self._fc, self._samp_rate,
-                                     self._name, 1)
-        self.snk.enable_autoscale(True)
+        self._setup(1)
 
-        self.connect(self.src, self.thr, (self.snk, 0))
+    def get_qtsink(self):
+        snk = qtgui.freq_sink_c(self._npts, self._wintype,
+                                self._fc, 1.0,
+                                self._name,
+                                self._ncons)
+        snk.enable_autoscale(True)
+        return snk
 
-        self.py_window = sip.wrapinstance(self.snk.pyqwidget(), QtGui.QWidget)
+    def get_vecsource(self):
+        return gr.vector_source_c([])
 
-    def __del__(self):
-        pass
+    def get_npts(self):
+        self._npts = self.snk.fft_size()
+        return self._npts
 
-    def qwidget(self):
-        return self.py_window
+    def set_line_label(self, n, name):
+        self.snk.set_line_label(n, self.knobnames[n])
 
-    def name(self):
-        return self._name
 
-    def update(self, data):
-        # Ask GUI if there has been a change in nsamps
-        fftsize = self.snk.fft_size()
-        if(self._fftsize != fftsize):
-
-            # Adjust buffers to accomodate new settings
-            if(fftsize < self._fftsize):
-                if(self._data_len < fftsize):
-                    self._last_data = self._last_data[0:fftsize]
-                else:
-                    self._last_data = self._last_data[self._data_len-fftsize:self._data_len]
-                    self._data_len = fftsize
-            else:
-                self._last_data += (fftsize - self._fftsize)*[0,]
-            self._fftsize = fftsize
-            self.snk.reset()
-        
-        # Update the plot data depending on type
-        if(type(data) == list):
-            data_r = data[0::2]
-            data_i = data[1::2]
-            data = [complex(r,i) for r,i in zip(data_r, data_i)]
-            if(len(data) > self._fftsize):
-                self.src.set_data(data)
-                self._last_data = data[-self._fftsize:]
-            else:
-                newdata = self._last_data[-(self._fftsize-len(data)):]
-                newdata += data
-                self.src.set_data(newdata)
-                self._last_data = newdata
-
-        else: # single value update
-            if(self._data_len < self._fftsize):
-                self._last_data[self._data_len] = data
-                self._data_len += 1
-            else:
-                self._last_data = self._last_data[1:]
-                self._last_data.append(data)
-            self.src.set_data(self._last_data)
-
-class GrDataPlotterPsdF(gr.top_block):
+class GrDataPlotterPsdF(GrDataPlotParent):
     def __init__(self, name, rate, pmin=None, pmax=None):
-        gr.top_block.__init__(self)
+        GrDataPlotParent.__init__(self, name, rate, pmin, pmax)
 
-        self._name = name
-        self._samp_rate = 1.0
-        self._fftsize = 2048
+        self._datasize = gr.sizeof_float
+        self._stripchart = True
+        self._iscomplex = False
+
+        self._npts = 2048
         self._wintype = gr.firdes.WIN_BLACKMAN_hARRIS
         self._fc = 0
-        
-        self._last_data = self._fftsize*[0,]
-        self._data_len = 0
 
-        self.src = gr.vector_source_f([])
-        self.thr = gr.throttle(gr.sizeof_float, rate)
-        self.snk = qtgui.freq_sink_f(self._fftsize, self._wintype,
-                                     self._fc, self._samp_rate,
-                                     self._name, 1)
-        self.snk.enable_autoscale(True)
+        self._setup(1)
 
-        self.connect(self.src, self.thr, (self.snk, 0))
+    def get_qtsink(self):
+        snk = qtgui.freq_sink_f(self._npts, self._wintype,
+                                self._fc, 1.0,
+                                self._name,
+                                self._ncons)
+        snk.enable_autoscale(True)
+        return snk
 
-        self.py_window = sip.wrapinstance(self.snk.pyqwidget(), QtGui.QWidget)
+    def get_vecsource(self):
+        return gr.vector_source_f([])
 
-    def __del__(self):
-        pass
+    def get_npts(self):
+        self._npts = self.snk.fft_size()
+        return self._npts
 
-    def qwidget(self):
-        return self.py_window
-
-    def name(self):
-        return self._name
-
-    def update(self, data):
-        # Ask GUI if there has been a change in nsamps
-        fftsize = self.snk.fft_size()
-        if(self._fftsize != fftsize):
-
-            # Adjust buffers to accomodate new settings
-            if(fftsize < self._fftsize):
-                if(self._data_len < fftsize):
-                    self._last_data = self._last_data[0:fftsize]
-                else:
-                    self._last_data = self._last_data[self._data_len-fftsize:self._data_len]
-                    self._data_len = fftsize
-            else:
-                self._last_data += (fftsize - self._fftsize)*[0,]
-            self._fftsize = fftsize
-            self.snk.reset()
-        
-        # Update the plot data depending on type
-        if(type(data) == list):
-            data_r = data[0::2]
-            data_i = data[1::2]
-            data = [complex(r,i) for r,i in zip(data_r, data_i)]
-            if(len(data) > self._fftsize):
-                self.src.set_data(data)
-                self._last_data = data[-self._fftsize:]
-            else:
-                newdata = self._last_data[-(self._fftsize-len(data)):]
-                newdata += data
-                self.src.set_data(newdata)
-                self._last_data = newdata
-
-        else: # single value update
-            if(self._data_len < self._fftsize):
-                self._last_data[self._data_len] = data
-                self._data_len += 1
-            else:
-                self._last_data = self._last_data[1:]
-                self._last_data.append(data)
-            self.src.set_data(self._last_data)
+    def set_line_label(self, n, name):
+        self.snk.set_line_label(n, self.knobnames[n])
 
 
-class GrTimeRasterF(gr.top_block):
+class GrTimeRasterF(GrDataPlotParent):
     def __init__(self, name, rate, pmin=None, pmax=None):
-        gr.top_block.__init__(self)
+        GrDataPlotParent.__init__(self, name, rate, pmin, pmax)
 
-        self._name = name
-        self._npts = 100
-        self._rows = 100
-        samp_rate = 1.0
+        self._npts = 10
+        self._rows = 40
 
-        self._last_data = self._npts*[0,]
-        self._data_len = 0
+        self._datasize = gr.sizeof_float
+        self._stripchart = False
+        self._iscomplex = False
 
-        self.src = gr.vector_source_f([])
-        self.thr = gr.throttle(gr.sizeof_float, rate)
-        self.snk = qtgui.time_raster_sink_f(samp_rate, self._npts, self._rows,
-                                            [], [], self._name, 1)
+        self._setup(1)
 
-        self.connect(self.src, self.thr, (self.snk, 0))
+    def get_qtsink(self):
+        snk = qtgui.time_raster_sink_f(1.0, self._npts, self._rows,
+                                       [], [], self._name,
+                                       self._ncons)
+        return snk
 
-        self.py_window = sip.wrapinstance(self.snk.pyqwidget(), QtGui.QWidget)
+    def get_vecsource(self):
+        return gr.vector_source_f([])
 
-    def __del__(self):
-        pass
+    def get_npts(self):
+        self._npts = self.snk.num_cols()
+        return self._npts
 
-    def qwidget(self):
-        return self.py_window
+    def set_line_label(self, n, name):
+        self.snk.set_line_label(n, self.knobnames[n])
 
-    def name(self):
-        return self._name
-
-    def update(self, data):
-        # Ask GUI if there has been a change in nsamps
-        npts = int(self.snk.num_cols())
-        if(self._npts != npts):
-
-            # Adjust buffers to accomodate new settings
-            if(npts < self._npts):
-                if(self._data_len < npts):
-                    self._last_data = self._last_data[0:npts]
-                else:
-                    self._last_data = self._last_data[self._data_len-npts:self._data_len]
-                    self._data_len = npts
-            else:
-                self._last_data += (npts - self._npts)*[0,]
-            self._npts = npts
-            self.snk.reset()
-        
-        # Update the plot data depending on type
-        if(type(data) == list):
-            if(len(data) > self._npts):
-                self.src.set_data(data)
-                self._last_data = data[-self._npts:]
-            else:
-                newdata = self._last_data[-(self._npts-len(data)):]
-                newdata += data
-                self.src.set_data(newdata)
-                self._last_data = newdata
-
-        else: # single value update
-            if(self._data_len < self._npts):
-                self._last_data[self._data_len] = data
-                self._data_len += 1
-            else:
-                self._last_data = self._last_data[1:]
-                self._last_data.append(data)
-            self.src.set_data(self._last_data)
-
-class GrTimeRasterB(gr.top_block):
+class GrTimeRasterB(GrDataPlotParent):
     def __init__(self, name, rate, pmin=None, pmax=None):
-        gr.top_block.__init__(self)
+        GrDataPlotParent.__init__(self, name, rate, pmin, pmax)
 
-        self._name = name
-        self._npts = 100
-        self._rows = 100
-        samp_rate = 1.0
+        self._npts = 10
+        self._rows = 40
 
-        self._last_data = self._npts*[0,]
-        self._data_len = 0
+        self._datasize = gr.sizeof_char
+        self._stripchart = False
+        self._iscomplex = False
 
-        self.src = gr.vector_source_b([])
-        self.thr = gr.throttle(gr.sizeof_char, rate)
-        self.snk = qtgui.time_raster_sink_b(samp_rate, self._npts, self._rows,
-                                            [], [], self._name, 1)
+        self._setup(1)
 
-        self.connect(self.src, self.thr, (self.snk, 0))
+    def get_qtsink(self):
+        snk = qtgui.time_raster_sink_b(1.0, self._npts, self._rows,
+                                       [], [], self._name,
+                                       self._ncons)
+        return snk
 
-        self.py_window = sip.wrapinstance(self.snk.pyqwidget(), QtGui.QWidget)
+    def get_vecsource(self):
+        return gr.vector_source_b([])
 
-    def __del__(self):
-        pass
+    def get_npts(self):
+        self._npts = self.snk.num_cols()
+        return self._npts
 
-    def qwidget(self):
-        return self.py_window
-
-    def name(self):
-        return self._name
-
-    def update(self, data):
-        # Ask GUI if there has been a change in nsamps
-        npts = self.snk.num_cols()
-        if(self._npts != npts):
-
-            # Adjust buffers to accomodate new settings
-            if(npts < self._npts):
-                if(self._data_len < npts):
-                    self._last_data = self._last_data[0:npts]
-                else:
-                    self._last_data = self._last_data[self._data_len-npts:self._data_len]
-                    self._data_len = npts
-            else:
-                self._last_data += (npts - self._npts)*[0,]
-            self._npts = npts
-            self.snk.reset()
-        
-        # Update the plot data depending on type
-        if(type(data) == list):
-            if(len(data) > self._npts):
-                self.src.set_data(data)
-                self._last_data = data[-self._npts:]
-            else:
-                newdata = self._last_data[-(self._npts-len(data)):]
-                newdata += data
-                self.src.set_data(newdata)
-                self._last_data = newdata
-
-        else: # single value update
-            if(self._data_len < self._npts):
-                self._last_data[self._data_len] = data
-                self._data_len += 1
-            else:
-                self._last_data = self._last_data[1:]
-                self._last_data.append(data)
-            self.src.set_data(self._last_data)
+    def set_line_label(self, n, name):
+        self.snk.set_line_label(n, self.knobnames[n])
 
 
 class GrDataPlotterValueTable:

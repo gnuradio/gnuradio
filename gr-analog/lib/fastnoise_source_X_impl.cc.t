@@ -57,6 +57,22 @@ namespace gr {
     }
 
     void
+    @IMPL_NAME@::set_type(noise_type_t type)
+    {
+      gruel::scoped_lock l(d_setlock);
+      d_type = type;
+      generate();
+    }
+    
+    void
+    @IMPL_NAME@::set_amplitude(float ampl) 
+    {
+      gruel::scoped_lock l(d_setlock);
+      d_ampl = ampl;
+      generate();
+    }
+
+    void
     @IMPL_NAME@::generate()
     {
       int noutput_items = d_samples.size();
@@ -107,6 +123,8 @@ namespace gr {
 		      gr_vector_const_void_star &input_items,
 		      gr_vector_void_star &output_items)
     {
+      gruel::scoped_lock l(d_setlock);
+
       @TYPE@ *out = (@TYPE@*)output_items[0];
 
       for(int i=0; i<noutput_items; i++) {
