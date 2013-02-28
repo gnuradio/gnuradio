@@ -33,6 +33,7 @@
 		<block>blocks_file_source</block>
 		<block>blocks_file_meta_source</block>
 		<block>blocks_pdu_to_tagged_stream</block>
+		<block>blocks_random_pdu</block>
 	</cat>
 	<cat>
 	        <name>Sinks (New)</name>

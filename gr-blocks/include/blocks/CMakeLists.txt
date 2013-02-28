@@ -130,6 +130,7 @@ install(FILES
     pdu.h
     pdu_to_tagged_stream.h
     peak_detector2_fb.h
+    random_pdu.h
     regenerate_bb.h
     repeat.h
     rms_cf.h

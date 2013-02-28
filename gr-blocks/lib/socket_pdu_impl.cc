@@ -27,7 +27,7 @@
 #include "socket_pdu_impl.h"
 #include "tcp_connection.h"
 #include <gr_io_signature.h>
-#include <gr_pdu.h>
+#include <blocks/pdu.h>
 
 namespace gr {
   namespace blocks {

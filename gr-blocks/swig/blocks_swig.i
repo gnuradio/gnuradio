@@ -109,6 +109,7 @@
 #include "blocks/or_bb.h"
 #include "blocks/or_ss.h"
 #include "blocks/or_ii.h"
+#include "blocks/random_pdu.h"
 #include "blocks/regenerate_bb.h"
 #include "blocks/repeat.h"
 #include "blocks/rms_cf.h"
@@ -221,6 +222,7 @@
 %include "blocks/patterned_interleaver.h"
 %include "blocks/pdu_to_tagged_stream.h"
 %include "blocks/peak_detector2_fb.h"
+%include "blocks/random_pdu.h"
 %include "blocks/regenerate_bb.h"
 %include "blocks/repeat.h"
 %include "blocks/rms_cf.h"
@@ -332,6 +334,7 @@ GR_SWIG_BLOCK_MAGIC2(blocks, pdu_to_tagged_stream);
 GR_SWIG_BLOCK_MAGIC2(blocks, or_bb);
 GR_SWIG_BLOCK_MAGIC2(blocks, or_ss);
 GR_SWIG_BLOCK_MAGIC2(blocks, or_ii);
+GR_SWIG_BLOCK_MAGIC2(blocks, random_pdu);
 GR_SWIG_BLOCK_MAGIC2(blocks, regenerate_bb);
 GR_SWIG_BLOCK_MAGIC2(blocks, repeat);
 GR_SWIG_BLOCK_MAGIC2(blocks, rms_cf);

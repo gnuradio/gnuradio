@@ -26,9 +26,7 @@
 
 #include "tcp_connection.h"
 #include <gr_basic_block.h>
-#include <gr_pdu.h>
-//#include <boost/asio.hpp>
-//#include <boost/bind.hpp>
+#include <blocks/pdu.h>
 
 namespace gr {
   namespace blocks {
