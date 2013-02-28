@@ -128,6 +128,7 @@ install(FILES
     pack_k_bits_bb.h
     patterned_interleaver.h
     pdu.h
+    pdu_to_tagged_stream.h
     peak_detector2_fb.h
     regenerate_bb.h
     repeat.h
