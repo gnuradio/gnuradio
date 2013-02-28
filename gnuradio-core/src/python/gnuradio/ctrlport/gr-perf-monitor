@@ -355,9 +355,6 @@ def build_edge_graph(sources, sinks, edges):
     allblocks = list(k for k,_ in itertools.groupby(allblocks))
     allblocks.reverse()
 
-    for a in allblocks:
-        print a
-    print "\n\n"
     return allblocks
 
 
@@ -452,6 +449,7 @@ class MForm(QtGui.QWidget):
 
         tmplist = []
         knobs = self.radio.get([])
+        edgelist = None
         for k in knobs:
             propname = k.split("::")
             blockname = propname[0]
@@ -462,6 +460,12 @@ class MForm(QtGui.QWidget):
                 # only take gr_blocks (no hier_block2)
                 if(knobs.has_key(input_name(blockname))):
                     tmplist.append(blockname)
+
+        if not edgelist:
+            sys.stderr.write("Could not find list of edges from flowgraph. " + \
+                                 "Make sure the option 'edges_list' is enabled " + \
+                                 "in the ControlPort configuration.\n\n")
+            sys.exit(1)
 
         edges = edgelist.split("\n")[0:-1]
         producers = []
@@ -494,7 +498,6 @@ class MForm(QtGui.QWidget):
 
         for row, blockrow in enumerate(allblocks):
             for col, block in enumerate(blockrow):
-                print "row: {0}  col: {1}  block: {2}".format(row, col, block)
                 if(block == ''):
                     continue
                 
