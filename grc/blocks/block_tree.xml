@@ -40,12 +40,8 @@
     </cat>
 	<cat>
 		<name>Operators</name>
-		<block>gr_max_xx</block>
-		<block>gr_argmax_xx</block>
-
 		<block>gr_vector_insert_x</block>
-
-        <block>gr_endian_swap</block>
+                <block>gr_endian_swap</block>
 	</cat>
 	<cat>
 		<name>Type Conversions</name>

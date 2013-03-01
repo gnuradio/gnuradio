@@ -47,8 +47,6 @@ reg_roots = [
 # other blocks
 others = (
     ('gr_sample_and_hold_XX',       ('bb','ss','ii','ff')),
-    ('gr_argmax_XX',                ('fs','is','ss')),
-    ('gr_max_XX',                   ('ff','ii','ss')),
     ('gr_peak_detector_XX',         ('fb','ib','sb')),
     )
 

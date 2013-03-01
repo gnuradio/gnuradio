@@ -91,8 +91,6 @@ expand_h_cc_i(gr_mute_XX                ss ii ff cc)
 expand_h_cc_i(gr_moving_average_XX      ss ii ff cc)
 
 expand_h_cc_i(gr_sample_and_hold_XX           bb ss ii ff)
-expand_h_cc_i(gr_argmax_XX                    fs is ss)
-expand_h_cc_i(gr_max_XX                       ff ii ss)
 expand_h_cc_i(gr_peak_detector_XX             fb ib sb)
 
 add_custom_target(gengen_generated DEPENDS
