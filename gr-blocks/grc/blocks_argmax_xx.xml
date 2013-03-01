@@ -7,9 +7,9 @@
  -->
 <block>
 	<name>Argmax</name>
-	<key>gr_argmax_xx</key>
-	<import>from gnuradio import gr</import>
-	<make>gr.argmax_$(type.fcn)($vlen)</make>
+	<key>blocks_argmax_xx</key>
+	<import>from gnuradio import blocks</import>
+	<make>blocks.argmax_$(type.fcn)($vlen)</make>
 	<param>
 		<name>IO Type</name>
 		<key>type</key>

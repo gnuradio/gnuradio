@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2007,2010 Free Software Foundation, Inc.
+# Copyright 2007,2010,2013 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -24,27 +24,22 @@ from gnuradio import gr, gr_unittest
 import blocks_swig as blocks
 import math
 
+class test_max(gr_unittest.TestCase):
 
-class test_max (gr_unittest.TestCase):
+    def setUp(self):
+        self.tb = gr.top_block()
 
-    def setUp (self):
-        self.tb = gr.top_block ()
-
-
-    def tearDown (self):
+    def tearDown(self):
         self.tb = None
 
-
     def test_001(self):
-
         src_data = (0,0.2,-0.3,0,12,0)
-        expected_result = (float(max(src_data)), )
+        expected_result = (float(max(src_data)),)
 
         src = gr.vector_source_f(src_data)
         s2v = blocks.stream_to_vector(gr.sizeof_float, len(src_data))
-        op = gr.max_ff( len(src_data) )
+        op = blocks.max_ff(len(src_data))
         dst = gr.vector_sink_f()
-
 
         self.tb.connect(src, s2v, op, dst)
         self.tb.run()
@@ -52,13 +47,12 @@ class test_max (gr_unittest.TestCase):
         self.assertEqual(expected_result, result_data)
 
     def test_002(self):
-
 	src_data=(-100,-99,-98,-97,-96,-1)
-	expected_result = (float(max(src_data)), )
+	expected_result = (float(max(src_data)),)
 
 	src = gr.vector_source_f(src_data)
 	s2v = blocks.stream_to_vector(gr.sizeof_float, len(src_data))
-	op = gr.max_ff( len(src_data) )
+	op = blocks.max_ff(len(src_data))
 	dst = gr.vector_sink_f()
 
 	self.tb.connect(src, s2v, op, dst)

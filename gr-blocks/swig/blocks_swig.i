@@ -49,6 +49,9 @@
 #include "blocks/and_const_bb.h"
 #include "blocks/and_const_ss.h"
 #include "blocks/and_const_ii.h"
+#include "blocks/argmax_fs.h"
+#include "blocks/argmax_is.h"
+#include "blocks/argmax_ss.h"
 #include "blocks/char_to_float.h"
 #include "blocks/char_to_short.h"
 #include "blocks/complex_to_interleaved_short.h"
@@ -82,6 +85,9 @@
 #include "blocks/interleaved_short_to_complex.h"
 #include "blocks/keep_m_in_n.h"
 #include "blocks/keep_one_in_n.h"
+#include "blocks/max_ff.h"
+#include "blocks/max_ii.h"
+#include "blocks/max_ss.h"
 #include "blocks/multiply_ss.h"
 #include "blocks/multiply_ii.h"
 #include "blocks/multiply_ff.h"
@@ -162,6 +168,9 @@
 %include "blocks/and_const_bb.h"
 %include "blocks/and_const_ss.h"
 %include "blocks/and_const_ii.h"
+%include "blocks/argmax_fs.h"
+%include "blocks/argmax_is.h"
+%include "blocks/argmax_ss.h"
 %include "blocks/char_to_float.h"
 %include "blocks/char_to_short.h"
 %include "blocks/complex_to_interleaved_short.h"
@@ -195,6 +204,9 @@
 %include "blocks/interleaved_short_to_complex.h"
 %include "blocks/keep_m_in_n.h"
 %include "blocks/keep_one_in_n.h"
+%include "blocks/max_ff.h"
+%include "blocks/max_ii.h"
+%include "blocks/max_ss.h"
 %include "blocks/multiply_ss.h"
 %include "blocks/multiply_ii.h"
 %include "blocks/multiply_ff.h"
@@ -274,6 +286,9 @@ GR_SWIG_BLOCK_MAGIC2(blocks, and_ii);
 GR_SWIG_BLOCK_MAGIC2(blocks, and_const_bb);
 GR_SWIG_BLOCK_MAGIC2(blocks, and_const_ss);
 GR_SWIG_BLOCK_MAGIC2(blocks, and_const_ii);
+GR_SWIG_BLOCK_MAGIC2(blocks, argmax_fs);
+GR_SWIG_BLOCK_MAGIC2(blocks, argmax_is);
+GR_SWIG_BLOCK_MAGIC2(blocks, argmax_ss);
 GR_SWIG_BLOCK_MAGIC2(blocks, char_to_float);
 GR_SWIG_BLOCK_MAGIC2(blocks, char_to_short);
 GR_SWIG_BLOCK_MAGIC2(blocks, complex_to_interleaved_short);
@@ -307,6 +322,9 @@ GR_SWIG_BLOCK_MAGIC2(blocks, interleave);
 GR_SWIG_BLOCK_MAGIC2(blocks, interleaved_short_to_complex);
 GR_SWIG_BLOCK_MAGIC2(blocks, keep_m_in_n);
 GR_SWIG_BLOCK_MAGIC2(blocks, keep_one_in_n);
+GR_SWIG_BLOCK_MAGIC2(blocks, max_ff);
+GR_SWIG_BLOCK_MAGIC2(blocks, max_ii);
+GR_SWIG_BLOCK_MAGIC2(blocks, max_ss);
 GR_SWIG_BLOCK_MAGIC2(blocks, multiply_ss);
 GR_SWIG_BLOCK_MAGIC2(blocks, multiply_ii);
 GR_SWIG_BLOCK_MAGIC2(blocks, multiply_ff);

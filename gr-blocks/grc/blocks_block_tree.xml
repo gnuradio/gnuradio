@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 
 <!--
- Copyright 2012 Free Software Foundation, Inc.
+ Copyright 2012,2013 Free Software Foundation, Inc.
  
  This file is part of GNU Radio
  
@@ -54,6 +54,8 @@
 		<block>blocks_nlog10_ff</block>
                 <block>blocks_rms_xx</block>
                 <block>blocks_transcendental</block>
+                <block>blocks_argmax_xx</block>
+                <block>blocks_max_xx</block>
 	</cat>
 	<cat>
 		<name>Boolean Operations (New) </name>

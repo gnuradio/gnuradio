@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2007 Free Software Foundation, Inc.
+ * Copyright 2007,2013 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -22,13 +22,29 @@
 
 // @WARNING@
 
-GR_SWIG_BLOCK_MAGIC(gr,@BASE_NAME@)
+#ifndef @GUARD_NAME_IMPL@
+#define @GUARD_NAME_IMPL@
 
-@SPTR_NAME@ gr_make_@BASE_NAME@ (size_t vlen);
+#include <blocks/@NAME@.h>
 
-class @NAME@ : public gr_sync_block
-{
- private:
-  @NAME@ (size_t vlen);
-  size_t d_vlen;
-};
+namespace gr {
+  namespace blocks {
+
+    class @NAME_IMPL@ : public @NAME@
+    {
+    private:
+      size_t d_vlen;
+
+    public:
+      @NAME_IMPL@(size_t vlen);
+      ~@NAME_IMPL@();
+
+      int work(int noutput_items,
+               gr_vector_const_void_star &input_items,
+               gr_vector_void_star &output_items);
+    };
+
+  } /* namespace blocks */
+} /* namespace gr */
+
+#endif /* @GUARD_NAME_IMPL@ */
