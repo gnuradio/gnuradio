@@ -94,7 +94,7 @@ class volk_modtool:
     
         dest = os.path.join(self.my_dict['destination'], 'volk_' + self.my_dict['name'])
         if os.path.exists(dest):
-            shutil.rmtree(dest)
+            raise exceptions.IOError("Destination %s already exits!"%(dest));
 
         if not os.path.exists(os.path.join(self.my_dict['destination'], 'volk_' + self.my_dict['name'], 'kernels/volk_' + self.my_dict['name'])):
             os.makedirs(os.path.join(self.my_dict['destination'], 'volk_' + self.my_dict['name'], 'kernels/volk_' + self.my_dict['name']))

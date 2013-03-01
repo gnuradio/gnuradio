@@ -28,21 +28,41 @@ import re
 
 
 class volk_modtool_config:
+    def key_val_sub(self, num, stuff, section):
+        return re.sub('\$' + 'k' + str(num), stuff[num][0], (re.sub('\$' + str(num), stuff[num][1], section[1][num])));
+
     def verify(self):
         for i in self.verification:
             self.verify_section(i)
-            
+    def remap(self):
+        for i in self.remapification:
+            self.verify_section(i)
+                    
     def verify_section(self, section):
         stuff = self.cfg.items(section[0])
         for i in range(len(section[1])):
-            if not eval(re.sub('\$' + str(i), stuff[i][1], section[1][i])):
+            eval(self.key_val_sub(i, stuff, section))
+            try:
+               val = eval(self.key_val_sub(i, stuff, section))
+               if val == False:
+                   raise exceptions.ValueError
+            except ValueError:
+                raise exceptions.ValueError('Verification function returns False... key:%s, val:%s'%(stuff[i][0], stuff[i][1]))
+            except:
                 raise exceptions.IOError('bad configuration... key:%s, val:%s'%(stuff[i][0], stuff[i][1]))
+           
 
     def __init__(self, cfg=None):
         self.config_name = 'config'
         self.config_defaults = ['name', 'destination', 'base']
+        self.config_defaults_remap = ['1',
+                                      'self.cfg.set(self.config_name, \'$k1\', os.path.realpath(os.path.expanduser(\'$1\')))', 
+                                      'self.cfg.set(self.config_name, \'$k2\', os.path.realpath(os.path.expanduser(\'$2\')))'] 
+                                      
         self.config_defaults_verify = ['re.match(\'[a-zA-Z0-9]+$\', \'$0\')',
-                                       'os.path.exists(\'$1\')', 'os.path.exists(\'$2\')']
+                                       'os.path.exists(\'$1\')', 
+                                       'os.path.exists(\'$2\')']
+        self.remapification = [(self.config_name, self.config_defaults_remap)]
         self.verification = [(self.config_name, self.config_defaults_verify)]
         default = os.path.join(os.getcwd(), 'volk_modtool.cfg')
         icfg = ConfigParser.RawConfigParser()
@@ -57,7 +77,9 @@ class volk_modtool_config:
                 rv = raw_input("%s: "%(kn))
                 icfg.set(self.config_name, kn, rv)
         self.cfg = icfg
+        self.remap()
         self.verify()
+        
             
 
     def read_map(self, name, inp):

@@ -25,6 +25,7 @@ from optparse import OptionParser, OptionGroup
 
 import exceptions
 import os
+import sys
 
 if __name__ == '__main__':
     parser = OptionParser();
@@ -54,8 +55,10 @@ if __name__ == '__main__':
     parser.add_option_group(actions)
 
     (options, args) = parser.parse_args();
+    if len(sys.argv) < 2:
+        parser.print_help()
     
-    if options.moo:
+    elif options.moo:
         print "         (__)    "
         print "         (oo)    "
         print "   /------\/     "
@@ -123,5 +126,3 @@ if __name__ == '__main__':
             kernelset = my_modtool.get_current_kernels(base);
             for i in kernelset:
                 print i;
- 
-    
