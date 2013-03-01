@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2004,2009,2012 Free Software Foundation, Inc.
+ * Copyright 2007,2013 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -22,28 +22,37 @@
 
 // @WARNING@
 
-#ifndef @GUARD_NAME_IMPL@
-#define @GUARD_NAME_IMPL@
+#ifndef @GUARD_NAME@
+#define @GUARD_NAME@
 
-#include <blocks/@NAME@.h>
+#include <blocks/api.h>
+#include <gr_sync_block.h>
 
 namespace gr {
   namespace blocks {
 
-    class BLOCKS_API @NAME_IMPL@ : public @NAME@
+    /*!
+     * \brief Compares vectors from multiple streams and determines
+     * the maximum value from each vector over all streams.
+     * \ingroup math_blk
+     *
+     * Data is passed in as a vector of length \p vlen from multiple
+     * input sources. It will look through these streams of \p vlen
+     * data items and output two streams.
+     *    Stream 0 will contain the index value in the vector where
+     *    the maximum value occurred.
+     */
+    class BLOCKS_API @NAME@ : virtual public gr_sync_block
     {
-    private:
-      size_t d_vlen;
-
     public:
-      @NAME_IMPL@(size_t vlen);
+      // gr::blocks::@NAME@::sptr
+      typedef boost::shared_ptr<@NAME@> sptr;
 
-      int work(int noutput_items,
-	       gr_vector_const_void_star &input_items,
-	       gr_vector_void_star &output_items);
+      static sptr make(size_t vlen);
     };
 
   } /* namespace blocks */
 } /* namespace gr */
 
-#endif /* @GUARD_NAME_IMPL@ */
+#endif /* @GUARD_NAME@ */
+

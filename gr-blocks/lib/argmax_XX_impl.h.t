@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2004,2009,2012 Free Software Foundation, Inc.
+ * Copyright 2007,2013 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -30,17 +30,18 @@
 namespace gr {
   namespace blocks {
 
-    class BLOCKS_API @NAME_IMPL@ : public @NAME@
+    class @NAME_IMPL@ : public @NAME@
     {
     private:
       size_t d_vlen;
 
     public:
       @NAME_IMPL@(size_t vlen);
+      ~@NAME_IMPL@();
 
       int work(int noutput_items,
-	       gr_vector_const_void_star &input_items,
-	       gr_vector_void_star &output_items);
+               gr_vector_const_void_star &input_items,
+               gr_vector_void_star &output_items);
     };
 
   } /* namespace blocks */
