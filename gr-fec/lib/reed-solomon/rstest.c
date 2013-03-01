@@ -12,7 +12,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
-#include "rs.h"
+#include <fec/rs.h>
 
 int exercise_char(void *,int);
 

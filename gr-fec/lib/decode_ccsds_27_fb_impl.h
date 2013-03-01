@@ -26,7 +26,7 @@
 #include <fec/decode_ccsds_27_fb.h>
 
 extern "C" {
-#include "viterbi/viterbi.h"
+#include <fec/viterbi.h>
 }
 
 namespace gr {

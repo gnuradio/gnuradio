@@ -30,7 +30,7 @@
  */
 
 extern "C" {
-#include "viterbi.h"
+#include <fec/viterbi.h>
 }
 
 #include <cstdio>

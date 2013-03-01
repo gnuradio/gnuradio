@@ -78,6 +78,8 @@ install(FILES
     api.h
     decode_ccsds_27_fb.h
     encode_ccsds_27_bb.h
+    rs.h
+    viterbi.h
     DESTINATION ${GR_INCLUDE_DIR}/gnuradio/fec
     COMPONENT "fec_devel"
 )

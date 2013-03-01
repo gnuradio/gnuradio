@@ -28,7 +28,7 @@
 #include <gr_io_signature.h>
 
 extern "C" {
-#include "viterbi/viterbi.h"
+#include <fec/viterbi.h>
 }
 
 namespace gr {
