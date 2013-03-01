@@ -108,7 +108,7 @@ macro(GR_SWIG_MAKE name)
     #do swig doc generation if specified
     if (GR_SWIG_DOC_FILE)
         set(GR_SWIG_DOCS_SOURCE_DEPS ${GR_SWIG_SOURCE_DEPS})
-        set(GR_SWIG_DOCS_TAREGT_DEPS ${GR_SWIG_TARGET_DEPS})
+        set(GR_SWIG_DOCS_TARGET_DEPS ${GR_SWIG_TARGET_DEPS})
         GR_SWIG_MAKE_DOCS(${GR_SWIG_DOC_FILE} ${GR_SWIG_DOC_DIRS})
         list(APPEND GR_SWIG_SOURCE_DEPS ${GR_SWIG_DOC_FILE})
     endif()

@@ -24,14 +24,17 @@ GR_CHECK_HDR_N_DEF(sys/resource.h HAVE_SYS_RESOURCE_H)
 ########################################################################
 # Setup the include and linker paths
 ########################################################################
-include_directories(${GRUEL_INCLUDE_DIRS})
-include_directories(${GNURADIO_CORE_INCLUDE_DIRS})
+include_directories(
+	${GNURADIO_CORE_INCLUDE_DIRS}
+	${GRUEL_INCLUDE_DIRS}
+	${Boost_INCLUDE_DIRS}
+	${CPPUNIT_INCLUDE_DIRS}
+)
 
-include_directories(${Boost_INCLUDE_DIRS})
-link_directories(${Boost_LIBRARY_DIRS})
-
-include_directories(${CPPUNIT_INCLUDE_DIRS})
-link_directories(${CPPUNIT_LIBRARY_DIRS})
+link_directories(
+	${Boost_LIBRARY_DIRS}
+	${CPPUNIT_LIBRARY_DIRS}
+)
 
 include_directories(${LOG4CXX_INCLUDE_DIRS})
 link_directories(${LOG4CXX_LIBRARY_DIRS})
@@ -66,7 +69,7 @@ endforeach(test_not_run_src)
 # Set the test environment so the build libs will be found under MSVC.
 ########################################################################
 include(GrTest)
-set(GR_TEST_TARGET_DEPS volk gruel gnuradio-core test-gnuradio-core)
+list(APPEND GR_TEST_TARGET_DEPS test-gnuradio-core)
 add_executable(gr_core_test_all test_all.cc)
 target_link_libraries(gr_core_test_all test-gnuradio-core)
 GR_ADD_TEST(gr-core-test-all gr_core_test_all)

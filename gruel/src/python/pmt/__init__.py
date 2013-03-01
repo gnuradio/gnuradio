@@ -26,4 +26,6 @@ The GNU Radio Utility Etcetera Library's Polymorphic Types for Python.
 '''
 
 from pmt_swig import *
+from pmt_to_python import pmt_to_python as to_python
+from pmt_to_python import python_to_pmt as to_pmt
 

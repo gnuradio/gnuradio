@@ -158,11 +158,13 @@ gr_simple_correlator::general_work (int noutput_items,
   int decision;
   int hamming_dist;
 
+#ifdef DEBUG_SIMPLE_CORRELATOR
   struct debug_data {
     float	raw_data;
     float	sampled;
     float 	enter_locked;
   } debug_data;
+#endif
 
   while (n < nin){
 
@@ -212,7 +214,9 @@ gr_simple_correlator::general_work (int noutput_items,
       else if (d_state == ST_UNDER_THRESHOLD && hamming_dist > THRESHOLD){
 	// no longer seeing good PN code, compute center of goodness
 	enter_locked ();
+#ifdef DEBUG_SIMPLE_CORRELATOR
 	debug_data.enter_locked = 1.0;
+#endif
       }
       break;
 

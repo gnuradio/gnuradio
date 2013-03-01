@@ -37,7 +37,288 @@ More details on packages in GNU Radio:
 \li \ref page_qtgui
 \li \ref page_uhd
 \li \ref page_vocoder
+
+More details on GNU Radio concepts:
+\li \ref page_logger
+\li \ref page_pmt
+\li \ref page_msg_passing
+\li \ref page_metadata
+\li \ref volk_guide
 \li \ref page_pfb
+
+
+\section flowgraph Operating a Flowgraph
+
+The basic data structure in GNU Radio is the flowgraph, which
+represents the connections of the blocks through which a continuous
+stream of samples flows. The concept of a flowgraph is an acyclic
+directional graph with one or more source blocks (to insert samples
+into the flowgraph), one or more sink blocks (to terminate or export
+samples from the flowgraph), and any signal processing blocks in
+between.
+
+A program must at least create a GNU Radio 'top_block', which
+represents the top-most structure of the flowgraph. The top blocks
+provide the overall control and hold methods such as 'start,' 'stop,'
+and 'wait.'
+
+The general construction of a GNU Radio application is to create a
+gr_top_block, instantiate the blocks, connect the blocks together, and
+then start the gr_top_block. The following program shows how this is
+done. A single source and sink are used with a FIR filter between
+them.
+
+\code
+    from gnuradio import gr, filter
+    
+    class my_topblock(gr.top_block):
+        def __init__(self):
+            gr.top_block.__init__(self)
+    
+            amp = 1
+            taps = filter.firdes.low_pass(1, 1, 0.1, 0.01)
+            
+            self.src = gr.noise_source_c(gr.GR_GAUSSIAN, amp)
+            self.flt = filter.fir_filter_ccf(1, taps)
+            self.snk = gr.null_sink(gr.sizeof_gr_complex)
+    
+            self.connect(self.src, self.flt, self.snk)
+    
+    if __name__ == "__main__":
+        tb = my_topblock()
+        tb.start()
+        tb.wait()
+\endcode
+
+The 'tb.start()' starts the data flowing through the flowgraph while
+the 'tb.wait()' is the equivalent of a thread's 'join' operation and
+blocks until the gr_top_block is done.
+
+An alternative to using the 'start' and 'wait' methods, a 'run' method is
+also provided for convenience that is a blocking start call;
+equivalent to the above 'start' followed by a 'wait.'
+
+
+\subsection latency Latency and Throughput
+
+By default, GNU Radio runs a scheduler that attempts to optimize
+throughput. Using a dynamic scheduler, blocks in a flowgraph pass
+chunks of items from sources to sinks. The sizes of these chunks will
+vary depending on the speed of processing. For each block, the number
+of items is can process is dependent on how much space it has in its
+output buffer(s) and how many items are available on the input
+buffer(s).
+
+The consequence of this is that often a block may be called with a very
+large number of items to process (several thousand). In terms of
+speed, this is efficient since now the majority of the processing time
+is taken up with processing samples. Smaller chunks mean more calls
+into the scheduler to retrieve more data. The downside to this is that
+it can lead to large latency while a block is processing a large chunk
+of data.
+
+To combat this problem, the gr_top_block can be passed a limit on the
+number of output items a block will ever receive. A block may get less
+than this number, but never more, and so it serves as an upper limit
+to the latency any block will exhibit. By limiting the number of items
+per call to a block, though, we increase the overhead of the
+scheduler, and so reduce the overall efficiency of the application.
+
+To set the maximum number of output items, we pass a value into the
+'start' or 'run' method of the gr_top_block:
+
+\code
+     tb.start(1000)
+     tb.wait()
+or
+     tb.run(1000)
+\endcode
+
+Using this method, we place a global restriction on the size of items
+to all blocks. Each block, though, has the ability to overwrite this
+with its own limit. Using the 'set_max_noutput_items(m)' method for an
+individual block will overwrite the global setting. For example, in
+the following code, the global setting is 1000 items max, except for
+the FIR filter, which can receive up to 2000 items.
+
+\code
+     tb.flt.set_max_noutput_items(2000)
+     tb.run(1000)
+\endcode
+
+In some situations, you might actually want to restrict the size of
+the buffer itself. This can help to prevent a buffer who is blocked
+for data from just increasing the amount of items in its buffer, which
+will then cause an increased latency for new samples. You can set the
+size of an output buffer for each output port for every block. 
+
+WARNING: This is an advanced feature in GNU Radio and should not be
+used without a full understanding of this concept as explained below.
+
+To set the output buffer size of a block, you simply call:
+
+\code
+     tb.blk0.set_max_output_buffer(2000)
+     tb.blk1.set_max_output_buffer(1, 2000)
+     tb.start()
+     print tb.blk1.max_output_buffer(0)
+     print tb.blk1.max_output_buffer(1)
+\endcode
+
+In the above example, all ports of blk0 are set to a buffer size of
+2000 in _items_ (not bytes), and blk1 only sets the size for output
+port 1, any and all other ports use the default. The third and fourth
+lines just print out the buffer sizes for ports 0 and 1 of blk1. This
+is done after start() is called because the values are updated based
+on what is actually allocated to the block's buffers.
+
+NOTES:
+
+1. Buffer length assignment is done once at runtime (i.e., when run()
+or start() is called). So to set the max buffer lengths, the
+set_max_output_buffer calls must be done before this.
+
+2. Once the flowgraph is started, the buffer lengths for a block are
+set and cannot be dynamically changed, even during a
+lock()/unlock(). If you need to change the buffer size, you will have
+to delete the block and rebuild it, and therefore must disconnect and
+reconnect the blocks.
+
+3. This can affect throughput. Large buffers are designed to improve
+the efficiency and speed of the program at the expense of
+latency. Limiting the size of the buffer may decrease performance.
+
+4. The real buffer size is actually based on a minimum granularity of
+the system. Typically, this is a page size, which is typically 4096
+bytes. This means that any buffer size that is specified with this
+command will get rounded up to the nearest granularity (e.g., page)
+size. When calling max_output_buffer(port) after the flowgraph is
+started, you will get how many items were actually allocated in the
+buffer, which may be different than what was initially specified.
+
+
+\section reconfigure Reconfiguring Flowgraphs
+
+It is possible to reconfigure the flowgraph at runtime. The
+reconfiguration is meant for changes in the flowgraph structure, not
+individual parameter settings of the blocks. For example, changing the
+constant in a gr_add_const_cc block can be done while the flowgraph is
+running using the 'set_k(k)' method.
+
+Reconfiguration is done by locking the flowgraph, which stops it from
+running and processing data, performing the reconfiguration, and then
+restarting the graph by unlocking it.
+
+The following example code shows a graph that first adds two
+gr_noise_source_c blocks and then replaces the gr_add_cc block with a
+gr_sub_cc block to then subtract the sources.
+
+\code
+from gnuradio import gr
+import time
+
+class mytb(gr.top_block):
+    def __init__(self):
+        gr.top_block.__init__(self)
+
+        self.src0 = gr.noise_source_c(gr.GR_GAUSSIAN, 1)
+        self.src1 = gr.noise_source_c(gr.GR_GAUSSIAN, 1)
+        self.add  = gr.add_cc()
+        self.sub  = gr.sub_cc()
+        self.head = gr.head(gr.sizeof_gr_complex, 1000000)
+        self.snk  = gr.file_sink(gr.sizeof_gr_complex, "output.32fc")
+
+        self.connect(self.src0, (self.add,0))
+        self.connect(self.src1, (self.add,1))
+        self.connect(self.add, self.head)
+        self.connect(self.head, self.snk)
+
+def main():
+    tb = mytb()
+    tb.start()
+    time.sleep(0.01)
+
+    # Stop flowgraph and disconnect the add block
+    tb.lock()
+    tb.disconnect(tb.add, tb.head)
+    tb.disconnect(tb.src0, (tb.add,0))
+    tb.disconnect(tb.src1, (tb.add,1))
+
+    # Connect the sub block and restart
+    tb.connect(tb.sub, tb.head)
+    tb.connect(tb.src0, (tb.sub,0))
+    tb.connect(tb.src1, (tb.sub,1))
+    tb.unlock()
+
+    tb.wait()
+
+if __name__ == "__main__":
+    main()
+\endcode
+
+During reconfiguration, the maximum noutput_items value can be changed
+either globally using the 'set_max_noutput_items(m)' on the gr_top_block
+object or locally using the 'set_max_noutput_items(m)' on any given
+block object.
+
+A block also has a 'unset_max_noutput_items()' method that unsets the
+local max noutput_items value so that block reverts back to using the
+global value.
+
+The following example expands the previous example but sets and resets
+the max noutput_items both locally and globally.
+
+\code
+from gnuradio import gr
+import time
+
+class mytb(gr.top_block):
+    def __init__(self):
+        gr.top_block.__init__(self)
+
+        self.src0 = gr.noise_source_c(gr.GR_GAUSSIAN, 1)
+        self.src1 = gr.noise_source_c(gr.GR_GAUSSIAN, 1)
+        self.add  = gr.add_cc()
+        self.sub  = gr.sub_cc()
+        self.head = gr.head(gr.sizeof_gr_complex, 1000000)
+        self.snk  = gr.file_sink(gr.sizeof_gr_complex, "output.32fc")
+
+        self.connect(self.src0, (self.add,0))
+        self.connect(self.src1, (self.add,1))
+        self.connect(self.add, self.head)
+        self.connect(self.head, self.snk)
+
+def main():
+    # Start the gr_top_block after setting some max noutput_items.
+    tb = mytb()
+    tb.src1.set_max_noutput_items(2000)
+    tb.start(100)
+    time.sleep(0.01)
+    
+    # Stop flowgraph and disconnect the add block
+    tb.lock()
+
+    tb.disconnect(tb.add, tb.head)
+    tb.disconnect(tb.src0, (tb.add,0))
+    tb.disconnect(tb.src1, (tb.add,1))
+
+    # Connect the sub block
+    tb.connect(tb.sub, tb.head)
+    tb.connect(tb.src0, (tb.sub,0))
+    tb.connect(tb.src1, (tb.sub,1))
+
+    # Set new max_noutput_items for the gr_top_block
+    # and unset the local value for src1
+    tb.set_max_noutput_items(1000)
+    tb.src1.unset_max_noutput_items()
+    tb.unlock()
+
+    tb.wait()
+
+if __name__ == "__main__":
+    main()
+\endcode
+
 
 \section volk_main Using Volk in GNU Radio
 
@@ -49,115 +330,77 @@ they can also serve as examples. See the gr_complex_to_xxx.h file for
 examples of various blocks that make use of Volk.
 
 
-\section logging Logging
+\section prefs Configuration / Preference Files
 
-GNU Radio has a logging interface to enable various levels of logging
-information to be printed to the console or a file. The logger derives
-from log4cxx (http://logging.apache.org/log4cxx) which is readily
-available in most Linux distributions. This is an optional dependency
-and GNU Radio will work without it.
+GNU Radio defines some of its basic behavior through a set of
+configuration files located in
+${prefix}/etc/gnuradio/conf.d. Different components have different
+files listed in here for the various properties. These will be read
+once when starting a GNU Radio application, so updates during runtime
+will not affect them.
 
-When configuring GNU Radio, the -DENABLE_GR_LOG=On|Off option to cmake
-will allow the user to toggle use of the logger on and off and will
-turn off if log4cxx is not available.
-
-Logging is useful for blocks to print out certain amounts of data at
-different levels. These levels are:
-
-    TRACE < DEBUG < INFO < WARN < ERROR < FATAL
-
-The order here determines the level of output. When using the Debug
-level, for instance, all Debug and higher messages are logged and
-Trace is ignored.
-
-\subsection use_logging Using the Logging Features
-
-In a GNU Radio block, you use the logging features by calling macros
-that are defined in gr_log.h, which must be included for use.
-
-The logger must be properly configured, which is easiest by defining a
-configuration file. The log4cxx website will provide more information
-on how configuration works and looks. Mostly, a default configuration
-script provided with GNU Radio can be used. After installation, the
-default configuration script is located at:
-
-    $prefix/etc/gnuradio/gr_log_default.xml
-
-However, we use the global GNU Radio configuration file to tell the
-system where this file is located. In the [LOG] section of the
-configuration file, the location of the logger's XML file can be
-specified. The default configuration file is found in:
-
-    $prefix/etc/gnuradio/conf.d/gnuradio-core.conf
-
-A local "~/.gnuradio/config.conf" file can be used to override any
-parameter in the global file.
-
-For the following examples, we will assume that our local
-"~/.gnuradio/config.conf" looks like this:
+The configuration files use the following format:
 
 \code
-[LOG]
-log_file = /opt/gr/etc/gnuadio/gr_log_default.xml
-log_level = All
+# Stuff from section 1
+[section1]
+var1 = value1 
+var2 = value2 # value of 2
+
+# Stuff from section 2
+[section2]
+var3 = value3
 \endcode
 
-The startup and configuration process proceeds as follows.
+In this file, the hash mark ('#') indicates a comment and blank lines
+are ignored. Section labels are defined inside square brackets as a
+group distinguisher. All options must be associated with a section
+name. The options are listed one per line with the option name is
+given followed by an equals ('=') sign and then the value. All section
+and option names must not have white spaces (actually, all white
+spaces are ignored).
+
+The value of an option can be a string or number and retrieved through
+a few different interfaces. There is a single preference object
+created when GNU Radio is launched. In Python, you can get this by
+making a new variable:
 
 \code
-  std::string log_file = gr_prefs::singleton()->get_string("LOG", "log_config", "");
-  std::string log_level = gr_prefs::singleton()->get_string("LOG", "log_level", "off");
-  GR_CONFIG_LOGGER(log_file);
-  GR_LOG_GETLOGGER(LOG, <name>);
-  GR_LOG_SET_LEVEL(LOG, log_level);
+p = gr.prefs()
 \endcode
 
-The default config file has two names that can be used (as std::string
-types): "gr_log" and "gr_log_debug". The first one will print
-all levels of logging informaiton while the second one will only print
-Debug and above.
-
-Names of loggers are global, so "gr_log" as a name will be the same
-logger no matter where it is picked from.
-
-The "LOG" name for the logger is now a LoggerPtr object and can be
-named anything.
-
-For a given block, it is recommended that a new name be specified for
-individual control over the logger as loggers are globally held in a
-LoggerManager. Since log4cxx is hierarchical, a new name is created by
-appending a string to an existing logger. So a general logger used in
-the digital_costas_loop_cc.cc class, for instance, could look
-something like "gr_log.costas_loop". This will inherit all properties
-of the parent logger, "gr_log".
-
-After calling "GR_LOG_GETLOGGER", the LoggerPtr that was specified,
-"LOG" in the example above, is used to set the properties. The main
-setting we are generally interested in is the level of the
-logger. This will determine if this logger gets outputted or not. In
-this case, we are actually getting the gr_log level from the GNU Radio
-configuration file, stored in log_level. The macro GR_LOG_SET_LEVEL
-can take either a string or a log4cxx::LevelPtr object. The log_level
-variable in this case holds a string read in from the config file, and
-it's case insensitive. I can be "off", "all", "trace", "debug",
-"info", "warn", "error", or "fatal" to match with the levels above.
-
-In our example here, all logging information is displayed because the
-config file specifies "All". We can then easily turn off all reporting
-by setting this value to "Off".
-
-The various logging macros are defined in gr_log.h. Here are some
-simple exmaples of using them:
+Similarly, in C++, we get a reference to the object by explicitly
+calling for the singleton of the object:
 
 \code
-  GR_LOG_TRACE(LOG, "TRACE message");
-  GR_LOG_DEBUG(LOG, "DEBUG message");
-  GR_LOG_INFO(LOG, "INFO message");
-  GR_LOG_WARN(LOG, "WARNING message");
-  GR_LOG_ERROR(LOG, "ERROR message");
-  GR_FATAL(LOG, "FATAL message");
-  GR_ERRORIF(LOG, a>b, "CONDITIONAL ERROR message");
-  GR_ASSERT(LOG, a>b, "ASSERT error message");
+  gr_prefs *p = gr_prefs::singleton();
 \endcode
+
+The methods associated with this preferences object are (from class gr_prefs):
+
+\code
+  bool has_section(string section)
+  bool has_option(string section, string option)
+  string get_string(string section, string option, string default_val)
+  bool get_bool(string section, string option, bool default_val)
+  long get_long(string section, string option, long default_val)
+  double get_double(string section, string option, double default_val)
+\endcode
+
+When setting a Boolean value, we can use 0, 1, "True", "true",
+"False", "false", "On", "on", "Off", and "off".
+
+All configuration preferences in these files can also be overloaded by
+an environmental variable. The environmental variable is named based
+on the section and option name from the configuration file as:
+
+\code
+  GR_CONF_<SECTION>_<OPTION> = <value>
+\endcode
+
+The "GR_CONF_" is a prefix to identify this as a GNU Radio
+configuration variable and the section and option names are in
+uppercase. The value is the same format that would be used in the
+config file itself.
 
 */

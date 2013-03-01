@@ -25,7 +25,7 @@
 #include <gr_sig_source_c.h>
 #include <gr_fir_filter_ccc.h>
 #include <gr_add_cc.h>
-#include <gr_noise_source_c.h>
+#include <gr_fastnoise_source_c.h>
 #include <gr_multiply_cc.h>
 
 class gr_channel_model;
@@ -36,7 +36,7 @@ GR_CORE_API gr_channel_model_sptr gr_make_channel_model(double noise_voltage=0.0
 					    double frequency_offset=0.0,
 					    double epsilon=1.0,
 					    const std::vector<gr_complex> &taps=std::vector<gr_complex>(1, 1),
-					    double noise_seed=3021);
+					    double noise_seed=0);
 
 /*!
  * \brief channel simulator
@@ -61,7 +61,7 @@ class GR_CORE_API gr_channel_model : public gr_hier_block2
   gr_sig_source_c_sptr d_freq_offset;
   gr_fir_filter_ccc_sptr d_multipath;
   gr_add_cc_sptr d_noise_adder;
-  gr_noise_source_c_sptr d_noise;
+  gr_fastnoise_source_c_sptr d_noise;
   gr_multiply_cc_sptr d_mixer_offset;
 
   std::vector<gr_complex> d_taps;

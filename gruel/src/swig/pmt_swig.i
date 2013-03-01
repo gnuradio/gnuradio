@@ -38,6 +38,27 @@
 //load generated python docstrings
 %include "pmt_swig_doc.i"
 
+%include <std_complex.i>
+%include <std_vector.i>
+%include <stl.i>
+
+namespace std {
+  %template()	  vector<unsigned char>;
+  %template()	  vector<uint8_t>;
+  %template()	  vector<char>;
+  %template()	  vector<int8_t>;
+  %template()	  vector<short>;
+  %template()	  vector<uint16_t>;
+  %template()	  vector<int16_t>;
+  %template()	  vector<int>;
+  %template()	  vector<int32_t>;
+  %template()	  vector<uint32_t>;
+  %template()	  vector<float>;
+  %template()	  vector<double>;
+  %template()	  vector< std::complex<float> >;
+  %template()	  vector< std::complex<double> >;
+};
+
 ////////////////////////////////////////////////////////////////////////
 // Language independent exception handler
 ////////////////////////////////////////////////////////////////////////
@@ -190,6 +211,8 @@ bool pmt_is_complex(pmt_t obj);
 
 //! Return a complex number constructed of the given real and imaginary parts.
 pmt_t pmt_make_rectangular(double re, double im);
+
+pmt_t pmt_from_complex(const std::complex<double> &z);
 
 /*!
  * If \p z is complex, real or integer, return the closest complex<double>.
@@ -380,16 +403,17 @@ pmt_t pmt_make_f64vector(size_t k, double fill);
 pmt_t pmt_make_c32vector(size_t k, std::complex<float> fill);
 pmt_t pmt_make_c64vector(size_t k, std::complex<double> fill);
 
-pmt_t pmt_init_u8vector(size_t k, const uint8_t *data);
-pmt_t pmt_init_s8vector(size_t k, const int8_t *data);
-pmt_t pmt_init_u16vector(size_t k, const uint16_t *data);
-pmt_t pmt_init_s16vector(size_t k, const int16_t *data);
-pmt_t pmt_init_u32vector(size_t k, const uint32_t *data);
-pmt_t pmt_init_s32vector(size_t k, const int32_t *data);
-pmt_t pmt_init_f32vector(size_t k, const float *data);
-pmt_t pmt_init_f64vector(size_t k, const double *data);
-pmt_t pmt_init_c32vector(size_t k, const std::complex<float> *data);
-pmt_t pmt_init_c64vector(size_t k, const std::complex<double> *data);
+
+pmt_t pmt_init_u8vector(size_t k, const std::vector<uint8_t> &data);
+pmt_t pmt_init_s8vector(size_t k, const std::vector<int8_t> &data);
+pmt_t pmt_init_u16vector(size_t k, const std::vector<uint16_t> &data);
+pmt_t pmt_init_s16vector(size_t k, const std::vector<int16_t> &data);
+pmt_t pmt_init_u32vector(size_t k, const std::vector<uint32_t> &data);
+pmt_t pmt_init_s32vector(size_t k, const std::vector<int32_t> &data);
+pmt_t pmt_init_f32vector(size_t k, const std::vector<float> &data);
+pmt_t pmt_init_f64vector(size_t k, const std::vector<double> &data);
+pmt_t pmt_init_c32vector(size_t k, const std::vector<std::complex<float> > &data);
+pmt_t pmt_init_c64vector(size_t k, const std::vector<std::complex<double> > &data);
 
 uint8_t  pmt_u8vector_ref(pmt_t v, size_t k);
 int8_t   pmt_s8vector_ref(pmt_t v, size_t k);
@@ -419,37 +443,23 @@ void pmt_c64vector_set(pmt_t v, size_t k, std::complex<double> x);
 
 // Return const pointers to the elements
 
-const void *pmt_uniform_vector_elements(pmt_t v, size_t &len);  //< works with any; len is in bytes
+%apply size_t & INOUT { size_t &len };
 
-const uint8_t  *pmt_u8vector_elements(pmt_t v, size_t &len);  //< len is in elements
-const int8_t   *pmt_s8vector_elements(pmt_t v, size_t &len);  //< len is in elements
-const uint16_t *pmt_u16vector_elements(pmt_t v, size_t &len); //< len is in elements
-const int16_t  *pmt_s16vector_elements(pmt_t v, size_t &len); //< len is in elements
-const uint32_t *pmt_u32vector_elements(pmt_t v, size_t &len); //< len is in elements
-const int32_t  *pmt_s32vector_elements(pmt_t v, size_t &len); //< len is in elements
-const uint64_t *pmt_u64vector_elements(pmt_t v, size_t &len); //< len is in elements
-const int64_t  *pmt_s64vector_elements(pmt_t v, size_t &len); //< len is in elements
-const float    *pmt_f32vector_elements(pmt_t v, size_t &len); //< len is in elements
-const double   *pmt_f64vector_elements(pmt_t v, size_t &len); //< len is in elements
-const std::complex<float>  *pmt_c32vector_elements(pmt_t v, size_t &len); //< len is in elements
-const std::complex<double> *pmt_c64vector_elements(pmt_t v, size_t &len); //< len is in elements
+// works with any; len is in bytes
+// Returns an opaque Python type
+const void *pmt_uniform_vector_elements(pmt_t v, size_t &len);  
 
-// Return non-const pointers to the elements
-
-void *pmt_uniform_vector_writable_elements(pmt_t v, size_t &len);  //< works with any; len is in bytes
-
-uint8_t  *pmt_u8vector_writable_elements(pmt_t v, size_t &len);  //< len is in elements
-int8_t   *pmt_s8vector_writable_elements(pmt_t v, size_t &len);  //< len is in elements
-uint16_t *pmt_u16vector_writable_elements(pmt_t v, size_t &len); //< len is in elements
-int16_t  *pmt_s16vector_writable_elements(pmt_t v, size_t &len); //< len is in elements
-uint32_t *pmt_u32vector_writable_elements(pmt_t v, size_t &len); //< len is in elements
-int32_t  *pmt_s32vector_writable_elements(pmt_t v, size_t &len); //< len is in elements
-uint64_t *pmt_u64vector_writable_elements(pmt_t v, size_t &len); //< len is in elements
-int64_t  *pmt_s64vector_writable_elements(pmt_t v, size_t &len); //< len is in elements
-float    *pmt_f32vector_writable_elements(pmt_t v, size_t &len); //< len is in elements
-double   *pmt_f64vector_writable_elements(pmt_t v, size_t &len); //< len is in elements
-std::complex<float>  *pmt_c32vector_writable_elements(pmt_t v, size_t &len); //< len is in elements
-std::complex<double> *pmt_c64vector_writable_elements(pmt_t v, size_t &len); //< len is in elements
+// Returns a Python tuple
+const std::vector<uint8_t>  pmt_u8vector_elements(pmt_t v);
+const std::vector<int8_t>   pmt_s8vector_elements(pmt_t v);
+const std::vector<uint16_t> pmt_u16vector_elements(pmt_t v);
+const std::vector<int16_t>  pmt_s16vector_elements(pmt_t v);
+const std::vector<uint32_t> pmt_u32vector_elements(pmt_t v);
+const std::vector<int32_t>  pmt_s32vector_elements(pmt_t v);
+const std::vector<float>    pmt_f32vector_elements(pmt_t v);
+const std::vector<double>   pmt_f64vector_elements(pmt_t v);
+const std::vector<std::complex<float> > pmt_c32vector_elements(pmt_t v);
+const std::vector<std::complex<double> > pmt_c64vector_elements(pmt_t v);
 
 /*
  * ------------------------------------------------------------------------
@@ -696,6 +706,15 @@ pmt_t pmt_list6(const pmt_t& x1, const pmt_t& x2, const pmt_t& x3, const pmt_t& 
  */
 pmt_t pmt_list_add(pmt_t list, const pmt_t& item);
 
+/*!
+ * \brief Return \p list with \p item removed
+ */
+pmt_t pmt_list_rm(pmt_t list, const pmt_t& item);
+
+/*!
+ * \brief Return bool of \p list contains \p item
+ */
+bool pmt_list_has(pmt_t list, const pmt_t& item);
 
 /*
  * ------------------------------------------------------------------------

@@ -64,8 +64,8 @@ GR_INCLUDE_SUBDIRECTORY(pmt)
 ########################################################################
 # Setup the include and linker paths
 ########################################################################
-include_directories(${GRUEL_INCLUDE_DIRS})
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
+include_directories(${GRUEL_INCLUDE_DIRS})
 
 include_directories(${Boost_INCLUDE_DIRS})
 link_directories(${Boost_LIBRARY_DIRS})
@@ -76,6 +76,7 @@ link_directories(${Boost_LIBRARY_DIRS})
 list(APPEND gruel_sources
     realtime.cc
     sys_pri.cc
+    thread.cc
     thread_body_wrapper.cc
     thread_group.cc
 )

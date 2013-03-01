@@ -61,6 +61,10 @@ class Platform(_Element):
 		#create a dummy flow graph for the blocks
 		self._flow_graph = _Element(self)
 		#search for *.xml files in the given search path
+
+		self.loadblocks();
+    
+	def loadblocks(self):
 		xml_files = list()
 		for block_path in self._block_paths:
 			if os.path.isfile(block_path): xml_files.append(block_path)

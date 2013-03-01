@@ -38,12 +38,8 @@ set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake) #location for custom "M
 # Environment setup
 ########################################################################
 IF(NOT DEFINED BOOST_ROOT)
-    SET(BOOST_ROOT "")
+    SET(BOOST_ROOT ${CMAKE_INSTALL_PREFIX})
 ENDIF()
-SET(BOOST_ROOT ${BOOST_ROOT} CACHE STRING "Modify search path for Boost components")
-
-#after caching user-defined value, make sure to add the install prefix
-SET(BOOST_ROOT ${BOOST_ROOT}:${CMAKE_INSTALL_PREFIX})
 
 IF(NOT DEFINED CROSSCOMPILE_MULTILIB)
     SET(CROSSCOMPILE_MULTILIB "")
@@ -66,6 +62,18 @@ if(NOT CHEETAH_FOUND)
     message(FATAL_ERROR "Cheetah templates required to build VOLK")
 endif()
 
+if(MSVC)
+    if (NOT DEFINED BOOST_ALL_DYN_LINK)
+        set(BOOST_ALL_DYN_LINK TRUE)
+    endif()
+    set(BOOST_ALL_DYN_LINK "${BOOST_ALL_DYN_LINK}" CACHE BOOL "boost enable dynamic linking")
+    if(BOOST_ALL_DYN_LINK)
+        add_definitions(-DBOOST_ALL_DYN_LINK) #setup boost auto-linking in msvc
+    else(BOOST_ALL_DYN_LINK)
+        unset(BOOST_REQUIRED_COMPONENTS) #empty components list for static link
+    endif(BOOST_ALL_DYN_LINK)
+endif(MSVC)
+
 set(Boost_ADDITIONAL_VERSIONS
     "1.35.0" "1.35" "1.36.0" "1.36" "1.37.0" "1.37" "1.38.0" "1.38" "1.39.0" "1.39"
     "1.40.0" "1.40" "1.41.0" "1.41" "1.42.0" "1.42" "1.43.0" "1.43" "1.44.0" "1.44"
@@ -75,7 +83,11 @@ set(Boost_ADDITIONAL_VERSIONS
     "1.60.0" "1.60" "1.61.0" "1.61" "1.62.0" "1.62" "1.63.0" "1.63" "1.64.0" "1.64"
     "1.65.0" "1.65" "1.66.0" "1.66" "1.67.0" "1.67" "1.68.0" "1.68" "1.69.0" "1.69"
 )
-find_package(Boost COMPONENTS unit_test_framework)
+find_package(Boost COMPONENTS unit_test_framework filesystem system)
+
+if(NOT Boost_FOUND)
+    message(FATAL_ERROR "VOLK Requires boost to build")
+endif()
 
 find_package(ORC)
 

@@ -198,6 +198,12 @@ BLOCK_DISABLE = Action(
 	stock_id=gtk.STOCK_DISCONNECT,
 	keypresses=(gtk.keysyms.d, NO_MODS_MASK),
 )
+BLOCK_CREATE_HIER = Action(
+	label='C_reate Hier',
+	tooltip='Create hier block from selected blocks',
+	stock_id=gtk.STOCK_CONNECT,
+	keypresses=(gtk.keysyms.c, NO_MODS_MASK),
+)
 BLOCK_CUT = Action(
 	label='Cu_t',
 	tooltip='Cut',
@@ -272,4 +278,14 @@ BLOCK_INC_TYPE = Action(
 )
 BLOCK_DEC_TYPE = Action(
 	keypresses=(gtk.keysyms.Up, NO_MODS_MASK),
+)
+RELOAD_BLOCKS = Action(
+	label='Reload _Blocks',
+	tooltip='Reload Blocks',
+	stock_id=gtk.STOCK_REFRESH
+)
+OPEN_HIER = Action(
+	label='Open H_ier',
+	tooltip='Open the source of the selected hierarchical block',
+	stock_id=gtk.STOCK_JUMP_TO,
 )

@@ -28,6 +28,7 @@
 /*! \defgroup slicedice_blk Slicing and Dicing Streams  */
 /*! \defgroup vocoder_blk Voice Encoders and Decoders	*/
 /*! \defgroup digital Digital Modulation Blocks		*/
+/*! \defgroup analog Analog Communications Blocks	*/
 /*! \defgroup qtgui_blk QT Graphical Interfaces		*/
 /*! \defgroup uhd_blk UHD Interface  			*/
 /*! \defgroup audio_blk Audio Interface  		*/

@@ -20,6 +20,10 @@
 #
 
 from gnuradio_core import hier_block2_swig
+try:
+    import pmt
+except ImportError:
+    from gruel import pmt
 
 #
 # This hack forces a 'has-a' relationship to look like an 'is-a' one.
@@ -110,4 +114,16 @@ class hier_block2(object):
         (dst_block, dst_port) = self._coerce_endpoint(dst)
         self._hb.primitive_disconnect(src_block.to_basic_block(), src_port,
                                       dst_block.to_basic_block(), dst_port)
+
+    def msg_connect(self, src, srcport, dst, dstport):
+        self.primitive_msg_connect(src.to_basic_block(), srcport, dst.to_basic_block(), dstport);
+
+    def msg_disconnect(self, src, srcport, dst, dstport):
+        self.primitive_msg_disconnect(src.to_basic_block(), srcport, dst.to_basic_block(), dstport);
+
+    def message_port_register_hier_in(self, portname):
+        self.primitive_message_port_register_hier_in(pmt.pmt_intern(portname));
+
+    def message_port_register_hier_out(self, portname):
+        self.primitive_message_port_register_hier_out(pmt.pmt_intern(portname));
 

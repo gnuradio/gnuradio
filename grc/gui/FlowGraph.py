@@ -63,6 +63,8 @@ class FlowGraph(Element):
 			Actions.BLOCK_ENABLE,
 			Actions.BLOCK_DISABLE,
 			Actions.BLOCK_PARAM_MODIFY,
+			Actions.BLOCK_CREATE_HIER,
+			Actions.OPEN_HIER,
 		]: self._context_menu.append(action.create_menu_item())
 
 	###########################################################################
@@ -96,6 +98,8 @@ class FlowGraph(Element):
 		block.set_rotation(0)
 		block.get_param('id').set_value(id)
 		Actions.ELEMENT_CREATE()
+
+                return id
 
 	###########################################################################
 	# Copy Paste
@@ -490,8 +494,9 @@ class FlowGraph(Element):
 		Move a selected element to the new coordinate.
 		Auto-scroll the scroll bars at the boundaries.
 		"""
-		#to perform a movement, the mouse must be pressed, no pending events
-		if gtk.events_pending() or not self.mouse_pressed: return
+		#to perform a movement, the mouse must be pressed
+		# (no longer checking pending events via gtk.events_pending() - always true in Windows)
+		if not self.mouse_pressed: return
 		#perform autoscrolling
 		width, height = self.get_size()
 		x, y = coordinate

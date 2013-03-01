@@ -90,19 +90,17 @@ expand_cc(rational_resampler_base_XXX_impl ccc ccf fcc fff fsf scc)
 # Setup the include and linker paths
 ########################################################################
 include_directories(
-    ${GR_FILTER_INCLUDE_DIRS}
     ${CMAKE_CURRENT_SOURCE_DIR}
     ${CMAKE_CURRENT_BINARY_DIR}
-    ${VOLK_INCLUDE_DIRS}
-    ${GNURADIO_CORE_INCLUDE_DIRS}
+    ${GR_FILTER_INCLUDE_DIRS}
     ${GR_FFT_INCLUDE_DIRS}
+    ${GNURADIO_CORE_INCLUDE_DIRS}
+    ${VOLK_INCLUDE_DIRS}
+    ${GRUEL_INCLUDE_DIRS}
     ${Boost_INCLUDE_DIRS}
-    ${FFTW3F_INCLUDE_DIRS}
 )
 
-link_directories(${FFT_LIBRARY_DIRS})
 link_directories(${Boost_LIBRARY_DIRS})
-link_directories(${FFTW3F_LIBRARY_DIRS})
 
 ########################################################################
 # Setup library
@@ -144,7 +142,6 @@ list(APPEND filter_libs
     gnuradio-fft
     volk
     ${Boost_LIBRARIES}
-    ${FFTW3F_LIBRARIES}
 )
 
 add_library(gnuradio-filter SHARED ${filter_sources})
@@ -173,10 +170,12 @@ if(ENABLE_TESTING)
 
   add_executable(test-gr-filter ${test_gr_filter_sources})
 
+  list(APPEND GR_TEST_TARGET_DEPS test-gr-filter gnuradio-filter gnuradio-fft)
+
   target_link_libraries(
     test-gr-filter
     gnuradio-core
-    gnuradio-filter 
+    gnuradio-filter
     ${Boost_LIBRARIES}
     ${CPPUNIT_LIBRARIES}
   )

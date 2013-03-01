@@ -455,12 +455,6 @@ MAX_INITIALIZER_LINES  = 30
 
 SHOW_USED_FILES        = YES
 
-# If the sources in your project are distributed over multiple directories
-# then setting the SHOW_DIRECTORIES tag to YES will show the directory hierarchy
-# in the documentation. The default is NO.
-
-SHOW_DIRECTORIES       = NO
-
 # Set the SHOW_FILES tag to NO to disable the generation of the Files page.
 # This will remove the Files entry from the Quick Index and from the
 # Folder Tree View (if specified). The default is YES.
@@ -639,7 +633,8 @@ EXCLUDE                = @abs_top_builddir@/docs/doxygen/html \
 			 @abs_top_builddir@/_CPack_Packages \
                          @abs_top_srcdir@/cmake \
 			 @abs_top_srcdir@/gr-qtgui/lib \
-                         @abs_top_srcdir@/gr-howto-write-a-block
+                         @abs_top_srcdir@/gr-howto-write-a-block \
+                         @abs_top_srcdir@/gr-utils/src/python/modtool/gr-newmod
 
 # The EXCLUDE_SYMLINKS tag can be used select whether or not files or
 # directories that are symbolic links (a Unix filesystem feature) are excluded
@@ -861,12 +856,6 @@ HTML_FOOTER            =
 # stylesheet in the HTML output directory as well, or it will be erased!
 
 HTML_STYLESHEET        =
-
-# If the HTML_ALIGN_MEMBERS tag is set to YES, the members of classes,
-# files or namespaces will be aligned in HTML using tables. If set to
-# NO a bullet list will be used.
-
-HTML_ALIGN_MEMBERS     = YES
 
 # If the HTML_DYNAMIC_SECTIONS tag is set to YES then the generated HTML
 # documentation will contain sections that can be hidden and shown after the

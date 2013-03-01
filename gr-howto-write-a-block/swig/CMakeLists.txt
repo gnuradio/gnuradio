@@ -39,6 +39,8 @@ foreach(incdir ${GRUEL_INCLUDE_DIRS})
     list(APPEND GR_SWIG_INCLUDE_DIRS ${incdir}/gruel/swig)
 endforeach(incdir)
 
+list(APPEND GR_SWIG_INCLUDE_DIRS ${Boost_INCLUDE_DIRS})
+
 set(GR_SWIG_LIBRARIES gnuradio-howto)
 set(GR_SWIG_DOC_FILE ${CMAKE_CURRENT_BINARY_DIR}/howto_swig_doc.i)
 set(GR_SWIG_DOC_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/../include)

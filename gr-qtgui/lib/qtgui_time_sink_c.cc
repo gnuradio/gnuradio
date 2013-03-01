@@ -83,6 +83,7 @@ qtgui_time_sink_c::initialize()
   }
 
   d_main_gui = new TimeDisplayForm(d_nconnections, d_parent);
+  d_main_gui->setFrequencyRange(0, 0, d_bandwidth);
 
   // initialize update time to 10 times a second
   set_update_time(0.1);

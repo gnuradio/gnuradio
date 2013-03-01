@@ -32,6 +32,7 @@
 #include <stdint.h>
 #include <iosfwd>
 #include <stdexcept>
+#include <vector>
 
 namespace gruel {
   class msg_accepter;
@@ -221,6 +222,12 @@ GRUEL_API bool pmt_is_complex(pmt_t obj);
 
 //! Return a complex number constructed of the given real and imaginary parts.
 GRUEL_API pmt_t pmt_make_rectangular(double re, double im);
+
+//! Return a complex number constructed of the given real and imaginary parts.
+GRUEL_API pmt_t pmt_from_complex(double re, double im);
+
+//! Return a complex number constructed of the given a complex number.
+GRUEL_API pmt_t pmt_from_complex(const std::complex<double> &z);
 
 /*!
  * If \p z is complex, real or integer, return the closest complex<double>.
@@ -412,17 +419,29 @@ GRUEL_API pmt_t pmt_make_c32vector(size_t k, std::complex<float> fill);
 GRUEL_API pmt_t pmt_make_c64vector(size_t k, std::complex<double> fill);
 
 GRUEL_API pmt_t pmt_init_u8vector(size_t k, const uint8_t *data);
+GRUEL_API pmt_t pmt_init_u8vector(size_t k, const std::vector<uint8_t> &data);
 GRUEL_API pmt_t pmt_init_s8vector(size_t k, const int8_t *data);
+GRUEL_API pmt_t pmt_init_s8vector(size_t k, const std::vector<int8_t> &data);
 GRUEL_API pmt_t pmt_init_u16vector(size_t k, const uint16_t *data);
+GRUEL_API pmt_t pmt_init_u16vector(size_t k, const std::vector<uint16_t> &data);
 GRUEL_API pmt_t pmt_init_s16vector(size_t k, const int16_t *data);
+GRUEL_API pmt_t pmt_init_s16vector(size_t k, const std::vector<int16_t> &data);
 GRUEL_API pmt_t pmt_init_u32vector(size_t k, const uint32_t *data);
+GRUEL_API pmt_t pmt_init_u32vector(size_t k, const std::vector<uint32_t> &data);
 GRUEL_API pmt_t pmt_init_s32vector(size_t k, const int32_t *data);
+GRUEL_API pmt_t pmt_init_s32vector(size_t k, const std::vector<int32_t> &data);
 GRUEL_API pmt_t pmt_init_u64vector(size_t k, const uint64_t *data);
+GRUEL_API pmt_t pmt_init_u64vector(size_t k, const std::vector<uint64_t> &data);
 GRUEL_API pmt_t pmt_init_s64vector(size_t k, const int64_t *data);
+GRUEL_API pmt_t pmt_init_s64vector(size_t k, const std::vector<int64_t> &data);
 GRUEL_API pmt_t pmt_init_f32vector(size_t k, const float *data);
+GRUEL_API pmt_t pmt_init_f32vector(size_t k, const std::vector<float> &data);
 GRUEL_API pmt_t pmt_init_f64vector(size_t k, const double *data);
+GRUEL_API pmt_t pmt_init_f64vector(size_t k, const std::vector<double> &data);
 GRUEL_API pmt_t pmt_init_c32vector(size_t k, const std::complex<float> *data);
+GRUEL_API pmt_t pmt_init_c32vector(size_t k, const std::vector<std::complex<float> > &data);
 GRUEL_API pmt_t pmt_init_c64vector(size_t k, const std::complex<double> *data);
+GRUEL_API pmt_t pmt_init_c64vector(size_t k, const std::vector<std::complex<double> > &data);
 
 GRUEL_API uint8_t  pmt_u8vector_ref(pmt_t v, size_t k);
 GRUEL_API int8_t   pmt_s8vector_ref(pmt_t v, size_t k);
@@ -466,6 +485,20 @@ GRUEL_API const float    *pmt_f32vector_elements(pmt_t v, size_t &len); //< len 
 GRUEL_API const double   *pmt_f64vector_elements(pmt_t v, size_t &len); //< len is in elements
 GRUEL_API const std::complex<float>  *pmt_c32vector_elements(pmt_t v, size_t &len); //< len is in elements
 GRUEL_API const std::complex<double> *pmt_c64vector_elements(pmt_t v, size_t &len); //< len is in elements
+
+// len is in elements
+GRUEL_API const std::vector<uint8_t>  pmt_u8vector_elements(pmt_t v);
+GRUEL_API const std::vector<int8_t>   pmt_s8vector_elements(pmt_t v);
+GRUEL_API const std::vector<uint16_t> pmt_u16vector_elements(pmt_t v);
+GRUEL_API const std::vector<int16_t>  pmt_s16vector_elements(pmt_t v);
+GRUEL_API const std::vector<uint32_t> pmt_u32vector_elements(pmt_t v);
+GRUEL_API const std::vector<int32_t>  pmt_s32vector_elements(pmt_t v);
+GRUEL_API const std::vector<uint64_t> pmt_u64vector_elements(pmt_t v);
+GRUEL_API const std::vector<int64_t>  pmt_s64vector_elements(pmt_t v);
+GRUEL_API const std::vector<float>    pmt_f32vector_elements(pmt_t v);
+GRUEL_API const std::vector<double>   pmt_f64vector_elements(pmt_t v);
+GRUEL_API const std::vector<std::complex<float> > pmt_c32vector_elements(pmt_t v);
+GRUEL_API const std::vector<std::complex<double> > pmt_c64vector_elements(pmt_t v);
 
 // Return non-const pointers to the elements
 
@@ -729,6 +762,16 @@ GRUEL_API pmt_t pmt_list6(const pmt_t& x1, const pmt_t& x2, const pmt_t& x3, con
  */
 GRUEL_API pmt_t pmt_list_add(pmt_t list, const pmt_t& item);
 
+/*!
+ * \brief Return \p list with \p item removed from it.
+ */
+GRUEL_API pmt_t pmt_list_rm(pmt_t list, const pmt_t& item);
+
+/*!
+ * \brief Return bool of \p list contains \p item
+ */
+GRUEL_API bool pmt_list_has(pmt_t list, const pmt_t& item);
+
 
 /*
  * ------------------------------------------------------------------------
@@ -804,6 +847,15 @@ GRUEL_API std::string pmt_serialize_str(pmt_t obj);
  * \brief Provide a simple string generating interface to pmt's deserialize function
  */
 GRUEL_API pmt_t pmt_deserialize_str(std::string str);
+
+/*!
+ * \brief Provide a comparator function object to allow pmt use in stl types
+ */
+class pmt_comperator {
+    public:
+        bool operator()(pmt::pmt_t const& p1, pmt::pmt_t const& p2) const
+            { return pmt::pmt_eqv(p1,p2)?false:p1.get()>p2.get(); }
+    };
 
 } /* namespace pmt */
 

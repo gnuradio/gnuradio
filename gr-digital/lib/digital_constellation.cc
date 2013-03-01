@@ -49,6 +49,17 @@ digital_constellation::digital_constellation (std::vector<gr_complex> constellat
   d_rotational_symmetry(rotational_symmetry),
   d_dimensionality(dimensionality)
 {
+  // Scale constellation points so that average magnitude is 1.
+  float summed_mag = 0;
+  unsigned int constsize = d_constellation.size();
+  for (unsigned int i=0; i<constsize; i++) {
+    gr_complex c = d_constellation[i];
+    summed_mag += sqrt(c.real()*c.real() + c.imag()*c.imag());
+  }
+  d_scalefactor = constsize/summed_mag;
+  for (unsigned int i=0; i<constsize; i++) {
+    d_constellation[i] = d_constellation[i]*d_scalefactor;
+  }
   if (pre_diff_code.size() == 0)
     d_apply_pre_diff_code = false;
   else if (pre_diff_code.size() != constellation.size())
@@ -293,6 +304,8 @@ digital_constellation_rect::digital_constellation_rect (std::vector<gr_complex> 
   n_real_sectors(real_sectors), n_imag_sectors(imag_sectors),
   d_width_real_sectors(width_real_sectors), d_width_imag_sectors(width_imag_sectors)
 {
+  d_width_real_sectors *= d_scalefactor;
+  d_width_imag_sectors *= d_scalefactor;
   find_sector_values();
 }
 

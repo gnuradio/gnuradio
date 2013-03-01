@@ -59,6 +59,7 @@
 		<block>digital_framer_sink_1</block>
 		<block>digital_packet_sink</block>
 		<block>digital_simple_framer</block>
+		<block>digital_simple_correlator</block>
 	</cat>
 	<cat>
 		<name>Digital Modulators</name>

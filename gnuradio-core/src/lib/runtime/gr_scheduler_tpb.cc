@@ -74,6 +74,11 @@ gr_scheduler_tpb::gr_scheduler_tpb(gr_flat_flowgraph_sptr ffg, int max_noutput_i
   for (size_t i = 0; i < blocks.size(); i++){
     std::stringstream name;
     name << "thread-per-block[" << i << "]: " << blocks[i];
+
+    // If set, use internal value instead of global value
+    if(blocks[i]->is_set_max_noutput_items())
+      max_noutput_items = blocks[i]->max_noutput_items();
+    
     d_threads.create_thread(
 	    gruel::thread_body_wrapper<tpb_container>(tpb_container(blocks[i], max_noutput_items),
 						      name.str()));

@@ -24,15 +24,16 @@ GR_INCLUDE_SUBDIRECTORY(fcd)
 # Setup the include and linker paths
 ########################################################################
 include_directories(
-    ${GNURADIO_CORE_INCLUDE_DIRS}
-    ${GR_FCD_INCLUDE_DIRS}
-    ${GR_AUDIO_INCLUDE_DIRS}
     ${CMAKE_CURRENT_SOURCE_DIR}/hid
     ${CMAKE_CURRENT_SOURCE_DIR}/fcd
+    ${GR_FCD_INCLUDE_DIRS}
+    ${GR_AUDIO_INCLUDE_DIRS}
+    ${GNURADIO_CORE_INCLUDE_DIRS}
+    ${GRUEL_INCLUDE_DIRS}
+    ${Boost_INCLUDE_DIRS}
     ${LIBUSB_INCLUDE_DIR}
 )
 
-include_directories(${Boost_INCLUDE_DIRS})
 link_directories(${Boost_LIBRARY_DIRS})
 
 include_directories(${LOG4CXX_INCLUDE_DIRS})

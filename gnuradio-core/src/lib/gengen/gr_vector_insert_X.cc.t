@@ -44,7 +44,7 @@
     // some sanity checks
     assert(offset < periodicity);
     assert(offset >= 0);
-    assert(periodicity > data.size());
+    assert((size_t)periodicity > data.size());
 }
 
 int

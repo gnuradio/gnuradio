@@ -41,13 +41,13 @@ class wfm_rx_block (stdgui2.std_top_block):
                           help="select Rx Antenna where appropriate")
         parser.add_option("-f", "--freq", type="eng_float", default=100.1e6,
                           help="set frequency to FREQ", metavar="FREQ")
-        parser.add_option("-g", "--gain", type="eng_float", default=65,
+        parser.add_option("-g", "--gain", type="eng_float", default=None,
                           help="set gain in dB (default is midpoint)")
         parser.add_option("-s", "--squelch", type="eng_float", default=0,
                           help="set squelch level (default is 0)")
         parser.add_option("-V", "--volume", type="eng_float", default=None,
                           help="set volume (default is midpoint)")
-        parser.add_option("-O", "--audio-output", type="string", default="",
+        parser.add_option("-O", "--audio-output", type="string", default="default",
                           help="pcm device name.  E.g., hw:0,0 or surround51 or /dev/dsp")
         parser.add_option("", "--freq-min", type="eng_float", default=87.9e6,
                           help="Set a minimum frequency [default=%default]")

@@ -21,12 +21,13 @@
 # Setup the include and linker paths
 ########################################################################
 include_directories(
-    ${GNURADIO_CORE_INCLUDE_DIRS}
-    ${GR_ATSC_INCLUDE_DIRS}
     ${CMAKE_CURRENT_BINARY_DIR}
+    ${GR_ATSC_INCLUDE_DIRS}
+    ${GNURADIO_CORE_INCLUDE_DIRS}
+    ${GRUEL_INCLUDE_DIRS}
+    ${Boost_INCLUDE_DIRS}
 )
 
-include_directories(${Boost_INCLUDE_DIRS})
 link_directories(${Boost_LIBRARY_DIRS})
 
 include_directories(${LOG4CXX_INCLUDE_DIRS})
@@ -133,7 +134,7 @@ list(APPEND test_atsci_sources
 )
 
 include(GrTest)
-set(GR_TEST_TARGET_DEPS gnuradio-atsc gnuradio-core gruel volk)
+list(APPEND GR_TEST_TARGET_DEPS gnuradio-atsc)
 add_executable(test_atsci ${test_atsci_sources} test_atsci.cc)
 target_link_libraries(test_atsci gnuradio-atsc gnuradio-core ${CPPUNIT_LIBRARIES})
 GR_ADD_TEST(atsci-test test_atsci)
@@ -208,11 +209,11 @@ if(ENABLE_PYTHON)
 include(GrPython)
 include(GrSwig)
 
-set(GR_SWIG_TARGET_DEPS core_swig)
-
 set(GR_SWIG_INCLUDE_DIRS
     ${GR_ATSC_INCLUDE_DIRS}
     ${GNURADIO_CORE_SWIG_INCLUDE_DIRS}
+    ${GRUEL_INCLUDE_DIRS}
+    ${Boost_INCLUDE_DIRS}
 )
 
 # add Doxygen docs to python

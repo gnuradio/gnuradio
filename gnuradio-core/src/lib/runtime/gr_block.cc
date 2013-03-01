@@ -28,10 +28,11 @@
 #include <gr_block_detail.h>
 #include <stdexcept>
 #include <iostream>
+#include <gr_block_registry.h>
 
 gr_block::gr_block (const std::string &name,
-		    gr_io_signature_sptr input_signature,
-		    gr_io_signature_sptr output_signature)
+                    gr_io_signature_sptr input_signature,
+                    gr_io_signature_sptr output_signature)
   : gr_basic_block(name, input_signature, output_signature),
     d_output_multiple (1),
     d_output_multiple_set(false),
@@ -40,12 +41,19 @@ gr_block::gr_block (const std::string &name,
     d_relative_rate (1.0),
     d_history(1),
     d_fixed_rate(false),
-    d_tag_propagation_policy(TPP_ALL_TO_ALL)
+    d_max_noutput_items_set(false),
+    d_max_noutput_items(0),
+    d_min_noutput_items(0),
+    d_tag_propagation_policy(TPP_ALL_TO_ALL),
+    d_max_output_buffer(std::max(output_signature->max_streams(),1), -1),
+    d_min_output_buffer(std::max(output_signature->max_streams(),1), -1)
 {
+    global_block_registry.register_primitive(alias(), this);
 }
 
 gr_block::~gr_block ()
 {
+    global_block_registry.unregister_primitive(alias());
 }
 
 // stub implementation:  1:1
@@ -180,6 +188,13 @@ gr_block::add_item_tag(unsigned int which_output,
 }
 
 void
+gr_block::remove_item_tag(unsigned int which_input,
+		       const gr_tag_t &tag)
+{
+  d_detail->remove_item_tag(which_input, tag);
+}
+
+void
 gr_block::get_tags_in_range(std::vector<gr_tag_t> &v,
 			    unsigned int which_output,
 			    uint64_t start, uint64_t end)
@@ -208,6 +223,215 @@ gr_block::set_tag_propagation_policy(tag_propagation_policy_t p)
   d_tag_propagation_policy = p;
 }
 
+
+int
+gr_block::max_noutput_items()
+{
+  return d_max_noutput_items;
+}
+
+void
+gr_block::set_max_noutput_items(int m)
+{
+  if(m <= 0)
+    throw std::runtime_error("gr_block::set_max_noutput_items: value for max_noutput_items must be greater than 0.\n");
+
+  d_max_noutput_items = m;
+  d_max_noutput_items_set = true;
+}
+
+void
+gr_block::unset_max_noutput_items()
+{
+  d_max_noutput_items_set = false;
+}
+
+bool
+gr_block::is_set_max_noutput_items()
+{
+  return d_max_noutput_items_set;
+}
+
+void
+gr_block::set_processor_affinity(const std::vector<unsigned int> &mask)
+{
+  d_affinity = mask;
+  if(d_detail) {
+    d_detail->set_processor_affinity(d_affinity);
+  }
+}
+
+void
+gr_block::unset_processor_affinity()
+{
+  d_affinity.clear();
+  if(d_detail) {
+    d_detail->unset_processor_affinity();
+  }
+}
+
+float
+gr_block::pc_noutput_items()
+{
+  if(d_detail) {
+    return d_detail->pc_noutput_items();
+  }
+  else {
+    return 0;
+  }
+}
+
+float
+gr_block::pc_noutput_items_var()
+{
+  if(d_detail) {
+    return d_detail->pc_noutput_items_var();
+  }
+  else {
+    return 0;
+  }
+}
+
+float
+gr_block::pc_nproduced()
+{
+  if(d_detail) {
+    return d_detail->pc_nproduced();
+  }
+  else {
+    return 0;
+  }
+}
+
+float
+gr_block::pc_nproduced_var()
+{
+  if(d_detail) {
+    return d_detail->pc_nproduced_var();
+  }
+  else {
+    return 0;
+  }
+}
+
+float
+gr_block::pc_input_buffers_full(int which)
+{
+  if(d_detail) {
+    return d_detail->pc_input_buffers_full(static_cast<size_t>(which));
+  }
+  else {
+    return 0;
+  }
+}
+
+float
+gr_block::pc_input_buffers_full_var(int which)
+{
+  if(d_detail) {
+    return d_detail->pc_input_buffers_full_var(static_cast<size_t>(which));
+  }
+  else {
+    return 0;
+  }
+}
+
+std::vector<float>
+gr_block::pc_input_buffers_full()
+{
+  if(d_detail) {
+    return d_detail->pc_input_buffers_full();
+  }
+  else {
+    return std::vector<float>(1,0);
+  }
+}
+
+std::vector<float>
+gr_block::pc_input_buffers_full_var()
+{
+  if(d_detail) {
+    return d_detail->pc_input_buffers_full_var();
+  }
+  else {
+    return std::vector<float>(1,0);
+  }
+}
+
+float
+gr_block::pc_output_buffers_full(int which)
+{
+  if(d_detail) {
+    return d_detail->pc_output_buffers_full(static_cast<size_t>(which));
+  }
+  else {
+    return 0;
+  }
+}
+
+float
+gr_block::pc_output_buffers_full_var(int which)
+{
+  if(d_detail) {
+    return d_detail->pc_output_buffers_full_var(static_cast<size_t>(which));
+  }
+  else {
+    return 0;
+  }
+}
+
+std::vector<float>
+gr_block::pc_output_buffers_full()
+{
+  if(d_detail) {
+    return d_detail->pc_output_buffers_full();
+  }
+  else {
+    return std::vector<float>(1,0);
+  }
+}
+
+std::vector<float>
+gr_block::pc_output_buffers_full_var()
+{
+  if(d_detail) {
+    return d_detail->pc_output_buffers_full_var();
+  }
+  else {
+    return std::vector<float>(1,0);
+  }
+}
+
+float
+gr_block::pc_work_time()
+{
+  if(d_detail) {
+    return d_detail->pc_work_time();
+  }
+  else {
+    return 0;
+  }
+}
+
+float
+gr_block::pc_work_time_var()
+{
+  if(d_detail) {
+    return d_detail->pc_work_time_var();
+  }
+  else {
+    return 0;
+  }
+}
+
+void
+gr_block::reset_perf_counters()
+{
+  if(d_detail) {
+    d_detail->reset_perf_counters();
+  }
+}
+
 std::ostream&
 operator << (std::ostream& os, const gr_block *m)
 {
@@ -215,3 +439,12 @@ operator << (std::ostream& os, const gr_block *m)
   return os;
 }
 
+int
+gr_block::general_work(int noutput_items,
+		       gr_vector_int &ninput_items,
+		       gr_vector_const_void_star &input_items,
+		       gr_vector_void_star &output_items)
+{
+  throw std::runtime_error("gr_block::general_work() not implemented");
+  return 0;
+}

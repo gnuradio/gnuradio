@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+<!--
+###################################################
+##Logical Not Block
+###################################################
+ -->
+<block>
+	<name>Not</name>
+	<key>blocks_not_xx</key>
+	<import>from gnuradio import blocks</import>
+	<make>blocks.not_$(type.fcn)()</make>
+	<param>
+		<name>IO Type</name>
+		<key>type</key>
+		<type>enum</type>
+		<option>
+			<name>Int</name>
+			<key>int</key>
+			<opt>fcn:ii</opt>
+		</option>
+		<option>
+			<name>Short</name>
+			<key>short</key>
+			<opt>fcn:ss</opt>
+		</option>
+		<option>
+			<name>Byte</name>
+			<key>byte</key>
+			<opt>fcn:bb</opt>
+		</option>
+	</param>
+	<sink>
+		<name>in</name>
+		<type>$type</type>
+	</sink>
+	<source>
+		<name>out</name>
+		<type>$type</type>
+	</source>
+</block>

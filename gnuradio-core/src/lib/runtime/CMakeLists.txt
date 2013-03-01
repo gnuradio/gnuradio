@@ -54,6 +54,7 @@ list(APPEND gnuradio_core_sources
     ${CMAKE_CURRENT_SOURCE_DIR}/gr_block.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/gr_block_detail.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/gr_block_executor.cc
+    ${CMAKE_CURRENT_SOURCE_DIR}/gr_block_registry.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/gr_hier_block2.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/gr_hier_block2_detail.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/gr_buffer.cc
@@ -118,6 +119,7 @@ install(FILES
     ${CMAKE_CURRENT_SOURCE_DIR}/gr_block.h
     ${CMAKE_CURRENT_SOURCE_DIR}/gr_block_detail.h
     ${CMAKE_CURRENT_SOURCE_DIR}/gr_block_executor.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/gr_block_registry.h
     ${CMAKE_CURRENT_SOURCE_DIR}/gr_hier_block2.h
     ${CMAKE_CURRENT_SOURCE_DIR}/gr_hier_block2_detail.h
     ${CMAKE_CURRENT_SOURCE_DIR}/gr_buffer.h

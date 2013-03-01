@@ -28,6 +28,7 @@
 #include <gr_block.h>
 #include <gr_block_detail.h>
 #include <gr_buffer.h>
+#include <gr_prefs.h>
 #include <boost/thread.hpp>
 #include <boost/format.hpp>
 #include <iostream>
@@ -64,22 +65,21 @@ round_down (unsigned int n, unsigned int multiple)
 // on is done.
 //
 static int
-min_available_space (gr_block_detail *d, int output_multiple)
+min_available_space (gr_block_detail *d, int output_multiple, int min_noutput_items)
 {
-  int	min_space = std::numeric_limits<int>::max();
-
+  int min_space = std::numeric_limits<int>::max();
+  if (min_noutput_items == 0)
+    min_noutput_items = 1;
   for (int i = 0; i < d->noutputs (); i++){
     gruel::scoped_lock guard(*d->output(i)->mutex());
-#if 0
-    int n = round_down(d->output(i)->space_available(), output_multiple);
-#else
-    int n = round_down(std::min(d->output(i)->space_available(),
-				d->output(i)->bufsize()/2),
-		       output_multiple);
-#endif
-    if (n == 0){			// We're blocked on output.
-      if (d->output(i)->done()){	// Downstream is done, therefore we're done.
-	return -1;
+    int avail_n = round_down(d->output(i)->space_available(), output_multiple);
+    int best_n = round_down(d->output(i)->bufsize()/2, output_multiple);
+    if (best_n < min_noutput_items)
+      throw std::runtime_error("Buffer too small for min_noutput_items");
+    int n = std::min(avail_n, best_n);
+    if (n < min_noutput_items){  // We're blocked on output.
+      if (d->output(i)->done()){ // Downstream is done, therefore we're done.
+        return -1;
       }
       return 0;
     }
@@ -166,6 +166,11 @@ gr_block_executor::gr_block_executor (gr_block_sptr block, int max_noutput_items
 	   << d_block << std::endl;
   }
 
+#ifdef GR_PERFORMANCE_COUNTERS
+  gr_prefs *prefs = gr_prefs::singleton();
+  d_use_pc = prefs->get_bool("PerfCounters", "on", false);
+#endif /* GR_PERFORMANCE_COUNTERS */
+
   d_block->start();			// enable any drivers, etc.
 }
 
@@ -205,8 +210,8 @@ gr_block_executor::run_one_iteration()
     d_start_nitems_read.resize(0);
 
     // determine the minimum available output space
-    noutput_items = min_available_space (d, m->output_multiple ());
-    noutput_items = std::min(noutput_items, d_max_noutput_items);
+    noutput_items = min_available_space (d, m->output_multiple (), m->min_noutput_items ());
+    noutput_items = std::min(noutput_items, max_noutput_items);
     LOG(*d_log << " source\n  noutput_items = " << noutput_items << std::endl);
     if (noutput_items == -1)		// we're done
       goto were_done;
@@ -251,7 +256,7 @@ gr_block_executor::run_one_iteration()
     // take a swag at how much output we can sink
     noutput_items = (int) (max_items_avail * m->relative_rate ());
     noutput_items = round_down (noutput_items, m->output_multiple ());
-    noutput_items = std::min(noutput_items, d_max_noutput_items);
+    noutput_items = std::min(noutput_items, max_noutput_items);
     LOG(*d_log << "  max_items_avail = " << max_items_avail << std::endl);
     LOG(*d_log << "  noutput_items = " << noutput_items << std::endl);
 
@@ -286,7 +291,7 @@ gr_block_executor::run_one_iteration()
     }
 
     // determine the minimum available output space
-    noutput_items = min_available_space (d, m->output_multiple ());
+    noutput_items = min_available_space (d, m->output_multiple (), m->min_noutput_items ());
     if (ENABLE_LOGGING){
       *d_log << " regular ";
       if (m->relative_rate() >= 1.0)
@@ -420,9 +425,20 @@ gr_block_executor::run_one_iteration()
     for (int i = 0; i < d->ninputs(); i++)
       d_start_nitems_read[i] = d->nitems_read(i);
 
+#ifdef GR_PERFORMANCE_COUNTERS
+    if(d_use_pc)
+      d->start_perf_counters();
+#endif /* GR_PERFORMANCE_COUNTERS */
+    
     // Do the actual work of the block
     int n = m->general_work (noutput_items, d_ninput_items,
 			     d_input_items, d_output_items);
+
+#ifdef GR_PERFORMANCE_COUNTERS
+    if(d_use_pc)
+      d->stop_perf_counters(noutput_items, n);
+#endif /* GR_PERFORMANCE_COUNTERS */
+
     LOG(*d_log << "  general_work: noutput_items = " << noutput_items
 	<< " result = " << n << std::endl);
 
@@ -449,6 +465,7 @@ gr_block_executor::run_one_iteration()
     // We didn't produce any output even though we called general_work.
     // We have (most likely) consumed some input.
 
+    /*
     // If this is a source, it's broken.
     if (d->source_p()){
       std::cerr << "gr_block_executor: source " << m
@@ -456,6 +473,7 @@ gr_block_executor::run_one_iteration()
       // FIXME maybe we ought to raise an exception...
       goto were_done;
     }
+    */
 
     // Have the caller try again...
     return READY_NO_OUTPUT;

@@ -34,11 +34,13 @@ set(BOOST_REQUIRED_COMPONENTS
     thread
 )
 
-if(UNIX AND EXISTS "/usr/lib64")
+if(UNIX AND NOT BOOST_ROOT AND EXISTS "/usr/lib64")
     list(APPEND BOOST_LIBRARYDIR "/usr/lib64") #fedora 64-bit fix
-endif(UNIX AND EXISTS "/usr/lib64")
+endif(UNIX AND NOT BOOST_ROOT AND EXISTS "/usr/lib64")
 
 if(MSVC)
+    set(BOOST_REQUIRED_COMPONENTS ${BOOST_REQUIRED_COMPONENTS} chrono)
+
     if (NOT DEFINED BOOST_ALL_DYN_LINK)
         set(BOOST_ALL_DYN_LINK TRUE)
     endif()
@@ -50,6 +52,12 @@ if(MSVC)
     endif(BOOST_ALL_DYN_LINK)
 endif(MSVC)
 
+find_package(Boost "1.35" COMPONENTS ${BOOST_REQUIRED_COMPONENTS})
+
+# This does not allow us to disable specific versions. It is used
+# internally by cmake to know the formation newer versions. As newer
+# Boost version beyond what is shown here are produced, we must extend
+# this list. To disable Boost versions, see below.
 set(Boost_ADDITIONAL_VERSIONS
     "1.35.0" "1.35" "1.36.0" "1.36" "1.37.0" "1.37" "1.38.0" "1.38" "1.39.0" "1.39"
     "1.40.0" "1.40" "1.41.0" "1.41" "1.42.0" "1.42" "1.43.0" "1.43" "1.44.0" "1.44"
@@ -59,4 +67,33 @@ set(Boost_ADDITIONAL_VERSIONS
     "1.60.0" "1.60" "1.61.0" "1.61" "1.62.0" "1.62" "1.63.0" "1.63" "1.64.0" "1.64"
     "1.65.0" "1.65" "1.66.0" "1.66" "1.67.0" "1.67" "1.68.0" "1.68" "1.69.0" "1.69"
 )
-find_package(Boost "1.35" COMPONENTS ${BOOST_REQUIRED_COMPONENTS})
+
+# Boost 1.52 disabled, see https://svn.boost.org/trac/boost/ticket/7669
+# Similar problems with Boost 1.46 and 1.47.
+
+OPTION(ENABLE_BAD_BOOST "Enable known bad versions of Boost" OFF)
+if(ENABLE_BAD_BOOST)
+  MESSAGE(STATUS "Enabling use of known bad versions of Boost.")
+endif(ENABLE_BAD_BOOST)
+
+# For any unsuitable Boost version, add the version number below in
+# the following format: XXYYZZ
+# Where:
+#     XX is the major version ('10' for version 1)
+#     YY is the minor version number ('46' for 1.46)
+#     ZZ is the patcher version number (typically just '00')
+set(Boost_NOGO_VERSIONS
+  104600 104601 104700 105200
+  )
+
+foreach(ver ${Boost_NOGO_VERSIONS})
+  if(${Boost_VERSION} EQUAL ${ver})
+    if(NOT ENABLE_BAD_BOOST)
+      MESSAGE(STATUS "WARNING: Found a known bad version of Boost (v${Boost_VERSION}). Disabling.")
+      set(Boost_FOUND FALSE)
+    else(NOT ENABLE_BAD_BOOST)
+      MESSAGE(STATUS "WARNING: Found a known bad version of Boost (v${Boost_VERSION}). Continuing anyway.")
+      set(Boost_FOUND TRUE)
+    endif(NOT ENABLE_BAD_BOOST)
+  endif(${Boost_VERSION} EQUAL ${ver})
+endforeach(ver)

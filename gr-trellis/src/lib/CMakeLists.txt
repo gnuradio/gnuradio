@@ -23,12 +23,13 @@ include(GrPython)
 # Setup the include and linker paths
 ########################################################################
 include_directories(
-    ${GNURADIO_CORE_INCLUDE_DIRS}
     ${GR_TRELLIS_INCLUDE_DIRS}
     ${GR_DIGITAL_INCLUDE_DIRS}
+    ${GNURADIO_CORE_INCLUDE_DIRS}
+    ${GRUEL_INCLUDE_DIRS}
+    ${Boost_INCLUDE_DIRS}
 )
 
-include_directories(${Boost_INCLUDE_DIRS})
 link_directories(${Boost_LIBRARY_DIRS})
 
 include_directories(${LOG4CXX_INCLUDE_DIRS})
@@ -202,16 +203,16 @@ if(ENABLE_PYTHON)
 include(GrPython)
 include(GrSwig)
 
-set(GR_SWIG_TARGET_DEPS core_swig)
-
 set(GR_SWIG_SOURCE_DEPS
     ${generated_trellis_includes}
     ${generated_trellis_swigs}
 )
 set(GR_SWIG_INCLUDE_DIRS
     ${GR_TRELLIS_INCLUDE_DIRS}
-    ${GNURADIO_CORE_SWIG_INCLUDE_DIRS}
     ${GR_DIGITAL_SWIG_INCLUDE_DIRS}
+    ${GNURADIO_CORE_SWIG_INCLUDE_DIRS}
+    ${GRUEL_INCLUDE_DIRS}
+    ${Boost_INCLUDE_DIRS}
 )
 
 set(GR_SWIG_DOC_FILE ${CMAKE_CURRENT_BINARY_DIR}/trellis_swig_doc.i)

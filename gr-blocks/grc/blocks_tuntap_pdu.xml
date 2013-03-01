@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+<!--
+###################################################
+## TUNTAP PDU async message source/sink
+###################################################
+ -->
+<block>
+  <name>TUNTAP PDU</name>
+  <key>blocks_tuntap_pdu</key>
+  <import>from gnuradio import blocks</import>
+  <make>blocks.tuntap_pdu($ifn, $mtu)</make>
+  <param>
+    <name>Interface Name</name>
+    <key>ifn</key>
+    <value>tun0</value>
+    <type>string</type>
+  </param>
+  <param>
+    <name>MTU</name>
+    <key>mtu</key>
+    <value>10000</value>
+    <type>int</type>
+  </param>
+  <sink>
+    <name>pdus</name>
+    <type>message</type>
+    <optional>1</optional>
+  </sink>
+  <source>
+    <name>pdus</name>
+    <type>message</type>
+    <optional>1</optional>
+  </source>
+</block>

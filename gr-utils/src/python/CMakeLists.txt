@@ -35,7 +35,7 @@ GR_PYTHON_INSTALL(
 
 GR_PYTHON_INSTALL(
     PROGRAMS
-    create-gnuradio-out-of-tree-project
+    gr_modtool
     gr_plot_char
     gr_plot_const
     gr_plot_fft
@@ -50,6 +50,10 @@ GR_PYTHON_INSTALL(
     gr_plot_short
     gr_plot_qt
     gr_filter_design
+    gr_read_file_metadata
+    grcc
     DESTINATION ${GR_RUNTIME_DIR}
     COMPONENT "utils"
 )
+
+add_subdirectory(modtool)

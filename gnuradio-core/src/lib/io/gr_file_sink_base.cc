@@ -79,7 +79,6 @@ gr_file_sink_base::open(const char *filename)
     perror (filename);
     return false;
   }
-
   if (d_new_fp){		// if we've already got a new one open, close it
     fclose(d_new_fp);
     d_new_fp = 0;
@@ -122,5 +121,5 @@ gr_file_sink_base::do_update()
 void
 gr_file_sink_base::set_unbuffered(bool unbuffered)
 {
-	d_unbuffered = unbuffered;
+  d_unbuffered = unbuffered;
 }

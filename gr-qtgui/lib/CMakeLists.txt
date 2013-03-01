@@ -1,4 +1,4 @@
-# Copyright 2010-2011 Free Software Foundation, Inc.
+# Copyright 2010-2011,2013 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -62,20 +62,22 @@ set(qtgui_srcs
 # Setup the include and linker paths
 ########################################################################
 include_directories(
-    ${GNURADIO_CORE_INCLUDE_DIRS}
     ${GR_QTGUI_INCLUDE_DIRS}
+    ${GNURADIO_CORE_INCLUDE_DIRS}
+    ${GRUEL_INCLUDE_DIRS}
+    ${QWT_INCLUDE_DIRS}
+    ${QT_INCLUDE_DIRS}
+    ${LOG4CXX_INCLUDE_DIRS}
+    ${Boost_INCLUDE_DIRS}
+    ${PYTHON_INCLUDE_DIRS}
 )
 
-include_directories(${Boost_INCLUDE_DIRS})
-link_directories(${Boost_LIBRARY_DIRS})
+link_directories(
+	${QWT_LIBRARY_DIRS}
+        ${LOG4CXX_LIBRARY_DIRS}
+	${Boost_LIBRARY_DIRS}
+)
 
-include_directories(${LOG4CXX_INCLUDE_DIRS})
-link_directories(${LOG4CXX_LIBRARY_DIRS})
-
-include_directories(${QWT_INCLUDE_DIRS})
-link_directories(${QWT_LIBRARY_DIRS})
-
-include_directories(${PYTHON_INCLUDE_DIRS})
 include_directories(${PYTHON_INCLUDE_PATH}) #deprecated for dirs (cmake 2.6)
 
 ########################################################################
@@ -83,8 +85,8 @@ include_directories(${PYTHON_INCLUDE_PATH}) #deprecated for dirs (cmake 2.6)
 ########################################################################
 list(APPEND qtgui_libs
     gnuradio-core
-    ${QT_LIBRARIES}
     ${QWT_LIBRARIES}
+    ${QT_LIBRARIES}
     ${PYTHON_LIBRARIES}
     ${LOG4CXX_LIBRARIES}
 )

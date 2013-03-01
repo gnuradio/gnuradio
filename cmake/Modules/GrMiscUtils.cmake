@@ -241,3 +241,69 @@ function(GR_LOGGING)
     SET(LOG4CXX_LIBRARIES "" CACHE INTERNAL "" FORCE)
   endif(ENABLE_GR_LOG)
 endfunction(GR_LOGGING)
+
+########################################################################
+# Run GRCC to compile .grc files into .py files.
+#
+# Usage: GRCC(filename, directory)
+#    - filenames: List of file name of .grc file
+#    - directory: directory of built .py file - usually in
+#                 ${CMAKE_CURRENT_BINARY_DIR}
+#    - Sets PYFILES: output converted GRC file names to Python files.
+########################################################################
+function(GRCC)
+  # Extract directory from list of args, remove it for the list of filenames.
+  list(GET ARGV -1 directory)
+  list(REMOVE_AT ARGV -1)
+  set(filenames ${ARGV})
+  file(MAKE_DIRECTORY ${directory})
+
+  SET(GRCC_COMMAND ${CMAKE_SOURCE_DIR}/gr-utils/src/python/grcc)
+
+  # GRCC uses some stuff in grc and gnuradio-core, so we force
+  # the known paths here
+  list(APPEND PYTHONPATHS
+    ${CMAKE_SOURCE_DIR}
+    ${CMAKE_SOURCE_DIR}/gnuradio-core/src/python
+    ${CMAKE_SOURCE_DIR}/gnuradio-core/src/lib/swig
+    ${CMAKE_BINARY_DIR}/gnuradio-core/src/lib/swig
+    )
+
+  if(WIN32)
+    #SWIG generates the python library files into a subdirectory.
+    #Therefore, we must append this subdirectory into PYTHONPATH.
+    #Only do this for the python directories matching the following:
+    foreach(pydir ${PYTHONPATHS})
+      get_filename_component(name ${pydir} NAME)
+      if(name MATCHES "^(swig|lib|src)$")
+        list(APPEND PYTHONPATHS ${pydir}/${CMAKE_BUILD_TYPE})
+      endif()
+    endforeach(pydir)
+  endif(WIN32)
+
+  file(TO_NATIVE_PATH "${PYTHONPATHS}" pypath)
+
+  if(UNIX)
+    list(APPEND pypath "$PYTHONPATH")
+    string(REPLACE ";" ":" pypath "${pypath}")
+    set(ENV{PYTHONPATH} ${pypath})
+  endif(UNIX)
+
+  if(WIN32)
+    list(APPEND pypath "%PYTHONPATH%")
+    string(REPLACE ";" "\\;" pypath "${pypath}")
+    #list(APPEND environs "PYTHONPATH=${pypath}")
+    set(ENV{PYTHONPATH} ${pypath})
+  endif(WIN32)
+
+  foreach(f ${filenames})
+    execute_process(
+      COMMAND ${GRCC_COMMAND} -d ${directory} ${f}
+      )
+    string(REPLACE ".grc" ".py" pyfile "${f}")
+    string(REPLACE "${CMAKE_CURRENT_SOURCE_DIR}" "${CMAKE_CURRENT_BINARY_DIR}" pyfile "${pyfile}")
+    list(APPEND pyfiles ${pyfile})
+  endforeach(f)
+
+  set(PYFILES ${pyfiles} PARENT_SCOPE)
+endfunction(GRCC)

@@ -22,5 +22,5 @@
 
 GR_SWIG_BLOCK_MAGIC(gr,annotator_raw);
 
-%include <pmt_swig.i>
+%include <gr_tags.i>
 %include <gr_annotator_raw.h>

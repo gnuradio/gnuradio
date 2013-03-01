@@ -21,19 +21,12 @@
 include(GrPython)
 include(GrSwig)
 
-include_directories(${Boost_INCLUDE_DIRS})
-link_directories(${Boost_LIBRARY_DIRS})
-
-include_directories(${LOG4CXX_INCLUDE_DIRS})
-link_directories(${LOG4CXX_LIBRARY_DIRS})
-
 set(GR_SWIG_INCLUDE_DIRS
-    ${Boost_INCLUDE_DIRS}
-    ${GSL_INCLUDE_DIRS}
+    ${CMAKE_CURRENT_BINARY_DIR}
+    ${GNURADIO_CORE_SWIG_INCLUDE_DIRS}
     ${GRUEL_INCLUDE_DIRS}
     ${LOG4CXX_INCLUDE_DIRS}
-    ${GNURADIO_CORE_SWIG_INCLUDE_DIRS}
-    ${CMAKE_CURRENT_BINARY_DIR}
+    ${Boost_INCLUDE_DIRS}
 )
 set(GR_SWIG_LIBRARIES
     gnuradio-core
@@ -45,6 +38,8 @@ set(GR_SWIG_LIBRARIES
 if(ENABLE_GR_LOG)
      SET(GR_SWIG_FLAGS "-DENABLE_GR_LOG")
 endif(ENABLE_GR_LOG)
+
+link_directories(${Boost_LIBRARY_DIRS})
 
 ########################################################################
 # Build and install the swig targets

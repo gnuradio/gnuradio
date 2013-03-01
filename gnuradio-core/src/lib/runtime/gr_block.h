@@ -124,7 +124,7 @@ class GR_CORE_API gr_block : public gr_basic_block {
   virtual int general_work (int noutput_items,
 			    gr_vector_int &ninput_items,
 			    gr_vector_const_void_star &input_items,
-			    gr_vector_void_star &output_items) = 0;
+			    gr_vector_void_star &output_items);
 
   /*!
    * \brief Called to enable drivers, etc for i/o devices.
@@ -251,6 +251,227 @@ class GR_CORE_API gr_block : public gr_basic_block {
    */
   void set_tag_propagation_policy(tag_propagation_policy_t p);
 
+  /*!
+   * \brief Return the minimum number of output items this block can
+   * produce during a call to work.
+   *
+   * Should be 0 for most blocks.  Useful if we're dealing with packets and
+   * the block produces one packet per call to work.
+  */
+  int min_noutput_items() const { return d_min_noutput_items; }
+
+  /*!
+   * \brief Set the minimum number of output items this block can
+   * produce during a call to work.
+   *
+   * \param m the minimum noutput_items this block can produce.
+   */
+  void set_min_noutput_items(int m) { d_min_noutput_items = m; }
+
+  /*!
+   * \brief Return the maximum number of output items this block will
+   * handle during a call to work.
+   */
+  int max_noutput_items();
+
+  /*!
+   * \brief Set the maximum number of output items this block will
+   * handle during a call to work.
+   *
+   * \param m the maximum noutput_items this block will handle.
+   */
+  void set_max_noutput_items(int m);
+
+  /*!
+   * \brief Clear the switch for using the max_noutput_items value of this block.
+   *
+   * When is_set_max_noutput_items() returns 'true', the scheduler
+   * will use the value returned by max_noutput_items() to limit the
+   * size of the number of items possible for this block's work
+   * function. If is_set_max_notput_items() returns 'false', then the
+   * scheduler ignores the internal value and uses the value set
+   * globally in the top_block.
+   *
+   * Use this value to clear the 'is_set' flag so the scheduler will
+   * ignore this. Use the set_max_noutput_items(m) call to both set a
+   * new value for max_noutput_items and to reenable its use in the
+   * scheduler.
+   */
+  void unset_max_noutput_items();
+
+  /*!
+   * \brief Ask the block if the flag is or is not set to use the
+   * internal value of max_noutput_items during a call to work.
+   */
+  bool is_set_max_noutput_items();
+
+  /*
+   * Used to expand the vectors that hold the min/max buffer sizes.
+   *
+   * Specifically, when -1 is used, the vectors are just initialized
+   * with 1 value; this is used by the flat_flowgraph to expand when
+   * required to add a new value for new ports on these blocks.
+   */
+  void expand_minmax_buffer(int port) {
+    if((size_t)port >= d_max_output_buffer.size())
+      set_max_output_buffer(port, -1);
+    if((size_t)port >= d_min_output_buffer.size())
+      set_min_output_buffer(port, -1);
+  }
+
+  /*!
+   * \brief Returns max buffer size on output port \p i.
+   */
+  long max_output_buffer(size_t i) {
+    if(i >= d_max_output_buffer.size())
+      throw std::invalid_argument("gr_basic_block::max_output_buffer: port out of range.");
+    return d_max_output_buffer[i];
+  }
+
+  /*!
+   * \brief Sets max buffer size on all output ports.
+   */
+  void set_max_output_buffer(long max_output_buffer) { 
+    for(int i = 0; i < output_signature()->max_streams(); i++) {
+      set_max_output_buffer(i, max_output_buffer);
+    }
+  }
+
+  /*!
+   * \brief Sets max buffer size on output port \p port.
+   */
+  void set_max_output_buffer(int port, long max_output_buffer) {
+    if((size_t)port >= d_max_output_buffer.size())
+      d_max_output_buffer.push_back(max_output_buffer);
+    else
+      d_max_output_buffer[port] = max_output_buffer; 
+  }
+
+  /*!
+   * \brief Returns min buffer size on output port \p i.
+   */
+  long min_output_buffer(size_t i) {
+    if(i >= d_min_output_buffer.size())
+      throw std::invalid_argument("gr_basic_block::min_output_buffer: port out of range.");
+    return d_min_output_buffer[i];
+  }
+
+  /*!
+   * \brief Sets min buffer size on all output ports.
+   */
+  void set_min_output_buffer(long min_output_buffer) {
+    for(int i=0; i<output_signature()->max_streams(); i++) {
+      set_min_output_buffer(i, min_output_buffer);
+    }
+  }
+
+  /*!
+   * \brief Sets min buffer size on output port \p port.
+   */
+  void set_min_output_buffer(int port, long min_output_buffer) {
+    if((size_t)port >= d_min_output_buffer.size())
+      d_min_output_buffer.push_back(min_output_buffer);
+    else
+      d_min_output_buffer[port] = min_output_buffer; 
+  }
+
+  // --------------- Performance counter functions -------------
+
+  /*!
+   * \brief Gets average noutput_items performance counter.
+   */
+  float pc_noutput_items();
+
+  /*!
+   * \brief Gets variance of noutput_items performance counter.
+   */
+  float pc_noutput_items_var();
+
+  /*!
+   * \brief Gets average num items produced performance counter.
+   */
+  float pc_nproduced();
+
+  /*!
+   * \brief Gets variance of  num items produced performance counter.
+   */
+  float pc_nproduced_var();
+
+  /*!
+   * \brief Gets average fullness of \p which input buffer.
+   */
+  float pc_input_buffers_full(int which);
+
+  /*!
+   * \brief Gets variance of fullness of \p which input buffer.
+   */
+  float pc_input_buffers_full_var(int which);
+
+  /*!
+   * \brief Gets average fullness of all input buffers.
+   */
+  std::vector<float> pc_input_buffers_full();
+
+  /*!
+   * \brief Gets variance of fullness of all input buffers.
+   */
+  std::vector<float> pc_input_buffers_full_var();
+
+  /*!
+   * \brief Gets average fullness of \p which input buffer.
+   */
+  float pc_output_buffers_full(int which);
+
+  /*!
+   * \brief Gets variance of fullness of \p which input buffer.
+   */
+  float pc_output_buffers_full_var(int which);
+
+  /*!
+   * \brief Gets average fullness of all output buffers.
+   */
+  std::vector<float> pc_output_buffers_full();
+  /*!
+   * \brief Gets variance of fullness of all output buffers.
+   */
+  std::vector<float> pc_output_buffers_full_var();
+
+  /*!
+   * \brief Gets average clock cycles spent in work.
+   */
+  float pc_work_time();
+
+  /*!
+   * \brief Gets average clock cycles spent in work.
+   */
+  float pc_work_time_var();
+
+  /*!
+   * \brief Resets the performance counters
+   */
+  void reset_perf_counters();
+
+
+  // ----------------------------------------------------------------------------
+  // Functions to handle thread affinity
+
+  /*!
+   * \brief Set the thread's affinity to processor core \p n.
+   *
+   * \param mask a vector of unsigned ints of the core numbers available to this block.
+   */
+  void set_processor_affinity(const std::vector<unsigned int> &mask);
+
+  /*!
+   * \brief Remove processor affinity to a specific core.
+   */
+  void unset_processor_affinity();
+
+  /*!
+   * \brief Get the current processor affinity.
+   */
+  std::vector<unsigned int> processor_affinity() { return d_affinity; }
+
   // ----------------------------------------------------------------------------
 
  private:
@@ -263,7 +484,11 @@ class GR_CORE_API gr_block : public gr_basic_block {
   gr_block_detail_sptr	d_detail;		// implementation details
   unsigned              d_history;
   bool                  d_fixed_rate;
+  bool                  d_max_noutput_items_set;     // if d_max_noutput_items is valid
+  int                   d_max_noutput_items;         // value of max_noutput_items for this block
+  int                   d_min_noutput_items;
   tag_propagation_policy_t d_tag_propagation_policy; // policy for moving tags downstream
+  std::vector<unsigned int> d_affinity;              // thread affinity proc. mask
 
  protected:
   gr_block (void){} //allows pure virtual interface sub-classes
@@ -307,6 +532,42 @@ class GR_CORE_API gr_block : public gr_basic_block {
   void add_item_tag(unsigned int which_output, const gr_tag_t &tag);
 
   /*!
+   * \brief  Removes a tag from the given input buffer.
+   *
+   * \param which_input an integer of which input stream to remove the tag from
+   * \param abs_offset   a uint64 number of the absolute item number
+   *                     assicated with the tag. Can get from nitems_written.
+   * \param key          the tag key as a PMT symbol
+   * \param value        any PMT holding any value for the given key
+   * \param srcid        optional source ID specifier; defaults to PMT_F
+   *
+   * If no such tag is found, does nothing.
+   */
+  inline void remove_item_tag(unsigned int which_input,
+		    uint64_t abs_offset,
+		    const pmt::pmt_t &key,
+		    const pmt::pmt_t &value,
+		    const pmt::pmt_t &srcid=pmt::PMT_F)
+  {
+      gr_tag_t tag;
+      tag.offset = abs_offset;
+      tag.key = key;
+      tag.value = value;
+      tag.srcid = srcid;
+      this->remove_item_tag(which_input, tag);
+  }
+
+ /*!
+   * \brief  Removes a tag from the given input buffer.
+   *
+   * If no such tag is found, does nothing.
+   *
+   * \param which_input an integer of which input stream to remove the tag from
+   * \param tag the tag object to remove
+   */
+  void remove_item_tag(unsigned int which_input, const gr_tag_t &tag);
+
+  /*!
    * \brief Given a [start,end), returns a vector of all tags in the range.
    *
    * Range of counts is from start to end-1.
@@ -344,6 +605,16 @@ class GR_CORE_API gr_block : public gr_basic_block {
 			 uint64_t abs_start,
 			 uint64_t abs_end,
 			 const pmt::pmt_t &key);
+
+  std::vector<long>    d_max_output_buffer;
+  std::vector<long>    d_min_output_buffer;
+
+  /*! Used by block's setters and work functions to make
+   * setting/resetting of parameters thread-safe.
+   *
+   * Used by calling gruel::scoped_lock l(d_setlock);
+   */ 
+  gruel::mutex d_setlock;
 
   // These are really only for internal use, but leaving them public avoids
   // having to work up an ever-varying list of friend GR_CORE_APIs

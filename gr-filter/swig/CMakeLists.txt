@@ -25,15 +25,17 @@ include(GrSwig)
 
 set(GR_SWIG_INCLUDE_DIRS
     ${GR_FILTER_INCLUDE_DIRS}
+    ${GR_FFT_INCLUDE_DIRS}
     ${GNURADIO_CORE_SWIG_INCLUDE_DIRS}
-    ${FFT_INCLUDE_DIRS}
+    ${GRUEL_INCLUDE_DIRS}
+    ${Boost_INCLUDE_DIRS}
     ${FFTW3F_INCLUDE_DIRS}
 )
 
 # FIXME: rename to filter_swig_doc.i when gnuradio-core is updated
 set(GR_SWIG_DOC_FILE ${CMAKE_CURRENT_BINARY_DIR}/gr_filter_swig_doc.i)
 set(GR_SWIG_DOC_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/../lib)
-
+set(GR_SWIG_TARGET_DEPS filter_generated_includes)
 set(GR_SWIG_LIBRARIES gnuradio-filter gnuradio-fft)
 
 GR_SWIG_MAKE(filter_swig filter_swig.i)

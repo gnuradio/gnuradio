@@ -36,6 +36,13 @@ class qa_gr_top_block : public CppUnit::TestCase
   CPPUNIT_TEST(t2_start_stop_wait);
   CPPUNIT_TEST(t3_lock_unlock);
   CPPUNIT_TEST(t4_reconfigure);  // triggers 'join never returns' bug
+  CPPUNIT_TEST(t5_max_noutputs);
+  CPPUNIT_TEST(t6_reconfig_max_noutputs);
+  CPPUNIT_TEST(t7_max_noutputs_per_block);
+  CPPUNIT_TEST(t8_reconfig_max_noutputs_per_block);
+  CPPUNIT_TEST(t9_max_output_buffer);
+  CPPUNIT_TEST(t10_reconfig_max_output_buffer);
+  CPPUNIT_TEST(t11_set_block_affinity);
 
   CPPUNIT_TEST_SUITE_END();
 
@@ -46,6 +53,14 @@ private:
   void t2_start_stop_wait();
   void t3_lock_unlock();
   void t4_reconfigure();
+  void t5_max_noutputs();
+  void t6_reconfig_max_noutputs();
+  void t7_max_noutputs_per_block();
+  void t8_reconfig_max_noutputs_per_block();
+  void t9_max_output_buffer();
+  void t10_reconfig_max_output_buffer();
+  void t11_set_block_affinity();
+
 };
 
 #endif /* INCLUDED_QA_GR_TOP_BLOCK_H */

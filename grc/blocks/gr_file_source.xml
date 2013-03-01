@@ -9,6 +9,7 @@
 	<key>gr_file_source</key>
 	<import>from gnuradio import gr</import>
 	<make>gr.file_source($type.size*$vlen, $file, $repeat)</make>
+	<callback>open($file, $repeat)</callback>
 	<param>
 		<name>File</name>
 		<key>file</key>

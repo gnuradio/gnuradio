@@ -24,7 +24,7 @@
 
 #include <digital_api.h>
 #include <gr_sync_block.h>
-#include <gri_lfsr.h>
+#include <analog/lfsr.h>
 
 class digital_additive_scrambler_bb;
 typedef boost::shared_ptr<digital_additive_scrambler_bb> digital_additive_scrambler_bb_sptr;
@@ -57,7 +57,7 @@ class DIGITAL_API digital_additive_scrambler_bb : public gr_sync_block
     digital_make_additive_scrambler_bb(int mask, int seed,
 				       int len, int count);
 
-  gri_lfsr d_lfsr;
+  gr::analog::lfsr d_lfsr;
   int      d_count;
   int      d_bits;
 

@@ -10,6 +10,7 @@
 	<throttle>1</throttle>
 	<import>from gnuradio import gr</import>
 	<make>gr.throttle($type.size*$vlen, $samples_per_second)</make>
+    <callback>set_sample_rate($samples_per_second)</callback>
 	<param>
 		<name>Type</name>
 		<key>type</key>

@@ -25,12 +25,12 @@ include(GrSwig)
 
 #set(GR_SWIG_FLAGS -DGR_HAVE_FCD) #needed to parse fcd_swig.i
 
-set(GR_SWIG_TARGET_DEPS core_swig)
-
 set(GR_SWIG_INCLUDE_DIRS
     ${GR_FCD_INCLUDE_DIRS}
-    ${GNURADIO_CORE_SWIG_INCLUDE_DIRS}
     ${GR_AUDIO_INCLUDE_DIRS}
+    ${GNURADIO_CORE_SWIG_INCLUDE_DIRS}
+    ${GRUEL_INCLUDE_DIRS}
+    ${Boost_INCLUDE_DIRS}
 )
 
 set(GR_SWIG_DOC_FILE ${CMAKE_CURRENT_BINARY_DIR}/fcd_swig_doc.i)

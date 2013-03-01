@@ -33,7 +33,7 @@
 #include <gr_annotator_1to1.h>
 #include <gr_keep_one_in_n.h>
 #include <gr_firdes.h>
-#include <gruel/pmt.h>
+#include <gr_tags.h>
 
 
 // ----------------------------------------------------------------

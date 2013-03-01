@@ -1,0 +1,63 @@
+<?xml version="1.0"?>
+<!--
+###################################################
+##Add Block:
+##	all types, 1 output, 2 to inf inputs
+###################################################
+ -->
+<block>
+	<name>Add</name>
+	<key>blocks_add_xx</key>
+	<import>from gnuradio import blocks</import>
+	<make>blocks.add_v$(type.fcn)($vlen)</make>
+	<param>
+		<name>IO Type</name>
+		<key>type</key>
+		<type>enum</type>
+		<option>
+			<name>Complex</name>
+			<key>complex</key>
+			<opt>fcn:cc</opt>
+		</option>
+		<option>
+			<name>Float</name>
+			<key>float</key>
+			<opt>fcn:ff</opt>
+		</option>
+		<option>
+			<name>Int</name>
+			<key>int</key>
+			<opt>fcn:ii</opt>
+		</option>
+		<option>
+			<name>Short</name>
+			<key>short</key>
+			<opt>fcn:ss</opt>
+		</option>
+	</param>
+	<param>
+		<name>Num Inputs</name>
+		<key>num_inputs</key>
+		<value>2</value>
+		<type>int</type>
+	</param>
+	<param>
+		<name>Vec Length</name>
+		<key>vlen</key>
+		<value>1</value>
+		<type>int</type>
+	</param>
+	<check>$num_inputs &gt; 1</check>
+	<check>$vlen &gt; 0</check>
+	<sink>
+		<name>in</name>
+		<type>$type</type>
+		<vlen>$vlen</vlen>
+		<nports>$num_inputs</nports>
+	</sink>
+	<source>
+		<name>out</name>
+		<type>$type</type>
+		<vlen>$vlen</vlen>
+	</source>
+</block>

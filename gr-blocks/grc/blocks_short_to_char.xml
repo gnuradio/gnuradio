@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<!--
+###################################################
+##Short to char:
+###################################################
+ -->
+<block>
+	<name>Short To Char</name>
+	<key>blocks_short_to_char</key>
+	<import>from gnuradio import blocks</import>
+	<make>blocks.short_to_char($vlen)</make>
+	<param>
+		<name>Vec Length</name>
+		<key>vlen</key>
+		<value>1</value>
+		<type>int</type>
+	</param>
+	<sink>
+		<name>in</name>
+		<type>short</type>
+		<vlen>$vlen</vlen>
+	</sink>
+	<source>
+		<name>out</name>
+		<type>byte</type>
+		<vlen>$vlen</vlen>
+	</source>
+</block>

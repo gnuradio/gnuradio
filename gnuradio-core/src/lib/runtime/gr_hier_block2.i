@@ -38,6 +38,10 @@ gr_hier_block2_sptr gr_make_hier_block2(const std::string name,
 // better interface in scripting land.
 %rename(primitive_connect) gr_hier_block2::connect;
 %rename(primitive_disconnect) gr_hier_block2::disconnect;
+%rename(primitive_msg_connect) gr_hier_block2::msg_connect;
+%rename(primitive_msg_disconnect) gr_hier_block2::msg_disconnect;
+%rename(primitive_message_port_register_hier_in) gr_hier_block2::message_port_register_hier_in;
+%rename(primitive_message_port_register_hier_out) gr_hier_block2::message_port_register_hier_out;
 
 class gr_hier_block2 : public gr_basic_block
 {
@@ -54,6 +58,19 @@ public:
   void connect(gr_basic_block_sptr src, int src_port,
 	       gr_basic_block_sptr dst, int dst_port)
     throw (std::invalid_argument);
+  void msg_connect(gr_basic_block_sptr src, pmt::pmt_t srcport,
+           gr_basic_block_sptr dst, pmt::pmt_t dstport)
+    throw (std::runtime_error);
+  void msg_connect(gr_basic_block_sptr src, std::string srcport,
+           gr_basic_block_sptr dst,  std::string dstport)
+    throw (std::runtime_error);
+  void msg_disconnect(gr_basic_block_sptr src, pmt::pmt_t srcport,
+           gr_basic_block_sptr dst, pmt::pmt_t dstport)
+    throw (std::runtime_error);
+  void msg_disconnect(gr_basic_block_sptr src, std::string srcport,
+           gr_basic_block_sptr dst, std::string dstport)
+    throw (std::runtime_error);
+
   void disconnect(gr_basic_block_sptr block)
     throw (std::invalid_argument);
   void disconnect(gr_basic_block_sptr src, int src_port,
@@ -62,6 +79,10 @@ public:
   void disconnect_all();
   void lock();
   void unlock();
+
+  void message_port_register_hier_in(pmt::pmt_t port_id);
+  void message_port_register_hier_out(pmt::pmt_t port_id);
+
 
   gr_hier_block2_sptr to_hier_block2(); // Needed for Python type coercion
 };

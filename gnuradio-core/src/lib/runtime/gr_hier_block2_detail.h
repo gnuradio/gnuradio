@@ -39,6 +39,10 @@ public:
   void connect(gr_basic_block_sptr block);
   void connect(gr_basic_block_sptr src, int src_port,
 	       gr_basic_block_sptr dst, int dst_port);
+  void msg_connect(gr_basic_block_sptr src, pmt::pmt_t srcport,
+	       gr_basic_block_sptr dst, pmt::pmt_t dstport);
+  void msg_disconnect(gr_basic_block_sptr src, pmt::pmt_t srcport,
+	       gr_basic_block_sptr dst, pmt::pmt_t dstport);
   void disconnect(gr_basic_block_sptr block);
   void disconnect(gr_basic_block_sptr, int src_port,
 		  gr_basic_block_sptr, int dst_port);
@@ -56,6 +60,7 @@ private:
   std::vector<gr_endpoint_vector_t> d_inputs; // Multiple internal endpoints per external input
   gr_endpoint_vector_t d_outputs;             // Single internal endpoint per external output
   gr_basic_block_vector_t d_blocks;
+
 
   void connect_input(int my_port, int port, gr_basic_block_sptr block);
   void connect_output(int my_port, int port, gr_basic_block_sptr block);

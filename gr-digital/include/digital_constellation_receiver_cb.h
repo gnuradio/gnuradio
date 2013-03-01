@@ -41,36 +41,18 @@ digital_make_constellation_receiver_cb (digital_constellation_sptr constellation
 					float loop_bw, float fmin, float fmax);
 
 /*!
- * \brief This block takes care of receiving generic modulated signals
- * through phase, frequency, and symbol synchronization.
+ * \brief This block does fine-phase and frequency locking and decision making.
  * \ingroup sync_blk
  * \ingroup demod_blk
  * \ingroup digital
- *
- * This block takes care of receiving generic modulated signals
- * through phase, frequency, and symbol synchronization. It performs
- * carrier frequency and phase locking as well as symbol timing
- * recovery.
  *
  * The phase and frequency synchronization are based on a Costas loop
  * that finds the error of the incoming signal point compared to its
  * nearest constellation point. The frequency and phase of the NCO are
  * updated according to this error.
  *
- * The symbol synchronization is done using a modified Mueller and
- * Muller circuit from the paper:
- * 
- * "G. R. Danesfahani, T.G. Jeans, "Optimisation of modified Mueller
- * and Muller algorithm," Electronics Letters, Vol. 31, no. 13, 22
- * June 1995, pp. 1032 - 1033."
- *
- * This circuit interpolates the downconverted sample (using the NCO
- * developed by the Costas loop) every mu samples, then it finds the
- * sampling error based on this and the past symbols and the decision
- * made on the samples. Like the phase error detector, there are
- * optimized decision algorithms for BPSK and QPKS, but 8PSK uses
- * another brute force computation against all possible symbols. The
- * modifications to the M&M used here reduce self-noise.
+ * The decicision making itself is performed by the appropriate method of the
+ * passed constellation object.
  *
  */
 
@@ -87,13 +69,11 @@ protected:
  /*!
    * \brief Constructor to synchronize incoming M-PSK symbols
    *
-   * \param constellation	constellation of points for generic modulation
+   * \param constellation constellation object for generic demodulation
    * \param loop_bw	Loop bandwidth of the Costas Loop (~ 2pi/100)
    * \param fmin        minimum normalized frequency value the loop can achieve
    * \param fmax        maximum normalized frequency value the loop can achieve
    *
-   * The constructor also chooses which phase detector and decision maker to use in the
-   * work loop based on the value of M.
    */
   digital_constellation_receiver_cb (digital_constellation_sptr constellation, 
 				     float loop_bw, float fmin, float fmax);

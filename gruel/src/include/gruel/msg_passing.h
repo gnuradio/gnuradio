@@ -36,6 +36,7 @@ namespace gruel {
    * \brief send message to msg_accepter
    *
    * \param accepter is the target of the send.
+   * \param which_port A pmt symbol describing the port by name.
    * \param msg is the message to send.  It's usually a pmt tuple.
    *
    * Sending a message is an asynchronous operation.  The \p send
@@ -45,9 +46,9 @@ namespace gruel {
    * \returns msg
    */
   static inline pmt::pmt_t
-  send(msg_accepter_sptr accepter, const pmt::pmt_t &msg)
+  send(msg_accepter_sptr accepter, const pmt::pmt_t &which_port, const pmt::pmt_t &msg)
   {
-    accepter->post(msg);
+    accepter->post(which_port, msg);
     return msg;
   }
 
@@ -55,6 +56,7 @@ namespace gruel {
    * \brief send message to msg_accepter
    *
    * \param accepter is the target of the send.
+   * \param which_port A pmt symbol describing the port by name.
    * \param msg is the message to send.  It's usually a pmt tuple.
    *
    * Sending a message is an asynchronous operation.  The \p send
@@ -64,9 +66,9 @@ namespace gruel {
    * \returns msg
    */
   static inline pmt::pmt_t
-  send(msg_accepter *accepter, const pmt::pmt_t &msg)
+  send(msg_accepter *accepter, const pmt::pmt_t &which_port, const pmt::pmt_t &msg)
   {
-    accepter->post(msg);
+    accepter->post(which_port, msg);
     return msg;
   }
 
@@ -74,6 +76,7 @@ namespace gruel {
    * \brief send message to msg_accepter
    *
    * \param accepter is the target of the send.
+   * \param which_port A pmt symbol describing the port by name.
    * \param msg is the message to send.  It's usually a pmt tuple.
    *
    * Sending a message is an asynchronous operation.  The \p send
@@ -83,9 +86,9 @@ namespace gruel {
    * \returns msg
    */
   static inline pmt::pmt_t
-  send(msg_accepter &accepter, const pmt::pmt_t &msg)
+  send(msg_accepter &accepter, const pmt::pmt_t &which_port, const pmt::pmt_t &msg)
   {
-    accepter.post(msg);
+    accepter.post(which_port, msg);
     return msg;
   }
 
@@ -93,6 +96,7 @@ namespace gruel {
    * \brief send message to msg_accepter
    *
    * \param accepter is the target of the send.  precond: pmt_is_msg_accepter(accepter)
+   * \param which_port A pmt symbol describing the port by name.
    * \param msg is the message to send.  It's usually a pmt tuple.
    *
    * Sending a message is an asynchronous operation.  The \p send
@@ -102,9 +106,9 @@ namespace gruel {
    * \returns msg
    */
   static inline pmt::pmt_t
-  send(pmt::pmt_t accepter, const pmt::pmt_t &msg)
+  send(pmt::pmt_t accepter, const pmt::pmt_t &which_port, const pmt::pmt_t &msg)
   {
-    return send(pmt_msg_accepter_ref(accepter), msg);
+    return send(pmt_msg_accepter_ref(accepter), which_port, msg);
   }
 
 } /* namespace gruel */

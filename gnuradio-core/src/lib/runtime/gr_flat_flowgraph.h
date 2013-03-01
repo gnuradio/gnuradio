@@ -46,7 +46,7 @@ public:
 
   // Wire gr_blocks together in new flat_flowgraph
   void setup_connections();
-
+  
   // Merge applicable connections from existing flat flowgraph
   void merge_connections(gr_flat_flowgraph_sptr sfg);
 
@@ -56,6 +56,9 @@ public:
    * Make a vector of gr_block from a vector of gr_basic_block
    */
   static gr_block_vector_t make_block_vector(gr_basic_block_vector_t &blocks);
+
+  void replace_endpoint(const gr_msg_endpoint &e, const gr_msg_endpoint &r, bool is_src);
+  void clear_endpoint(const gr_msg_endpoint &e, bool is_src);
 
 private:
   gr_flat_flowgraph();

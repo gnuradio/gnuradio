@@ -55,7 +55,7 @@
 #include "assembly.h"
 
 	.file	"ccomplex_dotprod_sse.S"
-	.version	"01.01"
+//	.version	"01.01"
 .text
 	.p2align 4
 .globl GLOB_SYMB(ccomplex_dotprod_sse)

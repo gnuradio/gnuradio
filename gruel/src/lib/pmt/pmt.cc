@@ -388,7 +388,17 @@ pmt_is_complex(pmt_t x)
 pmt_t
 pmt_make_rectangular(double re, double im)
 {
+  return pmt_from_complex(re, im);
+}
+
+pmt_t pmt_from_complex(double re, double im)
+{
   return pmt_t(new pmt_complex(std::complex<double>(re, im)));
+}
+
+pmt_t pmt_from_complex(const std::complex<double> &z)
+{
+  return pmt_t(new pmt_complex(z));
 }
 
 std::complex<double>
@@ -1322,6 +1332,38 @@ pmt_t
 pmt_list_add(pmt_t list, const pmt_t& item)
 {
   return pmt_reverse(pmt_cons(item, pmt_reverse(list)));
+}
+
+pmt_t
+pmt_list_rm(pmt_t list, const pmt_t& item)
+{
+  if(pmt_is_pair(list)){
+    pmt_t left = pmt_car(list);
+    pmt_t right = pmt_cdr(list);
+    if(!pmt_equal(left, item)){
+        return pmt_cons(left, pmt_list_rm(right, item));
+        } else {
+        return pmt_list_rm(right, item);
+        }
+    } else {
+      return list;
+    }
+}
+
+bool
+pmt_list_has(pmt_t list, const pmt_t& item)
+{
+  if(pmt_is_pair(list)){
+    pmt_t left = pmt_car(list);
+    pmt_t right = pmt_cdr(list);
+    if(pmt_equal(left,item))
+        return true;
+    return pmt_list_has(right, item);   
+  } else {
+    if(pmt_is_null(list))
+        return false;
+    throw std::runtime_error("list contains invalid format!");
+  }
 }
 
 pmt_t

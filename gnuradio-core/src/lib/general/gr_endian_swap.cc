@@ -51,7 +51,7 @@ gr_endian_swap::work (int noutput_items,
   const char *in = (const char *) input_items[0];
   char *out = (char *) output_items[0];
 
-  int nbytes( d_output_signature->sizeof_stream_item(0) );
+  int nbytes( output_signature()->sizeof_stream_item(0) );
   if(is_unaligned()) {
       switch(nbytes){
         case 1:
