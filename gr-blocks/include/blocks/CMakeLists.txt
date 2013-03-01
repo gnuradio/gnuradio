@@ -124,9 +124,6 @@ install(FILES
     conjugate_cc.h
     deinterleave.h
     delay.h
-    file_descriptor_sink.h
-    file_descriptor_source.h
-    file_sink.h
     file_source.h
     file_meta_sink.h
     file_meta_source.h
@@ -156,6 +153,7 @@ install(FILES
     pdu.h
     pdu_to_tagged_stream.h
     peak_detector2_fb.h
+    probe_rate.h
     regenerate_bb.h
     repeat.h
     rms_cf.h
