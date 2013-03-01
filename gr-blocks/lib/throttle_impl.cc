@@ -93,5 +93,25 @@ namespace gr {
       return noutput_items;
     }
 
+    void
+    throttle_impl::setup_rpc()
+    {
+#ifdef GR_CTRLPORT
+      d_rpc_vars.push_back(
+        rpcbasic_sptr(new rpcbasic_register_get<throttle, double>(
+            alias(), "sample_rate", &throttle::sample_rate,
+            pmt::mp(0.0), pmt::mp(100.0e6), pmt::mp(0.0),
+            "Hz", "Sample Rate", RPC_PRIVLVL_MIN,
+            DISPTIME | DISPOPTSTRIP)));
+
+      d_rpc_vars.push_back(
+        rpcbasic_sptr(new rpcbasic_register_set<throttle, double>(
+            alias(), "sample_rate", &throttle::set_sample_rate,
+            pmt::mp(0.0), pmt::mp(100.0e6), pmt::mp(0.0),
+            "Hz", "Sample Rate", RPC_PRIVLVL_MIN,
+            DISPTIME | DISPOPTSTRIP)));
+#endif /* GR_CTRLPORT */
+    }
+
   } /* namespace blocks */
 } /* namespace gr */
