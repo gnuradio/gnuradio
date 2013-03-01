@@ -34,7 +34,7 @@
 #include <qa_gr_io_signature.h>
 #include <qa_gr_block.h>
 #include <qa_gr_flowgraph.h>
-#include <qa_gr_log.h>
+#include <qa_gr_logger.h>
 #include <qa_gr_top_block.h>
 #include <qa_gr_hier_block2.h>
 #include <qa_gr_hier_block2_derived.h>
@@ -51,7 +51,7 @@ qa_runtime::suite ()
   s->addTest (qa_gr_io_signature::suite ());
   s->addTest (qa_gr_block::suite ());
   s->addTest (qa_gr_flowgraph::suite ());
-  s->addTest (qa_gr_log::suite ());
+  s->addTest (qa_gr_logger::suite ());
   s->addTest (qa_gr_top_block::suite ());
   s->addTest (qa_gr_hier_block2::suite ());
   s->addTest (qa_gr_hier_block2_derived::suite ());

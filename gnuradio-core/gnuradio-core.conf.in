@@ -6,9 +6,19 @@
 verbose = False
 
 [LOG]
-log_config = @CMAKE_INSTALL_PREFIX@/etc/gnuradio/gr_log_default.xml
 log_level = all
-debug_level = DEBUG
+debug_level = all
+
+# These file names can either be 'stdout' to output to standard output
+# or 'stderr' to output to standard error. Any other string will
+# create a file in which to output the logging information. An empty
+# string or no value here will ignore this level of configuration
+# completely.
+log_file = stdout
+debug_file = stderr
+
+# Used for advanced configuration of the logger
+#log_config = @CMAKE_INSTALL_PREFIX@/etc/gnuradio/gr_log_default.xml
 
 [PerfCounters]
 on = False

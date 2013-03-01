@@ -26,7 +26,7 @@
   <appender name="RootConsoleAppender" class="org.apache.log4j.ConsoleAppender">    
     <param name="Target" value="System.out"/>
         <layout class="org.apache.log4j.PatternLayout">
-            <param name="ConversionPattern" value="Root :%-5p %c{1} - %m%n"/>
+            <param name="ConversionPattern" value="Root :%p: %c{1} - %m%n"/>
         </layout>
   </appender>
 
@@ -38,7 +38,7 @@
   <appender name="errLogRootConsoleAppender" class="org.apache.log4j.ConsoleAppender">    
     <param name="Target" value="System.out"/>
         <layout class="org.apache.log4j.PatternLayout">
-            <param name="ConversionPattern" value="grlog :%-5p %c{1} - %m%n"/>
+            <param name="ConversionPattern" value="gr::log :%p: %c{1} - %m%n"/>
         </layout>
   </appender>
 
@@ -51,7 +51,7 @@
   <appender name="errConsoleAppender" class="org.apache.log4j.ConsoleAppender">    
     <param name="Target" value="System.out"/>
         <layout class="org.apache.log4j.PatternLayout">
-            <param name="ConversionPattern" value="err :%-5p %c{1} - %m%n"/>
+            <param name="ConversionPattern" value="gr::debug :%p: %c{1} - %m%n"/>
         </layout>
   </appender>
 

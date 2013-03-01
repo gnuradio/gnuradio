@@ -23,7 +23,7 @@
 * Copyright 2011 Johns Hopkins University Applied Physics Lab
 * Author: Mark Plett
 * Description:
-*   SWIG interface generator file for gr_log module.  gr_log wraps log4cxx logging
+*   SWIG interface generator file for gr_logger module.  gr_logger wraps log4cxx logging
 *   for gnuradio.
 *******************************************************************************/
 
@@ -40,10 +40,11 @@
 //-----------------------------------
 
 #ifdef ENABLE_GR_LOG
+#ifdef HAVE_LOG4CXX
 
 %{
 // The .h files
-#include <gr_log.h>
+#include <gr_logger.h>
 #include <log4cxx/logger.h>
 #include <log4cxx/logmanager.h>
 %}
@@ -57,15 +58,15 @@ public:
 void logger_load_config(const std::string &config_filename);
 void logger_set_level(log4cxx::LoggerPtr logger, const std::string &level);
 
-%rename(log) gr_log;
+%rename(log) gr_logger;
 
-class gr_log
+class gr_logger
 {
 private:
   
 public:
-  //gr_log(std::string config_filename);
-  gr_log(std::string config_filename,int watchPeriodSec);
+  //gr_logger(std::string config_filename);
+  gr_logger(std::string config_filename,int watchPeriodSec);
   void set_level(std::string name,std::string level);
   void get_level(std::string name,std::string &level);
   void trace(std::string name,std::string msg);
@@ -91,4 +92,5 @@ public:
   void log_assert(log4cxx::LoggerPtr logger,bool cond,std::string msg);
 };
 
+#endif /* HAVE_LOG4CXX */
 #endif /* ENABLE_GR_LOG */

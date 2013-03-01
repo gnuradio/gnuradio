@@ -40,7 +40,7 @@
 #include <gr_sync_decimator.h>
 #include <gr_sync_interpolator.h>
 #include <gr_top_block.h>
-#include <gr_log.h>
+#include <gr_logger.h>
 %}
 
 %constant int sizeof_char 	= sizeof(char);
@@ -68,4 +68,4 @@
 %include <gr_sync_decimator.i>
 %include <gr_sync_interpolator.i>
 %include <gr_top_block.i>
-%include <gr_log.i>
+%include <gr_logger.i>

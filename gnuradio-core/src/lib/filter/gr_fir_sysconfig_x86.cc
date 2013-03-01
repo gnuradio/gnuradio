@@ -49,7 +49,7 @@
 // #include <gr_fir_sss_sse2.h>
 
 #include <gr_prefs.h>
-#include <gr_log.h>
+#include <gr_logger.h>
 
 /*
  * ----------------------------------------------------------------
@@ -177,15 +177,9 @@ gr_fir_sysconfig_x86::create_gr_fir_ccf (const std::vector<float> &taps)
 {
   static bool first = true;
 
-  std::string log_file = gr_prefs::singleton()->get_string("LOG", "log_config", "");
-  std::string log_level = gr_prefs::singleton()->get_string("LOG", "log_level", "off");
-  GR_CONFIG_LOGGER(log_file);
-  GR_LOG_GETLOGGER(LOG, "gr_log.gr_fir_sysconfig_x86");
-  GR_LOG_SET_LEVEL(LOG, log_level);
-
   if (gr_cpu::has_3dnow ()){
     if (first){
-      GR_LOG_TRACE(LOG, "gr_fir_ccf: using 3DNow!");
+      cerr << ">>> gr_fir_ccf: using 3DNow!\n";
       first = false;
     }
     return make_gr_fir_ccf_3dnow (taps);
@@ -193,14 +187,14 @@ gr_fir_sysconfig_x86::create_gr_fir_ccf (const std::vector<float> &taps)
 
   if (gr_cpu::has_sse ()){
     if (first){
-      GR_LOG_TRACE(LOG, "gr_fir_ccf: using SSE");
+      cer << ">>> gr_fir_ccf: using SSE\n";
       first = false;
     }
     return make_gr_fir_ccf_sse (taps);
   }
 
   if (first){
-    GR_LOG_TRACE(LOG, "gr_fir_ccf: handing off to parent class");
+    cer << ">>> gr_fir_ccf: handing off to parent class\n";
     first = false;
   }
   return gr_fir_sysconfig_generic::create_gr_fir_ccf (taps);
@@ -211,15 +205,9 @@ gr_fir_sysconfig_x86::create_gr_fir_fcc (const std::vector<gr_complex> &taps)
 {
   static bool first = true;
 
-  std::string log_file = gr_prefs::singleton()->get_string("LOG", "log_config", "");
-  std::string log_level = gr_prefs::singleton()->get_string("LOG", "log_level", "off");
-  GR_CONFIG_LOGGER(log_file);
-  GR_LOG_GETLOGGER(LOG, "gr_log.gr_fir_sysconfig_x86");
-  GR_LOG_SET_LEVEL(LOG, log_level);
-
   if (gr_cpu::has_3dnow ()){
     if (first){
-      GR_LOG_TRACE(LOG, "gr_fir_fcc: gr_fir_fcc: using 3DNow!");
+      cerr << ">>> gr_fir_fcc: gr_fir_fcc: using 3DNow!\n";
       first = false;
     }
     return make_gr_fir_fcc_3dnow (taps);
@@ -227,14 +215,14 @@ gr_fir_sysconfig_x86::create_gr_fir_fcc (const std::vector<gr_complex> &taps)
 
   if (gr_cpu::has_sse ()){
     if (first){
-      GR_LOG_TRACE(LOG, "gr_fir_fcc: gr_fir_fcc: using SSE");
+      cerr << ">>> gr_fir_fcc: gr_fir_fcc: using SSE\n";
       first = false;
     }
     return make_gr_fir_fcc_sse (taps);
   }
 
   if (first){
-    GR_LOG_TRACE(LOG, "gr_fir_fcc: handing off to parent class");
+    cerr << ">>> gr_fir_fcc: handing off to parent class\n";
     first = false;
   }
   return gr_fir_sysconfig_generic::create_gr_fir_fcc (taps);
@@ -245,15 +233,9 @@ gr_fir_sysconfig_x86::create_gr_fir_ccc (const std::vector<gr_complex> &taps)
 {
   static bool first = true;
 
-  std::string log_file = gr_prefs::singleton()->get_string("LOG", "log_config", "");
-  std::string log_level = gr_prefs::singleton()->get_string("LOG", "log_level", "off");
-  GR_CONFIG_LOGGER(log_file);
-  GR_LOG_GETLOGGER(LOG, "gr_log.gr_fir_sysconfig_x86");
-  GR_LOG_SET_LEVEL(LOG, log_level);
-
   if (gr_cpu::has_3dnowext ()){
     if (first) {
-      GR_LOG_TRACE(LOG, "gr_fir_ccc: using 3DNow!Ext");
+      cerr << ">>> gr_fir_ccc: using 3DNow!Ext\n";
       first = false;
     }
     return make_gr_fir_ccc_3dnowext (taps);
@@ -261,7 +243,7 @@ gr_fir_sysconfig_x86::create_gr_fir_ccc (const std::vector<gr_complex> &taps)
 
   if (gr_cpu::has_3dnow ()){
     if (first) {
-      GR_LOG_TRACE(LOG, "gr_fir_ccc: using 3DNow!");
+      cerr << ">>> gr_fir_ccc: using 3DNow!\n";
       first = false;
     }
     return make_gr_fir_ccc_3dnow (taps);
@@ -269,14 +251,14 @@ gr_fir_sysconfig_x86::create_gr_fir_ccc (const std::vector<gr_complex> &taps)
 
   if (gr_cpu::has_sse ()){
     if (first){
-      GR_LOG_TRACE(LOG, "gr_fir_ccc: using SSE");
+      cerr << ">>> gr_fir_ccc: using SSE\n";
       first = false;
     }
     return make_gr_fir_ccc_sse (taps);
   }
 
   if (first){
-    GR_LOG_TRACE(LOG, "gr_fir_ccc: handing off to parent class");
+    cerr << ">>> gr_fir_ccc: handing off to parent class\n";
     first = false;
   }
   return gr_fir_sysconfig_generic::create_gr_fir_ccc (taps);
@@ -287,15 +269,9 @@ gr_fir_sysconfig_x86::create_gr_fir_fff (const std::vector<float> &taps)
 {
   static bool first = true;
 
-  std::string log_file = gr_prefs::singleton()->get_string("LOG", "log_config", "");
-  std::string log_level = gr_prefs::singleton()->get_string("LOG", "log_level", "off");
-  GR_CONFIG_LOGGER(log_file);
-  GR_LOG_GETLOGGER(LOG, "gr_log.gr_fir_sysconfig_x86");
-  GR_LOG_SET_LEVEL(LOG, log_level);
-
   if (gr_cpu::has_3dnow ()){
     if (first) {
-      GR_LOG_TRACE(LOG, "gr_fir_fff: using 3DNow!");
+      cerr << ">>> gr_fir_fff: using 3DNow!\n";
       first = false;
     }
     return make_gr_fir_fff_3dnow (taps);
@@ -303,14 +279,14 @@ gr_fir_sysconfig_x86::create_gr_fir_fff (const std::vector<float> &taps)
 
   if (gr_cpu::has_sse ()){
     if (first){
-      GR_LOG_TRACE(LOG, "gr_fir_fff: using SSE");
+      cerr << ">>> gr_fir_fff: using SSE\n";
       first = false;
     }
     return make_gr_fir_fff_sse (taps);
   }
 
   if (first){
-    GR_LOG_TRACE(LOG, "gr_fir_fff: handing off to parent class");
+    cerr << ">>> gr_fir_fff: handing off to parent class\n";
     first = false;
   }
   return gr_fir_sysconfig_generic::create_gr_fir_fff (taps);
@@ -321,15 +297,9 @@ gr_fir_sysconfig_x86::create_gr_fir_fsf (const std::vector<float> &taps)
 {
   static bool first = true;
 
-  std::string log_file = gr_prefs::singleton()->get_string("LOG", "log_config", "");
-  std::string log_level = gr_prefs::singleton()->get_string("LOG", "log_level", "off");
-  GR_CONFIG_LOGGER(log_file);
-  GR_LOG_GETLOGGER(LOG, "gr_log.gr_fir_sysconfig_x86");
-  GR_LOG_SET_LEVEL(LOG, log_level);
-
   if (gr_cpu::has_3dnow ()){
     if (first) {
-      GR_LOG_TRACE(LOG, "gr_fir_fsf: using 3DNow!");
+      cerr << ">>> gr_fir_fsf: using 3DNow!\n";
       first = false;
     }
     return make_gr_fir_fsf_3dnow (taps);
@@ -337,14 +307,14 @@ gr_fir_sysconfig_x86::create_gr_fir_fsf (const std::vector<float> &taps)
 
   if (gr_cpu::has_sse ()){
     if (first){
-      GR_LOG_TRACE(LOG, "gr_fir_fsf: using SSE");
+      cerr << ">>> gr_fir_fsf: using SSE\n";
       first = false;
     }
     return make_gr_fir_fsf_sse (taps);
   }
 
   if (first){
-    GR_LOG_TRACE(LOG, "gr_fir_fsf: handing off to parent class");
+    cerr << ">>> gr_fir_fsf: handing off to parent class\n";
     first = false;
   }
   return gr_fir_sysconfig_generic::create_gr_fir_fsf (taps);
@@ -358,28 +328,22 @@ gr_fir_sysconfig_x86::create_gr_fir_sss (const std::vector<short> &taps)
   // add code to select it here...
   static bool first = true;
 
-  std::string log_file = gr_prefs::singleton()->get_string("LOG", "log_config", "");
-  std::string log_level = gr_prefs::singleton()->get_string("LOG", "log_level", "off");
-  GR_CONFIG_LOGGER(log_file);
-  GR_LOG_GETLOGGER(LOG, "gr_log.gr_fir_sysconfig_x86");
-  GR_LOG_SET_LEVEL(LOG, log_level);
-
   if (gr_cpu::has_sse2 ()){
     if(first) {
-      GR_LOG_TRACE(LOG, "gr_fir_sss: using SSE2");
+      cerr << ">>> gr_fir_sss: using SSE2\n";
       return make_gr_fir_sss_sse2 (taps);
     }
   }
 
   if (gr_cpu::has_mmx ()){
     if(first) {
-      GR_LOG_TRACE(LOG, "gr_fir_sss: using MMX");
+      cerr << ">>> gr_fir_sss: using MMX\n";
       return make_gr_fir_sss_mmx (taps);
     }
   }
 
   if(first) {
-    GR_LOG_TRACE(LOG, "gr_fir_sss: handing off to parent class");
+    cerr << ">>> gr_fir_sss: handing off to parent class\n";
     return gr_fir_sysconfig_generic::create_gr_fir_sss (taps);
   }
 }
@@ -390,15 +354,9 @@ gr_fir_sysconfig_x86::create_gr_fir_scc (const std::vector<gr_complex> &taps)
 {
   static bool first = true;
 
-  std::string log_file = gr_prefs::singleton()->get_string("LOG", "log_config", "");
-  std::string log_level = gr_prefs::singleton()->get_string("LOG", "log_level", "off");
-  GR_CONFIG_LOGGER(log_file);
-  GR_LOG_GETLOGGER(LOG, "gr_log.gr_fir_sysconfig_x86");
-  GR_LOG_SET_LEVEL(LOG, log_level);
-
   if (gr_cpu::has_3dnowext ()){
     if (first){
-      GR_LOG_TRACE(LOG, "gr_fir_scc: using 3DNow!Ext");
+      cerr << ">>> gr_fir_scc: using 3DNow!Ext\n";
       first = false;
     }
     return make_gr_fir_scc_3dnowext (taps);
@@ -406,7 +364,7 @@ gr_fir_sysconfig_x86::create_gr_fir_scc (const std::vector<gr_complex> &taps)
 
   if (gr_cpu::has_3dnow ()){
     if (first){
-      GR_LOG_TRACE(LOG, "gr_fir_scc: using 3DNow!");
+      cerr << ">>> gr_fir_scc: using 3DNow!\n";
       first = false;
     }
     return make_gr_fir_scc_3dnow (taps);
@@ -414,14 +372,14 @@ gr_fir_sysconfig_x86::create_gr_fir_scc (const std::vector<gr_complex> &taps)
 
   if (gr_cpu::has_sse ()){
     if (first){
-      GR_LOG_TRACE(LOG, "gr_fir_scc: using SSE");
+      cerr << ">>> gr_fir_scc: using SSE\n";
       first = false;
     }
     return make_gr_fir_scc_sse (taps);
   }
 
   if (first){
-    GR_LOG_TRACE(LOG, "gr_fir_scc: handing off to parent class");
+    cerr << ">>> gr_fir_scc: handing off to parent class\n";
     first = false;
   }
   return gr_fir_sysconfig_generic::create_gr_fir_scc (taps);

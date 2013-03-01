@@ -29,11 +29,11 @@
 #include <config.h>
 #endif
 
-#include <qa_gr_log.h>
-#include <gr_log.h>
+#include <qa_gr_logger.h>
+#include <gr_logger.h>
 
 void
-qa_gr_log::t1()
+qa_gr_logger::t1()
 {
 #ifdef ENABLE_GR_LOG
   // This doesn't really test anything, more just

@@ -24,36 +24,81 @@
 * Copyright 2011 Johns Hopkins University Applied Physics Lab
 * Author: Mark Plett
 * Description:
-*   The gr_log module wraps the log4cxx library for logging in gnuradio
+*   The gr_logger module wraps the log4cxx library for logging in gnuradio
 *******************************************************************************/
 
-#ifndef INCLUDED_GR_LOG_H
-#define INCLUDED_GR_LOG_H
+#ifndef INCLUDED_GR_LOGGER_H
+#define INCLUDED_GR_LOGGER_H
 
 /*!
-* \file gr_log.h
+* \file gr_logger.h
 * \ingroup logging
 * \brief GNURADIO logging wrapper for log4cxx library (C++ port of log4j)
 *
 */
 
+#include <gr_core_api.h>
+#include <assert.h>
+#include <iostream>
+
 #ifdef ENABLE_GR_LOG
 
-#include <gr_core_api.h>
-#include <stdio.h>
-#include <string>
-#include <stdlib.h>
-#include <assert.h>
+// We have three configurations... first logging to stdout/stderr
+#ifndef HAVE_LOG4CXX
+//#warning GR logging Enabled and using std::cout
+
+typedef std::string gr_logger_ptr;
+
+#define GR_LOG_DECLARE_LOGPTR(logger)
+#define GR_LOG_ASSIGN_LOGPTR(logger,name)
+#define GR_CONFIG_LOGGER(config)
+#define GR_CONFIG_AND_WATCH_LOGGER(config)
+#define GR_LOG_GETLOGGER(logger, name) 
+#define GR_SET_LEVEL(name, level)
+#define GR_LOG_SET_LEVEL(logger, level) 
+#define GR_GET_LEVEL(name, level)
+#define GR_LOG_GET_LEVEL(logger, level)
+#define GR_ADD_CONSOLE_APPENDER(logger,layout)
+#define GR_LOG_ADD_CONSOLE_APPENDER(logger,layout)
+#define GR_ADD_FILE_APPENDER(logger,layout,filename,append)
+#define GR_LOG_ADD_FILE_APPENDER(logger,layout,filename,append)
+#define GR_ADD_ROLLINGFILE_APPENDER(logger,layout,filename,append,bkup_index,filesize)
+#define GR_LOG_ADD_ROLLINGFILE_APPENDER(logger,layout,filename,append,bkup_index,filesize)
+#define GR_GET_LOGGER_NAMES(names)
+#define GR_RESET_CONFIGURATION()
+#define GR_TRACE(name, msg) std::cout<<"TRACE:"<<msg<<std::endl
+#define GR_DEBUG(name, msg) std::cout<<"DEBUG:"<<msg<<std::endl
+#define GR_INFO(name, msg) std::cout<<"INFO:"<<msg<<std::endl
+#define GR_WARN(name, msg) std::cerr<<"WARN:"<<msg<<std::endl
+#define GR_ERROR(name, msg) std::cerr<<"ERROR:"<<msg<<std::endl
+#define GR_FATAL(name, msg) std::cerr<<"FATAL:"<<msg<<std::endl
+#define GR_ERRORIF(name, cond, msg) if((cond)) std::cerr<<"ERROR:"<<msg<<std::endl
+#define GR_ASSERT(name, cond, msg) std::cerr<<"ERROR:"<<msg<<std::endl; assert(cond)
+#define GR_LOG_SET_LEVEL(logger, level)
+#define GR_LOG_GET_LEVEL(logger, level)
+#define GR_LOG_TRACE(logger, msg) std::cout<<"TRACE:"<<msg<<std::endl
+#define GR_LOG_DEBUG(logger, msg) std::cout<<"DEBUG:"<<msg<<std::endl
+#define GR_LOG_INFO(logger, msg) std::cout<<"INFO:"<<msg<<std::endl
+#define GR_LOG_WARN(logger, msg) std::cerr<<"WARN:"<<msg<<std::endl
+#define GR_LOG_ERROR(logger, msg) std::cerr<<"ERROR:"<<msg<<std::endl
+#define GR_LOG_FATAL(logger, msg) std::cerr<<"FATAL:"<<msg<<std::endl
+#define GR_LOG_ERRORIF(logger, cond, msg) if((cond)) std::cerr<<"ERROR:"<<msg<<std::endl
+#define GR_LOG_ASSERT(logger, cond, msg) std::cerr<<"ERROR:"<<msg<<std::endl; assert(cond)
+
+#else /* HAVE_LOG4CXX */
+// Second configuration...logging to log4cxx
+//#warning GR logging Enabled and using LOG4CXX
 
 #include <log4cxx/logger.h>
 #include <log4cxx/logmanager.h>
 #include <log4cxx/basicconfigurator.h>
 #include <log4cxx/xml/domconfigurator.h>
 #include <log4cxx/propertyconfigurator.h>
-
-//using namespace log4cxx;
-//using namespace log4cxx::xml;
-//using namespace log4cxx::helpers;
+#include <log4cxx/helpers/pool.h>
+#include <log4cxx/fileappender.h>
+#include <log4cxx/rollingfileappender.h>
+#include <log4cxx/consoleappender.h>
+#include <log4cxx/patternlayout.h>
 
 /*!
  * \brief GR_LOG macros
@@ -69,11 +114,23 @@
  *  GR_LOG_FATAL
  */
 
+typedef log4cxx::LoggerPtr gr_logger_ptr;
+
+/* Macros for Programmatic Configuration */
+#define GR_LOG_DECLARE_LOGPTR(logger) \
+  gr_logger_ptr logger;
+
+#define GR_LOG_ASSIGN_LOGPTR(logger,name) \
+  logger = gr_logger::getLogger(name);
+
 #define GR_CONFIG_LOGGER(config)	\
   logger_load_config(config)
 
+#define GR_CONFIG_AND_WATCH_LOGGER(config,period)	\
+  logger_load_config_and_watch(config,period)
+
 #define GR_LOG_GETLOGGER(logger, name) \
-  log4cxx::LoggerPtr logger = gr_log::getLogger(name);
+  log4cxx::LoggerPtr logger = gr_logger::getLogger(name);
 
 #define GR_SET_LEVEL(name, level){ \
   log4cxx::LoggerPtr logger = log4cxx::Logger::getLogger(name); \
@@ -89,6 +146,32 @@
 #define GR_LOG_GET_LEVEL(logger, level) \
   logger_get_level(logger,level);
 
+#define GR_ADD_CONSOLE_APPENDER(name,layout,terget){d      \
+  gr_logger_ptr logger = log4cxx::Logger::getLogger(name); \
+  logger_add_console_appender(logger,layout, target);}
+
+#define GR_LOG_ADD_CONSOLE_APPENDER(logger,layout,target){      \
+  logger_add_console_appender(logger,layout,target);}
+
+#define GR_ADD_FILE_APPENDER(name,layout,filename,append){\
+  gr_logger_ptr logger = log4cxx::Logger::getLogger(name); \
+  logger_add_file_appender(logger,layout,filename,append);}
+
+#define GR_LOG_ADD_FILE_APPENDER(logger,layout,filename,append){\
+  logger_add_file_appender(logger,layout,filename,append);}
+
+#define GR_ADD_ROLLINGFILE_APPENDER(name,layout,filename,append,bkup_index,filesize){\
+  gr_logger_ptr logger = log4cxx::Logger::getLogger(name); \
+  logger_add_rollingfile_appender(logger,layout,filename,append,bkup_index,filesize);}
+
+#define GR_LOG_ADD_ROLLINGFILE_APPENDER(logger,layout,filename,append,bkup_index,filesize){\
+  logger_add_rollingfile_appender(logger,layout,filename,append,bkup_index,filesize);}
+
+#define GR_GET_LOGGER_NAMES(names){ \
+  logger_get_logger_names(names);}
+
+#define GR_RESET_CONFIGURATION(){ \
+  logger_reset_config();}
 
 /* Logger name referenced macros */
 #define GR_TRACE(name, msg) { \
@@ -150,7 +233,6 @@
   LOG4CXX_ASSERT(logger, (cond), msg); \
   assert((cond));}
 
-
 /*!
  * \brief Load logger's configuration file.
  *
@@ -161,6 +243,12 @@
  *        basic logger that outputs to the console.
  */
 GR_CORE_API void logger_load_config(const std::string &config_filename="");
+
+
+GR_CORE_API void logger_load_config_and_watch(const std::string &config_filename,
+                                              unsigned int watch_period);
+
+GR_CORE_API void logger_reset_config(void);
 
 /*!
  * \brief Set the logger's output level.
@@ -180,7 +268,7 @@ GR_CORE_API void logger_load_config(const std::string &config_filename="");
  * \param logger the logger to set the level of.
  * \param level  string to set the level to.
  */
-GR_CORE_API void logger_set_level(log4cxx::LoggerPtr logger, const std::string &level);
+GR_CORE_API void logger_set_level(gr_logger_ptr logger, const std::string &level);
 
 /*!
  * \brief Set the logger's output level.
@@ -200,7 +288,7 @@ GR_CORE_API void logger_set_level(log4cxx::LoggerPtr logger, const std::string &
  * \param logger the logger to set the level of.
  * \param level  new logger level of type Log4cxx::Level
  */
-void logger_set_level(log4cxx::LoggerPtr logger, log4cxx::LevelPtr level);
+GR_CORE_API void logger_set_level(gr_logger_ptr logger, log4cxx::LevelPtr level);
 
 
 /*!
@@ -221,7 +309,7 @@ void logger_set_level(log4cxx::LoggerPtr logger, log4cxx::LevelPtr level);
  * \param logger the logger to get the level of.
  * \param level  string to get the level into.
  */
-GR_CORE_API void logger_get_level(log4cxx::LoggerPtr logger,std::string &level);
+GR_CORE_API void logger_get_level(gr_logger_ptr logger, std::string &level);
 
 /*!
  * \brief Get the logger's output level.
@@ -240,21 +328,33 @@ GR_CORE_API void logger_get_level(log4cxx::LoggerPtr logger,std::string &level);
  *
  * \param logger the logger to get the level of.
  */
-void logger_get_level(log4cxx::LoggerPtr logger,log4cxx::LevelPtr level);
+GR_CORE_API void logger_get_level(gr_logger_ptr logger, log4cxx::LevelPtr level);
 
+
+GR_CORE_API void logger_add_console_appender(gr_logger_ptr logger, std::string layout,
+                                             std::string target);
+
+GR_CORE_API void logger_add_file_appender(gr_logger_ptr logger, std::string layout,
+                                          std::string filename, bool append);
+
+GR_CORE_API void logger_add_rollingfile_appender(gr_logger_ptr logger, std::string layout,
+                                                 std::string filename, bool append,
+                                                 int bkup_index, std::string filesize);
+
+GR_CORE_API void logger_get_logger_names(std::vector<std::string>& names);
 
 /*!
  * \brief instantiate (configure) logger.
  * \ingroup logging
  *
  */
-class gr_log
+class gr_logger
 {
  public:
   /*!
    * \brief contructor take log configuration file and configures loggers.
    */
-  gr_log(std::string config_filename)
+  gr_logger(std::string config_filename)
   {
     // Load configuration file
     logger_load_config(config_filename);
@@ -263,7 +363,7 @@ class gr_log
   /*!
    * \brief contructor take log configuration file and watchtime and configures
    */
-  gr_log(std::string config_filename, int watchPeriodSec)
+  gr_logger(std::string config_filename, int watchPeriodSec)
   {
     // Load configuration file
     if(config_filename.find(".xml")!=std::string::npos) {
@@ -351,12 +451,30 @@ class gr_log
 };
 
 
-//If ENABLE_GR_LOG not set then clear all logging macros
-#else
+#endif /* HAVE_LOG4CXX */
+
+// If Logger disable do nothing
+#else /* ENABLE_GR_LOG */
+
+typedef void* gr_logger_ptr;
+
+#define GR_LOG_DECLARE_LOGPTR(logger)
+#define GR_LOG_ASSIGN_LOGPTR(logger,name)
 #define GR_CONFIG_LOGGER(config)
+#define GR_CONFIG_AND_WATCH_LOGGER(config)
 #define GR_LOG_GETLOGGER(logger, name) 
-#define GR_SET_LEVEL(logger, level)
-#define GR_GET_LEVEL(logger, level)
+#define GR_SET_LEVEL(name, level)
+#define GR_LOG_SET_LEVEL(logger, level) 
+#define GR_GET_LEVEL(name, level)
+#define GR_LOG_GET_LEVEL(logger, level)
+#define GR_ADD_CONSOLE_APPENDER(logger,layout)
+#define GR_LOG_ADD_CONSOLE_APPENDER(logger,layout)
+#define GR_ADD_FILE_APPENDER(logger,layout,filename,append)
+#define GR_LOG_ADD_FILE_APPENDER(logger,layout)
+#define GR_ADD_ROLLINGFILE_APPENDER(logger,layout,filename,append,bkup_index,filesize)
+#define GR_LOG_ADD_ROLLINGFILE_APPENDER(logger,layout)
+#define GR_GET_LOGGER_NAMES(names)
+#define GR_RESET_CONFIGURATION()
 #define GR_TRACE(name, msg)
 #define GR_DEBUG(name, msg)
 #define GR_INFO(name, msg)
@@ -377,4 +495,4 @@ class gr_log
 #define GR_LOG_ASSERT(logger, cond, msg)
 
 #endif /* ENABLE_GR_LOG */
-#endif /* INCLUDED_GR_LOG_H */
+#endif /* INCLUDED_GR_LOGGER_H */

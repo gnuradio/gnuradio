@@ -28,9 +28,9 @@
 
 //! collect all the tests for the example directory
 
-class qa_gr_log : public CppUnit::TestCase {
+class qa_gr_logger : public CppUnit::TestCase {
  public:
-  CPPUNIT_TEST_SUITE(qa_gr_log); 
+  CPPUNIT_TEST_SUITE(qa_gr_logger); 
   CPPUNIT_TEST(t1);
   CPPUNIT_TEST_SUITE_END();
 

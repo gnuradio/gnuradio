@@ -26,6 +26,7 @@
 #include <gr_core_api.h>
 #include <gr_basic_block.h>
 #include <gr_tags.h>
+#include <gr_logger.h>
 
 /*!
  * \brief The abstract base class for all 'terminal' processing blocks.
@@ -615,6 +616,11 @@ class GR_CORE_API gr_block : public gr_basic_block {
    * Used by calling gruel::scoped_lock l(d_setlock);
    */ 
   gruel::mutex d_setlock;
+
+  /*! Used by blocks to access the logger system.
+   */ 
+  gr_logger_ptr d_logger;
+  gr_logger_ptr d_debug_logger;
 
   // These are really only for internal use, but leaving them public avoids
   // having to work up an ever-varying list of friend GR_CORE_APIs
