@@ -84,13 +84,9 @@ endmacro(expand_h_cc_i)
 expand_h_cc_i(gr_vector_source_X   b s i f c)
 expand_h_cc_i(gr_vector_insert_X   b)
 expand_h_cc_i(gr_vector_sink_X     b s i f c)
-expand_h_cc_i(gr_probe_signal_X    b s i f c)
-expand_h_cc_i(gr_probe_signal_vX    b s i f c)
 
-expand_h_cc_i(gr_mute_XX                ss ii ff cc)
 expand_h_cc_i(gr_moving_average_XX      ss ii ff cc)
 
-expand_h_cc_i(gr_sample_and_hold_XX           bb ss ii ff)
 expand_h_cc_i(gr_peak_detector_XX             fb ib sb)
 
 add_custom_target(gengen_generated DEPENDS

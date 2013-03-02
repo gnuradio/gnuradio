@@ -5,7 +5,6 @@ gnuradio.gr: Signal Sinks
 .. autooldblock:: gnuradio.gr.check_counting_s
 .. autooldblock:: gnuradio.gr.check_lfsr_32k_s
 .. autooldblock:: gnuradio.gr.null_sink
-.. autooldblock:: gnuradio.gr.probe_signal_f
 .. autooldblock:: gnuradio.gr.vector_sink_b
 .. autooldblock:: gnuradio.gr.vector_sink_c
 .. autooldblock:: gnuradio.gr.vector_sink_f

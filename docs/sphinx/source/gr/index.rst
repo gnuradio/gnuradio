@@ -44,7 +44,6 @@ Signal Sinks
    gnuradio.gr.check_counting_s
    gnuradio.gr.check_lfsr_32k_s
    gnuradio.gr.null_sink
-   gnuradio.gr.probe_signal_f
    gnuradio.gr.vector_sink_b
    gnuradio.gr.vector_sink_c
    gnuradio.gr.vector_sink_f
@@ -139,17 +138,9 @@ Signal Level Control (AGC)
 .. autosummary::
    :nosignatures:
 
-   gnuradio.gr.mute_cc
-   gnuradio.gr.mute_ff
-   gnuradio.gr.mute_ii
-   gnuradio.gr.mute_ss
    gnuradio.gr.peak_detector_fb
    gnuradio.gr.peak_detector_ib
    gnuradio.gr.peak_detector_sb
-   gnuradio.gr.sample_and_hold_bb
-   gnuradio.gr.sample_and_hold_ff
-   gnuradio.gr.sample_and_hold_ii
-   gnuradio.gr.sample_and_hold_ss
 
 Fourier Transform
 ^^^^^^^^^^^^^^^^^

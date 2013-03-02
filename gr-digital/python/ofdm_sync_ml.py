@@ -99,7 +99,7 @@ class ofdm_sync_ml(gr.hier_block2):
         #ML measurements input to sampler block and detect
         self.f2c = blocks.float_to_complex()
         self.pk_detect = gr.peak_detector_fb(0.2, 0.25, 30, 0.0005)
-        self.sample_and_hold = gr.sample_and_hold_ff()
+        self.sample_and_hold = blocks.sample_and_hold_ff()
 
         # use the sync loop values to set the sampler and the NCO
         #     self.diff = theta

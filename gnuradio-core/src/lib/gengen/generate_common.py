@@ -32,21 +32,17 @@ ss_signatures = ['s', 'i', 'f', 'c']
 ss_roots = [
     'gr_vector_source_X',
     'gr_vector_sink_X',
-    'gr_probe_signal_X',
-    'gr_probe_signal_vX'
     ]
 
 # regular blocks
 reg_signatures = ['ss', 'ii', 'ff', 'cc']
 
 reg_roots = [
-    'gr_mute_XX',
     'gr_moving_average_XX',
     ]
 
 # other blocks
 others = (
-    ('gr_sample_and_hold_XX',       ('bb','ss','ii','ff')),
     ('gr_peak_detector_XX',         ('fb','ib','sb')),
     )
 
@@ -63,8 +59,6 @@ def expand_h_cc_i (root, sig):
 def generate ():
     expand_h_cc_i ('gr_vector_sink_X', 'b')
     expand_h_cc_i ('gr_vector_source_X', 'b')
-    expand_h_cc_i ('gr_probe_signal_X', 'b')
-    expand_h_cc_i ('gr_probe_signal_vX', 'b')
     for r in ss_roots:
         for s in ss_signatures:
             expand_h_cc_i (r, s)

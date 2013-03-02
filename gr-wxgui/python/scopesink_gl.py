@@ -46,7 +46,7 @@ class ac_couple_block(gr.hier_block2):
 		#blocks
 		lpf = filter.single_pole_iir_filter_ff(0.0)
 		sub = blocks.sub_ff()
-		mute = gr.mute_ff()
+		mute = blocks.mute_ff()
 		#connect
 		self.connect(self, sub, self)
 		self.connect(self, lpf, mute, (sub, 1))

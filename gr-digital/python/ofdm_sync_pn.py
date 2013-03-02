@@ -82,7 +82,7 @@ class ofdm_sync_pn(gr.hier_block2):
         self.c2mag = gr.complex_to_mag_squared()
         self.angle = gr.complex_to_arg()
 
-        self.sample_and_hold = gr.sample_and_hold_ff()
+        self.sample_and_hold = blocks.sample_and_hold_ff()
 
         #ML measurements input to sampler block and detect
         self.sub1 = blocks.add_const_ff(-1)

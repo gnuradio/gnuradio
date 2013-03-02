@@ -88,7 +88,7 @@ class ofdm_sync_pnac(gr.hier_block2):
         self.angle = gr.complex_to_arg()
         self.compare = blocks.sub_ff()
         
-        self.sample_and_hold = gr.sample_and_hold_ff()
+        self.sample_and_hold = blocks.sample_and_hold_ff()
 
         #ML measurements input to sampler block and detect
         self.threshold = blocks.threshold_ff(0,0,0)      # threshold detection might need to be tweaked
