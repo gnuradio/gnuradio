@@ -124,4 +124,14 @@
 		<block>blocks_tuntap_pdu</block>
 		<block>blocks_socket_pdu</block>
 	</cat>
+	<cat>
+	        <name>Level Controls (New)</name>
+		<block>blocks_mute_xx</block>
+		<block>blocks_sample_and_hold_xx</block>
+	</cat>
+	<cat>
+	        <name>Probes (New)</name>
+		<block>blocks_probe_signal_x</block>
+		<block>blocks_probe_signal_vx</block>
+	</cat>
 </cat>
