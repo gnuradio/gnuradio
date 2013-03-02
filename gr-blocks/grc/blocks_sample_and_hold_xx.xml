@@ -1,0 +1,49 @@
+<?xml version="1.0"?>
+<!--
+###################################################
+##Sample and Hold
+###################################################
+ -->
+<block>
+	<name>Sample and Hold</name>
+	<key>blocks_sample_and_hold_xx</key>
+	<import>from gnuradio import blocks</import>
+	<make>blocks.sample_and_hold_$(type.fcn)()</make>
+	<param>
+		<name>Type</name>
+		<key>type</key>
+		<type>enum</type>
+		<option>
+			<name>Float</name>
+			<key>float</key>
+			<opt>fcn:ff</opt>
+		</option>
+		<option>
+			<name>Int</name>
+			<key>int</key>
+			<opt>fcn:ii</opt>
+		</option>
+		<option>
+			<name>Short</name>
+			<key>short</key>
+			<opt>fcn:ss</opt>
+		</option>
+		<option>
+			<name>Byte</name>
+			<key>byte</key>
+			<opt>fcn:bb</opt>
+		</option>
+	</param>
+	<sink>
+		<name>in</name>
+		<type>$type</type>
+	</sink>
+	<sink>
+		<name>ctrl</name>
+		<type>byte</type>
+	</sink>
+	<source>
+		<name>out</name>
+		<type>$type</type>
+	</source>
+</block>
