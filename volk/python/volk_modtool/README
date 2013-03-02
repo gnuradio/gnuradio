@@ -49,6 +49,10 @@ Run the command "volk_modtool -i". This will ask you three questions:
                // It will create <directory>/volk_<name>
   base: // the directory containing the original VOLK source code
 
+The name provided must be alphanumeric (and cannot start with a
+number). No special characters including dashes and underscores are
+allowed.
+
 This will build a new skeleton directory in the destination provided
 with the name volk_<name>. It will contain the necessary structure to
 build:

@@ -45,6 +45,11 @@ INCLUDE(FindPackageHandleStandardArgs)
 FIND_PACKAGE_HANDLE_STANDARD_ARGS(SHD DEFAULT_MSG SHD_LIBRARIES SHD_INCLUDE_DIRS)
 MARK_AS_ADVANCED(SHD_LIBRARIES SHD_INCLUDE_DIRS)
 
+if(ENABLE_GR_CTRLPORT)
+  ADD_DEFINITIONS(-DGR_CTRLPORT)
+  include_directories(${ICE_INCLUDE_DIR})
+endif(ENABLE_GR_CTRLPORT)
+
 ########################################################################
 # Register component
 ########################################################################
