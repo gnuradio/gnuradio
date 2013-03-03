@@ -25,13 +25,15 @@ include_directories(
     ${GR_UHD_INCLUDE_DIRS}
     ${GNURADIO_CORE_INCLUDE_DIRS}
     ${GRUEL_INCLUDE_DIRS}
+    ${LOG4CXX_INCLUDE_DIRS}
     ${Boost_INCLUDE_DIRS}
     ${UHD_INCLUDE_DIRS}
 )
 
 link_directories(
-	${UHD_LIBRARY_DIRS}
-	${Boost_LIBRARY_DIRS}
+  ${UHD_LIBRARY_DIRS}
+  ${LOG4CXX_LIBRARY_DIRS}
+  ${Boost_LIBRARY_DIRS}
 )
 
 if(ENABLE_GR_CTRLPORT)
@@ -52,6 +54,7 @@ list(APPEND uhd_libs
     gnuradio-core
     ${Boost_LIBRARIES}
     ${UHD_LIBRARIES}
+    ${LOG4CXX_LIBRARIES}
 )
 
 add_library(gnuradio-uhd SHARED ${gr_uhd_sources})

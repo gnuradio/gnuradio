@@ -209,6 +209,47 @@ function(GR_GEN_TARGET_DEPS name var)
     endif()
 endfunction(GR_GEN_TARGET_DEPS)
 
+########################################################################
+# Control use of gr_logger
+# Usage:
+#   GR_LOGGING()
+#
+# Will set ENABLE_GR_LOG to 1 by default.
+# Can manually set with -DENABLE_GR_LOG=0|1
+########################################################################
+function(GR_LOGGING)
+  find_package(Log4cxx)
+
+  OPTION(ENABLE_GR_LOG "Use gr_logger" ON)
+  if(ENABLE_GR_LOG)
+    # If gr_logger is enabled, make it usable
+    add_definitions( -DENABLE_GR_LOG )
+
+    # also test LOG4CXX; if we have it, use this version of the logger
+    # otherwise, default to the stdout/stderr model.
+    if(LOG4CXX_FOUND)
+      SET(HAVE_LOG4CXX True)
+      add_definitions( -DHAVE_LOG4CXX )
+    else(LOG4CXX_FOUND)
+      SET(HAVE_LOG4CXX False)
+      SET(LOG4CXX_INCLUDE_DIRS "")
+      SET(LOG4CXX_LIBRARY_DIRS "")
+      SET(LOG4CXX_LIBRARIES "")
+    endif(LOG4CXX_FOUND)
+
+    SET(ENABLE_GR_LOG ${ENABLE_GR_LOG} CACHE INTERNAL "" FORCE)
+
+  else(ENABLE_GR_LOG)
+    SET(HAVE_LOG4CXX False)
+    SET(LOG4CXX_INCLUDE_DIRS)
+    SET(LOG4CXX_LIBRARY_DIRS)
+    SET(LOG4CXX_LIBRARIES)
+  endif(ENABLE_GR_LOG)
+
+  message(STATUS "ENABLE_GR_LOG set to ${ENABLE_GR_LOG}.")
+  message(STATUS "HAVE_LOG4CXX set to ${HAVE_LOG4CXX}.")
+
+endfunction(GR_LOGGING)
 
 ########################################################################
 # Run GRCC to compile .grc files into .py files.

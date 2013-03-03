@@ -62,6 +62,7 @@ list(APPEND gnuradio_core_sources
     ${CMAKE_CURRENT_SOURCE_DIR}/gr_error_handler.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/gr_io_signature.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/gr_local_sighandler.cc
+    ${CMAKE_CURRENT_SOURCE_DIR}/gr_logger.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/gr_message.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/gr_msg_accepter.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/gr_msg_handler.cc
@@ -119,6 +120,7 @@ list(APPEND test_gnuradio_core_sources
     ${CMAKE_CURRENT_SOURCE_DIR}/qa_block_tags.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/qa_runtime.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/qa_set_msg_handler.cc
+    ${CMAKE_CURRENT_SOURCE_DIR}/qa_gr_logger.cc
 )
 
 ########################################################################
@@ -140,6 +142,7 @@ install(FILES
     ${CMAKE_CURRENT_SOURCE_DIR}/gr_error_handler.h
     ${CMAKE_CURRENT_SOURCE_DIR}/gr_io_signature.h
     ${CMAKE_CURRENT_SOURCE_DIR}/gr_local_sighandler.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/gr_logger.h
     ${CMAKE_CURRENT_SOURCE_DIR}/gr_message.h
     ${CMAKE_CURRENT_SOURCE_DIR}/gr_msg_accepter.h
     ${CMAKE_CURRENT_SOURCE_DIR}/gr_msg_handler.h
@@ -206,6 +209,7 @@ install(FILES
     ${CMAKE_CURRENT_SOURCE_DIR}/gr_dispatcher.i
     ${CMAKE_CURRENT_SOURCE_DIR}/gr_error_handler.i
     ${CMAKE_CURRENT_SOURCE_DIR}/gr_io_signature.i
+    ${CMAKE_CURRENT_SOURCE_DIR}/gr_logger.i
     ${CMAKE_CURRENT_SOURCE_DIR}/gr_message.i
     ${CMAKE_CURRENT_SOURCE_DIR}/gr_msg_handler.i
     ${CMAKE_CURRENT_SOURCE_DIR}/gr_msg_queue.i
@@ -220,4 +224,5 @@ install(FILES
     DESTINATION ${GR_INCLUDE_DIR}/gnuradio/swig
     COMPONENT "core_swig"
 )
+    
 endif(ENABLE_PYTHON)

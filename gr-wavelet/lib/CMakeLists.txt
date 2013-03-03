@@ -27,12 +27,14 @@ include_directories(
     ${GR_BLOCKS_INCLUDE_DIRS}
     ${GNURADIO_CORE_INCLUDE_DIRS}
     ${GRUEL_INCLUDE_DIRS}
+    ${LOG4CXX_INCLUDE_DIRS}
     ${Boost_INCLUDE_DIRS}
     ${GSL_INCLUDE_DIRS}
 )
 
 # is this correct?
 link_directories(${GR_WAVELET_LIBRARY_DIRS})
+link_directories(${LOG4CXX_LIBRARY_DIRS})
 link_directories(${Boost_LIBRARY_DIRS})
 link_directories(${GSL_LIBRARY_DIRS})
 add_definitions(${GSL_DEFINITIONS})
@@ -57,6 +59,7 @@ list(APPEND wavelet_libs
     ${Boost_LIBRARIES}
     ${WAVELET_LIBRARIES}
     ${GSL_LIBRARIES}
+    ${LOG4CXX_LIBRARIES}
 )
 
 add_library(gnuradio-wavelet SHARED ${gr_wavelet_sources})

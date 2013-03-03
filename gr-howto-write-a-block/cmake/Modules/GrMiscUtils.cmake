@@ -208,3 +208,35 @@ function(GR_GEN_TARGET_DEPS name var)
         set(${var} "DEPENDS;${name};COMMAND;${name}" PARENT_SCOPE)
     endif()
 endfunction(GR_GEN_TARGET_DEPS)
+
+
+########################################################################
+# Control use of gr_log
+# Usage:
+#   GR_LOGGING()
+#
+# Will set ENABLE_GR_LOG to 1 by default.
+# Can manually set with -DENABLE_GR_LOG=0|1
+########################################################################
+function(GR_LOGGING)
+  find_package(Log4cxx)
+
+  OPTION(ENABLE_GR_LOG "Use gr_log" ON)
+  
+  if(NOT LOG4CXX_FOUND)
+    SET(ENABLE_GR_LOG OFF)
+  endif(NOT LOG4CXX_FOUND)
+
+  message(STATUS "ENABLE_GR_LOG set to ${ENABLE_GR_LOG}.")
+
+  if(ENABLE_GR_LOG)
+    add_definitions( -DENABLE_GR_LOG )
+  else(ENABLE_GR_LOG)
+    # If not enabled or available, set these variable to
+    # blank so we can use them later without having to
+    # check ENABLE_GR_LOG each time.
+    SET(LOG4CXX_INCLUDE_DIRS "" CACHE INTERNAL "" FORCE)
+    SET(LOG4CXX_LIBRARY_DIRS "" CACHE INTERNAL "" FORCE)
+    SET(LOG4CXX_LIBRARIES "" CACHE INTERNAL "" FORCE)
+  endif(ENABLE_GR_LOG)
+endfunction(GR_LOGGING)

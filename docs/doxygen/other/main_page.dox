@@ -39,6 +39,7 @@ More details on packages in GNU Radio:
 \li \ref page_vocoder
 
 More details on GNU Radio concepts:
+\li \ref page_logger
 \li \ref page_pmt
 \li \ref page_msg_passing
 \li \ref page_metadata
