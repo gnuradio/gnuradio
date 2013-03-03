@@ -119,13 +119,13 @@ install(
     COMPONENT "core_runtime"
 )
 
-if(ENABLE_GR_LOG)
+if(ENABLE_GR_LOG AND HAVE_LOG4CXX)
 install(FILES
     ${CMAKE_CURRENT_SOURCE_DIR}/gr_log_default.xml
     DESTINATION ${GR_CONF_DIR}/gnuradio
     COMPONENT "core_runtime"
 )
-endif(ENABLE_GR_LOG)
+endif(ENABLE_GR_LOG AND HAVE_LOG4CXX)
 
 ########################################################################
 # Add subdirectories

@@ -81,10 +81,10 @@ gr_block::gr_block (const std::string &name,
     GR_LOG_SET_LEVEL(DLOG, debug_level);
     if(debug_file.size() > 0) {
       if(debug_file == "stdout") {
-        GR_LOG_ADD_CONSOLE_APPENDER(DLOG, "gr::log :%p: %c{1} - %m%n", "System.out");
+        GR_LOG_ADD_CONSOLE_APPENDER(DLOG, "gr::debug :%p: %c{1} - %m%n", "System.out");
       }
       else if(debug_file == "stderr") {
-        GR_LOG_ADD_CONSOLE_APPENDER(DLOG, "gr::log :%p: %c{1} - %m%n", "System.err");
+        GR_LOG_ADD_CONSOLE_APPENDER(DLOG, "gr::debug :%p: %c{1} - %m%n", "System.err");
       }
       else {
         GR_LOG_ADD_FILE_APPENDER(DLOG, "%r :%p: %c{1} - %m%n", debug_file, "");

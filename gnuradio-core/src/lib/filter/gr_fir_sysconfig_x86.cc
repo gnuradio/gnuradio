@@ -48,8 +48,9 @@
 // #include <gr_fir_sss_mmx.h>
 // #include <gr_fir_sss_sse2.h>
 
-#include <gr_prefs.h>
-#include <gr_logger.h>
+
+#include <iostream>
+using std::cerr;
 
 /*
  * ----------------------------------------------------------------
@@ -187,14 +188,14 @@ gr_fir_sysconfig_x86::create_gr_fir_ccf (const std::vector<float> &taps)
 
   if (gr_cpu::has_sse ()){
     if (first){
-      cer << ">>> gr_fir_ccf: using SSE\n";
+      cerr << ">>> gr_fir_ccf: using SSE\n";
       first = false;
     }
     return make_gr_fir_ccf_sse (taps);
   }
 
   if (first){
-    cer << ">>> gr_fir_ccf: handing off to parent class\n";
+    cerr << ">>> gr_fir_ccf: handing off to parent class\n";
     first = false;
   }
   return gr_fir_sysconfig_generic::create_gr_fir_ccf (taps);
