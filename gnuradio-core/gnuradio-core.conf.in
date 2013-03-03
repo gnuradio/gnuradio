@@ -20,5 +20,13 @@ debug_file = stderr
 # Used for advanced configuration of the logger
 #log_config = @CMAKE_INSTALL_PREFIX@/etc/gnuradio/gr_log_default.xml
 
+
 [PerfCounters]
 on = False
+export = True
+
+
+[ControlPort]
+on = False
+edges_list = False
+config = # @CMAKE_INSTALL_PREFIX@/etc/gnuradio/ctrlport.conf

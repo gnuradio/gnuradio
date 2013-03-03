@@ -51,6 +51,8 @@ namespace gr {
       d_updated = false;
       set_history(d_fir->ntaps());
 
+      GR_LOG_WARN(d_logger, "WARNING WARNING");
+
       const int alignment_multiple =
 	volk_get_alignment() / sizeof(float);
       set_alignment(std::max(1, alignment_multiple));
