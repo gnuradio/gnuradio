@@ -25,9 +25,19 @@ set(GR_SWIG_INCLUDE_DIRS
     ${CMAKE_CURRENT_BINARY_DIR}
     ${GNURADIO_CORE_SWIG_INCLUDE_DIRS}
     ${GRUEL_INCLUDE_DIRS}
+    ${LOG4CXX_INCLUDE_DIRS}
     ${Boost_INCLUDE_DIRS}
 )
-set(GR_SWIG_LIBRARIES gnuradio-core)
+set(GR_SWIG_LIBRARIES
+    gnuradio-core
+    ${LOG4CXX_LIBRARIES}
+)
+
+# Only use if log4cxx is installed
+# Define ENABLE_GR_LOG for the .i file to ignore it.
+if(ENABLE_GR_LOG)
+     SET(GR_SWIG_FLAGS "-DENABLE_GR_LOG")
+endif(ENABLE_GR_LOG)
 
 link_directories(${Boost_LIBRARY_DIRS})
 

@@ -26,10 +26,12 @@ include_directories(
     ${GR_ANALOG_INCLUDE_DIRS}
     ${GNURADIO_CORE_INCLUDE_DIRS}
     ${GRUEL_INCLUDE_DIRS}
+    ${LOG4CXX_INCLUDE_DIRS}
     ${Boost_INCLUDE_DIRS}
 )
 
 link_directories(${Boost_LIBRARY_DIRS})
+link_directories(${LOG4CXX_LIBRARY_DIRS})
 
 ########################################################################
 # generate helper scripts to expand templated files
@@ -90,6 +92,7 @@ expand_cc(digital_chunks_to_symbols_XX         bf bc sf sc if ic)
 ########################################################################
 # Setup library
 ########################################################################
+
 list(APPEND gr_digital_sources
     ${generated_sources}
     digital_impl_glfsr.cc
@@ -142,6 +145,7 @@ list(APPEND gr_digital_sources
 list(APPEND digital_libs
     gnuradio-core
     ${Boost_LIBRARIES}
+    ${LOG4CXX_LIBRARIES}
 )
 
 add_library(gnuradio-digital SHARED ${gr_digital_sources})

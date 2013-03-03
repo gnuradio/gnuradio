@@ -94,6 +94,10 @@ if(NOT GNURADIO_CORE_FOUND)
     message(FATAL_ERROR "GnuRadio Core required to compile howto")
 endif()
 
+# Handle gr_log enable/disable
+include(GrMiscUtils) #define LIB_SUFFIX
+GR_LOGGING()
+
 ########################################################################
 # Setup the include and linker paths
 ########################################################################
@@ -101,12 +105,14 @@ include_directories(
     ${CMAKE_SOURCE_DIR}/include
     ${GNURADIO_CORE_INCLUDE_DIRS}
     ${GRUEL_INCLUDE_DIRS}
+    ${LOG4CXX_INCLUDE_DIRS}
     ${Boost_INCLUDE_DIRS}
 )
 
 link_directories(
     ${GNURADIO_CORE_LIBRARY_DIRS}
     ${GRUEL_LIBRARY_DIRS}
+    ${LOG4CXX_LIBRARY_DIRS}
     ${Boost_LIBRARY_DIRS}
 )
 

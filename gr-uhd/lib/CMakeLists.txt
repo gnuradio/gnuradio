@@ -34,6 +34,9 @@ link_directories(
 	${Boost_LIBRARY_DIRS}
 )
 
+include_directories(${LOG4CXX_INCLUDE_DIRS})
+link_directories(${LOG4CXX_LIBRARY_DIRS})
+
 ########################################################################
 # Setup library
 ########################################################################
@@ -47,6 +50,7 @@ list(APPEND uhd_libs
     gnuradio-core
     ${Boost_LIBRARIES}
     ${UHD_LIBRARIES}
+    ${LOG4CXX_LIBRARIES}
 )
 
 add_library(gnuradio-uhd SHARED ${gr_uhd_sources})

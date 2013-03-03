@@ -226,6 +226,9 @@ CPACK_COMPONENT("volk_devel"
 add_subdirectory(volk)
 endif(ENABLE_VOLK)
 
+# Handle gr_log enable/disable
+GR_LOGGING()
+
 ########################################################################
 # Distribute the README file
 ########################################################################

@@ -25,6 +25,7 @@ include_directories(
     ${GNURADIO_CORE_INCLUDE_DIRS}
     ${GRUEL_INCLUDE_DIRS}
     ${Boost_INCLUDE_DIRS}
+    ${LOG4CXX_INCLUDE_DIRS}
     ${SDL_INCLUDE_DIR}
 )
 
@@ -42,6 +43,7 @@ list(APPEND video_sdl_libs
     gnuradio-core
     ${Boost_LIBRARIES}
     ${SDL_LIBRARY}
+    ${LOG4CXX_LIBRARIES}
 )
 
 add_library(gnuradio-video-sdl SHARED ${gr_video_sdl_sources})

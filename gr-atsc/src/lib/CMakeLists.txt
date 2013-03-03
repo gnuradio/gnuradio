@@ -30,6 +30,9 @@ include_directories(
 
 link_directories(${Boost_LIBRARY_DIRS})
 
+include_directories(${LOG4CXX_INCLUDE_DIRS})
+link_directories(${LOG4CXX_LIBRARY_DIRS})
+
 ########################################################################
 # Generate viterbi mux source
 # http://www.vtk.org/Wiki/CMake_Cross_Compiling#Using_executables_in_the_build_created_during_the_build
@@ -98,6 +101,7 @@ list(APPEND gr_atsc_sources
 list(APPEND atsc_libs
     gnuradio-core
     ${Boost_LIBRARIES}
+    ${LOG4CXX_LIBRARIES}
 )
 
 add_library(gnuradio-atsc SHARED ${gr_atsc_sources})

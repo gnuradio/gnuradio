@@ -107,11 +107,25 @@ CPACK_COMPONENT("core_swig"
     DEPENDS      "gruel_swig;core_python;core_devel"
 )
 
+# Setup configure file
+configure_file(
+    ${CMAKE_CURRENT_SOURCE_DIR}/gnuradio-core.conf.in
+    ${CMAKE_CURRENT_BINARY_DIR}/gnuradio-core.conf
+@ONLY)
+
 install(
-    FILES gnuradio-core.conf
+    FILES ${CMAKE_CURRENT_BINARY_DIR}/gnuradio-core.conf
     DESTINATION ${GR_PREFSDIR}
     COMPONENT "core_runtime"
 )
+
+if(ENABLE_GR_LOG)
+install(FILES
+    ${CMAKE_CURRENT_SOURCE_DIR}/gr_log_default.xml
+    DESTINATION ${GR_CONF_DIR}/gnuradio
+    COMPONENT "core_runtime"
+)
+endif(ENABLE_GR_LOG)
 
 ########################################################################
 # Add subdirectories

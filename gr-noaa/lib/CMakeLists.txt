@@ -29,6 +29,9 @@ include_directories(
 
 link_directories(${Boost_LIBRARY_DIRS})
 
+include_directories(${LOG4CXX_INCLUDE_DIRS})
+link_directories(${LOG4CXX_LIBRARY_DIRS})
+
 ########################################################################
 # Setup library
 ########################################################################
@@ -41,6 +44,7 @@ list(APPEND gr_noaa_sources
 list(APPEND noaa_libs
     gnuradio-core
     ${Boost_LIBRARIES}
+    ${LOG4CXX_LIBRARIES}
 )
 
 add_library(gnuradio-noaa SHARED ${gr_noaa_sources})
