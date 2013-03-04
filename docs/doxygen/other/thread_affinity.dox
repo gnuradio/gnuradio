@@ -37,7 +37,7 @@ cores. Again, the function that does not take a thread argument unsets
 the affinity for the current thread.
 
 
-\section api GNU Radio Block API
+\section affinity_api GNU Radio Block API
 
 Each block has two new data members:
 
