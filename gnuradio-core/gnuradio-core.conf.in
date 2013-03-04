@@ -6,6 +6,8 @@
 verbose = False
 
 [LOG]
+# Levels can be (case insensitive):
+#   trace, debug, info, warn, error, fatal
 log_level = all
 debug_level = all
 
