@@ -128,8 +128,10 @@ set(GR_PREFSDIR         ${SYSCONFDIR}/${CMAKE_PROJECT_NAME}/conf.d)
 OPTION(ENABLE_PERFORMANCE_COUNTERS "Enable block performance counters" OFF)
 if(ENABLE_PERFORMANCE_COUNTERS)
   message(STATUS "ADDING PERF COUNTERS")
+  SET(GR_PERFORMANCE_COUNTERS True)
   add_definitions(-DGR_PERFORMANCE_COUNTERS)
 else(ENABLE_PERFORMANCE_COUNTERS)
+  SET(GR_PERFORMANCE_COUNTERS False)
   message(STATUS "NO PERF COUNTERS")
 endif(ENABLE_PERFORMANCE_COUNTERS)
 
@@ -287,6 +289,28 @@ add_subdirectory(gr-vocoder)
 add_subdirectory(gr-fcd)
 add_subdirectory(gr-wavelet)
 add_subdirectory(gr-wxgui)
+
+# Create a config.h with some definitions to export to other projects.
+CONFIGURE_FILE(
+  ${CMAKE_CURRENT_SOURCE_DIR}/config.h.in
+  ${CMAKE_CURRENT_BINARY_DIR}/config.h
+)
+
+# Install config.h in include/gnuradio
+install(
+    FILES
+    ${CMAKE_CURRENT_BINARY_DIR}/config.h
+    DESTINATION ${GR_INCLUDE_DIR}/gnuradio
+    COMPONENT "core_devel"
+)
+
+# Install our Cmake modules into ${GR_PKG_DATA_DIR}/cmake/Modules
+file(GLOB cmake_modules "cmake/Modules/*.cmake")
+install(
+  FILES ${cmake_modules} 
+  DESTINATION ${GR_PKG_DATA_DIR}/cmake/Modules
+  COMPONENT "core_devel"
+)
 
 #finalize cpack after subdirs processed
 include(GrPackage)
