@@ -119,14 +119,14 @@ gr_prefs::_read_files()
 }
 
 bool
-gr_prefs::has_section(const std::string section)
+gr_prefs::has_section(const std::string &section)
 {
   size_t t = d_configs.find("[" + section + "]#");
   return t != std::string::npos;
 }
 
 bool
-gr_prefs::has_option(const std::string section, const std::string option)
+gr_prefs::has_option(const std::string &section, const std::string &option)
 {
   if(has_section(section)) {
     size_t sec = d_configs.find("[" + section + "]#");
@@ -139,7 +139,8 @@ gr_prefs::has_option(const std::string section, const std::string option)
 }
 
 const std::string
-gr_prefs::get_string(const std::string section, const std::string option, const std::string default_val)
+gr_prefs::get_string(const std::string &section, const std::string &option,
+		     const std::string &default_val)
 {
   std::stringstream envname;
   std::string secname=section, optname=option;
@@ -170,7 +171,7 @@ gr_prefs::get_string(const std::string section, const std::string option, const 
 }
 
 bool
-gr_prefs::get_bool(const std::string section, const std::string option, bool default_val)
+gr_prefs::get_bool(const std::string &section, const std::string &option, bool default_val)
 {
   if(has_option(section, option)) {
     std::string str = get_string(section, option, "");
@@ -191,7 +192,7 @@ gr_prefs::get_bool(const std::string section, const std::string option, bool def
 }
 
 long
-gr_prefs::get_long(const std::string section, const std::string option, long default_val)
+gr_prefs::get_long(const std::string &section, const std::string &option, long default_val)
 {
   if(has_option(section, option)) {
     std::string str = get_string(section, option, "");
@@ -209,7 +210,7 @@ gr_prefs::get_long(const std::string section, const std::string option, long def
 }
 
 double
-gr_prefs::get_double(const std::string section, const std::string option, double default_val)
+gr_prefs::get_double(const std::string &section, const std::string &option, double default_val)
 {
   if(has_option(section, option)) {
     std::string str = get_string(section, option, "");
