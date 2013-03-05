@@ -23,6 +23,7 @@
 #ifndef INCLUDED_TCP_CONNECTION_H
 #define INCLUDED_TCP_CONNECTION_H
 
+#include <boost/array.hpp>
 #include <boost/asio.hpp>
 #include <gruel/pmt.h>
 
