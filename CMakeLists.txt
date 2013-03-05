@@ -294,6 +294,14 @@ install(
     COMPONENT "core_devel"
 )
 
+# Install our Cmake modules into ${GR_PKG_DATA_DIR}/cmake/Modules
+file(GLOB cmake_modules "cmake/Modules/*.cmake")
+install(
+  FILES ${cmake_modules} 
+  DESTINATION ${GR_PKG_DATA_DIR}/cmake/Modules
+  COMPONENT "core_devel"
+)
+
 #finalize cpack after subdirs processed
 include(GrPackage)
 CPACK_FINALIZE()
