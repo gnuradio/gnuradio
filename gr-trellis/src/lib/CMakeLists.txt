@@ -1,4 +1,4 @@
-# Copyright 2011 Free Software Foundation, Inc.
+# Copyright 2011,2013 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -149,6 +149,20 @@ list(APPEND gr_trellis_sources
     trellis_constellation_metrics_cf.cc
     ${generated_trellis_sources}
 )
+
+#Add Windows DLL resource file if using MSVC
+if(MSVC)
+    include(${CMAKE_SOURCE_DIR}/cmake/Modules/GrVersion.cmake)
+
+    configure_file(
+        ${CMAKE_CURRENT_SOURCE_DIR}/gnuradio-trellis.rc.in
+        ${CMAKE_CURRENT_BINARY_DIR}/gnuradio-trellis.rc
+    @ONLY)
+
+    list(APPEND gr_trellis_sources
+        ${CMAKE_CURRENT_BINARY_DIR}/gnuradio-trellis.rc
+    )
+endif(MSVC)
 
 list(APPEND trellis_libs
     gnuradio-core

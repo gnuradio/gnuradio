@@ -1,4 +1,4 @@
-# Copyright 2011-212 Free Software Foundation, Inc.
+# Copyright 2011-2013 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -97,6 +97,20 @@ list(APPEND gr_atsc_sources
     create_atsci_fs_correlator.cc
     plinfo.cc
 )
+
+#Add Windows DLL resource file under MSVC
+IF(MSVC)
+    include(${CMAKE_SOURCE_DIR}/cmake/Modules/GrVersion.cmake)
+
+    configure_file(
+        ${CMAKE_CURRENT_SOURCE_DIR}/gnuradio-atsc.rc.in
+        ${CMAKE_CURRENT_BINARY_DIR}/gnuradio-atsc.rc
+    @ONLY)
+
+    list(APPEND gr_atsc_sources
+        ${CMAKE_CURRENT_BINARY_DIR}/gnuradio-atsc.rc
+    )
+ENDIF(MSVC)
 
 list(APPEND atsc_libs
     gnuradio-core

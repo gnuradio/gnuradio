@@ -1,4 +1,4 @@
-# Copyright 2011 Free Software Foundation, Inc.
+# Copyright 2011,2013 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -41,6 +41,20 @@ list(APPEND gr_shd_sources
     gr_shd_smini_source.cc
     gr_shd_smini_sink.cc
 )
+
+#Add Windows DLL resource file if using MSVC
+if(MSVC)
+    include(${CMAKE_SOURCE_DIR}/cmake/Modules/GrVersion.cmake)
+
+    configure_file(
+        ${CMAKE_CURRENT_SOURCE_DIR}/gnuradio-shd.rc.in
+        ${CMAKE_CURRENT_BINARY_DIR}/gnuradio-shd.rc
+    @ONLY)
+
+    list(APPEND gr_shd_sources
+        ${CMAKE_CURRENT_BINARY_DIR}/gnuradio-shd.rc
+    )
+endif(MSVC)
 
 list(APPEND shd_libs
     gnuradio-core

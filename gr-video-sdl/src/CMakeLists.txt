@@ -1,4 +1,4 @@
-# Copyright 2011-2012 Free Software Foundation, Inc.
+# Copyright 2011-2013 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -38,6 +38,20 @@ list(APPEND gr_video_sdl_sources
     video_sdl_sink_uc.cc
     video_sdl_sink_s.cc
 )
+
+#Add Windows DLL resource file if using MSVC
+if(MSVC)
+    include(${CMAKE_SOURCE_DIR}/cmake/Modules/GrVersion.cmake)
+
+    configure_file(
+        ${CMAKE_CURRENT_SOURCE_DIR}/gnuradio-video-sdl.rc.in
+        ${CMAKE_CURRENT_BINARY_DIR}/gnuradio-video-sdl.rc
+    @ONLY)
+
+    list(APPEND gr_uhd_sources
+        ${CMAKE_CURRENT_BINARY_DIR}/gnuradio-video-sdl.rc
+    )
+endif(MSVC)
 
 list(APPEND video_sdl_libs
     gnuradio-core

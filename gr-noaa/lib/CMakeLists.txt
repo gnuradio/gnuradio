@@ -1,4 +1,4 @@
-# Copyright 2011 Free Software Foundation, Inc.
+# Copyright 2011,2013 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -40,6 +40,20 @@ list(APPEND gr_noaa_sources
     noaa_hrpt_deframer.cc
     noaa_hrpt_pll_cf.cc
 )
+
+#Add Windows DLL resource file if using MSVC
+if(MSVC)
+    include(${CMAKE_SOURCE_DIR}/cmake/Modules/GrVersion.cmake)
+
+    configure_file(
+        ${CMAKE_CURRENT_SOURCE_DIR}/gnuradio-noaa.rc.in
+        ${CMAKE_CURRENT_BINARY_DIR}/gnuradio-noaa.rc
+    @ONLY)
+
+    list(APPEND gr_noaa_sources
+        ${CMAKE_CURRENT_BINARY_DIR}/gnuradio-noaa.rc
+    )
+endif(MSVC)
 
 list(APPEND noaa_libs
     gnuradio-core

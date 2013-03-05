@@ -1,4 +1,4 @@
-# Copyright 2010-2011 Free Software Foundation, Inc.
+# Copyright 2010-2011,2013 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -37,6 +37,21 @@ GR_INCLUDE_SUBDIRECTORY(hier)
 
 list(APPEND gnuradio_core_sources bug_work_around_6.cc)
 list(APPEND test_gnuradio_core_sources bug_work_around_6.cc)
+
+########################################################################
+# Set up Windows DLL resource files
+########################################################################
+
+IF(MSVC)
+    include(${CMAKE_SOURCE_DIR}/cmake/Modules/GrVersion.cmake)
+
+    configure_file(
+        ${CMAKE_CURRENT_SOURCE_DIR}/gnuradio-core.rc.in
+        ${CMAKE_CURRENT_BINARY_DIR}/gnuradio-core.rc
+    @ONLY)
+
+    list(APPEND gnuradio_core_sources ${CMAKE_CURRENT_BINARY_DIR}/gnuradio-core.rc)
+ENDIF(MSVC)
 
 ########################################################################
 # Setup the include and linker paths
