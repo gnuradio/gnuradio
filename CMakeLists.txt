@@ -56,6 +56,10 @@ IF(NOT DEFINED BOOST_ROOT)
     SET(BOOST_ROOT ${CMAKE_INSTALL_PREFIX})
 ENDIF()
 
+if(ENABLE_GR_CTRLPORT)
+  set(GR_CTRLPORT True)
+endif(ENABLE_GR_CTRLPORT)
+
 ########################################################################
 # Import executables from a native build (for cross compiling)
 # http://www.vtk.org/Wiki/CMake_Cross_Compiling#Using_executables_in_the_build_created_during_the_build

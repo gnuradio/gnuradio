@@ -24,6 +24,7 @@
 
 #cmakedefine TRY_SHM_VMCIRCBUF
 #cmakedefine GR_PERFORMANCE_COUNTERS
+#cmakedefine GR_CTRLPORT
 #cmakedefine ENABLE_GR_LOG
 #cmakedefine HAVE_LOG4CXX
 
