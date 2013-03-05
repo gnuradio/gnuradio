@@ -66,7 +66,7 @@ class ModToolNewModule(ModTool):
             print 'The given directory exists.'
             exit(2)
         if options.srcdir is None:
-            options.srcdir = '/usr/local/share/gnuradio/modtool/gr-newmod',
+            options.srcdir = '/usr/local/share/gnuradio/modtool/gr-newmod'
         self._srcdir = gr.prefs().get_string('modtool', 'newmod_path', options.srcdir)
         if not os.path.isdir(self._srcdir):
             print 'Error: Could not find gr-newmod source dir.'

@@ -28,6 +28,10 @@
 #include <io.h>
 #endif
 
+#ifdef HAVE_WINDOWS_H
+#include <winsock2.h>
+#endif
+
 #include <blocks/pdu.h>
 #include <gr_basic_block.h>
 #include "stream_pdu_base.h"
