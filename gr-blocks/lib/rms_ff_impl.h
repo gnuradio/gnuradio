@@ -24,7 +24,6 @@
 #define INCLUDED_BLOCKS_RMS_FF_IMPL_H
 
 #include <blocks/rms_ff.h>
-#include <gr_single_pole_iir.h>
 
 namespace gr {
   namespace blocks {
