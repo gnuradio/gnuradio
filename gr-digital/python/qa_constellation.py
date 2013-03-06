@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2011 Free Software Foundation, Inc.
+# Copyright 2011,2013 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -31,6 +31,7 @@ import blocks_swig as blocks
 # import from local folder
 import psk
 import qam
+import qamlike
 
 tested_mod_codes = (mod_codes.NO_CODE, mod_codes.GRAY_CODE)
 
@@ -65,11 +66,14 @@ def threed_constell():
     dim = 3
     return digital.constellation_calcdist(points, [], rot_sym, dim)
 
-tested_constellation_info = (
+# A list of tuples for constellation testing.  The contents of the
+# tuples are (constructor, poss_args, differential, diff_argname).
+
+# These constellations should lock on well.
+easy_constellation_info = (
     (psk.psk_constellation,
-     {'m': (2, 4, 8, 16, 32, 64),
-      'mod_code': tested_mod_codes, 
-      'differential': (True,)},
+     {'m': (2, 4, 8, 16, ),
+      'mod_code': tested_mod_codes, },
      True, None),
     (psk.psk_constellation,
      {'m': (2, 4, 8, 16, 32, 64),
@@ -77,9 +81,9 @@ tested_constellation_info = (
       'differential': (False,)},
      False, None),
     (qam.qam_constellation,
-     {'constellation_points': (4, 16, 64),
+     {'constellation_points': (4,),
       'mod_code': tested_mod_codes, 
-      'differential': (True,)},
+      'large_ampls_to_corners': [False],},
      True, None),
     (qam.qam_constellation,
      {'constellation_points': (4, 16, 64),
@@ -94,11 +98,44 @@ tested_constellation_info = (
     (threed_constell, {}, True, None),
     )
 
-def tested_constellations():
+# These constellations don't work nicely.
+# We have a lower required error rate.
+medium_constellation_info = (
+    (psk.psk_constellation,
+     {'m': (32, 64),
+      'mod_code': tested_mod_codes, },
+     True, None),
+    (qam.qam_constellation,
+     {'constellation_points': (16 ,),
+      'mod_code': tested_mod_codes, 
+      'large_ampls_to_corners': [False, True],},
+     True, None),
+    (qamlike.qam32_holeinside_constellation,
+     {'large_ampls_to_corners': [True]},
+     True, None),
+)
+
+# These constellation are basically broken in our test
+difficult_constellation_info = (
+    (qam.qam_constellation,
+     {'constellation_points': (64,),
+      'mod_code': tested_mod_codes, 
+      'large_ampls_to_corners': [False, True],},
+     True, None),    
+)
+
+def tested_constellations(easy=True, medium=True, difficult=True):
     """
     Generator to produce (constellation, differential) tuples for testing purposes.
     """
-    for constructor, poss_args, differential, diff_argname in tested_constellation_info:
+    constellation_info = []
+    if easy:
+        constellation_info += easy_constellation_info
+    if medium:
+        constellation_info += medium_constellation_info
+    if difficult:
+        constellation_info += difficult_constellation_info
+    for constructor, poss_args, differential, diff_argname in constellation_info:
         if differential:
             diff_poss = (True, False)
         else:
