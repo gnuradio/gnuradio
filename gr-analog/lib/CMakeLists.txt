@@ -1,4 +1,4 @@
-# Copyright 2012 Free Software Foundation, Inc.
+# Copyright 2012-2013 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -140,6 +140,21 @@ list(APPEND analog_sources
     simple_squelch_cc_impl.cc
     sincos.cc
 )
+
+#Add Windows DLL resource file if using MSVC
+IF(MSVC)
+    include(${CMAKE_SOURCE_DIR}/cmake/Modules/GrVersion.cmake)
+
+    configure_file(
+        ${CMAKE_CURRENT_SOURCE_DIR}/gnuradio-analog.rc.in
+        ${CMAKE_CURRENT_BINARY_DIR}/gnuradio-analog.rc
+    @ONLY)
+
+    list(APPEND analog_sources
+        ${CMAKE_CURRENT_BINARY_DIR}/gnuradio-analog.rc
+    )
+
+ENDIF(MSVC)
 
 list(APPEND analog_libs
     volk

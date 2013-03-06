@@ -1,4 +1,4 @@
-# Copyright 2011 Free Software Foundation, Inc.
+# Copyright 2011,2013 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -46,6 +46,20 @@ list(APPEND pager_sources
     flex_modes.cc
     util.cc
 )
+
+#Add Windows DLL resource file if using MSVC
+if(MSVC)
+    include(${CMAKE_SOURCE_DIR}/cmake/Modules/GrVersion.cmake)
+
+    configure_file(
+        ${CMAKE_CURRENT_SOURCE_DIR}/gnuradio-pager.rc.in
+        ${CMAKE_CURRENT_BINARY_DIR}/gnuradio-pager.rc
+    @ONLY)
+
+    list(APPEND gr_pager_sources
+        ${CMAKE_CURRENT_BINARY_DIR}/gnuradio-pager.rc
+    )
+endif(MSVC)
 
 list(APPEND pager_libs
     gnuradio-core

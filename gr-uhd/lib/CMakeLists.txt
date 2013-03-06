@@ -1,4 +1,4 @@
-# Copyright 2011-2012 Free Software Foundation, Inc.
+# Copyright 2011-2013 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -49,6 +49,20 @@ list(APPEND gr_uhd_sources
     usrp_sink_impl.cc
     amsg_source_impl.cc
 )
+
+#Add Windows DLL resource file if using MSVC
+if(MSVC)
+    include(${CMAKE_SOURCE_DIR}/cmake/Modules/GrVersion.cmake)
+
+    configure_file(
+        ${CMAKE_CURRENT_SOURCE_DIR}/gnuradio-uhd.rc.in
+        ${CMAKE_CURRENT_BINARY_DIR}/gnuradio-uhd.rc
+    @ONLY)
+
+    list(APPEND gr_uhd_sources
+        ${CMAKE_CURRENT_BINARY_DIR}/gnuradio-uhd.rc
+    )
+endif(MSVC)
 
 list(APPEND uhd_libs
     gnuradio-core

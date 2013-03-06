@@ -1,4 +1,4 @@
-# Copyright 2012 Free Software Foundation, Inc.
+# Copyright 2012-2013 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -54,6 +54,20 @@ list(APPEND fft_libs
     ${Boost_LIBRARIES}
     ${FFTW3F_LIBRARIES}
 )
+
+#Add Windows DLL resource file if using MSVC
+if(MSVC)
+    include(${CMAKE_SOURCE_DIR}/cmake/Modules/GrVersion.cmake)
+
+    configure_file(
+        ${CMAKE_CURRENT_SOURCE_DIR}/gnuradio-fft.rc.in
+        ${CMAKE_CURRENT_BINARY_DIR}/gnuradio-fft.rc
+    @ONLY)
+
+    list(APPEND fft_sources
+        ${CMAKE_CURRENT_BINARY_DIR}/gnuradio-fft.rc
+    )
+endif(MSVC)
 
 if(FFTW3F_THREADS_LIBRARIES)
     list(APPEND fft_libs ${FFTW3F_THREADS_LIBRARIES})

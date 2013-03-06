@@ -1,4 +1,4 @@
-# Copyright 2012 Free Software Foundation, Inc.
+# Copyright 2012-2013 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -64,6 +64,18 @@ list(APPEND fcd_libs
 
 if (WIN32)
 	list(APPEND fcd_libs setupapi)
+
+    #Add Windows DLL resource file if using MSVC
+    if(MSVC)
+        include(${CMAKE_SOURCE_DIR}/cmake/Modules/GrVersion.cmake)
+
+        configure_file(
+            ${CMAKE_CURRENT_SOURCE_DIR}/gnuradio-fcd.rc.in
+            ${CMAKE_CURRENT_BINARY_DIR}/gnuradio-fcd.rc
+        @ONLY)
+
+        list(APPEND gr_fcd_sources ${CMAKE_CURRENT_BINARY_DIR}/gnuradio-fcd.rc)
+    endif(MSVC)
 endif()
 
 if(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")

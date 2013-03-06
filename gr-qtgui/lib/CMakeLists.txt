@@ -82,6 +82,20 @@ set(qtgui_srcs
     qtgui_util.cc
 )
 
+#Add Windows DLL resource file if using MSVC
+if(MSVC)
+    include(${CMAKE_SOURCE_DIR}/cmake/Modules/GrVersion.cmake)
+
+    configure_file(
+        ${CMAKE_CURRENT_SOURCE_DIR}/gnuradio-qtgui.rc.in
+        ${CMAKE_CURRENT_BINARY_DIR}/gnuradio-qtgui.rc
+    @ONLY)
+
+    list(APPEND qtgui_srcs
+        ${CMAKE_CURRENT_BINARY_DIR}/gnuradio-qtgui.rc
+    )
+endif(MSVC)
+
 ########################################################################
 # Setup the include and linker paths
 ########################################################################

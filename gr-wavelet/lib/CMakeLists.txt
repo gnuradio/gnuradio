@@ -53,6 +53,20 @@ list(APPEND gr_wavelet_sources
     wvps_ff_impl.cc
 )
 
+#Add Windows DLL resource file if using MSVC
+if(MSVC)
+    include(${CMAKE_SOURCE_DIR}/cmake/Modules/GrVersion.cmake)
+
+    configure_file(
+        ${CMAKE_CURRENT_SOURCE_DIR}/gnuradio-wavelet.rc.in
+        ${CMAKE_CURRENT_BINARY_DIR}/gnuradio-wavelet.rc
+    @ONLY)
+
+    list(APPEND gr_wavelet_sources
+        ${CMAKE_CURRENT_BINARY_DIR}/gnuradio-wavelet.rc
+    )
+endif(MSVC)
+
 list(APPEND wavelet_libs
     gnuradio-core
     gnuradio-blocks

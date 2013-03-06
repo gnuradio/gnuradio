@@ -58,6 +58,20 @@ list(APPEND gr_vocoder_sources
     ulaw_encode_sb_impl.cc
 )
 
+#Add Windows DLL resource file if using MSVC
+if(MSVC)
+    include(${CMAKE_SOURCE_DIR}/cmake/Modules/GrVersion.cmake)
+
+    configure_file(
+        ${CMAKE_CURRENT_SOURCE_DIR}/gnuradio-vocoder.rc.in
+        ${CMAKE_CURRENT_BINARY_DIR}/gnuradio-vocoder.rc
+    @ONLY)
+
+    list(APPEND gr_uhd_sources
+        ${CMAKE_CURRENT_BINARY_DIR}/gnuradio-vocoder.rc
+    )
+endif(MSVC)
+
 ########################################################################
 # Include subdirs rather to populate to the sources lists.
 ########################################################################
