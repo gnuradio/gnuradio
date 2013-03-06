@@ -95,7 +95,7 @@ class waterfall_sink_f(gr.hier_block2, waterfall_sink_base):
 
         mywindow = window.blackmanharris(self.fft_size)
         self.fft = fft.fft_vfc(self.fft_size, True, mywindow)
-        self.c2mag = gr.complex_to_mag(self.fft_size)
+        self.c2mag = blocks.complex_to_mag(self.fft_size)
         self.avg = filter.single_pole_iir_filter_ff(1.0, self.fft_size)
         self.log = blocks.nlog10_ff(20, self.fft_size, -20*math.log10(self.fft_size))
         self.sink = blocks.message_sink(gr.sizeof_float * self.fft_size, self.msgq, True)
@@ -126,7 +126,7 @@ class waterfall_sink_c(gr.hier_block2, waterfall_sink_base):
 
         mywindow = window.blackmanharris(self.fft_size)
         self.fft = fft.fft_vcc(self.fft_size, True, mywindow)
-        self.c2mag = gr.complex_to_mag(self.fft_size)
+        self.c2mag = blocks.complex_to_mag(self.fft_size)
         self.avg = filter.single_pole_iir_filter_ff(1.0, self.fft_size)
         self.log = blocks.nlog10_ff(20, self.fft_size, -20*math.log10(self.fft_size))
         self.sink = blocks.message_sink(gr.sizeof_float * self.fft_size, self.msgq, True)

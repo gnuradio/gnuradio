@@ -190,7 +190,7 @@ class test_app_block (stdgui2.std_top_block):
         vbox.Add(sink2.win, 1, wx.EXPAND)
 
         combine2 = blocks.add_ff()
-        c2f2 = gr.complex_to_float()
+        c2f2 = blocks.complex_to_float()
 
         self.connect(src2, (combine2,0))
         self.connect(noise,c2f2,(combine2,1))

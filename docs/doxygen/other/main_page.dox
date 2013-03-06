@@ -327,8 +327,9 @@ The \ref volk_guide page provides an overview of how to incorporate
 and use Volk in GNU Radio blocks.
 
 Many blocks have already been converted to use Volk in their calls, so
-they can also serve as examples. See the gr_complex_to_xxx.h file for
-examples of various blocks that make use of Volk.
+they can also serve as examples. See the
+gr::blocks::complex_to_<type>.h files for examples of various blocks
+that make use of Volk.
 
 
 \section prefs Configuration / Preference Files

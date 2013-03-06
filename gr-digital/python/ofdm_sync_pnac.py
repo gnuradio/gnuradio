@@ -79,13 +79,13 @@ class ofdm_sync_pnac(gr.hier_block2):
         self.corr = blocks.multiply_cc();
 
         # Create a moving sum filter for the input
-        self.mag = gr.complex_to_mag_squared()
+        self.mag = blocks.complex_to_mag_squared()
         movingsum_taps = (fft_length//1)*[1.0,]
         self.power = filter.fir_filter_fff(1,movingsum_taps)
      
         # Get magnitude (peaks) and angle (phase/freq error)
-        self.c2mag = gr.complex_to_mag_squared()
-        self.angle = gr.complex_to_arg()
+        self.c2mag = blocks.complex_to_mag_squared()
+        self.angle = blocks.complex_to_arg()
         self.compare = blocks.sub_ff()
         
         self.sample_and_hold = blocks.sample_and_hold_ff()

@@ -60,7 +60,7 @@ class ssb_demod( gr.hier_block2 ):
             0,
             self.if_rate )
 
-        self.split = gr.complex_to_float()
+        self.split = blocks.complex_to_float()
 
         self.lpf = gr.fir_filter_fff(
             1, self.audio_taps )
@@ -69,7 +69,7 @@ class ssb_demod( gr.hier_block2 ):
         self.am_sel = blocks.multiply_const_ff( 0 )
         self.sb_sel = blocks.multiply_const_ff( 1 )
         self.mixer  = blocks.add_ff()
-        self.am_det = gr.complex_to_mag()
+        self.am_det = blocks.complex_to_mag()
 
         self.connect(self,             self.xlate)
         self.connect(self.xlate,       self.split)

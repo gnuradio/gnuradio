@@ -50,35 +50,35 @@ def int_to_float(N):
 ######################################################################
 
 def complex_to_float(N):
-    op = gr.complex_to_float()
+    op = blocks.complex_to_float()
     tb = helper(N, op, gr.sizeof_gr_complex, gr.sizeof_float, 1, 2)
     return tb
 
 ######################################################################
 
 def complex_to_real(N):
-    op = gr.complex_to_real()
+    op = blocks.complex_to_real()
     tb = helper(N, op, gr.sizeof_gr_complex, gr.sizeof_float, 1, 1)
     return tb
 
 ######################################################################
 
 def complex_to_imag(N):
-    op = gr.complex_to_imag()
+    op = blocks.complex_to_imag()
     tb = helper(N, op, gr.sizeof_gr_complex, gr.sizeof_float, 1, 1)
     return tb
 
 ######################################################################
 
 def complex_to_mag(N):
-    op = gr.complex_to_mag()
+    op = blocks.complex_to_mag()
     tb = helper(N, op, gr.sizeof_gr_complex, gr.sizeof_float, 1, 1)
     return tb
 
 ######################################################################
 
 def complex_to_mag_squared(N):
-    op = gr.complex_to_mag_squared()
+    op = blocks.complex_to_mag_squared()
     tb = helper(N, op, gr.sizeof_gr_complex, gr.sizeof_float, 1, 1)
     return tb
 

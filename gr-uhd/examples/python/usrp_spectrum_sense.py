@@ -162,7 +162,7 @@ class my_top_block(gr.top_block):
         for tap in mywindow:
             power += tap*tap
 
-        c2mag = gr.complex_to_mag_squared(self.fft_size)
+        c2mag = blocks.complex_to_mag_squared(self.fft_size)
 
         # FIXME the log10 primitive is dog slow
         log = blocks.nlog10_ff(10, self.fft_size,

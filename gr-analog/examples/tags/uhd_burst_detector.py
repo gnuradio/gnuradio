@@ -61,7 +61,7 @@ class uhd_burst_detector(gr.top_block):
         ## use squelch to detect energy
         self.det  = analog.simple_squelch_cc(self.threshold, 0.01)
         ## convert to mag squared (float)
-        self.c2m = gr.complex_to_mag_squared()
+        self.c2m = blocks.complex_to_mag_squared()
         ## average to debounce
         self.avg = filter.single_pole_iir_filter_ff(0.01)
         ## rescale signal for conversion to short

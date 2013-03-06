@@ -305,7 +305,7 @@ class MyFrame(wx.Frame):
                                           sample_rate=self.af_sample_rate,
                                           average=True, size=(640,240))
 
-        c2f = gr.complex_to_float()
+        c2f = blocks.complex_to_float()
 
 	# AM branch
 	self.sel_am = blocks.multiply_const_cc(0)
@@ -318,8 +318,8 @@ class MyFrame(wx.Frame):
 	am_det = blocks.multiply_cc()
 	# these are for converting +7.5kHz to -7.5kHz
 	# for some reason blocks.conjugate_cc() adds noise ??
-	c2f2 = gr.complex_to_float()
-	c2f3 = gr.complex_to_float()
+	c2f2 = blocks.complex_to_float()
+	c2f3 = blocks.complex_to_float()
 	f2c = blocks.float_to_complex()
 	phaser1 = blocks.multiply_const_ff(1)
 	phaser2 = blocks.multiply_const_ff(-1)

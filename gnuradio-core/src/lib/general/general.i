@@ -33,8 +33,6 @@
 #include <gr_lfsr_32k_source_s.h>
 #include <gr_check_lfsr_32k_s.h>
 #include <gr_align_on_samplenumbers_ss.h>
-#include <gr_complex_to_xxx.h>
-#include <gr_complex_to_interleaved_short.h>
 //#include <gr_endianness.h>
 #include <gr_endian_swap.h>
 #include <gr_firdes.h>
@@ -69,8 +67,6 @@
 %include "gr_lfsr_32k_source_s.i"
 %include "gr_check_lfsr_32k_s.i"
 %include "gr_align_on_samplenumbers_ss.i"
-%include "gr_complex_to_xxx.i"
-%include "gr_complex_to_interleaved_short.i"
 //%include "gr_endianness.i"
 %include "gr_endian_swap.i"
 %include "gr_firdes.i"

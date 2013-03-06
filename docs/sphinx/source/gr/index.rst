@@ -66,20 +66,6 @@ Information Coding and Decoding
    gnuradio.gr.fake_channel_decoder_pp
 
 
-Type Conversions
-^^^^^^^^^^^^^^^^
-
-.. autosummary::
-   :nosignatures:
-
-   gnuradio.gr.complex_to_interleaved_short
-   gnuradio.gr.complex_to_float
-   gnuradio.gr.complex_to_real
-   gnuradio.gr.complex_to_imag
-   gnuradio.gr.complex_to_mag
-   gnuradio.gr.complex_to_mag_squared
-   gnuradio.gr.complex_to_arg
-
 
 Miscellaneous Blocks
 ^^^^^^^^^^^^^^^^^^^^

@@ -33,6 +33,8 @@
 # then at 0 with edges at -3.2MHz and 3.2MHz.
 
 from gnuradio import gr, atsc
+from gnuradio import filter
+from gnuradio import blocks
 import sys, os, math
 
 def graph (args):
@@ -48,24 +50,24 @@ def graph (args):
 
     # Convert to a from shorts to a stream of complex numbers.
     srcf = gr.file_source (gr.sizeof_short,infile)
-    s2ss = gr.stream_to_streams(gr.sizeof_short,2)
-    s2f1 = gr.short_to_float()
-    s2f2 = gr.short_to_float()
-    src0 = gr.float_to_complex()
+    s2ss = blocks.stream_to_streams(gr.sizeof_short,2)
+    s2f1 = blocks.short_to_float()
+    s2f2 = blocks.short_to_float()
+    src0 = blocks.float_to_complex()
     tb.connect(srcf, s2ss)
     tb.connect((s2ss, 0), s2f1, (src0, 0))
     tb.connect((s2ss, 1), s2f2, (src0, 1))
 
     # Low pass filter it and increase sample rate by a factor of 3.
-    lp_coeffs = gr.firdes.low_pass ( 3, 19.2e6, 3.2e6, .5e6, gr.firdes.WIN_HAMMING )
-    lp = gr.interp_fir_filter_ccf ( 3, lp_coeffs )
+    lp_coeffs = filter.firdes.low_pass ( 3, 19.2e6, 3.2e6, .5e6, filter.firdes.WIN_HAMMING )
+    lp = filter.interp_fir_filter_ccf ( 3, lp_coeffs )
     tb.connect(src0, lp)
 
     # Upconvert it.
-    duc_coeffs = gr.firdes.low_pass ( 1, 19.2e6, 9e6, 1e6, gr.firdes.WIN_HAMMING )
-    duc = gr.freq_xlating_fir_filter_ccf ( 1, duc_coeffs, 5.75e6, 19.2e6 )
+    duc_coeffs = filter.firdes.low_pass ( 1, 19.2e6, 9e6, 1e6, filter.firdes.WIN_HAMMING )
+    duc = filter.freq_xlating_fir_filter_ccf ( 1, duc_coeffs, 5.75e6, 19.2e6 )
     # Discard the imaginary component.
-    c2f = gr.complex_to_float()
+    c2f = blocks.complex_to_float()
     tb.connect(lp, duc, c2f)
 
     # Frequency Phase Lock Loop
@@ -74,7 +76,7 @@ def graph (args):
     # 1/2 as wide because we're designing lp filter
     symbol_rate = atsc.ATSC_SYMBOL_RATE/2.
     NTAPS = 279
-    tt = gr.firdes.root_raised_cosine (1.0, input_rate, symbol_rate, .115, NTAPS)
+    tt = filter.firdes.root_raised_cosine (1.0, input_rate, symbol_rate, .115, NTAPS)
     # heterodyne the low pass coefficients up to the specified bandpass
     # center frequency.  Note that when we do this, the filter bandwidth
     # is effectively twice the low pass (2.69 * 2 = 5.38) and hence
@@ -83,7 +85,7 @@ def graph (args):
     t=[]
     for i in range(len(tt)):
         t += [tt[i] * 2. * math.cos(arg * i)]
-    rrc = gr.fir_filter_fff(1, t)
+    rrc = filter.fir_filter_fff(1, t)
 
     fpll = atsc.fpll()
 
@@ -91,17 +93,17 @@ def graph (args):
     lower_edge = 6e6 - 0.31e6
     upper_edge = IF_freq - 3e6 + pilot_freq
     transition_width = upper_edge - lower_edge
-    lp_coeffs = gr.firdes.low_pass (1.0,
-                                    input_rate,
-                                    (lower_edge + upper_edge) * 0.5,
-                                    transition_width,
-                                    gr.firdes.WIN_HAMMING);
+    lp_coeffs = filter.firdes.low_pass(1.0,
+                                       input_rate,
+                                       (lower_edge + upper_edge) * 0.5,
+                                       transition_width,
+                                       filter.firdes.WIN_HAMMING);
     
-    lp_filter = gr.fir_filter_fff (1,lp_coeffs)
+    lp_filter = filter.fir_filter_fff(1,lp_coeffs)
     
     alpha = 1e-5
-    iir = gr.single_pole_iir_filter_ff(alpha)
-    remove_dc = gr.sub_ff()
+    iir = filter.single_pole_iir_filter_ff(alpha)
+    remove_dc = blocks.sub_ff()
 
     tb.connect(c2f, fpll, lp_filter)
     tb.connect(lp_filter, iir)

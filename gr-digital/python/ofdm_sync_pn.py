@@ -67,7 +67,7 @@ class ofdm_sync_pn(gr.hier_block2):
             self.moving_sum_filter = filter.fft_filter_ccc(1,moving_sum_taps)
 
         # Create a moving sum filter for the input
-        self.inputmag2 = gr.complex_to_mag_squared()
+        self.inputmag2 = blocks.complex_to_mag_squared()
         movingsum2_taps = [1.0 for i in range(fft_length//2)]
 
         if 1:
@@ -79,8 +79,8 @@ class ofdm_sync_pn(gr.hier_block2):
         self.normalize = blocks.divide_ff()
      
         # Get magnitude (peaks) and angle (phase/freq error)
-        self.c2mag = gr.complex_to_mag_squared()
-        self.angle = gr.complex_to_arg()
+        self.c2mag = blocks.complex_to_mag_squared()
+        self.angle = blocks.complex_to_arg()
 
         self.sample_and_hold = blocks.sample_and_hold_ff()
 

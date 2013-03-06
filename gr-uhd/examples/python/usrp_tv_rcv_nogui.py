@@ -161,7 +161,7 @@ class my_top_block(gr.top_block):
 
 
         self.agc = analog.agc_cc(1e-7,1.0,1.0) #1e-7
-        self.am_demod = gr.complex_to_mag ()
+        self.am_demod = blocks.complex_to_mag ()
         self.set_blacklevel = blocks.add_const_ff(options.brightness +255.0)
         self.invert_and_scale = blocks.multiply_const_ff(-options.contrast *128.0*255.0/(200.0))
         self.f2uc = blocks.float_to_uchar()

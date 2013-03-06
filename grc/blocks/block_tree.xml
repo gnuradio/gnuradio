@@ -36,18 +36,6 @@
                 <block>gr_endian_swap</block>
 	</cat>
 	<cat>
-		<name>Type Conversions</name>
-		<block>gr_complex_to_arg</block>
-		<block>gr_complex_to_mag</block>
-		<block>gr_complex_to_mag_squared</block>
-		<block>gr_complex_to_real</block>
-		<block>gr_complex_to_imag</block>
-
-		<block>gr_complex_to_float</block>
-
-		<block>gr_complex_to_interleaved_short</block>
-	</cat>
-	<cat>
 		<name>Stream Conversions</name>
 		<block>gr_burst_tagger</block>
 	</cat>

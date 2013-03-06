@@ -141,7 +141,7 @@ class wfm_rcv_pll(gr.hier_block2):
 
             # pick off the real component of the basebanded L-R signal.  The imaginary SHOULD be zero
 
-            self.LmR_real = gr.complex_to_real();
+            self.LmR_real = blocks.complex_to_real();
             self.Make_Left = blocks.add_ff();
             self.Make_Right = blocks.sub_ff();
 

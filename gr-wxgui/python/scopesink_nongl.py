@@ -66,7 +66,7 @@ class scope_sink_c(gr.hier_block2):
         msgq = gr.msg_queue(2)         # message queue that holds at most 2 messages
         self.guts = gr.oscope_sink_f(sample_rate, msgq)
         for i in range(num_inputs):
-	        c2f = gr.complex_to_float()
+	        c2f = blocks.complex_to_float()
 	        self.connect((self, i), c2f)
 	        self.connect((c2f, 0),(self.guts, 2*i+0))
 	        self.connect((c2f, 1),(self.guts, 2*i+1))

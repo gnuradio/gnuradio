@@ -130,7 +130,7 @@ class fft_sink_f(gr.hier_block2, fft_sink_base):
         for tap in mywindow:
             power += tap*tap
 
-        self.c2mag = gr.complex_to_mag(self.fft_size)
+        self.c2mag = blocks.complex_to_mag(self.fft_size)
         self.avg = filter.single_pole_iir_filter_ff(1.0, self.fft_size)
 
         # FIXME  We need to add 3dB to all bins but the DC bin
@@ -176,7 +176,7 @@ class fft_sink_c(gr.hier_block2, fft_sink_base):
         for tap in mywindow:
             power += tap*tap
 
-        self.c2mag = gr.complex_to_mag(self.fft_size)
+        self.c2mag = blocks.complex_to_mag(self.fft_size)
         self.avg = filter.single_pole_iir_filter_ff(1.0, self.fft_size)
 
         # FIXME  We need to add 3dB to all bins but the DC bin

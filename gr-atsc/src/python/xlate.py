@@ -32,6 +32,8 @@
 # Input complex -3.2 to 3.2Mhz, output float 2.55 to 8.95Mhz.
 
 from gnuradio import gr
+from gnuradio import filter
+from gnuradio import blocks
 import os
 
 def graph ():
@@ -40,12 +42,12 @@ def graph ():
 
     tb = gr.top_block ()
 
-    src0 = gr.file_source (gr.sizeof_gr_complex,"/tmp/atsc_pipe_1")
+    src0 = gr.file_source(gr.sizeof_gr_complex,"/tmp/atsc_pipe_1")
 
-    duc_coeffs = gr.firdes.low_pass ( 1, 19.2e6, 9e6, 1e6, gr.firdes.WIN_HAMMING )
-    duc = gr.freq_xlating_fir_filter_ccf ( 1, duc_coeffs, 5.75e6, 19.2e6 )
+    duc_coeffs = filter.firdes.low_pass( 1, 19.2e6, 9e6, 1e6, filter.firdes.WIN_HAMMING )
+    duc = filter.freq_xlating_fir_filter_ccf( 1 duc_coeffs, 5.75e6, 19.2e6 )
 
-    c2f = gr.complex_to_float()
+    c2f = blocks.complex_to_float()
     file = gr.file_sink(gr.sizeof_float,"/tmp/atsc_pipe_2")
 
     tb.connect( src0, duc, c2f, file )

@@ -147,8 +147,6 @@ set(gr_core_general_triple_threats
     gr_block_gateway
     gr_check_counting_s
     gr_check_lfsr_32k_s
-    gr_complex_to_interleaved_short
-    gr_complex_to_xxx
     gr_copy
     gr_endian_swap
     gr_fake_channel_coder_pp

@@ -158,7 +158,7 @@ class _scope_sink_base(gr.hier_block2, common.wxgui_hb):
 				)
 		else:
 			for i in range(num_inputs):
-				c2f = gr.complex_to_float()
+				c2f = blocks.complex_to_float()
 				self.wxgui_connect((self, i), c2f)
 				for j in range(2):
 					self.connect(

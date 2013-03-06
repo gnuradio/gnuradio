@@ -197,7 +197,7 @@ class tv_rx_block (stdgui2.std_top_block):
           self.dst =file_sink
 
         self.agc = analog.agc_cc(1e-7,1.0,1.0) #1e-7
-        self.am_demod = gr.complex_to_mag ()
+        self.am_demod = blocks.complex_to_mag ()
         self.set_blacklevel = blocks.add_const_ff(0.0)
         self.invert_and_scale = blocks.multiply_const_ff (0.0) #-self.contrast *128.0*255.0/(200.0)
 
@@ -225,7 +225,7 @@ class tv_rx_block (stdgui2.std_top_block):
 
         elif process_type=='do_nullsink':
           #self.connect (self.src, self.am_demod,self.invert_and_scale,f2uc,video_sink)
-          c2r=gr.complex_to_real()
+          c2r=blocks.complex_to_real()
           nullsink=gr.null_sink(gr.sizeof_float)
           self.connect (self.src, c2r,nullsink) #video_sink)
         elif process_type=='do_tv_sync_corr':

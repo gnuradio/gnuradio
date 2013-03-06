@@ -62,8 +62,8 @@ class ofdm_sync_ml(gr.hier_block2):
         self.connect(self.input, self.delay)
 
         # magnitude squared blocks
-        self.magsqrd1 = gr.complex_to_mag_squared()
-        self.magsqrd2 = gr.complex_to_mag_squared()
+        self.magsqrd1 = blocks.complex_to_mag_squared()
+        self.magsqrd2 = blocks.complex_to_mag_squared()
         self.adder = blocks.add_ff()
 
         moving_sum_taps = [rho/2 for i in range(cp_length)]
@@ -126,7 +126,7 @@ class ofdm_sync_ml(gr.hier_block2):
         kstime = [k.conjugate() for k in kstime]
         kstime.reverse()
         self.kscorr = filter.fir_filter_ccc(1, kstime)
-        self.corrmag = gr.complex_to_mag_squared()
+        self.corrmag = blocks.complex_to_mag_squared()
         self.div = blocks.divide_ff()
 
         # The output signature of the correlation has a few spikes because the rest of the
