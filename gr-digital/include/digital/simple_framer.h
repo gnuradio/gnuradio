@@ -35,7 +35,7 @@ namespace gr {
      *
      * Takes in enough samples to create a full output frame. The
      * frame is prepended with the GRSF_SYNC (defind in
-     * digital_simple_framer_sync.h) and an 8-bit sequence number.
+     * simple_framer_sync.h) and an 8-bit sequence number.
      */
     class DIGITAL_API simple_framer : virtual public gr_block
     {

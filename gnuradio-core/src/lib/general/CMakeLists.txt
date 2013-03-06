@@ -108,7 +108,6 @@ install(FILES
     ${CMAKE_CURRENT_SOURCE_DIR}/gr_nco.h
     ${CMAKE_CURRENT_SOURCE_DIR}/gr_random.h
     ${CMAKE_CURRENT_SOURCE_DIR}/gr_reverse.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/gr_simple_framer_sync.h
     ${CMAKE_CURRENT_SOURCE_DIR}/gr_test_types.h
     ${CMAKE_CURRENT_SOURCE_DIR}/gr_vco.h
     ${CMAKE_CURRENT_SOURCE_DIR}/gri_add_const_ss.h
