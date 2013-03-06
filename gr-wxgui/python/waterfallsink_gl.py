@@ -77,7 +77,7 @@ class _waterfall_sink_base(gr.hier_block2, common.wxgui_hb):
 			win=win,
 		)
 		msgq = gr.msg_queue(2)
-		sink = gr.message_sink(gr.sizeof_float*fft_size, msgq, True)
+		sink = blocks.message_sink(gr.sizeof_float*fft_size, msgq, True)
 		#controller
 		self.controller = pubsub()
 		self.controller.subscribe(AVERAGE_KEY, fft.set_average)

@@ -50,7 +50,7 @@ class audio_tx(gr.hier_block2):
 				gr.io_signature(0, 0, 0)) # Output signature
 				
         self.sample_rate = sample_rate = 8000
-        self.packet_src = gr.message_source(33)
+        self.packet_src = blocks.message_source(33)
         voice_decoder = vocoder.gsm_fr_decode_ps()
         s2f = blocks.short_to_float()
         sink_scale = blocks.multiply_const_ff(1.0/32767.)

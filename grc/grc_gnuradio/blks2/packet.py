@@ -19,6 +19,7 @@
 #
 
 from gnuradio import gr, digital
+from gnuradio import blocks
 from gnuradio.digital import packet_utils
 import gnuradio.gr.gr_threading as _threading
 
@@ -89,7 +90,7 @@ class packet_encoder(gr.hier_block2):
 		self._access_code = access_code
 		self._pad_for_usrp = pad_for_usrp
 		#create blocks
-		msg_source = gr.message_source(gr.sizeof_char, DEFAULT_MSGQ_LIMIT)
+		msg_source = blocks.message_source(gr.sizeof_char, DEFAULT_MSGQ_LIMIT)
 		self._msgq_out = msg_source.msgq()
 		#initialize hier2
 		gr.hier_block2.__init__(
@@ -199,7 +200,7 @@ class packet_mod_base(gr.hier_block2):
 		)
 		#create blocks
 		msgq = gr.msg_queue(DEFAULT_MSGQ_LIMIT)
-		msg_sink = gr.message_sink(self._item_size_in, msgq, False) #False -> blocking
+		msg_sink = blocks.message_sink(self._item_size_in, msgq, False) #False -> blocking
 		#connect
 		self.connect(self, msg_sink)
 		self.connect(packet_source, self)
@@ -229,7 +230,7 @@ class packet_demod_base(gr.hier_block2):
 			gr.io_signature(1, 1, self._item_size_out) # Output signature
 		)
 		#create blocks
-		msg_source = gr.message_source(self._item_size_out, DEFAULT_MSGQ_LIMIT)
+		msg_source = blocks.message_source(self._item_size_out, DEFAULT_MSGQ_LIMIT)
 		self._msgq_out = msg_source.msgq()
 		#connect
 		self.connect(self, packet_sink)
@@ -238,7 +239,7 @@ class packet_demod_base(gr.hier_block2):
 			self.connect(packet_sink, gr.null_sink(packet_sink._hb.output_signature().sizeof_stream_item(0)))
 
 	def recv_pkt(self, ok, payload):
-		msg = gr.message_from_string(payload, 0, self._item_size_out, len(payload)/self._item_size_out)
+		msg = blocks.message_from_string(payload, 0, self._item_size_out, len(payload)/self._item_size_out)
 		if ok: self._msgq_out.insert_tail(msg)
 
 class packet_demod_b(packet_demod_base): _item_size_out = gr.sizeof_char

@@ -15,8 +15,6 @@
 		<block>blks2_tcp_source</block>
 		<block>gr_udp_source</block>
 		<block>gr_wavfile_source</block>
-		<block>gr_message_source</block>
-		<block>gr_message_burst_source</block>
 		<block>pad_source</block>
 		<block>virtual_source</block>
 	</cat>
@@ -28,16 +26,10 @@
 		<block>blks2_tcp_sink</block>
 		<block>gr_udp_sink</block>
 		<block>gr_wavfile_sink</block>
-		<block>gr_message_sink</block>
 		<block>pad_sink</block>
 		<block>virtual_sink</block>
 		<block>gr_tag_debug</block>
 	</cat>
-    <cat>
-        <name>Message Tools</name>
-        <block>gr_message_debug</block>
-        <block>gr_message_strobe</block>
-    </cat>
 	<cat>
 		<name>Operators</name>
 		<block>gr_vector_insert_x</block>
@@ -66,15 +58,6 @@
 
 		<block>blks2_packet_decoder</block>
 		<block>blks2_packet_encoder</block>
-	</cat>
-	<cat>
-		<name>Level Controls</name>
-		<block>gr_peak_detector_xb</block>
-	</cat>
-	<cat>
-		<name>Filters</name>
-		<!-- Other filters -->
-		<block>gr_moving_average_xx</block>
 	</cat>
 	<cat>
 		<name>Modulators</name>

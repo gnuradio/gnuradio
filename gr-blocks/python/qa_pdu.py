@@ -43,7 +43,7 @@ class test_pdu(gr_unittest.TestCase):
         snk = gr.tag_debug(1, "test")
         snk.set_display(False)
 
-        dbg = gr.message_debug()
+        dbg = blocks.message_debug()
 
         # Test that the right number of ports exist.
         pi = snk3.message_ports_in()

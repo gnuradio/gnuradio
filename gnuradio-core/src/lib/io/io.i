@@ -37,15 +37,11 @@
 #include <gr_oscope_sink_x.h>
 #include <gr_oscope_sink_f.h>
 #include <ppio.h>
-#include <gr_message_source.h>
-#include <gr_message_burst_source.h>
-#include <gr_message_sink.h>
 #include <gr_udp_sink.h>
 #include <gr_udp_source.h>
 #include <gr_wavfile_sink.h>
 #include <gr_wavfile_source.h>
 #include <gr_tagged_file_sink.h>
-#include <gr_message_debug.h>
 %}
 
 %include "gr_file_sink_base.i"
@@ -60,14 +56,10 @@
 %include "sdr_1000.i"
 %include "gr_oscope_sink.i"
 %include "ppio.i"
-%include "gr_message_source.i"
-%include "gr_message_burst_source.i"
-%include "gr_message_sink.i"
 %include "gr_udp_sink.i"
 %include "gr_udp_source.i"
 %include "gr_wavfile_sink.i"
 %include "gr_wavfile_source.i"
 %include "gr_tagged_file_sink.i"
-%include "gr_message_debug.i"
 
 

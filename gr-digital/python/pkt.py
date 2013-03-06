@@ -25,6 +25,10 @@ import gnuradio.gr.gr_threading as _threading
 import packet_utils
 import digital_swig as digital
 
+try:
+    from gnuradio import blocks
+except ImportError:
+    import blocks_swig as blocks
 
 # /////////////////////////////////////////////////////////////////////////////
 #                   mod/demod with packets as i/o
@@ -70,7 +74,7 @@ class mod_pkts(gr.hier_block2):
         self._access_code = access_code
 
         # accepts messages from the outside world
-        self._pkt_input = gr.message_source(gr.sizeof_char, msgq_limit)
+        self._pkt_input = blocks.message_source(gr.sizeof_char, msgq_limit)
         self.connect(self._pkt_input, self._modulator, self)
 
     def send_pkt(self, payload='', eof=False):

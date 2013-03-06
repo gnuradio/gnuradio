@@ -34,10 +34,6 @@ gnuradio.gr: Filters
 .. autooldblock:: gnuradio.gr.rational_resampler_base_scc
 .. autooldblock:: gnuradio.gr.single_pole_iir_filter_cc
 .. autooldblock:: gnuradio.gr.single_pole_iir_filter_ff
-.. autooldblock:: gnuradio.gr.moving_average_cc
-.. autooldblock:: gnuradio.gr.moving_average_ff
-.. autooldblock:: gnuradio.gr.moving_average_ii
-.. autooldblock:: gnuradio.gr.moving_average_ss
 .. autooldblock:: gnuradio.gr.pfb_arb_resampler_ccf
 .. autooldblock:: gnuradio.gr.pfb_channelizer_ccf
 .. autooldblock:: gnuradio.gr.pfb_clock_sync_ccf

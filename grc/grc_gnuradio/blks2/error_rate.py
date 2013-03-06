@@ -79,10 +79,10 @@ class error_rate(gr.hier_block2):
 		self._max_samples = win_size
 		self._bits_per_symbol = bits_per_symbol
 		#setup message queue
-		msg_source = gr.message_source(gr.sizeof_float, 1)
+		msg_source = blocks.message_source(gr.sizeof_float, 1)
 		self._msgq_source = msg_source.msgq()
 		msgq_sink = gr.msg_queue(2)
-		msg_sink = gr.message_sink(gr.sizeof_char, msgq_sink, False) #False -> blocking
+		msg_sink = blocks.message_sink(gr.sizeof_char, msgq_sink, False) #False -> blocking
 		inter = blocks.interleave(gr.sizeof_char)
 		#start thread
 		self._num_errs = 0
@@ -113,7 +113,7 @@ class error_rate(gr.hier_block2):
 			#write sample
 			arr[i] = float(self._num_errs)/float(self._num_samps*self._bits_per_symbol)
 		#write message
-		msg = gr.message_from_string(arr.tostring(), 0, gr.sizeof_float, num)
+		msg = blocks.message_from_string(arr.tostring(), 0, gr.sizeof_float, num)
 		self._msgq_source.insert_tail(msg)
 
 	def _handler_ser(self, samples):
@@ -136,5 +136,5 @@ class error_rate(gr.hier_block2):
 			#write sample
 			arr[i] = float(self._num_errs)/float(self._num_samps)
 		#write message
-		msg = gr.message_from_string(arr.tostring(), 0, gr.sizeof_float, num)
+		msg = blocks.message_from_string(arr.tostring(), 0, gr.sizeof_float, num)
 		self._msgq_source.insert_tail(msg)

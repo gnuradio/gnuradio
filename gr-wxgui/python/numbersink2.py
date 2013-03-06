@@ -82,7 +82,7 @@ class _number_sink_base(gr.hier_block2, common.wxgui_hb):
 			add = blocks.add_const_cc(ref_level)
 			avg = filter.single_pole_iir_filter_cc(1.0)
 		msgq = gr.msg_queue(2)
-		sink = gr.message_sink(self._item_size, msgq, True)
+		sink = blocks.message_sink(self._item_size, msgq, True)
 		#controller
 		self.controller = pubsub()
 		self.controller.subscribe(SAMPLE_RATE_KEY, sd.set_sample_rate)

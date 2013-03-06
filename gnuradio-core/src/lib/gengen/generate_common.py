@@ -37,15 +37,6 @@ ss_roots = [
 # regular blocks
 reg_signatures = ['ss', 'ii', 'ff', 'cc']
 
-reg_roots = [
-    'gr_moving_average_XX',
-    ]
-
-# other blocks
-others = (
-    ('gr_peak_detector_XX',         ('fb','ib','sb')),
-    )
-
 
 def expand_h_cc_i (root, sig):
     # root looks like 'gr_vector_sink_X'
@@ -62,15 +53,6 @@ def generate ():
     for r in ss_roots:
         for s in ss_signatures:
             expand_h_cc_i (r, s)
-    for r in reg_roots :
-        for s in reg_signatures:
-            expand_h_cc_i (r, s)
-
-    for root, sigs in others:
-        for s in sigs:
-            expand_h_cc_i (root, s)
-
-
 
 if __name__ == '__main__':
     generate ()

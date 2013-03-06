@@ -18,7 +18,6 @@
 # Boston, MA 02110-1301, USA.
 
 add_subdirectory(mp-sched)
-add_subdirectory(msg_passing)
 add_subdirectory(network)
 add_subdirectory(tags)
 add_subdirectory(volk_benchmark)

@@ -102,7 +102,7 @@ class const_sink_c(gr.hier_block2, common.wxgui_hb):
 		#)
 		agc = gr.feedforward_agc_cc(16, 1)
 		msgq = gr.msg_queue(2)
-		sink = gr.message_sink(gr.sizeof_gr_complex*const_size, msgq, True)
+		sink = blocks.message_sink(gr.sizeof_gr_complex*const_size, msgq, True)
 		#controller
 		def setter(p, k, x): p[k] = x
 		self.controller = pubsub()

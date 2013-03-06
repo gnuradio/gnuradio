@@ -84,8 +84,8 @@ class ofdm_sync_ml(gr.hier_block2):
         self.movingsum2 = filter.fir_filter_ccf(1,movingsum2_taps)
         
         # Correlator data handler
-        self.c2mag = gr.complex_to_mag()
-        self.angle = gr.complex_to_arg()
+        self.c2mag = blocks.complex_to_mag()
+        self.angle = blocks.complex_to_arg()
         self.connect(self.input,(self.mixer,1))
         self.connect(self.delay,self.conjg,(self.mixer,0))
         self.connect(self.mixer,self.movingsum2,self.c2mag)
@@ -98,7 +98,7 @@ class ofdm_sync_ml(gr.hier_block2):
 
         #ML measurements input to sampler block and detect
         self.f2c = blocks.float_to_complex()
-        self.pk_detect = gr.peak_detector_fb(0.2, 0.25, 30, 0.0005)
+        self.pk_detect = blocks.peak_detector_fb(0.2, 0.25, 30, 0.0005)
         self.sample_and_hold = blocks.sample_and_hold_ff()
 
         # use the sync loop values to set the sampler and the NCO

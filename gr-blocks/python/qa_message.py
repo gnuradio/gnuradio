@@ -130,7 +130,7 @@ class test_message(gr_unittest.TestCase):
         self.assertEquals(tuple(map(ord, '0123456789')), dst.data())
 
     def test_debug_401(self):
-        msg = pmt.pmt_intern("TESTING")
+        msg = pmt.intern("TESTING")
         src = blocks.message_strobe(msg, 500)
         snk = blocks.message_debug()
 
@@ -142,7 +142,7 @@ class test_message(gr_unittest.TestCase):
         tb.wait()
 
         rec_msg = snk.get_message(0)
-        self.assertTrue(pmt.pmt_eqv(rec_msg, msg))
+        self.assertTrue(pmt.eqv(rec_msg, msg))
         
 
 if __name__ == '__main__':

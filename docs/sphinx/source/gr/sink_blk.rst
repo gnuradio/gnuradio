@@ -13,7 +13,6 @@ gnuradio.gr: Signal Sinks
 .. autooldblock:: gnuradio.gr.file_descriptor_sink
 .. autooldblock:: gnuradio.gr.file_sink
 .. autooldblock:: gnuradio.gr.histo_sink_f
-.. autooldblock:: gnuradio.gr.message_sink
 .. autooldblock:: gnuradio.gr.oscope_sink_f
 .. autooldblock:: gnuradio.gr.udp_sink
 .. autooldblock:: gnuradio.gr.wavfile_sink

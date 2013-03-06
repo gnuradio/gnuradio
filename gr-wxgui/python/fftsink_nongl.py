@@ -139,7 +139,7 @@ class fft_sink_f(gr.hier_block2, fft_sink_base):
                                     -10*math.log10(power/self.fft_size) # Adjust for windowing loss
                                     -20*math.log10(ref_scale/2))        # Adjust for reference scale
 
-        self.sink = gr.message_sink(gr.sizeof_float * self.fft_size, self.msgq, True)
+        self.sink = blocks.message_sink(gr.sizeof_float * self.fft_size, self.msgq, True)
         self.connect(self, self.s2p, self.one_in_n, self.fft, self.c2mag, self.avg, self.log, self.sink)
 
         self.win = fft_window(self, parent, size=size)
@@ -185,7 +185,7 @@ class fft_sink_c(gr.hier_block2, fft_sink_base):
                                     -10*math.log10(power/self.fft_size)  # Adjust for windowing loss
                                     -20*math.log10(ref_scale/2))         # Adjust for reference scale
 
-        self.sink = gr.message_sink(gr.sizeof_float * self.fft_size, self.msgq, True)
+        self.sink = blocks.message_sink(gr.sizeof_float * self.fft_size, self.msgq, True)
         self.connect(self, self.s2p, self.one_in_n, self.fft, self.c2mag, self.avg, self.log, self.sink)
 
         self.win = fft_window(self, parent, size=size)

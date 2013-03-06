@@ -56,7 +56,6 @@
 #include <gr_burst_tagger.h>
 #include <gr_vector_map.h>
 #include <gr_tag_debug.h>
-#include <gr_message_strobe.h>
 %}
 
 %include "gri_control_loop.i"
@@ -94,7 +93,6 @@
 %include "gr_vector_map.i"
 %include "gr_tag_debug.i"
 %include "gr_block_gateway.i"
-%include "gr_message_strobe.i"
 
 
 #ifdef GR_CTRLPORT

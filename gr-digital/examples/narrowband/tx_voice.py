@@ -55,7 +55,7 @@ class audio_rx(gr.hier_block2):
         f2s = blocks.float_to_short()
         voice_coder = vocoder.gsm_fr_encode_sp()
         self.packets_from_encoder = gr.msg_queue()
-        packet_sink = gr.message_sink(33, self.packets_from_encoder, False)
+        packet_sink = blocks.message_sink(33, self.packets_from_encoder, False)
         self.connect(src, src_scale, f2s, voice_coder, packet_sink)
 
     def get_encoded_voice_packet(self):

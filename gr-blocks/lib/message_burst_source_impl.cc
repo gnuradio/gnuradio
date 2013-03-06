@@ -61,7 +61,7 @@ namespace gr {
     {
       std::stringstream id;
       id << name() << unique_id();
-      d_me = pmt::pmt_string_to_symbol(id.str());
+      d_me = pmt::string_to_symbol(id.str());
     }
 
     message_burst_source_impl::message_burst_source_impl(size_t itemsize, gr_msg_queue_sptr msgq)
@@ -73,7 +73,7 @@ namespace gr {
     {
       std::stringstream id;
       id << name() << unique_id();
-      d_me = pmt::pmt_string_to_symbol(id.str());
+      d_me = pmt::string_to_symbol(id.str());
     }
 
     message_burst_source_impl::~message_burst_source_impl()
@@ -112,8 +112,8 @@ namespace gr {
 	    //tag end of burst
 	    add_item_tag(0, //stream ID
 			 abs_sample_count+nn-1, //sample number
-			 pmt::pmt_string_to_symbol("tx_eob"),      
-			 pmt::pmt_from_bool(1),
+			 pmt::string_to_symbol("tx_eob"),      
+			 pmt::from_bool(1),
 			 d_me);        //block src id
           }
         }
@@ -133,8 +133,8 @@ namespace gr {
           //tag start of burst
           add_item_tag(0, //stream ID
                        abs_sample_count+nn, //sample number
-                       pmt::pmt_string_to_symbol("tx_sob"),      
-                       pmt::pmt_from_bool(1),
+                       pmt::string_to_symbol("tx_sob"),      
+                       pmt::from_bool(1),
                        d_me);        //block src id
 
           if((d_msg->length() % d_itemsize) != 0)

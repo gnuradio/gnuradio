@@ -85,10 +85,6 @@ expand_h_cc_i(gr_vector_source_X   b s i f c)
 expand_h_cc_i(gr_vector_insert_X   b)
 expand_h_cc_i(gr_vector_sink_X     b s i f c)
 
-expand_h_cc_i(gr_moving_average_XX      ss ii ff cc)
-
-expand_h_cc_i(gr_peak_detector_XX             fb ib sb)
-
 add_custom_target(gengen_generated DEPENDS
     ${generated_gengen_includes}
     ${generated_gengen_swigs}

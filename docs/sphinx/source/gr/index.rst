@@ -30,7 +30,6 @@ Signal Sources
    gnuradio.gr.vector_source_s
    gnuradio.gr.file_descriptor_source
    gnuradio.gr.file_source
-   gnuradio.gr.message_source
    gnuradio.gr.udp_source
    gnuradio.gr.wavfile_source
 
@@ -52,7 +51,6 @@ Signal Sinks
    gnuradio.gr.file_descriptor_sink
    gnuradio.gr.file_sink
    gnuradio.gr.histo_sink_f
-   gnuradio.gr.message_sink
    gnuradio.gr.oscope_sink_f
    gnuradio.gr.udp_sink
    gnuradio.gr.wavfile_sink
@@ -96,10 +94,6 @@ Filters
    gnuradio.gr.rational_resampler_base_scc
    gnuradio.gr.single_pole_iir_filter_cc
    gnuradio.gr.single_pole_iir_filter_ff
-   gnuradio.gr.moving_average_cc
-   gnuradio.gr.moving_average_ff
-   gnuradio.gr.moving_average_ii
-   gnuradio.gr.moving_average_ss
    gnuradio.gr.pfb_arb_resampler_ccf
    gnuradio.gr.pfb_channelizer_ccf
    gnuradio.gr.pfb_clock_sync_ccf
@@ -132,15 +126,6 @@ Type Conversions
    gnuradio.gr.complex_to_mag_squared
    gnuradio.gr.complex_to_arg
 
-Signal Level Control (AGC)
-^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-.. autosummary::
-   :nosignatures:
-
-   gnuradio.gr.peak_detector_fb
-   gnuradio.gr.peak_detector_ib
-   gnuradio.gr.peak_detector_sb
 
 Fourier Transform
 ^^^^^^^^^^^^^^^^^
