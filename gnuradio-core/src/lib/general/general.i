@@ -51,7 +51,6 @@
 #include <gr_annotator_raw.h>
 #include <gr_burst_tagger.h>
 #include <gr_vector_map.h>
-#include <gr_tag_debug.h>
 %}
 
 %include "gri_control_loop.i"
@@ -83,7 +82,6 @@
 %include "gr_annotator_raw.i"
 %include "gr_burst_tagger.i"
 %include "gr_vector_map.i"
-%include "gr_tag_debug.i"
 %include "gr_block_gateway.i"
 
 

@@ -114,7 +114,6 @@ install(FILES
     ${CMAKE_CURRENT_SOURCE_DIR}/gri_add_const_ss.h
     ${CMAKE_CURRENT_SOURCE_DIR}/gri_control_loop.h
     ${CMAKE_CURRENT_SOURCE_DIR}/gri_debugger_hook.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/gri_fft.h
     ${CMAKE_CURRENT_SOURCE_DIR}/gri_lfsr_15_1_0.h
     ${CMAKE_CURRENT_SOURCE_DIR}/gri_lfsr_32k.h
     ${CMAKE_CURRENT_SOURCE_DIR}/malloc16.h
@@ -167,7 +166,6 @@ set(gr_core_general_triple_threats
     gr_annotator_1to1
     gr_annotator_raw
     gr_burst_tagger
-    gr_tag_debug
 )
 
 if(ENABLE_GR_CTRLPORT)
