@@ -146,9 +146,17 @@ def make_non_differential_constellation(m, gray_coded):
 
 def qam_constellation(constellation_points=_def_constellation_points,
                       differential=_def_differential,
-                      mod_code=_def_mod_code):
+                      mod_code=_def_mod_code,
+                      large_ampls_to_corners=False):
     """
     Creates a QAM constellation object.
+
+    If large_ampls_to_corners=True then sectors that are probably
+    occupied due to a phase offset, are not mapped to the closest
+    constellation point.  Rather we take into account the fact that a
+    phase offset is probably the problem and map them to the closest
+    corner point.  It's a bit hackish but it seems to improve
+    frequency locking.
     """
     if mod_code == mod_codes.GRAY_CODE:
         gray_coded = True
@@ -165,10 +173,85 @@ def qam_constellation(constellation_points=_def_constellation_points,
     # No pre-diff code
     # Should add one so that we can gray-code the quadrant bits too.
     pre_diff_code = []
-    constellation = digital_swig.constellation_rect(points, pre_diff_code, 4,
-                                                    side, side, width, width)
+    if not large_ampls_to_corners:
+        constellation = digital_swig.constellation_rect(points, pre_diff_code, 4,
+                                                        side, side, width, width)
+    else:
+        sector_values = large_ampls_to_corners_mapping(side, points, width)
+        constellation = digital_swig.constellation_expl_rect(
+            points, pre_diff_code, 4, side, side, width, width, sector_values)
     return constellation
 
+def find_closest_point(p, qs):
+    """
+    Return in index of the closest point in 'qs' to 'p'.
+    """
+    min_dist = None
+    min_i = None
+    for i, q in enumerate(qs):
+        dist = abs(q-p)
+        if min_dist is None or dist < min_dist:
+            min_dist = dist
+            min_i = i
+    return min_i
+
+def large_ampls_to_corners_mapping(side, points, width):
+    """
+    We have a grid that we use for decision making.  One additional row/column
+    is placed on each side of the grid.  Points in these additional rows/columns
+    are mapped to the corners rather than the closest constellation points.
+
+    Args:
+        side: The number of rows/columns in the grid that we use to do
+              decision making.
+        points: The list of constellation points.
+        width: The width of the rows/columns.
+
+    Returns:
+        sector_values maps the sector index to the constellation
+        point index.
+    """
+    # First find the indices of the corner points.
+    # Assume the corner points are the 4 points with the largest magnitudes.
+    corner_indices = []
+    corner_points = []
+    max_mag = 0
+    for i, p in enumerate(points):
+        if abs(p) > max_mag:
+            corner_indices = [i]
+            corner_points = [p]
+            max_mag = abs(p)
+        elif abs(p) == max_mag:
+            corner_indices.append(i)
+            corner_points.append(p)
+    if len(corner_indices) != 4:
+        raise ValueError("Found {0} corner indices.  Expected 4."
+                         .format(len(corner_indices)))
+    # We want an additional layer around the constellation
+    # Value in this extra layer will be mapped to the closest corner rather
+    # than the closest constellation point.
+    extra_layers = 1
+    side = side + extra_layers*2
+    # Calculate sector values
+    sector_values = []
+    for real_x in range(side):
+        for imag_x in range(side):
+            sector = real_x * side + imag_x
+            # If this sector is a normal constellation sector then
+            # use the center point.
+            c = ((real_x-side/2.0+0.5)*width +
+                 (imag_x-side/2.0+0.5)*width*1j)
+            if (real_x >= extra_layers and real_x < side-extra_layers
+                and imag_x >= extra_layers and imag_x < side-extra_layers):
+                # This is not an edge row/column.  Find closest point.
+                index = find_closest_point(c, points)
+            else:
+                # This is an edge. Find closest corner point.
+                index = corner_indices[find_closest_point(c, corner_points)]
+            sector_values.append(index)
+    return sector_values
+
+ 
 # /////////////////////////////////////////////////////////////////////////////
 #                           QAM modulator
 # /////////////////////////////////////////////////////////////////////////////
@@ -186,12 +269,19 @@ class qam_mod(generic_mod):
 	The input is a byte stream (unsigned char) and the
 	output is the complex modulated signal at baseband.
 
-        See generic_mod block for list of parameters.
+        Args:
+            constellation_points: Number of constellation points.
+                Must be a power of 4.
+            mod_code: Specifies an encoding to use (typically used to indicated
+                      if we want gray coding, see digital.utils.mod_codes)
+
+        See generic_mod block for list of additional parameters.
 	"""
 
-        constellation = qam_constellation(constellation_points, differential, mod_code)
-        # We take care of the gray coding in the constellation generation so it doesn't 
-        # need to be done in the block.
+        constellation = qam_constellation(constellation_points, differential,
+                                          mod_code)
+        # We take care of the gray coding in the constellation
+        # generation so it doesn't need to be done in the block.
         super(qam_mod, self).__init__(constellation, differential=differential,
                                       *args, **kwargs)
 
@@ -205,6 +295,7 @@ class qam_demod(generic_demod):
     def __init__(self, constellation_points=_def_constellation_points,
                  differential=_def_differential,
                  mod_code=_def_mod_code,
+                 large_ampls_to_corner = False,
                  *args, **kwargs):
 
         """
@@ -213,11 +304,23 @@ class qam_demod(generic_demod):
 	The input is a byte stream (unsigned char) and the
 	output is the complex modulated signal at baseband.
 
-        See generic_demod block for list of parameters.
+        Args:
+            constellation_points: Number of constellation points.
+                Must be a power of 4.
+            mod_code: Specifies an encoding to use (typically used to indicated
+                      if we want gray coding, see digital.utils.mod_codes)
+            large_ampls_to_corners:  If this is set to True then when the
+                constellation is making decisions, points that are far outside
+                the constellation are mapped to the closest corner rather than
+                the closet constellation point.  This can help with phase
+                locking.
+
+        See generic_demod block for list of additional parameters.
         """
-        constellation = qam_constellation(constellation_points, differential, mod_code)
-        # We take care of the gray coding in the constellation generation so it doesn't 
-        # need to be done in the block.
+        constellation = qam_constellation(constellation_points, differential,
+                                          mod_code)
+        # We take care of the gray coding in the constellation
+        # generation so it doesn't need to be done in the block.
         super(qam_demod, self).__init__(constellation, differential=differential,
                                         *args, **kwargs)
 
