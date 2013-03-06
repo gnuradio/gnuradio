@@ -125,6 +125,11 @@ install(FILES
     interleaved_short_to_complex.h
     keep_m_in_n.h
     keep_one_in_n.h
+    message_debug.h
+    message_sink.h
+    message_source.h
+    message_strobe.h
+    message_burst_source.h
     multiply_cc.h
     multiply_ff.h
     multiply_conjugate_cc.h

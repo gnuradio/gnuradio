@@ -88,6 +88,11 @@
 #include "blocks/max_ff.h"
 #include "blocks/max_ii.h"
 #include "blocks/max_ss.h"
+#include "blocks/message_debug.h"
+#include "blocks/message_sink.h"
+#include "blocks/message_source.h"
+#include "blocks/message_strobe.h"
+#include "blocks/message_burst_source.h"
 #include "blocks/multiply_ss.h"
 #include "blocks/multiply_ii.h"
 #include "blocks/multiply_ff.h"
@@ -224,6 +229,11 @@
 %include "blocks/max_ff.h"
 %include "blocks/max_ii.h"
 %include "blocks/max_ss.h"
+%include "blocks/message_debug.h"
+%include "blocks/message_sink.h"
+%include "blocks/message_source.h"
+%include "blocks/message_strobe.h"
+%include "blocks/message_burst_source.h"
 %include "blocks/multiply_ss.h"
 %include "blocks/multiply_ii.h"
 %include "blocks/multiply_ff.h"
@@ -359,6 +369,11 @@ GR_SWIG_BLOCK_MAGIC2(blocks, keep_one_in_n);
 GR_SWIG_BLOCK_MAGIC2(blocks, max_ff);
 GR_SWIG_BLOCK_MAGIC2(blocks, max_ii);
 GR_SWIG_BLOCK_MAGIC2(blocks, max_ss);
+GR_SWIG_BLOCK_MAGIC2(blocks, message_debug);
+GR_SWIG_BLOCK_MAGIC2(blocks, message_sink);
+GR_SWIG_BLOCK_MAGIC2(blocks, message_source);
+GR_SWIG_BLOCK_MAGIC2(blocks, message_strobe);
+GR_SWIG_BLOCK_MAGIC2(blocks, message_burst_source);
 GR_SWIG_BLOCK_MAGIC2(blocks, multiply_ss);
 GR_SWIG_BLOCK_MAGIC2(blocks, multiply_ii);
 GR_SWIG_BLOCK_MAGIC2(blocks, multiply_ff);
