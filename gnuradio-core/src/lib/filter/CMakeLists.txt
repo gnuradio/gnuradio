@@ -26,7 +26,6 @@
 ########################################################################
 list(APPEND gnuradio_core_sources
     ${CMAKE_CURRENT_SOURCE_DIR}/gr_sincos.c
-    ${CMAKE_CURRENT_SOURCE_DIR}/gri_goertzel.cc
 )
 
 ########################################################################
@@ -35,7 +34,6 @@ list(APPEND gnuradio_core_sources
 install(FILES
     ${CMAKE_CURRENT_SOURCE_DIR}/gr_rotator.h
     ${CMAKE_CURRENT_SOURCE_DIR}/gr_sincos.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/gri_goertzel.h
     DESTINATION ${GR_INCLUDE_DIR}/gnuradio
     COMPONENT "core_devel"
 )

@@ -77,7 +77,6 @@ list(APPEND gnuradio_core_sources
     ${CMAKE_CURRENT_SOURCE_DIR}/gri_add_const_ss_generic.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/gri_control_loop.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/gri_debugger_hook.cc
-    ${CMAKE_CURRENT_SOURCE_DIR}/gri_fft.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/malloc16.c
 )
 

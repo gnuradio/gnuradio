@@ -55,52 +55,6 @@ Signal Sinks
    gnuradio.gr.udp_sink
    gnuradio.gr.wavfile_sink
 
-Filters
-^^^^^^^
-
-.. autosummary::
-   :nosignatures:
-
-   gnuradio.gr.fft_filter_ccc
-   gnuradio.gr.fft_filter_fff
-   gnuradio.gr.filter_delay_fc
-   gnuradio.gr.fir_filter_ccc
-   gnuradio.gr.fir_filter_ccf
-   gnuradio.gr.fir_filter_fcc
-   gnuradio.gr.fir_filter_fff
-   gnuradio.gr.fir_filter_fsf
-   gnuradio.gr.fir_filter_scc
-   gnuradio.gr.fractional_interpolator_cc
-   gnuradio.gr.fractional_interpolator_ff
-   gnuradio.gr.freq_xlating_fir_filter_ccc
-   gnuradio.gr.freq_xlating_fir_filter_ccf
-   gnuradio.gr.freq_xlating_fir_filter_fcc
-   gnuradio.gr.freq_xlating_fir_filter_fcf
-   gnuradio.gr.freq_xlating_fir_filter_scc
-   gnuradio.gr.freq_xlating_fir_filter_scf
-   gnuradio.gr.hilbert_fc
-   gnuradio.gr.iir_filter_ffd
-   gnuradio.gr.interp_fir_filter_ccc
-   gnuradio.gr.interp_fir_filter_ccf
-   gnuradio.gr.interp_fir_filter_fcc
-   gnuradio.gr.interp_fir_filter_fff
-   gnuradio.gr.interp_fir_filter_fsf
-   gnuradio.gr.interp_fir_filter_scc
-   gnuradio.gr.rational_resampler_base_ccc
-   gnuradio.gr.rational_resampler_base_ccf
-   gnuradio.gr.rational_resampler_base_fcc
-   gnuradio.gr.rational_resampler_base_fff
-   gnuradio.gr.rational_resampler_base_fsf
-   gnuradio.gr.rational_resampler_base_scc
-   gnuradio.gr.single_pole_iir_filter_cc
-   gnuradio.gr.single_pole_iir_filter_ff
-   gnuradio.gr.pfb_arb_resampler_ccf
-   gnuradio.gr.pfb_channelizer_ccf
-   gnuradio.gr.pfb_clock_sync_ccf
-   gnuradio.gr.pfb_clock_sync_fff
-   gnuradio.gr.pfb_decimator_ccf
-   gnuradio.gr.pfb_interpolator_ccf
-
 
 Information Coding and Decoding
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -126,16 +80,6 @@ Type Conversions
    gnuradio.gr.complex_to_mag_squared
    gnuradio.gr.complex_to_arg
 
-
-Fourier Transform
-^^^^^^^^^^^^^^^^^
-
-.. autosummary::
-   :nosignatures:
-
-   gnuradio.gr.goertzel_fc
-   gnuradio.gr.fft_vcc
-   gnuradio.gr.fft_vfc
 
 Miscellaneous Blocks
 ^^^^^^^^^^^^^^^^^^^^
