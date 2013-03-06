@@ -23,6 +23,7 @@
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
+
 #include <qa_block_tags.h>
 #include <gr_block.h>
 #include <gr_top_block.h>
@@ -31,8 +32,6 @@
 #include <gr_head.h>
 #include <gr_annotator_alltoall.h>
 #include <gr_annotator_1to1.h>
-//#include <gr_keep_one_in_n.h>
-#include <gr_firdes.h>
 #include <gr_tags.h>
 
 

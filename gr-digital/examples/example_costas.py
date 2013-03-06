@@ -41,7 +41,7 @@ class example_costas(gr.top_block):
     def __init__(self, N, sps, rolloff, ntaps, bw, noise, foffset, toffset, poffset):
         gr.top_block.__init__(self)
 
-        rrc_taps = gr.firdes.root_raised_cosine(
+        rrc_taps = filter.firdes.root_raised_cosine(
             sps, sps, 1.0, rolloff, ntaps)
 
         data = 2.0*scipy.random.randint(0, 2, N) - 1.0

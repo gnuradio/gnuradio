@@ -86,7 +86,6 @@ list(APPEND gnuradio_core_sources
 list(APPEND test_gnuradio_core_sources
     ${CMAKE_CURRENT_SOURCE_DIR}/qa_general.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/qa_gr_circular_file.cc
-    ${CMAKE_CURRENT_SOURCE_DIR}/qa_gr_firdes.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/qa_gr_fxpt.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/qa_gr_fxpt_nco.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/qa_gr_fxpt_vco.cc
@@ -151,7 +150,6 @@ set(gr_core_general_triple_threats
     gr_endian_swap
     gr_fake_channel_coder_pp
     gr_feval
-    gr_firdes
     gr_head
     gr_iqcomp_cc
     gr_kludge_copy
@@ -161,7 +159,6 @@ set(gr_core_general_triple_threats
     gr_null_source
     gr_pa_2x2_phase_combiner
     gr_prefs
-    gr_remez
     gr_skiphead
     gr_test
     gr_vco_f

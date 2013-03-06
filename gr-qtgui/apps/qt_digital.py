@@ -22,6 +22,8 @@
 
 from gnuradio import gr, digital
 from gnuradio import blocks
+from gnuradio import filter
+from gnuradio import channels
 from gnuradio import eng_notation
 import sys
 
@@ -186,8 +188,8 @@ class my_top_block(gr.top_block):
                                      excess_bw=self.excess_bw,
                                      verbose=False, log=False)
 
-        self.rrctaps = gr.firdes.root_raised_cosine(1, self.sps, 1, self.excess_bw, 21)
-        self.rx_rrc = gr.fir_filter_ccf(1, self.rrctaps)
+        self.rrctaps = filter.firdes.root_raised_cosine(1, self.sps, 1, self.excess_bw, 21)
+        self.rx_rrc = filter.fir_filter_ccf(1, self.rrctaps)
 
 
         # Set up the carrier & clock recovery parameters
@@ -214,14 +216,14 @@ class my_top_block(gr.top_block):
         noise = self.get_noise_voltage(self.snr_dB)
         self.fo = 100/self.sample_rate()
         self.to = 1.0
-        self.channel = gr.channel_model(noise, self.fo, self.to)
+        self.channel = channels.channel_model(noise, self.fo, self.to)
 
         self.thr = blocks.throttle(gr.sizeof_char, self._sample_rate)
-        self.snk_tx = qtgui.sink_c(fftsize, gr.firdes.WIN_BLACKMAN_hARRIS, 
+        self.snk_tx = qtgui.sink_c(fftsize, filter.firdes.WIN_BLACKMAN_hARRIS, 
                                    0, self._sample_rate*self.sps,
                                    "Tx", True, True, True, True)
 
-        self.snk_rx = qtgui.sink_c(fftsize, gr.firdes.WIN_BLACKMAN_hARRIS,
+        self.snk_rx = qtgui.sink_c(fftsize, filter.firdes.WIN_BLACKMAN_hARRIS,
                                    0, self._sample_rate,
                                    "Rx", True, True, True, True)
 

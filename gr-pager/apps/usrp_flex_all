@@ -80,11 +80,11 @@ class app_top_block(gr.top_block):
             if options.verbose:
                 print "\nReceiving", rate/1e6, "MHz of bandwidth containing", self.nchan, "baseband channels."
 
-        taps = gr.firdes.low_pass(1.0,
-                                  1.0,
-                                  1.0/self.nchan*0.4,
-                                  1.0/self.nchan*0.1,
-                                  gr.firdes.WIN_HANN)
+        taps = filter.firdes.low_pass(1.0,
+                                      1.0,
+                                      1.0/self.nchan*0.4,
+                                      1.0/self.nchan*0.1,
+                                      filter.firdes.WIN_HANN)
 
         if options.verbose:
             print "Channel filter has", len(taps), "taps"

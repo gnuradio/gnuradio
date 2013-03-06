@@ -45,8 +45,8 @@ class test_pfb_clock_sync(gr_unittest.TestCase):
         osps = 1
         
         ntaps = 11 * int(sps*nfilts)
-        taps = gr.firdes.root_raised_cosine(nfilts, nfilts*sps,
-                                            1.0, excess_bw, ntaps)
+        taps = filter.firdes.root_raised_cosine(nfilts, nfilts*sps,
+                                                1.0, excess_bw, ntaps)
 
         self.test = digital.pfb_clock_sync_ccf(sps, loop_bw, taps,
                                                nfilts, init_phase,
@@ -57,7 +57,7 @@ class test_pfb_clock_sync(gr_unittest.TestCase):
         self.src = gr.vector_source_c(data, False)
 
         # pulse shaping interpolation filter
-        rrc_taps = gr.firdes.root_raised_cosine(
+        rrc_taps = filter.firdes.root_raised_cosine(
             nfilts,          # gain
             nfilts,          # sampling rate based on 32 filters in resampler
             1.0,             # symbol rate
@@ -98,8 +98,8 @@ class test_pfb_clock_sync(gr_unittest.TestCase):
         osps = 1
         
         ntaps = 11 * int(sps*nfilts)
-        taps = gr.firdes.root_raised_cosine(nfilts, nfilts*sps,
-                                            1.0, excess_bw, ntaps)
+        taps = filter.firdes.root_raised_cosine(nfilts, nfilts*sps,
+                                                1.0, excess_bw, ntaps)
 
         self.test = digital.pfb_clock_sync_fff(sps, loop_bw, taps,
                                                nfilts, init_phase,
@@ -110,7 +110,7 @@ class test_pfb_clock_sync(gr_unittest.TestCase):
         self.src = gr.vector_source_f(data, False)
 
         # pulse shaping interpolation filter
-        rrc_taps = gr.firdes.root_raised_cosine(
+        rrc_taps = filter.firdes.root_raised_cosine(
             nfilts,          # gain
             nfilts,          # sampling rate based on 32 filters in resampler
             1.0,             # symbol rate

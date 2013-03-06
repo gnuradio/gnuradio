@@ -31,14 +31,17 @@ class test_qtgui(gr_unittest.TestCase):
     def tearDown (self):
         self.tb = None
 
-    # Tests to make sure we can instantiate the sink
+    # Tests to make sure we can instantiate the sink.
+    # We use '5' in place of filter.firdes.WIN_BLACKMAN_hARRIS so we
+    # don't have to worry about importing filter just for this one
+    # constant.
     def test01(self):
-        self.qtsnk = qtgui.sink_c(1024, gr.firdes.WIN_BLACKMAN_hARRIS,
+        self.qtsnk = qtgui.sink_c(1024, 5,
                                   0, 1, "Test",
                                   True, True, True, True)
 
     def test02(self):
-        self.qtsnk = qtgui.sink_f(1024, gr.firdes.WIN_BLACKMAN_hARRIS,
+        self.qtsnk = qtgui.sink_f(1024, 5,
                                   0, 1, "Test",
                                   True, True, True, True)
 
@@ -49,19 +52,19 @@ class test_qtgui(gr_unittest.TestCase):
         self.qtsnk = qtgui.time_sink_f(1024, 1, "Test", 1)
 
     def test05(self):
-        self.qtsnk = qtgui.freq_sink_c(1024, gr.firdes.WIN_BLACKMAN_hARRIS,
+        self.qtsnk = qtgui.freq_sink_c(1024, 5,
                                        0, 1, "Test", 1)
 
     def test06(self):
-        self.qtsnk = qtgui.freq_sink_f(1024, gr.firdes.WIN_BLACKMAN_hARRIS,
+        self.qtsnk = qtgui.freq_sink_f(1024, 5,
                                        0, 1, "Test", 1)
 
     def test07(self):
-        self.qtsnk = qtgui.waterfall_sink_c(1024, gr.firdes.WIN_BLACKMAN_hARRIS,
+        self.qtsnk = qtgui.waterfall_sink_c(1024, 5,
                                             0, 1, "Test")
 
     def test08(self):
-        self.qtsnk = qtgui.waterfall_sink_f(1024, gr.firdes.WIN_BLACKMAN_hARRIS,
+        self.qtsnk = qtgui.waterfall_sink_f(1024, 5,
                                             0, 1, "Test")
 
     def test09(self):

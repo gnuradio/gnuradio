@@ -28,6 +28,7 @@ import math
 import numpy
 
 from gnuradio import gr
+from gnuradio import filter
 from gnuradio.gruimpl.freqz import freqz
 
 
@@ -69,11 +70,11 @@ def gnuplot_freqz (hw, Fs=None, logfreq=False):
 
 def test_plot ():
     sample_rate = 2.0e6
-    taps = gr.firdes.low_pass (1.0,           # gain
-                               sample_rate,   # sampling rate
-                               200e3,         # low pass cutoff freq
-                               100e3,         # width of trans. band
-                               gr.firdes.WIN_HAMMING)
+    taps = filter.firdes.low_pass (1.0,           # gain
+                                   sample_rate,   # sampling rate
+                                   200e3,         # low pass cutoff freq
+                                   100e3,         # width of trans. band
+                                   filter.firdes.WIN_HAMMING)
     # print len (taps)
     return gnuplot_freqz (freqz (taps, 1), sample_rate)
 

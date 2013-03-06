@@ -66,7 +66,7 @@ class receive_path(gr.hier_block2):
                                              sw_decim * self.samples_per_symbol(), # sampling rate
                                              self._chbw_factor,    # midpoint of trans. band
                                              0.5,                  # width of trans. band
-                                             gr.firdes.WIN_HANN)   # filter type
+                                             filter.firdes.WIN_HANN)   # filter type
         self.channel_filter = filter.fft_filter_ccc(sw_decim, chan_coeffs)
         
         # receiver

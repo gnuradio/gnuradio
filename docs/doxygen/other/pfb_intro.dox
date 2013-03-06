@@ -30,9 +30,9 @@ filter that is then split up between the \p N channels of the PFB.
     self._fs = 9000          # input sample rate
     self._M = 9              # Number of channels to channelize
 
-    self._taps = gr.firdes.low_pass_2(1, self._fs, 475.50, 50,
-                                      attenuation_dB=100,
-				      window=gr.firdes.WIN_BLACKMAN_hARRIS)
+    self._taps = filter.firdes.low_pass_2(1, self._fs, 475.50, 50,
+                                          attenuation_dB=100,
+			                  window=filter.firdes.WIN_BLACKMAN_hARRIS)
 \endcode
 
 In this example, the signal into the channelizer is sampled at 9 ksps

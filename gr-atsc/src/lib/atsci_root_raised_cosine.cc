@@ -22,7 +22,7 @@
 
 #include <atsc_consts.h>
 #include <atsci_root_raised_cosine.h>
-#include <gr_firdes.h>
+#include <filter/firdes.h>
 
 vector<float>
 atsc_root_raised_cosine::taps (double sampling_rate)
@@ -32,5 +32,5 @@ atsc_root_raised_cosine::taps (double sampling_rate)
   // static const int    NTAPS = 745;			// better number
   static const int    NTAPS = 279;			// better number
 
-  return gr_firdes::root_raised_cosine (1.0, sampling_rate, symbol_rate, .115, NTAPS);
+  return gr::filter::firdes::root_raised_cosine(1.0, sampling_rate, symbol_rate, .115, NTAPS);
 }

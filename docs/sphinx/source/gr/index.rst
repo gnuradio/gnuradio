@@ -88,15 +88,6 @@ Slicing and Dicing Streams
    gnuradio.gr.head
    gnuradio.gr.skiphead
 
-Digital Filter Design
----------------------
-
-.. autosummary::
-   :nosignatures:
-
-   gnuradio.gr.firdes
-   gnuradio.gr.remez
-
 Miscellaneous
 -------------
 

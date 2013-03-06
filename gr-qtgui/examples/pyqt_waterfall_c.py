@@ -164,7 +164,7 @@ class my_top_block(gr.top_block):
         channel = channels.channel_model(0.01)
         thr = blocks.throttle(gr.sizeof_gr_complex, 100*npts)
         filt = filter.fft_filter_ccc(1, taps)
-        self.snk1 = qtgui.waterfall_sink_c(npts, gr.firdes.WIN_BLACKMAN_hARRIS,
+        self.snk1 = qtgui.waterfall_sink_c(npts, filter.firdes.WIN_BLACKMAN_hARRIS,
                                            0, Rs,
                                            "Complex Waterfall Example", 2)
 

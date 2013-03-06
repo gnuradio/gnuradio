@@ -26,7 +26,6 @@
  */
 
 #include <qa_general.h>
-#include <qa_gr_firdes.h>
 #include <qa_gr_circular_file.h>
 #include <qa_gr_fxpt.h>
 #include <qa_gr_fxpt_nco.h>
@@ -38,7 +37,6 @@ qa_general::suite ()
 {
   CppUnit::TestSuite	*s = new CppUnit::TestSuite ("general");
 
-  s->addTest (qa_gr_firdes::suite ());
   s->addTest (qa_gr_circular_file::suite ());
   s->addTest (qa_gr_fxpt::suite ());
   s->addTest (qa_gr_fxpt_nco::suite ());

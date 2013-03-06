@@ -144,7 +144,7 @@ class generic_mod(gr.hier_block2):
         # pulse shaping filter
         nfilts = 32
         ntaps = nfilts * 11 * int(self._samples_per_symbol)    # make nfilts filters of ntaps each
-        self.rrc_taps = gr.firdes.root_raised_cosine(
+        self.rrc_taps = filter.firdes.root_raised_cosine(
             nfilts,          # gain
             nfilts,          # sampling rate based on 32 filters in resampler
             1.0,             # symbol rate
@@ -282,8 +282,8 @@ class generic_demod(gr.hier_block2):
                                                    fll_ntaps, self._freq_bw)
 
         # symbol timing recovery with RRC data filter
-        taps = gr.firdes.root_raised_cosine(nfilts, nfilts*self._samples_per_symbol,
-                                            1.0, self._excess_bw, ntaps)
+        taps = filter.firdes.root_raised_cosine(nfilts, nfilts*self._samples_per_symbol,
+                                                1.0, self._excess_bw, ntaps)
         self.time_recov = digital.pfb_clock_sync_ccf(self._samples_per_symbol,
                                                      self._timing_bw, taps,
                                                      nfilts, nfilts//2, self._timing_max_dev)

@@ -50,7 +50,7 @@ class mytb(gr.top_block):
         print "Resampling from %f to %f by %f " %(fs_in, fs_out, rerate)
 
         # Creating our own taps
-        taps = gr.firdes.low_pass_2(32, 32, 0.25, 0.1, 80)
+        taps = filter.firdes.low_pass_2(32, 32, 0.25, 0.1, 80)
 
         self.src = analog.sig_source_c(fs_in, analog.GR_SIN_WAVE, fc, 1)
         #self.src = analog.noise_source_c(analog.GR_GAUSSIAN, 1)

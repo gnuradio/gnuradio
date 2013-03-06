@@ -25,6 +25,7 @@ from numpy import fft
 from gnuradio import gr
 from gnuradio import analog
 from gnuradio import blocks
+from gnuradio import filter
 
 import digital_swig as digital
 from ofdm_sync_pn import ofdm_sync_pn
@@ -69,11 +70,11 @@ class ofdm_receiver(gr.hier_block2):
         
         bw = (float(occupied_tones) / float(fft_length)) / 2.0
         tb = bw*0.08
-        chan_coeffs = gr.firdes.low_pass (1.0,                     # gain
-                                          1.0,                     # sampling rate
-                                          bw+tb,                   # midpoint of trans. band
-                                          tb,                      # width of trans. band
-                                          gr.firdes.WIN_HAMMING)   # filter type
+        chan_coeffs = filter.firdes.low_pass (1.0,                     # gain
+                                              1.0,                     # sampling rate
+                                              bw+tb,                   # midpoint of trans. band
+                                              tb,                      # width of trans. band
+                                              filter.firdes.WIN_HAMMING)   # filter type
         self.chan_filt = filter.fft_filter_ccc(1, chan_coeffs)
         
         win = [1 for i in range(fft_length)]
@@ -124,7 +125,7 @@ class ofdm_receiver(gr.hier_block2):
         self.nco = analog.frequency_modulator_fc(nco_sensitivity)         # generate a signal proportional to frequency error of sync block
         self.sigmix = blocks.multiply_cc()
         self.sampler = digital.ofdm_sampler(fft_length, fft_length+cp_length)
-        self.fft_demod = gr.fft_vcc(fft_length, True, win, True)
+        self.fft_demod = fft.fft_vcc(fft_length, True, win, True)
         self.ofdm_frame_acq = digital.ofdm_frame_acquisition(occupied_tones,
                                                                   fft_length,
                                                                   cp_length, ks[0])

@@ -33,6 +33,7 @@
 
 from gnuradio import gr
 from gnuradio import blocks
+from gnuradio import filter
 
 class ssb_demod( gr.hier_block2 ):
     def __init__( self, if_rate, af_rate ):
@@ -47,14 +48,14 @@ class ssb_demod( gr.hier_block2 ):
 
         self.xlate_taps = ([complex(v) for v in file('ssb_taps').readlines()])
 
-        self.audio_taps = gr.firdes.low_pass(
+        self.audio_taps = filter.firdes.low_pass(
             1.0,
             self.af_rate,
             3e3,
             600,
-            gr.firdes.WIN_HAMMING )
+            filter.firdes.WIN_HAMMING )
 
-        self.xlate = gr.freq_xlating_fir_filter_ccc(
+        self.xlate = filter.freq_xlating_fir_filter_ccc(
             self.if_decim,
             self.xlate_taps,
             0,
@@ -62,7 +63,7 @@ class ssb_demod( gr.hier_block2 ):
 
         self.split = blocks.complex_to_float()
 
-        self.lpf = gr.fir_filter_fff(
+        self.lpf = filter.fir_filter_fff(
             1, self.audio_taps )
 
         self.sum   = blocks.add_ff( )
@@ -94,22 +95,22 @@ class ssb_demod( gr.hier_block2 ):
         self.am_sel.set_k( 0.0 )
 
     def set_am( self ):
-        taps = gr.firdes.low_pass( 1.0,
-                                   self.if_rate,
-                                   5e3,
-                                   2e3,
-                                   gr.firdes.WIN_HAMMING )
+        taps = filter.firdes.low_pass( 1.0,
+                                       self.if_rate,
+                                       5e3,
+                                       2e3,
+                                       filter.firdes.WIN_HAMMING )
         self.xlate.set_taps( taps )
         self.sb_sel.set_k( 0.0 )
         self.am_sel.set_k( 1.0 )
 
     def set_bw( self, bw ):
-        self.audio_taps = gr.firdes.low_pass(
+        self.audio_taps = filter.firdes.low_pass(
             1.0,
             self.af_rate,
             bw,
             600,
-            gr.firdes.WIN_HAMMING )
+            filter.firdes.WIN_HAMMING )
         self.lpf.set_taps( self.audio_taps )
 
     def tune( self, freq ):

@@ -65,11 +65,11 @@ class app_top_block(gr.top_block):
             self.u.set_gain(options.rx_gain, 0)
 
 
-        taps = gr.firdes.low_pass(1.0,
-                                  1.0,
-                                  1.0/40.0*0.4,
-                                  1.0/40.0*0.1,
-                                  gr.firdes.WIN_HANN)
+        taps = filter.firdes.low_pass(1.0,
+                                      1.0,
+                                      1.0/40.0*0.4,
+                                      1.0/40.0*0.1,
+                                      filter.firdes.WIN_HANN)
 
         if options.verbose:
             print "Channel filter has", len(taps), "taps"

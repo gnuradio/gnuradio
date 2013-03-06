@@ -21,6 +21,7 @@
 #
 
 from gnuradio import gr
+from gnuradio import filter
 import scipy
 
 try:
@@ -46,7 +47,7 @@ class spectrogram_plot_s(plot_base.plot_base):
         self.read_samples = plot_base.read_samples_s
         self.dsize = gr.sizeof_float
         self.src_type = plot_base.source_shorts_to_float
-        self.gui_snk = qtgui.waterfall_sink_f(self._psd_size, gr.firdes.WIN_BLACKMAN_hARRIS,
+        self.gui_snk = qtgui.waterfall_sink_f(self._psd_size, filter.firdes.WIN_BLACKMAN_hARRIS,
                                               self._center_freq, self._samp_rate,
                                               "GNU Radio Spectrogram Plot", self._nsigs)
         self.setup()

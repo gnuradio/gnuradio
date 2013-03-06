@@ -34,31 +34,32 @@
 from gnuradio import gr
 import sys
 
-def graph (args):
+def graph(args):
 
-    nargs = len (args)
+    nargs = len(args)
     if nargs == 1:
 	infile = args[0]
     else:
 	sys.stderr.write('usage: interp.py input_file\n')
-	sys.exit (1)
+	sys.exit(1)
 
-    tb = gr.top_block ()
+    tb = gr.top_block()
 
-    src0 = gr.file_source (gr.sizeof_gr_complex,infile)
+    src0 = gr.file_source(gr.sizeof_gr_complex, infile)
 
-    lp_coeffs = gr.firdes.low_pass ( 3, 19.2e6, 3.2e6, .5e6, gr.firdes.WIN_HAMMING )
-    lp = gr.interp_fir_filter_ccf ( 1, lp_coeffs )
+    lp_coeffs = filter.firdes.low_pass(3, 19.2e6, 3.2e6, .5e6,
+                                       filter.firdes.WIN_HAMMING )
+    lp = filter.interp_fir_filter_ccf(1, lp_coeffs)
 
-    file = gr.file_sink(gr.sizeof_gr_complex,"/tmp/atsc_pipe_1")
+    file = gr.file_sink(gr.sizeof_gr_complex, "/tmp/atsc_pipe_1")
 
-    tb.connect( src0, lp, file )
+    tb.connect(src0, lp, file)
 
     tb.start()
-    raw_input ('Head End: Press Enter to stop')
+    raw_input('Head End: Press Enter to stop')
     tb.stop()
 
 if __name__ == '__main__':
-    graph (sys.argv[1:])
+    graph(sys.argv[1:])
 
 

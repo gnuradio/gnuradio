@@ -44,12 +44,12 @@ class example_timing(gr.top_block):
                  foffset, toffset, poffset, mode=0):
         gr.top_block.__init__(self)
 
-        rrc_taps = gr.firdes.root_raised_cosine(
+        rrc_taps = filter.firdes.root_raised_cosine(
             sps, sps, 1.0, rolloff, ntaps)
 
         gain = 2*scipy.pi/100.0
         nfilts = 32
-        rrc_taps_rx = gr.firdes.root_raised_cosine(
+        rrc_taps_rx = filter.firdes.root_raised_cosine(
             nfilts, sps*nfilts, 1.0, rolloff, ntaps*nfilts)
             
         data = 2.0*scipy.random.randint(0, 2, N) - 1.0
