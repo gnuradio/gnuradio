@@ -27,6 +27,7 @@ Blocks and utilities for digital modulation and demodulation.
 from digital_swig import *
 from psk import *
 from qam import *
+from qamlike import *
 from bpsk import *
 from qpsk import *
 from gmsk import *

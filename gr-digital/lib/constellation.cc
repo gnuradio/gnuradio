@@ -378,6 +378,45 @@ namespace gr {
     /********************************************************************/
 
 
+    constellation_expl_rect::sptr 
+    constellation_expl_rect::make(std::vector<gr_complex> constellation,
+                                  std::vector<int> pre_diff_code,
+                                  unsigned int rotational_symmetry,
+                                  unsigned int real_sectors,
+                                  unsigned int imag_sectors,
+                                  float width_real_sectors,
+                                  float width_imag_sectors,
+                                  std::vector<unsigned int> sector_values)
+    {
+      return constellation_expl_rect::sptr
+        (new constellation_expl_rect(constellation, pre_diff_code,
+                                     rotational_symmetry,
+                                     real_sectors, imag_sectors,
+                                     width_real_sectors, width_imag_sectors,
+                                     sector_values));
+    }
+
+    constellation_expl_rect::constellation_expl_rect(std::vector<gr_complex> constellation,
+                                                     std::vector<int> pre_diff_code,
+                                                     unsigned int rotational_symmetry,
+                                                     unsigned int real_sectors,
+                                                     unsigned int imag_sectors,
+                                                     float width_real_sectors,
+                                                     float width_imag_sectors,
+                                                     std::vector<unsigned int> sector_values)
+      : constellation_rect(constellation, pre_diff_code, rotational_symmetry,
+                           real_sectors, imag_sectors, width_real_sectors, width_imag_sectors),
+        d_sector_values(sector_values)
+    {
+    }
+
+    constellation_expl_rect::~constellation_expl_rect()
+    {
+    }
+
+    /********************************************************************/
+
+
     constellation_psk::sptr 
     constellation_psk::make(std::vector<gr_complex> constell, 
 			    std::vector<int> pre_diff_code,

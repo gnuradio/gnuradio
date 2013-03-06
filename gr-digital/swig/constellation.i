@@ -34,6 +34,12 @@ constellation_rect_sptr.__repr__ = lambda self: "<constellation rect (m=%d)>" % 
 constellation_rect = constellation_rect.make;
 %}
 
+%template(constellation_expl_rect_sptr) boost::shared_ptr<gr::digital::constellation_expl_rect>;
+%pythoncode %{
+constellation_expl_rect_sptr.__repr__ = lambda self: "<constellation expl rect (m=%d)>" % (len(self.points()))
+constellation_expl_rect = constellation_expl_rect.make;
+%}
+
 %template(constellation_psk_sptr) boost::shared_ptr<gr::digital::constellation_psk>;
 %pythoncode %{
 constellation_psk_sptr.__repr__ = lambda self: "<constellation PSK (m=%d)>" % (len(self.points()))

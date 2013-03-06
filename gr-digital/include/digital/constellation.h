@@ -164,7 +164,7 @@ namespace gr {
       // void calc_euclidean_metric(gr_complex *sample, float *metric);
       // void calc_hard_symbol_metric(gr_complex *sample, float *metric);
 
-    private:
+    protected:
       constellation_calcdist(std::vector<gr_complex> constell,
 			     std::vector<int> pre_diff_code,
 			     unsigned int rotational_symmetry,
@@ -246,6 +246,15 @@ namespace gr {
       ~constellation_rect();
 
     protected:
+
+      constellation_rect(std::vector<gr_complex> constell,
+			 std::vector<int> pre_diff_code,
+			 unsigned int rotational_symmetry,
+			 unsigned int real_sectors,
+			 unsigned int imag_sectors,
+			 float width_real_sectors,
+			 float width_imag_sectors);
+
       unsigned int get_sector(const gr_complex *sample);
   
       unsigned int calc_sector_value(unsigned int sector);
@@ -255,16 +264,62 @@ namespace gr {
       unsigned int n_imag_sectors;
       float d_width_real_sectors;
       float d_width_imag_sectors;
-
-      constellation_rect(std::vector<gr_complex> constell,
-			 std::vector<int> pre_diff_code,
-			 unsigned int rotational_symmetry,
-			 unsigned int real_sectors,
-			 unsigned int imag_sectors,
-			 float width_real_sectors,
-			 float width_imag_sectors);
     };
 
+
+    /************************************************************/
+    /* constellation_expl_rect                                  */
+    /************************************************************/
+
+    /*!
+     * \brief Rectangular digital constellation
+     * \ingroup digital
+     *
+     * Only implemented for 1-(complex)dimensional constellation.
+     *
+     * Constellation space is divided into rectangular sectors. Each
+     * sector is associated with the nearest constellation point.
+     *
+     * This class is different from constellation_rect in that the
+     * mapping from sector to constellation point is explicitly passed
+     * into the constructor as sector_values.  Usually we do not need
+     * this, since we want each sector to be automatically mapped to
+     * the closest constellation point, however sometimes it's nice to
+     * have the flexibility.
+     */
+    class DIGITAL_API constellation_expl_rect 
+      : public constellation_rect
+    {
+    public:
+      typedef boost::shared_ptr<constellation_expl_rect> sptr;
+
+      static sptr make(std::vector<gr_complex> constellation,
+                       std::vector<int> pre_diff_code,
+                       unsigned int rotational_symmetry,
+                       unsigned int real_sectors,
+                       unsigned int imag_sectors,
+                       float width_real_sectors,
+                       float width_imag_sectors,
+                       std::vector<unsigned int> sector_values);
+      ~constellation_expl_rect();
+
+    protected:
+      constellation_expl_rect(std::vector<gr_complex> constellation,
+                              std::vector<int> pre_diff_code,
+                              unsigned int rotational_symmetry,
+                              unsigned int real_sectors,
+                              unsigned int imag_sectors,
+                              float width_real_sectors,
+                              float width_imag_sectors,
+                              std::vector<unsigned int> sector_values);
+
+      unsigned int calc_sector_value (unsigned int sector) {
+        return d_sector_values[sector];
+      }
+
+    private:
+      std::vector<unsigned int> d_sector_values;
+    };
 
     /************************************************************/
     /* constellation_psk                                        */
@@ -299,7 +354,6 @@ namespace gr {
   
       unsigned int calc_sector_value(unsigned int sector);
 
-    private:
       constellation_psk(std::vector<gr_complex> constell,
 			std::vector<int> pre_diff_code,
 			unsigned int n_sectors);
@@ -329,7 +383,7 @@ namespace gr {
 
       unsigned int decision_maker(const gr_complex *sample);
 
-    private:
+    protected:
       constellation_bpsk();
     };
 
@@ -357,7 +411,7 @@ namespace gr {
 
       unsigned int decision_maker(const gr_complex *sample);
 
-    private:
+    protected:
       constellation_qpsk();
     };
 
@@ -385,7 +439,7 @@ namespace gr {
 
       unsigned int decision_maker(const gr_complex *sample);
 
-    private:
+    protected:
       constellation_dqpsk();
     };
 
@@ -413,7 +467,7 @@ namespace gr {
 
       unsigned int decision_maker(const gr_complex *sample);
 
-    private:
+    protected:
       constellation_8psk();
     };
 

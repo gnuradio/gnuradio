@@ -176,11 +176,11 @@ def qam_constellation(constellation_points=_def_constellation_points,
     # Should add one so that we can gray-code the quadrant bits too.
     pre_diff_code = []
     if not large_ampls_to_corners:
-        constellation = digital_swig.constellation_rect(points, pre_diff_code, 4,
+        constellation = digital.constellation_rect(points, pre_diff_code, 4,
                                                         side, side, width, width)
     else:
         sector_values = large_ampls_to_corners_mapping(side, points, width)
-        constellation = digital_swig.constellation_expl_rect(
+        constellation = digital.constellation_expl_rect(
             points, pre_diff_code, 4, side, side, width, width, sector_values)
 
     return constellation
