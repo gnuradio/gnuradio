@@ -93,6 +93,10 @@
 #include "blocks/message_source.h"
 #include "blocks/message_strobe.h"
 #include "blocks/message_burst_source.h"
+#include "blocks/moving_average_cc.h"
+#include "blocks/moving_average_ff.h"
+#include "blocks/moving_average_ii.h"
+#include "blocks/moving_average_ss.h"
 #include "blocks/multiply_ss.h"
 #include "blocks/multiply_ii.h"
 #include "blocks/multiply_ff.h"
@@ -120,6 +124,9 @@
 #include "blocks/packed_to_unpacked_ss.h"
 #include "blocks/packed_to_unpacked_ii.h"
 #include "blocks/pdu_to_tagged_stream.h"
+#include "blocks/peak_detector_fb.h"
+#include "blocks/peak_detector_ib.h"
+#include "blocks/peak_detector_sb.h"
 #include "blocks/peak_detector2_fb.h"
 #include "blocks/probe_signal_b.h"
 #include "blocks/probe_signal_s.h"
@@ -234,6 +241,10 @@
 %include "blocks/message_source.h"
 %include "blocks/message_strobe.h"
 %include "blocks/message_burst_source.h"
+%include "blocks/moving_average_cc.h"
+%include "blocks/moving_average_ff.h"
+%include "blocks/moving_average_ii.h"
+%include "blocks/moving_average_ss.h"
 %include "blocks/multiply_ss.h"
 %include "blocks/multiply_ii.h"
 %include "blocks/multiply_ff.h"
@@ -274,6 +285,9 @@
 %include "blocks/packed_to_unpacked_ii.h"
 %include "blocks/patterned_interleaver.h"
 %include "blocks/pdu_to_tagged_stream.h"
+%include "blocks/peak_detector_fb.h"
+%include "blocks/peak_detector_ib.h"
+%include "blocks/peak_detector_sb.h"
 %include "blocks/peak_detector2_fb.h"
 %include "blocks/regenerate_bb.h"
 %include "blocks/repeat.h"
@@ -374,6 +388,10 @@ GR_SWIG_BLOCK_MAGIC2(blocks, message_sink);
 GR_SWIG_BLOCK_MAGIC2(blocks, message_source);
 GR_SWIG_BLOCK_MAGIC2(blocks, message_strobe);
 GR_SWIG_BLOCK_MAGIC2(blocks, message_burst_source);
+GR_SWIG_BLOCK_MAGIC2(blocks, moving_average_cc);
+GR_SWIG_BLOCK_MAGIC2(blocks, moving_average_ff);
+GR_SWIG_BLOCK_MAGIC2(blocks, moving_average_ii);
+GR_SWIG_BLOCK_MAGIC2(blocks, moving_average_ss);
 GR_SWIG_BLOCK_MAGIC2(blocks, multiply_ss);
 GR_SWIG_BLOCK_MAGIC2(blocks, multiply_ii);
 GR_SWIG_BLOCK_MAGIC2(blocks, multiply_ff);
@@ -400,6 +418,9 @@ GR_SWIG_BLOCK_MAGIC2(blocks, pack_k_bits_bb);
 GR_SWIG_BLOCK_MAGIC2(blocks, packed_to_unpacked_bb);
 GR_SWIG_BLOCK_MAGIC2(blocks, packed_to_unpacked_ss);
 GR_SWIG_BLOCK_MAGIC2(blocks, packed_to_unpacked_ii);
+GR_SWIG_BLOCK_MAGIC2(blocks, peak_detector_fb);
+GR_SWIG_BLOCK_MAGIC2(blocks, peak_detector_ib);
+GR_SWIG_BLOCK_MAGIC2(blocks, peak_detector_sb);
 GR_SWIG_BLOCK_MAGIC2(blocks, peak_detector2_fb);
 GR_SWIG_BLOCK_MAGIC2(blocks, pdu_to_tagged_stream);
 GR_SWIG_BLOCK_MAGIC2(blocks, or_bb);

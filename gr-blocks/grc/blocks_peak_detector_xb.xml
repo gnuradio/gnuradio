@@ -1,0 +1,68 @@
+<?xml version="1.0"?>
+<!--
+###################################################
+##Peak Detector
+###################################################
+ -->
+<block>
+	<name>Peak Detector</name>
+	<key>blocks_peak_detector_xb</key>
+	<import>from gnuradio import blocks</import>
+	<make>blocks.peak_detector_$(type.fcn)b($threshold_factor_rise, $threshold_factor_fall, $look_ahead, $alpha)</make>
+	<callback>set_threshold_factor_rise($threshold_factor_rise)</callback>
+	<callback>set_threshold_factor_fall($threshold_factor_fall)</callback>
+	<callback>set_look_ahead($look_ahead)</callback>
+	<callback>set_alpha($alpha)</callback>
+	<param>
+		<name>Input Type</name>
+		<key>type</key>
+		<type>enum</type>
+		<option>
+			<name>Float</name>
+			<key>float</key>
+			<opt>fcn:f</opt>
+		</option>
+		<option>
+			<name>Int</name>
+			<key>int</key>
+			<opt>fcn:i</opt>
+		</option>
+		<option>
+			<name>Short</name>
+			<key>short</key>
+			<opt>fcn:s</opt>
+		</option>
+	</param>
+	<param>
+		<name>TH Factor Rise</name>
+		<key>threshold_factor_rise</key>
+		<value>0.25</value>
+		<type>real</type>
+	</param>
+	<param>
+		<name>TH Factor Fall</name>
+		<key>threshold_factor_fall</key>
+		<value>0.40</value>
+		<type>real</type>
+	</param>
+	<param>
+		<name>Look Ahead</name>
+		<key>look_ahead</key>
+		<value>10</value>
+		<type>int</type>
+	</param>
+	<param>
+		<name>Alpha</name>
+		<key>alpha</key>
+		<value>0.001</value>
+		<type>real</type>
+	</param>
+	<sink>
+		<name>in</name>
+		<type>$type</type>
+	</sink>
+	<source>
+		<name>out</name>
+		<type>byte</type>
+	</source>
+</block>

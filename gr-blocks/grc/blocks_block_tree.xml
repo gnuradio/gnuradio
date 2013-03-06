@@ -104,6 +104,7 @@
 		<block>blocks_streams_to_vector</block>
 		<block>blocks_vector_to_stream</block>
 		<block>blocks_vector_to_streams</block>
+		<block>blocks_peak_detector_xb</block>
 		<block>blocks_peak_detector2_fb</block>
 		<block>blocks_regenerate_bb</block>
 		<block>blocks_stretch_ff</block>
@@ -129,6 +130,7 @@
 	        <name>Level Controls (New)</name>
 		<block>blocks_mute_xx</block>
 		<block>blocks_sample_and_hold_xx</block>
+                <block>blocks_moving_average_xx</block>
 	</cat>
 	<cat>
 	        <name>Probes (New)</name>
