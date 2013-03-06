@@ -41,8 +41,10 @@ namespace gr {
 
       /*!
        * \brief Construct a SOCKET PDU interface
-       * \param dev Device name to create
-       * \param MTU Maximum Transmission Unit size
+       * \param type "TCP_SERVER", "TCP_CLIENT", "UDP_SERVER", or "UDP_CLIENT"
+       * \param addr network address to use
+       * \param port network port to use
+       * \param MTU maximum transmission unit
        */
       static sptr make(std::string type, std::string addr, std::string port, int MTU=10000);
     };
