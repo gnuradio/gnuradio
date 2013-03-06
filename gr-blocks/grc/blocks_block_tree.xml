@@ -34,11 +34,14 @@
 		<block>blocks_file_meta_source</block>
 		<block>blocks_pdu_to_tagged_stream</block>
 		<block>blocks_random_pdu</block>
+		<block>blocks_message_source</block>
+		<block>blocks_message_burst_source</block>
 	</cat>
 	<cat>
 	        <name>Sinks (New)</name>
 		<block>blocks_file_meta_sink</block>
 		<block>blocks_tagged_stream_to_pdu</block>
+		<block>blocks_message_sink</block>
 	</cat>
 	<cat>
 		<name>Math Operations (New) </name>
@@ -103,6 +106,7 @@
 		<block>blocks_vector_to_stream</block>
 		<block>blocks_vector_to_streams</block>
 		<block>blocks_stream_to_vector_decimator</block>
+		<block>blocks_peak_detector_xb</block>
 		<block>blocks_peak_detector2_fb</block>
 		<block>blocks_regenerate_bb</block>
 		<block>blocks_stretch_ff</block>
@@ -128,10 +132,16 @@
 	        <name>Level Controls (New)</name>
 		<block>blocks_mute_xx</block>
 		<block>blocks_sample_and_hold_xx</block>
+                <block>blocks_moving_average_xx</block>
 	</cat>
 	<cat>
 	        <name>Probes (New)</name>
 		<block>blocks_probe_signal_x</block>
 		<block>blocks_probe_signal_vx</block>
 	</cat>
+        <cat>
+                <name>Message Tools (New)</name>
+                <block>blocks_message_strobe</block>
+		<block>blocks_message_debug</block>
+        </cat>
 </cat>

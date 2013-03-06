@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<!--
+###################################################
+##Message Debug
+###################################################
+ -->
+<block>
+	<name>Message Debug</name>
+	<key>blocks_message_debug</key>
+	<import>from gnuradio import blocks</import>
+	<make>blocks.message_debug()</make>
+	<sink>
+		<name>print</name>
+		<type>message</type>
+		<optional>1</optional>
+	</sink>
+	<sink>
+		<name>store</name>
+		<type>message</type>
+		<optional>1</optional>
+	</sink>
+	<sink>
+		<name>print_pdu</name>
+		<type>message</type>
+        <optional>1</optional>
+	</sink>
+</block>

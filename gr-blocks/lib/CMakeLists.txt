@@ -99,12 +99,14 @@ expand_cc_h_impl(argmax_XX          fs is ss)
 expand_cc_h_impl(divide_XX          ss ii ff cc)
 expand_cc_h_impl(integrate_XX       ss ii ff cc)
 expand_cc_h_impl(max_XX             ff ii ss)
+expand_cc_h_impl(moving_average_XX  ss ii ff cc)
 expand_cc_h_impl(multiply_XX        ss ii)
 expand_cc_h_impl(multiply_const_XX  ss ii)
 expand_cc_h_impl(multiply_const_vXX ss ii ff cc)
 expand_cc_h_impl(mute_XX            ss ii ff cc)
 expand_cc_h_impl(not_XX             bb ss ii)
 expand_cc_h_impl(or_XX              bb ss ii)
+expand_cc_h_impl(peak_detector_XX   fb ib sb)
 expand_cc_h_impl(probe_signal_X     b s i f c)
 expand_cc_h_impl(probe_signal_vX    b s i f c)
 expand_cc_h_impl(sample_and_hold_XX bb ss ii ff)
@@ -169,6 +171,11 @@ list(APPEND gr_blocks_sources
     interleaved_short_to_complex_impl.cc
     keep_m_in_n_impl.cc
     keep_one_in_n_impl.cc
+    message_debug_impl.cc
+    message_sink_impl.cc
+    message_source_impl.cc
+    message_strobe_impl.cc
+    message_burst_source_impl.cc
     multiply_cc_impl.cc
     multiply_ff_impl.cc
     multiply_conjugate_cc_impl.cc

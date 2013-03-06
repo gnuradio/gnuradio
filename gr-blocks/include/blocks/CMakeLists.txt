@@ -73,12 +73,14 @@ expand_h(argmax_XX          fs is ss)
 expand_h(divide_XX          ss ii ff cc)
 expand_h(integrate_XX       ss ii ff cc)
 expand_h(max_XX             ff ii ss)
+expand_h(moving_average_XX  ss ii ff cc)
 expand_h(multiply_XX        ss ii)
 expand_h(multiply_const_XX  ss ii)
 expand_h(multiply_const_vXX ss ii ff cc)
 expand_h(mute_XX            ss ii ff cc)
 expand_h(not_XX             bb ss ii)
 expand_h(or_XX              bb ss ii)
+expand_h(peak_detector_XX   fb ib sb)
 expand_h(probe_signal_X     b s i f c)
 expand_h(probe_signal_vX    b s i f c)
 expand_h(sample_and_hold_XX bb ss ii ff)
@@ -125,6 +127,11 @@ install(FILES
     interleaved_short_to_complex.h
     keep_m_in_n.h
     keep_one_in_n.h
+    message_debug.h
+    message_sink.h
+    message_source.h
+    message_strobe.h
+    message_burst_source.h
     multiply_cc.h
     multiply_ff.h
     multiply_conjugate_cc.h
