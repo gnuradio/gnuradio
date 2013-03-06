@@ -40,6 +40,7 @@
 	        <name>Sinks (New)</name>
 		<block>blocks_file_meta_sink</block>
 		<block>blocks_tagged_stream_to_pdu</block>
+		<block>blocks_tag_debug</block>
 		<block>blocks_message_sink</block>
 	</cat>
 	<cat>
