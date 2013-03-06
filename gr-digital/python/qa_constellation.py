@@ -30,6 +30,7 @@ import digital_swig
 # import from local folder
 import psk
 import qam
+import qamlike
 
 tested_mod_codes = (mod_codes.NO_CODE, mod_codes.GRAY_CODE)
 
@@ -97,6 +98,9 @@ medium_constellation_info = (
      {'constellation_points': (16 ,),
       'mod_code': tested_mod_codes, 
       'large_ampls_to_corners': [False, True],},
+     True, None),
+    (qamlike.qam32_holeinside_constellation,
+     {'large_ampls_to_corners': [True]},
      True, None),
 )
 
