@@ -52,6 +52,7 @@
 #include "blocks/argmax_fs.h"
 #include "blocks/argmax_is.h"
 #include "blocks/argmax_ss.h"
+#include "blocks/burst_tagger.h"
 #include "blocks/char_to_float.h"
 #include "blocks/char_to_short.h"
 #include "blocks/complex_to_interleaved_short.h"
@@ -202,6 +203,7 @@
 %include "blocks/argmax_is.h"
 %include "blocks/argmax_ss.h"
 %include "blocks/char_to_float.h"
+%include "blocks/burst_tagger.h"
 %include "blocks/char_to_short.h"
 %include "blocks/complex_to_interleaved_short.h"
 %include "blocks/complex_to_float.h"
@@ -349,6 +351,7 @@ GR_SWIG_BLOCK_MAGIC2(blocks, and_const_ii);
 GR_SWIG_BLOCK_MAGIC2(blocks, argmax_fs);
 GR_SWIG_BLOCK_MAGIC2(blocks, argmax_is);
 GR_SWIG_BLOCK_MAGIC2(blocks, argmax_ss);
+GR_SWIG_BLOCK_MAGIC2(blocks, burst_tagger);
 GR_SWIG_BLOCK_MAGIC2(blocks, char_to_float);
 GR_SWIG_BLOCK_MAGIC2(blocks, char_to_short);
 GR_SWIG_BLOCK_MAGIC2(blocks, complex_to_interleaved_short);
