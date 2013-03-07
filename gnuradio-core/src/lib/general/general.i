@@ -43,7 +43,6 @@
 #include <gr_test_types.h>
 #include <gr_test.h>
 #include <gr_feval.h>
-#include <gr_bin_statistics_f.h>
 #include <gr_copy.h>
 #include <complex_vec_test.h>
 #include <gr_annotator_alltoall.h>
@@ -73,7 +72,6 @@
 %include "gr_test_types.h"
 %include "gr_test.i"
 %include "gr_feval.i"
-%include "gr_bin_statistics_f.i"
 %include "gr_copy.i"
 %include "complex_vec_test.i"
 %include "gr_annotator_alltoall.i"

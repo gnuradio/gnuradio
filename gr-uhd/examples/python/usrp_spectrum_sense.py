@@ -49,7 +49,7 @@ class tune(gr.feval_dd):
 
     def eval(self, ignore):
         """
-        This method is called from gr.bin_statistics_f when it wants
+        This method is called from blocks.bin_statistics_f when it wants
         to change the center frequency.  This method tunes the front
         end to the new center frequency, and returns the new frequency
         as its result.
@@ -183,9 +183,9 @@ class my_top_block(gr.top_block):
 
         self.msgq = gr.msg_queue(16)
         self._tune_callback = tune(self)        # hang on to this to keep it from being GC'd
-        stats = gr.bin_statistics_f(self.fft_size, self.msgq,
-                                    self._tune_callback, tune_delay,
-                                    dwell_delay)
+        stats = blocks.bin_statistics_f(self.fft_size, self.msgq,
+                                        self._tune_callback, tune_delay,
+                                        dwell_delay)
 
         # FIXME leave out the log10 until we speed it up
 	#self.connect(self.u, s2v, ffter, c2mag, log, stats)

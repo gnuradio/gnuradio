@@ -27,9 +27,8 @@ import struct
 
 """
 Note: There has been an issue with this block in the past, see Issue
-#199. This looks like it might have fixed itself over the years. I am
-leaving these tests disabled on our master branch for v3.6 for now,
-though, just in case. TWR.
+#199. This test is being enabled only on the 'next' branch for version
+v3.7 for now. TWR
 """
 
 class counter(gr.feval_dd):
@@ -100,7 +99,7 @@ class test_bin_statistics(gr_unittest.TestCase):
     def tearDown(self):
         self.tb = None
 
-    def xtest_001(self):
+    def test_001(self):
         vlen = 4
         tune = counter(1)
         tune_delay = 0
@@ -132,7 +131,7 @@ class test_bin_statistics(gr_unittest.TestCase):
             #print "m =", m.center_freq, m.data
             self.assertEqual(expected_results[vlen*i:vlen*i + vlen], m.data)
 
-    def xtest_002(self):
+    def test_002(self):
         vlen = 4
         tune = counter(1)
         tune_delay = 1
@@ -162,7 +161,7 @@ class test_bin_statistics(gr_unittest.TestCase):
 
 
 
-    def xtest_003(self):
+    def test_003(self):
         vlen = 4
         tune = counter3(foobar3, 1)
         tune_delay = 1
@@ -194,7 +193,7 @@ class test_bin_statistics(gr_unittest.TestCase):
         #print "foobar4: new_t =", new_t
         pass
 
-    def xtest_004(self):
+    def test_004(self):
         vlen = 4
         tune = counter4(self, 1)
         tune_delay = 1
