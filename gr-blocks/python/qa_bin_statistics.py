@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2006,2007,2010 Free Software Foundation, Inc.
+# Copyright 2006,2007,2010,2013 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -25,13 +25,10 @@ import blocks_swig as blocks
 import random
 import struct
 
-#import os
-#print "pid =", os.getpid()
-#raw_input("Attach gdb and press return...")
-
 """
-Note: The QA tests below have been disabled by renaming them from test_*
-to xtest_*.  See ticket:199 on http://gnuradio.org/trac/ticket/199
+Note: There has been an issue with this block in the past, see Issue
+#199. This test is being enabled only on the 'next' branch for version
+v3.7 for now. TWR
 """
 
 class counter(gr.feval_dd):
@@ -94,8 +91,7 @@ class parse_msg(object):
         assert(msg.length() == self.vlen * gr.sizeof_float)
         self.data = struct.unpack('%df' % (self.vlen,), msg.to_string())
 
-# FIXME: see ticket:199
-class xtest_bin_statistics(gr_unittest.TestCase):
+class test_bin_statistics(gr_unittest.TestCase):
 
     def setUp(self):
         self.tb = gr.top_block ()
@@ -103,7 +99,7 @@ class xtest_bin_statistics(gr_unittest.TestCase):
     def tearDown(self):
         self.tb = None
 
-    def xtest_001(self):
+    def test_001(self):
         vlen = 4
         tune = counter(1)
         tune_delay = 0
@@ -126,7 +122,7 @@ class xtest_bin_statistics(gr_unittest.TestCase):
 
         src = gr.vector_source_f(src_data, False)
         s2v = blocks.stream_to_vector(gr.sizeof_float, vlen)
-        stats = gr.bin_statistics_f(vlen, msgq, tune, tune_delay, dwell_delay)
+        stats = blocks.bin_statistics_f(vlen, msgq, tune, tune_delay, dwell_delay)
         self.tb.connect(src, s2v, stats)
         self.tb.run()
         self.assertEqual(4, msgq.count())
@@ -135,7 +131,7 @@ class xtest_bin_statistics(gr_unittest.TestCase):
             #print "m =", m.center_freq, m.data
             self.assertEqual(expected_results[vlen*i:vlen*i + vlen], m.data)
 
-    def xtest_002(self):
+    def test_002(self):
         vlen = 4
         tune = counter(1)
         tune_delay = 1
@@ -154,7 +150,7 @@ class xtest_bin_statistics(gr_unittest.TestCase):
 
         src = gr.vector_source_f(src_data, False)
         s2v = blocks.stream_to_vector(gr.sizeof_float, vlen)
-        stats = gr.bin_statistics_f(vlen, msgq, tune, tune_delay, dwell_delay)
+        stats = blocks.bin_statistics_f(vlen, msgq, tune, tune_delay, dwell_delay)
         self.tb.connect(src, s2v, stats)
         self.tb.run()
         self.assertEqual(1, msgq.count())
@@ -165,7 +161,7 @@ class xtest_bin_statistics(gr_unittest.TestCase):
 
 
 
-    def xtest_003(self):
+    def test_003(self):
         vlen = 4
         tune = counter3(foobar3, 1)
         tune_delay = 1
@@ -184,7 +180,7 @@ class xtest_bin_statistics(gr_unittest.TestCase):
 
         src = gr.vector_source_f(src_data, False)
         s2v = blocks.stream_to_vector(gr.sizeof_float, vlen)
-        stats = gr.bin_statistics_f(vlen, msgq, tune, tune_delay, dwell_delay)
+        stats = blocks.bin_statistics_f(vlen, msgq, tune, tune_delay, dwell_delay)
         self.tb.connect(src, s2v, stats)
         self.tb.run()
         self.assertEqual(1, msgq.count())
@@ -193,12 +189,11 @@ class xtest_bin_statistics(gr_unittest.TestCase):
             #print "m =", m.center_freq, m.data
             self.assertEqual(expected_results[vlen*i:vlen*i + vlen], m.data)
 
-
     def foobar4(self, new_t):
         #print "foobar4: new_t =", new_t
         pass
 
-    def xtest_004(self):
+    def test_004(self):
         vlen = 4
         tune = counter4(self, 1)
         tune_delay = 1
@@ -217,7 +212,7 @@ class xtest_bin_statistics(gr_unittest.TestCase):
 
         src = gr.vector_source_f(src_data, False)
         s2v = blocks.stream_to_vector(gr.sizeof_float, vlen)
-        stats = gr.bin_statistics_f(vlen, msgq, tune, tune_delay, dwell_delay)
+        stats = blocks.bin_statistics_f(vlen, msgq, tune, tune_delay, dwell_delay)
         self.tb.connect(src, s2v, stats)
         self.tb.run()
         self.assertEqual(1, msgq.count())
@@ -228,4 +223,4 @@ class xtest_bin_statistics(gr_unittest.TestCase):
 
 
 if __name__ == '__main__':
-   gr_unittest.run(xtest_bin_statistics, "test_bin_statistics.xml")
+   gr_unittest.run(test_bin_statistics, "test_bin_statistics.xml")

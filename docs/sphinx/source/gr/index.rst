@@ -39,7 +39,6 @@ Signal Sinks
 .. autosummary::
    :nosignatures:
 
-   gnuradio.gr.bin_statistics_f
    gnuradio.gr.check_counting_s
    gnuradio.gr.check_lfsr_32k_s
    gnuradio.gr.null_sink

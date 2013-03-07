@@ -140,7 +140,6 @@ endif(ENABLE_PYTHON)
 set(gr_core_general_triple_threats
     complex_vec_test
     gr_align_on_samplenumbers_ss
-    gr_bin_statistics_f
     gr_block_gateway
     gr_check_counting_s
     gr_check_lfsr_32k_s

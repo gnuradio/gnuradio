@@ -1,7 +1,6 @@
 gnuradio.gr: Signal Sinks
 =========================
 
-.. autooldblock:: gnuradio.gr.bin_statistics_f
 .. autooldblock:: gnuradio.gr.check_counting_s
 .. autooldblock:: gnuradio.gr.check_lfsr_32k_s
 .. autooldblock:: gnuradio.gr.null_sink
