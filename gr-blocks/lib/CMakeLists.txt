@@ -143,6 +143,7 @@ list(APPEND gr_blocks_sources
     ${generated_sources}
     count_bits.cc
     add_ff_impl.cc
+    burst_tagger_impl.cc
     char_to_float_impl.cc
     char_to_short_impl.cc
     complex_to_interleaved_short_impl.cc

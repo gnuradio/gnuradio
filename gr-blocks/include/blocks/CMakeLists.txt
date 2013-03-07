@@ -102,6 +102,7 @@ install(FILES
     count_bits.h
     log2_const.h
     add_ff.h
+    burst_tagger.h
     char_to_float.h
     char_to_short.h
     complex_to_interleaved_short.h

@@ -112,6 +112,7 @@
 		<block>blocks_regenerate_bb</block>
 		<block>blocks_stretch_ff</block>
                 <block>blocks_threshold_ff</block>
+                <block>blocks_burst_tagger</block>
 	</cat>
 	<cat>
 	        <name>Misc Conversions (New) </name>
