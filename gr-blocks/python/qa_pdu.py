@@ -51,7 +51,6 @@ class test_pdu(gr_unittest.TestCase):
         self.assertEqual(pmt.length(pi), 0)
         self.assertEqual(pmt.length(po), 1)
 
-        time.sleep(0.1)
         self.tb.connect(src, snk)
         self.tb.connect(src, snk2)
         self.tb.connect(src, snk3)
@@ -66,7 +65,7 @@ class test_pdu(gr_unittest.TestCase):
         src.to_basic_block()._post(port, msg) # eww, what's that smell?
 
         while dbg.num_messages() < 1:
-            time.sleep(0.5)
+            time.sleep(0.1)
         self.tb.stop()
         self.tb.wait()
 
