@@ -22,6 +22,7 @@
 #include <config.h>
 #endif
 #include <gr_tpb_thread_body.h>
+#include <gr_prefs.h>
 #include <iostream>
 #include <boost/thread.hpp>
 #include <gruel/pmt.h>
@@ -41,6 +42,9 @@ gr_tpb_thread_body::gr_tpb_thread_body(gr_block_sptr block, int max_noutput_item
   d->threaded = true;
   d->thread = gruel::get_current_thread_id();
 
+  gr_prefs *p = gr_prefs::singleton();
+  size_t max_nmsgs = static_cast<size_t>(p->get_long("DEFAULT", "max_messages", 100));
+
   // Set thread affinity if it was set before fg was started.
   if(block->processor_affinity().size() > 0) {
     gruel::thread_bind_to_processor(d->thread, block->processor_affinity());
@@ -54,9 +58,20 @@ gr_tpb_thread_body::gr_tpb_thread_body(gr_block_sptr block, int max_noutput_item
     
     BOOST_FOREACH( gr_basic_block::msg_queue_map_t::value_type &i, block->msg_queue )
     {
+      // Check if we have a message handler attached before getting
+      // any messages. This is mostly a protection for the unknown
+      // startup sequence of the threads.
+      if(block->has_msg_handler(i.first)) {
         while ((msg = block->delete_head_nowait(i.first))){
-            block->dispatch_msg(i.first,msg);
+          block->dispatch_msg(i.first,msg);
         }
+      }
+      else {
+        // If we don't have a handler but are building up messages,
+        // prune the queue from the front to keep memory in check.
+        if(block->nmsgs(i.first) > max_nmsgs)
+          msg = block->delete_head_nowait(i.first);
+      }
     }
 
     d->d_tpb.clear_changed();
