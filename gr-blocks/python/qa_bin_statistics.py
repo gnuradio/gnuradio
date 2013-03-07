@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2006,2007,2010 Free Software Foundation, Inc.
+# Copyright 2006,2007,2010,2013 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -25,13 +25,11 @@ import blocks_swig as blocks
 import random
 import struct
 
-#import os
-#print "pid =", os.getpid()
-#raw_input("Attach gdb and press return...")
-
 """
-Note: The QA tests below have been disabled by renaming them from test_*
-to xtest_*.  See ticket:199 on http://gnuradio.org/trac/ticket/199
+Note: There has been an issue with this block in the past, see Issue
+#199. This looks like it might have fixed itself over the years. I am
+leaving these tests disabled on our master branch for v3.6 for now,
+though, just in case. TWR.
 """
 
 class counter(gr.feval_dd):
@@ -94,8 +92,7 @@ class parse_msg(object):
         assert(msg.length() == self.vlen * gr.sizeof_float)
         self.data = struct.unpack('%df' % (self.vlen,), msg.to_string())
 
-# FIXME: see ticket:199
-class xtest_bin_statistics(gr_unittest.TestCase):
+class test_bin_statistics(gr_unittest.TestCase):
 
     def setUp(self):
         self.tb = gr.top_block ()
@@ -126,7 +123,7 @@ class xtest_bin_statistics(gr_unittest.TestCase):
 
         src = gr.vector_source_f(src_data, False)
         s2v = blocks.stream_to_vector(gr.sizeof_float, vlen)
-        stats = gr.bin_statistics_f(vlen, msgq, tune, tune_delay, dwell_delay)
+        stats = blocks.bin_statistics_f(vlen, msgq, tune, tune_delay, dwell_delay)
         self.tb.connect(src, s2v, stats)
         self.tb.run()
         self.assertEqual(4, msgq.count())
@@ -154,7 +151,7 @@ class xtest_bin_statistics(gr_unittest.TestCase):
 
         src = gr.vector_source_f(src_data, False)
         s2v = blocks.stream_to_vector(gr.sizeof_float, vlen)
-        stats = gr.bin_statistics_f(vlen, msgq, tune, tune_delay, dwell_delay)
+        stats = blocks.bin_statistics_f(vlen, msgq, tune, tune_delay, dwell_delay)
         self.tb.connect(src, s2v, stats)
         self.tb.run()
         self.assertEqual(1, msgq.count())
@@ -184,7 +181,7 @@ class xtest_bin_statistics(gr_unittest.TestCase):
 
         src = gr.vector_source_f(src_data, False)
         s2v = blocks.stream_to_vector(gr.sizeof_float, vlen)
-        stats = gr.bin_statistics_f(vlen, msgq, tune, tune_delay, dwell_delay)
+        stats = blocks.bin_statistics_f(vlen, msgq, tune, tune_delay, dwell_delay)
         self.tb.connect(src, s2v, stats)
         self.tb.run()
         self.assertEqual(1, msgq.count())
@@ -192,7 +189,6 @@ class xtest_bin_statistics(gr_unittest.TestCase):
             m = parse_msg(msgq.delete_head())
             #print "m =", m.center_freq, m.data
             self.assertEqual(expected_results[vlen*i:vlen*i + vlen], m.data)
-
 
     def foobar4(self, new_t):
         #print "foobar4: new_t =", new_t
@@ -217,7 +213,7 @@ class xtest_bin_statistics(gr_unittest.TestCase):
 
         src = gr.vector_source_f(src_data, False)
         s2v = blocks.stream_to_vector(gr.sizeof_float, vlen)
-        stats = gr.bin_statistics_f(vlen, msgq, tune, tune_delay, dwell_delay)
+        stats = blocks.bin_statistics_f(vlen, msgq, tune, tune_delay, dwell_delay)
         self.tb.connect(src, s2v, stats)
         self.tb.run()
         self.assertEqual(1, msgq.count())
@@ -228,4 +224,4 @@ class xtest_bin_statistics(gr_unittest.TestCase):
 
 
 if __name__ == '__main__':
-   gr_unittest.run(xtest_bin_statistics, "test_bin_statistics.xml")
+   gr_unittest.run(test_bin_statistics, "test_bin_statistics.xml")
