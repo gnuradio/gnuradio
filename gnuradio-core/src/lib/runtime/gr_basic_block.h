@@ -113,6 +113,13 @@ class GR_CORE_API gr_basic_block : public gr_msg_accepter, public boost::enable_
   void set_color(vcolor color) { d_color = color; }
   vcolor color() const { return d_color; }
 
+  /*!
+   * \brief Tests if there is a handler attached to port \p which_port
+   */
+   bool has_msg_handler(pmt::pmt_t which_port) {
+     return (d_msg_handlers.find(which_port) != d_msg_handlers.end());
+   }
+
   /*
    * This function is called by the runtime system to dispatch messages.
    *
@@ -122,9 +129,10 @@ class GR_CORE_API gr_basic_block : public gr_msg_accepter, public boost::enable_
   virtual void dispatch_msg(pmt::pmt_t which_port, pmt::pmt_t msg)
   {
     // AA Update this
-    if (d_msg_handlers.find(which_port) != d_msg_handlers.end()) // Is there a handler?
+    if(has_msg_handler(which_port)) {  // Is there a handler?
       d_msg_handlers[which_port](msg); // Yes, invoke it.
-  };
+    }
+  }
   
   // Message passing interface
   pmt::pmt_t message_subscribers;
@@ -184,8 +192,17 @@ class GR_CORE_API gr_basic_block : public gr_msg_accepter, public boost::enable_
   }
   bool empty_p() { 
     bool rv = true;
-    BOOST_FOREACH(msg_queue_map_t::value_type &i, msg_queue){ rv &= msg_queue[i.first].empty(); }
+    BOOST_FOREACH(msg_queue_map_t::value_type &i, msg_queue) {
+      rv &= msg_queue[i.first].empty();
+    }
     return rv;
+  }
+
+  //! How many messages in the queue?
+  size_t nmsgs(pmt::pmt_t which_port) { 
+    if(msg_queue.find(which_port) == msg_queue.end())
+      throw std::runtime_error("port does not exist!");
+    return msg_queue[which_port].size(); 
   }
   
   //| Acquires and release the mutex
