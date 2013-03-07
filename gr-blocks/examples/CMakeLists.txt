@@ -18,3 +18,4 @@
 # Boston, MA 02110-1301, USA.
 
 add_subdirectory(metadata)
+add_subdirectory(tags)

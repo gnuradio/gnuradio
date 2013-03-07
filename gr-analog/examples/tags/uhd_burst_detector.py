@@ -51,7 +51,7 @@ class uhd_burst_detector(gr.top_block):
 
         taps = firdes.low_pass_2(1, 1, 0.4, 0.1, 60)
         self.chanfilt = filter.fir_filter_ccc(10, taps)
-        self.tagger = gr.burst_tagger(gr.sizeof_gr_complex)
+        self.tagger = blocks.burst_tagger(gr.sizeof_gr_complex)
 
         # Dummy signaler to collect a burst on known periods
         data = 1000*[0,] + 1000*[1,]

@@ -19,7 +19,6 @@
 
 add_subdirectory(mp-sched)
 add_subdirectory(network)
-add_subdirectory(tags)
 add_subdirectory(volk_benchmark)
 
 if(ENABLE_GR_CTRLPORT)

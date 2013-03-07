@@ -51,10 +51,10 @@ class test_burst_tagger(gr_unittest.TestCase):
         self.assertEqual(6, x[2].offset)
         self.assertEqual(8, x[3].offset)
 
-        self.assertEqual(True,  pmt.pmt_to_bool(x[0].value))
-        self.assertEqual(False, pmt.pmt_to_bool(x[1].value))
-        self.assertEqual(True,  pmt.pmt_to_bool(x[2].value))
-        self.assertEqual(False, pmt.pmt_to_bool(x[3].value))
+        self.assertEqual(True,  pmt.to_bool(x[0].value))
+        self.assertEqual(False, pmt.to_bool(x[1].value))
+        self.assertEqual(True,  pmt.to_bool(x[2].value))
+        self.assertEqual(False, pmt.to_bool(x[3].value))
 
 if __name__ == '__main__':
     gr_unittest.run(test_burst_tagger, "test_burst_tagger.xml")

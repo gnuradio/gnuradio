@@ -35,10 +35,6 @@
                 <block>gr_endian_swap</block>
 	</cat>
 	<cat>
-		<name>Stream Conversions</name>
-		<block>gr_burst_tagger</block>
-	</cat>
-	<cat>
 		<name>Synchronizers</name>
 
 		<block>gr_mpsk_sync_cc</block>

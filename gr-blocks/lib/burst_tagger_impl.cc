@@ -47,13 +47,13 @@ namespace gr {
       std::stringstream str;
       str << name() << unique_id();
 
-      d_true_key = pmt::pmt_string_to_symbol("burst");
+      d_true_key = pmt::string_to_symbol("burst");
       d_true_value = pmt::PMT_T;
 
-      d_false_key = pmt::pmt_string_to_symbol("burst");
+      d_false_key = pmt::string_to_symbol("burst");
       d_false_value = pmt::PMT_F;
 
-      d_id  = pmt::pmt_string_to_symbol(str.str());
+      d_id  = pmt::string_to_symbol(str.str());
     }
 
     burst_tagger_impl::~burst_tagger_impl()
@@ -63,7 +63,7 @@ namespace gr {
     void
     burst_tagger_impl::set_true_tag(const std::string &key, bool value)
     {
-      d_true_key = pmt::pmt_string_to_symbol(key);
+      d_true_key = pmt::string_to_symbol(key);
       if(value == true) {
         d_true_value = pmt::PMT_T;
       }
@@ -75,7 +75,7 @@ namespace gr {
     void
     burst_tagger_impl::set_false_tag (const std::string &key, bool value)
     {
-      d_false_key = pmt::pmt_string_to_symbol(key);
+      d_false_key = pmt::string_to_symbol(key);
       if(value == true) {
         d_false_value = pmt::PMT_T;
       }
