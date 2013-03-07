@@ -26,7 +26,7 @@ from gnuradio import filter, analog, blocks
 from gnuradio import uhd
 from gnuradio.fft import window
 from gnuradio.eng_option import eng_option
-from gnuradio.gr import firdes
+from gnuradio.filter import firdes
 from optparse import OptionParser
 
 class uhd_burst_detector(gr.top_block):

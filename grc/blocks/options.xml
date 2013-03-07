@@ -10,7 +10,7 @@
 	<name>Options</name>
 	<key>options</key>
 	<import>from gnuradio import gr</import>
-	<import>from gnuradio.gr import firdes</import>
+	<import>from gnuradio.filter import firdes</import>
 	<import>#if $generate_options() == 'wx_gui'
 from grc_gnuradio import wxgui as grc_wxgui
 import wx

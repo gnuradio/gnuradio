@@ -8,7 +8,7 @@
 	<name>FFT Filter</name>
 	<key>fft_filter_xxx</key>
 	<import>from gnuradio import filter</import>
-	<import>from gnuradio.gr import firdes</import>
+	<import>from gnuradio.filter import firdes</import>
 	<make>filter.fft_filter_$(type)($decim, $taps, $nthreads)</make>
 	<callback>set_taps($taps)</callback>
 	<callback>set_nthreads($nthreads)</callback>
