@@ -100,6 +100,9 @@ install(FILES
     ${generated_includes}
     api.h
     count_bits.h
+    fxpt.h
+    fxpt_nco.h
+    fxpt_vco.h
     log2_const.h
     add_ff.h
     bin_statistics_f.h
