@@ -10,3 +10,23 @@ GNU Radio is licensed under the GNU General Public License (GPL) version 3. All 
 
 # This file makes gnuradio a package
 # The docstring will be associated with the top level of the package.
+
+import os
+
+# Check if the gnuradio package is installed or whether we're attempting to import it from
+# the build directory.
+path_ending = os.path.join('gnuradio-core', 'src', 'python', 'gnuradio', '__init__.py')
+path = os.path.abspath(__file__)
+if path.endswith('.pyc'):
+    path = path[:-1]
+
+if path.endswith(path_ending):
+    print("importing from build directory")
+    # We importing it from build directory.
+    build_path = os.path.join(path[:-len(path_ending)])
+
+    # Place these directory on __path__ so that it's contents are part of the gnuradio
+    # package.
+    __path__.append(os.path.join(build_path, 'gr-utils', 'src', 'python'))
+    
+print(__path__)

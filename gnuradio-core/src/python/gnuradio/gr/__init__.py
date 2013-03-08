@@ -28,7 +28,17 @@ Core contents.
 # This is the main GNU Radio python module.
 # We pull the swig output and the other modules into the gnuradio.gr namespace
 
-from gnuradio_core import *
+# If gnuradio is installed then the swig output will be in this directory.
+# Otherwise it will reside in ../../../swig.
+
+import os
+
+try:
+    from gnuradio_core import *
+except ImportError:
+    dirname, filename = os.path.split(os.path.abspath(__file__))
+    __path__.append(os.path.join(dirname, "..", "..", "..", "lib", "swig"))
+    from gnuradio_core import *
 from exceptions import *
 from hier_block2 import *
 from top_block import *
