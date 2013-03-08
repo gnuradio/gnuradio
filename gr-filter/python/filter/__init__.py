@@ -23,8 +23,14 @@
 This is the gr-filter package. This package provides GNU Radio
 processing blocks for FILTER and related functions.
 '''
+import os
 
-from filter_swig import *
+try:
+    from filter_swig import *
+except ImportError:
+    dirname, filename = os.path.split(os.path.abspath(__file__))
+    __path__.append(os.path.join(dirname, "..", "..", "swig"))
+    from filter_swig import *
 from filterbank import *
 from rational_resampler import *
 import pfb

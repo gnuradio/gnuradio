@@ -30,5 +30,6 @@ if path.endswith(path_ending):
     __path__.append(os.path.join(build_path, 'gr-utils', 'src', 'python'))
     __path__.append(os.path.join(build_path, 'gr-blocks', 'python'))
     __path__.append(os.path.join(build_path, 'gr-digital', 'python'))
+    __path__.append(os.path.join(build_path, 'gr-filter', 'python'))
     
 print(__path__)
