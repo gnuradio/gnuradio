@@ -176,6 +176,7 @@
 #include "blocks/unpacked_to_packed_bb.h"
 #include "blocks/unpacked_to_packed_ss.h"
 #include "blocks/unpacked_to_packed_ii.h"
+#include "blocks/vco_f.h"
 #include "blocks/vector_to_stream.h"
 #include "blocks/vector_to_streams.h"
 #include "blocks/xor_bb.h"
@@ -328,6 +329,7 @@
 %include "blocks/unpacked_to_packed_bb.h"
 %include "blocks/unpacked_to_packed_ss.h"
 %include "blocks/unpacked_to_packed_ii.h"
+%include "blocks/vco_f.h"
 %include "blocks/vector_to_stream.h"
 %include "blocks/vector_to_streams.h"
 %include "blocks/xor_bb.h"
@@ -479,6 +481,7 @@ GR_SWIG_BLOCK_MAGIC2(blocks, unpack_k_bits_bb);
 GR_SWIG_BLOCK_MAGIC2(blocks, unpacked_to_packed_bb);
 GR_SWIG_BLOCK_MAGIC2(blocks, unpacked_to_packed_ss);
 GR_SWIG_BLOCK_MAGIC2(blocks, unpacked_to_packed_ii);
+GR_SWIG_BLOCK_MAGIC2(blocks, vco_f);
 GR_SWIG_BLOCK_MAGIC2(blocks, vector_to_stream);
 GR_SWIG_BLOCK_MAGIC2(blocks, vector_to_streams);
 GR_SWIG_BLOCK_MAGIC2(blocks, xor_bb);

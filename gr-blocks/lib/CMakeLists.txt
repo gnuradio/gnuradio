@@ -142,6 +142,7 @@ endif(ENABLE_GR_CTRLPORT)
 list(APPEND gr_blocks_sources
     ${generated_sources}
     count_bits.cc
+    fxpt.cc
     add_ff_impl.cc
     bin_statistics_f_impl.cc
     burst_tagger_impl.cc
@@ -214,6 +215,7 @@ list(APPEND gr_blocks_sources
     uchar_array_to_float.cc
     uchar_to_float_impl.cc
     unpack_k_bits_bb_impl.cc
+    vco_f_impl.cc
     vector_to_stream_impl.cc
     vector_to_streams_impl.cc
 )
@@ -244,3 +246,35 @@ add_dependencies(gnuradio-blocks blocks_generated_includes)
 
 target_link_libraries(gnuradio-blocks ${blocks_libs})
 GR_LIBRARY_FOO(gnuradio-blocks RUNTIME_COMPONENT "blocks_runtime" DEVEL_COMPONENT "blocks_devel")
+
+########################################################################
+# QA C++ Code for gr-filter
+########################################################################
+if(ENABLE_TESTING)
+  include(GrTest)
+
+  include_directories(${CPPUNIT_INCLUDE_DIRS})
+  link_directories(${CPPUNIT_LIBRARY_DIRS})
+
+  list(APPEND test_gr_blocks_sources
+    ${CMAKE_CURRENT_SOURCE_DIR}/test_gr_blocks.cc
+    ${CMAKE_CURRENT_SOURCE_DIR}/qa_blocks.cc
+    ${CMAKE_CURRENT_SOURCE_DIR}/qa_fxpt.cc
+    ${CMAKE_CURRENT_SOURCE_DIR}/qa_fxpt_nco.cc
+    ${CMAKE_CURRENT_SOURCE_DIR}/qa_fxpt_vco.cc
+    )
+
+  add_executable(test-gr-blocks ${test_gr_blocks_sources})
+
+  list(APPEND GR_TEST_TARGET_DEPS test-gr-blocks gnuradio-blocks)
+
+  target_link_libraries(
+    test-gr-blocks
+    gnuradio-core
+    gnuradio-blocks
+    ${Boost_LIBRARIES}
+    ${CPPUNIT_LIBRARIES}
+  )
+
+  GR_ADD_TEST(test_gr_blocks test-gr-blocks)
+endif(ENABLE_TESTING)

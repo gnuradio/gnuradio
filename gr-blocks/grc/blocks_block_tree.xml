@@ -60,6 +60,7 @@
                 <block>blocks_transcendental</block>
                 <block>blocks_argmax_xx</block>
                 <block>blocks_max_xx</block>
+                <block>blocks_vco_f</block>
 	</cat>
 	<cat>
 		<name>Boolean Operations (New) </name>

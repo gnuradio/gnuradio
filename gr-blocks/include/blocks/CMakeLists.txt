@@ -100,7 +100,12 @@ install(FILES
     ${generated_includes}
     api.h
     count_bits.h
+    fxpt.h
+    fxpt_nco.h
+    fxpt_vco.h
     log2_const.h
+    nco.h
+    vco.h
     add_ff.h
     bin_statistics_f.h
     burst_tagger.h
@@ -167,6 +172,7 @@ install(FILES
     tuntap_pdu.h
     uchar_to_float.h
     unpack_k_bits_bb.h
+    vco_f.h
     vector_to_stream.h
     vector_to_streams.h
     DESTINATION ${GR_INCLUDE_DIR}/gnuradio/blocks
