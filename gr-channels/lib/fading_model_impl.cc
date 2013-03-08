@@ -27,11 +27,11 @@
 #include <boost/format.hpp>
 #include <boost/random.hpp>
 
-#include <gr_fxpt.h>
+#include <blocks/fxpt.h>
 #include <sincostable.h>
 
 
-// FASTSINCOS:  0 = slow native,  1 = gr_fxpt impl,  2 = sincostable.h
+// FASTSINCOS:  0 = slow native,  1 = gr::blocks::fxpt impl,  2 = sincostable.h
 #define FASTSINCOS  2
 
 
@@ -178,8 +178,8 @@ namespace gr {
             for(int n=1; n<d_N; n++){
                 float alpha_n = (2*M_PI*n - M_PI + d_theta)/4*d_N;
 #if FASTSINCOS == 1
-                float s_i = scale_sin*gr_fxpt::cos(gr_fxpt::float_to_fixed(2*M_PI*d_fDTs*d_m*gr_fxpt::cos(gr_fxpt::float_to_fixed(alpha_n))+d_psi[n+1]));
-                float s_q = scale_sin*gr_fxpt::cos(gr_fxpt::float_to_fixed(2*M_PI*d_fDTs*d_m*gr_fxpt::sin(gr_fxpt::float_to_fixed(alpha_n))+d_phi[n+1]));
+                float s_i = scale_sin*gr::blocks::fxpt::cos(gr::blocks::fxpt::float_to_fixed(2*M_PI*d_fDTs*d_m*gr::blocks::fxpt::cos(gr::blocks::fxpt::float_to_fixed(alpha_n))+d_psi[n+1]));
+                float s_q = scale_sin*gr::blocks::fxpt::cos(gr::blocks::fxpt::float_to_fixed(2*M_PI*d_fDTs*d_m*gr::blocks::fxpt::sin(gr::blocks::fxpt::float_to_fixed(alpha_n))+d_phi[n+1]));
 #elif FASTSINCOS == 2
                 float s_i = scale_sin*d_table.cos(2*M_PI*d_fDTs*d_m*d_table.cos(alpha_n)+d_psi[n+1]);
                 float s_q = scale_sin*d_table.cos(2*M_PI*d_fDTs*d_m*d_table.sin(alpha_n)+d_phi[n+1]);
@@ -194,8 +194,8 @@ namespace gr {
 
             if(d_LOS){
 #if FASTSINCOS == 1
-                float los_i = gr_fxpt::cos(gr_fxpt::float_to_fixed(2*M_PI*d_fDTs*d_m*gr_fxpt::cos(gr_fxpt::float_to_fixed(d_theta_los)) + d_psi[0]));
-                float los_q = gr_fxpt::sin(gr_fxpt::float_to_fixed(2*M_PI*d_fDTs*d_m*gr_fxpt::cos(gr_fxpt::float_to_fixed(d_theta_los)) + d_psi[0]));
+                float los_i = gr::blocks::fxpt::cos(gr::blocks::fxpt::float_to_fixed(2*M_PI*d_fDTs*d_m*gr::blocks::fxpt::cos(gr::blocks::fxpt::float_to_fixed(d_theta_los)) + d_psi[0]));
+                float los_q = gr::blocks::fxpt::sin(gr::blocks::fxpt::float_to_fixed(2*M_PI*d_fDTs*d_m*gr::blocks::fxpt::cos(gr::blocks::fxpt::float_to_fixed(d_theta_los)) + d_psi[0]));
 #elif FASTSINCOS == 2
                 float los_i = d_table.cos(2*M_PI*d_fDTs*d_m*d_table.cos(d_theta_los) + d_psi[0]);
                 float los_q = d_table.sin(2*M_PI*d_fDTs*d_m*d_table.cos(d_theta_los) + d_psi[0]);

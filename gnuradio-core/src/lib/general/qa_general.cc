@@ -27,9 +27,6 @@
 
 #include <qa_general.h>
 #include <qa_gr_circular_file.h>
-#include <qa_gr_fxpt.h>
-#include <qa_gr_fxpt_nco.h>
-#include <qa_gr_fxpt_vco.h>
 #include <qa_gr_math.h>
 
 CppUnit::TestSuite *
@@ -38,9 +35,6 @@ qa_general::suite ()
   CppUnit::TestSuite	*s = new CppUnit::TestSuite ("general");
 
   s->addTest (qa_gr_circular_file::suite ());
-  s->addTest (qa_gr_fxpt::suite ());
-  s->addTest (qa_gr_fxpt_nco::suite ());
-  s->addTest (qa_gr_fxpt_vco::suite ());
   s->addTest (qa_gr_math::suite ());
 
   return s;

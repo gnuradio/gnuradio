@@ -24,7 +24,7 @@
 
 #include <atsc_api.h>
 #include <gr_sync_block.h>
-#include <gr_nco.h>
+#include <blocks/nco.h>
 #include <filter/single_pole_iir.h>
 #include <analog/agc.h>
 #include <stdio.h>
@@ -69,7 +69,7 @@ public:
   double                        initial_freq;
   double                        initial_phase;
   bool                          debug_no_update;
-  gr_nco<float,float>           nco;
+  blocks::nco<float,float>      nco;
   analog::kernel::agc_ff        agc;    // automatic gain control
   filter::single_pole_iir<float,float,float> afci;
   filter::single_pole_iir<float,float,float> afcq;

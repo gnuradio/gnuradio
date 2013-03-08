@@ -81,9 +81,9 @@ CPACK_COMPONENT("blocks_swig"
 ########################################################################
 add_subdirectory(include/blocks)
 add_subdirectory(lib)
-#if(ENABLE_TESTING)
-#  add_subdirectory(tests)
-#endif(ENABLE_TESTING)
+if(ENABLE_TESTING)
+  add_subdirectory(tests)
+endif(ENABLE_TESTING)
 if(ENABLE_PYTHON)
      add_subdirectory(python)
      add_subdirectory(swig)

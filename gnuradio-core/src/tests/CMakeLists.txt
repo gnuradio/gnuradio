@@ -43,8 +43,6 @@ link_directories(${LOG4CXX_LIBRARY_DIRS})
 # Build benchmarks and non-registered tests
 ########################################################################
 set(tests_not_run #single source per test
-    benchmark_nco.cc
-    benchmark_vco.cc
     test_runtime.cc
     test_general.cc
     test_vmcircbuf.cc
