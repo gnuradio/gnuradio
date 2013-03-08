@@ -26,7 +26,7 @@
 
 #include <qa_fxpt_nco.h>
 #include <blocks/fxpt_nco.h>
-#include <gr_nco.h>
+#include <blocks/nco.h>
 #include <cppunit/TestAssert.h>
 #include <iostream>
 #include <stdio.h>
@@ -50,7 +50,7 @@ static double max_d(double a, double b)
 void
 qa_fxpt_nco::t0()
 {
-  gr_nco<float,float>	ref_nco;
+  nco<float,float>	ref_nco;
   fxpt_nco		new_nco;
   double max_error = 0, max_phase_error = 0;
 
@@ -86,7 +86,7 @@ qa_fxpt_nco::t0()
 void
 qa_fxpt_nco::t1()
 {
-  gr_nco<float,float>	ref_nco;
+  nco<float,float>	ref_nco;
   fxpt_nco		new_nco;
   gr_complex		ref_block[SIN_COS_BLOCK_SIZE];
   gr_complex		new_block[SIN_COS_BLOCK_SIZE];

@@ -77,6 +77,7 @@ namespace gr {
         d_phase += d_phase_inc;
       }
 
+      //! increment current phase angle n times
       void step(int n) {
         d_phase += d_phase_inc * n;
       }

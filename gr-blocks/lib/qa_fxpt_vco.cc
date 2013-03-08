@@ -26,7 +26,7 @@
 
 #include <qa_fxpt_vco.h>
 #include <blocks/fxpt_vco.h>
-#include <gr_vco.h>
+#include <blocks/vco.h>
 #include <cppunit/TestAssert.h>
 #include <iostream>
 #include <stdio.h>
@@ -50,7 +50,7 @@ static double max_d(double a, double b)
 void
 qa_fxpt_vco::t0()
 {
-  gr_vco<float,float>	ref_vco;
+  vco<float,float>	ref_vco;
   fxpt_vco		new_vco;
   double max_error = 0, max_phase_error = 0;
   float			input[SIN_COS_BLOCK_SIZE];
@@ -79,7 +79,7 @@ qa_fxpt_vco::t0()
 void
 qa_fxpt_vco::t1()
 {
-  gr_vco<float,float>	ref_vco;
+  vco<float,float>	ref_vco;
   fxpt_vco		new_vco;
   float			ref_block[SIN_COS_BLOCK_SIZE];
   float			new_block[SIN_COS_BLOCK_SIZE];
