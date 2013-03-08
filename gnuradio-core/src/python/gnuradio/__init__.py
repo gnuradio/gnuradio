@@ -21,7 +21,6 @@ if path.endswith('.pyc'):
     path = path[:-1]
 
 if path.endswith(path_ending):
-    print("importing from build directory")
     # We importing it from build directory.
     build_path = os.path.join(path[:-len(path_ending)])
 
@@ -31,5 +30,4 @@ if path.endswith(path_ending):
     __path__.append(os.path.join(build_path, 'gr-blocks', 'python'))
     __path__.append(os.path.join(build_path, 'gr-digital', 'python'))
     __path__.append(os.path.join(build_path, 'gr-filter', 'python'))
-    
-print(__path__)
+    __path__.append(os.path.join(build_path, 'gr-fft', 'python'))

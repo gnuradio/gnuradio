@@ -23,6 +23,13 @@
 This is the gr-fft package. This package provides GNU Radio
 processing blocks for FFT and related functions.
 '''
+import os
 
-from fft_swig import *
+try:
+    from fft_swig import *
+except ImportError:
+    dirname, filename = os.path.split(os.path.abspath(__file__))
+    __path__.append(os.path.join(dirname, "..", "..", "swig"))
+    from fft_swig import *
+
 from window import *
