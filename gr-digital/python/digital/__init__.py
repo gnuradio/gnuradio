@@ -24,7 +24,14 @@ Blocks and utilities for digital modulation and demodulation.
 
 # The presence of this file turns this directory into a Python package
 
-from digital_swig import *
+import os
+
+try:
+    from digital_swig import *
+except ImportError:
+    dirname, filename = os.path.split(os.path.abspath(__file__))
+    __path__.append(os.path.join(dirname, "..", "..", "swig"))
+    from digital_swig import *
 from psk import *
 from qam import *
 from qamlike import *

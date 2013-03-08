@@ -29,5 +29,6 @@ if path.endswith(path_ending):
     # package.
     __path__.append(os.path.join(build_path, 'gr-utils', 'src', 'python'))
     __path__.append(os.path.join(build_path, 'gr-blocks', 'python'))
+    __path__.append(os.path.join(build_path, 'gr-digital', 'python'))
     
 print(__path__)
