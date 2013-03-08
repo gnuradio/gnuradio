@@ -56,6 +56,8 @@ namespace gr {
                       const ::uhd::stream_args_t &stream_args);
       ~usrp_sink_impl();
 
+      void setup_rpc();
+
       ::uhd::dict<std::string, std::string> get_usrp_info(size_t chan);
       double get_samp_rate(void);
       ::uhd::meta_range_t get_samp_rates(void);

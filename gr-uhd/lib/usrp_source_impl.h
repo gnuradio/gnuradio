@@ -56,6 +56,8 @@ namespace gr {
                        const ::uhd::stream_args_t &stream_args);
       ~usrp_source_impl();
 
+      void setup_rpc();
+
       // Get Commands
       ::uhd::dict<std::string, std::string> get_usrp_info(size_t chan);
       std::string get_subdev_spec(size_t mboard);
