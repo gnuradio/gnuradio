@@ -82,7 +82,7 @@ CPACK_COMPONENT("blocks_swig"
 add_subdirectory(include/blocks)
 add_subdirectory(lib)
 if(ENABLE_PYTHON)
-     add_subdirectory(python)
+     add_subdirectory(python/blocks)
      add_subdirectory(swig)
      add_subdirectory(grc)
      add_subdirectory(doc)

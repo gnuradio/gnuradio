@@ -23,8 +23,15 @@
 This is the gr-blocks package. This package provides GNU Radio
 processing blocks common to many flowgraphs.
 '''
+import os
 
-from blocks_swig import *
+try:
+    from blocks_swig import *
+except ImportError:
+    dirname, filename = os.path.split(os.path.abspath(__file__))
+    __path__.append(os.path.join(dirname, "..", "..", "swig"))
+    from blocks_swig import *
+    
 from stream_to_vector_decimator import *
 
 #alias old add_vXX and multiply_vXX

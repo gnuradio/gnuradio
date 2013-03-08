@@ -28,5 +28,6 @@ if path.endswith(path_ending):
     # Place these directory on __path__ so that it's contents are part of the gnuradio
     # package.
     __path__.append(os.path.join(build_path, 'gr-utils', 'src', 'python'))
+    __path__.append(os.path.join(build_path, 'gr-blocks', 'python'))
     
 print(__path__)
