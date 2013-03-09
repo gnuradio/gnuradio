@@ -22,6 +22,11 @@
 '''
 Processing blocks for wavelet transforms.
 '''
+import os
 
-from wavelet_swig import *
-
+try:
+    from wavelet_swig import *
+except ImportError:
+    dirname, filename = os.path.split(os.path.abspath(__file__))
+    __path__.append(os.path.join(dirname, "..", "..", "swig"))
+    from wavelet_swig import *

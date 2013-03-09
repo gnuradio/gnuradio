@@ -33,3 +33,4 @@ if path.endswith(path_ending):
     __path__.append(os.path.join(build_path, 'gr-fft', 'python'))
     __path__.append(os.path.join(build_path, 'gr-analog', 'python'))
     __path__.append(os.path.join(build_path, 'gr-trellis', 'python'))
+    __path__.append(os.path.join(build_path, 'gr-wavelet', 'python'))
