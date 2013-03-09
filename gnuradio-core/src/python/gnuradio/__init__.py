@@ -43,3 +43,4 @@ if path.endswith(path_ending):
     __path__.append(os.path.join(build_path, 'gr-video-sdl', 'python'))
     __path__.append(os.path.join(build_path, 'gr-vocoder', 'python'))
     __path__.append(os.path.join(build_path, 'gr-fcd', 'python'))
+    __path__.append(os.path.join(build_path, 'gr-comedi', 'python'))
