@@ -25,7 +25,7 @@ include(GrPython)
 GR_PYTHON_INSTALL(
     FILES
     __init__.py
-    DESTINATION ${GR_PYTHON_DIR}/gnuradio/video-sdl
+    DESTINATION ${GR_PYTHON_DIR}/gnuradio/video_sdl
     COMPONENT "video_sdl_python"
 )
 

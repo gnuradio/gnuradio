@@ -85,7 +85,7 @@ add_subdirectory(include/video_sdl)
 add_subdirectory(lib)
 if(ENABLE_PYTHON)
     add_subdirectory(swig)
-    add_subdirectory(python)
+    add_subdirectory(python/video_sdl)
 endif(ENABLE_PYTHON)
 
 ########################################################################

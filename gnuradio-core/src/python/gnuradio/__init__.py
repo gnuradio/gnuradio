@@ -40,3 +40,4 @@ if path.endswith(path_ending):
     #__path__.append(os.path.join(build_path, 'gr-atsc', 'python'))
     __path__.append(os.path.join(build_path, 'gr-noaa', 'python'))
     __path__.append(os.path.join(build_path, 'gr-pager', 'python'))
+    __path__.append(os.path.join(build_path, 'gr-video-sdl', 'python'))
