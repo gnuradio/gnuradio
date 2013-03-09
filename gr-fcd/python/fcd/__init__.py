@@ -23,6 +23,12 @@
 This is the gr-fcd package. This package provides a GNU Radio
 source block for the FunCube Dongle hardware.
 '''
+import os
 
-from fcd_swig import *
+try:
+    from fcd_swig import *
+except ImportError:
+    dirname, filename = os.path.split(os.path.abspath(__file__))
+    __path__.append(os.path.join(dirname, "..", "..", "swig"))
+    from fcd_swig import *
 
