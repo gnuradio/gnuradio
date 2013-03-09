@@ -35,6 +35,7 @@
 		<block>blocks_pdu_to_tagged_stream</block>
 		<block>blocks_message_source</block>
 		<block>blocks_message_burst_source</block>
+		<block>blocks_wavfile_source</block>
 	</cat>
 	<cat>
 	        <name>Sinks (New)</name>
@@ -42,6 +43,8 @@
 		<block>blocks_tagged_stream_to_pdu</block>
 		<block>blocks_tag_debug</block>
 		<block>blocks_message_sink</block>
+		<block>blocks_tagged_file_sink</block>
+		<block>blocks_wavfile_sink</block>
 	</cat>
 	<cat>
 		<name>Math Operations (New) </name>

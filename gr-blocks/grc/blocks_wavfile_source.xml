@@ -1,0 +1,44 @@
+<?xml version="1.0"?>
+<!--
+###################################################
+##Wav File Source
+###################################################
+ -->
+<block>
+	<name>Wav File Source</name>
+	<key>blocks_wavfile_source</key>
+	<import>from gnuradio import blocks</import>
+	<make>blocks.wavfile_source($file, $repeat)</make>
+	<param>
+		<name>File</name>
+		<key>file</key>
+		<value></value>
+		<type>file_open</type>
+	</param>
+	<param>
+		<name>Repeat</name>
+		<key>repeat</key>
+		<value>True</value>
+		<type>enum</type>
+		<option>
+			<name>Yes</name>
+			<key>True</key>
+		</option>
+		<option>
+			<name>No</name>
+			<key>False</key>
+		</option>
+	</param>
+	<param>
+		<name>N Channels</name>
+		<key>nchan</key>
+		<value>1</value>
+		<type>int</type>
+	</param>
+	<check>1 &lt;= $nchan</check>
+	<source>
+		<name>out</name>
+		<type>float</type>
+		<nports>$nchan</nports>
+	</source>
+</block>

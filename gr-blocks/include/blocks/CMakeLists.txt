@@ -106,6 +106,7 @@ install(FILES
     log2_const.h
     nco.h
     vco.h
+    wavfile.h
     add_ff.h
     bin_statistics_f.h
     burst_tagger.h
@@ -164,6 +165,7 @@ install(FILES
     streams_to_vector.h
     stretch_ff.h
     tag_debug.h
+    tagged_file_sink.h
     tagged_stream_to_pdu.h
     threshold_ff.h
     throttle.h
@@ -174,6 +176,8 @@ install(FILES
     vco_f.h
     vector_to_stream.h
     vector_to_streams.h
+    wavfile_sink.h
+    wavfile_source.h
     DESTINATION ${GR_INCLUDE_DIR}/gnuradio/blocks
     COMPONENT "blocks_devel"
 )

@@ -165,6 +165,7 @@
 #include "blocks/sub_ii.h"
 #include "blocks/sub_cc.h"
 #include "blocks/tag_debug.h"
+#include "blocks/tagged_file_sink.h"
 #include "blocks/tagged_stream_to_pdu.h"
 #include "blocks/threshold_ff.h"
 #include "blocks/throttle.h"
@@ -178,6 +179,8 @@
 #include "blocks/vco_f.h"
 #include "blocks/vector_to_stream.h"
 #include "blocks/vector_to_streams.h"
+#include "blocks/wavfile_sink.h"
+#include "blocks/wavfile_source.h"
 #include "blocks/xor_bb.h"
 #include "blocks/xor_ss.h"
 #include "blocks/xor_ii.h"
@@ -317,6 +320,7 @@
 %include "blocks/sub_ss.h"
 %include "blocks/sub_ii.h"
 %include "blocks/sub_cc.h"
+%include "blocks/tagged_file_sink.h"
 %include "blocks/tagged_stream_to_pdu.h"
 %include "blocks/threshold_ff.h"
 %include "blocks/throttle.h"
@@ -330,6 +334,8 @@
 %include "blocks/vco_f.h"
 %include "blocks/vector_to_stream.h"
 %include "blocks/vector_to_streams.h"
+%include "blocks/wavfile_sink.h"
+%include "blocks/wavfile_source.h"
 %include "blocks/xor_bb.h"
 %include "blocks/xor_ss.h"
 %include "blocks/xor_ii.h"
@@ -468,6 +474,7 @@ GR_SWIG_BLOCK_MAGIC2(blocks, sub_ss);
 GR_SWIG_BLOCK_MAGIC2(blocks, sub_ii);
 GR_SWIG_BLOCK_MAGIC2(blocks, sub_cc);
 GR_SWIG_BLOCK_MAGIC2(blocks, tag_debug);
+GR_SWIG_BLOCK_MAGIC2(blocks, tagged_file_sink);
 GR_SWIG_BLOCK_MAGIC2(blocks, tagged_stream_to_pdu);
 GR_SWIG_BLOCK_MAGIC2(blocks, threshold_ff);
 GR_SWIG_BLOCK_MAGIC2(blocks, throttle);
@@ -481,6 +488,8 @@ GR_SWIG_BLOCK_MAGIC2(blocks, unpacked_to_packed_ii);
 GR_SWIG_BLOCK_MAGIC2(blocks, vco_f);
 GR_SWIG_BLOCK_MAGIC2(blocks, vector_to_stream);
 GR_SWIG_BLOCK_MAGIC2(blocks, vector_to_streams);
+GR_SWIG_BLOCK_MAGIC2(blocks, wavfile_sink);
+GR_SWIG_BLOCK_MAGIC2(blocks, wavfile_source);
 GR_SWIG_BLOCK_MAGIC2(blocks, xor_bb);
 GR_SWIG_BLOCK_MAGIC2(blocks, xor_ss);
 GR_SWIG_BLOCK_MAGIC2(blocks, xor_ii);
