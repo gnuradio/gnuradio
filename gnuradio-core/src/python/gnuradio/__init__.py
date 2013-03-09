@@ -24,8 +24,8 @@ if path.endswith(path_ending):
     # We importing it from build directory.
     build_path = os.path.join(path[:-len(path_ending)])
 
-    # Place these directory on __path__ so that it's contents are part of the gnuradio
-    # package.
+    # Place these directories on __path__ so that their contents are
+    # part of the gnuradio package.
     __path__.append(os.path.join(build_path, 'gr-utils', 'src', 'python'))
     __path__.append(os.path.join(build_path, 'gr-blocks', 'python'))
     __path__.append(os.path.join(build_path, 'gr-digital', 'python'))
@@ -41,3 +41,4 @@ if path.endswith(path_ending):
     __path__.append(os.path.join(build_path, 'gr-noaa', 'python'))
     __path__.append(os.path.join(build_path, 'gr-pager', 'python'))
     __path__.append(os.path.join(build_path, 'gr-video-sdl', 'python'))
+    __path__.append(os.path.join(build_path, 'gr-vocoder', 'python'))
