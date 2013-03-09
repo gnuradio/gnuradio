@@ -38,3 +38,4 @@ if path.endswith(path_ending):
     __path__.append(os.path.join(build_path, 'gr-qtgui', 'python'))
     __path__.append(os.path.join(build_path, 'gr-wxgui', 'python'))
     #__path__.append(os.path.join(build_path, 'gr-atsc', 'python'))
+    __path__.append(os.path.join(build_path, 'gr-noaa', 'python'))

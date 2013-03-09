@@ -24,4 +24,11 @@ Blocks and utilities for NOAA app.
 
 # The presence of this file turns this directory into a Python package
 
-from noaa_swig import *
+import os
+
+try:
+    from noaa_swig import *
+except ImportError:
+    dirname, filename = os.path.split(os.path.abspath(__file__))
+    __path__.append(os.path.join(dirname, "..", "..", "swig"))
+    from noaa_swig import *
