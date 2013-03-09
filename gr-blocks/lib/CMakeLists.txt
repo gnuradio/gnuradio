@@ -143,6 +143,7 @@ list(APPEND gr_blocks_sources
     ${generated_sources}
     count_bits.cc
     fxpt.cc
+    wavfile.cc
     add_ff_impl.cc
     bin_statistics_f_impl.cc
     burst_tagger_impl.cc
@@ -206,6 +207,7 @@ list(APPEND gr_blocks_sources
     streams_to_stream_impl.cc
     streams_to_vector_impl.cc
     stretch_ff_impl.cc
+    tagged_file_sink_impl.cc
     tagged_stream_to_pdu_impl.cc
     threshold_ff_impl.cc
     throttle_impl.cc
@@ -218,6 +220,8 @@ list(APPEND gr_blocks_sources
     vco_f_impl.cc
     vector_to_stream_impl.cc
     vector_to_streams_impl.cc
+    wavfile_sink_impl.cc
+    wavfile_source_impl.cc
 )
 
 #Add Windows DLL resource file if using MSVC
