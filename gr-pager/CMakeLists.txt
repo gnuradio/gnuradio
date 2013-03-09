@@ -94,7 +94,7 @@ CPACK_COMPONENT("pager_swig"
 add_subdirectory(include/pager)
 add_subdirectory(lib)
 if(ENABLE_PYTHON)
-    add_subdirectory(python)
+    add_subdirectory(python/pager)
     add_subdirectory(swig)
     add_subdirectory(grc)
     add_subdirectory(apps)

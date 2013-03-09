@@ -24,7 +24,14 @@
 '''
 The GNU Radio pager application.
 '''
+import os
 
-from pager_swig import *
+try:
+    from pager_swig import *
+except ImportError:
+    dirname, filename = os.path.split(os.path.abspath(__file__))
+    __path__.append(os.path.join(dirname, "..", "..", "swig"))
+    from pager_swig import *
+
 from flex_demod import flex_demod
 from pager_utils import *
