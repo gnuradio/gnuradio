@@ -25,6 +25,11 @@ sinks.
 '''
 
 # The presence of this file turns this directory into a Python package
+import os
 
-from qtgui_swig import *
-#import qtgui_swig as qtgui # to preserve the old interface
+try:
+    from qtgui_swig import *
+except ImportError:
+    dirname, filename = os.path.split(os.path.abspath(__file__))
+    __path__.append(os.path.join(dirname, "..", "..", "swig"))
+    from qtgui_swig import *
