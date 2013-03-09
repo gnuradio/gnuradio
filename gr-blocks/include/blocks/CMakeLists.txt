@@ -99,6 +99,7 @@ add_custom_target(blocks_generated_includes DEPENDS
 install(FILES
     ${generated_includes}
     api.h
+    control_loop.h
     count_bits.h
     fxpt.h
     fxpt_nco.h
