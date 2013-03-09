@@ -141,6 +141,7 @@ endif(ENABLE_GR_CTRLPORT)
 ########################################################################
 list(APPEND gr_blocks_sources
     ${generated_sources}
+    control_loop.cc
     count_bits.cc
     fxpt.cc
     wavfile.cc
