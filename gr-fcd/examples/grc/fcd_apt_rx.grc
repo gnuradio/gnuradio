@@ -270,7 +270,7 @@
     </param>
   </block>
   <block>
-    <key>gr_wavfile_sink</key>
+    <key>blocks_wavfile_sink</key>
     <param>
       <key>id</key>
       <value>wavfile_sink</value>

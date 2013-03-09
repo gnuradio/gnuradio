@@ -31,7 +31,6 @@ Signal Sources
    gnuradio.gr.file_descriptor_source
    gnuradio.gr.file_source
    gnuradio.gr.udp_source
-   gnuradio.gr.wavfile_source
 
 Signal Sinks
 ^^^^^^^^^^^^
@@ -52,7 +51,6 @@ Signal Sinks
    gnuradio.gr.histo_sink_f
    gnuradio.gr.oscope_sink_f
    gnuradio.gr.udp_sink
-   gnuradio.gr.wavfile_sink
 
 
 Information Coding and Decoding

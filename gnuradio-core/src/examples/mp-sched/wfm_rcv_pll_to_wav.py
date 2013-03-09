@@ -80,7 +80,7 @@ class wfm_rx_block (gr.top_block):
 
         # wave file as final sink
         if 1:
-            sink = gr.wavfile_sink(output_filename, 2, int(audio_rate), 16)
+            sink = blocks.wavfile_sink(output_filename, 2, int(audio_rate), 16)
         else:
             sink = audio.sink (int (audio_rate),
                                options.audio_output,

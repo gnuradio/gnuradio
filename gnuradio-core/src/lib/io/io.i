@@ -39,9 +39,6 @@
 #include <ppio.h>
 #include <gr_udp_sink.h>
 #include <gr_udp_source.h>
-#include <gr_wavfile_sink.h>
-#include <gr_wavfile_source.h>
-#include <gr_tagged_file_sink.h>
 %}
 
 %include "gr_file_sink_base.i"
@@ -58,8 +55,5 @@
 %include "ppio.i"
 %include "gr_udp_sink.i"
 %include "gr_udp_source.i"
-%include "gr_wavfile_sink.i"
-%include "gr_wavfile_source.i"
-%include "gr_tagged_file_sink.i"
 
 

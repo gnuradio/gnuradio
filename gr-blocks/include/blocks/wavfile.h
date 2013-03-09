@@ -20,7 +20,7 @@
  * Boston, MA 02110-1301, USA.
  */
 
-// This file stores all the RIFF file type knowledge for the gr_wavfile_*
+// This file stores all the RIFF file type knowledge for the wavfile_*
 // blocks.
 
 #include <blocks/api.h>

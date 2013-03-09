@@ -70,7 +70,7 @@ class uhd_burst_detector(gr.top_block):
         self.f2s = blocks.float_to_short()
 
         # Use file sink burst tagger to capture bursts
-        self.fsnk = gr.tagged_file_sink(gr.sizeof_gr_complex, self.samp_rate)
+        self.fsnk = blocks.tagged_file_sink(gr.sizeof_gr_complex, self.samp_rate)
 
 
         ##################################################

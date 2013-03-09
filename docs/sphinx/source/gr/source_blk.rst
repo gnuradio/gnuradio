@@ -11,5 +11,4 @@ gnuradio.gr: Signal Sources
 .. autooldblock:: gnuradio.gr.file_descriptor_source
 .. autooldblock:: gnuradio.gr.file_source
 .. autooldblock:: gnuradio.gr.udp_source
-.. autooldblock:: gnuradio.gr.wavfile_source
 
