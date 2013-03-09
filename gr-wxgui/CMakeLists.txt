@@ -87,6 +87,6 @@ install(
 # Add subdirectories
 ########################################################################
 add_subdirectory(grc)
-add_subdirectory(python)
+add_subdirectory(python/wxgui)
 
 endif(ENABLE_GR_WXGUI)
