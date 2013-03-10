@@ -24,13 +24,13 @@
 #define INCLUDED_ANALOG_PLL_CARRIERTRACKING_CC_IMPL_H
 
 #include <analog/pll_carriertracking_cc.h>
-#include <gri_control_loop.h>
+#include <blocks/control_loop.h>
 
 namespace gr {
   namespace analog {
     
     class pll_carriertracking_cc_impl
-      : public pll_carriertracking_cc, public gri_control_loop
+      : public pll_carriertracking_cc, public blocks::control_loop
     {
     private:
       float d_locksig,d_lock_threshold;

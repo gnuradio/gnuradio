@@ -63,7 +63,7 @@ namespace gr {
       : gr_block("mpsk_receiver_cc",
 		 gr_make_io_signature(1, 1, sizeof(gr_complex)),
 		 gr_make_io_signature(1, 1, sizeof(gr_complex))),
-	gri_control_loop(loop_bw, fmax, fmin),  
+	blocks::control_loop(loop_bw, fmax, fmin),  
 	d_M(M), d_theta(theta), 
 	d_current_const_point(0),
 	d_mu(mu), d_gain_mu(gain_mu), d_gain_omega(gain_omega), 

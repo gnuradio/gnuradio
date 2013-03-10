@@ -34,8 +34,6 @@ set(GR_SWIG_INCLUDE_DIRS
     ${Boost_INCLUDE_DIRS}
 )
 
-set(GR_SWIG_LIBRARIES gnuradio-digital gnuradio-filter)
-
 if(ENABLE_GR_CTRLPORT)
   ADD_DEFINITIONS(-DGR_CTRLPORT)
   list(APPEND GR_SWIG_INCLUDE_DIRS ${ICE_INCLUDE_DIR})
@@ -46,7 +44,8 @@ set(GR_SWIG_TARGET_DEPS digital_generated_includes)
 set(GR_SWIG_DOC_FILE ${CMAKE_CURRENT_BINARY_DIR}/digital_swig_doc.i)
 set(GR_SWIG_DOC_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/../lib)
 
-set(GR_SWIG_LIBRARIES gnuradio-digital gnuradio-filter gnuradio-analog)
+set(GR_SWIG_LIBRARIES gnuradio-digital
+  gnuradio-filter gnuradio-analog gnuradio-blocks)
 
 GR_SWIG_MAKE(digital_swig digital_swig.i)
 

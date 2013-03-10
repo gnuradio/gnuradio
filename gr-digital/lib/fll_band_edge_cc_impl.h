@@ -24,7 +24,7 @@
 #define	INCLUDED_DIGITAL_FLL_BAND_EDGE_CC_IMPL_H
 
 #include <digital/fll_band_edge_cc.h>
-#include <gri_control_loop.h>
+#include <blocks/control_loop.h>
 #include <filter/fir_filter.h>
 
 namespace gr {

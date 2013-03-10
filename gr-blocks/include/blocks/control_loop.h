@@ -37,6 +37,7 @@ namespace gr {
       float d_alpha, d_beta;
 
     public:
+      control_loop(void) {}
       control_loop(float loop_bw, float max_freq, float min_freq);
       virtual ~control_loop();
 

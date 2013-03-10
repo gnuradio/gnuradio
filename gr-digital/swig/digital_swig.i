@@ -30,7 +30,9 @@
 
 %include "analog/cpm.h"
 
-%include "gri_control_loop.h"
+%{
+#include <blocks/control_loop.h>
+%}
 
 // Used in the constellation objects
 %template(unsigned_int_vector) std::vector<unsigned int>;
