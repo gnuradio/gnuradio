@@ -21,7 +21,7 @@
 #
 
 import unittest
-import pmt_swig as pmt
+import pmt
 
 class test_gruel_pmt(unittest.TestCase):
 
