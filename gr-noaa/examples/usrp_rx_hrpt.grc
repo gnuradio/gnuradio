@@ -1872,7 +1872,7 @@
     </param>
   </block>
   <block>
-    <key>gr_file_sink</key>
+    <key>blocks_file_sink</key>
     <param>
       <key>id</key>
       <value>frame_sink</value>

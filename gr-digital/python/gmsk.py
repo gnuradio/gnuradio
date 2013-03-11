@@ -142,11 +142,11 @@ class gmsk_mod(gr.hier_block2):
     def _setup_logging(self):
         print "Modulation logging turned on."
         self.connect(self.nrz,
-                     gr.file_sink(gr.sizeof_float, "nrz.dat"))
+                     blocks.file_sink(gr.sizeof_float, "nrz.dat"))
         self.connect(self.gaussian_filter,
-                     gr.file_sink(gr.sizeof_float, "gaussian_filter.dat"))
+                     blocks.file_sink(gr.sizeof_float, "gaussian_filter.dat"))
         self.connect(self.fmmod,
-                     gr.file_sink(gr.sizeof_gr_complex, "fmmod.dat"))
+                     blocks.file_sink(gr.sizeof_gr_complex, "fmmod.dat"))
 
 
     def add_options(parser):
@@ -262,11 +262,11 @@ class gmsk_demod(gr.hier_block2):
     def _setup_logging(self):
         print "Demodulation logging turned on."
         self.connect(self.fmdemod,
-                    gr.file_sink(gr.sizeof_float, "fmdemod.dat"))
+                    blocks.file_sink(gr.sizeof_float, "fmdemod.dat"))
         self.connect(self.clock_recovery,
-                    gr.file_sink(gr.sizeof_float, "clock_recovery.dat"))
+                    blocks.file_sink(gr.sizeof_float, "clock_recovery.dat"))
         self.connect(self.slicer,
-                    gr.file_sink(gr.sizeof_char, "slicer.dat"))
+                    blocks.file_sink(gr.sizeof_char, "slicer.dat"))
 
     def add_options(parser):
         """

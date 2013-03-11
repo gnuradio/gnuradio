@@ -24,7 +24,6 @@
 #define INCLUDED_GR_WAVFILE_SINK_IMPL_H
 
 #include <blocks/wavfile_sink.h>
-#include <gr_file_sink_base.h>
 
 namespace gr {
   namespace blocks {

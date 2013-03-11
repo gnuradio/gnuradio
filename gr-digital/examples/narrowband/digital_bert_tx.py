@@ -78,7 +78,7 @@ class tx_psk_block(gr.top_block):
             options.samples_per_symbol = self._sink._sps
             
         elif(options.to_file is not None):
-            self._sink = gr.file_sink(gr.sizeof_gr_complex, options.to_file)
+            self._sink = blocks.file_sink(gr.sizeof_gr_complex, options.to_file)
         else:
             self._sink = gr.null_sink(gr.sizeof_gr_complex)
             

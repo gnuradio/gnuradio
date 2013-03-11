@@ -78,11 +78,6 @@ endif(ENABLE_PYTHON)
 # Handle triple-threat files that have cc, h, and i
 ########################################################################
 set(gr_core_io_triple_threats
-    gr_file_sink
-    gr_file_sink_base
-    gr_file_source
-    gr_file_descriptor_sink
-    gr_file_descriptor_source
     microtune_xxxx_eval_board
     microtune_4702_eval_board
     microtune_4937_eval_board

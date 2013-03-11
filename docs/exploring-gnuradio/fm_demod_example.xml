@@ -11,7 +11,7 @@ from gnuradio import mc4020
 import sys
 
 def high_speed_adc (fg, input_rate):
-    # return gr.file_source (gr.sizeof_short, "dummy.dat", False)
+    # return blocks.file_source (gr.sizeof_short, "dummy.dat", False)
     return mc4020.source (input_rate, mc4020.MCC_CH3_EN | mc4020.MCC_ALL_1V)
 
 #

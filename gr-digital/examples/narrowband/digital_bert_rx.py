@@ -27,6 +27,7 @@ import gnuradio.gr.gr_threading as _threading
 import sys, time, math
 
 from gnuradio import digital
+from gnuradio import blocks
 
 # from current dir
 from uhd_interface import uhd_receiver
@@ -124,7 +125,7 @@ class rx_psk_block(gr.top_block):
             options.samples_per_symbol = self._source._sps
 
         elif(options.from_file is not None):
-            self._source = gr.file_source(gr.sizeof_gr_complex, options.from_file)
+            self._source = blocks.file_source(gr.sizeof_gr_complex, options.from_file)
         else:
             self._source = gr.null_source(gr.sizeof_gr_complex)
 

@@ -28,8 +28,6 @@ Signal Sources
    gnuradio.gr.vector_source_f
    gnuradio.gr.vector_source_i
    gnuradio.gr.vector_source_s
-   gnuradio.gr.file_descriptor_source
-   gnuradio.gr.file_source
    gnuradio.gr.udp_source
 
 Signal Sinks
@@ -46,8 +44,6 @@ Signal Sinks
    gnuradio.gr.vector_sink_f
    gnuradio.gr.vector_sink_i
    gnuradio.gr.vector_sink_s
-   gnuradio.gr.file_descriptor_sink
-   gnuradio.gr.file_sink
    gnuradio.gr.histo_sink_f
    gnuradio.gr.oscope_sink_f
    gnuradio.gr.udp_sink

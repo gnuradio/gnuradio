@@ -26,6 +26,7 @@
 
 from gnuradio import gr, filter
 from gnuradio import analog
+from gnuradio import blocks
 from math import pi
 import numpy
 
@@ -195,13 +196,13 @@ class cpm_mod(gr.hier_block2):
     def _setup_logging(self):
         print "Modulation logging turned on."
         self.connect(self.B2s,
-                     gr.file_sink(gr.sizeof_float, "symbols.dat"))
+                     blocks.file_sink(gr.sizeof_float, "symbols.dat"))
         self.connect(self.pam,
-                     gr.file_sink(gr.sizeof_float, "pam.dat"))
+                     blocks.file_sink(gr.sizeof_float, "pam.dat"))
         self.connect(self.filter,
-                     gr.file_sink(gr.sizeof_float, "filter.dat"))
+                     blocks.file_sink(gr.sizeof_float, "filter.dat"))
         self.connect(self.fmmod,
-                     gr.file_sink(gr.sizeof_gr_complex, "fmmod.dat"))
+                     blocks.file_sink(gr.sizeof_gr_complex, "fmmod.dat"))
 
 
     def add_options(parser):

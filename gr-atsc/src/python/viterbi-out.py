@@ -21,6 +21,7 @@
 #
 
 from gnuradio import gr, atsc
+from gnuradio import blocks
 import sys, os
 
 def main(args):
@@ -36,13 +37,13 @@ def main(args):
 
 	tb = gr.top_block()
 
-        src = gr.file_source(atsc.sizeof_atsc_soft_data_segment, "/tmp/atsc_pipe_5")
+        src = blocks.file_source(atsc.sizeof_atsc_soft_data_segment, "/tmp/atsc_pipe_5")
 	viterbi = atsc.viterbi_decoder()
         deinter = atsc.deinterleaver()
         rs_dec = atsc.rs_decoder()
         derand = atsc.derandomizer()
 	depad = atsc.depad()
-        dst = gr.file_sink(gr.sizeof_char,outfile)
+        dst = blocks.file_sink(gr.sizeof_char,outfile)
 	tb.connect(src, viterbi, deinter, rs_dec, derand, depad, dst)
         tb.run ()
 

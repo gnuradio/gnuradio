@@ -31,7 +31,7 @@ def main():
 
 	tb = gr.top_block()
 
-        u = gr.file_source(gr.sizeof_float,"/tmp/atsc_pipe_2")
+        u = blocks.file_source(gr.sizeof_float,"/tmp/atsc_pipe_2")
 
         input_rate = 19.2e6
 	IF_freq = 5.75e6
@@ -69,8 +69,8 @@ def main():
 	iir = filter.single_pole_iir_filter_ff(alpha)
 	remove_dc = blocks.sub_ff()
 
-	out = gr.file_sink(gr.sizeof_float,"/tmp/atsc_pipe_3")
-	# out = gr.file_sink(gr.sizeof_float,"/mnt/sata/atsc_data_float")
+	out = blocks.file_sink(gr.sizeof_float,"/tmp/atsc_pipe_3")
+	# out = blocks.file_sink(gr.sizeof_float,"/mnt/sata/atsc_data_float")
 
         tb.connect(u, fpll, lp_filter)
 	tb.connect(lp_filter, iir)

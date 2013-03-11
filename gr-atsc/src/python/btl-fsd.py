@@ -22,6 +22,7 @@
 
 from gnuradio import gr
 from gnuradio import atsc
+from gnuradio import blocks
 import os
 
 print os.getpid()
@@ -33,9 +34,9 @@ fsc = atsc.fs_checker()
 eq = atsc.equalizer()
 fsd = atsc.field_sync_demux()
 
-out_data = gr.file_sink(atsc.sizeof_atsc_soft_data_segment,"/tmp/atsc_pipe_5")
+out_data = blocks.file_sink(atsc.sizeof_atsc_soft_data_segment,"/tmp/atsc_pipe_5")
 
-inp = gr.file_source(gr.sizeof_float,"/tmp/atsc_pipe_3")
+inp = blocks.file_source(gr.sizeof_float,"/tmp/atsc_pipe_3")
 
 tb.connect(inp,btl)
 tb.connect((btl,0),(fsc,0),(eq,0),(fsd,0))

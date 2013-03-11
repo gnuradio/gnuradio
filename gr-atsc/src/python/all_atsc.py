@@ -49,7 +49,7 @@ def graph (args):
     tb = gr.top_block ()
 
     # Convert to a from shorts to a stream of complex numbers.
-    srcf = gr.file_source (gr.sizeof_short,infile)
+    srcf = blocks.file_source (gr.sizeof_short,infile)
     s2ss = blocks.stream_to_streams(gr.sizeof_short,2)
     s2f1 = blocks.short_to_float()
     s2f2 = blocks.short_to_float()
@@ -128,10 +128,10 @@ def graph (args):
     rs_dec = atsc.rs_decoder()
     derand = atsc.derandomizer()
     depad = atsc.depad()
-    dst = gr.file_sink(gr.sizeof_char, outfile)
+    dst = blocks.file_sink(gr.sizeof_char, outfile)
     tb.connect(fsd, viterbi, deinter, rs_dec, derand, depad, dst)
 
-    dst2 = gr.file_sink(gr.sizeof_gr_complex, "atsc_complex.data")
+    dst2 = blocks.file_sink(gr.sizeof_gr_complex, "atsc_complex.data")
     tb.connect(src0, dst2)
 
     tb.run ()

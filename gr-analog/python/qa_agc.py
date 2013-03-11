@@ -24,14 +24,12 @@ from gnuradio import gr, gr_unittest
 import analog_swig as analog
 import math
 
-test_output = False
+class test_agc(gr_unittest.TestCase):
 
-class test_agc (gr_unittest.TestCase):
+    def setUp(self):
+        self.tb = gr.top_block()
 
-    def setUp (self):
-        self.tb = gr.top_block ()
-
-    def tearDown (self):
+    def tearDown(self):
         self.tb = None
 
 
@@ -115,9 +113,6 @@ class test_agc (gr_unittest.TestCase):
         tb.connect(src1, head)
         tb.connect(head, agc)
         tb.connect(agc, dst1)
-
-        if test_output == True:
-            tb.connect(agc, gr.file_sink(gr.sizeof_gr_complex, "test_agc_cc.dat"))
 
         tb.run()
         dst_data = dst1.data()
@@ -203,9 +198,6 @@ class test_agc (gr_unittest.TestCase):
         tb.connect (src1, head)
         tb.connect (head, agc)
         tb.connect (agc, dst1)
-
-        if test_output == True:
-            tb.connect (agc, gr.file_sink(gr.sizeof_float, "test_agc_ff.dat"))
 
         tb.run ()
         dst_data = dst1.data ()
@@ -294,9 +286,6 @@ class test_agc (gr_unittest.TestCase):
         tb.connect(head, agc)
         tb.connect(agc, dst1)
 
-        if test_output == True:
-            tb.connect(agc, gr.file_sink(gr.sizeof_gr_complex, "test_agc2_cc.dat"))
-
         tb.run()
         dst_data = dst1.data()
         self.assertComplexTuplesAlmostEqual(expected_result, dst_data, 4)
@@ -384,9 +373,6 @@ class test_agc (gr_unittest.TestCase):
         tb.connect(head, agc)
         tb.connect(agc, dst1)
 
-        if test_output == True:
-            tb.connect(agc, gr.file_sink(gr.sizeof_float, "test_agc2_ff.dat"))
-
         tb.run()
         dst_data = dst1.data()
         self.assertFloatTuplesAlmostEqual(expected_result, dst_data, 4)
@@ -460,9 +446,6 @@ class test_agc (gr_unittest.TestCase):
         tb.connect(head, agc)
         tb.connect(agc, dst1)
 
-        if test_output == True:
-            tb.connect(agc, gr.file_sink(gr.sizeof_gr_complex, "test_agc2_cc.dat"))
-
         tb.run()
         dst_data = dst1.data()
         self.assertComplexTuplesAlmostEqual(expected_result, dst_data, 4)
@@ -480,10 +463,6 @@ class test_agc (gr_unittest.TestCase):
         agc = analog.feedforward_agc_cc(8, 2.0)
         dst = gr.vector_sink_c()
         self.tb.connect(src, agc, dst)
-
-        if test_output == True:
-            self.tb.connect(agc, gr.file_sink(gr.sizeof_gr_complex,
-                                              "test_feedforward_cc.dat"))
 
         self.tb.run()
         dst_data = dst.data()[0:len(expected_result)]

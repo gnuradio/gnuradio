@@ -21,6 +21,7 @@
 #
 
 from gnuradio import gr
+from gnuradio import blocks
 from gnuradio.eng_option import eng_option
 from optparse import OptionParser
 
@@ -30,7 +31,7 @@ class vector_sink(gr.top_block):
 
         udp = gr.udp_source(gr.sizeof_float, host, port, pkt_size,
                             eof=eof, wait=wait)
-        sink = gr.file_sink(gr.sizeof_float, "received.dat")
+        sink = blocks.file_sink(gr.sizeof_float, "received.dat")
         self.connect(udp, sink)
 
 if __name__ == "__main__":

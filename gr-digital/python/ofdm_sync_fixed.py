@@ -22,6 +22,7 @@
 
 import math
 from gnuradio import gr
+from gnuradio import blocks
 
 class ofdm_sync_fixed(gr.hier_block2):
     def __init__(self, fft_length, cp_length, nsymbols, freq_offset, logging=False):
@@ -46,5 +47,5 @@ class ofdm_sync_fixed(gr.hier_block2):
         self.connect(self.peak_trigger, (self,1))
 
         if logging:
-            self.connect(self.peak_trigger, gr.file_sink(gr.sizeof_char, "ofdm_sync_fixed-peaks_b.dat"))
+            self.connect(self.peak_trigger, blocks.file_sink(gr.sizeof_char, "ofdm_sync_fixed-peaks_b.dat"))
 

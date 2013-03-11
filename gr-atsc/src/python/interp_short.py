@@ -50,7 +50,7 @@ def graph (args):
 
     tb = gr.top_block()
 
-    srcf = gr.file_source(gr.sizeof_short,infile)
+    srcf = blocks.file_source(gr.sizeof_short,infile)
     s2ss = blocks.stream_to_streams(gr.sizeof_short,2)
     s2f1 = blocks.short_to_float()
     s2f2 = blocks.short_to_float()
@@ -61,7 +61,7 @@ def graph (args):
                                        filter.firdes.WIN_HAMMING)
     lp = filter.interp_fir_filter_ccf(3, lp_coeffs)
 
-    file = gr.file_sink(gr.sizeof_gr_complex,"/tmp/atsc_pipe_1")
+    file = blocks.file_sink(gr.sizeof_gr_complex,"/tmp/atsc_pipe_1")
 
     tb.connect( srcf, s2ss )
     tb.connect( (s2ss, 0), s2f1, (src0,0) )

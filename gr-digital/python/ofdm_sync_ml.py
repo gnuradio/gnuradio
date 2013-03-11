@@ -158,18 +158,18 @@ class ofdm_sync_ml(gr.hier_block2):
 
 
         if logging:
-            self.connect(self.moving_sum_filter, gr.file_sink(gr.sizeof_float, "ofdm_sync_ml-energy_f.dat"))
-            self.connect(self.diff, gr.file_sink(gr.sizeof_float, "ofdm_sync_ml-theta_f.dat"))
-            self.connect(self.angle, gr.file_sink(gr.sizeof_float, "ofdm_sync_ml-epsilon_f.dat"))
-            self.connect(self.corrmag, gr.file_sink(gr.sizeof_float, "ofdm_sync_ml-corrmag_f.dat"))
-            self.connect(self.kscorr, gr.file_sink(gr.sizeof_gr_complex, "ofdm_sync_ml-kscorr_c.dat"))
-            self.connect(self.div, gr.file_sink(gr.sizeof_float, "ofdm_sync_ml-div_f.dat"))
-            self.connect(self.mul, gr.file_sink(gr.sizeof_float, "ofdm_sync_ml-mul_f.dat"))
-            self.connect(self.slice, gr.file_sink(gr.sizeof_float, "ofdm_sync_ml-slice_f.dat"))
-            self.connect(self.pk_detect, gr.file_sink(gr.sizeof_char, "ofdm_sync_ml-peaks_b.dat"))
+            self.connect(self.moving_sum_filter, blocks.file_sink(gr.sizeof_float, "ofdm_sync_ml-energy_f.dat"))
+            self.connect(self.diff, blocks.file_sink(gr.sizeof_float, "ofdm_sync_ml-theta_f.dat"))
+            self.connect(self.angle, blocks.file_sink(gr.sizeof_float, "ofdm_sync_ml-epsilon_f.dat"))
+            self.connect(self.corrmag, blocks.file_sink(gr.sizeof_float, "ofdm_sync_ml-corrmag_f.dat"))
+            self.connect(self.kscorr, blocks.file_sink(gr.sizeof_gr_complex, "ofdm_sync_ml-kscorr_c.dat"))
+            self.connect(self.div, blocks.file_sink(gr.sizeof_float, "ofdm_sync_ml-div_f.dat"))
+            self.connect(self.mul, blocks.file_sink(gr.sizeof_float, "ofdm_sync_ml-mul_f.dat"))
+            self.connect(self.slice, blocks.file_sink(gr.sizeof_float, "ofdm_sync_ml-slice_f.dat"))
+            self.connect(self.pk_detect, blocks.file_sink(gr.sizeof_char, "ofdm_sync_ml-peaks_b.dat"))
             if use_dpll:
-                self.connect(self.dpll, gr.file_sink(gr.sizeof_char, "ofdm_sync_ml-dpll_b.dat"))
+                self.connect(self.dpll, blocks.file_sink(gr.sizeof_char, "ofdm_sync_ml-dpll_b.dat"))
 
-            self.connect(self.sample_and_hold, gr.file_sink(gr.sizeof_float, "ofdm_sync_ml-sample_and_hold_f.dat"))
-            self.connect(self.input, gr.file_sink(gr.sizeof_gr_complex, "ofdm_sync_ml-input_c.dat"))
+            self.connect(self.sample_and_hold, blocks.file_sink(gr.sizeof_float, "ofdm_sync_ml-sample_and_hold_f.dat"))
+            self.connect(self.input, blocks.file_sink(gr.sizeof_gr_complex, "ofdm_sync_ml-input_c.dat"))
 

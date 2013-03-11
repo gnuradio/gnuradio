@@ -32,6 +32,7 @@
 # then at 0 with edges at -3.2MHz and 3.2MHz.
 
 from gnuradio import gr
+from gnuradio import blocks
 import sys
 
 def graph(args):
@@ -45,13 +46,13 @@ def graph(args):
 
     tb = gr.top_block()
 
-    src0 = gr.file_source(gr.sizeof_gr_complex, infile)
+    src0 = blocks.file_source(gr.sizeof_gr_complex, infile)
 
     lp_coeffs = filter.firdes.low_pass(3, 19.2e6, 3.2e6, .5e6,
                                        filter.firdes.WIN_HAMMING )
     lp = filter.interp_fir_filter_ccf(1, lp_coeffs)
 
-    file = gr.file_sink(gr.sizeof_gr_complex, "/tmp/atsc_pipe_1")
+    file = blocks.file_sink(gr.sizeof_gr_complex, "/tmp/atsc_pipe_1")
 
     tb.connect(src0, lp, file)
 

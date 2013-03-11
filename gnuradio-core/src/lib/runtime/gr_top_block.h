@@ -83,7 +83,7 @@ public:
   /*!
    * Wait for a flowgraph to complete.  Flowgraphs complete when
    * either (1) all blocks indicate that they are done (typically only
-   * when using gr.file_source, or gr.head, or (2) after stop() has been
+   * when using blocks.file_source, or gr.head, or (2) after stop() has been
    * called to request shutdown.  Calling wait on a top_block that is
    * not running IS NOT an error (wait returns w/o blocking).
    */
