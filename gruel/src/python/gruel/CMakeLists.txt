@@ -28,13 +28,6 @@ GR_PYTHON_INSTALL(
     COMPONENT "gruel_python"
 )
 
-GR_PYTHON_INSTALL(FILES
-    pmt/__init__.py
-    pmt/pmt_to_python.py
-    DESTINATION ${GR_PYTHON_DIR}/pmt
-    COMPONENT "gruel_python"
-)
-
 ########################################################################
 # Setup unit tests
 ########################################################################

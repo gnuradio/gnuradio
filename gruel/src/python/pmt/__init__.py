@@ -25,7 +25,15 @@
 The GNU Radio Utility Etcetera Library's Polymorphic Types for Python.
 '''
 
-from pmt_swig import *
+import os
+
+try:
+    from pmt_swig import *
+except ImportError:
+    dirname, filename = os.path.split(os.path.abspath(__file__))
+    __path__.append(os.path.join(dirname, "..", "..", "swig"))
+    from pmt_swig import *
+
 from pmt_to_python import pmt_to_python as to_python
 from pmt_to_python import python_to_pmt as to_pmt
 

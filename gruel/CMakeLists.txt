@@ -83,7 +83,8 @@ add_subdirectory(src/include/gruel)
 add_subdirectory(src/lib)
 if(ENABLE_PYTHON)
     add_subdirectory(src/swig)
-    add_subdirectory(src/python)
+    add_subdirectory(src/python/pmt)
+    add_subdirectory(src/python/gruel)
 endif(ENABLE_PYTHON)
 
 ########################################################################
