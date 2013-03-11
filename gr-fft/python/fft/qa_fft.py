@@ -19,11 +19,10 @@
 # 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 #
 
-from gnuradio import gr, gr_unittest
-import fft_swig as fft
-import blocks_swig as blocks
 import sys
 import random
+
+from gnuradio import gr, gr_unittest, fft, blocks
 
 primes = (2,3,5,7,11,13,17,19,23,29,31,37,41,43,47,53,
           59,61,67,71,73,79,83,89,97,101,103,107,109,113,127,131,

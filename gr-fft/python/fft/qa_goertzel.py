@@ -20,9 +20,9 @@
 # Boston, MA 02110-1301, USA.
 #
 
-from gnuradio import gr, gr_unittest
 from math import pi, cos
-import fft_swig as fft
+
+from gnuradio import gr, gr_unittest, fft
 
 class test_goertzel(gr_unittest.TestCase):
 
