@@ -138,6 +138,7 @@ list(APPEND gr_blocks_sources
     ${generated_sources}
     control_loop.cc
     count_bits.cc
+    file_sink_base.cc
     fxpt.cc
     wavfile.cc
     add_ff_impl.cc
@@ -155,6 +156,9 @@ list(APPEND gr_blocks_sources
     conjugate_cc_impl.cc
     deinterleave_impl.cc
     delay_impl.cc
+    file_descriptor_sink_impl.cc
+    file_descriptor_source_impl.cc
+    file_sink_impl.cc
     file_source_impl.cc
     file_meta_sink_impl.cc
     file_meta_source_impl.cc
