@@ -101,11 +101,16 @@ GR_PYTHON_INSTALL(
 ########################################################################
 if(ENABLE_GR_CTRLPORT)
   if(ENABLE_TESTING)
+    set(GR_TEST_TARGET_DEPS "")
+    set(GR_TEST_LIBRARY_DIRS "")
+    set(GR_TEST_PYTHON_DIRS 
+      ${CMAKE_BINARY_DIR}/gruel/src/python
+      ${CMAKE_BINARY_DIR}/gnuradio-core/src/python
+      )
     include(GrTest)
     file(GLOB py_qa_test_files "qa_*.py")
     foreach(py_qa_test_file ${py_qa_test_files})
       get_filename_component(py_qa_test_name ${py_qa_test_file} NAME_WE)
-      set(GR_TEST_TARGET_DEPS gruel gnuradio-core)
       GR_ADD_TEST(${py_qa_test_name} ${PYTHON_EXECUTABLE} ${py_qa_test_file})
     endforeach(py_qa_test_file)
   endif(ENABLE_TESTING)

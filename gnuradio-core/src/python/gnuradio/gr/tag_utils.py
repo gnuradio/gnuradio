@@ -20,10 +20,12 @@
 #
 """ Conversion tools between stream tags and Python objects """
 
-try: import pmt
-except: from gruel import pmt
+try:
+    import pmt
+except:
+    from gruel import pmt
 
-from gnuradio_core import gr_tag_t
+from gnuradio.gr import gr_tag_t
 
 class PythonTag(object):
     " Python container for tags "
