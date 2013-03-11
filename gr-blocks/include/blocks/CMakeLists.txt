@@ -101,6 +101,7 @@ install(FILES
     api.h
     control_loop.h
     count_bits.h
+    file_sink_base.h
     fxpt.h
     fxpt_nco.h
     fxpt_vco.h
@@ -123,6 +124,9 @@ install(FILES
     conjugate_cc.h
     deinterleave.h
     delay.h
+    file_descriptor_sink.h
+    file_descriptor_source.h
+    file_sink.h
     file_source.h
     file_meta_sink.h
     file_meta_source.h

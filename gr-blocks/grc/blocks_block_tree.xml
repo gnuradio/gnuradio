@@ -31,6 +31,7 @@
 	<cat>
 	        <name>Sources (New)</name>
 		<block>blocks_file_source</block>
+		<block>blocks_file_descriptor_source</block>
 		<block>blocks_file_meta_source</block>
 		<block>blocks_pdu_to_tagged_stream</block>
 		<block>blocks_random_pdu</block>
@@ -40,6 +41,8 @@
 	</cat>
 	<cat>
 	        <name>Sinks (New)</name>
+		<block>blocks_file_sink</block>
+		<block>blocks_file_descriptor_sink</block>
 		<block>blocks_file_meta_sink</block>
 		<block>blocks_tagged_stream_to_pdu</block>
 		<block>blocks_tag_debug</block>

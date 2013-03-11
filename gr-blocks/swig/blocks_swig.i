@@ -71,6 +71,10 @@
 #include "blocks/divide_ss.h"
 #include "blocks/divide_ii.h"
 #include "blocks/divide_cc.h"
+#include "blocks/file_descriptor_sink.h"
+#include "blocks/file_descriptor_source.h"
+#include "blocks/file_sink_base.h"
+#include "blocks/file_sink.h"
 #include "blocks/file_source.h"
 #include "blocks/file_meta_sink.h"
 #include "blocks/file_meta_source.h"
@@ -224,6 +228,10 @@
 %include "blocks/control_loop.h"
 %include "blocks/deinterleave.h"
 %include "blocks/delay.h"
+%include "blocks/file_descriptor_sink.h"
+%include "blocks/file_descriptor_source.h"
+%include "blocks/file_sink_base.h"
+%include "blocks/file_sink.h"
 %include "blocks/file_source.h"
 %include "blocks/file_meta_sink.h"
 %include "blocks/file_meta_source.h"
@@ -383,6 +391,9 @@ GR_SWIG_BLOCK_MAGIC2(blocks, divide_ff);
 GR_SWIG_BLOCK_MAGIC2(blocks, divide_ss);
 GR_SWIG_BLOCK_MAGIC2(blocks, divide_ii);
 GR_SWIG_BLOCK_MAGIC2(blocks, divide_cc);
+GR_SWIG_BLOCK_MAGIC2(blocks, file_descriptor_sink);
+GR_SWIG_BLOCK_MAGIC2(blocks, file_descriptor_source);
+GR_SWIG_BLOCK_MAGIC2(blocks, file_sink);
 GR_SWIG_BLOCK_MAGIC2(blocks, file_source);
 GR_SWIG_BLOCK_MAGIC2(blocks, file_meta_sink);
 GR_SWIG_BLOCK_MAGIC2(blocks, file_meta_source);
