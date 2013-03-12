@@ -338,7 +338,7 @@ class ${blockname}(${parenttype}):
 
     def general_work(self, input_items, output_items):
         output_items[0][:] = input_items[0]
-        consume(0, len(input_items[0])
+        consume(0, len(input_items[0]))
         \#self.consume_each(len(input_items[0]))
         return len(output_items[0])
 #stop
