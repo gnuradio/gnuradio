@@ -1,4 +1,4 @@
-# Copyright 2011 Free Software Foundation, Inc.
+# Copyright 2011,2013 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -54,6 +54,8 @@ if("${MINOR_VERSION}" STREQUAL "git")
     set(VERSION "${GIT_DESCRIBE}")
     set(DOCVER  "${MAJOR_VERSION}.${API_COMPAT}${MINOR_VERSION}")
     set(LIBVER  "${MAJOR_VERSION}.${API_COMPAT}${MINOR_VERSION}")
+    set(RC_MINOR_VERSION "0")
+    set(RC_MAINT_VERSION "0")
 elseif("${MAINT_VERSION}" STREQUAL "git")
     # VERSION: 3.3.1git-xxx-gxxxxxxxx
     # DOCVER:  3.3.1git
@@ -61,6 +63,8 @@ elseif("${MAINT_VERSION}" STREQUAL "git")
     set(VERSION "${GIT_DESCRIBE}")
     set(DOCVER  "${MAJOR_VERSION}.${API_COMPAT}.${MINOR_VERSION}${MAINT_VERSION}")
     set(LIBVER  "${MAJOR_VERSION}.${API_COMPAT}.${MINOR_VERSION}${MAINT_VERSION}")
+    math(EXPR RC_MINOR_VERSION "${MINOR_VERSION} - 1")
+    set(RC_MAINT_VERSION "0")
 else()
     # This is a numbered release.
     # VERSION: 3.3.1{.x}
@@ -73,4 +77,6 @@ else()
     endif()
     set(DOCVER "${VERSION}")
     set(LIBVER "${VERSION}")
+    set(RC_MINOR_VERSION ${MINOR_VERSION})
+    set(RC_MAINT_VERSION ${MAINT_VERSION})
 endif()

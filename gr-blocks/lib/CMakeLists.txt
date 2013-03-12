@@ -1,4 +1,4 @@
-# Copyright 2012 Free Software Foundation, Inc.
+# Copyright 2012-2013 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -95,15 +95,25 @@ expand_cc_h_impl(add_const_XX       ss ii ff cc)
 expand_cc_h_impl(add_const_vXX      ss ii ff cc)
 expand_cc_h_impl(and_XX             bb ss ii)
 expand_cc_h_impl(and_const_XX       bb ss ii)
+expand_cc_h_impl(argmax_XX          fs is ss)
 expand_cc_h_impl(divide_XX          ss ii ff cc)
 expand_cc_h_impl(integrate_XX       ss ii ff cc)
+expand_cc_h_impl(max_XX             ff ii ss)
+expand_cc_h_impl(moving_average_XX  ss ii ff cc)
 expand_cc_h_impl(multiply_XX        ss ii)
 expand_cc_h_impl(multiply_const_XX  ss ii)
 expand_cc_h_impl(multiply_const_vXX ss ii ff cc)
+expand_cc_h_impl(mute_XX            ss ii ff cc)
 expand_cc_h_impl(not_XX             bb ss ii)
 expand_cc_h_impl(or_XX              bb ss ii)
+expand_cc_h_impl(peak_detector_XX   fb ib sb)
+expand_cc_h_impl(probe_signal_X     b s i f c)
+expand_cc_h_impl(probe_signal_vX    b s i f c)
+expand_cc_h_impl(sample_and_hold_XX bb ss ii ff)
 expand_cc_h_impl(sub_XX             ss ii ff cc)
 expand_cc_h_impl(xor_XX             bb ss ii)
+expand_cc_h_impl(packed_to_unpacked_XX bb ss ii)
+expand_cc_h_impl(unpacked_to_packed_XX bb ss ii)
 
 ########################################################################
 # Setup the include and linker paths
@@ -126,7 +136,14 @@ link_directories(${Boost_LIBRARY_DIRS})
 ########################################################################
 list(APPEND gr_blocks_sources
     ${generated_sources}
+    control_loop.cc
+    count_bits.cc
+    file_sink_base.cc
+    fxpt.cc
+    wavfile.cc
     add_ff_impl.cc
+    bin_statistics_f_impl.cc
+    burst_tagger_impl.cc
     char_to_float_impl.cc
     char_to_short_impl.cc
     complex_to_interleaved_short_impl.cc
@@ -138,6 +155,10 @@ list(APPEND gr_blocks_sources
     complex_to_arg_impl.cc
     conjugate_cc_impl.cc
     deinterleave_impl.cc
+    delay_impl.cc
+    file_descriptor_sink_impl.cc
+    file_descriptor_source_impl.cc
+    file_sink_impl.cc
     file_source_impl.cc
     file_meta_sink_impl.cc
     file_meta_source_impl.cc
@@ -154,26 +175,67 @@ list(APPEND gr_blocks_sources
     interleaved_short_to_complex_impl.cc
     keep_m_in_n_impl.cc
     keep_one_in_n_impl.cc
+    message_debug_impl.cc
+    message_sink_impl.cc
+    message_source_impl.cc
+    message_strobe_impl.cc
+    message_burst_source_impl.cc
     multiply_cc_impl.cc
     multiply_ff_impl.cc
     multiply_conjugate_cc_impl.cc
     multiply_const_cc_impl.cc
     multiply_const_ff_impl.cc
     nlog10_ff_impl.cc
+    pack_k_bits_bb_impl.cc
     patterned_interleaver_impl.cc
+    pdu.cc
+    tag_debug_impl.cc
+    pdu_to_tagged_stream_impl.cc
+    peak_detector2_fb_impl.cc
+    regenerate_bb_impl.cc
     repeat_impl.cc
+    rms_cf_impl.cc
+    rms_ff_impl.cc
     short_to_char_impl.cc
     short_to_float_impl.cc
+    socket_pdu_impl.cc
     stream_mux_impl.cc
+    stream_pdu_base.cc
     stream_to_streams_impl.cc
     stream_to_vector_impl.cc
     streams_to_stream_impl.cc
     streams_to_vector_impl.cc
+    stretch_ff_impl.cc
+    tagged_file_sink_impl.cc
+    tagged_stream_to_pdu_impl.cc
+    threshold_ff_impl.cc
+    throttle_impl.cc
+    transcendental_impl.cc
+    tcp_connection.cc
+    tuntap_pdu_impl.cc
     uchar_array_to_float.cc
     uchar_to_float_impl.cc
+    unpack_k_bits_bb_impl.cc
+    vco_f_impl.cc
     vector_to_stream_impl.cc
     vector_to_streams_impl.cc
+    wavfile_sink_impl.cc
+    wavfile_source_impl.cc
 )
+
+#Add Windows DLL resource file if using MSVC
+IF(MSVC)
+    include(${CMAKE_SOURCE_DIR}/cmake/Modules/GrVersion.cmake)
+
+    configure_file(
+        ${CMAKE_CURRENT_SOURCE_DIR}/gnuradio-blocks.rc.in
+        ${CMAKE_CURRENT_BINARY_DIR}/gnuradio-blocks.rc
+    @ONLY)
+
+    list(APPEND gr_blocks_sources
+        ${CMAKE_CURRENT_BINARY_DIR}/gnuradio-blocks.rc
+    )
+ENDIF(MSVC)
 
 list(APPEND blocks_libs
     gnuradio-core
@@ -187,3 +249,35 @@ add_dependencies(gnuradio-blocks blocks_generated_includes)
 
 target_link_libraries(gnuradio-blocks ${blocks_libs})
 GR_LIBRARY_FOO(gnuradio-blocks RUNTIME_COMPONENT "blocks_runtime" DEVEL_COMPONENT "blocks_devel")
+
+########################################################################
+# QA C++ Code for gr-filter
+########################################################################
+if(ENABLE_TESTING)
+  include(GrTest)
+
+  include_directories(${CPPUNIT_INCLUDE_DIRS})
+  link_directories(${CPPUNIT_LIBRARY_DIRS})
+
+  list(APPEND test_gr_blocks_sources
+    ${CMAKE_CURRENT_SOURCE_DIR}/test_gr_blocks.cc
+    ${CMAKE_CURRENT_SOURCE_DIR}/qa_blocks.cc
+    ${CMAKE_CURRENT_SOURCE_DIR}/qa_fxpt.cc
+    ${CMAKE_CURRENT_SOURCE_DIR}/qa_fxpt_nco.cc
+    ${CMAKE_CURRENT_SOURCE_DIR}/qa_fxpt_vco.cc
+    )
+
+  add_executable(test-gr-blocks ${test_gr_blocks_sources})
+
+  list(APPEND GR_TEST_TARGET_DEPS test-gr-blocks gnuradio-blocks)
+
+  target_link_libraries(
+    test-gr-blocks
+    gnuradio-core
+    gnuradio-blocks
+    ${Boost_LIBRARIES}
+    ${CPPUNIT_LIBRARIES}
+  )
+
+  GR_ADD_TEST(test_gr_blocks test-gr-blocks)
+endif(ENABLE_TESTING)

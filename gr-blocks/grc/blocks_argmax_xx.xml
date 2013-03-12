@@ -1,0 +1,61 @@
+<?xml version="1.0"?>
+<!--
+###################################################
+##ArgMax:
+##	1 output, 2 to inf inputs
+###################################################
+ -->
+<block>
+	<name>Argmax</name>
+	<key>blocks_argmax_xx</key>
+	<import>from gnuradio import blocks</import>
+	<make>blocks.argmax_$(type.fcn)($vlen)</make>
+	<param>
+		<name>IO Type</name>
+		<key>type</key>
+		<type>enum</type>
+		<option>
+			<name>Float</name>
+			<key>float</key>
+			<opt>fcn:fs</opt>
+		</option>
+		<option>
+			<name>Int</name>
+			<key>int</key>
+			<opt>fcn:is</opt>
+		</option>
+		<option>
+			<name>Short</name>
+			<key>short</key>
+			<opt>fcn:dd</opt>
+		</option>
+	</param>
+	<param>
+		<name>Num Inputs</name>
+		<key>num_inputs</key>
+		<value>2</value>
+		<type>int</type>
+	</param>
+	<param>
+		<name>Vec Length</name>
+		<key>vlen</key>
+		<value>1</value>
+		<type>int</type>
+	</param>
+	<check>$num_inputs &gt;= 1</check>
+	<check>$vlen &gt;= 1</check>
+	<sink>
+		<name>in</name>
+		<type>$type</type>
+		<vlen>$vlen</vlen>
+		<nports>$num_inputs</nports>
+	</sink>
+	<source>
+		<name>max_vec</name>
+		<type>short</type>
+	</source>
+	<source>
+		<name>max_inp</name>
+		<type>short</type>
+	</source>
+</block>

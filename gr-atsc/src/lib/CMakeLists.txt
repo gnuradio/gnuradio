@@ -1,4 +1,4 @@
-# Copyright 2011-212 Free Software Foundation, Inc.
+# Copyright 2011-2013 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -29,6 +29,9 @@ include_directories(
 )
 
 link_directories(${Boost_LIBRARY_DIRS})
+
+include_directories(${LOG4CXX_INCLUDE_DIRS})
+link_directories(${LOG4CXX_LIBRARY_DIRS})
 
 ########################################################################
 # Generate viterbi mux source
@@ -95,9 +98,24 @@ list(APPEND gr_atsc_sources
     plinfo.cc
 )
 
+#Add Windows DLL resource file under MSVC
+IF(MSVC)
+    include(${CMAKE_SOURCE_DIR}/cmake/Modules/GrVersion.cmake)
+
+    configure_file(
+        ${CMAKE_CURRENT_SOURCE_DIR}/gnuradio-atsc.rc.in
+        ${CMAKE_CURRENT_BINARY_DIR}/gnuradio-atsc.rc
+    @ONLY)
+
+    list(APPEND gr_atsc_sources
+        ${CMAKE_CURRENT_BINARY_DIR}/gnuradio-atsc.rc
+    )
+ENDIF(MSVC)
+
 list(APPEND atsc_libs
     gnuradio-core
     ${Boost_LIBRARIES}
+    ${LOG4CXX_LIBRARIES}
 )
 
 add_library(gnuradio-atsc SHARED ${gr_atsc_sources})

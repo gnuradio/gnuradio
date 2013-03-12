@@ -1,4 +1,4 @@
-# Copyright 2011-2012 Free Software Foundation, Inc.
+# Copyright 2011-2013 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -34,6 +34,9 @@ link_directories(
 	${Boost_LIBRARY_DIRS}
 )
 
+include_directories(${LOG4CXX_INCLUDE_DIRS})
+link_directories(${LOG4CXX_LIBRARY_DIRS})
+
 ########################################################################
 # Setup library
 ########################################################################
@@ -43,10 +46,25 @@ list(APPEND gr_uhd_sources
     gr_uhd_amsg_source.cc
 )
 
+#Add Windows DLL resource file if using MSVC
+if(MSVC)
+    include(${CMAKE_SOURCE_DIR}/cmake/Modules/GrVersion.cmake)
+
+    configure_file(
+        ${CMAKE_CURRENT_SOURCE_DIR}/gnuradio-uhd.rc.in
+        ${CMAKE_CURRENT_BINARY_DIR}/gnuradio-uhd.rc
+    @ONLY)
+
+    list(APPEND gr_uhd_sources
+        ${CMAKE_CURRENT_BINARY_DIR}/gnuradio-uhd.rc
+    )
+endif(MSVC)
+
 list(APPEND uhd_libs
     gnuradio-core
     ${Boost_LIBRARIES}
     ${UHD_LIBRARIES}
+    ${LOG4CXX_LIBRARIES}
 )
 
 add_library(gnuradio-uhd SHARED ${gr_uhd_sources})

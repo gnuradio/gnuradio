@@ -29,6 +29,7 @@
 #include <stdexcept>
 #include <iostream>
 #include <gr_block_registry.h>
+#include <gr_prefs.h>
 
 gr_block::gr_block (const std::string &name,
                     gr_io_signature_sptr input_signature,
@@ -49,6 +50,52 @@ gr_block::gr_block (const std::string &name,
     d_min_output_buffer(std::max(output_signature->max_streams(),1), -1)
 {
     global_block_registry.register_primitive(alias(), this);
+
+#ifdef ENABLE_GR_LOG
+#ifdef HAVE_LOG4CXX
+    gr_prefs *p = gr_prefs::singleton();
+    std::string config_file = p->get_string("LOG", "log_config", "");
+    std::string log_level = p->get_string("LOG", "log_level", "off");
+    std::string log_file = p->get_string("LOG", "log_file", "");
+    std::string debug_level = p->get_string("LOG", "debug_level", "off");
+    std::string debug_file = p->get_string("LOG", "debug_file", "");
+
+    GR_CONFIG_LOGGER(config_file);
+
+    GR_LOG_GETLOGGER(LOG, "gr_log." + alias());
+    GR_LOG_SET_LEVEL(LOG, log_level);
+    if(log_file.size() > 0) {
+      if(log_file == "stdout") {
+        GR_LOG_ADD_CONSOLE_APPENDER(LOG, "gr::log :%p: %c{1} - %m%n", "System.out");
+      }
+      else if(log_file == "stderr") {
+        GR_LOG_ADD_CONSOLE_APPENDER(LOG, "gr::log :%p: %c{1} - %m%n", "System.err");
+      }
+      else {
+        GR_LOG_ADD_FILE_APPENDER(LOG, "%r :%p: %c{1} - %m%n", log_file, "");
+      }
+    }
+    d_logger = LOG;
+
+    GR_LOG_GETLOGGER(DLOG, "gr_log_debug." + alias());
+    GR_LOG_SET_LEVEL(DLOG, debug_level);
+    if(debug_file.size() > 0) {
+      if(debug_file == "stdout") {
+        GR_LOG_ADD_CONSOLE_APPENDER(DLOG, "gr::debug :%p: %c{1} - %m%n", "System.out");
+      }
+      else if(debug_file == "stderr") {
+        GR_LOG_ADD_CONSOLE_APPENDER(DLOG, "gr::debug :%p: %c{1} - %m%n", "System.err");
+      }
+      else {
+        GR_LOG_ADD_FILE_APPENDER(DLOG, "%r :%p: %c{1} - %m%n", debug_file, "");
+      }
+    }
+    d_debug_logger = DLOG;
+#endif /* HAVE_LOG4CXX */
+#else /* ENABLE_GR_LOG */
+    d_logger = NULL;
+    d_debug_logger = NULL;
+#endif /* ENABLE_GR_LOG */
 }
 
 gr_block::~gr_block ()
@@ -282,10 +329,32 @@ gr_block::pc_noutput_items()
 }
 
 float
+gr_block::pc_noutput_items_var()
+{
+  if(d_detail) {
+    return d_detail->pc_noutput_items_var();
+  }
+  else {
+    return 0;
+  }
+}
+
+float
 gr_block::pc_nproduced()
 {
   if(d_detail) {
     return d_detail->pc_nproduced();
+  }
+  else {
+    return 0;
+  }
+}
+
+float
+gr_block::pc_nproduced_var()
+{
+  if(d_detail) {
+    return d_detail->pc_nproduced_var();
   }
   else {
     return 0;
@@ -303,11 +372,33 @@ gr_block::pc_input_buffers_full(int which)
   }
 }
 
+float
+gr_block::pc_input_buffers_full_var(int which)
+{
+  if(d_detail) {
+    return d_detail->pc_input_buffers_full_var(static_cast<size_t>(which));
+  }
+  else {
+    return 0;
+  }
+}
+
 std::vector<float>
 gr_block::pc_input_buffers_full()
 {
   if(d_detail) {
     return d_detail->pc_input_buffers_full();
+  }
+  else {
+    return std::vector<float>(1,0);
+  }
+}
+
+std::vector<float>
+gr_block::pc_input_buffers_full_var()
+{
+  if(d_detail) {
+    return d_detail->pc_input_buffers_full_var();
   }
   else {
     return std::vector<float>(1,0);
@@ -325,11 +416,33 @@ gr_block::pc_output_buffers_full(int which)
   }
 }
 
+float
+gr_block::pc_output_buffers_full_var(int which)
+{
+  if(d_detail) {
+    return d_detail->pc_output_buffers_full_var(static_cast<size_t>(which));
+  }
+  else {
+    return 0;
+  }
+}
+
 std::vector<float>
 gr_block::pc_output_buffers_full()
 {
   if(d_detail) {
     return d_detail->pc_output_buffers_full();
+  }
+  else {
+    return std::vector<float>(1,0);
+  }
+}
+
+std::vector<float>
+gr_block::pc_output_buffers_full_var()
+{
+  if(d_detail) {
+    return d_detail->pc_output_buffers_full_var();
   }
   else {
     return std::vector<float>(1,0);
@@ -344,6 +457,25 @@ gr_block::pc_work_time()
   }
   else {
     return 0;
+  }
+}
+
+float
+gr_block::pc_work_time_var()
+{
+  if(d_detail) {
+    return d_detail->pc_work_time_var();
+  }
+  else {
+    return 0;
+  }
+}
+
+void
+gr_block::reset_perf_counters()
+{
+  if(d_detail) {
+    d_detail->reset_perf_counters();
   }
 }
 

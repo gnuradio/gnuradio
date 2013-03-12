@@ -55,7 +55,18 @@ class GR_CORE_API gr_message_debug : public gr_block
    * \param msg A pmt message passed from the scheduler's message handling.
    */
   void print(pmt::pmt_t msg);
-  void print_verbose(pmt::pmt_t msg);
+
+  /*!
+   * \brief PDU formatted messages received in this port are printed to stdout.
+   *
+   * This port receives messages from the scheduler's message handling
+   * mechanism and prints it to stdout. This message handler function
+   * is only meant to be used by the scheduler to handle messages
+   * posted to port 'print'.
+   *
+   * \param pdu A PDU message passed from the scheduler's message handling.
+   */
+  void print_pdu(pmt::pmt_t pdu);
 
   /*!
    * \brief Messages received in this port are stored in a vector.

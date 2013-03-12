@@ -39,7 +39,9 @@ SEED = 1239
 # We need this many to let the frequency recovery block converge.
 DATA_LENGTH = 2000
 # Test fails if fraction of output that is correct is less than this.
-REQ_CORRECT = 0.7
+EASY_REQ_CORRECT = 0.9
+# For constellations that aren't expected to work so well.
+MEDIUM_REQ_CORRECT = 0.8
 
 # CHANNEL PARAMETERS
 NOISE_VOLTAGE = 0.01
@@ -78,25 +80,33 @@ class test_constellation_receiver (gr_unittest.TestCase):
         self.indices = alignment.random_sample(
             self.max_data_length, self.max_num_samples, SEED)
 
-        for constellation, differential in tested_constellations():
-            # The constellation_receiver doesn't work for constellations
-            # of multple dimensions (i.e. multiple complex numbers to a
-            # single symbol).
-            # That is not implemented since the receiver has no way of
-            # knowing where the beginning of a symbol is.
-            # It also doesn't work for non-differential modulation.
-            if constellation.dimensionality() != 1 or not differential:
-                continue
-            data_length = DATA_LENGTH * constellation.bits_per_symbol()
-            tb = rec_test_tb(constellation, differential,
-                             src_data=self.src_data[:data_length])
-            tb.run()
-            data = tb.dst.data()
-            d1 = tb.src_data[:int(len(tb.src_data)*self.ignore_fraction)]
-            d2 = data[:int(len(data)*self.ignore_fraction)]
-            correct, overlap, offset, indices = alignment.align_sequences(
-                d1, d2, indices=self.indices)
-            self.assertTrue(correct > REQ_CORRECT)
+        requirements = (
+            (EASY_REQ_CORRECT, tested_constellations(easy=True, medium=False, difficult=False)),
+            (MEDIUM_REQ_CORRECT, tested_constellations(easy=False, medium=True, difficult=False)),
+            )
+        for req_correct, tcs in requirements:
+            for constellation, differential in tcs:
+                # The constellation_receiver doesn't work for constellations
+                # of multple dimensions (i.e. multiple complex numbers to a
+                # single symbol).
+                # That is not implemented since the receiver has no way of
+                # knowing where the beginning of a symbol is.
+                # It also doesn't work for non-differential modulation.
+                if constellation.dimensionality() != 1 or not differential:
+                    continue
+                data_length = DATA_LENGTH * constellation.bits_per_symbol()
+                tb = rec_test_tb(constellation, differential,
+                                 src_data=self.src_data[:data_length])
+                tb.run()
+                data = tb.dst.data()
+                d1 = tb.src_data[:int(len(tb.src_data)*self.ignore_fraction)]
+                d2 = data[:int(len(data)*self.ignore_fraction)]
+                correct, overlap, offset, indices = alignment.align_sequences(
+                    d1, d2, indices=self.indices)
+                if correct <= req_correct:
+                    print("Constellation is {0}. Differential is {1}.  Required correct is {2}. Correct is {3}. FAIL.".
+                          format(constellation, differential, req_correct, correct))
+                self.assertTrue(correct > req_correct)
             
 
 class rec_test_tb (gr.top_block):

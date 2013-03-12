@@ -276,6 +276,80 @@ class DIGITAL_API digital_constellation_rect : public digital_constellation_sect
   
 };
 
+/************************************************************/
+/* digital_constellation_expl_rect                               */
+/************************************************************/
+
+/*!
+ * \brief Rectangular digital constellation
+ * \ingroup digital
+ *
+ * Only implemented for 1-(complex)dimensional constellation.
+ *
+ * Constellation space is divided into rectangular sectors. Each
+ * sector is associated with the nearest constellation point.
+ *
+ * This class is different from constellation_rect in that the mapping
+ * from sector to constellation point is explicitly passed into the
+ * constructor as sector_values.  Usually we do not need this, since
+ * we want each sector to be automatically mapped to the closest
+ * constellation point, however sometimes it's nice to have the
+ * flexibility.
+ */
+
+class digital_constellation_expl_rect;
+typedef boost::shared_ptr<digital_constellation_expl_rect> digital_constellation_expl_rect_sptr;
+
+// public constructor
+DIGITAL_API digital_constellation_expl_rect_sptr 
+digital_make_constellation_expl_rect (
+  std::vector<gr_complex> constellation,
+  std::vector<unsigned int> pre_diff_code,
+  unsigned int rotational_symmetry,
+  unsigned int real_sectors,
+  unsigned int imag_sectors,
+  float width_real_sectors,
+  float width_imag_sectors,
+  std::vector<unsigned int> sector_values
+);
+
+class DIGITAL_API digital_constellation_expl_rect : public digital_constellation_rect
+{
+ public:
+
+  digital_constellation_expl_rect (
+    std::vector<gr_complex> constellation,
+    std::vector<unsigned int> pre_diff_code,
+    unsigned int rotational_symmetry,
+    unsigned int real_sectors,
+    unsigned int imag_sectors,
+    float width_real_sectors,
+    float width_imag_sectors,
+    std::vector<unsigned int> sector_values
+  );
+
+ protected:
+  unsigned int calc_sector_value (unsigned int sector) {
+    return d_sector_values[sector];
+  }
+
+ private:
+  std::vector<unsigned int> d_sector_values;
+
+  friend DIGITAL_API digital_constellation_expl_rect_sptr
+  digital_make_constellation_expl_rect (
+    std::vector<gr_complex> constellation,
+    std::vector<unsigned int> pre_diff_code,
+    unsigned int rotational_symmetry,
+    unsigned int real_sectors,
+    unsigned int imag_sectors,
+    float width_real_sectors,
+    float width_imag_sectors,
+    std::vector<unsigned int> sector_values
+  );
+  
+};
+
 
 /************************************************************/
 /* digital_constellation_psk                                */

@@ -1,0 +1,68 @@
+<?xml version="1.0"?>
+<!--
+###################################################
+##Unpacked to Packed
+###################################################
+ -->
+<block>
+	<name>Unpacked to Packed</name>
+	<key>blocks_unpacked_to_packed_xx</key>
+	<import>from gnuradio import blocks</import>
+	<make>blocks.unpacked_to_packed_$(type.fcn)($bits_per_chunk, $endianness)</make>
+	<param>
+		<name>Type</name>
+		<key>type</key>
+		<type>enum</type>
+		<option>
+			<name>Int</name>
+			<key>int</key>
+			<opt>fcn:ii</opt>
+		</option>
+		<option>
+			<name>Short</name>
+			<key>short</key>
+			<opt>fcn:ss</opt>
+		</option>
+		<option>
+			<name>Byte</name>
+			<key>byte</key>
+			<opt>fcn:bb</opt>
+		</option>
+	</param>
+	<param>
+		<name>Bits per Chunk</name>
+		<key>bits_per_chunk</key>
+		<value>2</value>
+		<type>int</type>
+	</param>
+	<param>
+		<name>Endianness</name>
+		<key>endianness</key>
+		<type>int</type>
+		<option>
+			<name>MSB</name>
+			<key>gr.GR_MSB_FIRST</key>
+		</option>
+		<option>
+			<name>LSB</name>
+			<key>gr.GR_LSB_FIRST</key>
+		</option>
+	</param>
+	<param>
+		<name>Num Ports</name>
+		<key>num_ports</key>
+		<value>1</value>
+		<type>int</type>
+	</param>
+	<check>$num_ports &gt; 0</check>
+	<sink>
+		<name>in</name>
+		<type>$type</type>
+		<nports>$num_ports</nports>
+	</sink>
+	<source>
+		<name>out</name>
+		<type>$type</type>
+		<nports>$num_ports</nports>
+	</source>
+</block>

@@ -48,6 +48,7 @@
 // #include <gr_fir_sss_mmx.h>
 // #include <gr_fir_sss_sse2.h>
 
+
 #include <iostream>
 using std::cerr;
 
@@ -207,7 +208,7 @@ gr_fir_sysconfig_x86::create_gr_fir_fcc (const std::vector<gr_complex> &taps)
 
   if (gr_cpu::has_3dnow ()){
     if (first){
-      cerr << ">>> gr_fir_fcc: using 3DNow!\n";
+      cerr << ">>> gr_fir_fcc: gr_fir_fcc: using 3DNow!\n";
       first = false;
     }
     return make_gr_fir_fcc_3dnow (taps);
@@ -215,7 +216,7 @@ gr_fir_sysconfig_x86::create_gr_fir_fcc (const std::vector<gr_complex> &taps)
 
   if (gr_cpu::has_sse ()){
     if (first){
-      cerr << ">>> gr_fir_fcc: using SSE\n";
+      cerr << ">>> gr_fir_fcc: gr_fir_fcc: using SSE\n";
       first = false;
     }
     return make_gr_fir_fcc_sse (taps);
@@ -326,19 +327,26 @@ gr_fir_sysconfig_x86::create_gr_fir_sss (const std::vector<short> &taps)
 {
   // FIXME -- probably want to figure out best answer for Athlon and code
   // add code to select it here...
+  static bool first = true;
 
   if (gr_cpu::has_sse2 ()){
-    cerr << ">>> gr_fir_sss: using SSE2\n";
-    return make_gr_fir_sss_sse2 (taps);
+    if(first) {
+      cerr << ">>> gr_fir_sss: using SSE2\n";
+      return make_gr_fir_sss_sse2 (taps);
+    }
   }
 
   if (gr_cpu::has_mmx ()){
-    cerr << ">>> gr_fir_sss: using MMX\n";
-    return make_gr_fir_sss_mmx (taps);
+    if(first) {
+      cerr << ">>> gr_fir_sss: using MMX\n";
+      return make_gr_fir_sss_mmx (taps);
+    }
   }
 
-  cerr << ">>> gr_fir_sss: handing off to parent class\n";
-  return gr_fir_sysconfig_generic::create_gr_fir_sss (taps);
+  if(first) {
+    cerr << ">>> gr_fir_sss: handing off to parent class\n";
+    return gr_fir_sysconfig_generic::create_gr_fir_sss (taps);
+  }
 }
 #endif
 

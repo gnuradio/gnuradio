@@ -1,4 +1,4 @@
-# Copyright 2012 Free Software Foundation, Inc.
+# Copyright 2012-2013 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -97,10 +97,14 @@ include_directories(
     ${GNURADIO_CORE_INCLUDE_DIRS}
     ${VOLK_INCLUDE_DIRS}
     ${GRUEL_INCLUDE_DIRS}
+    ${LOG4CXX_INCLUDE_DIRS}
     ${Boost_INCLUDE_DIRS}
 )
 
-link_directories(${Boost_LIBRARY_DIRS})
+link_directories(
+  ${Boost_LIBRARY_DIRS}
+  ${LOG4CXX_LIBRARIES}
+)
 
 ########################################################################
 # Setup library
@@ -136,6 +140,20 @@ list(APPEND filter_sources
   single_pole_iir_filter_ff_impl.cc
   channel_model_impl.cc
 )
+
+#Add Windows DLL resource file if using MSVC
+if(MSVC)
+    include(${CMAKE_SOURCE_DIR}/cmake/Modules/GrVersion.cmake)
+
+    configure_file(
+        ${CMAKE_CURRENT_SOURCE_DIR}/gnuradio-filter.rc.in
+        ${CMAKE_CURRENT_BINARY_DIR}/gnuradio-filter.rc
+    @ONLY)
+
+    list(APPEND filter_sources
+        ${CMAKE_CURRENT_BINARY_DIR}/gnuradio-filter.rc
+    )
+endif(MSVC)
 
 list(APPEND filter_libs
     gnuradio-core

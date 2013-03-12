@@ -495,15 +495,13 @@ gr_modtool help -- Show a list of commands.
 gr_modtool help <command> -- Shows the help for a given command. '''
 
 # SWIG string
-Templates['swig_block_magic'] = """#if $version == '37'
-#set $mod_block_sep = '/'
-#set $block_magic_version = '2'
+Templates['swig_block_magic'] = """#if $version == '36'
+GR_SWIG_BLOCK_MAGIC($modname, $blockname);
+%include "${modname}_${blockname}.h"
 #else
-#set $mod_block_sep = '_'
-#set $block_magic_version = ''
+%include "${modname}/${blockname}.h"
+GR_SWIG_BLOCK_MAGIC2($modname, $blockname);
 #end if
-%include "${modname}${mod_block_sep}${blockname}.h"
-GR_SWIG_BLOCK_MAGIC${block_magic_version}($modname, $blockname);
 """
 
 ## Old stuff

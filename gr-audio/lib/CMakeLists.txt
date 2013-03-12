@@ -1,4 +1,4 @@
-# Copyright 2011 Free Software Foundation, Inc.
+# Copyright 2011,2013 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -30,7 +30,10 @@ include_directories(
 
 link_directories(${Boost_LIBRARY_DIRS})
 
-list(APPEND gr_audio_libs gnuradio-core ${Boost_LIBRARIES})
+include_directories(${LOG4CXX_INCLUDE_DIRS})
+link_directories(${LOG4CXX_LIBRARY_DIRS})
+
+list(APPEND gr_audio_libs gnuradio-core ${Boost_LIBRARIES} ${LOG4CXX_LIBRARIES})
 list(APPEND gr_audio_sources gr_audio_registry.cc)
 list(APPEND gr_audio_confs ${CMAKE_CURRENT_SOURCE_DIR}/gr-audio.conf)
 
@@ -141,6 +144,20 @@ if(WIN32)
         ${CMAKE_CURRENT_SOURCE_DIR}/windows/audio_windows_source.cc
         ${CMAKE_CURRENT_SOURCE_DIR}/windows/audio_windows_sink.cc
     )
+
+    #Add Windows DLL resource file if using MSVC
+    IF(MSVC)
+        include(${CMAKE_SOURCE_DIR}/cmake/Modules/GrVersion.cmake)
+
+        configure_file(
+            ${CMAKE_CURRENT_SOURCE_DIR}/gnuradio-audio.rc.in
+            ${CMAKE_CURRENT_BINARY_DIR}/gnuradio-audio.rc
+        @ONLY)
+
+        list(APPEND gr_audio_sources
+            ${CMAKE_CURRENT_BINARY_DIR}/gnuradio-audio.rc
+        )
+    ENDIF()
 
 endif(WIN32)
 

@@ -24,6 +24,7 @@
 #include "config.h"
 #endif
 
+#include <gruel/thread.h>
 #include <gr_file_source.h>
 #include <gr_io_signature.h>
 #include <cstdio>

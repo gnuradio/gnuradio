@@ -1,4 +1,4 @@
-# Copyright 2011 Free Software Foundation, Inc.
+# Copyright 2011,2013 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -29,6 +29,9 @@ include_directories(
 
 link_directories(${Boost_LIBRARY_DIRS})
 
+include_directories(${LOG4CXX_INCLUDE_DIRS})
+link_directories(${LOG4CXX_LIBRARY_DIRS})
+
 ########################################################################
 # Setup library
 ########################################################################
@@ -38,9 +41,24 @@ list(APPEND gr_noaa_sources
     noaa_hrpt_pll_cf.cc
 )
 
+#Add Windows DLL resource file if using MSVC
+if(MSVC)
+    include(${CMAKE_SOURCE_DIR}/cmake/Modules/GrVersion.cmake)
+
+    configure_file(
+        ${CMAKE_CURRENT_SOURCE_DIR}/gnuradio-noaa.rc.in
+        ${CMAKE_CURRENT_BINARY_DIR}/gnuradio-noaa.rc
+    @ONLY)
+
+    list(APPEND gr_noaa_sources
+        ${CMAKE_CURRENT_BINARY_DIR}/gnuradio-noaa.rc
+    )
+endif(MSVC)
+
 list(APPEND noaa_libs
     gnuradio-core
     ${Boost_LIBRARIES}
+    ${LOG4CXX_LIBRARIES}
 )
 
 add_library(gnuradio-noaa SHARED ${gr_noaa_sources})

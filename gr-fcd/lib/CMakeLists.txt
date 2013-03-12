@@ -1,4 +1,4 @@
-# Copyright 2012 Free Software Foundation, Inc.
+# Copyright 2012-2013 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -36,6 +36,9 @@ include_directories(
 
 link_directories(${Boost_LIBRARY_DIRS})
 
+include_directories(${LOG4CXX_INCLUDE_DIRS})
+link_directories(${LOG4CXX_LIBRARY_DIRS})
+
 ########################################################################
 # Setup library
 ########################################################################
@@ -51,6 +54,18 @@ list(APPEND fcd_libs
 
 if (WIN32)
 	list(APPEND fcd_libs setupapi)
+
+    #Add Windows DLL resource file if using MSVC
+    if(MSVC)
+        include(${CMAKE_SOURCE_DIR}/cmake/Modules/GrVersion.cmake)
+
+        configure_file(
+            ${CMAKE_CURRENT_SOURCE_DIR}/gnuradio-fcd.rc.in
+            ${CMAKE_CURRENT_BINARY_DIR}/gnuradio-fcd.rc
+        @ONLY)
+
+        list(APPEND gr_fcd_sources ${CMAKE_CURRENT_BINARY_DIR}/gnuradio-fcd.rc)
+    endif(MSVC)
 endif()
 
 if(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
@@ -67,7 +82,7 @@ add_library(gnuradio-fcd SHARED ${gr_fcd_sources})
 if (LINUX)
   list(APPEND fcd_libs rt)
 endif()
-target_link_libraries(gnuradio-fcd ${fcd_libs})
+target_link_libraries(gnuradio-fcd ${fcd_libs} ${LOG4CXX_LIBRARIES})
 
 
 GR_LIBRARY_FOO(gnuradio-fcd RUNTIME_COMPONENT "fcd_runtime" DEVEL_COMPONENT "fcd_devel")

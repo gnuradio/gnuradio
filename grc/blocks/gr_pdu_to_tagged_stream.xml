@@ -16,17 +16,17 @@
         <option>
             <name>Byte</name>
             <key>byte</key>
-            <opt>tv:gr.BYTE</opt>
+            <opt>tv:gr.pdu_byte</opt>
         </option>
         <option>
             <name>Complex</name>
             <key>complex</key>
-            <opt>tv:gr.COMPLEX</opt>
+            <opt>tv:gr.pdu_complex</opt>
         </option>
         <option>
             <name>Float</name>
             <key>float</key>
-            <opt>tv:gr.FLOAT</opt>
+            <opt>tv:gr.pdu_float</opt>
         </option>
     </param>
 	<sink>

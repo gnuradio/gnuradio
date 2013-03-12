@@ -102,6 +102,33 @@ public:
 			      float width_real_sectors, float width_imag_sectors);
 };
 
+class digital_constellation_expl_rect;
+typedef boost::shared_ptr<digital_constellation_expl_rect> digital_constellation_expl_rect_sptr;
+%template(digital_constellation_expl_rect_sptr) boost::shared_ptr<digital_constellation_expl_rect>;
+%rename(constellation_expl_rect) digital_make_constellation_expl_rect;
+digital_constellation_expl_rect_sptr digital_make_constellation_expl_rect(
+  std::vector<gr_complex> constellation,
+  std::vector<unsigned int> pre_diff_code,
+  unsigned int rotational_symmetry,
+  unsigned int real_sectors, unsigned int imag_sectors,
+  float width_real_sectors, float width_imag_sectors,
+  std::vector<unsigned int> sector_values
+);
+%ignore digital_constellation_expl_rect;
+
+class digital_constellation_expl_rect : public digital_constellation_rect
+{
+public:
+  digital_constellation_expl_rect (
+    std::vector<gr_complex> constellation,
+    std::vector<unsigned int> pre_diff_code,
+    unsigned int rotational_symmetry,
+    unsigned int real_sectors, unsigned int imag_sectors,
+    float width_real_sectors, float width_imag_sectors,
+    std::vector<unsigned int> sector_values
+  );
+};
+
 class digital_constellation_psk;
 typedef boost::shared_ptr<digital_constellation_psk> digital_constellation_psk_sptr;
 %template(digital_constellation_psk_sptr) boost::shared_ptr<digital_constellation_psk>;
@@ -198,6 +225,7 @@ public:
 
 digital_constellation_calcdist_sptr.__repr__ = lambda self: '<constellation calcdist (m=%s)>' % str(len(self.points()))
 digital_constellation_rect_sptr.__repr__ = lambda self: '<constellation rect (m=%s)>' % str(len(self.points()))
+digital_constellation_expl_rect_sptr.__repr__ = lambda self: '<constellation expl_rect (m=%s)>' % str(len(self.points()))
 digital_constellation_psk_sptr.__repr__ = lambda self: '<constellation psk (m=%s)>' % str(len(self.points()))
 digital_constellation_bpsk_sptr.__repr__ = lambda self: '<constellation bpsk>'
 digital_constellation_qpsk_sptr.__repr__ = lambda self: '<constellation qpsk>'

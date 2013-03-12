@@ -123,6 +123,7 @@ install(FILES
     digital_scrambler_bb.h
     digital_simple_framer.h
     digital_simple_framer_sync.h
+    digital_simple_correlator.h
     DESTINATION ${GR_INCLUDE_DIR}/gnuradio
     COMPONENT "digital_devel"
 )

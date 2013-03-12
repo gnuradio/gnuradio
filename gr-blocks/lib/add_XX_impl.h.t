@@ -32,6 +32,7 @@ namespace gr {
 
     class BLOCKS_API @NAME_IMPL@ : public @NAME@
     {
+    private:
       size_t d_vlen;
 
     public:

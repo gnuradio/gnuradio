@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<!--
+###################################################
+##VCO
+###################################################
+ -->
+<block>
+	<name>VCO</name>
+	<key>blocks_vco_f</key>
+	<import>from gnuradio import blocks</import>
+	<make>blocks.vco_f($samp_rate, $sensitivity, $amplitude)</make>
+	<param>
+		<name>Sample Rate</name>
+		<key>samp_rate</key>
+		<type>real</type>
+	</param>
+	<param>
+		<name>Sensitivity</name>
+		<key>sensitivity</key>
+		<type>real</type>
+	</param>
+	<param>
+		<name>Amplitude</name>
+		<key>amplitude</key>
+		<type>real</type>
+	</param>
+	<sink>
+		<name>in</name>
+		<type>float</type>
+	</sink>
+	<source>
+		<name>out</name>
+		<type>float</type>
+	</source>
+</block>

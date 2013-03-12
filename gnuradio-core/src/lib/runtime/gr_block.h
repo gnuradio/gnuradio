@@ -26,6 +26,7 @@
 #include <gr_core_api.h>
 #include <gr_basic_block.h>
 #include <gr_tags.h>
+#include <gr_logger.h>
 
 /*!
  * \brief The abstract base class for all 'terminal' processing blocks.
@@ -383,14 +384,29 @@ class GR_CORE_API gr_block : public gr_basic_block {
   float pc_noutput_items();
 
   /*!
+   * \brief Gets variance of noutput_items performance counter.
+   */
+  float pc_noutput_items_var();
+
+  /*!
    * \brief Gets average num items produced performance counter.
    */
   float pc_nproduced();
 
   /*!
-   * \brief Gets average average fullness of \p which input buffer.
+   * \brief Gets variance of  num items produced performance counter.
+   */
+  float pc_nproduced_var();
+
+  /*!
+   * \brief Gets average fullness of \p which input buffer.
    */
   float pc_input_buffers_full(int which);
+
+  /*!
+   * \brief Gets variance of fullness of \p which input buffer.
+   */
+  float pc_input_buffers_full_var(int which);
 
   /*!
    * \brief Gets average fullness of all input buffers.
@@ -398,19 +414,43 @@ class GR_CORE_API gr_block : public gr_basic_block {
   std::vector<float> pc_input_buffers_full();
 
   /*!
+   * \brief Gets variance of fullness of all input buffers.
+   */
+  std::vector<float> pc_input_buffers_full_var();
+
+  /*!
    * \brief Gets average fullness of \p which input buffer.
    */
   float pc_output_buffers_full(int which);
 
   /*!
+   * \brief Gets variance of fullness of \p which input buffer.
+   */
+  float pc_output_buffers_full_var(int which);
+
+  /*!
    * \brief Gets average fullness of all output buffers.
    */
   std::vector<float> pc_output_buffers_full();
+  /*!
+   * \brief Gets variance of fullness of all output buffers.
+   */
+  std::vector<float> pc_output_buffers_full_var();
 
   /*!
    * \brief Gets average clock cycles spent in work.
    */
   float pc_work_time();
+
+  /*!
+   * \brief Gets average clock cycles spent in work.
+   */
+  float pc_work_time_var();
+
+  /*!
+   * \brief Resets the performance counters
+   */
+  void reset_perf_counters();
 
 
   // ----------------------------------------------------------------------------
@@ -445,9 +485,9 @@ class GR_CORE_API gr_block : public gr_basic_block {
   gr_block_detail_sptr	d_detail;		// implementation details
   unsigned              d_history;
   bool                  d_fixed_rate;
-  int                   d_min_noutput_items;
   bool                  d_max_noutput_items_set;     // if d_max_noutput_items is valid
   int                   d_max_noutput_items;         // value of max_noutput_items for this block
+  int                   d_min_noutput_items;
   tag_propagation_policy_t d_tag_propagation_policy; // policy for moving tags downstream
   std::vector<unsigned int> d_affinity;              // thread affinity proc. mask
 
@@ -570,6 +610,17 @@ class GR_CORE_API gr_block : public gr_basic_block {
   std::vector<long>    d_max_output_buffer;
   std::vector<long>    d_min_output_buffer;
 
+  /*! Used by block's setters and work functions to make
+   * setting/resetting of parameters thread-safe.
+   *
+   * Used by calling gruel::scoped_lock l(d_setlock);
+   */ 
+  gruel::mutex d_setlock;
+
+  /*! Used by blocks to access the logger system.
+   */ 
+  gr_logger_ptr d_logger;
+  gr_logger_ptr d_debug_logger;
 
   // These are really only for internal use, but leaving them public avoids
   // having to work up an ever-varying list of friend GR_CORE_APIs

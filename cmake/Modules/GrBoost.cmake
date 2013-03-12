@@ -39,6 +39,8 @@ if(UNIX AND NOT BOOST_ROOT AND EXISTS "/usr/lib64")
 endif(UNIX AND NOT BOOST_ROOT AND EXISTS "/usr/lib64")
 
 if(MSVC)
+    set(BOOST_REQUIRED_COMPONENTS ${BOOST_REQUIRED_COMPONENTS} chrono)
+
     if (NOT DEFINED BOOST_ALL_DYN_LINK)
         set(BOOST_ALL_DYN_LINK TRUE)
     endif()
@@ -81,7 +83,7 @@ endif(ENABLE_BAD_BOOST)
 #     YY is the minor version number ('46' for 1.46)
 #     ZZ is the patcher version number (typically just '00')
 set(Boost_NOGO_VERSIONS
-  104600 104700 105200
+  104600 104601 104700 105200
   )
 
 foreach(ver ${Boost_NOGO_VERSIONS})

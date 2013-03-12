@@ -29,6 +29,9 @@ include_directories(
 
 link_directories(${Boost_LIBRARY_DIRS})
 
+include_directories(${LOG4CXX_INCLUDE_DIRS})
+link_directories(${LOG4CXX_LIBRARY_DIRS})
+
 ########################################################################
 # Setup library
 ########################################################################
@@ -51,6 +54,20 @@ list(APPEND gr_vocoder_sources
     vocoder_ulaw_encode_sb.cc
 )
 
+#Add Windows DLL resource file if using MSVC
+if(MSVC)
+    include(${CMAKE_SOURCE_DIR}/cmake/Modules/GrVersion.cmake)
+
+    configure_file(
+        ${CMAKE_CURRENT_SOURCE_DIR}/gnuradio-vocoder.rc.in
+        ${CMAKE_CURRENT_BINARY_DIR}/gnuradio-vocoder.rc
+    @ONLY)
+
+    list(APPEND gr_uhd_sources
+        ${CMAKE_CURRENT_BINARY_DIR}/gnuradio-vocoder.rc
+    )
+endif(MSVC)
+
 ########################################################################
 # Include subdirs rather to populate to the sources lists.
 ########################################################################
@@ -61,6 +78,7 @@ GR_INCLUDE_SUBDIRECTORY(gsm)
 list(APPEND vocoder_libs
     gnuradio-core
     ${Boost_LIBRARIES}
+    ${LOG4CXX_LIBRARIES}
 )
 
 add_library(gnuradio-vocoder SHARED ${gr_vocoder_sources})

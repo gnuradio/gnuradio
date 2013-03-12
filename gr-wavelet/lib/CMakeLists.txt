@@ -35,6 +35,9 @@ link_directories(${Boost_LIBRARY_DIRS})
 link_directories(${GSL_LIBRARY_DIRS})
 add_definitions(${GSL_DEFINITIONS})
 
+include_directories(${LOG4CXX_INCLUDE_DIRS})
+link_directories(${LOG4CXX_LIBRARY_DIRS})
+
 ########################################################################
 # Setup library
 ########################################################################
@@ -44,11 +47,26 @@ list(APPEND gr_wavelet_sources
     wavelet_wvps_ff_impl.cc
 )
 
+#Add Windows DLL resource file if using MSVC
+if(MSVC)
+    include(${CMAKE_SOURCE_DIR}/cmake/Modules/GrVersion.cmake)
+
+    configure_file(
+        ${CMAKE_CURRENT_SOURCE_DIR}/gnuradio-wavelet.rc.in
+        ${CMAKE_CURRENT_BINARY_DIR}/gnuradio-wavelet.rc
+    @ONLY)
+
+    list(APPEND gr_wavelet_sources
+        ${CMAKE_CURRENT_BINARY_DIR}/gnuradio-wavelet.rc
+    )
+endif(MSVC)
+
 list(APPEND wavelet_libs
     gnuradio-core
     ${Boost_LIBRARIES}
     ${WAVELET_LIBRARIES}
     ${GSL_LIBRARIES}
+    ${LOG4CXX_LIBRARIES}
 )
 
 add_library(gnuradio-wavelet SHARED ${gr_wavelet_sources})

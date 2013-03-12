@@ -1,4 +1,4 @@
-# Copyright 2011,2012 Free Software Foundation, Inc.
+# Copyright 2011-2013 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -26,10 +26,12 @@ include_directories(
     ${GR_ANALOG_INCLUDE_DIRS}
     ${GNURADIO_CORE_INCLUDE_DIRS}
     ${GRUEL_INCLUDE_DIRS}
+    ${LOG4CXX_INCLUDE_DIRS}
     ${Boost_INCLUDE_DIRS}
 )
 
 link_directories(${Boost_LIBRARY_DIRS})
+link_directories(${LOG4CXX_LIBRARY_DIRS})
 
 ########################################################################
 # generate helper scripts to expand templated files
@@ -90,6 +92,7 @@ expand_cc(digital_chunks_to_symbols_XX         bf bc sf sc if ic)
 ########################################################################
 # Setup library
 ########################################################################
+
 list(APPEND gr_digital_sources
     ${generated_sources}
     digital_impl_glfsr.cc
@@ -136,11 +139,27 @@ list(APPEND gr_digital_sources
     digital_probe_mpsk_snr_est_c.cc
     digital_scrambler_bb.cc
     digital_simple_framer.cc
+    digital_simple_correlator.cc
 )
+
+#Add Windows DLL resource file if using MSVC
+IF(MSVC)
+    include(${CMAKE_SOURCE_DIR}/cmake/Modules/GrVersion.cmake)
+
+    configure_file(
+        ${CMAKE_CURRENT_SOURCE_DIR}/gnuradio-digital.rc.in
+        ${CMAKE_CURRENT_BINARY_DIR}/gnuradio-digital.rc
+    @ONLY)
+
+    list(APPEND gr_digital_sources
+        ${CMAKE_CURRENT_BINARY_DIR}/gnuradio-digital.rc
+    )
+ENDIF(MSVC)
 
 list(APPEND digital_libs
     gnuradio-core
     ${Boost_LIBRARIES}
+    ${LOG4CXX_LIBRARIES}
 )
 
 add_library(gnuradio-digital SHARED ${gr_digital_sources})

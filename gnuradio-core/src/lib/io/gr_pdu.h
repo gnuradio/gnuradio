@@ -23,17 +23,18 @@
 #ifndef GR_PDU_H
 #define GR_PDU_H
 
+#include <gr_core_api.h>
 #include <gr_complex.h>
 #include <gruel/pmt.h>
 
-#define pdu_port_id     pmt::mp("pdus")
-#define pdu_length_tag  pmt::mp("pdu_length")
+#define PDU_PORT_ID     pmt::mp("pdus")
+#define PDU_LENGTH_TAG  pmt::mp("pdu_length")
 
 enum gr_pdu_vector_type { pdu_byte, pdu_float, pdu_complex };
 
-size_t gr_pdu_itemsize(gr_pdu_vector_type type);
-bool gr_pdu_type_matches(gr_pdu_vector_type type, pmt::pmt_t v);
-pmt::pmt_t gr_pdu_make_vector(gr_pdu_vector_type type, const uint8_t* buf, size_t items);
-gr_pdu_vector_type type_from_pmt(pmt::pmt_t vector);
+GR_CORE_API size_t gr_pdu_itemsize(gr_pdu_vector_type type);
+GR_CORE_API bool gr_pdu_type_matches(gr_pdu_vector_type type, pmt::pmt_t v);
+GR_CORE_API pmt::pmt_t gr_pdu_make_vector(gr_pdu_vector_type type, const uint8_t* buf, size_t items);
+GR_CORE_API gr_pdu_vector_type type_from_pmt(pmt::pmt_t vector);
 
 #endif

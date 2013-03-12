@@ -20,9 +20,6 @@
  * Boston, MA 02110-1301, USA.
  */
 
-// Generate SWIG directors for gr_prefs.
-%feature("director") gr_prefs;
-
 class gr_prefs
 {
 public:
@@ -34,39 +31,39 @@ public:
   /*!
    * \brief Does \p section exist?
    */
-  virtual bool has_section(const std::string section);
+  virtual bool has_section(const std::string &section);
 
   /*!
    * \brief Does \p option exist?
    */
-  virtual bool has_option(const std::string section, const std::string option);
+  virtual bool has_option(const std::string &section, const std::string &option);
 
   /*!
    * \brief If option exists return associated value; else default_val.
    */
-  virtual const std::string get_string(const std::string section,
-				       const std::string option,
-				       const std::string default_val);
+  virtual const std::string get_string(const std::string &section,
+				       const std::string &option,
+				       const std::string &default_val);
 
   /*!
    * \brief If option exists and value can be converted to bool, return it; else default_val.
    */
-  virtual bool get_bool(const std::string section,
-			const std::string option,
+  virtual bool get_bool(const std::string &section,
+			const std::string &option,
 			bool default_val);
 
   /*!
    * \brief If option exists and value can be converted to long, return it; else default_val.
    */
-  virtual long get_long(const std::string section,
-			const std::string option,
+  virtual long get_long(const std::string &section,
+			const std::string &option,
 			long default_val);
 
   /*!
    * \brief If option exists and value can be converted to double, return it; else default_val.
    */
-  virtual double get_double(const std::string section,
-			    const std::string option,
+  virtual double get_double(const std::string &section,
+			    const std::string &option,
 			    double default_val);
 };
 

@@ -64,6 +64,7 @@ namespace gr {
     void
     @IMPL_NAME@::set_taps(const std::vector<@TAP_TYPE@> &taps)
     {
+      gruel::scoped_lock l(d_setlock);
       d_fir->set_taps(taps);
       d_updated = true;
     }
@@ -79,6 +80,8 @@ namespace gr {
 		      gr_vector_const_void_star &input_items,
 		      gr_vector_void_star &output_items)
     {
+      gruel::scoped_lock l(d_setlock);
+
       const @I_TYPE@ *in = (const @I_TYPE@*)input_items[0];
       @O_TYPE@ *out = (@O_TYPE@*)output_items[0];
       
