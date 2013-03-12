@@ -20,8 +20,7 @@
 # Boston, MA 02110-1301, USA.
 #
 
-from gnuradio import gr, gr_unittest
-import comedi_swig as comedi
+from gnuradio import gr, gr_unittest, comedi
 
 class test_comedi(gr_unittest.TestCase):
 
