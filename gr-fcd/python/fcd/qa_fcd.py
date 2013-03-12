@@ -20,8 +20,7 @@
 # Boston, MA 02110-1301, USA.
 #
 
-from gnuradio import gr, gr_unittest
-import fcd_swig
+from gnuradio import gr, gr_unittest, fcd
 
 class test_fcd(gr_unittest.TestCase):
 
