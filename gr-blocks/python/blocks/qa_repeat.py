@@ -20,8 +20,8 @@
 # Boston, MA 02110-1301, USA.
 #
 
-from gnuradio import gr, gr_unittest
-import blocks_swig
+from gnuradio import gr, gr_unittest, blocks
+
 import math
 
 class test_repeat (gr_unittest.TestCase):
@@ -39,7 +39,7 @@ class test_repeat (gr_unittest.TestCase):
 	    dst_data += [1.0*n, 1.0*n, 1.0*n]
 
 	src = gr.vector_source_f(src_data)
-	rpt = blocks_swig.repeat(gr.sizeof_float, 3)
+	rpt = blocks.repeat(gr.sizeof_float, 3)
 	dst = gr.vector_sink_f()
 	self.tb.connect(src, rpt, dst)
 	self.tb.run()

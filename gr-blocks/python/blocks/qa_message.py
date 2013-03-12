@@ -20,10 +20,10 @@
 # Boston, MA 02110-1301, USA.
 #
 
-from gnuradio import gr, gr_unittest
-import blocks_swig as blocks
-import pmt
 import time
+
+from gnuradio import gr, gr_unittest, blocks
+import pmt
 
 def all_counts():
     return (gr.block_ncurrently_allocated(),

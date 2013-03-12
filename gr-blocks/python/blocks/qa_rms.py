@@ -20,8 +20,8 @@
 # Boston, MA 02110-1301, USA.
 #
 
-from gnuradio import gr, gr_unittest
-import blocks_swig as blocks
+from gnuradio import gr, gr_unittest, blocks
+
 import math
 
 def sig_source_f(samp_rate, freq, amp, N):

@@ -20,8 +20,8 @@
 # Boston, MA 02110-1301, USA.
 #
 
-from gnuradio import gr, gr_unittest
-import blocks_swig
+from gnuradio import gr, gr_unittest, blocks
+
 import os
 
 class test_stream_mux (gr_unittest.TestCase):
@@ -37,7 +37,7 @@ class test_stream_mux (gr_unittest.TestCase):
         v0 = gr.vector_source_f(N*[1,], False)
         v1 = gr.vector_source_f(N*[2,], False)
 
-        mux = blocks_swig.stream_mux(gr.sizeof_float, stream_sizes)
+        mux = blocks.stream_mux(gr.sizeof_float, stream_sizes)
 
         dst = gr.vector_sink_f ()
 
@@ -56,7 +56,7 @@ class test_stream_mux (gr_unittest.TestCase):
         v0 = gr.vector_source_f(r1, False)
         v1 = gr.vector_source_f(r2, False)
 
-        mux = blocks_swig.stream_mux(gr.sizeof_float, stream_sizes)
+        mux = blocks.stream_mux(gr.sizeof_float, stream_sizes)
 
         dst = gr.vector_sink_f ()
 

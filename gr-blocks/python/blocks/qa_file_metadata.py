@@ -20,11 +20,12 @@
 # Boston, MA 02110-1301, USA.
 #
 
-from gnuradio import gr, gr_unittest
-import parse_file_metadata
-import blocks_swig as blocks
-import pmt
 import os, math
+
+from gnuradio import gr, gr_unittest, blocks
+import pmt
+
+import parse_file_metadata
 
 def sig_source_c(samp_rate, freq, amp, N):
     t = map(lambda x: float(x)/samp_rate, xrange(N))

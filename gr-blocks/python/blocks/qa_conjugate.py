@@ -20,8 +20,7 @@
 # Boston, MA 02110-1301, USA.
 #
 
-from gnuradio import gr, gr_unittest
-import blocks_swig
+from gnuradio import gr, gr_unittest, blocks
 
 class test_conjugate (gr_unittest.TestCase):
 
@@ -41,7 +40,7 @@ class test_conjugate (gr_unittest.TestCase):
                      0-0j)
 
         src = gr.vector_source_c(src_data)
-        op = blocks_swig.conjugate_cc ()
+        op = blocks.conjugate_cc ()
         dst = gr.vector_sink_c ()
 
         self.tb.connect(src, op)

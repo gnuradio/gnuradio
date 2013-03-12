@@ -20,8 +20,7 @@
 # Boston, MA 02110-1301, USA.
 #
 
-from gnuradio import gr, gr_unittest
-import blocks_swig
+from gnuradio import gr, gr_unittest, blocks
 
 class test_nlog10(gr_unittest.TestCase):
 
@@ -35,7 +34,7 @@ class test_nlog10(gr_unittest.TestCase):
         src_data = (-10, 0, 10, 100, 1000, 10000, 100000)
         expected_result = (-180, -180, 10, 20, 30, 40, 50)
         src = gr.vector_source_f(src_data)
-        op = blocks_swig.nlog10_ff(10)
+        op = blocks.nlog10_ff(10)
         dst = gr.vector_sink_f()
         self.tb.connect (src, op, dst)
         self.tb.run()

@@ -20,11 +20,8 @@
 # Boston, MA 02110-1301, USA.
 #
 
-from gnuradio import gr, gr_unittest
-try:
-    import blocks_swig as blocks
-except:
-    from gnuradio import blocks
+from gnuradio import gr, gr_unittest, blocks
+
 import math
 
 class test_patterned_interleaver (gr_unittest.TestCase):

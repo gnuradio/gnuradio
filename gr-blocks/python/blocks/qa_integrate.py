@@ -20,8 +20,8 @@
 # Boston, MA 02110-1301, USA.
 #
 
-from gnuradio import gr, gr_unittest
-import blocks_swig
+from gnuradio import gr, gr_unittest, blocks
+
 import math
 
 class test_integrate (gr_unittest.TestCase):
@@ -36,7 +36,7 @@ class test_integrate (gr_unittest.TestCase):
 	src_data = (1, 2, 3, 4, 5, 6)
 	dst_data = (6, 15)
 	src = gr.vector_source_s(src_data)
-	itg = blocks_swig.integrate_ss(3)
+	itg = blocks.integrate_ss(3)
 	dst = gr.vector_sink_s()
 	self.tb.connect(src, itg, dst)
 	self.tb.run()
@@ -46,7 +46,7 @@ class test_integrate (gr_unittest.TestCase):
 	src_data = (1, 2, 3, 4, 5, 6)
 	dst_data = (6, 15)
 	src = gr.vector_source_i(src_data)
-	itg = blocks_swig.integrate_ii(3)
+	itg = blocks.integrate_ii(3)
 	dst = gr.vector_sink_i()
 	self.tb.connect(src, itg, dst)
 	self.tb.run()
@@ -56,7 +56,7 @@ class test_integrate (gr_unittest.TestCase):
 	src_data = [1.0, 2.0, 3.0, 4.0, 5.0, 6.0]
 	dst_data = [6.0, 15.0]
 	src = gr.vector_source_f(src_data)
-	itg = blocks_swig.integrate_ff(3)
+	itg = blocks.integrate_ff(3)
 	dst = gr.vector_sink_f()
 	self.tb.connect(src, itg, dst)
 	self.tb.run()
@@ -66,7 +66,7 @@ class test_integrate (gr_unittest.TestCase):
 	src_data = [1.0+1.0j, 2.0+2.0j, 3.0+3.0j, 4.0+4.0j, 5.0+5.0j, 6.0+6.0j]
 	dst_data = [6.0+6.0j, 15.0+15.0j]
 	src = gr.vector_source_c(src_data)
-	itg = blocks_swig.integrate_cc(3)
+	itg = blocks.integrate_cc(3)
 	dst = gr.vector_sink_c()
 	self.tb.connect(src, itg, dst)
 	self.tb.run()

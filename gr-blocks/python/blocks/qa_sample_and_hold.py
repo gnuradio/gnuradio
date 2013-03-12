@@ -21,8 +21,7 @@
 #
 
 import time
-from gnuradio import gr, gr_unittest
-import blocks_swig as blocks
+from gnuradio import gr, gr_unittest, blocks
 
 class test_sample_and_hold(gr_unittest.TestCase):
 

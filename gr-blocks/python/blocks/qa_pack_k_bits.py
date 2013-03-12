@@ -20,9 +20,9 @@
 # Boston, MA 02110-1301, USA.
 #
 
-from gnuradio import gr, gr_unittest
-import blocks_swig as blocks
 import random
+
+from gnuradio import gr, gr_unittest, blocks
 
 class test_pack(gr_unittest.TestCase):
 

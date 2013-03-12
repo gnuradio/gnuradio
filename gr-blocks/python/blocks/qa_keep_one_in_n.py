@@ -20,8 +20,7 @@
 # Boston, MA 02110-1301, USA.
 #
 
-from gnuradio import gr, gr_unittest
-import blocks_swig
+from gnuradio import gr, gr_unittest, blocks
 
 class test_keep_one_in_n(gr_unittest.TestCase):
 
@@ -35,7 +34,7 @@ class test_keep_one_in_n(gr_unittest.TestCase):
         src_data = (1, 2, 3, 4, 5, 6, 7, 8, 9, 10)
         expected_data = (5, 10)
         src = gr.vector_source_b(src_data);
-        op = blocks_swig.keep_one_in_n(gr.sizeof_char, 5)
+        op = blocks.keep_one_in_n(gr.sizeof_char, 5)
         dst = gr.vector_sink_b()
         self.tb.connect(src, op, dst)
         self.tb.run()

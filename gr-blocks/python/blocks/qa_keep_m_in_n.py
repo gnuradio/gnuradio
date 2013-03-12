@@ -19,8 +19,8 @@
 # 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 #
 
-from gnuradio import gr, gr_unittest
-import blocks_swig
+from gnuradio import gr, gr_unittest, blocks
+
 import sys
 import random
 
@@ -38,9 +38,9 @@ class test_keep_m_in_n(gr_unittest.TestCase):
         src = gr.vector_source_b( range(0,100) )
 
         # itemsize, M, N, offset
-        km2 = blocks_swig.keep_m_in_n( 1, 1, 2, 0 );
-        km3 = blocks_swig.keep_m_in_n( 1, 1, 3, 1 );
-        km7 = blocks_swig.keep_m_in_n( 1, 1, 7, 2 );
+        km2 = blocks.keep_m_in_n( 1, 1, 2, 0 );
+        km3 = blocks.keep_m_in_n( 1, 1, 3, 1 );
+        km7 = blocks.keep_m_in_n( 1, 1, 7, 2 );
         snk2 = gr.vector_sink_b();
         snk3 = gr.vector_sink_b();
         snk7 = gr.vector_sink_b();

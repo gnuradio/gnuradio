@@ -20,8 +20,7 @@
 # Boston, MA 02110-1301, USA.
 #
 
-from gnuradio import gr, gr_unittest
-import blocks_swig
+from gnuradio import gr, gr_unittest, blocks
 
 class test_add_mult_div_sub(gr_unittest.TestCase):
 
@@ -77,28 +76,28 @@ class test_add_mult_div_sub(gr_unittest.TestCase):
         src1_data = (1,  2, 3, 4, 5)
         src2_data = (8, -3, 4, 8, 2)
         expected_result = (9, -1, 7, 12, 7)
-        op = blocks_swig.add_ss()
+        op = blocks.add_ss()
         self.help_ss((src1_data, src2_data), expected_result, op)
 
     def test_add_ii(self):
         src1_data = (1,  2, 3, 4, 5)
         src2_data = (8, -3, 4, 8, 2)
         expected_result = (9, -1, 7, 12, 7)
-        op = blocks_swig.add_ii()
+        op = blocks.add_ii()
         self.help_ii((src1_data, src2_data), expected_result, op)
 
     def test_add_ff(self):
         src1_data = (1.0,  2.0, 3.0, 4.0, 5.0)
         src2_data = (8.0, -3.0, 4.0, 8.0, 2.0)
         expected_result = (9.0, -1.0, 7.0, 12.0, 7.0)
-        op = blocks_swig.add_ff()
+        op = blocks.add_ff()
         self.help_ff((src1_data, src2_data), expected_result, op)
 
     def test_add_cc(self):
         src1_data = (1+1j,  2+2j, 3+3j, 4+4j, 5+5j)
         src2_data = (8+8j, -3-3j, 4+4j, 8+8j, 2+2j)
         expected_result = (9+9j, -1-1j, 7+7j, 12+12j, 7+7j)
-        op = blocks_swig.add_cc()
+        op = blocks.add_cc()
         self.help_cc((src1_data, src2_data), expected_result, op)
 
     # add_const_XX
@@ -106,25 +105,25 @@ class test_add_mult_div_sub(gr_unittest.TestCase):
     def test_add_const_ss(self):
         src_data = (1, 2, 3, 4, 5)
         expected_result = (6, 7, 8, 9, 10)
-        op = blocks_swig.add_const_ss(5)
+        op = blocks.add_const_ss(5)
         self.help_ss((src_data,), expected_result, op)
 
     def test_add_const_ii(self):
         src_data = (1, 2, 3, 4, 5)
         expected_result = (6, 7, 8, 9, 10)
-        op = blocks_swig.add_const_ii(5)
+        op = blocks.add_const_ii(5)
         self.help_ii((src_data,), expected_result, op)
 
     def test_add_const_ff(self):
         src_data = (1, 2, 3, 4, 5)
         expected_result = (6, 7, 8, 9, 10)
-        op = blocks_swig.add_const_ff(5)
+        op = blocks.add_const_ff(5)
         self.help_ff((src_data,), expected_result, op)
 
     def test_add_const_cc(self):
         src_data = (1, 2, 3, 4, 5)
         expected_result = (1+5j, 2+5j, 3+5j, 4+5j, 5+5j)
-        op = blocks_swig.add_const_cc(5j)
+        op = blocks.add_const_cc(5j)
         self.help_cc((src_data,), expected_result, op)
 
     # multiply_XX
@@ -133,7 +132,7 @@ class test_add_mult_div_sub(gr_unittest.TestCase):
         src1_data = (1,  2, 3, 4, 5)
         src2_data = (8, -3, 4, 8, 2)
         expected_result = (8, -6, 12, 32, 10)
-        op = blocks_swig.multiply_ss()
+        op = blocks.multiply_ss()
         self.help_ss((src1_data, src2_data),
                       expected_result, op)
 
@@ -141,7 +140,7 @@ class test_add_mult_div_sub(gr_unittest.TestCase):
         src1_data = (1,  2, 3, 4, 5)
         src2_data = (8, -3, 4, 8, 2)
         expected_result = (8, -6, 12, 32, 10)
-        op = blocks_swig.multiply_ii()
+        op = blocks.multiply_ii()
         self.help_ii((src1_data, src2_data),
                       expected_result, op)
 
@@ -149,7 +148,7 @@ class test_add_mult_div_sub(gr_unittest.TestCase):
         src1_data = (1,  2, 3, 4, 5)
         src2_data = (8, -3, 4, 8, 2)
         expected_result = (8, -6, 12, 32, 10)
-        op = blocks_swig.multiply_ff()
+        op = blocks.multiply_ff()
         self.help_ff((src1_data, src2_data),
                       expected_result, op)
 
@@ -157,7 +156,7 @@ class test_add_mult_div_sub(gr_unittest.TestCase):
         src1_data = (1+1j,  2+2j, 3+3j, 4+4j, 5+5j)
         src2_data = (8, -3, 4, 8, 2)
         expected_result = (8+8j, -6-6j, 12+12j, 32+32j, 10+10j)
-        op = blocks_swig.multiply_cc()
+        op = blocks.multiply_cc()
         self.help_cc((src1_data, src2_data),
                       expected_result, op)
 
@@ -166,38 +165,38 @@ class test_add_mult_div_sub(gr_unittest.TestCase):
     def test_multiply_const_ss(self):
         src_data = (-1, 0, 1, 2, 3)
         expected_result = (-5, 0, 5, 10, 15)
-        op = blocks_swig.multiply_const_ss(5)
+        op = blocks.multiply_const_ss(5)
         self.help_ss((src_data,), expected_result, op)
 
     def test_multiply_const_ii(self):
         src_data = (-1, 0, 1, 2, 3)
         expected_result = (-5, 0, 5, 10, 15)
-        op = blocks_swig.multiply_const_ii(5)
+        op = blocks.multiply_const_ii(5)
         self.help_ii((src_data,), expected_result, op)
 
     def test_multiply_const_ff(self):
         src_data = (-1, 0, 1, 2, 3)
         expected_result = (-5, 0, 5, 10, 15)
-        op = blocks_swig.multiply_const_ff(5)
+        op = blocks.multiply_const_ff(5)
         self.help_ff((src_data,), expected_result, op)
 
     def test_multiply_const_cc(self):
         src_data = (-1-1j, 0+0j, 1+1j, 2+2j, 3+3j)
         expected_result = (-5-5j, 0+0j, 5+5j, 10+10j, 15+15j)
-        op = blocks_swig.multiply_const_cc(5)
+        op = blocks.multiply_const_cc(5)
         self.help_cc((src_data,), expected_result, op)
 
     def test_multiply_const_cc2(self):
         src_data = (-1-1j, 0+0j, 1+1j, 2+2j, 3+3j)
         expected_result = (-3-7j, 0+0j, 3+7j, 6+14j, 9+21j)
-        op = blocks_swig.multiply_const_cc(5+2j)
+        op = blocks.multiply_const_cc(5+2j)
         self.help_cc((src_data,), expected_result, op)
 
     def test_sub_ii(self):
         src1_data = (1,  2, 3, 4, 5)
         src2_data = (8, -3, 4, 8, 2)
         expected_result = (-7, 5, -1, -4, 3)
-        op = blocks_swig.sub_ii()
+        op = blocks.sub_ii()
         self.help_ii((src1_data, src2_data),
                       expected_result, op)
 
@@ -205,7 +204,7 @@ class test_add_mult_div_sub(gr_unittest.TestCase):
         src1_data       = ( 5,  9, -15, 1024)
         src2_data       = (10,  3,  -5,   64)
         expected_result = (0.5, 3,   3,   16)
-        op = blocks_swig.divide_ff()
+        op = blocks.divide_ff()
         self.help_ff((src1_data, src2_data), expected_result, op)
 
 if __name__ == '__main__':
