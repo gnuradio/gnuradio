@@ -20,8 +20,7 @@
 # Boston, MA 02110-1301, USA.
 #
 
-from gnuradio import gr, gr_unittest
-import video_sdl_swig as video_sdl
+from gnuradio import gr, gr_unittest, video_sdl
 
 class test_video_sdl (gr_unittest.TestCase):
 
