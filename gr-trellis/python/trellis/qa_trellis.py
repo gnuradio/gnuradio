@@ -23,12 +23,7 @@
 import math
 import os
 
-from gnuradio import gr, gr_unittest
-
-import trellis_swig as trellis
-import digital_swig as digital
-import analog_swig as analog
-import blocks_swig as blocks
+from gnuradio import gr, gr_unittest, trellis, digital, analog, blocks
 
 fsm_args = {"awgn1o2_4": (2, 4, 4,
                           (0, 2, 0, 2, 1, 3, 1, 3),
