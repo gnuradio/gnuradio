@@ -20,8 +20,7 @@
 # Boston, MA 02110-1301, USA.
 #
 
-from gnuradio import gr, gr_unittest
-import noaa_swig as noaa
+from gnuradio import gr, gr_unittest, noaa
 
 class test_noaa(gr_unittest.TestCase):
 
