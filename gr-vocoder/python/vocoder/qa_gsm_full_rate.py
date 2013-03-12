@@ -20,8 +20,7 @@
 # Boston, MA 02110-1301, USA.
 #
 
-from gnuradio import gr, gr_unittest
-import vocoder_swig
+from gnuradio import gr, gr_unittest, vocoder
 
 class test_gsm_vocoder (gr_unittest.TestCase):
 
@@ -48,8 +47,8 @@ class test_gsm_vocoder (gr_unittest.TestCase):
                          208,288,480,600,616,520,176,88,184,296,392,584,
                          656,552,248,160,144,336,432,512,608,664)
         src = gr.vector_source_s(data)
-        enc = vocoder_swig.gsm_fr_encode_sp()
-        dec = vocoder_swig.gsm_fr_decode_ps()
+        enc = vocoder.gsm_fr_encode_sp()
+        dec = vocoder.gsm_fr_decode_ps()
         snk = gr.vector_sink_s()
         self.tb.connect(src, enc, dec, snk)
         self.tb.run()

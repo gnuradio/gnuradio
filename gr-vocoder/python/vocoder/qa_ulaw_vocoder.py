@@ -20,8 +20,7 @@
 # Boston, MA 02110-1301, USA.
 #
 
-from gnuradio import gr, gr_unittest
-from vocoder_swig import *
+from gnuradio import gr, gr_unittest, vocoder
 
 class test_ulaw_vocoder (gr_unittest.TestCase):
 
@@ -35,8 +34,8 @@ class test_ulaw_vocoder (gr_unittest.TestCase):
         data = (8,24,40,56,72,88,104,120,132,148,164,180,
                 196,212,228,244,260,276,292,308,324,340)
         src = gr.vector_source_s(data)
-        enc = ulaw_encode_sb()
-        dec = ulaw_decode_bs()
+        enc = vocoder.ulaw_encode_sb()
+        dec = vocoder.ulaw_decode_bs()
         snk = gr.vector_sink_s()
         self.tb.connect(src, enc, dec, snk)
         self.tb.run()

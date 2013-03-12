@@ -20,18 +20,8 @@
 # Boston, MA 02110-1301, USA.
 #
 
-from gnuradio import gr
+from gnuradio import gr, filter, blocks
 import vocoder_swig
-
-try:
-    from gnuradio import filter
-except ImportError:
-    import filter_swig as filter
-
-try:
-    from gnuradio import blocks
-except ImportError:
-    import blocks_swig as blocks
 
 class cvsd_encode_fb(gr.hier_block2):
     '''
