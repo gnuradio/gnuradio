@@ -20,9 +20,9 @@
 # Boston, MA 02110-1301, USA.
 #
 
-from gnuradio import gr, gr_unittest
-import analog_swig as analog
 import math
+
+from gnuradio import gr, gr_unittest, analog
 
 def sincos(x):
     return  math.cos(x) + math.sin(x) * 1j

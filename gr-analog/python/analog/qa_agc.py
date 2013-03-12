@@ -20,9 +20,9 @@
 # Boston, MA 02110-1301, USA.
 #
 
-from gnuradio import gr, gr_unittest
-import analog_swig as analog
 import math
+
+from gnuradio import gr, gr_unittest, analog
 
 test_output = False
 
