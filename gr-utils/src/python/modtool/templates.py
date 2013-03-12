@@ -275,7 +275,7 @@ ${str_to_python_comment($license)}
 #if $blocktype in ('sync', 'sink', 'source')
 #set $parenttype = 'gr.sync_block'
 #else
-#set $parenttype = {'hier': 'gr.hier_block2', 'interpolator': 'gr.interp_block', 'decimator': 'gr.decim_block', 'general': 'gr.block'}[$blocktype]
+#set $parenttype = {'hier': 'gr.hier_block2', 'interpolator': 'gr.interp_block', 'decimator': 'gr.decim_block', 'general': 'gr.basic_block'}[$blocktype]
 #end if
 #if $blocktype != 'hier'
 import numpy
