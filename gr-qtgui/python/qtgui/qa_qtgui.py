@@ -20,8 +20,7 @@
 # Boston, MA 02110-1301, USA.
 #
 
-from gnuradio import gr, gr_unittest
-import qtgui_swig as qtgui
+from gnuradio import gr, gr_unittest, qtgui
 
 class test_qtgui(gr_unittest.TestCase):
 
