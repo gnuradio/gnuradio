@@ -230,7 +230,10 @@ endif(ENABLE_VOLK)
 
 # Handle gr_log enable/disable
 GR_LOGGING()
+set(LOG4CPP_LIBRARIES ${LOG4CPP_LIBRARY})
+message("First Libs: ${LOG4CPP_LIBRARIES}")
 
+message("First Lib: ${LOG4CPP_LIBRARY}")
 ########################################################################
 # Distribute the README file
 ########################################################################

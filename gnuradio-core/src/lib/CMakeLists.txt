@@ -69,8 +69,8 @@ link_directories(
 	${FFTW3F_LIBRARY_DIRS}
 )
 
-include_directories(${LOG4CXX_INCLUDE_DIRS})
-link_directories(${LOG4CXX_LIBRARY_DIRS})
+include_directories(${LOG4CPP_INCLUDE_DIRS})
+link_directories(${LOG4CPP_LIBRARY_DIRS})
 
 ########################################################################
 # Setup library
@@ -82,12 +82,15 @@ link_directories(${LOG4CXX_LIBRARY_DIRS})
 #if(LOG4CXX_FOUND)
 #    add_definitions(-DENABLE_GR_LOG)
 #endif(LOG4CXX_FOUND)
+message("******************************************")
+message("LOG4CPP LIBRARIES are ${LOG4CPP_LIBRARIES}")
+message("******************************************")
 
 list(APPEND gnuradio_core_libs
     gruel
     ${Boost_LIBRARIES}
     ${FFTW3F_LIBRARIES}
-    ${LOG4CXX_LIBRARIES}
+    ${LOG4CPP_LIBRARIES}
 )
 
 if(FFTW3F_THREADS_LIBRARIES)
@@ -128,6 +131,6 @@ include_directories(${CPPUNIT_INCLUDE_DIRS})
 link_directories(${CPPUNIT_LIBRARY_DIRS})
 
 add_library(test-gnuradio-core SHARED ${test_gnuradio_core_sources})
-target_link_libraries(test-gnuradio-core gnuradio-core ${CPPUNIT_LIBRARIES} ${Boost_LIBRARIES} ${LOG4CXX_LIBRARIES})
+target_link_libraries(test-gnuradio-core gnuradio-core ${CPPUNIT_LIBRARIES} ${Boost_LIBRARIES} ${LOG4CPP_LIBRARIES})
 
 endif(ENABLE_TESTING)
