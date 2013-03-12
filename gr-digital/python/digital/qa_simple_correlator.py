@@ -20,10 +20,7 @@
 # Boston, MA 02110-1301, USA.
 #
 
-from gnuradio import gr, gr_unittest
-import blocks_swig as blocks
-import filter_swig as filter
-import digital_swig as digital
+from gnuradio import gr, gr_unittest, blocks, filter, digital
 
 class test_simple_correlator(gr_unittest.TestCase):
 

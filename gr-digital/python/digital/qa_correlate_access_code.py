@@ -20,9 +20,9 @@
 # Boston, MA 02110-1301, USA.
 # 
 
-from gnuradio import gr, gr_unittest
-import digital_swig as digital
 import math
+
+from gnuradio import gr, gr_unittest, digital
 
 default_access_code = '\xAC\xDD\xA4\xE2\xF2\x8C\x20\xFC'
 

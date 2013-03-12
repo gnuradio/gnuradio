@@ -20,10 +20,11 @@
 # Boston, MA 02110-1301, USA.
 # 
 
-from gnuradio import gr, gr_unittest
-import digital_swig as digital
-import psk
-import random, cmath
+import random
+import cmath
+
+from gnuradio import gr, gr_unittest, digital
+from gnuradio.digital import psk
 
 class test_costas_loop_cc(gr_unittest.TestCase):
 

@@ -21,18 +21,14 @@
 # 
 
 import random
+import math
 
-from gnuradio import gr, gr_unittest
-from utils import mod_codes, alignment
-import packet_utils
-import filter_swig as filter
-import analog_swig as analog
-import blocks_swig as blocks
-from generic_mod_demod import generic_mod, generic_demod
+from gnuradio import gr, gr_unittest, filter, analog, blocks, digital
+from gnuradio.digital.utils import mod_codes, alignment
+from gnuradio.digital import packet_utils
+from gnuradio.digital.generic_mod_demod import generic_mod, generic_demod
 
 from qa_constellation import tested_constellations, twod_constell
-
-import math
 
 # Set a seed so that if errors turn up they are reproducible.
 SEED = 1239

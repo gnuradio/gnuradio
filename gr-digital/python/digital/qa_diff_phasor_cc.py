@@ -20,9 +20,9 @@
 # Boston, MA 02110-1301, USA.
 #
 
-from gnuradio import gr, gr_unittest
-import digital_swig as digital
 import math
+
+from gnuradio import gr, gr_unittest, digital
 
 class test_diff_phasor(gr_unittest.TestCase):
 

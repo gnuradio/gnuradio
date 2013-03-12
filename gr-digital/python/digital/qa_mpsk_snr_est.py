@@ -19,10 +19,9 @@
 # the Free Software Foundation, Inc., 51 Franklin Street,
 # Boston, MA 02110-1301, USA.
 # 
+import random
 
-from gnuradio import gr, gr_unittest
-import digital_swig as digital
-import math, random
+from gnuradio import gr, gr_unittest, digital
 
 def get_cplx():
     return complex(2*random.randint(0,1) - 1, 0)

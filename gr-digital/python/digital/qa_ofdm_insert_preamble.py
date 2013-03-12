@@ -20,10 +20,9 @@
 # Boston, MA 02110-1301, USA.
 # 
 
-from gnuradio import gr, gr_unittest
 from pprint import pprint
-import digital_swig as digital
-import blocks_swig as blocks
+
+from gnuradio import gr, gr_unittest, digital, blocks
 
 class test_ofdm_insert_preamble(gr_unittest.TestCase):
 

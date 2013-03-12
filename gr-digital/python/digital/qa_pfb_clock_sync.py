@@ -20,10 +20,10 @@
 # Boston, MA 02110-1301, USA.
 # 
 
-from gnuradio import gr, gr_unittest
-import filter_swig as filter
-import digital_swig as digital
-import random, cmath
+import random
+import cmath
+
+from gnuradio import gr, gr_unittest, filter, digital
 
 class test_pfb_clock_sync(gr_unittest.TestCase):
 

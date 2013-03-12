@@ -20,8 +20,8 @@
 # Boston, MA 02110-1301, USA.
 # 
 
-from gnuradio import gr, gr_unittest
-import digital_swig as digital
+from gnuradio import gr, gr_unittest, digital
+
 import math, random
 
 class test_binary_slicer_fb(gr_unittest.TestCase):

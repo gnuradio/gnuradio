@@ -24,21 +24,15 @@
 
 # See gnuradio-examples/python/digital for examples
 
-from gnuradio import gr
-from gnuradio import blocks
-from gnuradio import analog
-import modulation_utils
-import digital_swig as digital
 from math import pi
-import numpy
 from pprint import pprint
 import inspect
 
-try:
-    from gnuradio import filter
-except ImportError:
-    import filter_swig as filter
+import numpy
 
+from gnuradio import gr, blocks, analog, filter
+import modulation_utils
+import digital_swig as digital
 
 # default values (used in __init__ and add_options)
 _def_samples_per_symbol = 2

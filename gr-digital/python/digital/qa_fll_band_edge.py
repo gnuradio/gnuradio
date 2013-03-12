@@ -20,12 +20,10 @@
 # Boston, MA 02110-1301, USA.
 # 
 
-from gnuradio import gr, gr_unittest
-import digital_swig as digital
-import filter_swig as filter
-import blocks_swig as blocks
-import analog_swig as analog
-import random, math
+import random
+import math
+
+from gnuradio import gr, gr_unittest, digital, filter, blocks, analog
 
 class test_fll_band_edge_cc(gr_unittest.TestCase):
 

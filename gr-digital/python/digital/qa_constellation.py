@@ -23,15 +23,9 @@
 import random
 from cmath import exp, pi, log
 
-from gnuradio import gr, gr_unittest
-from utils import mod_codes
-import digital_swig as digital
-import blocks_swig as blocks
-
-# import from local folder
-import psk
-import qam
-import qamlike
+from gnuradio import gr, gr_unittest, digital, blocks
+from gnuradio.digital.utils import mod_codes
+from gnuradio.digital import psk, qam, qamlike
 
 tested_mod_codes = (mod_codes.NO_CODE, mod_codes.GRAY_CODE)
 

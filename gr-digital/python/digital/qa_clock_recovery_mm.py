@@ -20,9 +20,10 @@
 # Boston, MA 02110-1301, USA.
 # 
 
-from gnuradio import gr, gr_unittest
-import digital_swig as digital
-import random, cmath
+import random
+import cmath
+
+from gnuradio import gr, gr_unittest, digital
 
 class test_clock_recovery_mm(gr_unittest.TestCase):
 

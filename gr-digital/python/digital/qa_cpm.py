@@ -20,11 +20,9 @@
 # Boston, MA 02110-1301, USA.
 # 
 
-from gnuradio import gr, gr_unittest
-import digital_swig as digital
-import analog_swig as analog
-import blocks_swig as blocks
 import numpy
+
+from gnuradio import gr, gr_unittest, digital, analog, blocks
 
 class test_cpm(gr_unittest.TestCase):
 

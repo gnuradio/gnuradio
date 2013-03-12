@@ -20,10 +20,10 @@
 # Boston, MA 02110-1301, USA.
 #
 
-from gnuradio import gr, gr_unittest
-import digital_swig as digital
 import math
 import random
+
+from gnuradio import gr, gr_unittest, digital
 
 def make_random_int_tuple(L, min, max):
     result = []
