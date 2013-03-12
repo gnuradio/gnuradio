@@ -20,8 +20,7 @@
 # Boston, MA 02110-1301, USA.
 #
 
-from gnuradio import gr, gr_unittest
-import pager_swig as pager
+from gnuradio import gr, gr_unittest, pager
 
 class test_pager(gr_unittest.TestCase):
 
