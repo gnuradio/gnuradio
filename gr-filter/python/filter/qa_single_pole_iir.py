@@ -20,9 +20,7 @@
 # Boston, MA 02110-1301, USA.
 #
 
-from gnuradio import gr, gr_unittest
-import filter_swig as filter
-import blocks_swig as blocks
+from gnuradio import gr, gr_unittest, filter, blocks
 
 class test_single_pole_iir_filter(gr_unittest.TestCase):
 

@@ -19,8 +19,7 @@
 # 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 #
 
-from gnuradio import gr, gr_unittest
-import filter_swig as filter
+from gnuradio import gr, gr_unittest, filter
 
 class test_filter(gr_unittest.TestCase):
 

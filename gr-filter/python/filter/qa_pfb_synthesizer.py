@@ -20,8 +20,7 @@
 # Boston, MA 02110-1301, USA.
 #
 
-from gnuradio import gr, gr_unittest
-import filter_swig as filter
+from gnuradio import gr, gr_unittest, filter
 import math
 
 def sig_source_c(samp_rate, freq, amp, N):
