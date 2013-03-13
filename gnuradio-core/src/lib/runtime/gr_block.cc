@@ -52,7 +52,7 @@ gr_block::gr_block (const std::string &name,
     global_block_registry.register_primitive(alias(), this);
 
 #ifdef ENABLE_GR_LOG
-#ifdef HAVE_LOG4CXX
+#ifdef HAVE_LOG4CPP
     gr_prefs *p = gr_prefs::singleton();
     std::string config_file = p->get_string("LOG", "log_config", "");
     std::string log_level = p->get_string("LOG", "log_level", "off");
@@ -66,13 +66,13 @@ gr_block::gr_block (const std::string &name,
     GR_LOG_SET_LEVEL(LOG, log_level);
     if(log_file.size() > 0) {
       if(log_file == "stdout") {
-        GR_LOG_ADD_CONSOLE_APPENDER(LOG, "gr::log :%p: %c{1} - %m%n", "System.out");
+        GR_LOG_ADD_CONSOLE_APPENDER(LOG, "cout","gr::log :%p: %c{1} - %m%n");
       }
       else if(log_file == "stderr") {
-        GR_LOG_ADD_CONSOLE_APPENDER(LOG, "gr::log :%p: %c{1} - %m%n", "System.err");
+        GR_LOG_ADD_CONSOLE_APPENDER(LOG, "cerr","gr::log :%p: %c{1} - %m%n");
       }
       else {
-        GR_LOG_ADD_FILE_APPENDER(LOG, "%r :%p: %c{1} - %m%n", log_file, "");
+        GR_LOG_ADD_FILE_APPENDER(LOG, log_file , true,"%r :%p: %c{1} - %m%n");
       }
     }
     d_logger = LOG;
@@ -81,13 +81,13 @@ gr_block::gr_block (const std::string &name,
     GR_LOG_SET_LEVEL(DLOG, debug_level);
     if(debug_file.size() > 0) {
       if(debug_file == "stdout") {
-        GR_LOG_ADD_CONSOLE_APPENDER(DLOG, "gr::debug :%p: %c{1} - %m%n", "System.out");
+        GR_LOG_ADD_CONSOLE_APPENDER(DLOG, "cout","gr::debug :%p: %c{1} - %m%n");
       }
       else if(debug_file == "stderr") {
-        GR_LOG_ADD_CONSOLE_APPENDER(DLOG, "gr::debug :%p: %c{1} - %m%n", "System.err");
+        GR_LOG_ADD_CONSOLE_APPENDER(DLOG, "cerr", "gr::debug :%p: %c{1} - %m%n");
       }
       else {
-        GR_LOG_ADD_FILE_APPENDER(DLOG, "%r :%p: %c{1} - %m%n", debug_file, "");
+        GR_LOG_ADD_FILE_APPENDER(DLOG, debug_file, true, "%r :%p: %c{1} - %m%n");
       }
     }
     d_debug_logger = DLOG;

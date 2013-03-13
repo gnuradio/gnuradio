@@ -25,6 +25,6 @@
 #cmakedefine TRY_SHM_VMCIRCBUF
 #cmakedefine GR_PERFORMANCE_COUNTERS
 #cmakedefine ENABLE_GR_LOG
-#cmakedefine HAVE_LOG4CXX
+#cmakedefine HAVE_LOG4CPP
 
 #endif /* GNURADIO_CONFIG_H */

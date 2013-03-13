@@ -38,8 +38,10 @@ qa_gr_logger::t1()
 #ifdef ENABLE_GR_LOG
   // This doesn't really test anything, more just
   // making sure nothing's gone horribly wrong.
-  GR_LOG_GETLOGGER(LOG,"errLoggerRoot");
-  GR_LOG_TRACE(LOG,"test from c++ 1");
+
+  GR_LOG_GETLOGGER(LOG,"main");
+  GR_ADD_CONSOLE_APPENDER("main","cout","%d{%H:%M:%S} : %m%n");
+  GR_LOG_NOTICE(LOG,"test from c++ 1");
   GR_LOG_DEBUG(LOG,"test from c++ 1");
   GR_LOG_INFO(LOG,"test from c++ 1");
   GR_LOG_WARN(LOG,"test from c++ 1");
