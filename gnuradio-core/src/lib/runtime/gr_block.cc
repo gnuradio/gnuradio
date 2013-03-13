@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2004,2009,2010 Free Software Foundation, Inc.
+ * Copyright 2004,2009,2010,2013 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -91,7 +91,7 @@ gr_block::gr_block (const std::string &name,
       }
     }
     d_debug_logger = DLOG;
-#endif /* HAVE_LOG4CXX */
+#endif /* HAVE_LOG4CPP */
 #else /* ENABLE_GR_LOG */
     d_logger = NULL;
     d_debug_logger = NULL;

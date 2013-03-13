@@ -36,8 +36,8 @@ include_directories(
 
 link_directories(${Boost_LIBRARY_DIRS})
 
-include_directories(${LOG4CXX_INCLUDE_DIRS})
-link_directories(${LOG4CXX_LIBRARY_DIRS})
+include_directories(${LOG4CPP_INCLUDE_DIRS})
+link_directories(${LOG4CPP_LIBRARY_DIRS})
 
 ########################################################################
 # Setup library
@@ -82,7 +82,7 @@ add_library(gnuradio-fcd SHARED ${gr_fcd_sources})
 if (LINUX)
   list(APPEND fcd_libs rt)
 endif()
-target_link_libraries(gnuradio-fcd ${fcd_libs} ${LOG4CXX_LIBRARIES})
+target_link_libraries(gnuradio-fcd ${fcd_libs} ${LOG4CPP_LIBRARIES})
 
 
 GR_LIBRARY_FOO(gnuradio-fcd RUNTIME_COMPONENT "fcd_runtime" DEVEL_COMPONENT "fcd_devel")

@@ -76,12 +76,12 @@ link_directories(${LOG4CPP_LIBRARY_DIRS})
 # Setup library
 ########################################################################
 
-# Only use if log4cxx is installed
+# Only use if log4cpp is installed
 # Define ENABLE_GR_LOG so .h and .cc files can turn actual
 # logging and insert dummy functions.
-#if(LOG4CXX_FOUND)
+#if(LOG4CPP_FOUND)
 #    add_definitions(-DENABLE_GR_LOG)
-#endif(LOG4CXX_FOUND)
+#endif(LOG4CPP_FOUND)
 message("******************************************")
 message("LOG4CPP LIBRARIES are ${LOG4CPP_LIBRARIES}")
 message("******************************************")

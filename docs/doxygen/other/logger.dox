@@ -4,20 +4,23 @@
 
 GNU Radio has a logging interface to enable various levels of logging
 information to be printed to the console or a file. The logger derives
-from log4cxx (http://logging.apache.org/log4cxx) which is readily
+from log4cpp (http://log4cpp.sourceforge.net/) which is readily
 available in most Linux distributions. This is an optional dependency
 and GNU Radio will work without it.
 
 When configuring GNU Radio, the -DENABLE_GR_LOG=On|Off option to cmake
 will allow the user to toggle use of the logger on and off. The logger
-defaults to "on" and will use log4cxx if it is available. If log4cxx
+defaults to "on" and will use log4cpp if it is available. If log4cpp
 is not found, the default logging will output to standard output or
 standard error, depending on the level of the log message.
 
 Logging is useful for blocks to print out certain amounts of data at
 different levels. These levels are:
 
-    TRACE < DEBUG < INFO < WARN < ERROR < FATAL
+<pre>
+    DEBUG < INFO < WARN < TRACE < ERROR < ALERT < CRIT < FATAL <EMERG
+</pre>
+
 
 The order here determines the level of output. These levels are
 hierarchical in that specifying any level also includes any level
@@ -123,7 +126,7 @@ simple examples of using them:
 
 If the logger is not enabled, then these macros become nops and do
 nothing (and d_logger and d_debug_logger are NULL pointers). If
-logging is enabled but the log4cxx library is not found, then TRACE,
+logging is enabled but the log4cpp library is not found, then TRACE,
 DEBUG, and INFO levels go to stdout and the rest to stderr.
 
 
@@ -133,11 +136,10 @@ If not using the simplified settings discussed above, where we can
 direct the logger messages to either a file or one of the standard
 outputs, we must use a more complicated configuration file. We do this
 by specifying the "log_config" option in the [LOG] section. The
-log4cxx documentation (found through
-http://logging.apache.org/log4cxx/) will provide more information on
-how configuration works and looks. Mostly, a default configuration
-script provided with GNU Radio can be used. After installation, the
-default configuration script is located at:
+log4cpp documentation will provide more information on how
+configuration works and looks. Mostly, a default configuration script
+provided with GNU Radio can be used. After installation, the default
+configuration script is located at:
 
 <pre>
     $prefix/etc/gnuradio/gr_log_default.xml
@@ -196,7 +198,7 @@ except we would use "gr_log_debug." in the GR_LOG_GETLOGGER call):
 \endcode
 
 This creates a pointer called LOG (which is instantiated as a
-log4cxx:LoggerPtr in the macro) that we can now use locally as the
+log4cpp:LoggerPtr in the macro) that we can now use locally as the
 input to our logging macros like 'GR_LOG_TRACE(LOG, "message")'.
 
 */

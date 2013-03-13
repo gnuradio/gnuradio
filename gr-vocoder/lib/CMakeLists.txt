@@ -29,8 +29,8 @@ include_directories(
 
 link_directories(${Boost_LIBRARY_DIRS})
 
-include_directories(${LOG4CXX_INCLUDE_DIRS})
-link_directories(${LOG4CXX_LIBRARY_DIRS})
+include_directories(${LOG4CPP_INCLUDE_DIRS})
+link_directories(${LOG4CPP_LIBRARY_DIRS})
 
 ########################################################################
 # Setup library
@@ -78,7 +78,7 @@ GR_INCLUDE_SUBDIRECTORY(gsm)
 list(APPEND vocoder_libs
     gnuradio-core
     ${Boost_LIBRARIES}
-    ${LOG4CXX_LIBRARIES}
+    ${LOG4CPP_LIBRARIES}
 )
 
 add_library(gnuradio-vocoder SHARED ${gr_vocoder_sources})

@@ -23,7 +23,7 @@
 * Copyright 2011 Johns Hopkins University Applied Physics Lab
 * Author: Mark Plett
 * Description:
-*   SWIG interface generator file for gr_logger module.  gr_logger wraps log4cxx logging
+*   SWIG interface generator file for gr_logger module.  gr_logger wraps log4cpp logging
 *   for gnuradio.
 *******************************************************************************/
 
@@ -48,14 +48,14 @@
 #include <log4cpp/Category.hh>
 %}
 
-namespace log4cxx{
+namespace log4cpp{
 class LoggerPtr {
 public:
  ~LoggerPtr();
 };
 };
 void logger_load_config(const std::string &config_filename);
-void logger_set_level(log4cxx::LoggerPtr logger, const std::string &level);
+void logger_set_level(log4cpp::LoggerPtr logger, const std::string &level);
 
 %rename(log) gr_logger;
 
@@ -105,5 +105,5 @@ public:
 
 };
 
-#endif /* HAVE_LOG4CXX */
+#endif /* HAVE_LOG4CPP */
 #endif /* ENABLE_GR_LOG */

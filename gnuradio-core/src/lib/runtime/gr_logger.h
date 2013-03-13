@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2012 Free Software Foundation, Inc.
+ * Copyright 2012-2013 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -23,7 +23,7 @@
 /*******************************************************************************
 * Author: Mark Plett
 * Description:
-*   The gr_logger module wraps the log4cxx library for logging in gnuradio
+*   The gr_logger module wraps the log4cpp library for logging in gnuradio
 *******************************************************************************/
 
 #ifndef INCLUDED_GR_LOGGER_H
@@ -32,7 +32,7 @@
 /*!
 * \file gr_logger.h
 * \ingroup logging
-* \brief GNURADIO logging wrapper for log4cxx library (C++ port of log4j)
+* \brief GNURADIO logging wrapper for log4cpp library (C++ port of log4j)
 *
 */
 
@@ -101,7 +101,7 @@ typedef std::string gr_logger_ptr;
 #define GR_LOG_ASSERT(logger, cond, msg) std::cerr<<"ERROR:"<<msg<<std::endl; assert(cond)
 
 #else /* HAVE_LOG4CPP */
-// Second configuration...logging to log4cxx
+// Second configuration...logging to log4cpp
 
 #include <log4cpp/Category.hh>
 #include <log4cpp/PropertyConfigurator.hh>
@@ -114,7 +114,7 @@ typedef std::string gr_logger_ptr;
  * \brief GR_LOG macros
  * \ingroup logging
  *
- * These macros wrap the standard LOG4CXX_LEVEL macros.  The availablie macros
+ * These macros wrap the standard LOG4CPP_LEVEL macros.  The availablie macros
  * are:
  *  GR_LOG_DEBUG
  *  GR_LOG_INFO
@@ -362,7 +362,7 @@ GR_CORE_API void logger_get_level(gr_logger_ptr logger, std::string &level);
 /*!
  * \brief Get the logger's output level.
  *
- * Gets the level of the logger. This returns the actual Log4cxx::Level
+ * Gets the level of the logger. This returns the actual Log4cpp::Level
  * data type, which can be:
  *
  * \li log4cpp::Priority::NOTSET
@@ -465,10 +465,10 @@ class gr_logger
   /*! \brief inline function, wrapper for EMERG message */
   void emerg(std::string name,std::string msg){GR_EMERG(name,msg);};
 
-  /*! \brief inline function, wrapper for LOG4CXX_ASSERT for conditional ERROR message */
+  /*! \brief inline function, wrapper for LOG4CPP_ASSERT for conditional ERROR message */
   void errorIF(std::string name,bool cond,std::string msg){GR_ERRORIF(name,cond,msg);};
 
-  /*! \brief inline function, wrapper for LOG4CXX_ASSERT for conditional ERROR message */
+  /*! \brief inline function, wrapper for LOG4CPP_ASSERT for conditional ERROR message */
   void gr_assert(std::string name,bool cond,std::string msg){GR_ASSERT(name,cond,msg);};
 
   // Wrappers for Logger Pointer referenced functions
@@ -478,19 +478,19 @@ class gr_logger
   /*! \brief inline function, wrapper to get the logger level */
   void get_log_level(gr_logger_ptr logger,std::string &level){GR_LOG_GET_LEVEL(logger,level);}
 
-  /*! \brief inline function, wrapper for LOG4CXX_DEBUG for DEBUG message */
+  /*! \brief inline function, wrapper for LOG4CPP_DEBUG for DEBUG message */
   void log_debug(gr_logger_ptr logger,std::string msg){GR_LOG_DEBUG(logger,msg);};
 
-  /*! \brief inline function, wrapper for LOG4CXX_INFO for INFO message */
+  /*! \brief inline function, wrapper for LOG4CPP_INFO for INFO message */
   void log_info(gr_logger_ptr logger,std::string msg){GR_LOG_INFO(logger,msg);};
 
   /*! \brief inline function, wrapper for NOTICE message */
   void log_notice(gr_logger_ptr logger,std::string msg){GR_LOG_NOTICE(logger,msg);};
 
-  /*! \brief inline function, wrapper for LOG4CXX_WARN for WARN message */
+  /*! \brief inline function, wrapper for LOG4CPP_WARN for WARN message */
   void log_warn(gr_logger_ptr logger,std::string msg){GR_LOG_WARN(logger,msg);};
 
-  /*! \brief inline function, wrapper for LOG4CXX_ERROR for ERROR message */
+  /*! \brief inline function, wrapper for LOG4CPP_ERROR for ERROR message */
   void log_error(gr_logger_ptr logger,std::string msg){GR_LOG_ERROR(logger,msg);};
 
   /*! \brief inline function, wrapper for NOTICE message */
@@ -505,10 +505,10 @@ class gr_logger
   /*! \brief inline function, wrapper for EMERG message */
   void log_emerg(gr_logger_ptr logger,std::string msg){GR_LOG_EMERG(logger,msg);};
 
-  /*! \brief inline function, wrapper for LOG4CXX_ASSERT for conditional ERROR message */
+  /*! \brief inline function, wrapper for LOG4CPP_ASSERT for conditional ERROR message */
   void log_errorIF(gr_logger_ptr logger,bool cond,std::string msg){GR_LOG_ERRORIF(logger,cond,msg);};
 
-  /*! \brief inline function, wrapper for LOG4CXX_ASSERT for conditional ERROR message */
+  /*! \brief inline function, wrapper for LOG4CPP_ASSERT for conditional ERROR message */
   void log_assert(gr_logger_ptr logger,bool cond,std::string msg){GR_LOG_ASSERT(logger,cond,msg);};
 };
 

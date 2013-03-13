@@ -35,8 +35,8 @@ link_directories(${Boost_LIBRARY_DIRS})
 link_directories(${GSL_LIBRARY_DIRS})
 add_definitions(${GSL_DEFINITIONS})
 
-include_directories(${LOG4CXX_INCLUDE_DIRS})
-link_directories(${LOG4CXX_LIBRARY_DIRS})
+include_directories(${LOG4CPP_INCLUDE_DIRS})
+link_directories(${LOG4CPP_LIBRARY_DIRS})
 
 ########################################################################
 # Setup library
@@ -66,7 +66,7 @@ list(APPEND wavelet_libs
     ${Boost_LIBRARIES}
     ${WAVELET_LIBRARIES}
     ${GSL_LIBRARIES}
-    ${LOG4CXX_LIBRARIES}
+    ${LOG4CPP_LIBRARIES}
 )
 
 add_library(gnuradio-wavelet SHARED ${gr_wavelet_sources})
