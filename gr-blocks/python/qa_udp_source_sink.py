@@ -29,6 +29,7 @@ from threading import Timer
 class test_udp_sink_source(gr_unittest.TestCase):
 
     def setUp(self):
+        os.environ['GR_CONF_CONTROLPORT_ON'] = 'False'
         self.tb_snd = gr.top_block()
         self.tb_rcv = gr.top_block()
 

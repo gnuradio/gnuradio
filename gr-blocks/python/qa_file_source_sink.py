@@ -27,6 +27,7 @@ import os
 class test_file_source_sink(gr_unittest.TestCase):
 
     def setUp (self):
+        os.environ['GR_CONF_CONTROLPORT_ON'] = 'False'
         self.tb = gr.top_block ()
 
     def tearDown (self):
