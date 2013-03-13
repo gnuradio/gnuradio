@@ -41,10 +41,10 @@ namespace gr {
       // gr::blocks::@NAME@::sptr
       typedef boost::shared_ptr<@NAME@> sptr;
 
-      static sptr make(bool mute);
+      static sptr make(bool mute=False);
 
       virtual bool mute() const = 0;
-      virtual void set_mute(bool mute) = 0;
+      virtual void set_mute(bool mute=False) = 0;
     };
 
   } /* namespace blocks */
