@@ -133,6 +133,7 @@
 	<cat>
 	        <name>Misc (New) </name>
                 <block>blocks_throttle</block>
+                <block>blocks_probe_rate</block>
 	</cat>
 	<cat>
 	        <name>Networking</name>

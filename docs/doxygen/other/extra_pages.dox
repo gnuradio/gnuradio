@@ -80,7 +80,7 @@ audio-osx and audio-windows to be either satisfied or built.
 \li comedilib   (>= 0.8)     http://www.comedi.org/
 
 \subsection dep_gr_log gr-log: Logging Tools (Optional)
-\li log4cxx     (>= 0.10.0)  http://logging.apache.org/log4cxx
+\li log4cpp     (>= 1.0)  http://log4cpp.sourceforge.net/
 
 
 \section build_gr_cmake Building GNU Radio

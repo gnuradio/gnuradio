@@ -21,63 +21,70 @@
  */
 
 /*******************************************************************************
-* Copyright 2011 Johns Hopkins University Applied Physics Lab
 * Author: Mark Plett 
 * Description:
-*   The gr_log module wraps the log4cxx library for logging in gnuradio.
+*   The gr_log module wraps the log4cpp library for logging in gnuradio.
 *******************************************************************************/
 
-#ifdef HAVE_CONFIG_H
-#include "config.h" 
-#endif
+//#ifdef HAVE_CONFIG_H
+//#include "config.h" 
+//#endif
 
 #include <gr_logger.h>
 #include <stdexcept>
 #include <algorithm>
 
 #ifdef ENABLE_GR_LOG
-#ifdef HAVE_LOG4CXX 
+#ifdef HAVE_LOG4CPP 
 
 bool gr_logger_configured(false);
 
 void
 logger_load_config(const std::string &config_filename)
 {
-  if(!gr_logger_configured) {
+  if(!gr_logger_configured){
     gr_logger_configured = true;
-    if(config_filename.size() > 0) {
-      if(config_filename.find(".xml") != std::string::npos) {
-        log4cxx::xml::DOMConfigurator::configure(config_filename);
-      }
-      else {
-        log4cxx::PropertyConfigurator::configure(config_filename);
-      }
-    }
-  }
+    if(config_filename.size() != 0) {
+       try
+       {
+         log4cpp::PropertyConfigurator::configure(config_filename);
+       }
+       catch( log4cpp::ConfigureFailure &e )
+       {
+         std::cout << "Logger config failed :" << e.what() << std::endl;
+       }
+    };
+  };
 }
 
 void
 logger_load_config_and_watch(const std::string &config_filename,
                              unsigned int watch_period)
 {
-  if(!gr_logger_configured) {
+// NOTE:: NEEDS CODE TO WATCH FILE HERE
+  if(!gr_logger_configured){
     gr_logger_configured = true;
-    if(config_filename.size() > 0) {
-      if(config_filename.find(".xml") != std::string::npos) {
-        log4cxx::xml::DOMConfigurator::configureAndWatch(config_filename, watch_period);
-      }
-      else {
-        log4cxx::PropertyConfigurator::configureAndWatch(config_filename, watch_period);
-      }
-    }
-  }
+    if(config_filename.size() != 0) {
+       try
+       {
+         log4cpp::PropertyConfigurator::configure(config_filename);
+       }
+       catch( log4cpp::ConfigureFailure &e )
+       {
+         std::cout << "Logger config failed :" << e.what() << std::endl;
+       }
+    };
+  };
 }
 
 void 
-logger_reset_config(void)
-{
-  log4cxx::LogManager::resetConfiguration();
-  gr_logger_configured=false;
+logger_reset_config(void){
+  std::vector<log4cpp::Category*> *loggers = log4cpp::Category::getCurrentCategories();
+  std::vector<log4cpp::Category*>::iterator logger = loggers->begin();
+// We can't destroy categories but we can neuter them by removing all appenders.
+  for (;logger!=loggers->end();logger++){
+    (*logger)->removeAllAppenders();
+  };
 }
 
 void
@@ -85,105 +92,113 @@ logger_set_level(gr_logger_ptr logger, const std::string &level)
 {
   std::string nocase = level;
   std::transform(level.begin(), level.end(), nocase.begin(), ::tolower);
-  
-  if(nocase == "off")
-    logger_set_level(logger, log4cxx::Level::getOff());
-  else if(nocase == "all")
-    logger_set_level(logger, log4cxx::Level::getAll());
-  else if(nocase == "trace")
-    logger_set_level(logger, log4cxx::Level::getTrace());
+
+  if(nocase == "off" || nocase == "notset")
+    logger_set_level(logger, log4cpp::Priority::NOTSET);
   else if(nocase == "debug")
-    logger_set_level(logger, log4cxx::Level::getDebug());
+    logger_set_level(logger, log4cpp::Priority::DEBUG);
   else if(nocase == "info")
-    logger_set_level(logger, log4cxx::Level::getInfo());
+    logger_set_level(logger, log4cpp::Priority::INFO);
+  else if(nocase == "notice")
+    logger_set_level(logger, log4cpp::Priority::NOTICE);
   else if(nocase == "warn")
-    logger_set_level(logger, log4cxx::Level::getWarn());
+    logger_set_level(logger, log4cpp::Priority::WARN);
   else if(nocase == "error")
-    logger_set_level(logger, log4cxx::Level::getError());
-  else if(nocase == "fatal")
-    logger_set_level(logger, log4cxx::Level::getFatal());
+    logger_set_level(logger, log4cpp::Priority::ERROR);
+  else if(nocase == "crit")
+    logger_set_level(logger, log4cpp::Priority::CRIT);
+  else if(nocase == "alert")
+    logger_set_level(logger, log4cpp::Priority::ALERT);
+ else if(nocase=="fatal")
+    logger_set_level(logger, log4cpp::Priority::FATAL);
+  else if(nocase == "all" || nocase == "emerg")
+    logger_set_level(logger, log4cpp::Priority::EMERG);
   else
     throw std::runtime_error("logger_set_level: Bad level type.\n");
 }
 
 void
-logger_set_level(gr_logger_ptr logger, log4cxx::LevelPtr level)
+logger_set_level(gr_logger_ptr logger, log4cpp::Priority::Value level)
 {
-  logger->setLevel(level);
+  logger->setPriority(level);
 }
 
 void 
 logger_get_level(gr_logger_ptr logger, std::string &level)
 {
-  log4cxx::LevelPtr levelPtr = logger->getLevel();
-  if(levelPtr == log4cxx::Level::getOff()) level = "off";
-  if(levelPtr == log4cxx::Level::getAll()) level = "all";
-  if(levelPtr == log4cxx::Level::getTrace()) level = "trace";
-  if(levelPtr == log4cxx::Level::getDebug()) level = "debug";
-  if(levelPtr == log4cxx::Level::getInfo()) level = "info";
-  if(levelPtr == log4cxx::Level::getWarn()) level = "warn";
-  if(levelPtr == log4cxx::Level::getError()) level = "error";
-  if(levelPtr == log4cxx::Level::getFatal()) level = "fatal";
+  log4cpp::Priority::Value levelPtr = logger->getPriority();
+  if(levelPtr == log4cpp::Priority::NOTSET) level = "noset";
+  if(levelPtr == log4cpp::Priority::DEBUG) level = "debug";
+  if(levelPtr == log4cpp::Priority::INFO) level = "info";
+  if(levelPtr == log4cpp::Priority::NOTICE) level = "notice";
+  if(levelPtr == log4cpp::Priority::WARN) level = "warn";
+  if(levelPtr == log4cpp::Priority::ERROR) level = "error";
+  if(levelPtr == log4cpp::Priority::CRIT) level = "crit";
+  if(levelPtr == log4cpp::Priority::ALERT) level = "alert";
+  if(levelPtr == log4cpp::Priority::FATAL) level = "fatal";
+  if(levelPtr == log4cpp::Priority::EMERG) level = "emerg";
 };
 
 void 
-logger_get_level(gr_logger_ptr logger, log4cxx::LevelPtr level)
+logger_get_level(gr_logger_ptr logger,log4cpp::Priority::Value level)
 {
-  level = logger->getLevel();
+  level = logger->getPriority();
 }
 
 void 
-logger_add_console_appender(gr_logger_ptr logger, std::string layout,
-                            std::string target)
+logger_add_console_appender(gr_logger_ptr logger,std::string target,std::string pattern)
 {
-  log4cxx::PatternLayout *playout =
-    new log4cxx::PatternLayout(layout);
-  log4cxx::ConsoleAppender *appender =
-    new log4cxx::ConsoleAppender(log4cxx::LayoutPtr(playout), target);
-  log4cxx::helpers::Pool p;
-  appender->activateOptions(p);
-  logger->addAppender(appender);
+
+  log4cpp::PatternLayout* layout = new log4cpp::PatternLayout();
+  log4cpp::Appender* app;
+  if(target=="cout")
+    app = new log4cpp::OstreamAppender("ConsoleAppender::",&std::cout);
+  else
+	  app = new log4cpp::OstreamAppender("ConsoleAppender::",&std::cerr);
+
+  layout->setConversionPattern(pattern);
+	app->setLayout(layout);
+  logger->setAppender(app);
+
 }
 
 void
-logger_add_file_appender(gr_logger_ptr logger, std::string layout,
-                         std::string filename, bool append)
+logger_add_file_appender(gr_logger_ptr logger,std::string filename,bool append,std::string pattern)
 {
-  log4cxx::PatternLayout *playout =
-    new log4cxx::PatternLayout(layout);
-  log4cxx::FileAppender *appender =
-    new log4cxx::FileAppender(log4cxx::LayoutPtr(playout), filename, append);
-  log4cxx::helpers::Pool p;
-  appender->activateOptions(p);
-  logger->addAppender(appender);
+
+  log4cpp::PatternLayout* layout = new log4cpp::PatternLayout();
+	log4cpp::Appender* app = new 
+              log4cpp::FileAppender("FileAppender::"+filename,
+              filename);
+  layout->setConversionPattern(pattern);
+	app->setLayout(layout);
+  logger->setAppender(app);
+
 }
 
 void 
-logger_add_rollingfile_appender(gr_logger_ptr logger, std::string layout,
-                                std::string filename, bool append,
-                                int bkup_index, std::string filesize)
+logger_add_rollingfile_appender(gr_logger_ptr logger,std::string filename,
+            size_t filesize,int bkup_index,bool append,mode_t mode,std::string pattern)
 {
-  log4cxx::PatternLayout *playout =
-    new log4cxx::PatternLayout(layout);
-  log4cxx::RollingFileAppender *appender = 
-    new log4cxx::RollingFileAppender(log4cxx::LayoutPtr(playout), filename, append);
-  appender->setMaxBackupIndex(bkup_index);
-  appender->setMaxFileSize(filesize);
-  log4cxx::helpers::Pool p; 
-  appender->activateOptions(p);
-  logger->addAppender(appender);
+  log4cpp::PatternLayout* layout = new log4cpp::PatternLayout();
+  log4cpp::Appender* app = new 
+              log4cpp::RollingFileAppender("RollFileAppender::"+filename,filename,filesize,bkup_index,append,mode);
+  layout->setConversionPattern(pattern);
+  app->setLayout(layout);
+  logger->setAppender(app);
 }
 
 void
-logger_get_logger_names(std::vector<std::string>& names)
-{
-  log4cxx::LoggerList list = log4cxx::LogManager::getCurrentLoggers();
-  log4cxx::LoggerList::iterator logger = list.begin();
+logger_get_logger_names(std::vector<std::string>& names){
+  std::vector<log4cpp::Category*> *loggers = log4cpp::Category::getCurrentCategories();
+  std::vector<log4cpp::Category*>::iterator logger = loggers->begin();
+
   names.clear();
-  for(; logger != list.end(); logger++) {
+  for (;logger!=loggers->end();logger++){
     names.push_back((*logger)->getName());
-  }
+  };
+  
 }
 
-#endif /* HAVE_LOG4CXX */
+#endif /* HAVE_LOG4CPP */
 #endif /* ENABLE_GR_LOGGER */

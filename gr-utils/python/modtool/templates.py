@@ -275,7 +275,7 @@ ${str_to_python_comment($license)}
 #if $blocktype in ('sync', 'sink', 'source')
 #set $parenttype = 'gr.sync_block'
 #else
-#set $parenttype = {'hier': 'gr.hier_block2', 'interpolator': 'gr.interp_block', 'decimator': 'gr.decim_block', 'general': 'gr.block'}[$blocktype]
+#set $parenttype = {'hier': 'gr.hier_block2', 'interpolator': 'gr.interp_block', 'decimator': 'gr.decim_block', 'general': 'gr.basic_block'}[$blocktype]
 #end if
 #if $blocktype != 'hier'
 import numpy
@@ -338,7 +338,7 @@ class ${blockname}(${parenttype}):
 
     def general_work(self, input_items, output_items):
         output_items[0][:] = input_items[0]
-        consume(0, len(input_items[0])
+        consume(0, len(input_items[0]))
         \#self.consume_each(len(input_items[0]))
         return len(output_items[0])
 #stop

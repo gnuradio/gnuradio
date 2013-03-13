@@ -25,13 +25,12 @@ include(GrPlatform) #define LIB_SUFFIX
 include_directories(${Boost_INCLUDE_DIR})
 link_directories(${Boost_LIBRARY_DIRS})
 
-add_library(gnuradio-howto SHARED square_ff_impl.cc square2_ff_impl.cc)
-target_link_libraries(gnuradio-howto 
-  ${Boost_LIBRARIES} 
-  ${GRUEL_LIBRARIES} 
-  ${GNURADIO_CORE_LIBRARIES}
-  ${LOG4CXX_LIBRARIES}
-)
+add_library(gnuradio-howto SHARED howto_square_ff.cc howto_square2_ff.cc)
+target_link_libraries(gnuradio-howto
+    ${Boost_LIBRARIES}
+    ${GRUEL_LIBRARIES}
+    ${GNURADIO_CORE_LIBRARIES}
+    ${LOG4CPP_LIBRARIES})
 
 set_target_properties(gnuradio-howto PROPERTIES DEFINE_SYMBOL "gnuradio_howto_EXPORTS")
 

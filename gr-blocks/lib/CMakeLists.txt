@@ -198,6 +198,7 @@ list(APPEND gr_blocks_sources
     pdu_to_tagged_stream_impl.cc
     peak_detector2_fb_impl.cc
     random_pdu_impl.cc
+    probe_rate_impl.cc
     regenerate_bb_impl.cc
     repeat_impl.cc
     rms_cf_impl.cc

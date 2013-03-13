@@ -41,7 +41,7 @@ namespace gr {
      * to the fxpt_vco can also be used to set or adjust the current
      * phase.
      */
-    class BLOCKS_API fxpt_nco 
+    class fxpt_nco 
     {
     private:
       uint32_t d_phase;

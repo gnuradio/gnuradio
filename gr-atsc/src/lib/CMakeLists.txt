@@ -33,8 +33,8 @@ include_directories(
 
 link_directories(${Boost_LIBRARY_DIRS})
 
-include_directories(${LOG4CXX_INCLUDE_DIRS})
-link_directories(${LOG4CXX_LIBRARY_DIRS})
+include_directories(${LOG4CPP_INCLUDE_DIRS})
+link_directories(${LOG4CPP_LIBRARY_DIRS})
 
 ########################################################################
 # Generate viterbi mux source
@@ -122,7 +122,7 @@ list(APPEND atsc_libs
     gnuradio-fec
     gnuradio-blocks
     ${Boost_LIBRARIES}
-    ${LOG4CXX_LIBRARIES}
+    ${LOG4CPP_LIBRARIES}
 )
 
 add_library(gnuradio-atsc SHARED ${gr_atsc_sources})

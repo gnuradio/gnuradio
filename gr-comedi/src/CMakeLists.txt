@@ -1,4 +1,4 @@
-# Copyright 2011-2013 Free Software Foundation, Inc.
+# Copyright 2011 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -21,58 +21,49 @@
 # Setup the include and linker paths
 ########################################################################
 include_directories(
-    ${GR_VIDEO_SDL_INCLUDE_DIRS}
+    ${GR_COMEDI_INCLUDE_DIRS}
     ${GNURADIO_CORE_INCLUDE_DIRS}
     ${GRUEL_INCLUDE_DIRS}
     ${Boost_INCLUDE_DIRS}
-    ${LOG4CPP_INCLUDE_DIRS}
-    ${SDL_INCLUDE_DIR}
+    ${COMEDI_INCLUDE_DIRS}
 )
 
-link_directories(${Boost_LIBRARY_DIRS})
+link_directories(
+	${Boost_LIBRARY_DIRS}
+	${COMEDI_LIBRARY_DIRS}
+)
+
+include_directories(${LOG4CPP_INCLUDE_DIRS})
+link_directories(${LOG4CPP_LIBRARY_DIRS})
 
 ########################################################################
 # Setup library
 ########################################################################
-list(APPEND gr_video_sdl_sources
-    video_sdl_sink_uc.cc
-    video_sdl_sink_s.cc
+list(APPEND gr_comedi_sources
+    comedi_sink_s.cc
+    comedi_source_s.cc
+    gri_comedi.cc
 )
 
-#Add Windows DLL resource file if using MSVC
-if(MSVC)
-    include(${CMAKE_SOURCE_DIR}/cmake/Modules/GrVersion.cmake)
-
-    configure_file(
-        ${CMAKE_CURRENT_SOURCE_DIR}/gnuradio-video-sdl.rc.in
-        ${CMAKE_CURRENT_BINARY_DIR}/gnuradio-video-sdl.rc
-    @ONLY)
-
-    list(APPEND gr_uhd_sources
-        ${CMAKE_CURRENT_BINARY_DIR}/gnuradio-video-sdl.rc
-    )
-endif(MSVC)
-
-list(APPEND video_sdl_libs
+list(APPEND comedi_libs
     gnuradio-core
     ${Boost_LIBRARIES}
-    ${SDL_LIBRARY}
+    ${COMEDI_LIBRARIES}
     ${LOG4CPP_LIBRARIES}
 )
 
-add_library(gnuradio-video-sdl SHARED ${gr_video_sdl_sources})
-target_link_libraries(gnuradio-video-sdl ${video_sdl_libs})
-GR_LIBRARY_FOO(gnuradio-video-sdl RUNTIME_COMPONENT "video_sdl_runtime" DEVEL_COMPONENT "video_sdl_devel")
+add_library(gnuradio-comedi SHARED ${gr_comedi_sources})
+target_link_libraries(gnuradio-comedi ${comedi_libs})
+GR_LIBRARY_FOO(gnuradio-comedi RUNTIME_COMPONENT "comedi_runtime" DEVEL_COMPONENT "comedi_devel")
 
 ########################################################################
 # Install public header files
 ########################################################################
 install(FILES
-    video_sdl_api.h
-    video_sdl_sink_uc.h
-    video_sdl_sink_s.h
+    comedi_sink_s.h
+    comedi_source_s.h
     DESTINATION ${GR_INCLUDE_DIR}/gnuradio
-    COMPONENT "video_sdl_devel"
+    COMPONENT "comedi_devel"
 )
 
 ########################################################################
@@ -89,24 +80,24 @@ set(GR_SWIG_INCLUDE_DIRS
     ${Boost_INCLUDE_DIRS}
 )
 
-set(GR_SWIG_DOC_FILE ${CMAKE_CURRENT_BINARY_DIR}/video_sdl_swig_doc.i)
+set(GR_SWIG_DOC_FILE ${CMAKE_CURRENT_BINARY_DIR}/comedi_swig_doc.i)
 set(GR_SWIG_DOC_DIRS ${CMAKE_CURRENT_SOURCE_DIR})
 
-set(GR_SWIG_LIBRARIES gnuradio-video-sdl)
+set(GR_SWIG_LIBRARIES gnuradio-comedi)
 
-GR_SWIG_MAKE(video_sdl video_sdl.i)
+GR_SWIG_MAKE(comedi comedi.i)
 
 GR_SWIG_INSTALL(
-    TARGETS video_sdl
+    TARGETS comedi
     DESTINATION ${GR_PYTHON_DIR}/gnuradio
-    COMPONENT "video_sdl_python"
+    COMPONENT "comedi_python"
 )
 
 install(
-    FILES video_sdl.i
-    ${CMAKE_CURRENT_BINARY_DIR}/video_sdl_swig_doc.i
+    FILES comedi.i
+    ${CMAKE_CURRENT_BINARY_DIR}/comedi_swig_doc.i
     DESTINATION ${GR_INCLUDE_DIR}/gnuradio/swig
-    COMPONENT "video_sdl_swig"
+    COMPONENT "comedi_swig"
 )
 
 endif(ENABLE_PYTHON)
@@ -117,9 +108,9 @@ endif(ENABLE_PYTHON)
 if(ENABLE_TESTING AND ENABLE_PYTHON)
 
 list(APPEND GR_TEST_PYTHON_DIRS
-    ${CMAKE_BINARY_DIR}/gr-video-sdl/src
+    ${CMAKE_BINARY_DIR}/gr-comedi/src
 )
-list(APPEND GR_TEST_TARGET_DEPS gnuradio-video-sdl)
+list(APPEND GR_TEST_TARGET_DEPS gnuradio-comedi)
 
 include(GrTest)
 file(GLOB py_qa_test_files "qa_*.py")

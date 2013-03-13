@@ -135,6 +135,7 @@
 #include "blocks/peak_detector_ib.h"
 #include "blocks/peak_detector_sb.h"
 #include "blocks/peak_detector2_fb.h"
+#include "blocks/probe_rate.h"
 #include "blocks/probe_signal_b.h"
 #include "blocks/probe_signal_s.h"
 #include "blocks/probe_signal_i.h"
@@ -313,6 +314,7 @@
 %include "blocks/peak_detector_sb.h"
 %include "blocks/peak_detector2_fb.h"
 %include "blocks/random_pdu.h"
+%include "blocks/probe_rate.h"
 %include "blocks/regenerate_bb.h"
 %include "blocks/repeat.h"
 %include "blocks/rms_cf.h"
@@ -458,6 +460,7 @@ GR_SWIG_BLOCK_MAGIC2(blocks, peak_detector_ib);
 GR_SWIG_BLOCK_MAGIC2(blocks, peak_detector_sb);
 GR_SWIG_BLOCK_MAGIC2(blocks, peak_detector2_fb);
 GR_SWIG_BLOCK_MAGIC2(blocks, pdu_to_tagged_stream);
+GR_SWIG_BLOCK_MAGIC2(blocks, probe_rate);
 GR_SWIG_BLOCK_MAGIC2(blocks, or_bb);
 GR_SWIG_BLOCK_MAGIC2(blocks, or_ss);
 GR_SWIG_BLOCK_MAGIC2(blocks, or_ii);
