@@ -41,7 +41,7 @@ namespace gr {
       /*!
        * \brief Make a throughput measurement block
        * \param itemsize size of each stream item
-       * \param update_rate_sec minimum update time in seconds
+       * \param update_rate_ms minimum update time in milliseconds
        * \param alpha gain for running average filter
        */
       static sptr make(size_t itemsize, double update_rate_ms = 500.0, double alpha = 0.0001);

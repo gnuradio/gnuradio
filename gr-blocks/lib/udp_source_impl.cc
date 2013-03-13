@@ -143,7 +143,7 @@ namespace gr {
             // Make sure we never go beyond the boundary of the
             // residual buffer.  This will just drop the last bit of
             // data in the buffer if we've run out of room.
-            if(d_residual + bytes_transferred > 50*d_payload_size) {
+            if((int)(d_residual + bytes_transferred) > (50*d_payload_size)) {
               GR_LOG_WARN(d_logger, "Too much data; dropping packet.");
             }
             else {
