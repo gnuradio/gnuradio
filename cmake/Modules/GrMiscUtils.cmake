@@ -220,8 +220,6 @@ endfunction(GR_GEN_TARGET_DEPS)
 function(GR_LOGGING)
   find_package(Log4cpp)
 
-  message(STATUS "LOG4CPP_LIBRARIES First set to ${LOG4CPP_LIBRARIES}.")
-
   OPTION(ENABLE_GR_LOG "Use gr_logger" ON)
   if(ENABLE_GR_LOG)
     # If gr_logger is enabled, make it usable

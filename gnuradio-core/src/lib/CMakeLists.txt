@@ -82,9 +82,6 @@ link_directories(${LOG4CPP_LIBRARY_DIRS})
 #if(LOG4CPP_FOUND)
 #    add_definitions(-DENABLE_GR_LOG)
 #endif(LOG4CPP_FOUND)
-message("******************************************")
-message("LOG4CPP LIBRARIES are ${LOG4CPP_LIBRARIES}")
-message("******************************************")
 
 list(APPEND gnuradio_core_libs
     gruel

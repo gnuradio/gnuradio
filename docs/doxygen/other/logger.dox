@@ -18,7 +18,7 @@ Logging is useful for blocks to print out certain amounts of data at
 different levels. These levels are:
 
 <pre>
-    DEBUG < INFO < WARN < TRACE < ERROR < ALERT < CRIT < FATAL <EMERG
+    DEBUG < INFO < WARN < TRACE < ERROR < ALERT < CRIT < FATAL < EMERG
 </pre>
 
 
@@ -45,14 +45,14 @@ stream or file.
 The four main configure options are:
 
 <pre>
-  log_level = all
-  debug_level = all
+  log_level = debug
+  debug_level = debug
   log_file = stdout
   debug_file = stderr
 </pre>
 
 This establishes the two loggers as having access to all levels of
-logging events (TRACE through FATAL). They are also configured not to
+logging events (DEBUG through EMERG). They are also configured not to
 use files but instead output to the console. The standard logger will
 output to standard out while the debug logger outputs to standard
 error.
@@ -114,20 +114,21 @@ The various logging macros are defined in gr_logger.h. Here are some
 simple examples of using them:
 
 \code
-  GR_LOG_TRACE(LOG, "TRACE message");
   GR_LOG_DEBUG(LOG, "DEBUG message");
   GR_LOG_INFO(LOG, "INFO message");
+  GR_LOG_NOTICE(LOG, "NOTICE message");
   GR_LOG_WARN(LOG, "WARNING message");
   GR_LOG_ERROR(LOG, "ERROR message");
-  GR_FATAL(LOG, "FATAL message");
-  GR_ERRORIF(LOG, a>b, "CONDITIONAL ERROR message");
-  GR_ASSERT(LOG, a>b, "ASSERT error message");
+  GR_LOG_CRIT(LOG, "CRIT message");
+  GR_LOG_ALERT(LOG, "ALERT message");
+  GR_LOG_FATAL(LOG, "FATAL message");
+  GR_LOG_EMERG(LOG, "EMERG message");
 \endcode
 
 If the logger is not enabled, then these macros become nops and do
 nothing (and d_logger and d_debug_logger are NULL pointers). If
 logging is enabled but the log4cpp library is not found, then TRACE,
-DEBUG, and INFO levels go to stdout and the rest to stderr.
+INFO, and NOTICE levels go to stdout and the rest to stderr.
 
 
 \subsection adv_config Advanced Configuration Options
@@ -151,7 +152,7 @@ For the following examples, we will assume that our local
 \code
 [LOG]
 log_config = /opt/gr/etc/gnuadio/gr_log_default.xml
-log_level = All
+log_level = debug
 debug_level = Off
 \endcode
 
@@ -165,7 +166,7 @@ specified in the XML file. Here, we have turned on the standard logger
 (d_debug_logger). So even if the debug logger is used in the code, it
 will not actually output any information. Conversely, any level of
 output passed to the standard logger will output because we have
-turned this value to "all."
+turned this value to the lowest level "debug."
 
 If both an XML configuration file is set and the "log_file" or
 "debug_file" options are set at the same time, both systems are
@@ -199,6 +200,6 @@ except we would use "gr_log_debug." in the GR_LOG_GETLOGGER call):
 
 This creates a pointer called LOG (which is instantiated as a
 log4cpp:LoggerPtr in the macro) that we can now use locally as the
-input to our logging macros like 'GR_LOG_TRACE(LOG, "message")'.
+input to our logging macros like 'GR_LOG_INFO(LOG, "message")'.
 
 */
