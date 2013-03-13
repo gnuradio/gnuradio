@@ -178,6 +178,8 @@ install(FILES
     transcendental.h
     tuntap_pdu.h
     uchar_to_float.h
+    udp_sink.h
+    udp_source.h
     unpack_k_bits_bb.h
     vco_f.h
     vector_to_stream.h

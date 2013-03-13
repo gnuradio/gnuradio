@@ -37,6 +37,7 @@
 		<block>blocks_random_pdu</block>
 		<block>blocks_message_source</block>
 		<block>blocks_message_burst_source</block>
+		<block>blocks_udp_source</block>
 		<block>blocks_wavfile_source</block>
 	</cat>
 	<cat>
@@ -48,6 +49,7 @@
 		<block>blocks_tag_debug</block>
 		<block>blocks_message_sink</block>
 		<block>blocks_tagged_file_sink</block>
+		<block>blocks_udp_sink</block>
 		<block>blocks_wavfile_sink</block>
 	</cat>
 	<cat>
