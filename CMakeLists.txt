@@ -96,6 +96,7 @@ if(MSVC)
     )
     add_definitions(-DHAVE_CONFIG_H)
     add_definitions(/MP) #build with multiple processors
+    add_definitions(/bigobj) #allow for larger object files
 endif(MSVC)
 
 ########################################################################
