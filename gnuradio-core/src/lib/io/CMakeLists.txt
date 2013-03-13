@@ -83,8 +83,6 @@ set(gr_core_io_triple_threats
     microtune_4937_eval_board
     ppio
     sdr_1000
-    gr_udp_sink
-    gr_udp_source
 )
 
 foreach(file_tt ${gr_core_io_triple_threats})

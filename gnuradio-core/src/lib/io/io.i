@@ -33,8 +33,6 @@
 #include <gr_oscope_sink_x.h>
 #include <gr_oscope_sink_f.h>
 #include <ppio.h>
-#include <gr_udp_sink.h>
-#include <gr_udp_source.h>
 %}
 
 %include "gr_histo_sink.i"
@@ -44,7 +42,5 @@
 %include "sdr_1000.i"
 %include "gr_oscope_sink.i"
 %include "ppio.i"
-%include "gr_udp_sink.i"
-%include "gr_udp_source.i"
 
 

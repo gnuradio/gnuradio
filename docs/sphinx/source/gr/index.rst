@@ -28,7 +28,6 @@ Signal Sources
    gnuradio.gr.vector_source_f
    gnuradio.gr.vector_source_i
    gnuradio.gr.vector_source_s
-   gnuradio.gr.udp_source
 
 Signal Sinks
 ^^^^^^^^^^^^
@@ -46,7 +45,6 @@ Signal Sinks
    gnuradio.gr.vector_sink_s
    gnuradio.gr.histo_sink_f
    gnuradio.gr.oscope_sink_f
-   gnuradio.gr.udp_sink
 
 
 Information Coding and Decoding

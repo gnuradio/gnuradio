@@ -12,7 +12,6 @@
 		<block>random_source_x</block>
 		<block>gr_null_source</block>
 		<block>blks2_tcp_source</block>
-		<block>gr_udp_source</block>
 		<block>pad_source</block>
 		<block>virtual_source</block>
 	</cat>
@@ -21,7 +20,6 @@
 		<block>gr_vector_sink_x</block>
 		<block>gr_null_sink</block>
 		<block>blks2_tcp_sink</block>
-		<block>gr_udp_sink</block>
 		<block>pad_sink</block>
 		<block>virtual_sink</block>
 	</cat>
