@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='ASCII'?>
 <flow_graph>
-  <timestamp>Tue Feb 26 14:26:03 2013</timestamp>
+  <timestamp>Thu Mar 14 14:41:57 2013</timestamp>
   <block>
     <key>options</key>
     <param>
@@ -54,75 +54,6 @@
     <param>
       <key>_coordinate</key>
       <value>(10, 10)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>variable</key>
-    <param>
-      <key>id</key>
-      <value>graymap</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>value</key>
-      <value>[[3,1,0,2]]</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(32, 387)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>variable</key>
-    <param>
-      <key>id</key>
-      <value>amps</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>value</key>
-      <value>[1]</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(32, 451)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>variable</key>
-    <param>
-      <key>id</key>
-      <value>nfilts</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>value</key>
-      <value>32</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(99, 451)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -199,6 +130,297 @@
     </param>
   </block>
   <block>
+    <key>ctrlport_monitor</key>
+    <param>
+      <key>id</key>
+      <value>ctrlport_monitor_0</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>en</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(175, 10)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>gr_vector_source_x</key>
+    <param>
+      <key>id</key>
+      <value>gr_vector_source_x_0</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>type</key>
+      <value>byte</value>
+    </param>
+    <param>
+      <key>vector</key>
+      <value>0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50</value>
+    </param>
+    <param>
+      <key>repeat</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>vlen</key>
+      <value>1</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(190, 71)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>blocks_packed_to_unpacked_xx</key>
+    <param>
+      <key>id</key>
+      <value>blocks_packed_to_unpacked_xx_0</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>type</key>
+      <value>byte</value>
+    </param>
+    <param>
+      <key>bits_per_chunk</key>
+      <value>8</value>
+    </param>
+    <param>
+      <key>endianness</key>
+      <value>gr.GR_MSB_FIRST</value>
+    </param>
+    <param>
+      <key>num_ports</key>
+      <value>1</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(419, 10)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>blocks_throttle</key>
+    <param>
+      <key>id</key>
+      <value>blocks_throttle_0</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>type</key>
+      <value>byte</value>
+    </param>
+    <param>
+      <key>samples_per_second</key>
+      <value>samp_rate</value>
+    </param>
+    <param>
+      <key>vlen</key>
+      <value>1</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(436, 97)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>digital_psk_mod</key>
+    <param>
+      <key>id</key>
+      <value>digital_psk_mod_0</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>constellation_points</key>
+      <value>4</value>
+    </param>
+    <param>
+      <key>mod_code</key>
+      <value>"gray"</value>
+    </param>
+    <param>
+      <key>differential</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>samples_per_symbol</key>
+      <value>sps</value>
+    </param>
+    <param>
+      <key>excess_bw</key>
+      <value>0.35</value>
+    </param>
+    <param>
+      <key>verbose</key>
+      <value>False</value>
+    </param>
+    <param>
+      <key>log</key>
+      <value>False</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(627, 65)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>digital_pfb_clock_sync_xxx</key>
+    <param>
+      <key>id</key>
+      <value>digital_pfb_clock_sync_xxx_0</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>type</key>
+      <value>ccf</value>
+    </param>
+    <param>
+      <key>sps</key>
+      <value>sps</value>
+    </param>
+    <param>
+      <key>loop_bw</key>
+      <value>2*3.14/100.0</value>
+    </param>
+    <param>
+      <key>taps</key>
+      <value>firdes.root_raised_cosine(nfilts, nfilts,1.0/sps, 0.35, int(22*sps*nfilts))</value>
+    </param>
+    <param>
+      <key>filter_size</key>
+      <value>nfilts</value>
+    </param>
+    <param>
+      <key>init_phase</key>
+      <value>nfilts/2</value>
+    </param>
+    <param>
+      <key>max_dev</key>
+      <value>1.5</value>
+    </param>
+    <param>
+      <key>osps</key>
+      <value>1</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(339, 195)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>variable</key>
+    <param>
+      <key>id</key>
+      <value>nfilts</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>value</key>
+      <value>32</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(74, 390)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>variable</key>
+    <param>
+      <key>id</key>
+      <value>amps</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>value</key>
+      <value>[1]</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(7, 390)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>variable</key>
+    <param>
+      <key>id</key>
+      <value>graymap</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>value</key>
+      <value>[[3,1,0,2]]</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(7, 326)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
     <key>variable_qtgui_range</key>
     <param>
       <key>id</key>
@@ -246,34 +468,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(175, 387)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>gr_null_sink</key>
-    <param>
-      <key>id</key>
-      <value>gr_null_sink_0</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>type</key>
-      <value>complex</value>
-    </param>
-    <param>
-      <key>vlen</key>
-      <value>1</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(939, 313)</value>
+      <value>(150, 326)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -328,7 +523,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(316, 389)</value>
+      <value>(341, 341)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -387,7 +582,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(949, 232)</value>
+      <value>(752, 196)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -395,10 +590,68 @@
     </param>
   </block>
   <block>
-    <key>digital_pfb_clock_sync_xxx</key>
+    <key>digital_costas_loop_cc</key>
     <param>
       <key>id</key>
-      <value>digital_pfb_clock_sync_xxx_0</value>
+      <value>digital_costas_loop_cc_0</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>w</key>
+      <value>6.28/100.0</value>
+    </param>
+    <param>
+      <key>order</key>
+      <value>4</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(609, 282)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>gr_ctrlport_probe2_c</key>
+    <param>
+      <key>id</key>
+      <value>phase_probe2</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>name</key>
+      <value>phase locked</value>
+    </param>
+    <param>
+      <key>desc</key>
+      <value>Constellation Points</value>
+    </param>
+    <param>
+      <key>len</key>
+      <value>1024</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(781, 383)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>gr_null_sink</key>
+    <param>
+      <key>id</key>
+      <value>gr_null_sink_0</value>
     </param>
     <param>
       <key>_enabled</key>
@@ -406,39 +659,15 @@
     </param>
     <param>
       <key>type</key>
-      <value>ccf</value>
+      <value>complex</value>
     </param>
     <param>
-      <key>sps</key>
-      <value>sps</value>
-    </param>
-    <param>
-      <key>loop_bw</key>
-      <value>2*3.14/100.0</value>
-    </param>
-    <param>
-      <key>taps</key>
-      <value>firdes.root_raised_cosine(nfilts, nfilts,1.0/sps, 0.35, int(22*sps*nfilts))</value>
-    </param>
-    <param>
-      <key>filter_size</key>
-      <value>nfilts</value>
-    </param>
-    <param>
-      <key>init_phase</key>
-      <value>nfilts/2</value>
-    </param>
-    <param>
-      <key>max_dev</key>
-      <value>1.5</value>
-    </param>
-    <param>
-      <key>osps</key>
+      <key>vlen</key>
       <value>1</value>
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(322, 231)</value>
+      <value>(866, 343)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -446,46 +675,61 @@
     </param>
   </block>
   <block>
-    <key>digital_psk_mod</key>
+    <key>gr_ctrlport_probe2_c</key>
     <param>
       <key>id</key>
-      <value>digital_psk_mod_0</value>
+      <value>time_probe2</value>
     </param>
     <param>
       <key>_enabled</key>
       <value>True</value>
     </param>
     <param>
-      <key>constellation_points</key>
-      <value>4</value>
+      <key>name</key>
+      <value>time locked</value>
     </param>
     <param>
-      <key>mod_code</key>
-      <value>"gray"</value>
+      <key>desc</key>
+      <value>Constellation Points</value>
     </param>
     <param>
-      <key>differential</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>samples_per_symbol</key>
-      <value>sps</value>
-    </param>
-    <param>
-      <key>excess_bw</key>
-      <value>0.35</value>
-    </param>
-    <param>
-      <key>verbose</key>
-      <value>False</value>
-    </param>
-    <param>
-      <key>log</key>
-      <value>False</value>
+      <key>len</key>
+      <value>1024</value>
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(846, 32)</value>
+      <value>(518, 435)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>gr_ctrlport_probe2_c</key>
+    <param>
+      <key>id</key>
+      <value>received_probe2</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>name</key>
+      <value>received</value>
+    </param>
+    <param>
+      <key>desc</key>
+      <value>Constellation Points</value>
+    </param>
+    <param>
+      <key>len</key>
+      <value>1024</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(368, 515)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -516,7 +760,7 @@
     </param>
     <param>
       <key>taps</key>
-      <value>cmath.exp(1j*noise)</value>
+      <value>cmath.exp(1j*phase)</value>
     </param>
     <param>
       <key>seed</key>
@@ -524,224 +768,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(80, 247)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>digital_costas_loop_cc</key>
-    <param>
-      <key>id</key>
-      <value>digital_costas_loop_cc_0</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>w</key>
-      <value>6.28/100.0</value>
-    </param>
-    <param>
-      <key>order</key>
-      <value>4</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(641, 313)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>gr_ctrlport_probe2_c</key>
-    <param>
-      <key>id</key>
-      <value>probe2_c_0</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>name</key>
-      <value>constellation</value>
-    </param>
-    <param>
-      <key>desc</key>
-      <value>Constellation Points</value>
-    </param>
-    <param>
-      <key>len</key>
-      <value>1024</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(936, 396)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>ctrlport_monitor</key>
-    <param>
-      <key>id</key>
-      <value>ctrlport_monitor_0</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>en</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(228, 9)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>gr_vector_source_x</key>
-    <param>
-      <key>id</key>
-      <value>gr_vector_source_x_0</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>type</key>
-      <value>byte</value>
-    </param>
-    <param>
-      <key>vector</key>
-      <value>0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50</value>
-    </param>
-    <param>
-      <key>repeat</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>vlen</key>
-      <value>1</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(234, 126)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>blocks_file_source</key>
-    <param>
-      <key>id</key>
-      <value>blocks_file_source_0</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>False</value>
-    </param>
-    <param>
-      <key>file</key>
-      <value>/dev/urandom</value>
-    </param>
-    <param>
-      <key>type</key>
-      <value>byte</value>
-    </param>
-    <param>
-      <key>repeat</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>vlen</key>
-      <value>1</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(228, 56)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>blocks_packed_to_unpacked_xx</key>
-    <param>
-      <key>id</key>
-      <value>blocks_packed_to_unpacked_xx_0</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>type</key>
-      <value>byte</value>
-    </param>
-    <param>
-      <key>bits_per_chunk</key>
-      <value>8</value>
-    </param>
-    <param>
-      <key>endianness</key>
-      <value>gr.GR_MSB_FIRST</value>
-    </param>
-    <param>
-      <key>num_ports</key>
-      <value>1</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(419, 56)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>blocks_throttle</key>
-    <param>
-      <key>id</key>
-      <value>blocks_throttle_0</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>type</key>
-      <value>byte</value>
-    </param>
-    <param>
-      <key>samples_per_second</key>
-      <value>samp_rate</value>
-    </param>
-    <param>
-      <key>vlen</key>
-      <value>1</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(623, 64)</value>
+      <value>(68, 211)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -751,12 +778,6 @@
   <connection>
     <source_block_id>blocks_throttle_0</source_block_id>
     <sink_block_id>digital_psk_mod_0</sink_block_id>
-    <source_key>0</source_key>
-    <sink_key>0</sink_key>
-  </connection>
-  <connection>
-    <source_block_id>digital_pfb_clock_sync_xxx_0</source_block_id>
-    <sink_block_id>digital_costas_loop_cc_0</sink_block_id>
     <source_key>0</source_key>
     <sink_key>0</sink_key>
   </connection>
@@ -792,7 +813,7 @@
   </connection>
   <connection>
     <source_block_id>digital_costas_loop_cc_0</source_block_id>
-    <sink_block_id>probe2_c_0</sink_block_id>
+    <sink_block_id>phase_probe2</sink_block_id>
     <source_key>0</source_key>
     <sink_key>0</sink_key>
   </connection>
@@ -809,8 +830,20 @@
     <sink_key>0</sink_key>
   </connection>
   <connection>
-    <source_block_id>blocks_file_source_0</source_block_id>
-    <sink_block_id>blocks_packed_to_unpacked_xx_0</sink_block_id>
+    <source_block_id>channels_channel_model_0</source_block_id>
+    <sink_block_id>received_probe2</sink_block_id>
+    <source_key>0</source_key>
+    <sink_key>0</sink_key>
+  </connection>
+  <connection>
+    <source_block_id>digital_pfb_clock_sync_xxx_0</source_block_id>
+    <sink_block_id>time_probe2</sink_block_id>
+    <source_key>0</source_key>
+    <sink_key>0</sink_key>
+  </connection>
+  <connection>
+    <source_block_id>digital_pfb_clock_sync_xxx_0</source_block_id>
+    <sink_block_id>digital_costas_loop_cc_0</sink_block_id>
     <source_key>0</source_key>
     <sink_key>0</sink_key>
   </connection>
