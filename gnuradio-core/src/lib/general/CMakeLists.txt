@@ -53,7 +53,6 @@ list(APPEND gnuradio_core_sources
     ${CMAKE_CURRENT_SOURCE_DIR}/gr_misc.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/gr_random.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/gr_reverse.cc
-    ${CMAKE_CURRENT_SOURCE_DIR}/gri_add_const_ss_generic.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/gri_debugger_hook.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/malloc16.c
 )
@@ -80,7 +79,6 @@ install(FILES
     ${CMAKE_CURRENT_SOURCE_DIR}/gr_random.h
     ${CMAKE_CURRENT_SOURCE_DIR}/gr_reverse.h
     ${CMAKE_CURRENT_SOURCE_DIR}/gr_test_types.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/gri_add_const_ss.h
     ${CMAKE_CURRENT_SOURCE_DIR}/gri_debugger_hook.h
     ${CMAKE_CURRENT_SOURCE_DIR}/gri_lfsr_15_1_0.h
     ${CMAKE_CURRENT_SOURCE_DIR}/gri_lfsr_32k.h
