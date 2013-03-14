@@ -330,6 +330,17 @@ gr_block::pc_noutput_items()
 }
 
 float
+gr_block::pc_noutput_items_avg()
+{
+  if(d_detail) {
+    return d_detail->pc_noutput_items_avg();
+  }
+  else {
+    return 0;
+  }
+}
+
+float
 gr_block::pc_noutput_items_var()
 {
   if(d_detail) {
@@ -345,6 +356,17 @@ gr_block::pc_nproduced()
 {
   if(d_detail) {
     return d_detail->pc_nproduced();
+  }
+  else {
+    return 0;
+  }
+}
+
+float
+gr_block::pc_nproduced_avg()
+{
+  if(d_detail) {
+    return d_detail->pc_nproduced_avg();
   }
   else {
     return 0;
@@ -374,6 +396,17 @@ gr_block::pc_input_buffers_full(int which)
 }
 
 float
+gr_block::pc_input_buffers_full_avg(int which)
+{
+  if(d_detail) {
+    return d_detail->pc_input_buffers_full_avg(static_cast<size_t>(which));
+  }
+  else {
+    return 0;
+  }
+}
+
+float
 gr_block::pc_input_buffers_full_var(int which)
 {
   if(d_detail) {
@@ -389,6 +422,17 @@ gr_block::pc_input_buffers_full()
 {
   if(d_detail) {
     return d_detail->pc_input_buffers_full();
+  }
+  else {
+    return std::vector<float>(1,0);
+  }
+}
+
+std::vector<float>
+gr_block::pc_input_buffers_full_avg()
+{
+  if(d_detail) {
+    return d_detail->pc_input_buffers_full_avg();
   }
   else {
     return std::vector<float>(1,0);
@@ -418,6 +462,17 @@ gr_block::pc_output_buffers_full(int which)
 }
 
 float
+gr_block::pc_output_buffers_full_avg(int which)
+{
+  if(d_detail) {
+    return d_detail->pc_output_buffers_full_avg(static_cast<size_t>(which));
+  }
+  else {
+    return 0;
+  }
+}
+
+float
 gr_block::pc_output_buffers_full_var(int which)
 {
   if(d_detail) {
@@ -440,6 +495,17 @@ gr_block::pc_output_buffers_full()
 }
 
 std::vector<float>
+gr_block::pc_output_buffers_full_avg()
+{
+  if(d_detail) {
+    return d_detail->pc_output_buffers_full_avg();
+  }
+  else {
+    return std::vector<float>(1,0);
+  }
+}
+
+std::vector<float>
 gr_block::pc_output_buffers_full_var()
 {
   if(d_detail) {
@@ -455,6 +521,17 @@ gr_block::pc_work_time()
 {
   if(d_detail) {
     return d_detail->pc_work_time();
+  }
+  else {
+    return 0;
+  }
+}
+
+float
+gr_block::pc_work_time_avg()
+{
+  if(d_detail) {
+    return d_detail->pc_work_time_avg();
   }
   else {
     return 0;
@@ -487,7 +564,14 @@ gr_block::setup_pc_rpc()
 #ifdef GR_CTRLPORT
   d_rpc_vars.push_back(
     rpcbasic_sptr(new rpcbasic_register_get<gr_block, float>(
-      alias(), "avg noutput_items", &gr_block::pc_noutput_items,
+      alias(), "noutput_items", &gr_block::pc_noutput_items,
+      pmt::mp(0), pmt::mp(32768), pmt::mp(0),
+      "", "noutput items", RPC_PRIVLVL_MIN,
+      DISPTIME | DISPOPTSTRIP)));
+
+  d_rpc_vars.push_back(
+    rpcbasic_sptr(new rpcbasic_register_get<gr_block, float>(
+      alias(), "avg noutput_items", &gr_block::pc_noutput_items_avg,
       pmt::mp(0), pmt::mp(32768), pmt::mp(0),
       "", "Average noutput items", RPC_PRIVLVL_MIN,
       DISPTIME | DISPOPTSTRIP)));
@@ -501,7 +585,14 @@ gr_block::setup_pc_rpc()
 
   d_rpc_vars.push_back(
     rpcbasic_sptr(new rpcbasic_register_get<gr_block, float>(
-      alias(), "avg nproduced", &gr_block::pc_nproduced,
+      alias(), "nproduced", &gr_block::pc_nproduced,
+      pmt::mp(0), pmt::mp(32768), pmt::mp(0),
+      "", "items produced", RPC_PRIVLVL_MIN,
+      DISPTIME | DISPOPTSTRIP)));
+
+  d_rpc_vars.push_back(
+    rpcbasic_sptr(new rpcbasic_register_get<gr_block, float>(
+      alias(), "avg nproduced", &gr_block::pc_nproduced_avg,
       pmt::mp(0), pmt::mp(32768), pmt::mp(0),
       "", "Average items produced", RPC_PRIVLVL_MIN,
       DISPTIME | DISPOPTSTRIP)));
@@ -515,7 +606,14 @@ gr_block::setup_pc_rpc()
 
   d_rpc_vars.push_back(
     rpcbasic_sptr(new rpcbasic_register_get<gr_block, float>(
-      alias(), "avg work time", &gr_block::pc_work_time,
+      alias(), "work time", &gr_block::pc_work_time,
+      pmt::mp(0), pmt::mp(1e9), pmt::mp(0),
+      "", "clock cycles in call to work", RPC_PRIVLVL_MIN,
+      DISPTIME | DISPOPTSTRIP)));
+
+  d_rpc_vars.push_back(
+    rpcbasic_sptr(new rpcbasic_register_get<gr_block, float>(
+      alias(), "avg work time", &gr_block::pc_work_time_avg,
       pmt::mp(0), pmt::mp(1e9), pmt::mp(0),
       "", "Average clock cycles in call to work", RPC_PRIVLVL_MIN,
       DISPTIME | DISPOPTSTRIP)));
@@ -529,7 +627,14 @@ gr_block::setup_pc_rpc()
 
   d_rpc_vars.push_back(
     rpcbasic_sptr(new rpcbasic_register_get<gr_block, std::vector<float> >(
-      alias(), "avg input \% full", &gr_block::pc_input_buffers_full,
+      alias(), "input \% full", &gr_block::pc_input_buffers_full,
+      pmt::make_c32vector(0,0), pmt::make_c32vector(0,1), pmt::make_c32vector(0,0),
+      "", "how full input buffers are", RPC_PRIVLVL_MIN,
+      DISPTIME | DISPOPTSTRIP)));
+
+  d_rpc_vars.push_back(
+    rpcbasic_sptr(new rpcbasic_register_get<gr_block, std::vector<float> >(
+      alias(), "avg input \% full", &gr_block::pc_input_buffers_full_avg,
       pmt::make_c32vector(0,0), pmt::make_c32vector(0,1), pmt::make_c32vector(0,0),
       "", "Average of how full input buffers are", RPC_PRIVLVL_MIN,
       DISPTIME | DISPOPTSTRIP)));
@@ -543,7 +648,14 @@ gr_block::setup_pc_rpc()
 
   d_rpc_vars.push_back(
     rpcbasic_sptr(new rpcbasic_register_get<gr_block, std::vector<float> >(
-      alias(), "avg output \% full", &gr_block::pc_output_buffers_full,
+      alias(), "output \% full", &gr_block::pc_output_buffers_full,
+      pmt::make_c32vector(0,0), pmt::make_c32vector(0,1), pmt::make_c32vector(0,0),
+      "", "how full output buffers are", RPC_PRIVLVL_MIN,
+      DISPTIME | DISPOPTSTRIP)));
+
+  d_rpc_vars.push_back(
+    rpcbasic_sptr(new rpcbasic_register_get<gr_block, std::vector<float> >(
+      alias(), "avg output \% full", &gr_block::pc_output_buffers_full_avg,
       pmt::make_c32vector(0,0), pmt::make_c32vector(0,1), pmt::make_c32vector(0,0),
       "", "Average of how full output buffers are", RPC_PRIVLVL_MIN,
       DISPTIME | DISPOPTSTRIP)));
