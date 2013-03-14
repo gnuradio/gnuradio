@@ -276,6 +276,8 @@ class DataTable(QtGui.QWidget):
         self.G = G;
         self.radio = radio;
 
+        self._keymap = None
+
         # Create a combobox to set the type of statistic we want.
         self._statistic = "Instantaneous"
         self._statistics_table = {"Instantaneous": "",
@@ -374,13 +376,20 @@ class DataTableBuffers(DataTable):
 
         if(self._sort):
             sorted_fullness = sorted(blockport_fullness.iteritems(), key=operator.itemgetter(1))
+            self._keymap = map(operator.itemgetter(0), sorted_fullness)
         else:
-            sorted_fullness = blockport_fullness.items()
+            if self._keymap:
+                sorted_fullness = len(self._keymap)*['',]
+                for b in blockport_fullness:
+                    sorted_fullness[self._keymap.index(b)] = (b, blockport_fullness[b])
+            else:
+                sorted_fullness = blockport_fullness.items()
 
         self.sp.clear();
         plt.figure(self.f.number)
         plt.subplot(111);
-        self.sp.bar( range(0,len(sorted_fullness)), map(lambda x: x[1], sorted_fullness))
+        self.sp.bar(range(0,len(sorted_fullness)), map(lambda x: x[1], sorted_fullness),
+                    alpha=0.5)
         self.sp.set_ylabel("% Buffers Full");
         self.sp.set_xticks( map(lambda x: x+0.5, range(0,len(sorted_fullness))))
         self.sp.set_xticklabels( map(lambda x: "  " + x, map(lambda x: x[0], sorted_fullness)),
@@ -413,16 +422,24 @@ class DataTableRuntimes(DataTable):
 
         if(self._sort):
             sorted_work = sorted(work_times.iteritems(), key=operator.itemgetter(1))
+            self._keymap = map(operator.itemgetter(0), sorted_work)
         else:
-            sorted_work = work_times.items()
+            if self._keymap:
+                sorted_work = len(self._keymap)*['',]
+                for b in work_times:
+                    sorted_work[self._keymap.index(b)] = (b, work_times[b])
+            else:
+                sorted_work = work_times.items()
             
         self.sp.clear();  
         plt.figure(self.f.number)
         plt.subplot(111);
-        self.sp.bar( range(0,len(sorted_work)), map(lambda x: x[1], sorted_work) )
+        self.sp.bar(range(0,len(sorted_work)), map(lambda x: x[1], sorted_work),
+                    alpha=0.5)
         self.sp.set_ylabel("% Runtime");
         self.sp.set_xticks( map(lambda x: x+0.5, range(0,len(sorted_work))))
-        self.sp.set_xticklabels( map(lambda x: "  " + x[0], sorted_work), rotation="vertical", verticalalignment="bottom" )
+        self.sp.set_xticklabels( map(lambda x: "  " + x[0], sorted_work),
+                                 rotation="vertical", verticalalignment="bottom" )
     
         self.canvas.draw();
         self.canvas.show();
