@@ -83,7 +83,7 @@ gr_prefs::_sys_prefs_filenames()
   // beginning of the file list to override any preferences in the
   // installed path config files.
   fs::path homedir = fs::path(gr_appdata_path());
-  homedir /= ".gnuradio/config.conf";
+  homedir = homedir/".gnuradio/config.conf";
   if(fs::exists(homedir)) {
     fnames.insert(fnames.begin(), homedir.string());
   }    
