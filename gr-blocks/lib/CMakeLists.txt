@@ -192,6 +192,7 @@ list(APPEND gr_blocks_sources
     tag_debug_impl.cc
     pdu_to_tagged_stream_impl.cc
     peak_detector2_fb_impl.cc
+    probe_rate_impl.cc
     regenerate_bb_impl.cc
     repeat_impl.cc
     rms_cf_impl.cc
@@ -215,6 +216,8 @@ list(APPEND gr_blocks_sources
     tuntap_pdu_impl.cc
     uchar_array_to_float.cc
     uchar_to_float_impl.cc
+    udp_sink_impl.cc
+    udp_source_impl.cc
     unpack_k_bits_bb_impl.cc
     vco_f_impl.cc
     vector_to_stream_impl.cc

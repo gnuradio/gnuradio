@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2004,2013 Free Software Foundation, Inc.
+ * Copyright 2005,2013 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -20,10 +20,8 @@
  * Boston, MA 02110-1301, USA.
  */
 
-// @WARNING@
-
-#ifndef @GUARD_NAME@
-#define @GUARD_NAME@
+#ifndef INCLUDED_BLOCKS_PROBE_RATE_H
+#define INCLUDED_BLOCKS_PROBE_RATE_H
 
 #include <blocks/api.h>
 #include <gr_sync_block.h>
@@ -32,23 +30,31 @@ namespace gr {
   namespace blocks {
 
     /*!
-     * \brief output = input or zero if muted.
-     * \ingroup level_blk
+     * \brief throughput measurement
      */
-    class BLOCKS_API @NAME@ : virtual public gr_sync_block
+    class BLOCKS_API probe_rate : virtual public gr_sync_block
     {
     public:
-      // gr::blocks::@NAME@::sptr
-      typedef boost::shared_ptr<@NAME@> sptr;
+      // gr::blocks::probe_rate::sptr
+      typedef boost::shared_ptr<probe_rate> sptr;
 
-      static sptr make(bool mute=false);
+      /*!
+       * \brief Make a throughput measurement block
+       * \param itemsize size of each stream item
+       * \param update_rate_ms minimum update time in milliseconds
+       * \param alpha gain for running average filter
+       */
+      static sptr make(size_t itemsize, double update_rate_ms = 500.0, double alpha = 0.0001);
 
-      virtual bool mute() const = 0;
-      virtual void set_mute(bool mute=false) = 0;
+      virtual void set_alpha(double alpha) = 0;
+      
+      virtual double rate() = 0;
+
+      virtual bool start() = 0;
+      virtual bool stop() = 0;
     };
 
   } /* namespace blocks */
 } /* namespace gr */
 
-#endif /* @GUARD_NAME@ */
-
+#endif /* INCLUDED_BLOCKS_PROBE_RATE_H */

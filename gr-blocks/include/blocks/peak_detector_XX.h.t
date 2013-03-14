@@ -38,7 +38,7 @@ namespace gr {
      * If a peak is detected, this block outputs a 1,
      * or it outputs 0's.
      */
-    class GR_CORE_API @NAME@ : virtual public gr_sync_block
+    class BLOCKS_API @NAME@ : virtual public gr_sync_block
     {
     public:
       // gr::blocks::@NAME@::sptr

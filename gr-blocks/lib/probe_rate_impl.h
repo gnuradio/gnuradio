@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2013 Free Software Foundation, Inc.
+ * Copyright 2005,2013 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -20,36 +20,44 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef INCLUDED_BLOCKS_SOCKET_PDU_H
-#define INCLUDED_BLOCKS_SOCKET_PDU_H
+#ifndef INCLUDED_GR_PROBE_RATE_IMPL_H
+#define INCLUDED_GR_PROBE_RATE_IMPL_H
 
-#include <blocks/api.h>
-#include <gr_block.h>
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
+
+#include <blocks/probe_rate.h>
 
 namespace gr {
   namespace blocks {
 
-    /*!
-     * \brief Creates socket interface and translates traffic to PDUs
-     * \ingroup net_blk
-     */
-    class BLOCKS_API socket_pdu : virtual public gr_block
+    class probe_rate_impl : public probe_rate
     {
-    public:
-      // gr::blocks::socket_pdu::sptr
-      typedef boost::shared_ptr<socket_pdu> sptr;
+    private:
+      double d_alpha, d_beta, d_avg;
+      double d_min_update_time;
+      boost::posix_time::ptime d_last_update;
+      uint64_t d_lastthru;
+      size_t d_itemsize;
+      void setup_rpc();
 
-      /*!
-       * \brief Construct a SOCKET PDU interface
-       * \param type type of socket (TCP_SERVER, TCP_CLIENT, UDP_SERVER, UDP_CLIENT)
-       * \param addr address of host
-       * \param port port number to use
-       * \param MTU Maximum Transmission Unit size
-       */
-      static sptr make(std::string type, std::string addr, std::string port, int MTU=10000);
-    };
+    public:
+      probe_rate_impl(size_t itemsize, double update_rate_ms, double alpha = 0.0001);
+      ~probe_rate_impl();
+      void set_alpha(double alpha);
+      double rate();
+      double timesincelast();
+      bool start();
+      bool stop();
+
+      int work(int noutput_items,
+               gr_vector_const_void_star &input_items,
+               gr_vector_void_star &output_items);
+
+    }; // end class
 
   } /* namespace blocks */
 } /* namespace gr */
 
-#endif /* INCLUDED_BLOCKS_SOCKET_PDU_H */
+#endif

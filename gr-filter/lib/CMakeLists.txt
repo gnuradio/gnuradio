@@ -97,13 +97,13 @@ include_directories(
     ${GNURADIO_CORE_INCLUDE_DIRS}
     ${VOLK_INCLUDE_DIRS}
     ${GRUEL_INCLUDE_DIRS}
-    ${LOG4CXX_INCLUDE_DIRS}
+    ${LOG4CPP_INCLUDE_DIRS}
     ${Boost_INCLUDE_DIRS}
 )
 
 link_directories(
   ${Boost_LIBRARY_DIRS}
-  ${LOG4CXX_LIBRARIES}
+  ${LOG4CPP_LIBRARIES}
 )
 
 ########################################################################

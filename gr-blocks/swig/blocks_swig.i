@@ -134,6 +134,7 @@
 #include "blocks/peak_detector_ib.h"
 #include "blocks/peak_detector_sb.h"
 #include "blocks/peak_detector2_fb.h"
+#include "blocks/probe_rate.h"
 #include "blocks/probe_signal_b.h"
 #include "blocks/probe_signal_s.h"
 #include "blocks/probe_signal_i.h"
@@ -176,6 +177,8 @@
 #include "blocks/transcendental.h"
 #include "blocks/tuntap_pdu.h"
 #include "blocks/uchar_to_float.h"
+#include "blocks/udp_sink.h"
+#include "blocks/udp_source.h"
 #include "blocks/unpack_k_bits_bb.h"
 #include "blocks/unpacked_to_packed_bb.h"
 #include "blocks/unpacked_to_packed_ss.h"
@@ -307,6 +310,7 @@
 %include "blocks/peak_detector_ib.h"
 %include "blocks/peak_detector_sb.h"
 %include "blocks/peak_detector2_fb.h"
+%include "blocks/probe_rate.h"
 %include "blocks/regenerate_bb.h"
 %include "blocks/repeat.h"
 %include "blocks/rms_cf.h"
@@ -335,6 +339,8 @@
 %include "blocks/transcendental.h"
 %include "blocks/tuntap_pdu.h"
 %include "blocks/uchar_to_float.h"
+%include "blocks/udp_sink.h"
+%include "blocks/udp_source.h"
 %include "blocks/unpack_k_bits_bb.h"
 %include "blocks/unpacked_to_packed_bb.h"
 %include "blocks/unpacked_to_packed_ss.h"
@@ -450,6 +456,7 @@ GR_SWIG_BLOCK_MAGIC2(blocks, peak_detector_ib);
 GR_SWIG_BLOCK_MAGIC2(blocks, peak_detector_sb);
 GR_SWIG_BLOCK_MAGIC2(blocks, peak_detector2_fb);
 GR_SWIG_BLOCK_MAGIC2(blocks, pdu_to_tagged_stream);
+GR_SWIG_BLOCK_MAGIC2(blocks, probe_rate);
 GR_SWIG_BLOCK_MAGIC2(blocks, or_bb);
 GR_SWIG_BLOCK_MAGIC2(blocks, or_ss);
 GR_SWIG_BLOCK_MAGIC2(blocks, or_ii);
@@ -492,6 +499,8 @@ GR_SWIG_BLOCK_MAGIC2(blocks, throttle);
 GR_SWIG_BLOCK_MAGIC2(blocks, transcendental);
 GR_SWIG_BLOCK_MAGIC2(blocks, tuntap_pdu);
 GR_SWIG_BLOCK_MAGIC2(blocks, uchar_to_float);
+GR_SWIG_BLOCK_MAGIC2(blocks, udp_sink);
+GR_SWIG_BLOCK_MAGIC2(blocks, udp_source);
 GR_SWIG_BLOCK_MAGIC2(blocks, unpack_k_bits_bb);
 GR_SWIG_BLOCK_MAGIC2(blocks, unpacked_to_packed_bb);
 GR_SWIG_BLOCK_MAGIC2(blocks, unpacked_to_packed_ss);

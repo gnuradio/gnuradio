@@ -27,7 +27,7 @@ target_link_libraries(gnuradio-howto
     ${Boost_LIBRARIES}
     ${GRUEL_LIBRARIES}
     ${GNURADIO_CORE_LIBRARIES}
-    ${LOG4CXX_LIBRARIES})
+    ${LOG4CPP_LIBRARIES})
 set_target_properties(gnuradio-howto PROPERTIES DEFINE_SYMBOL "gnuradio_howto_EXPORTS")
 
 ########################################################################
