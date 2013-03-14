@@ -28,6 +28,9 @@
 namespace gr {
   namespace analog {
 
+    /*! \brief Return the taps for an interpolating FIR filter
+     *   (gr::filter::interp_fir_filter_fff).
+     */
     class ANALOG_API cpm
     {
     public:
@@ -40,25 +43,30 @@ namespace gr {
 	GENERIC = 999
       };
       
-      /*! \brief Return the taps for an interpolating FIR filter (gr_interp_fir_filter_fff).
+      /*! \brief Return the taps for an interpolating FIR filter
+       *   (gr::filter::interp_fir_filter_fff).
        *
-       * These taps represent the phase response \f$g(k)\f$ for use in a CPM modulator,
-       * see also gr_cpmmod_bc.
+       * These taps represent the phase response \f$g(k)\f$ for use in
+       * a CPM modulator, see also gr_cpmmod_bc.
        *
-       * \param type The CPM type (Rectangular, Raised Cosine, Spectral Raised Cosine,
-       *             Tamed FM or Gaussian).
+       * \param type The CPM type (Rectangular, Raised Cosine,
+       *             Spectral Raised Cosine, Tamed FM or Gaussian).
        * \param samples_per_sym Samples per symbol.
        * \param L The length of the phase response in symbols.
-       * \param beta For Spectral Raised Cosine, this is the rolloff factor. For Gaussian
-       *             phase responses, this the 3dB-time-bandwidth product. For all other
-       *             cases, it is ignored.
+       * \param beta For Spectral Raised Cosine, this is the rolloff
+       *             factor. For Gaussian phase responses, this the
+       *             3dB-time-bandwidth product. For all other cases,
+       *             it is ignored.
        *
-       * Output: returns a vector of length \a K = \p samples_per_sym x \p L.
-       *         This can be used directly in an interpolating FIR filter such as
-       *         gr_interp_fir_filter_fff with interpolation factor \p samples_per_sym.
+       * Output: returns a vector of length \a K = \p samples_per_sym
+       *         x \p L.  This can be used directly in an
+       *         interpolating FIR filter such as
+       *         gr_interp_fir_filter_fff with interpolation factor \p
+       *         samples_per_sym.
        *
-       * All phase responses are normalised s.t. \f$ \sum_{k=0}^{K-1} g(k) = 1\f$; this will cause
-       * a maximum phase change of \f$ h \cdot \pi\f$ between two symbols, where \a h is the
+       * All phase responses are normalised s.t. \f$ \sum_{k=0}^{K-1}
+       * g(k) = 1\f$; this will cause a maximum phase change of \f$ h
+       * \cdot \pi\f$ between two symbols, where \a h is the
        * modulation index.
        *
        * The following phase responses can be generated:
@@ -77,7 +85,8 @@ namespace gr {
        * [1]: Anderson, Aulin and Sundberg; Digital Phase Modulation
        */
       static std::vector<float>
-	phase_response(cpm_type type, unsigned samples_per_sym, unsigned L, double beta=0.3);
+	phase_response(cpm_type type, unsigned samples_per_sym,
+                       unsigned L, double beta=0.3);
     };
   } // namespace analog
 } // namespace gr

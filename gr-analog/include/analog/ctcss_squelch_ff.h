@@ -31,7 +31,7 @@ namespace gr {
   namespace analog {
 
     /*!
-     * \brief gate or zero output if ctcss tone not present
+     * \brief gate or zero output if CTCSS tone not present
      * \ingroup level_blk
      */
     class ANALOG_API ctcss_squelch_ff :
@@ -47,6 +47,14 @@ namespace gr {
       
       /*!
        * \brief Make CTCSS tone squelch block.
+       *
+       * \param rate gain of the internal frequency filters.
+       * \param freq frequency value to use as the squelch tone.
+       * \param level threshold level for the squelch tone.
+       * \param len length of the frequency filters.
+       * \param ramp sets response characteristic.
+       * \param gate if true, no output if no squelch tone.
+       *             if false, output 0's if no squelch tone.
        */
       static sptr make(int rate, float freq, float level,
 		       int len, int ramp, bool gate);

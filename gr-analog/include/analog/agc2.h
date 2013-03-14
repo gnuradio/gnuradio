@@ -39,6 +39,15 @@ namespace gr {
       class ANALOG_API agc2_cc
       {
       public:
+        /*!
+         * Construct a comple value AGC loop implementation object.
+         *
+         * \param attack_rate the update rate of the loop when in attack mode.
+         * \param decay_rate the update rate of the loop when in decay mode.
+         * \param reference reference value to adjust signal power to.
+         * \param gain initial gain value.
+         * \param max_gain maximum gain value (0 for unlimited).
+         */
 	agc2_cc(float attack_rate = 1e-1, float decay_rate = 1e-2,
 		float reference = 1.0,
 		float gain = 1.0, float max_gain = 0.0)
@@ -99,6 +108,15 @@ namespace gr {
       class ANALOG_API agc2_ff
       {
       public:
+        /*!
+         * Construct a floating point value AGC loop implementation object.
+         *
+         * \param attack_rate the update rate of the loop when in attack mode.
+         * \param decay_rate the update rate of the loop when in decay mode.
+         * \param reference reference value to adjust signal power to.
+         * \param gain initial gain value.
+         * \param max_gain maximum gain value (0 for unlimited).
+         */
 	agc2_ff(float attack_rate = 1e-1, float decay_rate = 1e-2,
 		float reference = 1.0,
 		float gain = 1.0, float max_gain = 0.0)
