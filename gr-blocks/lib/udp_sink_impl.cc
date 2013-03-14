@@ -82,6 +82,9 @@ namespace gr {
         d_socket = new boost::asio::ip::udp::socket(d_io_service);
         d_socket->open(boost::asio::ip::udp::v4());
 
+        boost::asio::socket_base::reuse_address roption(true);
+        d_socket->set_option(roption);
+
         d_connected = true;
       }
     }

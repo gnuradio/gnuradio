@@ -79,15 +79,25 @@ namespace gr {
       d_host = host;
       d_port = static_cast<unsigned short>(port);
 
+      std::string s_port;
+      s_port = (boost::format("%d")%d_port).str();
+
       if(host.size() > 0) {
-        d_endpoint = boost::asio::ip::udp::endpoint(boost::asio::ip::udp::v4(), d_port);
-        d_socket = new boost::asio::ip::udp::socket(d_io_service, d_endpoint);
+        boost::asio::ip::udp::resolver resolver(d_io_service);
+        boost::asio::ip::udp::resolver::query query(boost::asio::ip::udp::v4(),
+                                                    host, s_port);
+        d_endpoint = *resolver.resolve(query);
+
+        d_socket = new boost::asio::ip::udp::socket(d_io_service);
+        d_socket->open(d_endpoint.protocol());
 
         boost::asio::socket_base::linger loption(true, 0);
         d_socket->set_option(loption);
 
         boost::asio::socket_base::reuse_address roption(true);
         d_socket->set_option(roption);
+
+        d_socket->bind(d_endpoint);
 
         start_receive();
         d_udp_thread = gruel::thread(boost::bind(&udp_source_impl::run_io_service, this));
@@ -115,7 +125,8 @@ namespace gr {
     int
     udp_source_impl::get_port(void)
     {
-      return d_endpoint.port();
+      //return d_endpoint.port();
+      return d_socket->local_endpoint().port();
     }
 
     void
@@ -137,7 +148,9 @@ namespace gr {
           if(d_eof && (bytes_transferred == 1) && (d_rxbuf[0] == 0x00)) {
             // If we are using EOF notification, test for it and don't
             // add anything to the output.
-            d_residual = 0;
+            d_residual = -1;
+            d_cond_wait.notify_one();
+            return;
           }
           else {
             // Make sure we never go beyond the boundary of the
@@ -174,6 +187,9 @@ namespace gr {
       // synchronous receive_from is not.
       boost::unique_lock<boost::mutex> lock(d_udp_mutex);
       d_cond_wait.wait(lock);
+
+      if(d_residual < 0)
+        return -1;
 
       int to_be_sent = (int)(d_residual - d_sent);
       int to_send    = std::min(noutput_items, to_be_sent);
