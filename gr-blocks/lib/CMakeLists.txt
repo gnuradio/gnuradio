@@ -247,6 +247,7 @@ list(APPEND blocks_libs
     volk
     ${Boost_LIBRARIES}
     ${BLOCKS_LIBRARIES}
+    ${LOG4CPP_LIBRARIES}
 )
 
 add_library(gnuradio-blocks SHARED ${gr_blocks_sources})
