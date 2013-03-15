@@ -37,10 +37,16 @@ namespace gr {
       gr_message_sptr	d_msg;
       unsigned		d_msg_offset;
       bool		d_eof;
+      bool              d_tags;
+      // FIXME: Is this adequate tagname length.
+      std::string       d_lengthtagname;
 
     public:
       message_source_impl(size_t itemsize, int msgq_limit);
       message_source_impl(size_t itemsize, gr_msg_queue_sptr msgq);
+      message_source_impl(size_t itemsize, gr_msg_queue_sptr msgq,
+			  const std::string& lengthtagname);
+
       ~message_source_impl();
 
       gr_msg_queue_sptr msgq() const { return d_msgq; }

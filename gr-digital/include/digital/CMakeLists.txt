@@ -75,54 +75,63 @@ add_custom_target(digital_generated_includes DEPENDS
 ########################################################################
 install(FILES
     ${generated_includes}
-    api.h
-    constellation.h
-    crc32.h
-    lfsr.h
-    glfsr.h
-    mpsk_snr_est.h
-    simple_framer_sync.h
     additive_scrambler_bb.h
+    api.h
     binary_slicer_fb.h
     clock_recovery_mm_cc.h
     clock_recovery_mm_ff.h
     cma_equalizer_cc.h
-    cpmmod_bc.h
-    constellation_receiver_cb.h
+    constellation.h
     constellation_decoder_cb.h
+    constellation_receiver_cb.h
     correlate_access_code_bb.h
     correlate_access_code_tag_bb.h
     costas_loop_cc.h
+    cpmmod_bc.h
+    crc32.h
     descrambler_bb.h
     diff_decoder_bb.h
     diff_encoder_bb.h
     diff_phasor_cc.h
-    framer_sink_1.h
     fll_band_edge_cc.h
+    framer_sink_1.h
+    glfsr.h
     glfsr_source_b.h
     glfsr_source_f.h
+    header_payload_demux.h
     kurtotic_equalizer_cc.h
+    lfsr.h
     lms_dd_equalizer_cc.h
     map_bb.h
     metric_type.h
     mpsk_receiver_cc.h
+    mpsk_snr_est.h
     mpsk_snr_est_cc.h
     ofdm_cyclic_prefixer.h
     ofdm_frame_acquisition.h
+    ofdm_frame_equalizer_vcvc.h
     ofdm_frame_sink.h
     ofdm_insert_preamble.h
     ofdm_mapper_bcv.h
     ofdm_sampler.h
+    ofdm_serializer_vcc.h
+    packet_header_default.h
+    packet_header_ofdm.h
+    packet_headergenerator_bb.h
+    packet_headerparser_b.h
     packet_sink.h
     pfb_clock_sync_ccf.h
     pfb_clock_sync_fff.h
     pn_correlator_cc.h
     probe_density_b.h
     probe_mpsk_snr_est_c.h
+    scale_tags.h
     scrambler_bb.h
-    simple_framer.h
     simple_correlator.h
+    simple_framer.h
+    simple_framer_sync.h
+    tagged_stream_check.h
+    ts_insert_zeros_cc.h
     DESTINATION ${GR_INCLUDE_DIR}/gnuradio/digital
     COMPONENT "digital_devel"
 )
-

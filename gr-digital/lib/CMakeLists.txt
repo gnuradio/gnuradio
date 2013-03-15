@@ -26,6 +26,7 @@ include_directories(
     ${GR_ANALOG_INCLUDE_DIRS}
     ${GR_FFT_INCLUDE_DIRS}
     ${GR_FILTER_INCLUDE_DIRS}
+    ${GR_BLOCKS_INCLUDE_DIRS}
     ${GNURADIO_CORE_INCLUDE_DIRS}
     ${VOLK_INCLUDE_DIRS}
     ${GRUEL_INCLUDE_DIRS}
@@ -112,49 +113,67 @@ expand_cc(chunks_to_symbols_XX_impl     bf bc sf sc if ic)
 ########################################################################
 list(APPEND digital_sources
     ${generated_sources}
-    constellation.cc
-    crc32.cc
-    glfsr.cc
-    mpsk_snr_est.cc
     additive_scrambler_bb_impl.cc
     binary_slicer_fb_impl.cc
     clock_recovery_mm_cc_impl.cc
     clock_recovery_mm_ff_impl.cc
     cma_equalizer_cc_impl.cc
-    constellation_receiver_cb_impl.cc
+    constellation.cc
     constellation_decoder_cb_impl.cc
+    constellation_receiver_cb_impl.cc
     correlate_access_code_bb_impl.cc
     correlate_access_code_tag_bb_impl.cc
     costas_loop_cc_impl.cc
     cpmmod_bc_impl.cc
+    crc32.cc
     descrambler_bb_impl.cc
     diff_decoder_bb_impl.cc
     diff_encoder_bb_impl.cc
     diff_phasor_cc_impl.cc
+    digital_crc32_bb.cc
+    digital_ofdm_carrier_allocator_cvc.cc
+    digital_ofdm_chanest_vcvc.cc
+    digital_ofdm_cyclic_prefixer.cc
+    digital_ofdm_equalizer_base.cc
+    digital_ofdm_equalizer_simpledfe.cc
+    digital_ofdm_equalizer_static.cc
+    digital_ofdm_sync_sc_cfb.cc
     fll_band_edge_cc_impl.cc
     framer_sink_1_impl.cc
+    glfsr.cc
     glfsr_source_b_impl.cc
     glfsr_source_f_impl.cc
+    header_payload_demux_impl.cc
     kurtotic_equalizer_cc_impl.cc
     lms_dd_equalizer_cc_impl.cc
     map_bb_impl.cc
     mpsk_receiver_cc_impl.cc
+    mpsk_snr_est.cc
     mpsk_snr_est_cc_impl.cc
     ofdm_cyclic_prefixer_impl.cc
     ofdm_frame_acquisition_impl.cc
+    ofdm_frame_equalizer_vcvc_impl.cc
     ofdm_frame_sink_impl.cc
     ofdm_insert_preamble_impl.cc
     ofdm_mapper_bcv_impl.cc
     ofdm_sampler_impl.cc
+    ofdm_serializer_vcc_impl.cc
+    packet_header_default.cc
+    packet_header_ofdm.cc
+    packet_headergenerator_bb_impl.cc
+    packet_headerparser_b_impl.cc
     packet_sink_impl.cc
     pfb_clock_sync_ccf_impl.cc
     pfb_clock_sync_fff_impl.cc
     pn_correlator_cc_impl.cc
     probe_density_b_impl.cc
     probe_mpsk_snr_est_c_impl.cc
+    scale_tags_impl.cc
     scrambler_bb_impl.cc
-    simple_framer_impl.cc
     simple_correlator_impl.cc
+    simple_framer_impl.cc
+    tagged_stream_check_impl.cc
+    ts_insert_zeros_cc_impl.cc
 )
 
 #Add Windows DLL resource file if using MSVC
@@ -185,6 +204,13 @@ list(APPEND digital_libs
 add_library(gnuradio-digital SHARED ${digital_sources})
 target_link_libraries(gnuradio-digital ${digital_libs})
 GR_LIBRARY_FOO(gnuradio-digital RUNTIME_COMPONENT "digital_runtime" DEVEL_COMPONENT "digital_devel")
-add_dependencies(gnuradio-digital 
-  digital_generated_includes digital_generated_swigs
-  gnuradio-core gnuradio-filter gnuradio-analog)
+
+add_dependencies(
+    gnuradio-digital
+    digital_generated_includes
+    digital_generated_swigs
+    gnuradio-core
+    gnuradio-filter
+    gnuradio-analog
+    gnuradio-blocks
+)

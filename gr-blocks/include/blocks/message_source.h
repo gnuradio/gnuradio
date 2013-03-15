@@ -42,6 +42,8 @@ namespace gr {
 
       static sptr make(size_t itemsize, int msgq_limit=0);
       static sptr make(size_t itemsize, gr_msg_queue_sptr msgq);
+      static sptr make(size_t itemsize, gr_msg_queue_sptr msgq,
+		       const std::string& lengthtagname);
 
       virtual gr_msg_queue_sptr msgq() const = 0;
     };

@@ -40,7 +40,10 @@ namespace gr {
       // gr::blocks::message_sink::sptr
       typedef boost::shared_ptr<message_sink> sptr;
 
-      static sptr make (size_t itemsize, gr_msg_queue_sptr msgq, bool dont_block);
+      static sptr make(size_t itemsize, gr_msg_queue_sptr msgq, bool dont_block);
+      static sptr make(size_t itemsize, gr_msg_queue_sptr msgq, bool dont_block,
+		       const std::string& lengthtagname);
+
     };
 
   } /* namespace blocks */
