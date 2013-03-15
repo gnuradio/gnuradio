@@ -635,10 +635,10 @@
     </param>
   </block>
   <block>
-    <key>digital_tagged_stream_mux</key>
+    <key>blocks_tagged_stream_mux</key>
     <param>
       <key>id</key>
-      <value>digital_tagged_stream_mux_0</value>
+      <value>blocks_tagged_stream_mux_0</value>
     </param>
     <param>
       <key>_enabled</key>
@@ -748,10 +748,10 @@
     </param>
   </block>
   <block>
-    <key>digital_tagged_stream_mux</key>
+    <key>blocks_tagged_stream_mux</key>
     <param>
       <key>id</key>
-      <value>digital_tagged_stream_mux_1</value>
+      <value>blocks_tagged_stream_mux_1</value>
     </param>
     <param>
       <key>_enabled</key>
@@ -1063,20 +1063,20 @@
     <sink_key>0</sink_key>
   </connection>
   <connection>
-    <source_block_id>digital_tagged_stream_mux_0</source_block_id>
+    <source_block_id>blocks_tagged_stream_mux_0</source_block_id>
     <sink_block_id>digital_ofdm_carrier_allocator_cvc_0</sink_block_id>
     <source_key>0</source_key>
     <sink_key>0</sink_key>
   </connection>
   <connection>
     <source_block_id>digital_ofdm_carrier_allocator_cvc_0</source_block_id>
-    <sink_block_id>digital_tagged_stream_mux_1</sink_block_id>
+    <sink_block_id>blocks_tagged_stream_mux_1</sink_block_id>
     <source_key>0</source_key>
     <sink_key>1</sink_key>
   </connection>
   <connection>
     <source_block_id>sync_word_source</source_block_id>
-    <sink_block_id>digital_tagged_stream_mux_1</sink_block_id>
+    <sink_block_id>blocks_tagged_stream_mux_1</sink_block_id>
     <source_key>0</source_key>
     <sink_key>0</sink_key>
   </connection>
@@ -1094,13 +1094,13 @@
   </connection>
   <connection>
     <source_block_id>digital_chunks_to_symbols_xx_0</source_block_id>
-    <sink_block_id>digital_tagged_stream_mux_0</sink_block_id>
+    <sink_block_id>blocks_tagged_stream_mux_0</sink_block_id>
     <source_key>0</source_key>
     <sink_key>0</sink_key>
   </connection>
   <connection>
     <source_block_id>digital_chunks_to_symbols_xx_0_0</source_block_id>
-    <sink_block_id>digital_tagged_stream_mux_0</sink_block_id>
+    <sink_block_id>blocks_tagged_stream_mux_0</sink_block_id>
     <source_key>0</source_key>
     <sink_key>1</sink_key>
   </connection>
@@ -1111,7 +1111,7 @@
     <sink_key>0</sink_key>
   </connection>
   <connection>
-    <source_block_id>digital_tagged_stream_mux_1</source_block_id>
+    <source_block_id>blocks_tagged_stream_mux_1</source_block_id>
     <sink_block_id>fft_vxx_0</sink_block_id>
     <source_key>0</source_key>
     <sink_key>0</sink_key>
