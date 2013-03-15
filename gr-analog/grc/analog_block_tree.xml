@@ -56,6 +56,7 @@
     <block>analog_pll_carriertracking_cc</block>
     <block>analog_pll_freqdet_cf</block>
     <block>analog_pll_refout_cc</block>
+    <block>analog_plateau_detector_fb</block>
   </cat>
   <cat>
     <name>Probes</name>

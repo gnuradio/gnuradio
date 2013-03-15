@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2006,2009,2011 Free Software Foundation, Inc.
+ * Copyright 2004-2006,2011 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -20,15 +20,16 @@
  * Boston, MA 02110-1301, USA.
  */
 
-GR_SWIG_BLOCK_MAGIC(digital,ofdm_cyclic_prefixer)
+GR_SWIG_BLOCK_MAGIC(digital,ofdm_cyclic_prefixer);
 
-digital_ofdm_cyclic_prefixer_sptr 
-digital_make_ofdm_cyclic_prefixer (size_t input_size, size_t output_size);
+digital_ofdm_cyclic_prefixer_sptr
+digital_make_ofdm_cyclic_prefixer (size_t input_size,
+		size_t output_size,
+		int rolloff_len=0,
+		const std::string &len_tag_key="");
 
-class digital_ofdm_cyclic_prefixer : public gr_sync_interpolator
+
+class digital_ofdm_cyclic_prefixer : public gr_tagged_stream_block
 {
- protected:
-  digital_ofdm_cyclic_prefixer (size_t input_size, size_t output_size);
-
- public:
 };
+

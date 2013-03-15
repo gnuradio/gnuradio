@@ -157,7 +157,7 @@ list(APPEND analog_libs
     ${Boost_LIBRARIES}
 )
 
-add_library(gnuradio-analog SHARED ${analog_sources})
+add_library(gnuradio-analog SHARED ${analog_sources} plateau_detector_fb_impl.cc)
 target_link_libraries(gnuradio-analog ${analog_libs})
 GR_LIBRARY_FOO(gnuradio-analog RUNTIME_COMPONENT "analog_runtime" DEVEL_COMPONENT "analog_devel")
 add_dependencies(gnuradio-analog analog_generated_includes analog_generated_swigs gnuradio-filter)

@@ -65,6 +65,7 @@
 #include "analog/simple_squelch_cc.h"
 #include "analog/squelch_base_cc.h"
 #include "analog/squelch_base_ff.h"
+#include "analog/plateau_detector_fb.h"
 %}
 
 %include "analog/cpm.h"
@@ -135,3 +136,5 @@ GR_SWIG_BLOCK_MAGIC2(analog, sig_source_i);
 GR_SWIG_BLOCK_MAGIC2(analog, sig_source_f);
 GR_SWIG_BLOCK_MAGIC2(analog, sig_source_c);
 GR_SWIG_BLOCK_MAGIC2(analog, simple_squelch_cc);
+%include "analog/plateau_detector_fb.h"
+GR_SWIG_BLOCK_MAGIC2(analog, plateau_detector_fb);

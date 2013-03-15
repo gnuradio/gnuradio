@@ -1,0 +1,19 @@
+<block>
+  <name>Packet Header Parser</name>
+  <key>digital_packet_headerparser_b</key>
+  <import>from gnuradio import digital</import>
+  <make>digital.packet_headerparser_b($header_formatter)</make>
+  <param>
+    <name>Formatter Object</name>
+    <key>header_formatter</key>
+    <type>raw</type>
+  </param>
+  <sink>
+    <name>in</name>
+    <type>byte</type>
+  </sink>
+  <source>
+    <name>header_data</name>
+    <type>message</type>
+  </source>
+</block>

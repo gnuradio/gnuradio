@@ -22,14 +22,18 @@
 
 GR_SWIG_BLOCK_MAGIC(gr,message_source);
 
+#include <string>
+
 gr_message_source_sptr gr_make_message_source (size_t itemsize, int msgq_limit=0);
 gr_message_source_sptr gr_make_message_source (size_t itemsize, gr_msg_queue_sptr msgq);
+gr_message_source_sptr gr_make_message_source (size_t itemsize, gr_msg_queue_sptr msgq, const std::string& lengthtagname);
 
 class gr_message_source : public gr_sync_block
 {
  protected:
   gr_message_source (size_t itemsize, int msgq_limit);
   gr_message_source (size_t itemsize, gr_msg_queue_sptr msgq);
+  gr_message_source (size_t itemsize, gr_msg_queue_sptr msgq, const std::string& lengthtagname);
 
  public:
   ~gr_message_source ();
