@@ -194,6 +194,7 @@ list(APPEND gr_blocks_sources
     peak_detector2_fb_impl.cc
     probe_rate_impl.cc
     regenerate_bb_impl.cc
+    repack_bits_bb_impl.cc
     repeat_impl.cc
     rms_cf_impl.cc
     rms_ff_impl.cc
@@ -248,8 +249,7 @@ list(APPEND blocks_libs
     ${BLOCKS_LIBRARIES}
 )
 
-add_library(gnuradio-blocks SHARED ${gr_blocks_sources}
-    repack_bits_bb_impl.cc)
+add_library(gnuradio-blocks SHARED ${gr_blocks_sources})
 add_dependencies(gnuradio-blocks blocks_generated_includes)
 
 target_link_libraries(gnuradio-blocks ${blocks_libs})
