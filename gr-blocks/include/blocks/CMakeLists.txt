@@ -155,6 +155,7 @@ install(FILES
     peak_detector2_fb.h
     probe_rate.h
     regenerate_bb.h
+    repack_bits_bb.h 
     repeat.h
     rms_cf.h
     rms_ff.h
@@ -174,6 +175,7 @@ install(FILES
     throttle.h
     transcendental.h
     tuntap_pdu.h
+    tagged_stream_mux.h
     uchar_to_float.h
     udp_sink.h
     udp_source.h

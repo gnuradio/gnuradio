@@ -33,6 +33,8 @@ typedef boost::shared_ptr<gr_message_source> gr_message_source_sptr;
 
 GR_CORE_API gr_message_source_sptr gr_make_message_source (size_t itemsize, int msgq_limit=0);
 GR_CORE_API gr_message_source_sptr gr_make_message_source (size_t itemsize, gr_msg_queue_sptr msgq);
+GR_CORE_API gr_message_source_sptr gr_make_message_source (size_t itemsize, gr_msg_queue_sptr msgq,
+                                                           const std::string& lengthtagname);
 
 /*!
  * \brief Turn received messages into a stream
@@ -46,15 +48,21 @@ class GR_CORE_API gr_message_source : public gr_sync_block
   gr_message_sptr	d_msg;
   unsigned		d_msg_offset;
   bool			d_eof;
+  bool d_tags;
+  // FIXME: Is this adequate tagname length.
+  std::string d_lengthtagname;
 
   friend GR_CORE_API gr_message_source_sptr
-  gr_make_message_source(size_t itemsize, int msgq_limit);
+    gr_make_message_source(size_t itemsize, int msgq_limit);
   friend GR_CORE_API gr_message_source_sptr
-  gr_make_message_source(size_t itemsize, gr_msg_queue_sptr msgq);
+    gr_make_message_source(size_t itemsize, gr_msg_queue_sptr msgq);
+  friend GR_CORE_API gr_message_source_sptr
+    gr_make_message_source(size_t itemsize, gr_msg_queue_sptr msgq, const std::string& lengthtagname);
 
  protected:
   gr_message_source (size_t itemsize, int msgq_limit);
   gr_message_source (size_t itemsize, gr_msg_queue_sptr msgq);
+  gr_message_source (size_t itemsize, gr_msg_queue_sptr msgq, const std::string& lengthtagname);
 
  public:
   ~gr_message_source ();

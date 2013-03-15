@@ -36,7 +36,6 @@
 
 
 // public constructor that returns a shared_ptr
-
 gr_message_source_sptr
 gr_make_message_source(size_t itemsize, int msgq_limit)
 {
@@ -50,11 +49,19 @@ gr_make_message_source(size_t itemsize, gr_msg_queue_sptr msgq)
   return gnuradio::get_initial_sptr(new gr_message_source(itemsize, msgq));
 }
 
+// public constructor that takes existing message queue and adds messages length tags.
+gr_message_source_sptr
+gr_make_message_source(size_t itemsize, gr_msg_queue_sptr msgq, const std::string& lengthtagname)
+{
+  return gnuradio::get_initial_sptr(new gr_message_source(itemsize, msgq, lengthtagname));
+}
+
 gr_message_source::gr_message_source (size_t itemsize, int msgq_limit)
   : gr_sync_block("message_source",
 		  gr_make_io_signature(0, 0, 0),
 		  gr_make_io_signature(1, 1, itemsize)),
-    d_itemsize(itemsize), d_msgq(gr_make_msg_queue(msgq_limit)), d_msg_offset(0), d_eof(false)
+    d_itemsize(itemsize), d_msgq(gr_make_msg_queue(msgq_limit)), d_msg_offset(0), d_eof(false),
+    d_tags(false)
 {
 }
 
@@ -62,11 +69,19 @@ gr_message_source::gr_message_source (size_t itemsize, gr_msg_queue_sptr msgq)
   : gr_sync_block("message_source",
 		  gr_make_io_signature(0, 0, 0),
 		  gr_make_io_signature(1, 1, itemsize)),
-    d_itemsize(itemsize), d_msgq(msgq), d_msg_offset(0), d_eof(false)
+    d_itemsize(itemsize), d_msgq(msgq), d_msg_offset(0), d_eof(false), d_tags(false)
 {
 }
 
 gr_message_source::~gr_message_source()
+{}
+
+gr_message_source::gr_message_source(size_t itemsize, gr_msg_queue_sptr msgq, const std::string& lengthtagname)
+  : gr_sync_block("message_source",
+		  gr_make_io_signature(0, 0, 0),
+		  gr_make_io_signature(1, 1, itemsize)),
+    d_itemsize(itemsize), d_msgq(msgq), d_msg_offset(0), d_eof(false),
+    d_tags(true), d_lengthtagname(lengthtagname)
 {
 }
 
@@ -86,15 +101,21 @@ gr_message_source::work(int noutput_items,
       int mm = std::min(noutput_items - nn, (int)((d_msg->length() - d_msg_offset) / d_itemsize));
       memcpy (out, &(d_msg->msg()[d_msg_offset]), mm * d_itemsize);
 
+      if (d_tags && (d_msg_offset == 0)) {
+        const uint64_t offset = this->nitems_written(0) + nn;
+        pmt::pmt_t key = pmt::pmt_string_to_symbol(d_lengthtagname);
+        pmt::pmt_t value = pmt::pmt_from_long(d_msg->length());
+        this->add_item_tag(0, offset, key, value);
+      }
       nn += mm;
       out += mm * d_itemsize;
       d_msg_offset += mm * d_itemsize;
       assert(d_msg_offset <= d_msg->length());
 
       if (d_msg_offset == d_msg->length()){
-	if (d_msg->type() == 1)	           // type == 1 sets EOF
-	  d_eof = true;
-	d_msg.reset();
+        if (d_msg->type() == 1)	           // type == 1 sets EOF
+          d_eof = true;
+        d_msg.reset();
       }
     }
     else {
@@ -102,17 +123,17 @@ gr_message_source::work(int noutput_items,
       // No current message
       //
       if (d_msgq->empty_p() && nn > 0){    // no more messages in the queue, return what we've got
-	break;
+        break;
       }
-
+      
       if (d_eof)
-	return -1;
-
+        return -1;
+      
       d_msg = d_msgq->delete_head();	   // block, waiting for a message
       d_msg_offset = 0;
-
+      
       if ((d_msg->length() % d_itemsize) != 0)
-	throw std::runtime_error("msg length is not a multiple of d_itemsize");
+        throw std::runtime_error("msg length is not a multiple of d_itemsize");
     }
   }
 

@@ -214,6 +214,7 @@ list(APPEND gr_blocks_sources
     transcendental_impl.cc
     tcp_connection.cc
     tuntap_pdu_impl.cc
+    tagged_stream_mux_impl.cc
     uchar_array_to_float.cc
     uchar_to_float_impl.cc
     udp_sink_impl.cc
@@ -247,7 +248,8 @@ list(APPEND blocks_libs
     ${BLOCKS_LIBRARIES}
 )
 
-add_library(gnuradio-blocks SHARED ${gr_blocks_sources})
+add_library(gnuradio-blocks SHARED ${gr_blocks_sources}
+    repack_bits_bb_impl.cc)
 add_dependencies(gnuradio-blocks blocks_generated_includes)
 
 target_link_libraries(gnuradio-blocks ${blocks_libs})

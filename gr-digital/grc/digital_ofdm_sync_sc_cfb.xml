@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<block>
+  <name>Schmidl &amp; Cox OFDM synchronisation</name>
+  <key>digital_ofdm_sync_sc_cfb</key>
+  <import>from gnuradio import digital</import>
+  <make>digital.ofdm_sync_sc_cfb($fft_len, $cp_len)</make>
+  <param>
+    <name>FFT length</name>
+    <key>fft_len</key>
+    <type>int</type>
+  </param>
+  <param>
+    <name>Cyclic Prefix length</name>
+    <key>cp_len</key>
+    <type>int</type>
+  </param>
+  <sink>
+    <name>in</name>
+    <type>complex</type>
+  </sink>
+  <source>
+    <name>freq_offset</name>
+    <type>float</type>
+  </source>
+  <source>
+    <name>detect</name>
+    <type>byte</type>
+  </source>
+</block>

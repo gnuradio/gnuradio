@@ -27,13 +27,23 @@
 #include <gr_sync_block.h>
 #include <gr_message.h>
 #include <gr_msg_queue.h>
+#include <string>
 
 class gr_message_sink;
 typedef boost::shared_ptr<gr_message_sink> gr_message_sink_sptr;
 
-GR_CORE_API gr_message_sink_sptr gr_make_message_sink (size_t itemsize,
-					   gr_msg_queue_sptr msgq,
-					   bool dont_block);
+GR_CORE_API gr_message_sink_sptr gr_make_message_sink (
+  size_t itemsize,
+  gr_msg_queue_sptr msgq,
+  bool dont_block
+);
+
+GR_CORE_API gr_message_sink_sptr gr_make_message_sink (
+  size_t itemsize,
+  gr_msg_queue_sptr msgq,
+  bool dont_block,
+  const std::string& lengthtagname
+);
 
 /*!
  * \brief Gather received items into messages and insert into msgq
@@ -45,12 +55,21 @@ class GR_CORE_API gr_message_sink : public gr_sync_block
   size_t	 	d_itemsize;
   gr_msg_queue_sptr	d_msgq;
   bool			d_dont_block;
+  bool d_tags;
+  std::string d_lengthtagname;
+  uint64_t d_items_read;
 
   friend GR_CORE_API gr_message_sink_sptr
-  gr_make_message_sink(size_t itemsize, gr_msg_queue_sptr msgq, bool dont_block);
+    gr_make_message_sink(size_t itemsize, gr_msg_queue_sptr msgq,
+                         bool dont_block);
+  friend GR_CORE_API gr_message_sink_sptr
+    gr_make_message_sink(size_t itemsize, gr_msg_queue_sptr msgq,
+                         bool dont_block, const std::string& lengthtagname);
 
  protected:
   gr_message_sink (size_t itemsize, gr_msg_queue_sptr msgq, bool dont_block);
+  gr_message_sink (size_t itemsize, gr_msg_queue_sptr msgq, bool dont_block,
+                   const std::string& lengthtagname);
 
  public:
   ~gr_message_sink ();

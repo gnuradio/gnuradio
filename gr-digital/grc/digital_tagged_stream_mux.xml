@@ -1,0 +1,65 @@
+<block>
+  <name>Tagged Stream Mux</name>
+  <key>digital_tagged_stream_mux</key>
+  <category>Digital</category>
+  <import>from gnuradio import digital</import>
+  <make>digital.tagged_stream_mux($type.size*$vlen, $ninputs, $lengthtagname)</make>
+	<param>
+		<name>IO Type</name>
+		<key>type</key>
+		<type>enum</type>
+		<option>
+			<name>Complex</name>
+			<key>complex</key>
+			<opt>size:gr.sizeof_gr_complex</opt>
+		</option>
+		<option>
+			<name>Float</name>
+			<key>float</key>
+			<opt>size:gr.sizeof_float</opt>
+		</option>
+		<option>
+			<name>Int</name>
+			<key>int</key>
+			<opt>size:gr.sizeof_int</opt>
+		</option>
+		<option>
+			<name>Short</name>
+			<key>short</key>
+			<opt>size:gr.sizeof_short</opt>
+		</option>
+		<option>
+			<name>Byte</name>
+			<key>byte</key>
+			<opt>size:gr.sizeof_char</opt>
+		</option>
+	</param>
+  <param>
+    <name>Number of inputs</name>
+    <key>ninputs</key>
+    <type>int</type>
+  </param>
+  <param>
+    <name>Length tag names</name>
+    <key>lengthtagname</key>
+    <type>string</type>
+  </param>
+  <param>
+    <name>Vector Length</name>
+    <key>vlen</key>
+    <value>1</value>
+    <type>int</type>
+  </param>
+  <sink>
+    <name>in</name>
+    <type>$type</type>
+    <vlen>$vlen</vlen>
+    <nports>$ninputs</nports>
+  </sink>
+  <source>
+    <name>out</name>
+    <type>$type</type>
+    <vlen>$vlen</vlen>
+  </source>
+</block>
+

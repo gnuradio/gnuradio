@@ -105,8 +105,7 @@ install(FILES
     rail_ff.h
     rotator.h
     sig_source_waveform.h
-    simple_squelch_cc.h
-    DESTINATION ${GR_INCLUDE_DIR}/gnuradio/analog
+    simple_squelch_cc.h plateau_detector_fb.h DESTINATION ${GR_INCLUDE_DIR}/gnuradio/analog
     COMPONENT "analog_devel"
 )
 
