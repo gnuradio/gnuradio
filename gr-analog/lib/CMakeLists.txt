@@ -121,6 +121,7 @@ list(APPEND analog_sources
     fmdet_cf_impl.cc
     frequency_modulator_fc_impl.cc
     phase_modulator_fc_impl.cc
+    plateau_detector_fb_impl.cc
     pll_carriertracking_cc_impl.cc
     pll_freqdet_cf_impl.cc
     pll_refout_cc_impl.cc
@@ -157,7 +158,7 @@ list(APPEND analog_libs
     ${Boost_LIBRARIES}
 )
 
-add_library(gnuradio-analog SHARED ${analog_sources} plateau_detector_fb_impl.cc)
+add_library(gnuradio-analog SHARED ${analog_sources})
 target_link_libraries(gnuradio-analog ${analog_libs})
 GR_LIBRARY_FOO(gnuradio-analog RUNTIME_COMPONENT "analog_runtime" DEVEL_COMPONENT "analog_devel")
 add_dependencies(gnuradio-analog analog_generated_includes analog_generated_swigs gnuradio-filter)
