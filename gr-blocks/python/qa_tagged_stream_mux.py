@@ -21,7 +21,7 @@
 #
 
 from gnuradio import gr, gr_unittest
-from gruel import pmt
+import pmt
 import blocks_swig as blocks
 import numpy
 

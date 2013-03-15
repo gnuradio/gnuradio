@@ -22,7 +22,7 @@
 
 import random
 from gnuradio import gr, gr_unittest
-from gruel import pmt
+import pmt
 import blocks_swig as blocks
 
 class qa_repack_bits_bb (gr_unittest.TestCase):
