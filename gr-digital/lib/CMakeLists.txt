@@ -24,6 +24,8 @@ include_directories(
     ${CMAKE_CURRENT_BINARY_DIR}/../include
     ${GR_DIGITAL_INCLUDE_DIRS}
     ${GR_ANALOG_INCLUDE_DIRS}
+    ${GR_FILTER_INCLUDE_DIRS}
+    ${GR_BLOCKS_INCLUDE_DIRS}
     ${GNURADIO_CORE_INCLUDE_DIRS}
     ${GRUEL_INCLUDE_DIRS}
     ${LOG4CPP_INCLUDE_DIRS}
@@ -139,6 +141,23 @@ list(APPEND gr_digital_sources
     digital_probe_mpsk_snr_est_c.cc
     digital_scrambler_bb.cc
     digital_simple_framer.cc
+    digital_ofdm_sync_sc_cfb.cc
+    digital_ofdm_chanest_vcvc.cc
+    digital_crc32_bb.cc
+    digital_ofdm_carrier_allocator_cvc.cc
+    digital_ofdm_equalizer_base.cc
+    digital_ofdm_equalizer_static.cc
+    digital_ofdm_equalizer_simpledfe.cc
+    ofdm_frame_equalizer_vcvc_impl.cc
+    ofdm_serializer_vcc_impl.cc
+    packet_header_default.cc
+    packet_header_ofdm.cc
+    packet_headergenerator_bb_impl.cc
+    packet_headerparser_b_impl.cc
+    scale_tags_impl.cc
+    tagged_stream_check_impl.cc
+    ts_insert_zeros_cc_impl.cc
+    header_payload_demux_impl.cc
     digital_simple_correlator.cc
 )
 
@@ -158,6 +177,9 @@ ENDIF(MSVC)
 
 list(APPEND digital_libs
     gnuradio-core
+    gnuradio-blocks
+    gnuradio-analog
+    gnuradio-filter
     ${Boost_LIBRARIES}
     ${LOG4CPP_LIBRARIES}
 )
@@ -165,5 +187,11 @@ list(APPEND digital_libs
 add_library(gnuradio-digital SHARED ${gr_digital_sources})
 target_link_libraries(gnuradio-digital ${digital_libs})
 GR_LIBRARY_FOO(gnuradio-digital RUNTIME_COMPONENT "digital_runtime" DEVEL_COMPONENT "digital_devel")
+add_dependencies(gnuradio-digital
+     digital_generated_includes
+     digital_generated_swigs
+     gnuradio-analog
+     gnuradio-blocks
+     gnuradio-filter
+)
 
-add_dependencies(gnuradio-digital digital_generated_includes digital_generated_swigs gnuradio-analog)

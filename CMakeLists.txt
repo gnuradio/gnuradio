@@ -259,7 +259,7 @@ add_subdirectory(docs)
 add_subdirectory(gruel)
 add_subdirectory(gnuradio-core)
 add_subdirectory(grc)
-
+add_subdirectory(gr-blocks)
 add_subdirectory(gr-fft)
 add_subdirectory(gr-filter)
 add_subdirectory(gr-atsc)
@@ -279,7 +279,6 @@ add_subdirectory(gr-vocoder)
 add_subdirectory(gr-fcd)
 add_subdirectory(gr-wavelet)
 add_subdirectory(gr-wxgui)
-add_subdirectory(gr-blocks)
 
 # Create a config.h with some definitions to export to other projects.
 CONFIGURE_FILE(

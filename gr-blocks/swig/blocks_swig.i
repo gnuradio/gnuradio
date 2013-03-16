@@ -149,6 +149,7 @@
 #include "blocks/or_ss.h"
 #include "blocks/or_ii.h"
 #include "blocks/regenerate_bb.h"
+#include "blocks/repack_bits_bb.h"
 #include "blocks/repeat.h"
 #include "blocks/rms_cf.h"
 #include "blocks/rms_ff.h"
@@ -171,6 +172,7 @@
 #include "blocks/sub_cc.h"
 #include "blocks/tag_debug.h"
 #include "blocks/tagged_file_sink.h"
+#include "blocks/tagged_stream_mux.h"
 #include "blocks/tagged_stream_to_pdu.h"
 #include "blocks/threshold_ff.h"
 #include "blocks/throttle.h"
@@ -312,6 +314,7 @@
 %include "blocks/peak_detector2_fb.h"
 %include "blocks/probe_rate.h"
 %include "blocks/regenerate_bb.h"
+%include "blocks/repack_bits_bb.h"
 %include "blocks/repeat.h"
 %include "blocks/rms_cf.h"
 %include "blocks/rms_ff.h"
@@ -333,6 +336,7 @@
 %include "blocks/sub_ii.h"
 %include "blocks/sub_cc.h"
 %include "blocks/tagged_file_sink.h"
+%include "blocks/tagged_stream_mux.h"
 %include "blocks/tagged_stream_to_pdu.h"
 %include "blocks/threshold_ff.h"
 %include "blocks/throttle.h"
@@ -471,6 +475,7 @@ GR_SWIG_BLOCK_MAGIC2(blocks, probe_signal_vi);
 GR_SWIG_BLOCK_MAGIC2(blocks, probe_signal_vf);
 GR_SWIG_BLOCK_MAGIC2(blocks, probe_signal_vc);
 GR_SWIG_BLOCK_MAGIC2(blocks, regenerate_bb);
+GR_SWIG_BLOCK_MAGIC2(blocks, repack_bits_bb);
 GR_SWIG_BLOCK_MAGIC2(blocks, repeat);
 GR_SWIG_BLOCK_MAGIC2(blocks, rms_cf);
 GR_SWIG_BLOCK_MAGIC2(blocks, rms_ff);
@@ -493,6 +498,7 @@ GR_SWIG_BLOCK_MAGIC2(blocks, sub_ii);
 GR_SWIG_BLOCK_MAGIC2(blocks, sub_cc);
 GR_SWIG_BLOCK_MAGIC2(blocks, tag_debug);
 GR_SWIG_BLOCK_MAGIC2(blocks, tagged_file_sink);
+GR_SWIG_BLOCK_MAGIC2(blocks, tagged_stream_mux);
 GR_SWIG_BLOCK_MAGIC2(blocks, tagged_stream_to_pdu);
 GR_SWIG_BLOCK_MAGIC2(blocks, threshold_ff);
 GR_SWIG_BLOCK_MAGIC2(blocks, throttle);

@@ -194,6 +194,7 @@ list(APPEND gr_blocks_sources
     peak_detector2_fb_impl.cc
     probe_rate_impl.cc
     regenerate_bb_impl.cc
+    repack_bits_bb_impl.cc
     repeat_impl.cc
     rms_cf_impl.cc
     rms_ff_impl.cc
@@ -214,6 +215,7 @@ list(APPEND gr_blocks_sources
     transcendental_impl.cc
     tcp_connection.cc
     tuntap_pdu_impl.cc
+    tagged_stream_mux_impl.cc
     uchar_array_to_float.cc
     uchar_to_float_impl.cc
     udp_sink_impl.cc
@@ -245,6 +247,7 @@ list(APPEND blocks_libs
     volk
     ${Boost_LIBRARIES}
     ${BLOCKS_LIBRARIES}
+    ${LOG4CPP_LIBRARIES}
 )
 
 add_library(gnuradio-blocks SHARED ${gr_blocks_sources})
