@@ -38,6 +38,8 @@
 		<block>blocks_message_burst_source</block>
 		<block>blocks_udp_source</block>
 		<block>blocks_wavfile_source</block>
+		<block>blocks_vector_source_x</block>
+		<block>blocks_vector_insert_x</block>
 	</cat>
 	<cat>
 	        <name>Sinks (New)</name>
@@ -50,6 +52,7 @@
 		<block>blocks_tagged_file_sink</block>
 		<block>blocks_udp_sink</block>
 		<block>blocks_wavfile_sink</block>
+		<block>blocks_vector_sink_x</block>
 	</cat>
 	<cat>
 		<name>Math Operations (New) </name>
@@ -121,6 +124,7 @@
 		<block>blocks_stretch_ff</block>
                 <block>blocks_threshold_ff</block>
                 <block>blocks_burst_tagger</block>
+                <block>blocks_endian_swap</block>
 	</cat>
 	<cat>
 	        <name>Misc Conversions (New) </name>
@@ -133,6 +137,9 @@
 	        <name>Misc (New) </name>
                 <block>blocks_throttle</block>
                 <block>blocks_probe_rate</block>
+		<block>blocks_head</block>
+		<block>blocks_skiphead</block>
+                <block>blocks_copy</block>
 	</cat>
 	<cat>
 	        <name>Networking</name>

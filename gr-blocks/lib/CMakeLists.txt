@@ -114,6 +114,9 @@ expand_cc_h_impl(sub_XX             ss ii ff cc)
 expand_cc_h_impl(xor_XX             bb ss ii)
 expand_cc_h_impl(packed_to_unpacked_XX bb ss ii)
 expand_cc_h_impl(unpacked_to_packed_XX bb ss ii)
+expand_cc_h_impl(vector_insert_X    b s i f c)
+expand_cc_h_impl(vector_sink_X      b s i f c)
+expand_cc_h_impl(vector_source_X    b s i f c)
 
 ########################################################################
 # Setup the include and linker paths
@@ -142,6 +145,9 @@ list(APPEND gr_blocks_sources
     fxpt.cc
     wavfile.cc
     add_ff_impl.cc
+    annotator_1to1_impl.cc
+    annotator_alltoall_impl.cc
+    annotator_raw_impl.cc
     bin_statistics_f_impl.cc
     burst_tagger_impl.cc
     char_to_float_impl.cc
@@ -154,8 +160,10 @@ list(APPEND gr_blocks_sources
     complex_to_mag_squared_impl.cc
     complex_to_arg_impl.cc
     conjugate_cc_impl.cc
+    copy_impl.cc
     deinterleave_impl.cc
     delay_impl.cc
+    endian_swap_impl.cc
     file_descriptor_sink_impl.cc
     file_descriptor_source_impl.cc
     file_sink_impl.cc
@@ -169,6 +177,7 @@ list(APPEND gr_blocks_sources
     float_to_short_impl.cc
     float_array_to_uchar.cc
     float_to_uchar_impl.cc
+    head_impl.cc
     int_to_float_impl.cc
     interleave_impl.cc
     interleaved_short_array_to_complex.cc
@@ -200,6 +209,7 @@ list(APPEND gr_blocks_sources
     rms_ff_impl.cc
     short_to_char_impl.cc
     short_to_float_impl.cc
+    skiphead_impl.cc
     socket_pdu_impl.cc
     stream_mux_impl.cc
     stream_pdu_base.cc
@@ -262,15 +272,19 @@ GR_LIBRARY_FOO(gnuradio-blocks RUNTIME_COMPONENT "blocks_runtime" DEVEL_COMPONEN
 if(ENABLE_TESTING)
   include(GrTest)
 
-  include_directories(${CPPUNIT_INCLUDE_DIRS})
+  include_directories(
+    ${GR_FILTER_INCLUDE_DIRS}
+    ${CPPUNIT_INCLUDE_DIRS})
   link_directories(${CPPUNIT_LIBRARY_DIRS})
 
   list(APPEND test_gr_blocks_sources
     ${CMAKE_CURRENT_SOURCE_DIR}/test_gr_blocks.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/qa_blocks.cc
+    ${CMAKE_CURRENT_SOURCE_DIR}/qa_block_tags.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/qa_fxpt.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/qa_fxpt_nco.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/qa_fxpt_vco.cc
+    ${CMAKE_CURRENT_SOURCE_DIR}/qa_rotator.cc
     )
 
   add_executable(test-gr-blocks ${test_gr_blocks_sources})
@@ -281,6 +295,7 @@ if(ENABLE_TESTING)
     test-gr-blocks
     gnuradio-core
     gnuradio-blocks
+    gnuradio-filter
     ${Boost_LIBRARIES}
     ${CPPUNIT_LIBRARIES}
   )

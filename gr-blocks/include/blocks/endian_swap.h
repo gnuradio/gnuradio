@@ -1,5 +1,6 @@
+/* -*- c++ -*- */
 /*
- * Copyright 2012-2013 Free Software Foundation, Inc.
+ * Copyright 2004,2012,2013 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -19,29 +20,31 @@
  * Boston, MA 02110-1301, USA.
  */
 
-/*
- * This class gathers together all the test cases for the gr-blocks
- * directory into a single test suite.  As you create new test cases,
- * add them here.
- */
+#ifndef INCLUDED_GR_ENDIAN_SWAP_H
+#define INCLUDED_GR_ENDIAN_SWAP_H
 
-#include <qa_blocks.h>
-#include <qa_block_tags.h>
-#include <qa_fxpt.h>
-#include <qa_fxpt_nco.h>
-#include <qa_fxpt_vco.h>
-#include <qa_rotator.h>
+#include <blocks/api.h>
+#include <gr_sync_block.h>
 
-CppUnit::TestSuite *
-qa_gr_blocks::suite()
-{
-  CppUnit::TestSuite *s = new CppUnit::TestSuite("gr-blocks");
+namespace gr {
+  namespace blocks {
 
-  s->addTest(qa_block_tags::suite());
-  s->addTest(qa_fxpt::suite());
-  s->addTest(qa_fxpt_nco::suite());
-  s->addTest(qa_fxpt_vco::suite());
-  s->addTest(qa_rotator::suite());
+    /*!
+     * \brief Convert stream of items into thier byte swapped version
+     *
+     * \param item_size_bytes number of bytes per item, 1=no-op, 
+     *        2=uint16_t, 4=uint32_t, 8=uint64_t
+     */
+    class BLOCKS_API endian_swap : virtual public gr_sync_block
+    {
+    public:
+      // gr::blocks::endian_swap::sptr
+      typedef boost::shared_ptr<endian_swap> sptr;
 
-  return s;
-}
+      static sptr make(size_t item_size_bytes=1);
+    };
+
+  } /* namespace blocks */
+} /* namespace gr */
+
+#endif /* INCLUDED_GR_ENDIAN_SWAP_H */

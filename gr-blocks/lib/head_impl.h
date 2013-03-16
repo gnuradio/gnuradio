@@ -1,5 +1,6 @@
+/* -*- c++ -*- */
 /*
- * Copyright 2012-2013 Free Software Foundation, Inc.
+ * Copyright 2004,2009,2012,2013 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -19,29 +20,33 @@
  * Boston, MA 02110-1301, USA.
  */
 
-/*
- * This class gathers together all the test cases for the gr-blocks
- * directory into a single test suite.  As you create new test cases,
- * add them here.
- */
+#ifndef INCLUDED_GR_HEAD_IMPL_H
+#define INCLUDED_GR_HEAD_IMPL_H
 
-#include <qa_blocks.h>
-#include <qa_block_tags.h>
-#include <qa_fxpt.h>
-#include <qa_fxpt_nco.h>
-#include <qa_fxpt_vco.h>
-#include <qa_rotator.h>
+#include <blocks/head.h>
 
-CppUnit::TestSuite *
-qa_gr_blocks::suite()
-{
-  CppUnit::TestSuite *s = new CppUnit::TestSuite("gr-blocks");
+namespace gr {
+  namespace blocks {
 
-  s->addTest(qa_block_tags::suite());
-  s->addTest(qa_fxpt::suite());
-  s->addTest(qa_fxpt_nco::suite());
-  s->addTest(qa_fxpt_vco::suite());
-  s->addTest(qa_rotator::suite());
+    class head_impl : public head
+    {
+    private:
+      uint64_t d_nitems;
+      uint64_t d_ncopied_items;
 
-  return s;
-}
+    public:
+      head_impl(size_t sizeof_stream_item, uint64_t nitems);
+      ~head_impl();
+
+      void reset() { d_ncopied_items = 0; }
+      void set_length(int nitems) { d_nitems = nitems; }
+
+      int work(int noutput_items,
+               gr_vector_const_void_star &input_items,
+               gr_vector_void_star &output_items);
+    };
+
+  } /* namespace blocks */
+} /* namespace gr */
+
+#endif /* INCLUDED_GR_HEAD_IMPL_H */
