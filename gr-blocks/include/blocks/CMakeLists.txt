@@ -65,8 +65,8 @@ endmacro(expand_h)
 # Invoke macro to generate various sources
 ########################################################################
 expand_h(add_XX             ss ii cc)
-expand_h(add_const_XX       ss ii ff cc)
-expand_h(add_const_vXX      ss ii ff cc)
+expand_h(add_const_XX       bb ss ii ff cc)
+expand_h(add_const_vXX      bb ss ii ff cc)
 expand_h(and_XX             bb ss ii)
 expand_h(and_const_XX       bb ss ii)
 expand_h(argmax_XX          fs is ss)
@@ -156,6 +156,7 @@ install(FILES
     random_pdu.h
     probe_rate.h
     regenerate_bb.h
+    repack_bits_bb.h 
     repeat.h
     rms_cf.h
     rms_ff.h
@@ -175,6 +176,7 @@ install(FILES
     throttle.h
     transcendental.h
     tuntap_pdu.h
+    tagged_stream_mux.h
     uchar_to_float.h
     udp_sink.h
     udp_source.h

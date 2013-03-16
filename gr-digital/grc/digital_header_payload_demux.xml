@@ -1,0 +1,94 @@
+<block>
+  <name>Header payload demux</name>
+  <key>digital_header_payload_demux</key>
+  <import>from gnuradio import digital</import>
+  <make>digital.header_payload_demux($header_len, $items_per_symbol, $guard_interval, $length_tag_key, $trigger_tag_key, $output_symbols, $(type.itemsize))</make>
+  <param>
+    <name>Header Length (Symbols)</name>
+    <key>header_len</key>
+    <type>int</type>
+  </param>
+  <param>
+    <name>Items per symbol</name>
+    <key>items_per_symbol</key>
+    <type>int</type>
+  </param>
+  <param>
+    <name>Guard Interval (items)</name>
+    <key>guard_interval</key>
+    <value>0</value>
+    <type>int</type>
+  </param>
+  <param>
+    <name>Length tag key</name>
+    <key>length_tag_key</key>
+    <value>"frame_len"</value>
+    <type>string</type>
+  </param>
+  <param>
+    <name>Trigger tag key</name>
+    <key>trigger_tag_key</key>
+    <value>""</value>
+    <type>string</type>
+  </param>
+  <param>
+    <name>Output Format</name>
+    <key>output_symbols</key>
+    <type>enum</type>
+    <option>
+      <name>Items</name>
+      <key>False</key>
+    </option>
+    <option>
+      <name>Symbols</name>
+      <key>True</key>
+    </option>
+  </param>
+  <param>
+    <name>IO Type</name>
+    <key>type</key>
+    <type>enum</type>
+    <option>
+      <name>Complex</name>
+      <key>complex</key>
+      <opt>itemsize:gr.sizeof_gr_complex</opt>
+    </option>
+    <option>
+      <name>Float</name>
+      <key>float</key>
+      <opt>itemsize:gr.sizeof_float</opt>
+    </option>
+    <option>
+      <name>Int</name>
+      <key>int</key>
+      <opt>itemsize:gr.sizeof_int</opt>
+    </option>
+    <option>
+      <name>Short</name>
+      <key>short</key>
+      <opt>itemsize:gr.sizeof_short</opt>
+    </option>
+  </param>
+  <sink>
+    <name>in</name>
+    <type>$type</type>
+  </sink>
+  <sink>
+    <name>trigger</name>
+    <type>byte</type>
+  </sink>
+  <sink>
+    <name>header_data</name>
+    <type>message</type>
+  </sink>
+  <source>
+    <name>out_hdr</name>
+    <type>$type</type>
+    <vlen>{True: $items_per_symbol, False: 1}[$output_symbols]</vlen>
+  </source>
+  <source>
+    <name>out_payload</name>
+    <type>$type</type>
+    <vlen>{True: $items_per_symbol, False: 1}[$output_symbols]</vlen>
+  </source>
+</block>

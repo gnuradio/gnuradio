@@ -43,6 +43,7 @@ gr_make_@BASE_NAME@ (int vlen = 1);
 class GR_CORE_API @NAME@ : public gr_sync_block {
   friend GR_CORE_API @NAME@_sptr gr_make_@BASE_NAME@ (int vlen);
   std::vector<@TYPE@>	d_data;
+  std::vector<gr_tag_t>	d_tags;
   int			d_vlen;
   @NAME@ (int vlen);
 
@@ -54,6 +55,7 @@ class GR_CORE_API @NAME@ : public gr_sync_block {
   void reset() {d_data.clear();}
   void clear() {reset(); }		// deprecated
   std::vector<@TYPE@> data () const;
+  std::vector<gr_tag_t> tags () const;
 };
 
 #endif

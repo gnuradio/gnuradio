@@ -91,8 +91,8 @@ endmacro(expand_cc_h_impl)
 # Invoke macro to generate various sources
 ########################################################################
 expand_cc_h_impl(add_XX             ss ii cc)
-expand_cc_h_impl(add_const_XX       ss ii ff cc)
-expand_cc_h_impl(add_const_vXX      ss ii ff cc)
+expand_cc_h_impl(add_const_XX       bb ss ii ff cc)
+expand_cc_h_impl(add_const_vXX      bb ss ii ff cc)
 expand_cc_h_impl(and_XX             bb ss ii)
 expand_cc_h_impl(and_const_XX       bb ss ii)
 expand_cc_h_impl(argmax_XX          fs is ss)
@@ -200,6 +200,7 @@ list(APPEND gr_blocks_sources
     random_pdu_impl.cc
     probe_rate_impl.cc
     regenerate_bb_impl.cc
+    repack_bits_bb_impl.cc
     repeat_impl.cc
     rms_cf_impl.cc
     rms_ff_impl.cc
@@ -220,6 +221,7 @@ list(APPEND gr_blocks_sources
     transcendental_impl.cc
     tcp_connection.cc
     tuntap_pdu_impl.cc
+    tagged_stream_mux_impl.cc
     uchar_array_to_float.cc
     uchar_to_float_impl.cc
     udp_sink_impl.cc
@@ -251,6 +253,7 @@ list(APPEND blocks_libs
     volk
     ${Boost_LIBRARIES}
     ${BLOCKS_LIBRARIES}
+    ${LOG4CPP_LIBRARIES}
 )
 
 add_library(gnuradio-blocks SHARED ${gr_blocks_sources})

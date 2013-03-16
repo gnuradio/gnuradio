@@ -34,9 +34,15 @@ namespace gr {
       size_t	 	d_itemsize;
       gr_msg_queue_sptr	d_msgq;
       bool		d_dont_block;
+      bool              d_tags;
+      std::string       d_lengthtagname;
+      uint64_t          d_items_read;
 
     public:
       message_sink_impl(size_t itemsize, gr_msg_queue_sptr msgq, bool dont_block);
+      message_sink_impl(size_t itemsize, gr_msg_queue_sptr msgq, bool dont_block,
+			const std::string& lengthtagname);
+
       ~message_sink_impl();
 
       int work(int noutput_items,
