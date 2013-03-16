@@ -15,7 +15,8 @@
 	  $nfilts,
 	  $atten)
 	</make>
-           <callback>set_taps($taps)</callback>
+        <callback>set_taps($taps)</callback>
+        <callback>set_rate($rrate)</callback>
 	<param>
 		<name>Type</name>
 		<key>type</key>
