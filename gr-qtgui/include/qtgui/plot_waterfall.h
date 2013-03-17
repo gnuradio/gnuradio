@@ -24,7 +24,7 @@
 #define PLOT_WATERFALL_H
 
 #include <qglobal.h>
-#include <waterfallGlobalData.h>
+#include <qtgui/waterfallGlobalData.h>
 #include <qwt_plot_rasteritem.h>
 
 #if QWT_VERSION >= 0x060000

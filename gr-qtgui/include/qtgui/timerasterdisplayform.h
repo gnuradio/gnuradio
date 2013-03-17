@@ -23,13 +23,13 @@
 #ifndef TIMERASTER_DISPLAY_FORM_H
 #define TIMERASTER_DISPLAY_FORM_H
 
-#include <spectrumUpdateEvents.h>
-#include <TimeRasterDisplayPlot.h>
+#include <qtgui/spectrumUpdateEvents.h>
+#include <qtgui/TimeRasterDisplayPlot.h>
 #include <QtGui/QtGui>
 #include <vector>
 #include <filter/firdes.h>
 
-#include "displayform.h"
+#include <qtgui/displayform.h>
 
 class TimeRasterDisplayForm : public DisplayForm
 {

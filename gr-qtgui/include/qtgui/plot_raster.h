@@ -24,7 +24,7 @@
 #define PLOT_TIMERASTER_H
 
 #include <qglobal.h>
-#include <timeRasterGlobalData.h>
+#include <qtgui/timeRasterGlobalData.h>
 #include <qwt_plot_rasteritem.h>
 
 #if QWT_VERSION >= 0x060000

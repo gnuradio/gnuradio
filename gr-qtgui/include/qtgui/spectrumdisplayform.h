@@ -23,16 +23,16 @@
 #ifndef SPECTRUM_DISPLAY_FORM_H
 #define SPECTRUM_DISPLAY_FORM_H
 
-#include "spectrumdisplayform.ui.h"
+#include <spectrumdisplayform.ui.h>
 
 class SpectrumGUIClass;
-#include <SpectrumGUIClass.h>
+#include <qtgui/SpectrumGUIClass.h>
 
-#include <SpectrumGUIClass.h>
-#include <FrequencyDisplayPlot.h>
-#include <WaterfallDisplayPlot.h>
-#include <TimeDomainDisplayPlot.h>
-#include <ConstellationDisplayPlot.h>
+#include <qtgui/SpectrumGUIClass.h>
+#include <qtgui/FrequencyDisplayPlot.h>
+#include <qtgui/WaterfallDisplayPlot.h>
+#include <qtgui/TimeDomainDisplayPlot.h>
+#include <qtgui/ConstellationDisplayPlot.h>
 #include <QValidator>
 #include <QTimer>
 #include <vector>

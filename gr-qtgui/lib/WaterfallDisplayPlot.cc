@@ -23,9 +23,9 @@
 #ifndef WATERFALL_DISPLAY_PLOT_C
 #define WATERFALL_DISPLAY_PLOT_C
 
-#include <WaterfallDisplayPlot.h>
+#include <qtgui/WaterfallDisplayPlot.h>
 
-#include "qtgui_types.h"
+#include <qtgui/qtgui_types.h>
 #include <qwt_color_map.h>
 #include <qwt_scale_draw.h>
 #include <qwt_legend.h>

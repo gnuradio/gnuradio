@@ -26,7 +26,7 @@
 #include <stdint.h>
 #include <cstdio>
 #include <vector>
-#include "DisplayPlot.h"
+#include <qtgui/DisplayPlot.h>
 
 class FrequencyDisplayPlot: public DisplayPlot
 {

@@ -23,7 +23,7 @@
 #ifndef TIME_DOMAIN_DISPLAY_PLOT_C
 #define TIME_DOMAIN_DISPLAY_PLOT_C
 
-#include <TimeDomainDisplayPlot.h>
+#include <qtgui/TimeDomainDisplayPlot.h>
 
 #include <qwt_scale_draw.h>
 #include <qwt_legend.h>

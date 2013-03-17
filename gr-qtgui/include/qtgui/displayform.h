@@ -23,15 +23,15 @@
 #ifndef DISPLAY_FORM_H
 #define DISPLAY_FORM_H
 
-#include <spectrumUpdateEvents.h>
+#include <qtgui/spectrumUpdateEvents.h>
 #include <QtGui/QtGui>
 #include <vector>
 
 #include <qwt_plot_grid.h>
 #include <qwt_plot_layout.h>
 
-#include "DisplayPlot.h"
-#include "form_menus.h"
+#include <qtgui/DisplayPlot.h>
+#include <qtgui/form_menus.h>
 
 class DisplayForm : public QWidget
 {

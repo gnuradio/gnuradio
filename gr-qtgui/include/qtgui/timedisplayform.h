@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2012 Free Software Foundation, Inc.
+ * Copyright 2011,2012 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -20,55 +20,58 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef FREQ_DISPLAY_FORM_H
-#define FREQ_DISPLAY_FORM_H
+#ifndef TIME_DISPLAY_FORM_H
+#define TIME_DISPLAY_FORM_H
 
-#include <spectrumUpdateEvents.h>
-#include <FrequencyDisplayPlot.h>
+#include <qtgui/spectrumUpdateEvents.h>
+#include <qtgui/TimeDomainDisplayPlot.h>
 #include <QtGui/QtGui>
 #include <vector>
-#include <filter/firdes.h>
 
-#include "displayform.h"
+#include <qtgui/displayform.h>
 
-class FreqDisplayForm : public DisplayForm
+class TimeDisplayForm : public DisplayForm
 {
   Q_OBJECT
 
   public:
-  FreqDisplayForm(int nplots=1, QWidget* parent = 0);
-  ~FreqDisplayForm();
+  TimeDisplayForm(int nplots=1, QWidget* parent = 0);
+  ~TimeDisplayForm();
 
-  FrequencyDisplayPlot* getPlot();
+  TimeDomainDisplayPlot* getPlot();
 
-  int getFFTSize() const;
-  float getFFTAverage() const;
-  gr::filter::firdes::win_type getFFTWindowType() const;
+  int getNPoints() const;
 
 public slots:
-  void customEvent(QEvent *e);
+  void customEvent(QEvent * e);
 
+  void setSampleRate(const double samprate);
   void setSampleRate(const QString &samprate);
-  void setFFTSize(const int);
-  void setFFTAverage(const float);
-  void setFFTWindowType(const gr::filter::firdes::win_type);
-
-  void setFrequencyRange(const double centerfreq,
-			 const double bandwidth);
   void setYaxis(double min, double max);
+  void setNPoints(const int);
+  void setStem(bool en);
   void autoScale(bool en);
+  void setSemilogx(bool en);
+  void setSemilogy(bool en);
 
 private slots:
-  void newData(const QEvent *updateEvent);
+  void newData(const QEvent*);
 
 private:
-  uint64_t _numRealDataPoints;
   QIntValidator* _intValidator;
 
-  double _samp_rate, _center_freq;
-  int _fftsize;
-  float _fftavg;
-  gr::filter::firdes::win_type _fftwintype;
+  double _startFrequency;
+  double _stopFrequency;
+
+  int d_npoints;
+
+  bool d_stem;
+  bool d_semilogx;
+  bool d_semilogy;
+  
+  QAction *d_stemmenu;
+  QAction *d_semilogxmenu;
+  QAction *d_semilogymenu;
 };
 
-#endif /* FREQ_DISPLAY_FORM_H */
+#endif /* TIME_DISPLAY_FORM_H */

@@ -20,7 +20,7 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include <displayform.h>
+#include <qtgui/displayform.h>
 #include <iostream>
 #include <QPixmap>
 #include <QFileDialog>

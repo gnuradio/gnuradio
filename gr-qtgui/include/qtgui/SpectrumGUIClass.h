@@ -28,10 +28,10 @@
 #include <qapplication.h>
 #include <qlabel.h>
 #include <qslider.h>
-#include <spectrumUpdateEvents.h>
+#include <qtgui/spectrumUpdateEvents.h>
 
 class SpectrumDisplayForm;
-#include <spectrumdisplayform.h>
+#include <qtgui/spectrumdisplayform.h>
 
 #include <cmath>
 

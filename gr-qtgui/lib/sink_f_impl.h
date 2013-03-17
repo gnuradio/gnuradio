@@ -27,7 +27,7 @@
 #include <filter/firdes.h>
 #include <fft/fft.h>
 #include <gruel/high_res_timer.h>
-#include <SpectrumGUIClass.h>
+#include <qtgui/SpectrumGUIClass.h>
 
 namespace gr {
   namespace qtgui {

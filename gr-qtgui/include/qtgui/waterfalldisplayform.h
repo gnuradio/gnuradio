@@ -23,13 +23,13 @@
 #ifndef WATERFALL_DISPLAY_FORM_H
 #define WATERFALL_DISPLAY_FORM_H
 
-#include <spectrumUpdateEvents.h>
-#include <WaterfallDisplayPlot.h>
+#include <qtgui/spectrumUpdateEvents.h>
+#include <qtgui/WaterfallDisplayPlot.h>
 #include <QtGui/QtGui>
 #include <vector>
 #include <filter/firdes.h>
 
-#include "displayform.h"
+#include <qtgui/displayform.h>
 
 class WaterfallDisplayForm : public DisplayForm
 {

@@ -23,7 +23,7 @@
 #ifndef SPECTRUM_GUI_CLASS_CPP
 #define SPECTRUM_GUI_CLASS_CPP
 
-#include <SpectrumGUIClass.h>
+#include <qtgui/SpectrumGUIClass.h>
 //Added by qt3to4:
 #include <QEvent>
 #include <QCustomEvent>
