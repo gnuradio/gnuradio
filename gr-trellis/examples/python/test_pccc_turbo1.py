@@ -20,11 +20,11 @@ def run_test (fo,fi,interleaver,Kb,bitspersymbol,K,dimensionality,constellation,
 
     # TX
     src = gr.lfsr_32k_source_s()
-    src_head = gr.head (gr.sizeof_short,Kb/16) # packet size in shorts
+    src_head = blocks.head (gr.sizeof_short,Kb/16) # packet size in shorts
     s2fsmi = blocks.packed_to_unpacked_ss(bitspersymbol,gr.GR_MSB_FIRST) # unpack shorts to symbols compatible with the outer FSM input cardinality
-    #src = gr.vector_source_s([0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1],False)
+    #src = blocks.vector_source_s([0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1],False)
     enc = trellis.pccc_encoder_ss(fo,0,fi,0,interleaver,K)
-    code = gr.vector_sink_s()
+    code = blocks.vector_sink_s()
     mod = digital.chunks_to_symbols_sf(constellation,dimensionality)
 
     # CHANNEL

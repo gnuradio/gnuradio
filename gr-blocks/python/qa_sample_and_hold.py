@@ -37,10 +37,10 @@ class test_sample_and_hold(gr_unittest.TestCase):
         ctrl_data       = 10*[1,0,0,0,1,1,1,1,1,1,0,0,0,0,0,0,0,0]
         expected_result = 10*(0,0,0,0,4,5,6,7,8,9,9,9,9,9,9,9,9,9)
 
-        src  = gr.vector_source_f(src_data)
-        ctrl = gr.vector_source_b(ctrl_data)
+        src  = blocks.vector_source_f(src_data)
+        ctrl = blocks.vector_source_b(ctrl_data)
         op = blocks.sample_and_hold_ff()
-        dst = gr.vector_sink_f()
+        dst = blocks.vector_sink_f()
 
         self.tb.connect(src,  (op,0))
         self.tb.connect(ctrl, (op,1))

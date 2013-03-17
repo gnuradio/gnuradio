@@ -58,7 +58,7 @@ namespace gr {
       gruel::scoped_lock l(d_mutex);
 
       gr_tag_t tag;
-      tag.srcid = pmt::pmt_intern(name());
+      tag.srcid = pmt::intern(name());
       tag.key = key;
       tag.value = val;
       tag.offset = offset;

@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2011 Free Software Foundation, Inc.
+# Copyright 2011,2013 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -21,6 +21,7 @@
 # 
 
 from gnuradio import gr, gru
+from gnuradio import blocks
 from gnuradio.eng_option import eng_option
 from optparse import OptionParser
 import sys
@@ -37,8 +38,8 @@ class my_graph(gr.top_block):
             raise SystemExit, 1
 
         src = gr.lfsr_32k_source_s()
-        head = gr.head(gr.sizeof_short, 2048)
-        self.dst = gr.vector_sink_s()
+        head = blocks.head(gr.sizeof_short, 2048)
+        self.dst = blocks.vector_sink_s()
         self.connect(src, head, self.dst)
 
 if __name__ == '__main__':

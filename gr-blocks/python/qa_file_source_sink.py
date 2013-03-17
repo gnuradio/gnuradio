@@ -38,12 +38,12 @@ class test_file_source_sink(gr_unittest.TestCase):
         expected_result = range(1000)
 
         filename = "tmp.32f"
-        src = gr.vector_source_f(src_data)
+        src = blocks.vector_source_f(src_data)
         snk = blocks.file_sink(gr.sizeof_float, filename)
         snk.set_unbuffered(True)
 
         src2 = blocks.file_source(gr.sizeof_float, filename)
-        snk2 = gr.vector_sink_f()
+        snk2 = blocks.vector_sink_f()
 
         self.tb.connect(src, snk)
         self.tb.run()
@@ -65,7 +65,7 @@ class test_file_source_sink(gr_unittest.TestCase):
         fhandle0 = open(filename, "wb")
         fd0 = fhandle0.fileno()
 
-        src = gr.vector_source_f(src_data)
+        src = blocks.vector_source_f(src_data)
         snk = blocks.file_descriptor_sink(gr.sizeof_float, fd0)
 
         self.tb.connect(src, snk)
@@ -76,7 +76,7 @@ class test_file_source_sink(gr_unittest.TestCase):
         fhandle1 = open(filename, "rb")
         fd1 = fhandle1.fileno()
         src2 = blocks.file_descriptor_source(gr.sizeof_float, fd1, False)
-        snk2 = gr.vector_sink_f()
+        snk2 = blocks.vector_sink_f()
 
         self.tb.disconnect(src, snk)
         self.tb.connect(src2, snk2)

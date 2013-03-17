@@ -20,7 +20,7 @@ def run_test (f,Kb,bitspersymbol,K,dimensionality,constellation,N0,seed,P):
 
     # TX
     src = gr.lfsr_32k_source_s()
-    src_head = gr.head (gr.sizeof_short,Kb/16*P) # packet size in shorts
+    src_head = blocks.head(gr.sizeof_short,Kb/16*P) # packet size in shorts
     s2fsmi=blocks.packed_to_unpacked_ss(bitspersymbol,gr.GR_MSB_FIRST) # unpack shorts to symbols compatible with the FSM input cardinality
     s2p = blocks.stream_to_streams(gr.sizeof_short,P) # serial to parallel
     enc = trellis.encoder_ss(f,0) # initiali state = 0

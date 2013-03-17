@@ -1,5 +1,5 @@
 #
-# Copyright 2005,2006,2012 Free Software Foundation, Inc.
+# Copyright 2005,2006,2012-2013 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -125,7 +125,7 @@ class wfm_rcv_pll(gr.hier_block2):
 
 	    self.rds_carrier_generator = blocks.multiply_cc();
 	    self.rds_signal_generator = blocks.multiply_cc();
-	    self_rds_signal_processor = gr.null_sink(gr.sizeof_gr_complex);
+	    self_rds_signal_processor = blocks.null_sink(gr.sizeof_gr_complex);
 
             loop_bw = 2*math.pi/100.0
             max_freq = -2.0*math.pi*18990/audio_rate;

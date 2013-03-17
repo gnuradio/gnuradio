@@ -289,6 +289,10 @@ if(ENABLE_TESTING)
 
   list(APPEND test_gr_blocks_sources
     ${CMAKE_CURRENT_SOURCE_DIR}/test_gr_blocks.cc
+    ${CMAKE_CURRENT_SOURCE_DIR}/qa_gr_block.cc
+    ${CMAKE_CURRENT_SOURCE_DIR}/qa_gr_top_block.cc
+    ${CMAKE_CURRENT_SOURCE_DIR}/qa_gr_hier_block2.cc
+    ${CMAKE_CURRENT_SOURCE_DIR}/qa_gr_hier_block2_derived.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/qa_blocks.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/qa_block_tags.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/qa_fxpt.cc

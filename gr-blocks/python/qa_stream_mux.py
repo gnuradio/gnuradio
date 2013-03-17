@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2004,2005,2007,2010,2012 Free Software Foundation, Inc.
+# Copyright 2004,2005,2007,2010,2012,2013 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -21,7 +21,7 @@
 #
 
 from gnuradio import gr, gr_unittest
-import blocks_swig
+import blocks_swig as blocks
 import os
 
 class test_stream_mux (gr_unittest.TestCase):
@@ -34,12 +34,12 @@ class test_stream_mux (gr_unittest.TestCase):
         self.tb = None
 
     def help_stream_2ff(self, N, stream_sizes):
-        v0 = gr.vector_source_f(N*[1,], False)
-        v1 = gr.vector_source_f(N*[2,], False)
+        v0 = blocks.vector_source_f(N*[1,], False)
+        v1 = blocks.vector_source_f(N*[2,], False)
 
-        mux = blocks_swig.stream_mux(gr.sizeof_float, stream_sizes)
+        mux = blocks.stream_mux(gr.sizeof_float, stream_sizes)
 
-        dst = gr.vector_sink_f ()
+        dst = blocks.vector_sink_f ()
 
         self.tb.connect (v0, (mux,0))
         self.tb.connect (v1, (mux,1))
@@ -53,12 +53,12 @@ class test_stream_mux (gr_unittest.TestCase):
         r2 = range(N)
         r2.reverse()
 
-        v0 = gr.vector_source_f(r1, False)
-        v1 = gr.vector_source_f(r2, False)
+        v0 = blocks.vector_source_f(r1, False)
+        v1 = blocks.vector_source_f(r2, False)
 
-        mux = blocks_swig.stream_mux(gr.sizeof_float, stream_sizes)
+        mux = blocks.stream_mux(gr.sizeof_float, stream_sizes)
 
-        dst = gr.vector_sink_f ()
+        dst = blocks.vector_sink_f ()
 
         self.tb.connect (v0, (mux,0))
         self.tb.connect (v1, (mux,1))

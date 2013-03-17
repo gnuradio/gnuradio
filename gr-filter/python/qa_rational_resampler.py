@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2005,2006,2007,2010 Free Software Foundation, Inc.
+# Copyright 2005-2007,2010,2013 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -22,6 +22,7 @@
 
 from gnuradio import gr, gr_unittest
 import filter_swig as filter
+import blocks_swig as blocks
 import math
 import random
 import sys
@@ -37,9 +38,9 @@ def random_floats(n):
 
 def reference_dec_filter(src_data, decim, taps):
     tb = gr.top_block()
-    src = gr.vector_source_f(src_data)
+    src = blocks.vector_source_f(src_data)
     op = filter.fir_filter_fff(decim, taps)
-    dst = gr.vector_sink_f()
+    dst = blocks.vector_sink_f()
     tb.connect(src, op, dst)
     tb.run()
     result_data = dst.data()
@@ -48,9 +49,9 @@ def reference_dec_filter(src_data, decim, taps):
 
 def reference_interp_filter(src_data, interp, taps):
     tb = gr.top_block()
-    src = gr.vector_source_f(src_data)
+    src = blocks.vector_source_f(src_data)
     op = filter.interp_fir_filter_fff(interp, taps)
-    dst = gr.vector_sink_f()
+    dst = blocks.vector_sink_f()
     tb.connect(src, op, dst)
     tb.run()
     result_data = dst.data()
@@ -59,10 +60,10 @@ def reference_interp_filter(src_data, interp, taps):
 
 def reference_interp_dec_filter(src_data, interp, decim, taps):
     tb = gr.top_block()
-    src = gr.vector_source_f(src_data)
+    src = blocks.vector_source_f(src_data)
     up = filter.interp_fir_filter_fff(interp, (1,))
     dn = filter.fir_filter_fff(decim, taps)
-    dst = gr.vector_sink_f()
+    dst = blocks.vector_sink_f()
     tb.connect(src, up, dn, dst)
     tb.run()
     result_data = dst.data()
@@ -86,9 +87,9 @@ class test_rational_resampler (gr_unittest.TestCase):
         expected_result = tuple([float(x) for x in xr])
 
 	tb = gr.top_block()
-        src = gr.vector_source_f(src_data)
+        src = blocks.vector_source_f(src_data)
         op = filter.rational_resampler_base_fff(1, 1, taps)
-        dst = gr.vector_sink_f()
+        dst = blocks.vector_sink_f()
         tb.connect(src, op)
         tb.connect(op, dst)
         tb.run()
@@ -109,9 +110,9 @@ class test_rational_resampler (gr_unittest.TestCase):
         expected_result = tuple([float(x) for x in xr])
 
 	tb = gr.top_block()
-        src = gr.vector_source_f(src_data)
+        src = blocks.vector_source_f(src_data)
         op = filter.rational_resampler_base_fff(interpolation, 1, taps)
-        dst = gr.vector_sink_f()
+        dst = blocks.vector_sink_f()
         tb.connect(src, op)
         tb.connect(op, dst)
         tb.run()
@@ -126,9 +127,9 @@ class test_rational_resampler (gr_unittest.TestCase):
         expected_result = reference_interp_filter(src_data, interpolation, taps)
 
 	tb = gr.top_block()
-        src = gr.vector_source_f(src_data)
+        src = blocks.vector_source_f(src_data)
         op = filter.rational_resampler_base_fff(interpolation, 1, taps)
-        dst = gr.vector_sink_f()
+        dst = blocks.vector_sink_f()
         tb.connect(src, op)
         tb.connect(op, dst)
         tb.run()
@@ -146,9 +147,9 @@ class test_rational_resampler (gr_unittest.TestCase):
         expected_result = reference_dec_filter(src_data, decimation, taps)
 
 	tb = gr.top_block()
-        src = gr.vector_source_f(src_data)
+        src = blocks.vector_source_f(src_data)
         op = filter.rational_resampler_base_fff(1, decimation, taps)
-        dst = gr.vector_sink_f()
+        dst = blocks.vector_sink_f()
         tb.connect(src, op)
         tb.connect(op, dst)
         tb.run()
@@ -176,9 +177,9 @@ class test_rational_resampler (gr_unittest.TestCase):
                     expected_result = reference_dec_filter(src_data, decim, taps)
 
                     tb = gr.top_block()
-                    src = gr.vector_source_f(src_data)
+                    src = blocks.vector_source_f(src_data)
                     op = filter.rational_resampler_base_fff(1, decim, taps)
-                    dst = gr.vector_sink_f()
+                    dst = blocks.vector_sink_f()
                     tb.connect(src, op, dst)
                     tb.run()
                     tb = None
@@ -210,9 +211,9 @@ class test_rational_resampler (gr_unittest.TestCase):
                     expected_result = reference_interp_filter(src_data, interp, taps)
 
                     tb = gr.top_block()
-                    src = gr.vector_source_f(src_data)
+                    src = blocks.vector_source_f(src_data)
                     op = filter.rational_resampler_base_fff(interp, 1, taps)
-                    dst = gr.vector_sink_f()
+                    dst = blocks.vector_sink_f()
                     tb.connect(src, op, dst)
                     tb.run()
                     tb = None
@@ -238,9 +239,9 @@ class test_rational_resampler (gr_unittest.TestCase):
         expected_result = reference_interp_dec_filter(src_data, interp, decimation, taps)
 
 	tb = gr.top_block()
-        src = gr.vector_source_f(src_data)
+        src = blocks.vector_source_f(src_data)
         op = filter.rational_resampler_base_fff(interp, decimation, taps)
-        dst = gr.vector_sink_f()
+        dst = blocks.vector_sink_f()
         tb.connect(src, op)
         tb.connect(op, dst)
         tb.run()

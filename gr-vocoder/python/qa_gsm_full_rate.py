@@ -21,7 +21,8 @@
 #
 
 from gnuradio import gr, gr_unittest
-import vocoder_swig
+import vocoder_swig as vocoder
+import blocks_swig as blocks
 
 class test_gsm_vocoder (gr_unittest.TestCase):
 
@@ -47,10 +48,10 @@ class test_gsm_vocoder (gr_unittest.TestCase):
                          680,600,240,168,112,408,488,472,608,480,240,232,
                          208,288,480,600,616,520,176,88,184,296,392,584,
                          656,552,248,160,144,336,432,512,608,664)
-        src = gr.vector_source_s(data)
-        enc = vocoder_swig.gsm_fr_encode_sp()
-        dec = vocoder_swig.gsm_fr_decode_ps()
-        snk = gr.vector_sink_s()
+        src = blocks.vector_source_s(data)
+        enc = vocoder.gsm_fr_encode_sp()
+        dec = vocoder.gsm_fr_decode_ps()
+        snk = blocks.vector_sink_s()
         self.tb.connect(src, enc, dec, snk)
         self.tb.run()
         actual_result = snk.data()

@@ -74,5 +74,27 @@ namespace gr {
       return noutput_items;
     }
 
+    void
+    nop_impl::setup_rpc()
+    {
+#ifdef GR_CTRLPORT
+      d_rpc_vars.push_back(
+        rpcbasic_sptr(new rpcbasic_register_get<nop, int>(
+          alias(), "test",
+          &nop::ctrlport_test,
+          pmt::mp(-256), pmt::mp(255), pmt::mp(0),
+          "", "Simple testing variable",
+          RPC_PRIVLVL_MIN, DISPNULL)));
+
+      d_rpc_vars.push_back(
+        rpcbasic_sptr(new rpcbasic_register_set<nop, int>(
+          alias(), "test",
+          &nop::set_ctrlport_test,
+          pmt::mp(-256), pmt::mp(255), pmt::mp(0),
+          "", "Simple testing variable",
+          RPC_PRIVLVL_MIN, DISPNULL)));
+#endif /* GR_CTRLPORT */
+    }
+
   } /* namespace blocks */
 } /* namespace gr */

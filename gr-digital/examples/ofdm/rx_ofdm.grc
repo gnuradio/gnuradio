@@ -689,10 +689,10 @@
     </param>
   </block>
   <block>
-    <key>gr_null_sink</key>
+    <key>blocks_null_sink</key>
     <param>
       <key>id</key>
-      <value>gr_null_sink_0</value>
+      <value>blocks_null_sink_0</value>
     </param>
     <param>
       <key>_enabled</key>
@@ -1067,7 +1067,7 @@
   </connection>
   <connection>
     <source_block_id>digital_constellation_decoder_cb_0</source_block_id>
-    <sink_block_id>gr_null_sink_0</sink_block_id>
+    <sink_block_id>blocks_null_sink_0</sink_block_id>
     <source_key>0</source_key>
     <sink_key>0</sink_key>
   </connection>

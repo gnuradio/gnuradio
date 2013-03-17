@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2012 Free Software Foundation, Inc.
+# Copyright 2012,2013 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -22,6 +22,7 @@
 
 from gnuradio import gr, gr_unittest
 import analog_swig as analog
+import blocks_swig as blocks
 import math
 
 def avg_mag_sqrd_c(x, alpha):
@@ -52,7 +53,7 @@ class test_probe_avg_mag_sqrd(gr_unittest.TestCase):
                     6.0+6.0j, 7.0+7.0j, 8.0+8.0j, 9.0+9.0j, 10.0+10.0j]
         expected_result = avg_mag_sqrd_c(src_data, alpha)[-1]
 
-        src = gr.vector_source_c(src_data)
+        src = blocks.vector_source_c(src_data)
         op = analog.probe_avg_mag_sqrd_c(0, alpha)
 
         self.tb.connect(src, op)
@@ -67,9 +68,9 @@ class test_probe_avg_mag_sqrd(gr_unittest.TestCase):
                     6.0+6.0j, 7.0+7.0j, 8.0+8.0j, 9.0+9.0j, 10.0+10.0j]
         expected_result = avg_mag_sqrd_c(src_data, alpha)[0:-1]
 
-        src = gr.vector_source_c(src_data)
+        src = blocks.vector_source_c(src_data)
         op = analog.probe_avg_mag_sqrd_cf(0, alpha)
-        dst = gr.vector_sink_f()
+        dst = blocks.vector_sink_f()
 
         self.tb.connect(src, op)
         self.tb.connect(op, dst)
@@ -84,7 +85,7 @@ class test_probe_avg_mag_sqrd(gr_unittest.TestCase):
                     6.0, 7.0, 8.0, 9.0, 10.0]
         expected_result = avg_mag_sqrd_f(src_data, alpha)[-1]
 
-        src = gr.vector_source_f(src_data)
+        src = blocks.vector_source_f(src_data)
         op = analog.probe_avg_mag_sqrd_f(0, alpha)
 
         self.tb.connect(src, op)

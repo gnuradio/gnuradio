@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# Copyright 2012 Free Software Foundation, Inc.
+# Copyright 2012,2013 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -45,10 +45,10 @@ class qa_scale_tags (gr_unittest.TestCase):
         tagname = "packet_length"
         data, tags = tagged_streams.packets_to_vectors(packets, tagname)
         tb = gr.top_block()
-        src = gr.vector_source_b(data, False, 1, tags)
+        src = blocks.vector_source_b(data, False, 1, tags)
         tag_scaler = digital.scale_tags(1, tagname, 2)
         unpacker = blocks.packed_to_unpacked_bb(4, blocks.GR_MSB_FIRST)
-        snk = gr.vector_sink_b()
+        snk = blocks.vector_sink_b()
         tb.connect(src, unpacker, tag_scaler, snk)
         tb.run()
         packets = tagged_streams.vectors_to_packets(snk.data(), snk.tags(), tagname)

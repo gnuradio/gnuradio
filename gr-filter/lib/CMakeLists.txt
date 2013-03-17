@@ -94,6 +94,7 @@ include_directories(
     ${CMAKE_CURRENT_BINARY_DIR}
     ${GR_FILTER_INCLUDE_DIRS}
     ${GR_FFT_INCLUDE_DIRS}
+    ${GR_BLOCKS_INCLUDE_DIRS}
     ${GNURADIO_CORE_INCLUDE_DIRS}
     ${VOLK_INCLUDE_DIRS}
     ${GRUEL_INCLUDE_DIRS}
@@ -163,6 +164,7 @@ endif(MSVC)
 list(APPEND filter_libs
     gnuradio-core
     gnuradio-fft
+    gnuradio-blocks
     volk
     ${Boost_LIBRARIES}
 )

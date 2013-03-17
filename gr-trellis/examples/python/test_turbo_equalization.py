@@ -16,7 +16,7 @@ except ImportError:
 def make_rx(tb,fo,fi,dimensionality,tot_constellation,K,interleaver,IT,Es,N0,type):
     metrics_in = trellis.metrics_f(fi.O(),dimensionality,tot_constellation,digital.TRELLIS_EUCLIDEAN) # data preprocessing to generate metrics for innner SISO
     scale = blocks.multiply_const_ff(1.0/N0)
-    gnd = gr.vector_source_f([0],True);
+    gnd = blocks.vector_source_f([0],True);
 
     inter=[]
     deinter=[]
@@ -58,7 +58,7 @@ def run_test (fo,fi,interleaver,Kb,bitspersymbol,K,dimensionality,tot_constellat
 
     # TX
     src = gr.lfsr_32k_source_s()
-    src_head = gr.head (gr.sizeof_short,Kb/16) # packet size in shorts
+    src_head = blocks.head(gr.sizeof_short,Kb/16) # packet size in shorts
     s2fsmi = blocks.packed_to_unpacked_ss(bitspersymbol,gr.GR_MSB_FIRST) # unpack shorts to symbols compatible with the iouter FSM input cardinality
     enc_out = trellis.encoder_ss(fo,0) # initial state = 0
     inter = trellis.permutation(interleaver.K(),interleaver.INTER(),1,gr.sizeof_short)

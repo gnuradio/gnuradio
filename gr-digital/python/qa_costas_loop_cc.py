@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2011 Free Software Foundation, Inc.
+# Copyright 2011,2013 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -22,6 +22,7 @@
 
 from gnuradio import gr, gr_unittest
 import digital_swig as digital
+import blocks_swig as blocks
 import psk
 import random, cmath
 
@@ -40,8 +41,8 @@ class test_costas_loop_cc(gr_unittest.TestCase):
         self.test = digital.costas_loop_cc(natfreq, order)
 
         data = 100*[complex(1,0),]
-        self.src = gr.vector_source_c(data, False)
-        self.snk = gr.vector_sink_c()
+        self.src = blocks.vector_source_c(data, False)
+        self.snk = blocks.vector_sink_c()
 
         self.tb.connect(self.src, self.test, self.snk)
         self.tb.run()
@@ -57,8 +58,8 @@ class test_costas_loop_cc(gr_unittest.TestCase):
         self.test = digital.costas_loop_cc(natfreq, order)
 
         data = [complex(2*random.randint(0,1)-1, 0) for i in xrange(100)]
-        self.src = gr.vector_source_c(data, False)
-        self.snk = gr.vector_sink_c()
+        self.src = blocks.vector_source_c(data, False)
+        self.snk = blocks.vector_sink_c()
 
         self.tb.connect(self.src, self.test, self.snk)
         self.tb.run()
@@ -81,8 +82,8 @@ class test_costas_loop_cc(gr_unittest.TestCase):
         expected_result = data[N:]
         data = [rot*d for d in data]
 
-        self.src = gr.vector_source_c(data, False)
-        self.snk = gr.vector_sink_c()
+        self.src = blocks.vector_source_c(data, False)
+        self.snk = blocks.vector_sink_c()
 
         self.tb.connect(self.src, self.test, self.snk)
         self.tb.run()
@@ -107,8 +108,8 @@ class test_costas_loop_cc(gr_unittest.TestCase):
         expected_result = data[N:]
         data = [rot*d for d in data]
 
-        self.src = gr.vector_source_c(data, False)
-        self.snk = gr.vector_sink_c()
+        self.src = blocks.vector_source_c(data, False)
+        self.snk = blocks.vector_sink_c()
 
         self.tb.connect(self.src, self.test, self.snk)
         self.tb.run()
@@ -136,8 +137,8 @@ class test_costas_loop_cc(gr_unittest.TestCase):
         rot = cmath.exp(0.1j) # some small rotation
         data = [rot*d for d in data]
 
-        self.src = gr.vector_source_c(data, False)
-        self.snk = gr.vector_sink_c()
+        self.src = blocks.vector_source_c(data, False)
+        self.snk = blocks.vector_sink_c()
 
         self.tb.connect(self.src, self.test, self.snk)
         self.tb.run()

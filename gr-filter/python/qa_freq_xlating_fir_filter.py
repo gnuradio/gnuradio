@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2008,2010,2012 Free Software Foundation, Inc.
+# Copyright 2008,2010,2012,2013 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -21,6 +21,7 @@
 
 from gnuradio import gr, gr_unittest
 import filter_swig as filter
+import blocks_swig as blocks
 import cmath, math
 
 class test_freq_xlating_filter(gr_unittest.TestCase):
@@ -102,9 +103,9 @@ class test_freq_xlating_filter(gr_unittest.TestCase):
                          (-0.0016229727771133184+0.0028335191309452057j),
                          (-0.0010890064295381308+0.0037298379465937614j),
                          (-0.00012392725329846144+0.0027196139562875032j))
-        src = gr.vector_source_c(self.src_data)
+        src = blocks.vector_source_c(self.src_data)
         op  = filter.freq_xlating_fir_filter_ccf(1, self.taps, self.fc, self.fs)
-        dst = gr.vector_sink_c()
+        dst = blocks.vector_sink_c()
         self.tb.connect(src, op, dst)
         self.tb.run()
         result_data = dst.data()
@@ -132,9 +133,9 @@ class test_freq_xlating_filter(gr_unittest.TestCase):
                           (-0.002173811662942171+0.007211671676486731j),
                           (0.0022051059640944004-0.00402153329923749j),
                           (-0.0011226903880015016+0.0009080505697056651j))
-        src = gr.vector_source_c(self.src_data)
+        src = blocks.vector_source_c(self.src_data)
         op  = filter.freq_xlating_fir_filter_ccf(4, self.taps, self.fc, self.fs)
-        dst = gr.vector_sink_c()
+        dst = blocks.vector_sink_c()
         self.tb.connect(src, op, dst)
         self.tb.run()
         result_data = dst.data()
@@ -162,9 +163,9 @@ class test_freq_xlating_filter(gr_unittest.TestCase):
                          (0.000998671515845-0.00135387131013j),
                          (0.00104933069088-0.00243046949618j),
                          (0.000765930046327-0.0026717747096j))
-        src = gr.vector_source_c(self.src_data)
+        src = blocks.vector_source_c(self.src_data)
         op  = filter.freq_xlating_fir_filter_ccc(1, self.taps, self.fc, self.fs)
-        dst = gr.vector_sink_c()
+        dst = blocks.vector_sink_c()
         self.tb.connect(src, op, dst)
         self.tb.run()
         result_data = dst.data()
@@ -192,9 +193,9 @@ class test_freq_xlating_filter(gr_unittest.TestCase):
                          (-0.00180401885882+0.00427213776857j),
                          (-0.00122803344857+0.00427243299782j),
                          (0.000414476031438-0.000383919978049j))
-        src = gr.vector_source_c(self.src_data)
+        src = blocks.vector_source_c(self.src_data)
         op  = filter.freq_xlating_fir_filter_ccc(4, self.taps, self.fc, self.fs)
-        dst = gr.vector_sink_c()
+        dst = blocks.vector_sink_c()
         self.tb.connect(src, op, dst)
         self.tb.run()
         result_data = dst.data()
@@ -222,9 +223,9 @@ class test_freq_xlating_filter(gr_unittest.TestCase):
                          (0.000185727752978-0.000154630601173j),
                          (-0.000141745767905-0.000120098840853j),
                          (-3.9850056055e-07+0.000168364742422j))
-        src = gr.vector_source_f(self.src_data)
+        src = blocks.vector_source_f(self.src_data)
         op  = filter.freq_xlating_fir_filter_fcf(1, self.taps, self.fc, self.fs)
-        dst = gr.vector_sink_c()
+        dst = blocks.vector_sink_c()
         self.tb.connect(src, op, dst)
         self.tb.run()
         result_data = dst.data()
@@ -252,9 +253,9 @@ class test_freq_xlating_filter(gr_unittest.TestCase):
                          (-0.00010601492977-0.00015005269961j),
                          (-0.000204817260965+0.000160534662427j),
                          (0.000114742244477+0.000205190313864j))
-        src = gr.vector_source_f(self.src_data)
+        src = blocks.vector_source_f(self.src_data)
         op  = filter.freq_xlating_fir_filter_fcf(4, self.taps, self.fc, self.fs)
-        dst = gr.vector_sink_c()
+        dst = blocks.vector_sink_c()
         self.tb.connect(src, op, dst)
         self.tb.run()
         result_data = dst.data()
@@ -282,9 +283,9 @@ class test_freq_xlating_filter(gr_unittest.TestCase):
                          (-0.000193948610104+0.000113364716526j),
                          (0.000134820176754+0.000142527525895j),
                          (4.74465123261e-05-0.000175131688593j))
-        src = gr.vector_source_f(self.src_data)
+        src = blocks.vector_source_f(self.src_data)
         op  = filter.freq_xlating_fir_filter_fcc(1, self.taps, self.fc, self.fs)
-        dst = gr.vector_sink_c()
+        dst = blocks.vector_sink_c()
         self.tb.connect(src, op, dst)
         self.tb.run()
         result_data = dst.data()
@@ -312,9 +313,9 @@ class test_freq_xlating_filter(gr_unittest.TestCase):
                          (0.000215422536712+0.000116706112749j),
                          (0.000224391726078-0.000156330308528j),
                          (-5.96956087975e-05-0.000211163976928j))
-        src = gr.vector_source_f(self.src_data)
+        src = blocks.vector_source_f(self.src_data)
         op  = filter.freq_xlating_fir_filter_fcc(4, self.taps, self.fc, self.fs)
-        dst = gr.vector_sink_c()
+        dst = blocks.vector_sink_c()
         self.tb.connect(src, op, dst)
         self.tb.run()
         result_data = dst.data()
@@ -342,9 +343,9 @@ class test_freq_xlating_filter(gr_unittest.TestCase):
                          (0.128281414509+0.0677760615945j),
                          (0.0748447552323+0.0619902014732j),
                          (0.0512856245041+0.0775099247694j))
-        src = gr.vector_source_s(self.src_data)
+        src = blocks.vector_source_s(self.src_data)
         op  = filter.freq_xlating_fir_filter_scf(1, self.taps, self.fc, self.fs)
-        dst = gr.vector_sink_c()
+        dst = blocks.vector_sink_c()
         self.tb.connect(src, op, dst)
         self.tb.run()
         result_data = dst.data()
@@ -372,9 +373,9 @@ class test_freq_xlating_filter(gr_unittest.TestCase):
                          (-0.0770940706134-0.230615705252j),
                          (-0.103762261569-0.0382265634835j),
                          (0.11808334291+0.104863762856j))
-        src = gr.vector_source_s(self.src_data)
+        src = blocks.vector_source_s(self.src_data)
         op  = filter.freq_xlating_fir_filter_scf(4, self.taps, self.fc, self.fs)
-        dst = gr.vector_sink_c()
+        dst = blocks.vector_sink_c()
         self.tb.connect(src, op, dst)
         self.tb.run()
         result_data = dst.data()
@@ -402,9 +403,9 @@ class test_freq_xlating_filter(gr_unittest.TestCase):
                          (-0.0151527002454+0.036265052855j),
                          (0.0199296213686+0.0452499426901j),
                          (0.0122985243797+0.0143278446048j))
-        src = gr.vector_source_s(self.src_data)
+        src = blocks.vector_source_s(self.src_data)
         op  = filter.freq_xlating_fir_filter_scc(1, self.taps, self.fc, self.fs)
-        dst = gr.vector_sink_c()
+        dst = blocks.vector_sink_c()
         self.tb.connect(src, op, dst)
         self.tb.run()
         result_data = dst.data()
@@ -432,9 +433,9 @@ class test_freq_xlating_filter(gr_unittest.TestCase):
                          (-0.0108893103898-0.0875638127327j),
                          (0.00204296782613-0.0721434056759j),
                          (-0.00527479872108-0.00698097236454j))
-        src = gr.vector_source_s(self.src_data)
+        src = blocks.vector_source_s(self.src_data)
         op  = filter.freq_xlating_fir_filter_scc(4, self.taps, self.fc, self.fs)
-        dst = gr.vector_sink_c()
+        dst = blocks.vector_sink_c()
         self.tb.connect(src, op, dst)
         self.tb.run()
         result_data = dst.data()

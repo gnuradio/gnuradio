@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2012 Free Software Foundation, Inc.
+# Copyright 2012,2013 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -52,9 +52,9 @@ class qa_ofdm_serializer_vcc (gr_unittest.TestCase):
         tag.offset = 0
         tag.key = pmt.string_to_symbol(tag_name)
         tag.value = pmt.from_long(n_syms)
-        src = gr.vector_source_c(tx_symbols, False, fft_len, (tag,))
+        src = blocks.vector_source_c(tx_symbols, False, fft_len, (tag,))
         serializer = digital.ofdm_serializer_vcc(fft_len, occupied_carriers, tag_name, "", 0, False)
-        sink = gr.vector_sink_c()
+        sink = blocks.vector_sink_c()
         self.tb.connect(src, serializer, sink)
         self.tb.run ()
         self.assertEqual(sink.data(), expected_result)
@@ -83,9 +83,9 @@ class qa_ofdm_serializer_vcc (gr_unittest.TestCase):
         offsettag.offset = 0
         offsettag.key = pmt.string_to_symbol("ofdm_sync_carr_offset")
         offsettag.value = pmt.from_long(carr_offset)
-        src = gr.vector_source_c(tx_symbols, False, fft_len, (tag, offsettag))
+        src = blocks.vector_source_c(tx_symbols, False, fft_len, (tag, offsettag))
         serializer = digital.ofdm_serializer_vcc(fft_len, occupied_carriers, tag_name, "", 0, False)
-        sink = gr.vector_sink_c()
+        sink = blocks.vector_sink_c()
         self.tb.connect(src, serializer, sink)
         self.tb.run ()
         self.assertEqual(sink.data(), expected_result)
@@ -108,14 +108,14 @@ class qa_ofdm_serializer_vcc (gr_unittest.TestCase):
         tag.offset = 0
         tag.key = pmt.string_to_symbol(tag_name)
         tag.value = pmt.from_long(len(tx_data))
-        src = gr.vector_source_c(tx_data, False, 1, (tag,))
+        src = blocks.vector_source_c(tx_data, False, 1, (tag,))
         alloc = digital.ofdm_carrier_allocator_cvc(fft_len,
                        occupied_carriers,
                        pilot_carriers,
                        pilot_symbols,
                        tag_name)
         serializer = digital.ofdm_serializer_vcc(alloc)
-        sink = gr.vector_sink_c()
+        sink = blocks.vector_sink_c()
         self.tb.connect(src, alloc, serializer, sink)
         self.tb.run ()
         self.assertEqual(sink.data(), tx_data)
@@ -146,7 +146,7 @@ class qa_ofdm_serializer_vcc (gr_unittest.TestCase):
         offsettag.offset = 0
         offsettag.key = pmt.string_to_symbol("ofdm_sync_carr_offset")
         offsettag.value = pmt.from_long(carr_offset)
-        src = gr.vector_source_c(tx_data, False, 1, (tag, offsettag))
+        src = blocks.vector_source_c(tx_data, False, 1, (tag, offsettag))
         alloc = digital.ofdm_carrier_allocator_cvc(fft_len,
                        occupied_carriers,
                        pilot_carriers,
@@ -157,7 +157,7 @@ class qa_ofdm_serializer_vcc (gr_unittest.TestCase):
         mixer = blocks.multiply_cc()
         rx_fft  = fft.fft_vcc(fft_len, True, (), True)
         serializer = digital.ofdm_serializer_vcc(alloc)
-        sink = gr.vector_sink_c()
+        sink = blocks.vector_sink_c()
         self.tb.connect(
                 src, alloc, tx_ifft,
                 blocks.vector_to_stream(gr.sizeof_gr_complex, fft_len),
@@ -189,9 +189,9 @@ class qa_ofdm_serializer_vcc (gr_unittest.TestCase):
         tag2.offset = 0
         tag2.key = pmt.string_to_symbol("packet_len")
         tag2.value = pmt.from_long(len(expected_result))
-        src = gr.vector_source_c(tx_symbols, False, fft_len, (tag, tag2))
+        src = blocks.vector_source_c(tx_symbols, False, fft_len, (tag, tag2))
         serializer = digital.ofdm_serializer_vcc(fft_len, occupied_carriers, tag_name, "packet_len", 0, False)
-        sink = gr.vector_sink_c()
+        sink = blocks.vector_sink_c()
         self.tb.connect(src, serializer, sink)
         self.tb.run ()
         self.assertEqual(sink.data(), expected_result)

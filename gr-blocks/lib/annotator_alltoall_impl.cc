@@ -83,8 +83,8 @@ namespace gr {
       }
 
       // Source ID and key for any tag that might get applied from this block
-      pmt::pmt_t srcid = pmt::pmt_string_to_symbol(str.str());
-      pmt::pmt_t key = pmt::pmt_string_to_symbol("seq");
+      pmt::pmt_t srcid = pmt::string_to_symbol(str.str());
+      pmt::pmt_t key = pmt::string_to_symbol("seq");
 
       // Work does nothing to the data stream; just copy all inputs to
       // outputs Adds a new tag when the number of items read is a
@@ -95,7 +95,7 @@ namespace gr {
       for(int j = 0; j < noutput_items; j++) {
         for(int i = 0; i < noutputs; i++) {
           if(abs_N % d_when == 0) {
-            pmt::pmt_t value = pmt::pmt_from_uint64(d_tag_counter++);
+            pmt::pmt_t value = pmt::from_uint64(d_tag_counter++);
             add_item_tag(i, abs_N, key, value, srcid);
           }
 

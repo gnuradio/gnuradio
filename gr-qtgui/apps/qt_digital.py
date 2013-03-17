@@ -182,7 +182,7 @@ class my_top_block(gr.top_block):
         fftsize = 2048
 
         self.data = scipy.random.randint(0, 255, 1000)
-        self.src = gr.vector_source_b(self.data.tolist(), True)
+        self.src = blocks.vector_source_b(self.data.tolist(), True)
         self.mod = digital.dqpsk_mod(self.gray_code,
                                      samples_per_symbol=self.sps,
                                      excess_bw=self.excess_bw,

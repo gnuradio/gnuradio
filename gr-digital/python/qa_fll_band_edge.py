@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2011,2012 Free Software Foundation, Inc.
+# Copyright 2011-2013 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -51,7 +51,7 @@ class test_fll_band_edge_cc(gr_unittest.TestCase):
         # Create a set of 1's and -1's, pulse shape and interpolate to sps
         random.seed(0)
         data = [2.0*random.randint(0, 2) - 1.0 for i in xrange(200)]
-        self.src = gr.vector_source_c(data, False)
+        self.src = blocks.vector_source_c(data, False)
         self.rrc = filter.interp_fir_filter_ccf(sps, rrc_taps)
 
         # Mix symbols with a complex sinusoid to spin them
@@ -63,10 +63,10 @@ class test_fll_band_edge_cc(gr_unittest.TestCase):
 
         # Create sinks for all outputs of the FLL
         # we will only care about the freq and error outputs
-        self.vsnk_frq = gr.vector_sink_f()
-        self.nsnk_fll = gr.null_sink(gr.sizeof_gr_complex)
-        self.nsnk_phs = gr.null_sink(gr.sizeof_float)
-        self.nsnk_err = gr.null_sink(gr.sizeof_float)
+        self.vsnk_frq = blocks.vector_sink_f()
+        self.nsnk_fll = blocks.null_sink(gr.sizeof_gr_complex)
+        self.nsnk_phs = blocks.null_sink(gr.sizeof_float)
+        self.nsnk_err = blocks.null_sink(gr.sizeof_float)
         
         # Connect the blocks
         self.tb.connect(self.nco, (self.mix,1))

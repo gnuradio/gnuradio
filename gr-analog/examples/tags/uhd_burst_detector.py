@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2012 Free Software Foundation, Inc.
+# Copyright 2012,2013 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -55,7 +55,7 @@ class uhd_burst_detector(gr.top_block):
 
         # Dummy signaler to collect a burst on known periods
         data = 1000*[0,] + 1000*[1,]
-        self.signal = gr.vector_source_s(data, True)
+        self.signal = blocks.vector_source_s(data, True)
 
         # Energy detector to get signal burst
         ## use squelch to detect energy

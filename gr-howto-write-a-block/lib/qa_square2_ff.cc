@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2011,2012 Free Software Foundation, Inc.
+ * Copyright 2011-2013 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -24,8 +24,8 @@
 
 #include <vector>
 #include <gr_top_block.h>
-#include <gr_vector_source_f.h>
-#include <gr_vector_sink_f.h>
+#include <blocks/vector_source_f.h>
+#include <blocks/vector_sink_f.h>
 #include <howto/square2_ff.h>
 
 namespace gr {
@@ -43,8 +43,8 @@ namespace gr {
       }
       
       gr_top_block_sptr tb = gr_make_top_block("dial_tone");
-      gr_vector_source_f_sptr src = gr_make_vector_source_f(data);
-      gr_vector_sink_f_sptr snk = gr_make_vector_sink_f();
+      gr::blocks::vector_source_f::sptr src = gr::blocks::vector_source_f::make(data);
+      gr::blocks::vector_sink_f::sptr snk = gr::blocks::vector_sink_f::make();
 
       square2_ff::sptr op = square2_ff::make();
       

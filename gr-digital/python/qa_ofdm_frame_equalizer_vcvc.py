@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# Copyright 2012 Free Software Foundation, Inc.
+# Copyright 2012,2013 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -24,6 +24,7 @@ from gnuradio import gr, gr_unittest
 try: import pmt
 except: from gruel import pmt
 import digital_swig as digital
+import blocks_swig as blocks
 
 class qa_ofdm_frame_equalizer_vcvc (gr_unittest.TestCase):
 
@@ -48,9 +49,9 @@ class qa_ofdm_frame_equalizer_vcvc (gr_unittest.TestCase):
         chan_tag.offset = 0
         chan_tag.key = pmt.string_to_symbol("ofdm_sync_chan_taps")
         chan_tag.value = pmt.init_c32vector(fft_len, (1,) * fft_len)
-        src = gr.vector_source_c(tx_data, False, fft_len, (len_tag, chan_tag))
+        src = blocks.vector_source_c(tx_data, False, fft_len, (len_tag, chan_tag))
         eq = digital.ofdm_frame_equalizer_vcvc(equalizer.base(), len_tag_key)
-        sink = gr.vector_sink_c(fft_len)
+        sink = blocks.vector_sink_c(fft_len)
         self.tb.connect(src, eq, sink)
         self.tb.run ()
         # Check data
@@ -93,9 +94,9 @@ class qa_ofdm_frame_equalizer_vcvc (gr_unittest.TestCase):
         chan_tag.offset = 0
         chan_tag.key = pmt.string_to_symbol("ofdm_sync_chan_taps")
         chan_tag.value = pmt.init_c32vector(fft_len, channel[:fft_len])
-        src = gr.vector_source_c(numpy.multiply(tx_signal, channel), False, fft_len, (len_tag, chan_tag))
+        src = blocks.vector_source_c(numpy.multiply(tx_signal, channel), False, fft_len, (len_tag, chan_tag))
         eq = digital.ofdm_frame_equalizer_vcvc(equalizer.base(), len_tag_key, True)
-        sink = gr.vector_sink_c(fft_len)
+        sink = blocks.vector_sink_c(fft_len)
         self.tb.connect(src, eq, sink)
         self.tb.run ()
         rx_data = [cnst.decision_maker_v((x,)) if x != 0 else -1 for x in sink.data()]
@@ -142,9 +143,9 @@ class qa_ofdm_frame_equalizer_vcvc (gr_unittest.TestCase):
         chan_tag.offset = 0
         chan_tag.key = pmt.string_to_symbol("ofdm_sync_chan_taps")
         chan_tag.value = pmt.init_c32vector(fft_len, channel[:fft_len])
-        src = gr.vector_source_c(numpy.multiply(tx_signal, channel), False, fft_len, (len_tag, chan_tag))
+        src = blocks.vector_source_c(numpy.multiply(tx_signal, channel), False, fft_len, (len_tag, chan_tag))
         eq = digital.ofdm_frame_equalizer_vcvc(equalizer.base(), len_tag_key, True)
-        sink = gr.vector_sink_c(fft_len)
+        sink = blocks.vector_sink_c(fft_len)
         self.tb.connect(src, eq, sink)
         self.tb.run ()
         rx_data = [cnst.decision_maker_v((x,)) if x != 0 else -1 for x in sink.data()]

@@ -93,8 +93,8 @@ class test_message(gr_unittest.TestCase):
 
     def test_300(self):
         input_data = (0,1,2,3,4,5,6,7,8,9)
-        src = gr.vector_source_b(input_data)
-        dst = gr.vector_sink_b()
+        src = blocks.vector_source_b(input_data)
+        dst = blocks.vector_sink_b()
 	tb = gr.top_block()
         tb.connect(src, dst)
         tb.run()
@@ -103,7 +103,7 @@ class test_message(gr_unittest.TestCase):
     def test_301(self):
         # Use itemsize, limit constructor
         src = blocks.message_source(gr.sizeof_char)
-        dst = gr.vector_sink_b()
+        dst = blocks.vector_sink_b()
 	tb = gr.top_block()
         tb.connect(src, dst)
         src.msgq().insert_tail(gr.message_from_string('01234'))
@@ -118,7 +118,7 @@ class test_message(gr_unittest.TestCase):
         # Use itemsize, msgq constructor
         msgq = gr.msg_queue()
         src = blocks.message_source(gr.sizeof_char, msgq)
-        dst = gr.vector_sink_b()
+        dst = blocks.vector_sink_b()
 	tb = gr.top_block()
         tb.connect(src, dst)
         src.msgq().insert_tail(gr.message_from_string('01234'))

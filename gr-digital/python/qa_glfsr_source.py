@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2007,2010,2012 Free Software Foundation, Inc.
+# Copyright 2007,2010,2012,2013 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -22,6 +22,7 @@
 
 from gnuradio import gr, gr_unittest
 import digital_swig as digital
+import blocks_swig as blocks
 
 class test_glfsr_source(gr_unittest.TestCase):
 
@@ -46,7 +47,7 @@ class test_glfsr_source(gr_unittest.TestCase):
         for degree in range(1,11):                # Higher degrees take too long to correlate
             src = digital.glfsr_source_b(degree, False)
             b2f = digital.chunks_to_symbols_bf((-1.0,1.0), 1)
-            dst = gr.vector_sink_f()
+            dst = blocks.vector_sink_f()
 	    del self.tb # Discard existing top block
 	    self.tb = gr.top_block()
             self.tb.connect(src, b2f, dst)
@@ -71,7 +72,7 @@ class test_glfsr_source(gr_unittest.TestCase):
     def test_005_correlation_f(self):
         for degree in range(1,11):                # Higher degrees take too long to correlate
             src = digital.glfsr_source_f(degree, False)
-            dst = gr.vector_sink_f()
+            dst = blocks.vector_sink_f()
 	    del self.tb # Discard existing top block
 	    self.tb = gr.top_block()
             self.tb.connect(src, dst)

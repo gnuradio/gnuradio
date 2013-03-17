@@ -73,6 +73,7 @@ install(FILES
     ${CMAKE_CURRENT_SOURCE_DIR}/gr_core_api.h
     ${CMAKE_CURRENT_SOURCE_DIR}/gr_circular_file.h
     ${CMAKE_CURRENT_SOURCE_DIR}/gr_constants.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/gr_endianness.h
     ${CMAKE_CURRENT_SOURCE_DIR}/gr_expj.h
     ${CMAKE_CURRENT_SOURCE_DIR}/gr_math.h
     ${CMAKE_CURRENT_SOURCE_DIR}/gr_misc.h
@@ -109,25 +110,13 @@ set(gr_core_general_triple_threats
     gr_block_gateway
     gr_check_counting_s
     gr_check_lfsr_32k_s
-    gr_copy
-    gr_endian_swap
     gr_fake_channel_coder_pp
     gr_feval
-    gr_head
     gr_iqcomp_cc
-    gr_kludge_copy
     gr_lfsr_32k_source_s
-    gr_nop
-    gr_null_sink
-    gr_null_source
     gr_pa_2x2_phase_combiner
     gr_prefs
-    gr_skiphead
     gr_test
-    gr_vector_map
-    gr_annotator_alltoall
-    gr_annotator_1to1
-    gr_annotator_raw
 )
 
 if(ENABLE_GR_CTRLPORT)

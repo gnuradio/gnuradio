@@ -24,6 +24,7 @@
 ##################################################
 import wx
 from gnuradio import gr
+from gnuradio import blocks
 
 RUN_ALWAYS = gr.prefs().get_bool ('wxgui', 'run_always', False)
 
@@ -47,7 +48,7 @@ class wxgui_hb(object):
 		"""
 		try:
 			assert points[0] == self or points[0][0] == self
-			copy = gr.copy(self._hb.input_signature().sizeof_stream_item(0))
+			copy = blocks.copy(self._hb.input_signature().sizeof_stream_item(0))
 			handler = self._handler_factory(copy.set_enabled)
 			if RUN_ALWAYS == False:
 				handler(False) #initially disable the copy block

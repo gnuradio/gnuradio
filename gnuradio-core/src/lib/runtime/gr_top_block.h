@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2007,2008,2009 Free Software Foundation, Inc.
+ * Copyright 2007-2009 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -83,7 +83,7 @@ public:
   /*!
    * Wait for a flowgraph to complete.  Flowgraphs complete when
    * either (1) all blocks indicate that they are done (typically only
-   * when using blocks.file_source, or gr.head, or (2) after stop() has been
+   * when using blocks.file_source, or blocks.head, or (2) after stop() has been
    * called to request shutdown.  Calling wait on a top_block that is
    * not running IS NOT an error (wait returns w/o blocking).
    */

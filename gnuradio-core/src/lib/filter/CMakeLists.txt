@@ -32,7 +32,6 @@ list(APPEND gnuradio_core_sources
 # Install runtime headers
 ########################################################################
 install(FILES
-    ${CMAKE_CURRENT_SOURCE_DIR}/gr_rotator.h
     ${CMAKE_CURRENT_SOURCE_DIR}/gr_sincos.h
     DESTINATION ${GR_INCLUDE_DIR}/gnuradio
     COMPONENT "core_devel"

@@ -39,8 +39,8 @@ class test_vector_insert(gr_unittest.TestCase):
         period = 9177;
         offset = 0;
 
-        src = gr.null_source(1)
-        head = gr.head(1, 10000000);
+        src = blocks.null_source(1)
+        head = blocks.head(1, 10000000);
         ins = blocks.vector_insert_b([1], period, offset);
         dst = blocks.vector_sink_b()
 

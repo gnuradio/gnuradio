@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2008,2010 Free Software Foundation, Inc.
+# Copyright 2008,2010,2013 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -37,12 +37,12 @@ class test_patterned_interleaver (gr_unittest.TestCase):
 
     def test_000(self):
         dst_data = [0,0,1,2,0,2,1,0];
-        src0 = gr.vector_source_f(200*[0])
-        src1 = gr.vector_source_f(200*[1])
-        src2 = gr.vector_source_f(200*[2])
+        src0 = blocks.vector_source_f(200*[0])
+        src1 = blocks.vector_source_f(200*[1])
+        src2 = blocks.vector_source_f(200*[2])
         itg = blocks.patterned_interleaver(gr.sizeof_float, dst_data)
-        dst = gr.vector_sink_f()
-        head = gr.head(gr.sizeof_float, 8);
+        dst = blocks.vector_sink_f()
+        head = blocks.head(gr.sizeof_float, 8);
         
         self.tb.connect( src0, (itg,0) );
         self.tb.connect( src1, (itg,1) );

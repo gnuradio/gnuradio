@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2012 Free Software Foundation, Inc.
+# Copyright 2012,2013 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -63,9 +63,9 @@ class qa_ofdm_sync_sc_cfb (gr_unittest.TestCase):
         tx_signal = tx_signal * 2
         add = blocks.add_cc()
         sync = digital.ofdm_sync_sc_cfb(fft_len, cp_len)
-        sink_freq   = gr.vector_sink_f()
-        sink_detect = gr.vector_sink_b()
-        self.tb.connect(gr.vector_source_c(tx_signal), (add, 0))
+        sink_freq   = blocks.vector_sink_f()
+        sink_detect = blocks.vector_sink_b()
+        self.tb.connect(blocks.vector_source_c(tx_signal), (add, 0))
         self.tb.connect(analog.noise_source_c(analog.GR_GAUSSIAN, .01), (add, 1))
         self.tb.connect(add, sync)
         self.tb.connect((sync, 0), sink_freq)
@@ -92,9 +92,9 @@ class qa_ofdm_sync_sc_cfb (gr_unittest.TestCase):
         mult = blocks.multiply_cc()
         add = blocks.add_cc()
         sync = digital.ofdm_sync_sc_cfb(fft_len, cp_len)
-        sink_freq   = gr.vector_sink_f()
-        sink_detect = gr.vector_sink_b()
-        self.tb.connect(gr.vector_source_c(tx_signal), (mult, 0), (add, 0))
+        sink_freq   = blocks.vector_sink_f()
+        sink_detect = blocks.vector_sink_b()
+        self.tb.connect(blocks.vector_source_c(tx_signal), (mult, 0), (add, 0))
         self.tb.connect(analog.sig_source_c(2 * numpy.pi, analog.GR_SIN_WAVE, freq_offset, 1.0), (mult, 1))
         self.tb.connect(analog.noise_source_c(analog.GR_GAUSSIAN, .01), (add, 1))
         self.tb.connect(add, sync)
@@ -122,9 +122,9 @@ class qa_ofdm_sync_sc_cfb (gr_unittest.TestCase):
                          [(random.randint(0, 1)*2)-1 for x in range(fft_len * random.randint(5,23))]
         add = blocks.add_cc()
         sync = digital.ofdm_sync_sc_cfb(fft_len, cp_len)
-        sink_freq   = gr.vector_sink_f()
-        sink_detect = gr.vector_sink_b()
-        self.tb.connect(gr.vector_source_c(tx_signal), (add, 0))
+        sink_freq   = blocks.vector_sink_f()
+        sink_detect = blocks.vector_sink_b()
+        self.tb.connect(blocks.vector_source_c(tx_signal), (add, 0))
         self.tb.connect(analog.noise_source_c(analog.GR_GAUSSIAN, .005), (add, 1))
         self.tb.connect(add, sync)
         self.tb.connect((sync, 0), sink_freq)
@@ -161,7 +161,7 @@ Detection error was: %d """ % (numpy.sum(sink_detect.data()) - n_bursts)
             #packets, tagname, vlen=1)
         #total_length = len(data)
 
-        #src = gr.vector_source_b(data, False, 1, tags)
+        #src = blocks.vector_source_b(data, False, 1, tags)
         #mod = ofdm_tx(
                 #fft_len=fft_len,
                 #cp_len=cp_len,
@@ -176,15 +176,15 @@ Detection error was: %d """ % (numpy.sum(sink_detect.data()) - n_bursts)
         #throttle1 = gr.throttle(gr.sizeof_gr_complex, rate_in)
         #insert_zeros = digital.ts_insert_zeros_cc(tagname)
         #throttle2 = gr.throttle(gr.sizeof_gr_complex, rate_out)
-        #sink_countbursts = gr.vector_sink_c()
-        #head = gr.head(gr.sizeof_gr_complex, int(total_length * ratio*2))
+        #sink_countbursts = blocks.vector_sink_c()
+        #head = blocks.head(gr.sizeof_gr_complex, int(total_length * ratio*2))
         #add = gr.add_cc()
         #sync = digital.ofdm_sync_sc_cfb(fft_len, cp_len)
-        #sink_freq   = gr.vector_sink_f()
-        #sink_detect = gr.vector_sink_b()
+        #sink_freq   = blocks.vector_sink_f()
+        #sink_detect = blocks.vector_sink_b()
         #noise_level = 0.01
         #noise = gr.noise_source_c(gr.GR_GAUSSIAN, noise_level)
-        #self.tb.connect(src, mod, gr.null_sink(gr.sizeof_gr_complex))
+        #self.tb.connect(src, mod, blocks.null_sink(gr.sizeof_gr_complex))
         #self.tb.connect(insert_zeros, sink_countbursts)
         #self.tb.connect(noise, (add, 1))
         #self.tb.connect(add, sync)

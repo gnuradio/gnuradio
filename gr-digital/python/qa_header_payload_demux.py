@@ -23,6 +23,7 @@ from gnuradio import gr, gr_unittest
 try: import pmt
 except: from gruel import pmt
 import digital_swig as digital
+import blocks_swig as blocks
 import time
 
 class qa_header_payload_demux (gr_unittest.TestCase):
@@ -45,14 +46,14 @@ class qa_header_payload_demux (gr_unittest.TestCase):
         trigger_signal = [0,] * len(data_signal)
         trigger_signal[n_zeros] = 1
 
-        data_src = gr.vector_source_f(data_signal, False)
-        trigger_src = gr.vector_source_b(trigger_signal, False)
+        data_src = blocks.vector_source_f(data_signal, False)
+        trigger_src = blocks.vector_source_b(trigger_signal, False)
         hpd = digital.header_payload_demux(
             len(header), 1, 0, "frame_len", "detect", False, gr.sizeof_float
         )
         self.assertEqual(pmt.length(hpd.message_ports_in()), 1)
-        header_sink = gr.vector_sink_f()
-        payload_sink = gr.vector_sink_f()
+        header_sink = blocks.vector_sink_f()
+        payload_sink = blocks.vector_sink_f()
 
         self.tb.connect(data_src,    (hpd, 0))
         self.tb.connect(trigger_src, (hpd, 1))

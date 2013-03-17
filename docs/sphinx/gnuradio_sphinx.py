@@ -113,8 +113,8 @@ class OldBlockDocumenter(FunctionDocumenter):
     """
     Specialized Documenter subclass for gnuradio blocks.
 
-    It merges together the documentation for the generator function (e.g. gr.head)
-    with the wrapped sptr (e.g. gr.gr_head_sptr) to keep the documentation
+    It merges together the documentation for the generator function (e.g. blocks.head)
+    with the wrapped sptr (e.g. gr::blocks::head::sptr) to keep the documentation
     tidier.
     """
     objtype = 'oldblock'

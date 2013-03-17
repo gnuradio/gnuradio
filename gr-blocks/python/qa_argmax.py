@@ -39,20 +39,20 @@ class test_arg_max(gr_unittest.TestCase):
         src2_data = (0,0.0,3.0,0,10,0)
         src3_data = (0,0.0,3.0,0,1,0)
 
-        src1 = gr.vector_source_f(src1_data)
+        src1 = blocks.vector_source_f(src1_data)
         s2v1 = blocks.stream_to_vector(gr.sizeof_float, len(src1_data))
         tb.connect(src1, s2v1)
 
-        src2 = gr.vector_source_f(src2_data)
+        src2 = blocks.vector_source_f(src2_data)
         s2v2 = blocks.stream_to_vector(gr.sizeof_float, len(src1_data))
         tb.connect(src2, s2v2)
 
-        src3 = gr.vector_source_f(src3_data)
+        src3 = blocks.vector_source_f(src3_data)
         s2v3 = blocks.stream_to_vector(gr.sizeof_float, len(src1_data))
         tb.connect(src3, s2v3)
 
-        dst1 = gr.vector_sink_s()
-        dst2 = gr.vector_sink_s()
+        dst1 = blocks.vector_sink_s()
+        dst2 = blocks.vector_sink_s()
         argmax = blocks.argmax_fs(len(src1_data))
 
         tb.connect(s2v1, (argmax, 0))

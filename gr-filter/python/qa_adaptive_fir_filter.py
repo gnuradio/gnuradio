@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2008,2010,2012 Free Software Foundation, Inc.
+# Copyright 2008,2010,2012,2013 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -21,6 +21,7 @@
 
 from gnuradio import gr, gr_unittest
 import filter_swig as filter
+import blocks_swig as blocks
 
 class test_adaptive_filter(gr_unittest.TestCase):
 
@@ -61,9 +62,9 @@ class test_adaptive_filter(gr_unittest.TestCase):
                          (50+50j), (50+50j), (50+50j), (50+50j), (50+50j), (50+50j),
                          (50+50j), (50+50j), (50+50j), (50+50j), (50+50j), (50+50j))
 
-        src = gr.vector_source_c(src_data)
+        src = blocks.vector_source_c(src_data)
         op  = filter.adaptive_fir_ccf("test", 1, 20*[0.5, 0.5])
-        dst = gr.vector_sink_c()
+        dst = blocks.vector_sink_c()
         self.tb.connect(src, op, dst)
         self.tb.run()
         result_data = dst.data()
@@ -80,9 +81,9 @@ class test_adaptive_filter(gr_unittest.TestCase):
                          (50+50j), (50+50j), (50+50j), (50+50j), (50+50j),
                          (50+50j), (50+50j), (50+50j), (50+50j))
 
-        src = gr.vector_source_c(src_data)
+        src = blocks.vector_source_c(src_data)
         op  = filter.adaptive_fir_ccf("test", 4, 20*[0.5, 0.5])
-        dst = gr.vector_sink_c()
+        dst = blocks.vector_sink_c()
         self.tb.connect(src, op, dst)
         self.tb.run()
         result_data = dst.data()
@@ -124,9 +125,9 @@ class test_adaptive_filter(gr_unittest.TestCase):
                          (-50+150j), (-50+150j), (-50+150j), (-50+150j), (-50+150j),
                          (-50+150j), (-50+150j), (-50+150j), (-50+150j), (-50+150j),
                          (-50+150j), (-50+150j), (-50+150j), (-50+150j), (-50+150j))
-        src = gr.vector_source_c(src_data)
+        src = blocks.vector_source_c(src_data)
         op  = filter.adaptive_fir_ccc("test", 1, 20*[0.5+1j, 0.5+1j])
-        dst = gr.vector_sink_c()
+        dst = blocks.vector_sink_c()
         self.tb.connect(src, op, dst)
         self.tb.run()
         result_data = dst.data()
@@ -146,9 +147,9 @@ class test_adaptive_filter(gr_unittest.TestCase):
                          (-50+150j), (-50+150j), (-50+150j), (-50+150j),
                          (-50+150j), (-50+150j), (-50+150j), (-50+150j),
                          (-50+150j), (-50+150j), (-50+150j))
-        src = gr.vector_source_c(src_data)
+        src = blocks.vector_source_c(src_data)
         op  = filter.adaptive_fir_ccc("test", 4, 20*[0.5+1j, 0.5+1j])
-        dst = gr.vector_sink_c()
+        dst = blocks.vector_sink_c()
         self.tb.connect(src, op, dst)
         self.tb.run()
         result_data = dst.data()

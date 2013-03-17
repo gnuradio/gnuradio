@@ -108,7 +108,7 @@ class trellis_tb(gr.top_block):
         # TX
         src = gr.lfsr_32k_source_s()
         # packet size in shorts
-        src_head = gr.head (gr.sizeof_short, packet_size/16)
+        src_head = blocks.head(gr.sizeof_short, packet_size/16)
         # unpack shorts to symbols compatible with the FSM input cardinality
         s2fsmi = blocks.packed_to_unpacked_ss(bitspersymbol, gr.GR_MSB_FIRST)
         # initial FSM state = 0

@@ -22,7 +22,8 @@
 
 import numpy
 from gnuradio import gr, gr_unittest
-import digital_swig
+import digital_swig as digital
+import blocks_swig as blocks
 
 class test_ofdm_txrx (gr_unittest.TestCase):
 
@@ -38,18 +39,18 @@ class test_ofdm_txrx (gr_unittest.TestCase):
         #n_bytes = 100
         #test_data = [random.randint(0, 255) for x in range(n_bytes)]
         #tx_data, tags = tagged_streams.packets_to_vectors((test_data,), len_tag_key)
-        #src = gr.vector_source_b(test_data, False, 1, tags)
+        #src = blocks.vector_source_b(test_data, False, 1, tags)
         #tx = ofdm_tx(frame_length_tag_key=len_tag_key)
         #rx = ofdm_rx(frame_length_tag_key=len_tag_key)
         #self.assertEqual(tx.sync_word1, rx.sync_word1)
         #self.assertEqual(tx.sync_word2, rx.sync_word2)
-        #delay = gr.delay(gr.sizeof_gr_complex, 100)
-        #noise = gr.noise_source_c(gr.GR_GAUSSIAN, 0.05)
-        #add = gr.add_cc()
-        #sink = gr.vector_sink_b()
+        #delay = blocks.delay(gr.sizeof_gr_complex, 100)
+        #noise = analog.noise_source_c(analog.GR_GAUSSIAN, 0.05)
+        #add = blocks.add_cc()
+        #sink = blocks.vector_sink_b()
         ##self.tb.connect(src, tx, add, rx, sink)
         ##self.tb.connect(noise, (add, 1))
-        #self.tb.connect(src, tx, gr.null_sink(gr.sizeof_gr_complex))
+        #self.tb.connect(src, tx, blocks.null_sink(gr.sizeof_gr_complex))
         #self.tb.run()
 
 

@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 from gnuradio import gr
+from gnuradio import blocks
 import math, sys, os, time
 
 try:
@@ -119,13 +120,13 @@ class helper(gr.top_block):
         self.op = op
         self.srcs = []
         self.snks = []
-        self.head = gr.head(isizeof, N)
+        self.head = blocks.head(isizeof, N)
 
         for n in xrange(nsrcs):
-            self.srcs.append(gr.null_source(isizeof))
+            self.srcs.append(blocks.null_source(isizeof))
 
         for n in xrange(nsnks):
-            self.snks.append(gr.null_sink(osizeof))
+            self.snks.append(blocks.null_sink(osizeof))
 
         self.connect(self.srcs[0], self.head, (self.op,0))
 

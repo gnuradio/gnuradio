@@ -35,9 +35,9 @@ class test_packing(gr_unittest.TestCase):
     def test_001(self):
         src_data = (0x80,)
         expected_results = (1,0,0,0,0,0,0,0)
-        src = gr.vector_source_b(src_data, False)
+        src = blocks.vector_source_b(src_data, False)
         op = blocks.packed_to_unpacked_bb(1, gr.GR_MSB_FIRST)
-        dst = gr.vector_sink_b()
+        dst = blocks.vector_sink_b()
 
         self.tb.connect(src, op)
         self.tb.connect(op, dst)
@@ -48,9 +48,9 @@ class test_packing(gr_unittest.TestCase):
     def test_002(self):
         src_data = (0x80,)
         expected_results = (0,0,0,0,0,0,0,1)
-        src = gr.vector_source_b(src_data, False)
+        src = blocks.vector_source_b(src_data, False)
         op = blocks.packed_to_unpacked_bb(1, gr.GR_LSB_FIRST)
-        dst = gr.vector_sink_b()
+        dst = blocks.vector_sink_b()
 
         self.tb.connect(src, op)
         self.tb.connect(op, dst)
@@ -61,9 +61,9 @@ class test_packing(gr_unittest.TestCase):
     def test_003(self):
         src_data = (0x11,)
         expected_results = (4, 2)
-        src = gr.vector_source_b(src_data, False)
+        src = blocks.vector_source_b(src_data, False)
         op = blocks.packed_to_unpacked_bb(3, gr.GR_LSB_FIRST)
-        dst = gr.vector_sink_b()
+        dst = blocks.vector_sink_b()
 
         self.tb.connect(src, op)
         self.tb.connect(op, dst)
@@ -74,9 +74,9 @@ class test_packing(gr_unittest.TestCase):
     def test_004(self):
         src_data = (0x11,)
         expected_results = (0, 4)
-        src = gr.vector_source_b(src_data, False)
+        src = blocks.vector_source_b(src_data, False)
         op = blocks.packed_to_unpacked_bb(3, gr.GR_MSB_FIRST)
-        dst = gr.vector_sink_b()
+        dst = blocks.vector_sink_b()
 
         self.tb.connect(src, op)
         self.tb.connect(op, dst)
@@ -87,9 +87,9 @@ class test_packing(gr_unittest.TestCase):
     def test_005(self):
         src_data = (1,0,0,0,0,0,1,0,0,1,0,1,1,0,1,0)
         expected_results = (0x82, 0x5a)
-        src = gr.vector_source_b(src_data, False)
+        src = blocks.vector_source_b(src_data, False)
         op = blocks.unpacked_to_packed_bb(1, gr.GR_MSB_FIRST)
-        dst = gr.vector_sink_b()
+        dst = blocks.vector_sink_b()
 
         self.tb.connect(src, op)
         self.tb.connect(op, dst)
@@ -100,9 +100,9 @@ class test_packing(gr_unittest.TestCase):
     def test_006(self):
         src_data = (0,1,0,0,0,0,0,1,0,1,0,1,1,0,1,0)
         expected_results = (0x82, 0x5a)
-        src = gr.vector_source_b(src_data, False)
+        src = blocks.vector_source_b(src_data, False)
         op = blocks.unpacked_to_packed_bb(1, gr.GR_LSB_FIRST)
-        dst = gr.vector_sink_b()
+        dst = blocks.vector_sink_b()
 
         self.tb.connect(src, op)
         self.tb.connect(op, dst)
@@ -113,9 +113,9 @@ class test_packing(gr_unittest.TestCase):
     def test_007(self):
         src_data = (4, 2, 0,0,0)
         expected_results = (0x11,)
-        src = gr.vector_source_b(src_data, False)
+        src = blocks.vector_source_b(src_data, False)
         op = blocks.unpacked_to_packed_bb(3, gr.GR_LSB_FIRST)
-        dst = gr.vector_sink_b()
+        dst = blocks.vector_sink_b()
 
         self.tb.connect(src, op)
         self.tb.connect(op, dst)
@@ -126,9 +126,9 @@ class test_packing(gr_unittest.TestCase):
     def test_008(self):
         src_data = (0, 4, 2,0,0)
         expected_results = (0x11,)
-        src = gr.vector_source_b(src_data,False)
+        src = blocks.vector_source_b(src_data,False)
         op = blocks.unpacked_to_packed_bb(3, gr.GR_MSB_FIRST)
-        dst = gr.vector_sink_b()
+        dst = blocks.vector_sink_b()
 
         self.tb.connect(src, op)
         self.tb.connect(op, dst)
@@ -144,10 +144,10 @@ class test_packing(gr_unittest.TestCase):
         src_data = tuple(src_data)
         expected_results = src_data
 
-        src = gr.vector_source_b(tuple(src_data), False)
+        src = blocks.vector_source_b(tuple(src_data), False)
         op1 = blocks.packed_to_unpacked_bb(3, gr.GR_MSB_FIRST)
         op2 = blocks.unpacked_to_packed_bb(3, gr.GR_MSB_FIRST)
-        dst = gr.vector_sink_b()
+        dst = blocks.vector_sink_b()
 
         self.tb.connect(src, op1, op2)
         self.tb.connect(op2, dst)
@@ -162,10 +162,10 @@ class test_packing(gr_unittest.TestCase):
             src_data.append((random.randint(0,255)))
         src_data = tuple(src_data)
         expected_results = src_data
-        src = gr.vector_source_b(tuple(src_data), False)
+        src = blocks.vector_source_b(tuple(src_data), False)
         op1 = blocks.packed_to_unpacked_bb(7, gr.GR_MSB_FIRST)
         op2 = blocks.unpacked_to_packed_bb(7, gr.GR_MSB_FIRST)
-        dst = gr.vector_sink_b()
+        dst = blocks.vector_sink_b()
 
         self.tb.connect(src, op1, op2)
         self.tb.connect(op2, dst)
@@ -180,10 +180,10 @@ class test_packing(gr_unittest.TestCase):
             src_data.append((random.randint(0,255)))
         src_data = tuple(src_data)
         expected_results = src_data
-        src = gr.vector_source_b(tuple(src_data),False)
+        src = blocks.vector_source_b(tuple(src_data),False)
         op1 = blocks.packed_to_unpacked_bb(7, gr.GR_LSB_FIRST)
         op2 = blocks.unpacked_to_packed_bb(7, gr.GR_LSB_FIRST)
-        dst = gr.vector_sink_b()
+        dst = blocks.vector_sink_b()
 
         self.tb.connect(src, op1, op2)
         self.tb.connect(op2, dst)
@@ -200,10 +200,10 @@ class test_packing(gr_unittest.TestCase):
             src_data.append((random.randint(-2**15,2**15-1)))
         src_data = tuple(src_data)
         expected_results = src_data
-        src = gr.vector_source_s(tuple(src_data), False)
+        src = blocks.vector_source_s(tuple(src_data), False)
         op1 = blocks.packed_to_unpacked_ss(1, gr.GR_MSB_FIRST)
         op2 = blocks.unpacked_to_packed_ss(1, gr.GR_MSB_FIRST)
-        dst = gr.vector_sink_s()
+        dst = blocks.vector_sink_s()
 
         self.tb.connect(src, op1, op2)
         self.tb.connect(op2, dst)
@@ -218,10 +218,10 @@ class test_packing(gr_unittest.TestCase):
             src_data.append((random.randint(-2**15,2**15-1)))
         src_data = tuple(src_data)
         expected_results = src_data
-        src = gr.vector_source_s(tuple(src_data), False)
+        src = blocks.vector_source_s(tuple(src_data), False)
         op1 = blocks.packed_to_unpacked_ss(1, gr.GR_LSB_FIRST)
         op2 = blocks.unpacked_to_packed_ss(1, gr.GR_LSB_FIRST)
-        dst = gr.vector_sink_s()
+        dst = blocks.vector_sink_s()
 
         self.tb.connect(src, op1, op2)
         self.tb.connect(op2, dst)
@@ -236,10 +236,10 @@ class test_packing(gr_unittest.TestCase):
             src_data.append((random.randint(-2**15,2**15-1)))
         src_data = tuple(src_data)
         expected_results = src_data
-        src = gr.vector_source_s(tuple(src_data), False)
+        src = blocks.vector_source_s(tuple(src_data), False)
         op1 = blocks.packed_to_unpacked_ss(8, gr.GR_MSB_FIRST)
         op2 = blocks.unpacked_to_packed_ss(8, gr.GR_MSB_FIRST)
-        dst = gr.vector_sink_s()
+        dst = blocks.vector_sink_s()
 
         self.tb.connect(src, op1, op2)
         self.tb.connect(op2, dst)
@@ -254,10 +254,10 @@ class test_packing(gr_unittest.TestCase):
             src_data.append((random.randint(-2**15,2**15-1)))
         src_data = tuple(src_data)
         expected_results = src_data
-        src = gr.vector_source_s(tuple(src_data), False)
+        src = blocks.vector_source_s(tuple(src_data), False)
         op1 = blocks.packed_to_unpacked_ss(8, gr.GR_LSB_FIRST)
         op2 = blocks.unpacked_to_packed_ss(8, gr.GR_LSB_FIRST)
-        dst = gr.vector_sink_s()
+        dst = blocks.vector_sink_s()
 
         self.tb.connect(src, op1, op2)
         self.tb.connect(op2, dst)
@@ -274,10 +274,10 @@ class test_packing(gr_unittest.TestCase):
             src_data.append((random.randint(-2**31,2**31-1)))
         src_data = tuple(src_data)
         expected_results = src_data
-        src = gr.vector_source_i(tuple(src_data), False)
+        src = blocks.vector_source_i(tuple(src_data), False)
         op1 = blocks.packed_to_unpacked_ii(1, gr.GR_MSB_FIRST)
         op2 = blocks.unpacked_to_packed_ii(1, gr.GR_MSB_FIRST)
-        dst = gr.vector_sink_i()
+        dst = blocks.vector_sink_i()
 
         self.tb.connect(src, op1, op2)
         self.tb.connect(op2, dst)
@@ -292,10 +292,10 @@ class test_packing(gr_unittest.TestCase):
             src_data.append((random.randint(-2**31,2**31-1)))
         src_data = tuple(src_data)
         expected_results = src_data
-        src = gr.vector_source_i(tuple(src_data), False)
+        src = blocks.vector_source_i(tuple(src_data), False)
         op1 = blocks.packed_to_unpacked_ii(1, gr.GR_LSB_FIRST)
         op2 = blocks.unpacked_to_packed_ii(1, gr.GR_LSB_FIRST)
-        dst = gr.vector_sink_i()
+        dst = blocks.vector_sink_i()
 
         self.tb.connect(src, op1, op2)
         self.tb.connect(op2, dst)
@@ -310,10 +310,10 @@ class test_packing(gr_unittest.TestCase):
             src_data.append((random.randint(-2**31,2**31-1)))
         src_data = tuple(src_data)
         expected_results = src_data
-        src = gr.vector_source_i(tuple(src_data), False)
+        src = blocks.vector_source_i(tuple(src_data), False)
         op1 = blocks.packed_to_unpacked_ii(8, gr.GR_MSB_FIRST)
         op2 = blocks.unpacked_to_packed_ii(8, gr.GR_MSB_FIRST)
-        dst = gr.vector_sink_i()
+        dst = blocks.vector_sink_i()
 
         self.tb.connect(src, op1, op2)
         self.tb.connect(op2, dst)
@@ -328,10 +328,10 @@ class test_packing(gr_unittest.TestCase):
             src_data.append((random.randint(-2**31,2**31-1)))
         src_data = tuple(src_data)
         expected_results = src_data
-        src = gr.vector_source_i(tuple(src_data), False)
+        src = blocks.vector_source_i(tuple(src_data), False)
         op1 = blocks.packed_to_unpacked_ii(8, gr.GR_LSB_FIRST)
         op2 = blocks.unpacked_to_packed_ii(8, gr.GR_LSB_FIRST)
-        dst = gr.vector_sink_i()
+        dst = blocks.vector_sink_i()
 
         self.tb.connect(src, op1, op2)
         self.tb.connect(op2, dst)

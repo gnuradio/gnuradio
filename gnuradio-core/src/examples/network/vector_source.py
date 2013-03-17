@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2006,2010 Free Software Foundation, Inc.
+# Copyright 2006,2010,2013 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -29,7 +29,7 @@ class vector_source(gr.top_block):
     def __init__(self, host, port, pkt_size, eof):
         gr.top_block.__init__(self, "vector_source")
         data = [i*0.01 for i in range(1000)]
-        vec = gr.vector_source_f(data, True)
+        vec = blocks.vector_source_f(data, True)
         udp = blocks.udp_sink(gr.sizeof_float, host, port, pkt_size, eof=eof)
         self.connect(vec, udp)
 

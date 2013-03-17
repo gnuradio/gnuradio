@@ -32,14 +32,8 @@
 #include <qa_runtime.h>
 #include <qa_gr_vmcircbuf.h>
 #include <qa_gr_io_signature.h>
-#include <qa_gr_block.h>
-#include <qa_gr_flowgraph.h>
 #include <qa_gr_logger.h>
-#include <qa_gr_top_block.h>
-#include <qa_gr_hier_block2.h>
-#include <qa_gr_hier_block2_derived.h>
 #include <qa_gr_buffer.h>
-#include <qa_block_tags.h>
 #include <qa_set_msg_handler.h>
 
 CppUnit::TestSuite *

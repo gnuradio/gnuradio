@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2007,2010-2012 Free Software Foundation, Inc.
+# Copyright 2007,2010-2013 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -35,8 +35,8 @@ class test_ofdm_insert_preamble(gr_unittest.TestCase):
 
     def helper(self, v0, v1, fft_length, preamble):
         tb = self.tb
-        src0 = gr.vector_source_c(v0)
-        src1 = gr.vector_source_b(v1)
+        src0 = blocks.vector_source_c(v0)
+        src1 = blocks.vector_source_b(v1)
         
         s2v = blocks.stream_to_vector(gr.sizeof_gr_complex, fft_length)
 
@@ -45,8 +45,8 @@ class test_ofdm_insert_preamble(gr_unittest.TestCase):
         op = digital.ofdm_insert_preamble(fft_length, preamble)
 
         v2s = blocks.vector_to_stream(gr.sizeof_gr_complex, fft_length)
-        dst0 = gr.vector_sink_c()
-        dst1 = gr.vector_sink_b()
+        dst0 = blocks.vector_sink_c()
+        dst1 = blocks.vector_sink_b()
 
         tb.connect(src0, s2v, (op, 0))
         tb.connect(src1, (op, 1))

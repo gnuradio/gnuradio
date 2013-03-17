@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2008,2010 Free Software Foundation, Inc.
+# Copyright 2008,2010,2013 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -51,8 +51,8 @@ class test_classify(gr_unittest.TestCase):
 #     def test_000_(self):
 #         src_data = numpy.zeros(10)
 #         trg_data = numpy.zeros(10)
-#         src = gr.vector_source_f(src_data)
-#         dst = gr.vector_sink_f()
+#         src = blocks.vector_source_f(src_data)
+#         dst = blocks.vector_sink_f()
 #         self.tb.connect(src, dst)
 #         self.tb.run()
 #         rsl_data = dst.data()
@@ -66,8 +66,8 @@ class test_classify(gr_unittest.TestCase):
     def test_001_(self):
         src_data = numpy.array([-1.0, 1.0, -1.0, 1.0])
         trg_data = src_data * 0.5
-        src = gr.vector_source_f(src_data)
-        dst = gr.vector_sink_f()
+        src = blocks.vector_source_f(src_data)
+        dst = blocks.vector_sink_f()
         rail = analog.rail_ff(-0.5, 0.5)
         self.tb.connect(src, rail)
         self.tb.connect(rail, dst)
@@ -88,9 +88,9 @@ class test_classify(gr_unittest.TestCase):
                                 -1.0/5.0])
         trg_data = copy.deepcopy(src_data)
 
-        src = gr.vector_source_f(src_data, False, len(src_data))
+        src = blocks.vector_source_f(src_data, False, len(src_data))
         st = blocks.stretch_ff(-1.0/5.0, len(src_data))
-        dst = gr.vector_sink_f(len(src_data))
+        dst = blocks.vector_sink_f(len(src_data))
         self.tb.connect(src, st)
         self.tb.connect(st, dst)
         self.tb.run()
@@ -107,9 +107,9 @@ class test_classify(gr_unittest.TestCase):
         trg_grid = copy.deepcopy(src_grid)
         src_data = (0.0, 1.0, 0.0, 1.0, 0.0)
 
-        src = gr.vector_source_f(src_data, False, len(src_grid))
+        src = blocks.vector_source_f(src_data, False, len(src_grid))
         sq = wavelet_swig.squash_ff(src_grid, trg_grid)
-        dst = gr.vector_sink_f(len(trg_grid))
+        dst = blocks.vector_sink_f(len(trg_grid))
         self.tb.connect(src, sq)
         self.tb.connect(sq, dst)
         self.tb.run()
@@ -133,10 +133,10 @@ class test_classify(gr_unittest.TestCase):
 #        c = w.transform_forward(b, ws)
 #        d = w.transform_inverse(c, ws)
 #
-#        src = gr.vector_source_f(b, False, n)
+#        src = blocks.vector_source_f(b, False, n)
 #        wv = wavelet_swig.wavelet_ff(n, o, True)
 #
-#        dst = gr.vector_sink_f(n)
+#        dst = blocks.vector_sink_f(n)
 #        self.tb.connect(src, wv)
 #        self.tb.connect(wv, dst)
 #        self.tb.run()
@@ -162,9 +162,9 @@ class test_classify(gr_unittest.TestCase):
             wvps[e] = scl*sqr(dwav[k:k+(01<<e)]).sum()
             k += 01<<e
 
-        src = gr.vector_source_f(src_data, False, len(src_data))
+        src = blocks.vector_source_f(src_data, False, len(src_data))
         kon = wavelet_swig.wvps_ff(len(src_data))
-        dst = gr.vector_sink_f(int(math.ceil(math.log(len(src_data), 2))))
+        dst = blocks.vector_sink_f(int(math.ceil(math.log(len(src_data), 2))))
 
         self.tb.connect(src, kon)
         self.tb.connect(kon, dst)

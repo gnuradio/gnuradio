@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2011 Free Software Foundation, Inc.
+# Copyright 2011,2013 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -34,11 +34,11 @@ def main():
     data = scipy.arange(0, 32000, 1).tolist()
     trig = 100*[0,] + 100*[1,]
 
-    src = gr.vector_source_s(data, True)
-    trigger = gr.vector_source_s(trig, True)
+    src = blocks.vector_source_s(data, True)
+    trigger = blocks.vector_source_s(trig, True)
 
     thr = blocks.throttle(gr.sizeof_short, 10e3)
-    ann = gr.annotator_alltoall(1000000, gr.sizeof_short)
+    ann = blocks.annotator_alltoall(1000000, gr.sizeof_short)
     tagger = blocks..burst_tagger(gr.sizeof_short)
 
     fsnk = blocks.tagged_file_sink(gr.sizeof_short, 1)

@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2012 Free Software Foundation, Inc.
+# Copyright 2012,2013 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -22,6 +22,7 @@
 
 from gnuradio import gr, gr_unittest
 import analog_swig as analog
+import blocks_swig as blocks
 
 class test_simple_squelch(gr_unittest.TestCase):
 
@@ -50,9 +51,9 @@ class test_simple_squelch(gr_unittest.TestCase):
         thr = -25
 
         src_data = map(lambda x: float(x)/10.0, range(1, 40))
-        src = gr.vector_source_c(src_data)
+        src = blocks.vector_source_c(src_data)
         op = analog.simple_squelch_cc(thr, alpha)
-        dst = gr.vector_sink_c()
+        dst = blocks.vector_sink_c()
 
         self.tb.connect(src, op)
         self.tb.connect(op, dst)

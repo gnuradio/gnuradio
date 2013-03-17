@@ -35,9 +35,9 @@ class test_unpack(gr_unittest.TestCase):
     def test_001(self):
         src_data =         (1,0,1,1,0,1,1,0)
         expected_results = (1,0,1,1,0,1,1,0)
-        src = gr.vector_source_b(src_data,False)
+        src = blocks.vector_source_b(src_data,False)
         op = blocks.unpack_k_bits_bb(1)
-        dst = gr.vector_sink_b()
+        dst = blocks.vector_sink_b()
         self.tb.connect(src, op, dst)
         self.tb.run()
         self.assertEqual(expected_results, dst.data())
@@ -45,9 +45,9 @@ class test_unpack(gr_unittest.TestCase):
     def test_002(self):
         src_data =         (  2,  3,  0,  1)
         expected_results = (1,0,1,1,0,0,0,1)
-        src = gr.vector_source_b(src_data,False)
+        src = blocks.vector_source_b(src_data,False)
         op = blocks.unpack_k_bits_bb(2)
-        dst = gr.vector_sink_b()
+        dst = blocks.vector_sink_b()
         self.tb.connect(src, op, dst)
         self.tb.run()
         self.assertEqual(expected_results, dst.data())

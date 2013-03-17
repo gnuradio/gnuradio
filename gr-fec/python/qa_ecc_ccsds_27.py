@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2004,2007,2010 Free Software Foundation, Inc.
+# Copyright 2004,2007,2010,2013 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -35,13 +35,13 @@ class test_ccsds_27 (gr_unittest.TestCase):
     def xtest_ccsds_27 (self):
         src_data = (1, 2, 3, 4, 5, 6, 7, 8, 9, 10)
 	expected = (0, 0, 0, 0, 1, 2, 3, 4, 5, 6)
-        src = gr.vector_source_b(src_data)
+        src = blocks.vector_source_b(src_data)
 	enc = fec.encode_ccsds_27_bb()
 	b2f = blocks.char_to_float()
 	add = blocks.add_const_ff(-0.5)
 	mul = blocks.multiply_const_ff(2.0)
 	dec = fec.decode_ccsds_27_fb()
-	dst = gr.vector_sink_b()
+	dst = blocks.vector_sink_b()
 	self.tb.connect(src, enc, b2f, add, mul, dec, dst)
 	self.tb.run()
 	dst_data = dst.data()

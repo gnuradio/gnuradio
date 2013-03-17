@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2005,2007,2010,2012 Free Software Foundation, Inc.
+# Copyright 2005,2007,2010,2012,2013 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -21,7 +21,7 @@
 #
 
 from gnuradio import gr, gr_unittest
-import blocks_swig
+import blocks_swig as blocks
 
 class test_nlog10(gr_unittest.TestCase):
 
@@ -34,9 +34,9 @@ class test_nlog10(gr_unittest.TestCase):
     def test_001(self):
         src_data = (-10, 0, 10, 100, 1000, 10000, 100000)
         expected_result = (-180, -180, 10, 20, 30, 40, 50)
-        src = gr.vector_source_f(src_data)
-        op = blocks_swig.nlog10_ff(10)
-        dst = gr.vector_sink_f()
+        src = blocks.vector_source_f(src_data)
+        op = blocks.nlog10_ff(10)
+        dst = blocks.vector_sink_f()
         self.tb.connect (src, op, dst)
         self.tb.run()
         result_data = dst.data()

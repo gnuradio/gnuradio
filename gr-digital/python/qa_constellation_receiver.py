@@ -156,7 +156,7 @@ class rec_test_tb(gr.top_block):
         else:
             self.src_data = src_data
         packer = blocks.unpacked_to_packed_bb(1, gr.GR_MSB_FIRST)
-        src = gr.vector_source_b(self.src_data)
+        src = blocks.vector_source_b(self.src_data)
         mod = generic_mod(constellation, differential=differential)
         # Channel
         if freq_offset:
@@ -171,7 +171,7 @@ class rec_test_tb(gr.top_block):
         else:
             demod = generic_demod(constellation, differential=differential,
                                   freq_bw=0, phase_bw=0)
-        self.dst = gr.vector_sink_b()
+        self.dst = blocks.vector_sink_b()
         self.connect(src, packer, mod, channel, demod, self.dst)
 
 if __name__ == '__main__':

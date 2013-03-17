@@ -46,7 +46,7 @@ class test_copy(gr_unittest.TestCase):
         src_data = (1, 2, 3, 4, 5, 6, 7, 8, 9, 10)
         expected_result = ()
         src = blocks.vector_source_b(src_data)
-        op = gr.copy(gr.sizeof_char)
+        op = blocks.copy(gr.sizeof_char)
 	op.set_enabled(False)
         dst = blocks.vector_sink_b()
         self.tb.connect(src, op, dst)

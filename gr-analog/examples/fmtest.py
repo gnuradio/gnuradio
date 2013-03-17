@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2009,2012 Free Software Foundation, Inc.
+# Copyright 2009,2012,2013 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -84,8 +84,8 @@ class fmtest(gr.top_block):
             self.connect(sig, fm)
             self.connect(fm, (self.sum, n))
 
-        self.head = gr.head(gr.sizeof_gr_complex, self._nsamples)
-        self.snk_tx = gr.vector_sink_c()
+        self.head = blocks.head(gr.sizeof_gr_complex, self._nsamples)
+        self.snk_tx = blocks.vector_sink_c()
         self.channel = filter.channel_model(0.1)
 
         self.connect(self.sum, self.head, self.channel, self.snk_tx)
@@ -116,7 +116,7 @@ class fmtest(gr.top_block):
         for i in xrange(self._M):
             self.fmdet.append(analog.nbfm_rx(self._audio_rate, self._chan_rate))
             self.squelch.append(analog.standard_squelch(self._audio_rate*10))
-            self.snks.append(gr.vector_sink_f())
+            self.snks.append(blocks.vector_sink_f())
             self.connect((self.pfb, i), self.fmdet[i], self.squelch[i], self.snks[i])
 
     def num_tx_channels(self):

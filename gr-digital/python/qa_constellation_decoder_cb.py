@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2004,2007,2010-2012 Free Software Foundation, Inc.
+# Copyright 2004,2007,2010-2013 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -22,6 +22,7 @@
 
 from gnuradio import gr, gr_unittest
 import digital_swig as digital
+import blocks_swig as blocks
 import math
 
 class test_constellation_decoder(gr_unittest.TestCase):
@@ -38,9 +39,9 @@ class test_constellation_decoder(gr_unittest.TestCase):
                            0.8 + 1.0j, -0.5 + 0.1j,  0.1 - 1.2j)
 	expected_result = (        1,           1,           0,            0,
                                    1,           0,           1)
-        src = gr.vector_source_c(src_data)
+        src = blocks.vector_source_c(src_data)
         op = digital.constellation_decoder_cb(cnst.base())
-        dst = gr.vector_sink_b()
+        dst = blocks.vector_sink_b()
 
         self.tb.connect(src, op)
         self.tb.connect(op, dst)
@@ -57,9 +58,9 @@ class test_constellation_decoder(gr_unittest.TestCase):
                            0.8 + 1.0j, -0.5 + 0.1j,  0.1 - 1.2j)
 	expected_result = (        3,           1,           0,            2,
                                    3,           2,           1)
-        src = gr.vector_source_c(src_data)
+        src = blocks.vector_source_c(src_data)
         op = digital_swig.constellation_decoder_cb(cnst.base())
-        dst = gr.vector_sink_b()
+        dst = blocks.vector_sink_b()
 
         self.tb.connect(src, op)
         self.tb.connect(op, dst)

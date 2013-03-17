@@ -22,12 +22,6 @@ Signal Sources
    :nosignatures:
 
    gnuradio.gr.lfsr_32k_source_s
-   gnuradio.gr.null_source
-   gnuradio.gr.vector_source_b
-   gnuradio.gr.vector_source_c
-   gnuradio.gr.vector_source_f
-   gnuradio.gr.vector_source_i
-   gnuradio.gr.vector_source_s
 
 Signal Sinks
 ^^^^^^^^^^^^
@@ -37,12 +31,6 @@ Signal Sinks
 
    gnuradio.gr.check_counting_s
    gnuradio.gr.check_lfsr_32k_s
-   gnuradio.gr.null_sink
-   gnuradio.gr.vector_sink_b
-   gnuradio.gr.vector_sink_c
-   gnuradio.gr.vector_sink_f
-   gnuradio.gr.vector_sink_i
-   gnuradio.gr.vector_sink_s
    gnuradio.gr.histo_sink_f
    gnuradio.gr.oscope_sink_f
 
@@ -64,20 +52,7 @@ Miscellaneous Blocks
 .. autosummary::
    :nosignatures:
 
-   gnuradio.gr.copy
-   gnuradio.gr.kludge_copy
-   gnuradio.gr.nop
    gnuradio.gr.pa_2x2_phase_combiner
-   gnuradio.gr.channel_model
-
-Slicing and Dicing Streams
-^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-.. autosummary::
-   :nosignatures:
-
-   gnuradio.gr.head
-   gnuradio.gr.skiphead
 
 Miscellaneous
 -------------

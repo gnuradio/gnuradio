@@ -48,6 +48,9 @@ namespace gr {
       static sptr make(size_t sizeof_stream_item);
 
       virtual int nmsgs_received() const = 0;
+
+      virtual int  ctrlport_test() const = 0;
+      virtual void set_ctrlport_test(int x) = 0;
     };
 
   } /* namespace blocks */

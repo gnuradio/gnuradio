@@ -21,6 +21,7 @@
 #
 
 from gnuradio import gr
+from gnuradio import blocks
 from gnuradio.eng_option import eng_option
 from optparse import OptionParser
 import os, sys
@@ -67,7 +68,7 @@ class my_top_block(gr.top_block):
 
         self.qapp = QtGui.QApplication(sys.argv)
 
-        self.skip = gr.skiphead(gr.sizeof_gr_complex, self._start)
+        self.skip = blocks.skiphead(gr.sizeof_gr_complex, self._start)
         self.gui_snk = qtgui.const_sink_c(self._nsamps,
                                           "GNU Radio Constellation Plot",
                                           self._nsigs)
@@ -77,7 +78,7 @@ class my_top_block(gr.top_block):
         self._data_max = -sys.maxint - 1
         for f in filelist:
             data,_min,_max = read_samples_c(f, self._start, self._nsamps)
-            self.srcs.append(gr.vector_source_c(data))
+            self.srcs.append(blocks.vector_source_c(data))
 
             if(_min < self._data_min):
                 self._data_min = _min

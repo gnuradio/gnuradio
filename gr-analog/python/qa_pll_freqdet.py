@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2004,2007,2010-2012 Free Software Foundation, Inc.
+# Copyright 2004,2007,2010-2013 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -22,6 +22,7 @@
 
 from gnuradio import gr, gr_unittest
 import analog_swig as analog
+import blocks_swig as blocks
 import math
 
 class test_pll_freqdet(gr_unittest.TestCase):
@@ -143,8 +144,8 @@ class test_pll_freqdet(gr_unittest.TestCase):
 
         src = analog.sig_source_c(sampling_freq, analog.GR_COS_WAVE, freq, 1.0)
         pll = analog.pll_freqdet_cf(loop_bw, maxf, minf)
-        head = gr.head(gr.sizeof_float, int (freq))
-        dst = gr.vector_sink_f()
+        head = blocks.head(gr.sizeof_float, int (freq))
+        dst = blocks.vector_sink_f()
 
         self.tb.connect(src, pll, head)
         self.tb.connect(head, dst)

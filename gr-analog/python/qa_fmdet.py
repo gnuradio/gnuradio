@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2012 Free Software Foundation, Inc.
+# Copyright 2012,2013 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -22,6 +22,7 @@
 
 from gnuradio import gr, gr_unittest
 import analog_swig as analog
+import blocks_swig as blocks
 import math
 
 class test_fmdet_cf(gr_unittest.TestCase):
@@ -63,9 +64,9 @@ class test_fmdet_cf(gr_unittest.TestCase):
     def est_fmdet_cf_002(self):
         N = 100
         src = analog.sig_source_c(1, analog.GR_SIN_WAVE, 0.2, 1)
-        head = gr.head(gr.sizeof_gr_complex, N)
+        head = blocks.head(gr.sizeof_gr_complex, N)
         op = analog.fmdet_cf(1, 0.1, 0.3, 0.1)
-        dst = gr.vector_sink_f()
+        dst = blocks.vector_sink_f()
 
         self.tb.connect(src, head, op)
         self.tb.connect(op, dst)

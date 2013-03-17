@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2011,2012 Free Software Foundation, Inc.
+# Copyright 2011-2013 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -21,6 +21,7 @@
 # 
 
 from gnuradio import gr, digital, filter
+from gnuradio import blocks
 from gnuradio import eng_notation
 from gnuradio.eng_option import eng_option
 from optparse import OptionParser
@@ -55,7 +56,7 @@ class example_timing(gr.top_block):
         data = 2.0*scipy.random.randint(0, 2, N) - 1.0
         data = scipy.exp(1j*poffset) * data
 
-        self.src = gr.vector_source_c(data.tolist(), False)
+        self.src = blocks.vector_source_c(data.tolist(), False)
         self.rrc = filter.interp_fir_filter_ccf(sps, rrc_taps)
         self.chn = filter.channel_model(noise, foffset, toffset)
         self.off = filter.fractional_interpolator_cc(0.20, 1.0)
@@ -66,9 +67,9 @@ class example_timing(gr.top_block):
             self.taps = self.clk.taps()
             self.dtaps = self.clk.diff_taps()
 
-            self.vsnk_err = gr.vector_sink_f()
-            self.vsnk_rat = gr.vector_sink_f()
-            self.vsnk_phs = gr.vector_sink_f()
+            self.vsnk_err = blocks.vector_sink_f()
+            self.vsnk_rat = blocks.vector_sink_f()
+            self.vsnk_phs = blocks.vector_sink_f()
 
             self.connect((self.clk,1), self.vsnk_err)
             self.connect((self.clk,2), self.vsnk_rat)
@@ -83,12 +84,12 @@ class example_timing(gr.top_block):
                                                     mu, gain_mu,
                                                     omega_rel_lim)
 
-            self.vsnk_err = gr.vector_sink_f()
+            self.vsnk_err = blocks.vector_sink_f()
 
             self.connect((self.clk,1), self.vsnk_err)
 
-        self.vsnk_src = gr.vector_sink_c()
-        self.vsnk_clk = gr.vector_sink_c()
+        self.vsnk_src = blocks.vector_sink_c()
+        self.vsnk_clk = blocks.vector_sink_c()
 
         self.connect(self.src, self.rrc, self.chn, self.off, self.clk, self.vsnk_clk)
         self.connect(self.off, self.vsnk_src)

@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2007,2010,2012 Free Software Foundation, Inc.
+# Copyright 2007,2010,2012,2013 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -39,10 +39,10 @@ class test_pn_correlator_cc(gr_unittest.TestCase):
         degree = 10
         length = 2**degree-1
         src = digital.glfsr_source_f(degree)
-        head = gr.head(gr.sizeof_float, length*length)
+        head = blocks.head(gr.sizeof_float, length*length)
         f2c = blocks.float_to_complex()
         corr = digital.pn_correlator_cc(degree)
-        dst = gr.vector_sink_c()
+        dst = blocks.vector_sink_c()
         self.tb.connect(src, head, f2c, corr, dst)
         self.tb.run()
         data = dst.data()

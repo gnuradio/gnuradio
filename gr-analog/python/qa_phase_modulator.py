@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2012 Free Software Foundation, Inc.
+# Copyright 2012,2013 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -22,6 +22,7 @@
 
 from gnuradio import gr, gr_unittest
 import analog_swig as analog
+import blocks_swig as blocks
 import math
 
 def sincos(x):
@@ -42,9 +43,9 @@ class test_phase_modulator(gr_unittest.TestCase):
         src_data = (1.0/4, 1.0/2, 1.0/4, -1.0/4, -1.0/2, -1/4.0)
         expected_result = tuple([sincos(sensitivity*x) for x in src_data])
 
-        src = gr.vector_source_f(src_data)
+        src = blocks.vector_source_f(src_data)
         op = analog.phase_modulator_fc(sensitivity)
-        dst = gr.vector_sink_c()
+        dst = blocks.vector_sink_c()
         
         self.tb.connect(src, op)
         self.tb.connect(op, dst)

@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2012 Free Software Foundation, Inc.
+# Copyright 2012,2013 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -22,6 +22,7 @@
 
 from gnuradio import gr, gr_unittest
 import analog_swig as analog
+import blocks_swig as blocks
 import cmath
 
 class test_quadrature_demod(gr_unittest.TestCase):
@@ -47,9 +48,9 @@ class test_quadrature_demod(gr_unittest.TestCase):
 
         expected_result = [0,] + 199*[1.0]
 
-        src = gr.vector_source_c(src_data)
+        src = blocks.vector_source_c(src_data)
         op = analog.quadrature_demod_cf(gain)
-        dst = gr.vector_sink_f()
+        dst = blocks.vector_sink_f()
         
         self.tb.connect(src, op)
         self.tb.connect(op, dst)
