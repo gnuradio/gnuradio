@@ -23,7 +23,7 @@
 #ifndef INCLUDED_DIGITAL_SCALE_TAGS_H
 #define INCLUDED_DIGITAL_SCALE_TAGS_H
 
-#include <digital_ofdm_equalizer_base.h> // FIXME: Error without this line. No idea why.
+//#include <digital_ofdm_equalizer_base.h> // FIXME: Error without this line. No idea why.
 #include <digital/api.h>
 #include <gr_sync_block.h>
 

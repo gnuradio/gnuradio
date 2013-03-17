@@ -50,7 +50,7 @@ namespace gr {
 
     ofdm_serializer_vcc::sptr
     ofdm_serializer_vcc::make(
-		const digital_ofdm_carrier_allocator_cvc_sptr &allocator,
+		const gr::digital::ofdm_carrier_allocator_cvc::sptr &allocator,
 		const std::string &packet_len_tag_key,
 		int symbols_skipped,
 		bool input_is_shifted

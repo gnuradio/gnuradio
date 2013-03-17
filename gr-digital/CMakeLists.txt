@@ -38,10 +38,10 @@ GR_REGISTER_COMPONENT("gr-digital" ENABLE_GR_DIGITAL
     ENABLE_GR_FILTER
 )
 
-GR_SET_GLOBAL(GR_DIGITAL_INCLUDE_DIRS
-    ${CMAKE_CURRENT_SOURCE_DIR}/include
-    ${CMAKE_CURRENT_BINARY_DIR}/include
-)
+#GR_SET_GLOBAL(GR_DIGITAL_INCLUDE_DIRS
+    #${CMAKE_CURRENT_SOURCE_DIR}/include
+    #${CMAKE_CURRENT_BINARY_DIR}/include
+#)
 
 GR_SET_GLOBAL(GR_DIGITAL_SWIG_INCLUDE_DIRS
     ${CMAKE_CURRENT_SOURCE_DIR}/swig
@@ -91,7 +91,6 @@ CPACK_COMPONENT("digital_swig"
 ########################################################################
 # Add subdirectories
 ########################################################################
-add_subdirectory(include)
 add_subdirectory(include/digital)
 add_subdirectory(lib)
 add_subdirectory(doc)

@@ -19,14 +19,12 @@
  * Boston, MA 02110-1301, USA.
  */
 
-
 #ifndef INCLUDED_DIGITAL_TAGGED_STREAM_CHECK_H
 #define INCLUDED_DIGITAL_TAGGED_STREAM_CHECK_H
 
-#include <digital_ofdm_equalizer_base.h> // FIXME: Error without this line. No idea why.
+//#include <digital_ofdm_equalizer_base.h> // FIXME: Error without this line. No idea why.
 #include <digital/api.h>
 #include <gr_sync_block.h>
-
 
 namespace gr {
   namespace digital {

@@ -89,6 +89,7 @@ install(FILES
     costas_loop_cc.h
     cpmmod_bc.h
     crc32.h
+    crc32_bb.h
     descrambler_bb.h
     diff_decoder_bb.h
     diff_encoder_bb.h
@@ -107,7 +108,12 @@ install(FILES
     mpsk_receiver_cc.h
     mpsk_snr_est.h
     mpsk_snr_est_cc.h
+    ofdm_carrier_allocator_cvc.h
+    ofdm_chanest_vcvc.h
     ofdm_cyclic_prefixer.h
+    ofdm_equalizer_base.h
+    ofdm_equalizer_simpledfe.h
+    ofdm_equalizer_static.h
     ofdm_frame_acquisition.h
     ofdm_frame_equalizer_vcvc.h
     ofdm_frame_sink.h
@@ -115,6 +121,7 @@ install(FILES
     ofdm_mapper_bcv.h
     ofdm_sampler.h
     ofdm_serializer_vcc.h
+    ofdm_sync_sc_cfb.h
     packet_header_default.h
     packet_header_ofdm.h
     packet_headergenerator_bb.h
@@ -135,3 +142,4 @@ install(FILES
     DESTINATION ${GR_INCLUDE_DIR}/gnuradio/digital
     COMPONENT "digital_devel"
 )
+

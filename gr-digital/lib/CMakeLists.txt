@@ -126,18 +126,11 @@ list(APPEND digital_sources
     costas_loop_cc_impl.cc
     cpmmod_bc_impl.cc
     crc32.cc
+    crc32_bb_impl.cc
     descrambler_bb_impl.cc
     diff_decoder_bb_impl.cc
     diff_encoder_bb_impl.cc
     diff_phasor_cc_impl.cc
-    digital_crc32_bb.cc
-    digital_ofdm_carrier_allocator_cvc.cc
-    digital_ofdm_chanest_vcvc.cc
-    digital_ofdm_cyclic_prefixer.cc
-    digital_ofdm_equalizer_base.cc
-    digital_ofdm_equalizer_simpledfe.cc
-    digital_ofdm_equalizer_static.cc
-    digital_ofdm_sync_sc_cfb.cc
     fll_band_edge_cc_impl.cc
     framer_sink_1_impl.cc
     glfsr.cc
@@ -150,7 +143,12 @@ list(APPEND digital_sources
     mpsk_receiver_cc_impl.cc
     mpsk_snr_est.cc
     mpsk_snr_est_cc_impl.cc
+    ofdm_carrier_allocator_cvc_impl.cc
+    ofdm_chanest_vcvc_impl.cc
     ofdm_cyclic_prefixer_impl.cc
+    ofdm_equalizer_base.cc
+    ofdm_equalizer_simpledfe.cc
+    ofdm_equalizer_static.cc
     ofdm_frame_acquisition_impl.cc
     ofdm_frame_equalizer_vcvc_impl.cc
     ofdm_frame_sink_impl.cc
@@ -158,6 +156,7 @@ list(APPEND digital_sources
     ofdm_mapper_bcv_impl.cc
     ofdm_sampler_impl.cc
     ofdm_serializer_vcc_impl.cc
+    ofdm_sync_sc_cfb_impl.cc
     packet_header_default.cc
     packet_header_ofdm.cc
     packet_headergenerator_bb_impl.cc

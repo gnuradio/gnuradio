@@ -24,7 +24,7 @@
 
 #include <digital/api.h>
 #include <gr_tagged_stream_block.h>
-#include <digital_ofdm_carrier_allocator_cvc.h>
+#include <digital/ofdm_carrier_allocator_cvc.h>
 
 namespace gr {
   namespace digital {
@@ -77,7 +77,7 @@ namespace gr {
        * \param input_is_shifted If the input has the DC carrier on index 0 (i.e. it is not FFT shifted), set this to false
        */
       static sptr make(
-	  const digital_ofdm_carrier_allocator_cvc_sptr &allocator,
+	  const gr::digital::ofdm_carrier_allocator_cvc::sptr &allocator,
 	  const std::string &packet_len_tag_key="",
 	  int symbols_skipped=0,
 	  bool input_is_shifted=true
