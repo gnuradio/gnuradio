@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2006,2009,2013 Free Software Foundation, Inc.
+ * Copyright 2004,2010,2013 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -20,37 +20,37 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef INCLUDED_GR_COPY_IMPL_H
-#define INCLUDED_GR_COPY_IMPL_H
+#ifndef INCLUDED_GR_NOP_H
+#define INCLUDED_GR_NOP_H
 
-#include <blocks/copy.h>
+#include <blocks/api.h>
+#include <gr_block.h>
+#include <stddef.h>			// size_t
 
 namespace gr {
   namespace blocks {
 
-    class copy_impl : public copy
+    /*!
+     * \brief Does nothing. Used for testing only.
+     * \ingroup misc_blk
+     */
+    class BLOCKS_API nop : virtual public gr_block
     {
-    private:
-      size_t d_itemsize;
-      bool d_enabled;
-
     public:
-      copy_impl(size_t itemsize);
-      ~copy_impl();
+      // gr::blocks::nop::sptr
+      typedef boost::shared_ptr<nop> sptr;
 
-      void forecast(int noutput_items, gr_vector_int &ninput_items_required);
-      bool check_topology(int ninputs, int noutputs);
+      /*!
+       * Build a nop block.
+       *
+       * \param sizeof_stream_item size of the stream items in bytes.
+       */
+      static sptr make(size_t sizeof_stream_item);
 
-      void set_enabled(bool enable) { d_enabled = enable; }
-      bool enabled() const { return d_enabled;}
-
-      int general_work(int noutput_items,
-                       gr_vector_int &ninput_items,
-                       gr_vector_const_void_star &input_items,
-                       gr_vector_void_star &output_items);
+      virtual int nmsgs_received() const = 0;
     };
 
   } /* namespace blocks */
 } /* namespace gr */
 
-#endif /* INCLUDED_GR_COPY_IMPL_H */
+#endif /* INCLUDED_GR_NOP_H */

@@ -158,6 +158,9 @@ install(FILES
     multiply_const_cc.h
     multiply_const_ff.h
     nlog10_ff.h
+    nop.h
+    null_sink.h
+    null_source.h
     pack_k_bits_bb.h
     patterned_interleaver.h
     pdu.h
@@ -192,6 +195,7 @@ install(FILES
     udp_source.h
     unpack_k_bits_bb.h
     vco_f.h
+    vector_map.h
     vector_to_stream.h
     vector_to_streams.h
     wavfile_sink.h

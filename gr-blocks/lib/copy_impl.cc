@@ -40,8 +40,8 @@ namespace gr {
 
     copy_impl::copy_impl(size_t itemsize)
       : gr_block("copy",
-                 gr_make_io_signature(1, 1, itemsize),
-                 gr_make_io_signature(1, 1, itemsize)),
+                 gr_make_io_signature(1, -1, itemsize),
+                 gr_make_io_signature(1, -1, itemsize)),
         d_itemsize(itemsize),
         d_enabled(true)
     {
@@ -49,6 +49,14 @@ namespace gr {
 
     copy_impl::~copy_impl()
     {
+    }
+
+    void
+    copy_impl::forecast(int noutput_items, gr_vector_int &ninput_items_required)
+    {
+      unsigned ninputs = ninput_items_required.size();
+      for (unsigned i = 0; i < ninputs; i++)
+	ninput_items_required[i] = noutput_items;
     }
 
     bool
@@ -63,19 +71,20 @@ namespace gr {
                             gr_vector_const_void_star &input_items,
                             gr_vector_void_star &output_items)
     {
-      const uint8_t *in = (const uint8_t*)input_items[0];
-      uint8_t *out = (uint8_t*)output_items[0];
+      const uint8_t **in = (const uint8_t**)&input_items[0];
+      uint8_t **out = (uint8_t**)&output_items[0];
 
-      int n = std::min<int>(ninput_items[0], noutput_items);
-      int j = 0;
-
+      int n = 0;
       if(d_enabled) {
-        memcpy(out, in, n*d_itemsize);
-        j = n;
+        int ninputs = input_items.size();
+        for(int i = 0; i < ninputs; i++) {
+          memcpy(out[i], in[i], noutput_items*d_itemsize);
+        }
+        n = noutput_items;
       }
 
-      consume_each(n);
-      return j;
+      consume_each(noutput_items);
+      return n;
     }
 
   } /* namespace blocks */

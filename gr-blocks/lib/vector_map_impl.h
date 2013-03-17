@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2006,2009,2013 Free Software Foundation, Inc.
+ * Copyright 2012,2013 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -20,37 +20,36 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef INCLUDED_GR_COPY_IMPL_H
-#define INCLUDED_GR_COPY_IMPL_H
+#ifndef INCLUDED_GR_VECTOR_MAP_IMPL_H
+#define INCLUDED_GR_VECTOR_MAP_IMPL_H
 
-#include <blocks/copy.h>
+#include <blocks/vector_map.h>
+#include <gruel/thread.h>
 
 namespace gr {
   namespace blocks {
 
-    class copy_impl : public copy
+    class vector_map_impl : public vector_map
     {
     private:
-      size_t d_itemsize;
-      bool d_enabled;
+      size_t d_item_size;
+      std::vector<size_t> d_in_vlens;
+      std::vector< std::vector< std::vector<size_t> > > d_mapping;
+      gruel::mutex d_mutex; // mutex to protect set/work access
 
     public:
-      copy_impl(size_t itemsize);
-      ~copy_impl();
+      vector_map_impl(size_t item_size, std::vector<size_t> in_vlens,
+                      std::vector< std::vector< std::vector<size_t> > > mapping);
+      ~vector_map_impl();
 
-      void forecast(int noutput_items, gr_vector_int &ninput_items_required);
-      bool check_topology(int ninputs, int noutputs);
+      void set_mapping(std::vector< std::vector< std::vector<size_t> > > mapping);
 
-      void set_enabled(bool enable) { d_enabled = enable; }
-      bool enabled() const { return d_enabled;}
-
-      int general_work(int noutput_items,
-                       gr_vector_int &ninput_items,
-                       gr_vector_const_void_star &input_items,
-                       gr_vector_void_star &output_items);
+      int work(int noutput_items,
+               gr_vector_const_void_star &input_items,
+               gr_vector_void_star &output_items);
     };
 
   } /* namespace blocks */
 } /* namespace gr */
 
-#endif /* INCLUDED_GR_COPY_IMPL_H */
+#endif /* INCLUDED_GR_VECTOR_MAP_IMPL_H */

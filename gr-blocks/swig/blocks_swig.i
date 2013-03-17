@@ -30,6 +30,9 @@
 
 %include <gr_endianness.h>
 
+%template() std::vector<size_t>;
+%template() std::vector< std::vector< std::vector<size_t> > >;
+
 %{
 #include "blocks/add_ff.h"
 #include "blocks/add_ss.h"
@@ -124,9 +127,12 @@
 #include "blocks/mute_ff.h"
 #include "blocks/mute_cc.h"
 #include "blocks/nlog10_ff.h"
+#include "blocks/nop.h"
 #include "blocks/not_bb.h"
 #include "blocks/not_ss.h"
 #include "blocks/not_ii.h"
+#include "blocks/null_sink.h"
+#include "blocks/null_source.h"
 #include "blocks/patterned_interleaver.h"
 #include "blocks/pack_k_bits_bb.h"
 #include "blocks/packed_to_unpacked_bb.h"
@@ -190,6 +196,7 @@
 #include "blocks/unpacked_to_packed_ss.h"
 #include "blocks/unpacked_to_packed_ii.h"
 #include "blocks/vco_f.h"
+#include "blocks/vector_map.h"
 #include "blocks/vector_to_stream.h"
 #include "blocks/vector_to_streams.h"
 #include "blocks/vector_insert_b.h"
@@ -307,9 +314,12 @@
 %include "blocks/mute_ff.h"
 %include "blocks/mute_cc.h"
 %include "blocks/nlog10_ff.h"
+%include "blocks/nop.h"
 %include "blocks/not_bb.h"
 %include "blocks/not_ss.h"
 %include "blocks/not_ii.h"
+%include "blocks/null_sink.h"
+%include "blocks/null_source.h"
 %include "blocks/probe_signal_b.h"
 %include "blocks/probe_signal_s.h"
 %include "blocks/probe_signal_i.h"
@@ -373,6 +383,7 @@
 %include "blocks/unpacked_to_packed_ss.h"
 %include "blocks/unpacked_to_packed_ii.h"
 %include "blocks/vco_f.h"
+%include "blocks/vector_map.h"
 %include "blocks/vector_to_stream.h"
 %include "blocks/vector_to_streams.h"
 %include "blocks/vector_insert_b.h"
@@ -488,9 +499,12 @@ GR_SWIG_BLOCK_MAGIC2(blocks, mute_ii);
 GR_SWIG_BLOCK_MAGIC2(blocks, mute_ff);
 GR_SWIG_BLOCK_MAGIC2(blocks, mute_cc);
 GR_SWIG_BLOCK_MAGIC2(blocks, nlog10_ff);
+GR_SWIG_BLOCK_MAGIC2(blocks, nop);
 GR_SWIG_BLOCK_MAGIC2(blocks, not_bb);
 GR_SWIG_BLOCK_MAGIC2(blocks, not_ss);
 GR_SWIG_BLOCK_MAGIC2(blocks, not_ii);
+GR_SWIG_BLOCK_MAGIC2(blocks, null_sink);
+GR_SWIG_BLOCK_MAGIC2(blocks, null_source);
 GR_SWIG_BLOCK_MAGIC2(blocks, patterned_interleaver);
 GR_SWIG_BLOCK_MAGIC2(blocks, pack_k_bits_bb);
 GR_SWIG_BLOCK_MAGIC2(blocks, packed_to_unpacked_bb);
@@ -554,6 +568,7 @@ GR_SWIG_BLOCK_MAGIC2(blocks, unpacked_to_packed_bb);
 GR_SWIG_BLOCK_MAGIC2(blocks, unpacked_to_packed_ss);
 GR_SWIG_BLOCK_MAGIC2(blocks, unpacked_to_packed_ii);
 GR_SWIG_BLOCK_MAGIC2(blocks, vco_f);
+GR_SWIG_BLOCK_MAGIC2(blocks, vector_map);
 GR_SWIG_BLOCK_MAGIC2(blocks, vector_to_stream);
 GR_SWIG_BLOCK_MAGIC2(blocks, vector_to_streams);
 GR_SWIG_BLOCK_MAGIC2(blocks, vector_insert_b);

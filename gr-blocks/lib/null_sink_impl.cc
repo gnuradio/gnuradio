@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2006,2009,2013 Free Software Foundation, Inc.
+ * Copyright 2004,2010,2013 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -20,37 +20,41 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef INCLUDED_GR_COPY_IMPL_H
-#define INCLUDED_GR_COPY_IMPL_H
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
 
-#include <blocks/copy.h>
+#include "null_sink_impl.h"
+#include <gr_io_signature.h>
 
 namespace gr {
   namespace blocks {
 
-    class copy_impl : public copy
+    null_sink::sptr
+    null_sink::make(size_t sizeof_stream_item)
     {
-    private:
-      size_t d_itemsize;
-      bool d_enabled;
+      return gnuradio::get_initial_sptr
+        (new null_sink_impl(sizeof_stream_item));
+    }
 
-    public:
-      copy_impl(size_t itemsize);
-      ~copy_impl();
+    null_sink_impl::null_sink_impl(size_t sizeof_stream_item)
+      : gr_sync_block("null_sink",
+                      gr_make_io_signature(1, 1, sizeof_stream_item),
+                      gr_make_io_signature(0, 0, 0))
+    {
+    }
 
-      void forecast(int noutput_items, gr_vector_int &ninput_items_required);
-      bool check_topology(int ninputs, int noutputs);
+    null_sink_impl::~null_sink_impl()
+    {
+    }
 
-      void set_enabled(bool enable) { d_enabled = enable; }
-      bool enabled() const { return d_enabled;}
-
-      int general_work(int noutput_items,
-                       gr_vector_int &ninput_items,
-                       gr_vector_const_void_star &input_items,
-                       gr_vector_void_star &output_items);
-    };
+    int
+    null_sink_impl::work(int noutput_items,
+                         gr_vector_const_void_star &input_items,
+                         gr_vector_void_star &output_items)
+    {
+      return noutput_items;
+    }
 
   } /* namespace blocks */
 } /* namespace gr */
-
-#endif /* INCLUDED_GR_COPY_IMPL_H */

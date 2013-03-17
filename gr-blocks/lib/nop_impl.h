@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2006,2009,2013 Free Software Foundation, Inc.
+ * Copyright 2004,2010,2013 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -20,29 +20,27 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef INCLUDED_GR_COPY_IMPL_H
-#define INCLUDED_GR_COPY_IMPL_H
+#ifndef INCLUDED_GR_NOP_IMPL_H
+#define INCLUDED_GR_NOP_IMPL_H
 
-#include <blocks/copy.h>
+#include <blocks/nop.h>
 
 namespace gr {
   namespace blocks {
 
-    class copy_impl : public copy
+    class nop_impl : public nop
     {
-    private:
-      size_t d_itemsize;
-      bool d_enabled;
+    protected:
+      int d_nmsgs_recvd;
+
+      // Method that just counts any received messages.
+      void count_received_msgs(pmt::pmt_t msg);
 
     public:
-      copy_impl(size_t itemsize);
-      ~copy_impl();
+      nop_impl(size_t sizeof_stream_item);
+      ~nop_impl();
 
-      void forecast(int noutput_items, gr_vector_int &ninput_items_required);
-      bool check_topology(int ninputs, int noutputs);
-
-      void set_enabled(bool enable) { d_enabled = enable; }
-      bool enabled() const { return d_enabled;}
+      int nmsgs_received() const { return d_nmsgs_recvd; }
 
       int general_work(int noutput_items,
                        gr_vector_int &ninput_items,
@@ -53,4 +51,4 @@ namespace gr {
   } /* namespace blocks */
 } /* namespace gr */
 
-#endif /* INCLUDED_GR_COPY_IMPL_H */
+#endif /* INCLUDED_GR_NOP_IMPL_H */

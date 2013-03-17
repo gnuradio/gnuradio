@@ -195,6 +195,9 @@ list(APPEND gr_blocks_sources
     multiply_const_cc_impl.cc
     multiply_const_ff_impl.cc
     nlog10_ff_impl.cc
+    nop_impl.cc
+    null_sink_impl.cc
+    null_source_impl.cc
     pack_k_bits_bb_impl.cc
     patterned_interleaver_impl.cc
     pdu.cc
@@ -232,6 +235,7 @@ list(APPEND gr_blocks_sources
     udp_source_impl.cc
     unpack_k_bits_bb_impl.cc
     vco_f_impl.cc
+    vector_map_impl.cc
     vector_to_stream_impl.cc
     vector_to_streams_impl.cc
     wavfile_sink_impl.cc

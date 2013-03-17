@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2006,2009,2013 Free Software Foundation, Inc.
+ * Copyright 2004,2010,2013 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -20,37 +20,36 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef INCLUDED_GR_COPY_IMPL_H
-#define INCLUDED_GR_COPY_IMPL_H
+#ifndef INCLUDED_GR_NULL_SINK_H
+#define INCLUDED_GR_NULL_SINK_H
 
-#include <blocks/copy.h>
+#include <blocks/api.h>
+#include <gr_sync_block.h>
+#include <stddef.h>			// size_t
 
 namespace gr {
   namespace blocks {
 
-    class copy_impl : public copy
+    /*!
+     * \brief Bit bucket. Use as a termination point when a sink is
+     * required and we don't want to do anything real.
+     * \ingroup sink_blk
+     */
+    class BLOCKS_API null_sink : virtual public gr_sync_block
     {
-    private:
-      size_t d_itemsize;
-      bool d_enabled;
-
     public:
-      copy_impl(size_t itemsize);
-      ~copy_impl();
+      // gr::blocks::null_sink::sptr
+      typedef boost::shared_ptr<null_sink> sptr;
 
-      void forecast(int noutput_items, gr_vector_int &ninput_items_required);
-      bool check_topology(int ninputs, int noutputs);
-
-      void set_enabled(bool enable) { d_enabled = enable; }
-      bool enabled() const { return d_enabled;}
-
-      int general_work(int noutput_items,
-                       gr_vector_int &ninput_items,
-                       gr_vector_const_void_star &input_items,
-                       gr_vector_void_star &output_items);
+      /*!
+       * Build a null sink block.
+       *
+       * \param sizeof_stream_item size of the stream items in bytes.
+       */
+      static sptr make(size_t sizeof_stream_item);
     };
 
   } /* namespace blocks */
 } /* namespace gr */
 
-#endif /* INCLUDED_GR_COPY_IMPL_H */
+#endif /* INCLUDED_GR_NULL_SINK_H */

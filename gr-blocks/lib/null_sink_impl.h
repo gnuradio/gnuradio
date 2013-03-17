@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2006,2009,2013 Free Software Foundation, Inc.
+ * Copyright 2004,2010,2013 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -20,37 +20,26 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef INCLUDED_GR_COPY_IMPL_H
-#define INCLUDED_GR_COPY_IMPL_H
+#ifndef INCLUDED_GR_NULL_SINK_IMPL_H
+#define INCLUDED_GR_NULL_SINK_IMPL_H
 
-#include <blocks/copy.h>
+#include <blocks/null_sink.h>
 
 namespace gr {
   namespace blocks {
 
-    class copy_impl : public copy
+    class null_sink_impl : public null_sink
     {
-    private:
-      size_t d_itemsize;
-      bool d_enabled;
-
     public:
-      copy_impl(size_t itemsize);
-      ~copy_impl();
+      null_sink_impl(size_t sizeof_stream_item);
+      ~null_sink_impl();
 
-      void forecast(int noutput_items, gr_vector_int &ninput_items_required);
-      bool check_topology(int ninputs, int noutputs);
-
-      void set_enabled(bool enable) { d_enabled = enable; }
-      bool enabled() const { return d_enabled;}
-
-      int general_work(int noutput_items,
-                       gr_vector_int &ninput_items,
-                       gr_vector_const_void_star &input_items,
-                       gr_vector_void_star &output_items);
+      int work(int noutput_items,
+               gr_vector_const_void_star &input_items,
+               gr_vector_void_star &output_items);
     };
 
   } /* namespace blocks */
 } /* namespace gr */
 
-#endif /* INCLUDED_GR_COPY_IMPL_H */
+#endif /* INCLUDED_GR_NULL_SINK_IMPL_H */
