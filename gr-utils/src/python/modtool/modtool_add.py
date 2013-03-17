@@ -37,7 +37,7 @@ class ModToolAdd(ModTool):
     name = 'add'
     aliases = ('insert',)
     _block_types = ('sink', 'source', 'sync', 'decimator', 'interpolator',
-                    'general', 'hier', 'noblock')
+                    'general', 'tagged_stream', 'hier', 'noblock')
     def __init__(self):
         ModTool.__init__(self)
         self._add_cc_qa = False
@@ -208,7 +208,7 @@ class ModToolAdd(ModTool):
             fname_h  = self._info['blockname'] + '.h'
             fname_cc = self._info['blockname'] + '.cc'
             if self._info['blocktype'] in ('source', 'sink', 'sync', 'decimator',
-                                           'interpolator', 'general', 'hier'):
+                                           'interpolator', 'general', 'hier', 'tagged_stream'):
                 fname_cc = self._info['blockname'] + '_impl.cc'
                 self._write_tpl('block_impl_h',   'lib', self._info['blockname'] + '_impl.h')
             self._write_tpl('block_impl_cpp', 'lib', fname_cc)
