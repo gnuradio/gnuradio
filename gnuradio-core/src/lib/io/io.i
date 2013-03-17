@@ -27,20 +27,11 @@
 #endif
 
 #include <gr_histo_sink_f.h>
-#include <microtune_4702_eval_board.h>
-#include <microtune_4937_eval_board.h>
-#include <sdr_1000.h>
 #include <gr_oscope_sink_x.h>
 #include <gr_oscope_sink_f.h>
-#include <ppio.h>
 %}
 
 %include "gr_histo_sink.i"
-%include "microtune_xxxx_eval_board.i"
-%include "microtune_4702_eval_board.i"
-%include "microtune_4937_eval_board.i"
-%include "sdr_1000.i"
 %include "gr_oscope_sink.i"
-%include "ppio.i"
 
 

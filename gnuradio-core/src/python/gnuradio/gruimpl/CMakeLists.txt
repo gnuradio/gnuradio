@@ -26,10 +26,8 @@ GR_PYTHON_INSTALL(FILES
     hexint.py
     listmisc.py
     mathmisc.py
-    lmx2306.py
     msgq_runner.py
     os_read_exactly.py
-    sdr_1000.py
     seq_with_cursor.py
     socket_stuff.py
     daemon.py
