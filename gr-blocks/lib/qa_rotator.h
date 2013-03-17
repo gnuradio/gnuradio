@@ -1,5 +1,6 @@
+/* -*- c++ -*- */
 /*
- * Copyright 2012-2013 Free Software Foundation, Inc.
+ * Copyright 2008,2013 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -19,29 +20,20 @@
  * Boston, MA 02110-1301, USA.
  */
 
-/*
- * This class gathers together all the test cases for the gr-blocks
- * directory into a single test suite.  As you create new test cases,
- * add them here.
- */
+#ifndef _QA_GR_ROTATOR_H_
+#define _QA_GR_ROTATOR_H_
 
-#include <qa_blocks.h>
-#include <qa_block_tags.h>
-#include <qa_fxpt.h>
-#include <qa_fxpt_nco.h>
-#include <qa_fxpt_vco.h>
-#include <qa_rotator.h>
+#include <cppunit/extensions/HelperMacros.h>
+#include <cppunit/TestCase.h>
 
-CppUnit::TestSuite *
-qa_gr_blocks::suite()
+class qa_rotator : public CppUnit::TestCase 
 {
-  CppUnit::TestSuite *s = new CppUnit::TestSuite("gr-blocks");
+  CPPUNIT_TEST_SUITE(qa_rotator);
+  CPPUNIT_TEST(t1);
+  CPPUNIT_TEST_SUITE_END();
 
-  s->addTest(qa_block_tags::suite());
-  s->addTest(qa_fxpt::suite());
-  s->addTest(qa_fxpt_nco::suite());
-  s->addTest(qa_fxpt_vco::suite());
-  s->addTest(qa_rotator::suite());
+ private:
+  void t1();
+};
 
-  return s;
-}
+#endif /* _QA_GR_ROTATOR_H_ */

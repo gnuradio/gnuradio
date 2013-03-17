@@ -1,5 +1,6 @@
+/* -*- c++ -*- */
 /*
- * Copyright 2012-2013 Free Software Foundation, Inc.
+ * Copyright 2004,2008,2009,2013 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -19,29 +20,35 @@
  * Boston, MA 02110-1301, USA.
  */
 
-/*
- * This class gathers together all the test cases for the gr-blocks
- * directory into a single test suite.  As you create new test cases,
- * add them here.
- */
+// @WARNING@
 
-#include <qa_blocks.h>
-#include <qa_block_tags.h>
-#include <qa_fxpt.h>
-#include <qa_fxpt_nco.h>
-#include <qa_fxpt_vco.h>
-#include <qa_rotator.h>
+#ifndef @GUARD_NAME@
+#define @GUARD_NAME@
 
-CppUnit::TestSuite *
-qa_gr_blocks::suite()
-{
-  CppUnit::TestSuite *s = new CppUnit::TestSuite("gr-blocks");
+#include <blocks/api.h>
+#include <gr_sync_block.h>
 
-  s->addTest(qa_block_tags::suite());
-  s->addTest(qa_fxpt::suite());
-  s->addTest(qa_fxpt_nco::suite());
-  s->addTest(qa_fxpt_vco::suite());
-  s->addTest(qa_rotator::suite());
+namespace gr {
+  namespace blocks {
 
-  return s;
-}
+    /*!
+     * \brief @TYPE@ sink that writes to a vector
+     * \ingroup sink_blk
+     */
+    class BLOCKS_API @NAME@ : virtual public gr_sync_block
+    {
+    public:
+      // gr::blocks::@NAME@::sptr
+      typedef boost::shared_ptr<@NAME@> sptr;
+
+      static sptr make(int vlen = 1);
+
+      virtual void reset() = 0;
+      virtual std::vector<@TYPE@> data() const = 0;
+      virtual std::vector<gr_tag_t> tags() const = 0;
+    };
+
+  } /* namespace blocks */
+} /* namespace gr */
+
+#endif /* @GUARD_NAME@ */

@@ -1,5 +1,6 @@
+/* -*- c++ -*- */
 /*
- * Copyright 2012-2013 Free Software Foundation, Inc.
+ * Copyright 2004,2010,2013 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -19,29 +20,26 @@
  * Boston, MA 02110-1301, USA.
  */
 
-/*
- * This class gathers together all the test cases for the gr-blocks
- * directory into a single test suite.  As you create new test cases,
- * add them here.
- */
+#ifndef INCLUDED_GR_NULL_SINK_IMPL_H
+#define INCLUDED_GR_NULL_SINK_IMPL_H
 
-#include <qa_blocks.h>
-#include <qa_block_tags.h>
-#include <qa_fxpt.h>
-#include <qa_fxpt_nco.h>
-#include <qa_fxpt_vco.h>
-#include <qa_rotator.h>
+#include <blocks/null_sink.h>
 
-CppUnit::TestSuite *
-qa_gr_blocks::suite()
-{
-  CppUnit::TestSuite *s = new CppUnit::TestSuite("gr-blocks");
+namespace gr {
+  namespace blocks {
 
-  s->addTest(qa_block_tags::suite());
-  s->addTest(qa_fxpt::suite());
-  s->addTest(qa_fxpt_nco::suite());
-  s->addTest(qa_fxpt_vco::suite());
-  s->addTest(qa_rotator::suite());
+    class null_sink_impl : public null_sink
+    {
+    public:
+      null_sink_impl(size_t sizeof_stream_item);
+      ~null_sink_impl();
 
-  return s;
-}
+      int work(int noutput_items,
+               gr_vector_const_void_star &input_items,
+               gr_vector_void_star &output_items);
+    };
+
+  } /* namespace blocks */
+} /* namespace gr */
+
+#endif /* INCLUDED_GR_NULL_SINK_IMPL_H */

@@ -1,47 +1,54 @@
+/* -*- c++ -*- */
 /*
  * Copyright 2012-2013 Free Software Foundation, Inc.
- *
+ * 
  * This file is part of GNU Radio
- *
+ * 
  * GNU Radio is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3, or (at your option)
  * any later version.
- *
+ * 
  * GNU Radio is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- *
+ * 
  * You should have received a copy of the GNU General Public License
  * along with GNU Radio; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 51 Franklin Street,
  * Boston, MA 02110-1301, USA.
  */
 
-/*
- * This class gathers together all the test cases for the gr-blocks
- * directory into a single test suite.  As you create new test cases,
- * add them here.
- */
+// @WARNING@
 
-#include <qa_blocks.h>
-#include <qa_block_tags.h>
-#include <qa_fxpt.h>
-#include <qa_fxpt_nco.h>
-#include <qa_fxpt_vco.h>
-#include <qa_rotator.h>
+#ifndef @GUARD_NAME@
+#define @GUARD_NAME@
 
-CppUnit::TestSuite *
-qa_gr_blocks::suite()
-{
-  CppUnit::TestSuite *s = new CppUnit::TestSuite("gr-blocks");
+#include <blocks/api.h>
+#include <gr_block.h>
 
-  s->addTest(qa_block_tags::suite());
-  s->addTest(qa_fxpt::suite());
-  s->addTest(qa_fxpt_nco::suite());
-  s->addTest(qa_fxpt_vco::suite());
-  s->addTest(qa_rotator::suite());
+namespace gr {
+  namespace blocks {
 
-  return s;
-}
+    /*!
+     * \brief source of @TYPE@'s that gets its data from a vector
+     * \ingroup source_blk
+     */
+    class BLOCKS_API @NAME@ : virtual public gr_block 
+    {
+    public:
+      // gr::blocks::@NAME@::sptr
+      typedef boost::shared_ptr<@NAME@> sptr;
+
+      static sptr make(const std::vector<@TYPE@> &data,
+                       int periodicity, int offset=0);
+
+      virtual void rewind() = 0;
+      virtual void set_data(const std::vector<@TYPE@> &data) = 0;
+    };
+
+  } /* namespace blocks */
+} /* namespace gr */
+
+#endif /* @GUARD_NAME@ */
