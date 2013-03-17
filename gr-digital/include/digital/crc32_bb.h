@@ -1,5 +1,6 @@
 /* -*- c++ -*- */
-/* Copyright 2012 Free Software Foundation, Inc.
+/* 
+ * Copyright 2013 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -19,35 +20,41 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef INCLUDED_DIGITAL_TS_INSERT_ZEROS_CC_H
-#define INCLUDED_DIGITAL_TS_INSERT_ZEROS_CC_H
 
-//#include <digital_ofdm_equalizer_base.h> // FIXME: Error without this line. No idea why.
+#ifndef INCLUDED_DIGITAL_CRC32_BB_H
+#define INCLUDED_DIGITAL_CRC32_BB_H
+
 #include <digital/api.h>
-#include <gr_block.h>
-#include <string>
+#include <gr_tagged_stream_block.h>
 
 namespace gr {
   namespace digital {
 
     /*!
-     * \brief Inserts zeros between the packets of a tagged stream.
-     *
-     * \description
-     * Outputs zeros if a packet is not yet ready at the input, otherwise
-     * passes packets through.
-     *
+     * \brief Byte-stream CRC block
      * \ingroup digital
      *
+     * Input: stream of bytes, which form a packet. The first byte of the packet
+     * has a tag with key "length" and the value being the number of bytes in the
+     * packet.
+     *
+     * Output: The same bytes as incoming, but trailing a CRC32 of the packet.
+     * The tag is re-set to the new length.
      */
-    class DIGITAL_API ts_insert_zeros_cc : virtual public gr_block
+    class DIGITAL_API crc32_bb : virtual public gr_tagged_stream_block
     {
-    public:
-      typedef boost::shared_ptr<ts_insert_zeros_cc> sptr;
-      static sptr make(const std::string &lengthtagname);
+     public:
+      typedef boost::shared_ptr<crc32_bb> sptr;
+
+      /*!
+       * \param check Set to true if you want to check CRC, false to create CRC.
+       * \param lengthtagname Length tag key
+       */
+      static sptr make(bool check=false, const std::string& lengthtagname="packet_len");
     };
+
   } // namespace digital
 } // namespace gr
 
-#endif /* INCLUDED_DIGITAL_TS_INSERT_ZEROS_CC_H */
+#endif /* INCLUDED_DIGITAL_CRC32_BB_H */
 

@@ -1,5 +1,6 @@
 /* -*- c++ -*- */
-/* Copyright 2012 Free Software Foundation, Inc.
+/* 
+ * Copyright 2013 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -19,19 +20,23 @@
  * Boston, MA 02110-1301, USA.
  */
 
-GR_SWIG_BLOCK_MAGIC(digital, ofdm_carrier_allocator_cvc);
+#ifndef INCLUDED_DIGITAL_OFDM_SYNC_SC_CFB_IMPL_H
+#define INCLUDED_DIGITAL_OFDM_SYNC_SC_CFB_IMPL_H
 
-digital_ofdm_carrier_allocator_cvc_sptr
-digital_make_ofdm_carrier_allocator_cvc (
-		int fft_len,
-		const std::vector<std::vector<int> > &occupied_carriers,
-		const std::vector<std::vector<int> > &pilot_carriers,
-		const std::vector<std::vector<gr_complex> > &pilot_symbols,
-		const std::string &len_tag_key = "packet_len");
+#include <digital/ofdm_sync_sc_cfb.h>
 
-class digital_ofdm_carrier_allocator_cvc : public gr_tagged_stream_block
-{
- private:
-  digital_ofdm_carrier_allocator_cvc(int fft_len, const std::vector<std::vector<int> > &occupied_carriers, const std::vector<std::vector<int> > &pilot_carriers, const std::vector<std::vector<gr_complex> > &pilot_symbols, const std::string &len_tag_key);
-};
+namespace gr {
+  namespace digital {
+
+    class ofdm_sync_sc_cfb_impl : public ofdm_sync_sc_cfb
+    {
+     public:
+      ofdm_sync_sc_cfb_impl(int fft_len, int cp_len);
+      ~ofdm_sync_sc_cfb_impl();
+    };
+
+  } // namespace digital
+} // namespace gr
+
+#endif /* INCLUDED_DIGITAL_OFDM_SYNC_SC_CFB_IMPL_H */
 

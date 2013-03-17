@@ -59,13 +59,7 @@ install(
     FILES
     digital_swig.i
     constellation.i
-    digital_crc32_bb.i
-    digital_ofdm_carrier_allocator_cvc.i
-    digital_ofdm_chanest_vcvc.i
-    digital_ofdm_equalizer_base.i
-    digital_ofdm_equalizer_simpledfe.i
-    digital_ofdm_equalizer_static.i
-    digital_ofdm_sync_sc_cfb.i
+    ofdm_equalizer.i
     packet_header.i
     ${CMAKE_CURRENT_BINARY_DIR}/digital_swig_doc.i
     DESTINATION ${GR_INCLUDE_DIR}/gnuradio/swig

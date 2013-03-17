@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
-/*
- * Copyright 2004-2006,2011 Free Software Foundation, Inc.
+/* 
+ * Copyright 2013 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -20,16 +20,32 @@
  * Boston, MA 02110-1301, USA.
  */
 
-GR_SWIG_BLOCK_MAGIC(digital,ofdm_cyclic_prefixer);
+#ifndef INCLUDED_DIGITAL_CRC32_BB_IMPL_H
+#define INCLUDED_DIGITAL_CRC32_BB_IMPL_H
 
-digital_ofdm_cyclic_prefixer_sptr
-digital_make_ofdm_cyclic_prefixer (size_t input_size,
-		size_t output_size,
-		int rolloff_len=0,
-		const std::string &len_tag_key="");
+#include <digital/crc32_bb.h>
 
+namespace gr {
+  namespace digital {
 
-class digital_ofdm_cyclic_prefixer : public gr_tagged_stream_block
-{
-};
+    class crc32_bb_impl : public crc32_bb
+    {
+     private:
+      bool d_check;
+
+     public:
+      crc32_bb_impl(bool check, const std::string& lengthtagname);
+      ~crc32_bb_impl();
+
+      int calculate_output_stream_length(const gr_vector_int &ninput_items);
+      int work(int noutput_items,
+		       gr_vector_int &ninput_items,
+		       gr_vector_const_void_star &input_items,
+		       gr_vector_void_star &output_items);
+    };
+
+  } // namespace digital
+} // namespace gr
+
+#endif /* INCLUDED_DIGITAL_CRC32_BB_IMPL_H */
 

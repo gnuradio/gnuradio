@@ -30,12 +30,16 @@ namespace gr {
   namespace digital {
 
     ofdm_frame_equalizer_vcvc::sptr
-    ofdm_frame_equalizer_vcvc::make(digital_ofdm_equalizer_base_sptr equalizer, const std::string &len_tag_key, bool propagate_channel_state)
+    ofdm_frame_equalizer_vcvc::make(ofdm_equalizer_base::sptr equalizer, const std::string &len_tag_key, bool propagate_channel_state)
     {
-      return gnuradio::get_initial_sptr (new ofdm_frame_equalizer_vcvc_impl(equalizer, len_tag_key, propagate_channel_state));
+      return gnuradio::get_initial_sptr (
+	  new ofdm_frame_equalizer_vcvc_impl(
+	    equalizer, len_tag_key, propagate_channel_state
+	  )
+      );
     }
 
-    ofdm_frame_equalizer_vcvc_impl::ofdm_frame_equalizer_vcvc_impl(digital_ofdm_equalizer_base_sptr equalizer, const std::string &len_tag_key, bool propagate_channel_state)
+    ofdm_frame_equalizer_vcvc_impl::ofdm_frame_equalizer_vcvc_impl(ofdm_equalizer_base::sptr equalizer, const std::string &len_tag_key, bool propagate_channel_state)
       : gr_tagged_stream_block("ofdm_frame_equalizer_vcvc",
 	  gr_make_io_signature(1, 1, sizeof (gr_complex) * equalizer->fft_len()),
 	  gr_make_io_signature(1, 1, sizeof (gr_complex) * equalizer->fft_len()),

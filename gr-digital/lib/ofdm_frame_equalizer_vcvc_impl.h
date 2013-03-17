@@ -31,7 +31,7 @@ namespace gr {
     {
      private:
       const int d_fft_len;
-      digital_ofdm_equalizer_base_sptr d_eq;
+      ofdm_equalizer_base::sptr d_eq;
       bool d_propagate_channel_state;
       std::vector<gr_complex> d_channel_state;
 
@@ -41,7 +41,7 @@ namespace gr {
       void update_length_tags(int n_produced, int n_ports) {};
 
      public:
-      ofdm_frame_equalizer_vcvc_impl(digital_ofdm_equalizer_base_sptr equalizer, const std::string &len_tag_key, bool propagate_channel_state);
+      ofdm_frame_equalizer_vcvc_impl(ofdm_equalizer_base::sptr equalizer, const std::string &len_tag_key, bool propagate_channel_state);
       ~ofdm_frame_equalizer_vcvc_impl();
 
       int work(int noutput_items,
