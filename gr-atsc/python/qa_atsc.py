@@ -21,8 +21,7 @@
 #
 
 from gnuradio import gr, gr_unittest
-import atsc                    # qa code needs to run without being installed
-#from gnuradio import atsc
+import atsc_swig as atsc
 from atsc_utils import *
 import sys
 import blocks_swig as blocks
