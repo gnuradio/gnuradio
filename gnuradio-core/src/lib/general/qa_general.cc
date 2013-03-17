@@ -28,6 +28,7 @@
 #include <qa_general.h>
 #include <qa_gr_circular_file.h>
 #include <qa_gr_math.h>
+#include <qa_sincos.h>
 
 CppUnit::TestSuite *
 qa_general::suite ()
@@ -36,6 +37,7 @@ qa_general::suite ()
 
   s->addTest (qa_gr_circular_file::suite ());
   s->addTest (qa_gr_math::suite ());
+  s->addTest(gr::analog::qa_sincos::suite());
 
   return s;
 }

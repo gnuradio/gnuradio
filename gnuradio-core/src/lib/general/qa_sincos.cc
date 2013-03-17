@@ -25,7 +25,7 @@
 #endif
 
 #include <qa_sincos.h>
-#include <analog/sincos.h>
+#include <gr_sincos.h>
 #include <gruel/attributes.h>
 #include <cppunit/TestAssert.h>
 #include <cmath>
@@ -45,7 +45,7 @@ namespace gr {
 	c_sin = sin(x);
 	c_cos = cos(x);
 
-	analog::sincos(x, &gr_sin, &gr_cos);
+	gr_sincos(x, &gr_sin, &gr_cos);
 
 	CPPUNIT_ASSERT_DOUBLES_EQUAL(c_sin, gr_sin, 0.0001);
 	CPPUNIT_ASSERT_DOUBLES_EQUAL(c_cos, gr_cos, 0.0001);
@@ -64,7 +64,7 @@ namespace gr {
 	c_sin = sinf(x);
 	c_cos = cosf(x);
 
-	analog::sincosf(x, &gr_sin, &gr_cos);
+	gr_sincosf(x, &gr_sin, &gr_cos);
 
 	CPPUNIT_ASSERT_DOUBLES_EQUAL(c_sin, gr_sin, 0.0001);
 	CPPUNIT_ASSERT_DOUBLES_EQUAL(c_cos, gr_cos, 0.0001);
