@@ -29,30 +29,10 @@ Signal Sinks
 .. autosummary::
    :nosignatures:
 
-   gnuradio.gr.check_counting_s
    gnuradio.gr.check_lfsr_32k_s
    gnuradio.gr.histo_sink_f
    gnuradio.gr.oscope_sink_f
 
-
-Information Coding and Decoding
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-.. autosummary::
-   :nosignatures:
-
-   gnuradio.gr.fake_channel_encoder_pp
-   gnuradio.gr.fake_channel_decoder_pp
-
-
-
-Miscellaneous Blocks
-^^^^^^^^^^^^^^^^^^^^
-
-.. autosummary::
-   :nosignatures:
-
-   gnuradio.gr.pa_2x2_phase_combiner
 
 Miscellaneous
 -------------

@@ -23,8 +23,7 @@
 """
 Digital voice Tx and Rx using GSM 13kbit vocoder and GMSK.
 
-Runs channel at 32kbit/sec.  Currently uses fake channel coding,
-but there's room for a rate 1/2 coder.
+Runs channel at 32kbit/sec.
 """
 
 from gnuradio import gr, gru
@@ -66,7 +65,7 @@ class digital_voice_tx(gr.hier_block):
         f2s = blocks.float_to_short()
         voice_coder = gsm_full_rate.encode_sp()
 
-        channel_coder = gr.fake_channel_encoder_pp(GSM_FRAME_SIZE, AIR_FRAME_SIZE)
+        channel_coder = gr.multiply_const_b(1)
         p2s = gr.parallel_to_serial(gr.sizeof_char, AIR_FRAME_SIZE)
 
         mod = gmsk_mod(fg, sps=samples_per_symbol,
@@ -93,7 +92,7 @@ class digital_voice_rx(gr.hier_block):
                            p_size=AIR_FRAME_SIZE)
 
         s2p = gr.serial_to_parallel(gr.sizeof_char, AIR_FRAME_SIZE)
-        channel_decoder = gr.fake_channel_decoder_pp(AIR_FRAME_SIZE, GSM_FRAME_SIZE)
+        channel_decoder = gr.multiply_const_b(1)
 
         voice_decoder = gsm_full_rate.decode_ps()
         s2f = blocks.short_to_float ()

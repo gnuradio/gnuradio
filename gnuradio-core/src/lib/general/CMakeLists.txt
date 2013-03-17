@@ -106,15 +106,10 @@ endif(ENABLE_PYTHON)
 ########################################################################
 set(gr_core_general_triple_threats
     complex_vec_test
-    gr_align_on_samplenumbers_ss
     gr_block_gateway
-    gr_check_counting_s
     gr_check_lfsr_32k_s
-    gr_fake_channel_coder_pp
     gr_feval
-    gr_iqcomp_cc
     gr_lfsr_32k_source_s
-    gr_pa_2x2_phase_combiner
     gr_prefs
     gr_test
 )
