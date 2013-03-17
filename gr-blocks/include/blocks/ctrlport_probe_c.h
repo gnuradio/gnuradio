@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2012 Free Software Foundation, Inc.
+ * Copyright 2012-2013 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -23,43 +23,40 @@
 #ifndef INCLUDED_CTRLPORT_PROBE_C_H
 #define INCLUDED_CTRLPORT_PROBE_C_H
 
-#include <gr_core_api.h>
+#include <blocks/api.h>
 #include <gr_sync_block.h>
 #include <rpcregisterhelpers.h>
 #include <boost/thread/shared_mutex.hpp>
 
-class gr_ctrlport_probe_c;
-typedef boost::shared_ptr<gr_ctrlport_probe_c> gr_ctrlport_probe_c_sptr;
+namespace gr {
+  namespace blocks {
 
-GR_CORE_API gr_ctrlport_probe_c_sptr
-gr_make_ctrlport_probe_c(const std::string &id, const std::string &desc);
+    /*!
+     * \brief A ControlPort probe to export vectors of signals.
+     *
+     * This block acts as a sink in the flowgraph but also exports
+     * vectors of complex samples over ControlPort. This block simply
+     * sends the current vector held in the work function when the
+     * queried by a ControlPort client.
+     */
+    class BLOCKS_API ctrlport_probe_c : virtual public gr_sync_block
+    {
+    public:
+      // gr::blocks::ctrlport_probe_c::sptr
+      typedef boost::shared_ptr<ctrlport_probe_c> sptr;
 
-class GR_CORE_API gr_ctrlport_probe_c : public gr_sync_block
-{
- private:
-  friend GR_CORE_API gr_ctrlport_probe_c_sptr gr_make_ctrlport_probe_c
-    (const std::string &id, const std::string &desc);
+      /*!
+       * \brief Make a ControlPort probe block.
+       * \param id A string ID to name the probe over ControlPort.
+       * \param desc A string describing the probe.
+       */
+      static sptr make(const std::string &id, const std::string &desc);
 
-  gr_ctrlport_probe_c(const std::string &id, const std::string &desc);
+      virtual std::vector<gr_complex> get() = 0;
+    };
 
-  boost::shared_mutex ptrlock;
-
-  std::string d_id;
-  std::string d_desc;
-  const gr_complex* d_ptr;
-  size_t d_ptrLen;
-
- public:
-  ~gr_ctrlport_probe_c();
-
-  void setup_rpc();
-
-  std::vector<gr_complex> get();
-
-  int work(int noutput_items,
-	   gr_vector_const_void_star &input_items,
-	   gr_vector_void_star &output_items);
-};
+  } /* namespace blocks */
+} /* namespace gr */
 
 #endif /* INCLUDED_CTRLPORT_GR_CTRLPORT_PROBE_C_H */
 

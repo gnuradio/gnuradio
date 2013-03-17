@@ -204,3 +204,12 @@ install(FILES
     DESTINATION ${GR_INCLUDE_DIR}/gnuradio/blocks
     COMPONENT "blocks_devel"
 )
+
+if(ENABLE_GR_CTRLPORT)
+install(FILES
+  ctrlport_probe_c.h
+  ctrlport_probe2_c.h
+  DESTINATION ${GR_INCLUDE_DIR}/gnuradio/blocks
+  COMPONENT "blocks_devel"
+)
+endif(ENABLE_GR_CTRLPORT)

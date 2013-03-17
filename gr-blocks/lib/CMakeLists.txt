@@ -248,6 +248,13 @@ list(APPEND gr_blocks_sources
     wavfile_source_impl.cc
 )
 
+if(ENABLE_GR_CTRLPORT)
+list(APPEND gr_blocks_sources
+  ctrlport_probe_c_impl.cc
+  ctrlport_probe2_c_impl.cc
+)
+endif(ENABLE_GR_CTRLPORT)
+
 #Add Windows DLL resource file if using MSVC
 IF(MSVC)
     include(${CMAKE_SOURCE_DIR}/cmake/Modules/GrVersion.cmake)

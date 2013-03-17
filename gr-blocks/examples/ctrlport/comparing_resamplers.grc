@@ -33,7 +33,7 @@
     </param>
   </block>
   <block>
-    <key>gr_ctrlport_probe2_c</key>
+    <key>blocks_ctrlport_probe2_c</key>
     <param>
       <key>id</key>
       <value>probe_arc_resamp</value>
@@ -126,7 +126,7 @@
     </param>
   </block>
   <block>
-    <key>gr_ctrlport_probe2_c</key>
+    <key>blocks_ctrlport_probe2_c</key>
     <param>
       <key>id</key>
       <value>probe_frac_interp</value>

@@ -602,3 +602,19 @@ GR_SWIG_BLOCK_MAGIC2(blocks, wavfile_source);
 GR_SWIG_BLOCK_MAGIC2(blocks, xor_bb);
 GR_SWIG_BLOCK_MAGIC2(blocks, xor_ss);
 GR_SWIG_BLOCK_MAGIC2(blocks, xor_ii);
+
+
+#ifdef GR_CTRLPORT
+
+%{
+#include "blocks/ctrlport_probe_c.h"
+#include "blocks/ctrlport_probe2_c.h"
+%}
+
+%include "blocks/ctrlport_probe_c.h"
+%include "blocks/ctrlport_probe2_c.h"
+
+GR_SWIG_BLOCK_MAGIC2(blocks, ctrlport_probe_c);
+GR_SWIG_BLOCK_MAGIC2(blocks, ctrlport_probe2_c);
+
+#endif /* GR_CTRLPORT */
