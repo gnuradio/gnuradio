@@ -33,7 +33,6 @@
 #include <blocks/annotator_alltoall.h>
 #include <blocks/annotator_1to1.h>
 #include <gr_keep_one_in_n.h>
-#include <filter/firdes.h>
 #include <gr_tags.h>
 
 
