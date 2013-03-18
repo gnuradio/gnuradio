@@ -121,6 +121,7 @@
 		<block>blocks_vector_to_streams</block>
 		<block>blocks_peak_detector_xb</block>
 		<block>blocks_peak_detector2_fb</block>
+		<block>blocks_plateau_detector_fb</block>
 		<block>blocks_regenerate_bb</block>
 		<block>blocks_stretch_ff</block>
                 <block>blocks_threshold_ff</block>

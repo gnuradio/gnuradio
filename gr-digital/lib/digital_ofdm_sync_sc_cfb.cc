@@ -35,7 +35,7 @@
 #include <blocks/multiply_ff.h>
 #include <blocks/divide_ff.h>
 #include <blocks/complex_to_arg.h>
-#include <analog/plateau_detector_fb.h>
+#include <blocks/plateau_detector_fb.h>
 #include <gr_sample_and_hold_ff.h>
 
 // Define this to add a third output for debugging
@@ -72,7 +72,7 @@ digital_ofdm_sync_sc_cfb::digital_ofdm_sync_sc_cfb (int fft_len, int cp_len)
   gr::blocks::complex_to_arg::sptr         peak_to_angle(gr::blocks::complex_to_arg::make());
   gr_sample_and_hold_ff_sptr               sample_and_hold(gr_make_sample_and_hold_ff());
 
-  gr::analog::plateau_detector_fb::sptr    plateau_detector(gr::analog::plateau_detector_fb::make(cp_len));
+  gr::blocks::plateau_detector_fb::sptr    plateau_detector(gr::blocks::plateau_detector_fb::make(cp_len));
 
   // Delay Path
   connect(self(),               0, delay,                0);
