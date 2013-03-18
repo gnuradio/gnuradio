@@ -154,9 +154,6 @@ list(APPEND gr_digital_sources
     packet_header_ofdm.cc
     packet_headergenerator_bb_impl.cc
     packet_headerparser_b_impl.cc
-    scale_tags_impl.cc
-    tagged_stream_check_impl.cc
-    ts_insert_zeros_cc_impl.cc
     header_payload_demux_impl.cc
     digital_simple_correlator.cc
 )

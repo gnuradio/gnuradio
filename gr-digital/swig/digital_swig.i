@@ -95,9 +95,6 @@ enum snr_est_type_t {
 #include "digital/packet_header_ofdm.h"
 #include "digital/packet_headergenerator_bb.h"
 #include "digital/ofdm_serializer_vcc.h"
-#include "digital/scale_tags.h"
-#include "digital/tagged_stream_check.h"
-#include "digital/ts_insert_zeros_cc.h"
 #include "digital/packet_headerparser_b.h"
 #include "digital/header_payload_demux.h"
 #include "digital_simple_correlator.h"
@@ -154,12 +151,6 @@ enum snr_est_type_t {
 %include "digital_ofdm_equalizer_static.i"
 %include "digital/ofdm_frame_equalizer_vcvc.h"
 GR_SWIG_BLOCK_MAGIC2(digital, ofdm_frame_equalizer_vcvc);
-%include "digital/scale_tags.h"
-GR_SWIG_BLOCK_MAGIC2(digital, scale_tags);
-%include "digital/tagged_stream_check.h"
-GR_SWIG_BLOCK_MAGIC2(digital, tagged_stream_check);
-%include "digital/ts_insert_zeros_cc.h"
-GR_SWIG_BLOCK_MAGIC2(digital, ts_insert_zeros_cc);
 
 %include "digital/packet_header_default.h"
 %include "digital/packet_header_ofdm.h"

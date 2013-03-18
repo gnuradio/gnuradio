@@ -32,9 +32,6 @@ install(FILES
     packet_header_default.h
     packet_header_ofdm.h
     packet_headergenerator_bb.h
-    scale_tags.h
-    tagged_stream_check.h
-    ts_insert_zeros_cc.h
     packet_headerparser_b.h
     header_payload_demux.h
     DESTINATION ${GR_INCLUDE_DIR}/gnuradio/digital
