@@ -32,7 +32,7 @@ Core Framework
    gnuradio.qtgui <qtgui/index>
    gnuradio.wxgui <wxgui/index>
 
-Harware Interfaces
+Hardware Interfaces
 ------------------
 
 .. autosummary::
