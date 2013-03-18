@@ -165,6 +165,7 @@ install(FILES
     pdu_to_tagged_stream.h
     peak_detector2_fb.h
     random_pdu.h
+    plateau_detector_fb.h
     probe_rate.h
     regenerate_bb.h
     repack_bits_bb.h 

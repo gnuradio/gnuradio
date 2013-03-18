@@ -211,6 +211,7 @@ list(APPEND gr_blocks_sources
     pdu_to_tagged_stream_impl.cc
     peak_detector2_fb_impl.cc
     random_pdu_impl.cc
+    plateau_detector_fb_impl.cc
     probe_rate_impl.cc
     regenerate_bb_impl.cc
     repack_bits_bb_impl.cc
