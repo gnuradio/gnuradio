@@ -110,17 +110,9 @@ endif(ENABLE_GR_CTRLPORT)
 # Append gnuradio-core test sources
 ########################################################################
 list(APPEND test_gnuradio_core_sources
-    ${CMAKE_CURRENT_SOURCE_DIR}/qa_gr_block.cc
-    ${CMAKE_CURRENT_SOURCE_DIR}/qa_gr_hier_block2.cc
-    ${CMAKE_CURRENT_SOURCE_DIR}/qa_gr_hier_block2_derived.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/qa_gr_buffer.cc
-    ${CMAKE_CURRENT_SOURCE_DIR}/qa_gr_flowgraph.cc
-    ${CMAKE_CURRENT_SOURCE_DIR}/qa_gr_top_block.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/qa_gr_io_signature.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/qa_gr_vmcircbuf.cc
-    ${CMAKE_CURRENT_SOURCE_DIR}/qa_block_tags.cc
-    ${CMAKE_CURRENT_SOURCE_DIR}/qa_runtime.cc
-    ${CMAKE_CURRENT_SOURCE_DIR}/qa_set_msg_handler.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/qa_gr_logger.cc
 )
 

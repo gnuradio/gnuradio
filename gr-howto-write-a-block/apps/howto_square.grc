@@ -209,7 +209,7 @@
     </param>
   </block>
   <block>
-    <key>gr_vector_source_x</key>
+    <key>blocks_vector_source_x</key>
     <param>
       <key>id</key>
       <value>src</value>

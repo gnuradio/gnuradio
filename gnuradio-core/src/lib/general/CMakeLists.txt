@@ -53,6 +53,7 @@ list(APPEND gnuradio_core_sources
     ${CMAKE_CURRENT_SOURCE_DIR}/gr_misc.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/gr_random.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/gr_reverse.cc
+    ${CMAKE_CURRENT_SOURCE_DIR}/gr_sincos.c
     ${CMAKE_CURRENT_SOURCE_DIR}/gri_debugger_hook.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/malloc16.c
 )
@@ -64,6 +65,7 @@ list(APPEND test_gnuradio_core_sources
     ${CMAKE_CURRENT_SOURCE_DIR}/qa_general.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/qa_gr_circular_file.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/qa_gr_math.cc
+    ${CMAKE_CURRENT_SOURCE_DIR}/qa_sincos.cc
 )
 
 ########################################################################
@@ -73,11 +75,13 @@ install(FILES
     ${CMAKE_CURRENT_SOURCE_DIR}/gr_core_api.h
     ${CMAKE_CURRENT_SOURCE_DIR}/gr_circular_file.h
     ${CMAKE_CURRENT_SOURCE_DIR}/gr_constants.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/gr_endianness.h
     ${CMAKE_CURRENT_SOURCE_DIR}/gr_expj.h
     ${CMAKE_CURRENT_SOURCE_DIR}/gr_math.h
     ${CMAKE_CURRENT_SOURCE_DIR}/gr_misc.h
     ${CMAKE_CURRENT_SOURCE_DIR}/gr_random.h
     ${CMAKE_CURRENT_SOURCE_DIR}/gr_reverse.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/gr_sincos.h
     ${CMAKE_CURRENT_SOURCE_DIR}/gr_test_types.h
     ${CMAKE_CURRENT_SOURCE_DIR}/gri_debugger_hook.h
     ${CMAKE_CURRENT_SOURCE_DIR}/gri_lfsr_15_1_0.h
@@ -105,39 +109,13 @@ endif(ENABLE_PYTHON)
 ########################################################################
 set(gr_core_general_triple_threats
     complex_vec_test
-    gr_align_on_samplenumbers_ss
     gr_block_gateway
-    gr_check_counting_s
     gr_check_lfsr_32k_s
-    gr_copy
-    gr_endian_swap
-    gr_fake_channel_coder_pp
     gr_feval
-    gr_head
-    gr_iqcomp_cc
-    gr_kludge_copy
     gr_lfsr_32k_source_s
-    gr_nop
-    gr_null_sink
-    gr_null_source
-    gr_pa_2x2_phase_combiner
     gr_prefs
-    gr_skiphead
     gr_test
-    gr_vector_map
-    gr_annotator_alltoall
-    gr_annotator_1to1
-    gr_annotator_raw
 )
-
-if(ENABLE_GR_CTRLPORT)
-ADD_DEFINITIONS(-DGR_CTRLPORT)
-list(APPEND gr_core_general_triple_threats
-    gr_ctrlport_probe_c
-    gr_ctrlport_probe2_c
-)
-endif(ENABLE_GR_CTRLPORT)
-
 
 foreach(file_tt ${gr_core_general_triple_threats})
     list(APPEND gnuradio_core_sources ${CMAKE_CURRENT_SOURCE_DIR}/${file_tt}.cc)
@@ -146,3 +124,11 @@ foreach(file_tt ${gr_core_general_triple_threats})
         install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/${file_tt}.i DESTINATION ${GR_INCLUDE_DIR}/gnuradio/swig COMPONENT "core_swig")
     endif(ENABLE_PYTHON)
 endforeach(file_tt ${gr_core_general_triple_threats})
+
+CHECK_CXX_SOURCE_COMPILES("
+    #define _GNU_SOURCE
+    #include <math.h>
+    int main(){double x, sin, cos; sincos(x, &sin, &cos); return 0;}
+    " HAVE_SINCOS
+)
+GR_ADD_COND_DEF(HAVE_SINCOS)

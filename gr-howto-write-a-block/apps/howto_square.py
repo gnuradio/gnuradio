@@ -30,7 +30,7 @@ class howto_square(grc_wxgui.top_block_gui):
 		# Blocks
 		##################################################
 		self.thr = blocks.throttle(gr.sizeof_float*1, samp_rate)
-		self.src = gr.vector_source_f(([float(n)-50 for n in range(100)]), True, 1)
+		self.src = blocks.vector_source_f(([float(n)-50 for n in range(100)]), True, 1)
 		self.sqr = howto.square_ff()
 		self.sink2 = scopesink2.scope_sink_f(
 			self.GetWin(),

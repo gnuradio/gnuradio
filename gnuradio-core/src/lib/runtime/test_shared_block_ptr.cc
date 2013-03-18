@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2004 Free Software Foundation, Inc.
+ * Copyright 2004,2013 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -21,16 +21,16 @@
  */
 
 #include <gr_shared_block_sptr.h>
-#include <gr_vector_source_i.h>
+#include <blocks/vector_source_i.h>
 
 gr_block_sptr
-foo (gr_vector_source_i_sptr s)
+foo (gr::blocks::vector_source_i::sptr s)
 {
   return gr_block_sptr (s);
 }
 
-typedef gr_shared_block_sptr<gr_vector_source_i> gr_vector_source_i_ptrX;
-//typedef boost::shared_ptr<gr_vector_source_i> gr_vector_source_i_ptrX;
+typedef gr_shared_block_sptr<gr::blocks::vector_source_i> gr_vector_source_i_ptrX;
+//typedef boost::shared_ptr<gr::blocks::vector_source_i> gr_vector_source_i_ptrX;
 
 gr_vector_source_i_ptrX
 bar (gr_vector_source_i *s)

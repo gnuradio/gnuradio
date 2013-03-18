@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2005-2007,2011 Free Software Foundation, Inc.
+# Copyright 2005-2007,2011,2013 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -202,7 +202,7 @@ class my_top_block(gr.top_block):
         if options.nframes is None:
             self.connect(self.src, self.agc)
         else:
-            self.head = gr.head(gr.sizeof_gr_complex, int(options.nframes*width*height))
+            self.head = blocks.head(gr.sizeof_gr_complex, int(options.nframes*width*height))
             self.connect(self.src, self.head, self.agc)
 
         self.connect (self.agc, self.am_demod, self.invert_and_scale,

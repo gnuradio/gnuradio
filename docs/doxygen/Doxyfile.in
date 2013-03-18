@@ -581,19 +581,6 @@ EXCLUDE                = @abs_top_builddir@/docs/doxygen/html \
                          @abs_top_builddir@/docs/doxygen/other/doxypy.py \
                          @abs_top_builddir@/dtools \
                          @abs_top_builddir@/gnuradio-core/src/lib/bug_work_around_6.cc \
-                         @abs_top_builddir@/gnuradio-core/src/lib/filter/assembly.h \
-                         @abs_top_builddir@/gnuradio-core/src/lib/filter/generate_all.py \
-                         @abs_top_builddir@/gnuradio-core/src/lib/filter/generate_gr_fir_XXX.py \
-                         @abs_top_builddir@/gnuradio-core/src/lib/filter/generate_gr_fir_filter_XXX.py \
-                         @abs_top_builddir@/gnuradio-core/src/lib/filter/generate_gr_fir_sysconfig.py \
-                         @abs_top_builddir@/gnuradio-core/src/lib/filter/generate_gr_fir_sysconfig_generic.py \
-                         @abs_top_builddir@/gnuradio-core/src/lib/filter/generate_gr_fir_util.py \
-                         @abs_top_builddir@/gnuradio-core/src/lib/filter/generate_gr_freq_xlating_fir_filter_XXX.py \
-                         @abs_top_builddir@/gnuradio-core/src/lib/filter/generate_gr_interp_fir_filter_XXX.py \
-                         @abs_top_builddir@/gnuradio-core/src/lib/filter/generate_gr_rational_resampler_base_XXX.py \
-                         @abs_top_builddir@/gnuradio-core/src/lib/filter/generate_utils.py \
-                         @abs_top_builddir@/gnuradio-core/src/lib/filter/gr_altivec.h \
-                         @abs_top_builddir@/gnuradio-core/src/lib/filter/sse_debug.h \
                          @abs_top_builddir@/gnuradio-core/src/lib/gengen/generate_all.py \
                          @abs_top_builddir@/gnuradio-core/src/lib/gengen/generate_common.py \
                          @abs_top_builddir@/gnuradio-core/src/lib/missing/bug_work_around_8.cc \

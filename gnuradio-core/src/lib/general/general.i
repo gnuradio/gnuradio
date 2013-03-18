@@ -22,69 +22,24 @@
 
 %{
 
-#include <gr_nop.h>
-#include <gr_null_sink.h>
-#include <gr_null_source.h>
-#include <gr_head.h>
-#include <gr_skiphead.h>
-#include <gr_check_counting_s.h>
 #include <gr_lfsr_32k_source_s.h>
 #include <gr_check_lfsr_32k_s.h>
-#include <gr_align_on_samplenumbers_ss.h>
-//#include <gr_endianness.h>
-#include <gr_endian_swap.h>
-#include <gr_fake_channel_coder_pp.h>
-#include <gr_pa_2x2_phase_combiner.h>
-#include <gr_kludge_copy.h>
 #include <gr_prefs.h>
 #include <gr_constants.h>
 #include <gr_test_types.h>
 #include <gr_test.h>
 #include <gr_feval.h>
-#include <gr_copy.h>
 #include <complex_vec_test.h>
-#include <gr_annotator_alltoall.h>
-#include <gr_annotator_1to1.h>
-#include <gr_annotator_raw.h>
-#include <gr_vector_map.h>
+#include <gr_endianness.h>
 %}
 
-%include "gr_nop.i"
-%include "gr_null_sink.i"
-%include "gr_null_source.i"
-%include "gr_head.i"
-%include "gr_skiphead.i"
-%include "gr_check_counting_s.i"
 %include "gr_lfsr_32k_source_s.i"
 %include "gr_check_lfsr_32k_s.i"
-%include "gr_align_on_samplenumbers_ss.i"
-//%include "gr_endianness.i"
-%include "gr_endian_swap.i"
-%include "gr_fake_channel_coder_pp.i"
-%include "gr_pa_2x2_phase_combiner.i"
-%include "gr_kludge_copy.i"
 %include "gr_prefs.i"
 %include "gr_constants.i"
 %include "gr_test_types.h"
 %include "gr_test.i"
 %include "gr_feval.i"
-%include "gr_copy.i"
 %include "complex_vec_test.i"
-%include "gr_annotator_alltoall.i"
-%include "gr_annotator_1to1.i"
-%include "gr_annotator_raw.i"
-%include "gr_vector_map.i"
 %include "gr_block_gateway.i"
-
-
-#ifdef GR_CTRLPORT
-
-%{
-#include <gr_ctrlport_probe_c.h>
-#include <gr_ctrlport_probe2_c.h>
-%}
-
-%include "gr_ctrlport_probe_c.i"
-%include "gr_ctrlport_probe2_c.i"
-
-#endif /* GR_CTRLPORT */
+%include "gr_endianness.h"

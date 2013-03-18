@@ -20,7 +20,7 @@ def run_test (fo,fi,interleaver,Kb,bitspersymbol,K,dimensionality,constellation,
 
     # TX
     src = gr.lfsr_32k_source_s()
-    src_head = gr.head (gr.sizeof_short,Kb/16) # packet size in shorts
+    src_head = blocks.head(gr.sizeof_short,Kb/16) # packet size in shorts
     s2fsmi = blocks.packed_to_unpacked_ss(bitspersymbol,gr.GR_MSB_FIRST) # unpack shorts to symbols compatible with the outer FSM input cardinality
     enc_out = trellis.encoder_ss(fo,0) # initial state = 0
     inter = trellis.permutation(interleaver.K(),interleaver.INTER(),1,gr.sizeof_short)

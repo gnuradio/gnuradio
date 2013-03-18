@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2012 Free Software Foundation, Inc.
+# Copyright 2012,2013 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -22,6 +22,7 @@
 
 from gnuradio import gr, gr_unittest
 import analog_swig as analog
+import blocks_swig as blocks
 import math
 
 class test_dpll_bb(gr_unittest.TestCase):
@@ -60,9 +61,9 @@ class test_dpll_bb(gr_unittest.TestCase):
         src_data = 10*((period-1)*[0,] + [1,])
         expected_result = src_data
 
-        src = gr.vector_source_b(src_data)
+        src = blocks.vector_source_b(src_data)
         op = analog.dpll_bb(period, gain)
-        dst = gr.vector_sink_b()
+        dst = blocks.vector_sink_b()
 
         self.tb.connect(src, op)
         self.tb.connect(op, dst)

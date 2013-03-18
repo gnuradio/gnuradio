@@ -91,7 +91,6 @@ CPACK_COMPONENT("digital_swig"
 ########################################################################
 # Add subdirectories
 ########################################################################
-add_subdirectory(include)
 add_subdirectory(include/digital)
 add_subdirectory(lib)
 add_subdirectory(doc)

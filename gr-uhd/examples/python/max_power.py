@@ -27,6 +27,7 @@ Setup USRP for maximum power consumption.
 
 from gnuradio import gr
 from gnuradio import analog
+from gnuradio import blocks
 from gnuradio import uhd
 from gnuradio.eng_option import eng_option
 from optparse import OptionParser
@@ -95,7 +96,7 @@ class build_block(gr.top_block):
             self.u_rx = uhd.usrp_source(device_addr=args,
                                         io_type=uhd.io_type.COMPLEX_FLOAT32,
                                         num_channels=rx_nchan)
-            self.rx_dst0 = gr.null_sink(gr.sizeof_gr_complex)
+            self.rx_dst0 = blocks.null_sink(gr.sizeof_gr_complex)
 
             self.u_rx.set_samp_rate(MAX_RATE)
 

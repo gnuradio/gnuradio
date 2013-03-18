@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2006 Free Software Foundation, Inc.
+# Copyright 2006,2013 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -22,6 +22,7 @@
 
 from gnuradio import gr, gru
 from gnuradio import audio
+from gnuradio import blocks
 from gnuradio.eng_option import eng_option
 from optparse import OptionParser
 
@@ -68,7 +69,7 @@ class my_graph(gr.top_block):
         nsamples=int(sample_rate * seconds) #1 seconds
 
         data = sig_source_f(sample_rate, 350, ampl, nsamples)
-        src0 = gr.vector_source_f(data)
+        src0 = blocks.vector_source_f(data)
 
         # gr.test (const std::string &name=std::string("gr_test"),
         # int min_inputs=1, int max_inputs=1, unsigned int sizeof_input_item=1,

@@ -82,10 +82,10 @@ class qa_tagged_stream_mux (gr_unittest.TestCase):
         test_tag_1.offset = 3 # On the first '3' of the 2nd stream
         test_tag_1.value = pmt.to_pmt(23)
 
-        src0 = gr.vector_source_b(datas[0:9], False, 1, len_tags_0 + (test_tag_0,))
-        src1 = gr.vector_source_b(datas[9:],  False, 1, len_tags_1 + (test_tag_1,))
+        src0 = blocks.vector_source_b(datas[0:9], False, 1, len_tags_0 + (test_tag_0,))
+        src1 = blocks.vector_source_b(datas[9:],  False, 1, len_tags_1 + (test_tag_1,))
         tagged_stream_mux = blocks.tagged_stream_mux(gr.sizeof_char, tagname)
-        snk = gr.vector_sink_b()
+        snk = blocks.vector_sink_b()
         self.tb.connect(src0, (tagged_stream_mux, 0))
         self.tb.connect(src1, (tagged_stream_mux, 1))
         self.tb.connect(tagged_stream_mux, snk)

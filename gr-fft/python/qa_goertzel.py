@@ -23,6 +23,7 @@
 from gnuradio import gr, gr_unittest
 from math import pi, cos
 import fft_swig as fft
+import blocks_swig as blocks
 
 class test_goertzel(gr_unittest.TestCase):
 
@@ -36,9 +37,9 @@ class test_goertzel(gr_unittest.TestCase):
         return [cos(2*pi*x*freq/rate) for x in range(rate)]
 
     def transform(self, src_data, rate, freq):
-	src = gr.vector_source_f(src_data, False)
+	src = blocks.vector_source_f(src_data, False)
         dft = fft.goertzel_fc(rate, rate, freq)
-	dst = gr.vector_sink_c()
+	dst = blocks.vector_sink_c()
 	self.tb.connect(src, dft, dst)
 	self.tb.run()
 	return dst.data()

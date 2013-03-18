@@ -53,9 +53,9 @@ class test_moving_average(gr_unittest.TestCase):
         data = make_random_float_tuple(N, 1)
         expected_result = N*[0,]
 
-        src = gr.vector_source_f(data, False)
+        src = blocks.vector_source_f(data, False)
         op  = blocks.moving_average_ff(100, 0.001)
-        dst = gr.vector_sink_f()
+        dst = blocks.vector_sink_f()
 
         tb.connect(src, op)
         tb.connect(op, dst)
@@ -74,9 +74,9 @@ class test_moving_average(gr_unittest.TestCase):
         data = make_random_complex_tuple(N, 1)
         expected_result = N*[0,]
 
-        src = gr.vector_source_c(data, False)
+        src = blocks.vector_source_c(data, False)
         op  = blocks.moving_average_cc(100, 0.001)
-        dst = gr.vector_sink_c()
+        dst = blocks.vector_sink_c()
 
         tb.connect(src, op)
         tb.connect(op, dst)

@@ -301,9 +301,9 @@ class GR_CORE_API gr_basic_block : public gr_msg_accepter, public boost::enable_
    *    void msg_handler(pmt::pmt msg);
    * </pre>
    *
-   * (You may want to use boost::bind to massage your callable into the
-   * correct form.  See gr_nop.{h,cc} for an example that sets up a class
-   * method as the callback.)
+   * (You may want to use boost::bind to massage your callable into
+   * the correct form.  See gr::blocks::nop for an example that sets
+   * up a class method as the callback.)
    *
    * Blocks that desire to handle messages must call this method in their
    * constructors to register the handler that will be invoked when messages

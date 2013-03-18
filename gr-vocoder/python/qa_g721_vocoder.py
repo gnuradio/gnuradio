@@ -21,7 +21,8 @@
 #
 
 from gnuradio import gr, gr_unittest
-from vocoder_swig import *
+import vocoder_swig as vocoder
+import blocks_swig as blocks
 
 class test_g721_vocoder (gr_unittest.TestCase):
 
@@ -34,10 +35,10 @@ class test_g721_vocoder (gr_unittest.TestCase):
     def test001_module_load (self):
         data = (8,24,36,52,56,64,76,88,104,124,132,148,172,
                 196,220,244,280,320,372,416,468,524,580,648)
-        src = gr.vector_source_s(data)
-        enc = g721_encode_sb()
-        dec = g721_decode_bs()
-        snk = gr.vector_sink_s()
+        src = blocks.vector_source_s(data)
+        enc = vocoder.g721_encode_sb()
+        dec = vocoder.g721_decode_bs()
+        snk = blocks.vector_sink_s()
         self.tb.connect(src, enc, dec, snk)
         self.tb.run()
         actual_result = snk.data()

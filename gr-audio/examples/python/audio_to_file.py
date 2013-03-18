@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2004,2007 Free Software Foundation, Inc.
+# Copyright 2004,2007,2013 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -53,7 +53,7 @@ class my_top_block(gr.top_block):
         if options.nsamples is None:
             self.connect((src, 0), dst)
         else:
-            head = gr.head(gr.sizeof_float, int(options.nsamples))
+            head = blocks.head(gr.sizeof_float, int(options.nsamples))
             self.connect((src, 0), head, dst)
 
 

@@ -23,13 +23,12 @@
 #ifndef INCLUDED_QTGUI_WATERFALL_SINK_F_IMPL_H
 #define INCLUDED_QTGUI_WATERFALL_SINK_F_IMPL_H
 
-
 #include <qtgui/waterfall_sink_f.h>
 #include <filter/firdes.h>
 #include <fft/fft.h>
 #include <gruel/high_res_timer.h>
 #include <gruel/thread.h>
-#include <waterfalldisplayform.h>
+#include <qtgui/waterfalldisplayform.h>
 
 namespace gr {
   namespace qtgui {

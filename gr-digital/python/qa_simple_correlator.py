@@ -44,7 +44,7 @@ class test_simple_correlator(gr_unittest.TestCase):
         # Just using a RRC for some basic filter shape
         taps = filter.firdes.root_raised_cosine(8, 8, 1.0, 0.5, 21)
         
-        src = gr.vector_source_b(expected_result)
+        src = blocks.vector_source_b(expected_result)
         frame = digital.simple_framer(4)
         unpack = blocks.packed_to_unpacked_bb(1, gr.GR_MSB_FIRST)
         expand = filter.interp_fir_filter_fff(8, taps)
@@ -52,7 +52,7 @@ class test_simple_correlator(gr_unittest.TestCase):
         mult2 = blocks.multiply_const_ff(2)
         sub1 = blocks.add_const_ff(-1)
         op = digital.simple_correlator(4)
-        dst = gr.vector_sink_b()
+        dst = blocks.vector_sink_b()
         self.tb.connect(src, frame, unpack, b2f, mult2, sub1, expand)
         self.tb.connect(expand, op, dst)
         self.tb.run()

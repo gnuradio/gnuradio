@@ -52,14 +52,15 @@ namespace gr {
      * filters in the filterbank are filled out with 0's to make sure each
      * filter has the same number of taps.
      *
-     * Each filter operates using the gr_fir filter classs of GNU Radio,
-     * which takes the input stream at <EM>i</EM> and performs the inner
-     * product calculation to <EM>i+(n-1)</EM> where <EM>n</EM> is the
-     * number of filter taps. To efficiently handle this in the GNU Radio
-     * structure, each filter input must come from its own input
-     * stream. So the channelizer must be provided with <EM>M</EM> streams
-     * where the input stream has been deinterleaved. This is most easily
-     * done using the gr::blocks::stream_to_streams block.
+     * Each filter operates using the gr::blocks::fir_filter_XXX
+     * classs of GNU Radio, which takes the input stream at <EM>i</EM>
+     * and performs the inner product calculation to <EM>i+(n-1)</EM>
+     * where <EM>n</EM> is the number of filter taps. To efficiently
+     * handle this in the GNU Radio structure, each filter input must
+     * come from its own input stream. So the channelizer must be
+     * provided with <EM>M</EM> streams where the input stream has
+     * been deinterleaved. This is most easily done using the
+     * gr::blocks::stream_to_streams block.
      *
      * The output is then produced as a vector, where index <EM>i</EM>
      * in the vector is the next sample from the <EM>i</EM>th

@@ -1,5 +1,5 @@
 #
-# Copyright 2005,2006,2007 Free Software Foundation, Inc.
+# Copyright 2005-2007,2013 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -143,7 +143,7 @@ class ofdm_tx(gr.hier_block2):
             (header_payload_mux, 1)
         )
         self.connect(payload_mod, gr.tag_debug(gr.sizeof_gr_complex, "pmod"))
-        sync_word_gen = gr.vector_source_c(
+        sync_word_gen = blocks.vector_source_c(
             total_sync_word, True, self.fft_len,
             tagged_streams.make_lengthtags((n_sync_words,), (0,), self.frame_length_tag_key)
         )

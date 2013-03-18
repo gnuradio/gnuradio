@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2012 Free Software Foundation, Inc.
+# Copyright 2012,2013 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -22,6 +22,7 @@
 
 from gnuradio import gr, gr_unittest
 import digital_swig as digital
+import blocks_swig as blocks
 
 class test_chunks_to_symbols(gr_unittest.TestCase):
 
@@ -38,10 +39,10 @@ class test_chunks_to_symbols(gr_unittest.TestCase):
         expected_result = (1+0j, 0+1j, -1+0j, 0-1j,
                            0-1j, -1+0j, 0+1j, 1+0j)
 
-        src = gr.vector_source_b(src_data)
+        src = blocks.vector_source_b(src_data)
         op = digital.chunks_to_symbols_bc(const)
 
-        dst = gr.vector_sink_c()
+        dst = blocks.vector_sink_c()
         self.tb.connect(src, op)
         self.tb.connect(op, dst)
         self.tb.run()
@@ -55,10 +56,10 @@ class test_chunks_to_symbols(gr_unittest.TestCase):
         expected_result = (-3, -1, 1, 3,
                             3, 1, -1, -3)
 
-        src = gr.vector_source_b(src_data)
+        src = blocks.vector_source_b(src_data)
         op = digital.chunks_to_symbols_bf(const)
 
-        dst = gr.vector_sink_f()
+        dst = blocks.vector_sink_f()
         self.tb.connect(src, op)
         self.tb.connect(op, dst)
         self.tb.run()
@@ -73,10 +74,10 @@ class test_chunks_to_symbols(gr_unittest.TestCase):
         expected_result = (1+0j, 0+1j, -1+0j, 0-1j,
                            0-1j, -1+0j, 0+1j, 1+0j)
 
-        src = gr.vector_source_i(src_data)
+        src = blocks.vector_source_i(src_data)
         op = digital.chunks_to_symbols_ic(const)
 
-        dst = gr.vector_sink_c()
+        dst = blocks.vector_sink_c()
         self.tb.connect(src, op)
         self.tb.connect(op, dst)
         self.tb.run()
@@ -90,10 +91,10 @@ class test_chunks_to_symbols(gr_unittest.TestCase):
         expected_result = (-3, -1, 1, 3,
                             3, 1, -1, -3)
 
-        src = gr.vector_source_i(src_data)
+        src = blocks.vector_source_i(src_data)
         op = digital.chunks_to_symbols_if(const)
 
-        dst = gr.vector_sink_f()
+        dst = blocks.vector_sink_f()
         self.tb.connect(src, op)
         self.tb.connect(op, dst)
         self.tb.run()
@@ -108,10 +109,10 @@ class test_chunks_to_symbols(gr_unittest.TestCase):
         expected_result = (1+0j, 0+1j, -1+0j, 0-1j,
                            0-1j, -1+0j, 0+1j, 1+0j)
 
-        src = gr.vector_source_s(src_data)
+        src = blocks.vector_source_s(src_data)
         op = digital.chunks_to_symbols_sc(const)
 
-        dst = gr.vector_sink_c()
+        dst = blocks.vector_sink_c()
         self.tb.connect(src, op)
         self.tb.connect(op, dst)
         self.tb.run()
@@ -125,10 +126,10 @@ class test_chunks_to_symbols(gr_unittest.TestCase):
         expected_result = (-3, -1, 1, 3,
                             3, 1, -1, -3)
 
-        src = gr.vector_source_s(src_data)
+        src = blocks.vector_source_s(src_data)
         op = digital.chunks_to_symbols_sf(const)
 
-        dst = gr.vector_sink_f()
+        dst = blocks.vector_sink_f()
         self.tb.connect(src, op)
         self.tb.connect(op, dst)
         self.tb.run()

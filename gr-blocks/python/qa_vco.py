@@ -21,7 +21,7 @@
 #
 
 from gnuradio import gr, gr_unittest
-import blocks_swig
+import blocks_swig as blocks
 import math
 
 def sig_source_f(samp_rate, freq, amp, N):
@@ -43,9 +43,9 @@ class test_vco(gr_unittest.TestCase):
             sig_source_f(1, 0.125, 1, 200) + \
             sig_source_f(1, 0.25, 1, 200)
 
-        src = gr.vector_source_f(src_data)
-        op = blocks_swig.vco_f(1, math.pi/2.0, 1)
-        dst = gr.vector_sink_f()
+        src = blocks.vector_source_f(src_data)
+        op = blocks.vco_f(1, math.pi/2.0, 1)
+        dst = blocks.vector_sink_f()
 
         self.tb.connect(src, op, dst)
         self.tb.run()

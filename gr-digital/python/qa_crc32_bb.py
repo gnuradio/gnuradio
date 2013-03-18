@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# Copyright 2012 Free Software Foundation, Inc.
+# Copyright 2012,2013 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -41,9 +41,9 @@ class qa_crc32_bb (gr_unittest.TestCase):
         tag.offset = 0
         tag.key = pmt.string_to_symbol(tag_name)
         tag.value = pmt.from_long(len(data))
-        src = gr.vector_source_b(data, False, 1, (tag,))
+        src = blocks.vector_source_b(data, False, 1, (tag,))
         crc = digital.crc32_bb(False, tag_name)
-        sink = gr.vector_sink_b()
+        sink = blocks.vector_sink_b()
         self.tb.connect(src, crc, sink)
         self.tb.run()
         # Check that the packets before crc_check are 4 bytes longer that the input.
@@ -58,10 +58,10 @@ class qa_crc32_bb (gr_unittest.TestCase):
         tag.offset = 0
         tag.key = pmt.string_to_symbol(tag_name)
         tag.value = pmt.from_long(len(data))
-        src = gr.vector_source_b(data, False, 1, (tag,))
+        src = blocks.vector_source_b(data, False, 1, (tag,))
         crc = digital.crc32_bb(False, tag_name)
         crc_check = digital.crc32_bb(True, tag_name)
-        sink = gr.vector_sink_b()
+        sink = blocks.vector_sink_b()
         self.tb.connect(src, crc, crc_check, sink)
         self.tb.run()
         # Check that the packets after crc_check are the same as input.
@@ -91,9 +91,9 @@ class qa_crc32_bb (gr_unittest.TestCase):
         testtag3.offset = len(packets)-1
         testtag3.key = pmt.string_to_symbol("tag3")
         testtag3.value = pmt.from_long(0)
-        src = gr.vector_source_b(packets, False, 1, (tag1, tag2, testtag1, testtag2, testtag3))
+        src = blocks.vector_source_b(packets, False, 1, (tag1, tag2, testtag1, testtag2, testtag3))
         crc = digital.crc32_bb(False, tag_name)
-        sink = gr.vector_sink_b()
+        sink = blocks.vector_sink_b()
         self.tb.connect(src, crc, sink)
         self.tb.run()
         self.assertEqual(len(sink.data()), 2*(pack_len+4))
@@ -117,11 +117,11 @@ class qa_crc32_bb (gr_unittest.TestCase):
         tag.offset = 0
         tag.key = pmt.string_to_symbol(tag_name)
         tag.value = pmt.from_long(len(data))
-        src = gr.vector_source_b(data, False, 1, (tag,))
+        src = blocks.vector_source_b(data, False, 1, (tag,))
         crc = digital.crc32_bb(False, tag_name)
         crc_check = digital.crc32_bb(True, tag_name)
         corruptor = blocks.add_const_bb(1)
-        sink = gr.vector_sink_b()
+        sink = blocks.vector_sink_b()
         self.tb.connect(src, crc, corruptor, crc_check, sink)
         self.tb.run()
         # crc_check will drop invalid packets
@@ -139,9 +139,9 @@ class qa_crc32_bb (gr_unittest.TestCase):
         testtag.offset = len(data)-1
         testtag.key = pmt.string_to_symbol('tag1')
         testtag.value = pmt.from_long(0)
-        src = gr.vector_source_b(data, False, 1, (tag, testtag))
+        src = blocks.vector_source_b(data, False, 1, (tag, testtag))
         crc_check = digital.crc32_bb(True, tag_name)
-        sink = gr.vector_sink_b()
+        sink = blocks.vector_sink_b()
         self.tb.connect(src, crc_check, sink)
         self.tb.run()
         self.assertEqual([len(data)-5,], [tag.offset for tag in sink.tags() if pmt.symbol_to_string(tag.key) == 'tag1'])

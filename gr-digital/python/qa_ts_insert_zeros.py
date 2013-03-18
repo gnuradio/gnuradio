@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# Copyright 2012 Free Software Foundation, Inc.
+# Copyright 2012,2013 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -38,15 +38,15 @@ class qa_ts_insert_zeros (gr_unittest.TestCase):
         tagname = "packet_length"
         data, tags = tagged_streams.packets_to_vectors(packets, tagname)
         tb = gr.top_block()
-        src = gr.vector_source_c(data, False, 1, tags)
+        src = blocks.vector_source_c(data, False, 1, tags)
         rate_in = 16000
         rate_out = 48000
         ratio = float(rate_out) / rate_in
         throttle1 = blocks.throttle(gr.sizeof_gr_complex, rate_in)
         insert_zeros = digital.ts_insert_zeros_cc(tagname)
         throttle2 = blocks.throttle(gr.sizeof_gr_complex, rate_out)
-        head = gr.head(gr.sizeof_gr_complex, int(n_packets * packet_length * ratio*2))
-        snk = gr.vector_sink_c()
+        head = blocks.head(gr.sizeof_gr_complex, int(n_packets * packet_length * ratio*2))
+        snk = blocks.vector_sink_c()
         tb.connect(src, throttle1, insert_zeros, throttle2, head, snk)
         tb.run()
         data = snk.data()

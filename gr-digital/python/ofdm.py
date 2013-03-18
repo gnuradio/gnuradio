@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2006,2007,2008 Free Software Foundation, Inc.
+# Copyright 2006-2008,2013 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -260,7 +260,7 @@ class ofdm_demod(gr.hier_block2):
                                       "ofdm_frame_sink_c.dat"))
         else:
             self.connect(self.ofdm_demod,
-                         gr.null_sink(gr.sizeof_gr_complex*self._occupied_tones))
+                         blocks.null_sink(gr.sizeof_gr_complex*self._occupied_tones))
 
         if options.verbose:
             self._print_verbage()

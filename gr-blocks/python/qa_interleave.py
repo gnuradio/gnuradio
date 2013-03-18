@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2004,2007,2010,2012 Free Software Foundation, Inc.
+# Copyright 2004,2007,2010,2012,2013 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -21,7 +21,7 @@
 #
 
 from gnuradio import gr, gr_unittest
-import blocks_swig
+import blocks_swig as blocks
 import math
 
 class test_interleave (gr_unittest.TestCase):
@@ -34,12 +34,12 @@ class test_interleave (gr_unittest.TestCase):
 
     def test_int_001 (self):
         lenx = 64
-        src0 = gr.vector_source_f (range (0, lenx, 4))
-        src1 = gr.vector_source_f (range (1, lenx, 4))
-        src2 = gr.vector_source_f (range (2, lenx, 4))
-        src3 = gr.vector_source_f (range (3, lenx, 4))
-        op = blocks_swig.interleave (gr.sizeof_float)
-        dst = gr.vector_sink_f ()
+        src0 = blocks.vector_source_f (range (0, lenx, 4))
+        src1 = blocks.vector_source_f (range (1, lenx, 4))
+        src2 = blocks.vector_source_f (range (2, lenx, 4))
+        src3 = blocks.vector_source_f (range (3, lenx, 4))
+        op = blocks.interleave (gr.sizeof_float)
+        dst = blocks.vector_sink_f ()
 
         self.tb.connect (src0, (op, 0))
         self.tb.connect (src1, (op, 1))
@@ -53,12 +53,12 @@ class test_interleave (gr_unittest.TestCase):
 
     def test_deint_001 (self):
         lenx = 64
-        src = gr.vector_source_f (range (lenx))
-        op = blocks_swig.deinterleave (gr.sizeof_float)
-        dst0 = gr.vector_sink_f ()
-        dst1 = gr.vector_sink_f ()
-        dst2 = gr.vector_sink_f ()
-        dst3 = gr.vector_sink_f ()
+        src = blocks.vector_source_f (range (lenx))
+        op = blocks.deinterleave (gr.sizeof_float)
+        dst0 = blocks.vector_sink_f ()
+        dst1 = blocks.vector_sink_f ()
+        dst2 = blocks.vector_sink_f ()
+        dst3 = blocks.vector_sink_f ()
 
         self.tb.connect (src, op)
         self.tb.connect ((op, 0), dst0)

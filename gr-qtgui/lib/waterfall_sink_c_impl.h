@@ -28,7 +28,7 @@
 #include <fft/fft.h>
 #include <gruel/high_res_timer.h>
 #include <gruel/thread.h>
-#include <waterfalldisplayform.h>
+#include <qtgui/waterfalldisplayform.h>
 
 namespace gr {
   namespace qtgui {

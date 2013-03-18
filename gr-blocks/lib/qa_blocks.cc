@@ -26,18 +26,22 @@
  */
 
 #include <qa_blocks.h>
+#include <qa_block_tags.h>
 #include <qa_fxpt.h>
 #include <qa_fxpt_nco.h>
 #include <qa_fxpt_vco.h>
+#include <qa_rotator.h>
 
 CppUnit::TestSuite *
 qa_gr_blocks::suite()
 {
   CppUnit::TestSuite *s = new CppUnit::TestSuite("gr-blocks");
 
+  s->addTest(qa_block_tags::suite());
   s->addTest(qa_fxpt::suite());
   s->addTest(qa_fxpt_nco::suite());
   s->addTest(qa_fxpt_vco::suite());
+  s->addTest(qa_rotator::suite());
 
   return s;
 }

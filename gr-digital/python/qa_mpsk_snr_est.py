@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2011,2012 Free Software Foundation, Inc.
+# Copyright 2011-2013 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -22,6 +22,7 @@
 
 from gnuradio import gr, gr_unittest
 import digital_swig as digital
+import blocks_swig as blocks
 import math, random
 
 def get_cplx():
@@ -46,8 +47,8 @@ class test_mpsk_snr_est(gr_unittest.TestCase):
         for i in xrange(1,6):
             src_data = [b+(i*n) for b,n in zip(self._bits, self._noise)]
             
-            src = gr.vector_source_c(src_data)
-            dst = gr.null_sink(gr.sizeof_gr_complex)
+            src = blocks.vector_source_c(src_data)
+            dst = blocks.null_sink(gr.sizeof_gr_complex)
 
             tb = gr.top_block()
             tb.connect(src, op)
@@ -104,7 +105,7 @@ class test_mpsk_snr_est(gr_unittest.TestCase):
         for i in xrange(1,6):
             src_data = [b+(i*n) for b,n in zip(self._bits, self._noise)]
             
-            src = gr.vector_source_c(src_data)
+            src = blocks.vector_source_c(src_data)
 
             N = 10000
             alpha = 0.001

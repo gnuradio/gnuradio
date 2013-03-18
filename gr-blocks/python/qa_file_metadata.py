@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2012 Free Software Foundation, Inc.
+# Copyright 2012,2013 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -54,7 +54,7 @@ class test_file_metadata(gr_unittest.TestCase):
         extras_str = pmt.serialize_str(extras)
 
         data = sig_source_c(samp_rate, 1000, 1, N)
-        src  = gr.vector_source_c(data)
+        src  = blocks.vector_source_c(data)
         fsnk = blocks.file_meta_sink(gr.sizeof_gr_complex, outfile,
                                      samp_rate, 1, 
                                      blocks.GR_FILE_FLOAT, True,
@@ -96,9 +96,9 @@ class test_file_metadata(gr_unittest.TestCase):
         # Test file metadata source
         src.rewind()
         fsrc = blocks.file_meta_source(outfile, False)
-        vsnk = gr.vector_sink_c()
+        vsnk = blocks.vector_sink_c()
         tsnk = blocks.tag_debug(gr.sizeof_gr_complex, "QA")
-        ssnk = gr.vector_sink_c()
+        ssnk = blocks.vector_sink_c()
         self.tb.disconnect(src, fsnk)
         self.tb.connect(fsrc, vsnk)
         self.tb.connect(fsrc, tsnk)
@@ -133,7 +133,7 @@ class test_file_metadata(gr_unittest.TestCase):
         extras_str = pmt.serialize_str(extras)
 
         data = sig_source_c(samp_rate, 1000, 1, N)
-        src  = gr.vector_source_c(data)
+        src  = blocks.vector_source_c(data)
         fsnk = blocks.file_meta_sink(gr.sizeof_gr_complex, outfile,
                                      samp_rate, 1, 
                                      blocks.GR_FILE_FLOAT, True,
@@ -175,9 +175,9 @@ class test_file_metadata(gr_unittest.TestCase):
         # Test file metadata source
         src.rewind()
         fsrc = blocks.file_meta_source(outfile, False, detached, outfile_hdr)
-        vsnk = gr.vector_sink_c()
+        vsnk = blocks.vector_sink_c()
         tsnk = blocks.tag_debug(gr.sizeof_gr_complex, "QA")
-        ssnk = gr.vector_sink_c()
+        ssnk = blocks.vector_sink_c()
         self.tb.disconnect(src, fsnk)
         self.tb.connect(fsrc, vsnk)
         self.tb.connect(fsrc, tsnk)

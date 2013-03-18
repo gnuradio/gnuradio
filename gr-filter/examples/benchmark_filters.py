@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2005,2006,2007 Free Software Foundation, Inc.
+# Copyright 2005-2007,2013 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -24,6 +24,7 @@ import time
 import random
 from optparse import OptionParser
 from gnuradio import gr
+from gnuradio import blocks
 from gnuradio.eng_option import eng_option
 
 def make_random_complex_tuple(L):
@@ -38,10 +39,10 @@ def benchmark(name, creator, dec, ntaps, total_test_size, block_size):
 
     tb = gr.top_block()
     taps = make_random_complex_tuple(ntaps)
-    src = gr.vector_source_c(make_random_complex_tuple(block_size), True)
-    head = gr.head(gr.sizeof_gr_complex, int(total_test_size))
+    src = blocks.vector_source_c(make_random_complex_tuple(block_size), True)
+    head = blocks.head(gr.sizeof_gr_complex, int(total_test_size))
     op = creator(dec, taps)
-    dst = gr.null_sink(gr.sizeof_gr_complex)
+    dst = blocks.null_sink(gr.sizeof_gr_complex)
     tb.connect(src, head, op, dst)
     start = time.time()
     tb.run()
@@ -66,9 +67,9 @@ def main():
     block_size = options.block_size
     dec = options.decimation
 
-    benchmark("filter.fir_filter_ccc", gr.fir_filter_ccc,
+    benchmark("filter.fir_filter_ccc", filter.fir_filter_ccc,
               dec, ntaps, total_input_size, block_size)
-    benchmark("filter.fft_filter_ccc", gr.fft_filter_ccc,
+    benchmark("filter.fft_filter_ccc", filter.fft_filter_ccc,
               dec, ntaps, total_input_size, block_size)
 
 if __name__ == '__main__':

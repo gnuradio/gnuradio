@@ -19,3 +19,7 @@
 
 add_subdirectory(metadata)
 add_subdirectory(tags)
+
+if(ENABLE_GR_CTRLPORT)
+add_subdirectory(ctrlport)
+endif(ENABLE_GR_CTRLPORT)

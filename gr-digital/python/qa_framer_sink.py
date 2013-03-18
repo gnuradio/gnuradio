@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2012 Free Software Foundation, Inc.
+# Copyright 2012,2013 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -22,6 +22,7 @@
 
 from gnuradio import gr, gr_unittest
 import digital_swig as digital
+import blocks_swig as blocks
 
 default_access_code = '\xAC\xDD\xA4\xE2\xF2\x8C\x20\xFC'
 
@@ -56,10 +57,10 @@ class test_framker_sink(gr_unittest.TestCase):
 
         rcvd_pktq = gr.msg_queue()
 
-        src = gr.vector_source_b(src_data)
+        src = blocks.vector_source_b(src_data)
         correlator = digital.correlate_access_code_bb(access_code, 0)
         framer_sink = digital.framer_sink_1(rcvd_pktq)
-        vsnk = gr.vector_sink_b()
+        vsnk = blocks.vector_sink_b()
 
         self.tb.connect(src, correlator, framer_sink)
         self.tb.connect(correlator, vsnk)
@@ -80,10 +81,10 @@ class test_framker_sink(gr_unittest.TestCase):
 
         rcvd_pktq = gr.msg_queue()
 
-        src = gr.vector_source_b(src_data)
+        src = blocks.vector_source_b(src_data)
         correlator = digital.correlate_access_code_bb(access_code, 0)
         framer_sink = digital.framer_sink_1(rcvd_pktq)
-        vsnk = gr.vector_sink_b()
+        vsnk = blocks.vector_sink_b()
 
         self.tb.connect(src, correlator, framer_sink)
         self.tb.connect(correlator, vsnk)

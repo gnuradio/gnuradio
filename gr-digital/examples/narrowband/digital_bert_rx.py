@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2008,2011 Free Software Foundation, Inc.
+# Copyright 2008,2011,2013 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -127,7 +127,7 @@ class rx_psk_block(gr.top_block):
         elif(options.from_file is not None):
             self._source = blocks.file_source(gr.sizeof_gr_complex, options.from_file)
         else:
-            self._source = gr.null_source(gr.sizeof_gr_complex)
+            self._source = blocks.null_source(gr.sizeof_gr_complex)
 
         # Create the BERT receiver
         self._receiver = bert_receiver(options.bitrate,

@@ -39,7 +39,7 @@ class test_pdu(gr_unittest.TestCase):
 
         src = blocks.pdu_to_tagged_stream(blocks.byte_t)
         snk3 = blocks.tagged_stream_to_pdu(blocks.byte_t)
-        snk2 = gr.vector_sink_b()
+        snk2 = blocks.vector_sink_b()
         snk = blocks.tag_debug(1, "test")
         snk.set_display(False)
 

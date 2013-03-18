@@ -7,6 +7,7 @@
 from gnuradio import eng_notation
 from gnuradio import gr
 from gnuradio import blocks
+from gnuradio import filter
 from gnuradio.eng_option import eng_option
 from gnuradio.filter import firdes
 from optparse import OptionParser
@@ -27,21 +28,21 @@ class affinity_set(gr.top_block):
 	##################################################
         vec_len = 1
 	self.blocks_throttle_0 = blocks.throttle(gr.sizeof_gr_complex*vec_len, samp_rate)
-	self.gr_null_source_0 = gr.null_source(gr.sizeof_gr_complex*vec_len)
-	self.gr_null_sink_0 = gr.null_sink(gr.sizeof_gr_complex*vec_len)
-	self.gr_filt_0 = gr.fir_filter_ccc(1, 40000*[0.2+0.3j,])
-	self.gr_filt_1 = gr.fir_filter_ccc(1, 40000*[0.2+0.3j,])
+	self.blocks_null_source_0 = blocks.null_source(gr.sizeof_gr_complex*vec_len)
+	self.blocks_null_sink_0 = blocks.null_sink(gr.sizeof_gr_complex*vec_len)
+	self.filter_filt_0 = filter.fir_filter_ccc(1, 40000*[0.2+0.3j,])
+	self.filter_filt_1 = filter.fir_filter_ccc(1, 40000*[0.2+0.3j,])
 
-	self.gr_filt_0.set_processor_affinity([0,])
-	self.gr_filt_1.set_processor_affinity([0,1])
+	self.filter_filt_0.set_processor_affinity([0,])
+	self.filter_filt_1.set_processor_affinity([0,1])
 		
 	##################################################
 	# Connections
 	##################################################
-	self.connect((self.gr_null_source_0, 0), (self.blocks_throttle_0, 0))
+	self.connect((self.blocks_null_source_0, 0), (self.blocks_throttle_0, 0))
 	self.connect((self.blocks_throttle_0, 0), (self.gr_filt_0, 0))
-	self.connect((self.gr_filt_0, 0), (self.gr_filt_1, 0))
-	self.connect((self.gr_filt_1, 0), (self.gr_null_sink_0, 0))
+	self.connect((self.filter_filt_0, 0), (self.gr_filt_1, 0))
+	self.connect((self.filter_filt_1, 0), (self.blocks_null_sink_0, 0))
 
 
 	# QT sink close method reimplementation

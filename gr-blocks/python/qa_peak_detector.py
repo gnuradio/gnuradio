@@ -40,9 +40,9 @@ class test_peak_detector(gr_unittest.TestCase):
         expected_result = (0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
                            0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
 
-        src = gr.vector_source_f(data, False)
+        src = blocks.vector_source_f(data, False)
         regen = blocks.peak_detector_fb()
-        dst = gr.vector_sink_b()
+        dst = blocks.vector_sink_b()
 
         tb.connect(src, regen)
         tb.connect(regen, dst)
@@ -61,9 +61,9 @@ class test_peak_detector(gr_unittest.TestCase):
         expected_result = (0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
                            0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
 
-        src = gr.vector_source_i(data, False)
+        src = blocks.vector_source_i(data, False)
         regen = blocks.peak_detector_ib()
-        dst = gr.vector_sink_b()
+        dst = blocks.vector_sink_b()
 
         tb.connect(src, regen)
         tb.connect(regen, dst)
@@ -82,9 +82,9 @@ class test_peak_detector(gr_unittest.TestCase):
         expected_result = (0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
                            0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
 
-        src = gr.vector_source_s(data, False)
+        src = blocks.vector_source_s(data, False)
         regen = blocks.peak_detector_sb()
-        dst = gr.vector_sink_b()
+        dst = blocks.vector_sink_b()
 
         tb.connect(src, regen)
         tb.connect(regen, dst)

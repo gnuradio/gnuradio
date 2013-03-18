@@ -27,9 +27,7 @@ include(${CMAKE_CURRENT_SOURCE_DIR}/ConfigChecks.cmake)
 ########################################################################
 GR_INCLUDE_SUBDIRECTORY(missing)
 GR_INCLUDE_SUBDIRECTORY(runtime)
-GR_INCLUDE_SUBDIRECTORY(filter)
 GR_INCLUDE_SUBDIRECTORY(general)
-GR_INCLUDE_SUBDIRECTORY(gengen)
 GR_INCLUDE_SUBDIRECTORY(io)
 
 list(APPEND gnuradio_core_sources bug_work_around_6.cc)

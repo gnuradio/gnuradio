@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2004,2007,2010 Free Software Foundation, Inc.
+# Copyright 2004,2007,2010,2013 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -22,6 +22,7 @@
 
 from gnuradio import gr, gr_unittest
 import digital_swig as digital
+import blocks_swig as blocks
 import math
 
 class test_diff_phasor(gr_unittest.TestCase):
@@ -35,9 +36,9 @@ class test_diff_phasor(gr_unittest.TestCase):
     def test_diff_phasor_cc(self):
         src_data = (0+0j, 1+0j, -1+0j, 3+4j, -3-4j, -3+4j)
         expected_result = (0+0j, 0+0j, -1+0j, -3-4j, -25+0j, -7-24j)
-        src = gr.vector_source_c(src_data)
+        src = blocks.vector_source_c(src_data)
         op = digital.diff_phasor_cc()
-        dst = gr.vector_sink_c()
+        dst = blocks.vector_sink_c()
         self.tb.connect(src, op)
         self.tb.connect(op, dst)
         self.tb.run()               # run the graph and wait for it to finish

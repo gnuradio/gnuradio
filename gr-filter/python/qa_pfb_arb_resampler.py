@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2012 Free Software Foundation, Inc.
+# Copyright 2012,2013 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -22,6 +22,7 @@
 
 from gnuradio import gr, gr_unittest
 import filter_swig as filter
+import blocks_swig as blocks
 import math
 
 def sig_source_c(samp_rate, freq, amp, N):
@@ -55,9 +56,9 @@ class test_pfb_arb_resampler(gr_unittest.TestCase):
 
         freq = 100
         data = sig_source_f(fs, freq, 1, N)
-        signal = gr.vector_source_f(data)
+        signal = blocks.vector_source_f(data)
         pfb = filter.pfb_arb_resampler_fff(rrate, taps)
-        snk = gr.vector_sink_f()
+        snk = blocks.vector_sink_f()
 
         self.tb.connect(signal, pfb, snk)
         self.tb.run() 
@@ -84,9 +85,9 @@ class test_pfb_arb_resampler(gr_unittest.TestCase):
 
         freq = 100
         data = sig_source_c(fs, freq, 1, N)
-        signal = gr.vector_source_c(data)
+        signal = blocks.vector_source_c(data)
         pfb = filter.pfb_arb_resampler_ccf(rrate, taps)
-        snk = gr.vector_sink_c()
+        snk = blocks.vector_sink_c()
 
         self.tb.connect(signal, pfb, snk)
         self.tb.run() 

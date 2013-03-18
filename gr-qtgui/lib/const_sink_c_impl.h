@@ -26,7 +26,7 @@
 #include <qtgui/const_sink_c.h>
 #include <gruel/high_res_timer.h>
 #include <gruel/thread.h>
-#include <constellationdisplayform.h>
+#include <qtgui/constellationdisplayform.h>
 
 namespace gr {
   namespace qtgui {

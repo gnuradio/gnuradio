@@ -19,15 +19,13 @@
  * Boston, MA 02110-1301, USA.
  */
 
-
 #ifndef INCLUDED_DIGITAL_TS_INSERT_ZEROS_CC_H
 #define INCLUDED_DIGITAL_TS_INSERT_ZEROS_CC_H
 
-#include <digital_ofdm_equalizer_base.h> // FIXME: Error without this line. No idea why.
+//#include <digital_ofdm_equalizer_base.h> // FIXME: Error without this line. No idea why.
 #include <digital/api.h>
 #include <gr_block.h>
 #include <string>
-
 
 namespace gr {
   namespace digital {

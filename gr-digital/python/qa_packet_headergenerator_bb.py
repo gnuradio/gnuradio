@@ -21,6 +21,7 @@
 
 from gnuradio import gr, gr_unittest
 import digital_swig as digital
+import blocks_swig as blocks
 try: import pmt
 except: from gruel import pmt
 
@@ -48,9 +49,9 @@ class qa_packet_headergenerator_bb (gr_unittest.TestCase):
         tag3.offset = 6
         tag3.key = pmt.string_to_symbol(tagname)
         tag3.value = pmt.from_long(4)
-        src = gr.vector_source_b(data, False, 1, (tag1, tag2, tag3))
+        src = blocks.vector_source_b(data, False, 1, (tag1, tag2, tag3))
         header = digital.packet_headergenerator_bb(12, tagname)
-        sink = gr.vector_sink_b()
+        sink = blocks.vector_sink_b()
         self.tb.connect(src, header, sink)
         self.tb.run()
         expected_data = (
@@ -77,9 +78,9 @@ class qa_packet_headergenerator_bb (gr_unittest.TestCase):
         tag3.offset = 6
         tag3.key = pmt.string_to_symbol(tagname)
         tag3.value = pmt.from_long(4)
-        src = gr.vector_source_b(data, False, 1, (tag1, tag2, tag3))
+        src = blocks.vector_source_b(data, False, 1, (tag1, tag2, tag3))
         header = digital.packet_headergenerator_bb(32, tagname)
-        sink = gr.vector_sink_b()
+        sink = blocks.vector_sink_b()
         self.tb.connect(src, header, sink)
         self.tb.run()
         expected_data = (
@@ -107,10 +108,10 @@ class qa_packet_headergenerator_bb (gr_unittest.TestCase):
         tag3.offset = 6
         tag3.key = pmt.string_to_symbol(tagname)
         tag3.value = pmt.from_long(4)
-        src = gr.vector_source_b(data, False, 1, (tag1, tag2, tag3))
+        src = blocks.vector_source_b(data, False, 1, (tag1, tag2, tag3))
         formatter_object = digital.packet_header_default(12, tagname)
         header = digital.packet_headergenerator_bb(formatter_object.formatter())
-        sink = gr.vector_sink_b()
+        sink = blocks.vector_sink_b()
         self.tb.connect(src, header, sink)
         self.tb.run()
         expected_data = (
@@ -137,12 +138,12 @@ class qa_packet_headergenerator_bb (gr_unittest.TestCase):
         tag3.offset = 6
         tag3.key = pmt.string_to_symbol(tagname)
         tag3.value = pmt.from_long(4)
-        src = gr.vector_source_b(data, False, 1, (tag1, tag2, tag3))
+        src = blocks.vector_source_b(data, False, 1, (tag1, tag2, tag3))
         formatter_object = digital.packet_header_ofdm(occupied_carriers, 1, tagname)
         self.assertEqual(formatter_object.header_len(), 6)
         self.assertEqual(pmt.symbol_to_string(formatter_object.len_tag_key()), tagname)
         header = digital.packet_headergenerator_bb(formatter_object.formatter())
-        sink = gr.vector_sink_b()
+        sink = blocks.vector_sink_b()
         self.tb.connect(src, header, sink)
         self.tb.run()
         expected_data = (

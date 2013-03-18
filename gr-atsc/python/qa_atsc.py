@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2004,2006,2007 Free Software Foundation, Inc.
+# Copyright 2004,2006,2007,2013 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -21,8 +21,7 @@
 #
 
 from gnuradio import gr, gr_unittest
-import atsc                    # qa code needs to run without being installed
-#from gnuradio import atsc
+import atsc_swig as atsc
 from atsc_utils import *
 import sys
 import blocks_swig as blocks
@@ -80,7 +79,7 @@ class vector_source_ts(gr.hier_block2):
             ts: MPEG transport stream. (sequence of ints in [0,255]; len(ts) % 188 == 0)
         """
 
-        src = gr.vector_source_b(pad_transport_stream(ts))
+        src = blocks.vector_source_b(pad_transport_stream(ts))
         s2v = blocks.stream_to_vector(gr.sizeof_char, atsc.sizeof_atsc_mpeg_packet)
 
 	gr.hier_block2.__init__(self, "vector_source_ts",
@@ -98,7 +97,7 @@ class vector_sink_ts(gr.hier_block2):
         """
 
         v2s = blocks.vector_to_stream(gr.sizeof_char, atsc.sizeof_atsc_mpeg_packet)
-        self.sink = gr.vector_sink_b()
+        self.sink = blocks.vector_sink_b()
 	gr.hier_block2.__init__(self, "vector_sink_ts",
 				v2s.input_signature(),
 				gr.io_signature(0, 0, 0))

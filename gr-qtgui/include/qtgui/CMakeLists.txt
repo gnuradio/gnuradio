@@ -21,19 +21,41 @@
 # Install the header files
 ########################################################################
 install(FILES
-    api.h
-    time_sink_c.h
-    time_sink_f.h
-    time_raster_sink_b.h
-    time_raster_sink_f.h
-    freq_sink_c.h
-    freq_sink_f.h
-    const_sink_c.h
-    waterfall_sink_c.h
-    waterfall_sink_f.h
-    sink_c.h
-    sink_f.h
-    utils.h
-    DESTINATION ${GR_INCLUDE_DIR}/gnuradio/qtgui
-    COMPONENT "qtgui_devel"
+  api.h
+  CMakeLists.txt
+  constellationdisplayform.h
+  ConstellationDisplayPlot.h
+  const_sink_c.h
+  displayform.h
+  DisplayPlot.h
+  form_menus.h
+  freqdisplayform.h
+  freq_sink_c.h
+  freq_sink_f.h
+  FrequencyDisplayPlot.h
+  plot_raster.h
+  plot_waterfall.h
+  qtgui_types.h
+  sink_c.h
+  sink_f.h
+  spectrumdisplayform.h
+  SpectrumGUIClass.h
+  spectrumUpdateEvents.h
+  timedisplayform.h
+  TimeDomainDisplayPlot.h
+  timerasterdisplayform.h
+  TimeRasterDisplayPlot.h
+  timeRasterGlobalData.h
+  time_raster_sink_b.h
+  time_raster_sink_f.h
+  time_sink_c.h
+  time_sink_f.h
+  utils.h
+  waterfalldisplayform.h
+  WaterfallDisplayPlot.h
+  waterfallGlobalData.h
+  waterfall_sink_c.h
+  waterfall_sink_f.h
+  DESTINATION ${GR_INCLUDE_DIR}/gnuradio/qtgui
+  COMPONENT "qtgui_devel"
 )

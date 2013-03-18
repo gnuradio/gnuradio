@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2006,2007,2009 Free Software Foundation, Inc.
+# Copyright 2006,2007,2009,2013 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -105,7 +105,7 @@ class app_top_block(gr.top_block):
 		freq = options.freq-(self.nchan-i)*25e3
 
 	    if (freq < 929.0e6 or freq > 932.0e6):
-                self.connect((self.bank, i), gr.null_sink(gr.sizeof_gr_complex))
+                self.connect((self.bank, i), blocks.null_sink(gr.sizeof_gr_complex))
 	    else:
             	self.connect((self.bank, i), pager.flex_demod(queue, freq, options.verbose, options.log))
                 if options.log:

@@ -49,8 +49,6 @@ GR_SET_GLOBAL(GNURADIO_CORE_INCLUDE_DIRS
     ${CMAKE_CURRENT_SOURCE_DIR}/src/lib/runtime
     ${CMAKE_CURRENT_BINARY_DIR}/src/lib/general
     ${CMAKE_CURRENT_SOURCE_DIR}/src/lib/general
-    ${CMAKE_CURRENT_BINARY_DIR}/src/lib/gengen
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/lib/gengen
     ${CMAKE_CURRENT_BINARY_DIR}/src/lib/filter
     ${CMAKE_CURRENT_SOURCE_DIR}/src/lib/filter
     ${CMAKE_CURRENT_SOURCE_DIR}/src/lib/missing

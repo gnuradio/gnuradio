@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2008,2010,2012 Free Software Foundation, Inc.
+# Copyright 2008,2010,2012,2013 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -20,7 +20,7 @@
 #
 
 from gnuradio import gr, gr_unittest
-import blocks_swig
+import blocks_swig as blocks
 import sys
 import random
 
@@ -35,15 +35,15 @@ class test_keep_m_in_n(gr_unittest.TestCase):
     def test_001(self):
         self.maxDiff = None;
         tb = gr.top_block()
-        src = gr.vector_source_b( range(0,100) )
+        src = blocks.vector_source_b( range(0,100) )
 
         # itemsize, M, N, offset
-        km2 = blocks_swig.keep_m_in_n( 1, 1, 2, 0 );
-        km3 = blocks_swig.keep_m_in_n( 1, 1, 3, 1 );
-        km7 = blocks_swig.keep_m_in_n( 1, 1, 7, 2 );
-        snk2 = gr.vector_sink_b();
-        snk3 = gr.vector_sink_b();
-        snk7 = gr.vector_sink_b();
+        km2 = blocks.keep_m_in_n( 1, 1, 2, 0 );
+        km3 = blocks.keep_m_in_n( 1, 1, 3, 1 );
+        km7 = blocks.keep_m_in_n( 1, 1, 7, 2 );
+        snk2 = blocks.vector_sink_b();
+        snk3 = blocks.vector_sink_b();
+        snk7 = blocks.vector_sink_b();
         tb.connect(src,km2,snk2);
         tb.connect(src,km3,snk3);
         tb.connect(src,km7,snk7);

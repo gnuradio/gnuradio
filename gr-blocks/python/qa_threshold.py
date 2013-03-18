@@ -38,9 +38,9 @@ class test_threshold(gr_unittest.TestCase):
 
         expected_result = (0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 1, 1, 1)
 
-        src = gr.vector_source_f(data, False)
+        src = blocks.vector_source_f(data, False)
         op = blocks.threshold_ff(1, 1)
-        dst = gr.vector_sink_f()
+        dst = blocks.vector_sink_f()
 
         tb.connect(src, op)
         tb.connect(op, dst)

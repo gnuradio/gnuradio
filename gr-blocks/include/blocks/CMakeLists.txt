@@ -88,6 +88,9 @@ expand_h(sub_XX             ss ii ff cc)
 expand_h(xor_XX             bb ss ii)
 expand_h(packed_to_unpacked_XX bb ss ii)
 expand_h(unpacked_to_packed_XX bb ss ii)
+expand_h(vector_insert_X    b s i f c)
+expand_h(vector_sink_X      b s i f c)
+expand_h(vector_source_X    b s i f c)
 
 add_custom_target(blocks_generated_includes DEPENDS
     ${generated_includes}
@@ -106,10 +109,14 @@ install(FILES
     fxpt_nco.h
     fxpt_vco.h
     log2_const.h
+    rotator.h
     nco.h
     vco.h
     wavfile.h
     add_ff.h
+    annotator_1to1.h
+    annotator_alltoall.h
+    annotator_raw.h
     bin_statistics_f.h
     burst_tagger.h
     char_to_float.h
@@ -122,8 +129,10 @@ install(FILES
     complex_to_mag_squared.h
     complex_to_arg.h
     conjugate_cc.h
+    copy.h
     deinterleave.h
     delay.h
+    endian_swap.h
     file_source.h
     file_meta_sink.h
     file_meta_source.h
@@ -132,6 +141,7 @@ install(FILES
     float_to_int.h
     float_to_short.h
     float_to_uchar.h
+    head.h
     int_to_float.h
     interleave.h
     interleaved_short_to_complex.h
@@ -148,6 +158,9 @@ install(FILES
     multiply_const_cc.h
     multiply_const_ff.h
     nlog10_ff.h
+    nop.h
+    null_sink.h
+    null_source.h
     pack_k_bits_bb.h
     patterned_interleaver.h
     pdu.h
@@ -162,6 +175,7 @@ install(FILES
     rms_ff.h
     short_to_char.h
     short_to_float.h
+    skiphead.h
     socket_pdu.h
     stream_mux.h
     stream_to_streams.h
@@ -182,6 +196,7 @@ install(FILES
     udp_source.h
     unpack_k_bits_bb.h
     vco_f.h
+    vector_map.h
     vector_to_stream.h
     vector_to_streams.h
     wavfile_sink.h
@@ -189,3 +204,12 @@ install(FILES
     DESTINATION ${GR_INCLUDE_DIR}/gnuradio/blocks
     COMPONENT "blocks_devel"
 )
+
+if(ENABLE_GR_CTRLPORT)
+install(FILES
+  ctrlport_probe_c.h
+  ctrlport_probe2_c.h
+  DESTINATION ${GR_INCLUDE_DIR}/gnuradio/blocks
+  COMPONENT "blocks_devel"
+)
+endif(ENABLE_GR_CTRLPORT)

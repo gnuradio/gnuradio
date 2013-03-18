@@ -30,7 +30,6 @@
 
 #include <filter/api.h>
 #include <gr_sync_decimator.h>
-#include <gr_rotator.h>
 
 namespace gr {
   namespace filter {

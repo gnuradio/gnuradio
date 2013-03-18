@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2007,2010,2012 Free Software Foundation, Inc.
+# Copyright 2007,2010,2012,2013 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -22,6 +22,7 @@
 
 from gnuradio import gr, gr_unittest
 import filter_swig as filter
+import blocks_swig as blocks
 import math
 
 def sig_source_f(samp_rate, freq, amp, N):
@@ -50,9 +51,9 @@ class test_fractional_resampler(gr_unittest.TestCase):
 
         freq = 10
         data = sig_source_f(fs, freq, 1, N)
-        signal = gr.vector_source_f(data)
+        signal = blocks.vector_source_f(data)
         op = filter.fractional_interpolator_ff(0, rrate)
-        snk = gr.vector_sink_f()
+        snk = blocks.vector_sink_f()
 
         self.tb.connect(signal, op, snk)
         self.tb.run() 
@@ -76,9 +77,9 @@ class test_fractional_resampler(gr_unittest.TestCase):
 
         freq = 10
         data = sig_source_c(fs, freq, 1, N)
-        signal = gr.vector_source_c(data)
+        signal = blocks.vector_source_c(data)
         op = filter.fractional_interpolator_cc(0.0, rrate)
-        snk = gr.vector_sink_c()
+        snk = blocks.vector_sink_c()
 
         self.tb.connect(signal, op, snk)
         self.tb.run() 

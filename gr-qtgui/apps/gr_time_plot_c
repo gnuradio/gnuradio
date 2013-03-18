@@ -21,6 +21,7 @@
 #
 
 from gnuradio import gr
+from gnuradio import blocks
 import scipy
 
 try:
@@ -45,7 +46,7 @@ class plot_time_c(plot_base.plot_base):
                                      auto_scale)
         self.read_samples = plot_base.read_samples_c
         self.dsize = gr.sizeof_gr_complex
-        self.src_type = gr.vector_source_c
+        self.src_type = blocks.vector_source_c
         self.gui_snk = qtgui.time_sink_c(self._nsamps, self._samp_rate,
                                          "GNU Radio Time Plot", self._nsigs)
         self._nsigs *= 2 # complex plots have real/imag

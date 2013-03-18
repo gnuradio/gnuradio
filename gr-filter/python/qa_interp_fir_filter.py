@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2004,2007,2010,2012 Free Software Foundation, Inc.
+# Copyright 2004,2007,2010,2012,2013 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -22,6 +22,7 @@
 
 from gnuradio import gr, gr_unittest
 import filter_swig as filter
+import blocks_swig as blocks
 import math
 
 class test_interp_fir_filter(gr_unittest.TestCase):
@@ -45,9 +46,9 @@ class test_interp_fir_filter(gr_unittest.TestCase):
               1300,13017,130170)
         expected_result = tuple([float(x) for x in xr])
 
-        src = gr.vector_source_f(src_data)
+        src = blocks.vector_source_f(src_data)
         op = filter.interp_fir_filter_fff(interpolation, taps)
-        dst = gr.vector_sink_f()
+        dst = blocks.vector_sink_f()
         self.tb.connect(src, op)
         self.tb.connect(op, dst)
         self.tb.run()

@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2012 Free Software Foundation, Inc.
+# Copyright 2012,2013 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -56,13 +56,13 @@ class test_pfb_decimator(gr_unittest.TestCase):
         for i in xrange(len(freqs)):
             f = freqs[i] + (M/2-M+i+1)*fs
             data = sig_source_c(ifs, f, 1, N)
-            signals.append(gr.vector_source_c(data))
+            signals.append(blocks.vector_source_c(data))
             self.tb.connect(signals[i], (add,i))
 
-        head = gr.head(gr.sizeof_gr_complex, N)
+        head = blocks.head(gr.sizeof_gr_complex, N)
         s2ss = blocks.stream_to_streams(gr.sizeof_gr_complex, M)
         pfb = filter.pfb_decimator_ccf(M, taps, channel)
-        snk = gr.vector_sink_c()
+        snk = blocks.vector_sink_c()
 
         self.tb.connect(add, head, s2ss)
         for i in xrange(M):
@@ -102,12 +102,12 @@ class test_pfb_decimator(gr_unittest.TestCase):
         for i in xrange(len(freqs)):
             f = freqs[i] + (M/2-M+i+1)*fs
             data = sig_source_c(ifs, f, 1, N)
-            signals.append(gr.vector_source_c(data))
+            signals.append(blocks.vector_source_c(data))
             self.tb.connect(signals[i], (add,i))
 
         s2ss = blocks.stream_to_streams(gr.sizeof_gr_complex, M)
         pfb = filter.pfb_decimator_ccf(M, taps, channel)
-        snk = gr.vector_sink_c()
+        snk = blocks.vector_sink_c()
 
         self.tb.connect(add, s2ss)
         for i in xrange(M):

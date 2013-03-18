@@ -17,7 +17,7 @@ except ImportError:
 def make_rx(tb,fo,fi,dimensionality,tot_constellation,K,interleaver,IT,Es,N0,type):
     metrics_in = trellis.metrics_f(fi.O(),dimensionality,tot_constellation,digital.TRELLIS_EUCLIDEAN) # data preprocessing to generate metrics for innner SISO
     scale = blocks.multiply_const_ff(1.0/N0)
-    gnd = gr.vector_source_f([0],True);
+    gnd = blocks.vector_source_f([0],True);
 
     inter=[]
     deinter=[]
@@ -64,7 +64,7 @@ def run_test (fo,fi,interleaver,Kb,bitspersymbol,K,channel,modulation,dimensiona
     random.seed(seed)
     for i in range(len(packet)):
         packet[i] = random.randint(0, 2**bitspersymbol - 1) # random symbols
-    src = gr.vector_source_s(packet,False)
+    src = blocks.vector_source_s(packet,False)
     enc_out = trellis.encoder_ss(fo,0) # initial state = 0
     inter = trellis.permutation(interleaver.K(),interleaver.INTER(),1,gr.sizeof_short)
     mod = digital.chunks_to_symbols_sf(modulation[1],modulation[0])
@@ -76,7 +76,7 @@ def run_test (fo,fi,interleaver,Kb,bitspersymbol,K,channel,modulation,dimensiona
 
     # RX
     (head,tail) = make_rx(tb,fo,fi,dimensionality,tot_constellation,K,interleaver,IT,Es,N0,trellis.TRELLIS_MIN_SUM)
-    dst = gr.vector_sink_s();
+    dst = blocks.vector_sink_s();
 
     tb.connect (src,enc_out,inter,mod)
     tb.connect (mod,isi,(add,0))

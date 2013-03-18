@@ -24,7 +24,6 @@
 #include <cppunit/XmlOutputter.h>
 
 #include <gr_unittests.h>
-#include <qa_runtime.h>
 #include <qa_general.h>
 
 // FIXME add atsc back in.
@@ -36,7 +35,6 @@ main (int argc, char **argv)
   std::ofstream xmlfile(get_unittest_path("gnuradio_core_all.xml").c_str());
   CppUnit::XmlOutputter *xmlout = new CppUnit::XmlOutputter(&runner.result(), xmlfile);
 
-  runner.addTest (qa_runtime::suite ());
   runner.addTest (qa_general::suite ());
   runner.setOutputter(xmlout);
 

@@ -19,12 +19,11 @@
  * Boston, MA 02110-1301, USA.
  */
 
-
 #ifndef INCLUDED_OFDM_FRAME_EQUALIZER_VCVC_H
 #define INCLUDED_OFDM_FRAME_EQUALIZER_VCVC_H
 
-#include <digital_ofdm_equalizer_base.h>
 #include <digital/api.h>
+#include <digital/ofdm_equalizer_base.h>
 #include <gr_tagged_stream_block.h>
 
 namespace gr {
@@ -50,7 +49,7 @@ namespace gr {
        *                                will be added to the first symbol as a tag
        */
       static sptr make(
-	   digital_ofdm_equalizer_base_sptr equalizer,
+	   ofdm_equalizer_base::sptr equalizer,
 	   const std::string &len_tag_key = "frame_len",
 	   bool propagate_channel_state=false
       );

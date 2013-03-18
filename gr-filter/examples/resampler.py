@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2009,2012 Free Software Foundation, Inc.
+# Copyright 2009,2012,2013 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -22,6 +22,7 @@
 
 from gnuradio import gr
 from gnuradio import filter
+from gnuradio import blocks
 import sys
 
 try:
@@ -54,7 +55,7 @@ class mytb(gr.top_block):
 
         self.src = analog.sig_source_c(fs_in, analog.GR_SIN_WAVE, fc, 1)
         #self.src = analog.noise_source_c(analog.GR_GAUSSIAN, 1)
-        self.head = gr.head(gr.sizeof_gr_complex, N)
+        self.head = blocks.head(gr.sizeof_gr_complex, N)
 
         # A resampler with our taps
         self.resamp_0 = filter.pfb.arb_resampler_ccf(rerate, taps,
@@ -67,9 +68,9 @@ class mytb(gr.top_block):
         # specify the out-of-band rejection (default=80).
         self.resamp_1 = filter.pfb.arb_resampler_ccf(rerate)
 
-        self.snk_in = gr.vector_sink_c()
-        self.snk_0 = gr.vector_sink_c()
-        self.snk_1 = gr.vector_sink_c()
+        self.snk_in = blocks.vector_sink_c()
+        self.snk_0 = blocks.vector_sink_c()
+        self.snk_1 = blocks.vector_sink_c()
 
         self.connect(self.src, self.head, self.snk_in)
         self.connect(self.head, self.resamp_0, self.snk_0)

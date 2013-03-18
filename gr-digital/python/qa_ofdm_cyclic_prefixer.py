@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2007,2010,2011 Free Software Foundation, Inc.
+# Copyright 2007,2010,2011,2013 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -24,6 +24,7 @@ from gnuradio import gr, gr_unittest
 try: import pmt
 except: from gruel import pmt
 import digital_swig as digital
+import blocks_swig as blocks
 
 class test_ofdm_cyclic_prefixer (gr_unittest.TestCase):
 
@@ -39,9 +40,9 @@ class test_ofdm_cyclic_prefixer (gr_unittest.TestCase):
         cp_len = 2
         expected_result = (6, 7, 0, 1, 2, 3, 4, 5, 6, 7,
                            6, 7, 0, 1, 2, 3, 4, 5, 6, 7)
-        src = gr.vector_source_c(range(fft_len) * 2, False, fft_len)
+        src = blocks.vector_source_c(range(fft_len) * 2, False, fft_len)
         cp = digital.ofdm_cyclic_prefixer(fft_len, fft_len + cp_len)
-        sink = gr.vector_sink_c()
+        sink = blocks.vector_sink_c()
         self.tb.connect(src, cp, sink)
         self.tb.run()
         self.assertEqual(sink.data(), expected_result)
@@ -53,9 +54,9 @@ class test_ofdm_cyclic_prefixer (gr_unittest.TestCase):
         rolloff = 2
         expected_result = (7.0/2,       8, 1, 2, 3, 4, 5, 6, 7, 8, # 1.0/2
                            7.0/2+1.0/2, 8, 1, 2, 3, 4, 5, 6, 7, 8)
-        src = gr.vector_source_c(range(1, fft_len+1) * 2, False, fft_len)
+        src = blocks.vector_source_c(range(1, fft_len+1) * 2, False, fft_len)
         cp = digital.ofdm_cyclic_prefixer(fft_len, fft_len + cp_len, rolloff)
-        sink = gr.vector_sink_c()
+        sink = blocks.vector_sink_c()
         self.tb.connect(src, cp, sink)
         self.tb.run()
         self.assertEqual(sink.data(), expected_result)
@@ -75,9 +76,9 @@ class test_ofdm_cyclic_prefixer (gr_unittest.TestCase):
         tag2.offset = 1
         tag2.key = pmt.string_to_symbol("random_tag")
         tag2.value = pmt.from_long(42)
-        src = gr.vector_source_c(range(1, fft_len+1) * 2, False, fft_len, (tag, tag2))
+        src = blocks.vector_source_c(range(1, fft_len+1) * 2, False, fft_len, (tag, tag2))
         cp = digital.ofdm_cyclic_prefixer(fft_len, fft_len + cp_len, 2, tag_name)
-        sink = gr.vector_sink_c()
+        sink = blocks.vector_sink_c()
         self.tb.connect(src, cp, sink)
         self.tb.run()
         self.assertEqual(sink.data(), expected_result)

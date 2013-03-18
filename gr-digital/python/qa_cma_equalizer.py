@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2006,2007,2010,2011 Free Software Foundation, Inc.
+# Copyright 2006,2007,2010,2011,2013 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -22,6 +22,7 @@
 
 from gnuradio import gr, gr_unittest
 import digital_swig as digital
+import blocks_swig as blocks
 
 class test_cma_equalizer_fir(gr_unittest.TestCase):
 
@@ -32,9 +33,9 @@ class test_cma_equalizer_fir(gr_unittest.TestCase):
     	self.tb = None
     	
     def transform(self, src_data):
-	SRC = gr.vector_source_c(src_data, False)
+	SRC = blocks.vector_source_c(src_data, False)
 	EQU = digital.cma_equalizer_cc(4, 1.0, .001, 1)
-	DST = gr.vector_sink_c()
+	DST = blocks.vector_sink_c()
 	self.tb.connect(SRC, EQU, DST)
 	self.tb.run()
 	return DST.data()

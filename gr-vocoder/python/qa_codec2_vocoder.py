@@ -21,7 +21,8 @@
 #
 
 from gnuradio import gr, gr_unittest
-from vocoder_swig import *
+import vocoder_swig as vocoder
+import blocks_swig as blocks
 
 class test_codec2_vocoder (gr_unittest.TestCase):
 
@@ -45,10 +46,10 @@ class test_codec2_vocoder (gr_unittest.TestCase):
                          31,-82,-98,-51,6,93,104,44,-5,-84,-107,-44,45,102,104,
                          15,-47,-107,-126,-87,-11,89,93,13,-95,-136,-187,-70,
                          -167,216,-70,-103,175,-284,-486)
-        src = gr.vector_source_s(data)
-        enc = codec2_encode_sp()
-        dec = codec2_decode_ps()
-        snk = gr.vector_sink_s()
+        src = blocks.vector_source_s(data)
+        enc = vocoder.codec2_encode_sp()
+        dec = vocoder.codec2_decode_ps()
+        snk = blocks.vector_sink_s()
         self.tb.connect(src, enc, dec, snk)
         self.tb.run()
         actual_result = snk.data()

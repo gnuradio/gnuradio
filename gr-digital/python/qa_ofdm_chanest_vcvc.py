@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# Copyright 2012 Free Software Foundation, Inc.
+# Copyright 2012,2013 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -70,9 +70,9 @@ class qa_ofdm_sync_eqinit_vcvc (gr_unittest.TestCase):
         tag2.offset = 2
         tag2.key = pmt.string_to_symbol("test_tag_2")
         tag2.value = pmt.from_long(42)
-        src = gr.vector_source_c(tx_data, False, fft_len, (tag1, tag2))
+        src = blocks.vector_source_c(tx_data, False, fft_len, (tag1, tag2))
         chanest = digital.ofdm_chanest_vcvc(sync_symbol1, sync_symbol2, 1)
-        sink = gr.vector_sink_c(fft_len)
+        sink = blocks.vector_sink_c(fft_len)
         self.tb.connect(src, chanest, sink)
         self.tb.run()
         self.assertEqual(shift_tuple(sink.data(), -carr_offset), data_symbol)
@@ -104,10 +104,10 @@ class qa_ofdm_sync_eqinit_vcvc (gr_unittest.TestCase):
         data_symbol = (0, 0, 0, 1, -1, 1, -1,  1, 0, 1, -1, -1, -1, 1, 0, 0)
         tx_data = shift_tuple(sync_symbol, carr_offset) + \
                   shift_tuple(data_symbol, carr_offset)
-        src = gr.vector_source_c(tx_data, False, fft_len)
+        src = blocks.vector_source_c(tx_data, False, fft_len)
         # 17 is out of bounds!
         chanest = digital.ofdm_chanest_vcvc(sync_symbol, (), 1, 0, 17)
-        sink = gr.vector_sink_c(fft_len)
+        sink = blocks.vector_sink_c(fft_len)
         self.tb.connect(src, chanest, sink)
         self.tb.run()
         self.assertEqual(shift_tuple(sink.data(), -carr_offset), data_symbol)
@@ -126,10 +126,10 @@ class qa_ofdm_sync_eqinit_vcvc (gr_unittest.TestCase):
         data_symbol  = (0, 0, 0, 1, -1, 1, -1,  1, 0, 1, -1, -1, -1, 1, 0, 0)
         tx_data = sync_symbol1 + sync_symbol2 + data_symbol
         channel = (0, 0, 0, 2, -2, 2, 3j, 2, 0, 2, 2, 2, 2, 3, 0, 0)
-        src = gr.vector_source_c(tx_data, False, fft_len)
+        src = blocks.vector_source_c(tx_data, False, fft_len)
         chan = blocks.multiply_const_vcc(channel)
         chanest = digital.ofdm_chanest_vcvc(sync_symbol1, sync_symbol2, 1)
-        sink = gr.vector_sink_c(fft_len)
+        sink = blocks.vector_sink_c(fft_len)
         self.tb.connect(src, chan, chanest, sink)
         self.tb.run()
         tags = sink.tags()
@@ -149,10 +149,10 @@ class qa_ofdm_sync_eqinit_vcvc (gr_unittest.TestCase):
         data_symbol  = (0, 0, 0, 1, -1, 1, -1,  1, 0, 1, -1, -1, -1, 1, 0, 0)
         tx_data = sync_symbol + data_symbol
         channel = (0, 0, 0, 2, 2, 2, 2.5, 3, 2.5, 2, 2.5, 3, 2, 1, 1, 0)
-        src = gr.vector_source_c(tx_data, False, fft_len)
+        src = blocks.vector_source_c(tx_data, False, fft_len)
         chan = blocks.multiply_const_vcc(channel)
         chanest = digital.ofdm_chanest_vcvc(sync_symbol, (), 1)
-        sink = gr.vector_sink_c(fft_len)
+        sink = blocks.vector_sink_c(fft_len)
         self.tb.connect(src, chan, chanest, sink)
         self.tb.run()
         tags = sink.tags()
@@ -172,10 +172,10 @@ class qa_ofdm_sync_eqinit_vcvc (gr_unittest.TestCase):
         data_symbol = (0, 0, 0, 1, -1, 1, -1,  1, 0, 1, -1, -1, -1, 1, 0, 0)
         tx_data = sync_symbol + data_symbol
         channel = (0, 0, 0, 2, 2, 2, 2.5, 3, 2.5, 2, 2.5, 3, 2, 1, 1, 0)
-        src = gr.vector_source_c(tx_data, False, fft_len)
+        src = blocks.vector_source_c(tx_data, False, fft_len)
         chan = blocks.multiply_const_vcc(channel)
         chanest = digital.ofdm_chanest_vcvc(sync_symbol, ref_symbol, 1)
-        sink = gr.vector_sink_c(fft_len)
+        sink = blocks.vector_sink_c(fft_len)
         self.tb.connect(src, chan, chanest, sink)
         self.tb.run()
         tags = sink.tags()
@@ -199,10 +199,10 @@ class qa_ofdm_sync_eqinit_vcvc (gr_unittest.TestCase):
                   shift_tuple(sync_symbol2, carr_offset) + \
                   shift_tuple(data_symbol, carr_offset)
         channel = range(fft_len)
-        src = gr.vector_source_c(tx_data, False, fft_len)
+        src = blocks.vector_source_c(tx_data, False, fft_len)
         chan = blocks.multiply_const_vcc(channel)
         chanest = digital.ofdm_chanest_vcvc(sync_symbol1, sync_symbol2, 1)
-        sink = gr.vector_sink_c(fft_len)
+        sink = blocks.vector_sink_c(fft_len)
         self.tb.connect(src, chan, chanest, sink)
         self.tb.run()
         tags = sink.tags()
@@ -236,12 +236,12 @@ class qa_ofdm_sync_eqinit_vcvc (gr_unittest.TestCase):
                       shift_tuple(sync_sym2, carr_offset) + \
                       shift_tuple(data_sym,  carr_offset)
             channel = [rand_range(min_chan_ampl, max_chan_ampl) * numpy.exp(1j * rand_range(0, 2 * numpy.pi)) for x in range(fft_len)]
-            src = gr.vector_source_c(tx_data, False, fft_len)
+            src = blocks.vector_source_c(tx_data, False, fft_len)
             chan = blocks.multiply_const_vcc(channel)
             noise = analog.noise_source_c(analog.GR_GAUSSIAN, wgn_amplitude)
             add = blocks.add_cc(fft_len)
             chanest = digital.ofdm_chanest_vcvc(sync_sym1, sync_sym2, 1)
-            sink = gr.vector_sink_c(fft_len)
+            sink = blocks.vector_sink_c(fft_len)
             top_block.connect(src, chan, (add, 0), chanest, sink)
             top_block.connect(noise, blocks.stream_to_vector(gr.sizeof_gr_complex, fft_len), (add, 1))
             top_block.run()

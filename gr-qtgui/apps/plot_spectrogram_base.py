@@ -72,7 +72,7 @@ class plot_base(gr.top_block):
         self.qapp = QtGui.QApplication(sys.argv)
 
     def setup(self):
-        self.skip = gr.skiphead(self.dsize, self._start)
+        self.skip = blocks.skiphead(self.dsize, self._start)
 
         n = 0
         self.srcs = list()

@@ -37,6 +37,7 @@ class GRMTemplate(Cheetah.Template.Template):
                 'decimator': 'gr_sync_decimator',
                 'interpolator': 'gr_sync_interpolator',
                 'general': 'gr_block',
+                'tagged_stream': 'gr_tagged_stream_block',
                 'hier': 'gr_hier_block2',
                 'noblock': ''}
         searchList['str_to_fancyc_comment'] = str_to_fancyc_comment

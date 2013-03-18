@@ -522,10 +522,10 @@
   <tabstop>WaterfallMinimumIntensitySlider</tabstop>
  </tabstops>
  <includes>
-  <include location="global">SpectrumGUIClass.h</include>
-  <include location="global">FrequencyDisplayPlot.h</include>
-  <include location="global">WaterfallDisplayPlot.h</include>
-  <include location="global">TimeDomainDisplayPlot.h</include>
+  <include location="global">qtgui/SpectrumGUIClass.h</include>
+  <include location="global">qtgui/FrequencyDisplayPlot.h</include>
+  <include location="global">qtgui/WaterfallDisplayPlot.h</include>
+  <include location="global">qtgui/TimeDomainDisplayPlot.h</include>
   <include location="global">qvalidator.h</include>
   <include location="global">vector</include>
   <include location="local">qwt_slider.h</include>

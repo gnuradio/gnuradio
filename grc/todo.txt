@@ -12,11 +12,6 @@
 * packet mod: whitening offset
 * wx min window size in options block
 * gr_adaptive_fir_ccf
-* ofdm
-  * gr_ofdm_bpsk_demapper
-  * gr_ofdm_demapper_vcb
-  * gr_ofdm_frame_sink
-  * gr_ofdm_mapper_bcv
 * size params for the graphical sinks
 * callbacks for set average on fft, waterfall, number sinks
 * add units to params: Sps, Hz, dB...

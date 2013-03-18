@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# Copyright 2012 Free Software Foundation, Inc.
+# Copyright 2012,2013 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -23,6 +23,7 @@ from gnuradio import gr, gr_unittest
 try: import pmt
 except: from gruel import pmt
 import digital_swig as digital
+import blocks_swig as blocks
 
 class qa_digital_carrier_allocator_cvc (gr_unittest.TestCase):
 
@@ -47,13 +48,13 @@ class qa_digital_carrier_allocator_cvc (gr_unittest.TestCase):
         tag.offset = 0
         tag.key = pmt.string_to_symbol(tag_name)
         tag.value = pmt.from_long(len(tx_symbols))
-        src = gr.vector_source_c(tx_symbols, False, 1, (tag,))
+        src = blocks.vector_source_c(tx_symbols, False, 1, (tag,))
         alloc = digital.ofdm_carrier_allocator_cvc(fft_len,
                        occupied_carriers,
                        pilot_carriers,
                        pilot_symbols,
                        tag_name)
-        sink = gr.vector_sink_c(fft_len)
+        sink = blocks.vector_sink_c(fft_len)
         self.tb.connect(src, alloc, sink)
         self.tb.run ()
         self.assertEqual(sink.data(), expected_result)
@@ -73,13 +74,13 @@ class qa_digital_carrier_allocator_cvc (gr_unittest.TestCase):
         tag.offset = 0
         tag.key = pmt.string_to_symbol(tag_name)
         tag.value = pmt.from_long(len(tx_symbols))
-        src = gr.vector_source_c(tx_symbols, False, 1, (tag,))
+        src = blocks.vector_source_c(tx_symbols, False, 1, (tag,))
         alloc = digital.ofdm_carrier_allocator_cvc(fft_len,
                        occupied_carriers,
                        pilot_carriers,
                        pilot_symbols,
                        tag_name)
-        sink = gr.vector_sink_c(fft_len)
+        sink = blocks.vector_sink_c(fft_len)
         self.tb.connect(src, alloc, sink)
         self.tb.run ()
         self.assertEqual(sink.data(), expected_result)
@@ -126,13 +127,14 @@ class qa_digital_carrier_allocator_cvc (gr_unittest.TestCase):
         testtag4.offset = 2*len(tx_symbols)-1 # Last OFDM symbol of packet 2
         testtag4.key = pmt.string_to_symbol('tag4')
         testtag4.value = pmt.from_long(0)
-        src = gr.vector_source_c(tx_symbols * 2, False, 1, (tag1, tag2, testtag1, testtag2, testtag3, testtag4))
+        src = blocks.vector_source_c(tx_symbols * 2, False, 1, 
+                                     (tag1, tag2, testtag1, testtag2, testtag3, testtag4))
         alloc = digital.ofdm_carrier_allocator_cvc(fft_len,
                        occupied_carriers,
                        pilot_carriers,
                        pilot_symbols,
                        tag_name)
-        sink = gr.vector_sink_c(fft_len)
+        sink = blocks.vector_sink_c(fft_len)
         self.tb.connect(src, alloc, sink)
         self.tb.run ()
         self.assertEqual(sink.data(), expected_result * 2)

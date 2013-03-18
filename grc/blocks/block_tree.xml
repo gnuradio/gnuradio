@@ -8,31 +8,19 @@
 	<name></name> <!-- Blank for Root Name -->
 	<cat>
 		<name>Sources</name>
-		<block>gr_vector_source_x</block>
 		<block>random_source_x</block>
-		<block>gr_null_source</block>
 		<block>blks2_tcp_source</block>
 		<block>pad_source</block>
 		<block>virtual_source</block>
 	</cat>
 	<cat>
 		<name>Sinks</name>
-		<block>gr_vector_sink_x</block>
-		<block>gr_null_sink</block>
 		<block>blks2_tcp_sink</block>
 		<block>pad_sink</block>
 		<block>virtual_sink</block>
 	</cat>
 	<cat>
-		<name>Operators</name>
-		<block>gr_vector_insert_x</block>
-                <block>gr_endian_swap</block>
-	</cat>
-	<cat>
 		<name>Synchronizers</name>
-
-		<block>gr_mpsk_sync_cc</block>
-
 		<block>blks2_packet_decoder</block>
 		<block>blks2_packet_encoder</block>
 	</cat>
@@ -57,13 +45,6 @@
 		<block>blks2_selector</block>
 		<block>blks2_valve</block>
 		<block>blks2_error_rate</block>
-
-		<block>gr_head</block>
-		<block>gr_skiphead</block>
-
-		<block>gr_kludge_copy</block>
-		<block>gr_copy</block>
-		<block>gr_nop</block>
 
 		<block>xmlrpc_server</block>
 		<block>xmlrpc_client</block>

@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2011,2012 Free Software Foundation, Inc.
+# Copyright 2011-2013 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -22,6 +22,7 @@
 
 from gnuradio import gr, gr_unittest
 import filter_swig as filter
+import blocks_swig as blocks
 
 class test_dc_blocker(gr_unittest.TestCase):
 
@@ -38,9 +39,9 @@ class test_dc_blocker(gr_unittest.TestCase):
                            (0.979156494140625+0j), (-0.02081298828125+0j),
                            (-0.02072429656982422+0j))
 
-        src = gr.vector_source_c(src_data)
+        src = blocks.vector_source_c(src_data)
         op = filter.dc_blocker_cc(32, True)
-        dst = gr.vector_sink_c()
+        dst = blocks.vector_sink_c()
 
         self.tb.connect (src, op, dst)
         self.tb.run()
@@ -56,9 +57,9 @@ class test_dc_blocker(gr_unittest.TestCase):
                            (0.96875+0j), (-0.0302734375+0j),
                            (-0.029296875+0j))
 
-        src = gr.vector_source_c(src_data)
+        src = blocks.vector_source_c(src_data)
         op = filter.dc_blocker_cc(32, False)
-        dst = gr.vector_sink_c()
+        dst = blocks.vector_sink_c()
 
         self.tb.connect (src, op, dst)
         self.tb.run()
@@ -75,9 +76,9 @@ class test_dc_blocker(gr_unittest.TestCase):
                            (0.979156494140625), (-0.02081298828125),
                            (-0.02072429656982422))
 
-        src = gr.vector_source_f(src_data)
+        src = blocks.vector_source_f(src_data)
         op = filter.dc_blocker_ff(32, True)
-        dst = gr.vector_sink_f()
+        dst = blocks.vector_sink_f()
 
         self.tb.connect (src, op, dst)
         self.tb.run()
@@ -93,9 +94,9 @@ class test_dc_blocker(gr_unittest.TestCase):
                            (0.96875), (-0.0302734375),
                            (-0.029296875))
 
-        src = gr.vector_source_f(src_data)
+        src = blocks.vector_source_f(src_data)
         op = filter.dc_blocker_ff(32, False)
-        dst = gr.vector_sink_f()
+        dst = blocks.vector_sink_f()
 
         self.tb.connect (src, op, dst)
         self.tb.run()

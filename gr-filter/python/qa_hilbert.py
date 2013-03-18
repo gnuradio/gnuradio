@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2004,2007,2010,2012 Free Software Foundation, Inc.
+# Copyright 2004,2007,2010,2012,2013 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -22,6 +22,7 @@
 
 from gnuradio import gr, gr_unittest
 import filter_swig as filter
+import blocks_swig as blocks
 import math
 
 def sig_source_f(samp_rate, freq, amp, N):
@@ -107,10 +108,10 @@ class test_hilbert(gr_unittest.TestCase):
         
         N = int(ntaps + sampling_freq * 0.10)
         data = sig_source_f(sampling_freq, sampling_freq * 0.10, 1.0, N)
-        src1 = gr.vector_source_f(data)
+        src1 = blocks.vector_source_f(data)
 
         hilb = filter.hilbert_fc(ntaps)
-        dst1 = gr.vector_sink_c()
+        dst1 = blocks.vector_sink_c()
         tb.connect(src1, hilb)
         tb.connect(hilb, dst1)
         tb.run()

@@ -45,7 +45,7 @@ class test_udp_sink_source(gr_unittest.TestCase):
         n_data = 16
         src_data = [x for x in range(n_data)]
         expected_result = tuple(src_data)
-        src = gr.vector_source_s(src_data, False)
+        src = blocks.vector_source_s(src_data, False)
         udp_snd = blocks.udp_sink(gr.sizeof_short, 'localhost', port)
         self.tb_snd.connect(src, udp_snd)
 
@@ -62,12 +62,12 @@ class test_udp_sink_source(gr_unittest.TestCase):
         n_data = 100
         src_data = [float(x) for x in range(n_data)]
         expected_result = tuple(src_data)
-        src = gr.vector_source_f(src_data, False)
+        src = blocks.vector_source_f(src_data, False)
         udp_snd = blocks.udp_sink(gr.sizeof_float, 'localhost', port)
         self.tb_snd.connect(src, udp_snd)
 
         udp_rcv = blocks.udp_source(gr.sizeof_float, 'localhost', port)
-        dst = gr.vector_sink_f()
+        dst = blocks.vector_sink_f()
         self.tb_rcv.connect(udp_rcv, dst)
 
         self.tb_rcv.start()
@@ -93,8 +93,8 @@ class test_udp_sink_source(gr_unittest.TestCase):
         n_data = 16
         src_data = [float(x) for x in range(n_data)]
         expected_result = tuple(src_data)
-        src = gr.vector_source_f(src_data)
-        dst = gr.vector_sink_f()
+        src = blocks.vector_source_f(src_data)
+        dst = blocks.vector_sink_f()
 
         self.tb_snd.connect(src, udp_snd)
         self.tb_rcv.connect(udp_rcv, dst)

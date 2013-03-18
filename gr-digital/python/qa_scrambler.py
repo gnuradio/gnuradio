@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2008,2010,2012 Free Software Foundation, Inc.
+# Copyright 2008,2010,2012,2013 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -22,6 +22,7 @@
 
 from gnuradio import gr, gr_unittest
 import digital_swig as digital
+import blocks_swig as blocks
 
 class test_scrambler(gr_unittest.TestCase):
 
@@ -33,30 +34,30 @@ class test_scrambler(gr_unittest.TestCase):
 
     def test_scrambler_descrambler(self):
         src_data = (1,)*1000
-        src = gr.vector_source_b(src_data, False)
+        src = blocks.vector_source_b(src_data, False)
         scrambler = digital.scrambler_bb(0x8a, 0x7F, 7)     # CCSDS 7-bit scrambler
         descrambler = digital.descrambler_bb(0x8a, 0x7F, 7)
-        dst = gr.vector_sink_b()
+        dst = blocks.vector_sink_b()
         self.tb.connect(src, scrambler, descrambler, dst)
         self.tb.run()
         self.assertEqual(tuple(src_data[:-8]), dst.data()[8:]) # skip garbage during synchronization
 
     def test_additive_scrambler(self):
         src_data = (1,)*1000
-        src = gr.vector_source_b(src_data, False)
+        src = blocks.vector_source_b(src_data, False)
         scrambler = digital.additive_scrambler_bb(0x8a, 0x7f, 7)
         descrambler = digital.additive_scrambler_bb(0x8a, 0x7f, 7)
-        dst = gr.vector_sink_b()
+        dst = blocks.vector_sink_b()
         self.tb.connect(src, scrambler, descrambler, dst)
         self.tb.run()
         self.assertEqual(src_data, dst.data())
 
     def test_additive_scrambler_reset(self):
         src_data = (1,)*1000
-        src = gr.vector_source_b(src_data, False)
+        src = blocks.vector_source_b(src_data, False)
         scrambler = digital.additive_scrambler_bb(0x8a, 0x7f, 7, 100)
         descrambler = digital.additive_scrambler_bb(0x8a, 0x7f, 7, 100)
-        dst = gr.vector_sink_b()
+        dst = blocks.vector_sink_b()
         self.tb.connect(src, scrambler, descrambler, dst)
         self.tb.run()
         self.assertEqual(src_data, dst.data())

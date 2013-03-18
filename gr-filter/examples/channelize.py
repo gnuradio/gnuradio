@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2009,2012 Free Software Foundation, Inc.
+# Copyright 2009,2012,2013 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -76,13 +76,13 @@ class pfb_top_block(gr.top_block):
             self.signals.append(analog.sig_source_c(self._ifs, analog.GR_SIN_WAVE, f, 1))
             self.connect(self.signals[i], (self.add,i))
 
-        self.head = gr.head(gr.sizeof_gr_complex, self._N)
+        self.head = blocks.head(gr.sizeof_gr_complex, self._N)
 
         # Construct the channelizer filter
         self.pfb = filter.pfb.channelizer_ccf(self._M, self._taps, 1)
 
         # Construct a vector sink for the input signal to the channelizer
-        self.snk_i = gr.vector_sink_c()
+        self.snk_i = blocks.vector_sink_c()
 
         # Connect the blocks
         self.connect(self.add, self.head, self.pfb)
@@ -94,7 +94,7 @@ class pfb_top_block(gr.top_block):
         # Create a vector sink for each of M output channels of the filter and connect it
         self.snks = list()
         for i in xrange(self._M):
-            self.snks.append(gr.vector_sink_c())
+            self.snks.append(blocks.vector_sink_c())
             self.connect((self.pfb, i), self.snks[i])
 
 

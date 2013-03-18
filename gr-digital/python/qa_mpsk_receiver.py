@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2011,2012 Free Software Foundation, Inc.
+# Copyright 2011-2013 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -23,6 +23,7 @@
 from gnuradio import gr, gr_unittest
 import digital_swig as digital
 import filter_swig as filter
+import blocks_swig as blocks
 import random, cmath, time
 
 class test_mpsk_receiver(gr_unittest.TestCase):
@@ -53,8 +54,8 @@ class test_mpsk_receiver(gr_unittest.TestCase):
         
         data = 10000*[complex(1,0), complex(-1,0)]
         #data = [2*random.randint(0,1)-1 for x in xrange(10000)]
-        self.src = gr.vector_source_c(data, False)
-        self.snk = gr.vector_sink_c()
+        self.src = blocks.vector_source_c(data, False)
+        self.snk = blocks.vector_sink_c()
 
         # pulse shaping interpolation filter
         nfilts = 32
@@ -109,8 +110,8 @@ class test_mpsk_receiver(gr_unittest.TestCase):
                      complex(-0.707, -0.707), 
                      complex( 0.707, -0.707)]
         data = [0.5*d for d in data]
-        self.src = gr.vector_source_c(data, False)
-        self.snk = gr.vector_sink_c()
+        self.src = blocks.vector_source_c(data, False)
+        self.snk = blocks.vector_sink_c()
 
         # pulse shaping interpolation filter
         nfilts = 32

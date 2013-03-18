@@ -140,7 +140,6 @@ list(APPEND analog_sources
     quadrature_demod_cf_impl.cc
     rail_ff_impl.cc
     simple_squelch_cc_impl.cc
-    sincos.cc
 )
 
 #Add Windows DLL resource file if using MSVC
@@ -184,7 +183,6 @@ if(ENABLE_TESTING)
   list(APPEND test_gr_analog_sources
     ${CMAKE_CURRENT_SOURCE_DIR}/test_gr_analog.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/qa_analog.cc
-    ${CMAKE_CURRENT_SOURCE_DIR}/qa_sincos.cc
     )
 
   add_executable(test-gr-analog ${test_gr_analog_sources})
@@ -201,11 +199,3 @@ if(ENABLE_TESTING)
 
   GR_ADD_TEST(test_gr_analog test-gr-analog)
 endif(ENABLE_TESTING)
-
-CHECK_CXX_SOURCE_COMPILES("
-    #define _GNU_SOURCE
-    #include <math.h>
-    int main(){double x, sin, cos; sincos(x, &sin, &cos); return 0;}
-    " HAVE_SINCOS
-)
-GR_ADD_COND_DEF(HAVE_SINCOS)

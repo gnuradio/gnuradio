@@ -120,7 +120,7 @@ class test_bin_statistics(gr_unittest.TestCase):
                                     13, 14, 15, 16
                                     )])
 
-        src = gr.vector_source_f(src_data, False)
+        src = blocks.vector_source_f(src_data, False)
         s2v = blocks.stream_to_vector(gr.sizeof_float, vlen)
         stats = blocks.bin_statistics_f(vlen, msgq, tune, tune_delay, dwell_delay)
         self.tb.connect(src, s2v, stats)
@@ -148,7 +148,7 @@ class test_bin_statistics(gr_unittest.TestCase):
         expected_results = tuple([float(x) for x in
                                   ( 9, 10, 11, 12)])
 
-        src = gr.vector_source_f(src_data, False)
+        src = blocks.vector_source_f(src_data, False)
         s2v = blocks.stream_to_vector(gr.sizeof_float, vlen)
         stats = blocks.bin_statistics_f(vlen, msgq, tune, tune_delay, dwell_delay)
         self.tb.connect(src, s2v, stats)
@@ -178,7 +178,7 @@ class test_bin_statistics(gr_unittest.TestCase):
         expected_results = tuple([float(x) for x in
                                   ( 9, 10, 11, 12)])
 
-        src = gr.vector_source_f(src_data, False)
+        src = blocks.vector_source_f(src_data, False)
         s2v = blocks.stream_to_vector(gr.sizeof_float, vlen)
         stats = blocks.bin_statistics_f(vlen, msgq, tune, tune_delay, dwell_delay)
         self.tb.connect(src, s2v, stats)
@@ -210,7 +210,7 @@ class test_bin_statistics(gr_unittest.TestCase):
         expected_results = tuple([float(x) for x in
                                   ( 9, 10, 11, 12)])
 
-        src = gr.vector_source_f(src_data, False)
+        src = blocks.vector_source_f(src_data, False)
         s2v = blocks.stream_to_vector(gr.sizeof_float, vlen)
         stats = blocks.bin_statistics_f(vlen, msgq, tune, tune_delay, dwell_delay)
         self.tb.connect(src, s2v, stats)

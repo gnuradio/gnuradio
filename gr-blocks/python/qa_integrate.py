@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2008,2010 Free Software Foundation, Inc.
+# Copyright 2008,2010,2013 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -21,7 +21,7 @@
 #
 
 from gnuradio import gr, gr_unittest
-import blocks_swig
+import blocks_swig as blocks
 import math
 
 class test_integrate (gr_unittest.TestCase):
@@ -35,9 +35,9 @@ class test_integrate (gr_unittest.TestCase):
     def test_000_ss(self):
 	src_data = (1, 2, 3, 4, 5, 6)
 	dst_data = (6, 15)
-	src = gr.vector_source_s(src_data)
-	itg = blocks_swig.integrate_ss(3)
-	dst = gr.vector_sink_s()
+	src = blocks.vector_source_s(src_data)
+	itg = blocks.integrate_ss(3)
+	dst = blocks.vector_sink_s()
 	self.tb.connect(src, itg, dst)
 	self.tb.run()
 	self.assertEqual(dst_data, dst.data())
@@ -45,9 +45,9 @@ class test_integrate (gr_unittest.TestCase):
     def test_001_ii(self):
 	src_data = (1, 2, 3, 4, 5, 6)
 	dst_data = (6, 15)
-	src = gr.vector_source_i(src_data)
-	itg = blocks_swig.integrate_ii(3)
-	dst = gr.vector_sink_i()
+	src = blocks.vector_source_i(src_data)
+	itg = blocks.integrate_ii(3)
+	dst = blocks.vector_sink_i()
 	self.tb.connect(src, itg, dst)
 	self.tb.run()
 	self.assertEqual(dst_data, dst.data())
@@ -55,9 +55,9 @@ class test_integrate (gr_unittest.TestCase):
     def test_002_ff(self):
 	src_data = [1.0, 2.0, 3.0, 4.0, 5.0, 6.0]
 	dst_data = [6.0, 15.0]
-	src = gr.vector_source_f(src_data)
-	itg = blocks_swig.integrate_ff(3)
-	dst = gr.vector_sink_f()
+	src = blocks.vector_source_f(src_data)
+	itg = blocks.integrate_ff(3)
+	dst = blocks.vector_sink_f()
 	self.tb.connect(src, itg, dst)
 	self.tb.run()
 	self.assertFloatTuplesAlmostEqual(dst_data, dst.data(), 6)
@@ -65,9 +65,9 @@ class test_integrate (gr_unittest.TestCase):
     def test_003_cc(self):
 	src_data = [1.0+1.0j, 2.0+2.0j, 3.0+3.0j, 4.0+4.0j, 5.0+5.0j, 6.0+6.0j]
 	dst_data = [6.0+6.0j, 15.0+15.0j]
-	src = gr.vector_source_c(src_data)
-	itg = blocks_swig.integrate_cc(3)
-	dst = gr.vector_sink_c()
+	src = blocks.vector_source_c(src_data)
+	itg = blocks.integrate_cc(3)
+	dst = blocks.vector_sink_c()
 	self.tb.connect(src, itg, dst)
 	self.tb.run()
 	self.assertComplexTuplesAlmostEqual(dst_data, dst.data(), 6)

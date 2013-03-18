@@ -84,10 +84,10 @@
     </param>
   </block>
   <block>
-    <key>gr_vector_source_x</key>
+    <key>blocks_vector_source_x</key>
     <param>
       <key>id</key>
-      <value>gr_vector_source_x_0</value>
+      <value>blocks_vector_source_x_0</value>
     </param>
     <param>
       <key>_enabled</key>
@@ -119,10 +119,10 @@
     </param>
   </block>
   <block>
-    <key>gr_head</key>
+    <key>blocks_head</key>
     <param>
       <key>id</key>
-      <value>gr_head_0</value>
+      <value>blocks_head_0</value>
     </param>
     <param>
       <key>_enabled</key>
@@ -205,13 +205,13 @@
     </param>
   </block>
   <connection>
-    <source_block_id>gr_vector_source_x_0</source_block_id>
-    <sink_block_id>gr_head_0</sink_block_id>
+    <source_block_id>blocks_vector_source_x_0</source_block_id>
+    <sink_block_id>blocks_head_0</sink_block_id>
     <source_key>0</source_key>
     <sink_key>0</sink_key>
   </connection>
   <connection>
-    <source_block_id>gr_head_0</source_block_id>
+    <source_block_id>blocks_head_0</source_block_id>
     <sink_block_id>blocks_file_meta_sink_0</sink_block_id>
     <source_key>0</source_key>
     <sink_key>0</sink_key>

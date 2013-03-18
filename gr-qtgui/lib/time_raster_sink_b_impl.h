@@ -28,7 +28,7 @@
 #include <fft/fft.h>
 #include <gruel/high_res_timer.h>
 #include <gruel/thread.h>
-#include <timerasterdisplayform.h>
+#include <qtgui/timerasterdisplayform.h>
 
 namespace gr {
   namespace qtgui {

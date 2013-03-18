@@ -23,7 +23,7 @@
 #include <cmath>
 #include <QColorDialog>
 #include <QMessageBox>
-#include <waterfalldisplayform.h>
+#include <qtgui/waterfalldisplayform.h>
 #include <iostream>
 
 WaterfallDisplayForm::WaterfallDisplayForm(int nplots, QWidget* parent)

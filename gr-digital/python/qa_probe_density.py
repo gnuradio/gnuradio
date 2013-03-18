@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2012 Free Software Foundation, Inc.
+# Copyright 2012,2013 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -22,6 +22,7 @@
 
 from gnuradio import gr, gr_unittest
 import digital_swig as digital
+import blocks_swig as blocks
 
 class test_probe_density(gr_unittest.TestCase):
 
@@ -34,7 +35,7 @@ class test_probe_density(gr_unittest.TestCase):
     def test_001(self):
         src_data = [0, 1, 0, 1]
         expected_data = 1
-        src = gr.vector_source_b(src_data)
+        src = blocks.vector_source_b(src_data)
         op = digital.probe_density_b(1)
         self.tb.connect(src, op)
         self.tb.run()
@@ -46,7 +47,7 @@ class test_probe_density(gr_unittest.TestCase):
     def test_002(self):
         src_data = [1, 1, 1, 1]
         expected_data = 1
-        src = gr.vector_source_b(src_data)
+        src = blocks.vector_source_b(src_data)
         op = digital.probe_density_b(0.01)
         self.tb.connect(src, op)
         self.tb.run()
@@ -57,7 +58,7 @@ class test_probe_density(gr_unittest.TestCase):
     def test_003(self):
         src_data = [0, 1, 0, 1, 0, 1, 0, 1, 0, 1]
         expected_data = 0.95243
-        src = gr.vector_source_b(src_data)
+        src = blocks.vector_source_b(src_data)
         op = digital.probe_density_b(0.01)
         self.tb.connect(src, op)
         self.tb.run()

@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2004,2007,2010,2012 Free Software Foundation, Inc.
+# Copyright 2004,2007,2010,2012,2013 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -22,6 +22,7 @@
 
 from gnuradio import gr, gr_unittest
 import filter_swig as filter
+import blocks_swig as blocks
 import math
 
 def sin_source_f(samp_rate, freq, amp, N):
@@ -114,8 +115,8 @@ class test_filter_delay_fc(gr_unittest.TestCase):
         ntaps = 51
         N = int(ntaps + sampling_freq * 0.10)
         data = sin_source_f(sampling_freq, sampling_freq * 0.10, 1.0, N)
-        src1 = gr.vector_source_f(data)
-        dst2 = gr.vector_sink_c()
+        src1 = blocks.vector_source_f(data)
+        dst2 = blocks.vector_sink_c()
 
         # calculate taps
         taps = filter.firdes_hilbert(ntaps)
@@ -205,8 +206,8 @@ class test_filter_delay_fc(gr_unittest.TestCase):
         ntaps = 51
         N = int(ntaps + sampling_freq * 0.10)
         data = sin_source_f(sampling_freq, sampling_freq * 0.10, 1.0, N)
-        src1 = gr.vector_source_f(data)
-        dst2 = gr.vector_sink_c()
+        src1 = blocks.vector_source_f(data)
+        dst2 = blocks.vector_sink_c()
 
         # calculate taps
         taps = filter.firdes_hilbert(ntaps)
@@ -298,13 +299,13 @@ class test_filter_delay_fc(gr_unittest.TestCase):
 
         data1 = sin_source_f(sampling_freq, sampling_freq * 0.10, 1.0, N)
         data2 = cos_source_f(sampling_freq, sampling_freq * 0.10, 1.0, N)
-        src1 = gr.vector_source_f(data1)
-        src2 = gr.vector_source_f(data2)
+        src1 = blocks.vector_source_f(data1)
+        src2 = blocks.vector_source_f(data2)
 
         taps = filter.firdes_hilbert(ntaps)
         hd = filter.filter_delay_fc(taps)
 
-        dst2 = gr.vector_sink_c()
+        dst2 = blocks.vector_sink_c()
 
         tb.connect(src1, (hd,0))
         tb.connect(src2, (hd,1))

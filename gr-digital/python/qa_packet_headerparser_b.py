@@ -43,7 +43,7 @@ class qa_packet_headerparser_b (gr_unittest.TestCase):
         )
         tagname = "packet_len"
 
-        src = gr.vector_source_b(expected_data)
+        src = blocks.vector_source_b(expected_data)
         parser = digital.packet_headerparser_b(32, tagname)
         sink = blocks.message_debug()
 

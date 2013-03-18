@@ -206,7 +206,7 @@ class GrDataPlotterC(GrDataPlotParent):
         return snk
 
     def get_vecsource(self):
-        return gr.vector_source_c([])
+        return blocks.vector_source_c([])
 
     def get_npts(self):
         self._npts = self.snk.nsamps()
@@ -237,7 +237,7 @@ class GrDataPlotterF(GrDataPlotParent):
         return snk
     
     def get_vecsource(self):
-        return gr.vector_source_f([])
+        return blocks.vector_source_f([])
 
     def get_npts(self):
         self._npts = self.snk.nsamps()
@@ -265,7 +265,7 @@ class GrDataPlotterConst(GrDataPlotParent):
         return snk
 
     def get_vecsource(self):
-        return gr.vector_source_c([])
+        return blocks.vector_source_c([])
 
     def get_npts(self):
         self._npts = self.snk.nsamps()
@@ -304,7 +304,7 @@ class GrDataPlotterPsdC(GrDataPlotParent):
         return snk
 
     def get_vecsource(self):
-        return gr.vector_source_c([])
+        return blocks.vector_source_c([])
 
     def get_npts(self):
         self._npts = self.snk.fft_size()
@@ -337,7 +337,7 @@ class GrDataPlotterPsdF(GrDataPlotParent):
         return snk
 
     def get_vecsource(self):
-        return gr.vector_source_f([])
+        return blocks.vector_source_f([])
 
     def get_npts(self):
         self._npts = self.snk.fft_size()
@@ -367,7 +367,7 @@ class GrTimeRasterF(GrDataPlotParent):
         return snk
 
     def get_vecsource(self):
-        return gr.vector_source_f([])
+        return blocks.vector_source_f([])
 
     def get_npts(self):
         self._npts = self.snk.num_cols()
@@ -396,7 +396,7 @@ class GrTimeRasterB(GrDataPlotParent):
         return snk
 
     def get_vecsource(self):
-        return gr.vector_source_b([])
+        return blocks.vector_source_b([])
 
     def get_npts(self):
         self._npts = self.snk.num_cols()

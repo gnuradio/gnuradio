@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2008,2010,2012 Free Software Foundation, Inc.
+# Copyright 2008,2010,2012,2013 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -21,7 +21,7 @@
 #
 
 from gnuradio import gr, gr_unittest
-import blocks_swig
+import blocks_swig as blocks
 import math
 
 class test_repeat (gr_unittest.TestCase):
@@ -38,9 +38,9 @@ class test_repeat (gr_unittest.TestCase):
 	for n in range(100):
 	    dst_data += [1.0*n, 1.0*n, 1.0*n]
 
-	src = gr.vector_source_f(src_data)
-	rpt = blocks_swig.repeat(gr.sizeof_float, 3)
-	dst = gr.vector_sink_f()
+	src = blocks.vector_source_f(src_data)
+	rpt = blocks.repeat(gr.sizeof_float, 3)
+	dst = blocks.vector_sink_f()
 	self.tb.connect(src, rpt, dst)
 	self.tb.run()
 	self.assertFloatTuplesAlmostEqual(dst_data, dst.data(), 6)

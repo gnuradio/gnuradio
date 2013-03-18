@@ -21,6 +21,7 @@
 #
 
 from gnuradio import gr
+from gnuradio import blocks
 import scipy
 
 try:
@@ -48,7 +49,7 @@ class plot_time_raster_f(plot_base.plot_base):
         self._ncols = ncols
         self.read_samples = plot_base.read_samples_f
         self.dsize = gr.sizeof_float
-        self.src_type = gr.vector_source_f
+        self.src_type = blocks.vector_source_f
         self.gui_snk = qtgui.time_raster_sink_f(self._samp_rate, self._nrows, self._ncols,
                                                 [], [], "GNU Radio Time Plot", self._nsigs)
         self.setup()

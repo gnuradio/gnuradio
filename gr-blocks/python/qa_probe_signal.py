@@ -36,7 +36,7 @@ class test_probe_signal(gr_unittest.TestCase):
         repeats = 100
         src_data = [value] * repeats
 
-        src = gr.vector_source_f(src_data)
+        src = blocks.vector_source_f(src_data)
         dst = blocks.probe_signal_f()
 
         self.tb.connect(src, dst)
@@ -50,7 +50,7 @@ class test_probe_signal(gr_unittest.TestCase):
         value = [0.5+i for i in range(0, vector_length)]
         src_data = value * repeats
 
-        src = gr.vector_source_f(src_data)
+        src = blocks.vector_source_f(src_data)
         s2v = blocks.stream_to_vector(gr.sizeof_float, vector_length)
         dst = blocks.probe_signal_vf(vector_length)
 

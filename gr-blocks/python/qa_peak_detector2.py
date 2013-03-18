@@ -41,9 +41,9 @@ class test_peak_detector2(gr_unittest.TestCase):
                            0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
 
 
-        src = gr.vector_source_f(data, False)
+        src = blocks.vector_source_f(data, False)
         regen = blocks.peak_detector2_fb()
-        dst = gr.vector_sink_b()
+        dst = blocks.vector_sink_b()
 
         tb.connect(src, regen)
         tb.connect(regen, dst)

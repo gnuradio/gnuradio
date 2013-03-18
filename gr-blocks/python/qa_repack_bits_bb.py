@@ -39,9 +39,9 @@ class qa_repack_bits_bb (gr_unittest.TestCase):
         expected_data = (0b1, 0b1, 0b1, 0b0, 0b0, 0b1)
         k = 2
         l = 1
-        src = gr.vector_source_b(src_data, False, 1)
+        src = blocks.vector_source_b(src_data, False, 1)
         repack = blocks.repack_bits_bb(k, l)
-        sink = gr.vector_sink_b()
+        sink = blocks.vector_sink_b()
         self.tb.connect(src, repack, sink)
         self.tb.run ()
         self.assertEqual(sink.data(), expected_data)
@@ -52,9 +52,9 @@ class qa_repack_bits_bb (gr_unittest.TestCase):
         expected_data = (0b101,) + (0b111,) * 7
         k = 8
         l = 3
-        src = gr.vector_source_b(src_data, False, 1)
+        src = blocks.vector_source_b(src_data, False, 1)
         repack = blocks.repack_bits_bb(k, l)
-        sink = gr.vector_sink_b()
+        sink = blocks.vector_sink_b()
         self.tb.connect(src, repack, sink)
         self.tb.run ()
         self.assertEqual(sink.data(), expected_data)
@@ -62,12 +62,12 @@ class qa_repack_bits_bb (gr_unittest.TestCase):
     def test_003_lots_of_bytes (self):
         """ Lots and lots of bytes, multiple packer stages """
         src_data = tuple([random.randint(0, 255) for x in range(3*5*7*8 * 10)])
-        src = gr.vector_source_b(src_data, False, 1)
+        src = blocks.vector_source_b(src_data, False, 1)
         repack1 = blocks.repack_bits_bb(8, 3)
         repack2 = blocks.repack_bits_bb(3, 5)
         repack3 = blocks.repack_bits_bb(5, 7)
         repack4 = blocks.repack_bits_bb(7, 8)
-        sink = gr.vector_sink_b()
+        sink = blocks.vector_sink_b()
         self.tb.connect(src, repack1, repack2, repack3, repack4, sink)
         self.tb.run ()
         self.assertEqual(sink.data(), src_data)
@@ -83,9 +83,9 @@ class qa_repack_bits_bb (gr_unittest.TestCase):
         tag.offset = 0
         tag.key = pmt.string_to_symbol(tag_name)
         tag.value = pmt.from_long(len(src_data))
-        src = gr.vector_source_b(src_data, False, 1, (tag,))
+        src = blocks.vector_source_b(src_data, False, 1, (tag,))
         repack = blocks.repack_bits_bb(k, l, tag_name)
-        sink = gr.vector_sink_b()
+        sink = blocks.vector_sink_b()
         self.tb.connect(src, repack, sink)
         self.tb.run ()
         self.assertEqual(sink.data(), expected_data)
@@ -108,9 +108,9 @@ class qa_repack_bits_bb (gr_unittest.TestCase):
         tag.offset = 0
         tag.key = pmt.string_to_symbol(tag_name)
         tag.value = pmt.from_long(len(src_data))
-        src = gr.vector_source_b(src_data, False, 1, (tag,))
+        src = blocks.vector_source_b(src_data, False, 1, (tag,))
         repack = blocks.repack_bits_bb(k, l, tag_name, True)
-        sink = gr.vector_sink_b()
+        sink = blocks.vector_sink_b()
         self.tb.connect(src, repack, sink)
         self.tb.run ()
         self.assertEqual(sink.data(), expected_data)

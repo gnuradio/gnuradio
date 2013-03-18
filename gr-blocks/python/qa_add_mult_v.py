@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2004,2007,2010,2012 Free Software Foundation, Inc.
+# Copyright 2004,2007,2010,2012,2013 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -33,12 +33,12 @@ class test_add_mult_v(gr_unittest.TestCase):
 
     def help_ss(self, size, src_data, exp_data, op):
         for s in zip(range (len (src_data)), src_data):
-            src = gr.vector_source_s(s[1])
+            src = blocks.vector_source_s(s[1])
 	    srcv = blocks.stream_to_vector(gr.sizeof_short, size)
 	    self.tb.connect(src, srcv)
             self.tb.connect(srcv, (op, s[0]))
 	rhs = blocks.vector_to_stream(gr.sizeof_short, size)
-        dst = gr.vector_sink_s()
+        dst = blocks.vector_sink_s()
         self.tb.connect(op, rhs, dst)
         self.tb.run()
         result_data = dst.data()
@@ -46,12 +46,12 @@ class test_add_mult_v(gr_unittest.TestCase):
 
     def help_ii(self, size, src_data, exp_data, op):
         for s in zip(range (len (src_data)), src_data):
-            src = gr.vector_source_i(s[1])
+            src = blocks.vector_source_i(s[1])
 	    srcv = blocks.stream_to_vector(gr.sizeof_int, size)
 	    self.tb.connect(src, srcv)
             self.tb.connect(srcv, (op, s[0]))
 	rhs = blocks.vector_to_stream(gr.sizeof_int, size)
-        dst = gr.vector_sink_i()
+        dst = blocks.vector_sink_i()
         self.tb.connect(op, rhs, dst)
         self.tb.run()
         result_data = dst.data()
@@ -59,12 +59,12 @@ class test_add_mult_v(gr_unittest.TestCase):
 
     def help_ff(self, size, src_data, exp_data, op):
         for s in zip(range (len (src_data)), src_data):
-            src = gr.vector_source_f(s[1])
+            src = blocks.vector_source_f(s[1])
 	    srcv = blocks.stream_to_vector(gr.sizeof_float, size)
 	    self.tb.connect(src, srcv)
             self.tb.connect(srcv, (op, s[0]))
 	rhs = blocks.vector_to_stream(gr.sizeof_float, size)
-        dst = gr.vector_sink_f()
+        dst = blocks.vector_sink_f()
         self.tb.connect(op, rhs, dst)
         self.tb.run()
         result_data = dst.data()
@@ -72,52 +72,52 @@ class test_add_mult_v(gr_unittest.TestCase):
 
     def help_cc(self, size, src_data, exp_data, op):
         for s in zip(range (len (src_data)), src_data):
-            src = gr.vector_source_c(s[1])
+            src = blocks.vector_source_c(s[1])
 	    srcv = blocks.stream_to_vector(gr.sizeof_gr_complex, size)
 	    self.tb.connect(src, srcv)
             self.tb.connect(srcv, (op, s[0]))
 	rhs = blocks.vector_to_stream(gr.sizeof_gr_complex, size)
-        dst = gr.vector_sink_c()
+        dst = blocks.vector_sink_c()
         self.tb.connect(op, rhs, dst)
         self.tb.run()
         result_data = dst.data()
         self.assertEqual(exp_data, result_data)
 
     def help_const_ss(self, src_data, exp_data, op):
-	src = gr.vector_source_s(src_data)
+	src = blocks.vector_source_s(src_data)
 	srcv = blocks.stream_to_vector(gr.sizeof_short, len(src_data))
 	rhs = blocks.vector_to_stream(gr.sizeof_short, len(src_data))
-        dst = gr.vector_sink_s()
+        dst = blocks.vector_sink_s()
         self.tb.connect(src, srcv, op, rhs, dst)
         self.tb.run()
         result_data = dst.data()
         self.assertEqual(exp_data, result_data)
 
     def help_const_ii(self, src_data, exp_data, op):
-	src = gr.vector_source_i(src_data)
+	src = blocks.vector_source_i(src_data)
 	srcv = blocks.stream_to_vector(gr.sizeof_int, len(src_data))
 	rhs = blocks.vector_to_stream(gr.sizeof_int, len(src_data))
-        dst = gr.vector_sink_i()
+        dst = blocks.vector_sink_i()
         self.tb.connect(src, srcv, op, rhs, dst)
         self.tb.run()
         result_data = dst.data()
         self.assertEqual(exp_data, result_data)
 
     def help_const_ff(self, src_data, exp_data, op):
-	src = gr.vector_source_f(src_data)
+	src = blocks.vector_source_f(src_data)
 	srcv = blocks.stream_to_vector(gr.sizeof_float, len(src_data))
 	rhs = blocks.vector_to_stream(gr.sizeof_float, len(src_data))
-        dst = gr.vector_sink_f()
+        dst = blocks.vector_sink_f()
         self.tb.connect(src, srcv, op, rhs, dst)
         self.tb.run()
         result_data = dst.data()
         self.assertEqual(exp_data, result_data)
 
     def help_const_cc(self, src_data, exp_data, op):
-	src = gr.vector_source_c(src_data)
+	src = blocks.vector_source_c(src_data)
 	srcv = blocks.stream_to_vector(gr.sizeof_gr_complex, len(src_data))
 	rhs = blocks.vector_to_stream(gr.sizeof_gr_complex, len(src_data))
-        dst = gr.vector_sink_c()
+        dst = blocks.vector_sink_c()
         self.tb.connect(src, srcv, op, rhs, dst)
         self.tb.run()
         result_data = dst.data()

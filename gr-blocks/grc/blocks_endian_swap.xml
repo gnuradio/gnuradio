@@ -1,0 +1,41 @@
+<?xml version="1.0"?>
+<!--
+###################################################
+##Add Block:
+##	all types, 1 output, 2 to inf inputs
+###################################################
+ -->
+<block>
+	<name>Endian Swap</name>
+	<key>blocks_endian_swap</key>
+	<import>from gnuradio import blocks</import>
+	<make>blocks.endian_swap($type.size)</make>
+	<param>
+		<name>IO Type</name>
+		<key>type</key>
+		<type>enum</type>
+		<option>
+			<name>Complex</name>
+			<key>complex</key>
+			<opt>size:8</opt>
+		</option>
+		<option>
+			<name>Int</name>
+			<key>s32</key>
+			<opt>size:4</opt>
+		</option>
+		<option>
+			<name>Short</name>
+			<key>s16</key>
+			<opt>size:2</opt>
+		</option>
+	</param>
+	<sink>
+		<name>in</name>
+		<type>$type</type>
+	</sink>
+	<source>
+		<name>out</name>
+		<type>$type</type>
+	</source>
+</block>

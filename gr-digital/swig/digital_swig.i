@@ -21,6 +21,7 @@
 
 #define DIGITAL_API
 #define ANALOG_API
+#define BLOCKS_API
 
 %include "gnuradio.i"
 %include "stdint.i"
@@ -33,6 +34,7 @@
 %{
 #include <blocks/control_loop.h>
 %}
+%include <blocks/control_loop.h>
 
 // Used in the constellation objects
 %template(unsigned_int_vector) std::vector<unsigned int>;
@@ -57,6 +59,7 @@
 #include "digital/costas_loop_cc.h"
 #include "digital/cpmmod_bc.h"
 #include "digital/crc32.h"
+#include "digital/crc32_bb.h"
 #include "digital/descrambler_bb.h"
 #include "digital/diff_decoder_bb.h"
 #include "digital/diff_encoder_bb.h"
@@ -74,6 +77,12 @@
 #include "digital/mpsk_receiver_cc.h"
 #include "digital/mpsk_snr_est.h"
 #include "digital/mpsk_snr_est_cc.h"
+#include "digital/ofdm_carrier_allocator_cvc.h"
+#include "digital/ofdm_chanest_vcvc.h"
+#include "digital/ofdm_cyclic_prefixer.h"
+#include "digital/ofdm_equalizer_base.h"
+#include "digital/ofdm_equalizer_simpledfe.h"
+#include "digital/ofdm_equalizer_static.h"
 #include "digital/ofdm_frame_acquisition.h"
 #include "digital/ofdm_frame_equalizer_vcvc.h"
 #include "digital/ofdm_frame_sink.h"
@@ -81,6 +90,7 @@
 #include "digital/ofdm_mapper_bcv.h"
 #include "digital/ofdm_sampler.h"
 #include "digital/ofdm_serializer_vcc.h"
+#include "digital/ofdm_sync_sc_cfb.h"
 #include "digital/packet_header_default.h"
 #include "digital/packet_header_ofdm.h"
 #include "digital/packet_headergenerator_bb.h"
@@ -118,6 +128,7 @@
 %include "digital/costas_loop_cc.h"
 %include "digital/cpmmod_bc.h"
 %include "digital/crc32.h"
+%include "digital/crc32_bb.h"
 %include "digital/descrambler_bb.h"
 %include "digital/diff_decoder_bb.h"
 %include "digital/diff_encoder_bb.h"
@@ -135,7 +146,12 @@
 %include "digital/mpsk_receiver_cc.h"
 %include "digital/mpsk_snr_est.h"
 %include "digital/mpsk_snr_est_cc.h"
-//%include "digital/ofdm_cyclic_prefixer.h"
+%include "digital/ofdm_carrier_allocator_cvc.h"
+%include "digital/ofdm_chanest_vcvc.h"
+%include "digital/ofdm_cyclic_prefixer.h"
+%include "digital/ofdm_equalizer_base.h"
+%include "digital/ofdm_equalizer_simpledfe.h"
+%include "digital/ofdm_equalizer_static.h"
 %include "digital/ofdm_frame_acquisition.h"
 %include "digital/ofdm_frame_equalizer_vcvc.h"
 %include "digital/ofdm_frame_sink.h"
@@ -143,6 +159,7 @@
 %include "digital/ofdm_mapper_bcv.h"
 %include "digital/ofdm_sampler.h"
 %include "digital/ofdm_serializer_vcc.h"
+%include "digital/ofdm_sync_sc_cfb.h"
 %include "digital/packet_header_default.h"
 %include "digital/packet_header_ofdm.h"
 %include "digital/packet_headergenerator_bb.h"
@@ -176,7 +193,7 @@ GR_SWIG_BLOCK_MAGIC2(digital, constellation_receiver_cb);
 GR_SWIG_BLOCK_MAGIC2(digital, correlate_access_code_bb);
 GR_SWIG_BLOCK_MAGIC2(digital, correlate_access_code_tag_bb);
 GR_SWIG_BLOCK_MAGIC2(digital, costas_loop_cc);
-//GR_SWIG_BLOCK_MAGIC2(digital, ofdm_cyclic_prefixer);
+GR_SWIG_BLOCK_MAGIC2(digital, crc32_bb);
 GR_SWIG_BLOCK_MAGIC2(digital, cpmmod_bc);
 GR_SWIG_BLOCK_MAGIC2(digital, descrambler_bb);
 GR_SWIG_BLOCK_MAGIC2(digital, diff_decoder_bb);
@@ -192,6 +209,9 @@ GR_SWIG_BLOCK_MAGIC2(digital, lms_dd_equalizer_cc);
 GR_SWIG_BLOCK_MAGIC2(digital, map_bb);
 GR_SWIG_BLOCK_MAGIC2(digital, mpsk_receiver_cc);
 GR_SWIG_BLOCK_MAGIC2(digital, mpsk_snr_est_cc);
+GR_SWIG_BLOCK_MAGIC2(digital, ofdm_carrier_allocator_cvc);
+GR_SWIG_BLOCK_MAGIC2(digital, ofdm_chanest_vcvc);
+GR_SWIG_BLOCK_MAGIC2(digital, ofdm_cyclic_prefixer);
 GR_SWIG_BLOCK_MAGIC2(digital, ofdm_frame_acquisition);
 GR_SWIG_BLOCK_MAGIC2(digital, ofdm_frame_equalizer_vcvc);
 GR_SWIG_BLOCK_MAGIC2(digital, ofdm_frame_sink);
@@ -199,6 +219,7 @@ GR_SWIG_BLOCK_MAGIC2(digital, ofdm_insert_preamble);
 GR_SWIG_BLOCK_MAGIC2(digital, ofdm_mapper_bcv);
 GR_SWIG_BLOCK_MAGIC2(digital, ofdm_sampler);
 GR_SWIG_BLOCK_MAGIC2(digital, ofdm_serializer_vcc);
+GR_SWIG_BLOCK_MAGIC2(digital, ofdm_sync_sc_cfb);
 GR_SWIG_BLOCK_MAGIC2(digital, packet_headergenerator_bb);
 GR_SWIG_BLOCK_MAGIC2(digital, packet_headerparser_b);
 GR_SWIG_BLOCK_MAGIC2(digital, packet_sink);
@@ -216,29 +237,8 @@ GR_SWIG_BLOCK_MAGIC2(digital, ts_insert_zeros_cc);
 
 GR_SWIG_BLOCK_MAGIC_FACTORY(digital, cpmmod_bc, gmskmod_bc);
 
-// Properly package up constellation objects
+// Properly package up non-block objects
 %include "constellation.i"
-
 %include "packet_header.i"
+%include "ofdm_equalizer.i"
 
-// Old-style blocks to be converted to 3.7
-%{
-#include <digital_crc32_bb.h>
-#include <digital_ofdm_carrier_allocator_cvc.h>
-#include <digital_ofdm_cyclic_prefixer.h>
-#include <digital_ofdm_chanest_vcvc.h>
-#include <digital_ofdm_cyclic_prefixer.h>
-#include <digital_ofdm_equalizer_base.h>
-#include <digital_ofdm_equalizer_simpledfe.h>
-#include <digital_ofdm_equalizer_static.h>
-#include <digital_ofdm_sync_sc_cfb.h>
-%}
-
-%include "digital_crc32_bb.i"
-%include "digital_ofdm_carrier_allocator_cvc.i"
-%include "digital_ofdm_chanest_vcvc.i"
-%include "digital_ofdm_cyclic_prefixer.i"
-%include "digital_ofdm_equalizer_base.i"
-%include "digital_ofdm_equalizer_simpledfe.i"
-%include "digital_ofdm_equalizer_static.i"
-%include "digital_ofdm_sync_sc_cfb.i"
