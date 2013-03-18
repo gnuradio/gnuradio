@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2005,2013 Free Software Foundation, Inc.
+ * Copyright 2004 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -20,34 +20,50 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef INCLUDED_GR_VCO_F_IMPL_H
-#define INCLUDED_GR_VCO_F_IMPL_H
+#ifndef INCLUDED_GRI_LFSR_15_1_0_H
+#define INCLUDED_GRI_LFSR_15_1_0_H
 
-#include <blocks/vco_f.h>
-#include <gr_fxpt_vco.h>
+#include <blocks/api.h>
 
 namespace gr {
   namespace blocks {
 
-    class vco_f_impl : public vco_f
+    /*!
+     * \brief Linear Feedback Shift Register using primitive polynomial x^15 + x + 1
+     * \ingroup misc
+     *
+     * Generates a maximal length pseudo-random sequence of length
+     * 2^15 - 1 bits.
+     */
+    class BLOCKS_API lfsr_15_1_0
     {
     private:
-      double d_sampling_rate;
-      double d_sensitivity;
-      double d_amplitude;
-      double d_k;
-      gr_fxpt_vco d_vco;
+      unsigned long d_sr;    // shift register
 
     public:
-      vco_f_impl(double sampling_rate, double sensitivity, double amplitude);
-      ~vco_f_impl();
+      lfsr_15_1_0() { reset(); }
 
-      int work(int noutput_items,
-               gr_vector_const_void_star &input_items,
-               gr_vector_void_star &output_items);
+      void reset() { d_sr = 0x7fff; }
+
+      int next_bit()
+      {
+        d_sr = ((((d_sr >> 1) ^ d_sr) & 0x1) << 14) | (d_sr >> 1);
+        return d_sr & 0x1;
+      }
+
+      int next_byte ()
+      {
+        int	v = 0;
+        for(int i = 0; i < 8; i++) {
+          v >>= 1;
+          if(next_bit ())
+            v |= 0x80;
+        }
+        return v;
+      }
     };
 
   } /* namespace blocks */
 } /* namespace gr */
 
-#endif /* INCLUDED_GR_VCO_F_H */
+#endif /* INCLUDED_GRI_LFSR_15_1_0_H */

@@ -105,13 +105,10 @@ install(FILES
     control_loop.h
     count_bits.h
     file_sink_base.h
-    fxpt.h
-    fxpt_nco.h
-    fxpt_vco.h
+    lfsr_15_1_0.h
+    lfsr_32k.h
     log2_const.h
     rotator.h
-    nco.h
-    vco.h
     wavfile.h
     add_ff.h
     annotator_1to1.h
@@ -121,6 +118,7 @@ install(FILES
     burst_tagger.h
     char_to_float.h
     char_to_short.h
+    check_lfsr_32k_s.h
     complex_to_interleaved_short.h
     complex_to_float.h
     complex_to_imag.h

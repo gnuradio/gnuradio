@@ -20,28 +20,33 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef INCLUDED_QA_GR_FXPT_H
-#define INCLUDED_QA_GR_FXPT_H
+#ifndef INCLUDED_GR_LFSR_32K_SOURCE_S_IMPL_H
+#define INCLUDED_GR_LFSR_32K_SOURCE_S_IMPL_H
 
-#include <cppunit/extensions/HelperMacros.h>
-#include <cppunit/TestCase.h>
+#include <blocks/lfsr_32k_source_s.h>
+#include <blocks/lfsr_32k.h>
+#include <gr_sync_block.h>
 
-class qa_fxpt : public CppUnit::TestCase 
-{
-  CPPUNIT_TEST_SUITE(qa_fxpt);
-  CPPUNIT_TEST(t0);
-  CPPUNIT_TEST(t1);
-  CPPUNIT_TEST(t2);
-  CPPUNIT_TEST(t3);
-  CPPUNIT_TEST_SUITE_END();
+namespace gr {
+  namespace blocks {
 
- private:
-  void t0();
-  void t1();
-  void t2();
-  void t3();
-};
+    class lfsr_32k_source_s_impl : public lfsr_32k_source_s
+    {
+    private:
+      static const int BUFSIZE = 2048 - 1;	// ensure pattern isn't packet aligned
+      int d_index;
+      short d_buffer[BUFSIZE];
 
-#endif /* INCLUDED_QA_GR_FXPT_H */
+    public:
+      lfsr_32k_source_s_impl();
+      ~lfsr_32k_source_s_impl();
 
+      int work(int noutput_items,
+               gr_vector_const_void_star &input_items,
+               gr_vector_void_star &output_items);
+    };
 
+  } /* namespace blocks */
+} /* namespace gr */
+
+#endif /* INCLUDED_GR_LFSR_32K_SOURCE_S_IMPL_H */

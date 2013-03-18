@@ -64,6 +64,7 @@
 #include "blocks/burst_tagger.h"
 #include "blocks/char_to_float.h"
 #include "blocks/char_to_short.h"
+#include "blocks/check_lfsr_32k_s.h"
 #include "blocks/complex_to_interleaved_short.h"
 #include "blocks/complex_to_float.h"
 #include "blocks/complex_to_real.h"
@@ -103,6 +104,7 @@
 #include "blocks/interleaved_short_to_complex.h"
 #include "blocks/keep_m_in_n.h"
 #include "blocks/keep_one_in_n.h"
+#include "blocks/lfsr_32k_source_s.h"
 #include "blocks/max_ff.h"
 #include "blocks/max_ii.h"
 #include "blocks/max_ss.h"
@@ -258,6 +260,7 @@
 %include "blocks/bin_statistics_f.h"
 %include "blocks/burst_tagger.h"
 %include "blocks/char_to_short.h"
+%include "blocks/check_lfsr_32k_s.h"
 %include "blocks/complex_to_interleaved_short.h"
 %include "blocks/complex_to_float.h"
 %include "blocks/complex_to_real.h"
@@ -297,6 +300,7 @@
 %include "blocks/interleaved_short_to_complex.h"
 %include "blocks/keep_m_in_n.h"
 %include "blocks/keep_one_in_n.h"
+%include "blocks/lfsr_32k_source_s.h"
 %include "blocks/max_ff.h"
 %include "blocks/max_ii.h"
 %include "blocks/max_ss.h"
@@ -451,6 +455,7 @@ GR_SWIG_BLOCK_MAGIC2(blocks, bin_statistics_f);
 GR_SWIG_BLOCK_MAGIC2(blocks, burst_tagger);
 GR_SWIG_BLOCK_MAGIC2(blocks, char_to_float);
 GR_SWIG_BLOCK_MAGIC2(blocks, char_to_short);
+GR_SWIG_BLOCK_MAGIC2(blocks, check_lfsr_32k_s);
 GR_SWIG_BLOCK_MAGIC2(blocks, complex_to_interleaved_short);
 GR_SWIG_BLOCK_MAGIC2(blocks, complex_to_float);
 GR_SWIG_BLOCK_MAGIC2(blocks, complex_to_real);
@@ -488,6 +493,7 @@ GR_SWIG_BLOCK_MAGIC2(blocks, interleave);
 GR_SWIG_BLOCK_MAGIC2(blocks, interleaved_short_to_complex);
 GR_SWIG_BLOCK_MAGIC2(blocks, keep_m_in_n);
 GR_SWIG_BLOCK_MAGIC2(blocks, keep_one_in_n);
+GR_SWIG_BLOCK_MAGIC2(blocks, lfsr_32k_source_s);
 GR_SWIG_BLOCK_MAGIC2(blocks, max_ff);
 GR_SWIG_BLOCK_MAGIC2(blocks, max_ii);
 GR_SWIG_BLOCK_MAGIC2(blocks, max_ss);

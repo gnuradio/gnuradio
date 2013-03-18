@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2005,2013 Free Software Foundation, Inc.
+ * Copyright 2004,2013 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -20,34 +20,36 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef INCLUDED_GR_VCO_F_IMPL_H
-#define INCLUDED_GR_VCO_F_IMPL_H
+#ifndef INCLUDED_GR_LFSR_32K_SOURCE_S_H
+#define INCLUDED_GR_LFSR_32K_SOURCE_S_H
 
-#include <blocks/vco_f.h>
-#include <gr_fxpt_vco.h>
+#include <blocks/api.h>
+#include <blocks/lfsr_32k.h>
+#include <gr_sync_block.h>
 
 namespace gr {
   namespace blocks {
 
-    class vco_f_impl : public vco_f
+    /*!
+     * \brief LFSR pseudo-random source with period of 2^15 bits (2^11 shorts)
+     * \ingroup source_blk
+     *
+     * This source is typically used along with gr::blocks::check_lfsr_32k_s to
+     * test the USRP using its digital loopback mode.
+     */
+    class BLOCKS_API lfsr_32k_source_s : virtual public gr_sync_block
     {
-    private:
-      double d_sampling_rate;
-      double d_sensitivity;
-      double d_amplitude;
-      double d_k;
-      gr_fxpt_vco d_vco;
-
     public:
-      vco_f_impl(double sampling_rate, double sensitivity, double amplitude);
-      ~vco_f_impl();
+      // gr::blocks::lfsr_32k_source_s::sptr
+      typedef boost::shared_ptr<lfsr_32k_source_s> sptr;
 
-      int work(int noutput_items,
-               gr_vector_const_void_star &input_items,
-               gr_vector_void_star &output_items);
+      /*!
+       * \brief Make a LFSR 32k source block.
+       */
+      static sptr make();
     };
 
   } /* namespace blocks */
 } /* namespace gr */
 
-#endif /* INCLUDED_GR_VCO_F_H */
+#endif /* INCLUDED_GR_LFSR_32K_SOURCE_S_H */
