@@ -27,7 +27,7 @@
 #include <gr_io_signature.h>
 #include "ofdm_sync_sc_cfb_impl.h"
 
-#include <analog/plateau_detector_fb.h>
+#include <blocks/plateau_detector_fb.h>
 #include <blocks/complex_to_arg.h>
 #include <blocks/complex_to_mag_squared.h>
 #include <blocks/conjugate_cc.h>
@@ -72,7 +72,7 @@ namespace gr {
       gr::blocks::complex_to_arg::sptr         peak_to_angle(gr::blocks::complex_to_arg::make());
       gr::blocks::sample_and_hold_ff::sptr     sample_and_hold(gr::blocks::sample_and_hold_ff::make());
 
-      gr::analog::plateau_detector_fb::sptr    plateau_detector(gr::analog::plateau_detector_fb::make(cp_len));
+      gr::blocks::plateau_detector_fb::sptr    plateau_detector(gr::blocks::plateau_detector_fb::make(cp_len));
 
       // Delay Path
       connect(self(),               0, delay,                0);

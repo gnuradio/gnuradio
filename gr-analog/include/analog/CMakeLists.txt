@@ -95,7 +95,6 @@ install(FILES
     fmdet_cf.h
     frequency_modulator_fc.h
     phase_modulator_fc.h
-    plateau_detector_fb.h
     pll_carriertracking_cc.h
     pll_freqdet_cf.h
     pll_refout_cc.h
