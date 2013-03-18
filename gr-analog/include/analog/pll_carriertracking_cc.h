@@ -24,6 +24,7 @@
 #define INCLUDED_ANALOG_PLL_CARRIERTRACKING_CC_H
 
 #include <analog/api.h>
+#include <blocks/control_loop.h>
 #include <gr_sync_block.h>
 
 namespace gr {
@@ -45,7 +46,9 @@ namespace gr {
      * and should be set around pi/200 -- 2pi/100.  \sa
      * pll_freqdet_cf, pll_carriertracking_cc
      */
-    class ANALOG_API pll_carriertracking_cc : virtual public gr_sync_block
+    class ANALOG_API pll_carriertracking_cc
+      : virtual public gr_sync_block,
+        virtual public blocks::control_loop
     {
     public:
       // gr::analog::pll_carriertracking_cc::sptr

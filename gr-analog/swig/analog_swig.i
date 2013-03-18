@@ -20,12 +20,18 @@
  */
 
 #define ANALOG_API
+#define BLOCKS_API
 
 %include "gnuradio.i"
 %include "stdint.i"
 
 //load generated python docstrings
 %include "analog_swig_doc.i"
+
+%{
+#include <blocks/control_loop.h>
+%}
+%include <blocks/control_loop.h>
 
 %{
 #include "analog/cpm.h"

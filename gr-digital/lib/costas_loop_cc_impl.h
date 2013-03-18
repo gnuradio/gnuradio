@@ -25,12 +25,11 @@
 #define INCLUDED_DIGITAL_COSTAS_LOOP_CC_IMPL_H
 
 #include <digital/costas_loop_cc.h>
-#include <blocks/control_loop.h>
 
 namespace gr {
   namespace digital {
 
-    class costas_loop_cc_impl : public costas_loop_cc, blocks::control_loop
+    class costas_loop_cc_impl : public costas_loop_cc
     {
     private:
       int d_order;

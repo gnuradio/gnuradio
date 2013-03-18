@@ -24,6 +24,7 @@
 #define INCLUDED_DIGITAL_COSTAS_LOOP_CC_H
 
 #include <digital/api.h>
+#include <blocks/control_loop.h>
 #include <gr_sync_block.h>
 
 namespace gr {
@@ -54,7 +55,9 @@ namespace gr {
      *    stream 1 is the baseband I and Q;
      *    stream 2 is the normalized frequency of the loop
      */
-    class DIGITAL_API costas_loop_cc : virtual public gr_sync_block
+    class DIGITAL_API costas_loop_cc
+      : virtual public gr_sync_block, 
+        virtual public blocks::control_loop
     {
     public:
       // gr::digital::costas_loop_cc::sptr
