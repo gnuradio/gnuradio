@@ -1,5 +1,6 @@
+/* -*- c++ -*- */
 /*
- * Copyright 2002 Free Software Foundation, Inc.
+ * Copyright 2005 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -19,31 +20,19 @@
  * Boston, MA 02110-1301, USA.
  */
 
-/*
- * This class gathers together all the test cases for the gr
- * directory into a single test suite.  As you create new test cases,
- * add them here.
+GR_SWIG_BLOCK_MAGIC(gr,vco_f);
+
+/*!
+ * \brief VCO - Voltage controlled oscillator
+ *
+ * \param sampling_rate		sampling rate (Hz)
+ * \param sensitivity		units are radians/sec/volt
+ * \param amplitude		output amplitude
  */
+gr_vco_f_sptr gr_make_vco_f(double sampling_rate, double sensitivity, double amplitude);
 
-#include <qa_general.h>
-#include <qa_gr_circular_file.h>
-#include <qa_gr_fxpt.h>
-#include <qa_gr_fxpt_nco.h>
-#include <qa_gr_fxpt_vco.h>
-#include <qa_gr_math.h>
-#include <qa_sincos.h>
 
-CppUnit::TestSuite *
-qa_general::suite ()
-{
-  CppUnit::TestSuite	*s = new CppUnit::TestSuite ("general");
-
-  s->addTest (qa_gr_circular_file::suite ());
-  s->addTest (qa_gr_fxpt::suite ());
-  s->addTest (qa_gr_fxpt_nco::suite ());
-  s->addTest (qa_gr_fxpt_vco::suite ());
-  s->addTest (qa_gr_math::suite ());
-  s->addTest(gr::analog::qa_sincos::suite());
-
-  return s;
-}
+class gr_vco_f : public gr_sync_block {
+ private:
+  gr_vco_f(double sampling_rate, double sensitivity, double amplitude);
+};

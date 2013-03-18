@@ -1,5 +1,6 @@
+/* -*- c++ -*- */
 /*
- * Copyright 2002 Free Software Foundation, Inc.
+ * Copyright 2004 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -19,31 +20,16 @@
  * Boston, MA 02110-1301, USA.
  */
 
-/*
- * This class gathers together all the test cases for the gr
- * directory into a single test suite.  As you create new test cases,
- * add them here.
- */
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
 
-#include <qa_general.h>
-#include <qa_gr_circular_file.h>
-#include <qa_gr_fxpt.h>
-#include <qa_gr_fxpt_nco.h>
-#include <qa_gr_fxpt_vco.h>
-#include <qa_gr_math.h>
-#include <qa_sincos.h>
+#include <gr_fxpt.h>
 
-CppUnit::TestSuite *
-qa_general::suite ()
-{
-  CppUnit::TestSuite	*s = new CppUnit::TestSuite ("general");
+const float gr_fxpt::s_sine_table[1 << NBITS][2] = {
+#include "sine_table.h"
+};
 
-  s->addTest (qa_gr_circular_file::suite ());
-  s->addTest (qa_gr_fxpt::suite ());
-  s->addTest (qa_gr_fxpt_nco::suite ());
-  s->addTest (qa_gr_fxpt_vco::suite ());
-  s->addTest (qa_gr_math::suite ());
-  s->addTest(gr::analog::qa_sincos::suite());
+const float gr_fxpt::PI = 3.14159265358979323846;
+const float gr_fxpt::TWO_TO_THE_31 = 2147483648.0;
 
-  return s;
-}

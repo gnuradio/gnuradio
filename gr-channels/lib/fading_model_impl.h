@@ -30,7 +30,7 @@
 #include <boost/format.hpp>
 #include <boost/random.hpp>
 
-#include <blocks/fxpt.h>
+#include <gr_fxpt.h>
 #include <sincostable.h>
 
 namespace gr {

@@ -22,6 +22,26 @@
 ########################################################################
 
 ########################################################################
+# Handle the generated sine table
+########################################################################
+add_custom_command(
+    OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/sine_table.h
+    DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/gen_sine_table.py
+    COMMAND ${PYTHON_EXECUTABLE}
+        ${CMAKE_CURRENT_SOURCE_DIR}/gen_sine_table.py >
+        ${CMAKE_CURRENT_BINARY_DIR}/sine_table.h
+)
+
+include(AddFileDependencies)
+ADD_FILE_DEPENDENCIES(${CMAKE_CURRENT_SOURCE_DIR}/gr_fxpt.cc
+    ${CMAKE_CURRENT_BINARY_DIR}/sine_table.h
+)
+
+add_custom_target(general_generated DEPENDS
+    ${CMAKE_CURRENT_BINARY_DIR}/sine_table.h
+)
+
+########################################################################
 # Handle the generated constants
 ########################################################################
 execute_process(COMMAND ${PYTHON_EXECUTABLE} -c
@@ -50,6 +70,7 @@ list(APPEND gnuradio_core_sources ${CMAKE_CURRENT_BINARY_DIR}/gr_constants.cc)
 list(APPEND gnuradio_core_sources
     ${CMAKE_CURRENT_SOURCE_DIR}/gr_circular_file.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/gr_fast_atan2f.cc
+    ${CMAKE_CURRENT_SOURCE_DIR}/gr_fxpt.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/gr_misc.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/gr_random.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/gr_reverse.cc
@@ -64,6 +85,9 @@ list(APPEND gnuradio_core_sources
 list(APPEND test_gnuradio_core_sources
     ${CMAKE_CURRENT_SOURCE_DIR}/qa_general.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/qa_gr_circular_file.cc
+    ${CMAKE_CURRENT_SOURCE_DIR}/qa_gr_fxpt.cc
+    ${CMAKE_CURRENT_SOURCE_DIR}/qa_gr_fxpt_nco.cc
+    ${CMAKE_CURRENT_SOURCE_DIR}/qa_gr_fxpt_vco.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/qa_gr_math.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/qa_sincos.cc
 )
@@ -77,12 +101,17 @@ install(FILES
     ${CMAKE_CURRENT_SOURCE_DIR}/gr_constants.h
     ${CMAKE_CURRENT_SOURCE_DIR}/gr_endianness.h
     ${CMAKE_CURRENT_SOURCE_DIR}/gr_expj.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/gr_fxpt.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/gr_fxpt_nco.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/gr_fxpt_vco.h
     ${CMAKE_CURRENT_SOURCE_DIR}/gr_math.h
     ${CMAKE_CURRENT_SOURCE_DIR}/gr_misc.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/gr_nco.h
     ${CMAKE_CURRENT_SOURCE_DIR}/gr_random.h
     ${CMAKE_CURRENT_SOURCE_DIR}/gr_reverse.h
     ${CMAKE_CURRENT_SOURCE_DIR}/gr_sincos.h
     ${CMAKE_CURRENT_SOURCE_DIR}/gr_test_types.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/gr_vco.h
     ${CMAKE_CURRENT_SOURCE_DIR}/gri_debugger_hook.h
     ${CMAKE_CURRENT_SOURCE_DIR}/gri_lfsr_15_1_0.h
     ${CMAKE_CURRENT_SOURCE_DIR}/gri_lfsr_32k.h

@@ -74,7 +74,7 @@ class pfb_top_block(gr.top_block):
 
         # Build a VCO controlled by either the sinusoid or single chirp tone
         # Then convert this to a complex signal
-        self.vco = blocks.vco_f(self._fs, 225, 1)
+        self.vco = gr.vco_f(self._fs, 225, 1)
         self.f2c = blocks.float_to_complex()
 
         self.head = blocks.head(gr.sizeof_gr_complex, self._N)

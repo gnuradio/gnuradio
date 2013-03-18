@@ -27,7 +27,7 @@
 
 #include <analog/@BASE_NAME@.h>
 #include <gr_sync_block.h>
-#include <blocks/fxpt_nco.h>
+#include <gr_fxpt_nco.h>
 
 namespace gr {
   namespace analog {
@@ -40,7 +40,7 @@ namespace gr {
       double		d_frequency;
       double		d_ampl;
       @TYPE@		d_offset;
-      gr::blocks::fxpt_nco d_nco;
+      gr_fxpt_nco	d_nco;
 
     public:
       @IMPL_NAME@(double sampling_freq, gr_waveform_t waveform,

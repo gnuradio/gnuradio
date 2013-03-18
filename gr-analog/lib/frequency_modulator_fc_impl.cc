@@ -26,7 +26,7 @@
 
 #include "frequency_modulator_fc_impl.h"
 #include <gr_io_signature.h>
-#include <blocks/fxpt.h>
+#include <gr_fxpt.h>
 #include <math.h>
 #include <boost/math/special_functions/trunc.hpp>
 
@@ -70,8 +70,8 @@ namespace gr {
 
 	float oi, oq;
 
-	int32_t angle = gr::blocks::fxpt::float_to_fixed (d_phase);
-        gr::blocks::fxpt::sincos(angle, &oq, &oi);
+	gr_int32 angle = gr_fxpt::float_to_fixed (d_phase);
+	gr_fxpt::sincos(angle, &oq, &oi);
 	out[i] = gr_complex(oi, oq);
       }
 

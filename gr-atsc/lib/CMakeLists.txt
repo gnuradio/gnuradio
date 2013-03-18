@@ -27,7 +27,6 @@ include_directories(
     ${GR_FILTER_INCLUDE_DIRS}
     ${GR_ANALOG_INCLUDE_DIRS}
     ${GR_FEC_INCLUDE_DIRS}
-    ${GR_BLOCKS_INCLUDE_DIRS}
     ${GNURADIO_CORE_INCLUDE_DIRS}
     ${GRUEL_INCLUDE_DIRS}
     ${LOG4CPP_INCLUDE_DIRS}
@@ -121,7 +120,6 @@ list(APPEND atsc_libs
     gnuradio-analog
     gnuradio-core
     gnuradio-fec
-    gnuradio-blocks
     ${Boost_LIBRARIES}
     ${LOG4CPP_LIBRARIES}
 )
