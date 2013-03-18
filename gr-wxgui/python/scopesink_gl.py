@@ -26,6 +26,8 @@ import scope_window
 import common
 from gnuradio import gr, filter
 from gnuradio import blocks
+from gnuradio import analog
+from gnuradio import wxgui
 from pubsub import pubsub
 from constants import *
 import math
@@ -101,7 +103,7 @@ class _scope_sink_base(gr.hier_block2, common.wxgui_hb):
 		)
 		#scope
 		msgq = gr.msg_queue(2)
-		scope = gr.oscope_sink_f(sample_rate, msgq)
+		scope = wxgui.oscope_sink_f(sample_rate, msgq)
 		#controller
 		self.controller = pubsub()
 		self.controller.subscribe(SAMPLE_RATE_KEY, scope.set_sample_rate)
@@ -207,12 +209,13 @@ class test_top_block (stdgui2.std_top_block):
 
         # Generate a complex sinusoid
         ampl=1.0e3
-        self.src0 = analog.sig_source_c(input_rate, gr.GR_SIN_WAVE,
+        self.src0 = analog.sig_source_c(input_rate, analog.GR_SIN_WAVE,
 					25.1e3*input_rate/default_input_rate, ampl)
-        self.noise = analog.sig_source_c (input_rate, analog.GR_SIN_WAVE,
-					  11.1*25.1e3*input_rate/default_input_rate, ampl/10)
+        self.noise = analog.sig_source_c(input_rate, analog.GR_SIN_WAVE,
+					 11.1*25.1e3*input_rate/default_input_rate,
+                                         ampl/10)
         #self.noise = analog.noise_source_c(analog.GR_GAUSSIAN, ampl/10)
-        self.combine = analog.add_cc()
+        self.combine = blocks.add_cc()
 
         # We add this throttle block so that this demo doesn't suck down
         # all the CPU available.  You normally wouldn't use it...

@@ -30,6 +30,7 @@ import time
 import pubsub
 from constants import *
 from gnuradio import gr #for gr.prefs, trigger modes
+from gnuradio import wxgui
 import forms
 
 ##################################################
@@ -38,21 +39,21 @@ import forms
 DEFAULT_FRAME_RATE = gr.prefs().get_long('wxgui', 'scope_rate', 30)
 PERSIST_ALPHA_MIN_EXP, PERSIST_ALPHA_MAX_EXP = -2, 0
 SLIDER_STEPS = 100
-DEFAULT_TRIG_MODE = gr.prefs().get_long('wxgui', 'trig_mode', gr.gr_TRIG_MODE_AUTO)
+DEFAULT_TRIG_MODE = gr.prefs().get_long('wxgui', 'trig_mode', wxgui.TRIG_MODE_AUTO)
 DEFAULT_WIN_SIZE = (600, 300)
 COUPLING_MODES = (
 	('DC', False),
 	('AC', True),
 )
 TRIGGER_MODES = (
-	('Freerun', gr.gr_TRIG_MODE_FREE),
-	('Auto', gr.gr_TRIG_MODE_AUTO),
-	('Normal', gr.gr_TRIG_MODE_NORM),
-	('Stripchart', gr.gr_TRIG_MODE_STRIPCHART),
+	('Freerun', wxgui.TRIG_MODE_FREE),
+	('Auto', wxgui.TRIG_MODE_AUTO),
+	('Normal', wxgui.TRIG_MODE_NORM),
+	('Stripchart', wxgui.TRIG_MODE_STRIPCHART),
 )
 TRIGGER_SLOPES = (
-	('Pos +', gr.gr_TRIG_SLOPE_POS),
-	('Neg -', gr.gr_TRIG_SLOPE_NEG),
+	('Pos +', wxgui.TRIG_SLOPE_POS),
+	('Neg -', wxgui.TRIG_SLOPE_NEG),
 )
 CHANNEL_COLOR_SPECS = (
 	(0.3, 0.3, 1.0),
@@ -281,7 +282,7 @@ class control_panel(wx.Panel):
 		)
 		def disable_all(trigger_mode):
 			for widget in (trigger_slope_chooser, trigger_channel_chooser, trigger_level_buttons, trigger_level_button):
-				widget.Disable(trigger_mode == gr.gr_TRIG_MODE_FREE)
+				widget.Disable(trigger_mode == wxgui.TRIG_MODE_FREE)
 		parent.subscribe(TRIGGER_MODE_KEY, disable_all)
 		disable_all(parent[TRIGGER_MODE_KEY])
 		##################################################
@@ -480,12 +481,12 @@ class scope_window(wx.Panel, pubsub.pubsub):
 		self[TRIGGER_CHANNEL_KEY] = 0
 		self[TRIGGER_MODE_KEY] = trig_mode
 
-		self[TRIGGER_SLOPE_KEY] = gr.gr_TRIG_SLOPE_POS
+		self[TRIGGER_SLOPE_KEY] = wxgui.TRIG_SLOPE_POS
 		self[T_FRAC_OFF_KEY] = 0.5
 		self[USE_PERSISTENCE_KEY] = use_persistence
 		self[PERSIST_ALPHA_KEY] = persist_alpha
 
-		if self[TRIGGER_MODE_KEY] == gr.gr_TRIG_MODE_STRIPCHART:
+		if self[TRIGGER_MODE_KEY] == wxgui.TRIG_MODE_STRIPCHART:
 			self[T_FRAC_OFF_KEY] = 0.0
 
 		for i in range(num_inputs):
@@ -639,7 +640,7 @@ class scope_window(wx.Panel, pubsub.pubsub):
 		if self[TRIGGER_LEVEL_KEY] < self.get_y_min():
 			self[TRIGGER_LEVEL_KEY] = self.get_y_min(); return
 		#disable the trigger channel
-		if not self[TRIGGER_SHOW_KEY] or self[XY_MODE_KEY] or self[TRIGGER_MODE_KEY] == gr.gr_TRIG_MODE_FREE:
+		if not self[TRIGGER_SHOW_KEY] or self[XY_MODE_KEY] or self[TRIGGER_MODE_KEY] == wxgui.TRIG_MODE_FREE:
 			self.plotter.clear_waveform(channel='Trig')
 		else: #show trigger channel
 			trigger_level = self[TRIGGER_LEVEL_KEY]

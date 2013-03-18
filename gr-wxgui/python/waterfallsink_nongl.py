@@ -89,7 +89,7 @@ class waterfall_sink_f(gr.hier_block2, waterfall_sink_base):
                                fft_rate=fft_rate,
                                average=average, avg_alpha=avg_alpha, title=title)
 
-        self.s2p = gr.serial_to_parallel(gr.sizeof_float, self.fft_size)
+        self.s2p = blocks.stream_to_vector(gr.sizeof_float, self.fft_size)
         self.one_in_n = blocks.keep_one_in_n(gr.sizeof_float * self.fft_size,
                                              max(1, int(self.sample_rate/self.fft_size/self.fft_rate)))
 
@@ -120,7 +120,7 @@ class waterfall_sink_c(gr.hier_block2, waterfall_sink_base):
                                      fft_rate=fft_rate,
                                      average=average, avg_alpha=avg_alpha, title=title)
 
-        self.s2p = gr.serial_to_parallel(gr.sizeof_gr_complex, self.fft_size)
+        self.s2p = blocks.stream_to_vector(gr.sizeof_gr_complex, self.fft_size)
         self.one_in_n = blocks.keep_one_in_n(gr.sizeof_gr_complex * self.fft_size,
                                              max(1, int(self.sample_rate/self.fft_size/self.fft_rate)))
 

@@ -22,4 +22,3 @@
 
 from gnuradio_core_runtime import *
 from gnuradio_core_general import *
-from gnuradio_core_io import *

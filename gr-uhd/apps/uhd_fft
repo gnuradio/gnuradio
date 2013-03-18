@@ -38,6 +38,10 @@ except ImportError:
     sys.stderr.write("Error importing GNU Radio's wxgui. Please make sure gr-wxgui is installed.\n")
     sys.exit(1)
 
+import os
+print os.getpid()
+raw_input()
+
 class app_top_block(stdgui2.std_top_block):
     def __init__(self, frame, panel, vbox, argv):
         stdgui2.std_top_block.__init__(self, frame, panel, vbox, argv)

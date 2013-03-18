@@ -60,7 +60,7 @@ link_directories(${Boost_LIBRARY_DIRS})
 set(GR_SWIG_TARGET_DEPS gnuradio_core_generated_sources
   general_generated filter_generated pmt_swig)
 
-foreach(what runtime general io)
+foreach(what runtime general)
     SET(GR_SWIG_DOC_FILE ${CMAKE_CURRENT_BINARY_DIR}/${what}_swig_doc.i)
     SET(GR_SWIG_DOC_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/../${what} ${CMAKE_CURRENT_BINARY_DIR}/../${what})
     GR_SWIG_MAKE(gnuradio_core_${what} gnuradio_core_${what}.i)

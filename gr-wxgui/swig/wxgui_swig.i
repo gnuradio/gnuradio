@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2009 Free Software Foundation, Inc.
+ * Copyright 2013 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -20,20 +20,24 @@
  * Boston, MA 02110-1301, USA.
  */
 
+#define WXGUI_API
 
-GR_SWIG_BLOCK_MAGIC(gr,histo_sink_f)
+%include "gnuradio.i"
 
-gr_histo_sink_f_sptr gr_make_histo_sink_f (gr_msg_queue_sptr msgq);
+//load generated python docstrings
+%include "wxgui_swig_doc.i"
 
-class gr_histo_sink_f : public gr_sync_block
-{
-public:
-  ~gr_histo_sink_f (void);
+%include "wxgui/trigger_mode.h"
 
-  unsigned int get_frame_size(void);
-  unsigned int get_num_bins(void);
+%{
+#include "wxgui/oscope_sink_x.h"
+#include "wxgui/histo_sink_f.h"
+#include "wxgui/oscope_sink_f.h"
+%}
 
-  void set_frame_size(unsigned int frame_size);
-  void set_num_bins(unsigned int num_bins);
+%include "wxgui/oscope_sink_x.h"
+%include "wxgui/histo_sink_f.h"
+%include "wxgui/oscope_sink_f.h"
 
-};
+GR_SWIG_BLOCK_MAGIC2(wxgui, histo_sink_f);
+GR_SWIG_BLOCK_MAGIC2(wxgui, oscope_sink_f);

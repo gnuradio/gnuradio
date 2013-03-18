@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='ASCII'?>
 <flow_graph>
-  <timestamp>Mon Mar 18 11:09:57 2013</timestamp>
+  <timestamp>Mon Mar 18 15:42:27 2013</timestamp>
   <block>
     <key>options</key>
     <param>
@@ -248,7 +248,7 @@
     </param>
     <param>
       <key>trig_mode</key>
-      <value>gr.gr_TRIG_MODE_AUTO</value>
+      <value>wxgui.TRIG_MODE_AUTO</value>
     </param>
     <param>
       <key>y_axis_label</key>
@@ -1488,7 +1488,7 @@
     </param>
     <param>
       <key>value</key>
-      <value></value>
+      <value>addr=192.168.11.2</value>
     </param>
     <param>
       <key>type</key>

@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2004,2007 Free Software Foundation, Inc.
+ * Copyright 2003,2004,2013 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -20,18 +20,25 @@
  * Boston, MA 02110-1301, USA.
  */
 
-%{
+#ifndef INCLUDED_GR_TRIGGER_MODE_H
+#define INCLUDED_GR_TRIGGER_MODE_H
 
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
+namespace gr {
+  namespace wxgui {
 
-#include <gr_histo_sink_f.h>
-#include <gr_oscope_sink_x.h>
-#include <gr_oscope_sink_f.h>
-%}
+    enum trigger_mode {
+      TRIG_MODE_FREE,
+      TRIG_MODE_AUTO,
+      TRIG_MODE_NORM,
+      TRIG_MODE_STRIPCHART,
+    };
 
-%include "gr_histo_sink.i"
-%include "gr_oscope_sink.i"
+    enum trigger_slope {
+      TRIG_SLOPE_POS,
+      TRIG_SLOPE_NEG,
+    };
 
+  } /* namespace wxgui */
+} /* namespace gr */
 
+#endif /* INCLUDED_GR_TRIGGER_MODE_H */

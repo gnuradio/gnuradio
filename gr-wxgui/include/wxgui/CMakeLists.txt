@@ -1,5 +1,4 @@
-#
-# Copyright 2011 Free Software Foundation, Inc.
+# Copyright 2013 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -17,10 +16,17 @@
 # along with GNU Radio; see the file COPYING.  If not, write to
 # the Free Software Foundation, Inc., 51 Franklin Street,
 # Boston, MA 02110-1301, USA.
-#
 
-'''
-Provides a GUI interface using the Wx backend.
-'''
-
-from wxgui_swig import *
+########################################################################
+# Install header files
+########################################################################
+install(FILES
+    api.h
+    histo_sink_f.h
+    oscope_guts.h
+    oscope_sink_f.h
+    oscope_sink_x.h
+    trigger_mode.h
+    DESTINATION ${GR_INCLUDE_DIR}/gnuradio/wxgui
+    COMPONENT "wxgui_devel"
+)

@@ -1,4 +1,4 @@
-# Copyright 2011 Free Software Foundation, Inc.
+# Copyright 2011,2013 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -22,8 +22,8 @@
 ########################################################################
 include(GrPython)
 
-GR_PYTHON_CHECK_MODULE("wx >= 2.8"  wx           "wx.version().split()[0] >= '2.8'"    WX_FOUND)
-GR_PYTHON_CHECK_MODULE("numpy"      numpy        True                                  NUMPY_FOUND)
+GR_PYTHON_CHECK_MODULE("wx >= 2.8" wx "wx.version().split()[0] >= '2.8'" WX_FOUND)
+GR_PYTHON_CHECK_MODULE("numpy" numpy True NUMPY_FOUND)
 
 ########################################################################
 # Register component
@@ -49,6 +49,13 @@ GR_REGISTER_COMPONENT("gr-wxgui" ENABLE_GR_WXGUI
 # Begin conditional configuration
 ########################################################################
 if(ENABLE_GR_WXGUI)
+
+GR_SET_GLOBAL(GR_WXGUI_INCLUDE_DIRS
+    ${CMAKE_CURRENT_SOURCE_DIR}/lib
+    ${CMAKE_CURRENT_SOURCE_DIR}/include
+    ${CMAKE_CURRENT_BINARY_DIR}/lib
+    ${CMAKE_CURRENT_BINARY_DIR}/include
+)
 
 ########################################################################
 # Setup CPack components
@@ -86,7 +93,10 @@ install(
 ########################################################################
 # Add subdirectories
 ########################################################################
+add_subdirectory(include/wxgui)
+add_subdirectory(lib)
 add_subdirectory(grc)
+add_subdirectory(swig)
 add_subdirectory(python)
 
 endif(ENABLE_GR_WXGUI)

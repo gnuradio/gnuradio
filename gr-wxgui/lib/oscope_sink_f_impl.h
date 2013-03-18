@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2003,2004 Free Software Foundation, Inc.
+ * Copyright 2003-2005,2013 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -20,19 +20,32 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef INCLUDED_GR_TRIGGER_MODE_H
-#define INCLUDED_GR_TRIGGER_MODE_H
+#ifndef INCLUDED_GR_OSCOPE_SINK_F_IMPL_H
+#define INCLUDED_GR_OSCOPE_SINK_F_IMPL_H
 
-enum gr_trigger_mode {
-  gr_TRIG_MODE_FREE,
-  gr_TRIG_MODE_AUTO,
-  gr_TRIG_MODE_NORM,
-  gr_TRIG_MODE_STRIPCHART,
-};
+#include <wxgui/oscope_sink_f.h>
 
-enum gr_trigger_slope {
-  gr_TRIG_SLOPE_POS,
-  gr_TRIG_SLOPE_NEG,
-};
+namespace gr {
+  namespace wxgui {
 
-#endif /* INCLUDED_GR_TRIGGER_MODE_H */
+    class oscope_sink_f_impl : public oscope_sink_f
+    {
+    private:
+      gr_msg_queue_sptr d_msgq;
+
+    public:
+      oscope_sink_f_impl(double sampling_rate, gr_msg_queue_sptr msgq);
+      ~oscope_sink_f_impl();
+
+      bool check_topology(int ninputs, int noutputs);
+
+      int work(int noutput_items,
+               gr_vector_const_void_star &input_items,
+               gr_vector_void_star &output_items);
+    };
+
+  } /* namespace wxgui */
+} /* namespace gr */
+
+#endif /* INCLUDED_GR_OSCOPE_SINK_F_IMPL_H */
+

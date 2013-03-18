@@ -1667,7 +1667,7 @@
     </param>
     <param>
       <key>trig_mode</key>
-      <value>gr.gr_TRIG_MODE_AUTO</value>
+      <value>wxgui.TRIG_MODE_AUTO</value>
     </param>
     <param>
       <key>y_axis_label</key>

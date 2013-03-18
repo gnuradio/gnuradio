@@ -42,7 +42,7 @@ class howto_square(grc_wxgui.top_block_gui):
 			ac_couple=False,
 			xy_mode=False,
 			num_inputs=1,
-			trig_mode=gr.gr_TRIG_MODE_AUTO,
+			trig_mode=wxgui.TRIG_MODE_AUTO,
 			y_axis_label="Counts",
 		)
 		self.Add(self.sink2.win)
@@ -56,7 +56,7 @@ class howto_square(grc_wxgui.top_block_gui):
 			ac_couple=False,
 			xy_mode=False,
 			num_inputs=1,
-			trig_mode=gr.gr_TRIG_MODE_AUTO,
+			trig_mode=wxgui.TRIG_MODE_AUTO,
 			y_axis_label="Counts",
 		)
 		self.Add(self.sink.win)

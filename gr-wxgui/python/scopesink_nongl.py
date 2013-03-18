@@ -23,6 +23,7 @@
 from gnuradio import gr, gru, eng_notation
 from gnuradio import analog
 from gnuradio import blocks
+from gnuradio import wxgui
 from gnuradio.wxgui import stdgui2
 import wx
 import gnuradio.wxgui.plot as plot
@@ -43,7 +44,7 @@ class scope_sink_f(gr.hier_block2):
                                 gr.io_signature(0,0,0))
 
         msgq = gr.msg_queue(2)         # message queue that holds at most 2 messages
-        self.guts = gr.oscope_sink_f(sample_rate, msgq)
+        self.guts = wxgui.oscope_sink_f(sample_rate, msgq)
         for i in range(num_inputs):
           self.connect((self, i), (self.guts, i))
 
@@ -64,7 +65,7 @@ class scope_sink_c(gr.hier_block2):
                                 gr.io_signature(0,0,0))
 
         msgq = gr.msg_queue(2)         # message queue that holds at most 2 messages
-        self.guts = gr.oscope_sink_f(sample_rate, msgq)
+        self.guts = wxgui.oscope_sink_f(sample_rate, msgq)
         for i in range(num_inputs):
 	        c2f = blocks.complex_to_float()
 	        self.connect((self, i), c2f)
@@ -425,11 +426,11 @@ class scope_window(wx.Panel):
         sink = self.info.scopesink
         s = evt.GetString()
         if s == 'Norm':
-            sink.set_trigger_mode(gr.gr_TRIG_MODE_NORM)
+            sink.set_trigger_mode(wxgui.TRIG_MODE_NORM)
         elif s == 'Auto':
-            sink.set_trigger_mode(gr.gr_TRIG_MODE_AUTO)
+            sink.set_trigger_mode(wxgui.TRIG_MODE_AUTO)
         elif s == 'Free':
-            sink.set_trigger_mode(gr.gr_TRIG_MODE_FREE)
+            sink.set_trigger_mode(wxgui.TRIG_MODE_FREE)
         else:
             assert 0, "Bad trig_mode_choice string"
 
