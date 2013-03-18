@@ -58,6 +58,7 @@ GR_SET_GLOBAL(GNURADIO_CORE_INCLUDE_DIRS
     ${CMAKE_CURRENT_BINARY_DIR}/src/lib/swig
     ${CMAKE_CURRENT_SOURCE_DIR}/src/lib/swig
     ${CMAKE_CURRENT_SOURCE_DIR}/src/lib/hier
+    ${CMAKE_BINARY_DIR}
 )
 
 list(APPEND GNURADIO_CORE_INCLUDE_DIRS ${CMAKE_BINARY_DIR})
@@ -67,6 +68,7 @@ GR_SET_GLOBAL(GNURADIO_CORE_SWIG_INCLUDE_DIRS
     ${CMAKE_CURRENT_SOURCE_DIR}/src/lib/swig
     ${CMAKE_SOURCE_DIR}/gruel/src/swig
     ${CMAKE_BINARY_DIR}/gruel/src/swig
+    ${CMAKE_BINARY_DIR}
 )
 
 ########################################################################
