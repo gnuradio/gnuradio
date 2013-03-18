@@ -235,7 +235,7 @@ class my_top_block(gr.top_block):
         self.lock()
 
         # Add file sink to save data
-        self.file_sink = gr.file_sink(gr.sizeof_gr_complex, name)
+        self.file_sink = blocks.file_sink(gr.sizeof_gr_complex, name)
         self.connect(self.amp, self.file_sink)
 
         self.unlock()

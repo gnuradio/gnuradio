@@ -27,6 +27,6 @@ install(FILES
     flex_deinterleave.h
     flex_parse.h
     flex_sync.h
-    DESTINATION ${GR_INCLUDE_DIR}/gnuradio/noaa
-    COMPONENT "noaa_devel"
+    DESTINATION ${GR_INCLUDE_DIR}/gnuradio/pager
+    COMPONENT "pager_devel"
 )

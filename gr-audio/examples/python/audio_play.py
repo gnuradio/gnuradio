@@ -22,6 +22,7 @@
 
 from gnuradio import gr
 from gnuradio import audio
+from gnuradio import blocks
 from gnuradio.eng_option import eng_option
 from optparse import OptionParser
 
@@ -45,7 +46,7 @@ class my_top_block(gr.top_block):
             raise SystemExit, 1
 
         sample_rate = int(options.sample_rate)
-        src = gr.file_source (gr.sizeof_float, options.filename, options.repeat)
+        src = blocks.file_source (gr.sizeof_float, options.filename, options.repeat)
         dst = audio.sink (sample_rate, options.audio_output)
         self.connect(src, dst)
 

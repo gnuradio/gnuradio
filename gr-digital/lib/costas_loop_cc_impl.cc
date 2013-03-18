@@ -44,7 +44,7 @@ namespace gr {
       : gr_sync_block("costas_loop_cc",
 		      gr_make_io_signature(1, 1, sizeof(gr_complex)),
 		      gr_make_io_signature2(1, 2, sizeof(gr_complex), sizeof(float))),
-	gri_control_loop(loop_bw, 1.0, -1.0),
+	blocks::control_loop(loop_bw, 1.0, -1.0),
 	d_order(order), d_phase_detector(NULL)
     {
       // Set up the phase detector to use based on the constellation order

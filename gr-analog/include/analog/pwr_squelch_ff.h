@@ -50,8 +50,9 @@ namespace gr {
        *
        * \param db threshold (in dB) for power squelch
        * \param alpha Gain of averaging filter
-       * \param ramp
-       * \param gate 
+       * \param ramp sets response characteristic.
+       * \param gate if true, no output if no squelch tone.
+       *             if false, output 0's if no squelch tone.
        */
       static sptr make(double db, double alpha=0.0001,
 		       int ramp=0, bool gate=false);

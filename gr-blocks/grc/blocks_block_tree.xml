@@ -31,18 +31,26 @@
 	<cat>
 	        <name>Sources (New)</name>
 		<block>blocks_file_source</block>
+		<block>blocks_file_descriptor_source</block>
 		<block>blocks_file_meta_source</block>
 		<block>blocks_pdu_to_tagged_stream</block>
 		<block>blocks_random_pdu</block>
 		<block>blocks_message_source</block>
 		<block>blocks_message_burst_source</block>
+		<block>blocks_udp_source</block>
+		<block>blocks_wavfile_source</block>
 	</cat>
 	<cat>
 	        <name>Sinks (New)</name>
+		<block>blocks_file_sink</block>
+		<block>blocks_file_descriptor_sink</block>
 		<block>blocks_file_meta_sink</block>
 		<block>blocks_tagged_stream_to_pdu</block>
 		<block>blocks_tag_debug</block>
 		<block>blocks_message_sink</block>
+		<block>blocks_tagged_file_sink</block>
+		<block>blocks_udp_sink</block>
+		<block>blocks_wavfile_sink</block>
 	</cat>
 	<cat>
 		<name>Math Operations (New) </name>
@@ -89,6 +97,7 @@
 		<block>blocks_int_to_float</block>
 		<block>blocks_interleaved_short_to_complex</block>
 		<block>blocks_short_to_char</block>
+		<block>blocks_repack_bits_bb</block>
 		<block>blocks_short_to_float</block>
 		<block>blocks_uchar_to_float</block>
 	</cat>
@@ -125,6 +134,7 @@
 	<cat>
 	        <name>Misc (New) </name>
                 <block>blocks_throttle</block>
+                <block>blocks_probe_rate</block>
 	</cat>
 	<cat>
 	        <name>Networking</name>

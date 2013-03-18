@@ -379,9 +379,14 @@ class GR_CORE_API gr_block : public gr_basic_block {
   // --------------- Performance counter functions -------------
 
   /*!
-   * \brief Gets average noutput_items performance counter.
+   * \brief Gets instantaneous noutput_items performance counter.
    */
   float pc_noutput_items();
+
+  /*!
+   * \brief Gets average noutput_items performance counter.
+   */
+  float pc_noutput_items_avg();
 
   /*!
    * \brief Gets variance of noutput_items performance counter.
@@ -389,9 +394,14 @@ class GR_CORE_API gr_block : public gr_basic_block {
   float pc_noutput_items_var();
 
   /*!
-   * \brief Gets average num items produced performance counter.
+   * \brief Gets instantaneous num items produced performance counter.
    */
   float pc_nproduced();
+
+  /*!
+   * \brief Gets average num items produced performance counter.
+   */
+  float pc_nproduced_avg();
 
   /*!
    * \brief Gets variance of  num items produced performance counter.
@@ -399,9 +409,14 @@ class GR_CORE_API gr_block : public gr_basic_block {
   float pc_nproduced_var();
 
   /*!
-   * \brief Gets average fullness of \p which input buffer.
+   * \brief Gets instantaneous fullness of \p which input buffer.
    */
   float pc_input_buffers_full(int which);
+
+  /*!
+   * \brief Gets average fullness of \p which input buffer.
+   */
+  float pc_input_buffers_full_avg(int which);
 
   /*!
    * \brief Gets variance of fullness of \p which input buffer.
@@ -409,9 +424,14 @@ class GR_CORE_API gr_block : public gr_basic_block {
   float pc_input_buffers_full_var(int which);
 
   /*!
-   * \brief Gets average fullness of all input buffers.
+   * \brief Gets instantaneous fullness of all input buffers.
    */
   std::vector<float> pc_input_buffers_full();
+
+  /*!
+   * \brief Gets average fullness of all input buffers.
+   */
+  std::vector<float> pc_input_buffers_full_avg();
 
   /*!
    * \brief Gets variance of fullness of all input buffers.
@@ -419,9 +439,14 @@ class GR_CORE_API gr_block : public gr_basic_block {
   std::vector<float> pc_input_buffers_full_var();
 
   /*!
-   * \brief Gets average fullness of \p which input buffer.
+   * \brief Gets instantaneous fullness of \p which input buffer.
    */
   float pc_output_buffers_full(int which);
+
+  /*!
+   * \brief Gets average fullness of \p which input buffer.
+   */
+  float pc_output_buffers_full_avg(int which);
 
   /*!
    * \brief Gets variance of fullness of \p which input buffer.
@@ -429,18 +454,29 @@ class GR_CORE_API gr_block : public gr_basic_block {
   float pc_output_buffers_full_var(int which);
 
   /*!
-   * \brief Gets average fullness of all output buffers.
+   * \brief Gets instantaneous fullness of all output buffers.
    */
   std::vector<float> pc_output_buffers_full();
+
+  /*!
+   * \brief Gets average fullness of all output buffers.
+   */
+  std::vector<float> pc_output_buffers_full_avg();
+
   /*!
    * \brief Gets variance of fullness of all output buffers.
    */
   std::vector<float> pc_output_buffers_full_var();
 
   /*!
-   * \brief Gets average clock cycles spent in work.
+   * \brief Gets instantaneous clock cycles spent in work.
    */
   float pc_work_time();
+
+  /*!
+   * \brief Gets average clock cycles spent in work.
+   */
+  float pc_work_time_avg();
 
   /*!
    * \brief Gets average clock cycles spent in work.

@@ -80,7 +80,7 @@ class my_top_block(gr.top_block):
             rrate = usrp_rate / audio_rate
             
         elif(options.to_file is not None):
-            self.sink = gr.file_sink(gr.sizeof_gr_complex, options.to_file)
+            self.sink = blocks.file_sink(gr.sizeof_gr_complex, options.to_file)
             rrate = 1
         else:
             self.sink = gr.null_sink(gr.sizeof_gr_complex)

@@ -25,7 +25,7 @@
 
 #include <digital/api.h>
 #include <gr_sync_block.h>
-#include <gri_control_loop.h>
+#include <blocks/control_loop.h>
 
 namespace gr {
   namespace digital {
@@ -84,7 +84,7 @@ namespace gr {
      */
     class DIGITAL_API fll_band_edge_cc
       : virtual public gr_sync_block,
-        virtual public gri_control_loop
+        virtual public blocks::control_loop
     {
     public:
       // gr::digital::fll_band_edge_cc::sptr

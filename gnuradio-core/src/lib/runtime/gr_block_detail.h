@@ -184,6 +184,14 @@ class GR_CORE_API gr_block_detail {
   std::vector<float> pc_output_buffers_full();
   float pc_work_time();
 
+  float pc_noutput_items_avg();
+  float pc_nproduced_avg();
+  float pc_input_buffers_full_avg(size_t which);
+  std::vector<float> pc_input_buffers_full_avg();
+  float pc_output_buffers_full_avg(size_t which);
+  std::vector<float> pc_output_buffers_full_avg();
+  float pc_work_time_avg();
+
   float pc_noutput_items_var();
   float pc_nproduced_var();
   float pc_input_buffers_full_var(size_t which);
@@ -205,15 +213,20 @@ class GR_CORE_API gr_block_detail {
   bool                               d_done;
 
   // Performance counters
+  float d_ins_noutput_items;
   float d_avg_noutput_items;
   float d_var_noutput_items;
+  float d_ins_nproduced;
   float d_avg_nproduced;
   float d_var_nproduced;
+  std::vector<float> d_ins_input_buffers_full;
   std::vector<float> d_avg_input_buffers_full;
   std::vector<float> d_var_input_buffers_full;
+  std::vector<float> d_ins_output_buffers_full;
   std::vector<float> d_avg_output_buffers_full;
   std::vector<float> d_var_output_buffers_full;
   gruel::high_res_timer_type d_start_of_work, d_end_of_work;
+  float d_ins_work_time;
   float d_avg_work_time;
   float d_var_work_time;
   float d_pc_counter;

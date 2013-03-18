@@ -28,8 +28,10 @@
 namespace gr {
   namespace analog {
 
-  // compute sine and cosine at the same time
+  //! compute double sine and cosine at the same time
   ANALOG_API void sincos(double x, double *sin, double *cos);
+
+  //! compute floating point sine and cosine at the same time
   ANALOG_API void sincosf(float x, float *sin, float *cos);
 
   } /* namespace analog */

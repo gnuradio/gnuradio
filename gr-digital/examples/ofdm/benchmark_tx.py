@@ -27,6 +27,7 @@ from optparse import OptionParser
 import time, struct, sys
 
 from gnuradio import digital
+from gnuradio import blocks
 
 # from current dir
 from transmit_path import transmit_path
@@ -43,7 +44,7 @@ class my_top_block(gr.top_block):
                                         options.spec, options.antenna,
                                         options.verbose)
         elif(options.to_file is not None):
-            self.sink = gr.file_sink(gr.sizeof_gr_complex, options.to_file)
+            self.sink = blocks.file_sink(gr.sizeof_gr_complex, options.to_file)
         else:
             self.sink = gr.null_sink(gr.sizeof_gr_complex)
 

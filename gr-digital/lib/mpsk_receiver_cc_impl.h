@@ -25,7 +25,7 @@
 
 #include <digital/mpsk_receiver_cc.h>
 #include <gruel/attributes.h>
-#include <gri_control_loop.h>
+#include <blocks/control_loop.h>
 #include <gr_complex.h>
 #include <fstream>
 #include <filter/mmse_fir_interpolator_cc.h>
@@ -34,7 +34,7 @@ namespace gr {
   namespace digital {
 
     class mpsk_receiver_cc_impl
-      : public mpsk_receiver_cc, public gri_control_loop
+      : public mpsk_receiver_cc, public blocks::control_loop
     {
     public:
       mpsk_receiver_cc_impl(unsigned int M, float theta, 

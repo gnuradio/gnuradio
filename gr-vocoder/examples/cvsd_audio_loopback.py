@@ -50,15 +50,15 @@ def build_graph():
     tb.connect(enc, dec, s2f, decim, sink_scale, sink)
 
     if 0: # debug
-        tb.conect(src, gr.file_sink(gr.sizeof_float, "source.dat"))
-        tb.conect(src_scale, gr.file_sink(gr.sizeof_float, "src_scale.dat"))
-        tb.conect(interp, gr.file_sink(gr.sizeof_float, "interp.dat"))
-        tb.conect(f2s, gr.file_sink(gr.sizeof_short, "f2s.dat"))
-        tb.conect(enc, gr.file_sink(gr.sizeof_char,  "enc.dat"))
-        tb.conect(dec, gr.file_sink(gr.sizeof_short, "dec.dat"))
-        tb.conect(s2f, gr.file_sink(gr.sizeof_float, "s2f.dat"))
-        tb.conect(decim, gr.file_sink(gr.sizeof_float, "decim.dat"))
-        tb.conect(sink_scale, gr.file_sink(gr.sizeof_float, "sink_scale.dat"))
+        tb.conect(src, blocks.file_sink(gr.sizeof_float, "source.dat"))
+        tb.conect(src_scale, blocks.file_sink(gr.sizeof_float, "src_scale.dat"))
+        tb.conect(interp, blocks.file_sink(gr.sizeof_float, "interp.dat"))
+        tb.conect(f2s, blocks.file_sink(gr.sizeof_short, "f2s.dat"))
+        tb.conect(enc, blocks.file_sink(gr.sizeof_char,  "enc.dat"))
+        tb.conect(dec, blocks.file_sink(gr.sizeof_short, "dec.dat"))
+        tb.conect(s2f, blocks.file_sink(gr.sizeof_float, "s2f.dat"))
+        tb.conect(decim, blocks.file_sink(gr.sizeof_float, "decim.dat"))
+        tb.conect(sink_scale, blocks.file_sink(gr.sizeof_float, "sink_scale.dat"))
 
     return tb
 

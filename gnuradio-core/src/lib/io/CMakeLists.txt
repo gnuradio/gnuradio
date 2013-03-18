@@ -37,7 +37,6 @@ list(APPEND gnuradio_core_sources
     ${CMAKE_CURRENT_SOURCE_DIR}/microtune_4937.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/microtune_xxxx.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/ppio_ppdev.cc
-    ${CMAKE_CURRENT_SOURCE_DIR}/gri_wavfile.cc
 )
 
 ########################################################################
@@ -58,7 +57,6 @@ install(FILES
     ${CMAKE_CURRENT_SOURCE_DIR}/microtune_eval_board_defs.h
     ${CMAKE_CURRENT_SOURCE_DIR}/microtune_xxxx.h
     ${CMAKE_CURRENT_SOURCE_DIR}/ppio_ppdev.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/gri_wavfile.h
     DESTINATION ${GR_INCLUDE_DIR}/gnuradio
     COMPONENT "core_devel"
 )
@@ -80,21 +78,11 @@ endif(ENABLE_PYTHON)
 # Handle triple-threat files that have cc, h, and i
 ########################################################################
 set(gr_core_io_triple_threats
-    gr_file_sink
-    gr_file_sink_base
-    gr_file_source
-    gr_file_descriptor_sink
-    gr_file_descriptor_source
     microtune_xxxx_eval_board
     microtune_4702_eval_board
     microtune_4937_eval_board
     ppio
     sdr_1000
-    gr_udp_sink
-    gr_udp_source
-    gr_wavfile_source
-    gr_wavfile_sink
-    gr_tagged_file_sink
 )
 
 foreach(file_tt ${gr_core_io_triple_threats})

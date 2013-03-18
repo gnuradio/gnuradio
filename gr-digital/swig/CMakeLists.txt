@@ -34,8 +34,6 @@ set(GR_SWIG_INCLUDE_DIRS
     ${Boost_INCLUDE_DIRS}
 )
 
-set(GR_SWIG_LIBRARIES gnuradio-digital gnuradio-filter)
-
 if(ENABLE_GR_CTRLPORT)
   ADD_DEFINITIONS(-DGR_CTRLPORT)
   list(APPEND GR_SWIG_INCLUDE_DIRS ${ICE_INCLUDE_DIR})
@@ -46,7 +44,8 @@ set(GR_SWIG_TARGET_DEPS digital_generated_includes)
 set(GR_SWIG_DOC_FILE ${CMAKE_CURRENT_BINARY_DIR}/digital_swig_doc.i)
 set(GR_SWIG_DOC_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/../lib)
 
-set(GR_SWIG_LIBRARIES gnuradio-digital gnuradio-filter gnuradio-analog)
+set(GR_SWIG_LIBRARIES gnuradio-digital
+  gnuradio-filter gnuradio-analog gnuradio-blocks)
 
 GR_SWIG_MAKE(digital_swig digital_swig.i)
 
@@ -59,6 +58,15 @@ GR_SWIG_INSTALL(
 install(
     FILES
     digital_swig.i
+    constellation.i
+    digital_crc32_bb.i
+    digital_ofdm_carrier_allocator_cvc.i
+    digital_ofdm_chanest_vcvc.i
+    digital_ofdm_equalizer_base.i
+    digital_ofdm_equalizer_simpledfe.i
+    digital_ofdm_equalizer_static.i
+    digital_ofdm_sync_sc_cfb.i
+    packet_header.i
     ${CMAKE_CURRENT_BINARY_DIR}/digital_swig_doc.i
     DESTINATION ${GR_INCLUDE_DIR}/gnuradio/swig
     COMPONENT "digital_swig"

@@ -39,6 +39,14 @@ namespace gr {
       class ANALOG_API agc_cc
       {
       public:
+        /*!
+         * Construct a complex value AGC loop implementation object.
+         *
+         * \param rate the update rate of the loop.
+         * \param reference reference value to adjust signal power to.
+         * \param gain initial gain value.
+         * \param max_gain maximum gain value (0 for unlimited).
+         */
 	agc_cc(float rate = 1e-4, float reference = 1.0,
 	       float gain = 1.0, float max_gain = 0.0)
 	  : _rate(rate), _reference(reference),
@@ -90,6 +98,14 @@ namespace gr {
       class ANALOG_API agc_ff 
       {
       public:
+        /*!
+         * Construct a floating point value AGC loop implementation object.
+         *
+         * \param rate the update rate of the loop.
+         * \param reference reference value to adjust signal power to.
+         * \param gain initial gain value.
+         * \param max_gain maximum gain value (0 for unlimited).
+         */
 	agc_ff(float rate = 1e-4, float reference = 1.0,
 	       float gain = 1.0, float max_gain = 0.0)
 	  : _rate(rate), _reference(reference), _gain(gain),

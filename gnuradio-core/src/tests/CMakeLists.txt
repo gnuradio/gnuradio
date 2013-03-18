@@ -36,8 +36,8 @@ link_directories(
 	${CPPUNIT_LIBRARY_DIRS}
 )
 
-include_directories(${LOG4CXX_INCLUDE_DIRS})
-link_directories(${LOG4CXX_LIBRARY_DIRS})
+include_directories(${LOG4CPP_INCLUDE_DIRS})
+link_directories(${LOG4CPP_LIBRARY_DIRS})
 
 ########################################################################
 # Build benchmarks and non-registered tests

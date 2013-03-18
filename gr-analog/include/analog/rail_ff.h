@@ -39,6 +39,12 @@ namespace gr {
       // gr::analog::rail_ff::sptr
       typedef boost::shared_ptr<rail_ff> sptr;
 
+      /*!
+       * Build a rail block.
+       *
+       * \param lo the low value to clip to.
+       * \param hi the high value to clip to.
+       */
       static sptr make(float lo, float hi);
 
       virtual float lo() const = 0;

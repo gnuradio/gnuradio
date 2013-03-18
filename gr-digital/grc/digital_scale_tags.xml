@@ -1,0 +1,31 @@
+<block>
+  <name>Tag Scaler</name>
+  <key>digital_scale_tags</key>
+  <category>digital</category>
+  <import>from gnuradio import digital</import>
+  <make>digital.scale_tags($item_size, $tag_name, $scale_factor)</make>
+  <param>
+    <name>Item size</name>
+    <key>item_size</key>
+    <type>int</type>
+  </param>
+  <param>
+    <name>Tag Name</name>
+    <key>tag_name</key>
+    <type>string</type>
+  </param>
+  <param>
+    <name>Scale Factor</name>
+    <key>scale_factor</key>
+    <type>real</type>
+  </param>
+  <!--FIXME type should be choosable-->
+  <sink>
+    <name>in</name>
+    <type>byte</type>
+  </sink>
+  <source>
+    <name>out</name>
+    <type>byte</type>
+  </source>
+</block>

@@ -47,7 +47,7 @@ class dial_tone_source(gr.top_block):
 
         # Throttle needed here to account for the other side's audio card sampling rate
 	thr = blocks.throttle(gr.sizeof_float, sample_rate)
-	sink = gr.udp_sink(gr.sizeof_float, host, port, pkt_size, eof=eof)
+	sink = blocks.udp_sink(gr.sizeof_float, host, port, pkt_size, eof=eof)
 	self.connect(src0, (add, 0))
 	self.connect(src1, (add, 1))
 	self.connect(add, thr, sink)

@@ -42,6 +42,12 @@ namespace gr {
       // gr::analog::quadrature_demod_cf::sptr
       typedef boost::shared_ptr<quadrature_demod_cf> sptr;
 
+      /* \brief Make a quadrature demodulator block.
+       *
+       * \param gain Gain setting to adjust the output amplitude. Set
+       *             based on converting the phase difference between
+       *             samples to a nominal output value.
+       */
       static sptr make(float gain);
 
       virtual void set_gain(float gain) = 0;

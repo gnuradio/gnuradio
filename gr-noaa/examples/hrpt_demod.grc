@@ -196,7 +196,7 @@
     </param>
   </block>
   <block>
-    <key>gr_file_source</key>
+    <key>blocks_file_source</key>
     <param>
       <key>id</key>
       <value>file_source</value>
@@ -521,10 +521,10 @@
     </param>
   </block>
   <block>
-    <key>gr_file_sink</key>
+    <key>blocks_file_sink</key>
     <param>
       <key>id</key>
-      <value>gr_file_sink_0</value>
+      <value>blocks_file_sink_0</value>
     </param>
     <param>
       <key>_enabled</key>
@@ -720,7 +720,7 @@
   </connection>
   <connection>
     <source_block_id>noaa_hrpt_deframer_0</source_block_id>
-    <sink_block_id>gr_file_sink_0</sink_block_id>
+    <sink_block_id>blocks_file_sink_0</sink_block_id>
     <source_key>0</source_key>
     <sink_key>0</sink_key>
   </connection>

@@ -227,7 +227,7 @@ class mytb(gr.top_block):
         self.add  = blocks.add_cc()
         self.sub  = blocks.sub_cc()
         self.head = gr.head(gr.sizeof_gr_complex, 1000000)
-        self.snk  = gr.file_sink(gr.sizeof_gr_complex, "output.32fc")
+        self.snk  = blocks.file_sink(gr.sizeof_gr_complex, "output.32fc")
 
         self.connect(self.src0, (self.add,0))
         self.connect(self.src1, (self.add,1))
@@ -282,7 +282,7 @@ class mytb(gr.top_block):
         self.add  = blocks.add_cc()
         self.sub  = blocks.sub_cc()
         self.head = gr.head(gr.sizeof_gr_complex, 1000000)
-        self.snk  = gr.file_sink(gr.sizeof_gr_complex, "output.32fc")
+        self.snk  = blocks.file_sink(gr.sizeof_gr_complex, "output.32fc")
 
         self.connect(self.src0, (self.add,0))
         self.connect(self.src1, (self.add,1))

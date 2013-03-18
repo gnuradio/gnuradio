@@ -91,8 +91,8 @@ endmacro(expand_cc_h_impl)
 # Invoke macro to generate various sources
 ########################################################################
 expand_cc_h_impl(add_XX             ss ii cc)
-expand_cc_h_impl(add_const_XX       ss ii ff cc)
-expand_cc_h_impl(add_const_vXX      ss ii ff cc)
+expand_cc_h_impl(add_const_XX       bb ss ii ff cc)
+expand_cc_h_impl(add_const_vXX      bb ss ii ff cc)
 expand_cc_h_impl(and_XX             bb ss ii)
 expand_cc_h_impl(and_const_XX       bb ss ii)
 expand_cc_h_impl(argmax_XX          fs is ss)
@@ -141,8 +141,11 @@ endif(ENABLE_GR_CTRLPORT)
 ########################################################################
 list(APPEND gr_blocks_sources
     ${generated_sources}
+    control_loop.cc
     count_bits.cc
+    file_sink_base.cc
     fxpt.cc
+    wavfile.cc
     add_ff_impl.cc
     bin_statistics_f_impl.cc
     burst_tagger_impl.cc
@@ -158,6 +161,9 @@ list(APPEND gr_blocks_sources
     conjugate_cc_impl.cc
     deinterleave_impl.cc
     delay_impl.cc
+    file_descriptor_sink_impl.cc
+    file_descriptor_source_impl.cc
+    file_sink_impl.cc
     file_source_impl.cc
     file_meta_sink_impl.cc
     file_meta_source_impl.cc
@@ -192,7 +198,9 @@ list(APPEND gr_blocks_sources
     pdu_to_tagged_stream_impl.cc
     peak_detector2_fb_impl.cc
     random_pdu_impl.cc
+    probe_rate_impl.cc
     regenerate_bb_impl.cc
+    repack_bits_bb_impl.cc
     repeat_impl.cc
     rms_cf_impl.cc
     rms_ff_impl.cc
@@ -206,18 +214,24 @@ list(APPEND gr_blocks_sources
     streams_to_stream_impl.cc
     streams_to_vector_impl.cc
     stretch_ff_impl.cc
+    tagged_file_sink_impl.cc
     tagged_stream_to_pdu_impl.cc
     threshold_ff_impl.cc
     throttle_impl.cc
     transcendental_impl.cc
     tcp_connection.cc
     tuntap_pdu_impl.cc
+    tagged_stream_mux_impl.cc
     uchar_array_to_float.cc
     uchar_to_float_impl.cc
+    udp_sink_impl.cc
+    udp_source_impl.cc
     unpack_k_bits_bb_impl.cc
     vco_f_impl.cc
     vector_to_stream_impl.cc
     vector_to_streams_impl.cc
+    wavfile_sink_impl.cc
+    wavfile_source_impl.cc
 )
 
 #Add Windows DLL resource file if using MSVC
@@ -239,6 +253,7 @@ list(APPEND blocks_libs
     volk
     ${Boost_LIBRARIES}
     ${BLOCKS_LIBRARIES}
+    ${LOG4CPP_LIBRARIES}
 )
 
 add_library(gnuradio-blocks SHARED ${gr_blocks_sources})

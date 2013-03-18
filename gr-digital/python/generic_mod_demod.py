@@ -198,17 +198,17 @@ class generic_mod(gr.hier_block2):
     def _setup_logging(self):
         print "Modulation logging turned on."
         self.connect(self.bytes2chunks,
-                     gr.file_sink(gr.sizeof_char, "tx_bytes2chunks.8b"))
+                     blocks.file_sink(gr.sizeof_char, "tx_bytes2chunks.8b"))
         if self.pre_diff_code:
             self.connect(self.symbol_mapper,
-                         gr.file_sink(gr.sizeof_char, "tx_symbol_mapper.8b"))
+                         blocks.file_sink(gr.sizeof_char, "tx_symbol_mapper.8b"))
         if self._differential:
             self.connect(self.diffenc,
-                         gr.file_sink(gr.sizeof_char, "tx_diffenc.8b"))
+                         blocks.file_sink(gr.sizeof_char, "tx_diffenc.8b"))
         self.connect(self.chunks2symbols,
-                     gr.file_sink(gr.sizeof_gr_complex, "tx_chunks2symbols.32fc"))
+                     blocks.file_sink(gr.sizeof_gr_complex, "tx_chunks2symbols.32fc"))
         self.connect(self.rrc_filter,
-                     gr.file_sink(gr.sizeof_gr_complex, "tx_rrc_filter.32fc"))
+                     blocks.file_sink(gr.sizeof_gr_complex, "tx_rrc_filter.32fc"))
               
 
 # /////////////////////////////////////////////////////////////////////////////
@@ -338,39 +338,39 @@ class generic_demod(gr.hier_block2):
     def _setup_logging(self):
         print "Modulation logging turned on."
         self.connect(self.agc,
-                     gr.file_sink(gr.sizeof_gr_complex, "rx_agc.32fc"))
+                     blocks.file_sink(gr.sizeof_gr_complex, "rx_agc.32fc"))
         self.connect((self.freq_recov, 0),
-                     gr.file_sink(gr.sizeof_gr_complex, "rx_freq_recov.32fc"))
+                     blocks.file_sink(gr.sizeof_gr_complex, "rx_freq_recov.32fc"))
         self.connect((self.freq_recov, 1),
-                     gr.file_sink(gr.sizeof_float, "rx_freq_recov_freq.32f"))
+                     blocks.file_sink(gr.sizeof_float, "rx_freq_recov_freq.32f"))
         self.connect((self.freq_recov, 2),
-                     gr.file_sink(gr.sizeof_float, "rx_freq_recov_phase.32f"))
+                     blocks.file_sink(gr.sizeof_float, "rx_freq_recov_phase.32f"))
         self.connect((self.freq_recov, 3),
-                     gr.file_sink(gr.sizeof_float, "rx_freq_recov_error.32f"))
+                     blocks.file_sink(gr.sizeof_float, "rx_freq_recov_error.32f"))
         self.connect((self.time_recov, 0),
-                     gr.file_sink(gr.sizeof_gr_complex, "rx_time_recov.32fc"))
+                     blocks.file_sink(gr.sizeof_gr_complex, "rx_time_recov.32fc"))
         self.connect((self.time_recov, 1),
-                     gr.file_sink(gr.sizeof_float, "rx_time_recov_error.32f"))
+                     blocks.file_sink(gr.sizeof_float, "rx_time_recov_error.32f"))
         self.connect((self.time_recov, 2),
-                     gr.file_sink(gr.sizeof_float, "rx_time_recov_rate.32f"))
+                     blocks.file_sink(gr.sizeof_float, "rx_time_recov_rate.32f"))
         self.connect((self.time_recov, 3),
-                     gr.file_sink(gr.sizeof_float, "rx_time_recov_phase.32f"))
+                     blocks.file_sink(gr.sizeof_float, "rx_time_recov_phase.32f"))
         self.connect((self.receiver, 0),
-                     gr.file_sink(gr.sizeof_char, "rx_receiver.8b"))
+                     blocks.file_sink(gr.sizeof_char, "rx_receiver.8b"))
         self.connect((self.receiver, 1),
-                     gr.file_sink(gr.sizeof_float, "rx_receiver_error.32f"))
+                     blocks.file_sink(gr.sizeof_float, "rx_receiver_error.32f"))
         self.connect((self.receiver, 2),
-                     gr.file_sink(gr.sizeof_float, "rx_receiver_phase.32f"))
+                     blocks.file_sink(gr.sizeof_float, "rx_receiver_phase.32f"))
         self.connect((self.receiver, 3),
-                     gr.file_sink(gr.sizeof_float, "rx_receiver_freq.32f"))
+                     blocks.file_sink(gr.sizeof_float, "rx_receiver_freq.32f"))
         if self._differential:
             self.connect(self.diffdec,
-                         gr.file_sink(gr.sizeof_char, "rx_diffdec.8b"))
+                         blocks.file_sink(gr.sizeof_char, "rx_diffdec.8b"))
         if self.pre_diff_code:
             self.connect(self.symbol_mapper,
-                         gr.file_sink(gr.sizeof_char, "rx_symbol_mapper.8b"))
+                         blocks.file_sink(gr.sizeof_char, "rx_symbol_mapper.8b"))
         self.connect(self.unpack,
-                     gr.file_sink(gr.sizeof_char, "rx_unpack.8b"))
+                     blocks.file_sink(gr.sizeof_char, "rx_unpack.8b"))
         
     def add_options(parser):
         """

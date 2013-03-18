@@ -9,9 +9,5 @@ gnuradio.gr: Signal Sinks
 .. autooldblock:: gnuradio.gr.vector_sink_f
 .. autooldblock:: gnuradio.gr.vector_sink_i
 .. autooldblock:: gnuradio.gr.vector_sink_s
-.. autooldblock:: gnuradio.gr.file_descriptor_sink
-.. autooldblock:: gnuradio.gr.file_sink
 .. autooldblock:: gnuradio.gr.histo_sink_f
 .. autooldblock:: gnuradio.gr.oscope_sink_f
-.. autooldblock:: gnuradio.gr.udp_sink
-.. autooldblock:: gnuradio.gr.wavfile_sink

@@ -24,13 +24,7 @@
 	</sink>
 	<source>
 		<name>re</name>
-		<type>real</type>
+		<type>float</type>
 		<vlen>$vlen</vlen>
-	</source>
-	<source>
-		<name>im</name>
-		<type>real</type>
-		<vlen>$vlen</vlen>
-		<optional>1</optional>
 	</source>
 </block>

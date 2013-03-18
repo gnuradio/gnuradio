@@ -22,7 +22,6 @@
 
 %{
 
-#include <gri_control_loop.h>
 #include <gr_nop.h>
 #include <gr_null_sink.h>
 #include <gr_null_source.h>
@@ -50,7 +49,6 @@
 #include <gr_vector_map.h>
 %}
 
-%include "gri_control_loop.i"
 %include "gr_nop.i"
 %include "gr_null_sink.i"
 %include "gr_null_source.i"

@@ -1,0 +1,19 @@
+<block>
+  <name>Packet Header Generator</name>
+  <key>digital_packet_headergenerator_bb</key>
+  <import>from gnuradio import digital</import>
+  <make>digital.packet_headergenerator_bb($header_formatter)</make>
+  <param>
+    <name>Formatter Object</name>
+    <key>header_formatter</key>
+    <type>raw</type>
+  </param>
+  <sink>
+    <name>in</name>
+    <type>byte</type>
+  </sink>
+  <source>
+    <name>out</name>
+    <type>byte</type>
+  </source>
+</block>

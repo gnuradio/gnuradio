@@ -100,6 +100,7 @@ if(MSVC)
     )
     add_definitions(-DHAVE_CONFIG_H)
     add_definitions(/MP) #build with multiple processors
+    add_definitions(/bigobj) #allow for larger object files
 endif(MSVC)
 
 ########################################################################
@@ -274,7 +275,6 @@ add_subdirectory(grc)
 add_subdirectory(gr-fec)
 add_subdirectory(gr-fft)
 add_subdirectory(gr-filter)
-#add_subdirectory(gr-ctrlport)
 add_subdirectory(gr-analog)
 add_subdirectory(gr-digital)
 add_subdirectory(gr-atsc)

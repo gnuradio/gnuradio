@@ -8,8 +8,4 @@ gnuradio.gr: Signal Sources
 .. autooldblock:: gnuradio.gr.vector_source_f
 .. autooldblock:: gnuradio.gr.vector_source_i
 .. autooldblock:: gnuradio.gr.vector_source_s
-.. autooldblock:: gnuradio.gr.file_descriptor_source
-.. autooldblock:: gnuradio.gr.file_source
-.. autooldblock:: gnuradio.gr.udp_source
-.. autooldblock:: gnuradio.gr.wavfile_source
 

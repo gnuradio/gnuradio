@@ -1,0 +1,45 @@
+<block>
+  <name>OFDM Frame Equalizer</name>
+  <key>digital_ofdm_frame_equalizer_vcvc</key>
+  <import>from gnuradio import digital</import>
+  <make>digital.ofdm_frame_equalizer_vcvc($equalizer, $len_tag_key, $propagate_channel_state)</make>
+  <param>
+    <name>FFT length</name>
+    <key>fft_len</key>
+    <value>fft_len</value>
+    <type>int</type>
+  </param>
+  <param>
+    <name>Equalizer</name>
+    <key>equalizer</key>
+    <type>raw</type>
+  </param>
+  <param>
+    <name>Length Tag Key</name>
+    <key>len_tag_key</key>
+    <type>string</type>
+  </param>
+  <param>
+	  <name>Propagate Channel State</name>
+	  <key>propagate_channel_state</key>
+	  <type>enum</type>
+	  <option>
+		  <name>Yes</name>
+		  <key>True</key>
+	  </option>
+	  <option>
+		  <name>No</name>
+		  <key>False</key>
+	  </option>
+  </param>
+  <sink>
+    <name>in</name>
+    <type>complex</type>
+    <vlen>$fft_len</vlen>
+  </sink>
+  <source>
+    <name>out</name>
+    <type>complex</type>
+    <vlen>$fft_len</vlen>
+  </source>
+</block>

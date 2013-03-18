@@ -26,13 +26,13 @@
 #include <digital/constellation_receiver_cb.h>
 #include <gruel/attributes.h>
 #include <gr_complex.h>
-#include <gri_control_loop.h>
+#include <blocks/control_loop.h>
 
 namespace gr {
   namespace digital {
 
     class constellation_receiver_cb_impl
-      : public constellation_receiver_cb, gri_control_loop
+      : public constellation_receiver_cb, blocks::control_loop
     {
     public:
       constellation_receiver_cb_impl(constellation_sptr constell, 

@@ -65,8 +65,8 @@ endmacro(expand_h)
 # Invoke macro to generate various sources
 ########################################################################
 expand_h(add_XX             ss ii cc)
-expand_h(add_const_XX       ss ii ff cc)
-expand_h(add_const_vXX      ss ii ff cc)
+expand_h(add_const_XX       bb ss ii ff cc)
+expand_h(add_const_vXX      bb ss ii ff cc)
 expand_h(and_XX             bb ss ii)
 expand_h(and_const_XX       bb ss ii)
 expand_h(argmax_XX          fs is ss)
@@ -99,13 +99,16 @@ add_custom_target(blocks_generated_includes DEPENDS
 install(FILES
     ${generated_includes}
     api.h
+    control_loop.h
     count_bits.h
+    file_sink_base.h
     fxpt.h
     fxpt_nco.h
     fxpt_vco.h
     log2_const.h
     nco.h
     vco.h
+    wavfile.h
     add_ff.h
     bin_statistics_f.h
     burst_tagger.h
@@ -151,7 +154,9 @@ install(FILES
     pdu_to_tagged_stream.h
     peak_detector2_fb.h
     random_pdu.h
+    probe_rate.h
     regenerate_bb.h
+    repack_bits_bb.h 
     repeat.h
     rms_cf.h
     rms_ff.h
@@ -165,16 +170,22 @@ install(FILES
     streams_to_vector.h
     stretch_ff.h
     tag_debug.h
+    tagged_file_sink.h
     tagged_stream_to_pdu.h
     threshold_ff.h
     throttle.h
     transcendental.h
     tuntap_pdu.h
+    tagged_stream_mux.h
     uchar_to_float.h
+    udp_sink.h
+    udp_source.h
     unpack_k_bits_bb.h
     vco_f.h
     vector_to_stream.h
     vector_to_streams.h
+    wavfile_sink.h
+    wavfile_source.h
     DESTINATION ${GR_INCLUDE_DIR}/gnuradio/blocks
     COMPONENT "blocks_devel"
 )

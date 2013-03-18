@@ -21,6 +21,7 @@
 #
 
 from gnuradio import gr
+from gnuradio import blocks
 from gnuradio.eng_option import eng_option
 from optparse import OptionParser
 
@@ -28,9 +29,8 @@ class vector_sink(gr.top_block):
     def __init__(self, host, port, pkt_size, eof, wait):
         gr.top_block.__init__(self, "vector_sink")
 
-        udp = gr.udp_source(gr.sizeof_float, host, port, pkt_size,
-                            eof=eof, wait=wait)
-        sink = gr.file_sink(gr.sizeof_float, "received.dat")
+        udp = blocks.udp_source(gr.sizeof_float, host, port, pkt_size, eof=eof)
+        sink = blocks.file_sink(gr.sizeof_float, "received.dat")
         self.connect(udp, sink)
 
 if __name__ == "__main__":
@@ -43,8 +43,6 @@ if __name__ == "__main__":
                       help="packet size.")
     parser.add_option("", "--no-eof", action="store_true", default=False,
                       help="don't send EOF on disconnect")
-    parser.add_option("", "--no-wait", action="store_true", default=False,
-                      help="don't wait for source")
     (options, args) = parser.parse_args()
     if len(args) != 0:
         parser.print_help()
@@ -53,7 +51,7 @@ if __name__ == "__main__":
     # Create an instance of a hierarchical block
     top_block = vector_sink(options.host, options.port,
                             options.packet_size,
-                            not options.no_eof, not options.no_wait)
+                            not options.no_eof)
 
     try:
         # Run forever

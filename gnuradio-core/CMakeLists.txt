@@ -44,6 +44,7 @@ GR_REGISTER_COMPONENT("gnuradio-core" ENABLE_GR_CORE
 )
 
 include(GrMiscUtils)
+
 GR_SET_GLOBAL(GNURADIO_CORE_INCLUDE_DIRS
     ${CMAKE_CURRENT_SOURCE_DIR}/src/lib/runtime
     ${CMAKE_CURRENT_BINARY_DIR}/src/lib/general
@@ -58,6 +59,8 @@ GR_SET_GLOBAL(GNURADIO_CORE_INCLUDE_DIRS
     ${CMAKE_CURRENT_SOURCE_DIR}/src/lib/swig
     ${CMAKE_CURRENT_SOURCE_DIR}/src/lib/hier
 )
+
+list(APPEND GNURADIO_CORE_INCLUDE_DIRS ${CMAKE_BINARY_DIR})
 
 GR_SET_GLOBAL(GNURADIO_CORE_SWIG_INCLUDE_DIRS
     ${GNURADIO_CORE_INCLUDE_DIRS}
@@ -144,13 +147,13 @@ install(
     COMPONENT "core_runtime"
 )
 
-if(ENABLE_GR_LOG AND HAVE_LOG4CXX)
+if(ENABLE_GR_LOG AND HAVE_LOG4CPP)
 install(FILES
     ${CMAKE_CURRENT_SOURCE_DIR}/gr_log_default.xml
     DESTINATION ${GR_CONF_DIR}/gnuradio
     COMPONENT "core_runtime"
 )
-endif(ENABLE_GR_LOG AND HAVE_LOG4CXX)
+endif(ENABLE_GR_LOG AND HAVE_LOG4CPP)
 
 ########################################################################
 # Add subdirectories

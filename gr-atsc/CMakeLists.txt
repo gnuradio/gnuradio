@@ -1,4 +1,4 @@
-# Copyright 2011 Free Software Foundation, Inc.
+# Copyright 2011,2013 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -36,7 +36,8 @@ GR_REGISTER_COMPONENT("gr-atsc" ENABLE_GR_ATSC
 )
 
 GR_SET_GLOBAL(GR_ATSC_INCLUDE_DIRS
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/lib
+    ${CMAKE_CURRENT_SOURCE_DIR}/include
+    ${CMAKE_CURRENT_BINARY_DIR}/lib
 )
 
 ########################################################################
@@ -88,9 +89,11 @@ CPACK_COMPONENT("atsc_swig"
 ########################################################################
 # Add subdirectories
 ########################################################################
-add_subdirectory(src/lib)
+add_subdirectory(lib)
+add_subdirectory(include/atsc)
 if(ENABLE_PYTHON)
-    add_subdirectory(src/python)
+    add_subdirectory(swig)
+    add_subdirectory(python)
 endif(ENABLE_PYTHON)
 
 ########################################################################

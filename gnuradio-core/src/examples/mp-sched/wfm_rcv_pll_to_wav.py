@@ -50,7 +50,7 @@ class wfm_rx_block (gr.top_block):
 
         # build graph
 
-        self.src = gr.file_source(gr.sizeof_gr_complex, input_filename, False)
+        self.src = blocks.file_source(gr.sizeof_gr_complex, input_filename, False)
 
         adc_rate = 64e6                             # 64 MS/s
         usrp_decim = 200
@@ -80,7 +80,7 @@ class wfm_rx_block (gr.top_block):
 
         # wave file as final sink
         if 1:
-            sink = gr.wavfile_sink(output_filename, 2, int(audio_rate), 16)
+            sink = blocks.wavfile_sink(output_filename, 2, int(audio_rate), 16)
         else:
             sink = audio.sink (int (audio_rate),
                                options.audio_output,

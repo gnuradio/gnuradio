@@ -41,6 +41,11 @@ namespace gr {
       // gr::analog::frequency_modulator_fc::sptr
       typedef boost::shared_ptr<frequency_modulator_fc> sptr;
 
+      /*!
+       * Build a frequency modulator block.
+       *
+       * \param sensitivity radians/sample = amplitude * sensitivity
+       */
       static sptr make(double sensitivity);
 
       virtual void set_sensitivity(float sens) = 0;

@@ -40,6 +40,7 @@ class gr_msg_queue;
 class gr_sync_block;
 class gr_sync_decimator;
 class gr_sync_interpolator;
+class gr_tagged_stream_block;
 class gr_top_block;
 
 #endif /* INCLUDED_GNURADIO_SWIG_BUG_WORKAROUND_H */
