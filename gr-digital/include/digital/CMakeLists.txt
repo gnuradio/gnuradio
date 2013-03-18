@@ -125,13 +125,11 @@ install(FILES
     pn_correlator_cc.h
     probe_density_b.h
     probe_mpsk_snr_est_c.h
-    scale_tags.h
     scrambler_bb.h
     simple_correlator.h
     simple_framer.h
     simple_framer_sync.h
-    tagged_stream_check.h
-    ts_insert_zeros_cc.h
+    header_payload_demux.h
     DESTINATION ${GR_INCLUDE_DIR}/gnuradio/digital
     COMPONENT "digital_devel"
 )

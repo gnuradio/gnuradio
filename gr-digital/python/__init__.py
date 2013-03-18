@@ -42,7 +42,6 @@ from ofdm_sync_fixed import *
 from ofdm_sync_ml import *
 from ofdm_sync_pnac import *
 from ofdm_sync_pn import *
-from fftshift import fftshift, ifftshift
 from ofdm_txrx import ofdm_tx, ofdm_rx
 
 import packet_utils

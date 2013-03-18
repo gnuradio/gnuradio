@@ -168,12 +168,10 @@ list(APPEND digital_sources
     pn_correlator_cc_impl.cc
     probe_density_b_impl.cc
     probe_mpsk_snr_est_c_impl.cc
-    scale_tags_impl.cc
     scrambler_bb_impl.cc
     simple_correlator_impl.cc
     simple_framer_impl.cc
-    tagged_stream_check_impl.cc
-    ts_insert_zeros_cc_impl.cc
+    header_payload_demux_impl.cc
 )
 
 #Add Windows DLL resource file if using MSVC
