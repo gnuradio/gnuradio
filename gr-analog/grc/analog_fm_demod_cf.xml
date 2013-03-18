@@ -1,18 +1,21 @@
 <?xml version="1.0"?>
 <!--
 ###################################################
-##AM Demod
+##FM Demod
 ###################################################
  -->
 <block>
-	<name>AM Demod</name>
-	<key>blks2_am_demod_cf</key>
-	<import>from gnuradio import blks2</import>
-	<make>blks2.am_demod_cf(
+	<name>FM Demod</name>
+	<key>analog_fm_demod_cf</key>
+	<import>from gnuradio import analog</import>
+	<make>analog.fm_demod_cf(
 	channel_rate=$chan_rate,
 	audio_decim=$audio_decim,
+	deviation=$deviation,
 	audio_pass=$audio_pass,
 	audio_stop=$audio_stop,
+	gain=$gain,
+	tau=$tau,
 )</make>
 	<param>
 		<name>Channel Rate</name>
@@ -25,15 +28,33 @@
 		<type>int</type>
 	</param>
 	<param>
+		<name>Deviation</name>
+		<key>deviation</key>
+		<value>75000</value>
+		<type>real</type>
+	</param>
+	<param>
 		<name>Audio Pass</name>
 		<key>audio_pass</key>
-		<value>5000</value>
+		<value>15000</value>
 		<type>real</type>
 	</param>
 	<param>
 		<name>Audio Stop</name>
 		<key>audio_stop</key>
-		<value>5500</value>
+		<value>16000</value>
+		<type>real</type>
+	</param>
+	<param>
+		<name>Gain</name>
+		<key>gain</key>
+		<value>1.0</value>
+		<type>real</type>
+	</param>
+	<param>
+		<name>Tau</name>
+		<key>tau</key>
+		<value>75e-6</value>
 		<type>real</type>
 	</param>
 	<sink>

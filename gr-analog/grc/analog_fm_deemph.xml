@@ -1,14 +1,14 @@
 <?xml version="1.0"?>
 <!--
 ###################################################
-##FM Preemphasis
+##FM Deemphasis
 ###################################################
  -->
 <block>
-	<name>FM Preemphasis</name>
-	<key>blks2_fm_preemph</key>
-	<import>from gnuradio import blks2</import>
-	<make>blks2.fm_preemph(fs=$samp_rate, tau=$tau)</make>
+	<name>FM Deemphasis</name>
+	<key>analog_fm_deemph</key>
+	<import>from gnuradio import analog</import>
+	<make>analog.fm_deemph(fs=$samp_rate, tau=$tau)</make>
 	<param>
 		<name>Sample Rate</name>
 		<key>samp_rate</key>

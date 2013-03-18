@@ -1,14 +1,14 @@
 <?xml version="1.0"?>
 <!--
 ###################################################
-##WBFM Transmit
+##NBFM Transmit
 ###################################################
  -->
 <block>
-	<name>WBFM Transmit</name>
-	<key>blks2_wfm_tx</key>
-	<import>from gnuradio import blks2</import>
-	<make>blks2.wfm_tx(
+	<name>NBFM Transmit</name>
+	<key>analog_nbfm_tx</key>
+	<import>from gnuradio import analog</import>
+	<make>analog.nbfm_tx(
 	audio_rate=$audio_rate,
 	quad_rate=$quad_rate,
 	tau=$tau,
@@ -33,7 +33,7 @@
 	<param>
 		<name>Max Deviation</name>
 		<key>max_dev</key>
-		<value>75e3</value>
+		<value>5e3</value>
 		<type>real</type>
 	</param>
 	<check>$quad_rate%$audio_rate == 0</check>

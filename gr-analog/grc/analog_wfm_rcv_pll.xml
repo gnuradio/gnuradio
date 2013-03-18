@@ -1,15 +1,15 @@
 <?xml version="1.0"?>
 <!--
 ###################################################
-##WBFM Receive
+##WBFM Receive PLL
 ###################################################
  -->
 <block>
-	<name>WBFM Receive</name>
-	<key>blks2_wfm_rcv</key>
-	<import>from gnuradio import blks2</import>
-	<make>blks2.wfm_rcv(
-	quad_rate=$quad_rate,
+	<name>WBFM Receive PLL</name>
+	<key>analog_wfm_rcv_pll</key>
+	<import>from gnuradio import analog</import>
+	<make>analog.wfm_rcv_pll(
+	demod_rate=$quad_rate,
 	audio_decimation=$audio_decimation,
 )</make>
 	<param>
@@ -27,7 +27,11 @@
 		<type>complex</type>
 	</sink>
 	<source>
-		<name>out</name>
+		<name>Lout</name>
+		<type>float</type>
+	</source>
+	<source>
+		<name>Rout</name>
 		<type>float</type>
 	</source>
 </block>

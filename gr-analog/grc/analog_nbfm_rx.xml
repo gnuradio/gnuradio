@@ -6,9 +6,9 @@
  -->
 <block>
 	<name>NBFM Receive</name>
-	<key>blks2_nbfm_rx</key>
-	<import>from gnuradio import blks2</import>
-	<make>blks2.nbfm_rx(
+	<key>analog_nbfm_rx</key>
+	<import>from gnuradio import analog</import>
+	<make>analog.nbfm_rx(
 	audio_rate=$audio_rate,
 	quad_rate=$quad_rate,
 	tau=$tau,

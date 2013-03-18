@@ -46,6 +46,15 @@
     <block>analog_frequency_modulator_fc</block>
     <block>analog_phase_modulator_fc</block>
     <block>analog_quadrature_demod_cf</block>
+    <block>analog_nbfm_tx</block>
+    <block>analog_nbfm_rx</block>
+    <block>analog_wfm_tx</block>
+    <block>analog_wfm_rcv</block>
+    <block>analog_wfm_rcv_pll</block>
+    <block>analog_am_demod_cf</block>
+    <block>analog_fm_demod_cf</block>
+    <block>analog_fm_deemph</block>
+    <block>analog_fm_preemph</block>
   </cat>
   <cat>
     <name>Sources</name>
