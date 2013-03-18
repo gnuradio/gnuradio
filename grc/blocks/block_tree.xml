@@ -25,10 +25,6 @@
 		<block>blks2_packet_encoder</block>
 	</cat>
 	<cat>
-		<name>Modulators</name>
-		<block>gr_vco_f</block>
-	</cat>
-	<cat>
 		<name>Error Correction</name>
 		<cat>
 			<name>Trellis</name>

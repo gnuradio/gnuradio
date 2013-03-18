@@ -111,7 +111,7 @@
     </param>
   </block>
   <block>
-    <key>gr_vco_f</key>
+    <key>blocks_vco_f</key>
     <param>
       <key>id</key>
       <value>vco</value>
