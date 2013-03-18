@@ -142,7 +142,6 @@ list(APPEND gr_blocks_sources
     control_loop.cc
     count_bits.cc
     file_sink_base.cc
-    fxpt.cc
     wavfile.cc
     add_ff_impl.cc
     annotator_1to1_impl.cc
@@ -287,9 +286,6 @@ if(ENABLE_TESTING)
     ${CMAKE_CURRENT_SOURCE_DIR}/test_gr_blocks.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/qa_blocks.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/qa_block_tags.cc
-    ${CMAKE_CURRENT_SOURCE_DIR}/qa_fxpt.cc
-    ${CMAKE_CURRENT_SOURCE_DIR}/qa_fxpt_nco.cc
-    ${CMAKE_CURRENT_SOURCE_DIR}/qa_fxpt_vco.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/qa_rotator.cc
     )
 
