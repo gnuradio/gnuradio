@@ -113,8 +113,6 @@ install(FILES
     ${CMAKE_CURRENT_SOURCE_DIR}/gr_test_types.h
     ${CMAKE_CURRENT_SOURCE_DIR}/gr_vco.h
     ${CMAKE_CURRENT_SOURCE_DIR}/gri_debugger_hook.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/gri_lfsr_15_1_0.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/gri_lfsr_32k.h
     ${CMAKE_CURRENT_SOURCE_DIR}/malloc16.h
     ${CMAKE_CURRENT_SOURCE_DIR}/random.h
     DESTINATION ${GR_INCLUDE_DIR}/gnuradio
@@ -139,9 +137,7 @@ endif(ENABLE_PYTHON)
 set(gr_core_general_triple_threats
     complex_vec_test
     gr_block_gateway
-    gr_check_lfsr_32k_s
     gr_feval
-    gr_lfsr_32k_source_s
     gr_prefs
     gr_test
 )

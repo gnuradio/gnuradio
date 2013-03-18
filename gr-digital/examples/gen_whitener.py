@@ -37,7 +37,7 @@ class my_graph(gr.top_block):
             parser.print_help()
             raise SystemExit, 1
 
-        src = gr.lfsr_32k_source_s()
+        src = blocks.lfsr_32k_source_s()
         head = blocks.head(gr.sizeof_short, 2048)
         self.dst = blocks.vector_sink_s()
         self.connect(src, head, self.dst)

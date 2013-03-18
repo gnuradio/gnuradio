@@ -19,7 +19,7 @@ def run_test (fo,fi,interleaver,Kb,bitspersymbol,K,dimensionality,constellation,
 
 
     # TX
-    src = gr.lfsr_32k_source_s()
+    src = blocks.lfsr_32k_source_s()
     src_head = blocks.head (gr.sizeof_short,Kb/16) # packet size in shorts
     s2fsmi = blocks.packed_to_unpacked_ss(bitspersymbol,gr.GR_MSB_FIRST) # unpack shorts to symbols compatible with the outer FSM input cardinality
     #src = blocks.vector_source_s([0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1],False)
@@ -37,7 +37,7 @@ def run_test (fo,fi,interleaver,Kb,bitspersymbol,K,dimensionality,constellation,
     dec = trellis.pccc_decoder_s(fo,0,-1,fi,0,-1,interleaver,K,IT,trellis.TRELLIS_MIN_SUM)
 
     fsmi2s = blocks.unpacked_to_packed_ss(bitspersymbol,gr.GR_MSB_FIRST) # pack FSM input symbols to shorts
-    dst = gr.check_lfsr_32k_s()
+    dst = blocks.check_lfsr_32k_s()
 
     tb.connect (src,src_head,s2fsmi,enc,mod)
     #tb.connect (src,enc,mod)

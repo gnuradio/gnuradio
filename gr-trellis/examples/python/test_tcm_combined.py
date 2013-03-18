@@ -19,7 +19,7 @@ def run_test (f,Kb,bitspersymbol,K,dimensionality,constellation,N0,seed):
     tb = gr.top_block ()
 
     # TX
-    src = gr.lfsr_32k_source_s()
+    src = blocks.lfsr_32k_source_s()
     src_head = blocks.head(gr.sizeof_short,Kb/16) # packet size in shorts
     s2fsmi = blocks.packed_to_unpacked_ss(bitspersymbol,gr.GR_MSB_FIRST) # unpack shorts to symbols compatible with the FSM input cardinality
     enc = trellis.encoder_ss(f,0) # initial state = 0
@@ -34,7 +34,7 @@ def run_test (f,Kb,bitspersymbol,K,dimensionality,constellation,N0,seed):
     # RX
     va = trellis.viterbi_combined_fs(f,K,0,-1,dimensionality,constellation,digital.TRELLIS_EUCLIDEAN) # Put -1 if the Initial/Final states are not set.
     fsmi2s = blocks.unpacked_to_packed_ss(bitspersymbol,gr.GR_MSB_FIRST) # pack FSM input symbols to shorts
-    dst = gr.check_lfsr_32k_s();
+    dst = blocks.check_lfsr_32k_s();
 
 
     tb.connect (src,src_head,s2fsmi,enc,mod)

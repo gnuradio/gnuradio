@@ -22,8 +22,6 @@
 
 %{
 
-#include <gr_lfsr_32k_source_s.h>
-#include <gr_check_lfsr_32k_s.h>
 #include <gr_prefs.h>
 #include <gr_constants.h>
 #include <gr_test_types.h>
@@ -33,8 +31,6 @@
 #include <gr_endianness.h>
 %}
 
-%include "gr_lfsr_32k_source_s.i"
-%include "gr_check_lfsr_32k_s.i"
 %include "gr_prefs.i"
 %include "gr_constants.i"
 %include "gr_test_types.h"

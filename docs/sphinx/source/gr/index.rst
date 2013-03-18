@@ -15,13 +15,6 @@ Top Block and Hierarchical Block Base Classes
    gnuradio.gr.top_block
    gnuradio.gr.hier_block2
 
-Signal Sources
-^^^^^^^^^^^^^^
-
-.. autosummary::
-   :nosignatures:
-
-   gnuradio.gr.lfsr_32k_source_s
 
 Signal Sinks
 ^^^^^^^^^^^^
@@ -29,7 +22,6 @@ Signal Sinks
 .. autosummary::
    :nosignatures:
 
-   gnuradio.gr.check_lfsr_32k_s
    gnuradio.gr.histo_sink_f
    gnuradio.gr.oscope_sink_f
 
