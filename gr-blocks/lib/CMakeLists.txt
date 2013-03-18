@@ -152,6 +152,7 @@ list(APPEND gr_blocks_sources
     burst_tagger_impl.cc
     char_to_float_impl.cc
     char_to_short_impl.cc
+    check_lfsr_32k_s_impl.cc
     complex_to_interleaved_short_impl.cc
     complex_to_float_impl.cc
     complex_to_real_impl.cc
@@ -184,6 +185,7 @@ list(APPEND gr_blocks_sources
     interleaved_short_to_complex_impl.cc
     keep_m_in_n_impl.cc
     keep_one_in_n_impl.cc
+    lfsr_32k_source_s_impl.cc
     message_debug_impl.cc
     message_sink_impl.cc
     message_source_impl.cc
