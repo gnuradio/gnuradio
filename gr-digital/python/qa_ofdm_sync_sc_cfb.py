@@ -174,10 +174,8 @@ Detection error was: %d """ % (numpy.sum(sink_detect.data()) - n_bursts)
         #rate_out = 48000
         #ratio = float(rate_out) / rate_in
         #throttle1 = gr.throttle(gr.sizeof_gr_complex, rate_in)
-        #insert_zeros = digital.ts_insert_zeros_cc(tagname)
-        #throttle2 = gr.throttle(gr.sizeof_gr_complex, rate_out)
-        #sink_countbursts = blocks.vector_sink_c()
-        #head = blocks.head(gr.sizeof_gr_complex, int(total_length * ratio*2))
+        #sink_countbursts = gr.vector_sink_c()
+        #head = gr.head(gr.sizeof_gr_complex, int(total_length * ratio*2))
         #add = gr.add_cc()
         #sync = digital.ofdm_sync_sc_cfb(fft_len, cp_len)
         #sink_freq   = blocks.vector_sink_f()

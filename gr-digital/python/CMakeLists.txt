@@ -28,7 +28,6 @@ GR_PYTHON_INSTALL(
     bpsk.py
     cpm.py
     crc.py
-    fftshift.py
     generic_mod_demod.py
     gmsk.py
     gfsk.py

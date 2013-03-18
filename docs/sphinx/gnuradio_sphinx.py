@@ -107,7 +107,32 @@ common_block_members =[
     'to_basic_block',
     'unique_id',
     'make',
-    ]
+    'alias', 
+    'is_set_max_noutput_items', 
+    'max_noutput_items', 
+    'max_output_buffer', 
+    'message_ports_in', 
+    'message_ports_out', 
+    'min_output_buffer', 
+    'pc_input_buffers_full', 
+    'pc_input_buffers_full_var', 
+    'pc_noutput_items', 
+    'pc_noutput_items_var', 
+    'pc_nproduced', 
+    'pc_nproduced_var', 
+    'pc_output_buffers_full', 
+    'pc_output_buffers_full_var', 
+    'pc_work_time', 
+    'pc_work_time_var', 
+    'processor_affinity', 
+    'set_block_alias', 
+    'set_max_noutput_items', 
+    'unset_max_noutput_items', 
+    'set_max_output_buffer', 
+    'set_min_output_buffer', 
+    'set_processor_affinity', 
+    'symbol_name', 
+    'unset_processor_affinity', ]
 
 class OldBlockDocumenter(FunctionDocumenter):
     """

@@ -25,6 +25,7 @@
 #include <ice_application_base.h>
 #include <IcePy_Communicator.h>
 #include <pythread.h>
+#include <boost/format.hpp>
 
 enum pyport_t {
   PYPORT_STRING,
@@ -78,11 +79,17 @@ public:
 		    DisplayType dtype) :
     d_callback(NULL),
     d_functionbase(functionbase), d_units(units), d_desc(desc),
-    d_min(min), d_max(max), d_deflt(deflt), d_dtype(dtype)
+    d_min(min), d_max(max), d_deflt(deflt), d_dtype(dtype),
+    d_name(name), d_id(pycallback_object_count++)
   {
     d_callback = NULL;
   }
-    
+
+  void add_rpc_variable(rpcbasic_sptr s)
+  {
+    d_rpc_vars.push_back(s);
+  }
+
   myType get() {
     myType rVal;
     if(d_callback == NULL) {
@@ -123,7 +130,7 @@ public:
 #ifdef GR_CTRLPORT
     add_rpc_variable(
       rpcbasic_sptr(new rpcbasic_register_get<pycallback_object, myType>(
-        alias(), d_functionbase.c_str(),
+        (boost::format("%s%d") % d_name % d_id).str() , d_functionbase.c_str(),
 	&pycallback_object::get, pmt_assist<myType>::make(d_min),
 	pmt_assist<myType>::make(d_max), pmt_assist<myType>::make(d_deflt),
 	d_units.c_str(), d_desc.c_str(), RPC_PRIVLVL_MIN, d_dtype)));
@@ -140,6 +147,10 @@ private:
     printf("TYPE NOT IMPLEMENTED!\n");
     assert(0);
   };
+  std::vector<boost::any> d_rpc_vars; // container for all RPC variables
+  std::string d_name;
+  int d_id;
+
 };
 
 

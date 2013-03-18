@@ -101,12 +101,12 @@
 #include "digital/pn_correlator_cc.h"
 #include "digital/probe_density_b.h"
 #include "digital/probe_mpsk_snr_est_c.h"
-#include "digital/scale_tags.h"
 #include "digital/scrambler_bb.h"
 #include "digital/simple_correlator.h"
 #include "digital/simple_framer.h"
-#include "digital/tagged_stream_check.h"
-#include "digital/ts_insert_zeros_cc.h"
+#include "digital/ofdm_serializer_vcc.h"
+#include "digital/packet_headerparser_b.h"
+#include "digital/header_payload_demux.h"
 %}
 
 %include "digital/additive_scrambler_bb.h"
@@ -170,12 +170,9 @@
 %include "digital/pn_correlator_cc.h"
 %include "digital/probe_density_b.h"
 %include "digital/probe_mpsk_snr_est_c.h"
-%include "digital/scale_tags.h"
 %include "digital/scrambler_bb.h"
 %include "digital/simple_correlator.h"
 %include "digital/simple_framer.h"
-%include "digital/tagged_stream_check.h"
-%include "digital/ts_insert_zeros_cc.h"
 
 GR_SWIG_BLOCK_MAGIC2(digital, additive_scrambler_bb);
 GR_SWIG_BLOCK_MAGIC2(digital, binary_slicer_fb);
@@ -228,12 +225,9 @@ GR_SWIG_BLOCK_MAGIC2(digital, pfb_clock_sync_fff);
 GR_SWIG_BLOCK_MAGIC2(digital, pn_correlator_cc);
 GR_SWIG_BLOCK_MAGIC2(digital, probe_density_b);
 GR_SWIG_BLOCK_MAGIC2(digital, probe_mpsk_snr_est_c);
-GR_SWIG_BLOCK_MAGIC2(digital, scale_tags);
 GR_SWIG_BLOCK_MAGIC2(digital, scrambler_bb);
 GR_SWIG_BLOCK_MAGIC2(digital, simple_correlator);
 GR_SWIG_BLOCK_MAGIC2(digital, simple_framer);
-GR_SWIG_BLOCK_MAGIC2(digital, tagged_stream_check);
-GR_SWIG_BLOCK_MAGIC2(digital, ts_insert_zeros_cc);
 
 GR_SWIG_BLOCK_MAGIC_FACTORY(digital, cpmmod_bc, gmskmod_bc);
 
