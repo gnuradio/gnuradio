@@ -48,7 +48,7 @@ namespace gr {
       static sptr make(size_t sizeof_stream_item);
 
       // insert a tag to be added
-      void add_tag(uint64_t offset, pmt::pmt_t key, pmt::pmt_t val);
+      virtual void add_tag(uint64_t offset, pmt::pmt_t key, pmt::pmt_t val) = 0;
     };
 
   } /* namespace blocks */

@@ -68,7 +68,7 @@ class wfm_rx_block (gr.top_block):
                                             0.1,         # passband ripple
                                             60)          # stopband attenuation
         #print len(chan_filt_coeffs)
-        chan_filt = gr.fir_filter_ccf (chanfilt_decim, chan_filt_coeffs)
+        chan_filt = filter.fir_filter_ccf (chanfilt_decim, chan_filt_coeffs)
 
 
         #self.guts = analog.wfm_rcv (demod_rate, audio_decimation)

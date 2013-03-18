@@ -29,7 +29,7 @@ import os
 class pipeline(gr.hier_block2):
     def __init__(self, nstages, ntaps=256):
         """
-        Create a pipeline of nstages of gr.fir_filter_fff's connected in serial
+        Create a pipeline of nstages of filter.fir_filter_fff's connected in serial
         terminating in a blocks.null_sink.
         """
         gr.hier_block2.__init__(self, "pipeline",
@@ -38,7 +38,7 @@ class pipeline(gr.hier_block2):
         taps = ntaps*[1.0/ntaps]
         upstream = self
         for i in range(nstages):
-            op = gr.fir_filter_fff(1, taps)
+            op = filter.fir_filter_fff(1, taps)
             self.connect(upstream, op)
             upstream = op
 

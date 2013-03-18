@@ -54,6 +54,9 @@
 #include "blocks/and_const_bb.h"
 #include "blocks/and_const_ss.h"
 #include "blocks/and_const_ii.h"
+#include "blocks/annotator_1to1.h"
+#include "blocks/annotator_alltoall.h"
+#include "blocks/annotator_raw.h"
 #include "blocks/argmax_fs.h"
 #include "blocks/argmax_is.h"
 #include "blocks/argmax_ss.h"
@@ -245,6 +248,9 @@
 %include "blocks/and_const_bb.h"
 %include "blocks/and_const_ss.h"
 %include "blocks/and_const_ii.h"
+%include "blocks/annotator_1to1.h"
+%include "blocks/annotator_alltoall.h"
+%include "blocks/annotator_raw.h"
 %include "blocks/argmax_fs.h"
 %include "blocks/argmax_is.h"
 %include "blocks/argmax_ss.h"
@@ -435,6 +441,9 @@ GR_SWIG_BLOCK_MAGIC2(blocks, and_ii);
 GR_SWIG_BLOCK_MAGIC2(blocks, and_const_bb);
 GR_SWIG_BLOCK_MAGIC2(blocks, and_const_ss);
 GR_SWIG_BLOCK_MAGIC2(blocks, and_const_ii);
+GR_SWIG_BLOCK_MAGIC2(blocks, annotator_1to1);
+GR_SWIG_BLOCK_MAGIC2(blocks, annotator_alltoall);
+GR_SWIG_BLOCK_MAGIC2(blocks, annotator_raw);
 GR_SWIG_BLOCK_MAGIC2(blocks, argmax_fs);
 GR_SWIG_BLOCK_MAGIC2(blocks, argmax_is);
 GR_SWIG_BLOCK_MAGIC2(blocks, argmax_ss);

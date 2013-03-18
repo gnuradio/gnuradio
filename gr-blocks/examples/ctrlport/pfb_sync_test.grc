@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='ASCII'?>
 <flow_graph>
-  <timestamp>Thu Feb 21 19:08:39 2013</timestamp>
+  <timestamp>Sun Mar 17 21:01:36 2013</timestamp>
   <block>
     <key>options</key>
     <param>
@@ -500,29 +500,6 @@
     </param>
   </block>
   <block>
-    <key>ctrlport_monitor</key>
-    <param>
-      <key>id</key>
-      <value>ctrlport_monitor_0</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>en</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(228, 5)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
     <key>blocks_file_source</key>
     <param>
       <key>id</key>
@@ -617,6 +594,29 @@
     <param>
       <key>_coordinate</key>
       <value>(415, 56)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>blocks_ctrlport_monitor</key>
+    <param>
+      <key>id</key>
+      <value>blocks_ctrlport_monitor_0</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>en</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(229, 7)</value>
     </param>
     <param>
       <key>_rotation</key>

@@ -116,7 +116,7 @@ class gfsk_mod(gr.hier_block2):
 	self.gaussian_filter = filter.interp_fir_filter_fff(samples_per_symbol, self.taps)
 
 	# FM modulation
-	self.fmmod = frequency.frequency_modulator_fc(sensitivity)
+	self.fmmod = analog.frequency_modulator_fc(sensitivity)
 
 	# small amount of output attenuation to prevent clipping USRP sink
 	self.amp = blocks.multiply_const_cc(0.999)

@@ -21,6 +21,7 @@
 
 #define DIGITAL_API
 #define ANALOG_API
+#define BLOCKS_API
 
 %include "gnuradio.i"
 %include "stdint.i"
@@ -33,6 +34,7 @@
 %{
 #include <blocks/control_loop.h>
 %}
+%include <blocks/control_loop.h>
 
 // Used in the constellation objects
 %template(unsigned_int_vector) std::vector<unsigned int>;

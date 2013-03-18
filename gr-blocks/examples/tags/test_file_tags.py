@@ -39,7 +39,7 @@ def main():
 
     thr = blocks.throttle(gr.sizeof_short, 10e3)
     ann = blocks.annotator_alltoall(1000000, gr.sizeof_short)
-    tagger = blocks..burst_tagger(gr.sizeof_short)
+    tagger = blocks.burst_tagger(gr.sizeof_short)
 
     fsnk = blocks.tagged_file_sink(gr.sizeof_short, 1)
 

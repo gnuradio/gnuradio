@@ -37,6 +37,7 @@ except ImportError:
     
 from gnuradio import gr, digital, filter
 from gnuradio import blocks
+from gnuradio import channels
 from optparse import OptionParser
 from gnuradio.eng_option import eng_option
 
@@ -168,7 +169,7 @@ def main():
 
         gr_src = blocks.vector_source_c(bits.tolist(), False)
         gr_snr = digital.mpsk_snr_est_cc(gr_est, ntag, 0.001)
-        gr_chn = filter.channel_model(1.0/scale)
+        gr_chn = channels.channel_model(1.0/scale)
         gr_snk = blocks.null_sink(gr.sizeof_gr_complex)
         tb = gr.top_block()
         tb.connect(gr_src, gr_chn, gr_snr, gr_snk)

@@ -47,7 +47,7 @@
 	<param>
 		<name>Vector</name>
 		<key>vector</key>
-		<value>[0, 0, 0]</value>
+		<value>(0, 0, 0)</value>
 		<type>raw</type>
 	</param>
 	<param>

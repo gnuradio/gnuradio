@@ -67,9 +67,9 @@ def main():
     block_size = options.block_size
     dec = options.decimation
 
-    benchmark("filter.fir_filter_ccc", gr.fir_filter_ccc,
+    benchmark("filter.fir_filter_ccc", filter.fir_filter_ccc,
               dec, ntaps, total_input_size, block_size)
-    benchmark("filter.fft_filter_ccc", gr.fft_filter_ccc,
+    benchmark("filter.fft_filter_ccc", filter.fft_filter_ccc,
               dec, ntaps, total_input_size, block_size)
 
 if __name__ == '__main__':

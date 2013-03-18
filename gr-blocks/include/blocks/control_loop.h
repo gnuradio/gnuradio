@@ -99,7 +99,7 @@ namespace gr {
        *
        * \param bw    (float) new bandwidth
        */
-      void set_loop_bandwidth(float bw);
+      virtual void set_loop_bandwidth(float bw);
 
       /*!
        * \brief Set the loop damping factor

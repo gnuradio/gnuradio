@@ -20,6 +20,7 @@
 #
 
 from gnuradio import gr, gru
+import filter_swig as filter
 
 _plot = None
 

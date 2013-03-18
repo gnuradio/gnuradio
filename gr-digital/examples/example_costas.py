@@ -22,6 +22,7 @@
 
 from gnuradio import gr, digital, filter
 from gnuradio import blocks
+from gnuradio import channels
 from gnuradio import eng_notation
 from gnuradio.eng_option import eng_option
 from optparse import OptionParser
@@ -50,7 +51,7 @@ class example_costas(gr.top_block):
 
         self.src = blocks.vector_source_c(data.tolist(), False)
         self.rrc = filter.interp_fir_filter_ccf(sps, rrc_taps)
-        self.chn = filter.channel_model(noise, foffset, toffset)
+        self.chn = channels.channel_model(noise, foffset, toffset)
         self.cst = digital.costas_loop_cc(bw, 2)
 
         self.vsnk_src = blocks.vector_sink_c()

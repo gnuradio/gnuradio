@@ -24,6 +24,7 @@ from gnuradio import gr
 from gnuradio import blocks
 from gnuradio import filter
 from gnuradio import analog
+from gnuradio import channels
 import sys, math, time
 
 try:
@@ -86,7 +87,7 @@ class fmtest(gr.top_block):
 
         self.head = blocks.head(gr.sizeof_gr_complex, self._nsamples)
         self.snk_tx = blocks.vector_sink_c()
-        self.channel = filter.channel_model(0.1)
+        self.channel = channels.channel_model(0.1)
 
         self.connect(self.sum, self.head, self.channel, self.snk_tx)
 
