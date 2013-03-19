@@ -102,6 +102,8 @@ class fft_sink_base(object):
     def _set_n(self):
         self.one_in_n.set_n(max(1, int(self.sample_rate/self.fft_size/self.fft_rate)))
 
+    def set_callback(self, callb):
+        return
 
 class fft_sink_f(gr.hier_block2, fft_sink_base):
     def __init__(self, parent, baseband_freq=0, ref_scale=2.0,

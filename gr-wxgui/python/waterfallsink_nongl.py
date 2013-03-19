@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2003-2008,2012 Free Software Foundation, Inc.
+# Copyright 2003-2005,2007,2008,2013 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -73,6 +73,9 @@ class waterfall_sink_base(object):
 
     def _set_n(self):
         self.one_in_n.set_n(max(1, int(self.sample_rate/self.fft_size/self.fft_rate)))
+
+    def set_callback(self, callb):
+        return
 
 class waterfall_sink_f(gr.hier_block2, waterfall_sink_base):
     def __init__(self, parent, baseband_freq=0,
