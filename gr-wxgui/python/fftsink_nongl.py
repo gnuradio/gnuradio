@@ -20,7 +20,8 @@
 # Boston, MA 02110-1301, USA.
 #
 
-from gnuradio import gr, gru, fft, filter
+from gnuradio import gr, gru, fft
++import gnuradio.filter as grfilter
 from gnuradio import blocks
 from gnuradio import analog
 from gnuradio.wxgui import stdgui2
@@ -133,13 +134,13 @@ class fft_sink_f(gr.hier_block2, fft_sink_base):
             power += tap*tap
 
         self.c2mag = blocks.complex_to_mag(self.fft_size)
-        self.avg = filter.single_pole_iir_filter_ff(1.0, self.fft_size)
+        self.avg = grfilter.single_pole_iir_filter_ff(1.0, self.fft_size)
 
         # FIXME  We need to add 3dB to all bins but the DC bin
-        self.log = blocks.nlog10_ff(20, self.fft_size,
-                                    -10*math.log10(self.fft_size)       # Adjust for number of bins
-                                    -10*math.log10(power/self.fft_size) # Adjust for windowing loss
-                                    -20*math.log10(ref_scale/2))        # Adjust for reference scale
+        self.log = gr.nlog10_ff(20, self.fft_size,
+                               -20*math.log10(self.fft_size)                # Adjust for number of bins
+                               -10*math.log10(power/self.fft_size)        # Adjust for windowing loss
+                               -20*math.log10(ref_scale/2))                # Adjust for reference scale
 
         self.sink = blocks.message_sink(gr.sizeof_float * self.fft_size, self.msgq, True)
         self.connect(self, self.s2p, self.one_in_n, self.fft, self.c2mag, self.avg, self.log, self.sink)
@@ -179,13 +180,13 @@ class fft_sink_c(gr.hier_block2, fft_sink_base):
             power += tap*tap
 
         self.c2mag = blocks.complex_to_mag(self.fft_size)
-        self.avg = filter.single_pole_iir_filter_ff(1.0, self.fft_size)
+        self.avg = grfilter.single_pole_iir_filter_ff(1.0, self.fft_size)
 
         # FIXME  We need to add 3dB to all bins but the DC bin
-        self.log = blocks.nlog10_ff(20, self.fft_size,
-                                    -10*math.log10(self.fft_size)        # Adjust for number of bins
-                                    -10*math.log10(power/self.fft_size)  # Adjust for windowing loss
-                                    -20*math.log10(ref_scale/2))         # Adjust for reference scale
+        self.log = gr.nlog10_ff(20, self.fft_size,
+                                -20*math.log10(self.fft_size)                # Adjust for number of bins
+                                -10*math.log10(power/self.fft_size)        # Adjust for windowing loss
+                                -20*math.log10(ref_scale/2))                # Adjust for reference scale
 
         self.sink = blocks.message_sink(gr.sizeof_float * self.fft_size, self.msgq, True)
         self.connect(self, self.s2p, self.one_in_n, self.fft, self.c2mag, self.avg, self.log, self.sink)
@@ -610,8 +611,15 @@ class test_app_block (stdgui2.std_top_block):
         input_rate = 100*20.48e3
 
         # Generate a complex sinusoid
+<<<<<<< HEAD:gr-wxgui/python/fftsink_nongl.py
         #src1 = analog.sig_source_c(input_rate, analog.GR_SIN_WAVE, 100*2e3, 1)
         src1 = analog.sig_source_c(input_rate, analog.GR_CONST_WAVE, 100*5.75e3, 1)
+=======
+        #src1 = gr.sig_source_c (input_rate, gr.GR_SIN_WAVE, 100*2e3, 1)
+        src1 = gr.sig_source_c (input_rate, gr.GR_CONST_WAVE, 100*5.75e3, 1)
+        noise1 = analog.noise_source_c(analog.GR_UNIFORM, 1.0/10)
+        add1 = blocks.add_cc()
+>>>>>>> master:gr-wxgui/src/python/fftsink_nongl.py
 
         # We add these throttle blocks so that this demo doesn't
         # suck down all the CPU available.  Normally you wouldn't use these.
@@ -622,8 +630,11 @@ class test_app_block (stdgui2.std_top_block):
                            ref_level=0, y_per_div=20, y_divs=10)
         vbox.Add(sink1.win, 1, wx.EXPAND)
 
-        self.connect(src1, thr1, sink1)
+        self.connect(src1, (add1,0))
+        self.connect(noise1, (add1,1))
+        self.connect(add1, thr1, sink1)
 
+<<<<<<< HEAD:gr-wxgui/python/fftsink_nongl.py
         #src2 = analog.sig_source_f(input_rate, analog.GR_SIN_WAVE, 100*2e3, 1)
         src2 = analog.sig_source_f(input_rate, analog.GR_CONST_WAVE, 100*5.75e3, 1)
         thr2 = blocks.throttle(gr.sizeof_float, input_rate)
@@ -631,8 +642,22 @@ class test_app_block (stdgui2.std_top_block):
                            sample_rate=input_rate, baseband_freq=100e3,
                            ref_level=0, y_per_div=20, y_divs=10)
         vbox.Add(sink2.win, 1, wx.EXPAND)
+=======
+        #src2 = gr.sig_source_f (input_rate, gr.GR_SIN_WAVE, 100*2e3, 1)
+        src2 = gr.sig_source_f (input_rate, gr.GR_CONST_WAVE, 100*5.75e3, 1)
+        noise2 = analog.noise_source_f(analog.GR_UNIFORM, 1.0/10)
+        add2 = blocks.add_ff()
 
-        self.connect(src2, thr2, sink2)
+        thr2 = gr.throttle(gr.sizeof_float, input_rate)
+        sink2 = fft_sink_f (panel, title="Real Data", fft_size=fft_size*2,
+                            sample_rate=input_rate, baseband_freq=100e3,
+                            ref_level=0, y_per_div=20, y_divs=10)
+        vbox.Add (sink2.win, 1, wx.EXPAND)
+>>>>>>> master:gr-wxgui/src/python/fftsink_nongl.py
+
+        self.connect(src2, (add2,0))
+        self.connect(noise2, (add2,1))
+        self.connect(add2, thr2, sink2)
 
 def main ():
     app = stdgui2.stdapp(test_app_block, "FFT Sink Test App")
