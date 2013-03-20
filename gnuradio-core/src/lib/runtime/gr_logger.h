@@ -38,19 +38,14 @@
 
 #ifndef ENABLE_GR_LOG
 #include "config.h"
-//#define GR_LOG_CONFIG_H
 #endif
 
 #include <gr_core_api.h>
 #include <assert.h>
 #include <iostream>
-
-//#ifndef ENABLE_GR_LOG
-//#define ENABLE_GR_LOG 1
-//#endif
-//#ifndef HAVE_LOG4CPP
-//#define HAVE_LOG4CPP 2
-//#endif
+#include <time.h>
+#include <boost/filesystem.hpp>
+#include <boost/thread.hpp>
 
 #ifdef ENABLE_GR_LOG
 
@@ -86,8 +81,8 @@ typedef std::string gr_logger_ptr;
 #define GR_CRIT(name, msg) std::cerr<<"ERROR: "<<msg<<std::endl
 #define GR_FATAL(name, msg) std::cerr<<"FATAL: "<<msg<<std::endl
 #define GR_EMERG(name, msg) std::cerr<<"EMERG: "<<msg<<std::endl
-#define GR_ERRORIF(name, cond, msg) if((cond)) std::cerr<<"ERROR: "<<msg<<std::endl
-#define GR_ASSERT(name, cond, msg) if(!(cond)) std::cerr<<"ERROR: "<<msg<<std::endl; assert(cond)
+#define GR_ERRORIF(name, cond, msg) {if((cond)) std::cerr<<"ERROR: "<<msg<<std::endl;}
+#define GR_ASSERT(name, cond, msg) {if(!(cond)) std::cerr<<"FATAL: "<<msg<<std::endl; assert(cond);}
 #define GR_LOG_DEBUG(logger, msg) std::cout<<"DEBUG: "<<msg<<std::endl
 #define GR_LOG_INFO(logger, msg) std::cout<<"INFO: "<<msg<<std::endl
 #define GR_LOG_NOTICE(logger, msg) std::cout<<"NOTICE: "<<msg<<std::endl
@@ -97,8 +92,10 @@ typedef std::string gr_logger_ptr;
 #define GR_LOG_CRIT(logger, msg) std::cerr<<"CRIT: "<<msg<<std::endl
 #define GR_LOG_FATAL(logger, msg) std::cerr<<"FATAL: "<<msg<<std::endl
 #define GR_LOG_EMERG(logger, msg) std::cerr<<"EMERG: "<<msg<<std::endl
-#define GR_LOG_ERRORIF(logger, cond, msg) if((cond)) std::cerr<<"ERROR: "<<msg<<std::endl
-#define GR_LOG_ASSERT(logger, cond, msg) std::cerr<<"ERROR: "<<msg<<std::endl; assert(cond)
+#define GR_LOG_ERRORIF(logger, cond, msg) {\
+  if((cond)) std::cerr<<"ERROR: "<<msg<<std::endl;}
+#define GR_LOG_ASSERT(logger, cond, msg) {\
+  if(!(cond)) {std::cerr<<"FATAL: "<<msg<<std::endl; assert(cond);};}
 
 #else /* HAVE_LOG4CPP */
 // Second configuration...logging to log4cpp
@@ -133,104 +130,104 @@ typedef log4cpp::Category* gr_logger_ptr;
   gr_logger_ptr logger;
 
 #define GR_LOG_ASSIGN_LOGPTR(logger,name) \
-  logger = gr_logger::getLogger(name);
+  logger = logger_get_logger(name);
 
 #define GR_CONFIG_LOGGER(config)	\
-  logger_load_config(config)
+  logger_config::load_config(config)
 
 #define GR_CONFIG_AND_WATCH_LOGGER(config,period)	\
-  logger_load_config_and_watch(config,period)
+  logger_config::load_config(config,period)
 
 #define GR_LOG_GETLOGGER(logger, name) \
-  gr_logger_ptr logger = gr_logger::getLogger(name);
+  gr_logger_ptr logger = logger_get_logger(name);
 
 #define GR_SET_LEVEL(name, level){ \
-  gr_logger_ptr logger = gr_logger::getLogger(name);\
+  gr_logger_ptr logger = logger_get_logger(name);\
   logger_set_level(logger,level);}
 
 #define GR_LOG_SET_LEVEL(logger, level) \
   logger_set_level(logger, level);
 
 #define GR_GET_LEVEL(name, level){ \
-  gr_logger_ptr logger = gr_logger::getLogger(name);\
+  gr_logger_ptr logger = logger_get_logger(name);\
   logger_get_level(logger,level);}
 
 #define GR_LOG_GET_LEVEL(logger, level) \
   logger_get_level(logger,level);
 
 #define GR_ADD_CONSOLE_APPENDER(name,target,pattern){\
-  gr_logger_ptr logger = gr_logger::getLogger(name);\
+  gr_logger_ptr logger = logger_get_logger(name);\
   logger_add_console_appender(logger,target,pattern);}
 
 #define GR_LOG_ADD_CONSOLE_APPENDER(logger,target,pattern){\
   logger_add_console_appender(logger,target,pattern);}
 
 #define GR_ADD_FILE_APPENDER(name,filename,append,pattern){\
-  gr_logger_ptr logger = gr_logger::getLogger(name);\
+  gr_logger_ptr logger = logger_get_logger(name);\
   logger_add_file_appender(logger,filename,append,pattern);}
 
 #define GR_LOG_ADD_FILE_APPENDER(logger,filename,append,pattern){\
   logger_add_file_appender(logger,filename,append,pattern);}
 
 #define GR_ADD_ROLLINGFILE_APPENDER(name,filename,filesize,bkup_index,append,mode,pattern){\
-  gr_logger_ptr logger = gr_logger::getLogger(name);\
+  gr_logger_ptr logger = logger_get_logger(name);\
   logger_add_rollingfile_appender(logger,filename,filesize,bkup_index,append,mode,pattern);}
 
 #define GR_LOG_ADD_ROLLINGFILE_APPENDER(logger,filename,filesize,bkup_index,append,mode,pattern){\
   logger_add_rollingfile_appender(logger,filename,filesize,bkup_index,append,mode,pattern);}
 
 #define GR_GET_LOGGER_NAMES(names){ \
-  logger_get_logger_names(names);}
+  names = logger_get_logger_names();}
 
 #define GR_RESET_CONFIGURATION(){ \
-  logger_reset_config();}
+  logger_config::reset_config();}
 
 /* Logger name referenced macros */
 #define GR_DEBUG(name, msg) { \
-  gr_logger_ptr logger = gr_logger::getLogger(name);\
+  gr_logger_ptr logger = logger_get_logger(name);\
   *logger<< log4cpp::Priority::DEBUG << msg << log4cpp::eol;}
 
 #define GR_INFO(name, msg) { \
-  gr_logger_ptr logger = gr_logger::getLogger(name);\
+  gr_logger_ptr logger = logger_get_logger(name);\
   *logger<< log4cpp::Priority::INFO << msg << log4cpp::eol;}
 
 #define GR_NOTICE(name, msg) { \
-  gr_logger_ptr logger = gr_logger::getLogger(name);\
+  gr_logger_ptr logger = logger_get_logger(name);\
   *logger << log4cpp::Priority::NOTICE << msg;}
 
 #define GR_WARN(name, msg) { \
-  gr_logger_ptr logger = gr_logger::getLogger(name);\
+  gr_logger_ptr logger = logger_get_logger(name);\
   *logger<< log4cpp::Priority::WARN << msg << log4cpp::eol;}
 
 #define GR_ERROR(name, msg) { \
-  gr_logger_ptr logger = gr_logger::getLogger(name);\
+  gr_logger_ptr logger = logger_get_logger(name);\
   *logger<< log4cpp::Priority::ERROR << msg << log4cpp::eol;}
 
 #define GR_CRIT(name, msg) { \
-  gr_logger_ptr logger = gr_logger::getLogger(name);\
+  gr_logger_ptr logger = logger_get_logger(name);\
   *logger<< log4cpp::Priority::CRIT << msg << log4cpp::eol;}
 
 #define GR_ALERT(name, msg) { \
-  gr_logger_ptr logger = gr_logger::getLogger(name);\
+  gr_logger_ptr logger = logger_get_logger(name);\
   *logger<< log4cpp::Priority::ALERT << msg << log4cpp::eol;}
 
 #define GR_FATAL(name, msg) { \
-  gr_logger_ptr logger = gr_logger::getLogger(name);\
+  gr_logger_ptr logger = logger_get_logger(name);\
   *logger<< log4cpp::Priority::FATAL << msg << log4cpp::eol;}
 
 #define GR_EMERG(name, msg) { \
-  gr_logger_ptr logger = gr_logger::getLogger(name);\
+  gr_logger_ptr logger = logger_get_logger(name);\
   *logger<< log4cpp::Priority::EMERG << msg << log4cpp::eol;}
 
 #define GR_ERRORIF(name, cond, msg) { \
 if((cond)){\
-  gr_logger_ptr logger = gr_logger::getLogger(name);\
+  gr_logger_ptr logger = logger_get_logger(name);\
   *logger<< log4cpp::Priority::ERROR << msg << log4cpp::eol;};\
 };
 
 #define GR_ASSERT(name, cond, msg) { \
-if((!cond)){\
-    gr_logger_ptr logger = gr_logger::getLogger(name);\
+if(!(cond)){\
+    gr_logger_ptr logger = logger_get_logger(name);\
     *logger<< log4cpp::Priority::EMERG << msg << log4cpp::eol;};\
     assert(0);\
 };
@@ -264,16 +261,73 @@ if((!cond)){\
   *logger << log4cpp::Priority::EMERG << msg << log4cpp::eol;}
 
 #define GR_LOG_ERRORIF(logger,cond, msg) { \
-if((!cond)){\
+if((cond)){\
     *logger<< log4cpp::Priority::ERROR << msg << log4cpp::eol;};\
-    assert(0);\
 };
 
 #define GR_LOG_ASSERT(logger, cond, msg) { \
-if((!cond)){\
-    *logger<< log4cpp::Priority::EMERG << msg << log4cpp::eol;};\
-    assert(0);\
+if(!(cond)){\
+    *logger<< log4cpp::Priority::EMERG << msg << log4cpp::eol;\
+    assert(0);};\
 };
+
+/*!
+ * \brief Class to control configuration of logger.  
+ * This is a singleton that cna launch a thread to wathc a config file for changes
+ * \ingroup logging
+ */
+class logger_config {
+private:
+  /*! \brief filename of logger config file */
+  std::string filename;
+  /*! \brief Period (seconds) over which watcher thread checks config file for changes */
+  unsigned int watch_period;
+  /*! \brief Pointer to watch thread for config file changes */
+  boost::thread *watch_thread;
+
+  /*! \brief Watcher thread method 
+   * /param filename Name of configuration file
+   * /param watch_period Seconds between checks for changes in config file
+   */
+  static void watch_file(std::string filename,unsigned int watch_period);
+
+  logger_config(){};  //!< Constructor
+  logger_config(logger_config const&);  //!<Copy constructor
+  void operator=(logger_config const&);  //!<Assignment Operator
+
+  /*! \brief destrcutor stops watch thread before exits */
+  ~logger_config(){ 
+     stop_watch();
+  };
+
+  /*! \brief Instance getter for singleton.  Only used by class. */
+  static logger_config& get_instance(void);
+
+public:
+  /*! \brief Getter for config filename */
+  static std::string get_filename();
+  /*! \brief Getter for watch period */
+  static unsigned int get_watch_period();
+  /*! \brief Method to load configuration
+   * /param filename Name of configuration file
+   * /param watch_period Seconds between checks for changes in config file
+   */
+  static void load_config(std::string filename,unsigned int watch_period=0);
+  /*! \brief Method to stop watcher thread */
+  static void stop_watch();
+  /*! \brief method to reset logger configuration */
+  static void reset_config(void);
+};
+
+/*!
+ * \brief Retrieve a pointer to a logger by name
+ *
+ * Retrives a logger pointer
+ * \p name.
+ *
+ * \param name Name of the logger for which a pointer is requested
+ */
+GR_CORE_API gr_logger_ptr logger_get_logger(std::string name);
 
 /*!
  * \brief Load logger's configuration file.
@@ -286,10 +340,11 @@ if((!cond)){\
  */
 GR_CORE_API void logger_load_config(const std::string &config_filename="");
 
-
-GR_CORE_API void logger_load_config_and_watch(const std::string &config_filename,
-                                              unsigned int watch_period);
-
+/*!
+ * \brief Reset logger's configuration file.
+ *
+ * Remove all appenders from loggers
+ */
 GR_CORE_API void logger_reset_config(void);
 
 /*!
@@ -334,7 +389,7 @@ GR_CORE_API void logger_set_level(gr_logger_ptr logger, const std::string &level
  * \param logger the logger to set the level of.
  * \param level  new logger level of type Log4cpp::Priority
  */
-void logger_set_level(gr_logger_ptr logger, log4cpp::Priority::Value level);
+GR_CORE_API void logger_set_level(gr_logger_ptr logger, log4cpp::Priority::Value level);
 
 
 /*!
@@ -381,139 +436,56 @@ GR_CORE_API void logger_get_level(gr_logger_ptr logger, std::string &level);
  */
 GR_CORE_API void logger_get_level(gr_logger_ptr logger, log4cpp::Priority::Value &level);
 
+/*!
+ * \brief Add console appender to a given logger
+ *
+ * Add console appender to a given logger
+ *
+ * \param logger Logger to which appender will be added
+ * \param target Std target to write 'cout' or 'cerr' (default is cout)
+ * \param pattern Formating pattern for log messages
+ */
 GR_CORE_API void logger_add_console_appender(gr_logger_ptr logger,std::string target,std::string pattern);
 
+/*!
+ * \brief Add file appender to a given logger
+ *
+ * Add file appender to a given logger
+ *
+ * \param logger Logger to which appender will be added
+ * \param filename File to which log will be written
+ * \param append Overwrite or append to log file
+ * \param pattern Formating pattern for log messages
+ */
 GR_CORE_API void logger_add_file_appender(gr_logger_ptr logger,std::string filename,bool append,std::string pattern);
 
+/*!
+ * \brief Add rolling file appender to a given logger
+ *
+ * Add rolling file appender to a given logger
+ *
+ * \param logger Logger to which appender will be added
+ * \param filename File to which log will be written
+ * \param filesize Sizez of files to write
+ * \param bkup_index Number of files to write
+ * \param append Overwrite or append to log file
+ * \param mode Permissions to set on log file
+ * \param pattern Formating pattern for log messages
+ */
 GR_CORE_API void logger_add_rollingfile_appender(gr_logger_ptr logger,std::string filename,
                     size_t filesize,int bkup_index,bool append,mode_t mode,std::string pattern);
 
-GR_CORE_API void logger_get_logger_names(std::vector<std::string>& names);
-
 /*!
- * \brief instantiate (configure) logger.
- * \ingroup logging
+ * \brief Add rolling file appender to a given logger
  *
+ * Add rolling file appender to a given logger
+ *
+ * \return vector of string names of loggers 
  */
-class gr_logger
-{
- public:
-  /*!
-   * \brief contructor take log configuration file and configures loggers.
-   */
-  gr_logger(std::string config_filename)
-  {
-    // Load configuration file
-    logger_load_config(config_filename);
-  };
-
-  /*!
-   * \brief contructor take log configuration file and watchtime and configures
-   */
-  gr_logger(std::string config_filename, int watchPeriodSec)
-  {
-    // Load configuration file
-    logger_load_config_and_watch(config_filename,watchPeriodSec);
-
-  };
-
-  static gr_logger_ptr getLogger(std::string name)
-  {
-      if(log4cpp::Category::exists(name)){
-        gr_logger_ptr logger = &log4cpp::Category::getInstance(name);
-        return logger;
-      }
-      else
-      {
-        gr_logger_ptr logger = &log4cpp::Category::getInstance(name);
-        logger->setPriority(log4cpp::Priority::NOTSET);
-        return logger;
-      };
-  };
-
-  // Wrappers for logging macros
-  /*! \brief inline function, wrapper to set the logger level */
-  void set_level(std::string name,std::string level){GR_SET_LEVEL(name,level);}
-  
-  /*! \brief inline function, wrapper to get the logger level */
-  void get_level(std::string name,std::string &level){GR_GET_LEVEL(name,level);}
-
-  /*! \brief inline function, wrapper for DEBUG message */
-  void debug(std::string name,std::string msg){GR_DEBUG(name,msg);};
-
-  /*! \brief inline function, wrapper for INFO message */
-  void info(std::string name,std::string msg){GR_INFO(name,msg);};
-
-  /*! \brief inline function, wrapper for NOTICE message */
-  void notice(std::string name,std::string msg){GR_NOTICE(name,msg);};
-
-  /*! \brief inline function, wrapper for WARN message */
-  void warn(std::string name,std::string msg){GR_WARN(name,msg);};
-
-  /*! \brief inline function, wrapper for ERROR message */
-  void error(std::string name,std::string msg){GR_ERROR(name,msg);};
-
-  /*! \brief inline function, wrapper for CRIT message */
-  void crit(std::string name,std::string msg){GR_CRIT(name,msg);};
-
-  /*! \brief inline function, wrapper for ALERT message */
-  void alert(std::string name,std::string msg){GR_ALERT(name,msg);};
-
-  /*! \brief inline function, wrapper for FATAL message */
-  void fatal(std::string name,std::string msg){GR_FATAL(name,msg);};
-
-  /*! \brief inline function, wrapper for EMERG message */
-  void emerg(std::string name,std::string msg){GR_EMERG(name,msg);};
-
-  /*! \brief inline function, wrapper for LOG4CPP_ASSERT for conditional ERROR message */
-  void errorIF(std::string name,bool cond,std::string msg){GR_ERRORIF(name,cond,msg);};
-
-  /*! \brief inline function, wrapper for LOG4CPP_ASSERT for conditional ERROR message */
-  void gr_assert(std::string name,bool cond,std::string msg){GR_ASSERT(name,cond,msg);};
-
-  // Wrappers for Logger Pointer referenced functions
-  /*! \brief inline function, wrapper to set the logger level */
-  void set_log_level(gr_logger_ptr logger,std::string level){GR_LOG_SET_LEVEL(logger,level);}
-
-  /*! \brief inline function, wrapper to get the logger level */
-  void get_log_level(gr_logger_ptr logger,std::string &level){GR_LOG_GET_LEVEL(logger,level);}
-
-  /*! \brief inline function, wrapper for LOG4CPP_DEBUG for DEBUG message */
-  void log_debug(gr_logger_ptr logger,std::string msg){GR_LOG_DEBUG(logger,msg);};
-
-  /*! \brief inline function, wrapper for LOG4CPP_INFO for INFO message */
-  void log_info(gr_logger_ptr logger,std::string msg){GR_LOG_INFO(logger,msg);};
-
-  /*! \brief inline function, wrapper for NOTICE message */
-  void log_notice(gr_logger_ptr logger,std::string msg){GR_LOG_NOTICE(logger,msg);};
-
-  /*! \brief inline function, wrapper for LOG4CPP_WARN for WARN message */
-  void log_warn(gr_logger_ptr logger,std::string msg){GR_LOG_WARN(logger,msg);};
-
-  /*! \brief inline function, wrapper for LOG4CPP_ERROR for ERROR message */
-  void log_error(gr_logger_ptr logger,std::string msg){GR_LOG_ERROR(logger,msg);};
-
-  /*! \brief inline function, wrapper for NOTICE message */
-  void log_crit(gr_logger_ptr logger,std::string msg){GR_LOG_CRIT(logger,msg);};
-
-  /*! \brief inline function, wrapper for ALERT message */
-  void log_alert(gr_logger_ptr logger,std::string msg){GR_LOG_ALERT(logger,msg);};
-
-  /*! \brief inline function, wrapper for FATAL message */
-  void log_fatal(gr_logger_ptr logger,std::string msg){GR_LOG_FATAL(logger,msg);};
-
-  /*! \brief inline function, wrapper for EMERG message */
-  void log_emerg(gr_logger_ptr logger,std::string msg){GR_LOG_EMERG(logger,msg);};
-
-  /*! \brief inline function, wrapper for LOG4CPP_ASSERT for conditional ERROR message */
-  void log_errorIF(gr_logger_ptr logger,bool cond,std::string msg){GR_LOG_ERRORIF(logger,cond,msg);};
-
-  /*! \brief inline function, wrapper for LOG4CPP_ASSERT for conditional ERROR message */
-  void log_assert(gr_logger_ptr logger,bool cond,std::string msg){GR_LOG_ASSERT(logger,cond,msg);};
-};
-
+GR_CORE_API std::vector<std::string> logger_get_logger_names(void);
 
 #endif /* HAVE_LOG4CPP */
+
 
 // If Logger disable do nothing
 #else /* ENABLE_GR_LOG */
@@ -561,4 +533,111 @@ typedef void* gr_logger_ptr;
 #define GR_LOG_ASSERT(logger, cond, msg)
 
 #endif /* ENABLE_GR_LOG */
+
+// Even if logger is disabled we'll need for methods below to exist in python.
+// The macros these call will be disabled if ENABLE_GR_LOG is undefined
+
+/********************* Start  Classes and Methods for Python ******************/
+/*!
+ * \brief Logger class for referencing loggers in python.  Not needed in C++ (use macros)
+ * Wraps and manipulates loggers for python as python has no macros
+ * \ingroup logging
+ *
+ */
+class gr_logger
+{
+ private:
+  /*! \brief logger pointer to logger associated wiith this wrapper class */
+  gr_logger_ptr d_logger;
+ public:
+  /*!
+   * \brief contructor Provide name of logger to associate with this class
+   * \param logger_name Name of logger associated with class
+   */
+  gr_logger(std::string logger_name) {
+    GR_LOG_ASSIGN_LOGPTR(d_logger,logger_name);
+  };
+
+  /*! \brief Destructor */
+  ~gr_logger(){;};
+
+  // Wrappers for logging macros
+  /*! \brief inline function, wrapper to set the logger level */
+  void set_level(std::string level){GR_LOG_SET_LEVEL(d_logger,level);}
+
+  /*! \brief inline function, wrapper to get the logger level */
+  void get_level(std::string &level){GR_LOG_GET_LEVEL(d_logger,level);}
+
+  /*! \brief inline function, wrapper for LOG4CPP_DEBUG for DEBUG message */
+  void debug(std::string msg){GR_LOG_DEBUG(d_logger,msg);};
+
+  /*! \brief inline function, wrapper for LOG4CPP_INFO for INFO message */
+  void info(std::string msg){GR_LOG_INFO(d_logger,msg);};
+
+  /*! \brief inline function, wrapper for NOTICE message */
+  void notice(std::string msg){GR_LOG_NOTICE(d_logger,msg);};
+
+  /*! \brief inline function, wrapper for LOG4CPP_WARN for WARN message */
+  void warn(std::string msg){GR_LOG_WARN(d_logger,msg);};
+
+  /*! \brief inline function, wrapper for LOG4CPP_ERROR for ERROR message */
+  void error(std::string msg){GR_LOG_ERROR(d_logger,msg);};
+
+  /*! \brief inline function, wrapper for NOTICE message */
+  void crit(std::string msg){GR_LOG_CRIT(d_logger,msg);};
+
+  /*! \brief inline function, wrapper for ALERT message */
+  void alert(std::string msg){GR_LOG_ALERT(d_logger,msg);};
+
+  /*! \brief inline function, wrapper for FATAL message */
+  void fatal(std::string msg){GR_LOG_FATAL(d_logger,msg);};
+
+  /*! \brief inline function, wrapper for EMERG message */
+  void emerg(std::string msg){GR_LOG_EMERG(d_logger,msg);};
+
+  /*! \brief inline function, wrapper for LOG4CPP_ASSERT for conditional ERROR message */
+  void errorIF(bool cond,std::string msg){GR_LOG_ERRORIF(d_logger,cond,msg);};
+
+  /*! \brief inline function, wrapper for LOG4CPP_ASSERT for conditional ERROR message */
+  void log_assert(bool cond,std::string msg){GR_LOG_ASSERT(d_logger,cond,msg);};
+
+  /*! \brief inline function, Method to add console appender to logger */
+  void add_console_appender(std::string target,std::string pattern){
+     GR_LOG_ADD_CONSOLE_APPENDER(d_logger,target,pattern);
+  };
+
+  /*! \brief inline function, Method to add file appender to logger */
+  void add_file_appender(std::string filename,bool append,std::string pattern){
+     GR_LOG_ADD_FILE_APPENDER(d_logger,filename,append,pattern);
+  };
+
+  /*! \brief inline function, Method to add rolling file appender to logger */
+  void add_rollingfile_appender(std::string filename,size_t filesize,
+                int bkup_index,bool append,mode_t mode,std::string pattern){
+     GR_LOG_ADD_ROLLINGFILE_APPENDER(d_logger,filename,filesize,
+                bkup_index,append,mode,pattern);
+  };
+};
+
+/**************** Start Configuration Class and Methods for Python ************/
+/*!
+ * \brief Function to call configuration macro from python.  
+ *        Note: Configuration is only updated if filename or watch_period has changed.
+ * \param config_filename  Name of configuration file
+ * \param watch_period Seconds to wait between checking for changes in conf file.
+ *        Watch_period defaults to 0 in which case the file is not watched for changes
+ */
+GR_CORE_API void gr_logger_config(const std::string config_filename, unsigned int watch_period = 0);
+/*!
+ * \brief Function to return logger names to python
+ * \return Vector of name strings
+ *
+ */
+GR_CORE_API std::vector<std::string> gr_logger_get_logger_names(void);
+/*!
+ * \brief Function to reset logger configuration from python
+ * 
+ */
+GR_CORE_API void gr_logger_reset_config(void);
+
 #endif /* INCLUDED_GR_LOGGER_H */

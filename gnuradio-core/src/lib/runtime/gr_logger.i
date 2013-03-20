@@ -39,71 +39,41 @@
 
 //-----------------------------------
 
-#ifdef ENABLE_GR_LOG
-#ifdef HAVE_LOG4CPP
-
 %{
 // The .h files
 #include <gr_logger.h>
-#include <log4cpp/Category.hh>
 %}
 
-namespace log4cpp{
-class LoggerPtr {
-public:
- ~LoggerPtr();
-};
-};
-void logger_load_config(const std::string &config_filename);
-void logger_set_level(log4cpp::LoggerPtr logger, const std::string &level);
+%rename(logger) gr_logger;
+%rename(logger_config) gr_logger_config;
+%rename(logger_get_names) gr_logger_get_logger_names;
+%rename(logger_reset_config) gr_logger_reset_config;
 
-%rename(log) gr_logger;
+
+void gr_logger_config(const std::string config_filename,unsigned int watch_period = 0);
+std::vector<std::string> gr_logger_get_logger_names(void);
+void gr_logger_reset_config(void);
 
 class gr_logger
 {
-private:
-  
-public:
-  //gr_logger(std::string config_filename);
-  gr_logger(std::string config_filename,int watchPeriodSec);
-  void set_level(std::string name,std::string level);
-  void get_level(std::string name,std::string &level);
-  void add_console_appender(std::string name,std::string target,std::string pattern);
-  void add_file_appender(std::string name,std::string filename,bool append,std::string patter);
-  void add_rollingfile_appender(std::string name,std::string filename,size_t filesize,int bkup_indx,bool append,mode_t mode,std::string pattern);
-
-  void notice(std::string name,std::string msg);
-  void debug(std::string name,std::string msg);
-  void info(std::string name,std::string msg);
-  void warn(std::string name,std::string msg);
-  void error(std::string name,std::string msg);
-  void emerg(std::string name,std::string msg);
-  void crit(std::string name,std::string msg);
-  void errorIF(std::string name,bool cond,std::string msg);
-  void gr_assert(std::string name,bool cond,std::string msg);
-
-  static gr_logger_ptr getLogger(std::string name);
-
-  void log_set_level(gr_logger_ptr logger,std::string level);
-  void log_get_level(gr_logger_ptr logger,std::string &level);
-  void log_add_console_appender(gr_logger_ptr logger,std::string target,std::string pattern);
-  void log_add_file_appender(gr_logger_ptr logger,std::string filename,bool append,std::string pattern);
-  void log_add_rollingfile_appender(gr_logger_ptr logger,std::string filename,size_t filesize,int bkup_index,bool append,mode_t mode,std::string pattern);
-
-  void log_notice(gr_logger_ptr logger,std::string msg);
-  void log_debug(gr_logger_ptr logger,std::string msg);
-  void log_info(gr_logger_ptr logger,std::string msg);
-  void log_warn(gr_logger_ptr logger,std::string msg);
-  void log_error(gr_logger_ptr logger,std::string msg);
-  void log_crit(gr_logger_ptr logger,std::string msg);
-  void log_emerg(gr_logger_ptr logger,std::string msg);
-  void log_errorIF(gr_logger_ptr logger,bool cond,std::string msg);
-  void log_assert(gr_logger_ptr logger,bool cond,std::string msg);
-
-  void get_logger_names(std::vector<std::string>& names);
-  void reset_configuration();
-
+ public:
+  gr_logger(std::string logger_name);
+  void set_level(std::string level){GR_LOG_SET_LEVEL(d_logger,level);}
+  void get_level(std::string &level){GR_LOG_GET_LEVEL(d_logger,level);}
+  void debug(std::string msg){GR_LOG_DEBUG(d_logger,msg);};
+  void info(std::string msg){GR_LOG_INFO(d_logger,msg);};
+  void notice(std::string msg){GR_LOG_NOTICE(d_logger,msg);};
+  void warn(std::string msg){GR_LOG_WARN(d_logger,msg);};
+  void error(std::string msg){GR_LOG_ERROR(d_logger,msg);};
+  void crit(std::string msg){GR_LOG_CRIT(d_logger,msg);};
+  void alert(std::string msg){GR_LOG_ALERT(d_logger,msg);};
+  void fatal(std::string msg){GR_LOG_FATAL(d_logger,msg);};
+  void emerg(std::string msg){GR_LOG_EMERG(d_logger,msg);};
+  void errorIF(bool cond,std::string msg){GR_LOG_ERRORIF(d_logger,cond,msg);};
+  void log_assert(bool cond,std::string msg){GR_LOG_ASSERT(d_logger,cond,msg);};
+  void add_console_appender(std::string target,std::string pattern);
+  void add_file_appender(std::string filename,bool append,std::string pattern);
+  void add_rollingfile_appender(std::string filename,size_t filesize,int bkup_index,bool append,mode_t mode,std::string pattern);
 };
 
-#endif /* HAVE_LOG4CPP */
-#endif /* ENABLE_GR_LOG */
+

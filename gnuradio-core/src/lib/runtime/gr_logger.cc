@@ -26,10 +26,6 @@
 *   The gr_log module wraps the log4cpp library for logging in gnuradio.
 *******************************************************************************/
 
-//#ifdef HAVE_CONFIG_H
-//#include "config.h" 
-//#endif
-
 #include <gr_logger.h>
 #include <stdexcept>
 #include <algorithm>
@@ -37,54 +33,128 @@
 #ifdef ENABLE_GR_LOG
 #ifdef HAVE_LOG4CPP 
 
-bool gr_logger_configured(false);
+/**************************** BEGIN LOG4CPP HELPERS ***************************/
+/* Logger config class.  This is a singleton that controls how log4cpp is configured
+ * If watch_period>0 a thread is started to watch teh config file for changes.
+ */
 
-void
-logger_load_config(const std::string &config_filename)
-{
-  if(!gr_logger_configured){
-    gr_logger_configured = true;
-    if(config_filename.size() != 0) {
-       try
-       {
-         log4cpp::PropertyConfigurator::configure(config_filename);
-       }
-       catch( log4cpp::ConfigureFailure &e )
-       {
-         std::cout << "Logger config failed :" << e.what() << std::endl;
-       }
-    };
+// Getters of logger_config 
+logger_config& 
+logger_config::get_instance(void){
+  static logger_config instance;
+  return instance;
+};
+
+std::string 
+logger_config::get_filename(){
+  logger_config& in=get_instance(); 
+  return in.filename;
+};
+
+unsigned int 
+logger_config::get_watch_period(){
+  logger_config& in=get_instance(); 
+  return in.watch_period;
+};
+
+// Method to watch config file for changes
+void logger_config::watch_file(std::string filename,unsigned int watch_period){
+   std::time_t last_write(boost::filesystem::last_write_time(filename));
+   std::time_t current_time(0);
+   while(true){
+    try{
+     current_time = boost::filesystem::last_write_time(filename);
+     if(current_time>last_write){
+       std::cout<<"GNURadio Reloading logger configuration:"<<filename<<std::endl;
+       last_write = current_time;
+// Should we wipe out all old configuration or just add the new?  Just adding...
+//     logger_reset_config();  
+       logger_load_config(filename);     
+     };
+       boost::this_thread::sleep(boost::posix_time::time_duration(0,0,watch_period,0));
+    }
+    catch(const boost::thread_interrupted&){
+       std::cout<<"GNURadio leaving logger config file watch."<<std::endl;
+      break;
+    }; 
+   };
+};
+
+// Method to load the confifuration.  It only loads if the filename or watch has changed
+void logger_config::load_config(std::string filename,unsigned int watch_period){
+  logger_config& instance = get_instance();
+// Only reconfigure if filename or watch has changed
+  if(instance.filename!=filename || watch_period!=instance.watch_period){
+    instance.filename = filename;
+    instance.watch_period = watch_period;
+// Stop any file watching thread
+    if(instance.watch_thread!=NULL) stop_watch();
+// Load configuration   
+    std::cout<<"GNURadio Loading logger configuration:"<<instance.filename<<std::endl;
+    logger_load_config(instance.filename);
+// Start watch if required
+    if(instance.watch_period>0){
+      instance.watch_thread = new boost::thread(watch_file,instance.filename,instance.watch_period);
+    }
   };
-}
+};
 
-void
-logger_load_config_and_watch(const std::string &config_filename,
-                             unsigned int watch_period)
-{
-// NOTE:: NEEDS CODE TO WATCH FILE HERE
-  if(!gr_logger_configured){
-    gr_logger_configured = true;
-    if(config_filename.size() != 0) {
-       try
-       {
-         log4cpp::PropertyConfigurator::configure(config_filename);
-       }
-       catch( log4cpp::ConfigureFailure &e )
-       {
-         std::cout << "Logger config failed :" << e.what() << std::endl;
-       }
-    };
-  };
-}
+// Method to stop the watcher thread
+void logger_config::stop_watch(){
+  logger_config& instance = get_instance();
+     if(instance.watch_thread){
+       instance.watch_thread->interrupt(); 
+       instance.watch_thread->join(); 
+       delete(instance.watch_thread);
+       instance.watch_thread=NULL;
+     };
+};
 
+// Method to reset logger configuration
 void 
-logger_reset_config(void){
+logger_config::reset_config(void){
+  logger_config& instance = get_instance();
+  stop_watch();
   std::vector<log4cpp::Category*> *loggers = log4cpp::Category::getCurrentCategories();
   std::vector<log4cpp::Category*>::iterator logger = loggers->begin();
 // We can't destroy categories but we can neuter them by removing all appenders.
   for (;logger!=loggers->end();logger++){
     (*logger)->removeAllAppenders();
   };
+  instance.filename=std::string("");
+  instance.watch_period=0;
+}
+
+/***************** Functions to call log4cpp methods *************************/
+
+gr_logger_ptr 
+logger_get_logger(std::string name)
+{
+      if(log4cpp::Category::exists(name)){
+        gr_logger_ptr logger = &log4cpp::Category::getInstance(name);
+        return logger;
+      }
+      else
+      {
+        gr_logger_ptr logger = &log4cpp::Category::getInstance(name);
+        logger->setPriority(log4cpp::Priority::NOTSET);
+        return logger;
+      };
+};
+
+void
+logger_load_config(const std::string &config_filename)
+{
+    if(config_filename.size() != 0) {
+       try
+       {
+         log4cpp::PropertyConfigurator::configure(config_filename);
+       }
+       catch( log4cpp::ConfigureFailure &e )
+       {
+         std::cout << "Logger config failed :" << e.what() << std::endl;
+       }
+    };
 }
 
 void
@@ -95,7 +165,7 @@ logger_set_level(gr_logger_ptr logger, const std::string &level)
 
   if(nocase == "off" || nocase == "notset")
     logger_set_level(logger, log4cpp::Priority::NOTSET);
-  else if(nocase == "debug")
+  else if(nocase == "all" || nocase == "debug")
     logger_set_level(logger, log4cpp::Priority::DEBUG);
   else if(nocase == "info")
     logger_set_level(logger, log4cpp::Priority::INFO);
@@ -111,7 +181,7 @@ logger_set_level(gr_logger_ptr logger, const std::string &level)
     logger_set_level(logger, log4cpp::Priority::ALERT);
  else if(nocase=="fatal")
     logger_set_level(logger, log4cpp::Priority::FATAL);
-  else if(nocase == "all" || nocase == "emerg")
+  else if(nocase == "emerg")
     logger_set_level(logger, log4cpp::Priority::EMERG);
   else
     throw std::runtime_error("logger_set_level: Bad level type.\n");
@@ -151,7 +221,7 @@ logger_add_console_appender(gr_logger_ptr logger,std::string target,std::string 
 
   log4cpp::PatternLayout* layout = new log4cpp::PatternLayout();
   log4cpp::Appender* app;
-  if(target=="cout")
+  if(target=="stdout")
     app = new log4cpp::OstreamAppender("ConsoleAppender::",&std::cout);
   else
 	  app = new log4cpp::OstreamAppender("ConsoleAppender::",&std::cerr);
@@ -188,17 +258,34 @@ logger_add_rollingfile_appender(gr_logger_ptr logger,std::string filename,
   logger->setAppender(app);
 }
 
-void
-logger_get_logger_names(std::vector<std::string>& names){
+std::vector<std::string>
+logger_get_logger_names(void){
+  std::vector<std::string> names;
   std::vector<log4cpp::Category*> *loggers = log4cpp::Category::getCurrentCategories();
   std::vector<log4cpp::Category*>::iterator logger = loggers->begin();
 
-  names.clear();
   for (;logger!=loggers->end();logger++){
     names.push_back((*logger)->getName());
   };
-  
+  return names;  
+
 }
 
 #endif /* HAVE_LOG4CPP */
+
+/****** Start Methods to provide Python the capabilities of the macros ********/
+void gr_logger_config(const std::string config_filename, unsigned int watch_period){
+  GR_CONFIG_AND_WATCH_LOGGER(config_filename,watch_period);  
+};
+std::vector<std::string> gr_logger_get_logger_names(void){
+  std::vector<std::string> names;
+  GR_GET_LOGGER_NAMES(names);
+  return names;
+};
+void gr_logger_reset_config(void){
+  GR_RESET_CONFIGURATION();
+};
+
+// Remaining capability provided by gr_logger class in gr_logger.h
+
 #endif /* ENABLE_GR_LOGGER */

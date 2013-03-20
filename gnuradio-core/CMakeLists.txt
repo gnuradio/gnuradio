@@ -148,7 +148,7 @@ install(
 
 if(ENABLE_GR_LOG AND HAVE_LOG4CPP)
 install(FILES
-    ${CMAKE_CURRENT_SOURCE_DIR}/gr_log_default.xml
+    ${CMAKE_CURRENT_SOURCE_DIR}/gr_log_default.conf
     DESTINATION ${GR_CONF_DIR}/gnuradio
     COMPONENT "core_runtime"
 )
