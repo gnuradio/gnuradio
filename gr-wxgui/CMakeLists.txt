@@ -20,6 +20,7 @@
 ########################################################################
 # Setup dependencies
 ########################################################################
+include(GrBoost)
 include(GrPython)
 
 GR_PYTHON_CHECK_MODULE("wx >= 2.8" wx "wx.version().split()[0] >= '2.8'" WX_FOUND)
