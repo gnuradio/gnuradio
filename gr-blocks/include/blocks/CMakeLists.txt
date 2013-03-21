@@ -131,6 +131,7 @@ install(FILES
     deinterleave.h
     delay.h
     endian_swap.h
+    file_sink.h
     file_source.h
     file_meta_sink.h
     file_meta_source.h
