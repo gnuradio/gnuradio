@@ -21,8 +21,11 @@
 # 
 
 import numpy
+import random
 from gnuradio import gr, gr_unittest
-import digital_swig
+import digital_swig as digital
+from ofdm_txrx import ofdm_tx, ofdm_rx
+from utils import  tagged_streams
 
 class test_ofdm_txrx (gr_unittest.TestCase):
 
@@ -33,7 +36,7 @@ class test_ofdm_txrx (gr_unittest.TestCase):
         self.tb = None
 
     def test_001 (self):
-        pass
+        ##pass
         #len_tag_key = 'frame_len'
         #n_bytes = 100
         #test_data = [random.randint(0, 255) for x in range(n_bytes)]
