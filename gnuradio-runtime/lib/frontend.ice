@@ -1,5 +1,5 @@
 /*
- * Copyright 2012 Free Software Foundation, Inc.
+ * Copyright 2013 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -25,78 +25,128 @@
 module GNURadio {
     module Frontend {
 
+        // primitive types
+		dictionary<string, string>	StrStrDict;
+        dictionary<string, string>  TunerArgs;
+		struct F32Range 
+        {
+          float min; 
+          float max; 
+        };
+
+        // exception types
         exception NotSupported {};
         exception InvalidSetting { string msg; };
         exception ReceiverFailure { string msg; };
-	exception NotExist {};
-        dictionary<string, string>      TunerArgs;
+		exception NotExist {};
 
+
+        // Status Types
         struct TunerStatus {
+            float freq;
+            float rate;
             int   a2dbits;
             float gain;
+            F32Range gainrange;
             bool  isInverted;
+			StrStrDict info;
         };
 
-        interface Tuner {
-            TunerStatus configureTuner(TunerArgs args);                     //ADDED
-            idempotent TunerStatus status();
-            idempotent float setGain(float gain) throws NotSupported, InvalidSetting;
-            idempotent bool  setInversion(bool inverted) throws NotSupported, InvalidSetting;
+        struct StreamInfo {
+			string uri;
+			StrStrDict info;
+        };
+
+        struct ReceiverInfo {
+            string uid;
+            string name;
+			StrStrDict info;
         };
 
         struct ChannelStatus {
-	    string uid;
+	    	string uid;
+            string name;
             bool active;
             float freq;
             float bandwidth;
-            int payloadBits;
             bool  isComplex;
-            string signalName;
+			StrStrDict info;
         };
 
-        interface Channel extends Component {
-            idempotent ChannelStatus status();
-            idempotent FeedInfo  feed();
-            idempotent bool  active();
+        struct ChannelizerStatus {
+		    string uid;
+            string name;
+			StrStrDict info;
+        };
+
+        // Interfaces
+        interface Component {
+            void setName(string newName);
+        };
+
+        interface AbstractReceiver extends Component {
+            idempotent ReceiverInfo   getReceiverInfo();
+        };
+
+        interface Tuner {
+            TunerStatus configureTuner(TunerArgs args) throws ReceiverFailure, InvalidSetting;
+            idempotent TunerStatus status();
+            idempotent float setGain(float gain) throws ReceiverFailure, NotSupported, InvalidSetting;
+            idempotent bool  setInversion(bool inverted) throws ReceiverFailure, NotSupported, InvalidSetting;
+            idempotent float setCenterFreq(float freq) throws ReceiverFailure, NotSupported, InvalidSetting;
+            idempotent float setBandwidth(float bw) throws ReceiverFailure, NotSupported, InvalidSetting;
+            idempotent void  setInfo(string k, string v) throws ReceiverFailure, NotSupported, InvalidSetting;
+        };
+
+        interface Channel {
             void start();
             void stop();
-            idempotent float setCenterFreq(float freq) throws NotSupported, InvalidSetting;
-            idempotent float setBandwidth(float bw) throws NotSupported, InvalidSetting;
-            idempotent int   setPayloadBits(int bits) throws NotSupported, InvalidSetting;
-            idempotent bool  setComplex(bool complex) throws NotSupported, InvalidSetting;
-            void removeChannel() throws NotSupported;
+            void destroyChannel() throws NotSupported;
+            idempotent bool  active();
+            idempotent ChannelStatus status();
+            idempotent StreamInfo    stream();
+            idempotent bool setComplex(bool complex) throws ReceiverFailure, NotSupported, InvalidSetting;
+            idempotent void setInfo(string k, string v) throws ReceiverFailure, NotSupported, InvalidSetting;
+            idempotent void setStreamInfo(string k, string v) throws ReceiverFailure, NotSupported, InvalidSetting;
         };
 
         sequence<Tuner*>   TunerSeq;
         sequence<Channel*> ChannelSeq;
-
-        struct ChannelizerStatus {
-	    string uid;
-            string signalName;
-        };
     
-        interface Channelizer extends Component {
+        interface Channelizer extends AbstractReceiver {
             idempotent ChannelizerStatus status();
             idempotent Tuner*       getTuner();
             idempotent ChannelSeq   getChannels();
             idempotent ChannelSeq   getActiveChannels();
             idempotent ChannelSeq   getInactiveChannels();
-            Channel* createChannel(float freq, float bw, int payloadBits, string address, int port) throws NotSupported;
+            Channel* createChannel(float freq, float bw, StrStrDict args) throws NotSupported;
         };
 
         sequence<Channelizer*>  ChannelizerSeq;
 
         interface Receiver extends AbstractReceiver {
             idempotent ChannelizerSeq getInputs();
-//            idempotent ChannelizerSeq getActiveInputs();
-//            idempotent ChannelizerSeq getInactiveInputs();
-	    idempotent Channel* getChannelByID(string id) throws NotExist;
-	    idempotent Channelizer* getChannelizerByID(string id) throws NotExist;
+            idempotent Channel* getChannelByID(string id) throws NotExist;
+            idempotent Channelizer* getChannelizerByID(string id) throws NotExist;
+            idempotent void setInfo(string k, string v) throws ReceiverFailure, NotSupported, InvalidSetting;
         };
-
 
     };
     
-
-
+    module Booter {
+        dictionary<string, string>      WaveformArgs;
+        exception WaveformRunningError {
+            string waveformClass;
+            float centerFrequencyHz;
+        };
+        exception SignalSourceError {string msg; };
+        interface WaveformBooter extends Frontend::Receiver, ControlPort {
+            string  launchWaveform(string waveformClass, WaveformArgs       args)
+                    throws WaveformRunningError, SignalSourceError;
+            WaveformArgMap  getDriverEnum();
+            WaveformArgMap  getSourceInfo();
+            idempotent bool     waveformRunning();
+            idempotent string   getWaveformClass();
+        };
+    };
 };

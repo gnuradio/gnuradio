@@ -29,6 +29,7 @@
 #include <map>
 #include <gnuradio.h>
 #include <Ice/Exception.h>
+#include <boost/format.hpp>
 
 class rpcserver_ice : public virtual rpcserver_base, public GNURadio::ControlPort
 {
@@ -109,7 +110,9 @@ private:
 	}
       }
       else {
-	throw IceUtil::NullHandleException(__FILE__, __LINE__);
+        std::cout << "Ctrlport Key called with unregistered key (" << p << ")\n";
+        std::string tmpkey(p);
+        throw IceUtil::NullHandleException((boost::format("%s Ctrlport Key called with unregistered key = %s")%__FILE__%p).str().c_str(), __LINE__);
       }
     }
 

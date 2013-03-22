@@ -88,66 +88,7 @@ interface ControlPort {
     idempotent  KnobMap 	get(KnobIDList knobs);
     idempotent  KnobPropMap 	properties(KnobIDList knobs);
     void 			shutdown();
-
-//    string 			subscribe(StreamReceiver* proxy, string streamName, int requestedPeriod, int RequestedSize);
-//    idempotent  void 		unsubscribe(string streamID);
 };
-
-struct FeedInfo {
-	string protocol;
-	string address;
-	string iface;
-	string port;
-};
-
-//TODO: convert this part to a Feed Info
-struct ReceiverInfo {
-	string uid;
-	string signalType;
-	string signalName;
-	string allocatableObjectID;
-	string signalProtocol;
-	string signalAddress;
-	string signalInterface;
-	string signalPort;
-};
-
-interface Component {
-		void setName(string newName);
-};
-
-module Frontend {
-	interface AbstractReceiver extends Component {
-        idempotent ReceiverInfo   getReceiverInfo();
-	};
-};
-
-module Booter {
-    dictionary<string, string>      WaveformArgs;
-
-    exception WaveformRunningError {
-        string waveformClass;
-        float centerFrequencyHz;
-    };
-    exception SignalSourceError {string msg; };
-
-    interface WaveformBooter extends Frontend::AbstractReceiver {
-        string  launchWaveform(string waveformClass, WaveformArgs       args)
-                throws WaveformRunningError, SignalSourceError;
-
-//        string  launchWaveformWithSession(string waveformClass, WaveformArgs       args, IceGrid::Session* session)
-//                throws WaveformRunningError;
-        WaveformArgMap getDriverEnum();
-        WaveformArgMap getSourceInfo();
-	idempotent bool	waveformRunning();
-    	idempotent string  getWaveformClass();
-        void    shutdown();
-    };
-};
-
-//interface Pingable {
-//	bool ping();
-//};
 
 };
 
