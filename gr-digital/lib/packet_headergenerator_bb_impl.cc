@@ -23,6 +23,7 @@
 #include "config.h"
 #endif
 
+#include <boost/format.hpp>
 #include <gr_io_signature.h>
 #include "packet_headergenerator_bb_impl.h"
 
@@ -79,6 +80,7 @@ namespace gr {
     {
       unsigned char *out = (unsigned char *) output_items[0];
       if (!d_formatter->header_formatter(ninput_items[0], out)) {
+	GR_LOG_FATAL(d_logger, boost::format("header_formatter() returned false (this shouldn't happen). Offending header started at %1%") % nitems_read(0));
 	throw std::runtime_error("header formatter returned false.");
       }
 
