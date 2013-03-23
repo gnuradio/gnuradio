@@ -151,7 +151,7 @@ void
 DisplayForm::mousePressEvent( QMouseEvent * e)
 {
   bool ctrloff = Qt::ControlModifier != QApplication::keyboardModifiers();
-  if((e->button() == Qt::MiddleButton) && ctrloff && (_menu_on)) {
+  if((e->button() == Qt::MidButton) && ctrloff && (_menu_on)) {
     if(_stop_state == false)
       _stop_act->setText(tr("Stop"));
     else
