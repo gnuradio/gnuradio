@@ -25,6 +25,8 @@ from gnuradio.eng_option import eng_option
 from optparse import OptionParser
 import os, sys
 
+os.environ['GR_CONF_CONTROLPORT_ON'] = 'False'
+
 try:
     from gnuradio import qtgui
     from PyQt4 import QtGui, QtCore

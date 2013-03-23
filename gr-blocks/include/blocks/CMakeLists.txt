@@ -131,6 +131,9 @@ install(FILES
     deinterleave.h
     delay.h
     endian_swap.h
+    file_descriptor_sink.h
+    file_descriptor_source.h
+    file_sink.h
     file_source.h
     file_meta_sink.h
     file_meta_source.h
@@ -145,6 +148,7 @@ install(FILES
     interleaved_short_to_complex.h
     keep_m_in_n.h
     keep_one_in_n.h
+    lfsr_32k_source_s.h
     message_debug.h
     message_sink.h
     message_source.h
@@ -184,12 +188,12 @@ install(FILES
     stretch_ff.h
     tag_debug.h
     tagged_file_sink.h
+    tagged_stream_mux.h
     tagged_stream_to_pdu.h
     threshold_ff.h
     throttle.h
     transcendental.h
     tuntap_pdu.h
-    tagged_stream_mux.h
     uchar_to_float.h
     udp_sink.h
     udp_source.h
