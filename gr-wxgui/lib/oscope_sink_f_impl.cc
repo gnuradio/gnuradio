@@ -56,7 +56,6 @@ namespace gr {
     bool
     oscope_sink_f_impl::check_topology(int ninputs, int noutputs)
     {
-      GR_LOG_DEBUG(d_logger, "oscopy_sink_f check_topology");
       return d_guts->set_num_channels(ninputs);
     }
 
