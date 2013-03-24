@@ -17,7 +17,7 @@
   </param>
   <sink>
     <name>in</name>
-    <type>real</type>
+    <type>float</type>
   </sink>
   <source>
     <name>out</name>
