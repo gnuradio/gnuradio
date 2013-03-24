@@ -46,6 +46,7 @@
 #include "analog/noise_source_f.h"
 #include "analog/noise_source_c.h"
 #include "analog/phase_modulator_fc.h"
+#include "analog/plateau_detector_fb.h"
 #include "analog/pll_carriertracking_cc.h"
 #include "analog/pll_freqdet_cf.h"
 #include "analog/pll_refout_cc.h"
@@ -85,6 +86,7 @@
 %include "analog/noise_source_f.h"
 %include "analog/noise_source_c.h"
 %include "analog/phase_modulator_fc.h"
+%include "analog/plateau_detector_fb.h"
 %include "analog/pll_carriertracking_cc.h"
 %include "analog/pll_freqdet_cf.h"
 %include "analog/pll_refout_cc.h"
@@ -120,6 +122,7 @@ GR_SWIG_BLOCK_MAGIC2(analog, noise_source_i);
 GR_SWIG_BLOCK_MAGIC2(analog, noise_source_f);
 GR_SWIG_BLOCK_MAGIC2(analog, noise_source_c);
 GR_SWIG_BLOCK_MAGIC2(analog, phase_modulator_fc);
+GR_SWIG_BLOCK_MAGIC2(analog, plateau_detector_fb);
 GR_SWIG_BLOCK_MAGIC2(analog, pll_carriertracking_cc);
 GR_SWIG_BLOCK_MAGIC2(analog, pll_freqdet_cf);
 GR_SWIG_BLOCK_MAGIC2(analog, pll_refout_cc);

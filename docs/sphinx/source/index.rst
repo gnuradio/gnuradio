@@ -38,6 +38,19 @@ Core Framework
    gnuradio.qtgui <qtgui/index>
    gnuradio.wxgui <wxgui/index>
 
+Hardware Interfaces
+------------------
+
+.. autosummary::
+   :nosignatures:
+   
+   gnuradio.uhd
+
+.. toctree::
+   :hidden:   
+
+   gnuradio.uhd <uhd>
+
 Utilities
 ---------
 

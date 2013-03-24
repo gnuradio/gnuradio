@@ -51,6 +51,6 @@ set(tests_not_run #single source per test
 foreach(test_not_run_src ${tests_not_run})
     get_filename_component(name ${test_not_run_src} NAME_WE)
     add_executable(${name} ${test_not_run_src})
-    target_link_libraries(${name} test-gnuradio-core gnuradio-blocks)
+    target_link_libraries(${name} test-gnuradio-core gnuradio-blocks ${LOG4CPP_LIBRARIES})
 endforeach(test_not_run_src)
 

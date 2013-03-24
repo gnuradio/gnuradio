@@ -22,14 +22,21 @@
 
 GR_SWIG_BLOCK_MAGIC(gr,message_sink);
 
+#include <string>
+
 gr_message_sink_sptr gr_make_message_sink (size_t itemsize,
 					   gr_msg_queue_sptr msgq,
 					   bool dont_block);
+gr_message_sink_sptr gr_make_message_sink (size_t itemsize,
+                                           gr_msg_queue_sptr msgq,
+                                           bool dont_block,
+                                           const std::string& lengthtagname);
 
 class gr_message_sink : public gr_sync_block
 {
  protected:
   gr_message_sink (size_t itemsize, gr_msg_queue_sptr msgq, bool dont_block);
+  gr_message_sink (size_t itemsize, gr_msg_queue_sptr msgq, bool dont_block, const std::string& lengthtagname);
 
  public:
   ~gr_message_sink ();

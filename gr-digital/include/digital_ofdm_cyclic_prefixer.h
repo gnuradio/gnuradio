@@ -24,36 +24,72 @@
 #define INCLUDED_DIGITAL_OFDM_CYCLIC_PREFIXER_H
 
 #include <digital_api.h>
-#include <gr_sync_interpolator.h>
-#include <stdio.h>
+#include <gr_tagged_stream_block.h>
 
 class digital_ofdm_cyclic_prefixer;
 typedef boost::shared_ptr<digital_ofdm_cyclic_prefixer> digital_ofdm_cyclic_prefixer_sptr;
 
-DIGITAL_API digital_ofdm_cyclic_prefixer_sptr 
-digital_make_ofdm_cyclic_prefixer (size_t input_size, size_t output_size);
+/*!
+ * \param input_size FFT length (i.e. length of the OFDM symbols)
+ * \param output_size FFT length + cyclic prefix length (in samples)
+ * \param rolloff_len Length of the rolloff flank in samples
+ * \param len_tag_key For framed processing the key of the length tag
+ */
+DIGITAL_API digital_ofdm_cyclic_prefixer_sptr
+digital_make_ofdm_cyclic_prefixer (size_t input_size,
+		size_t output_size,
+		int rolloff_len=0,
+		const std::string &len_tag_key="");
 
 
 /*!
- * \brief adds a cyclic prefix vector to an input size long ofdm
- * symbol(vector) and converts vector to a stream output_size long.
+ * \brief Adds a cyclic prefix and performs pulse shaping on OFDM symbols.
  * \ingroup ofdm_blk
+ *
+ * Input: OFDM symbols (in the time domain, i.e. after the IFFT). Optionally,
+ *        entire frames can be processed. In this case, \p len_tag_key must be
+ *        specified which holds the key of the tag that denotes how
+ *        many OFDM symbols are in a frame.
+ * Output: A stream of (scalar) complex symbols, which include the cyclic prefix
+ *         and the pulse shaping.
+ *         Note: If complete frames are processed, and \p rolloff_len is greater
+ *         than zero, the final OFDM symbol is followed by the delay line of
+ *         the pulse shaping.
+ *
+ * The pulse shape is a raised cosine in the time domain.
  */
-class DIGITAL_API digital_ofdm_cyclic_prefixer : public gr_sync_interpolator
+class DIGITAL_API digital_ofdm_cyclic_prefixer : public gr_tagged_stream_block
 {
   friend DIGITAL_API digital_ofdm_cyclic_prefixer_sptr
-    digital_make_ofdm_cyclic_prefixer (size_t input_size, size_t output_size);
+    digital_make_ofdm_cyclic_prefixer (size_t input_size, size_t output_size, int rolloff_len, const std::string &len_tag_key);
+
 
  protected:
-  digital_ofdm_cyclic_prefixer (size_t input_size, size_t output_size);
+  digital_ofdm_cyclic_prefixer (size_t input_size, size_t output_size, int rolloff_len, const std::string &len_tag_key);
+
+  //! Return the number of complex samples from the number of OFDM symbols (includes rolloff)
+  int calculate_output_stream_length(const gr_vector_int &ninput_items);
 
  public:
-  int work (int noutput_items,
-	    gr_vector_const_void_star &input_items,
-	    gr_vector_void_star &output_items);
+  int work(int noutput_items,
+	       gr_vector_int &ninput_items,
+	       gr_vector_const_void_star &input_items,
+	       gr_vector_void_star &output_items);
+
  private:
-  size_t d_input_size;
+  size_t d_fft_len;
+  //! FFT length + CP length in samples
   size_t d_output_size;
+  //! Length of the cyclic prefix in samples
+  int d_cp_size;
+  //! Length of pulse rolloff in samples
+  int d_rolloff_len;
+  //! Buffers the up-flank (at the beginning of the cyclic prefix)
+  std::vector<float> d_up_flank;
+  //! Buffers the down-flank (which trails the symbol)
+  std::vector<float> d_down_flank;
+  std::vector<gr_complex> d_delay_line; // We do this explicitly to avoid outputting zeroes (i.e. no history!)
 };
 
 #endif /* INCLUDED_DIGITAL_OFDM_CYCLIC_PREFIXER_H */
+

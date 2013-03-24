@@ -123,6 +123,13 @@ install(FILES
     digital_scrambler_bb.h
     digital_simple_framer.h
     digital_simple_framer_sync.h
+    digital_ofdm_sync_sc_cfb.h
+    digital_ofdm_chanest_vcvc.h
+    digital_crc32_bb.h
+    digital_ofdm_carrier_allocator_cvc.h
+    digital_ofdm_equalizer_base.h
+    digital_ofdm_equalizer_static.h
+    digital_ofdm_equalizer_simpledfe.h
     digital_simple_correlator.h
     DESTINATION ${GR_INCLUDE_DIR}/gnuradio
     COMPONENT "digital_devel"

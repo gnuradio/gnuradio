@@ -35,5 +35,6 @@ class @NAME@ : public gr_sync_block {
   void clear();			// deprecated
   void reset();
   std::vector<@TYPE@> data () const;
+  std::vector<gr_tag_t> tags () const;
 };
 

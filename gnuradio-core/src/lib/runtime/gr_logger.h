@@ -530,7 +530,7 @@ typedef void* gr_logger_ptr;
 #define GR_GET_LEVEL(name, level)
 #define GR_LOG_GET_LEVEL(logger, level)
 #define GR_ADD_CONSOLE_APPENDER(logger,target,pattern)
-#define GR_LOG_ADD_CONSOLE_APPENDER(logger,,target,pattern)
+#define GR_LOG_ADD_CONSOLE_APPENDER(logger,target,pattern)
 #define GR_ADD_FILE_APPENDER(name,filename,append,pattern)
 #define GR_LOG_ADD_FILE_APPENDER(logger,filename,append,pattern)
 #define GR_ADD_ROLLINGFILE_APPENDER(name,filename,filesize,bkup_index,append,mode,pattern)

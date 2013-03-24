@@ -39,6 +39,7 @@ GR_PYTHON_INSTALL(
     ofdm_sync_ml.py
     ofdm_sync_pnac.py
     ofdm_sync_pn.py
+    ofdm_txrx.py
     packet_utils.py
     pkt.py
     psk.py
@@ -55,6 +56,7 @@ GR_PYTHON_INSTALL(
     utils/gray_code.py
     utils/mod_codes.py
     utils/alignment.py
+    utils/tagged_streams.py
     DESTINATION ${GR_PYTHON_DIR}/gnuradio/digital/utils
     COMPONENT "digital_python"
 )
@@ -67,6 +69,12 @@ if(ENABLE_TESTING)
 list(APPEND GR_TEST_PYTHON_DIRS
     ${CMAKE_BINARY_DIR}/gr-digital/python
     ${CMAKE_BINARY_DIR}/gr-digital/swig
+    ${CMAKE_BINARY_DIR}/gr-fft/python
+    ${CMAKE_BINARY_DIR}/gr-fft/swig
+    ${CMAKE_BINARY_DIR}/gr-blocks/python
+    ${CMAKE_BINARY_DIR}/gr-blocks/swig
+    ${CMAKE_BINARY_DIR}/gr-analog/python
+    ${CMAKE_BINARY_DIR}/gr-analog/swig
 )
 list(APPEND GR_TEST_TARGET_DEPS gnuradio-digital gnuradio-filter gnuradio-fft)
 

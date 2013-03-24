@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2003,2004,2005,2006,2007,2009,2010 Free Software Foundation, Inc.
+# Copyright 2003-2007,2009,2010 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -99,6 +99,8 @@ class fft_sink_base(object):
     def _set_n(self):
         self.one_in_n.set_n(max(1, int(self.sample_rate/self.fft_size/self.fft_rate)))
 
+    def set_callback(self, callb):
+        return
 
 class fft_sink_f(gr.hier_block2, fft_sink_base):
     def __init__(self, parent, baseband_freq=0, ref_scale=2.0,
@@ -132,7 +134,7 @@ class fft_sink_f(gr.hier_block2, fft_sink_base):
 
         # FIXME  We need to add 3dB to all bins but the DC bin
         self.log = gr.nlog10_ff(20, self.fft_size,
-                               -10*math.log10(self.fft_size)                # Adjust for number of bins
+                               -20*math.log10(self.fft_size)                # Adjust for number of bins
                                -10*math.log10(power/self.fft_size)        # Adjust for windowing loss
                                -20*math.log10(ref_scale/2))                # Adjust for reference scale
 
@@ -177,7 +179,7 @@ class fft_sink_c(gr.hier_block2, fft_sink_base):
 
         # FIXME  We need to add 3dB to all bins but the DC bin
         self.log = gr.nlog10_ff(20, self.fft_size,
-                                -10*math.log10(self.fft_size)                # Adjust for number of bins
+                                -20*math.log10(self.fft_size)                # Adjust for number of bins
                                 -10*math.log10(power/self.fft_size)        # Adjust for windowing loss
                                 -20*math.log10(ref_scale/2))                # Adjust for reference scale
 
@@ -606,6 +608,8 @@ class test_app_block (stdgui2.std_top_block):
         # Generate a complex sinusoid
         #src1 = gr.sig_source_c (input_rate, gr.GR_SIN_WAVE, 100*2e3, 1)
         src1 = gr.sig_source_c (input_rate, gr.GR_CONST_WAVE, 100*5.75e3, 1)
+        noise1 = analog.noise_source_c(analog.GR_UNIFORM, 1.0/10)
+        add1 = blocks.add_cc()
 
         # We add these throttle blocks so that this demo doesn't
         # suck down all the CPU available.  Normally you wouldn't use these.
@@ -616,17 +620,24 @@ class test_app_block (stdgui2.std_top_block):
                             ref_level=0, y_per_div=20, y_divs=10)
         vbox.Add (sink1.win, 1, wx.EXPAND)
 
-        self.connect(src1, thr1, sink1)
+        self.connect(src1, (add1,0))
+        self.connect(noise1, (add1,1))
+        self.connect(add1, thr1, sink1)
 
         #src2 = gr.sig_source_f (input_rate, gr.GR_SIN_WAVE, 100*2e3, 1)
         src2 = gr.sig_source_f (input_rate, gr.GR_CONST_WAVE, 100*5.75e3, 1)
+        noise2 = analog.noise_source_f(analog.GR_UNIFORM, 1.0/10)
+        add2 = blocks.add_ff()
+
         thr2 = gr.throttle(gr.sizeof_float, input_rate)
         sink2 = fft_sink_f (panel, title="Real Data", fft_size=fft_size*2,
                             sample_rate=input_rate, baseband_freq=100e3,
                             ref_level=0, y_per_div=20, y_divs=10)
         vbox.Add (sink2.win, 1, wx.EXPAND)
 
-        self.connect(src2, thr2, sink2)
+        self.connect(src2, (add2,0))
+        self.connect(noise2, (add2,1))
+        self.connect(add2, thr2, sink2)
 
 def main ():
     app = stdgui2.stdapp (test_app_block, "FFT Sink Test App")

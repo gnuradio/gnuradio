@@ -24,7 +24,7 @@
 #define INCLUDED_GR_VCO_F_IMPL_H
 
 #include <blocks/vco_f.h>
-#include <blocks/fxpt_vco.h>
+#include <gr_fxpt_vco.h>
 
 namespace gr {
   namespace blocks {
@@ -36,7 +36,7 @@ namespace gr {
       double d_sensitivity;
       double d_amplitude;
       double d_k;
-      fxpt_vco d_vco;
+      gr_fxpt_vco d_vco;
 
     public:
       vco_f_impl(double sampling_rate, double sensitivity, double amplitude);

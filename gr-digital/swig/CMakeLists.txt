@@ -162,8 +162,8 @@ install(
     digital_map_bb.i
     digital_mpsk_receiver_cc.i
     digital_mpsk_snr_est_cc.i
-    digital_ofdm_cyclic_prefixer.i
     digital_ofdm_frame_acquisition.i
+    digital_ofdm_cyclic_prefixer.i
     digital_ofdm_frame_sink.i
     digital_ofdm_insert_preamble.i
     digital_ofdm_mapper_bcv.i

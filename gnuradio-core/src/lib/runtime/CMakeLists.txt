@@ -79,6 +79,7 @@ list(APPEND gnuradio_core_sources
     ${CMAKE_CURRENT_SOURCE_DIR}/gr_sync_decimator.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/gr_sync_interpolator.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/gr_sys_paths.cc
+    ${CMAKE_CURRENT_SOURCE_DIR}/gr_tagged_stream_block.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/gr_top_block.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/gr_top_block_impl.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/gr_tpb_detail.cc
@@ -146,6 +147,7 @@ install(FILES
     ${CMAKE_CURRENT_SOURCE_DIR}/gr_sync_block.h
     ${CMAKE_CURRENT_SOURCE_DIR}/gr_sync_decimator.h
     ${CMAKE_CURRENT_SOURCE_DIR}/gr_sync_interpolator.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/gr_tagged_stream_block.h
     ${CMAKE_CURRENT_SOURCE_DIR}/gr_top_block.h
     ${CMAKE_CURRENT_SOURCE_DIR}/gr_top_block_impl.h
     ${CMAKE_CURRENT_SOURCE_DIR}/gr_tpb_detail.h
@@ -182,6 +184,7 @@ install(FILES
     ${CMAKE_CURRENT_SOURCE_DIR}/gr_sync_block.i
     ${CMAKE_CURRENT_SOURCE_DIR}/gr_sync_decimator.i
     ${CMAKE_CURRENT_SOURCE_DIR}/gr_sync_interpolator.i
+    ${CMAKE_CURRENT_SOURCE_DIR}/gr_tagged_stream_block.i
     ${CMAKE_CURRENT_SOURCE_DIR}/gr_tags.i
     ${CMAKE_CURRENT_SOURCE_DIR}/gr_top_block.i
     ${CMAKE_CURRENT_SOURCE_DIR}/runtime.i

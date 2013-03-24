@@ -28,6 +28,7 @@
 #include <@NAME@.h>
 #include <algorithm>
 #include <gr_io_signature.h>
+#include <iostream>
 
 
 @NAME@::@NAME@ (int vlen)
@@ -46,7 +47,9 @@ int
   @TYPE@ *iptr = (@TYPE@ *) input_items[0];
   for (int i = 0; i < noutput_items * d_vlen; i++)
     d_data.push_back (iptr[i]);
-
+  std::vector<gr_tag_t> tags;
+  get_tags_in_range(tags, 0, nitems_read(0), nitems_read(0) + noutput_items);
+  d_tags.insert(d_tags.end(), tags.begin(), tags.end());
   return noutput_items;
 }
 
@@ -61,4 +64,10 @@ std::vector<@TYPE@>
 @NAME@::data () const
 {
   return d_data;
+}
+
+std::vector<gr_tag_t>
+@NAME@::tags () const
+{
+  return d_tags;
 }
