@@ -292,7 +292,7 @@ if(ENABLE_TESTING)
   include(GrTest)
 
   include_directories(
-    ${GR_FILTER_INCLUDE_DIRS}
+    ${GR_BLOCKS_INCLUDE_DIRS}
     ${CPPUNIT_INCLUDE_DIRS})
   link_directories(${CPPUNIT_LIBRARY_DIRS})
 
@@ -315,7 +315,6 @@ if(ENABLE_TESTING)
     test-gr-blocks
     gnuradio-core
     gnuradio-blocks
-    gnuradio-filter
     ${Boost_LIBRARIES}
     ${CPPUNIT_LIBRARIES}
   )
