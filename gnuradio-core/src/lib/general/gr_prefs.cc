@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2006 Free Software Foundation, Inc.
+ * Copyright 2006,2013 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -75,17 +75,18 @@ gr_prefs::_sys_prefs_filenames()
   fs::directory_iterator diritr(dir);
   while(diritr != fs::directory_iterator()) {
     fs::path p = *diritr++;
-    fnames.push_back(p.string());
+    if(p.extension() != ".swp")
+      fnames.push_back(p.string());
   }
   std::sort(fnames.begin(), fnames.end());
 
-  // Find if there is a ~/.gnuradio/config file and add this to the
-  // beginning of the file list to override any preferences in the
+  // Find if there is a ~/.gnuradio/config.conf file and add this to
+  // the end of the file list to override any preferences in the
   // installed path config files.
   fs::path homedir = fs::path(gr_appdata_path());
   homedir = homedir/".gnuradio/config.conf";
   if(fs::exists(homedir)) {
-    fnames.insert(fnames.begin(), homedir.string());
+    fnames.push_back(homedir.string());
   }    
 
   return fnames;
@@ -94,6 +95,8 @@ gr_prefs::_sys_prefs_filenames()
 void
 gr_prefs::_read_files()
 {
+  std::string config;
+
   std::vector<std::string> filenames = _sys_prefs_filenames();
   std::vector<std::string>::iterator sitr;
   char tmp[1024];
@@ -108,14 +111,89 @@ gr_prefs::_read_files()
 	size_t hash = t.find("#");
 
 	// Use hash marks at the end of each segment as a delimiter
-	d_configs += t.substr(0, hash) + '#';
+	config += t.substr(0, hash) + '#';
       }
     }
     fin.close();
   }
 
-  // Remove all whitespace
-  d_configs.erase(std::remove_if(d_configs.begin(), d_configs.end(), ::isspace), d_configs.end());
+  // Remove all whitespace.
+  config.erase(std::remove_if(config.begin(), config.end(), ::isspace), config.end());
+
+  // Convert the string into a map
+  _convert_to_map(config);
+}
+
+void
+gr_prefs::_convert_to_map(const std::string &conf)
+{
+  // Convert the string into an map of maps
+  // Map is structured as {section name: map of options}
+  // And options map is simply: {option name: option value}
+  std::string sub = conf;
+  size_t sec_start = sub.find("[");
+  while(sec_start != std::string::npos) {
+    sub = sub.substr(sec_start);
+    
+    size_t sec_end = sub.find("]");
+    if(sec_end == std::string::npos)
+      throw std::runtime_error("Config file error: Mismatched section label.\n");
+   
+    std::string sec = sub.substr(1, sec_end-1);
+    size_t next_sec_start = sub.find("[", sec_end);
+    std::string subsec = sub.substr(sec_end+1, next_sec_start-sec_end-2);
+
+    std::transform(sec.begin(), sec.end(), sec.begin(), ::tolower);
+
+    std::map<std::string, std::string> options_map = d_config_map[sec];
+    size_t next_opt = 0;
+    size_t next_val = 0;
+    next_opt = subsec.find("#");
+    while(next_opt < subsec.size()-1) {
+      next_val = subsec.find("=", next_opt);
+      std::string option = subsec.substr(next_opt+1, next_val-next_opt-1);
+      
+      next_opt = subsec.find("#", next_val);
+      std::string value = subsec.substr(next_val+1, next_opt-next_val-1);
+
+      std::transform(option.begin(), option.end(), option.begin(), ::tolower);
+      options_map[option] = value;
+    }
+
+    d_config_map[sec] = options_map;
+
+    sec_start = sub.find("[", sec_end);
+  }
+}
+
+std::string
+gr_prefs::to_string()
+{
+  gr_config_map_itr sections;
+  gr_config_map_elem_itr options;
+  std::stringstream s;
+
+  for(sections = d_config_map.begin(); sections != d_config_map.end(); sections++) {
+    s << "[" << sections->first << "]" << std::endl;
+    for(options = sections->second.begin(); options != sections->second.end(); options++) {
+      s << options->first << " = " << options->second << std::endl;
+    }
+    s << std::endl;
+  }
+
+  return s.str();
+}
+
+void
+gr_prefs::save()
+{
+  std::string conf = to_string();
+
+  fs::path homedir = fs::path(gr_appdata_path());
+  homedir = homedir/".gnuradio/config.conf";
+  fs::ofstream fout(homedir);
+  fout << conf;
+  fout.close();
 }
 
 char *
@@ -134,8 +212,9 @@ gr_prefs::option_to_env(std::string section, std::string option)
 bool
 gr_prefs::has_section(const std::string &section)
 {
-  size_t t = d_configs.find("[" + section + "]#");
-  return t != std::string::npos;
+  std::string s = section;
+  std::transform(section.begin(), section.end(), s.begin(), ::tolower);
+  return d_config_map.count(s) > 0;
 }
 
 bool
@@ -145,9 +224,14 @@ gr_prefs::has_option(const std::string &section, const std::string &option)
     return true;
 
   if(has_section(section)) {
-    size_t sec = d_configs.find("[" + section + "]#");
-    size_t opt = d_configs.find("#" + option + "=", sec);
-    return opt != std::string::npos;
+    std::string s = section;
+    std::transform(section.begin(), section.end(), s.begin(), ::tolower);
+
+    std::string o = option;
+    std::transform(option.begin(), option.end(), o.begin(), ::tolower);
+
+    gr_config_map_itr sec = d_config_map.find(s);
+    return sec->second.count(o) > 0;
   }
   else {
     return false;
@@ -163,19 +247,36 @@ gr_prefs::get_string(const std::string &section, const std::string &option,
     return std::string(env);
 
   if(has_option(section, option)) {
-    std::string optname = "#" + option + "=";
-    size_t sec = d_configs.find("[" + section + "]#");
-    size_t opt = d_configs.find(optname, sec);
+    std::string s = section;
+    std::transform(section.begin(), section.end(), s.begin(), ::tolower);
 
-    size_t start = opt + optname.size();
-    size_t end = d_configs.find("#", start);
-    size_t len = end - start;
+    std::string o = option;
+    std::transform(option.begin(), option.end(), o.begin(), ::tolower);
 
-    return d_configs.substr(start, len);
+    gr_config_map_itr sec = d_config_map.find(s);
+    gr_config_map_elem_itr opt = sec->second.find(o);
+    return opt->second;
   }
   else {
     return default_val;
   }
+}
+
+void
+gr_prefs::set_string(const std::string &section, const std::string &option,
+                     const std::string &val)
+{
+  std::string s = section;
+  std::transform(section.begin(), section.end(), s.begin(), ::tolower);
+
+  std::string o = option;
+  std::transform(option.begin(), option.end(), o.begin(), ::tolower);
+
+  std::map<std::string, std::string> opt_map = d_config_map[s];
+
+  opt_map[o] = val;
+
+  d_config_map[s] = opt_map;
 }
 
 bool
@@ -199,6 +300,24 @@ gr_prefs::get_bool(const std::string &section, const std::string &option, bool d
   }
 }
 
+void
+gr_prefs::set_bool(const std::string &section, const std::string &option, bool val)
+{
+  std::string s = section;
+  std::transform(section.begin(), section.end(), s.begin(), ::tolower);
+
+  std::string o = option;
+  std::transform(option.begin(), option.end(), o.begin(), ::tolower);
+
+  std::map<std::string, std::string> opt_map = d_config_map[s];
+
+  std::stringstream sstr;
+  sstr << (val == true);
+  opt_map[o] = sstr.str();
+
+  d_config_map[s] = opt_map;
+}
+
 long
 gr_prefs::get_long(const std::string &section, const std::string &option, long default_val)
 {
@@ -215,6 +334,24 @@ gr_prefs::get_long(const std::string &section, const std::string &option, long d
   else {
     return default_val;
   }
+}
+
+void
+gr_prefs::set_long(const std::string &section, const std::string &option, long val)
+{
+  std::string s = section;
+  std::transform(section.begin(), section.end(), s.begin(), ::tolower);
+
+  std::string o = option;
+  std::transform(option.begin(), option.end(), o.begin(), ::tolower);
+
+  std::map<std::string, std::string> opt_map = d_config_map[s];
+
+  std::stringstream sstr;
+  sstr << val;
+  opt_map[o] = sstr.str();
+
+  d_config_map[s] = opt_map;
 }
 
 double
@@ -235,3 +372,20 @@ gr_prefs::get_double(const std::string &section, const std::string &option, doub
   }
 }
 
+void
+gr_prefs::set_double(const std::string &section, const std::string &option, double val)
+{
+  std::string s = section;
+  std::transform(section.begin(), section.end(), s.begin(), ::tolower);
+
+  std::string o = option;
+  std::transform(option.begin(), option.end(), o.begin(), ::tolower);
+
+  std::map<std::string, std::string> opt_map = d_config_map[s];
+
+  std::stringstream sstr;
+  sstr << val;
+  opt_map[o] = sstr.str();
+
+  d_config_map[s] = opt_map;
+}

@@ -28,42 +28,39 @@ public:
 
   virtual ~gr_prefs();
 
-  /*!
-   * \brief Does \p section exist?
-   */
+  std::string to_string();
+  void save();
+
   virtual bool has_section(const std::string &section);
 
-  /*!
-   * \brief Does \p option exist?
-   */
   virtual bool has_option(const std::string &section, const std::string &option);
 
-  /*!
-   * \brief If option exists return associated value; else default_val.
-   */
   virtual const std::string get_string(const std::string &section,
 				       const std::string &option,
 				       const std::string &default_val);
+  virtual void set_string(const std::string &section,
+                          const std::string &option,
+                          const std::string &val);
 
-  /*!
-   * \brief If option exists and value can be converted to bool, return it; else default_val.
-   */
   virtual bool get_bool(const std::string &section,
 			const std::string &option,
 			bool default_val);
+  virtual void set_bool(const std::string &section,
+			const std::string &option,
+			bool val);
 
-  /*!
-   * \brief If option exists and value can be converted to long, return it; else default_val.
-   */
   virtual long get_long(const std::string &section,
 			const std::string &option,
 			long default_val);
+  virtual void set_long(const std::string &section,
+			const std::string &option,
+			long val);
 
-  /*!
-   * \brief If option exists and value can be converted to double, return it; else default_val.
-   */
   virtual double get_double(const std::string &section,
 			    const std::string &option,
 			    double default_val);
+  virtual void set_double(const std::string &section,
+                          const std::string &option,
+                          double val);
 };
 
