@@ -26,6 +26,7 @@
 #include <IcePy_Communicator.h>
 #include <pythread.h>
 #include <boost/format.hpp>
+#include <config.h>
 
 enum pyport_t {
   PYPORT_STRING,
@@ -83,6 +84,7 @@ public:
     d_name(name), d_id(pycallback_object_count++)
   {
     d_callback = NULL;
+    setup_rpc();
   }
 
   void add_rpc_variable(rpcbasic_sptr s)
@@ -131,7 +133,7 @@ public:
     add_rpc_variable(
       rpcbasic_sptr(new rpcbasic_register_get<pycallback_object, myType>(
         (boost::format("%s%d") % d_name % d_id).str() , d_functionbase.c_str(),
-	&pycallback_object::get, pmt_assist<myType>::make(d_min),
+    this, &pycallback_object::get, pmt_assist<myType>::make(d_min),
 	pmt_assist<myType>::make(d_max), pmt_assist<myType>::make(d_deflt),
 	d_units.c_str(), d_desc.c_str(), RPC_PRIVLVL_MIN, d_dtype)));
 #endif /* GR_CTRLPORT */
