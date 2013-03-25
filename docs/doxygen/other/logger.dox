@@ -24,8 +24,8 @@ different levels. These levels are:
 
 The order here determines the level of output. These levels are
 hierarchical in that specifying any level also includes any level
-above it. For example, when using the Debug level, all Debug and
-higher messages are logged and Trace is ignored.
+above it. For example, when using the WARN level, all WARN and
+higher messages are logged while DEBUG and INFO are ignored.
 
 \subsection configfile Logging Configuration
 
