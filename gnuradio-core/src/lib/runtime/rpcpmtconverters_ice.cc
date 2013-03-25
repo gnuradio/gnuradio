@@ -32,14 +32,7 @@ rpcpmtconverter::from_pmt(const pmt::pmt_t& knob, const Ice::Current& c)
   }
   else if(pmt::is_symbol(knob)) {
     std::string stuff = pmt::symbol_to_string(knob);
-    if(stuff.length() != 1) {
-      return new GNURadio::KnobS(stuff);
-    }
-    else {
-      return new GNURadio::KnobC(stuff[0]);
-    }
-
-    //TODO: FLOAT!!!
+    return new GNURadio::KnobS(stuff);
   }
   else if(pmt::is_integer(knob)) {
     return new GNURadio::KnobI(pmt::to_long(knob));
@@ -108,10 +101,12 @@ rpcpmtconverter::to_pmt(const GNURadio::KnobPtr& knob, const Ice::Current& c)
   else if(id == "KnobL") {
     GNURadio::KnobLPtr k(GNURadio::KnobLPtr::dynamicCast(knob));
     return pmt::mp((long)k->value);
-  } else if(id == "KnobVecC") {
+  } 
+  else if(id == "KnobVecC") {
     GNURadio::KnobVecCPtr k(GNURadio::KnobVecCPtr::dynamicCast(knob));
     return pmt::init_u8vector(k->value.size(), &k->value[0]);
-  } else if(id == "KnobVecI") {
+  } 
+  else if(id == "KnobVecI") {
     GNURadio::KnobVecIPtr k(GNURadio::KnobVecIPtr::dynamicCast(knob));
     return pmt::init_s32vector(k->value.size(), &k->value[0]);
   }
