@@ -60,11 +60,11 @@ if __name__ == '__main__':
             tb.stop()
 	    sys.exit(0)
         elif(ret.lower() == "none"):
-            tb.filter_filt_0.unset_processor_affinity()
+            tb.gr_filt_0.unset_processor_affinity()
 	else:
             try:
                 n = int(ret)
 	    except ValueError:
                 print "Invalid number"
 	    else:
-                tb.filter_filt_0.set_processor_affinity([n,])
+                tb.gr_filt_0.set_processor_affinity([n,])
