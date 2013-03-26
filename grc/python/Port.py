@@ -90,6 +90,7 @@ class Port(_Port, _GUIPort):
 		"""
 		self._n = n
 		if n['type'] == 'msg': n['key'] = 'msg'
+                if n['type'] == 'message': n['key'] = n['name']
 		if dir == 'source' and not n.find('key'):
 			n['key'] = str(block._source_count)
 			block._source_count += 1
