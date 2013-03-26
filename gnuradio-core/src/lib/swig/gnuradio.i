@@ -44,6 +44,7 @@
 
 // local file
 %include <gr_shared_ptr.i>
+%include <gr_types.h>
 %include <std_complex.i>
 %include <std_vector.i>
 %include <stl.i>

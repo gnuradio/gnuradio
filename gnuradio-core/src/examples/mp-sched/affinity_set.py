@@ -42,9 +42,6 @@ class affinity_set(gr.top_block):
 	self.connect((self.gr_filt_0, 0), (self.gr_filt_1, 0))
 	self.connect((self.gr_filt_1, 0), (self.gr_null_sink_0, 0))
 
-
-	# QT sink close method reimplementation
-
     def get_samp_rate(self):
         return self.samp_rate
 
@@ -58,16 +55,16 @@ if __name__ == '__main__':
     tb.start()
 	
     while(1):
-        ret = raw_input('Press Enter to quit: ')
+        ret = raw_input('Enter a new Core # or Press Enter to quit: ')
 	if(len(ret) == 0):
             tb.stop()
 	    sys.exit(0)
         elif(ret.lower() == "none"):
-            tb.gr_filt_0.unset_processor_affinity()
+            tb.filter_filt_0.unset_processor_affinity()
 	else:
             try:
                 n = int(ret)
 	    except ValueError:
                 print "Invalid number"
 	    else:
-                tb.gr_filt_0.set_processor_affinity([n,])
+                tb.filter_filt_0.set_processor_affinity([n,])
