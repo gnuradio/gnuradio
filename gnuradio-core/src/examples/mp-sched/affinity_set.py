@@ -40,8 +40,8 @@ class affinity_set(gr.top_block):
 	# Connections
 	##################################################
 	self.connect((self.blocks_null_source_0, 0), (self.blocks_throttle_0, 0))
-	self.connect((self.blocks_throttle_0, 0), (self.gr_filt_0, 0))
-	self.connect((self.filter_filt_0, 0), (self.gr_filt_1, 0))
+	self.connect((self.blocks_throttle_0, 0), (self.filter_filt_0, 0))
+	self.connect((self.filter_filt_0, 0), (self.filter_filt_1, 0))
 	self.connect((self.filter_filt_1, 0), (self.blocks_null_sink_0, 0))
 
     def get_samp_rate(self):
