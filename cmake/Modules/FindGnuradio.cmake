@@ -86,6 +86,7 @@ function(GR_MODULE EXTVAR PCNAME INCFILE LIBFILE)
 endfunction()
 
 GR_MODULE(CORE gnuradio-core gr_top_block.h gnuradio-core)
+GR_MODULE(RUNTIME gnuradio-runtime gr_top_block.h gnuradio-runtime)
 GR_MODULE(ANALOG gnuradio-analog analog/noise_type.h gnuradio-analog)
 GR_MODULE(ATSC gnuradio-atsc atsc_api.h gnuradio-atsc)
 GR_MODULE(AUDIO gnuradio-audio audio/sink.h gnuradio-audio)

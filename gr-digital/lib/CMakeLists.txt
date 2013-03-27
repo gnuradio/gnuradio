@@ -27,7 +27,7 @@ include_directories(
     ${GR_FFT_INCLUDE_DIRS}
     ${GR_FILTER_INCLUDE_DIRS}
     ${GR_BLOCKS_INCLUDE_DIRS}
-    ${GNURADIO_CORE_INCLUDE_DIRS}
+    ${GNURADIO_RUNTIME_INCLUDE_DIRS}
     ${VOLK_INCLUDE_DIRS}
     ${GRUEL_INCLUDE_DIRS}
     ${LOG4CPP_INCLUDE_DIRS}
@@ -51,7 +51,7 @@ file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/generate_helper.py "
 #!${PYTHON_EXECUTABLE}
 
 import sys, os, re
-sys.path.append('${GR_CORE_PYTHONPATH}')
+sys.path.append('${GR_RUNTIME_PYTHONPATH}')
 os.environ['srcdir'] = '${CMAKE_CURRENT_SOURCE_DIR}'
 os.chdir('${CMAKE_CURRENT_BINARY_DIR}')
 
@@ -189,7 +189,7 @@ ENDIF(MSVC)
 
 list(APPEND digital_libs
     volk
-    gnuradio-core
+    gnuradio-runtime
     gnuradio-filter
     gnuradio-blocks
     gnuradio-analog
@@ -206,7 +206,7 @@ add_dependencies(
     gnuradio-digital
     digital_generated_includes
     digital_generated_swigs
-    gnuradio-core
+    gnuradio-runtime
     gnuradio-filter
     gnuradio-analog
     gnuradio-blocks

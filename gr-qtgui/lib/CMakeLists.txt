@@ -104,7 +104,7 @@ include_directories(
     ${GR_QTGUI_INCLUDE_DIRS}
     ${GR_FFT_INCLUDE_DIRS}
     ${GR_FILTER_INCLUDE_DIRS}
-    ${GNURADIO_CORE_INCLUDE_DIRS}
+    ${GNURADIO_RUNTIME_INCLUDE_DIRS}
     ${GRUEL_INCLUDE_DIRS}
     ${VOLK_INCLUDE_DIRS}
     ${QWT_INCLUDE_DIRS}
@@ -133,7 +133,7 @@ endif(ENABLE_GR_CTRLPORT)
 # Setup library
 ########################################################################
 list(APPEND qtgui_libs
-    gnuradio-core
+    gnuradio-runtime
     gnuradio-fft
     gnuradio-filter
     volk

@@ -22,7 +22,7 @@
 
 #define FILTER_API
 
-%include "gnuradio.i"
+%include "runtime_swig.i"
 
 //load generated python docstrings
 %include "gr_filter_swig_doc.i"

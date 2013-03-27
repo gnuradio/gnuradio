@@ -256,12 +256,12 @@ install(
 ########################################################################
 # The following dependency libraries are needed by all gr modules:
 ########################################################################
-list(APPEND GR_TEST_TARGET_DEPS volk gruel gnuradio-core)
+list(APPEND GR_TEST_TARGET_DEPS volk gruel gnuradio-runtime)
 list(APPEND GR_TEST_PYTHON_DIRS
     ${CMAKE_SOURCE_DIR}/gruel/src/python
     ${CMAKE_BINARY_DIR}/gruel/src/swig
-    ${CMAKE_BINARY_DIR}/gnuradio-core/src/python
-    ${CMAKE_BINARY_DIR}/gnuradio-core/src/lib/swig
+    ${CMAKE_SOURCE_DIR}/gnuradio-runtime/python
+    ${CMAKE_BINARY_DIR}/gnuradio-runtime/swig
 )
 
 ########################################################################
@@ -269,7 +269,7 @@ list(APPEND GR_TEST_PYTHON_DIRS
 ########################################################################
 add_subdirectory(docs)
 add_subdirectory(gruel)
-add_subdirectory(gnuradio-core)
+add_subdirectory(gnuradio-runtime)
 add_subdirectory(gr-blocks)
 add_subdirectory(grc)
 add_subdirectory(gr-fec)

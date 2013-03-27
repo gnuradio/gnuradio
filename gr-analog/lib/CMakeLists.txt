@@ -28,7 +28,7 @@ include_directories(
     ${GR_FILTER_INCLUDE_DIRS}
     ${GR_FFT_INCLUDE_DIRS}
     ${GR_BLOCKS_INCLUDE_DIRS}
-    ${GNURADIO_CORE_INCLUDE_DIRS}
+    ${GNURADIO_RUNTIME_INCLUDE_DIRS}
     ${VOLK_INCLUDE_DIRS}
     ${GRUEL_INCLUDE_DIRS}
     ${Boost_INCLUDE_DIRS}
@@ -50,7 +50,7 @@ file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/generate_helper.py "
 #!${PYTHON_EXECUTABLE}
 
 import sys, os, re
-sys.path.append('${GR_CORE_PYTHONPATH}')
+sys.path.append('${GR_RUNTIME_PYTHONPATH}')
 os.environ['srcdir'] = '${CMAKE_CURRENT_SOURCE_DIR}'
 os.chdir('${CMAKE_CURRENT_BINARY_DIR}')
 
@@ -158,7 +158,7 @@ ENDIF(MSVC)
 
 list(APPEND analog_libs
     volk
-    gnuradio-core
+    gnuradio-runtime
     gnuradio-filter
     ${Boost_LIBRARIES}
 )
@@ -187,7 +187,7 @@ if(ENABLE_TESTING)
 
   target_link_libraries(
     test-gr-analog
-    gnuradio-core
+    gnuradio-runtime
     gnuradio-analog 
     ${Boost_LIBRARIES}
     ${CPPUNIT_LIBRARIES}

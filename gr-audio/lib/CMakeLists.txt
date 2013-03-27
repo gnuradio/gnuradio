@@ -23,7 +23,7 @@
 include_directories(
     ${CMAKE_CURRENT_SOURCE_DIR}
     ${GR_AUDIO_INCLUDE_DIRS}
-    ${GNURADIO_CORE_INCLUDE_DIRS}
+    ${GNURADIO_RUNTIME_INCLUDE_DIRS}
     ${GRUEL_INCLUDE_DIRS}
     ${LOG4CPP_INCLUDE_DIRS}
     ${Boost_INCLUDE_DIRS}
@@ -32,7 +32,7 @@ include_directories(
 link_directories(${Boost_LIBRARY_DIRS})
 link_directories(${LOG4CPP_LIBRARY_DIRS})
 
-list(APPEND gr_audio_libs gnuradio-core ${Boost_LIBRARIES} ${LOG4CPP_LIBRARIES})
+list(APPEND gr_audio_libs gnuradio-runtime ${Boost_LIBRARIES} ${LOG4CPP_LIBRARIES})
 list(APPEND gr_audio_sources audio_registry.cc)
 list(APPEND gr_audio_confs ${CMAKE_CURRENT_SOURCE_DIR}/gr-audio.conf)
 

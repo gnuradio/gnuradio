@@ -31,7 +31,7 @@ file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/generate_helper.py "
 #!${PYTHON_EXECUTABLE}
 
 import sys, os, re
-sys.path.append('${GR_CORE_PYTHONPATH}')
+sys.path.append('${GR_RUNTIME_PYTHONPATH}')
 os.environ['srcdir'] = '${CMAKE_CURRENT_SOURCE_DIR}'
 os.chdir('${CMAKE_CURRENT_BINARY_DIR}')
 
@@ -126,7 +126,7 @@ include_directories(
     ${CMAKE_CURRENT_BINARY_DIR}
     ${CMAKE_CURRENT_BINARY_DIR}/../include
     ${GR_BLOCKS_INCLUDE_DIRS}
-    ${GNURADIO_CORE_INCLUDE_DIRS}
+    ${GNURADIO_RUNTIME_INCLUDE_DIRS}
     ${VOLK_INCLUDE_DIRS}
     ${GRUEL_INCLUDE_DIRS}
     ${Boost_INCLUDE_DIRS}
@@ -272,7 +272,7 @@ IF(MSVC)
 ENDIF(MSVC)
 
 list(APPEND blocks_libs
-    gnuradio-core
+    gnuradio-runtime
     volk
     ${Boost_LIBRARIES}
     ${BLOCKS_LIBRARIES}
@@ -313,7 +313,7 @@ if(ENABLE_TESTING)
 
   target_link_libraries(
     test-gr-blocks
-    gnuradio-core
+    gnuradio-runtime
     gnuradio-blocks
     ${Boost_LIBRARIES}
     ${CPPUNIT_LIBRARIES}

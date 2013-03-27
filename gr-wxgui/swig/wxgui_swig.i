@@ -22,7 +22,7 @@
 
 #define WXGUI_API
 
-%include "gnuradio.i"
+%include "runtime_swig.i"
 
 //load generated python docstrings
 %include "wxgui_swig_doc.i"

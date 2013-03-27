@@ -22,7 +22,7 @@
 #define ANALOG_API
 #define BLOCKS_API
 
-%include "gnuradio.i"
+%include "runtime_swig.i"
 %include "stdint.i"
 
 //load generated python docstrings

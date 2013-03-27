@@ -22,7 +22,7 @@
 ########################################################################
 include_directories(
     ${GR_VOCODER_INCLUDE_DIRS}
-    ${GNURADIO_CORE_INCLUDE_DIRS}
+    ${GNURADIO_RUNTIME_INCLUDE_DIRS}
     ${GRUEL_INCLUDE_DIRS}
     ${LOG4CXX_INCLUDE_DIRS}
     ${Boost_INCLUDE_DIRS}
@@ -83,7 +83,7 @@ GR_INCLUDE_SUBDIRECTORY(g7xx)
 GR_INCLUDE_SUBDIRECTORY(gsm)
 
 list(APPEND vocoder_libs
-    gnuradio-core
+    gnuradio-runtime
     ${Boost_LIBRARIES}
     ${LOG4CPP_LIBRARIES}
 )

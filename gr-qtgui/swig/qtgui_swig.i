@@ -23,7 +23,7 @@
 #define QTGUI_API
 #define FILTER_API
 
-%include "gnuradio.i"
+%include "runtime_swig.i"
 
 //load generated python docstrings
 %include "qtgui_swig_doc.i"

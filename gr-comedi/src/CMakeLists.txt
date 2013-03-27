@@ -22,7 +22,7 @@
 ########################################################################
 include_directories(
     ${GR_COMEDI_INCLUDE_DIRS}
-    ${GNURADIO_CORE_INCLUDE_DIRS}
+    ${GNURADIO_RUNTIME_INCLUDE_DIRS}
     ${GRUEL_INCLUDE_DIRS}
     ${Boost_INCLUDE_DIRS}
     ${COMEDI_INCLUDE_DIRS}
@@ -46,7 +46,7 @@ list(APPEND gr_comedi_sources
 )
 
 list(APPEND comedi_libs
-    gnuradio-core
+    gnuradio-runtime
     ${Boost_LIBRARIES}
     ${COMEDI_LIBRARIES}
     ${LOG4CPP_LIBRARIES}
@@ -75,7 +75,7 @@ include(GrSwig)
 
 set(GR_SWIG_INCLUDE_DIRS
     ${GR_COMEDI_INCLUDE_DIRS}
-    ${GNURADIO_CORE_SWIG_INCLUDE_DIRS}
+    ${GNURADIO_RUNTIME_SWIG_INCLUDE_DIRS}
     ${GRUEL_INCLUDE_DIRS}
     ${Boost_INCLUDE_DIRS}
 )
