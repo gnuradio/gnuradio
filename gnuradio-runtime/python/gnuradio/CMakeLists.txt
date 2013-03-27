@@ -22,14 +22,15 @@ include(GrPython)
 
 add_subdirectory(gr)
 add_subdirectory(gru)
-add_subdirectory(ctrlport)
 
 if(ENABLE_GR_CTRLPORT)
-#add_subdirectory(ctrlport)
+  add_subdirectory(ctrlport)
 endif(ENABLE_GR_CTRLPORT)
 
 GR_PYTHON_INSTALL(FILES
     __init__.py
+    eng_notation.py
+    eng_option.py
     gr_unittest.py
     gr_xmlrunner.py
     DESTINATION ${GR_PYTHON_DIR}/gnuradio
