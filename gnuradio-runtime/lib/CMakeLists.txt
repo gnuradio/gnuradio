@@ -132,6 +132,7 @@ list(APPEND gnuradio_runtime_libs
     gruel
     volk
     ${Boost_LIBRARIES}
+    ${LOG4CPP_LIBRARIES}
 )
 
 #need to link with librt on ubuntu 11.10 for shm_*
