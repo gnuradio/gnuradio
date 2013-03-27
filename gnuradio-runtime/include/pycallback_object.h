@@ -26,7 +26,6 @@
 #include <IcePy_Communicator.h>
 #include <pythread.h>
 #include <boost/format.hpp>
-#include <config.h>
 
 enum pyport_t {
   PYPORT_STRING,

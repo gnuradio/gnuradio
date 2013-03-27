@@ -36,10 +36,6 @@
 *
 */
 
-#ifndef ENABLE_GR_LOG
-#include "config.h"
-#endif
-
 #include <gr_runtime_api.h>
 #include <assert.h>
 #include <iostream>

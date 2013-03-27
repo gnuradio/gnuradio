@@ -36,7 +36,7 @@
 #include <gr_endianness.h>
 #include <gr_block.h>
 #include <gr_block_detail.h>
-  //#include <gr_block_gateway.h>
+#include <gr_block_gateway.h>
 #include <gr_buffer.h>
 #include <gr_constants.h>
 #include <gr_dispatcher.h>
@@ -70,7 +70,7 @@
 %include <gr_basic_block.i>
 %include <gr_block.i>
 %include <gr_block_detail.i>
- //%include <gr_block_gateway.i>
+%include <gr_block_gateway.i>
 %include <gr_buffer.i>
 %include <gr_constants.i>
 %include <gr_dispatcher.i>
