@@ -67,7 +67,6 @@ list(APPEND gnuradio_runtime_sources
   gr_block.cc
   gr_block_detail.cc
   gr_block_executor.cc
-  gr_block_gateway.cc
   gr_block_registry.cc
   gr_buffer.cc
   gr_circular_file.cc
@@ -118,6 +117,7 @@ list(APPEND gnuradio_runtime_sources
   gr_vmcircbuf_mmap_tmpfile.cc
   gr_vmcircbuf_sysv_shm.cc
   malloc16.c
+  runtime_block_gateway.cc
 )
 
 # PowerPC workaround for posix_memalign

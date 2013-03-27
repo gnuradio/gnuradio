@@ -22,6 +22,7 @@ include(GrPython)
 
 GR_PYTHON_INSTALL(FILES
     __init__.py
+    gateway.py
     gr_threading.py
     gr_threading_23.py
     gr_threading_24.py

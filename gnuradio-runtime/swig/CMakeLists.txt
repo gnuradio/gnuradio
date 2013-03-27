@@ -97,6 +97,7 @@ install(
     gr_tagged_stream_block.i
     gr_tags.i
     gr_top_block.i
+    runtime_block_gateway.i
     runtime_swig.i
     ${CMAKE_CURRENT_BINARY_DIR}/runtime_swig_doc.i
     DESTINATION ${GR_INCLUDE_DIR}/gnuradio/swig

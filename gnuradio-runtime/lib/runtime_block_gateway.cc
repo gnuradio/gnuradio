@@ -19,7 +19,7 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include <gr_block_gateway.h>
+#include <runtime_block_gateway.h>
 #include <gr_io_signature.h>
 #include <iostream>
 #include <boost/bind.hpp>
@@ -38,9 +38,9 @@ void copy_pointers(OutType &out, const InType &in){
 /***********************************************************************
  * The gr_block gateway implementation class
  **********************************************************************/
-class gr_block_gateway_impl : public gr_block_gateway{
+class runtime_block_gateway_impl : public runtime_block_gateway{
 public:
-    gr_block_gateway_impl(
+    runtime_block_gateway_impl(
         gr_feval_ll *handler,
         const std::string &name,
         gr_io_signature_sptr in_sig,
@@ -170,7 +170,7 @@ private:
     unsigned _decim, _interp;
 };
 
-boost::shared_ptr<gr_block_gateway> gr_make_block_gateway(
+boost::shared_ptr<runtime_block_gateway> runtime_make_block_gateway(
     gr_feval_ll *handler,
     const std::string &name,
     gr_io_signature_sptr in_sig,
@@ -178,7 +178,8 @@ boost::shared_ptr<gr_block_gateway> gr_make_block_gateway(
     const gr_block_gw_work_type work_type,
     const unsigned factor
 ){
-    return boost::shared_ptr<gr_block_gateway>(
-        new gr_block_gateway_impl(handler, name, in_sig, out_sig, work_type, factor)
+    return boost::shared_ptr<runtime_block_gateway>(
+        new runtime_block_gateway_impl(handler, name, in_sig, out_sig,
+                                       work_type, factor)
     );
 }

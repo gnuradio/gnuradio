@@ -33,7 +33,7 @@ from exceptions import *
 from top_block import *
 from hier_block2 import *
 from tag_utils import *
-#from gateway import basic_block, sync_block, decim_block, interp_block
+from gateway import basic_block, sync_block, decim_block, interp_block
 
 # Force the preference database to be initialized
 prefs = gr_prefs.singleton

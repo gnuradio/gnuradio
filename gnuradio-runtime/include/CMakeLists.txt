@@ -23,7 +23,6 @@
 install(FILES
   gr_basic_block.h
   gr_block_detail.h
-  gr_block_gateway.h
   gr_block.h
   gr_block_registry.h
   gr_buffer.h
@@ -87,6 +86,7 @@ install(FILES
   rpcserver_booter_ice.h
   rpcserver_ice.h
   rpcserver_selector.h
+  runtime_block_gateway.h
   DESTINATION ${GR_INCLUDE_DIR}/gnuradio
   COMPONENT "runtime_devel"
 )

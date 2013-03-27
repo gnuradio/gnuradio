@@ -19,8 +19,8 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef INCLUDED_GR_BLOCK_GATEWAY_H
-#define INCLUDED_GR_BLOCK_GATEWAY_H
+#ifndef INCLUDED_RUNTIME_BLOCK_GATEWAY_H
+#define INCLUDED_RUNTIME_BLOCK_GATEWAY_H
 
 #include <gr_runtime_api.h>
 #include <gr_block.h>
@@ -79,7 +79,7 @@ struct gr_block_gw_message_type{
  * The methods prefixed with gr_block__ are renamed
  * to class methods without the prefix in python.
  */
-class GR_RUNTIME_API gr_block_gateway : virtual public gr_block{
+class GR_RUNTIME_API runtime_block_gateway : virtual public gr_block{
 public:
     //! Provide access to the shared message object
     virtual gr_block_gw_message_type &gr_block_message(void) = 0;
@@ -252,7 +252,8 @@ protected:
  * \param factor the decimation or interpolation factor
  * \return a new gateway block
  */
-GR_RUNTIME_API boost::shared_ptr<gr_block_gateway> gr_make_block_gateway(
+GR_RUNTIME_API boost::shared_ptr<runtime_block_gateway>
+runtime_make_block_gateway(
     gr_feval_ll *handler,
     const std::string &name,
     gr_io_signature_sptr in_sig,
@@ -261,4 +262,4 @@ GR_RUNTIME_API boost::shared_ptr<gr_block_gateway> gr_make_block_gateway(
     const unsigned factor
 );
 
-#endif /* INCLUDED_GR_BLOCK_GATEWAY_H */
+#endif /* INCLUDED_RUNTIME_BLOCK_GATEWAY_H */
