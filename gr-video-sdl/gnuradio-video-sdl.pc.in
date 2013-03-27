@@ -5,7 +5,7 @@ includedir=@includedir@
 
 Name: gnuradio-comedi
 Description: GNU Radio blocks for the SDL library
-Requires: gnuradio-core sdl
+Requires: gnuradio-runtime sdl
 Version: @LIBVER@
 Libs: -L${libdir} -lgnuradio-video-sdl
 Cflags: -I${includedir}
