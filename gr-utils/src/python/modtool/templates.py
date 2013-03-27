@@ -473,7 +473,7 @@ Templates['grc_xml'] = '''<?xml version="1.0"?>
        * optional (set to 1 for optional inputs) -->
   <sink>
     <name>in</name>
-    <type><!-- e.g. int, real, complex, byte, short, xxx_vector, ...--></type>
+    <type><!-- e.g. int, float, complex, byte, short, xxx_vector, ...--></type>
   </sink>
 
   <!-- Make one 'source' node per output. Sub-nodes:
@@ -483,7 +483,7 @@ Templates['grc_xml'] = '''<?xml version="1.0"?>
        * optional (set to 1 for optional inputs) -->
   <source>
     <name>out</name>
-    <type><!-- e.g. int, real, complex, byte, short, xxx_vector, ...--></type>
+    <type><!-- e.g. int, float, complex, byte, short, xxx_vector, ...--></type>
   </source>
 </block>
 '''
