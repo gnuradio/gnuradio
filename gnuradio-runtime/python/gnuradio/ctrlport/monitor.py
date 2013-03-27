@@ -24,10 +24,21 @@ import sys, subprocess, re, signal, time, atexit, os
 from gnuradio import gr
 
 class monitor:
-    def __init__(self):
+    def __init__(self,tool="gr-ctrlport-monitor"):
         print "ControlPort Monitor running."
         self.started = False
+        self.tool = tool
         atexit.register(self.shutdown)
+
+        try:
+            # setup export prefs
+            gr.prefs().singleton().set_bool("ControlPort","on",True);
+            if(tool == "gr-ctrlport-monitor"):
+                gr.prefs().singleton().set_bool("ControlPort","edges_list",True);
+                gr.prefs().singleton().set_bool("PerfCounters","on",True);
+                gr.prefs().singleton().set_bool("PerfCounters","export",True);
+        except:
+            print "no support for gr.prefs setting"
 
     def __del__(self):
         if(self.started):
@@ -36,10 +47,12 @@ class monitor:
     def start(self):
         print "monitor::endpoints() = %s" % (gr.rpcmanager_get().endpoints())
         try:
-            self.proc = subprocess.Popen(map(lambda a: ["gr-ctrlport-monitor",
+            cmd = map(lambda a: [self.tool,
                                                         re.search("\d+\.\d+\.\d+\.\d+",a).group(0),
                                                         re.search("-p (\d+)",a).group(1)],
-                                             gr.rpcmanager_get().endpoints())[0])
+                                             gr.rpcmanager_get().endpoints())[0]
+            print "running: %s"%(str(cmd))
+            self.proc = subprocess.Popen(cmd);
             self.started = True
         except:
             self.proc = None
