@@ -24,6 +24,7 @@
 #include "config.h"
 #endif
 
+#include <boost/format.hpp>
 #include <gr_tagged_stream_block.h>
 
 gr_tagged_stream_block::gr_tagged_stream_block (const std::string &name,
@@ -111,7 +112,8 @@ gr_tagged_stream_block::general_work (int noutput_items,
   }
   for (unsigned i = 0; i < input_items.size(); i++) {
     if (d_n_input_items_reqd[i] == -1) {
-    	throw std::runtime_error("Missing length tag.");
+      GR_LOG_FATAL(d_logger, boost::format("Missing a required length tag on port %1% at item #%2%") % i % nitems_read(i));
+      throw std::runtime_error("Missing length tag.");
     }
     if (d_n_input_items_reqd[i] > ninput_items[i]) {
       return 0;
