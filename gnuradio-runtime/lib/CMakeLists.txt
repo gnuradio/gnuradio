@@ -242,7 +242,7 @@ include_directories(${CPPUNIT_INCLUDE_DIRS})
 link_directories(${CPPUNIT_LIBRARY_DIRS})
 
 add_library(test-gnuradio-runtime SHARED ${test_gnuradio_runtime_sources})
-target_link_libraries(test-gnuradio-runtime gnuradio-runtime ${CPPUNIT_LIBRARIES} ${Boost_LIBRARIES})
+target_link_libraries(test-gnuradio-runtime gnuradio-runtime ${CPPUNIT_LIBRARIES} ${Boost_LIBRARIES} ${LOG4CPP_LIBRARIES})
 
 ########################################################################
 # Build the test executable

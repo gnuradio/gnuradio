@@ -317,6 +317,7 @@ if(ENABLE_TESTING)
     gnuradio-blocks
     ${Boost_LIBRARIES}
     ${CPPUNIT_LIBRARIES}
+    ${LOG4CPP_LIBRARIES}
   )
 
   GR_ADD_TEST(test_gr_blocks test-gr-blocks)
