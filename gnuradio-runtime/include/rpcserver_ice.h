@@ -26,6 +26,7 @@
 #include <rpcserver_base.h>
 #include <rpcpmtconverters_ice.h>
 #include <string>
+#include <sstream>
 #include <map>
 #include <gnuradio.h>
 #include <Ice/Exception.h>
@@ -110,9 +111,10 @@ private:
 	}
       }
       else {
-        std::cout << "Ctrlport Key called with unregistered key (" << p << ")\n";
-        std::string tmpkey(p);
-        throw IceUtil::NullHandleException((boost::format("%s Ctrlport Key called with unregistered key = %s")%__FILE__%p).str().c_str(), __LINE__);
+        std::stringstream ss;
+        ss << "Ctrlport Key called with unregistered key (" << p << ")\n";
+        std::cout << ss.str();
+        throw IceUtil::IllegalArgumentException(__FILE__,__LINE__,ss.str().c_str());
       }
     }
 
