@@ -21,9 +21,9 @@
  */
 
 #define GR_RUNTIME_API
-%include "runtime_swig_doc.i"
 
 #ifndef SWIGIMPORTED
+%include "runtime_swig_doc.i"
 %module(directors="1") gnuradio_runtime
 #endif
 

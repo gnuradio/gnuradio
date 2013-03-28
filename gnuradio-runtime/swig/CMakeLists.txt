@@ -53,11 +53,7 @@ endif(ENABLE_GR_CTRLPORT)
 
 set(GR_SWIG_DOC_FILE ${CMAKE_CURRENT_BINARY_DIR}/runtime_swig_doc.i)
 set(GR_SWIG_DOC_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/../lib)
-
-set(GR_SWIG_TARGET_DEPS 
-  pmt_swig
-  ${CMAKE_CURRENT_BINARY_DIR}/runtime_swig_doc.i
-)
+set(GR_RUNTIME_SWIG_DOC_FILE ${GR_SWIG_DOC_FILE})
 
 GR_SWIG_MAKE(runtime_swig runtime_swig.i)
 
