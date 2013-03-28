@@ -44,6 +44,7 @@
 #include <gr_core_api.h>
 #include <assert.h>
 #include <iostream>
+#include <boost/format.hpp>
 
 //#ifndef ENABLE_GR_LOG
 //#define ENABLE_GR_LOG 1
