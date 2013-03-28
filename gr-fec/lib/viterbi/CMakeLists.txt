@@ -41,7 +41,7 @@ list(APPEND viterbi_sources ${CMAKE_CURRENT_BINARY_DIR}/boost_math_erf.cc)
 endif(MSVC)
 
 ########################################################################
-# Append gnuradio-core library sources
+# Append gnuradio-runtime library sources
 ########################################################################
 list(APPEND gnuradio_fec_sources ${viterbi_sources})
 

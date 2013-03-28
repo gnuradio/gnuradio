@@ -29,7 +29,7 @@ include_directories(
     ${GR_FCD_INCLUDE_DIRS}
     ${GR_AUDIO_INCLUDE_DIRS}
     ${GR_BLOCKS_INCLUDE_DIRS}
-    ${GNURADIO_CORE_INCLUDE_DIRS}
+    ${GNURADIO_RUNTIME_INCLUDE_DIRS}
     ${GRUEL_INCLUDE_DIRS}
     ${Boost_INCLUDE_DIRS}
     ${LIBUSB_INCLUDE_DIR}
@@ -56,7 +56,7 @@ list(APPEND gr_fcd_sources
 )
 
 list(APPEND fcd_libs
-    gnuradio-core
+    gnuradio-runtime
     gnuradio-blocks
     gnuradio-audio
     ${Boost_LIBRARIES}

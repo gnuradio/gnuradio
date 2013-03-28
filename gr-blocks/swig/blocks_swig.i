@@ -22,7 +22,7 @@
 
 #define BLOCKS_API
 
-%include "gnuradio.i"
+%include "runtime_swig.i"
 %include "blocks/pdu.h"
 
 //load generated python docstrings

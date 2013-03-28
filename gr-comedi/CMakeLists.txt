@@ -32,7 +32,7 @@ GR_REGISTER_COMPONENT("gr-comedi" ENABLE_GR_COMEDI
     COMEDI_FOUND
     LINUX #comedi uses linux specific device noces
     Boost_FOUND
-    ENABLE_GR_CORE
+    ENABLE_GNURADIO_RUNTIME
 )
 
 GR_SET_GLOBAL(GR_COMEDI_INCLUDE_DIRS

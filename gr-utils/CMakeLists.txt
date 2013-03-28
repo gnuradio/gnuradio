@@ -26,7 +26,7 @@
 ########################################################################
 include(GrComponent)
 GR_REGISTER_COMPONENT("gr-utils" ENABLE_GR_UTILS
-    ENABLE_GR_CORE
+    ENABLE_GNURADIO_RUNTIME
     ENABLE_PYTHON
 )
 

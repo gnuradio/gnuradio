@@ -25,7 +25,7 @@ include_directories(
     ${CMAKE_CURRENT_BINARY_DIR}
     ${CMAKE_CURRENT_BINARY_DIR}/../include
     ${GR_WXGUI_INCLUDE_DIRS}
-    ${GNURADIO_CORE_INCLUDE_DIRS}
+    ${GNURADIO_RUNTIME_INCLUDE_DIRS}
     ${VOLK_INCLUDE_DIRS}
     ${GRUEL_INCLUDE_DIRS}
     ${Boost_INCLUDE_DIRS}
@@ -63,7 +63,7 @@ IF(MSVC)
 ENDIF(MSVC)
 
 list(APPEND wxgui_libs
-    gnuradio-core
+    gnuradio-runtime
     volk
     ${Boost_LIBRARIES}
     ${BLOCKS_LIBRARIES}

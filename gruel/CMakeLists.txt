@@ -37,6 +37,8 @@ include(GrMiscUtils)
 GR_SET_GLOBAL(GRUEL_INCLUDE_DIRS
     ${CMAKE_CURRENT_SOURCE_DIR}/src/include
     ${CMAKE_CURRENT_BINARY_DIR}/src/include
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/swig
+    ${CMAKE_CURRENT_BINARY_DIR}/src/swig
 )
 
 ########################################################################

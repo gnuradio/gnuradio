@@ -22,7 +22,7 @@
 #define TRELLIS_API
 #define DIGITAL_API
 
-%include "gnuradio.i"
+%include "runtime_swig.i"
 
 //load generated python docstrings
 %include "trellis_swig_doc.i"

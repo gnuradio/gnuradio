@@ -23,7 +23,7 @@
 include_directories(
     ${CMAKE_CURRENT_BINARY_DIR}
     ${GR_UHD_INCLUDE_DIRS}
-    ${GNURADIO_CORE_INCLUDE_DIRS}
+    ${GNURADIO_RUNTIME_INCLUDE_DIRS}
     ${GRUEL_INCLUDE_DIRS}
     ${LOG4CXX_INCLUDE_DIRS}
     ${Boost_INCLUDE_DIRS}
@@ -68,7 +68,7 @@ if(MSVC)
 endif(MSVC)
 
 list(APPEND uhd_libs
-    gnuradio-core
+    gnuradio-runtime
     ${Boost_LIBRARIES}
     ${UHD_LIBRARIES}
     ${LOG4CPP_LIBRARIES}

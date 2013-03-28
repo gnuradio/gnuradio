@@ -47,7 +47,7 @@ foreach(py_qa_test_file ${py_qa_test_files})
         ${CMAKE_BINARY_DIR}/gruel/src/python
         ${CMAKE_BINARY_DIR}/gruel/src/swig
     )
-    set(GR_TEST_TARGET_DEPS gruel gnuradio-core)
+    set(GR_TEST_TARGET_DEPS gruel gnuradio-runtime)
     GR_ADD_TEST(${py_qa_test_name} ${PYTHON_EXECUTABLE} ${PYTHON_DASH_B} ${py_qa_test_file})
 endforeach(py_qa_test_file)
 endif(ENABLE_TESTING)

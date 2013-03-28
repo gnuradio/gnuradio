@@ -26,7 +26,7 @@ file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/generate_helper.py "
 #!${PYTHON_EXECUTABLE}
 
 import sys, os, re
-sys.path.append('${GR_CORE_PYTHONPATH}')
+sys.path.append('${GR_RUNTIME_PYTHONPATH}')
 os.environ['srcdir'] = '${CMAKE_CURRENT_SOURCE_DIR}'
 os.chdir('${CMAKE_CURRENT_BINARY_DIR}')
 

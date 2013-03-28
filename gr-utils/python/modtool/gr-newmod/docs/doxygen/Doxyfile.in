@@ -679,7 +679,7 @@ INPUT_FILTER           =
 # info on how filters are used. If FILTER_PATTERNS is empty, INPUT_FILTER
 # is applied to all files.
 
-FILTER_PATTERNS        = *.py=@top_srcdir@/gnuradio-core/doc/other/doxypy.py
+FILTER_PATTERNS        = *.py=@top_srcdir@/doc/doxygen/other/doxypy.py
 
 # If the FILTER_SOURCE_FILES tag is set to YES, the input filter (if set using
 # INPUT_FILTER) will be used to filter the input files when producing source

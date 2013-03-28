@@ -22,7 +22,7 @@
 ########################################################################
 include_directories(
     ${GR_COMEDI_INCLUDE_DIRS}
-    ${GNURADIO_CORE_INCLUDE_DIRS}
+    ${GNURADIO_RUNTIME_INCLUDE_DIRS}
     ${GRUEL_INCLUDE_DIRS}
     ${LOG4CXX_INCLUDE_DIRS}
     ${Boost_INCLUDE_DIRS}
@@ -49,7 +49,7 @@ list(APPEND comedi_sources
 )
 
 list(APPEND comedi_libs
-    gnuradio-core
+    gnuradio-runtime
     ${Boost_LIBRARIES}
     ${COMEDI_LIBRARIES}
 )

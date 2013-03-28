@@ -93,14 +93,14 @@ namespace gr {
       // copy samples for this vector into either a pmt or our save buffer
       if (ncopy == d_pdu_remain) { // we will send this pdu
 	if (d_save.size() == 0) {
-	  d_pdu_vector = pdu::make_vector(d_type, in, ncopy);
+	  d_pdu_vector = pdu::make_pdu_vector(d_type, in, ncopy);
 	  send_message();
 	} 
 	else {
 	  size_t oldsize = d_save.size();
 	  d_save.resize((oldsize + ncopy)*d_itemsize, 0);
 	  memcpy(&d_save[oldsize*d_itemsize], in, ncopy*d_itemsize);
-	  d_pdu_vector = pdu::make_vector(d_type, &d_save[0], d_pdu_length);
+	  d_pdu_vector = pdu::make_pdu_vector(d_type, &d_save[0], d_pdu_length);
 	  send_message();
 	  d_save.clear();
         }

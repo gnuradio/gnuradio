@@ -5,7 +5,7 @@ includedir=@includedir@
 
 Name: gnuradio-noaa
 Description: GNU Radio blocks implementing a NOAA satellite protocols
-Requires: gnuradio-core
+Requires: gnuradio-runtime
 Version: @LIBVER@
 Libs: -L${libdir} -lgnuradio-noaa
 Cflags: -I${includedir}

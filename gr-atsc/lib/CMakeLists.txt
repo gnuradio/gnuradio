@@ -27,7 +27,7 @@ include_directories(
     ${GR_FILTER_INCLUDE_DIRS}
     ${GR_ANALOG_INCLUDE_DIRS}
     ${GR_FEC_INCLUDE_DIRS}
-    ${GNURADIO_CORE_INCLUDE_DIRS}
+    ${GNURADIO_RUNTIME_INCLUDE_DIRS}
     ${GRUEL_INCLUDE_DIRS}
     ${LOG4CPP_INCLUDE_DIRS}
     ${Boost_INCLUDE_DIRS}
@@ -118,7 +118,7 @@ ENDIF(MSVC)
 list(APPEND atsc_libs
     gnuradio-filter
     gnuradio-analog
-    gnuradio-core
+    gnuradio-runtime
     gnuradio-fec
     ${Boost_LIBRARIES}
     ${LOG4CPP_LIBRARIES}
@@ -156,7 +156,7 @@ list(APPEND test_atsci_sources
 include(GrTest)
 list(APPEND GR_TEST_TARGET_DEPS gnuradio-atsc gnuradio-fec gnuradio-filter gnuradio-analog gnuradio-fft)
 add_executable(test_atsci ${test_atsci_sources} test_atsci.cc)
-target_link_libraries(test_atsci gnuradio-atsc gnuradio-core ${CPPUNIT_LIBRARIES})
+target_link_libraries(test_atsci gnuradio-atsc gnuradio-runtime ${CPPUNIT_LIBRARIES})
 GR_ADD_TEST(atsci-test test_atsci)
 
 endif(ENABLE_TESTING)

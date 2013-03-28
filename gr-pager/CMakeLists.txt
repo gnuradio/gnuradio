@@ -28,7 +28,7 @@ include(GrBoost)
 include(GrComponent)
 GR_REGISTER_COMPONENT("gr-pager" ENABLE_GR_PAGER
     Boost_FOUND
-    ENABLE_GR_CORE
+    ENABLE_GNURADIO_RUNTIME
     ENABLE_GR_FILTER
     ENABLE_GR_ANALOG
 )
