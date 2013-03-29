@@ -118,17 +118,17 @@ class ofdm_tx(gr.hier_block2):
         else:
             if len(sync_word1) != self.fft_len:
                 raise ValueError("Length of sync sequence(s) must be FFT length.")
-        total_sync_word = self.sync_word1
+        self.sync_words = [sync_word1,]
         self.sync_word2 = ()
         if sync_word2 is not None:
             if len(sync_word2) != fft_len:
                 raise ValueError("Length of sync sequence(s) must be FFT length.")
             self.sync_word2 = sync_word2
             n_sync_words = 2
-            total_sync_word = sync_word1 + sync_word2
+            self.sync_words.append(self.sync_word2)
         crc = digital.crc32_bb(False, self.frame_length_tag_key)
         formatter_object = digital.packet_header_ofdm(
-            occupied_carriers, 1, "", "", "",
+            occupied_carriers, 1, self.frame_length_tag_key, self.frame_length_tag_key, "",
             bps_header
         )
         header_gen = digital.packet_headergenerator_bb(formatter_object.base())
@@ -142,29 +142,22 @@ class ofdm_tx(gr.hier_block2):
             payload_mod,
             (header_payload_mux, 1)
         )
-        self.connect(payload_mod, gr.tag_debug(gr.sizeof_gr_complex, "pmod"))
-        sync_word_gen = blocks.vector_source_c(
-            total_sync_word, True, self.fft_len,
-            tagged_streams.make_lengthtags((n_sync_words,), (0,), self.frame_length_tag_key)
-        )
         allocator = digital.ofdm_carrier_allocator_cvc(
             self.fft_len,
             occupied_carriers=self.occupied_carriers,
             pilot_carriers=self.pilot_carriers,
             pilot_symbols=self.pilot_symbols,
+            sync_words=self.sync_words,
             len_tag_key=self.frame_length_tag_key
         )
-        syncword_data_mux  = blocks.tagged_stream_mux(gr.sizeof_gr_complex*self.fft_len, self.frame_length_tag_key)
-        self.connect(sync_word_gen, (syncword_data_mux, 0))
-        self.connect(header_payload_mux, allocator, (syncword_data_mux, 1))
-        ffter = fft.fft_vcc(self.fft_len, False, (), False)
+        ffter = fft.fft_vcc(self.fft_len, False, (), True)
         cyclic_prefixer = digital.ofdm_cyclic_prefixer(
             self.fft_len,
             self.fft_len+self.cp_len,
             rolloff,
             self.frame_length_tag_key
         )
-        self.connect(syncword_data_mux, ffter, cyclic_prefixer, self)
+        self.connect(header_payload_mux, allocator, ffter, cyclic_prefixer, self)
 
 
 class ofdm_rx(gr.hier_block2):
