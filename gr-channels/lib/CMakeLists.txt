@@ -28,7 +28,6 @@ include_directories(
     ${GR_FILTER_INCLUDE_DIRS}
     ${GR_ANALOG_INCLUDE_DIRS}
     ${GNURADIO_RUNTIME_INCLUDE_DIRS}
-    ${GRUEL_INCLUDE_DIRS}
     ${Boost_INCLUDE_DIRS}
 )
 

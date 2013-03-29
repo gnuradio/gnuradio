@@ -27,7 +27,7 @@
 #include <gr_runtime_types.h>
 #include <gr_tpb_detail.h>
 #include <gr_tags.h>
-#include <gruel/high_res_timer.h>
+#include <high_res_timer.h>
 #include <stdexcept>
 
 /*!
@@ -169,7 +169,7 @@ class GR_RUNTIME_API gr_block_detail {
   void unset_processor_affinity();
 
   bool                               threaded;  // set if thread is currently running.
-  gruel::gr_thread_t                 thread;    // portable thread handle
+  gr::thread::gr_thread_t            thread;    // portable thread handle
 
   void start_perf_counters();
   void stop_perf_counters(int noutput_items, int nproduced);
@@ -225,7 +225,7 @@ class GR_RUNTIME_API gr_block_detail {
   std::vector<float> d_ins_output_buffers_full;
   std::vector<float> d_avg_output_buffers_full;
   std::vector<float> d_var_output_buffers_full;
-  gruel::high_res_timer_type d_start_of_work, d_end_of_work;
+  gr::high_res_timer_type d_start_of_work, d_end_of_work;
   float d_ins_work_time;
   float d_avg_work_time;
   float d_var_work_time;

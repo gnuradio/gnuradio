@@ -264,7 +264,7 @@ void
 WaterfallDisplayPlot::plotNewData(const std::vector<double*> dataPoints,
 				  const int64_t numDataPoints,
 				  const double timePerFFT,
-				  const gruel::high_res_timer_type timestamp,
+				  const gr::high_res_timer_type timestamp,
 				  const int droppedFrames)
 {
   if(!_stop) {
@@ -283,7 +283,7 @@ WaterfallDisplayPlot::plotNewData(const std::vector<double*> dataPoints,
 	  replot();
 	}
 
-	_lastReplot = gruel::high_res_timer_now();
+	_lastReplot = gr::high_res_timer_now();
       }
 
       for(int i = 0; i < _nplots; i++) {
@@ -312,7 +312,7 @@ void
 WaterfallDisplayPlot::plotNewData(const double* dataPoints,
 				  const int64_t numDataPoints,
 				  const double timePerFFT,
-				  const gruel::high_res_timer_type timestamp,
+				  const gr::high_res_timer_type timestamp,
 				  const int droppedFrames)
 {
   std::vector<double*> vecDataPoints;
@@ -569,7 +569,7 @@ WaterfallDisplayPlot::_updateIntensityRangeDisplay()
   replot();
 
   // Update the last replot timer
-  _lastReplot = gruel::high_res_timer_now();
+  _lastReplot = gr::high_res_timer_now();
 }
 
 #endif /* WATERFALL_DISPLAY_PLOT_C */

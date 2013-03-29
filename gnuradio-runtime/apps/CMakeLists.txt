@@ -22,7 +22,6 @@
 ########################################################################
 include_directories(
   ${GNURADIO_RUNTIME_INCLUDE_DIRS}
-  ${GRUEL_INCLUDE_DIRS}
   ${Boost_INCLUDE_DIRS}
 )
 

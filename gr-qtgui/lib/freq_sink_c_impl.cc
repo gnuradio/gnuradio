@@ -208,7 +208,7 @@ namespace gr {
     freq_sink_c_impl::set_update_time(double t)
     {
       //convert update time to ticks
-      gruel::high_res_timer_type tps = gruel::high_res_timer_tps();
+      gr::high_res_timer_type tps = gr::high_res_timer_tps();
       d_update_time = t * tps;
       d_main_gui->setUpdateTime(t);
       d_last_time = 0;
@@ -376,7 +376,7 @@ namespace gr {
     void
     freq_sink_c_impl::fftresize()
     {
-      gruel::scoped_lock lock(d_mutex);
+      gr::thread::scoped_lock lock(d_mutex);
 
       int newfftsize = d_main_gui->getFFTSize();
       d_fftavg = d_main_gui->getFFTAverage();
@@ -443,8 +443,8 @@ namespace gr {
 	    //volk_32f_convert_64f_a(d_magbufs[n], d_fbuf, d_fftsize);
 	  }
       
-	  if(gruel::high_res_timer_now() - d_last_time > d_update_time) {
-	    d_last_time = gruel::high_res_timer_now();
+	  if(gr::high_res_timer_now() - d_last_time > d_update_time) {
+	    d_last_time = gr::high_res_timer_now();
 	    d_qApplication->postEvent(d_main_gui,
 				      new FreqUpdateEvent(d_magbufs, d_fftsize));
 	  }

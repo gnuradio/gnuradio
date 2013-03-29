@@ -182,7 +182,7 @@ gr_basic_block::_post(pmt::pmt_t which_port, pmt::pmt_t msg)
 void
 gr_basic_block::insert_tail(pmt::pmt_t which_port, pmt::pmt_t msg)
 {
-  gruel::scoped_lock guard(mutex);
+  gr::thread::scoped_lock guard(mutex);
 
     if( (msg_queue.find(which_port) == msg_queue.end()) || (msg_queue_ready.find(which_port) == msg_queue_ready.end())){
         std::cout << "target port = " << pmt::symbol_to_string(which_port) << std::endl;
@@ -199,7 +199,7 @@ gr_basic_block::insert_tail(pmt::pmt_t which_port, pmt::pmt_t msg)
 pmt::pmt_t
 gr_basic_block::delete_head_nowait(pmt::pmt_t which_port)
 {
-  gruel::scoped_lock guard(mutex);
+  gr::thread::scoped_lock guard(mutex);
 
   if (empty_p(which_port)){
     return pmt::pmt_t();
@@ -214,7 +214,7 @@ gr_basic_block::delete_head_nowait(pmt::pmt_t which_port)
 pmt::pmt_t
 gr_basic_block::delete_head_blocking(pmt::pmt_t which_port)
 {
-  gruel::scoped_lock guard(mutex);
+  gr::thread::scoped_lock guard(mutex);
 
   while (empty_p(which_port)){
     msg_queue_ready[which_port]->wait(guard);

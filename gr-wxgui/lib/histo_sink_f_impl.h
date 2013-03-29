@@ -37,7 +37,7 @@ namespace gr {
       unsigned int d_sample_count;
       unsigned int *d_bins;
       float *d_samps;
-      gruel::mutex d_mutex;
+      gr::thread::mutex d_mutex;
 
       void send_frame(void);
       void clear(void);

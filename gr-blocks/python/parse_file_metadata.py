@@ -22,12 +22,7 @@
 
 import sys
 from gnuradio import gr
-
-try:
-    import pmt
-except ImportError:
-    from gruel import pmt
-
+import pmt
 
 try:
     import blocks_swig as blocks

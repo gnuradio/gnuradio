@@ -49,7 +49,7 @@ gr_msg_queue::insert_tail(gr_message_sptr msg)
   if (msg->d_next)
     throw std::invalid_argument("gr_msg_queue::insert_tail: msg already in queue");
 
-  gruel::scoped_lock guard(d_mutex);
+  gr::thread::scoped_lock guard(d_mutex);
 
   while (full_p())
     d_not_full.wait(guard);
@@ -72,7 +72,7 @@ gr_msg_queue::insert_tail(gr_message_sptr msg)
 gr_message_sptr
 gr_msg_queue::delete_head()
 {
-  gruel::scoped_lock guard(d_mutex);
+  gr::thread::scoped_lock guard(d_mutex);
   gr_message_sptr m;
 
   while ((m = d_head) == 0)
@@ -94,7 +94,7 @@ gr_msg_queue::delete_head()
 gr_message_sptr
 gr_msg_queue::delete_head_nowait()
 {
-  gruel::scoped_lock guard(d_mutex);
+  gr::thread::scoped_lock guard(d_mutex);
   gr_message_sptr m;
 
   if ((m = d_head) == 0){

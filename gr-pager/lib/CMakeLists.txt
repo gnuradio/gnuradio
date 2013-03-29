@@ -24,7 +24,6 @@ include_directories(
     ${GR_PAGER_INCLUDE_DIRS}
     ${GR_BLOCKS_INCLUDE_DIRS}
     ${GNURADIO_RUNTIME_INCLUDE_DIRS}
-    ${GRUEL_INCLUDE_DIRS}
     ${Boost_INCLUDE_DIRS}
 )
 

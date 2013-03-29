@@ -100,7 +100,7 @@ namespace gr {
         d_socket->bind(d_endpoint);
 
         start_receive();
-        d_udp_thread = gruel::thread(boost::bind(&udp_source_impl::run_io_service, this));
+        d_udp_thread = gr::thread::thread(boost::bind(&udp_source_impl::run_io_service, this));
         d_connected = true;
       }
     }
@@ -108,7 +108,7 @@ namespace gr {
     void
     udp_source_impl::disconnect()
     {
-      gruel::scoped_lock lock(d_setlock);
+      gr::thread::scoped_lock lock(d_setlock);
 
       if(!d_connected)
         return;
@@ -144,7 +144,7 @@ namespace gr {
     {
       if(!error) {
         {
-          boost::lock_guard<gruel::mutex> lock(d_udp_mutex);
+          boost::lock_guard<gr::thread::mutex> lock(d_udp_mutex);
           if(d_eof && (bytes_transferred == 1) && (d_rxbuf[0] == 0x00)) {
             // If we are using EOF notification, test for it and don't
             // add anything to the output.
@@ -177,7 +177,7 @@ namespace gr {
                           gr_vector_const_void_star &input_items,
                           gr_vector_void_star &output_items)
     {
-      gruel::scoped_lock l(d_setlock);
+      gr::thread::scoped_lock l(d_setlock);
 
       char *out = (char*)output_items[0];
 

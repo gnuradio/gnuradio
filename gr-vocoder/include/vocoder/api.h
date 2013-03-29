@@ -22,7 +22,7 @@
 #ifndef INCLUDED_VOCODER_API_H
 #define INCLUDED_VOCODER_API_H
 
-#include <gruel/attributes.h>
+#include <attributes.h>
 
 #ifdef gnuradio_vocoder_EXPORTS
 #  define VOCODER_API __GR_ATTR_EXPORT

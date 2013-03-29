@@ -24,7 +24,7 @@
 #define	INCLUDED_GR_ANNOTATOR_RAW_IMPL_H
 
 #include <blocks/annotator_raw.h>
-#include <gruel/thread.h>
+#include <thread/thread.h>
 
 namespace gr {
   namespace blocks {
@@ -34,7 +34,7 @@ namespace gr {
     private:
       size_t d_itemsize;
       std::vector<gr_tag_t> d_queued_tags;
-      gruel::mutex d_mutex;
+      gr::thread::mutex d_mutex;
 
     public:
       annotator_raw_impl(size_t sizeof_stream_item);

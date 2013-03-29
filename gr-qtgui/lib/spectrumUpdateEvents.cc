@@ -30,10 +30,10 @@ SpectrumUpdateEvent::SpectrumUpdateEvent(const float* fftPoints,
 					 const double* realTimeDomainPoints,
 					 const double* imagTimeDomainPoints,
 					 const uint64_t numTimeDomainDataPoints,
-					 const gruel::high_res_timer_type dataTimestamp,
+					 const gr::high_res_timer_type dataTimestamp,
 					 const bool repeatDataFlag,
 					 const bool lastOfMultipleUpdateFlag,
-					 const gruel::high_res_timer_type generatedTimestamp,
+					 const gr::high_res_timer_type generatedTimestamp,
 					 const int droppedFFTFrames)
   : QEvent(QEvent::Type(SpectrumUpdateEventType))
 {
@@ -112,7 +112,7 @@ SpectrumUpdateEvent::getNumTimeDomainDataPoints() const
   return _numTimeDomainDataPoints;
 }
 
-gruel::high_res_timer_type
+gr::high_res_timer_type
 SpectrumUpdateEvent::getDataTimestamp() const
 {
   return _dataTimestamp;
@@ -130,7 +130,7 @@ SpectrumUpdateEvent::getLastOfMultipleUpdateFlag() const
   return _lastOfMultipleUpdateFlag;
 }
 
-gruel::high_res_timer_type
+gr::high_res_timer_type
 SpectrumUpdateEvent::getEventGeneratedTimestamp() const
 {
   return _eventGeneratedTimestamp;
@@ -348,7 +348,7 @@ ConstUpdateEvent::getNumDataPoints() const
 
 WaterfallUpdateEvent::WaterfallUpdateEvent(const std::vector<double*> dataPoints,
 					   const uint64_t numDataPoints,
-					   const gruel::high_res_timer_type dataTimestamp)
+					   const gr::high_res_timer_type dataTimestamp)
   : QEvent(QEvent::Type(SpectrumUpdateEventType))
 {
   if(numDataPoints < 1) {
@@ -389,7 +389,7 @@ WaterfallUpdateEvent::getNumDataPoints() const
   return _numDataPoints;
 }
 
-gruel::high_res_timer_type
+gr::high_res_timer_type
 WaterfallUpdateEvent::getDataTimestamp() const
 {
   return _dataTimestamp;

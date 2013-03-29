@@ -92,7 +92,7 @@ gr_top_block_impl::~gr_top_block_impl()
 void
 gr_top_block_impl::start(int max_noutput_items)
 {
-  gruel::scoped_lock	l(d_mutex);
+  gr::thread::scoped_lock	l(d_mutex);
 
   d_max_noutput_items = max_noutput_items;
 
@@ -141,14 +141,14 @@ gr_top_block_impl::wait()
 void
 gr_top_block_impl::lock()
 {
-  gruel::scoped_lock lock(d_mutex);
+  gr::thread::scoped_lock lock(d_mutex);
   d_lock_count++;
 }
 
 void
 gr_top_block_impl::unlock()
 {
-  gruel::scoped_lock lock(d_mutex);
+  gr::thread::scoped_lock lock(d_mutex);
 
   if (d_lock_count <= 0){
     d_lock_count = 0;		// fix it, then complain

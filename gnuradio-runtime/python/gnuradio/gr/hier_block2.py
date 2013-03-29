@@ -20,11 +20,7 @@
 #
 
 from runtime_swig import hier_block2_swig
-
-try:
-    import pmt
-except ImportError:
-    from gruel import pmt
+import pmt
 
 #
 # This hack forces a 'has-a' relationship to look like an 'is-a' one.

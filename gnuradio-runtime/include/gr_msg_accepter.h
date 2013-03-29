@@ -23,14 +23,14 @@
 #define INCLUDED_GR_MSG_ACCEPTER_H
 
 #include <gr_runtime_api.h>
-#include <gruel/msg_accepter.h>
-#include <gruel/pmt.h>
+#include <messages/msg_accepter.h>
+#include <pmt/pmt.h>
 
 /*!
  * \brief Accepts messages and inserts them into a message queue, then notifies
  * subclass gr_basic_block there is a message pending.
  */
-class GR_RUNTIME_API gr_msg_accepter : public gruel::msg_accepter
+class GR_RUNTIME_API gr_msg_accepter : public gr::messages::msg_accepter
 {
 public:
   gr_msg_accepter();

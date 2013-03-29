@@ -26,7 +26,7 @@
 #include <iostream>
 #include <sstream>
 #include <stdexcept>
-#include <gruel/pmt.h>
+#include <pmt/pmt.h>
 
 #define DEBUG 0
 

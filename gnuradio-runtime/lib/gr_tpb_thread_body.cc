@@ -25,7 +25,7 @@
 #include <gr_prefs.h>
 #include <iostream>
 #include <boost/thread.hpp>
-#include <gruel/pmt.h>
+#include <pmt/pmt.h>
 #include <boost/foreach.hpp>
 
 using namespace pmt;
@@ -40,14 +40,14 @@ gr_tpb_thread_body::gr_tpb_thread_body(gr_block_sptr block, int max_noutput_item
   pmt_t msg;
 
   d->threaded = true;
-  d->thread = gruel::get_current_thread_id();
+  d->thread = gr::thread::get_current_thread_id();
 
   gr_prefs *p = gr_prefs::singleton();
   size_t max_nmsgs = static_cast<size_t>(p->get_long("DEFAULT", "max_messages", 100));
 
   // Set thread affinity if it was set before fg was started.
   if(block->processor_affinity().size() > 0) {
-    gruel::thread_bind_to_processor(d->thread, block->processor_affinity());
+    gr::thread::thread_bind_to_processor(d->thread, block->processor_affinity());
   }
 
   while (1){
@@ -97,7 +97,7 @@ gr_tpb_thread_body::gr_tpb_thread_body(gr_block_sptr block, int max_noutput_item
 
     case gr_block_executor::BLKD_IN:		// Wait for input.
       {
-	gruel::scoped_lock guard(d->d_tpb.mutex);
+	gr::thread::scoped_lock guard(d->d_tpb.mutex);
 	while (!d->d_tpb.input_changed){
 
 	  // wait for input or message
@@ -120,7 +120,7 @@ gr_tpb_thread_body::gr_tpb_thread_body(gr_block_sptr block, int max_noutput_item
 
     case gr_block_executor::BLKD_OUT:		// Wait for output buffer space.
       {
-	gruel::scoped_lock guard(d->d_tpb.mutex);
+	gr::thread::scoped_lock guard(d->d_tpb.mutex);
 	while (!d->d_tpb.output_changed){
 
 	  // wait for output room or message

@@ -54,9 +54,15 @@ include_directories(${GNURADIO_RUNTIME_INCLUDE_DIRS}
                     ${CMAKE_CURRENT_SOURCE_DIR}
 		    ${CMAKE_CURRENT_BINARY_DIR}/../include/
                     ${Boost_INCLUDE_DIRS}
-                    ${GRUEL_INCLUDE_DIRS}
 		    ${VOLK_INCLUDE_DIRS}
 )
+
+########################################################################
+# Include subdirs rather to populate to the sources lists.
+########################################################################
+GR_INCLUDE_SUBDIRECTORY(messages)
+GR_INCLUDE_SUBDIRECTORY(pmt)
+GR_INCLUDE_SUBDIRECTORY(thread)
 
 ########################################################################
 # Setup library
@@ -129,7 +135,6 @@ if(CMAKE_SYSTEM_PROCESSOR MATCHES "^(powerpc|ppc)")
 endif(CMAKE_SYSTEM_PROCESSOR MATCHES "^(powerpc|ppc)")
 
 list(APPEND gnuradio_runtime_libs
-    gruel
     volk
     ${Boost_LIBRARIES}
     ${LOG4CPP_LIBRARIES}
@@ -209,7 +214,7 @@ endif(TRY_SHM_VMCIRCBUF)
 add_library(gnuradio-runtime SHARED ${gnuradio_runtime_sources})
 target_link_libraries(gnuradio-runtime ${gnuradio_runtime_libs})
 GR_LIBRARY_FOO(gnuradio-runtime RUNTIME_COMPONENT "runtime" DEVEL_COMPONENT "runtime_devel")
-set_target_properties(gnuradio-runtime PROPERTIES LINK_INTERFACE_LIBRARIES "gruel")
+#set_target_properties(gnuradio-runtime PROPERTIES LINK_INTERFACE_LIBRARIES "gruel")
 
 add_dependencies(gnuradio-runtime
   runtime_generated_includes

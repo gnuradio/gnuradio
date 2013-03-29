@@ -23,8 +23,8 @@
 #ifndef RPCCALLBACKREGISTER_BASE_H
 #define RPCCALLBACKREGISTER_BASE_H
 
-#include <gruel/msg_accepter.h>
-#include <gruel/msg_producer.h>
+#include <messages/msg_accepter.h>
+#include <messages/msg_producer.h>
 
 typedef uint32_t DisplayType;
 
@@ -90,8 +90,8 @@ struct callbackregister_base
     Tsptr callback;
   };
 
-  typedef callback_t<gruel::msg_accepter, gruel::msg_accepter_sptr> configureCallback_t;
-  typedef callback_t<gruel::msg_producer, gruel::msg_producer_sptr> queryCallback_t;
+  typedef callback_t<gr::messages::msg_accepter, gr::messages::msg_accepter_sptr> configureCallback_t;
+  typedef callback_t<gr::messages::msg_producer, gr::messages::msg_producer_sptr> queryCallback_t;
 
   callbackregister_base() {;}
   virtual ~callbackregister_base() {;}

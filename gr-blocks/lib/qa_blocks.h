@@ -23,7 +23,7 @@
 #ifndef _QA_GR_BLOCKS_H_
 #define _QA_GR_BLOCKS_H_
 
-#include <gruel/attributes.h>
+#include <attributes.h>
 #include <cppunit/TestSuite.h>
 
 //! collect all the tests for the gr-blocks directory

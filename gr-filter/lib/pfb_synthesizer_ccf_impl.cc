@@ -86,7 +86,7 @@ namespace gr {
     void
     pfb_synthesizer_ccf_impl::set_taps(const std::vector<float> &taps)
     {
-      gruel::scoped_lock guard(d_mutex);
+      gr::thread::scoped_lock guard(d_mutex);
 
       if(d_twox == 1)
 	set_taps1(taps);
@@ -201,7 +201,7 @@ namespace gr {
     void
     pfb_synthesizer_ccf_impl::set_channel_map(const std::vector<int> &map)
     {
-      gruel::scoped_lock guard(d_mutex);
+      gr::thread::scoped_lock guard(d_mutex);
 
       if(map.size() > 0) {
 	unsigned int max = (unsigned int)*std::max_element(map.begin(), map.end());
@@ -226,7 +226,7 @@ namespace gr {
 				   gr_vector_const_void_star &input_items,
 				   gr_vector_void_star &output_items)
     {
-      gruel::scoped_lock guard(d_mutex);
+      gr::thread::scoped_lock guard(d_mutex);
 
       gr_complex *in = (gr_complex*)input_items[0];
       gr_complex *out = (gr_complex*)output_items[0];

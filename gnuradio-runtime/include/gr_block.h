@@ -668,9 +668,9 @@ class GR_RUNTIME_API gr_block : public gr_basic_block {
   /*! Used by block's setters and work functions to make
    * setting/resetting of parameters thread-safe.
    *
-   * Used by calling gruel::scoped_lock l(d_setlock);
+   * Used by calling gr::thread::scoped_lock l(d_setlock);
    */ 
-  gruel::mutex d_setlock;
+  gr::thread::mutex d_setlock;
 
   /*! Used by blocks to access the logger system.
    */ 

@@ -17,6 +17,10 @@
 # the Free Software Foundation, Inc., 51 Franklin Street,
 # Boston, MA 02110-1301, USA.
 
+add_subdirectory(messages)
+add_subdirectory(pmt)
+add_subdirectory(thread)
+
 ########################################################################
 # Install header files
 ########################################################################
@@ -87,6 +91,10 @@ install(FILES
   rpcserver_ice.h
   rpcserver_selector.h
   runtime_block_gateway.h
+  attributes.h
+  high_res_timer.h
+  realtime.h
+  sys_pri.h
   DESTINATION ${GR_INCLUDE_DIR}/gnuradio
   COMPONENT "runtime_devel"
 )

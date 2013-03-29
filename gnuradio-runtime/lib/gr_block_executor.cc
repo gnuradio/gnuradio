@@ -71,7 +71,7 @@ min_available_space (gr_block_detail *d, int output_multiple, int min_noutput_it
   if (min_noutput_items == 0)
     min_noutput_items = 1;
   for (int i = 0; i < d->noutputs (); i++){
-    gruel::scoped_lock guard(*d->output(i)->mutex());
+    gr::thread::scoped_lock guard(*d->output(i)->mutex());
     int avail_n = round_down(d->output(i)->space_available(), output_multiple);
     int best_n = round_down(d->output(i)->bufsize()/2, output_multiple);
     if (best_n < min_noutput_items)
@@ -239,7 +239,7 @@ gr_block_executor::run_one_iteration()
 	/*
 	 * Acquire the mutex and grab local copies of items_available and done.
 	 */
-	gruel::scoped_lock guard(*d->input(i)->mutex());
+	gr::thread::scoped_lock guard(*d->input(i)->mutex());
 	d_ninput_items[i] = d->input(i)->items_available();
 	d_input_done[i] = d->input(i)->done();
       }
@@ -283,7 +283,7 @@ gr_block_executor::run_one_iteration()
 	/*
 	 * Acquire the mutex and grab local copies of items_available and done.
 	 */
-	gruel::scoped_lock guard(*d->input(i)->mutex());
+	gr::thread::scoped_lock guard(*d->input(i)->mutex());
 	d_ninput_items[i] = d->input(i)->items_available ();
 	d_input_done[i] = d->input(i)->done();
       }

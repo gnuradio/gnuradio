@@ -30,7 +30,6 @@ include_directories(
     ${CMAKE_CURRENT_BINARY_DIR}
     ${GR_FEC_INCLUDE_DIRS}
     ${GNURADIO_RUNTIME_INCLUDE_DIRS}
-    ${GRUEL_INCLUDE_DIRS}
     ${Boost_INCLUDE_DIRS}
 )
 

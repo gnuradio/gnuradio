@@ -22,7 +22,7 @@
 #ifndef INCLUDED_DIGITAL_API_H
 #define INCLUDED_DIGITAL_API_H
 
-#include <gruel/attributes.h>
+#include <attributes.h>
 
 #ifdef gnuradio_digital_EXPORTS
 #  define DIGITAL_API __GR_ATTR_EXPORT

@@ -23,7 +23,7 @@
 #ifndef SPECTRUM_GUI_CLASS_HPP
 #define SPECTRUM_GUI_CLASS_HPP
 
-#include <gruel/thread.h>
+#include <thread/thread.h>
 #include <qwidget.h>
 #include <qapplication.h>
 #include <qlabel.h>
@@ -66,7 +66,7 @@ public:
 		    const uint64_t, const float*,
 		    const uint64_t, const float*,
 		    const uint64_t,
-		    const gruel::high_res_timer_type, const bool);
+		    const gr::high_res_timer_type, const bool);
 
   float getPowerValue();
   void setPowerValue(const float);
@@ -78,8 +78,8 @@ public:
   int getFFTSizeIndex();
   void setFFTSize(const int);
 
-  gruel::high_res_timer_type getLastGUIUpdateTime();
-  void setLastGUIUpdateTime(const gruel::high_res_timer_type);
+  gr::high_res_timer_type getLastGUIUpdateTime();
+  void setLastGUIUpdateTime(const gr::high_res_timer_type);
 
   unsigned int getPendingGUIUpdateEvents();
   void incrementPendingGUIUpdateEvents();
@@ -103,7 +103,7 @@ protected:
 
 private:
 
-  gruel::mutex d_mutex;
+  gr::thread::mutex d_mutex;
   int64_t _dataPoints;
   std::string _title;
   double _centerFrequency;
@@ -114,7 +114,7 @@ private:
   int _windowType;
   int64_t _lastDataPointCount;
   int _fftSize;
-  gruel::high_res_timer_type _lastGUIUpdateTime;
+  gr::high_res_timer_type _lastGUIUpdateTime;
   unsigned int _pendingGUIUpdateEventsCount;
   int _droppedEntriesCount;
   bool _fftBuffersCreatedFlag;

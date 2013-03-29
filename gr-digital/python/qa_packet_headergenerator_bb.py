@@ -22,8 +22,7 @@
 from gnuradio import gr, gr_unittest
 import digital_swig as digital
 import blocks_swig as blocks
-try: import pmt
-except: from gruel import pmt
+import pmt
 
 class qa_packet_headergenerator_bb (gr_unittest.TestCase):
 

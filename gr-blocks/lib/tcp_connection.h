@@ -25,7 +25,7 @@
 
 #include <boost/array.hpp>
 #include <boost/asio.hpp>
-#include <gruel/pmt.h>
+#include <pmt/pmt.h>
 
 class gr_basic_block;
 

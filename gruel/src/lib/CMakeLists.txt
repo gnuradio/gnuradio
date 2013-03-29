@@ -59,14 +59,12 @@ GR_ADD_COND_DEF(HAVE_SCHED_SETSCHEDULER)
 # Include subdirs rather to populate to the sources lists.
 ########################################################################
 GR_INCLUDE_SUBDIRECTORY(msg)
-GR_INCLUDE_SUBDIRECTORY(pmt)
 
 ########################################################################
 # Setup the include and linker paths
 ########################################################################
 include_directories(
 	${CMAKE_CURRENT_SOURCE_DIR}
-	${GRUEL_INCLUDE_DIRS}
 	${Boost_INCLUDE_DIRS}
 )
 link_directories(${Boost_LIBRARY_DIRS})

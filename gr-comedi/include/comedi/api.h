@@ -22,7 +22,7 @@
 #ifndef INCLUDED_COMEDI_API_H
 #define INCLUDED_COMEDI_API_H
 
-#include <gruel/attributes.h>
+#include <attributes.h>
 
 #ifdef gnuradio_comedi_EXPORTS
 #  define COMEDI_API __GR_ATTR_EXPORT

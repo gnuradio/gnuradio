@@ -30,7 +30,7 @@
 #include <blocks/null_source.h>
 #include <blocks/null_sink.h>
 #include <blocks/nop.h>
-#include <gruel/msg_passing.h>
+#include <messages/msg_passing.h>
 #include <iostream>
 #include <boost/thread/thread.hpp>
 

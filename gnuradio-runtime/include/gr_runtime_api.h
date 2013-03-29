@@ -22,7 +22,7 @@
 #ifndef INCLUDED_GR_RUNTIME_API_H
 #define INCLUDED_GR_RUNTIME_API_H
 
-#include <gruel/attributes.h>
+#include <attributes.h>
 
 #ifdef gnuradio_core_EXPORTS
 #  define GR_RUNTIME_API __GR_ATTR_EXPORT

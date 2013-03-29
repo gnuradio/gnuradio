@@ -22,7 +22,7 @@
 #ifndef INCLUDED_GRUEL_API_H
 #define INCLUDED_GRUEL_API_H
 
-#include <gruel/attributes.h>
+#include <attributes.h>
 
 #ifdef gruel_EXPORTS
 #  define GRUEL_API __GR_ATTR_EXPORT

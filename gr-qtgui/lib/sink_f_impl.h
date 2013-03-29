@@ -26,7 +26,7 @@
 #include <qtgui/sink_f.h>
 #include <filter/firdes.h>
 #include <fft/fft.h>
-#include <gruel/high_res_timer.h>
+#include <high_res_timer.h>
 #include <qtgui/SpectrumGUIClass.h>
 
 namespace gr {

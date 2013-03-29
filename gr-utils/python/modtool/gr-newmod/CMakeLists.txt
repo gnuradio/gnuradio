@@ -87,10 +87,6 @@ find_package(Gruel)
 find_package(GnuradioRuntime)
 find_package(CppUnit)
 
-if(NOT GRUEL_FOUND)
-    message(FATAL_ERROR "Gruel required to compile howto")
-endif()
-
 if(NOT GNURADIO_RUNTIME_FOUND)
     message(FATAL_ERROR "GnuRadio Runtime required to compile howto")
 endif()

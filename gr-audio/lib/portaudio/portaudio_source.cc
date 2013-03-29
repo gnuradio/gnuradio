@@ -103,7 +103,7 @@ namespace gr {
 
         // copy from input buffer to ringbuffer
         {
-          gruel::scoped_lock(d_ringbuffer_mutex);
+          gr::thread::scoped_lock(d_ringbuffer_mutex);
 
           memcpy(self->d_writer->write_pointer(),
                  inputBuffer,
@@ -305,7 +305,7 @@ namespace gr {
             return k;
 
           if(d_ok_to_block) {
-            gruel::scoped_lock guard(d_ringbuffer_mutex);
+            gr::thread::scoped_lock guard(d_ringbuffer_mutex);
             while(d_ringbuffer_ready == false)
               d_ringbuffer_cond.wait(guard);  // block here, then try again
             continue;
@@ -324,7 +324,7 @@ namespace gr {
 
           // Fill with some frames of zeros
           {
-            gruel::scoped_lock guard(d_ringbuffer_mutex);
+            gr::thread::scoped_lock guard(d_ringbuffer_mutex);
 
             int nf = std::min(noutput_items - k, (int)d_portaudio_buffer_size_frames);
             for(int i = 0; i < nf; i++) {
@@ -341,7 +341,7 @@ namespace gr {
 
         // We can read the smaller of the request and what's in the buffer.
         {
-          gruel::scoped_lock guard(d_ringbuffer_mutex);
+          gr::thread::scoped_lock guard(d_ringbuffer_mutex);
 
           int nf = std::min(noutput_items - k, nframes);
 

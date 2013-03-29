@@ -29,7 +29,7 @@
 #include <qwt_plot_spectrogram.h>
 #include <qtgui/DisplayPlot.h>
 #include <qtgui/waterfallGlobalData.h>
-#include <gruel/high_res_timer.h>
+#include <high_res_timer.h>
 
 #if QWT_VERSION < 0x060000
 #include <qtgui/plot_waterfall.h>
@@ -61,14 +61,14 @@ public:
   void plotNewData(const std::vector<double*> dataPoints,
 		   const int64_t numDataPoints,
 		   const double timePerFFT,
-		   const gruel::high_res_timer_type timestamp,
+		   const gr::high_res_timer_type timestamp,
 		   const int droppedFrames);
 
   // to be removed
   void plotNewData(const double* dataPoints,
 		   const int64_t numDataPoints,
 		   const double timePerFFT,
-		   const gruel::high_res_timer_type timestamp,
+		   const gr::high_res_timer_type timestamp,
 		   const int droppedFrames);
 
   void setIntensityRange(const double minIntensity, const double maxIntensity);
@@ -111,7 +111,7 @@ private:
   std::vector<QwtPlotSpectrogram*> d_spectrogram;
 #endif
 
-  gruel::high_res_timer_type _lastReplot;
+  gr::high_res_timer_type _lastReplot;
 
   std::vector<int> _intensityColorMapType;
   QColor _userDefinedLowIntensityColor;

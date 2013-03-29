@@ -95,7 +95,7 @@ namespace gr {
           }
         }
       }
-      gruel::scoped_lock guard(d_mutex);
+      gr::thread::scoped_lock guard(d_mutex);
       d_mapping = mapping;
     }
 

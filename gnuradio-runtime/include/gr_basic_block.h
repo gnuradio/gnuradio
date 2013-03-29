@@ -33,7 +33,7 @@
 #include <deque>
 #include <map>
 #include <gr_io_signature.h>
-#include <gruel/thread.h>
+#include <thread/thread.h>
 #include <boost/foreach.hpp>
 #include <boost/thread/condition_variable.hpp>
 #include <iostream>
@@ -68,7 +68,7 @@ class GR_RUNTIME_API gr_basic_block : public gr_msg_accepter, public boost::enab
   typedef std::map<pmt::pmt_t, msg_queue_t, pmt::comperator>::iterator msg_queue_map_itr;
   std::map<pmt::pmt_t, boost::shared_ptr<boost::condition_variable>, pmt::comperator> msg_queue_ready;
   
-  gruel::mutex          mutex;          //< protects all vars
+  gr::thread::mutex          mutex;          //< protects all vars
   
  protected:
   friend class gr_flowgraph;

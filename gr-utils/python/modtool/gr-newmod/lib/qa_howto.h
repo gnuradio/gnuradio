@@ -23,7 +23,7 @@
 #ifndef _QA_HOWTO_H_
 #define _QA_HOWTO_H_
 
-#include <gruel/attributes.h>
+#include <attributes.h>
 #include <cppunit/TestSuite.h>
 
 //! collect all the tests for the gr-filter directory

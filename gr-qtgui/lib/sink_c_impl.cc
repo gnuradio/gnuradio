@@ -137,7 +137,7 @@ namespace gr {
       // initialize update time to 10 times a second
       set_update_time(0.5);
 
-      d_last_update = gruel::high_res_timer_now();
+      d_last_update = gr::high_res_timer_now();
       d_update_active = false;
     }
 
@@ -215,7 +215,7 @@ namespace gr {
     void
     sink_c_impl::set_update_time(double t)
     {
-      d_update_time = t * gruel::high_res_timer_tps();
+      d_update_time = t * gr::high_res_timer_tps();
       d_main_gui->setUpdateTime(t);
     }
 
@@ -300,18 +300,18 @@ namespace gr {
 	unsigned int datasize = noutput_items - i;
 	unsigned int resid = d_fftsize-d_index;
 
-	if (!d_update_active && (gruel::high_res_timer_now() - d_last_update) < d_update_time) {
+	if (!d_update_active && (gr::high_res_timer_now() - d_last_update) < d_update_time) {
 	  consume_each(noutput_items);
 	  return noutput_items;
 	}
 	else {
-	  d_last_update = gruel::high_res_timer_now();
+	  d_last_update = gr::high_res_timer_now();
 	  d_update_active = true;
 	}
 
 	// If we have enough input for one full FFT, do it
 	if(datasize >= resid) {
-	  const gruel::high_res_timer_type currentTime = gruel::high_res_timer_now();
+	  const gr::high_res_timer_type currentTime = gr::high_res_timer_now();
 
 	  // Fill up residbuf with d_fftsize number of items
 	  memcpy(d_residbuf+d_index, &in[j], sizeof(gr_complex)*resid);

@@ -160,7 +160,7 @@ public:
  */
 
 %inline %{
-#include <gruel/pmt.h>
+#include <pmt/pmt.h>
 
 class gr_py_feval_dd : public gr_feval_dd
 {

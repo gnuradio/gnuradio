@@ -25,7 +25,7 @@
 
 #include <qwt_color_map.h>
 #include <qwt_scale_draw.h>
-#include <gruel/high_res_timer.h>
+#include <high_res_timer.h>
 
 class FreqOffsetAndPrecisionClass
 {
@@ -80,14 +80,14 @@ public:
   {    
   }
 
-  virtual gruel::high_res_timer_type getZeroTime() const
+  virtual gr::high_res_timer_type getZeroTime() const
   {
     return _zeroTime;
   }
   
-  virtual void setZeroTime(const gruel::high_res_timer_type newTime)
+  virtual void setZeroTime(const gr::high_res_timer_type newTime)
   {
-    _zeroTime = newTime - gruel::high_res_timer_epoch();
+    _zeroTime = newTime - gr::high_res_timer_epoch();
   }
 
   virtual void setSecondsPerLine(const double newTime)
@@ -104,7 +104,7 @@ public:
 protected:
   
 private:
-  gruel::high_res_timer_type _zeroTime;
+  gr::high_res_timer_type _zeroTime;
   double _secondsPerLine;
   
 };

@@ -24,7 +24,7 @@
 #define INCLUDED_GR_DELAY_IMPL_H
 
 #include <blocks/delay.h>
-#include <gruel/thread.h>
+#include <thread/thread.h>
 
 namespace gr {
   namespace blocks {
@@ -37,7 +37,7 @@ namespace gr {
 
       size_t d_itemsize;
       int d_delta;
-      gruel::mutex d_mutex_delay;
+      gr::thread::mutex d_mutex_delay;
 
     public:
       delay_impl(size_t itemsize, int delay);

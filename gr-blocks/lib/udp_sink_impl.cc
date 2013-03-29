@@ -28,7 +28,7 @@
 #include <gr_io_signature.h>
 #include <boost/asio.hpp>
 #include <boost/format.hpp>
-#include <gruel/thread.h>
+#include <thread/thread.h>
 #include <stdexcept>
 #include <stdio.h>
 #include <string.h>
@@ -95,7 +95,7 @@ namespace gr {
       if(!d_connected)
         return;
 
-      gruel::scoped_lock guard(d_mutex);  // protect d_socket from work()
+      gr::thread::scoped_lock guard(d_mutex);  // protect d_socket from work()
 
       // Send a few zero-length packets to signal receiver we are done
       boost::array<char, 1> send_buf = {{ 0 }};
@@ -120,7 +120,7 @@ namespace gr {
       ssize_t r=0, bytes_sent=0, bytes_to_send=0;
       ssize_t total_size = noutput_items*d_itemsize;
 
-      gruel::scoped_lock guard(d_mutex);  // protect d_socket
+      gr::thread::scoped_lock guard(d_mutex);  // protect d_socket
 
       while(bytes_sent <  total_size) {
         bytes_to_send = std::min((ssize_t)d_payload_size, (total_size-bytes_sent));

@@ -22,7 +22,7 @@
 #ifndef INCLUDED_WXGUI_API_H
 #define INCLUDED_WXGUI_API_H
 
-#include <gruel/attributes.h>
+#include <attributes.h>
 
 #ifdef gnuradio_wxgui_EXPORTS
 #  define WXGUI_API __GR_ATTR_EXPORT

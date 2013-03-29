@@ -32,7 +32,7 @@
 #include <cstring>
 #include <cmath>
 #include <fcntl.h>
-#include <gruel/thread.h>
+#include <thread/thread.h>
 #include <boost/math/special_functions/round.hpp>
 
 // win32 (mingw/msvc) specific
@@ -106,7 +106,7 @@ namespace gr {
     bool
     wavfile_sink_impl::open(const char* filename)
     {
-      gruel::scoped_lock guard(d_mutex);
+      gr::thread::scoped_lock guard(d_mutex);
 
       // we use the open system call to get access to the O_LARGEFILE flag.
       int fd;
@@ -143,7 +143,7 @@ namespace gr {
     void
     wavfile_sink_impl::close()
     {
-      gruel::scoped_lock guard(d_mutex);
+      gr::thread::scoped_lock guard(d_mutex);
 
       if(!d_fp)
 	return;
@@ -183,7 +183,7 @@ namespace gr {
 
       int nwritten;
 
-      gruel::scoped_lock guard(d_mutex);    // hold mutex for duration of this block
+      gr::thread::scoped_lock guard(d_mutex);    // hold mutex for duration of this block
       do_update();      // update: d_fp is reqd
       if(!d_fp)         // drop output on the floor
 	return noutput_items;
@@ -232,7 +232,7 @@ namespace gr {
     void
     wavfile_sink_impl::set_bits_per_sample(int bits_per_sample)
     {
-      gruel::scoped_lock guard(d_mutex);
+      gr::thread::scoped_lock guard(d_mutex);
       if(bits_per_sample == 8 || bits_per_sample == 16) {
 	d_bytes_per_sample_new = bits_per_sample / 8;
       }
@@ -241,7 +241,7 @@ namespace gr {
     void
     wavfile_sink_impl::set_sample_rate(unsigned int sample_rate)
     {
-      gruel::scoped_lock guard(d_mutex);
+      gr::thread::scoped_lock guard(d_mutex);
       d_sample_rate = sample_rate;
     }
 

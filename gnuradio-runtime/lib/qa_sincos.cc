@@ -26,7 +26,7 @@
 
 #include <qa_sincos.h>
 #include <gr_sincos.h>
-#include <gruel/attributes.h>
+#include <attributes.h>
 #include <cppunit/TestAssert.h>
 #include <cmath>
 

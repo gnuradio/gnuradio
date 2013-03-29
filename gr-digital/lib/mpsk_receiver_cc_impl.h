@@ -24,7 +24,7 @@
 #define	INCLUDED_DIGITAL_MPSK_RECEIVER_CC_IMPL_H
 
 #include <digital/mpsk_receiver_cc.h>
-#include <gruel/attributes.h>
+#include <attributes.h>
 #include <blocks/control_loop.h>
 #include <gr_complex.h>
 #include <fstream>
