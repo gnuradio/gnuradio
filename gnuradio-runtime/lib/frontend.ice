@@ -88,7 +88,7 @@ module GNURadio {
             idempotent ReceiverInfo   getReceiverInfo();
         };
 
-        interface Tuner {
+        interface Tuner extends Component {
             TunerStatus configureTuner(TunerArgs args) throws ReceiverFailure, InvalidSetting;
             idempotent TunerStatus status();
             idempotent float setGain(float gain) throws ReceiverFailure, NotSupported, InvalidSetting;
