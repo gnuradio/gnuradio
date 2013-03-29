@@ -129,6 +129,7 @@ void
 gr_top_block::setup_rpc()
 {
 #ifdef GR_CTRLPORT
+  if(is_rpc_set()) return;
   // Getters
   add_rpc_variable(
       rpcbasic_sptr(new rpcbasic_register_get<gr_top_block, int>(
@@ -156,5 +157,6 @@ gr_top_block::setup_rpc()
 	 pmt::mp(0), pmt::mp(8192), pmt::mp(8192),
 	 "items", "Max number of output items",
 	 RPC_PRIVLVL_MIN, DISPNULL)));
+  rpc_set();
 #endif /* GR_CTRLPORT */
 }
