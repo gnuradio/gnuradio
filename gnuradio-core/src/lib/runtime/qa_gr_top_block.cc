@@ -269,7 +269,7 @@ void qa_gr_top_block::t11_set_block_affinity()
   gr_block_sptr src (gr_make_null_source(sizeof(float)));
   gr_block_sptr snk (gr_make_null_sink(sizeof(float)));
 
-  std::vector<unsigned int> set(1, 0), ret;
+  std::vector<int> set(1, 0), ret;
   src->set_processor_affinity(set);
 
   tb->connect(src, 0, snk, 0);

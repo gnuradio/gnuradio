@@ -300,7 +300,7 @@ gr_block::is_set_max_noutput_items()
 }
 
 void
-gr_block::set_processor_affinity(const std::vector<unsigned int> &mask)
+gr_block::set_processor_affinity(const std::vector<int> &mask)
 {
   d_affinity = mask;
   if(d_detail) {
