@@ -75,7 +75,7 @@ namespace gruel {
    * support in this way since 10.5 is not what we want or can use in
    * this fashion).
    */
-  GRUEL_API void thread_bind_to_processor(const std::vector<unsigned int> &mask);
+  GRUEL_API void thread_bind_to_processor(const std::vector<int> &mask);
 
   /*! \brief Convineince function to bind the current thread to a single core.
    *
@@ -87,7 +87,7 @@ namespace gruel {
    * support in this way since 10.5 is not what we want or can use in
    * this fashion).
    */
-  GRUEL_API void thread_bind_to_processor(unsigned int n);
+  GRUEL_API void thread_bind_to_processor(int n);
 
   /*! \brief Bind a thread to a set of cores.
    *
@@ -101,7 +101,7 @@ namespace gruel {
    * support in this way since 10.5 is not what we want or can use in
    * this fashion).
    */
-  GRUEL_API void thread_bind_to_processor(gr_thread_t thread, const std::vector<unsigned int> &mask);
+  GRUEL_API void thread_bind_to_processor(gr_thread_t thread, const std::vector<int> &mask);
 
 
   /*! \brief Convineince function to bind the a thread to a single core.

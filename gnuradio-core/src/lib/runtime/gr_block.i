@@ -83,9 +83,9 @@ class gr_block : public gr_basic_block {
   float pc_work_time_var();
   
   // Methods to manage processor affinity.
-  void set_processor_affinity(const gr_vector_uint &mask);
+  void set_processor_affinity(const std::vector<int> &mask);
   void unset_processor_affinity();
-  gr_vector_uint processor_affinity();
+  std::vector<int> processor_affinity();
 
   // internal use
   gr_block_detail_sptr detail () const { return d_detail; }

@@ -458,9 +458,9 @@ class GR_CORE_API gr_block : public gr_basic_block {
   /*!
    * \brief Set the thread's affinity to processor core \p n.
    *
-   * \param mask a vector of unsigned ints of the core numbers available to this block.
+   * \param mask a vector of ints of the core numbers available to this block.
    */
-  void set_processor_affinity(const std::vector<unsigned int> &mask);
+  void set_processor_affinity(const std::vector<int> &mask);
 
   /*!
    * \brief Remove processor affinity to a specific core.
@@ -470,7 +470,7 @@ class GR_CORE_API gr_block : public gr_basic_block {
   /*!
    * \brief Get the current processor affinity.
    */
-  std::vector<unsigned int> processor_affinity() { return d_affinity; }
+  std::vector<int> processor_affinity() { return d_affinity; }
 
   // ----------------------------------------------------------------------------
 
@@ -488,7 +488,7 @@ class GR_CORE_API gr_block : public gr_basic_block {
   int                   d_max_noutput_items;         // value of max_noutput_items for this block
   int                   d_min_noutput_items;
   tag_propagation_policy_t d_tag_propagation_policy; // policy for moving tags downstream
-  std::vector<unsigned int> d_affinity;              // thread affinity proc. mask
+  std::vector<int>      d_affinity;              // thread affinity proc. mask
 
  protected:
   gr_block (void){} //allows pure virtual interface sub-classes
