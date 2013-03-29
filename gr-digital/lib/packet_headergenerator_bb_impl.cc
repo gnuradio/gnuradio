@@ -30,9 +30,12 @@ namespace gr {
   namespace digital {
 
     packet_headergenerator_bb::sptr
-    packet_headergenerator_bb::make(const packet_header_default::sptr &header_formatter)
+    packet_headergenerator_bb::make(
+	const packet_header_default::sptr &header_formatter,
+	const std::string &len_tag_key
+    )
     {
-      return gnuradio::get_initial_sptr (new packet_headergenerator_bb_impl(header_formatter));
+      return gnuradio::get_initial_sptr (new packet_headergenerator_bb_impl(header_formatter, len_tag_key));
     }
 
 
@@ -45,25 +48,23 @@ namespace gr {
       const packet_header_default::sptr header_formatter(
 	  new packet_header_default(header_len, len_tag_key)
       );
-      return gnuradio::get_initial_sptr (new packet_headergenerator_bb_impl(header_formatter));
+      return gnuradio::get_initial_sptr (new packet_headergenerator_bb_impl(header_formatter, len_tag_key));
     }
 
 
     packet_headergenerator_bb_impl::packet_headergenerator_bb_impl(
-		    const gr::digital::packet_header_default::sptr &header_formatter
+		    const gr::digital::packet_header_default::sptr &header_formatter,
+		    const std::string &len_tag_key
 		    )
       : gr_tagged_stream_block("packet_headergenerator_bb_impl",
 		       gr_make_io_signature(1, 1, sizeof (char)),
 		       gr_make_io_signature(1, 1, sizeof (char)),
-		       pmt::pmt_symbol_to_string(header_formatter->len_tag_key())),
-	    d_formatter(header_formatter),
-	    d_input_size(1),
-	    d_header_len(header_formatter->header_len()),
-	    d_len_tag_value(pmt::pmt_from_long(d_header_len))
+		       len_tag_key),
+	    d_formatter(header_formatter)
     {
-      set_output_multiple(d_header_len);
+      set_output_multiple(d_formatter->header_len());
       // This is the worst case rate, because we don't know the true value, of course
-      set_relative_rate(d_header_len);
+      set_relative_rate(d_formatter->header_len());
       set_tag_propagation_policy(TPP_DONT);
     }
 
@@ -82,7 +83,7 @@ namespace gr {
 	throw std::runtime_error("header formatter returned false.");
       }
 
-      return d_header_len;
+      return d_formatter->header_len();
     }
 
   } /* namespace digital */

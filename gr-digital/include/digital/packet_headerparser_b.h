@@ -35,7 +35,11 @@ namespace gr {
      *
      * In a sense, this is the inverse block to packet_headergenerator_bb.
      * The difference is, the parsed header is not output as a stream,
-     * but as a message.
+     * but as a PMT dictionary, which is published to message port with
+     * the id "header_data".
+     * The dictionary consists of the tags created by the header formatter
+     * object. You should be able to use the exact same formatter object
+     * as used on the Tx side in the packet_headergenerator_bb.
      *
      * If only a header length is given, this block uses the default header
      * format.
