@@ -23,6 +23,7 @@
 #include "config.h"
 #endif
 
+#include <string.h>
 #include <digital/packet_header_default.h>
 
 namespace gr {
