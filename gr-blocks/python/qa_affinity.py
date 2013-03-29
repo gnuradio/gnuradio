@@ -21,6 +21,7 @@
 #
 
 from gnuradio import gr, gr_unittest
+import blocks_swig as blocks
 
 class test_affinity(gr_unittest.TestCase):
 
@@ -34,8 +35,8 @@ class test_affinity(gr_unittest.TestCase):
         # Just run some data through and make sure it doesn't puke.
         src_data = (1, 2, 3, 4, 5, 6, 7, 8, 9, 10)
 
-        src = gr.vector_source_f(src_data)
-        snk = gr.vector_sink_f()
+        src = blocks.vector_source_f(src_data)
+        snk = blocks.vector_sink_f()
 
         src.set_processor_affinity([0,])
         self.tb.connect(src, snk)
