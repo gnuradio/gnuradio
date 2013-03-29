@@ -140,7 +140,7 @@ class fft_sink_f(gr.hier_block2, fft_sink_base):
         self.avg = grfilter.single_pole_iir_filter_ff(1.0, self.fft_size)
 
         # FIXME  We need to add 3dB to all bins but the DC bin
-        self.log = gr.nlog10_ff(20, self.fft_size,
+        self.log = blocks.nlog10_ff(20, self.fft_size,
                                -20*math.log10(self.fft_size)                # Adjust for number of bins
                                -10*math.log10(power/self.fft_size)        # Adjust for windowing loss
                                -20*math.log10(ref_scale/2))                # Adjust for reference scale
@@ -187,7 +187,7 @@ class fft_sink_c(gr.hier_block2, fft_sink_base):
         self.avg = grfilter.single_pole_iir_filter_ff(1.0, self.fft_size)
 
         # FIXME  We need to add 3dB to all bins but the DC bin
-        self.log = gr.nlog10_ff(20, self.fft_size,
+        self.log = blocks.nlog10_ff(20, self.fft_size,
                                 -20*math.log10(self.fft_size)                # Adjust for number of bins
                                 -10*math.log10(power/self.fft_size)        # Adjust for windowing loss
                                 -20*math.log10(ref_scale/2))                # Adjust for reference scale
