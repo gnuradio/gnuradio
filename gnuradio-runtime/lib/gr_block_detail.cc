@@ -218,7 +218,7 @@ gr_block_detail::get_tags_in_range(std::vector<gr_tag_t> &v,
 }
 
 void
-gr_block_detail::set_processor_affinity(const std::vector<unsigned int> &mask)
+gr_block_detail::set_processor_affinity(const std::vector<int> &mask)
 {
   if(threaded) {
     try {
