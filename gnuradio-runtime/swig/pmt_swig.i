@@ -20,6 +20,8 @@
  * Boston, MA 02110-1301, USA.
  */
 
+#pragma SWIG nowarn=401
+
 %include "std_string.i"
 %include "stdint.i"
 
@@ -29,17 +31,19 @@
 #include <boost/any.hpp>
 #include <complex>
 #include <string>
+#include <stddef.h>		// size_t
 #include <stdint.h>
 #include <iosfwd>
 #include <stdexcept>
 #include <pmt/pmt.h>
 %}
 
-%include "gnuradio.i"
+%feature("autodoc","1");
 
 //load generated python docstrings
 %include "pmt_swig_doc.i"
 
+%include <gr_extras.i>
 %include <std_complex.i>
 %include <std_vector.i>
 %include <stl.i>

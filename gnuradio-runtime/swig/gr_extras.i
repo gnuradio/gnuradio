@@ -1,5 +1,5 @@
 /*
- * Copyright 2011 Free Software Foundation, Inc.
+ * Copyright 2011,2013 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -19,8 +19,8 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef GRUEL_COMMON_I
-#define GRUEL_COMMON_I
+#ifndef GR_EXTRAS_I
+#define GR_EXTRAS_I
 
 ////////////////////////////////////////////////////////////////////////
 // Language independent exception handler
@@ -63,4 +63,4 @@
 
 %}
 
-#endif /*GRUEL_COMMON_I*/
+#endif /*GR_EXTRAS_I*/

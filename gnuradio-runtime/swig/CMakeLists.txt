@@ -115,17 +115,13 @@ install(
     gr_tagged_stream_block.i
     gr_tags.i
     gr_top_block.i
+    gr_extras.i
     runtime_block_gateway.i
     runtime_swig.i
+    gr_intrusive_ptr.i
     pmt_swig.i
     ${CMAKE_CURRENT_BINARY_DIR}/runtime_swig_doc.i
     ${CMAKE_CURRENT_BINARY_DIR}/pmt_swig_doc.i
-    DESTINATION ${GR_INCLUDE_DIR}/gnuradio/swig
-    COMPONENT "runtime_swig"
-)
-
-install(
-    FILES gr_intrusive_ptr.i  gruel_common.i
     DESTINATION ${GR_INCLUDE_DIR}/gnuradio/swig
     COMPONENT "runtime_swig"
 )
