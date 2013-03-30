@@ -30,7 +30,7 @@
 
 %include <gr_endianness.h>
 
-%template() std::vector<size_t>;
+// For vector_map.
 %template() std::vector< std::vector< std::vector<size_t> > >;
 
 %{

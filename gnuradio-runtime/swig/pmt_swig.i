@@ -44,26 +44,9 @@
 %include "pmt_swig_doc.i"
 
 %include <gr_extras.i>
-%include <std_complex.i>
-%include <std_vector.i>
-%include <stl.i>
+%include <gr_types.i>
 
-namespace std {
-  %template()	  vector<unsigned char>;
-  %template()	  vector<uint8_t>;
-  %template()	  vector<char>;
-  %template()	  vector<int8_t>;
-  %template()	  vector<short>;
-  %template()	  vector<uint16_t>;
-  %template()	  vector<int16_t>;
-  %template()	  vector<int>;
-  %template()	  vector<int32_t>;
-  %template()	  vector<uint32_t>;
-  %template()	  vector<float>;
-  %template()	  vector<double>;
-  %template()	  vector< std::complex<float> >;
-  %template()	  vector< std::complex<double> >;
-};
+%template() std::vector<uint32_t>;
 
 ////////////////////////////////////////////////////////////////////////
 // Language independent exception handler

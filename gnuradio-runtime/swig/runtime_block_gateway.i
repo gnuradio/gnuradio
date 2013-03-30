@@ -1,3 +1,4 @@
+/* -*- c++ -*- */
 /*
  * Copyright 2011-2012 Free Software Foundation, Inc.
  *
@@ -26,11 +27,7 @@
 %include <gr_tags.i>
 %include <gr_feval.i>
 
-////////////////////////////////////////////////////////////////////////
-// data type support
-////////////////////////////////////////////////////////////////////////
-%template(int_vector_t) std::vector<int>;
-%template(void_star_vector_t) std::vector<void *>;
+%template(void_start_vector_t) std::vector<void *>;
 
 ////////////////////////////////////////////////////////////////////////
 // block headers

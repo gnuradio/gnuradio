@@ -36,9 +36,6 @@
 %}
 %include <blocks/control_loop.h>
 
-// Used in the constellation objects
-%template(unsigned_int_vector) std::vector<unsigned int>;
-
 %{
 #include "digital/additive_scrambler_bb.h"
 #include "digital/binary_slicer_fb.h"
