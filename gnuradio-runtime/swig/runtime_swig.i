@@ -27,7 +27,7 @@
 %module(directors="1") gnuradio_runtime
 #endif
 
-//%feature("autodoc", "1");		// generate python docstrings
+%feature("autodoc", "1");		// generate python docstrings
 
 #define SW_RUNTIME
 %include "gnuradio.i"				// the common stuff

@@ -35,6 +35,7 @@ set(GR_SWIG_INCLUDE_DIRS
 
 set(GR_SWIG_DOC_FILE ${CMAKE_CURRENT_BINARY_DIR}/atsc_swig_doc.i)
 set(GR_SWIG_DOC_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/../lib)
+set(GR_SWIG_DOCS_TARGET_DEPS runtime_swig_swig_doc)
 set(GR_SWIG_LIBRARIES gnuradio-atsc gnuradio-fft)
 
 GR_SWIG_MAKE(atsc_swig atsc_swig.i)
