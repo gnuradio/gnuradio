@@ -58,11 +58,6 @@ namespace std {
 
   %template() vector<float>;
   %template() vector<double>;
-  %template() vector< complex<float> >;
-  %template() vector< complex<double> >;
-
-  %template() vector<gr_complex>;
-  %template() vector<gr_complexd>;
 
   %template() vector< vector< unsigned char > >;
   %template() vector< vector< char > >;
@@ -71,12 +66,14 @@ namespace std {
   %template() vector< vector< long int> >;
   %template() vector< vector< float > >;
   %template() vector< vector< double > >;
-  %template() vector< vector< complex<float> > >;
-  %template() vector< vector< gr_complex> >;
-  %template() vector< vector< gr_complexd> >;
 
   %template() vector<string>;
 };
+
+%template(gr_vector_complexf) std::vector< std::complex<float> >;
+%template(gr_vector_complexd) std::vector< std::complex<double> >;
+%template(gr_vector_vector_complexf) std::vector< std::vector< std::complex<float> > >;
+%template(gr_vector_vector_complexd) std::vector< std::vector< std::complex<double> > >;
 
 // Fix for Issue #529
 #ifdef SIZE_T_32
