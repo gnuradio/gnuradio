@@ -35,14 +35,17 @@ class qa_digital_carrier_allocator_cvc (gr_unittest.TestCase):
 
     def test_001_t (self):
         """
-        pretty simple
+        pretty simple (the carrier allocation is not a practical OFDM configuration!)
         """
         fft_len = 6
         tx_symbols = (1, 2, 3)
+        #             ^ this gets mapped to the DC carrier because occupied_carriers[0][0] == 0
         pilot_symbols = ((1j,),)
         occupied_carriers = ((0, 1, 2),)
         pilot_carriers = ((3,),)
-        expected_result = (1, 2, 3, 1j, 0, 0)
+        sync_word = (range(fft_len),)
+        expected_result = tuple(sync_word[0] + [1j, 0, 0, 1, 2, 3])
+        #                                                 ^ DC carrier
         tag_name = "len"
         tag = gr.gr_tag_t()
         tag.offset = 0
@@ -52,7 +55,35 @@ class qa_digital_carrier_allocator_cvc (gr_unittest.TestCase):
         alloc = digital.ofdm_carrier_allocator_cvc(fft_len,
                        occupied_carriers,
                        pilot_carriers,
-                       pilot_symbols,
+                       pilot_symbols, sync_word,
+                       tag_name)
+        sink = blocks.vector_sink_c(fft_len)
+        self.tb.connect(src, alloc, sink)
+        self.tb.run ()
+        self.assertEqual(sink.data(), expected_result)
+
+    def test_001_t2 (self):
+        """
+        pretty simple (same as before, but odd fft len)
+        """
+        fft_len = 5
+        tx_symbols = (1, 2, 3)
+        #             ^ this gets mapped to the DC carrier because occupied_carriers[0][0] == 0
+        occupied_carriers = ((0, 1, 2),)
+        pilot_carriers = ((-2,),)
+        pilot_symbols = ((1j,),)
+        expected_result = (1j, 0, 1, 2, 3)
+        #                         ^ DC carrier
+        tag_name = "len"
+        tag = gr.gr_tag_t()
+        tag.offset = 0
+        tag.key = pmt.string_to_symbol(tag_name)
+        tag.value = pmt.from_long(len(tx_symbols))
+        src = blocks.vector_source_c(tx_symbols, False, 1, (tag,))
+        alloc = digital.ofdm_carrier_allocator_cvc(fft_len,
+                       occupied_carriers,
+                       pilot_carriers,
+                       pilot_symbols, (),
                        tag_name)
         sink = blocks.vector_sink_c(fft_len)
         self.tb.connect(src, alloc, sink)
@@ -68,7 +99,7 @@ class qa_digital_carrier_allocator_cvc (gr_unittest.TestCase):
         pilot_symbols = ((1j,),)
         occupied_carriers = ((-1, 1, 2),)
         pilot_carriers = ((3,),)
-        expected_result = (0, 2, 3, 1j, 0, 1)
+        expected_result = (1j, 0, 1, 0, 2, 3)
         tag_name = "len"
         tag = gr.gr_tag_t()
         tag.offset = 0
@@ -78,7 +109,7 @@ class qa_digital_carrier_allocator_cvc (gr_unittest.TestCase):
         alloc = digital.ofdm_carrier_allocator_cvc(fft_len,
                        occupied_carriers,
                        pilot_carriers,
-                       pilot_symbols,
+                       pilot_symbols, (),
                        tag_name)
         sink = blocks.vector_sink_c(fft_len)
         self.tb.connect(src, alloc, sink)
@@ -93,6 +124,7 @@ class qa_digital_carrier_allocator_cvc (gr_unittest.TestCase):
         - have enough data for nearly 3 OFDM symbols
         - send that twice
         - add some random tags
+        - don't shift
         """
         tx_symbols = range(1, 16); # 15 symbols
         pilot_symbols = ((1j, 2j), (3j, 4j))
@@ -132,8 +164,9 @@ class qa_digital_carrier_allocator_cvc (gr_unittest.TestCase):
         alloc = digital.ofdm_carrier_allocator_cvc(fft_len,
                        occupied_carriers,
                        pilot_carriers,
-                       pilot_symbols,
-                       tag_name)
+                       pilot_symbols, (),
+                       tag_name,
+                       False)
         sink = blocks.vector_sink_c(fft_len)
         self.tb.connect(src, alloc, sink)
         self.tb.run ()

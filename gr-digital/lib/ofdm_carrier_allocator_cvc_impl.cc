@@ -36,7 +36,10 @@ namespace gr {
 	const std::vector<std::vector<int> > &occupied_carriers,
 	const std::vector<std::vector<int> > &pilot_carriers,
 	const std::vector<std::vector<gr_complex> > &pilot_symbols,
-	const std::string &len_tag_key)
+	const std::vector<std::vector<gr_complex> > &sync_words,
+	const std::string &len_tag_key,
+	const bool output_is_shifted
+    )
     {
       return gnuradio::get_initial_sptr(
 	  new ofdm_carrier_allocator_cvc_impl(
@@ -44,20 +47,31 @@ namespace gr {
 	    occupied_carriers,
 	    pilot_carriers,
 	    pilot_symbols,
-	    len_tag_key
+	    sync_words,
+	    len_tag_key,
+	    output_is_shifted
 	  )
       );
     }
 
-    ofdm_carrier_allocator_cvc_impl::ofdm_carrier_allocator_cvc_impl(int fft_len, const std::vector<std::vector<int> > &occupied_carriers, const std::vector<std::vector<int> > &pilot_carriers, const std::vector<std::vector<gr_complex> > &pilot_symbols, const std::string &len_tag_key)
-      : gr_tagged_stream_block("ofdm_carrier_allocator_cvc",
+    ofdm_carrier_allocator_cvc_impl::ofdm_carrier_allocator_cvc_impl(
+	  int fft_len,
+	  const std::vector<std::vector<int> > &occupied_carriers,
+	  const std::vector<std::vector<int> > &pilot_carriers,
+	  const std::vector<std::vector<gr_complex> > &pilot_symbols,
+	  const std::vector<std::vector<gr_complex> > &sync_words,
+	  const std::string &len_tag_key,
+	  const bool output_is_shifted
+    ) : gr_tagged_stream_block("ofdm_carrier_allocator_cvc",
 		   gr_make_io_signature(1, 1, sizeof (gr_complex)),
 		   gr_make_io_signature(1, 1, sizeof (gr_complex) * fft_len), len_tag_key),
 	d_fft_len(fft_len),
 	d_occupied_carriers(occupied_carriers),
 	d_pilot_carriers(pilot_carriers),
 	d_pilot_symbols(pilot_symbols),
-	d_symbols_per_set(0)
+	d_sync_words(sync_words),
+	d_symbols_per_set(0),
+	d_output_is_shifted(output_is_shifted)
     {
       for (unsigned i = 0; i < d_occupied_carriers.size(); i++) {
 	for (unsigned j = 0; j < d_occupied_carriers[i].size(); j++) {
@@ -66,6 +80,9 @@ namespace gr {
 	  }
 	  if (d_occupied_carriers[i][j] > d_fft_len || d_occupied_carriers[i][j] < 0) {
 	    throw std::invalid_argument("data carrier index out of bounds");
+	  }
+	  if (d_output_is_shifted) {
+	    d_occupied_carriers[i][j] = (d_occupied_carriers[i][j] + fft_len/2) % fft_len;
 	  }
 	}
       }
@@ -80,6 +97,14 @@ namespace gr {
 	  if (d_pilot_carriers[i][j] > d_fft_len || d_pilot_carriers[i][j] < 0) {
 	    throw std::invalid_argument("pilot carrier index out of bounds");
 	  }
+	  if (d_output_is_shifted) {
+	    d_pilot_carriers[i][j] = (d_pilot_carriers[i][j] + fft_len/2) % fft_len;
+	  }
+	}
+      }
+      for (unsigned i = 0; i < d_sync_words.size(); i++) {
+	if (d_sync_words[i].size() != (unsigned) d_fft_len) {
+	  throw std::invalid_argument("sync words must be fft length");
 	}
       }
 
@@ -104,7 +129,7 @@ namespace gr {
 	nout++;
 	i += d_occupied_carriers[k % d_occupied_carriers.size()].size();
       }
-      return nout;
+      return nout + d_sync_words.size();
     }
 
     int
@@ -115,10 +140,16 @@ namespace gr {
     {
       const gr_complex *in = (const gr_complex *) input_items[0];
       gr_complex *out = (gr_complex *) output_items[0];
-
       std::vector<gr_tag_t> tags;
 
       memset((void *) out, 0x00, sizeof(gr_complex) * d_fft_len * noutput_items);
+      // Copy Sync word
+      for (unsigned i = 0; i < d_sync_words.size(); i++) {
+	memcpy((void *) out, (void *) &d_sync_words[i][0], sizeof(gr_complex) * d_fft_len);
+	out += d_fft_len;
+      }
+
+      // Copy data symbols
       long n_ofdm_symbols = 0;
       int curr_set = 0;
       int symbols_to_allocate = d_occupied_carriers[0].size();
@@ -145,7 +176,7 @@ namespace gr {
 	  symbols_allocated = 0;
 	}
       }
-      // 2) Copy pilot symbols
+      // Copy pilot symbols
       curr_set = 0;
       for (int i = 0; i < n_ofdm_symbols; i++) {
 	for (unsigned k = 0; k < d_pilot_carriers[curr_set].size(); k++) {
@@ -154,7 +185,7 @@ namespace gr {
 	curr_set = (curr_set + 1) % d_pilot_carriers.size();
       }
 
-      return n_ofdm_symbols;
+      return n_ofdm_symbols + d_sync_words.size();
     }
 
   } /* namespace digital */

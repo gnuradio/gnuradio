@@ -45,12 +45,15 @@ namespace gr {
      *        containing the number of complex symbols in this frame.
      * Output: A tagged stream of complex vectors of length fft_len. This can directly
      *         be connected to an FFT block. Make sure to set this block to 'reverse'
-     *         for the IFFT and to deactivate FFT shifting.
+     *         for the IFFT. If \p output_is_shifted is true, the FFT block must activate
+     *         FFT shifting, otherwise, set shifting to false. If given, sync words are
+     *         prepended to the output. Note that sync words are prepended verbatim,
+     *         make sure they are shifted (or not).
      *
      * Carrier indexes are always such that index 0 is the DC carrier (note: you should
      * not allocate this carrier). The carriers below the DC carrier are either indexed
-     * with negative numbers, or with indexes larger than fft_len/2. Index -1 and index
-     * fft_len-1 both identify the carrier below the DC carrier.
+     * with negative numbers, or with indexes larger than \p fft_len/2. Index -1 and index
+     * \p fft_len-1 both identify the carrier below the DC carrier.
      *
      */
     class DIGITAL_API ofdm_carrier_allocator_cvc : virtual public gr_tagged_stream_block
@@ -63,6 +66,9 @@ namespace gr {
       virtual std::vector<std::vector<int> > occupied_carriers() = 0;
 
       /*
+       * \param fft_len FFT length, is also the maximum width of the OFDM symbols, the
+       *                output vector size and maximum value for elements in
+       *                \p occupied_carriers and \p pilot_carriers.
        * \param occupied_carriers A vector of vectors of indexes. Example: if
        *                          occupied_carriers = ((1, 2, 3), (1, 2, 4)), the first
        *                          three input symbols will be mapped to carriers 1, 2
@@ -78,6 +84,10 @@ namespace gr {
        * \param pilot_symbols The pilot symbols which are placed onto the pilot carriers.
        *                      pilot_symbols[0][0] is placed onto the first OFDM symbol, on
        *                      carrier index pilot_carriers[0][0] etc.
+       * \param sync_words OFDM symbols that are prepended to the OFDM frame (usually for
+       *                   synchronisation purposes, e.g. OFDM symbols with every second
+       *                   sub-carrier being idle). Is a vector of complex vectors of length
+       *                   \p fft_len
        * \param len_tag_key The key of the tag identifying the length of the input packet.
        */
       static sptr make(
@@ -85,7 +95,9 @@ namespace gr {
 	  const std::vector<std::vector<int> > &occupied_carriers,
 	  const std::vector<std::vector<int> > &pilot_carriers,
 	  const std::vector<std::vector<gr_complex> > &pilot_symbols,
-	  const std::string &len_tag_key = "packet_len");
+	  const std::vector<std::vector<gr_complex> > &sync_words,
+	  const std::string &len_tag_key = "packet_len",
+	  const bool output_is_shifted=true);
     };
 
   } // namespace digital
