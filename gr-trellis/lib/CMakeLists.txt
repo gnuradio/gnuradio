@@ -134,6 +134,20 @@ list(APPEND trellis_libs
     ${Boost_LIBRARIES}
 )
 
+#Add Windows DLL resource file if using MSVC
+IF(MSVC)
+    include(${CMAKE_SOURCE_DIR}/cmake/Modules/GrVersion.cmake)
+
+    configure_file(
+        ${CMAKE_CURRENT_SOURCE_DIR}/gnuradio-trellis.rc.in
+        ${CMAKE_CURRENT_BINARY_DIR}/gnuradio-trellis.rc
+    @ONLY)
+
+    list(APPEND trellis_sources
+        ${CMAKE_CURRENT_BINARY_DIR}/gnuradio-trellis.rc
+    )
+ENDIF(MSVC)
+
 add_library(gnuradio-trellis SHARED ${trellis_sources})
 target_link_libraries(gnuradio-trellis ${trellis_libs})
 GR_LIBRARY_FOO(gnuradio-trellis RUNTIME_COMPONENT "trellis_runtime" DEVEL_COMPONENT "trellis_devel")
