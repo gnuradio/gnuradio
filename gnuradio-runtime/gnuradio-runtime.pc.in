@@ -8,4 +8,4 @@ Description: GNU Radio core runtime infrastructure
 Requires:
 Version: @LIBVER@
 Libs: -L${libdir} -lgnuradio-runtime
-Cflags: -I${includedir}
+Cflags: -I${includedir} -I${includedir}/gnuradio
