@@ -36,7 +36,6 @@ set(GR_SWIG_INCLUDE_DIRS
 set(GR_SWIG_DOC_FILE ${CMAKE_CURRENT_BINARY_DIR}/qtgui_swig_doc.i)
 set(GR_SWIG_DOC_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/../include/qtgui)
 set(GR_SWIG_DOCS_TARGET_DEPS runtime_swig_swig_doc)
-list(APPEND GR_SWIG_TARGET_DEPS ${qtgui_moc_srcs})
 
 set(GR_SWIG_LIBRARIES gnuradio-qtgui)
 
