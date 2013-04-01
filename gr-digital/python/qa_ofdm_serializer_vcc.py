@@ -97,11 +97,12 @@ class qa_ofdm_serializer_vcc (gr_unittest.TestCase):
     def test_003_connect (self):
         """ Connect carrier_allocator to ofdm_serializer,
             make sure output==input """
-        fft_len = 8
+        fft_len = 32
         n_syms = 10
         occupied_carriers = ((1, 2, 6, 7),)
         pilot_carriers = ((3,),(5,))
         pilot_symbols = ((1j,),(-1j,))
+        sync_word = (range(fft_len),)
         tx_data = tuple([numpy.random.randint(0, 10) for x in range(4 * n_syms)])
         tag_name = "len"
         tag = gr.gr_tag_t()
@@ -112,13 +113,13 @@ class qa_ofdm_serializer_vcc (gr_unittest.TestCase):
         alloc = digital.ofdm_carrier_allocator_cvc(fft_len,
                        occupied_carriers,
                        pilot_carriers,
-                       pilot_symbols,
+                       pilot_symbols, sync_word,
                        tag_name)
         serializer = digital.ofdm_serializer_vcc(alloc)
         sink = blocks.vector_sink_c()
         self.tb.connect(src, alloc, serializer, sink)
         self.tb.run ()
-        self.assertEqual(sink.data(), tx_data)
+        self.assertEqual(sink.data()[4:], tx_data)
 
     def test_004_connect (self):
         """
@@ -135,6 +136,7 @@ class qa_ofdm_serializer_vcc (gr_unittest.TestCase):
         occupied_carriers = ((1, 2, -2, -1),)
         pilot_carriers = ((3,),(5,))
         pilot_symbols = ((1j,),(-1j,))
+        sync_word = (range(fft_len),)
         tx_data = tuple([numpy.random.randint(0, 10) for x in range(4 * n_syms)])
         #tx_data = (1,) * occupied_carriers[0] * n_syms
         tag_name = "len"
@@ -150,7 +152,7 @@ class qa_ofdm_serializer_vcc (gr_unittest.TestCase):
         alloc = digital.ofdm_carrier_allocator_cvc(fft_len,
                        occupied_carriers,
                        pilot_carriers,
-                       pilot_symbols,
+                       pilot_symbols, sync_word,
                        tag_name)
         tx_ifft = fft.fft_vcc(fft_len, False, ())
         offset_sig = analog.sig_source_c(1.0, analog.GR_COS_WAVE, freq_offset, 1.0)
