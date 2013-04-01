@@ -3,7 +3,7 @@
   <name>OFDM Carrier Allocator</name>
   <key>digital_ofdm_carrier_allocator_cvc</key>
   <import>from gnuradio import digital</import>
-  <make>digital.ofdm_carrier_allocator_cvc($fft_len, $occupied_carriers, $pilot_carriers, $pilot_symbols, $len_tag_key)</make>
+  <make>digital.ofdm_carrier_allocator_cvc($fft_len, $occupied_carriers, $pilot_carriers, $pilot_symbols, $sync_words, $len_tag_key)</make>
   <param>
     <name>FFT length</name>
     <key>fft_len</key>
@@ -24,6 +24,12 @@
   <param>
     <name>Pilot Symbols</name>
     <key>pilot_symbols</key>
+    <value>()</value>
+    <type>raw</type>
+  </param>
+  <param>
+    <name>Sync Words</name>
+    <key>sync_words</key>
     <value>()</value>
     <type>raw</type>
   </param>
