@@ -43,7 +43,7 @@ namespace gr {
      public:
       typedef boost::shared_ptr<ofdm_frame_equalizer_vcvc> sptr;
 
-      /*
+      /*!
        * \param equalizer The equalizer object that will do the actual work
        * \param len_tag_key Length tag key
        * \param propagate_channel_state If true, the channel state after the last symbol

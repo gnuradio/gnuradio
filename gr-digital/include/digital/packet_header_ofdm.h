@@ -48,7 +48,8 @@ namespace gr {
 		      int bits_per_sym=1);
       ~packet_header_ofdm();
 
-      /* \brief Inverse function to header_formatter().
+      /*!
+       * \brief Inverse function to header_formatter().
        *
        * Does the same as packet_header_default::header_parser(), but
        * adds another tag that stores the number of OFDM symbols in the
@@ -72,8 +73,8 @@ namespace gr {
 
      protected:
       pmt::pmt_t d_frame_len_tag_key;
-      const std::vector<std::vector<int> > d_occupied_carriers; //! Which carriers/symbols carry data
-      int d_syms_per_set; //! Helper variable: Total number of elements in d_occupied_carriers
+      const std::vector<std::vector<int> > d_occupied_carriers; //!< Which carriers/symbols carry data
+      int d_syms_per_set; //!< Helper variable: Total number of elements in d_occupied_carriers
     };
 
   } // namespace digital
