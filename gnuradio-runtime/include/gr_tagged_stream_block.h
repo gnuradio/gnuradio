@@ -35,8 +35,8 @@
 class GR_RUNTIME_API gr_tagged_stream_block : public gr_block
 {
  private:
-  pmt::pmt_t d_length_tag_key; //! This is the key for the tag that stores the PDU length
-  gr_vector_int d_n_input_items_reqd; //! How many input items do I need to process the next PDU?
+  pmt::pmt_t d_length_tag_key; //!< This is the key for the tag that stores the PDU length
+  gr_vector_int d_n_input_items_reqd; //!< How many input items do I need to process the next PDU?
 
  protected:
   std::string d_length_tag_key_str;
@@ -46,7 +46,8 @@ class GR_RUNTIME_API gr_tagged_stream_block : public gr_block
 		 gr_io_signature_sptr output_signature,
 		 const std::string &length_tag_key);
 
-  /* \brief Parse all tags on the first sample of a PDU, return the number of items per input
+  /*!
+   * \brief Parse all tags on the first sample of a PDU, return the number of items per input
    *        and prune the length tags.
    *
    * In most cases, you don't need to override this, unless the number of items read
@@ -66,7 +67,8 @@ class GR_RUNTIME_API gr_tagged_stream_block : public gr_block
       gr_vector_int &n_input_items_reqd
   );
 
-  /* \brief Calculate the number of output items.
+  /*!
+   * \brief Calculate the number of output items.
    *
    * This is basically the inverse function to forecast(): Given a number of input
    * items, it returns the maximum number of output items.
@@ -77,7 +79,8 @@ class GR_RUNTIME_API gr_tagged_stream_block : public gr_block
    */
   virtual int calculate_output_stream_length(const gr_vector_int &ninput_items);
 
-  /* \brief Set the new length tags on the output stream
+  /*!
+   * \brief Set the new length tags on the output stream
    *
    * Default behaviour: Set a tag with key \p length_tag_key and
    * the number of produced items on every output port.
@@ -91,11 +94,12 @@ class GR_RUNTIME_API gr_tagged_stream_block : public gr_block
 
  public:
 
-  /* \brief Don't override this.
+  /*! \brief Don't override this.
    */
   void /* final */ forecast (int noutput_items, gr_vector_int &ninput_items_required);
 
-  /* - Reads the number of input items from the tags using parse_length_tags()
+  /*!
+   * - Reads the number of input items from the tags using parse_length_tags()
    * - Checks there's enough data on the input and output buffers
    * - If not, inform the scheduler and do nothing
    * - Calls work() with the exact number of items per PDU

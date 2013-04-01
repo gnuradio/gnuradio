@@ -39,9 +39,7 @@
 #include <gr_runtime_api.h>
 #include <assert.h>
 #include <iostream>
-#include <time.h>
-#include <boost/filesystem.hpp>
-#include <boost/thread.hpp>
+#include <boost/format.hpp>
 
 #ifdef ENABLE_GR_LOG
 

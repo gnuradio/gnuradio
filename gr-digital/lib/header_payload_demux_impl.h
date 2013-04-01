@@ -30,17 +30,17 @@ namespace gr {
     class header_payload_demux_impl : public header_payload_demux
     {
      private:
-      int d_header_len; //! Number of bytes per header
-      int d_items_per_symbol; //! Bytes per symbol
-      int d_gi; //! Bytes per guard interval
-      pmt::pmt_t d_len_tag_key; //! Key of length tag
-      pmt::pmt_t d_trigger_tag_key; //! Key of trigger tag (if used)
-      bool d_output_symbols; //! If true, output is symbols, not items
-      size_t d_itemsize; //! Bytes per item
-      bool d_uses_trigger_tag; //! If a trigger tag is used
-      int d_ninput_items_reqd; //! Helper for forecast()
-      int d_state; //! Current read state
-      int d_remaining_symbols; //! When in payload or header state, the number of symbols still to transmit
+      int d_header_len; //!< Number of bytes per header
+      int d_items_per_symbol; //!< Bytes per symbol
+      int d_gi; //!< Bytes per guard interval
+      pmt::pmt_t d_len_tag_key; //!< Key of length tag
+      pmt::pmt_t d_trigger_tag_key; //!< Key of trigger tag (if used)
+      bool d_output_symbols; //!< If true, output is symbols, not items
+      size_t d_itemsize; //!< Bytes per item
+      bool d_uses_trigger_tag; //!< If a trigger tag is used
+      int d_ninput_items_reqd; //!< Helper for forecast()
+      int d_state; //!< Current read state
+      int d_remaining_symbols; //!< When in payload or header state, the number of symbols still to transmit
 
       // Helpers to make the state machine more readable
 

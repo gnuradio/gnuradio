@@ -128,10 +128,10 @@ class ofdm_tx(gr.hier_block2):
             self.sync_words.append(self.sync_word2)
         crc = digital.crc32_bb(False, self.frame_length_tag_key)
         formatter_object = digital.packet_header_ofdm(
-            occupied_carriers, 1, self.frame_length_tag_key, self.frame_length_tag_key, "",
-            bps_header
+            occupied_carriers=occupied_carriers, n_syms=1,
+            bits_per_sym=self.bps_header
         )
-        header_gen = digital.packet_headergenerator_bb(formatter_object.base())
+        header_gen = digital.packet_headergenerator_bb(formatter_object.base(), self.frame_length_tag_key)
         header_payload_mux = blocks.tagged_stream_mux(gr.sizeof_gr_complex*1, self.frame_length_tag_key)
         self.connect(self, crc, header_gen, header_mod, (header_payload_mux, 0))
         payload_constellation = _get_constellation(bps_payload)

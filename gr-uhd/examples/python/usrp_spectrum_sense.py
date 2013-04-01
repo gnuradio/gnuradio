@@ -107,7 +107,10 @@ class my_top_block(gr.top_block):
                           help="time to delay (in seconds) after changing frequency [default=%default]")
         parser.add_option("", "--dwell-delay", type="eng_float",
                           default=10e-3, metavar="SECS",
-                          help="time to dwell (in seconds) at a given frequncy [default=%default]")
+                          help="time to dwell (in seconds) at a given frequency [default=%default]")
+        parser.add_option("", "--channel-bandwidth", type="eng_float",
+                          default=12.5e3, metavar="Hz",
+                          help="channel bandwidth of fft bins in Hz [default=%default]")
         parser.add_option("-F", "--fft-size", type="int", default=256,
                           help="specify number of FFT bins [default=%default]")
         parser.add_option("", "--real-time", action="store_true", default=False,
@@ -125,8 +128,9 @@ class my_top_block(gr.top_block):
             # swap them
             self.min_freq, self.max_freq = self.max_freq, self.min_freq
 
-	self.fft_size = options.fft_size
-
+        self.fft_size = options.fft_size
+        self.channel_bandwidth = options.channel_bandwidth
+        
         if not options.real_time:
             realtime = False
         else:
@@ -150,14 +154,14 @@ class my_top_block(gr.top_block):
         if(options.antenna):
             self.u.set_antenna(options.antenna, 0)
 
-        usrp_rate = options.samp_rate
+        self.usrp_rate = usrp_rate = options.samp_rate
         self.u.set_samp_rate(usrp_rate)
         dev_rate = self.u.get_samp_rate()
 
-	s2v = blocks.stream_to_vector(gr.sizeof_gr_complex, self.fft_size)
+        s2v = blocks.stream_to_vector(gr.sizeof_gr_complex, self.fft_size)
 
         mywindow = filter.window.blackmanharris(self.fft_size)
-        ffter = fft.fft_vcc(self.fft_size, True, mywindow)
+        ffter = fft.fft_vcc(self.fft_size, True, mywindow, True)
         power = 0
         for tap in mywindow:
             power += tap*tap
@@ -197,7 +201,7 @@ class my_top_block(gr.top_block):
             options.gain = float(g.start()+g.stop())/2.0
 
         self.set_gain(options.gain)
-	print "gain =", options.gain
+        print "gain =", options.gain
 
     def set_next_freq(self):
         target_freq = self.next_freq
@@ -231,6 +235,20 @@ class my_top_block(gr.top_block):
 
 
 def main_loop(tb):
+    
+    def nearest_freq(freq, channel_bandwidth):
+        freq = round(freq / channel_bandwidth, 0) * channel_bandwidth
+        return freq
+
+    def bin_freq(i_bin, center_freq):
+        hz_per_bin = tb.usrp_rate / tb.fft_size
+        freq = center_freq - (tb.usrp_rate / 2) + (hz_per_bin * i_bin)
+        freq = nearest_freq(freq, tb.channel_bandwidth)
+        return freq
+    
+    bin_start = int(tb.fft_size * ((1 - 0.75) / 2))
+    bin_stop = int(tb.fft_size - bin_start)
+    
     while 1:
 
         # Get the next message sent from the C++ code (blocking call).
@@ -238,7 +256,7 @@ def main_loop(tb):
         m = parse_msg(tb.msgq.delete_head())
 
         # Print center freq so we know that something is happening...
-        print m.center_freq
+        #print "m.center_freq:", m.center_freq
 
         # FIXME do something useful with the data...
 
@@ -248,6 +266,13 @@ def main_loop(tb):
         # m.raw_data is a string that contains the binary floats.
         # You could write this as binary to a file.
 
+        for i_bin in range(bin_start, bin_stop):
+
+            # create signal object to find matching signals
+            freq = int(bin_freq(i_bin, m.center_freq))
+            power = float(m.data[i_bin])
+            
+            print freq, power
 
 if __name__ == '__main__':
     t = ThreadClass()

@@ -23,6 +23,7 @@
 #include "config.h"
 #endif
 
+#include <boost/format.hpp>
 #include <gr_io_signature.h>
 #include "packet_headerparser_b_impl.h"
 
@@ -73,6 +74,7 @@ namespace gr {
 
       std::vector<gr_tag_t> tags;
       if (!d_header_formatter->header_parser(in, tags)) {
+	GR_LOG_INFO(d_logger, boost::format("Detected an invalid packet at item %1%") % nitems_read(0));
 	message_port_pub(msg_port_id, pmt::PMT_F);
       } else {
 	pmt::pmt_t dict(pmt::make_dict());

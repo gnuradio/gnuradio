@@ -21,9 +21,12 @@
 # 
 
 import numpy
+import random
 from gnuradio import gr, gr_unittest
 import digital_swig as digital
 import blocks_swig as blocks
+from ofdm_txrx import ofdm_tx, ofdm_rx
+from utils import  tagged_streams
 
 class test_ofdm_txrx (gr_unittest.TestCase):
 

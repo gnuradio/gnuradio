@@ -31,12 +31,11 @@ namespace gr {
     /*!
      * \brief Combines tagged streams.
      *
-     * \description
      * Takes N streams as input.  Each stream is tagged with packet lengths.
      * Packets are output sequentially from each input stream.
      *
      * The output signal has a new length tag, which is the sum of all
-     * individual length tags.
+     * individual length tags. The old length tags are discarded.
      *
      * All other tags are propagated as expected, i.e. they stay associated
      * with the same input item.
@@ -48,7 +47,8 @@ namespace gr {
      public:
       typedef boost::shared_ptr<tagged_stream_mux> sptr;
 
-      /* \param itemsize Items size (number of bytes per item)
+      /*!
+       * \param itemsize Items size (number of bytes per item)
        * \param lengthtagname Length tag key
        */
       static sptr make(size_t itemsize, const std::string &lengthtagname);

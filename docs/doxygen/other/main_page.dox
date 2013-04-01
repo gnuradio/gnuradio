@@ -45,6 +45,7 @@ More details on GNU Radio concepts:
 \li \ref page_metadata
 \li \ref volk_guide
 \li \ref page_pfb
+\li \ref page_tagged_stream_blocks
 
 
 \section flowgraph Operating a Flowgraph

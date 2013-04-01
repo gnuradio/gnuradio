@@ -36,7 +36,7 @@ namespace gr {
       std::vector<gr_complex> d_channel_state;
 
      protected:
-      // This aren't really necessary, so let's override them with nuthin'
+      // These aren't really necessary, so let's override them with nuthin'
       void remove_length_tags(const std::vector<std::vector<gr_tag_t> > &tags) {};
       void update_length_tags(int n_produced, int n_ports) {};
 

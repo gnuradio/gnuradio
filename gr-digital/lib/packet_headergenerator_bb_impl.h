@@ -31,16 +31,16 @@ namespace gr {
     {
      private:
       gr::digital::packet_header_default::sptr d_formatter;
-      int d_input_size;
-      int d_header_len;
-      pmt::pmt_t d_len_tag_value;
 
      public:
-      packet_headergenerator_bb_impl(const packet_header_default::sptr &header_formatter);
+      packet_headergenerator_bb_impl(
+	  const packet_header_default::sptr &header_formatter,
+	  const std::string &len_tag_key
+      );
       ~packet_headergenerator_bb_impl();
 
       void remove_length_tags(const std::vector<std::vector<gr_tag_t> > &tags) {};
-      int calculate_output_stream_length(const gr_vector_int &ninput_items) { return d_header_len; };
+      int calculate_output_stream_length(const gr_vector_int &ninput_items) { return d_formatter->header_len(); };
 
       int work(int noutput_items,
 	  gr_vector_int &ninput_items,
