@@ -159,9 +159,9 @@ class GR_CORE_API gr_block_detail {
   /*!
    * \brief Set core affinity of block to the cores in the vector mask.
    *
-   * \param mask a vector of unsigned ints of the core numbers available to this block.
+   * \param mask a vector of ints of the core numbers available to this block.
    */
-  void set_processor_affinity(const std::vector<unsigned int> &mask);
+  void set_processor_affinity(const std::vector<int> &mask);
 
   /*!
    * \brief Unset core affinity.
