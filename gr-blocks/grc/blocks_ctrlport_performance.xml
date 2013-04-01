@@ -23,7 +23,7 @@
 
 <block>
   <name>CtrlPort Performance Monitor</name>
-  <key>blocks_ctrlport_perfmonitor</key>
+  <key>blocks_ctrlport_monitor_performance</key>
   <category>Control Port</category>
   <import>from gnuradio.ctrlport.monitor import *</import>
   <make>not $en or monitor("gr-perf-monitorx")</make>
