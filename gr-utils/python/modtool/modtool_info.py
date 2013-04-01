@@ -129,8 +129,6 @@ class ModToolInfo(ModTool):
             for line in cmakecache_fid:
                 if line.find('GNURADIO_RUNTIME_INCLUDE_DIRS:%s' % path_or_internal) != -1:
                     inc_dirs += line.replace('GNURADIO_RUNTIME_INCLUDE_DIRS:%s=' % path_or_internal, '').strip().split(';')
-                if line.find('GRUEL_INCLUDE_DIRS:%s' % path_or_internal) != -1:
-                    inc_dirs += line.replace('GRUEL_INCLUDE_DIRS:%s=' % path_or_internal, '').strip().split(';')
         except IOError:
             pass
         if len(inc_dirs) == 0 and self.options.suggested_dirs is not None:

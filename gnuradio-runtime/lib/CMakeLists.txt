@@ -214,7 +214,6 @@ endif(TRY_SHM_VMCIRCBUF)
 add_library(gnuradio-runtime SHARED ${gnuradio_runtime_sources})
 target_link_libraries(gnuradio-runtime ${gnuradio_runtime_libs})
 GR_LIBRARY_FOO(gnuradio-runtime RUNTIME_COMPONENT "runtime" DEVEL_COMPONENT "runtime_devel")
-#set_target_properties(gnuradio-runtime PROPERTIES LINK_INTERFACE_LIBRARIES "gruel")
 
 add_dependencies(gnuradio-runtime
   runtime_generated_includes
@@ -241,6 +240,8 @@ list(APPEND test_gnuradio_runtime_sources
   qa_gr_vmcircbuf.cc
   qa_runtime.cc
   qa_sincos.cc
+  pmt/qa_pmt.cc
+  pmt/qa_pmt_prims.cc
 )
 
 include_directories(${CPPUNIT_INCLUDE_DIRS})
