@@ -301,20 +301,6 @@ add_subdirectory(gr-fcd)
 add_subdirectory(gr-wavelet)
 add_subdirectory(gr-wxgui)
 
-# Create a config.h with some definitions to export to other projects.
-CONFIGURE_FILE(
-  ${CMAKE_CURRENT_SOURCE_DIR}/config.h.in
-  ${CMAKE_CURRENT_BINARY_DIR}/config.h
-)
-
-# Install config.h in include/gnuradio
-install(
-    FILES
-    ${CMAKE_CURRENT_BINARY_DIR}/config.h
-    DESTINATION ${GR_INCLUDE_DIR}/gnuradio
-    COMPONENT "core_devel"
-)
-
 # Install our Cmake modules into ${GR_PKG_DATA_DIR}/cmake/Modules
 file(GLOB cmake_modules "cmake/Modules/*.cmake")
 install(
@@ -333,3 +319,17 @@ CPACK_FINALIZE()
 GR_PRINT_COMPONENT_SUMMARY()
 message(STATUS "Using install prefix: ${CMAKE_INSTALL_PREFIX}")
 message(STATUS "Building for version: ${VERSION} / ${LIBVER}")
+
+# Create a config.h with some definitions to export to other projects.
+CONFIGURE_FILE(
+  ${CMAKE_CURRENT_SOURCE_DIR}/config.h.in
+  ${CMAKE_CURRENT_BINARY_DIR}/config.h
+)
+
+# Install config.h in include/gnuradio
+install(
+    FILES
+    ${CMAKE_CURRENT_BINARY_DIR}/config.h
+    DESTINATION ${GR_INCLUDE_DIR}/gnuradio
+    COMPONENT "core_devel"
+)
