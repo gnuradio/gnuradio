@@ -299,16 +299,16 @@ GR_PRINT_COMPONENT_SUMMARY()
 message(STATUS "Using install prefix: ${CMAKE_INSTALL_PREFIX}")
 message(STATUS "Building for version: ${VERSION} / ${LIBVER}")
 
-# Create a config.h with some definitions to export to other projects.
+# Create a gr_config.h with some definitions to export to other projects.
 CONFIGURE_FILE(
-  ${CMAKE_CURRENT_SOURCE_DIR}/config.h.in
-  ${CMAKE_CURRENT_BINARY_DIR}/config.h
+  ${CMAKE_CURRENT_SOURCE_DIR}/gr_config.h.in
+  ${CMAKE_CURRENT_BINARY_DIR}/gr_config.h
 )
 
-# Install config.h in include/gnuradio
+# Install gr_config.h in include/gnuradio
 install(
     FILES
-    ${CMAKE_CURRENT_BINARY_DIR}/config.h
+    ${CMAKE_CURRENT_BINARY_DIR}/gr_config.h
     DESTINATION ${GR_INCLUDE_DIR}/gnuradio
     COMPONENT "core_devel"
 )
