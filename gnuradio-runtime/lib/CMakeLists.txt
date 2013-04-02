@@ -53,9 +53,9 @@ list(APPEND gnuradio_runtime_sources ${CMAKE_CURRENT_BINARY_DIR}/gr_constants.cc
 include_directories(${GNURADIO_RUNTIME_INCLUDE_DIRS}
                     ${CMAKE_CURRENT_SOURCE_DIR}
 		    ${CMAKE_CURRENT_BINARY_DIR}/../include/
-                    ${Boost_INCLUDE_DIRS}
                     ${GRUEL_INCLUDE_DIRS}
 		    ${VOLK_INCLUDE_DIRS}
+                    ${Boost_INCLUDE_DIRS}
 )
 
 ########################################################################
