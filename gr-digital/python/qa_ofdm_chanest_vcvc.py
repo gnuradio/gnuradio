@@ -228,7 +228,7 @@ class qa_ofdm_sync_eqinit_vcvc (gr_unittest.TestCase):
         wgn_amplitude = 0.05
         min_chan_ampl = 0.1
         max_chan_ampl = 5
-        n_iter = 100
+        n_iter = 20
         def run_flow_graph(sync_sym1, sync_sym2, data_sym):
             top_block = gr.top_block()
             carr_offset = random.randint(-max_offset/2, max_offset/2) * 2
