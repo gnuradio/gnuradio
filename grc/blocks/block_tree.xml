@@ -7,168 +7,6 @@
 <cat>
 	<name></name> <!-- Blank for Root Name -->
 	<cat>
-		<name>Sources</name>
-		<block>const_source_x</block>
-		<block>gr_sig_source_x</block>
-		<block>gr_noise_source_x</block>
-		<block>gr_vector_source_x</block>
-		<block>random_source_x</block>
-		<block>gr_glfsr_source_x</block>
-		<block>gr_null_source</block>
-		<block>gr_file_source</block>
-		<block>blks2_tcp_source</block>
-		<block>gr_udp_source</block>
-		<block>gr_wavfile_source</block>
-		<block>gr_message_source</block>
-		<block>gr_message_burst_source</block>
-		<block>pad_source</block>
-		<block>virtual_source</block>
-	</cat>
-	<cat>
-		<name>Sinks</name>
-		<block>gr_vector_sink_x</block>
-		<block>gr_null_sink</block>
-		<block>gr_file_sink</block>
-		<block>blks2_tcp_sink</block>
-		<block>gr_udp_sink</block>
-		<block>gr_wavfile_sink</block>
-		<block>gr_message_sink</block>
-		<block>pad_sink</block>
-		<block>virtual_sink</block>
-		<block>gr_tag_debug</block>
-	</cat>
-    <cat>
-        <name>Message Tools</name>
-        <block>gr_message_debug</block>
-        <block>gr_message_strobe</block>
-        <block>gr_pdu_to_tagged_stream</block>
-        <block>gr_tagged_stream_to_pdu</block>
-        <block>gr_tuntap_pdu</block>
-        <block>gr_socket_pdu</block>
-        <block>gr_random_pdu</block>
-    </cat>
-	<cat>
-		<name>Operators</name>
-		<block>gr_add_xx</block>
-		<block>gr_sub_xx</block>
-		<block>gr_multiply_xx</block>
-		<block>gr_divide_xx</block>
-		<block>gr_nlog10_ff</block>
-		<block>gr_transcendental</block>
-		<block>gr_add_const_vxx</block>
-		<block>gr_multiply_const_vxx</block>
-		<block>gr_and_const_xx</block>
-
-		<block>gr_not_xx</block>
-		<block>gr_and_xx</block>
-		<block>gr_or_xx</block>
-		<block>gr_xor_xx</block>
-
-		<block>gr_max_xx</block>
-		<block>gr_argmax_xx</block>
-		<block>gr_rms_xx</block>
-		<block>gr_integrate_xx</block>
-
-		<block>gr_conjugate_cc</block>
-
-		<block>gr_fft_vxx</block>
-		<block>blks2_logpwrfft_x</block>
-		<block>gr_vector_insert_x</block>
-
-        <block>gr_endian_swap</block>
-	</cat>
-	<cat>
-		<name>Type Conversions</name>
-		<block>gr_complex_to_arg</block>
-		<block>gr_complex_to_mag</block>
-		<block>gr_complex_to_mag_squared</block>
-		<block>gr_complex_to_real</block>
-		<block>gr_complex_to_imag</block>
-
-		<block>gr_complex_to_float</block>
-		<block>gr_float_to_complex</block>
-
-		<block>gr_float_to_int</block>
-		<block>gr_float_to_short</block>
-		<block>gr_short_to_float</block>
-		<block>gr_short_to_char</block>
-
-		<block>gr_int_to_float</block>
-
-		<block>gr_float_to_char</block>
-		<block>gr_char_to_float</block>
-		<block>gr_char_to_short</block>
-
-		<block>gr_float_to_uchar</block>
-		<block>gr_uchar_to_float</block>
-
-		<block>gr_complex_to_interleaved_short</block>
-		<block>gr_interleaved_short_to_complex</block>
-	</cat>
-	<cat>
-		<name>Stream Conversions</name>
-		<block>gr_interleave</block>
-		<block>gr_deinterleave</block>
-
-		<block>gr_streams_to_stream</block>
-		<block>gr_stream_to_streams</block>
-
-		<block>gr_streams_to_vector</block>
-		<block>gr_vector_to_streams</block>
-
-		<block>gr_stream_to_vector</block>
-		<block>gr_vector_to_stream</block>
-
-		<block>blks2_stream_to_vector_decimator</block>
-
-		<block>gr_stream_mux</block>
-		<block>gr_burst_tagger</block>
-	</cat>
-	<cat>
-		<name>Misc Conversions</name>
-		<block>gr_unpacked_to_packed_xx</block>
-		<block>gr_packed_to_unpacked_xx</block>
-		<block>gr_unpack_k_bits_bb</block>
-		<block>gr_pack_k_bits_bb</block>
-		<block>gr_chunks_to_symbols_xx</block>
-		<block>gr_map_bb</block>
-	</cat>
-	<cat>
-		<name>Synchronizers</name>
-		<block>gr_pfb_clock_sync_xxx</block>
-
-		<block>gr_mpsk_sync_cc</block>
-
-		<block>gr_pll_carriertracking_cc</block>
-		<block>gr_pll_freqdet_cf</block>
-		<block>gr_pll_refout_cc</block>
-
-		<block>gr_pn_correlator_cc</block>
-		<block>gr_simple_correlator</block>
-		<block>gr_simple_framer</block>
-
-		<block>blks2_packet_decoder</block>
-		<block>blks2_packet_encoder</block>
-	</cat>
-	<cat>
-		<name>Level Controls</name>
-		<block>gr_dpll_bb</block>
-		<block>gr_peak_detector_xb</block>
-		<block>gr_peak_detector2_fb</block>
-		<block>gr_sample_and_hold_xx</block>
-
-		<block>gr_agc_xx</block>
-		<block>gr_agc2_xx</block>
-		<block>gr_feedforward_agc_cc</block>
-
-		<block>gr_mute_xx</block>
-		<block>gr_simple_squelch_cc</block>
-		<block>blks2_standard_squelch</block>
-		<block>gr_pwr_squelch_xx</block>
-		<block>gr_ctcss_squelch_ff</block>
-		<block>gr_threshold_ff</block>
-	</cat>
-	<cat>
 		<name>Filters</name>
 		<!-- FIR convenience filters -->
 		<block>low_pass_filter</block>
@@ -176,47 +14,49 @@
 		<block>band_pass_filter</block>
 		<block>band_reject_filter</block>
 		<block>root_raised_cosine_filter</block>
-		<!-- Filters that take taps as arguments -->
-		<block>gr_fir_filter_xxx</block>
-		<block>gr_interp_fir_filter_xxx</block>
-		<block>gr_fft_filter_xxx</block>
-		<block>gr_freq_xlating_fir_filter_xxx</block>
-		<block>gr_iir_filter_ffd</block>
-		<block>gr_filter_delay_fc</block>
-		<block>gr_channel_model</block>
 		<!-- Filter banks -->
 		<block>blks2_synthesis_filterbank</block>
 		<block>blks2_analysis_filterbank</block>
-		<!-- Polyphase filters -->
-		<block>blks2_pfb_arb_resampler_ccf</block>
-		<block>blks2_pfb_channelizer_ccf</block>
-		<block>gr_pfb_synthesizer_ccf</block>
 		<!-- Other filters -->
-		<block>gr_single_pole_iir_filter_xx</block>
-		<block>gr_hilbert_fc</block>
-		<block>gr_goertzel_fc</block>
-		<block>gr_rational_resampler_base_xxx</block>
 		<block>blks2_rational_resampler_xxx</block>
-		<block>gr_fractional_interpolator_xx</block>
-		<block>gr_keep_one_in_n</block>
-		<block>gr_keep_m_in_n</block>
-		<block>gr_moving_average_xx</block>
 		<block>gr_iqcomp_cc</block>
-		<block>gr_dc_blocker</block>
+	</cat>
+	<cat>
+		<name>Error Coding</name>
+		<block>gr_encode_ccsds_27_bb</block>
+		<block>gr_decode_ccsds_27_fb</block>
+	</cat>
+	<cat>
+		<name>Fourier Analysis</name>
+		<block>blks2_logpwrfft_x</block>
+	</cat>
+	<cat>
+ 		<name>Level Controllers</name>
+		<block>blks2_standard_squelch</block>
+	</cat>
+        <cat>
+                <name>Message Tools</name>
+                <block>gr_random_pdu</block>
+        </cat>
+	<cat>
+		<name>Misc</name>
+		<block>pad_source</block>
+		<block>pad_sink</block>
+		<block>virtual_source</block>
+		<block>virtual_sink</block>
+
+		<block>note</block>
+		<block>import</block>
+
+		<block>blks2_selector</block>
+		<block>blks2_valve</block>
+		<block>blks2_error_rate</block>
+
+		<block>xmlrpc_server</block>
+		<block>xmlrpc_client</block>
 	</cat>
 	<cat>
 		<name>Modulators</name>
-		<block>gr_vco_f</block>
-		<block>gr_frequency_modulator_fc</block>
-		<block>gr_phase_modulator_fc</block>
-		<block>gr_quadrature_demod_cf</block>
-		<block>gr_cpfsk_bc</block>
-
-		<block>gr_diff_phasor_cc</block>
-
-		<block>gr_diff_encoder_bb</block>
-		<block>gr_diff_decoder_bb</block>
-
 		<block>blks2_wfm_tx</block>
 		<block>blks2_wfm_rcv</block>
 		<block>blks2_wfm_rcv_pll</block>
@@ -230,25 +70,23 @@
 		<block>blks2_fm_preemph</block>
 	</cat>
 	<cat>
-		<name>Error Correction</name>
-		<cat>
-			<name>Trellis</name>
-		</cat>
-
-		<block>gr_encode_ccsds_27_bb</block>
-		<block>gr_decode_ccsds_27_fb</block>
+		<name>Networking Tool</name>
+		<block>blks2_tcp_source</block>
+		<block>blks2_tcp_sink</block>
 	</cat>
 	<cat>
-		<name>Line Coding</name>
-		<block>gr_scrambler_bb</block>
-		<block>gr_descrambler_bb</block>
-		<block>gr_additive_scrambler_bb</block>
+		<name>Synchronizers</name>
+		<block>blks2_packet_decoder</block>
+		<block>blks2_packet_encoder</block>
 	</cat>
 	<cat>
-		<name>Probes</name>
-		<block>gr_probe_avg_mag_sqrd_x</block>
-		<block>gr_probe_density_b</block>
-		<block>gr_probe_signal_f</block>
+		<name>Type Converters</name>
+		<block>blks2_stream_to_vector_decimator</block>
+	</cat>
+	<cat>
+		<name>Waveform Generators</name>
+		<block>const_source_x</block>
+		<block>random_source_x</block>
 	</cat>
 	<cat>
 		<name>Variables</name>
@@ -256,28 +94,5 @@
 		<block>variable_config</block>
 		<block>variable_function_probe</block>
 		<block>parameter</block>
-	</cat>
-	<cat>
-		<name>Misc</name>
-		<block>note</block>
-		<block>import</block>
-
-		<block>gr_throttle</block>
-		<block>gr_delay</block>
-		<block>gr_repeat</block>
-
-		<block>blks2_selector</block>
-		<block>blks2_valve</block>
-		<block>blks2_error_rate</block>
-
-		<block>gr_head</block>
-		<block>gr_skiphead</block>
-
-		<block>gr_kludge_copy</block>
-		<block>gr_copy</block>
-		<block>gr_nop</block>
-
-		<block>xmlrpc_server</block>
-		<block>xmlrpc_client</block>
 	</cat>
 </cat>

@@ -6,7 +6,7 @@
 ###################################################
  -->
 <block>
-	<name>Burst Tagger</name>
+	<name>Burst Tagger (old)</name>
 	<key>gr_burst_tagger</key>
 	<import>from gnuradio import gr</import>
 	<make>gr.burst_tagger($type.size)

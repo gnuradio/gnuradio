@@ -5,7 +5,7 @@
 ###################################################
  -->
 <block>
-	<name>PLL Freq Det</name>
+	<name>PLL Freq Det (old)</name>
 	<key>gr_pll_freqdet_cf</key>
 	<import>from gnuradio import gr</import>
 	<make>gr.pll_freqdet_cf($w, $max_freq, $min_freq)</make>

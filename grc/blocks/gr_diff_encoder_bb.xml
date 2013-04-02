@@ -5,7 +5,7 @@
 ###################################################
  -->
 <block>
-	<name>Differential Encoder</name>
+	<name>Differential Encoder (old)</name>
 	<key>gr_diff_encoder_bb</key>
 	<import>from gnuradio import gr</import>
 	<make>gr.diff_encoder_bb($modulus)</make>

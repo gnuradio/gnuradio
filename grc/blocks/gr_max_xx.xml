@@ -6,7 +6,7 @@
 ###################################################
  -->
 <block>
-	<name>Max</name>
+	<name>Max (old)</name>
 	<key>gr_max_xx</key>
 	<import>from gnuradio import gr</import>
 	<make>gr.max_$(type.fcn)($vlen)</make>

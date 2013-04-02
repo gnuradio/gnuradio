@@ -5,7 +5,7 @@
 ###################################################
  -->
 <block>
-	<name>Peak Detector</name>
+	<name>Peak Detector (old)</name>
 	<key>gr_peak_detector_xb</key>
 	<import>from gnuradio import gr</import>
 	<make>gr.peak_detector_$(type.fcn)b($threshold_factor_rise, $threshold_factor_fall, $look_ahead, $alpha)</make>

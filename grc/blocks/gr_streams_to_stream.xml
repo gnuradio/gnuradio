@@ -5,7 +5,7 @@
 ###################################################
  -->
 <block>
-	<name>Streams to Stream</name>
+	<name>Streams to Stream (old)</name>
 	<key>gr_streams_to_stream</key>
 	<import>from gnuradio import gr</import>
 	<make>gr.streams_to_stream($type.size*$vlen, $num_streams)</make>

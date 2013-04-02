@@ -5,7 +5,7 @@
 ###################################################
  -->
 <block>
-	<name>UDP Source</name>
+	<name>UDP Source (old)</name>
 	<key>gr_udp_source</key>
 	<import>from gnuradio import gr</import>
 	<make>gr.udp_source($type.size*$vlen, $ipaddr, $port, $psize, $eof, $wait)</make>

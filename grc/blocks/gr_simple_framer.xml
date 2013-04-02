@@ -5,7 +5,7 @@
 ###################################################
  -->
 <block>
-	<name>Simple Framer</name>
+	<name>Simple Framer (old)</name>
 	<key>gr_simple_framer</key>
 	<import>from gnuradio import gr</import>
 	<make>gr.simple_framer($payload_bytesize)</make>

@@ -5,7 +5,7 @@
 ###################################################
  -->
 <block>
-	<name>Transcendental</name>
+	<name>Transcendental (old)</name>
 	<key>gr_transcendental</key>
 	<import>from gnuradio import gr</import>
 	<make>gr.transcendental($name, "$type")</make>

@@ -5,7 +5,7 @@
 ###################################################
  -->
 <block>
-	<name>CPFSK</name>
+	<name>CPFSK (old)</name>
 	<key>gr_cpfsk_bc</key>
 	<import>from gnuradio import gr</import>
 	<make>gr.cpfsk_bc($k, $amplitude, $samples_per_symbol)</make>

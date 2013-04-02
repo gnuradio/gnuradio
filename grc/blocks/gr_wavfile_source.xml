@@ -5,7 +5,7 @@
 ###################################################
  -->
 <block>
-	<name>Wav File Source</name>
+	<name>Wav File Source (old)</name>
 	<key>gr_wavfile_source</key>
 	<import>from gnuradio import gr</import>
 	<make>gr.wavfile_source($file, $repeat)</make>

@@ -5,7 +5,7 @@
 ###################################################
  -->
 <block>
-	<name>Feed Forward AGC</name>
+	<name>Feed Forward AGC (old)</name>
 	<key>gr_feedforward_agc_cc</key>
 	<import>from gnuradio import gr</import>
 	<make>gr.feedforward_agc_cc($num_samples, $reference)</make>

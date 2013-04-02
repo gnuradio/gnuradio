@@ -5,7 +5,7 @@
 ###################################################
  -->
 <block>
-	<name>Tag Debug</name>
+	<name>Tag Debug (old)</name>
 	<key>gr_tag_debug</key>
 	<import>from gnuradio import gr</import>
 	<make>gr.tag_debug($type.size*$vlen, $name)</make>

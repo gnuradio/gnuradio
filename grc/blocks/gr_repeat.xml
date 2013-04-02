@@ -5,7 +5,7 @@
 ###################################################
  -->
 <block>
-	<name>Repeat</name>
+	<name>Repeat (old)</name>
 	<key>gr_repeat</key>
 	<import>from gnuradio import gr</import>
 	<make>gr.repeat($type.size*$vlen, $interp)</make>

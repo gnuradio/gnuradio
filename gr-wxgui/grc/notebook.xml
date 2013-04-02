@@ -7,7 +7,7 @@
 <block>
 	<name>WX GUI Notebook</name>
 	<key>notebook</key>
-	<category>WX GUI Widgets</category>
+	<category>GUI Widgets/WX</category>
 	<import>from grc_gnuradio import wxgui as grc_wxgui</import>
 	<make>#set $parent = $notebook() and 'self.%s.GetPage(%s)'%$notebook() or 'self'
 self.$(id) = wx.Notebook($(parent).GetWin(), style=$style)

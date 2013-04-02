@@ -5,7 +5,7 @@
 ###################################################
  -->
 <block>
-	<name>Pack K Bits</name>
+	<name>Pack K Bits (old)</name>
 	<key>gr_pack_k_bits_bb</key>
 	<import>from gnuradio import gr</import>
 	<make>gr.pack_k_bits_bb($k)</make>

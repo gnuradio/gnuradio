@@ -5,7 +5,7 @@
 ###################################################
  -->
 <block>
-	<name>Complex To IShort</name>
+	<name>Complex To IShort (old)</name>
 	<key>gr_complex_to_interleaved_short</key>
 	<import>from gnuradio import gr</import>
 	<make>gr.complex_to_interleaved_short()</make>

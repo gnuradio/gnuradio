@@ -5,7 +5,7 @@
 ###################################################
  -->
 <block>
-	<name>Polyphase Resampler</name>
+	<name>Polyphase Resampler (old)</name>
 	<key>blks2_pfb_arb_resampler_ccf</key>
 	<import>from gnuradio import blks2</import>
 	<import>from gnuradio.gr import firdes</import>

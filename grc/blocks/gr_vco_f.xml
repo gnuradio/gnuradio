@@ -5,7 +5,7 @@
 ###################################################
  -->
 <block>
-	<name>VCO</name>
+	<name>VCO (old)</name>
 	<key>gr_vco_f</key>
 	<import>from gnuradio import gr</import>
 	<make>gr.vco_f($samp_rate, $sensitivity, $amplitude)</make>

@@ -5,7 +5,7 @@
 ###################################################
  -->
 <block>
-	<name>Not</name>
+	<name>Not (old)</name>
 	<key>gr_not_xx</key>
 	<import>from gnuradio import gr</import>
 	<make>gr.not_$(type.fcn)()</make>

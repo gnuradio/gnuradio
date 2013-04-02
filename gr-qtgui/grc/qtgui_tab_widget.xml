@@ -7,7 +7,7 @@
 <block>
 	<name>QT GUI Tab Widget</name>
 	<key>qtgui_tab_widget</key>
-	<category>QT GUI Widgets</category>
+	<category>GUI Widgets/QT</category>
 	<import>from PyQt4 import Qt</import>
 	<make>#set $win = 'self.%s'%$id
 Qt.QTabWidget()

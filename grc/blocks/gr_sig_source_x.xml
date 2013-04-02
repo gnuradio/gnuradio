@@ -5,7 +5,7 @@
 ###################################################
  -->
 <block>
-	<name>Signal Source</name>
+	<name>Signal Source (old)</name>
 	<key>gr_sig_source_x</key>
 	<import>from gnuradio import gr</import>
 	<make>gr.sig_source_$(type.fcn)($samp_rate, $waveform, $freq, $amp, $offset)</make>

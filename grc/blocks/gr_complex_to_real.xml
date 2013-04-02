@@ -5,7 +5,7 @@
 ###################################################
  -->
 <block>
-	<name>Complex to Real</name>
+	<name>Complex to Real (old)</name>
 	<key>gr_complex_to_real</key>
 	<import>from gnuradio import gr</import>
 	<make>gr.complex_to_real($vlen)</make>

@@ -1,7 +1,6 @@
 <block>
   <name>Tagged Stream Mux</name>
   <key>blocks_tagged_stream_mux</key>
-  <category>Stream Operations</category>
   <import>from gnuradio import blocks</import>
   <make>blocks.tagged_stream_mux($type.size*$vlen, $lengthtagname)</make>
 	<param>

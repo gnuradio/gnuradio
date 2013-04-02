@@ -1,5 +1,5 @@
 <block>
-  <name>Packet Header Generator</name>
+  <name>Packet Header Generator (Default)</name>
   <key>digital_packet_headergenerator_bb_default</key>
   <import>from gnuradio import digital</import>
   <make>digital.packet_headergenerator_bb($header_len, $len_tag_key)</make>

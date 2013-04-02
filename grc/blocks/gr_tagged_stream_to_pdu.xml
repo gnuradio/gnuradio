@@ -5,7 +5,7 @@
 ###################################################
  -->
 <block>
-	<name>Tagged Stream to PDU</name>
+	<name>Tagged Stream to PDU (old)</name>
 	<key>gr_tagged_stream_to_pdu</key>
 	<import>from gnuradio import gr</import>
 	<make>gr.tagged_stream_to_pdu($type.tv)</make>

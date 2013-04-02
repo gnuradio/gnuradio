@@ -5,7 +5,7 @@
 ###################################################
  -->
 <block>
-	<name>And</name>
+	<name>And (old)</name>
 	<key>gr_and_xx</key>
 	<import>from gnuradio import gr</import>
 	<make>gr.and_$(type.fcn)()</make>

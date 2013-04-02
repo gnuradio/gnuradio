@@ -5,7 +5,7 @@
 ###################################################
  -->
 <block>
-	<name>Kludge Copy</name>
+	<name>Kludge Copy (old)</name>
 	<key>gr_kludge_copy</key>
 	<import>from gnuradio import gr</import>
 	<make>gr.kludge_copy($type.size*$vlen)</make>

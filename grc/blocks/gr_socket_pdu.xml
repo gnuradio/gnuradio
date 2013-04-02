@@ -5,7 +5,7 @@
 ###################################################
  -->
 <block>
-	<name>Socket PDU</name>
+	<name>Socket PDU (old)</name>
 	<key>gr_socket_pdu</key>
 	<import>from gnuradio import gr</import>
 	<make>gr.socket_pdu($type, $host, $port, $mtu)</make>

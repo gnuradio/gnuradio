@@ -5,7 +5,7 @@
 ###################################################
  -->
 <block>
-	<name>Message Sink</name>
+	<name>Message Sink (old)</name>
 	<key>gr_message_sink</key>
 	<import>from gnuradio import gr</import>
 	<make>gr.message_sink($type.size*$vlen, $(id)_msgq_out, $dont_block)</make>

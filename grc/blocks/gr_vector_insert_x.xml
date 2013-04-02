@@ -5,7 +5,7 @@
 ###################################################
  -->
 <block>
-	<name>Vector Insert</name>
+	<name>Vector Insert (old)</name>
 	<key>gr_vector_insert_x</key>
 	<import>from gnuradio import gr</import>
 	<make>gr.vector_insert_$(type.fcn)($vector, $period, $offset)</make>

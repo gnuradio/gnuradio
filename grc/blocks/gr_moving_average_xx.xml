@@ -5,7 +5,7 @@
 ###################################################
  -->
 <block>
-	<name>Moving Average</name>
+	<name>Moving Average (old)</name>
 	<key>gr_moving_average_xx</key>
 	<import>from gnuradio import gr</import>
 	<make>gr.moving_average_$(type.fcn)($length, $scale, $max_iter)</make>

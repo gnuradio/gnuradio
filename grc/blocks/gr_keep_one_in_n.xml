@@ -5,7 +5,7 @@
 ###################################################
  -->
 <block>
-	<name>Keep 1 in N</name>
+	<name>Keep 1 in N (old)</name>
 	<key>gr_keep_one_in_n</key>
 	<import>from gnuradio import gr</import>
 	<make>gr.keep_one_in_n($type.size*$vlen, $n)</make>

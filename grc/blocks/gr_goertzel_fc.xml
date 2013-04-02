@@ -5,7 +5,7 @@
 ###################################################
  -->
 <block>
-	<name>Goertzel</name>
+	<name>Goertzel (old)</name>
 	<key>gr_goertzel_fc</key>
 	<import>from gnuradio import gr</import>
 	<make>gr.goertzel_fc($rate, $len, $freq)</make>
