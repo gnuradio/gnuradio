@@ -18,6 +18,7 @@ Core Framework
    gnuradio.gr_unittest
    gnuradio.qtgui
    gnuradio.wxgui
+   gnuradio.window
 
 .. toctree::
    :hidden:   
@@ -31,9 +32,10 @@ Core Framework
    gnuradio.fft <fft>
    gnuradio.qtgui <qtgui/index>
    gnuradio.wxgui <wxgui/index>
+   gnuradio.window <window/index>
 
 Hardware Interfaces
-------------------
+-------------------
 
 .. autosummary::
    :nosignatures:
@@ -90,33 +92,15 @@ Framework Extensions
 .. toctree::
    :hidden:   
    
-   coding <gr/coding_blk>
-   converter <gr/converter_blk>
-   demodulation <gr/demodulation_blk>
-   dft <gr/dft_blk>
-   filter <gr/filter_blk>
-   filter_design <gr/filter_design>
    internal <gr/internal>
-   level <gr/level_blk>
-   math <gr/math_blk>
-   misc <gr/misc>
-   misc <gr/misc_blk>
-   modulation <gr/modulation_blk>
-   sink <gr/sink_blk>
-   slicedice <gr/slicedice_blk>
-   source <gr/source_blk>
-   sync <gr/sync_blk>
    top_block <gr/top_block>
-
+   misc <gr/misc>
    atsc_blks <atsc/blks>
-   blks <blks2/blks>
-   blks2_utilities <blks2/utilities>
    digital_blocks <digital/blocks>
    constellations <digital/constellations>
    ofdm <digital/ofdm>
    pkt_utils <digital/pkt_utils>
    digital_utilities <digital/utilities>
-   optfir <optfir/detail>
    pager_blks <pager/blks>
    pyqt_filter <pyqt_filter>
    pyqt_plot <pyqt_plot>

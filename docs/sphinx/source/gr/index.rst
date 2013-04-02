@@ -15,17 +15,6 @@ Top Block and Hierarchical Block Base Classes
    gnuradio.gr.top_block
    gnuradio.gr.hier_block2
 
-
-Signal Sinks
-^^^^^^^^^^^^
-
-.. autosummary::
-   :nosignatures:
-
-   gnuradio.gr.histo_sink_f
-   gnuradio.gr.oscope_sink_f
-
-
 Miscellaneous
 -------------
 

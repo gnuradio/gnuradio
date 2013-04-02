@@ -3,9 +3,9 @@ gnuradio.uhd
 
 .. automodule:: gnuradio.uhd
 
-.. autooldblock:: gnuradio.uhd.usrp_sink
-.. autooldblock:: gnuradio.uhd.usrp_source
-.. autooldblock:: gnuradio.uhd.amsg_source
+.. autoblock:: gnuradio.uhd.usrp_sink
+.. autoblock:: gnuradio.uhd.usrp_source
+.. autoblock:: gnuradio.uhd.amsg_source
 .. autoclass:: gnuradio.uhd.stream_cmd_t
 .. autoclass:: gnuradio.uhd.time_spec_t
 .. autoclass:: gnuradio.uhd.meta_range_t
