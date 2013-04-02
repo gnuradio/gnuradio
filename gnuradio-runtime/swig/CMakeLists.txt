@@ -95,6 +95,7 @@ install(
     gr_block.i
     gr_buffer.i
     gr_constants.i
+    gr_ctrlport.i
     gr_dispatcher.i
     gr_error_handler.i
     gr_feval.i
@@ -115,6 +116,7 @@ install(
     gr_tagged_stream_block.i
     gr_tags.i
     gr_top_block.i
+    gr_types.i
     gr_extras.i
     runtime_block_gateway.i
     runtime_swig.i
