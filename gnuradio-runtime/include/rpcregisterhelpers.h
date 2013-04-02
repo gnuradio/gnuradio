@@ -34,7 +34,7 @@
 
 // Base classes
 template<typename T, typename Tto> class rpcextractor_base
-  : public virtual gruel::msg_accepter
+  : public virtual gr::messages::msg_accepter
 {
 public:
   rpcextractor_base(T* source, void (T::*func)(Tto)) :
@@ -60,7 +60,7 @@ public:
 };
 
 template<typename T, typename Tfrom>
-class rpcinserter_base : public virtual gruel::msg_producer
+class rpcinserter_base : public virtual gr::messages::msg_producer
 {
 public:
   rpcinserter_base(T* source, Tfrom (T::*func)()) : _source(source), _func(func) {;}

@@ -104,7 +104,7 @@ namespace gr {
       else
 	throw std::runtime_error("gr::blocks:socket_pdu: unknown socket type");
 
-      d_thread = gruel::thread(boost::bind(&socket_pdu_impl::run_io_service, this));
+      d_thread = gr::thread::thread(boost::bind(&socket_pdu_impl::run_io_service, this));
       d_started = true;
     }
 

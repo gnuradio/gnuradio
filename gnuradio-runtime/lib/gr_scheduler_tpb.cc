@@ -24,7 +24,7 @@
 #endif
 #include <gr_scheduler_tpb.h>
 #include <gr_tpb_thread_body.h>
-#include <gruel/thread_body_wrapper.h>
+#include <thread/thread_body_wrapper.h>
 #include <sstream>
 
 /*
@@ -80,7 +80,7 @@ gr_scheduler_tpb::gr_scheduler_tpb(gr_flat_flowgraph_sptr ffg, int max_noutput_i
       max_noutput_items = blocks[i]->max_noutput_items();
     
     d_threads.create_thread(
-	    gruel::thread_body_wrapper<tpb_container>(tpb_container(blocks[i], max_noutput_items),
+	    gr::thread::thread_body_wrapper<tpb_container>(tpb_container(blocks[i], max_noutput_items),
 						      name.str()));
   }
 }

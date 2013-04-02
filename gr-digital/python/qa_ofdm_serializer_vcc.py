@@ -25,8 +25,7 @@ import blocks_swig as blocks
 import fft_swig as fft
 import analog_swig as analog
 import digital_swig as digital
-try: import pmt
-except: from gruel import pmt
+import pmt
 import numpy
 
 class qa_ofdm_serializer_vcc (gr_unittest.TestCase):

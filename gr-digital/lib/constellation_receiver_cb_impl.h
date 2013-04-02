@@ -24,7 +24,7 @@
 #define	INCLUDED_DIGITAL_CONSTELLATION_RECEIVER_CB_IMPL_H
 
 #include <digital/constellation_receiver_cb.h>
-#include <gruel/attributes.h>
+#include <attributes.h>
 #include <gr_complex.h>
 #include <blocks/control_loop.h>
 

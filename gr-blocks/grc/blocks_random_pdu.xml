@@ -8,7 +8,7 @@
 	<name>Random PDU Generator</name>
 	<key>blocks_random_pdu</key>
 	<import>from gnuradio import blocks</import>
-	<import>from gruel import pmt</import>
+	<import>import pmt</import>
 	<make>blocks.random_pdu($minsize, $maxsize)</make>
 	<param>
 		<name>Min Bytes</name>

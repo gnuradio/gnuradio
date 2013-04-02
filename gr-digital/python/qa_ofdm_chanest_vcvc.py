@@ -20,8 +20,7 @@
 # 
 
 from gnuradio import gr, gr_unittest
-try: import pmt
-except: from gruel import pmt
+import pmt
 import blocks_swig as blocks
 import analog_swig as analog
 import digital_swig as digital

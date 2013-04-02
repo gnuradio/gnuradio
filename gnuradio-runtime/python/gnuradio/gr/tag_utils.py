@@ -20,8 +20,7 @@
 #
 """ Conversion tools between stream tags and Python objects """
 
-try: import pmt
-except: from gruel import pmt
+import pmt
 
 try:
     from gnuradio import gr

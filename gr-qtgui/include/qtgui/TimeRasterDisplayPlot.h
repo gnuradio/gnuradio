@@ -30,7 +30,7 @@
 #include <qtgui/DisplayPlot.h>
 #include <qtgui/timeRasterGlobalData.h>
 #include <qtgui/plot_raster.h>
-#include <gruel/high_res_timer.h>
+#include <high_res_timer.h>
 
 #if QWT_VERSION < 0x060000
 #include <qtgui/plot_waterfall.h>

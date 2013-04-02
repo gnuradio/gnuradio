@@ -188,12 +188,12 @@ namespace gr {
 
       // create the stuff to regulate I/O
 
-      d_cond_data = new gruel::condition_variable();
+      d_cond_data = new gr::thread::condition_variable();
       if(d_cond_data == NULL)
         CheckErrorAndThrow(errno, "new condition (data)",
                            "audio_osx_sink::audio_osx_sink");
 
-      d_internal = new gruel::mutex();
+      d_internal = new gr::thread::mutex();
       if(d_internal == NULL)
         CheckErrorAndThrow(errno, "new mutex (internal)",
                            "audio_osx_sink::audio_osx_sink");
@@ -288,7 +288,7 @@ namespace gr {
                    gr_vector_const_void_star &input_items,
                    gr_vector_void_star &output_items)
     {
-      gruel::scoped_lock l(*d_internal);
+      gr::thread::scoped_lock l(*d_internal);
 
       /* take the input data, copy it, and push it to the bottom of the queue
          mono input are pushed onto queue[0];
@@ -386,7 +386,7 @@ namespace gr {
       osx_sink* This = (osx_sink*)inRefCon;
       OSStatus err = noErr;
 
-      gruel::scoped_lock l(*This->d_internal);
+      gr::thread::scoped_lock l(*This->d_internal);
 
 #if _OSX_AU_DEBUG_
       std::cerr << "cb_in: SC = " << This->d_queueSampleCount

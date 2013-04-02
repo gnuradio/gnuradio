@@ -122,11 +122,11 @@ built or installed.
 
 The -DENABLE_DEFAULT=False can be used to disable all
 components. Individual components can then be selectively turned back
-on. For example, just buidling the Volk and Gruel libraries can be
+on. For example, just buidling the Volk library can be
 done with this:
 
 \code
-cmake -DENABLE_DEFAULT=Off -DENABLE_VOLK=True -DENABLE_GRUEL=True <srcdir>
+cmake -DENABLE_DEFAULT=Off -DENABLE_VOLK=True <srcdir>
 \endcode
 
 

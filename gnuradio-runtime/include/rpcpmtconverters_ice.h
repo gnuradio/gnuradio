@@ -23,7 +23,7 @@
 #ifndef RPCPMTCONVERTERS_ICE_H
 #define RPCPMTCONVERTERS_ICE_H
 
-#include <gruel/pmt.h>
+#include <pmt/pmt.h>
 #include <gnuradio.h>
 
 namespace rpcpmtconverter

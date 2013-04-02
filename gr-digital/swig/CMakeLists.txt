@@ -30,7 +30,6 @@ set(GR_SWIG_INCLUDE_DIRS
     ${GR_FFT_INCLUDE_DIRS}
     ${GR_FILTER_INCLUDE_DIRS}
     ${GNURADIO_RUNTIME_SWIG_INCLUDE_DIRS}
-    ${GRUEL_INCLUDE_DIRS}
     ${Boost_INCLUDE_DIRS}
 )
 
@@ -42,7 +41,8 @@ endif(ENABLE_GR_CTRLPORT)
 # Setup swig docs to depend on includes and pull in from build directory
 set(GR_SWIG_TARGET_DEPS digital_generated_includes)
 set(GR_SWIG_DOC_FILE ${CMAKE_CURRENT_BINARY_DIR}/digital_swig_doc.i)
-set(GR_SWIG_DOC_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/../lib)
+set(GR_SWIG_DOC_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/../include/digital)
+set(GR_SWIG_DOCS_TARGET_DEPS runtime_swig_swig_doc)
 
 set(GR_SWIG_LIBRARIES gnuradio-digital
   gnuradio-filter gnuradio-analog gnuradio-blocks)

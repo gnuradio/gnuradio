@@ -49,7 +49,6 @@ gr_flowgraph::~gr_flowgraph()
 {
 }
 
-// FIXME: move to libgruel as a utility function
 template<class T>
 static
 std::vector<T>

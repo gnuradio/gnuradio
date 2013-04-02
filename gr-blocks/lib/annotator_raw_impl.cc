@@ -60,7 +60,7 @@ namespace gr {
     void
     annotator_raw_impl::add_tag(uint64_t offset, pmt_t key, pmt_t val)
     {
-      gruel::scoped_lock l(d_mutex);
+      gr::thread::scoped_lock l(d_mutex);
 
       gr_tag_t tag;
       tag.srcid = pmt::intern(name());
@@ -84,7 +84,7 @@ namespace gr {
                              gr_vector_const_void_star &input_items,
                              gr_vector_void_star &output_items)
     {
-      gruel::scoped_lock l(d_mutex);
+      gr::thread::scoped_lock l(d_mutex);
 
       const char *in = (const char*)input_items[0];
       char *out = (char*)output_items[0];

@@ -22,14 +22,14 @@
 
 %rename(enable_realtime_scheduling) gr_enable_realtime_scheduling;
 
-// NOTE: This is duplicated from gruel/src/include/gruel/gr_realtime.h,
+// NOTE: This is duplicated from gnuradio-runtime/include/gr_realtime.h,
 //       and must be kept in sync with it.  This is the least evil workaround
 //       for allowing 3rd party code builds to work when GNU Radio is
 //       installed from binary packages into the standard system directories.
-//       Otherwise, they can't find #include <gruel/gr_realtime.h>, since
+//       Otherwise, they can't find #include <gr_realtime.h>, since
 //       pkg-config strips -I/usr/include from the --cflags path.
 
-namespace gruel {
+namespace gr {
 
   typedef enum {
     RT_OK = 0,
@@ -40,5 +40,5 @@ namespace gruel {
 
 }
 
-typedef gruel::rt_status_t gr_rt_status_t;
+typedef gr::rt_status_t gr_rt_status_t;
 gr_rt_status_t gr_enable_realtime_scheduling();

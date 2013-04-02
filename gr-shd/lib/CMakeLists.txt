@@ -23,7 +23,6 @@
 include_directories(
     ${GR_SHD_INCLUDE_DIRS}
     ${GNURADIO_RUNTIME_INCLUDE_DIRS}
-    ${GRUEL_INCLUDE_DIRS}
     ${Boost_INCLUDE_DIRS}
     ${SHD_INCLUDE_DIRS}
 }

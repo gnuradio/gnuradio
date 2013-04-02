@@ -63,7 +63,7 @@ namespace gr {
     void
     pfb_decimator_ccf_impl::set_taps(const std::vector<float> &taps)
     {
-      gruel::scoped_lock guard(d_mutex);
+      gr::thread::scoped_lock guard(d_mutex);
 
       polyphase_filterbank::set_taps(taps);
       set_history(d_taps_per_filter+1);
@@ -89,7 +89,7 @@ namespace gr {
 				 gr_vector_const_void_star &input_items,
 				 gr_vector_void_star &output_items)
     {
-      gruel::scoped_lock guard(d_mutex);
+      gr::thread::scoped_lock guard(d_mutex);
 
       gr_complex *in;
       gr_complex *out = (gr_complex *)output_items[0];

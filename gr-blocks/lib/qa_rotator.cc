@@ -24,7 +24,7 @@
 #include <config.h>
 #endif
 
-#include <gruel/attributes.h>
+#include <attributes.h>
 #include <cppunit/TestAssert.h>
 #include <qa_rotator.h>
 #include <blocks/rotator.h>

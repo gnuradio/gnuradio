@@ -28,7 +28,7 @@
 #include <filter/polyphase_filterbank.h>
 #include <filter/fir_filter.h>
 #include <fft/fft.h>
-#include <gruel/thread.h>
+#include <thread/thread.h>
 
 namespace gr {
   namespace filter {
@@ -40,7 +40,7 @@ namespace gr {
       unsigned int d_rate;
       unsigned int d_chan;
       gr_complex  *d_rotator;
-      gruel::mutex d_mutex; // mutex to protect set/work access
+      gr::thread::mutex d_mutex; // mutex to protect set/work access
     
     public:
       pfb_decimator_ccf_impl(unsigned int decim,

@@ -24,7 +24,7 @@
 #include "config.h"
 #endif
 
-#include <gruel/thread.h>
+#include <thread/thread.h>
 #include "file_source_impl.h"
 #include <gr_io_signature.h>
 #include <cstdio>
@@ -85,7 +85,7 @@ namespace gr {
     file_source_impl::open(const char *filename, bool repeat)
     {
       // obtain exclusive access for duration of this function
-      gruel::scoped_lock lock(fp_mutex);
+      gr::thread::scoped_lock lock(fp_mutex);
 
       int fd;
 
@@ -114,7 +114,7 @@ namespace gr {
     file_source_impl::close()
     {
       // obtain exclusive access for duration of this function
-      gruel::scoped_lock lock(fp_mutex);
+      gr::thread::scoped_lock lock(fp_mutex);
 
       if(d_new_fp != NULL) {
 	fclose(d_new_fp);
@@ -127,7 +127,7 @@ namespace gr {
     file_source_impl::do_update()
     {
       if(d_updated) {
-	gruel::scoped_lock lock(fp_mutex); // hold while in scope
+	gr::thread::scoped_lock lock(fp_mutex); // hold while in scope
 
 	if(d_fp)
 	  fclose(d_fp);
@@ -151,7 +151,7 @@ namespace gr {
       if(d_fp == NULL)
 	throw std::runtime_error("work with file not open");
 
-      gruel::scoped_lock lock(fp_mutex); // hold for the rest of this function
+      gr::thread::scoped_lock lock(fp_mutex); // hold for the rest of this function
       while(size) {
 	i = fread(o, d_itemsize, size, (FILE*)d_fp);
 

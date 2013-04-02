@@ -48,7 +48,7 @@ namespace gr {
     {
       _dev = ::uhd::usrp::multi_usrp::make(device_addr);
       _amsg_thread =
-        gruel::thread(boost::bind(&amsg_source_impl::recv_loop, this));
+        gr::thread::thread(boost::bind(&amsg_source_impl::recv_loop, this));
     }
 
     amsg_source_impl::~amsg_source_impl()

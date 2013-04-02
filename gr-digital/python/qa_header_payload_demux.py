@@ -20,8 +20,7 @@
 # 
 
 from gnuradio import gr, gr_unittest
-try: import pmt
-except: from gruel import pmt
+import pmt
 import digital_swig as digital
 import blocks_swig as blocks
 import time

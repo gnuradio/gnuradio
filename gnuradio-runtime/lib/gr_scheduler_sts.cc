@@ -24,7 +24,7 @@
 #endif
 #include <gr_scheduler_sts.h>
 #include <gr_single_threaded_scheduler.h>
-#include <gruel/thread_body_wrapper.h>
+#include <thread/thread_body_wrapper.h>
 
 class sts_container
 {
@@ -64,7 +64,7 @@ gr_scheduler_sts::gr_scheduler_sts(gr_flat_flowgraph_sptr ffg, int max_noutput_i
 
     gr_block_vector_t blocks = gr_flat_flowgraph::make_block_vector(*p);
     d_threads.create_thread(
-        gruel::thread_body_wrapper<sts_container>(sts_container(blocks),
+        gr::thread::thread_body_wrapper<sts_container>(sts_container(blocks),
 						  "single-threaded-scheduler"));
   }
 }

@@ -1,6 +1,4 @@
 #set the debian package dependencies (parsed by our deb component maker)
-SET(PACKAGE_DEPENDS_GRUEL_RUNTIME "libboost-all-dev" "libc6")
-SET(PACKAGE_DEPENDS_GRUEL_PYTHON "python")
 SET(PACKAGE_DEPENDS_CORE_RUNTIME "libfftw3-3")
 SET(PACKAGE_DEPENDS_QTGUI_RUNTIME "libqtcore4" "libqwt5-qt4")
 SET(PACKAGE_DEPENDS_QTGUI_PYTHON "python-qt4" "python-qwt5-qt4")

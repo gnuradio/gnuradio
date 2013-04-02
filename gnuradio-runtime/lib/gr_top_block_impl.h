@@ -25,7 +25,7 @@
 
 #include <gr_runtime_api.h>
 #include <gr_scheduler.h>
-#include <gruel/thread.h>
+#include <thread/thread.h>
 
 /*!
  *\brief Abstract implementation details of gr_top_block
@@ -76,7 +76,7 @@ protected:
   gr_flat_flowgraph_sptr         d_ffg;
   gr_scheduler_sptr		 d_scheduler;
 
-  gruel::mutex                   d_mutex;	// protects d_state and d_lock_count
+  gr::thread::mutex                   d_mutex;	// protects d_state and d_lock_count
   tb_state			 d_state;
   int                            d_lock_count;
   int                            d_max_noutput_items;

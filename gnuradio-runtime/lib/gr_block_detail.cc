@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2004,2009,2010 Free Software Foundation, Inc.
+ * Copyright 2004,2009,2010,2013 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -222,7 +222,7 @@ gr_block_detail::set_processor_affinity(const std::vector<int> &mask)
 {
   if(threaded) {
     try {
-      gruel::thread_bind_to_processor(thread, mask);
+      gr::thread::thread_bind_to_processor(thread, mask);
     }
     catch (std::runtime_error e) {
       std::cerr << "set_processor_affinity: invalid mask."  << std::endl;;
@@ -234,21 +234,21 @@ void
 gr_block_detail::unset_processor_affinity()
 {
   if(threaded) {
-    gruel::thread_unbind(thread);
+    gr::thread::thread_unbind(thread);
   }
 }
 
 void
 gr_block_detail::start_perf_counters()
 {
-  d_start_of_work = gruel::high_res_timer_now();
+  d_start_of_work = gr::high_res_timer_now();
 }
 
 void
 gr_block_detail::stop_perf_counters(int noutput_items, int nproduced)
 {
-  d_end_of_work = gruel::high_res_timer_now();
-  gruel::high_res_timer_type diff = d_end_of_work - d_start_of_work;
+  d_end_of_work = gr::high_res_timer_now();
+  gr::high_res_timer_type diff = d_end_of_work - d_start_of_work;
 
   if(d_pc_counter == 0) {
     d_ins_work_time = diff;

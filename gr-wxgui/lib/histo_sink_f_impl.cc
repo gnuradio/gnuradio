@@ -80,7 +80,7 @@ namespace gr {
                             gr_vector_void_star &output_items)
     {
       const float *in = (const float*)input_items[0];
-      gruel::scoped_lock guard(d_mutex);  // hold mutex for duration of this function
+      gr::thread::scoped_lock guard(d_mutex);  // hold mutex for duration of this function
       for(unsigned int i = 0; i < (unsigned int)noutput_items; i++) {
         d_samps[d_sample_count] = in[i];
         d_sample_count++;
@@ -164,7 +164,7 @@ namespace gr {
     void
     histo_sink_f_impl::set_frame_size(unsigned int frame_size)
     {
-      gruel::scoped_lock guard(d_mutex);    // hold mutex for duration of this function
+      gr::thread::scoped_lock guard(d_mutex);    // hold mutex for duration of this function
       d_frame_size = frame_size;
       /* allocate a new sample array */
       delete [] d_samps;
@@ -174,7 +174,7 @@ namespace gr {
 
     void
     histo_sink_f_impl::set_num_bins(unsigned int num_bins) {
-      gruel::scoped_lock guard(d_mutex);    // hold mutex for duration of this function
+      gr::thread::scoped_lock guard(d_mutex);    // hold mutex for duration of this function
       d_num_bins = num_bins;
       /* allocate a new bin array */
       delete [] d_bins;

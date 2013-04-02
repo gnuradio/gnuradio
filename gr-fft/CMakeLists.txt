@@ -30,7 +30,6 @@ find_package(FFTW3f)
 include(GrComponent)
 
 GR_REGISTER_COMPONENT("gr-fft" ENABLE_GR_FFT
-    ENABLE_GRUEL
     ENABLE_VOLK
     Boost_FOUND
     ENABLE_GNURADIO_RUNTIME

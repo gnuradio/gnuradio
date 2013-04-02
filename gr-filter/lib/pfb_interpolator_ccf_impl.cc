@@ -58,7 +58,7 @@ namespace gr {
     void
     pfb_interpolator_ccf_impl::set_taps(const std::vector<float> &taps)
     {
-      gruel::scoped_lock guard(d_mutex);
+      gr::thread::scoped_lock guard(d_mutex);
 
       polyphase_filterbank::set_taps(taps);
       set_history(d_taps_per_filter+1);

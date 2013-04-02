@@ -26,7 +26,7 @@
 
 #include <filter/pfb_arb_resampler_ccf.h>
 #include <filter/fir_filter.h>
-#include <gruel/thread.h>
+#include <thread/thread.h>
 
 namespace gr {
   namespace filter {
@@ -46,7 +46,7 @@ namespace gr {
       int          d_start_index;
       unsigned int d_taps_per_filter;
       bool         d_updated;
-      gruel::mutex d_mutex; // mutex to protect set/work access
+      gr::thread::mutex d_mutex; // mutex to protect set/work access
 
       void create_diff_taps(const std::vector<float> &newtaps,
 			    std::vector<float> &difftaps);

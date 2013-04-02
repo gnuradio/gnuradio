@@ -23,14 +23,14 @@
 
 #include <gr_runtime_api.h>
 #include <gr_scheduler.h>
-#include <gruel/thread_group.h>
+#include <thread/thread_group.h>
 
 /*!
  * \brief Concrete scheduler that uses the single_threaded_scheduler
  */
 class GR_RUNTIME_API gr_scheduler_sts : public gr_scheduler
 {
-  gruel::thread_group		       d_threads;
+  gr::thread::thread_group		       d_threads;
 
 protected:
   /*!

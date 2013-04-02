@@ -24,7 +24,7 @@
 
 #include <gr_runtime_api.h>
 #include <gr_msg_handler.h>
-#include <gruel/thread.h>
+#include <thread/thread.h>
 
 class gr_msg_queue;
 typedef boost::shared_ptr<gr_msg_queue> gr_msg_queue_sptr;
@@ -37,9 +37,9 @@ GR_RUNTIME_API gr_msg_queue_sptr gr_make_msg_queue(unsigned int limit=0);
  */
 class GR_RUNTIME_API gr_msg_queue : public gr_msg_handler {
 
-  gruel::mutex		    d_mutex;
-  gruel::condition_variable d_not_empty;
-  gruel::condition_variable d_not_full;
+  gr::thread::mutex		    d_mutex;
+  gr::thread::condition_variable d_not_empty;
+  gr::thread::condition_variable d_not_full;
   gr_message_sptr	    d_head;
   gr_message_sptr	    d_tail;
   unsigned int		    d_count;    // # of messages in queue.

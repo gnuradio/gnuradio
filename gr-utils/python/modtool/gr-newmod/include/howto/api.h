@@ -22,7 +22,7 @@
 #ifndef INCLUDED_HOWTO_API_H
 #define INCLUDED_HOWTO_API_H
 
-#include <gruel/attributes.h>
+#include <attributes.h>
 
 #ifdef gnuradio_howto_EXPORTS
 #  define HOWTO_API __GR_ATTR_EXPORT

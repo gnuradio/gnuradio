@@ -28,54 +28,21 @@
 // SWIG interface definition
 ////////////////////////////////////////////////////////////////////////
 
-%include <gruel_common.i>
+%include <gr_extras.i>
+%include <gr_types.i>
 
 ////////////////////////////////////////////////////////////////////////
 // Headers
 
 %{
 #include "gnuradio_swig_bug_workaround.h"	// mandatory bug fix
-#include <gr_types.h>
-#include <stddef.h>		// size_t
-#include <complex>
 %}
 
 %feature("autodoc","1");
 
 // local file
 %include <gr_shared_ptr.i>
-%include <gr_types.h>
-%include <std_complex.i>
-%include <std_vector.i>
-%include <stl.i>
 %include <std_except.i>
-
-typedef std::complex<float>		gr_complex;
-typedef std::complex<double>		gr_complexd;
-typedef unsigned long long              uint64_t;
-typedef long long                       int64_t;
-
-
-// instantiate the required template specializations
-
-namespace std {
-  %template()	  vector<unsigned char>;
-  %template()	  vector<char>;
-  %template()	  vector<short>;
-  %template()	  vector<int>;
-  %template()	  vector<float>;
-  %template()	  vector<double>;
-  // %template()	  std::complex<float>;
-
-  %template() 	  vector< std::complex<float> >;
-  %template()     vector< std::vector< unsigned char > >;
-  %template()     vector< std::vector< char > >;
-  %template()     vector< std::vector< short > >;
-  %template()     vector< std::vector< int > >;
-  %template()     vector< std::vector< float > >;
-  %template()     vector< std::vector< double > >;
-  %template()     vector< std::vector< std::complex<float> > >;
-};
 
 ////////////////////////////////////////////////////////////////////////
 

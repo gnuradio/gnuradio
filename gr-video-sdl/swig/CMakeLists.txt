@@ -26,7 +26,6 @@ include(GrSwig)
 set(GR_SWIG_INCLUDE_DIRS
     ${GR_VIDEO_SDL_INCLUDE_DIRS}
     ${GNURADIO_RUNTIME_SWIG_INCLUDE_DIRS}
-    ${GRUEL_INCLUDE_DIRS}
     ${Boost_INCLUDE_DIRS}
 )
 
@@ -40,7 +39,8 @@ endif(ENABLE_GR_CTRLPORT)
 # Setup swig docs to depend on includes and pull in from build directory
 set(GR_SWIG_TARGET_DEPS video_sdl_generated_includes)
 set(GR_SWIG_DOC_FILE ${CMAKE_CURRENT_BINARY_DIR}/video_sdl_swig_doc.i)
-set(GR_SWIG_DOC_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/../lib)
+set(GR_SWIG_DOC_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/../include/video_sdl)
+set(GR_SWIG_DOCS_TARGET_DEPS runtime_swig_swig_doc)
 
 set(GR_SWIG_LIBRARIES gnuradio-video-sdl)
 

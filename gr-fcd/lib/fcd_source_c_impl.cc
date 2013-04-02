@@ -27,7 +27,7 @@
 #include <fcdhidcmd.h> // needed for extended API
 #include <gr_io_signature.h>
 #include <blocks/float_to_complex.h>
-#include <gruel/attributes.h>
+#include <attributes.h>
 
 //#include <iostream>
 //using namespace std;

@@ -49,9 +49,6 @@
 ////////////////////////////////////////////////////////////////////////
 // used types
 ////////////////////////////////////////////////////////////////////////
-%template(string_vector_t) std::vector<std::string>;
-
-%template(size_vector_t) std::vector<size_t>;
 
 %include <uhd/config.hpp>
 
@@ -91,7 +88,6 @@
 ////////////////////////////////////////////////////////////////////////
 %include stdint.i
 %include <uhd/types/serial.hpp>
-%template(byte_vector_t) std::vector<uint8_t>;
 %include <uhd/usrp/dboard_iface.hpp>
 
 %template(dboard_iface_sptr) boost::shared_ptr<uhd::usrp::dboard_iface>;

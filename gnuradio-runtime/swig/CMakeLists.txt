@@ -24,7 +24,6 @@ include(GrPython)
 include(GrSwig)
 
 set(GR_SWIG_INCLUDE_DIRS
-    ${GRUEL_INCLUDE_DIRS}
     ${GNURADIO_RUNTIME_INCLUDE_DIRS}
     ${GNURADIO_RUNTIME_SWIG_INCLUDE_DIRS}
     ${CMAKE_CURRENT_BINARY_DIR}
@@ -38,6 +37,28 @@ set(GR_SWIG_LIBRARIES
     gnuradio-runtime
     ${LOG4CPP_LIBRARIES}
 )
+
+###############################################################
+#    Build pmt swig 
+###############################################################
+
+set(GR_SWIG_DOC_FILE ${CMAKE_CURRENT_BINARY_DIR}/pmt_swig_doc.i)
+set(GR_SWIG_DOC_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/../include/pmt 
+  ${CMAKE_CURRENT_BINARY_DIR}/../include/pmt)
+set(GR_SWIG_TARGET_DEPS pmt_generated)
+GR_SWIG_MAKE(pmt_swig pmt_swig.i)
+
+GR_SWIG_INSTALL(
+    TARGETS pmt_swig
+    DESTINATION ${GR_PYTHON_DIR}/pmt
+    COMPONENT "runtime_python"
+)
+
+add_custom_target(pmt_swig DEPENDS ${SWIG_MODULE_pmt_swig_REAL_NAME})
+
+###############################################################
+#    Build gnuradio-runtime swig 
+###############################################################
 
 # Only use if log4cpp is installed
 # Define ENABLE_GR_LOG for the .i file to ignore it.
@@ -53,7 +74,7 @@ if(ENABLE_GR_CTRLPORT)
 endif(ENABLE_GR_CTRLPORT)
 
 set(GR_SWIG_DOC_FILE ${CMAKE_CURRENT_BINARY_DIR}/runtime_swig_doc.i)
-set(GR_SWIG_DOC_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/../lib)
+set(GR_SWIG_DOC_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/../include)
 set(GR_RUNTIME_SWIG_DOC_FILE ${GR_SWIG_DOC_FILE})
 
 GR_SWIG_MAKE(runtime_swig runtime_swig.i)
@@ -74,6 +95,7 @@ install(
     gr_block.i
     gr_buffer.i
     gr_constants.i
+    gr_ctrlport.i
     gr_dispatcher.i
     gr_error_handler.i
     gr_feval.i
@@ -94,9 +116,14 @@ install(
     gr_tagged_stream_block.i
     gr_tags.i
     gr_top_block.i
+    gr_types.i
+    gr_extras.i
     runtime_block_gateway.i
     runtime_swig.i
+    gr_intrusive_ptr.i
+    pmt_swig.i
     ${CMAKE_CURRENT_BINARY_DIR}/runtime_swig_doc.i
+    ${CMAKE_CURRENT_BINARY_DIR}/pmt_swig_doc.i
     DESTINATION ${GR_INCLUDE_DIR}/gnuradio/swig
     COMPONENT "runtime_swig"
 )

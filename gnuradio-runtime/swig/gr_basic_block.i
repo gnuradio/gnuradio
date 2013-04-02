@@ -23,6 +23,7 @@
 class gr_basic_block;
 typedef boost::shared_ptr<gr_basic_block> gr_basic_block_sptr;
 %template(gr_basic_block_sptr) boost::shared_ptr<gr_basic_block>;
+
 %include "pmt_swig.i"
 using namespace pmt;
 

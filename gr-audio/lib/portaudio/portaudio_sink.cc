@@ -100,7 +100,7 @@ namespace gr {
 
       if(nreqd_samples <= navail_samples) {  // We've got enough data...
         {
-          gruel::scoped_lock guard(self->d_ringbuffer_mutex);
+          gr::thread::scoped_lock guard(self->d_ringbuffer_mutex);
 
           memcpy(outputBuffer,
                  self->d_reader->read_pointer(),
@@ -313,7 +313,7 @@ namespace gr {
         if(nframes == 0) {      // no room...
           if(d_ok_to_block) {
             {
-              gruel::scoped_lock guard(d_ringbuffer_mutex);
+              gr::thread::scoped_lock guard(d_ringbuffer_mutex);
               while(!d_ringbuffer_ready)
                 d_ringbuffer_cond.wait(guard);
             }
@@ -331,7 +331,7 @@ namespace gr {
 
         // We can write the smaller of the request and the room we've got
         {
-          gruel::scoped_lock guard(d_ringbuffer_mutex);
+          gr::thread::scoped_lock guard(d_ringbuffer_mutex);
 
           int nf = std::min(noutput_items - k, nframes);
           float *p = (float*)d_writer->write_pointer();

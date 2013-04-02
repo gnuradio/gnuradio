@@ -22,7 +22,7 @@
 #ifndef INCLUDED_BLOCKS_API_H
 #define INCLUDED_BLOCKS_API_H
 
-#include <gruel/attributes.h>
+#include <attributes.h>
 
 #ifdef gnuradio_blocks_EXPORTS
 #  define BLOCKS_API __GR_ATTR_EXPORT

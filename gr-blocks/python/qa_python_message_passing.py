@@ -21,8 +21,7 @@
 #
 
 from gnuradio import gr, gr_unittest
-try: import pmt
-except: from gruel import pmt
+import pmt
 import numpy
 import time
 import blocks_swig as blocks

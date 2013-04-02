@@ -309,7 +309,7 @@ into the metadata to keep track of later. The date in this case is
 encoded as a vector of uint16 with [day, month, year].
 
 \code
-  from gruel import pmt
+  import pmt
   from gnuradio import blocks
 
   key = pmt.intern("date")

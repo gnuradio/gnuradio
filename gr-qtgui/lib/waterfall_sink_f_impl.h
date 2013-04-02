@@ -26,8 +26,8 @@
 #include <qtgui/waterfall_sink_f.h>
 #include <filter/firdes.h>
 #include <fft/fft.h>
-#include <gruel/high_res_timer.h>
-#include <gruel/thread.h>
+#include <high_res_timer.h>
+#include <thread/thread.h>
 #include <qtgui/waterfalldisplayform.h>
 
 namespace gr {
@@ -60,8 +60,8 @@ namespace gr {
       QWidget *d_parent;
       WaterfallDisplayForm *d_main_gui;
 
-      gruel::high_res_timer_type d_update_time;
-      gruel::high_res_timer_type d_last_time;
+      gr::high_res_timer_type d_update_time;
+      gr::high_res_timer_type d_last_time;
 
       void windowreset();
       void buildwindow();

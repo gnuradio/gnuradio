@@ -580,48 +580,71 @@ EXCLUDE                = @abs_top_builddir@/docs/doxygen/html \
 		         @abs_top_builddir@/docs/doxygen/xml \
                          @abs_top_builddir@/docs/doxygen/other/doxypy.py \
                          @abs_top_builddir@/dtools \
-                         @abs_top_builddir@/gnuradio-core/src/lib/bug_work_around_6.cc \
-                         @abs_top_builddir@/gnuradio-core/src/lib/gengen/generate_all.py \
-                         @abs_top_builddir@/gnuradio-core/src/lib/gengen/generate_common.py \
-                         @abs_top_builddir@/gnuradio-core/src/lib/missing/bug_work_around_8.cc \
-                         @abs_top_builddir@/gnuradio-core/src/lib/missing/getopt.h \
-                         @abs_top_builddir@/gnuradio-core/src/lib/runtime/gr_error_handler.cc \
-                         @abs_top_builddir@/gnuradio-core/src/lib/swig \
-                         @abs_top_builddir@/gnuradio-core/src/python/bin \
-                         @abs_top_builddir@/gnuradio-core/src/python/build_utils.py \
-                         @abs_top_builddir@/gnuradio-core/src/python/build_utils_codes.py \
-                         @abs_top_builddir@/gnuradio-core/src/python/gnuradio/gr/gr_threading.py \
-                         @abs_top_builddir@/gnuradio-core/src/python/gnuradio/gr/gr_threading_23.py \
-                         @abs_top_builddir@/gnuradio-core/src/python/gnuradio/gr/gr_threading_24.py \
-                         @abs_top_builddir@/gnuradio-core/src/tests \
-                         @abs_top_builddir@/gnuradio-core/src/utils \
-                         @abs_top_builddir@/gnuradio-examples/python/apps/hf_radio/output.py \
-                         @abs_top_builddir@/gnuradio-examples/python/apps/hf_radio/ui.py \
-                         @abs_top_builddir@/gr-atsc/src/lib/atsc.cc \
-                         @abs_top_builddir@/gr-atsc/src/lib/atsc.py \
-                         @abs_top_builddir@/gr-atsc/src/lib/gen_encoder.py \
-                         @abs_top_builddir@/gr-atsc/src/python \
-                         @abs_top_builddir@/gr-atsc/src/python \
-                         @abs_top_builddir@/gr-audio-alsa/src/audio-alsa.py \
-                         @abs_top_builddir@/gr-audio-oss/src/audio_oss.py \
-                         @abs_top_builddir@/gr-audio-osx/src/test_audio_loop.py \
-                         @abs_top_builddir@/gr-gsm-fr-vocoder/src/lib/gsm \
-                         @abs_top_builddir@/gr-gsm-fr-vocoder/src/lib/gsm_full_rate.py \
-                         @abs_top_builddir@/gr-gsm-fr-vocoder/src/python/encdec.py \
-                         @abs_top_builddir@/gr-howto-write-a-block \
-                         @abs_top_builddir@/gr-pager/src/pager_swig.py \
+                         @abs_top_builddir@/gnuradio-runtime/lib/runtime/gr_error_handler.cc \
+                         @abs_top_builddir@/gnuradio-runtime/swig \
+                         @abs_top_builddir@/gnuradio-runtime/python/build_utils.py \
+                         @abs_top_builddir@/gnuradio-runtime/python/build_utils_codes.py \
+                         @abs_top_builddir@/gnuradio-runtime/python/gnuradio/gr/gr_threading.py \
+                         @abs_top_builddir@/gnuradio-runtime/python/gnuradio/gr/gr_threading_23.py \
+                         @abs_top_builddir@/gnuradio-runtime/python/gnuradio/gr/gr_threading_24.py \
+                         @abs_top_builddir@/gr-atsc/swig/atsc_swig.py \
+                         @abs_top_builddir@/gr-atsc/lib/gen_encoder.py \
+                         @abs_top_builddir@/gr-atsc/python \
+                         @abs_top_builddir@/gr-pager/swig/pager_swig.py \
                          @abs_top_builddir@/gr-trellis/doc \
-                         @abs_top_builddir@/gr-trellis/src/lib/generate_all.py \
-                         @abs_top_builddir@/gr-trellis/src/lib/generate_trellis.py \
-                         @abs_top_builddir@/gr-trellis/src/lib/trellis.py \
-                         @abs_top_builddir@/gr-video-sdl/src/video_sdl.py \
-                         @abs_top_builddir@/gr-wxgui/src/python \
+                         @abs_top_builddir@/gr-trellis/swig/trellis_swig.py \
+                         @abs_top_builddir@/gr-video-sdl/swig/video_sdl_swig.py \
+                         @abs_top_builddir@/gr-wxgui/python \
                          @abs_top_builddir@/grc \
 			 @abs_top_builddir@/_CPack_Packages \
                          @abs_top_srcdir@/cmake \
-			 @abs_top_srcdir@/gr-qtgui/lib \
-                         @abs_top_srcdir@/gr-howto-write-a-block \
-                         @abs_top_srcdir@/gr-utils/python/modtool/gr-newmod
+                         @abs_top_srcdir@/gr-utils/python/modtool/gr-newmod \
+                         @abs_top_srcdir@/docs/doxygen/doxyxml/example \
+                         @abs_top_srcdir@/docs/sphinx \
+                         @abs_top_srcdir@/gnuradio-runtime/lib \
+                         @abs_top_builddir@/gnuradio-runtime/lib \
+                         @abs_top_srcdir@/gr-analog/lib \
+                         @abs_top_builddir@/gr-analog/lib \
+                         @abs_top_srcdir@/gr-atsc/lib \
+                         @abs_top_builddir@/gr-atsc/lib \
+                         @abs_top_srcdir@/gr-audio/lib \
+                         @abs_top_builddir@/gr-audio/lib \
+                         @abs_top_srcdir@/gr-blocks/lib \
+                         @abs_top_builddir@/gr-blocks/lib \
+                         @abs_top_srcdir@/gr-channels/lib \
+                         @abs_top_builddir@/gr-channels/lib \
+                         @abs_top_srcdir@/gr-comedi/lib \
+                         @abs_top_builddir@/gr-comedi/lib \
+                         @abs_top_srcdir@/gr-digital/lib \
+                         @abs_top_builddir@/gr-digital/lib \
+                         @abs_top_srcdir@/gr-fcd/lib \
+                         @abs_top_builddir@/gr-fcd/lib \
+                         @abs_top_srcdir@/gr-fec/lib \
+                         @abs_top_builddir@/gr-fec/lib \
+                         @abs_top_srcdir@/gr-filter/lib \
+                         @abs_top_builddir@/gr-filter/lib \
+                         @abs_top_srcdir@/gr-noaa/lib \
+                         @abs_top_builddir@/gr-noaa/lib \
+                         @abs_top_srcdir@/gr-pager/lib \
+                         @abs_top_builddir@/gr-pager/lib \
+                         @abs_top_srcdir@/gr-qtgui/lib \
+                         @abs_top_builddir@/gr-qtgui/lib \
+                         @abs_top_srcdir@/gr-shd/lib \
+                         @abs_top_builddir@/gr-shd/lib \
+                         @abs_top_srcdir@/gr-trellis/lib \
+                         @abs_top_builddir@/gr-trellis/lib \
+                         @abs_top_srcdir@/gr-uhd/lib \
+                         @abs_top_builddir@/gr-uhd/lib \
+                         @abs_top_srcdir@/gr-utils/lib \
+                         @abs_top_builddir@/gr-utils/lib \
+                         @abs_top_srcdir@/gr-video-sdl/lib \
+                         @abs_top_builddir@/gr-video-sdl/lib \
+                         @abs_top_srcdir@/gr-vocoder/lib \
+                         @abs_top_builddir@/gr-vocoder/lib \
+                         @abs_top_srcdir@/gr-wavelet/lib \
+                         @abs_top_builddir@/gr-wavelet/lib \
+                         @abs_top_srcdir@/gr-wxgui/lib \
+                         @abs_top_builddir@/gr-wxgui/lib
 
 # The EXCLUDE_SYMLINKS tag can be used select whether or not files or
 # directories that are symbolic links (a Unix filesystem feature) are excluded
@@ -1254,7 +1277,7 @@ SEARCH_INCLUDES        = YES
 # contain include files that are not input files but should be processed by
 # the preprocessor.
 
-INCLUDE_PATH           = @abs_top_builddir@/gruel/src/lib/pmt/
+INCLUDE_PATH           = @abs_top_builddir@/gnuradio-runtime/lib/pmt/
 
 # You can use the INCLUDE_FILE_PATTERNS tag to specify one or more wildcard
 # patterns (like *.h and *.hpp) to filter out the header-files in the

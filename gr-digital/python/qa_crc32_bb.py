@@ -22,8 +22,7 @@
 from gnuradio import gr, gr_unittest
 import blocks_swig as blocks
 import digital_swig as digital
-try: import pmt
-except: from gruel import pmt
+import pmt
 
 class qa_crc32_bb (gr_unittest.TestCase):
 

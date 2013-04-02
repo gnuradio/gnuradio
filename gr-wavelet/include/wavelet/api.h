@@ -22,7 +22,7 @@
 #ifndef INCLUDED_WAVELET_API_H
 #define INCLUDED_WAVELET_API_H
 
-#include <gruel/attributes.h>
+#include <attributes.h>
 
 #ifdef gnuradio_wavelet_EXPORTS
 #  define WAVELET_API __GR_ATTR_EXPORT

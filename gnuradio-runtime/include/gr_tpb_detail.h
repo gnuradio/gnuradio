@@ -22,9 +22,9 @@
 #define INCLUDED_GR_TPB_DETAIL_H
 
 #include <gr_runtime_api.h>
-#include <gruel/thread.h>
+#include <thread/thread.h>
 #include <deque>
-#include <gruel/pmt.h>
+#include <pmt/pmt.h>
 
 class gr_block_detail;
 
@@ -33,11 +33,11 @@ class gr_block_detail;
  */
 struct GR_RUNTIME_API gr_tpb_detail {
 
-  gruel::mutex			mutex;			//< protects all vars
+  gr::thread::mutex			mutex;			//< protects all vars
   bool				input_changed;
-  gruel::condition_variable	input_cond;
+  gr::thread::condition_variable	input_cond;
   bool				output_changed;
-  gruel::condition_variable	output_cond;
+  gr::thread::condition_variable	output_cond;
 
 public:
   gr_tpb_detail()
@@ -61,7 +61,7 @@ public:
   //! Called by us
   void clear_changed()
   {
-    gruel::scoped_lock guard(mutex);
+    gr::thread::scoped_lock guard(mutex);
     input_changed = false;
     output_changed = false;
   }
@@ -71,7 +71,7 @@ private:
   //! Used by notify_downstream
   void set_input_changed()
   {
-    gruel::scoped_lock guard(mutex);
+    gr::thread::scoped_lock guard(mutex);
     input_changed = true;
     input_cond.notify_one();
   }
@@ -79,7 +79,7 @@ private:
   //! Used by notify_upstream
   void set_output_changed()
   {
-    gruel::scoped_lock guard(mutex);
+    gr::thread::scoped_lock guard(mutex);
     output_changed = true;
     output_cond.notify_one();
   }

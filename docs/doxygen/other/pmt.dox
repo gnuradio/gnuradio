@@ -173,7 +173,7 @@ reference to the old dictionary. This just keeps our number of
 variables small.
 
 \code
-from gruel import pmt
+import pmt
 
 key0 = pmt.intern("int")
 val0 = pmt.from_long(123)
@@ -303,7 +303,7 @@ ready to be written to a file and then deserialize it back to its
 original PMT.
 
 \code
-from gruel import pmt
+import pmt
 
 key0 = pmt.intern("int")
 val0 = pmt.from_long(123)

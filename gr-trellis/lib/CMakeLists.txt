@@ -25,7 +25,6 @@ include_directories(
     ${GR_TRELLIS_INCLUDE_DIRS}
     ${GR_DIGITAL_INCLUDE_DIRS}
     ${GNURADIO_RUNTIME_INCLUDE_DIRS}
-    ${GRUEL_INCLUDE_DIRS}
     ${LOG4CXX_INCLUDE_DIRS}
     ${Boost_INCLUDE_DIRS}
 )
@@ -134,6 +133,20 @@ list(APPEND trellis_libs
     gnuradio-digital
     ${Boost_LIBRARIES}
 )
+
+#Add Windows DLL resource file if using MSVC
+IF(MSVC)
+    include(${CMAKE_SOURCE_DIR}/cmake/Modules/GrVersion.cmake)
+
+    configure_file(
+        ${CMAKE_CURRENT_SOURCE_DIR}/gnuradio-trellis.rc.in
+        ${CMAKE_CURRENT_BINARY_DIR}/gnuradio-trellis.rc
+    @ONLY)
+
+    list(APPEND trellis_sources
+        ${CMAKE_CURRENT_BINARY_DIR}/gnuradio-trellis.rc
+    )
+ENDIF(MSVC)
 
 add_library(gnuradio-trellis SHARED ${trellis_sources})
 target_link_libraries(gnuradio-trellis ${trellis_libs})

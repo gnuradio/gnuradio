@@ -24,7 +24,7 @@
 
 #include <gr_runtime_api.h>
 #include <gr_complex.h>
-#include <gruel/pmt.h>
+#include <pmt/pmt.h>
 
 /*!
  * \brief base class for evaluating a function: double -> double

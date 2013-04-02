@@ -28,7 +28,7 @@
 #include <QString>
 #include <complex>
 #include <vector>
-#include <gruel/high_res_timer.h>
+#include <high_res_timer.h>
 
 static const int SpectrumUpdateEventType = 10005;
 static const int SpectrumWindowCaptionEventType = 10008;
@@ -43,10 +43,10 @@ public:
 		      const double* realTimeDomainPoints,
 		      const double* imagTimeDomainPoints,
 		      const uint64_t numTimeDomainDataPoints,
-		      const gruel::high_res_timer_type dataTimestamp,
+		      const gr::high_res_timer_type dataTimestamp,
 		      const bool repeatDataFlag,
 		      const bool lastOfMultipleUpdateFlag,
-		      const gruel::high_res_timer_type generatedTimestamp,
+		      const gr::high_res_timer_type generatedTimestamp,
 		      const int droppedFFTFrames);
 
   ~SpectrumUpdateEvent();
@@ -56,10 +56,10 @@ public:
   const double* getImagTimeDomainPoints() const;
   uint64_t getNumFFTDataPoints() const;
   uint64_t getNumTimeDomainDataPoints() const;
-  gruel::high_res_timer_type getDataTimestamp() const;
+  gr::high_res_timer_type getDataTimestamp() const;
   bool getRepeatDataFlag() const;
   bool getLastOfMultipleUpdateFlag() const;
-  gruel::high_res_timer_type getEventGeneratedTimestamp() const;
+  gr::high_res_timer_type getEventGeneratedTimestamp() const;
   int getDroppedFFTFrames() const;
 
 protected:
@@ -70,10 +70,10 @@ private:
   double* _imagDataTimeDomainPoints;
   uint64_t _numFFTDataPoints;
   uint64_t _numTimeDomainDataPoints;
-  gruel::high_res_timer_type _dataTimestamp;
+  gr::high_res_timer_type _dataTimestamp;
   bool _repeatDataFlag;
   bool _lastOfMultipleUpdateFlag;
-  gruel::high_res_timer_type _eventGeneratedTimestamp;
+  gr::high_res_timer_type _eventGeneratedTimestamp;
   int _droppedFFTFrames;
 };
 
@@ -209,7 +209,7 @@ class WaterfallUpdateEvent: public QEvent
 public:
   WaterfallUpdateEvent(const std::vector<double*> dataPoints,
 		       const uint64_t numDataPoints,
-		       const gruel::high_res_timer_type dataTimestamp);
+		       const gr::high_res_timer_type dataTimestamp);
 
   ~WaterfallUpdateEvent();
 
@@ -218,7 +218,7 @@ public:
   uint64_t getNumDataPoints() const;
   bool getRepeatDataFlag() const;
 
-  gruel::high_res_timer_type getDataTimestamp() const;
+  gr::high_res_timer_type getDataTimestamp() const;
 
   static QEvent::Type Type()
   { return QEvent::Type(SpectrumUpdateEventType); }
@@ -230,7 +230,7 @@ private:
   std::vector<double*> _dataPoints;
   uint64_t _numDataPoints;
 
-  gruel::high_res_timer_type _dataTimestamp;
+  gr::high_res_timer_type _dataTimestamp;
 };
 
 

@@ -26,7 +26,7 @@
 #include <gr_runtime_api.h>
 #include <string>
 #include <map>
-#include <gruel/thread.h>
+#include <thread/thread.h>
 
 typedef std::map< std::string, std::map<std::string, std::string> > gr_config_map_t;
 typedef std::map< std::string, std::map<std::string, std::string> >::iterator gr_config_map_itr;
@@ -135,7 +135,7 @@ public:
   virtual char * option_to_env(std::string section, std::string option);
 
  private:
-  gruel::mutex d_mutex;
+  gr::thread::mutex d_mutex;
   gr_config_map_t d_config_map;
 };
 

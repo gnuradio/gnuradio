@@ -185,7 +185,7 @@ gr_buffer::write_pointer ()
 void
 gr_buffer::update_write_pointer (int nitems)
 {
-  gruel::scoped_lock guard(*mutex());
+  gr::thread::scoped_lock guard(*mutex());
   d_write_index = index_add (d_write_index, nitems);
   d_abs_write_offset += nitems;
 }
@@ -193,7 +193,7 @@ gr_buffer::update_write_pointer (int nitems)
 void
 gr_buffer::set_done (bool done)
 {
-  gruel::scoped_lock guard(*mutex());
+  gr::thread::scoped_lock guard(*mutex());
   d_done = done;
 }
 
@@ -229,14 +229,14 @@ gr_buffer::drop_reader (gr_buffer_reader *reader)
 void
 gr_buffer::add_item_tag(const gr_tag_t &tag)
 {
-  gruel::scoped_lock guard(*mutex());
+  gr::thread::scoped_lock guard(*mutex());
   d_item_tags.push_back(tag);
 }
 
 void
 gr_buffer::remove_item_tag(const gr_tag_t &tag)
 {
-  gruel::scoped_lock guard(*mutex());
+  gr::thread::scoped_lock guard(*mutex());
   for (std::deque<gr_tag_t>::iterator it = d_item_tags.begin(); it != d_item_tags.end(); ++it) {
     if (*it == tag) {
       d_item_tags.erase(it);
@@ -256,7 +256,7 @@ gr_buffer::prune_tags(uint64_t max_time)
      If this function is used elsewhere, remember to lock the
      buffer's mutex al la the scoped_lock line below.
   */
-  //gruel::scoped_lock guard(*mutex());
+  //gr::thread::scoped_lock guard(*mutex());
   std::deque<gr_tag_t>::iterator itr = d_item_tags.begin();
 
   uint64_t item_time;
@@ -313,7 +313,7 @@ gr_buffer_reader::read_pointer ()
 void
 gr_buffer_reader::update_read_pointer (int nitems)
 {
-  gruel::scoped_lock guard(*mutex());
+  gr::thread::scoped_lock guard(*mutex());
   d_read_index = d_buffer->index_add (d_read_index, nitems);
   d_abs_read_offset += nitems;
 }
@@ -323,7 +323,7 @@ gr_buffer_reader::get_tags_in_range(std::vector<gr_tag_t> &v,
 				    uint64_t abs_start,
 				    uint64_t abs_end)
 {
-  gruel::scoped_lock guard(*mutex());
+  gr::thread::scoped_lock guard(*mutex());
 
   v.resize(0);
   std::deque<gr_tag_t>::iterator itr = d_buffer->get_tags_begin();
