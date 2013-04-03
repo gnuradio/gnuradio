@@ -77,6 +77,10 @@ digital_constellation::digital_constellation () :
   calc_arity();
 }
 
+digital_constellation::~digital_constellation()
+{
+}
+
 //! Returns the constellation points for a symbol value
 void
 digital_constellation::map_to_points(unsigned int value, gr_complex *points)
