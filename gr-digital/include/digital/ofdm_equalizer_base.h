@@ -45,7 +45,7 @@ namespace gr {
       typedef boost::shared_ptr<ofdm_equalizer_base> sptr;
 
       ofdm_equalizer_base(int fft_len);
-      ~ofdm_equalizer_base();
+      virtual ~ofdm_equalizer_base();
 
       //! Reset the channel information state knowledge
       virtual void reset() = 0;

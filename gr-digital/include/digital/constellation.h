@@ -65,7 +65,7 @@ namespace gr {
 		    unsigned int rotational_symmetry,
 		    unsigned int dimensionality);
       constellation();
-      ~constellation();
+      virtual ~constellation();
 
       //! Returns the constellation points for a symbol value
       void map_to_points(unsigned int value, gr_complex *points);
