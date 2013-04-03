@@ -63,6 +63,8 @@ public:
 			 unsigned int dimensionality);
   digital_constellation ();
 
+  virtual ~digital_constellation();
+
   //! Returns the constellation points for a symbol value
   void map_to_points(unsigned int value, gr_complex *points);
   std::vector<gr_complex> map_to_points_v(unsigned int value);
