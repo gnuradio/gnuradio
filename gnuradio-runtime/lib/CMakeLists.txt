@@ -189,6 +189,23 @@ list(APPEND gnuradio_runtime_libs
 endif(ENABLE_GR_CTRLPORT)
 
 ########################################################################
+# Add DLL resource file when using MSVC
+########################################################################
+
+if(MSVC)
+    include(${CMAKE_SOURCE_DIR}/cmake/Modules/GrVersion.cmake)
+
+    configure_file(
+        ${CMAKE_CURRENT_SOURCE_DIR}/gnuradio-runtime.rc.in
+        ${CMAKE_CURRENT_BINARY_DIR}/gnuradio-runtime.rc
+    @ONLY)
+
+    list(APPEND gnuradio_runtime_sources
+        ${CMAKE_CURRENT_BINARY_DIR}/gnuradio-runtime.rc
+    )
+endif(MSVC)
+
+########################################################################
 # Control availability of vmcircbuf methods.
 # For now, only allows disabling of shm methods, which cause uncatchable
 #    segmentation faults on Cygwin with gcc 4.x (x <= 5)
