@@ -278,7 +278,8 @@ class DoxyOther(Base):
     
     __module__ = "gnuradio.utils.doxyxml"
 
-    kinds = set(['variable', 'struct', 'union', 'define', 'typedef', 'enum', 'dir', 'page'])
+    kinds = set(['variable', 'struct', 'union', 'define', 'typedef', 'enum',
+                 'dir', 'page', 'signal', 'slot', 'property'])
 
     @classmethod
     def can_parse(cls, obj):
