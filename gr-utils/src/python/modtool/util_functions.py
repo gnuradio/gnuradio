@@ -92,7 +92,7 @@ def get_modname():
         pass
     # OK, there's no gnuradio.project. So, we need to guess.
     cmfile = open('CMakeLists.txt', 'r').read()
-    regexp = r'(project\s*\(\s*|GR_REGISTER_COMPONENT\(")gr-(?P<modname>[a-zA-Z1-9-_]+)(\s*(CXX)?|" ENABLE)'
+    regexp = r'(project\s*\(\s*|GR_REGISTER_COMPONENT\(")gr-(?P<modname>[a-zA-Z0-9-_]+)(\s*(CXX)?|" ENABLE)'
     try:
         modname = re.search(regexp, cmfile, flags=re.MULTILINE).group('modname').strip()
         if modname in modname_trans.keys():
