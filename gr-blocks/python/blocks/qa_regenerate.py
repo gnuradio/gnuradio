@@ -42,9 +42,9 @@ class test_regenerate(gr_unittest.TestCase):
                            1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
 
 
-        src = gr.vector_source_b(data, False)
+        src = blocks.vector_source_b(data, False)
         regen = blocks.regenerate_bb(5, 2)
-        dst = gr.vector_sink_b()
+        dst = blocks.vector_sink_b()
 
         tb.connect(src, regen)
         tb.connect(regen, dst)
@@ -72,9 +72,9 @@ class test_regenerate(gr_unittest.TestCase):
         expected_result[119]  = 1
         expected_result[129]  = 1
 
-        src = gr.vector_source_b(data, False)
+        src = blocks.vector_source_b(data, False)
         regen = blocks.regenerate_bb(10, 3)
-        dst = gr.vector_sink_b()
+        dst = blocks.vector_sink_b()
 
         tb.connect(src, regen)
         tb.connect(regen, dst)

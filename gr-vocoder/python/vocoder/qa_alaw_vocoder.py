@@ -20,7 +20,7 @@
 # Boston, MA 02110-1301, USA.
 #
 
-from gnuradio import gr, gr_unittest, vocoder
+from gnuradio import gr, gr_unittest, vocoder, blocks
 
 class test_alaw_vocoder (gr_unittest.TestCase):
 
@@ -33,10 +33,10 @@ class test_alaw_vocoder (gr_unittest.TestCase):
     def test001_module_load (self):
         data = (8,24,40,56,72,88,104,120,136,152,168,184,
                 200,216,232,248,264,280,296,312,328,344)
-        src = gr.vector_source_s(data)
+        src = blocks.vector_source_s(data)
         enc = vocoder.alaw_encode_sb()
         dec = vocoder.alaw_decode_bs()
-        snk = gr.vector_sink_s()
+        snk = blocks.vector_sink_s()
         self.tb.connect(src, enc, dec, snk)
         self.tb.run()
         actual_result = snk.data()

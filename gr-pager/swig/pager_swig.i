@@ -21,7 +21,7 @@
 
 #define PAGER_API
 
-%include "gnuradio.i"
+%include "runtime_swig.i"
 
 //load generated python docstrings
 %include "pager_swig_doc.i"

@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2003-2008,2012 Free Software Foundation, Inc.
+# Copyright 2003-2005,2007,2008,2013 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -74,6 +74,9 @@ class waterfall_sink_base(object):
     def _set_n(self):
         self.one_in_n.set_n(max(1, int(self.sample_rate/self.fft_size/self.fft_rate)))
 
+    def set_callback(self, callb):
+        return
+
 class waterfall_sink_f(gr.hier_block2, waterfall_sink_base):
     def __init__(self, parent, baseband_freq=0,
                  y_per_div=10, ref_level=50, sample_rate=1, fft_size=512,
@@ -89,7 +92,7 @@ class waterfall_sink_f(gr.hier_block2, waterfall_sink_base):
                                fft_rate=fft_rate,
                                average=average, avg_alpha=avg_alpha, title=title)
 
-        self.s2p = gr.serial_to_parallel(gr.sizeof_float, self.fft_size)
+        self.s2p = blocks.stream_to_vector(gr.sizeof_float, self.fft_size)
         self.one_in_n = blocks.keep_one_in_n(gr.sizeof_float * self.fft_size,
                                              max(1, int(self.sample_rate/self.fft_size/self.fft_rate)))
 
@@ -120,7 +123,7 @@ class waterfall_sink_c(gr.hier_block2, waterfall_sink_base):
                                      fft_rate=fft_rate,
                                      average=average, avg_alpha=avg_alpha, title=title)
 
-        self.s2p = gr.serial_to_parallel(gr.sizeof_gr_complex, self.fft_size)
+        self.s2p = blocks.stream_to_vector(gr.sizeof_gr_complex, self.fft_size)
         self.one_in_n = blocks.keep_one_in_n(gr.sizeof_gr_complex * self.fft_size,
                                              max(1, int(self.sample_rate/self.fft_size/self.fft_rate)))
 

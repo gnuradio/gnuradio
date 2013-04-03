@@ -40,13 +40,13 @@ class test_stretch(gr_unittest.TestCase):
         expected_result0 = 10*[0.05,]
         expected_result1 = 10*[0.1,]
 
-        src0 = gr.vector_source_f(data0, False)
-        src1 = gr.vector_source_f(data1, False)
+        src0 = blocks.vector_source_f(data0, False)
+        src1 = blocks.vector_source_f(data1, False)
         inter = blocks.streams_to_vector(gr.sizeof_float, 2)
         op = blocks.stretch_ff(0.1, 2)
         deinter = blocks.vector_to_streams(gr.sizeof_float, 2)
-        dst0 = gr.vector_sink_f()
-        dst1 = gr.vector_sink_f()
+        dst0 = blocks.vector_sink_f()
+        dst1 = blocks.vector_sink_f()
         
         tb.connect(src0, (inter,0))
         tb.connect(src1, (inter,1))

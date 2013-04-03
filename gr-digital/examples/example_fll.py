@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2011,2012 Free Software Foundation, Inc.
+# Copyright 2011-2013 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -21,6 +21,8 @@
 # 
 
 from gnuradio import gr, digital, filter
+from gnuradio import blocks
+from gnuradio import channels
 from gnuradio import eng_notation
 from gnuradio.eng_option import eng_option
 from optparse import OptionParser
@@ -47,16 +49,16 @@ class example_fll(gr.top_block):
         data = 2.0*scipy.random.randint(0, 2, N) - 1.0
         data = scipy.exp(1j*poffset) * data
 
-        self.src = gr.vector_source_c(data.tolist(), False)
+        self.src = blocks.vector_source_c(data.tolist(), False)
         self.rrc = filter.interp_fir_filter_ccf(sps, rrc_taps)
-        self.chn = filter.channel_model(noise, foffset, toffset)
+        self.chn = channels.channel_model(noise, foffset, toffset)
         self.fll = digital.fll_band_edge_cc(sps, rolloff, ntaps, bw)
 
-        self.vsnk_src = gr.vector_sink_c()
-        self.vsnk_fll = gr.vector_sink_c()
-        self.vsnk_frq = gr.vector_sink_f()
-        self.vsnk_phs = gr.vector_sink_f()
-        self.vsnk_err = gr.vector_sink_f()
+        self.vsnk_src = blocks.vector_sink_c()
+        self.vsnk_fll = blocks.vector_sink_c()
+        self.vsnk_frq = blocks.vector_sink_f()
+        self.vsnk_phs = blocks.vector_sink_f()
+        self.vsnk_err = blocks.vector_sink_f()
 
         self.connect(self.src, self.rrc, self.chn, self.fll, self.vsnk_fll)
         self.connect(self.rrc, self.vsnk_src)

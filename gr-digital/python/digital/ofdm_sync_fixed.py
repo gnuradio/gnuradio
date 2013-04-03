@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2007 Free Software Foundation, Inc.
+# Copyright 2007,2013 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -22,6 +22,7 @@
 
 import math
 from gnuradio import gr
+from gnuradio import blocks
 
 class ofdm_sync_fixed(gr.hier_block2):
     def __init__(self, fft_length, cp_length, nsymbols, freq_offset, logging=False):
@@ -35,16 +36,16 @@ class ofdm_sync_fixed(gr.hier_block2):
         pkt_length = nsymbols*symbol_length
         data = (pkt_length)*[0,]
         data[(symbol_length)-1] = 1
-        self.peak_trigger = gr.vector_source_b(data, True)
+        self.peak_trigger = blocks.vector_source_b(data, True)
 
         # Use a pre-defined frequency offset
         foffset = (pkt_length)*[math.pi*freq_offset,]
-        self.frequency_offset = gr.vector_source_f(foffset, True)
+        self.frequency_offset = blocks.vector_source_f(foffset, True)
 
-        self.connect(self, gr.null_sink(gr.sizeof_gr_complex))
+        self.connect(self, blocks.null_sink(gr.sizeof_gr_complex))
         self.connect(self.frequency_offset, (self,0))
         self.connect(self.peak_trigger, (self,1))
 
         if logging:
-            self.connect(self.peak_trigger, gr.file_sink(gr.sizeof_char, "ofdm_sync_fixed-peaks_b.dat"))
+            self.connect(self.peak_trigger, blocks.file_sink(gr.sizeof_char, "ofdm_sync_fixed-peaks_b.dat"))
 

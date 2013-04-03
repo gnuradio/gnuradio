@@ -23,7 +23,7 @@
 #include <cmath>
 #include <QColorDialog>
 #include <QMessageBox>
-#include <timerasterdisplayform.h>
+#include <qtgui/timerasterdisplayform.h>
 #include <iostream>
 
 TimeRasterDisplayForm::TimeRasterDisplayForm(int nplots,

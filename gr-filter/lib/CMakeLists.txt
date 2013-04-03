@@ -26,7 +26,7 @@ file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/generate_helper.py "
 #!${PYTHON_EXECUTABLE}
 
 import sys, os, re
-sys.path.append('${GR_CORE_PYTHONPATH}')
+sys.path.append('${GR_RUNTIME_PYTHONPATH}')
 os.environ['srcdir'] = '${CMAKE_CURRENT_SOURCE_DIR}'
 os.chdir('${CMAKE_CURRENT_BINARY_DIR}')
 
@@ -94,16 +94,16 @@ include_directories(
     ${CMAKE_CURRENT_BINARY_DIR}
     ${GR_FILTER_INCLUDE_DIRS}
     ${GR_FFT_INCLUDE_DIRS}
-    ${GNURADIO_CORE_INCLUDE_DIRS}
+    ${GR_BLOCKS_INCLUDE_DIRS}
+    ${GNURADIO_RUNTIME_INCLUDE_DIRS}
     ${VOLK_INCLUDE_DIRS}
-    ${GRUEL_INCLUDE_DIRS}
-    ${LOG4CXX_INCLUDE_DIRS}
+    ${LOG4CPP_INCLUDE_DIRS}
     ${Boost_INCLUDE_DIRS}
 )
 
 link_directories(
   ${Boost_LIBRARY_DIRS}
-  ${LOG4CXX_LIBRARIES}
+  ${LOG4CPP_LIBRARIES}
 )
 
 if(ENABLE_GR_CTRLPORT)
@@ -161,8 +161,9 @@ if(MSVC)
 endif(MSVC)
 
 list(APPEND filter_libs
-    gnuradio-core
+    gnuradio-runtime
     gnuradio-fft
+    gnuradio-blocks
     volk
     ${Boost_LIBRARIES}
 )
@@ -173,7 +174,7 @@ target_link_libraries(gnuradio-filter ${filter_libs})
 GR_LIBRARY_FOO(gnuradio-filter RUNTIME_COMPONENT "filter_runtime" DEVEL_COMPONENT "filter_devel")
 add_dependencies(gnuradio-filter
   filter_generated_includes filter_generated_swigs
-  gnuradio-core gnuradio-fft)
+  gnuradio-runtime gnuradio-fft)
 
 ########################################################################
 # QA C++ Code for gr-filter
@@ -199,7 +200,7 @@ if(ENABLE_TESTING)
 
   target_link_libraries(
     test-gr-filter
-    gnuradio-core
+    gnuradio-runtime
     gnuradio-filter
     ${Boost_LIBRARIES}
     ${CPPUNIT_LIBRARIES}

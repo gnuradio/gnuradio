@@ -22,7 +22,7 @@
 #ifndef INCLUDED_FFT_API_H
 #define INCLUDED_FFT_API_H
 
-#include <gruel/attributes.h>
+#include <attributes.h>
 
 #ifdef gnuradio_fft_EXPORTS
 #  define FFT_API __GR_ATTR_EXPORT

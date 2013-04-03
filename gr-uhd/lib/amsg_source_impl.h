@@ -21,7 +21,7 @@
  */
 
 #include <uhd/amsg_source.h>
-#include <gruel/thread.h>
+#include <thread/thread.h>
 
 namespace gr {
   namespace uhd {
@@ -38,7 +38,7 @@ namespace gr {
 
     protected:
       ::uhd::usrp::multi_usrp::sptr _dev;
-      gruel::thread _amsg_thread;
+      gr::thread::thread _amsg_thread;
       gr_msg_queue_sptr _msgq;
       bool _running;
     };

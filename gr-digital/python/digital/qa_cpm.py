@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2010 Free Software Foundation, Inc.
+# Copyright 2010,2013 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -36,10 +36,10 @@ class test_cpm(gr_unittest.TestCase):
         sps = 2
         L = 1
         in_bits = (1,) * 20
-        src = gr.vector_source_b(in_bits, False)
+        src = blocks.vector_source_b(in_bits, False)
         cpm = digital.cpmmod_bc(type, 0.5, sps, L)
         arg = blocks.complex_to_arg()
-        sink = gr.vector_sink_f()
+        sink = blocks.vector_sink_f()
 
         self.tb.connect(src, cpm, arg, sink)
         self.tb.run()
@@ -67,10 +67,10 @@ class test_cpm(gr_unittest.TestCase):
         L = 5
         bt = 0.3
         in_bits = (1,) * 20
-        src = gr.vector_source_b(in_bits, False)
+        src = blocks.vector_source_b(in_bits, False)
         gmsk = digital.gmskmod_bc(sps, L, bt)
         arg = blocks.complex_to_arg()
-        sink = gr.vector_sink_f()
+        sink = blocks.vector_sink_f()
 
         self.tb.connect(src, gmsk, arg, sink)
         self.tb.run()

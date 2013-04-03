@@ -36,7 +36,6 @@ Signal Processing Blocks
    gnuradio.digital.scrambler_bb
    gnuradio.digital.pn_correlator_cc
    gnuradio.digital.simple_framer
-   gnuradio.digital.bytes_to_syms
    gnuradio.digital.chunks_to_symbols_bc
    gnuradio.digital.chunks_to_symbols_bf
    gnuradio.digital.chunks_to_symbols_ic

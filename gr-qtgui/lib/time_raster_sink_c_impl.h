@@ -26,9 +26,9 @@
 #include <qtgui/time_raster_sink_c.h>
 #include <filter/firdes.h>
 #include <fft/fft.h>
-#include <gruel/high_res_timer.h>
-#include <gruel/thread.h>
-#include <time_rasterdisplayform.h>
+#include <high_res_timer.h>
+#include <thread/thread.h>
+#include <qtgui/time_rasterdisplayform.h>
 
 namespace gr {
   namespace qtgui {
@@ -52,8 +52,8 @@ namespace gr {
 
       unsigned int d_rows, d_cols;
 
-      gruel::high_res_timer_type d_update_time;
-      gruel::high_res_timer_type d_last_time;
+      gr::high_res_timer_type d_update_time;
+      gr::high_res_timer_type d_last_time;
 
     public:
       time_raster_sink_c_impl(unsignedint rows,

@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2004,2007,2010,2012 Free Software Foundation, Inc.
+# Copyright 2004,2007,2010,2012,2013 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -20,20 +20,15 @@
 # Boston, MA 02110-1301, USA.
 #
 
-import math
+from gnuradio import gr, gr_unittest, analog, blocks
 
-from gnuradio import gr, gr_unittest, analog
+class test_agc(gr_unittest.TestCase):
 
-test_output = False
+    def setUp(self):
+        self.tb = gr.top_block()
 
-class test_agc (gr_unittest.TestCase):
-
-    def setUp (self):
-        self.tb = gr.top_block ()
-
-    def tearDown (self):
+    def tearDown(self):
         self.tb = None
-
 
     def test_001_sets(self):
         agc = analog.agc_cc(1e-3, 1, 1, 1000)
@@ -107,17 +102,14 @@ class test_agc (gr_unittest.TestCase):
         sampling_freq = 100
         src1 = analog.sig_source_c(sampling_freq, analog.GR_SIN_WAVE,
                                    sampling_freq * 0.10, 100.0)
-        dst1 = gr.vector_sink_c()
-        head = gr.head(gr.sizeof_gr_complex, int (5*sampling_freq * 0.10))
+        dst1 = blocks.vector_sink_c()
+        head = blocks.head(gr.sizeof_gr_complex, int (5*sampling_freq * 0.10))
 
         agc = analog.agc_cc(1e-3, 1, 1, 1000)
 
         tb.connect(src1, head)
         tb.connect(head, agc)
         tb.connect(agc, dst1)
-
-        if test_output == True:
-            tb.connect(agc, gr.file_sink(gr.sizeof_gr_complex, "test_agc_cc.dat"))
 
         tb.run()
         dst_data = dst1.data()
@@ -195,17 +187,14 @@ class test_agc (gr_unittest.TestCase):
         sampling_freq = 100
         src1 = analog.sig_source_f(sampling_freq, analog.GR_SIN_WAVE,
                                    sampling_freq * 0.10, 100.0)
-        dst1 = gr.vector_sink_f ()
-        head = gr.head (gr.sizeof_float, int (5*sampling_freq * 0.10))
+        dst1 = blocks.vector_sink_f ()
+        head = blocks.head (gr.sizeof_float, int (5*sampling_freq * 0.10))
 
         agc = analog.agc_ff(1e-3, 1, 1, 1000)
 
         tb.connect (src1, head)
         tb.connect (head, agc)
         tb.connect (agc, dst1)
-
-        if test_output == True:
-            tb.connect (agc, gr.file_sink(gr.sizeof_float, "test_agc_ff.dat"))
 
         tb.run ()
         dst_data = dst1.data ()
@@ -285,17 +274,14 @@ class test_agc (gr_unittest.TestCase):
         sampling_freq = 100
         src1 = analog.sig_source_c(sampling_freq, analog.GR_SIN_WAVE,
                                    sampling_freq * 0.10, 100)
-        dst1 = gr.vector_sink_c()
-        head = gr.head(gr.sizeof_gr_complex, int(5*sampling_freq * 0.10))
+        dst1 = blocks.vector_sink_c()
+        head = blocks.head(gr.sizeof_gr_complex, int(5*sampling_freq * 0.10))
 
         agc = analog.agc2_cc(1e-2, 1e-3, 1, 1, 1000)
 
         tb.connect(src1, head)
         tb.connect(head, agc)
         tb.connect(agc, dst1)
-
-        if test_output == True:
-            tb.connect(agc, gr.file_sink(gr.sizeof_gr_complex, "test_agc2_cc.dat"))
 
         tb.run()
         dst_data = dst1.data()
@@ -375,17 +361,14 @@ class test_agc (gr_unittest.TestCase):
         sampling_freq = 100
         src1 = analog.sig_source_f(sampling_freq, analog.GR_SIN_WAVE,
                                    sampling_freq * 0.10, 100)
-        dst1 = gr.vector_sink_f()
-        head = gr.head(gr.sizeof_float, int(5*sampling_freq * 0.10))
+        dst1 = blocks.vector_sink_f()
+        head = blocks.head(gr.sizeof_float, int(5*sampling_freq * 0.10))
 
         agc = analog.agc2_ff(1e-2, 1e-3, 1, 1, 1000)
 
         tb.connect(src1, head)
         tb.connect(head, agc)
         tb.connect(agc, dst1)
-
-        if test_output == True:
-            tb.connect(agc, gr.file_sink(gr.sizeof_float, "test_agc2_ff.dat"))
 
         tb.run()
         dst_data = dst1.data()
@@ -451,17 +434,14 @@ class test_agc (gr_unittest.TestCase):
         sampling_freq = 100
         src1 = analog.sig_source_c(sampling_freq, analog.GR_SIN_WAVE,
                                    sampling_freq * 0.10, 100)
-        dst1 = gr.vector_sink_c()
-        head = gr.head(gr.sizeof_gr_complex, int(5*sampling_freq * 0.10))
+        dst1 = blocks.vector_sink_c()
+        head = blocks.head(gr.sizeof_gr_complex, int(5*sampling_freq * 0.10))
 
         agc = analog.agc2_cc(1e-2, 1e-3, 1, 1, 1000)
 
         tb.connect(src1, head)
         tb.connect(head, agc)
         tb.connect(agc, dst1)
-
-        if test_output == True:
-            tb.connect(agc, gr.file_sink(gr.sizeof_gr_complex, "test_agc2_cc.dat"))
 
         tb.run()
         dst_data = dst1.data()
@@ -476,14 +456,10 @@ class test_agc (gr_unittest.TestCase):
         input_data = 8*(0.0,) + 24*(1.0,) + 24*(0.0,)
         expected_result = (8+length-1)*(0.0,) + 24*(gain*1.0,) + (0,)
 
-        src = gr.vector_source_c(input_data)
+        src = blocks.vector_source_c(input_data)
         agc = analog.feedforward_agc_cc(8, 2.0)
-        dst = gr.vector_sink_c()
+        dst = blocks.vector_sink_c()
         self.tb.connect(src, agc, dst)
-
-        if test_output == True:
-            self.tb.connect(agc, gr.file_sink(gr.sizeof_gr_complex,
-                                              "test_feedforward_cc.dat"))
 
         self.tb.run()
         dst_data = dst.data()[0:len(expected_result)]

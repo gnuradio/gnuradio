@@ -100,6 +100,7 @@ if(MSVC)
     )
     add_definitions(-DHAVE_CONFIG_H)
     add_definitions(/MP) #build with multiple processors
+    add_definitions(/bigobj) #allow for larger object files
 endif(MSVC)
 
 ########################################################################
@@ -255,26 +256,29 @@ install(
 ########################################################################
 # The following dependency libraries are needed by all gr modules:
 ########################################################################
-list(APPEND GR_TEST_TARGET_DEPS volk gruel gnuradio-core)
+list(APPEND GR_TEST_TARGET_DEPS volk gnuradio-runtime)
 list(APPEND GR_TEST_PYTHON_DIRS
-    ${CMAKE_SOURCE_DIR}/gruel/src/python
-    ${CMAKE_BINARY_DIR}/gruel/src/swig
-    ${CMAKE_BINARY_DIR}/gnuradio-core/src/python
-    ${CMAKE_BINARY_DIR}/gnuradio-core/src/lib/swig
+    ${CMAKE_BINARY_DIR}/gnuradio-runtime/python
+    ${CMAKE_SOURCE_DIR}/gnuradio-runtime/python
+    ${CMAKE_BINARY_DIR}/gnuradio-runtime/swig
 )
+
+# Note that above we put the binary gnuradio-runtime/python directory
+# before the source directory. This is due to a quirk with ControlPort
+# and how slice generates files and names. We want the QA and
+# installed code to import the same names, so we have to grab from the
+# binary directory first.
 
 ########################################################################
 # Add subdirectories (in order of deps)
 ########################################################################
 add_subdirectory(docs)
-add_subdirectory(gruel)
-add_subdirectory(gnuradio-core)
+add_subdirectory(gnuradio-runtime)
 add_subdirectory(gr-blocks)
 add_subdirectory(grc)
 add_subdirectory(gr-fec)
 add_subdirectory(gr-fft)
 add_subdirectory(gr-filter)
-#add_subdirectory(gr-ctrlport)
 add_subdirectory(gr-analog)
 add_subdirectory(gr-digital)
 add_subdirectory(gr-atsc)
@@ -294,20 +298,6 @@ add_subdirectory(gr-fcd)
 add_subdirectory(gr-wavelet)
 add_subdirectory(gr-wxgui)
 
-# Create a config.h with some definitions to export to other projects.
-CONFIGURE_FILE(
-  ${CMAKE_CURRENT_SOURCE_DIR}/config.h.in
-  ${CMAKE_CURRENT_BINARY_DIR}/config.h
-)
-
-# Install config.h in include/gnuradio
-install(
-    FILES
-    ${CMAKE_CURRENT_BINARY_DIR}/config.h
-    DESTINATION ${GR_INCLUDE_DIR}/gnuradio
-    COMPONENT "core_devel"
-)
-
 # Install our Cmake modules into ${GR_PKG_DATA_DIR}/cmake/Modules
 file(GLOB cmake_modules "cmake/Modules/*.cmake")
 install(
@@ -326,3 +316,17 @@ CPACK_FINALIZE()
 GR_PRINT_COMPONENT_SUMMARY()
 message(STATUS "Using install prefix: ${CMAKE_INSTALL_PREFIX}")
 message(STATUS "Building for version: ${VERSION} / ${LIBVER}")
+
+# Create a config.h with some definitions to export to other projects.
+CONFIGURE_FILE(
+  ${CMAKE_CURRENT_SOURCE_DIR}/config.h.in
+  ${CMAKE_CURRENT_BINARY_DIR}/config.h
+)
+
+# Install config.h in include/gnuradio
+install(
+    FILES
+    ${CMAKE_CURRENT_BINARY_DIR}/config.h
+    DESTINATION ${GR_INCLUDE_DIR}/gnuradio
+    COMPONENT "core_devel"
+)

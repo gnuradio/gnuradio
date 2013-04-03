@@ -22,8 +22,7 @@
 ########################################################################
 include_directories(
     ${GR_VIDEO_SDL_INCLUDE_DIRS}
-    ${GNURADIO_CORE_INCLUDE_DIRS}
-    ${GRUEL_INCLUDE_DIRS}
+    ${GNURADIO_RUNTIME_INCLUDE_DIRS}
     ${LOG4CXX_INCLUDE_DIRS}
     ${Boost_INCLUDE_DIRS}
     ${SDL_INCLUDE_DIR}
@@ -46,14 +45,27 @@ list(APPEND video_sdl_sources
 )
 
 list(APPEND video_sdl_libs
-    gnuradio-core
+    gnuradio-runtime
     ${Boost_LIBRARIES}
     ${SDL_LIBRARY}
 )
 
+#Add Windows DLL resource file if using MSVC
+IF(MSVC)
+    include(${CMAKE_SOURCE_DIR}/cmake/Modules/GrVersion.cmake)
+
+    configure_file(
+        ${CMAKE_CURRENT_SOURCE_DIR}/gnuradio-video-sdl.rc.in
+        ${CMAKE_CURRENT_BINARY_DIR}/gnuradio-video-sdl.rc
+    @ONLY)
+
+    list(APPEND video_sdl_sources
+        ${CMAKE_CURRENT_BINARY_DIR}/gnuradio-video-sdl.rc
+    )
+ENDIF(MSVC)
 
 add_library(gnuradio-video-sdl SHARED ${video_sdl_sources})
 target_link_libraries(gnuradio-video-sdl ${video_sdl_libs})
 GR_LIBRARY_FOO(gnuradio-video-sdl RUNTIME_COMPONENT "video_sdl_runtime" DEVEL_COMPONENT "video_sdl_devel")
 add_dependencies(gnuradio-video-sdl 
-  gnuradio-core)
+  gnuradio-runtime)

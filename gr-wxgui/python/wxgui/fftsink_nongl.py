@@ -20,7 +20,8 @@
 # Boston, MA 02110-1301, USA.
 #
 
-from gnuradio import gr, gru, fft, filter
+from gnuradio import gr, gru, fft
+import gnuradio.filter as grfilter
 from gnuradio import blocks
 from gnuradio import analog
 from gnuradio.wxgui import stdgui2
@@ -40,7 +41,8 @@ class fft_sink_base(object):
                  y_divs=8, ref_level=50,
                  sample_rate=1, fft_size=512,
                  fft_rate=default_fft_rate,
-                 average=False, avg_alpha=None, title='', peak_hold=False,use_persistence=False,persist_alpha=0.2):
+                 average=False, avg_alpha=None, title='',
+                 peak_hold=False, use_persistence=False, persist_alpha=0.2):
 
         # initialize common attributes
         self.baseband_freq = baseband_freq
@@ -102,12 +104,15 @@ class fft_sink_base(object):
     def _set_n(self):
         self.one_in_n.set_n(max(1, int(self.sample_rate/self.fft_size/self.fft_rate)))
 
+    def set_callback(self, callb):
+        return
 
 class fft_sink_f(gr.hier_block2, fft_sink_base):
     def __init__(self, parent, baseband_freq=0, ref_scale=2.0,
                  y_per_div=10, y_divs=8, ref_level=50, sample_rate=1, fft_size=512,
                  fft_rate=default_fft_rate, average=False, avg_alpha=None,
-                 title='', size=default_fftsink_size, peak_hold=False, use_persistence=False,persist_alpha=0.2, **kwargs):
+                 title='', size=default_fftsink_size, peak_hold=False,
+                 use_persistence=False, persist_alpha=0.2, **kwargs):
 
         gr.hier_block2.__init__(self, "fft_sink_f",
                                 gr.io_signature(1, 1, gr.sizeof_float),
@@ -118,7 +123,8 @@ class fft_sink_f(gr.hier_block2, fft_sink_base):
                                sample_rate=sample_rate, fft_size=fft_size,
                                fft_rate=fft_rate,
                                average=average, avg_alpha=avg_alpha, title=title,
-                               peak_hold=peak_hold,use_persistence=use_persistence,persist_alpha=persist_alpha)
+                               peak_hold=peak_hold, use_persistence=use_persistence,
+                               persist_alpha=persist_alpha)
 
         self.s2p = blocks.stream_to_vector(gr.sizeof_float, self.fft_size)
         self.one_in_n = blocks.keep_one_in_n(gr.sizeof_float * self.fft_size,
@@ -131,13 +137,13 @@ class fft_sink_f(gr.hier_block2, fft_sink_base):
             power += tap*tap
 
         self.c2mag = blocks.complex_to_mag(self.fft_size)
-        self.avg = filter.single_pole_iir_filter_ff(1.0, self.fft_size)
+        self.avg = grfilter.single_pole_iir_filter_ff(1.0, self.fft_size)
 
         # FIXME  We need to add 3dB to all bins but the DC bin
         self.log = blocks.nlog10_ff(20, self.fft_size,
-                                    -10*math.log10(self.fft_size)       # Adjust for number of bins
-                                    -10*math.log10(power/self.fft_size) # Adjust for windowing loss
-                                    -20*math.log10(ref_scale/2))        # Adjust for reference scale
+                               -20*math.log10(self.fft_size)                # Adjust for number of bins
+                               -10*math.log10(power/self.fft_size)        # Adjust for windowing loss
+                               -20*math.log10(ref_scale/2))                # Adjust for reference scale
 
         self.sink = blocks.message_sink(gr.sizeof_float * self.fft_size, self.msgq, True)
         self.connect(self, self.s2p, self.one_in_n, self.fft, self.c2mag, self.avg, self.log, self.sink)
@@ -164,7 +170,8 @@ class fft_sink_c(gr.hier_block2, fft_sink_base):
                                sample_rate=sample_rate, fft_size=fft_size,
                                fft_rate=fft_rate,
                                average=average, avg_alpha=avg_alpha, title=title,
-                               peak_hold=peak_hold, use_persistence=use_persistence,persist_alpha=persist_alpha)
+                               peak_hold=peak_hold, use_persistence=use_persistence, 
+                               persist_alpha=persist_alpha)
 
         self.s2p = blocks.stream_to_vector(gr.sizeof_gr_complex, self.fft_size)
         self.one_in_n = blocks.keep_one_in_n(gr.sizeof_gr_complex * self.fft_size,
@@ -177,13 +184,13 @@ class fft_sink_c(gr.hier_block2, fft_sink_base):
             power += tap*tap
 
         self.c2mag = blocks.complex_to_mag(self.fft_size)
-        self.avg = filter.single_pole_iir_filter_ff(1.0, self.fft_size)
+        self.avg = grfilter.single_pole_iir_filter_ff(1.0, self.fft_size)
 
         # FIXME  We need to add 3dB to all bins but the DC bin
         self.log = blocks.nlog10_ff(20, self.fft_size,
-                                    -10*math.log10(self.fft_size)        # Adjust for number of bins
-                                    -10*math.log10(power/self.fft_size)  # Adjust for windowing loss
-                                    -20*math.log10(ref_scale/2))         # Adjust for reference scale
+                                -20*math.log10(self.fft_size)                # Adjust for number of bins
+                                -10*math.log10(power/self.fft_size)        # Adjust for windowing loss
+                                -20*math.log10(ref_scale/2))                # Adjust for reference scale
 
         self.sink = blocks.message_sink(gr.sizeof_float * self.fft_size, self.msgq, True)
         self.connect(self, self.s2p, self.one_in_n, self.fft, self.c2mag, self.avg, self.log, self.sink)
@@ -608,8 +615,10 @@ class test_app_block (stdgui2.std_top_block):
         input_rate = 100*20.48e3
 
         # Generate a complex sinusoid
-        #src1 = analog.sig_source_c(input_rate, analog.GR_SIN_WAVE, 100*2e3, 1)
-        src1 = analog.sig_source_c(input_rate, analog.GR_CONST_WAVE, 100*5.75e3, 1)
+        #src1 = gr.sig_source_c (input_rate, gr.GR_SIN_WAVE, 100*2e3, 1)
+        src1 = gr.sig_source_c (input_rate, gr.GR_CONST_WAVE, 100*5.75e3, 1)
+        noise1 = analog.noise_source_c(analog.GR_UNIFORM, 1.0/10)
+        add1 = blocks.add_cc()
 
         # We add these throttle blocks so that this demo doesn't
         # suck down all the CPU available.  Normally you wouldn't use these.
@@ -620,17 +629,24 @@ class test_app_block (stdgui2.std_top_block):
                            ref_level=0, y_per_div=20, y_divs=10)
         vbox.Add(sink1.win, 1, wx.EXPAND)
 
-        self.connect(src1, thr1, sink1)
+        self.connect(src1, (add1,0))
+        self.connect(noise1, (add1,1))
+        self.connect(add1, thr1, sink1)
 
-        #src2 = analog.sig_source_f(input_rate, analog.GR_SIN_WAVE, 100*2e3, 1)
-        src2 = analog.sig_source_f(input_rate, analog.GR_CONST_WAVE, 100*5.75e3, 1)
-        thr2 = blocks.throttle(gr.sizeof_float, input_rate)
-        sink2 = fft_sink_f(panel, title="Real Data", fft_size=fft_size*2,
-                           sample_rate=input_rate, baseband_freq=100e3,
-                           ref_level=0, y_per_div=20, y_divs=10)
-        vbox.Add(sink2.win, 1, wx.EXPAND)
+        #src2 = gr.sig_source_f (input_rate, gr.GR_SIN_WAVE, 100*2e3, 1)
+        src2 = gr.sig_source_f (input_rate, gr.GR_CONST_WAVE, 100*5.75e3, 1)
+        noise2 = analog.noise_source_f(analog.GR_UNIFORM, 1.0/10)
+        add2 = blocks.add_ff()
 
-        self.connect(src2, thr2, sink2)
+        thr2 = gr.throttle(gr.sizeof_float, input_rate)
+        sink2 = fft_sink_f (panel, title="Real Data", fft_size=fft_size*2,
+                            sample_rate=input_rate, baseband_freq=100e3,
+                            ref_level=0, y_per_div=20, y_divs=10)
+        vbox.Add (sink2.win, 1, wx.EXPAND)
+
+        self.connect(src2, (add2,0))
+        self.connect(noise2, (add2,1))
+        self.connect(add2, thr2, sink2)
 
 def main ():
     app = stdgui2.stdapp(test_app_block, "FFT Sink Test App")

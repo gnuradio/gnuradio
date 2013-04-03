@@ -135,21 +135,6 @@ namespace gr {
             pmt::mp(0), pmt::mp(1), pmt::mp(0.00001),
             "radians", "Maximum step size for random walk angle per sample",
             RPC_PRIVLVL_MIN, DISPTIME | DISPOPTSTRIP)));
-
-    add_rpc_variable(
-        rpcbasic_sptr(new rpcbasic_register_get<fading_model, float >(
-            alias(), "step",
-            &fading_model::step,
-            pmt::mp(0), pmt::mp(8), pmt::mp(4),
-            "radians", "Maximum step size for random walk angle per sample",
-            RPC_PRIVLVL_MIN, DISPTIME | DISPOPTSTRIP)));
-    add_rpc_variable(
-        rpcbasic_sptr(new rpcbasic_register_set<fading_model, float >(
-            alias(), "step",
-            &fading_model::set_step,
-            pmt::mp(0), pmt::mp(1), pmt::mp(0.00001),
-            "radians", "Maximum step size for random walk angle per sample",
-            RPC_PRIVLVL_MIN, DISPTIME | DISPOPTSTRIP)));
 #endif /* GR_CTRLPORT */
     }
 

@@ -33,7 +33,7 @@ class test_tag_debug(gr_unittest.TestCase):
     def test_001(self):
         # Just run some data through and make sure it doesn't puke.
         src_data = (1, 2, 3, 4, 5, 6, 7, 8, 9, 10)
-        src = gr.vector_source_i(src_data)
+        src = blocks.vector_source_i(src_data)
         op = blocks.tag_debug(gr.sizeof_int, "tag QA")
         self.tb.connect(src, op)
         self.tb.run()

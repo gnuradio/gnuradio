@@ -10,6 +10,7 @@
 	<category>WX GUI Widgets</category>
 	<import>from gnuradio.fft import window</import>
 	<import>from gnuradio.wxgui import fftsink2</import>
+        <import>from gnuradio import wxgui</import>
 	<make>#set $parent = $notebook() and 'self.%s.GetPage(%s)'%$notebook() or 'self'
 fftsink2.$(type.fcn)(
 	$(parent).GetWin(),

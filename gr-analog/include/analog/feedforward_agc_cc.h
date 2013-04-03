@@ -30,7 +30,8 @@ namespace gr {
   namespace analog {
 
     /*!
-     * \brief Non-causal AGC which computes required gain based on max absolute value over nsamples
+     * \brief Non-causal AGC which computes required gain based on max
+     * absolute value over nsamples
      * \ingroup level_blk
      */
     class ANALOG_API feedforward_agc_cc : virtual public gr_sync_block
@@ -38,7 +39,13 @@ namespace gr {
     public:
       // gr::analog::feedforward_agc_cc::sptr
       typedef boost::shared_ptr<feedforward_agc_cc> sptr;
-      
+
+      /*!
+       * Build a complex valued feed-forward AGC loop block.
+       *
+       * \param nsamples number of samples to look ahead.
+       * \param reference reference value to adjust signal power to.
+       */
       static sptr make(int nsamples, float reference);
     };
     

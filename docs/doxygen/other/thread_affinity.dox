@@ -6,8 +6,8 @@ In the thread-per-block scheduler, you can set the block's core
 affinity. Each block can be pinned to a group cores or be set back
 to use the standard kernel scheduler.
 
-The implementation is done by adding new functions to the GRUEL
-library:
+The implementation is done by adding new functions to the threading
+section of the gnuradio-runtime library:
 
 \code
   gr_thread_t get_current_thread_id();
@@ -21,7 +21,7 @@ library:
 
 The ability to set a thread's affinity to a core or groups of cores is
 not implemented in the Boost thread library, and so we have made our
-own portability library. In particular, the gruel::gr_thread_t type is
+own portability library. In particular, the gr::thread::gr_thread_t type is
 defined as the thread type for the given system. The other functions
 are designed to be portable as well by calling the specific
 implementation for the thread affinity for a particular platform.
@@ -43,7 +43,7 @@ Each block has two new data members:
 
 - threaded: a boolean value that is true if the block is attached to a
   thread.
-- thread: a gruel::gr_thread_t handle to the block's thread.
+- thread: a gr::thread::gr_thread_t handle to the block's thread.
 
 A block can set and unset it's affinity at any time using the
 following member functions:

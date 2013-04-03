@@ -25,6 +25,6 @@ install(FILES
     usrp_source.h
     usrp_sink.h
     amsg_source.h
-    DESTINATION ${GR_INCLUDE_DIR}/gnuradio/gr_uhd
+    DESTINATION ${GR_INCLUDE_DIR}/gnuradio/uhd
     COMPONENT "uhd_devel"
 )

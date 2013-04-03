@@ -21,6 +21,7 @@
 
 from gnuradio import gr
 from gnuradio import analog
+from gnuradio import blocks
 from gnuradio import filter
 from math import pi
 import pager_swig
@@ -54,9 +55,9 @@ class flex_demod(gr.hier_block2):
 
 	if log:
 	    suffix = '_'+ "%3.3f" % (freq/1e6,) + '.dat'
-	    quad_sink = gr.file_sink(gr.sizeof_float, 'quad'+suffix)
-	    rsamp_sink = gr.file_sink(gr.sizeof_float, 'rsamp'+suffix)
-	    slicer_sink = gr.file_sink(gr.sizeof_char, 'slicer'+suffix)
+	    quad_sink = blocks.file_sink(gr.sizeof_float, 'quad'+suffix)
+	    rsamp_sink = blocks.file_sink(gr.sizeof_float, 'rsamp'+suffix)
+	    slicer_sink = blocks.file_sink(gr.sizeof_char, 'slicer'+suffix)
 	    self.connect(rsamp, rsamp_sink)
 	    self.connect(quad, quad_sink)
 	    self.connect(self.slicer, slicer_sink)

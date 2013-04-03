@@ -58,25 +58,25 @@ namespace gr {
       : gr_sync_block("fll_band_edge_cc",
 		      gr_make_io_signature(1, 1, sizeof(gr_complex)),
 		      gr_make_io_signaturev(1, 4, iosig)),
-	gri_control_loop(bandwidth, M_TWOPI*(2.0/samps_per_sym),
-			 -M_TWOPI*(2.0/samps_per_sym)),
+	blocks::control_loop(bandwidth, M_TWOPI*(2.0/samps_per_sym),
+                                 -M_TWOPI*(2.0/samps_per_sym)),
 	d_updated(false)
     {
       // Initialize samples per symbol
       if(samps_per_sym <= 0) {
-	throw std::out_of_range("digital_fll_band_edge_cc: invalid number of sps. Must be > 0.");
+	throw std::out_of_range("fll_band_edge_cc: invalid number of sps. Must be > 0.");
       }
       d_sps = samps_per_sym;
   
       // Initialize rolloff factor
       if(rolloff < 0 || rolloff > 1.0) {
-	throw std::out_of_range("digital_fll_band_edge_cc: invalid rolloff factor. Must be in [0,1].");
+	throw std::out_of_range("fll_band_edge_cc: invalid rolloff factor. Must be in [0,1].");
       }
       d_rolloff = rolloff;
   
       // Initialize filter length
       if(filter_size <= 0) {
-	throw std::out_of_range("digital_fll_band_edge_cc: invalid filter size. Must be > 0.");
+	throw std::out_of_range("fll_band_edge_cc: invalid filter size. Must be > 0.");
       }
       d_filter_size = filter_size;
   
@@ -97,7 +97,7 @@ namespace gr {
     fll_band_edge_cc_impl::set_samples_per_symbol(float sps)
     {
       if(sps <= 0) {
-	throw std::out_of_range("digital_fll_band_edge_cc: invalid number of sps. Must be > 0.");
+	throw std::out_of_range("fll_band_edge_cc: invalid number of sps. Must be > 0.");
       }
       d_sps = sps;
       design_filter(d_sps, d_rolloff, d_filter_size);
@@ -107,7 +107,7 @@ namespace gr {
     fll_band_edge_cc_impl::set_rolloff(float rolloff)
     {
       if(rolloff < 0 || rolloff > 1.0) {
-	throw std::out_of_range("digital_fll_band_edge_cc: invalid rolloff factor. Must be in [0,1].");
+	throw std::out_of_range("fll_band_edge_cc: invalid rolloff factor. Must be in [0,1].");
       }
       d_rolloff = rolloff;
       design_filter(d_sps, d_rolloff, d_filter_size);
@@ -117,7 +117,7 @@ namespace gr {
     fll_band_edge_cc_impl::set_filter_size(int filter_size)
     {
       if(filter_size <= 0) {
-	throw std::out_of_range("digital_fll_band_edge_cc: invalid filter size. Must be > 0.");
+	throw std::out_of_range("fll_band_edge_cc: invalid filter size. Must be > 0.");
       }
       d_filter_size = filter_size;
       design_filter(d_sps, d_rolloff, d_filter_size);

@@ -21,8 +21,9 @@
 
 #define DIGITAL_API
 #define ANALOG_API
+#define BLOCKS_API
 
-%include "gnuradio.i"
+%include "runtime_swig.i"
 %include "stdint.i"
 
 //load generated python docstrings
@@ -30,34 +31,32 @@
 
 %include "analog/cpm.h"
 
-%include "gri_control_loop.h"
-
-// Used in the constellation objects
-%template(unsigned_int_vector) std::vector<unsigned int>;
+%{
+#include <blocks/control_loop.h>
+%}
+%include <blocks/control_loop.h>
 
 %{
-#include "digital/metric_type.h"
-#include "digital/mpsk_snr_est.h"
-#include "digital/lfsr.h"
 #include "digital/additive_scrambler_bb.h"
 #include "digital/binary_slicer_fb.h"
-#include "digital/chunks_to_symbols_bf.h"
 #include "digital/chunks_to_symbols_bc.h"
-#include "digital/chunks_to_symbols_sf.h"
-#include "digital/chunks_to_symbols_sc.h"
-#include "digital/chunks_to_symbols_if.h"
+#include "digital/chunks_to_symbols_bf.h"
 #include "digital/chunks_to_symbols_ic.h"
+#include "digital/chunks_to_symbols_if.h"
+#include "digital/chunks_to_symbols_sc.h"
+#include "digital/chunks_to_symbols_sf.h"
 #include "digital/clock_recovery_mm_cc.h"
 #include "digital/clock_recovery_mm_ff.h"
 #include "digital/cma_equalizer_cc.h"
 #include "digital/constellation.h"
-#include "digital/constellation_receiver_cb.h"
 #include "digital/constellation_decoder_cb.h"
+#include "digital/constellation_receiver_cb.h"
 #include "digital/correlate_access_code_bb.h"
 #include "digital/correlate_access_code_tag_bb.h"
 #include "digital/costas_loop_cc.h"
 #include "digital/cpmmod_bc.h"
 #include "digital/crc32.h"
+#include "digital/crc32_bb.h"
 #include "digital/descrambler_bb.h"
 #include "digital/diff_decoder_bb.h"
 #include "digital/diff_encoder_bb.h"
@@ -66,17 +65,33 @@
 #include "digital/framer_sink_1.h"
 #include "digital/glfsr_source_b.h"
 #include "digital/glfsr_source_f.h"
+#include "digital/header_payload_demux.h"
 #include "digital/kurtotic_equalizer_cc.h"
+#include "digital/lfsr.h"
 #include "digital/lms_dd_equalizer_cc.h"
 #include "digital/map_bb.h"
+#include "digital/metric_type.h"
 #include "digital/mpsk_receiver_cc.h"
+#include "digital/mpsk_snr_est.h"
 #include "digital/mpsk_snr_est_cc.h"
+#include "digital/ofdm_carrier_allocator_cvc.h"
+#include "digital/ofdm_chanest_vcvc.h"
 #include "digital/ofdm_cyclic_prefixer.h"
+#include "digital/ofdm_equalizer_base.h"
+#include "digital/ofdm_equalizer_simpledfe.h"
+#include "digital/ofdm_equalizer_static.h"
 #include "digital/ofdm_frame_acquisition.h"
+#include "digital/ofdm_frame_equalizer_vcvc.h"
 #include "digital/ofdm_frame_sink.h"
 #include "digital/ofdm_insert_preamble.h"
 #include "digital/ofdm_mapper_bcv.h"
 #include "digital/ofdm_sampler.h"
+#include "digital/ofdm_serializer_vcc.h"
+#include "digital/ofdm_sync_sc_cfb.h"
+#include "digital/packet_header_default.h"
+#include "digital/packet_header_ofdm.h"
+#include "digital/packet_headergenerator_bb.h"
+#include "digital/packet_headerparser_b.h"
 #include "digital/packet_sink.h"
 #include "digital/pfb_clock_sync_ccf.h"
 #include "digital/pfb_clock_sync_fff.h"
@@ -84,32 +99,33 @@
 #include "digital/probe_density_b.h"
 #include "digital/probe_mpsk_snr_est_c.h"
 #include "digital/scrambler_bb.h"
-#include "digital/simple_framer.h"
 #include "digital/simple_correlator.h"
+#include "digital/simple_framer.h"
+#include "digital/ofdm_serializer_vcc.h"
+#include "digital/packet_headerparser_b.h"
+#include "digital/header_payload_demux.h"
 %}
 
-%include "digital/metric_type.h"
-%include "digital/mpsk_snr_est.h"
-%include "digital/lfsr.h"
 %include "digital/additive_scrambler_bb.h"
 %include "digital/binary_slicer_fb.h"
-%include "digital/chunks_to_symbols_bf.h"
 %include "digital/chunks_to_symbols_bc.h"
-%include "digital/chunks_to_symbols_sf.h"
-%include "digital/chunks_to_symbols_sc.h"
-%include "digital/chunks_to_symbols_if.h"
+%include "digital/chunks_to_symbols_bf.h"
 %include "digital/chunks_to_symbols_ic.h"
+%include "digital/chunks_to_symbols_if.h"
+%include "digital/chunks_to_symbols_sc.h"
+%include "digital/chunks_to_symbols_sf.h"
 %include "digital/clock_recovery_mm_cc.h"
 %include "digital/clock_recovery_mm_ff.h"
 %include "digital/cma_equalizer_cc.h"
 %include "digital/constellation.h"
-%include "digital/constellation_receiver_cb.h"
 %include "digital/constellation_decoder_cb.h"
+%include "digital/constellation_receiver_cb.h"
 %include "digital/correlate_access_code_bb.h"
 %include "digital/correlate_access_code_tag_bb.h"
 %include "digital/costas_loop_cc.h"
 %include "digital/cpmmod_bc.h"
 %include "digital/crc32.h"
+%include "digital/crc32_bb.h"
 %include "digital/descrambler_bb.h"
 %include "digital/diff_decoder_bb.h"
 %include "digital/diff_encoder_bb.h"
@@ -118,17 +134,33 @@
 %include "digital/framer_sink_1.h"
 %include "digital/glfsr_source_b.h"
 %include "digital/glfsr_source_f.h"
+%include "digital/header_payload_demux.h"
 %include "digital/kurtotic_equalizer_cc.h"
+%include "digital/lfsr.h"
 %include "digital/lms_dd_equalizer_cc.h"
 %include "digital/map_bb.h"
+%include "digital/metric_type.h"
 %include "digital/mpsk_receiver_cc.h"
+%include "digital/mpsk_snr_est.h"
 %include "digital/mpsk_snr_est_cc.h"
+%include "digital/ofdm_carrier_allocator_cvc.h"
+%include "digital/ofdm_chanest_vcvc.h"
 %include "digital/ofdm_cyclic_prefixer.h"
+%include "digital/ofdm_equalizer_base.h"
+%include "digital/ofdm_equalizer_simpledfe.h"
+%include "digital/ofdm_equalizer_static.h"
 %include "digital/ofdm_frame_acquisition.h"
+%include "digital/ofdm_frame_equalizer_vcvc.h"
 %include "digital/ofdm_frame_sink.h"
 %include "digital/ofdm_insert_preamble.h"
 %include "digital/ofdm_mapper_bcv.h"
 %include "digital/ofdm_sampler.h"
+%include "digital/ofdm_serializer_vcc.h"
+%include "digital/ofdm_sync_sc_cfb.h"
+%include "digital/packet_header_default.h"
+%include "digital/packet_header_ofdm.h"
+%include "digital/packet_headergenerator_bb.h"
+%include "digital/packet_headerparser_b.h"
 %include "digital/packet_sink.h"
 %include "digital/pfb_clock_sync_ccf.h"
 %include "digital/pfb_clock_sync_fff.h"
@@ -136,25 +168,26 @@
 %include "digital/probe_density_b.h"
 %include "digital/probe_mpsk_snr_est_c.h"
 %include "digital/scrambler_bb.h"
-%include "digital/simple_framer.h"
 %include "digital/simple_correlator.h"
+%include "digital/simple_framer.h"
 
 GR_SWIG_BLOCK_MAGIC2(digital, additive_scrambler_bb);
 GR_SWIG_BLOCK_MAGIC2(digital, binary_slicer_fb);
-GR_SWIG_BLOCK_MAGIC2(digital, chunks_to_symbols_bf);
 GR_SWIG_BLOCK_MAGIC2(digital, chunks_to_symbols_bc);
-GR_SWIG_BLOCK_MAGIC2(digital, chunks_to_symbols_sf);
-GR_SWIG_BLOCK_MAGIC2(digital, chunks_to_symbols_sc);
-GR_SWIG_BLOCK_MAGIC2(digital, chunks_to_symbols_if);
+GR_SWIG_BLOCK_MAGIC2(digital, chunks_to_symbols_bf);
 GR_SWIG_BLOCK_MAGIC2(digital, chunks_to_symbols_ic);
+GR_SWIG_BLOCK_MAGIC2(digital, chunks_to_symbols_if);
+GR_SWIG_BLOCK_MAGIC2(digital, chunks_to_symbols_sc);
+GR_SWIG_BLOCK_MAGIC2(digital, chunks_to_symbols_sf);
 GR_SWIG_BLOCK_MAGIC2(digital, clock_recovery_mm_cc);
 GR_SWIG_BLOCK_MAGIC2(digital, clock_recovery_mm_ff);
 GR_SWIG_BLOCK_MAGIC2(digital, cma_equalizer_cc);
-GR_SWIG_BLOCK_MAGIC2(digital, constellation_receiver_cb);
 GR_SWIG_BLOCK_MAGIC2(digital, constellation_decoder_cb);
+GR_SWIG_BLOCK_MAGIC2(digital, constellation_receiver_cb);
 GR_SWIG_BLOCK_MAGIC2(digital, correlate_access_code_bb);
 GR_SWIG_BLOCK_MAGIC2(digital, correlate_access_code_tag_bb);
 GR_SWIG_BLOCK_MAGIC2(digital, costas_loop_cc);
+GR_SWIG_BLOCK_MAGIC2(digital, crc32_bb);
 GR_SWIG_BLOCK_MAGIC2(digital, cpmmod_bc);
 GR_SWIG_BLOCK_MAGIC2(digital, descrambler_bb);
 GR_SWIG_BLOCK_MAGIC2(digital, diff_decoder_bb);
@@ -164,17 +197,25 @@ GR_SWIG_BLOCK_MAGIC2(digital, fll_band_edge_cc);
 GR_SWIG_BLOCK_MAGIC2(digital, framer_sink_1);
 GR_SWIG_BLOCK_MAGIC2(digital, glfsr_source_b);
 GR_SWIG_BLOCK_MAGIC2(digital, glfsr_source_f);
+GR_SWIG_BLOCK_MAGIC2(digital, header_payload_demux);
 GR_SWIG_BLOCK_MAGIC2(digital, kurtotic_equalizer_cc);
 GR_SWIG_BLOCK_MAGIC2(digital, lms_dd_equalizer_cc);
 GR_SWIG_BLOCK_MAGIC2(digital, map_bb);
 GR_SWIG_BLOCK_MAGIC2(digital, mpsk_receiver_cc);
 GR_SWIG_BLOCK_MAGIC2(digital, mpsk_snr_est_cc);
+GR_SWIG_BLOCK_MAGIC2(digital, ofdm_carrier_allocator_cvc);
+GR_SWIG_BLOCK_MAGIC2(digital, ofdm_chanest_vcvc);
 GR_SWIG_BLOCK_MAGIC2(digital, ofdm_cyclic_prefixer);
 GR_SWIG_BLOCK_MAGIC2(digital, ofdm_frame_acquisition);
+GR_SWIG_BLOCK_MAGIC2(digital, ofdm_frame_equalizer_vcvc);
 GR_SWIG_BLOCK_MAGIC2(digital, ofdm_frame_sink);
 GR_SWIG_BLOCK_MAGIC2(digital, ofdm_insert_preamble);
 GR_SWIG_BLOCK_MAGIC2(digital, ofdm_mapper_bcv);
 GR_SWIG_BLOCK_MAGIC2(digital, ofdm_sampler);
+GR_SWIG_BLOCK_MAGIC2(digital, ofdm_serializer_vcc);
+GR_SWIG_BLOCK_MAGIC2(digital, ofdm_sync_sc_cfb);
+GR_SWIG_BLOCK_MAGIC2(digital, packet_headergenerator_bb);
+GR_SWIG_BLOCK_MAGIC2(digital, packet_headerparser_b);
 GR_SWIG_BLOCK_MAGIC2(digital, packet_sink);
 GR_SWIG_BLOCK_MAGIC2(digital, pfb_clock_sync_ccf);
 GR_SWIG_BLOCK_MAGIC2(digital, pfb_clock_sync_fff);
@@ -182,10 +223,13 @@ GR_SWIG_BLOCK_MAGIC2(digital, pn_correlator_cc);
 GR_SWIG_BLOCK_MAGIC2(digital, probe_density_b);
 GR_SWIG_BLOCK_MAGIC2(digital, probe_mpsk_snr_est_c);
 GR_SWIG_BLOCK_MAGIC2(digital, scrambler_bb);
-GR_SWIG_BLOCK_MAGIC2(digital, simple_framer);
 GR_SWIG_BLOCK_MAGIC2(digital, simple_correlator);
+GR_SWIG_BLOCK_MAGIC2(digital, simple_framer);
 
 GR_SWIG_BLOCK_MAGIC_FACTORY(digital, cpmmod_bc, gmskmod_bc);
 
-// Properly package up constellation objects
+// Properly package up non-block objects
 %include "constellation.i"
+%include "packet_header.i"
+%include "ofdm_equalizer.i"
+

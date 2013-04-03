@@ -19,8 +19,8 @@ def run_test (fo,fi,interleaver,Kb,bitspersymbol,K,dimensionality,constellation,
 
 
     # TX
-    src = gr.lfsr_32k_source_s()
-    src_head = gr.head (gr.sizeof_short,Kb/16) # packet size in shorts
+    src = blocks.lfsr_32k_source_s()
+    src_head = blocks.head (gr.sizeof_short,Kb/16) # packet size in shorts
     s2fsmi = blocks.packed_to_unpacked_ss(bitspersymbol,gr.GR_MSB_FIRST) # unpack shorts to symbols compatible with the outer FSM input cardinality
     enc_out = trellis.encoder_ss(fo,0) # initial state = 0
     inter = trellis.permutation(interleaver.K(),interleaver.INTER(),1,gr.sizeof_short)
@@ -33,12 +33,12 @@ def run_test (fo,fi,interleaver,Kb,bitspersymbol,K,dimensionality,constellation,
 
     # RX
     metrics_in = trellis.metrics_f(fi.O(),dimensionality,constellation,digital.TRELLIS_EUCLIDEAN) # data preprocessing to generate metrics for innner Viterbi
-    gnd = gr.vector_source_f([0],True);
+    gnd = blocks.vector_source_f([0],True);
     siso_in = trellis.siso_f(fi,K,0,-1,True,False,trellis.TRELLIS_MIN_SUM) # Put -1 if the Initial/Final states are not set.
     deinter = trellis.permutation(interleaver.K(),interleaver.DEINTER(),fi.I(),gr.sizeof_float)
     va_out = trellis.viterbi_s(fo,K,0,-1) # Put -1 if the Initial/Final states are not set.
     fsmi2s = blocks.unpacked_to_packed_ss(bitspersymbol,gr.GR_MSB_FIRST) # pack FSM input symbols to shorts
-    dst = gr.check_lfsr_32k_s()
+    dst = blocks.check_lfsr_32k_s()
 
     tb.connect (src,src_head,s2fsmi,enc_out,inter,enc_in,mod)
     tb.connect (mod,(add,0))

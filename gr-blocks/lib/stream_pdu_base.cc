@@ -61,7 +61,7 @@ namespace gr {
     {
       d_blk = blk;
       d_port = port;
-      d_thread = gruel::thread(boost::bind(&stream_pdu_base::run, this));
+      d_thread = gr::thread::thread(boost::bind(&stream_pdu_base::run, this));
       d_started = true;
     }
 

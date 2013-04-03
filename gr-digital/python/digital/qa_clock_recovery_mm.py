@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2011,2012 Free Software Foundation, Inc.
+# Copyright 2011-2013 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -23,7 +23,7 @@
 import random
 import cmath
 
-from gnuradio import gr, gr_unittest, digital
+from gnuradio import gr, gr_unittest, digital, blocks
 
 class test_clock_recovery_mm(gr_unittest.TestCase):
 
@@ -46,8 +46,8 @@ class test_clock_recovery_mm(gr_unittest.TestCase):
                                                  omega_rel_lim)
         
         data = 100*[complex(1, 1),]
-        self.src = gr.vector_source_c(data, False)
-        self.snk = gr.vector_sink_c()
+        self.src = blocks.vector_source_c(data, False)
+        self.snk = blocks.vector_sink_c()
 
         self.tb.connect(self.src, self.test, self.snk)
         self.tb.run()
@@ -81,8 +81,8 @@ class test_clock_recovery_mm(gr_unittest.TestCase):
                                                  omega_rel_lim)
         
         data = 100*[1,]
-        self.src = gr.vector_source_f(data, False)
-        self.snk = gr.vector_sink_f()
+        self.src = blocks.vector_source_f(data, False)
+        self.snk = blocks.vector_sink_f()
 
         self.tb.connect(self.src, self.test, self.snk)
         self.tb.run()
@@ -116,8 +116,8 @@ class test_clock_recovery_mm(gr_unittest.TestCase):
                                                  omega_rel_lim)
         
         data = 1000*[complex(1, 1), complex(1, 1), complex(-1, -1), complex(-1, -1)]
-        self.src = gr.vector_source_c(data, False)
-        self.snk = gr.vector_sink_c()
+        self.src = blocks.vector_source_c(data, False)
+        self.snk = blocks.vector_sink_c()
 
         self.tb.connect(self.src, self.test, self.snk)
         self.tb.run()
@@ -151,8 +151,8 @@ class test_clock_recovery_mm(gr_unittest.TestCase):
                                                  omega_rel_lim)
         
         data = 1000*[1, 1, -1, -1]
-        self.src = gr.vector_source_f(data, False)
-        self.snk = gr.vector_sink_f()
+        self.src = blocks.vector_source_f(data, False)
+        self.snk = blocks.vector_sink_f()
 
         self.tb.connect(self.src, self.test, self.snk)
         self.tb.run()

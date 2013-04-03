@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2004,2007,2010,2012 Free Software Foundation, Inc.
+# Copyright 2004,2007,2010,2012,2013 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -32,9 +32,9 @@ class test_add_mult_div_sub(gr_unittest.TestCase):
 
     def help_ii(self, src_data, exp_data, op):
         for s in zip(range(len(src_data)), src_data):
-            src = gr.vector_source_i(s[1])
+            src = blocks.vector_source_i(s[1])
             self.tb.connect(src, (op, s[0]))
-        dst = gr.vector_sink_i()
+        dst = blocks.vector_sink_i()
         self.tb.connect(op, dst)
         self.tb.run()
         result_data = dst.data()
@@ -42,9 +42,9 @@ class test_add_mult_div_sub(gr_unittest.TestCase):
 
     def help_ss(self, src_data, exp_data, op):
         for s in zip(range(len(src_data)), src_data):
-            src = gr.vector_source_s(s[1])
+            src = blocks.vector_source_s(s[1])
             self.tb.connect(src, (op, s[0]))
-        dst = gr.vector_sink_s()
+        dst = blocks.vector_sink_s()
         self.tb.connect(op, dst)
         self.tb.run()
         result_data = dst.data()
@@ -52,9 +52,9 @@ class test_add_mult_div_sub(gr_unittest.TestCase):
 
     def help_ff(self, src_data, exp_data, op):
         for s in zip(range(len(src_data)), src_data):
-            src = gr.vector_source_f(s[1])
+            src = blocks.vector_source_f(s[1])
             self.tb.connect(src, (op, s[0]))
-        dst = gr.vector_sink_f()
+        dst = blocks.vector_sink_f()
         self.tb.connect(op, dst)
         self.tb.run()
         result_data = dst.data()
@@ -62,9 +62,9 @@ class test_add_mult_div_sub(gr_unittest.TestCase):
 
     def help_cc(self, src_data, exp_data, op):
         for s in zip(range(len(src_data)), src_data):
-            src = gr.vector_source_c(s[1])
+            src = blocks.vector_source_c(s[1])
             self.tb.connect(src, (op, s[0]))
-        dst = gr.vector_sink_c()
+        dst = blocks.vector_sink_c()
         self.tb.connect(op, dst)
         self.tb.run()
         result_data = dst.data()

@@ -39,6 +39,7 @@ GR_PYTHON_INSTALL(
     ofdm_sync_ml.py
     ofdm_sync_pnac.py
     ofdm_sync_pn.py
+    ofdm_txrx.py
     packet_utils.py
     pkt.py
     psk.py
@@ -55,6 +56,7 @@ GR_PYTHON_INSTALL(
     utils/gray_code.py
     utils/mod_codes.py
     utils/alignment.py
+    utils/tagged_streams.py
     DESTINATION ${GR_PYTHON_DIR}/gnuradio/digital/utils
     COMPONENT "digital_python"
 )

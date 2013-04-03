@@ -54,7 +54,7 @@ namespace gr {
       : gr_block("constellation_receiver_cb",
 		 gr_make_io_signature(1, 1, sizeof(gr_complex)),
 		 gr_make_io_signaturev(1, 5, iosig)),
-	gri_control_loop(loop_bw, fmax, fmin),
+	blocks::control_loop(loop_bw, fmax, fmin),
 	d_constellation(constellation),
 	d_current_const_point(0)
     {

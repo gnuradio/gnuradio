@@ -1,5 +1,3 @@
-SET(PACKAGE_DEPENDS_GRUEL_RUNTIME "libboost-all-dev" "libc6")
-SET(PACKAGE_DEPENDS_GRUEL_PYTHON "python" "python-numpy")
 SET(PACKAGE_DEPENDS_CORE_RUNTIME "libfftw3-3")
 SET(PACKAGE_DEPENDS_QTGUI_RUNTIME "libqtcore4" "libqwt6")
 SET(PACKAGE_DEPENDS_QTGUI_PYTHON "python-qt4" "python-qwt5-qt4")

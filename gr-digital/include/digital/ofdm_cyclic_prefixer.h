@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
-/*
- * Copyright 2004-2006,2011,2012 Free Software Foundation, Inc.
+/* 
+ * Copyright 2013 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -24,34 +24,48 @@
 #define INCLUDED_DIGITAL_OFDM_CYCLIC_PREFIXER_H
 
 #include <digital/api.h>
-#include <gr_sync_interpolator.h>
+#include <gr_tagged_stream_block.h>
 
 namespace gr {
   namespace digital {
-    
+
     /*!
-     * \brief adds a cyclic prefix vector to an input size long ofdm
-     * symbol(vector) and converts vector to a stream output_size
-     * long. 
+     * \brief Adds a cyclic prefix and performs pulse shaping on OFDM symbols.
      * \ingroup ofdm_blk
+     *
+     * Input: OFDM symbols (in the time domain, i.e. after the IFFT). Optionally,
+     *        entire frames can be processed. In this case, \p len_tag_key must be
+     *        specified which holds the key of the tag that denotes how
+     *        many OFDM symbols are in a frame.
+     * Output: A stream of (scalar) complex symbols, which include the cyclic prefix
+     *         and the pulse shaping.
+     *         Note: If complete frames are processed, and \p rolloff_len is greater
+     *         than zero, the final OFDM symbol is followed by the delay line of
+     *         the pulse shaping.
+     *
+     * The pulse shape is a raised cosine in the time domain.
      */
-    class DIGITAL_API ofdm_cyclic_prefixer : virtual public gr_sync_interpolator
+    class DIGITAL_API ofdm_cyclic_prefixer : virtual public gr_tagged_stream_block
     {
-    public:
-      // gr::digital::ofdm_cyclic_prefixer::sptr
+     public:
       typedef boost::shared_ptr<ofdm_cyclic_prefixer> sptr;
 
       /*!
-       * Make an OFDM cyclic prefix adder block.
-       *
-       * \param input_size size of the input symbol
-       * \param output_size output of the symbol
-       *        (CP len = output_size - input_size)
+       * \param input_size FFT length (i.e. length of the OFDM symbols)
+       * \param output_size FFT length + cyclic prefix length (in samples)
+       * \param rolloff_len Length of the rolloff flank in samples
+       * \param len_tag_key For framed processing the key of the length tag
        */
-      static sptr make(size_t input_size, size_t output_size);
+      static sptr make(
+	  size_t input_size,
+	  size_t output_size,
+	  int rolloff_len=0,
+	  const std::string &len_tag_key=""
+      );
     };
 
-  } /* namespace digital */
-} /* namespace gr */
+  } // namespace digital
+} // namespace gr
 
 #endif /* INCLUDED_DIGITAL_OFDM_CYCLIC_PREFIXER_H */
+

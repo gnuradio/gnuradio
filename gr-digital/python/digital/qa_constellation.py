@@ -174,9 +174,9 @@ class test_constellation(gr_unittest.TestCase):
             else:
                 rotations = [None]
             for rotation in rotations:
-                src = gr.vector_source_b(self.src_data)
+                src = blocks.vector_source_b(self.src_data)
                 content = mod_demod(constellation, differential, rotation)
-                dst = gr.vector_sink_b()
+                dst = blocks.vector_sink_b()
                 self.tb = gr.top_block()
                 self.tb.connect(src, content, dst)
                 self.tb.run()

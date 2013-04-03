@@ -32,9 +32,9 @@ class test_mute(gr_unittest.TestCase):
 
     def help_ii(self, src_data, exp_data, op):
         for s in zip(range(len(src_data)), src_data):
-            src = gr.vector_source_i(s[1])
+            src = blocks.vector_source_i(s[1])
             self.tb.connect(src, (op, s[0]))
-        dst = gr.vector_sink_i()
+        dst = blocks.vector_sink_i()
         self.tb.connect(op, dst)
         self.tb.run()
         result_data = dst.data()
@@ -42,9 +42,9 @@ class test_mute(gr_unittest.TestCase):
 
     def help_ff(self, src_data, exp_data, op):
         for s in zip(range(len(src_data)), src_data):
-            src = gr.vector_source_f(s[1])
+            src = blocks.vector_source_f(s[1])
             self.tb.connect(src, (op, s[0]))
-        dst = gr.vector_sink_f()
+        dst = blocks.vector_sink_f()
         self.tb.connect(op, dst)
         self.tb.run()
         result_data = dst.data()
@@ -52,9 +52,9 @@ class test_mute(gr_unittest.TestCase):
 
     def help_cc(self, src_data, exp_data, op):
         for s in zip(range(len(src_data)), src_data):
-            src = gr.vector_source_c(s[1])
+            src = blocks.vector_source_c(s[1])
             self.tb.connect(src, (op, s[0]))
-        dst = gr.vector_sink_c()
+        dst = blocks.vector_sink_c()
         self.tb.connect(op, dst)
         self.tb.run()
         result_data = dst.data()

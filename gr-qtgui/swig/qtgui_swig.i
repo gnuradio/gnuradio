@@ -23,15 +23,18 @@
 #define QTGUI_API
 #define FILTER_API
 
-%include "gnuradio.i"
+%include "runtime_swig.i"
 
 //load generated python docstrings
 %include "qtgui_swig_doc.i"
 
 // So we understand the firdes window types
-%include "filter/firdes.h"
+%import "filter/firdes.h"
 
 %{
+#include "qtgui/form_menus.h"
+#include "qtgui/DisplayPlot.h"
+#include "qtgui/displayform.h"
 #include "qtgui/sink_c.h"
 #include "qtgui/sink_f.h"
 #include "qtgui/time_sink_c.h"

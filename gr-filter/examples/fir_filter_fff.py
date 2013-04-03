@@ -2,6 +2,7 @@
 
 from gnuradio import gr, filter
 from gnuradio import analog
+from gnuradio import blocks
 from gnuradio import eng_notation
 from gnuradio.eng_option import eng_option
 from optparse import OptionParser
@@ -32,12 +33,12 @@ class example_fir_filter_fff(gr.top_block):
         print "Num. Taps: ", len(taps)
 
         self.src  = analog.noise_source_f(analog.GR_GAUSSIAN, 1)
-        self.head = gr.head(gr.sizeof_float, self._nsamps)
+        self.head = blocks.head(gr.sizeof_float, self._nsamps)
 
         self.filt0 = filter.fir_filter_fff(self._decim, taps)
 
-        self.vsnk_src = gr.vector_sink_f()
-        self.vsnk_out = gr.vector_sink_f()
+        self.vsnk_src = blocks.vector_sink_f()
+        self.vsnk_out = blocks.vector_sink_f()
 
         self.connect(self.src, self.head, self.vsnk_src)
         self.connect(self.head, self.filt0, self.vsnk_out)

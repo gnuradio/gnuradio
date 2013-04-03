@@ -25,6 +25,8 @@ from gnuradio.eng_option import eng_option
 from optparse import OptionParser
 import os, sys
 
+os.environ['GR_CONF_CONTROLPORT_ON'] = 'False'
+
 try:
     from gnuradio import qtgui
     from PyQt4 import QtGui, QtCore
@@ -91,7 +93,7 @@ def read_samples_b(filename, start, in_size, min_size=0):
                            scipy.int8, gr.sizeof_char)
 
     # Bit of a hack since we want to read the data as signed ints, but
-    # the gr.vector_source_b will only accept unsigned. We read in as
+    # the blocks.vector_source_b will only accept unsigned. We read in as
     # signed, do our min/max and things on that, then convert here.
     d = scipy.array(d, dtype=scipy.uint8).tolist()
     return d,mn,mx
@@ -122,7 +124,7 @@ class source_ints_to_float(gr.hier_block2):
 	gr.hier_block2.__init__(self, "ints_to_floats",
 				gr.io_signature(0, 0, 0),
 				gr.io_signature(1, 1, gr.sizeof_float))
-        self.src = gr.vector_source_i(data)
+        self.src = blocks.vector_source_i(data)
         self.cvt = blocks.int_to_float()
         self.connect(self.src, self.cvt, self)
 
@@ -134,7 +136,7 @@ class source_shorts_to_float(gr.hier_block2):
 	gr.hier_block2.__init__(self, "shorts_to_floats",
 				gr.io_signature(0, 0, 0),
 				gr.io_signature(1, 1, gr.sizeof_float))
-        self.src = gr.vector_source_s(data)
+        self.src = blocks.vector_source_s(data)
         self.cvt = blocks.short_to_float()
         self.connect(self.src, self.cvt, self)
 
@@ -146,7 +148,7 @@ class source_chars_to_float(gr.hier_block2):
 	gr.hier_block2.__init__(self, "chars_to_floats",
 				gr.io_signature(0, 0, 0),
 				gr.io_signature(1, 1, gr.sizeof_float))
-        self.src = gr.vector_source_b(data)
+        self.src = blocks.vector_source_b(data)
         self.cvt = blocks.char_to_float()
         self.connect(self.src, self.cvt, self)
 

@@ -50,10 +50,10 @@ class test_rms(gr_unittest.TestCase):
 
         expected_data = amp/math.sqrt(2.0)
 
-        src = gr.vector_source_f(src_data, True)
-        head = gr.head(gr.sizeof_float, N)
+        src = blocks.vector_source_f(src_data, True)
+        head = blocks.head(gr.sizeof_float, N)
         op = blocks.rms_ff(0.0001)
-        dst = gr.vector_sink_f()
+        dst = blocks.vector_sink_f()
 
         self.tb.connect(src, head, op, dst)
         self.tb.run()
@@ -68,10 +68,10 @@ class test_rms(gr_unittest.TestCase):
 
         expected_data = amp
 
-        src = gr.vector_source_c(src_data, True)
-        head = gr.head(gr.sizeof_gr_complex, N)
+        src = blocks.vector_source_c(src_data, True)
+        head = blocks.head(gr.sizeof_gr_complex, N)
         op = blocks.rms_cf(0.0001)
-        dst = gr.vector_sink_f()
+        dst = blocks.vector_sink_f()
 
         self.tb.connect(src, head, op, dst)
         self.tb.run()

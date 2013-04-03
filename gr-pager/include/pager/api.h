@@ -22,7 +22,7 @@
 #ifndef INCLUDED_PAGER_API_H
 #define INCLUDED_PAGER_API_H
 
-#include <gruel/attributes.h>
+#include <attributes.h>
 
 #ifdef gnuradio_pager_EXPORTS
 #  define PAGER_API __GR_ATTR_EXPORT

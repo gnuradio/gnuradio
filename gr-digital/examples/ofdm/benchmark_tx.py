@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2005,2006,2011 Free Software Foundation, Inc.
+# Copyright 2005,2006,2011,2013 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -27,6 +27,7 @@ from optparse import OptionParser
 import time, struct, sys
 
 from gnuradio import digital
+from gnuradio import blocks
 
 # from current dir
 from transmit_path import transmit_path
@@ -43,9 +44,9 @@ class my_top_block(gr.top_block):
                                         options.spec, options.antenna,
                                         options.verbose)
         elif(options.to_file is not None):
-            self.sink = gr.file_sink(gr.sizeof_gr_complex, options.to_file)
+            self.sink = blocks.file_sink(gr.sizeof_gr_complex, options.to_file)
         else:
-            self.sink = gr.null_sink(gr.sizeof_gr_complex)
+            self.sink = blocks.null_sink(gr.sizeof_gr_complex)
 
         # do this after for any adjustments to the options that may
         # occur in the sinks (specifically the UHD sink)

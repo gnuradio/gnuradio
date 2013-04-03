@@ -22,7 +22,7 @@
 #ifndef INCLUDED_ANALOG_API_H
 #define INCLUDED_ANALOG_API_H
 
-#include <gruel/attributes.h>
+#include <attributes.h>
 
 #ifdef gnuradio_analog_EXPORTS
 #  define ANALOG_API __GR_ATTR_EXPORT

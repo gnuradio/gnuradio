@@ -22,3 +22,5 @@
 '''
 Provides a GUI interface using the Wx backend.
 '''
+
+from wxgui_swig import *

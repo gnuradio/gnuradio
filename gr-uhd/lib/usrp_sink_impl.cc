@@ -571,5 +571,27 @@ namespace gr {
       return true;
     }
 
+    void
+    usrp_sink_impl::setup_rpc()
+    {
+#ifdef GR_CTRLPORT
+      add_rpc_variable(
+        rpcbasic_sptr(new rpcbasic_register_get<usrp_sink, double>(
+	  alias(), "samp_rate",
+	  &usrp_sink::get_samp_rate,
+	  pmt::mp(100000.0f), pmt::mp(25000000.0f), pmt::mp(1000000.0f),
+	  "sps", "TX Sample Rate", RPC_PRIVLVL_MIN,
+          DISPTIME | DISPOPTSTRIP)));
+
+      add_rpc_variable(
+        rpcbasic_sptr(new rpcbasic_register_set<usrp_sink, double>(
+	  alias(), "samp_rate",
+	  &usrp_sink::set_samp_rate,
+	  pmt::mp(100000.0f), pmt::mp(25000000.0f), pmt::mp(1000000.0f),
+	  "sps", "TX Sample Rate",
+	  RPC_PRIVLVL_MIN, DISPNULL)));
+#endif /* GR_CTRLPORT */
+    }
+
   } /* namespace uhd */
 } /* namespace gr */

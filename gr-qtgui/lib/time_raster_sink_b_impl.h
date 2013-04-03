@@ -26,9 +26,9 @@
 #include <qtgui/time_raster_sink_b.h>
 #include <filter/firdes.h>
 #include <fft/fft.h>
-#include <gruel/high_res_timer.h>
-#include <gruel/thread.h>
-#include <timerasterdisplayform.h>
+#include <high_res_timer.h>
+#include <thread/thread.h>
+#include <qtgui/timerasterdisplayform.h>
 
 namespace gr {
   namespace qtgui {
@@ -56,8 +56,8 @@ namespace gr {
       std::vector<float> d_offset;
       double d_samp_rate;
 
-      gruel::high_res_timer_type d_update_time;
-      gruel::high_res_timer_type d_last_time;
+      gr::high_res_timer_type d_update_time;
+      gr::high_res_timer_type d_last_time;
 
     public:
       time_raster_sink_b_impl(double samp_rate,

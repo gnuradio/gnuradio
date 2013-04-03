@@ -31,7 +31,7 @@ file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/generate_helper.py "
 #!${PYTHON_EXECUTABLE}
 
 import sys, os, re
-sys.path.append('${GR_CORE_PYTHONPATH}')
+sys.path.append('${GR_RUNTIME_PYTHONPATH}')
 os.environ['srcdir'] = '${CMAKE_CURRENT_SOURCE_DIR}'
 os.chdir('${CMAKE_CURRENT_BINARY_DIR}')
 
@@ -91,8 +91,8 @@ endmacro(expand_cc_h_impl)
 # Invoke macro to generate various sources
 ########################################################################
 expand_cc_h_impl(add_XX             ss ii cc)
-expand_cc_h_impl(add_const_XX       ss ii ff cc)
-expand_cc_h_impl(add_const_vXX      ss ii ff cc)
+expand_cc_h_impl(add_const_XX       bb ss ii ff cc)
+expand_cc_h_impl(add_const_vXX      bb ss ii ff cc)
 expand_cc_h_impl(and_XX             bb ss ii)
 expand_cc_h_impl(and_const_XX       bb ss ii)
 expand_cc_h_impl(argmax_XX          fs is ss)
@@ -114,6 +114,9 @@ expand_cc_h_impl(sub_XX             ss ii ff cc)
 expand_cc_h_impl(xor_XX             bb ss ii)
 expand_cc_h_impl(packed_to_unpacked_XX bb ss ii)
 expand_cc_h_impl(unpacked_to_packed_XX bb ss ii)
+expand_cc_h_impl(vector_insert_X    b s i f c)
+expand_cc_h_impl(vector_sink_X      b s i f c)
+expand_cc_h_impl(vector_source_X    b s i f c)
 
 ########################################################################
 # Setup the include and linker paths
@@ -123,9 +126,8 @@ include_directories(
     ${CMAKE_CURRENT_BINARY_DIR}
     ${CMAKE_CURRENT_BINARY_DIR}/../include
     ${GR_BLOCKS_INCLUDE_DIRS}
-    ${GNURADIO_CORE_INCLUDE_DIRS}
+    ${GNURADIO_RUNTIME_INCLUDE_DIRS}
     ${VOLK_INCLUDE_DIRS}
-    ${GRUEL_INCLUDE_DIRS}
     ${Boost_INCLUDE_DIRS}
 )
 
@@ -141,12 +143,19 @@ endif(ENABLE_GR_CTRLPORT)
 ########################################################################
 list(APPEND gr_blocks_sources
     ${generated_sources}
+    control_loop.cc
     count_bits.cc
+    file_sink_base.cc
+    wavfile.cc
     add_ff_impl.cc
+    annotator_1to1_impl.cc
+    annotator_alltoall_impl.cc
+    annotator_raw_impl.cc
     bin_statistics_f_impl.cc
     burst_tagger_impl.cc
     char_to_float_impl.cc
     char_to_short_impl.cc
+    check_lfsr_32k_s_impl.cc
     complex_to_interleaved_short_impl.cc
     complex_to_float_impl.cc
     complex_to_real_impl.cc
@@ -155,8 +164,13 @@ list(APPEND gr_blocks_sources
     complex_to_mag_squared_impl.cc
     complex_to_arg_impl.cc
     conjugate_cc_impl.cc
+    copy_impl.cc
     deinterleave_impl.cc
     delay_impl.cc
+    endian_swap_impl.cc
+    file_descriptor_sink_impl.cc
+    file_descriptor_source_impl.cc
+    file_sink_impl.cc
     file_source_impl.cc
     file_meta_sink_impl.cc
     file_meta_source_impl.cc
@@ -167,12 +181,14 @@ list(APPEND gr_blocks_sources
     float_to_short_impl.cc
     float_array_to_uchar.cc
     float_to_uchar_impl.cc
+    head_impl.cc
     int_to_float_impl.cc
     interleave_impl.cc
     interleaved_short_array_to_complex.cc
     interleaved_short_to_complex_impl.cc
     keep_m_in_n_impl.cc
     keep_one_in_n_impl.cc
+    lfsr_32k_source_s_impl.cc
     message_debug_impl.cc
     message_sink_impl.cc
     message_source_impl.cc
@@ -184,6 +200,9 @@ list(APPEND gr_blocks_sources
     multiply_const_cc_impl.cc
     multiply_const_ff_impl.cc
     nlog10_ff_impl.cc
+    nop_impl.cc
+    null_sink_impl.cc
+    null_source_impl.cc
     pack_k_bits_bb_impl.cc
     patterned_interleaver_impl.cc
     pdu.cc
@@ -191,12 +210,16 @@ list(APPEND gr_blocks_sources
     pdu_to_tagged_stream_impl.cc
     peak_detector2_fb_impl.cc
     random_pdu_impl.cc
+    plateau_detector_fb_impl.cc
+    probe_rate_impl.cc
     regenerate_bb_impl.cc
+    repack_bits_bb_impl.cc
     repeat_impl.cc
     rms_cf_impl.cc
     rms_ff_impl.cc
     short_to_char_impl.cc
     short_to_float_impl.cc
+    skiphead_impl.cc
     socket_pdu_impl.cc
     stream_mux_impl.cc
     stream_pdu_base.cc
@@ -205,18 +228,33 @@ list(APPEND gr_blocks_sources
     streams_to_stream_impl.cc
     streams_to_vector_impl.cc
     stretch_ff_impl.cc
+    tagged_file_sink_impl.cc
     tagged_stream_to_pdu_impl.cc
     threshold_ff_impl.cc
     throttle_impl.cc
     transcendental_impl.cc
     tcp_connection.cc
     tuntap_pdu_impl.cc
+    tagged_stream_mux_impl.cc
     uchar_array_to_float.cc
     uchar_to_float_impl.cc
+    udp_sink_impl.cc
+    udp_source_impl.cc
     unpack_k_bits_bb_impl.cc
+    vco_f_impl.cc
+    vector_map_impl.cc
     vector_to_stream_impl.cc
     vector_to_streams_impl.cc
+    wavfile_sink_impl.cc
+    wavfile_source_impl.cc
 )
+
+if(ENABLE_GR_CTRLPORT)
+list(APPEND gr_blocks_sources
+  ctrlport_probe_c_impl.cc
+  ctrlport_probe2_c_impl.cc
+)
+endif(ENABLE_GR_CTRLPORT)
 
 #Add Windows DLL resource file if using MSVC
 IF(MSVC)
@@ -233,10 +271,11 @@ IF(MSVC)
 ENDIF(MSVC)
 
 list(APPEND blocks_libs
-    gnuradio-core
+    gnuradio-runtime
     volk
     ${Boost_LIBRARIES}
     ${BLOCKS_LIBRARIES}
+    ${LOG4CPP_LIBRARIES}
 )
 
 add_library(gnuradio-blocks SHARED ${gr_blocks_sources})
@@ -244,3 +283,41 @@ add_dependencies(gnuradio-blocks blocks_generated_includes)
 
 target_link_libraries(gnuradio-blocks ${blocks_libs})
 GR_LIBRARY_FOO(gnuradio-blocks RUNTIME_COMPONENT "blocks_runtime" DEVEL_COMPONENT "blocks_devel")
+
+########################################################################
+# QA C++ Code for gr-filter
+########################################################################
+if(ENABLE_TESTING)
+  include(GrTest)
+
+  include_directories(
+    ${GR_BLOCKS_INCLUDE_DIRS}
+    ${CPPUNIT_INCLUDE_DIRS})
+  link_directories(${CPPUNIT_LIBRARY_DIRS})
+
+  list(APPEND test_gr_blocks_sources
+    ${CMAKE_CURRENT_SOURCE_DIR}/test_gr_blocks.cc
+    ${CMAKE_CURRENT_SOURCE_DIR}/qa_gr_block.cc
+    ${CMAKE_CURRENT_SOURCE_DIR}/qa_gr_top_block.cc
+    ${CMAKE_CURRENT_SOURCE_DIR}/qa_gr_hier_block2.cc
+    ${CMAKE_CURRENT_SOURCE_DIR}/qa_gr_hier_block2_derived.cc
+    ${CMAKE_CURRENT_SOURCE_DIR}/qa_blocks.cc
+    ${CMAKE_CURRENT_SOURCE_DIR}/qa_block_tags.cc
+    ${CMAKE_CURRENT_SOURCE_DIR}/qa_rotator.cc
+    )
+
+  add_executable(test-gr-blocks ${test_gr_blocks_sources})
+
+  list(APPEND GR_TEST_TARGET_DEPS test-gr-blocks gnuradio-blocks)
+
+  target_link_libraries(
+    test-gr-blocks
+    gnuradio-runtime
+    gnuradio-blocks
+    ${Boost_LIBRARIES}
+    ${CPPUNIT_LIBRARIES}
+    ${LOG4CPP_LIBRARIES}
+  )
+
+  GR_ADD_TEST(test_gr_blocks test-gr-blocks)
+endif(ENABLE_TESTING)

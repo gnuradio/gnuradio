@@ -20,21 +20,22 @@
 ########################################################################
 # Setup the QT file generations stuff
 ########################################################################
+set(qtgui_mod_includedir ${CMAKE_CURRENT_SOURCE_DIR}/../include/qtgui)
 set(qtgui_moc_hdrs
-    spectrumdisplayform.h
-    displayform.h
-    timedisplayform.h
-    timerasterdisplayform.h
-    freqdisplayform.h
-    constellationdisplayform.h
-    waterfalldisplayform.h
-    form_menus.h
-    DisplayPlot.h
-    FrequencyDisplayPlot.h
-    TimeDomainDisplayPlot.h
-    TimeRasterDisplayPlot.h
-    WaterfallDisplayPlot.h
-    ConstellationDisplayPlot.h
+    ${qtgui_mod_includedir}/spectrumdisplayform.h
+    ${qtgui_mod_includedir}/displayform.h
+    ${qtgui_mod_includedir}/timedisplayform.h
+    ${qtgui_mod_includedir}/timerasterdisplayform.h
+    ${qtgui_mod_includedir}/freqdisplayform.h
+    ${qtgui_mod_includedir}/constellationdisplayform.h
+    ${qtgui_mod_includedir}/waterfalldisplayform.h
+    ${qtgui_mod_includedir}/form_menus.h
+    ${qtgui_mod_includedir}/DisplayPlot.h
+    ${qtgui_mod_includedir}/FrequencyDisplayPlot.h
+    ${qtgui_mod_includedir}/TimeDomainDisplayPlot.h
+    ${qtgui_mod_includedir}/TimeRasterDisplayPlot.h
+    ${qtgui_mod_includedir}/WaterfallDisplayPlot.h
+    ${qtgui_mod_includedir}/ConstellationDisplayPlot.h
 )
 QT4_WRAP_CPP(qtgui_moc_srcs ${qtgui_moc_hdrs})
 QT4_WRAP_UI(qtgui_ui_hdrs spectrumdisplayform.ui)
@@ -103,13 +104,12 @@ include_directories(
     ${GR_QTGUI_INCLUDE_DIRS}
     ${GR_FFT_INCLUDE_DIRS}
     ${GR_FILTER_INCLUDE_DIRS}
-    ${GNURADIO_CORE_INCLUDE_DIRS}
-    ${GRUEL_INCLUDE_DIRS}
+    ${GNURADIO_RUNTIME_INCLUDE_DIRS}
     ${VOLK_INCLUDE_DIRS}
     ${QWT_INCLUDE_DIRS}
     ${QT_INCLUDE_DIRS}
     ${FFTW3F_INCLUDE_DIRS}
-    ${LOG4CXX_INCLUDE_DIRS}
+    ${LOG4CPP_INCLUDE_DIRS}
     ${Boost_INCLUDE_DIRS}
     ${PYTHON_INCLUDE_DIRS}
 )
@@ -117,7 +117,7 @@ include_directories(
 link_directories(
     ${QWT_LIBRARY_DIRS}
     ${FFTW3F_LIBRARY_DIRS}
-    ${LOG4CXX_LIBRARY_DIRS}
+    ${LOG4CPP_LIBRARY_DIRS}
     ${Boost_LIBRARY_DIRS}
 )
 
@@ -132,7 +132,7 @@ endif(ENABLE_GR_CTRLPORT)
 # Setup library
 ########################################################################
 list(APPEND qtgui_libs
-    gnuradio-core
+    gnuradio-runtime
     gnuradio-fft
     gnuradio-filter
     volk
@@ -140,38 +140,10 @@ list(APPEND qtgui_libs
     ${QT_LIBRARIES}
     ${PYTHON_LIBRARIES}
     ${FFTW3F_LIBRARIES}
-    ${LOG4CXX_LIBRARIES}
+    ${LOG4CPP_LIBRARIES}
 )
 
 add_definitions(-DQWT_DLL) #setup QWT library linkage
 add_library(gnuradio-qtgui SHARED ${qtgui_srcs})
 target_link_libraries(gnuradio-qtgui ${qtgui_libs})
 GR_LIBRARY_FOO(gnuradio-qtgui RUNTIME_COMPONENT "qtgui_runtime" DEVEL_COMPONENT "qtgui_devel")
-
-########################################################################
-# Install the header files
-########################################################################
-install(FILES
-    DisplayPlot.h
-    FrequencyDisplayPlot.h
-    TimeDomainDisplayPlot.h
-    TimeRasterDisplayPlot.h
-    timeRasterGlobalData.h
-    WaterfallDisplayPlot.h
-    waterfallGlobalData.h
-    ConstellationDisplayPlot.h
-    plot_waterfall.h
-    plot_raster.h
-    spectrumdisplayform.h
-    displayform.h
-    timedisplayform.h
-    timerasterdisplayform.h
-    freqdisplayform.h
-    constellationdisplayform.h
-    waterfalldisplayform.h
-    form_menus.h
-    SpectrumGUIClass.h
-    spectrumUpdateEvents.h
-    DESTINATION ${GR_INCLUDE_DIR}/gnuradio
-    COMPONENT "qtgui_devel"
-)

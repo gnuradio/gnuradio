@@ -24,9 +24,9 @@ def run_test (f,Kb,bitspersymbol,K,dimensionality,constellation,N0,seed):
     #packet = [0]*Kb
     #for i in range(Kb-1*16): # last 16 bits = 0 to drive the final state to 0
         #packet[i] = random.randint(0, 1) # random 0s and 1s
-    #src = gr.vector_source_s(packet,False)
-    src = gr.lfsr_32k_source_s()
-    src_head = gr.head (gr.sizeof_short,Kb/16) # packet size in shorts
+    #src = blocks.vector_source_s(packet,False)
+    src = blocks.lfsr_32k_source_s()
+    src_head = blocks.head(gr.sizeof_short,Kb/16) # packet size in shorts
     #b2s = blocks.unpacked_to_packed_ss(1,gr.GR_MSB_FIRST) # pack bits in shorts
     s2fsmi = blocks.packed_to_unpacked_ss(bitspersymbol,gr.GR_MSB_FIRST) # unpack shorts to symbols compatible with the FSM input cardinality
     enc = trellis.encoder_ss(f,0) # initial state = 0
@@ -41,8 +41,8 @@ def run_test (f,Kb,bitspersymbol,K,dimensionality,constellation,N0,seed):
     va = trellis.viterbi_s(f,K,0,-1) # Put -1 if the Initial/Final states are not set.
     fsmi2s = blocks.unpacked_to_packed_ss(bitspersymbol,gr.GR_MSB_FIRST) # pack FSM input symbols to shorts
     #s2b = blocks.packed_to_unpacked_ss(1,gr.GR_MSB_FIRST) # unpack shorts to bits
-    #dst = gr.vector_sink_s();
-    dst = gr.check_lfsr_32k_s()
+    #dst = blocks.vector_sink_s();
+    dst = blocks.check_lfsr_32k_s()
 
 
     tb.connect (src,src_head,s2fsmi,enc,mod)

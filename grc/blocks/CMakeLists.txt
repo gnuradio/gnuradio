@@ -20,13 +20,4 @@
 ########################################################################
 file(GLOB xml_files "*.xml")
 
-# Force out the controlport GRC blocks if we've disabled it.
-if(NOT ENABLE_GR_CTRLPORT)
-  list(REMOVE_ITEM xml_files
-    ${CMAKE_CURRENT_SOURCE_DIR}/gr_ctrlport_viewer.xml
-    ${CMAKE_CURRENT_SOURCE_DIR}/gr_ctrlport_probe_c.xml
-    ${CMAKE_CURRENT_SOURCE_DIR}/gr_ctrlport_probe2_c.xml
-    )
-endif(NOT ENABLE_GR_CTRLPORT)
-
 install(FILES ${xml_files} DESTINATION ${GRC_BLOCKS_DIR} COMPONENT "grc")

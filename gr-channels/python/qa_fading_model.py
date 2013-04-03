@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2012 Free Software Foundation, Inc.
+# Copyright 2012,2013 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -22,6 +22,7 @@
 
 from gnuradio import gr, gr_unittest
 import analog_swig as analog
+import blocks_swig as blocks
 import channels_swig as channels
 import math
 
@@ -41,11 +42,11 @@ class test_fading_model(gr_unittest.TestCase):
         fDTs = 0.01
         K = 4
         signal = analog.sig_source_c(fs, analog.GR_SIN_WAVE, freq, 1)
-        head = gr.head(gr.sizeof_gr_complex, N)
+        head = blocks.head(gr.sizeof_gr_complex, N)
         op = channels.fading_model(8, fDTs=fDTs, LOS=True,
                                    K=K, seed=0)
-        snk = gr.vector_sink_c()
-        snk1 = gr.vector_sink_c()
+        snk = blocks.vector_sink_c()
+        snk1 = blocks.vector_sink_c()
 
         self.assertAlmostEqual(K, op.K(), 4)
         self.assertAlmostEqual(fDTs, op.fDTs(), 4)

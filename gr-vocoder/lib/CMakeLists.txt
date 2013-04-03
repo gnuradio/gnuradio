@@ -22,8 +22,7 @@
 ########################################################################
 include_directories(
     ${GR_VOCODER_INCLUDE_DIRS}
-    ${GNURADIO_CORE_INCLUDE_DIRS}
-    ${GRUEL_INCLUDE_DIRS}
+    ${GNURADIO_RUNTIME_INCLUDE_DIRS}
     ${LOG4CXX_INCLUDE_DIRS}
     ${Boost_INCLUDE_DIRS}
 )
@@ -35,6 +34,9 @@ if(ENABLE_GR_CTRLPORT)
   ADD_DEFINITIONS(-DGR_CTRLPORT)
   include_directories(${ICE_INCLUDE_DIR})
 endif(ENABLE_GR_CTRLPORT)
+
+include_directories(${LOG4CPP_INCLUDE_DIRS})
+link_directories(${LOG4CPP_LIBRARY_DIRS})
 
 ########################################################################
 # Setup library
@@ -80,9 +82,9 @@ GR_INCLUDE_SUBDIRECTORY(g7xx)
 GR_INCLUDE_SUBDIRECTORY(gsm)
 
 list(APPEND vocoder_libs
-    gnuradio-core
+    gnuradio-runtime
     ${Boost_LIBRARIES}
-    ${LOG4CXX_LIBRARIES}
+    ${LOG4CPP_LIBRARIES}
 )
 
 add_library(gnuradio-vocoder SHARED ${gr_vocoder_sources})

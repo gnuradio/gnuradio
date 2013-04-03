@@ -38,9 +38,9 @@ class test_transcendental(gr_unittest.TestCase):
         data = 100*[0,]
         expected_result = 100*[1,]
 
-        src = gr.vector_source_f(data, False)
+        src = blocks.vector_source_f(data, False)
         op = blocks.transcendental("cos", "float")
-        dst = gr.vector_sink_f()
+        dst = blocks.vector_sink_f()
 
         tb.connect(src, op)
         tb.connect(op, dst)
@@ -56,9 +56,9 @@ class test_transcendental(gr_unittest.TestCase):
         data = 100*[3,]
         expected_result = 100*[math.log10(3),]
 
-        src = gr.vector_source_f(data, False)
+        src = blocks.vector_source_f(data, False)
         op = blocks.transcendental("log10", "float")
-        dst = gr.vector_sink_f()
+        dst = blocks.vector_sink_f()
 
         tb.connect(src, op)
         tb.connect(op, dst)
@@ -74,9 +74,9 @@ class test_transcendental(gr_unittest.TestCase):
         data = 100*[3,]
         expected_result = 100*[math.tanh(3),]
 
-        src = gr.vector_source_f(data, False)
+        src = blocks.vector_source_f(data, False)
         op = blocks.transcendental("tanh", "float")
-        dst = gr.vector_sink_f()
+        dst = blocks.vector_sink_f()
 
         tb.connect(src, op)
         tb.connect(op, dst)

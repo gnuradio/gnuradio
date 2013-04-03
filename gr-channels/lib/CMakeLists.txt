@@ -27,8 +27,7 @@ include_directories(
     ${GR_BLOCKS_INCLUDE_DIRS}
     ${GR_FILTER_INCLUDE_DIRS}
     ${GR_ANALOG_INCLUDE_DIRS}
-    ${GNURADIO_CORE_INCLUDE_DIRS}
-    ${GRUEL_INCLUDE_DIRS}
+    ${GNURADIO_RUNTIME_INCLUDE_DIRS}
     ${Boost_INCLUDE_DIRS}
 )
 
@@ -49,7 +48,7 @@ list(APPEND channels_sources
 
 #Add Windows DLL resource file if using MSVC
 if(MSVC)
-    include(${CMAKE_INSTALL_PREFIX}/cmake/Modules/GrVersion.cmake)
+    include(${CMAKE_SOURCE_DIR}/cmake/Modules/GrVersion.cmake)
 
     configure_file(
         ${CMAKE_CURRENT_SOURCE_DIR}/gnuradio-channels.rc.in
@@ -63,7 +62,7 @@ endif(MSVC)
 
 list(APPEND channels_libs
     volk
-    gnuradio-core
+    gnuradio-runtime
     gnuradio-filter
     gnuradio-analog
     gnuradio-blocks
@@ -75,4 +74,4 @@ target_link_libraries(gnuradio-channels ${channels_libs})
 GR_LIBRARY_FOO(gnuradio-channels RUNTIME_COMPONENT "channels_runtime" DEVEL_COMPONENT "channels_devel")
 add_dependencies(gnuradio-channels
   channels_generated_includes channels_generated_swigs
-  gnuradio-core gnuradio-filter gnuradio-analog gnuradio-blocks)
+  gnuradio-runtime gnuradio-filter gnuradio-analog gnuradio-blocks)

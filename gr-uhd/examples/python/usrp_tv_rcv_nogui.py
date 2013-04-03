@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2005-2007,2011 Free Software Foundation, Inc.
+# Copyright 2005-2007,2011,2013 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -120,9 +120,9 @@ class my_top_block(gr.top_block):
 
         if not (options.in_filename=="usrp"):
           # file is data source, capture with usr_rx_csfile.py
-          self.filesource = gr.file_source(gr.sizeof_short,
-                                           options.in_filename,
-                                           options.repeat)
+          self.filesource = blocks.file_source(gr.sizeof_short,
+                                               options.in_filename,
+                                               options.repeat)
           self.istoc = blocks.interleaved_short_to_complex()
           self.connect(self.filesource,self.istoc)
           self.src=self.istoc
@@ -196,13 +196,13 @@ class my_top_block(gr.top_block):
           print "use the following line to show the demodulated TV-signal:"
           print "display -depth 8 -size " +str(width)+ "x" + str(height) + " gray:" +filename
           print "(Use the spacebar to advance to next frames)"
-          file_sink=gr.file_sink(gr.sizeof_char, filename)
+          file_sink = blocks.file_sink(gr.sizeof_char, filename)
           self.dst =file_sink
 
         if options.nframes is None:
             self.connect(self.src, self.agc)
         else:
-            self.head = gr.head(gr.sizeof_gr_complex, int(options.nframes*width*height))
+            self.head = blocks.head(gr.sizeof_gr_complex, int(options.nframes*width*height))
             self.connect(self.src, self.head, self.agc)
 
         self.connect (self.agc, self.am_demod, self.invert_and_scale,

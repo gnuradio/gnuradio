@@ -24,6 +24,7 @@
 #define INCLUDED_ANALOG_PLL_FREQDET_CF_H
 
 #include <analog/api.h>
+#include <blocks/control_loop.h>
 #include <gr_sync_block.h>
 
 namespace gr {
@@ -44,7 +45,9 @@ namespace gr {
      * around pi/200 -- 2pi/100.
      * \sa pll_refout_cc, pll_carriertracking_cc
      */
-    class ANALOG_API pll_freqdet_cf : virtual public gr_sync_block
+    class ANALOG_API pll_freqdet_cf
+      : virtual public gr_sync_block,
+        virtual public blocks::control_loop
     {
     public:
       // gr::analog::pll_freqdet_cf::sptr

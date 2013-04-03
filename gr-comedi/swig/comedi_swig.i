@@ -22,7 +22,7 @@
 
 #define COMEDI_API
 
-%include "gnuradio.i"
+%include "runtime_swig.i"
 
 //load generated python docstrings
 %include "comedi_swig_doc.i"

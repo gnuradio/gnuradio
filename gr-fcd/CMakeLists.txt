@@ -34,7 +34,7 @@ include(GrComponent)
 if (LINUX)
     GR_REGISTER_COMPONENT("gr-fcd" ENABLE_GR_FCD
         Boost_FOUND
-        ENABLE_GR_CORE
+        ENABLE_GNURADIO_RUNTIME
         ENABLE_GR_BLOCKS
         ENABLE_GR_AUDIO
         LIBUSB_FOUND
@@ -42,7 +42,7 @@ if (LINUX)
 else()
     GR_REGISTER_COMPONENT("gr-fcd" ENABLE_GR_FCD
         Boost_FOUND
-        ENABLE_GR_CORE
+        ENABLE_GNURADIO_RUNTIME
         ENABLE_GR_AUDIO
     )
 endif()

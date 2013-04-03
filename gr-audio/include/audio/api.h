@@ -22,7 +22,7 @@
 #ifndef INCLUDED_GR_AUDIO_API_H
 #define INCLUDED_GR_AUDIO_API_H
 
-#include <gruel/attributes.h>
+#include <attributes.h>
 
 #ifdef gnuradio_audio_EXPORTS
 #  define GR_AUDIO_API __GR_ATTR_EXPORT

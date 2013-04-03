@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2012 Free Software Foundation, Inc.
+# Copyright 2012,2013 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -20,7 +20,8 @@
 # Boston, MA 02110-1301, USA.
 #
 
-from gnuradio import gr, gr_unittest, filter
+from gnuradio import gr, gr_unittest, filter, blocks
+
 import math
 
 def sig_source_c(samp_rate, freq, amp, N):
@@ -51,10 +52,10 @@ class test_pfb_synthesizer(gr_unittest.TestCase):
         freqs = [0, 100, 200, -200, -100]
         for i in xrange(len(freqs)):
             data = sig_source_c(fs, freqs[i], 1, N)
-            signals.append(gr.vector_source_c(data))
+            signals.append(blocks.vector_source_c(data))
 
         pfb = filter.pfb_synthesizer_ccf(M, taps)
-        snk = gr.vector_sink_c()
+        snk = blocks.vector_sink_c()
 
         for i in xrange(M):
             self.tb.connect(signals[i], (pfb,i))

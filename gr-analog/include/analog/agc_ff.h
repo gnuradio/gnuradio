@@ -42,6 +42,14 @@ namespace gr {
       // gr::analog::agc_ff::sptr
       typedef boost::shared_ptr<agc_ff> sptr;
             
+      /*!
+       * Build a floating point AGC loop block.
+       *
+       * \param rate the update rate of the loop.
+       * \param reference reference value to adjust signal power to.
+       * \param gain initial gain value.
+       * \param max_gain maximum gain value (0 for unlimited).
+       */
       static sptr make(float rate = 1e-4, float reference = 1.0,
 		       float gain = 1.0, float max_gain = 0.0);
       

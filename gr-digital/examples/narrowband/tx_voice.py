@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2005-2007,2009,2011 Free Software Foundation, Inc.
+# Copyright 2005-2007,2009,2011,2013 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -80,10 +80,10 @@ class my_top_block(gr.top_block):
             rrate = usrp_rate / audio_rate
             
         elif(options.to_file is not None):
-            self.sink = gr.file_sink(gr.sizeof_gr_complex, options.to_file)
+            self.sink = blocks.file_sink(gr.sizeof_gr_complex, options.to_file)
             rrate = 1
         else:
-            self.sink = gr.null_sink(gr.sizeof_gr_complex)
+            self.sink = blocks.null_sink(gr.sizeof_gr_complex)
             rrate = 1
 
         self.resampler = filter.pfb.arb_resampler_ccf(rrate)

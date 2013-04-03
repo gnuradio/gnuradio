@@ -1,5 +1,5 @@
 #
-# Copyright 2008 Free Software Foundation, Inc.
+# Copyright 2008,2013 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -20,6 +20,7 @@
 #
 
 from gnuradio import gr
+from gnuradio import blocks
 
 class selector(gr.hier_block2):
 	"""A hier2 block with N inputs and M outputs, where data is only forwarded through input n to output m."""
@@ -40,12 +41,13 @@ class selector(gr.hier_block2):
 			gr.io_signature(num_outputs, num_outputs, item_size),
 		)
 		#terminator blocks for unused inputs and outputs
-		self.input_terminators = [gr.null_sink(item_size) for i in range(num_inputs)]
-		self.output_terminators = [gr.head(item_size, 0) for i in range(num_outputs)]
-		self.copy = gr.kludge_copy(item_size)
+		self.input_terminators = [blocks.null_sink(item_size) for i in range(num_inputs)]
+		self.output_terminators = [blocks.head(item_size, 0) for i in range(num_outputs)]
+		self.copy = blocks.copy(item_size)
 		#connections
 		for i in range(num_inputs): self.connect((self, i), self.input_terminators[i])
-		for i in range(num_outputs): self.connect(gr.null_source(item_size), self.output_terminators[i], (self, i))
+		for i in range(num_outputs): self.connect(blocks.null_source(item_size),
+                                                          self.output_terminators[i], (self, i))
 		self.item_size = item_size
 		self.input_index = input_index
 		self.output_index = output_index

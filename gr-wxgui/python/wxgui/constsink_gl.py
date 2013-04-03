@@ -26,6 +26,7 @@ import const_window
 import common
 from gnuradio import gr
 from gnuradio import blocks
+from gnuradio import analog
 from pubsub import pubsub
 from constants import *
 import sys
@@ -100,7 +101,7 @@ class const_sink_c(gr.hier_block2, common.wxgui_hb):
 		#	gain_omega,
 		#	omega_limit,
 		#)
-		agc = gr.feedforward_agc_cc(16, 1)
+		agc = analog.feedforward_agc_cc(16, 1)
 		msgq = gr.msg_queue(2)
 		sink = blocks.message_sink(gr.sizeof_gr_complex*const_size, msgq, True)
 		#controller

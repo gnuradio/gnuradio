@@ -24,7 +24,7 @@
 #define INCLUDED_GR_TAG_DEBUG_IMPL_H
 
 #include <blocks/tag_debug.h>
-#include <gruel/thread.h>
+#include <thread/thread.h>
 #include <stddef.h>
 
 namespace gr {
@@ -37,7 +37,7 @@ namespace gr {
       std::vector<gr_tag_t> d_tags;
       std::vector<gr_tag_t>::iterator d_tags_itr;
       bool d_display;
-      gruel::mutex d_mutex;
+      gr::thread::mutex d_mutex;
 
     public:
       tag_debug_impl(size_t sizeof_stream_item, const std::string &name);

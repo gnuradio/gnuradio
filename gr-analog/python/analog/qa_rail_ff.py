@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2012 Free Software Foundation, Inc.
+# Copyright 2012,2013 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -20,7 +20,7 @@
 # Boston, MA 02110-1301, USA.
 #
 
-from gnuradio import gr, gr_unittest, analog
+from gnuradio import gr, gr_unittest, analog, blocks
 
 def clip(x, lo, hi):
     if(x < lo):
@@ -62,9 +62,9 @@ class test_rail(gr_unittest.TestCase):
         src_data = [-2, -1, -0.5, -0.25, 0, 0.25, 0.5, 1, 2]
         expected_result = map(lambda x: clip(x, lo, hi), src_data)
 
-        src = gr.vector_source_f(src_data)
+        src = blocks.vector_source_f(src_data)
         op = analog.rail_ff(lo, hi)
-        dst = gr.vector_sink_f()
+        dst = blocks.vector_sink_f()
 
         self.tb.connect(src, op)
         self.tb.connect(op, dst)

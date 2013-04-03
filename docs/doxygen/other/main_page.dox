@@ -45,6 +45,7 @@ More details on GNU Radio concepts:
 \li \ref page_metadata
 \li \ref volk_guide
 \li \ref page_pfb
+\li \ref page_tagged_stream_blocks
 
 
 \section flowgraph Operating a Flowgraph
@@ -80,7 +81,7 @@ them.
             
             self.src = analog.noise_source_c(gr.GR_GAUSSIAN, amp)
             self.flt = filter.fir_filter_ccf(1, taps)
-            self.snk = gr.null_sink(gr.sizeof_gr_complex)
+            self.snk = blocks.null_sink(gr.sizeof_gr_complex)
     
             self.connect(self.src, self.flt, self.snk)
     
@@ -226,8 +227,8 @@ class mytb(gr.top_block):
         self.src1 = analog.noise_source_c(analog.GR_GAUSSIAN, 1)
         self.add  = blocks.add_cc()
         self.sub  = blocks.sub_cc()
-        self.head = gr.head(gr.sizeof_gr_complex, 1000000)
-        self.snk  = gr.file_sink(gr.sizeof_gr_complex, "output.32fc")
+        self.head = blocks.head(gr.sizeof_gr_complex, 1000000)
+        self.snk  = blocks.file_sink(gr.sizeof_gr_complex, "output.32fc")
 
         self.connect(self.src0, (self.add,0))
         self.connect(self.src1, (self.add,1))
@@ -281,8 +282,8 @@ class mytb(gr.top_block):
         self.src1 = analog.noise_source_c(analog.GR_GAUSSIAN, 1)
         self.add  = blocks.add_cc()
         self.sub  = blocks.sub_cc()
-        self.head = gr.head(gr.sizeof_gr_complex, 1000000)
-        self.snk  = gr.file_sink(gr.sizeof_gr_complex, "output.32fc")
+        self.head = blocks.head(gr.sizeof_gr_complex, 1000000)
+        self.snk  = blocks.file_sink(gr.sizeof_gr_complex, "output.32fc")
 
         self.connect(self.src0, (self.add,0))
         self.connect(self.src1, (self.add,1))

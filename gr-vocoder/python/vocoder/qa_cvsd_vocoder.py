@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2007,2010,2011 Free Software Foundation, Inc.
+# Copyright 2007,2010,2011,2013 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -97,20 +97,20 @@ class test_cvsd_vocoder (gr_unittest.TestCase):
         # WARNING: not importing analog in this QA code.
         # If we enable this, we can probably just create a sin with numpy.
         src = analog.sig_source_f(sample_rate, analog.GR_SIN_WAVE, 200, 1, 0)
-        head = gr.head(gr.sizeof_float, 100)
+        head = blocks.head(gr.sizeof_float, 100)
         src_scale = blocks.multiply_const_ff(scale_factor)
 
         interp = filter.rational_resampler_fff(8, 1)
         f2s = blocks.float_to_short()
 
-        enc = cvsd_vocoder.encode_sb()
-        dec = cvsd_vocoder.decode_bs()
+        enc = vocoder.cvsd_vocoder.encode_sb()
+        dec = vocoder.cvsd_vocoder.decode_bs()
 
         s2f = blocks.short_to_float()
         decim = filter.rational_resampler_fff(1, 8)
 
         sink_scale = blocks.multiply_const_ff(1.0/scale_factor)
-        sink = gr.vector_sink_f()
+        sink = blocks.vector_sink_f()
 
         self.tb.connect(src, src_scale, interp, f2s, enc)
         self.tb.connect(enc, dec, s2f, decim, sink_scale, head, sink)

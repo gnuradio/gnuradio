@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2006,2007,2010,2011 Free Software Foundation, Inc.
+# Copyright 2006,2007,2010,2011,2013 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -20,7 +20,7 @@
 # Boston, MA 02110-1301, USA.
 # 
 
-from gnuradio import gr, gr_unittest, digital
+from gnuradio import gr, gr_unittest, digital, blocks
 
 class test_lms_dd_equalizer(gr_unittest.TestCase):
 
@@ -31,9 +31,9 @@ class test_lms_dd_equalizer(gr_unittest.TestCase):
     	self.tb = None
     	
     def transform(self, src_data, gain, const):
-	SRC = gr.vector_source_c(src_data, False)
+	SRC = blocks.vector_source_c(src_data, False)
 	EQU = digital.lms_dd_equalizer_cc(4, gain, 1, const.base())
-	DST = gr.vector_sink_c()
+	DST = blocks.vector_sink_c()
 	self.tb.connect(SRC, EQU, DST)
 	self.tb.run()
 	return DST.data()

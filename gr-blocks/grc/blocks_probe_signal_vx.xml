@@ -45,9 +45,11 @@
 		<value>1</value>
 		<type>int</type>
 	</param>
+	<check>$vlen &gt; 0</check>
 	<sink>
 		<name>in</name>
 		<type>$type</type>
+		<vlen>$vlen</vlen>
 	</sink>
 	<doc>
 Available functions to probe: level()

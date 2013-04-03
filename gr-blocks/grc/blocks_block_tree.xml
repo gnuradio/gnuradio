@@ -31,18 +31,30 @@
 	<cat>
 	        <name>Sources (New)</name>
 		<block>blocks_file_source</block>
+		<block>blocks_file_descriptor_source</block>
 		<block>blocks_file_meta_source</block>
 		<block>blocks_pdu_to_tagged_stream</block>
 		<block>blocks_random_pdu</block>
 		<block>blocks_message_source</block>
 		<block>blocks_message_burst_source</block>
+		<block>blocks_udp_source</block>
+		<block>blocks_wavfile_source</block>
+		<block>blocks_vector_source_x</block>
+		<block>blocks_null_source</block>
 	</cat>
 	<cat>
 	        <name>Sinks (New)</name>
+		<block>blocks_file_sink</block>
+		<block>blocks_file_descriptor_sink</block>
 		<block>blocks_file_meta_sink</block>
 		<block>blocks_tagged_stream_to_pdu</block>
 		<block>blocks_tag_debug</block>
 		<block>blocks_message_sink</block>
+		<block>blocks_tagged_file_sink</block>
+		<block>blocks_udp_sink</block>
+		<block>blocks_wavfile_sink</block>
+		<block>blocks_vector_sink_x</block>
+		<block>blocks_null_sink</block>
 	</cat>
 	<cat>
 		<name>Math Operations (New) </name>
@@ -60,6 +72,7 @@
                 <block>blocks_transcendental</block>
                 <block>blocks_argmax_xx</block>
                 <block>blocks_max_xx</block>
+                <block>blocks_vco_f</block>
 	</cat>
 	<cat>
 		<name>Boolean Operations (New) </name>
@@ -88,6 +101,7 @@
 		<block>blocks_int_to_float</block>
 		<block>blocks_interleaved_short_to_complex</block>
 		<block>blocks_short_to_char</block>
+		<block>blocks_repack_bits_bb</block>
 		<block>blocks_short_to_float</block>
 		<block>blocks_uchar_to_float</block>
 	</cat>
@@ -109,10 +123,13 @@
 		<block>blocks_stream_to_vector_decimator</block>
 		<block>blocks_peak_detector_xb</block>
 		<block>blocks_peak_detector2_fb</block>
+		<block>blocks_plateau_detector_fb</block>
 		<block>blocks_regenerate_bb</block>
 		<block>blocks_stretch_ff</block>
                 <block>blocks_threshold_ff</block>
                 <block>blocks_burst_tagger</block>
+                <block>blocks_endian_swap</block>
+		<block>blocks_vector_insert_x</block>
 	</cat>
 	<cat>
 	        <name>Misc Conversions (New) </name>
@@ -124,6 +141,11 @@
 	<cat>
 	        <name>Misc (New) </name>
                 <block>blocks_throttle</block>
+                <block>blocks_probe_rate</block>
+		<block>blocks_head</block>
+		<block>blocks_skiphead</block>
+                <block>blocks_copy</block>
+                <block>blocks_nop</block>
 	</cat>
 	<cat>
 	        <name>Networking</name>

@@ -33,6 +33,7 @@ install(FILES
     filter_pfb_decimator.xml
     filter_pfb_interpolator.xml
     filter_pfb_synthesizer.xml
+    filter_rational_resampler_xxx.xml
     filter_rational_resampler_base_xxx.xml
     filter_single_pole_iir_filter_xx.xml
     filter_low_pass_filter.xml

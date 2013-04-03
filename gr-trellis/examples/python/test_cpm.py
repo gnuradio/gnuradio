@@ -93,7 +93,7 @@ def run_test(seed,blocksize):
 	##################################################
 	# Blocks
 	##################################################
-	random_source_x_0 = gr.vector_source_b(data.tolist(), False)
+	random_source_x_0 = blocks.vector_source_b(data.tolist(), False)
 	digital_chunks_to_symbols_xx_0 = digital.chunks_to_symbols_bf((-1, 1), 1)
 	filter_interp_fir_filter_xxx_0 = filter.interp_fir_filter_fff(Q, p)
 	analog_frequency_modulator_fc_0 = analog.frequency_modulator_fc(2*math.pi*h*(1.0/Q))
@@ -107,11 +107,11 @@ def run_test(seed,blocksize):
 	filter_fir_filter_xxx_0_0 = filter.fir_filter_ccc(Q, MF[0].conjugate())
 	filter_fir_filter_xxx_0_0_0 = filter.fir_filter_ccc(Q, MF[1].conjugate())
 	blocks_streams_to_stream_0 = blocks.streams_to_stream(gr.sizeof_gr_complex*1, int(N))
-	gr_skiphead_0 = gr.skiphead(gr.sizeof_gr_complex*1, int(N*(1+0)))
+	blocks_skiphead_0 = blocks.skiphead(gr.sizeof_gr_complex*1, int(N*(1+0)))
 	viterbi = trellis.viterbi_combined_cb(f, head+blocksize+tail, 0, -1, int(N),
 					      constellation, digital.TRELLIS_EUCLIDEAN)
 
-        gr_vector_sink_x_0 = gr.vector_sink_b()
+        blocks_vector_sink_x_0 = blocks.vector_sink_b()
 
 	##################################################
 	# Connections
@@ -127,13 +127,13 @@ def run_test(seed,blocksize):
 	tb.connect((blocks_multiply_vxx_0, 0), (filter_fir_filter_xxx_0_0_0, 0))
 	tb.connect((filter_fir_filter_xxx_0_0, 0), (blocks_streams_to_stream_0, 0))
 	tb.connect((filter_fir_filter_xxx_0_0_0, 0), (blocks_streams_to_stream_0, 1))
-	tb.connect((blocks_streams_to_stream_0, 0), (gr_skiphead_0, 0))
-	tb.connect((gr_skiphead_0, 0), (viterbi, 0))
-	tb.connect((viterbi, 0), (gr_vector_sink_x_0, 0))
+	tb.connect((blocks_streams_to_stream_0, 0), (blocks_skiphead_0, 0))
+	tb.connect((blocks_skiphead_0, 0), (viterbi, 0))
+	tb.connect((viterbi, 0), (blocks_vector_sink_x_0, 0))
 
 
         tb.run()
-        dataest = gr_vector_sink_x_0.data()
+        dataest = blocks_vector_sink_x_0.data()
         #print data
         #print numpy.array(dataest)
         perr = 0

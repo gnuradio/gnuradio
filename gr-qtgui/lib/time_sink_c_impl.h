@@ -24,9 +24,9 @@
 #define INCLUDED_QTGUI_TIME_SINK_C_IMPL_H
 
 #include <qtgui/time_sink_c.h>
-#include <timedisplayform.h>
-#include <gruel/thread.h>
-#include <gruel/high_res_timer.h>
+#include <qtgui/timedisplayform.h>
+#include <thread/thread.h>
+#include <high_res_timer.h>
 
 namespace gr {
   namespace qtgui {
@@ -36,7 +36,7 @@ namespace gr {
     private:
       void initialize();
 
-      gruel::mutex d_mutex;
+      gr::thread::mutex d_mutex;
 
       int d_size;
       double d_samp_rate;
@@ -49,8 +49,8 @@ namespace gr {
       QWidget *d_parent;
       TimeDisplayForm *d_main_gui;
 
-      gruel::high_res_timer_type d_update_time;
-      gruel::high_res_timer_type d_last_time;
+      gr::high_res_timer_type d_update_time;
+      gr::high_res_timer_type d_last_time;
 
       void npoints_resize();
 

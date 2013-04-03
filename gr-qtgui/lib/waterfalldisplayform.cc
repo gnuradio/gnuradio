@@ -23,7 +23,7 @@
 #include <cmath>
 #include <QColorDialog>
 #include <QMessageBox>
-#include <waterfalldisplayform.h>
+#include <qtgui/waterfalldisplayform.h>
 #include <iostream>
 
 WaterfallDisplayForm::WaterfallDisplayForm(int nplots, QWidget* parent)
@@ -115,7 +115,7 @@ WaterfallDisplayForm::newData(const QEvent *updateEvent)
   WaterfallUpdateEvent *event = (WaterfallUpdateEvent*)updateEvent;
   const std::vector<double*> dataPoints = event->getPoints();
   const uint64_t numDataPoints = event->getNumDataPoints();
-  const gruel::high_res_timer_type dataTimestamp = event->getDataTimestamp();
+  const gr::high_res_timer_type dataTimestamp = event->getDataTimestamp();
 
   _min_val =  1000;
   _max_val = -1000;

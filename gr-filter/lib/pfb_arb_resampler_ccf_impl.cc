@@ -140,7 +140,7 @@ namespace gr {
     void
     pfb_arb_resampler_ccf_impl::set_taps(const std::vector<float> &taps)
     {
-      gruel::scoped_lock guard(d_mutex);
+      gr::thread::scoped_lock guard(d_mutex);
 
       std::vector<float> dtaps;
       create_diff_taps(taps, dtaps);
@@ -172,7 +172,7 @@ namespace gr {
     void
     pfb_arb_resampler_ccf_impl::set_rate(float rate)
     {
-      gruel::scoped_lock guard(d_mutex);
+      gr::thread::scoped_lock guard(d_mutex);
 
       d_dec_rate = (unsigned int)floor(d_int_rate/rate);
       d_flt_rate = (d_int_rate/rate) - d_dec_rate;
@@ -182,7 +182,7 @@ namespace gr {
     void
     pfb_arb_resampler_ccf_impl::set_phase(float ph)
     {
-      gruel::scoped_lock guard(d_mutex);
+      gr::thread::scoped_lock guard(d_mutex);
       if((ph < 0) || (ph >= 2.0*M_PI)) {
 	throw std::runtime_error("pfb_arb_resampler_ccf: set_phase value out of bounds [0, 2pi).\n");
       }
@@ -204,7 +204,7 @@ namespace gr {
 					     gr_vector_const_void_star &input_items,
 					     gr_vector_void_star &output_items)
     {
-      gruel::scoped_lock guard(d_mutex);
+      gr::thread::scoped_lock guard(d_mutex);
 
       gr_complex *in = (gr_complex*)input_items[0];
       gr_complex *out = (gr_complex*)output_items[0];

@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2012 Free Software Foundation, Inc.
+# Copyright 2012,2013 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -20,7 +20,7 @@
 # Boston, MA 02110-1301, USA.
 #
 
-from gnuradio import gr, gr_unittest, analog
+from gnuradio import gr, gr_unittest, analog, blocks
 
 class test_ctcss_squelch(gr_unittest.TestCase):
 
@@ -67,10 +67,10 @@ class test_ctcss_squelch(gr_unittest.TestCase):
         expected_result = src_data
         expected_result[0] = 0
 
-        src = gr.vector_source_f(src_data)
+        src = blocks.vector_source_f(src_data)
         op = analog.ctcss_squelch_ff(rate, freq, level,
                                      length, ramp, gate)
-        dst = gr.vector_sink_f()
+        dst = blocks.vector_sink_f()
 
         self.tb.connect(src, op)
         self.tb.connect(op, dst)
@@ -89,10 +89,10 @@ class test_ctcss_squelch(gr_unittest.TestCase):
         gate = False
 
         src_data = map(lambda x: float(x)/10.0, range(1, 40))
-        src = gr.vector_source_f(src_data)
+        src = blocks.vector_source_f(src_data)
         op = analog.ctcss_squelch_ff(rate, freq, level,
                                      length, ramp, gate)
-        dst = gr.vector_sink_f()
+        dst = blocks.vector_sink_f()
 
         self.tb.connect(src, op)
         self.tb.connect(op, dst)

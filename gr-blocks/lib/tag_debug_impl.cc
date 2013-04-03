@@ -56,14 +56,14 @@ namespace gr {
     std::vector<gr_tag_t>
     tag_debug_impl::current_tags()
     {
-      gruel::scoped_lock l(d_mutex);
+      gr::thread::scoped_lock l(d_mutex);
       return d_tags;
     }
 
     void
     tag_debug_impl::set_display(bool d)
     {
-      gruel::scoped_lock l(d_mutex);
+      gr::thread::scoped_lock l(d_mutex);
       d_display = d;
     }
 
@@ -72,7 +72,7 @@ namespace gr {
                          gr_vector_const_void_star &input_items,
                          gr_vector_void_star &output_items)
     {
-      gruel::scoped_lock l(d_mutex);
+      gr::thread::scoped_lock l(d_mutex);
 
       std::stringstream sout;
       if(d_display) {

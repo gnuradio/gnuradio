@@ -23,7 +23,7 @@
 #ifndef TIMERASTER_GLOBAL_DATA_CPP
 #define TIMERASTER_GLOBAL_DATA_CPP
 
-#include <timeRasterGlobalData.h>
+#include <qtgui/timeRasterGlobalData.h>
 #include <cstdio>
 #include <cmath>
 #include <iostream>

@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2012 Free Software Foundation, Inc.
+# Copyright 2012,2013 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -41,10 +41,10 @@ class test_multiply_conjugate (gr_unittest.TestCase):
         exp_data = (12+0j, 8+0j, 12+0j, 8+0j,
                     12+0j, 8+0j, 12+0j, 8+0j,
                     0+0j)
-        src0 = gr.vector_source_c(src_data0)
-        src1 = gr.vector_source_c(src_data1)
+        src0 = blocks.vector_source_c(src_data0)
+        src1 = blocks.vector_source_c(src_data1)
         op = blocks.multiply_conjugate_cc ()
-        dst = gr.vector_sink_c ()
+        dst = blocks.vector_sink_c ()
 
         self.tb.connect(src0, (op,0))
         self.tb.connect(src1, (op,1))

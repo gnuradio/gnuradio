@@ -20,7 +20,7 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include <DisplayPlot.h>
+#include <qtgui/DisplayPlot.h>
 
 #include <qwt_scale_draw.h>
 #include <qwt_legend.h>

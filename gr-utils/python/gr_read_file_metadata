@@ -23,7 +23,7 @@
 import sys
 from optparse import OptionParser
 
-from gruel import pmt
+import pmt
 from gnuradio.blocks import parse_file_metadata
 
 def main(filename, detached=False):

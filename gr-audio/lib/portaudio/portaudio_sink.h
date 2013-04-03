@@ -24,7 +24,7 @@
 
 #include <audio/sink.h>
 #include <gr_buffer.h>
-#include <gruel/thread.h>
+#include <thread/thread.h>
 #include <string>
 #include <portaudio.h>
 #include <stdexcept>
@@ -58,8 +58,8 @@ namespace gr {
       gr_buffer_sptr        d_writer;  // buffer used between work and callback
       gr_buffer_reader_sptr d_reader;
 
-      gruel::mutex              d_ringbuffer_mutex;
-      gruel::condition_variable d_ringbuffer_cond;
+      gr::thread::mutex              d_ringbuffer_mutex;
+      gr::thread::condition_variable d_ringbuffer_cond;
       bool                      d_ringbuffer_ready;
 
       // random stats

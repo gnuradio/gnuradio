@@ -20,12 +20,18 @@
  */
 
 #define ANALOG_API
+#define BLOCKS_API
 
-%include "gnuradio.i"
+%include "runtime_swig.i"
 %include "stdint.i"
 
 //load generated python docstrings
 %include "analog_swig_doc.i"
+
+%{
+#include <blocks/control_loop.h>
+%}
+%include <blocks/control_loop.h>
 
 %{
 #include "analog/cpm.h"
@@ -59,7 +65,6 @@
 #include "analog/pwr_squelch_ff.h"
 #include "analog/quadrature_demod_cf.h"
 #include "analog/rail_ff.h"
-#include "analog/sincos.h"
 #include "analog/sig_source_s.h"
 #include "analog/sig_source_i.h"
 #include "analog/sig_source_f.h"
@@ -101,7 +106,6 @@
 %include "analog/pwr_squelch_ff.h"
 %include "analog/quadrature_demod_cf.h"
 %include "analog/rail_ff.h"
-%include "analog/sincos.h"
 %include "analog/sig_source_s.h"
 %include "analog/sig_source_i.h"
 %include "analog/sig_source_f.h"

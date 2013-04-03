@@ -255,7 +255,7 @@ class MyFrame(wx.Frame):
             self.tune_offset = 0
 
         else:
-           self.src = gr.file_source (gr.sizeof_short,options.input_file)
+           self.src = blocks.file_source (gr.sizeof_short,options.input_file)
            self.tune_offset = 2200 # 2200 works for 3.5-4Mhz band
 
            # convert rf data in interleaved short int form to complex
@@ -271,7 +271,7 @@ class MyFrame(wx.Frame):
 
         # save radio data to a file
         if SAVE_RADIO_TO_FILE:
-           radio_file = gr.file_sink(gr.sizeof_short, options.radio_file)
+           radio_file = blocks.file_sink(gr.sizeof_short, options.radio_file)
            self.tb.connect (self.src, radio_file)
 
 	# 2nd DDC
@@ -375,7 +375,7 @@ class MyFrame(wx.Frame):
 	self.tb.connect(agc,dst)
 
 	if SAVE_AUDIO_TO_FILE:
-	  f_out = gr.file_sink(gr.sizeof_short,options.audio_file)
+	  f_out = blocks.file_sink(gr.sizeof_short,options.audio_file)
 	  sc1 = blocks.multiply_const_ff(64000)
 	  f2s1 = blocks.float_to_short()
 	  self.tb.connect(agc,sc1,f2s1,f_out)

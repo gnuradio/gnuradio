@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2010,2011 Free Software Foundation, Inc.
+# Copyright 2010,2011,2013 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -21,6 +21,7 @@
 # 
 
 from gnuradio import gr
+from gnuradio import blocks
 from gnuradio import eng_notation
 from gnuradio.eng_option import eng_option
 from optparse import OptionParser
@@ -56,10 +57,10 @@ class my_top_block(gr.top_block):
             
         elif(options.to_file is not None):
             sys.stderr.write(("Saving samples to '%s'.\n\n" % (options.to_file)))
-            self.sink = gr.file_sink(gr.sizeof_gr_complex, options.to_file)
+            self.sink = blocks.file_sink(gr.sizeof_gr_complex, options.to_file)
         else:
             sys.stderr.write("No sink defined, dumping samples to null sink.\n\n")
-            self.sink = gr.null_sink(gr.sizeof_gr_complex)
+            self.sink = blocks.null_sink(gr.sizeof_gr_complex)
 
         # do this after for any adjustments to the options that may
         # occur in the sinks (specifically the UHD sink)

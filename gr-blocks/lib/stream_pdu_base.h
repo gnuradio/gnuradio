@@ -23,8 +23,8 @@
 #ifndef INCLUDED_STREAM_PDU_BASE_H
 #define INCLUDED_STREAM_PDU_BASE_H
 
-#include <gruel/thread.h>
-#include <gruel/pmt.h>
+#include <thread/thread.h>
+#include <pmt/pmt.h>
 
 class gr_basic_block;
 
@@ -42,7 +42,7 @@ namespace gr {
       bool d_started;
       bool d_finished;
       std::vector<uint8_t> d_rxbuf;
-      gruel::thread d_thread;
+      gr::thread::thread d_thread;
 
       pmt::pmt_t d_port;
       gr_basic_block *d_blk;

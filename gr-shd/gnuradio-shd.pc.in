@@ -5,7 +5,7 @@ includedir=@includedir@
 
 Name: gnuradio-shd
 Description: GNU Radio blocks for the Symplex Hardware Driver (SHD)
-Requires: gnuradio-core
+Requires: gnuradio-runtime
 Version: @LIBVER@
 Libs: -L${libdir} -lgnuradio-shd
 Cflags: -I${includedir}

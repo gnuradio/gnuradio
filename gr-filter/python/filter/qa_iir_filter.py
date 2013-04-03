@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2004,2007,2010 Free Software Foundation, Inc.
+# Copyright 2004,2007,2010,2013 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -20,7 +20,7 @@
 # Boston, MA 02110-1301, USA.
 #
 
-from gnuradio import gr, gr_unittest, filter
+from gnuradio import gr, gr_unittest, filter, blocks
 
 class test_iir_filter(gr_unittest.TestCase):
 
@@ -35,9 +35,9 @@ class test_iir_filter(gr_unittest.TestCase):
         fftaps = ()
         fbtaps = ()
         expected_result = (0, 0, 0, 0, 0, 0, 0, 0)
-        src = gr.vector_source_f(src_data)
+        src = blocks.vector_source_f(src_data)
         op = filter.iir_filter_ffd(fftaps, fbtaps)
-        dst = gr.vector_sink_f()
+        dst = blocks.vector_sink_f()
         self.tb.connect(src, op)
         self.tb.connect(op, dst)
         self.tb.run()
@@ -49,9 +49,9 @@ class test_iir_filter(gr_unittest.TestCase):
         fftaps = (2,)
         fbtaps = (0,)
         expected_result = (2, 4, 6, 8, 10, 12, 14, 16)
-        src = gr.vector_source_f(src_data)
+        src = blocks.vector_source_f(src_data)
         op = filter.iir_filter_ffd(fftaps, fbtaps)
-        dst = gr.vector_sink_f()
+        dst = blocks.vector_sink_f()
         self.tb.connect(src, op)
         self.tb.connect(op, dst)
         self.tb.run()
@@ -63,9 +63,9 @@ class test_iir_filter(gr_unittest.TestCase):
         fftaps = (2, 11)
         fbtaps = (0,  0)
         expected_result = (2, 15, 28, 41, 54, 67, 80, 93)
-        src = gr.vector_source_f(src_data)
+        src = blocks.vector_source_f(src_data)
         op = filter.iir_filter_ffd(fftaps, fbtaps)
-        dst = gr.vector_sink_f()
+        dst = blocks.vector_sink_f()
         self.tb.connect(src, op)
         self.tb.connect(op, dst)
         self.tb.run()
@@ -77,9 +77,9 @@ class test_iir_filter(gr_unittest.TestCase):
         fftaps = (2, 11)
         fbtaps = (0,  -1)
         expected_result = (2, 13, 15, 26, 28, 39, 41, 52)
-        src = gr.vector_source_f(src_data)
+        src = blocks.vector_source_f(src_data)
         op = filter.iir_filter_ffd(fftaps, fbtaps)
-        dst = gr.vector_sink_f()
+        dst = blocks.vector_sink_f()
         self.tb.connect(src, op)
         self.tb.connect(op, dst)
         self.tb.run()
@@ -91,9 +91,9 @@ class test_iir_filter(gr_unittest.TestCase):
         fftaps = (2, 11,  0)
         fbtaps = (0,  -1, 3)
         expected_result = (2, 13, 21, 59, 58, 186, 68, 583)
-        src = gr.vector_source_f(src_data)
+        src = blocks.vector_source_f(src_data)
         op = filter.iir_filter_ffd(fftaps, fbtaps)
-        dst = gr.vector_sink_f()
+        dst = blocks.vector_sink_f()
         self.tb.connect(src, op)
         self.tb.connect(op, dst)
         self.tb.run()
@@ -105,12 +105,12 @@ class test_iir_filter(gr_unittest.TestCase):
         expected_result = (2, 13, 21, 59, 58, 186, 68, 583)
         fftaps = (2, 1)
         fbtaps = (0, -1)
-        src = gr.vector_source_f(src_data)
+        src = blocks.vector_source_f(src_data)
         op = filter.iir_filter_ffd(fftaps, fbtaps)
         fftaps = (2, 11,  0)
         fbtaps = (0,  -1, 3)
         op.set_taps(fftaps, fbtaps)
-        dst = gr.vector_sink_f()
+        dst = blocks.vector_sink_f()
         self.tb.connect(src, op)
         self.tb.connect(op, dst)
         self.tb.run()
@@ -122,12 +122,12 @@ class test_iir_filter(gr_unittest.TestCase):
         expected_result = (2,2,5,5,8,8,11,11)
         fftaps = (2, 1)
         fbtaps = (0, -1)
-        src = gr.vector_source_f(src_data)
+        src = blocks.vector_source_f(src_data)
         op = filter.iir_filter_ffd(fftaps, fbtaps)
         fftaps = (2,0,1)
         fbtaps = (0, -1)
         op.set_taps(fftaps, fbtaps)
-        dst = gr.vector_sink_f()
+        dst = blocks.vector_sink_f()
         self.tb.connect(src, op)
         self.tb.connect(op, dst)
         self.tb.run()
@@ -139,12 +139,12 @@ class test_iir_filter(gr_unittest.TestCase):
         expected_result = (2,4,4,10,18,14,26,56)
         fftaps = (2,)
         fbtaps = (0, 1)
-        src = gr.vector_source_f(src_data)
+        src = blocks.vector_source_f(src_data)
         op = filter.iir_filter_ffd(fftaps, fbtaps)
         fftaps_data = (1)
         fbtaps = (0,0, -1,3)
         op.set_taps(fftaps, fbtaps)
-        dst = gr.vector_sink_f()
+        dst = blocks.vector_sink_f()
         self.tb.connect(src, op)
         self.tb.connect(op, dst)
         self.tb.run()

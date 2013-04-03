@@ -56,7 +56,7 @@ class pipeline(gr.hier_block2):
                                 gr.io_signature(1, 1, gr.sizeof_gr_complex))
 
         try:
-            src = gr.file_source (gr.sizeof_float, filename, True)
+            src = blocks.file_source (gr.sizeof_float, filename, True)
         except RuntimeError:
             sys.stderr.write(("\nError: Could not open file '%s'\n\n" % \
                                   filename))

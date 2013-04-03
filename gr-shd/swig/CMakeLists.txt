@@ -27,14 +27,14 @@ set(GR_SWIG_FLAGS -DGR_HAVE_SHD) #needed to parse shd_swig.i
 
 set(GR_SWIG_INCLUDE_DIRS
     ${GR_SHD_INCLUDE_DIRS}
-    ${GNURADIO_CORE_SWIG_INCLUDE_DIRS}
-    ${GRUEL_INCLUDE_DIRS}
+    ${GNURADIO_RUNTIME_SWIG_INCLUDE_DIRS}
     ${Boost_INCLUDE_DIRS}
     ${SHD_INCLUDE_DIRS}
 )
 
 set(GR_SWIG_DOC_FILE ${CMAKE_CURRENT_BINARY_DIR}/shd_swig_doc.i)
 set(GR_SWIG_DOC_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/../include)
+set(GR_SWIG_DOCS_TARGET_DEPS runtime_swig_swig_doc)
 
 link_directories(${SHD_LIBRARY_DIRS})
 set(GR_SWIG_LIBRARIES gnuradio-shd ${SHD_LIBRARIES})

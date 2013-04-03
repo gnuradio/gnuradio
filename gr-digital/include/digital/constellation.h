@@ -82,7 +82,7 @@ namespace gr {
   
       //! Calculates metrics for all points in the constellation.
       //! For use with the viterbi algorithm.
-      virtual void calc_metric(const gr_complex *sample, float *metric, trellis_metric_type_t type);
+      virtual void calc_metric(const gr_complex *sample, float *metric, gr::digital::trellis_metric_type_t type);
       virtual void calc_euclidean_metric(const gr_complex *sample, float *metric);
       virtual void calc_hard_symbol_metric(const gr_complex *sample, float *metric);
   

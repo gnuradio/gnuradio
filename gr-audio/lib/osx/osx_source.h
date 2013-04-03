@@ -53,8 +53,8 @@ namespace gr {
       UInt32              d_n_AvailableInputFrames, d_n_ActualInputFrames;
       UInt32              d_n_user_channels, d_n_max_channels, d_n_deviceChannels;
       bool                d_do_block, d_passThrough, d_waiting_for_data;
-      gruel::mutex*       d_internal;
-      gruel::condition_variable* d_cond_data;
+      gr::thread::mutex*       d_internal;
+      gr::thread::condition_variable* d_cond_data;
       circular_buffer<float>** d_buffers;
 
       // AudioUnits and Such

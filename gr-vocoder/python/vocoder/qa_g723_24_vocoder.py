@@ -20,7 +20,7 @@
 # Boston, MA 02110-1301, USA.
 #
 
-from gnuradio import gr, gr_unittest, vocoder
+from gnuradio import gr, gr_unittest, vocoder, blocks
 
 class test_g723_24_vocoder (gr_unittest.TestCase):
 
@@ -32,10 +32,10 @@ class test_g723_24_vocoder (gr_unittest.TestCase):
 
     def test001_module_load (self):
         data = (0,16,36,40,68,104,148,220,320,512)
-        src = gr.vector_source_s(data)
+        src = blocks.vector_source_s(data)
         enc = vocoder.g723_24_encode_sb()
         dec = vocoder.g723_24_decode_bs()
-        snk = gr.vector_sink_s()
+        snk = blocks.vector_sink_s()
         self.tb.connect(src, enc, dec, snk)
         self.tb.run()
         actual_result = snk.data()

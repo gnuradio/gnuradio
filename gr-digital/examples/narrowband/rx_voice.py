@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2005,2006,2009,2011 Free Software Foundation, Inc.
+# Copyright 2005,2006,2009,2011,2013 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -21,6 +21,7 @@
 # 
 
 from gnuradio import gr, audio, uhd
+from gnuradio import blocks
 from gnuradio import filter
 from gnuradio import eng_notation
 from gnuradio.eng_option import eng_option
@@ -83,12 +84,12 @@ class my_top_block(gr.top_block):
 
         elif(options.from_file is not None):
             self.thr = blocks.throttle(gr.sizeof_gr_complex, options.bitrate)
-            self.source = gr.file_source(gr.sizeof_gr_complex, options.from_file)
+            self.source = blocks.file_source(gr.sizeof_gr_complex, options.from_file)
             self.connect(self.source, self.thr, self.rxpath)
 
         else:
             self.thr = blocks.throttle(gr.sizeof_gr_complex, 1e6)
-            self.source = gr.null_source(gr.sizeof_gr_complex)
+            self.source = blocks.null_source(gr.sizeof_gr_complex)
             self.connect(self.source, self.thr, self.rxpath)
 
 	self.connect(self.audio_tx)        

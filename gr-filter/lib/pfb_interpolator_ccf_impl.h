@@ -28,7 +28,7 @@
 #include <filter/polyphase_filterbank.h>
 #include <filter/fir_filter.h>
 #include <fft/fft.h>
-#include <gruel/thread.h>
+#include <thread/thread.h>
 
 namespace gr {
   namespace filter {
@@ -38,7 +38,7 @@ namespace gr {
     private:
       bool         d_updated;
       unsigned int d_rate;
-      gruel::mutex d_mutex; // mutex to protect set/work access
+      gr::thread::mutex d_mutex; // mutex to protect set/work access
 
     public:
       pfb_interpolator_ccf_impl(unsigned int interp,

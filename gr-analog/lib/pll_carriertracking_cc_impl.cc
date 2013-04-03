@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2006,2010-2012 Free Software Foundation, Inc.
+ * Copyright 2006,2010-2013 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -50,7 +50,7 @@ namespace gr {
       : gr_sync_block("pll_carriertracking_cc",
 		      gr_make_io_signature(1, 1, sizeof(gr_complex)),
 		      gr_make_io_signature(1, 1, sizeof(gr_complex))),
-	gri_control_loop(loop_bw, max_freq, min_freq),
+	blocks::control_loop(loop_bw, max_freq, min_freq),
 	d_locksig(0), d_lock_threshold(0), d_squelch_enable(false)
     {
     }
@@ -130,98 +130,98 @@ namespace gr {
     void
     pll_carriertracking_cc_impl::set_loop_bandwidth(float bw)
     {
-      gri_control_loop::set_loop_bandwidth(bw);
+      blocks::control_loop::set_loop_bandwidth(bw);
     }
 
     void
     pll_carriertracking_cc_impl::set_damping_factor(float df)
     {
-      gri_control_loop::set_damping_factor(df);
+      blocks::control_loop::set_damping_factor(df);
     }
 
     void
     pll_carriertracking_cc_impl::set_alpha(float alpha)
     {
-      gri_control_loop::set_alpha(alpha);
+      blocks::control_loop::set_alpha(alpha);
     }
 
     void
     pll_carriertracking_cc_impl::set_beta(float beta)
     {
-      gri_control_loop::set_beta(beta);
+      blocks::control_loop::set_beta(beta);
     }
 
     void
     pll_carriertracking_cc_impl::set_frequency(float freq)
     {
-      gri_control_loop::set_frequency(freq);
+      blocks::control_loop::set_frequency(freq);
     }
 
     void
     pll_carriertracking_cc_impl::set_phase(float phase)
     {
-      gri_control_loop::set_phase(phase);
+      blocks::control_loop::set_phase(phase);
     }
 
     void
     pll_carriertracking_cc_impl::set_min_freq(float freq)
     {
-      gri_control_loop::set_min_freq(freq);
+      blocks::control_loop::set_min_freq(freq);
     }
 
     void
     pll_carriertracking_cc_impl::set_max_freq(float freq)
     {
-      gri_control_loop::set_max_freq(freq);
+      blocks::control_loop::set_max_freq(freq);
     }
 
 
     float
     pll_carriertracking_cc_impl::get_loop_bandwidth() const
     {
-      return gri_control_loop::get_loop_bandwidth();
+      return blocks::control_loop::get_loop_bandwidth();
     }
 
     float
     pll_carriertracking_cc_impl::get_damping_factor() const
     {
-      return gri_control_loop::get_damping_factor();
+      return blocks::control_loop::get_damping_factor();
     }
 
     float
     pll_carriertracking_cc_impl::get_alpha() const
     {
-      return gri_control_loop::get_alpha();
+      return blocks::control_loop::get_alpha();
     }
 
     float
     pll_carriertracking_cc_impl::get_beta() const
     {
-      return gri_control_loop::get_beta();
+      return blocks::control_loop::get_beta();
     }
 
     float
     pll_carriertracking_cc_impl::get_frequency() const
     {
-      return gri_control_loop::get_frequency();
+      return blocks::control_loop::get_frequency();
     }
 
     float
     pll_carriertracking_cc_impl::get_phase() const
     {
-      return gri_control_loop::get_phase();
+      return blocks::control_loop::get_phase();
     }
 
     float
     pll_carriertracking_cc_impl::get_min_freq() const
     {
-      return gri_control_loop::get_min_freq();
+      return blocks::control_loop::get_min_freq();
     }
 
     float
     pll_carriertracking_cc_impl::get_max_freq() const
     {
-      return gri_control_loop::get_max_freq();
+      return blocks::control_loop::get_max_freq();
     }
 
   } /* namespace analog */

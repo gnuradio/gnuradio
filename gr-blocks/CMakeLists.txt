@@ -28,12 +28,13 @@ include(GrBoost)
 include(GrComponent)
 GR_REGISTER_COMPONENT("gr-blocks" ENABLE_GR_BLOCKS
     Boost_FOUND
-    ENABLE_GR_CORE
+    ENABLE_GNURADIO_RUNTIME
 )
 
 GR_SET_GLOBAL(GR_BLOCKS_INCLUDE_DIRS
     ${CMAKE_CURRENT_SOURCE_DIR}/lib
     ${CMAKE_CURRENT_SOURCE_DIR}/include
+    ${CMAKE_CURRENT_BINARY_DIR}/lib
     ${CMAKE_CURRENT_BINARY_DIR}/include
 )
 
@@ -81,6 +82,9 @@ CPACK_COMPONENT("blocks_swig"
 ########################################################################
 add_subdirectory(include/blocks)
 add_subdirectory(lib)
+#if(ENABLE_TESTING)
+#  add_subdirectory(tests)
+#endif(ENABLE_TESTING)
 if(ENABLE_PYTHON)
      add_subdirectory(python/blocks)
      add_subdirectory(swig)

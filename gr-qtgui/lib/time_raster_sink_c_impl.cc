@@ -126,7 +126,7 @@ namespace gr {
     time_raster_sink_c_impl::set_update_time(double t)
     {
       //convert update time to ticks
-      gruel::high_res_timer_type tps = gruel::high_res_timer_tps();
+      gr::high_res_timer_type tps = gr::high_res_timer_tps();
       d_update_time = t * tps;
       d_main_gui->setUpdateTime(t);
     }
@@ -193,8 +193,8 @@ namespace gr {
 	    memcpy(d_residbufs[n]+d_index, &in[j], sizeof(gr_complex)*resid);
 	  }
       
-	  if(gruel::high_res_timer_now() - d_last_time > d_update_time) {
-	    d_last_time = gruel::high_res_timer_now();
+	  if(gr::high_res_timer_now() - d_last_time > d_update_time) {
+	    d_last_time = gr::high_res_timer_now();
 	    d_qApplication->postEvent(d_main_gui,
 				      new TimeRasterUpdateEvent(d_residbufs,
 								d_fftsize,

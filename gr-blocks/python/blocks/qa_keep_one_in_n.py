@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2012 Free Software Foundation, Inc.
+# Copyright 2012,2013 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -33,9 +33,9 @@ class test_keep_one_in_n(gr_unittest.TestCase):
     def test_001(self):
         src_data = (1, 2, 3, 4, 5, 6, 7, 8, 9, 10)
         expected_data = (5, 10)
-        src = gr.vector_source_b(src_data);
+        src = blocks.vector_source_b(src_data);
         op = blocks.keep_one_in_n(gr.sizeof_char, 5)
-        dst = gr.vector_sink_b()
+        dst = blocks.vector_sink_b()
         self.tb.connect(src, op, dst)
         self.tb.run()
         self.assertEqual(dst.data(), expected_data)

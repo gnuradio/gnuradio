@@ -33,11 +33,10 @@ class test_burst_tagger(gr_unittest.TestCase):
         self.tb = None
 
     def test_001(self):
-        # Just run some data through and make sure it doesn't puke.
         src_data  = ( 1,  2,  3,  4,  5,  6,  7,  8,  9,  10)
         trg_data = (-1, -1,  1,  1, -1, -1,  1,  1, -1,  -1)
-        src = gr.vector_source_i(src_data)
-        trg = gr.vector_source_s(trg_data)
+        src = blocks.vector_source_i(src_data)
+        trg = blocks.vector_source_s(trg_data)
         op  = blocks.burst_tagger(gr.sizeof_int)
         snk = blocks.tag_debug(gr.sizeof_int, "burst tagger QA")
         self.tb.connect(src, (op,0))

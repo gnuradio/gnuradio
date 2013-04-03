@@ -36,10 +36,10 @@ class test_max(gr_unittest.TestCase):
         src_data = (0,0.2,-0.3,0,12,0)
         expected_result = (float(max(src_data)),)
 
-        src = gr.vector_source_f(src_data)
+        src = blocks.vector_source_f(src_data)
         s2v = blocks.stream_to_vector(gr.sizeof_float, len(src_data))
         op = blocks.max_ff(len(src_data))
-        dst = gr.vector_sink_f()
+        dst = blocks.vector_sink_f()
 
         self.tb.connect(src, s2v, op, dst)
         self.tb.run()
@@ -50,10 +50,10 @@ class test_max(gr_unittest.TestCase):
 	src_data=(-100,-99,-98,-97,-96,-1)
 	expected_result = (float(max(src_data)),)
 
-	src = gr.vector_source_f(src_data)
+	src = blocks.vector_source_f(src_data)
 	s2v = blocks.stream_to_vector(gr.sizeof_float, len(src_data))
 	op = blocks.max_ff(len(src_data))
-	dst = gr.vector_sink_f()
+	dst = blocks.vector_sink_f()
 
 	self.tb.connect(src, s2v, op, dst)
 	self.tb.run()

@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2005-2007,2011,2012 Free Software Foundation, Inc.
+# Copyright 2005-2007,2011-2013 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -124,7 +124,7 @@ class tv_rx_block (stdgui2.std_top_block):
 
         if not ((filename is None) or (filename=="usrp")):
           # file is data source
-          self.filesource = gr.file_source(gr.sizeof_short,filename,options.repeat)
+          self.filesource = blocks.file_source(gr.sizeof_short,filename,options.repeat)
           self.istoc = blocks.interleaved_short_to_complex()
           self.connect(self.filesource,self.istoc)
           self.src=self.istoc
@@ -193,7 +193,7 @@ class tv_rx_block (stdgui2.std_top_block):
               + " gray:" + options.out_filename
           print "(Use the spacebar to advance to next frames)"
           options.repeat=False
-          file_sink=gr.file_sink(gr.sizeof_char, options.out_filename)
+          file_sink = blocks.file_sink(gr.sizeof_char, options.out_filename)
           self.dst =file_sink
 
         self.agc = analog.agc_cc(1e-7,1.0,1.0) #1e-7
@@ -226,7 +226,7 @@ class tv_rx_block (stdgui2.std_top_block):
         elif process_type=='do_nullsink':
           #self.connect (self.src, self.am_demod,self.invert_and_scale,f2uc,video_sink)
           c2r=blocks.complex_to_real()
-          nullsink=gr.null_sink(gr.sizeof_float)
+          nullsink=blocks.null_sink(gr.sizeof_float)
           self.connect (self.src, c2r,nullsink) #video_sink)
         elif process_type=='do_tv_sync_corr':
           frame_size=width*height #int(usrp_rate/25.0)

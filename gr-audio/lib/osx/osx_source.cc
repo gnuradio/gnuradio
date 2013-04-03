@@ -484,12 +484,12 @@ namespace gr {
 
       // create the stuff to regulate I/O
 
-      d_cond_data = new gruel::condition_variable();
+      d_cond_data = new gr::thread::condition_variable();
       if(d_cond_data == NULL)
         CheckErrorAndThrow(errno, "new condition (data)",
                            "audio_osx_source::audio_osx_source");
 
-      d_internal = new gruel::mutex();
+      d_internal = new gr::thread::mutex();
       if(d_internal == NULL)
         CheckErrorAndThrow(errno, "new mutex (internal)",
                            "audio_osx_source::audio_osx_source");
@@ -687,7 +687,7 @@ namespace gr {
                      gr_vector_void_star &output_items)
     {
       // acquire control to do processing here only
-      gruel::scoped_lock l(*d_internal);
+      gr::thread::scoped_lock l(*d_internal);
 
 #if _OSX_AU_DEBUG_
       std::cerr << "work1: SC = " << d_queueSampleCount
@@ -806,7 +806,7 @@ namespace gr {
       OSStatus err = noErr;
       osx_source* This = static_cast<osx_source*>(inRefCon);
 
-      gruel::scoped_lock l(*This->d_internal);
+      gr::thread::scoped_lock l(*This->d_internal);
 
 #if _OSX_AU_DEBUG_
       std::cerr << "cb0: in#F = " << inNumberFrames

@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2010,2012 Free Software Foundation, Inc.
+# Copyright 2010,2012,2013 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -22,6 +22,7 @@
 
 from gnuradio import gr
 from gnuradio import filter
+from gnuradio import blocks
 import sys
 
 try:
@@ -60,8 +61,8 @@ def main():
                                                      len(taps)/nchans)
     filtbank = filter.pfb_synthesizer_ccf(nchans, taps)
 
-    head = gr.head(gr.sizeof_gr_complex, N)
-    snk = gr.vector_sink_c()
+    head = blocks.head(gr.sizeof_gr_complex, N)
+    snk = blocks.vector_sink_c()
 
     tb = gr.top_block()
     tb.connect(filtbank, head, snk)

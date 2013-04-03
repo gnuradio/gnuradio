@@ -24,8 +24,8 @@
 #define INCLUDED_BLOCKS_FILE_META_SINK_IMPL_H
 
 #include <blocks/file_meta_sink.h>
-#include <gruel/pmt.h>
-#include <gruel/thread.h>
+#include <pmt/pmt.h>
+#include <thread/thread.h>
 
 using namespace pmt;
 

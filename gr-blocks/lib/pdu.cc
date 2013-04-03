@@ -61,7 +61,7 @@ namespace gr {
       }
 
       pmt::pmt_t
-      make_vector(vector_type type, const uint8_t *buf, size_t items)
+      make_pdu_vector(vector_type type, const uint8_t *buf, size_t items)
       {
 	switch(type) {
 	case byte_t:

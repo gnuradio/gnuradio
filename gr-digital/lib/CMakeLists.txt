@@ -26,15 +26,15 @@ include_directories(
     ${GR_ANALOG_INCLUDE_DIRS}
     ${GR_FFT_INCLUDE_DIRS}
     ${GR_FILTER_INCLUDE_DIRS}
-    ${GNURADIO_CORE_INCLUDE_DIRS}
+    ${GR_BLOCKS_INCLUDE_DIRS}
+    ${GNURADIO_RUNTIME_INCLUDE_DIRS}
     ${VOLK_INCLUDE_DIRS}
-    ${GRUEL_INCLUDE_DIRS}
-    ${LOG4CXX_INCLUDE_DIRS}
+    ${LOG4CPP_INCLUDE_DIRS}
     ${Boost_INCLUDE_DIRS}
 )
 
 link_directories(${Boost_LIBRARY_DIRS})
-link_directories(${LOG4CXX_LIBRARY_DIRS})
+link_directories(${LOG4CPP_LIBRARY_DIRS})
 
 if(ENABLE_GR_CTRLPORT)
   ADD_DEFINITIONS(-DGR_CTRLPORT)
@@ -50,7 +50,7 @@ file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/generate_helper.py "
 #!${PYTHON_EXECUTABLE}
 
 import sys, os, re
-sys.path.append('${GR_CORE_PYTHONPATH}')
+sys.path.append('${GR_RUNTIME_PYTHONPATH}')
 os.environ['srcdir'] = '${CMAKE_CURRENT_SOURCE_DIR}'
 os.chdir('${CMAKE_CURRENT_BINARY_DIR}')
 
@@ -112,40 +112,54 @@ expand_cc(chunks_to_symbols_XX_impl     bf bc sf sc if ic)
 ########################################################################
 list(APPEND digital_sources
     ${generated_sources}
-    constellation.cc
-    crc32.cc
-    glfsr.cc
-    mpsk_snr_est.cc
     additive_scrambler_bb_impl.cc
     binary_slicer_fb_impl.cc
     clock_recovery_mm_cc_impl.cc
     clock_recovery_mm_ff_impl.cc
     cma_equalizer_cc_impl.cc
-    constellation_receiver_cb_impl.cc
+    constellation.cc
     constellation_decoder_cb_impl.cc
+    constellation_receiver_cb_impl.cc
     correlate_access_code_bb_impl.cc
     correlate_access_code_tag_bb_impl.cc
     costas_loop_cc_impl.cc
     cpmmod_bc_impl.cc
+    crc32.cc
+    crc32_bb_impl.cc
     descrambler_bb_impl.cc
     diff_decoder_bb_impl.cc
     diff_encoder_bb_impl.cc
     diff_phasor_cc_impl.cc
     fll_band_edge_cc_impl.cc
     framer_sink_1_impl.cc
+    glfsr.cc
     glfsr_source_b_impl.cc
     glfsr_source_f_impl.cc
+    header_payload_demux_impl.cc
     kurtotic_equalizer_cc_impl.cc
     lms_dd_equalizer_cc_impl.cc
     map_bb_impl.cc
     mpsk_receiver_cc_impl.cc
+    mpsk_snr_est.cc
     mpsk_snr_est_cc_impl.cc
+    ofdm_carrier_allocator_cvc_impl.cc
+    ofdm_chanest_vcvc_impl.cc
     ofdm_cyclic_prefixer_impl.cc
+    ofdm_equalizer_base.cc
+    ofdm_equalizer_simpledfe.cc
+    ofdm_equalizer_static.cc
     ofdm_frame_acquisition_impl.cc
+    ofdm_frame_equalizer_vcvc_impl.cc
     ofdm_frame_sink_impl.cc
     ofdm_insert_preamble_impl.cc
     ofdm_mapper_bcv_impl.cc
     ofdm_sampler_impl.cc
+    ofdm_serializer_vcc_impl.cc
+    ofdm_sync_sc_cfb_impl.cc
+    packet_header_default.cc
+    packet_header_ofdm.cc
+    packet_headergenerator_bb_impl.cc
+    packet_headerparser_b_impl.cc
     packet_sink_impl.cc
     pfb_clock_sync_ccf_impl.cc
     pfb_clock_sync_fff_impl.cc
@@ -153,8 +167,9 @@ list(APPEND digital_sources
     probe_density_b_impl.cc
     probe_mpsk_snr_est_c_impl.cc
     scrambler_bb_impl.cc
-    simple_framer_impl.cc
     simple_correlator_impl.cc
+    simple_framer_impl.cc
+    header_payload_demux_impl.cc
 )
 
 #Add Windows DLL resource file if using MSVC
@@ -173,18 +188,25 @@ ENDIF(MSVC)
 
 list(APPEND digital_libs
     volk
-    gnuradio-core
+    gnuradio-runtime
     gnuradio-filter
     gnuradio-blocks
     gnuradio-analog
     ${Boost_LIBRARIES}
-    ${LOG4CXX_LIBRARIES}
+    ${LOG4CPP_LIBRARIES}
 )
 
 
 add_library(gnuradio-digital SHARED ${digital_sources})
 target_link_libraries(gnuradio-digital ${digital_libs})
 GR_LIBRARY_FOO(gnuradio-digital RUNTIME_COMPONENT "digital_runtime" DEVEL_COMPONENT "digital_devel")
-add_dependencies(gnuradio-digital 
-  digital_generated_includes digital_generated_swigs
-  gnuradio-core gnuradio-filter gnuradio-analog)
+
+add_dependencies(
+    gnuradio-digital
+    digital_generated_includes
+    digital_generated_swigs
+    gnuradio-runtime
+    gnuradio-filter
+    gnuradio-analog
+    gnuradio-blocks
+)

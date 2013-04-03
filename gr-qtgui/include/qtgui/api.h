@@ -22,7 +22,7 @@
 #ifndef INCLUDED_QTGUI_API_H
 #define INCLUDED_QTGUI_API_H
 
-#include <gruel/attributes.h>
+#include <attributes.h>
 
 #ifdef gnuradio_qtgui_EXPORTS
 #  define QTGUI_API __GR_ATTR_EXPORT

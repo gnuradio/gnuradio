@@ -29,8 +29,7 @@ include_directories(
     ${CMAKE_CURRENT_SOURCE_DIR}
     ${CMAKE_CURRENT_BINARY_DIR}
     ${GR_FEC_INCLUDE_DIRS}
-    ${GNURADIO_CORE_INCLUDE_DIRS}
-    ${GRUEL_INCLUDE_DIRS}
+    ${GNURADIO_RUNTIME_INCLUDE_DIRS}
     ${Boost_INCLUDE_DIRS}
 )
 
@@ -46,7 +45,7 @@ list(APPEND gnuradio_fec_sources
 
 #Add Windows DLL resource file if using MSVC
 if(MSVC)
-    include(${CMAKE_INSTALL_PREFIX}/cmake/Modules/GrVersion.cmake)
+    include(${CMAKE_SOURCE_DIR}/cmake/Modules/GrVersion.cmake)
 
     configure_file(
         ${CMAKE_CURRENT_SOURCE_DIR}/gnuradio-fec.rc.in
@@ -59,7 +58,7 @@ if(MSVC)
 endif(MSVC)
 
 list(APPEND gnuradio_fec_libs
-    gnuradio-core
+    gnuradio-runtime
     ${Boost_LIBRARIES}
 )
 

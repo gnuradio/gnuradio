@@ -297,7 +297,7 @@ namespace gr {
 
 	// If we have enough input for one full FFT, do it
 	if(datasize >= resid) {
-	  const gruel::high_res_timer_type currentTime = gruel::high_res_timer_now();
+	  const gr::high_res_timer_type currentTime = gr::high_res_timer_now();
 
 	  // Fill up residbuf with d_fftsize number of items
 	  memcpy(d_residbuf+d_index, &in[j], sizeof(float)*resid);

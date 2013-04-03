@@ -27,6 +27,7 @@ import common
 from gnuradio import gr
 from gnuradio import analog
 from gnuradio import blocks
+from gnuradio import wxgui
 from pubsub import pubsub
 from constants import *
 
@@ -55,7 +56,7 @@ class histo_sink_f(gr.hier_block2, common.wxgui_hb):
 		)
 		#blocks
 		msgq = gr.msg_queue(2)
-		histo = gr.histo_sink_f(msgq)
+		histo = wxgui.histo_sink_f(msgq)
 		histo.set_num_bins(num_bins)
 		histo.set_frame_size(frame_size)
 		#controller

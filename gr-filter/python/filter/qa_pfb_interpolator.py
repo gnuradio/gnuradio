@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2012 Free Software Foundation, Inc.
+# Copyright 2012,2013 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -20,7 +20,8 @@
 # Boston, MA 02110-1301, USA.
 #
 
-from gnuradio import gr, gr_unittest, filter
+from gnuradio import gr, gr_unittest, filter, blocks
+
 import math
 
 def sig_source_c(samp_rate, freq, amp, N):
@@ -49,9 +50,9 @@ class test_pfb_interpolator(gr_unittest.TestCase):
 
         freq = 100
         data = sig_source_c(fs, freq, 1, N)
-        signal = gr.vector_source_c(data)
+        signal = blocks.vector_source_c(data)
         pfb = filter.pfb_interpolator_ccf(M, taps)
-        snk = gr.vector_sink_c()
+        snk = blocks.vector_sink_c()
 
         self.tb.connect(signal, pfb)
         self.tb.connect(pfb, snk)

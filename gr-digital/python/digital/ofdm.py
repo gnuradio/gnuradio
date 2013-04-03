@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2006,2007,2008 Free Software Foundation, Inc.
+# Copyright 2006-2008,2013 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -118,13 +118,13 @@ class ofdm_mod(gr.hier_block2):
             self._print_verbage()
 
         if options.log:
-            self.connect(self._pkt_input, gr.file_sink(gr.sizeof_gr_complex*options.fft_length,
+            self.connect(self._pkt_input, blocks.file_sink(gr.sizeof_gr_complex*options.fft_length,
                                                        "ofdm_mapper_c.dat"))
-            self.connect(self.preambles, gr.file_sink(gr.sizeof_gr_complex*options.fft_length,
+            self.connect(self.preambles, blocks.file_sink(gr.sizeof_gr_complex*options.fft_length,
                                                       "ofdm_preambles.dat"))
-            self.connect(self.ifft, gr.file_sink(gr.sizeof_gr_complex*options.fft_length,
+            self.connect(self.ifft, blocks.file_sink(gr.sizeof_gr_complex*options.fft_length,
                                                  "ofdm_ifft_c.dat"))
-            self.connect(self.cp_adder, gr.file_sink(gr.sizeof_gr_complex,
+            self.connect(self.cp_adder, blocks.file_sink(gr.sizeof_gr_complex,
                                                      "ofdm_cp_adder_c.dat"))
 
     def send_pkt(self, payload='', eof=False):
@@ -256,11 +256,11 @@ class ofdm_demod(gr.hier_block2):
 
         if options.log:
             self.connect(self.ofdm_demod,
-                         gr.file_sink(gr.sizeof_gr_complex*self._occupied_tones,
+                         blocks.file_sink(gr.sizeof_gr_complex*self._occupied_tones,
                                       "ofdm_frame_sink_c.dat"))
         else:
             self.connect(self.ofdm_demod,
-                         gr.null_sink(gr.sizeof_gr_complex*self._occupied_tones))
+                         blocks.null_sink(gr.sizeof_gr_complex*self._occupied_tones))
 
         if options.verbose:
             self._print_verbage()
