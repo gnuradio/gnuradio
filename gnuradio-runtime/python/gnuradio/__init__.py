@@ -15,7 +15,7 @@ import os
 
 # Check if the gnuradio package is installed or whether we're attempting to import it from
 # the build directory.
-path_ending = os.path.join('gnuradio-core', 'src', 'python', 'gnuradio', '__init__.py')
+path_ending = os.path.join('gnuradio-runtime', 'python', 'gnuradio', '__init__.py')
 path = os.path.abspath(__file__)
 if path.endswith('.pyc'):
     path = path[:-1]
