@@ -34,6 +34,7 @@ namespace gr {
      * \brief Compute intermediate samples between signal samples x(k*Ts)
      * \ingroup filter_primitive
      *
+     * \details
      * This implements a Mininum Mean Squared Error interpolator with
      * 8 taps. It is suitable for signals where the bandwidth of
      * interest B = 1/(4*Ts) Where Ts is the time between samples.
@@ -46,7 +47,6 @@ namespace gr {
      * \li gnuradio-core/src/gen_interpolator_taps/README
      * \li gnuradio-core/src/gen_interpolator_taps/praxis.txt
      */
-
     class FILTER_API mmse_fir_interpolator_cc
     {
     public:

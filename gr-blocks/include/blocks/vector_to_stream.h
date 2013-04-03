@@ -31,15 +31,20 @@ namespace gr {
 
     /*!
      * \brief convert a stream of blocks of nitems_per_block items into a stream of items
-     * \ingroup slicedice_blk
+     * \ingroup stream_operators_blk
      */
     class BLOCKS_API vector_to_stream : virtual public gr_sync_interpolator
     {
     public:
-      
       // gr::blocks::vector_to_stream::sptr
       typedef boost::shared_ptr<vector_to_stream> sptr;
 
+      /*!
+       * Make vector-to-stream block
+       *
+       * \param itemsize the item size of the stream
+       * \param nitems_per_block number of items per vector (vector size)
+       */
       static sptr make(size_t itemsize, size_t nitems_per_block);
     };
 

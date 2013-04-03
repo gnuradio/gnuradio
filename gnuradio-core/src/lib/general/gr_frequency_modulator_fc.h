@@ -33,7 +33,6 @@ GR_CORE_API gr_frequency_modulator_fc_sptr gr_make_frequency_modulator_fc (doubl
 
 /*!
  * \brief Frequency modulator block
- * \ingroup modulation_blk
  *
  * float input; complex baseband output
  */

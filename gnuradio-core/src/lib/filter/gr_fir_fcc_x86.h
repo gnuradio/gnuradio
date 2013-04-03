@@ -39,7 +39,7 @@ public:
 
 /*!
  * \brief SSE version of gr_fir_fcc
- * \ingroup filter_blk
+ * \ingroup filter_primitive
  */
 class GR_CORE_API gr_fir_fcc_sse : public gr_fir_fcc_simd
 {

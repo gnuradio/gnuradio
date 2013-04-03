@@ -33,7 +33,7 @@ VOCODER_API vocoder_gsm_fr_decode_ps_sptr vocoder_make_gsm_fr_decode_ps ();
 
 /*!
  * \brief GSM 06.10 Full Rate Vocoder Decoder
- * \ingroup vocoder_blk
+ * \ingroup audio_blk
  */
 class VOCODER_API vocoder_gsm_fr_decode_ps : public gr_sync_interpolator {
   struct gsm_state	*d_gsm;

@@ -36,7 +36,6 @@ GR_CORE_API @SPTR_NAME@ gr_make_@BASE_NAME@ (int length, @O_TYPE@ scale, int max
 
 /*!
  * \brief output is the moving sum of the last N samples, scaled by the scale factor
- * \ingroup filter_blk
  *
  * max_iter limits how long we go without flushing the accumulator
  * This is necessary to avoid numerical instability for float and complex.

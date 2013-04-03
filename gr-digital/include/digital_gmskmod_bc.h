@@ -36,15 +36,9 @@ digital_make_gmskmod_bc(unsigned samples_per_sym=2,
 
 /*!
  * \brief GMSK modulator
+ * \ingroup modulators_blk
  *
- * \ingroup modulation_blk
- * \ingroup digital
- *
- * \param samples_per_sym Samples per symbol.
- * \param bt The 3 dB time-bandwidth product.
- * \param L The length of the phase duration in symbols. The Gaussian
- *          pulse is truncated after L symbols.
- *
+ * \details
  * The input of this block are symbols from an M-ary alphabet
  * +/-1, +/-3, ..., +/-(M-1). Usually, M = 2 and therefore, the
  * valid inputs are +/-1.
@@ -55,6 +49,14 @@ class DIGITAL_API digital_gmskmod_bc : public digital_cpmmod_bc
 {
   friend DIGITAL_API digital_gmskmod_bc_sptr digital_make_gmskmod_bc(unsigned samples_per_sym,
 							 double bt, unsigned L);
+  /*!
+   * Build a GMSK modulator block.
+   *
+   * \param samples_per_sym Samples per symbol.
+   * \param bt The 3 dB time-bandwidth product.
+   * \param L The length of the phase duration in symbols. The Gaussian
+   *          pulse is truncated after L symbols.
+   */
   digital_gmskmod_bc(unsigned samples_per_sym,
 		     double bt, unsigned L);
 };

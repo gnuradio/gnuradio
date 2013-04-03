@@ -33,7 +33,6 @@ GR_CORE_API gr_diff_decoder_bb_sptr gr_make_diff_decoder_bb (unsigned int modulu
 
 /*!
  * \brief y[0] = (x[0] - x[-1]) % M
- * \ingroup coding_blk
  *
  * Differential decoder
  */

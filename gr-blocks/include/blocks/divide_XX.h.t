@@ -33,8 +33,9 @@ namespace gr {
 
     /*!
      * \brief output = input_0 / input_1 / input_x ...)
-     * \ingroup math_blk
+     * \ingroup math_operators_blk
      *
+     * \details
      * Divide across all input streams.
      */
     class BLOCKS_API @NAME@ : virtual public gr_sync_block

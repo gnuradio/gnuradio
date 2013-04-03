@@ -34,7 +34,7 @@ typedef boost::shared_ptr<vocoder_cvsd_encode_sb> vocoder_cvsd_encode_sb_sptr;
   * default values are modeled after the Bluetooth standard and should
   * not be changed except by an advanced user
   *
-  * \ingroup vocoder_blk
+  * \ingroup audio_blk
   *
   * \param min_step       Minimum step size used to update the internal reference.  Default: "10"
   * \param max_step       Maximum step size used to update the internal reference.  Default: "1280"
@@ -61,7 +61,7 @@ VOCODER_API vocoder_cvsd_encode_sb_sptr vocoder_make_cvsd_encode_sb(short min_st
  * is modeled after the CVSD encoder/decoder specifications defined in the
  * Bluetooth standard.
  *
- * \ingroup vocoder_blk
+ * \ingroup audio_blk
  *
  * CVSD is a method for encoding speech that seeks to reduce the
  * bandwidth required for digital voice transmission.  CVSD takes

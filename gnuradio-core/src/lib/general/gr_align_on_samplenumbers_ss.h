@@ -28,7 +28,6 @@
 
 /*!
  * \brief align several complex short (interleaved short) input channels with corresponding unsigned 32 bit sample_counters (provided as interleaved 16 bit values)
- * \ingroup misc
  * \param number of complex_short input channels (including the 32 bit counting channel)
  * \param align_interval is after how much samples (minimally) the sample-alignement is refreshed. Default is 128.
  * A bigger value means less processing power but also requests more buffer space, which has a maximum.
@@ -37,7 +36,6 @@
  *  ninput_items_required = 32768
  *  max_possible_items_available = 16383
  *  If this is a filter, consider reducing the number of taps."
- * \ingroup block
  * Pay attention on how you connect this block.
  * It expects a minimum of 2 usrp_source_s with nchan number of channels and FPGA_MODE_COUNTING_32BIT enabled.
  * This means that the first complex_short channel on every input is an interleaved 32 bit counter.

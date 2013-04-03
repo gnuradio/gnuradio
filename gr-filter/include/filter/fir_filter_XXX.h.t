@@ -35,6 +35,7 @@ namespace gr {
      * \brief FIR filter with @I_TYPE@ input, @O_TYPE@ output, and @TAP_TYPE@ taps
      * \ingroup filter_blk
      *
+     * \details
      * The fir_filter_XXX blocks create finite impulse response
      * (FIR) filters that perform the convolution in the time
      * domain:
@@ -53,7 +54,6 @@ namespace gr {
      * These versions of the filter can also act as down-samplers
      * (or decimators) by specifying an integer value for \p
      * decimation.
-     *
      */
     class FILTER_API @BASE_NAME@ : virtual public gr_sync_decimator
     {
@@ -64,13 +64,12 @@ namespace gr {
 
       /*!
        * \brief FIR filter with @I_TYPE@ input, @O_TYPE@ output, and @TAP_TYPE@ taps
-       * \ingroup filter_blk
        *
        * \param decimation set the integer decimation rate
        * \param taps a vector/list of taps of type @TAP_TYPE@
        */
       static sptr make(int decimation,
-				  const std::vector<@TAP_TYPE@> &taps);
+                       const std::vector<@TAP_TYPE@> &taps);
 
       virtual void set_taps(const std::vector<@TAP_TYPE@> &taps) = 0;
       virtual std::vector<@TAP_TYPE@> taps() const = 0;

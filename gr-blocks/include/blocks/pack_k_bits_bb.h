@@ -32,7 +32,7 @@ namespace gr {
     /*!
      * \brief Converts a stream of bytes with 1 bit in the LSB to a
      * byte with k relevent bits.
-     * \ingroup converter_blk
+     * \ingroup byte_operators_blk
      */
     class BLOCKS_API pack_k_bits_bb : virtual public gr_sync_decimator
     {

@@ -36,13 +36,8 @@ GR_CORE_API gr_pfb_arb_resampler_fff_sptr gr_make_pfb_arb_resampler_fff (float r
 class gr_fir_fff;
 
 /*!
- * \class gr_pfb_arb_resampler_fff
- *
  * \brief Polyphase filterbank arbitrary resampler with
  *        float input, float output and float taps
- *
- * \ingroup filter_blk
- * \ingroup pfb_blk
  *
  * This block takes in a signal stream and performs arbitrary
  * resampling. The resampling rate can be any real

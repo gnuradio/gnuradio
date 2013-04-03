@@ -27,7 +27,6 @@
 
 /*!
  * \brief throttle flow of samples such that the average rate does not exceed samples_per_sec.
- * \ingroup misc_blk
  *
  * input: one stream of itemsize; output: one stream of itemsize
  *

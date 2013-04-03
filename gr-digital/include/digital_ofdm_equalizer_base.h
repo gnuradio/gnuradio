@@ -35,7 +35,7 @@ typedef boost::shared_ptr<digital_ofdm_equalizer_1d_pilots> digital_ofdm_equaliz
 
 /* \brief Base class for implementation details of frequency-domain OFDM equalizers.
  * \ingroup ofdm_blk
- * \ingroup eq_blk
+ * \ingroup equalizers_blk
  * 
  */
 class DIGITAL_API digital_ofdm_equalizer_base : public boost::enable_shared_from_this<digital_ofdm_equalizer_base>

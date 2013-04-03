@@ -36,7 +36,6 @@ GR_CORE_API gr_simple_correlator_sptr gr_make_simple_correlator (int payload_byt
 
 /*!
  * \brief inverse of gr_simple_framer (more or less)
- * \ingroup sync_blk
  */
 class GR_CORE_API gr_simple_correlator : public gr_block
 {

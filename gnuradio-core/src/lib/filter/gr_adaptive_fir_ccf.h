@@ -28,7 +28,6 @@
 
 /*!
  * \brief Adaptive FIR filter with gr_complex input, gr_complex output and float taps
- * \ingroup filter_blk
  */
 class GR_CORE_API gr_adaptive_fir_ccf : public gr_sync_decimator
 {

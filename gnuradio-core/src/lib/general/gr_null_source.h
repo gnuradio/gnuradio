@@ -34,7 +34,6 @@ gr_make_null_source (size_t sizeof_stream_item);
 
 /*!
  * \brief A source of zeros.
- * \ingroup source_blk
  */
 class GR_CORE_API gr_null_source : public gr_sync_block
 {

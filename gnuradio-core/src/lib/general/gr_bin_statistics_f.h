@@ -43,7 +43,6 @@ gr_make_bin_statistics_f(unsigned int vlen,	// vector length
 
 /*!
  * \brief control scanning and record frequency domain statistics
- * \ingroup sink_blk
  */
 class GR_CORE_API gr_bin_statistics_f : public gr_sync_block
 {

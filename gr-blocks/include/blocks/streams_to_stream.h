@@ -31,18 +31,24 @@ namespace gr {
 
     /*!
      * \brief Convert N streams of 1 item into a 1 stream of N items
-     * \ingroup slicedice_blk
+     * \ingroup stream_operators_blk
      *
+     * \details
      * Convert N streams of 1 item into 1 stream of N items.
      * Repeat ad infinitum.
      */
     class BLOCKS_API streams_to_stream : virtual public gr_sync_interpolator
     {
     public:
-      
       // gr::blocks::streams_to_stream::sptr
       typedef boost::shared_ptr<streams_to_stream> sptr;
 
+      /*!
+       * Make a streams-to-stream block.
+       *
+       * \param itemsize the item size of the stream
+       * \param nstreams number of streams to combine
+       */
       static sptr make(size_t itemsize, size_t nstreams);
     };
 

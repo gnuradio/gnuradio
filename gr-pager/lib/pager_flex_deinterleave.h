@@ -34,7 +34,6 @@ PAGER_API pager_flex_deinterleave_sptr pager_make_flex_deinterleave();
  * \brief flex deinterleave description
  * \ingroup pager_blk
  */
-
 class PAGER_API pager_flex_deinterleave : public gr_sync_decimator
 {
 private:

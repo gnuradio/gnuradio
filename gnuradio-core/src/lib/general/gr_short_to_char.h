@@ -34,7 +34,6 @@ gr_make_short_to_char (size_t vlen=1);
 
 /*!
  * \brief Convert stream of short to a stream of float
- * \ingroup converter_blk
  *
  * \param vlen vector length of data streams.
  */

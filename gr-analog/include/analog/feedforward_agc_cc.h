@@ -31,7 +31,7 @@ namespace gr {
 
     /*!
      * \brief Non-causal AGC which computes required gain based on max absolute value over nsamples
-     * \ingroup level_blk
+     * \ingroup level_controllers_blk
      */
     class ANALOG_API feedforward_agc_cc : virtual public gr_sync_block
     {

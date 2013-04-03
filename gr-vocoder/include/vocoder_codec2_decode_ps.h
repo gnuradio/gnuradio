@@ -32,7 +32,7 @@ VOCODER_API vocoder_codec2_decode_ps_sptr vocoder_make_codec2_decode_ps ();
 
 /*!
  * \brief CODEC2 Vocoder Decoder
- * \ingroup vocoder_blk
+ * \ingroup audio_blk
  */
 class VOCODER_API vocoder_codec2_decode_ps : public gr_sync_interpolator {
   void *d_codec2;

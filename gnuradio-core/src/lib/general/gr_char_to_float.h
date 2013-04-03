@@ -34,7 +34,6 @@ gr_make_char_to_float (size_t vlen=1, float scale=1);
 
 /*!
  * \brief Convert stream of chars to a stream of float
- * \ingroup converter_blk
  *
  * \param vlen vector length of data streams.
  * \param scale a scalar divider to change the output signal scale.

@@ -35,7 +35,6 @@ gr_make_complex_to_interleaved_short ();
 
 /*!
  * \brief Convert stream of complex to a stream of interleaved shorts
- * \ingroup converter_blk
  */
 
 class GR_CORE_API gr_complex_to_interleaved_short : public gr_sync_interpolator

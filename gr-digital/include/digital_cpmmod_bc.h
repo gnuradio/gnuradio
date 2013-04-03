@@ -42,25 +42,9 @@ digital_make_cpmmod_bc(int type, float h,
 
 /*!
  * \brief Generic CPM modulator
+ * \ingroup modulators_blk
  *
- * \ingroup modulation_blk
- * \ingroup digital
- *
- * \param type The modulation type. Can be one of LREC, LRC, LSRC, TFM
- *             or GAUSSIAN. See gr_cpm::phase_response() for a
- *             detailed description.
- * \param h The modulation index. \f$ h \cdot \pi\f$ is the maximum
- *          phase change that can occur between two symbols, i.e., if
- *          you only send ones, the phase will increase by \f$ h \cdot
- *          \pi\f$ every \p samples_per_sym samples. Set this to 0.5
- *          for Minimum Shift Keying variants.
- * \param samples_per_sym Samples per symbol.
- * \param L The length of the phase duration in symbols. For L=1, this
- *          yields full- response CPM symbols, for L > 1,
- *          partial-response.
- * \param beta For LSRC, this is the rolloff factor. For Gaussian
- *             pulses, this is the 3 dB time-bandwidth product.
- *
+ * \details
  * Examples:
  * - Setting h = 0.5, L = 1, type = LREC yields MSK.
  * - Setting h = 0.5, type = GAUSSIAN and beta = 0.3 yields GMSK
@@ -85,6 +69,24 @@ class DIGITAL_API digital_cpmmod_bc : public gr_hier_block2
   gr_frequency_modulator_fc_sptr d_fm;
   
 protected:
+  /*!
+   * Build a generic CPM modulator block.
+   *
+   * \param type The modulation type. Can be one of LREC, LRC, LSRC, TFM
+   *             or GAUSSIAN. See gr_cpm::phase_response() for a
+   *             detailed description.
+   * \param h The modulation index. \f$ h \cdot \pi\f$ is the maximum
+   *          phase change that can occur between two symbols, i.e., if
+   *          you only send ones, the phase will increase by \f$ h \cdot
+   *          \pi\f$ every \p samples_per_sym samples. Set this to 0.5
+   *          for Minimum Shift Keying variants.
+   * \param samples_per_sym Samples per symbol.
+   * \param L The length of the phase duration in symbols. For L=1, this
+   *          yields full- response CPM symbols, for L > 1,
+   *          partial-response.
+   * \param beta For LSRC, this is the rolloff factor. For Gaussian
+   *             pulses, this is the 3 dB time-bandwidth product.
+   */
   digital_cpmmod_bc(gr_cpm::cpm_type type, float h,
 		    unsigned samples_per_sym,
 		    unsigned L, double beta);

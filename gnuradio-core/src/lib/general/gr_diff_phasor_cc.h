@@ -28,7 +28,6 @@
 
 /*!
  * \brief Please fix my documentation!
- * \ingroup misc
  */
 class gr_diff_phasor_cc;
 typedef boost::shared_ptr<gr_diff_phasor_cc> gr_diff_phasor_cc_sptr;

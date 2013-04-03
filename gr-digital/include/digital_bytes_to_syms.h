@@ -32,8 +32,9 @@ DIGITAL_API digital_bytes_to_syms_sptr digital_make_bytes_to_syms();
 
 /*!
  * \brief Convert stream of bytes to stream of +/- 1 symbols
- * \ingroup converter_blk
+ * \ingroup symbol_coding_blk
  *
+ * \details
  * input: stream of bytes; output: stream of float
  *
  * This block is deprecated.

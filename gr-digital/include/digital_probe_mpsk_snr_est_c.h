@@ -34,9 +34,10 @@ digital_make_probe_mpsk_snr_est_c(snr_est_type_t type,
 				  int msg_nsamples=10000,
 				  double alpha=0.001);
 
-//! \brief A probe for computing SNR of a signal.
-/*! \ingroup snr_blk
+/*! \brief A probe for computing SNR of a signal.
+ *  \ingroup measurement_tools_blk
  *
+ * \details
  *  This is a probe block (a sink) that can be used to monitor and
  *  retrieve estimations of the signal SNR. This probe is designed for
  *  use with M-PSK signals especially. The type of estimator is
@@ -60,8 +61,6 @@ class DIGITAL_API digital_probe_mpsk_snr_est_c : public gr_sync_block
   pmt::pmt_t d_key;
 
   /*! Factory function returning shared pointer of this class
-   *
-   *  Parameters:
    *
    *  \param type: the type of estimator to use \ref ref_snr_est_types
    *  "snr_est_type_t" for details about the available types.

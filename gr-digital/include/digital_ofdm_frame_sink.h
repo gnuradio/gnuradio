@@ -39,7 +39,6 @@ digital_make_ofdm_frame_sink (const std::vector<gr_complex> &sym_position,
 /*!
  * \brief Takes an OFDM symbol in, demaps it into bits of 0's and 1's, packs
  * them into packets, and sends to to a message queue sink.
- * \ingroup sink_blk
  * \ingroup ofdm_blk
  *
  * NOTE: The mod input parameter simply chooses a pre-defined demapper/slicer. Eventually,

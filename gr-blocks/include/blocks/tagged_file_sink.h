@@ -31,8 +31,10 @@ namespace gr {
 
     /*!
      * \brief A file sink that uses tags to save files.
-     * \ingroup sink_blk
+     * \ingroup file_operators_blk
+     * \ingroup stream_tag_tools_blk
      *
+     * \details
      * The sink uses a tag with the key 'burst' to trigger the saving
      * of the burst data to a new file. If the value of this tag is
      * True, it will open a new file and start writing all incoming

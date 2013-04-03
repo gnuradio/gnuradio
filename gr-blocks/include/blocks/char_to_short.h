@@ -31,9 +31,7 @@ namespace gr {
 
     /*!
      * \brief Convert stream of chars to a stream of short
-     * \ingroup converter_blk
-     *
-     * \param vlen vector length of data streams.
+     * \ingroup type_converters_blk
      */
     class BLOCKS_API char_to_short : virtual public gr_sync_block
     {

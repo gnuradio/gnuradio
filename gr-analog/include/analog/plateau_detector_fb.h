@@ -33,6 +33,7 @@ namespace gr {
     /*!
      * \brief Detects a plateau and marks the middle.
      *
+     * \details
      * Detect a plateau of a-priori known height. Input is a stream of floats,
      * the output is a stream of bytes. Whenever a plateau is detected, the
      * middle of that plateau is marked with a '1' on the output stream (all
@@ -48,9 +49,6 @@ namespace gr {
      *
      * An implicit hysteresis is provided by the fact that after detecting one plateau,
      * it waits at least max_len samples before the next plateau can be detected.
-     *
-     * \ingroup analog
-     *
      */
     class ANALOG_API plateau_detector_fb : virtual public gr_sync_block
     {

@@ -33,7 +33,6 @@ GR_CORE_API gr_deinterleave_sptr gr_make_deinterleave (size_t itemsize);
 
 /*!
  * \brief deinterleave a single input into N outputs
- * \ingroup slicedice_blk
  */
 class GR_CORE_API gr_deinterleave : public gr_sync_decimator
 {

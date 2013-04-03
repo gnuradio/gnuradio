@@ -34,7 +34,6 @@ gr_make_streams_to_stream (size_t item_size, size_t nstreams);
 
 /*!
  * \brief Convert N streams of 1 item into a 1 stream of N items
- * \ingroup slicedice_blk
  *
  * Convert N streams of 1 item into 1 stream of N items.
  * Repeat ad infinitum.

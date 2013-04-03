@@ -31,8 +31,9 @@ namespace gr {
 
     /*!
      * \brief Send message at defined interval
-     * \ingroup msg_blk
+     * \ingroup message_tools_blk
      *
+     * \details
      * Takes a PMT message and sends it out every \p period_ms
      * milliseconds. Useful for testing/debugging the message system.
      */

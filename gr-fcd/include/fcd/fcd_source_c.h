@@ -31,14 +31,18 @@ typedef boost::shared_ptr<fcd_source_c> fcd_source_c_sptr;
 /*!
  * \brief Return a shared_ptr to a new instance of fcd_source_c.
  *
+ * \details
  * This is effectively the public constructor. To avoid accidental use
  * of raw pointers, fcd_source_c's constructor is private.
  * fcd_make_source_c is the public interface for creating new instances.
  */
 FCD_API fcd_source_c_sptr fcd_make_source_c(const std::string device_name = "");
 
-/*! \brief Funcube Dongle source block.
+/*!
+ * \brief Funcube Dongle source block.
+ * \ingroup fcd_blk
  *
+ * \details
  * This class provides a Funcube Dongle soure block by wrapping the
  * USB audio interface and the USB HID control interface of the Funcube
  * Dongle into one convenient source block.

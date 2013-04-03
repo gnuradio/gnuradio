@@ -35,7 +35,7 @@ VOCODER_API vocoder_ulaw_encode_sb_sptr vocoder_make_ulaw_encode_sb();
 /*!
  * \brief This block performs g.711 ulaw audio encoding.
  *
- * \ingroup vocoder_blk
+ * \ingroup audio_blk
  */
 class VOCODER_API vocoder_ulaw_encode_sb : public gr_sync_block
 {

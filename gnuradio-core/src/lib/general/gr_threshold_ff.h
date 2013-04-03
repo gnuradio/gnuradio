@@ -33,7 +33,6 @@ GR_CORE_API gr_threshold_ff_sptr gr_make_threshold_ff (float lo, float hi, float
 
 /*!
  * \brief Please fix my documentation
- * \ingroup misc_blk
  */
 class GR_CORE_API gr_threshold_ff : public gr_sync_block
 {

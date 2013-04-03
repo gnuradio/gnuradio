@@ -32,7 +32,6 @@ typedef boost::shared_ptr<gr_head> gr_head_sptr;
 
 /*!
  * \brief copies the first N items to the output then signals done
- * \ingroup slicedice_blk
  *
  * Useful for building test cases
  */

@@ -35,7 +35,7 @@ VOCODER_API vocoder_ulaw_decode_bs_sptr vocoder_make_ulaw_decode_bs();
 /*!
  * \brief This block performs ulaw audio decoding.
  *
- * \ingroup vocoder_blk
+ * \ingroup audio_blk
  */
 
 class VOCODER_API vocoder_ulaw_decode_bs : public gr_sync_block

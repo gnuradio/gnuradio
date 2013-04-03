@@ -34,7 +34,6 @@ gr_make_float_to_short (size_t vlen=1, float scale=1);
 
 /*!
  * \brief Convert stream of float to a stream of short
- * \ingroup converter_blk
  *
  * \param vlen vector length of data streams.
  * \param scale a scalar multiplier to change the output signal scale.

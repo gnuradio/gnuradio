@@ -34,7 +34,6 @@ typedef boost::shared_ptr<gr_decode_ccsds_27_fb> gr_decode_ccsds_27_fb_sptr;
 GR_CORE_API gr_decode_ccsds_27_fb_sptr gr_make_decode_ccsds_27_fb();
 
 /*! \brief A rate 1/2, k=7 convolutional decoder for the CCSDS standard
- * \ingroup ecc
  *
  * This block performs soft-decision convolutional decoding using the Viterbi
  * algorithm.

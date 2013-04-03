@@ -48,10 +48,7 @@ typedef boost::shared_ptr<gr_dc_blocker_cc> gr_dc_blocker_cc_sptr;
 GR_CORE_API gr_dc_blocker_cc_sptr gr_make_dc_blocker_cc (int D=32, bool long_form=true);
 
 /*!
- * \class gr_dc_blocker_cc
  * \brief a computationally efficient controllable DC blocker
- *
- * \ingroup filter_blk
  *
  * This block implements a computationally efficient DC blocker that produces
  * a tighter notch filter around DC for a smaller group delay than an

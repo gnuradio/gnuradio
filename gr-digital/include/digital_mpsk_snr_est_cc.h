@@ -34,9 +34,10 @@ digital_make_mpsk_snr_est_cc(snr_est_type_t type,
 			     int tag_nsamples=10000,
 			     double alpha=0.001);
 
-//! \brief A block for computing SNR of a signal.
-/*! \ingroup snr_blk
+/*! \brief A block for computing SNR of a signal.
+ *  \ingroup measurement_tools_blk
  *
+ *  \details
  *  This block can be used to monitor and retrieve estimations of the
  *  signal SNR. It is designed to work in a flowgraph and passes all
  *  incoming data along to its output.

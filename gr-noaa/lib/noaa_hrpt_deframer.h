@@ -32,6 +32,10 @@ typedef boost::shared_ptr<noaa_hrpt_deframer> noaa_hrpt_deframer_sptr;
 NOAA_API noaa_hrpt_deframer_sptr
 noaa_make_hrpt_deframer();
 
+/*!
+ * \brief NOAA HRPT Deframer
+ * \ingroup noaa_blk
+ */
 class NOAA_API noaa_hrpt_deframer : public gr_block
 {
   friend NOAA_API noaa_hrpt_deframer_sptr noaa_make_hrpt_deframer();

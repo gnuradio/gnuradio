@@ -31,8 +31,9 @@ namespace gr {
 
     /*!
      * \brief Phase modulator block
-     * \ingroup modulation_blk
+     * \ingroup modulators_blk
      *
+     * \details
      * output = complex(cos(in*sensitivity), sin(in*sensitivity))
      *
      * Input stream 0: floats

@@ -31,14 +31,11 @@ namespace gr {
   namespace filter {
 
     /*!
-     * \class pfb_arb_resampler_ccf
-     *
      * \brief Polyphase filterbank arbitrary resampler with
      *        gr_complex input, gr_complex output and float taps
+     * \ingroup resamplers_blk
      *
-     * \ingroup filter_blk
-     * \ingroup pfb_blk
-     *
+     * \details
      * This block takes in a signal stream and performs arbitrary
      * resampling. The resampling rate can be any real number
      * <EM>r</EM>. The resampling is done by constructing <EM>N</EM>

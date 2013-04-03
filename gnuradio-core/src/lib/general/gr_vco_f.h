@@ -28,7 +28,6 @@
 
 /*!
  * \brief VCO - Voltage controlled oscillator
- * \ingroup misc
  *
  * \param sampling_rate		sampling rate (Hz)
  * \param sensitivity		units are radians/sec/volt

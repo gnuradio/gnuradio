@@ -33,6 +33,7 @@ namespace gr {
      * \brief output[i] = input[i]
      * \ingroup misc_blk
      *
+     * \details
      * When enabled (default), this block copies its input to its
      * output. When disabled, this block drops its input on the floor.
      */

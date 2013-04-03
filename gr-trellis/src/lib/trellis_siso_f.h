@@ -44,7 +44,7 @@ TRELLIS_API trellis_siso_f_sptr trellis_make_siso_f (
 
 
 /*!
- *  \ingroup coding_blk
+ *  \ingroup trellis_coding_blk
  */
 class TRELLIS_API trellis_siso_f : public gr_block
 {

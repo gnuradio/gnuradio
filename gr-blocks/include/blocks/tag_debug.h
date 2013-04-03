@@ -31,8 +31,11 @@ namespace gr {
 
     /*!
      * \brief Bit bucket that prints out any tag received.
-     * \ingroup sink_blk
+     * \ingroup measurement_tools_blk
+     * \ingroup stream_tag_tools_blk
+     * \ingroup debug_tools_blk
      *
+     * \details
      * This block collects all tags sent to it on all input ports and
      * displays them to stdout in a formatted way. The \p name
      * parameter is used to identify which debug sink generated the

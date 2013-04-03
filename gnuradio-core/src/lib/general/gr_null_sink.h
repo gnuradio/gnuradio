@@ -35,7 +35,6 @@ gr_make_null_sink (size_t sizeof_stream_item);
 
 /*!
  * \brief Bit bucket
- * \ingroup sink_blk
  */
 class GR_CORE_API gr_null_sink : public gr_sync_block
 {

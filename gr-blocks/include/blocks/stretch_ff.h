@@ -33,7 +33,7 @@ namespace gr {
      * \brief adjust y-range of an input vector by mapping to range
      * (max-of-input, stipulated-min). Primarily for spectral
      * signature matching by normalizing spectrum dynamic ranges.
-     * \ingroup misc_blk
+     * \ingroup stream_operators_blk
      */
     class BLOCKS_API stretch_ff : virtual public gr_sync_block
     {
@@ -43,9 +43,10 @@ namespace gr {
       
       /*!
        * \brief Make a stretch block.
+       *
        * \param lo Set low value for range.
        * \param vlen vector length of input stream.
-     */
+       */
       static sptr make(float lo, size_t vlen=1);
 
       virtual float lo() const = 0;

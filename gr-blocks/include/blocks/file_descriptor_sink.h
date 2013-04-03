@@ -31,7 +31,7 @@ namespace gr {
 
     /*!
      * \brief Write stream to file descriptor.
-     * \ingroup sink_blk
+     * \ingroup file_operators_blk
      */
     class BLOCKS_API file_descriptor_sink : virtual public gr_sync_block
     {

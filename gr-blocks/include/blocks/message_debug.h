@@ -31,8 +31,11 @@ namespace gr {
 
     /*!
      * \brief Debug block for the message passing system.
-     * \ingroup sink_blk
+     * \ingroup message_tools_blk
+     * \ingroup measurement_tools_blk
+     * \ingroup debug_tools_blk
      *
+     * \details
      * The message debug block is used to capture and print or store
      * messages as they are received. Any block that generates a
      * message may connect that message port to one or more of the

@@ -35,7 +35,6 @@ GR_CORE_API gr_message_strobe_sptr gr_make_message_strobe (pmt::pmt_t msg, float
 
 /*!
  * \brief Send message at defined interval
- * \ingroup msg_blk
  */
 class GR_CORE_API gr_message_strobe : public gr_block
 {

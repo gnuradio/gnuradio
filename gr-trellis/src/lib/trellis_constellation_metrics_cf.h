@@ -35,7 +35,7 @@ TRELLIS_API trellis_constellation_metrics_cf_sptr trellis_make_constellation_met
 
 /*!
  * \brief Evaluate metrics for use by the Viterbi algorithm.
- * \ingroup coding_blk
+ * \ingroup trellis_coding_blk
  */
 class TRELLIS_API trellis_constellation_metrics_cf : public gr_block
 {

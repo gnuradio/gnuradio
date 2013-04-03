@@ -42,6 +42,7 @@ namespace gr {
       
       /*! \brief Return the taps for an interpolating FIR filter (gr_interp_fir_filter_fff).
        *
+       * \details
        * These taps represent the phase response \f$g(k)\f$ for use in a CPM modulator,
        * see also gr_cpmmod_bc.
        *

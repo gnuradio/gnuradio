@@ -34,7 +34,6 @@ GR_CORE_API gr_delay_sptr gr_make_delay (size_t itemsize, int delay);
 
 /*!
  * \brief delay the input by a certain number of samples
- * \ingroup misc_blk
  */
 class GR_CORE_API gr_delay : public gr_block
 {

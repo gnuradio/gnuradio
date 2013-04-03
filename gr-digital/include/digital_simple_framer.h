@@ -33,8 +33,10 @@ DIGITAL_API digital_simple_framer_sptr digital_make_simple_framer(int payload_by
 
 /*!
  * \brief add sync field, seq number and command field to payload
- * \ingroup sync_blk
+ * \ingroup packet_operators_blk
+ * \ingroup deprecated_blk
  *
+ * \details
  * Takes in enough samples to create a full output frame. The frame is
  * prepended with the GRSF_SYNC (defind in
  * digital_simple_framer_sync.h) and an 8-bit sequence number.

@@ -35,7 +35,7 @@ VOCODER_API vocoder_g723_40_encode_sb_sptr vocoder_make_g723_40_encode_sb();
 /*!
  * \brief This block performs g723_40 audio encoding.
  *
- * \ingroup vocoder_blk
+ * \ingroup audio_blk
  */
 
 class VOCODER_API vocoder_g723_40_encode_sb : virtual public gr_sync_block

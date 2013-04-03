@@ -31,16 +31,19 @@ namespace gr {
 
     /*!
      * \brief convert a stream of gr_complex to 1 or 2 streams of float
-     * \ingroup converter_blk
-     * \param vlen vector len (default 1)
+     * \ingroup type_converters_blk
      */
     class BLOCKS_API complex_to_float : virtual public gr_sync_block
     {
     public:
-      
       // gr::blocks::complex_to_float_ff::sptr
       typedef boost::shared_ptr<complex_to_float> sptr;
 
+      /*!
+       * Build a complex to float block.
+       *
+       * \param vlen vector len (default 1)
+       */
       static sptr make(size_t vlen=1);
     };
 

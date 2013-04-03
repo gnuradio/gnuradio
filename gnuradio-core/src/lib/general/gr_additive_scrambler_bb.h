@@ -45,8 +45,6 @@ GR_CORE_API gr_additive_scrambler_bb_sptr gr_make_additive_scrambler_bb(int mask
  * the LFSR.  Optionally, after 'count' bits have been processed, the shift
  * register is reset to the seed value.  This allows processing fixed length
  * vectors of samples.
- *
- * \ingroup coding_blk
  */
 
 class GR_CORE_API gr_additive_scrambler_bb : public gr_sync_block

@@ -35,7 +35,6 @@ gr_make_vector_to_stream (size_t item_size, size_t nitems_per_block);
 
 /*!
  * \brief convert a stream of blocks of nitems_per_block items into a stream of items
- * \ingroup slicedice_blk
  */
 class GR_CORE_API gr_vector_to_stream : public gr_sync_interpolator
 {

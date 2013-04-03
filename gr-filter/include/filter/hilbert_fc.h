@@ -30,6 +30,15 @@
 namespace gr {
   namespace filter {
     
+    /*!
+     * \brief Hilbert transformer.
+     * \ingroup filter_blk
+     *
+     * \details
+     * real output is input appropriately delayed.
+     * imaginary output is hilbert filtered (90 degree phase shift)
+     * version of input.
+     */
     class FILTER_API hilbert_fc : virtual public gr_sync_block
     {
     public:
@@ -37,12 +46,7 @@ namespace gr {
       typedef boost::shared_ptr<hilbert_fc> sptr;
 
       /*!
-       * \brief Hilbert transformer.
-       * \ingroup filter_blk
-       *
-       * real output is input appropriately delayed.
-       * imaginary output is hilbert filtered (90 degree phase shift)
-       * version of input.
+       * Build a Hilbert transformer filter block.
        */
       static sptr make(unsigned int ntaps);
     };

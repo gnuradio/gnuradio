@@ -70,7 +70,7 @@
 		<block>blks2_fm_preemph</block>
 	</cat>
 	<cat>
-		<name>Networking Tool</name>
+		<name>Networking Tools</name>
 		<block>blks2_tcp_source</block>
 		<block>blks2_tcp_sink</block>
 	</cat>

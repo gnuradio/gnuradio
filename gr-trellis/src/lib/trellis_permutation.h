@@ -35,7 +35,7 @@ TRELLIS_API trellis_permutation_sptr trellis_make_permutation (int K, const std:
 
 /*!
  * \brief Permutation.
- * \ingroup coding_blk
+ * \ingroup trellis_coding_blk
  */
 class TRELLIS_API trellis_permutation : public gr_sync_block
 {

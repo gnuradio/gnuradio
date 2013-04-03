@@ -38,7 +38,6 @@ gr_make_fft_vfc (int fft_size, bool forward,
 
 /*!
  * \brief Compute forward FFT.  float vector in / complex vector out.
- * \ingroup dft_blk
  */
 
 class GR_CORE_API gr_fft_vfc : public gr_sync_block

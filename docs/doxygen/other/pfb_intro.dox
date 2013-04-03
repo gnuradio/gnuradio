@@ -5,8 +5,7 @@
 Polyphase filterbanks (PFB) are a very powerful set of filtering tools
 that can efficiently perform many multi-rate signal processing
 tasks. GNU Radio has a set of polyphase filterbank blocks to be used
-in all sorts of applications. These blocks and their documentation can
-be found in \ref pfb_blk.
+in all sorts of applications.
 
 \section Usage
 

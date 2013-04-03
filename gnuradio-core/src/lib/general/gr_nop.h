@@ -35,7 +35,6 @@ gr_make_nop (size_t sizeof_stream_item);
 
 /*!
  * \brief Does nothing.  Used for testing only.
- * \ingroup misc_blk
  */
 class GR_CORE_API gr_nop : public gr_block
 {

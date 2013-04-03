@@ -32,7 +32,7 @@ namespace gr {
 
     /*!
      * \brief gate or zero output if ctcss tone not present
-     * \ingroup level_blk
+     * \ingroup level_controllers_blk
      */
     class ANALOG_API ctcss_squelch_ff :
       public squelch_base_ff, virtual public gr_block
