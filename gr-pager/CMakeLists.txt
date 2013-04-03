@@ -64,28 +64,28 @@ CPACK_COMPONENT("pager_runtime"
     GROUP        "Pager"
     DISPLAY_NAME "Runtime"
     DESCRIPTION  "Runtime"
-    DEPENDS      "core_runtime"
+    DEPENDS      "runtime_runtime"
 )
 
 CPACK_COMPONENT("pager_devel"
     GROUP        "Pager"
     DISPLAY_NAME "Development"
     DESCRIPTION  "C++ headers, package config, import libraries"
-    DEPENDS      "core_devel"
+    DEPENDS      "runtime_devel"
 )
 
 CPACK_COMPONENT("pager_python"
     GROUP        "Pager"
     DISPLAY_NAME "Python"
     DESCRIPTION  "Python modules for runtime; GRC xml files"
-    DEPENDS      "core_python;pager_runtime"
+    DEPENDS      "runtime_python;pager_runtime"
 )
 
 CPACK_COMPONENT("pager_swig"
     GROUP        "Pager"
     DISPLAY_NAME "SWIG"
     DESCRIPTION  "SWIG development .i files"
-    DEPENDS      "core_swig;pager_python;pager_devel"
+    DEPENDS      "runtime_swig;pager_python;pager_devel"
 )
 
 ########################################################################

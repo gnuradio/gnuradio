@@ -32,5 +32,5 @@ GR_PYTHON_INSTALL(FILES
     socket_stuff.py
     daemon.py
     DESTINATION ${GR_PYTHON_DIR}/gnuradio/gru
-    COMPONENT "core_python"
+    COMPONENT "runtime_python"
 )

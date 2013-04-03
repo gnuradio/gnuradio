@@ -57,28 +57,28 @@ CPACK_COMPONENT("wavelet_runtime"
     GROUP        "WAVELET"
     DISPLAY_NAME "Runtime"
     DESCRIPTION  "Runtime"
-    DEPENDS      "core_runtime"
+    DEPENDS      "runtime_runtime"
 )
 
 CPACK_COMPONENT("wavelet_devel"
     GROUP        "WAVELET"
     DISPLAY_NAME "Development"
     DESCRIPTION  "C++ headers, package config, import libraries"
-    DEPENDS      "core_devel"
+    DEPENDS      "runtime_devel"
 )
 
 CPACK_COMPONENT("wavelet_python"
     GROUP        "WAVELET"
     DISPLAY_NAME "Python"
     DESCRIPTION  "Python modules for runtime; GRC xml files"
-    DEPENDS      "core_python;wavelet_runtime"
+    DEPENDS      "runtime_python;wavelet_runtime"
 )
 
 CPACK_COMPONENT("wavelet_swig"
     GROUP        "WAVELET"
     DISPLAY_NAME "SWIG"
     DESCRIPTION  "SWIG development .i files"
-    DEPENDS      "core_swig;wavelet_python;wavelet_devel"
+    DEPENDS      "runtime_swig;wavelet_python;wavelet_devel"
 )
 
 ########################################################################

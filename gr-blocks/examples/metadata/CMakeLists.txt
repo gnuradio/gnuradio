@@ -26,5 +26,5 @@ install(
   file_metadata_vector_sink.grc
   file_metadata_vector_source.grc
   DESTINATION ${GR_PKG_DATA_DIR}/examples/metadata
-  COMPONENT "core_python"
+  COMPONENT "runtime_python"
 )

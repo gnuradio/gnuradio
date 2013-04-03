@@ -52,21 +52,21 @@ CPACK_COMPONENT("audio_runtime"
     GROUP        "Audio"
     DISPLAY_NAME "Runtime"
     DESCRIPTION  "Runtime"
-    DEPENDS      "core_runtime"
+    DEPENDS      "runtime_runtime"
 )
 
 CPACK_COMPONENT("audio_devel"
     GROUP        "Audio"
     DISPLAY_NAME "Development"
     DESCRIPTION  "C++ headers, package config, import libraries"
-    DEPENDS      "core_devel"
+    DEPENDS      "runtime_devel"
 )
 
 CPACK_COMPONENT("audio_python"
     GROUP        "Audio"
     DISPLAY_NAME "Python"
     DESCRIPTION  "Python modules for runtime; GRC xml files"
-    DEPENDS      "core_python;audio_runtime"
+    DEPENDS      "runtime_python;audio_runtime"
 )
 
 CPACK_COMPONENT("audio_examples"
@@ -80,7 +80,7 @@ CPACK_COMPONENT("audio_swig"
     GROUP        "Audio"
     DISPLAY_NAME "SWIG"
     DESCRIPTION  "SWIG development .i files"
-    DEPENDS      "core_swig;audio_python;audio_devel"
+    DEPENDS      "runtime_swig;audio_python;audio_devel"
 )
 
 ########################################################################

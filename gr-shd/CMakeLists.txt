@@ -80,28 +80,28 @@ CPACK_COMPONENT("shd_runtime"
     GROUP        "SHD"
     DISPLAY_NAME "Runtime"
     DESCRIPTION  "Runtime"
-    DEPENDS      "core_runtime"
+    DEPENDS      "runtime_runtime"
 )
 
 CPACK_COMPONENT("shd_devel"
     GROUP        "SHD"
     DISPLAY_NAME "Development"
     DESCRIPTION  "C++ headers, package config, import libraries"
-    DEPENDS      "core_devel"
+    DEPENDS      "runtime_devel"
 )
 
 CPACK_COMPONENT("shd_python"
     GROUP        "SHD"
     DISPLAY_NAME "Python"
     DESCRIPTION  "Python modules for runtime; GRC xml files"
-    DEPENDS      "core_python;shd_runtime"
+    DEPENDS      "runtime_python;shd_runtime"
 )
 
 CPACK_COMPONENT("shd_swig"
     GROUP        "SHD"
     DISPLAY_NAME "SWIG"
     DESCRIPTION  "SWIG development .i files"
-    DEPENDS      "core_swig;shd_python;shd_devel"
+    DEPENDS      "runtime_swig;shd_python;shd_devel"
 )
 
 ########################################################################

@@ -130,7 +130,7 @@ list(APPEND gnuradio_runtime_sources
 # PowerPC workaround for posix_memalign
 # Might not be needed, but we'll keep it for now.
 if(CMAKE_SYSTEM_PROCESSOR MATCHES "^(powerpc|ppc)")
-    list(APPEND gnuradio_core_sources
+    list(APPEND gnuradio_runtime_sources
         ${CMAKE_CURRENT_SOURCE_DIR}/posix_memalign.cc
     )
 endif(CMAKE_SYSTEM_PROCESSOR MATCHES "^(powerpc|ppc)")
@@ -141,12 +141,22 @@ list(APPEND gnuradio_runtime_libs
     ${LOG4CPP_LIBRARIES}
 )
 
+#Add libraries for winsock2.h on Windows
+CHECK_INCLUDE_FILE_CXX(windows.h HAVE_WINDOWS_H)
+IF(HAVE_WINDOWS_H)
+    ADD_DEFINITIONS(-DHAVE_WINDOWS_H -DUSING_WINSOCK -DWIN32_LEAN_AND_MEAN)
+    MESSAGE(STATUS "Adding windows libs to gnuradio runtime libs...")
+    LIST(APPEND gnuradio_runtime_libs WS2_32.lib WSock32.lib)
+ENDIF(HAVE_WINDOWS_H)
+
 #need to link with librt on ubuntu 11.10 for shm_*
 if(LINUX)
     list(APPEND gnuradio_runtime_libs rt)
 endif()
 
 if(ENABLE_GR_CTRLPORT)
+
+include_directories(${ICE_INCLUDE_DIR})
 
 # Add definition so we can compile in ControlPort to the blocks.
 ADD_DEFINITIONS(-DGR_CTRLPORT)
@@ -188,6 +198,23 @@ list(APPEND gnuradio_runtime_libs
 )
 
 endif(ENABLE_GR_CTRLPORT)
+
+########################################################################
+# Add DLL resource file when using MSVC
+########################################################################
+
+if(MSVC)
+    include(${CMAKE_SOURCE_DIR}/cmake/Modules/GrVersion.cmake)
+
+    configure_file(
+        ${CMAKE_CURRENT_SOURCE_DIR}/gnuradio-runtime.rc.in
+        ${CMAKE_CURRENT_BINARY_DIR}/gnuradio-runtime.rc
+    @ONLY)
+
+    list(APPEND gnuradio_runtime_sources
+        ${CMAKE_CURRENT_BINARY_DIR}/gnuradio-runtime.rc
+    )
+endif(MSVC)
 
 ########################################################################
 # Control availability of vmcircbuf methods.

@@ -60,28 +60,28 @@ CPACK_COMPONENT("fec_runtime"
     GROUP        "FEC"
     DISPLAY_NAME "Runtime"
     DESCRIPTION  "Runtime"
-    DEPENDS      "core_runtime"
+    DEPENDS      "runtime_runtime"
 )
 
 CPACK_COMPONENT("fec_devel"
     GROUP        "FEC"
     DISPLAY_NAME "Development"
     DESCRIPTION  "C++ headers, package config, import libraries"
-    DEPENDS      "core_devel"
+    DEPENDS      "runtime_devel"
 )
 
 CPACK_COMPONENT("fec_python"
     GROUP        "FEC"
     DISPLAY_NAME "Python"
     DESCRIPTION  "Python modules for runtime; GRC xml files"
-    DEPENDS      "core_python;fec_runtime"
+    DEPENDS      "runtime_python;fec_runtime"
 )
 
 CPACK_COMPONENT("fec_swig"
     GROUP        "FEC"
     DISPLAY_NAME "SWIG"
     DESCRIPTION  "SWIG development .i files"
-    DEPENDS      "core_swig;fec_python;fec_devel"
+    DEPENDS      "runtime_swig;fec_python;fec_devel"
 )
 
 ########################################################################
