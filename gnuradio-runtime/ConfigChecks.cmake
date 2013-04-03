@@ -154,14 +154,6 @@ CHECK_CXX_SOURCE_COMPILES("
 GR_ADD_COND_DEF(HAVE_CREATEFILEMAPPING)
 
 ########################################################################
-CHECK_INCLUDE_FILE_CXX(windows.h HAVE_WINDOWS_H)
-IF(HAVE_WINDOWS_H)
-    ADD_DEFINITIONS(-DHAVE_WINDOWS_H -DUSING_WINSOCK)
-    MESSAGE(STATUS "Adding windows libs to gnuradio core libs...")
-    LIST(APPEND gnuradio_core_libs WS2_32.lib WSock32.lib)
-ENDIF(HAVE_WINDOWS_H)
-
-########################################################################
 SET(CMAKE_REQUIRED_LIBRARIES -lrt)
 CHECK_CXX_SOURCE_COMPILES("
     #include <sys/types.h>

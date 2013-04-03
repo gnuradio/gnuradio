@@ -43,6 +43,10 @@
 #include <boost/thread.hpp>
 #include <boost/format.hpp>
 
+#if defined(_WIN32) || defined(__WIN32__) || defined(WIN32)
+typedef int mode_t;
+#endif
+
 #ifdef ENABLE_GR_LOG
 
 // We have three configurations... first logging to stdout/stderr
