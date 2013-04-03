@@ -29,7 +29,7 @@
 namespace gr {
   namespace blocks {
 
-    class BLOCKS_API rotator 
+    class rotator 
     {
     private:
       gr_complex d_phase;

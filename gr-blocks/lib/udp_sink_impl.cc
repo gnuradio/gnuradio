@@ -26,6 +26,7 @@
 
 #include "udp_sink_impl.h"
 #include <gr_io_signature.h>
+#include <boost/array.hpp>
 #include <boost/asio.hpp>
 #include <boost/format.hpp>
 #include <gruel/thread.h>
