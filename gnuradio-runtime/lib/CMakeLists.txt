@@ -129,7 +129,7 @@ list(APPEND gnuradio_runtime_sources
 # PowerPC workaround for posix_memalign
 # Might not be needed, but we'll keep it for now.
 if(CMAKE_SYSTEM_PROCESSOR MATCHES "^(powerpc|ppc)")
-    list(APPEND gnuradio_core_sources
+    list(APPEND gnuradio_runtime_sources
         ${CMAKE_CURRENT_SOURCE_DIR}/posix_memalign.cc
     )
 endif(CMAKE_SYSTEM_PROCESSOR MATCHES "^(powerpc|ppc)")

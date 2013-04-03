@@ -35,7 +35,7 @@ int
 main (int argc, char **argv)
 {
   CppUnit::TextTestRunner runner;
-  std::ofstream xmlfile(get_unittest_path("gnuradio_core_runtime.xml").c_str());
+  std::ofstream xmlfile(get_unittest_path("gnuradio_runtime_runtime.xml").c_str());
   CppUnit::XmlOutputter *xmlout = new CppUnit::XmlOutputter(&runner.result(), xmlfile);
 
   runner.addTest(qa_runtime::suite());

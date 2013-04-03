@@ -42,7 +42,7 @@ include(GrPackage)
 CPACK_COMPONENT("utils"
     DISPLAY_NAME "Utils"
     DESCRIPTION  "Misc gnuradio python utilities"
-    DEPENDS      "core_python"
+    DEPENDS      "runtime_python"
 )
 
 ########################################################################

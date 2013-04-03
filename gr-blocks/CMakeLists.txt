@@ -53,28 +53,28 @@ CPACK_COMPONENT("blocks_runtime"
     GROUP        "Blocks"
     DISPLAY_NAME "Runtime"
     DESCRIPTION  "Runtime"
-    DEPENDS      "core_runtime"
+    DEPENDS      "runtime_runtime"
 )
 
 CPACK_COMPONENT("blocks_devel"
     GROUP        "Blocks"
     DISPLAY_NAME "Development"
     DESCRIPTION  "C++ headers, package config, import libraries"
-    DEPENDS      "core_devel"
+    DEPENDS      "runtime_devel"
 )
 
 CPACK_COMPONENT("blocks_python"
     GROUP        "Blocks"
     DISPLAY_NAME "Python"
     DESCRIPTION  "Python modules for runtime; GRC xml files"
-    DEPENDS      "core_python;blocks_runtime"
+    DEPENDS      "runtime_python;blocks_runtime"
 )
 
 CPACK_COMPONENT("blocks_swig"
     GROUP        "Blocks"
     DISPLAY_NAME "SWIG"
     DESCRIPTION  "SWIG development .i files"
-    DEPENDS      "core_swig;blocks_python;blocks_devel"
+    DEPENDS      "runtime_swig;blocks_python;blocks_devel"
 )
 
 ########################################################################

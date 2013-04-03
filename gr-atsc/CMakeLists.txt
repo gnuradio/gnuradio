@@ -56,21 +56,21 @@ CPACK_COMPONENT("atsc_runtime"
     GROUP        "ATSC"
     DISPLAY_NAME "Runtime"
     DESCRIPTION  "Runtime"
-    DEPENDS      "core_runtime"
+    DEPENDS      "runtime_runtime"
 )
 
 CPACK_COMPONENT("atsc_devel"
     GROUP        "ATSC"
     DISPLAY_NAME "Development"
     DESCRIPTION  "C++ headers, package config, import libraries"
-    DEPENDS      "core_devel"
+    DEPENDS      "runtime_devel"
 )
 
 CPACK_COMPONENT("atsc_python"
     GROUP        "ATSC"
     DISPLAY_NAME "Python"
     DESCRIPTION  "Python modules for runtime; GRC xml files"
-    DEPENDS      "core_python;atsc_runtime"
+    DEPENDS      "runtime_python;atsc_runtime"
 )
 
 CPACK_COMPONENT("atsc_examples"
@@ -84,7 +84,7 @@ CPACK_COMPONENT("atsc_swig"
     GROUP        "ATSC"
     DISPLAY_NAME "SWIG"
     DESCRIPTION  "SWIG development .i files"
-    DEPENDS      "core_swig;atsc_python;atsc_devel"
+    DEPENDS      "runtime_swig;atsc_python;atsc_devel"
 )
 
 ########################################################################

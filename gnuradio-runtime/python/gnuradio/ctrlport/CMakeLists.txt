@@ -37,7 +37,7 @@ GR_PYTHON_INSTALL(
     ${CMAKE_CURRENT_SOURCE_DIR}/__init__.py
     ${CMAKE_CURRENT_SOURCE_DIR}/IceRadioClient.py
     DESTINATION ${GR_PYTHON_DIR}/gnuradio/ctrlport/
-    COMPONENT "core_python"
+    COMPONENT "runtime_python"
 )
 
 # We don't want to install these in the root Python directory, but we
@@ -48,35 +48,35 @@ GR_PYTHON_INSTALL(
     ${CMAKE_BINARY_DIR}/gnuradio-runtime/python/gnuradio_ice.py
     ${CMAKE_BINARY_DIR}/gnuradio-runtime/python/frontend_ice.py
     DESTINATION ${GR_PYTHON_DIR}
-    COMPONENT "core_python"
+    COMPONENT "runtime_python"
 )
 
 GR_PYTHON_INSTALL(
     FILES
     ${CMAKE_CURRENT_BINARY_DIR}/GNURadio/__init__.py
     DESTINATION ${GR_PYTHON_DIR}/gnuradio/ctrlport/GNURadio
-    COMPONENT "core_python"
+    COMPONENT "runtime_python"
 )
 
 GR_PYTHON_INSTALL(
     FILES
     ${CMAKE_CURRENT_BINARY_DIR}/GNURadio/Booter/__init__.py
     DESTINATION ${GR_PYTHON_DIR}/gnuradio/ctrlport/GNURadio/Booter
-    COMPONENT "core_python"
+    COMPONENT "runtime_python"
 )
 
 GR_PYTHON_INSTALL(
     FILES
     ${CMAKE_CURRENT_BINARY_DIR}/GNURadio/Frontend/__init__.py
     DESTINATION ${GR_PYTHON_DIR}/gnuradio/ctrlport/GNURadio/Frontend
-    COMPONENT "core_python"
+    COMPONENT "runtime_python"
 )
 
 install(
     FILES
     ${CMAKE_CURRENT_SOURCE_DIR}/icon.png
     DESTINATION ${GR_PYTHON_DIR}/gnuradio/ctrlport
-    COMPONENT "core_python"
+    COMPONENT "runtime_python"
 )
 
 GR_PYTHON_INSTALL(
@@ -84,7 +84,7 @@ GR_PYTHON_INSTALL(
     ${CMAKE_CURRENT_SOURCE_DIR}/GrDataPlotter.py
     ${CMAKE_CURRENT_SOURCE_DIR}/monitor.py
     DESTINATION ${GR_PYTHON_DIR}/gnuradio/ctrlport/
-    COMPONENT "core_python"
+    COMPONENT "runtime_python"
 )
 
 GR_PYTHON_INSTALL(
@@ -94,5 +94,5 @@ GR_PYTHON_INSTALL(
     ${CMAKE_CURRENT_SOURCE_DIR}/gr-ctrlport-curses
     DESTINATION ${GR_RUNTIME_DIR}
     PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE 
-    COMPONENT "core_python"
+    COMPONENT "runtime_python"
 )

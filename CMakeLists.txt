@@ -303,7 +303,7 @@ file(GLOB cmake_modules "cmake/Modules/*.cmake")
 install(
   FILES ${cmake_modules} 
   DESTINATION ${GR_PKG_DATA_DIR}/cmake/Modules
-  COMPONENT "core_devel"
+  COMPONENT "runtime_devel"
 )
 
 #finalize cpack after subdirs processed
@@ -328,5 +328,5 @@ install(
     FILES
     ${CMAKE_CURRENT_BINARY_DIR}/config.h
     DESTINATION ${GR_INCLUDE_DIR}/gnuradio
-    COMPONENT "core_devel"
+    COMPONENT "runtime_devel"
 )
