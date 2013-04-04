@@ -34,7 +34,6 @@ gr_make_multiply_const_cc (gr_complex k, size_t vlen=1);
 
 /*!
  * \brief Multiply stream of complex values with a constant \p k
- * \ingroup math_blk
  */
 
 class GR_CORE_API gr_multiply_const_cc : public gr_sync_block

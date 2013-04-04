@@ -5,7 +5,7 @@
 ###################################################
  -->
 <block>
-	<name>Interpolating FIR Filter</name>
+	<name>Interpolating FIR Filter (old)</name>
 	<key>gr_interp_fir_filter_xxx</key>
 	<import>from gnuradio import gr</import>
 	<import>from gnuradio.gr import firdes</import>

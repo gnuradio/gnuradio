@@ -34,8 +34,9 @@ digital_make_diff_decoder_bb(unsigned int modulus);
 
 /*!
  * \brief y[0] = (x[0] - x[-1]) % M
- * \ingroup coding_blk
+ * \ingroup symbol_coding_blk
  *
+ * \details
  * Uses current and previous symbols and the alphabet modulus to
  * perform differential decoding.
  */

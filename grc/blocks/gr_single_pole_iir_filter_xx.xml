@@ -5,7 +5,7 @@
 ###################################################
  -->
 <block>
-	<name>Single Pole IIR Filter</name>
+	<name>Single Pole IIR Filter (old)</name>
 	<key>gr_single_pole_iir_filter_xx</key>
 	<import>from gnuradio import gr</import>
 	<make>gr.single_pole_iir_filter_$(type.fcn)($alpha, $vlen)</make>

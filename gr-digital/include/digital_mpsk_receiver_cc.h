@@ -46,10 +46,9 @@ digital_make_mpsk_receiver_cc (unsigned int M, float theta,
 /*!
  * \brief This block takes care of receiving M-PSK modulated signals
  * through phase, frequency, and symbol synchronization.
- * \ingroup sync_blk
- * \ingroup demod_blk
- * \ingroup digital
+ * \ingroup synchronizers_blk
  *
+ * \details
  * This block takes care of receiving M-PSK modulated signals through
  * phase, frequency, and symbol synchronization. It performs carrier
  * frequency and phase locking as well as symbol timing recovery.  It
@@ -77,9 +76,7 @@ digital_make_mpsk_receiver_cc (unsigned int M, float theta,
  * optimized decision algorithms for BPSK and QPKS, but 8PSK uses
  * another brute force computation against all possible symbols. The
  * modifications to the M&M used here reduce self-noise.
- *
  */
-
 class DIGITAL_API digital_mpsk_receiver_cc : public gr_block, public gri_control_loop
 {
  public:

@@ -34,7 +34,6 @@ gr_make_add_ff (size_t vlen=1);
 
 /*!
  * \brief Add streams of complex values
- * \ingroup math_blk
  */
 
 class GR_CORE_API gr_add_ff : public gr_sync_block

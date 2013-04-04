@@ -33,7 +33,8 @@ DIGITAL_API digital_simple_correlator_sptr digital_make_simple_correlator(int pa
 
 /*!
  * \brief inverse of simple_framer (more or less)
- * \ingroup sync_blk
+ * \ingroup packet_operators_blk
+ * \ingroup deprecated_blk
  */
 class DIGITAL_API digital_simple_correlator : public gr_block
 {

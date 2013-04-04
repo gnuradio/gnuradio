@@ -35,7 +35,6 @@ PAGER_API pager_flex_sync_sptr pager_make_flex_sync();
  * \brief flex sync description
  * \ingroup pager_blk
  */
-
 class PAGER_API pager_flex_sync : public gr_block
 {
 private:

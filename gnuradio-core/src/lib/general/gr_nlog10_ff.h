@@ -32,7 +32,6 @@ GR_CORE_API gr_nlog10_ff_sptr gr_make_nlog10_ff (float n=1.0, unsigned vlen=1, f
 
 /*!
  * \brief output = n*log10(input) + k
- * \ingroup math_blk
  */
 class GR_CORE_API gr_nlog10_ff : public gr_sync_block
 {

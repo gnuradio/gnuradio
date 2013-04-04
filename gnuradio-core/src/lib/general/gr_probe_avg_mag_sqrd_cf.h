@@ -34,7 +34,6 @@ gr_make_probe_avg_mag_sqrd_cf (double threshold_db, double alpha = 0.0001);
 
 /*!
  * \brief compute avg magnitude squared.
- * \ingroup sink_blk
  *
  * input: gr_complex
  * output: gr_float

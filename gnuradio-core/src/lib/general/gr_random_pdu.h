@@ -38,7 +38,6 @@ GR_CORE_API gr_random_pdu_sptr gr_make_random_pdu (int mintime, int maxtime);
 
 /*!
  * \brief Send message at defined interval
- * \ingroup msg_blk
  */
 class GR_CORE_API gr_random_pdu : public gr_block
 {

@@ -5,7 +5,7 @@
 ###################################################
  -->
 <block>
-	<name>Null Source</name>
+	<name>Null Source (old)</name>
 	<key>gr_null_source</key>
 	<import>from gnuradio import gr</import>
 	<make>gr.null_source($type.size*$vlen)</make>

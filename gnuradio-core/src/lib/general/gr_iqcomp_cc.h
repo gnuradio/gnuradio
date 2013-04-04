@@ -34,7 +34,6 @@ GR_CORE_API gr_iqcomp_cc_sptr gr_make_iqcomp_cc (float mu);
 
 /*!
  * \brief
- * \ingroup misc_blk
  */
 class GR_CORE_API gr_iqcomp_cc : public gr_sync_block
 {

@@ -6,7 +6,7 @@
 ###################################################
  -->
 <block>
-	<name>Endian Swap</name>
+	<name>Endian Swap (old)</name>
 	<key>gr_endian_swap</key>
 	<import>from gnuradio import gr</import>
 	<make>gr.endian_swap($type.size)</make>

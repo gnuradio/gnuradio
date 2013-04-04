@@ -31,7 +31,6 @@
 /*!
  * \brief Creates a stream muxing block to multiplex many streams into
  * one with a specified format.
- * \ingroup converter_blk
  *
  * \param itemsize the item size of the stream
  * \param length   a vector (list/tuple) specifying the number of

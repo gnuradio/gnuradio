@@ -42,10 +42,10 @@ digital_make_constellation_receiver_cb (digital_constellation_sptr constellation
 
 /*!
  * \brief This block does fine-phase and frequency locking and decision making.
- * \ingroup sync_blk
- * \ingroup demod_blk
- * \ingroup digital
+ * \ingroup symbol_coding_blk
+ * \ingroup modulators_blk
  *
+ * \details
  * The phase and frequency synchronization are based on a Costas loop
  * that finds the error of the incoming signal point compared to its
  * nearest constellation point. The frequency and phase of the NCO are

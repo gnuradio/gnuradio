@@ -36,7 +36,6 @@ GR_CORE_API gr_fractional_interpolator_cc_sptr gr_make_fractional_interpolator_c
 
 /*!
  * \brief Interpolating mmse filter with gr_complex input, gr_complex output
- * \ingroup filter_blk
  */
 class GR_CORE_API gr_fractional_interpolator_cc : public gr_block
 {

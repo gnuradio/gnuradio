@@ -33,7 +33,7 @@ namespace gr {
     /*!
      * \brief Bit bucket. Use as a termination point when a sink is
      * required and we don't want to do anything real.
-     * \ingroup sink_blk
+     * \ingroup misc_blk
      */
     class BLOCKS_API null_sink : virtual public gr_sync_block
     {

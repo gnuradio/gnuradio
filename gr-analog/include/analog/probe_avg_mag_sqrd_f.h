@@ -31,8 +31,9 @@ namespace gr {
     
     /*!
      * \brief compute avg magnitude squared.
-     * \ingroup sink_blk
+     * \ingroup measurement_tools_blk
      *
+     * \details
      * input stream 0: float
      *
      * Compute a running average of the magnitude squared of the the

@@ -50,7 +50,6 @@ GR_CORE_API gr_complex_to_arg_sptr gr_make_complex_to_arg (unsigned int vlen=1);
 
 /*!
  * \brief convert a stream of gr_complex to 1 or 2 streams of float
- * \ingroup converter_blk
  * \param vlen	vector len (default 1)
  */
 class GR_CORE_API gr_complex_to_float : public gr_sync_block
@@ -68,7 +67,6 @@ class GR_CORE_API gr_complex_to_float : public gr_sync_block
 
 /*!
  * \brief complex in, real out (float)
- * \ingroup converter_blk
  * \param vlen	vector len (default 1)
  */
 class GR_CORE_API gr_complex_to_real : public gr_sync_block
@@ -86,7 +84,6 @@ class GR_CORE_API gr_complex_to_real : public gr_sync_block
 
 /*!
  * \brief complex in, imaginary out (float)
- * \ingroup converter_blk
  * \param vlen	vector len (default 1)
  */
 class GR_CORE_API gr_complex_to_imag : public gr_sync_block
@@ -104,7 +101,6 @@ class GR_CORE_API gr_complex_to_imag : public gr_sync_block
 
 /*!
  * \brief complex in, magnitude out (float)
- * \ingroup converter_blk
  * \param vlen	vector len (default 1)
  */
 class GR_CORE_API gr_complex_to_mag : public gr_sync_block
@@ -123,7 +119,6 @@ class GR_CORE_API gr_complex_to_mag : public gr_sync_block
 
 /*!
  * \brief complex in, magnitude squared out (float)
- * \ingroup converter_blk
  * \param vlen	vector len (default 1)
  */
 class GR_CORE_API gr_complex_to_mag_squared : public gr_sync_block
@@ -141,7 +136,6 @@ class GR_CORE_API gr_complex_to_mag_squared : public gr_sync_block
 
 /*!
  * \brief complex in, angle out (float)
- * \ingroup converter_blk
  * \param vlen	vector len (default 1)
  */
 class GR_CORE_API gr_complex_to_arg : public gr_sync_block

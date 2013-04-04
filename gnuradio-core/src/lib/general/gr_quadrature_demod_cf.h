@@ -32,7 +32,6 @@ GR_CORE_API gr_quadrature_demod_cf_sptr gr_make_quadrature_demod_cf (float gain)
 
 /*!
  * \brief quadrature demodulator: complex in, float out
- * \ingroup demodulation_blk
  *
  * This can be used to demod FM, FSK, GMSK, etc.
  * The input is complex baseband.

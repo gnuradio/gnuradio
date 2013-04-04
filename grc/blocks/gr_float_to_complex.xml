@@ -6,7 +6,7 @@
 ###################################################
  -->
 <block>
-	<name>Float To Complex</name>
+	<name>Float To Complex (old)</name>
 	<key>gr_float_to_complex</key>
 	<import>from gnuradio import gr</import>
 	<make>gr.float_to_complex($vlen)</make>

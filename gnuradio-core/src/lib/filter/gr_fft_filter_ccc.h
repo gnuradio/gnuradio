@@ -36,7 +36,6 @@ class gri_fft_filter_ccc_generic;
 
 /*!
  * \brief Fast FFT filter with gr_complex input, gr_complex output and gr_complex taps
- * \ingroup filter_blk
  */
 class GR_CORE_API gr_fft_filter_ccc : public gr_sync_decimator
 {

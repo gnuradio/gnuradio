@@ -6,7 +6,7 @@
 ###################################################
  -->
 <block>
-	<name>Multiply</name>
+	<name>Multiply (old)</name>
 	<key>gr_multiply_xx</key>
 	<import>from gnuradio import gr</import>
 	<make>gr.multiply_v$(type.fcn)($vlen)</make>

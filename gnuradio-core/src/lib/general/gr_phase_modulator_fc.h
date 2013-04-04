@@ -33,7 +33,6 @@ GR_CORE_API gr_phase_modulator_fc_sptr gr_make_phase_modulator_fc (double sensit
 
 /*!
  * \brief Phase modulator block
- * \ingroup modulation_blk
  * output=complex(cos(in*sensitivity),sin(in*sensitivity))
  */
 class GR_CORE_API gr_phase_modulator_fc : public gr_sync_block

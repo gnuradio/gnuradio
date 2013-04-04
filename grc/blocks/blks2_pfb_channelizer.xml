@@ -5,7 +5,7 @@
 ###################################################
  -->
 <block>
-	<name>Polyphase Channelizer</name>
+	<name>Polyphase Channelizer (old)</name>
 	<key>blks2_pfb_channelizer_ccf</key>
 	<import>from gnuradio import blks2</import>
 	<import>from gnuradio.gr import firdes</import>

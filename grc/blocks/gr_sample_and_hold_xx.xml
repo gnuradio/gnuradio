@@ -5,7 +5,7 @@
 ###################################################
  -->
 <block>
-	<name>Sample and Hold</name>
+	<name>Sample and Hold (old)</name>
 	<key>gr_sample_and_hold_xx</key>
 	<import>from gnuradio import gr</import>
 	<make>gr.sample_and_hold_$(type.fcn)()</make>

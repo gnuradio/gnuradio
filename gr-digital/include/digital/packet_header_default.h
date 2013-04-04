@@ -31,8 +31,9 @@ namespace gr {
 
     /*!
      * \brief Default header formatter for digital packet transmission.
-     * \ingroup digital
+     * \ingroup packet_operators_blk
      *
+     * \details
      * For bursty/packetized digital transmission, packets are usually prepended
      * with a packet header, containing the number of bytes etc.
      * This class is not a block, but a tool to create these packet header.

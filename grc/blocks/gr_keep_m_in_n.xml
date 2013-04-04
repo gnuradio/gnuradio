@@ -5,7 +5,7 @@
 ###################################################
  -->
 <block>
-	<name>Keep M in N</name>
+	<name>Keep M in N (old)</name>
 	<key>gr_keep_m_in_n</key>
 	<import>from gnuradio import gr</import>
 	<make>gr.keep_m_in_n($type.size, $m, $n, $offset)</make>

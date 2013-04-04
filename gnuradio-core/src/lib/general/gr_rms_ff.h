@@ -34,7 +34,6 @@ gr_make_rms_ff (double alpha = 0.0001);
 
 /*!
  * \brief RMS average power
- * \ingroup math_blk
  */
 class GR_CORE_API gr_rms_ff : public gr_sync_block
 {

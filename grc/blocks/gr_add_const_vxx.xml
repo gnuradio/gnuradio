@@ -6,7 +6,7 @@
 ###################################################
  -->
 <block>
-	<name>Add Const</name>
+	<name>Add Const (old)</name>
 	<key>gr_add_const_vxx</key>
 	<import>from gnuradio import gr</import>
 	<make>gr.add_const_v$(type.fcn)($const)</make>

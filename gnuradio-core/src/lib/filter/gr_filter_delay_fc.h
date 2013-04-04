@@ -38,7 +38,6 @@ class gr_fir_fff;
 
 /*!
  * \brief Filter-Delay Combination Block.
- * \ingroup filter_blk
  *
  * The block takes one or two float stream and outputs a complex
  * stream. If only one float stream is input, the real output is

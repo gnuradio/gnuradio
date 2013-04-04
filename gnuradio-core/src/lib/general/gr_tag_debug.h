@@ -36,7 +36,6 @@ gr_make_tag_debug(size_t sizeof_stream_item, const std::string &name);
 
 /*!
  * \brief Bit bucket that prints out any tag received.
- * \ingroup sink_blk
  *
  * This block collects all tags sent to it on all input ports and
  * displays them to stdout in a formatted way. The \p name parameter

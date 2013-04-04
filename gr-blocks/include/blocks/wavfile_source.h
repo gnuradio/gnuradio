@@ -31,11 +31,11 @@ namespace gr {
 
     /*!
      * \brief Read stream from a Microsoft PCM (.wav) file, output floats
+     * \ingroup audio_blk
      *
+     * \details
      * Unless otherwise called, values are within [-1;1].
      * Check gr_make_wavfile_source() for extra info.
-     *
-     * \ingroup source_blk
      */
     class BLOCKS_API wavfile_source : virtual public gr_sync_block
     {

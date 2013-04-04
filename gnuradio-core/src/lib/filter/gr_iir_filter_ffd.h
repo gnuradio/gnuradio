@@ -36,7 +36,6 @@ gr_make_iir_filter_ffd (const std::vector<double> &fftaps,
 
 /*!
  * \brief  IIR filter with float input, float output and double taps
- * \ingroup filter_blk
  *
  * This filter uses the Direct Form I implementation, where
  * \p fftaps contains the feed-forward taps, and \p fbtaps the feedback ones.

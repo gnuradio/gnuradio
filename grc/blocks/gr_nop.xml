@@ -5,7 +5,7 @@
 ###################################################
  -->
 <block>
-	<name>Nop</name>
+	<name>Nop (old)</name>
 	<key>gr_nop</key>
 	<import>from gnuradio import gr</import>
 	<make>gr.nop($type.size*$vlen)</make>

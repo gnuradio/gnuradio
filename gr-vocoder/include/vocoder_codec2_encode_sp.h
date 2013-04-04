@@ -32,7 +32,7 @@ VOCODER_API vocoder_codec2_encode_sp_sptr vocoder_make_codec2_encode_sp ();
 
 /*!
  * \brief CODEC2 Vocoder Encoder
- * \ingroup vocoder_blk
+ * \ingroup audio_blk
  */
 class VOCODER_API vocoder_codec2_encode_sp : public gr_sync_decimator {
   void *d_codec2;

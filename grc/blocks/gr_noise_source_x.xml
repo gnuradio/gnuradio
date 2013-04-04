@@ -5,7 +5,7 @@
 ###################################################
  -->
 <block>
-	<name>Noise Source</name>
+	<name>Noise Source (old)</name>
 	<key>gr_noise_source_x</key>
 	<import>from gnuradio import gr</import>
 	<make>gr.noise_source_$(type.fcn)($noise_type, $amp, $seed)</make>

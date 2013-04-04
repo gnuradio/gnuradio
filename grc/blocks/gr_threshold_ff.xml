@@ -5,7 +5,7 @@
 ###################################################
  -->
 <block>
-	<name>Threshold</name>
+	<name>Threshold (old)</name>
 	<key>gr_threshold_ff</key>
 	<import>from gnuradio import gr</import>
 	<make>gr.threshold_ff($low, $high, $init)</make>

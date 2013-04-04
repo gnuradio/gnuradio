@@ -6,7 +6,7 @@
 ###################################################
  -->
 <block>
-	<name>Add</name>
+	<name>Add (old)</name>
 	<key>gr_add_xx</key>
 	<import>from gnuradio import gr</import>
 	<make>gr.add_v$(type.fcn)($vlen)</make>

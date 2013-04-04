@@ -5,7 +5,7 @@
 ###################################################
  -->
 <block>
-	<name>FFT</name>
+	<name>FFT (old)</name>
 	<key>gr_fft_vxx</key>
 	<import>from gnuradio import gr</import>
 	<import>from gnuradio import window</import>

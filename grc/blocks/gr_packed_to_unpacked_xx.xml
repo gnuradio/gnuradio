@@ -5,7 +5,7 @@
 ###################################################
  -->
 <block>
-	<name>Packed to Unpacked</name>
+	<name>Packed to Unpacked (old)</name>
 	<key>gr_packed_to_unpacked_xx</key>
 	<import>from gnuradio import gr</import>
 	<make>gr.packed_to_unpacked_$(type.fcn)($bits_per_chunk, $endianness)</make>

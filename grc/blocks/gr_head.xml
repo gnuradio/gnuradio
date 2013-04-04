@@ -5,7 +5,7 @@
 ###################################################
  -->
 <block>
-	<name>Head</name>
+	<name>Head (old)</name>
 	<key>gr_head</key>
 	<import>from gnuradio import gr</import>
 	<make>gr.head($type.size*$vlen, $num_items)</make>

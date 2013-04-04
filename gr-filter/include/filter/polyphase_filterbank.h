@@ -33,13 +33,11 @@ namespace gr {
     namespace kernel {
 
       /*!
-       * \class polyphase_filterbank
-       *
        * \brief Polyphase filterbank parent class
-       *
        * \ingroup filter_blk
        * \ingroup pfb_blk
        *
+       * \details
        * This block takes in complex inputs and channelizes it to
        * <EM>M</EM> channels of equal bandwidth. Each of the resulting
        * channels is decimated to the new rate that is the input

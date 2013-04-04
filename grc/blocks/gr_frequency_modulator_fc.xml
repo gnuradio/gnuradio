@@ -5,7 +5,7 @@
 ###################################################
  -->
 <block>
-	<name>Frequency Mod</name>
+	<name>Frequency Mod (old)</name>
 	<key>gr_frequency_modulator_fc</key>
 	<import>from gnuradio import gr</import>
 	<make>gr.frequency_modulator_fc($sensitivity)</make>

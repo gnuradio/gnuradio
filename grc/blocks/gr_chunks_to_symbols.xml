@@ -5,7 +5,7 @@
 ###################################################
  -->
 <block>
-	<name>Chunks to Symbols</name>
+	<name>Chunks to Symbols (old)</name>
 	<key>gr_chunks_to_symbols_xx</key>
 	<import>from gnuradio import gr</import>
 	<make>gr.chunks_to_symbols_$(in_type.fcn)$(out_type.fcn)($symbol_table, $dimension)</make>

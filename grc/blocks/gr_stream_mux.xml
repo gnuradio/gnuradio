@@ -6,7 +6,7 @@
 ###################################################
  -->
 <block>
-	<name>Stream Mux</name>
+	<name>Stream Mux (old)</name>
 	<key>gr_stream_mux</key>
 	<import>from gnuradio import gr</import>
 	<make>gr.stream_mux($type.size*$vlen, $lengths)</make>

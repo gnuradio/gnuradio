@@ -37,7 +37,6 @@ gr_make_packet_sink (const std::vector<unsigned char>& sync_vector,
 		     );
 /*!
  * \brief process received  bits looking for packet sync, header, and process bits into packet
- * \ingroup sink_blk
  */
 class GR_CORE_API gr_packet_sink : public gr_sync_block
 {

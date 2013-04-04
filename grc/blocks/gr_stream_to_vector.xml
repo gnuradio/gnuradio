@@ -5,7 +5,7 @@
 ###################################################
  -->
 <block>
-	<name>Stream to Vector</name>
+	<name>Stream to Vector (old)</name>
 	<key>gr_stream_to_vector</key>
 	<import>from gnuradio import gr</import>
 	<make>gr.stream_to_vector($type.size*$vlen, $num_items)</make>

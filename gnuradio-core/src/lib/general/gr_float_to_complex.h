@@ -35,7 +35,6 @@ gr_make_float_to_complex (size_t vlen = 1);
 
 /*!
  * \brief Convert 1 or 2 streams of float to a stream of gr_complex
- * \ingroup converter_blk
  */
 
 class GR_CORE_API gr_float_to_complex : public gr_sync_block

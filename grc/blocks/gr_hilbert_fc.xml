@@ -5,7 +5,7 @@
 ###################################################
  -->
 <block>
-	<name>Hilbert</name>
+	<name>Hilbert (old)</name>
 	<key>gr_hilbert_fc</key>
 	<import>from gnuradio import gr</import>
 	<make>gr.hilbert_fc($num_taps)</make>

@@ -36,7 +36,6 @@ GR_CORE_API gr_pll_carriertracking_cc_sptr gr_make_pll_carriertracking_cc (float
 /*!
  * \brief Implements a PLL which locks to the input frequency and outputs the
  * input signal mixed with that carrier.
- * \ingroup sync_blk
  *
  * input: stream of complex; output: stream of complex
  *

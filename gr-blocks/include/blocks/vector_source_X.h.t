@@ -33,7 +33,7 @@ namespace gr {
 
     /*!
      * \brief source of @TYPE@'s that gets its data from a vector
-     * \ingroup source_blk
+     * \ingroup misc_blk
      */
     class BLOCKS_API @NAME@ : virtual public gr_sync_block
     {

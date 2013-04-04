@@ -34,23 +34,16 @@ digital_make_additive_scrambler_bb(int mask, int seed,
 				   int len, int count=0);
 
 /*!
+ * \ingroup coding_blk
  * Scramble an input stream using an LFSR.  This block works on the LSB only
  * of the input data stream, i.e., on an "unpacked binary" stream, and
  * produces the same format on its output.
- *
- * \param mask     Polynomial mask for LFSR
- * \param seed     Initial shift register contents
- * \param len      Shift register length
- * \param count    Number of bits after which shift register is reset, 0=never
  *
  * The scrambler works by XORing the incoming bit stream by the output of
  * the LFSR.  Optionally, after 'count' bits have been processed, the shift
  * register is reset to the seed value.  This allows processing fixed length
  * vectors of samples.
- *
- * \ingroup coding_blk
  */
-
 class DIGITAL_API digital_additive_scrambler_bb : public gr_sync_block
 {
   friend DIGITAL_API digital_additive_scrambler_bb_sptr
@@ -61,6 +54,14 @@ class DIGITAL_API digital_additive_scrambler_bb : public gr_sync_block
   int      d_count;
   int      d_bits;
 
+  /*!
+   * Build an additive scrambler block.
+   *
+   * \param mask     Polynomial mask for LFSR
+   * \param seed     Initial shift register contents
+   * \param len      Shift register length
+   * \param count    Number of bits after which shift register is reset, 0=never
+   */
   digital_additive_scrambler_bb(int mask, int seed,
 				int len, int count);
 

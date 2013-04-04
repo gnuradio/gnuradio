@@ -34,7 +34,6 @@ gr_make_agc_cc (float rate = 1e-4, float reference = 1.0,
 		float gain = 1.0, float max_gain = 0.0);
 /*!
  * \brief high performance Automatic Gain Control class
- * \ingroup level_blk
  *
  * For Power the absolute value of the complex number is used.
  */

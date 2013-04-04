@@ -28,7 +28,6 @@
 
 /*!
  * \brief clips input values to min, max
- * \ingroup misc
  */
 
 class gr_rail_ff;

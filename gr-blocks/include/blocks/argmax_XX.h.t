@@ -35,8 +35,9 @@ namespace gr {
      * \brief Compares vectors from multiple streams and determines
      * the index in the vector and stream number where the maximum
      * value occurred.
-     * \ingroup math_blk
+     * \ingroup math_operators_blk
      *
+     * \details
      * Data is passed in as a vector of length \p vlen from multiple
      * input sources. It will look through these streams of \p vlen
      * data items and output two streams.

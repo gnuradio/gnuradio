@@ -39,12 +39,7 @@ GR_CORE_API gr_pfb_clock_sync_ccf_sptr gr_make_pfb_clock_sync_ccf (double sps, f
 class gr_fir_ccf;
 
 /*!
- * \class gr_pfb_clock_sync_ccf
- *
  * \brief Timing synchronizer using polyphase filterbanks
- *
- * \ingroup filter_blk
- * \ingroup pfb_blk
  *
  * This block performs timing synchronization for PAM signals by
  * minimizing the derivative of the filtered signal, which in turn

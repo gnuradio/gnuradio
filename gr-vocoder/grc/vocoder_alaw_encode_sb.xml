@@ -5,7 +5,7 @@
 ###################################################
  -->
 <block>
-	<name>g711 alaw Audio Encoder</name>
+	<name>g711 Alaw Audio Encoder</name>
 	<key>vocoder_alaw_encode_sb</key>
 	<import>from gnuradio import vocoder</import>
 	<make>vocoder.alaw_encode_sb()</make>

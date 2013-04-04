@@ -39,7 +39,6 @@ DIGITAL_API digital_make_ofdm_frame_acquisition (unsigned int occupied_carriers,
 /*!
  * \brief take a vector of complex constellation points in from an FFT
  * and performs a correlation and equalization.
- * \ingroup demodulation_blk
  * \ingroup ofdm_blk
  *
  * This block takes the output of an FFT of a received OFDM symbol and finds the 

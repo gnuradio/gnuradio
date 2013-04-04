@@ -32,10 +32,10 @@ typedef boost::shared_ptr<digital_pn_correlator_cc> digital_pn_correlator_cc_spt
 
 DIGITAL_API digital_pn_correlator_cc_sptr
 digital_make_pn_correlator_cc(int degree, int mask=0, int seed=1);
+
 /*!
  * \brief PN code sequential search correlator
- *
- * \ingroup sync_blk
+ * \ingroup synchronizers_blk
  *
  * Receives complex baseband signal, outputs complex correlation
  * against reference PN code, one sample per PN code period. The PN

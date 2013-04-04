@@ -8,7 +8,7 @@
 <block>
 	<name>PCCC Encoder</name>
 	<key>trellis_pccc_encoder_xx</key>
-	<category>Error Correction/Trellis</category>
+	<category>Trellis Coding</category>
 	<import>from gnuradio import trellis</import>
 	<make>trellis.pccc_encoder_$(type)(trellis.fsm($o_fsm_args), $o_init_state, trellis.fsm($i_fsm_args), $i_init_state, trellis.interleaver($interleaver_args), $bl)</make>
 	<param>

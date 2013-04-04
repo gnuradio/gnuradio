@@ -34,7 +34,7 @@ namespace gr {
 
     /*!
      * \brief signal generator with @TYPE@ output.
-     * \ingroup source_blk
+     * \ingroup waveform_generators_blk
      */
     class ANALOG_API @BASE_NAME@ : virtual public gr_sync_block
     {
@@ -43,7 +43,7 @@ namespace gr {
       typedef boost::shared_ptr<@BASE_NAME@> sptr;
       
       /*!
-       * \brief Make a signal source block.
+       * Build a signal source block.
        *
        * \param sampling_freq Sampling rate of signal.
        * \param waveform wavetform type.

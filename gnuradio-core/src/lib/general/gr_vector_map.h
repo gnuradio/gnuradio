@@ -55,8 +55,6 @@ gr_make_vector_map (size_t item_size, std::vector<size_t> in_vlens,
  *
  * \param mapping (vector of vectors of vectors of integers) how to
  *                map elements from input to output vectors
- *
- * \ingroup slicedice_blk
  */
 class GR_CORE_API gr_vector_map : public gr_sync_block
 {

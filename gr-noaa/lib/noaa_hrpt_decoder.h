@@ -32,6 +32,10 @@ typedef boost::shared_ptr<noaa_hrpt_decoder> noaa_hrpt_decoder_sptr;
 NOAA_API noaa_hrpt_decoder_sptr
 noaa_make_hrpt_decoder(bool verbose, bool output_files);
 
+/*!
+ * \brief NOAA HRPT Decoder
+ * \ingroup noaa_blk
+ */
 class NOAA_API noaa_hrpt_decoder : public gr_sync_block
 {
   friend NOAA_API noaa_hrpt_decoder_sptr noaa_make_hrpt_decoder(bool verbose, bool output_files);

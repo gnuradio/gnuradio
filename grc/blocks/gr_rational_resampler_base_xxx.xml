@@ -5,7 +5,7 @@
 ###################################################
  -->
 <block>
-	<name>Rational Resampler Base</name>
+	<name>Rational Resampler Base (old)</name>
 	<key>gr_rational_resampler_base_xxx</key>
 	<import>from gnuradio import gr</import>
 	<import>from gnuradio.gr import firdes</import>

@@ -29,6 +29,10 @@
 class noaa_hrpt_pll_cf;
 typedef boost::shared_ptr<noaa_hrpt_pll_cf> noaa_hrpt_pll_cf_sptr;
 
+/*!
+ * \brief NOAA HRPT PLL
+ * \ingroup noaa_blk
+ */
 NOAA_API noaa_hrpt_pll_cf_sptr
 noaa_make_hrpt_pll_cf(float alpha, float beta, float max_offset);
 

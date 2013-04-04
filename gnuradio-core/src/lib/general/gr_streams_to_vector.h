@@ -35,7 +35,6 @@ gr_make_streams_to_vector (size_t item_size, size_t nstreams);
 
 /*!
  * \brief convert N streams of items to 1 stream of vector length N
- * \ingroup slicedice_blk
  */
 class GR_CORE_API gr_streams_to_vector : public gr_sync_block
 {

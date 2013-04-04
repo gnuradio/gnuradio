@@ -33,9 +33,9 @@ DIGITAL_API digital_binary_slicer_fb_sptr digital_make_binary_slicer_fb ();
 
 /*!
  * \brief slice float binary symbol outputting 1 bit output
- * \ingroup converter_blk
- * \ingroup digital
+ * \ingroup symbol_coding_blk
  *
+ * \details
  * x <  0 --> 0
  * x >= 0 --> 1
  */

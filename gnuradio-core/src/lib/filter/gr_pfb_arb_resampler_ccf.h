@@ -36,14 +36,10 @@ GR_CORE_API gr_pfb_arb_resampler_ccf_sptr gr_make_pfb_arb_resampler_ccf (float r
 class gr_fir_ccf;
 
 /*!
- * \class gr_pfb_arb_resampler_ccf
- *
  * \brief Polyphase filterbank arbitrary resampler with
  *        gr_complex input, gr_complex output and float taps
  *
- * \ingroup filter_blk
- * \ingroup pfb_blk
- *
+
  * This block takes in a signal stream and performs arbitrary
  * resampling. The resampling rate can be any real
  * number <EM>r</EM>. The resampling is done by constructing

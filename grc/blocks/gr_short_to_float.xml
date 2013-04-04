@@ -5,7 +5,7 @@
 ###################################################
  -->
 <block>
-	<name>Short To Float</name>
+	<name>Short To Float (old)</name>
 	<key>gr_short_to_float</key>
 	<import>from gnuradio import gr</import>
 	<make>gr.short_to_float($vlen, $scale)</make>

@@ -5,7 +5,7 @@
 ###################################################
  -->
 <block>
-	<name>Or</name>
+	<name>Or (old)</name>
 	<key>gr_or_xx</key>
 	<import>from gnuradio import gr</import>
 	<make>gr.or_$(type.fcn)()</make>

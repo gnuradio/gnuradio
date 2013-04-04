@@ -40,7 +40,6 @@ GR_CORE_API gr_channel_model_sptr gr_make_channel_model(double noise_voltage=0.0
 
 /*!
  * \brief channel simulator
- * \ingroup misc_blk
  */
 class GR_CORE_API gr_channel_model : public gr_hier_block2
 {

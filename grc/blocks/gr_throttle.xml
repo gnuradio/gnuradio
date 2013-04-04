@@ -5,7 +5,7 @@
 ###################################################
  -->
 <block>
-	<name>Throttle</name>
+	<name>Throttle (old)</name>
 	<key>gr_throttle</key>
 	<throttle>1</throttle>
 	<import>from gnuradio import gr</import>

@@ -5,7 +5,7 @@
 ###################################################
  -->
 <block>
-	<name>PN Correlator</name>
+	<name>PN Correlator (old)</name>
 	<key>gr_pn_correlator_cc</key>
 	<import>from gnuradio import gr</import>
 	<make>gr.pn_correlator_cc($degree, $mask, $seed)</make>

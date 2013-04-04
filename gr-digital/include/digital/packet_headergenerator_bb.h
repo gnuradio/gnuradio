@@ -31,8 +31,9 @@ namespace gr {
 
     /*!
      * \brief Generates a header for a tagged, streamed packet.
-     * \ingroup digital
+     * \ingroup packet_operators_blk
      *
+     * \details
      * Input: A tagged stream. This is consumed entirely, it is not appended
      *        to the output stream.
      * Output: An tagged stream containing the header. The details on the header

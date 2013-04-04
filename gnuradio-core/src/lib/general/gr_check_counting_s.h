@@ -33,7 +33,6 @@ GR_CORE_API gr_check_counting_s_sptr gr_make_check_counting_s (bool do_32bit=fal
 /*!
  * \brief sink that checks if its input stream consists of a counting sequence.
  * \param do_32bit  expect an interleaved 32 bit counter in stead of 16 bit counter (default false)
- * \ingroup sink_blk
  *
  * This sink is typically used to test the USRP "Counting Mode" or "Counting mode 32 bit".
  */

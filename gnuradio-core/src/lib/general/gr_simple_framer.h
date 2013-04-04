@@ -33,7 +33,6 @@ GR_CORE_API gr_simple_framer_sptr gr_make_simple_framer (int payload_bytesize);
 
 /*!
  * \brief add sync field, seq number and command field to payload
- * \ingroup sync_blk
  */
 class GR_CORE_API gr_simple_framer : public gr_block
 {

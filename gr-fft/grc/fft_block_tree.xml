@@ -29,7 +29,7 @@
 <cat>
 	<name></name> <!-- Blank for Root Name -->
 	<cat>
-		<name>FFT</name>
+		<name>Fourier Analysis</name>
 		<block>fft_vxx</block>
 		<block>goertzel_fc</block>
 	</cat>

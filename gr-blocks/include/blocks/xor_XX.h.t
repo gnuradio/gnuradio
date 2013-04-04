@@ -33,7 +33,7 @@ namespace gr {
 
     /*!
      * \brief output = input_0 ^ input_1 ^ , ... ^ input_N)
-     * \ingroup math_blk
+     * \ingroup boolean_operators_blk
      *
      * Bitwise boolean xor across all input streams.
      */

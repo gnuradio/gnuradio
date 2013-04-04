@@ -32,7 +32,6 @@ GR_CORE_API gr_map_bb_sptr gr_make_map_bb(const std::vector<int> &map);
 
 /*!
  * \brief output[i] = map[input[i]]
- * \ingroup coding_blk
  */
 
 class GR_CORE_API gr_map_bb : public gr_sync_block

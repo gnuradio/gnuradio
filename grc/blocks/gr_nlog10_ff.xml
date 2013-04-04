@@ -6,7 +6,7 @@
 ###################################################
  -->
 <block>
-	<name>Log10</name>
+	<name>Log10 (old)</name>
 	<key>gr_nlog10_ff</key>
 	<import>from gnuradio import gr</import>
 	<make>gr.nlog10_ff($n, $vlen, $k)</make>

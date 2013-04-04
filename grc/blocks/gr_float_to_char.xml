@@ -5,7 +5,7 @@
 ###################################################
  -->
 <block>
-	<name>Float To Char</name>
+	<name>Float To Char (old)</name>
 	<key>gr_float_to_char</key>
 	<import>from gnuradio import gr</import>
 	<make>gr.float_to_char($vlen, $scale)</make>

@@ -34,6 +34,7 @@ namespace gr {
      * \brief LFSR pseudo-random source with period of 2^15 bits (2^11 shorts)
      * \ingroup source_blk
      *
+     * \details
      * This source is typically used along with gr::blocks::check_lfsr_32k_s to
      * test the USRP using its digital loopback mode.
      */

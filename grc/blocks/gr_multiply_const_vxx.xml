@@ -6,7 +6,7 @@
 ###################################################
  -->
 <block>
-	<name>Multiply Const</name>
+	<name>Multiply Const (old)</name>
 	<key>gr_multiply_const_vxx</key>
 	<import>from gnuradio import gr</import>
 	<make>gr.multiply_const_v$(type.fcn)($const)</make>

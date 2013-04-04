@@ -35,7 +35,6 @@ gr_make_pn_correlator_cc(int degree, int mask=0, int seed=1);
 /*!
  * \brief PN code sequential search correlator
  *
- * \ingroup sync_blk
  * Receives complex baseband signal, outputs complex correlation against
  * reference PN code, one sample per PN code period
  */

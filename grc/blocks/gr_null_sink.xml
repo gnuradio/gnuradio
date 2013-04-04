@@ -5,7 +5,7 @@
 ###################################################
  -->
 <block>
-	<name>Null Sink</name>
+	<name>Null Sink (old)</name>
 	<key>gr_null_sink</key>
 	<import>from gnuradio import gr</import>
 	<make>gr.null_sink($type.size*$vlen)</make>

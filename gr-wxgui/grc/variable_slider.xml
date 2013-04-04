@@ -8,7 +8,7 @@
 <block>
 	<name>WX GUI Slider</name>
 	<key>variable_slider</key>
-	<category>WX GUI Widgets</category>
+	<category>GUI Widgets/WX</category>
 	<import>from gnuradio.wxgui import forms</import>
 	<var_make>self.$(id) = $(id) = $value</var_make>
 	<make>#set $parent = $notebook() and 'self.%s.GetPage(%s)'%$notebook() or 'self'

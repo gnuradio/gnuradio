@@ -1,7 +1,6 @@
 <block>
   <name>OFDM Mod 2</name>
   <key>digital_ofdm_mod2</key>
-  <category>OFDM</category>
   <import>from gnuradio import digital</import>
   <make>digital.ofdm_mod2(fft_len=$fft_len,
             cp_len=$cp_len,

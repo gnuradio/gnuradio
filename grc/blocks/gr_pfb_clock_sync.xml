@@ -5,7 +5,7 @@
 ###################################################
  -->
 <block>
-	<name>Polyphase Clock Sync</name>
+	<name>Polyphase Clock Sync (old)</name>
 	<key>gr_pfb_clock_sync_xxx</key>
 	<import>from gnuradio import gr</import>
 	<make>gr.pfb_clock_sync_$(type)($sps, $alpha, $taps, $filter_size, $init_phase, $max_dev, $osps)

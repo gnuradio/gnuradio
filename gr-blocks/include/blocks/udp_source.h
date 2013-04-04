@@ -31,7 +31,7 @@ namespace gr {
 
     /*!
      * \brief Read stream from an UDP socket.
-     * \ingroup source_blk
+     * \ingroup networking_tools_blk
      */
     class BLOCKS_API udp_source : virtual public gr_sync_block
     {

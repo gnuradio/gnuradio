@@ -40,13 +40,10 @@ digital_make_pfb_clock_sync_ccf(double sps, float loop_bw,
 class gr_fir_ccf;
 
 /*!
- * \class digital_pfb_clock_sync_ccf
- *
  * \brief Timing synchronizer using polyphase filterbanks
+ * \ingroup synchronizers_blk
  *
- * \ingroup filter_blk
- * \ingroup pfb_blk
- *
+ * \details
  * This block performs timing synchronization for PAM signals by
  * minimizing the derivative of the filtered signal, which in turn
  * maximizes the SNR and minimizes ISI.

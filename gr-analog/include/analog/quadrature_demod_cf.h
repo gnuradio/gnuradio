@@ -31,8 +31,9 @@ namespace gr {
     
     /*!
      * \brief quadrature demodulator: complex in, float out
-     * \ingroup demodulation_blk
+     * \ingroup modulators_blk
      *
+     * \details
      * This can be used to demod FM, FSK, GMSK, etc.
      * The input is complex baseband.
      */

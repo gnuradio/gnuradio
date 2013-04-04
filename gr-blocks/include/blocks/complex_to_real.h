@@ -31,16 +31,19 @@ namespace gr {
 
     /*!
      * \brief complex in, real out (float)
-     * \ingroup converter_blk
-     * \param vlen	vector len (default 1)
+     * \ingroup type_converters_blk
      */
     class BLOCKS_API complex_to_real : virtual public gr_sync_block
     {
     public:
-      
       // gr::blocks::complex_to_real_ff::sptr
       typedef boost::shared_ptr<complex_to_real> sptr;
 
+      /*!
+       * Build a complex to real part block.
+       *
+       * \param vlen vector len (default 1)
+       */
       static sptr make(size_t vlen=1);
     };
 

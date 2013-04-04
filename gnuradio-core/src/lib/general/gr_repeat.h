@@ -33,7 +33,6 @@ GR_CORE_API gr_repeat_sptr gr_make_repeat(size_t itemsize, int interp);
 
 /*!
  * \brief Repeat a sample 'interp' times in output stream
- * \ingroup misc_blk
  */
 
 class GR_CORE_API gr_repeat : public gr_sync_interpolator

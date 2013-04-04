@@ -6,7 +6,7 @@
 ###################################################
  -->
 <block>
-	<name>Divide</name>
+	<name>Divide (old)</name>
 	<key>gr_divide_xx</key>
 	<import>from gnuradio import gr</import>
 	<make>gr.divide_$(type.fcn)($vlen)</make>

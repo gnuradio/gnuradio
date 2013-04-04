@@ -5,7 +5,7 @@
 ###################################################
  -->
 <block>
-	<name>Char To Short</name>
+	<name>Char To Short (old)</name>
 	<key>gr_char_to_short</key>
 	<import>from gnuradio import gr</import>
 	<make>gr.char_to_short($vlen)</make>

@@ -33,6 +33,7 @@ namespace gr {
      * \brief  IIR filter with float input, float output and double taps
      * \ingroup filter_blk
      *
+     * \details
      * This filter uses the Direct Form I implementation, where
      * \p fftaps contains the feed-forward taps, and \p fbtaps the feedback ones.
      *
@@ -70,7 +71,7 @@ namespace gr {
       typedef boost::shared_ptr<iir_filter_ffd> sptr;
 
       static sptr make(const std::vector<double> &fftaps,
-				  const std::vector<double> &fbtaps);
+                       const std::vector<double> &fbtaps);
 
       virtual void set_taps(const std::vector<double> &fftaps,
 			    const std::vector<double> &fbtaps) = 0;

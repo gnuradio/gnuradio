@@ -57,7 +57,7 @@ digital_make_ofdm_equalizer_static(
 
 /* \brief Very simple static equalizer for OFDM.
  * \ingroup ofdm_blk
- * \ingroup eq_blk
+ * \ingroup equalizers_blk
  *
  * This is an extremely simple equalizer. It will only work for high-SNR, very, very
  * slowly changing channels.
