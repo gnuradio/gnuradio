@@ -35,8 +35,7 @@ namespace gr {
     /*!
      * \brief Rational Resampling Polyphase FIR filter with @I_TYPE@
      * input, @O_TYPE@ output and @TAP_TYPE@ taps.
-     *
-     *\ingroup filter_blk
+     * \ingroup resamplers_blk
      */
     class FILTER_API @NAME@ : virtual public gr_block
     {
@@ -45,8 +44,8 @@ namespace gr {
       typedef boost::shared_ptr<@BASE_NAME@> sptr;
 
       static sptr make(unsigned interpolation,
-				  unsigned decimation,
-				  const std::vector<@TAP_TYPE@> &taps);
+                       unsigned decimation,
+                       const std::vector<@TAP_TYPE@> &taps);
 
       virtual unsigned interpolation() const = 0;
       virtual unsigned decimation() const = 0;

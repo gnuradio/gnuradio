@@ -32,9 +32,9 @@ namespace gr {
   namespace filter {
     /*!
      * \brief Parks-McClellan FIR filter design using Remez algorithm.
-     *
      * \ingroup filter_design
      *
+     * \details
      * Calculates the optimal (in the Chebyshev/minimax sense) FIR
      * filter inpulse reponse given a set of band edges, the desired
      * reponse on those bands, and the weight given to the error in

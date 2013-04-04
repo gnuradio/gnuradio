@@ -31,14 +31,11 @@ namespace gr {
   namespace filter {
 
     /*!
-     * \class pfb_channelizer_ccf
-     *
      * \brief Polyphase filterbank channelizer with
      *        gr_complex input, gr_complex output and float taps
+     * \ingroup channelizers_blk
      *
-     * \ingroup filter_blk
-     * \ingroup pfb_blk
-     *
+     * \details
      * This block takes in complex inputs and channelizes it to <EM>M</EM>
      * channels of equal bandwidth. Each of the resulting channels is
      * decimated to the new rate that is the input sampling rate

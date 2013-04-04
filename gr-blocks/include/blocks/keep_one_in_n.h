@@ -30,8 +30,8 @@ namespace gr {
   namespace blocks {
 
     /*!
-     * \brief decimate a stream, keeping one item out of every n.
-     * \ingroup slicedice_blk
+     * \brief decimate a stream, keeping one item out of every \p n.
+     * \ingroup stream_operators_blk
      */
     class BLOCKS_API keep_one_in_n : virtual public gr_block
     {
@@ -40,6 +40,12 @@ namespace gr {
       // gr::blocks::keep_one_in_n::sptr
       typedef boost::shared_ptr<keep_one_in_n> sptr;
 
+      /*!
+       * Make a keep one in n block.
+       *
+       * \param itemsize stream itemsize
+       * \param n block size in items
+       */
       static sptr make(size_t itemsize, int n);
 
       virtual void set_n(int n) = 0;

@@ -33,8 +33,9 @@ namespace gr {
     /*!
      * \brief high performance Automatic Gain Control class with
      * attack and decay rates.
-     * \ingroup level_blk
+     * \ingroup level_controllers_blk
      *
+     * \details
      * For Power the absolute value of the complex number is used.
      */
     class ANALOG_API agc2_cc : virtual public gr_sync_block

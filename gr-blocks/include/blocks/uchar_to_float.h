@@ -31,15 +31,17 @@ namespace gr {
 
     /*!
      * \brief Convert stream of unsigned chars to a stream of floats
-     * \ingroup converter_blk
+     * \ingroup type_converters_blk
      */
     class BLOCKS_API uchar_to_float : virtual public gr_sync_block
     {
     public:
-      
       // gr::blocks::uchar_to_float_ff::sptr
       typedef boost::shared_ptr<uchar_to_float> sptr;
 
+      /*!
+       * Build a uchar to float block.
+       */
       static sptr make();
     };
 

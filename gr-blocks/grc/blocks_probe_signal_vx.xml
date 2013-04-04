@@ -5,7 +5,7 @@
 ###################################################
  -->
 <block>
-	<name>Probe Signal</name>
+	<name>Probe Signal Vector</name>
 	<key>blocks_probe_signal_vx</key>
 	<import>from gnuradio import blocks</import>
 	<make>blocks.probe_signal_v$(type.fcn)($vlen)</make>

@@ -32,7 +32,7 @@ namespace gr {
 
     /*!
      * \brief Read stream from file descriptor.
-     * \ingroup source_blk
+     * \ingroup file_operators_blk
      */
     class BLOCKS_API file_descriptor_source : virtual public gr_sync_block
     {

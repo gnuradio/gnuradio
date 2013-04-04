@@ -39,7 +39,7 @@ namespace gr {
      * \brief FIR filter combined with frequency translation with
      * @I_TYPE@ input, @O_TYPE@ output and @TAP_TYPE@ taps
      *
-     * \ingroup filter_blk
+     * \ingroup channelizers_blk
      *
      * This class efficiently combines a frequency translation
      * (typically "down conversion") with a FIR filter (typically

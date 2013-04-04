@@ -33,7 +33,7 @@ namespace gr {
 
     /*!
      * \brief output is the moving sum of the last N samples, scaled by the scale factor
-     * \ingroup filter_blk
+     * \ingroup level_controllers_blk
      */
     class BLOCKS_API @NAME@ : virtual public gr_sync_block
     {

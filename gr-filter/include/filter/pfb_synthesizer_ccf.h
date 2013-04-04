@@ -31,15 +31,10 @@ namespace gr {
   namespace filter {
 
     /*!
-     * \class pfb_synthesizer_ccf
-     *
      * \brief Polyphase synthesis filterbank with
      *        gr_complex input, gr_complex output and float taps
-     *
-     * \ingroup filter_blk
-     * \ingroup pfb_blk
+     * \ingroup channelizers_blk
      */
-
     class FILTER_API pfb_synthesizer_ccf : virtual public gr_sync_interpolator
     {
     public:

@@ -35,7 +35,7 @@ namespace gr {
     
     /*!
      * \brief Random number source
-     * \ingroup source_blk
+     * \ingroup waveform_generators_blk
      *
      * \details
      * Generate random values from different distributions.
@@ -47,11 +47,11 @@ namespace gr {
       // gr::analog::@BASE_NAME@::sptr
       typedef boost::shared_ptr<@BASE_NAME@> sptr;
 
-      /*! \brief Make a noise source
+      /*! Build a noise source
        * \param type the random distribution to use (see analog/noise_type.h)
        * \param ampl a scaling factor for the output
        * \param seed seed for random generators. Note that for uniform and
-       * Gaussian distributions, this should be a negative number.
+       *             Gaussian distributions, this should be a negative number.
        */
       static sptr make(noise_type_t type, float ampl, long seed=0);
 

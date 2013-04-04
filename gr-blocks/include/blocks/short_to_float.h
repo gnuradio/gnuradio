@@ -31,18 +31,20 @@ namespace gr {
 
     /*!
      * \brief Convert stream of shorts to a stream of floats
-     * \ingroup converter_blk
-     *
-     * \param vlen vector length of data streams.
-     * \param scale a scalar divider to change the output signal scale.
+     * \ingroup type_converters_blk
      */
     class BLOCKS_API short_to_float : virtual public gr_sync_block
     {
     public:
-      
       // gr::blocks::short_to_float_ff::sptr
       typedef boost::shared_ptr<short_to_float> sptr;
 
+      /*!
+       * Build a short to float block.
+       *
+       * \param vlen vector length of data streams.
+       * \param scale a scalar divider to change the output signal scale.
+       */
       static sptr make(size_t vlen=1, float scale=1.0);
 
       /*!

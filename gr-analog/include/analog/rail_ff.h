@@ -31,7 +31,7 @@ namespace gr {
     
     /*!
      * \brief clips input values to min, max
-     * \ingroup misc
+     * \ingroup level_controllers_blk
      */
     class ANALOG_API rail_ff : virtual public gr_sync_block
     {

@@ -684,13 +684,11 @@ EXCLUDE_SYMBOLS        = ad9862 \
                          *app_top_block* \
                          *am_rx_graph* \
                          *_queue_watcher_thread* \
-                         *parse* \
                          *MyFrame* \
                          *MyApp* \
                          *PyObject* \
                          *wfm_rx_block* \
                          *_sptr* \
-                         *debug* \
                          *wfm_rx_sca_block* \
                          *tv_rx_block* \
                          *wxapt_rx_block* \

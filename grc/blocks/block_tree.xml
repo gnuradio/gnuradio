@@ -7,38 +7,44 @@
 <cat>
 	<name></name> <!-- Blank for Root Name -->
 	<cat>
-		<name>Sources</name>
-		<block>random_source_x</block>
-		<block>blks2_tcp_source</block>
-		<block>pad_source</block>
-		<block>virtual_source</block>
+		<name>Filters</name>
+		<!-- FIR convenience filters -->
+		<block>low_pass_filter</block>
+		<block>high_pass_filter</block>
+		<block>band_pass_filter</block>
+		<block>band_reject_filter</block>
+		<block>root_raised_cosine_filter</block>
+		<!-- Filter banks -->
+		<block>blks2_synthesis_filterbank</block>
+		<block>blks2_analysis_filterbank</block>
+		<!-- Other filters -->
+		<block>blks2_rational_resampler_xxx</block>
+		<block>gr_iqcomp_cc</block>
 	</cat>
 	<cat>
-		<name>Sinks</name>
-		<block>blks2_tcp_sink</block>
-		<block>pad_sink</block>
-		<block>virtual_sink</block>
+		<name>Error Coding</name>
+		<block>gr_encode_ccsds_27_bb</block>
+		<block>gr_decode_ccsds_27_fb</block>
 	</cat>
 	<cat>
-		<name>Synchronizers</name>
-		<block>blks2_packet_decoder</block>
-		<block>blks2_packet_encoder</block>
+		<name>Fourier Analysis</name>
+		<block>blks2_logpwrfft_x</block>
 	</cat>
 	<cat>
-		<name>Error Correction</name>
-		<cat>
-			<name>Trellis</name>
-		</cat>
+ 		<name>Level Controllers</name>
+		<block>blks2_standard_squelch</block>
 	</cat>
-	<cat>
-		<name>Variables</name>
-		<block>variable</block>
-		<block>variable_config</block>
-		<block>variable_function_probe</block>
-		<block>parameter</block>
-	</cat>
+        <cat>
+                <name>Message Tools</name>
+                <block>gr_random_pdu</block>
+        </cat>
 	<cat>
 		<name>Misc</name>
+		<block>pad_source</block>
+		<block>pad_sink</block>
+		<block>virtual_source</block>
+		<block>virtual_sink</block>
+
 		<block>note</block>
 		<block>import</block>
 
@@ -48,5 +54,45 @@
 
 		<block>xmlrpc_server</block>
 		<block>xmlrpc_client</block>
+	</cat>
+	<cat>
+		<name>Modulators</name>
+		<block>blks2_wfm_tx</block>
+		<block>blks2_wfm_rcv</block>
+		<block>blks2_wfm_rcv_pll</block>
+
+		<block>blks2_nbfm_tx</block>
+		<block>blks2_nbfm_rx</block>
+
+		<block>blks2_am_demod_cf</block>
+		<block>blks2_fm_demod_cf</block>
+		<block>blks2_fm_deemph</block>
+		<block>blks2_fm_preemph</block>
+	</cat>
+	<cat>
+		<name>Networking Tools</name>
+		<block>blks2_tcp_source</block>
+		<block>blks2_tcp_sink</block>
+	</cat>
+	<cat>
+		<name>Synchronizers</name>
+		<block>blks2_packet_decoder</block>
+		<block>blks2_packet_encoder</block>
+	</cat>
+	<cat>
+		<name>Type Converters</name>
+		<block>blks2_stream_to_vector_decimator</block>
+	</cat>
+	<cat>
+		<name>Waveform Generators</name>
+		<block>const_source_x</block>
+		<block>random_source_x</block>
+	</cat>
+	<cat>
+		<name>Variables</name>
+		<block>variable</block>
+		<block>variable_config</block>
+		<block>variable_function_probe</block>
+		<block>parameter</block>
 	</cat>
 </cat>

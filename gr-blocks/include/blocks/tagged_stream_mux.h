@@ -30,8 +30,10 @@ namespace gr {
 
     /*!
      * \brief Combines tagged streams.
+     * \ingroup stream_operators_blk
      *
-     * Takes N streams as input.  Each stream is tagged with packet lengths.
+     * \details
+     * Takes N streams as input. Each stream is tagged with packet lengths.
      * Packets are output sequentially from each input stream.
      *
      * The output signal has a new length tag, which is the sum of all
@@ -39,8 +41,6 @@ namespace gr {
      *
      * All other tags are propagated as expected, i.e. they stay associated
      * with the same input item.
-     *
-     * \ingroup blocks
      */
     class BLOCKS_API tagged_stream_mux : virtual public gr_tagged_stream_block
     {
@@ -48,6 +48,8 @@ namespace gr {
       typedef boost::shared_ptr<tagged_stream_mux> sptr;
 
       /*!
+       * Make a tagged stream mux block.
+       *
        * \param itemsize Items size (number of bytes per item)
        * \param lengthtagname Length tag key
        */

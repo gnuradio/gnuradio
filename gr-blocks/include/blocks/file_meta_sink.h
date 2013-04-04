@@ -45,8 +45,9 @@ namespace gr {
 
     /*!
      * \brief Write stream to file with meta-data headers.
-     * \ingroup sink_blk
+     * \ingroup file_operators_blk
      *
+     * \details
      * These files represent data as binary information in between
      * meta-data headers. The headers contain information about the
      * type of data and properties of the data in the next segment of

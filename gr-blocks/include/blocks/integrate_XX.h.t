@@ -33,7 +33,7 @@ namespace gr {
 
     /*!
      * \brief Integrate successive samples and decimate
-     * \ingroup math_blk
+     * \ingroup math_operators_blk
      */
     class BLOCKS_API @NAME@ : virtual public gr_sync_decimator
     {

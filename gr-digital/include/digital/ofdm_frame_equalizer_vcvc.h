@@ -31,7 +31,7 @@ namespace gr {
 
     /*!
      * \brief OFDM frame equalizer
-     * \ingroup ofdm
+     * \ingroup ofdm_blk
      *
      * Performs equalization in one or two dimensions on a tagged OFDM frame.
      * Input: a tagged series of OFDM symbols.

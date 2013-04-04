@@ -32,8 +32,9 @@ namespace gr {
     /*!
      * \brief Reads stream from file with meta-data headers. Headers
      * are parsed into tags.
-     * \ingroup source_blk
+     * \ingroup file_operators_blk
      *
+     * \details
      * The information in the metadata headers includes:
      *
      *   rx_rate (double): sample rate of data.

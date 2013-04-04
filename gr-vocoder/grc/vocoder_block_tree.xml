@@ -29,7 +29,7 @@
 <cat>
 	<name></name> <!-- Blank for Root Name -->
 	<cat>
-		<name>Vocoders</name>
+		<name>Audio</name>
 		<block>vocoder_alaw_decode_bs</block>
 		<block>vocoder_alaw_encode_sb</block>
 		<block>vocoder_codec2_decode_ps</block>

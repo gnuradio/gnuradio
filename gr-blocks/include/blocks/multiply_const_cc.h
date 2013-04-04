@@ -33,7 +33,7 @@ namespace gr {
 
     /*!
      * \brief output = input * complex constant
-     * \ingroup math_blk
+     * \ingroup math_operators_blk
      */
     class BLOCKS_API multiply_const_cc : virtual public gr_sync_block
     {

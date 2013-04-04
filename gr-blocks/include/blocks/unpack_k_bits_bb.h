@@ -31,7 +31,7 @@ namespace gr {
     
     /*!
      * \brief Converts a byte with k relevent bits to k output bytes with 1 bit in the LSB.
-     * \ingroup converter_blk
+     * \ingroup byte_operators_blk
      */
     class BLOCKS_API unpack_k_bits_bb : virtual public gr_sync_interpolator
     {

@@ -33,8 +33,9 @@ namespace gr {
 
     /*!
      * \brief sample and hold circuit
-     * \ingroup level_blk
+     * \ingroup level_controllers_blk
      *
+     * \details
      * Samples the data stream (input stream 0) and holds the value if
      * the control signal is 1 (intput stream 1).
      */

@@ -31,8 +31,9 @@ namespace gr {
     
     /*!
      * \brief Frequency modulator block
-     * \ingroup modulation_blk
+     * \ingroup modulators_blk
      *
+     * \details
      * float input; complex baseband output
      */
     class ANALOG_API frequency_modulator_fc : virtual public gr_sync_block

@@ -33,7 +33,7 @@ namespace gr {
 
     /*!
      * \brief output_N = input_N & value
-     * \ingroup math_blk
+     * \ingroup boolean_operators_blk
      *
      * bitwise boolean and of const to the data stream.
      */

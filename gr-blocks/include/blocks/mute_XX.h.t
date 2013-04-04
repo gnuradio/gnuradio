@@ -33,7 +33,7 @@ namespace gr {
 
     /*!
      * \brief output = input or zero if muted.
-     * \ingroup level_blk
+     * \ingroup level_controllers_blk
      */
     class BLOCKS_API @NAME@ : virtual public gr_sync_block
     {

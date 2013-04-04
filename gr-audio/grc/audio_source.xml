@@ -7,7 +7,7 @@
 <block>
 	<name>Audio Source</name>
 	<key>audio_source</key>
-	<category>Sources</category>
+	<category>Audio</category>
 	<throttle>1</throttle>
 	<import>from gnuradio import audio</import>
 	<make>audio.source($samp_rate, $device_name, $ok_to_block)</make>

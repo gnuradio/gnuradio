@@ -31,16 +31,19 @@ namespace gr {
 
     /*!
      * \brief complex in, arg out (float)
-     * \ingroup converter_blk
-     * \param vlen vector len (default 1)
+     * \ingroup type_converters_blk
      */
     class BLOCKS_API complex_to_arg : virtual public gr_sync_block
     {
     public:
-      
       // gr::blocks::complex_to_arg_ff::sptr
       typedef boost::shared_ptr<complex_to_arg> sptr;
 
+      /*!
+       * Build a complex to arg block.
+       *
+       * \param vlen vector len (default 1)
+       */
       static sptr make(size_t vlen=1);
     };
 

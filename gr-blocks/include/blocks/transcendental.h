@@ -32,7 +32,9 @@ namespace gr {
 
     /*!
      * \brief A block that performs various transcendental math operations.
+     * \ingroup math_operators_blk
      *
+     * \details
      * Possible function names can be found in the cmath library. IO
      * may be either complex or real, double or single precision.
      *

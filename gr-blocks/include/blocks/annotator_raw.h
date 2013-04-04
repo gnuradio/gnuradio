@@ -33,6 +33,7 @@ namespace gr {
     /*!
      * \brief raw stream annotator testing block.
      *
+     * \details
      * This block creates arbitrary tags to be sent downstream blocks
      * to be sent are set manually via accessor methods and are sent
      * only once.
