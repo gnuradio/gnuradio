@@ -31,7 +31,7 @@ namespace gr {
 
     /*!
      * \brief Galois LFSR pseudo-random source generating float outputs -1.0 - 1.0.
-     * \ingroup source_blk
+     * \ingroup waveform_generators_blk
      */
     class DIGITAL_API glfsr_source_f : virtual public gr_sync_block
     {

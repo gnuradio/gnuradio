@@ -31,6 +31,10 @@
 
 #include <qtgui/displayform.h>
 
+/*!
+ * \brief DisplayForm child for managing time raster plots.
+ * \ingroup qtgui_blk
+ */
 class TimeRasterDisplayForm : public DisplayForm
 {
   Q_OBJECT

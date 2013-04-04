@@ -33,6 +33,7 @@ namespace gr {
 
       /*!
        * \brief high performance Automatic Gain Control class
+       * \ingroup level_controllers_blk
        *
        * \details
        * For Power the absolute value of the complex number is used.

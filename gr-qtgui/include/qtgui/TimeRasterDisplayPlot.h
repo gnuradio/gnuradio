@@ -38,6 +38,10 @@
 #include <qwt_compat.h>
 #endif
 
+/*!
+ * \brief QWidget for time raster (time vs. time) plots.
+ * \ingroup qtgui_blk
+ */
 class TimeRasterDisplayPlot: public DisplayPlot
 {
   Q_OBJECT

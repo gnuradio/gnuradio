@@ -31,7 +31,7 @@ namespace gr {
 
     /*!
      * \brief This block performs g.711 ulaw audio encoding.
-     * \ingroup vocoder_blk
+     * \ingroup audio_blk
      */
     class VOCODER_API ulaw_encode_sb : virtual public gr_sync_block
     {

@@ -31,13 +31,16 @@ namespace gr {
 
     /* \brief Very simple static equalizer for OFDM.
      * \ingroup ofdm_blk
-     * \ingroup eq_blk
+     * \ingroup equalizers_blk
      *
-     * This is an extremely simple equalizer. It will only work for high-SNR, very, very
-     * slowly changing channels.
-     * It simply divides the signal with the currently known channel state. Whenever
-     * a pilot symbol comes around, it updates the channel state on that particular
-     * carrier by dividing the received symbol with the known pilot symbol.
+     * \details
+     * This is an extremely simple equalizer. It will only work for
+     * high-SNR, very, very slowly changing channels.
+     *
+     * It simply divides the signal with the currently known channel
+     * state. Whenever a pilot symbol comes around, it updates the
+     * channel state on that particular carrier by dividing the
+     * received symbol with the known pilot symbol.
      */
     class DIGITAL_API ofdm_equalizer_static : public ofdm_equalizer_1d_pilots
     {

@@ -31,8 +31,9 @@ namespace gr {
 
     /*!
      * \brief output[i] = map[input[i]]
-     * \ingroup coding_blk
+     * \ingroup symbol_coding_blk
      *
+     * \details
      * This block maps an incoming signal to the value in the map.
      * The block expects that the incoming signal has a maximum
      * value of len(map)-1.

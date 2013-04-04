@@ -31,6 +31,10 @@
 
 #include <qtgui/displayform.h>
 
+/*!
+ * \brief DisplayForm child for managing frequency (PSD) plots.
+ * \ingroup qtgui_blk
+ */
 class FreqDisplayForm : public DisplayForm
 {
   Q_OBJECT

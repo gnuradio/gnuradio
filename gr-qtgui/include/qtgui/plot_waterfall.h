@@ -35,15 +35,16 @@
 class QwtColorMap;
 
 /*!
-  \brief A plot item, which displays a waterfall spectrogram
-
-  A waterfall displays threedimenional data, where the 3rd dimension
-  ( the intensity ) is displayed using colors. The colors are calculated
-  from the values using a color map.
-
-  \sa QwtRasterData, QwtColorMap
-*/
-
+ * \brief A plot item, which displays a waterfall spectrogram
+ * \ingroup qtgui_blk
+ *
+ * \details
+ * A waterfall displays threedimenional data, where the 3rd dimension
+ * (the intensity) is displayed using colors. The colors are calculated
+ * from the values using a color map.
+ *
+ * \sa QwtRasterData, QwtColorMap
+ */
 class PlotWaterfall: public QwtPlotRasterItem
 {
 public:

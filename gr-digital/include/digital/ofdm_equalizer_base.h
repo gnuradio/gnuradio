@@ -32,7 +32,7 @@ namespace gr {
 
     /* \brief Base class for implementation details of frequency-domain OFDM equalizers.
      * \ingroup ofdm_blk
-     * \ingroup eq_blk
+     * \ingroup equalizers_blk
      */
     class DIGITAL_API ofdm_equalizer_base
       : public boost::enable_shared_from_this<ofdm_equalizer_base>

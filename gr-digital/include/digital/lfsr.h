@@ -35,6 +35,7 @@ namespace gr {
      * polynomial mask
      * \ingroup misc
      *
+     * \details
      * Generates a maximal length pseudo-random sequence of length
      * 2^degree-1
      *

@@ -33,6 +33,7 @@ namespace gr {
      * \brief Serializes complex modulations symbols from OFDM sub-carriers
      * \ingroup ofdm_blk
      *
+     * \details
      * This is the inverse block to the carrier_allocator_cvc. It outputs the
      * complex data symbols as a tagged stream, discarding the pilot symbols.
      *

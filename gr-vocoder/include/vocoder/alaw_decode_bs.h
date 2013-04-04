@@ -31,7 +31,7 @@ namespace gr {
 
     /*!
      * \brief This block performs alaw audio decoding.
-     * \ingroup vocoder_blk
+     * \ingroup audio_blk
      */
     class VOCODER_API alaw_decode_bs : virtual public gr_sync_block
     {

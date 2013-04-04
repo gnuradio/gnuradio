@@ -30,22 +30,24 @@
 namespace gr {
   namespace digital {
 
-    //! \brief A block for computing SNR of a signal.
-    /*! \ingroup snr_blk
+    /*!
+     * \brief A block for computing SNR of a signal.
+     * \ingroup measurement_tools_blk
      *
-     *  This block can be used to monitor and retrieve estimations of
-     *  the signal SNR. It is designed to work in a flowgraph and
-     *  passes all incoming data along to its output.
+     * \details
+     * This block can be used to monitor and retrieve estimations of
+     * the signal SNR. It is designed to work in a flowgraph and
+     * passes all incoming data along to its output.
      *
-     *  The block is designed for use with M-PSK signals
-     *  especially. The type of estimator is specified as the \p type
-     *  parameter in the constructor. The estimators tend to trade off
-     *  performance for accuracy, although experimentation should be
-     *  done to figure out the right approach for a given
-     *  implementation. Further, the current set of estimators are
-     *  designed and proven theoretically under AWGN conditions; some
-     *  amount of error should be assumed and/or estimated for real
-     *  channel conditions.
+     * The block is designed for use with M-PSK signals
+     * especially. The type of estimator is specified as the \p type
+     * parameter in the constructor. The estimators tend to trade off
+     * performance for accuracy, although experimentation should be
+     * done to figure out the right approach for a given
+     * implementation. Further, the current set of estimators are
+     * designed and proven theoretically under AWGN conditions; some
+     * amount of error should be assumed and/or estimated for real
+     * channel conditions.
      */
     class DIGITAL_API mpsk_snr_est_cc : virtual public gr_sync_block
     {
@@ -55,9 +57,7 @@ namespace gr {
 
       /*! Factory function returning shared pointer of this class
        *
-       *  Parameters:
-       *
-       *  \param type: the type of estimator to use \ref ref_snr_est_types
+       *  \param type: the type of estimator to use gr::digital::snr_est_type_t
        *  "snr_est_type_t" for details about the available types
        *  \param tag_nsamples: after this many samples, a tag containing
        *  the SNR (key='snr') will be sent

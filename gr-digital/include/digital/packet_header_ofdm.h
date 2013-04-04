@@ -32,7 +32,6 @@ namespace gr {
     /*!
      * \brief Header utility for OFDM signals.
      * \ingroup ofdm_blk
-     *
      */
     class DIGITAL_API packet_header_ofdm : public packet_header_default
     {

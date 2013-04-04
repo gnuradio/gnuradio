@@ -31,7 +31,7 @@ namespace gr {
 
     /*!
      * \brief Galois LFSR pseudo-random source
-     * \ingroup source_blk
+     * \ingroup waveform_generators_blk
      */
     class DIGITAL_API glfsr_source_b : virtual public gr_sync_block
     {

@@ -37,7 +37,7 @@ namespace gr {
   namespace trellis {
 
     /*!
-     *  \ingroup coding_blk
+     *  \ingroup trellis_coding_blk
      */
     class TRELLIS_API @NAME@ : virtual public gr_block
     {

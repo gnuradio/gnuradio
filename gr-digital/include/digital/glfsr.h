@@ -30,11 +30,11 @@ namespace gr {
 
     /*!
      * \brief Galois Linear Feedback Shift Register using specified polynomial mask
-     * \ingroup misc
+     * \ingroup waveform_generators_blk
      *
+     * \details
      * Generates a maximal length pseudo-random sequence of length 2^degree-1
      */
-
     class DIGITAL_API glfsr
     {
     private:

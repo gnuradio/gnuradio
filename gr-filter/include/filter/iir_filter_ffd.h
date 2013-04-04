@@ -74,7 +74,8 @@ namespace gr {
       typedef boost::shared_ptr<iir_filter_ffd> sptr;
 
       static sptr make(const std::vector<double> &fftaps,
-                       const std::vector<double> &fbtaps);
+                       const std::vector<double> &fbtaps,
+                       bool oldstyle=true);
 
       virtual void set_taps(const std::vector<double> &fftaps,
 			    const std::vector<double> &fbtaps) = 0;

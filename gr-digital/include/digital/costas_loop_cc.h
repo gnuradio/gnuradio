@@ -32,9 +32,9 @@ namespace gr {
 
     /*! 
      * \brief A Costas loop carrier recovery module.
-     * \ingroup sync_blk
-     * \ingroup digital
-     *  
+     * \ingroup synchronizers_blk
+     *
+     * \details
      * The Costas loop locks to the center frequency of a signal and
      * downconverts it to baseband. The second (order=2) order loop
      * is used for BPSK where the real part of the output signal is

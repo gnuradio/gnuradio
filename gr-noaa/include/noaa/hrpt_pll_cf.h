@@ -29,6 +29,10 @@
 namespace gr {
   namespace noaa {
 
+    /*!
+     * \brief NOAA HRPT PLL
+     * \ingroup noaa_blk
+     */
     class NOAA_API hrpt_pll_cf : virtual public gr_sync_block
     {
     public:

@@ -31,6 +31,7 @@ namespace gr {
     
     /*!
      * \brief flex_frame.
+     * \ingroup pager_blk
      */
     class PAGER_API flex_frame
     {

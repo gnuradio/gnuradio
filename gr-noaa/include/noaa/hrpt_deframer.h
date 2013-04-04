@@ -29,6 +29,10 @@
 namespace gr {
   namespace noaa {
 
+    /*!
+     * \brief NOAA HRPT Deframer
+     * \ingroup noaa_blk
+     */
     class NOAA_API hrpt_deframer : virtual public gr_block
     {
     public:

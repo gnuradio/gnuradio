@@ -30,6 +30,10 @@
 
 #include <qtgui/displayform.h>
 
+/*!
+ * \brief DisplayForm child for managing time domain plots.
+ * \ingroup qtgui_blk
+ */
 class TimeDisplayForm : public DisplayForm
 {
   Q_OBJECT

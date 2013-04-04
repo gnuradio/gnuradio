@@ -32,8 +32,9 @@ namespace gr {
 
     /*!
      * \brief update running CRC-32
-     * \ingroup digital
+     * \ingroup packet_operators_blk
      *
+     * \details
      * Update a running CRC with the bytes buf[0..len-1] The CRC
      * should be initialized to all 1's, and the transmitted value is
      * the 1's complement of the final running CRC.  The resulting CRC

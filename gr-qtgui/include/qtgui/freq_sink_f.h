@@ -34,8 +34,10 @@ namespace gr {
     
     /*!
      * \brief A graphical sink to display multiple signals in frequency.
+     * \ingroup instrumentation_blk
      * \ingroup qtgui_blk
      *
+     * \details
      * This is a QT-based graphical sink the takes set of a floating
      * point streams and plots the PSD. Each signal is plotted with a
      * different color, and the \a set_title and \a set_color

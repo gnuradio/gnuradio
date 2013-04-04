@@ -43,8 +43,9 @@ namespace gr {
 
     /*!
      * \brief An abstracted constellation object
-     * \ingroup digital
+     * \ingroup symbol_coding_blk
      *
+     * \details
      * The constellation objects hold the necessary information to pass
      * around constellation information for modulators and
      * demodulators. These objects contain the mapping between the bits

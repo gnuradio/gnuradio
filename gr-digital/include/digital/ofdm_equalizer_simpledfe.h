@@ -31,8 +31,9 @@ namespace gr {
 
     /* \brief Simple decision feedback equalizer for OFDM.
      * \ingroup ofdm_blk
-     * \ingroup eq_blk
+     * \ingroup equalizers_blk
      *
+     * \details
      * Equalizes an OFDM signal symbol by symbol using knowledge of the
      * complex modulations symbols.
      * For every symbol, the following steps are performed:

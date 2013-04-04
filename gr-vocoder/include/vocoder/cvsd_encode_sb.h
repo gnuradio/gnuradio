@@ -32,9 +32,9 @@ namespace gr {
      * \brief This block performs CVSD audio encoding.  Its design and
      * implementation is modeled after the CVSD encoder/decoder
      * specifications defined in the Bluetooth standard.
+     * \ingroup audio_blk
      *
-     * \ingroup vocoder_blk
-     *
+     * \details
      * CVSD is a method for encoding speech that seeks to reduce the
      * bandwidth required for digital voice transmission. CVSD takes
      * advantage of strong correlation between samples, quantizing the
@@ -94,8 +94,6 @@ namespace gr {
        * \brief Constructor parameters to initialize the CVSD encoder.
        * The default values are modeled after the Bluetooth standard and
        * should not be changed except by an advanced user
-       *
-       * \ingroup vocoder_blk
        *
        * \param min_step      Minimum step size used to update the internal reference.  Default: "10"
        * \param max_step      Maximum step size used to update the internal reference.  Default: "1280"

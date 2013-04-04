@@ -31,9 +31,10 @@ namespace gr {
     
     /*!
      * \brief insert "pre-modulated" preamble symbols before each payload.
-     * \ingroup sync_blk
      * \ingroup ofdm_blk
+     * \ingroup synchronizers_blk
      *
+     * \details
      * <pre>
      * input 1: stream of vectors of gr_complex [fft_length]
      *          These are the modulated symbols of the payload.
@@ -45,7 +46,6 @@ namespace gr {
      *
      * N.B., this implies that there must be at least 1 symbol in the payload.
      *
-     *
      * output 1: stream of vectors of gr_complex [fft_length]
      *           These include the preamble symbols and the payload symbols.
      *
@@ -54,9 +54,6 @@ namespace gr {
      *           first symbol of the preamble.)   It's a 1 if the corresponding
      *           symbol is the first symbol, otherwise 0.
      * </pre>
-     *
-     * \param fft_length length of each symbol in samples.
-     * \param preamble   vector of symbols that represent the pre-modulated preamble.
      */
     class DIGITAL_API ofdm_insert_preamble : virtual public gr_block
     {

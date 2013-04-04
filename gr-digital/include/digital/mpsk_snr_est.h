@@ -29,10 +29,11 @@
 namespace gr {
   namespace digital {
 
-    //! Enum for the type of SNR estimator to select
-    /*! \ingroup snr_blk
-     *  \anchor ref_snr_est_types
+    /*!
+     * \brief A block for computing SNR of a signal.
+     * \ingroup measurement_tools_blk
      *
+     * \details
      * Below are some ROUGH estimates of what values of SNR each of
      * these types of estimators is good for. In general, these offer
      * a trade-off between accuracy and performance.

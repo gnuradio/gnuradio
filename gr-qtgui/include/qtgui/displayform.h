@@ -33,6 +33,10 @@
 #include <qtgui/DisplayPlot.h>
 #include <qtgui/form_menus.h>
 
+/*!
+ * \brief Base class for setting up and  managing QTGUI plot forms.
+ * \ingroup qtgui_blk
+ */
 class DisplayForm : public QWidget
 {
   Q_OBJECT

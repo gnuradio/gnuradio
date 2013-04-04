@@ -34,6 +34,7 @@ namespace gr {
      * \brief Create frequency domain OFDM symbols from complex values, add pilots.
      * \ingroup ofdm_blk
      *
+     * \details
      * This block turns a stream of complex, scalar modulation symbols into vectors
      * which are the input for an IFFT in an OFDM transmitter. It also supports the
      * possibility of placing pilot symbols onto the carriers.

@@ -33,10 +33,9 @@ namespace gr {
     /*!
      * \brief This block takes care of receiving generic modulated signals
      * through phase, frequency, and symbol synchronization.
-     * \ingroup sync_blk
-     * \ingroup demod_blk
-     * \ingroup digital
+     * \ingroup modulators_blk
      *
+     * \details
      * This block takes care of receiving generic modulated signals
      * through phase, frequency, and symbol synchronization. It
      * performs carrier frequency and phase locking as well as symbol

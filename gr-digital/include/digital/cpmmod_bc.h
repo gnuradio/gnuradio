@@ -32,10 +32,9 @@ namespace gr {
 
     /*!
      * \brief Generic CPM modulator
+     * \ingroup modulators_blk
      *
-     * \ingroup modulation_blk
-     * \ingroup digital
-     *
+     * \details
      * Examples:
      * - Setting h = 0.5, L = 1, type = LREC yields MSK.
      * - Setting h = 0.5, type = GAUSSIAN and beta = 0.3 yields GMSK

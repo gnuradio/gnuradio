@@ -31,6 +31,10 @@
 
 #include <qtgui/displayform.h>
 
+/*!
+ * \brief DisplayForm child for managing waterfall (spectrogram) plots.
+ * \ingroup qtgui_blk
+ */
 class WaterfallDisplayForm : public DisplayForm
 {
   Q_OBJECT

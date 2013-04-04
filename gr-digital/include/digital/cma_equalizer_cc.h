@@ -31,9 +31,9 @@ namespace gr {
 
     /*!
      * \brief Implements constant modulus adaptive filter on complex stream
-     * \ingroup eq_blk
-     * \ingroup digital
+     * \ingroup equalizers_blk
      *
+     * \details
      * The error value and tap update equations (for p=2) can be found in:
      *
      * D. Godard, "Self-Recovering Equalization and Carrier Tracking

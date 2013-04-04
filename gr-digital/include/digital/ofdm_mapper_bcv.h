@@ -34,9 +34,9 @@ namespace gr {
      * \brief take a stream of bytes in and map to a vector of complex
      * constellation points suitable for IFFT input to be used in an
      * ofdm modulator.
-     * \ingroup modulation_blk
      * \ingroup ofdm_blk
      *
+     * \details
      * Abstract class must be subclassed with specific mapping.
      */
     class DIGITAL_API ofdm_mapper_bcv : virtual public gr_sync_block

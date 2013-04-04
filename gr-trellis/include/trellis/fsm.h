@@ -32,7 +32,9 @@ namespace gr {
 
     /*!
      * \brief  Finite State Machine Specification class.
+     * \ingroup trellis_coding_blk
      *
+     * \details
      * An instance of this class represents a finite state machine
      * specification (FSMS) rather than the FSM itself.  It particular
      * the state of the FSM is not stored within an instance of this

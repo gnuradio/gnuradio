@@ -31,7 +31,7 @@ namespace gr {
 
     /*!
      * \brief CODEC2 Vocoder Decoder
-     * \ingroup vocoder_blk
+     * \ingroup audio_blk
      */
     class VOCODER_API codec2_decode_ps : virtual public gr_sync_interpolator
     {

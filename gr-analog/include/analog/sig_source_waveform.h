@@ -26,6 +26,10 @@
 namespace gr {
   namespace analog {
 
+    /*!
+     * \brief Types of signal generator waveforms.
+     * \ingroup waveform_generators_blk
+     */
     typedef enum {
       GR_CONST_WAVE = 100,
       GR_SIN_WAVE,

@@ -35,8 +35,8 @@ namespace gr {
   namespace trellis {
 
     /*!
-     * \brief SCCC encoder.
-     * \ingroup coding_blk
+     * \brief PCCC encoder.
+     * \ingroup trellis_coding_blk
      */
     class TRELLIS_API @NAME@ : virtual public gr_sync_block
     {
@@ -49,12 +49,12 @@ namespace gr {
 		       const interleaver &INTERLEAVER,
 		       int blocklength);
 
-      virtual fsm FSM1 () const = 0;
-      virtual int ST1 () const = 0;
-      virtual fsm FSM2 () const = 0;
-      virtual int ST2 () const = 0;
-      virtual interleaver INTERLEAVER () const = 0;
-      virtual int blocklength () const = 0;
+      virtual fsm FSM1() const = 0;
+      virtual int ST1() const = 0;
+      virtual fsm FSM2() const = 0;
+      virtual int ST2() const = 0;
+      virtual interleaver INTERLEAVER() const = 0;
+      virtual int blocklength() const = 0;
     };
 
   } /* namespace trellis */

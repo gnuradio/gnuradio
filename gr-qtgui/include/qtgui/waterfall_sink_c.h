@@ -35,8 +35,10 @@ namespace gr {
     /*!
      * \brief A graphical sink to display multiple signals on a
      * waterfall (spectrogram) plot.
+     * \ingroup instrumentation_blk
      * \ingroup qtgui_blk
      *
+     * \details
      * This is a QT-based graphical sink the takes set of a complex
      * streams and plots a waterfall (spectrogram) plot.
      *

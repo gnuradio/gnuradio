@@ -33,8 +33,9 @@ namespace gr {
     /*!
      * \brief process received bits looking for packet sync, header,
      * and process bits into packet
-     * \ingroup sink_blk
+     * \ingroup packet_operators_blk
      *
+     * \details
      * input: stream of symbols to be sliced.
      * 
      * output: none. Pushes assembled packet into target queue
