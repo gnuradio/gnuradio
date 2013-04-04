@@ -194,10 +194,10 @@
     </param>
   </block>
   <block>
-    <key>random_source_x</key>
+    <key>analog_random_source_x</key>
     <param>
       <key>id</key>
-      <value>random_source_x_0</value>
+      <value>analog_random_source_x_0</value>
     </param>
     <param>
       <key>_enabled</key>
@@ -233,10 +233,10 @@
     </param>
   </block>
   <block>
-    <key>random_source_x</key>
+    <key>analog_random_source_x</key>
     <param>
       <key>id</key>
-      <value>random_source_x_1</value>
+      <value>analog_random_source_x_1</value>
     </param>
     <param>
       <key>_enabled</key>
@@ -1911,7 +1911,7 @@
     </param>
   </block>
   <connection>
-    <source_block_id>random_source_x_1</source_block_id>
+    <source_block_id>analog_random_source_x_1</source_block_id>
     <sink_block_id>trellis_encoder_xx_1</sink_block_id>
     <source_key>0</source_key>
     <sink_key>0</sink_key>
@@ -1965,7 +1965,7 @@
     <sink_key>0</sink_key>
   </connection>
   <connection>
-    <source_block_id>random_source_x_0</source_block_id>
+    <source_block_id>analog_random_source_x_0</source_block_id>
     <sink_block_id>trellis_encoder_xx_0</sink_block_id>
     <source_key>0</source_key>
     <sink_key>0</sink_key>
@@ -1977,7 +1977,7 @@
     <sink_key>0</sink_key>
   </connection>
   <connection>
-    <source_block_id>random_source_x_0</source_block_id>
+    <source_block_id>analog_random_source_x_0</source_block_id>
     <sink_block_id>blocks_sub_xx_0</sink_block_id>
     <source_key>0</source_key>
     <sink_key>0</sink_key>
@@ -1995,7 +1995,7 @@
     <sink_key>1</sink_key>
   </connection>
   <connection>
-    <source_block_id>random_source_x_1</source_block_id>
+    <source_block_id>analog_random_source_x_1</source_block_id>
     <sink_block_id>blocks_sub_xx_1</sink_block_id>
     <source_key>0</source_key>
     <sink_key>0</sink_key>
@@ -2073,7 +2073,7 @@
     <sink_key>0</sink_key>
   </connection>
   <connection>
-    <source_block_id>random_source_x_1</source_block_id>
+    <source_block_id>analog_random_source_x_1</source_block_id>
     <sink_block_id>blocks_sub_xx_3</sink_block_id>
     <source_key>0</source_key>
     <sink_key>0</sink_key>
@@ -2133,7 +2133,7 @@
     <sink_key>0</sink_key>
   </connection>
   <connection>
-    <source_block_id>random_source_x_0</source_block_id>
+    <source_block_id>analog_random_source_x_0</source_block_id>
     <sink_block_id>blocks_sub_xx_1_0</sink_block_id>
     <source_key>0</source_key>
     <sink_key>0</sink_key>

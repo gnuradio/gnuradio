@@ -24,7 +24,6 @@
 <block>
   <name>Ctrlport Complex Probe</name>
   <key>blocks_ctrlport_probe_c</key>
-  <category>Control Port</category>
   <import>from gnuradio import blocks</import>
   <make>blocks.ctrlport_probe_c($name, $desc)</make>
 

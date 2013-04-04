@@ -30,8 +30,9 @@ namespace gr {
   namespace fec {
 
     /*! \brief A rate 1/2, k=7 convolutional encoder for the CCSDS standard
-     * \ingroup ecc
+     * \ingroup error_coding_blk
      *
+     * \details
      * This block performs convolutional encoding using the CCSDS standard
      * polynomial ("Voyager").
      *

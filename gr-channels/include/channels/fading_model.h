@@ -32,12 +32,12 @@ namespace gr {
     
     /*!
      * \brief fading simulator
-     * \ingroup misc_blk
+     * \ingroup channel_models_blk
      *
+     * \details
      * This block implements a basic fading model simulator that can
      * be used to help evaluate, design, and test various signals,
      * waveforms, and algorithms. 
-     *
      */
     class CHANNELS_API fading_model : virtual public gr_sync_block
     {

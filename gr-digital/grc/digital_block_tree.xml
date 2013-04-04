@@ -85,6 +85,7 @@
     <block>digital_ofdm_cyclic_prefixer</block>
     <block>digital_ofdm_frame_acquisition</block>
     <block>digital_ofdm_frame_equalizer_vcvc</block>
+    <block>digital_ofdm_frame_sink</block>
     <block>digital_ofdm_insert_preamble</block>
     <block>digital_ofdm_sampler</block>
     <block>digital_ofdm_serializer_vcc</block>
@@ -119,6 +120,7 @@
   <cat>
     <name>Deprecated</name>
     <block>digital_correlate_access_code_bb</block>
+    <block>digital_correlate_access_code_tag_bb</block>
     <block>digital_simple_framer</block>
     <block>digital_simple_correlator</block>
   </cat>

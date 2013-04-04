@@ -31,7 +31,10 @@ namespace gr {
 
     /*!
      * \brief A ControlPort probe to export vectors of signals.
+     * \ingroup measurement_tools_blk
+     * \ingroup controlport_blk
      *
+     * \details
      * This block acts as a sink in the flowgraph but also exports
      * vectors of complex samples over ControlPort. This block holds
      * the latest \p len number of complex samples so that every query
