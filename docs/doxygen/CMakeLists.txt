@@ -39,7 +39,7 @@ set(BUILT_DIRS ${CMAKE_CURRENT_BINARY_DIR}/xml ${CMAKE_CURRENT_BINARY_DIR}/html)
 set(GENERATED_DEPS pmt_generated
   general_generated gengen_generated filter_generated
   analog_generated_includes blocks_generated_includes digital_generated_includes
-  filter_generated_includes)
+  filter_generated_includes trellis_generated_includes)
 
 ########################################################################
 # Make and install doxygen docs
