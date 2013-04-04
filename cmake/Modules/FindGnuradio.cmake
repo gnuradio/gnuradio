@@ -104,3 +104,20 @@ GR_MODULE(UHD gnuradio-uhd gr_uhd/usrp_sink.h gnuradio-uhd)
 GR_MODULE(VOCODER gnuradio-vocoder vocoder/alaw_encode_sb.h gnuradio-vocoder)
 GR_MODULE(WAVELET gnuradio-wavelet wavelet/wavelet_ff.h gnuradio-wavelet)
 
+# Check for PMT Library
+FIND_PATH(
+    PMT_INCLUDE_DIRS
+    NAMES pmt/pmt.h
+    HINTS $ENV{PMT_DIR}/include
+        ${PC_PMT_INCLUDEDIR}
+        ${CMAKE_INSTALL_PREFIX}/include
+    PATHS /usr/local/include
+          /usr/include
+)
+MARK_AS_ADVANCED(PMT_INCLUDE_DIRS)
+if(PMT_INCLUDE_DIRS)
+    message(STATUS "PMT includes in ${PMT_INCLUDE_DIRS}")
+else()
+    message(FATAL "Could not find PMT includes!")
+endif()
+
