@@ -36,22 +36,10 @@
 *
 */
 
-#ifndef ENABLE_GR_LOG
-#include "config.h"
-//#define GR_LOG_CONFIG_H
-#endif
-
 #include <gr_core_api.h>
 #include <assert.h>
 #include <iostream>
 #include <boost/format.hpp>
-
-//#ifndef ENABLE_GR_LOG
-//#define ENABLE_GR_LOG 1
-//#endif
-//#ifndef HAVE_LOG4CPP
-//#define HAVE_LOG4CPP 2
-//#endif
 
 #ifdef ENABLE_GR_LOG
 
