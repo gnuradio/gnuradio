@@ -23,6 +23,7 @@
 #ifndef ICE_SERVER_TEMPLATE_H
 #define ICE_SERVER_TEMPLATE_H
 
+#include <rpcserver_ice.h>
 #include <ice_application_base.h>
 #include <iostream>
 
