@@ -11,9 +11,12 @@
 	<import>from gnuradio.filter import firdes</import>
 	<make>pfb.arb_resampler_$(type)(
 	  $rrate,
-	  $taps,
-	  $nfilts,
-	  $atten)
+#if $taps()
+          taps=$taps,
+#else
+          taps=None,
+#end if
+	  flt_size=$nfilts)
 	</make>
         <callback>set_taps($taps)</callback>
         <callback>set_rate($rrate)</callback>
