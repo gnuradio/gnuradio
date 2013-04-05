@@ -32,7 +32,7 @@ void gr_block_registry::block_unregister(gr_basic_block* block){
     d_ref_map = pmt::dict_delete(d_ref_map, pmt::intern(block->symbol_name()));
     if(block->alias_set()){
         d_ref_map = pmt::dict_delete(d_ref_map, pmt::intern(block->alias()));
-        }
+    }
 }
 
 std::string gr_block_registry::register_symbolic_name(gr_basic_block* block){
@@ -44,14 +44,14 @@ std::string gr_block_registry::register_symbolic_name(gr_basic_block* block){
 }
 
 void gr_block_registry::register_symbolic_name(gr_basic_block* block, std::string name){
-    if(dict_has_key(d_ref_map, pmt::intern(name))){
+    if(pmt::dict_has_key(d_ref_map, pmt::intern(name))){
         throw std::runtime_error("symbol already exists, can not re-use!");
         }
-    d_ref_map = dict_add(d_ref_map, pmt::intern(name), pmt::make_any(block));
+    d_ref_map = pmt::dict_add(d_ref_map, pmt::intern(name), pmt::make_any(block));
 }
 
 gr_basic_block_sptr gr_block_registry::block_lookup(pmt::pmt_t symbol){
-    pmt::pmt_t ref = dict_ref(d_ref_map, symbol, pmt::PMT_NIL);
+    pmt::pmt_t ref = pmt::dict_ref(d_ref_map, symbol, pmt::PMT_NIL);
     if(pmt::eq(ref, pmt::PMT_NIL)){
         throw std::runtime_error("block lookup failed! block not found!");
     }
