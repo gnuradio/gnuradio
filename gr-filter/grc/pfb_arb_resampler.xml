@@ -9,10 +9,14 @@
 	<key>pfb_arb_resampler_xxx</key>
 	<import>from gnuradio import filter</import>
 	<import>from gnuradio.filter import firdes</import>
-	<make>filter.pfb_arb_resampler_$(type)(
+	<make>filter.pfb.arb_resampler_$(type)(
 	  $rrate,
-	  $taps,
-	  $nfilts)
+#if $taps()
+          taps=$taps,
+#else
+          taps=None,
+#end if
+	  flt_size=$nfilts)
 	</make>
            <callback>set_taps($taps)</callback>
 	<param>
