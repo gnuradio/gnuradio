@@ -41,10 +41,6 @@ configure_file(
     ${CMAKE_CURRENT_BINARY_DIR}/blocks_swig.py
 @ONLY)
 
-set(GR_SWIG_DOC_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/../include/blocks)
-set(GR_SWIG_TARGET_DEPS blocks_generated_includes)
-set(GR_SWIG_LIBRARIES gnuradio-blocks)
-
 # We split up the swig files into multiple sections to minimize the
 # memory overhead. If a .i file grows too large, create a new file
 # named 'blocks_swigN.i' and add it to this list.
@@ -59,6 +55,10 @@ set(GR_SWIG_BLOCK_IFILES
 
 foreach(swigfile ${GR_SWIG_BLOCK_IFILES})
   set(GR_SWIG_DOC_FILE ${CMAKE_CURRENT_BINARY_DIR}/${swigfile}_doc.i)
+  set(GR_SWIG_DOC_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/../include/blocks)
+  set(GR_SWIG_DOCS_TARGET_DEPS runtime_swig_swig_doc)
+  set(GR_SWIG_TARGET_DEPS blocks_generated_includes)
+  set(GR_SWIG_LIBRARIES gnuradio-blocks)
   GR_SWIG_MAKE(${swigfile} ${swigfile}.i)
 
   GR_SWIG_INSTALL(

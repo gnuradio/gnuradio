@@ -22,7 +22,7 @@
 
 #define BLOCKS_API
 
-%include "gnuradio.i"
+%include "runtime_swig.i"
 %include "blocks/pdu.h"
 
 %include <gr_endianness.h>
@@ -60,6 +60,7 @@
 #include "blocks/or_bb.h"
 #include "blocks/or_ss.h"
 #include "blocks/or_ii.h"
+#include "blocks/random_pdu.h"
 #include "blocks/regenerate_bb.h"
 #include "blocks/repack_bits_bb.h"
 #include "blocks/repeat.h"
@@ -124,6 +125,7 @@
 %include "blocks/peak_detector2_fb.h"
 %include "blocks/plateau_detector_fb.h"
 %include "blocks/probe_rate.h"
+%include "blocks/random_pdu.h"
 %include "blocks/regenerate_bb.h"
 %include "blocks/repack_bits_bb.h"
 %include "blocks/repeat.h"
@@ -187,6 +189,7 @@ GR_SWIG_BLOCK_MAGIC2(blocks, probe_signal_vs);
 GR_SWIG_BLOCK_MAGIC2(blocks, probe_signal_vi);
 GR_SWIG_BLOCK_MAGIC2(blocks, probe_signal_vf);
 GR_SWIG_BLOCK_MAGIC2(blocks, probe_signal_vc);
+GR_SWIG_BLOCK_MAGIC2(blocks, random_pdu);
 GR_SWIG_BLOCK_MAGIC2(blocks, regenerate_bb);
 GR_SWIG_BLOCK_MAGIC2(blocks, repack_bits_bb);
 GR_SWIG_BLOCK_MAGIC2(blocks, repeat);

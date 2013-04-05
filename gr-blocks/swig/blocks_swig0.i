@@ -22,7 +22,7 @@
 
 #define BLOCKS_API
 
-%include "gnuradio.i"
+%include "runtime_swig.i"
 
 %include "blocks_swig0_doc.i"
 
@@ -30,6 +30,10 @@
 %template() std::vector< std::vector< std::vector<size_t> > >;
 
 %{
+#include "blocks/annotator_1to1.h"
+#include "blocks/annotator_alltoall.h"
+#include "blocks/annotator_raw.h"
+#include "blocks/control_loop.h"
 #include "blocks/copy.h"
 #include "blocks/delay.h"
 #include "blocks/endian_swap.h"
@@ -80,6 +84,10 @@
 #include "blocks/wavfile_source.h"
 %}
 
+%include "blocks/annotator_1to1.h"
+%include "blocks/annotator_alltoall.h"
+%include "blocks/annotator_raw.h"
+%include "blocks/control_loop.h"
 %include "blocks/copy.h"
 %include "blocks/delay.h"
 %include "blocks/endian_swap.h"
@@ -129,6 +137,9 @@
 %include "blocks/wavfile_sink.h"
 %include "blocks/wavfile_source.h"
 
+GR_SWIG_BLOCK_MAGIC2(blocks, annotator_1to1);
+GR_SWIG_BLOCK_MAGIC2(blocks, annotator_alltoall);
+GR_SWIG_BLOCK_MAGIC2(blocks, annotator_raw);
 GR_SWIG_BLOCK_MAGIC2(blocks, copy);
 GR_SWIG_BLOCK_MAGIC2(blocks, delay);
 GR_SWIG_BLOCK_MAGIC2(blocks, endian_swap);
@@ -176,3 +187,18 @@ GR_SWIG_BLOCK_MAGIC2(blocks, vector_source_f);
 GR_SWIG_BLOCK_MAGIC2(blocks, vector_source_c);
 GR_SWIG_BLOCK_MAGIC2(blocks, wavfile_sink);
 GR_SWIG_BLOCK_MAGIC2(blocks, wavfile_source);
+
+#ifdef GR_CTRLPORT
+
+%{
+#include "blocks/ctrlport_probe_c.h"
+#include "blocks/ctrlport_probe2_c.h"
+%}
+
+%include "blocks/ctrlport_probe_c.h"
+%include "blocks/ctrlport_probe2_c.h"
+
+GR_SWIG_BLOCK_MAGIC2(blocks, ctrlport_probe_c);
+GR_SWIG_BLOCK_MAGIC2(blocks, ctrlport_probe2_c);
+
+#endif /* GR_CTRLPORT */

@@ -22,7 +22,7 @@
 
 #define BLOCKS_API
 
-%include "gnuradio.i"
+%include "runtime_swig.i"
 
 //load generated python docstrings
 %include "blocks_swig1_doc.i"
@@ -32,10 +32,12 @@
 #include "blocks/add_ss.h"
 #include "blocks/add_ii.h"
 #include "blocks/add_cc.h"
+#include "blocks/add_const_bb.h"
 #include "blocks/add_const_ff.h"
 #include "blocks/add_const_ss.h"
 #include "blocks/add_const_ii.h"
 #include "blocks/add_const_cc.h"
+#include "blocks/add_const_vbb.h"
 #include "blocks/add_const_vff.h"
 #include "blocks/add_const_vss.h"
 #include "blocks/add_const_vii.h"
@@ -112,10 +114,12 @@
 %include "blocks/add_ss.h"
 %include "blocks/add_ii.h"
 %include "blocks/add_cc.h"
+%include "blocks/add_const_bb.h"
 %include "blocks/add_const_ff.h"
 %include "blocks/add_const_ss.h"
 %include "blocks/add_const_ii.h"
 %include "blocks/add_const_cc.h"
+%include "blocks/add_const_vbb.h"
 %include "blocks/add_const_vff.h"
 %include "blocks/add_const_vss.h"
 %include "blocks/add_const_vii.h"
@@ -191,10 +195,12 @@ GR_SWIG_BLOCK_MAGIC2(blocks, add_ff);
 GR_SWIG_BLOCK_MAGIC2(blocks, add_ss);
 GR_SWIG_BLOCK_MAGIC2(blocks, add_ii);
 GR_SWIG_BLOCK_MAGIC2(blocks, add_cc);
+GR_SWIG_BLOCK_MAGIC2(blocks, add_const_bb);
 GR_SWIG_BLOCK_MAGIC2(blocks, add_const_ff);
 GR_SWIG_BLOCK_MAGIC2(blocks, add_const_ss);
 GR_SWIG_BLOCK_MAGIC2(blocks, add_const_ii);
 GR_SWIG_BLOCK_MAGIC2(blocks, add_const_cc);
+GR_SWIG_BLOCK_MAGIC2(blocks, add_const_vbb);
 GR_SWIG_BLOCK_MAGIC2(blocks, add_const_vff);
 GR_SWIG_BLOCK_MAGIC2(blocks, add_const_vss);
 GR_SWIG_BLOCK_MAGIC2(blocks, add_const_vii);
