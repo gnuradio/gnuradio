@@ -52,7 +52,7 @@ endif(ENABLE_GR_DIGITAL)
 
 if(ENABLE_GR_FEC)
   list(APPEND GENERATED_DEPS fec_generated_includes)
-endif(ENABLE_GR_FILTER)
+endif(ENABLE_GR_FEC)
 
 if(ENABLE_GR_FILTER)
   list(APPEND GENERATED_DEPS filter_generated_includes)
