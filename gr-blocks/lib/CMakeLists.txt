@@ -128,7 +128,6 @@ include_directories(
     ${GR_BLOCKS_INCLUDE_DIRS}
     ${GNURADIO_RUNTIME_INCLUDE_DIRS}
     ${VOLK_INCLUDE_DIRS}
-    ${ICE_INCLUDE_DIR}
     ${Boost_INCLUDE_DIRS}
 )
 
