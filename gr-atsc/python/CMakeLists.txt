@@ -23,6 +23,13 @@
 include(GrPython)
 
 GR_PYTHON_INSTALL(
+    FILES
+    __init__.py
+    DESTINATION ${GR_PYTHON_DIR}/gnuradio/atsc
+    COMPONENT "atsc_python"
+)
+
+GR_PYTHON_INSTALL(
     PROGRAMS
     btl-fsd.py
     fpll.py
