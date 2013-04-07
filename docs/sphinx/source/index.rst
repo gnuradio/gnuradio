@@ -18,7 +18,6 @@ Core Framework
    gnuradio.gr_unittest
    gnuradio.qtgui
    gnuradio.wxgui
-   gnuradio.window
 
 .. toctree::
    :hidden:   
@@ -32,7 +31,6 @@ Core Framework
    gnuradio.fft <fft>
    gnuradio.qtgui <qtgui/index>
    gnuradio.wxgui <wxgui/index>
-   gnuradio.window <window/index>
 
 Hardware Interfaces
 -------------------
@@ -107,5 +105,4 @@ Framework Extensions
    trellis_blks <trellis/blks>
    trellis_objs <trellis/objs>
    vocoder_blks <vocoder/blks>
-   window_detail <window/detail>
    wxgui_blks <wxgui/blks>
