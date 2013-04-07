@@ -236,9 +236,9 @@ digital_impl_mpsk_snr_est_svr::update(
 		 int noutput_items,
 		 const gr_complex *in)
 {
-  for (int i = 0; i < noutput_items; i++){
-    double x = abs(in[i]);
-      double x1 = abs(in[i-1]);
+  for(int i = 0; i < noutput_items; i++) {
+    double x = abs(in[i+1]);
+    double x1 = abs(in[i]);
     double y1 = (x*x)*(x1*x1);
     d_y1 = d_alpha*y1 + d_beta*d_y1;
     
