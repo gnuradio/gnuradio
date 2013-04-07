@@ -53,8 +53,6 @@ ADD_FILE_DEPENDENCIES(
     ${PMT_SERIAL_TAGS_H}
 )
 
-add_custom_target(pmt_generated DEPENDS ${PMT_SERIAL_TAGS_H})
-
 ########################################################################
 # Generate other pmt stuff
 ########################################################################
@@ -87,3 +85,6 @@ list(APPEND test_gruel_sources
     ${CMAKE_CURRENT_SOURCE_DIR}/qa_pmt_prims.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/qa_pmt.cc
 )
+
+add_custom_target(pmt_generated 
+  DEPENDS ${PMT_SERIAL_TAGS_H} ${CMAKE_CURRENT_BINARY_DIR}/pmt_unv_int.h)

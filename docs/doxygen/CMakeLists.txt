@@ -36,8 +36,14 @@ configure_file(
 @ONLY)
 
 set(BUILT_DIRS ${CMAKE_CURRENT_BINARY_DIR}/xml ${CMAKE_CURRENT_BINARY_DIR}/html)
-set(GENERATED_DEPS pmt_generated
-  general_generated gengen_generated filter_generated)
+
+if(ENABLE_GRUEL)
+  list(APPEND GENERATED_DEPS pmt_generated)
+endif(ENABLE_GRUEL)
+
+if(ENABLE_GR_CORE)
+  list(APPEND GENERATED_DEPS general_generated gengen_generated filter_generated)
+endif(ENABLE_GR_CORE)
 
 if(ENABLE_GR_BLOCKS)
   list(APPEND GENERATED_DEPS blocks_generated_includes)

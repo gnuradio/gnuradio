@@ -85,7 +85,7 @@ namespace gr {
       /*!
        * \brief Inverse function to header_formatter().
        *
-       * Reads the bit stream in \in and writes a corresponding tag into \p tags.
+       * Reads the bit stream in and writes a corresponding tag into \p tags.
        *
        */
       bool header_parser(
