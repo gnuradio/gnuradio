@@ -76,7 +76,7 @@ namespace gr {
        * If the header length is smaller than 29, bits are simply left out. For this
        * reason, they always start with the LSB.
        */
-      bool header_formatter(
+      virtual bool header_formatter(
 	  long packet_len,
 	  unsigned char *out,
 	  const std::vector<gr_tag_t> &tags=std::vector<gr_tag_t>()
@@ -85,10 +85,9 @@ namespace gr {
       /*!
        * \brief Inverse function to header_formatter().
        *
-       * Reads the bit stream in and writes a corresponding tag into \p tags.
-       *
+       * Reads the bit stream in \p header and writes a corresponding tag into \p tags.
        */
-      bool header_parser(
+      virtual bool header_parser(
 	const unsigned char *header,
 	std::vector<gr_tag_t> &tags);
 

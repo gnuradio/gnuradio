@@ -79,7 +79,7 @@ namespace gr {
       } else {
 	pmt::pmt_t dict(pmt::pmt_make_dict());
 	for (unsigned i = 0; i < tags.size(); i++) {
-	  pmt::pmt_dict_add(dict, tags[i].key, tags[i].value);
+	  dict = pmt::pmt_dict_add(dict, tags[i].key, tags[i].value);
 	}
 	message_port_pub(msg_port_id, dict);
       }
