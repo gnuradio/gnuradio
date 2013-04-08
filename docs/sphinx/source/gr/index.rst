@@ -26,7 +26,6 @@ Miscellaneous
    gnuradio.gr.feval_ll
    gnuradio.gr.feval
    gnuradio.gr.prefs
-   gnuradio.gr.test
    gnuradio.gr.message
    gnuradio.gr.msg_queue
    gnuradio.gr.enable_realtime_scheduling
