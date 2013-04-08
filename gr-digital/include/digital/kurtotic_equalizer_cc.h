@@ -34,7 +34,7 @@ namespace gr {
      * \ingroup equalizers_blk
      *
      * \details
-     * WARNING: This block does not yet work.
+     * Warning: This block does not yet work.
      *
      * "Y. Guo, J. Zhao, Y. Sun, "Sign kurtosis maximization based blind
      * equalization algorithm," IEEE Conf. on Control, Automation,
