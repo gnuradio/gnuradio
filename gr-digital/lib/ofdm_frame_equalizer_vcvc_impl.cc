@@ -30,25 +30,39 @@ namespace gr {
   namespace digital {
 
     ofdm_frame_equalizer_vcvc::sptr
-    ofdm_frame_equalizer_vcvc::make(ofdm_equalizer_base::sptr equalizer, const std::string &len_tag_key, bool propagate_channel_state)
+    ofdm_frame_equalizer_vcvc::make(
+	ofdm_equalizer_base::sptr equalizer,
+	const std::string &len_tag_key,
+	bool propagate_channel_state,
+	int fixed_frame_len
+    )
     {
       return gnuradio::get_initial_sptr (
 	  new ofdm_frame_equalizer_vcvc_impl(
-	    equalizer, len_tag_key, propagate_channel_state
+	    equalizer, len_tag_key, propagate_channel_state, fixed_frame_len
 	  )
       );
     }
 
-    ofdm_frame_equalizer_vcvc_impl::ofdm_frame_equalizer_vcvc_impl(ofdm_equalizer_base::sptr equalizer, const std::string &len_tag_key, bool propagate_channel_state)
-      : gr_tagged_stream_block("ofdm_frame_equalizer_vcvc",
+    ofdm_frame_equalizer_vcvc_impl::ofdm_frame_equalizer_vcvc_impl(
+	ofdm_equalizer_base::sptr equalizer,
+	const std::string &len_tag_key,
+	bool propagate_channel_state,
+	int fixed_frame_len
+    ) : gr_tagged_stream_block("ofdm_frame_equalizer_vcvc",
 	  gr_make_io_signature(1, 1, sizeof (gr_complex) * equalizer->fft_len()),
 	  gr_make_io_signature(1, 1, sizeof (gr_complex) * equalizer->fft_len()),
 	  len_tag_key),
       d_fft_len(equalizer->fft_len()),
       d_eq(equalizer),
       d_propagate_channel_state(propagate_channel_state),
+      d_fixed_frame_len(len_tag_key.empty() ? fixed_frame_len : 0),
       d_channel_state(equalizer->fft_len(), gr_complex(1, 0))
-    {}
+    {
+      if (d_fixed_frame_len) {
+	set_output_multiple(d_fixed_frame_len);
+      }
+    }
 
     ofdm_frame_equalizer_vcvc_impl::~ofdm_frame_equalizer_vcvc_impl()
     {
@@ -64,6 +78,12 @@ namespace gr {
       const gr_complex *in = (const gr_complex *) input_items[0];
       gr_complex *out = (gr_complex *) output_items[0];
       int carrier_offset = 0;
+      int frame_len = 0;
+      if (d_fixed_frame_len) {
+	frame_len = d_fixed_frame_len;
+      } else {
+	frame_len = ninput_items[0];
+      }
 
       std::vector<gr_tag_t> tags;
       get_tags_in_range(tags, 0, nitems_read(0), nitems_read(0)+1);
@@ -74,10 +94,10 @@ namespace gr {
 	}
       }
 
-      memcpy((void *) out, (void *) in, sizeof(gr_complex) * d_fft_len * ninput_items[0]);
+      memcpy((void *) out, (void *) in, sizeof(gr_complex) * d_fft_len * frame_len);
       d_eq->reset();
       d_eq->set_carrier_offset(carrier_offset);
-      d_eq->equalize(out, ninput_items[0], d_channel_state);
+      d_eq->equalize(out, frame_len, d_channel_state);
       d_eq->get_channel_state(d_channel_state);
       if (d_propagate_channel_state) {
 	add_item_tag(0, nitems_written(0),
@@ -85,7 +105,11 @@ namespace gr {
 	    pmt::init_c32vector(d_fft_len, d_channel_state));
       }
 
-      return ninput_items[0];
+      if (d_fixed_frame_len) {
+	consume_each(frame_len);
+      }
+
+      return frame_len;
     }
 
   } /* namespace digital */
