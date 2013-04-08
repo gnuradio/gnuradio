@@ -218,8 +218,10 @@ def make_block2_entry(di, block):
     descriptions = []
     # For new style blocks all the relevant documentation should be
     # associated with the 'make' method.
+    class_description = combine_descriptions(block)
     make_func = block.get_member('make', DoxyFunction)
-    description = combine_descriptions(make_func)
+    make_description = combine_descriptions(make_func)
+    description = class_description + "\n\n" + make_description
     # Associate the combined description with the class and
     # the make function.
     output = []
