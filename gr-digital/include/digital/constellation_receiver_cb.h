@@ -31,36 +31,16 @@ namespace gr {
   namespace digital {
 
     /*!
-     * \brief This block takes care of receiving generic modulated signals
-     * through phase, frequency, and symbol synchronization.
-     * \ingroup modulators_blk
+     * \brief This block makes hard decisions about the received
+     * symbols (using a constellation object) and also fine tunes
+     * phase synchronization.
      *
      * \details
-     * This block takes care of receiving generic modulated signals
-     * through phase, frequency, and symbol synchronization. It
-     * performs carrier frequency and phase locking as well as symbol
-     * timing recovery.
      *
      * The phase and frequency synchronization are based on a Costas
      * loop that finds the error of the incoming signal point compared
      * to its nearest constellation point. The frequency and phase of
      * the NCO are updated according to this error.
-     *
-     * The symbol synchronization is done using a modified Mueller and
-     * Muller circuit from the paper:
-     * 
-     * "G. R. Danesfahani, T.G. Jeans, "Optimisation of modified
-     * Mueller and Muller algorithm," Electronics Letters, Vol. 31,
-     * no. 13, 22 June 1995, pp. 1032 - 1033."
-     *
-     * This circuit interpolates the downconverted sample (using the
-     * NCO developed by the Costas loop) every mu samples, then it
-     * finds the sampling error based on this and the past symbols and
-     * the decision made on the samples. Like the phase error
-     * detector, there are optimized decision algorithms for BPSK and
-     * QPKS, but 8PSK uses another brute force computation against all
-     * possible symbols. The modifications to the M&M used here reduce
-     * self-noise.
      */
     class DIGITAL_API constellation_receiver_cb
       : virtual public gr_block
