@@ -52,7 +52,8 @@ namespace gr {
       static sptr make(
 	   digital_ofdm_equalizer_base_sptr equalizer,
 	   const std::string &len_tag_key = "frame_len",
-	   bool propagate_channel_state=false
+	   bool propagate_channel_state=false,
+	   int fixed_frame_len=0
       );
     };
 
