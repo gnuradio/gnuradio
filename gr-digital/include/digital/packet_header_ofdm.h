@@ -41,10 +41,11 @@ namespace gr {
       packet_header_ofdm(
 		      const std::vector<std::vector<int> > &occupied_carriers,
 		      int n_syms,
-		      const std::string &len_tag_key="packet_len",
-		      const std::string &frame_len_tag_key="frame_len",
-		      const std::string &num_tag_key="packet_num",
-		      int bits_per_sym=1);
+		      const std::string &len_tag_key,
+		      const std::string &frame_len_tag_key,
+		      const std::string &num_tag_key,
+		      int bits_per_header_sym,
+		      int bits_per_payload_sym);
       ~packet_header_ofdm();
 
       /*!
@@ -61,19 +62,37 @@ namespace gr {
 	const unsigned char *header,
 	std::vector<gr_tag_t> &tags);
 
+      /*!
+       * \param occupied_carriers See carrier allocator
+       * \param n_syms The number of OFDM symbols the header should be (usually 1)
+       * \param len_tag_key The tag key used for the packet length (number of bytes)
+       * \param frame_len_tag_key The tag key used for the frame length (number of
+       *                          OFDM symbols, this is the tag key required for the
+       *                          frame equalizer etc.)
+       * \param bits_per_header_sym Bits per complex symbol in the header, e.g. 1 if
+       *                            the header is BPSK modulated, 2 if it's QPSK
+       *                            modulated etc.
+       * \param bits_per_payload_sym Bits per complex symbol in the payload. This is
+       *                             required to figure out how many OFDM symbols
+       *                             are necessary to encode the given number of
+       *                             bytes.
+       */
       static sptr make(
-		      const std::vector<std::vector<int> > &occupied_carriers,
-		      int n_syms,
-		      const std::string &len_tag_key="packet_len",
-		      const std::string &frame_len_tag_key="frame_len",
-		      const std::string &num_tag_key="packet_num",
-		      int bits_per_sym=1);
+	    const std::vector<std::vector<int> > &occupied_carriers,
+	    int n_syms,
+	    const std::string &len_tag_key="packet_len",
+	    const std::string &frame_len_tag_key="frame_len",
+	    const std::string &num_tag_key="packet_num",
+	    int bits_per_header_sym=1,
+	    int bits_per_payload_sym=1
+      );
 
 
      protected:
       pmt::pmt_t d_frame_len_tag_key;
       const std::vector<std::vector<int> > d_occupied_carriers; //!< Which carriers/symbols carry data
       int d_syms_per_set; //!< Helper variable: Total number of elements in d_occupied_carriers
+      int d_bits_per_payload_sym;
     };
 
   } // namespace digital
