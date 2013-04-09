@@ -241,7 +241,7 @@ endif(TRY_SHM_VMCIRCBUF)
 
 add_library(gnuradio-runtime SHARED ${gnuradio_runtime_sources})
 target_link_libraries(gnuradio-runtime ${gnuradio_runtime_libs})
-GR_LIBRARY_FOO(gnuradio-runtime RUNTIME_COMPONENT "runtime" DEVEL_COMPONENT "runtime_devel")
+GR_LIBRARY_FOO(gnuradio-runtime RUNTIME_COMPONENT "runtime_runtime" DEVEL_COMPONENT "runtime_devel")
 
 add_dependencies(gnuradio-runtime
   pmt_generated runtime_generated_includes

@@ -88,7 +88,7 @@ list(APPEND gnuradio_pmt_libs
 add_library(gnuradio-pmt SHARED ${pmt_sources})
 target_link_libraries(gnuradio-pmt ${gnuradio_pmt_libs})
 
-GR_LIBRARY_FOO(gnuradio-pmt RUNTIME_COMPONENT "runtime" DEVEL_COMPONENT "runtime_devel")
+GR_LIBRARY_FOO(gnuradio-pmt RUNTIME_COMPONENT "runtime_runtime" DEVEL_COMPONENT "runtime_devel")
 
 add_dependencies(gnuradio-pmt
   pmt_generated

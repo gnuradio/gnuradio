@@ -24,7 +24,7 @@
 
 #include <attributes.h>
 
-#ifdef gnuradio_runtime_EXPORTS
+#ifdef gnuradio_pmt_EXPORTS
 #  define PMT_API __GR_ATTR_EXPORT
 #else
 #  define PMT_API __GR_ATTR_IMPORT
