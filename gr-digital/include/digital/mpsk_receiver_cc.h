@@ -35,12 +35,10 @@ namespace gr {
      * \ingroup synchronizers_blk
      *
      * \details
-     * This block takes care of receiving M-PSK modulated signals
-     * through phase, frequency, and symbol synchronization. It
-     * performs carrier frequency and phase locking as well as symbol
-     * timing recovery.  It works with (D)BPSK, (D)QPSK, and (D)8PSK
-     * as tested currently. It should also work for OQPSK and PI/4
-     * DQPSK.
+     * It performs carrier frequency and phase locking as well as
+     * symbol timing recovery.  It works with (D)BPSK, (D)QPSK, and
+     * (D)8PSK as tested currently. It should also work for OQPSK and
+     * PI/4 DQPSK.
      *
      * The phase and frequency synchronization are based on a Costas
      * loop that finds the error of the incoming signal point compared
@@ -74,9 +72,9 @@ namespace gr {
       typedef boost::shared_ptr<mpsk_receiver_cc> sptr;
 
       /*!
-       * \brief Buil M-PSK receiver block.
+       * \brief Make a M-PSK receiver block.
        *
-       * \param M	    modulation order of the M-PSK modulation
+       * \param M	        modulation order of the M-PSK modulation
        * \param theta	    any constant phase rotation from the real axis of the constellation
        * \param loop_bw	    Loop bandwidth to set gains of phase/freq tracking loop
        * \param fmin        minimum normalized frequency value the loop can achieve

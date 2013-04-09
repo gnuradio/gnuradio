@@ -132,7 +132,21 @@ common_block_members =[
     'set_min_output_buffer', 
     'set_processor_affinity', 
     'symbol_name', 
-    'unset_processor_affinity', ]
+    'unset_processor_affinity',
+    'disconnect_all',
+    'index',
+    'length',
+    'lock',
+    'primitive_connect',
+    'primitive_disconnect',
+    'primitive_message_port_register_hier_in',
+    'primitive_message_port_register_hier_out',
+    'primitive_msg_connect',
+    'primitive_msg_disconnect',
+    'to_hier_block2',
+    'type',
+    'unlock',
+]
 
 class OldBlockDocumenter(FunctionDocumenter):
     """
