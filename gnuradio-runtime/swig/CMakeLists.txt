@@ -34,6 +34,7 @@ set(GR_SWIG_INCLUDE_DIRS
 link_directories(${Boost_LIBRARY_DIRS})
 
 set(GR_SWIG_LIBRARIES
+    gnuradio-pmt
     gnuradio-runtime
     ${LOG4CPP_LIBRARIES}
 )

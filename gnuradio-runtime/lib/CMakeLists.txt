@@ -60,8 +60,8 @@ include_directories(${GNURADIO_RUNTIME_INCLUDE_DIRS}
 ########################################################################
 # Include subdirs rather to populate to the sources lists.
 ########################################################################
-GR_INCLUDE_SUBDIRECTORY(messages)
 GR_INCLUDE_SUBDIRECTORY(pmt)
+GR_INCLUDE_SUBDIRECTORY(messages)
 GR_INCLUDE_SUBDIRECTORY(thread)
 
 ########################################################################
@@ -136,6 +136,7 @@ endif(CMAKE_SYSTEM_PROCESSOR MATCHES "^(powerpc|ppc)")
 
 list(APPEND gnuradio_runtime_libs
     volk
+    gnuradio-pmt
     ${Boost_LIBRARIES}
     ${LOG4CPP_LIBRARIES}
 )
@@ -269,13 +270,14 @@ list(APPEND test_gnuradio_runtime_sources
   qa_sincos.cc
   pmt/qa_pmt.cc
   pmt/qa_pmt_prims.cc
+  ${CMAKE_CURRENT_BINARY_DIR}/pmt/qa_pmt_unv.cc
 )
 
 include_directories(${CPPUNIT_INCLUDE_DIRS})
 link_directories(${CPPUNIT_LIBRARY_DIRS})
 
 add_library(test-gnuradio-runtime SHARED ${test_gnuradio_runtime_sources})
-target_link_libraries(test-gnuradio-runtime gnuradio-runtime ${CPPUNIT_LIBRARIES} ${Boost_LIBRARIES} ${LOG4CPP_LIBRARIES})
+target_link_libraries(test-gnuradio-runtime gnuradio-runtime gnuradio-pmt ${CPPUNIT_LIBRARIES} ${Boost_LIBRARIES} ${LOG4CPP_LIBRARIES})
 
 ########################################################################
 # Build the test executable

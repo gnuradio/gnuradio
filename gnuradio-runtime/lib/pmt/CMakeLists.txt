@@ -72,21 +72,27 @@ add_custom_command(
     WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
 )
 
-list(APPEND gnuradio_runtime_sources
-    ${CMAKE_CURRENT_BINARY_DIR}/pmt_unv.cc
-    ${CMAKE_CURRENT_SOURCE_DIR}/pmt.cc
-    ${CMAKE_CURRENT_SOURCE_DIR}/pmt_io.cc
-    ${CMAKE_CURRENT_SOURCE_DIR}/pmt_pool.cc
-    ${CMAKE_CURRENT_SOURCE_DIR}/pmt_serialize.cc
+set(pmt_sources
+  ${CMAKE_CURRENT_BINARY_DIR}/pmt_unv.cc
+  ${CMAKE_CURRENT_SOURCE_DIR}/pmt.cc
+  ${CMAKE_CURRENT_SOURCE_DIR}/pmt_io.cc
+  ${CMAKE_CURRENT_SOURCE_DIR}/pmt_pool.cc
+  ${CMAKE_CURRENT_SOURCE_DIR}/pmt_serialize.cc
 )
 
-if(ENABLE_TESTING)
-  list(APPEND test_gnuradio_runtime_sources
-    ${CMAKE_CURRENT_BINARY_DIR}/qa_pmt_unv.cc
-    ${CMAKE_CURRENT_SOURCE_DIR}/qa_pmt_prims.cc
-    ${CMAKE_CURRENT_SOURCE_DIR}/qa_pmt.cc
-    )
-endif(ENABLE_TESTING)
+list(APPEND gnuradio_pmt_libs
+    ${Boost_LIBRARIES}
+    ${LOG4CPP_LIBRARIES}
+)
 
-add_custom_target(pmt_generated
-  DEPENDS ${PMT_SERIAL_TAGS_H} ${CMAKE_CURRENT_BINARY_DIR}/pmt_unv_int.h)
+add_library(gnuradio-pmt SHARED ${pmt_sources})
+target_link_libraries(gnuradio-pmt ${gnuradio_pmt_libs})
+
+GR_LIBRARY_FOO(gnuradio-pmt RUNTIME_COMPONENT "runtime" DEVEL_COMPONENT "runtime_devel")
+
+add_dependencies(gnuradio-pmt
+  pmt_generated
+)
+
+# Testing is handled in gnuradio-runtime tests one level down.
+
