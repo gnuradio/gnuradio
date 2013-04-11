@@ -15,6 +15,8 @@ histosink_gl.histo_sink_f(
 	title=$title,
 	num_bins=$num_bins,
 	frame_size=$frame_size,
+	range_size=$range_size,
+	offset=$offset,
 #if $win_size()
 	size=$win_size,
 #end if
@@ -26,6 +28,8 @@ $(parent).GridAdd(self.$(id).win, $(', '.join(map(str, $grid_pos()))))
 #end if</make>
 	<callback>set_num_bins($num_bins)</callback>
 	<callback>set_frame_size($frame_size)</callback>
+	<callback>set_range($range_size)</callback>
+	<callback>set_offset($offset)</callback>
 	<param>
 		<name>Title</name>
 		<key>title</key>
@@ -43,6 +47,18 @@ $(parent).GridAdd(self.$(id).win, $(', '.join(map(str, $grid_pos()))))
 		<key>frame_size</key>
 		<value>1000</value>
 		<type>int</type>
+	</param>
+	<param>
+		<name>Range</name>
+		<key>range_size</key>
+		<value>0.0</value>
+		<type>real</type>
+	</param>
+	<param>
+		<name>Offset</name>
+		<key>offset</key>
+		<value>0.0</value>
+		<type>real</type>
 	</param>
 	<param>
 		<name>Window Size</name>

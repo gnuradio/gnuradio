@@ -52,11 +52,11 @@ gr_make_histo_sink_f (gr_msg_queue_sptr msgq)
 
 gr_histo_sink_f::gr_histo_sink_f (gr_msg_queue_sptr msgq)
   : gr_sync_block ("histo_sink_f", gr_make_io_signature (1, 1, sizeof (float)), gr_make_io_signature (0, 0, 0)),
-  d_msgq (msgq), d_num_bins(11), d_frame_size(1000), d_sample_count(0), d_bins(NULL), d_samps(NULL)
+  d_msgq (msgq), d_num_bins(11), d_frame_size(1000), d_sample_count(0), d_bins(NULL), d_samps(NULL), d_range(0), d_offset(0)
 {
   //allocate arrays and clear
-  set_num_bins(d_num_bins);
-  set_frame_size(d_frame_size);
+  update_num_bins();
+  update_frame_size();
 }
 
 gr_histo_sink_f::~gr_histo_sink_f (void)
@@ -91,13 +91,20 @@ gr_histo_sink_f::send_frame(void){
   /* find the minimum and maximum */
   float minimum = d_samps[0];
   float maximum = d_samps[0];
-  for (unsigned int i = 0; i < d_frame_size; i++){
+  for (unsigned int i = 1; i < d_frame_size; i++){
     if (d_samps[i] < minimum) minimum = d_samps[i];
     if (d_samps[i] > maximum) maximum = d_samps[i];
   }
   minimum = get_clean_num(minimum);
   maximum = get_clean_num(maximum);
-  if (minimum == maximum || minimum > maximum) return; //useless data or screw up?
+  if (d_range)
+  {
+    if(maximum < d_maximum)
+      maximum = d_maximum;
+    if(minimum > d_minimum)
+      minimum = d_minimum;
+  }
+  else if (minimum == maximum || minimum > maximum) return; //useless data or screw up?
   /* load the bins */
   int index;
   float bin_width = (maximum - minimum)/(d_num_bins-1);
@@ -128,26 +135,8 @@ gr_histo_sink_f::clear(void){
   }
 }
 
-/**************************************************
- * Getters
- **************************************************/
-unsigned int
-gr_histo_sink_f::get_frame_size(void){
-  return d_frame_size;
-}
-
-unsigned int
-gr_histo_sink_f::get_num_bins(void){
-  return d_num_bins;
-}
-
-/**************************************************
- * Setters
- **************************************************/
 void
-gr_histo_sink_f::set_frame_size(unsigned int frame_size){
-  gruel::scoped_lock guard(d_mutex);	// hold mutex for duration of this function
-  d_frame_size = frame_size;
+gr_histo_sink_f::update_frame_size(void){
   /* allocate a new sample array */
   delete [] d_samps;
   d_samps = new float[d_frame_size];
@@ -155,11 +144,54 @@ gr_histo_sink_f::set_frame_size(unsigned int frame_size){
 }
 
 void
-gr_histo_sink_f::set_num_bins(unsigned int num_bins){
-  gruel::scoped_lock guard(d_mutex);	// hold mutex for duration of this function
-  d_num_bins = num_bins;
+gr_histo_sink_f::update_num_bins(void){
   /* allocate a new bin array */
   delete [] d_bins;
   d_bins = new unsigned int[d_num_bins];
   clear();
+}
+
+void
+gr_histo_sink_f::update_limits(void){
+  d_minimum = d_offset - d_range;
+  d_maximum = d_offset + d_range;
+}
+
+/**************************************************
+ * Setters
+ **************************************************/
+void
+gr_histo_sink_f::set_frame_size(unsigned int frame_size){
+  if(d_frame_size != frame_size){
+    gruel::scoped_lock guard(d_mutex);	// hold mutex for duration of this function
+    d_frame_size = frame_size;
+    update_frame_size();
+  }
+}
+
+void
+gr_histo_sink_f::set_num_bins(unsigned int num_bins){
+  if(d_num_bins != num_bins){
+    gruel::scoped_lock guard(d_mutex);	// hold mutex for duration of this function
+	d_num_bins = num_bins;
+    update_num_bins();
+  }
+}
+
+void
+gr_histo_sink_f::set_range(float range){
+  if(d_range != range){
+    gruel::scoped_lock guard(d_mutex);	// hold mutex for duration of this function
+	d_range = range;
+	update_limits();
+  }
+}
+
+void
+gr_histo_sink_f::set_offset(float offset){
+  if(d_offset != offset){
+    gruel::scoped_lock guard(d_mutex);	// hold mutex for duration of this function
+    d_offset = offset;
+    update_limits();
+  }
 }

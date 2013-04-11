@@ -74,6 +74,20 @@ class control_panel(wx.Panel):
 			converter=forms.int_converter(),
 			ps=parent, key=FRAME_SIZE_KEY,
 		)
+		#range
+		control_box.AddStretchSpacer()
+		forms.text_box(
+			sizer=control_box, parent=self, label='Range Limit',
+			converter=forms.float_converter(),
+			ps=parent, key=HISTO_RANGE_KEY,
+		)
+		#offset
+		control_box.AddStretchSpacer()
+		forms.text_box(
+			sizer=control_box, parent=self, label='Offset',
+			converter=forms.float_converter(),
+			ps=parent, key=HISTO_OFFSET_KEY,
+		)
 		#run/stop
 		control_box.AddStretchSpacer()
 		forms.toggle_button(
@@ -98,6 +112,8 @@ class histo_window(wx.Panel, pubsub.pubsub):
 		minimum_key,
 		num_bins_key,
 		frame_size_key,
+		histo_range_key,
+		histo_offset_key,
 		msg_key,
 	):
 		pubsub.pubsub.__init__(self)
@@ -108,6 +124,8 @@ class histo_window(wx.Panel, pubsub.pubsub):
 		self.proxy(MINIMUM_KEY, controller, minimum_key)
 		self.proxy(NUM_BINS_KEY, controller, num_bins_key)
 		self.proxy(FRAME_SIZE_KEY, controller, frame_size_key)
+		self.proxy(HISTO_RANGE_KEY, controller, histo_range_key)
+		self.proxy(HISTO_OFFSET_KEY, controller, histo_offset_key)
 		self.proxy(MSG_KEY, controller, msg_key)
 		#initialize values
 		self[RUNNING_KEY] = True

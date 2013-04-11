@@ -32,8 +32,12 @@ public:
 
   unsigned int get_frame_size(void);
   unsigned int get_num_bins(void);
+  float get_range(void);
+  float get_offset(void);
 
   void set_frame_size(unsigned int frame_size);
   void set_num_bins(unsigned int num_bins);
+  void set_range(float range);
+  void set_offset(float offset);
 
 };
