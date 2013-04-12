@@ -117,6 +117,7 @@ class histo_window(wx.Panel, pubsub.pubsub):
 		wx.Panel.__init__(self, parent, style=wx.SIMPLE_BORDER)
 		self.plotter = plotter.bar_plotter(self)
 		self.plotter.SetSize(wx.Size(*size))
+		self.plotter.SetSizeHints(*size)
 		self.plotter.set_title(title)
 		self.plotter.enable_point_label(True)
 		self.plotter.enable_grid_lines(False)
