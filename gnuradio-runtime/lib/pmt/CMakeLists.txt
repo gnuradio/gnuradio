@@ -85,6 +85,21 @@ list(APPEND gnuradio_pmt_libs
     ${LOG4CPP_LIBRARIES}
 )
 
+#Add Windows DLL resource file if using MSVC
+if(MSVC)
+    include(${CMAKE_SOURCE_DIR}/cmake/Modules/GrVersion.cmake)
+
+    configure_file(
+        ${CMAKE_CURRENT_SOURCE_DIR}/gnuradio-pmt.rc.in
+        ${CMAKE_CURRENT_BINARY_DIR}/gnuradio-pmt.rc
+    @ONLY)
+
+    list(APPEND gr_pmt_sources
+        ${CMAKE_CURRENT_BINARY_DIR}/gnuradio-pmt.rc
+    )
+endif(MSVC)
+
+
 add_library(gnuradio-pmt SHARED ${pmt_sources})
 target_link_libraries(gnuradio-pmt ${gnuradio_pmt_libs})
 
