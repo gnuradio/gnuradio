@@ -150,6 +150,7 @@ class const_window(wx.Panel, pubsub.pubsub):
 		wx.Panel.__init__(self, parent, style=wx.SIMPLE_BORDER)
 		self.plotter = plotter.channel_plotter(self)
 		self.plotter.SetSize(wx.Size(*size))
+		self.plotter.SetSizeHints(*size)
 		self.plotter.set_title(title)
 		self.plotter.set_x_label('Inphase')
 		self.plotter.set_y_label('Quadrature')
