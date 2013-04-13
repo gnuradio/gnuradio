@@ -39,6 +39,7 @@ class _number_sink_base(gr.hier_block2, common.wxgui_hb):
 	def __init__(
 		self,
 		parent,
+		show_panel=True,
 		unit='units',
 		minval=0,
 		maxval=1,
@@ -99,6 +100,7 @@ class _number_sink_base(gr.hier_block2, common.wxgui_hb):
 		self.win = number_window.number_window(
 			parent=parent,
 			controller=self.controller,
+			show_panel=show_panel,
 			size=size,
 			title=label,
 			units=unit,

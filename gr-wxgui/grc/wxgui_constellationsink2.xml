@@ -12,6 +12,7 @@
 	<make>#set $parent = $notebook() and 'self.%s.GetPage(%s)'%$notebook() or 'self'
 constsink_gl.const_sink_c(
 	$(parent).GetWin(),
+	show_panel=$show_panel,
 	title=$title,
 	sample_rate=$samp_rate,
 	frame_rate=$frame_rate,
@@ -34,6 +35,21 @@ $(parent).Add(self.$(id).win)
 $(parent).GridAdd(self.$(id).win, $(', '.join(map(str, $grid_pos()))))
 #end if</make>
 	<callback>set_sample_rate($samp_rate)</callback>
+	<param>
+		<name>Control Panel</name>
+		<key>show_panel</key>
+		<value>True</value>
+		<type>enum</type>
+		<hide>#if $show_panel() == 'False' then 'none' else 'part'#</hide>
+		<option>
+			<name>Show</name>
+			<key>True</key>
+		</option>
+		<option>
+			<name>Hide</name>
+			<key>False</key>
+		</option>
+	</param>
 	<param>
 		<name>Title</name>
 		<key>title</key>

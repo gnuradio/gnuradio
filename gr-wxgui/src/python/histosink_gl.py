@@ -39,6 +39,7 @@ class histo_sink_f(gr.hier_block2, common.wxgui_hb):
 	def __init__(
 		self,
 		parent,
+		show_panel=True,
 		size=histo_window.DEFAULT_WIN_SIZE,
 		title='',
 		num_bins=11,
@@ -77,6 +78,7 @@ class histo_sink_f(gr.hier_block2, common.wxgui_hb):
 		self.win = histo_window.histo_window(
 			parent=parent,
 			controller=self.controller,
+			show_panel=show_panel,
 			size=size,
 			title=title,
 			maximum_key=MAXIMUM_KEY,

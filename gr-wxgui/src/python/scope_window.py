@@ -416,6 +416,7 @@ class scope_window(wx.Panel, pubsub.pubsub):
 		self,
 		parent,
 		controller,
+		show_panel,
 		size,
 		title,
 		frame_rate,
@@ -500,10 +501,11 @@ class scope_window(wx.Panel, pubsub.pubsub):
                 self.plotter.set_use_persistence(use_persistence)
                 self.plotter.set_persist_alpha(persist_alpha)
 		#setup the box with plot and controls
-		self.control_panel = control_panel(self)
 		main_box = wx.BoxSizer(wx.HORIZONTAL)
 		main_box.Add(self.plotter, 1, wx.EXPAND)
-		main_box.Add(self.control_panel, 0, wx.EXPAND)
+		if show_panel:
+			self.control_panel = control_panel(self)
+			main_box.Add(self.control_panel, 0, wx.EXPAND)
 		self.SetSizerAndFit(main_box)
 		#register events for message
 		self.subscribe(MSG_KEY, self.handle_msg)

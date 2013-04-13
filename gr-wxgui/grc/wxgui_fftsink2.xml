@@ -13,6 +13,7 @@
 	<make>#set $parent = $notebook() and 'self.%s.GetPage(%s)'%$notebook() or 'self'
 fftsink2.$(type.fcn)(
 	$(parent).GetWin(),
+	show_panel=$show_panel,
 	baseband_freq=$baseband_freq,
 	y_per_div=$y_per_div,
 	y_divs=$y_divs,
@@ -59,6 +60,21 @@ self.$(id).set_callback($(id)_callback)
 			<name>Float</name>
 			<key>float</key>
 			<opt>fcn:fft_sink_f</opt>
+		</option>
+	</param>
+	<param>
+		<name>Control Panel</name>
+		<key>show_panel</key>
+		<value>True</value>
+		<type>enum</type>
+		<hide>#if $show_panel() == 'False' then 'none' else 'part'#</hide>
+		<option>
+			<name>Show</name>
+			<key>True</key>
+		</option>
+		<option>
+			<name>Hide</name>
+			<key>False</key>
 		</option>
 	</param>
 	<param>

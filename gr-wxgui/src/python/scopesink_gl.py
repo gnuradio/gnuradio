@@ -67,6 +67,7 @@ class _scope_sink_base(gr.hier_block2, common.wxgui_hb):
 	def __init__(
 		self,
 		parent,
+		show_panel=True,
 		title='',
 		sample_rate=1,
 		size=scope_window.DEFAULT_WIN_SIZE,
@@ -125,6 +126,7 @@ class _scope_sink_base(gr.hier_block2, common.wxgui_hb):
 		self.win = scope_window.scope_window(
 			parent=parent,
 			controller=self.controller,
+			show_panel=show_panel,
 			size=size,
 			title=title,
 			frame_rate=frame_rate,
