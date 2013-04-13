@@ -168,6 +168,14 @@ public:
         return _dev->set_rx_bandwidth(bandwidth, chan);
     }
 
+    double get_bandwidth(size_t chan){
+        return _dev->get_rx_bandwidth(chan);
+    }
+
+    uhd::freq_range_t get_bandwidth_range(size_t chan){
+        return _dev->get_rx_bandwidth_range(chan);
+    }
+
     void set_auto_dc_offset(const bool enable, size_t chan){
         #ifdef UHD_USRP_MULTI_USRP_FRONTEND_CAL_API
         return _dev->set_rx_dc_offset(enable, chan);

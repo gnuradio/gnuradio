@@ -157,6 +157,14 @@ public:
         return _dev->set_tx_bandwidth(bandwidth, chan);
     }
 
+    double get_bandwidth(size_t chan){
+        return _dev->get_tx_bandwidth(chan);
+    }
+
+    uhd::freq_range_t get_bandwidth_range(size_t chan){
+        return _dev->get_tx_bandwidth_range(chan);
+    }
+
     void set_dc_offset(const std::complex<double> &offset, size_t chan){
         #ifdef UHD_USRP_MULTI_USRP_FRONTEND_CAL_API
         return _dev->set_tx_dc_offset(offset, chan);
