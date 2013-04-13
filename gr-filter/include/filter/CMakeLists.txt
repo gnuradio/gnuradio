@@ -99,6 +99,8 @@ install(FILES
     fft_filter_fff.h
     fractional_interpolator_cc.h
     fractional_interpolator_ff.h
+    fractional_resampler_cc.h
+    fractional_resampler_ff.h
     hilbert_fc.h
     iir_filter_ffd.h
     pfb_arb_resampler_ccf.h
