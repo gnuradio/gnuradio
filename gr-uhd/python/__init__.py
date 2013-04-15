@@ -93,7 +93,7 @@ def _prepare_uhd_swig():
             new_dev_addr = uhd_swig.device_addr_t()
             for key in dev_addr.keys(): new_dev_addr[key] = dev_addr.get(key)
             return new_dev_addr
-        return map(to_pythonized_dev_addr, uhd_swig.find_devices_raw(*args, **kwargs))
+        return __builtins__['map'](to_pythonized_dev_addr, uhd_swig.find_devices_raw(*args, **kwargs))
     setattr(uhd_swig, 'find_devices', find_devices)
 
     #Cast constructor args (FIXME swig handle overloads?)
