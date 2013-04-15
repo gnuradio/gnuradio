@@ -85,6 +85,10 @@ list(APPEND gnuradio_pmt_libs
     ${LOG4CPP_LIBRARIES}
 )
 
+add_custom_target(pmt_generated 
+  DEPENDS ${PMT_SERIAL_TAGS_H} ${CMAKE_CURRENT_BINARY_DIR}/pmt_unv_int.h)
+
+
 #Add Windows DLL resource file if using MSVC
 if(MSVC)
     include(${CMAKE_SOURCE_DIR}/cmake/Modules/GrVersion.cmake)
