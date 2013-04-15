@@ -421,6 +421,7 @@ class scope_window(wx.Panel, pubsub.pubsub):
 		title,
 		frame_rate,
 		num_inputs,
+		inputs_labels,
 		sample_rate_key,
 		t_scale,
 		v_scale,
@@ -433,8 +434,8 @@ class scope_window(wx.Panel, pubsub.pubsub):
 		trigger_channel_key,
 		decimation_key,
 		msg_key,
-                use_persistence,
-                persist_alpha,
+		use_persistence,
+		persist_alpha,
 		trig_mode,
 		y_axis_label,
 	):
@@ -448,6 +449,11 @@ class scope_window(wx.Panel, pubsub.pubsub):
 		self.autorange_ts = 0
 		v_scale = v_scale or 1
 		self.frame_rate_ts = 0
+		self.inputs_labels = ['Ch%d'%(i+1) for i in range(num_inputs)]
+		if inputs_labels != None:
+			assert len(inputs_labels) == num_inputs
+			for i, labels in enumerate(inputs_labels):
+				self.inputs_labels[i] = str(labels)
 		#proxy the keys
 		self.proxy(MSG_KEY, controller, msg_key)
 		self.proxy(SAMPLE_RATE_KEY, controller, sample_rate_key)
@@ -590,7 +596,7 @@ class scope_window(wx.Panel, pubsub.pubsub):
 			)
 			#turn off each waveform
 			for i, samples in enumerate(sampleses):
-				self.plotter.clear_waveform(channel='Ch%d'%(i+1))
+				self.plotter.clear_waveform(channel=self.inputs_labels[i])
 		else:
 			#autorange
 			if self[AUTORANGE_KEY] and time.time() - self.autorange_ts > AUTORANGE_UPDATE_RATE:
@@ -624,7 +630,7 @@ class scope_window(wx.Panel, pubsub.pubsub):
 				for i, samples in enumerate(sampleses):
 					#plot samples
 					self.plotter.set_waveform(
-						channel='Ch%d'%(i+1),
+						channel=self.inputs_labels[i],
 						samples=samples[samps_off:num_samps+samps_off],
 						color_spec=CHANNEL_COLOR_SPECS[i],
 						marker=self[common.index_key(MARKER_KEY, i)],
@@ -671,10 +677,10 @@ class scope_window(wx.Panel, pubsub.pubsub):
 		if self[T_FRAC_OFF_KEY] > 1: self[T_FRAC_OFF_KEY] = 1; return
 		if self[XY_MODE_KEY]:
 			#update the x axis
-			self.plotter.set_x_label('Ch%d'%(self[X_CHANNEL_KEY]+1))
+			self.plotter.set_x_label(self.inputs_labels[self[X_CHANNEL_KEY]])
 			self.plotter.set_x_grid(self.get_x_min(), self.get_x_max(), self[X_PER_DIV_KEY])
 			#update the y axis
-			self.plotter.set_y_label('Ch%d'%(self[Y_CHANNEL_KEY]+1))
+			self.plotter.set_y_label(self.inputs_labels[self[Y_CHANNEL_KEY]])
 			self.plotter.set_y_grid(self.get_y_min(), self.get_y_max(), self[Y_PER_DIV_KEY])
 		else:
 			#update the t axis

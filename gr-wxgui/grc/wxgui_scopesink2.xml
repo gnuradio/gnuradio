@@ -22,6 +22,9 @@ scopesink2.$(type.fcn)(
 	ac_couple=$ac_couple,
 	xy_mode=$xy_mode,
 	num_inputs=$num_inputs,
+#if $inputs_captions() == 'True'
+	inputs_labels=$inputs_labels,
+#end if
 	trig_mode=$trig_mode,
 	y_axis_label=$y_axis_label,
 #if $win_size()
@@ -135,6 +138,34 @@ $(parent).GridAdd(self.$(id).win, $(', '.join(map(str, $grid_pos()))))
 		<type>int</type>
 	</param>
 	<param>
+		<name>Inputs Captions</name>
+		<key>inputs_captions</key>
+		<value>False</value>
+		<type>enum</type>
+		<hide>part</hide>
+		<option>
+			<name>Off</name>
+			<key>False</key>
+		</option>
+		<option>
+			<name>On</name>
+			<key>True</key>
+		</option>
+	</param>
+	<param>
+		<name>Inputs Labels</name>
+		<key>inputs_labels</key>
+		<value>$(['Ch%d'%(i+1) for i in range($num_inputs())])</value>
+		<type>raw</type>
+		<hide>#if $inputs_captions() == 'False'
+all#slurp
+#elif inputs_labels()
+none#slurp
+#else
+part#slurp
+#end if</hide>
+	</param>
+	<param>
 		<name>Window Size</name>
 		<key>win_size</key>
 		<value></value>
@@ -180,6 +211,7 @@ $(parent).GridAdd(self.$(id).win, $(', '.join(map(str, $grid_pos()))))
 		<value>Counts</value>
 		<type>string</type>
 	</param>
+	<check>not $inputs_captions() or len($inputs_labels) == $num_inputs</check>
 	<check>not $win_size or len($win_size) == 2</check>
 	<check>not $xy_mode or '$type' == 'complex' or $num_inputs != 1</check>
 	<sink>

@@ -132,7 +132,7 @@ class Param(Element):
 	def get_hide(self): return self.get_parent().resolve_dependencies(self._hide).strip()
 
 	def get_value(self):
-		value = self._value
+		value = self.get_parent().resolve_dependencies(self._value).strip()
 		if self.is_enum() and value not in self.get_option_keys():
 			value = self.get_option_keys()[0]
 			self.set_value(value)
