@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2004,2007,2010,2012 Free Software Foundation, Inc.
+ * Copyright 2004,2007,2010,2012-2013 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -25,58 +25,56 @@
 #endif
 
 #include <gr_io_signature.h>
-#include "fractional_interpolator_cc_impl.h"
+#include "fractional_resampler_cc_impl.h"
 #include <stdexcept>
 
 namespace gr {
   namespace filter {
     
-    fractional_interpolator_cc::sptr
-    fractional_interpolator_cc::make(float phase_shift, float interp_ratio)
+    fractional_resampler_cc::sptr
+    fractional_resampler_cc::make(float phase_shift, float resamp_ratio)
     {
-      return gnuradio::get_initial_sptr(
-          new fractional_interpolator_cc_impl(phase_shift, interp_ratio));
+      return gnuradio::get_initial_sptr
+        (new fractional_resampler_cc_impl(phase_shift, resamp_ratio));
     }
 
-    fractional_interpolator_cc_impl::fractional_interpolator_cc_impl
-                                     (float phase_shift, float interp_ratio)
-      : gr_block("fractional_interpolator_cc",
+    fractional_resampler_cc_impl::fractional_resampler_cc_impl
+                                     (float phase_shift, float resamp_ratio)
+      : gr_block("fractional_resampler_cc",
 		 gr_make_io_signature(1, 1, sizeof(gr_complex)),
 		 gr_make_io_signature(1, 1, sizeof(gr_complex))),
-	d_mu (phase_shift), d_mu_inc (interp_ratio),
-	d_interp(new mmse_fir_interpolator_cc())
+	d_mu(phase_shift), d_mu_inc(resamp_ratio),
+	d_resamp(new mmse_fir_interpolator_cc())
     {
-      GR_LOG_WARN(d_logger, "fractional_interpolator is deprecated. Please use fractional_resampler instead.");
-
-      if(interp_ratio <=  0)
-	throw std::out_of_range("interpolation ratio must be > 0");
+      if(resamp_ratio <=  0)
+	throw std::out_of_range("resampling ratio must be > 0");
       if(phase_shift <  0  || phase_shift > 1)
 	throw std::out_of_range("phase shift ratio must be > 0 and < 1");
 
-      set_relative_rate(1.0 / interp_ratio);
+      set_relative_rate(1.0 / resamp_ratio);
     }
 
-    fractional_interpolator_cc_impl::~fractional_interpolator_cc_impl()
+    fractional_resampler_cc_impl::~fractional_resampler_cc_impl()
     {
-      delete d_interp;
+      delete d_resamp;
     }
 
     void
-    fractional_interpolator_cc_impl::forecast(int noutput_items,
-				     gr_vector_int &ninput_items_required)
+    fractional_resampler_cc_impl::forecast(int noutput_items,
+                                           gr_vector_int &ninput_items_required)
     {
       unsigned ninputs = ninput_items_required.size();
       for(unsigned i=0; i < ninputs; i++) {
 	ninput_items_required[i] =
-	  (int)ceil((noutput_items * d_mu_inc) + d_interp->ntaps());
+	  (int)ceil((noutput_items * d_mu_inc) + d_resamp->ntaps());
       }
     }
 
     int
-    fractional_interpolator_cc_impl::general_work(int noutput_items,
-				     gr_vector_int &ninput_items,
-				     gr_vector_const_void_star &input_items,
-				     gr_vector_void_star &output_items)
+    fractional_resampler_cc_impl::general_work(int noutput_items,
+                                               gr_vector_int &ninput_items,
+                                               gr_vector_const_void_star &input_items,
+                                               gr_vector_void_star &output_items)
     {
       const gr_complex *in = (const gr_complex*)input_items[0];
       gr_complex *out = (gr_complex*)output_items[0];
@@ -85,7 +83,7 @@ namespace gr {
       int oo = 0; // output index
 
       while(oo < noutput_items) {
-	out[oo++] = d_interp->interpolate(&in[ii], d_mu);
+	out[oo++] = d_resamp->interpolate(&in[ii], d_mu);
 
 	double s = d_mu + d_mu_inc;
 	double f = floor(s);
@@ -100,27 +98,27 @@ namespace gr {
     }
 
     float
-    fractional_interpolator_cc_impl::mu() const
+    fractional_resampler_cc_impl::mu() const
     {
       return d_mu;
     }
 
     float
-    fractional_interpolator_cc_impl::interp_ratio() const
+    fractional_resampler_cc_impl::resamp_ratio() const
     {
       return d_mu_inc;
     }
 
     void
-    fractional_interpolator_cc_impl::set_mu(float mu)
+    fractional_resampler_cc_impl::set_mu(float mu)
     {
       d_mu = mu;
     }
 
     void
-    fractional_interpolator_cc_impl::set_interp_ratio(float interp_ratio)
+    fractional_resampler_cc_impl::set_resamp_ratio(float resamp_ratio)
     {
-      d_mu_inc = interp_ratio;
+      d_mu_inc = resamp_ratio;
     }
 
   } /* namespace filter */
