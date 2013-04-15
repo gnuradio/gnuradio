@@ -73,8 +73,6 @@ install(FILES
 if(ENABLE_PYTHON)
 install(FILES
     ${CMAKE_CURRENT_SOURCE_DIR}/io.i
-    ${CMAKE_CURRENT_SOURCE_DIR}/gr_histo_sink.i
-    ${CMAKE_CURRENT_SOURCE_DIR}/gr_oscope_sink.i
     DESTINATION ${GR_INCLUDE_DIR}/gnuradio/swig
     COMPONENT "core_swig"
 )

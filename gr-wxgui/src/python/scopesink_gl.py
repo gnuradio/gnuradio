@@ -67,6 +67,7 @@ class _scope_sink_base(gr.hier_block2, common.wxgui_hb):
 	def __init__(
 		self,
 		parent,
+		show_panel=True,
 		title='',
 		sample_rate=1,
 		size=scope_window.DEFAULT_WIN_SIZE,
@@ -76,11 +77,12 @@ class _scope_sink_base(gr.hier_block2, common.wxgui_hb):
 		xy_mode=False,
 		ac_couple=False,
 		num_inputs=1,
+		inputs_labels=None,
 		trig_mode=scope_window.DEFAULT_TRIG_MODE,
 		y_axis_label='Counts',
 		frame_rate=scope_window.DEFAULT_FRAME_RATE,
-                use_persistence=False,
-                persist_alpha=None,
+		use_persistence=False,
+		persist_alpha=None,
 		**kwargs #do not end with a comma
 	):
                 #ensure analog alpha
@@ -116,6 +118,11 @@ class _scope_sink_base(gr.hier_block2, common.wxgui_hb):
 		self.controller.subscribe(TRIGGER_CHANNEL_KEY, scope.set_trigger_channel)
 		self.controller.publish(TRIGGER_CHANNEL_KEY, scope.get_trigger_channel)
 		actual_num_inputs = self._real and num_inputs or num_inputs*2
+		if inputs_labels != None and not self._real:
+			inputs_labels[len(inputs_labels):] = inputs_labels
+			for i in range(0,num_inputs*2,2):
+				inputs_labels[i]   = str(inputs_labels[num_inputs+i/2])+':1'
+				inputs_labels[i+1] = str(inputs_labels[num_inputs+i/2])+':2'
 		#init ac couple
 		for i in range(actual_num_inputs):
 			self.controller[common.index_key(AC_COUPLE_KEY, i)] = ac_couple
@@ -125,10 +132,12 @@ class _scope_sink_base(gr.hier_block2, common.wxgui_hb):
 		self.win = scope_window.scope_window(
 			parent=parent,
 			controller=self.controller,
+			show_panel=show_panel,
 			size=size,
 			title=title,
 			frame_rate=frame_rate,
 			num_inputs=actual_num_inputs,
+			inputs_labels=inputs_labels,
 			sample_rate_key=SAMPLE_RATE_KEY,
 			t_scale=t_scale,
 			v_scale=v_scale,
@@ -143,8 +152,8 @@ class _scope_sink_base(gr.hier_block2, common.wxgui_hb):
 			trigger_channel_key=TRIGGER_CHANNEL_KEY,
 			decimation_key=DECIMATION_KEY,
 			msg_key=MSG_KEY,
-                        use_persistence=use_persistence,
-                        persist_alpha=persist_alpha,
+			use_persistence=use_persistence,
+			persist_alpha=persist_alpha,
 		)
 		common.register_access_methods(self, self.win)
 		#connect

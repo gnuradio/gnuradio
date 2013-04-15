@@ -39,6 +39,7 @@ class _waterfall_sink_base(gr.hier_block2, common.wxgui_hb):
 	def __init__(
 		self,
 		parent,
+		show_panel=True,
 		baseband_freq=0,
 		ref_level=50,
 		sample_rate=1,
@@ -93,6 +94,7 @@ class _waterfall_sink_base(gr.hier_block2, common.wxgui_hb):
 		self.win = waterfall_window.waterfall_window(
 			parent=parent,
 			controller=self.controller,
+			show_panel=show_panel,
 			size=size,
 			title=title,
 			real=self._real,

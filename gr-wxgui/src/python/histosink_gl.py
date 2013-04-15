@@ -39,10 +39,13 @@ class histo_sink_f(gr.hier_block2, common.wxgui_hb):
 	def __init__(
 		self,
 		parent,
+		show_panel=True,
 		size=histo_window.DEFAULT_WIN_SIZE,
 		title='',
 		num_bins=11,
 		frame_size=1000,
+		range_size=0.0,
+		offset=0.0
 	):
 		#init
 		gr.hier_block2.__init__(
@@ -56,24 +59,34 @@ class histo_sink_f(gr.hier_block2, common.wxgui_hb):
 		histo = gr.histo_sink_f(msgq)
 		histo.set_num_bins(num_bins)
 		histo.set_frame_size(frame_size)
+		histo.set_range(range_size)
+		histo.set_offset(offset)
 		#controller
 		self.controller = pubsub()
 		self.controller.subscribe(NUM_BINS_KEY, histo.set_num_bins)
 		self.controller.publish(NUM_BINS_KEY, histo.get_num_bins)
 		self.controller.subscribe(FRAME_SIZE_KEY, histo.set_frame_size)
 		self.controller.publish(FRAME_SIZE_KEY, histo.get_frame_size)
+		self.controller.subscribe(HISTO_RANGE_KEY, histo.set_range)
+		self.controller.publish(HISTO_RANGE_KEY, histo.get_range)
+		self.controller.subscribe(HISTO_OFFSET_KEY, histo.set_offset)
+		self.controller.publish(HISTO_OFFSET_KEY, histo.get_offset)
+
 		#start input watcher
 		common.input_watcher(msgq, self.controller, MSG_KEY, arg1_key=MINIMUM_KEY, arg2_key=MAXIMUM_KEY)
 		#create window
 		self.win = histo_window.histo_window(
 			parent=parent,
 			controller=self.controller,
+			show_panel=show_panel,
 			size=size,
 			title=title,
 			maximum_key=MAXIMUM_KEY,
 			minimum_key=MINIMUM_KEY,
 			num_bins_key=NUM_BINS_KEY,
 			frame_size_key=FRAME_SIZE_KEY,
+			histo_range_key=HISTO_RANGE_KEY,
+			histo_offset_key=HISTO_OFFSET_KEY,
 			msg_key=MSG_KEY,
 		)
 		common.register_access_methods(self, self.win)

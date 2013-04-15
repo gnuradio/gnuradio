@@ -13,6 +13,7 @@
 	<make>#set $parent = $notebook() and 'self.%s.GetPage(%s)'%$notebook() or 'self'
 waterfallsink2.$(type.fcn)(
 	$(parent).GetWin(),
+	show_panel=$show_panel,
 	baseband_freq=$baseband_freq,
 	dynamic_range=$dynamic_range,
 	ref_level=$ref_level,
@@ -57,6 +58,21 @@ self.$(id).set_callback($(id)_callback)
 			<name>Float</name>
 			<key>float</key>
 			<opt>fcn:waterfall_sink_f</opt>
+		</option>
+	</param>
+	<param>
+		<name>Control Panel</name>
+		<key>show_panel</key>
+		<value>True</value>
+		<type>enum</type>
+		<hide>#if $show_panel() == 'False' then 'none' else 'part'#</hide>
+		<option>
+			<name>Show</name>
+			<key>True</key>
+		</option>
+		<option>
+			<name>Hide</name>
+			<key>False</key>
 		</option>
 	</param>
 	<param>

@@ -109,6 +109,7 @@ class number_window(wx.Panel, pubsub.pubsub):
 		self,
 		parent,
 		controller,
+		show_panel,
 		size,
 		title,
 		units,
@@ -142,13 +143,14 @@ class number_window(wx.Panel, pubsub.pubsub):
 		self[VALUE_REAL_KEY] = minval
 		self[VALUE_IMAG_KEY] = minval
 		#setup the box with display and controls
-		self.control_panel = control_panel(self)
 		main_box = wx.BoxSizer(wx.HORIZONTAL)
 		sizer = forms.static_box_sizer(
 			parent=self, sizer=main_box, label=title,
 			bold=True, orient=wx.VERTICAL, proportion=1,
 		)
-		main_box.Add(self.control_panel, 0, wx.EXPAND)
+		if show_panel:
+			self.control_panel = control_panel(self)
+			main_box.Add(self.control_panel, 0, wx.EXPAND)
 		sizer.AddStretchSpacer()
 		forms.static_text(
 			parent=self, sizer=sizer,

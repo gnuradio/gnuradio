@@ -176,6 +176,7 @@ class waterfall_window(wx.Panel, pubsub.pubsub):
 		self,
 		parent,
 		controller,
+		show_panel,
 		size,
 		title,
 		real,
@@ -225,10 +226,11 @@ class waterfall_window(wx.Panel, pubsub.pubsub):
 		self[COLOR_MODE_KEY] = DEFAULT_COLOR_MODE
 		self[RUNNING_KEY] = True
 		#setup the box with plot and controls
-		self.control_panel = control_panel(self)
 		main_box = wx.BoxSizer(wx.HORIZONTAL)
 		main_box.Add(self.plotter, 1, wx.EXPAND)
-		main_box.Add(self.control_panel, 0, wx.EXPAND)
+		if show_panel:
+			self.control_panel = control_panel(self)
+			main_box.Add(self.control_panel, 0, wx.EXPAND)
 		self.SetSizerAndFit(main_box)
 		#register events
 		self.subscribe(MSG_KEY, self.handle_msg)

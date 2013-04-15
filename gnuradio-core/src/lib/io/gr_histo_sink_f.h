@@ -46,12 +46,19 @@ private:
   unsigned int d_sample_count;
   unsigned int *d_bins;
   float *d_samps;
+  float d_minimum;
+  float d_maximum;
+  float d_range;
+  float d_offset;
   gruel::mutex d_mutex;
 
   friend GR_CORE_API gr_histo_sink_f_sptr gr_make_histo_sink_f (gr_msg_queue_sptr msgq);
   gr_histo_sink_f (gr_msg_queue_sptr msgq);
   void send_frame(void);
   void clear(void);
+  void update_frame_size(void);
+  void update_num_bins(void);
+  void update_limits(void);
 
 public:
   ~gr_histo_sink_f (void);
@@ -60,11 +67,15 @@ public:
     gr_vector_const_void_star &input_items,
     gr_vector_void_star &output_items);
 
-  unsigned int get_frame_size(void);
-  unsigned int get_num_bins(void);
+  unsigned int get_frame_size(void){return d_frame_size;};
+  unsigned int get_num_bins(void){return d_num_bins;};
+  float get_range(void){return d_range;};
+  float get_offset(void){return d_offset;};
 
   void set_frame_size(unsigned int frame_size);
   void set_num_bins(unsigned int num_bins);
+  void set_range(float range);
+  void set_offset(float offset);
 
 };
 

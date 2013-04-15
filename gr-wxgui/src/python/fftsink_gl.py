@@ -42,6 +42,7 @@ class _fft_sink_base(gr.hier_block2, common.wxgui_hb):
 	def __init__(
 		self,
 		parent,
+		show_panel=True,
 		baseband_freq=0,
 		ref_scale=2.0,
 		y_per_div=10,
@@ -106,6 +107,7 @@ class _fft_sink_base(gr.hier_block2, common.wxgui_hb):
 		self.win = fft_window.fft_window(
 			parent=parent,
 			controller=self.controller,
+			show_panel=show_panel,
 			size=size,
 			title=title,
 			real=self._real,

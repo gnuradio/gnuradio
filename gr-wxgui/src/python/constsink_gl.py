@@ -45,6 +45,7 @@ class const_sink_c(gr.hier_block2, common.wxgui_hb):
 	def __init__(
 		self,
 		parent,
+		show_panel=True,
 		title='',
 		sample_rate=1,
 		size=const_window.DEFAULT_WIN_SIZE,
@@ -124,6 +125,7 @@ class const_sink_c(gr.hier_block2, common.wxgui_hb):
 		self.win = const_window.const_window(
 			parent=parent,
 			controller=self.controller,
+			show_panel=show_panel,
 			size=size,
 			title=title,
 			msg_key=MSG_KEY,
