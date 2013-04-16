@@ -376,7 +376,15 @@ namespace gr {
 	  parse_extras(extras, nitems_written(0), d_tags);
 	}
 	else {
-	  return -1;
+          if(!d_repeat)
+            return -1;
+          else {
+            if(fseek(d_fp, 0, SEEK_SET) == -1) {
+              std::stringstream s;
+              s << "[" << __FILE__ << "]" << " fseek failed" << std::endl;
+              throw std::runtime_error(s.str());
+            }
+          }
 	}
       }
 
@@ -404,7 +412,7 @@ namespace gr {
 	out += i * d_itemsize;
 
 	if(size == 0)		// done
-	  break;
+          break;
 
 	if(i > 0)			// short read, try again
 	  continue;
@@ -424,7 +432,7 @@ namespace gr {
       }
 
       if(size > 0) {			// EOF or error
-	if(size == seg_size)		// we didn't read anything; say we're done
+	if(size == seg_size)    	// we didn't read anything; say we're done
 	  return -1;
 	return seg_size - size;	// else return partial result
       }
