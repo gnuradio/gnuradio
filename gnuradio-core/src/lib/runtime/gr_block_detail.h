@@ -107,12 +107,14 @@ class GR_CORE_API gr_block_detail {
   /*!
    * \brief  Removes a tag from the given input stream.
    *
-   * Calls gr_buffer::remove_item_tag(), which removes the tag from its deque.
+   * Calls gr_buffer::remove_item_tag().
+   * The tag in question will then no longer appear on subsequent calls of get_tags_in_range().
    *
    * \param which_input  an integer of which input stream to remove the tag from
    * \param tag the tag object to add
+   * \param id The unique block ID (use gr_block::unique_id())
    */
-  void remove_item_tag(unsigned int which_input, const gr_tag_t &tag);
+  void remove_item_tag(unsigned int which_input, const gr_tag_t &tag, long id);
 
   /*!
    * \brief Given a [start,end), returns a vector of all tags in the range.
@@ -127,11 +129,13 @@ class GR_CORE_API gr_block_detail {
    * \param which_input  an integer of which input stream to pull from
    * \param abs_start    a uint64 count of the start of the range of interest
    * \param abs_end      a uint64 count of the end of the range of interest
+   * \param id           Block ID
    */
   void get_tags_in_range(std::vector<gr_tag_t> &v,
 			 unsigned int which_input,
 			 uint64_t abs_start,
-			 uint64_t abs_end);
+			 uint64_t abs_end,
+			 long id);
 
   /*!
    * \brief Given a [start,end), returns a vector of all tags in the range
@@ -149,12 +153,14 @@ class GR_CORE_API gr_block_detail {
    * \param abs_start    a uint64 count of the start of the range of interest
    * \param abs_end      a uint64 count of the end of the range of interest
    * \param key          a PMT symbol to select only tags of this key
+   * \param id           Block ID
    */
   void get_tags_in_range(std::vector<gr_tag_t> &v,
 			 unsigned int which_input,
 			 uint64_t abs_start,
 			 uint64_t abs_end,
-			 const pmt::pmt_t &key);
+			 const pmt::pmt_t &key,
+			 long id);
 
   /*!
    * \brief Set core affinity of block to the cores in the vector mask.
