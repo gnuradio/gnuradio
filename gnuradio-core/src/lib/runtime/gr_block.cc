@@ -238,7 +238,7 @@ void
 gr_block::remove_item_tag(unsigned int which_input,
 		       const gr_tag_t &tag)
 {
-  d_detail->remove_item_tag(which_input, tag);
+  d_detail->remove_item_tag(which_input, tag, unique_id());
 }
 
 void
@@ -246,7 +246,7 @@ gr_block::get_tags_in_range(std::vector<gr_tag_t> &v,
 			    unsigned int which_output,
 			    uint64_t start, uint64_t end)
 {
-  d_detail->get_tags_in_range(v, which_output, start, end);
+  d_detail->get_tags_in_range(v, which_output, start, end, unique_id());
 }
 
 void
@@ -255,7 +255,7 @@ gr_block::get_tags_in_range(std::vector<gr_tag_t> &v,
 			    uint64_t start, uint64_t end,
 			    const pmt::pmt_t &key)
 {
-  d_detail->get_tags_in_range(v, which_output, start, end, key);
+  d_detail->get_tags_in_range(v, which_output, start, end, key, unique_id());
 }
 
 gr_block::tag_propagation_policy_t

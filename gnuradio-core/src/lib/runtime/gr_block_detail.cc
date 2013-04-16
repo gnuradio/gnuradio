@@ -168,25 +168,15 @@ gr_block_detail::add_item_tag(unsigned int which_output, const gr_tag_t &tag)
 }
 
 void
-gr_block_detail::remove_item_tag(unsigned int which_input, const gr_tag_t &tag)
+gr_block_detail::remove_item_tag(unsigned int which_input, const gr_tag_t &tag, long id)
 {
   if(!pmt_is_symbol(tag.key)) {
     throw pmt_wrong_type("gr_block_detail::add_item_tag key", tag.key);
   }
   else {
     // Add tag to gr_buffer's deque tags
-    d_input[which_input]->buffer()->remove_item_tag(tag);
+    d_input[which_input]->buffer()->remove_item_tag(tag, id);
   }
-}
-
-void
-gr_block_detail::get_tags_in_range(std::vector<gr_tag_t> &v,
-				   unsigned int which_input,
-				   uint64_t abs_start,
-				   uint64_t abs_end)
-{
-  // get from gr_buffer_reader's deque of tags
-  d_input[which_input]->get_tags_in_range(v, abs_start, abs_end);
 }
 
 void
@@ -194,14 +184,26 @@ gr_block_detail::get_tags_in_range(std::vector<gr_tag_t> &v,
 				   unsigned int which_input,
 				   uint64_t abs_start,
 				   uint64_t abs_end,
-				   const pmt_t &key)
+				   long id)
+{
+  // get from gr_buffer_reader's deque of tags
+  d_input[which_input]->get_tags_in_range(v, abs_start, abs_end, id);
+}
+
+void
+gr_block_detail::get_tags_in_range(std::vector<gr_tag_t> &v,
+				   unsigned int which_input,
+				   uint64_t abs_start,
+				   uint64_t abs_end,
+				   const pmt_t &key,
+				   long id)
 {
   std::vector<gr_tag_t> found_items;
 
   v.resize(0);
 
   // get from gr_buffer_reader's deque of tags
-  d_input[which_input]->get_tags_in_range(found_items, abs_start, abs_end);
+  d_input[which_input]->get_tags_in_range(found_items, abs_start, abs_end, id);
 
   // Filter further by key name
   pmt_t itemkey;

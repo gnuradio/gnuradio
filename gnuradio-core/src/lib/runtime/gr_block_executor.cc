@@ -91,7 +91,7 @@ min_available_space (gr_block_detail *d, int output_multiple, int min_noutput_it
 static bool
 propagate_tags(gr_block::tag_propagation_policy_t policy, gr_block_detail *d,
 	       const std::vector<uint64_t> &start_nitems_read, double rrate,
-	       std::vector<gr_tag_t> &rtags)
+	       std::vector<gr_tag_t> &rtags, long block_id)
 {
   // Move tags downstream
   // if a sink, we don't need to move downstream
@@ -107,7 +107,7 @@ propagate_tags(gr_block::tag_propagation_policy_t policy, gr_block_detail *d,
     // every tag on every input propogates to everyone downstream
     for(int i = 0; i < d->ninputs(); i++) {
       d->get_tags_in_range(rtags, i, start_nitems_read[i],
-			   d->nitems_read(i));
+			   d->nitems_read(i), block_id);
 
       std::vector<gr_tag_t>::iterator t;
       if(rrate == 1.0) {
@@ -133,7 +133,7 @@ propagate_tags(gr_block::tag_propagation_policy_t policy, gr_block_detail *d,
     if(d->ninputs() == d->noutputs()) {
       for(int i = 0; i < d->ninputs(); i++) {
 	d->get_tags_in_range(rtags, i, start_nitems_read[i],
-			     d->nitems_read(i));
+			     d->nitems_read(i), block_id);
 
 	std::vector<gr_tag_t>::iterator t;
 	for(t = rtags.begin(); t != rtags.end(); t++) {
@@ -450,7 +450,7 @@ gr_block_executor::run_one_iteration()
 
     if(!propagate_tags(m->tag_propagation_policy(), d,
 		       d_start_nitems_read, m->relative_rate(),
-		       d_returned_tags))
+		       d_returned_tags, m->unique_id()))
       goto were_done;
 
     if (n == gr_block::WORK_DONE)
