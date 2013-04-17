@@ -220,6 +220,18 @@ namespace gr {
       return _dev->set_rx_bandwidth(bandwidth, chan);
     }
 
+    double
+    usrp_source_impl::get_bandwidth(size_t chan)
+    {
+        return _dev->get_rx_bandwidth(chan);
+    }
+
+    ::uhd::freq_range_t
+    usrp_source_impl::get_bandwidth_range(size_t chan)
+    {
+        return _dev->get_rx_bandwidth_range(chan);
+    }
+
     void
     usrp_source_impl::set_auto_dc_offset(const bool enable, size_t chan)
     {

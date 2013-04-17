@@ -309,6 +309,20 @@ namespace gr {
       virtual void set_bandwidth(double bandwidth, size_t chan = 0) = 0;
 
       /*!
+       * Get the bandpass filter setting on the RF frontend.
+       * \param chan the channel index 0 to N-1
+       * \return bandwidth of the filter in Hz
+       */
+      virtual double get_bandwidth(size_t chan = 0) = 0;
+
+      /*!
+       * Get the bandpass filter range of the RF frontend.
+       * \param chan the channel index 0 to N-1
+       * \return the range of the filter bandwidth in Hz
+       */
+      virtual ::uhd::freq_range_t get_bandwidth_range(size_t chan = 0) = 0;
+
+      /*!
        * Enable/disable the automatic DC offset correction.
        * The automatic correction subtracts out the long-run average.
        *
