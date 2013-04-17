@@ -25,7 +25,7 @@
 #endif
 
 #include <atsc/randomizer.h>
-#include <gr_io_signature.h>
+#include <gnuradio/io_signature.h>
 #include <atsc/consts.h>
 
 
@@ -36,9 +36,9 @@ atsc_make_randomizer()
 }
 
 atsc_randomizer::atsc_randomizer()
-  : gr_sync_block("atsc_randomizer",
-		  gr_make_io_signature(1, 1, sizeof(atsc_mpeg_packet)),
-		  gr_make_io_signature(1, 1, sizeof(atsc_mpeg_packet_no_sync)))
+  : gr::sync_block("atsc_randomizer",
+		  gr::io_signature::make(1, 1, sizeof(atsc_mpeg_packet)),
+		  gr::io_signature::make(1, 1, sizeof(atsc_mpeg_packet_no_sync)))
 {
   reset();
 }

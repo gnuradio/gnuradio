@@ -25,10 +25,9 @@
 #endif
 
 #include "mpsk_receiver_cc_impl.h"
-#include <gr_io_signature.h>
-#include <gr_prefs.h>
-#include <gr_math.h>
-#include <gr_expj.h>
+#include <gnuradio/io_signature.h>
+#include <gnuradio/math.h>
+#include <gnuradio/expj.h>
 #include <stdexcept>
 
 namespace gr {
@@ -60,9 +59,9 @@ namespace gr {
 						 float mu, float gain_mu, 
 						 float omega, float gain_omega,
 						 float omega_rel)
-      : gr_block("mpsk_receiver_cc",
-		 gr_make_io_signature(1, 1, sizeof(gr_complex)),
-		 gr_make_io_signature(1, 1, sizeof(gr_complex))),
+      : block("mpsk_receiver_cc",
+		 io_signature::make(1, 1, sizeof(gr_complex)),
+		 io_signature::make(1, 1, sizeof(gr_complex))),
 	blocks::control_loop(loop_bw, fmax, fmin),  
 	d_M(M), d_theta(theta), 
 	d_current_const_point(0),
@@ -163,14 +162,14 @@ namespace gr {
 
     float mpsk_receiver_cc_impl::phase_error_detector_generic(gr_complex sample) const
     {
-      //return gr_fast_atan2f(sample*conj(d_constellation[d_current_const_point]));
+      //return gr::fast_atan2f(sample*conj(d_constellation[d_current_const_point]));
       return -arg(sample*conj(d_constellation[d_current_const_point]));
     }
 
     unsigned int
     mpsk_receiver_cc_impl::decision_bpsk(gr_complex sample) const
     {
-      return (gr_branchless_binary_slicer(sample.real()) ^ 1);
+      return (gr::branchless_binary_slicer(sample.real()) ^ 1);
       //return gr_binary_slicer(sample.real()) ^ 1;
     }
 
@@ -179,8 +178,8 @@ namespace gr {
     {
       unsigned int index;
 
-      //index = gr_branchless_quad_0deg_slicer(sample);
-      index = gr_quad_0deg_slicer(sample);
+      //index = gr::branchless_quad_0deg_slicer(sample);
+      index = gr::quad_0deg_slicer(sample);
       return index;
     }
 
@@ -257,10 +256,10 @@ namespace gr {
       y = (d_p_0T - d_p_2T) * conj(d_c_1T);
       u = y - x;
       mm_error = u.real();   // the error signal is in the real part
-      mm_error = gr_branchless_clip(mm_error, 1.0); // limit mm_val
+      mm_error = gr::branchless_clip(mm_error, 1.0); // limit mm_val
     
       d_omega = d_omega + d_gain_omega * mm_error;  // update omega based on loop error
-      d_omega = d_omega_mid + gr_branchless_clip(d_omega-d_omega_mid, d_omega_rel);   // make sure we don't walk away
+      d_omega = d_omega_mid + gr::branchless_clip(d_omega-d_omega_mid, d_omega_rel);   // make sure we don't walk away
   
       d_mu += d_omega + d_gain_mu * mm_error;   // update mu based on loop error
   

@@ -25,7 +25,7 @@
 
 #include <atsc/api.h>
 #include <cstdio>
-#include <gr_block.h>
+#include <gnuradio/block.h>
 #include <atsc/diag_output_impl.h>
 #include <atsc/sssr_impl.h>
 #include <atsc/syminfo_impl.h>
@@ -42,7 +42,7 @@ ATSC_API atsc_bit_timing_loop_sptr atsc_make_bit_timing_loop();
  * This class accepts a single real input and produces two outputs,
  *  the raw symbol (float) and the tag (atsc_syminfo)
  */
-class ATSC_API atsc_bit_timing_loop : public gr_block
+class ATSC_API atsc_bit_timing_loop : public gr::block
 {
   friend ATSC_API atsc_bit_timing_loop_sptr atsc_make_bit_timing_loop();
 

@@ -25,9 +25,9 @@
 #endif
 
 #include "ofdm_frame_acquisition_impl.h"
-#include <gr_io_signature.h>
-#include <gr_expj.h>
-#include <gr_math.h>
+#include <gnuradio/io_signature.h>
+#include <gnuradio/expj.h>
+#include <gnuradio/math.h>
 #include <cstdio>
 
 namespace gr {
@@ -54,9 +54,9 @@ namespace gr {
 							     unsigned int cplen,
 							     const std::vector<gr_complex> &known_symbol,
 							     unsigned int max_fft_shift_len)
-      : gr_block("ofdm_frame_acquisition",
-		 gr_make_io_signature2(2, 2, sizeof(gr_complex)*fft_length, sizeof(char)*fft_length),
-		 gr_make_io_signature2(2, 2, sizeof(gr_complex)*occupied_carriers, sizeof(char))),
+      : block("ofdm_frame_acquisition",
+		 io_signature::make2(2, 2, sizeof(gr_complex)*fft_length, sizeof(char)*fft_length),
+		 io_signature::make2(2, 2, sizeof(gr_complex)*occupied_carriers, sizeof(char))),
 	d_occupied_carriers(occupied_carriers),
 	d_fft_length(fft_length),
 	d_cplen(cplen),

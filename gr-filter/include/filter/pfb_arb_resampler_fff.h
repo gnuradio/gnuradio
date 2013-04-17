@@ -25,7 +25,7 @@
 #define	INCLUDED_PFB_ARB_RESAMPLER_FFF_H
 
 #include <filter/api.h>
-#include <gr_block.h>
+#include <gnuradio/block.h>
 
 namespace gr {
   namespace filter {
@@ -92,7 +92,7 @@ namespace gr {
      *      Systems", Upper Saddle River, NJ: Prentice Hall, Inc. 2004.</EM></B>
      */
 
-    class FILTER_API pfb_arb_resampler_fff : virtual public gr_block
+    class FILTER_API pfb_arb_resampler_fff : virtual public block
     {
     public:
       // gr::filter::pfb_arb_resampler_fff::sptr

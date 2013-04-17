@@ -25,7 +25,7 @@
 
 #include <digital/api.h>
 #include <digital/constellation.h>
-#include <gr_block.h>
+#include <gnuradio/block.h>
 
 namespace gr {
   namespace digital {
@@ -40,7 +40,7 @@ namespace gr {
      * object.
      */
     class DIGITAL_API constellation_decoder_cb
-      : virtual public gr_block
+      : virtual public block
     {
     public:
       // gr::digital::constellation_decoder_cb::sptr

@@ -25,7 +25,7 @@
 #define INCLUDED_DIGITAL_CRC32_BB_H
 
 #include <digital/api.h>
-#include <gr_tagged_stream_block.h>
+#include <gnuradio/tagged_stream_block.h>
 
 namespace gr {
   namespace digital {
@@ -42,7 +42,7 @@ namespace gr {
      * Output: The same bytes as incoming, but trailing a CRC32 of the packet.
      * The tag is re-set to the new length.
      */
-    class DIGITAL_API crc32_bb : virtual public gr_tagged_stream_block
+    class DIGITAL_API crc32_bb : virtual public tagged_stream_block
     {
      public:
       typedef boost::shared_ptr<crc32_bb> sptr;

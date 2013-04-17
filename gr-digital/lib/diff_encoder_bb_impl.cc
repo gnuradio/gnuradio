@@ -25,7 +25,7 @@
 #endif
 
 #include "diff_encoder_bb_impl.h"
-#include <gr_io_signature.h>
+#include <gnuradio/io_signature.h>
 
 namespace gr {
   namespace digital {
@@ -38,9 +38,9 @@ namespace gr {
     }
 
     diff_encoder_bb_impl::diff_encoder_bb_impl(unsigned int modulus)
-      : gr_sync_block("diff_encoder_bb",
-		      gr_make_io_signature(1, 1, sizeof(unsigned char)),
-		      gr_make_io_signature(1, 1, sizeof(unsigned char))),
+      : sync_block("diff_encoder_bb",
+		      io_signature::make(1, 1, sizeof(unsigned char)),
+		      io_signature::make(1, 1, sizeof(unsigned char))),
 	d_last_out(0), d_modulus(modulus)
     {
     }

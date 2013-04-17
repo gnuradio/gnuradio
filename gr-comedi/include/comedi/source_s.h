@@ -24,7 +24,7 @@
 #define INCLUDED_COMEDI_SOURCE_S_H
 
 #include <comedi/api.h>
-#include <gr_sync_block.h>
+#include <gnuradio/sync_block.h>
 
 namespace gr {
   namespace comedi {
@@ -36,7 +36,7 @@ namespace gr {
      *
      * Output samples will be in the range [-32768,32767].
      */
-    class COMEDI_API source_s : virtual public gr_sync_block
+    class COMEDI_API source_s : virtual public sync_block
     {
     public:
       // gr::comedi::source_s::sptr

@@ -26,7 +26,7 @@
 
 #include "audio_registry.h"
 #include <windows_sink.h>
-#include <gr_io_signature.h>
+#include <gnuradio/io_signature.h>
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <fcntl.h>
@@ -59,9 +59,9 @@ namespace gr {
     }
 
     windows_sink::windows_sink(int sampling_freq, const std::string device_name)
-      : gr_sync_block("audio_windows_sink",
-                      gr_make_io_signature(1, 2, sizeof(float)),
-                      gr_make_io_signature(0, 0, 0)),
+      : sync_block("audio_windows_sink",
+                      io_signature::make(1, 2, sizeof(float)),
+                      io_signature::make(0, 0, 0)),
         d_sampling_freq(sampling_freq),
         d_device_name(device_name.empty() ? default_device_name() : device_name),
         d_fd(-1), d_buffer(0), d_chunk_size(0)

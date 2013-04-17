@@ -24,7 +24,7 @@
 #define INCLUDED_DIGITAL_OFDM_CHANEST_VCVC_H
 
 #include <digital/api.h>
-#include <gr_block.h>
+#include <gnuradio/block.h>
 
 namespace gr {
   namespace digital {
@@ -53,7 +53,7 @@ namespace gr {
      *     Communications, IEEE Transactions on, 1997.
      * [2] K.D. Kammeyer, "Nachrichtenuebertragung," Chapter. 16.3.2.
      */
-    class DIGITAL_API ofdm_chanest_vcvc : virtual public gr_block
+    class DIGITAL_API ofdm_chanest_vcvc : virtual public block
     {
      public:
       typedef boost::shared_ptr<ofdm_chanest_vcvc> sptr;

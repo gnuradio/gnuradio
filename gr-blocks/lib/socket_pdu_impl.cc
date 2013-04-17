@@ -26,8 +26,8 @@
 
 #include "socket_pdu_impl.h"
 #include "tcp_connection.h"
-#include <gr_io_signature.h>
-#include <blocks/pdu.h>
+#include <gnuradio/io_signature.h>
+#include <gnuradio/blocks/pdu.h>
 
 namespace gr {
   namespace blocks {
@@ -39,9 +39,9 @@ namespace gr {
     }
 
     socket_pdu_impl::socket_pdu_impl(std::string type, std::string addr, std::string port, int MTU)
-      :	gr_block("socket_pdu",
-		 gr_make_io_signature (0, 0, 0),
-		 gr_make_io_signature (0, 0, 0))
+      :	block("socket_pdu",
+		 io_signature::make (0, 0, 0),
+		 io_signature::make (0, 0, 0))
     {
       message_port_register_in(PDU_PORT_ID);
       message_port_register_out(PDU_PORT_ID);

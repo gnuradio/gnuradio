@@ -25,8 +25,8 @@
 #endif
 
 #include "random_pdu_impl.h"
-#include <gr_io_signature.h>
-#include <blocks/pdu.h>
+#include <gnuradio/io_signature.h>
+#include <gnuradio/blocks/pdu.h>
 
 namespace gr {
   namespace blocks {
@@ -38,9 +38,9 @@ namespace gr {
     }
 
     random_pdu_impl::random_pdu_impl(int min_items, int max_items)
-      :	gr_block("random_pdu",
-		 gr_make_io_signature (0, 0, 0),
-		 gr_make_io_signature (0, 0, 0)),
+      :	block("random_pdu",
+		 io_signature::make (0, 0, 0),
+		 io_signature::make (0, 0, 0)),
 	d_urange(min_items, max_items),
 	d_brange(0, 255),
 	d_rvar(d_rng, d_urange),

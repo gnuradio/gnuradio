@@ -24,8 +24,8 @@
 #define INCLUDED_ATSC_FPLL_H
 
 #include <atsc/api.h>
-#include <gr_sync_block.h>
-#include <gr_nco.h>
+#include <gnuradio/sync_block.h>
+#include <gnuradio/nco.h>
 #include <filter/single_pole_iir.h>
 #include <analog/agc.h>
 #include <stdio.h>
@@ -49,7 +49,7 @@ ATSC_API atsc_fpll_sptr atsc_make_fpll();
  * This class accepts a single real input and produces a single real output
  */
 
-class ATSC_API atsc_fpll : public gr_sync_block
+class ATSC_API atsc_fpll : public gr::sync_block
 {
   friend ATSC_API atsc_fpll_sptr atsc_make_fpll();
 
@@ -70,7 +70,7 @@ public:
   double                        initial_freq;
   double                        initial_phase;
   bool                          debug_no_update;
-  gr_nco<float,float>           nco;
+  gr::nco<float,float>          nco;
   analog::kernel::agc_ff        agc;    // automatic gain control
   filter::single_pole_iir<float,float,float> afci;
   filter::single_pole_iir<float,float,float> afcq;

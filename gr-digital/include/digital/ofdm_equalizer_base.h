@@ -23,8 +23,8 @@
 #define INCLUDED_DIGITAL_OFDM_EQUALIZER_BASE_H
 
 #include <digital/api.h>
-#include <gr_tags.h>
-#include <gr_complex.h>
+#include <gnuradio/tags.h>
+#include <gnuradio/gr_complex.h>
 #include <boost/enable_shared_from_this.hpp>
 
 namespace gr {
@@ -55,7 +55,7 @@ namespace gr {
 		      gr_complex *frame,
 		      int n_sym,
 		      const std::vector<gr_complex> &initial_taps = std::vector<gr_complex>(),
-		      const std::vector<gr_tag_t> &tags = std::vector<gr_tag_t>()) = 0;
+		      const std::vector<tag_t> &tags = std::vector<tag_t>()) = 0;
       //! Return the current channel state
       virtual void get_channel_state(std::vector<gr_complex> &taps) = 0;
       int fft_len() { return d_fft_len; };

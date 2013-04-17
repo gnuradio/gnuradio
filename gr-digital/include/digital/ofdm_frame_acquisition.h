@@ -24,7 +24,7 @@
 #define INCLUDED_DIGITAL_OFDM_FRAME_ACQUISITION_H
 
 #include <digital/api.h>
-#include <gr_block.h>
+#include <gnuradio/block.h>
 #include <vector>
 
 namespace gr {
@@ -49,7 +49,7 @@ namespace gr {
      * equalization on all subcarriers. This corrects for the phase
      * and amplitude distortion caused by the channel.
      */
-    class DIGITAL_API ofdm_frame_acquisition : virtual public gr_block
+    class DIGITAL_API ofdm_frame_acquisition : virtual public block
     {
     public:
       // gr::digital::ofdm_frame_acquisition::sptr

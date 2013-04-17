@@ -24,7 +24,7 @@
 #define INCLUDED_GR_GLFSR_SOURCE_B_H
 
 #include <digital/api.h>
-#include <gr_sync_block.h>
+#include <gnuradio/sync_block.h>
 
 namespace gr {
   namespace digital {
@@ -33,7 +33,7 @@ namespace gr {
      * \brief Galois LFSR pseudo-random source
      * \ingroup waveform_generators_blk
      */
-    class DIGITAL_API glfsr_source_b : virtual public gr_sync_block
+    class DIGITAL_API glfsr_source_b : virtual public sync_block
     {
     public:
       // gr::digital::glfsr_source_b::sptr

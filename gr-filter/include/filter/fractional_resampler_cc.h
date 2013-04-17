@@ -24,7 +24,7 @@
 #define	INCLUDED_FRACTIONAL_RESAMPLER_CC_H
 
 #include <filter/api.h>
-#include <gr_block.h>
+#include <gnuradio/block.h>
 
 namespace gr {
   namespace filter {
@@ -33,7 +33,7 @@ namespace gr {
      * \brief resampling MMSE filter with complex input, complex output
      * \ingroup resamplers_blk
      */
-    class FILTER_API fractional_resampler_cc : virtual public gr_block
+    class FILTER_API fractional_resampler_cc : virtual public block
     {
     public:
       // gr::filter::fractional_resampler_cc::sptr

@@ -24,7 +24,7 @@
 #define INCLUDED_DIGITAL_BINARY_SLICER_FB_H
 
 #include <digital/api.h>
-#include <gr_sync_block.h>
+#include <gnuradio/sync_block.h>
 
 namespace gr {
   namespace digital {
@@ -37,7 +37,7 @@ namespace gr {
      * x <  0 --> 0
      * x >= 0 --> 1
      */
-    class DIGITAL_API binary_slicer_fb : virtual public gr_sync_block
+    class DIGITAL_API binary_slicer_fb : virtual public sync_block
     {
     public:
       // gr::digital::binary_slicer_fb::sptr

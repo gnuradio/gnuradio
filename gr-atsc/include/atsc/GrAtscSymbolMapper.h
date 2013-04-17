@@ -26,7 +26,7 @@
 
 #include <VrInterpolatingSigProcNoWork.h>
 #include <atsc/types.h>
-#include <blocks/nco.h>
+#include <gnuradio/blocks/nco.h>
 
 /*!
  * \brief take atsc_data_segments and map them to symbols.

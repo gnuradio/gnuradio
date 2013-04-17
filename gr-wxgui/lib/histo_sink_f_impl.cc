@@ -25,7 +25,7 @@
 #endif
 
 #include "histo_sink_f_impl.h"
-#include <gr_io_signature.h>
+#include <gnuradio/io_signature.h>
 #include <boost/math/special_functions/round.hpp>
 
 namespace gr {
@@ -50,16 +50,16 @@ namespace gr {
     }
 
     histo_sink_f::sptr
-    histo_sink_f::make(gr_msg_queue_sptr msgq)
+    histo_sink_f::make(msg_queue::sptr msgq)
     {
       return gnuradio::get_initial_sptr
         (new histo_sink_f_impl(msgq));
     }
 
-    histo_sink_f_impl::histo_sink_f_impl(gr_msg_queue_sptr msgq)
-      : gr_sync_block("histo_sink_f",
-                      gr_make_io_signature(1, 1, sizeof(float)),
-                      gr_make_io_signature(0, 0, 0)),
+    histo_sink_f_impl::histo_sink_f_impl(msg_queue::sptr msgq)
+      : sync_block("histo_sink_f",
+                      io_signature::make(1, 1, sizeof(float)),
+                      io_signature::make(0, 0, 0)),
         d_msgq(msgq), d_num_bins(11), d_frame_size(1000),
         d_sample_count(0), d_bins(NULL), d_samps(NULL)
     {
@@ -123,7 +123,7 @@ namespace gr {
         d_bins[index]++;
       }
       /* Build a message to hold the output records */
-      gr_message_sptr msg = gr_make_message(0, minimum, maximum, d_num_bins*sizeof(float));
+      message::sptr msg = message::make(0, minimum, maximum, d_num_bins*sizeof(float));
       float *out = (float *)msg->msg(); // get pointer to raw message buffer
       /* normalize the bins and put into message */
       for(unsigned int i = 0; i < d_num_bins; i++) {

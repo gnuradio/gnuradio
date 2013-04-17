@@ -27,7 +27,7 @@
 
 #include <trellis/api.h>
 #include <trellis/calc_metric.h>
-#include <gr_block.h>
+#include <gnuradio/block.h>
 
 namespace gr {
   namespace trellis {
@@ -36,7 +36,7 @@ namespace gr {
      * \brief Evaluate metrics for use by the Viterbi algorithm.
      * \ingroup trellis_coding_blk
      */
-    class TRELLIS_API @NAME@ : virtual public gr_block
+    class TRELLIS_API @NAME@ : virtual public block
     {
     public:
       // gr::trellis::@BASE_NAME@::sptr

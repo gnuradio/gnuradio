@@ -26,7 +26,7 @@
 
 #include <wxgui/api.h>
 #include <wxgui/trigger_mode.h>
-#include <gr_msg_queue.h>
+#include <gnuradio/msg_queue.h>
 
 namespace gr {
   namespace wxgui {
@@ -54,7 +54,7 @@ namespace gr {
       enum scope_state  { HOLD_OFF, LOOK_FOR_TRIGGER, POST_TRIGGER };
 
       int d_nchannels;		     // how many channels
-      gr_msg_queue_sptr d_msgq;      // message queue we stuff output records into
+      msg_queue::sptr d_msgq;      // message queue we stuff output records into
       trigger_mode  d_trigger_mode;
       trigger_slope d_trigger_slope;
       int d_trigger_channel;         // which channel to watch for trigger condition
@@ -90,7 +90,7 @@ namespace gr {
 
     public:
       // CREATORS
-      oscope_guts(double sample_rate, gr_msg_queue_sptr msgq);
+      oscope_guts(double sample_rate, msg_queue::sptr msgq);
       ~oscope_guts();
 
       // MANIPULATORS

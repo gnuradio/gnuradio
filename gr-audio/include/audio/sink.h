@@ -24,7 +24,7 @@
 #define INCLUDED_GR_AUDIO_SINK_H
 
 #include <audio/api.h>
-#include <gr_sync_block.h>
+#include <gnuradio/sync_block.h>
 
 namespace gr {
   namespace audio {
@@ -33,7 +33,7 @@ namespace gr {
      * \brief Creates a sink from an audio device.
      * \ingroup audio_blk
      */
-    class GR_AUDIO_API sink : virtual public gr_sync_block
+    class GR_AUDIO_API sink : virtual public sync_block
     {
     public:
       typedef boost::shared_ptr<sink> sptr;

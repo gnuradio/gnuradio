@@ -23,7 +23,7 @@
 #define INCLUDED_PACKET_HEADERGENERATOR_BB_H
 
 #include <digital/api.h>
-#include <gr_tagged_stream_block.h>
+#include <gnuradio/tagged_stream_block.h>
 #include <digital/packet_header_default.h>
 
 namespace gr {
@@ -41,7 +41,7 @@ namespace gr {
      *         or a subclass thereof). If only a number of bits is specified, a
      *         default header is generated (see packet_header_default).
      */
-    class DIGITAL_API packet_headergenerator_bb : virtual public gr_tagged_stream_block
+    class DIGITAL_API packet_headergenerator_bb : virtual public tagged_stream_block
     {
      public:
       typedef boost::shared_ptr<packet_headergenerator_bb> sptr;

@@ -25,7 +25,7 @@
 #endif
 
 #include "pfb_arb_resampler_ccf_impl.h"
-#include <gr_io_signature.h>
+#include <gnuradio/io_signature.h>
 #include <cstdio>
 
 namespace gr {
@@ -44,9 +44,9 @@ namespace gr {
     pfb_arb_resampler_ccf_impl::pfb_arb_resampler_ccf_impl(float rate,
 							   const std::vector<float> &taps,
 							   unsigned int filter_size)
-      : gr_block("pfb_arb_resampler_ccf",
-		 gr_make_io_signature(1, 1, sizeof(gr_complex)),
-		 gr_make_io_signature(1, 1, sizeof(gr_complex))),
+      : block("pfb_arb_resampler_ccf",
+		 io_signature::make(1, 1, sizeof(gr_complex)),
+		 io_signature::make(1, 1, sizeof(gr_complex))),
 	d_updated (false)
     {
       d_acc = 0; // start accumulator at 0

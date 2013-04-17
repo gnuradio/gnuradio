@@ -24,7 +24,7 @@
 #define INCLUDED_ATSC_EQUALIZER_H
 
 #include <atsc/api.h>
-#include <gr_sync_block.h>
+#include <gnuradio/sync_block.h>
 #include <atsc/equalizer_impl.h>
 #include <vector>
 
@@ -40,7 +40,7 @@ atsc_equalizer_sptr ATSC_API atsc_make_equalizer();
  * first inputs are data samples, second inputs are tags.
  * first outputs are equalized data samples, second outputs are tags.
  */
-class ATSC_API atsc_equalizer : public gr_sync_block
+class ATSC_API atsc_equalizer : public gr::sync_block
 {
   friend ATSC_API atsc_equalizer_sptr atsc_make_equalizer();
 

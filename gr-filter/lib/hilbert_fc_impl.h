@@ -25,7 +25,7 @@
 
 #include <filter/hilbert_fc.h>
 #include <filter/fir_filter.h>
-#include <gr_types.h>
+#include <gnuradio/types.h>
 
 namespace gr {
   namespace filter {

@@ -90,38 +90,32 @@ GR_SWIG_INSTALL(
 install(
     FILES
     gnuradio_swig_bug_workaround.h
+    runtime_swig.i
     complex_vec_test.i
     gnuradio.i
-    gr_basic_block.i
-    gr_block_detail.i
-    gr_block.i
-    gr_buffer.i
-    gr_constants.i
+    basic_block.i
+    constants.i
     gr_ctrlport.i
-    gr_dispatcher.i
-    gr_error_handler.i
-    gr_feval.i
-    gr_hier_block2.i
-    gr_io_signature.i
+    dispatcher.i
+    error_handler.i
+    feval.i
+    hier_block2.i
+    io_signature.i
+    message.i
+    msg_handler.i
+    msg_queue.i
+    prefs.i
+    realtime.i
+    single_threaded_scheduler.i
+    tagged_stream_block.i
+    tags.i
+    top_block.i
+    block_gateway.i
     gr_logger.i
-    gr_message.i
-    gr_msg_handler.i
-    gr_msg_queue.i
-    gr_prefs.i
-    gr_realtime.i
     gr_shared_ptr.i
-    gr_single_threaded_scheduler.i
     gr_swig_block_magic.i
-    gr_sync_block.i
-    gr_sync_decimator.i
-    gr_sync_interpolator.i
-    gr_tagged_stream_block.i
-    gr_tags.i
-    gr_top_block.i
     gr_types.i
     gr_extras.i
-    runtime_block_gateway.i
-    runtime_swig.i
     gr_intrusive_ptr.i
     pmt_swig.i
     ${CMAKE_CURRENT_BINARY_DIR}/runtime_swig_doc.i

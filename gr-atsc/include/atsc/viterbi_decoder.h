@@ -24,7 +24,7 @@
 #define INCLUDED_ATSC_VITERBI_DECODER_H
 
 #include <atsc/api.h>
-#include <gr_sync_block.h>
+#include <gnuradio/sync_block.h>
 #include <atsc/viterbi_decoder_impl.h>
 
 class atsc_viterbi_decoder;
@@ -38,7 +38,7 @@ ATSC_API atsc_viterbi_decoder_sptr atsc_make_viterbi_decoder();
  *
  * input: atsc_soft_data_segment; output: atsc_mpeg_packet_rs_encoded
  */
-class ATSC_API atsc_viterbi_decoder : public gr_sync_block
+class ATSC_API atsc_viterbi_decoder : public gr::sync_block
 {
   friend ATSC_API atsc_viterbi_decoder_sptr atsc_make_viterbi_decoder();
 

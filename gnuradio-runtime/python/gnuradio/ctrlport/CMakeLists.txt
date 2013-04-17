@@ -21,15 +21,15 @@
 include(GrPython)
 
 EXECUTE_PROCESS(
-  COMMAND ${ICE_SLICE2PY} -I${CMAKE_SOURCE_DIR}/gnuradio-runtime/lib
+  COMMAND ${ICE_SLICE2PY} -I${CMAKE_SOURCE_DIR}/gnuradio-runtime/lib/controlport
           --output-dir=${CMAKE_BINARY_DIR}/gnuradio-runtime/python
-          ${CMAKE_SOURCE_DIR}/gnuradio-runtime/lib/gnuradio.ice
+          ${CMAKE_SOURCE_DIR}/gnuradio-runtime/lib/controlport/gnuradio.ice
 )
 
 EXECUTE_PROCESS(
-  COMMAND ${ICE_SLICE2PY} -I${CMAKE_SOURCE_DIR}/gnuradio-runtime/lib
+  COMMAND ${ICE_SLICE2PY} -I${CMAKE_SOURCE_DIR}/gnuradio-runtime/lib/controlport
           --output-dir=${CMAKE_BINARY_DIR}/gnuradio-runtime/python
-          ${CMAKE_SOURCE_DIR}/gnuradio-runtime/lib/frontend.ice
+          ${CMAKE_SOURCE_DIR}/gnuradio-runtime/lib/controlport/frontend.ice
 )
 
 GR_PYTHON_INSTALL(

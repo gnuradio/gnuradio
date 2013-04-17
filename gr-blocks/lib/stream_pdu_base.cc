@@ -32,8 +32,8 @@
 #include <winsock2.h>
 #endif
 
-#include <blocks/pdu.h>
-#include <gr_basic_block.h>
+#include <gnuradio/blocks/pdu.h>
+#include <gnuradio/basic_block.h>
 #include "stream_pdu_base.h"
 #include <boost/format.hpp>
 
@@ -57,7 +57,7 @@ namespace gr {
     }
 
     void
-    stream_pdu_base::start_rxthread(gr_basic_block *blk, pmt::pmt_t port)
+    stream_pdu_base::start_rxthread(basic_block *blk, pmt::pmt_t port)
     {
       d_blk = blk;
       d_port = port;

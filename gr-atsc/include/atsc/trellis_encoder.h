@@ -23,7 +23,7 @@
 #define INCLUDED_ATSC_TRELLIS_ENCODER_H
 
 #include <atsc/api.h>
-#include <gr_sync_block.h>
+#include <gnuradio/sync_block.h>
 #include <atsc/trellis_encoder_impl.h>
 
 class atsc_trellis_encoder;
@@ -37,7 +37,7 @@ ATSC_API atsc_trellis_encoder_sptr atsc_make_trellis_encoder();
  *
  * input: atsc_mpeg_packet_rs_encoded; output: atsc_data_segment
  */
-class ATSC_API atsc_trellis_encoder : public gr_sync_block
+class ATSC_API atsc_trellis_encoder : public gr::sync_block
 {
   friend ATSC_API atsc_trellis_encoder_sptr atsc_make_trellis_encoder();
 

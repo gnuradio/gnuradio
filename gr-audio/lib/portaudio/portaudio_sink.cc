@@ -27,8 +27,8 @@
 #include "audio_registry.h"
 #include <portaudio_sink.h>
 #include <portaudio_impl.h>
-#include <gr_io_signature.h>
-#include <gr_prefs.h>
+#include <gnuradio/io_signature.h>
+#include <gnuradio/prefs.h>
 #include <stdio.h>
 #include <iostream>
 #include <unistd.h>
@@ -58,7 +58,7 @@ namespace gr {
     static std::string
     default_device_name()
     {
-      return gr_prefs::singleton()->get_string
+      return prefs::singleton()->get_string
         ("audio_portaudio", "default_output_device", "");
     }
 
@@ -73,8 +73,8 @@ namespace gr {
       }
 
       // FYI, the buffer indicies are in units of samples.
-      d_writer = gr_make_buffer(N_BUFFERS * bufsize_samples, sizeof(sample_t));
-      d_reader = gr_buffer_add_reader(d_writer, 0);
+      d_writer = gr::make_buffer(N_BUFFERS * bufsize_samples, sizeof(sample_t));
+      d_reader = gr::buffer_add_reader(d_writer, 0);
     }
 
     /*
@@ -137,13 +137,13 @@ namespace gr {
     portaudio_sink::portaudio_sink(int sampling_rate,
                                    const std::string device_name,
                                    bool ok_to_block)
-      : gr_sync_block("audio_portaudio_sink",
-                      gr_make_io_signature(0, 0, 0),
-                      gr_make_io_signature(0, 0, 0)),
+      : sync_block("audio_portaudio_sink",
+                      io_signature::make(0, 0, 0),
+                      io_signature::make(0, 0, 0)),
         d_sampling_rate(sampling_rate),
         d_device_name(device_name.empty() ? default_device_name() : device_name),
         d_ok_to_block(ok_to_block),
-        d_verbose(gr_prefs::singleton()->get_bool("audio_portaudio", "verbose", false)),
+        d_verbose(prefs::singleton()->get_bool("audio_portaudio", "verbose", false)),
         d_portaudio_buffer_size_frames(0),
         d_stream(0),
         d_ringbuffer_mutex(),
@@ -226,7 +226,7 @@ namespace gr {
       // supported by the h/w, we can compute a reasonable input
       // signature.  The portaudio specs say that they'll accept any
       // number of channels from 1 to max.
-      set_input_signature(gr_make_io_signature(1, deviceInfo->maxOutputChannels,
+      set_input_signature(io_signature::make(1, deviceInfo->maxOutputChannels,
                                                sizeof(sample_t)));
     }
 

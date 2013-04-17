@@ -376,10 +376,10 @@ Similarly, in C++, we get a reference to the object by explicitly
 calling for the singleton of the object:
 
 \code
-  gr_prefs *p = gr_prefs::singleton();
+  prefs *p = prefs::singleton();
 \endcode
 
-The methods associated with this preferences object are (from class gr_prefs):
+The methods associated with this preferences object are (from class gr::prefs):
 
 \code
   bool has_section(string section)

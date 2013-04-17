@@ -25,8 +25,8 @@
 
 #include <filter/api.h>
 #include <filter/single_pole_iir.h>
-#include <gr_sync_block.h>
-#include <gr_complex.h>
+#include <gnuradio/sync_block.h>
+#include <gnuradio/gr_complex.h>
 
 namespace gr {
   namespace filter {
@@ -62,7 +62,7 @@ namespace gr {
      * denominator. If you're using that convention, you'll need to
      * negate the feedback tap.
      */
-    class FILTER_API single_pole_iir_filter_ff : virtual public gr_sync_block
+    class FILTER_API single_pole_iir_filter_ff : virtual public sync_block
     {
     public:
       // gr::filter::single_pole_iir_filter_ff::sptr

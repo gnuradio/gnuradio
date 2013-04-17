@@ -25,8 +25,8 @@
 #endif
 
 #include "wavfile_source_impl.h"
-#include <gr_io_signature.h>
-#include <blocks/wavfile.h>
+#include <gnuradio/io_signature.h>
+#include <gnuradio/blocks/wavfile.h>
 #include <sys/types.h>
 #include <fcntl.h>
 #include <stdexcept>
@@ -58,9 +58,9 @@ namespace gr {
     }
 
     wavfile_source_impl::wavfile_source_impl (const char *filename, bool repeat)
-      : gr_sync_block("wavfile_source",
-		      gr_make_io_signature(0, 0, 0),
-		      gr_make_io_signature(1, 2, sizeof(float))),
+      : sync_block("wavfile_source",
+		      io_signature::make(0, 0, 0),
+		      io_signature::make(1, 2, sizeof(float))),
 	d_fp(NULL), d_repeat(repeat),
 	d_sample_rate(1), d_nchans(1), d_bytes_per_sample(2), d_first_sample_pos(0),
 	d_samples_per_chan(0), d_sample_idx(0)
@@ -102,7 +102,7 @@ namespace gr {
       }
 
       // Re-set the output signature
-      set_output_signature(gr_make_io_signature(1, d_nchans, sizeof(float)));
+      set_output_signature(io_signature::make(1, d_nchans, sizeof(float)));
     }
 
     wavfile_source_impl::~wavfile_source_impl ()

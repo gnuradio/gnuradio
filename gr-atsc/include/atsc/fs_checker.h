@@ -25,7 +25,7 @@
 
 #include <atsc/api.h>
 #include <atsc/fs_checker_impl.h>
-#include <gr_sync_block.h>
+#include <gnuradio/sync_block.h>
 
 class atsc_fs_checker;
 typedef boost::shared_ptr<atsc_fs_checker> atsc_fs_checker_sptr;
@@ -40,7 +40,7 @@ ATSC_API atsc_fs_checker_sptr atsc_make_fs_checker();
  * second output is set of tags, one-for-one with first output.
  */
 
-class ATSC_API atsc_fs_checker : public gr_sync_block
+class ATSC_API atsc_fs_checker : public gr::sync_block
 {
   friend ATSC_API atsc_fs_checker_sptr atsc_make_fs_checker();
 

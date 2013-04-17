@@ -27,8 +27,8 @@ execute_process(COMMAND ${PYTHON_EXECUTABLE} -c
     "import time;print time.strftime('%a, %d %b %Y %H:%M:%S', time.gmtime())"
     OUTPUT_VARIABLE BUILD_DATE OUTPUT_STRIP_TRAILING_WHITESPACE
 )
-message(STATUS "Loading build date ${BUILD_DATE} into gr_constants...")
-message(STATUS "Loading version ${VERSION} into gr_constants...")
+message(STATUS "Loading build date ${BUILD_DATE} into constants...")
+message(STATUS "Loading version ${VERSION} into constants...")
 
 #double escape for windows backslash path separators
 string(REPLACE "\\" "\\\\" prefix ${prefix})
@@ -36,11 +36,11 @@ string(REPLACE "\\" "\\\\" SYSCONFDIR ${SYSCONFDIR})
 string(REPLACE "\\" "\\\\" GR_PREFSDIR ${GR_PREFSDIR})
 
 configure_file(
-    ${CMAKE_CURRENT_SOURCE_DIR}/gr_constants.cc.in
-    ${CMAKE_CURRENT_BINARY_DIR}/gr_constants.cc
+    ${CMAKE_CURRENT_SOURCE_DIR}/constants.cc.in
+    ${CMAKE_CURRENT_BINARY_DIR}/constants.cc
 @ONLY)
 
-list(APPEND gnuradio_runtime_sources ${CMAKE_CURRENT_BINARY_DIR}/gr_constants.cc)
+list(APPEND gnuradio_runtime_sources ${CMAKE_CURRENT_BINARY_DIR}/constants.cc)
 
 ########################################################################
 # Include subdirs rather to populate to the sources lists.
@@ -63,67 +63,62 @@ include_directories(${GNURADIO_RUNTIME_INCLUDE_DIRS}
 GR_INCLUDE_SUBDIRECTORY(pmt)
 GR_INCLUDE_SUBDIRECTORY(messages)
 GR_INCLUDE_SUBDIRECTORY(thread)
+GR_INCLUDE_SUBDIRECTORY(math)
 
 ########################################################################
 # Setup library
 ########################################################################
 list(APPEND gnuradio_runtime_sources
   complex_vec_test.cc
-  gr_basic_block.cc
-  gr_block.cc
-  gr_block_detail.cc
-  gr_block_executor.cc
-  gr_block_registry.cc
-  gr_buffer.cc
-  gr_circular_file.cc
-  gr_dispatcher.cc
-  gr_error_handler.cc
-  gr_fast_atan2f.cc
-  gr_feval.cc
-  gr_flat_flowgraph.cc
-  gr_flowgraph.cc
-  gr_fxpt.cc
-  gr_hier_block2.cc
-  gr_hier_block2_detail.cc
-  gri_debugger_hook.cc
-  gr_io_signature.cc
-  gr_local_sighandler.cc
-  gr_logger.cc
-  gr_message.cc
-  gr_misc.cc
-  gr_msg_accepter.cc
-  gr_msg_handler.cc
-  gr_msg_queue.cc
-  gr_pagesize.cc
-  gr_preferences.cc
-  gr_prefs.cc
-  gr_random.cc
-  gr_realtime.cc
-  gr_reverse.cc
-  gr_scheduler.cc
-  gr_scheduler_sts.cc
-  gr_scheduler_tpb.cc
-  gr_select_handler.cc
-  gr_sincos.c
-  gr_single_threaded_scheduler.cc
-  gr_sptr_magic.cc
-  gr_sync_block.cc
-  gr_sync_decimator.cc
-  gr_sync_interpolator.cc
-  gr_sys_paths.cc
-  gr_tagged_stream_block.cc
-  gr_test.cc
-  gr_top_block.cc
-  gr_top_block_impl.cc
-  gr_tpb_detail.cc
-  gr_tpb_thread_body.cc
-  gr_vmcircbuf.cc
-  gr_vmcircbuf_createfilemapping.cc
-  gr_vmcircbuf_mmap_shm_open.cc
-  gr_vmcircbuf_mmap_tmpfile.cc
-  gr_vmcircbuf_sysv_shm.cc
   malloc16.c
-  runtime_block_gateway.cc
+  basic_block.cc
+  block.cc
+  block_detail.cc
+  block_executor.cc
+  block_gateway_impl.cc
+  block_registry.cc
+  buffer.cc
+  circular_file.cc
+  dispatcher.cc
+  error_handler.cc
+  feval.cc
+  flat_flowgraph.cc
+  flowgraph.cc
+  hier_block2.cc
+  hier_block2_detail.cc
+  io_signature.cc
+  local_sighandler.cc
+  logger.cc
+  message.cc
+  misc.cc
+  msg_accepter.cc
+  msg_handler.cc
+  msg_queue.cc
+  pagesize.cc
+  prefs.cc
+  tagged_stream_block.cc
+  test.cc
+  top_block.cc
+  top_block_impl.cc
+  realtime.cc
+  scheduler.cc
+  scheduler_sts.cc
+  scheduler_tpb.cc
+  select_handler.cc
+  single_threaded_scheduler.cc
+  sptr_magic.cc
+  sync_block.cc
+  sync_decimator.cc
+  sync_interpolator.cc
+  sys_paths.cc
+  tpb_detail.cc
+  tpb_thread_body.cc
+  vmcircbuf.cc
+  vmcircbuf_createfilemapping.cc
+  vmcircbuf_mmap_shm_open.cc
+  vmcircbuf_mmap_tmpfile.cc
+  vmcircbuf_prefs.cc
+  vmcircbuf_sysv_shm.cc
 )
 
 # PowerPC workaround for posix_memalign
@@ -154,50 +149,7 @@ if(LINUX)
     list(APPEND gnuradio_runtime_libs rt)
 endif()
 
-if(ENABLE_GR_CTRLPORT)
-
-include_directories(${ICE_INCLUDE_DIR})
-
-# Add definition so we can compile in ControlPort to the blocks.
-ADD_DEFINITIONS(-DGR_CTRLPORT)
-
-########################################################################
-# Run ICE To compile Slice files
-########################################################################
-EXECUTE_PROCESS(
-   COMMAND "${ICE_SLICE2CPP}" "-I${CMAKE_CURRENT_SOURCE_DIR}"
-       "--output-dir=${CMAKE_CURRENT_BINARY_DIR}"
-       "${CMAKE_CURRENT_SOURCE_DIR}/gnuradio.ice"
-   )
-
-list(APPEND gnuradio_runtime_sources
-    ice_application_base.cc
-    rpcmanager.cc
-    rpcpmtconverters_ice.cc
-    rpcserver_aggregator.cc
-    rpcserver_booter_aggregator.cc
-    rpcserver_booter_ice.cc
-    rpcserver_ice.cc
-    rpcserver_selector.cc
-    rpcpmtconverters_ice.cc
-)
-
-# Append generated file in build directory
-list(APPEND gnuradio_runtime_sources 
-    ${CMAKE_CURRENT_BINARY_DIR}/gnuradio.cpp
-)
-
-########################################################################
-# Add controlport stuff to gnuradio-runtime
-########################################################################
-
-include_directories(${CMAKE_CURRENT_BINARY_DIR})
-
-list(APPEND gnuradio_runtime_libs
-  ${ICE_LIBRARIES}
-)
-
-endif(ENABLE_GR_CTRLPORT)
+GR_INCLUDE_SUBDIRECTORY(controlport)
 
 ########################################################################
 # Add DLL resource file when using MSVC
@@ -257,23 +209,23 @@ include(GrTest)
 # Append gnuradio-runtime test sources
 ########################################################################
 list(APPEND test_gnuradio_runtime_sources
-  qa_gr_buffer.cc
-  qa_gr_circular_file.cc
-  qa_gr_fxpt.cc
-  qa_gr_fxpt_nco.cc
-  qa_gr_fxpt_vco.cc
-  qa_gr_io_signature.cc
-  qa_gr_logger.cc
-  qa_gr_math.cc
-  qa_gr_vmcircbuf.cc
-  qa_runtime.cc
-  qa_sincos.cc
+  math/qa_fxpt.cc
+  math/qa_fxpt_nco.cc
+  math/qa_fxpt_vco.cc
+  math/qa_math.cc
+  math/qa_sincos.cc
   pmt/qa_pmt.cc
   pmt/qa_pmt_prims.cc
+  qa_buffer.cc
+  qa_io_signature.cc
+  qa_circular_file.cc
+  qa_logger.cc
+  qa_vmcircbuf.cc
+  qa_runtime.cc
   ${CMAKE_CURRENT_BINARY_DIR}/pmt/qa_pmt_unv.cc
 )
 
-include_directories(${CPPUNIT_INCLUDE_DIRS})
+include_directories(${CPPUNIT_INCLUDE_DIRS} ${CMAKE_CURRENT_SOURCE_DIR}/math)
 link_directories(${CPPUNIT_LIBRARY_DIRS})
 
 add_library(test-gnuradio-runtime SHARED ${test_gnuradio_runtime_sources})

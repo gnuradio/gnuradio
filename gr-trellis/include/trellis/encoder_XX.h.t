@@ -27,7 +27,7 @@
 
 #include <trellis/api.h>
 #include <trellis/fsm.h>
-#include <gr_sync_block.h>
+#include <gnuradio/sync_block.h>
 
 namespace gr {
   namespace trellis {
@@ -36,7 +36,7 @@ namespace gr {
      * \brief Convolutional encoder.
      * \ingroup trellis_coding_blk
      */
-    class TRELLIS_API @NAME@ : virtual public gr_sync_block
+    class TRELLIS_API @NAME@ : virtual public sync_block
     {
     public:
       // gr::trellis::@BASE_NAME@::sptr

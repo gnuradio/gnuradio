@@ -36,9 +36,9 @@ namespace gr {
     }
 
     filter_delay_fc_impl::filter_delay_fc_impl(const std::vector<float> &taps)
-      : gr_sync_block("filter_delay_fc",
-		      gr_make_io_signature(1, 2, sizeof(float)),
-		      gr_make_io_signature(1, 1, sizeof(gr_complex))),
+      : sync_block("filter_delay_fc",
+		      io_signature::make(1, 2, sizeof(float)),
+		      io_signature::make(1, 1, sizeof(gr_complex))),
 	d_update(false)
     {
       d_taps = taps;

@@ -24,7 +24,7 @@
 #define INCLUDED_DIGITAL_ADDITIVE_SCRAMBLER_BB_H
 
 #include <digital/api.h>
-#include <gr_sync_block.h>
+#include <gnuradio/sync_block.h>
 
 namespace gr {
   namespace digital {
@@ -45,7 +45,7 @@ namespace gr {
      * processed, the shift register is reset to the seed value.
      * This allows processing fixed length vectors of samples.
      */
-    class DIGITAL_API additive_scrambler_bb : virtual public gr_sync_block
+    class DIGITAL_API additive_scrambler_bb : virtual public sync_block
     {
     public:
       // gr::digital::additive_scrambler_bb::sptr

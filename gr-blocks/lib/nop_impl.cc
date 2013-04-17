@@ -25,7 +25,7 @@
 #endif
 
 #include "nop_impl.h"
-#include <gr_io_signature.h>
+#include <gnuradio/io_signature.h>
 #include <boost/bind.hpp>
 
 namespace gr {
@@ -39,9 +39,9 @@ namespace gr {
     }
 
     nop_impl::nop_impl (size_t sizeof_stream_item)
-      : gr_block("nop",
-                 gr_make_io_signature(0, -1, sizeof_stream_item),
-                 gr_make_io_signature(0, -1, sizeof_stream_item)),
+      : block("nop",
+                 io_signature::make(0, -1, sizeof_stream_item),
+                 io_signature::make(0, -1, sizeof_stream_item)),
         d_nmsgs_recvd(0)
     {
       // Arrange to have count_received_msgs called when messages are received.

@@ -24,7 +24,7 @@
 #define INCLUDED_GR_SIMPLE_CORRELATOR_H
 
 #include <digital/api.h>
-#include <gr_block.h>
+#include <gnuradio/block.h>
 
 namespace gr {
   namespace digital {
@@ -34,7 +34,7 @@ namespace gr {
      * \ingroup packet_operators_blk
      * \ingroup deprecated_blk
      */
-    class DIGITAL_API simple_correlator : virtual public gr_block
+    class DIGITAL_API simple_correlator : virtual public block
     {
     public:
       // gr::digital::simple_correlator::sptr

@@ -24,7 +24,7 @@
 #define	INCLUDED_DIGITAL_MPSK_RECEIVER_CC_H
 
 #include <digital/api.h>
-#include <gr_block.h>
+#include <gnuradio/block.h>
 
 namespace gr {
   namespace digital {
@@ -65,7 +65,7 @@ namespace gr {
      * self-noise.
      *
      */
-    class DIGITAL_API mpsk_receiver_cc : virtual public gr_block
+    class DIGITAL_API mpsk_receiver_cc : virtual public block
     {
     public:
       // gr::digital::mpsk_receiver_cc::sptr

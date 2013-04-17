@@ -67,11 +67,11 @@ class test_ofdm_cyclic_prefixer (gr_unittest.TestCase):
         tag_name = "length"
         expected_result = (7.0/2,       8, 1, 2, 3, 4, 5, 6, 7, 8, # 1.0/2
                            7.0/2+1.0/2, 8, 1, 2, 3, 4, 5, 6, 7, 8, 1.0/2)
-        tag = gr.gr_tag_t()
+        tag = gr.tag_t()
         tag.offset = 0
         tag.key = pmt.string_to_symbol(tag_name)
         tag.value = pmt.from_long(2)
-        tag2 = gr.gr_tag_t()
+        tag2 = gr.tag_t()
         tag2.offset = 1
         tag2.key = pmt.string_to_symbol("random_tag")
         tag2.value = pmt.from_long(42)

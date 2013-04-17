@@ -25,9 +25,9 @@
 #include <fcd_source_c_impl.h>
 #include <fcd.h>
 #include <fcdhidcmd.h> // needed for extended API
-#include <gr_io_signature.h>
-#include <blocks/float_to_complex.h>
-#include <attributes.h>
+#include <gnuradio/io_signature.h>
+#include <gnuradio/blocks/float_to_complex.h>
+#include <gnuradio/attributes.h>
 
 //#include <iostream>
 //using namespace std;
@@ -47,9 +47,9 @@ static const int MIN_OUT = 1; /*!< Minimum number of output streams. */
 static const int MAX_OUT = 1; /*!< Maximum number of output streams. */
 
 fcd_source_c_impl::fcd_source_c_impl(const std::string device_name)
-  : gr_hier_block2 ("fcd_source_c",
-		    gr_make_io_signature (MIN_IN, MAX_IN, sizeof (gr_complex)),
-		    gr_make_io_signature (MIN_OUT, MAX_OUT, sizeof (gr_complex))),
+  : gr::hier_block2("fcd_source_c",
+		    gr::io_signature::make(MIN_IN, MAX_IN, sizeof(gr_complex)),
+		    gr::io_signature::make(MIN_OUT, MAX_OUT, sizeof(gr_complex))),
     d_freq_corr(-120),
     d_freq_req(0)
 {

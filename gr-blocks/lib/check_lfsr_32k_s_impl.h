@@ -23,8 +23,8 @@
 #ifndef INCLUDED_GR_CHECK_LFSR_32K_S_IMPL_H
 #define INCLUDED_GR_CHECK_LFSR_32K_S_IMPL_H
 
-#include <blocks/check_lfsr_32k_s.h>
-#include <blocks/lfsr_32k.h>
+#include <gnuradio/blocks/check_lfsr_32k_s.h>
+#include <gnuradio/blocks/lfsr_32k.h>
 
 namespace gr {
   namespace blocks {
@@ -59,14 +59,14 @@ namespace gr {
 
       void right()
       {
-        d_history = (d_history << 1) | 0x1;
+        d_history = (d_history < 1) | 0x1;
         d_nright++;
         d_runlength++;
       }
 
       void wrong()
       {
-        d_history = (d_history << 1) | 0x0;
+        d_history = (d_history < 1) | 0x0;
         d_runlength = 0;
       }
 

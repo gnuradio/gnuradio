@@ -23,7 +23,7 @@
 #ifndef INCLUDED_BLOCKS_PLATEAU_DETECTOR_FB_IMPL_H
 #define INCLUDED_BLOCKS_PLATEAU_DETECTOR_FB_IMPL_H
 
-#include <blocks/plateau_detector_fb.h>
+#include <gnuradio/blocks/plateau_detector_fb.h>
 
 namespace gr {
   namespace blocks {

@@ -24,7 +24,7 @@
 #define INCLUDED_ANALOG_QUADRATURE_DEMOD_CF_H
 
 #include <analog/api.h>
-#include <gr_sync_block.h>
+#include <gnuradio/sync_block.h>
 
 namespace gr {
   namespace analog {
@@ -37,7 +37,7 @@ namespace gr {
      * This can be used to demod FM, FSK, GMSK, etc.
      * The input is complex baseband.
      */
-    class ANALOG_API quadrature_demod_cf : virtual public gr_sync_block
+    class ANALOG_API quadrature_demod_cf : virtual public sync_block
     {
     public:
       // gr::analog::quadrature_demod_cf::sptr

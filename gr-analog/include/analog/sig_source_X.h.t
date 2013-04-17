@@ -27,7 +27,7 @@
 
 #include <analog/api.h>
 #include <analog/sig_source_waveform.h>
-#include <gr_sync_block.h>
+#include <gnuradio/sync_block.h>
 
 namespace gr {
   namespace analog {
@@ -36,7 +36,7 @@ namespace gr {
      * \brief signal generator with @TYPE@ output.
      * \ingroup waveform_generators_blk
      */
-    class ANALOG_API @BASE_NAME@ : virtual public gr_sync_block
+    class ANALOG_API @BASE_NAME@ : virtual public sync_block
     {
     public:
       // gr::analog::@BASE_NAME@::sptr

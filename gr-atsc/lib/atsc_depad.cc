@@ -25,7 +25,7 @@
 #endif
 
 #include <atsc/depad.h>
-#include <gr_io_signature.h>
+#include <gnuradio/io_signature.h>
 #include <atsc/types.h>
 
 atsc_depad_sptr
@@ -35,10 +35,10 @@ atsc_make_depad()
 }
 
 atsc_depad::atsc_depad()
-  : gr_sync_interpolator("atsc_depad",
-			 gr_make_io_signature(1, 1, sizeof(atsc_mpeg_packet)),
-			 gr_make_io_signature(1, 1, sizeof(unsigned char)),
-			 ATSC_MPEG_PKT_LENGTH)
+  : gr::sync_interpolator("atsc_depad",
+                          gr::io_signature::make(1, 1, sizeof(atsc_mpeg_packet)),
+                          gr::io_signature::make(1, 1, sizeof(unsigned char)),
+                          ATSC_MPEG_PKT_LENGTH)
 {
   reset();
 }

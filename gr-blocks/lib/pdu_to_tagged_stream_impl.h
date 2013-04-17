@@ -23,7 +23,7 @@
 #ifndef INCLUDED_PDU_TO_TAGGED_STREAM_IMPL_H
 #define INCLUDED_PDU_TO_TAGGED_STREAM_IMPL_H
 
-#include <blocks/pdu_to_tagged_stream.h>
+#include <gnuradio/blocks/pdu_to_tagged_stream.h>
 
 namespace gr {
   namespace blocks {

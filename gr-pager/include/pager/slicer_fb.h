@@ -24,7 +24,7 @@
 #define INCLUDED_PAGER_SLICER_FB_H
 
 #include <pager/api.h>
-#include <gr_sync_block.h>
+#include <gnuradio/sync_block.h>
 
 namespace gr {
   namespace pager {
@@ -33,7 +33,7 @@ namespace gr {
      * \brief slicer description
      * \ingroup pager_blk
      */
-    class PAGER_API slicer_fb : virtual public gr_sync_block
+    class PAGER_API slicer_fb : virtual public sync_block
     {
     public:
       // gr::pager::slicer_fb::sptr

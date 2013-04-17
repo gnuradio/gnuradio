@@ -25,7 +25,7 @@
 #endif
 
 #include "decode_ccsds_27_fb_impl.h"
-#include <gr_io_signature.h>
+#include <gnuradio/io_signature.h>
 
 namespace gr {
   namespace fec {
@@ -36,9 +36,9 @@ namespace gr {
     }
 
     decode_ccsds_27_fb_impl::decode_ccsds_27_fb_impl()
-      : gr_sync_decimator("decode_ccsds_27_fb",
-			  gr_make_io_signature (1, 1, sizeof(float)),
-			  gr_make_io_signature (1, 1, sizeof(char)),
+      : sync_decimator("decode_ccsds_27_fb",
+			  io_signature::make (1, 1, sizeof(float)),
+			  io_signature::make (1, 1, sizeof(char)),
 			  2*8)  // Rate 1/2 code, unpacked to packed conversion
     {
       float RATE = 0.5;

@@ -24,7 +24,7 @@
 #define INCLUDED_FFT_GOERTZEL_FC_H
 
 #include <fft/api.h>
-#include <gr_sync_decimator.h>
+#include <gnuradio/sync_decimator.h>
 
 namespace gr {
   namespace fft {
@@ -33,7 +33,7 @@ namespace gr {
      * \brief Goertzel single-bin DFT calculation.
      * \ingroup fourier_analysis_blk
      */
-    class FFT_API goertzel_fc : virtual public gr_sync_decimator
+    class FFT_API goertzel_fc : virtual public sync_decimator
     {
     public:
 

@@ -24,7 +24,7 @@
 #define INCLUDED_VOCODER_ULAW_DECODE_BS_H
 
 #include <vocoder/api.h>
-#include <gr_sync_block.h>
+#include <gnuradio/sync_block.h>
 
 namespace gr {
   namespace vocoder {
@@ -33,7 +33,7 @@ namespace gr {
      * \brief This block performs ulaw audio decoding.
      * \ingroup audio_blk
      */
-    class VOCODER_API ulaw_decode_bs : virtual public gr_sync_block
+    class VOCODER_API ulaw_decode_bs : virtual public sync_block
     {
     public:
       // gr::vocoder::ulaw_decode_bs::sptr

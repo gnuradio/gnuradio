@@ -25,7 +25,7 @@
 #endif
 
 #include "stretch_ff_impl.h"
-#include <gr_io_signature.h>
+#include <gnuradio/io_signature.h>
 
 namespace gr {
   namespace blocks {
@@ -38,9 +38,9 @@ namespace gr {
     }
 
     stretch_ff_impl::stretch_ff_impl(float lo, size_t vlen)
-      : gr_sync_block("stretch_ff",
-                      gr_make_io_signature(1, 1, vlen * sizeof(float)),
-                      gr_make_io_signature(1, 1, vlen * sizeof(float))),
+      : sync_block("stretch_ff",
+                      io_signature::make(1, 1, vlen * sizeof(float)),
+                      io_signature::make(1, 1, vlen * sizeof(float))),
         d_lo(lo), d_vlen(vlen)
     {
     }

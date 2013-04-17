@@ -22,7 +22,7 @@
 #define INCLUDED_FCD_SOURCE_C_H
 
 #include <fcd_api.h>
-#include <gr_hier_block2.h>
+#include <gnuradio/hier_block2.h>
 
 class fcd_source_c;
 
@@ -51,7 +51,7 @@ FCD_API fcd_source_c_sptr fcd_make_source_c(const std::string device_name = "");
  * interface to work properly. As of early 2011, FCDs still come with firmware
  * 18b. You can use qthid 2.2 (not 3) to upgrade the firmware: http://qthid.sf.net
  */
-class FCD_API fcd_source_c : virtual public gr_hier_block2
+class FCD_API fcd_source_c : virtual public gr::hier_block2
 {
 public:
     /*! \brief Set frequency with Hz resolution.

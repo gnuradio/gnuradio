@@ -61,11 +61,11 @@ class qa_ofdm_sync_eqinit_vcvc (gr_unittest.TestCase):
         tx_data = shift_tuple(sync_symbol1, carr_offset) + \
                   shift_tuple(sync_symbol2, carr_offset) + \
                   shift_tuple(data_symbol, carr_offset)
-        tag1 = gr.gr_tag_t()
+        tag1 = gr.tag_t()
         tag1.offset = 0
         tag1.key = pmt.string_to_symbol("test_tag_1")
         tag1.value = pmt.from_long(23)
-        tag2 = gr.gr_tag_t()
+        tag2 = gr.tag_t()
         tag2.offset = 2
         tag2.key = pmt.string_to_symbol("test_tag_2")
         tag2.value = pmt.from_long(42)

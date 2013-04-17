@@ -25,8 +25,8 @@
 #endif
 
 #include "fll_band_edge_cc_impl.h"
-#include <gr_io_signature.h>
-#include <gr_expj.h>
+#include <gnuradio/io_signature.h>
+#include <gnuradio/expj.h>
 #include <cstdio>
 
 namespace gr {
@@ -55,9 +55,9 @@ namespace gr {
     static std::vector<int> iosig(ios, ios+sizeof(ios)/sizeof(int));
     fll_band_edge_cc_impl::fll_band_edge_cc_impl(float samps_per_sym, float rolloff,
 						 int filter_size, float bandwidth)
-      : gr_sync_block("fll_band_edge_cc",
-		      gr_make_io_signature(1, 1, sizeof(gr_complex)),
-		      gr_make_io_signaturev(1, 4, iosig)),
+      : sync_block("fll_band_edge_cc",
+		      io_signature::make(1, 1, sizeof(gr_complex)),
+		      io_signature::makev(1, 4, iosig)),
 	blocks::control_loop(bandwidth, M_TWOPI*(2.0/samps_per_sym),
                                  -M_TWOPI*(2.0/samps_per_sym)),
 	d_updated(false)

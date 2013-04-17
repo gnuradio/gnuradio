@@ -25,7 +25,7 @@
 #endif
 
 #include "g723_40_encode_sb_impl.h"
-#include <gr_io_signature.h>
+#include <gnuradio/io_signature.h>
 #include <limits.h>
 
 namespace gr {
@@ -39,9 +39,9 @@ namespace gr {
     }
 
     g723_40_encode_sb_impl::g723_40_encode_sb_impl()
-      : gr_sync_block("vocoder_g723_40_encode_sb",
-		      gr_make_io_signature(1, 1, sizeof(short)),
-		      gr_make_io_signature(1, 1, sizeof(unsigned char)))
+      : sync_block("vocoder_g723_40_encode_sb",
+		      io_signature::make(1, 1, sizeof(short)),
+		      io_signature::make(1, 1, sizeof(unsigned char)))
     {
       g72x_init_state(&d_state);
     }

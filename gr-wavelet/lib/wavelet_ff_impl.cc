@@ -26,7 +26,7 @@
 
 #include <stdexcept>
 #include <wavelet_ff_impl.h>
-#include <gr_io_signature.h>
+#include <gnuradio/io_signature.h>
 
 #include <stdio.h>
 
@@ -46,9 +46,9 @@ namespace gr {
     wavelet_ff_impl::wavelet_ff_impl(int size, 
 				     int order, 
 				     bool forward)
-      : gr_sync_block("wavelet_ff",
-		      gr_make_io_signature(1, 1, size * sizeof(float)),
-		      gr_make_io_signature(1, 1, size * sizeof(float))),
+      : sync_block("wavelet_ff",
+		      io_signature::make(1, 1, size * sizeof(float)),
+		      io_signature::make(1, 1, size * sizeof(float))),
 	d_size(size),
 	d_order(order),
 	d_forward(forward)

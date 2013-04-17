@@ -26,7 +26,7 @@
 #define	@GUARD_NAME@
 
 #include <filter/api.h>
-#include <gr_block.h>
+#include <gnuradio/block.h>
 
 
 namespace gr {
@@ -37,7 +37,7 @@ namespace gr {
      * input, @O_TYPE@ output and @TAP_TYPE@ taps.
      * \ingroup resamplers_blk
      */
-    class FILTER_API @NAME@ : virtual public gr_block
+    class FILTER_API @NAME@ : virtual public block
     {
     public:
       // gr::filter::@BASE_NAME@::sptr

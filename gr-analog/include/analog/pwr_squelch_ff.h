@@ -35,7 +35,7 @@ namespace gr {
      * \ingroup level_controllers_blk
      */
     class ANALOG_API pwr_squelch_ff :
-      public squelch_base_ff, virtual public gr_block
+      public squelch_base_ff, virtual public block
     {
     protected:
       virtual void update_state(const float &in) = 0;

@@ -25,7 +25,7 @@
 #endif
 
 #include "pn_correlator_cc_impl.h"
-#include <gr_io_signature.h>
+#include <gnuradio/io_signature.h>
 
 namespace gr {
   namespace digital {
@@ -40,9 +40,9 @@ namespace gr {
     pn_correlator_cc_impl::pn_correlator_cc_impl(int degree,
 						 int mask,
 						 int seed)
-      : gr_sync_decimator("pn_correlator_cc",
-			  gr_make_io_signature(1, 1, sizeof(gr_complex)),
-			  gr_make_io_signature(1, 1, sizeof(gr_complex)),
+      : sync_decimator("pn_correlator_cc",
+			  io_signature::make(1, 1, sizeof(gr_complex)),
+			  io_signature::make(1, 1, sizeof(gr_complex)),
 			  (unsigned int)((1ULL << degree)-1)) // PN code length
     {
       d_len = (unsigned int)((1ULL << degree)-1);

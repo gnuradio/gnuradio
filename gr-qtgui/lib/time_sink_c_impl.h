@@ -25,8 +25,8 @@
 
 #include <qtgui/time_sink_c.h>
 #include <qtgui/timedisplayform.h>
-#include <thread/thread.h>
-#include <high_res_timer.h>
+#include <gnuradio/thread/thread.h>
+#include <gnuradio/high_res_timer.h>
 
 namespace gr {
   namespace qtgui {

@@ -27,7 +27,7 @@ import numpy
 
 def make_len_tags(tupl, key):
     tags = []
-    tag = gr.gr_tag_t()
+    tag = gr.tag_t()
     tag.key = pmt.string_to_symbol(key)
     n_read = 0
     for element in tupl:
@@ -38,7 +38,7 @@ def make_len_tags(tupl, key):
     return tags
 
 def make_len_tag(offset, key, value):
-    tag = gr.gr_tag_t()
+    tag = gr.tag_t()
     tag.offset = offset
     tag.key = pmt.string_to_symbol(key)
     tag.value = pmt.to_pmt(value)
@@ -73,11 +73,11 @@ class qa_tagged_stream_mux (gr_unittest.TestCase):
             make_len_tag(5, tagname, 3),
             make_len_tag(8, tagname, 1)
         )
-        test_tag_0 = gr.gr_tag_t()
+        test_tag_0 = gr.tag_t()
         test_tag_0.key = pmt.string_to_symbol('spam')
         test_tag_0.offset = 4 # On the second '1'
         test_tag_0.value = pmt.to_pmt(42)
-        test_tag_1 = gr.gr_tag_t()
+        test_tag_1 = gr.tag_t()
         test_tag_1.key = pmt.string_to_symbol('eggs')
         test_tag_1.offset = 3 # On the first '3' of the 2nd stream
         test_tag_1.value = pmt.to_pmt(23)

@@ -23,7 +23,7 @@
 #ifndef INCLUDED_GR_NOP_IMPL_H
 #define INCLUDED_GR_NOP_IMPL_H
 
-#include <blocks/nop.h>
+#include <gnuradio/blocks/nop.h>
 
 namespace gr {
   namespace blocks {

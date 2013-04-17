@@ -24,7 +24,7 @@
 #define INCLUDED_GR_SIMPLE_FRAMER_H
 
 #include <digital/api.h>
-#include <gr_block.h>
+#include <gnuradio/block.h>
 
 namespace gr {
   namespace digital {
@@ -39,7 +39,7 @@ namespace gr {
      * frame is prepended with the GRSF_SYNC (defind in
      * simple_framer_sync.h) and an 8-bit sequence number.
      */
-    class DIGITAL_API simple_framer : virtual public gr_block
+    class DIGITAL_API simple_framer : virtual public block
     {
     public:
       // gr::digital::simple_framer::sptr

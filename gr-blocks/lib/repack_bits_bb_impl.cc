@@ -24,7 +24,7 @@
 #include "config.h"
 #endif
 
-#include <gr_io_signature.h>
+#include <gnuradio/io_signature.h>
 #include "repack_bits_bb_impl.h"
 
 namespace gr {
@@ -37,9 +37,9 @@ namespace gr {
     }
 
     repack_bits_bb_impl::repack_bits_bb_impl(int k, int l, const std::string &len_tag_key, bool align_output)
-      : gr_tagged_stream_block("repack_bits_bb",
-		      gr_make_io_signature(1, 1, sizeof (char)),
-		      gr_make_io_signature(1, 1, sizeof (char)),
+      : tagged_stream_block("repack_bits_bb",
+		      io_signature::make(1, 1, sizeof (char)),
+		      io_signature::make(1, 1, sizeof (char)),
 		      len_tag_key),
       d_k(k), d_l(l),
       d_packet_mode(!len_tag_key.empty()),

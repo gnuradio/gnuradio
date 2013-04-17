@@ -22,7 +22,7 @@
 
 #include "usrp_source_impl.h"
 #include "gr_uhd_common.h"
-#include <gr_io_signature.h>
+#include <gnuradio/io_signature.h>
 #include <boost/format.hpp>
 #include <boost/thread/thread.hpp>
 #include <boost/make_shared.hpp>
@@ -63,8 +63,8 @@ namespace gr {
 
     usrp_source_impl::usrp_source_impl(const ::uhd::device_addr_t &device_addr,
                                        const ::uhd::stream_args_t &stream_args):
-      gr_sync_block("gr uhd usrp source",
-                    gr_make_io_signature(0, 0, 0),
+      sync_block("gr uhd usrp source",
+                    io_signature::make(0, 0, 0),
                     args_to_io_sig(stream_args)),
       _stream_args(stream_args),
       _nchan(std::max<size_t>(1, stream_args.channels.size())),

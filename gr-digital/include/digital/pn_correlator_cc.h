@@ -24,7 +24,7 @@
 #define INCLUDED_GR_PN_CORRELATOR_CC_H
 
 #include <digital/api.h>
-#include <gr_sync_decimator.h>
+#include <gnuradio/sync_decimator.h>
 
 namespace gr {
   namespace digital {
@@ -38,7 +38,7 @@ namespace gr {
      * against reference PN code, one sample per PN code period. The
      * PN sequence is generated using a GLFSR.
      */
-    class DIGITAL_API pn_correlator_cc : virtual public gr_sync_decimator
+    class DIGITAL_API pn_correlator_cc : virtual public sync_decimator
     {
     public:
       // gr::digital::pn_correlator_cc::sptr

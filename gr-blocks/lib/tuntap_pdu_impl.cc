@@ -25,8 +25,8 @@
 #endif
 
 #include "tuntap_pdu_impl.h"
-#include <gr_io_signature.h>
-#include <blocks/pdu.h>
+#include <gnuradio/io_signature.h>
+#include <gnuradio/blocks/pdu.h>
 #include <boost/format.hpp>
 
 #include <sys/types.h>
@@ -54,9 +54,9 @@ namespace gr {
 
 #if (defined(linux) || defined(__linux) || defined(__linux__))
     tuntap_pdu_impl::tuntap_pdu_impl(std::string dev, int MTU)
-      :	gr_block("tuntap_pdu",
-		 gr_make_io_signature (0, 0, 0),
-		 gr_make_io_signature (0, 0, 0)),
+      :	block("tuntap_pdu",
+		 io_signature::make (0, 0, 0),
+		 io_signature::make (0, 0, 0)),
 	stream_pdu_base(MTU),
 	d_dev(dev)
     {

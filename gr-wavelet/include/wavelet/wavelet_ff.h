@@ -24,12 +24,12 @@
 #define INCLUDED_WAVELET_WAVELET_FF_H
 
 #include <wavelet/api.h>
-#include <gr_sync_block.h>
+#include <gnuradio/sync_block.h>
 
 namespace gr { 
   namespace wavelet {
 
-    class WAVELET_API wavelet_ff : virtual public gr_sync_block
+    class WAVELET_API wavelet_ff : virtual public sync_block
     {
     public:
 

@@ -25,7 +25,7 @@
 #endif
 
 #include "fft_filter_ccc_impl.h"
-#include <gr_io_signature.h>
+#include <gnuradio/io_signature.h>
 
 #include <math.h>
 #include <assert.h>
@@ -45,9 +45,9 @@ namespace gr {
     fft_filter_ccc_impl::fft_filter_ccc_impl(int decimation,
 					     const std::vector<gr_complex> &taps,
 					     int nthreads)
-      : gr_sync_decimator("fft_filter_ccc",
-			  gr_make_io_signature (1, 1, sizeof(gr_complex)),
-			  gr_make_io_signature (1, 1, sizeof(gr_complex)),
+      : sync_decimator("fft_filter_ccc",
+			  io_signature::make (1, 1, sizeof(gr_complex)),
+			  io_signature::make (1, 1, sizeof(gr_complex)),
 			  decimation),
 	d_updated(false)
     {

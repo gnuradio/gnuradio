@@ -25,7 +25,7 @@
 #endif
 
 #include "burst_tagger_impl.h"
-#include <gr_io_signature.h>
+#include <gnuradio/io_signature.h>
 #include <string.h>
 
 namespace gr {
@@ -39,9 +39,9 @@ namespace gr {
     }
 
     burst_tagger_impl::burst_tagger_impl(size_t itemsize)
-      : gr_sync_block("burst_tagger",
-                      gr_make_io_signature2(2, 2, itemsize, sizeof(short)),
-                      gr_make_io_signature(1, 1, itemsize)),
+      : sync_block("burst_tagger",
+                      io_signature::make2(2, 2, itemsize, sizeof(short)),
+                      io_signature::make(1, 1, itemsize)),
         d_itemsize(itemsize), d_state(false)
     {
       std::stringstream str;

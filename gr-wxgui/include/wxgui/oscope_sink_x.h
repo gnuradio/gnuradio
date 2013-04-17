@@ -26,7 +26,7 @@
 #include <wxgui/api.h>
 #include <wxgui/trigger_mode.h>
 #include <wxgui/oscope_guts.h>
-#include <gr_sync_block.h>
+#include <gnuradio/sync_block.h>
 
 namespace gr {
   namespace wxgui {
@@ -37,7 +37,7 @@ namespace gr {
      *
      * Don't instantiate this. Use gr::blocks::oscope_sink_f instead.
      */
-    class WXGUI_API oscope_sink_x : public gr_sync_block
+    class WXGUI_API oscope_sink_x : public sync_block
     {
     protected:
       double d_sampling_rate;
@@ -45,7 +45,7 @@ namespace gr {
 
       oscope_sink_x() {};
       oscope_sink_x(const std::string name,
-                    gr_io_signature_sptr input_sig,
+                    gr::io_signature::sptr input_sig,
                     double sampling_rate);
     public:
       virtual ~oscope_sink_x();
@@ -54,7 +54,7 @@ namespace gr {
       //typedef boost::shared_ptr<oscope_sink_x> sptr;
       //
       //static sptr make(const std::string name,
-      //                 gr_io_signature_sptr input_sig,
+      //                 gnuradio/io_signature.h_sptr input_sig,
       //                 double sampling_rate);
 
       bool set_update_rate(double update_rate);

@@ -24,7 +24,7 @@
 #define INCLUDED_VOCODER_CODEC2_ENCODE_SP_H
 
 #include <vocoder/api.h>
-#include <gr_sync_decimator.h>
+#include <gnuradio/sync_decimator.h>
 
 namespace gr {
   namespace vocoder {
@@ -33,7 +33,7 @@ namespace gr {
      * \brief CODEC2 Vocoder Encoder
      * \ingroup audio_blk
      */
-    class VOCODER_API codec2_encode_sp : virtual public gr_sync_decimator
+    class VOCODER_API codec2_encode_sp : virtual public sync_decimator
     {
     public:
       // gr::vocoder::codec2_encode_sp::sptr

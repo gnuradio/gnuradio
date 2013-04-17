@@ -24,7 +24,7 @@
 #define INCLUDED_ATSC_DS_TO_SOFTDS_H
 
 #include <atsc/api.h>
-#include <gr_sync_block.h>
+#include <gnuradio/sync_block.h>
 #include <atsc/types.h>
 
 class atsc_ds_to_softds;
@@ -38,7 +38,7 @@ ATSC_API atsc_ds_to_softds_sptr atsc_make_ds_to_softds();
  *
  * input: atsc_data_segment; output: atsc_soft_data_segment
  */
-class ATSC_API atsc_ds_to_softds : public gr_sync_block
+class ATSC_API atsc_ds_to_softds : public gr::sync_block
 {
   friend ATSC_API atsc_ds_to_softds_sptr atsc_make_ds_to_softds();
 

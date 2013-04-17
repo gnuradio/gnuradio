@@ -25,7 +25,7 @@
 #define INCLUDED_DIGITAL_OFDM_CARRIER_ALLOCATOR_CVC_H
 
 #include <digital/api.h>
-#include <gr_tagged_stream_block.h>
+#include <gnuradio/tagged_stream_block.h>
 
 namespace gr {
   namespace digital {
@@ -57,7 +57,7 @@ namespace gr {
      * \p fft_len-1 both identify the carrier below the DC carrier.
      *
      */
-    class DIGITAL_API ofdm_carrier_allocator_cvc : virtual public gr_tagged_stream_block
+    class DIGITAL_API ofdm_carrier_allocator_cvc : virtual public tagged_stream_block
     {
      public:
       typedef boost::shared_ptr<ofdm_carrier_allocator_cvc> sptr;

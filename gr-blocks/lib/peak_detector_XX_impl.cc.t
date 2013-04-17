@@ -27,7 +27,7 @@
 #endif
 
 #include "@NAME_IMPL@.h"
-#include <gr_io_signature.h>
+#include <gnuradio/io_signature.h>
 #include <string.h>
 
 namespace gr {
@@ -47,9 +47,9 @@ namespace gr {
     @NAME_IMPL@::@NAME_IMPL@(float threshold_factor_rise,
                              float threshold_factor_fall,
                              int look_ahead, float alpha)
-    : gr_sync_block("@BASE_NAME@",
-                    gr_make_io_signature(1, 1, sizeof(@I_TYPE@)),
-                    gr_make_io_signature(1, 1, sizeof(char))),
+    : sync_block("@BASE_NAME@",
+                    io_signature::make(1, 1, sizeof(@I_TYPE@)),
+                    io_signature::make(1, 1, sizeof(char))),
       d_threshold_factor_rise(threshold_factor_rise),
       d_threshold_factor_fall(threshold_factor_fall),
       d_look_ahead(look_ahead), d_avg_alpha(alpha), d_avg(0), d_found(0)

@@ -27,8 +27,8 @@
 #include "audio_registry.h"
 #include <jack_sink.h>
 #include <jack_impl.h>
-#include <gr_io_signature.h>
-#include <gr_prefs.h>
+#include <gnuradio/io_signature.h>
+#include <gnuradio/prefs.h>
 #include <stdio.h>
 #include <iostream>
 #include <stdexcept>
@@ -57,7 +57,7 @@ namespace gr {
     static std::string
     default_device_name()
     {
-      return gr_prefs::singleton()->get_string
+      return prefs::singleton()->get_string
         ("audio_jack", "default_output_device", "gr_sink");
     }
 
@@ -98,9 +98,9 @@ namespace gr {
     jack_sink::jack_sink(int sampling_rate,
                          const std::string device_name,
                          bool ok_to_block)
-      : gr_sync_block("audio_jack_sink",
-                      gr_make_io_signature(0, 0, 0),
-                      gr_make_io_signature(0, 0, 0)),
+      : sync_block("audio_jack_sink",
+                      io_signature::make(0, 0, 0),
+                      io_signature::make(0, 0, 0)),
         d_sampling_rate(sampling_rate),
         d_device_name(device_name.empty() ? default_device_name() : device_name),
         d_ok_to_block(ok_to_block),
@@ -150,7 +150,7 @@ namespace gr {
         bail("jack_ringbuffer_create failed", 0);
 
       assert(sizeof(float)==sizeof(sample_t));
-      set_input_signature(gr_make_io_signature(1, 1, sizeof(sample_t)));
+      set_input_signature(io_signature::make(1, 1, sizeof(sample_t)));
 
       jack_nframes_t sample_rate = jack_get_sample_rate(d_jack_client);
 

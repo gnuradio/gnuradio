@@ -30,7 +30,7 @@ extern "C" {
 #include "codec2/codec2.h"
 }
 
-#include <gr_io_signature.h>
+#include <gnuradio/io_signature.h>
 #include <stdexcept>
 
 namespace gr {
@@ -44,9 +44,9 @@ namespace gr {
     }
 
     codec2_encode_sp_impl::codec2_encode_sp_impl()
-      : gr_sync_decimator("vocoder_codec2_encode_sp",
-			  gr_make_io_signature(1, 1, sizeof(short)),
-			  gr_make_io_signature(1, 1, CODEC2_BITS_PER_FRAME * sizeof(char)),
+      : sync_decimator("vocoder_codec2_encode_sp",
+			  io_signature::make(1, 1, sizeof(short)),
+			  io_signature::make(1, 1, CODEC2_BITS_PER_FRAME * sizeof(char)),
 			  CODEC2_SAMPLES_PER_FRAME)
     {
       if((d_codec2 = codec2_create()) == 0)

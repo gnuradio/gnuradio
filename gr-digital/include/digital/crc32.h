@@ -25,7 +25,7 @@
 
 #include <digital/api.h>
 #include <string>
-#include <gr_types.h>
+#include <gnuradio/types.h>
 
 namespace gr {
   namespace digital {

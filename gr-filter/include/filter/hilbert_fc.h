@@ -24,8 +24,8 @@
 #define INCLUDED_FILTER_HILBERT_FC_H
 
 #include <filter/api.h>
-#include <gr_sync_block.h>
-#include <gr_types.h>
+#include <gnuradio/sync_block.h>
+#include <gnuradio/types.h>
 
 namespace gr {
   namespace filter {
@@ -39,7 +39,7 @@ namespace gr {
      * imaginary output is hilbert filtered (90 degree phase shift)
      * version of input.
      */
-    class FILTER_API hilbert_fc : virtual public gr_sync_block
+    class FILTER_API hilbert_fc : virtual public sync_block
     {
     public:
       // gr::filter::hilbert_fc::sptr

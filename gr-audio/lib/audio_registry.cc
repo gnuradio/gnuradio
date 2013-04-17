@@ -21,7 +21,7 @@
 
 #include "audio_registry.h"
 #include <boost/foreach.hpp>
-#include <gr_prefs.h>
+#include <gnuradio/prefs.h>
 #include <stdexcept>
 #include <vector>
 #include <iostream>
@@ -89,7 +89,7 @@ namespace gr {
      **********************************************************************/
     static std::string default_arch_name(void)
     {
-      return gr_prefs::singleton()->get_string("audio", "audio_module", "auto");
+      return prefs::singleton()->get_string("audio", "audio_module", "auto");
     }
 
     static void do_arch_warning(const std::string &arch)

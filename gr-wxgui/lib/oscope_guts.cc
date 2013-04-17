@@ -68,7 +68,7 @@ namespace gr {
       return wrap_bi(buffer_index - 1, mx);
     }
 
-    oscope_guts::oscope_guts(double sample_rate, gr_msg_queue_sptr msgq)
+    oscope_guts::oscope_guts(double sample_rate, msg_queue::sptr msgq)
       : d_nchannels(1),
     d_msgq(msgq),
     d_trigger_mode(TRIG_MODE_AUTO),
@@ -251,8 +251,8 @@ namespace gr {
       if(d_msgq->full_p())
         return;
       // Build a message to hold the output records
-      gr_message_sptr msg =
-        gr_make_message(0,                           // msg type
+      message::sptr msg =
+        message::make(0,                           // msg type
                         d_nchannels,                 // arg1 for other side
                         mx,                          // arg2 for other side
                         ((d_nchannels * mx) + 1) * sizeof(float)); // sizeof payload

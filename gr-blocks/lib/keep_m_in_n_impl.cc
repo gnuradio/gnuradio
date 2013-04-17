@@ -25,7 +25,7 @@
 #endif
 
 #include "keep_m_in_n_impl.h"
-#include <gr_io_signature.h>
+#include <gnuradio/io_signature.h>
 
 namespace gr {
   namespace blocks {
@@ -36,9 +36,9 @@ namespace gr {
     }
 
     keep_m_in_n_impl::keep_m_in_n_impl(size_t itemsize, int m, int n, int offset)
-      : gr_block("keep_m_in_n",
-		 gr_make_io_signature (1, 1, itemsize),
-		 gr_make_io_signature (1, 1, itemsize)),
+      : block("keep_m_in_n",
+		 io_signature::make (1, 1, itemsize),
+		 io_signature::make (1, 1, itemsize)),
 	d_m(m),
 	d_n(n),
 	d_offset(offset),

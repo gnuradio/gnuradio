@@ -24,7 +24,7 @@
 #define INCLUDED_ANALOG_FEEDFORWARD_AGC_CC_H
 
 #include <analog/api.h>
-#include <gr_sync_block.h>
+#include <gnuradio/sync_block.h>
 
 namespace gr {
   namespace analog {
@@ -34,7 +34,7 @@ namespace gr {
      * absolute value over nsamples
      * \ingroup level_controllers_blk
      */
-    class ANALOG_API feedforward_agc_cc : virtual public gr_sync_block
+    class ANALOG_API feedforward_agc_cc : virtual public sync_block
     {
     public:
       // gr::analog::feedforward_agc_cc::sptr

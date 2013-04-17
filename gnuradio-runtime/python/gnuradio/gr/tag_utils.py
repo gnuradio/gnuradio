@@ -25,7 +25,7 @@ import pmt
 try:
     from gnuradio import gr
 except ImportError:
-    from runtime_swig import gr_tag_t
+    from runtime_swig import tag_t
 
 class PythonTag(object):
     " Python container for tags "
@@ -46,7 +46,7 @@ def tag_to_python(tag):
 
 def tag_to_pmt(tag):
     """ Convert a Python-readable object to a stream tag """
-    newtag = gr_tag_t()
+    newtag = tag_t()
     newtag.offset = tag.offset
     newtag.key = pmt.to_python(tag.key)
     newtag.value = pmt.from_python(tag.value)

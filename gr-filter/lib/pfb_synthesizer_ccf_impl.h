@@ -27,7 +27,7 @@
 #include <filter/pfb_synthesizer_ccf.h>
 #include <filter/fir_filter_with_buffer.h>
 #include <fft/fft.h>
-#include <thread/thread.h>
+#include <gnuradio/thread/thread.h>
 
 namespace gr {
   namespace filter {

@@ -32,9 +32,9 @@
 %include "analog/cpm.h"
 
 %{
-#include <blocks/control_loop.h>
+#include <gnuradio/blocks/control_loop.h>
 %}
-%include <blocks/control_loop.h>
+%include <gnuradio/blocks/control_loop.h>
 
 %{
 #include "digital/additive_scrambler_bb.h"

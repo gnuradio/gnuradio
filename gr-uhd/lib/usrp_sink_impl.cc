@@ -22,7 +22,7 @@
 
 #include "usrp_sink_impl.h"
 #include "gr_uhd_common.h"
-#include <gr_io_signature.h>
+#include <gnuradio/io_signature.h>
 #include <boost/make_shared.hpp>
 #include <stdexcept>
 
@@ -60,9 +60,9 @@ namespace gr {
 
     usrp_sink_impl::usrp_sink_impl(const ::uhd::device_addr_t &device_addr,
                                    const ::uhd::stream_args_t &stream_args)
-      : gr_sync_block("gr uhd usrp sink",
+      : sync_block("gr uhd usrp sink",
                       args_to_io_sig(stream_args),
-                      gr_make_io_signature(0, 0, 0)),
+                      io_signature::make(0, 0, 0)),
         _stream_args(stream_args),
         _nchan(std::max<size_t>(1, stream_args.channels.size())),
         _stream_now(_nchan == 1),
@@ -461,10 +461,10 @@ namespace gr {
     usrp_sink_impl::tag_work(int &ninput_items)
     {
       //the for loop below assumes tags sorted by count low -> high
-      std::sort(_tags.begin(), _tags.end(), gr_tag_t::offset_compare);
+      std::sort(_tags.begin(), _tags.end(), tag_t::offset_compare);
 
       //extract absolute sample counts
-      const gr_tag_t &tag0 = _tags.front();
+      const tag_t &tag0 = _tags.front();
       const uint64_t tag0_count = tag0.offset;
       const uint64_t samp0_count = this->nitems_read(0);
 
@@ -479,7 +479,7 @@ namespace gr {
       _metadata.has_time_spec = false;
 
       //process all of the tags found with the same count as tag0
-      BOOST_FOREACH(const gr_tag_t &my_tag, _tags) {
+      BOOST_FOREACH(const tag_t &my_tag, _tags) {
         const uint64_t my_tag_count = my_tag.offset;
         const pmt::pmt_t &key = my_tag.key;
         const pmt::pmt_t &value = my_tag.value;

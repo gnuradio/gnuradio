@@ -23,7 +23,7 @@
 #ifndef SPECTRUM_GUI_CLASS_HPP
 #define SPECTRUM_GUI_CLASS_HPP
 
-#include <thread/thread.h>
+#include <gnuradio/thread/thread.h>
 #include <qwidget.h>
 #include <qapplication.h>
 #include <qlabel.h>

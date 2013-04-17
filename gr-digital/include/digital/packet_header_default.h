@@ -22,7 +22,7 @@
 #ifndef INCLUDED_DIGITAL_PACKET_HEADER_DEFAULT_H
 #define INCLUDED_DIGITAL_PACKET_HEADER_DEFAULT_H
 
-#include <gr_tags.h>
+#include <gnuradio/tags.h>
 #include <digital/api.h>
 #include <boost/enable_shared_from_this.hpp>
 
@@ -79,7 +79,7 @@ namespace gr {
       virtual bool header_formatter(
 	  long packet_len,
 	  unsigned char *out,
-	  const std::vector<gr_tag_t> &tags=std::vector<gr_tag_t>()
+	  const std::vector<tag_t> &tags=std::vector<tag_t>()
       );
 
       /*!
@@ -89,7 +89,7 @@ namespace gr {
        */
       virtual bool header_parser(
 	const unsigned char *header,
-	std::vector<gr_tag_t> &tags);
+	std::vector<tag_t> &tags);
 
       static sptr make(
 	      long header_len,

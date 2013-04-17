@@ -24,8 +24,8 @@
 #define INCLUDED_GR_PACKET_SINK_H
 
 #include <digital/api.h>
-#include <gr_sync_block.h>
-#include <gr_msg_queue.h>
+#include <gnuradio/sync_block.h>
+#include <gnuradio/msg_queue.h>
 
 namespace gr {
   namespace digital {
@@ -53,7 +53,7 @@ namespace gr {
      * generally be replaced with a correlate access code and frame
      * sink blocks.
      */
-    class DIGITAL_API packet_sink : virtual public gr_sync_block
+    class DIGITAL_API packet_sink : virtual public sync_block
     {
     public:
       // gr::digital::packet_sink::sptr
@@ -67,7 +67,7 @@ namespace gr {
        * \param threshold Number of bits that can be incorrect in the \p sync_vector.
        */
       static sptr make(const std::vector<unsigned char>& sync_vector,
-		       gr_msg_queue_sptr target_queue,
+		       msg_queue::sptr target_queue,
 		       int threshold=-1);
 
       //! return true if we detect carrier

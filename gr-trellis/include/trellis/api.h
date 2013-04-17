@@ -22,7 +22,7 @@
 #ifndef INCLUDED_TRELLIS_API_H
 #define INCLUDED_TRELLIS_API_H
 
-#include <attributes.h>
+#include <gnuradio/attributes.h>
 
 #ifdef gnuradio_trellis_EXPORTS
 #  define TRELLIS_API __GR_ATTR_EXPORT

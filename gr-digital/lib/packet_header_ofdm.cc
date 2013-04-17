@@ -85,7 +85,7 @@ namespace gr {
 
     bool packet_header_ofdm::header_parser(
 	const unsigned char *in,
-	std::vector<gr_tag_t> &tags)
+	std::vector<tag_t> &tags)
     {
       if (!packet_header_default::header_parser(in, tags)) {
 	return false;
@@ -108,7 +108,7 @@ namespace gr {
 	frame_len++;
 	i += d_occupied_carriers[k].size();
       }
-      gr_tag_t tag;
+      tag_t tag;
       tag.key = d_frame_len_tag_key;
       tag.value = pmt::from_long(frame_len);
       tags.push_back(tag);

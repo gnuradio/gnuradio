@@ -27,7 +27,7 @@
 #include <sys/mman.h>
 
 #include "source_s_impl.h"
-#include <gr_io_signature.h>
+#include <gnuradio/io_signature.h>
 #include <stdio.h>
 #include <errno.h>
 #include <iostream>
@@ -55,9 +55,9 @@ namespace gr {
 
     source_s_impl::source_s_impl(int sampling_freq,
 				 const std::string device_name)
-      : gr_sync_block("comedi_source_s",
-		      gr_make_io_signature(0, 0, 0),
-		      gr_make_io_signature(0, 0, 0)),
+      : sync_block("comedi_source_s",
+		      io_signature::make(0, 0, 0),
+		      io_signature::make(0, 0, 0)),
 	d_sampling_freq(sampling_freq),
 	d_device_name(device_name.empty() ? default_device_name() : device_name),
 	d_dev(0),
@@ -139,7 +139,7 @@ namespace gr {
       set_output_multiple(d_n_chan*sizeof(sampl_t));
 
       assert(sizeof(sampl_t) == sizeof(short));
-      set_output_signature(gr_make_io_signature(1, 1, sizeof(sampl_t)));
+      set_output_signature(io_signature::make(1, 1, sizeof(sampl_t)));
     }
 
     bool

@@ -25,9 +25,9 @@
 #endif
 
 #include "hrpt_pll_cf_impl.h"
-#include <gr_io_signature.h>
-#include <gr_math.h>
-#include <gr_sincos.h>
+#include <gnuradio/io_signature.h>
+#include <gnuradio/math.h>
+#include <gnuradio/sincos.h>
 
 namespace gr {
   namespace noaa {
@@ -53,9 +53,9 @@ namespace gr {
     }
     
     hrpt_pll_cf_impl::hrpt_pll_cf_impl(float alpha, float beta, float max_offset)
-      : gr_sync_block("noaa_hrpt_pll_cf",
-		      gr_make_io_signature(1, 1, sizeof(gr_complex)),
-		      gr_make_io_signature(1, 1, sizeof(float))),
+      : sync_block("noaa_hrpt_pll_cf",
+		      io_signature::make(1, 1, sizeof(gr_complex)),
+		      io_signature::make(1, 1, sizeof(float))),
 	d_alpha(alpha), d_beta(beta), d_max_offset(max_offset),
 	d_phase(0.0), d_freq(0.0)
     {
@@ -77,12 +77,12 @@ namespace gr {
 
 	// Generate and mix out carrier
 	float re, im;
-	gr_sincosf(d_phase, &im, &re);
+	gr::sincosf(d_phase, &im, &re);
 	out[i] = (in[i]*gr_complex(re, -im)).imag();
 
 	// Adjust PLL phase/frequency
-	float error = phase_wrap(gr_fast_atan2f(in[i].imag(), in[i].real()) - d_phase);
-	d_freq  = gr_branchless_clip(d_freq + error*d_beta, d_max_offset);
+	float error = phase_wrap(gr::fast_atan2f(in[i].imag(), in[i].real()) - d_phase);
+	d_freq  = gr::branchless_clip(d_freq + error*d_beta, d_max_offset);
 	d_phase = phase_wrap(d_phase + error*d_alpha + d_freq);
       }
 

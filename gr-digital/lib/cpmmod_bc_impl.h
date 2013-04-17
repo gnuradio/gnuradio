@@ -24,7 +24,7 @@
 #define INCLUDED_DIGITAL_CPMMOD_BC_IMPL_H
 
 #include <digital/cpmmod_bc.h>
-#include <blocks/char_to_float.h>
+#include <gnuradio/blocks/char_to_float.h>
 #include <analog/frequency_modulator_fc.h>
 #include <filter/interp_fir_filter_fff.h>
 

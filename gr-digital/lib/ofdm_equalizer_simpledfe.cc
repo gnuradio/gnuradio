@@ -78,7 +78,7 @@ namespace gr {
     ofdm_equalizer_simpledfe::equalize(gr_complex *frame,
 	      int n_sym,
 	      const std::vector<gr_complex> &initial_taps,
-	      const std::vector<gr_tag_t> &tags)
+	      const std::vector<tag_t> &tags)
     {
       if (!initial_taps.empty()) {
 	d_channel_state = initial_taps;

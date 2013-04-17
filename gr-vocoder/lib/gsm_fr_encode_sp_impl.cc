@@ -25,7 +25,7 @@
 #endif
 
 #include "gsm_fr_encode_sp_impl.h"
-#include <gr_io_signature.h>
+#include <gnuradio/io_signature.h>
 #include <stdexcept>
 
 namespace gr {
@@ -39,9 +39,9 @@ namespace gr {
     }
 
     gsm_fr_encode_sp_impl::gsm_fr_encode_sp_impl()
-      : gr_sync_decimator("vocoder_gsm_fr_encode_sp",
-			  gr_make_io_signature(1, 1, sizeof(short)),
-			  gr_make_io_signature(1, 1, sizeof(gsm_frame)),
+      : sync_decimator("vocoder_gsm_fr_encode_sp",
+			  io_signature::make(1, 1, sizeof(short)),
+			  io_signature::make(1, 1, sizeof(gsm_frame)),
 			  GSM_SAMPLES_PER_FRAME)
     {
       if((d_gsm = gsm_create ()) == 0)

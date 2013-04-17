@@ -25,7 +25,7 @@
 #endif
 
 #include "slicer_fb_impl.h"
-#include <gr_io_signature.h>
+#include <gnuradio/io_signature.h>
 
 namespace gr {
   namespace pager {
@@ -38,9 +38,9 @@ namespace gr {
     }
 
     slicer_fb_impl::slicer_fb_impl(float alpha) :
-      gr_sync_block("slicer_fb",
-		    gr_make_io_signature(1, 1, sizeof(float)),
-		    gr_make_io_signature(1, 1, sizeof(unsigned char)))
+      sync_block("slicer_fb",
+		    io_signature::make(1, 1, sizeof(float)),
+		    io_signature::make(1, 1, sizeof(unsigned char)))
     {
       d_alpha = alpha;
       d_beta = 1.0-alpha;

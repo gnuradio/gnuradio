@@ -24,7 +24,7 @@
 #define INCLUDED_GR_SCRAMBLER_BB_H
 
 #include <digital/api.h>
-#include <gr_sync_block.h>
+#include <gnuradio/sync_block.h>
 
 namespace gr {
   namespace digital {
@@ -38,7 +38,7 @@ namespace gr {
      * i.e., on an "unpacked binary" stream, and produces the same
      * format on its output.
      */
-    class DIGITAL_API scrambler_bb : virtual public gr_sync_block
+    class DIGITAL_API scrambler_bb : virtual public sync_block
     {
     public:
       // gr::digital::scrambler_bb::sptr

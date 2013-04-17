@@ -24,8 +24,8 @@
 #define INCLUDED_CHANNELS_FADING_MODEL_H
 
 #include <channels/api.h>
-#include <gr_sync_block.h>
-#include <gr_types.h>
+#include <gnuradio/sync_block.h>
+#include <gnuradio/types.h>
 
 namespace gr {
   namespace channels {
@@ -39,7 +39,7 @@ namespace gr {
      * be used to help evaluate, design, and test various signals,
      * waveforms, and algorithms. 
      */
-    class CHANNELS_API fading_model : virtual public gr_sync_block
+    class CHANNELS_API fading_model : virtual public sync_block
     {
     public:
       // gr::channels::channel_model::sptr

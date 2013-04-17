@@ -24,7 +24,7 @@
 #define INCLUDED_ANALOG_DPLL_BB_H
 
 #include <analog/api.h>
-#include <gr_sync_block.h>
+#include <gnuradio/sync_block.h>
 
 namespace gr {
   namespace analog {
@@ -37,7 +37,7 @@ namespace gr {
      * If a peak is detected, this block outputs a 1,
      * or it outputs 0's.
      */
-    class ANALOG_API dpll_bb : virtual public gr_sync_block
+    class ANALOG_API dpll_bb : virtual public sync_block
     {
     public:
       // gr::analog::dpll_bb::sptr

@@ -23,7 +23,7 @@
 #ifndef INCLUDED_CHAR_TO_SHORT_IMPL_H
 #define INCLUDED_CHAR_TO_SHORT_IMPL_H
 
-#include <blocks/char_to_short.h>
+#include <gnuradio/blocks/char_to_short.h>
 
 namespace gr {
   namespace blocks {

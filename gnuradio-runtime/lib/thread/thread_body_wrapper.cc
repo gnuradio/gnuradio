@@ -23,7 +23,7 @@
 #include <config.h>
 #endif
 
-#include <thread/thread_body_wrapper.h>
+#include <gnuradio/thread/thread_body_wrapper.h>
 
 #ifdef HAVE_SIGNAL_H
 #include <signal.h>

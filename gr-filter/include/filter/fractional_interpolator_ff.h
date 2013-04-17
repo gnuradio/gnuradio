@@ -24,7 +24,7 @@
 #define	INCLUDED_FRACTIONAL_INTERPOLATOR_FF_H
 
 #include <filter/api.h>
-#include <gr_block.h>
+#include <gnuradio/block.h>
 
 namespace gr {
   namespace filter {
@@ -33,7 +33,7 @@ namespace gr {
      * \brief Interpolating MMSE filter with float input, float output
      * \ingroup resamplers_blk
      */
-    class FILTER_API fractional_interpolator_ff : virtual public gr_block
+    class FILTER_API fractional_interpolator_ff : virtual public block
     {
     public:
       // gr::filter::fractional_interpolator_ff::sptr

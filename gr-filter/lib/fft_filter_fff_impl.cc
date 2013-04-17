@@ -25,7 +25,7 @@
 #endif
 
 #include "fft_filter_fff_impl.h"
-#include <gr_io_signature.h>
+#include <gnuradio/io_signature.h>
 
 #include <math.h>
 #include <assert.h>
@@ -46,9 +46,9 @@ namespace gr {
     fft_filter_fff_impl::fft_filter_fff_impl(int decimation,
 					     const std::vector<float> &taps,
 					     int nthreads)
-      : gr_sync_decimator("fft_filter_fff",
-			  gr_make_io_signature (1, 1, sizeof(float)),
-			  gr_make_io_signature (1, 1, sizeof(float)),
+      : sync_decimator("fft_filter_fff",
+			  io_signature::make (1, 1, sizeof(float)),
+			  io_signature::make (1, 1, sizeof(float)),
 			  decimation),
 	d_updated(false)
     {

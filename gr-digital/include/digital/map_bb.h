@@ -24,7 +24,7 @@
 #define INCLUDED_GR_MAP_BB_H
 
 #include <digital/api.h>
-#include <gr_sync_block.h>
+#include <gnuradio/sync_block.h>
 
 namespace gr {
   namespace digital {
@@ -40,7 +40,7 @@ namespace gr {
      *
      * -> output[i] = map[input[i]]
      */
-    class DIGITAL_API map_bb : virtual public gr_sync_block
+    class DIGITAL_API map_bb : virtual public sync_block
     {
     public:
       // gr::digital::map_bb::sptr

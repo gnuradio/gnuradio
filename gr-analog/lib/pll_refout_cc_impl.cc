@@ -25,10 +25,10 @@
 #endif
 
 #include "pll_refout_cc_impl.h"
-#include <gr_io_signature.h>
-#include <gr_sincos.h>
+#include <gnuradio/io_signature.h>
+#include <gnuradio/sincos.h>
 #include <math.h>
-#include <gr_math.h>
+#include <gnuradio/math.h>
 
 namespace gr {
   namespace analog {
@@ -45,9 +45,9 @@ namespace gr {
     }
     
     pll_refout_cc_impl::pll_refout_cc_impl(float loop_bw, float max_freq, float min_freq)
-      : gr_sync_block("pll_refout_cc",
-		      gr_make_io_signature(1, 1, sizeof(gr_complex)),
-		      gr_make_io_signature(1, 1, sizeof(gr_complex))),
+      : sync_block("pll_refout_cc",
+		      io_signature::make(1, 1, sizeof(gr_complex)),
+		      io_signature::make(1, 1, sizeof(gr_complex))),
 	blocks::control_loop(loop_bw, max_freq, min_freq)
     {
     }
@@ -71,7 +71,7 @@ namespace gr {
     pll_refout_cc_impl::phase_detector(gr_complex sample,float ref_phase)
     {
       float sample_phase;
-      sample_phase = gr_fast_atan2f(sample.imag(),sample.real());
+      sample_phase = gr::fast_atan2f(sample.imag(),sample.real());
       return mod_2pi(sample_phase-ref_phase);
     }
 
@@ -88,7 +88,7 @@ namespace gr {
       int size = noutput_items;
 
       while(size-- > 0) {
-	gr_sincosf(d_phase,&t_imag,&t_real);
+	gr::sincosf(d_phase,&t_imag,&t_real);
 	*optr++ = gr_complex(t_real,t_imag);
 
 	error = phase_detector(*iptr++,d_phase);

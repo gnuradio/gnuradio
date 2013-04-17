@@ -25,7 +25,7 @@
 #endif
 
 #include "stream_mux_impl.h"
-#include <gr_io_signature.h>
+#include <gnuradio/io_signature.h>
 #include <string.h>
 #include <cstdio>
 
@@ -40,9 +40,9 @@ namespace gr {
     }
 
     stream_mux_impl::stream_mux_impl(size_t itemsize, const std::vector<int> &lengths)
-      : gr_block("stream_mux",
-		 gr_make_io_signature (1, -1, itemsize),
-		 gr_make_io_signature (1, 1, itemsize)),
+      : block("stream_mux",
+		 io_signature::make (1, -1, itemsize),
+		 io_signature::make (1, 1, itemsize)),
 	d_itemsize(itemsize),
 	d_stream(0),
 	d_residual(0),

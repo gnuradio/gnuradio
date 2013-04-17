@@ -20,7 +20,7 @@
 #
 
 import gnuradio_core as gsp
-_prefs_base = gsp.gr_prefs
+_prefs_base = gsp.prefs
 
 
 import ConfigParser

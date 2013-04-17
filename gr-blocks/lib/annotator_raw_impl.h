@@ -23,8 +23,8 @@
 #ifndef INCLUDED_GR_ANNOTATOR_RAW_IMPL_H
 #define	INCLUDED_GR_ANNOTATOR_RAW_IMPL_H
 
-#include <blocks/annotator_raw.h>
-#include <thread/thread.h>
+#include <gnuradio/blocks/annotator_raw.h>
+#include <gnuradio/thread/thread.h>
 
 namespace gr {
   namespace blocks {
@@ -33,7 +33,7 @@ namespace gr {
     {
     private:
       size_t d_itemsize;
-      std::vector<gr_tag_t> d_queued_tags;
+      std::vector<tag_t> d_queued_tags;
       gr::thread::mutex d_mutex;
 
     public:

@@ -26,7 +26,7 @@
 #define	@GUARD_NAME@
 
 #include <filter/api.h>
-#include <gr_sync_interpolator.h>
+#include <gnuradio/sync_interpolator.h>
 
 namespace gr {
   namespace filter {
@@ -56,7 +56,7 @@ namespace gr {
      * interpolation.
      *
      */
-    class FILTER_API @BASE_NAME@ : virtual public gr_sync_interpolator
+    class FILTER_API @BASE_NAME@ : virtual public sync_interpolator
     {
     public:
       // gr::filter::@BASE_NAME@::sptr

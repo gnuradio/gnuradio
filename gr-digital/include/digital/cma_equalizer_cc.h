@@ -24,7 +24,7 @@
 #define	INCLUDED_DIGITAL_CMA_EQUALIZER_CC_H
 
 #include <digital/api.h>
-#include <gr_sync_decimator.h>
+#include <gnuradio/sync_decimator.h>
 
 namespace gr {
   namespace digital {
@@ -41,7 +41,7 @@ namespace gr {
      * Transactions on Communications, Vol. 28, No. 11, pp. 1867 -
      * 1875, 1980.
      */
-    class DIGITAL_API cma_equalizer_cc: virtual public gr_sync_decimator
+    class DIGITAL_API cma_equalizer_cc: virtual public sync_decimator
     {
     protected:
       virtual gr_complex error(const gr_complex &out) = 0;

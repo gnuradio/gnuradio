@@ -25,7 +25,7 @@
 #ifndef @GUARD_NAME_IMPL@
 #define @GUARD_NAME_IMPL@
 
-#include <blocks/@NAME@.h>
+#include <gnuradio/blocks/@NAME@.h>
 
 namespace gr {
   namespace blocks {

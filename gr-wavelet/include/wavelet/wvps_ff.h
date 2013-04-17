@@ -24,14 +24,14 @@
 #define INCLUDED_WAVELET_WVPS_FF_H
 
 #include <wavelet/api.h>
-#include <gr_sync_decimator.h>
+#include <gnuradio/sync_decimator.h>
 
 class wavelet_wvps_ff;
 
 namespace gr { 
   namespace wavelet {
 
-    class WAVELET_API wvps_ff : virtual public gr_sync_block
+    class WAVELET_API wvps_ff : virtual public sync_block
     {
     public:
 

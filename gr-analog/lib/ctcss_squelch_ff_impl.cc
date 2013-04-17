@@ -57,9 +57,9 @@ namespace gr {
 
     ctcss_squelch_ff_impl::ctcss_squelch_ff_impl(int rate, float freq, float level,
 						 int len, int ramp, bool gate) 
-      :	gr_block("ctcss_squelch_ff",
-		 gr_make_io_signature(1, 1, sizeof(float)),
-		 gr_make_io_signature(1, 1, sizeof(float))),
+      :	block("ctcss_squelch_ff",
+		 io_signature::make(1, 1, sizeof(float)),
+		 io_signature::make(1, 1, sizeof(float))),
 	squelch_base_ff_impl("ctcss_squelch_ff", ramp, gate)
     {
       d_freq = freq;

@@ -24,7 +24,7 @@
 #define INCLUDED_FEC_DECODE_CCSDS_27_FB_H
 
 #include <fec/api.h>
-#include <gr_sync_decimator.h>
+#include <gnuradio/sync_decimator.h>
 
 namespace gr {
   namespace fec {
@@ -49,7 +49,7 @@ namespace gr {
      * from the corresponding inputs.
      */
     
-    class FEC_API decode_ccsds_27_fb : virtual public gr_sync_decimator
+    class FEC_API decode_ccsds_27_fb : virtual public sync_decimator
     {
     public:
       

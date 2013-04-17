@@ -28,7 +28,7 @@
 #include <filter/polyphase_filterbank.h>
 #include <filter/fir_filter.h>
 #include <fft/fft.h>
-#include <thread/thread.h>
+#include <gnuradio/thread/thread.h>
 
 namespace gr {
   namespace filter {

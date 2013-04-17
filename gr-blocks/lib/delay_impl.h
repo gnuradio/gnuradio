@@ -23,8 +23,8 @@
 #ifndef INCLUDED_GR_DELAY_IMPL_H
 #define INCLUDED_GR_DELAY_IMPL_H
 
-#include <blocks/delay.h>
-#include <thread/thread.h>
+#include <gnuradio/blocks/delay.h>
+#include <gnuradio/thread/thread.h>
 
 namespace gr {
   namespace blocks {

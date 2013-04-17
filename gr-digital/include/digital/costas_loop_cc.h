@@ -24,8 +24,8 @@
 #define INCLUDED_DIGITAL_COSTAS_LOOP_CC_H
 
 #include <digital/api.h>
-#include <blocks/control_loop.h>
-#include <gr_sync_block.h>
+#include <gnuradio/blocks/control_loop.h>
+#include <gnuradio/sync_block.h>
 
 namespace gr {
   namespace digital {
@@ -56,7 +56,7 @@ namespace gr {
      *    stream 2 is the normalized frequency of the loop
      */
     class DIGITAL_API costas_loop_cc
-      : virtual public gr_sync_block, 
+      : virtual public sync_block, 
         virtual public blocks::control_loop
     {
     public:

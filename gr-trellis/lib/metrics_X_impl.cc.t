@@ -27,7 +27,7 @@
 #endif
 
 #include "@NAME@.h"
-#include <gr_io_signature.h>
+#include <gnuradio/io_signature.h>
 #include <assert.h>
 #include <stdexcept>
 #include <iostream>
@@ -45,9 +45,9 @@ namespace gr {
 
     @IMPL_NAME@::@IMPL_NAME@(int O, int D,  const std::vector<@I_TYPE@> &TABLE,
 			     digital::trellis_metric_type_t TYPE)
-    : gr_block("@BASE_NAME@",
-	       gr_make_io_signature(1, -1, sizeof (@I_TYPE@)),
-	       gr_make_io_signature(1, -1, sizeof (float))),
+    : block("@BASE_NAME@",
+	       io_signature::make(1, -1, sizeof (@I_TYPE@)),
+	       io_signature::make(1, -1, sizeof (float))),
       d_O(O), d_D(D), d_TYPE(TYPE), d_TABLE(TABLE)
     {
       set_relative_rate (1.0 * d_O / ((double) d_D));

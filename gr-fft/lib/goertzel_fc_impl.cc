@@ -25,7 +25,7 @@
 #endif
 
 #include "goertzel_fc_impl.h"
-#include <gr_io_signature.h>
+#include <gnuradio/io_signature.h>
 
 namespace gr {
   namespace fft {
@@ -36,9 +36,9 @@ namespace gr {
     }
     
     goertzel_fc_impl::goertzel_fc_impl(int rate, int len, float freq)
-      : gr_sync_decimator("goertzel_fc",
-			  gr_make_io_signature (1, 1, sizeof(float)),
-			  gr_make_io_signature (1, 1, sizeof(gr_complex)),
+      : sync_decimator("goertzel_fc",
+			  io_signature::make (1, 1, sizeof(float)),
+			  io_signature::make (1, 1, sizeof(gr_complex)),
 			  len),
 	d_goertzel(rate, len, freq)
     {

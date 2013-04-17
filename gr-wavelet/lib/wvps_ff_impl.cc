@@ -25,7 +25,7 @@
 #endif
 
 #include <wvps_ff_impl.h>
-#include <gr_io_signature.h>
+#include <gnuradio/io_signature.h>
 #include <string.h>
 
 namespace gr {
@@ -45,9 +45,9 @@ namespace gr {
     }
 
     wvps_ff_impl::wvps_ff_impl(int ilen)
-      : gr_sync_block("wvps_ff",
-		      gr_make_io_signature(1, 1, sizeof(float) * ilen),
-		      gr_make_io_signature(1, 1, sizeof(float) * ceil_log2(ilen))),
+      : sync_block("wvps_ff",
+		      io_signature::make(1, 1, sizeof(float) * ilen),
+		      io_signature::make(1, 1, sizeof(float) * ceil_log2(ilen))),
 	d_ilen(ilen), d_olen(ceil_log2(ilen))
     {
     }

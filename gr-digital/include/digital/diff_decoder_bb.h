@@ -24,7 +24,7 @@
 #define INCLUDED_GR_DIFF_DECODER_BB_H
 
 #include <digital/api.h>
-#include <gr_sync_block.h>
+#include <gnuradio/sync_block.h>
 
 namespace gr {
   namespace digital {
@@ -37,7 +37,7 @@ namespace gr {
      * Uses current and previous symbols and the alphabet modulus to
      * perform differential decoding.
      */
-    class DIGITAL_API diff_decoder_bb : virtual public gr_sync_block
+    class DIGITAL_API diff_decoder_bb : virtual public sync_block
     {
     public:
       // gr::digital::diff_decoder_bb::sptr

@@ -24,7 +24,7 @@
 #define INCLUDED_FEC_ENCODE_CCSDS_27_BB_H
 
 #include <fec/api.h>
-#include <gr_sync_interpolator.h>
+#include <gnuradio/sync_interpolator.h>
 
 namespace gr {
   namespace fec {
@@ -46,7 +46,7 @@ namespace gr {
      * There is no provision to "flush" the encoder.
      */
     
-    class FEC_API encode_ccsds_27_bb : virtual public gr_sync_interpolator
+    class FEC_API encode_ccsds_27_bb : virtual public sync_interpolator
     {
     public:
       

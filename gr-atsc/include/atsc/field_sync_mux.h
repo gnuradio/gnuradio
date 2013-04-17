@@ -24,7 +24,7 @@
 #define INCLUDED_ATSC_FIELD_SYNC_MUX_H
 
 #include <atsc/api.h>
-#include <gr_sync_block.h>
+#include <gnuradio/sync_block.h>
 #include <atsc/types.h>
 
 class atsc_field_sync_mux;
@@ -38,7 +38,7 @@ ATSC_API atsc_field_sync_mux_sptr atsc_make_field_sync_mux();
  *
  * input: atsc_data_segment; output: atsc_data_segment
  */
-class ATSC_API atsc_field_sync_mux : public gr_sync_block
+class ATSC_API atsc_field_sync_mux : public gr::sync_block
 {
   friend ATSC_API atsc_field_sync_mux_sptr atsc_make_field_sync_mux();
 

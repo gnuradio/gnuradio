@@ -28,8 +28,8 @@
 #include <cmath>
 
 #include "pfb_clock_sync_fff_impl.h"
-#include <gr_io_signature.h>
-#include <gr_math.h>
+#include <gnuradio/io_signature.h>
+#include <gnuradio/math.h>
 
 namespace gr {
   namespace digital {
@@ -58,9 +58,9 @@ namespace gr {
 						     float init_phase,
 						     float max_rate_deviation,
 						     int osps)
-      : gr_block("pfb_clock_sync_fff",
-		 gr_make_io_signature(1, 1, sizeof(float)),
-		 gr_make_io_signaturev(1, 4, iosig)),
+      : block("pfb_clock_sync_fff",
+		 io_signature::make(1, 1, sizeof(float)),
+		 io_signature::makev(1, 4, iosig)),
 	d_updated(false), d_nfilters(filter_size),
 	d_max_dev(max_rate_deviation),
 	d_osps(osps), d_error(0), d_out_idx(0)
@@ -421,7 +421,7 @@ namespace gr {
 	d_k = d_k + d_alpha*d_error;
 
 	// Keep our rate within a good range
-	d_rate_f = gr_branchless_clip(d_rate_f, d_max_dev);
+	d_rate_f = gr::branchless_clip(d_rate_f, d_max_dev);
 
 	i+=d_osps;
 	count += (int)floor(d_sps);

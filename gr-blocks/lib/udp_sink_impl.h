@@ -23,7 +23,7 @@
 #ifndef INCLUDED_GR_UDP_SINK_IMPL_H
 #define INCLUDED_GR_UDP_SINK_IMPL_H
 
-#include <blocks/udp_sink.h>
+#include <gnuradio/blocks/udp_sink.h>
 #include <boost/asio.hpp>
 
 namespace gr {

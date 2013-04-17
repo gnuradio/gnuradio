@@ -23,7 +23,7 @@
 #define INCLUDED_DIGITAL_PACKET_HEADERPARSER_B_H
 
 #include <digital/api.h>
-#include <gr_sync_block.h>
+#include <gnuradio/sync_block.h>
 #include <digital/packet_header_default.h>
 
 namespace gr {
@@ -46,7 +46,7 @@ namespace gr {
      * If only a header length is given, this block uses the default header
      * format.
      */
-    class DIGITAL_API packet_headerparser_b : virtual public gr_sync_block
+    class DIGITAL_API packet_headerparser_b : virtual public sync_block
     {
      public:
       typedef boost::shared_ptr<packet_headerparser_b> sptr;

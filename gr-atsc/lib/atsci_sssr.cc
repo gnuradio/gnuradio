@@ -26,7 +26,7 @@
 #include <cstdio>
 #include <assert.h>
 #include <atsc/diag_output_impl.h>
-#include <gr_math.h>
+#include <gnuradio/math.h>
 #include <stdio.h>
 #include <boost/math/special_functions/sign.hpp>
 #include <iostream>

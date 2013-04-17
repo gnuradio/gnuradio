@@ -23,7 +23,7 @@
 #ifndef INCLUDED_STREAM_MUX_IMPL_H
 #define INCLUDED_STREAM_MUX_IMPL_H
 
-#include <blocks/stream_mux.h>
+#include <gnuradio/blocks/stream_mux.h>
 
 namespace gr {
   namespace blocks {

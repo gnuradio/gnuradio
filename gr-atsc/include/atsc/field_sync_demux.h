@@ -23,7 +23,7 @@
 #define INCLUDED_ATSC_FIELD_SYNC_DEMUX_H
 
 #include <atsc/api.h>
-#include <gr_block.h>
+#include <gnuradio/block.h>
 #include <atsc/types.h>
 
 class atsc_field_sync_demux;
@@ -38,7 +38,7 @@ ATSC_API atsc_field_sync_demux_sptr atsc_make_field_sync_demux();
  * \ingroup atsc
  *
  */
-class ATSC_API atsc_field_sync_demux : public gr_block
+class ATSC_API atsc_field_sync_demux : public gr::block
 {
   friend ATSC_API atsc_field_sync_demux_sptr atsc_make_field_sync_demux();
 

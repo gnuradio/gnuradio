@@ -23,7 +23,7 @@
 #ifndef INCLUDED_GR_REGENERATE_BB_H
 #define INCLUDED_GR_REGENERATE_BB_IMPL_H
 
-#include <blocks/regenerate_bb.h>
+#include <gnuradio/blocks/regenerate_bb.h>
 
 namespace gr {
   namespace blocks {

@@ -27,7 +27,7 @@
 #include <vector>
 #include <pmt/pmt.h>
 #include "pmt_int.h"
-#include <messages/msg_accepter.h>
+#include <gnuradio/messages/msg_accepter.h>
 #include <pmt/pmt_pool.h>
 #include <stdio.h>
 #include <string.h>

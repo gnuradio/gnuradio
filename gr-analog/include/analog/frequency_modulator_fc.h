@@ -24,7 +24,7 @@
 #define INCLUDED_ANALOG_FREQUENCY_MODULATOR_FC_H
 
 #include <analog/api.h>
-#include <gr_sync_block.h>
+#include <gnuradio/sync_block.h>
 
 namespace gr {
   namespace analog {
@@ -36,7 +36,7 @@ namespace gr {
      * \details
      * float input; complex baseband output
      */
-    class ANALOG_API frequency_modulator_fc : virtual public gr_sync_block
+    class ANALOG_API frequency_modulator_fc : virtual public sync_block
     {
     public:
       // gr::analog::frequency_modulator_fc::sptr

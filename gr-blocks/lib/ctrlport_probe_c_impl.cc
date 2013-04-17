@@ -25,7 +25,7 @@
 #endif
 
 #include "ctrlport_probe_c_impl.h"
-#include <gr_io_signature.h>
+#include <gnuradio/io_signature.h>
 
 namespace gr {
   namespace blocks {
@@ -40,9 +40,9 @@ namespace gr {
 
     ctrlport_probe_c_impl::ctrlport_probe_c_impl(const std::string &id,
                                                  const std::string &desc)
-      : gr_sync_block("probe_c",
-                      gr_make_io_signature(1, 1, sizeof(gr_complex)),
-                      gr_make_io_signature(0, 0, 0)),
+      : sync_block("probe_c",
+                      io_signature::make(1, 1, sizeof(gr_complex)),
+                      io_signature::make(0, 0, 0)),
         d_id(id), d_desc(desc), d_ptr(NULL), d_ptrLen(0)
     {
     }

@@ -24,7 +24,7 @@
 #define INCLUDED_DIGITAL_CORRELATE_ACCESS_CODE_TAG_BB_H
 
 #include <digital/api.h>
-#include <gr_sync_block.h>
+#include <gnuradio/sync_block.h>
 #include <string>
 
 namespace gr {
@@ -42,7 +42,7 @@ namespace gr {
      * key name [tag_name], specified in the constructor. Used for
      * searching an input data stream for preambles, etc.
      */
-    class DIGITAL_API correlate_access_code_tag_bb : virtual public gr_sync_block
+    class DIGITAL_API correlate_access_code_tag_bb : virtual public sync_block
     {
     public:
       // gr::digital::correlate_access_code_tag_bb::sptr

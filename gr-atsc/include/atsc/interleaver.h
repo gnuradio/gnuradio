@@ -24,7 +24,7 @@
 #define INCLUDED_ATSC_INTERLEAVER_H
 
 #include <atsc/api.h>
-#include <gr_sync_block.h>
+#include <gnuradio/sync_block.h>
 #include <atsc/data_interleaver_impl.h>
 
 class atsc_interleaver;
@@ -37,7 +37,7 @@ ATSC_API atsc_interleaver_sptr atsc_make_interleaver();
  *
  * input: atsc_mpeg_packet_rs_encoded; output: atsc_mpeg_packet_rs_encoded
  */
-class ATSC_API atsc_interleaver : public gr_sync_block
+class ATSC_API atsc_interleaver : public gr::sync_block
 {
   friend ATSC_API atsc_interleaver_sptr atsc_make_interleaver();
 

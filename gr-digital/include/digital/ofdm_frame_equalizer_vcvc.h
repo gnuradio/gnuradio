@@ -24,7 +24,7 @@
 
 #include <digital/api.h>
 #include <digital/ofdm_equalizer_base.h>
-#include <gr_tagged_stream_block.h>
+#include <gnuradio/tagged_stream_block.h>
 
 namespace gr {
   namespace digital {
@@ -38,7 +38,7 @@ namespace gr {
      * Input: a tagged series of OFDM symbols.
      * Output: The same as the input, but equalized.
      */
-    class DIGITAL_API ofdm_frame_equalizer_vcvc : virtual public gr_tagged_stream_block
+    class DIGITAL_API ofdm_frame_equalizer_vcvc : virtual public tagged_stream_block
     {
      public:
       typedef boost::shared_ptr<ofdm_frame_equalizer_vcvc> sptr;

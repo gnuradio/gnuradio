@@ -22,7 +22,7 @@
 #define INCLUDED_GR_PROBE_DENSITY_B_H
 
 #include <digital/api.h>
-#include <gr_sync_block.h>
+#include <gnuradio/sync_block.h>
 
 namespace gr {
   namespace digital {
@@ -37,7 +37,7 @@ namespace gr {
      * If you send this block a stream of unpacked bytes, it will tell
      * you what the bit density is.
      */
-    class DIGITAL_API probe_density_b : virtual public gr_sync_block
+    class DIGITAL_API probe_density_b : virtual public sync_block
     {
     public:
       // gr::digital::probe_density_b::sptr

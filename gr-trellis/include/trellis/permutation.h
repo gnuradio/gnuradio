@@ -25,7 +25,7 @@
 
 #include <trellis/api.h>
 #include <vector>
-#include <gr_sync_block.h>
+#include <gnuradio/sync_block.h>
 
 namespace gr {
   namespace trellis {
@@ -34,7 +34,7 @@ namespace gr {
      * \brief Permutation.
      * \ingroup trellis_coding_blk
      */
-    class TRELLIS_API permutation : virtual public gr_sync_block
+    class TRELLIS_API permutation : virtual public sync_block
     {
     public:
       // gr::trellis::permutation::sptr

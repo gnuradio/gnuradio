@@ -28,7 +28,7 @@
 #include <trellis/siso_type.h>
 #include <trellis/calc_metric.h>
 #include <trellis/core_algorithms.h>
-#include <gr_block.h>
+#include <gnuradio/block.h>
 
 namespace gr {
   namespace trellis {
@@ -36,7 +36,7 @@ namespace gr {
     /*!
      *  \ingroup trellis_coding_blk
      */
-    class TRELLIS_API siso_combined_f : virtual public gr_block
+    class TRELLIS_API siso_combined_f : virtual public block
     {
     public:
       // gr::trellis::siso_combined_f::sptr

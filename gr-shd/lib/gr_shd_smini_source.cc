@@ -20,7 +20,7 @@
  */
 
 #include <gr_shd_smini_source.h>
-#include <gr_io_signature.h>
+#include <gnuradio/io_signature.h>
 #include <stdexcept>
 #include <iostream>
 #include <boost/format.hpp>
@@ -36,10 +36,10 @@ public:
         const shd::io_type_t &io_type,
         size_t num_channels
   ):
-    gr_sync_block(
+    sync_block(
        "gr shd smini source",
-       gr_make_io_signature(0, 0, 0),
-       gr_make_io_signature(num_channels, num_channels, io_type.size)
+       io_signature::make(0, 0, 0),
+       io_signature::make(num_channels, num_channels, io_type.size)
     ),
     _type(io_type),
     _nchan(num_channels),

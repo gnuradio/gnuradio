@@ -26,7 +26,7 @@
 #define @GUARD_NAME@
 
 #include <analog/@BASE_NAME@.h>
-#include <gr_random.h>
+#include <gnuradio/random.h>
 
 namespace gr {
   namespace analog {
@@ -36,7 +36,7 @@ namespace gr {
     private:
       noise_type_t d_type;
       float d_ampl;
-      gr_random d_rng;
+      gr::random d_rng;
       std::vector<@TYPE@> d_samples;
 
     public:

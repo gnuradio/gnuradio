@@ -24,7 +24,7 @@
 #endif
 
 #include <boost/format.hpp>
-#include <gr_io_signature.h>
+#include <gnuradio/io_signature.h>
 #include "packet_headerparser_b_impl.h"
 
 #define msg_port_id     pmt::mp("header_data")
@@ -48,9 +48,9 @@ namespace gr {
     }
 
     packet_headerparser_b_impl::packet_headerparser_b_impl(const gr::digital::packet_header_default::sptr &header_formatter)
-      : gr_sync_block("packet_headerparser_b",
-		      gr_make_io_signature(1, 1, sizeof (unsigned char)),
-		      gr_make_io_signature(0, 0, 0)),
+      : sync_block("packet_headerparser_b",
+		      io_signature::make(1, 1, sizeof (unsigned char)),
+		      io_signature::make(0, 0, 0)),
       d_header_formatter(header_formatter)
     {
       message_port_register_out(msg_port_id);
@@ -72,7 +72,7 @@ namespace gr {
 	return 0;
       }
 
-      std::vector<gr_tag_t> tags;
+      std::vector<tag_t> tags;
       if (!d_header_formatter->header_parser(in, tags)) {
 	GR_LOG_INFO(d_logger, boost::format("Detected an invalid packet at item %1%") % nitems_read(0));
 	message_port_pub(msg_port_id, pmt::PMT_F);

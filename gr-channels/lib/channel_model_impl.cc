@@ -21,7 +21,7 @@
  */
 
 #include "channel_model_impl.h"
-#include <gr_io_signature.h>
+#include <gnuradio/io_signature.h>
 #include <iostream>
 
 namespace gr {
@@ -48,9 +48,9 @@ namespace gr {
 					   double epsilon,
 					   const std::vector<gr_complex> &taps,
 					   double noise_seed)
-      : gr_hier_block2("channel_model",
-		       gr_make_io_signature(1, 1, sizeof(gr_complex)),
-		       gr_make_io_signature(1, 1, sizeof(gr_complex)))
+      : hier_block2("channel_model",
+		       io_signature::make(1, 1, sizeof(gr_complex)),
+		       io_signature::make(1, 1, sizeof(gr_complex)))
     {
       d_taps = taps;
       while(d_taps.size() < 2) {

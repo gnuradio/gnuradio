@@ -25,29 +25,31 @@
 #endif
 
 #include "stream_to_streams_impl.h"
-#include <gr_io_signature.h>
+#include <gnuradio/io_signature.h>
 #include <string.h>
 
 namespace gr {
   namespace blocks {
 
-    stream_to_streams::sptr stream_to_streams::make(size_t itemsize, size_t nstreams)
+    stream_to_streams::sptr
+    stream_to_streams::make(size_t itemsize, size_t nstreams)
     {
-      return gnuradio::get_initial_sptr(new stream_to_streams_impl(itemsize, nstreams));
+      return gnuradio::get_initial_sptr
+        (new stream_to_streams_impl(itemsize, nstreams));
     }
 
     stream_to_streams_impl::stream_to_streams_impl(size_t itemsize, size_t nstreams)
-      : gr_sync_decimator("stream_to_streams",
-			  gr_make_io_signature (1, 1, itemsize),
-			  gr_make_io_signature (nstreams, nstreams, itemsize),
-			  nstreams)
+      : sync_decimator("stream_to_streams",
+                          io_signature::make(1, 1, itemsize),
+                          io_signature::make(nstreams, nstreams, itemsize),
+                          nstreams)
     {
     }
 
     int
     stream_to_streams_impl::work(int noutput_items,
-			    gr_vector_const_void_star &input_items,
-			    gr_vector_void_star &output_items)
+                                 gr_vector_const_void_star &input_items,
+                                 gr_vector_void_star &output_items)
     {
       size_t item_size = output_signature()->sizeof_stream_item(0);
 

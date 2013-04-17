@@ -25,7 +25,7 @@
 #endif
 
 #include "cvsd_encode_sb_impl.h"
-#include <gr_io_signature.h>
+#include <gnuradio/io_signature.h>
 #include <limits.h>
 
 namespace gr {
@@ -45,9 +45,9 @@ namespace gr {
     cvsd_encode_sb_impl::cvsd_encode_sb_impl(short min_step, short max_step, double step_decay,
 					     double accum_decay, int K, int J,
 					     short pos_accum_max, short neg_accum_max)
-      : gr_sync_decimator("vocoder_cvsd_encode_sb",
-			  gr_make_io_signature(1, 1, sizeof(short)),
-			  gr_make_io_signature(1, 1, sizeof(unsigned char)),
+      : sync_decimator("vocoder_cvsd_encode_sb",
+			  io_signature::make(1, 1, sizeof(short)),
+			  io_signature::make(1, 1, sizeof(unsigned char)),
 			  8),
 	d_min_step (min_step), d_max_step(max_step), d_step_decay(step_decay),
 	d_accum_decay(accum_decay), d_K(K), d_J(J),

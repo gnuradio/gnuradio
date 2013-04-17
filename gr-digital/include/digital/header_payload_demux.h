@@ -23,7 +23,7 @@
 #define INCLUDED_DIGITAL_HEADER_PAYLOAD_DEMUX_H
 
 #include <digital/api.h>
-#include <gr_block.h>
+#include <gnuradio/block.h>
 
 namespace gr {
   namespace digital {
@@ -59,7 +59,7 @@ namespace gr {
      * A special case are tags on items that make up the guard interval. These are copied
      * to the first item of the following symbol.
      */
-    class DIGITAL_API header_payload_demux : virtual public gr_block
+    class DIGITAL_API header_payload_demux : virtual public block
     {
      public:
       typedef boost::shared_ptr<header_payload_demux> sptr;

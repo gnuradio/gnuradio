@@ -36,7 +36,7 @@
 /* emulate posix_memalign functionality, to some degree */
 
 #include <errno.h>
-#include "gr_pagesize.h"
+#include "pagesize.h"
 
 int posix_memalign
 (void **memptr, size_t alignment, size_t size)
@@ -86,7 +86,7 @@ int posix_memalign
     /* try valloc if it exists */
     /* cheap and easy way to make sure alignment is met, so long as it
      * is <= pagesize () */
-    if (alignment <= (size_t) gr_pagesize ()) {
+    if (alignment <= (size_t) gr::pagesize ()) {
       *memptr = valloc (size);
     }
   }

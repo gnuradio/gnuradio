@@ -24,7 +24,7 @@
 #define INCLUDED_TRELLIS_CONSTELLATION_METRICS_CF_H
 
 #include <trellis/api.h>
-#include <gr_block.h>
+#include <gnuradio/block.h>
 #include <digital/constellation.h>
 #include <digital/metric_type.h>
 
@@ -35,7 +35,7 @@ namespace gr {
      * \brief Evaluate metrics for use by the Viterbi algorithm.
      * \ingroup trellis_coding_blk
      */
-    class TRELLIS_API constellation_metrics_cf : virtual public gr_block
+    class TRELLIS_API constellation_metrics_cf : virtual public block
     {
     public:
       // gr::trellis::constellation_metrics_cf::sptr

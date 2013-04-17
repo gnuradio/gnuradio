@@ -24,7 +24,7 @@
 #define INCLUDED_ATSC_PAD_H
 
 #include <atsc/api.h>
-#include <gr_sync_decimator.h>
+#include <gnuradio/sync_decimator.h>
 
 class atsc_pad;
 typedef boost::shared_ptr<atsc_pad> atsc_pad_sptr;
@@ -38,7 +38,7 @@ ATSC_API atsc_pad_sptr atsc_make_pad();
  *
  * input: unsigned char; output: atsc_mpeg_packet
  */
-class ATSC_API atsc_pad : public gr_sync_decimator
+class ATSC_API atsc_pad : public gr::sync_decimator
 {
   friend ATSC_API atsc_pad_sptr atsc_make_pad();
 

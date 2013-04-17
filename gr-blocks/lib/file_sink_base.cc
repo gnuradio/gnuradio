@@ -24,14 +24,14 @@
 #include "config.h"
 #endif
 
-#include <blocks/file_sink_base.h>
+#include <gnuradio/blocks/file_sink_base.h>
 #include <cstdio>
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <fcntl.h>
 #include <stdexcept>
 #include <stdio.h>
-#include <thread/thread.h>
+#include <gnuradio/thread/thread.h>
 
 // win32 (mingw/msvc) specific
 #ifdef HAVE_IO_H

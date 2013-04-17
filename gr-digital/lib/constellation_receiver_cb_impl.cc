@@ -25,10 +25,9 @@
 #endif
 
 #include "constellation_receiver_cb_impl.h"
-#include <gr_io_signature.h>
-#include <gr_prefs.h>
-#include <gr_math.h>
-#include <gr_expj.h>
+#include <gnuradio/io_signature.h>
+#include <gnuradio/math.h>
+#include <gnuradio/expj.h>
 #include <stdexcept>
 
 namespace gr {
@@ -51,9 +50,9 @@ namespace gr {
     static std::vector<int> iosig(ios, ios+sizeof(ios)/sizeof(int));
     constellation_receiver_cb_impl::constellation_receiver_cb_impl(constellation_sptr constellation, 
 								   float loop_bw, float fmin, float fmax)
-      : gr_block("constellation_receiver_cb",
-		 gr_make_io_signature(1, 1, sizeof(gr_complex)),
-		 gr_make_io_signaturev(1, 5, iosig)),
+      : block("constellation_receiver_cb",
+		 io_signature::make(1, 1, sizeof(gr_complex)),
+		 io_signature::makev(1, 5, iosig)),
 	blocks::control_loop(loop_bw, fmax, fmin),
 	d_constellation(constellation),
 	d_current_const_point(0)

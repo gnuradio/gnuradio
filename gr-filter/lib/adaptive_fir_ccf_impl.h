@@ -25,7 +25,7 @@
 
 #include <filter/adaptive_fir_ccf.h>
 #include <filter/adaptive_fir.h>
-#include <gr_types.h>
+#include <gnuradio/types.h>
 
 namespace gr {
   namespace filter {

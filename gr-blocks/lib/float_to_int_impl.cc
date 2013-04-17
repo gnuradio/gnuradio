@@ -26,7 +26,7 @@
 
 #include "float_to_int_impl.h"
 #include "float_array_to_int.h"
-#include <gr_io_signature.h>
+#include <gnuradio/io_signature.h>
 #include <volk/volk.h>
 
 namespace gr {
@@ -38,9 +38,9 @@ namespace gr {
     }
 
     float_to_int_impl::float_to_int_impl(size_t vlen, float scale)
-      : gr_sync_block("float_to_int",
-		      gr_make_io_signature (1, 1, sizeof(float)*vlen),
-		      gr_make_io_signature (1, 1, sizeof(int)*vlen)),
+      : sync_block("float_to_int",
+		      io_signature::make (1, 1, sizeof(float)*vlen),
+		      io_signature::make (1, 1, sizeof(int)*vlen)),
 	d_vlen(vlen), d_scale(scale)
     {
       const int alignment_multiple =

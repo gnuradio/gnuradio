@@ -24,7 +24,7 @@
 #define	INCLUDED_FILTER_DC_BLOCKER_CC_H
 
 #include <filter/api.h>
-#include <gr_sync_block.h>
+#include <gnuradio/sync_block.h>
 
 namespace gr {
   namespace filter {
@@ -54,7 +54,7 @@ namespace gr {
      *    <B><EM>R. Yates, "DC Blocker Algorithms," IEEE Signal Processing Magazine,
      *        Mar. 2008, pp 132-134.</EM></B>
      */
-    class FILTER_API dc_blocker_cc : virtual public gr_sync_block
+    class FILTER_API dc_blocker_cc : virtual public sync_block
     {
     public:
 

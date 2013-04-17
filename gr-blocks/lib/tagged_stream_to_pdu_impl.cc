@@ -25,8 +25,8 @@
 #endif
 
 #include "tagged_stream_to_pdu_impl.h"
-#include <blocks/pdu.h>
-#include <gr_io_signature.h>
+#include <gnuradio/blocks/pdu.h>
+#include <gnuradio/io_signature.h>
 
 namespace gr {
   namespace blocks {
@@ -38,9 +38,9 @@ namespace gr {
     }
 
     tagged_stream_to_pdu_impl::tagged_stream_to_pdu_impl(pdu::vector_type type)
-      : gr_sync_block("tagged_stream_to_pdu",
-		      gr_make_io_signature(1, 1, pdu::itemsize(type)),
-		      gr_make_io_signature(0, 0, 0)),
+      : sync_block("tagged_stream_to_pdu",
+		      io_signature::make(1, 1, pdu::itemsize(type)),
+		      io_signature::make(0, 0, 0)),
 	d_itemsize(pdu::itemsize(type)),
 	d_inpdu(false),
 	d_type(type),

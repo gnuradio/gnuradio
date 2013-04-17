@@ -25,7 +25,7 @@
 #endif
 
 #include "agc2_cc_impl.h"
-#include <gr_io_signature.h>
+#include <gnuradio/io_signature.h>
 
 namespace gr {
   namespace analog {
@@ -43,9 +43,9 @@ namespace gr {
     agc2_cc_impl::agc2_cc_impl(float attack_rate, float decay_rate,
 			       float reference,
 			       float gain, float max_gain)
-      : gr_sync_block("agc2_cc",
-		      gr_make_io_signature(1, 1, sizeof(gr_complex)),
-		      gr_make_io_signature(1, 1, sizeof(gr_complex))),
+      : sync_block("agc2_cc",
+		      io_signature::make(1, 1, sizeof(gr_complex)),
+		      io_signature::make(1, 1, sizeof(gr_complex))),
 	kernel::agc2_cc(attack_rate, decay_rate,
 			reference, gain, max_gain)
     {

@@ -22,7 +22,7 @@
 #ifndef INCLUDED_CHANNELS_API_H
 #define INCLUDED_CHANNELS_API_H
 
-#include <attributes.h>
+#include <gnuradio/attributes.h>
 
 #ifdef gnuradio_channels_EXPORTS
 #  define CHANNELS_API __GR_ATTR_EXPORT

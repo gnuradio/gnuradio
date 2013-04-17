@@ -30,7 +30,7 @@
 #include <trellis/interleaver.h>
 #include <trellis/calc_metric.h>
 #include <trellis/siso_type.h>
-#include <gr_block.h>
+#include <gnuradio/block.h>
 #include <vector>
 
 namespace gr {
@@ -39,7 +39,7 @@ namespace gr {
     /*!
      *  \ingroup trellis_coding_blk
      */
-    class TRELLIS_API @NAME@ : virtual public gr_block
+    class TRELLIS_API @NAME@ : virtual public block
     {
     public:
       // gr::trellis::@BASE_NAME@::sptr

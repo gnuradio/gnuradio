@@ -25,7 +25,7 @@
 #ifndef @GUARD_NAME_IMPL@
 #define @GUARD_NAME_IMPL@
 
-#include <blocks/@NAME@.h>
+#include <gnuradio/blocks/@NAME@.h>
 
 namespace gr {
   namespace blocks {
@@ -34,7 +34,7 @@ namespace gr {
     {
     private:
       std::vector<@TYPE@> d_data;
-      std::vector<gr_tag_t> d_tags;
+      std::vector<tag_t> d_tags;
       int d_vlen;
 
     public:
@@ -43,7 +43,7 @@ namespace gr {
 
       void reset() { d_data.clear(); }
       std::vector<@TYPE@> data() const;
-      std::vector<gr_tag_t> tags() const;
+      std::vector<tag_t> tags() const;
 
       int work(int noutput_items,
                gr_vector_const_void_star &input_items,

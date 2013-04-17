@@ -24,7 +24,7 @@
 #define INCLUDED_VOCODER_G723_24_ENCODE_SB_H
 
 #include <vocoder/api.h>
-#include <gr_sync_block.h>
+#include <gnuradio/sync_block.h>
 
 namespace gr {
   namespace vocoder {
@@ -33,7 +33,7 @@ namespace gr {
      * \brief This block performs g723_24 audio encoding.
      * \ingroup audio_blk
      */
-    class VOCODER_API g723_24_encode_sb : virtual public gr_sync_block
+    class VOCODER_API g723_24_encode_sb : virtual public sync_block
     {
     public:
       // gr::vocoder::g723_24_encode_sb::sptr

@@ -24,7 +24,7 @@
 #define INCLUDED_DIGITAL_LMS_DD_EQUALIZER_CC_H
 
 #include <digital/api.h>
-#include <gr_sync_decimator.h>
+#include <gnuradio/sync_decimator.h>
 #include <digital/constellation.h>
 
 namespace gr {
@@ -65,7 +65,7 @@ namespace gr {
      *    Prentice Hall, 1996.
      */
     class DIGITAL_API lms_dd_equalizer_cc :
-      virtual public gr_sync_decimator
+      virtual public sync_decimator
     {
     protected:
       virtual gr_complex error(const gr_complex &out) = 0;

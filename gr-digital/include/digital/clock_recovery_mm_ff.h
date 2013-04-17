@@ -24,7 +24,7 @@
 #define	INCLUDED_DIGITAL_CLOCK_RECOVERY_MM_FF_H
 
 #include <digital/api.h>
-#include <gr_block.h>
+#include <gnuradio/block.h>
 
 namespace gr {
   namespace digital {
@@ -41,7 +41,7 @@ namespace gr {
      * Estimation and Signal Processing" by Heinrich Meyr, Marc
      * Moeneclaey, & Stefan Fechtel.  ISBN 0-471-50275-8.
      */
-    class DIGITAL_API clock_recovery_mm_ff : virtual public gr_block
+    class DIGITAL_API clock_recovery_mm_ff : virtual public block
     {
     public:
       // gr::digital::clock_recovery_mm_ff::sptr

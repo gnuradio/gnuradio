@@ -25,7 +25,7 @@
 #endif
 
 #include "time_raster_sink_b_impl.h"
-#include <gr_io_signature.h>
+#include <gnuradio/io_signature.h>
 #include <string.h>
 #include <volk/volk.h>
 
@@ -57,9 +57,9 @@ namespace gr {
 						     const std::string &name,
 						     int nconnections,
 						     QWidget *parent)
-      : gr_sync_block("time_raster_sink_b",
-		      gr_make_io_signature(1, -1, sizeof(char)),
-		      gr_make_io_signature(0, 0, 0)),
+      : sync_block("time_raster_sink_b",
+		      io_signature::make(1, -1, sizeof(char)),
+		      io_signature::make(0, 0, 0)),
 	d_name(name), d_nconnections(nconnections), d_parent(parent),
 	d_rows(rows), d_cols(cols),
 	d_mult(std::vector<float>(nconnections,1)),

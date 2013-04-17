@@ -26,7 +26,7 @@
 #define @GUARD_NAME@
 
 #include <digital/api.h>
-#include <gr_sync_interpolator.h>
+#include <gnuradio/sync_interpolator.h>
 
 namespace gr {
   namespace digital {
@@ -52,7 +52,7 @@ namespace gr {
      * \sa gr::digital::chunks_to_symbols_sf, gr::digital::chunks_to_symbols_sc.
      */
 
-    class DIGITAL_API @NAME@ : virtual public gr_sync_interpolator
+    class DIGITAL_API @NAME@ : virtual public sync_interpolator
     {
     public:
       // gr::digital::@BASE_NAME@::sptr

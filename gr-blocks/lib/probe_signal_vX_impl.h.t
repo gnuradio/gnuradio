@@ -26,7 +26,7 @@
 #define @GUARD_NAME_IMPL@
 
 #include <vector>
-#include <blocks/@NAME@.h>
+#include <gnuradio/blocks/@NAME@.h>
 
 namespace gr {
   namespace blocks {

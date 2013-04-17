@@ -25,7 +25,7 @@
 #endif
 
 #include "conjugate_cc_impl.h"
-#include <gr_io_signature.h>
+#include <gnuradio/io_signature.h>
 #include <volk/volk.h>
 
 namespace gr {
@@ -37,9 +37,9 @@ namespace gr {
     }
 
     conjugate_cc_impl::conjugate_cc_impl()
-      : gr_sync_block("conjugate_cc",
-		      gr_make_io_signature (1, 1, sizeof(gr_complex)),
-		      gr_make_io_signature (1, 1, sizeof(gr_complex)))
+      : sync_block("conjugate_cc",
+		      io_signature::make (1, 1, sizeof(gr_complex)),
+		      io_signature::make (1, 1, sizeof(gr_complex)))
     {
       const int alignment_multiple =
 	volk_get_alignment() / sizeof(gr_complex);

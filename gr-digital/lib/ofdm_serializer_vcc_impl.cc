@@ -23,7 +23,7 @@
 #include "config.h"
 #endif
 
-#include <gr_io_signature.h>
+#include <gnuradio/io_signature.h>
 #include "ofdm_serializer_vcc_impl.h"
 
 namespace gr {
@@ -75,9 +75,9 @@ namespace gr {
 		    const std::string &packet_len_tag_key,
 		    int symbols_skipped,
 		    bool input_is_shifted)
-      : gr_tagged_stream_block ("ofdm_serializer_vcc",
-		       gr_make_io_signature(1, 1, sizeof (gr_complex) * fft_len),
-		       gr_make_io_signature(1, 1, sizeof (gr_complex)),
+      : tagged_stream_block ("ofdm_serializer_vcc",
+		       io_signature::make(1, 1, sizeof (gr_complex) * fft_len),
+		       io_signature::make(1, 1, sizeof (gr_complex)),
 		       len_tag_key),
 	    d_fft_len(fft_len),
 	    d_occupied_carriers(occupied_carriers),
@@ -143,7 +143,7 @@ namespace gr {
       long packet_length = 0; // Output frame
       int carr_offset = 0;
 
-      std::vector<gr_tag_t> tags;
+      std::vector<tag_t> tags;
       // Packet mode
       if (!d_length_tag_key_str.empty()) {
 	get_tags_in_range(tags, 0, nitems_read(0), nitems_read(0)+1);

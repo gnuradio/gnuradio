@@ -25,7 +25,7 @@
 #endif
 
 #include "float_to_complex_impl.h"
-#include <gr_io_signature.h>
+#include <gnuradio/io_signature.h>
 #include <volk/volk.h>
 
 namespace gr {
@@ -37,9 +37,9 @@ namespace gr {
     }
 
     float_to_complex_impl::float_to_complex_impl(size_t vlen)
-      : gr_sync_block("float_to_complex",
-		      gr_make_io_signature (1, 2, sizeof(float)*vlen),
-		      gr_make_io_signature (1, 1, sizeof(gr_complex)*vlen)),
+      : sync_block("float_to_complex",
+		      io_signature::make (1, 2, sizeof(float)*vlen),
+		      io_signature::make (1, 1, sizeof(gr_complex)*vlen)),
 	d_vlen(vlen)
     {
       const int alignment_multiple =

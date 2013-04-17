@@ -26,7 +26,7 @@
 
 #include <cmath>
 #include <atsc/field_sync_demux.h>
-#include <gr_io_signature.h>
+#include <gnuradio/io_signature.h>
 #include <atsc/types.h>
 #include <atsc/consts.h>
 #include <atsc/syminfo_impl.h>
@@ -38,7 +38,7 @@ using std::cerr;
 using std::endl;
 
 
-static const int        DEC = ATSC_DATA_SEGMENT_LENGTH; // nominal decimation factor
+static const int DEC = ATSC_DATA_SEGMENT_LENGTH; // nominal decimation factor
 
 
 atsc_field_sync_demux_sptr
@@ -48,12 +48,12 @@ atsc_make_field_sync_demux()
 }
 
 atsc_field_sync_demux::atsc_field_sync_demux()
-  : gr_block("atsc_field_sync_demux",
-		  gr_make_io_signature(2, 2, sizeof(float)),
-		  gr_make_io_signature(1, 1, sizeof(atsc_soft_data_segment))),
-		  d_locked(false), d_in_field2(true), d_segment_number(0),
-		  d_next_input(0), d_lost_index(0), d_inputs0_index(0),
-                  d_inputs0_size(0), d_consume(0)
+  : gr::block("atsc_field_sync_demux",
+              gr::io_signature::make(2, 2, sizeof(float)),
+              gr::io_signature::make(1, 1, sizeof(atsc_soft_data_segment))),
+    d_locked(false), d_in_field2(true), d_segment_number(0),
+    d_next_input(0), d_lost_index(0), d_inputs0_index(0),
+    d_inputs0_size(0), d_consume(0)
 {
   reset();
 }

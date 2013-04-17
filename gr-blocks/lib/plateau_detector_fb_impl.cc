@@ -24,7 +24,7 @@
 #include "config.h"
 #endif
 
-#include <gr_io_signature.h>
+#include <gnuradio/io_signature.h>
 #include "plateau_detector_fb_impl.h"
 
 namespace gr {
@@ -38,9 +38,9 @@ namespace gr {
     }
 
     plateau_detector_fb_impl::plateau_detector_fb_impl(int max_len, float threshold)
-      : gr_sync_block("plateau_detector_fb",
-                      gr_make_io_signature(1, 1, sizeof(float)),
-                      gr_make_io_signature(1, 1, sizeof(char))),
+      : sync_block("plateau_detector_fb",
+                      io_signature::make(1, 1, sizeof(float)),
+                      io_signature::make(1, 1, sizeof(char))),
 	d_max_len(max_len),
 	d_threshold(threshold)
     {}

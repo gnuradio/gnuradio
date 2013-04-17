@@ -25,7 +25,7 @@
 
 #include <analog/api.h>
 #include <analog/agc2.h>
-#include <gr_sync_block.h>
+#include <gnuradio/sync_block.h>
 
 namespace gr {
   namespace analog {
@@ -38,7 +38,7 @@ namespace gr {
      * \details
      * Power is approximated by absolute value
      */
-    class ANALOG_API agc2_ff : virtual public gr_sync_block
+    class ANALOG_API agc2_ff : virtual public sync_block
     {
     public:
       // gr::analog::agc2_ff::sptr

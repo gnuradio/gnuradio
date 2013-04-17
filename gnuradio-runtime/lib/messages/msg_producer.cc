@@ -24,7 +24,7 @@
 #include "config.h"
 #endif
 
-#include <messages/msg_producer.h>
+#include <gnuradio/messages/msg_producer.h>
 
 namespace gr {
   namespace messages {

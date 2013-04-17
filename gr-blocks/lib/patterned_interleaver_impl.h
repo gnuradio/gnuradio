@@ -23,7 +23,7 @@
 #ifndef INCLUDED_PATTERNED_INTERLEAVER_IMPL_H
 #define INCLUDED_PATTERNED_INTERLEAVER_IMPL_H
 
-#include <blocks/patterned_interleaver.h>
+#include <gnuradio/blocks/patterned_interleaver.h>
 #include <boost/foreach.hpp>
 
 namespace gr {

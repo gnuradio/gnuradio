@@ -25,7 +25,7 @@
 #endif
 
 #include "glfsr_source_b_impl.h"
-#include <gr_io_signature.h>
+#include <gnuradio/io_signature.h>
 #include <stdexcept>
 
 namespace gr {
@@ -40,9 +40,9 @@ namespace gr {
 
     glfsr_source_b_impl::glfsr_source_b_impl(int degree, bool repeat,
 					     int mask, int seed)
-      : gr_sync_block("glfsr_source_b",
-		      gr_make_io_signature(0, 0, 0),
-		      gr_make_io_signature(1, 1, sizeof(unsigned char))),
+      : sync_block("glfsr_source_b",
+		      io_signature::make(0, 0, 0),
+		      io_signature::make(1, 1, sizeof(unsigned char))),
 	d_repeat(repeat), d_index(0)
     {
       if(degree < 1 || degree > 32)

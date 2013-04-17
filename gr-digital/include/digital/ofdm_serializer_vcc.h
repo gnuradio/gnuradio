@@ -23,7 +23,7 @@
 #define INCLUDED_DIGITAL_OFDM_SERIALIZER_VCC_H
 
 #include <digital/api.h>
-#include <gr_tagged_stream_block.h>
+#include <gnuradio/tagged_stream_block.h>
 #include <digital/ofdm_carrier_allocator_cvc.h>
 
 namespace gr {
@@ -49,7 +49,7 @@ namespace gr {
      * Input: Complex vectors of length \p fft_len
      * Output: Complex scalars, in the same order as specified in occupied_carriers.
      */
-    class DIGITAL_API ofdm_serializer_vcc : virtual public gr_tagged_stream_block
+    class DIGITAL_API ofdm_serializer_vcc : virtual public tagged_stream_block
     {
      public:
       typedef boost::shared_ptr<ofdm_serializer_vcc> sptr;

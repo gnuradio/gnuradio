@@ -25,12 +25,12 @@
 #endif
 
 #include <qa_set_msg_handler.h>
-#include <gr_top_block.h>
-#include <blocks/head.h>
-#include <blocks/null_source.h>
-#include <blocks/null_sink.h>
-#include <blocks/nop.h>
-#include <messages/msg_passing.h>
+#include <gnuradio/top_block.h>
+#include <gnuradio/blocks/head.h>
+#include <gnuradio/blocks/null_source.h>
+#include <gnuradio/blocks/null_sink.h>
+#include <gnuradio/blocks/nop.h>
+#include <gnuradio/messages/msg_passing.h>
 #include <iostream>
 #include <boost/thread/thread.hpp>
 
@@ -49,11 +49,11 @@ void qa_set_msg_handler::t0()
 
   if (VERBOSE) std::cout << "qa_set_msg_handler::t0()\n";
 
-  gr_top_block_sptr tb = gr_make_top_block("top");
+  top_block_sptr tb = make_top_block("top");
 
-  gr_block_sptr src = gr::blocks::null_source::make(sizeof(int));
+  block_sptr src = gr::blocks::null_source::make(sizeof(int));
   gr::blocks::nop::sptr nop = gr::blocks::nop::make(sizeof(int));
-  gr_block_sptr dst = gr::blocks::null_sink::make(sizeof(int));
+  block_sptr dst = gr::blocks::null_sink::make(sizeof(int));
 
   tb->connect(src, 0, nop, 0);
   tb->connect(nop, 0, dst, 0);

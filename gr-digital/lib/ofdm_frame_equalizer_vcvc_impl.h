@@ -38,7 +38,7 @@ namespace gr {
 
      protected:
       // These aren't really necessary, so let's override them with nuthin'
-      void remove_length_tags(const std::vector<std::vector<gr_tag_t> > &tags) {};
+      void remove_length_tags(const std::vector<std::vector<tag_t> > &tags) {};
       void update_length_tags(int n_produced, int n_ports) {};
 
      public:

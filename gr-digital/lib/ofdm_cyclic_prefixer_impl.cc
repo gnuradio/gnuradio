@@ -24,7 +24,7 @@
 #include "config.h"
 #endif
 
-#include <gr_io_signature.h>
+#include <gnuradio/io_signature.h>
 #include "ofdm_cyclic_prefixer_impl.h"
 
 namespace gr {
@@ -38,9 +38,9 @@ namespace gr {
 
 
     ofdm_cyclic_prefixer_impl::ofdm_cyclic_prefixer_impl(size_t input_size, size_t output_size, int rolloff_len, const std::string &len_tag_key)
-  : gr_tagged_stream_block ("ofdm_cyclic_prefixer",
-		  gr_make_io_signature (1, 1, input_size*sizeof(gr_complex)),
-		  gr_make_io_signature (1, 1, sizeof(gr_complex)),
+  : tagged_stream_block ("ofdm_cyclic_prefixer",
+		  io_signature::make (1, 1, input_size*sizeof(gr_complex)),
+		  io_signature::make (1, 1, sizeof(gr_complex)),
 		  len_tag_key),
 	d_fft_len(input_size),
 	d_output_size(output_size),
@@ -140,7 +140,7 @@ namespace gr {
 	  }
 	  d_delay_line.assign(d_delay_line.size(), 0);
 	}
-	std::vector<gr_tag_t> tags;
+	std::vector<tag_t> tags;
 	get_tags_in_range(
 	    tags, 0,
 	    nitems_read(0), nitems_read(0)+symbols_to_read

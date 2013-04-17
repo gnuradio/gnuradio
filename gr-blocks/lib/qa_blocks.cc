@@ -30,7 +30,7 @@
 #include <qa_rotator.h>
 
 CppUnit::TestSuite *
-qa_gr_blocks::suite()
+qa_blocks::suite()
 {
   CppUnit::TestSuite *s = new CppUnit::TestSuite("gr-blocks");
 

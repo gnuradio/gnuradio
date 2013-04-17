@@ -23,7 +23,7 @@
 #define INCLUDED_ATSC_DERANDOMIZER_H
 
 #include <atsc/api.h>
-#include <gr_sync_block.h>
+#include <gnuradio/sync_block.h>
 #include <atsc/randomizer_impl.h>
 
 class atsc_derandomizer;
@@ -37,7 +37,7 @@ ATSC_API atsc_derandomizer_sptr atsc_make_derandomizer();
  *
  * input: atsc_mpeg_packet_no_sync; output: atsc_mpeg_packet;
  */
-class ATSC_API atsc_derandomizer : public gr_sync_block
+class ATSC_API atsc_derandomizer : public gr::sync_block
 {
   friend ATSC_API atsc_derandomizer_sptr atsc_make_derandomizer();
 

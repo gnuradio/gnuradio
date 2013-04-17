@@ -24,8 +24,8 @@
 #define INCLUDED_CHANNELS_CHANNEL_MODEL_H
 
 #include <channels/api.h>
-#include <gr_hier_block2.h>
-#include <gr_types.h>
+#include <gnuradio/hier_block2.h>
+#include <gnuradio/types.h>
 
 namespace gr {
   namespace channels {
@@ -45,7 +45,7 @@ namespace gr {
      * Multipath can be approximated in this model by using a FIR
      * filter representation of a multipath delay profile..
      */
-    class CHANNELS_API channel_model : virtual public gr_hier_block2
+    class CHANNELS_API channel_model : virtual public hier_block2
     {
     public:
       // gr::channels::channel_model::sptr

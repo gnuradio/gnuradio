@@ -28,7 +28,7 @@
 #include <trellis/api.h>
 #include <trellis/fsm.h>
 #include <trellis/core_algorithms.h>
-#include <gr_block.h>
+#include <gnuradio/block.h>
 
 namespace gr {
   namespace trellis {
@@ -36,7 +36,7 @@ namespace gr {
     /*!
      *  \ingroup trellis_coding_blk
      */
-    class TRELLIS_API @NAME@ : virtual public gr_block
+    class TRELLIS_API @NAME@ : virtual public block
     {
     public:
       // gr::trellis::@BASE_NAME@::sptr

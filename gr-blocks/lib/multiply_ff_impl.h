@@ -23,7 +23,7 @@
 #ifndef INCLUDED_BLOCKS_MULTIPLY_FF_IMPL_H
 #define INCLUDED_BLOCKS_MULTIPLY_FF_IMPL_H
 
-#include <blocks/multiply_ff.h>
+#include <gnuradio/blocks/multiply_ff.h>
 
 namespace gr {
   namespace blocks {

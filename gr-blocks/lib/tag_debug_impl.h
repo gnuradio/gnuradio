@@ -23,8 +23,8 @@
 #ifndef INCLUDED_GR_TAG_DEBUG_IMPL_H
 #define INCLUDED_GR_TAG_DEBUG_IMPL_H
 
-#include <blocks/tag_debug.h>
-#include <thread/thread.h>
+#include <gnuradio/blocks/tag_debug.h>
+#include <gnuradio/thread/thread.h>
 #include <stddef.h>
 
 namespace gr {
@@ -34,8 +34,8 @@ namespace gr {
     {
     private:
       std::string d_name;
-      std::vector<gr_tag_t> d_tags;
-      std::vector<gr_tag_t>::iterator d_tags_itr;
+      std::vector<tag_t> d_tags;
+      std::vector<tag_t>::iterator d_tags_itr;
       bool d_display;
       gr::thread::mutex d_mutex;
 
@@ -43,7 +43,7 @@ namespace gr {
       tag_debug_impl(size_t sizeof_stream_item, const std::string &name);
       ~tag_debug_impl();
 
-      std::vector<gr_tag_t> current_tags();
+      std::vector<tag_t> current_tags();
 
       void set_display(bool d);
 

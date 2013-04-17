@@ -25,7 +25,7 @@
 #endif
 
 #include "probe_rate_impl.h"
-#include <gr_io_signature.h>
+#include <gnuradio/io_signature.h>
 
 namespace gr {
   namespace blocks {
@@ -38,9 +38,9 @@ namespace gr {
     }
 
     probe_rate_impl::probe_rate_impl(size_t itemsize, double update_rate_ms, double alpha) : 
-        gr_sync_block("probe_rate",
-            gr_make_io_signature(1,1,itemsize),
-            gr_make_io_signature(0,0,itemsize)),
+        sync_block("probe_rate",
+            io_signature::make(1,1,itemsize),
+            io_signature::make(0,0,itemsize)),
         d_alpha(alpha),
         d_beta(1.0-alpha),
         d_avg(0),

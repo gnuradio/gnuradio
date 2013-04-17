@@ -25,7 +25,7 @@
 
 #include <Python.h>
 #include <qtgui/api.h>
-#include <gr_sync_block.h>
+#include <gnuradio/sync_block.h>
 #include <qapplication.h>
 #include <qwt_symbol.h>
 
@@ -46,7 +46,7 @@ namespace gr {
      * byte). It will display packed bytes but the display will have
      * to be autoscaled.
      */
-    class QTGUI_API time_raster_sink_b : virtual public gr_sync_block
+    class QTGUI_API time_raster_sink_b : virtual public sync_block
     {
     public:
       // gr::qtgui::time_raster_sink_b::sptr

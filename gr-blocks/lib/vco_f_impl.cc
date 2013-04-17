@@ -25,7 +25,7 @@
 #endif
 
 #include "vco_f_impl.h"
-#include <gr_io_signature.h>
+#include <gnuradio/io_signature.h>
 #include <math.h>
 
 namespace gr {
@@ -39,9 +39,9 @@ namespace gr {
     }
 
     vco_f_impl::vco_f_impl(double sampling_rate, double sensitivity, double amplitude)
-      : gr_sync_block("vco_f",
-                      gr_make_io_signature(1, 1, sizeof(float)),
-                      gr_make_io_signature(1, 1, sizeof(float))),
+      : sync_block("vco_f",
+                      io_signature::make(1, 1, sizeof(float)),
+                      io_signature::make(1, 1, sizeof(float))),
         d_sampling_rate(sampling_rate), d_sensitivity(sensitivity),
         d_amplitude(amplitude), d_k(d_sensitivity/d_sampling_rate)
     {

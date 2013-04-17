@@ -23,10 +23,10 @@
 #ifndef INCLUDED_STREAM_PDU_BASE_H
 #define INCLUDED_STREAM_PDU_BASE_H
 
-#include <thread/thread.h>
+#include <gnuradio/thread/thread.h>
 #include <pmt/pmt.h>
 
-class gr_basic_block;
+class basic_block;
 
 namespace gr {
   namespace blocks {
@@ -45,12 +45,12 @@ namespace gr {
       gr::thread::thread d_thread;
 
       pmt::pmt_t d_port;
-      gr_basic_block *d_blk;
+      basic_block *d_blk;
 
       void run();
       void send(pmt::pmt_t msg);
       bool wait_ready();
-      void start_rxthread(gr_basic_block *blk, pmt::pmt_t rxport);
+      void start_rxthread(basic_block *blk, pmt::pmt_t rxport);
       void stop_rxthread();
     };
  

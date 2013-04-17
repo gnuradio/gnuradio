@@ -23,7 +23,7 @@
 #ifndef INCLUDED_NLOG10_FF_IMPL_H
 #define INCLUDED_NLOG10_FF_IMPL_H
 
-#include <blocks/nlog10_ff.h>
+#include <gnuradio/blocks/nlog10_ff.h>
 
 namespace gr {
   namespace blocks {

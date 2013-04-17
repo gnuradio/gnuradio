@@ -23,7 +23,7 @@
 #include "config.h"
 #endif
 
-#include <gr_io_signature.h>
+#include <gnuradio/io_signature.h>
 #include "ofdm_frame_equalizer_vcvc_impl.h"
 
 namespace gr {
@@ -49,9 +49,9 @@ namespace gr {
 	const std::string &len_tag_key,
 	bool propagate_channel_state,
 	int fixed_frame_len
-    ) : gr_tagged_stream_block("ofdm_frame_equalizer_vcvc",
-	  gr_make_io_signature(1, 1, sizeof (gr_complex) * equalizer->fft_len()),
-	  gr_make_io_signature(1, 1, sizeof (gr_complex) * equalizer->fft_len()),
+    ) : tagged_stream_block("ofdm_frame_equalizer_vcvc",
+	  io_signature::make(1, 1, sizeof (gr_complex) * equalizer->fft_len()),
+	  io_signature::make(1, 1, sizeof (gr_complex) * equalizer->fft_len()),
 	  len_tag_key),
       d_fft_len(equalizer->fft_len()),
       d_eq(equalizer),
@@ -85,7 +85,7 @@ namespace gr {
 	frame_len = ninput_items[0];
       }
 
-      std::vector<gr_tag_t> tags;
+      std::vector<tag_t> tags;
       get_tags_in_range(tags, 0, nitems_read(0), nitems_read(0)+1);
       for (unsigned i = 0; i < tags.size(); i++) {
 	if (pmt::symbol_to_string(tags[i].key) == "ofdm_sync_chan_taps") {

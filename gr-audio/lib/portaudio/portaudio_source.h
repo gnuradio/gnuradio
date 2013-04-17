@@ -24,8 +24,8 @@
 #define INCLUDED_AUDIO_PORTAUDIO_SOURCE_H
 
 #include <audio/source.h>
-#include <gr_buffer.h>
-#include <thread/thread.h>
+#include <gnuradio/buffer.h>
+#include <gnuradio/thread/thread.h>
 #include <string>
 #include <portaudio.h>
 #include <stdexcept>
@@ -55,8 +55,8 @@ namespace gr {
       PaStream           *d_stream;
       PaStreamParameters  d_input_parameters;
 
-      gr_buffer_sptr        d_writer;  // buffer used between work and callback
-      gr_buffer_reader_sptr d_reader;
+      gr::buffer_sptr        d_writer;  // buffer used between work and callback
+      gr::buffer_reader_sptr d_reader;
 
       gr::thread::mutex              d_ringbuffer_mutex;
       gr::thread::condition_variable d_ringbuffer_cond;

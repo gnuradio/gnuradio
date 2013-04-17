@@ -24,7 +24,7 @@
 #define	INCLUDED_FILTER_ADAPTIVE_FIR_CCC_H
 
 #include <filter/api.h>
-#include <gr_sync_decimator.h>
+#include <gnuradio/sync_decimator.h>
 
 namespace gr {
   namespace filter {
@@ -59,7 +59,7 @@ namespace gr {
      * See digital::cma_equalizer_cc and digital::lms_dd_equalizer_cc
      * for example usage.
      */
-    class FILTER_API adaptive_fir_ccc : virtual public gr_sync_decimator
+    class FILTER_API adaptive_fir_ccc : virtual public sync_decimator
     {
     protected:
       

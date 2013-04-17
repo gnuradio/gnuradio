@@ -24,10 +24,10 @@
 #include "config.h"
 #endif
 
-#include <gr_io_signature.h>
+#include <gnuradio/io_signature.h>
 #include <digital/constellation.h>
-#include <gr_math.h>
-#include <gr_complex.h>
+#include <gnuradio/math.h>
+#include <gnuradio/gr_complex.h>
 #include <math.h>
 #include <iostream>
 #include <stdlib.h>

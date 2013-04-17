@@ -25,8 +25,8 @@
 #endif
 
 #include "fmdet_cf_impl.h"
-#include <gr_io_signature.h>
-#include <gr_math.h>
+#include <gnuradio/io_signature.h>
+#include <gnuradio/math.h>
 
 namespace gr {
   namespace analog {
@@ -43,9 +43,9 @@ namespace gr {
 
     fmdet_cf_impl::fmdet_cf_impl(float samplerate, float freq_low,
 				 float freq_high, float scl)
-      : gr_sync_block("fmdet_cf",
-		      gr_make_io_signature(1, 1, sizeof(gr_complex)),
-		      gr_make_io_signature(1, 1, sizeof(float))),
+      : sync_block("fmdet_cf",
+		      io_signature::make(1, 1, sizeof(gr_complex)),
+		      io_signature::make(1, 1, sizeof(float))),
 	d_S1(0.1), d_S2(0.1),
 	d_S3(0.1), d_S4(0.1)
     {

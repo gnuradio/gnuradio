@@ -23,7 +23,7 @@
 #ifndef INCLUDED_COMPLEX_TO_REAL_IMPL_H
 #define INCLUDED_COMPLEX_TO_REAL_IMPL_H
 
-#include <blocks/complex_to_real.h>
+#include <gnuradio/blocks/complex_to_real.h>
 
 namespace gr {
   namespace blocks {

@@ -25,7 +25,7 @@
 
 #include <Python.h>
 #include <qtgui/api.h>
-#include <gr_sync_block.h>
+#include <gnuradio/sync_block.h>
 #include <qapplication.h>
 #include <filter/firdes.h>
 
@@ -41,7 +41,7 @@ namespace gr {
      * This is a QT-based graphical sink the takes set of a complex
      * streams and plots them on an IQ constellation plot.
      */
-    class QTGUI_API const_sink_c : virtual public gr_sync_block
+    class QTGUI_API const_sink_c : virtual public sync_block
     {
     public:
       // gr::qtgui::const_sink_c::sptr

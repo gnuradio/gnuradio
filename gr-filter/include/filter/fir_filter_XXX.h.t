@@ -26,7 +26,7 @@
 #define	@GUARD_NAME@
 
 #include <filter/api.h>
-#include <gr_sync_decimator.h>
+#include <gnuradio/sync_decimator.h>
 
 namespace gr {
   namespace filter {
@@ -55,7 +55,7 @@ namespace gr {
      * (or decimators) by specifying an integer value for \p
      * decimation.
      */
-    class FILTER_API @BASE_NAME@ : virtual public gr_sync_decimator
+    class FILTER_API @BASE_NAME@ : virtual public sync_decimator
     {
     public:
 

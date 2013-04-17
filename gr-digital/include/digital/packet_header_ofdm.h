@@ -60,7 +60,7 @@ namespace gr {
        */
       bool header_parser(
 	const unsigned char *header,
-	std::vector<gr_tag_t> &tags);
+	std::vector<tag_t> &tags);
 
       /*!
        * \param occupied_carriers See carrier allocator

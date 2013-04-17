@@ -23,7 +23,7 @@
 #define INCLUDED_GR_SHD_SMINI_SINK_H
 
 #include <gr_shd_api.h>
-#include <gr_sync_block.h>
+#include <gnuradio/sync_block.h>
 #include <shd/xmini/multi_xmini.hpp>
 
 class shd_smini_sink;
@@ -34,7 +34,7 @@ GR_SHD_API boost::shared_ptr<shd_smini_sink> shd_make_smini_sink(
     size_t num_channels
 );
 
-class GR_SHD_API shd_smini_sink : virtual public gr_sync_block
+class GR_SHD_API shd_smini_sink : virtual public sync_block
 {
  public:
 

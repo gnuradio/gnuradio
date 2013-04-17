@@ -20,7 +20,7 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include <blocks/count_bits.h>
+#include <gnuradio/blocks/count_bits.h>
 
 /*
  * these are slow and obvious.  If you need something faster, fix these

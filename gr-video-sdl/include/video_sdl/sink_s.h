@@ -24,7 +24,7 @@
 #define INCLUDED_VIDEO_SDL_SINK_S_H
 
 #include <video_sdl/api.h>
-#include <gr_sync_block.h>
+#include <gnuradio/sync_block.h>
 
 namespace gr {
   namespace video_sdl {
@@ -38,7 +38,7 @@ namespace gr {
      * Three streams: first is grey (Y), second is U, third is V
      * Input samples must be in the range [0,255].
      */
-    class VIDEO_SDL_API sink_s : virtual public gr_sync_block
+    class VIDEO_SDL_API sink_s : virtual public sync_block
     {
     public:
       // gr::video_sdl::sink_s::sptr

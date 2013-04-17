@@ -25,7 +25,7 @@
 #endif
 
 #include <atsc/viterbi_decoder.h>
-#include <gr_io_signature.h>
+#include <gnuradio/io_signature.h>
 #include <atsc/consts.h>
 #include <iostream>
 
@@ -39,9 +39,9 @@ atsc_make_viterbi_decoder()
 }
 
 atsc_viterbi_decoder::atsc_viterbi_decoder()
-  : gr_sync_block("atsc_viterbi_decoder",
-		  gr_make_io_signature(1, 1, sizeof(atsc_soft_data_segment)),
-		  gr_make_io_signature(1, 1, sizeof(atsc_mpeg_packet_rs_encoded))),
+  : gr::sync_block("atsc_viterbi_decoder",
+		  gr::io_signature::make(1, 1, sizeof(atsc_soft_data_segment)),
+		  gr::io_signature::make(1, 1, sizeof(atsc_mpeg_packet_rs_encoded))),
 		  last_start(-1)
 {
   set_output_multiple(atsci_viterbi_decoder::NCODERS);

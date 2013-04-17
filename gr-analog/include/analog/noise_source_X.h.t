@@ -27,8 +27,7 @@
 
 #include <analog/api.h>
 #include <analog/noise_type.h>
-#include <gr_sync_block.h>
-#include <gr_random.h>
+#include <gnuradio/sync_block.h>
 
 namespace gr {
   namespace analog {
@@ -41,7 +40,7 @@ namespace gr {
      * Generate random values from different distributions.
      * Currently, only Gaussian and uniform are enabled.
      */
-    class ANALOG_API @BASE_NAME@ : virtual public gr_sync_block 
+    class ANALOG_API @BASE_NAME@ : virtual public sync_block 
     {
     public:
       // gr::analog::@BASE_NAME@::sptr

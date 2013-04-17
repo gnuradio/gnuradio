@@ -25,7 +25,7 @@
 #endif
 
 #include "head_impl.h"
-#include <gr_io_signature.h>
+#include <gnuradio/io_signature.h>
 #include <string.h>
 
 namespace gr {
@@ -39,9 +39,9 @@ namespace gr {
     }
 
     head_impl::head_impl(size_t sizeof_stream_item, uint64_t nitems)
-      : gr_sync_block("head",
-                      gr_make_io_signature(1, 1, sizeof_stream_item),
-                      gr_make_io_signature(1, 1, sizeof_stream_item)),
+      : sync_block("head",
+                   io_signature::make(1, 1, sizeof_stream_item),
+                   io_signature::make(1, 1, sizeof_stream_item)),
         d_nitems(nitems), d_ncopied_items(0)
     {
     }

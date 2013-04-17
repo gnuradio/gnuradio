@@ -23,7 +23,7 @@
 #define INCLUDED_ATSC_DEPAD_H
 
 #include <atsc/api.h>
-#include <gr_sync_interpolator.h>
+#include <gnuradio/sync_interpolator.h>
 
 class atsc_depad;
 typedef boost::shared_ptr<atsc_depad> atsc_depad_sptr;
@@ -36,7 +36,7 @@ ATSC_API atsc_depad_sptr atsc_make_depad();
  *
  * input: atsc_mpeg_packet; output: unsigned char
  */
-class ATSC_API atsc_depad : public gr_sync_interpolator
+class ATSC_API atsc_depad : public gr::sync_interpolator
 {
   friend ATSC_API atsc_depad_sptr atsc_make_depad();
 

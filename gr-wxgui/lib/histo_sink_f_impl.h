@@ -31,7 +31,7 @@ namespace gr {
     class histo_sink_f_impl : public histo_sink_f
     {
     private:
-      gr_msg_queue_sptr d_msgq;
+      msg_queue::sptr d_msgq;
       unsigned int d_num_bins;
       unsigned int d_frame_size;
       unsigned int d_sample_count;
@@ -43,7 +43,7 @@ namespace gr {
       void clear(void);
 
     public:
-      histo_sink_f_impl(gr_msg_queue_sptr msgq);
+      histo_sink_f_impl(msg_queue::sptr msgq);
       ~histo_sink_f_impl(void);
 
       int work(int noutput_items,

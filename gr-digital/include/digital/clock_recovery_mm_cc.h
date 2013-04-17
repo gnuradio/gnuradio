@@ -24,7 +24,7 @@
 #define	INCLUDED_DIGITAL_CLOCK_RECOVERY_MM_CC_H
 
 #include <digital/api.h>
-#include <gr_block.h>
+#include <gnuradio/block.h>
 
 namespace gr {
   namespace digital {
@@ -44,7 +44,7 @@ namespace gr {
      *    and Muller algorithm," Electronics Letters, Vol. 31, no. 13, 22
      *    June 1995, pp. 1032 - 1033.
      */
-    class DIGITAL_API clock_recovery_mm_cc : virtual public gr_block
+    class DIGITAL_API clock_recovery_mm_cc : virtual public block
     {
     public:
       // gr::digital::clock_recovery_mm_cc::sptr

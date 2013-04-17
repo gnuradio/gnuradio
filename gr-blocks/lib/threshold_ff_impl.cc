@@ -25,7 +25,7 @@
 #endif
 
 #include "threshold_ff_impl.h"
-#include <gr_io_signature.h>
+#include <gnuradio/io_signature.h>
 
 namespace gr {
   namespace blocks {
@@ -39,9 +39,9 @@ namespace gr {
 
     threshold_ff_impl::threshold_ff_impl(float lo, float hi,
                                          float initial_state)
-      : gr_sync_block("threshold_ff",
-                      gr_make_io_signature(1, 1, sizeof(float)),
-                      gr_make_io_signature(1, 1, sizeof(float))),
+      : sync_block("threshold_ff",
+                      io_signature::make(1, 1, sizeof(float)),
+                      io_signature::make(1, 1, sizeof(float))),
         d_lo(lo), d_hi(hi), d_last_state(initial_state)
     {
     }

@@ -23,7 +23,7 @@
 #ifndef INCLUDED_GR_ANNOTATOR_1TO1_IMPL_H
 #define	INCLUDED_GR_ANNOTATOR_1TO1_IMPL_H
 
-#include <blocks/annotator_1to1.h>
+#include <gnuradio/blocks/annotator_1to1.h>
 
 namespace gr {
   namespace blocks {
@@ -34,13 +34,13 @@ namespace gr {
       size_t d_itemsize;
       uint64_t d_when;
       uint64_t d_tag_counter;
-      std::vector<gr_tag_t> d_stored_tags;
+      std::vector<tag_t> d_stored_tags;
 
     public:
       annotator_1to1_impl(int when, size_t sizeof_stream_item);
       ~annotator_1to1_impl();
 
-      std::vector<gr_tag_t> data() const
+      std::vector<tag_t> data() const
       {
         return d_stored_tags;
       }

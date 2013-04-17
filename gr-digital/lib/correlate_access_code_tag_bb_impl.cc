@@ -25,9 +25,9 @@
 #endif
 
 #include "correlate_access_code_tag_bb_impl.h"
-#include <gr_io_signature.h>
+#include <gnuradio/io_signature.h>
 #include <stdexcept>
-#include <blocks/count_bits.h>
+#include <gnuradio/blocks/count_bits.h>
 #include <cstdio>
 #include <iostream>
 
@@ -49,9 +49,9 @@ namespace gr {
 
     correlate_access_code_tag_bb_impl::correlate_access_code_tag_bb_impl(
         const std::string &access_code, int threshold, const std::string &tag_name)
-      : gr_sync_block("correlate_access_code_tag_bb",
-		      gr_make_io_signature(1, 1, sizeof(char)),
-		      gr_make_io_signature(1, 1, sizeof(char))),
+      : sync_block("correlate_access_code_tag_bb",
+		      io_signature::make(1, 1, sizeof(char)),
+		      io_signature::make(1, 1, sizeof(char))),
 	d_data_reg(0), d_mask(0),
 	d_threshold(threshold), d_len(0)
     {

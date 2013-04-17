@@ -24,7 +24,7 @@
 #define INCLUDED_ATSC_RANDOMIZER_H
 
 #include <atsc/api.h>
-#include <gr_sync_block.h>
+#include <gnuradio/sync_block.h>
 #include <atsc/randomizer_impl.h>
 
 class atsc_randomizer;
@@ -38,7 +38,7 @@ ATSC_API atsc_randomizer_sptr atsc_make_randomizer();
  *
  * input: atsc_mpeg_packet; output: atsc_mpeg_packet_no_sync
  */
-class ATSC_API atsc_randomizer : public gr_sync_block
+class ATSC_API atsc_randomizer : public gr::sync_block
 {
   friend ATSC_API atsc_randomizer_sptr atsc_make_randomizer();
 

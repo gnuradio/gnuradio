@@ -25,7 +25,7 @@
 
 #include <Python.h>
 #include <qtgui/api.h>
-#include <gr_block.h>
+#include <gnuradio/block.h>
 #include <qapplication.h>
 #include <qwt_symbol.h>
 
@@ -46,7 +46,7 @@ namespace gr {
      * appropriate boolean value in the constructor to False.
      */
 
-    class QTGUI_API sink_c : virtual public gr_block
+    class QTGUI_API sink_c : virtual public block
     {
     public:
       // gr::qtgui::sink_c::sptr

@@ -25,7 +25,7 @@
 
 #include <filter/filter_delay_fc.h>
 #include <filter/fir_filter.h>
-#include <gr_io_signature.h>
+#include <gnuradio/io_signature.h>
 
 namespace gr {
   namespace filter {

@@ -32,7 +32,7 @@
 #endif
 
 // Include header files for each block used in flowgraph
-#include <gr_top_block.h>
+#include <gnuradio/top_block.h>
 #include <filter/firdes.h>
 #include <filter/fir_filter_ccf.h>
 #include <analog/quadrature_demod_cf.h>
@@ -77,7 +77,7 @@ int main(int argc, char **argv)
 
 
     // Construct a top block that will contain flowgraph blocks.
-    gr_top_block_sptr tb = gr_make_top_block("fcd_nfm_rx");
+    top_block_sptr tb = make_top_block("fcd_nfm_rx");
 
     // FCD source
     fcd_source_c_sptr fcd = fcd_make_source_c(device);

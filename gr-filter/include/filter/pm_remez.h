@@ -24,7 +24,7 @@
 #define INCLUDED_FILTER_PM_REMEZ_H
 
 #include <filter/api.h>
-#include <gr_types.h>
+#include <gnuradio/types.h>
 #include <string>
 #include <stdexcept>
 

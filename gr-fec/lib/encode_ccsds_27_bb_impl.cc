@@ -25,7 +25,7 @@
 #endif
 
 #include "encode_ccsds_27_bb_impl.h"
-#include <gr_io_signature.h>
+#include <gnuradio/io_signature.h>
 
 extern "C" {
 #include <fec/viterbi.h>
@@ -40,9 +40,9 @@ namespace gr {
     }
 
     encode_ccsds_27_bb_impl::encode_ccsds_27_bb_impl()
-      : gr_sync_interpolator("encode_ccsds_27_bb",
-			     gr_make_io_signature (1, 1, sizeof(char)),
-			     gr_make_io_signature (1, 1, sizeof(char)),
+      : sync_interpolator("encode_ccsds_27_bb",
+			     io_signature::make (1, 1, sizeof(char)),
+			     io_signature::make (1, 1, sizeof(char)),
 			     16)  // Rate 1/2 code, packed to unpacked conversion
     {
       d_encstate = 0;

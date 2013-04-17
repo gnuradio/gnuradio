@@ -25,7 +25,7 @@
 #define	INCLUDED_FILTER_PFB_CHANNELIZER_CCF_H
 
 #include <filter/api.h>
-#include <gr_block.h>
+#include <gnuradio/block.h>
 
 namespace gr {
   namespace filter {
@@ -103,7 +103,7 @@ namespace gr {
      *
      */
     
-    class FILTER_API pfb_channelizer_ccf : virtual public gr_block
+    class FILTER_API pfb_channelizer_ccf : virtual public block
     {
     public:
       // gr::filter::pfb_channelizer_ccf::sptr

@@ -24,7 +24,7 @@
 #define INCLUDED_FFT_FFT_VFC_H
 
 #include <fft/api.h>
-#include <gr_sync_block.h>
+#include <gnuradio/sync_block.h>
 
 namespace gr {
   namespace fft {
@@ -33,7 +33,7 @@ namespace gr {
      * \brief Compute forward or reverse FFT. float vector in / complex vector out.
      * \ingroup fourier_analysis_blk
      */
-    class FFT_API fft_vfc : virtual public gr_sync_block
+    class FFT_API fft_vfc : virtual public sync_block
     {
     public:
 

@@ -25,7 +25,7 @@
 #endif
 
 #include "constellation_metrics_cf_impl.h"
-#include <gr_io_signature.h>
+#include <gnuradio/io_signature.h>
 #include <assert.h>
 #include <stdexcept>
 #include <iostream>
@@ -43,9 +43,9 @@ namespace gr {
 
     constellation_metrics_cf_impl::constellation_metrics_cf_impl(digital::constellation_sptr constellation,
 								 digital::trellis_metric_type_t TYPE)
-      : gr_block("constellation_metrics_cf",
-		 gr_make_io_signature(1, -1, sizeof(gr_complex)),
-		 gr_make_io_signature(1, -1, sizeof(float))),
+      : block("constellation_metrics_cf",
+		 io_signature::make(1, -1, sizeof(gr_complex)),
+		 io_signature::make(1, -1, sizeof(float))),
 	d_constellation(constellation),
 	d_TYPE(TYPE),
 	d_O(constellation->arity()),

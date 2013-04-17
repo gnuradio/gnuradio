@@ -24,8 +24,8 @@
 #define INCLUDED_DIGITAL_OFDM_MAPPER_BCV_H
 
 #include <digital/api.h>
-#include <gr_sync_block.h>
-#include <gr_msg_queue.h>
+#include <gnuradio/sync_block.h>
+#include <gnuradio/msg_queue.h>
 
 namespace gr {
   namespace digital {
@@ -39,7 +39,7 @@ namespace gr {
      * \details
      * Abstract class must be subclassed with specific mapping.
      */
-    class DIGITAL_API ofdm_mapper_bcv : virtual public gr_sync_block
+    class DIGITAL_API ofdm_mapper_bcv : virtual public sync_block
     {
     public:
       // gr::digital::ofdm_mapper_bcv::sptr
@@ -58,7 +58,7 @@ namespace gr {
 		       unsigned occupied_carriers,
 		       unsigned int fft_length);
 
-      virtual gr_msg_queue_sptr msgq() const = 0;
+      virtual msg_queue::sptr msgq() const = 0;
     };
 
   } /* namespace digital */

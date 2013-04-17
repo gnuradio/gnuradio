@@ -22,7 +22,7 @@
 #ifndef INCLUDED_FILTER_API_H
 #define INCLUDED_FILTER_API_H
 
-#include <attributes.h>
+#include <gnuradio/attributes.h>
 
 #ifdef gnuradio_filter_EXPORTS
 #  define FILTER_API __GR_ATTR_EXPORT

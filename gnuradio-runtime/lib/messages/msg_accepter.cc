@@ -24,7 +24,7 @@
 #include "config.h"
 #endif
 
-#include <messages/msg_accepter.h>
+#include <gnuradio/messages/msg_accepter.h>
 
 namespace gr {
   namespace messages {

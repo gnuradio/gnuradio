@@ -25,7 +25,7 @@
 #endif
 
 #include "nlog10_ff_impl.h"
-#include <gr_io_signature.h>
+#include <gnuradio/io_signature.h>
 
 namespace gr {
   namespace blocks {
@@ -36,9 +36,9 @@ namespace gr {
     }
 
     nlog10_ff_impl::nlog10_ff_impl(float n, size_t vlen, float k)
-      : gr_sync_block("nlog10_ff",
-		      gr_make_io_signature (1, 1, sizeof(float)*vlen),
-		      gr_make_io_signature (1, 1, sizeof(float)*vlen)),
+      : sync_block("nlog10_ff",
+		      io_signature::make (1, 1, sizeof(float)*vlen),
+		      io_signature::make (1, 1, sizeof(float)*vlen)),
 	d_n(n), d_vlen(vlen), d_k(k)
     {
     }

@@ -24,7 +24,7 @@
 #define INCLUDED_TAGGED_STREAM_MUX_IMPL_H
 
 #include <vector>
-#include <blocks/tagged_stream_mux.h>
+#include <gnuradio/blocks/tagged_stream_mux.h>
 
 namespace gr {
   namespace blocks {

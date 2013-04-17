@@ -25,8 +25,8 @@
 #endif
 
 #include "udp_source_impl.h"
-#include <gr_io_signature.h>
-#include <gr_math.h>
+#include <gnuradio/io_signature.h>
+#include <gnuradio/math.h>
 #include <stdexcept>
 #include <errno.h>
 #include <stdio.h>
@@ -48,9 +48,9 @@ namespace gr {
     udp_source_impl::udp_source_impl(size_t itemsize,
                                      const std::string &host, int port,
                                      int payload_size, bool eof)
-      : gr_sync_block("udp_source",
-                      gr_make_io_signature(0, 0, 0),
-                      gr_make_io_signature(1, 1, itemsize)),
+      : sync_block("udp_source",
+                      io_signature::make(0, 0, 0),
+                      io_signature::make(1, 1, itemsize)),
         d_itemsize(itemsize), d_payload_size(payload_size),
         d_eof(eof), d_connected(false), d_residual(0), d_sent(0), d_offset(0)
     {

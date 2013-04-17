@@ -25,7 +25,7 @@
 #define	INCLUDED_PFB_DECIMATOR_CCF_H
 
 #include <filter/api.h>
-#include <gr_sync_block.h>
+#include <gnuradio/sync_block.h>
 
 namespace gr {
   namespace filter {
@@ -88,7 +88,7 @@ namespace gr {
      *      Systems," Upper Saddle River, NJ: Prentice Hall, Inc. 2004.</EM></B>
      */
 
-    class FILTER_API pfb_decimator_ccf : virtual public gr_sync_block
+    class FILTER_API pfb_decimator_ccf : virtual public sync_block
     {
     public:
       // gr::filter::pfb_decimator_ccf::sptr

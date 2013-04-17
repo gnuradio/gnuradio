@@ -25,14 +25,14 @@
 #endif
 
 #include "packet_sink_impl.h"
-#include <gr_io_signature.h>
+#include <gnuradio/io_signature.h>
 #include <cstdio>
 #include <errno.h>
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <fcntl.h>
 #include <stdexcept>
-#include <blocks/count_bits.h>
+#include <gnuradio/blocks/count_bits.h>
 #include <string.h>
 
 namespace gr {
@@ -79,17 +79,17 @@ static const int DEFAULT_THRESHOLD = 12;
 
     packet_sink::sptr
     packet_sink::make(const std::vector<unsigned char>& sync_vector,
-		      gr_msg_queue_sptr target_queue, int threshold)
+		      msg_queue::sptr target_queue, int threshold)
     {
       return gnuradio::get_initial_sptr
 	(new packet_sink_impl(sync_vector, target_queue, threshold));
     }
 
     packet_sink_impl::packet_sink_impl(const std::vector<unsigned char>& sync_vector,
-				       gr_msg_queue_sptr target_queue, int threshold)
-      : gr_sync_block("packet_sink",
-		      gr_make_io_signature(1, 1, sizeof(float)),
-		      gr_make_io_signature(0, 0, 0)),
+				       msg_queue::sptr target_queue, int threshold)
+      : sync_block("packet_sink",
+		      io_signature::make(1, 1, sizeof(float)),
+		      io_signature::make(0, 0, 0)),
 	d_target_queue(target_queue), d_threshold(threshold == -1 ? DEFAULT_THRESHOLD : threshold)
     {
       d_sync_vector = 0;
@@ -184,7 +184,7 @@ static const int DEFAULT_THRESHOLD = 12;
 
 	      if(d_packetlen_cnt == d_packetlen) {		// packet is filled
 		// build a message
-		gr_message_sptr msg = gr_make_message(0, 0, 0, d_packetlen_cnt);
+		message::sptr msg = message::make(0, 0, 0, d_packetlen_cnt);
 		memcpy(msg->msg(), d_packet, d_packetlen_cnt);
 
 		d_target_queue->insert_tail(msg);	// send it

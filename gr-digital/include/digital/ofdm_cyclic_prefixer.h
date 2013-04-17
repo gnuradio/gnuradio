@@ -24,7 +24,7 @@
 #define INCLUDED_DIGITAL_OFDM_CYCLIC_PREFIXER_H
 
 #include <digital/api.h>
-#include <gr_tagged_stream_block.h>
+#include <gnuradio/tagged_stream_block.h>
 
 namespace gr {
   namespace digital {
@@ -46,7 +46,7 @@ namespace gr {
      *
      * The pulse shape is a raised cosine in the time domain.
      */
-    class DIGITAL_API ofdm_cyclic_prefixer : virtual public gr_tagged_stream_block
+    class DIGITAL_API ofdm_cyclic_prefixer : virtual public tagged_stream_block
     {
      public:
       typedef boost::shared_ptr<ofdm_cyclic_prefixer> sptr;

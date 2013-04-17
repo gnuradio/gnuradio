@@ -24,8 +24,8 @@
 #define INCLUDED_QTGUI_CONST_SINK_C_IMPL_H
 
 #include <qtgui/const_sink_c.h>
-#include <high_res_timer.h>
-#include <thread/thread.h>
+#include <gnuradio/high_res_timer.h>
+#include <gnuradio/thread/thread.h>
 #include <qtgui/constellationdisplayform.h>
 
 namespace gr {

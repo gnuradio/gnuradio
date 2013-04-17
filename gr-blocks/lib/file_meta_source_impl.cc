@@ -25,7 +25,7 @@
 #endif
 
 #include "file_meta_source_impl.h"
-#include <gr_io_signature.h>
+#include <gnuradio/io_signature.h>
 #include <cstdio>
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -72,9 +72,9 @@ namespace gr {
 						 bool repeat,
 						 bool detached_header,
 						 const std::string &hdr_filename)
-      : gr_sync_block("file_meta_source",
-		      gr_make_io_signature(0, 0, 0),
-		      gr_make_io_signature(1, 1, 1)),
+      : sync_block("file_meta_source",
+		      io_signature::make(0, 0, 0),
+		      io_signature::make(1, 1, 1)),
 	d_itemsize(0), d_samp_rate(0),
 	d_seg_size(0),
 	d_updated(false), d_repeat(repeat)
@@ -104,7 +104,7 @@ namespace gr {
 	throw std::runtime_error("file_meta_source: could not read header.\n");
 
       // Set output signature based on itemsize info in header
-      set_output_signature(gr_make_io_signature(1, 1, d_itemsize));
+      set_output_signature(io_signature::make(1, 1, d_itemsize));
     }
 
     file_meta_source_impl::~file_meta_source_impl()
@@ -197,7 +197,7 @@ namespace gr {
 
     void
     file_meta_source_impl::parse_header(pmt::pmt_t hdr, uint64_t offset,
-					std::vector<gr_tag_t> &tags)
+					std::vector<tag_t> &tags)
     {
       pmt::pmt_t r, key;
 
@@ -207,7 +207,7 @@ namespace gr {
 	r = pmt::dict_ref(hdr, key, pmt::PMT_NIL);
 	d_samp_rate = pmt::to_double(r);
 
-	gr_tag_t t;
+	tag_t t;
 	t.offset = offset;
 	t.key = key;
 	t.value = r;
@@ -223,7 +223,7 @@ namespace gr {
       if(pmt::dict_has_key(hdr, key)) {
 	d_time_stamp = pmt::dict_ref(hdr, key, pmt::PMT_NIL);
 
-	gr_tag_t t;
+	tag_t t;
 	t.offset = offset;
 	t.key = key;
 	t.value = d_time_stamp;
@@ -256,7 +256,7 @@ namespace gr {
 
     void
     file_meta_source_impl::parse_extras(pmt::pmt_t extras, uint64_t offset,
-					std::vector<gr_tag_t> &tags)
+					std::vector<tag_t> &tags)
     {
       pmt::pmt_t item, key, val;
 
@@ -266,7 +266,7 @@ namespace gr {
 	key = pmt::car(item);
 	val = pmt::cdr(item);
 
-	gr_tag_t t;
+	tag_t t;
 	t.offset = offset;
 	t.key = key;
 	t.value = val;

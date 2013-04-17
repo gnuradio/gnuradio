@@ -24,7 +24,7 @@
 #endif
 
 #include <climits>
-#include <gr_io_signature.h>
+#include <gnuradio/io_signature.h>
 #include "header_payload_demux_impl.h"
 
 namespace gr {
@@ -70,9 +70,9 @@ namespace gr {
 	const std::string &trigger_tag_key,
 	bool output_symbols,
 	size_t itemsize
-    ) : gr_block("header_payload_demux",
-		      gr_make_io_signature2(1, 2, itemsize, sizeof(char)),
-		      gr_make_io_signature(2, 2, (output_symbols ? itemsize * items_per_symbol : itemsize))),
+    ) : block("header_payload_demux",
+		      io_signature::make2(1, 2, itemsize, sizeof(char)),
+		      io_signature::make(2, 2, (output_symbols ? itemsize * items_per_symbol : itemsize))),
       d_header_len(header_len),
       d_items_per_symbol(items_per_symbol),
       d_gi(guard_interval),
@@ -199,7 +199,7 @@ namespace gr {
 	}
       }
       if (d_uses_trigger_tag) {
-	std::vector<gr_tag_t> tags;
+	std::vector<tag_t> tags;
 	get_tags_in_range(tags, 0, nitems_read(0), nitems_read(0)+noutput_items);
 	uint64_t min_offset = ULLONG_MAX;
 	int tag_index = -1;
@@ -250,7 +250,7 @@ namespace gr {
     void
     header_payload_demux_impl::copy_symbol(const unsigned char *&in, unsigned char *&out, int port, int &nread, int &nproduced)
     {
-      std::vector<gr_tag_t> tags;
+      std::vector<tag_t> tags;
       memcpy((void *) out,
 	     (void *) (in + d_gi * d_itemsize),
 	     d_itemsize * d_items_per_symbol

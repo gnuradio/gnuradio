@@ -25,7 +25,7 @@
 #endif
 
 #include <filter/adaptive_fir.h>
-#include <gr_io_signature.h>
+#include <gnuradio/io_signature.h>
 
 namespace gr {
   namespace filter {

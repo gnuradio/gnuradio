@@ -29,7 +29,7 @@
 #include <qwt_plot_spectrogram.h>
 #include <qtgui/DisplayPlot.h>
 #include <qtgui/waterfallGlobalData.h>
-#include <high_res_timer.h>
+#include <gnuradio/high_res_timer.h>
 
 #if QWT_VERSION < 0x060000
 #include <qtgui/plot_waterfall.h>

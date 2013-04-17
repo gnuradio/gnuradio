@@ -24,7 +24,7 @@
 #define	INCLUDED_FILTER_ADAPTIVE_FIR_CCF_H
 
 #include <filter/api.h>
-#include <gr_sync_decimator.h>
+#include <gnuradio/sync_decimator.h>
 
 namespace gr {
   namespace filter {
@@ -56,7 +56,7 @@ namespace gr {
      *     }
      * \endcode
      */
-    class FILTER_API adaptive_fir_ccf : virtual public gr_sync_decimator
+    class FILTER_API adaptive_fir_ccf : virtual public sync_decimator
     {
     public:
       // gr::filter::adaptive_fir_ccf::sptr

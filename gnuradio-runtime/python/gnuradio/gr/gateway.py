@@ -21,7 +21,7 @@
 
 import runtime_swig as gr
 from runtime_swig import io_signature, io_signaturev
-from runtime_swig import gr_block_gw_message_type
+from runtime_swig import block_gw_message_type
 from runtime_swig import block_gateway
 import numpy
 
@@ -107,16 +107,16 @@ class gateway_block(object):
         self.__handler.init(self.__gr_block_handle)
         self.__gateway = block_gateway(
             self.__handler, name, gr_in_sig, gr_out_sig, work_type, factor)
-        self.__message = self.__gateway.gr_block_message()
+        self.__message = self.__gateway.block_message()
 
         #dict to keep references to all message handlers
         self.__msg_handlers = {}
 
-        #register gr_block functions
-        prefix = 'gr_block__'
+        #register block functions
+        prefix = 'block__'
         for attr in [x for x in dir(self.__gateway) if x.startswith(prefix)]:
             setattr(self, attr.replace(prefix, ''), getattr(self.__gateway, attr))
-        self.pop_msg_queue = lambda: gr.gr_block_gw_pop_msg_queue_safe(self.__gateway)
+        self.pop_msg_queue = lambda: gr.block_gw_pop_msg_queue_safe(self.__gateway)
 
     def to_basic_block(self):
         """
@@ -128,7 +128,7 @@ class gateway_block(object):
         """
         Dispatch tasks according to the action type specified in the message.
         """
-        if self.__message.action == gr_block_gw_message_type.ACTION_GENERAL_WORK:
+        if self.__message.action == gr.block_gw_message_type.ACTION_GENERAL_WORK:
             self.__message.general_work_args_return_value = self.general_work(
 
                 input_items=[pointer_to_ndarray(
@@ -144,7 +144,7 @@ class gateway_block(object):
                 ) for i in self.__out_indexes],
             )
 
-        elif self.__message.action == gr_block_gw_message_type.ACTION_WORK:
+        elif self.__message.action == gr.block_gw_message_type.ACTION_WORK:
             self.__message.work_args_return_value = self.work(
 
                 input_items=[pointer_to_ndarray(
@@ -160,16 +160,16 @@ class gateway_block(object):
                 ) for i in self.__out_indexes],
             )
 
-        elif self.__message.action == gr_block_gw_message_type.ACTION_FORECAST:
+        elif self.__message.action == gr.block_gw_message_type.ACTION_FORECAST:
             self.forecast(
                 noutput_items=self.__message.forecast_args_noutput_items,
                 ninput_items_required=self.__message.forecast_args_ninput_items_required,
             )
 
-        elif self.__message.action == gr_block_gw_message_type.ACTION_START:
+        elif self.__message.action == gr.block_gw_message_type.ACTION_START:
             self.__message.start_args_return_value = self.start()
 
-        elif self.__message.action == gr_block_gw_message_type.ACTION_STOP:
+        elif self.__message.action == gr.block_gw_message_type.ACTION_STOP:
             self.__message.stop_args_return_value = self.stop()
 
     def forecast(self, noutput_items, ninput_items_required):

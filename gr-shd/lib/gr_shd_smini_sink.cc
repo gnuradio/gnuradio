@@ -20,7 +20,7 @@
  */
 
 #include <gr_shd_smini_sink.h>
-#include <gr_io_signature.h>
+#include <gnuradio/io_signature.h>
 #include <stdexcept>
 
 /*********************************************************************
@@ -32,9 +32,9 @@ public:
   shd_smini_sink_impl(const shd::device_addr_t &device_addr,
 		      const shd::io_type_t &io_type,
 		      size_t num_channels):
-    gr_sync_block("gr shd smini sink",
-		  gr_make_io_signature(num_channels, num_channels, io_type.size),
-		  gr_make_io_signature(0, 0, 0)),
+    sync_block("gr shd smini sink",
+		  io_signature::make(num_channels, num_channels, io_type.size),
+		  io_signature::make(0, 0, 0)),
     _type(io_type),
     _nchan(num_channels),
     _has_time_spec(_nchan > 1)

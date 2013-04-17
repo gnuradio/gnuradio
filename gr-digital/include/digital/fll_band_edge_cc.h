@@ -24,8 +24,8 @@
 #define	INCLUDED_DIGITAL_FLL_BAND_EDGE_CC_H
 
 #include <digital/api.h>
-#include <gr_sync_block.h>
-#include <blocks/control_loop.h>
+#include <gnuradio/sync_block.h>
+#include <gnuradio/blocks/control_loop.h>
 
 namespace gr {
   namespace digital {
@@ -81,7 +81,7 @@ namespace gr {
      * large.
      */
     class DIGITAL_API fll_band_edge_cc
-      : virtual public gr_sync_block,
+      : virtual public sync_block,
         virtual public blocks::control_loop
     {
     public:

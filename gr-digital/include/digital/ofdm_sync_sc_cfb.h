@@ -25,7 +25,7 @@
 #define INCLUDED_DIGITAL_OFDM_SYNC_SC_CFB_H
 
 #include <digital/api.h>
-#include <gr_hier_block2.h>
+#include <gnuradio/hier_block2.h>
 
 namespace gr {
   namespace digital {
@@ -61,7 +61,7 @@ namespace gr {
      * [1] Schmidl, T.M. and Cox, D.C., "Robust frequency and timing synchronization for OFDM",
      *     Communications, IEEE Transactions on, 1997.
      */
-    class DIGITAL_API ofdm_sync_sc_cfb : virtual public gr_hier_block2
+    class DIGITAL_API ofdm_sync_sc_cfb : virtual public hier_block2
     {
      public:
       typedef boost::shared_ptr<ofdm_sync_sc_cfb> sptr;

@@ -25,7 +25,7 @@
 #endif
 
 #include "patterned_interleaver_impl.h"
-#include <gr_io_signature.h>
+#include <gnuradio/io_signature.h>
 
 namespace gr {
   namespace blocks {
@@ -36,9 +36,9 @@ namespace gr {
     }
 
     patterned_interleaver_impl::patterned_interleaver_impl(size_t itemsize, std::vector<int> pattern)
-      : gr_block ("patterned_interleaver",
-			      gr_make_io_signature (pattern_max(pattern)+1, pattern_max(pattern)+1, itemsize),
-			      gr_make_io_signature (1, 1, itemsize)),
+      : block ("patterned_interleaver",
+			      io_signature::make (pattern_max(pattern)+1, pattern_max(pattern)+1, itemsize),
+			      io_signature::make (1, 1, itemsize)),
         d_pattern(pattern), d_counts( pattern_max(pattern)+1, 0), d_itemsize(itemsize)
     {
         BOOST_FOREACH( int i, d_pattern)

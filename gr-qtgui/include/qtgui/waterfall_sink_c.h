@@ -25,7 +25,7 @@
 
 #include <Python.h>
 #include <qtgui/api.h>
-#include <gr_sync_block.h>
+#include <gnuradio/sync_block.h>
 #include <qapplication.h>
 #include <filter/firdes.h>
 
@@ -50,7 +50,7 @@ namespace gr {
      * here, it's probably best to sum the signals together and
      * connect that here.
      */
-    class QTGUI_API waterfall_sink_c : virtual public gr_sync_block
+    class QTGUI_API waterfall_sink_c : virtual public sync_block
     {
     public:
       // gr::qtgui::waterfall_sink_c::sptr

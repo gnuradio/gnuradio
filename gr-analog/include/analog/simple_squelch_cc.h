@@ -24,7 +24,7 @@
 #define INCLUDED_ANALOG_SIMPLE_SQUELCH_CC_H
 
 #include <analog/api.h>
-#include <gr_sync_block.h>
+#include <gnuradio/sync_block.h>
 
 namespace gr {
   namespace analog {
@@ -33,7 +33,7 @@ namespace gr {
      * \brief simple squelch block based on average signal power and threshold in dB.
      * \ingroup level_controllers_blk
      */
-    class ANALOG_API simple_squelch_cc : virtual public gr_sync_block
+    class ANALOG_API simple_squelch_cc : virtual public sync_block
     {
     public:
       // gr::analog::simple_squelch_cc::sptr

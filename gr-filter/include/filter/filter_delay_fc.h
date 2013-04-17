@@ -24,7 +24,7 @@
 #define INCLUDED_FILTER_FILTER_DELAY_FC_H
 
 #include <filter/api.h>
-#include <gr_sync_block.h>
+#include <gnuradio/sync_block.h>
 
 namespace gr {
   namespace filter {
@@ -49,7 +49,7 @@ namespace gr {
      * introduced by the filter in the imaginary path. The filter taps
      * needs to be calculated before initializing this block.
      */
-    class FILTER_API filter_delay_fc : virtual public gr_sync_block
+    class FILTER_API filter_delay_fc : virtual public sync_block
     {
     public:
 

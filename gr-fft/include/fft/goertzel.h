@@ -24,7 +24,7 @@
 #define INCLUDED_FFT_IMPL_GOERTZEL_H
 
 #include <fft/api.h>
-#include <gr_types.h>
+#include <gnuradio/types.h>
 
 namespace gr {
   namespace fft {

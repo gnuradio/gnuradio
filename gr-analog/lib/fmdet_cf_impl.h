@@ -25,7 +25,7 @@
 
 #include <analog/fmdet_cf.h>
 //#include <filter/fir_filter.h>
-#include <gr_sync_block.h>
+#include <gnuradio/sync_block.h>
 
 namespace gr {
   namespace analog {

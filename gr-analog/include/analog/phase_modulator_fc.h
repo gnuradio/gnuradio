@@ -24,7 +24,7 @@
 #define INCLUDED_ANALOG_PHASE_MODULATOR_FC_H
 
 #include <analog/api.h>
-#include <gr_sync_block.h>
+#include <gnuradio/sync_block.h>
 
 namespace gr {
   namespace analog {
@@ -39,7 +39,7 @@ namespace gr {
      * Input stream 0: floats
      * Ouput stream 0: complex
      */
-    class ANALOG_API phase_modulator_fc : virtual public gr_sync_block
+    class ANALOG_API phase_modulator_fc : virtual public sync_block
     {
     public:
       // gr::analog::phase_modulator_fc::sptr

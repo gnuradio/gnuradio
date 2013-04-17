@@ -29,9 +29,9 @@
 %include "analog_swig_doc.i"
 
 %{
-#include <blocks/control_loop.h>
+#include <gnuradio/blocks/control_loop.h>
 %}
-%include <blocks/control_loop.h>
+%include <gnuradio/blocks/control_loop.h>
 
 %{
 #include "analog/cpm.h"

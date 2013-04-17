@@ -23,7 +23,7 @@
 #ifndef _GRATSCBITTIMINGLOOP2_H_
 #define _GRATSCBITTIMINGLOOP2_H_
 
-#include <blocks/nco.h>
+#include <gnuradio/blocks/nco.h>
 #include <VrSigProc.h>
 #include <VrHistoryProc.h>
 #include <VrDecimatingSigProc.h>

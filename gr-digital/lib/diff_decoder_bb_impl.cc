@@ -25,7 +25,7 @@
 #endif
 
 #include "diff_decoder_bb_impl.h"
-#include <gr_io_signature.h>
+#include <gnuradio/io_signature.h>
 
 namespace gr {
   namespace digital {
@@ -37,9 +37,9 @@ namespace gr {
     }
 
     diff_decoder_bb_impl::diff_decoder_bb_impl(unsigned int modulus)
-      : gr_sync_block("diff_decoder_bb",
-		      gr_make_io_signature(1, 1, sizeof(unsigned char)),
-		      gr_make_io_signature(1, 1, sizeof(unsigned char))),
+      : sync_block("diff_decoder_bb",
+		      io_signature::make(1, 1, sizeof(unsigned char)),
+		      io_signature::make(1, 1, sizeof(unsigned char))),
 	d_modulus(modulus)
     {
       set_history(2);	// need to look at two inputs

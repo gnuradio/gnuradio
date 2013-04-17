@@ -24,7 +24,7 @@
 #define	INCLUDED_DIGITAL_KURTOTIC_EQUALIZER_CC_H
 
 #include <digital/api.h>
-#include <gr_sync_decimator.h>
+#include <gnuradio/sync_decimator.h>
 
 namespace gr {
   namespace digital {
@@ -41,7 +41,7 @@ namespace gr {
      * Robotics and Vision, Vol. 3, Dec. 2004, pp. 2052 - 2057."
      */
     class DIGITAL_API kurtotic_equalizer_cc :
-      virtual public gr_sync_decimator
+      virtual public sync_decimator
     {
     protected:
       virtual gr_complex error(const gr_complex &out) = 0;

@@ -25,7 +25,7 @@
 #endif
 
 #include "pfb_decimator_ccf_impl.h"
-#include <gr_io_signature.h>
+#include <gnuradio/io_signature.h>
 
 namespace gr {
   namespace filter {
@@ -43,9 +43,9 @@ namespace gr {
     pfb_decimator_ccf_impl::pfb_decimator_ccf_impl(unsigned int decim,
 						   const std::vector<float> &taps,
 						   unsigned int channel)
-      : gr_sync_block("pfb_decimator_ccf",
-		      gr_make_io_signature(decim, decim, sizeof(gr_complex)),
-		      gr_make_io_signature(1, 1, sizeof(gr_complex))),
+      : sync_block("pfb_decimator_ccf",
+		      io_signature::make(decim, decim, sizeof(gr_complex)),
+		      io_signature::make(1, 1, sizeof(gr_complex))),
 	polyphase_filterbank(decim, taps),
 	d_updated(false), d_chan(channel)
     {

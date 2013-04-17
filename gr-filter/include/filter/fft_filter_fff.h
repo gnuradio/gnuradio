@@ -24,7 +24,7 @@
 #define INCLUDED_FILTER_FFT_FILTER_FFF_H
 
 #include <filter/api.h>
-#include <gr_sync_decimator.h>
+#include <gnuradio/sync_decimator.h>
 
 namespace gr {
   namespace filter {
@@ -52,7 +52,7 @@ namespace gr {
      * of taps used is very large) if you have enough threads/cores to
      * support it.
      */
-    class FILTER_API fft_filter_fff : virtual public gr_sync_decimator
+    class FILTER_API fft_filter_fff : virtual public sync_decimator
     {
     public:
       // gr::filter::fft_filter_fff::sptr

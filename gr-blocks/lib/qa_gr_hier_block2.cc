@@ -25,14 +25,14 @@
 #endif
 
 #include <qa_gr_hier_block2.h>
-#include <gr_hier_block2.h>
-#include <gr_io_signature.h>
+#include <gnuradio/hier_block2.h>
+#include <gnuradio/io_signature.h>
 
-void qa_gr_hier_block2::test_make()
+void qa_hier_block2::test_make()
 {
-    gr_hier_block2_sptr src1(gr_make_hier_block2("test",
-						 gr_make_io_signature(1, 1, 1 * sizeof(int)),
-						 gr_make_io_signature(1, 1, 1 * sizeof(int))));
+  gr::hier_block2_sptr src1(gr::make_hier_block2("test",
+						 gr::io_signature::make(1, 1, 1 * sizeof(int)),
+						 gr::io_signature::make(1, 1, 1 * sizeof(int))));
 
     CPPUNIT_ASSERT(src1);
     CPPUNIT_ASSERT_EQUAL(std::string("test"), src1->name());

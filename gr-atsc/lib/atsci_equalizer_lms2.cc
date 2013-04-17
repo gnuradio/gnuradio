@@ -26,7 +26,7 @@
 #include <atsc/pnXXX_impl.h>
 #include <cmath>
 #include <stdlib.h>
-#include <gr_math.h>
+#include <gnuradio/math.h>
 #include <stdio.h>
 #include <boost/math/special_functions/fpclassify.hpp>
 

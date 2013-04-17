@@ -24,7 +24,7 @@
 #define INCLUDED_ANALOG_RAIL_FF_H
 
 #include <analog/api.h>
-#include <gr_sync_block.h>
+#include <gnuradio/sync_block.h>
 
 namespace gr {
   namespace analog {
@@ -33,7 +33,7 @@ namespace gr {
      * \brief clips input values to min, max
      * \ingroup level_controllers_blk
      */
-    class ANALOG_API rail_ff : virtual public gr_sync_block
+    class ANALOG_API rail_ff : virtual public sync_block
     {
     public:
       // gr::analog::rail_ff::sptr

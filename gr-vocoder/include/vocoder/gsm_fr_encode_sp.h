@@ -24,7 +24,7 @@
 #define INCLUDED_VOCODER_GSM_FR_ENCODE_SP_H
 
 #include <vocoder/api.h>
-#include <gr_sync_decimator.h>
+#include <gnuradio/sync_decimator.h>
 
 namespace gr {
   namespace vocoder {
@@ -35,7 +35,7 @@ namespace gr {
      *
      * shorts in; 33 byte packets out
      */
-    class VOCODER_API gsm_fr_encode_sp : virtual public gr_sync_decimator
+    class VOCODER_API gsm_fr_encode_sp : virtual public sync_decimator
     {
     public:
       // gr::vocoder::gsm_fr_encode_sp::sptr

@@ -25,7 +25,7 @@
 
 #include <wxgui/api.h>
 #include <wxgui/oscope_sink_x.h>
-#include <gr_msg_queue.h>
+#include <gnuradio/msg_queue.h>
 
 namespace gr {
   namespace wxgui {
@@ -43,7 +43,7 @@ namespace gr {
       // gr::blocks::oscope_sink_f::sptr
       typedef boost::shared_ptr<oscope_sink_f> sptr;
 
-      static sptr make(double sampling_rate, gr_msg_queue_sptr msgq);
+      static sptr make(double sampling_rate, msg_queue::sptr msgq);
     };
 
   } /* namespace wxgui */

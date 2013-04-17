@@ -24,7 +24,7 @@
 #include "config.h"
 #endif
 
-#include <gr_io_signature.h>
+#include <gnuradio/io_signature.h>
 #include "ofdm_chanest_vcvc_impl.h"
 
 namespace gr {
@@ -46,9 +46,9 @@ namespace gr {
     }
 
     ofdm_chanest_vcvc_impl::ofdm_chanest_vcvc_impl(const std::vector<gr_complex> &sync_symbol1, const std::vector<gr_complex> &sync_symbol2, int n_data_symbols, int eq_noise_red_len, int max_carr_offset, bool force_one_sync_symbol)
-      : gr_block("ofdm_chanest_vcvc",
-		       gr_make_io_signature(1, 1, sizeof (gr_complex) * sync_symbol1.size()),
-		       gr_make_io_signature(1, 1, sizeof (gr_complex) * sync_symbol1.size())),
+      : block("ofdm_chanest_vcvc",
+		       io_signature::make(1, 1, sizeof (gr_complex) * sync_symbol1.size()),
+		       io_signature::make(1, 1, sizeof (gr_complex) * sync_symbol1.size())),
       d_fft_len(sync_symbol1.size()),
       d_n_data_syms(n_data_symbols),
       d_n_sync_syms(1),
@@ -241,7 +241,7 @@ namespace gr {
 	in += framesize * d_fft_len;
 	out += d_n_data_syms * d_fft_len;
 
-	std::vector<gr_tag_t> tags;
+	std::vector<tag_t> tags;
 	this->get_tags_in_range(tags, 0,
 	    this->nitems_read(0)+i*framesize,
 	    this->nitems_read(0)+(i+1)*framesize);

@@ -25,7 +25,7 @@
 #endif
 
 #include "framer_sink_1_impl.h"
-#include <gr_io_signature.h>
+#include <gnuradio/io_signature.h>
 #include <cstdio>
 #include <string>
 
@@ -71,16 +71,16 @@ namespace gr {
     }
 
     framer_sink_1::sptr
-    framer_sink_1::make(gr_msg_queue_sptr target_queue)
+    framer_sink_1::make(msg_queue::sptr target_queue)
     {
       return gnuradio::get_initial_sptr
 	(new framer_sink_1_impl(target_queue));
     }
 
-    framer_sink_1_impl::framer_sink_1_impl(gr_msg_queue_sptr target_queue)
-      : gr_sync_block("framer_sink_1",
-		      gr_make_io_signature(1, 1, sizeof(unsigned char)),
-		      gr_make_io_signature(0, 0, 0)),
+    framer_sink_1_impl::framer_sink_1_impl(msg_queue::sptr target_queue)
+      : sync_block("framer_sink_1",
+		      io_signature::make(1, 1, sizeof(unsigned char)),
+		      io_signature::make(0, 0, 0)),
 	d_target_queue(target_queue)
     {
       enter_search();
@@ -139,8 +139,8 @@ namespace gr {
 		if(d_packetlen == 0) {	    // check for zero-length payload
 		  // build a zero-length message
 		  // NOTE: passing header field as arg1 is not scalable
-		  gr_message_sptr msg =
-		    gr_make_message(0, d_packet_whitener_offset, 0, 0);
+		  message::sptr msg =
+		    message::make(0, d_packet_whitener_offset, 0, 0);
 
 		  d_target_queue->insert_tail(msg);		// send it
 		  msg.reset();  				// free it up
@@ -168,8 +168,8 @@ namespace gr {
 	      if(d_packetlen_cnt == d_packetlen) {	// packet is filled
 		// build a message
 		// NOTE: passing header field as arg1 is not scalable
-		gr_message_sptr msg =
-		  gr_make_message(0, d_packet_whitener_offset, 0, d_packetlen_cnt);
+		message::sptr msg =
+		  message::make(0, d_packet_whitener_offset, 0, d_packetlen_cnt);
 		memcpy(msg->msg(), d_packet, d_packetlen_cnt);
 
 		d_target_queue->insert_tail(msg);	// send it

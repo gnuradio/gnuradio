@@ -64,7 +64,7 @@ namespace gr {
     bool packet_header_default::header_formatter(
 	long packet_len,
         unsigned char *out,
-	const std::vector<gr_tag_t> &tags
+	const std::vector<tag_t> &tags
 	)
     {
       packet_len &= 0x0FFF;
@@ -91,11 +91,11 @@ namespace gr {
 
     bool packet_header_default::header_parser(
 	const unsigned char *in,
-	std::vector<gr_tag_t> &tags)
+	std::vector<tag_t> &tags)
     {
       unsigned header_len = 0;
       unsigned header_num = 0;
-      gr_tag_t tag;
+      tag_t tag;
 
       int k = 0; // Position in "in"
       for (int i = 0; i < 12 && k < d_header_len; i += d_bits_per_byte, k++) {

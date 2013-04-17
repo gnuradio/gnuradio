@@ -25,7 +25,7 @@
 #endif
 
 #include "endian_swap_impl.h"
-#include <gr_io_signature.h>
+#include <gnuradio/io_signature.h>
 #include <volk/volk.h>
 
 namespace gr {
@@ -39,9 +39,9 @@ namespace gr {
     }
 
     endian_swap_impl::endian_swap_impl (size_t item_size_bytes)
-      : gr_sync_block("endian_swap_impl",
-                      gr_make_io_signature(1, 1, item_size_bytes),
-                      gr_make_io_signature(1, 1, item_size_bytes))
+      : sync_block("endian_swap_impl",
+                      io_signature::make(1, 1, item_size_bytes),
+                      io_signature::make(1, 1, item_size_bytes))
     {
       const int alignment_multiple = volk_get_alignment();
       set_alignment(std::max(1, alignment_multiple));

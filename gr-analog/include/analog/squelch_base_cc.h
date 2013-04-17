@@ -24,7 +24,7 @@
 #define INCLUDED_ANALOG_SQUELCH_BASE_CC_H
 
 #include <analog/api.h>
-#include <gr_block.h>
+#include <gnuradio/block.h>
 
 namespace gr {
   namespace analog {
@@ -33,7 +33,7 @@ namespace gr {
      * \brief basic squelch block; to be subclassed for other squelches.
      * \ingroup level_blk
      */
-    class ANALOG_API squelch_base_cc : virtual public gr_block
+    class ANALOG_API squelch_base_cc : virtual public block
     {
     protected:
       virtual void update_state(const gr_complex &sample) = 0;

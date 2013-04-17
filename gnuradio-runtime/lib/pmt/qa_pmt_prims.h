@@ -22,13 +22,13 @@
 #ifndef INCLUDED_QA_PMT_PRIMS_H
 #define INCLUDED_QA_PMT_PRIMS_H
 
-#include <attributes.h>
+#include <gnuradio/attributes.h>
 #include <pmt/api.h> //reason: suppress warnings
 #include <cppunit/extensions/HelperMacros.h>
 #include <cppunit/TestCase.h>
 
-class __GR_ATTR_EXPORT qa_pmt_prims : public CppUnit::TestCase {
-
+class __GR_ATTR_EXPORT qa_pmt_prims : public CppUnit::TestCase
+{
   CPPUNIT_TEST_SUITE(qa_pmt_prims);
   CPPUNIT_TEST(test_symbols);
   CPPUNIT_TEST(test_booleans);

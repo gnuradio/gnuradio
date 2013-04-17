@@ -34,7 +34,7 @@
 #include <atsc/types.h>
 #include <cppunit/TestAssert.h>
 #include <assert.h>
-#include <random.h>
+#include <gnuradio/random.h>
 
 
 static float

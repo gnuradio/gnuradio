@@ -24,8 +24,8 @@
 #define INCLUDED_GR_FRAMER_SINK_1_H
 
 #include <digital/api.h>
-#include <gr_sync_block.h>
-#include <gr_msg_queue.h>
+#include <gnuradio/sync_block.h>
+#include <gnuradio/msg_queue.h>
 
 namespace gr {
   namespace digital {
@@ -48,7 +48,7 @@ namespace gr {
      * the corresponding bit is the the first bit of the packet. That
      * is, this bit is the first one after the access code.
      */
-    class DIGITAL_API framer_sink_1 : virtual public gr_sync_block
+    class DIGITAL_API framer_sink_1 : virtual public sync_block
     {
     public:
       // gr::digital::framer_sink_1::sptr
@@ -59,7 +59,7 @@ namespace gr {
        *
        * \param target_queue The message queue where frames go.
        */
-      static sptr make(gr_msg_queue_sptr target_queue);
+      static sptr make(msg_queue::sptr target_queue);
     };
 
   } /* namespace digital */

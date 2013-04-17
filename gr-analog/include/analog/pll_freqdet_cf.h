@@ -24,8 +24,8 @@
 #define INCLUDED_ANALOG_PLL_FREQDET_CF_H
 
 #include <analog/api.h>
-#include <blocks/control_loop.h>
-#include <gr_sync_block.h>
+#include <gnuradio/blocks/control_loop.h>
+#include <gnuradio/sync_block.h>
 
 namespace gr {
   namespace analog {
@@ -47,7 +47,7 @@ namespace gr {
      * \sa pll_refout_cc, pll_carriertracking_cc
      */
     class ANALOG_API pll_freqdet_cf
-      : virtual public gr_sync_block,
+      : virtual public sync_block,
         virtual public blocks::control_loop
     {
     public:

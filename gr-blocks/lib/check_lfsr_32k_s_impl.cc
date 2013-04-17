@@ -25,7 +25,7 @@
 #endif
 
 #include "check_lfsr_32k_s_impl.h"
-#include <gr_io_signature.h>
+#include <gnuradio/io_signature.h>
 #include <stdlib.h>
 #include <stdio.h>
 
@@ -40,9 +40,9 @@ namespace gr {
     }
 
     check_lfsr_32k_s_impl::check_lfsr_32k_s_impl()
-      : gr_sync_block("check_lfsr_32k",
-                       gr_make_io_signature(1, 1, sizeof(short)),
-                      gr_make_io_signature(0, 0, 0)),
+      : sync_block("check_lfsr_32k",
+                       io_signature::make(1, 1, sizeof(short)),
+                      io_signature::make(0, 0, 0)),
         d_state(SEARCHING), d_history(0), d_ntotal(0), d_nright(0),
         d_runlength(0), d_index(0)
     {

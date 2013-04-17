@@ -23,7 +23,7 @@
 #ifndef INCLUDED_QA_PMT_H
 #define INCLUDED_QA_PMT_H
 
-#include <attributes.h>
+#include <gnuradio/attributes.h>
 #include <cppunit/TestSuite.h>
 
 //! collect all the tests for pmt

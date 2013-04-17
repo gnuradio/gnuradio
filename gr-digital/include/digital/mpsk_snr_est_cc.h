@@ -25,7 +25,7 @@
 
 #include <digital/api.h>
 #include <digital/mpsk_snr_est.h>
-#include <gr_sync_block.h>
+#include <gnuradio/sync_block.h>
 
 namespace gr {
   namespace digital {
@@ -49,7 +49,7 @@ namespace gr {
      * amount of error should be assumed and/or estimated for real
      * channel conditions.
      */
-    class DIGITAL_API mpsk_snr_est_cc : virtual public gr_sync_block
+    class DIGITAL_API mpsk_snr_est_cc : virtual public sync_block
     {
     public:
       // gr::digital::mpsk_snr_est_cc::sptr

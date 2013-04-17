@@ -27,7 +27,7 @@
 #include "audio_registry.h"
 #include <osx_source.h>
 #include <osx_impl.h>
-#include <gr_io_signature.h>
+#include <gnuradio/io_signature.h>
 #include <stdexcept>
 
 namespace gr {
@@ -71,9 +71,9 @@ namespace gr {
                            bool do_block,
                            int channel_config,
                            int max_sample_count)
-      : gr_sync_block("audio_osx_source",
-                      gr_make_io_signature(0, 0, 0),
-                      gr_make_io_signature(0, 0, 0)),
+      : sync_block("audio_osx_source",
+                      io_signature::make(0, 0, 0),
+                      io_signature::make(0, 0, 0)),
         d_deviceSampleRate(0.0), d_outputSampleRate(0.0),
 	d_channel_config(0),
 	d_inputBufferSizeFrames(0), d_inputBufferSizeBytes(0),
@@ -310,7 +310,7 @@ namespace gr {
 
       // create the output io signature;
       // no input siganture to set (source is hardware)
-      set_output_signature(gr_make_io_signature(1,
+      set_output_signature(io_signature::make(1,
                                                 d_n_max_channels,
                                                 sizeof(float)));
 

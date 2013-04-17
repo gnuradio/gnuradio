@@ -23,7 +23,7 @@
 #ifndef INCLUDED_GR_SKIPHEAD_IMPL_H
 #define INCLUDED_GR_SKIPHEAD_IMPL_H
 
-#include <blocks/skiphead.h>
+#include <gnuradio/blocks/skiphead.h>
 
 namespace gr {
   namespace blocks {

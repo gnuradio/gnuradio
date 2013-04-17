@@ -39,9 +39,9 @@ namespace gr {
 
     pwr_squelch_ff_impl::pwr_squelch_ff_impl(double threshold, double alpha,
 					     int ramp, bool gate)
-      :	gr_block("pwr_squelch_ff",
-		 gr_make_io_signature(1, 1, sizeof(float)),
-		 gr_make_io_signature(1, 1, sizeof(float))),
+      :	block("pwr_squelch_ff",
+		 io_signature::make(1, 1, sizeof(float)),
+		 io_signature::make(1, 1, sizeof(float))),
 	squelch_base_ff_impl("pwr_squelch_ff", ramp, gate),
 	d_iir(alpha)
     {

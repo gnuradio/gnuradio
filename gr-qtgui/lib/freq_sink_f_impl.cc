@@ -25,7 +25,7 @@
 #endif
 
 #include "freq_sink_f_impl.h"
-#include <gr_io_signature.h>
+#include <gnuradio/io_signature.h>
 #include <string.h>
 #include <volk/volk.h>
 #include <qwt_symbol.h>
@@ -52,9 +52,9 @@ namespace gr {
 				       const std::string &name,
 				       int nconnections,
 				       QWidget *parent)
-      : gr_sync_block("freq_sink_f",
-		      gr_make_io_signature(1, -1, sizeof(float)),
-		      gr_make_io_signature(0, 0, 0)),
+      : sync_block("freq_sink_f",
+		      io_signature::make(1, -1, sizeof(float)),
+		      io_signature::make(0, 0, 0)),
 	d_fftsize(fftsize), d_fftavg(1.0), 
 	d_wintype((filter::firdes::win_type)(wintype)),
 	d_center_freq(fc), d_bandwidth(bw), d_name(name),

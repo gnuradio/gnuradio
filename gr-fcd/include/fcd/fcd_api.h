@@ -22,7 +22,7 @@
 #ifndef INCLUDED_FCD_API_H
 #define INCLUDED_FCD_API_H
 
-#include <attributes.h>
+#include <gnuradio/attributes.h>
 
 #ifdef gnuradio_fcd_EXPORTS
 #  define FCD_API __GR_ATTR_EXPORT

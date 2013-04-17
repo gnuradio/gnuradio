@@ -24,7 +24,7 @@
 #define INCLUDED_VOCODER_GSM_FR_DECODE_PS_H
 
 #include <vocoder/api.h>
-#include <gr_sync_interpolator.h>
+#include <gnuradio/sync_interpolator.h>
 
 namespace gr {
   namespace vocoder {
@@ -33,7 +33,7 @@ namespace gr {
      * \brief GSM 06.10 Full Rate Vocoder Decoder
      * \ingroup audio_blk
      */
-    class VOCODER_API gsm_fr_decode_ps : virtual public gr_sync_interpolator
+    class VOCODER_API gsm_fr_decode_ps : virtual public sync_interpolator
     {
     public:
       // gr::vocoder::gsm_fr_decode_ps::sptr

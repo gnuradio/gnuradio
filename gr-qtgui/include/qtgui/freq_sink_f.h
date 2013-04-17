@@ -25,7 +25,7 @@
 
 #include <Python.h>
 #include <qtgui/api.h>
-#include <gr_sync_block.h>
+#include <gnuradio/sync_block.h>
 #include <qapplication.h>
 #include <filter/firdes.h>
 
@@ -44,7 +44,7 @@ namespace gr {
      * functions can be used to change the lable and color for a given
      * input number.
      */
-    class QTGUI_API freq_sink_f : virtual public gr_sync_block
+    class QTGUI_API freq_sink_f : virtual public sync_block
     {
     public:
       // gr::qtgui::freq_sink_f::sptr

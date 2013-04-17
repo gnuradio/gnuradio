@@ -25,7 +25,7 @@
 #endif
 
 #include "pfb_synthesizer_ccf_impl.h"
-#include <gr_io_signature.h>
+#include <gnuradio/io_signature.h>
 #include <cstdio>
 
 namespace gr {
@@ -44,9 +44,9 @@ namespace gr {
     pfb_synthesizer_ccf_impl::pfb_synthesizer_ccf_impl(unsigned int numchans,
 						       const std::vector<float> &taps,
 						       bool twox)
-      : gr_sync_interpolator("pfb_synthesizer_ccf",
-			     gr_make_io_signature(1, numchans, sizeof(gr_complex)),
-			     gr_make_io_signature(1, 1, sizeof(gr_complex)),
+      : sync_interpolator("pfb_synthesizer_ccf",
+			     io_signature::make(1, numchans, sizeof(gr_complex)),
+			     io_signature::make(1, 1, sizeof(gr_complex)),
 			     (twox ? numchans/2 : numchans)),
 	d_updated(false), d_numchans(numchans), d_state(0)
     {

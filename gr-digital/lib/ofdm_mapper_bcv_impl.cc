@@ -25,7 +25,7 @@
 #endif
 
 #include "ofdm_mapper_bcv_impl.h"
-#include <gr_io_signature.h>
+#include <gnuradio/io_signature.h>
 #include <stdexcept>
 #include <string>
 
@@ -49,11 +49,11 @@ namespace gr {
 					       unsigned int msgq_limit, 
 					       unsigned int occupied_carriers,
 					       unsigned int fft_length)
-      : gr_sync_block("ofdm_mapper_bcv",
-		      gr_make_io_signature(0, 0, 0),
-		      gr_make_io_signature2(1, 2, sizeof(gr_complex)*fft_length, sizeof(char))),
+      : sync_block("ofdm_mapper_bcv",
+		      io_signature::make(0, 0, 0),
+		      io_signature::make2(1, 2, sizeof(gr_complex)*fft_length, sizeof(char))),
 	d_constellation(constellation),
-	d_msgq(gr_make_msg_queue(msgq_limit)), d_msg_offset(0), d_eof(false),
+	d_msgq(msg_queue::make(msgq_limit)), d_msg_offset(0), d_eof(false),
 	d_occupied_carriers(occupied_carriers),
 	d_fft_length(fft_length),
 	d_bit_offset(0),

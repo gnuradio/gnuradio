@@ -24,7 +24,7 @@
 #define INCLUDED_VOCODER_CODEC2_DECODE_PS_H
 
 #include <vocoder/api.h>
-#include <gr_sync_interpolator.h>
+#include <gnuradio/sync_interpolator.h>
 
 namespace gr {
   namespace vocoder {
@@ -33,7 +33,7 @@ namespace gr {
      * \brief CODEC2 Vocoder Decoder
      * \ingroup audio_blk
      */
-    class VOCODER_API codec2_decode_ps : virtual public gr_sync_interpolator
+    class VOCODER_API codec2_decode_ps : virtual public sync_interpolator
     {
     public:
       // gr::vocoder::codec2_decode_ps::sptr

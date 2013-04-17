@@ -24,8 +24,8 @@
 #define INCLUDED_DIGITAL_OFDM_FRAME_SINK_H
 
 #include <digital/api.h>
-#include <gr_sync_block.h>
-#include <gr_msg_queue.h>
+#include <gnuradio/sync_block.h>
+#include <gnuradio/msg_queue.h>
 
 namespace gr {
   namespace digital {
@@ -42,7 +42,7 @@ namespace gr {
      * reference to an object to do the demapping and slicing for a
      * given modulation type.
      */
-    class DIGITAL_API ofdm_frame_sink : virtual public gr_sync_block
+    class DIGITAL_API ofdm_frame_sink : virtual public sync_block
     {
     public:
       // gr::digital::ofdm_frame_sink::sptr
@@ -60,7 +60,7 @@ namespace gr {
        */
       static sptr make(const std::vector<gr_complex> &sym_position, 
 		       const std::vector<char> &sym_value_out,
-		       gr_msg_queue_sptr target_queue,
+		       msg_queue::sptr target_queue,
 		       int occupied_tones,
 		       float phase_gain=0.25, float freq_gain=0.25*0.25/4);
     };

@@ -24,7 +24,7 @@
 #define INCLUDED_DIGITAL_CORRELATE_ACCESS_CODE_BB_H
 
 #include <digital/api.h>
-#include <gr_sync_block.h>
+#include <gnuradio/sync_block.h>
 #include <string>
 
 namespace gr {
@@ -45,7 +45,7 @@ namespace gr {
      * the corresponding data bit is the first data bit following the
      * access code. Otherwise the flag bit is 0.
      */
-    class DIGITAL_API correlate_access_code_bb : virtual public gr_sync_block
+    class DIGITAL_API correlate_access_code_bb : virtual public sync_block
     {
     public:
       // gr::digital::correlate_access_code_bb::sptr

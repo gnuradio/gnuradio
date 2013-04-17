@@ -24,7 +24,7 @@
 #define INCLUDED_NOAA_HRPT_DEFRAMER_H
 
 #include <noaa/api.h>
-#include <gr_block.h>
+#include <gnuradio/block.h>
 
 namespace gr {
   namespace noaa {
@@ -33,7 +33,7 @@ namespace gr {
      * \brief NOAA HRPT Deframer
      * \ingroup noaa_blk
      */
-    class NOAA_API hrpt_deframer : virtual public gr_block
+    class NOAA_API hrpt_deframer : virtual public block
     {
     public:
       // gr::noaa::hrpt_deframer::sptr

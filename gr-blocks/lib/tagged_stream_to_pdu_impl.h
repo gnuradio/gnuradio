@@ -23,7 +23,7 @@
 #ifndef INCLUDED_TAGGED_STREAM_TO_PDU_IMPL_H
 #define INCLUDED_TAGGED_STREAM_TO_PDU_IMPL_H
 
-#include <blocks/tagged_stream_to_pdu.h>
+#include <gnuradio/blocks/tagged_stream_to_pdu.h>
 
 namespace gr {
   namespace blocks {
@@ -39,8 +39,8 @@ namespace gr {
       pmt::pmt_t           d_pdu_meta;
       pmt::pmt_t           d_pdu_vector;
 
-      std::vector<gr_tag_t>::iterator d_tags_itr;
-      std::vector<gr_tag_t> d_tags;
+      std::vector<tag_t>::iterator d_tags_itr;
+      std::vector<tag_t> d_tags;
       
     public:
       tagged_stream_to_pdu_impl(pdu::vector_type type);

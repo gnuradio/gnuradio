@@ -24,7 +24,7 @@
 
 #include <filter/api.h>
 #include <filter/fir_filter.h>
-#include <gr_complex.h>
+#include <gnuradio/gr_complex.h>
 #include <vector>
 
 namespace gr {

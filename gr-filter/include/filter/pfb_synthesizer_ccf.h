@@ -25,7 +25,7 @@
 #define	INCLUDED_PFB_SYNTHESIZER_CCF_H
 
 #include <filter/api.h>
-#include <gr_sync_interpolator.h>
+#include <gnuradio/sync_interpolator.h>
 
 namespace gr {
   namespace filter {
@@ -35,7 +35,7 @@ namespace gr {
      *        gr_complex input, gr_complex output and float taps
      * \ingroup channelizers_blk
      */
-    class FILTER_API pfb_synthesizer_ccf : virtual public gr_sync_interpolator
+    class FILTER_API pfb_synthesizer_ccf : virtual public sync_interpolator
     {
     public:
       // gr::filter::pfb_synthesizer_ccf::sptr

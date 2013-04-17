@@ -23,7 +23,7 @@
 #define INCLUDED_DIGITAL_OFDM_INSERT_PREAMBLE_H
 
 #include <digital/api.h>
-#include <gr_block.h>
+#include <gnuradio/block.h>
 #include <vector>
 
 namespace gr {
@@ -55,7 +55,7 @@ namespace gr {
      *           symbol is the first symbol, otherwise 0.
      * </pre>
      */
-    class DIGITAL_API ofdm_insert_preamble : virtual public gr_block
+    class DIGITAL_API ofdm_insert_preamble : virtual public block
     {
     public:
       // gr::digital::ofdm_insert_preamble::sptr

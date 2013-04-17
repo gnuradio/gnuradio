@@ -24,7 +24,7 @@
 #define	INCLUDED_IIR_FILTER_FFD_H
 
 #include <filter/api.h>
-#include <gr_sync_block.h>
+#include <gnuradio/sync_block.h>
 
 namespace gr {
   namespace filter {
@@ -67,7 +67,7 @@ namespace gr {
      \endxmlonly
 
      */
-    class FILTER_API iir_filter_ffd : virtual public gr_sync_block
+    class FILTER_API iir_filter_ffd : virtual public sync_block
     {
     public:
       // gr::filter::iir_filter_ffd::sptr

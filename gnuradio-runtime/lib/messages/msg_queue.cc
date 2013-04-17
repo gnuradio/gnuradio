@@ -24,10 +24,8 @@
 #include "config.h"
 #endif
 
-#include <messages/msg_queue.h>
+#include <gnuradio/messages/msg_queue.h>
 #include <stdexcept>
-
-using namespace pmt;
 
 namespace gr {
   namespace messages {
@@ -49,7 +47,7 @@ namespace gr {
     }
 
     void
-    msg_queue::insert_tail(pmt_t msg)
+    msg_queue::insert_tail(pmt::pmt_t msg)
     {
       gr::thread::scoped_lock guard(d_mutex);
 
@@ -60,7 +58,7 @@ namespace gr {
       d_not_empty.notify_one();
     }
 
-    pmt_t
+    pmt::pmt_t
     msg_queue::delete_head()
     {
       gr::thread::scoped_lock guard(d_mutex);
@@ -68,7 +66,7 @@ namespace gr {
       while(empty_p())
         d_not_empty.wait(guard);
 
-      pmt_t m(d_msgs.front());
+      pmt::pmt_t m(d_msgs.front());
       d_msgs.pop_front();
 
       if(d_limit > 0)		// Unlimited length queues never block on write
@@ -77,15 +75,15 @@ namespace gr {
       return m;
     }
 
-    pmt_t
+    pmt::pmt_t
     msg_queue::delete_head_nowait()
     {
       gr::thread::scoped_lock guard(d_mutex);
 
       if(empty_p())
-        return pmt_t();
+        return pmt::pmt_t();
 
-      pmt_t m(d_msgs.front());
+      pmt::pmt_t m(d_msgs.front());
       d_msgs.pop_front();
 
       if(d_limit > 0)		// Unlimited length queues never block on write
@@ -97,7 +95,7 @@ namespace gr {
     void
     msg_queue::flush()
     {
-      while(delete_head_nowait() != pmt_t())
+      while(delete_head_nowait() != pmt::pmt_t())
         ;
     }
     

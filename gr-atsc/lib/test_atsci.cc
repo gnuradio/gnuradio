@@ -24,7 +24,7 @@
 #include "config.h"
 #endif
 
-#include <gr_unittests.h>
+#include <gnuradio/unittests.h>
 #include <cppunit/TextTestRunner.h>
 #include <cppunit/XmlOutputter.h>
 #include "qa_atsci.h"

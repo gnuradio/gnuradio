@@ -22,7 +22,7 @@
 #define INCLUDED_ANALOG_CPFSK_BC_H
 
 #include <analog/api.h>
-#include <gr_sync_interpolator.h>
+#include <gnuradio/sync_interpolator.h>
 
 namespace gr {
   namespace analog {
@@ -32,7 +32,7 @@ namespace gr {
      * on an input stream of unpacked bits.
      * \ingroup modulators_blk
      */
-    class ANALOG_API cpfsk_bc : virtual public gr_sync_interpolator
+    class ANALOG_API cpfsk_bc : virtual public sync_interpolator
     {
     public:
       // gr::analog::cpfsk_bc::sptr

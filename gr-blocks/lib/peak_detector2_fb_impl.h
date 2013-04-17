@@ -23,7 +23,7 @@
 #ifndef INCLUDED_GR_PEAK_DETECTOR2_FB_IMPL_H
 #define INCLUDED_GR_PEAK_DETECTOR2_FB_IMPL_H
 
-#include <blocks/peak_detector2_fb.h>
+#include <gnuradio/blocks/peak_detector2_fb.h>
 
 namespace gr {
   namespace blocks {

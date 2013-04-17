@@ -25,7 +25,7 @@
 
 #include <digital/api.h>
 #include <filter/fir_filter.h>
-#include <gr_block.h>
+#include <gnuradio/block.h>
 
 namespace gr {
   namespace digital {
@@ -145,7 +145,7 @@ namespace gr {
      * was added to better work with equalizers, which do a better job
      * of modeling the channel if they have 2 samps/sym.
      */
-    class DIGITAL_API pfb_clock_sync_fff : virtual public gr_block
+    class DIGITAL_API pfb_clock_sync_fff : virtual public block
     {
     public:
       // gr::digital::pfb_clock_sync_fff::sptr

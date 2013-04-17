@@ -25,7 +25,7 @@
 #endif
 
 #include "additive_scrambler_bb_impl.h"
-#include <gr_io_signature.h>
+#include <gnuradio/io_signature.h>
 
 namespace gr {
   namespace digital {
@@ -41,9 +41,9 @@ namespace gr {
 							   int seed,
 							   int len,
 							   int count)
-      : gr_sync_block("additive_scrambler_bb",
-		      gr_make_io_signature(1, 1, sizeof(unsigned char)),
-		      gr_make_io_signature(1, 1, sizeof(unsigned char))),
+      : sync_block("additive_scrambler_bb",
+		      io_signature::make(1, 1, sizeof(unsigned char)),
+		      io_signature::make(1, 1, sizeof(unsigned char))),
 	d_lfsr(mask, seed, len),
 	d_count(count),
 	d_bits(0), d_len(len), d_seed(seed)

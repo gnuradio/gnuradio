@@ -23,7 +23,7 @@
 #ifndef INCLUDED_BLOCKS_FILE_SOURCE_IMPL_H
 #define INCLUDED_BLOCKS_FILE_SOURCE_IMPL_H
 
-#include <blocks/file_source.h>
+#include <gnuradio/blocks/file_source.h>
 #include <boost/thread/mutex.hpp>
 
 namespace gr {

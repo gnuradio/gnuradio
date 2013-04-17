@@ -22,7 +22,7 @@
 
 #include <qa_pmt_prims.h>
 #include <cppunit/TestAssert.h>
-#include <messages/msg_passing.h>
+#include <gnuradio/messages/msg_passing.h>
 #include <boost/format.hpp>
 #include <cstdio>
 #include <cstring>

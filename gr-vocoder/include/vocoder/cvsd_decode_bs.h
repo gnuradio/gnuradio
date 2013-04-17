@@ -24,7 +24,7 @@
 #define INCLUDED_VOCODER_CVSD_DECODE_BS_H
 
 #include <vocoder/api.h>
-#include <gr_sync_interpolator.h>
+#include <gnuradio/sync_interpolator.h>
 
 namespace gr {
   namespace vocoder {
@@ -83,7 +83,7 @@ namespace gr {
      *         Bluetooth Voice Simulink® Model, Available:
      *         http://www.mathworks.com/company/newsletters/digest/nov01/bluetooth.html
      */
-    class VOCODER_API cvsd_decode_bs : virtual public gr_sync_interpolator
+    class VOCODER_API cvsd_decode_bs : virtual public sync_interpolator
     {
     public:
       // gr::vocoder::cvsd_decode_bs::sptr

@@ -24,7 +24,7 @@
 #define INCLUDED_ANALOG_PROBE_AVG_MAG_SQRD_F_H
 
 #include <analog/api.h>
-#include <gr_sync_block.h>
+#include <gnuradio/sync_block.h>
 
 namespace gr {
   namespace analog {
@@ -41,7 +41,7 @@ namespace gr {
      * threshold can be retrieved with the level and unmuted
      * accessors.
      */
-    class ANALOG_API probe_avg_mag_sqrd_f : virtual public gr_sync_block
+    class ANALOG_API probe_avg_mag_sqrd_f : virtual public sync_block
     {
     public:
       // gr::analog::probe_avg_mag_sqrd_f::sptr

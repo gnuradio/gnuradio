@@ -25,7 +25,7 @@
 #endif
 
 #include "diff_phasor_cc_impl.h"
-#include <gr_io_signature.h>
+#include <gnuradio/io_signature.h>
 
 namespace gr {
   namespace digital {
@@ -38,9 +38,9 @@ namespace gr {
     }
 
     diff_phasor_cc_impl::diff_phasor_cc_impl()
-      : gr_sync_block("diff_phasor_cc",
-		   gr_make_io_signature(1, 1, sizeof(gr_complex)),
-		   gr_make_io_signature(1, 1, sizeof(gr_complex)))
+      : sync_block("diff_phasor_cc",
+		   io_signature::make(1, 1, sizeof(gr_complex)),
+		   io_signature::make(1, 1, sizeof(gr_complex)))
     {
       set_history(2);
     }

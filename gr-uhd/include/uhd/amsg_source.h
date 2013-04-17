@@ -25,7 +25,7 @@
 
 #include <uhd/api.h>
 #include <uhd/usrp/multi_usrp.hpp>
-#include <gr_msg_queue.h>
+#include <gnuradio/msg_queue.h>
 
 namespace gr {
   namespace uhd {
@@ -43,14 +43,14 @@ namespace gr {
        * \ingroup uhd_blk
        */
       static sptr make(const ::uhd::device_addr_t &device_addr,
-                       gr_msg_queue_sptr msgq);
+                       msg_queue::sptr msgq);
 
       /*!
        * Convert a raw asynchronous message to an asynchronous metatdata object.
        * \return The asynchronous metadata object.
        */
       static ::uhd::async_metadata_t
-        msg_to_async_metadata_t(const gr_message_sptr msg);
+        msg_to_async_metadata_t(const message::sptr msg);
     };
 
   } /* namespace uhd */

@@ -24,7 +24,7 @@
 #define INCLUDED_GR_DIFF_PHASOR_CC_H
 
 #include <digital/api.h>
-#include <gr_sync_block.h>
+#include <gnuradio/sync_block.h>
 
 namespace gr {
   namespace digital {
@@ -39,7 +39,7 @@ namespace gr {
      *
      *     out[i] = in[i] * conj(in[i-1]);
      */
-    class DIGITAL_API diff_phasor_cc : virtual public gr_sync_block
+    class DIGITAL_API diff_phasor_cc : virtual public sync_block
     {
     public:
       // gr::digital::diff_phasor_cc::sptr

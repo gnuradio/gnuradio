@@ -25,7 +25,7 @@
 
 #include <qwt_color_map.h>
 #include <qwt_scale_draw.h>
-#include <high_res_timer.h>
+#include <gnuradio/high_res_timer.h>
 
 class FreqOffsetAndPrecisionClass
 {

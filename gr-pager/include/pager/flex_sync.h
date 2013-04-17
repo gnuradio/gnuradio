@@ -24,7 +24,7 @@
 #define INCLUDED_PAGER_FLEX_SYNC_H
 
 #include <pager/api.h>
-#include <gr_block.h>
+#include <gnuradio/block.h>
 
 namespace gr {
   namespace pager {
@@ -33,7 +33,7 @@ namespace gr {
      * \brief flex sync description
      * \ingroup pager_blk
      */
-    class PAGER_API flex_sync : virtual public gr_block
+    class PAGER_API flex_sync : virtual public block
     {
     public:
       // gr::pager::flex_sync::sptr

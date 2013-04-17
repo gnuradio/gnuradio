@@ -30,7 +30,7 @@
 #include <string>
 #include <stddef.h>		// size_t
 #include <stdint.h>
-#include <gr_types.h>
+#include <gnuradio/types.h>
 %}
 
 %include <std_complex.i>

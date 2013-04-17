@@ -21,17 +21,17 @@
  */
 
 #include "fading_model_impl.h"
-#include <gr_io_signature.h>
+#include <gnuradio/io_signature.h>
 #include <iostream>
 
 #include <boost/format.hpp>
 #include <boost/random.hpp>
 
-#include <gr_fxpt.h>
+#include <gnuradio/fxpt.h>
 #include <sincostable.h>
 
 
-// FASTSINCOS:  0 = slow native,  1 = gr_fxpt impl,  2 = sincostable.h
+// FASTSINCOS:  0 = slow native,  1 = gr::fxpt impl,  2 = sincostable.h
 #define FASTSINCOS  2
 
 
@@ -47,9 +47,9 @@ namespace gr {
 
     // Block constructor
     fading_model_impl::fading_model_impl( unsigned int N, float fDTs, bool LOS, float K, int seed )
-      : gr_sync_block("fading_model",
-		       gr_make_io_signature(1, 1, sizeof(gr_complex)),
-		       gr_make_io_signature(1, 1, sizeof(gr_complex))),
+      : sync_block("fading_model",
+		       io_signature::make(1, 1, sizeof(gr_complex)),
+		       io_signature::make(1, 1, sizeof(gr_complex))),
         seed_1((int)seed),
         dist_1(-M_PI, M_PI),
         rv_1( seed_1, dist_1 ), // U(-pi,pi)
@@ -163,8 +163,8 @@ namespace gr {
             for(int n=1; n<d_N; n++){
                 float alpha_n = (2*M_PI*n - M_PI + d_theta)/4*d_N;
 #if FASTSINCOS == 1
-                float s_i = scale_sin*gr_fxpt::cos(gr_fxpt::float_to_fixed(2*M_PI*d_fDTs*d_m*gr_fxpt::cos(gr_fxpt::float_to_fixed(alpha_n))+d_psi[n+1]));
-                float s_q = scale_sin*gr_fxpt::cos(gr_fxpt::float_to_fixed(2*M_PI*d_fDTs*d_m*gr_fxpt::sin(gr_fxpt::float_to_fixed(alpha_n))+d_phi[n+1]));
+                float s_i = scale_sin*gr::fxpt::cos(gr::fxpt::float_to_fixed(2*M_PI*d_fDTs*d_m*gr::fxpt::cos(gr::fxpt::float_to_fixed(alpha_n))+d_psi[n+1]));
+                float s_q = scale_sin*gr::fxpt::cos(gr::fxpt::float_to_fixed(2*M_PI*d_fDTs*d_m*gr::fxpt::sin(gr::fxpt::float_to_fixed(alpha_n))+d_phi[n+1]));
 #elif FASTSINCOS == 2
                 float s_i = scale_sin*d_table.cos(2*M_PI*d_fDTs*d_m*d_table.cos(alpha_n)+d_psi[n+1]);
                 float s_q = scale_sin*d_table.cos(2*M_PI*d_fDTs*d_m*d_table.sin(alpha_n)+d_phi[n+1]);
@@ -179,8 +179,8 @@ namespace gr {
 
             if(d_LOS){
 #if FASTSINCOS == 1
-                float los_i = gr_fxpt::cos(gr_fxpt::float_to_fixed(2*M_PI*d_fDTs*d_m*gr_fxpt::cos(gr_fxpt::float_to_fixed(d_theta_los)) + d_psi[0]));
-                float los_q = gr_fxpt::sin(gr_fxpt::float_to_fixed(2*M_PI*d_fDTs*d_m*gr_fxpt::cos(gr_fxpt::float_to_fixed(d_theta_los)) + d_psi[0]));
+                float los_i = gr::fxpt::cos(gr::fxpt::float_to_fixed(2*M_PI*d_fDTs*d_m*gr::fxpt::cos(gr::fxpt::float_to_fixed(d_theta_los)) + d_psi[0]));
+                float los_q = gr::fxpt::sin(gr::fxpt::float_to_fixed(2*M_PI*d_fDTs*d_m*gr::fxpt::cos(gr::fxpt::float_to_fixed(d_theta_los)) + d_psi[0]));
 #elif FASTSINCOS == 2
                 float los_i = d_table.cos(2*M_PI*d_fDTs*d_m*d_table.cos(d_theta_los) + d_psi[0]);
                 float los_q = d_table.sin(2*M_PI*d_fDTs*d_m*d_table.cos(d_theta_los) + d_psi[0]);

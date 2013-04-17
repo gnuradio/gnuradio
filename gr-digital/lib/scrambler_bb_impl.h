@@ -24,7 +24,7 @@
 #define INCLUDED_GR_SCRAMBLER_BB_IMPL_H
 
 #include <digital/scrambler_bb.h>
-#include <gr_sync_block.h>
+#include <gnuradio/sync_block.h>
 #include <digital/lfsr.h>
 
 namespace gr {

@@ -28,7 +28,7 @@
  */
 
 #include <fft/api.h>
-#include <gr_complex.h>
+#include <gnuradio/gr_complex.h>
 #include <boost/thread.hpp>
 
 namespace gr {

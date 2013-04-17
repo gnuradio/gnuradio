@@ -25,7 +25,7 @@
 #endif
 
 #include "lfsr_32k_source_s_impl.h"
-#include <gr_io_signature.h>
+#include <gnuradio/io_signature.h>
 #include <stdexcept>
 
 namespace gr {
@@ -39,9 +39,9 @@ namespace gr {
     }
 
     lfsr_32k_source_s_impl::lfsr_32k_source_s_impl()
-      : gr_sync_block("lfsr_32k_source_s",
-                      gr_make_io_signature(0, 0, 0),
-                      gr_make_io_signature(1, 1, sizeof(short))),
+      : sync_block("lfsr_32k_source_s",
+                      io_signature::make(0, 0, 0),
+                      io_signature::make(1, 1, sizeof(short))),
         d_index(0)
     {
       lfsr_32k lfsr;

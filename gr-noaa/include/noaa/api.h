@@ -22,7 +22,7 @@
 #ifndef INCLUDED_NOAA_API_H
 #define INCLUDED_NOAA_API_H
 
-#include <attributes.h>
+#include <gnuradio/attributes.h>
 
 #ifdef gnuradio_noaa_EXPORTS
 #  define NOAA_API __GR_ATTR_EXPORT

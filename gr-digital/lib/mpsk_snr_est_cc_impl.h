@@ -25,7 +25,7 @@
 
 #include <digital/api.h>
 #include <digital/mpsk_snr_est_cc.h>
-#include <gr_sync_block.h>
+#include <gnuradio/sync_block.h>
 
 namespace gr {
   namespace digital {

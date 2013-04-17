@@ -25,7 +25,7 @@
 
 #include <filter/api.h>
 #include <stdexcept>
-#include <gr_complex.h>
+#include <gnuradio/gr_complex.h>
 
 namespace gr {
   namespace filter {

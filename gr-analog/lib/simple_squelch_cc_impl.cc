@@ -25,7 +25,7 @@
 #endif
 
 #include "simple_squelch_cc_impl.h"
-#include <gr_io_signature.h>
+#include <gnuradio/io_signature.h>
 #include <cmath>
 
 namespace gr {
@@ -39,9 +39,9 @@ namespace gr {
     }
 
     simple_squelch_cc_impl::simple_squelch_cc_impl(double threshold_db, double alpha)
-      : gr_sync_block("simple_squelch_cc",
-		      gr_make_io_signature(1, 1, sizeof(gr_complex)),
-		      gr_make_io_signature(1, 1, sizeof(gr_complex))),
+      : sync_block("simple_squelch_cc",
+		      io_signature::make(1, 1, sizeof(gr_complex)),
+		      io_signature::make(1, 1, sizeof(gr_complex))),
 	d_unmuted(false), d_iir(alpha)
     {
       set_threshold(threshold_db);

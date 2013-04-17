@@ -25,7 +25,7 @@
 #define	INCLUDED_PFB_INTERPOLATOR_CCF_H
 
 #include <filter/api.h>
-#include <gr_sync_interpolator.h>
+#include <gnuradio/sync_interpolator.h>
 
 namespace gr {
   namespace filter {
@@ -76,7 +76,7 @@ namespace gr {
      *       Inc. 2004.</EM></B>
      */
 
-    class FILTER_API pfb_interpolator_ccf : virtual public gr_sync_interpolator
+    class FILTER_API pfb_interpolator_ccf : virtual public sync_interpolator
     {
     public:
       // gr::filter::pfb_interpolator_ccf::sptr

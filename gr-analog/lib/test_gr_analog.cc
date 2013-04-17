@@ -27,7 +27,7 @@
 #include <cppunit/TextTestRunner.h>
 #include <cppunit/XmlOutputter.h>
 
-#include <gr_unittests.h>
+#include <gnuradio/unittests.h>
 #include "qa_analog.h"
 #include <iostream>
 

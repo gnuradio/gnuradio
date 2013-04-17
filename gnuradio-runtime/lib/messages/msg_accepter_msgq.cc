@@ -23,9 +23,7 @@
 #include <config.h>
 #endif
 
-#include <messages/msg_accepter_msgq.h>
-
-using namespace pmt;
+#include <gnuradio/messages/msg_accepter_msgq.h>
 
 namespace gr {
   namespace messages {
@@ -41,7 +39,7 @@ namespace gr {
     }
 
     void
-    msg_accepter_msgq::post(pmt_t msg)
+    msg_accepter_msgq::post(pmt::pmt_t msg)
     {
       d_msg_queue->insert_tail(msg);
     }

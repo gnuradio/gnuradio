@@ -31,10 +31,10 @@ namespace gr {
     class oscope_sink_f_impl : public oscope_sink_f
     {
     private:
-      gr_msg_queue_sptr d_msgq;
+      msg_queue::sptr d_msgq;
 
     public:
-      oscope_sink_f_impl(double sampling_rate, gr_msg_queue_sptr msgq);
+      oscope_sink_f_impl(double sampling_rate, msg_queue::sptr msgq);
       ~oscope_sink_f_impl();
 
       bool check_topology(int ninputs, int noutputs);

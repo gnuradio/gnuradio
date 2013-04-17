@@ -23,8 +23,8 @@
 #ifndef INCLUDED_CTRLPORT_PROBE2_C_IMPL_H
 #define INCLUDED_CTRLPORT_PROBE2_C_IMPL_H
 
-#include <blocks/ctrlport_probe2_c.h>
-#include <rpcregisterhelpers.h>
+#include <gnuradio/blocks/ctrlport_probe2_c.h>
+#include <gnuradio/rpcregisterhelpers.h>
 #include <boost/thread/shared_mutex.hpp>
 
 namespace gr {

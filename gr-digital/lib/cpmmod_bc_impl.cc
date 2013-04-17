@@ -23,7 +23,7 @@
 #endif
 
 #include "cpmmod_bc_impl.h"
-#include <gr_io_signature.h>
+#include <gnuradio/io_signature.h>
 
 namespace gr {
   namespace digital {
@@ -55,9 +55,9 @@ namespace gr {
 				   analog::cpm::cpm_type type, float h,
 				   int samples_per_sym,
 				   int L, double beta)
-      : gr_hier_block2(name,
-		       gr_make_io_signature(1, 1, sizeof(char)),
-		       gr_make_io_signature2(1, 1, sizeof(gr_complex), sizeof(float))),
+      : hier_block2(name,
+		       io_signature::make(1, 1, sizeof(char)),
+		       io_signature::make2(1, 1, sizeof(gr_complex), sizeof(float))),
 	d_type(type), d_index(h), d_sps(samples_per_sym), d_length(L), d_beta(beta),
 	d_taps(analog::cpm::phase_response(type, samples_per_sym, L, beta)),
 	d_char_to_float(blocks::char_to_float::make()),

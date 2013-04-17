@@ -25,7 +25,7 @@
 #endif
 
 #include "tag_debug_impl.h"
-#include <gr_io_signature.h>
+#include <gnuradio/io_signature.h>
 #include <iostream>
 #include <iomanip>
 
@@ -42,9 +42,9 @@ namespace gr {
 
     tag_debug_impl::tag_debug_impl(size_t sizeof_stream_item,
                                    const std::string &name)
-      : gr_sync_block("tag_debug",
-                      gr_make_io_signature(1, -1, sizeof_stream_item),
-                      gr_make_io_signature(0, 0, 0)),
+      : sync_block("tag_debug",
+                      io_signature::make(1, -1, sizeof_stream_item),
+                      io_signature::make(0, 0, 0)),
         d_name(name), d_display(true)
     {
     }
@@ -53,7 +53,7 @@ namespace gr {
     {
     }
 
-    std::vector<gr_tag_t>
+    std::vector<tag_t>
     tag_debug_impl::current_tags()
     {
       gr::thread::scoped_lock l(d_mutex);

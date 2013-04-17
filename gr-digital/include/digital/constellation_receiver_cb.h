@@ -25,7 +25,7 @@
 
 #include <digital/api.h>
 #include <digital/constellation.h>
-#include <gr_block.h>
+#include <gnuradio/block.h>
 
 namespace gr {
   namespace digital {
@@ -43,7 +43,7 @@ namespace gr {
      * the NCO are updated according to this error.
      */
     class DIGITAL_API constellation_receiver_cb
-      : virtual public gr_block
+      : virtual public block
     {
     public:
       // gr::digital::constellation_receiver_cb::sptr

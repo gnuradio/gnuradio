@@ -24,7 +24,7 @@
 #define INCLUDED_CALC_METRIC_H
 
 #include <vector>
-#include <gr_complex.h>
+#include <gnuradio/gr_complex.h>
 #include <digital/metric_type.h>
 
 namespace gr {

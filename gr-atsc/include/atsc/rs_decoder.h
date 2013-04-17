@@ -24,7 +24,7 @@
 #define INCLUDED_ATSC_RS_DECODER_H
 
 #include <atsc/api.h>
-#include <gr_sync_block.h>
+#include <gnuradio/sync_block.h>
 #include <atsc/reed_solomon_impl.h>
 
 class atsc_rs_decoder;
@@ -38,7 +38,7 @@ ATSC_API atsc_rs_decoder_sptr atsc_make_rs_decoder();
  *
  * input: atsc_mpeg_packet_rs_encoded; output: atsc_mpeg_packet_no_sync
  */
-class ATSC_API atsc_rs_decoder : public gr_sync_block
+class ATSC_API atsc_rs_decoder : public gr::sync_block
 {
   friend ATSC_API atsc_rs_decoder_sptr atsc_make_rs_decoder();
 

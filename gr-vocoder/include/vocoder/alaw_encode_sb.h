@@ -24,7 +24,7 @@
 #define INCLUDED_VOCODER_ALAW_ENCODER_SB_H
 
 #include <vocoder/api.h>
-#include <gr_sync_block.h>
+#include <gnuradio/sync_block.h>
 
 namespace gr {
   namespace vocoder {
@@ -33,7 +33,7 @@ namespace gr {
      * \brief This block performs g.711 alaw audio encoding.
      * \ingroup audio_blk
      */
-    class VOCODER_API alaw_encode_sb : virtual public gr_sync_block
+    class VOCODER_API alaw_encode_sb : virtual public sync_block
     {
     public:
       // gr::vocoder::alaw_encode_sb::sptr

@@ -24,7 +24,7 @@
 #define INCLUDED_ANALOG_AGC_H
 
 #include <analog/api.h>
-#include <gr_complex.h>
+#include <gnuradio/gr_complex.h>
 #include <math.h>
 
 namespace gr {

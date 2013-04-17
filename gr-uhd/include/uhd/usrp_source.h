@@ -24,7 +24,7 @@
 #define INCLUDED_GR_UHD_USRP_SOURCE_H
 
 #include <uhd/api.h>
-#include <gr_sync_block.h>
+#include <gnuradio/sync_block.h>
 #include <uhd/usrp/multi_usrp.hpp>
 
 #ifndef INCLUDED_UHD_STREAM_HPP
@@ -53,7 +53,7 @@ namespace gr {
 
     class uhd_usrp_source;
 
-    class GR_UHD_API usrp_source : virtual public gr_sync_block
+    class GR_UHD_API usrp_source : virtual public sync_block
     {
     public:
       // gr::uhd::usrp_source::sptr

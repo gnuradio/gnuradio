@@ -24,7 +24,7 @@
 #define INCLUDED_DIGITAL_OFDM_SAMPLER_H
 
 #include <digital/api.h>
-#include <gr_sync_block.h>
+#include <gnuradio/sync_block.h>
 
 namespace gr {
   namespace digital {
@@ -33,7 +33,7 @@ namespace gr {
      * \brief does the rest of the OFDM stuff
      * \ingroup ofdm_blk
      */
-    class DIGITAL_API ofdm_sampler : virtual public gr_block
+    class DIGITAL_API ofdm_sampler : virtual public block
     {
     public:
       // gr::digital::ofdm_sampler::sptr

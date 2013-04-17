@@ -36,15 +36,15 @@ class qa_packet_headergenerator_bb (gr_unittest.TestCase):
         # 3 PDUs: |           |       |
         data   = (1, 2, 3, 4, 1, 2) + tuple(range(25))
         tagname = "packet_len"
-        tag1 = gr.gr_tag_t()
+        tag1 = gr.tag_t()
         tag1.offset = 0
         tag1.key = pmt.string_to_symbol(tagname)
         tag1.value = pmt.from_long(4)
-        tag2 = gr.gr_tag_t()
+        tag2 = gr.tag_t()
         tag2.offset = 4
         tag2.key = pmt.string_to_symbol(tagname)
         tag2.value = pmt.from_long(2)
-        tag3 = gr.gr_tag_t()
+        tag3 = gr.tag_t()
         tag3.offset = 6
         tag3.key = pmt.string_to_symbol(tagname)
         tag3.value = pmt.from_long(25)
@@ -65,15 +65,15 @@ class qa_packet_headergenerator_bb (gr_unittest.TestCase):
         # 3 PDUs: |           |     |         |
         data   = (1, 2, 3, 4, 1, 2, 1, 2, 3, 4)
         tagname = "packet_len"
-        tag1 = gr.gr_tag_t()
+        tag1 = gr.tag_t()
         tag1.offset = 0
         tag1.key = pmt.string_to_symbol(tagname)
         tag1.value = pmt.from_long(4)
-        tag2 = gr.gr_tag_t()
+        tag2 = gr.tag_t()
         tag2.offset = 4
         tag2.key = pmt.string_to_symbol(tagname)
         tag2.value = pmt.from_long(2)
-        tag3 = gr.gr_tag_t()
+        tag3 = gr.tag_t()
         tag3.offset = 6
         tag3.key = pmt.string_to_symbol(tagname)
         tag3.value = pmt.from_long(4)
@@ -95,15 +95,15 @@ class qa_packet_headergenerator_bb (gr_unittest.TestCase):
         # 3 PDUs: |           |     |         |
         data   = (1, 2, 3, 4, 1, 2, 1, 2, 3, 4)
         tagname = "packet_len"
-        tag1 = gr.gr_tag_t()
+        tag1 = gr.tag_t()
         tag1.offset = 0
         tag1.key = pmt.string_to_symbol(tagname)
         tag1.value = pmt.from_long(4)
-        tag2 = gr.gr_tag_t()
+        tag2 = gr.tag_t()
         tag2.offset = 4
         tag2.key = pmt.string_to_symbol(tagname)
         tag2.value = pmt.from_long(2)
-        tag3 = gr.gr_tag_t()
+        tag3 = gr.tag_t()
         tag3.offset = 6
         tag3.key = pmt.string_to_symbol(tagname)
         tag3.value = pmt.from_long(4)
@@ -125,15 +125,15 @@ class qa_packet_headergenerator_bb (gr_unittest.TestCase):
         # 3 PDUs: |           |     |         |
         data   = (1, 2, 3, 4, 1, 2, 1, 2, 3, 4)
         tagname = "packet_len"
-        tag1 = gr.gr_tag_t()
+        tag1 = gr.tag_t()
         tag1.offset = 0
         tag1.key = pmt.string_to_symbol(tagname)
         tag1.value = pmt.from_long(4)
-        tag2 = gr.gr_tag_t()
+        tag2 = gr.tag_t()
         tag2.offset = 4
         tag2.key = pmt.string_to_symbol(tagname)
         tag2.value = pmt.from_long(2)
-        tag3 = gr.gr_tag_t()
+        tag3 = gr.tag_t()
         tag3.offset = 6
         tag3.key = pmt.string_to_symbol(tagname)
         tag3.value = pmt.from_long(4)

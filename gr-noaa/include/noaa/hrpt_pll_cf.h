@@ -24,7 +24,7 @@
 #define INCLUDED_NOAA_HRPT_PLL_CF_H
 
 #include <noaa/api.h>
-#include <gr_sync_block.h>
+#include <gnuradio/sync_block.h>
 
 namespace gr {
   namespace noaa {
@@ -33,7 +33,7 @@ namespace gr {
      * \brief NOAA HRPT PLL
      * \ingroup noaa_blk
      */
-    class NOAA_API hrpt_pll_cf : virtual public gr_sync_block
+    class NOAA_API hrpt_pll_cf : virtual public sync_block
     {
     public:
       // gr::noaa::hrpt_pll_cf::sptr

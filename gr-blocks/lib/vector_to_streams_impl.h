@@ -23,7 +23,7 @@
 #ifndef INCLUDED_VECTOR_TO_STREAMS_IMPL_H
 #define INCLUDED_VECTOR_TO_STREAMS_IMPL_H
 
-#include <blocks/vector_to_streams.h>
+#include <gnuradio/blocks/vector_to_streams.h>
 
 namespace gr {
   namespace blocks {

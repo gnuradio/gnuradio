@@ -24,8 +24,8 @@
 #include "config.h"
 #endif
 
-#include <blocks/control_loop.h>
-#include <gr_math.h>
+#include <gnuradio/blocks/control_loop.h>
+#include <gnuradio/math.h>
 #include <stdexcept>
 
 namespace gr {

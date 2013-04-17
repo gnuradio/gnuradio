@@ -25,7 +25,7 @@
 #endif
 
 #include "peak_detector2_fb_impl.h"
-#include <gr_io_signature.h>
+#include <gnuradio/io_signature.h>
 #include <string.h>
 
 namespace gr {
@@ -42,9 +42,9 @@ namespace gr {
 
     peak_detector2_fb_impl::peak_detector2_fb_impl(float threshold_factor_rise,
                                                    int look_ahead, float alpha)
-      : gr_sync_block("peak_detector2_fb",
-                      gr_make_io_signature(1, 1, sizeof(float)),
-                      gr_make_io_signature2(1, 2, sizeof(char), sizeof(float))),
+      : sync_block("peak_detector2_fb",
+                      io_signature::make(1, 1, sizeof(float)),
+                      io_signature::make2(1, 2, sizeof(char), sizeof(float))),
         d_threshold_factor_rise(threshold_factor_rise),
         d_look_ahead(look_ahead), d_alpha(alpha), d_avg(0.0f), d_found(false)
     {

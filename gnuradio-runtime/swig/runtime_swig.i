@@ -33,29 +33,34 @@
 %include "gnuradio.i"				// the common stuff
 
 %{
-#include <gr_endianness.h>
-#include <gr_block.h>
-#include <gr_block_detail.h>
-#include <gr_buffer.h>
-#include <gr_constants.h>
-#include <gr_dispatcher.h>
-#include <gr_error_handler.h>
-#include <gr_feval.h>
-#include <gr_hier_block2.h>
-#include <gr_io_signature.h>
-#include <gr_message.h>
-#include <gr_msg_handler.h>
-#include <gr_msg_queue.h>
-#include <gr_prefs.h>
-#include <gr_realtime.h>
-#include <gr_runtime_types.h>
-#include <gr_single_threaded_scheduler.h>
-#include <gr_sync_block.h>
-#include <gr_sync_decimator.h>
-#include <gr_sync_interpolator.h>
-#include <gr_tagged_stream_block.h>
-#include <gr_tags.h>
-#include <gr_top_block.h>
+#include <gnuradio/runtime_types.h>
+%}
+
+%include <gnuradio/runtime_types.h>
+
+%{
+#include <gnuradio/block.h>
+#include <gnuradio/block_detail.h>
+#include <gnuradio/buffer.h>
+#include <gnuradio/constants.h>
+#include <gnuradio/dispatcher.h>
+#include <gnuradio/endianness.h>
+#include <gnuradio/error_handler.h>
+#include <gnuradio/feval.h>
+#include <gnuradio/hier_block2.h>
+#include <gnuradio/io_signature.h>
+#include <gnuradio/message.h>
+#include <gnuradio/msg_handler.h>
+#include <gnuradio/msg_queue.h>
+#include <gnuradio/prefs.h>
+#include <gnuradio/realtime.h>
+#include <gnuradio/single_threaded_scheduler.h>
+#include <gnuradio/sync_block.h>
+#include <gnuradio/sync_decimator.h>
+#include <gnuradio/sync_interpolator.h>
+#include <gnuradio/tags.h>
+#include <gnuradio/tagged_stream_block.h>
+#include <gnuradio/top_block.h>
 %}
 
 %constant int sizeof_char 	= sizeof(char);
@@ -65,30 +70,30 @@
 %constant int sizeof_double	= sizeof(double);
 %constant int sizeof_gr_complex	= sizeof(gr_complex);
 
-%include <gr_endianness.h>
-%include <gr_basic_block.i>
-%include <gr_block.i>
-%include <gr_block_detail.i>
-%include <gr_buffer.i>
-%include <gr_constants.i>
-%include <gr_dispatcher.i>
-%include <gr_error_handler.i>
-%include <gr_feval.i>
-%include <gr_hier_block2.i>
-%include <gr_io_signature.i>
-%include <gr_message.i>
-%include <gr_msg_handler.i>
-%include <gr_msg_queue.i>
-%include <gr_prefs.i>
-%include <gr_realtime.i>
-%include <gr_single_threaded_scheduler.i>
-%include <gr_swig_block_magic.i>
-%include <gr_sync_block.i>
-%include <gr_sync_decimator.i>
-%include <gr_sync_interpolator.i>
-%include <gr_tagged_stream_block.i>
-%include <gr_tags.i>
-%include <gr_top_block.i>
-%include <runtime_block_gateway.i>
+%include <gnuradio/endianness.h>
+%include <basic_block.i>
+%include <block.i>
+%include <block_detail.i>
+%include <buffer.i>
+%include <constants.i>
+%include <dispatcher.i>
+%include <feval.i>
+%include <error_handler.i>
+%include <hier_block2.i>
+%include <io_signature.i>
+%include <message.i>
+%include <msg_handler.i>
+%include <msg_queue.i>
+%include <prefs.i>
+%include <realtime.i>
+%include <single_threaded_scheduler.i>
+%include <sync_block.i>
+%include <sync_decimator.i>
+%include <sync_interpolator.i>
+%include <tagged_stream_block.i>
+%include <tags.i>
+%include <top_block.i>
+%include <block_gateway.i>
 
+%include <gr_swig_block_magic.i>
 %include <gr_ctrlport.i>

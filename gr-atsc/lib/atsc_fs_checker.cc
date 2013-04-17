@@ -27,7 +27,7 @@
 #include <atsc/fs_checker.h>
 #include <atsc/create_atsci_fs_checker.h>
 #include <atsc/fs_checker_impl.h>
-#include <gr_io_signature.h>
+#include <gnuradio/io_signature.h>
 #include <atsc/consts.h>
 #include <atsc/syminfo_impl.h>
 
@@ -39,9 +39,9 @@ atsc_make_fs_checker()
 }
 
 atsc_fs_checker::atsc_fs_checker()
-  : gr_sync_block("atsc_fs_checker",
-		  gr_make_io_signature(2, 2, sizeof(float)),
-		  gr_make_io_signature(2, 2, sizeof(float)))
+  : gr::sync_block("atsc_fs_checker",
+		  gr::io_signature::make(2, 2, sizeof(float)),
+		  gr::io_signature::make(2, 2, sizeof(float)))
 {
   d_fsc = create_atsci_fs_checker();
 }
