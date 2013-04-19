@@ -23,11 +23,11 @@
 GR_SWIG_BLOCK_MAGIC(digital, ofdm_sync_sc_cfb)
 
 digital_ofdm_sync_sc_cfb_sptr
-digital_make_ofdm_sync_sc_cfb (int fft_len, int cp_len);
+digital_make_ofdm_sync_sc_cfb (int fft_len, int cp_len, bool use_even_carriers=false);
 
 class digital_ofdm_sync_sc_cfb : public gr_hier_block2
 {
  private:
-  digital_ofdm_sync_sc_cfb(int fft_len, int cp_len);
+  digital_ofdm_sync_sc_cfb(int fft_len, int cp_len, bool use_even_carriers);
 };
 

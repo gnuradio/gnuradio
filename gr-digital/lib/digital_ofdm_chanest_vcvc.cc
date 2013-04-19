@@ -1,5 +1,4 @@
 /* -*- c++ -*- */
-// vim: set sw=2:
 /* Copyright 2012 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
@@ -36,8 +35,16 @@ digital_make_ofdm_chanest_vcvc (
 		int max_carr_offset,
 		bool force_one_sync_symbol)
 {
-	return gnuradio::get_initial_sptr (new digital_ofdm_chanest_vcvc(
-				sync_symbol1, sync_symbol2, n_data_symbols, eq_noise_red_len, max_carr_offset, force_one_sync_symbol));
+  return gnuradio::get_initial_sptr (
+      new digital_ofdm_chanest_vcvc(
+	    sync_symbol1,
+	    sync_symbol2,
+	    n_data_symbols,
+	    eq_noise_red_len,
+	    max_carr_offset,
+	    force_one_sync_symbol
+      )
+  );
 }
 
 
@@ -50,7 +57,7 @@ digital_ofdm_chanest_vcvc::digital_ofdm_chanest_vcvc (
 		bool force_one_sync_symbol)
   : gr_block ("ofdm_chanest_vcvc",
 		   gr_make_io_signature(1, 1, sizeof (gr_complex) * sync_symbol1.size()),
-		   gr_make_io_signature(1, 1, sizeof (gr_complex) * sync_symbol1.size())),
+		   gr_make_io_signature(1, 2, sizeof (gr_complex) * sync_symbol1.size())),
   d_fft_len(sync_symbol1.size()),
   d_n_data_syms(n_data_symbols),
   d_n_sync_syms(1),
@@ -201,13 +208,14 @@ digital_ofdm_chanest_vcvc::get_chan_taps(
   }
   for (int i = loop_start; i < loop_end; i++) {
     if ((d_ref_sym[i-carr_offset] != gr_complex(0, 0))) {
-      taps[i] = sym[i] / d_ref_sym[i-carr_offset];
+      taps[i-carr_offset] = sym[i] / d_ref_sym[i-carr_offset];
     }
   }
 
   if (d_interpolate) {
+    // FIXME check this out re offset + update docs
     for (int i = d_first_active_carrier + 1; i < d_last_active_carrier; i += 2) {
-      taps[i] = (taps[i-1] + taps[i+1]) / gr_complex(2.0, 0);
+      taps[i] = taps[i-1];
     }
     taps[d_last_active_carrier] = taps[d_last_active_carrier-1];
   }
@@ -246,6 +254,12 @@ digital_ofdm_chanest_vcvc::general_work (int noutput_items,
     std::vector<gr_complex> chan_taps(d_fft_len, 0);
     get_chan_taps(in, in+d_fft_len, carr_offset, chan_taps);
 
+    if (output_items.size() == 2) {
+      gr_complex *out_chantaps = ((gr_complex *) output_items[1]) + i * d_fft_len;
+      memcpy((void *) out_chantaps, (void *) &chan_taps[0], sizeof(gr_complex) * d_fft_len);
+      produce(1, 1);
+    }
+
     memcpy((void *) out,
 	   (void *) &in[d_n_sync_syms * d_fft_len],
 	   sizeof(gr_complex) * d_fft_len * d_n_data_syms);
@@ -253,29 +267,30 @@ digital_ofdm_chanest_vcvc::general_work (int noutput_items,
     out += d_n_data_syms * d_fft_len;
 
     std::vector<gr_tag_t> tags;
-    this->get_tags_in_range(tags, 0,
-	this->nitems_read(0)+i*framesize,
-	this->nitems_read(0)+(i+1)*framesize);
+    get_tags_in_range(tags, 0,
+	nitems_read(0)+i*framesize,
+	nitems_read(0)+(i+1)*framesize);
     for (unsigned t = 0; t < tags.size(); t++) {
-      int offset = tags[t].offset - (this->nitems_read(0) + i*framesize);
+      int offset = tags[t].offset - (nitems_read(0) + i*framesize);
       if (offset < d_n_sync_syms) {
 	offset = 0;
       } else {
 	offset -= d_n_sync_syms;
       }
-      tags[t].offset = offset + this->nitems_written(0) + i*d_n_data_syms;
-      this->add_item_tag(0, tags[t]);
+      tags[t].offset = offset + nitems_written(0) + i*d_n_data_syms;
+      add_item_tag(0, tags[t]);
     }
 
-    this->add_item_tag(0, this->nitems_written(0) + i*d_n_data_syms,
+    add_item_tag(0, nitems_written(0) + i*d_n_data_syms,
 	pmt::pmt_string_to_symbol("ofdm_sync_carr_offset"),
 	pmt::pmt_from_long(carr_offset));
-    this->add_item_tag(0, this->nitems_written(0) + i*d_n_data_syms,
+    add_item_tag(0, nitems_written(0) + i*d_n_data_syms,
 	pmt::pmt_string_to_symbol("ofdm_sync_chan_taps"),
 	pmt::pmt_init_c32vector(d_fft_len, chan_taps));
   }
-
+  produce(0, n_frames * d_n_data_syms);
   consume_each(n_frames * framesize);
-  return n_frames * d_n_data_syms;
+
+  return WORK_CALLED_PRODUCE;
 }
 

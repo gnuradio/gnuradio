@@ -37,7 +37,6 @@ class digital_ofdm_equalizer_base
   digital_ofdm_equalizer_base(int fft_len);
 
   virtual void reset() = 0;
-  void set_carrier_offset(int offset) { d_carr_offset = offset; };
   virtual void equalize(
 		  gr_complex *frame,
 		  int n_sym,

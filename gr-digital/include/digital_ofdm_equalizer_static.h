@@ -70,11 +70,11 @@ class DIGITAL_API digital_ofdm_equalizer_static : public digital_ofdm_equalizer_
  public:
   digital_ofdm_equalizer_static(
       int fft_len,
-      const std::vector<std::vector<int> > &occupied_carriers = std::vector<std::vector<int> >(),
-      const std::vector<std::vector<int> > &pilot_carriers = std::vector<std::vector<int> >(),
-      const std::vector<std::vector<gr_complex> > &pilot_symbols = std::vector<std::vector<gr_complex> >(),
-      int symbols_skipped = 0,
-      bool input_is_shifted = true);
+      const std::vector<std::vector<int> > &occupied_carriers,
+      const std::vector<std::vector<int> > &pilot_carriers,
+      const std::vector<std::vector<gr_complex> > &pilot_symbols,
+      int symbols_skipped,
+      bool input_is_shifted);
   ~digital_ofdm_equalizer_static();
 
   /*! \brief Divide the input signal with the current channel state.
