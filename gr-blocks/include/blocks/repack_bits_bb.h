@@ -30,7 +30,7 @@ namespace gr {
   namespace blocks {
 
     /*!
-     * \brief Pack \p k bits from the input stream onto \p k bits of the output stream.
+     * \brief Pack \p k bits from the input stream onto \p l bits of the output stream.
      * \ingroup byte_operators_blk
      *
      * \details
