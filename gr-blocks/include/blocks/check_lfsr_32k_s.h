@@ -31,7 +31,7 @@ namespace gr {
 
     /*!
      * \brief sink that checks if its input stream consists of a lfsr_32k sequence.
-     * \ingroup sink_blk
+     * \ingroup misc_blk
      *
      * \details
      * This sink is typically used along with

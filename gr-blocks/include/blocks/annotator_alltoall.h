@@ -31,6 +31,7 @@ namespace gr {
 
     /*!
      * \brief All-to-all stream annotator testing block. FOR TESTING PURPOSES ONLY.
+     * \ingroup debug_tools_blk
      *
      * \details
      * This block creates tags to be sent downstream every 10,000
