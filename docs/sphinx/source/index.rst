@@ -14,6 +14,9 @@ Core Framework
    gnuradio.analog
    gnuradio.digital
    gnuradio.audio
+   gnuradio.channels
+   gnuradio.comedi
+   gnuradio.fec
    gnuradio.trellis
    gnuradio.wavelet
    gnuradio.fft
@@ -29,6 +32,9 @@ Core Framework
    gnuradio.analog <analog/index>
    gnuradio.digital <digital/index>
    gnuradio.audio <audio/index>
+   gnuradio.channels <channels>
+   gnuradio.comedi <comedi>
+   gnuradio.fec <fec>
    gnuradio.gr_unittest <gr_unittest/index>
    gnuradio.trellis <trellis/index>
    gnuradio.wavelet <wavelet>
@@ -43,11 +49,13 @@ Hardware Interfaces
    :nosignatures:
    
    gnuradio.uhd
+   gnuradio.fcd
 
 .. toctree::
    :hidden:   
 
    gnuradio.uhd <uhd>
+   gnuradio.fcd <fcd>
 
 Utilities
 ---------
