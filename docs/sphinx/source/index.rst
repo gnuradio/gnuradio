@@ -17,6 +17,7 @@ Core Framework
    gnuradio.channels
    gnuradio.comedi
    gnuradio.fec
+   gnuradio.filter
    gnuradio.trellis
    gnuradio.wavelet
    gnuradio.fft
@@ -35,6 +36,7 @@ Core Framework
    gnuradio.channels <channels>
    gnuradio.comedi <comedi>
    gnuradio.fec <fec>
+   gnuradio.filter <filter>
    gnuradio.gr_unittest <gr_unittest/index>
    gnuradio.trellis <trellis/index>
    gnuradio.wavelet <wavelet>
