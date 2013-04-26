@@ -11,6 +11,7 @@ Core Framework
 
    gnuradio.gr
    gnuradio.blocks
+   gnuradio.analog
    gnuradio.digital
    gnuradio.audio
    gnuradio.trellis
@@ -25,6 +26,7 @@ Core Framework
 
    gnuradio.gr <gr/index>
    gnuradio.blocks <blocks/index>
+   gnuradio.analog <analog/index>
    gnuradio.digital <digital/index>
    gnuradio.audio <audio/index>
    gnuradio.gr_unittest <gr_unittest/index>
@@ -126,3 +128,8 @@ Framework Extensions
    blocks_message <blocks/message_tools_blk>
    blocks_waveform <blocks/waveform_generators_blk>
    blocks_misc <blocks/misc_blk>
+   analog_level_controllers <analog/level_controllers_blk>
+   analog_peak_detectors <analog/peak_detectors_blk>
+   analog_measurement <analog/measurement_tools_blk>
+   analog_synchronizers <analog/synchronizers_blk>
+   analog_modulators <analog/modulators_blk>
