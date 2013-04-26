@@ -38,7 +38,10 @@ endif(ENABLE_GR_CTRLPORT)
 
 # FIXME: rename to filter_swig_doc.i when gnuradio-runtime is updated
 set(GR_SWIG_DOC_FILE ${CMAKE_CURRENT_BINARY_DIR}/gr_filter_swig_doc.i)
-set(GR_SWIG_DOC_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/../include/filter)
+set(GR_SWIG_DOC_DIRS
+    ${CMAKE_CURRENT_SOURCE_DIR}/../include/filter
+    ${CMAKE_CURRENT_BINARY_DIR}/../include/filter
+)
 set(GR_SWIG_DOCS_TARGET_DEPS runtime_swig_swig_doc)
 set(GR_SWIG_TARGET_DEPS filter_generated_includes)
 set(GR_SWIG_LIBRARIES gnuradio-filter gnuradio-fft)
