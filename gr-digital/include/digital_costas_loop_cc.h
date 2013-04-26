@@ -28,13 +28,21 @@
 #include <gri_control_loop.h>
 #include <stdexcept>
 #include <fstream>
+#include <digital_api.h>
 
+class digital_costas_loop_cc;
+typedef boost::shared_ptr<digital_costas_loop_cc> digital_costas_loop_cc_sptr;
+
+
+DIGITAL_API digital_costas_loop_cc_sptr 
+digital_make_costas_loop_cc (float loop_bw, int order
+			     ) throw (std::invalid_argument);
 
 /*! 
  * \brief A Costas loop carrier recovery module.
- * \ingroup sync_blk
- * \ingroup digital
+ * \ingroup synchronizers_blk
  *  
+ * \details
  *  The Costas loop locks to the center frequency of a signal and
  *  downconverts it to baseband. The second (order=2) order loop is
  *  used for BPSK where the real part of the output signal is the
@@ -49,31 +57,6 @@
  *  processing, pp. 20-36, 2002.
  *
  *  http://rfdesign.com/images/archive/0102Feigin20.pdf
- *  
- * \param loop_bw  internal 2nd order loop bandwidth (~ 2pi/100)
- * \param order the loop order, either 2, 4, or 8
- */
-
-#include <digital_api.h>
-
-class digital_costas_loop_cc;
-typedef boost::shared_ptr<digital_costas_loop_cc> digital_costas_loop_cc_sptr;
-
-
-DIGITAL_API digital_costas_loop_cc_sptr 
-digital_make_costas_loop_cc (float loop_bw, int order
-			     ) throw (std::invalid_argument);
-
-
-/*!
- * \brief Carrier tracking PLL for QPSK
- * \ingroup sync_blk
- * input: complex; output: complex
- * <br>The Costas loop can have two output streams:
- *    stream 1 is the baseband I and Q;
- *    stream 2 is the normalized frequency of the loop
- *
- * \p order must be 2, 4, or 8.
  */
 class DIGITAL_API digital_costas_loop_cc : public gr_sync_block, public gri_control_loop
 {
@@ -83,6 +66,16 @@ class DIGITAL_API digital_costas_loop_cc : public gr_sync_block, public gri_cont
 
   int d_order;
 
+  /*!
+   * \brief Carrier tracking PLL for QPSK
+   * input: complex; output: complex
+   * <br>The Costas loop can have two output streams:
+   *    stream 1 is the baseband I and Q;
+   *    stream 2 is the normalized frequency of the loop
+   *
+   * \param loop_bw  internal 2nd order loop bandwidth (~ 2pi/100)
+   * \param order the loop order, either 2, 4, or 8
+   */
   digital_costas_loop_cc (float loop_bw, int order
 			  ) throw (std::invalid_argument);
   

@@ -36,7 +36,7 @@ TRELLIS_API @SPTR_NAME@ trellis_make_@BASE_NAME@ (int O, int D,  const std::vect
 
 /*!
  * \brief Evaluate metrics for use by the Viterbi algorithm.
- * \ingroup coding_blk
+ * \ingroup trellis_coding_blk
  */
 class TRELLIS_API @NAME@ : public gr_block
 {

@@ -33,7 +33,9 @@ namespace gr {
     /*!
      * \brief Stream muxing block to multiplex many streams into
      * one with a specified format.
+     * \ingroup stream_operators_blk
      *
+     * \details
      * Muxes N streams together producing an output stream that
      * contains N0 items from the first stream, N1 items from the second,
      * etc. and repeats:
@@ -50,7 +52,6 @@ namespace gr {
       /*!
        * \brief Creates a stream muxing block to multiplex many streams into
        * one with a specified format.
-       * \ingroup converter_blk
        *
        * \param itemsize the item size of the stream
        * \param lengths  a vector (list/tuple) specifying the number of

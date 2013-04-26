@@ -33,7 +33,6 @@ GR_CORE_API gr_copy_sptr gr_make_copy(size_t itemsize);
 
 /*!
  * \brief output[i] = input[i]
- * \ingroup misc_blk
  *
  * When enabled (default), this block copies its input to its output.
  * When disabled, this block drops its input on the floor.

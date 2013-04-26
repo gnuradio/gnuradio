@@ -31,7 +31,6 @@ class gri_fft_complex;
 
 /*!
  * \brief Fast FFT filter with gr_complex input, gr_complex output and gr_complex taps
- * \ingroup filter_blk
  */
 class GR_CORE_API gri_fft_filter_ccc_generic
 {

@@ -41,7 +41,6 @@ gr_make_correlate_access_code_tag_bb (const std::string &access_code, int thresh
 
 /*!
  * \brief Examine input for specified access code, one bit at a time.
- * \ingroup sync_blk
  *
  * input:  stream of bits, 1 bit per input byte (data in LSB)
  * output: unaltered stream of bits (plus tags)

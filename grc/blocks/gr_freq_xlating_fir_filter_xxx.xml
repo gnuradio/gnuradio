@@ -5,7 +5,7 @@
 ###################################################
  -->
 <block>
-	<name>Frequency Xlating FIR Filter</name>
+	<name>Frequency Xlating FIR Filter (old)</name>
 	<key>gr_freq_xlating_fir_filter_xxx</key>
 	<import>from gnuradio import gr</import>
 	<import>from gnuradio.gr import firdes</import>

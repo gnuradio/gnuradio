@@ -26,21 +26,21 @@
 #include <digital_api.h>
 #include <gr_sync_block.h>
 
-/*!
- * \brief Differential decoding based on phase change.
- * \ingroup coding_blk
- *
- * Uses the phase difference between two symbols to determine the
- * output symbol:
- *
- *     out[i] = in[i] * conj(in[i-1]);
- */
 class digital_diff_phasor_cc;
 typedef boost::shared_ptr<digital_diff_phasor_cc> digital_diff_phasor_cc_sptr;
 
 DIGITAL_API digital_diff_phasor_cc_sptr digital_make_diff_phasor_cc();
 
-
+/*!
+ * \brief Differential decoding based on phase change.
+ * \ingroup symbol_coding_blk
+ *
+ * \details
+ * Uses the phase difference between two symbols to determine the
+ * output symbol:
+ *
+ *     out[i] = in[i] * conj(in[i-1]);
+ */
 class DIGITAL_API digital_diff_phasor_cc : public gr_sync_block
 {
   friend DIGITAL_API digital_diff_phasor_cc_sptr

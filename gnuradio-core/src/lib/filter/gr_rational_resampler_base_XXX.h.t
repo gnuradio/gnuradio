@@ -43,7 +43,6 @@ class @FIR_TYPE@;
 
 /*!
  * \brief Rational Resampling Polyphase FIR filter with @I_TYPE@ input, @O_TYPE@ output and @TAP_TYPE@ taps
- * \ingroup filter_blk
  */
 class GR_CORE_API @NAME@ : public gr_block
 {

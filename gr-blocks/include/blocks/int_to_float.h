@@ -30,19 +30,21 @@ namespace gr {
   namespace blocks {
 
     /*!
-     * \brief Convert stream of ints to a stream of floats
-     * \ingroup converter_blk
-     *
-     * \param vlen vector length of data streams.
-     * \param scale a scalar divider to change the output signal scale.
+     * \brief Convert stream of ints to a stream of floats.
+     * \ingroup type_converters_blk
      */
     class BLOCKS_API int_to_float : virtual public gr_sync_block
     {
     public:
-      
       // gr::blocks::int_to_float_ff::sptr
       typedef boost::shared_ptr<int_to_float> sptr;
 
+      /*!
+       * Build an int to float block.
+       *
+       * \param vlen vector length of data streams.
+       * \param scale a scalar divider to change the output signal scale.
+       */
       static sptr make(size_t vlen=1, float scale=1.0);
 
       /*!

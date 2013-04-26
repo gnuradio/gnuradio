@@ -35,7 +35,6 @@ gr_make_agc2_ff (float attack_rate = 1e-1, float decay_rate = 1e-2, float refere
 /*!
  * \brief high performance Automatic Gain Control class
  *
- * \ingroup level_blk
  * Power is approximated by absolute value
  */
 

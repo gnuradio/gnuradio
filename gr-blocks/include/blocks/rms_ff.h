@@ -19,6 +19,7 @@
  * the Free Software Foundation, Inc., 51 Franklin Street,
  * Boston, MA 02110-1301, USA.
  */
+
 #ifndef INCLUDED_BLOCKS_RMS_FF_H
 #define INCLUDED_BLOCKS_RMS_FF_H
 
@@ -30,7 +31,7 @@ namespace gr {
 
     /*!
      * \brief RMS average power
-     * \ingroup math_blk
+     * \ingroup math_operators_blk
      */
     class BLOCKS_API rms_ff : virtual public gr_sync_block
     {

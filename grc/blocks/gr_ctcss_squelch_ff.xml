@@ -27,7 +27,7 @@
 ###################################################
  -->
 <block>
-	<name>CTCSS Squelch</name>
+	<name>CTCSS Squelch (old)</name>
 	<key>gr_ctcss_squelch_ff</key>
 	<import>from gnuradio import gr</import>
 	<make>gr.ctcss_squelch_ff($rate, $freq, $level, $len, $ramp, $gate)</make>

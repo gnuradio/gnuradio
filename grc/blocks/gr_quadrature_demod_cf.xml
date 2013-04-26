@@ -5,7 +5,7 @@
 ###################################################
  -->
 <block>
-	<name>Quadrature Demod</name>
+	<name>Quadrature Demod (old)</name>
 	<key>gr_quadrature_demod_cf</key>
 	<import>from gnuradio import gr</import>
 	<make>gr.quadrature_demod_cf($gain)</make>

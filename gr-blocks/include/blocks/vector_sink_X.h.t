@@ -33,7 +33,7 @@ namespace gr {
 
     /*!
      * \brief @TYPE@ sink that writes to a vector
-     * \ingroup sink_blk
+     * \ingroup debug_tools_blk
      */
     class BLOCKS_API @NAME@ : virtual public gr_sync_block
     {

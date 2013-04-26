@@ -55,6 +55,7 @@ namespace gr {
     /*!
      * \brief Read one sample from an open WAV file at the current position.
      *
+     * \details
      * Takes care of endianness.
      */
     short int
@@ -77,6 +78,7 @@ namespace gr {
     /*!
      * \brief Write one sample to an open WAV file at the current position.
      *
+     * \details
      * Takes care of endianness.
      */
     void
@@ -86,6 +88,7 @@ namespace gr {
     /*!
      * \brief Complete a WAV header
      *
+     * \details
      * Note: The stream position is changed during this function. If
      * anything needs to be written to the WAV file after calling this
      * function (which shouldn't happen), you need to fseek() to the

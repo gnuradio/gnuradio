@@ -34,6 +34,7 @@ namespace gr {
       /*!
        * \brief high performance Automatic Gain Control class for complex signals.
        *
+       * \details
        * For Power the absolute value of the complex number is used.
        */
       class ANALOG_API agc_cc

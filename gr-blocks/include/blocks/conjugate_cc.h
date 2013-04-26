@@ -31,7 +31,7 @@ namespace gr {
 
     /*!
      * \brief output = complex conjugate of input
-     * \ingroup math_blk
+     * \ingroup math_operators_blk
      */
     class BLOCKS_API conjugate_cc : virtual public gr_sync_block
     {

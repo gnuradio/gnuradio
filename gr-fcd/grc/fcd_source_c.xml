@@ -2,7 +2,7 @@
 <block>
     <name>Funcube Dongle Source</name>
     <key>fcd_source_c</key>
-    <category>Sources</category>
+    <category>FCD</category>
     <throttle>1</throttle>
     <import>from gnuradio import fcd</import>
     <make>fcd.source_c($device_name)

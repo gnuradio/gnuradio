@@ -5,7 +5,7 @@
 ###################################################
  -->
 <block>
-	<name>Delay</name>
+	<name>Delay (old)</name>
 	<key>gr_delay</key>
 	<import>from gnuradio import gr</import>
 	<make>gr.delay($type.size*$vlen, $delay)</make>

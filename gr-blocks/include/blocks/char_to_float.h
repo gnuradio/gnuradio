@@ -31,10 +31,7 @@ namespace gr {
 
     /*!
      * \brief Convert stream of chars to a stream of float
-     * \ingroup converter_blk
-     *
-     * \param vlen vector length of data streams.
-     * \param scale a scalar divider to change the output signal scale.
+     * \ingroup type_converters_blk
      */
     class BLOCKS_API char_to_float : virtual public gr_sync_block
     {
@@ -43,6 +40,12 @@ namespace gr {
       // gr::blocks::char_to_float_ff::sptr
       typedef boost::shared_ptr<char_to_float> sptr;
 
+      /*!
+       * Build a chars to float stream converter block.
+       *
+       * \param vlen vector length of data streams.
+       * \param scale a scalar divider to change the output signal scale.
+       */
       static sptr make(size_t vlen=1, float scale=1.0);
 
       /*!

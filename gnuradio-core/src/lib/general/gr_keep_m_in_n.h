@@ -35,7 +35,6 @@ gr_make_keep_m_in_n (size_t item_size, int m, int n, int offset);
 
 /*!
  * \brief decimate a stream, keeping one item out of every n.
- * \ingroup slicedice_blk
  */
 class GR_CORE_API gr_keep_m_in_n : public gr_block
 {

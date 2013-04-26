@@ -37,7 +37,6 @@ gr_make_single_pole_iir_filter_cc (double alpha, unsigned int vlen=1);
 
 /*!
  * \brief  single pole IIR filter with complex input, complex output
- * \ingroup filter_blk
  *
  * The input and output satisfy a difference equation of the form
  \htmlonly

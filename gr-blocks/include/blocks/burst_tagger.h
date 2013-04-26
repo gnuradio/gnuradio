@@ -31,8 +31,10 @@ namespace gr {
 
     /*!
      * \brief Sets a burst on/off tag based on the value of the trigger input.
-     * \ingroup misc_blk
+     * \ingroup peak_detectors_blk
+     * \ingroup stream_tag_tools_blk
      *
+     * \details
      * This block takes two inputs, a signal stream on the input
      * stream 0 and a trigger stream of shorts on input stream 1. If
      * the trigger stream goes above 0, a tag with the key "burst"

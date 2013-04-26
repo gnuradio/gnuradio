@@ -36,7 +36,7 @@ TRELLIS_API @SPTR_NAME@ trellis_make_@BASE_NAME@ (const fsm &FSM, int ST);
 
 /*!
  * \brief Convolutional encoder.
- * \ingroup coding_blk
+ * \ingroup trellis_coding_blk
  */
 class TRELLIS_API @NAME@ : public gr_sync_block
 {

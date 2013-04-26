@@ -35,12 +35,8 @@ GR_CORE_API gr_pfb_interpolator_ccf_sptr gr_make_pfb_interpolator_ccf (unsigned 
 class gr_fir_ccf;
 
 /*!
- * \class gr_pfb_interpolator_ccf
  * \brief Polyphase filterbank interpolator with gr_complex input,
  * gr_complex output and float taps
- *
- * \ingroup filter_blk
- * \ingroup pfb_blk
  *
  * This block takes in a signal stream and performs interger up-
  * sampling (interpolation) with a polyphase filterbank. The first

@@ -39,8 +39,6 @@ GR_CORE_API gr_descrambler_bb_sptr gr_make_descrambler_bb(int mask, int seed, in
  * \param mask     Polynomial mask for LFSR
  * \param seed     Initial shift register contents
  * \param len      Shift register length
- *
- * \ingroup coding_blk
  */
 
 class GR_CORE_API gr_descrambler_bb : public gr_sync_block

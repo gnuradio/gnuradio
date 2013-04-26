@@ -31,6 +31,7 @@ namespace gr {
 
     /*!
      * \brief throughput measurement
+     * \ingroup measurement_tools_blk
      */
     class BLOCKS_API probe_rate : virtual public gr_sync_block
     {

@@ -31,11 +31,11 @@ namespace gr {
 
     /*!
      * \brief Write stream to a Microsoft PCM (.wav) file.
+     * \ingroup audio_blk
      *
+     * \details
      * Values must be floats within [-1;1].
      * Check gr_make_wavfile_sink() for extra info.
-     *
-     * \ingroup sink_blk
      */
     class BLOCKS_API wavfile_sink : virtual public gr_sync_block
     {
@@ -44,10 +44,10 @@ namespace gr {
       typedef boost::shared_ptr<wavfile_sink> sptr;
 
       /*
-       * \p filename The .wav file to be opened
-       * \p n_channels Number of channels (2 = stereo or I/Q output)
-       * \p sample_rate Sample rate [S/s]
-       * \p bits_per_sample 16 or 8 bit, default is 16
+       * \param filename The .wav file to be opened
+       * \param n_channels Number of channels (2 = stereo or I/Q output)
+       * \param sample_rate Sample rate [S/s]
+       * \param bits_per_sample 16 or 8 bit, default is 16
        */
       static sptr make(const char *filename,
 		       int n_channels,

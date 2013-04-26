@@ -30,9 +30,20 @@ namespace gr {
   namespace digital {
 
     /*!
-     * \brief <+description of block+>
-     * \ingroup digital
+     * \brief Default header formatter for digital packet transmission.
+     * \ingroup packet_operators_blk
      *
+     * \details
+     * For bursty/packetized digital transmission, packets are usually prepended
+     * with a packet header, containing the number of bytes etc.
+     * This class is not a block, but a tool to create these packet header.
+     *
+     * This is a default packet header (see header_formatter()) for a description
+     * on the header format). To create other header, derive packet header creator
+     * classes from this function.
+     *
+     * gr::digital::packet_headergenerator_bb uses header generators derived from
+     * this class to create packet headers from data streams.
      */
     class DIGITAL_API packet_header_default : public boost::enable_shared_from_this<gr::digital::packet_header_default>
     {
@@ -53,7 +64,8 @@ namespace gr {
       long header_len() { return d_header_len; };
       pmt::pmt_t len_tag_key() { return d_len_tag_key; };
 
-      /* \brief Encodes the header information in the given tags into bits and places them into \p out
+      /*!
+       * \brief Encodes the header information in the given tags into bits and places them into \p out
        *
        * Uses the following header format:
        * Bits 0-11: The packet length (what was stored in the tag with key \p len_tag_key)
@@ -64,18 +76,18 @@ namespace gr {
        * If the header length is smaller than 29, bits are simply left out. For this
        * reason, they always start with the LSB.
        */
-      bool header_formatter(
+      virtual bool header_formatter(
 	  long packet_len,
 	  unsigned char *out,
 	  const std::vector<gr_tag_t> &tags=std::vector<gr_tag_t>()
       );
 
-      /* \brief Inverse function to header_formatter().
+      /*!
+       * \brief Inverse function to header_formatter().
        *
-       * Reads the bit stream in \in and writes a corresponding tag into \p tags.
-       *
+       * Reads the bit stream in \p header and writes a corresponding tag into \p tags.
        */
-      bool header_parser(
+      virtual bool header_parser(
 	const unsigned char *header,
 	std::vector<gr_tag_t> &tags);
 

@@ -5,7 +5,7 @@
 ###################################################
  -->
 <block>
-	<name>IIR Filter</name>
+	<name>IIR Filter (old)</name>
 	<key>gr_iir_filter_ffd</key>
 	<import>from gnuradio import gr</import>
 	<make>gr.iir_filter_ffd($fftaps, $fbtaps)</make>

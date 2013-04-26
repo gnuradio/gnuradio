@@ -35,6 +35,7 @@ namespace gr {
      * \brief  single pole IIR filter with float input, float output
      * \ingroup filter_blk
      *
+     * \details
      * The input and output satisfy a difference equation of the form
      \htmlonly
      \f{

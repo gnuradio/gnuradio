@@ -5,7 +5,7 @@
 ###################################################
  -->
 <block>
-	<name>Message Strobe</name>
+	<name>Message Strobe (old)</name>
 	<key>gr_message_strobe</key>
 	<import>from gnuradio import gr</import>
 	<import>from gruel import pmt</import>

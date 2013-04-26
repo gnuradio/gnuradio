@@ -5,7 +5,7 @@
 ###################################################
  -->
 <block>
-	<name>Int To Float</name>
+	<name>Int To Float (old)</name>
 	<key>gr_int_to_float</key>
 	<import>from gnuradio import gr</import>
 	<make>gr.int_to_float($vlen, $scale)</make>

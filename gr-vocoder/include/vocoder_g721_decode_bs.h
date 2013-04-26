@@ -35,7 +35,7 @@ VOCODER_API vocoder_g721_decode_bs_sptr vocoder_make_g721_decode_bs();
 /*!
  * \brief This block performs g721 audio decoding.
  *
- * \ingroup vocoder_blk
+ * \ingroup audio_blk
  */
 
 class VOCODER_API vocoder_g721_decode_bs : virtual public gr_sync_block

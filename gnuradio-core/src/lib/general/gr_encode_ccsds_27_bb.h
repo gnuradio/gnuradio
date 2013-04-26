@@ -30,7 +30,6 @@ typedef boost::shared_ptr<gr_encode_ccsds_27_bb> gr_encode_ccsds_27_bb_sptr;
 GR_CORE_API gr_encode_ccsds_27_bb_sptr gr_make_encode_ccsds_27_bb();
 
 /*! \brief A rate 1/2, k=7 convolutional encoder for the CCSDS standard
- * \ingroup ecc
  *
  * This block performs convolutional encoding using the CCSDS standard
  * polynomial ("Voyager").

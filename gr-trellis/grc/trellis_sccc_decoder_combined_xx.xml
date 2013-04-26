@@ -9,7 +9,7 @@
 <block>
 	<name>SCCC Decoder Combo</name>
 	<key>trellis_sccc_decoder_combined_xx</key>
-	<category>Error Correction/Trellis</category>
+	<category>Trellis Coding</category>
 	<import>from gnuradio import trellis, digital</import>
 	<make>trellis.sccc_decoder_combined_$(type)$(out_type)(
 		trellis.fsm($o_fsm_args), $o_init_state, $o_final_state,

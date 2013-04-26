@@ -36,7 +36,6 @@ gr_make_fft_vcc (int fft_size, bool forward,
 
 /*!
  * \brief Compute forward or reverse FFT.  complex vector in / complex vector out.
- * \ingroup dft_blk
  *
  * Abstract base class
  */

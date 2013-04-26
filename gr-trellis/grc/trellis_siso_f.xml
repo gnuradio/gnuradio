@@ -9,7 +9,7 @@
 <block>
 	<name>SISO</name>
 	<key>trellis_siso_f</key>
-	<category>Error Correction/Trellis</category>
+	<category>Trellis Coding</category>
 	<import>from gnuradio import trellis</import>
 	<make>trellis.siso_f(trellis.fsm($fsm_args), $block_size, $init_state, $final_state, $a_post_in, $a_post_out, $siso_type)</make>
 	<param>

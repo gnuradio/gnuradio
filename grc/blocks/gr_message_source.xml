@@ -5,7 +5,7 @@
 ###################################################
  -->
 <block>
-	<name>Message Source</name>
+	<name>Message Source (old)</name>
 	<key>gr_message_source</key>
 	<import>from gnuradio import gr</import>
 	<make>gr.message_source($type.size*$vlen, $(id)_msgq_in)</make>

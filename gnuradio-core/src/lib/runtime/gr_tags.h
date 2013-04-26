@@ -39,6 +39,9 @@ struct GR_CORE_API gr_tag_t{
     //! the source ID of \p tag (as a PMT)
     pmt::pmt_t srcid;
 
+    //! Used by gr_buffer to mark a tagged as deleted by a specific block. You can usually ignore this.
+    std::vector<long> marked_deleted;
+
     //! Comparison function to test which tag, \p x or \p y, came first in time
     static inline bool offset_compare(
         const gr_tag_t &x, const gr_tag_t &y

@@ -36,8 +36,9 @@ digital_make_@BASE_NAME@ (const std::vector<@O_TYPE@> &symbol_table, const int D
 
 /*!
  * \brief Map a stream of symbol indexes (unpacked bytes or shorts) to stream of float or complex constellation points in D dimensions (D = 1 by default)
- * \ingroup converter_blk
+ * \ingroup symbol_coding_blk
  *
+ * \details
  * input: stream of @I_TYPE@; output: stream of @O_TYPE@
  *
  * out[n D + k] = symbol_table[in[n] D + k], k=0,1,...,D-1

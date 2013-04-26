@@ -35,7 +35,6 @@ gr_make_multiply_conjugate_cc (size_t vlen=1);
 
 /*!
  * \brief Multiplies a stream by the conjugate of the second stream
- * \ingroup math_blk
  */
 
 class GR_CORE_API gr_multiply_conjugate_cc : public gr_sync_block

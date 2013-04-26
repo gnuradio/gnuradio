@@ -5,7 +5,7 @@
 ###################################################
  -->
 <block>
-	<name>UDP Sink</name>
+	<name>UDP Sink (old)</name>
 	<key>gr_udp_sink</key>
 	<import>from gnuradio import gr</import>
 	<make>gr.udp_sink($type.size*$vlen, $ipaddr, $port, $psize, $eof)</make>

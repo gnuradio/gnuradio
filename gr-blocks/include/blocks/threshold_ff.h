@@ -31,8 +31,9 @@ namespace gr {
 
     /*!
      * \brief Output a 1 or zero based on a threshold value.
-     * \ingroup misc_blk
+     * \ingroup level_controllers_blk
      *
+     * \details
      * Test the incoming signal against a threshold. If the signal
      * excedes the \p hi value, it will output a 1 until the signal
      * falls below the \p lo value.

@@ -31,7 +31,7 @@ namespace gr {
 
     /*!
      * \brief Write stream to an UDP socket.
-     * \ingroup sink_blk
+     * \ingroup networking_tools_blk
      */
     class BLOCKS_API udp_sink : virtual public gr_sync_block
     {

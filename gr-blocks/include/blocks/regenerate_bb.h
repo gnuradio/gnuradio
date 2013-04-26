@@ -31,8 +31,9 @@ namespace gr {
 
     /*!
      * \brief Detect the peak of a signal and repeat every period samples
-     * \ingroup level_blk
+     * \ingroup stream_operators_blk
      *
+     * \details
      * If a peak is detected, this block outputs a 1 repeated every
      * period samples until reset by detection of another 1 on the
      * input or stopped after max_regen regenerations have occurred.

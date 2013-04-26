@@ -6,7 +6,7 @@
 ###################################################
  -->
 <block>
-	<name>And Const</name>
+	<name>And Const (old)</name>
 	<key>gr_and_const_xx</key>
 	<import>from gnuradio import gr</import>
 	<make>gr.and_const_$(type.fcn)($const)</make>

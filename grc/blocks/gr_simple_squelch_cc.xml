@@ -5,7 +5,7 @@
 ###################################################
  -->
 <block>
-	<name>Simple Squelch</name>
+	<name>Simple Squelch (old)</name>
 	<key>gr_simple_squelch_cc</key>
 	<import>from gnuradio import gr</import>
 	<make>gr.simple_squelch_cc($threshold, $alpha)</make>

@@ -36,7 +36,6 @@ gr_make_pwr_squelch_ff(double db, double alpha = 0.0001, int ramp=0, bool gate=f
 
 /*!
  * \brief gate or zero output when input power below threshold
- * \ingroup level_blk
  */
 class GR_CORE_API gr_pwr_squelch_ff : public gr_squelch_base_ff
 {

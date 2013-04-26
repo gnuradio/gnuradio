@@ -5,7 +5,7 @@
 ###################################################
  -->
 <block>
-	<name>UChar To Float</name>
+	<name>UChar To Float (old)</name>
 	<key>gr_uchar_to_float</key>
 	<import>from gnuradio import gr</import>
 	<make>gr.uchar_to_float()</make>

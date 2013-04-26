@@ -6,7 +6,7 @@
 ###################################################
  -->
 <block>
-	<name>Subtract</name>
+	<name>Subtract (old)</name>
 	<key>gr_sub_xx</key>
 	<import>from gnuradio import gr</import>
 	<make>gr.sub_$(type.fcn)($vlen)</make>

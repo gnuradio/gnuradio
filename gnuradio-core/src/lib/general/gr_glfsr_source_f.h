@@ -35,7 +35,6 @@ GR_CORE_API gr_glfsr_source_f_sptr gr_make_glfsr_source_f(int degree, bool repea
 
 /*!
  * \brief Galois LFSR pseudo-random source generating float outputs -1.0 - 1.0
- * \ingroup source_blk
  */
 class GR_CORE_API gr_glfsr_source_f : public gr_sync_block
 {

@@ -31,19 +31,12 @@ namespace gr {
 
     /*!
      * \brief Detect the peak of a signal
-     * \ingroup level_blk
+     * \ingroup peak_detectors_blk
      *
+     * \details
      * If a peak is detected, this block outputs a 1, or it outputs
      * 0's. A separate debug output may be connected, to view the
      * internal EWMA described below.
-     *
-     * \param threshold_factor_rise The threshold factor determins
-     *        when a peak is present. An EWMA average of the signal is
-     *        calculated and when the value of the signal goes over
-     *        threshold_factor_rise*average, we call the peak.
-     * \param look_ahead The look-ahead value is used when the
-     *        threshold is found to locate the peak within this range.
-     * \param alpha The gain value of a single-pole moving average filter.
      */
     class BLOCKS_API peak_detector2_fb : virtual public gr_sync_block
     {
@@ -51,6 +44,17 @@ namespace gr {
       // gr::blocks::peak_detector2_fb::sptr
       typedef boost::shared_ptr<peak_detector2_fb> sptr;
 
+      /*!
+       * Build a peak detector block with float in, byte out.
+       *
+       * \param threshold_factor_rise The threshold factor determins
+       *        when a peak is present. An EWMA average of the signal is
+       *        calculated and when the value of the signal goes over
+       *        threshold_factor_rise*average, we call the peak.
+       * \param look_ahead The look-ahead value is used when the
+       *        threshold is found to locate the peak within this range.
+       * \param alpha The gain value of a single-pole moving average filter.
+       */
       static sptr make(float threshold_factor_rise=7,
                        int look_ahead=1000, float alpha=0.001);
 

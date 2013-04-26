@@ -33,7 +33,6 @@ GR_CORE_API gr_burst_tagger_sptr gr_make_burst_tagger(size_t itemsize);
 
 /*!
  * \brief output[i] = input[i]
- * \ingroup misc_blk
  *
  */
 class GR_CORE_API gr_burst_tagger : public gr_sync_block

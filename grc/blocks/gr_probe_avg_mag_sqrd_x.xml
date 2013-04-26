@@ -5,7 +5,7 @@
 ###################################################
  -->
 <block>
-	<name>Probe Avg Mag^2</name>
+	<name>Probe Avg Mag^2 (old)</name>
 	<key>gr_probe_avg_mag_sqrd_x</key>
 	<import>from gnuradio import gr</import>
 	<make>gr.probe_avg_mag_sqrd_$(type)($threshold, $alpha)</make>

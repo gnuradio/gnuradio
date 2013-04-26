@@ -33,8 +33,8 @@ class qa_packet_headergenerator_bb (gr_unittest.TestCase):
         self.tb = None
 
     def test_001_12bits (self):
-        # 3 PDUs: |           |     |         |
-        data   = (1, 2, 3, 4, 1, 2, 1, 2, 3, 4)
+        # 3 PDUs: |           |       |
+        data   = (1, 2, 3, 4, 1, 2) + tuple(range(25))
         tagname = "packet_len"
         tag1 = gr.gr_tag_t()
         tag1.offset = 0
@@ -47,7 +47,7 @@ class qa_packet_headergenerator_bb (gr_unittest.TestCase):
         tag3 = gr.gr_tag_t()
         tag3.offset = 6
         tag3.key = pmt.pmt_string_to_symbol(tagname)
-        tag3.value = pmt.pmt_from_long(4)
+        tag3.value = pmt.pmt_from_long(25)
         src = gr.vector_source_b(data, False, 1, (tag1, tag2, tag3))
         header = digital.packet_headergenerator_bb(12, tagname)
         sink = gr.vector_sink_b()
@@ -56,7 +56,7 @@ class qa_packet_headergenerator_bb (gr_unittest.TestCase):
         expected_data = (
                 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0,
                 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0
+                1, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0
         )
         self.assertEqual(sink.data(), expected_data)
 
@@ -109,7 +109,7 @@ class qa_packet_headergenerator_bb (gr_unittest.TestCase):
         tag3.value = pmt.pmt_from_long(4)
         src = gr.vector_source_b(data, False, 1, (tag1, tag2, tag3))
         formatter_object = digital.packet_header_default(12, tagname)
-        header = digital.packet_headergenerator_bb(formatter_object.formatter())
+        header = digital.packet_headergenerator_bb(formatter_object.formatter(), tagname)
         sink = gr.vector_sink_b()
         self.tb.connect(src, header, sink)
         self.tb.run()
@@ -141,7 +141,7 @@ class qa_packet_headergenerator_bb (gr_unittest.TestCase):
         formatter_object = digital.packet_header_ofdm(occupied_carriers, 1, tagname)
         self.assertEqual(formatter_object.header_len(), 6)
         self.assertEqual(pmt.pmt_symbol_to_string(formatter_object.len_tag_key()), tagname)
-        header = digital.packet_headergenerator_bb(formatter_object.formatter())
+        header = digital.packet_headergenerator_bb(formatter_object.formatter(), tagname)
         sink = gr.vector_sink_b()
         self.tb.connect(src, header, sink)
         self.tb.run()

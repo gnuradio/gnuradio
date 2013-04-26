@@ -5,7 +5,7 @@
 ###################################################
  -->
 <block>
-	<name>RMS</name>
+	<name>RMS (old)</name>
 	<key>gr_rms_xx</key>
 	<import>from gnuradio import gr</import>
 	<make>gr.rms_$(type.fcn)f($alpha)</make>

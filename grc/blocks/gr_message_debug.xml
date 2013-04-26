@@ -5,7 +5,7 @@
 ###################################################
  -->
 <block>
-	<name>Message Debug</name>
+	<name>Message Debug (old)</name>
 	<key>gr_message_debug</key>
 	<import>from gnuradio import gr</import>
 	<make>gr.message_debug()</make>

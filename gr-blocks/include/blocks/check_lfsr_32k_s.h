@@ -33,6 +33,7 @@ namespace gr {
      * \brief sink that checks if its input stream consists of a lfsr_32k sequence.
      * \ingroup sink_blk
      *
+     * \details
      * This sink is typically used along with
      * gr::blocks::lfsr_32k_source_s to test the USRP using its
      * digital loopback mode.

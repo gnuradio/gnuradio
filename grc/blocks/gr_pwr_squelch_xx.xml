@@ -5,7 +5,7 @@
 ###################################################
  -->
 <block>
-	<name>Power Squelch</name>
+	<name>Power Squelch (old)</name>
 	<key>gr_pwr_squelch_xx</key>
 	<import>from gnuradio import gr</import>
 	<make>gr.pwr_squelch_$(type.fcn)($threshold, $alpha, $ramp, $gate)</make>

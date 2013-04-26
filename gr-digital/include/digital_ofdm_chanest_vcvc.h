@@ -62,7 +62,7 @@ digital_make_ofdm_chanest_vcvc (
 /*!
  * \brief Estimate channel and coarse frequency offset for OFDM from preambles
  * \ingroup ofdm_blk
- * \ingroup sync_blk
+ * \ingroup syncronizers_blk
  *
  * Input: OFDM symbols (in frequency domain). The first one (or two) symbols are expected
  *        to be synchronisation symbols, which are used to estimate the coarse freq offset

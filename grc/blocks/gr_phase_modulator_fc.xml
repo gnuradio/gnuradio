@@ -5,7 +5,7 @@
 ###################################################
  -->
 <block>
-	<name>Phase Mod</name>
+	<name>Phase Mod (old)</name>
 	<key>gr_phase_modulator_fc</key>
 	<import>from gnuradio import gr</import>
 	<make>gr.phase_modulator_fc($sensitivity)</make>

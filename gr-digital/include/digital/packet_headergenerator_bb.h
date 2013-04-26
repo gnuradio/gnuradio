@@ -31,20 +31,36 @@ namespace gr {
 
     /*!
      * \brief Generates a header for a tagged, streamed packet.
-     * \ingroup digital
+     * \ingroup packet_operators_blk
      *
-     * Input: A tagged stream. The first element must have a tag with the key
-     *        specified in len_tag_key, which hold the exact number of elements
-     *        in the PDU.
-     * Output: An tagged stream of length header_len. The output is determined
-     *         by a header formatter.
+     * \details
+     * Input: A tagged stream. This is consumed entirely, it is not appended
+     *        to the output stream.
+     * Output: An tagged stream containing the header. The details on the header
+     *         are set in a header formatter object (of type packet_header_default
+     *         or a subclass thereof). If only a number of bits is specified, a
+     *         default header is generated (see packet_header_default).
      */
     class DIGITAL_API packet_headergenerator_bb : virtual public gr_tagged_stream_block
     {
      public:
       typedef boost::shared_ptr<packet_headergenerator_bb> sptr;
 
-      static sptr make(const packet_header_default::sptr &header_formatter);
+      /* \param header_formatter A header formatter object.
+       * \param len_tag_key Length tag key. Note that for header generation,
+       *                    it is irrelevant which tag names are set in the
+       *                    formatter object, only this value is relevant!
+       */
+      static sptr make(
+	  const packet_header_default::sptr &header_formatter,
+	  const std::string &len_tag_key="packet_len"
+      );
+
+      /* \param header_len If this value is given, a packet_header_default
+       *                   object is used to generate the header. This is
+       *                   the number of bits per header.
+       * \param len_tag_key Length tag key.
+       */
       static sptr make(
 	   long header_len,
 	   const std::string &len_tag_key = "packet_len");

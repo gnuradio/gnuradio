@@ -34,6 +34,7 @@ PAGER_API pager_flex_frame_sptr pager_make_flex_frame();
 
 /*!
  * \brief flex_frame.
+ * \ingroup pager_blk
  */
 class PAGER_API pager_flex_frame {
     // Constructor is private to force use of shared_ptr

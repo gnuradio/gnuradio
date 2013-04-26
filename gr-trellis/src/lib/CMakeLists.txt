@@ -106,6 +106,10 @@ expand_h_cc_i(trellis_sccc_decoder_combined_XX   fb fs fi cb cs ci)
 expand_h_cc_i(trellis_pccc_decoder_X             b s i)
 expand_h_cc_i(trellis_pccc_decoder_combined_XX   fb fs fi cb cs ci)
 
+add_custom_target(trellis_generated_includes DEPENDS
+    ${generated_trellis_includes}
+)
+
 ########################################################################
 # Create the master trellis swig include files
 ########################################################################

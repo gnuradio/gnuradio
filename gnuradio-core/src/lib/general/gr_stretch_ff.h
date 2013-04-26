@@ -30,7 +30,6 @@
  * \brief adjust y-range of an input vector by mapping to range
  * (max-of-input, stipulated-min). Primarily for spectral signature
  * matching by normalizing spectrum dynamic ranges.
- * \ingroup misc_blk
  */
 
 

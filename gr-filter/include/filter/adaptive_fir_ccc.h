@@ -34,6 +34,7 @@ namespace gr {
      * \brief Adaptive FIR filter with gr_complex input, gr_complex output and gr_complex taps
      * \ingroup filter_blk
      *
+     * \details
      * This is a base class to implement an adaptive FIR
      * filter. Generally, another block will inherit from this one to
      * build a new type of adaptive filter such as an equalizer.

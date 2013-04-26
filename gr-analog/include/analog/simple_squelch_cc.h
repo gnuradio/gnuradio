@@ -31,7 +31,7 @@ namespace gr {
     
     /*!
      * \brief simple squelch block based on average signal power and threshold in dB.
-     * \ingroup level_blk
+     * \ingroup level_controllers_blk
      */
     class ANALOG_API simple_squelch_cc : virtual public gr_sync_block
     {

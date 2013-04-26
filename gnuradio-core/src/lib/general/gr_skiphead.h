@@ -36,7 +36,6 @@ gr_make_skiphead (size_t itemsize, uint64_t nitems_to_skip);
 
 /*!
  * \brief skips the first N items, from then on copies items to the output
- * \ingroup slicedice_blk
  *
  * Useful for building test cases and sources which have metadata or junk at the start
  */

@@ -34,7 +34,6 @@ gr_make_multiply_cc (size_t vlen=1);
 
 /*!
  * \brief Multiply streams of complex values
- * \ingroup math_blk
  */
 
 class GR_CORE_API gr_multiply_cc : public gr_sync_block

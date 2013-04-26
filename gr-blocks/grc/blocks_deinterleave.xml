@@ -16,27 +16,27 @@
 		<option>
 			<name>Complex</name>
 			<key>complex</key>
-			<opt>size:blocks.sizeof_blocks_complex</opt>
+			<opt>size:gr.sizeof_gr_complex</opt>
 		</option>
 		<option>
 			<name>Float</name>
 			<key>float</key>
-			<opt>size:blocks.sizeof_float</opt>
+			<opt>size:gr.sizeof_float</opt>
 		</option>
 		<option>
 			<name>Int</name>
 			<key>int</key>
-			<opt>size:blocks.sizeof_int</opt>
+			<opt>size:gr.sizeof_int</opt>
 		</option>
 		<option>
 			<name>Short</name>
 			<key>short</key>
-			<opt>size:blocks.sizeof_short</opt>
+			<opt>size:gr.sizeof_short</opt>
 		</option>
 		<option>
 			<name>Byte</name>
 			<key>byte</key>
-			<opt>size:blocks.sizeof_char</opt>
+			<opt>size:gr.sizeof_char</opt>
 		</option>
 	</param>
 	<param>

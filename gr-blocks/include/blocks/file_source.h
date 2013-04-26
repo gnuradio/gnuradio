@@ -31,7 +31,7 @@ namespace gr {
 
     /*!
      * \brief Read stream from file
-     * \ingroup source_blk
+     * \ingroup file_operators_blk
      */
     class BLOCKS_API file_source : virtual public gr_sync_block
     {

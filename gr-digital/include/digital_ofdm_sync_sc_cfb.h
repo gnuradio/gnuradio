@@ -37,8 +37,9 @@ digital_make_ofdm_sync_sc_cfb (int fft_len, int cp_len);
 /*!
  * \brief Schmidl & Cox synchronisation for OFDM
  * \ingroup ofdm_blk
- * \ingroup sync_blk
+ * \ingroup synchronizers_blk
  *
+ * \details
  * Input: complex samples.
  * Output 0: Fine frequency offset, scaled by the OFDM symbol duration.
  *           This is \f$\hat{\varphi}\f$ in [1]. The normalized frequency

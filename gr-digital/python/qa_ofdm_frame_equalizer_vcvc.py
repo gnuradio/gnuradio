@@ -106,6 +106,39 @@ class qa_ofdm_frame_equalizer_vcvc (gr_unittest.TestCase):
             if pmt.pmt_symbol_to_string(tag.key) == "ofdm_sync_chan_taps":
                 self.assertEqual(list(pmt.pmt_c32vector_elements(tag.value)), channel[-fft_len:])
 
+    def test_002_static_wo_tags (self):
+        fft_len = 8
+        #           4   5  6  7   0  1  2   3
+        tx_data = [-1, -1, 1, 2, -1, 3, 0, -1, # 0
+                   -1, -1, 0, 2, -1, 2, 0, -1, # 8
+                   -1, -1, 3, 0, -1, 1, 0, -1, # 16 (Pilot symbols)
+                   -1, -1, 1, 1, -1, 0, 2, -1] # 24
+        cnst = digital.constellation_qpsk()
+        tx_signal = [cnst.map_to_points_v(x)[0] if x != -1 else 0 for x in tx_data]
+        occupied_carriers = ((1, 2, 6, 7),)
+        pilot_carriers = ((), (), (1, 2, 6, 7), ())
+        pilot_symbols = (
+                [], [], [cnst.map_to_points_v(x)[0] for x in (1, 0, 3, 0)], []
+        )
+        equalizer = digital.ofdm_equalizer_static(fft_len, occupied_carriers, pilot_carriers, pilot_symbols)
+        channel = [
+            0, 0,  1,  1, 0,  1,  1, 0,
+            0, 0,  1,  1, 0,  1,  1, 0, # These coefficients will be rotated slightly...
+            0, 0, 1j, 1j, 0, 1j, 1j, 0, # Go crazy here!
+            0, 0, 1j, 1j, 0, 1j, 1j, 0  # ...and again here.
+        ]
+        for idx in range(fft_len, 2*fft_len):
+            channel[idx] = channel[idx-fft_len] * numpy.exp(1j * .1 * numpy.pi * (numpy.random.rand()-.5))
+            idx2 = idx+2*fft_len
+            channel[idx2] = channel[idx2] * numpy.exp(1j * 0 * numpy.pi * (numpy.random.rand()-.5))
+        src = gr.vector_source_c(numpy.multiply(tx_signal, channel), False, fft_len)
+        eq = digital.ofdm_frame_equalizer_vcvc(equalizer.base(), "", False, 4)
+        sink = gr.vector_sink_c(fft_len)
+        self.tb.connect(src, eq, sink)
+        self.tb.run ()
+        rx_data = [cnst.decision_maker_v((x,)) if x != 0 else -1 for x in sink.data()]
+        self.assertEqual(tx_data, rx_data)
+
     def test_002_simpledfe (self):
         fft_len = 8
         #           4   5  6  7   0  1  2   3

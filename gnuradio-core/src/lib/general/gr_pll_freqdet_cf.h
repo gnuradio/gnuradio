@@ -36,7 +36,6 @@ GR_CORE_API gr_pll_freqdet_cf_sptr gr_make_pll_freqdet_cf (float loop_bw,
 /*!
  * \brief Implements a PLL which locks to the input frequency and outputs
  * an estimate of that frequency.  Useful for FM Demod.
- * \ingroup sync_blk
  *
  * input: stream of complex; output: stream of floats
  *

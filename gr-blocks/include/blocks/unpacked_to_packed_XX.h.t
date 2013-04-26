@@ -34,8 +34,9 @@ namespace gr {
 
     /*!
      * \brief Convert a stream of unpacked bytes or shorts into a stream of packed bytes or shorts.
-     * \ingroup converter_blk
+     * \ingroup byte_operators_blk
      *
+     * \details
      * input: stream of @I_TYPE@; output: stream of @O_TYPE@
      *
      * This is the inverse of gr::blocks::packed_to_unpacked_XX.

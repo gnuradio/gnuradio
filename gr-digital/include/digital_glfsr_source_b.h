@@ -38,14 +38,6 @@ digital_make_glfsr_source_b(int degree, bool repeat=true,
 /*!
  * \brief Galois LFSR pseudo-random source
  * \ingroup source_blk
- *
- * \param degree Degree of shift register must be in [1, 32]. If mask
- *               is 0, the degree determines a default mask (see
- *               digital_impl_glfsr.cc for the mapping).
- * \param repeat Set to repeat sequence.
- * \param mask   Allows a user-defined bit mask for indexes of the shift
- *               register to feed back.
- * \param seed   Initial setting for values in shift register.
  */
 class DIGITAL_API digital_glfsr_source_b : public gr_sync_block
 {
@@ -60,6 +52,17 @@ class DIGITAL_API digital_glfsr_source_b : public gr_sync_block
   unsigned int d_index;
   unsigned int d_length;
 
+  /*!
+   * Build a Galois LFSR pseudo-random source generating block.
+   *
+   * \param degree Degree of shift register must be in [1, 32]. If mask
+   *               is 0, the degree determines a default mask (see
+   *               digital_impl_glfsr.cc for the mapping).
+   * \param repeat Set to repeat sequence.
+   * \param mask   Allows a user-defined bit mask for indexes of the shift
+   *               register to feed back.
+   * \param seed   Initial setting for values in shift register.
+   */
   digital_glfsr_source_b(int degree, bool repeat,
 			 int mask, int seed);
 

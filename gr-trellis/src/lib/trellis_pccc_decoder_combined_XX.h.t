@@ -51,7 +51,7 @@ TRELLIS_API @SPTR_NAME@ trellis_make_@BASE_NAME@ (
 
 
 /*!
- *  \ingroup coding_blk
+ *  \ingroup trellis_coding_blk
  */
 class TRELLIS_API @NAME@ : public gr_block
 {

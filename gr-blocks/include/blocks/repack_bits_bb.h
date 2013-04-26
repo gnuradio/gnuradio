@@ -30,9 +30,10 @@ namespace gr {
   namespace blocks {
 
     /*!
-     * \brief Pack \p k bits from the input stream onto \p k bits of the output stream.
-     * \ingroup blocks
+     * \brief Pack \p k bits from the input stream onto \p l bits of the output stream.
+     * \ingroup byte_operators_blk
      *
+     * \details
      * No bits are lost here; any value for k and l (within [1, 8]) is allowed.
      * On every fresh input byte, it starts reading on the LSB, and starts copying
      * to the LSB as well.

@@ -26,9 +26,9 @@
 *   The gr_log module wraps the log4cpp library for logging in gnuradio.
 *******************************************************************************/
 
-//#ifdef HAVE_CONFIG_H
-//#include "config.h" 
-//#endif
+#ifdef HAVE_CONFIG_H
+#include "config.h" 
+#endif
 
 #include <gr_logger.h>
 #include <stdexcept>

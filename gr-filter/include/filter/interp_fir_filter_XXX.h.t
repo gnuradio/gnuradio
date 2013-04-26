@@ -35,6 +35,7 @@ namespace gr {
      * \brief Interpolating FIR filter with @I_TYPE@ input, @O_TYPE@ output and @TAP_TYPE@ taps
      * \ingroup filter_blk
      *
+     * \details
      * The fir_filter_XXX blocks create finite impulse response
      * (FIR) filters that perform the convolution in the time
      * domain:
@@ -63,7 +64,6 @@ namespace gr {
 
       /*!
        * \brief Interpolating FIR filter with @I_TYPE@ input, @O_TYPE@ output, and @TAP_TYPE@ taps
-       * \ingroup filter_blk
        *
        * \param interpolation set the integer interpolation rate
        * \param taps a vector/list of taps of type @TAP_TYPE@

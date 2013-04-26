@@ -31,7 +31,7 @@ namespace gr {
 
     /*!
      * \brief output = n*log10(input) + k
-     * \ingroup math_blk
+     * \ingroup math_operators_blk
      */
     class BLOCKS_API nlog10_ff : virtual public gr_sync_block
     {

@@ -5,7 +5,7 @@
 ###################################################
  -->
 <block>
-	<name>Deinterleave</name>
+	<name>Deinterleave (old)</name>
 	<key>gr_deinterleave</key>
 	<import>from gnuradio import gr</import>
 	<make>gr.deinterleave($type.size*$vlen)</make>

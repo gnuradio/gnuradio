@@ -9,7 +9,7 @@
 <block>
 	<name>Viterbi</name>
 	<key>trellis_viterbi_x</key>
-	<category>Error Correction/Trellis</category>
+	<category>Trellis Coding</category>
 	<import>from gnuradio import trellis</import>
 	<make>trellis.viterbi_$(type)(trellis.fsm($fsm_args), $block_size, $init_state, $final_state)</make>
 	<param>

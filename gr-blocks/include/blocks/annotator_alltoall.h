@@ -32,6 +32,7 @@ namespace gr {
     /*!
      * \brief All-to-all stream annotator testing block. FOR TESTING PURPOSES ONLY.
      *
+     * \details
      * This block creates tags to be sent downstream every 10,000
      * items it sees. The tags contain the name and ID of the
      * instantiated block, use "seq" as a key, and have a counter that

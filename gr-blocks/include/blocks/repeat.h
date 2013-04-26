@@ -30,18 +30,21 @@ namespace gr {
   namespace blocks {
 
     /*!
-     * \brief repeat each input 'interp' times 
-     * \ingroup slicedice_blk
-     * \param itemsize stream itemsize
-     * \param interp number of times to repeat
+     * \brief repeat each input \p repeat times 
+     * \ingroup stream_operators_blk
      */
     class BLOCKS_API repeat : virtual public gr_sync_interpolator
     {
     public:
-      
       // gr::blocks::repeat::sptr
       typedef boost::shared_ptr<repeat> sptr;
 
+      /*!
+       * Make a repeat block.
+       *
+       * \param itemsize stream itemsize
+       * \param repeat number of times to repeat the input
+       */
       static sptr make(size_t itemsize, int repeat);
     };
 

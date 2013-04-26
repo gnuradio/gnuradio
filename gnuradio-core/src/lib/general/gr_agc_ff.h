@@ -35,7 +35,6 @@ gr_make_agc_ff (float rate = 1e-4, float reference = 1.0,
 
 /*!
  * \brief high performance Automatic Gain Control class
- * \ingroup level_blk
  *
  * Power is approximated by absolute value
  */

@@ -36,7 +36,6 @@ GR_CORE_API gr_fractional_interpolator_ff_sptr gr_make_fractional_interpolator_f
 
 /*!
  * \brief Interpolating mmse filter with float input, float output
- * \ingroup filter_blk
  */
 class GR_CORE_API gr_fractional_interpolator_ff : public gr_block
 {

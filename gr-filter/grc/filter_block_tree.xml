@@ -34,18 +34,27 @@
 		<block>fft_filter_xxx</block>
 		<block>fir_filter_xxx</block>
 		<block>filter_delay_fc</block>
-		<block>fractional_interpolator_xx</block>
-		<block>freq_xlating_fir_filter_xxx</block>
 		<block>hilbert_fc</block>
 		<block>iir_filter_ffd</block>
 		<block>interp_fir_filter_xxx</block>
+		<block>single_pole_iir_filter_xx</block>
+	</cat>
+	<cat>
+		<name>Resamplers</name>
+		<block>fractional_resampler_xx</block>
 		<block>pfb_arb_resampler_xxx</block>
+		<block>rational_resampler_base_xxx</block>
+	</cat>
+	<cat>
+		<name>Channelizers</name>
+		<block>freq_xlating_fir_filter_xxx</block>
 		<block>pfb_channelizer_ccf</block>
 		<block>pfb_decimator_ccf</block>
 		<block>pfb_interpolator_ccf</block>
 		<block>pfb_synthesizer_ccf</block>
-		<block>rational_resampler_base_xxx</block>
-		<block>single_pole_iir_filter_xx</block>
+	</cat>
+	<cat>
+		<name>Channel Models</name>
 		<block>channel_model</block>
 	</cat>
 </cat>

@@ -31,6 +31,8 @@ DIGITAL_API digital_probe_density_b_sptr
 digital_make_probe_density_b(double alpha);
 
 /*!
+ * \ingroup measurement_tools_blk
+ *
  * This block maintains a running average of the input stream and
  * makes it available as an accessor function.  The input stream
  * is type unsigned char.

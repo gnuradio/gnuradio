@@ -6,7 +6,7 @@
 ###################################################
  -->
 <block>
-	<name>Mute</name>
+	<name>Mute (old)</name>
 	<key>gr_mute_xx</key>
 	<import>from gnuradio import gr</import>
 	<make>gr.mute_$(type.fcn)(bool($mute))</make>

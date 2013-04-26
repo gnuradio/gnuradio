@@ -36,7 +36,6 @@ class gri_fft_filter_fff_generic;
 
 /*!
  * \brief Fast FFT filter with float input, float output and float taps
- * \ingroup filter_blk
  */
 class GR_CORE_API gr_fft_filter_fff : public gr_sync_decimator
 {

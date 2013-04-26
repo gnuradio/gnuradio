@@ -32,7 +32,7 @@ namespace gr {
 
     /*!
      * \brief OFDM frame equalizer
-     * \ingroup ofdm
+     * \ingroup ofdm_blk
      *
      * Performs equalization in one or two dimensions on a tagged OFDM frame.
      * Input: a tagged series of OFDM symbols.
@@ -43,7 +43,7 @@ namespace gr {
      public:
       typedef boost::shared_ptr<ofdm_frame_equalizer_vcvc> sptr;
 
-      /*
+      /*!
        * \param equalizer The equalizer object that will do the actual work
        * \param len_tag_key Length tag key
        * \param propagate_channel_state If true, the channel state after the last symbol
@@ -52,7 +52,8 @@ namespace gr {
       static sptr make(
 	   digital_ofdm_equalizer_base_sptr equalizer,
 	   const std::string &len_tag_key = "frame_len",
-	   bool propagate_channel_state=false
+	   bool propagate_channel_state=false,
+	   int fixed_frame_len=0
       );
     };
 

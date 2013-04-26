@@ -35,7 +35,6 @@ GR_CORE_API gr_goertzel_fc_sptr gr_make_goertzel_fc(int rate, int len, float fre
 
 /*!
  * \brief Goertzel single-bin DFT calculation.
- * \ingroup dft_blk
  */
 class GR_CORE_API gr_goertzel_fc : public gr_sync_decimator
 {

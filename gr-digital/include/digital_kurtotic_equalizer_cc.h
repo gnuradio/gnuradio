@@ -36,9 +36,9 @@ digital_make_kurtotic_equalizer_cc(int num_taps, float mu);
 
 /*!
  * \brief Implements a kurtosis-based adaptive equalizer on complex stream
- * \ingroup eq_blk
- * \ingroup digital
+ * \ingroup equalizers_blk
  *
+ * \details
  * "Y. Guo, J. Zhao, Y. Sun, "Sign kurtosis maximization based blind
  * equalization algorithm," IEEE Conf. on Control, Automation,
  * Robotics and Vision, Vol. 3, Dec. 2004, pp. 2052 - 2057."
