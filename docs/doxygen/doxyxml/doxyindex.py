@@ -43,13 +43,16 @@ class DoxyIndex(Base):
         self._root = index.parse(os.path.join(self._xml_path, 'index.xml'))      
         for mem in self._root.compound:
             converted = self.convert_mem(mem)
-            # For files we want the contents to be accessible directly
-            # from the parent rather than having to go through the file
-            # object.
+            # For files and namespaces we want the contents to be
+            # accessible directly from the parent rather than having
+            # to go through the file object.
             if self.get_cls(mem) == DoxyFile:
                 if mem.name.endswith('.h'):
                     self._members += converted.members()
                     self._members.append(converted)
+            elif self.get_cls(mem) == DoxyNamespace:
+                self._members += converted.members()
+                self._members.append(converted)
             else:
                 self._members.append(converted)
 
@@ -227,7 +230,17 @@ class DoxyNamespace(DoxyCompound):
     __module__ = "gnuradio.utils.doxyxml"
 
     kind = 'namespace'
-    
+
+    def _parse(self):
+        if self._parsed:
+            return
+        super(DoxyNamespace, self)._parse()
+        self.retrieve_data()
+        self.set_descriptions(self._retrieved_data.compounddef)
+        if self._error:
+            return
+        self.process_memberdefs()
+            
 Base.mem_classes.append(DoxyNamespace)
 
 
