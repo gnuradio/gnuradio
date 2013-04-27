@@ -334,11 +334,3 @@ Waveform Generators
 
    gnuradio.blocks.vco_f
 
-Miscellaneous
--------------
-
-.. autosummary::
-   :nosignatures:
-
-   gnuradio.blocks.lfsr_15_1_0
-   gnuradio.blocks.lfsr_32k

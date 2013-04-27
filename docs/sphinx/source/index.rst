@@ -10,6 +10,7 @@ Core Framework
    :nosignatures:
 
    gnuradio.gr
+   pmt
    gnuradio.blocks
    gnuradio.analog
    gnuradio.digital
@@ -29,6 +30,7 @@ Core Framework
    :hidden:   
 
    gnuradio.gr <gr/index>
+   pmt <pmt>
    gnuradio.blocks <blocks/index>
    gnuradio.analog <analog/index>
    gnuradio.digital <digital/index>
@@ -106,9 +108,7 @@ Framework Extensions
 .. toctree::
    :hidden:   
    
-   internal <gr/internal>
-   top_block <gr/top_block>
-   misc <gr/misc>
+   runtime_contents <gr/contents>
    atsc_blks <atsc/blks>
    digital_blocks <digital/blocks>
    constellations <digital/constellations>
