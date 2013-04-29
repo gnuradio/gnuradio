@@ -91,7 +91,7 @@ install(FILES
   rpcserver_booter_ice.h
   rpcserver_ice.h
   rpcserver_selector.h
-  ${CMAKE_CURRENT_SOURCE_DIR}/logger.h
+  ${CMAKE_CURRENT_BINARY_DIR}/logger.h
   DESTINATION ${GR_INCLUDE_DIR}/gnuradio
   COMPONENT "runtime_devel"
 )
