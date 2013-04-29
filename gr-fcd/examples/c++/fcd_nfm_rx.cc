@@ -35,7 +35,7 @@
 #include <gnuradio/top_block.h>
 #include <filter/firdes.h>
 #include <filter/fir_filter_ccf.h>
-#include <analog/quadrature_demod_cf.h>
+#include <gnuradio/analog/quadrature_demod_cf.h>
 #include <audio/sink.h>
 #include <fcd_source_c.h>
 

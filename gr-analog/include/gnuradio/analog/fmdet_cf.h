@@ -23,7 +23,7 @@
 #ifndef INCLUDED_ANALOG_FMDET_CF_H
 #define INCLUDED_ANALOG_FMDET_CF_H
 
-#include <analog/api.h>
+#include <gnuradio/analog/api.h>
 #include <gnuradio/sync_block.h>
 
 namespace gr {

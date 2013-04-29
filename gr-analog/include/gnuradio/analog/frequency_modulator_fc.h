@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2006,2012 Free Software Foundation, Inc.
+ * Copyright 2004,2012 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -20,37 +20,40 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef INCLUDED_ANALOG_SQUELCH_BASE_FF_H
-#define INCLUDED_ANALOG_SQUELCH_BASE_FF_H
+#ifndef INCLUDED_ANALOG_FREQUENCY_MODULATOR_FC_H
+#define INCLUDED_ANALOG_FREQUENCY_MODULATOR_FC_H
 
-#include <analog/api.h>
-#include <gnuradio/block.h>
+#include <gnuradio/analog/api.h>
+#include <gnuradio/sync_block.h>
 
 namespace gr {
   namespace analog {
-
+    
     /*!
-     * \brief basic squelch block; to be subclassed for other squelches.
-     * \ingroup level_blk
+     * \brief Frequency modulator block
+     * \ingroup modulators_blk
+     *
+     * \details
+     * float input; complex baseband output
      */
-    class ANALOG_API squelch_base_ff : virtual public block
+    class ANALOG_API frequency_modulator_fc : virtual public sync_block
     {
-    protected:
-      virtual void update_state(const float &sample) = 0;
-      virtual bool mute() const = 0;
-
     public:
-      squelch_base_ff() {};
-      virtual int ramp() const = 0;
-      virtual void set_ramp(int ramp) = 0;
-      virtual bool gate() const = 0;
-      virtual void set_gate(bool gate) = 0;
-      virtual bool unmuted() const = 0;
+      // gr::analog::frequency_modulator_fc::sptr
+      typedef boost::shared_ptr<frequency_modulator_fc> sptr;
 
-      virtual std::vector<float> squelch_range() const = 0;
+      /*!
+       * Build a frequency modulator block.
+       *
+       * \param sensitivity radians/sample = amplitude * sensitivity
+       */
+      static sptr make(double sensitivity);
+
+      virtual void set_sensitivity(float sens) = 0;
+      virtual float sensitivity() const = 0;
     };
 
   } /* namespace analog */
 } /* namespace gr */
 
-#endif /* INCLUDED_ANALOG_SQUELCH_BASE_FF_H */
+#endif /* INCLUDED_ANALOG_FREQUENCY_MODULATOR_FC_H */

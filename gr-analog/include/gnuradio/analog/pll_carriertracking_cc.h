@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2004,2011 Free Software Foundation, Inc.
+ * Copyright 2004,2006,2011,2012 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -20,10 +20,10 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef INCLUDED_ANALOG_PLL_FREQDET_CF_H
-#define INCLUDED_ANALOG_PLL_FREQDET_CF_H
+#ifndef INCLUDED_ANALOG_PLL_CARRIERTRACKING_CC_H
+#define INCLUDED_ANALOG_PLL_CARRIERTRACKING_CC_H
 
-#include <analog/api.h>
+#include <gnuradio/analog/api.h>
 #include <gnuradio/blocks/control_loop.h>
 #include <gnuradio/sync_block.h>
 
@@ -31,36 +31,41 @@ namespace gr {
   namespace analog {
     
     /*!
-     * \brief Implements a PLL which locks to the input frequency and outputs
-     * an estimate of that frequency.  Useful for FM Demod.
+     * \brief Implements a PLL which locks to the input frequency and outputs the
+     * input signal mixed with that carrier.
      * \ingroup synchronizers_blk
      *
      * \details
      * Input stream 0: complex
-     * Output stream 0: float
+     * Output stream 0: complex
      *
-     * This PLL locks onto a [possibly noisy] reference carrier on
-     * the input and outputs an estimate of that frequency in radians per sample.
-     * All settings max_freq and min_freq are in terms of radians per sample,
-     * NOT HERTZ.  The loop bandwidth determins the lock range and should be set
-     * around pi/200 -- 2pi/100.
-     * \sa pll_refout_cc, pll_carriertracking_cc
+     * This PLL locks onto a [possibly noisy] reference carrier on the
+     * input and outputs that signal, downconverted to DC
+     *
+     * All settings max_freq and min_freq are in terms of radians per
+     * sample, NOT HERTZ. The loop bandwidth determins the lock range
+     * and should be set around pi/200 -- 2pi/100.  \sa
+     * pll_freqdet_cf, pll_carriertracking_cc
      */
-    class ANALOG_API pll_freqdet_cf
+    class ANALOG_API pll_carriertracking_cc
       : virtual public sync_block,
         virtual public blocks::control_loop
     {
     public:
-      // gr::analog::pll_freqdet_cf::sptr
-      typedef boost::shared_ptr<pll_freqdet_cf> sptr;
-      
-      /* \brief Make PLL block that outputs the tracked signal's frequency.
+      // gr::analog::pll_carriertracking_cc::sptr
+      typedef boost::shared_ptr<pll_carriertracking_cc> sptr;
+
+      /* \brief Make a carrier tracking PLL block.
        *
        * \param loop_bw: control loop's bandwidth parameter.
        * \param max_freq: maximum (normalized) frequency PLL will lock to.
        * \param min_freq: minimum (normalized) frequency PLL will lock to.
        */
       static sptr make(float loop_bw, float max_freq, float min_freq);
+
+      virtual bool lock_detector(void) = 0;
+      virtual bool squelch_enable(bool) = 0;
+      virtual float set_lock_threshold(float) = 0;
 
       virtual void set_loop_bandwidth(float bw) = 0;
       virtual void set_damping_factor(float df) = 0;
@@ -84,4 +89,4 @@ namespace gr {
   } /* namespace analog */
 } /* namespace gr */
 
-#endif /* INCLUDED_ANALOG_PLL_FREQDET_CF_H */
+#endif /* INCLUDED_ANALOG_PLL_CARRIERTRACKING_CC_H */

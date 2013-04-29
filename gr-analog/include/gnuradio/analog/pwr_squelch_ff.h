@@ -23,8 +23,8 @@
 #ifndef INCLUDED_ANALOG_PWR_SQUELCH_FF_H
 #define INCLUDED_ANALOG_PWR_SQUELCH_FF_H
 
-#include <analog/api.h>
-#include <analog/squelch_base_ff.h>
+#include <gnuradio/analog/api.h>
+#include <gnuradio/analog/squelch_base_ff.h>
 #include <cmath>
 
 namespace gr {

@@ -25,7 +25,7 @@
 
 #include <digital/api.h>
 #include <gnuradio/hier_block2.h>
-#include <analog/cpm.h>
+#include <gnuradio/analog/cpm.h>
 
 namespace gr {
   namespace digital {

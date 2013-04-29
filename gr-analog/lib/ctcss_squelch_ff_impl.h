@@ -23,7 +23,7 @@
 #ifndef INCLUDED_ANALOG_CTCSS_SQUELCH_FF_IMPL_H
 #define INCLUDED_ANALOG_CTCSS_SQUELCH_FF_IMPL_H
 
-#include <analog/ctcss_squelch_ff.h>
+#include <gnuradio/analog/ctcss_squelch_ff.h>
 #include "squelch_base_ff_impl.h"
 #include <fft/goertzel.h>
 

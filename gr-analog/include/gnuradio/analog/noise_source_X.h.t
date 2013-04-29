@@ -25,8 +25,8 @@
 #ifndef @GUARD_NAME@
 #define @GUARD_NAME@
 
-#include <analog/api.h>
-#include <analog/noise_type.h>
+#include <gnuradio/analog/api.h>
+#include <gnuradio/analog/noise_type.h>
 #include <gnuradio/sync_block.h>
 
 namespace gr {
@@ -47,7 +47,7 @@ namespace gr {
       typedef boost::shared_ptr<@BASE_NAME@> sptr;
 
       /*! Build a noise source
-       * \param type the random distribution to use (see analog/noise_type.h)
+       * \param type the random distribution to use (see gnuradio/analog/noise_type.h)
        * \param ampl a scaling factor for the output
        * \param seed seed for random generators. Note that for uniform and
        *             Gaussian distributions, this should be a negative number.

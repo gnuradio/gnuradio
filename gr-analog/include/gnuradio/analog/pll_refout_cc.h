@@ -23,7 +23,7 @@
 #ifndef INCLUDED_ANALOG_PLL_REFOUT_CC_H
 #define INCLUDED_ANALOG_PLL_REFOUT_CC_H
 
-#include <analog/api.h>
+#include <gnuradio/analog/api.h>
 #include <gnuradio/blocks/control_loop.h>
 #include <gnuradio/sync_block.h>
 

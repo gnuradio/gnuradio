@@ -25,8 +25,8 @@
 #ifndef @GUARD_NAME@
 #define @GUARD_NAME@
 
-#include <analog/api.h>
-#include <analog/sig_source_waveform.h>
+#include <gnuradio/analog/api.h>
+#include <gnuradio/analog/sig_source_waveform.h>
 #include <gnuradio/sync_block.h>
 
 namespace gr {

@@ -29,7 +29,7 @@
 //load generated python docstrings
 %include "digital_swig_doc.i"
 
-%include "analog/cpm.h"
+%include "gnuradio/analog/cpm.h"
 
 %{
 #include <gnuradio/blocks/control_loop.h>

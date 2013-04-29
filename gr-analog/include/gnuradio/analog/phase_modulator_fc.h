@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2004,2012 Free Software Foundation, Inc.
+ * Copyright 2005,2006,2012 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -20,42 +20,45 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef INCLUDED_ANALOG_QUADRATURE_DEMOD_CF_H
-#define INCLUDED_ANALOG_QUADRATURE_DEMOD_CF_H
+#ifndef INCLUDED_ANALOG_PHASE_MODULATOR_FC_H
+#define INCLUDED_ANALOG_PHASE_MODULATOR_FC_H
 
-#include <analog/api.h>
+#include <gnuradio/analog/api.h>
 #include <gnuradio/sync_block.h>
 
 namespace gr {
   namespace analog {
-    
+
     /*!
-     * \brief quadrature demodulator: complex in, float out
+     * \brief Phase modulator block
      * \ingroup modulators_blk
      *
      * \details
-     * This can be used to demod FM, FSK, GMSK, etc.
-     * The input is complex baseband.
+     * output = complex(cos(in*sensitivity), sin(in*sensitivity))
+     *
+     * Input stream 0: floats
+     * Ouput stream 0: complex
      */
-    class ANALOG_API quadrature_demod_cf : virtual public sync_block
+    class ANALOG_API phase_modulator_fc : virtual public sync_block
     {
     public:
-      // gr::analog::quadrature_demod_cf::sptr
-      typedef boost::shared_ptr<quadrature_demod_cf> sptr;
+      // gr::analog::phase_modulator_fc::sptr
+      typedef boost::shared_ptr<phase_modulator_fc> sptr;
 
-      /* \brief Make a quadrature demodulator block.
+      /* \brief Make a phase modulator block.
        *
-       * \param gain Gain setting to adjust the output amplitude. Set
-       *             based on converting the phase difference between
-       *             samples to a nominal output value.
+       * \param sensitivity Phase change sensitivity of input amplitude.
        */
-      static sptr make(float gain);
+      static sptr make(double sensitivity);
 
-      virtual void set_gain(float gain) = 0;
-      virtual float gain() const = 0;
+      virtual double sensitivity() const = 0;
+      virtual double phase() const = 0;
+
+      virtual void set_sensitivity(double s) = 0;
+      virtual void set_phase(double p) = 0;
     };
-
+  
   } /* namespace analog */
 } /* namespace gr */
 
-#endif /* INCLUDED_ANALOG_QUADRATURE_DEMOD_CF_H */
+#endif /* INCLUDED_ANALOG_PHASE_MODULATOR_FC_H */

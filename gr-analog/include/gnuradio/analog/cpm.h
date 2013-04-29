@@ -22,7 +22,7 @@
 #ifndef INCLUDED_ANALOG_CPM_H
 #define INCLUDED_ANALOG_CPM_H
 
-#include <analog/api.h>
+#include <gnuradio/analog/api.h>
 #include <vector>
 
 namespace gr {

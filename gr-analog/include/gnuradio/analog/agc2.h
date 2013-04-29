@@ -23,7 +23,7 @@
 #ifndef INCLUDED_ANALOG_AGC2_H
 #define INCLUDED_ANALOG_AGC2_H
 
-#include <analog/api.h>
+#include <gnuradio/analog/api.h>
 #include <gnuradio/gr_complex.h>
 #include <math.h>
 

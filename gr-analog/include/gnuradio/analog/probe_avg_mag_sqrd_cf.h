@@ -19,10 +19,11 @@
  * the Free Software Foundation, Inc., 51 Franklin Street,
  * Boston, MA 02110-1301, USA.
  */
-#ifndef INCLUDED_ANALOG_PROBE_AVG_MAG_SQRD_C_H
-#define INCLUDED_ANALOG_PROBE_AVG_MAG_SQRD_C_H
 
-#include <analog/api.h>
+#ifndef INCLUDED_ANALOG_PROBE_AVG_MAG_SQRD_CF_H
+#define INCLUDED_ANALOG_PROBE_AVG_MAG_SQRD_CF_H
+
+#include <gnuradio/analog/api.h>
 #include <gnuradio/sync_block.h>
 
 namespace gr {
@@ -34,20 +35,21 @@ namespace gr {
      *
      * \details
      * Input stream 0: complex
+     * Output stream 0: float
      *
      * Compute a running average of the magnitude squared of the the
      * input. The level and indication as to whether the level exceeds
      * threshold can be retrieved with the level and unmuted
      * accessors.
      */
-    class ANALOG_API probe_avg_mag_sqrd_c : virtual public sync_block
+    class ANALOG_API probe_avg_mag_sqrd_cf : virtual public sync_block
     {
     public:
-      // gr::analog::probe_avg_mag_sqrd_c::sptr
-      typedef boost::shared_ptr<probe_avg_mag_sqrd_c> sptr;
+      // gr::analog::probe_avg_mag_sqrd_cf::sptr
+      typedef boost::shared_ptr<probe_avg_mag_sqrd_cf> sptr;
 
       /*!
-       * \brief Make a complex sink that computes avg magnitude squared.
+       * \brief Make a block that computes avg magnitude squared.
        *
        * \param threshold_db Threshold for muting.
        * \param alpha Gain parameter for the running average filter.
@@ -65,4 +67,4 @@ namespace gr {
   } /* namespace analog */
 } /* namespace gr */
 
-#endif /* INCLUDED_ANALOG_PROBE_AVG_MAG_SQRD_C_H */
+#endif /* INCLUDED_ANALOG_PROBE_AVG_MAG_SQRD_CF_H */

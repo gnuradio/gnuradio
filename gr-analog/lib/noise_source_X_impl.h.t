@@ -25,7 +25,7 @@
 #ifndef @GUARD_NAME@
 #define @GUARD_NAME@
 
-#include <analog/@BASE_NAME@.h>
+#include <gnuradio/analog/@BASE_NAME@.h>
 #include <gnuradio/random.h>
 
 namespace gr {

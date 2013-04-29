@@ -87,7 +87,7 @@ CPACK_COMPONENT("analog_swig"
 ########################################################################
 # Add subdirectories
 ########################################################################
-add_subdirectory(include/analog)
+add_subdirectory(include/gnuradio/analog)
 add_subdirectory(lib)
 add_subdirectory(doc)
 if(ENABLE_PYTHON)

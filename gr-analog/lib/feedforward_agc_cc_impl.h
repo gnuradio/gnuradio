@@ -23,7 +23,7 @@
 #ifndef INCLUDED_ANALOG_FEEDFORWARD_AGC_CC_IMPL_H
 #define INCLUDED_ANALOG_FEEDFORWARD_AGC_CC_IMPL_H
 
-#include <analog/feedforward_agc_cc.h>
+#include <gnuradio/analog/feedforward_agc_cc.h>
 
 namespace gr {
   namespace analog {

@@ -23,7 +23,7 @@
 #ifndef INCLUDED_ANALOG_PLL_FREQDET_CF_IMPL_H
 #define INCLUDED_ANALOG_PLL_FREQDET_CF_IMPL_H
 
-#include <analog/pll_freqdet_cf.h>
+#include <gnuradio/analog/pll_freqdet_cf.h>
 
 namespace gr {
   namespace analog {

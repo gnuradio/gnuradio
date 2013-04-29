@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2005,2006,2012 Free Software Foundation, Inc.
+ * Copyright 2006,2012 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -20,11 +20,11 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef INCLUDED_ANALOG_AGC2_FF_H
-#define INCLUDED_ANALOG_AGC2_FF_H
+#ifndef INCLUDED_ANALOG_AGC2_CC_H
+#define INCLUDED_ANALOG_AGC2_CC_H
 
-#include <analog/api.h>
-#include <analog/agc2.h>
+#include <gnuradio/analog/api.h>
+#include <gnuradio/analog/agc2.h>
 #include <gnuradio/sync_block.h>
 
 namespace gr {
@@ -36,16 +36,16 @@ namespace gr {
      * \ingroup level_controllers_blk
      *
      * \details
-     * Power is approximated by absolute value
+     * For Power the absolute value of the complex number is used.
      */
-    class ANALOG_API agc2_ff : virtual public sync_block
+    class ANALOG_API agc2_cc : virtual public sync_block
     {
     public:
-      // gr::analog::agc2_ff::sptr
-      typedef boost::shared_ptr<agc2_ff> sptr;
+      // gr::analog::agc2_cc::sptr
+      typedef boost::shared_ptr<agc2_cc> sptr;
             
       /*!
-       * Build a floating point AGC loop block with attack and decay rates.
+       * Build a complex value AGC loop block with attack and decay rates.
        *
        * \param attack_rate the update rate of the loop when in attack mode.
        * \param decay_rate the update rate of the loop when in decay mode.
@@ -73,4 +73,4 @@ namespace gr {
   } /* namespace analog */
 } /* namespace gr */
 
-#endif /* INCLUDED_ANALOG_AGC2_FF_H */
+#endif /* INCLUDED_ANALOG_AGC2_CC_H */

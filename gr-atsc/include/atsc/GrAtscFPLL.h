@@ -27,7 +27,7 @@
 #include <gnuradio/blocks/nco.h>
 #include <filter/iir.h>
 #include <filter/single_pole_iir.h>
-#include <analog/agc.h>
+#include <gnuradio/analog/agc.h>
 #include <VrSigProc.h>
 #include <stdio.h>
 #include <atsc/diag_output_impl.h>

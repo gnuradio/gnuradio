@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2005,2012 Free Software Foundation, Inc.
+ * Copyright 2004,2012 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -20,43 +20,41 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef INCLUDED_ANALOG_SIMPLE_SQUELCH_CC_H
-#define INCLUDED_ANALOG_SIMPLE_SQUELCH_CC_H
+#ifndef INCLUDED_ANALOG_RAIL_FF_H
+#define INCLUDED_ANALOG_RAIL_FF_H
 
-#include <analog/api.h>
+#include <gnuradio/analog/api.h>
 #include <gnuradio/sync_block.h>
 
 namespace gr {
   namespace analog {
     
     /*!
-     * \brief simple squelch block based on average signal power and threshold in dB.
+     * \brief clips input values to min, max
      * \ingroup level_controllers_blk
      */
-    class ANALOG_API simple_squelch_cc : virtual public sync_block
+    class ANALOG_API rail_ff : virtual public sync_block
     {
     public:
-      // gr::analog::simple_squelch_cc::sptr
-      typedef boost::shared_ptr<simple_squelch_cc> sptr;
+      // gr::analog::rail_ff::sptr
+      typedef boost::shared_ptr<rail_ff> sptr;
 
       /*!
-       * \brief Make a simple squelch block.
+       * Build a rail block.
        *
-       * \param threshold_db Threshold for muting.
-       * \param alpha Gain parameter for the running average filter.
+       * \param lo the low value to clip to.
+       * \param hi the high value to clip to.
        */
-      static sptr make(double threshold_db, double alpha);
+      static sptr make(float lo, float hi);
 
-      virtual bool unmuted() const  = 0;
+      virtual float lo() const = 0;
+      virtual float hi() const = 0;
 
-      virtual void set_alpha(double alpha) = 0;
-      virtual void set_threshold(double decibels) = 0;
-
-      virtual double threshold() const = 0;
-      virtual std::vector<float> squelch_range() const = 0;
+      virtual void set_lo(float lo) = 0;
+      virtual void set_hi(float hi) = 0;
     };
 
   } /* namespace analog */
 } /* namespace gr */
 
-#endif /* INCLUDED_ANALOG_SIMPLE_SQUELCH_CC_H */
+#endif /* INCLUDED_ANALOG_RAIL_FF_H */
