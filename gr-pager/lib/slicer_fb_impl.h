@@ -23,7 +23,7 @@
 #ifndef INCLUDED_PAGER_SLICER_FB_IMPL_H
 #define INCLUDED_PAGER_SLICER_FB_IMPL_H
 
-#include <pager/slicer_fb.h>
+#include <gnuradio/pager/slicer_fb.h>
 
 namespace gr {
   namespace pager {

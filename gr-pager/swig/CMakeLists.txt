@@ -35,7 +35,7 @@ if(ENABLE_GR_CTRLPORT)
 endif(ENABLE_GR_CTRLPORT)
 
 set(GR_SWIG_DOC_FILE ${CMAKE_CURRENT_BINARY_DIR}/pager_swig_doc.i)
-set(GR_SWIG_DOC_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/../include/pager)
+set(GR_SWIG_DOC_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/../include/gnuradio/pager)
 set(GR_SWIG_DOCS_TARGET_DEPS runtime_swig_swig_doc)
 
 set(GR_SWIG_LIBRARIES gnuradio-pager)

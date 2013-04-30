@@ -20,32 +20,29 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef INCLUDED_PAGER_FLEX_DEINTERLEAVE_H
-#define INCLUDED_PAGER_FLEX_DEINTERLEAVE_H
+#ifndef INCLUDED_PAGER_FLEX_FRAME_H
+#define INCLUDED_PAGER_FLEX_FRAME_H
 
-#include <pager/api.h>
-#include <gnuradio/sync_decimator.h>
+#include <gnuradio/pager/api.h>
+#include <boost/shared_ptr.hpp>
 
 namespace gr {
   namespace pager {
     
     /*!
-     * \brief flex deinterleave description
+     * \brief flex_frame.
      * \ingroup pager_blk
      */
-    class PAGER_API flex_deinterleave : virtual public sync_decimator
+    class PAGER_API flex_frame
     {
     public:
-      // gr::pager::flex_deinterleave::sptr
-      typedef boost::shared_ptr<flex_deinterleave> sptr;
+      // gr::pager::flex_frame::sptr
+      typedef boost::shared_ptr<flex_frame> sptr;
 
-      /*!
-       * \brief Make flex deinterleaver
-       */
       static sptr make();
     };
 
   } /* namespace pager */
 } /* namespace gr */
 
-#endif /* INCLUDED_PAGER_FLEX_DEINTERLEAVE_H */
+#endif /* INCLUDED_PAGER_FLEX_FRAME_H */

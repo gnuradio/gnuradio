@@ -23,7 +23,7 @@
 #ifndef INCLUDED_PAGER_FLEX_PARSE_IMPL_H
 #define INCLUDED_PAGER_FLEX_PARSE_IMPL_H
 
-#include <pager/flex_parse.h>
+#include <gnuradio/pager/flex_parse.h>
 #include <gnuradio/sync_block.h>
 #include <gnuradio/msg_queue.h>
 #include "flex_modes.h"

@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2006,2012 Free Software Foundation, Inc.
+ * Copyright 2006 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -20,29 +20,30 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef INCLUDED_PAGER_FLEX_FRAME_H
-#define INCLUDED_PAGER_FLEX_FRAME_H
+#ifndef INCLUDED_PAGER_FLEX_SYNC_H
+#define INCLUDED_PAGER_FLEX_SYNC_H
 
-#include <pager/api.h>
-#include <boost/shared_ptr.hpp>
+#include <gnuradio/pager/api.h>
+#include <gnuradio/block.h>
 
 namespace gr {
   namespace pager {
-    
+
     /*!
-     * \brief flex_frame.
+     * \brief flex sync description
      * \ingroup pager_blk
      */
-    class PAGER_API flex_frame
+    class PAGER_API flex_sync : virtual public block
     {
     public:
-      // gr::pager::flex_frame::sptr
-      typedef boost::shared_ptr<flex_frame> sptr;
+      // gr::pager::flex_sync::sptr
+      typedef boost::shared_ptr<flex_sync> sptr;
 
       static sptr make();
+
     };
 
   } /* namespace pager */
 } /* namespace gr */
 
-#endif /* INCLUDED_PAGER_FLEX_FRAME_H */
+#endif /* INCLUDED_PAGER_FLEX_SYNC_H */

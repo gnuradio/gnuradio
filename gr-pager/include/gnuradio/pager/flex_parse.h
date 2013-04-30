@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2006,2007,2012 Free Software Foundation, Inc.
+ * Copyright 2006,2012 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -20,34 +20,33 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef INCLUDED_PAGER_SLICER_FB_H
-#define INCLUDED_PAGER_SLICER_FB_H
+#ifndef INCLUDED_PAGER_FLEX_PARSE_H
+#define INCLUDED_PAGER_FLEX_PARSE_H
 
-#include <pager/api.h>
+#include <gnuradio/pager/api.h>
 #include <gnuradio/sync_block.h>
+#include <gnuradio/msg_queue.h>
+#include <sstream>
 
 namespace gr {
   namespace pager {
-    
+
+#define FIELD_DELIM ((unsigned char)128)
+
     /*!
-     * \brief slicer description
+     * \brief flex parse description
      * \ingroup pager_blk
      */
-    class PAGER_API slicer_fb : virtual public sync_block
+    class PAGER_API flex_parse : virtual public sync_block
     {
     public:
-      // gr::pager::slicer_fb::sptr
-      typedef boost::shared_ptr<slicer_fb> sptr;
+      // gr::pager::flex_parse::sptr
+      typedef boost::shared_ptr<flex_parse> sptr;
 
-      /*!
-       * \brief Make a pager slicer
-       */
-      static sptr make(float alpha);
-
-      virtual float dc_offset() const = 0;
+      static sptr make(msg_queue::sptr queue, float freq);
     };
 
   } /* namespace pager */
 } /* namespace gr */
 
-#endif /* INCLUDED_PAGER_SLICER_FB_H */
+#endif /* INCLUDED_PAGER_FLEX_PARSE_H */
