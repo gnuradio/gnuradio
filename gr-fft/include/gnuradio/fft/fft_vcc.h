@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2006,2011,2012 Free Software Foundation, Inc.
+ * Copyright 2004,2007,2008,2012 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -20,38 +20,38 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef INCLUDED_FFT_GOERTZEL_FC_H
-#define INCLUDED_FFT_GOERTZEL_FC_H
+#ifndef INCLUDED_FFT_FFT_VCC_H
+#define INCLUDED_FFT_FFT_VCC_H
 
-#include <fft/api.h>
-#include <gnuradio/sync_decimator.h>
+#include <gnuradio/fft/api.h>
+#include <gnuradio/sync_block.h>
 
 namespace gr {
   namespace fft {
 
     /*!
-     * \brief Goertzel single-bin DFT calculation.
+     * \brief Compute forward or reverse FFT. complex vector in / complex vector out.
      * \ingroup fourier_analysis_blk
      */
-    class FFT_API goertzel_fc : virtual public sync_decimator
+    class FFT_API fft_vcc : virtual public sync_block
     {
     public:
 
-      // gr::fft::goertzel_fc::sptr
-      typedef boost::shared_ptr<goertzel_fc> sptr;
+      // gr::fft::fft_vcc::sptr
+      typedef boost::shared_ptr<fft_vcc> sptr;
+
+      static sptr make(int fft_size, bool forward,
+                       const std::vector<float> &window,
+                       bool shift=false, int nthreads=1);
       
-      static sptr make(int rate, int len, float freq);
+      virtual void set_nthreads(int n) = 0;
 
-      virtual void set_freq (float freq) = 0;
+      virtual int nthreads() const = 0;
 
-      virtual void set_rate (int rate) = 0;
-
-      virtual float freq() = 0;
-	
-      virtual int rate() = 0;
+      virtual bool set_window(const std::vector<float> &window) = 0;
     };
 
   } /* namespace fft */
 } /* namespace gr */
 
-#endif /* INCLUDED_FFT_GOERTZEL_FC_H */
+#endif /* INCLUDED_FFT_FFT_VCC_H */

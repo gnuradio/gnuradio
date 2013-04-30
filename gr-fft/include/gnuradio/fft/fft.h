@@ -27,7 +27,7 @@
  * Wrappers for FFTW single precision 1d dft
  */
 
-#include <fft/api.h>
+#include <gnuradio/fft/api.h>
 #include <gnuradio/gr_complex.h>
 #include <boost/thread.hpp>
 

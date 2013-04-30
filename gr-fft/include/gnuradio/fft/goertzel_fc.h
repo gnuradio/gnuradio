@@ -20,45 +20,38 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef INCLUDED_FFT_IMPL_GOERTZEL_H
-#define INCLUDED_FFT_IMPL_GOERTZEL_H
+#ifndef INCLUDED_FFT_GOERTZEL_FC_H
+#define INCLUDED_FFT_GOERTZEL_FC_H
 
-#include <fft/api.h>
-#include <gnuradio/types.h>
+#include <gnuradio/fft/api.h>
+#include <gnuradio/sync_decimator.h>
 
 namespace gr {
   namespace fft {
 
     /*!
-     * \brief Implements Goertzel single-bin DFT calculation
-     * \ingroup misc
+     * \brief Goertzel single-bin DFT calculation.
+     * \ingroup fourier_analysis_blk
      */
-    class FFT_API goertzel
+    class FFT_API goertzel_fc : virtual public sync_decimator
     {
     public:
-      goertzel(){}
-      goertzel(int rate, int len, float freq);
+
+      // gr::fft::goertzel_fc::sptr
+      typedef boost::shared_ptr<goertzel_fc> sptr;
       
-      void set_params(int rate, int len, float freq);
-      
-      // Process a input array
-      gr_complex batch(float *in);
-      
-      // Process sample by sample
-      void input(const float &in);
-      gr_complex output();
-      bool ready() const { return d_processed == d_len; }
-      
-    private:
-      float d_d1;
-      float d_d2;
-      float d_wr;
-      float d_wi;
-      int   d_len;
-      int   d_processed;
+      static sptr make(int rate, int len, float freq);
+
+      virtual void set_freq (float freq) = 0;
+
+      virtual void set_rate (int rate) = 0;
+
+      virtual float freq() = 0;
+	
+      virtual int rate() = 0;
     };
-    
+
   } /* namespace fft */
 } /* namespace gr */
 
-#endif /* INCLUDED_FFT_IMPL_GOERTZEL_H */
+#endif /* INCLUDED_FFT_GOERTZEL_FC_H */

@@ -27,7 +27,7 @@
 #include <filter/pfb_decimator_ccf.h>
 #include <filter/polyphase_filterbank.h>
 #include <filter/fir_filter.h>
-#include <fft/fft.h>
+#include <gnuradio/fft/fft.h>
 #include <gnuradio/thread/thread.h>
 
 namespace gr {

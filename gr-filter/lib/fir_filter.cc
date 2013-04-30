@@ -21,7 +21,7 @@
  */
 
 #include <filter/fir_filter.h>
-#include <fft/fft.h>
+#include <gnuradio/fft/fft.h>
 #include <volk/volk.h>
 #include <cstdio>
 #include <cstring>

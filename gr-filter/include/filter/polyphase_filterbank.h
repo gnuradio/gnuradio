@@ -26,7 +26,7 @@
 
 #include <filter/api.h>
 #include <filter/fir_filter.h>
-#include <fft/fft.h>
+#include <gnuradio/fft/fft.h>
 
 namespace gr {
   namespace filter {

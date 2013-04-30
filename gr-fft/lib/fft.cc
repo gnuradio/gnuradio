@@ -20,7 +20,7 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include <fft/fft.h>
+#include <gnuradio/fft/fft.h>
 #include <gnuradio/sys_paths.h>
 #include <fftw3.h>
 

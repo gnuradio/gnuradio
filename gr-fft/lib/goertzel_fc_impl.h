@@ -23,8 +23,8 @@
 #ifndef INCLUDED_FFT_GOERTZEL_FC_IMPL_H
 #define INCLUDED_FFT_GOERTZEL_FC_IMPL_H
 
-#include <fft/goertzel_fc.h>
-#include <fft/goertzel.h>
+#include <gnuradio/fft/goertzel_fc.h>
+#include <gnuradio/fft/goertzel.h>
 
 namespace gr {
   namespace fft {
