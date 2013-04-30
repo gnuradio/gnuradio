@@ -23,7 +23,7 @@
 #ifndef INCLUDED_GR_OSCOPE_SINK_F_IMPL_H
 #define INCLUDED_GR_OSCOPE_SINK_F_IMPL_H
 
-#include <wxgui/oscope_sink_f.h>
+#include <gnuradio/wxgui/oscope_sink_f.h>
 
 namespace gr {
   namespace wxgui {

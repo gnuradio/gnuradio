@@ -23,9 +23,9 @@
 #ifndef INCLUDED_GR_OSCOPE_SINK_X_H
 #define INCLUDED_GR_OSCOPE_SINK_X_H
 
-#include <wxgui/api.h>
-#include <wxgui/trigger_mode.h>
-#include <wxgui/oscope_guts.h>
+#include <gnuradio/wxgui/api.h>
+#include <gnuradio/wxgui/trigger_mode.h>
+#include <gnuradio/wxgui/oscope_guts.h>
 #include <gnuradio/sync_block.h>
 
 namespace gr {

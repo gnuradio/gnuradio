@@ -24,8 +24,8 @@
 #ifndef INCLUDED_GR_OSCOPE_GUTS_H
 #define INCLUDED_GR_OSCOPE_GUTS_H
 
-#include <wxgui/api.h>
-#include <wxgui/trigger_mode.h>
+#include <gnuradio/wxgui/api.h>
+#include <gnuradio/wxgui/trigger_mode.h>
 #include <gnuradio/msg_queue.h>
 
 namespace gr {

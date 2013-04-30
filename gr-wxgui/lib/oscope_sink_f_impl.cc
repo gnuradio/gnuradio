@@ -25,8 +25,8 @@
 #endif
 
 #include "oscope_sink_f_impl.h"
-#include <wxgui/oscope_sink_x.h>
-#include <wxgui/oscope_guts.h>
+#include <gnuradio/wxgui/oscope_sink_x.h>
+#include <gnuradio/wxgui/oscope_guts.h>
 #include <gnuradio/io_signature.h>
 
 namespace gr {

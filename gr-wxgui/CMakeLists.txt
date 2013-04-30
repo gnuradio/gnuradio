@@ -94,7 +94,7 @@ install(
 ########################################################################
 # Add subdirectories
 ########################################################################
-add_subdirectory(include/wxgui)
+add_subdirectory(include/gnuradio/wxgui)
 add_subdirectory(lib)
 add_subdirectory(grc)
 add_subdirectory(swig)

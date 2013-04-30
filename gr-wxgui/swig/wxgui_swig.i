@@ -27,17 +27,17 @@
 //load generated python docstrings
 %include "wxgui_swig_doc.i"
 
-%include "wxgui/trigger_mode.h"
+%include "gnuradio/wxgui/trigger_mode.h"
 
 %{
-#include "wxgui/oscope_sink_x.h"
-#include "wxgui/histo_sink_f.h"
-#include "wxgui/oscope_sink_f.h"
+#include "gnuradio/wxgui/oscope_sink_x.h"
+#include "gnuradio/wxgui/histo_sink_f.h"
+#include "gnuradio/wxgui/oscope_sink_f.h"
 %}
 
-%include "wxgui/oscope_sink_x.h"
-%include "wxgui/histo_sink_f.h"
-%include "wxgui/oscope_sink_f.h"
+%include "gnuradio/wxgui/oscope_sink_x.h"
+%include "gnuradio/wxgui/histo_sink_f.h"
+%include "gnuradio/wxgui/oscope_sink_f.h"
 
 GR_SWIG_BLOCK_MAGIC2(wxgui, histo_sink_f);
 GR_SWIG_BLOCK_MAGIC2(wxgui, oscope_sink_f);

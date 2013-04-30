@@ -23,8 +23,8 @@
 #ifndef INCLUDED_GR_OSCOPE_SINK_F_H
 #define INCLUDED_GR_OSCOPE_SINK_F_H
 
-#include <wxgui/api.h>
-#include <wxgui/oscope_sink_x.h>
+#include <gnuradio/wxgui/api.h>
+#include <gnuradio/wxgui/oscope_sink_x.h>
 #include <gnuradio/msg_queue.h>
 
 namespace gr {

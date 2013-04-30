@@ -24,7 +24,7 @@
 #include <config.h>
 #endif
 
-#include <wxgui/oscope_guts.h>
+#include <gnuradio/wxgui/oscope_guts.h>
 #include <stdexcept>
 #include <stdio.h>
 #include <algorithm>

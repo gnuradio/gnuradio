@@ -23,7 +23,7 @@
 #ifndef INCLUDED_GR_HISTO_SINK_F_IMPL_H
 #define INCLUDED_GR_HISTO_SINK_F_IMPL_H
 
-#include <wxgui/histo_sink_f.h>
+#include <gnuradio/wxgui/histo_sink_f.h>
 
 namespace gr {
   namespace wxgui {
