@@ -20,8 +20,8 @@
  */
 
 #include <gnuradio/top_block.h>
-#include <uhd/usrp_source.h>
-#include <uhd/usrp_sink.h>
+#include <gnuradio/uhd/usrp_source.h>
+#include <gnuradio/uhd/usrp_sink.h>
 #include <tag_source_demo.h>
 #include <tag_sink_demo.h>
 #include <boost/make_shared.hpp>

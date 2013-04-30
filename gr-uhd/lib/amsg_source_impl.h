@@ -20,7 +20,7 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include <uhd/amsg_source.h>
+#include <gnuradio/uhd/amsg_source.h>
 #include <gnuradio/thread/thread.h>
 
 namespace gr {

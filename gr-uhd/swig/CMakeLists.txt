@@ -38,7 +38,7 @@ if(ENABLE_GR_CTRLPORT)
 endif(ENABLE_GR_CTRLPORT)
 
 set(GR_SWIG_DOC_FILE ${CMAKE_CURRENT_BINARY_DIR}/uhd_swig_doc.i)
-set(GR_SWIG_DOC_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/../include/uhd)
+set(GR_SWIG_DOC_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/../include/gnuradio/uhd)
 set(GR_SWIG_DOCS_TARGET_DEPS runtime_swig_swig_doc)
 
 link_directories(${UHD_LIBRARY_DIRS})

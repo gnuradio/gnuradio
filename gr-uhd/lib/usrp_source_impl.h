@@ -20,7 +20,7 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include <uhd/usrp_source.h>
+#include <gnuradio/uhd/usrp_source.h>
 #include <uhd/convert.hpp>
 
 static const pmt::pmt_t TIME_KEY = pmt::string_to_symbol("rx_time");

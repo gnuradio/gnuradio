@@ -20,7 +20,7 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include <uhd/usrp_sink.h>
+#include <gnuradio/uhd/usrp_sink.h>
 #include <uhd/convert.hpp>
 
 static const pmt::pmt_t SOB_KEY = pmt::string_to_symbol("tx_sob");

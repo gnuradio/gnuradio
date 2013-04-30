@@ -20,10 +20,10 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef INCLUDED_GR_UHD_USRP_SOURCE_H
-#define INCLUDED_GR_UHD_USRP_SOURCE_H
+#ifndef INCLUDED_GR_UHD_USRP_SINK_H
+#define INCLUDED_GR_UHD_USRP_SINK_H
 
-#include <uhd/api.h>
+#include <gnuradio/uhd/api.h>
 #include <gnuradio/sync_block.h>
 #include <uhd/usrp/multi_usrp.hpp>
 
@@ -51,106 +51,94 @@ namespace uhd {
 namespace gr {
   namespace uhd {
 
-    class uhd_usrp_source;
+    class uhd_usrp_sink;
 
-    class GR_UHD_API usrp_source : virtual public sync_block
+    class GR_UHD_API usrp_sink : virtual public sync_block
     {
     public:
-      // gr::uhd::usrp_source::sptr
-      typedef boost::shared_ptr<usrp_source> sptr;
-
+      // gr::uhd::usrp_sink::sptr
+      typedef boost::shared_ptr<usrp_sink> sptr;
+      
       /*!
-       * \brief Make a new USRP source block.
+       * \brief Make a new USRP sink block.
        * \ingroup uhd_blk
        *
-       * The USRP source block receives samples and writes to a stream.
-       * The source block also provides API calls for receiver settings.
+       * The USRP sink block reads a stream and transmits the samples.
+       * The sink block also provides API calls for transmitter settings.
        *
-       * RX Stream tagging:
+       * TX Stream tagging:
        *
-       * The following tag keys will be produced by the work function:
-       *  - pmt::string_to_symbol("rx_time")
-       *  - pmt::string_to_symbol("rx_rate")
-       *  - pmt::string_to_symbol("rx_freq")
+       * The following tag keys will be consumed by the work function:
+       *  - pmt::string_to_symbol("tx_sob")
+       *  - pmt::string_to_symbol("tx_eob")
+       *  - pmt::string_to_symbol("tx_time")
+       *
+       * The sob and eob (start and end of burst) tag values are pmt booleans.
+       * When present, burst tags should be set to true (pmt::PMT_T).
        *
        * The timstamp tag value is a pmt tuple of the following:
        * (uint64 seconds, and double fractional seconds).
-       * A timestamp tag is produced at start() and after overflows.
-       *
-       * The sample rate and center frequency tags are doubles,
-       * representing the sample rate in Sps and frequency in Hz.
-       * These tags are produced upon the user changing parameters.
        *
        * See the UHD manual for more detailed documentation:
        * http://code.ettus.com/redmine/ettus/projects/uhd/wiki
        *
        * \param device_addr the address to identify the hardware
-       * \param io_type the desired output data type
+       * \param io_type the desired input data type
        * \param num_channels number of stream from the device
-       * \return a new USRP source block object
+       * \return a new USRP sink block object
        */
       static sptr make(const ::uhd::device_addr_t &device_addr,
                        const ::uhd::io_type_t &io_type,
                        size_t num_channels);
 
       /*!
-       * \brief Make a new USRP source block.
+       * \brief Make a new USRP sink block.
        *
-       * The USRP source block receives samples and writes to a stream.
-       * The source block also provides API calls for receiver settings.
+       * The USRP sink block reads a stream and transmits the samples.
+       * The sink block also provides API calls for transmitter settings.
        *
-       * RX Stream tagging:
+       * TX Stream tagging:
        *
-       * The following tag keys will be produced by the work function:
-       *  - pmt::string_to_symbol("rx_time")
+       * The following tag keys will be consumed by the work function:
+       *  - pmt::string_to_symbol("tx_sob")
+       *  - pmt::string_to_symbol("tx_eob")
+       *  - pmt::string_to_symbol("tx_time")
+       *
+       * The sob and eob (start and end of burst) tag values are pmt booleans.
+       * When present, burst tags should be set to true (pmt::PMT_T).
        *
        * The timstamp tag value is a pmt tuple of the following:
        * (uint64 seconds, and double fractional seconds).
-       * A timestamp tag is produced at start() and after overflows.
        *
        * See the UHD manual for more detailed documentation:
        * http://code.ettus.com/redmine/ettus/projects/uhd/wiki
        *
        * \param device_addr the address to identify the hardware
        * \param stream_args the IO format and channel specification
-       * \return a new USRP source block object
+       * \return a new USRP sink block object
        */
       static sptr make(const ::uhd::device_addr_t &device_addr,
                        const ::uhd::stream_args_t &stream_args);
 
       /*!
-       * Set the start time for incoming samples.
-       * To control when samples are received,
+       * Set the start time for outgoing samples.
+       * To control when samples are transmitted,
        * set this value before starting the flow graph.
        * The value is cleared after each run.
        * When not specified, the start time will be:
        *  - Immediately for the one channel case
        *  - in the near future for multi-channel
        *
-       * \param time the absolute time for reception to begin
+       * \param time the absolute time for transmission to begin
        */
       virtual void set_start_time(const ::uhd::time_spec_t &time) = 0;
 
       /*!
-       * *Advanced use only:*
-       * Issue a stream command to all channels in this source block.
-       *
-       * This method is intended to override the default "always on"
-       * behavior. After starting the flow graph, the user should
-       * call stop() on this block, then issue any desired arbitrary
-       * stream_cmd_t structs to the device. The USRP will be able to
-       * enqueue several stream commands in the FPGA.
-       *
-       * \param cmd the stream command to issue to all source channels
-       */
-      virtual void issue_stream_cmd(const ::uhd::stream_cmd_t &cmd) = 0;
-
-      /*!
        * Returns identifying information about this USRP's configuration.
        * Returns motherboard ID, name, and serial.
-       * Returns daughterboard RX ID, subdev name and spec, serial, and antenna.
+       * Returns daughterboard TX ID, subdev name and spec, serial, and antenna.
        * \param chan channel index 0 to N-1
-       * \return RX info
+       * \return TX info
        */
       virtual ::uhd::dict<std::string, std::string> get_usrp_info(size_t chan = 0) = 0;
 
@@ -162,11 +150,11 @@ namespace gr {
       virtual void set_subdev_spec(const std::string &spec, size_t mboard = 0) = 0;
 
       /*!
-       * Get the RX frontend specification.
+       * Get the TX frontend specification.
        * \param mboard the motherboard index 0 to M-1
        * \return the frontend specification in use
        */
-      virtual std::string get_subdev_spec(size_t mboard = 0) = 0;
+      virtual std::string get_subdev_spec (size_t mboard = 0) = 0;
 
       /*!
        * Set the sample rate for the usrp device.
@@ -277,7 +265,7 @@ namespace gr {
        * \return the gain range in dB
        */
       virtual ::uhd::gain_range_t get_gain_range(const std::string &name,
-                                               size_t chan = 0) = 0;
+                                                 size_t chan = 0) = 0;
 
       /*!
        * Set the antenna to use.
@@ -303,46 +291,32 @@ namespace gr {
 
       /*!
        * Set the bandpass filter on the RF frontend.
-       * \param bandwidth the filter bandwidth in Hz
        * \param chan the channel index 0 to N-1
+       * \param bandwidth the filter bandwidth in Hz
        */
       virtual void set_bandwidth(double bandwidth, size_t chan = 0) = 0;
 
       /*!
-       * Enable/disable the automatic DC offset correction.
-       * The automatic correction subtracts out the long-run average.
-       *
-       * When disabled, the averaging option operation is halted.
-       * Once halted, the average value will be held constant until
-       * the user re-enables the automatic correction or overrides the
-       * value by manually setting the offset.
-       *
-       * \param enb true to enable automatic DC offset correction
-       * \param chan the channel index 0 to N-1
-       */
-      virtual void set_auto_dc_offset(const bool enb, size_t chan = 0) = 0;
-
-      /*!
        * Set a constant DC offset value.
        * The value is complex to control both I and Q.
-       * Only set this when automatic correction is disabled.
        * \param offset the dc offset (1.0 is full-scale)
        * \param chan the channel index 0 to N-1
        */
-      virtual void set_dc_offset(const std::complex<double> &offset, size_t chan = 0) = 0;
+      virtual void set_dc_offset(const std::complex<double> &offset,
+                                 size_t chan = 0) = 0;
 
       /*!
        * Set the RX frontend IQ imbalance correction.
        * Use this to adjust the magnitude and phase of I and Q.
        *
-       * \param correction the complex correction value
+       * \param correction the complex correction (1.0 is full-scale)
        * \param chan the channel index 0 to N-1
        */
       virtual void set_iq_balance(const std::complex<double> &correction,
                                   size_t chan = 0) = 0;
 
       /*!
-       * Get a RF frontend sensor value.
+       * Get an RF frontend sensor value.
        * \param name the name of the sensor
        * \param chan the channel index 0 to N-1
        * \return a sensor value object
@@ -359,7 +333,7 @@ namespace gr {
 
       //! DEPRECATED use get_sensor
       ::uhd::sensor_value_t get_dboard_sensor(const std::string &name,
-                                            size_t chan = 0)
+                                              size_t chan = 0)
       {
         return this->get_sensor(name, chan);
       }
@@ -477,8 +451,7 @@ namespace gr {
        * \param time_spec the new time
        * \param mboard the motherboard index 0 to M-1
        */
-      virtual void set_time_now(const ::uhd::time_spec_t &time_spec,
-                                size_t mboard = 0) = 0;
+      virtual void set_time_now(const ::uhd::time_spec_t &time_spec, size_t mboard = 0) = 0;
 
       /*!
        * Set the time registers at the next pps.
@@ -495,10 +468,9 @@ namespace gr {
       /*!
        * Set the time at which the control commands will take effect.
        *
-       * A timed command will back-pressure all subsequent timed
-       * commands, assuming that the subsequent commands occur within
-       * the time-window. If the time spec is late, the command will
-       * be activated upon arrival.
+       * A timed command will back-pressure all subsequent timed commands,
+       * assuming that the subsequent commands occur within the time-window.
+       * If the time spec is late, the command will be activated upon arrival.
        *
        * \param time_spec the time at which the next command will activate
        * \param mboard which motherboard to set the config
@@ -536,32 +508,9 @@ namespace gr {
       virtual void set_user_register(const uint8_t addr,
                                      const uint32_t data,
                                      size_t mboard = 0) = 0;
-
-      /*!
-       * Convenience function for finite data acquisition.
-       * This is not to be used with the scheduler; rather,
-       * one can request samples from the USRP in python.
-       * //TODO assumes fc32
-       * \param nsamps the number of samples
-       * \return a vector of complex float samples
-       */
-      virtual std::vector<std::complex<float> >
-        finite_acquisition(const size_t nsamps) = 0;
-
-      /*!
-       * Convenience function for finite data acquisition. This is the
-       * multi-channel version of finite_acquisition; This is not to
-       * be used with the scheduler; rather, one can request samples
-       * from the USRP in python.
-       * //TODO assumes fc32
-       * \param nsamps the number of samples per channel
-       * \return a vector of buffers, where each buffer represents a channel
-       */
-      virtual std::vector<std::vector<std::complex<float> > >
-        finite_acquisition_v(const size_t nsamps) = 0;
     };
 
   } /* namespace uhd */
 } /* namespace gr */
 
-#endif /* INCLUDED_GR_UHD_USRP_SOURCE_H */
+#endif /* INCLUDED_GR_UHD_USRP_SINK_H */
