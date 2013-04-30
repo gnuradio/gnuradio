@@ -26,7 +26,7 @@
 #include <stdint.h>
 #include <cstdio>
 #include <vector>
-#include <qtgui/DisplayPlot.h>
+#include <gnuradio/qtgui/DisplayPlot.h>
 
 /*!
  * \brief QWidget for displaying frequency domain (PSD) plots.

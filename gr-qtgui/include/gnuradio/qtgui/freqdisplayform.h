@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2011,2012 Free Software Foundation, Inc.
+ * Copyright 2012 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -20,62 +20,59 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef TIME_DISPLAY_FORM_H
-#define TIME_DISPLAY_FORM_H
+#ifndef FREQ_DISPLAY_FORM_H
+#define FREQ_DISPLAY_FORM_H
 
-#include <qtgui/spectrumUpdateEvents.h>
-#include <qtgui/TimeDomainDisplayPlot.h>
+#include <gnuradio/qtgui/spectrumUpdateEvents.h>
+#include <gnuradio/qtgui/FrequencyDisplayPlot.h>
 #include <QtGui/QtGui>
 #include <vector>
+#include <gnuradio/filter/firdes.h>
 
-#include <qtgui/displayform.h>
+#include <gnuradio/qtgui/displayform.h>
 
 /*!
- * \brief DisplayForm child for managing time domain plots.
+ * \brief DisplayForm child for managing frequency (PSD) plots.
  * \ingroup qtgui_blk
  */
-class TimeDisplayForm : public DisplayForm
+class FreqDisplayForm : public DisplayForm
 {
   Q_OBJECT
 
   public:
-  TimeDisplayForm(int nplots=1, QWidget* parent = 0);
-  ~TimeDisplayForm();
+  FreqDisplayForm(int nplots=1, QWidget* parent = 0);
+  ~FreqDisplayForm();
 
-  TimeDomainDisplayPlot* getPlot();
+  FrequencyDisplayPlot* getPlot();
 
-  int getNPoints() const;
+  int getFFTSize() const;
+  float getFFTAverage() const;
+  gr::filter::firdes::win_type getFFTWindowType() const;
 
 public slots:
-  void customEvent(QEvent * e);
+  void customEvent(QEvent *e);
 
-  void setSampleRate(const double samprate);
   void setSampleRate(const QString &samprate);
+  void setFFTSize(const int);
+  void setFFTAverage(const float);
+  void setFFTWindowType(const gr::filter::firdes::win_type);
+
+  void setFrequencyRange(const double centerfreq,
+			 const double bandwidth);
   void setYaxis(double min, double max);
-  void setNPoints(const int);
-  void setStem(bool en);
   void autoScale(bool en);
-  void setSemilogx(bool en);
-  void setSemilogy(bool en);
 
 private slots:
-  void newData(const QEvent*);
+  void newData(const QEvent *updateEvent);
 
 private:
+  uint64_t _numRealDataPoints;
   QIntValidator* _intValidator;
 
-  double _startFrequency;
-  double _stopFrequency;
-
-  int d_npoints;
-
-  bool d_stem;
-  bool d_semilogx;
-  bool d_semilogy;
-  
-  QAction *d_stemmenu;
-  QAction *d_semilogxmenu;
-  QAction *d_semilogymenu;
+  double _samp_rate, _center_freq;
+  int _fftsize;
+  float _fftavg;
+  gr::filter::firdes::win_type _fftwintype;
 };
 
-#endif /* TIME_DISPLAY_FORM_H */
+#endif /* FREQ_DISPLAY_FORM_H */

@@ -20,59 +20,47 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef FREQ_DISPLAY_FORM_H
-#define FREQ_DISPLAY_FORM_H
+#ifndef CONSTELLATION_DISPLAY_FORM_H
+#define CONSTELLATION_DISPLAY_FORM_H
 
-#include <qtgui/spectrumUpdateEvents.h>
-#include <qtgui/FrequencyDisplayPlot.h>
+#include <gnuradio/qtgui/spectrumUpdateEvents.h>
+#include <gnuradio/qtgui/ConstellationDisplayPlot.h>
 #include <QtGui/QtGui>
 #include <vector>
-#include <gnuradio/filter/firdes.h>
 
-#include <qtgui/displayform.h>
+#include <gnuradio/qtgui/displayform.h>
 
 /*!
- * \brief DisplayForm child for managing frequency (PSD) plots.
+ * \brief DisplayForm child for managing constellaton (I&Q) plots.
  * \ingroup qtgui_blk
  */
-class FreqDisplayForm : public DisplayForm
+class ConstellationDisplayForm : public DisplayForm
 {
   Q_OBJECT
 
-  public:
-  FreqDisplayForm(int nplots=1, QWidget* parent = 0);
-  ~FreqDisplayForm();
+public:
+  ConstellationDisplayForm(int nplots=1, QWidget* parent = 0);
+  ~ConstellationDisplayForm();
 
-  FrequencyDisplayPlot* getPlot();
+  ConstellationDisplayPlot* getPlot();
 
-  int getFFTSize() const;
-  float getFFTAverage() const;
-  gr::filter::firdes::win_type getFFTWindowType() const;
+  int getNPoints() const;
 
 public slots:
-  void customEvent(QEvent *e);
+  void customEvent(QEvent * e);
+  void setNPoints(const int);
 
   void setSampleRate(const QString &samprate);
-  void setFFTSize(const int);
-  void setFFTAverage(const float);
-  void setFFTWindowType(const gr::filter::firdes::win_type);
-
-  void setFrequencyRange(const double centerfreq,
-			 const double bandwidth);
   void setYaxis(double min, double max);
+  void setXaxis(double min, double max);
   void autoScale(bool en);
 
 private slots:
-  void newData(const QEvent *updateEvent);
+  void newData(const QEvent*);
 
 private:
-  uint64_t _numRealDataPoints;
   QIntValidator* _intValidator;
-
-  double _samp_rate, _center_freq;
-  int _fftsize;
-  float _fftavg;
-  gr::filter::firdes::win_type _fftwintype;
+  int d_npoints;
 };
 
-#endif /* FREQ_DISPLAY_FORM_H */
+#endif /* CONSTELLATION_DISPLAY_FORM_H */

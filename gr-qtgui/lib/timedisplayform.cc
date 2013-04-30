@@ -22,7 +22,7 @@
 
 #include <cmath>
 #include <QMessageBox>
-#include <qtgui/timedisplayform.h>
+#include <gnuradio/qtgui/timedisplayform.h>
 #include <iostream>
 
 TimeDisplayForm::TimeDisplayForm(int nplots, QWidget* parent)

@@ -23,7 +23,7 @@
 #include <cmath>
 #include <QColorDialog>
 #include <QMessageBox>
-#include <qtgui/timerasterdisplayform.h>
+#include <gnuradio/qtgui/timerasterdisplayform.h>
 #include <iostream>
 
 TimeRasterDisplayForm::TimeRasterDisplayForm(int nplots,

@@ -23,12 +23,12 @@
 #ifndef INCLUDED_QTGUI_FREQ_SINK_C_IMPL_H
 #define INCLUDED_QTGUI_FREQ_SINK_C_IMPL_H
 
-#include <qtgui/freq_sink_c.h>
+#include <gnuradio/qtgui/freq_sink_c.h>
 #include <gnuradio/filter/firdes.h>
 #include <gnuradio/fft/fft.h>
 #include <gnuradio/high_res_timer.h>
 #include <gnuradio/thread/thread.h>
-#include <qtgui/freqdisplayform.h>
+#include <gnuradio/qtgui/freqdisplayform.h>
 
 namespace gr {
   namespace qtgui {

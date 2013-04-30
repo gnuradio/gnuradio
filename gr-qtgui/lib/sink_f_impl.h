@@ -23,11 +23,11 @@
 #ifndef INCLUDED_QTGUI_SINK_F_IMPL_H
 #define INCLUDED_QTGUI_SINK_F_IMPL_H
 
-#include <qtgui/sink_f.h>
+#include <gnuradio/qtgui/sink_f.h>
 #include <gnuradio/filter/firdes.h>
 #include <gnuradio/fft/fft.h>
 #include <gnuradio/high_res_timer.h>
-#include <qtgui/SpectrumGUIClass.h>
+#include <gnuradio/qtgui/SpectrumGUIClass.h>
 
 namespace gr {
   namespace qtgui {

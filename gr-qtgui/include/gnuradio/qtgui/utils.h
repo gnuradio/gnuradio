@@ -24,7 +24,7 @@
 #define INCLUDED_QTGUI_UTILS_H
 
 #include <qevent.h>
-#include <qtgui/api.h>
+#include <gnuradio/qtgui/api.h>
 #include <qwt_plot_picker.h>
 #include <qwt_picker_machine.h>
 

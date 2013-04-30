@@ -23,7 +23,7 @@
 #ifndef CONSTELLATION_DISPLAY_PLOT_C
 #define CONSTELLATION_DISPLAY_PLOT_C
 
-#include <qtgui/ConstellationDisplayPlot.h>
+#include <gnuradio/qtgui/ConstellationDisplayPlot.h>
 
 #include <qwt_scale_draw.h>
 #include <qwt_legend.h>

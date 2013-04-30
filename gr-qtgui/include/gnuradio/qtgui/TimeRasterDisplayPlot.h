@@ -27,13 +27,13 @@
 #include <cstdio>
 #include <vector>
 #include <qwt_plot_rasteritem.h>
-#include <qtgui/DisplayPlot.h>
-#include <qtgui/timeRasterGlobalData.h>
-#include <qtgui/plot_raster.h>
+#include <gnuradio/qtgui/DisplayPlot.h>
+#include <gnuradio/qtgui/timeRasterGlobalData.h>
+#include <gnuradio/qtgui/plot_raster.h>
 #include <gnuradio/high_res_timer.h>
 
 #if QWT_VERSION < 0x060000
-#include <qtgui/plot_waterfall.h>
+#include <gnuradio/qtgui/plot_waterfall.h>
 #else
 #include <qwt_compat.h>
 #endif

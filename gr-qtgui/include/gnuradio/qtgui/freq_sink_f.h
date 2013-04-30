@@ -20,11 +20,11 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef INCLUDED_QTGUI_FREQ_SINK_C_H
-#define INCLUDED_QTGUI_FREQ_SINK_C_H
+#ifndef INCLUDED_QTGUI_FREQ_SINK_F_H
+#define INCLUDED_QTGUI_FREQ_SINK_F_H
 
 #include <Python.h>
-#include <qtgui/api.h>
+#include <gnuradio/qtgui/api.h>
 #include <gnuradio/sync_block.h>
 #include <qapplication.h>
 #include <gnuradio/filter/firdes.h>
@@ -38,20 +38,20 @@ namespace gr {
      * \ingroup qtgui_blk
      *
      * \details
-     * This is a QT-based graphical sink the takes set of a complex
-     * streams and plots the PSD. Each signal is plotted with a
+     * This is a QT-based graphical sink the takes set of a floating
+     * point streams and plots the PSD. Each signal is plotted with a
      * different color, and the \a set_title and \a set_color
      * functions can be used to change the lable and color for a given
      * input number.
      */
-    class QTGUI_API freq_sink_c : virtual public sync_block
+    class QTGUI_API freq_sink_f : virtual public sync_block
     {
     public:
-      // gr::qtgui::freq_sink_c::sptr
-      typedef boost::shared_ptr<freq_sink_c> sptr;
+      // gr::qtgui::freq_sink_f::sptr
+      typedef boost::shared_ptr<freq_sink_f> sptr;
 
       /*!
-       * \brief Build a complex PSD sink.
+       * \brief Build a floating point PSD sink.
        *
        * \param fftsize size of the FFT to compute and display
        * \param wintype type of window to apply (see gnuradio/filter/firdes.h)
@@ -81,7 +81,6 @@ namespace gr {
       virtual void set_y_axis(double min, double max) = 0;
 
       virtual void set_update_time(double t) = 0;
-
       virtual void set_title(const std::string &title) = 0;
       virtual void set_line_label(int which, const std::string &label) = 0;
       virtual void set_line_color(int which, const std::string &color) = 0;
@@ -111,4 +110,4 @@ namespace gr {
   } /* namespace qtgui */
 } /* namespace gr */
 
-#endif /* INCLUDED_QTGUI_FREQ_SINK_C_H */
+#endif /* INCLUDED_QTGUI_FREQ_SINK_F_H */

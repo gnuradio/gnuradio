@@ -22,7 +22,7 @@
 
 #include <cmath>
 #include <QMessageBox>
-#include <qtgui/freqdisplayform.h>
+#include <gnuradio/qtgui/freqdisplayform.h>
 #include <iostream>
 
 FreqDisplayForm::FreqDisplayForm(int nplots, QWidget* parent)

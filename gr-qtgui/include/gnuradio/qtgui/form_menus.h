@@ -28,7 +28,7 @@
 #include <QtGui/QtGui>
 #include <qwt_symbol.h>
 #include <gnuradio/filter/firdes.h>
-#include <qtgui/qtgui_types.h>
+#include <gnuradio/qtgui/qtgui_types.h>
 
 class LineColorMenu: public QMenu
 {

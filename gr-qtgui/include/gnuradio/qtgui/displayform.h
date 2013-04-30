@@ -23,15 +23,15 @@
 #ifndef DISPLAY_FORM_H
 #define DISPLAY_FORM_H
 
-#include <qtgui/spectrumUpdateEvents.h>
+#include <gnuradio/qtgui/spectrumUpdateEvents.h>
 #include <QtGui/QtGui>
 #include <vector>
 
 #include <qwt_plot_grid.h>
 #include <qwt_plot_layout.h>
 
-#include <qtgui/DisplayPlot.h>
-#include <qtgui/form_menus.h>
+#include <gnuradio/qtgui/DisplayPlot.h>
+#include <gnuradio/qtgui/form_menus.h>
 
 /*!
  * \brief Base class for setting up and  managing QTGUI plot forms.

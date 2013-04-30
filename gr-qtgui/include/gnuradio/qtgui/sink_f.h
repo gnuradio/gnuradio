@@ -20,11 +20,11 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef INCLUDED_QTGUI_SINK_C_H
-#define INCLUDED_QTGUI_SINK_C_H
+#ifndef INCLUDED_QTGUI_SINK_F_H
+#define INCLUDED_QTGUI_SINK_F_H
 
 #include <Python.h>
-#include <qtgui/api.h>
+#include <gnuradio/qtgui/api.h>
 #include <gnuradio/block.h>
 #include <qapplication.h>
 #include <qwt_symbol.h>
@@ -34,26 +34,26 @@ namespace gr {
   namespace qtgui {
 
     /*!
-     * \brief A graphical sink to display freq, spec, time, and const plots.
+     * \brief A graphical sink to display freq, spec, and time.
      * \ingroup instrumentation_blk
      * \ingroup qtgui_blk
      *
      * \details
-     * This is a QT-based graphical sink the takes a complex stream and
+     * This is a QT-based graphical sink the takes a float stream and
      * plots it. The default action is to plot the signal as a PSD (FFT),
-     * spectrogram (waterfall), time domain I&Q, and constellation (I
-     * vs. Q) plots. The plots may be turned off by setting the
-     * appropriate boolean value in the constructor to False.
+     * spectrogram (waterfall), and time domain plots. The plots may be
+     * turned off by setting the appropriate boolean value in the
+     * constructor to False.
      */
 
-    class QTGUI_API sink_c : virtual public block
+    class QTGUI_API sink_f : virtual public block
     {
     public:
-      // gr::qtgui::sink_c::sptr
-      typedef boost::shared_ptr<sink_c> sptr;
+      // gr::qtgui::sink_f::sptr
+      typedef boost::shared_ptr<sink_f> sptr;
 
       /*!
-       * \brief Build a complex qtgui sink.
+       * \brief Build a floating point qtgui sink.
        *
        * \param fftsize size of the FFT to compute and display
        * \param wintype type of window to apply (see gnuradio/filter/firdes.h)
@@ -96,4 +96,4 @@ namespace gr {
   } /* namespace qtgui */
 } /* namespace gr */
 
-#endif /* INCLUDED_QTGUI_SINK_C_H */
+#endif /* INCLUDED_QTGUI_SINK_F_H */

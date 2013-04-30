@@ -20,52 +20,55 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef TIME_DOMAIN_DISPLAY_PLOT_H
-#define TIME_DOMAIN_DISPLAY_PLOT_H
+#ifndef CONSTELLATION_DISPLAY_PLOT_H
+#define CONSTELLATION_DISPLAY_PLOT_H
 
 #include <stdint.h>
 #include <cstdio>
 #include <vector>
-#include <qtgui/DisplayPlot.h>
+#include <gnuradio/qtgui/DisplayPlot.h>
 
 /*!
- * \brief QWidget for displaying time domain plots.
+ * \brief QWidget for displaying constellaton (I&Q) plots.
  * \ingroup qtgui_blk
  */
-class TimeDomainDisplayPlot: public DisplayPlot
+class ConstellationDisplayPlot : public DisplayPlot
 {
   Q_OBJECT
 
 public:
-  TimeDomainDisplayPlot(int nplots, QWidget*);
-  virtual ~TimeDomainDisplayPlot();
+  ConstellationDisplayPlot(int nplots, QWidget*);
+  virtual ~ConstellationDisplayPlot();
 
-  void plotNewData(const std::vector<double*> dataPoints,
-		   const int64_t numDataPoints, const double timeInterval);
+  void plotNewData(const std::vector<double*> realDataPoints,
+		   const std::vector<double*> imagDataPoints,
+		   const int64_t numDataPoints,
+		   const double timeInterval);
+
+  // Old method to be removed
+  void plotNewData(const double* realDataPoints,
+		   const double* imagDataPoints,
+		   const int64_t numDataPoints,
+		   const double timeInterval);
 
   void replot();
 
-  void stemPlot(bool en);
+  void set_xaxis(double min, double max);
+  void set_yaxis(double min, double max);
+  void set_axis(double xmin, double xmax,
+		double ymin, double ymax);
+  void set_pen_size(int size);
 
 public slots:
-  void setSampleRate(double sr, double units,
-		     const std::string &strunits);
-
   void setAutoScale(bool state);
-  void setSemilogx(bool en);
-  void setSemilogy(bool en);
 
 private:
-  void _resetXAxisPoints();
   void _autoScale(double bottom, double top);
 
-  std::vector<double*> _dataPoints;
-  double* _xAxisPoints;
+  std::vector<double*> _realDataPoints;
+  std::vector<double*> _imagDataPoints;
 
-  double _sampleRate;
-
-  bool d_semilogx;
-  bool d_semilogy;
+  int64_t _penSize;
 };
 
-#endif /* TIME_DOMAIN_DISPLAY_PLOT_H */
+#endif /* CONSTELLATION_DISPLAY_PLOT_H */

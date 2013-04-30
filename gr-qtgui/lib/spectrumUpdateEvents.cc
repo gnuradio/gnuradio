@@ -23,7 +23,7 @@
 #ifndef SPECTRUM_UPDATE_EVENTS_C
 #define SPECTRUM_UPDATE_EVENTS_C
 
-#include <qtgui/spectrumUpdateEvents.h>
+#include <gnuradio/qtgui/spectrumUpdateEvents.h>
 
 SpectrumUpdateEvent::SpectrumUpdateEvent(const float* fftPoints,
 					 const uint64_t numFFTDataPoints,

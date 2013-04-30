@@ -107,7 +107,7 @@ CPACK_COMPONENT("qtgui_swig"
 ########################################################################
 # Add subdirectories
 ########################################################################
-add_subdirectory(include/qtgui)
+add_subdirectory(include/gnuradio/qtgui)
 add_subdirectory(lib)
 add_subdirectory(doc)
 if(ENABLE_PYTHON)

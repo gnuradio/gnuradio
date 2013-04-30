@@ -22,7 +22,7 @@
 
 #include <cmath>
 #include <QMessageBox>
-#include <qtgui/constellationdisplayform.h>
+#include <gnuradio/qtgui/constellationdisplayform.h>
 #include <iostream>
 
 ConstellationDisplayForm::ConstellationDisplayForm(int nplots, QWidget* parent)

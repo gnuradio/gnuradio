@@ -23,13 +23,13 @@
 #ifndef WATERFALL_DISPLAY_FORM_H
 #define WATERFALL_DISPLAY_FORM_H
 
-#include <qtgui/spectrumUpdateEvents.h>
-#include <qtgui/WaterfallDisplayPlot.h>
+#include <gnuradio/qtgui/spectrumUpdateEvents.h>
+#include <gnuradio/qtgui/WaterfallDisplayPlot.h>
 #include <QtGui/QtGui>
 #include <vector>
 #include <gnuradio/filter/firdes.h>
 
-#include <qtgui/displayform.h>
+#include <gnuradio/qtgui/displayform.h>
 
 /*!
  * \brief DisplayForm child for managing waterfall (spectrogram) plots.

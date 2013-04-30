@@ -26,13 +26,13 @@
 #include <spectrumdisplayform.ui.h>
 
 class SpectrumGUIClass;
-#include <qtgui/SpectrumGUIClass.h>
+#include <gnuradio/qtgui/SpectrumGUIClass.h>
 
-#include <qtgui/SpectrumGUIClass.h>
-#include <qtgui/FrequencyDisplayPlot.h>
-#include <qtgui/WaterfallDisplayPlot.h>
-#include <qtgui/TimeDomainDisplayPlot.h>
-#include <qtgui/ConstellationDisplayPlot.h>
+#include <gnuradio/qtgui/SpectrumGUIClass.h>
+#include <gnuradio/qtgui/FrequencyDisplayPlot.h>
+#include <gnuradio/qtgui/WaterfallDisplayPlot.h>
+#include <gnuradio/qtgui/TimeDomainDisplayPlot.h>
+#include <gnuradio/qtgui/ConstellationDisplayPlot.h>
 #include <QValidator>
 #include <QTimer>
 #include <vector>

@@ -23,9 +23,9 @@
 #ifndef FREQUENCY_DISPLAY_PLOT_C
 #define FREQUENCY_DISPLAY_PLOT_C
 
-#include <qtgui/FrequencyDisplayPlot.h>
+#include <gnuradio/qtgui/FrequencyDisplayPlot.h>
 
-#include <qtgui/qtgui_types.h>
+#include <gnuradio/qtgui/qtgui_types.h>
 #include <qwt_scale_draw.h>
 #include <qwt_legend.h>
 #include <qwt_legend_item.h>

@@ -20,11 +20,11 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef INCLUDED_QTGUI_TIME_RASTER_SINK_F_H
-#define INCLUDED_QTGUI_TIME_RASTER_SINK_F_H
+#ifndef INCLUDED_QTGUI_TIME_RASTER_SINK_B_H
+#define INCLUDED_QTGUI_TIME_RASTER_SINK_B_H
 
 #include <Python.h>
-#include <qtgui/api.h>
+#include <gnuradio/qtgui/api.h>
 #include <gnuradio/sync_block.h>
 #include <qapplication.h>
 #include <qwt_symbol.h>
@@ -39,18 +39,21 @@ namespace gr {
      * \ingroup qtgui_blk
      *
      * \details
-     * This is a QT-based graphical sink that takes set of a floating
-     * point streams and plots a time_raster (spectrogram) plot.
+     * This is a QT-based graphical sink that takes in byte
+     * streams and plots a time_raster (spectrogram) plot.
      *
+     * Input stream: This expects a bit stream (0, 1 in the LSB of a
+     * byte). It will display packed bytes but the display will have
+     * to be autoscaled.
      */
-    class QTGUI_API time_raster_sink_f : virtual public sync_block
+    class QTGUI_API time_raster_sink_b : virtual public sync_block
     {
     public:
-      // gr::qtgui::time_raster_sink_f::sptr
-      typedef boost::shared_ptr<time_raster_sink_f> sptr;
+      // gr::qtgui::time_raster_sink_b::sptr
+      typedef boost::shared_ptr<time_raster_sink_b> sptr;
 
       /*!
-       * \brief Build a floating point time raster sink.
+       * \brief Build a bit time raster sink.
        *
        * \param samp_rate sample rate of signal
        * \param cols number of cols to plot
@@ -116,4 +119,4 @@ namespace gr {
   } /* namespace qtgui */
 } /* namespace gr */
 
-#endif /* INCLUDED_QTGUI_TIME_RASTER_SINK_F_H */
+#endif /* INCLUDED_QTGUI_TIME_RASTER_SINK_B_H */

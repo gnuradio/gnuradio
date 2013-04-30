@@ -37,7 +37,7 @@
 #include <qwt_plot_magnifier.h>
 #include <qwt_plot_marker.h>
 #include <qwt_symbol.h>
-#include <qtgui/utils.h>
+#include <gnuradio/qtgui/utils.h>
 
 #if QWT_VERSION >= 0x060000
 #include <qwt_compat.h>

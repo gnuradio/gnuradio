@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2012 Free Software Foundation, Inc.
+ * Copyright 2011,2012 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -20,47 +20,62 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef CONSTELLATION_DISPLAY_FORM_H
-#define CONSTELLATION_DISPLAY_FORM_H
+#ifndef TIME_DISPLAY_FORM_H
+#define TIME_DISPLAY_FORM_H
 
-#include <qtgui/spectrumUpdateEvents.h>
-#include <qtgui/ConstellationDisplayPlot.h>
+#include <gnuradio/qtgui/spectrumUpdateEvents.h>
+#include <gnuradio/qtgui/TimeDomainDisplayPlot.h>
 #include <QtGui/QtGui>
 #include <vector>
 
-#include <qtgui/displayform.h>
+#include <gnuradio/qtgui/displayform.h>
 
 /*!
- * \brief DisplayForm child for managing constellaton (I&Q) plots.
+ * \brief DisplayForm child for managing time domain plots.
  * \ingroup qtgui_blk
  */
-class ConstellationDisplayForm : public DisplayForm
+class TimeDisplayForm : public DisplayForm
 {
   Q_OBJECT
 
-public:
-  ConstellationDisplayForm(int nplots=1, QWidget* parent = 0);
-  ~ConstellationDisplayForm();
+  public:
+  TimeDisplayForm(int nplots=1, QWidget* parent = 0);
+  ~TimeDisplayForm();
 
-  ConstellationDisplayPlot* getPlot();
+  TimeDomainDisplayPlot* getPlot();
 
   int getNPoints() const;
 
 public slots:
   void customEvent(QEvent * e);
-  void setNPoints(const int);
 
+  void setSampleRate(const double samprate);
   void setSampleRate(const QString &samprate);
   void setYaxis(double min, double max);
-  void setXaxis(double min, double max);
+  void setNPoints(const int);
+  void setStem(bool en);
   void autoScale(bool en);
+  void setSemilogx(bool en);
+  void setSemilogy(bool en);
 
 private slots:
   void newData(const QEvent*);
 
 private:
   QIntValidator* _intValidator;
+
+  double _startFrequency;
+  double _stopFrequency;
+
   int d_npoints;
+
+  bool d_stem;
+  bool d_semilogx;
+  bool d_semilogy;
+  
+  QAction *d_stemmenu;
+  QAction *d_semilogxmenu;
+  QAction *d_semilogymenu;
 };
 
-#endif /* CONSTELLATION_DISPLAY_FORM_H */
+#endif /* TIME_DISPLAY_FORM_H */

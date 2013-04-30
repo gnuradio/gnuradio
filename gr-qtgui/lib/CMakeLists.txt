@@ -20,7 +20,7 @@
 ########################################################################
 # Setup the QT file generations stuff
 ########################################################################
-set(qtgui_mod_includedir ${CMAKE_CURRENT_SOURCE_DIR}/../include/qtgui)
+set(qtgui_mod_includedir ${CMAKE_CURRENT_SOURCE_DIR}/../include/gnuradio/qtgui)
 set(qtgui_moc_hdrs
     ${qtgui_mod_includedir}/spectrumdisplayform.h
     ${qtgui_mod_includedir}/displayform.h

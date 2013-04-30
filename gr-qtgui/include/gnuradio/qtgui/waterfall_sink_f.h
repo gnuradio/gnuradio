@@ -24,7 +24,7 @@
 #define INCLUDED_QTGUI_WATERFALL_SINK_F_H
 
 #include <Python.h>
-#include <qtgui/api.h>
+#include <gnuradio/qtgui/api.h>
 #include <gnuradio/sync_block.h>
 #include <qapplication.h>
 #include <gnuradio/filter/firdes.h>
