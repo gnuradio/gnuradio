@@ -28,12 +28,12 @@
 %include "fec_swig_doc.i"
 
 %{
-#include "fec/decode_ccsds_27_fb.h"
-#include "fec/encode_ccsds_27_bb.h"
+#include "gnuradio/fec/decode_ccsds_27_fb.h"
+#include "gnuradio/fec/encode_ccsds_27_bb.h"
 %}
 
-%include "fec/decode_ccsds_27_fb.h"
-%include "fec/encode_ccsds_27_bb.h"
+%include "gnuradio/fec/decode_ccsds_27_fb.h"
+%include "gnuradio/fec/encode_ccsds_27_bb.h"
 
 GR_SWIG_BLOCK_MAGIC2(fec, decode_ccsds_27_fb);
 GR_SWIG_BLOCK_MAGIC2(fec, encode_ccsds_27_bb);

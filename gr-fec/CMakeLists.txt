@@ -87,7 +87,7 @@ CPACK_COMPONENT("fec_swig"
 ########################################################################
 # Add subdirectories
 ########################################################################
-add_subdirectory(include/fec)
+add_subdirectory(include/gnuradio/fec)
 add_subdirectory(lib)
 if(ENABLE_PYTHON)
     add_subdirectory(swig)

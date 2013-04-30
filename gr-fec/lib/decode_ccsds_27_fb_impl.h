@@ -23,10 +23,10 @@
 #ifndef INCLUDED_FEC_DECODE_CCSDS_27_FB_IMPL_H
 #define INCLUDED_FEC_DECODE_CCSDS_27_FB_IMPL_H
 
-#include <fec/decode_ccsds_27_fb.h>
+#include <gnuradio/fec/decode_ccsds_27_fb.h>
 
 extern "C" {
-#include <fec/viterbi.h>
+#include <gnuradio/fec/viterbi.h>
 }
 
 namespace gr {

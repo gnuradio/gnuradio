@@ -5,7 +5,7 @@
  */
 #define DTYPE int
 
-#include <fec/api.h>
+#include <gnuradio/fec/api.h>
 
 /* Reed-Solomon codec control block */
 struct FEC_API rs {

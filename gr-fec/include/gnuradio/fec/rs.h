@@ -1,4 +1,4 @@
-#include <fec/api.h>
+#include <gnuradio/fec/api.h>
 /* User include file for the Reed-Solomon codec
  * Copyright 2002, Phil Karn KA9Q
  * May be used under the terms of the GNU General Public License (GPL)

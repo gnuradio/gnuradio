@@ -23,7 +23,7 @@
 #ifndef INCLUDED_FEC_ENCODE_CCSDS_27_BB_H
 #define INCLUDED_FEC_ENCODE_CCSDS_27_BB_H
 
-#include <fec/api.h>
+#include <gnuradio/fec/api.h>
 #include <gnuradio/sync_interpolator.h>
 
 namespace gr {

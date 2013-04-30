@@ -24,7 +24,7 @@
  * But it fits so nicely into a 32-bit machine word...
  */
 
-#include <fec/api.h>
+#include <gnuradio/fec/api.h>
 
 struct viterbi_state {
   unsigned long path;	/* Decoded path to this state */

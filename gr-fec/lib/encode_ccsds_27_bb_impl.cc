@@ -28,7 +28,7 @@
 #include <gnuradio/io_signature.h>
 
 extern "C" {
-#include <fec/viterbi.h>
+#include <gnuradio/fec/viterbi.h>
 }
 
 namespace gr {
