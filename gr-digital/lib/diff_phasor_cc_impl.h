@@ -23,7 +23,7 @@
 #ifndef INCLUDED_GR_DIFF_PHASOR_CC_IMPL_H
 #define INCLUDED_GR_DIFF_PHASOR_CC_IMPL_H
 
-#include <digital/diff_phasor_cc.h>
+#include <gnuradio/digital/diff_phasor_cc.h>
 #include <gnuradio/sync_block.h>
 
 namespace gr {

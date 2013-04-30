@@ -25,7 +25,7 @@
 
 #include <vector>
 #include <gnuradio/gr_complex.h>
-#include <digital/metric_type.h>
+#include <gnuradio/digital/metric_type.h>
 
 namespace gr {
   namespace trellis {

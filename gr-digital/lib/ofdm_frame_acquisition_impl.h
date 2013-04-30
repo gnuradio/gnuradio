@@ -23,7 +23,7 @@
 #ifndef INCLUDED_DIGITAL_OFDM_FRAME_ACQUISITION_IMPL_H
 #define INCLUDED_DIGITAL_OFDM_FRAME_ACQUISITION_IMPL_H
 
-#include <digital/ofdm_frame_acquisition.h>
+#include <gnuradio/digital/ofdm_frame_acquisition.h>
 
 namespace gr {
   namespace digital {

@@ -22,7 +22,7 @@
 #ifndef INCLUDED_DIGITAL_OFDM_INSERT_PREAMBLE_IMPL_H
 #define INCLUDED_DIGITAL_OFDM_INSERT_PREAMBLE_IMPL_H
 
-#include <digital/ofdm_insert_preamble.h>
+#include <gnuradio/digital/ofdm_insert_preamble.h>
 
 namespace gr {
   namespace digital {

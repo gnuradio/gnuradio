@@ -23,7 +23,7 @@
 #ifndef INCLUDED_DIGITAL_OFDM_FRAME_SINK_IMPL_H
 #define INCLUDED_DIGITAL_OFDM_FRAME_SINK_IMPL_H
 
-#include <digital/ofdm_frame_sink.h>
+#include <gnuradio/digital/ofdm_frame_sink.h>
 
 namespace gr {
   namespace digital {

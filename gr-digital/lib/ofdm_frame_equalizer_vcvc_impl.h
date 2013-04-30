@@ -22,7 +22,7 @@
 #ifndef INCLUDED_DIGITAL_OFDM_FRAME_EQUALIZER_VCVC_IMPL_H
 #define INCLUDED_DIGITAL_OFDM_FRAME_EQUALIZER_VCVC_IMPL_H
 
-#include <digital/ofdm_frame_equalizer_vcvc.h>
+#include <gnuradio/digital/ofdm_frame_equalizer_vcvc.h>
 
 namespace gr {
   namespace digital {

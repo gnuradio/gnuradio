@@ -23,7 +23,7 @@
 #ifndef INCLUDED_GR_DIFF_ENCODER_BB_IMPL_H
 #define INCLUDED_GR_DIFF_ENCODER_BB_IMPL_H
 
-#include <digital/diff_encoder_bb.h>
+#include <gnuradio/digital/diff_encoder_bb.h>
 
 namespace gr {
   namespace digital {

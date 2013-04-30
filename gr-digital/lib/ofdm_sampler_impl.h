@@ -23,7 +23,7 @@
 #ifndef INCLUDED_DIGITAL_OFDM_SAMPLER_IMPL_H
 #define INCLUDED_DIGITAL_OFDM_SAMPLER_IMPL_H
 
-#include <digital/ofdm_sampler.h>
+#include <gnuradio/digital/ofdm_sampler.h>
 #include <gnuradio/sync_block.h>
 
 namespace gr {

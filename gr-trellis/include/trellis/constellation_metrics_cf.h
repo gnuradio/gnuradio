@@ -25,8 +25,8 @@
 
 #include <trellis/api.h>
 #include <gnuradio/block.h>
-#include <digital/constellation.h>
-#include <digital/metric_type.h>
+#include <gnuradio/digital/constellation.h>
+#include <gnuradio/digital/metric_type.h>
 
 namespace gr {
   namespace trellis {

@@ -23,7 +23,7 @@
 #ifndef INCLUDED_GR_FRAMER_SINK_1_IMPL_H
 #define INCLUDED_GR_FRAMER_SINK_1_IMPL_H
 
-#include <digital/framer_sink_1.h>
+#include <gnuradio/digital/framer_sink_1.h>
 
 namespace gr {
   namespace digital {

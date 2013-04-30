@@ -23,7 +23,7 @@
 #ifndef INCLUDED_GR_SIMPLE_FRAMER_IMPL_H
 #define INCLUDED_GR_SIMPLE_FRAMER_IMPL_H
 
-#include <digital/simple_framer.h>
+#include <gnuradio/digital/simple_framer.h>
 
 namespace gr {
   namespace digital {

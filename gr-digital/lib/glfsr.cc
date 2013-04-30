@@ -20,7 +20,7 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include <digital/glfsr.h>
+#include <gnuradio/digital/glfsr.h>
 #include <stdexcept>
 
 namespace gr {

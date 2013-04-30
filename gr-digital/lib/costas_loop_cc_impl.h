@@ -24,7 +24,7 @@
 #ifndef INCLUDED_DIGITAL_COSTAS_LOOP_CC_IMPL_H
 #define INCLUDED_DIGITAL_COSTAS_LOOP_CC_IMPL_H
 
-#include <digital/costas_loop_cc.h>
+#include <gnuradio/digital/costas_loop_cc.h>
 
 namespace gr {
   namespace digital {

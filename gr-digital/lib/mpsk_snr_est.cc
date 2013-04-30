@@ -24,7 +24,7 @@
 #include <config.h>
 #endif
 
-#include <digital/mpsk_snr_est.h>
+#include <gnuradio/digital/mpsk_snr_est.h>
 #include <stdexcept>
 #include <cstdio>
 

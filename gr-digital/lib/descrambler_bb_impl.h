@@ -23,8 +23,8 @@
 #ifndef INCLUDED_GR_DESCRAMBLER_BB_IMPL_H
 #define INCLUDED_GR_DESCRAMBLER_BB_IMPL_H
 
-#include <digital/descrambler_bb.h>
-#include <digital/lfsr.h>
+#include <gnuradio/digital/descrambler_bb.h>
+#include <gnuradio/digital/lfsr.h>
 
 namespace gr {
   namespace digital {

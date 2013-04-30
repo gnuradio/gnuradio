@@ -27,8 +27,8 @@
 //load generated python docstrings
 %include "trellis_swig_doc.i"
 
-%include "digital/metric_type.h"
-%include "digital/constellation.h"
+%include "gnuradio/digital/metric_type.h"
+%include "gnuradio/digital/constellation.h"
 %include "trellis/siso_type.h"
 %include "trellis/fsm.h"
 %include "trellis/interleaver.h"

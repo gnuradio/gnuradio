@@ -22,7 +22,7 @@
 #ifndef INCLUDED_DIGITAL_PACKET_HEADERGENERATOR_BB_IMPL_H
 #define INCLUDED_DIGITAL_PACKET_HEADERGENERATOR_BB_IMPL_H
 
-#include <digital/packet_headergenerator_bb.h>
+#include <gnuradio/digital/packet_headergenerator_bb.h>
 
 namespace gr {
   namespace digital {

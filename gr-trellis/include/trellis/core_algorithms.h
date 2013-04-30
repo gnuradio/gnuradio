@@ -25,7 +25,7 @@
 
 #include <cmath>
 #include <vector>
-#include <digital/metric_type.h>
+#include <gnuradio/digital/metric_type.h>
 #include <trellis/fsm.h>
 #include <trellis/interleaver.h>
 

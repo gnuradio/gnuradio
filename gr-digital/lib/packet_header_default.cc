@@ -24,7 +24,7 @@
 #endif
 
 #include <string.h>
-#include <digital/packet_header_default.h>
+#include <gnuradio/digital/packet_header_default.h>
 
 namespace gr {
   namespace digital {

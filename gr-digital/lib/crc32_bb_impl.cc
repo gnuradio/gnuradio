@@ -26,7 +26,7 @@
 
 #include <gnuradio/io_signature.h>
 #include "crc32_bb_impl.h"
-#include <digital/crc32.h>
+#include <gnuradio/digital/crc32.h>
 
 namespace gr {
   namespace digital {

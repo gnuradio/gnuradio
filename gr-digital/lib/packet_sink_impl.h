@@ -23,7 +23,7 @@
 #ifndef INCLUDED_GR_PACKET_SINK_IMPL_H
 #define INCLUDED_GR_PACKET_SINK_IMPL_H
 
-#include <digital/packet_sink.h>
+#include <gnuradio/digital/packet_sink.h>
 
 namespace gr {
   namespace digital {

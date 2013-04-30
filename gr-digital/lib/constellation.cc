@@ -25,7 +25,7 @@
 #endif
 
 #include <gnuradio/io_signature.h>
-#include <digital/constellation.h>
+#include <gnuradio/digital/constellation.h>
 #include <gnuradio/math.h>
 #include <gnuradio/gr_complex.h>
 #include <math.h>

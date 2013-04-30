@@ -23,7 +23,7 @@
 #include "config.h"
 #endif
 
-#include <digital/ofdm_equalizer_simpledfe.h>
+#include <gnuradio/digital/ofdm_equalizer_simpledfe.h>
 
 namespace gr {
   namespace digital {

@@ -25,7 +25,7 @@
 #endif
 
 #include "simple_correlator_impl.h"
-#include <digital/simple_framer_sync.h>
+#include <gnuradio/digital/simple_framer_sync.h>
 #include <gnuradio/io_signature.h>
 #include <gnuradio/blocks/count_bits.h>
 #include <assert.h>

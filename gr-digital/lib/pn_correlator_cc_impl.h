@@ -23,8 +23,8 @@
 #ifndef INCLUDED_GR_PN_CORRELATOR_CC_IMPL_H
 #define INCLUDED_GR_PN_CORRELATOR_CC_IMPL_H
 
-#include <digital/pn_correlator_cc.h>
-#include <digital/glfsr.h>
+#include <gnuradio/digital/pn_correlator_cc.h>
+#include <gnuradio/digital/glfsr.h>
 
 namespace gr {
   namespace digital {
