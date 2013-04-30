@@ -88,7 +88,7 @@ CPACK_COMPONENT("comedi_swig"
 ########################################################################
 # Add subdirectories
 ########################################################################
-add_subdirectory(include/comedi)
+add_subdirectory(include/gnuradio/comedi)
 add_subdirectory(lib)
 if(ENABLE_PYTHON)
     add_subdirectory(swig)

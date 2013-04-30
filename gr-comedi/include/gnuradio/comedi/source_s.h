@@ -23,7 +23,7 @@
 #ifndef INCLUDED_COMEDI_SOURCE_S_H
 #define INCLUDED_COMEDI_SOURCE_S_H
 
-#include <comedi/api.h>
+#include <gnuradio/comedi/api.h>
 #include <gnuradio/sync_block.h>
 
 namespace gr {
