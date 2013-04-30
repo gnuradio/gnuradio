@@ -25,7 +25,7 @@
 #endif
 
 #include "hilbert_fc_impl.h"
-#include <filter/firdes.h>
+#include <gnuradio/filter/firdes.h>
 #include <gnuradio/io_signature.h>
 #include <volk/volk.h>
 

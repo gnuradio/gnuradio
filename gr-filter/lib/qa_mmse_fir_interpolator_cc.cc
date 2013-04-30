@@ -26,7 +26,7 @@
 
 #include <cppunit/TestAssert.h>
 #include <qa_mmse_fir_interpolator_cc.h>
-#include <filter/mmse_fir_interpolator_cc.h>
+#include <gnuradio/filter/mmse_fir_interpolator_cc.h>
 #include <gnuradio/fft/fft.h>
 #include <cstdio>
 #include <cmath>

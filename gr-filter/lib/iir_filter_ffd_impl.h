@@ -23,8 +23,8 @@
 #ifndef INCLUDED_IIR_FILTER_FFD_IMPL_H
 #define	INCLUDED_IIR_FILTER_FFD_IMPL_H
 
-#include <filter/iir_filter.h>
-#include <filter/iir_filter_ffd.h>
+#include <gnuradio/filter/iir_filter.h>
+#include <gnuradio/filter/iir_filter_ffd.h>
 
 namespace gr {
   namespace filter {

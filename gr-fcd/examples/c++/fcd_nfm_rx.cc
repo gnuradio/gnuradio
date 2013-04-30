@@ -33,8 +33,8 @@
 
 // Include header files for each block used in flowgraph
 #include <gnuradio/top_block.h>
-#include <filter/firdes.h>
-#include <filter/fir_filter_ccf.h>
+#include <gnuradio/filter/firdes.h>
+#include <gnuradio/filter/fir_filter_ccf.h>
 #include <gnuradio/analog/quadrature_demod_cf.h>
 #include <gnuradio/audio/sink.h>
 #include <gnuradio/fcd/fcd_source_c.h>

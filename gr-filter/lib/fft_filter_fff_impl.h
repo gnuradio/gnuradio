@@ -22,9 +22,9 @@
 #ifndef INCLUDED_FILTER_FFT_FILTER_FFF_IMPL_H
 #define INCLUDED_FILTER_FFT_FILTER_FFF_IMPL_H
 
-#include <filter/api.h>
-#include <filter/fft_filter.h>
-#include <filter/fft_filter_fff.h>
+#include <gnuradio/filter/api.h>
+#include <gnuradio/filter/fft_filter.h>
+#include <gnuradio/filter/fft_filter_fff.h>
 
 namespace gr {
   namespace filter {

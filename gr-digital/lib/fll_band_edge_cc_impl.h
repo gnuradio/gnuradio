@@ -25,7 +25,7 @@
 
 #include <gnuradio/digital/fll_band_edge_cc.h>
 #include <gnuradio/blocks/control_loop.h>
-#include <filter/fir_filter.h>
+#include <gnuradio/filter/fir_filter.h>
 
 namespace gr {
   namespace digital {

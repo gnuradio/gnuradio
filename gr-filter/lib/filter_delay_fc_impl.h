@@ -23,8 +23,8 @@
 #ifndef INCLUDED_FILTER_FILTER_DELAY_FC_IMPL_H
 #define INCLUDED_FILTER_FILTER_DELAY_FC_IMPL_H
 
-#include <filter/filter_delay_fc.h>
-#include <filter/fir_filter.h>
+#include <gnuradio/filter/filter_delay_fc.h>
+#include <gnuradio/filter/fir_filter.h>
 #include <gnuradio/io_signature.h>
 
 namespace gr {

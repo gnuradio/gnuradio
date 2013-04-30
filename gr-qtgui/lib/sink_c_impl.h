@@ -24,7 +24,7 @@
 #define INCLUDED_QTGUI_SINK_C_IMPL_H
 
 #include <qtgui/sink_c.h>
-#include <filter/firdes.h>
+#include <gnuradio/filter/firdes.h>
 #include <gnuradio/fft/fft.h>
 #include <gnuradio/high_res_timer.h>
 #include <qtgui/SpectrumGUIClass.h>

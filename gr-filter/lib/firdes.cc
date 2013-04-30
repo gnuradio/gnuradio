@@ -24,7 +24,7 @@
 #include <config.h>
 #endif
 
-#include <filter/firdes.h>
+#include <gnuradio/filter/firdes.h>
 #include <stdexcept>
 
 using std::vector;

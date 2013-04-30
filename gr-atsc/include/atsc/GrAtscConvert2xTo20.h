@@ -23,7 +23,7 @@
 #define _GRATSCCONVERT2XTO20_H_
 
 #include <VrDecimatingSigProc.h>
-#include <filter/mmse_fir_interpolator.h>
+#include <gnuradio/filter/mmse_fir_interpolator.h>
 
 class GrAtscConvert2xTo20 : public VrDecimatingSigProc<float,float> {
   gr_mmse_fir_interpolator	d_interp;

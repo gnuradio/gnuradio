@@ -27,7 +27,7 @@
 #include <qtgui/api.h>
 #include <gnuradio/sync_block.h>
 #include <qapplication.h>
-#include <filter/firdes.h>
+#include <gnuradio/filter/firdes.h>
 
 namespace gr {
   namespace qtgui {
@@ -61,7 +61,7 @@ namespace gr {
        * \brief Build a complex waterfall sink.
        *
        * \param size size of the FFT to compute and display
-       * \param wintype type of window to apply (see filter/firdes.h)
+       * \param wintype type of window to apply (see gnuradio/filter/firdes.h)
        * \param fc center frequency of signal (use for x-axis labels)
        * \param bw bandwidth of signal (used to set x-axis labels)
        * \param name title for the plot

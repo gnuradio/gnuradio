@@ -24,7 +24,7 @@
 #include "config.h"
 #endif
 
-#include <filter/fft_filter.h>
+#include <gnuradio/filter/fft_filter.h>
 #include <volk/volk.h>
 #include <iostream>
 #include <cstring>

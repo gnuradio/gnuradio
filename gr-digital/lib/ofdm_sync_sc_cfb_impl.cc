@@ -36,8 +36,8 @@
 #include <gnuradio/blocks/multiply_cc.h>
 #include <gnuradio/blocks/multiply_ff.h>
 #include <gnuradio/blocks/sample_and_hold_ff.h>
-#include <filter/fir_filter_ccf.h>
-#include <filter/fir_filter_fff.h>
+#include <gnuradio/filter/fir_filter_ccf.h>
+#include <gnuradio/filter/fir_filter_fff.h>
 
 namespace gr {
   namespace digital {

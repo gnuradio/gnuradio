@@ -25,7 +25,7 @@
 
 #include <gnuradio/analog/pwr_squelch_ff.h>
 #include "squelch_base_ff_impl.h"
-#include <filter/single_pole_iir.h>
+#include <gnuradio/filter/single_pole_iir.h>
 #include <cmath>
 
 namespace gr {

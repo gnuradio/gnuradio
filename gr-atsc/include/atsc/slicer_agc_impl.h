@@ -25,7 +25,7 @@
 
 #include <atsc/api.h>
 #include <math.h>
-#include <filter/single_pole_iir.h>
+#include <gnuradio/filter/single_pole_iir.h>
 
 /*!
  * \brief Automatic Gain Control class for atsc slicer

@@ -27,7 +27,7 @@
 #include <qtgui/TimeRasterDisplayPlot.h>
 #include <QtGui/QtGui>
 #include <vector>
-#include <filter/firdes.h>
+#include <gnuradio/filter/firdes.h>
 
 #include <qtgui/displayform.h>
 

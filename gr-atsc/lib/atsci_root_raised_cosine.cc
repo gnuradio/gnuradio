@@ -22,7 +22,7 @@
 
 #include <atsc/consts.h>
 #include <atsc/root_raised_cosine_impl.h>
-#include <filter/firdes.h>
+#include <gnuradio/filter/firdes.h>
 
 vector<float>
 atsc_root_raised_cosine::taps (double sampling_rate)

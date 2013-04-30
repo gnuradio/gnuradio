@@ -24,7 +24,7 @@
 #include "config.h"
 #endif
 
-#include <filter/polyphase_filterbank.h>
+#include <gnuradio/filter/polyphase_filterbank.h>
 #include <cstdio>
 
 namespace gr {

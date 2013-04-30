@@ -23,8 +23,8 @@
 #ifndef INCLUDED_FILTER_ADAPTIVE_FIR_CCF_IMPL_H
 #define	INCLUDED_FILTER_ADAPTIVE_FIR_CCF_IMPL_H
 
-#include <filter/adaptive_fir_ccf.h>
-#include <filter/adaptive_fir.h>
+#include <gnuradio/filter/adaptive_fir_ccf.h>
+#include <gnuradio/filter/adaptive_fir.h>
 #include <gnuradio/types.h>
 
 namespace gr {

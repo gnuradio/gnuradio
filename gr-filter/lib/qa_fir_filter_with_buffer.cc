@@ -26,7 +26,7 @@
 
 #include <gnuradio/types.h>
 #include <qa_fir_filter_with_buffer.h>
-#include <filter/fir_filter_with_buffer.h>
+#include <gnuradio/filter/fir_filter_with_buffer.h>
 #include <gnuradio/fft/fft.h>
 #include <cppunit/TestAssert.h>
 #include <cmath>

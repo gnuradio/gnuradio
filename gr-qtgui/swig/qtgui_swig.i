@@ -29,7 +29,7 @@
 %include "qtgui_swig_doc.i"
 
 // So we understand the firdes window types
-%import "filter/firdes.h"
+%import "gnuradio/filter/firdes.h"
 
 %{
 #include "qtgui/form_menus.h"

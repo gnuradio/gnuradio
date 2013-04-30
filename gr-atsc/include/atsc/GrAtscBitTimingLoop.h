@@ -28,8 +28,8 @@
 #include <VrHistoryProc.h>
 #include <VrDecimatingSigProc.h>
 #include <atsc/interleaver_fifo.h>
-#include <filter/single_pole_iir.h>
-#include <filter/mmse_fir_interpolator.h>
+#include <gnuradio/filter/single_pole_iir.h>
+#include <gnuradio/filter/mmse_fir_interpolator.h>
 #include <atsc/slicer_agc_impl.h>
 #include <stdio.h>
 #include <atsc/diag_output_impl.h>

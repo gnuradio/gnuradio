@@ -26,7 +26,7 @@
 #include <gnuradio/digital/cpmmod_bc.h>
 #include <gnuradio/blocks/char_to_float.h>
 #include <gnuradio/analog/frequency_modulator_fc.h>
-#include <filter/interp_fir_filter_fff.h>
+#include <gnuradio/filter/interp_fir_filter_fff.h>
 
 namespace gr {
   namespace digital {

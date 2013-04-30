@@ -23,8 +23,8 @@
 #ifndef INCLUDED_SINGLE_POLE_IIR_FILTER_CC_IMPL_H
 #define	INCLUDED_SINGLE_POLE_IIR_FILTER_CC_IMPL_H
 
-#include <filter/single_pole_iir.h>
-#include <filter/single_pole_iir_filter_cc.h>
+#include <gnuradio/filter/single_pole_iir.h>
+#include <gnuradio/filter/single_pole_iir_filter_cc.h>
 #include <gnuradio/sync_block.h>
 #include <gnuradio/gr_complex.h>
 #include <stdexcept>

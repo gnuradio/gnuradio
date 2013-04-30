@@ -24,7 +24,7 @@
 #define INCLUDED_DIGITAL_LMS_DD_EQUALIZER_CC_IMPL_H
 
 #include <gnuradio/digital/lms_dd_equalizer_cc.h>
-#include <filter/fir_filter.h>
+#include <gnuradio/filter/fir_filter.h>
 #include <stdexcept>
 
 namespace gr {

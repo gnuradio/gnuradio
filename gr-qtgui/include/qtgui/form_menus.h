@@ -27,7 +27,7 @@
 #include <vector>
 #include <QtGui/QtGui>
 #include <qwt_symbol.h>
-#include <filter/firdes.h>
+#include <gnuradio/filter/firdes.h>
 #include <qtgui/qtgui_types.h>
 
 class LineColorMenu: public QMenu

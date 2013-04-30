@@ -29,7 +29,7 @@
 #include <VrDecimatingSigProc.h>
 #include <atsc/interleaver_fifo.h>
 #include <filtersingle_pole_iir.h>
-#include <filter/mmse_fir_interpolator.h>
+#include <gnuradio/filter/mmse_fir_interpolator.h>
 
 /*!
  * \brief ATSC BitTimingLoop

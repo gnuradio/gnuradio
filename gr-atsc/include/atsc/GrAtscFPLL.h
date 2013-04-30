@@ -25,8 +25,8 @@
 #define _GRATSCFPLL_H_
 
 #include <gnuradio/blocks/nco.h>
-#include <filter/iir.h>
-#include <filter/single_pole_iir.h>
+#include <gnuradio/filter/iir.h>
+#include <gnuradio/filter/single_pole_iir.h>
 #include <gnuradio/analog/agc.h>
 #include <VrSigProc.h>
 #include <stdio.h>

@@ -24,8 +24,8 @@
 #ifndef INCLUDED_PFB_SYNTHESIZER_CCF_IMPL_H
 #define	INCLUDED_PFB_SYNTHESIZER_CCF_IMPL_H
 
-#include <filter/pfb_synthesizer_ccf.h>
-#include <filter/fir_filter_with_buffer.h>
+#include <gnuradio/filter/pfb_synthesizer_ccf.h>
+#include <gnuradio/filter/fir_filter_with_buffer.h>
 #include <gnuradio/fft/fft.h>
 #include <gnuradio/thread/thread.h>
 

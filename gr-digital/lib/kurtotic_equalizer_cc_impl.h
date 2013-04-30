@@ -24,7 +24,7 @@
 #define	INCLUDED_DIGITAL_KURTOTIC_EQUALIZER_CC_IMPL_H
 
 #include <gnuradio/digital/kurtotic_equalizer_cc.h>
-#include <filter/fir_filter.h>
+#include <gnuradio/filter/fir_filter.h>
 #include <gnuradio/math.h>
 #include <stdexcept>
 

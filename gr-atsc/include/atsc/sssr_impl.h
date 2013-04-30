@@ -29,8 +29,8 @@
 
 #include <atsc/api.h>
 #include <atsc/consts.h>
-#include <filter/mmse_fir_interpolator_ff.h>
-#include <filter/single_pole_iir.h>
+#include <gnuradio/filter/mmse_fir_interpolator_ff.h>
+#include <gnuradio/filter/single_pole_iir.h>
 #include <cstdio>
 
 /*

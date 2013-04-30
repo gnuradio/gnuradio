@@ -29,8 +29,8 @@
 #include <gnuradio/analog/sig_source_c.h>
 #include <gnuradio/analog/fastnoise_source_c.h>
 #include <gnuradio/channels/channel_model.h>
-#include <filter/fractional_interpolator_cc.h>
-#include <filter/fir_filter_ccc.h>
+#include <gnuradio/filter/fractional_interpolator_cc.h>
+#include <gnuradio/filter/fir_filter_ccc.h>
 
 namespace gr {
   namespace channels {
