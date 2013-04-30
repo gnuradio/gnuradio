@@ -80,7 +80,7 @@ namespace gr {
       try {
         current_time = boost::filesystem::last_write_time(filename);
         if(current_time>last_write) {
-          std::cout<<"GNURadio Reloading logger configuration:"<<filename<<std::endl;
+          //std::cout<<"GNURadio Reloading logger configuration:"<<filename<<std::endl;
           last_write = current_time;
           // Should we wipe out all old configuration or just add the
           //     new?  Just adding...  logger_reset_config();
@@ -109,7 +109,7 @@ namespace gr {
       if(instance.watch_thread!=NULL)
         stop_watch();
       // Load configuration   
-      std::cout<<"GNURadio Loading logger configuration:"<<instance.filename<<std::endl;
+      //std::cout<<"GNURadio Loading logger configuration:"<<instance.filename<<std::endl;
       logger_configured = logger_load_config(instance.filename);
       // Start watch if required
       if(instance.watch_period>0) {
@@ -174,7 +174,7 @@ namespace gr {
         return true;
       }
       catch(log4cpp::ConfigureFailure &e) {
-        std::cout << "Logger config failed :" << e.what() << std::endl;
+        std::cerr << "Logger config failed :" << e.what() << std::endl;
       }
     }
     return false;
