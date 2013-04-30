@@ -21,7 +21,7 @@
 #ifndef INCLUDED_FCD_SOURCE_C_H
 #define INCLUDED_FCD_SOURCE_C_H
 
-#include <fcd_api.h>
+#include <gnuradio/fcd/fcd_api.h>
 #include <gnuradio/hier_block2.h>
 
 class fcd_source_c;
