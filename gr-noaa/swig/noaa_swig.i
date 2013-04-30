@@ -28,14 +28,14 @@
 %include "noaa_swig_doc.i"
 
 %{
-#include "noaa/hrpt_decoder.h"
-#include "noaa/hrpt_deframer.h"
-#include "noaa/hrpt_pll_cf.h"
+#include "gnuradio/noaa/hrpt_decoder.h"
+#include "gnuradio/noaa/hrpt_deframer.h"
+#include "gnuradio/noaa/hrpt_pll_cf.h"
 %}
 
-%include "noaa/hrpt_decoder.h"
-%include "noaa/hrpt_deframer.h"
-%include "noaa/hrpt_pll_cf.h"
+%include "gnuradio/noaa/hrpt_decoder.h"
+%include "gnuradio/noaa/hrpt_deframer.h"
+%include "gnuradio/noaa/hrpt_pll_cf.h"
 
 GR_SWIG_BLOCK_MAGIC2(noaa, hrpt_decoder);
 GR_SWIG_BLOCK_MAGIC2(noaa, hrpt_deframer);

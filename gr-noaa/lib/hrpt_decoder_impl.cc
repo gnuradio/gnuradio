@@ -25,7 +25,7 @@
 #endif
 
 #include "hrpt_decoder_impl.h"
-#include <noaa/hrpt.h>
+#include <gnuradio/noaa/hrpt.h>
 #include <gnuradio/io_signature.h>
 #include <cstdio>
 

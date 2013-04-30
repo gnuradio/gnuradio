@@ -26,7 +26,7 @@
 
 #include "hrpt_deframer_impl.h"
 #include <gnuradio/io_signature.h>
-#include <noaa/hrpt.h>
+#include <gnuradio/noaa/hrpt.h>
 #include <cstring>
 #include <cstdio>
 

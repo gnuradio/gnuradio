@@ -23,7 +23,7 @@
 #ifndef INCLUDED_NOAA_HRPT_DECODER_IMPL_H
 #define INCLUDED_NOAA_HRPT_DECODER_IMPL_H
 
-#include <noaa/hrpt_decoder.h>
+#include <gnuradio/noaa/hrpt_decoder.h>
 
 namespace gr {
   namespace noaa {

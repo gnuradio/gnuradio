@@ -23,7 +23,7 @@
 #ifndef INCLUDED_NOAA_HRPT_PLL_CF_IMPL_H
 #define INCLUDED_NOAA_HRPT_PLL_CF_IMPL_H
 
-#include <noaa/hrpt_pll_cf.h>
+#include <gnuradio/noaa/hrpt_pll_cf.h>
 
 namespace gr {
   namespace noaa {
