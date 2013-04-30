@@ -20,32 +20,32 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef INCLUDED_WAVELET_WVPS_FF_H
-#define INCLUDED_WAVELET_WVPS_FF_H
+#ifndef INCLUDED_WAVELET_WAVELET_FF_H
+#define INCLUDED_WAVELET_WAVELET_FF_H
 
-#include <wavelet/api.h>
-#include <gnuradio/sync_decimator.h>
-
-class wavelet_wvps_ff;
+#include <gnuradio/wavelet/api.h>
+#include <gnuradio/sync_block.h>
 
 namespace gr { 
   namespace wavelet {
 
-    class WAVELET_API wvps_ff : virtual public sync_block
+    class WAVELET_API wavelet_ff : virtual public sync_block
     {
     public:
 
-      // gr::wavelet::wvps_ff::sptr
-      typedef boost::shared_ptr<wvps_ff> sptr;
+      // gr::wavelet::wavelet_ff:sptr
+      typedef boost::shared_ptr<wavelet_ff> sptr;
 
       /*!
-       * \brief computes the Wavelet Power Spectrum from a set of wavelet coefficients
+       * \brief compute wavelet transform using gsl routines
        * \ingroup wavelet_blk
        */
-      static sptr make(int ilen);
+      static sptr make(int size = 1024,
+				   int order = 20,
+				   bool forward = true);
     };
 
   } /* namespace wavelet */
 } /* namespace gr */
 
-#endif /* INCLUDED_WAVELET_WVPS_FF_H */
+#endif /* INCLUDED_WAVELET_WAVELET_FF_H */

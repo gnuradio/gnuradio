@@ -22,7 +22,7 @@
 #ifndef INCLUDED_WAVELET_WAVELET_FF_IMPL_H
 #define INCLUDED_WAVELET_WAVELET_FF_IMPL_H
 
-#include <wavelet/wavelet_ff.h>
+#include <gnuradio/wavelet/wavelet_ff.h>
 #include <gsl/gsl_errno.h>
 #include <gsl/gsl_wavelet.h>
 

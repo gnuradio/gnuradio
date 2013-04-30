@@ -23,8 +23,8 @@
 #ifndef	INCLUDED_WAVELET_SQUASH_FF_IMPL_H
 #define	INCLUDED_WAVELET_SQUASH_FF_IMPL_H
 
-#include <wavelet/api.h>
-#include <wavelet/squash_ff.h>
+#include <gnuradio/wavelet/api.h>
+#include <gnuradio/wavelet/squash_ff.h>
 #include <gsl/gsl_errno.h>
 #include <gsl/gsl_interp.h>
 #include <gsl/gsl_spline.h>

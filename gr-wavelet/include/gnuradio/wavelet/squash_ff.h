@@ -20,32 +20,32 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef INCLUDED_WAVELET_WAVELET_FF_H
-#define INCLUDED_WAVELET_WAVELET_FF_H
+#ifndef	INCLUDED_WAVELET_SQUASH_FF_H
+#define	INCLUDED_WAVELET_SQUASH_FF_H
 
-#include <wavelet/api.h>
+#include <gnuradio/wavelet/api.h>
 #include <gnuradio/sync_block.h>
 
 namespace gr { 
   namespace wavelet {
 
-    class WAVELET_API wavelet_ff : virtual public sync_block
+    class WAVELET_API squash_ff : virtual public sync_block 
     {
     public:
-
-      // gr::wavelet::wavelet_ff:sptr
-      typedef boost::shared_ptr<wavelet_ff> sptr;
-
+      
+      // gr::wavelet::squash_ff::sptr
+      typedef boost::shared_ptr<squash_ff> sptr;
+      
       /*!
-       * \brief compute wavelet transform using gsl routines
-       * \ingroup wavelet_blk
+       * \brief implements cheap resampling of spectrum directly from
+       * spectral points, using gsl interpolation
+       * \ingroup misc
        */
-      static sptr make(int size = 1024,
-				   int order = 20,
-				   bool forward = true);
+      static sptr make(const std::vector<float> &igrid,
+				   const std::vector<float> &ogrid);
     };
 
   } /* namespace wavelet */
 } /* namespace gr */
 
-#endif /* INCLUDED_WAVELET_WAVELET_FF_H */
+#endif

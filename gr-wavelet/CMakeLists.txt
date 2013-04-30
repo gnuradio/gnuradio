@@ -84,7 +84,7 @@ CPACK_COMPONENT("wavelet_swig"
 ########################################################################
 # Add subdirectories
 ########################################################################
-add_subdirectory(include/wavelet)
+add_subdirectory(include/gnuradio/wavelet)
 add_subdirectory(lib)
 if(ENABLE_PYTHON)
     add_subdirectory(swig)

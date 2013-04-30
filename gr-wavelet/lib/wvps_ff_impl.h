@@ -23,7 +23,7 @@
 #ifndef INCLUDED_WAVELET_WVPS_FF_IMPL_H
 #define INCLUDED_WAVELET_WVPS_FF_IMPL_H
 
-#include <wavelet/wvps_ff.h>
+#include <gnuradio/wavelet/wvps_ff.h>
 
 namespace gr {
   namespace wavelet {
