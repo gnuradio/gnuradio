@@ -23,7 +23,7 @@
 #ifndef INCLUDED_AUDIO_PORTAUDIO_SOURCE_H
 #define INCLUDED_AUDIO_PORTAUDIO_SOURCE_H
 
-#include <audio/source.h>
+#include <gnuradio/audio/source.h>
 #include <gnuradio/buffer.h>
 #include <gnuradio/thread/thread.h>
 #include <string>

@@ -22,7 +22,7 @@
 #ifndef INCLUDED_AUDIO_PORTAUDIO_SINK_H
 #define INCLUDED_AUDIO_PORTAUDIO_SINK_H
 
-#include <audio/sink.h>
+#include <gnuradio/audio/sink.h>
 #include <gnuradio/buffer.h>
 #include <gnuradio/thread/thread.h>
 #include <string>

@@ -23,7 +23,7 @@
 #ifndef INCLUDED_GR_AUDIO_SINK_H
 #define INCLUDED_GR_AUDIO_SINK_H
 
-#include <audio/api.h>
+#include <gnuradio/audio/api.h>
 #include <gnuradio/sync_block.h>
 
 namespace gr {

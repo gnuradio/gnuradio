@@ -23,7 +23,7 @@
 #ifndef INCLUDED_AUDIO_OSX_SOURCE_H
 #define INCLUDED_AUDIO_OSX_SOURCE_H
 
-#include <audio/source.h>
+#include <gnuradio/audio/source.h>
 #include <string>
 #include <AudioToolbox/AudioToolbox.h>
 #include <AudioUnit/AudioUnit.h>

@@ -27,7 +27,7 @@
 #define ALSA_PCM_NEW_HW_PARAMS_API
 #define ALSA_PCM_NEW_SW_PARAMS_API
 
-#include <audio/source.h>
+#include <gnuradio/audio/source.h>
 #include <alsa/asoundlib.h>
 #include <string>
 #include <stdexcept>

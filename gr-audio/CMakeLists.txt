@@ -86,7 +86,7 @@ CPACK_COMPONENT("audio_swig"
 ########################################################################
 # Add subdirectories
 ########################################################################
-add_subdirectory(include/audio)
+add_subdirectory(include/gnuradio/audio)
 add_subdirectory(lib)
 add_subdirectory(doc)
 if(ENABLE_PYTHON)

@@ -22,8 +22,8 @@
 #ifndef INCLUDED_GR_AUDIO_REGISTRY_H
 #define INCLUDED_GR_AUDIO_REGISTRY_H
 
-#include <audio/sink.h>
-#include <audio/source.h>
+#include <gnuradio/audio/sink.h>
+#include <gnuradio/audio/source.h>
 #include <string>
 
 namespace gr {
