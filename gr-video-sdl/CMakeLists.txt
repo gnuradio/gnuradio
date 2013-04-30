@@ -81,7 +81,7 @@ CPACK_COMPONENT("video_sdl_swig"
 ########################################################################
 # Add subdirectories
 ########################################################################
-add_subdirectory(include/video_sdl)
+add_subdirectory(include/gnuradio/video_sdl)
 add_subdirectory(lib)
 if(ENABLE_PYTHON)
     add_subdirectory(swig)
