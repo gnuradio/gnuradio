@@ -23,7 +23,7 @@
 #ifndef INCLUDED_CHANNELS_CHANNEL_MODEL_H
 #define INCLUDED_CHANNELS_CHANNEL_MODEL_H
 
-#include <channels/api.h>
+#include <gnuradio/channels/api.h>
 #include <gnuradio/hier_block2.h>
 #include <gnuradio/types.h>
 

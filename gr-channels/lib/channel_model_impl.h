@@ -28,7 +28,7 @@
 #include <gnuradio/blocks/multiply_cc.h>
 #include <gnuradio/analog/sig_source_c.h>
 #include <gnuradio/analog/fastnoise_source_c.h>
-#include <channels/channel_model.h>
+#include <gnuradio/channels/channel_model.h>
 #include <filter/fractional_interpolator_cc.h>
 #include <filter/fir_filter_ccc.h>
 

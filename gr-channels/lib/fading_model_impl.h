@@ -24,7 +24,7 @@
 #define INCLUDED_CHANNELS_CHANNEL_MODEL_IMPL_H
 
 #include <gnuradio/sync_block.h>
-#include <channels/fading_model.h>
+#include <gnuradio/channels/fading_model.h>
 
 //#include <iostream>
 #include <boost/format.hpp>

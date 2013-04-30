@@ -23,7 +23,7 @@
 #ifndef INCLUDED_CHANNELS_FADING_MODEL_H
 #define INCLUDED_CHANNELS_FADING_MODEL_H
 
-#include <channels/api.h>
+#include <gnuradio/channels/api.h>
 #include <gnuradio/sync_block.h>
 #include <gnuradio/types.h>
 
