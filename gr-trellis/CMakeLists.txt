@@ -100,7 +100,7 @@ CPACK_COMPONENT("trellis_swig"
 ########################################################################
 # Add subdirectories
 ########################################################################
-add_subdirectory(include/trellis)
+add_subdirectory(include/gnuradio/trellis)
 add_subdirectory(lib)
 add_subdirectory(doc)
 if(ENABLE_PYTHON)

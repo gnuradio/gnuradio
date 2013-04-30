@@ -23,7 +23,7 @@
 #ifndef INCLUDED_TRELLIS_FSM_H
 #define INCLUDED_TRELLIS_FSM_H
 
-#include <trellis/api.h>
+#include <gnuradio/trellis/api.h>
 #include <vector>
 #include <iosfwd>
 

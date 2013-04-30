@@ -26,8 +26,8 @@
 #include <cmath>
 #include <vector>
 #include <gnuradio/digital/metric_type.h>
-#include <trellis/fsm.h>
-#include <trellis/interleaver.h>
+#include <gnuradio/trellis/fsm.h>
+#include <gnuradio/trellis/interleaver.h>
 
 namespace gr {
   namespace trellis {

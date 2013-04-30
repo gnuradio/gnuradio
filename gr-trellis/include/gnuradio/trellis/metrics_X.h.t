@@ -25,36 +25,31 @@
 #ifndef @GUARD_NAME@
 #define @GUARD_NAME@
 
-#include <trellis/api.h>
-#include <trellis/fsm.h>
-#include <trellis/interleaver.h>
-#include <gnuradio/sync_block.h>
-#include <vector>
+#include <gnuradio/trellis/api.h>
+#include <gnuradio/trellis/calc_metric.h>
+#include <gnuradio/block.h>
 
 namespace gr {
   namespace trellis {
 
     /*!
-     * \brief SCCC encoder.
+     * \brief Evaluate metrics for use by the Viterbi algorithm.
      * \ingroup trellis_coding_blk
      */
-    class TRELLIS_API @NAME@ : virtual public sync_block
+    class TRELLIS_API @NAME@ : virtual public block
     {
     public:
       // gr::trellis::@BASE_NAME@::sptr
       typedef boost::shared_ptr<@BASE_NAME@> sptr;
 
-      static sptr make(const fsm &FSMo, int STo,
-		       const fsm &FSMi, int STi,
-		       const interleaver &INTERLEAVER,
-		       int blocklength);
+      static sptr make(int O, int D, const std::vector<@I_TYPE@> &TABLE,
+		       digital::trellis_metric_type_t TYPE);
 
-      virtual fsm FSMo() const = 0;
-      virtual int STo() const = 0;
-      virtual fsm FSMi() const = 0;
-      virtual int STi() const = 0;
-      virtual interleaver INTERLEAVER() const = 0;
-      virtual int blocklength() const = 0;
+      virtual int O() const = 0;
+      virtual int D() const = 0;
+      virtual digital::trellis_metric_type_t TYPE() const = 0;
+      virtual std::vector<@I_TYPE@> TABLE() const = 0;
+      virtual void set_TABLE(const std::vector<@I_TYPE@> &table) = 0;
     };
 
   } /* namespace trellis */

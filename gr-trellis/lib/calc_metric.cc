@@ -22,7 +22,7 @@
 
 #include <float.h>
 #include <stdexcept>
-#include <trellis/calc_metric.h>
+#include <gnuradio/trellis/calc_metric.h>
 
 namespace gr {
   namespace trellis {

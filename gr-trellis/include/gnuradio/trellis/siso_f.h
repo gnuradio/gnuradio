@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2004,2010-2012 Free Software Foundation, Inc.
+ * Copyright 2004,2012 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -20,32 +20,42 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef INCLUDED_TRELLIS_CONSTELLATION_METRICS_CF_H
-#define INCLUDED_TRELLIS_CONSTELLATION_METRICS_CF_H
+#ifndef INCLUDED_TRELLIS_SISO_F_H
+#define INCLUDED_TRELLIS_SISO_F_H
 
-#include <trellis/api.h>
+#include <gnuradio/trellis/api.h>
+#include <gnuradio/trellis/fsm.h>
+#include <gnuradio/trellis/siso_type.h>
+#include <gnuradio/trellis/core_algorithms.h>
 #include <gnuradio/block.h>
-#include <gnuradio/digital/constellation.h>
-#include <gnuradio/digital/metric_type.h>
 
 namespace gr {
   namespace trellis {
 
     /*!
-     * \brief Evaluate metrics for use by the Viterbi algorithm.
-     * \ingroup trellis_coding_blk
+     *  \ingroup trellis_coding_blk
      */
-    class TRELLIS_API constellation_metrics_cf : virtual public block
+    class TRELLIS_API siso_f : virtual public block
     {
     public:
-      // gr::trellis::constellation_metrics_cf::sptr
-      typedef boost::shared_ptr<constellation_metrics_cf> sptr;
+      // gr::trellis::siso_f::sptr
+      typedef boost::shared_ptr<siso_f> sptr;
 
-      static sptr make(digital::constellation_sptr constellation,
-		       digital::trellis_metric_type_t TYPE);
+      static sptr make(const fsm &FSM, int K,
+		       int S0, int SK,
+		       bool POSTI, bool POSTO,
+		       siso_type_t d_SISO_TYPE);
+
+      virtual fsm FSM() const = 0;
+      virtual int K() const = 0; 
+      virtual int S0() const = 0;
+      virtual int SK() const = 0;
+      virtual bool POSTI() const = 0;
+      virtual bool POSTO() const = 0;
+      virtual siso_type_t SISO_TYPE() const = 0;
     };
 
   } /* namespace trellis */
 } /* namespace gr */
 
-#endif /* INCLUDED_TRELLIS_CONSTELLATION_METRICS_CF_H */
+#endif /* INCLUDED_TRELLIS_SISO_F_H */

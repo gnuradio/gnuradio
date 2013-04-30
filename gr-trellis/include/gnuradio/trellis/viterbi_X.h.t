@@ -25,12 +25,10 @@
 #ifndef @GUARD_NAME@
 #define @GUARD_NAME@
 
-#include <trellis/api.h>
-#include <trellis/fsm.h>
-#include <trellis/interleaver.h>
-#include <trellis/siso_type.h>
+#include <gnuradio/trellis/api.h>
+#include <gnuradio/trellis/fsm.h>
+#include <gnuradio/trellis/core_algorithms.h>
 #include <gnuradio/block.h>
-#include <vector>
 
 namespace gr {
   namespace trellis {
@@ -44,23 +42,13 @@ namespace gr {
       // gr::trellis::@BASE_NAME@::sptr
       typedef boost::shared_ptr<@BASE_NAME@> sptr;
 
-      static sptr make(const fsm &FSMo, int STo0, int SToK,
-		       const fsm &FSMi, int STi0, int STiK,
-		       const interleaver &INTERLEAVER,
-		       int blocklength,
-		       int repetitions,
-		       siso_type_t SISO_TYPE);
+      static sptr make(const fsm &FSM, int K,
+		       int S0, int SK);
 
-      virtual fsm FSMo() const = 0;
-      virtual fsm FSMi() const = 0;
-      virtual int STo0() const = 0;
-      virtual int SToK() const = 0;
-      virtual int STi0() const = 0;
-      virtual int STiK() const = 0;
-      virtual interleaver INTERLEAVER() const = 0;
-      virtual int blocklength() const = 0;
-      virtual int repetitions() const = 0;
-      virtual siso_type_t SISO_TYPE() const = 0;
+      virtual fsm FSM() const = 0;
+      virtual int K() const = 0;
+      virtual int S0() const = 0;
+      virtual int SK() const = 0;
     };
 
   } /* namespace trellis */

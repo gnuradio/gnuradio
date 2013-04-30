@@ -25,36 +25,42 @@
 #ifndef @GUARD_NAME@
 #define @GUARD_NAME@
 
-#include <trellis/api.h>
-#include <trellis/fsm.h>
-#include <trellis/interleaver.h>
-#include <gnuradio/sync_block.h>
+#include <gnuradio/trellis/api.h>
+#include <gnuradio/trellis/fsm.h>
+#include <gnuradio/trellis/interleaver.h>
+#include <gnuradio/trellis/siso_type.h>
+#include <gnuradio/block.h>
 #include <vector>
 
 namespace gr {
   namespace trellis {
 
     /*!
-     * \brief PCCC encoder.
-     * \ingroup trellis_coding_blk
+     *  \ingroup trellis_coding_blk
      */
-    class TRELLIS_API @NAME@ : virtual public sync_block
+    class TRELLIS_API @NAME@ : virtual public block
     {
     public:
       // gr::trellis::@BASE_NAME@::sptr
       typedef boost::shared_ptr<@BASE_NAME@> sptr;
 
-      static sptr make(const fsm &FSM1, int ST1,
-		       const fsm &FSM2, int ST2,
+      static sptr make(const fsm &FSM1, int ST10, int ST1K,
+		       const fsm &FSM2, int ST20, int ST2K,
 		       const interleaver &INTERLEAVER,
-		       int blocklength);
+		       int blocklength,
+		       int repetitions,
+		       siso_type_t SISO_TYPE);
 
       virtual fsm FSM1() const = 0;
-      virtual int ST1() const = 0;
       virtual fsm FSM2() const = 0;
-      virtual int ST2() const = 0;
+      virtual int ST10() const = 0;
+      virtual int ST1K() const = 0;
+      virtual int ST20() const = 0;
+      virtual int ST2K() const = 0;
       virtual interleaver INTERLEAVER() const = 0;
       virtual int blocklength() const = 0;
+      virtual int repetitions() const = 0;
+      virtual siso_type_t SISO_TYPE() const = 0;
     };
 
   } /* namespace trellis */

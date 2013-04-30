@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2002,2012 Free Software Foundation, Inc.
+ * Copyright 2004,2010-2012 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -20,39 +20,32 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef INCLUDED_TRELLIS_INTERLEAVER_H
-#define INCLUDED_TRELLIS_INTERLEAVER_H
+#ifndef INCLUDED_TRELLIS_CONSTELLATION_METRICS_CF_H
+#define INCLUDED_TRELLIS_CONSTELLATION_METRICS_CF_H
 
-#include <trellis/api.h>
-#include <vector>
+#include <gnuradio/trellis/api.h>
+#include <gnuradio/block.h>
+#include <gnuradio/digital/constellation.h>
+#include <gnuradio/digital/metric_type.h>
 
 namespace gr {
   namespace trellis {
 
     /*!
-     * \brief  INTERLEAVER class
+     * \brief Evaluate metrics for use by the Viterbi algorithm.
      * \ingroup trellis_coding_blk
      */
-    class TRELLIS_API interleaver
+    class TRELLIS_API constellation_metrics_cf : virtual public block
     {
-    private:
-      int d_K;
-      std::vector<int> d_INTER;
-      std::vector<int> d_DEINTER;
-
     public:
-      interleaver();
-      interleaver(const interleaver & INTERLEAVER);
-      interleaver(int K, const std::vector<int> & INTER);
-      interleaver(const char *name);
-      interleaver(int K, int seed);
-      int K () const { return d_K; }
-      const std::vector<int> & INTER() const { return d_INTER; }
-      const std::vector<int> & DEINTER() const { return d_DEINTER; }
-      void write_interleaver_txt(std::string filename);
+      // gr::trellis::constellation_metrics_cf::sptr
+      typedef boost::shared_ptr<constellation_metrics_cf> sptr;
+
+      static sptr make(digital::constellation_sptr constellation,
+		       digital::trellis_metric_type_t TYPE);
     };
 
   } /* namespace trellis */
 } /* namespace gr */
 
-#endif /* INCLUDED_TRELLIS_INTERLEAVER_H */
+#endif /* INCLUDED_TRELLIS_CONSTELLATION_METRICS_CF_H */

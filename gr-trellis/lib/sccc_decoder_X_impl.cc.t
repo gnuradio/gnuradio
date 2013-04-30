@@ -29,7 +29,7 @@
 #include "@NAME@.h"
 #include <gnuradio/io_signature.h>
 #include <iostream>
-#include <trellis/core_algorithms.h>
+#include <gnuradio/trellis/core_algorithms.h>
 
 namespace gr {
   namespace trellis {

@@ -23,7 +23,7 @@
 #ifndef INCLUDED_TRELLIS_PERMUTATION_H
 #define INCLUDED_TRELLIS_PERMUTATION_H
 
-#include <trellis/api.h>
+#include <gnuradio/trellis/api.h>
 #include <vector>
 #include <gnuradio/sync_block.h>
 

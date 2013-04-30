@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2004 Free Software Foundation, Inc.
+ * Copyright 2004,2012 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -25,52 +25,36 @@
 #ifndef @GUARD_NAME@
 #define @GUARD_NAME@
 
-#include <trellis/api.h>
-#include <trellis/fsm.h>
-#include <trellis/interleaver.h>
-#include <trellis/calc_metric.h>
-#include <trellis/siso_type.h>
-#include <gnuradio/block.h>
+#include <gnuradio/trellis/api.h>
+#include <gnuradio/trellis/fsm.h>
+#include <gnuradio/trellis/interleaver.h>
+#include <gnuradio/sync_block.h>
 #include <vector>
 
 namespace gr {
   namespace trellis {
 
     /*!
-     *  \ingroup trellis_coding_blk
+     * \brief SCCC encoder.
+     * \ingroup trellis_coding_blk
      */
-    class TRELLIS_API @NAME@ : virtual public block
+    class TRELLIS_API @NAME@ : virtual public sync_block
     {
     public:
       // gr::trellis::@BASE_NAME@::sptr
       typedef boost::shared_ptr<@BASE_NAME@> sptr;
 
-      static sptr make(const fsm &FSMo, int STo0, int SToK,
-		       const fsm &FSMi, int STi0, int STiK,
+      static sptr make(const fsm &FSMo, int STo,
+		       const fsm &FSMi, int STi,
 		       const interleaver &INTERLEAVER,
-		       int blocklength,
-		       int repetitions,
-		       siso_type_t SISO_TYPE,
-		       int D,
-		       const std::vector<@I_TYPE@> &TABLE,
-		       digital::trellis_metric_type_t METRIC_TYPE,
-		       float scaling);
+		       int blocklength);
 
-      virtual fsm FSM1() const = 0;
-      virtual fsm FSM2() const = 0;
-      virtual int ST10() const = 0;
-      virtual int ST1K() const = 0;
-      virtual int ST20() const = 0;
-      virtual int ST2K() const = 0;
+      virtual fsm FSMo() const = 0;
+      virtual int STo() const = 0;
+      virtual fsm FSMi() const = 0;
+      virtual int STi() const = 0;
       virtual interleaver INTERLEAVER() const = 0;
       virtual int blocklength() const = 0;
-      virtual int repetitions() const = 0;
-      virtual int D() const = 0;
-      virtual std::vector<@I_TYPE@> TABLE() const = 0;
-      virtual digital::trellis_metric_type_t METRIC_TYPE() const = 0;
-      virtual siso_type_t SISO_TYPE() const = 0;
-      virtual float scaling() const = 0;
-      virtual void set_scaling(float scaling) = 0;
     };
 
   } /* namespace trellis */

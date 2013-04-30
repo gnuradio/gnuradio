@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2004,2012 Free Software Foundation, Inc.
+ * Copyright 2004 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -25,11 +25,11 @@
 #ifndef @GUARD_NAME@
 #define @GUARD_NAME@
 
-#include <trellis/api.h>
-#include <trellis/fsm.h>
-#include <trellis/interleaver.h>
-#include <trellis/calc_metric.h>
-#include <trellis/siso_type.h>
+#include <gnuradio/trellis/api.h>
+#include <gnuradio/trellis/fsm.h>
+#include <gnuradio/trellis/interleaver.h>
+#include <gnuradio/trellis/calc_metric.h>
+#include <gnuradio/trellis/siso_type.h>
 #include <gnuradio/block.h>
 #include <vector>
 
@@ -56,12 +56,12 @@ namespace gr {
 		       digital::trellis_metric_type_t METRIC_TYPE,
 		       float scaling);
 
-      virtual fsm FSMo() const = 0;
-      virtual fsm FSMi() const = 0;
-      virtual int STo0() const = 0;
-      virtual int SToK() const = 0;
-      virtual int STi0() const = 0;
-      virtual int STiK() const = 0;
+      virtual fsm FSM1() const = 0;
+      virtual fsm FSM2() const = 0;
+      virtual int ST10() const = 0;
+      virtual int ST1K() const = 0;
+      virtual int ST20() const = 0;
+      virtual int ST2K() const = 0;
       virtual interleaver INTERLEAVER() const = 0;
       virtual int blocklength() const = 0;
       virtual int repetitions() const = 0;
@@ -69,7 +69,7 @@ namespace gr {
       virtual std::vector<@I_TYPE@> TABLE() const = 0;
       virtual digital::trellis_metric_type_t METRIC_TYPE() const = 0;
       virtual siso_type_t SISO_TYPE() const = 0;
-      virtual float scaling() const  = 0;
+      virtual float scaling() const = 0;
       virtual void set_scaling(float scaling) = 0;
     };
 

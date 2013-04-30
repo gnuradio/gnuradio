@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2004,2012 Free Software Foundation, Inc.
+ * Copyright 2002,2012 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -20,35 +20,39 @@
  * Boston, MA 02110-1301, USA.
  */
 
-// @WARNING@
+#ifndef INCLUDED_TRELLIS_INTERLEAVER_H
+#define INCLUDED_TRELLIS_INTERLEAVER_H
 
-#ifndef @GUARD_NAME@
-#define @GUARD_NAME@
-
-#include <trellis/api.h>
-#include <trellis/fsm.h>
-#include <gnuradio/sync_block.h>
+#include <gnuradio/trellis/api.h>
+#include <vector>
 
 namespace gr {
   namespace trellis {
 
     /*!
-     * \brief Convolutional encoder.
+     * \brief  INTERLEAVER class
      * \ingroup trellis_coding_blk
      */
-    class TRELLIS_API @NAME@ : virtual public sync_block
+    class TRELLIS_API interleaver
     {
+    private:
+      int d_K;
+      std::vector<int> d_INTER;
+      std::vector<int> d_DEINTER;
+
     public:
-      // gr::trellis::@BASE_NAME@::sptr
-      typedef boost::shared_ptr<@BASE_NAME@> sptr;
-
-      static sptr make(const fsm &FSM, int ST);
-
-      virtual fsm FSM() const = 0;
-      virtual int ST() const = 0;
+      interleaver();
+      interleaver(const interleaver & INTERLEAVER);
+      interleaver(int K, const std::vector<int> & INTER);
+      interleaver(const char *name);
+      interleaver(int K, int seed);
+      int K () const { return d_K; }
+      const std::vector<int> & INTER() const { return d_INTER; }
+      const std::vector<int> & DEINTER() const { return d_DEINTER; }
+      void write_interleaver_txt(std::string filename);
     };
 
   } /* namespace trellis */
 } /* namespace gr */
 
-#endif /* @GUARD_NAME@ */
+#endif /* INCLUDED_TRELLIS_INTERLEAVER_H */
