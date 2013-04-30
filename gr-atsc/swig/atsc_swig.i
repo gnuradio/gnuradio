@@ -26,26 +26,26 @@
 %include "atsc_swig_doc.i"
 
 %{
-#include <atsc/randomizer.h>
-#include <atsc/derandomizer.h>
-#include <atsc/rs_encoder.h>
-#include <atsc/rs_decoder.h>
-#include <atsc/interleaver.h>
-#include <atsc/deinterleaver.h>
-#include <atsc/trellis_encoder.h>
-#include <atsc/viterbi_decoder.h>
-#include <atsc/ds_to_softds.h>
-#include <atsc/field_sync_mux.h>
-#include <atsc/field_sync_demux.h>
-#include <atsc/equalizer.h>
-#include <atsc/fs_checker.h>
-#include <atsc/bit_timing_loop.h>
-#include <atsc/fpll.h>
-#include <atsc/depad.h>
-#include <atsc/pad.h>
+#include <gnuradio/atsc/randomizer.h>
+#include <gnuradio/atsc/derandomizer.h>
+#include <gnuradio/atsc/rs_encoder.h>
+#include <gnuradio/atsc/rs_decoder.h>
+#include <gnuradio/atsc/interleaver.h>
+#include <gnuradio/atsc/deinterleaver.h>
+#include <gnuradio/atsc/trellis_encoder.h>
+#include <gnuradio/atsc/viterbi_decoder.h>
+#include <gnuradio/atsc/ds_to_softds.h>
+#include <gnuradio/atsc/field_sync_mux.h>
+#include <gnuradio/atsc/field_sync_demux.h>
+#include <gnuradio/atsc/equalizer.h>
+#include <gnuradio/atsc/fs_checker.h>
+#include <gnuradio/atsc/bit_timing_loop.h>
+#include <gnuradio/atsc/fpll.h>
+#include <gnuradio/atsc/depad.h>
+#include <gnuradio/atsc/pad.h>
 %}
 
-%include "atsc/consts.h"
+%include "gnuradio/atsc/consts.h"
 
 %constant int sizeof_atsc_mpeg_packet = sizeof(atsc_mpeg_packet);
 %constant int sizeof_atsc_mpeg_packet_no_sync = sizeof(atsc_mpeg_packet_no_sync);

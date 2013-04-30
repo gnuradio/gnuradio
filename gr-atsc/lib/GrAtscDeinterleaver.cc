@@ -20,7 +20,7 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include <atsc/GrAtscDeinterleaver.h>
+#include <gnuradio/atsc/GrAtscDeinterleaver.h>
 
 // typedefs for fundamental i/o types
 

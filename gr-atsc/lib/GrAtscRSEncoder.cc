@@ -20,7 +20,7 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include <atsc/GrAtscRSEncoder.h>
+#include <gnuradio/atsc/GrAtscRSEncoder.h>
 
 // typedefs for fundamental i/o types
 

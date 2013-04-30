@@ -26,7 +26,7 @@
 #include <cppunit/extensions/HelperMacros.h>
 #include <cppunit/TestCase.h>
 
-#include <atsc/reed_solomon_impl.h>
+#include <gnuradio/atsc/reed_solomon_impl.h>
 
 class qa_atsci_reed_solomon : public CppUnit::TestCase {
 

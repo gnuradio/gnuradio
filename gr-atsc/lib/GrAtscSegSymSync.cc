@@ -20,8 +20,8 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include <atsc/GrAtscSegSymSync.h>
-#include <atsc/GrAtscSegSymSyncImpl_export.h>
+#include <gnuradio/atsc/GrAtscSegSymSync.h>
+#include <gnuradio/atsc/GrAtscSegSymSyncImpl_export.h>
 #include <iostream>
 #include <assert.h>
 

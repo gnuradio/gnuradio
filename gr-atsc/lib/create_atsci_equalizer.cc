@@ -20,10 +20,10 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include <atsc/create_atsci_equalizer.h>
-#include <atsc/equalizer_nop_impl.h>
-#include <atsc/equalizer_lms_impl.h>
-#include <atsc/equalizer_lms2_impl.h>
+#include <gnuradio/atsc/create_atsci_equalizer.h>
+#include <gnuradio/atsc/equalizer_nop_impl.h>
+#include <gnuradio/atsc/equalizer_lms_impl.h>
+#include <gnuradio/atsc/equalizer_lms2_impl.h>
 
 atsci_equalizer *
 create_atsci_equalizer_nop ()

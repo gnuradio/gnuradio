@@ -24,9 +24,9 @@
 #include <config.h>
 #endif
 
-#include <atsc/randomizer.h>
+#include <gnuradio/atsc/randomizer.h>
 #include <gnuradio/io_signature.h>
-#include <atsc/consts.h>
+#include <gnuradio/atsc/consts.h>
 
 
 atsc_randomizer_sptr

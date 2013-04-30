@@ -20,10 +20,10 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include <atsc/equalizer_lms2_impl.h>
+#include <gnuradio/atsc/equalizer_lms2_impl.h>
 #include <assert.h>
 #include <algorithm>
-#include <atsc/pnXXX_impl.h>
+#include <gnuradio/atsc/pnXXX_impl.h>
 #include <cmath>
 #include <stdlib.h>
 #include <gnuradio/math.h>

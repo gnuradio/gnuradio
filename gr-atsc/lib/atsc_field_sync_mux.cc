@@ -24,10 +24,10 @@
 #include <config.h>
 #endif
 
-#include <atsc/field_sync_mux.h>
+#include <gnuradio/atsc/field_sync_mux.h>
 #include <gnuradio/io_signature.h>
-#include <atsc/consts.h>
-#include <atsc/pnXXX_impl.h>
+#include <gnuradio/atsc/consts.h>
+#include <gnuradio/atsc/pnXXX_impl.h>
 
 
 atsc_field_sync_mux_sptr

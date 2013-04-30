@@ -24,9 +24,9 @@
 #include <config.h>
 #endif
 
-#include <atsc/viterbi_decoder.h>
+#include <gnuradio/atsc/viterbi_decoder.h>
 #include <gnuradio/io_signature.h>
-#include <atsc/consts.h>
+#include <gnuradio/atsc/consts.h>
 #include <iostream>
 
 using std::cerr;

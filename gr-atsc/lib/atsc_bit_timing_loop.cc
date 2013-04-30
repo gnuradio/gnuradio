@@ -24,9 +24,9 @@
 #include <config.h>
 #endif
 
-#include <atsc/bit_timing_loop.h>
+#include <gnuradio/atsc/bit_timing_loop.h>
 #include <gnuradio/io_signature.h>
-#include <atsc/consts.h>
+#include <gnuradio/atsc/consts.h>
 #include <string.h>
 
 // Input rate changed from 20MHz to 19.2 to support usrp at 3 * 6.4MHz

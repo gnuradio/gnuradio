@@ -24,9 +24,9 @@
 #include <config.h>
 #endif
 
-#include <atsc/deinterleaver.h>
+#include <gnuradio/atsc/deinterleaver.h>
 #include <gnuradio/io_signature.h>
-#include <atsc/consts.h>
+#include <gnuradio/atsc/consts.h>
 
 
 atsc_deinterleaver_sptr

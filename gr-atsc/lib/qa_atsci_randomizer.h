@@ -25,7 +25,7 @@
 #include <cppunit/extensions/HelperMacros.h>
 #include <cppunit/TestCase.h>
 
-#include <atsc/randomizer_impl.h>
+#include <gnuradio/atsc/randomizer_impl.h>
 
 class qa_atsci_randomizer : public CppUnit::TestCase {
  private:

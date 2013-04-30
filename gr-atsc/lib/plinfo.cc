@@ -20,7 +20,7 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include <atsc/types.h>
+#include <gnuradio/atsc/types.h>
 #include <assert.h>
 
 void

@@ -20,8 +20,8 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include <atsc/GrAtscEqualizer.h>
-#include <atsc/equalizer_impl.h>
+#include <gnuradio/atsc/GrAtscEqualizer.h>
+#include <gnuradio/atsc/equalizer_impl.h>
 
 // typedefs for fundamental i/o types
 

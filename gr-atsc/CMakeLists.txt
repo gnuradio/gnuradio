@@ -91,7 +91,7 @@ CPACK_COMPONENT("atsc_swig"
 # Add subdirectories
 ########################################################################
 add_subdirectory(lib)
-add_subdirectory(include/atsc)
+add_subdirectory(include/gnuradio/atsc)
 if(ENABLE_PYTHON)
     add_subdirectory(swig)
     add_subdirectory(python)

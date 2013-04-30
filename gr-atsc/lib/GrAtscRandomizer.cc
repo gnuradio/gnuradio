@@ -20,7 +20,7 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include <atsc/GrAtscRandomizer.h>
+#include <gnuradio/atsc/GrAtscRandomizer.h>
 
 // typedefs for fundamental i/o types
 

@@ -24,9 +24,9 @@
 #include <config.h>
 #endif
 
-#include <atsc/trellis_encoder.h>
+#include <gnuradio/atsc/trellis_encoder.h>
 #include <gnuradio/io_signature.h>
-#include <atsc/consts.h>
+#include <gnuradio/atsc/consts.h>
 
 
 atsc_trellis_encoder_sptr

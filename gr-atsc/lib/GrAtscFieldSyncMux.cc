@@ -20,8 +20,8 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include <atsc/GrAtscFieldSyncMux.h>
-#include <atsc/pnXXX_impl.h>
+#include <gnuradio/atsc/GrAtscFieldSyncMux.h>
+#include <gnuradio/atsc/pnXXX_impl.h>
 
 
 // typedefs for fundamental i/o types

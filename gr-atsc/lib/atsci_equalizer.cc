@@ -20,10 +20,10 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include <atsc/equalizer_impl.h>
+#include <gnuradio/atsc/equalizer_impl.h>
 #include <algorithm>
 #include <iostream>
-#include <atsc/types.h>
+#include <gnuradio/atsc/types.h>
 
 using std::cerr;
 using std::endl;

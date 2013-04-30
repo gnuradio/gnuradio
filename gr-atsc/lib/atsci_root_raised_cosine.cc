@@ -20,8 +20,8 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include <atsc/consts.h>
-#include <atsc/root_raised_cosine_impl.h>
+#include <gnuradio/atsc/consts.h>
+#include <gnuradio/atsc/root_raised_cosine_impl.h>
 #include <gnuradio/filter/firdes.h>
 
 vector<float>

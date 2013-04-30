@@ -20,8 +20,8 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include <atsc/GrAtscConvert2xTo20.h>
-#include <atsc/consts.h>
+#include <gnuradio/atsc/GrAtscConvert2xTo20.h>
+#include <gnuradio/atsc/consts.h>
 #include <cmath>
 #include <cstdio>
 

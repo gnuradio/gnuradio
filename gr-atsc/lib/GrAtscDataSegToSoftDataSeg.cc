@@ -20,7 +20,7 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include <atsc/GrAtscDataSegToSoftDataSeg.h>
+#include <gnuradio/atsc/GrAtscDataSegToSoftDataSeg.h>
 
 // typedefs for fundamental i/o types
 

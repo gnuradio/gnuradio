@@ -24,9 +24,9 @@
 #include <config.h>
 #endif
 
-#include <atsc/pad.h>
+#include <gnuradio/atsc/pad.h>
 #include <gnuradio/io_signature.h>
-#include <atsc/types.h>
+#include <gnuradio/atsc/types.h>
 
 static const int INTR = ATSC_MPEG_PKT_LENGTH;
 

@@ -24,9 +24,9 @@
 #include <config.h>
 #endif
 
-#include <atsc/fpll.h>
+#include <gnuradio/atsc/fpll.h>
 #include <gnuradio/io_signature.h>
-#include <atsc/consts.h>
+#include <gnuradio/atsc/consts.h>
 #include <algorithm>
 #include "fpll_btloop_coupling.h"
 #include <gnuradio/math.h>

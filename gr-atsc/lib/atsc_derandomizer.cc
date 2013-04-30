@@ -24,9 +24,9 @@
 #include <config.h>
 #endif
 
-#include <atsc/derandomizer.h>
+#include <gnuradio/atsc/derandomizer.h>
 #include <gnuradio/io_signature.h>
-#include <atsc/consts.h>
+#include <gnuradio/atsc/consts.h>
 
 
 atsc_derandomizer_sptr

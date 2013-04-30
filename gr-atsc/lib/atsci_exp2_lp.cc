@@ -21,7 +21,7 @@
  */
 
 #include <atsc_consts.h>
-#include <atsc/exp2_lp_impl.h>
+#include <gnuradio/atsc/exp2_lp_impl.h>
 #include <stdexcept>
 #include <cmath>
 #include <iostream>

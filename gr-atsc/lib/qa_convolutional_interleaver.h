@@ -26,7 +26,7 @@
 #include <cppunit/extensions/HelperMacros.h>
 #include <cppunit/TestCase.h>
 
-#include <atsc/convolutional_interleaver.h>
+#include <gnuradio/atsc/convolutional_interleaver.h>
 
 class qa_convolutional_interleaver : public CppUnit::TestCase {
  private:

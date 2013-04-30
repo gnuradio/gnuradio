@@ -24,9 +24,9 @@
 #include <config.h>
 #endif
 
-#include <atsc/rs_encoder.h>
+#include <gnuradio/atsc/rs_encoder.h>
 #include <gnuradio/io_signature.h>
-#include <atsc/consts.h>
+#include <gnuradio/atsc/consts.h>
 
 
 atsc_rs_encoder_sptr

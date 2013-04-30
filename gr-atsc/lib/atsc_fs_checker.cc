@@ -24,12 +24,12 @@
 #include <config.h>
 #endif
 
-#include <atsc/fs_checker.h>
-#include <atsc/create_atsci_fs_checker.h>
-#include <atsc/fs_checker_impl.h>
+#include <gnuradio/atsc/fs_checker.h>
+#include <gnuradio/atsc/create_atsci_fs_checker.h>
+#include <gnuradio/atsc/fs_checker_impl.h>
 #include <gnuradio/io_signature.h>
-#include <atsc/consts.h>
-#include <atsc/syminfo_impl.h>
+#include <gnuradio/atsc/consts.h>
+#include <gnuradio/atsc/syminfo_impl.h>
 
 
 atsc_fs_checker_sptr

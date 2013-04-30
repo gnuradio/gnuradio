@@ -20,7 +20,7 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include <atsc/pnXXX_impl.h>
+#include <gnuradio/atsc/pnXXX_impl.h>
 
 const unsigned char atsc_pn511[511] = {
   0,0,0,0,  0,0,0,1,  0,1,1,1,  1,1,1,1,  1,1,0,0,  1,0,1,0,  1,0,1,0,  1,1,1,0,

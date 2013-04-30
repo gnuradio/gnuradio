@@ -20,7 +20,7 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include <atsc/reed_solomon_impl.h>
+#include <gnuradio/atsc/reed_solomon_impl.h>
 #include <assert.h>
 #include <string.h>
 

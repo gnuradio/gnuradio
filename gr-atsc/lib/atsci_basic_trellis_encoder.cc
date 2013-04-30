@@ -20,7 +20,7 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include <atsc/basic_trellis_encoder_impl.h>
+#include <gnuradio/atsc/basic_trellis_encoder_impl.h>
 #include <assert.h>
 
 const unsigned char atsci_basic_trellis_encoder::next_state[32] = {

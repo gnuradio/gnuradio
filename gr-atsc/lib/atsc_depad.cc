@@ -24,9 +24,9 @@
 #include <config.h>
 #endif
 
-#include <atsc/depad.h>
+#include <gnuradio/atsc/depad.h>
 #include <gnuradio/io_signature.h>
-#include <atsc/types.h>
+#include <gnuradio/atsc/types.h>
 
 atsc_depad_sptr
 atsc_make_depad()

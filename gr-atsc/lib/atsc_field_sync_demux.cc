@@ -25,11 +25,11 @@
 #endif
 
 #include <cmath>
-#include <atsc/field_sync_demux.h>
+#include <gnuradio/atsc/field_sync_demux.h>
 #include <gnuradio/io_signature.h>
-#include <atsc/types.h>
-#include <atsc/consts.h>
-#include <atsc/syminfo_impl.h>
+#include <gnuradio/atsc/types.h>
+#include <gnuradio/atsc/consts.h>
+#include <gnuradio/atsc/syminfo_impl.h>
 #include <stdio.h>
 #include <assert.h>
 #include <iostream>
