@@ -20,27 +20,27 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef INCLUDED_VOCODER_G723_24_ENCODE_SB_H
-#define INCLUDED_VOCODER_G723_24_ENCODE_SB_H
+#ifndef INCLUDED_VOCODER_ULAW_DECODE_BS_H
+#define INCLUDED_VOCODER_ULAW_DECODE_BS_H
 
-#include <vocoder/api.h>
+#include <gnuradio/vocoder/api.h>
 #include <gnuradio/sync_block.h>
 
 namespace gr {
   namespace vocoder {
 
     /*!
-     * \brief This block performs g723_24 audio encoding.
+     * \brief This block performs ulaw audio decoding.
      * \ingroup audio_blk
      */
-    class VOCODER_API g723_24_encode_sb : virtual public sync_block
+    class VOCODER_API ulaw_decode_bs : virtual public sync_block
     {
     public:
-      // gr::vocoder::g723_24_encode_sb::sptr
-      typedef boost::shared_ptr<g723_24_encode_sb> sptr;
+      // gr::vocoder::ulaw_decode_bs::sptr
+      typedef boost::shared_ptr<ulaw_decode_bs> sptr;
       
       /*!
-       * \brief Make G722_24 encoder block.
+       * \brief Make ulaw decoder block.
        */
       static sptr make();
     };
@@ -48,4 +48,4 @@ namespace gr {
   } /* namespace vocoder */
 } /* namespace gr */
 
-#endif /* INCLUDED_VOCODER_G723_24_ENCODE_SB_H */
+#endif /* INCLUDED_VOCODER_ULAW_DECODE_BS_H */

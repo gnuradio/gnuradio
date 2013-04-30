@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2005,2011,2013 Free Software Foundation, Inc.
+ * Copyright 2011,2013 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -20,27 +20,27 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef INCLUDED_VOCODER_GSM_FR_DECODE_PS_H
-#define INCLUDED_VOCODER_GSM_FR_DECODE_PS_H
+#ifndef INCLUDED_VOCODER_ALAW_DECODE_BS_H
+#define INCLUDED_VOCODER_ALAW_DECODE_BS_H
 
-#include <vocoder/api.h>
-#include <gnuradio/sync_interpolator.h>
+#include <gnuradio/vocoder/api.h>
+#include <gnuradio/sync_block.h>
 
 namespace gr {
   namespace vocoder {
 
     /*!
-     * \brief GSM 06.10 Full Rate Vocoder Decoder
+     * \brief This block performs alaw audio decoding.
      * \ingroup audio_blk
      */
-    class VOCODER_API gsm_fr_decode_ps : virtual public sync_interpolator
+    class VOCODER_API alaw_decode_bs : virtual public sync_block
     {
     public:
-      // gr::vocoder::gsm_fr_decode_ps::sptr
-      typedef boost::shared_ptr<gsm_fr_decode_ps> sptr;
+      // gr::vocoder::alaw_decode_bs::sptr
+      typedef boost::shared_ptr<alaw_decode_bs> sptr;
       
       /*!
-       * \brief Make GSM decoder block.
+       * \brief Make alaw decoder block.
        */
       static sptr make();
     };
@@ -48,4 +48,4 @@ namespace gr {
   } /* namespace vocoder */
 } /* namespace gr */
 
-#endif /* INCLUDED_VOCODER_GSM_FR_DECODE_PS_H */
+#endif /* INCLUDED_VOCODER_ALAW_DECODE_BS_H */

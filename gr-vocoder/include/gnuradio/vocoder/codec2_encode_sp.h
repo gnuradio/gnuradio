@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2011,2013 Free Software Foundation, Inc.
+ * Copyright 2005,2013 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -20,27 +20,27 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef INCLUDED_VOCODER_G723_40_ENCODE_SB_H
-#define INCLUDED_VOCODER_G723_40_ENCODE_SB_H
+#ifndef INCLUDED_VOCODER_CODEC2_ENCODE_SP_H
+#define INCLUDED_VOCODER_CODEC2_ENCODE_SP_H
 
-#include <vocoder/api.h>
-#include <gnuradio/sync_block.h>
+#include <gnuradio/vocoder/api.h>
+#include <gnuradio/sync_decimator.h>
 
 namespace gr {
   namespace vocoder {
 
     /*!
-     * \brief This block performs g723_40 audio encoding.
+     * \brief CODEC2 Vocoder Encoder
      * \ingroup audio_blk
      */
-    class VOCODER_API g723_40_encode_sb : virtual public sync_block
+    class VOCODER_API codec2_encode_sp : virtual public sync_decimator
     {
     public:
-      // gr::vocoder::g723_40_encode_sb::sptr
-      typedef boost::shared_ptr<g723_40_encode_sb> sptr;
+      // gr::vocoder::codec2_encode_sp::sptr
+      typedef boost::shared_ptr<codec2_encode_sp> sptr;
       
       /*!
-       * \brief Make G722_40 encoder block.
+       * \brief Make Codec2 encoder block.
        */
       static sptr make();
     };
@@ -48,4 +48,4 @@ namespace gr {
   } /* namespace vocoder */
 } /* namespace gr */
 
-#endif /* INCLUDED_VOCODER_G723_40_ENCODE_SB_H */
+#endif /* INCLUDED_VOCODER_CODEC2_ENCODE_SP_H */

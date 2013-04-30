@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2005,2011,2013 Free Software Foundation, Inc.
+ * Copyright 2011,2013 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -20,34 +20,32 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef INCLUDED_VOCODER_GSM_FR_ENCODE_SP_H
-#define INCLUDED_VOCODER_GSM_FR_ENCODE_SP_H
+#ifndef INCLUDED_VOCODER_G721_DECODE_BS_H
+#define INCLUDED_VOCODER_G721_DECODE_BS_H
 
-#include <vocoder/api.h>
-#include <gnuradio/sync_decimator.h>
+#include <gnuradio/vocoder/api.h>
+#include <gnuradio/sync_block.h>
 
 namespace gr {
   namespace vocoder {
 
     /*!
-     * \brief GSM 06.10 Full Rate Vocoder Encoder
+     * \brief This block performs g721 audio decoding.
      * \ingroup audio_blk
-     *
-     * shorts in; 33 byte packets out
      */
-    class VOCODER_API gsm_fr_encode_sp : virtual public sync_decimator
+    class VOCODER_API g721_decode_bs : virtual public sync_block
     {
     public:
-      // gr::vocoder::gsm_fr_encode_sp::sptr
-      typedef boost::shared_ptr<gsm_fr_encode_sp> sptr;
+      // gr::vocoder::g721_decode_bs::sptr
+      typedef boost::shared_ptr<g721_decode_bs> sptr;
       
       /*!
-       * \brief Make GSM encoder block.
+       * \brief Make G721 decoder block.
        */
       static sptr make();
     };
 
   } /* namespace vocoder */
-} /* namespace gr */       
+} /* namespace gr */
 
-#endif /* INCLUDED_VOCODER_GSM_FR_ENCODE_SP_H */
+#endif /* INCLUDED_VOCODER_G721_DECODE_BS_H */

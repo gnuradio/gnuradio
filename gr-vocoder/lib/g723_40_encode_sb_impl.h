@@ -23,7 +23,7 @@
 #ifndef INCLUDED_VOCODER_G723_40_ENCODE_SB_IMPL_H
 #define INCLUDED_VOCODER_G723_40_ENCODE_SB_IMPL_H
 
-#include <vocoder/g723_40_encode_sb.h>
+#include <gnuradio/vocoder/g723_40_encode_sb.h>
 
 extern "C" {
 #include "g7xx/g72x.h"

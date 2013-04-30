@@ -20,27 +20,27 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef INCLUDED_VOCODER_ALAW_DECODE_BS_H
-#define INCLUDED_VOCODER_ALAW_DECODE_BS_H
+#ifndef INCLUDED_VOCODER_CODEC2_DECODE_PS_H
+#define INCLUDED_VOCODER_CODEC2_DECODE_PS_H
 
-#include <vocoder/api.h>
-#include <gnuradio/sync_block.h>
+#include <gnuradio/vocoder/api.h>
+#include <gnuradio/sync_interpolator.h>
 
 namespace gr {
   namespace vocoder {
 
     /*!
-     * \brief This block performs alaw audio decoding.
+     * \brief CODEC2 Vocoder Decoder
      * \ingroup audio_blk
      */
-    class VOCODER_API alaw_decode_bs : virtual public sync_block
+    class VOCODER_API codec2_decode_ps : virtual public sync_interpolator
     {
     public:
-      // gr::vocoder::alaw_decode_bs::sptr
-      typedef boost::shared_ptr<alaw_decode_bs> sptr;
+      // gr::vocoder::codec2_decode_ps::sptr
+      typedef boost::shared_ptr<codec2_decode_ps> sptr;
       
       /*!
-       * \brief Make alaw decoder block.
+       * \brief Make Codec2 decoder block.
        */
       static sptr make();
     };
@@ -48,4 +48,4 @@ namespace gr {
   } /* namespace vocoder */
 } /* namespace gr */
 
-#endif /* INCLUDED_VOCODER_ALAW_DECODE_BS_H */
+#endif /* INCLUDED_VOCODER_CODEC2_DECODE_PS_H */

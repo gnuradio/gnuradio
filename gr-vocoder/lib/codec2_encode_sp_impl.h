@@ -23,7 +23,7 @@
 #ifndef INCLUDED_VOCODER_CODEC2_ENCODE_SP_IMPL_H
 #define INCLUDED_VOCODER_CODEC2_ENCODE_SP_IMPL_H
 
-#include <vocoder/codec2_encode_sp.h>
+#include <gnuradio/vocoder/codec2_encode_sp.h>
 
 namespace gr {
   namespace vocoder {

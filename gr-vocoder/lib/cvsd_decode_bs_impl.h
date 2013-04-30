@@ -23,7 +23,7 @@
 #ifndef INCLUDED_VOCODER_CVSD_DECODE_BS_IMPL_H
 #define INCLUDED_VOCODER_CVSD_DECODE_BS_IMPL_H
 
-#include <vocoder/cvsd_decode_bs.h>
+#include <gnuradio/vocoder/cvsd_decode_bs.h>
 
 namespace gr {
   namespace vocoder {

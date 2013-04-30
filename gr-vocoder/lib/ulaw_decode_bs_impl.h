@@ -23,7 +23,7 @@
 #ifndef INCLUDED_VOCODER_ULAW_DECODE_BS_IMPL_H
 #define INCLUDED_VOCODER_ULAW_DECODE_BS_IMPL_H
 
-#include <vocoder/ulaw_decode_bs.h>
+#include <gnuradio/vocoder/ulaw_decode_bs.h>
 
 namespace gr {
   namespace vocoder {

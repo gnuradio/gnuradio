@@ -23,7 +23,7 @@
 #ifndef INCLUDED_VOCODER_G721_ENCODE_SB_H
 #define INCLUDED_VOCODER_G721_ENCODE_SB_H
 
-#include <vocoder/api.h>
+#include <gnuradio/vocoder/api.h>
 #include <gnuradio/sync_block.h>
 
 namespace gr {

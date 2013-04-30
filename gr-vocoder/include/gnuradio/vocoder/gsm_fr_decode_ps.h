@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2005,2013 Free Software Foundation, Inc.
+ * Copyright 2005,2011,2013 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -20,27 +20,27 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef INCLUDED_VOCODER_CODEC2_ENCODE_SP_H
-#define INCLUDED_VOCODER_CODEC2_ENCODE_SP_H
+#ifndef INCLUDED_VOCODER_GSM_FR_DECODE_PS_H
+#define INCLUDED_VOCODER_GSM_FR_DECODE_PS_H
 
-#include <vocoder/api.h>
-#include <gnuradio/sync_decimator.h>
+#include <gnuradio/vocoder/api.h>
+#include <gnuradio/sync_interpolator.h>
 
 namespace gr {
   namespace vocoder {
 
     /*!
-     * \brief CODEC2 Vocoder Encoder
+     * \brief GSM 06.10 Full Rate Vocoder Decoder
      * \ingroup audio_blk
      */
-    class VOCODER_API codec2_encode_sp : virtual public sync_decimator
+    class VOCODER_API gsm_fr_decode_ps : virtual public sync_interpolator
     {
     public:
-      // gr::vocoder::codec2_encode_sp::sptr
-      typedef boost::shared_ptr<codec2_encode_sp> sptr;
+      // gr::vocoder::gsm_fr_decode_ps::sptr
+      typedef boost::shared_ptr<gsm_fr_decode_ps> sptr;
       
       /*!
-       * \brief Make Codec2 encoder block.
+       * \brief Make GSM decoder block.
        */
       static sptr make();
     };
@@ -48,4 +48,4 @@ namespace gr {
   } /* namespace vocoder */
 } /* namespace gr */
 
-#endif /* INCLUDED_VOCODER_CODEC2_ENCODE_SP_H */
+#endif /* INCLUDED_VOCODER_GSM_FR_DECODE_PS_H */
