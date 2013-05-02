@@ -27,6 +27,7 @@
 #ifndef _GR_MATH_H_
 #define _GR_MATH_H_
 
+#include <cmath>
 #include <gnuradio/api.h>
 #include <gnuradio/gr_complex.h>
 

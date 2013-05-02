@@ -105,7 +105,7 @@ ${str_to_fancyc_comment($license)}
 \#include "config.h"
 \#endif
 
-\#include <gr_io_signature.h>
+\#include <gnuradio/io_signature.h>
 #if $blocktype == 'noblock'
 \#include <${modname}/${blockname}.h>
 #else
@@ -153,9 +153,9 @@ namespace gr {
      * The private constructor
      */
     ${blockname}_impl::${blockname}_impl(${strip_default_values($arglist)})
-      : ${grblocktype}("${blockname}",
-		      gr_make_io_signature($inputsig),
-		      gr_make_io_signature($outputsig)$decimation)
+      : gr::${grblocktype}("${blockname}",
+              gr::io_signature::make($inputsig),
+              gr::io_signature::make($outputsig)$decimation)
 #if $blocktype == 'hier'
     {
         connect(self(), 0, d_firstblock, 0);
@@ -251,7 +251,7 @@ ${str_to_fancyc_comment($license)}
 \#define INCLUDED_${modname.upper()}_${blockname.upper()}_H
 
 \#include <${modname}/api.h>
-\#include <${grblocktype}.h>
+\#include <gnuradio/${grblocktype}.h>
 
 namespace gr {
   namespace ${modname} {
@@ -273,7 +273,7 @@ namespace gr {
      * \ingroup ${modname}
      *
      */
-    class ${modname.upper()}_API ${blockname} : virtual public $grblocktype
+    class ${modname.upper()}_API ${blockname} : virtual public gr::$grblocktype
     {
      public:
       typedef boost::shared_ptr<${blockname}> sptr;
@@ -297,7 +297,7 @@ namespace gr {
 
 '''
 
-# Python block (from grextras!)
+# Python block
 Templates['block_python'] = '''\#!/usr/bin/env python
 ${str_to_python_comment($license)}
 #
@@ -587,7 +587,7 @@ ${modname}_make_${blockname} (${strip_default_values($arglist)})
  * The private constructor
  */
 ${modname}_${blockname}::${modname}_${blockname} (${strip_default_values($arglist)})
-  : ${grblocktype} ("${blockname}",
+  : gr_${grblocktype} ("${blockname}",
 		   gr_make_io_signature($inputsig),
 		   gr_make_io_signature($outputsig)$decimation)
 {
@@ -672,7 +672,7 @@ class ${modname.upper()}_API $blockname
 };
 
 #else
-\#include <${grblocktype}.h>
+\#include <gr_${grblocktype}.h>
 
 class ${modname}_${blockname};
 
@@ -685,7 +685,7 @@ ${modname.upper()}_API ${modname}_${blockname}_sptr ${modname}_make_${blockname}
  * \ingroup ${modname}
  *
  */
-class ${modname.upper()}_API ${modname}_${blockname} : public $grblocktype
+class ${modname.upper()}_API ${modname}_${blockname} : public gr_$grblocktype
 {
  private:
 	friend ${modname.upper()}_API ${modname}_${blockname}_sptr ${modname}_make_${blockname} (${strip_default_values($arglist)});
