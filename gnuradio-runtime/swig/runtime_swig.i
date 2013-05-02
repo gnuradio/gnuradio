@@ -52,7 +52,6 @@
 #include <gnuradio/msg_queue.h>
 #include <gnuradio/prefs.h>
 #include <gnuradio/realtime.h>
-  //#include <gnuradio/single_threaded_scheduler.h>
 #include <gnuradio/sync_block.h>
 #include <gnuradio/sync_decimator.h>
 #include <gnuradio/sync_interpolator.h>
@@ -82,7 +81,6 @@
 %include "msg_queue.i"
 %include "prefs.i"
 %include "realtime.i"
- //%include "single_threaded_scheduler.i"
 %include "sync_block.i"
 %include "sync_decimator.i"
 %include "sync_interpolator.i"

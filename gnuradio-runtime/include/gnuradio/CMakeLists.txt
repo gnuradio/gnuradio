@@ -59,7 +59,6 @@ install(FILES
   realtime.h
   realtime_impl.h
   runtime_types.h
-  single_threaded_scheduler.h
   tags.h
   tagged_stream_block.h
   top_block.h
