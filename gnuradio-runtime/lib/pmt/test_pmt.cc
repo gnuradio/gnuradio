@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2002,2010,2011 Free Software Foundation, Inc.
+ * Copyright 2013 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -28,7 +28,7 @@
 #include <cppunit/XmlOutputter.h>
 
 #include <gnuradio/unittests.h>
-#include <qa_runtime.h>
+#include <qa_pmt.h>
 
 int
 main (int argc, char **argv)
@@ -37,7 +37,7 @@ main (int argc, char **argv)
   std::ofstream xmlfile(get_unittest_path("gnuradio_runtime_runtime.xml").c_str());
   CppUnit::XmlOutputter *xmlout = new CppUnit::XmlOutputter(&runner.result(), xmlfile);
 
-  runner.addTest(qa_runtime::suite());
+  runner.addTest(qa_pmt::suite());
   runner.setOutputter(xmlout);
 
   bool was_successful = runner.run("", false);

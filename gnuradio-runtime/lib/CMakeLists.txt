@@ -60,7 +60,7 @@ include_directories(${GNURADIO_RUNTIME_INCLUDE_DIRS}
 ########################################################################
 # Include subdirs rather to populate to the sources lists.
 ########################################################################
-GR_INCLUDE_SUBDIRECTORY(pmt)
+add_subdirectory(pmt)
 GR_INCLUDE_SUBDIRECTORY(messages)
 GR_INCLUDE_SUBDIRECTORY(thread)
 GR_INCLUDE_SUBDIRECTORY(math)
@@ -214,15 +214,12 @@ list(APPEND test_gnuradio_runtime_sources
   math/qa_fxpt_vco.cc
   math/qa_math.cc
   math/qa_sincos.cc
-  pmt/qa_pmt.cc
-  pmt/qa_pmt_prims.cc
   qa_buffer.cc
   qa_io_signature.cc
   qa_circular_file.cc
   qa_logger.cc
   qa_vmcircbuf.cc
   qa_runtime.cc
-  ${CMAKE_CURRENT_BINARY_DIR}/pmt/qa_pmt_unv.cc
 )
 
 include_directories(${CPPUNIT_INCLUDE_DIRS} ${CMAKE_CURRENT_SOURCE_DIR}/math)
