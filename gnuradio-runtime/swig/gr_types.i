@@ -68,6 +68,9 @@ namespace std {
   %template() vector< vector< double > >;
 
   %template() vector<string>;
+
+  %template() std::vector<size_t>;
+  %template() std::vector< std::vector< std::vector<size_t> > >;
 };
 
 %template(gr_vector_complexf) std::vector< std::complex<float> >;
