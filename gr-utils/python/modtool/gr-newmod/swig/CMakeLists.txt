@@ -32,7 +32,7 @@ include(GrPython)
 # Setup swig generation
 ########################################################################
 foreach(incdir ${GNURADIO_RUNTIME_INCLUDE_DIRS})
-    list(APPEND GR_SWIG_INCLUDE_DIRS ${incdir}/swig)
+    list(APPEND GR_SWIG_INCLUDE_DIRS ${incdir}/gnuradio/swig)
 endforeach(incdir)
 
 set(GR_SWIG_LIBRARIES gnuradio-howto)
