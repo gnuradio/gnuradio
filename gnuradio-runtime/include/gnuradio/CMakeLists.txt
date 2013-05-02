@@ -72,7 +72,6 @@ install(FILES
   sync_decimator.h
   sync_interpolator.h
   sys_paths.h
-  timer.h
   types.h
   sys_pri.h
   unittests.h
