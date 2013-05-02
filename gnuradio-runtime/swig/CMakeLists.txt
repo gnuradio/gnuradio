@@ -100,7 +100,6 @@ install(
     complex_vec_test.i
     constants.i
     dispatcher.i
-    error_handler.i
     feval.i
     gnuradio.i
     gr_ctrlport.i

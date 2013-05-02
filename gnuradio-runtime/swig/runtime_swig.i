@@ -45,7 +45,6 @@
 #include <gnuradio/constants.h>
 #include <gnuradio/dispatcher.h>
 #include <gnuradio/endianness.h>
-#include <gnuradio/error_handler.h>
 #include <gnuradio/feval.h>
 #include <gnuradio/hier_block2.h>
 #include <gnuradio/io_signature.h>
@@ -78,7 +77,6 @@
 %include "constants.i"
 %include "dispatcher.i"
 %include "feval.i"
-%include "error_handler.i"
 %include "hier_block2.i"
 %include "io_signature.i"
 %include "message.i"
