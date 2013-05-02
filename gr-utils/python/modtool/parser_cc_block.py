@@ -41,7 +41,7 @@ class ParserCCBlock(object):
             """ From a type identifier, returns the data type.
             E.g., for sizeof(int), it will return 'int'.
             Returns a list! """
-            if 'gr_make_iosignaturev' in iosigcall:
+            if 'gr::io_signature::makev' in iosigcall:
                 print 'tbi'
                 raise ValueError
             return {'type': [_typestr_to_iotype(x) for x in typestr.split(',')],
@@ -72,9 +72,9 @@ class ParserCCBlock(object):
             elif len(vlen_parts) > 1:
                 return '*'.join(vlen_parts).strip()
         iosig = {}
-        iosig_regex = '(?P<incall>gr_make_io_signature[23v]?)\s*\(\s*(?P<inmin>[^,]+),\s*(?P<inmax>[^,]+),' + \
+        iosig_regex = '(?P<incall>gr::io_signature::make[23v]?)\s*\(\s*(?P<inmin>[^,]+),\s*(?P<inmax>[^,]+),' + \
                       '\s*(?P<intype>(\([^\)]*\)|[^)])+)\),\s*' + \
-                      '(?P<outcall>gr_make_io_signature[23v]?)\s*\(\s*(?P<outmin>[^,]+),\s*(?P<outmax>[^,]+),' + \
+                      '(?P<outcall>gr::io_signature::make[23v]?)\s*\(\s*(?P<outmin>[^,]+),\s*(?P<outmax>[^,]+),' + \
                       '\s*(?P<outtype>(\([^\)]*\)|[^)])+)\)'
         iosig_match = re.compile(iosig_regex, re.MULTILINE).search(self.code_cc)
         try:
