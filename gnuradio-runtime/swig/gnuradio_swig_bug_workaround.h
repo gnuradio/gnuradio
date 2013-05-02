@@ -32,7 +32,6 @@
 class base_error_handler;
 class basic_block;
 class block;
-class error_handler;
 class file_error_handler;
 class hier_block2;
 class msg_handler;

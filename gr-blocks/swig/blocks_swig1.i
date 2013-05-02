@@ -26,9 +26,6 @@
 
 %include "blocks_swig1_doc.i"
 
-%template() std::vector<size_t>;
-%template() std::vector< std::vector< std::vector<size_t> > >;
-
 %{
 #include "gnuradio/blocks/skiphead.h"
 #include "gnuradio/blocks/stream_mux.h"
