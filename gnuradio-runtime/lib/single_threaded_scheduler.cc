@@ -24,7 +24,7 @@
 #include "config.h"
 #endif
 
-#include <gnuradio/single_threaded_scheduler.h>
+#include "single_threaded_scheduler.h"
 #include <gnuradio/block.h>
 #include <gnuradio/block_detail.h>
 #include <gnuradio/buffer.h>

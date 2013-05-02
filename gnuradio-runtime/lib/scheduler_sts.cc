@@ -24,7 +24,7 @@
 #endif
 
 #include "scheduler_sts.h"
-#include <gnuradio/single_threaded_scheduler.h>
+#include "single_threaded_scheduler.h"
 #include <gnuradio/thread/thread_body_wrapper.h>
 
 namespace gr {
