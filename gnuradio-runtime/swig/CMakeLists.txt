@@ -99,7 +99,6 @@ install(
     buffer.i
     complex_vec_test.i
     constants.i
-    dispatcher.i
     feval.i
     gnuradio.i
     gr_ctrlport.i

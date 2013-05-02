@@ -79,7 +79,6 @@ list(APPEND gnuradio_runtime_sources
   block_registry.cc
   buffer.cc
   circular_file.cc
-  dispatcher.cc
   feval.cc
   flat_flowgraph.cc
   flowgraph.cc
@@ -103,7 +102,6 @@ list(APPEND gnuradio_runtime_sources
   scheduler.cc
   scheduler_sts.cc
   scheduler_tpb.cc
-  select_handler.cc
   single_threaded_scheduler.cc
   sptr_magic.cc
   sync_block.cc

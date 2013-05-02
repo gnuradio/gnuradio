@@ -33,7 +33,6 @@ install(FILES
   block_registry.h
   buffer.h
   constants.h
-  dispatcher.h
   endianness.h
   error_handler.h
   expj.h
@@ -65,7 +64,6 @@ install(FILES
   tagged_stream_block.h
   top_block.h
   tpb_detail.h
-  select_handler.h
   sincos.h
   sptr_magic.h
   sync_block.h
