@@ -280,12 +280,24 @@ add_subdirectory(gr-fcd)
 add_subdirectory(gr-wavelet)
 add_subdirectory(gr-wxgui)
 
-# Install our Cmake modules into ${GR_PKG_DATA_DIR}/cmake/Modules
-file(GLOB cmake_modules "cmake/Modules/*.cmake")
+# Install our Cmake modules into $prefix/lib/cmake/gnuradio
+# See "Package Configuration Files" on page:
+#    http://www.cmake.org/Wiki/CMake/Tutorials/Packaging
+
+configure_file(
+  ${CMAKE_SOURCE_DIR}/cmake/Modules/GnuradioConfigVersion.cmake.in
+  ${CMAKE_BINARY_DIR}/cmake/Modules/GnuradioConfigVersion.cmake
+@ONLY)
+
+SET(cmake_configs 
+  ${CMAKE_SOURCE_DIR}/cmake/Modules/GnuradioConfig.cmake
+  ${CMAKE_BINARY_DIR}/cmake/Modules/GnuradioConfigVersion.cmake
+)
+
 install(
-  FILES ${cmake_modules} 
-  DESTINATION ${GR_PKG_DATA_DIR}/cmake/Modules
-  COMPONENT "core_devel"
+  FILES ${cmake_configs} 
+  DESTINATION lib/cmake/gnuradio
+  COMPONENT "runtime_devel"
 )
 
 #finalize cpack after subdirs processed
