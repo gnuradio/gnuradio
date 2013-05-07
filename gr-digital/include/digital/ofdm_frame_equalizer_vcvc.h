@@ -48,6 +48,8 @@ namespace gr {
        * \param len_tag_key Length tag key
        * \param propagate_channel_state If true, the channel state after the last symbol
        *                                will be added to the first symbol as a tag
+       * \param fixed_frame_len Set if the frame length is fixed throughout, 
+       *                        helps with book keeping.
        */
       static sptr make(
 	   digital_ofdm_equalizer_base_sptr equalizer,

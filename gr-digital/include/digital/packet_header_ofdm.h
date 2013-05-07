@@ -70,6 +70,7 @@ namespace gr {
        * \param frame_len_tag_key The tag key used for the frame length (number of
        *                          OFDM symbols, this is the tag key required for the
        *                          frame equalizer etc.)
+       * \param num_tag_key The tag key used for packet numbering.
        * \param bits_per_header_sym Bits per complex symbol in the header, e.g. 1 if
        *                            the header is BPSK modulated, 2 if it's QPSK
        *                            modulated etc.
