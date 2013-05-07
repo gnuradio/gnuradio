@@ -23,7 +23,7 @@
 #include <gnuradio/tags.h>
 %}
 
-%include <pmt_swig.i> //for pmt support
+%import <pmt_swig.i> //for pmt support
 
 %include <gnuradio/tags.h>
 

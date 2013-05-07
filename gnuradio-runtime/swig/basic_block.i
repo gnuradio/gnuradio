@@ -24,7 +24,7 @@ class gr::basic_block;
 typedef boost::shared_ptr<gr::basic_block> gr::basic_block_sptr;
 %template(basic_block_sptr) boost::shared_ptr<gr::basic_block>;
 
-%include "pmt_swig.i"
+%import "pmt_swig.i"
 
 // support vectors of these...
 namespace std {
