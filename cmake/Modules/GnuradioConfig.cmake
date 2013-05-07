@@ -22,7 +22,7 @@ INCLUDE(FindPackageHandleStandardArgs)
 
 # if GR_REQUIRED_COMPONENTS is not defined, it will be set to the following list (all of them)
 if(NOT GR_REQUIRED_COMPONENTS)
-  set(GR_REQUIRED_COMPONENTS CORE RUNTIME ANALOG ATSC AUDIO BLOCKS CHANNELS DIGITAL FCD FEC FFT FILTER NOAA PAGER QTGUI TRELLIS UHD VOCODER WAVELET WXGUI)
+  set(GR_REQUIRED_COMPONENTS RUNTIME ANALOG ATSC AUDIO BLOCKS CHANNELS DIGITAL FCD FEC FFT FILTER NOAA PAGER QTGUI TRELLIS UHD VOCODER WAVELET WXGUI)
 endif()
 
 set(GNURADIO_ALL_LIBRARIES "")
@@ -59,8 +59,7 @@ function(GR_MODULE EXTVAR PCNAME INCFILE LIBFILE)
     FIND_PATH(
         ${INCVAR_NAME}
         NAMES ${INCFILE}
-        HINTS $ENV{GNURADIO_CORE_DIR}/include/gnuradio
-            ${PC_INCDIR}
+        HINTS $ENV{GNURADIO_RUNTIME_DIR}/include/gnuradio
             ${PC_INCDIR}/gnuradio/
             ${CMAKE_INSTALL_PREFIX}/include/gnuradio
         PATHS /usr/local/include/gnuradio
@@ -71,7 +70,7 @@ function(GR_MODULE EXTVAR PCNAME INCFILE LIBFILE)
     FIND_LIBRARY(
         ${LIBVAR_NAME}
         NAMES ${LIBFILE}
-        HINTS $ENV{GNURADIO_CORE_DIR}/lib
+        HINTS $ENV{GNURADIO_RUNTIME_DIR}/lib
             ${PC_LIBDIR}
             ${CMAKE_INSTALL_PREFIX}/lib/
             ${CMAKE_INSTALL_PREFIX}/lib64/
@@ -102,8 +101,7 @@ function(GR_MODULE EXTVAR PCNAME INCFILE LIBFILE)
 
 endfunction()
 
-GR_MODULE(CORE gnuradio-core gr_top_block.h gnuradio-core)
-GR_MODULE(RUNTIME gnuradio-core gr_top_block.h gnuradio-core)
+GR_MODULE(RUNTIME gnuradio-runtime gr_top_block.h gnuradio-runtime)
 GR_MODULE(ANALOG gnuradio-analog analog/noise_type.h gnuradio-analog)
 GR_MODULE(ATSC gnuradio-atsc atsc/api.h gnuradio-atsc)
 GR_MODULE(AUDIO gnuradio-audio audio/sink.h gnuradio-audio)
