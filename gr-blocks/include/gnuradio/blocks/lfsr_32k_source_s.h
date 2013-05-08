@@ -35,7 +35,7 @@ namespace gr {
      * \ingroup source_blk
      *
      * \details
-     * This source is typically used along with gr::gnuradio/blocks::check_lfsr_32k_s to
+     * This source is typically used along with gr::blocks::check_lfsr_32k_s to
      * test the USRP using its digital loopback mode.
      */
     class BLOCKS_API lfsr_32k_source_s : virtual public sync_block

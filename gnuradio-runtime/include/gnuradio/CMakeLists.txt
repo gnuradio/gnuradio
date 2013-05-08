@@ -34,7 +34,6 @@ install(FILES
   buffer.h
   constants.h
   endianness.h
-  error_handler.h
   expj.h
   feval.h
   flowgraph.h
