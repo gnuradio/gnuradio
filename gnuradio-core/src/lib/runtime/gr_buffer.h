@@ -112,7 +112,7 @@ class GR_CORE_API gr_buffer {
    * the tag.
    *
    * \param tag        the tag that needs to be removed
-   * \param id         an ID for this tag so other blocks can check it.
+   * \param id         the unique ID of the block calling this function
    */
   void remove_item_tag(const gr_tag_t &tag, long id);
 
@@ -284,7 +284,7 @@ class GR_CORE_API gr_buffer_reader {
    * \param v            a vector reference to return tags into
    * \param abs_start    a uint64 count of the start of the range of interest
    * \param abs_end      a uint64 count of the end of the range of interest
-   * \param id           an ID to check if its been removed.
+   * \param id           the unique ID of the block to make sure already deleted tags are not returned
    */
   void get_tags_in_range(std::vector<gr_tag_t> &v,
 			 uint64_t abs_start,
