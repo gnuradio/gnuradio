@@ -1,13 +1,15 @@
 /* -*- c++ -*- */
 
-%rename(prefix) gr::prefix;
-%rename(sysconfdir) gr::sysconfdir;
-%rename(prefsdir) gr::prefsdir;
-%rename(build_date) gr::build_date;
-%rename(version) gr::version;
+namespace gr {
+  %rename(prefix) prefix;
+  %rename(sysconfdir) sysconfdir;
+  %rename(prefsdir) prefsdir;
+  %rename(build_date) build_date;
+  %rename(version) version;
 
-const std::string gr::prefix();
-const std::string gr::sysconfdir();
-const std::string gr::prefsdir();
-const std::string gr::build_date();
-const std::string gr::version();
+  const std::string prefix();
+  const std::string sysconfdir();
+  const std::string prefsdir();
+  const std::string build_date();
+  const std::string version();
+}
