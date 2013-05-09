@@ -261,7 +261,7 @@ gr_block_detail::stop_perf_counters(int noutput_items, int nproduced)
       d_var_input_buffers_full[i] = 0;
     }
     for(size_t i=0; i < d_output.size(); i++) {
-      gr::thread::scoped_lock guard(*d_output[i]->mutex());
+      gruel::scoped_lock guard(*d_output[i]->mutex());
       float pfull = 1.0f - static_cast<float>(d_output[i]->space_available()) /
 	static_cast<float>(d_output[i]->bufsize());
       d_avg_output_buffers_full[i] = pfull;
@@ -291,7 +291,7 @@ gr_block_detail::stop_perf_counters(int noutput_items, int nproduced)
     }
 
     for(size_t i=0; i < d_output.size(); i++) {
-      gr::thread::scoped_lock guard(*d_output[i]->mutex());
+      gruel::scoped_lock guard(*d_output[i]->mutex());
       float pfull = 1.0f - static_cast<float>(d_output[i]->space_available()) /
 	static_cast<float>(d_output[i]->bufsize());
 
