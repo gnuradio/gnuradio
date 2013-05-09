@@ -37,7 +37,7 @@
 #include <gnuradio/filter/fir_filter_ccf.h>
 #include <gnuradio/analog/quadrature_demod_cf.h>
 #include <gnuradio/audio/sink.h>
-#include <gnuradio/fcd/fcd_source_c.h>
+#include <gnuradio/fcd/source_c.h>
 
 // other includes
 #include <iostream>
@@ -80,7 +80,7 @@ int main(int argc, char **argv)
     top_block_sptr tb = make_top_block("fcd_nfm_rx");
 
     // FCD source
-    fcd_source_c_sptr fcd = fcd_make_source_c(device);
+    gr::fcd::source_c::sptr fcd = gr::fcd::source_c::make(device);
     fcd->set_freq_khz(freq);
     fcd->set_lna_gain(gain);
 

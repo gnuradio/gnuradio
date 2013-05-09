@@ -23,7 +23,7 @@
 #ifndef FCD_H
 #define FCD_H 1
 
-#include <gnuradio/fcd/fcd_api.h>
+#include <gnuradio/fcd/api.h>
 
 #ifdef FCD
 #define EXTERN
