@@ -86,10 +86,17 @@ set(GRC_BLOCKS_DIR      ${GR_PKG_DATA_DIR}/grc/blocks)
 find_package(GnuradioRuntime)
 find_package(CppUnit)
 
+# To run a more advanced search for GNU Radio and it's components and
+# versions, use the following. Add any components required to the list
+# of GR_REQUIRED_COMPONENTS (in all caps) and change "version" to the
+# minimum API compatible version required.
+#
+# set(GR_REQUIRED_COMPONENTS RUNTIME BLOCKS FILTER ...)
+# find_package(Gnuradio "version")
+
 if(NOT GNURADIO_RUNTIME_FOUND)
     message(FATAL_ERROR "GnuRadio Runtime required to compile howto")
 endif()
-
 if(NOT CPPUNIT_FOUND)
     message(FATAL_ERROR "CppUnit required to compile howto")
 endif()
