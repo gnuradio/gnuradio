@@ -27,6 +27,7 @@ include(GrPython)
 # Setup compatibility checks and defines
 ########################################################################
 include(${CMAKE_CURRENT_SOURCE_DIR}/ConfigChecks.cmake)
+GR_CHECK_LINUX_SCHED_AVAIL()
 
 ########################################################################
 # Register component
