@@ -20,8 +20,7 @@
 #
 
 '''
-This is the gr-fft package. This package provides GNU Radio
-processing blocks for FFT and related functions.
+Fourier-transform blocks and related functions.
 '''
 
 from fft_swig import *
