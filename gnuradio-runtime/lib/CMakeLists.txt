@@ -123,6 +123,7 @@ list(APPEND gnuradio_runtime_sources
   gr_vmcircbuf_mmap_tmpfile.cc
   gr_vmcircbuf_sysv_shm.cc
   malloc16.c
+  realtime.cc
   runtime_block_gateway.cc
 )
 
