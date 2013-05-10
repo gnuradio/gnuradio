@@ -10,6 +10,7 @@ gnuradio.filter: Filters
 .. autoblock:: gnuradio.filter.filter_delay_fc
 .. autoblock:: gnuradio.filter.hilbert_fc
 .. autoblock:: gnuradio.filter.iir_filter_ffd
-.. autoblock:: gnuradio.filter.polyphase_filterbank
+.. autopyblock:: gnuradio.filter.analysis_filterbank
+.. autopyblock:: gnuradio.filter.synthesis_filterbank
 .. autoblock:: gnuradio.filter.single_pole_iir_filter_cc
 .. autoblock:: gnuradio.filter.single_pole_iir_filter_ff

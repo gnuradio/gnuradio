@@ -1,4 +1,4 @@
 gnuradio.filter: Digital Filter Design
 ======================================
 
-.. autoblock:: gnuradio.filter.firdes
+.. autoclass:: gnuradio.filter.firdes

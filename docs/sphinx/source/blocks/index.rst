@@ -185,10 +185,14 @@ Measurement Tools
    gnuradio.blocks.probe_signal_vi
    gnuradio.blocks.probe_signal_vs
    gnuradio.blocks.ctrlport_probe2_c
+      :noindex:
    gnuradio.blocks.ctrlport_probe_c
+      :noindex:
    gnuradio.blocks.message_debug
+      :noindex:
    gnuradio.blocks.probe_rate
    gnuradio.blocks.tag_debug
+      :noindex:
 
 Message Tools
 -------------
@@ -198,11 +202,13 @@ Message Tools
 
    gnuradio.blocks.message_burst_source
    gnuradio.blocks.message_debug
+      :noindex:
    gnuradio.blocks.message_sink
    gnuradio.blocks.message_source
    gnuradio.blocks.message_strobe
    gnuradio.blocks.pdu_to_tagged_stream
    gnuradio.blocks.random_pdu
+      :noindex:
    gnuradio.blocks.tagged_stream_to_pdu
 
 Miscellaneous
@@ -236,7 +242,7 @@ Modulators and Demodulators
 
    gnuradio.blocks.vco_f
 
-Netwroking Tools
+Networking Tools
 ----------------
 
 .. autosummary::
@@ -260,8 +266,8 @@ Peak Detectors
    gnuradio.blocks.peak_detector2_fb
    gnuradio.blocks.plateau_detector_fb
 
-Streams Operators
------------------
+Stream Operators
+----------------
 
 .. autosummary::
    :nosignatures:
@@ -297,8 +303,11 @@ Stream Tag Tools
    :nosignatures:
 
    gnuradio.blocks.burst_tagger
+      :noindex:
    gnuradio.blocks.tag_debug
+      :noindex:
    gnuradio.blocks.tagged_file_sink
+      :noindex:
 
 Data Type Converters
 --------------------
@@ -325,12 +334,4 @@ Data Type Converters
    gnuradio.blocks.short_to_char
    gnuradio.blocks.short_to_float
    gnuradio.blocks.uchar_to_float
-
-Waveform Generators
--------------------
-
-.. autosummary::
-   :nosignatures:
-
-   gnuradio.blocks.vco_f
 

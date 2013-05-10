@@ -30,7 +30,7 @@ Core Framework
    :hidden:   
 
    gnuradio.gr <gr/index>
-   pmt <pmt>
+   pmt <pmt/index>
    gnuradio.blocks <blocks/index>
    gnuradio.analog <analog/index>
    gnuradio.digital <digital/index>
@@ -38,7 +38,7 @@ Core Framework
    gnuradio.channels <channels>
    gnuradio.comedi <comedi>
    gnuradio.fec <fec>
-   gnuradio.filter <filter>
+   gnuradio.filter <filter/index>
    gnuradio.gr_unittest <gr_unittest/index>
    gnuradio.trellis <trellis/index>
    gnuradio.wavelet <wavelet>
@@ -145,3 +145,8 @@ Framework Extensions
    analog_measurement <analog/measurement_tools_blk>
    analog_synchronizers <analog/synchronizers_blk>
    analog_modulators <analog/modulators_blk>
+   filter_channelizers <filter/channelizers_blk>
+   filter_resamplers <filter/resamplers_blk>
+   filter_blocks <filter/filter_blk>
+   filter_design <filter/filter_design>
+   

@@ -29,7 +29,8 @@ Filters
    gnuradio.filter.filter_delay_fc
    gnuradio.filter.hilbert_fc
    gnuradio.filter.iir_filter_ffd
-   gnuradio.filter.polyphase_filterbank
+   gnuradio.filter.analysis_filterbank
+   gnuradio.filter.synthesis_filterbank
    gnuradio.filter.single_pole_iir_filter_cc
    gnuradio.filter.single_pole_iir_filter_ff
 
