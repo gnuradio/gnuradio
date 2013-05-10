@@ -85,7 +85,7 @@ namespace gr {
       // Update, calculate, and issue an SNR tag every d_nsamples
       int index = 0, x = 0;
       int64_t nwritten = nitems_written(0);
-      while(index + (d_nsamples-d_count) <= noutput_items) {
+      while(index + (d_nsamples-d_count) < noutput_items) {
 	x = d_nsamples - d_count;
 	nwritten += x;
         

@@ -27,6 +27,7 @@ include(GrPython)
 # Setup compatibility checks and defines
 ########################################################################
 include(${CMAKE_CURRENT_SOURCE_DIR}/ConfigChecks.cmake)
+GR_CHECK_LINUX_SCHED_AVAIL()
 
 ########################################################################
 # Register component
@@ -100,28 +101,28 @@ CPACK_COMPONENT("runtime_runtime"
     GROUP        "Runtime"
     DISPLAY_NAME "Runtime"
     DESCRIPTION  "Dynamic link libraries"
-    DEPENDS      "core_runtime"
+    DEPENDS      "runtime_runtime"
 )
 
 CPACK_COMPONENT("runtime_devel"
     GROUP        "Runtime"
     DISPLAY_NAME "Development"
     DESCRIPTION  "C++ headers, package config, import libraries"
-    DEPENDS      "core_devel"
+    DEPENDS      "runtime_devel"
 )
 
 CPACK_COMPONENT("runtime_python"
     GROUP        "Runtime"
     DISPLAY_NAME "Python"
     DESCRIPTION  "Python modules for runtime"
-    DEPENDS      "core_python;runtime_runtime"
+    DEPENDS      "runtime_python;runtime_runtime"
 )
 
 CPACK_COMPONENT("runtime_swig"
     GROUP        "Runtime"
     DISPLAY_NAME "SWIG"
     DESCRIPTION  "SWIG development .i files"
-    DEPENDS      "core_swig;runtime_python;runtime_devel"
+    DEPENDS      "runtime_swig;runtime_python;runtime_devel"
 )
 configure_file(
     ${CMAKE_CURRENT_SOURCE_DIR}/gnuradio-runtime.conf.in
@@ -132,14 +133,14 @@ install(
     FILES ${CMAKE_CURRENT_BINARY_DIR}/gnuradio-runtime.conf
     ctrlport.conf.example
     DESTINATION ${GR_PREFSDIR}
-    COMPONENT "core_runtime"
+    COMPONENT "runtime_runtime"
 )
 
 if(ENABLE_GR_LOG AND HAVE_LOG4CPP)
 install(FILES
     ${CMAKE_CURRENT_SOURCE_DIR}/gr_log_default.conf
     DESTINATION ${GR_CONF_DIR}/gnuradio
-    COMPONENT "core_runtime"
+    COMPONENT "runtime_runtime"
 )
 endif(ENABLE_GR_LOG AND HAVE_LOG4CPP)
 

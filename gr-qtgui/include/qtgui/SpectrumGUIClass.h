@@ -39,6 +39,10 @@ class SpectrumDisplayForm;
 #include <vector>
 #include <string>
 
+/*!
+ * \brief QWidget class for controlling plotting.
+ * \ingroup qtgui_blk
+ */
 class SpectrumGUIClass
 {
 public:

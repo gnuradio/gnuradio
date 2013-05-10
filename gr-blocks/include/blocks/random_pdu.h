@@ -31,7 +31,8 @@ namespace gr {
 
     /*!
      * \brief Sends a random PDU at intervals
-     * \ingroup source_blk
+     * \ingroup message_tools_blk
+     * \ingroup debug_tools_blk
      */
     class BLOCKS_API random_pdu : virtual public gr_block
     {

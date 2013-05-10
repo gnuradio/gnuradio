@@ -32,8 +32,9 @@ namespace gr {
 
     /*!
      * \brief Byte-stream CRC block
-     * \ingroup digital
+     * \ingroup packet_operators_blk
      *
+     * \details
      * Input: stream of bytes, which form a packet. The first byte of the packet
      * has a tag with key "length" and the value being the number of bytes in the
      * packet.

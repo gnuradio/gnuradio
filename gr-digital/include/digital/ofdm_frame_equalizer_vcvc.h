@@ -31,8 +31,9 @@ namespace gr {
 
     /*!
      * \brief OFDM frame equalizer
-     * \ingroup ofdm
+     * \ingroup ofdm_blk
      *
+     * \details
      * Performs equalization in one or two dimensions on a tagged OFDM frame.
      * Input: a tagged series of OFDM symbols.
      * Output: The same as the input, but equalized.
@@ -47,11 +48,14 @@ namespace gr {
        * \param len_tag_key Length tag key
        * \param propagate_channel_state If true, the channel state after the last symbol
        *                                will be added to the first symbol as a tag
+       * \param fixed_frame_len Set if the frame length is fixed throughout, 
+       *                        helps with book keeping.
        */
       static sptr make(
 	   ofdm_equalizer_base::sptr equalizer,
 	   const std::string &len_tag_key = "frame_len",
-	   bool propagate_channel_state=false
+	   bool propagate_channel_state=false,
+	   int fixed_frame_len=0
       );
     };
 

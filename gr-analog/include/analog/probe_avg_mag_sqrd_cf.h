@@ -31,8 +31,9 @@ namespace gr {
     
     /*!
      * \brief compute avg magnitude squared.
-     * \ingroup sink_blk
+     * \ingroup measurement_tools_blk
      *
+     * \details
      * Input stream 0: complex
      * Output stream 0: float
      *

@@ -30,8 +30,10 @@ namespace gr {
 
     class BLOCKS_API interleaved_short_to_complex_impl : public interleaved_short_to_complex
     {
+    private:
+      bool d_vector_input;
     public:
-      interleaved_short_to_complex_impl();
+      interleaved_short_to_complex_impl(bool vector_input=false);
 
       int work(int noutput_items,
 	       gr_vector_const_void_star &input_items,

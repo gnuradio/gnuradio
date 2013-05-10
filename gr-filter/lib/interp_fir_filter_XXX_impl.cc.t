@@ -54,6 +54,10 @@ namespace gr {
 	throw std::out_of_range("@IMPL_NAME@: interpolation must be > 0\n");
       }
 
+      if(taps.size() == 0) {
+	throw std::runtime_error("@IMPL_NAME@: no filter taps provided.\n");
+      }
+
       std::vector<@TAP_TYPE@> dummy_taps;
 
       for(unsigned i = 0; i < interpolation; i++) {

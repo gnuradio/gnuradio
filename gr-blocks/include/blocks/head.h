@@ -32,8 +32,9 @@ namespace gr {
 
     /*!
      * \brief copies the first N items to the output then signals done
-     * \ingroup slicedice_blk
+     * \ingroup misc_blk
      *
+     * \details
      * Useful for building test cases
      */
     class BLOCKS_API head : virtual public gr_sync_block

@@ -31,9 +31,9 @@ namespace gr {
 
     /*!
      * \brief PN code sequential search correlator
+     * \ingroup synchronizers_blk
      *
-     * \ingroup sync_blk
-     *
+     * \details
      * Receives complex baseband signal, outputs complex correlation
      * against reference PN code, one sample per PN code period. The
      * PN sequence is generated using a GLFSR.

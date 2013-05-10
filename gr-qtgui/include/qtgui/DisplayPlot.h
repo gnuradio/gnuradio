@@ -46,6 +46,10 @@
 typedef QList<QColor> QColorList;
 Q_DECLARE_METATYPE ( QColorList )
 
+/*!
+ * \brief QWidget base plot to build QTGUI plotting tools.
+ * \ingroup qtgui_blk
+ */
 class DisplayPlot:public QwtPlot{
   Q_OBJECT
 

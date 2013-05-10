@@ -33,7 +33,7 @@ namespace gr {
 
     /*!
      * \brief Sink that allows a sample to be grabbed from Python.
-     * \ingroup sink_blk
+     * \ingroup measurement_tools_blk
      */
     class BLOCKS_API @NAME@ : virtual public gr_sync_block
     {

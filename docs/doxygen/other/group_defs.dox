@@ -8,32 +8,47 @@
  * @{
  */
 
-/*! \defgroup container_blk Top Block and Hierarchical Block Base Classes	*/
-/*! \defgroup source_blk Signal Sources			*/
-/*! \defgroup sink_blk Signal Sinks			*/
-/*! \defgroup filter_blk Filters			*/
-/*! \defgroup math_blk Mathematics			*/
-/*! \defgroup modulation_blk Signal Modulation		*/
-/*! \defgroup demodulation_blk Signal Demodulation	*/
-/*! \defgroup coding_blk Information Coding and Decoding*/
-/*! \defgroup sync_blk Synchronization			*/
-/*! \defgroup eq_blk Equalization			*/
-/*! \defgroup converter_blk Type Conversions		*/
-/*! \defgroup level_blk Signal Level Control (AGC)	*/
-/*! \defgroup dft_blk Fourier Transform			*/
-/*! \defgroup wavelet_blk Wavelet Transform		*/
-/*! \defgroup ofdm_blk OFDM Blocks			*/
-/*! \defgroup pager_blk Pager Blocks			*/
-/*! \defgroup misc_blk Miscellaneous Blocks		*/
-/*! \defgroup slicedice_blk Slicing and Dicing Streams  */
-/*! \defgroup vocoder_blk Voice Encoders and Decoders	*/
-/*! \defgroup digital Digital Modulation Blocks		*/
-/*! \defgroup analog Analog Communications Blocks	*/
-/*! \defgroup qtgui_blk QT Graphical Interfaces		*/
-/*! \defgroup uhd_blk UHD Interface  			*/
-/*! \defgroup audio_blk Audio Interface  		*/
-/*! \defgroup pfb_blk Polyphase Filterbank  		*/
-/*! \defgroup snr_blk SNR estimators			*/
+/*! \defgroup container_blk Top Block and Hierarchical Block Base Classes	 */
+/*! \defgroup audio_blk Audio Signals */
+/*! \defgroup boolean_operators_blk Boolean Operators */
+/*! \defgroup byte_operators_blk Byte Operators */
+/*! \defgroup channel_models_blk Channel Models */
+/*! \defgroup channelizers_blk Channelizers */
+/*! \defgroup coding_blk Information Coding and Decoding */
+/*! \defgroup controlport_blk ControlPort */
+/*! \defgroup debug_tools_blk Debug Tools */
+/*! \defgroup deprecated_blk Deprecated */
+/*! \defgroup equalizers_blk Equalizers */
+/*! \defgroup error_coding_blk Error Coding and Decoding */
+/*! \defgroup fcd_blk FCD Interface */
+/*! \defgroup file_operators_blk File Operators */
+/*! \defgroup filter_blk Filters */
+/*! \defgroup fourier_analysis_blk Fourier Analysis */
+/*! \defgroup instrumentation_blk Instrumentation Tools  */
+/*! \defgroup level_controllers_blk Level Controllers */
+/*! \defgroup math_operators_blk Math Operators */
+/*! \defgroup measurement_tools_blk Measurement Tools */
+/*! \defgroup message_tools_blk Message Tools */
+/*! \defgroup misc_blk Miscellaneous */
+/*! \defgroup modulators_blk Modulators and Demodulators */
+/*! \defgroup networking_tools_blk Netwroking Tools */
+/*! \defgroup noaa_blk NOAA Blocks */
+/*! \defgroup ofdm_blk OFDM Blocks */
+/*! \defgroup packet_operators_blk Packet/Frame Operators */
+/*! \defgroup peak_detectors_blk Peak Detectors */
+/*! \defgroup pager_blk Pager Blocks */
+/*! \defgroup qtgui_blk QT Graphical Interfaces */
+/*! \defgroup resamplers_blk Resamplers */
+/*! \defgroup stream_operators_blk Streams Operators */
+/*! \defgroup stream_tag_tools_blk Stream Tag Tools */
+/*! \defgroup symbol_coding_blk Symbol Coding */
+/*! \defgroup synchronizers_blk Synchronizers */
+/*! \defgroup trellis_coding_blk Trellis Coding */
+/*! \defgroup type_converters_blk Data Type Converters */
+/*! \defgroup uhd_blk UHD Interface */
+/*! \defgroup waveform_generators_blk Waveform Generators */
+/*! \defgroup wavelet_blk Wavelet Transforms */
+/*! \defgroup wxgui_blk WX Graphical Interfaces */
 
 /*!
  * \defgroup base_blk Base classes for GR Blocks

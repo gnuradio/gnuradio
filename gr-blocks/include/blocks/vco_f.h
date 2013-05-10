@@ -31,8 +31,10 @@ namespace gr {
 
     /*!
      * \brief VCO - Voltage controlled oscillator
-     * \ingroup misc
+     * \ingroup modulators_blk
+     * \ingroup waveform_generators_blk
      *
+     * \details
      * input: float stream of control voltages; output: float oscillator output
      */
     class BLOCKS_API vco_f : virtual public gr_sync_block

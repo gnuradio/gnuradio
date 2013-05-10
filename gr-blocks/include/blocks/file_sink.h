@@ -32,7 +32,7 @@ namespace gr {
 
     /*!
      * \brief Write stream to file.
-     * \ingroup sink_blk
+     * \ingroup file_operators_blk
      */
     class BLOCKS_API file_sink : virtual public gr_sync_block,
                                  virtual public file_sink_base

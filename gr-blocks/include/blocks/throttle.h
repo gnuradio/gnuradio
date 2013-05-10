@@ -34,6 +34,7 @@ namespace gr {
      * not exceed samples_per_sec.
      * \ingroup misc_blk
      *
+     * \details
      * input: one stream of itemsize; output: one stream of itemsize
      *
      * N.B. this should only be used in GUI apps where there is no

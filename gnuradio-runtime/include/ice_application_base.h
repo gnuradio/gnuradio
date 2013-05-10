@@ -23,6 +23,11 @@
 #ifndef ICE_APPLICATION_BASE_H
 #define ICE_APPLICATION_BASE_H
 
+#ifdef HAVE_WINDOWS_H
+#include <winsock2.h>
+#include <sys/time.h>
+#endif
+
 #include <gr_runtime_api.h>
 #include <gr_prefs.h>
 #include <Ice/Ice.h>
@@ -38,7 +43,6 @@ namespace {
   static const unsigned int ICEAPPLICATION_ACTIVATION_TIMEOUT_MS(600);
 };
 
-
 class GR_RUNTIME_API ice_application_common : public Ice::Application 
 {
  public:
@@ -48,7 +52,8 @@ class GR_RUNTIME_API ice_application_common : public Ice::Application
   static int d_reacquire_attributes;
   
  protected:
-  static bool d_main_called, d_have_ice_config;
+  static bool d_main_called;
+  static bool d_have_ice_config;
   static std::string d_endpointStr;
   static boost::shared_ptr<boost::thread> d_thread;
   ice_application_common() {;}
@@ -147,7 +152,11 @@ void ice_application_base<TserverBase, TserverClass>::kickoff()
   
     int iter = 0;
     while(!d_this->application_started()) {
+      #if defined(_WIN32) || defined(__WIN32__) || defined(WIN32)
+	  ::Sleep(timer_ts.tv_nsec / 1000000);
+	  #else
       ::nanosleep(&timer_ts, &rem_ts);
+	  #endif
       if(!d_this->application_started())
 	std::cout << "@";
       if(iter++ > 100) {

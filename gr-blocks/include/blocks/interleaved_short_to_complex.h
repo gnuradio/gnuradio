@@ -31,16 +31,18 @@ namespace gr {
 
     /*!
      * \brief Convert stream of interleaved shorts to a stream of complex
-     * \ingroup converter_blk
+     * \ingroup type_converters_blk
      */
     class BLOCKS_API interleaved_short_to_complex : virtual public gr_sync_decimator
     {
     public:
-      
       // gr::blocks::interleaved_short_to_complex::sptr
       typedef boost::shared_ptr<interleaved_short_to_complex> sptr;
 
-      static sptr make();
+      /*!
+       * Build an interleaved short to complex block.
+       */
+      static sptr make(bool vector_input=false);
     };
 
   } /* namespace blocks */

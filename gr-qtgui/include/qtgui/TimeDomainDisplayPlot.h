@@ -28,6 +28,10 @@
 #include <vector>
 #include <qtgui/DisplayPlot.h>
 
+/*!
+ * \brief QWidget for displaying time domain plots.
+ * \ingroup qtgui_blk
+ */
 class TimeDomainDisplayPlot: public DisplayPlot
 {
   Q_OBJECT

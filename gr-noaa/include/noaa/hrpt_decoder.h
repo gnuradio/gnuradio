@@ -29,6 +29,10 @@
 namespace gr {
   namespace noaa {
 
+    /*!
+     * \brief NOAA HRPT Decoder
+     * \ingroup noaa_blk
+     */
     class NOAA_API hrpt_decoder : virtual public gr_sync_block
     {
     public:

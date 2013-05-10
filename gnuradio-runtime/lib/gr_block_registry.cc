@@ -1,3 +1,25 @@
+/* -*- c++ -*- */
+/*
+ * Copyright 2012-2013 Free Software Foundation, Inc.
+ *
+ * This file is part of GNU Radio
+ *
+ * GNU Radio is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3, or (at your option)
+ * any later version.
+ *
+ * GNU Radio is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with GNU Radio; see the file COPYING.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street,
+ * Boston, MA 02110-1301, USA.
+ */
+
 #include <gr_basic_block.h>
 #include <gr_block_registry.h>
 #include <gr_tpb_detail.h>
@@ -32,7 +54,7 @@ void gr_block_registry::block_unregister(gr_basic_block* block){
     d_ref_map = pmt::dict_delete(d_ref_map, pmt::intern(block->symbol_name()));
     if(block->alias_set()){
         d_ref_map = pmt::dict_delete(d_ref_map, pmt::intern(block->alias()));
-        }
+    }
 }
 
 std::string gr_block_registry::register_symbolic_name(gr_basic_block* block){
@@ -44,14 +66,14 @@ std::string gr_block_registry::register_symbolic_name(gr_basic_block* block){
 }
 
 void gr_block_registry::register_symbolic_name(gr_basic_block* block, std::string name){
-    if(dict_has_key(d_ref_map, pmt::intern(name))){
+    if(pmt::dict_has_key(d_ref_map, pmt::intern(name))){
         throw std::runtime_error("symbol already exists, can not re-use!");
         }
-    d_ref_map = dict_add(d_ref_map, pmt::intern(name), pmt::make_any(block));
+    d_ref_map = pmt::dict_add(d_ref_map, pmt::intern(name), pmt::make_any(block));
 }
 
 gr_basic_block_sptr gr_block_registry::block_lookup(pmt::pmt_t symbol){
-    pmt::pmt_t ref = dict_ref(d_ref_map, symbol, pmt::PMT_NIL);
+    pmt::pmt_t ref = pmt::dict_ref(d_ref_map, symbol, pmt::PMT_NIL);
     if(pmt::eq(ref, pmt::PMT_NIL)){
         throw std::runtime_error("block lookup failed! block not found!");
     }

@@ -1,0 +1,46 @@
+<?xml version="1.0"?>
+<!--
+###################################################
+##Fractional Resampler
+###################################################
+ -->
+<block>
+	<name>Fractional Resampler</name>
+	<key>fractional_resampler_xx</key>
+	<import>from gnuradio import filter</import>
+	<make>filter.fractional_resampler_$(type.fcn)($phase_shift, $resamp_ratio)</make>
+	<callback>set_resamp_ratio($resamp_ratio)</callback>
+	<param>
+		<name>Type</name>
+		<key>type</key>
+		<type>enum</type>
+		<option>
+			<name>Complex</name>
+			<key>complex</key>
+			<opt>fcn:cc</opt>
+		</option>
+		<option>
+			<name>Float</name>
+			<key>float</key>
+			<opt>fcn:ff</opt>
+		</option>
+	</param>
+	<param>
+		<name>Phase Shift</name>
+		<key>phase_shift</key>
+		<type>real</type>
+	</param>
+	<param>
+		<name>Resampling Ratio</name>
+		<key>resamp_ratio</key>
+		<type>real</type>
+	</param>
+	<sink>
+		<name>in</name>
+		<type>$type</type>
+	</sink>
+	<source>
+		<name>out</name>
+		<type>$type</type>
+	</source>
+</block>

@@ -87,9 +87,9 @@ namespace gr {
 
       std::vector<gr_tag_t> tags;
       get_tags_in_range(tags, 0, nitems_read(0), nitems_read(0)+packet_length);
-      for (unsigned i = 0; i < tags.size(); i++) {
+      for (size_t i = 0; i < tags.size(); i++) {
 	tags[i].offset -= nitems_read(0);
-	if (d_check && tags[i].offset > packet_length+packet_size_diff) {
+	if (d_check && tags[i].offset > (unsigned int)(packet_length+packet_size_diff)) {
 	  tags[i].offset = packet_length-5;
 	}
 	add_item_tag(0, nitems_written(0) + tags[i].offset,

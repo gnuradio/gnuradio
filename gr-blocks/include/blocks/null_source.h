@@ -31,7 +31,7 @@ namespace gr {
 
     /*!
      * \brief A source of zeros used mainly for testing.
-     * \ingroup source_blk
+     * \ingroup misc_blk
      */
     class BLOCKS_API null_source : virtual public gr_sync_block
     {

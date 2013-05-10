@@ -31,12 +31,10 @@ namespace gr {
   namespace digital {
 
     /*!
-     * \class digital_fll_band_edge_cc
      * \brief Frequency Lock Loop using band-edge filters
+     * \ingroup synchronizers_blk
      *
-     * \ingroup general
-     * \ingroup digital
-     *
+     * \details
      * The frequency lock loop derives a band-edge filter that covers
      * the upper and lower bandwidths of a digitally-modulated
      * signal. The bandwidth range is determined by the excess

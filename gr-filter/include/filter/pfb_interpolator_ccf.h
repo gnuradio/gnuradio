@@ -31,14 +31,11 @@ namespace gr {
   namespace filter {
 
     /*!
-     * \class gr_pfb_interpolator_ccf
-     *
      * \brief Polyphase filterbank interpolator with gr_complex input,
      * gr_complex output and float taps
+     * \ingroup channelizers_blk
      *
-     * \ingroup filter_blk
-     * \ingroup pfb_blk
-     *
+     * \details
      * This block takes in a signal stream and performs interger up-
      * sampling (interpolation) with a polyphase filterbank. The first
      * input is the integer specifying how much to interpolate by. The

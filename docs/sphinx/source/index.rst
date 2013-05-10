@@ -10,6 +10,7 @@ Core Framework
    :nosignatures:
 
    gnuradio.gr
+   gnuradio.blocks
    gnuradio.digital
    gnuradio.audio
    gnuradio.trellis
@@ -18,12 +19,12 @@ Core Framework
    gnuradio.gr_unittest
    gnuradio.qtgui
    gnuradio.wxgui
-   gnuradio.window
 
 .. toctree::
    :hidden:   
 
    gnuradio.gr <gr/index>
+   gnuradio.blocks <blocks/index>
    gnuradio.digital <digital/index>
    gnuradio.audio <audio/index>
    gnuradio.gr_unittest <gr_unittest/index>
@@ -32,7 +33,6 @@ Core Framework
    gnuradio.fft <fft>
    gnuradio.qtgui <qtgui/index>
    gnuradio.wxgui <wxgui/index>
-   gnuradio.window <window/index>
 
 Hardware Interfaces
 -------------------
@@ -107,5 +107,22 @@ Framework Extensions
    trellis_blks <trellis/blks>
    trellis_objs <trellis/objs>
    vocoder_blks <vocoder/blks>
-   window_detail <window/detail>
    wxgui_blks <wxgui/blks>
+   blocks_modulators <blocks/modulators_blk>
+   blocks_audio <blocks/audio_blk>
+   blocks_networking <blocks/networking_tools_blk>
+   blocks_boolean <blocks/boolean_operators_blk>
+   blocks_peak_detectors <blocks/peak_detectors_blk>
+   blocks_byte_operators <blocks/byte_operators_blk>
+   blocks_level_controllers <blocks/level_controllers_blk>
+   blocks_stream_operators <blocks/stream_operators_blk>
+   blocks_controlport <blocks/controlport_blk>
+   blocks_math <blocks/math_operators_blk>
+   blocks_stream_tag <blocks/stream_tag_tools_blk>
+   blocks_debug <blocks/debug_tools_blk>
+   blocks_measurement <blocks/measurement_tools_blk>
+   blocks_type_converters <blocks/type_converters_blk>
+   blocks_file <blocks/file_operators_blk>
+   blocks_message <blocks/message_tools_blk>
+   blocks_waveform <blocks/waveform_generators_blk>
+   blocks_misc <blocks/misc_blk>

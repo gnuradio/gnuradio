@@ -43,8 +43,9 @@ namespace gr {
 
     /*!
      * \brief An abstracted constellation object
-     * \ingroup digital
+     * \ingroup symbol_coding_blk
      *
+     * \details
      * The constellation objects hold the necessary information to pass
      * around constellation information for modulators and
      * demodulators. These objects contain the mapping between the bits
@@ -65,7 +66,7 @@ namespace gr {
 		    unsigned int rotational_symmetry,
 		    unsigned int dimensionality);
       constellation();
-      ~constellation();
+      virtual ~constellation();
 
       //! Returns the constellation points for a symbol value
       void map_to_points(unsigned int value, gr_complex *points);

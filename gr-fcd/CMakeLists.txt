@@ -69,21 +69,21 @@ CPACK_COMPONENT("fcd_runtime"
     GROUP        "FCD"
     DISPLAY_NAME "Runtime"
     DESCRIPTION  "Runtime"
-    DEPENDS      "core_runtime;audio_runtime"
+    DEPENDS      "runtime_runtime;audio_runtime"
 )
 
 CPACK_COMPONENT("fcd_devel"
     GROUP        "FCD"
     DISPLAY_NAME "Development"
     DESCRIPTION  "C++ headers, package config, import libraries"
-    DEPENDS      "core_devel;audio_devel"
+    DEPENDS      "runtime_devel;audio_devel"
 )
 
 CPACK_COMPONENT("fcd_python"
     GROUP        "FCD"
     DISPLAY_NAME "Python"
     DESCRIPTION  "Python modules for runtime; GRC xml files"
-    DEPENDS      "core_python;fcd_runtime"
+    DEPENDS      "runtime_python;fcd_runtime"
 )
 
 CPACK_COMPONENT("fcd_examples"
@@ -97,7 +97,7 @@ CPACK_COMPONENT("fcd_swig"
     GROUP        "FCD"
     DISPLAY_NAME "SWIG"
     DESCRIPTION  "SWIG development .i files"
-    DEPENDS      "core_swig;fcd_python;fcd_devel"
+    DEPENDS      "runtime_swig;fcd_python;fcd_devel"
 )
 
 ########################################################################

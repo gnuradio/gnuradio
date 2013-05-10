@@ -37,6 +37,10 @@
 #include <qwt_compat.h>
 #endif
 
+/*!
+ * \brief QWidget for displaying waterfall (spectrogram) plots.
+ * \ingroup qtgui_blk
+ */
 class WaterfallDisplayPlot: public DisplayPlot
 {
   Q_OBJECT

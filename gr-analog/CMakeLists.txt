@@ -60,28 +60,28 @@ CPACK_COMPONENT("analog_runtime"
     GROUP        "Analog"
     DISPLAY_NAME "Runtime"
     DESCRIPTION  "Dynamic link libraries"
-    DEPENDS      "core_runtime"
+    DEPENDS      "runtime_runtime"
 )
 
 CPACK_COMPONENT("analog_devel"
     GROUP        "Analog"
     DISPLAY_NAME "Development"
     DESCRIPTION  "C++ headers, package config, import libraries"
-    DEPENDS      "core_devel"
+    DEPENDS      "runtime_devel"
 )
 
 CPACK_COMPONENT("analog_python"
     GROUP        "Analog"
     DISPLAY_NAME "Python"
     DESCRIPTION  "Python modules for runtime"
-    DEPENDS      "core_python;analog_runtime"
+    DEPENDS      "runtime_python;analog_runtime"
 )
 
 CPACK_COMPONENT("analog_swig"
     GROUP        "Analog"
     DISPLAY_NAME "SWIG"
     DESCRIPTION  "SWIG development .i files"
-    DEPENDS      "core_swig;analog_python;analog_devel"
+    DEPENDS      "runtime_swig;analog_python;analog_devel"
 )
 
 ########################################################################

@@ -57,28 +57,28 @@ CPACK_COMPONENT("fft_runtime"
     GROUP        "FFT"
     DISPLAY_NAME "Runtime"
     DESCRIPTION  "Runtime"
-    DEPENDS      "core_runtime"
+    DEPENDS      "runtime_runtime"
 )
 
 CPACK_COMPONENT("fft_devel"
     GROUP        "FFT"
     DISPLAY_NAME "Development"
     DESCRIPTION  "C++ headers, package config, import libraries"
-    DEPENDS      "core_devel"
+    DEPENDS      "runtime_devel"
 )
 
 CPACK_COMPONENT("fft_python"
     GROUP        "FFT"
     DISPLAY_NAME "Python"
     DESCRIPTION  "Python modules for runtime; GRC xml files"
-    DEPENDS      "core_python;fft_runtime"
+    DEPENDS      "runtime_python;fft_runtime"
 )
 
 CPACK_COMPONENT("fft_swig"
     GROUP        "FFT"
     DISPLAY_NAME "SWIG"
     DESCRIPTION  "SWIG development .i files"
-    DEPENDS      "core_swig;fft_python;fft_devel"
+    DEPENDS      "runtime_swig;fft_python;fft_devel"
 )
 
 ########################################################################

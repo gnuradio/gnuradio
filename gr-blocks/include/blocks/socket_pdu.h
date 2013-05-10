@@ -31,7 +31,7 @@ namespace gr {
 
     /*!
      * \brief Creates socket interface and translates traffic to PDUs
-     * \ingroup net_blk
+     * \ingroup networking_tools_blk
      */
     class BLOCKS_API socket_pdu : virtual public gr_block
     {

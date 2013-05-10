@@ -25,9 +25,10 @@
 #endif
 
 #include <gr_realtime.h>
+#include <realtime.h>
 
 gr_rt_status_t
 gr_enable_realtime_scheduling()
 {
-  return gr_enable_realtime_scheduling();
+  return gr::enable_realtime_scheduling();
 }

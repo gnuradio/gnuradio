@@ -61,28 +61,28 @@ CPACK_COMPONENT("comedi_runtime"
     GROUP        "Comedi"
     DISPLAY_NAME "Runtime"
     DESCRIPTION  "Dynamic link libraries"
-    DEPENDS      "core_runtime"
+    DEPENDS      "runtime_runtime"
 )
 
 CPACK_COMPONENT("comedi_devel"
     GROUP        "Comedi"
     DISPLAY_NAME "Development"
     DESCRIPTION  "C++ headers, package config, import libraries"
-    DEPENDS      "core_devel"
+    DEPENDS      "runtime_devel"
 )
 
 CPACK_COMPONENT("comedi_python"
     GROUP        "Comedi"
     DISPLAY_NAME "Python"
     DESCRIPTION  "Python modules for runtime"
-    DEPENDS      "core_python;comedi_runtime"
+    DEPENDS      "runtime_python;comedi_runtime"
 )
 
 CPACK_COMPONENT("comedi_swig"
     GROUP        "Comedi"
     DISPLAY_NAME "SWIG"
     DESCRIPTION  "SWIG development .i files"
-    DEPENDS      "core_swig;comedi_python;comedi_devel"
+    DEPENDS      "runtime_swig;comedi_python;comedi_devel"
 )
 
 ########################################################################

@@ -32,6 +32,7 @@ namespace gr {
     /*!
      * \brief Implements an IQ slope detector
      *
+     * \details
      * input: stream of complex; output: stream of floats
      *
      * This implements a limiting slope detector. The limiter is in

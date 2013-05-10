@@ -28,9 +28,11 @@ namespace gr {
   namespace digital {
 
     /*!
+     * \ingroup measurement_tools_blk
+     *
      * This block maintains a running average of the input stream and
-     * makes it available as an accessor function.  The input stream
-     * is type unsigned char.
+     * makes it available as an accessor function. The input stream is
+     * type unsigned char.
      *
      * If you send this block a stream of unpacked bytes, it will tell
      * you what the bit density is.

@@ -31,16 +31,19 @@ namespace gr {
 
     /*!
      * \brief deinterleave a single input into N outputs
-     * \ingroup slicedice_blk
-     * \param itemsize stream itemsize
+     * \ingroup stream_operators_blk
      */
     class BLOCKS_API deinterleave : virtual public gr_sync_decimator
     {
     public:
-      
       // gr::blocks::deinterleave::sptr
       typedef boost::shared_ptr<deinterleave> sptr;
 
+      /*!
+       * Make a deinterleave block.
+       *
+       * \param itemsize stream itemsize
+       */
       static sptr make(size_t itemsize);
     };
 

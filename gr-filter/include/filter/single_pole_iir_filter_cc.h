@@ -35,6 +35,7 @@ namespace gr {
      * \brief  single pole IIR filter with complex input, complex output
      * \ingroup filter_blk
      *
+     * \details
      * The input and output satisfy a difference equation of the form
      \htmlonly
      \f{

@@ -33,8 +33,9 @@ namespace gr {
     /*!
      * \brief Implements a PLL which locks to the input frequency and outputs
      * an estimate of that frequency.  Useful for FM Demod.
-     * \ingroup sync_blk
+     * \ingroup synchronizers_blk
      *
+     * \details
      * Input stream 0: complex
      * Output stream 0: float
      *

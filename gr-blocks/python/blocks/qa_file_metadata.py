@@ -80,7 +80,7 @@ class test_file_metadata(gr_unittest.TestCase):
         info = parse_file_metadata.parse_header(header, False)
 
         extra_str = handle.read(info["extra_len"])
-        self.assertGreater(len(extra_str), 0)
+        self.assertEquals(len(extra_str) > 0, True)
         handle.close()
 
         try:
@@ -159,7 +159,7 @@ class test_file_metadata(gr_unittest.TestCase):
         info = parse_file_metadata.parse_header(header, False)
 
         extra_str = handle.read(info["extra_len"])
-        self.assertGreater(len(extra_str), 0)
+        self.assertEquals(len(extra_str) > 0, True)
         handle.close()
 
         try:

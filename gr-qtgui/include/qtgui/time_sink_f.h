@@ -33,8 +33,10 @@ namespace gr {
     
     /*!
      * \brief A graphical sink to display multiple signals in time.
+     * \ingroup instrumentation_blk
      * \ingroup qtgui_blk
      *
+     * \details
      * This is a QT-based graphical sink the takes set of a float streams
      * and plots them in the time domain. Each signal is plotted with a
      * different color, and the \a set_title and \a set_color functions

@@ -31,7 +31,9 @@ namespace gr {
 
     /*!
      * \brief 1-to-1 stream annotator testing block. FOR TESTING PURPOSES ONLY.
+     * \ingroup debug_tools_blk
      *
+     * \details
      * This block creates tags to be sent downstream every 10,000
      * items it sees. The tags contain the name and ID of the
      * instantiated block, use "seq" as a key, and have a counter that
@@ -41,7 +43,8 @@ namespace gr {
      * It also stores a copy of all tags it sees flow past it. These
      * tags can be recalled externally with the data() member.
      *
-     * This block is only meant for testing and showing how to use the tags.
+     * Warning: This block is only meant for testing and showing how to use the
+     * tags.
      */
     class BLOCKS_API annotator_1to1 : virtual public gr_sync_block
     {

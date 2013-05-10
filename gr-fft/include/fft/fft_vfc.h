@@ -29,6 +29,10 @@
 namespace gr {
   namespace fft {
 
+    /*!
+     * \brief Compute forward or reverse FFT. float vector in / complex vector out.
+     * \ingroup fourier_analysis_blk
+     */
     class FFT_API fft_vfc : virtual public gr_sync_block
     {
     public:
@@ -36,10 +40,6 @@ namespace gr {
       // gr::fft::fft_vfc::sptr
       typedef boost::shared_ptr<fft_vfc> sptr;
       
-      /*!
-       * \brief Compute forward or reverse FFT. float vector in / complex vector out.
-       * \ingroup dft_blk
-       */
       static sptr make(int fft_size, bool forward,
 			       const std::vector<float> &window,
 			       int nthreads=1);

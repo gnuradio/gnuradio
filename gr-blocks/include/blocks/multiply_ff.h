@@ -29,6 +29,13 @@
 namespace gr {
   namespace blocks {
 
+    /*!
+     * \brief output = prod (input_0, input_1, ...)
+     * \ingroup math_operators_blk
+     *
+     * \details
+     * Multiply across all input streams.
+     */
     class BLOCKS_API multiply_ff : virtual public gr_sync_block
     {
     public:

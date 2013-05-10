@@ -30,6 +30,10 @@
 
 #include <qtgui/displayform.h>
 
+/*!
+ * \brief DisplayForm child for managing constellaton (I&Q) plots.
+ * \ingroup qtgui_blk
+ */
 class ConstellationDisplayForm : public DisplayForm
 {
   Q_OBJECT

@@ -297,6 +297,20 @@ namespace gr {
       virtual void set_bandwidth(double bandwidth, size_t chan = 0) = 0;
 
       /*!
+       * Get the bandpass filter setting on the RF frontend.
+       * \param chan the channel index 0 to N-1
+       * \return bandwidth of the filter in Hz
+       */
+      virtual double get_bandwidth(size_t chan = 0) = 0;
+
+      /*!
+       * Get the bandpass filter range of the RF frontend.
+       * \param chan the channel index 0 to N-1
+       * \return the range of the filter bandwidth in Hz
+       */
+      virtual ::uhd::freq_range_t get_bandwidth_range(size_t chan = 0) = 0;
+
+      /*!
        * Set a constant DC offset value.
        * The value is complex to control both I and Q.
        * \param offset the dc offset (1.0 is full-scale)

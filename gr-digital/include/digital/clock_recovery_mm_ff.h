@@ -31,9 +31,9 @@ namespace gr {
     
     /*!
      * \brief Mueller and Müller (M&M) based clock recovery block with float input, float output.
-     * \ingroup sync_blk
-     * \ingroup digital
+     * \ingroup synchronizers_blk
      *
+     * \details
      * This implements the Mueller and Müller (M&M) discrete-time
      * error-tracking synchronizer.
      *

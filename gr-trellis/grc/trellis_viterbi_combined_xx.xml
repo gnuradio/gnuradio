@@ -9,7 +9,7 @@
 <block>
 	<name>Viterbi Combo</name>
 	<key>trellis_viterbi_combined_xx</key>
-	<category>Error Correction/Trellis</category>
+	<category>Trellis Coding</category>
 	<import>from gnuradio import trellis, digital</import>
 	<make>trellis.viterbi_combined_$(type)$(out_type)(trellis.fsm($fsm_args), $block_size, $init_state, $final_state, $dim, $table, $metric_type)</make>
         <callback>set_TABLE($table)</callback>

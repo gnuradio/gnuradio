@@ -57,21 +57,21 @@ CPACK_COMPONENT("vocoder_runtime"
     GROUP        "Vocoder"
     DISPLAY_NAME "Runtime"
     DESCRIPTION  "Dynamic link libraries"
-    DEPENDS      "core_runtime"
+    DEPENDS      "runtime_runtime"
 )
 
 CPACK_COMPONENT("vocoder_devel"
     GROUP        "Vocoder"
     DISPLAY_NAME "Development"
     DESCRIPTION  "C++ headers, package config, import libraries"
-    DEPENDS      "core_devel"
+    DEPENDS      "runtime_devel"
 )
 
 CPACK_COMPONENT("vocoder_python"
     GROUP        "Vocoder"
     DISPLAY_NAME "Python"
     DESCRIPTION  "Python modules for runtime"
-    DEPENDS      "core_python;vocoder_runtime"
+    DEPENDS      "runtime_python;vocoder_runtime"
 )
 
 CPACK_COMPONENT("vocoder_examples"
@@ -85,7 +85,7 @@ CPACK_COMPONENT("vocoder_swig"
     GROUP        "Vocoder"
     DISPLAY_NAME "SWIG"
     DESCRIPTION  "SWIG development .i files"
-    DEPENDS      "core_swig;vocoder_python;vocoder_devel"
+    DEPENDS      "runtime_swig;vocoder_python;vocoder_devel"
 )
 
 ########################################################################

@@ -31,7 +31,7 @@ namespace gr {
 
     /*!
      * \brief This block performs g723_40 audio encoding.
-     * \ingroup vocoder_blk
+     * \ingroup audio_blk
      */
     class VOCODER_API g723_40_encode_sb : virtual public gr_sync_block
     {

@@ -6,7 +6,7 @@ INCLUDE(FindPackageHandleStandardArgs)
 
 # if GR_REQUIRED_MODULES is not defined, it will be set to the following list (all of them)
 if(NOT GR_REQUIRED_MODULES)
-    set(GR_REQUIRED_MODULES RUNTIME ANALOG ATSC AUDIO BLOCKS CHANNELS DIGITAL FEC FFT FILTER NOAA PAGER QTGUI TRELLIS UHD VOCODER WAVELET)
+    set(GR_REQUIRED_MODULES RUNTIME ANALOG ATSC AUDIO BLOCKS CHANNELS DIGITAL FEC FFT FILTER NOAA PAGER QTGUI TRELLIS UHD VOCODER WAVELET PMT)
 endif()
 
 set(GNURADIO_ALL_LIBRARIES "")
@@ -103,4 +103,6 @@ GR_MODULE(TRELLIS gnuradio-trellis trellis/fsm.h gnuradio-trellis)
 GR_MODULE(UHD gnuradio-uhd gr_uhd/usrp_sink.h gnuradio-uhd)
 GR_MODULE(VOCODER gnuradio-vocoder vocoder/alaw_encode_sb.h gnuradio-vocoder)
 GR_MODULE(WAVELET gnuradio-wavelet wavelet/wavelet_ff.h gnuradio-wavelet)
+GR_MODULE(PMT gnuradio-pmt pmt/pmt.h gnuradio-pmt)
+
 

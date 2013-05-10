@@ -32,9 +32,10 @@ namespace gr {
 
     /*!
      * \brief Examine input for specified access code, one bit at a time.
-     * \ingroup sync_blk
-     * \ingroup digital
+     * \ingroup packet_operators_blk
+     * \ingroup deprecated_blk
      *
+     * \details
      * input:  stream of bits, 1 bit per input byte (data in LSB)
      * output: stream of bits, 2 bits per output byte (data in LSB, flag in next higher bit)
      *

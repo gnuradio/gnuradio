@@ -32,8 +32,9 @@ namespace gr {
     /*!
      * \brief Estimate channel and coarse frequency offset for OFDM from preambles
      * \ingroup ofdm_blk
-     * \ingroup sync_blk
+     * \ingroup synchronizers_blk
      *
+     * \details
      * Input: OFDM symbols (in frequency domain). The first one (or two) symbols are expected
      *        to be synchronisation symbols, which are used to estimate the coarse freq offset
      *        and the initial equalizer taps (these symbols are removed from the stream).

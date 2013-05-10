@@ -31,8 +31,9 @@ namespace gr {
 
     /*!
      * \brief Differential decoding based on phase change.
-     * \ingroup coding_blk
+     * \ingroup symbol_coding_blk
      *
+     * \details
      * Uses the phase difference between two symbols to determine the
      * output symbol:
      *

@@ -27,23 +27,29 @@
 ###################################################
  -->
 <cat>
-	<name></name> <!-- Blank for Root Name -->
-	<cat>
-		<name>QT GUI Sinks</name>
-		<block>qtgui_sink_x</block>
-		<block>qtgui_freq_sink_x</block>
-		<block>qtgui_time_sink_x</block>
-		<block>qtgui_const_sink_x</block>
-		<block>qtgui_waterfall_sink_x</block>
-		<block>qtgui_time_raster_sink_x</block>
-	</cat>
-	<cat>
-		<name>QT GUI Widgets</name>
-		<block>qtgui_tab_widget</block>
-		<block>variable_qtgui_range</block>
-		<block>variable_qtgui_chooser</block>
-		<block>variable_qtgui_check_box</block>
-		<block>variable_qtgui_entry</block>
-		<block>variable_qtgui_label</block>
-	</cat>
+  <name></name> <!-- Blank for Root Name -->
+  <cat>
+    <name>Instrumentation</name>
+    <cat>
+      <name>QT</name>
+      <block>qtgui_freq_sink_x</block>
+      <block>qtgui_time_sink_x</block>
+      <block>qtgui_const_sink_x</block>
+      <block>qtgui_waterfall_sink_x</block>
+      <block>qtgui_time_raster_sink_x</block>
+      <block>qtgui_sink_x</block>
+    </cat>
+  </cat>
+  <cat>
+    <name>GUI Widgets</name>
+    <cat>
+      <name>QT</name>
+      <block>qtgui_tab_widget</block>
+      <block>variable_qtgui_range</block>
+      <block>variable_qtgui_chooser</block>
+      <block>variable_qtgui_check_box</block>
+      <block>variable_qtgui_entry</block>
+      <block>variable_qtgui_label</block>
+    </cat>
+  </cat>
 </cat>

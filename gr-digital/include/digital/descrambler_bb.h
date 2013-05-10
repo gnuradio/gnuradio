@@ -33,6 +33,7 @@ namespace gr {
      * \brief Descramber an input stream using an LFSR.
      * \ingroup coding_blk
      *
+     * \details
      * Descramble an input stream using an LFSR. This block works on
      * the LSB only of the input data stream, i.e., on an "unpacked
      * binary" stream, and produces the same format on its output.
@@ -44,10 +45,8 @@ namespace gr {
       typedef boost::shared_ptr<descrambler_bb> sptr;
 
       /*!
-       * Descramble an input stream using an LFSR. This block works on
-       * the LSB only of the input data stream, i.e., on an "unpacked
-       * binary" stream, and produces the same format on its output.
-       *
+       * \brief Make a descrambler block.
+       * 
        * \param mask     Polynomial mask for LFSR
        * \param seed     Initial shift register contents
        * \param len      Shift register length

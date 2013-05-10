@@ -7,7 +7,7 @@
 <cat>
 	<name></name> <!-- Blank for Root Name -->
 	<cat>
-		<name>FEC (New)</name>
+		<name>Error Coding</name>
 		<block>fec_decode_ccsds_27_fb</block>
 		<block>fec_encode_ccsds_27_bb</block>
 	</cat>

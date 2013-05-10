@@ -31,7 +31,7 @@ namespace gr {
     
     /*!
      * \brief Interpolating MMSE filter with complex input, complex output
-     * \ingroup filter_blk
+     * \ingroup resamplers_blk
      */
     class FILTER_API fractional_interpolator_cc : virtual public gr_block
     {

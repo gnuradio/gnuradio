@@ -30,8 +30,9 @@ namespace gr {
 
     /*!
      * \brief Header/Payload demuxer.
-     * \ingroup digital
+     * \ingroup packet_operators_blk
      *
+     * \details
      * This block is designed to handle packets from a bursty transmission.
      * Input 0 takes a continuous transmission of samples.
      * If used, input 1 is a trigger signal. In this case, a 1 on input 1

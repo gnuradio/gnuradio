@@ -31,6 +31,7 @@
 namespace gr {
   namespace filter {
     namespace kernel {
+
       /*!
        * \brief Fast FFT filter with float input, float output and float taps
        * \ingroup filter_blk

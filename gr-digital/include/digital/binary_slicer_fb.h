@@ -31,9 +31,9 @@ namespace gr {
     
     /*!
      * \brief slice float binary symbol outputting 1 bit output
-     * \ingroup converter_blk
-     * \ingroup digital
+     * \ingroup symbol_coding_blk
      *
+     * \details
      * x <  0 --> 0
      * x >= 0 --> 1
      */

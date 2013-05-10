@@ -31,7 +31,8 @@ namespace gr {
     
     /*!
      * \brief inverse of simple_framer (more or less)
-     * \ingroup sync_blk
+     * \ingroup packet_operators_blk
+     * \ingroup deprecated_blk
      */
     class DIGITAL_API simple_correlator : virtual public gr_block
     {

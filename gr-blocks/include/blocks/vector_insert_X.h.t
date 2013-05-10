@@ -33,7 +33,7 @@ namespace gr {
 
     /*!
      * \brief source of @TYPE@'s that gets its data from a vector
-     * \ingroup source_blk
+     * \ingroup stream_operators_blk
      */
     class BLOCKS_API @NAME@ : virtual public gr_block 
     {
@@ -41,6 +41,13 @@ namespace gr {
       // gr::blocks::@NAME@::sptr
       typedef boost::shared_ptr<@NAME@> sptr;
 
+      /*!
+       * Make vector insert block.
+       *
+       * \param data vector of data to insert
+       * \param periodicity number of samples between when to send \p data
+       * \param offset initial item offset of first insert
+       */
       static sptr make(const std::vector<@TYPE@> &data,
                        int periodicity, int offset=0);
 

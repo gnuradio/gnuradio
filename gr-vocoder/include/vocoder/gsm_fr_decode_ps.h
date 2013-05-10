@@ -31,7 +31,7 @@ namespace gr {
 
     /*!
      * \brief GSM 06.10 Full Rate Vocoder Decoder
-     * \ingroup vocoder_blk
+     * \ingroup audio_blk
      */
     class VOCODER_API gsm_fr_decode_ps : virtual public gr_sync_interpolator
     {

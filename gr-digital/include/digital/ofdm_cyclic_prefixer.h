@@ -33,6 +33,7 @@ namespace gr {
      * \brief Adds a cyclic prefix and performs pulse shaping on OFDM symbols.
      * \ingroup ofdm_blk
      *
+     * \details
      * Input: OFDM symbols (in the time domain, i.e. after the IFFT). Optionally,
      *        entire frames can be processed. In this case, \p len_tag_key must be
      *        specified which holds the key of the tag that denotes how

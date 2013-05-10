@@ -30,7 +30,7 @@ namespace gr {
     /*!
      * \brief Perform continuous phase 2-level frequency shift keying modulation
      * on an input stream of unpacked bits.
-     * \ingroup modulation_blk
+     * \ingroup modulators_blk
      */
     class ANALOG_API cpfsk_bc : virtual public gr_sync_interpolator
     {

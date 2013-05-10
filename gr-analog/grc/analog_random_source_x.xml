@@ -7,8 +7,8 @@
  -->
 <block>
 	<name>Random Source</name>
-	<key>random_source_x</key>
-	<import>from gnuradio import gr</import>
+	<key>analog_random_source_x</key>
+	<import>from gnuradio import blocks</import>
 	<import>import numpy</import>
 	<make>blocks.vector_source_$(type.fcn)(map(int, numpy.random.randint($min, $max, $num_samps)), $repeat)</make>
 	<param>

@@ -32,8 +32,9 @@ namespace gr {
 
     /*!
      * \brief skips the first N items, from then on copies items to the output
-     * \ingroup slicedice_blk
+     * \ingroup misc_blk
      *
+     * \details
      * Useful for building test cases and sources which have metadata
      * or junk at the start
      */

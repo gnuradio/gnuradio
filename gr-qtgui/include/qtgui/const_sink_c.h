@@ -34,8 +34,10 @@ namespace gr {
     
     /*!
      * \brief A graphical sink to display the IQ constellation of multiple signals.
+     * \ingroup instrumentation_blk
      * \ingroup qtgui_blk
      *
+     * \details
      * This is a QT-based graphical sink the takes set of a complex
      * streams and plots them on an IQ constellation plot.
      */

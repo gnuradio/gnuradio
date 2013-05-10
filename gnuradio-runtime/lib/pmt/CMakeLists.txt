@@ -53,8 +53,6 @@ ADD_FILE_DEPENDENCIES(
     ${PMT_SERIAL_TAGS_H}
 )
 
-add_custom_target(pmt_generated DEPENDS ${PMT_SERIAL_TAGS_H})
-
 ########################################################################
 # Generate other pmt stuff
 ########################################################################
@@ -74,18 +72,46 @@ add_custom_command(
     WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
 )
 
-list(APPEND gnuradio_runtime_sources
-    ${CMAKE_CURRENT_BINARY_DIR}/pmt_unv.cc
-    ${CMAKE_CURRENT_SOURCE_DIR}/pmt.cc
-    ${CMAKE_CURRENT_SOURCE_DIR}/pmt_io.cc
-    ${CMAKE_CURRENT_SOURCE_DIR}/pmt_pool.cc
-    ${CMAKE_CURRENT_SOURCE_DIR}/pmt_serialize.cc
+set(pmt_sources
+  ${CMAKE_CURRENT_BINARY_DIR}/pmt_unv.cc
+  ${CMAKE_CURRENT_SOURCE_DIR}/pmt.cc
+  ${CMAKE_CURRENT_SOURCE_DIR}/pmt_io.cc
+  ${CMAKE_CURRENT_SOURCE_DIR}/pmt_pool.cc
+  ${CMAKE_CURRENT_SOURCE_DIR}/pmt_serialize.cc
 )
 
-if(ENABLE_TESTING)
-  list(APPEND test_gnuradio_runtime_sources
-    ${CMAKE_CURRENT_BINARY_DIR}/qa_pmt_unv.cc
-    ${CMAKE_CURRENT_SOURCE_DIR}/qa_pmt_prims.cc
-    ${CMAKE_CURRENT_SOURCE_DIR}/qa_pmt.cc
+list(APPEND gnuradio_pmt_libs
+    ${Boost_LIBRARIES}
+    ${LOG4CPP_LIBRARIES}
+)
+
+add_custom_target(pmt_generated 
+  DEPENDS ${PMT_SERIAL_TAGS_H} ${CMAKE_CURRENT_BINARY_DIR}/pmt_unv_int.h)
+
+
+#Add Windows DLL resource file if using MSVC
+if(MSVC)
+    include(${CMAKE_SOURCE_DIR}/cmake/Modules/GrVersion.cmake)
+
+    configure_file(
+        ${CMAKE_CURRENT_SOURCE_DIR}/gnuradio-pmt.rc.in
+        ${CMAKE_CURRENT_BINARY_DIR}/gnuradio-pmt.rc
+    @ONLY)
+
+    list(APPEND gr_pmt_sources
+        ${CMAKE_CURRENT_BINARY_DIR}/gnuradio-pmt.rc
     )
-endif(ENABLE_TESTING)
+endif(MSVC)
+
+
+add_library(gnuradio-pmt SHARED ${pmt_sources})
+target_link_libraries(gnuradio-pmt ${gnuradio_pmt_libs})
+
+GR_LIBRARY_FOO(gnuradio-pmt RUNTIME_COMPONENT "runtime_runtime" DEVEL_COMPONENT "runtime_devel")
+
+add_dependencies(gnuradio-pmt
+  pmt_generated
+)
+
+# Testing is handled in gnuradio-runtime tests one level down.
+

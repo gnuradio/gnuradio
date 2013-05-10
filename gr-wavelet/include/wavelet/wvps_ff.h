@@ -31,6 +31,10 @@ class wavelet_wvps_ff;
 namespace gr { 
   namespace wavelet {
 
+    /*!
+     * \brief computes the Wavelet Power Spectrum from a set of wavelet coefficients
+     * \ingroup wavelet_blk
+     */
     class WAVELET_API wvps_ff : virtual public gr_sync_block
     {
     public:
@@ -39,8 +43,7 @@ namespace gr {
       typedef boost::shared_ptr<wvps_ff> sptr;
 
       /*!
-       * \brief computes the Wavelet Power Spectrum from a set of wavelet coefficients
-       * \ingroup wavelet_blk
+        \param ilen
        */
       static sptr make(int ilen);
     };

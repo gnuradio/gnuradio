@@ -30,20 +30,21 @@
 namespace gr {
   namespace digital {
 
-    //! \brief A probe for computing SNR of a signal.
-    /*! \ingroup snr_blk
+    /*!
+     * \brief A probe for computing SNR of a signal.
+     * \ingroup measurement_tools_blk
      *
-     *  This is a probe block (a sink) that can be used to monitor and
-     *  retrieve estimations of the signal SNR. This probe is designed
-     *  for use with M-PSK signals especially. The type of estimator
-     *  is specified as the \p type parameter in the constructor. The
-     *  estimators tend to trade off performance for accuracy,
-     *  although experimentation should be done to figure out the
-     *  right approach for a given implementation. Further, the
-     *  current set of estimators are designed and proven
-     *  theoretically under AWGN conditions; some amount of error
-     *  should be assumed and/or estimated for real channel
-     *  conditions.
+     * \details 
+     * This is a probe block (a sink) that can be used to monitor and
+     * retrieve estimations of the signal SNR. This probe is designed
+     * for use with M-PSK signals especially. The type of estimator is
+     * specified as the \p type parameter in the constructor. The
+     * estimators tend to trade off performance for accuracy, although
+     * experimentation should be done to figure out the right approach
+     * for a given implementation. Further, the current set of
+     * estimators are designed and proven theoretically under AWGN
+     * conditions; some amount of error should be assumed and/or
+     * estimated for real channel conditions.
      */
     class DIGITAL_API probe_mpsk_snr_est_c : virtual public gr_sync_block
     {
@@ -55,12 +56,12 @@ namespace gr {
        *
        *  Parameters:
        *
-       *  \param type: the type of estimator to use \ref ref_snr_est_types
-       *  "snr_est_type_t" for details about the available types.
+       *  \param type: the type of estimator to use see
+       *   gr::digital::snr_est_type_t for details about the types.
        *  \param msg_nsamples: [not implemented yet] after this many
-       *  samples, a message containing the SNR (key='snr') will be sent
+       *   samples, a message containing the SNR (key='snr') will be sent
        *  \param alpha: the update rate of internal running average
-       *  calculations.
+       *   calculations.
        */
       static sptr make(snr_est_type_t type,
 		       int msg_nsamples=10000,

@@ -64,28 +64,28 @@ CPACK_COMPONENT("digital_runtime"
     GROUP        "Digital"
     DISPLAY_NAME "Runtime"
     DESCRIPTION  "Dynamic link libraries"
-    DEPENDS      "core_runtime"
+    DEPENDS      "runtime_runtime"
 )
 
 CPACK_COMPONENT("digital_devel"
     GROUP        "Digital"
     DISPLAY_NAME "Development"
     DESCRIPTION  "C++ headers, package config, import libraries"
-    DEPENDS      "core_devel"
+    DEPENDS      "runtime_devel"
 )
 
 CPACK_COMPONENT("digital_python"
     GROUP        "Digital"
     DISPLAY_NAME "Python"
     DESCRIPTION  "Python modules for runtime"
-    DEPENDS      "core_python;digital_runtime"
+    DEPENDS      "runtime_python;digital_runtime"
 )
 
 CPACK_COMPONENT("digital_swig"
     GROUP        "Digital"
     DISPLAY_NAME "SWIG"
     DESCRIPTION  "SWIG development .i files"
-    DEPENDS      "core_swig;digital_python;digital_devel"
+    DEPENDS      "runtime_swig;digital_python;digital_devel"
 )
 
 ########################################################################

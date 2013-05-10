@@ -46,8 +46,9 @@ namespace gr {
       /*! \brief Return the taps for an interpolating FIR filter
        *   (gr::filter::interp_fir_filter_fff).
        *
-       * These taps represent the phase response \f$g(k)\f$ for use in
-       * a CPM modulator, see also gr_cpmmod_bc.
+       * \details
+       * These taps represent the phase response \f$g(k)\f$ for use in a CPM modulator,
+       * see also gr_cpmmod_bc.
        *
        * \param type The CPM type (Rectangular, Raised Cosine,
        *             Spectral Raised Cosine, Tamed FM or Gaussian).

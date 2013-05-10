@@ -33,7 +33,9 @@ namespace gr {
 
       /*!
        * \brief high performance Automatic Gain Control class for complex signals.
+       * \ingroup level_controllers_blk
        *
+       * \details
        * For Power the absolute value of the complex number is used.
        */
       class ANALOG_API agc_cc

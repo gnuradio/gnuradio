@@ -106,10 +106,15 @@ class GR_RUNTIME_API gr_buffer {
    * \brief  Removes an existing tag from the buffer.
    *
    * If no such tag is found, does nothing.
+   * Note: Doesn't actually physically delete the tag, but
+   * marks it as deleted. For the user, this has the same effect:
+   * Any subsequent calls to get_tags_in_range() will not return
+   * the tag.
    *
    * \param tag        the tag that needs to be removed
+   * \param id         the unique ID of the block calling this function
    */
-  void remove_item_tag(const gr_tag_t &tag);
+  void remove_item_tag(const gr_tag_t &tag, long id);
 
   /*!
    * \brief  Removes all tags before \p max_time from buffer
@@ -279,10 +284,12 @@ class GR_RUNTIME_API gr_buffer_reader {
    * \param v            a vector reference to return tags into
    * \param abs_start    a uint64 count of the start of the range of interest
    * \param abs_end      a uint64 count of the end of the range of interest
+   * \param id           the unique ID of the block to make sure already deleted tags are not returned
    */
   void get_tags_in_range(std::vector<gr_tag_t> &v,
 			 uint64_t abs_start,
-			 uint64_t abs_end);
+			 uint64_t abs_end,
+			 long id);
 
   // -------------------------------------------------------------------------
 

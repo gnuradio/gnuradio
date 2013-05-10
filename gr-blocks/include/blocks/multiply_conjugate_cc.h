@@ -29,6 +29,10 @@
 namespace gr {
   namespace blocks {
 
+    /*!
+     * \brief Multiplies stream 0 by the complex conjugate of stream 1.
+     * \ingroup math_operators_blk
+     */
     class BLOCKS_API multiply_conjugate_cc : virtual public gr_sync_block
     {
     public:

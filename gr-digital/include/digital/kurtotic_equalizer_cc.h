@@ -31,10 +31,10 @@ namespace gr {
 
     /*!
      * \brief Implements a kurtosis-based adaptive equalizer on complex stream
-     * \ingroup eq_blk
-     * \ingroup digital
+     * \ingroup equalizers_blk
      *
-     * WARNING: This block does not yet work.
+     * \details
+     * Warning: This block does not yet work.
      *
      * "Y. Guo, J. Zhao, Y. Sun, "Sign kurtosis maximization based blind
      * equalization algorithm," IEEE Conf. on Control, Automation,

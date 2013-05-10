@@ -32,8 +32,9 @@ namespace gr {
 
     /*!
      * \brief high performance Automatic Gain Control class
-     * \ingroup level_blk
+     * \ingroup level_controllers_blk
      *
+     * \details
      * Power is approximated by absolute value
      */
     class ANALOG_API agc_ff : virtual public gr_sync_block

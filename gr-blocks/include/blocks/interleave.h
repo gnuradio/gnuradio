@@ -31,16 +31,19 @@ namespace gr {
 
     /*!
      * \brief interleave N inputs into a single output
-     * \ingroup slicedice_blk
-     * \param itemsize stream itemsize
+     * \ingroup stream_operators_blk
      */
     class BLOCKS_API interleave : virtual public gr_sync_interpolator
     {
     public:
-      
       // gr::blocks::interleave::sptr
       typedef boost::shared_ptr<interleave> sptr;
 
+      /*!
+       * Make a stream interleave block.
+       *
+       * \param itemsize stream itemsize
+       */
       static sptr make(size_t itemsize);
     };
 

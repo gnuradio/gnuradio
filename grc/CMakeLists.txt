@@ -60,7 +60,7 @@ include(GrPackage)
 CPACK_COMPONENT("grc"
     DISPLAY_NAME "GNU Radio Companion"
     DESCRIPTION  "Graphical flow graph designer"
-    DEPENDS      "core_python"
+    DEPENDS      "runtime_python"
 )
 
 ########################################################################

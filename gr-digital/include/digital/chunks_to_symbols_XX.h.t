@@ -51,7 +51,6 @@ namespace gr {
      * \sa gr::digital::chunks_to_symbols_bf, gr::digital::chunks_to_symbols_bc.
      * \sa gr::digital::chunks_to_symbols_sf, gr::digital::chunks_to_symbols_sc.
      */
-
     class DIGITAL_API @NAME@ : virtual public gr_sync_interpolator
     {
     public:

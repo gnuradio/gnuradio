@@ -33,8 +33,9 @@ namespace gr {
 
     /*!
      * \brief Detect the peak of a signal
-     * \ingroup level_blk
+     * \ingroup peak_detectors_blk
      *
+     * \details
      * If a peak is detected, this block outputs a 1,
      * or it outputs 0's.
      */

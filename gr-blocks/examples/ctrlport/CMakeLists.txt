@@ -21,5 +21,5 @@ include(GrPython)
 
 GR_PYTHON_INSTALL(PROGRAMS
     DESTINATION ${GR_PKG_CTRLPORT_EXAMPLES_DIR}
-    COMPONENT "core_python"
+    COMPONENT "runtime_python"
 )

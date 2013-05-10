@@ -32,6 +32,11 @@ set(GR_SWIG_INCLUDE_DIRS
     ${UHD_INCLUDE_DIRS}
 )
 
+if(ENABLE_GR_CTRLPORT)
+  list(APPEND GR_SWIG_FLAGS "-DGR_CTRLPORT")
+  list(APPEND GR_SWIG_INCLUDE_DIRS ${ICE_INCLUDE_DIR})
+endif(ENABLE_GR_CTRLPORT)
+
 set(GR_SWIG_DOC_FILE ${CMAKE_CURRENT_BINARY_DIR}/uhd_swig_doc.i)
 set(GR_SWIG_DOC_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/../include/uhd)
 set(GR_SWIG_DOCS_TARGET_DEPS runtime_swig_swig_doc)
@@ -52,10 +57,4 @@ install(
     ${CMAKE_CURRENT_BINARY_DIR}/uhd_swig_doc.i
     DESTINATION ${GR_INCLUDE_DIR}/gnuradio/swig
     COMPONENT "uhd_swig"
-)
-
-GR_PYTHON_INSTALL(
-    FILES __init__.py
-    DESTINATION ${GR_PYTHON_DIR}/gnuradio/uhd
-    COMPONENT "uhd_python"
 )

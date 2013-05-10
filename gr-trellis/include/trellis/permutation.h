@@ -32,7 +32,7 @@ namespace gr {
 
     /*!
      * \brief Permutation.
-     * \ingroup coding_blk
+     * \ingroup trellis_coding_blk
      */
     class TRELLIS_API permutation : virtual public gr_sync_block
     {

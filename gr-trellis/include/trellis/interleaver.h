@@ -31,6 +31,7 @@ namespace gr {
 
     /*!
      * \brief  INTERLEAVER class
+     * \ingroup trellis_coding_blk
      */
     class TRELLIS_API interleaver
     {

@@ -65,7 +65,7 @@ include(GrPackage)
 CPACK_COMPONENT("wxgui"
     DISPLAY_NAME "WxGUI"
     DESCRIPTION  "Wx GUI plotter widgets and grc wrappers"
-    DEPENDS      "core_python"
+    DEPENDS      "runtime_python"
 )
 
 ########################################################################

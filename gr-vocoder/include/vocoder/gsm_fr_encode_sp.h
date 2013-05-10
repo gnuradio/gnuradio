@@ -31,7 +31,7 @@ namespace gr {
 
     /*!
      * \brief GSM 06.10 Full Rate Vocoder Encoder
-     * \ingroup vocoder_blk
+     * \ingroup audio_blk
      *
      * shorts in; 33 byte packets out
      */

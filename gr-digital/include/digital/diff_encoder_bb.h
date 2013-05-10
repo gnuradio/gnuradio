@@ -31,8 +31,9 @@ namespace gr {
 
     /*!
      * \brief Differential decoder: y[0] = (x[0] + y[-1]) % M
-     * \ingroup coding_blk
+     * \ingroup symbol_coding_blk
      *
+     * \details
      * Uses current and previous symbols and the alphabet modulus to
      * perform differential encoding.
      */

@@ -28,6 +28,10 @@
 #include <vector>
 #include <qtgui/DisplayPlot.h>
 
+/*!
+ * \brief QWidget for displaying constellaton (I&Q) plots.
+ * \ingroup qtgui_blk
+ */
 class ConstellationDisplayPlot : public DisplayPlot
 {
   Q_OBJECT

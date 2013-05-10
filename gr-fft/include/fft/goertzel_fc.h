@@ -29,6 +29,10 @@
 namespace gr {
   namespace fft {
 
+    /*!
+     * \brief Goertzel single-bin DFT calculation.
+     * \ingroup fourier_analysis_blk
+     */
     class FFT_API goertzel_fc : virtual public gr_sync_decimator
     {
     public:
@@ -36,10 +40,6 @@ namespace gr {
       // gr::fft::goertzel_fc::sptr
       typedef boost::shared_ptr<goertzel_fc> sptr;
       
-      /*!
-       * \brief Goertzel single-bin DFT calculation.
-       * \ingroup dft_blk
-       */
       static sptr make(int rate, int len, float freq);
 
       virtual void set_freq (float freq) = 0;

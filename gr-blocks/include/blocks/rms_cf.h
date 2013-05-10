@@ -31,7 +31,7 @@ namespace gr {
 
     /*!
      * \brief RMS average power
-     * \ingroup math_blk
+     * \ingroup math_operators_blk
      */
     class BLOCKS_API rms_cf : virtual public gr_sync_block
     {

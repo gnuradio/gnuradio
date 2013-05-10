@@ -32,7 +32,7 @@ namespace gr {
 
     /*!
      * \brief Turns received PDUs into a tagged stream of items
-     * \ingroup source_blk
+     * \ingroup message_tools_blk
      */
     class BLOCKS_API pdu_to_tagged_stream : virtual public gr_sync_block
     {

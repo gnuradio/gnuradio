@@ -58,28 +58,28 @@ CPACK_COMPONENT("noaa_runtime"
     GROUP        "NOAA"
     DISPLAY_NAME "Runtime"
     DESCRIPTION  "Runtime"
-    DEPENDS      "core_runtime"
+    DEPENDS      "runtime_runtime"
 )
 
 CPACK_COMPONENT("noaa_devel"
     GROUP        "NOAA"
     DISPLAY_NAME "Development"
     DESCRIPTION  "C++ headers, package config, import libraries"
-    DEPENDS      "core_devel"
+    DEPENDS      "runtime_devel"
 )
 
 CPACK_COMPONENT("noaa_python"
     GROUP        "NOAA"
     DISPLAY_NAME "Python"
     DESCRIPTION  "Python modules for runtime; GRC xml files"
-    DEPENDS      "core_python;noaa_runtime"
+    DEPENDS      "runtime_python;noaa_runtime"
 )
 
 CPACK_COMPONENT("noaa_swig"
     GROUP        "NOAA"
     DISPLAY_NAME "SWIG"
     DESCRIPTION  "SWIG development .i files"
-    DEPENDS      "core_swig;noaa_python;noaa_devel"
+    DEPENDS      "runtime_swig;noaa_python;noaa_devel"
 )
 
 ########################################################################

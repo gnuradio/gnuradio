@@ -28,6 +28,10 @@
 #include <vector>
 #include <qtgui/DisplayPlot.h>
 
+/*!
+ * \brief QWidget for displaying frequency domain (PSD) plots.
+ * \ingroup qtgui_blk
+ */
 class FrequencyDisplayPlot: public DisplayPlot
 {
   Q_OBJECT

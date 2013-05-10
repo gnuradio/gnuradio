@@ -60,8 +60,8 @@ include_directories(${GNURADIO_RUNTIME_INCLUDE_DIRS}
 ########################################################################
 # Include subdirs rather to populate to the sources lists.
 ########################################################################
-GR_INCLUDE_SUBDIRECTORY(messages)
 GR_INCLUDE_SUBDIRECTORY(pmt)
+GR_INCLUDE_SUBDIRECTORY(messages)
 GR_INCLUDE_SUBDIRECTORY(thread)
 
 ########################################################################
@@ -123,22 +123,32 @@ list(APPEND gnuradio_runtime_sources
   gr_vmcircbuf_mmap_tmpfile.cc
   gr_vmcircbuf_sysv_shm.cc
   malloc16.c
+  realtime.cc
   runtime_block_gateway.cc
 )
 
 # PowerPC workaround for posix_memalign
 # Might not be needed, but we'll keep it for now.
 if(CMAKE_SYSTEM_PROCESSOR MATCHES "^(powerpc|ppc)")
-    list(APPEND gnuradio_core_sources
+    list(APPEND gnuradio_runtime_sources
         ${CMAKE_CURRENT_SOURCE_DIR}/posix_memalign.cc
     )
 endif(CMAKE_SYSTEM_PROCESSOR MATCHES "^(powerpc|ppc)")
 
 list(APPEND gnuradio_runtime_libs
     volk
+    gnuradio-pmt
     ${Boost_LIBRARIES}
     ${LOG4CPP_LIBRARIES}
 )
+
+#Add libraries for winsock2.h on Windows
+CHECK_INCLUDE_FILE_CXX(windows.h HAVE_WINDOWS_H)
+IF(HAVE_WINDOWS_H)
+    ADD_DEFINITIONS(-DHAVE_WINDOWS_H -DUSING_WINSOCK -DWIN32_LEAN_AND_MEAN)
+    MESSAGE(STATUS "Adding windows libs to gnuradio runtime libs...")
+    LIST(APPEND gnuradio_runtime_libs WS2_32.lib WSock32.lib)
+ENDIF(HAVE_WINDOWS_H)
 
 #need to link with librt on ubuntu 11.10 for shm_*
 if(LINUX)
@@ -146,6 +156,8 @@ if(LINUX)
 endif()
 
 if(ENABLE_GR_CTRLPORT)
+
+include_directories(${ICE_INCLUDE_DIR})
 
 # Add definition so we can compile in ControlPort to the blocks.
 ADD_DEFINITIONS(-DGR_CTRLPORT)
@@ -189,6 +201,23 @@ list(APPEND gnuradio_runtime_libs
 endif(ENABLE_GR_CTRLPORT)
 
 ########################################################################
+# Add DLL resource file when using MSVC
+########################################################################
+
+if(MSVC)
+    include(${CMAKE_SOURCE_DIR}/cmake/Modules/GrVersion.cmake)
+
+    configure_file(
+        ${CMAKE_CURRENT_SOURCE_DIR}/gnuradio-runtime.rc.in
+        ${CMAKE_CURRENT_BINARY_DIR}/gnuradio-runtime.rc
+    @ONLY)
+
+    list(APPEND gnuradio_runtime_sources
+        ${CMAKE_CURRENT_BINARY_DIR}/gnuradio-runtime.rc
+    )
+endif(MSVC)
+
+########################################################################
 # Control availability of vmcircbuf methods.
 # For now, only allows disabling of shm methods, which cause uncatchable
 #    segmentation faults on Cygwin with gcc 4.x (x <= 5)
@@ -213,10 +242,10 @@ endif(TRY_SHM_VMCIRCBUF)
 
 add_library(gnuradio-runtime SHARED ${gnuradio_runtime_sources})
 target_link_libraries(gnuradio-runtime ${gnuradio_runtime_libs})
-GR_LIBRARY_FOO(gnuradio-runtime RUNTIME_COMPONENT "runtime" DEVEL_COMPONENT "runtime_devel")
+GR_LIBRARY_FOO(gnuradio-runtime RUNTIME_COMPONENT "runtime_runtime" DEVEL_COMPONENT "runtime_devel")
 
 add_dependencies(gnuradio-runtime
-  runtime_generated_includes
+  pmt_generated runtime_generated_includes
 )
 
 ########################################################################
@@ -242,13 +271,14 @@ list(APPEND test_gnuradio_runtime_sources
   qa_sincos.cc
   pmt/qa_pmt.cc
   pmt/qa_pmt_prims.cc
+  ${CMAKE_CURRENT_BINARY_DIR}/pmt/qa_pmt_unv.cc
 )
 
 include_directories(${CPPUNIT_INCLUDE_DIRS})
 link_directories(${CPPUNIT_LIBRARY_DIRS})
 
 add_library(test-gnuradio-runtime SHARED ${test_gnuradio_runtime_sources})
-target_link_libraries(test-gnuradio-runtime gnuradio-runtime ${CPPUNIT_LIBRARIES} ${Boost_LIBRARIES} ${LOG4CPP_LIBRARIES})
+target_link_libraries(test-gnuradio-runtime gnuradio-runtime gnuradio-pmt ${CPPUNIT_LIBRARIES} ${Boost_LIBRARIES} ${LOG4CPP_LIBRARIES})
 
 ########################################################################
 # Build the test executable

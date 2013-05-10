@@ -29,13 +29,9 @@
 <cat>
 	<name></name> <!-- Blank for Root Name -->
 	<cat>
-		<name>FFT</name>
+		<name>Fourier Analysis</name>
 		<block>fft_vxx</block>
 		<block>goertzel_fc</block>
-	</cat>
-
-	<cat>
-		<name>Operators</name>
 		<block>logpwrfft_x</block>
 	</cat>
 </cat>

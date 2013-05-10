@@ -32,8 +32,9 @@ namespace gr {
 
     /*!
      * \brief Given a stream of bits and access_code flags, assemble packets.
-     * \ingroup sink_blk
+     * \ingroup packet_operators_blk
      *
+     * \details
      * input: stream of bytes from digital_correlate_access_code_bb
      * output: none. Pushes assembled packet into target queue
      *

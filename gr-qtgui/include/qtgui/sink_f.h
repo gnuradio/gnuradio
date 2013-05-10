@@ -35,8 +35,10 @@ namespace gr {
 
     /*!
      * \brief A graphical sink to display freq, spec, and time.
+     * \ingroup instrumentation_blk
      * \ingroup qtgui_blk
      *
+     * \details
      * This is a QT-based graphical sink the takes a float stream and
      * plots it. The default action is to plot the signal as a PSD (FFT),
      * spectrogram (waterfall), and time domain plots. The plots may be

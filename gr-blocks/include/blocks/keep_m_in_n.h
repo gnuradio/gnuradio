@@ -30,8 +30,8 @@ namespace gr {
   namespace blocks {
 
     /*!
-     * \brief decimate a stream, keeping one item out of every n.
-     * \ingroup slicedice_blk
+     * \brief decimate a stream, keeping \p m items out of every \p n.
+     * \ingroup stream_operators_blk
      */
     class BLOCKS_API keep_m_in_n : virtual public gr_block
     {
@@ -40,6 +40,14 @@ namespace gr {
       // gr::blocks::keep_m_in_n::sptr
       typedef boost::shared_ptr<keep_m_in_n> sptr;
 
+      /*!
+       * Make a keep m in n block.
+       *
+       * \param itemsize stream itemsize
+       * \param m number of items to take in block of \p n items
+       * \param n block size in items
+       * \param offset initial item offset into the stream
+       */
       static sptr make(size_t itemsize, int m, int n, int offset);
 
       virtual void set_m(int m) = 0;

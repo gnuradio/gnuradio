@@ -33,6 +33,7 @@ namespace gr {
      * \brief Scramble an input stream using an LFSR.
      * \ingroup coding_blk
      *
+     * \details
      * This block works on the LSB only of the input data stream,
      * i.e., on an "unpacked binary" stream, and produces the same
      * format on its output.

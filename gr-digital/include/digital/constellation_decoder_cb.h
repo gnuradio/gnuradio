@@ -32,9 +32,9 @@ namespace gr {
 
     /*!
      * \brief Constellation Decoder
-     * \ingroup coding_blk
-     * \ingroup digital
+     * \ingroup symbol_coding_blk
      *
+     * \details
      * Decode a constellation's points from a complex space to
      * (unpacked) bits based on the map of the \p consetllation
      * object.
