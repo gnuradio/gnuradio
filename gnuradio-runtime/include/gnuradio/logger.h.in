@@ -42,6 +42,10 @@
 #cmakedefine HAVE_LOG4CPP
 #endif
 
+#ifdef _MSC_VER
+typedef unsigned short mode_t;
+#endif
+
 #include <gnuradio/api.h>
 #include <assert.h>
 #include <iostream>
