@@ -228,13 +228,12 @@ namespace gr {
   }
 
   void
-  buffer::remove_item_tag(const tag_t &tag)
+  buffer::remove_item_tag(const tag_t &tag, long id)
   {
     gr::thread::scoped_lock guard(*mutex());
     for(std::deque<tag_t>::iterator it = d_item_tags.begin(); it != d_item_tags.end(); ++it) {
       if(*it == tag) {
-        d_item_tags.erase(it);
-        break;
+	(*it).marked_deleted.push_back(id);
       }
     }
   }
@@ -315,7 +314,8 @@ namespace gr {
   void
   buffer_reader::get_tags_in_range(std::vector<tag_t> &v,
                                    uint64_t abs_start,
-                                   uint64_t abs_end)
+                                   uint64_t abs_end,
+				   long id)
   {
     gr::thread::scoped_lock guard(*mutex());
 
@@ -327,9 +327,14 @@ namespace gr {
       item_time = (*itr).offset;
 
       if((item_time >= abs_start) && (item_time < abs_end)) {
-        v.push_back(*itr);
+	std::vector<long>::iterator id_itr;
+	id_itr = std::find(itr->marked_deleted.begin(), itr->marked_deleted.end(), id);
+	if (id_itr == itr->marked_deleted.end()) { // If id is not in the vector of marked blocks
+	  v.push_back(*itr);
+	  v.back().marked_deleted.clear();
+	}
       }
-
+      
       itr++;
     }
   }

@@ -98,15 +98,14 @@ module GNURadio {
             idempotent void  setInfo(string k, string v) throws ReceiverFailure, NotSupported, InvalidSetting;
         };
 
-        interface Channel {
+        interface Channel extends Tuner {
             void start();
             void stop();
             void destroyChannel() throws NotSupported;
             idempotent bool  active();
-            idempotent ChannelStatus status();
+            idempotent ChannelStatus channelStat();
             idempotent StreamInfo    stream();
             idempotent bool setComplex(bool complex) throws ReceiverFailure, NotSupported, InvalidSetting;
-            idempotent void setInfo(string k, string v) throws ReceiverFailure, NotSupported, InvalidSetting;
             idempotent void setStreamInfo(string k, string v) throws ReceiverFailure, NotSupported, InvalidSetting;
         };
 

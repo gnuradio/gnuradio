@@ -95,6 +95,8 @@ namespace gr {
       void set_gain(double gain, const std::string &name, size_t chan);
       void set_antenna(const std::string &ant, size_t chan);
       void set_bandwidth(double bandwidth, size_t chan);
+      double get_bandwidth(size_t chan);
+      ::uhd::freq_range_t get_bandwidth_range(size_t chan);
       void set_auto_dc_offset(const bool enable, size_t chan);
       void set_dc_offset(const std::complex<double> &offset, size_t chan);
       void set_iq_balance(const std::complex<double> &correction, size_t chan);

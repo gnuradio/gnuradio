@@ -214,6 +214,18 @@ namespace gr {
       return _dev->set_tx_bandwidth(bandwidth, chan);
     }
 
+    double
+    usrp_sink_impl::get_bandwidth(size_t chan)
+    {
+        return _dev->get_tx_bandwidth(chan);
+    }
+
+    ::uhd::freq_range_t
+    usrp_sink_impl::get_bandwidth_range(size_t chan)
+    {
+        return _dev->get_tx_bandwidth_range(chan);
+    }
+
     void
     usrp_sink_impl::set_dc_offset(const std::complex<double> &offset,
                                   size_t chan)

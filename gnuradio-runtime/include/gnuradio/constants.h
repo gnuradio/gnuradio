@@ -29,27 +29,27 @@
 namespace gr {
 
   /*!
-   * \brief return ./configure --prefix argument.  Typically /usr/local
+   * \brief return SYSCONFDIR. Typically ${CMAKE_INSTALL_PREFIX}/etc or /etc
    */
   GR_RUNTIME_API const std::string prefix();
 
   /*!
-   * \brief return ./configure --sysconfdir argument.  Typically $prefix/etc or /etc
+   * \brief return SYSCONFDIR. Typically ${CMAKE_INSTALL_PREFIX}/etc or /etc
    */
   GR_RUNTIME_API const std::string sysconfdir();
 
   /*!
-   * \brief return preferences file directory.  Typically $sysconfdir/etc/conf.d
+   * \brief return preferences file directory. Typically ${SYSCONFDIR}/etc/conf.d
    */
   GR_RUNTIME_API const std::string prefsdir();
 
   /*!
-   * \brief return date/time of build, as set when 'bootstrap' is run
+   * \brief return date/time of build, as set when 'cmake' is run
    */
   GR_RUNTIME_API const std::string build_date();
 
   /*!
-   * \brief return version string defined in configure.ac
+   * \brief return version string defined by cmake (GrVersion.cmake)
    */
   GR_RUNTIME_API const std::string version();
 

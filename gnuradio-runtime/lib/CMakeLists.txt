@@ -69,8 +69,6 @@ GR_INCLUDE_SUBDIRECTORY(math)
 # Setup library
 ########################################################################
 list(APPEND gnuradio_runtime_sources
-  complex_vec_test.cc
-  malloc16.c
   basic_block.cc
   block.cc
   block_detail.cc
@@ -79,6 +77,7 @@ list(APPEND gnuradio_runtime_sources
   block_registry.cc
   buffer.cc
   circular_file.cc
+  complex_vec_test.cc
   feval.cc
   flat_flowgraph.cc
   flowgraph.cc
@@ -87,6 +86,7 @@ list(APPEND gnuradio_runtime_sources
   io_signature.cc
   local_sighandler.cc
   logger.cc
+  malloc16.c
   message.cc
   misc.cc
   msg_accepter.cc
@@ -94,10 +94,6 @@ list(APPEND gnuradio_runtime_sources
   msg_queue.cc
   pagesize.cc
   prefs.cc
-  tagged_stream_block.cc
-  test.cc
-  top_block.cc
-  top_block_impl.cc
   realtime.cc
   scheduler.cc
   scheduler_sts.cc
@@ -108,6 +104,10 @@ list(APPEND gnuradio_runtime_sources
   sync_decimator.cc
   sync_interpolator.cc
   sys_paths.cc
+  tagged_stream_block.cc
+  test.cc
+  top_block.cc
+  top_block_impl.cc
   tpb_detail.cc
   tpb_thread_body.cc
   vmcircbuf.cc

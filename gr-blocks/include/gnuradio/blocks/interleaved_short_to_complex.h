@@ -42,7 +42,7 @@ namespace gr {
       /*!
        * Build an interleaved short to complex block.
        */
-      static sptr make();
+      static sptr make(bool vector_input=false);
     };
 
   } /* namespace blocks */

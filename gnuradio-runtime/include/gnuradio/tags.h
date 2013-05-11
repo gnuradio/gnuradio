@@ -42,6 +42,9 @@ namespace gr {
     //! the source ID of \p tag (as a PMT)
     pmt::pmt_t srcid;
 
+    //! Used by gr_buffer to mark a tagged as deleted by a specific block. You can usually ignore this.
+    std::vector<long> marked_deleted;
+
     /*!
      * Comparison function to test which tag, \p x or \p y, came
      * first in time

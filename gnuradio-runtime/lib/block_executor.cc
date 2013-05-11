@@ -93,7 +93,7 @@ namespace gr {
   static bool
   propagate_tags(block::tag_propagation_policy_t policy, block_detail *d,
                  const std::vector<uint64_t> &start_nitems_read, double rrate,
-                 std::vector<tag_t> &rtags)
+                 std::vector<tag_t> &rtags, long block_id)
   {
     // Move tags downstream
     // if a sink, we don't need to move downstream
@@ -109,7 +109,7 @@ namespace gr {
       // every tag on every input propogates to everyone downstream
       for(int i = 0; i < d->ninputs(); i++) {
         d->get_tags_in_range(rtags, i, start_nitems_read[i],
-                             d->nitems_read(i));
+                             d->nitems_read(i), block_id);
 
         std::vector<tag_t>::iterator t;
         if(rrate == 1.0) {
@@ -135,7 +135,7 @@ namespace gr {
       if(d->ninputs() == d->noutputs()) {
         for(int i = 0; i < d->ninputs(); i++) {
           d->get_tags_in_range(rtags, i, start_nitems_read[i],
-                               d->nitems_read(i));
+                               d->nitems_read(i), block_id);
 
           std::vector<tag_t>::iterator t;
           for(t = rtags.begin(); t != rtags.end(); t++) {
@@ -450,7 +450,7 @@ namespace gr {
 
       if(!propagate_tags(m->tag_propagation_policy(), d,
                          d_start_nitems_read, m->relative_rate(),
-                         d_returned_tags))
+                         d_returned_tags, m->unique_id()))
         goto were_done;
 
       if(n == block::WORK_DONE)
