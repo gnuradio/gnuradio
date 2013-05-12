@@ -204,7 +204,7 @@ install(FILES
     vector_to_streams.h
     wavfile_sink.h
     wavfile_source.h
-    DESTINATION ${GR_INCLUDE_DIR}/gnuradio/blocks
+    tag_gate.h DESTINATION ${GR_INCLUDE_DIR}/gnuradio/blocks
     COMPONENT "blocks_devel"
 )
 

@@ -23,8 +23,11 @@
 #include "config.h"
 #endif
 
+#include <gr_expj.h>
 #include <gr_io_signature.h>
 #include "ofdm_frame_equalizer_vcvc_impl.h"
+
+#define M_TWOPI (2*M_PI)
 
 namespace gr {
   namespace digital {
@@ -32,6 +35,7 @@ namespace gr {
     ofdm_frame_equalizer_vcvc::sptr
     ofdm_frame_equalizer_vcvc::make(
 	ofdm_equalizer_base::sptr equalizer,
+	int cp_len,
 	const std::string &len_tag_key,
 	bool propagate_channel_state,
 	int fixed_frame_len
@@ -39,13 +43,14 @@ namespace gr {
     {
       return gnuradio::get_initial_sptr (
 	  new ofdm_frame_equalizer_vcvc_impl(
-	    equalizer, len_tag_key, propagate_channel_state, fixed_frame_len
+	    equalizer, cp_len, len_tag_key, propagate_channel_state, fixed_frame_len
 	  )
       );
     }
 
     ofdm_frame_equalizer_vcvc_impl::ofdm_frame_equalizer_vcvc_impl(
 	ofdm_equalizer_base::sptr equalizer,
+	int cp_len,
 	const std::string &len_tag_key,
 	bool propagate_channel_state,
 	int fixed_frame_len
@@ -54,26 +59,49 @@ namespace gr {
 	  gr_make_io_signature(1, 1, sizeof (gr_complex) * equalizer->fft_len()),
 	  len_tag_key),
       d_fft_len(equalizer->fft_len()),
+      d_cp_len(cp_len),
       d_eq(equalizer),
       d_propagate_channel_state(propagate_channel_state),
-      d_fixed_frame_len(len_tag_key.empty() ? fixed_frame_len : 0),
+      d_fixed_frame_len(fixed_frame_len),
       d_channel_state(equalizer->fft_len(), gr_complex(1, 0))
     {
+      if (len_tag_key.empty() && fixed_frame_len == 0) {
+	throw std::invalid_argument("Either specify a length tag or a frame length!");
+      }
+      if (d_fixed_frame_len < 0) {
+	throw std::invalid_argument("Invalid frame length!");
+      }
       if (d_fixed_frame_len) {
 	set_output_multiple(d_fixed_frame_len);
       }
+      set_relative_rate(1.0);
     }
 
     ofdm_frame_equalizer_vcvc_impl::~ofdm_frame_equalizer_vcvc_impl()
     {
     }
 
+    void
+    ofdm_frame_equalizer_vcvc_impl::parse_length_tags(
+	const std::vector<std::vector<gr_tag_t> > &tags,
+	gr_vector_int &n_input_items_reqd
+    ){
+      if (d_fixed_frame_len) {
+	n_input_items_reqd[0] = d_fixed_frame_len;
+      } else {
+	for (unsigned k = 0; k < tags[0].size(); k++) {
+	  if (tags[0][k].key == pmt::string_to_symbol(d_length_tag_key_str)) {
+	    n_input_items_reqd[0] = pmt::to_long(tags[0][k].value);
+	    remove_item_tag(0, tags[0][k]);
+	  }
+	}
+      }
+    }
+
 
     int
     ofdm_frame_equalizer_vcvc_impl::work(int noutput_items,
-	  gr_vector_int &ninput_items,
-	  gr_vector_const_void_star &input_items,
-	  gr_vector_void_star &output_items)
+	  gr_vector_int &ninput_items, gr_vector_const_void_star &input_items, gr_vector_void_star &output_items)
     {
       const gr_complex *in = (const gr_complex *) input_items[0];
       gr_complex *out = (gr_complex *) output_items[0];
@@ -92,20 +120,54 @@ namespace gr {
 	  d_channel_state = pmt::c32vector_elements(tags[i].value);
 	  remove_item_tag(0, tags[i]);
 	}
+	if (pmt::symbol_to_string(tags[i].key) == "ofdm_sync_carr_offset") {
+	  carrier_offset = pmt::to_long(tags[i].value);
+	}
       }
 
-      memcpy((void *) out, (void *) in, sizeof(gr_complex) * d_fft_len * frame_len);
+      // Copy the frame and the channel state vector such that the symbols are shifted to the correct position
+      if (carrier_offset < 0) {
+	memset((void *) out, 0x00, sizeof(gr_complex) * (-carrier_offset));
+	memcpy(
+	    (void *) &out[-carrier_offset], (void *) in,
+	    sizeof(gr_complex) * (d_fft_len * frame_len + carrier_offset)
+	);
+      } else {
+	memset((void *) (out + d_fft_len * frame_len - carrier_offset), 0x00, sizeof(gr_complex) * carrier_offset);
+	memcpy(
+	    (void *) out, (void *) (in+carrier_offset),
+	    sizeof(gr_complex) * (d_fft_len * frame_len - carrier_offset)
+	);
+      }
+
+      // Correct the frequency shift on the symbols
+      gr_complex phase_correction;
+      for (int i = 0; i < frame_len; i++) {
+	phase_correction = gr_expj(-M_TWOPI * carrier_offset * d_cp_len / d_fft_len * (i+1));
+	for (int k = 0; k < d_fft_len; k++) {
+	  out[i*d_fft_len+k] *= phase_correction;
+	}
+      }
+
+      // Do the equalizing
       d_eq->reset();
-      d_eq->set_carrier_offset(carrier_offset);
       d_eq->equalize(out, frame_len, d_channel_state);
       d_eq->get_channel_state(d_channel_state);
+
+      // Update the channel state regarding the frequency offset
+      phase_correction = gr_expj(M_TWOPI * carrier_offset * d_cp_len / d_fft_len * frame_len);
+      for (int k = 0; k < d_fft_len; k++) {
+	d_channel_state[k] *= phase_correction;
+      }
+
+      // Housekeeping
       if (d_propagate_channel_state) {
 	add_item_tag(0, nitems_written(0),
 	    pmt::string_to_symbol("ofdm_sync_chan_taps"),
 	    pmt::init_c32vector(d_fft_len, d_channel_state));
       }
 
-      if (d_fixed_frame_len) {
+      if (d_fixed_frame_len && d_length_tag_key_str.empty()) {
 	consume_each(frame_len);
       }
 

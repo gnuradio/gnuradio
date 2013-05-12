@@ -35,8 +35,20 @@ namespace gr {
      *
      * \details
      * Performs equalization in one or two dimensions on a tagged OFDM frame.
+     *
+     * This does two things:
+     * First, it removes the coarse carrier offset. If a tag is found on the first
+     * item with the key 'ofdm_sync_carr_offset', this is interpreted as the coarse
+     * frequency offset in number of carriers.
+     * Next, it performs equalization in one or two dimensions on a tagged OFDM frame.
+     * The actual equalization is done by a ofdm_frame_equalizer object, outside of
+     * the block.
+     *
+     * Note that the tag with the coarse carrier offset is not removed. Blocks
+     * downstream from this block must not attempt to also correct this offset.
+     *
      * Input: a tagged series of OFDM symbols.
-     * Output: The same as the input, but equalized.
+     * Output: The same as the input, but equalized and frequency-corrected.
      */
     class DIGITAL_API ofdm_frame_equalizer_vcvc : virtual public gr_tagged_stream_block
     {
@@ -45,6 +57,7 @@ namespace gr {
 
       /*!
        * \param equalizer The equalizer object that will do the actual work
+       * \param cp_len Length of the cyclic prefix in samples (required to correct the frequency offset)
        * \param len_tag_key Length tag key
        * \param propagate_channel_state If true, the channel state after the last symbol
        *                                will be added to the first symbol as a tag
@@ -53,6 +66,7 @@ namespace gr {
        */
       static sptr make(
 	   ofdm_equalizer_base::sptr equalizer,
+	   int cp_len,
 	   const std::string &len_tag_key = "frame_len",
 	   bool propagate_channel_state=false,
 	   int fixed_frame_len=0

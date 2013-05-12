@@ -31,19 +31,22 @@ namespace gr {
     {
      private:
       const int d_fft_len;
+      const int d_cp_len;
       ofdm_equalizer_base::sptr d_eq;
       bool d_propagate_channel_state;
       const int d_fixed_frame_len;
       std::vector<gr_complex> d_channel_state;
 
      protected:
-      // These aren't really necessary, so let's override them with nuthin'
-      void remove_length_tags(const std::vector<std::vector<gr_tag_t> > &tags) {};
-      void update_length_tags(int n_produced, int n_ports) {};
+      void parse_length_tags(
+	  const std::vector<std::vector<gr_tag_t> > &tags,
+	  gr_vector_int &n_input_items_reqd
+      );
 
      public:
       ofdm_frame_equalizer_vcvc_impl(
 	  ofdm_equalizer_base::sptr equalizer,
+	  int cp_len,
 	  const std::string &len_tag_key,
 	  bool propagate_channel_state,
 	  int fixed_frame_len

@@ -32,9 +32,8 @@ namespace gr {
     /*!
      * \brief Estimate channel and coarse frequency offset for OFDM from preambles
      * \ingroup ofdm_blk
-     * \ingroup synchronizers_blk
+     * \ingroup syncronizers_blk
      *
-     * \details
      * Input: OFDM symbols (in frequency domain). The first one (or two) symbols are expected
      *        to be synchronisation symbols, which are used to estimate the coarse freq offset
      *        and the initial equalizer taps (these symbols are removed from the stream).
@@ -45,7 +44,9 @@ namespace gr {
      *         'ofdm_sync_carr_offset' (integer), the coarse frequency offset as number of carriers,
      *         and 'ofdm_sync_eq_taps' (complex vector).
      *         Any tags attached to the synchronisation symbols are attached to the first data
-     *         symbol. All other tags are propagated normally.
+     *         symbol. All other tags are propagated as expected.
+     *
+     * Note: The vector on ofdm_sync_eq_taps is already frequency-corrected, whereas the rest is not.
      *
      * This block assumes the frequency offset is even (i.e. an integer multiple of 2).
      *
@@ -58,7 +59,7 @@ namespace gr {
      public:
       typedef boost::shared_ptr<ofdm_chanest_vcvc> sptr;
 
-      /*
+      /*!
        * \param sync_symbol1 First synchronisation symbol in the frequency domain. Its length must be
        *                     the FFT length. For Schmidl & Cox synchronisation, every second sub-carrier
        *                     has to be zero.
