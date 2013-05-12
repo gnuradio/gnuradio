@@ -73,6 +73,12 @@ namespace gr {
       }
 
       std::vector<tag_t> tags;
+      get_tags_in_range(
+	  tags, 0,
+	  nitems_read(0),
+	  nitems_read(0)+d_header_formatter->header_len()
+      );
+
       if (!d_header_formatter->header_parser(in, tags)) {
 	GR_LOG_INFO(d_logger, boost::format("Detected an invalid packet at item %1%") % nitems_read(0));
 	message_port_pub(msg_port_id, pmt::PMT_F);

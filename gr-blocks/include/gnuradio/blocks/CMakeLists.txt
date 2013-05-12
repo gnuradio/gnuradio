@@ -187,6 +187,7 @@ install(FILES
     streams_to_vector.h
     stretch_ff.h
     tag_debug.h
+    tag_gate.h
     tagged_file_sink.h
     tagged_stream_mux.h
     tagged_stream_to_pdu.h

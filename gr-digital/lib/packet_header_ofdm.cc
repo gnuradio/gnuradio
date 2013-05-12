@@ -93,12 +93,15 @@ namespace gr {
       int packet_len = 0; // # of bytes in this frame
       for (unsigned i = 0; i < tags.size(); i++) {
 	if (pmt::equal(tags[i].key, d_len_tag_key)) {
-	  packet_len = pmt::to_long(tags[i].value);
+	  // Convert bytes to complex symbols:
+	  packet_len = pmt::to_long(tags[i].value) * 8 / d_bits_per_payload_sym;
+	  if (pmt::to_long(tags[i].value) * 8 % d_bits_per_payload_sym) {
+	    packet_len++;
+	  }
+	  tags[i].value = pmt::from_long(packet_len);
 	  break;
 	}
       }
-      // Convert bytes to complex symbols:
-      packet_len = packet_len * 8 / d_bits_per_payload_sym;
 
       // frame_len == # of OFDM symbols in this frame
       int frame_len = packet_len / d_syms_per_set;

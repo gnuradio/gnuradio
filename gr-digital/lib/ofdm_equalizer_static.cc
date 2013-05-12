@@ -79,9 +79,9 @@ namespace gr {
 	  if (!d_occupied_carriers[k]) {
 	    continue;
 	  }
-	  if (d_pilot_carriers.size() && d_pilot_carriers[d_pilot_carr_set][k-d_carr_offset]) {
-	    d_channel_state[k] = frame[i*d_fft_len + k] / d_pilot_symbols[d_pilot_carr_set][k-d_carr_offset];
-	    frame[i*d_fft_len+k] = d_pilot_symbols[d_pilot_carr_set][k-d_carr_offset];
+	  if (!d_pilot_carriers.empty() && d_pilot_carriers[d_pilot_carr_set][k]) {
+	    d_channel_state[k] = frame[i*d_fft_len + k] / d_pilot_symbols[d_pilot_carr_set][k];
+	    frame[i*d_fft_len+k] = d_pilot_symbols[d_pilot_carr_set][k];
 	  } else {
 	    frame[i*d_fft_len+k] /= d_channel_state[k];
 	  }

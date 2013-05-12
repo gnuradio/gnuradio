@@ -47,7 +47,7 @@ namespace gr {
 		    int bits_per_byte)
       : d_header_len(header_len),
       d_len_tag_key(pmt::string_to_symbol(len_tag_key)),
-      d_num_tag_key(pmt::string_to_symbol(num_tag_key)),
+      d_num_tag_key(num_tag_key.empty() ? pmt::PMT_NIL : pmt::string_to_symbol(num_tag_key)),
       d_bits_per_byte(bits_per_byte),
       d_header_number(0)
     {
@@ -64,8 +64,9 @@ namespace gr {
     bool packet_header_default::header_formatter(
 	long packet_len,
         unsigned char *out,
+
 	const std::vector<tag_t> &tags
-	)
+    )
     {
       packet_len &= 0x0FFF;
 
@@ -107,12 +108,17 @@ namespace gr {
       if (k >= d_header_len) {
 	return true;
       }
-      for (int i = 0; i < 16 && k < d_header_len; i += d_bits_per_byte, k++) {
-	header_num |= (((int) in[k]) & d_mask) << i;
+      if (d_num_tag_key == pmt::PMT_NIL) {
+	k += 16;
+      } else {
+	for (int i = 0; i < 16 && k < d_header_len; i += d_bits_per_byte, k++) {
+	  header_num |= (((int) in[k]) & d_mask) << i;
+	}
+	tag.key = d_num_tag_key;
+	tag.value = pmt::from_long(header_num);
+	tags.push_back(tag);
       }
-      tag.key = d_num_tag_key;
-      tag.value = pmt::from_long(header_num);
-      tags.push_back(tag);
+
       if (k >= d_header_len) {
 	return true;
       }

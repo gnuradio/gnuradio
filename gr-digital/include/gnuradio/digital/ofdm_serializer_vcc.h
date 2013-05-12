@@ -46,6 +46,9 @@ namespace gr {
      * output items, and the frame length specifies the exact number of
      * consumed input items.
      *
+     * It is possible to correct a carrier offset in this function by passing
+     * another tag with said offset.
+     *
      * Input: Complex vectors of length \p fft_len
      * Output: Complex scalars, in the same order as specified in occupied_carriers.
      */
@@ -60,6 +63,7 @@ namespace gr {
        * \param len_tag_key The key of the tag identifying the length of the input frame in OFDM symbols.
        * \param packet_len_tag_key The key of the tag identifying the number of complex symbols in this packet.
        * \param symbols_skipped If the first symbol is not allocated as in \p occupied_carriers[0], set this
+       * \param carr_offset_key When this block should correct a carrier offset, specify the tag key of the offset here (not necessary if following an ofdm_frame_equalizer_vcvc)
        * \param input_is_shifted If the input has the DC carrier on index 0 (i.e. it is not FFT shifted), set this to false
        */
       static sptr make(
@@ -68,6 +72,7 @@ namespace gr {
 	  const std::string &len_tag_key="frame_len",
 	  const std::string &packet_len_tag_key="",
 	  int symbols_skipped=0,
+	  const std::string &carr_offset_key="",
 	  bool input_is_shifted=true
       );
 
@@ -75,12 +80,14 @@ namespace gr {
        * \param allocator The carrier allocator block of which this shall be the inverse
        * \param packet_len_tag_key The key of the tag identifying the number of complex symbols in this packet.
        * \param symbols_skipped If the first symbol is not allocated as in \p occupied_carriers[0], set this
+       * \param carr_offset_key When this block should correct a carrier offset, specify the tag key of the offset here (not necessary if following an ofdm_frame_equalizer_vcvc)
        * \param input_is_shifted If the input has the DC carrier on index 0 (i.e. it is not FFT shifted), set this to false
        */
       static sptr make(
 	  const gr::digital::ofdm_carrier_allocator_cvc::sptr &allocator,
 	  const std::string &packet_len_tag_key="",
 	  int symbols_skipped=0,
+	  const std::string &carr_offset_key="",
 	  bool input_is_shifted=true
       );
     };

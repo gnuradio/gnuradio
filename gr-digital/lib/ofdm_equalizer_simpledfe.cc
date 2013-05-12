@@ -90,10 +90,10 @@ namespace gr {
 	  if (!d_occupied_carriers[k]) {
 	    continue;
 	  }
-	  if (d_pilot_carriers.size() && d_pilot_carriers[d_pilot_carr_set][k-d_carr_offset]) {
+	  if (!d_pilot_carriers.empty() && d_pilot_carriers[d_pilot_carr_set][k]) {
 	    d_channel_state[k] = d_alpha * d_channel_state[k]
-			       + (1-d_alpha) * frame[i*d_fft_len + k] / d_pilot_symbols[d_pilot_carr_set][k-d_carr_offset];
-	    frame[i*d_fft_len+k] = d_pilot_symbols[d_pilot_carr_set][k-d_carr_offset];
+			       + (1-d_alpha) * frame[i*d_fft_len + k] / d_pilot_symbols[d_pilot_carr_set][k];
+	    frame[i*d_fft_len+k] = d_pilot_symbols[d_pilot_carr_set][k];
 	  } else {
 	    sym_eq = frame[i*d_fft_len+k] / d_channel_state[k];
 	    d_constellation->map_to_points(d_constellation->decision_maker(&sym_eq), &sym_est);
@@ -101,7 +101,9 @@ namespace gr {
 	    frame[i*d_fft_len+k] = sym_est;
 	  }
 	}
-	d_pilot_carr_set = (d_pilot_carr_set + 1) % d_pilot_carriers.size();
+	if (!d_pilot_carriers.empty()) {
+	  d_pilot_carr_set = (d_pilot_carr_set + 1) % d_pilot_carriers.size();
+	}
       }
     }
 

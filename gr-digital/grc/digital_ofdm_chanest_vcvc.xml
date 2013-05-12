@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <block>
-	<name>OFDM channel &amp; coarse frequency offset estimation</name>
+	<name>OFDM Channel Estimation</name>
 	<key>digital_ofdm_chanest_vcvc</key>
 	<import>from gnuradio import digital</import>
 	<make>digital.ofdm_chanest_vcvc($sync_symbol1, $sync_symbol2, $n_data_symbols, $eq_noise_red_len, $max_carr_offset, $force_one_symbol)</make>

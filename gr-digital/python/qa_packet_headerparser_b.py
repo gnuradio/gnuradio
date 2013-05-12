@@ -48,8 +48,11 @@ class qa_packet_headerparser_b (gr_unittest.TestCase):
                 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0,  0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,  1, 0, 0, 0
         )
         packet_len_tagname = "packet_len"
-
-        src = blocks.vector_source_b(encoded_headers)
+        random_tag = gr.tag_t()
+        random_tag.offset = 5
+        random_tag.key = pmt.string_to_symbol("foo")
+        random_tag.value = pmt.from_long(42)
+        src = blocks.vector_source_b(encoded_headers, tags=(random_tag,))
         parser = digital.packet_headerparser_b(32, packet_len_tagname)
         sink = blocks.message_debug()
         self.tb.connect(src, parser)
@@ -62,7 +65,7 @@ class qa_packet_headerparser_b (gr_unittest.TestCase):
         msg1 = pmt.to_python(sink.get_message(0))
         msg2 = pmt.to_python(sink.get_message(1))
         msg3 = pmt.to_python(sink.get_message(2))
-        self.assertEqual(msg1, {'packet_len': 4, 'packet_num': 0})
+        self.assertEqual(msg1, {'packet_len': 4, 'packet_num': 0, 'foo': 42})
         self.assertEqual(msg2, {'packet_len': 2, 'packet_num': 1})
         self.assertEqual(msg3, False)
 
@@ -124,8 +127,11 @@ class qa_packet_headerparser_b (gr_unittest.TestCase):
         self.assertEqual(sink.num_messages(), 2)
         msg1 = pmt.to_python(sink.get_message(0))
         msg2 = pmt.to_python(sink.get_message(1))
-        self.assertEqual(msg1, {'packet_len': 193, 'frame_len': 25, 'packet_num': 0})
-        self.assertEqual(msg2, {'packet_len': 8, 'frame_len': 1, 'packet_num': 1})
+        # Multiply with 4 because unpacked bytes have only two bits
+        self.assertEqual(msg1, {'packet_len': 193*4, 'frame_len': 25, 'packet_num': 0})
+        self.assertEqual(msg2, {'packet_len': 8*4, 'frame_len': 1, 'packet_num': 1})
 
 if __name__ == '__main__':
     gr_unittest.run(qa_packet_headerparser_b, "qa_packet_headerparser_b.xml")
+
+

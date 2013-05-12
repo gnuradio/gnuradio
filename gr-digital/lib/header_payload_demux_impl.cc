@@ -123,7 +123,8 @@ namespace gr {
       int produced_hdr = 0;
       int produced_payload = 0;
 
-      while (nread < noutput_items && !exit_loop) {
+      // FIXME ninput_items[1] does not have to be defined O_o
+      while (nread < noutput_items && nread < ninput_items[0] && nread < ninput_items[1] && !exit_loop) {
 	switch (d_state) {
 	      case STATE_IDLE:
 		// 1) Search for a trigger signal on input 1 (if present)
@@ -154,6 +155,7 @@ namespace gr {
 		// 4) fall through to next state
 		d_remaining_symbols = -1;
 		if (!parse_header_data_msg()) {
+		  d_state = STATE_IDLE;
 		  exit_loop = true;
 		  break;
 		}
@@ -240,6 +242,8 @@ namespace gr {
 	  throw std::runtime_error("no length tag passed from header data");
 	}
       } else if (pmt::is_null(msg)) { // Blocking call was interrupted
+	return false;
+      } else if (msg == pmt::PMT_F) { // Header was invalid
 	return false;
       } else {
 	throw std::runtime_error("Received illegal header data");
