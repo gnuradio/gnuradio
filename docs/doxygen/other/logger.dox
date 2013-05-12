@@ -30,7 +30,7 @@ to disable a logger.
 
 \subsection configfile Logging Configuration
 
-The logging configuration can be found in the gnuradio-core.conf file
+The logging configuration can be found in the gnuradio-runtime.conf file
 under the [LOG] section. This allows us fairly complete control over
 the logging facilities. The main configuration functions are to set up
 the level of the loggers and set the default output behavior of the

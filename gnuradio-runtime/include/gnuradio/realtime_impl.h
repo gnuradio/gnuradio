@@ -87,7 +87,7 @@ namespace gr {
      */
 
     // NOTE: If you change this, you need to change the code in
-    // gnuradio-core/src/lib/runtime/gr_realtime.i, see note there.
+    // gnuradio-runtime/swig/realtime.i, see note there.
     rt_status_t
     GR_RUNTIME_API enable_realtime_scheduling(rt_sched_param = rt_sched_param());
 

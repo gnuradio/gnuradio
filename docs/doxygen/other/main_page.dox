@@ -413,9 +413,9 @@ config file itself.
 New as of 3.6.5.
 
 Using gr_modtool, each package comes with the ability to easily locate
-the gnuradio-core library using the 'find_package(GnuradioCore)' cmake
-command. This only locates that the library and include directories
-exist, which is enough for most simple projects.
+the gnuradio-runtime library using the 'find_package(GnuradioRuntime)'
+cmake command. This only locates that the library and include
+directories exist, which is enough for most simple projects.
 
 As projects become more complicated and start needing to rely on other
 GNU Radio components like gnuradio-blocks or gnuradio-filter, for

@@ -264,6 +264,6 @@ All of these mechanisms are explored and tested in the QA code of the
 file qa_pdu.py.
 
 There are some examples of using the message passing infrastructure
-through GRC in gnuradio-core/src/examples/msg_passing.
+through GRC in gr-blocks/examples/msg_passing.
 
 */

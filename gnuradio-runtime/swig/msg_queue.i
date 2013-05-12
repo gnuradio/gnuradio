@@ -74,7 +74,7 @@ namespace gr {
 /*
  * The following kludge-o-rama releases the Python global interpreter
  * lock around these potentially blocking calls.  We don't want
- * libgnuradio-core to be dependent on Python, thus we create these
+ * libgnuradio-runtime to be dependent on Python, thus we create these
  * functions that serve as replacements for the normal C++ delete_head
  * and insert_tail methods.  The %pythoncode smashes these new C++
  * functions into the gr.msg_queue wrapper class, so that everything

@@ -44,8 +44,8 @@ namespace gr {
      * quantized in the interpolate method to 32nd's of a sample.
      *
      * For more information, in the GNU Radio source code, see:
-     * \li gnuradio-core/src/gen_interpolator_taps/README
-     * \li gnuradio-core/src/gen_interpolator_taps/praxis.txt
+     * \li gr-filter/lib/gen_interpolator_taps/README
+     * \li gr-filter/lib/gen_interpolator_taps/praxis.txt
      */
     class FILTER_API mmse_fir_interpolator_cc
     {

@@ -98,7 +98,7 @@ int posix_memalign
    * (enough for the input arguments); no idea what to do.
    */
 
-#error gnuradio-core/src/libmissing/posix_memalign.cc: Cannot find a way to alloc aligned memory.
+#error gnuradio-runtime/lib/posix_memalign.cc: Cannot find a way to alloc aligned memory.
 
 #endif
 

@@ -11,7 +11,7 @@ Doxygen.
 
    $ python swig_doc.py \
      	    $(top_builddir)/docstrings/docs/doxygen/xml \
-     	    $(top_srcdir)/gnuradio-core/src/lib/swig/swig_doc.i
+     	    $(top_srcdir)/gnuradio-runtime/swig/swig_doc.i
 
    This uses the XML output of Doxygen to to rebuild a SWIG file that
    contains all of the current Doxygen markups.

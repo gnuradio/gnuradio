@@ -19,7 +19,7 @@
 # Boston, MA 02110-1301, USA.
 #
 
-import gnuradio_core as gsp
+import gnuradio_runtime as gsp
 _prefs_base = gsp.prefs
 
 

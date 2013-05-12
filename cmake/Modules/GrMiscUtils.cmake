@@ -268,15 +268,15 @@ function(GRCC)
   set(filenames ${ARGV})
   file(MAKE_DIRECTORY ${directory})
 
-  SET(GRCC_COMMAND ${CMAKE_SOURCE_DIR}/gr-utils/src/python/grcc)
+  SET(GRCC_COMMAND ${CMAKE_SOURCE_DIR}/gr-utils/python/grcc)
 
-  # GRCC uses some stuff in grc and gnuradio-core, so we force
+  # GRCC uses some stuff in grc and gnuradio-runtime, so we force
   # the known paths here
   list(APPEND PYTHONPATHS
     ${CMAKE_SOURCE_DIR}
-    ${CMAKE_SOURCE_DIR}/gnuradio-core/src/python
-    ${CMAKE_SOURCE_DIR}/gnuradio-core/src/lib/swig
-    ${CMAKE_BINARY_DIR}/gnuradio-core/src/lib/swig
+    ${CMAKE_SOURCE_DIR}/gnuradio-runtime/python
+    ${CMAKE_SOURCE_DIR}/gnuradio-runtime/lib/swig
+    ${CMAKE_BINARY_DIR}/gnuradio-runtime/lib/swig
     )
 
   if(WIN32)
