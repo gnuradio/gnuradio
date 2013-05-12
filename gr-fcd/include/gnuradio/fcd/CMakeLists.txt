@@ -23,6 +23,6 @@
 install(FILES
     api.h
     source_c.h
-    DESTINATION ${GR_INCLUDE_DIR}/gnuradio
+    DESTINATION ${GR_INCLUDE_DIR}/gnuradio/fcd
     COMPONENT "fcd_devel"
 )
