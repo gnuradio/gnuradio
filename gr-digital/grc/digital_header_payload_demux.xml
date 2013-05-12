@@ -1,5 +1,5 @@
 <block>
-  <name>Header payload demux</name>
+  <name>Header/Payload Demux</name>
   <key>digital_header_payload_demux</key>
   <import>from gnuradio import digital</import>
   <make>digital.header_payload_demux($header_len, $items_per_symbol, $guard_interval, $length_tag_key, $trigger_tag_key, $output_symbols, $(type.itemsize))</make>

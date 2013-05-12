@@ -278,7 +278,8 @@ list(APPEND blocks_libs
     ${LOG4CPP_LIBRARIES}
 )
 
-add_library(gnuradio-blocks SHARED ${gr_blocks_sources})
+add_library(gnuradio-blocks SHARED ${gr_blocks_sources}
+    tag_gate_impl.cc)
 add_dependencies(gnuradio-blocks blocks_generated_includes)
 
 target_link_libraries(gnuradio-blocks ${blocks_libs})

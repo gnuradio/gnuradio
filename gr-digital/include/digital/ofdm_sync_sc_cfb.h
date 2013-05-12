@@ -68,8 +68,11 @@ namespace gr {
 
       /*! \param fft_len FFT length
        *  \param cp_len Length of the guard interval (cyclic prefix) in samples
+       *  \param use_even_carriers If true, the carriers in the sync preamble are occupied such
+       *                     that the even carriers are used (0, 2, 4, ...). If you use all
+       *                     carriers, that would include the DC carrier, so be careful.
        */
-      static sptr make(int fft_len, int cp_len);
+      static sptr make(int fft_len, int cp_len, bool use_even_carriers=false);
     };
 
   } // namespace digital
