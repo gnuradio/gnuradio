@@ -56,6 +56,7 @@
 #include "blocks/streams_to_stream.h"
 #include "blocks/streams_to_vector.h"
 #include "blocks/tag_debug.h"
+#include "blocks/tag_gate.h"
 #include "blocks/tagged_file_sink.h"
 #include "blocks/throttle.h"
 #include "blocks/vector_map.h"
@@ -106,6 +107,7 @@
 %include "blocks/streams_to_stream.h"
 %include "blocks/streams_to_vector.h"
 %include "blocks/tag_debug.h"
+%include "blocks/tag_gate.h"
 %include "blocks/tagged_file_sink.h"
 %include "blocks/throttle.h"
 %include "blocks/vector_map.h"
@@ -154,6 +156,7 @@ GR_SWIG_BLOCK_MAGIC2(blocks, stream_to_vector);
 GR_SWIG_BLOCK_MAGIC2(blocks, streams_to_stream);
 GR_SWIG_BLOCK_MAGIC2(blocks, streams_to_vector);
 GR_SWIG_BLOCK_MAGIC2(blocks, tag_debug);
+GR_SWIG_BLOCK_MAGIC2(blocks, tag_gate);
 GR_SWIG_BLOCK_MAGIC2(blocks, tagged_file_sink);
 GR_SWIG_BLOCK_MAGIC2(blocks, throttle);
 GR_SWIG_BLOCK_MAGIC2(blocks, vector_map);

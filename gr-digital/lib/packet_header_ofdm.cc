@@ -90,15 +90,18 @@ namespace gr {
       if (!packet_header_default::header_parser(in, tags)) {
 	return false;
       }
-      int packet_len = 0; // # of bytes in this frame
+      int packet_len = 0; // # of symbols in this frame
       for (unsigned i = 0; i < tags.size(); i++) {
 	if (pmt::pmt_equal(tags[i].key, d_len_tag_key)) {
-	  packet_len = pmt::pmt_to_long(tags[i].value);
+	  // Convert bytes to complex symbols:
+	  packet_len = pmt::pmt_to_long(tags[i].value) * 8 / d_bits_per_payload_sym;
+	  if (pmt::pmt_to_long(tags[i].value) * 8 % d_bits_per_payload_sym) {
+	    packet_len++;
+	  }
+	  tags[i].value = pmt::pmt_from_long(packet_len);
 	  break;
 	}
       }
-      // Convert bytes to complex symbols:
-      packet_len = packet_len * 8 / d_bits_per_payload_sym;
 
       // frame_len == # of OFDM symbols in this frame
       int frame_len = packet_len / d_syms_per_set;

@@ -30,9 +30,12 @@ typedef boost::shared_ptr<digital_ofdm_sync_sc_cfb> digital_ofdm_sync_sc_cfb_spt
 
 /*! \param fft_len FFT length
  *  \param cp_len Length of the guard interval (cyclic prefix) in samples
+ *  \param use_even_carriers If true, the carriers in the sync preamble are occupied such
+ *                     that the even carriers are used (0, 2, 4, ...). If you use all
+ *                     carriers, that would include the DC carrier, so be careful.
  */
 DIGITAL_API digital_ofdm_sync_sc_cfb_sptr
-digital_make_ofdm_sync_sc_cfb (int fft_len, int cp_len);
+digital_make_ofdm_sync_sc_cfb (int fft_len, int cp_len, bool use_even_carriers=false);
 
 /*!
  * \brief Schmidl & Cox synchronisation for OFDM
@@ -68,8 +71,8 @@ digital_make_ofdm_sync_sc_cfb (int fft_len, int cp_len);
 class DIGITAL_API digital_ofdm_sync_sc_cfb : public gr_hier_block2
 {
  private:
-  friend DIGITAL_API digital_ofdm_sync_sc_cfb_sptr digital_make_ofdm_sync_sc_cfb (int fft_len, int cp_len);
-  digital_ofdm_sync_sc_cfb(int fft_len, int cp_len);
+  friend DIGITAL_API digital_ofdm_sync_sc_cfb_sptr digital_make_ofdm_sync_sc_cfb (int fft_len, int cp_len, bool use_even_carriers);
+  digital_ofdm_sync_sc_cfb(int fft_len, int cp_len, bool use_even_carriers);
 
  public:
   ~digital_ofdm_sync_sc_cfb();

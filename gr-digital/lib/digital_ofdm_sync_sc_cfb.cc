@@ -42,13 +42,13 @@
 //#define SYNC_ADD_DEBUG_OUTPUT
 
 digital_ofdm_sync_sc_cfb_sptr
-digital_make_ofdm_sync_sc_cfb (int fft_len, int cp_len)
+digital_make_ofdm_sync_sc_cfb (int fft_len, int cp_len, bool use_even_carriers)
 {
-	return gnuradio::get_initial_sptr (new digital_ofdm_sync_sc_cfb(fft_len, cp_len));
+	return gnuradio::get_initial_sptr (new digital_ofdm_sync_sc_cfb(fft_len, cp_len, use_even_carriers));
 }
 
 
-digital_ofdm_sync_sc_cfb::digital_ofdm_sync_sc_cfb (int fft_len, int cp_len)
+digital_ofdm_sync_sc_cfb::digital_ofdm_sync_sc_cfb (int fft_len, int cp_len, bool use_even_carriers)
   : gr_hier_block2 ("ofdm_sync_sc_cfb",
 		   gr_make_io_signature(1, 1, sizeof (gr_complex)),
 #ifndef SYNC_ADD_DEBUG_OUTPUT
@@ -61,7 +61,7 @@ digital_ofdm_sync_sc_cfb::digital_ofdm_sync_sc_cfb (int fft_len, int cp_len)
   gr_delay_sptr                    delay(gr_make_delay(sizeof(gr_complex), fft_len/2));
   gr::blocks::conjugate_cc::sptr   delay_conjugate(gr::blocks::conjugate_cc::make());
   gr::blocks::multiply_cc::sptr    delay_corr(gr::blocks::multiply_cc::make());
-  gr::filter::fir_filter_ccf::sptr delay_ma(gr::filter::fir_filter_ccf::make(1, std::vector<float>(fft_len/2, 1.0)));
+  gr::filter::fir_filter_ccf::sptr delay_ma(gr::filter::fir_filter_ccf::make(1, std::vector<float>(fft_len/2, use_even_carriers ? 1.0 : -1.0)));
   gr::blocks::complex_to_mag_squared::sptr delay_magsquare(gr::blocks::complex_to_mag_squared::make());
   gr::blocks::divide_ff::sptr      delay_normalize(gr::blocks::divide_ff::make());
 
