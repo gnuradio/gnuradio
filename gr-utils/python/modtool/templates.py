@@ -147,7 +147,7 @@ namespace gr {
 #if $blocktype == 'sink'
 #set $outputsig = '0, 0, 0'
 #else
-#set $outputsig = '<+MIN_IN+>, <+MAX_IN+>, sizeof (<+float+>)'
+#set $outputsig = '<+MIN_OUT+>, <+MAX_OUT+>, sizeof (<+float+>)'
 #end if
     /*
      * The private constructor
