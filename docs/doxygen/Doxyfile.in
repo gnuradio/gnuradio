@@ -629,8 +629,6 @@ EXCLUDE                = @abs_top_builddir@/docs/doxygen/html \
                          @abs_top_builddir@/gr-pager/lib \
                          @abs_top_srcdir@/gr-qtgui/lib \
                          @abs_top_builddir@/gr-qtgui/lib \
-                         @abs_top_srcdir@/gr-shd/lib \
-                         @abs_top_builddir@/gr-shd/lib \
                          @abs_top_srcdir@/gr-trellis/lib \
                          @abs_top_builddir@/gr-trellis/lib \
                          @abs_top_srcdir@/gr-uhd/lib \
