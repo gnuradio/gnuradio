@@ -2,11 +2,17 @@
   <name>OFDM Frame Equalizer</name>
   <key>digital_ofdm_frame_equalizer_vcvc</key>
   <import>from gnuradio import digital</import>
-  <make>digital.ofdm_frame_equalizer_vcvc($equalizer, $len_tag_key, $propagate_channel_state)</make>
+  <make>digital.ofdm_frame_equalizer_vcvc($equalizer, $cp_len, $len_tag_key, $propagate_channel_state)</make>
   <param>
     <name>FFT length</name>
     <key>fft_len</key>
     <value>fft_len</value>
+    <type>int</type>
+  </param>
+  <param>
+    <name>CP length</name>
+    <key>cp_len</key>
+    <value>fft_len/4</value>
     <type>int</type>
   </param>
   <param>

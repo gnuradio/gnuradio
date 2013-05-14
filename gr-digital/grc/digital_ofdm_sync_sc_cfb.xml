@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <block>
-  <name>Schmidl &amp; Cox OFDM synchronisation</name>
+  <name>Schmidl &amp; Cox OFDM synch.</name>
   <key>digital_ofdm_sync_sc_cfb</key>
   <import>from gnuradio import digital</import>
   <make>digital.ofdm_sync_sc_cfb($fft_len, $cp_len, $use_even_carriers)</make>
