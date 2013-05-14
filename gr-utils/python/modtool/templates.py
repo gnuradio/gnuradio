@@ -251,7 +251,9 @@ ${str_to_fancyc_comment($license)}
 \#define INCLUDED_${modname.upper()}_${blockname.upper()}_H
 
 \#include <${modname}/api.h>
+#if $blocktype != 'noblock'
 \#include <gnuradio/${grblocktype}.h>
+#end if
 
 namespace gr {
   namespace ${modname} {
