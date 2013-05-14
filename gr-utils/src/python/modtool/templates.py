@@ -230,9 +230,10 @@ namespace gr {
      */
     class ${modname.upper()}_API $blockname
     {
+    public:
         ${blockname}(${arglist});
         ~${blockname}();
-        private:
+    private:
     };
 #else
     /*!
@@ -496,11 +497,15 @@ gr_modtool help <command> -- Shows the help for a given command. '''
 
 # SWIG string
 Templates['swig_block_magic'] = """#if $version == '36'
+#if $blocktype != 'noblock'
 GR_SWIG_BLOCK_MAGIC($modname, $blockname);
+#end if
 %include "${modname}_${blockname}.h"
 #else
 %include "${modname}/${blockname}.h"
+#if $blocktype != 'noblock'
 GR_SWIG_BLOCK_MAGIC2($modname, $blockname);
+#end if
 #end if
 """
 
