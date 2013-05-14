@@ -186,7 +186,9 @@ namespace gr {
       // because the conditional wait is interruptable while a
       // synchronous receive_from is not.
       boost::unique_lock<boost::mutex> lock(d_udp_mutex);
-      d_cond_wait.wait(lock);
+
+      //use timed_wait to avoid permanent blocking in the work function
+      d_cond_wait.timed_wait(lock, boost::posix_time::milliseconds(10));
 
       if(d_residual < 0)
         return -1;
