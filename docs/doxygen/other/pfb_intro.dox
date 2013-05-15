@@ -11,7 +11,7 @@ in all sorts of applications.
 
 See the documentation for the individual blocks for details about what
 they can do and how they should be used. Furthermore, there are
-examples for these blocks in <b>gnuradio-examples/python/pfb</b>.
+examples for these blocks in <b>gr-filter/examples</b>.
 
 The main issue when using the PFB blocks is defining the prototype
 filter, which is passed to all of the blocks as a vector of \p
@@ -19,7 +19,7 @@ taps. The taps from the prototype filter which get partitioned among
 the \p N channels of the channelizer.
 
 An example of creating a set of filter taps for a PFB channelizer is
-found on line 49 of <b>gnuradio-examples/python/pfb/channelizer.py</b>
+found on line 49 of <b>gr-filter/examples/channelizer.py</b>
 and reproduced below. Notice that the sample rate is the sample rate
 at the input to the channelizer while the bandwidth and transition
 width are defined for the channel bandwidths. This makes a fairly long
