@@ -25,7 +25,7 @@
 ////////////////////////////////////////////////////////////////////////
 %include <gnuradio.i>
 %include <tags.i>
-%include <feval.i>
+%import <feval.i>
 
 %template(void_start_vector_t) std::vector<void *>;
 
