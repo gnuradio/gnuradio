@@ -44,11 +44,6 @@ GR_SET_GLOBAL(GR_PAGER_SWIG_INCLUDE_DIRS
 
 SET(GR_PKG_PAGER_EXAMPLES_DIR ${GR_PKG_DATA_DIR}/examples/pager)
 
-if(ENABLE_GR_CTRLPORT)
-  ADD_DEFINITIONS(-DGR_CTRLPORT)
-  include_directories(${ICE_INCLUDE_DIR})
-endif(ENABLE_GR_CTRLPORT)
-
 ########################################################################
 # Begin conditional configuration
 ########################################################################

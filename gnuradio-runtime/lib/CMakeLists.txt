@@ -219,7 +219,8 @@ list(APPEND test_gnuradio_runtime_sources
   qa_runtime.cc
 )
 
-include_directories(${CPPUNIT_INCLUDE_DIRS} ${CMAKE_CURRENT_SOURCE_DIR}/math)
+include_directories(BEFORE ${CMAKE_CURRENT_SOURCE_DIR}/math)
+include_directories(${CPPUNIT_INCLUDE_DIRS})
 link_directories(${CPPUNIT_LIBRARY_DIRS})
 
 add_library(test-gnuradio-runtime SHARED ${test_gnuradio_runtime_sources})

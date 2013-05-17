@@ -47,7 +47,8 @@ find_package(ALSA)
 
 if(ALSA_FOUND)
 
-    include_directories(${CMAKE_CURRENT_SOURCE_DIR}/alsa ${ALSA_INCLUDE_DIRS})
+    include_directories(BEFORE ${CMAKE_CURRENT_SOURCE_DIR}/alsa)
+    include_directories(${ALSA_INCLUDE_DIRS})
     list(APPEND gr_audio_libs ${ALSA_LIBRARIES})
     list(APPEND gr_audio_sources
         ${CMAKE_CURRENT_SOURCE_DIR}/alsa/alsa_impl.cc
@@ -65,7 +66,8 @@ find_package(OSS)
 
 if(OSS_FOUND)
 
-    include_directories(${CMAKE_CURRENT_SOURCE_DIR}/oss ${OSS_INCLUDE_DIRS})
+    include_directories(BEFORE ${CMAKE_CURRENT_SOURCE_DIR}/oss)
+    include_directories(${OSS_INCLUDE_DIRS})
     list(APPEND gr_audio_sources
         ${CMAKE_CURRENT_SOURCE_DIR}/oss/oss_source.cc
         ${CMAKE_CURRENT_SOURCE_DIR}/oss/oss_sink.cc
@@ -82,7 +84,8 @@ find_package(Jack)
 
 if(JACK_FOUND)
 
-    include_directories(${CMAKE_CURRENT_SOURCE_DIR}/jack ${JACK_INCLUDE_DIRS})
+    include_directories(BEFORE ${CMAKE_CURRENT_SOURCE_DIR}/jack)
+    include_directories(${JACK_INCLUDE_DIRS})
     list(APPEND gr_audio_libs ${JACK_LIBRARIES})
     add_definitions(${JACK_DEFINITIONS})
     list(APPEND gr_audio_sources
@@ -103,7 +106,7 @@ CHECK_INCLUDE_FILE_CXX(AudioToolbox/AudioToolbox.h AUDIO_TOOLBOX_H)
 
 if(AUDIO_UNIT_H AND AUDIO_TOOLBOX_H)
 
-    include_directories(${CMAKE_CURRENT_SOURCE_DIR}/osx)
+    include_directories(BEFORE ${CMAKE_CURRENT_SOURCE_DIR}/osx)
     list(APPEND gr_audio_libs
         "-framework AudioUnit"
         "-framework CoreAudio"
@@ -124,7 +127,8 @@ find_package(Portaudio)
 
 if(PORTAUDIO_FOUND)
 
-    include_directories(${CMAKE_CURRENT_SOURCE_DIR}/portaudio ${PORTAUDIO_INCLUDE_DIRS})
+    include_directories(BEFORE ${CMAKE_CURRENT_SOURCE_DIR}/portaudio)
+    include_directories(${PORTAUDIO_INCLUDE_DIRS})
     list(APPEND gr_audio_libs ${PORTAUDIO_LIBRARIES})
     add_definitions(${PORTAUDIO_DEFINITIONS})
     list(APPEND gr_audio_sources
@@ -141,7 +145,7 @@ endif(PORTAUDIO_FOUND)
 ########################################################################
 if(WIN32)
 
-    include_directories(${CMAKE_CURRENT_SOURCE_DIR}/windows)
+    include_directories(BEFORE ${CMAKE_CURRENT_SOURCE_DIR}/windows)
     list(APPEND gr_audio_libs winmm.lib)
     list(APPEND gr_audio_sources
         ${CMAKE_CURRENT_SOURCE_DIR}/windows/windows_source.cc
