@@ -23,8 +23,8 @@
 #ifndef INCLUDED_DIGITAL_CLOCK_RECOVERY_MM_FF_IMPL_H
 #define	INCLUDED_DIGITAL_CLOCK_RECOVERY_MM_FF_IMPL_H
 
-#include <digital/clock_recovery_mm_ff.h>
-#include <filter/mmse_fir_interpolator_ff.h>
+#include <gnuradio/digital/clock_recovery_mm_ff.h>
+#include <gnuradio/filter/mmse_fir_interpolator_ff.h>
 
 namespace gr {
   namespace digital {

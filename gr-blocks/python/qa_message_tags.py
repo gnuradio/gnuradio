@@ -7,8 +7,8 @@ class test_message_tags (gr_unittest.TestCase):
 
     def test_1 (self):
         data = ('hello', 'you', 'there')
-        tx_msgq = gr.msg_queue ()
-        rx_msgq = gr.msg_queue ()
+        tx_msgq = gr.msg_queue()
+        rx_msgq = gr.msg_queue()
         for d in data:
             tx_msgq.insert_tail(gr.message_from_string(d))
         tb = gr.top_block()

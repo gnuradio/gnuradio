@@ -24,9 +24,9 @@
 #include <config.h>
 #endif
 
-#include <atsc/bit_timing_loop.h>
-#include <gr_io_signature.h>
-#include <atsc/consts.h>
+#include <gnuradio/atsc/bit_timing_loop.h>
+#include <gnuradio/io_signature.h>
+#include <gnuradio/atsc/consts.h>
 #include <string.h>
 
 // Input rate changed from 20MHz to 19.2 to support usrp at 3 * 6.4MHz
@@ -42,12 +42,12 @@ atsc_make_bit_timing_loop()
 
 
 atsc_bit_timing_loop::atsc_bit_timing_loop()
-  : gr_block("atsc_bit_timing_loop",
-		  gr_make_io_signature(1, 1, sizeof(float)),
-             gr_make_io_signature3(2, 3, sizeof(float), sizeof(float), sizeof(float))),
-		  d_interp(ratio_of_rx_clock_to_symbol_freq), d_next_input(0),
-		  d_rx_clock_to_symbol_freq (ratio_of_rx_clock_to_symbol_freq),
-		  d_si(0)
+  : gr::block("atsc_bit_timing_loop",
+              gr::io_signature::make(1, 1, sizeof(float)),
+              gr::io_signature::make3(2, 3, sizeof(float), sizeof(float), sizeof(float))),
+    d_interp(ratio_of_rx_clock_to_symbol_freq), d_next_input(0),
+    d_rx_clock_to_symbol_freq (ratio_of_rx_clock_to_symbol_freq),
+    d_si(0)
 {
   reset();
 }

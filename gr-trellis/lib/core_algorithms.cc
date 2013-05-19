@@ -23,8 +23,8 @@
 #include <cstring>
 #include <stdexcept>
 #include <iostream>
-#include <trellis/core_algorithms.h>
-#include <trellis/calc_metric.h>
+#include <gnuradio/trellis/core_algorithms.h>
+#include <gnuradio/trellis/calc_metric.h>
 
 namespace gr {
   namespace trellis {

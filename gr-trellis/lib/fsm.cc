@@ -27,8 +27,8 @@
 #include <stdexcept>
 #include <cmath>
 #include <stdlib.h>
-#include <trellis/base.h>
-#include <trellis/fsm.h>
+#include <gnuradio/trellis/base.h>
+#include <gnuradio/trellis/fsm.h>
 
 namespace gr {
   namespace trellis {

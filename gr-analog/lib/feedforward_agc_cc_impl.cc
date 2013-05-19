@@ -25,7 +25,7 @@
 #endif
 
 #include "feedforward_agc_cc_impl.h"
-#include <gr_io_signature.h>
+#include <gnuradio/io_signature.h>
 #include <stdexcept>
 
 namespace gr {
@@ -39,9 +39,9 @@ namespace gr {
     }
 
     feedforward_agc_cc_impl::feedforward_agc_cc_impl(int nsamples, float reference)
-      : gr_sync_block("feedforward_agc_cc",
-		      gr_make_io_signature(1, 1, sizeof(gr_complex)),
-		      gr_make_io_signature(1, 1, sizeof(gr_complex))),
+      : sync_block("feedforward_agc_cc",
+		      io_signature::make(1, 1, sizeof(gr_complex)),
+		      io_signature::make(1, 1, sizeof(gr_complex))),
 	d_nsamples(nsamples), d_reference(reference)
     {
       if(nsamples < 1)

@@ -23,7 +23,7 @@
 #ifndef INCLUDED_GR_THROTTLE_IMPL_H
 #define INCLUDED_GR_THROTTLE_IMPL_H
 
-#include <blocks/throttle.h>
+#include <gnuradio/blocks/throttle.h>
 
 namespace gr {
   namespace blocks {

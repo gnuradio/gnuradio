@@ -23,9 +23,9 @@
 #ifndef INCLUDED_PAGER_FLEX_PARSE_IMPL_H
 #define INCLUDED_PAGER_FLEX_PARSE_IMPL_H
 
-#include <pager/flex_parse.h>
-#include <gr_sync_block.h>
-#include <gr_msg_queue.h>
+#include <gnuradio/pager/flex_parse.h>
+#include <gnuradio/sync_block.h>
+#include <gnuradio/msg_queue.h>
 #include "flex_modes.h"
 #include <sstream>
 
@@ -38,7 +38,7 @@ namespace gr {
     {
     private:
       std::ostringstream d_payload;
-      gr_msg_queue_sptr d_queue;		  // Destination for decoded pages
+      msg_queue::sptr d_queue;		  // Destination for decoded pages
 
       int d_count;	                  // Count of received codewords
       int d_datawords[88];                // 11 blocks of 8 32-bit words
@@ -56,7 +56,7 @@ namespace gr {
       void parse_unknown(int mw1, int mw2);
 
     public:
-      flex_parse_impl(gr_msg_queue_sptr queue, float freq);
+      flex_parse_impl(msg_queue::sptr queue, float freq);
       ~flex_parse_impl();
 
       int work(int noutput_items,

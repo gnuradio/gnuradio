@@ -23,8 +23,8 @@
 #ifndef INCLUDED_ANALOG_PROBE_AVG_MAG_SQRD_C_IMPL_H
 #define INCLUDED_ANALOG_PROBE_AVG_MAG_SQRD_C_IMPL_H
 
-#include <analog/probe_avg_mag_sqrd_c.h>
-#include <filter/single_pole_iir.h>
+#include <gnuradio/analog/probe_avg_mag_sqrd_c.h>
+#include <gnuradio/filter/single_pole_iir.h>
 
 namespace gr {
   namespace analog {

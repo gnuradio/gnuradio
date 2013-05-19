@@ -29,17 +29,16 @@
  * %import "gnuradio.i"
  */
 
-class gr_base_error_handler;
-class gr_basic_block;
-class gr_block;
-class gr_error_handler;
-class gr_file_error_handler;
-class gr_hier_block2;
-class gr_msg_handler;
-class gr_msg_queue;
-class gr_sync_block;
-class gr_sync_decimator;
-class gr_sync_interpolator;
-class gr_top_block;
+class base_error_handler;
+class basic_block;
+class block;
+class file_error_handler;
+class hier_block2;
+class msg_handler;
+class msg_queue;
+class sync_block;
+class sync_decimator;
+class sync_interpolator;
+class top_block;
 
 #endif /* INCLUDED_GNURADIO_SWIG_BUG_WORKAROUND_H */

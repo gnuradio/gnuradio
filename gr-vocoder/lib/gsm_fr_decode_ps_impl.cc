@@ -25,7 +25,7 @@
 #endif
 
 #include "gsm_fr_decode_ps_impl.h"
-#include <gr_io_signature.h>
+#include <gnuradio/io_signature.h>
 #include <stdexcept>
 #include <assert.h>
 
@@ -40,9 +40,9 @@ namespace gr {
     }
 
     gsm_fr_decode_ps_impl::gsm_fr_decode_ps_impl()
-      : gr_sync_interpolator("vocoder_gsm_fr_decode_ps",
-			     gr_make_io_signature(1, 1, sizeof(gsm_frame)),
-			     gr_make_io_signature(1, 1, sizeof(short)),
+      : sync_interpolator("vocoder_gsm_fr_decode_ps",
+			     io_signature::make(1, 1, sizeof(gsm_frame)),
+			     io_signature::make(1, 1, sizeof(short)),
 			     GSM_SAMPLES_PER_FRAME)
     {
       if((d_gsm = gsm_create()) == 0)

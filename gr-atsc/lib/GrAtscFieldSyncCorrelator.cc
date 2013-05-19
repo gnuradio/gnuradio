@@ -20,9 +20,9 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include <atsc/GrAtscFieldSyncCorrelator.h>
-#include <atsc/create_atsci_fs_correlator.h>
-#include <atsc/fs_correlator_impl.h>
+#include <gnuradio/atsc/GrAtscFieldSyncCorrelator.h>
+#include <gnuradio/atsc/create_atsci_fs_correlator.h>
+#include <gnuradio/atsc/fs_correlator_impl.h>
 
 // typedefs for fundamental i/o types
 

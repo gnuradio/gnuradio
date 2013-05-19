@@ -23,7 +23,7 @@
 #include <config.h>
 #endif
 
-#include <thread/thread.h>
+#include <gnuradio/thread/thread.h>
 
 #if defined(_WIN32) || defined(__WIN32__) || defined(WIN32)
 

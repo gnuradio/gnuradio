@@ -23,7 +23,7 @@
 #include "config.h"
 #endif
 
-#include <digital/ofdm_equalizer_simpledfe.h>
+#include <gnuradio/digital/ofdm_equalizer_simpledfe.h>
 
 namespace gr {
   namespace digital {
@@ -78,7 +78,7 @@ namespace gr {
     ofdm_equalizer_simpledfe::equalize(gr_complex *frame,
 	      int n_sym,
 	      const std::vector<gr_complex> &initial_taps,
-	      const std::vector<gr_tag_t> &tags)
+	      const std::vector<tag_t> &tags)
     {
       if (!initial_taps.empty()) {
 	d_channel_state = initial_taps;
@@ -90,10 +90,10 @@ namespace gr {
 	  if (!d_occupied_carriers[k]) {
 	    continue;
 	  }
-	  if (d_pilot_carriers.size() && d_pilot_carriers[d_pilot_carr_set][k-d_carr_offset]) {
+	  if (!d_pilot_carriers.empty() && d_pilot_carriers[d_pilot_carr_set][k]) {
 	    d_channel_state[k] = d_alpha * d_channel_state[k]
-			       + (1-d_alpha) * frame[i*d_fft_len + k] / d_pilot_symbols[d_pilot_carr_set][k-d_carr_offset];
-	    frame[i*d_fft_len+k] = d_pilot_symbols[d_pilot_carr_set][k-d_carr_offset];
+			       + (1-d_alpha) * frame[i*d_fft_len + k] / d_pilot_symbols[d_pilot_carr_set][k];
+	    frame[i*d_fft_len+k] = d_pilot_symbols[d_pilot_carr_set][k];
 	  } else {
 	    sym_eq = frame[i*d_fft_len+k] / d_channel_state[k];
 	    d_constellation->map_to_points(d_constellation->decision_maker(&sym_eq), &sym_est);
@@ -101,7 +101,9 @@ namespace gr {
 	    frame[i*d_fft_len+k] = sym_est;
 	  }
 	}
-	d_pilot_carr_set = (d_pilot_carr_set + 1) % d_pilot_carriers.size();
+	if (!d_pilot_carriers.empty()) {
+	  d_pilot_carr_set = (d_pilot_carr_set + 1) % d_pilot_carriers.size();
+	}
       }
     }
 

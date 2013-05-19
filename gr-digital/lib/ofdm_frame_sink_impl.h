@@ -23,7 +23,7 @@
 #ifndef INCLUDED_DIGITAL_OFDM_FRAME_SINK_IMPL_H
 #define INCLUDED_DIGITAL_OFDM_FRAME_SINK_IMPL_H
 
-#include <digital/ofdm_frame_sink.h>
+#include <gnuradio/digital/ofdm_frame_sink.h>
 
 namespace gr {
   namespace digital {
@@ -36,7 +36,7 @@ namespace gr {
       static const int MAX_PKT_LEN    = 4096;
       static const int HEADERBYTELEN   = 4;
 
-      gr_msg_queue_sptr  d_target_queue;	// where to send the packet when received
+      msg_queue::sptr  d_target_queue;	// where to send the packet when received
       state_t            d_state;
       unsigned int       d_header;		// header bits
       int                d_headerbytelen_cnt;	// how many so far
@@ -90,7 +90,7 @@ namespace gr {
     public:
       ofdm_frame_sink_impl(const std::vector<gr_complex> &sym_position, 
 			   const std::vector<char> &sym_value_out,
-			   gr_msg_queue_sptr target_queue,
+			   msg_queue::sptr target_queue,
 			   int occupied_tones,
 			   float phase_gain=0.25, float freq_gain=0.25*0.25/4);
       ~ofdm_frame_sink_impl();

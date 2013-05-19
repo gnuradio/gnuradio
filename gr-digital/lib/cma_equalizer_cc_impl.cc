@@ -25,7 +25,7 @@
 #endif
 
 #include "cma_equalizer_cc_impl.h"
-#include <gr_io_signature.h>
+#include <gnuradio/io_signature.h>
 
 namespace gr {
   namespace digital {
@@ -41,9 +41,9 @@ namespace gr {
 
     cma_equalizer_cc_impl::cma_equalizer_cc_impl(int num_taps, float modulus,
 						 float mu, int sps)
-      : gr_sync_decimator("cma_equalizer_cc",
-			  gr_make_io_signature(1, 1, sizeof(gr_complex)),
-			  gr_make_io_signature(1, 1, sizeof(gr_complex)),
+      : sync_decimator("cma_equalizer_cc",
+			  io_signature::make(1, 1, sizeof(gr_complex)),
+			  io_signature::make(1, 1, sizeof(gr_complex)),
 			  sps),
 	fir_filter_ccc(sps, std::vector<gr_complex>(num_taps, gr_complex(0,0))),
 	d_new_taps(num_taps, gr_complex(0,0)),
@@ -79,8 +79,8 @@ namespace gr {
     cma_equalizer_cc_impl::error(const gr_complex &out)
     { 
       gr_complex error = out*(norm(out) - d_modulus);
-      float re = gr_clip(error.real(), 1.0);
-      float im = gr_clip(error.imag(), 1.0);
+      float re = gr::clip(error.real(), 1.0);
+      float im = gr::clip(error.imag(), 1.0);
       return gr_complex(re, im);
     }
 

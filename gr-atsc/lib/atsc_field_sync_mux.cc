@@ -24,10 +24,10 @@
 #include <config.h>
 #endif
 
-#include <atsc/field_sync_mux.h>
-#include <gr_io_signature.h>
-#include <atsc/consts.h>
-#include <atsc/pnXXX_impl.h>
+#include <gnuradio/atsc/field_sync_mux.h>
+#include <gnuradio/io_signature.h>
+#include <gnuradio/atsc/consts.h>
+#include <gnuradio/atsc/pnXXX_impl.h>
 
 
 atsc_field_sync_mux_sptr
@@ -37,9 +37,9 @@ atsc_make_field_sync_mux()
 }
 
 atsc_field_sync_mux::atsc_field_sync_mux()
-  : gr_sync_block("atsc_field_sync_mux",
-		  gr_make_io_signature(1, 1, sizeof(atsc_data_segment)),
-		  gr_make_io_signature(1, 1, sizeof(atsc_data_segment)))
+  : gr::sync_block("atsc_field_sync_mux",
+                   gr::io_signature::make(1, 1, sizeof(atsc_data_segment)),
+                   gr::io_signature::make(1, 1, sizeof(atsc_data_segment)))
 {
   reset();
 }

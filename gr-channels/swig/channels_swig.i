@@ -28,12 +28,12 @@
 %include "channels_swig_doc.i"
 
 %{
-#include "channels/channel_model.h"
-#include "channels/fading_model.h"
+#include "gnuradio/channels/channel_model.h"
+#include "gnuradio/channels/fading_model.h"
 %}
 
-%include "channels/channel_model.h"
-%include "channels/fading_model.h"
+%include "gnuradio/channels/channel_model.h"
+%include "gnuradio/channels/fading_model.h"
 
 GR_SWIG_BLOCK_MAGIC2(channels, channel_model);
 GR_SWIG_BLOCK_MAGIC2(channels, fading_model);

@@ -23,7 +23,7 @@
 #ifndef INCLUDED_GR_PACKET_SINK_IMPL_H
 #define INCLUDED_GR_PACKET_SINK_IMPL_H
 
-#include <digital/packet_sink.h>
+#include <gnuradio/digital/packet_sink.h>
 
 namespace gr {
   namespace digital {
@@ -36,7 +36,7 @@ namespace gr {
       static const int MAX_PKT_LEN    = 4096;
       static const int HEADERBITLEN   = 32;
 
-      gr_msg_queue_sptr  d_target_queue;	// where to send the packet when received
+      msg_queue::sptr  d_target_queue;	// where to send the packet when received
       unsigned long long d_sync_vector;		// access code to locate start of packet
       unsigned int       d_threshold;		// how many bits may be wrong in sync vector
       
@@ -45,7 +45,7 @@ namespace gr {
       unsigned long long d_shift_reg;		// used to look for sync_vector
 
       unsigned int       d_header;		// header bits
-      int		     d_headerbitlen_cnt;// how many so far
+      int	         d_headerbitlen_cnt;// how many so far
 
       unsigned char      d_packet[MAX_PKT_LEN];	// assembled payload
       unsigned char      d_packet_byte;         // byte being assembled
@@ -75,7 +75,7 @@ namespace gr {
 
     public:
       packet_sink_impl(const std::vector<unsigned char>& sync_vector,
-		       gr_msg_queue_sptr target_queue,
+		       msg_queue::sptr target_queue,
 		       int threshold=-1);
       ~packet_sink_impl();
 

@@ -1,14 +1,26 @@
-This is the gr-audio package. This package includes all of the
-supported audio interfaces, including:
-    - alsa
-    - oss
-    - jack
-    - portaudio
-    - osx
-    - windows
+The gnuradio audio component provides gr::audio::source and
+gr::audio::sink blocks. The audio blocks stream floating point samples
+to and from audio hardware.
 
-Typically, the audio package will auto-detect the proper driver to use
-based on the system it is run on. Import this package with:
+The gr-audio component will be built automatically when
+gnuradio-runtime is enabled. Support for underlying audio
+architectures depends on OS and installed libraries. At the time of
+writing, gr-audio supports OSS, ALSA, Jack, Portaudio, Audiounit, and
+Winmm.
+
+At runtime, gr-audio will automatically select from the available
+architectures. The user can override the selection via configuration
+file by setting "audio_module" to one of the following strings:
+ - oss
+ - alsa
+ - jack
+ - portaudio
+ - osx
+ - windows
+
+See gr-audio.conf for an example.
+
+Import this package with:
 
     from gnuradio import audio
 

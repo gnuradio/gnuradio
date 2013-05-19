@@ -25,8 +25,8 @@
 #endif
 
 #include "clock_recovery_mm_ff_impl.h"
-#include <gr_io_signature.h>
-#include <gr_math.h>
+#include <gnuradio/io_signature.h>
+#include <gnuradio/math.h>
 #include <stdexcept>
 
 namespace gr {
@@ -46,9 +46,9 @@ namespace gr {
     clock_recovery_mm_ff_impl::clock_recovery_mm_ff_impl(float omega, float gain_omega,
 							 float mu, float gain_mu,
 							 float omega_relative_limit)
-      : gr_block("clock_recovery_mm_ff",
-		 gr_make_io_signature(1, 1, sizeof(float)),
-		 gr_make_io_signature(1, 1, sizeof(float))),
+      : block("clock_recovery_mm_ff",
+		 io_signature::make(1, 1, sizeof(float)),
+		 io_signature::make(1, 1, sizeof(float))),
 	d_mu(mu), d_gain_mu(gain_mu), d_gain_omega(gain_omega),
 	d_omega_relative_limit(omega_relative_limit),
 	d_last_sample(0), d_interp(new filter::mmse_fir_interpolator_ff())
@@ -104,7 +104,7 @@ namespace gr {
 	d_last_sample = out[oo];
 
 	d_omega = d_omega + d_gain_omega * mm_val;
-	d_omega = d_omega_mid + gr_branchless_clip(d_omega-d_omega_mid, d_omega_relative_limit);
+	d_omega = d_omega_mid + gr::branchless_clip(d_omega-d_omega_mid, d_omega_relative_limit);
 	d_mu = d_mu + d_omega + d_gain_mu * mm_val;
 
 	ii += (int)floor(d_mu);

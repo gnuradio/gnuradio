@@ -23,7 +23,7 @@
 #ifndef INCLUDED_VIDEO_SDL_SINK_S_IMPL_H
 #define INCLUDED_VIDEO_SDL_SINK_S_IMPL_H
 
-#include <video_sdl/sink_s.h>
+#include <gnuradio/video_sdl/sink_s.h>
 #include <SDL.h>
 
 namespace gr {

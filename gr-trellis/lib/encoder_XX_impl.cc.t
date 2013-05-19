@@ -27,7 +27,7 @@
 #endif
 
 #include "@NAME@.h"
-#include <gr_io_signature.h>
+#include <gnuradio/io_signature.h>
 #include <iostream>
 
 namespace gr {
@@ -41,9 +41,9 @@ namespace gr {
     }
 
     @IMPL_NAME@::@IMPL_NAME@(const fsm &FSM, int ST)
-    : gr_sync_block("@BASE_NAME@",
-		    gr_make_io_signature(1, -1, sizeof(@I_TYPE@)),
-		    gr_make_io_signature(1, -1, sizeof(@O_TYPE@))),
+    : sync_block("@BASE_NAME@",
+		    io_signature::make(1, -1, sizeof(@I_TYPE@)),
+		    io_signature::make(1, -1, sizeof(@O_TYPE@))),
       d_FSM(FSM),
       d_ST(ST)
     {

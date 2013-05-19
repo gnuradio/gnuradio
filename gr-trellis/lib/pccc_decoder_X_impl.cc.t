@@ -27,9 +27,9 @@
 #endif
 
 #include "@NAME@.h"
-#include <gr_io_signature.h>
+#include <gnuradio/io_signature.h>
 #include <iostream>
-#include <trellis/core_algorithms.h>
+#include <gnuradio/trellis/core_algorithms.h>
 
 namespace gr {
   namespace trellis {
@@ -59,9 +59,9 @@ namespace gr {
 			     int blocklength,
 			     int repetitions,
 			     siso_type_t SISO_TYPE)
-    : gr_block("@BASE_NAME@",
-	       gr_make_io_signature(1, 1, sizeof(float)),
-	       gr_make_io_signature(1, 1, sizeof(@O_TYPE@))),
+    : block("@BASE_NAME@",
+	       io_signature::make(1, 1, sizeof(float)),
+	       io_signature::make(1, 1, sizeof(@O_TYPE@))),
       d_FSM1(FSM1), d_ST10(ST10), d_ST1K(ST1K),
       d_FSM2(FSM2), d_ST20(ST20), d_ST2K(ST2K),
       d_INTERLEAVER(INTERLEAVER),

@@ -25,15 +25,15 @@
 #endif
 
 #include "squelch_base_cc_impl.h"
-#include <gr_io_signature.h>
+#include <gnuradio/io_signature.h>
 
 namespace gr {
   namespace analog {
 
     squelch_base_cc_impl::squelch_base_cc_impl(const char *name, int ramp, bool gate)
-      : gr_block(name,
-	         gr_make_io_signature(1, 1, sizeof(float)),
-	         gr_make_io_signature(1, 1, sizeof(float)))
+      : block(name,
+	         io_signature::make(1, 1, sizeof(float)),
+	         io_signature::make(1, 1, sizeof(float)))
     {
       set_ramp(ramp);
       set_gate(gate);

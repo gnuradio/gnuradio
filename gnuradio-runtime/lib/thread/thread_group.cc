@@ -12,7 +12,7 @@
  * This was extracted from Boost 1.35.0 and fixed.
  */
 
-#include <thread/thread_group.h>
+#include <gnuradio/thread/thread_group.h>
 
 namespace gr {
   namespace thread {

@@ -73,20 +73,23 @@ automake-1.8 --add-missing
 If you run this script it will convert a clean cvs checkout to a version which you can configure, build and install
 
 So now you can configure gnuradio.
-On win32 /mingw you need to give it a few parameters
-You need to tell it where cppunit is installed
-where boost include files are to be found
-where the pkg-config of libfftw is to be found
-to use a generic cpu (no 3Dnow,SSE,MMX) (This option will not be needed anymore soon)
-If you have boost installed in C:\boost_1_32_0 and cppunit and fftw in /usr/local then you would need the following configur commandline
-$ ./configure --with-md-cpu=generic --with-cppunit-prefix=/usr/local --with-boost-include-dir=/c/boost_1_32_0/include/boost-1_32 PKG_CONFIG_PATH=/usr/local/lib/pkgconfig
+On win32 / mingw you need to give it a few parameters:
+ - You need to tell it where cppunit is installed
+ - where boost include files are to be found
+ - where the pkg-config of libfftw is to be found
+ - to use a generic cpu (no 3Dnow, SSE, MMX) (This option will not be needed anymore soon)
+ - If you have boost installed in C:\boost_1_32_0 and cppunit and fftw in /usr/local then you would need the following configure commandline:
+   $ ./configure --with-md-cpu=generic --with-cppunit-prefix=/usr/local --with-boost-include-dir=/c/boost_1_32_0/include/boost-1_32 PKG_CONFIG_PATH=/usr/local/lib/pkgconfig
 
-If everything went well you cannow do
-make
-make install
+If everything went well you can now do:
+   $ make
+   $ make install
 
-Now you have a working gnuradio-core
-Now you can go on building and installing gr-audio-windows and windows and wxgui
-remember that all gnuradio and python dlls need to be on your path to use gnuradio
-The gnuradio dlls are installed at
+Now you have a working gnuradio-runtime.
+
+Now you can go on building and installing gr-audio-windows and windows and wxgui.
+
+Remember that all gnuradio and python dlls need to be on your path to use gnuradio.
+
+The gnuradio dlls are installed at:
 /c/Python24/Lib/site-packages:/c/Python24/Lib/site-packages/gnuradio:/c/Python24/Lib/site-packages/gnuradio/gr

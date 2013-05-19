@@ -25,7 +25,7 @@
 #endif
 
 #include "fft_vcc_fftw.h"
-#include <gr_io_signature.h>
+#include <gnuradio/io_signature.h>
 #include <math.h>
 #include <string.h>
 
@@ -44,9 +44,9 @@ namespace gr {
     fft_vcc_fftw::fft_vcc_fftw(int fft_size, bool forward,
 			       const std::vector<float> &window,
 			       bool shift, int nthreads)
-      : gr_sync_block("fft_vcc_fftw",
-		      gr_make_io_signature(1, 1, fft_size * sizeof(gr_complex)),
-		      gr_make_io_signature(1, 1, fft_size * sizeof(gr_complex))),
+      : sync_block("fft_vcc_fftw",
+		      io_signature::make(1, 1, fft_size * sizeof(gr_complex)),
+		      io_signature::make(1, 1, fft_size * sizeof(gr_complex))),
 	d_fft_size(fft_size), d_forward(forward), d_shift(shift)
     {
       d_fft = new fft_complex(d_fft_size, forward, nthreads);

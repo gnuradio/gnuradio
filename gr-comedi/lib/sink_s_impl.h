@@ -23,7 +23,7 @@
 #ifndef INCLUDED_COMEDI_SINK_IMPL_H
 #define INCLUDED_COMEDI_SINK_IMPL_H
 
-#include <comedi/sink_s.h>
+#include <gnuradio/comedi/sink_s.h>
 #include <string>
 #include <comedilib.h>
 #include <stdexcept>

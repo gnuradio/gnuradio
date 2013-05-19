@@ -23,7 +23,7 @@
 #ifndef INCLUDED_GR_HEAD_IMPL_H
 #define INCLUDED_GR_HEAD_IMPL_H
 
-#include <blocks/head.h>
+#include <gnuradio/blocks/head.h>
 
 namespace gr {
   namespace blocks {

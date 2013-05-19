@@ -23,8 +23,8 @@
 #ifndef INCLUDED_FFT_FFT_VCC_FFTW_IMPL_H
 #define INCLUDED_FFT_FFT_VCC_FFTW_IMPL_H
 
-#include <fft/fft_vcc.h>
-#include <fft/fft.h>
+#include <gnuradio/fft/fft_vcc.h>
+#include <gnuradio/fft/fft.h>
 
 namespace gr {
   namespace fft {

@@ -23,7 +23,7 @@
 #ifndef INCLUDED_DIGITAL_PROBE_MPSK_SNR_EST_C_IMPL_H
 #define INCLUDED_DIGITAL_PROBE_MPSK_SNR_EST_C_IMPL_H
 
-#include <digital/probe_mpsk_snr_est_c.h>
+#include <gnuradio/digital/probe_mpsk_snr_est_c.h>
 
 namespace gr {
   namespace digital {

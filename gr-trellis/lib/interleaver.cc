@@ -27,8 +27,8 @@
 #include <fstream>
 #include <stdexcept>
 #include <cmath>
-#include <trellis/quicksort_index.h>
-#include <trellis/interleaver.h>
+#include <gnuradio/trellis/quicksort_index.h>
+#include <gnuradio/trellis/interleaver.h>
 
 namespace gr {
   namespace trellis {

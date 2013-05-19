@@ -84,7 +84,7 @@ CPACK_COMPONENT("channels_swig"
 ########################################################################
 # Add subdirectories
 ########################################################################
-add_subdirectory(include/channels)
+add_subdirectory(include/gnuradio/channels)
 add_subdirectory(lib)
 if(ENABLE_PYTHON)
     add_subdirectory(swig)

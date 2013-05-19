@@ -27,7 +27,7 @@
 #include <cppunit/TestCase.h>
 #include <stdio.h>
 
-#include <atsc/sliding_correlator_impl.h>
+#include <gnuradio/atsc/sliding_correlator_impl.h>
 
 class qa_atsci_sliding_correlator : public CppUnit::TestCase {
 

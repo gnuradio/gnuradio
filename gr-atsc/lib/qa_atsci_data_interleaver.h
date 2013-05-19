@@ -27,7 +27,7 @@
 #include <cppunit/TestCase.h>
 #include <stdio.h>
 
-#include <atsc/data_interleaver_impl.h>
+#include <gnuradio/atsc/data_interleaver_impl.h>
 
 class qa_atsci_data_interleaver : public CppUnit::TestCase {
  public:

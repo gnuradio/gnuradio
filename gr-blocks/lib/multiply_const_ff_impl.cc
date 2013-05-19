@@ -27,7 +27,7 @@
 #endif
 
 #include <multiply_const_ff_impl.h>
-#include <gr_io_signature.h>
+#include <gnuradio/io_signature.h>
 #include <volk/volk.h>
 
 namespace gr {
@@ -39,9 +39,9 @@ namespace gr {
     }
 
     multiply_const_ff_impl::multiply_const_ff_impl(float k, size_t vlen)
-      : gr_sync_block ("multiply_const_ff",
-		       gr_make_io_signature (1, 1, sizeof (float)*vlen),
-		       gr_make_io_signature (1, 1, sizeof (float)*vlen)),
+      : sync_block ("multiply_const_ff",
+		       io_signature::make (1, 1, sizeof (float)*vlen),
+		       io_signature::make (1, 1, sizeof (float)*vlen)),
 	d_k(k), d_vlen(vlen)
     {
       const int alignment_multiple =

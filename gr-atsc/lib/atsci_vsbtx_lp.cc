@@ -20,8 +20,8 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include <atsc/consts.h>
-#include <atsc/vsbtx_lp_impl.h>
+#include <gnuradio/atsc/consts.h>
+#include <gnuradio/atsc/vsbtx_lp_impl.h>
 #include <stdexcept>
 #include <cmath>
 #include <iostream>

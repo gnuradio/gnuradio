@@ -85,7 +85,7 @@ CPACK_COMPONENT("noaa_swig"
 ########################################################################
 # Add subdirectories
 ########################################################################
-add_subdirectory(include/noaa)
+add_subdirectory(include/gnuradio/noaa)
 add_subdirectory(lib)
 if(ENABLE_PYTHON)
     add_subdirectory(swig)

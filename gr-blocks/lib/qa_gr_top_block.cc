@@ -25,48 +25,49 @@
 #endif
 
 #include <qa_gr_top_block.h>
-#include <gr_top_block.h>
-#include <blocks/head.h>
-#include <blocks/nop.h>
-#include <blocks/null_source.h>
-#include <blocks/null_sink.h>
+#include <gnuradio/top_block.h>
+#include <gnuradio/blocks/head.h>
+#include <gnuradio/blocks/nop.h>
+#include <gnuradio/blocks/null_source.h>
+#include <gnuradio/blocks/null_sink.h>
 #include <iostream>
 
 #define VERBOSE 0
 
-void qa_gr_top_block::t0()
+void qa_top_block::t0()
 {
-  if (VERBOSE) std::cout << "qa_gr_top_block::t0()\n";
+  if (VERBOSE) std::cout << "qa_top_block::t0()\n";
 
-  gr_top_block_sptr tb = gr_make_top_block("top");
+  gr::top_block_sptr tb = gr::make_top_block("top");
 
   CPPUNIT_ASSERT(tb);
 }
 
-void qa_gr_top_block::t1_run()
+void qa_top_block::t1_run()
 {
-  if (VERBOSE) std::cout << "qa_gr_top_block::t1()\n";
+  if (VERBOSE) std::cout << "qa_top_block::t1()\n";
 
-  gr_top_block_sptr tb = gr_make_top_block("top");
+  gr::top_block_sptr tb = gr::make_top_block("top");
 
-  gr_block_sptr src = gr::blocks::null_source::make(sizeof(int));
-  gr_block_sptr head = gr::blocks::head::make(sizeof(int), 100000);
-  gr_block_sptr dst = gr::blocks::null_sink::make(sizeof(int));
+  gr::block_sptr src = gr::blocks::null_source::make(sizeof(int));
+  gr::block_sptr head = gr::blocks::head::make(sizeof(int), 100000);
+  gr::block_sptr dst = gr::blocks::null_sink::make(sizeof(int));
 
   tb->connect(src, 0, head, 0);
   tb->connect(head, 0, dst, 0);
   tb->run();
 }
 
-void qa_gr_top_block::t2_start_stop_wait()
+void qa_top_block::t2_start_stop_wait()
 {
-  if (VERBOSE) std::cout << "qa_gr_top_block::t2()\n";
+  if(VERBOSE)
+    std::cout << "qa_top_block::t2()\n";
 
-  gr_top_block_sptr tb = gr_make_top_block("top");
+  gr::top_block_sptr tb = gr::make_top_block("top");
 
-  gr_block_sptr src = gr::blocks::null_source::make(sizeof(int));
-  gr_block_sptr head = gr::blocks::head::make(sizeof(int), 100000);
-  gr_block_sptr dst = gr::blocks::null_sink::make(sizeof(int));
+  gr::block_sptr src = gr::blocks::null_source::make(sizeof(int));
+  gr::block_sptr head = gr::blocks::head::make(sizeof(int), 100000);
+  gr::block_sptr dst = gr::blocks::null_sink::make(sizeof(int));
 
   tb->connect(src, 0, head, 0);
   tb->connect(head, 0, dst, 0);
@@ -76,14 +77,15 @@ void qa_gr_top_block::t2_start_stop_wait()
   tb->wait();
 }
 
-void qa_gr_top_block::t3_lock_unlock()
+void qa_top_block::t3_lock_unlock()
 {
-  if (VERBOSE) std::cout << "qa_gr_top_block::t3()\n";
+  if(VERBOSE)
+    std::cout << "qa_top_block::t3()\n";
 
-  gr_top_block_sptr tb = gr_make_top_block("top");
+  gr::top_block_sptr tb = gr::make_top_block("top");
 
-  gr_block_sptr src = gr::blocks::null_source::make(sizeof(int));
-  gr_block_sptr dst = gr::blocks::null_sink::make(sizeof(int));
+  gr::block_sptr src = gr::blocks::null_source::make(sizeof(int));
+  gr::block_sptr dst = gr::blocks::null_sink::make(sizeof(int));
 
   tb->connect(src, 0, dst, 0);
 
@@ -96,15 +98,16 @@ void qa_gr_top_block::t3_lock_unlock()
   tb->wait();
 }
 
-void qa_gr_top_block::t4_reconfigure()
+void qa_top_block::t4_reconfigure()
 {
-  if (VERBOSE) std::cout << "qa_gr_top_block::t4()\n";
+  if(VERBOSE)
+    std::cout << "qa_top_block::t4()\n";
 
-  gr_top_block_sptr tb = gr_make_top_block("top");
+  gr::top_block_sptr tb = gr::make_top_block("top");
 
-  gr_block_sptr src = gr::blocks::null_source::make(sizeof(int));
-  gr_block_sptr head = gr::blocks::head::make(sizeof(int), 100000);
-  gr_block_sptr dst = gr::blocks::null_sink::make(sizeof(int));
+  gr::block_sptr src = gr::blocks::null_source::make(sizeof(int));
+  gr::block_sptr head = gr::blocks::head::make(sizeof(int), 100000);
+  gr::block_sptr dst = gr::blocks::null_sink::make(sizeof(int));
 
   // Start infinite flowgraph
   tb->connect(src, 0, dst, 0);
@@ -122,15 +125,16 @@ void qa_gr_top_block::t4_reconfigure()
 }
 
 
-void qa_gr_top_block::t5_max_noutputs()
+void qa_top_block::t5_max_noutputs()
 {
-  if (VERBOSE) std::cout << "qa_gr_top_block::t5()\n";
+  if(VERBOSE)
+    std::cout << "qa_top_block::t5()\n";
 
-  gr_top_block_sptr tb = gr_make_top_block("top");
+  gr::top_block_sptr tb = gr::make_top_block("top");
 
-  gr_block_sptr src = gr::blocks::null_source::make(sizeof(int));
-  gr_block_sptr head = gr::blocks::head::make(sizeof(int), 100000);
-  gr_block_sptr dst = gr::blocks::null_sink::make(sizeof(int));
+  gr::block_sptr src = gr::blocks::null_source::make(sizeof(int));
+  gr::block_sptr head = gr::blocks::head::make(sizeof(int), 100000);
+  gr::block_sptr dst = gr::blocks::null_sink::make(sizeof(int));
 
   // Start infinite flowgraph
   tb->connect(src, 0, head, 0);
@@ -139,15 +143,16 @@ void qa_gr_top_block::t5_max_noutputs()
   tb->wait();
 }
 
-void qa_gr_top_block::t6_reconfig_max_noutputs()
+void qa_top_block::t6_reconfig_max_noutputs()
 {
-  if (VERBOSE) std::cout << "qa_gr_top_block::t6()\n";
+  if(VERBOSE)
+    std::cout << "qa_top_block::t6()\n";
 
-  gr_top_block_sptr tb = gr_make_top_block("top");
+  gr::top_block_sptr tb = gr::make_top_block("top");
 
-  gr_block_sptr src = gr::blocks::null_source::make(sizeof(int));
-  gr_block_sptr head = gr::blocks::head::make(sizeof(int), 100000);
-  gr_block_sptr dst = gr::blocks::null_sink::make(sizeof(int));
+  gr::block_sptr src = gr::blocks::null_source::make(sizeof(int));
+  gr::block_sptr head = gr::blocks::head::make(sizeof(int), 100000);
+  gr::block_sptr dst = gr::blocks::null_sink::make(sizeof(int));
 
   // Start infinite flowgraph
   tb->connect(src, 0, dst, 0);
@@ -166,15 +171,16 @@ void qa_gr_top_block::t6_reconfig_max_noutputs()
   tb->wait();
 }
 
-void qa_gr_top_block::t7_max_noutputs_per_block()
+void qa_top_block::t7_max_noutputs_per_block()
 {
-  if (VERBOSE) std::cout << "qa_gr_top_block::t7()\n";
+  if(VERBOSE)
+    std::cout << "qa_top_block::t7()\n";
 
-  gr_top_block_sptr tb = gr_make_top_block("top");
+  gr::top_block_sptr tb = gr::make_top_block("top");
 
-  gr_block_sptr src = gr::blocks::null_source::make(sizeof(int));
-  gr_block_sptr head = gr::blocks::head::make(sizeof(int), 100000);
-  gr_block_sptr dst = gr::blocks::null_sink::make(sizeof(int));
+  gr::block_sptr src = gr::blocks::null_source::make(sizeof(int));
+  gr::block_sptr head = gr::blocks::head::make(sizeof(int), 100000);
+  gr::block_sptr dst = gr::blocks::null_sink::make(sizeof(int));
 
   head->set_max_noutput_items(100);
 
@@ -185,15 +191,16 @@ void qa_gr_top_block::t7_max_noutputs_per_block()
   tb->wait();
 }
 
-void qa_gr_top_block::t8_reconfig_max_noutputs_per_block()
+void qa_top_block::t8_reconfig_max_noutputs_per_block()
 {
-  if (VERBOSE) std::cout << "qa_gr_top_block::t8()\n";
+  if(VERBOSE)
+    std::cout << "qa_top_block::t8()\n";
 
-  gr_top_block_sptr tb = gr_make_top_block("top");
+  gr::top_block_sptr tb = gr::make_top_block("top");
 
-  gr_block_sptr src = gr::blocks::null_source::make(sizeof(int));
-  gr_block_sptr head = gr::blocks::head::make(sizeof(int), 100000);
-  gr_block_sptr dst = gr::blocks::null_sink::make(sizeof(int));
+  gr::block_sptr src = gr::blocks::null_source::make(sizeof(int));
+  gr::block_sptr head = gr::blocks::head::make(sizeof(int), 100000);
+  gr::block_sptr dst = gr::blocks::null_sink::make(sizeof(int));
 
   head->set_max_noutput_items(99);
 
@@ -214,15 +221,16 @@ void qa_gr_top_block::t8_reconfig_max_noutputs_per_block()
   tb->wait();
 }
 
-void qa_gr_top_block::t9_max_output_buffer()
+void qa_top_block::t9_max_output_buffer()
 {
-  if (VERBOSE) std::cout << "qa_gr_top_block::t9()\n";
+  if(VERBOSE)
+    std::cout << "qa_top_block::t9()\n";
 
-  gr_top_block_sptr tb = gr_make_top_block("top");
+  gr::top_block_sptr tb = gr::make_top_block("top");
 
-  gr_block_sptr src = gr::blocks::null_source::make(sizeof(int));
-  gr_block_sptr head = gr::blocks::head::make(sizeof(int), 100000);
-  gr_block_sptr dst = gr::blocks::null_sink::make(sizeof(int));
+  gr::block_sptr src = gr::blocks::null_source::make(sizeof(int));
+  gr::block_sptr head = gr::blocks::head::make(sizeof(int), 100000);
+  gr::block_sptr dst = gr::blocks::null_sink::make(sizeof(int));
 
   head->set_max_output_buffer(1024);
 
@@ -233,15 +241,16 @@ void qa_gr_top_block::t9_max_output_buffer()
   tb->wait();
 }
 
-void qa_gr_top_block::t10_reconfig_max_output_buffer()
+void qa_top_block::t10_reconfig_max_output_buffer()
 {
-  if (VERBOSE) std::cout << "qa_gr_top_block::t10()\n";
+  if(VERBOSE)
+    std::cout << "qa_top_block::t10()\n";
 
-  gr_top_block_sptr tb = gr_make_top_block("top");
+  gr::top_block_sptr tb = gr::make_top_block("top");
 
-  gr_block_sptr src = gr::blocks::null_source::make(sizeof(int));
-  gr_block_sptr head = gr::blocks::head::make(sizeof(int), 100000);
-  gr_block_sptr dst = gr::blocks::null_sink::make(sizeof(int));
+  gr::block_sptr src = gr::blocks::null_source::make(sizeof(int));
+  gr::block_sptr head = gr::blocks::head::make(sizeof(int), 100000);
+  gr::block_sptr dst = gr::blocks::null_sink::make(sizeof(int));
 
   head->set_max_output_buffer(1000);
 
@@ -251,7 +260,7 @@ void qa_gr_top_block::t10_reconfig_max_output_buffer()
 
   // Reconfigure with gr_head in the middle
   tb->lock();
-  gr_block_sptr nop = gr::blocks::nop::make(sizeof(int));
+  gr::block_sptr nop = gr::blocks::nop::make(sizeof(int));
   nop->set_max_output_buffer(4000);
   tb->disconnect(src, 0, dst, 0);
   tb->connect(src, 0, head, 0);
@@ -263,11 +272,11 @@ void qa_gr_top_block::t10_reconfig_max_output_buffer()
   tb->wait();
 }
 
-void qa_gr_top_block::t11_set_block_affinity()
+void qa_top_block::t11_set_block_affinity()
 {
-  gr_top_block_sptr tb = gr_make_top_block("top");
-  gr_block_sptr src (gr::blocks::null_source::make(sizeof(float)));
-  gr_block_sptr snk (gr::blocks::null_sink::make(sizeof(float)));
+  gr::top_block_sptr tb = gr::make_top_block("top");
+  gr::block_sptr src (gr::blocks::null_source::make(sizeof(float)));
+  gr::block_sptr snk (gr::blocks::null_sink::make(sizeof(float)));
 
   std::vector<int> set(1, 0), ret;
   src->set_processor_affinity(set);

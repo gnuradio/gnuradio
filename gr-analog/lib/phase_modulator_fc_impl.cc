@@ -25,8 +25,8 @@
 #endif
 
 #include "phase_modulator_fc_impl.h"
-#include <gr_io_signature.h>
-#include <gr_sincos.h>
+#include <gnuradio/io_signature.h>
+#include <gnuradio/sincos.h>
 #include <math.h>
 
 namespace gr {
@@ -40,9 +40,9 @@ namespace gr {
     }
 
     phase_modulator_fc_impl::phase_modulator_fc_impl(double sensitivity)
-      : gr_sync_block("phase_modulator_fc",
-		      gr_make_io_signature(1, 1, sizeof(float)),
-		      gr_make_io_signature(1, 1, sizeof(gr_complex))),
+      : sync_block("phase_modulator_fc",
+		      io_signature::make(1, 1, sizeof(float)),
+		      io_signature::make(1, 1, sizeof(gr_complex))),
 	d_sensitivity(sensitivity), d_phase(0)
     {
     }
@@ -62,7 +62,7 @@ namespace gr {
       for(int i = 0; i < noutput_items; i++) {
 	d_phase = d_sensitivity * in[i];
 	float oi, oq;
-	gr_sincosf(d_phase, &oq, &oi);
+	gr::sincosf(d_phase, &oq, &oi);
 	out[i] = gr_complex(oi, oq);
       }
 

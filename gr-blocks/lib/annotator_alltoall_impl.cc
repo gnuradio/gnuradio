@@ -25,7 +25,7 @@
 #endif
 
 #include "annotator_alltoall_impl.h"
-#include <gr_io_signature.h>
+#include <gnuradio/io_signature.h>
 #include <string.h>
 #include <iostream>
 #include <iomanip>
@@ -42,9 +42,9 @@ namespace gr {
 
     annotator_alltoall_impl::annotator_alltoall_impl(int when,
                                                      size_t sizeof_stream_item)
-      : gr_sync_block("annotator_alltoall",
-                      gr_make_io_signature(1, -1, sizeof_stream_item),
-                      gr_make_io_signature(1, -1, sizeof_stream_item)),
+      : sync_block("annotator_alltoall",
+                      io_signature::make(1, -1, sizeof_stream_item),
+                      io_signature::make(1, -1, sizeof_stream_item)),
         d_itemsize(sizeof_stream_item), d_when((uint64_t)when)
     {
       set_tag_propagation_policy(TPP_ALL_TO_ALL);
@@ -73,10 +73,10 @@ namespace gr {
         abs_N = nitems_read(i);
         end_N = abs_N + (uint64_t)(noutput_items);
 
-        std::vector<gr_tag_t> all_tags;
+        std::vector<tag_t> all_tags;
         get_tags_in_range(all_tags, i, abs_N, end_N);
 
-        std::vector<gr_tag_t>::iterator itr;
+        std::vector<tag_t>::iterator itr;
         for(itr = all_tags.begin(); itr != all_tags.end(); itr++) {
           d_stored_tags.push_back(*itr);
         }

@@ -24,7 +24,7 @@
 #include <config.h>
 #endif
 
-#include <gr_constants.h>
+#include <gnuradio/constants.h>
 #include <boost/program_options.hpp>
 #include <iostream>
 
@@ -48,25 +48,25 @@ main(int argc, char **argv)
   po::store(po::parse_command_line(argc, argv, desc), vm);
   po::notify(vm);
 
-  if (vm.size() == 0 || vm.count("help")) {
+  if(vm.size() == 0 || vm.count("help")) {
     std::cout << desc << std::endl;
     return 1;
   }
 
-  if (vm.count("prefix"))
-    std::cout << gr_prefix() << std::endl;
+  if(vm.count("prefix"))
+    std::cout << gr::prefix() << std::endl;
 
-  if (vm.count("sysconfdir"))
-    std::cout << gr_sysconfdir() << std::endl;
+  if(vm.count("sysconfdir"))
+    std::cout << gr::sysconfdir() << std::endl;
 
-  if (vm.count("prefsdir"))
-    std::cout << gr_prefsdir() << std::endl;
+  if(vm.count("prefsdir"))
+    std::cout << gr::prefsdir() << std::endl;
 
-  if (vm.count("builddate"))
-    std::cout << gr_build_date() << std::endl;
+  if(vm.count("builddate"))
+    std::cout << gr::build_date() << std::endl;
 
-  if (vm.count("version"))
-    std::cout << gr_version() << std::endl;
+  if(vm.count("version"))
+    std::cout << gr::version() << std::endl;
 
   return 0;
 }

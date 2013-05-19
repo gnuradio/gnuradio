@@ -27,7 +27,7 @@
 #include <cppunit/TestCase.h>
 #include <stdio.h>
 
-#include <atsc/trellis_encoder_impl.h>
+#include <gnuradio/atsc/trellis_encoder_impl.h>
 
 class qa_atsci_trellis_encoder : public CppUnit::TestCase {
 

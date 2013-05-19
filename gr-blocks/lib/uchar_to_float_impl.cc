@@ -26,7 +26,7 @@
 
 #include "uchar_to_float_impl.h"
 #include "uchar_array_to_float.h"
-#include <gr_io_signature.h>
+#include <gnuradio/io_signature.h>
 
 namespace gr {
   namespace blocks {
@@ -37,9 +37,9 @@ namespace gr {
     }
 
     uchar_to_float_impl::uchar_to_float_impl()
-      : gr_sync_block("uchar_to_float",
-		      gr_make_io_signature (1, 1, sizeof(unsigned char)),
-		      gr_make_io_signature (1, 1, sizeof(float)))
+      : sync_block("uchar_to_float",
+		      io_signature::make (1, 1, sizeof(unsigned char)),
+		      io_signature::make (1, 1, sizeof(float)))
     {
     }
 

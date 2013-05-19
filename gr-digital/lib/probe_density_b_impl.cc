@@ -23,7 +23,7 @@
 #endif
 
 #include "probe_density_b_impl.h"
-#include <gr_io_signature.h>
+#include <gnuradio/io_signature.h>
 #include <iostream>
 
 namespace gr {
@@ -37,9 +37,9 @@ namespace gr {
     }
 
     probe_density_b_impl::probe_density_b_impl(double alpha)
-      : gr_sync_block("density_b",
-		      gr_make_io_signature(1, 1, sizeof(char)),
-		      gr_make_io_signature(0, 0, 0))
+      : sync_block("density_b",
+		      io_signature::make(1, 1, sizeof(char)),
+		      io_signature::make(0, 0, 0))
     {
       set_alpha(alpha);
       d_density = 1.0;

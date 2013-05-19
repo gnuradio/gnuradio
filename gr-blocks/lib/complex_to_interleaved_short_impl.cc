@@ -25,7 +25,7 @@
 #endif
 
 #include "complex_to_interleaved_short_impl.h"
-#include <gr_io_signature.h>
+#include <gnuradio/io_signature.h>
 
 namespace gr {
   namespace blocks {
@@ -36,9 +36,9 @@ namespace gr {
     }
 
     complex_to_interleaved_short_impl::complex_to_interleaved_short_impl()
-      : gr_sync_interpolator("complex_to_interleaved_short",
-			     gr_make_io_signature (1, 1, sizeof(gr_complex)),
-			     gr_make_io_signature (1, 1, sizeof(short)),
+      : sync_interpolator("complex_to_interleaved_short",
+			     io_signature::make (1, 1, sizeof(gr_complex)),
+			     io_signature::make (1, 1, sizeof(short)),
 			     2)
     {
     }

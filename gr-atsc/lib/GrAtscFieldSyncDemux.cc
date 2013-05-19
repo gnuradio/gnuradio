@@ -21,10 +21,10 @@
  */
 
 #include <cmath>
-#include <atsc/GrAtscFieldSyncDemux.h>
-#include <atsc/consts.h>
-#include <atsc/types.h>
-#include <atsc/syminfo_impl.h>
+#include <gnuradio/atsc/GrAtscFieldSyncDemux.h>
+#include <gnuradio/atsc/consts.h>
+#include <gnuradio/atsc/types.h>
+#include <gnuradio/atsc/syminfo_impl.h>
 #include <stdio.h>
 #include <assert.h>
 

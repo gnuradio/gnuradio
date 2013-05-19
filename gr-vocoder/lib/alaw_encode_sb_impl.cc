@@ -25,7 +25,7 @@
 #endif
 
 #include "alaw_encode_sb_impl.h"
-#include <gr_io_signature.h>
+#include <gnuradio/io_signature.h>
 #include <limits.h>
 
 namespace gr {
@@ -43,9 +43,9 @@ extern "C" {
     }
 
     alaw_encode_sb_impl::alaw_encode_sb_impl()
-      : gr_sync_block("avocoder_law_encode_sb",
-		      gr_make_io_signature(1, 1, sizeof(short)),
-		      gr_make_io_signature(1, 1, sizeof(unsigned char)))
+      : sync_block("avocoder_law_encode_sb",
+		      io_signature::make(1, 1, sizeof(short)),
+		      io_signature::make(1, 1, sizeof(unsigned char)))
     {
     }
 

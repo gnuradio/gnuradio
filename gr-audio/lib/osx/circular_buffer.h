@@ -23,7 +23,7 @@
 #ifndef _CIRCULAR_BUFFER_H_
 #define _CIRCULAR_BUFFER_H_
 
-#include <thread/thread.h>
+#include <gnuradio/thread/thread.h>
 #include <iostream>
 #include <stdexcept>
 

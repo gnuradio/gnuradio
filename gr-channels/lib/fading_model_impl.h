@@ -23,14 +23,14 @@
 #ifndef INCLUDED_CHANNELS_CHANNEL_MODEL_IMPL_H
 #define INCLUDED_CHANNELS_CHANNEL_MODEL_IMPL_H
 
-#include <gr_sync_block.h>
-#include <channels/fading_model.h>
+#include <gnuradio/sync_block.h>
+#include <gnuradio/channels/fading_model.h>
 
 //#include <iostream>
 #include <boost/format.hpp>
 #include <boost/random.hpp>
 
-#include <gr_fxpt.h>
+#include <gnuradio/fxpt.h>
 #include <sincostable.h>
 
 namespace gr {

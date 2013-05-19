@@ -25,7 +25,7 @@
 #endif
 
 #include "sink_s_impl.h"
-#include <gr_io_signature.h>
+#include <gnuradio/io_signature.h>
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <fcntl.h>
@@ -50,9 +50,9 @@ namespace gr {
 
     sink_s_impl::sink_s_impl(double framerate, int width, int height,
 			     unsigned int format, int dst_width, int dst_height)
-      : gr_sync_block("video_sdl_sink_s",
-		      gr_make_io_signature(1, 3, sizeof(short)),
-		      gr_make_io_signature(0, 0, 0)),
+      : sync_block("video_sdl_sink_s",
+		      io_signature::make(1, 3, sizeof(short)),
+		      io_signature::make(0, 0, 0)),
 	d_chunk_size(width*height), d_framerate(framerate),
 	d_wanted_frametime_ms(0), d_width(width), d_height(height),
 	d_dst_width(dst_width), d_dst_height(dst_height),

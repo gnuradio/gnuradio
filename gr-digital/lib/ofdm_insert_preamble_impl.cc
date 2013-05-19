@@ -24,7 +24,7 @@
 #endif
 
 #include "ofdm_insert_preamble_impl.h"
-#include <gr_io_signature.h>
+#include <gnuradio/io_signature.h>
 #include <stdexcept>
 #include <iostream>
 #include <string>
@@ -42,11 +42,11 @@ namespace gr {
 
     ofdm_insert_preamble_impl::ofdm_insert_preamble_impl(int fft_length,
         const std::vector<std::vector<gr_complex> > &preamble)
-      : gr_block("ofdm_insert_preamble",
-		 gr_make_io_signature2(1, 2,
+      : block("ofdm_insert_preamble",
+		 io_signature::make2(1, 2,
 				       sizeof(gr_complex)*fft_length,
 				       sizeof(char)),
-		 gr_make_io_signature2(1, 2,
+		 io_signature::make2(1, 2,
 				       sizeof(gr_complex)*fft_length,
 				       sizeof(char))),
 	d_fft_length(fft_length),

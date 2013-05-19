@@ -25,8 +25,8 @@
 #endif
 
 #include "hrpt_deframer_impl.h"
-#include <gr_io_signature.h>
-#include <noaa/hrpt.h>
+#include <gnuradio/io_signature.h>
+#include <gnuradio/noaa/hrpt.h>
 #include <cstring>
 #include <cstdio>
 
@@ -44,9 +44,9 @@ namespace gr {
     }
 
     hrpt_deframer_impl::hrpt_deframer_impl()
-      : gr_block("noaa_hrpt_deframer",
-		 gr_make_io_signature(1, 1, sizeof(char)),
-		 gr_make_io_signature(1, 1, sizeof(short)))
+      : block("noaa_hrpt_deframer",
+		 io_signature::make(1, 1, sizeof(char)),
+		 io_signature::make(1, 1, sizeof(short)))
     {
       set_output_multiple(6); // room for writing full sync when received
       d_mid_bit = true;

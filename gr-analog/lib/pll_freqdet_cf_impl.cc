@@ -25,9 +25,9 @@
 #endif
 
 #include "pll_freqdet_cf_impl.h"
-#include <gr_io_signature.h>
+#include <gnuradio/io_signature.h>
 #include <math.h>
-#include <gr_math.h>
+#include <gnuradio/math.h>
 
 namespace gr {
   namespace analog {
@@ -44,9 +44,9 @@ namespace gr {
     }
 
     pll_freqdet_cf_impl::pll_freqdet_cf_impl(float loop_bw, float max_freq, float min_freq)
-      : gr_sync_block("pll_freqdet_cf",
-		      gr_make_io_signature(1, 1, sizeof(gr_complex)),
-		      gr_make_io_signature(1, 1, sizeof(float))),
+      : sync_block("pll_freqdet_cf",
+		      io_signature::make(1, 1, sizeof(gr_complex)),
+		      io_signature::make(1, 1, sizeof(float))),
 	blocks::control_loop(loop_bw, max_freq, min_freq)
     {
     }
@@ -70,7 +70,7 @@ namespace gr {
     pll_freqdet_cf_impl::phase_detector(gr_complex sample, float ref_phase)
     {
       float sample_phase;
-      sample_phase = gr_fast_atan2f(sample.imag(), sample.real());
+      sample_phase = gr::fast_atan2f(sample.imag(), sample.real());
       return mod_2pi(sample_phase - ref_phase);
     }
 

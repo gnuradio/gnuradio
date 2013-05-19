@@ -24,9 +24,9 @@
 #include <config.h>
 #endif
 
-#include <atsc/rs_decoder.h>
-#include <gr_io_signature.h>
-#include <atsc/consts.h>
+#include <gnuradio/atsc/rs_decoder.h>
+#include <gnuradio/io_signature.h>
+#include <gnuradio/atsc/consts.h>
 
 
 atsc_rs_decoder_sptr
@@ -36,9 +36,9 @@ atsc_make_rs_decoder()
 }
 
 atsc_rs_decoder::atsc_rs_decoder()
-  : gr_sync_block("atsc_rs_decoder",
-		  gr_make_io_signature(1, 1, sizeof(atsc_mpeg_packet_rs_encoded)),
-		  gr_make_io_signature(1, 1, sizeof(atsc_mpeg_packet_no_sync)))
+  : gr::sync_block("atsc_rs_decoder",
+		  gr::io_signature::make(1, 1, sizeof(atsc_mpeg_packet_rs_encoded)),
+		  gr::io_signature::make(1, 1, sizeof(atsc_mpeg_packet_no_sync)))
 {
   reset();
 }

@@ -20,8 +20,8 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include <atsc/sliding_correlator_impl.h>
-#include <atsc/pnXXX_impl.h>
+#include <gnuradio/atsc/sliding_correlator_impl.h>
+#include <gnuradio/atsc/pnXXX_impl.h>
 
 // #define TRY_BACKWARDS
 

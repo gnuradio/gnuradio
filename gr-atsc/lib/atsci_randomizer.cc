@@ -20,7 +20,7 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include <atsc/randomizer_impl.h>
+#include <gnuradio/atsc/randomizer_impl.h>
 #include <assert.h>
 
 unsigned char atsci_randomizer::s_output_map[1 << 14];

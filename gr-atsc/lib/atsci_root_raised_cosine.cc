@@ -20,9 +20,9 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include <atsc/consts.h>
-#include <atsc/root_raised_cosine_impl.h>
-#include <filter/firdes.h>
+#include <gnuradio/atsc/consts.h>
+#include <gnuradio/atsc/root_raised_cosine_impl.h>
+#include <gnuradio/filter/firdes.h>
 
 vector<float>
 atsc_root_raised_cosine::taps (double sampling_rate)

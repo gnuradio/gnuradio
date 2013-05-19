@@ -23,7 +23,7 @@
 #ifndef INCLUDED_GR_NULL_SINK_IMPL_H
 #define INCLUDED_GR_NULL_SINK_IMPL_H
 
-#include <blocks/null_sink.h>
+#include <gnuradio/blocks/null_sink.h>
 
 namespace gr {
   namespace blocks {

@@ -49,7 +49,7 @@ endif()
 
 GR_SET_GLOBAL(GR_FCD_INCLUDE_DIRS
     ${CMAKE_CURRENT_SOURCE_DIR}/lib
-    ${CMAKE_CURRENT_SOURCE_DIR}/include/fcd
+    ${CMAKE_CURRENT_SOURCE_DIR}/include
 )
 
 SET(GR_PKG_FCD_EXAMPLES_DIR ${GR_PKG_DATA_DIR}/examples/fcd)
@@ -103,7 +103,7 @@ CPACK_COMPONENT("fcd_swig"
 ########################################################################
 # Add subdirectories
 ########################################################################
-add_subdirectory(include/fcd)
+add_subdirectory(include/gnuradio/fcd)
 add_subdirectory(lib)
 if(ENABLE_PYTHON)
     add_subdirectory(swig)

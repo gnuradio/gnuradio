@@ -23,9 +23,9 @@
 #ifndef INCLUDED_BLOCKS_FILE_META_SINK_IMPL_H
 #define INCLUDED_BLOCKS_FILE_META_SINK_IMPL_H
 
-#include <blocks/file_meta_sink.h>
+#include <gnuradio/blocks/file_meta_sink.h>
 #include <pmt/pmt.h>
-#include <thread/thread.h>
+#include <gnuradio/thread/thread.h>
 
 using namespace pmt;
 

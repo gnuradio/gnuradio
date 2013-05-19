@@ -23,7 +23,7 @@
 #ifndef INCLUDED_BLOCKS_SOCKET_PDU_IMPL_H
 #define INCLUDED_BLOCKS_RANDOM_PDU_IMPL_H
 
-#include <blocks/random_pdu.h>
+#include <gnuradio/blocks/random_pdu.h>
 #include <boost/random.hpp>
 #include <boost/generator_iterator.hpp>
 

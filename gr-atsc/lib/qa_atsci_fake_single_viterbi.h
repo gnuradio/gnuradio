@@ -26,8 +26,8 @@
 #include <cppunit/extensions/HelperMacros.h>
 #include <cppunit/TestCase.h>
 
-#include <atsc/fake_single_viterbi_impl.h>
-#include <atsc/basic_trellis_encoder_impl.h>
+#include <gnuradio/atsc/fake_single_viterbi_impl.h>
+#include <gnuradio/atsc/basic_trellis_encoder_impl.h>
 
 class qa_atsci_fake_single_viterbi : public CppUnit::TestCase {
  private:

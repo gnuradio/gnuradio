@@ -23,7 +23,7 @@
 #ifndef INCLUDED_ANALOG_PLL_REFOUT_CC_IMPL_H
 #define INCLUDED_ANALOG_PLL_REFOUT_CC_IMPL_H
 
-#include <analog/pll_refout_cc.h>
+#include <gnuradio/analog/pll_refout_cc.h>
 
 namespace gr {
   namespace analog {

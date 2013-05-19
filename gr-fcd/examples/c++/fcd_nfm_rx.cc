@@ -32,12 +32,12 @@
 #endif
 
 // Include header files for each block used in flowgraph
-#include <gr_top_block.h>
-#include <filter/firdes.h>
-#include <filter/fir_filter_ccf.h>
-#include <analog/quadrature_demod_cf.h>
-#include <audio/sink.h>
-#include <fcd_source_c.h>
+#include <gnuradio/top_block.h>
+#include <gnuradio/filter/firdes.h>
+#include <gnuradio/filter/fir_filter_ccf.h>
+#include <gnuradio/analog/quadrature_demod_cf.h>
+#include <gnuradio/audio/sink.h>
+#include <gnuradio/fcd/source_c.h>
 
 // other includes
 #include <iostream>
@@ -77,10 +77,10 @@ int main(int argc, char **argv)
 
 
     // Construct a top block that will contain flowgraph blocks.
-    gr_top_block_sptr tb = gr_make_top_block("fcd_nfm_rx");
+    top_block_sptr tb = make_top_block("fcd_nfm_rx");
 
     // FCD source
-    fcd_source_c_sptr fcd = fcd_make_source_c(device);
+    gr::fcd::source_c::sptr fcd = gr::fcd::source_c::make(device);
     fcd->set_freq_khz(freq);
     fcd->set_lna_gain(gain);
 

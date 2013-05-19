@@ -25,7 +25,7 @@
 #endif
 
 #include "probe_mpsk_snr_est_c_impl.h"
-#include <gr_io_signature.h>
+#include <gnuradio/io_signature.h>
 #include <cstdio>
 
 namespace gr {
@@ -43,9 +43,9 @@ namespace gr {
     probe_mpsk_snr_est_c_impl::probe_mpsk_snr_est_c_impl(snr_est_type_t type,
 							 int msg_nsamples,
 							 double alpha)
-      : gr_sync_block("probe_mpsk_snr_est_c",
-		      gr_make_io_signature(1, 1, sizeof(gr_complex)),
-		      gr_make_io_signature(0, 0, 0))
+      : sync_block("probe_mpsk_snr_est_c",
+		      io_signature::make(1, 1, sizeof(gr_complex)),
+		      io_signature::make(0, 0, 0))
     {
       d_snr_est = NULL;
 

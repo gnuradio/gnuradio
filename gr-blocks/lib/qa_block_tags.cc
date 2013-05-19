@@ -25,20 +25,18 @@
 #endif
 
 #include <qa_block_tags.h>
-#include <gr_block.h>
-#include <gr_top_block.h>
-#include <blocks/null_source.h>
-#include <blocks/null_sink.h>
-#include <blocks/head.h>
-#include <blocks/annotator_alltoall.h>
-#include <blocks/annotator_1to1.h>
-#include <blocks/keep_one_in_n.h>
-#include <gr_tags.h>
+#include <gnuradio/block.h>
+#include <gnuradio/top_block.h>
+#include <gnuradio/blocks/null_source.h>
+#include <gnuradio/blocks/null_sink.h>
+#include <gnuradio/blocks/head.h>
+#include <gnuradio/blocks/annotator_alltoall.h>
+#include <gnuradio/blocks/annotator_1to1.h>
+#include <gnuradio/blocks/keep_one_in_n.h>
+#include <gnuradio/tags.h>
 
 
 // ----------------------------------------------------------------
-
-using namespace pmt;
 
 // set to 1 to turn on debug output
 // The debug output fully checks that the tags seen are what are expected. While
@@ -53,10 +51,10 @@ void
 qa_block_tags::t0()
 {
   unsigned int N = 1000;
-  gr_top_block_sptr tb = gr_make_top_block("top");
-  gr_block_sptr src (gr::blocks::null_source::make(sizeof(int)));
-  gr_block_sptr head (gr::blocks::head::make(sizeof(int), N));
-  gr_block_sptr snk (gr::blocks::null_sink::make(sizeof(int)));
+  gr::top_block_sptr tb = gr::make_top_block("top");
+  gr::block_sptr src (gr::blocks::null_source::make(sizeof(int)));
+  gr::block_sptr head (gr::blocks::head::make(sizeof(int), N));
+  gr::block_sptr snk (gr::blocks::null_sink::make(sizeof(int)));
 
   tb->connect(src, 0, head, 0);
   tb->connect(head, 0, snk, 0);
@@ -79,16 +77,16 @@ void
 qa_block_tags::t1()
 {
   int N = 40000;
-  gr_top_block_sptr tb = gr_make_top_block("top");
-  gr_block_sptr src (gr::blocks::null_source::make(sizeof(int)));
-  gr_block_sptr head (gr::blocks::head::make(sizeof(int), N));
+  gr::top_block_sptr tb = gr::make_top_block("top");
+  gr::block_sptr src (gr::blocks::null_source::make(sizeof(int)));
+  gr::block_sptr head (gr::blocks::head::make(sizeof(int), N));
   gr::blocks::annotator_alltoall::sptr ann0(gr::blocks::annotator_alltoall::make(10000, sizeof(int)));
   gr::blocks::annotator_alltoall::sptr ann1(gr::blocks::annotator_alltoall::make(10000, sizeof(int)));
   gr::blocks::annotator_alltoall::sptr ann2(gr::blocks::annotator_alltoall::make(10000, sizeof(int)));
   gr::blocks::annotator_alltoall::sptr ann3(gr::blocks::annotator_alltoall::make(10000, sizeof(int)));
   gr::blocks::annotator_alltoall::sptr ann4(gr::blocks::annotator_alltoall::make(10000, sizeof(int)));
-  gr_block_sptr snk0 (gr::blocks::null_sink::make(sizeof(int)));
-  gr_block_sptr snk1 (gr::blocks::null_sink::make(sizeof(int)));
+  gr::block_sptr snk0 (gr::blocks::null_sink::make(sizeof(int)));
+  gr::block_sptr snk1 (gr::blocks::null_sink::make(sizeof(int)));
 
   tb->connect(src, 0, head, 0);
   tb->connect(head, 0, ann0, 0);
@@ -103,9 +101,9 @@ qa_block_tags::t1()
 
   tb->run();
 
-  std::vector<gr_tag_t> tags0 = ann0->data();
-  std::vector<gr_tag_t> tags3 = ann3->data();
-  std::vector<gr_tag_t> tags4 = ann4->data();
+  std::vector<gr::tag_t> tags0 = ann0->data();
+  std::vector<gr::tag_t> tags3 = ann3->data();
+  std::vector<gr::tag_t> tags4 = ann4->data();
 
   // The first annotator does not receive any tags from the null sink upstream
   CPPUNIT_ASSERT_EQUAL(tags0.size(), (size_t)0);
@@ -119,7 +117,7 @@ qa_block_tags::t1()
   str1 << ann1->name() << ann1->unique_id();
   str2 << ann2->name() << ann2->unique_id();
 
-  pmt_t expected_tags3[8];
+  pmt::pmt_t expected_tags3[8];
   expected_tags3[0] = mp(pmt::from_uint64(0),     mp(str1.str()), mp("seq"), mp(0));
   expected_tags3[1] = mp(pmt::from_uint64(0),     mp(str0.str()), mp("seq"), mp(0));
   expected_tags3[2] = mp(pmt::from_uint64(10000), mp(str1.str()), mp("seq"), mp(1));
@@ -129,7 +127,7 @@ qa_block_tags::t1()
   expected_tags3[6] = mp(pmt::from_uint64(30000), mp(str1.str()), mp("seq"), mp(3));
   expected_tags3[7] = mp(pmt::from_uint64(30000), mp(str0.str()), mp("seq"), mp(6));
 
-  pmt_t expected_tags4[8];
+  pmt::pmt_t expected_tags4[8];
   expected_tags4[0] = mp(pmt::from_uint64(0),     mp(str2.str()), mp("seq"), mp(0));
   expected_tags4[1] = mp(pmt::from_uint64(0),     mp(str0.str()), mp("seq"), mp(1));
   expected_tags4[2] = mp(pmt::from_uint64(10000), mp(str2.str()), mp("seq"), mp(1));
@@ -160,17 +158,17 @@ void
 qa_block_tags::t2 ()
 {
   int N = 40000;
-  gr_top_block_sptr tb = gr_make_top_block("top");
-  gr_block_sptr src (gr::blocks::null_source::make(sizeof(int)));
-  gr_block_sptr head (gr::blocks::head::make(sizeof(int), N));
+  gr::top_block_sptr tb = gr::make_top_block("top");
+  gr::block_sptr src (gr::blocks::null_source::make(sizeof(int)));
+  gr::block_sptr head (gr::blocks::head::make(sizeof(int), N));
   gr::blocks::annotator_alltoall::sptr ann0(gr::blocks::annotator_alltoall::make(10000, sizeof(int)));
   gr::blocks::annotator_alltoall::sptr ann1(gr::blocks::annotator_alltoall::make(10000, sizeof(int)));
   gr::blocks::annotator_alltoall::sptr ann2(gr::blocks::annotator_alltoall::make(10000, sizeof(int)));
   gr::blocks::annotator_alltoall::sptr ann3(gr::blocks::annotator_alltoall::make(10000, sizeof(int)));
   gr::blocks::annotator_alltoall::sptr ann4(gr::blocks::annotator_alltoall::make(10000, sizeof(int)));
-  gr_block_sptr snk0 (gr::blocks::null_sink::make(sizeof(int)));
-  gr_block_sptr snk1 (gr::blocks::null_sink::make(sizeof(int)));
-  gr_block_sptr snk2 (gr::blocks::null_sink::make(sizeof(int)));
+  gr::block_sptr snk0 (gr::blocks::null_sink::make(sizeof(int)));
+  gr::block_sptr snk1 (gr::blocks::null_sink::make(sizeof(int)));
+  gr::block_sptr snk2 (gr::blocks::null_sink::make(sizeof(int)));
 
   tb->connect(src, 0, head, 0);
   tb->connect(head, 0, ann0, 0);
@@ -187,11 +185,11 @@ qa_block_tags::t2 ()
 
   tb->run();
 
-  std::vector<gr_tag_t> tags0 = ann0->data();
-  std::vector<gr_tag_t> tags1 = ann1->data();
-  std::vector<gr_tag_t> tags2 = ann2->data();
-  std::vector<gr_tag_t> tags3 = ann4->data();
-  std::vector<gr_tag_t> tags4 = ann4->data();
+  std::vector<gr::tag_t> tags0 = ann0->data();
+  std::vector<gr::tag_t> tags1 = ann1->data();
+  std::vector<gr::tag_t> tags2 = ann2->data();
+  std::vector<gr::tag_t> tags3 = ann4->data();
+  std::vector<gr::tag_t> tags4 = ann4->data();
 
   // The first annotator does not receive any tags from the null sink upstream
   CPPUNIT_ASSERT_EQUAL(tags0.size(), (size_t)0);
@@ -209,7 +207,7 @@ qa_block_tags::t2 ()
   str0 << ann0->name() << ann0->unique_id();
   str1 << ann1->name() << ann1->unique_id();
 
-  pmt_t expected_tags2[12];
+  pmt::pmt_t expected_tags2[12];
   expected_tags2[0] = mp(pmt::from_uint64(0),     mp(str1.str()), mp("seq"), mp(0));
   expected_tags2[1] = mp(pmt::from_uint64(0),     mp(str0.str()), mp("seq"), mp(0));
   expected_tags2[2] = mp(pmt::from_uint64(0),     mp(str0.str()), mp("seq"), mp(1));
@@ -223,7 +221,7 @@ qa_block_tags::t2 ()
   expected_tags2[10] = mp(pmt::from_uint64(30000), mp(str0.str()), mp("seq"), mp(6));
   expected_tags2[11] = mp(pmt::from_uint64(30000), mp(str0.str()), mp("seq"), mp(7));
 
-  pmt_t expected_tags4[12];
+  pmt::pmt_t expected_tags4[12];
   expected_tags4[0] = mp(pmt::from_uint64(0),     mp(str1.str()), mp("seq"), mp(2));
   expected_tags4[1] = mp(pmt::from_uint64(0),     mp(str0.str()), mp("seq"), mp(0));
   expected_tags4[2] = mp(pmt::from_uint64(0),     mp(str0.str()), mp("seq"), mp(1));
@@ -261,16 +259,16 @@ void
 qa_block_tags::t3()
 {
   int N = 40000;
-  gr_top_block_sptr tb = gr_make_top_block("top");
-  gr_block_sptr src (gr::blocks::null_source::make(sizeof(int)));
-  gr_block_sptr head (gr::blocks::head::make(sizeof(int), N));
+  gr::top_block_sptr tb = gr::make_top_block("top");
+  gr::block_sptr src (gr::blocks::null_source::make(sizeof(int)));
+  gr::block_sptr head (gr::blocks::head::make(sizeof(int), N));
   gr::blocks::annotator_1to1::sptr ann0 (gr::blocks::annotator_1to1::make(10000, sizeof(int)));
   gr::blocks::annotator_alltoall::sptr ann1 (gr::blocks::annotator_alltoall::make(10000, sizeof(int)));
   gr::blocks::annotator_alltoall::sptr ann2 (gr::blocks::annotator_alltoall::make(10000, sizeof(int)));
   gr::blocks::annotator_1to1::sptr ann3 (gr::blocks::annotator_1to1::make(10000, sizeof(int)));
   gr::blocks::annotator_1to1::sptr ann4 (gr::blocks::annotator_1to1::make(10000, sizeof(int)));
-  gr_block_sptr snk0 (gr::blocks::null_sink::make(sizeof(int)));
-  gr_block_sptr snk1 (gr::blocks::null_sink::make(sizeof(int)));
+  gr::block_sptr snk0 (gr::blocks::null_sink::make(sizeof(int)));
+  gr::block_sptr snk1 (gr::blocks::null_sink::make(sizeof(int)));
 
   tb->connect(src, 0, head, 0);
   tb->connect(head, 0, ann0, 0);
@@ -287,9 +285,9 @@ qa_block_tags::t3()
   tb->run();
 
 
-  std::vector<gr_tag_t> tags0 = ann0->data();
-  std::vector<gr_tag_t> tags3 = ann3->data();
-  std::vector<gr_tag_t> tags4 = ann4->data();
+  std::vector<gr::tag_t> tags0 = ann0->data();
+  std::vector<gr::tag_t> tags3 = ann3->data();
+  std::vector<gr::tag_t> tags4 = ann4->data();
 
   // The first annotator does not receive any tags from the null sink upstream
   CPPUNIT_ASSERT_EQUAL(tags0.size(), (size_t)0);
@@ -303,7 +301,7 @@ qa_block_tags::t3()
   str1 << ann1->name() << ann1->unique_id();
   str2 << ann2->name() << ann2->unique_id();
 
-  pmt_t expected_tags3[8];
+  pmt::pmt_t expected_tags3[8];
   expected_tags3[0] = mp(pmt::from_uint64(0),     mp(str1.str()), mp("seq"), mp(0));
   expected_tags3[1] = mp(pmt::from_uint64(0),     mp(str0.str()), mp("seq"), mp(0));
   expected_tags3[2] = mp(pmt::from_uint64(10000), mp(str1.str()), mp("seq"), mp(1));
@@ -313,7 +311,7 @@ qa_block_tags::t3()
   expected_tags3[6] = mp(pmt::from_uint64(30000), mp(str1.str()), mp("seq"), mp(3));
   expected_tags3[7] = mp(pmt::from_uint64(30000), mp(str0.str()), mp("seq"), mp(6));
 
-  pmt_t expected_tags4[8];
+  pmt::pmt_t expected_tags4[8];
   expected_tags4[0] = mp(pmt::from_uint64(0),     mp(str2.str()), mp("seq"), mp(0));
   expected_tags4[1] = mp(pmt::from_uint64(0),     mp(str0.str()), mp("seq"), mp(1));
   expected_tags4[2] = mp(pmt::from_uint64(10000), mp(str2.str()), mp("seq"), mp(1));
@@ -345,14 +343,14 @@ void
 qa_block_tags::t4()
 {
   int N = 40000;
-  gr_top_block_sptr tb = gr_make_top_block("top");
-  gr_block_sptr src (gr::blocks::null_source::make(sizeof(int)));
-  gr_block_sptr head (gr::blocks::head::make(sizeof(int), N));
+  gr::top_block_sptr tb = gr::make_top_block("top");
+  gr::block_sptr src (gr::blocks::null_source::make(sizeof(int)));
+  gr::block_sptr head (gr::blocks::head::make(sizeof(int), N));
   gr::blocks::annotator_1to1::sptr ann0(gr::blocks::annotator_1to1::make(10000, sizeof(int)));
   gr::blocks::annotator_1to1::sptr ann1(gr::blocks::annotator_1to1::make(10000, sizeof(int)));
   gr::blocks::annotator_1to1::sptr ann2(gr::blocks::annotator_1to1::make(10000, sizeof(int)));
-  gr_block_sptr snk0 (gr::blocks::null_sink::make(sizeof(int)));
-  gr_block_sptr snk1 (gr::blocks::null_sink::make(sizeof(int)));
+  gr::block_sptr snk0 (gr::blocks::null_sink::make(sizeof(int)));
+  gr::block_sptr snk1 (gr::blocks::null_sink::make(sizeof(int)));
 
   // using 1-to-1 tag propagation without having equal number of
   // ins and outs. Make sure this works; will just exit run early.
@@ -364,7 +362,7 @@ qa_block_tags::t4()
   tb->connect(ann2, 0, snk1, 0);
 
   std::cerr << std::endl
-	    << "NOTE: This is supposed to produce an error from gr_block_executor"
+	    << "NOTE: This is supposed to produce an error from block_executor"
 	    << std::endl;
   tb->run();
 }
@@ -374,13 +372,13 @@ void
 qa_block_tags::t5()
 {
   int N = 40000;
-  gr_top_block_sptr tb = gr_make_top_block("top");
-  gr_block_sptr src (gr::blocks::null_source::make(sizeof(float)));
-  gr_block_sptr head (gr::blocks::head::make(sizeof(float), N));
+  gr::top_block_sptr tb = gr::make_top_block("top");
+  gr::block_sptr src (gr::blocks::null_source::make(sizeof(float)));
+  gr::block_sptr head (gr::blocks::head::make(sizeof(float), N));
   gr::blocks::annotator_alltoall::sptr ann0(gr::blocks::annotator_alltoall::make(10000, sizeof(float)));
   gr::blocks::annotator_alltoall::sptr ann1(gr::blocks::annotator_alltoall::make(10000, sizeof(float)));
   gr::blocks::annotator_alltoall::sptr ann2(gr::blocks::annotator_alltoall::make(1000,  sizeof(float)));
-  gr_block_sptr snk0 (gr::blocks::null_sink::make(sizeof(float)));
+  gr::block_sptr snk0 (gr::blocks::null_sink::make(sizeof(float)));
 
   // Rate change blocks
   gr::blocks::keep_one_in_n::sptr dec10(gr::blocks::keep_one_in_n::make(sizeof(float), 10));
@@ -394,9 +392,9 @@ qa_block_tags::t5()
 
   tb->run();
 
-  std::vector<gr_tag_t> tags0 = ann0->data();
-  std::vector<gr_tag_t> tags1 = ann1->data();
-  std::vector<gr_tag_t> tags2 = ann2->data();
+  std::vector<gr::tag_t> tags0 = ann0->data();
+  std::vector<gr::tag_t> tags1 = ann1->data();
+  std::vector<gr::tag_t> tags2 = ann2->data();
 
   // The first annotator does not receive any tags from the null sink upstream
   CPPUNIT_ASSERT_EQUAL(tags0.size(), (size_t)0);

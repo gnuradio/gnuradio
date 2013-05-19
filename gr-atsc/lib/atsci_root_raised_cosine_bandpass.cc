@@ -20,7 +20,7 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include <atsc/root_raised_cosine_bandpass_impl.h>
+#include <gnuradio/atsc/root_raised_cosine_bandpass_impl.h>
 #include <iostream>
 #include <cmath>
 

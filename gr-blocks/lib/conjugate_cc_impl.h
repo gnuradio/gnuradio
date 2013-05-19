@@ -23,7 +23,7 @@
 #ifndef INCLUDED_CONJUGATE_CC_IMPL_H
 #define INCLUDED_CONJUGATE_CC_IMPL_H
 
-#include <blocks/conjugate_cc.h>
+#include <gnuradio/blocks/conjugate_cc.h>
 
 namespace gr {
   namespace blocks {

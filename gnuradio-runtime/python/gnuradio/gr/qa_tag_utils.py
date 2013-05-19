@@ -38,7 +38,7 @@ class test_tag_utils (gr_unittest.TestCase):
         self.tb = None
 
     def test_001(self):
-        t = gr.gr_tag_t()
+        t = gr.tag_t()
         t.offset = 10
         t.key = pmt.string_to_symbol('key')
         t.value = pmt.from_long(23)

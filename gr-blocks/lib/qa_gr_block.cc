@@ -25,20 +25,20 @@
 #endif
 
 #include <qa_gr_block.h>
-#include <gr_block.h>
-#include <gr_io_signature.h>
-#include <blocks/null_sink.h>
-#include <blocks/null_source.h>
+#include <gnuradio/block.h>
+#include <gnuradio/io_signature.h>
+#include <gnuradio/blocks/null_sink.h>
+#include <gnuradio/blocks/null_source.h>
 
 
 // ----------------------------------------------------------------
 
 
 void
-qa_gr_block::t0 ()
+qa_block::t0 ()
 {
   // test creation of sources
-  gr_block_sptr src1(gr::blocks::null_source::make(sizeof (int)));
+  gr::block_sptr src1(gr::blocks::null_source::make(sizeof (int)));
   CPPUNIT_ASSERT_EQUAL(std::string("null_source"), src1->name ());
   CPPUNIT_ASSERT_EQUAL(0, src1->input_signature()->max_streams ());
   CPPUNIT_ASSERT_EQUAL(1, src1->output_signature()->min_streams ());
@@ -46,7 +46,7 @@ qa_gr_block::t0 ()
   CPPUNIT_ASSERT_EQUAL((int) sizeof(int),
                        src1->output_signature()->sizeof_stream_item (0));
 
-  gr_block_sptr src2(gr::blocks::null_source::make(sizeof(short)));
+  gr::block_sptr src2(gr::blocks::null_source::make(sizeof(short)));
   CPPUNIT_ASSERT_EQUAL(std::string ("null_source"), src2->name ());
   CPPUNIT_ASSERT_EQUAL(0, src2->input_signature()->max_streams ());
   CPPUNIT_ASSERT_EQUAL(1, src2->output_signature()->min_streams ());
@@ -57,10 +57,10 @@ qa_gr_block::t0 ()
 
 
 void
-qa_gr_block::t1 ()
+qa_block::t1 ()
 {
   // test creation of sinks
-  gr_block_sptr dst1 (gr::blocks::null_sink::make (sizeof (int)));
+  gr::block_sptr dst1 (gr::blocks::null_sink::make (sizeof (int)));
   CPPUNIT_ASSERT_EQUAL (std::string ("null_sink"), dst1->name ());
   CPPUNIT_ASSERT_EQUAL (1, dst1->input_signature()->min_streams ());
   CPPUNIT_ASSERT_EQUAL (1, dst1->input_signature()->max_streams ());
@@ -69,7 +69,7 @@ qa_gr_block::t1 ()
 
   CPPUNIT_ASSERT_EQUAL (0, dst1->output_signature()->max_streams ());
 
-  gr_block_sptr dst2 (gr::blocks::null_sink::make (sizeof (short)));
+  gr::block_sptr dst2 (gr::blocks::null_sink::make (sizeof (short)));
   CPPUNIT_ASSERT_EQUAL (std::string ("null_sink"), dst2->name ());
   CPPUNIT_ASSERT_EQUAL (1, dst2->input_signature()->min_streams ());
   CPPUNIT_ASSERT_EQUAL (1, dst2->input_signature()->max_streams ());
@@ -79,11 +79,11 @@ qa_gr_block::t1 ()
 }
 
 void
-qa_gr_block::t2 ()
+qa_block::t2 ()
 {
 }
 
 void
-qa_gr_block::t3 ()
+qa_block::t3 ()
 {
 }

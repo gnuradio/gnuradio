@@ -25,16 +25,16 @@
 #endif
 
 #include "qa_atsci_fs_correlator.h"
-#include <atsc/fs_correlator_impl.h>
-#include <atsc/create_atsci_fs_correlator.h>
-#include <atsc/sync_tag_impl.h>
+#include <gnuradio/atsc/fs_correlator_impl.h>
+#include <gnuradio/atsc/create_atsci_fs_correlator.h>
+#include <gnuradio/atsc/sync_tag_impl.h>
 #include <stdlib.h>
 #include <algorithm>
-#include <atsc/pnXXX_impl.h>
-#include <atsc/types.h>
+#include <gnuradio/atsc/pnXXX_impl.h>
+#include <gnuradio/atsc/types.h>
 #include <cppunit/TestAssert.h>
 #include <assert.h>
-#include <random.h>
+#include <gnuradio/random.h>
 
 
 static float

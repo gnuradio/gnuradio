@@ -30,7 +30,7 @@
 #endif
 
 #include "@IMPL_NAME@.h"
-#include <gr_io_signature.h>
+#include <gnuradio/io_signature.h>
 #include <volk/volk.h>
 
 namespace gr {
@@ -52,9 +52,9 @@ namespace gr {
 			     const std::vector<@TAP_TYPE@> &taps,
 			     double center_freq,
 			     double sampling_freq)
-    : gr_sync_decimator("@BASE_NAME@",
-			gr_make_io_signature(1, 1, sizeof(@I_TYPE@)),
-			gr_make_io_signature(1, 1, sizeof(@O_TYPE@)),
+    : sync_decimator("@BASE_NAME@",
+			io_signature::make(1, 1, sizeof(@I_TYPE@)),
+			io_signature::make(1, 1, sizeof(@O_TYPE@)),
 			decimation),
       d_proto_taps(taps), d_center_freq(center_freq),
       d_sampling_freq(sampling_freq),

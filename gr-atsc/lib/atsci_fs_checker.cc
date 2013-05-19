@@ -20,7 +20,7 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include <atsc/fs_checker_impl.h>
+#include <gnuradio/atsc/fs_checker_impl.h>
 
 // empty constructor
 atsci_fs_checker::atsci_fs_checker ()

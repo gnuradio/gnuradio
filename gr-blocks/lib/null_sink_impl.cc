@@ -25,7 +25,7 @@
 #endif
 
 #include "null_sink_impl.h"
-#include <gr_io_signature.h>
+#include <gnuradio/io_signature.h>
 
 namespace gr {
   namespace blocks {
@@ -38,9 +38,9 @@ namespace gr {
     }
 
     null_sink_impl::null_sink_impl(size_t sizeof_stream_item)
-      : gr_sync_block("null_sink",
-                      gr_make_io_signature(1, 1, sizeof_stream_item),
-                      gr_make_io_signature(0, 0, 0))
+      : sync_block("null_sink",
+                      io_signature::make(1, 1, sizeof_stream_item),
+                      io_signature::make(0, 0, 0))
     {
     }
 

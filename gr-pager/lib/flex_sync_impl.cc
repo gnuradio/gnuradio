@@ -28,8 +28,8 @@
 #include "flex_modes.h"
 #include "bch3221.h"
 #include "util.h"
-#include <gr_io_signature.h>
-#include <blocks/count_bits.h>
+#include <gnuradio/io_signature.h>
+#include <gnuradio/blocks/count_bits.h>
 #include <cstdio>
 
 namespace gr {
@@ -50,9 +50,9 @@ namespace gr {
     // get all zeros, which are considered idle code words.
 
     flex_sync_impl::flex_sync_impl() :
-      gr_block("flex_sync",
-	       gr_make_io_signature(1, 1, sizeof(unsigned char)),
-	       gr_make_io_signature(4, 4, sizeof(unsigned char))),
+      block("flex_sync",
+	       io_signature::make(1, 1, sizeof(unsigned char)),
+	       io_signature::make(4, 4, sizeof(unsigned char))),
       d_sync(10) // Fixed at 10 samples per baud (@ 1600 baud)
     {
       enter_idle();

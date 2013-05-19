@@ -25,9 +25,9 @@
 #endif
 
 #include "clock_recovery_mm_cc_impl.h"
-#include <gr_io_signature.h>
-#include <gr_prefs.h>
-#include <gr_math.h>
+#include <gnuradio/io_signature.h>
+#include <gnuradio/prefs.h>
+#include <gnuradio/math.h>
 #include <stdexcept>
 #include <iostream>
 
@@ -50,13 +50,13 @@ namespace gr {
     clock_recovery_mm_cc_impl::clock_recovery_mm_cc_impl(float omega, float gain_omega,
 							 float mu, float gain_mu,
 							 float omega_relative_limit)
-      : gr_block("clock_recovery_mm_cc",
-		 gr_make_io_signature(1, 1, sizeof(gr_complex)),
-		 gr_make_io_signature2(1, 2, sizeof(gr_complex), sizeof(float))),
+      : block("clock_recovery_mm_cc",
+		 io_signature::make(1, 1, sizeof(gr_complex)),
+		 io_signature::make2(1, 2, sizeof(gr_complex), sizeof(float))),
 	d_mu(mu), d_omega(omega), d_gain_omega(gain_omega), 
 	d_omega_relative_limit(omega_relative_limit), 
 	d_gain_mu(gain_mu), d_last_sample(0), d_interp(new filter::mmse_fir_interpolator_cc()),
-	d_verbose(gr_prefs::singleton()->get_bool("clock_recovery_mm_cc", "verbose", false)),
+	d_verbose(prefs::singleton()->get_bool("clock_recovery_mm_cc", "verbose", false)),
 	d_p_2T(0), d_p_1T(0), d_p_0T(0), d_c_2T(0), d_c_1T(0), d_c_0T(0)
     {
       if(omega <= 0.0)
@@ -147,9 +147,9 @@ namespace gr {
 	  out[oo++] = d_p_0T;
       
 	  // limit mm_val
-	  mm_val = gr_branchless_clip(mm_val,4.0);
+	  mm_val = gr::branchless_clip(mm_val,4.0);
 	  d_omega = d_omega + d_gain_omega * mm_val;
-	  d_omega = d_omega_mid + gr_branchless_clip(d_omega-d_omega_mid, d_omega_relative_limit);
+	  d_omega = d_omega_mid + gr::branchless_clip(d_omega-d_omega_mid, d_omega_relative_limit);
 
 	  d_mu = d_mu + d_omega + d_gain_mu * mm_val;
 	  ii += (int)floor(d_mu);
@@ -180,10 +180,10 @@ namespace gr {
 	  out[oo++] = d_p_0T;
       
 	  // limit mm_val
-	  mm_val = gr_branchless_clip(mm_val,1.0);
+	  mm_val = gr::branchless_clip(mm_val,1.0);
       
 	  d_omega = d_omega + d_gain_omega * mm_val;
-	  d_omega = d_omega_mid + gr_branchless_clip(d_omega-d_omega_mid, d_omega_relative_limit);
+	  d_omega = d_omega_mid + gr::branchless_clip(d_omega-d_omega_mid, d_omega_relative_limit);
       
 	  d_mu = d_mu + d_omega + d_gain_mu * mm_val;
 	  ii += (int)floor(d_mu);

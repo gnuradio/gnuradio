@@ -23,9 +23,9 @@
 #ifndef INCLUDED_ANALOG_PWR_SQUELCH_FF_IMPL_H
 #define INCLUDED_ANALOG_PWR_SQUELCH_FF_IMPL_H
 
-#include <analog/pwr_squelch_ff.h>
+#include <gnuradio/analog/pwr_squelch_ff.h>
 #include "squelch_base_ff_impl.h"
-#include <filter/single_pole_iir.h>
+#include <gnuradio/filter/single_pole_iir.h>
 #include <cmath>
 
 namespace gr {

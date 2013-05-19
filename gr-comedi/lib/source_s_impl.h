@@ -23,7 +23,7 @@
 #ifndef INCLUDED_COMEDI_SOURCE_S_IMPL_H
 #define INCLUDED_COMEDI_SOURCE_S_IMPL_H
 
-#include <comedi/source_s.h>
+#include <gnuradio/comedi/source_s.h>
 #include <string>
 #include <comedilib.h>
 #include <stdexcept>

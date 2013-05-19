@@ -28,7 +28,7 @@
  */
 
 extern "C" {
-#include <fec/viterbi.h>
+#include <gnuradio/fec/viterbi.h>
 }
 
 #include <cstdio>

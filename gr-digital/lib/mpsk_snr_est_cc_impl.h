@@ -23,9 +23,9 @@
 #ifndef INCLUDED_DIGITAL_MPSK_SNR_EST_CC_IMPL_H
 #define INCLUDED_DIGITAL_MPSK_SNR_EST_CC_IMPL_H
 
-#include <digital/api.h>
-#include <digital/mpsk_snr_est_cc.h>
-#include <gr_sync_block.h>
+#include <gnuradio/digital/api.h>
+#include <gnuradio/digital/mpsk_snr_est_cc.h>
+#include <gnuradio/sync_block.h>
 
 namespace gr {
   namespace digital {

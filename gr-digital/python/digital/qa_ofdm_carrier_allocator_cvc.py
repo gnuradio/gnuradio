@@ -44,7 +44,7 @@ class qa_digital_carrier_allocator_cvc (gr_unittest.TestCase):
         expected_result = tuple(sync_word[0] + [1j, 0, 0, 1, 2, 3])
         #                                                 ^ DC carrier
         tag_name = "len"
-        tag = gr.gr_tag_t()
+        tag = gr.tag_t()
         tag.offset = 0
         tag.key = pmt.string_to_symbol(tag_name)
         tag.value = pmt.from_long(len(tx_symbols))
@@ -72,7 +72,7 @@ class qa_digital_carrier_allocator_cvc (gr_unittest.TestCase):
         expected_result = (1j, 0, 1, 2, 3)
         #                         ^ DC carrier
         tag_name = "len"
-        tag = gr.gr_tag_t()
+        tag = gr.tag_t()
         tag.offset = 0
         tag.key = pmt.string_to_symbol(tag_name)
         tag.value = pmt.from_long(len(tx_symbols))
@@ -98,7 +98,7 @@ class qa_digital_carrier_allocator_cvc (gr_unittest.TestCase):
         pilot_carriers = ((3,),)
         expected_result = (1j, 0, 1, 0, 2, 3)
         tag_name = "len"
-        tag = gr.gr_tag_t()
+        tag = gr.tag_t()
         tag.offset = 0
         tag.key = pmt.string_to_symbol(tag_name)
         tag.value = pmt.from_long(len(tx_symbols))
@@ -132,27 +132,27 @@ class qa_digital_carrier_allocator_cvc (gr_unittest.TestCase):
                            0, 13, 1j, 14, 15, 0, 0, 0, 0, 0, 0, 0,  0,  2j, 0,  0)
         fft_len = 16
         tag_name = "len"
-        tag1 = gr.gr_tag_t()
+        tag1 = gr.tag_t()
         tag1.offset = 0
         tag1.key = pmt.string_to_symbol(tag_name)
         tag1.value = pmt.from_long(len(tx_symbols))
-        tag2 = gr.gr_tag_t()
+        tag2 = gr.tag_t()
         tag2.offset = len(tx_symbols)
         tag2.key = pmt.string_to_symbol(tag_name)
         tag2.value = pmt.from_long(len(tx_symbols))
-        testtag1 = gr.gr_tag_t()
+        testtag1 = gr.tag_t()
         testtag1.offset = 0
         testtag1.key = pmt.string_to_symbol('tag1')
         testtag1.value = pmt.from_long(0)
-        testtag2 = gr.gr_tag_t()
+        testtag2 = gr.tag_t()
         testtag2.offset = 7 # On the 2nd OFDM symbol
         testtag2.key = pmt.string_to_symbol('tag2')
         testtag2.value = pmt.from_long(0)
-        testtag3 = gr.gr_tag_t()
+        testtag3 = gr.tag_t()
         testtag3.offset = len(tx_symbols)+1 # First OFDM symbol of packet 2
         testtag3.key = pmt.string_to_symbol('tag3')
         testtag3.value = pmt.from_long(0)
-        testtag4 = gr.gr_tag_t()
+        testtag4 = gr.tag_t()
         testtag4.offset = 2*len(tx_symbols)-1 # Last OFDM symbol of packet 2
         testtag4.key = pmt.string_to_symbol('tag4')
         testtag4.value = pmt.from_long(0)

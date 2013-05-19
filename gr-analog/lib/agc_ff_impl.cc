@@ -25,7 +25,7 @@
 #endif
 
 #include "agc_ff_impl.h"
-#include <gr_io_signature.h>
+#include <gnuradio/io_signature.h>
 
 namespace gr {
   namespace analog {
@@ -38,9 +38,9 @@ namespace gr {
     }
 
     agc_ff_impl::agc_ff_impl(float rate, float reference, float gain, float max_gain)
-      : gr_sync_block("agc_ff",
-		      gr_make_io_signature(1, 1, sizeof(float)),
-		      gr_make_io_signature(1, 1, sizeof(float))),
+      : sync_block("agc_ff",
+		      io_signature::make(1, 1, sizeof(float)),
+		      io_signature::make(1, 1, sizeof(float))),
 	kernel::agc_ff(rate, reference, gain, max_gain)
     {
     }

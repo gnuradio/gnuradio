@@ -6,7 +6,7 @@
 
 #define DTYPE unsigned char
 
-#include <fec/api.h>
+#include <gnuradio/fec/api.h>
 
 /* Reed-Solomon codec control block */
 struct rs {

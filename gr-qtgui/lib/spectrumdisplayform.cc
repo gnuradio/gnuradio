@@ -23,8 +23,8 @@
 #include <cmath>
 #include <QColorDialog>
 #include <QMessageBox>
-#include <qtgui/spectrumdisplayform.h>
-#include <qtgui/qtgui_types.h>
+#include <gnuradio/qtgui/spectrumdisplayform.h>
+#include <gnuradio/qtgui/qtgui_types.h>
 
 SpectrumDisplayForm::SpectrumDisplayForm(QWidget* parent)
   : QWidget(parent)

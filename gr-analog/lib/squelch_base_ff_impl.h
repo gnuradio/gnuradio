@@ -23,7 +23,7 @@
 #ifndef INCLUDED_GR_SQUELCH_BASE_FF_IMPL_H
 #define INCLUDED_GR_SQUELCH_BASE_FF_IMPL_H
 
-#include <analog/squelch_base_ff.h>
+#include <gnuradio/analog/squelch_base_ff.h>
 
 namespace gr {
   namespace analog {

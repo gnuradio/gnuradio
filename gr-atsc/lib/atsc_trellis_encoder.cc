@@ -24,9 +24,9 @@
 #include <config.h>
 #endif
 
-#include <atsc/trellis_encoder.h>
-#include <gr_io_signature.h>
-#include <atsc/consts.h>
+#include <gnuradio/atsc/trellis_encoder.h>
+#include <gnuradio/io_signature.h>
+#include <gnuradio/atsc/consts.h>
 
 
 atsc_trellis_encoder_sptr
@@ -36,9 +36,9 @@ atsc_make_trellis_encoder()
 }
 
 atsc_trellis_encoder::atsc_trellis_encoder()
-  : gr_sync_block("atsc_trellis_encoder",
-		  gr_make_io_signature(1, 1, sizeof(atsc_mpeg_packet_rs_encoded)),
-		  gr_make_io_signature(1, 1, sizeof(atsc_data_segment)))
+  : gr::sync_block("atsc_trellis_encoder",
+		  gr::io_signature::make(1, 1, sizeof(atsc_mpeg_packet_rs_encoded)),
+		  gr::io_signature::make(1, 1, sizeof(atsc_data_segment)))
 {
   set_output_multiple(atsci_trellis_encoder::NCODERS);
   reset();

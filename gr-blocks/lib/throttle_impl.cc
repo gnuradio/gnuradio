@@ -25,7 +25,7 @@
 #endif
 
 #include "throttle_impl.h"
-#include <gr_io_signature.h>
+#include <gnuradio/io_signature.h>
 #include <cstring>
 #include <boost/thread/thread.hpp>
 
@@ -41,9 +41,9 @@ namespace gr {
 
     throttle_impl::throttle_impl(size_t itemsize,
                                  double samples_per_second)
-      : gr_sync_block("throttle",
-                      gr_make_io_signature(1, 1, itemsize),
-                      gr_make_io_signature(1, 1, itemsize)),
+      : sync_block("throttle",
+                      io_signature::make(1, 1, itemsize),
+                      io_signature::make(1, 1, itemsize)),
         d_itemsize(itemsize)
     {
       set_sample_rate(samples_per_second);

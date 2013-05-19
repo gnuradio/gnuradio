@@ -20,8 +20,8 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include <uhd/amsg_source.h>
-#include <thread/thread.h>
+#include <gnuradio/uhd/amsg_source.h>
+#include <gnuradio/thread/thread.h>
 
 namespace gr {
   namespace uhd {
@@ -30,16 +30,16 @@ namespace gr {
     {
     public:
       amsg_source_impl(const ::uhd::device_addr_t &device_addr,
-                       gr_msg_queue_sptr msgq);
+                       msg_queue::sptr msgq);
       ~amsg_source_impl();
 
       void recv_loop();
-      void post(gr_message_sptr msg);
+      void post(message::sptr msg);
 
     protected:
       ::uhd::usrp::multi_usrp::sptr _dev;
       gr::thread::thread _amsg_thread;
-      gr_msg_queue_sptr _msgq;
+      msg_queue::sptr _msgq;
       bool _running;
     };
 

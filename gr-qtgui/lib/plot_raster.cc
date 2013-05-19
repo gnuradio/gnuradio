@@ -27,7 +27,7 @@
 #include "qwt_painter.h"
 #include "qwt_scale_map.h"
 #include "qwt_color_map.h"
-#include <qtgui/plot_raster.h>
+#include <gnuradio/qtgui/plot_raster.h>
 
 #if QWT_VERSION < 0x060000
 #include "qwt_double_interval.h"

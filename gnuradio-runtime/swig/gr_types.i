@@ -30,7 +30,7 @@
 #include <string>
 #include <stddef.h>		// size_t
 #include <stdint.h>
-#include <gr_types.h>
+#include <gnuradio/types.h>
 %}
 
 %include <std_complex.i>
@@ -68,6 +68,9 @@ namespace std {
   %template() vector< vector< double > >;
 
   %template() vector<string>;
+
+  %template() std::vector<size_t>;
+  %template() std::vector< std::vector< std::vector<size_t> > >;
 };
 
 %template(gr_vector_complexf) std::vector< std::complex<float> >;

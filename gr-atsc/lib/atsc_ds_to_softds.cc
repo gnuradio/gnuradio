@@ -24,9 +24,9 @@
 #include <config.h>
 #endif
 
-#include <atsc/ds_to_softds.h>
-#include <gr_io_signature.h>
-#include <atsc/consts.h>
+#include <gnuradio/atsc/ds_to_softds.h>
+#include <gnuradio/io_signature.h>
+#include <gnuradio/atsc/consts.h>
 
 
 atsc_ds_to_softds_sptr
@@ -36,9 +36,9 @@ atsc_make_ds_to_softds()
 }
 
 atsc_ds_to_softds::atsc_ds_to_softds()
-  : gr_sync_block("atsc_ds_to_softds",
-		  gr_make_io_signature(1, 1, sizeof(atsc_data_segment)),
-		  gr_make_io_signature(1, 1, sizeof(atsc_soft_data_segment)))
+  : gr::sync_block("atsc_ds_to_softds",
+		  gr::io_signature::make(1, 1, sizeof(atsc_data_segment)),
+		  gr::io_signature::make(1, 1, sizeof(atsc_soft_data_segment)))
 {
   reset();
 }

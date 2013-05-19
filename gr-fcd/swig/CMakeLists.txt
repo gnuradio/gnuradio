@@ -28,6 +28,7 @@ include(GrSwig)
 set(GR_SWIG_INCLUDE_DIRS
     ${GR_FCD_INCLUDE_DIRS}
     ${GR_AUDIO_INCLUDE_DIRS}
+    ${GR_BLOCKS_INCLUDE_DIRS}
     ${GNURADIO_RUNTIME_SWIG_INCLUDE_DIRS}
     ${Boost_INCLUDE_DIRS}
 )
@@ -38,10 +39,11 @@ if(ENABLE_GR_CTRLPORT)
 endif(ENABLE_GR_CTRLPORT)
 
 set(GR_SWIG_DOC_FILE ${CMAKE_CURRENT_BINARY_DIR}/fcd_swig_doc.i)
-set(GR_SWIG_DOC_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/../include/fcd)
+set(GR_SWIG_DOC_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/../include/gnuradio/fcd)
 set(GR_SWIG_DOCS_TARGET_DEPS runtime_swig_swig_doc)
 
-set(GR_SWIG_LIBRARIES gnuradio-fcd)
+set(GR_SWIG_LIBRARIES gnuradio-fcd
+  gnuradio-runtime gnuradio-audio gnuradio-blocks)
 
 GR_SWIG_MAKE(fcd_swig fcd_swig.i)
 

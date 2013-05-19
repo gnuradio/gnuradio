@@ -25,7 +25,7 @@
  * Some modifications from original Karn code by Matt Ettus
  */
 
-#include <fec/viterbi.h>
+#include <gnuradio/fec/viterbi.h>
 
 /* The two generator polynomials for the NASA Standard K=7 code.
  * Since these polynomials are known to be optimal for this constraint

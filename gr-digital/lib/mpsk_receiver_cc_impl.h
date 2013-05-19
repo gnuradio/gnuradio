@@ -23,12 +23,12 @@
 #ifndef INCLUDED_DIGITAL_MPSK_RECEIVER_CC_IMPL_H
 #define	INCLUDED_DIGITAL_MPSK_RECEIVER_CC_IMPL_H
 
-#include <digital/mpsk_receiver_cc.h>
-#include <attributes.h>
-#include <blocks/control_loop.h>
-#include <gr_complex.h>
+#include <gnuradio/digital/mpsk_receiver_cc.h>
+#include <gnuradio/attributes.h>
+#include <gnuradio/blocks/control_loop.h>
+#include <gnuradio/gr_complex.h>
 #include <fstream>
-#include <filter/mmse_fir_interpolator_cc.h>
+#include <gnuradio/filter/mmse_fir_interpolator_cc.h>
 
 namespace gr {
   namespace digital {

@@ -24,9 +24,9 @@
 #ifndef INCLUDED_PFB_ARB_RESAMPLER_CCF_IMPL_H
 #define	INCLUDED_PFB_ARB_RESAMPLER_CCF_IMPL_H
 
-#include <filter/pfb_arb_resampler_ccf.h>
-#include <filter/fir_filter.h>
-#include <thread/thread.h>
+#include <gnuradio/filter/pfb_arb_resampler_ccf.h>
+#include <gnuradio/filter/fir_filter.h>
+#include <gnuradio/thread/thread.h>
 
 namespace gr {
   namespace filter {

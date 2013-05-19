@@ -2,7 +2,7 @@ void
 qa_pmt_unv::test_@TAG@vector()
 {
   static const size_t N = 3;
-  pmt_t v1 = pmt::make_@TAG@vector(N, 0);
+  pmt::pmt_t v1 = pmt::make_@TAG@vector(N, 0);
   CPPUNIT_ASSERT_EQUAL(N, pmt::length(v1));
   @TYPE@ s0 = @TYPE@(10);
   @TYPE@ s1 = @TYPE@(20);

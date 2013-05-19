@@ -25,7 +25,7 @@
 #endif
 
 #include "descrambler_bb_impl.h"
-#include <gr_io_signature.h>
+#include <gnuradio/io_signature.h>
 
 namespace gr {
   namespace digital {
@@ -38,9 +38,9 @@ namespace gr {
     }
 
     descrambler_bb_impl::descrambler_bb_impl(int mask, int seed, int len)
-      : gr_sync_block("descrambler_bb",
-		      gr_make_io_signature(1, 1, sizeof(unsigned char)),
-		      gr_make_io_signature(1, 1, sizeof(unsigned char))),
+      : sync_block("descrambler_bb",
+		      io_signature::make(1, 1, sizeof(unsigned char)),
+		      io_signature::make(1, 1, sizeof(unsigned char))),
 	d_lfsr(mask, seed, len)
     {
     }

@@ -23,7 +23,7 @@
 #ifndef INCLUDED_GR_STRETCH_FF_IMPL_H
 #define INCLUDED_GR_STRETCH_FF_IMPL_H
 
-#include <blocks/stretch_ff.h>
+#include <gnuradio/blocks/stretch_ff.h>
 
 namespace gr {
   namespace blocks {

@@ -23,9 +23,9 @@
 #ifndef TIMERASTER_DISPLAY_PLOT_C
 #define TIMERASTER_DISPLAY_PLOT_C
 
-#include <qtgui/TimeRasterDisplayPlot.h>
+#include <gnuradio/qtgui/TimeRasterDisplayPlot.h>
 
-#include <qtgui/qtgui_types.h>
+#include <gnuradio/qtgui/qtgui_types.h>
 #include <qwt_color_map.h>
 #include <qwt_scale_draw.h>
 #include <qwt_legend.h>

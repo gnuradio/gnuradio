@@ -23,8 +23,8 @@
 #ifndef INCLUDED_GR_VECTOR_MAP_IMPL_H
 #define INCLUDED_GR_VECTOR_MAP_IMPL_H
 
-#include <blocks/vector_map.h>
-#include <thread/thread.h>
+#include <gnuradio/blocks/vector_map.h>
+#include <gnuradio/thread/thread.h>
 
 namespace gr {
   namespace blocks {

@@ -25,7 +25,7 @@
 #ifndef @GUARD_NAME@
 #define @GUARD_NAME@
 
-#include <trellis/@BASE_NAME@.h>
+#include <gnuradio/trellis/@BASE_NAME@.h>
 
 namespace gr {
   namespace trellis {

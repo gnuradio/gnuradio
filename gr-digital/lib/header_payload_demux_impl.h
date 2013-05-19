@@ -22,7 +22,7 @@
 #ifndef INCLUDED_DIGITAL_HEADER_PAYLOAD_DEMUX_IMPL_H
 #define INCLUDED_DIGITAL_HEADER_PAYLOAD_DEMUX_IMPL_H
 
-#include <digital/header_payload_demux.h>
+#include <gnuradio/digital/header_payload_demux.h>
 
 namespace gr {
   namespace digital {

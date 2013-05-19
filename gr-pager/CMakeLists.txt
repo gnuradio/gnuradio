@@ -91,7 +91,7 @@ CPACK_COMPONENT("pager_swig"
 ########################################################################
 # Add subdirectories
 ########################################################################
-add_subdirectory(include/pager)
+add_subdirectory(include/gnuradio/pager)
 add_subdirectory(lib)
 if(ENABLE_PYTHON)
     add_subdirectory(python/pager)

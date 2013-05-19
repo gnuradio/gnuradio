@@ -20,8 +20,8 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include <filter/fir_filter.h>
-#include <fft/fft.h>
+#include <gnuradio/filter/fir_filter.h>
+#include <gnuradio/fft/fft.h>
 #include <volk/volk.h>
 #include <cstdio>
 #include <cstring>

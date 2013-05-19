@@ -23,7 +23,7 @@
 #include <cstdio>
 #include <stdexcept>
 #include <cmath>
-#include <trellis/base.h>
+#include <gnuradio/trellis/base.h>
 
 namespace gr {
   namespace trellis {

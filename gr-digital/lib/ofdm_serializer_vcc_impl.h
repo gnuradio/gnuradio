@@ -22,7 +22,7 @@
 #ifndef INCLUDED_DIGITAL_OFDM_SERIALIZER_VCC_IMPL_H
 #define INCLUDED_DIGITAL_OFDM_SERIALIZER_VCC_IMPL_H
 
-#include <digital/ofdm_serializer_vcc.h>
+#include <gnuradio/digital/ofdm_serializer_vcc.h>
 
 namespace gr {
   namespace digital {
@@ -35,6 +35,7 @@ namespace gr {
       pmt::pmt_t d_packet_len_tag_key; //!< Key of the length tag
       pmt::pmt_t d_out_len_tag_key; //!< Key of the length tag
       const int d_symbols_skipped; //!< Start position in d_occupied_carriers
+      pmt::pmt_t d_carr_offset_key; //!< Key of the carrier offset tag
       int d_curr_set; //!< Current position in d_occupied_carriers
       int d_symbols_per_set;
 
@@ -53,6 +54,7 @@ namespace gr {
 	  const std::string &len_tag_key,
 	  const std::string &packet_len_tag_key,
 	  int symbols_skipped,
+	  const std::string &carr_offset_key,
 	  bool input_is_shifted
       );
       ~ofdm_serializer_vcc_impl();

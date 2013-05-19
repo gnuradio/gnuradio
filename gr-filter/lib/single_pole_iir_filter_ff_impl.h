@@ -23,9 +23,9 @@
 #ifndef INCLUDED_SINGLE_POLE_IIR_FILTER_FF_IMPL_H
 #define	INCLUDED_SINGLE_POLE_IIR_FILTER_FF_IMPL_H
 
-#include <filter/single_pole_iir.h>
-#include <filter/single_pole_iir_filter_ff.h>
-#include <gr_sync_block.h>
+#include <gnuradio/filter/single_pole_iir.h>
+#include <gnuradio/filter/single_pole_iir_filter_ff.h>
+#include <gnuradio/sync_block.h>
 #include <stdexcept>
 
 namespace gr {

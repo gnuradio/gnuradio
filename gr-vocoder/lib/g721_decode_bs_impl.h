@@ -23,7 +23,7 @@
 #ifndef INCLUDED_VOCODER_G721_DECODE_BS_IMPL_H
 #define INCLUDED_VOCODER_G721_DECODE_BS_IMPL_H
 
-#include <vocoder/g721_decode_bs.h>
+#include <gnuradio/vocoder/g721_decode_bs.h>
 
 extern "C" {
 #include "g7xx/g72x.h"

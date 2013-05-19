@@ -23,7 +23,7 @@
 #ifndef INCLUDED_GR_COPY_IMPL_H
 #define INCLUDED_GR_COPY_IMPL_H
 
-#include <blocks/copy.h>
+#include <gnuradio/blocks/copy.h>
 
 namespace gr {
   namespace blocks {

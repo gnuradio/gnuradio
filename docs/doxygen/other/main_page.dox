@@ -46,6 +46,8 @@ More details on GNU Radio concepts:
 \li \ref volk_guide
 \li \ref page_pfb
 \li \ref page_tagged_stream_blocks
+\li \ref page_ofdm
+\li \ref page_packet_data
 
 
 \section flowgraph Operating a Flowgraph
@@ -376,10 +378,10 @@ Similarly, in C++, we get a reference to the object by explicitly
 calling for the singleton of the object:
 
 \code
-  gr_prefs *p = gr_prefs::singleton();
+  prefs *p = prefs::singleton();
 \endcode
 
-The methods associated with this preferences object are (from class gr_prefs):
+The methods associated with this preferences object are (from class gr::prefs):
 
 \code
   bool has_section(string section)
@@ -413,9 +415,9 @@ config file itself.
 New as of 3.6.5.
 
 Using gr_modtool, each package comes with the ability to easily locate
-the gnuradio-core library using the 'find_package(GnuradioCore)' cmake
-command. This only locates that the library and include directories
-exist, which is enough for most simple projects.
+the gnuradio-runtime library using the 'find_package(GnuradioRuntime)'
+cmake command. This only locates that the library and include
+directories exist, which is enough for most simple projects.
 
 As projects become more complicated and start needing to rely on other
 GNU Radio components like gnuradio-blocks or gnuradio-filter, for

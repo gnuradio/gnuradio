@@ -20,13 +20,13 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include <atsc/sssr_impl.h>
+#include <gnuradio/atsc/sssr_impl.h>
 #include <algorithm>
 #include <cmath>
 #include <cstdio>
 #include <assert.h>
-#include <atsc/diag_output_impl.h>
-#include <gr_math.h>
+#include <gnuradio/atsc/diag_output_impl.h>
+#include <gnuradio/math.h>
 #include <stdio.h>
 #include <boost/math/special_functions/sign.hpp>
 #include <iostream>

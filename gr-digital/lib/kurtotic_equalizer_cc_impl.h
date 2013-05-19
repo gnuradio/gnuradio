@@ -23,9 +23,9 @@
 #ifndef INCLUDED_DIGITAL_KURTOTIC_EQUALIZER_CC_IMPL_H
 #define	INCLUDED_DIGITAL_KURTOTIC_EQUALIZER_CC_IMPL_H
 
-#include <digital/kurtotic_equalizer_cc.h>
-#include <filter/fir_filter.h>
-#include <gr_math.h>
+#include <gnuradio/digital/kurtotic_equalizer_cc.h>
+#include <gnuradio/filter/fir_filter.h>
+#include <gnuradio/math.h>
 #include <stdexcept>
 
 namespace gr {
@@ -73,8 +73,8 @@ namespace gr {
 	  (sign(d_u) * (nrm*cnj - 2.0f*d_p*cnj - conj(d_q)*out) -
 	   abs(d_u)*cnj);
 
-	float re = gr_clip(F.real(), 1.0);
-	float im = gr_clip(F.imag(), 1.0);
+	float re = gr::clip(F.real(), 1.0);
+	float im = gr::clip(F.imag(), 1.0);
 	return gr_complex(re, im);
       }
 

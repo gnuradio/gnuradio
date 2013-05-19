@@ -26,7 +26,7 @@
 
 #include <cmath>
 #include <cfloat>
-#include <analog/cpm.h>
+#include <gnuradio/analog/cpm.h>
 
 //gives us erf on compilers without it
 #include <boost/math/special_functions/erf.hpp>

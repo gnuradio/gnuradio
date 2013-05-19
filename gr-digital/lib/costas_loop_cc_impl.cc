@@ -25,10 +25,10 @@
 #endif
 
 #include "costas_loop_cc_impl.h"
-#include <gr_io_signature.h>
-#include <gr_expj.h>
-#include <gr_sincos.h>
-#include <gr_math.h>
+#include <gnuradio/io_signature.h>
+#include <gnuradio/expj.h>
+#include <gnuradio/sincos.h>
+#include <gnuradio/math.h>
 
 namespace gr {
   namespace digital {
@@ -41,9 +41,9 @@ namespace gr {
     }
 
     costas_loop_cc_impl::costas_loop_cc_impl(float loop_bw, int order)
-      : gr_sync_block("costas_loop_cc",
-		      gr_make_io_signature(1, 1, sizeof(gr_complex)),
-		      gr_make_io_signature2(1, 2, sizeof(gr_complex), sizeof(float))),
+      : sync_block("costas_loop_cc",
+		      io_signature::make(1, 1, sizeof(gr_complex)),
+		      io_signature::make2(1, 2, sizeof(gr_complex), sizeof(float))),
 	blocks::control_loop(loop_bw, 1.0, -1.0),
 	d_order(order), d_phase_detector(NULL)
     {
@@ -132,7 +132,7 @@ namespace gr {
 	  optr[i] = iptr[i] * nco_out;
       
 	  error = (*this.*d_phase_detector)(optr[i]);
-	  error = gr_branchless_clip(error, 1.0);
+	  error = gr::branchless_clip(error, 1.0);
 	
 	  advance_loop(error);
 	  phase_wrap();
@@ -147,7 +147,7 @@ namespace gr {
 	  optr[i] = iptr[i] * nco_out;
       
 	  error = (*this.*d_phase_detector)(optr[i]);
-	  error = gr_branchless_clip(error, 1.0);
+	  error = gr::branchless_clip(error, 1.0);
 
 	  advance_loop(error);
 	  phase_wrap();

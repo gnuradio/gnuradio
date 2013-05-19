@@ -26,9 +26,9 @@
 
 #include <cppunit/TestAssert.h>
 #include <stdio.h>
-#include <atsc/fake_single_viterbi_impl.h>
+#include <gnuradio/atsc/fake_single_viterbi_impl.h>
 #include "qa_atsci_fake_single_viterbi.h"
-#include <random.h>
+#include <gnuradio/random.h>
 #include <string.h>
 
 

@@ -25,12 +25,12 @@
 #endif
 
 #include <qa_gr_hier_block2_derived.h>
-#include <gr_top_block.h>
-#include <gr_io_signature.h>
-#include <blocks/null_source.h>
-#include <blocks/null_sink.h>
-#include <blocks/head.h>
-#include <blocks/copy.h>
+#include <gnuradio/top_block.h>
+#include <gnuradio/io_signature.h>
+#include <gnuradio/blocks/null_source.h>
+#include <gnuradio/blocks/null_sink.h>
+#include <gnuradio/blocks/head.h>
+#include <gnuradio/blocks/copy.h>
 
 // Declare a test C++ hierarchical block
 
@@ -38,7 +38,7 @@ class gr_derived_block;
 typedef boost::shared_ptr<gr_derived_block> gr_derived_block_sptr;
 gr_derived_block_sptr gr_make_derived_block();
 
-class gr_derived_block : public gr_hier_block2
+class gr_derived_block : public gr::hier_block2
 {
 private:
   friend gr_derived_block_sptr gr_make_derived_block();
@@ -56,11 +56,11 @@ gr_make_derived_block()
 }
 
 gr_derived_block::gr_derived_block()
-  : gr_hier_block2("gr_derived_block",
-		   gr_make_io_signature(1, 1, sizeof(int)), // Input signature
-		   gr_make_io_signature(1, 1, sizeof(int))) // Output signature
+  : gr::hier_block2("gr_derived_block",
+                    gr::io_signature::make(1, 1, sizeof(int)), // Input signature
+                    gr::io_signature::make(1, 1, sizeof(int))) // Output signature
 {
-  gr_block_sptr copy(gr::blocks::copy::make(sizeof(int)));
+  gr::block_sptr copy(gr::blocks::copy::make(sizeof(int)));
 
   connect(self(), 0, copy, 0);
   connect(copy, 0, self(), 0);
@@ -70,14 +70,14 @@ gr_derived_block::~gr_derived_block()
 {
 }
 
-void qa_gr_hier_block2_derived::test_1()
+void qa_hier_block2_derived::test_1()
 {
-  gr_top_block_sptr     tb(gr_make_top_block("test"));
+  gr::top_block_sptr tb(gr::make_top_block("test"));
 
-  gr_block_sptr         src(gr::blocks::null_source::make(sizeof(int)));
-  gr_block_sptr         head(gr::blocks::head::make(sizeof(int), 1000));
+  gr::block_sptr  src(gr::blocks::null_source::make(sizeof(int)));
+  gr::block_sptr  head(gr::blocks::head::make(sizeof(int), 1000));
   gr_derived_block_sptr blk(gr_make_derived_block());
-  gr_block_sptr         dst(gr::blocks::null_sink::make(sizeof(int)));
+  gr::block_sptr  dst(gr::blocks::null_sink::make(sizeof(int)));
 
   tb->connect(src,  0, head, 0);
   tb->connect(head, 0, blk,  0);

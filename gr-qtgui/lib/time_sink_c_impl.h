@@ -23,10 +23,10 @@
 #ifndef INCLUDED_QTGUI_TIME_SINK_C_IMPL_H
 #define INCLUDED_QTGUI_TIME_SINK_C_IMPL_H
 
-#include <qtgui/time_sink_c.h>
-#include <qtgui/timedisplayform.h>
-#include <thread/thread.h>
-#include <high_res_timer.h>
+#include <gnuradio/qtgui/time_sink_c.h>
+#include <gnuradio/qtgui/timedisplayform.h>
+#include <gnuradio/thread/thread.h>
+#include <gnuradio/high_res_timer.h>
 
 namespace gr {
   namespace qtgui {

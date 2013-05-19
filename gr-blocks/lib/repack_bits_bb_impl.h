@@ -23,7 +23,7 @@
 #ifndef INCLUDED_BLOCKS_REPACK_BITS_BB_IMPL_H
 #define INCLUDED_BLOCKS_REPACK_BITS_BB_IMPL_H
 
-#include <blocks/repack_bits_bb.h>
+#include <gnuradio/blocks/repack_bits_bb.h>
 
 namespace gr {
   namespace blocks {

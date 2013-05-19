@@ -24,7 +24,7 @@
 #endif
 
 #include <boost/format.hpp>
-#include <gr_io_signature.h>
+#include <gnuradio/io_signature.h>
 #include "packet_headergenerator_bb_impl.h"
 
 namespace gr {
@@ -57,9 +57,9 @@ namespace gr {
 		    const gr::digital::packet_header_default::sptr &header_formatter,
 		    const std::string &len_tag_key
 		    )
-      : gr_tagged_stream_block("packet_headergenerator_bb_impl",
-		       gr_make_io_signature(1, 1, sizeof (char)),
-		       gr_make_io_signature(1, 1, sizeof (char)),
+      : tagged_stream_block("packet_headergenerator_bb_impl",
+		       io_signature::make(1, 1, sizeof (char)),
+		       io_signature::make(1, 1, sizeof (char)),
 		       len_tag_key),
 	    d_formatter(header_formatter)
     {

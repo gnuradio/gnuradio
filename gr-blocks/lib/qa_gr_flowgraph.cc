@@ -26,9 +26,9 @@
 
 #include <qa_gr_flowgraph.h>
 #include <gr_flowgraph.h>
-#include <blocks/nop.h>
-#include <blocks/null_source.h>
-#include <blocks/null_sink.h>
+#include <gnuradio/blocks/nop.h>
+#include <gnuradio/blocks/null_source.h>
+#include <gnuradio/blocks/null_sink.h>
 
 void qa_gr_flowgraph::t0()
 {
@@ -41,8 +41,8 @@ void qa_gr_flowgraph::t1_connect()
 {
   gr_flowgraph_sptr fg = gr_make_flowgraph();
 
-  gr_block_sptr nop1 = gr::blocks::nop::make(sizeof(int));
-  gr_block_sptr nop2 = gr::blocks::nop::make(sizeof(int));
+  block_sptr nop1 = gr::blocks::nop::make(sizeof(int));
+  block_sptr nop2 = gr::blocks::nop::make(sizeof(int));
 
   fg->connect(nop1, 0, nop2, 0);
 }
@@ -51,8 +51,8 @@ void qa_gr_flowgraph::t2_connect_invalid_src_port_neg()
 {
   gr_flowgraph_sptr fg = gr_make_flowgraph();
 
-  gr_block_sptr nop1 = gr::blocks::nop::make(sizeof(int));
-  gr_block_sptr nop2 = gr::blocks::nop::make(sizeof(int));
+  block_sptr nop1 = gr::blocks::nop::make(sizeof(int));
+  block_sptr nop2 = gr::blocks::nop::make(sizeof(int));
 
   CPPUNIT_ASSERT_THROW(fg->connect(nop1, -1, nop2, 0), std::invalid_argument);
 }
@@ -61,8 +61,8 @@ void qa_gr_flowgraph::t3_connect_src_port_exceeds()
 {
   gr_flowgraph_sptr fg = gr_make_flowgraph();
 
-  gr_block_sptr src = gr::blocks::null_source::make(sizeof(int));
-  gr_block_sptr dst = gr::blocks::null_sink::make(sizeof(int));
+  block_sptr src = gr::blocks::null_source::make(sizeof(int));
+  block_sptr dst = gr::blocks::null_sink::make(sizeof(int));
 
   CPPUNIT_ASSERT_THROW(fg->connect(src, 1, dst, 0), std::invalid_argument);
 }
@@ -71,8 +71,8 @@ void qa_gr_flowgraph::t4_connect_invalid_dst_port_neg()
 {
   gr_flowgraph_sptr fg = gr_make_flowgraph();
 
-  gr_block_sptr nop1 = gr::blocks::nop::make(sizeof(int));
-  gr_block_sptr nop2 = gr::blocks::nop::make(sizeof(int));
+  block_sptr nop1 = gr::blocks::nop::make(sizeof(int));
+  block_sptr nop2 = gr::blocks::nop::make(sizeof(int));
 
   CPPUNIT_ASSERT_THROW(fg->connect(nop1, 0, nop2, -1), std::invalid_argument);
 }
@@ -81,8 +81,8 @@ void qa_gr_flowgraph::t5_connect_dst_port_exceeds()
 {
   gr_flowgraph_sptr fg = gr_make_flowgraph();
 
-  gr_block_sptr src = gr::blocks::null_source::make(sizeof(int));
-  gr_block_sptr dst = gr::blocks::null_sink::make(sizeof(int));
+  block_sptr src = gr::blocks::null_source::make(sizeof(int));
+  block_sptr dst = gr::blocks::null_sink::make(sizeof(int));
 
   CPPUNIT_ASSERT_THROW(fg->connect(src, 0, dst, 1), std::invalid_argument);
 }
@@ -91,9 +91,9 @@ void qa_gr_flowgraph::t6_connect_dst_in_use()
 {
   gr_flowgraph_sptr fg = gr_make_flowgraph();
 
-  gr_block_sptr src1 = gr::blocks::null_source::make(sizeof(int));
-  gr_block_sptr src2 = gr::blocks::null_source::make(sizeof(int));
-  gr_block_sptr dst = gr::blocks::null_sink::make(sizeof(int));
+  block_sptr src1 = gr::blocks::null_source::make(sizeof(int));
+  block_sptr src2 = gr::blocks::null_source::make(sizeof(int));
+  block_sptr dst = gr::blocks::null_sink::make(sizeof(int));
 
   fg->connect(src1, 0, dst, 0);
   CPPUNIT_ASSERT_THROW(fg->connect(src2, 0, dst, 0), std::invalid_argument);
@@ -103,9 +103,9 @@ void qa_gr_flowgraph::t7_connect_one_src_two_dst()
 {
   gr_flowgraph_sptr fg = gr_make_flowgraph();
 
-  gr_block_sptr src = gr::blocks::null_source::make(sizeof(int));
-  gr_block_sptr dst1 = gr::blocks::null_sink::make(sizeof(int));
-  gr_block_sptr dst2 = gr::blocks::null_sink::make(sizeof(int));
+  block_sptr src = gr::blocks::null_source::make(sizeof(int));
+  block_sptr dst1 = gr::blocks::null_sink::make(sizeof(int));
+  block_sptr dst2 = gr::blocks::null_sink::make(sizeof(int));
 
   fg->connect(src, 0, dst1, 0);
   fg->connect(src, 0, dst2, 0);
@@ -115,8 +115,8 @@ void qa_gr_flowgraph::t8_connect_type_mismatch()
 {
   gr_flowgraph_sptr fg = gr_make_flowgraph();
 
-  gr_block_sptr nop1 = gr::blocks::nop::make(sizeof(char));
-  gr_block_sptr nop2 = gr::blocks::nop::make(sizeof(int));
+  block_sptr nop1 = gr::blocks::nop::make(sizeof(char));
+  block_sptr nop2 = gr::blocks::nop::make(sizeof(int));
 
   CPPUNIT_ASSERT_THROW(fg->connect(nop1, 0, nop2, 0), std::invalid_argument);
 }
@@ -125,8 +125,8 @@ void qa_gr_flowgraph::t9_disconnect()
 {
   gr_flowgraph_sptr fg = gr_make_flowgraph();
 
-  gr_block_sptr nop1 = gr::blocks::nop::make(sizeof(int));
-  gr_block_sptr nop2 = gr::blocks::nop::make(sizeof(int));
+  block_sptr nop1 = gr::blocks::nop::make(sizeof(int));
+  block_sptr nop2 = gr::blocks::nop::make(sizeof(int));
 
   fg->connect(nop1, 0, nop2, 0);
   fg->disconnect(nop1, 0, nop2, 0);
@@ -136,9 +136,9 @@ void qa_gr_flowgraph::t10_disconnect_unconnected_block()
 {
   gr_flowgraph_sptr fg = gr_make_flowgraph();
 
-  gr_block_sptr nop1 = gr::blocks::nop::make(sizeof(int));
-  gr_block_sptr nop2 = gr::blocks::nop::make(sizeof(int));
-  gr_block_sptr nop3 = gr::blocks::nop::make(sizeof(int));
+  block_sptr nop1 = gr::blocks::nop::make(sizeof(int));
+  block_sptr nop2 = gr::blocks::nop::make(sizeof(int));
+  block_sptr nop3 = gr::blocks::nop::make(sizeof(int));
 
   fg->connect(nop1, 0, nop2, 0);
   CPPUNIT_ASSERT_THROW(fg->disconnect(nop1, 0, nop3, 0), std::invalid_argument);
@@ -148,8 +148,8 @@ void qa_gr_flowgraph::t11_disconnect_unconnected_port()
 {
   gr_flowgraph_sptr fg = gr_make_flowgraph();
 
-  gr_block_sptr nop1 = gr::blocks::nop::make(sizeof(int));
-  gr_block_sptr nop2 = gr::blocks::nop::make(sizeof(int));
+  block_sptr nop1 = gr::blocks::nop::make(sizeof(int));
+  block_sptr nop2 = gr::blocks::nop::make(sizeof(int));
 
   fg->connect(nop1, 0, nop2, 0);
   CPPUNIT_ASSERT_THROW(fg->disconnect(nop1, 0, nop2, 1), std::invalid_argument);
@@ -159,8 +159,8 @@ void qa_gr_flowgraph::t12_validate()
 {
   gr_flowgraph_sptr fg = gr_make_flowgraph();
 
-  gr_block_sptr nop1 = gr::blocks::nop::make(sizeof(int));
-  gr_block_sptr nop2 = gr::blocks::nop::make(sizeof(int));
+  block_sptr nop1 = gr::blocks::nop::make(sizeof(int));
+  block_sptr nop2 = gr::blocks::nop::make(sizeof(int));
 
   fg->connect(nop1, 0, nop2, 0);
   fg->validate();
@@ -170,8 +170,8 @@ void qa_gr_flowgraph::t13_validate_missing_input_assignment()
 {
   gr_flowgraph_sptr fg = gr_make_flowgraph();
 
-  gr_block_sptr nop1 = gr::blocks::nop::make(sizeof(int));
-  gr_block_sptr nop2 = gr::blocks::nop::make(sizeof(int));
+  block_sptr nop1 = gr::blocks::nop::make(sizeof(int));
+  block_sptr nop2 = gr::blocks::nop::make(sizeof(int));
 
   fg->connect(nop1, 0, nop2, 0);
   fg->connect(nop1, 0, nop2, 2);
@@ -182,8 +182,8 @@ void qa_gr_flowgraph::t14_validate_missing_output_assignment()
 {
   gr_flowgraph_sptr fg = gr_make_flowgraph();
 
-  gr_block_sptr nop1 = gr::blocks::nop::make(sizeof(int));
-  gr_block_sptr nop2 = gr::blocks::nop::make(sizeof(int));
+  block_sptr nop1 = gr::blocks::nop::make(sizeof(int));
+  block_sptr nop2 = gr::blocks::nop::make(sizeof(int));
 
   fg->connect(nop1, 0, nop2, 0);
   fg->connect(nop1, 2, nop2, 1);
@@ -194,8 +194,8 @@ void qa_gr_flowgraph::t15_clear()
 {
   gr_flowgraph_sptr fg = gr_make_flowgraph();
 
-  gr_block_sptr nop1 = gr::blocks::nop::make(sizeof(int));
-  gr_block_sptr nop2 = gr::blocks::nop::make(sizeof(int));
+  block_sptr nop1 = gr::blocks::nop::make(sizeof(int));
+  block_sptr nop2 = gr::blocks::nop::make(sizeof(int));
 
   fg->connect(nop1, 0, nop2, 0);
 
@@ -212,17 +212,17 @@ void qa_gr_flowgraph::t16_partition()
 {
   gr_flowgraph_sptr fg = gr_make_flowgraph();
 
-  gr_block_sptr nop11 = gr::blocks::nop::make(sizeof(int));
-  gr_block_sptr nop12 = gr::blocks::nop::make(sizeof(int));
-  gr_block_sptr nop13 = gr::blocks::nop::make(sizeof(int));
-  gr_block_sptr nop14 = gr::blocks::nop::make(sizeof(int));
+  block_sptr nop11 = gr::blocks::nop::make(sizeof(int));
+  block_sptr nop12 = gr::blocks::nop::make(sizeof(int));
+  block_sptr nop13 = gr::blocks::nop::make(sizeof(int));
+  block_sptr nop14 = gr::blocks::nop::make(sizeof(int));
 
-  gr_block_sptr nop21 = gr::blocks::nop::make(sizeof(int));
-  gr_block_sptr nop22 = gr::blocks::nop::make(sizeof(int));
-  gr_block_sptr nop23 = gr::blocks::nop::make(sizeof(int));
+  block_sptr nop21 = gr::blocks::nop::make(sizeof(int));
+  block_sptr nop22 = gr::blocks::nop::make(sizeof(int));
+  block_sptr nop23 = gr::blocks::nop::make(sizeof(int));
 
-  gr_block_sptr nop31 = gr::blocks::nop::make(sizeof(int));
-  gr_block_sptr nop32 = gr::blocks::nop::make(sizeof(int));
+  block_sptr nop31 = gr::blocks::nop::make(sizeof(int));
+  block_sptr nop32 = gr::blocks::nop::make(sizeof(int));
 
   // Build disjoint graph #1
   fg->connect(nop11, 0, nop12, 0);
@@ -236,7 +236,7 @@ void qa_gr_flowgraph::t16_partition()
   // Build disjoint graph #3
   fg->connect(nop31, 0, nop32, 0);
 
-  std::vector<gr_basic_block_vector_t> graphs = fg->partition();
+  std::vector<basic_block_vector_t> graphs = fg->partition();
 
   CPPUNIT_ASSERT(graphs.size() == 3);
   CPPUNIT_ASSERT(graphs[0].size() == 4);

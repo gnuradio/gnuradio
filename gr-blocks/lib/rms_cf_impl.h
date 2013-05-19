@@ -23,7 +23,7 @@
 #ifndef INCLUDED_BLOCKS_RMS_CF_IMPL_H
 #define INCLUDED_BLOCKS_RMS_CF_IMPL_H
 
-#include <blocks/rms_cf.h>
+#include <gnuradio/blocks/rms_cf.h>
 
 namespace gr {
   namespace blocks {

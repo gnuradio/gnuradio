@@ -30,7 +30,7 @@ to disable a logger.
 
 \subsection configfile Logging Configuration
 
-The logging configuration can be found in the gnuradio-core.conf file
+The logging configuration can be found in the gnuradio-runtime.conf file
 under the [LOG] section. This allows us fairly complete control over
 the logging facilities. The main configuration functions are to set up
 the level of the loggers and set the default output behavior of the
@@ -83,7 +83,7 @@ data members of d_logger and d_debug_logger of gr_block and pass them
 to our pre-defined macros:
 
 \code
-  GR_LOG_<level>(<logger>, "<Message to print>");
+  gr::LOG_<level>(<logger>, "<Message to print>");
 \endcode
 
 Where \<level\> is one of the levels as mentioned above, \<logger\> is
@@ -93,8 +93,8 @@ message to the standard logger and a WARN level message to the debug
 logger, it would look like this:
 
 \code
-  GR_LOG_INFO(d_logger, "Some info about the block");
-  GR_LOG_WARN(d_debug_logger, "Some warning about the block");
+  gr::LOG_INFO(d_logger, "Some info about the block");
+  gr::LOG_WARN(d_debug_logger, "Some warning about the block");
 \endcode
 
 When this is printed to wherever you are directing the output of the
@@ -115,15 +115,15 @@ The various logging macros are defined in gr_logger.h. Here are some
 simple examples of using them:
 
 \code
-  GR_LOG_DEBUG(LOG, "DEBUG message");
-  GR_LOG_INFO(LOG, "INFO message");
-  GR_LOG_NOTICE(LOG, "NOTICE message");
-  GR_LOG_WARN(LOG, "WARNING message");
-  GR_LOG_ERROR(LOG, "ERROR message");
-  GR_LOG_CRIT(LOG, "CRIT message");
-  GR_LOG_ALERT(LOG, "ALERT message");
-  GR_LOG_FATAL(LOG, "FATAL message");
-  GR_LOG_EMERG(LOG, "EMERG message");
+  gr::LOG_DEBUG(LOG, "DEBUG message");
+  gr::LOG_INFO(LOG, "INFO message");
+  gr::LOG_NOTICE(LOG, "NOTICE message");
+  gr::LOG_WARN(LOG, "WARNING message");
+  gr::LOG_ERROR(LOG, "ERROR message");
+  gr::LOG_CRIT(LOG, "CRIT message");
+  gr::LOG_ALERT(LOG, "ALERT message");
+  gr::LOG_FATAL(LOG, "FATAL message");
+  gr::LOG_EMERG(LOG, "EMERG message");
 \endcode
 
 If the logger is not enabled, then these macros become nops and do
@@ -188,20 +188,20 @@ a singleton in the system, but we need to get a pointer to the right
 logger and then set it up for our local use. The following code
 snippet shows how to do this to get access to the standard logger,
 which has a root of "gr_log." (access to the debug logger is similar
-except we would use "gr_log_debug." in the GR_LOG_GETLOGGER call):
+except we would use "gr_log_debug." in the gr::LOG_GETLOGGER call):
 
 \code
-    gr_prefs *p = gr_prefs::singleton();
+    prefs *p = prefs::singleton();
     std::string log_file = p->get_string("LOG", "log_config", "");
     std::string log_level = p->get_string("LOG", "log_level", "off");
-    GR_CONFIG_LOGGER(log_file);
-    GR_LOG_GETLOGGER(LOG, "gr_log." + "my_logger_name");
-    GR_LOG_SET_LEVEL(LOG, log_level);
+    gr::CONFIG_LOGGER(log_file);
+    gr::LOG_GETLOGGER(LOG, "gr_log." + "my_logger_name");
+    gr::LOG_SET_LEVEL(LOG, log_level);
 \endcode
 
 This creates a pointer called LOG (which is instantiated as a
 log4cpp:LoggerPtr in the macro) that we can now use locally as the
-input to our logging macros like 'GR_LOG_INFO(LOG, "message")'.
+input to our logging macros like 'gr::LOG_INFO(LOG, "message")'.
 
 \section logPy Logging from Python
 

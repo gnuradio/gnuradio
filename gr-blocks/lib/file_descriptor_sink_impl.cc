@@ -25,7 +25,7 @@
 #endif
 
 #include "file_descriptor_sink_impl.h"
-#include <gr_io_signature.h>
+#include <gnuradio/io_signature.h>
 #include <cstdio>
 #include <errno.h>
 #include <sys/types.h>
@@ -49,9 +49,9 @@ namespace gr {
     }
 
     file_descriptor_sink_impl::file_descriptor_sink_impl(size_t itemsize, int fd)
-  : gr_sync_block("file_descriptor_sink",
-                  gr_make_io_signature(1, 1, itemsize),
-                  gr_make_io_signature(0, 0, 0)),
+  : sync_block("file_descriptor_sink",
+                  io_signature::make(1, 1, itemsize),
+                  io_signature::make(0, 0, 0)),
     d_itemsize(itemsize), d_fd(fd)
     {
     }

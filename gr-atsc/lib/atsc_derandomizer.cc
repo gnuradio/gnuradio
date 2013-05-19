@@ -24,9 +24,9 @@
 #include <config.h>
 #endif
 
-#include <atsc/derandomizer.h>
-#include <gr_io_signature.h>
-#include <atsc/consts.h>
+#include <gnuradio/atsc/derandomizer.h>
+#include <gnuradio/io_signature.h>
+#include <gnuradio/atsc/consts.h>
 
 
 atsc_derandomizer_sptr
@@ -36,9 +36,9 @@ atsc_make_derandomizer()
 }
 
 atsc_derandomizer::atsc_derandomizer()
-  : gr_sync_block("atsc_derandomizer",
-		  gr_make_io_signature(1, 1, sizeof(atsc_mpeg_packet_no_sync)),
-		  gr_make_io_signature(1, 1, sizeof(atsc_mpeg_packet)))
+  : gr::sync_block("atsc_derandomizer",
+		  gr::io_signature::make(1, 1, sizeof(atsc_mpeg_packet_no_sync)),
+		  gr::io_signature::make(1, 1, sizeof(atsc_mpeg_packet)))
 {
   reset();
 }

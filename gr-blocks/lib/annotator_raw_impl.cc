@@ -25,7 +25,7 @@
 #endif
 
 #include "annotator_raw_impl.h"
-#include <gr_io_signature.h>
+#include <gnuradio/io_signature.h>
 #include <string.h>
 #include <iostream>
 #include <iomanip>
@@ -44,9 +44,9 @@ namespace gr {
     }
 
     annotator_raw_impl::annotator_raw_impl(size_t sizeof_stream_item)
-      : gr_sync_block("annotator_raw",
-                      gr_make_io_signature(1, 1, sizeof_stream_item),
-                      gr_make_io_signature(1, 1, sizeof_stream_item)),
+      : sync_block("annotator_raw",
+                      io_signature::make(1, 1, sizeof_stream_item),
+                      io_signature::make(1, 1, sizeof_stream_item)),
         d_itemsize(sizeof_stream_item)
     {
       set_tag_propagation_policy(TPP_ONE_TO_ONE);
@@ -62,7 +62,7 @@ namespace gr {
     {
       gr::thread::scoped_lock l(d_mutex);
 
-      gr_tag_t tag;
+      tag_t tag;
       tag.srcid = pmt::intern(name());
       tag.key = key;
       tag.value = val;
@@ -72,7 +72,7 @@ namespace gr {
       d_queued_tags.push_back(tag);
       // make sure our tags are in offset order
       std::sort(d_queued_tags.begin(), d_queued_tags.end(),
-                gr_tag_t::offset_compare);
+                tag_t::offset_compare);
       // make sure we are not adding an item in the past!
       if(tag.offset > nitems_read(0)) {
         throw std::runtime_error("annotator_raw::add_tag: item added too far in the past\n.");
@@ -93,7 +93,7 @@ namespace gr {
       uint64_t end_N = start_N + (uint64_t)(noutput_items);
    
       // locate queued tags that fall in this range and insert them when appropriate
-      std::vector<gr_tag_t>::iterator i = d_queued_tags.begin();
+      std::vector<tag_t>::iterator i = d_queued_tags.begin();
       while( i != d_queued_tags.end() ) {
         if( (*i).offset >= start_N && (*i).offset < end_N) {
           add_item_tag(0, (*i).offset,(*i).key, (*i).value, (*i).srcid);

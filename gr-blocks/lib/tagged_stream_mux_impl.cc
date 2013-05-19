@@ -24,7 +24,7 @@
 #include "config.h"
 #endif
 
-#include <gr_io_signature.h>
+#include <gnuradio/io_signature.h>
 #include "tagged_stream_mux_impl.h"
 
 namespace gr {
@@ -37,9 +37,9 @@ namespace gr {
     }
 
     tagged_stream_mux_impl::tagged_stream_mux_impl(size_t itemsize, const std::string &lengthtagname)
-      : gr_tagged_stream_block("tagged_stream_mux",
-                 gr_make_io_signature(1, -1, itemsize),
-                 gr_make_io_signature(1,  1, itemsize),
+      : tagged_stream_block("tagged_stream_mux",
+                 io_signature::make(1, -1, itemsize),
+                 io_signature::make(1,  1, itemsize),
 		 lengthtagname),
         d_itemsize(itemsize)
     {
@@ -74,7 +74,7 @@ namespace gr {
       for (unsigned int i = 0; i < input_items.size(); i++) {
 	const unsigned char *in = (const unsigned char *) input_items[i];
 
-	std::vector<gr_tag_t> tags;
+	std::vector<tag_t> tags;
 	get_tags_in_range(tags, i, nitems_read(i), nitems_read(i)+ninput_items[i]);
 	for (unsigned int j = 0; j < tags.size(); j++) {
 	  const uint64_t offset = tags[j].offset - nitems_read(i) + nitems_written(0) + n_produced;

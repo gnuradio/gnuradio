@@ -25,7 +25,7 @@
 #endif
 
 #include "map_bb_impl.h"
-#include <gr_io_signature.h>
+#include <gnuradio/io_signature.h>
 
 namespace gr {
   namespace digital {
@@ -37,9 +37,9 @@ namespace gr {
     }
 
     map_bb_impl::map_bb_impl(const std::vector<int> &map)
-      : gr_sync_block("map_bb",
-		      gr_make_io_signature(1, 1, sizeof(unsigned char)),
-		      gr_make_io_signature(1, 1, sizeof(unsigned char)))
+      : sync_block("map_bb",
+		      io_signature::make(1, 1, sizeof(unsigned char)),
+		      io_signature::make(1, 1, sizeof(unsigned char)))
     {
       set_map(map);
     }

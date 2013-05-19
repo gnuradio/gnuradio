@@ -23,10 +23,10 @@
 #ifndef INCLUDED_GR_UDP_SOURCE_IMPL_H
 #define INCLUDED_GR_UDP_SOURCE_IMPL_H
 
-#include <blocks/udp_source.h>
+#include <gnuradio/blocks/udp_source.h>
 #include <boost/asio.hpp>
 #include <boost/format.hpp>
-#include <thread/thread.h>
+#include <gnuradio/thread/thread.h>
 
 namespace gr {
   namespace blocks {

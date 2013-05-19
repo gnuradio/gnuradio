@@ -28,9 +28,9 @@
 #include <stdexcept>
 
 // Declare a QA test case
-class qa_gr_hier_block2_derived : public CppUnit::TestCase
+class qa_hier_block2_derived : public CppUnit::TestCase
 {
-  CPPUNIT_TEST_SUITE(qa_gr_hier_block2_derived);
+  CPPUNIT_TEST_SUITE(qa_hier_block2_derived);
   CPPUNIT_TEST(test_1);
   CPPUNIT_TEST_SUITE_END();
 

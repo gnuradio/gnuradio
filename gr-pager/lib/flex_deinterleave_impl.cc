@@ -27,7 +27,7 @@
 #include "flex_deinterleave_impl.h"
 #include "bch3221.h"
 #include "util.h"
-#include <gr_io_signature.h>
+#include <gnuradio/io_signature.h>
 
 namespace gr {
   namespace pager {
@@ -40,9 +40,9 @@ namespace gr {
     }
 
     flex_deinterleave_impl::flex_deinterleave_impl() :
-      gr_sync_decimator("flex_deinterleave",
-			gr_make_io_signature(1, 1, sizeof(unsigned char)),
-			gr_make_io_signature(1, 1, sizeof(int)), 32)
+      sync_decimator("flex_deinterleave",
+			io_signature::make(1, 1, sizeof(unsigned char)),
+			io_signature::make(1, 1, sizeof(int)), 32)
     {
       set_output_multiple(8); // One FLEX block at a time
     }

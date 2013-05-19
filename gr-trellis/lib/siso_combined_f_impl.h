@@ -23,7 +23,7 @@
 #ifndef INCLUDED_TRELLIS_SISO_COMBINED_F_IMPL_H
 #define INCLUDED_TRELLIS_SISO_COMBINED_F_IMPL_H
 
-#include <trellis/siso_combined_f.h>
+#include <gnuradio/trellis/siso_combined_f.h>
 
 namespace gr {
   namespace trellis {

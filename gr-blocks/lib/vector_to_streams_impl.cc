@@ -25,7 +25,7 @@
 #endif
 
 #include "vector_to_streams_impl.h"
-#include <gr_io_signature.h>
+#include <gnuradio/io_signature.h>
 
 namespace gr {
   namespace blocks {
@@ -36,9 +36,9 @@ namespace gr {
     }
 
     vector_to_streams_impl::vector_to_streams_impl(size_t itemsize, size_t nstreams)
-      : gr_sync_block ("vector_to_streams",
-		       gr_make_io_signature (1, 1, nstreams * itemsize),
-		       gr_make_io_signature (nstreams, nstreams, itemsize))
+      : sync_block ("vector_to_streams",
+		       io_signature::make (1, 1, nstreams * itemsize),
+		       io_signature::make (nstreams, nstreams, itemsize))
 
     {
     }

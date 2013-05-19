@@ -23,8 +23,8 @@
 #ifndef INCLUDED_TRELLIS_PERMUTATION_IMPL_H
 #define INCLUDED_TRELLIS_PERMUTATION_IMPL_H
 
-#include <trellis/api.h>
-#include <trellis/permutation.h>
+#include <gnuradio/trellis/api.h>
+#include <gnuradio/trellis/permutation.h>
 
 namespace gr {
   namespace trellis {

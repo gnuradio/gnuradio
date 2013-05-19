@@ -20,7 +20,7 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include <atsc/data_interleaver_impl.h>
+#include <gnuradio/atsc/data_interleaver_impl.h>
 
 void
 atsci_data_interleaver::interleave (atsc_mpeg_packet_rs_encoded &out,

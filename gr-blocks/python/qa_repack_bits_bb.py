@@ -79,7 +79,7 @@ class qa_repack_bits_bb (gr_unittest.TestCase):
         k = 8
         l = 3
         tag_name = "len"
-        tag = gr.gr_tag_t()
+        tag = gr.tag_t()
         tag.offset = 0
         tag.key = pmt.string_to_symbol(tag_name)
         tag.value = pmt.from_long(len(src_data))
@@ -104,7 +104,7 @@ class qa_repack_bits_bb (gr_unittest.TestCase):
         k = 3
         l = 8
         tag_name = "len"
-        tag = gr.gr_tag_t()
+        tag = gr.tag_t()
         tag.offset = 0
         tag.key = pmt.string_to_symbol(tag_name)
         tag.value = pmt.from_long(len(src_data))

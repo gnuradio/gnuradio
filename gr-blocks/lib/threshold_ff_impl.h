@@ -23,7 +23,7 @@
 #ifndef INCLUDED_GR_THRESHOLD_FF_IMPL_H
 #define INCLUDED_GR_THRESHOLD_FF_IMPL_H
 
-#include <blocks/threshold_ff.h>
+#include <gnuradio/blocks/threshold_ff.h>
 
 namespace gr {
   namespace blocks {

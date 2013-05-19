@@ -23,7 +23,7 @@
 #ifndef INCLUDED_INTERLEAVED_SHORT_TO_COMPLEX_IMPL_H
 #define INCLUDED_INTERLEAVED_SHORT_TO_COMPLEX_IMPL_H
 
-#include <blocks/interleaved_short_to_complex.h>
+#include <gnuradio/blocks/interleaved_short_to_complex.h>
 
 namespace gr {
   namespace blocks {

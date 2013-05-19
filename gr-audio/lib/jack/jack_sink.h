@@ -22,7 +22,7 @@
 #ifndef INCLUDED_AUDIO_JACK_SINK_H
 #define INCLUDED_AUDIO_JACK_SINK_H
 
-#include <audio/sink.h>
+#include <gnuradio/audio/sink.h>
 #include <jack/jack.h>
 #include <jack/ringbuffer.h>
 #include <string>

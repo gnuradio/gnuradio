@@ -23,12 +23,12 @@
 #ifndef INCLUDED_QTGUI_WATERFALL_SINK_C_IMPL_H
 #define INCLUDED_QTGUI_WATERFALL_SINK_C_IMPL_H
 
-#include <qtgui/waterfall_sink_c.h>
-#include <filter/firdes.h>
-#include <fft/fft.h>
-#include <high_res_timer.h>
-#include <thread/thread.h>
-#include <qtgui/waterfalldisplayform.h>
+#include <gnuradio/qtgui/waterfall_sink_c.h>
+#include <gnuradio/filter/firdes.h>
+#include <gnuradio/fft/fft.h>
+#include <gnuradio/high_res_timer.h>
+#include <gnuradio/thread/thread.h>
+#include <gnuradio/qtgui/waterfalldisplayform.h>
 
 namespace gr {
   namespace qtgui {

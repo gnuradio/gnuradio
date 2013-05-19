@@ -24,7 +24,7 @@
 #include "config.h"
 #endif
 
-#include <gr_io_signature.h>
+#include <gnuradio/io_signature.h>
 #include "fractional_resampler_cc_impl.h"
 #include <stdexcept>
 
@@ -40,9 +40,9 @@ namespace gr {
 
     fractional_resampler_cc_impl::fractional_resampler_cc_impl
                                      (float phase_shift, float resamp_ratio)
-      : gr_block("fractional_resampler_cc",
-		 gr_make_io_signature(1, 1, sizeof(gr_complex)),
-		 gr_make_io_signature(1, 1, sizeof(gr_complex))),
+      : block("fractional_resampler_cc",
+		 io_signature::make(1, 1, sizeof(gr_complex)),
+		 io_signature::make(1, 1, sizeof(gr_complex))),
 	d_mu(phase_shift), d_mu_inc(resamp_ratio),
 	d_resamp(new mmse_fir_interpolator_cc())
     {

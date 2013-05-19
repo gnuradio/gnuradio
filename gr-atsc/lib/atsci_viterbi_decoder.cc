@@ -20,7 +20,7 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include <atsc/viterbi_decoder.h>
+#include <gnuradio/atsc/viterbi_decoder.h>
 #include <assert.h>
 #include <stdio.h>
 #include <cmath>

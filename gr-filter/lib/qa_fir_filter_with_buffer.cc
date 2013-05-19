@@ -24,13 +24,13 @@
 #include <config.h>
 #endif
 
-#include <gr_types.h>
+#include <gnuradio/types.h>
 #include <qa_fir_filter_with_buffer.h>
-#include <filter/fir_filter_with_buffer.h>
-#include <fft/fft.h>
+#include <gnuradio/filter/fir_filter_with_buffer.h>
+#include <gnuradio/fft/fft.h>
 #include <cppunit/TestAssert.h>
 #include <cmath>
-#include <random.h>
+#include <gnuradio/random.h>
 #include <cstring>
 
 namespace gr {
@@ -42,7 +42,7 @@ namespace gr {
     static float
     uniform() 
     {
-      return 2.0 * ((float) random() / RANDOM_MAX - 0.5); // uniformly (-1, 1)
+      return 2.0 * ((float)(::random()) / RANDOM_MAX - 0.5); // uniformly (-1, 1)
     }
 
     static void

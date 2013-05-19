@@ -21,10 +21,10 @@
  */
 
 #include <cmath>
-#include <atsc/GrAtscBitTimingLoop.h>
+#include <gnuradio/atsc/GrAtscBitTimingLoop.h>
 #include "fpll_btloop_coupling.h"
 #include <algorithm>
-#include <atsc/consts.h>
+#include <gnuradio/atsc/consts.h>
 #include <stdio.h>
 #include <assert.h>
 

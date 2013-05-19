@@ -22,3 +22,6 @@
 from blocks_swig0 import *
 from blocks_swig1 import *
 from blocks_swig2 import *
+from blocks_swig3 import *
+from blocks_swig4 import *
+from blocks_swig5 import *

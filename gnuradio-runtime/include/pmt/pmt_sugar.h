@@ -27,7 +27,7 @@
  * shorthand for making pmt objects
  */
 
-#include <messages/msg_accepter.h>
+#include <gnuradio/messages/msg_accepter.h>
 
 namespace pmt {
 

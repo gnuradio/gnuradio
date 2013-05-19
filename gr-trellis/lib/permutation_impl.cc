@@ -25,7 +25,7 @@
 #endif
 
 #include "permutation_impl.h"
-#include <gr_io_signature.h>
+#include <gnuradio/io_signature.h>
 #include <iostream>
 #include <string.h>
 
@@ -42,9 +42,9 @@ namespace gr {
 
     permutation_impl::permutation_impl(int K, const std::vector<int> &TABLE,
 				       int SYMS_PER_BLOCK, size_t BYTES_PER_SYMBOL)
-      : gr_sync_block("permutation",
-		      gr_make_io_signature(1, -1, BYTES_PER_SYMBOL),
-		      gr_make_io_signature(1, -1, BYTES_PER_SYMBOL)),
+      : sync_block("permutation",
+		      io_signature::make(1, -1, BYTES_PER_SYMBOL),
+		      io_signature::make(1, -1, BYTES_PER_SYMBOL)),
 	d_K(K), d_TABLE(TABLE),
 	d_SYMS_PER_BLOCK(SYMS_PER_BLOCK),
 	d_BYTES_PER_SYMBOL(BYTES_PER_SYMBOL)

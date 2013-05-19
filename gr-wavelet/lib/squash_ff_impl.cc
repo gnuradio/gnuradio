@@ -26,7 +26,7 @@
 
 #include <stdexcept>
 #include <squash_ff_impl.h>
-#include <gr_io_signature.h>
+#include <gnuradio/io_signature.h>
 
 // expect input vector of igrid.size y-values,
 // produce output vector of ogrid.size y-values
@@ -42,9 +42,9 @@ namespace gr {
 
     squash_ff_impl::squash_ff_impl(const std::vector<float> &igrid,
 				   const std::vector<float> &ogrid)
-      : gr_sync_block("squash_ff",
-		      gr_make_io_signature(1, 1, sizeof(float) * igrid.size()),
-		      gr_make_io_signature(1, 1, sizeof(float) * ogrid.size()))
+      : sync_block("squash_ff",
+		      io_signature::make(1, 1, sizeof(float) * igrid.size()),
+		      io_signature::make(1, 1, sizeof(float) * ogrid.size()))
     {
       d_inum  = igrid.size();
       d_onum  = ogrid.size();

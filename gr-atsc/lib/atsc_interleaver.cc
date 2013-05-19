@@ -24,9 +24,9 @@
 #include <config.h>
 #endif
 
-#include <atsc/interleaver.h>
-#include <gr_io_signature.h>
-#include <atsc/consts.h>
+#include <gnuradio/atsc/interleaver.h>
+#include <gnuradio/io_signature.h>
+#include <gnuradio/atsc/consts.h>
 
 
 atsc_interleaver_sptr
@@ -36,9 +36,9 @@ atsc_make_interleaver()
 }
 
 atsc_interleaver::atsc_interleaver()
-  : gr_sync_block("atsc_interleaver",
-		  gr_make_io_signature(1, 1, sizeof(atsc_mpeg_packet_rs_encoded)),
-		  gr_make_io_signature(1, 1, sizeof(atsc_mpeg_packet_rs_encoded)))
+  : gr::sync_block("atsc_interleaver",
+                   gr::io_signature::make(1, 1, sizeof(atsc_mpeg_packet_rs_encoded)),
+                   gr::io_signature::make(1, 1, sizeof(atsc_mpeg_packet_rs_encoded)))
 {
   reset();
 }

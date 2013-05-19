@@ -23,7 +23,7 @@
 #ifndef _QA_RUNTIME_H_
 #define _QA_RUNTIME_H_
 
-#include <attributes.h>
+#include <gnuradio/attributes.h>
 #include <cppunit/TestSuite.h>
 
 //! collect all the tests for the runtime directory

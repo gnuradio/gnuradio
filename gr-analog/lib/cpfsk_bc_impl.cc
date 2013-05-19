@@ -23,8 +23,8 @@
 #endif
 
 #include "cpfsk_bc_impl.h"
-#include <gr_io_signature.h>
-#include <gr_expj.h>
+#include <gnuradio/io_signature.h>
+#include <gnuradio/expj.h>
 
 namespace gr {
   namespace analog {
@@ -39,9 +39,9 @@ namespace gr {
     }
 
     cpfsk_bc_impl::cpfsk_bc_impl(float k, float ampl, int samples_per_sym)
-      : gr_sync_interpolator("cpfsk_bc",
-			     gr_make_io_signature(1, 1, sizeof(char)),
-			     gr_make_io_signature(1, 1, sizeof(gr_complex)),
+      : sync_interpolator("cpfsk_bc",
+			     io_signature::make(1, 1, sizeof(char)),
+			     io_signature::make(1, 1, sizeof(gr_complex)),
 			     samples_per_sym)
     {
       d_samples_per_sym = samples_per_sym;

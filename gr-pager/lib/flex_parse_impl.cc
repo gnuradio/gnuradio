@@ -26,7 +26,7 @@
 
 #include "flex_parse_impl.h"
 #include "bch3221.h"
-#include <gr_io_signature.h>
+#include <gnuradio/io_signature.h>
 #include <ctype.h>
 #include <iostream>
 #include <iomanip>
@@ -35,16 +35,16 @@ namespace gr {
   namespace pager {
 
     flex_parse::sptr
-    flex_parse::make(gr_msg_queue_sptr queue, float freq)
+    flex_parse::make(msg_queue::sptr queue, float freq)
     {
       return gnuradio::get_initial_sptr
 	(new flex_parse_impl(queue, freq));
     }
 
-    flex_parse_impl::flex_parse_impl(gr_msg_queue_sptr queue, float freq) :
-      gr_sync_block("flex_parse",
-		    gr_make_io_signature(1, 1, sizeof(gr_int32)),
-		    gr_make_io_signature(0, 0, 0)),
+    flex_parse_impl::flex_parse_impl(msg_queue::sptr queue, float freq) :
+      sync_block("flex_parse",
+		    io_signature::make(1, 1, sizeof(gr_int32)),
+		    io_signature::make(0, 0, 0)),
       d_queue(queue),
       d_freq(freq)
     {
@@ -159,7 +159,7 @@ namespace gr {
 	else
 	  parse_unknown(mw1, mw2);
 
-	gr_message_sptr msg = gr_make_message_from_string(std::string(d_payload.str()));
+	message::sptr msg = message::make_from_string(std::string(d_payload.str()));
 	d_queue->handle(msg);
       }
     }

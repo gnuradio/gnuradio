@@ -23,7 +23,7 @@
 #ifndef INCLUDED_BLOCKS_TUNTAP_PDU_IMPL_H
 #define INCLUDED_BLOCKS_TUNTAP_PDU_IMPL_H
 
-#include <blocks/tuntap_pdu.h>
+#include <gnuradio/blocks/tuntap_pdu.h>
 #include "stream_pdu_base.h"
 
 #if (defined(linux) || defined(__linux) || defined(__linux__))

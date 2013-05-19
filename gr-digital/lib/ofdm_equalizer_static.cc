@@ -23,7 +23,7 @@
 #include "config.h"
 #endif
 
-#include <digital/ofdm_equalizer_static.h>
+#include <gnuradio/digital/ofdm_equalizer_static.h>
 
 namespace gr {
   namespace digital {
@@ -70,7 +70,7 @@ namespace gr {
     ofdm_equalizer_static::equalize(gr_complex *frame,
 	      int n_sym,
 	      const std::vector<gr_complex> &initial_taps,
-	      const std::vector<gr_tag_t> &tags)
+	      const std::vector<tag_t> &tags)
     {
       d_channel_state = initial_taps;
 
@@ -79,9 +79,9 @@ namespace gr {
 	  if (!d_occupied_carriers[k]) {
 	    continue;
 	  }
-	  if (d_pilot_carriers.size() && d_pilot_carriers[d_pilot_carr_set][k-d_carr_offset]) {
-	    d_channel_state[k] = frame[i*d_fft_len + k] / d_pilot_symbols[d_pilot_carr_set][k-d_carr_offset];
-	    frame[i*d_fft_len+k] = d_pilot_symbols[d_pilot_carr_set][k-d_carr_offset];
+	  if (!d_pilot_carriers.empty() && d_pilot_carriers[d_pilot_carr_set][k]) {
+	    d_channel_state[k] = frame[i*d_fft_len + k] / d_pilot_symbols[d_pilot_carr_set][k];
+	    frame[i*d_fft_len+k] = d_pilot_symbols[d_pilot_carr_set][k];
 	  } else {
 	    frame[i*d_fft_len+k] /= d_channel_state[k];
 	  }

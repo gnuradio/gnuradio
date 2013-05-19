@@ -20,8 +20,8 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include <atsc/equalizer_nop_impl.h>
-#include <atsc/sync_tag_impl.h>
+#include <gnuradio/atsc/equalizer_nop_impl.h>
+#include <gnuradio/atsc/sync_tag_impl.h>
 #include <assert.h>
 
 atsci_equalizer_nop::atsci_equalizer_nop ()

@@ -23,7 +23,7 @@
 #ifndef INCLUDED_GR_FILE_DESCRIPTOR_SINK_IMPL_H
 #define INCLUDED_GR_FILE_DESCRIPTOR_SINK_IMPL_H
 
-#include <blocks/file_descriptor_sink.h>
+#include <gnuradio/blocks/file_descriptor_sink.h>
 
 namespace gr {
   namespace blocks {

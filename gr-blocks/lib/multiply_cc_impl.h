@@ -23,7 +23,7 @@
 #ifndef INCLUDED_BLOCKS_MULTIPLY_CC_IMPL_H
 #define INCLUDED_BLOCKS_MULTIPLY_CC_IMPL_H
 
-#include <blocks/multiply_cc.h>
+#include <gnuradio/blocks/multiply_cc.h>
 
 namespace gr {
   namespace blocks {

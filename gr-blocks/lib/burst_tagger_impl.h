@@ -23,7 +23,7 @@
 #ifndef INCLUDED_GR_BURST_TAGGER_IMPL_H
 #define INCLUDED_GR_BURST_TAGGER_IMPL_H
 
-#include <blocks/burst_tagger.h>
+#include <gnuradio/blocks/burst_tagger.h>
 
 namespace gr {
   namespace blocks {

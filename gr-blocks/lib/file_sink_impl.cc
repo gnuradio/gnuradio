@@ -25,7 +25,7 @@
 #endif
 
 #include "file_sink_impl.h"
-#include <gr_io_signature.h>
+#include <gnuradio/io_signature.h>
 #include <stdexcept>
 
 namespace gr {
@@ -39,9 +39,9 @@ namespace gr {
     }
 
     file_sink_impl::file_sink_impl(size_t itemsize, const char *filename)
-      : gr_sync_block("file_sink",
-                      gr_make_io_signature(1, 1, itemsize),
-                      gr_make_io_signature(0, 0, 0)),
+      : sync_block("file_sink",
+                      io_signature::make(1, 1, itemsize),
+                      io_signature::make(0, 0, 0)),
         file_sink_base(filename, true),
         d_itemsize(itemsize)
     {

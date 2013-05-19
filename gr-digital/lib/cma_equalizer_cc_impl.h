@@ -23,9 +23,9 @@
 #ifndef INCLUDED_DIGITAL_CMA_EQUALIZER_CC_IMPL_H
 #define	INCLUDED_DIGITAL_CMA_EQUALIZER_CC_IMPL_H
 
-#include <digital/cma_equalizer_cc.h>
-#include <filter/fir_filter.h>
-#include <gr_math.h>
+#include <gnuradio/digital/cma_equalizer_cc.h>
+#include <gnuradio/filter/fir_filter.h>
+#include <gnuradio/math.h>
 #include <stdexcept>
 
 namespace gr {

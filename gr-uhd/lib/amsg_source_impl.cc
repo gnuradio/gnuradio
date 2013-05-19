@@ -29,7 +29,7 @@ namespace gr {
 
     amsg_source::sptr
     amsg_source::make(const ::uhd::device_addr_t &device_addr,
-                      gr_msg_queue_sptr msgq)
+                      msg_queue::sptr msgq)
     {
       check_abi();
       return amsg_source::sptr
@@ -37,13 +37,13 @@ namespace gr {
     }
 
     ::uhd::async_metadata_t
-    amsg_source::msg_to_async_metadata_t(const gr_message_sptr msg)
+    amsg_source::msg_to_async_metadata_t(const message::sptr msg)
     {
       return *(::uhd::async_metadata_t *)msg->msg();
     }
 
     amsg_source_impl::amsg_source_impl(const ::uhd::device_addr_t &device_addr,
-                                       gr_msg_queue_sptr msgq)
+                                       msg_queue::sptr msgq)
       : _msgq(msgq), _running(true)
     {
       _dev = ::uhd::usrp::multi_usrp::make(device_addr);
@@ -60,11 +60,11 @@ namespace gr {
     void
     amsg_source_impl::recv_loop()
     {
-      gr_message_sptr msg;
+      message::sptr msg;
       ::uhd::async_metadata_t *md;
 
       while(_running) {
-        msg = gr_make_message(0, 0.0, 0.0, sizeof(::uhd::async_metadata_t));
+        msg = message::make(0, 0.0, 0.0, sizeof(::uhd::async_metadata_t));
         md = (::uhd::async_metadata_t*) msg->msg();
 
         while(!_dev->get_device()->recv_async_msg(*md, 0.1)) {
@@ -77,7 +77,7 @@ namespace gr {
     }
 
     void
-    amsg_source_impl::post(gr_message_sptr msg)
+    amsg_source_impl::post(message::sptr msg)
     {
       _msgq->insert_tail(msg);
     }

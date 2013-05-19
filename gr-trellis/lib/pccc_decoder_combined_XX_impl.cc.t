@@ -27,9 +27,9 @@
 #endif
 
 #include "@NAME@.h"
-#include <gr_io_signature.h>
+#include <gnuradio/io_signature.h>
 #include <iostream>
-#include <trellis/core_algorithms.h>
+#include <gnuradio/trellis/core_algorithms.h>
 
 namespace gr {
   namespace trellis {
@@ -64,9 +64,9 @@ namespace gr {
 			     const std::vector<@I_TYPE@> &TABLE,
 			     digital::trellis_metric_type_t METRIC_TYPE,
 			     float scaling)
-    : gr_block("@BASE_NAME@",
-	       gr_make_io_signature(1, 1, sizeof(@I_TYPE@)),
-	       gr_make_io_signature(1, 1, sizeof(@O_TYPE@))),
+    : block("@BASE_NAME@",
+	       io_signature::make(1, 1, sizeof(@I_TYPE@)),
+	       io_signature::make(1, 1, sizeof(@O_TYPE@))),
       d_FSMo(FSMo), d_STo0(STo0), d_SToK(SToK),
       d_FSMi(FSMi), d_STi0(STi0), d_STiK(STiK),
       d_INTERLEAVER(INTERLEAVER),

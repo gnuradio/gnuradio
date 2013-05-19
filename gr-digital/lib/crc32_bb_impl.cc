@@ -24,9 +24,9 @@
 #include "config.h"
 #endif
 
-#include <gr_io_signature.h>
+#include <gnuradio/io_signature.h>
 #include "crc32_bb_impl.h"
-#include <digital/crc32.h>
+#include <gnuradio/digital/crc32.h>
 
 namespace gr {
   namespace digital {
@@ -38,9 +38,9 @@ namespace gr {
     }
 
     crc32_bb_impl::crc32_bb_impl(bool check, const std::string& lengthtagname)
-      : gr_tagged_stream_block("crc32_bb",
-		   gr_make_io_signature(1, 1, sizeof (char)),
-		   gr_make_io_signature(1, 1, sizeof (char)),
+      : tagged_stream_block("crc32_bb",
+		   io_signature::make(1, 1, sizeof (char)),
+		   io_signature::make(1, 1, sizeof (char)),
 		   lengthtagname),
 	d_check(check)
     {
@@ -85,7 +85,7 @@ namespace gr {
 	memcpy((void *) (out + packet_length), &crc, 4); // FIXME big-endian/little-endian, this might be wrong
       }
 
-      std::vector<gr_tag_t> tags;
+      std::vector<tag_t> tags;
       get_tags_in_range(tags, 0, nitems_read(0), nitems_read(0)+packet_length);
       for (size_t i = 0; i < tags.size(); i++) {
 	tags[i].offset -= nitems_read(0);

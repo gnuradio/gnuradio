@@ -25,7 +25,7 @@
 #endif
 
 #include "delay_impl.h"
-#include <gr_io_signature.h>
+#include <gnuradio/io_signature.h>
 #include <string.h>
 
 namespace gr {
@@ -39,9 +39,9 @@ namespace gr {
     }
 
     delay_impl::delay_impl(size_t itemsize, int delay)
-      : gr_block("delay",
-                 gr_make_io_signature(1, -1, itemsize),
-                 gr_make_io_signature(1, -1, itemsize)),
+      : block("delay",
+                 io_signature::make(1, -1, itemsize),
+                 io_signature::make(1, -1, itemsize)),
         d_itemsize(itemsize)
     {
       set_dly(delay);

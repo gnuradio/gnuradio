@@ -25,8 +25,8 @@
 #endif
 
 #include "binary_slicer_fb_impl.h"
-#include <gr_io_signature.h>
-#include <gr_math.h>
+#include <gnuradio/io_signature.h>
+#include <gnuradio/math.h>
 
 namespace gr {
   namespace digital {
@@ -37,9 +37,9 @@ namespace gr {
     }
 
     binary_slicer_fb_impl::binary_slicer_fb_impl()
-      : gr_sync_block("binary_slicer_fb",
-		      gr_make_io_signature(1, 1, sizeof(float)),
-		      gr_make_io_signature(1, 1, sizeof(unsigned char)))
+      : sync_block("binary_slicer_fb",
+		      io_signature::make(1, 1, sizeof(float)),
+		      io_signature::make(1, 1, sizeof(unsigned char)))
     {
     }
 
@@ -56,7 +56,7 @@ namespace gr {
       unsigned char *out = (unsigned char *)output_items[0];
 
       for(int i = 0; i < noutput_items; i++) {
-	out[i] = gr_binary_slicer(in[i]);
+	out[i] = gr::binary_slicer(in[i]);
       }
   
       return noutput_items;

@@ -25,7 +25,7 @@
 #endif
 
 #include "kurtotic_equalizer_cc_impl.h"
-#include <gr_io_signature.h>
+#include <gnuradio/io_signature.h>
 #include <volk/volk.h>
 
 namespace gr {
@@ -39,9 +39,9 @@ namespace gr {
     }
 
     kurtotic_equalizer_cc_impl::kurtotic_equalizer_cc_impl(int num_taps, float mu)
-      : gr_sync_decimator("kurtotic_equalizer_cc",
-			  gr_make_io_signature(1, 1, sizeof(gr_complex)),
-			  gr_make_io_signature(1, 1, sizeof(gr_complex)),
+      : sync_decimator("kurtotic_equalizer_cc",
+			  io_signature::make(1, 1, sizeof(gr_complex)),
+			  io_signature::make(1, 1, sizeof(gr_complex)),
 			  1),
 	filter::kernel::fir_filter_ccc(1, std::vector<gr_complex>(num_taps, gr_complex(0,0)))
     {

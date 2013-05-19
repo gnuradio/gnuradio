@@ -21,7 +21,7 @@
 #ifndef INCLUDED_ANALOG_CPFSK_BC_IMPL_H
 #define INCLUDED_ANALOG_CPFSK_BC_IMPL_H
 
-#include <analog/cpfsk_bc.h>
+#include <gnuradio/analog/cpfsk_bc.h>
 
 namespace gr {
   namespace analog {

@@ -23,7 +23,7 @@
 #ifndef INCLUDED_ANALOG_AGC2_FF_IMPL_H
 #define INCLUDED_ANALOG_AGC2_FF_IMPL_H
 
-#include <analog/agc2_ff.h>
+#include <gnuradio/analog/agc2_ff.h>
 
 namespace gr {
   namespace analog {

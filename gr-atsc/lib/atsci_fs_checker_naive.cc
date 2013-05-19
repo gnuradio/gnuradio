@@ -20,9 +20,9 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include <atsc/fs_checker_naive_impl.h>
-#include <atsc/syminfo_impl.h>
-#include <atsc/pnXXX_impl.h>
+#include <gnuradio/atsc/fs_checker_naive_impl.h>
+#include <gnuradio/atsc/syminfo_impl.h>
+#include <gnuradio/atsc/pnXXX_impl.h>
 #include <iostream>
 #include <cstring>
 

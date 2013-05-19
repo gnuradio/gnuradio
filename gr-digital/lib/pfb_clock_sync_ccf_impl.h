@@ -23,7 +23,7 @@
 #ifndef INCLUDED_DIGITAL_PFB_CLOCK_SYNC_CCF_IMPL_H
 #define	INCLUDED_DIGITAL_PFB_CLOCK_SYNC_CCF_IMPL_H
 
-#include <digital/pfb_clock_sync_ccf.h>
+#include <gnuradio/digital/pfb_clock_sync_ccf.h>
 
 using namespace gr::filter;
 

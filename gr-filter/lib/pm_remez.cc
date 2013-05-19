@@ -41,7 +41,7 @@
 #include "config.h"
 #endif
 
-#include <filter/pm_remez.h>
+#include <gnuradio/filter/pm_remez.h>
 #include <cmath>
 #include <assert.h>
 #include <iostream>

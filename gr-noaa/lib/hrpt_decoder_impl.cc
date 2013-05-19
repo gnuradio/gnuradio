@@ -25,8 +25,8 @@
 #endif
 
 #include "hrpt_decoder_impl.h"
-#include <noaa/hrpt.h>
-#include <gr_io_signature.h>
+#include <gnuradio/noaa/hrpt.h>
+#include <gnuradio/io_signature.h>
 #include <cstdio>
 
 namespace gr {
@@ -59,9 +59,9 @@ namespace gr {
     }
 
     hrpt_decoder_impl::hrpt_decoder_impl(bool verbose, bool output_files)
-      : gr_sync_block("noaa_hrpt_decoder",
-		      gr_make_io_signature(1, 1, sizeof(short)),
-		      gr_make_io_signature(0, 0, 0)),
+      : sync_block("noaa_hrpt_decoder",
+		      io_signature::make(1, 1, sizeof(short)),
+		      io_signature::make(0, 0, 0)),
 	d_verbose(verbose),
 	d_output_files(output_files),
 	d_word_num(0),

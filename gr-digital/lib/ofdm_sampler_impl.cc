@@ -25,8 +25,8 @@
 #endif
 
 #include "ofdm_sampler_impl.h"
-#include <gr_io_signature.h>
-#include <gr_expj.h>
+#include <gnuradio/io_signature.h>
+#include <gnuradio/expj.h>
 #include <cstdio>
 
 namespace gr {
@@ -44,9 +44,9 @@ namespace gr {
     ofdm_sampler_impl::ofdm_sampler_impl(unsigned int fft_length, 
 					 unsigned int symbol_length,
 					 unsigned int timeout)
-      : gr_block("ofdm_sampler",
-		 gr_make_io_signature2(2, 2, sizeof(gr_complex), sizeof(char)),
-		 gr_make_io_signature2(2, 2, sizeof(gr_complex)*fft_length, sizeof(char)*fft_length)),
+      : block("ofdm_sampler",
+		 io_signature::make2(2, 2, sizeof(gr_complex), sizeof(char)),
+		 io_signature::make2(2, 2, sizeof(gr_complex)*fft_length, sizeof(char)*fft_length)),
 	d_state(STATE_NO_SIG), d_timeout_max(timeout),
 	d_fft_length(fft_length), d_symbol_length(symbol_length)
     {

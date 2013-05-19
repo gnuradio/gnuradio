@@ -24,9 +24,9 @@
 #include <config.h>
 #endif
 
-#include <atsc/pad.h>
-#include <gr_io_signature.h>
-#include <atsc/types.h>
+#include <gnuradio/atsc/pad.h>
+#include <gnuradio/io_signature.h>
+#include <gnuradio/atsc/types.h>
 
 static const int INTR = ATSC_MPEG_PKT_LENGTH;
 
@@ -37,10 +37,10 @@ atsc_make_pad()
 }
 
 atsc_pad::atsc_pad()
-  : gr_sync_decimator("atsc_pad",
-		  gr_make_io_signature(1, 1, sizeof(unsigned char)),
-		  gr_make_io_signature(1, 1, sizeof(atsc_mpeg_packet)),
-		  INTR)
+  : gr::sync_decimator("atsc_pad",
+                       gr::io_signature::make(1, 1, sizeof(unsigned char)),
+                       gr::io_signature::make(1, 1, sizeof(atsc_mpeg_packet)),
+                       INTR)
 {
   reset();
 }

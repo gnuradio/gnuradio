@@ -21,10 +21,10 @@
  */
 
 #include "qa_atsci_equalizer_nop.h"
-#include <atsc/equalizer_impl.h>
-#include <atsc/equalizer_nop_impl.h>
-#include <atsc/pnXXX_impl.h>
-#include <atsc/types.h>
+#include <gnuradio/atsc/equalizer_impl.h>
+#include <gnuradio/atsc/equalizer_nop_impl.h>
+#include <gnuradio/atsc/pnXXX_impl.h>
+#include <gnuradio/atsc/types.h>
 #include <cppunit/TestAssert.h>
 #include <assert.h>
 #include <iostream>

@@ -25,7 +25,7 @@
 #endif
 
 #include "keep_one_in_n_impl.h"
-#include <gr_io_signature.h>
+#include <gnuradio/io_signature.h>
 
 namespace gr {
   namespace blocks {
@@ -36,9 +36,9 @@ namespace gr {
     }
 
     keep_one_in_n_impl::keep_one_in_n_impl(size_t itemsize, int n)
-      : gr_block("keep_one_in_n",
-		 gr_make_io_signature (1, 1, itemsize),
-		 gr_make_io_signature (1, 1, itemsize)),
+      : block("keep_one_in_n",
+		 io_signature::make (1, 1, itemsize),
+		 io_signature::make (1, 1, itemsize)),
 	d_count(n)
     {
       // To avoid bad behavior with using set_relative_rate in this block with
@@ -92,11 +92,11 @@ namespace gr {
 
       // Because we have set TPP_DONT, we have to propagate the tags here manually.
       // Adjustment of the tag sample value is done using the float d_decim_rate.
-      std::vector<gr_tag_t> tags;
-      std::vector<gr_tag_t>::iterator t;
+      std::vector<tag_t> tags;
+      std::vector<tag_t>::iterator t;
       get_tags_in_range(tags, 0, nitems_read(0), nitems_read(0)+ni);
       for(t = tags.begin(); t != tags.end(); t++) {
-	gr_tag_t new_tag = *t;
+	tag_t new_tag = *t;
 	new_tag.offset *= d_decim_rate;
 	add_item_tag(0, new_tag);
       }

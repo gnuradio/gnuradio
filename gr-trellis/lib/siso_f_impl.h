@@ -23,11 +23,11 @@
 #ifndef INCLUDED_TRELLIS_SISO_F_IMPL_H
 #define INCLUDED_TRELLIS_SISO_F_IMPL_H
 
-#include <trellis/api.h>
-#include <trellis/fsm.h>
-#include <trellis/siso_type.h>
-#include <trellis/core_algorithms.h>
-#include <trellis/siso_f.h>
+#include <gnuradio/trellis/api.h>
+#include <gnuradio/trellis/fsm.h>
+#include <gnuradio/trellis/siso_type.h>
+#include <gnuradio/trellis/core_algorithms.h>
+#include <gnuradio/trellis/siso_f.h>
 
 namespace gr {
   namespace trellis {

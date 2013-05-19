@@ -27,7 +27,7 @@ def make_lengthtags(lengths, offsets, tagname='length', vlen=1):
     tags = []
     assert(len(offsets) == len(lengths))
     for offset, length in zip(offsets, lengths):
-        tag = gr.gr_tag_t()
+        tag = gr.tag_t()
         tag.offset = offset/vlen
         tag.key = pmt.string_to_symbol(tagname)
         tag.value = pmt.from_long(length/vlen)
@@ -124,7 +124,7 @@ def packets_to_vectors(packets, lengthtagname, vlen=1):
     offset = 0
     for packet in packets:
         data.extend(packet)
-        tag = gr.gr_tag_t()
+        tag = gr.tag_t()
         tag.offset = offset/vlen
         tag.key = pmt.string_to_symbol(lengthtagname)
         tag.value = pmt.from_long(len(packet)/vlen)

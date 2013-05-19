@@ -23,8 +23,8 @@
 #ifndef INCLUDED_DIGITAL_OFDM_MAPPER_BCV_IMPL_H
 #define INCLUDED_DIGITAL_OFDM_MAPPER_BCV_IMPL_H
 
-#include <digital/ofdm_mapper_bcv.h>
-#include <gr_message.h>
+#include <gnuradio/digital/ofdm_mapper_bcv.h>
+#include <gnuradio/message.h>
 #include <vector>
 
 namespace gr {
@@ -34,10 +34,10 @@ namespace gr {
     {
     private:
       std::vector<gr_complex> d_constellation;
-      gr_msg_queue_sptr d_msgq;
-      gr_message_sptr   d_msg;
-      unsigned          d_msg_offset;
-      bool              d_eof;
+      msg_queue::sptr d_msgq;
+      message::sptr   d_msg;
+      unsigned        d_msg_offset;
+      bool            d_eof;
   
       unsigned int d_occupied_carriers;
       unsigned int d_fft_length;
@@ -61,7 +61,7 @@ namespace gr {
 			   unsigned int fft_length);
       ~ofdm_mapper_bcv_impl(void);
 
-      gr_msg_queue_sptr msgq() const { return d_msgq; }
+      msg_queue::sptr msgq() const { return d_msgq; }
 
       int work(int noutput_items,
 	       gr_vector_const_void_star &input_items,

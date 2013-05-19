@@ -27,9 +27,8 @@
 #include <cppunit/TextTestRunner.h>
 #include <cppunit/XmlOutputter.h>
 
-#include <gr_unittests.h>
+#include <gnuradio/unittests.h>
 #include <qa_runtime.h>
-#include <pmt/qa_pmt.h>
 
 int
 main (int argc, char **argv)
@@ -39,7 +38,6 @@ main (int argc, char **argv)
   CppUnit::XmlOutputter *xmlout = new CppUnit::XmlOutputter(&runner.result(), xmlfile);
 
   runner.addTest(qa_runtime::suite());
-  runner.addTest(qa_pmt::suite());
   runner.setOutputter(xmlout);
 
   bool was_successful = runner.run("", false);

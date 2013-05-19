@@ -23,7 +23,7 @@
 #ifndef INCLUDED_PAGER_FLEX_SYNC_IMPL_H
 #define INCLUDED_PAGER_FLEX_SYNC_IMPL_H
 
-#include <pager/flex_sync.h>
+#include <gnuradio/pager/flex_sync.h>
 
 namespace gr {
   namespace pager {

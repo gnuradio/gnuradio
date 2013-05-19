@@ -24,18 +24,18 @@
 #include "config.h"
 #endif
 
-#include <wxgui/oscope_sink_x.h>
-#include <wxgui/oscope_guts.h>
-#include <gr_io_signature.h>
+#include <gnuradio/wxgui/oscope_sink_x.h>
+#include <gnuradio/wxgui/oscope_guts.h>
+#include <gnuradio/io_signature.h>
 
 namespace gr {
   namespace wxgui {
     
     oscope_sink_x::oscope_sink_x(const std::string name,
-                                 gr_io_signature_sptr input_sig,
+                                 gr::io_signature::sptr input_sig,
                                  double sampling_rate)
-      : gr_sync_block(name, input_sig,
-                      gr_make_io_signature(0, 0, 0)),
+      : sync_block(name, input_sig,
+                      io_signature::make(0, 0, 0)),
         d_sampling_rate(sampling_rate), d_guts(0)
     {
     }

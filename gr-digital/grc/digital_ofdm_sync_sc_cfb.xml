@@ -1,9 +1,9 @@
 <?xml version="1.0"?>
 <block>
-  <name>Schmidl &amp; Cox OFDM synchronisation</name>
+  <name>Schmidl &amp; Cox OFDM synch.</name>
   <key>digital_ofdm_sync_sc_cfb</key>
   <import>from gnuradio import digital</import>
-  <make>digital.ofdm_sync_sc_cfb($fft_len, $cp_len)</make>
+  <make>digital.ofdm_sync_sc_cfb($fft_len, $cp_len, $use_even_carriers)</make>
   <param>
     <name>FFT length</name>
     <key>fft_len</key>
@@ -13,6 +13,21 @@
     <name>Cyclic Prefix length</name>
     <key>cp_len</key>
     <type>int</type>
+  </param>
+  <param>
+	  <name>Preamble Carriers</name>
+	  <key>use_even_carriers</key>
+	  <value>False</value>
+	  <type>enum</type>
+	  <hide>part</hide>
+	  <option>
+		  <name>Odd</name>
+		  <key>False</key>
+	  </option>
+	  <option>
+		  <name>Even</name>
+		  <key>True</key>
+	  </option>
   </param>
   <sink>
     <name>in</name>

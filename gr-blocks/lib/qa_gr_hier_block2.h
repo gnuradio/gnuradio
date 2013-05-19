@@ -27,9 +27,9 @@
 #include <cppunit/TestCase.h>
 #include <stdexcept>
 
-class qa_gr_hier_block2 : public CppUnit::TestCase
+class qa_hier_block2 : public CppUnit::TestCase
 {
-    CPPUNIT_TEST_SUITE(qa_gr_hier_block2);
+    CPPUNIT_TEST_SUITE(qa_hier_block2);
 
     CPPUNIT_TEST(test_make);
 

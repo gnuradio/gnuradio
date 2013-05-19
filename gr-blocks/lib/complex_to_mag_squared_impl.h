@@ -23,7 +23,7 @@
 #ifndef INCLUDED_COMPLEX_TO_MAG_SQUARED_IMPL_H
 #define INCLUDED_COMPLEX_TO_MAG_SQUARED_IMPL_H
 
-#include <blocks/complex_to_mag_squared.h>
+#include <gnuradio/blocks/complex_to_mag_squared.h>
 
 namespace gr {
   namespace blocks {

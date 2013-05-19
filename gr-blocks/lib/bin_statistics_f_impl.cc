@@ -25,7 +25,7 @@
 #endif
 
 #include "bin_statistics_f_impl.h"
-#include <gr_io_signature.h>
+#include <gnuradio/io_signature.h>
 #include <string.h>
 
 namespace gr {
@@ -33,8 +33,8 @@ namespace gr {
 
     bin_statistics_f::sptr
     bin_statistics_f::make(unsigned int vlen,
-                           gr_msg_queue_sptr msgq,
-                           gr_feval_dd *tune,
+                           msg_queue::sptr msgq,
+                           feval_dd *tune,
                            size_t tune_delay,
                            size_t dwell_delay)
     {
@@ -44,13 +44,13 @@ namespace gr {
     }
 
     bin_statistics_f_impl::bin_statistics_f_impl(unsigned int vlen,
-                                                 gr_msg_queue_sptr msgq,
-                                                 gr_feval_dd *tune,
+                                                 msg_queue::sptr msgq,
+                                                 feval_dd *tune,
                                                  size_t tune_delay,
                                                  size_t dwell_delay)
-      : gr_sync_block("bin_statistics_f",
-                      gr_make_io_signature(1, 1, sizeof(float) * vlen),
-                      gr_make_io_signature(0, 0, 0)),
+      : sync_block("bin_statistics_f",
+                      io_signature::make(1, 1, sizeof(float) * vlen),
+                      io_signature::make(0, 0, 0)),
         d_vlen(vlen), d_msgq(msgq), d_tune(tune),
         d_tune_delay(tune_delay), d_dwell_delay(dwell_delay),
         d_center_freq(0), d_delay(0),
@@ -168,7 +168,7 @@ namespace gr {
         return;
 
       // build & send a message
-      gr_message_sptr msg = gr_make_message(0, center_freq(), vlen(), vlen() * sizeof(float));
+      message::sptr msg = message::make(0, center_freq(), vlen(), vlen() * sizeof(float));
       memcpy(msg->msg(), &d_max[0], vlen() * sizeof(float));
       msgq()->insert_tail(msg);
     }

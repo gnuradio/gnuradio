@@ -25,7 +25,7 @@
 #endif
 
 #include "null_source_impl.h"
-#include <gr_io_signature.h>
+#include <gnuradio/io_signature.h>
 #include <string.h>
 
 namespace gr {
@@ -39,9 +39,9 @@ namespace gr {
     }
 
     null_source_impl::null_source_impl (size_t sizeof_stream_item)
-      : gr_sync_block("null_source",
-                      gr_make_io_signature(0, 0, 0),
-                      gr_make_io_signature(1, 1, sizeof_stream_item))
+      : sync_block("null_source",
+                      io_signature::make(0, 0, 0),
+                      io_signature::make(1, 1, sizeof_stream_item))
     {
     }
 

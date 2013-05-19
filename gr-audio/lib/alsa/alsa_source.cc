@@ -27,8 +27,8 @@
 #include "audio_registry.h"
 #include <alsa_source.h>
 #include <alsa_impl.h>
-#include <gr_io_signature.h>
-#include <gr_prefs.h>
+#include <gnuradio/io_signature.h>
+#include <gnuradio/prefs.h>
 #include <stdio.h>
 #include <iostream>
 #include <stdexcept>
@@ -57,7 +57,7 @@ namespace gr {
     static std::string
     default_device_name()
     {
-      return gr_prefs::singleton()->get_string("audio_alsa",
+      return prefs::singleton()->get_string("audio_alsa",
                                                "default_input_device",
                                                "hw:0,0");
     }
@@ -66,14 +66,14 @@ namespace gr {
     default_period_time()
     {
       return std::max(0.001,
-                      gr_prefs::singleton()->get_double("audio_alsa", "period_time", 0.010));
+                      prefs::singleton()->get_double("audio_alsa", "period_time", 0.010));
     }
 
     static int
     default_nperiods()
     {
       return std::max(2L,
-                      gr_prefs::singleton()->get_long("audio_alsa", "nperiods", 4));
+                      prefs::singleton()->get_long("audio_alsa", "nperiods", 4));
     }
 
     // ----------------------------------------------------------------
@@ -81,9 +81,9 @@ namespace gr {
     alsa_source::alsa_source(int sampling_rate,
                              const std::string device_name,
                              bool ok_to_block)
-      : gr_sync_block("audio_alsa_source",
-                      gr_make_io_signature(0, 0, 0),
-                      gr_make_io_signature(0, 0, 0)),
+      : sync_block("audio_alsa_source",
+                      io_signature::make(0, 0, 0),
+                      io_signature::make(0, 0, 0)),
         d_sampling_rate(sampling_rate),
         d_device_name(device_name.empty() ? default_device_name() : device_name),
         d_pcm_handle(0),
@@ -97,7 +97,7 @@ namespace gr {
         d_special_case_stereo_to_mono(false),
         d_noverruns(0), d_nsuspends(0)
     {
-      CHATTY_DEBUG = gr_prefs::singleton()->get_bool("audio_alsa", "verbose", false);
+      CHATTY_DEBUG = prefs::singleton()->get_bool("audio_alsa", "verbose", false);
 
       int error;
       int dir;
@@ -134,7 +134,7 @@ namespace gr {
         d_special_case_stereo_to_mono = true;
       }
 
-      set_output_signature(gr_make_io_signature(min_chan, max_chan,
+      set_output_signature(io_signature::make(min_chan, max_chan,
                                                 sizeof(float)));
 
       // fill in portions of the d_hw_params that we know now...

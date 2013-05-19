@@ -29,7 +29,7 @@
 #include <windows.h>
 #include <mmsystem.h>
 
-#include <audio/sink.h>
+#include <gnuradio/audio/sink.h>
 #include <string>
 
 namespace gr {

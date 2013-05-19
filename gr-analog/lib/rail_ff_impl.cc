@@ -25,8 +25,8 @@
 #endif
 
 #include "rail_ff_impl.h"
-#include <gr_io_signature.h>
-#include <gr_math.h>
+#include <gnuradio/io_signature.h>
+#include <gnuradio/math.h>
 
 namespace gr {
   namespace analog {
@@ -39,9 +39,9 @@ namespace gr {
     }
 
     rail_ff_impl::rail_ff_impl(float lo, float hi)
-      : gr_sync_block("rail_ff",
-		      gr_make_io_signature(1, 1, sizeof(float)),
-		      gr_make_io_signature(1, 1, sizeof(float))),
+      : sync_block("rail_ff",
+		      io_signature::make(1, 1, sizeof(float)),
+		      io_signature::make(1, 1, sizeof(float))),
 	d_lo(lo), d_hi(hi)
     {
       set_clipping();
@@ -81,7 +81,7 @@ namespace gr {
       float *out = (float*)output_items[0];
 
       for(int i = 0; i < noutput_items; i++) {
-	out[i] = d_mid + gr_branchless_clip(in[i] - d_mid, d_clip);
+	out[i] = d_mid + gr::branchless_clip(in[i] - d_mid, d_clip);
       }
 
       return noutput_items;

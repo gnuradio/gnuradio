@@ -23,19 +23,10 @@
 import numpy
 import random
 
-from gnuradio import gr, gr_unittest, blocks, analog
-
-try:
-    # This will work when feature #505 is added.
-    from gnuradio import digital
-    from gnuradio.digital.utils import tagged_streams
-    from gnuradio.digital.ofdm_txrx import ofdm_tx
-except ImportError:
-    # Until then this will work.
-    import digital_swig as digital
-    from utils import tagged_streams
-    from ofdm_txrx import ofdm_tx
-
+from gnuradio import gr, gr_unittest, blocks, analog, channels
+from gnuradio import digital
+from gnuradio.digital.utils import tagged_streams
+from gnuradio.digital.ofdm_txrx import ofdm_tx
 
 class qa_ofdm_sync_sc_cfb (gr_unittest.TestCase):
 
@@ -76,33 +67,29 @@ class qa_ofdm_sync_sc_cfb (gr_unittest.TestCase):
         self.assertEqual(numpy.sum(sig1_detect), 1)
         self.assertEqual(numpy.sum(sig2_detect), 1)
 
-
     def test_002_freq (self):
         """ Add a fine frequency offset and see if that get's detected properly """
         fft_len = 32
         cp_len = 4
-        freq_offset = 0.1 # Must stay < 2*pi/fft_len = 0.196 (otherwise, it's coarse)
+        # This frequency offset is normalized to rads, i.e. \pi == f_s/2
+        max_freq_offset = 2*numpy.pi/fft_len # Otherwise, it's coarse
+        freq_offset = ((2 * random.random()) - 1) * max_freq_offset
         sig_len = (fft_len + cp_len) * 10
         sync_symbol = [(random.randint(0, 1)*2)-1 for x in range(fft_len/2)] * 2
         tx_signal = sync_symbol[-cp_len:] + \
                     sync_symbol + \
                     [(random.randint(0, 1)*2)-1 for x in range(sig_len)]
-        mult = blocks.multiply_cc()
-        add = blocks.add_cc()
-        sync = digital.ofdm_sync_sc_cfb(fft_len, cp_len)
+        sync = digital.ofdm_sync_sc_cfb(fft_len, cp_len, True)
         sink_freq   = blocks.vector_sink_f()
         sink_detect = blocks.vector_sink_b()
-        self.tb.connect(blocks.vector_source_c(tx_signal), (mult, 0), (add, 0))
-        self.tb.connect(analog.sig_source_c(2 * numpy.pi, analog.GR_SIN_WAVE, freq_offset, 1.0), (mult, 1))
-        self.tb.connect(analog.noise_source_c(analog.GR_GAUSSIAN, .01), (add, 1))
-        self.tb.connect(add, sync)
+        channel = channels.channel_model(0.005, freq_offset / 2.0 / numpy.pi)
+        self.tb.connect(blocks.vector_source_c(tx_signal), channel, sync)
         self.tb.connect((sync, 0), sink_freq)
         self.tb.connect((sync, 1), sink_detect)
         self.tb.run()
         phi_hat = sink_freq.data()[sink_detect.data().index(1)]
         est_freq_offset = 2 * phi_hat / fft_len
         self.assertAlmostEqual(est_freq_offset, freq_offset, places=2)
-
 
     def test_003_multiburst (self):
         """ Send several bursts, see if the number of detects is correct.
@@ -122,75 +109,55 @@ class qa_ofdm_sync_sc_cfb (gr_unittest.TestCase):
         sync = digital.ofdm_sync_sc_cfb(fft_len, cp_len)
         sink_freq   = blocks.vector_sink_f()
         sink_detect = blocks.vector_sink_b()
-        self.tb.connect(blocks.vector_source_c(tx_signal), (add, 0))
-        self.tb.connect(analog.noise_source_c(analog.GR_GAUSSIAN, .005), (add, 1))
-        self.tb.connect(add, sync)
+        channel = channels.channel_model(0.005)
+        self.tb.connect(blocks.vector_source_c(tx_signal), channel, sync)
         self.tb.connect((sync, 0), sink_freq)
         self.tb.connect((sync, 1), sink_detect)
         self.tb.run()
-        self.assertEqual(numpy.sum(sink_detect.data()), n_bursts,
+        n_bursts_detected = numpy.sum(sink_detect.data())
+        # We allow for one false alarm or missed burst
+        self.assertTrue(abs(n_bursts_detected - n_bursts) <= 1,
                 msg="""Because of statistics, it is possible (though unlikely)
 that the number of detected bursts differs slightly. If the number of detects is
 off by one or two, run the test again and see what happen.
 Detection error was: %d """ % (numpy.sum(sink_detect.data()) - n_bursts)
         )
 
-    # FIXME ofdm_mod is currently not working
-    #def test_004_ofdm_packets (self):
-        #"""
-        #Send several bursts, see if the number of detects is correct.
-        #Burst lengths and content are random.
-        #"""
-        #n_bursts = 42
-        #fft_len = 64
-        #cp_len = 12
-        #tx_signal = []
-        #packets = []
-        #tagname = "length"
-        #min_packet_length = 100
-        #max_packet_length = 100
-        #sync_sequence = [random.randint(0, 1)*2-1 for x in range(fft_len/2)]
-        #for i in xrange(n_bursts):
-            #packet_length = random.randint(min_packet_length,
-                                           #max_packet_length+1)
-            #packet = [random.randint(0, 255) for i in range(packet_length)]
-            #packets.append(packet)
-        #data, tags = tagged_streams.packets_to_vectors(
-            #packets, tagname, vlen=1)
-        #total_length = len(data)
-
-        #src = blocks.vector_source_b(data, False, 1, tags)
-        #mod = ofdm_tx(
-                #fft_len=fft_len,
-                #cp_len=cp_len,
-                #length_tag_name=tagname,
-                #occupied_carriers=(range(1, 27) + range(38, 64),),
-                #pilot_carriers=((0,),),
-                #pilot_symbols=((100,),),
-        #)
-        #rate_in = 16000
-        #rate_out = 48000
-        #ratio = float(rate_out) / rate_in
-        #throttle1 = gr.throttle(gr.sizeof_gr_complex, rate_in)
-        #sink_countbursts = gr.vector_sink_c()
-        #head = gr.head(gr.sizeof_gr_complex, int(total_length * ratio*2))
-        #add = gr.add_cc()
-        #sync = digital.ofdm_sync_sc_cfb(fft_len, cp_len)
-        #sink_freq   = blocks.vector_sink_f()
-        #sink_detect = blocks.vector_sink_b()
-        #noise_level = 0.01
-        #noise = gr.noise_source_c(gr.GR_GAUSSIAN, noise_level)
-        #self.tb.connect(src, mod, blocks.null_sink(gr.sizeof_gr_complex))
-        #self.tb.connect(insert_zeros, sink_countbursts)
-        #self.tb.connect(noise, (add, 1))
-        #self.tb.connect(add, sync)
-        #self.tb.connect((sync, 0), sink_freq)
-        #self.tb.connect((sync, 1), sink_detect)
-        #self.tb.run()
-        #count_data = sink_countbursts.data()
-        #count_tags = sink_countbursts.tags()
-        #burstcount = tagged_streams.count_bursts(count_data, count_tags, tagname)
-        #self.assertEqual(numpy.sum(sink_detect.data()), burstcount)
+    def test_004_ofdm_packets (self):
+        """
+        Send several bursts using ofdm_tx, see if the number of detects is correct.
+        Burst lengths and content are random.
+        """
+        n_bursts = 42
+        fft_len = 64
+        cp_len = 16
+        # Here, coarse freq offset is allowed
+        max_freq_offset = 2*numpy.pi/fft_len * 4
+        freq_offset = ((2 * random.random()) - 1) * max_freq_offset
+        tx_signal = []
+        packets = []
+        tagname = "packet_length"
+        min_packet_length = 10
+        max_packet_length = 50
+        sync_sequence = [random.randint(0, 1)*2-1 for x in range(fft_len/2)]
+        for i in xrange(n_bursts):
+            packet_length = random.randint(min_packet_length,
+                                           max_packet_length+1)
+            packet = [random.randint(0, 255) for i in range(packet_length)]
+            packets.append(packet)
+        data, tags = tagged_streams.packets_to_vectors(packets, tagname, vlen=1)
+        total_length = len(data)
+        src = blocks.vector_source_b(data, False, 1, tags)
+        mod = ofdm_tx(packet_length_tag_key=tagname)
+        sync = digital.ofdm_sync_sc_cfb(fft_len, cp_len)
+        sink_freq   = blocks.vector_sink_f()
+        sink_detect = blocks.vector_sink_b()
+        noise_level = 0.005
+        channel = channels.channel_model(noise_level, freq_offset / 2 / numpy.pi)
+        self.tb.connect(src, mod, channel, sync, sink_freq)
+        self.tb.connect((sync, 1), sink_detect)
+        self.tb.run()
+        self.assertEqual(numpy.sum(sink_detect.data()), n_bursts)
 
 
 if __name__ == '__main__':

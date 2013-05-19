@@ -25,7 +25,7 @@
 #endif
 
 #include "file_meta_sink_impl.h"
-#include <gr_io_signature.h>
+#include <gnuradio/io_signature.h>
 #include <cstdio>
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -79,9 +79,9 @@ namespace gr {
 					     size_t max_segment_size,
 					     const std::string &extra_dict,
 					     bool detached_header)
-      : gr_sync_block("file_meta_sink",
-		      gr_make_io_signature(1, 1, itemsize),
-		      gr_make_io_signature(0, 0, 0)),
+      : sync_block("file_meta_sink",
+		      io_signature::make(1, 1, itemsize),
+		      io_signature::make(0, 0, 0)),
 	d_itemsize(itemsize),
 	d_samp_rate(samp_rate), d_relative_rate(relative_rate),
 	d_max_seg_size(max_segment_size), d_total_seg_size(0),
@@ -396,10 +396,10 @@ namespace gr {
 
       uint64_t abs_N = nitems_read(0);
       uint64_t end_N = abs_N + (uint64_t)(noutput_items);
-      std::vector<gr_tag_t> all_tags;
+      std::vector<tag_t> all_tags;
       get_tags_in_range(all_tags, 0, abs_N, end_N);
 
-      std::vector<gr_tag_t>::iterator itr;
+      std::vector<tag_t>::iterator itr;
       for(itr = all_tags.begin(); itr != all_tags.end(); itr++) {
 	int item_offset = (int)(itr->offset - abs_N);
 

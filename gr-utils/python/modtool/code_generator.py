@@ -31,14 +31,14 @@ class GRMTemplate(Cheetah.Template.Template):
     """ An extended template class """
     def __init__(self, src, searchList):
         self.grtypelist = {
-                'sync': 'gr_sync_block',
-                'sink': 'gr_sync_block',
-                'source': 'gr_sync_block',
-                'decimator': 'gr_sync_decimator',
-                'interpolator': 'gr_sync_interpolator',
-                'general': 'gr_block',
-                'tagged_stream': 'gr_tagged_stream_block',
-                'hier': 'gr_hier_block2',
+                'sync': 'sync_block',
+                'sink': 'sync_block',
+                'source': 'sync_block',
+                'decimator': 'sync_decimator',
+                'interpolator': 'sync_interpolator',
+                'general': 'block',
+                'tagged_stream': 'tagged_stream_block',
+                'hier': 'hier_block2',
                 'noblock': ''}
         searchList['str_to_fancyc_comment'] = str_to_fancyc_comment
         searchList['str_to_python_comment'] = str_to_python_comment

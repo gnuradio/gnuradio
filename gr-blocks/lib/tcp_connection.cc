@@ -25,8 +25,8 @@
 #endif
 
 #include "tcp_connection.h"
-#include <gr_basic_block.h>
-#include <blocks/pdu.h>
+#include <gnuradio/basic_block.h>
+#include <gnuradio/blocks/pdu.h>
 
 namespace gr {
   namespace blocks {
@@ -55,7 +55,7 @@ namespace gr {
     }
 
     void
-    tcp_connection::start(gr_basic_block *block)
+    tcp_connection::start(gr::basic_block *block)
     {
       d_block = block;
       d_socket.async_read_some(boost::asio::buffer(d_buf),

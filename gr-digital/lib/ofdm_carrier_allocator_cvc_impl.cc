@@ -24,7 +24,7 @@
 #include "config.h"
 #endif
 
-#include <gr_io_signature.h>
+#include <gnuradio/io_signature.h>
 #include "ofdm_carrier_allocator_cvc_impl.h"
 
 namespace gr {
@@ -62,9 +62,9 @@ namespace gr {
 	  const std::vector<std::vector<gr_complex> > &sync_words,
 	  const std::string &len_tag_key,
 	  const bool output_is_shifted
-    ) : gr_tagged_stream_block("ofdm_carrier_allocator_cvc",
-		   gr_make_io_signature(1, 1, sizeof (gr_complex)),
-		   gr_make_io_signature(1, 1, sizeof (gr_complex) * fft_len), len_tag_key),
+    ) : tagged_stream_block("ofdm_carrier_allocator_cvc",
+		   io_signature::make(1, 1, sizeof (gr_complex)),
+		   io_signature::make(1, 1, sizeof (gr_complex) * fft_len), len_tag_key),
 	d_fft_len(fft_len),
 	d_occupied_carriers(occupied_carriers),
 	d_pilot_carriers(pilot_carriers),
@@ -140,7 +140,7 @@ namespace gr {
     {
       const gr_complex *in = (const gr_complex *) input_items[0];
       gr_complex *out = (gr_complex *) output_items[0];
-      std::vector<gr_tag_t> tags;
+      std::vector<tag_t> tags;
 
       memset((void *) out, 0x00, sizeof(gr_complex) * d_fft_len * noutput_items);
       // Copy Sync word

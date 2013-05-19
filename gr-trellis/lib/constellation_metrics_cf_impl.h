@@ -23,8 +23,8 @@
 #ifndef INCLUDED_TRELLIS_CONSTELLATION_METRICS_CF_IMPL_H
 #define INCLUDED_TRELLIS_CONSTELLATION_METRICS_CF_IMPL_H
 
-#include <trellis/api.h>
-#include <trellis/constellation_metrics_cf.h>
+#include <gnuradio/trellis/api.h>
+#include <gnuradio/trellis/constellation_metrics_cf.h>
 
 namespace gr {
   namespace trellis {

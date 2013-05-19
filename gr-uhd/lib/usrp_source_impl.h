@@ -20,7 +20,7 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include <uhd/usrp_source.h>
+#include <gnuradio/uhd/usrp_source.h>
 #include <uhd/convert.hpp>
 
 static const pmt::pmt_t TIME_KEY = pmt::string_to_symbol("rx_time");
@@ -30,7 +30,7 @@ static const pmt::pmt_t FREQ_KEY = pmt::string_to_symbol("rx_freq");
 namespace gr {
   namespace uhd {
 
-    inline gr_io_signature_sptr
+    inline io_signature::sptr
     args_to_io_sig(const ::uhd::stream_args_t &args)
     {
       const size_t nchan = std::max<size_t>(args.channels.size(), 1);
@@ -43,7 +43,7 @@ namespace gr {
       if(args.cpu_format == "sc16")
         size = 4;
 #endif
-      return gr_make_io_signature(nchan, nchan, size);
+      return io_signature::make(nchan, nchan, size);
     }
 
     /***********************************************************************

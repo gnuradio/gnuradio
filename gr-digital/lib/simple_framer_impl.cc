@@ -25,8 +25,8 @@
 #endif
 
 #include "simple_framer_impl.h"
-#include <digital/simple_framer_sync.h>
-#include <gr_io_signature.h>
+#include <gnuradio/digital/simple_framer_sync.h>
+#include <gnuradio/io_signature.h>
 #include <assert.h>
 #include <string>
 
@@ -41,9 +41,9 @@ namespace gr {
     }
 
     simple_framer_impl::simple_framer_impl(int payload_bytesize)
-      : gr_block("simple_framer",
-		 gr_make_io_signature(1, 1, sizeof(unsigned char)),
-		 gr_make_io_signature(1, 1, sizeof(unsigned char))),
+      : block("simple_framer",
+		 io_signature::make(1, 1, sizeof(unsigned char)),
+		 io_signature::make(1, 1, sizeof(unsigned char))),
 	d_seqno (0), d_payload_bytesize (payload_bytesize),
 	d_input_block_size (payload_bytesize),
 	d_output_block_size (payload_bytesize + GRSF_OVERHEAD)

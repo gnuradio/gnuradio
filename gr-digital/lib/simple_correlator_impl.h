@@ -23,7 +23,7 @@
 #ifndef INCLUDED_GR_SIMPLE_CORRELATOR_IMPL_H
 #define INCLUDED_GR_SIMPLE_CORRELATOR_IMPL_H
 
-#include <digital/simple_correlator.h>
+#include <gnuradio/digital/simple_correlator.h>
 
 //#define	DEBUG_SIMPLE_CORRELATOR
 

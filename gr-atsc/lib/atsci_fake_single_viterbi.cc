@@ -21,7 +21,7 @@
  */
 
 #include <math.h>
-#include <atsc/fake_single_viterbi_impl.h>
+#include <gnuradio/atsc/fake_single_viterbi_impl.h>
 #include <iostream>
 #include <algorithm>
 

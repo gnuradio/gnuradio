@@ -21,9 +21,9 @@
  */
 
 #include <qa_firdes.h>
-#include <filter/firdes.h>
+#include <gnuradio/filter/firdes.h>
 #include <cppunit/TestAssert.h>
-#include <gr_complex.h>
+#include <gnuradio/gr_complex.h>
 #include <string.h>
 #include <iostream>
 #include <iomanip>

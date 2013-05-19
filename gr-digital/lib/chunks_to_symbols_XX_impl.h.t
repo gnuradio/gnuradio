@@ -25,7 +25,7 @@
 #ifndef @GUARD_NAME@
 #define @GUARD_NAME@
 
-#include <digital/@BASE_NAME@.h>
+#include <gnuradio/digital/@BASE_NAME@.h>
 
 namespace gr {
   namespace digital {

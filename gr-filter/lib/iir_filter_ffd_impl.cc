@@ -25,7 +25,7 @@
 #endif
 
 #include "iir_filter_ffd_impl.h"
-#include <gr_io_signature.h>
+#include <gnuradio/io_signature.h>
 
 namespace gr {
   namespace filter {
@@ -43,9 +43,9 @@ namespace gr {
 					     const std::vector<double> &fbtaps,
 					     bool oldstyle)
 
-      : gr_sync_block("iir_filter_ffd",
-		      gr_make_io_signature(1, 1, sizeof (float)),
-		      gr_make_io_signature(1, 1, sizeof (float))),
+      : sync_block("iir_filter_ffd",
+		      io_signature::make(1, 1, sizeof (float)),
+		      io_signature::make(1, 1, sizeof (float))),
 	d_updated(false)
     {
       d_iir = new kernel::iir_filter<float,float,double>(fftaps, fbtaps, oldstyle);

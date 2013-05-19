@@ -23,7 +23,7 @@
 #ifndef INCLUDED_DIGITAL_BINARY_SLICER_FB_IMPL_H
 #define INCLUDED_DIGITAL_BINARY_SLICER_FB_IMPL_H
 
-#include <digital/binary_slicer_fb.h>
+#include <gnuradio/digital/binary_slicer_fb.h>
 
 namespace gr {
   namespace digital {

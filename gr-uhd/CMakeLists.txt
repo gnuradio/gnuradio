@@ -92,7 +92,7 @@ CPACK_COMPONENT("uhd_swig"
 ########################################################################
 # Add subdirectories
 ########################################################################
-add_subdirectory(include/uhd)
+add_subdirectory(include/gnuradio/uhd)
 add_subdirectory(lib)
 add_subdirectory(doc)
 add_subdirectory(examples/c++)

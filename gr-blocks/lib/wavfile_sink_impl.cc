@@ -25,14 +25,14 @@
 #endif
 
 #include "wavfile_sink_impl.h"
-#include <blocks/wavfile.h>
-#include <gr_io_signature.h>
+#include <gnuradio/blocks/wavfile.h>
+#include <gnuradio/io_signature.h>
 #include <stdexcept>
 #include <climits>
 #include <cstring>
 #include <cmath>
 #include <fcntl.h>
-#include <thread/thread.h>
+#include <gnuradio/thread/thread.h>
 #include <boost/math/special_functions/round.hpp>
 
 // win32 (mingw/msvc) specific
@@ -70,9 +70,9 @@ namespace gr {
 					 int n_channels,
 					 unsigned int sample_rate,
 					 int bits_per_sample)
-      : gr_sync_block("wavfile_sink",
-		      gr_make_io_signature(1, n_channels, sizeof(float)),
-		      gr_make_io_signature(0, 0, 0)),
+      : sync_block("wavfile_sink",
+		      io_signature::make(1, n_channels, sizeof(float)),
+		      io_signature::make(0, 0, 0)),
 	d_sample_rate(sample_rate), d_nchans(n_channels),
 	d_fp(0), d_new_fp(0), d_updated(false)
     {

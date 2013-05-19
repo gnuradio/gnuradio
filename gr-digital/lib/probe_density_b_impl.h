@@ -21,7 +21,7 @@
 #ifndef INCLUDED_GR_PROBE_DENSITY_B_IMPL_H
 #define INCLUDED_GR_PROBE_DENSITY_B_IMPL_H
 
-#include <digital/probe_density_b.h>
+#include <gnuradio/digital/probe_density_b.h>
 
 namespace gr {
   namespace digital {

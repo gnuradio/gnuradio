@@ -25,7 +25,7 @@
 #endif
 
 #include "probe_avg_mag_sqrd_cf_impl.h"
-#include <gr_io_signature.h>
+#include <gnuradio/io_signature.h>
 #include <cmath>
 
 namespace gr {
@@ -39,9 +39,9 @@ namespace gr {
     }
 
     probe_avg_mag_sqrd_cf_impl::probe_avg_mag_sqrd_cf_impl(double threshold_db, double alpha)
-      : gr_sync_block("probe_avg_mag_sqrd_cf",
-		      gr_make_io_signature(1, 1, sizeof(gr_complex)),
-		      gr_make_io_signature(1, 1, sizeof(float))),
+      : sync_block("probe_avg_mag_sqrd_cf",
+		      io_signature::make(1, 1, sizeof(gr_complex)),
+		      io_signature::make(1, 1, sizeof(float))),
 	d_unmuted(false), d_level(0), d_iir(alpha)
     {
       set_threshold(threshold_db);

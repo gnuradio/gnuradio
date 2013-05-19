@@ -25,11 +25,11 @@
 #endif
 
 #include "udp_sink_impl.h"
-#include <gr_io_signature.h>
+#include <gnuradio/io_signature.h>
 #include <boost/array.hpp>
 #include <boost/asio.hpp>
 #include <boost/format.hpp>
-#include <thread/thread.h>
+#include <gnuradio/thread/thread.h>
 #include <stdexcept>
 #include <stdio.h>
 #include <string.h>
@@ -50,9 +50,9 @@ namespace gr {
     udp_sink_impl::udp_sink_impl(size_t itemsize,
                                  const std::string &host, int port,
                                  int payload_size, bool eof)
-      : gr_sync_block("udp_sink",
-                      gr_make_io_signature(1, 1, itemsize),
-                      gr_make_io_signature(0, 0, 0)),
+      : sync_block("udp_sink",
+                      io_signature::make(1, 1, itemsize),
+                      io_signature::make(0, 0, 0)),
         d_itemsize(itemsize), d_payload_size(payload_size), d_eof(eof),
         d_connected(false)
     {

@@ -25,9 +25,9 @@
 #ifndef @GUARD_NAME@
 #define @GUARD_NAME@
 
-#include <analog/@BASE_NAME@.h>
-#include <gr_sync_block.h>
-#include <gr_fxpt_nco.h>
+#include <gnuradio/analog/@BASE_NAME@.h>
+#include <gnuradio/sync_block.h>
+#include <gnuradio/fxpt_nco.h>
 
 namespace gr {
   namespace analog {
@@ -40,7 +40,7 @@ namespace gr {
       double		d_frequency;
       double		d_ampl;
       @TYPE@		d_offset;
-      gr_fxpt_nco	d_nco;
+      gr::fxpt_nco	d_nco;
 
     public:
       @IMPL_NAME@(double sampling_freq, gr_waveform_t waveform,

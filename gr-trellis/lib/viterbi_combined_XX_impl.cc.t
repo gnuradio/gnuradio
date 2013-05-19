@@ -27,7 +27,7 @@
 #endif
 
 #include "@NAME@.h"
-#include <gr_io_signature.h>
+#include <gnuradio/io_signature.h>
 #include <iostream>
 
 namespace gr {
@@ -49,9 +49,9 @@ namespace gr {
 			     int S0, int SK, int D,
 			     const std::vector<@I_TYPE@> &TABLE,
 			     digital::trellis_metric_type_t TYPE)
-    : gr_block("@BASE_NAME@",
-	       gr_make_io_signature(1, -1, sizeof(@I_TYPE@)),
-	       gr_make_io_signature(1, -1, sizeof(@O_TYPE@))),
+    : block("@BASE_NAME@",
+	       io_signature::make(1, -1, sizeof(@I_TYPE@)),
+	       io_signature::make(1, -1, sizeof(@O_TYPE@))),
       d_FSM(FSM), d_K(K), d_S0(S0), d_SK(SK), d_D(D),
       d_TABLE(TABLE), d_TYPE(TYPE)//,
       //d_trace(FSM.S()*K)

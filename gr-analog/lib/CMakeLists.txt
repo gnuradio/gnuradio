@@ -158,6 +158,7 @@ ENDIF(MSVC)
 list(APPEND analog_libs
     volk
     gnuradio-runtime
+    gnuradio-blocks
     gnuradio-filter
     ${Boost_LIBRARIES}
 )

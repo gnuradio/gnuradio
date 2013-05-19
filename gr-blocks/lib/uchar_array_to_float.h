@@ -23,7 +23,7 @@
 #ifndef INCLUDED_UCHAR_ARRAY_TO_FLOAT_H
 #define INCLUDED_UCHAR_ARRAY_TO_FLOAT_H
 
-#include <blocks/api.h>
+#include <gnuradio/blocks/api.h>
 
 /*
  * convert array of unsigned chars to floats

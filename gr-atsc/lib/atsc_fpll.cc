@@ -24,12 +24,12 @@
 #include <config.h>
 #endif
 
-#include <atsc/fpll.h>
-#include <gr_io_signature.h>
-#include <atsc/consts.h>
+#include <gnuradio/atsc/fpll.h>
+#include <gnuradio/io_signature.h>
+#include <gnuradio/atsc/consts.h>
 #include <algorithm>
 #include "fpll_btloop_coupling.h"
-#include <gr_math.h>
+#include <gnuradio/math.h>
 
 atsc_fpll_sptr
 atsc_make_fpll()
@@ -51,9 +51,9 @@ static const float FPLL_AGC_RATE = 0.25e-6;
 
 
 atsc_fpll::atsc_fpll()
-  : gr_sync_block("atsc_fpll",
-		  gr_make_io_signature(1, 1, sizeof(float)),
-		  gr_make_io_signature(1, 1, sizeof(float))),
+  : gr::sync_block("atsc_fpll",
+		  gr::io_signature::make(1, 1, sizeof(float)),
+		  gr::io_signature::make(1, 1, sizeof(float))),
 		  initial_phase(0)
 {
   initial_freq = 5.75e6 - 3e6 + 0.31e6 + 5e3; // a_initial_freq;
@@ -107,7 +107,7 @@ atsc_fpll::work (int noutput_items,
     // phase detector
 
     // float x = atan2 (filtered_Q, filtered_I);
-    float x = gr_fast_atan2f(filtered_Q, filtered_I);
+    float x = gr::fast_atan2f(filtered_Q, filtered_I);
 
     // avoid slamming filter with big transitions
 

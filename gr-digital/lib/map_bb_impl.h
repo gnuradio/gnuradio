@@ -23,8 +23,8 @@
 #ifndef INCLUDED_GR_MAP_BB_IMPL_H
 #define INCLUDED_GR_MAP_BB_IMPL_H
 
-#include <digital/map_bb.h>
-#include <thread/thread.h>
+#include <gnuradio/digital/map_bb.h>
+#include <gnuradio/thread/thread.h>
 
 namespace gr {
   namespace digital {

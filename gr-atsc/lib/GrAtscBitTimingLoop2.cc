@@ -20,9 +20,9 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include <atsc/GrAtscBitTimingLoop2.h>
+#include <gnuradio/atsc/GrAtscBitTimingLoop2.h>
 #include <algorithm>
-#include <atsc/consts.h>
+#include <gnuradio/atsc/consts.h>
 #include <stdio.h>
 #include <assert.h>
 

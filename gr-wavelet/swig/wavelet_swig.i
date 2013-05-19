@@ -28,14 +28,14 @@
 %include "wavelet_swig_doc.i"
 
 %{
-#include "wavelet/squash_ff.h"
-#include "wavelet/wavelet_ff.h"
-#include "wavelet/wvps_ff.h"
+#include "gnuradio/wavelet/squash_ff.h"
+#include "gnuradio/wavelet/wavelet_ff.h"
+#include "gnuradio/wavelet/wvps_ff.h"
 %}
 
-%include "wavelet/squash_ff.h"
-%include "wavelet/wavelet_ff.h"
-%include "wavelet/wvps_ff.h"
+%include "gnuradio/wavelet/squash_ff.h"
+%include "gnuradio/wavelet/wavelet_ff.h"
+%include "gnuradio/wavelet/wvps_ff.h"
 
 GR_SWIG_BLOCK_MAGIC2(wavelet, squash_ff);
 GR_SWIG_BLOCK_MAGIC2(wavelet, wavelet_ff);

@@ -23,7 +23,7 @@
 #ifndef INCLUDED_GR_ENDIAN_SWAP_IMPL_H
 #define INCLUDED_GR_ENDIAN_SWAP_IMPL_H
 
-#include <blocks/endian_swap.h>
+#include <gnuradio/blocks/endian_swap.h>
 
 namespace gr {
   namespace blocks {

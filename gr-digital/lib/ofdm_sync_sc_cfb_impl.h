@@ -23,7 +23,7 @@
 #ifndef INCLUDED_DIGITAL_OFDM_SYNC_SC_CFB_IMPL_H
 #define INCLUDED_DIGITAL_OFDM_SYNC_SC_CFB_IMPL_H
 
-#include <digital/ofdm_sync_sc_cfb.h>
+#include <gnuradio/digital/ofdm_sync_sc_cfb.h>
 
 namespace gr {
   namespace digital {
@@ -31,7 +31,7 @@ namespace gr {
     class ofdm_sync_sc_cfb_impl : public ofdm_sync_sc_cfb
     {
      public:
-      ofdm_sync_sc_cfb_impl(int fft_len, int cp_len);
+      ofdm_sync_sc_cfb_impl(int fft_len, int cp_len, bool use_even_carriers);
       ~ofdm_sync_sc_cfb_impl();
     };
 

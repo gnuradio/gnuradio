@@ -84,7 +84,7 @@ CPACK_COMPONENT("fft_swig"
 ########################################################################
 # Add subdirectories
 ########################################################################
-add_subdirectory(include/fft)
+add_subdirectory(include/gnuradio/fft)
 add_subdirectory(lib)
 if(ENABLE_PYTHON)
     add_subdirectory(swig)

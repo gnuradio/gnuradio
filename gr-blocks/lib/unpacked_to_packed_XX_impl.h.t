@@ -25,7 +25,7 @@
 #ifndef @GUARD_NAME_IMPL@
 #define @GUARD_NAME_IMPL@
 
-#include <blocks/@NAME@.h>
+#include <gnuradio/blocks/@NAME@.h>
 
 namespace gr {
   namespace blocks {
@@ -34,12 +34,12 @@ namespace gr {
     {
     private:
       unsigned int    d_bits_per_chunk;
-      gr_endianness_t d_endianness;
+      endianness_t d_endianness;
       unsigned int    d_index;
 
     public:
       @NAME_IMPL@(unsigned int bits_per_chunk,
-                  gr_endianness_t endianness);
+                  endianness_t endianness);
       ~@NAME_IMPL@();
 
       void forecast(int noutput_items,

@@ -23,7 +23,7 @@
 #ifndef INCLUDED_FEC_ENCODE_CCSDS_27_BB_IMPL_H
 #define INCLUDED_FEC_ENCODE_CCSDS_27_BB_IMPL_H
 
-#include <fec/encode_ccsds_27_bb.h>
+#include <gnuradio/fec/encode_ccsds_27_bb.h>
 
 namespace gr {
   namespace fec {

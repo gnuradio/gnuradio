@@ -24,7 +24,7 @@
 #include "config.h"
 #endif
 
-#include <blocks/pdu.h>
+#include <gnuradio/blocks/pdu.h>
 
 namespace gr {
   namespace blocks {

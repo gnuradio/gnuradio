@@ -22,7 +22,7 @@
 #ifndef INCLUDED_PMT_API_H
 #define INCLUDED_PMT_API_H
 
-#include <attributes.h>
+#include <gnuradio/attributes.h>
 
 #ifdef gnuradio_pmt_EXPORTS
 #  define PMT_API __GR_ATTR_EXPORT

@@ -47,4 +47,4 @@ from tag_utils import *
 from gateway import basic_block, sync_block, decim_block, interp_block
 
 # Force the preference database to be initialized
-prefs = gr_prefs.singleton
+prefs = prefs.singleton

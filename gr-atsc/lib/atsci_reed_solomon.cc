@@ -20,12 +20,12 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include <atsc/reed_solomon_impl.h>
+#include <gnuradio/atsc/reed_solomon_impl.h>
 #include <assert.h>
 #include <string.h>
 
 extern "C" {
-#include <fec/rs.h>
+#include <gnuradio/fec/rs.h>
 }
 
 static const int rs_init_symsize =     8;

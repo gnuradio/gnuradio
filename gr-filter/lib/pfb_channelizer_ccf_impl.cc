@@ -25,7 +25,7 @@
 #endif
 
 #include "pfb_channelizer_ccf_impl.h"
-#include <gr_io_signature.h>
+#include <gnuradio/io_signature.h>
 
 namespace gr {
   namespace filter {
@@ -41,9 +41,9 @@ namespace gr {
     pfb_channelizer_ccf_impl::pfb_channelizer_ccf_impl(unsigned int nfilts,
 						       const std::vector<float> &taps,
 						       float oversample_rate)
-      : gr_block("pfb_channelizer_ccf",
-		 gr_make_io_signature(nfilts, nfilts, sizeof(gr_complex)),
-		 gr_make_io_signature(1, nfilts, sizeof(gr_complex))),
+      : block("pfb_channelizer_ccf",
+		 io_signature::make(nfilts, nfilts, sizeof(gr_complex)),
+		 io_signature::make(1, nfilts, sizeof(gr_complex))),
 	polyphase_filterbank(nfilts, taps),
 	d_updated(false), d_oversample_rate(oversample_rate)
     {

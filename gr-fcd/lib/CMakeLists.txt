@@ -51,7 +51,7 @@ link_directories(${LOG4CPP_LIBRARY_DIRS})
 # Setup library
 ########################################################################
 list(APPEND gr_fcd_sources
-    fcd_source_c_impl.cc
+    source_c_impl.cc
 )
 
 list(APPEND fcd_libs

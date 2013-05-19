@@ -23,14 +23,14 @@
 #ifndef INCLUDED_CHANNELS_CHANNEL_MODEL_IMPL_H
 #define INCLUDED_CHANNELS_CHANNEL_MODEL_IMPL_H
 
-#include <gr_top_block.h>
-#include <blocks/add_cc.h>
-#include <blocks/multiply_cc.h>
-#include <analog/sig_source_c.h>
-#include <analog/fastnoise_source_c.h>
-#include <channels/channel_model.h>
-#include <filter/fractional_interpolator_cc.h>
-#include <filter/fir_filter_ccc.h>
+#include <gnuradio/top_block.h>
+#include <gnuradio/blocks/add_cc.h>
+#include <gnuradio/blocks/multiply_cc.h>
+#include <gnuradio/analog/sig_source_c.h>
+#include <gnuradio/analog/fastnoise_source_c.h>
+#include <gnuradio/channels/channel_model.h>
+#include <gnuradio/filter/fractional_interpolator_cc.h>
+#include <gnuradio/filter/fir_filter_ccc.h>
 
 namespace gr {
   namespace channels {

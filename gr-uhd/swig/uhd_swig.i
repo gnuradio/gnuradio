@@ -41,9 +41,9 @@
 // block headers
 ////////////////////////////////////////////////////////////////////////
 %{
-#include <uhd/usrp_source.h>
-#include <uhd/usrp_sink.h>
-#include <uhd/amsg_source.h>
+#include <gnuradio/uhd/usrp_source.h>
+#include <gnuradio/uhd/usrp_sink.h>
+#include <gnuradio/uhd/amsg_source.h>
 %}
 
 ////////////////////////////////////////////////////////////////////////
@@ -83,6 +83,9 @@
 
 %include <uhd/types/sensors.hpp>
 
+// Prevents issue with vector<size_t> redef on 32-bit systems
+%import <uhd/stream.hpp>
+
 ////////////////////////////////////////////////////////////////////////
 // swig dboard_iface for python access
 ////////////////////////////////////////////////////////////////////////
@@ -95,9 +98,9 @@
 ////////////////////////////////////////////////////////////////////////
 // block magic
 ////////////////////////////////////////////////////////////////////////
-%include <uhd/usrp_source.h>
-%include <uhd/usrp_sink.h>
-%include <uhd/amsg_source.h>
+%include <gnuradio/uhd/usrp_source.h>
+%include <gnuradio/uhd/usrp_sink.h>
+%include <gnuradio/uhd/amsg_source.h>
 
 GR_SWIG_BLOCK_MAGIC2(uhd, usrp_source)
 GR_SWIG_BLOCK_MAGIC2(uhd, usrp_sink)

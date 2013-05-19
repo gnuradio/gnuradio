@@ -25,7 +25,7 @@
 #endif
 
 #include "pfb_interpolator_ccf_impl.h"
-#include <gr_io_signature.h>
+#include <gnuradio/io_signature.h>
 
 namespace gr {
   namespace filter {
@@ -41,9 +41,9 @@ namespace gr {
 
     pfb_interpolator_ccf_impl::pfb_interpolator_ccf_impl(unsigned int interp,
 							 const std::vector<float> &taps)
-      : gr_sync_interpolator("pfb_interpolator_ccf",
-			     gr_make_io_signature(1, 1, sizeof(gr_complex)),
-			     gr_make_io_signature(1, 1, sizeof(gr_complex)),
+      : sync_interpolator("pfb_interpolator_ccf",
+			     io_signature::make(1, 1, sizeof(gr_complex)),
+			     io_signature::make(1, 1, sizeof(gr_complex)),
 			     interp),
 	polyphase_filterbank(interp, taps),
 	d_updated (false), d_rate(interp)

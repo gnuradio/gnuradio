@@ -20,7 +20,7 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include <atsc/GrAtscViterbiDecoder.h>
+#include <gnuradio/atsc/GrAtscViterbiDecoder.h>
 #include <iostream>
 
 // typedefs for fundamental i/o types

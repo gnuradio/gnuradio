@@ -23,7 +23,7 @@
 #ifndef INCLUDED_ANALOG_PHASE_MODULATOR_FC_IMPL_H
 #define INCLUDED_ANALOG_PHASE_MODULATOR_FC_IMPL_H
 
-#include <analog/phase_modulator_fc.h>
+#include <gnuradio/analog/phase_modulator_fc.h>
 
 namespace gr {
   namespace analog {

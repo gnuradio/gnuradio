@@ -24,11 +24,11 @@
 #include <config.h>
 #endif
 
-#include <atsc/equalizer.h>
-#include <atsc/create_atsci_equalizer.h>
-#include <gr_io_signature.h>
-#include <atsc/consts.h>
-#include <atsc/syminfo_impl.h>
+#include <gnuradio/atsc/equalizer.h>
+#include <gnuradio/atsc/create_atsci_equalizer.h>
+#include <gnuradio/io_signature.h>
+#include <gnuradio/atsc/consts.h>
+#include <gnuradio/atsc/syminfo_impl.h>
 
 
 atsc_equalizer_sptr
@@ -39,9 +39,9 @@ atsc_make_equalizer()
 
 // had atsc_equalizer(atsci_equalizer *equalizer)
 atsc_equalizer::atsc_equalizer()
-  : gr_sync_block("atsc_equalizer",
-		  gr_make_io_signature(2, 2, sizeof(float)),
-		  gr_make_io_signature(2, 2, sizeof(float)))
+  : gr::sync_block("atsc_equalizer",
+		  gr::io_signature::make(2, 2, sizeof(float)),
+		  gr::io_signature::make(2, 2, sizeof(float)))
 {
   d_equalizer = create_atsci_equalizer_lms();
 }

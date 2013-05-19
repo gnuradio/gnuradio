@@ -23,7 +23,7 @@
 #ifndef INCLUDED_NOAA_HRPT_DEFRAMER_IMPL_H
 #define INCLUDED_NOAA_HRPT_DEFRAMER_IMPL_H
 
-#include <noaa/hrpt_deframer.h>
+#include <gnuradio/noaa/hrpt_deframer.h>
 
 namespace gr {
   namespace noaa {

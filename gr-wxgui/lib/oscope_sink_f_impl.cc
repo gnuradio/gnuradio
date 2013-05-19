@@ -25,23 +25,23 @@
 #endif
 
 #include "oscope_sink_f_impl.h"
-#include <wxgui/oscope_sink_x.h>
-#include <wxgui/oscope_guts.h>
-#include <gr_io_signature.h>
+#include <gnuradio/wxgui/oscope_sink_x.h>
+#include <gnuradio/wxgui/oscope_guts.h>
+#include <gnuradio/io_signature.h>
 
 namespace gr {
   namespace wxgui {
 
     oscope_sink_f::sptr
-    oscope_sink_f::make(double sampling_rate, gr_msg_queue_sptr msgq)
+    oscope_sink_f::make(double sampling_rate, msg_queue::sptr msgq)
     {
       return gnuradio::get_initial_sptr
         (new oscope_sink_f_impl(sampling_rate, msgq));
     }
 
-    oscope_sink_f_impl::oscope_sink_f_impl(double sampling_rate, gr_msg_queue_sptr msgq)
+    oscope_sink_f_impl::oscope_sink_f_impl(double sampling_rate, msg_queue::sptr msgq)
       : oscope_sink_x("oscope_sink_f",
-                      gr_make_io_signature(1, oscope_guts::MAX_CHANNELS,
+                      io_signature::make(1, oscope_guts::MAX_CHANNELS,
                                            sizeof(float)),
                       sampling_rate),
         d_msgq(msgq)

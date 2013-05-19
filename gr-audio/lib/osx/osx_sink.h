@@ -23,7 +23,7 @@
 #ifndef INCLUDED_AUDIO_OSX_SINK_H
 #define INCLUDED_AUDIO_OSX_SINK_H
 
-#include <audio/sink.h>
+#include <gnuradio/audio/sink.h>
 #include <string>
 #include <list>
 #include <AudioUnit/AudioUnit.h>

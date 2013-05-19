@@ -25,7 +25,7 @@
 #endif
 
 #include "rms_cf_impl.h"
-#include <gr_io_signature.h>
+#include <gnuradio/io_signature.h>
 #include <cmath>
 
 namespace gr {
@@ -39,9 +39,9 @@ namespace gr {
     }
 
     rms_cf_impl::rms_cf_impl(double alpha)
-      : gr_sync_block("rms_cf",
-                      gr_make_io_signature(1, 1, sizeof(gr_complex)),
-                      gr_make_io_signature(1, 1, sizeof(float)))
+      : sync_block("rms_cf",
+                      io_signature::make(1, 1, sizeof(gr_complex)),
+                      io_signature::make(1, 1, sizeof(float)))
     {
       set_alpha(alpha);
     }

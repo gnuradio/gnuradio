@@ -23,8 +23,8 @@
 #ifndef INCLUDED_GR_MESSAGE_BURST_SOURCE_IMPL_H
 #define INCLUDED_GR_MESSAGE_BURST_SOURCE_IMPL_H
 
-#include <blocks/message_burst_source.h>
-#include <gr_message.h>
+#include <gnuradio/blocks/message_burst_source.h>
+#include <gnuradio/message.h>
 
 namespace gr {
   namespace blocks {
@@ -33,8 +33,8 @@ namespace gr {
     {
     private:
       size_t	 	d_itemsize;
-      gr_msg_queue_sptr	d_msgq;
-      gr_message_sptr	d_msg;
+      msg_queue::sptr	d_msgq;
+      message::sptr	d_msg;
       unsigned		d_msg_offset;
       bool		d_eof;
 
@@ -42,10 +42,10 @@ namespace gr {
 
     public:
       message_burst_source_impl(size_t itemsize, int msgq_limit);
-      message_burst_source_impl(size_t itemsize, gr_msg_queue_sptr msgq);
+      message_burst_source_impl(size_t itemsize, msg_queue::sptr msgq);
       ~message_burst_source_impl();
 
-      gr_msg_queue_sptr msgq() const { return d_msgq; }
+      msg_queue::sptr msgq() const { return d_msgq; }
 
       int work(int noutput_items,
                gr_vector_const_void_star &input_items,

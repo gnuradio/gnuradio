@@ -25,9 +25,9 @@
 #endif
 
 #include "ofdm_frame_sink_impl.h"
-#include <gr_io_signature.h>
-#include <gr_expj.h>
-#include <gr_math.h>
+#include <gnuradio/io_signature.h>
+#include <gnuradio/expj.h>
+#include <gnuradio/math.h>
 #include <cmath>
 #include <cstdio>
 #include <stdexcept>
@@ -186,7 +186,7 @@ namespace gr {
     ofdm_frame_sink::sptr
     ofdm_frame_sink::make(const std::vector<gr_complex> &sym_position, 
 			  const std::vector<char> &sym_value_out,
-			  gr_msg_queue_sptr target_queue,
+			  msg_queue::sptr target_queue,
 			  int occupied_carriers,
 			  float phase_gain, float freq_gain)
     {
@@ -198,12 +198,12 @@ namespace gr {
 
     ofdm_frame_sink_impl::ofdm_frame_sink_impl(const std::vector<gr_complex> &sym_position, 
 					       const std::vector<char> &sym_value_out,
-					       gr_msg_queue_sptr target_queue,
+					       msg_queue::sptr target_queue,
 					       int occupied_carriers,
 					       float phase_gain, float freq_gain)
-      : gr_sync_block("ofdm_frame_sink",
-		      gr_make_io_signature2(2, 2, sizeof(gr_complex)*occupied_carriers, sizeof(char)),
-		      gr_make_io_signature(1, 1, sizeof(gr_complex)*occupied_carriers)),
+      : sync_block("ofdm_frame_sink",
+                   io_signature::make2(2, 2, sizeof(gr_complex)*occupied_carriers, sizeof(char)),
+                   io_signature::make(1, 1, sizeof(gr_complex)*occupied_carriers)),
 	d_target_queue(target_queue), d_occupied_carriers(occupied_carriers), 
 	d_byte_offset(0), d_partial_byte(0),
 	d_resid(0), d_nresid(0),d_phase(0),d_freq(0),
@@ -357,8 +357,8 @@ namespace gr {
 	      }
 	  
 	      if(d_packetlen_cnt == d_packetlen) {
-		gr_message_sptr msg =
-		  gr_make_message(0, d_packet_whitener_offset, 0, d_packetlen);
+		message::sptr msg =
+		  message::make(0, d_packet_whitener_offset, 0, d_packetlen);
 		memcpy(msg->msg(), d_packet, d_packetlen_cnt);
 		d_target_queue->insert_tail(msg);		// send it
 		msg.reset();  				// free it up
@@ -389,8 +389,8 @@ namespace gr {
 	  if (d_packetlen_cnt == d_packetlen){		// packet is filled
 	    // build a message
 	    // NOTE: passing header field as arg1 is not scalable
-	    gr_message_sptr msg =
-	      gr_make_message(0, d_packet_whitener_offset, 0, d_packetlen_cnt);
+	    message::sptr msg =
+	      message::make(0, d_packet_whitener_offset, 0, d_packetlen_cnt);
 	    memcpy(msg->msg(), d_packet, d_packetlen_cnt);
 	
 	    d_target_queue->insert_tail(msg);		// send it

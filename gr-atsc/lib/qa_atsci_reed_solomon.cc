@@ -27,7 +27,7 @@
 #include <cppunit/TestAssert.h>
 #include <stdlib.h>
 #include <stdio.h>
-#include <atsc/reed_solomon_impl.h>
+#include <gnuradio/atsc/reed_solomon_impl.h>
 #include "qa_atsci_reed_solomon.h"
 #include <string.h>
 

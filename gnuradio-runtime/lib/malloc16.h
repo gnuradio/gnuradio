@@ -20,7 +20,7 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include <gr_runtime_api.h>
+#include <gnuradio/api.h>
 
 #ifdef __cplusplus
 extern "C" {

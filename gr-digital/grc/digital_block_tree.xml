@@ -87,10 +87,12 @@
     <block>digital_ofdm_frame_equalizer_vcvc</block>
     <block>digital_ofdm_frame_sink</block>
     <block>digital_ofdm_insert_preamble</block>
+    <block>digital_ofdm_rx</block>
     <block>digital_ofdm_sampler</block>
     <block>digital_ofdm_serializer_vcc</block>
     <block>digital_ofdm_sync_pn</block>
     <block>digital_ofdm_sync_sc_cfb</block>
+    <block>digital_ofdm_tx</block>
   </cat>
   <cat>
     <name>Symbol Coding</name>

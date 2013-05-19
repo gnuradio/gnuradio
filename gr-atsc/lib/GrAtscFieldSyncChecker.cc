@@ -20,9 +20,9 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include <atsc/GrAtscFieldSyncChecker.h>
-#include <atsc/create_atsci_fs_checker.h>
-#include <atsc/fs_checker_impl.h>
+#include <gnuradio/atsc/GrAtscFieldSyncChecker.h>
+#include <gnuradio/atsc/create_atsci_fs_checker.h>
+#include <gnuradio/atsc/fs_checker_impl.h>
 
 // typedefs for fundamental i/o types
 

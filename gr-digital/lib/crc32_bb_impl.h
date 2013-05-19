@@ -23,7 +23,7 @@
 #ifndef INCLUDED_DIGITAL_CRC32_BB_IMPL_H
 #define INCLUDED_DIGITAL_CRC32_BB_IMPL_H
 
-#include <digital/crc32_bb.h>
+#include <gnuradio/digital/crc32_bb.h>
 
 namespace gr {
   namespace digital {

@@ -25,9 +25,9 @@
 #endif
 
 #include "simple_correlator_impl.h"
-#include <digital/simple_framer_sync.h>
-#include <gr_io_signature.h>
-#include <blocks/count_bits.h>
+#include <gnuradio/digital/simple_framer_sync.h>
+#include <gnuradio/io_signature.h>
+#include <gnuradio/blocks/count_bits.h>
 #include <assert.h>
 #include <stdexcept>
 #include <string.h>
@@ -46,9 +46,9 @@ namespace gr {
     }
 
     simple_correlator_impl::simple_correlator_impl(int payload_bytesize)
-      : gr_block("simple_correlator",
-                 gr_make_io_signature(1, 1, sizeof(float)),
-                 gr_make_io_signature(1, 1, sizeof(unsigned char))),
+      : block("simple_correlator",
+                 io_signature::make(1, 1, sizeof(float)),
+                 io_signature::make(1, 1, sizeof(unsigned char))),
         d_payload_bytesize(payload_bytesize),
         d_state(ST_LOOKING), d_osi(0),
         d_bblen((payload_bytesize + GRSF_PAYLOAD_OVERHEAD) * GRSF_BITS_PER_BYTE),

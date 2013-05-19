@@ -28,7 +28,7 @@
 #include <config.h>
 #endif
 
-#include <digital/crc32.h>
+#include <gnuradio/digital/crc32.h>
 
 namespace gr {
   namespace digital {

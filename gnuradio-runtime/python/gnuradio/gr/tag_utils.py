@@ -22,7 +22,7 @@
 
 import pmt
 
-from gnuradio.gr import gr_tag_t
+from gnuradio import gr
 
 class PythonTag(object):
     " Python container for tags "
@@ -43,7 +43,7 @@ def tag_to_python(tag):
 
 def tag_to_pmt(tag):
     """ Convert a Python-readable object to a stream tag """
-    newtag = gr_tag_t()
+    newtag = gr.tag_t()
     newtag.offset = tag.offset
     newtag.key = pmt.to_python(tag.key)
     newtag.value = pmt.from_python(tag.value)

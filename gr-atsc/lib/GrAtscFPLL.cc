@@ -20,7 +20,7 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include <atsc/GrAtscFPLL.h>
+#include <gnuradio/atsc/GrAtscFPLL.h>
 #include <algorithm>
 #include "fpll_btloop_coupling.h"
 

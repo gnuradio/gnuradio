@@ -27,7 +27,7 @@
 #include "audio_registry.h"
 #include <osx_sink.h>
 #include <osx_impl.h>
-#include <gr_io_signature.h>
+#include <gnuradio/io_signature.h>
 #include <stdexcept>
 
 namespace gr {
@@ -48,9 +48,9 @@ namespace gr {
                        bool do_block,
                        int channel_config,
                        int max_sample_count)
-      : gr_sync_block("audio_osx_sink",
-                      gr_make_io_signature(0, 0, 0),
-                      gr_make_io_signature(0, 0, 0)),
+      : sync_block("audio_osx_sink",
+                      io_signature::make(0, 0, 0),
+                      io_signature::make(0, 0, 0)),
         d_sample_rate(0.0), d_channel_config(0), d_n_channels(0),
         d_queueSampleCount(0), d_max_sample_count(0),
         d_do_block(do_block), d_internal(0), d_cond_data(0),
@@ -84,7 +84,7 @@ namespace gr {
 
       // set the input signature
 
-      set_input_signature(gr_make_io_signature(1, d_n_channels, sizeof(float)));
+      set_input_signature(io_signature::make(1, d_n_channels, sizeof(float)));
 
       // check that the max # of samples to store is valid
 

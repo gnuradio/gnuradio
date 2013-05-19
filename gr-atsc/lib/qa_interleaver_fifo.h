@@ -26,7 +26,7 @@
 #include <cppunit/extensions/HelperMacros.h>
 #include <cppunit/TestCase.h>
 
-#include <atsc/interleaver_fifo.h>
+#include <gnuradio/atsc/interleaver_fifo.h>
 
 class qa_interleaver_fifo : public CppUnit::TestCase {
  private:

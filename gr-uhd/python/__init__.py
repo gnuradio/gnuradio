@@ -20,9 +20,9 @@
 #
 
 '''
-This is the GNU Radio UHD package. It is the interface to the UHD
-library to connect to and send and receive data between the Ettus
-Research, LLC product line.
+Provides source and sink blocks to interface with the UHD library.
+Used to send and receive data between the Ettus Research, LLC product
+line.
 '''
 
 ########################################################################

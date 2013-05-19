@@ -7,7 +7,7 @@
  */
 #define DTYPE unsigned char
 
-#include <fec/api.h>
+#include <gnuradio/fec/api.h>
 
 static inline int mod255(int x){
   while (x >= 255) {

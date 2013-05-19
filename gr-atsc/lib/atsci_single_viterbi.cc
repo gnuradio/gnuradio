@@ -21,7 +21,7 @@
  */
 
 #include <math.h>
-#include <atsc/single_viterbi_impl.h>
+#include <gnuradio/atsc/single_viterbi_impl.h>
 #include <iostream>
 
 using std::cerr;

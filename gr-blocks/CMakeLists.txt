@@ -80,7 +80,7 @@ CPACK_COMPONENT("blocks_swig"
 ########################################################################
 # Add subdirectories
 ########################################################################
-add_subdirectory(include/blocks)
+add_subdirectory(include/gnuradio/blocks)
 add_subdirectory(lib)
 #if(ENABLE_TESTING)
 #  add_subdirectory(tests)

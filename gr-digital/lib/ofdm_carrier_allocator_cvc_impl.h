@@ -23,7 +23,7 @@
 #ifndef INCLUDED_DIGITAL_OFDM_CARRIER_ALLOCATOR_CVC_IMPL_H
 #define INCLUDED_DIGITAL_OFDM_CARRIER_ALLOCATOR_CVC_IMPL_H
 
-#include <digital/ofdm_carrier_allocator_cvc.h>
+#include <gnuradio/digital/ofdm_carrier_allocator_cvc.h>
 
 namespace gr {
   namespace digital {

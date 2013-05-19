@@ -26,8 +26,8 @@
 
 #include "audio_registry.h"
 #include <oss_source.h>
-#include <gr_io_signature.h>
-#include <gr_prefs.h>
+#include <gnuradio/io_signature.h>
+#include <gnuradio/prefs.h>
 #include <sys/soundcard.h>
 #include <sys/ioctl.h>
 #include <sys/types.h>
@@ -52,16 +52,16 @@ namespace gr {
     static std::string
     default_device_name()
     {
-      return gr_prefs::singleton()->get_string
+      return prefs::singleton()->get_string
         ("audio_oss", "default_input_device", "/dev/dsp");
     }
 
     oss_source::oss_source(int sampling_rate,
                            const std::string device_name,
                            bool ok_to_block)
-      : gr_sync_block("audio_oss_source",
-                      gr_make_io_signature(0, 0, 0),
-                      gr_make_io_signature(1, 2, sizeof(float))),
+      : sync_block("audio_oss_source",
+                      io_signature::make(0, 0, 0),
+                      io_signature::make(1, 2, sizeof(float))),
         d_sampling_rate(sampling_rate),
         d_device_name(device_name.empty() ? default_device_name() : device_name),
         d_fd(-1), d_buffer(0), d_chunk_size(0)
@@ -73,7 +73,7 @@ namespace gr {
       }
 
       double CHUNK_TIME =
-        std::max(0.001, gr_prefs::singleton()->get_double("audio_oss", "latency", 0.005));
+        std::max(0.001, prefs::singleton()->get_double("audio_oss", "latency", 0.005));
 
       d_chunk_size = (int)(d_sampling_rate * CHUNK_TIME);
       set_output_multiple(d_chunk_size);

@@ -23,7 +23,7 @@
 #ifndef INCLUDED_FLOAT_TO_COMPLEX_IMPL_H
 #define INCLUDED_FLOAT_TO_COMPLEX_IMPL_H
 
-#include <blocks/float_to_complex.h>
+#include <gnuradio/blocks/float_to_complex.h>
 
 namespace gr {
   namespace blocks {

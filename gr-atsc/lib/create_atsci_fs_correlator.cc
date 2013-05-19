@@ -20,8 +20,8 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include <atsc/create_atsci_fs_correlator.h>
-#include <atsc/fs_correlator_naive_impl.h>
+#include <gnuradio/atsc/create_atsci_fs_correlator.h>
+#include <gnuradio/atsc/fs_correlator_naive_impl.h>
 
 atsci_fs_correlator *
 create_atsci_fs_correlator ()

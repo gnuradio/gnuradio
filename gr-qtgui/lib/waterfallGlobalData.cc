@@ -23,7 +23,7 @@
 #ifndef WATERFALL_GLOBAL_DATA_CPP
 #define WATERFALL_GLOBAL_DATA_CPP
 
-#include <qtgui/waterfallGlobalData.h>
+#include <gnuradio/qtgui/waterfallGlobalData.h>
 #include <cstdio>
 
 WaterfallData::WaterfallData(const double minimumFrequency,

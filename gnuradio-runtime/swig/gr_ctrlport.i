@@ -53,14 +53,14 @@ enum KnobType {
 };
 
 %{
-#include <rpcserver_booter_base.h>
-#include <rpcserver_booter_aggregator.h>
-#include <pycallback_object.h>
+#include <gnuradio/rpcserver_booter_base.h>
+#include <gnuradio/rpcserver_booter_aggregator.h>
+#include <gnuradio/pycallback_object.h>
 %}
 
-%include <rpcserver_booter_base.h>
-%include <rpcserver_booter_aggregator.h>
-%include <pycallback_object.h>
+%include <gnuradio/rpcserver_booter_base.h>
+%include <gnuradio/rpcserver_booter_aggregator.h>
+%include <gnuradio/pycallback_object.h>
 
 // Declare this class here but without the nested templated class
 // inside (replaces include of rpcmanager.h)

@@ -27,7 +27,7 @@
 #endif
 
 #include "@NAME@.h"
-#include <gr_io_signature.h>
+#include <gnuradio/io_signature.h>
 #include <iostream>
 
 namespace gr {
@@ -47,9 +47,9 @@ namespace gr {
 			     const fsm &FSMi, int STi,
 			     const interleaver &INTERLEAVER,
 			     int blocklength)
-    : gr_sync_block("@BASE_NAME@",
-		    gr_make_io_signature(1, 1, sizeof(@I_TYPE@)),
-		    gr_make_io_signature(1, 1, sizeof(@O_TYPE@))),
+    : sync_block("@BASE_NAME@",
+		    io_signature::make(1, 1, sizeof(@I_TYPE@)),
+		    io_signature::make(1, 1, sizeof(@O_TYPE@))),
       d_FSMo(FSMo), d_STo(STo),
       d_FSMi(FSMi), d_STi(STi),
       d_INTERLEAVER(INTERLEAVER),

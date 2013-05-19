@@ -23,15 +23,14 @@
 #include "config.h"
 #endif
 
-#include <digital/ofdm_equalizer_base.h>
+#include <gnuradio/digital/ofdm_equalizer_base.h>
 
 namespace gr {
   namespace digital {
 
     // *** Base class ****************************************************
     ofdm_equalizer_base::ofdm_equalizer_base(int fft_len) :
-	    d_fft_len(fft_len),
-	    d_carr_offset(0)
+	    d_fft_len(fft_len)
     {
     }
 
@@ -54,7 +53,7 @@ namespace gr {
 	  d_pilot_carriers(pilot_carriers.size(), std::vector<bool>(fft_len, false)),
 	  d_pilot_symbols(pilot_symbols.size(), std::vector<gr_complex>(fft_len, gr_complex(0, 0))),
 	  d_symbols_skipped(symbols_skipped),
-	  d_pilot_carr_set(symbols_skipped),
+	  d_pilot_carr_set(pilot_carriers.empty() ? 0 : symbols_skipped % pilot_carriers.size()),
 	  d_channel_state(fft_len, gr_complex(1, 0))
     {
       int fft_shift_width = 0;
@@ -107,7 +106,7 @@ namespace gr {
     ofdm_equalizer_1d_pilots::reset()
     {
       std::fill(d_channel_state.begin(), d_channel_state.end(), gr_complex(1, 0));
-      d_pilot_carr_set = d_symbols_skipped;
+      d_pilot_carr_set = d_pilot_carriers.empty() ? 0 : d_symbols_skipped % d_pilot_carriers.size();
     }
 
 

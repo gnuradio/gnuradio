@@ -25,10 +25,10 @@
 #endif
 
 #include "const_sink_c_impl.h"
-#include <gr_io_signature.h>
+#include <gnuradio/io_signature.h>
 #include <string.h>
 #include <volk/volk.h>
-#include <fft/fft.h>
+#include <gnuradio/fft/fft.h>
 #include <qwt_symbol.h>
 
 namespace gr {
@@ -48,9 +48,9 @@ namespace gr {
 					 const std::string &name,
 					 int nconnections,
 					 QWidget *parent)
-      : gr_sync_block("const_sink_c",
-		      gr_make_io_signature(nconnections, nconnections, sizeof(gr_complex)),
-		      gr_make_io_signature(0, 0, 0)),
+      : sync_block("const_sink_c",
+		      io_signature::make(nconnections, nconnections, sizeof(gr_complex)),
+		      io_signature::make(0, 0, 0)),
 	d_size(size), d_name(name),
 	d_nconnections(nconnections), d_parent(parent)
     {

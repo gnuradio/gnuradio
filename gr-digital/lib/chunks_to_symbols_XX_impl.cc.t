@@ -27,7 +27,7 @@
 #endif
 
 #include "@NAME@.h"
-#include <gr_io_signature.h>
+#include <gnuradio/io_signature.h>
 #include <assert.h>
 
 namespace gr {
@@ -41,9 +41,9 @@ namespace gr {
     }
 
     @IMPL_NAME@::@IMPL_NAME@(const std::vector<@O_TYPE@> &symbol_table, const int D)
-    : gr_sync_interpolator("@BASE_NAME@",
-			   gr_make_io_signature(1, -1, sizeof(@I_TYPE@)),
-			   gr_make_io_signature(1, -1, sizeof(@O_TYPE@)),
+    : sync_interpolator("@BASE_NAME@",
+			   io_signature::make(1, -1, sizeof(@I_TYPE@)),
+			   io_signature::make(1, -1, sizeof(@O_TYPE@)),
 			   D),
       d_D(D), d_symbol_table(symbol_table)
     {

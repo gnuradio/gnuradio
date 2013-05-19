@@ -25,7 +25,7 @@
 #endif
 
 #include "constellation_decoder_cb_impl.h"
-#include <gr_io_signature.h>
+#include <gnuradio/io_signature.h>
 
 namespace gr {
   namespace digital {
@@ -39,9 +39,9 @@ namespace gr {
 
     constellation_decoder_cb_impl::
     constellation_decoder_cb_impl(constellation_sptr constellation)
-      : gr_block("constellation_decoder_cb",
-		 gr_make_io_signature(1, 1, sizeof(gr_complex)),
-		 gr_make_io_signature(1, 1, sizeof(unsigned char))),
+      : block("constellation_decoder_cb",
+		 io_signature::make(1, 1, sizeof(gr_complex)),
+		 io_signature::make(1, 1, sizeof(unsigned char))),
 	d_constellation(constellation),
 	d_dim(constellation->dimensionality())
     {

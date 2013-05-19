@@ -22,7 +22,7 @@
 #ifndef INCLUDED_AUDIO_JACK_SOURCE_H
 #define INCLUDED_AUDIO_JACK_SOURCE_H
 
-#include <audio/source.h>
+#include <gnuradio/audio/source.h>
 #include <jack/jack.h>
 #include <jack/ringbuffer.h>
 #include <string>

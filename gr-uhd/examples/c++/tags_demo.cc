@@ -19,9 +19,9 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include <gr_top_block.h>
-#include <uhd/usrp_source.h>
-#include <uhd/usrp_sink.h>
+#include <gnuradio/top_block.h>
+#include <gnuradio/uhd/usrp_source.h>
+#include <gnuradio/uhd/usrp_sink.h>
 #include <tag_source_demo.h>
 #include <tag_sink_demo.h>
 #include <boost/make_shared.hpp>
@@ -74,7 +74,7 @@ int main(int argc, char *argv[]){
     //------------------------------------------------------------------
     //-- make a top block
     //------------------------------------------------------------------
-    gr_top_block_sptr tb = gr_make_top_block("tags_demo");
+    gr::top_block_sptr tb = gr::make_top_block("tags_demo");
 
     //------------------------------------------------------------------
     //-- make the usrp source test blocks

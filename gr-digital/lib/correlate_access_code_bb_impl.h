@@ -23,7 +23,7 @@
 #ifndef INCLUDED_DIGITAL_CORRELATE_ACCESS_CODE_BB_IMPL_H
 #define INCLUDED_DIGITAL_CORRELATE_ACCESS_CODE_BB_IMPL_H
 
-#include <digital/correlate_access_code_bb.h>
+#include <gnuradio/digital/correlate_access_code_bb.h>
 
 namespace gr {
   namespace digital {

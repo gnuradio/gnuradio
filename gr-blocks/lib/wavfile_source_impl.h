@@ -23,7 +23,7 @@
 #ifndef INCLUDED_GR_WAVFILE_SOURCE_IMPL_H
 #define INCLUDED_GR_WAVFILE_SOURCE_IMPL_H
 
-#include <blocks/wavfile_source.h>
+#include <gnuradio/blocks/wavfile_source.h>
 #include <cstdio>  // for FILE
 
 namespace gr {

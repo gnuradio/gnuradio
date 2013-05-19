@@ -25,7 +25,7 @@
 #endif
 
 #include "siso_f_impl.h"
-#include <gr_io_signature.h>
+#include <gnuradio/io_signature.h>
 #include <stdexcept>
 #include <assert.h>
 #include <iostream>
@@ -49,9 +49,9 @@ namespace gr {
 			     int S0, int SK,
 			     bool POSTI, bool POSTO,
 			     siso_type_t SISO_TYPE)
-      : gr_block("siso_f",
-		 gr_make_io_signature(1, -1, sizeof(float)),
-		 gr_make_io_signature(1, -1, sizeof(float))),
+      : block("siso_f",
+		 io_signature::make(1, -1, sizeof(float)),
+		 io_signature::make(1, -1, sizeof(float))),
 	d_FSM(FSM), d_K(K),
 	d_S0(S0),d_SK(SK),
 	d_POSTI(POSTI), d_POSTO(POSTO),

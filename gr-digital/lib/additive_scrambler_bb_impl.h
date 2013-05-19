@@ -23,8 +23,8 @@
 #ifndef INCLUDED_DIGITAL_ADDITIVE_SCRAMBLER_BB_IMPL_H
 #define INCLUDED_DIGITAL_ADDITIVE_SCRAMBLER_BB_IMPL_H
 
-#include <digital/additive_scrambler_bb.h>
-#include <digital/lfsr.h>
+#include <gnuradio/digital/additive_scrambler_bb.h>
+#include <gnuradio/digital/lfsr.h>
 
 namespace gr {
   namespace digital {

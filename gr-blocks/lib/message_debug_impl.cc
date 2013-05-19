@@ -25,7 +25,7 @@
 #endif
 
 #include "message_debug_impl.h"
-#include <gr_io_signature.h>
+#include <gnuradio/io_signature.h>
 #include <cstdio>
 #include <iostream>
 
@@ -97,9 +97,9 @@ namespace gr {
     }
 
     message_debug_impl::message_debug_impl()
-      : gr_block("message_debug",
-                 gr_make_io_signature(0, 0, 0),
-                 gr_make_io_signature(0, 0, 0))
+      : block("message_debug",
+                 io_signature::make(0, 0, 0),
+                 io_signature::make(0, 0, 0))
     {
       message_port_register_in(pmt::mp("print"));
       set_msg_handler(pmt::mp("print"), boost::bind(&message_debug_impl::print, this, _1));

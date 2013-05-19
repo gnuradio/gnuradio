@@ -23,7 +23,7 @@
 #ifndef INCLUDED_VOCODER_GSM_FR_ENCODE_SP_IMPL_H
 #define INCLUDED_VOCODER_GSM_FR_ENCODE_SP_IMPL_H
 
-#include <vocoder/gsm_fr_encode_sp.h>
+#include <gnuradio/vocoder/gsm_fr_encode_sp.h>
 
 extern "C"{
 #include "gsm/gsm.h"
