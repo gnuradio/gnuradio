@@ -33,7 +33,7 @@ namespace gr {
 
     /*!
      * \brief control scanning and record frequency domain statistics
-     * \ingroup sink_blk
+     * \ingroup misc_blk
      */
     class BLOCKS_API bin_statistics_f : virtual public sync_block
     {

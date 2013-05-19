@@ -29,6 +29,10 @@
 namespace gr { 
   namespace wavelet {
 
+    /*!
+     * \brief Compute wavelet transform using gsl routines.
+     * \ingroup wavelet_blk
+     */
     class WAVELET_API wavelet_ff : virtual public sync_block
     {
     public:
@@ -37,14 +41,15 @@ namespace gr {
       typedef boost::shared_ptr<wavelet_ff> sptr;
 
       /*!
-       * \brief compute wavelet transform using gsl routines
-       * \ingroup wavelet_blk
+       * \param size
+       * \param order
+       * \param forward
        */
       static sptr make(int size = 1024,
-				   int order = 20,
-				   bool forward = true);
+                       int order = 20,
+                       bool forward = true);
     };
-
+    
   } /* namespace wavelet */
 } /* namespace gr */
 

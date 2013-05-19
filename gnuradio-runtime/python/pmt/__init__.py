@@ -22,7 +22,21 @@
 # The presence of this file turns this directory into a Python package
 
 '''
-The GNU Radio Utility Etcetera Library's Polymorphic Types for Python.
+Polymorphic Types.
+
+The type can really be used to store anything, but also has simple
+conversion methods for common data types such as bool, long, or a
+vector.
+
+The polymorphic type simplifies message passing between blocks, as all
+of the data is of the same type, including the message. Tags also use
+PMTs as data type, so a stream tag can be of any logical data type. In
+a sense, PMTs are a way to extend C++' strict typing with something
+more flexible.
+
+The PMT library supports the following major types:
+bool, symbol (string), integer, real, complex, null, pair, list,
+vector, dict, uniform_vector, any (boost::any cast)
 '''
 
 from pmt_swig import *

@@ -20,8 +20,7 @@
 #
 
 '''
-This is the gr-channels package. This package provides GNU Radio
-processing blocks for channel models and related functions.
+Blocks for channel models and related functions.
 '''
 
 from channels_swig import *

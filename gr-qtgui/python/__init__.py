@@ -20,8 +20,7 @@
 #
 
 '''
-This is the gr-qtgui package. This package includes QT-based graphical
-sinks.
+Provides a GUI interface using the QT backend.
 '''
 
 # The presence of this file turns this directory into a Python package

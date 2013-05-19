@@ -20,8 +20,7 @@
 #
 
 '''
-This is the gr-fcd package. This package provides a GNU Radio
-source block for the FunCube Dongle hardware.
+Provides a source block for the FunCube Dongle hardware.
 '''
 
 from fcd_swig import *

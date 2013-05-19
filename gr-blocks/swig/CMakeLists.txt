@@ -57,7 +57,10 @@ set(GR_SWIG_BLOCK_IFILES
 
 foreach(swigfile ${GR_SWIG_BLOCK_IFILES})
   set(GR_SWIG_DOC_FILE ${CMAKE_CURRENT_BINARY_DIR}/${swigfile}_doc.i)
-  set(GR_SWIG_DOC_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/../include/gnuradio/blocks)
+  set(GR_SWIG_DOC_DIRS
+    ${CMAKE_CURRENT_SOURCE_DIR}/../include/gnuradio/blocks
+    ${CMAKE_CURRENT_BINARY_DIR}/../include/gnuradio/blocks    
+  )
   set(GR_SWIG_DOCS_TARGET_DEPS runtime_swig_swig_doc)
   set(GR_SWIG_TARGET_DEPS blocks_generated_includes)
   set(GR_SWIG_LIBRARIES gnuradio-blocks)

@@ -20,7 +20,7 @@
 #
 
 '''
-This is the gr-fec package.
+Blocks for forward error correction.
 '''
 
 from fec_swig import *

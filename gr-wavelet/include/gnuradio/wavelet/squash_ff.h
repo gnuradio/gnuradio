@@ -29,20 +29,24 @@
 namespace gr { 
   namespace wavelet {
 
+    /*!
+     * \brief Implements cheap resampling of spectrum directly from
+     * spectral points, using gsl interpolation
+     * \ingroup misc
+     */
     class WAVELET_API squash_ff : virtual public sync_block 
     {
     public:
       
       // gr::wavelet::squash_ff::sptr
       typedef boost::shared_ptr<squash_ff> sptr;
-      
+
       /*!
-       * \brief implements cheap resampling of spectrum directly from
-       * spectral points, using gsl interpolation
-       * \ingroup misc
+       * \param igrid
+       * \param ogrid
        */
       static sptr make(const std::vector<float> &igrid,
-				   const std::vector<float> &ogrid);
+                       const std::vector<float> &ogrid);
     };
 
   } /* namespace wavelet */
