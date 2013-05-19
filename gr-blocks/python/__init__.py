@@ -20,8 +20,7 @@
 #
 
 '''
-This is the gr-blocks package. This package provides GNU Radio
-processing blocks common to many flowgraphs.
+Processing blocks common to many flowgraphs.
 '''
 
 from blocks_swig import *

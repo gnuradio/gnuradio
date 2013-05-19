@@ -20,8 +20,7 @@
 #
 
 '''
-This is the gr-filter package. This package provides GNU Radio
-processing blocks for FILTER and related functions.
+Filter blocks and related functions.
 '''
 
 from filter_swig import *
