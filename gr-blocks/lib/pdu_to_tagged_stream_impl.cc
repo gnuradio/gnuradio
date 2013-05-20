@@ -68,7 +68,7 @@ namespace gr {
       if (noutput_items > 0) {
 
 	// grab a message if one exists
-	pmt::pmt_t msg(delete_head_blocking(PDU_PORT_ID));
+	pmt::pmt_t msg(delete_head_nowait(PDU_PORT_ID));
 	if (msg.get() == NULL)
 	  return nout;
 
