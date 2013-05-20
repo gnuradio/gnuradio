@@ -83,8 +83,7 @@
 
 %include <uhd/types/sensors.hpp>
 
-// Prevents issue with vector<size_t> redef on 32-bit systems
-%import <uhd/stream.hpp>
+%include <uhd/stream.hpp>
 
 ////////////////////////////////////////////////////////////////////////
 // swig dboard_iface for python access
