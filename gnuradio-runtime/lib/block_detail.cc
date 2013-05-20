@@ -263,7 +263,7 @@ namespace gr {
       d_avg_noutput_items = noutput_items;
       d_var_noutput_items = 0;
       for(size_t i=0; i < d_input.size(); i++) {
-	gr::thread::scoped_lock guard(*d_output[i]->mutex());
+	gr::thread::scoped_lock guard(*d_input[i]->mutex());
         float pfull = static_cast<float>(d_input[i]->items_available()) /
           static_cast<float>(d_input[i]->max_possible_items_available());
         d_ins_input_buffers_full[i] = pfull;
@@ -287,8 +287,8 @@ namespace gr {
 
       d = nproduced - d_avg_nproduced;
       d_ins_nproduced = nproduced;
-      d_avg_nproduced = d_avg_nproduced +	d/d_pc_counter;
-      d_var_nproduced = d_var_nproduced +	d*d;
+      d_avg_nproduced = d_avg_nproduced + d/d_pc_counter;
+      d_var_nproduced = d_var_nproduced + d*d;
 
       d = noutput_items - d_avg_noutput_items;
       d_ins_noutput_items = noutput_items;
@@ -296,6 +296,7 @@ namespace gr {
       d_var_noutput_items = d_var_noutput_items + d*d;
 
       for(size_t i=0; i < d_input.size(); i++) {
+	gr::thread::scoped_lock guard(*d_input[i]->mutex());
         float pfull = static_cast<float>(d_input[i]->items_available()) /
           static_cast<float>(d_input[i]->max_possible_items_available());
       
@@ -306,6 +307,7 @@ namespace gr {
       }
 
       for(size_t i=0; i < d_output.size(); i++) {
+	gr::thread::scoped_lock guard(*d_output[i]->mutex());
         float pfull = 1.0f - static_cast<float>(d_output[i]->space_available()) /
           static_cast<float>(d_output[i]->bufsize());
 
