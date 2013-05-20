@@ -87,6 +87,14 @@ find_package(Gruel)
 find_package(GnuradioCore)
 find_package(CppUnit)
 
+# To run a more advanced search for GNU Radio and it's components and
+# versions, use the following. Add any components required to the list
+# of GR_REQUIRED_COMPONENTS (in all caps) and change "version" to the
+# minimum API compatible version required.
+#
+# set(GR_REQUIRED_COMPONENTS CORE BLOCKS FILTER ...)
+# find_package(Gnuradio "version")
+
 if(NOT GRUEL_FOUND)
     message(FATAL_ERROR "Gruel required to compile howto")
 endif()

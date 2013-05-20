@@ -74,7 +74,9 @@ digital_make_ofdm_chanest_vcvc (
  *         'ofdm_sync_carr_offset' (integer), the coarse frequency offset as number of carriers,
  *         and 'ofdm_sync_eq_taps' (complex vector).
  *         Any tags attached to the synchronisation symbols are attached to the first data
- *         symbol. All other tags are propagated normally.
+ *         symbol. All other tags are propagated as expected.
+ *
+ * Note: The vector on ofdm_sync_eq_taps is already frequency-corrected, whereas the rest is not.
  *
  * This block assumes the frequency offset is even (i.e. an integer multiple of 2).
  *

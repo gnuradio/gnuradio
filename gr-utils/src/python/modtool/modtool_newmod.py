@@ -37,7 +37,7 @@ class ModToolNewModule(ModTool):
     def setup_parser(self):
         " Initialise the option parser for 'gr_modtool newmod' "
         parser = ModTool.setup_parser(self)
-        parser.usage = '%prog rm [options]. \n Call %prog without any options to run it interactively.'
+        parser.usage = '%prog nm [options]. \n Call %prog without any options to run it interactively.'
         ogroup = OptionGroup(parser, "New out-of-tree module options")
         ogroup.add_option("--srcdir", type="string",
                 help="Source directory for the module template.")

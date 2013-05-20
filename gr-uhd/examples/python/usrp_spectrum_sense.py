@@ -29,6 +29,7 @@ import sys
 import math
 import struct
 import threading
+from datetime import datetime
 
 sys.stderr.write("Warning: this may have issues on some machines+Python version combinations to seg fault due to the callback in bin_statitics.\n\n")
 
@@ -64,6 +65,12 @@ class tune(gr.feval_dd):
             # message on stderr.  Not exactly helpful ;)
 
             new_freq = self.tb.set_next_freq()
+            
+            # wait until msgq is empty before continuing
+            while(self.tb.msgq.full_p()):
+                #print "msgq full, holding.."
+                time.sleep(0.1)
+            
             return new_freq
 
         except Exception, e:
@@ -100,16 +107,22 @@ class my_top_block(gr.top_block):
         parser.add_option("-g", "--gain", type="eng_float", default=None,
                           help="set gain in dB (default is midpoint)")
         parser.add_option("", "--tune-delay", type="eng_float",
-                          default=1e-3, metavar="SECS",
+                          default=0.25, metavar="SECS",
                           help="time to delay (in seconds) after changing frequency [default=%default]")
         parser.add_option("", "--dwell-delay", type="eng_float",
-                          default=10e-3, metavar="SECS",
+                          default=0.25, metavar="SECS",
                           help="time to dwell (in seconds) at a given frequency [default=%default]")
-        parser.add_option("", "--channel-bandwidth", type="eng_float",
-                          default=12.5e3, metavar="Hz",
+        parser.add_option("-b", "--channel-bandwidth", type="eng_float",
+                          default=6.25e3, metavar="Hz",
                           help="channel bandwidth of fft bins in Hz [default=%default]")
-        parser.add_option("-F", "--fft-size", type="int", default=256,
-                          help="specify number of FFT bins [default=%default]")
+        parser.add_option("-l", "--lo-offset", type="eng_float",
+                          default=0, metavar="Hz",
+                          help="lo_offset in Hz [default=%default]")
+        parser.add_option("-q", "--squelch-threshold", type="eng_float",
+                          default=None, metavar="dB",
+                          help="squelch threshold in dB [default=%default]")
+        parser.add_option("-F", "--fft-size", type="int", default=None,
+                          help="specify number of FFT bins [default=samp_rate/channel_bw]")
         parser.add_option("", "--real-time", action="store_true", default=False,
                           help="Attempt to enable real-time scheduling")
 
@@ -118,6 +131,8 @@ class my_top_block(gr.top_block):
             parser.print_help()
             sys.exit(1)
 
+        self.channel_bandwidth = options.channel_bandwidth
+
         self.min_freq = eng_notation.str_to_num(args[0])
         self.max_freq = eng_notation.str_to_num(args[1])
 
@@ -125,9 +140,6 @@ class my_top_block(gr.top_block):
             # swap them
             self.min_freq, self.max_freq = self.max_freq, self.min_freq
 
-        self.fft_size = options.fft_size
-        self.channel_bandwidth = options.channel_bandwidth
-        
         if not options.real_time:
             realtime = False
         else:
@@ -150,11 +162,19 @@ class my_top_block(gr.top_block):
         # Set the antenna
         if(options.antenna):
             self.u.set_antenna(options.antenna, 0)
+        
+        self.u.set_samp_rate(options.samp_rate)
+        self.usrp_rate = usrp_rate = self.u.get_samp_rate()
+        
+        self.lo_offset = options.lo_offset
 
-        self.usrp_rate = usrp_rate = options.samp_rate
-        self.u.set_samp_rate(usrp_rate)
-        dev_rate = self.u.get_samp_rate()
-
+        if options.fft_size is None:
+            self.fft_size = int(self.usrp_rate/self.channel_bandwidth)
+        else:
+            self.fft_size = options.fft_size
+        
+        self.squelch_threshold = options.squelch_threshold
+        
         s2v = gr.stream_to_vector(gr.sizeof_gr_complex, self.fft_size)
 
         mywindow = window.blackmanharris(self.fft_size)
@@ -166,14 +186,14 @@ class my_top_block(gr.top_block):
         c2mag = gr.complex_to_mag_squared(self.fft_size)
 
         # FIXME the log10 primitive is dog slow
-        log = gr.nlog10_ff(10, self.fft_size,
-                           -20*math.log10(self.fft_size)-10*math.log10(power/self.fft_size))
+        #log = gr.nlog10_ff(10, self.fft_size,
+        #                   -20*math.log10(self.fft_size)-10*math.log10(power/self.fft_size))
 
         # Set the freq_step to 75% of the actual data throughput.
         # This allows us to discard the bins on both ends of the spectrum.
 
-        self.freq_step = 0.75 * usrp_rate
-        self.min_center_freq = self.min_freq + self.freq_step/2
+        self.freq_step = self.nearest_freq((0.75 * self.usrp_rate), self.channel_bandwidth)
+        self.min_center_freq = self.min_freq + (self.freq_step/2) 
         nsteps = math.ceil((self.max_freq - self.min_freq) / self.freq_step)
         self.max_center_freq = self.min_center_freq + (nsteps * self.freq_step)
 
@@ -182,7 +202,7 @@ class my_top_block(gr.top_block):
         tune_delay  = max(0, int(round(options.tune_delay * usrp_rate / self.fft_size)))  # in fft_frames
         dwell_delay = max(1, int(round(options.dwell_delay * usrp_rate / self.fft_size))) # in fft_frames
 
-        self.msgq = gr.msg_queue(16)
+        self.msgq = gr.msg_queue(1)
         self._tune_callback = tune(self)        # hang on to this to keep it from being GC'd
         stats = gr.bin_statistics_f(self.fft_size, self.msgq,
                                     self._tune_callback, tune_delay,
@@ -220,7 +240,8 @@ class my_top_block(gr.top_block):
         @param target_freq: frequency in Hz
         @rypte: bool
         """
-        r = self.u.set_center_freq(target_freq)
+        
+        r = self.u.set_center_freq(uhd.tune_request(target_freq, rf_freq=(target_freq + self.lo_offset),rf_freq_policy=uhd.tune_request.POLICY_MANUAL))
         if r:
             return True
 
@@ -228,47 +249,45 @@ class my_top_block(gr.top_block):
 
     def set_gain(self, gain):
         self.u.set_gain(gain)
-
-
-def main_loop(tb):
     
-    def nearest_freq(freq, channel_bandwidth):
+    def nearest_freq(self, freq, channel_bandwidth):
         freq = round(freq / channel_bandwidth, 0) * channel_bandwidth
         return freq
 
+def main_loop(tb):
+    
     def bin_freq(i_bin, center_freq):
-        hz_per_bin = tb.usrp_rate / tb.fft_size
-        freq = center_freq - (tb.usrp_rate / 2) + (hz_per_bin * i_bin)
-        freq = nearest_freq(freq, tb.channel_bandwidth)
+        #hz_per_bin = tb.usrp_rate / tb.fft_size
+        freq = center_freq - (tb.usrp_rate / 2) + (tb.channel_bandwidth * i_bin)
+        #print "freq original:",freq
+        #freq = nearest_freq(freq, tb.channel_bandwidth)
+        #print "freq rounded:",freq
         return freq
     
     bin_start = int(tb.fft_size * ((1 - 0.75) / 2))
     bin_stop = int(tb.fft_size - bin_start)
-    
+
     while 1:
 
         # Get the next message sent from the C++ code (blocking call).
         # It contains the center frequency and the mag squared of the fft
         m = parse_msg(tb.msgq.delete_head())
 
-        # Print center freq so we know that something is happening...
-        #print "m.center_freq:", m.center_freq
-
-        # FIXME do something useful with the data...
-
-        # m.data are the mag_squared of the fft output (they are in the
-        # standard order.  I.e., bin 0 == DC.)
-        # You'll probably want to do the equivalent of "fftshift" on them
+        # m.center_freq is the center frequency at the time of capture
+        # m.data are the mag_squared of the fft output
         # m.raw_data is a string that contains the binary floats.
         # You could write this as binary to a file.
 
         for i_bin in range(bin_start, bin_stop):
 
-            # create signal object to find matching signals
-            freq = int(bin_freq(i_bin, m.center_freq))
-            power = float(m.data[i_bin])
-            
-            print freq, power
+            center_freq = m.center_freq
+            freq = bin_freq(i_bin, center_freq)
+            #noise_floor_db = -174 + 10*math.log10(tb.channel_bandwidth)
+            noise_floor_db = 10*math.log10(min(m.data)/tb.usrp_rate)
+            power_db = 10*math.log10(m.data[i_bin]/tb.usrp_rate) - noise_floor_db
+
+            if (power_db > tb.squelch_threshold) and (freq >= tb.min_freq) and (freq <= tb.max_freq):
+                print datetime.now(), "center_freq", center_freq, "freq", freq, "power_db", power_db, "noise_floor_db", noise_floor_db
 
 if __name__ == '__main__':
     t = ThreadClass()

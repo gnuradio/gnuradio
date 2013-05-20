@@ -42,14 +42,12 @@ class DIGITAL_API digital_ofdm_equalizer_base : public boost::enable_shared_from
 {
  protected:
   int d_fft_len;
-  int d_carr_offset;
 
  public:
   digital_ofdm_equalizer_base(int fft_len);
   ~digital_ofdm_equalizer_base();
 
   virtual void reset() = 0;
-  void set_carrier_offset(int offset) { d_carr_offset = offset; };
   virtual void equalize(
 		  gr_complex *frame,
 		  int n_sym,
@@ -71,7 +69,7 @@ class DIGITAL_API digital_ofdm_equalizer_1d_pilots : public digital_ofdm_equaliz
   //! If \p d_occupied_carriers[k][l] is true, symbol k, carrier l is carrying data.
   //  (this is a different format than occupied_carriers!)
   std::vector<bool> d_occupied_carriers;
-  //! If \p d_pilot_carriers[k][l] is true, symbol k, carrier l is carrying data.
+  //! If \p d_pilot_carriers[k][l] is true, symbol k, carrier l is carrying a pilot symbol.
   //  (this is a different format than pilot_carriers!)
   std::vector<std::vector<bool> > d_pilot_carriers;
   //! If \p d_pilot_carriers[k][l] is true, d_pilot_symbols[k][l] is its tx'd value.
