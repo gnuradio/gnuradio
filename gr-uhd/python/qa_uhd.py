@@ -36,5 +36,17 @@ class test_uhd(gr_unittest.TestCase):
         They may not have a UHD device connected, etc.  Don't try to run anything"""
         pass
 
+    def test_stream_args_channel_foo(self):
+        """
+        Try to manipulate the stream args channels for proper swig'ing checks.
+        """
+        sa = uhd_swig.stream_args_t()
+        sa.channels.append(1)
+        sa.channels.append(0)
+        print sa.channels
+        self.assertEqual(len(sa.channels), 2)
+        self.assertEqual(sa.channels[0], 1)
+        self.assertEqual(sa.channels[1], 0)
+
 if __name__ == '__main__':
     gr_unittest.run(test_uhd, "test_uhd.xml")
