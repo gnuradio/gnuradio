@@ -23,8 +23,8 @@
 #ifndef INCLUDED_ANALOG_AGC3_CC_H
 #define INCLUDED_ANALOG_AGC3_CC_H
 
-#include <analog/api.h>
-#include <gr_sync_block.h>
+#include <gnuradio/analog/api.h>
+#include <gnuradio/sync_block.h>
 
 namespace gr {
   namespace analog {
@@ -37,7 +37,7 @@ namespace gr {
      * \details
      * For Power the absolute value of the complex number is used.
      */
-    class ANALOG_API agc3_cc : virtual public gr_sync_block
+    class ANALOG_API agc3_cc : virtual public sync_block
     {
     public:
       // gr::analog::agc3_cc::sptr
@@ -52,7 +52,8 @@ namespace gr {
        * \param gain initial gain value.
        * \param max_gain maximum gain value (0 for unlimited).
        */
-      static sptr make(float attack_rate = 1e-1, float decay_rate = 1e-2, float reference = 1.0);
+      static sptr make(float attack_rate = 1e-1, float decay_rate = 1e-2,
+                       float reference = 1.0);
 
       virtual float attack_rate() const = 0;
       virtual float decay_rate() const = 0;

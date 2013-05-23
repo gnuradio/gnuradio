@@ -25,7 +25,7 @@
 #endif
 
 #include "agc3_cc_impl.h"
-#include <gr_io_signature.h>
+#include <gnuradio/io_signature.h>
 #include <volk/volk.h>
 
 namespace gr {
@@ -34,18 +34,21 @@ namespace gr {
     agc3_cc::sptr
     agc3_cc::make(float attack_rate, float decay_rate, float reference)
     {
-      return gnuradio::get_initial_sptr (new agc3_cc_impl(attack_rate, decay_rate, reference));
+      return gnuradio::get_initial_sptr
+        (new agc3_cc_impl(attack_rate, decay_rate, reference));
     }
 
     agc3_cc_impl::agc3_cc_impl(float attack_rate, float decay_rate, float reference)
-      : gr_sync_block("agc3_cc",
-		      gr_make_io_signature(1, 1, sizeof(gr_complex)),
-		      gr_make_io_signature(1, 1, sizeof(gr_complex))),
+      : sync_block("agc3_cc",
+                   io_signature::make(1, 1, sizeof(gr_complex)),
+                   io_signature::make(1, 1, sizeof(gr_complex))),
         d_attack(attack_rate), d_decay(decay_rate),
         d_reference(reference), d_gain(1.0),
         d_reset(true)
     {
-    set_alignment(volk_get_alignment());
+      const int alignment_multiple =
+	volk_get_alignment() / sizeof(gr_complex);
+      set_alignment(std::max(1, alignment_multiple));
     }
 
     agc3_cc_impl::~agc3_cc_impl()
