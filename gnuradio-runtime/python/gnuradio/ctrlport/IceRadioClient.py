@@ -58,6 +58,8 @@ class IceRadioClient(Ice.Application):
                 self.useglacier = False
                 host = args[1]
                 port = args[2]
+                if(port == "-p"):
+                    port = args[3]
 
         if self.useglacier:
 	  gstring = ginst + "/router -t:tcp -h " + ghost + " -p " + gport

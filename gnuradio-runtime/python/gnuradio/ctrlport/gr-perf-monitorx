@@ -22,8 +22,9 @@
 
 import random,math,operator
 import networkx as nx;
+import matplotlib
+matplotlib.use("Qt4Agg");
 import matplotlib.pyplot as plt
-
 from matplotlib.backends.backend_qt4agg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.backends.backend_qt4agg import NavigationToolbar2QTAgg as NavigationToolbar
 from matplotlib.figure import Figure
@@ -34,8 +35,6 @@ from PyQt4 import QtCore,Qt,Qwt5
 import PyQt4.QtGui as QtGui
 import sys, time, re, pprint
 import itertools
-import scipy
-from scipy import spatial
 
 import Ice
 from gnuradio.ctrlport.IceRadioClient import *
@@ -670,7 +669,7 @@ class MForm(QtGui.QWidget):
         thrsh = 100
 
         if(x is not None and y is not None):
-            nearby = map(lambda z: spatial.distance.euclidean((x,y), z), self.pos.values())
+            nearby = map(lambda z: math.sqrt( math.pow(x-z[0],2) + math.pow(y-z[1],2)), self.pos.values())
             i = nearby.index(min(nearby))
             if(abs(self.pos.values()[i][0] - x) < thrsh and
                abs(self.pos.values()[i][1]-y) < thrsh):

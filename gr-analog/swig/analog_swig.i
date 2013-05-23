@@ -40,6 +40,7 @@
 #include "gnuradio/analog/agc_ff.h"
 #include "gnuradio/analog/agc2_cc.h"
 #include "gnuradio/analog/agc2_ff.h"
+#include "gnuradio/analog/agc3_cc.h"
 #include "gnuradio/analog/cpfsk_bc.h"
 #include "gnuradio/analog/ctcss_squelch_ff.h"
 #include "gnuradio/analog/dpll_bb.h"
@@ -81,6 +82,7 @@
 %include "gnuradio/analog/agc_ff.h"
 %include "gnuradio/analog/agc2_cc.h"
 %include "gnuradio/analog/agc2_ff.h"
+%include "gnuradio/analog/agc3_cc.h"
 %include "gnuradio/analog/cpfsk_bc.h"
 %include "gnuradio/analog/ctcss_squelch_ff.h"
 %include "gnuradio/analog/dpll_bb.h"
@@ -119,6 +121,7 @@ GR_SWIG_BLOCK_MAGIC2(analog, agc_cc);
 GR_SWIG_BLOCK_MAGIC2(analog, agc_ff);
 GR_SWIG_BLOCK_MAGIC2(analog, agc2_cc);
 GR_SWIG_BLOCK_MAGIC2(analog, agc2_ff);
+GR_SWIG_BLOCK_MAGIC2(analog, agc3_cc);
 GR_SWIG_BLOCK_MAGIC2(analog, cpfsk_bc);
 GR_SWIG_BLOCK_MAGIC2(analog, ctcss_squelch_ff);
 GR_SWIG_BLOCK_MAGIC2(analog, dpll_bb);
