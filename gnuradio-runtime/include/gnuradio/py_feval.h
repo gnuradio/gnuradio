@@ -24,6 +24,7 @@
 #define INCLUDED_GR_PY_FEVAL_H
 
 #include <pmt/pmt.h>
+#include <gnuradio/feval.h>
 
 class ensure_py_gil_state {
   PyGILState_STATE d_gstate;
@@ -53,7 +54,7 @@ namespace gr {
       ensure_py_gil_state _lock;
       return eval(x);
     }
-    virtual ~py_feval_cc();
+    virtual ~py_feval_cc() {};
   };
 
   class GR_RUNTIME_API py_feval_ll : public feval_ll
@@ -64,7 +65,7 @@ namespace gr {
       ensure_py_gil_state _lock;
       return eval(x);
     }
-    virtual ~py_feval_ll();
+    virtual ~py_feval_ll() {};
   };
 
   class GR_RUNTIME_API py_feval : public feval
@@ -75,7 +76,7 @@ namespace gr {
       ensure_py_gil_state _lock;
       eval();
     }
-    virtual ~py_feval();
+    virtual ~py_feval() {};
   };
 
   class GR_RUNTIME_API py_feval_p : public feval_p
@@ -86,7 +87,7 @@ namespace gr {
       ensure_py_gil_state _lock;
       eval(x);
     }
-    virtual ~py_feval_p();
+    virtual ~py_feval_p() {};
   };
 
 } /* namespace gr */

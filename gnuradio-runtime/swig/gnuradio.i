@@ -65,5 +65,6 @@
 #include <gnuradio/tagged_stream_block.h>
 #include <gnuradio/block_gateway.h>
 #include <gnuradio/feval.h>
+#include <gnuradio/py_feval.h>
 %}
 
