@@ -78,7 +78,6 @@ namespace gr {
             out[i] = in[i] * d_gain;
         }
         d_reset = false;
-        printf("computed initial mean on %d values = %f\n", noutput_items, d_gain);
       } else {
         // Otherwise perform a normal iir update
         for(int i=0; i<noutput_items; i++){
