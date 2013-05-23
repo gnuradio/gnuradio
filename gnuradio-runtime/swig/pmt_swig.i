@@ -44,8 +44,8 @@
 %include "pmt_swig_doc.i"
 
 %include <gr_extras.i>
-%include <gr_types.i>
 
+%include <std_vector.i>
 %template(pmt_vector_uint32) std::vector<uint32_t>;
 
 ////////////////////////////////////////////////////////////////////////

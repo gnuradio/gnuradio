@@ -43,6 +43,12 @@
 
 %feature("autodoc","1");
 
+// Required for a bug in SWIG 2.0.4 with GCC 4.6
+// see: http://sourceforge.net/p/swig/bugs/1187/
+%{
+#include <cstddef>
+%}
+
 // local file
 %include <gr_shared_ptr.i>
 %include <std_except.i>
