@@ -26,6 +26,7 @@
 
 #include "agc3_cc_impl.h"
 #include <gr_io_signature.h>
+#include <volk/volk.h>
 
 namespace gr {
   namespace analog {
@@ -44,6 +45,7 @@ namespace gr {
         d_reference(reference), d_gain(1.0),
         d_reset(true)
     {
+    set_alignment(volk_get_alignment());
     }
 
     agc3_cc_impl::~agc3_cc_impl()
@@ -57,13 +59,21 @@ namespace gr {
     {
       const gr_complex *in = (const gr_complex*)input_items[0];
       gr_complex *out = (gr_complex*)output_items[0];
+      // Compute magnitude of each sample
+#ifdef __GNUC__
+        float mags[noutput_items]  __attribute__ ((aligned (16)));
+#else   
+        float mags[noutput_items];
+#endif
+      volk_32fc_magnitude_32f(mags, &in[0], noutput_items);
       // Compute a linear average on reset (no expected)  
       if(__builtin_expect (d_reset, false)){
         float mag;
         for(int i=0; i<noutput_items; i++){
-            mag += abs(in[i]);
+            mag += mags[i];
         }
         d_gain = d_reference * (noutput_items/mag);
+        // scale output values
         for(int i=0; i<noutput_items; i++){
             out[i] = in[i] * d_gain;
         }
@@ -72,7 +82,7 @@ namespace gr {
       } else {
         // Otherwise perform a normal iir update
         for(int i=0; i<noutput_items; i++){
-          float newlevel = abs(in[i]);
+          float newlevel = mags[i]; // abs(in[i]);
           float rate = (newlevel > d_reference/d_gain)?d_attack:d_decay;
           d_gain = (d_gain*(1-rate)) + (d_reference/newlevel)*rate;
           out[i] = in[i] * d_gain;
