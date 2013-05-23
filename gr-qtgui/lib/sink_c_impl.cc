@@ -123,8 +123,8 @@ namespace gr {
       uint64_t maxBufferSize = 32768;
       d_main_gui = new SpectrumGUIClass(maxBufferSize, d_fftsize,
 					d_center_freq,
-					-d_bandwidth/2.0,
-					d_bandwidth/2.0);
+					-d_bandwidth,
+					d_bandwidth);
 
       d_main_gui->setDisplayTitle(d_name);
       d_main_gui->setWindowType((int)d_wintype);
@@ -181,8 +181,8 @@ namespace gr {
       d_center_freq = centerfreq;
       d_bandwidth = bandwidth;
       d_main_gui->setFrequencyRange(d_center_freq,
-				    -d_bandwidth/2.0,
-				    d_bandwidth/2.0);
+				    -d_bandwidth,
+				    d_bandwidth);
     }
 
     void
