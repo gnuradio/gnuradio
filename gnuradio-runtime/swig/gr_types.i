@@ -20,6 +20,9 @@
  * Boston, MA 02110-1301, USA.
  */
 
+#ifndef SWIG_GR_TYPES_I
+#define SWIG_GR_TYPES_I
+
 %include "std_string.i"
 %include "stdint.i"
 
@@ -69,8 +72,8 @@ namespace std {
 
   %template() vector<string>;
 
-  %template() std::vector<size_t>;
-  %template() std::vector< std::vector< std::vector<size_t> > >;
+  %template(gr_vsize_t) std::vector<size_t>;
+  %template(gr_vvvsize_t) std::vector< std::vector< std::vector<size_t> > >;
 };
 
 %template(gr_vector_complexf) std::vector< std::complex<float> >;
@@ -88,3 +91,5 @@ namespace std {
   // with vector<long unsigned int>
   %apply std::vector<long unsigned int> { std::vector<size_t> };
 #endif
+
+#endif /* SWIG_GR_TYPES_I */

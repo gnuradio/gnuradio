@@ -22,7 +22,8 @@
 
 #define BLOCKS_API
 
-%include "runtime_swig.i"
+//%include "runtime_swig.i"
+%include "gnuradio.i"
 
 %include "blocks_swig0_doc.i"
 

@@ -21,8 +21,18 @@
  */
 
 #define BLOCKS_API
+#define GR_RUNTIME_API
 
-%include "runtime_swig.i"
+//%include "runtime_swig.i"
+%include "gnuradio.i"
+
+%{
+#include "gnuradio/feval.h"
+#include "gnuradio/py_feval.h"
+%}
+
+//%include "feval.i"
+%import "gnuradio/feval.h"
 
 //load generated python docstrings
 %include "blocks_swig2_doc.i"

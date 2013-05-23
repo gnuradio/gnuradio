@@ -22,7 +22,8 @@
 
 #define BLOCKS_API
 
-%include "runtime_swig.i"
+//%include "runtime_swig.i"
+%include "gnuradio.i"
 
 //load generated python docstrings
 %include "blocks_swig3_doc.i"

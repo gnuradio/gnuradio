@@ -25,7 +25,7 @@
 //suppress 319. No access specifier given for base class name (ignored).
 #pragma SWIG nowarn=319
 
-%include "runtime_swig.i"
+%include "gnuradio.i"
 
 //load generated python docstrings
 %include "fcd_swig_doc.i"

@@ -29,7 +29,10 @@
 ////////////////////////////////////////////////////////////////////////
 
 %include <gr_extras.i>
+
+#ifdef SW_RUNTIME
 %include <gr_types.i>
+#endif
 
 ////////////////////////////////////////////////////////////////////////
 // Headers
@@ -49,6 +52,18 @@
 #ifndef SW_RUNTIME
 // import runtime_swig.i for all but sw_runtime, since it needs to %include
 %import <runtime_swig.i>
+%import <gr_types.i>
 #endif
 
 ////////////////////////////////////////////////////////////////////////
+
+%{
+#include <gnuradio/block.h>
+#include <gnuradio/sync_block.h>
+#include <gnuradio/sync_decimator.h>
+#include <gnuradio/sync_interpolator.h>
+#include <gnuradio/tagged_stream_block.h>
+#include <gnuradio/block_gateway.h>
+#include <gnuradio/feval.h>
+%}
+

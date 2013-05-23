@@ -46,7 +46,7 @@
 %include <gr_extras.i>
 %include <gr_types.i>
 
-%template() std::vector<uint32_t>;
+%template(pmt_vector_uint32) std::vector<uint32_t>;
 
 ////////////////////////////////////////////////////////////////////////
 // Language independent exception handler

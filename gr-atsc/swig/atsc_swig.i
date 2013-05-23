@@ -20,7 +20,7 @@
  * Boston, MA 02110-1301, USA.
  */
 
-%include "runtime_swig.i"				// the common stuff
+%include "gnuradio.i"
 
 //load generated python docstrings
 %include "atsc_swig_doc.i"

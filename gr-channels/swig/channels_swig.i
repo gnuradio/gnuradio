@@ -22,7 +22,7 @@
 
 #define CHANNELS_API
 
-%include "runtime_swig.i"
+%include "gnuradio.i"
 
 //load generated python docstrings
 %include "channels_swig_doc.i"
