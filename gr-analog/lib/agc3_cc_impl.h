@@ -32,18 +32,20 @@ namespace gr {
     {
     public:
       agc3_cc_impl(float attack_rate = 1e-1, float decay_rate = 1e-2,
-		       float reference = 1.0);
+                   float reference = 1.0, float gain = 1.0);
       ~agc3_cc_impl();
 
       float attack_rate() const { return d_attack; }
       float decay_rate() const  { return d_decay; }
       float reference() const { return d_reference; }
       float gain() const { return d_gain; }
+      float max_gain() const { return d_max_gain; }
 
       void set_attack_rate(float rate) { d_attack = rate; }
       void set_decay_rate(float rate) { d_decay = rate; }
       void set_reference(float reference) { d_reference = reference; }
       void set_gain(float gain) { d_gain = gain; }
+      void set_max_gain(float max_gain) { d_max_gain = max_gain; }
 
       int work(int noutput_items,
 	       gr_vector_const_void_star &input_items,
@@ -54,6 +56,7 @@ namespace gr {
       float d_decay;
       float d_reference;
       float d_gain;
+      float d_max_gain;
       bool d_reset;
     };
 

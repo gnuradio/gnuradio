@@ -32,19 +32,22 @@ namespace gr {
   namespace analog {
 
     agc3_cc::sptr
-    agc3_cc::make(float attack_rate, float decay_rate, float reference)
+    agc3_cc::make(float attack_rate, float decay_rate,
+                  float reference, float gain)
     {
       return gnuradio::get_initial_sptr
-        (new agc3_cc_impl(attack_rate, decay_rate, reference));
+        (new agc3_cc_impl(attack_rate, decay_rate,
+                          reference, gain));
     }
 
-    agc3_cc_impl::agc3_cc_impl(float attack_rate, float decay_rate, float reference)
-      : sync_block("agc3_cc",
-                   io_signature::make(1, 1, sizeof(gr_complex)),
-                   io_signature::make(1, 1, sizeof(gr_complex))),
-        d_attack(attack_rate), d_decay(decay_rate),
-        d_reference(reference), d_gain(1.0),
-        d_reset(true)
+    agc3_cc_impl::agc3_cc_impl(float attack_rate, float decay_rate,
+                               float reference, float gain)
+    : sync_block("agc3_cc",
+                 io_signature::make(1, 1, sizeof(gr_complex)),
+                 io_signature::make(1, 1, sizeof(gr_complex))),
+      d_attack(attack_rate), d_decay(decay_rate),
+      d_reference(reference), d_gain(gain), d_max_gain(2e16),
+      d_reset(true)
     {
       const int alignment_multiple =
 	volk_get_alignment() / sizeof(gr_complex);
@@ -70,20 +73,29 @@ namespace gr {
 #endif
       volk_32fc_magnitude_32f(mags, &in[0], noutput_items);
       // Compute a linear average on reset (no expected)  
-      if(__builtin_expect (d_reset, false)){
+      if(__builtin_expect(d_reset, false)) {
         float mag;
-        for(int i=0; i<noutput_items; i++){
+        for(int i=0; i<noutput_items; i++) {
             mag += mags[i];
         }
         d_gain = d_reference * (noutput_items/mag);
+
+        if(d_gain < 0.0)
+          d_gain = 10e-5;
+
+        if(d_max_gain > 0.0 && d_gain > d_max_gain) {
+          d_gain = d_max_gain;
+        }
+
         // scale output values
         for(int i=0; i<noutput_items; i++){
             out[i] = in[i] * d_gain;
         }
         d_reset = false;
-      } else {
+      }
+      else {
         // Otherwise perform a normal iir update
-        for(int i=0; i<noutput_items; i++){
+        for(int i=0; i<noutput_items; i++) {
           float newlevel = mags[i]; // abs(in[i]);
           float rate = (newlevel > d_reference/d_gain)?d_attack:d_decay;
           d_gain = (d_gain*(1-rate)) + (d_reference/newlevel)*rate;

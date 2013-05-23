@@ -52,7 +52,7 @@ namespace gr {
        * \param max_gain maximum gain value (0 for unlimited).
        */
       static sptr make(float rate = 1e-4, float reference = 1.0,
-		       float gain = 1.0, float max_gain = 0.0);
+		       float gain = 1.0);
       
       virtual float rate() const = 0;
       virtual float reference() const = 0;

@@ -35,7 +35,7 @@ class test_agc(gr_unittest.TestCase):
 
 
     def test_001_sets(self):
-        agc = analog.agc_cc(1e-3, 1, 1, 1000)
+        agc = analog.agc_cc(1e-3, 1, 1)
 
 	agc.set_rate(1)
 	agc.set_reference(1.1)
@@ -109,7 +109,7 @@ class test_agc(gr_unittest.TestCase):
         dst1 = blocks.vector_sink_c()
         head = blocks.head(gr.sizeof_gr_complex, int (5*sampling_freq * 0.10))
 
-        agc = analog.agc_cc(1e-3, 1, 1, 1000)
+        agc = analog.agc_cc(1e-3, 1, 1)
 
         tb.connect(src1, head)
         tb.connect(head, agc)
@@ -120,7 +120,7 @@ class test_agc(gr_unittest.TestCase):
         self.assertComplexTuplesAlmostEqual(expected_result, dst_data, 4)
 
     def test_002_sets(self):
-        agc = analog.agc_ff(1e-3, 1, 1, 1000)
+        agc = analog.agc_ff(1e-3, 1, 1)
 
 	agc.set_rate(1)
 	agc.set_reference(1.1)
@@ -194,7 +194,7 @@ class test_agc(gr_unittest.TestCase):
         dst1 = blocks.vector_sink_f ()
         head = blocks.head (gr.sizeof_float, int (5*sampling_freq * 0.10))
 
-        agc = analog.agc_ff(1e-3, 1, 1, 1000)
+        agc = analog.agc_ff(1e-3, 1, 1)
 
         tb.connect (src1, head)
         tb.connect (head, agc)
@@ -205,7 +205,7 @@ class test_agc(gr_unittest.TestCase):
         self.assertFloatTuplesAlmostEqual (expected_result, dst_data, 4)
 
     def test_003_sets(self):
-        agc = analog.agc2_cc(1e-3, 1e-1, 1, 1, 1000)
+        agc = analog.agc2_cc(1e-3, 1e-1, 1, 1)
 
 	agc.set_attack_rate(1)
 	agc.set_decay_rate(2)
@@ -281,7 +281,7 @@ class test_agc(gr_unittest.TestCase):
         dst1 = blocks.vector_sink_c()
         head = blocks.head(gr.sizeof_gr_complex, int(5*sampling_freq * 0.10))
 
-        agc = analog.agc2_cc(1e-2, 1e-3, 1, 1, 1000)
+        agc = analog.agc2_cc(1e-2, 1e-3, 1, 1)
 
         tb.connect(src1, head)
         tb.connect(head, agc)
@@ -292,7 +292,7 @@ class test_agc(gr_unittest.TestCase):
         self.assertComplexTuplesAlmostEqual(expected_result, dst_data, 4)
 
     def test_004_sets(self):
-        agc = analog.agc2_ff(1e-3, 1e-1, 1, 1, 1000)
+        agc = analog.agc2_ff(1e-3, 1e-1, 1, 1)
 
 	agc.set_attack_rate(1)
 	agc.set_decay_rate(2)
@@ -368,7 +368,7 @@ class test_agc(gr_unittest.TestCase):
         dst1 = blocks.vector_sink_f()
         head = blocks.head(gr.sizeof_float, int(5*sampling_freq * 0.10))
 
-        agc = analog.agc2_ff(1e-2, 1e-3, 1, 1, 1000)
+        agc = analog.agc2_ff(1e-2, 1e-3, 1, 1)
 
         tb.connect(src1, head)
         tb.connect(head, agc)
@@ -441,7 +441,7 @@ class test_agc(gr_unittest.TestCase):
         dst1 = blocks.vector_sink_c()
         head = blocks.head(gr.sizeof_gr_complex, int(5*sampling_freq * 0.10))
 
-        agc = analog.agc2_cc(1e-2, 1e-3, 1, 1, 1000)
+        agc = analog.agc2_cc(1e-2, 1e-3, 1, 1)
 
         tb.connect(src1, head)
         tb.connect(head, agc)
