@@ -52,6 +52,10 @@
 // used types
 ////////////////////////////////////////////////////////////////////////
 
+%template(uhd_string_vector_t) std::vector<std::string>;
+
+%template(uhd_size_vector_t) std::vector<size_t>;
+
 %include <uhd/config.hpp>
 
 %include <uhd/utils/pimpl.hpp>

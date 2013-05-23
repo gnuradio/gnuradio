@@ -63,10 +63,10 @@
 	</param>
 	<sink>
 		<name>in</name>
-		<type>complex</type>
+		<type>$type.input</type>
 	</sink>
 	<source>
 		<name>out</name>
-		<type>complex</type>
+		<type>$type.output</type>
 	</source>
 </block>
