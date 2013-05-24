@@ -81,6 +81,12 @@ def strip_arg_types(string):
     string = strip_default_values(string)
     return ", ".join([part.strip().split(' ')[-1] for part in string.split(',')])
 
+def strip_arg_types_grc(string):
+    """" Strip the argument types from a list of arguments for GRC make tag.
+    Example: "int arg1, double arg2" -> "$arg1, $arg2" """
+    string = strip_default_values(string)
+    return ", ".join(['$' + part.strip().split(' ')[-1] for part in string.split(',')])
+
 def get_modname():
     """ Grep the current module's name from gnuradio.project or CMakeLists.txt """
     modname_trans = {'howto-write-a-block': 'howto'}
