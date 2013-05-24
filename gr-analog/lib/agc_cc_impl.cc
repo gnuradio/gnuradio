@@ -42,7 +42,7 @@ namespace gr {
       : sync_block("agc_cc",
                    io_signature::make(1, 1, sizeof(gr_complex)),
                    io_signature::make(1, 1, sizeof(gr_complex))),
-	kernel::agc_cc(rate, reference, gain, 2e16)
+	kernel::agc_cc(rate, reference, gain, 65536)
     {
       const int alignment_multiple =
 	volk_get_alignment() / sizeof(gr_complex);

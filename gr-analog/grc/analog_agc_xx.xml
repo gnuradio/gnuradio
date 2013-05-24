@@ -50,7 +50,7 @@ self.$(id).set_max_gain($max_gain)</make>
 	<param>
 		<name>Max Gain</name>
 		<key>max_gain</key>
-		<value>2e16</value>
+		<value>65536</value>
 		<type>real</type>
 	</param>
 	<sink>

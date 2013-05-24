@@ -46,7 +46,7 @@ namespace gr {
                  io_signature::make(1, 1, sizeof(gr_complex)),
                  io_signature::make(1, 1, sizeof(gr_complex))),
       d_attack(attack_rate), d_decay(decay_rate),
-      d_reference(reference), d_gain(gain), d_max_gain(2e16),
+      d_reference(reference), d_gain(gain), d_max_gain(65536),
       d_reset(true)
     {
       const int alignment_multiple =

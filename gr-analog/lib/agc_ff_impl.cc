@@ -41,7 +41,7 @@ namespace gr {
       : sync_block("agc_ff",
 		      io_signature::make(1, 1, sizeof(float)),
 		      io_signature::make(1, 1, sizeof(float))),
-	kernel::agc_ff(rate, reference, gain, 2e16)
+	kernel::agc_ff(rate, reference, gain, 65536)
     {
     }
 

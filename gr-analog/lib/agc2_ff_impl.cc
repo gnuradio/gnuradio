@@ -49,7 +49,7 @@ namespace gr {
                  io_signature::make(1, 1, sizeof(float)),
                  io_signature::make(1, 1, sizeof(float))),
       kernel::agc2_ff(attack_rate, decay_rate,
-                      reference, gain, 2e16)
+                      reference, gain, 65536)
     {
     }
 
