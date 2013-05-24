@@ -45,8 +45,18 @@
 
 %include <gr_extras.i>
 
+%include <std_complex.i>
 %include <std_vector.i>
+%template(pmt_vector_int8) std::vector<int8_t>;
+%template(pmt_vector_uint8) std::vector<uint8_t>;
+%template(pmt_vector_int16) std::vector<int16_t>;
+%template(pmt_vector_uint16) std::vector<uint16_t>;
+%template(pmt_vector_int32) std::vector<int32_t>;
 %template(pmt_vector_uint32) std::vector<uint32_t>;
+%template(pmt_vector_float) std::vector<float>;
+%template(pmt_vector_double) std::vector<double>;
+%template(pmt_vector_cfloat) std::vector< std::complex<float> >;
+%template(pmt_vector_cdouble) std::vector< std::complex<double> >;
 
 ////////////////////////////////////////////////////////////////////////
 // Language independent exception handler

@@ -274,7 +274,7 @@ class generic_demod(gr.hier_block2):
         ntaps = 11 * int(self._samples_per_symbol*nfilts)
 
         # Automatic gain control
-        self.agc = analog.agc2_cc(0.6e-1, 1e-3, 1, 1, 100)
+        self.agc = analog.agc2_cc(0.6e-1, 1e-3, 1, 1)
 
         # Frequency correction
         fll_ntaps = 55
