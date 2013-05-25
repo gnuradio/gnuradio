@@ -95,6 +95,7 @@ list(APPEND gnuradio_runtime_sources
   pagesize.cc
   prefs.cc
   realtime.cc
+  realtime_impl.cc
   scheduler.cc
   scheduler_sts.cc
   scheduler_tpb.cc

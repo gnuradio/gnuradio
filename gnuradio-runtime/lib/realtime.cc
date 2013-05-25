@@ -31,7 +31,7 @@ namespace gr {
   rt_status_t
   enable_realtime_scheduling()
   {
-    return gr::enable_realtime_scheduling();
+    return gr::impl::enable_realtime_scheduling();
   }
 
 } /* namespace gr */

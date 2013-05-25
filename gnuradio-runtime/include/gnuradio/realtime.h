@@ -28,8 +28,6 @@
 
 namespace gr {
   
-  typedef impl::rt_status_t rt_status_t;
-
   /*!
    * \brief If possible, enable high-priority "real time" scheduling.
    * \ingroup misc
