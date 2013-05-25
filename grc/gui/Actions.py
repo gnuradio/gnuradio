@@ -202,7 +202,7 @@ BLOCK_CREATE_HIER = Action(
 	label='C_reate Hier',
 	tooltip='Create hier block from selected blocks',
 	stock_id=gtk.STOCK_CONNECT,
-	keypresses=(gtk.keysyms.c, NO_MODS_MASK),
+#	keypresses=(gtk.keysyms.c, NO_MODS_MASK),
 )
 BLOCK_CUT = Action(
 	label='Cu_t',
