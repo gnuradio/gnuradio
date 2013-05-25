@@ -27,14 +27,14 @@ include(GrPython)
 ########################################################################
 install(FILES
     api.h
+    ofdm_chanest_vcvc.h
     ofdm_frame_equalizer_vcvc.h
     ofdm_serializer_vcc.h
     packet_header_default.h
     packet_header_ofdm.h
     packet_headergenerator_bb.h
     packet_headerparser_b.h
-    header_payload_demux.h
-    DESTINATION ${GR_INCLUDE_DIR}/gnuradio/digital
+    header_payload_demux.h DESTINATION ${GR_INCLUDE_DIR}/gnuradio/digital
     COMPONENT "digital_devel"
 )
 
