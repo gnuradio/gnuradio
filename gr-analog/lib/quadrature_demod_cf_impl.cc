@@ -64,8 +64,8 @@ namespace gr {
       gr_complex *in = (gr_complex*)input_items[0];
       float *out = (float*)output_items[0];
 
-      gr_complex tmp[noutput_items];
-      volk_32fc_x2_multiply_conjugate_32fc(tmp, &in[1], &in[0], noutput_items);
+      std::vector<gr_complex> tmp(noutput_items);
+      volk_32fc_x2_multiply_conjugate_32fc(&tmp[0], &in[1], &in[0], noutput_items);
       for(int i = 0; i < noutput_items; i++) {
         out[i] = d_gain * gr::fast_atan2f(imag(tmp[i]), real(tmp[i]));
       }
