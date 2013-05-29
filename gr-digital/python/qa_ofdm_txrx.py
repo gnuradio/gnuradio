@@ -21,7 +21,6 @@
 # 
 
 import numpy
-import scipy
 import random
 from gnuradio import gr, gr_unittest
 import blocks_swig as blocks
