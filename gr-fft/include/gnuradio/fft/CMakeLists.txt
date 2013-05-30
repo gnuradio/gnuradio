@@ -31,3 +31,11 @@ install(FILES
     COMPONENT "fft_devel"
 )
 
+if(ENABLE_GR_CTRLPORT)
+install(FILES
+  ctrlport_probe_psd.h
+  DESTINATION ${GR_INCLUDE_DIR}/gnuradio/fft
+  COMPONENT "fft_devel"
+)
+endif(ENABLE_GR_CTRLPORT)
+
