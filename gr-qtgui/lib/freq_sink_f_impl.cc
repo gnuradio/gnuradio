@@ -434,19 +434,19 @@ namespace gr {
 	// If we have enough input for one full FFT, do it
 	if(datasize >= resid) {
 
-	  for(int n = 0; n < d_nconnections; n++) {
-	    // Fill up residbuf with d_fftsize number of items
-	    in = (const float*)input_items[n];
-	    memcpy(d_residbufs[n]+d_index, &in[j], sizeof(float)*resid);
-
-	    fft(d_fbuf, d_residbufs[n], d_fftsize);
-	    for(int x = 0; x < d_fftsize; x++) {
-	      d_magbufs[n][x] = (double)((1.0-d_fftavg)*d_magbufs[n][x] + (d_fftavg)*d_fbuf[x]);
-	    }
-	    //volk_32f_convert_64f_a(d_magbufs[n], d_fbuf, d_fftsize);
-	  }
-      
 	  if(gr::high_res_timer_now() - d_last_time > d_update_time) {
+            for(int n = 0; n < d_nconnections; n++) {
+              // Fill up residbuf with d_fftsize number of items
+              in = (const float*)input_items[n];
+              memcpy(d_residbufs[n]+d_index, &in[j], sizeof(float)*resid);
+
+              fft(d_fbuf, d_residbufs[n], d_fftsize);
+              for(int x = 0; x < d_fftsize; x++) {
+                d_magbufs[n][x] = (double)((1.0-d_fftavg)*d_magbufs[n][x] + (d_fftavg)*d_fbuf[x]);
+              }
+              //volk_32f_convert_64f_a(d_magbufs[n], d_fbuf, d_fftsize);
+            }
+      
 	    d_last_time = gr::high_res_timer_now();
 	    d_qApplication->postEvent(d_main_gui,
 				      new FreqUpdateEvent(d_magbufs, d_fftsize));
