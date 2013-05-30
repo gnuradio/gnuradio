@@ -149,4 +149,20 @@ Framework Extensions
    filter_resamplers <filter/resamplers_blk>
    filter_blocks <filter/filter_blk>
    filter_design <filter/filter_design>
+   pmt_any <pmt/any>
+   pmt_generalfunctions <pmt/generalfunctions>
+   pmt_message_accepter <pmt/message_accepter>
+   pmt_readwrite <pmt/readwrite>
+   pmt_tuple <pmt/tuple>
+   pmt_boolean <pmt/boolean>
+   pmt_misc <pmt/misc>
+   pmt_real <pmt/real>
+   pmt_vector <pmt/vector>
+   pmt_integer <pmt/integer>
+   pmt_number <pmt/number>
+   pmt_serialize <pmt/serialize>
+   pmt_dictionary <pmt/dictionary>
+   pmt_list <pmt/list>
+   pmt_pair <pmt/pair>
+   pmt_symbol <pmt/symbol>
    
