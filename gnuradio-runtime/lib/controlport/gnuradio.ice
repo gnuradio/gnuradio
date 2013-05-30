@@ -86,6 +86,7 @@ interface StreamReceiver {
 interface ControlPort {
     void 			set(KnobMap knobs);
     idempotent  KnobMap 	get(KnobIDList knobs);
+    idempotent  KnobMap 	getRe(KnobIDList knobs);
     idempotent  KnobPropMap 	properties(KnobIDList knobs);
     void 			shutdown();
 };

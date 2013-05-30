@@ -48,6 +48,8 @@ public:
 
   GNURadio::KnobMap get(const GNURadio::KnobIDList&, const Ice::Current&);
 
+  GNURadio::KnobMap getRe(const GNURadio::KnobIDList&, const Ice::Current&);
+
   GNURadio::KnobPropMap properties(const GNURadio::KnobIDList&, const Ice::Current&);
 
   virtual void shutdown(const Ice::Current&);
