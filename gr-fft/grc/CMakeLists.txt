@@ -22,6 +22,7 @@ install(FILES
     fft_fft_vxx.xml
     fft_goertzel_fc.xml
     fft_logpwrfft_x.xml
+    fft_ctrlport_probe_psd.xml
     DESTINATION ${GRC_BLOCKS_DIR}
     COMPONENT "fft_python"
 )

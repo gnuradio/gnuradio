@@ -48,6 +48,12 @@ list(APPEND fft_sources
   goertzel.cc
 )
 
+if(ENABLE_GR_CTRLPORT)
+list(APPEND fft_sources
+  ctrlport_probe_psd_impl.cc
+)
+endif(ENABLE_GR_CTRLPORT)
+
 list(APPEND fft_libs
     gnuradio-runtime
     ${Boost_LIBRARIES}

@@ -40,3 +40,16 @@
 GR_SWIG_BLOCK_MAGIC2(fft, fft_vcc);
 GR_SWIG_BLOCK_MAGIC2(fft, fft_vfc);
 GR_SWIG_BLOCK_MAGIC2(fft, goertzel_fc);
+
+#ifdef GR_CTRLPORT
+
+%{
+#include "gnuradio/fft/ctrlport_probe_psd.h"
+%}
+
+%include "gnuradio/fft/ctrlport_probe_psd.h"
+
+GR_SWIG_BLOCK_MAGIC2(fft, ctrlport_probe_psd);
+
+#endif /* GR_CTRLPORT */
+
