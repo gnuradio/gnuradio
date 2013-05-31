@@ -8,7 +8,7 @@
 	<name>File Sink</name>
 	<key>blocks_file_sink</key>
 	<import>from gnuradio import blocks</import>
-	<make>blocks.file_sink($type.size*$vlen, $file)
+	<make>blocks.file_sink($type.size*$vlen, $file, $append)
 self.$(id).set_unbuffered($unbuffered)</make>
 	<callback>set_unbuffered($unbuffered)</callback>
 	<callback>open($file)</callback>
@@ -66,6 +66,20 @@ self.$(id).set_unbuffered($unbuffered)</make>
 		<option>
 				<name>On</name>
 				<key>True</key>
+		</option>
+	</param>
+	<param>
+		<name>Append file</name>
+		<key>append</key>
+		<value>False</value>
+		<type>bool</type>
+		<option>
+			<name>Append</name>
+			<key>True</key>
+		</option>
+		<option>
+			<name>Overwrite</name>
+			<key>False</key>
 		</option>
 	</param>
 

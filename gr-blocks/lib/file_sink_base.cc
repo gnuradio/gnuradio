@@ -53,8 +53,8 @@
 namespace gr {
   namespace blocks {
 
-    file_sink_base::file_sink_base(const char *filename, bool is_binary)
-      : d_fp(0), d_new_fp(0), d_updated(false), d_is_binary(is_binary)
+    file_sink_base::file_sink_base(const char *filename, bool is_binary, bool append)
+      : d_fp(0), d_new_fp(0), d_updated(false), d_is_binary(is_binary), d_append(append)
     {
       if (!open(filename))
         throw std::runtime_error ("can't open file");
@@ -76,9 +76,13 @@ namespace gr {
 
       // we use the open system call to get access to the O_LARGEFILE flag.
       int fd;
-      if((fd = ::open(filename,
-                      O_WRONLY|O_CREAT|O_TRUNC|OUR_O_LARGEFILE|OUR_O_BINARY,
-                      0664)) < 0){
+      int flags;
+      if(d_append) {
+        flags = O_WRONLY|O_CREAT|O_APPEND|OUR_O_LARGEFILE|OUR_O_BINARY;
+      } else {
+        flags = O_WRONLY|O_CREAT|O_TRUNC|OUR_O_LARGEFILE|OUR_O_BINARY;
+      }
+      if((fd = ::open(filename, flags, 0664)) < 0){
         perror(filename);
         return false;
       }
