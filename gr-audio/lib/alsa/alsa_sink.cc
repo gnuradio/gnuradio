@@ -96,12 +96,18 @@ namespace gr {
     {
       CHATTY_DEBUG = prefs::singleton()->get_bool("audio_alsa", "verbose", false);
 
-      int error;
+      int error=-1;
       int dir;
 
       // open the device for playback
-      error = snd_pcm_open(&d_pcm_handle, d_device_name.c_str(),
+      int attempts = 10;
+      while((error!=0)&&(attempts-->0)){
+        error = snd_pcm_open(&d_pcm_handle, d_device_name.c_str(),
                            SND_PCM_STREAM_PLAYBACK, 0);
+        if(error<0){ 
+                boost::this_thread::sleep( boost::posix_time::milliseconds(10));
+            }
+        }
       if(ok_to_block == false)
         snd_pcm_nonblock(d_pcm_handle, !ok_to_block);
       if(error < 0){
