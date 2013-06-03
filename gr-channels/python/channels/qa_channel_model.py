@@ -20,10 +20,7 @@
 # Boston, MA 02110-1301, USA.
 #
 
-from gnuradio import gr, gr_unittest
-import analog_swig as analog
-import blocks_swig as blocks
-import channels_swig as channels
+from gnuradio import gr, gr_unittest, analog, blocks, channels
 import math
 
 class test_channel_model(gr_unittest.TestCase):
