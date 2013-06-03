@@ -94,7 +94,7 @@ add_subdirectory(lib)
 add_subdirectory(include/gnuradio/atsc)
 if(ENABLE_PYTHON)
     add_subdirectory(swig)
-    add_subdirectory(python)
+    add_subdirectory(python/atsc)
 endif(ENABLE_PYTHON)
 
 ########################################################################

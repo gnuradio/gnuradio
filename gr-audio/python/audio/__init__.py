@@ -1,5 +1,5 @@
 #
-# Copyright 2013 Free Software Foundation, Inc.
+# Copyright 2011 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -19,10 +19,18 @@
 # Boston, MA 02110-1301, USA.
 #
 
-# The presence of this file turns this directory into a Python package
-
 '''
-Blocks and utilities for ATSC (Advanced Television Systems Committee) module.
-'''
+Blocks to connect to audio sources (mic-in) and sinks (speaker-out)
+ports on a computer.
 
-from atsc_swig import *
+The underlying hardware driver is system and OS dependent and this
+module should automatically discover the correct one to use.
+'''
+import os
+
+try:
+    from audio_swig import *
+except ImportError:
+    dirname, filename = os.path.split(os.path.abspath(__file__))
+    __path__.append(os.path.join(dirname, "..", "..", "swig"))
+    from audio_swig import *
