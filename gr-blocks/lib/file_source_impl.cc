@@ -71,9 +71,12 @@ namespace gr {
 
     file_source_impl::~file_source_impl()
     {
-      fclose ((FILE*)d_fp);
+      if(d_fp)
+        fclose ((FILE*)d_fp);
+      if(d_new_fp)
+        fclose ((FILE*)d_new_fp);
     }
-    
+
     bool
     file_source_impl::seek(long seek_point, int whence)
     {
