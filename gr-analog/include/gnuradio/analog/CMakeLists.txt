@@ -88,6 +88,7 @@ install(FILES
     agc_ff.h
     agc2_cc.h
     agc2_ff.h
+    agc3_cc.h
     cpfsk_bc.h
     ctcss_squelch_ff.h
     dpll_bb.h

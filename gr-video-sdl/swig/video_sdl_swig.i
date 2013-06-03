@@ -22,7 +22,7 @@
 
 #define VIDEO_SDL_API
 
-%include "runtime_swig.i"				// the common stuff
+%include "gnuradio.i"
 
 //load generated python docstrings
 %include "video_sdl_swig_doc.i"

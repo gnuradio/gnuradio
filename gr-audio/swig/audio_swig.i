@@ -22,7 +22,7 @@
 
 #define GR_AUDIO_API
 
-%include "runtime_swig.i"
+%include "gnuradio.i"
 
 //load generated python docstrings
 %include "audio_swig_doc.i"

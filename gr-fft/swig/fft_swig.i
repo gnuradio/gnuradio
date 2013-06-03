@@ -22,7 +22,7 @@
 
 #define FFT_API
 
-%include "runtime_swig.i"
+%include "gnuradio.i"
 
 //load generated python docstrings
 %include "fft_swig_doc.i"

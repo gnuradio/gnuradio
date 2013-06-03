@@ -148,6 +148,7 @@ namespace gr {
 		break;
 
 	      case STATE_WAIT_FOR_MSG:
+		if (empty_p(msg_port_id)) return 0; //no message available
 		// If we're in this state, nread is zero (because previous state exits loop)
 		// 1) Wait for msg (blocking call)
 		// 2) set d_remaining_symbols

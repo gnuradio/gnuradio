@@ -8,7 +8,8 @@
 	<name>AGC2</name>
 	<key>analog_agc2_xx</key>
 	<import>from gnuradio import analog</import>
-	<make>analog.agc2_$(type.fcn)($attack_rate, $decay_rate, $reference, $gain, $max_gain)</make>
+	<make>analog.agc2_$(type.fcn)($attack_rate, $decay_rate, $reference, $gain)
+self.$(id).set_max_gain($max_gain)</make>
 	<callback>set_attack_rate($attack_rate)</callback>
 	<callback>set_decay_rate($decay_rate)</callback>
 	<callback>set_reference($reference)</callback>
@@ -56,7 +57,7 @@
 	<param>
 		<name>Max Gain</name>
 		<key>max_gain</key>
-		<value>0.0</value>
+		<value>65536</value>
 		<type>real</type>
 	</param>
 	<sink>

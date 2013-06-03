@@ -11,6 +11,7 @@ class test_message_tags (gr_unittest.TestCase):
         rx_msgq = gr.msg_queue()
         for d in data:
             tx_msgq.insert_tail(gr.message_from_string(d))
+        tx_msgq.insert_tail(gr.message(1))                  # send EOF
         tb = gr.top_block()
         src = blocks.message_source(gr.sizeof_char, tx_msgq, "packet_length")
         snk = blocks.message_sink(gr.sizeof_char, rx_msgq, False, "packet_length")

@@ -22,7 +22,7 @@
 
 #define BLOCKS_API
 
-%include "runtime_swig.i"
+%include "gnuradio.i"
 %include "gnuradio/blocks/pdu.h"
 
 %include <gnuradio/endianness.h>

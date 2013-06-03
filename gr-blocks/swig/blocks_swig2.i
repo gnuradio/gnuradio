@@ -21,11 +21,14 @@
  */
 
 #define BLOCKS_API
+#define GR_RUNTIME_API
 
-%include "runtime_swig.i"
+%include "gnuradio.i"
 
 //load generated python docstrings
 %include "blocks_swig2_doc.i"
+
+%include "feval.i"
 
 %{
 #include "gnuradio/blocks/add_ff.h"

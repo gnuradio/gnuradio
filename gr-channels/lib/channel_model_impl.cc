@@ -57,7 +57,7 @@ namespace gr {
 	d_taps.push_back(0);
       }
 
-      d_timing_offset = filter::fractional_interpolator_cc::make(0, epsilon);
+      d_timing_offset = filter::fractional_resampler_cc::make(0, epsilon);
 
       d_multipath = filter::fir_filter_ccc::make(1, d_taps);
 
@@ -106,7 +106,7 @@ namespace gr {
     void
     channel_model_impl::set_timing_offset(double epsilon)
     {
-      d_timing_offset->set_interp_ratio(epsilon);
+      d_timing_offset->set_resamp_ratio(epsilon);
     }
 
     double
@@ -130,7 +130,7 @@ namespace gr {
     double
     channel_model_impl::timing_offset() const
     {
-      return d_timing_offset->interp_ratio();
+      return d_timing_offset->resamp_ratio();
     }
 
     void

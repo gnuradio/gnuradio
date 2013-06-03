@@ -32,20 +32,20 @@
  * \sa sys_pri.h
  */
 namespace gr {
+
+  typedef enum {
+    RT_OK = 0,
+    RT_NOT_IMPLEMENTED,
+    RT_NO_PRIVS,
+    RT_OTHER_ERROR
+  } rt_status_t;
+
+  enum rt_sched_policy {
+    RT_SCHED_RR   = 0,		// round robin
+    RT_SCHED_FIFO = 1,		// first in first out
+  };
+
   namespace impl {
-
-    typedef enum {
-      RT_OK = 0,
-      RT_NOT_IMPLEMENTED,
-      RT_NO_PRIVS,
-      RT_OTHER_ERROR
-    } rt_status_t;
-
-    enum rt_sched_policy {
-      RT_SCHED_RR   = 0,		// round robin
-      RT_SCHED_FIFO = 1,		// first in first out
-    };
-
     /*
      * Define the range for our virtual priorities (don't change
      * these)
@@ -88,8 +88,7 @@ namespace gr {
 
     // NOTE: If you change this, you need to change the code in
     // gnuradio-runtime/swig/realtime.i, see note there.
-    rt_status_t
-    GR_RUNTIME_API enable_realtime_scheduling(rt_sched_param = rt_sched_param());
+    GR_RUNTIME_API rt_status_t enable_realtime_scheduling(rt_sched_param = rt_sched_param());
 
   } /* namespace impl */
 } /* namespace gr */

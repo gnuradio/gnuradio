@@ -30,16 +30,13 @@
 //       pkg-config strips -I/usr/include from the --cflags path.
 
 namespace gr {
-  namespace impl {
 
-    typedef enum {
-      RT_OK = 0,
-      RT_NOT_IMPLEMENTED,
-      RT_NO_PRIVS,
-      RT_OTHER_ERROR
-    } rt_status_t;
-  }
+  typedef enum {
+    RT_OK = 0,
+    RT_NOT_IMPLEMENTED,
+    RT_NO_PRIVS,
+    RT_OTHER_ERROR
+  } rt_status_t;
+
+  gr::rt_status_t gr::enable_realtime_scheduling();
 }
-
-typedef gr::rt_status_t rt_status_t;
-rt_status_t gr::enable_realtime_scheduling();

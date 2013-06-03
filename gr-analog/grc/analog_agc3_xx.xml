@@ -1,16 +1,17 @@
 <?xml version="1.0"?>
 <!--
 ###################################################
-##AGC
+##AGC3
 ###################################################
  -->
 <block>
-	<name>AGC</name>
-	<key>analog_agc_xx</key>
+	<name>AGC3</name>
+	<key>analog_agc3_xx</key>
 	<import>from gnuradio import analog</import>
-	<make>analog.agc_$(type.fcn)($rate, $reference, $gain)
+	<make>analog.agc3_$(type.fcn)($attack_rate, $decay_rate, $reference, $gain)
 self.$(id).set_max_gain($max_gain)</make>
-	<callback>set_rate($rate)</callback>
+	<callback>set_attack_rate($attack_rate)</callback>
+	<callback>set_decay_rate($decay_rate)</callback>
 	<callback>set_reference($reference)</callback>
 	<callback>set_gain($gain)</callback>
 	<callback>set_max_gain($max_gain)</callback>
@@ -23,15 +24,21 @@ self.$(id).set_max_gain($max_gain)</make>
 			<key>complex</key>
 			<opt>fcn:cc</opt>
 		</option>
-		<option>
+<!--		<option>
 			<name>Float</name>
 			<key>float</key>
 			<opt>fcn:ff</opt>
-		</option>
+		</option>  -->
 	</param>
 	<param>
-		<name>Rate</name>
-		<key>rate</key>
+		<name>Attack Rate</name>
+		<key>attack_rate</key>
+		<value>1e-3</value>
+		<type>real</type>
+	</param>
+	<param>
+		<name>Decay Rate</name>
+		<key>decay_rate</key>
 		<value>1e-4</value>
 		<type>real</type>
 	</param>

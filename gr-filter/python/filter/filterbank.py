@@ -23,6 +23,7 @@ import sys
 from gnuradio import gr
 from gnuradio import fft
 from gnuradio import blocks
+from filter_swig import fft_filter_ccc
 
 def _generate_synthesis_taps(mpoints):
     return []   # FIXME
@@ -114,7 +115,7 @@ class synthesis_filterbank(gr.hier_block2):
 
         # build mpoints fir filters...
         for i in range(mpoints):
-            f = fft.fft_filter_ccc(1, sub_taps[i])
+            f = fft_filter_ccc(1, sub_taps[i])
             self.connect((self.v2ss, i), f)
             self.connect(f, (self.ss2s, i))
 
@@ -165,7 +166,7 @@ class analysis_filterbank(gr.hier_block2):
 
         # build mpoints fir filters...
         for i in range(mpoints):
-            f = fft.fft_filter_ccc(1, sub_taps[mpoints-i-1])
+            f = fft_filter_ccc(1, sub_taps[mpoints-i-1])
             self.connect((self.s2ss, i), f)
             self.connect(f, (self.ss2v, i))
             self.connect((self.v2ss, i), (self, i))

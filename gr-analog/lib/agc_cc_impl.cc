@@ -26,25 +26,27 @@
 
 #include "agc_cc_impl.h"
 #include <gnuradio/io_signature.h>
+#include <volk/volk.h>
 
 namespace gr {
   namespace analog {
 
     agc_cc::sptr
-    agc_cc::make(float rate, float reference,
-		 float gain, float max_gain)
+    agc_cc::make(float rate, float reference, float gain)
     {
       return gnuradio::get_initial_sptr
-	(new agc_cc_impl(rate, reference, gain, max_gain));
+	(new agc_cc_impl(rate, reference, gain));
     }
 
-    agc_cc_impl::agc_cc_impl(float rate, float reference,
-			     float gain, float max_gain)
+    agc_cc_impl::agc_cc_impl(float rate, float reference, float gain)
       : sync_block("agc_cc",
-		      io_signature::make(1, 1, sizeof(gr_complex)),
-		      io_signature::make(1, 1, sizeof(gr_complex))),
-	kernel::agc_cc(rate, reference, gain, max_gain)
+                   io_signature::make(1, 1, sizeof(gr_complex)),
+                   io_signature::make(1, 1, sizeof(gr_complex))),
+	kernel::agc_cc(rate, reference, gain, 65536)
     {
+      const int alignment_multiple =
+	volk_get_alignment() / sizeof(gr_complex);
+      set_alignment(std::max(1, alignment_multiple));
     }
 
     agc_cc_impl::~agc_cc_impl()

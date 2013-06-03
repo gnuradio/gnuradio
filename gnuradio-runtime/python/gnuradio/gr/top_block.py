@@ -20,7 +20,8 @@
 #
 
 from runtime_swig import top_block_swig, \
-    top_block_wait_unlocked, top_block_run_unlocked
+    top_block_wait_unlocked, top_block_run_unlocked, \
+    top_block_start_unlocked, top_block_stop_unlocked
 
 #import gnuradio.gr.gr_threading as _threading
 import gr_threading as _threading
@@ -99,10 +100,10 @@ class top_block(object):
 	return getattr(self._tb, name)
 
     def start(self, max_noutput_items=10000000):
-    	self._tb.start(max_noutput_items)
+    	top_block_start_unlocked(self._tb, max_noutput_items)
 
     def stop(self):
-    	self._tb.stop()
+    	top_block_stop_unlocked(self._tb)
 
     def run(self, max_noutput_items=10000000):
         self.start(max_noutput_items)

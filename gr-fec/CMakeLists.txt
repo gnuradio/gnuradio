@@ -40,11 +40,6 @@ GR_SET_GLOBAL(GR_FEC_INCLUDE_DIRS
     ${CMAKE_CURRENT_SOURCE_DIR}/include
 )
 
-if(ENABLE_GR_CTRLPORT)
-  ADD_DEFINITIONS(-DGR_CTRLPORT)
-  include_directories(${ICE_INCLUDE_DIR})
-endif(ENABLE_GR_CTRLPORT)
-
 ########################################################################
 # Begin conditional configuration
 ########################################################################

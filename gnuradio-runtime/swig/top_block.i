@@ -58,16 +58,34 @@ namespace gr {
 %inline %{
 void top_block_run_unlocked(gr::top_block_sptr r) throw (std::runtime_error)
 {
-    Py_BEGIN_ALLOW_THREADS;		// release global interpreter lock
-    r->run();
-    Py_END_ALLOW_THREADS;		// acquire global interpreter lock
+    GR_PYTHON_BLOCKING_CODE
+    (
+        r->run();
+    )
+}
+
+void top_block_start_unlocked(gr::top_block_sptr r, int max_noutput_items) throw (std::runtime_error)
+{
+    GR_PYTHON_BLOCKING_CODE
+    (
+        r->start(max_noutput_items);
+    )
 }
 
 void top_block_wait_unlocked(gr::top_block_sptr r) throw (std::runtime_error)
 {
-    Py_BEGIN_ALLOW_THREADS;		// release global interpreter lock
-    r->wait();
-    Py_END_ALLOW_THREADS;		// acquire global interpreter lock
+    GR_PYTHON_BLOCKING_CODE
+    (
+        r->wait();
+    )
+}
+
+void top_block_stop_unlocked(gr::top_block_sptr r) throw (std::runtime_error)
+{
+    GR_PYTHON_BLOCKING_CODE
+    (
+        r->stop();
+    )
 }
 %}
 

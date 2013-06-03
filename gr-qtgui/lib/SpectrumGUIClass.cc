@@ -133,6 +133,10 @@ SpectrumGUIClass::openSpectrumWindow(QWidget* parent,
 
   // GUI Thread only
   qApp->processEvents();
+
+  // Set the FFT Size combo box to display the right number
+  int idx = _spectrumDisplayForm->FFTSizeComboBox->findText(QString("%1").arg(_fftSize));
+  _spectrumDisplayForm->FFTSizeComboBox->setCurrentIndex(idx);
 }
 
 void

@@ -22,7 +22,7 @@
 
 #define VOCODER_API
 
-%include "runtime_swig.i"
+%include "gnuradio.i"
 
 //load generated python docstrings
 %include "vocoder_swig_doc.i"

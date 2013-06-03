@@ -22,7 +22,7 @@
 
 #define WAVELET_API
 
-%include "runtime_swig.i"
+%include "gnuradio.i"
 
 //load generated python docstrings
 %include "wavelet_swig_doc.i"

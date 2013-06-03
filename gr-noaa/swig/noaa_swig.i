@@ -22,7 +22,7 @@
 
 #define NOAA_API
 
-%include "runtime_swig.i"
+%include "gnuradio.i"
 
 //load generated python docstrings
 %include "noaa_swig_doc.i"

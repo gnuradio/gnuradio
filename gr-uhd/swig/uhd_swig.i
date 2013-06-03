@@ -32,7 +32,9 @@
 ////////////////////////////////////////////////////////////////////////
 // standard includes
 ////////////////////////////////////////////////////////////////////////
-%include "runtime_swig.i"
+
+%include <std_vector.i>
+%include "gnuradio.i"
 
 //load generated python docstrings
 %include "uhd_swig_doc.i"
@@ -49,6 +51,10 @@
 ////////////////////////////////////////////////////////////////////////
 // used types
 ////////////////////////////////////////////////////////////////////////
+
+%template(uhd_string_vector_t) std::vector<std::string>;
+
+%template(uhd_size_vector_t) std::vector<size_t>;
 
 %include <uhd/config.hpp>
 
@@ -83,8 +89,7 @@
 
 %include <uhd/types/sensors.hpp>
 
-// Prevents issue with vector<size_t> redef on 32-bit systems
-%import <uhd/stream.hpp>
+%include <uhd/stream.hpp>
 
 ////////////////////////////////////////////////////////////////////////
 // swig dboard_iface for python access

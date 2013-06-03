@@ -130,8 +130,10 @@ macro(GR_SWIG_MAKE name)
     find_package(PythonLibs)
     list(APPEND GR_SWIG_INCLUDE_DIRS ${PYTHON_INCLUDE_PATH}) #deprecated name (now dirs)
     list(APPEND GR_SWIG_INCLUDE_DIRS ${PYTHON_INCLUDE_DIRS})
-    list(APPEND GR_SWIG_INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR})
-    list(APPEND GR_SWIG_INCLUDE_DIRS ${CMAKE_CURRENT_BINARY_DIR})
+
+    #prepend local swig directories
+    list(INSERT GR_SWIG_INCLUDE_DIRS 0 ${CMAKE_CURRENT_SOURCE_DIR})
+    list(INSERT GR_SWIG_INCLUDE_DIRS 0 ${CMAKE_CURRENT_BINARY_DIR})
 
     #determine include dependencies for swig file
     execute_process(
