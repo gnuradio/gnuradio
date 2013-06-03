@@ -27,7 +27,6 @@ GR_PYTHON_INSTALL(FILES
     gr_threading_23.py
     gr_threading_24.py
     hier_block2.py
-    tag_utils.py
     top_block.py
     pubsub.py
     DESTINATION ${GR_PYTHON_DIR}/gnuradio/gr

@@ -43,8 +43,37 @@ except ImportError:
 from exceptions import *
 from top_block import *
 from hier_block2 import *
-from tag_utils import *
+#from tag_utils import *
 from gateway import basic_block, sync_block, decim_block, interp_block
 
 # Force the preference database to be initialized
 prefs = prefs.singleton
+
+
+class PythonTag(object):
+    " Python container for tags "
+    def __init__(self):
+        self.offset = None
+        self.key    = None
+        self.value  = None
+        self.srcid  = None
+
+def tag_to_python(tag):
+    """ Convert a stream tag to a Python-readable object """
+    newtag = PythonTag()
+    newtag.offset = tag.offset
+    newtag.key = pmt.to_python(tag.key)
+    newtag.value = pmt.to_python(tag.value)
+    newtag.srcid = pmt.to_python(tag.srcid)
+    return newtag
+
+def tag_to_pmt(tag):
+    """ Convert a Python-readable object to a stream tag """
+    newtag = gr.tag_t()
+    newtag.offset = tag.offset
+    newtag.key = pmt.to_python(tag.key)
+    newtag.value = pmt.from_python(tag.value)
+    newtag.srcid = pmt.from_python(tag.srcid)
+    return newtag
+
+

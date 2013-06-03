@@ -23,4 +23,11 @@
 Blocks for channel models and related functions.
 '''
 
-from channels_swig import *
+import os
+
+try:
+    from channels_swig import *
+except ImportError:
+    dirname, filename = os.path.split(os.path.abspath(__file__))
+    __path__.append(os.path.join(dirname, "..", "..", "swig"))
+    from channels_swig import *

@@ -23,7 +23,7 @@ import time
 import random
 
 from gnuradio import gr, gr_unittest, blocks, digital
-from gnuradio.digital import tagged_streams
+from gnuradio.digital.utils import tagged_streams
 import pmt
 
 class qa_packet_headerparser_b (gr_unittest.TestCase):
