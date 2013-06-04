@@ -59,7 +59,7 @@ namespace gr {
     {
       return prefs::singleton()->get_string("audio_alsa",
                                                "default_input_device",
-                                               "hw:0,0");
+                                               "default");
     }
 
     static double

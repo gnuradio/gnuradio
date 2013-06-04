@@ -57,7 +57,7 @@ namespace gr {
     static std::string
     default_device_name()
     {
-      return prefs::singleton()->get_string("audio_alsa", "default_output_device", "hw:0,0");
+      return prefs::singleton()->get_string("audio_alsa", "default_output_device", "default");
     }
 
     static double
