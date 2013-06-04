@@ -75,11 +75,13 @@ namespace gr {
       if (d_check) {
     //	crc = gr::digital::crc32(in, packet_length-4);
         d_crc_impl.reset();
-        d_crc_impl.process_bytes(in, packet_length);
+        d_crc_impl.process_bytes(in, packet_length-4);
         crc = d_crc_impl();
 	if (crc != *(unsigned int *)(in+packet_length-4)) { // Drop package
+      d_nfail++;
 	  return 0;
 	}
+    d_npass++;
 	memcpy((void *) out, (const void *) in, packet_length-4);
       } else {
         d_crc_impl.reset();
