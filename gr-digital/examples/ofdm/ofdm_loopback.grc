@@ -564,7 +564,7 @@
     </param>
   </block>
   <block>
-    <key>channel_model</key>
+    <key>channels_channel_model</key>
     <param>
       <key>id</key>
       <value>chan_model</value>
