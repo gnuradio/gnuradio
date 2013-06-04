@@ -20,11 +20,10 @@
 # Boston, MA 02110-1301, USA.
 #
 
-from gnuradio import gr, gr_unittest
+from gnuradio import gr, gr_unittest, blocks
 import pmt
 import numpy
 import time
-import blocks_swig as blocks
 
 # Simple block to generate messages
 class message_generator(gr.sync_block):

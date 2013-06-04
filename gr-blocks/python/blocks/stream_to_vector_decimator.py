@@ -19,12 +19,8 @@
 # Boston, MA 02110-1301, USA.
 #
 
+import blocks_swig as blocks
 from gnuradio import gr
-
-try:
-    from gnuradio import blocks
-except ImportError:
-    import blocks_swig as blocks
 
 class stream_to_vector_decimator(gr.hier_block2):
     """

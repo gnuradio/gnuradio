@@ -54,5 +54,3 @@ GR_PYTHON_INSTALL(
     DESTINATION ${GR_RUNTIME_DIR}
     COMPONENT "utils"
 )
-
-add_subdirectory(modtool)

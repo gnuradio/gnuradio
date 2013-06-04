@@ -20,10 +20,9 @@
 # Boston, MA 02110-1301, USA.
 #
 
-from gnuradio import gr, gr_unittest
-import filter_swig as filter
-import blocks_swig as blocks
 import math
+
+from gnuradio import gr, gr_unittest, filter, blocks
 
 def sig_source_f(samp_rate, freq, amp, N):
     t = map(lambda x: float(x)/samp_rate, xrange(N))

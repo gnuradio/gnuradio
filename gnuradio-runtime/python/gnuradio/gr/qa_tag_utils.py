@@ -21,7 +21,6 @@
 #
 
 from gnuradio import gr, gr_unittest
-import tag_utils
 
 try:
     import pmt_swig as pmt
@@ -43,7 +42,7 @@ class test_tag_utils (gr_unittest.TestCase):
         t.key = pmt.string_to_symbol('key')
         t.value = pmt.from_long(23)
         t.srcid = pmt.from_bool(False)
-        pt = tag_utils.tag_to_python(t)
+        pt = gr.tag_to_python(t)
         self.assertEqual(pt.key, 'key')
         self.assertEqual(pt.value, 23)
         self.assertEqual(pt.offset, 10)

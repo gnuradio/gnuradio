@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2013 Free Software Foundation, Inc.
+# Copyright 2012-2013 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -20,16 +20,9 @@
 # Boston, MA 02110-1301, USA.
 #
 
-from gnuradio import gr, gr_unittest
-import blocks_swig as blocks
-import math
+from gnuradio import gr, gr_unittest, blocks
 
-def sig_source_f(samp_rate, freq, amp, N):
-    t = map(lambda x: float(x)/samp_rate, xrange(N))
-    y = map(lambda x: amp*math.cos(2.*math.pi*freq*x), t)
-    return y
-
-class test_vco(gr_unittest.TestCase):
+class qa_plateau_detector_fb (gr_unittest.TestCase):
 
     def setUp (self):
         self.tb = gr.top_block ()
@@ -37,23 +30,16 @@ class test_vco(gr_unittest.TestCase):
     def tearDown (self):
         self.tb = None
 
-    def test_001(self):
-        src_data = 200*[0,] + 200*[0.5,] + 200*[1,]
-        expected_result = 200*[1,] + \
-            sig_source_f(1, 0.125, 1, 200) + \
-            sig_source_f(1, 0.25, 1, 200)
-
-        src = blocks.vector_source_f(src_data)
-        op = blocks.vco_f(1, math.pi/2.0, 1)
-        dst = blocks.vector_sink_f()
-
-        self.tb.connect(src, op, dst)
-        self.tb.run()
-
-        result_data = dst.data()
-        self.assertFloatTuplesAlmostEqual(expected_result, result_data, 5)
+    def test_001_t (self):
+        #                  | Spur spike 1     | Plateau                  | Spur spike 2
+        test_signal  = (0, 1, .2, .4, .6, .8, 1, 1, 1, 1, 1, .8, .6, .4, 1, 0)
+        expected_sig = (0, 0,  0,  0,  0,  0, 0, 0, 1, 0, 0,  0,  0,  0, 0, 0)
+        #                                           | Center of Plateau
+        sink = blocks.vector_sink_b()
+        self.tb.connect(blocks.vector_source_f(test_signal), blocks.plateau_detector_fb(5), sink)
+        self.tb.run ()
+        self.assertEqual(expected_sig, sink.data())
 
 
 if __name__ == '__main__':
-    gr_unittest.run(test_vco, "test_vco.xml")
-
+    gr_unittest.run(qa_plateau_detector_fb, "qa_plateau_detector_fb.xml")

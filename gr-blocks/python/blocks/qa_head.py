@@ -1,30 +1,28 @@
 #!/usr/bin/env python
 #
-# Copyright 2012-2013 Free Software Foundation, Inc.
-# 
+# Copyright 2004,2007,2010,2013 Free Software Foundation, Inc.
+#
 # This file is part of GNU Radio
-# 
+#
 # GNU Radio is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 3, or (at your option)
 # any later version.
-# 
+#
 # GNU Radio is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU General Public License
 # along with GNU Radio; see the file COPYING.  If not, write to
 # the Free Software Foundation, Inc., 51 Franklin Street,
 # Boston, MA 02110-1301, USA.
-# 
+#
 
-from gnuradio import gr, gr_unittest
-import blocks_swig as blocks
-import math
+from gnuradio import gr, gr_unittest, blocks
 
-class test_vector_insert(gr_unittest.TestCase):
+class test_head(gr_unittest.TestCase):
 
     def setUp(self):
         self.tb = gr.top_block()
@@ -32,28 +30,17 @@ class test_vector_insert(gr_unittest.TestCase):
     def tearDown(self):
         self.tb = None
 
-    def test_001(self):
-        src_data = [float(x) for x in range(16)]
-        expected_result = tuple(src_data)
-
-        period = 9177;
-        offset = 0;
-
-        src = blocks.null_source(1)
-        head = blocks.head(1, 10000000);
-        ins = blocks.vector_insert_b([1], period, offset);
-        dst = blocks.vector_sink_b()
-
-        self.tb.connect(src, head, ins, dst)
+    def test_head(self):
+        src_data = (1, 2, 3, 4, 5, 6, 7, 8, 9, 10)
+        expected_result = (1, 2, 3, 4)
+        src1 = blocks.vector_source_i(src_data)
+        op = blocks.head(gr.sizeof_int, 4)
+        dst1 = blocks.vector_sink_i()
+        self.tb.connect(src1, op)
+        self.tb.connect(op, dst1)
         self.tb.run()
-        result_data = dst.data()
-
-        for i in range(10000):
-            if(i%period == offset):
-                self.assertEqual(1, result_data[i])
-            else:
-                self.assertEqual(0, result_data[i])
+        dst_data = dst1.data()
+        self.assertEqual(expected_result, dst_data)
 
 if __name__ == '__main__':
-    gr_unittest.run(test_vector_insert, "test_vector_insert.xml")
-
+    gr_unittest.run(test_head, "test_head.xml")

@@ -19,10 +19,11 @@
 # Boston, MA 02110-1301, USA.
 #
 
-from gnuradio import gr, gr_unittest
-import pmt
 import numpy
-import blocks_swig as blocks
+
+import pmt
+
+from gnuradio import gr, gr_unittest, blocks
 
 class add_2_f32_1_f32(gr.sync_block):
     def __init__(self):

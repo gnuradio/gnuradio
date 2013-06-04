@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 
-from gnuradio import gr, gr_unittest
-import blocks_swig as blocks
+from gnuradio import gr, gr_unittest, blocks
 import numpy
 
 class add_ff(gr.sync_block):

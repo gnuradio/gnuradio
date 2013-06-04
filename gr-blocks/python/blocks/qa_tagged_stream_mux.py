@@ -20,9 +20,8 @@
 # Boston, MA 02110-1301, USA.
 #
 
-from gnuradio import gr, gr_unittest
+from gnuradio import gr, gr_unittest, blocks
 import pmt
-import blocks_swig as blocks
 import numpy
 
 def make_len_tags(tupl, key):

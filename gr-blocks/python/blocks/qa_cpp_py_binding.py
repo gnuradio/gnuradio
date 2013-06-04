@@ -26,13 +26,11 @@
 
 import Ice
 import sys, time, random, numpy
-from gnuradio import gr, gr_unittest
+from gnuradio import gr, gr_unittest, blocks
 
 from gnuradio.ctrlport import GNURadio
 from gnuradio import ctrlport
 import os
-
-import blocks_swig as blocks
 
 def get1():
     return "success"

@@ -21,13 +21,8 @@
 #
 
 import sys
-from gnuradio import gr
+from gnuradio import gr, blocks
 import pmt
-
-try:
-    import blocks_swig as blocks
-except ImportError:
-    from gnuradio import blocks
 
 '''
 sr    Sample rate (samples/second)

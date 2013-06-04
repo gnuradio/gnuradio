@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2005,2008,2010 Free Software Foundation, Inc.
+# Copyright 2013 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -20,10 +20,9 @@
 # Boston, MA 02110-1301, USA.
 #
 
-from gnuradio import gr, gr_unittest
-import uhd_swig
+from gnuradio import gr, gr_unittest, blocks
 
-class test_uhd(gr_unittest.TestCase):
+class test_affinity(gr_unittest.TestCase):
 
     def setUp(self):
         self.tb = gr.top_block()
@@ -31,22 +30,20 @@ class test_uhd(gr_unittest.TestCase):
     def tearDown(self):
         self.tb = None
 
-    def test_000_nop (self):
-        """Just see if we can import the module...
-        They may not have a UHD device connected, etc.  Don't try to run anything"""
-        pass
+    def test_000(self):
+        # Just run some data through and make sure it doesn't puke.
+        src_data = (1, 2, 3, 4, 5, 6, 7, 8, 9, 10)
 
-    def test_stream_args_channel_foo(self):
-        """
-        Try to manipulate the stream args channels for proper swig'ing checks.
-        """
-        sa = uhd_swig.stream_args_t()
-        sa.channels.append(1)
-        sa.channels.append(0)
-        print sa.channels
-        self.assertEqual(len(sa.channels), 2)
-        self.assertEqual(sa.channels[0], 1)
-        self.assertEqual(sa.channels[1], 0)
+        src = blocks.vector_source_f(src_data)
+        snk = blocks.vector_sink_f()
+
+        src.set_processor_affinity([0,])
+        self.tb.connect(src, snk)
+        self.tb.run()
+
+        a = src.processor_affinity()
+
+        self.assertEqual((0,), a)
 
 if __name__ == '__main__':
-    gr_unittest.run(test_uhd, "test_uhd.xml")
+    gr_unittest.run(test_affinity, "test_affinity.xml")

@@ -45,3 +45,6 @@ if path.endswith(path_ending):
     __path__.append(os.path.join(build_path, 'gr-fcd', 'python'))
     __path__.append(os.path.join(build_path, 'gr-comedi', 'python'))
     __path__.append(os.path.join(build_path, 'gr-channels', 'python'))
+    __path__.append(os.path.join(build_path, 'gr-fec', 'python'))
+    __path__.append(os.path.join(build_path, 'gr-utils', 'python'))
+    __path__.append(os.path.join(build_path, 'gr-uhd', 'python'))

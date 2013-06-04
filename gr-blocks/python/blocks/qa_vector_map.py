@@ -20,8 +20,7 @@
 # Boston, MA 02110-1301, USA.
 #
 
-from gnuradio import gr, gr_unittest
-import blocks_swig as blocks
+from gnuradio import gr, gr_unittest, blocks
 import math
 
 class test_vector_map(gr_unittest.TestCase):

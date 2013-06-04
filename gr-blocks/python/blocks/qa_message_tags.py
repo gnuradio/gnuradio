@@ -1,7 +1,6 @@
 import time
 
-from gnuradio import gr, gr_unittest
-import blocks_swig as blocks
+from gnuradio import gr, gr_unittest, blocks
 
 class test_message_tags (gr_unittest.TestCase):
 
