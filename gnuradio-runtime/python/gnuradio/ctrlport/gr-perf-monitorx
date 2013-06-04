@@ -446,6 +446,21 @@ class DataTableRuntimes(DataTable):
 class MForm(QtGui.QWidget):
     def update(self):
         try:
+            try:
+                # update current clock type
+                self.prevent_clock_change = True;
+                kl1 = None;
+                if(self.clockKey == None):
+                    kl1 = self.radio.getRe([".*perfcounter_clock"])
+                else:
+                    kl1 = self.radio.get([self.clockKey]);
+                self.clockKey = kl1.keys()[0];
+                self.currClock = kl1[self.clockKey].value;
+                self.clockSelIdx = self.clocks.values().index(self.currClock);
+                self.clockSel.setCurrentIndex(self.clockSelIdx);
+                self.prevent_clock_change = False;
+            except:
+                print "WARNING: Failed to get current clock setting!"
 
             nodes = self.G.nodes();
     
@@ -525,6 +540,18 @@ class MForm(QtGui.QWidget):
     def stat_changed(self, index):
         self._statistic = str(self.stattype.currentText())
 
+    def update_clock(self, clkidx):
+        if(self.prevent_clock_change):
+            return;
+        idx = self.clockSel.currentIndex();
+        clk = self.clocks.values()[idx]
+        print "UPDATE CLOCK!!! %d -> %d"%(idx,clk);
+        k = self.radio.get([self.clockKey]);
+        k[self.clockKey].value = clk;
+        km = {};
+        km[self.clockKey] = k[self.clockKey];
+        self.radio.set(km);
+
     def __init__(self, radio=None, port=None, uid=0, parent=None):
 
         super(MForm, self).__init__()
@@ -561,6 +588,15 @@ class MForm(QtGui.QWidget):
         self.bptBut = Qt.QToolButton()
         self.bptBut.setDefaultAction(self.bptAct);
         self.ctlBox.addWidget(self.bptBut);
+
+        self.prevent_clock_change = True;
+        self.clockKey = None;
+        self.clocks = {"MONOTONIC":1, "THREAD":3};
+        self.clockSel = QtGui.QComboBox(self);
+        map(lambda x: self.clockSel.addItem(x), self.clocks.keys());
+        self.ctlBox.addWidget(self.clockSel);
+        self.clockSel.currentIndexChanged.connect(self.update_clock);
+        self.prevent_clock_change = False;
 
         self._statistic = "Instantaneous"
         self._statistics_table = {"Instantaneous": "",
