@@ -25,6 +25,7 @@ include(GrPython)
 GR_PYTHON_INSTALL(
     FILES
     __init__.py
+    atsc_utils.py
     DESTINATION ${GR_PYTHON_DIR}/gnuradio/atsc
     COMPONENT "atsc_python"
 )

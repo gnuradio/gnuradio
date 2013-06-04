@@ -20,11 +20,11 @@
 # Boston, MA 02110-1301, USA.
 #
 
-from gnuradio import gr, gr_unittest
-import atsc_swig as atsc
-from atsc_utils import *
 import sys
-import blocks_swig as blocks
+
+from gnuradio import gr, gr_unittest, atsc, blocks
+from gnuradio.atsc import atsc_utils
+
 
 class memoize(object):
     def __init__(self, thunk):
@@ -46,7 +46,7 @@ We generate 8 full fields.  This is relatively expensive.  It
 takes about 2 seconds to execute.
 """
 make_transport_stream = \
-    memoize(lambda : tuple(make_fake_transport_stream_packet(8 * atsc.ATSC_DSEGS_PER_FIELD)))
+    memoize(lambda : tuple(atsc_utils.make_fake_transport_stream_packet(8 * atsc.ATSC_DSEGS_PER_FIELD)))
 
 
 def pad_transport_stream(src):
@@ -55,7 +55,7 @@ def pad_transport_stream(src):
     that is 256 bytes long to help with buffer alignment.  This function adds the
     appropriate trailing padding to convert each packet from 188 to 256 bytes.
     """
-    return pad_stream(src, atsc.sizeof_atsc_mpeg_packet, atsc.sizeof_atsc_mpeg_packet_pad)
+    return atsc_utils.pad_stream(src, atsc.sizeof_atsc_mpeg_packet, atsc.sizeof_atsc_mpeg_packet_pad)
 
 
 def depad_transport_stream(src):
@@ -64,7 +64,7 @@ def depad_transport_stream(src):
     that is 256 bytes long to help with buffer alignment.  This function removes the
     trailing padding to convert each packet from 256 back to 188 bytes.
     """
-    return depad_stream(src, atsc.sizeof_atsc_mpeg_packet, atsc.sizeof_atsc_mpeg_packet_pad)
+    return atsc_utils.depad_stream(src, atsc.sizeof_atsc_mpeg_packet, atsc.sizeof_atsc_mpeg_packet_pad)
 
 
 class vector_source_ts(gr.hier_block2):
