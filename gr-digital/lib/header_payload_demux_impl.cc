@@ -27,8 +27,11 @@
 #include <gr_io_signature.h>
 #include "header_payload_demux_impl.h"
 
+
 namespace gr {
   namespace digital {
+    // FIXME this is a completely arbitrary number, and depends on t
+    const int MAX_SYMBOLS = 100;
 
     enum demux_states_t {
       STATE_IDLE,
@@ -170,7 +173,11 @@ namespace gr {
 	    // 3) Write tags
 	    // 4) fall through to next state
 	    d_remaining_symbols = -1;
-	    if (!parse_header_data_msg()) {
+	    // TODO MAX_SYMBOLS depends on the buffer size in the payload demod chain
+	    if (!parse_header_data_msg() || d_remaining_symbols > MAX_SYMBOLS) {
+	      if (d_remaining_symbols > MAX_SYMBOLS) {
+		GR_LOG_INFO(d_logger, "Detected a packet larger than max frame size");
+	      }
 	      d_state = STATE_IDLE;
 	      exit_loop = true;
 	      break;
