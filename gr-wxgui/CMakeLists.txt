@@ -97,7 +97,7 @@ install(
 add_subdirectory(include/gnuradio/wxgui)
 add_subdirectory(lib)
 add_subdirectory(grc)
+add_subdirectory(python/wxgui)
 add_subdirectory(swig)
-add_subdirectory(python)
 
 endif(ENABLE_GR_WXGUI)

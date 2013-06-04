@@ -48,7 +48,8 @@ CPACK_COMPONENT("utils"
 ########################################################################
 # Add subdirectories
 ########################################################################
-add_subdirectory(python)
+add_subdirectory(python/utils)
+add_subdirectory(python/modtool)
 
 
 endif(ENABLE_GR_UTILS)

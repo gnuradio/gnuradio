@@ -32,6 +32,10 @@ EXECUTE_PROCESS(
           ${CMAKE_SOURCE_DIR}/gnuradio-runtime/lib/controlport/frontend.ice
 )
 
+EXECUTE_PROCESS(
+  COMMAND ${CMAKE_COMMAND} -E remove ${CMAKE_BINARY_DIR}/gnuradio-runtime/python/gnuradio/__init__.py
+)
+
 GR_PYTHON_INSTALL(
     FILES
     ${CMAKE_CURRENT_SOURCE_DIR}/__init__.py
