@@ -5,10 +5,10 @@
 ###################################################
  -->
 <block>
-	<name>Tagged Stream to PDU</name>
-	<key>blocks_tagged_stream_to_pdu</key>
-	<import>from gnuradio import blocks</import>
-	<make>blocks.tagged_stream_to_pdu($type.tv)</make>
+    <name>Tagged Stream to PDU</name>
+    <key>blocks_tagged_stream_to_pdu</key>
+    <import>from gnuradio import blocks</import>
+    <make>blocks.tagged_stream_to_pdu($type.tv, $tag)</make>
     <param>
         <name>Item Type</name>
         <key>type</key>
@@ -29,12 +29,18 @@
             <opt>tv:blocks.float_t</opt>
         </option>
     </param>
-	<sink>
-		<name>in</name>
-		<type>$type</type>
-	</sink>
-	<source>
-		<name>pdus</name>
-		<type>message</type>
-	</source>
+    <param>
+        <name>Length tag name</name>
+        <key>tag</key>
+        <value>packet_len</value>
+        <type>string</type>
+    </param>
+    <sink>
+        <name>in</name>
+        <type>$type</type>
+    </sink>
+    <source>
+        <name>pdus</name>
+        <type>message</type>
+    </source>
 </block>

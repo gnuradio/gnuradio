@@ -32,12 +32,12 @@ namespace gr {
   namespace blocks {
 
     tagged_stream_to_pdu::sptr
-    tagged_stream_to_pdu::make(pdu::vector_type type)
+    tagged_stream_to_pdu::make(pdu::vector_type type, const std::string& lengthtagname)
     {
-      return gnuradio::get_initial_sptr(new tagged_stream_to_pdu_impl(type));
+      return gnuradio::get_initial_sptr(new tagged_stream_to_pdu_impl(type, lengthtagname));
     }
 
-    tagged_stream_to_pdu_impl::tagged_stream_to_pdu_impl(pdu::vector_type type)
+    tagged_stream_to_pdu_impl::tagged_stream_to_pdu_impl(pdu::vector_type type, const std::string& lengthtagname)
       : sync_block("tagged_stream_to_pdu",
 		      io_signature::make(1, 1, pdu::itemsize(type)),
 		      io_signature::make(0, 0, 0)),

@@ -43,7 +43,7 @@ namespace gr {
       std::vector<tag_t> d_tags;
       
     public:
-      tagged_stream_to_pdu_impl(pdu::vector_type type);
+      tagged_stream_to_pdu_impl(pdu::vector_type type, const std::string& lengthtagname);
 
       int work(int noutput_items,
 	       gr_vector_const_void_star &input_items,

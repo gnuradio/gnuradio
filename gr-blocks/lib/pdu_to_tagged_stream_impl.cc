@@ -32,17 +32,18 @@ namespace gr {
   namespace blocks {
 
     pdu_to_tagged_stream::sptr
-    pdu_to_tagged_stream::make(pdu::vector_type type)
+    pdu_to_tagged_stream::make(pdu::vector_type type, const std::string& lengthtagname)
     {
-      return gnuradio::get_initial_sptr(new pdu_to_tagged_stream_impl(type));
+      return gnuradio::get_initial_sptr(new pdu_to_tagged_stream_impl(type, lengthtagname));
     }
 
-    pdu_to_tagged_stream_impl::pdu_to_tagged_stream_impl(pdu::vector_type type)
+    pdu_to_tagged_stream_impl::pdu_to_tagged_stream_impl(pdu::vector_type type, const std::string& lengthtagname)
       : sync_block("pdu_to_tagged_stream",
 		      io_signature::make(0, 0, 0),
 		      io_signature::make(1, 1, pdu::itemsize(type))),
 	d_itemsize(pdu::itemsize(type)),
-	d_type(type)
+	d_type(type),
+    d_tag(pmt::mp(lengthtagname))
     {
       message_port_register_in(PDU_PORT_ID);
     }
@@ -84,7 +85,7 @@ namespace gr {
 	uint64_t offset = nitems_written(0) + nout;
 
 	// add a tag for pdu length
-	add_item_tag(0, offset, PDU_LENGTH_TAG, pmt::from_long(pmt::length(vect)), pmt::mp(alias()));
+	add_item_tag(0, offset, d_tag, pmt::from_long(pmt::length(vect)), pmt::mp(alias()));
 
 	// if we recieved metadata add it as tags
 	if (!pmt::eq(meta, pmt::PMT_NIL) ) {

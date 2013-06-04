@@ -44,7 +44,7 @@ namespace gr {
        * \brief Construct a tagged_stream_to_pdu block
        * \param type PDU type of pdu::vector_type
        */
-      static sptr make(pdu::vector_type type);
+      static sptr make(pdu::vector_type type, const std::string& lengthtagname="packet_len");
     };
 
   } /* namespace blocks */
