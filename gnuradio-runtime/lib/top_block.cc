@@ -28,6 +28,7 @@
 #include <gnuradio/top_block.h>
 #include <gnuradio/io_signature.h>
 #include <gnuradio/prefs.h>
+#include <gnuradio/high_res_timer.h>
 #include <unistd.h>
 #include <iostream>
 
@@ -151,6 +152,24 @@ namespace gr {
            "edges", "List of edges in the graph",
            RPC_PRIVLVL_MIN, DISPNULL)));
     }
+
+#ifdef GNURADIO_HRT_USE_CLOCK_GETTIME
+    std::string initial_clock = prefs::singleton()->get_string("PerfCounters", "clock", "thread");
+    if(initial_clock.compare("thread") == 0){
+        gr::high_res_timer_source = CLOCK_THREAD_CPUTIME_ID;
+    } else if(initial_clock.compare("monotonic") == 0){
+        gr::high_res_timer_source = CLOCK_MONOTONIC;
+    } else {
+        throw std::runtime_error("bad argument for PerfCounters.clock!");
+    }
+    add_rpc_variable(
+        rpcbasic_sptr(new rpcbasic_register_variable_rw<int>(
+        alias(), "perfcounter_clock",
+        (int*)&gr::high_res_timer_source,
+        pmt::mp(0), pmt::mp(2), pmt::mp(2),
+        "clock", "Performance Counters Realtime Clock Type",
+        RPC_PRIVLVL_MIN, DISPNULL)));
+#endif
 
     // Setters
     add_rpc_variable(

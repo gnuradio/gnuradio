@@ -31,7 +31,8 @@ debug_file = stderr
 [PerfCounters]
 on = False
 export = True
-
+clock = thread
+#clock = monotonic
 
 [ControlPort]
 on = False
