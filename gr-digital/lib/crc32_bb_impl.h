@@ -24,6 +24,7 @@
 #define INCLUDED_DIGITAL_CRC32_BB_IMPL_H
 
 #include <gnuradio/digital/crc32_bb.h>
+#include <boost/crc.hpp>
 
 namespace gr {
   namespace digital {
@@ -32,6 +33,7 @@ namespace gr {
     {
      private:
       bool d_check;
+      boost::crc_optimal<32, 0x04C11DB7, 0xFFFFFFFF, 0xFFFFFFFF, true, true>    d_crc_impl;
 
      public:
       crc32_bb_impl(bool check, const std::string& lengthtagname);
@@ -42,6 +44,9 @@ namespace gr {
 		       gr_vector_int &ninput_items,
 		       gr_vector_const_void_star &input_items,
 		       gr_vector_void_star &output_items);
+
+      uint64_t d_npass;
+      uint64_t d_nfail;
     };
 
   } // namespace digital
