@@ -232,4 +232,3 @@ GR_SWIG_BLOCK_MAGIC_FACTORY(digital, cpmmod_bc, gmskmod_bc);
 %include "constellation.i"
 %include "packet_header.i"
 %include "ofdm_equalizer.i"
-

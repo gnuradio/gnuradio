@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /* 
- * Copyright 2013 Free Software Foundation, Inc.
+ * Copyright 2012,2013 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -125,7 +125,8 @@ namespace gr {
 	}
       }
 
-      set_relative_rate((double) n_data_symbols / (n_data_symbols + d_n_sync_syms));
+      set_output_multiple(d_n_data_syms);
+      set_relative_rate((double) d_n_data_syms / (d_n_data_syms + d_n_sync_syms));
       set_tag_propagation_policy(TPP_DONT);
     }
 
@@ -223,13 +224,7 @@ namespace gr {
     }
 
 
-    // 1) Go through all the frames available on the input buffer
-    // 2) Estimate the coarse freq. offset and the eq. taps from the
-    //    input symbol(s)
-    // 3) Copy the data symbols to the output
-    // 4) Copy all other tags onto the output. A tag that was on
-    //    a sync symbol is copied onto the first data symbol.
-    // 5) Add the new tags for carrier offset and eq. taps
+    // Operates on a per-frame basis
     int
     ofdm_chanest_vcvc_impl::general_work (int noutput_items,
                        gr_vector_int &ninput_items,
@@ -238,54 +233,47 @@ namespace gr {
     {
       const gr_complex *in = (const gr_complex *) input_items[0];
       gr_complex *out = (gr_complex *) output_items[0];
-      int n_frames = noutput_items/d_n_data_syms;
       const int framesize = d_n_sync_syms + d_n_data_syms;
 
-      for (int i = 0; i < n_frames; i++) {
-	int carr_offset = 0;
-	if (d_max_neg_carr_offset || d_max_pos_carr_offset)
-	  carr_offset = get_carr_offset(in, in+d_fft_len);
-	std::vector<gr_complex> chan_taps(d_fft_len, 0);
-	get_chan_taps(in, in+d_fft_len, carr_offset, chan_taps);
+      // Channel info estimation
+      int carr_offset = get_carr_offset(in, in+d_fft_len);
+      std::vector<gr_complex> chan_taps(d_fft_len, 0);
+      get_chan_taps(in, in+d_fft_len, carr_offset, chan_taps);
+      add_item_tag(0, nitems_written(0),
+	  pmt::string_to_symbol("ofdm_sync_carr_offset"),
+	  pmt::from_long(carr_offset));
+      add_item_tag(0, nitems_written(0),
+	  pmt::string_to_symbol("ofdm_sync_chan_taps"),
+	  pmt::init_c32vector(d_fft_len, chan_taps));
 
-	if (output_items.size() == 2) {
-	  gr_complex *out_chantaps = ((gr_complex *) output_items[1]) + i * d_fft_len;
-	  memcpy((void *) out_chantaps, (void *) &chan_taps[0], sizeof(gr_complex) * d_fft_len);
-	  produce(1, 1);
-	}
-
-	memcpy((void *) out,
-	       (void *) &in[d_n_sync_syms * d_fft_len],
-	       sizeof(gr_complex) * d_fft_len * d_n_data_syms);
-	in += framesize * d_fft_len;
-	out += d_n_data_syms * d_fft_len;
-
-	std::vector<tag_t> tags;
-	get_tags_in_range(tags, 0,
-	    nitems_read(0)+i*framesize,
-	    nitems_read(0)+(i+1)*framesize);
-
-	for (unsigned t = 0; t < tags.size(); t++) {
-	  int offset = tags[t].offset - (nitems_read(0) + i*framesize);
-	  if (offset < d_n_sync_syms) {
-	    offset = 0;
-	  } else {
-	    offset -= d_n_sync_syms;
-	  }
-	  tags[t].offset = offset + nitems_written(0) + i*d_n_data_syms;
-	  add_item_tag(0, tags[t]);
-	}
-
-	add_item_tag(0, nitems_written(0) + i*d_n_data_syms,
-	    pmt::string_to_symbol("ofdm_sync_carr_offset"),
-	    pmt::from_long(carr_offset));
-	add_item_tag(0, nitems_written(0) + i*d_n_data_syms,
-	    pmt::string_to_symbol("ofdm_sync_chan_taps"),
-	    pmt::init_c32vector(d_fft_len, chan_taps));
+      // Copy data symbols
+      if (output_items.size() == 2) {
+	gr_complex *out_chantaps = ((gr_complex *) output_items[1]);
+	memcpy((void *) out_chantaps, (void *) &chan_taps[0], sizeof(gr_complex) * d_fft_len);
+	produce(1, 1);
       }
-      produce(0, n_frames * d_n_data_syms);
-      consume_each(n_frames * framesize);
+      memcpy((void *) out,
+	     (void *) &in[d_n_sync_syms * d_fft_len],
+	     sizeof(gr_complex) * d_fft_len * d_n_data_syms);
 
+      // Propagate tags
+      std::vector<gr::tag_t> tags;
+      get_tags_in_range(tags, 0,
+	  nitems_read(0),
+	  nitems_read(0)+framesize);
+      for (unsigned t = 0; t < tags.size(); t++) {
+	int offset = tags[t].offset - nitems_read(0);
+	if (offset < d_n_sync_syms) {
+	  offset = 0;
+	} else {
+	  offset -= d_n_sync_syms;
+	}
+	tags[t].offset = offset + nitems_written(0);
+	add_item_tag(0, tags[t]);
+      }
+
+      produce(0, d_n_data_syms);
+      consume_each(framesize);
       return WORK_CALLED_PRODUCE;
     }
 
