@@ -234,9 +234,10 @@ class ofdm_tx(gr.hier_block2):
         self.connect(header_payload_mux, allocator, (syncword_data_mux, 1))
         self.connect(syncword_data_mux, ffter, cyclic_prefixer, self)
         if debug_log:
-            self.connect(allocator,         blocks.file_sink(8*64, 'tx-post-allocator.dat'))
-            self.connect(syncword_data_mux, blocks.file_sink(8*64, 'post-sync-mux.dat'))
-            self.connect(cyclic_prefixer,   blocks.file_sink(8,    'tx-signal.dat'))
+            self.connect(header_gen,        blocks.file_sink(1,                                 'tx-post-headergen.dat'))
+            self.connect(allocator,         blocks.file_sink(gr.sizeof_gr_complex*self.fft_len, 'tx-post-allocator.dat'))
+            self.connect(syncword_data_mux, blocks.file_sink(gr.sizeof_gr_complex*self.fft_len, 'post-sync-mux.dat'))
+            self.connect(cyclic_prefixer,   blocks.file_sink(gr.sizeof_gr_complex,              'tx-signal.dat'))
 
 
 class ofdm_rx(gr.hier_block2):
@@ -344,7 +345,8 @@ class ofdm_rx(gr.hier_block2):
                 packet_length_tag_key,
                 frame_length_tag_key,
                 packet_num_tag_key,
-                bps_header
+                bps_header,
+                bps_payload
         )
         header_parser = digital.packet_headerparser_b(header_formatter.formatter())
         self.connect((hpd, 0), header_fft, chanest, header_eq, header_serializer, header_demod, header_parser)

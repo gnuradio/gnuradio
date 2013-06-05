@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='ASCII'?>
 <flow_graph>
-  <timestamp>Thu May 30 08:10:19 2013</timestamp>
+  <timestamp>Tue Jun  4 16:46:45 2013</timestamp>
   <block>
     <key>options</key>
     <param>
@@ -153,57 +153,42 @@
     </param>
   </block>
   <block>
-    <key>variable</key>
+    <key>channel_model</key>
     <param>
       <key>id</key>
-      <value>tx_signal</value>
+      <value>channel_model_0</value>
     </param>
     <param>
       <key>_enabled</key>
       <value>True</value>
     </param>
     <param>
-      <key>value</key>
-      <value>[numpy.sin(2 * numpy.pi * 1.0/8 * x) for x in range(8*2)]</value>
+      <key>noise_voltage</key>
+      <value>noise_voltage</value>
+    </param>
+    <param>
+      <key>freq_offset</key>
+      <value>freq_offset * 1.0/fft_len</value>
+    </param>
+    <param>
+      <key>epsilon</key>
+      <value>1.0</value>
+    </param>
+    <param>
+      <key>taps</key>
+      <value>1.0</value>
+    </param>
+    <param>
+      <key>seed</key>
+      <value>0</value>
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(176, -1)</value>
+      <value>(742, 85)</value>
     </param>
     <param>
       <key>_rotation</key>
       <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>blocks_throttle</key>
-    <param>
-      <key>id</key>
-      <value>blocks_throttle_0</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>type</key>
-      <value>complex</value>
-    </param>
-    <param>
-      <key>samples_per_second</key>
-      <value>100e3</value>
-    </param>
-    <param>
-      <key>vlen</key>
-      <value>1</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(354, 230)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>180</value>
     </param>
   </block>
   <block>
@@ -290,195 +275,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(92, 463)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>blocks_vector_source_x</key>
-    <param>
-      <key>id</key>
-      <value>blocks_vector_source_x_0</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>type</key>
-      <value>float</value>
-    </param>
-    <param>
-      <key>vector</key>
-      <value>tx_signal</value>
-    </param>
-    <param>
-      <key>tags</key>
-      <value>tagged_streams.make_lengthtags((8*2*gr.sizeof_float,), (0,), tagname=len_tag_key)</value>
-    </param>
-    <param>
-      <key>repeat</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>vlen</key>
-      <value>1</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(-1, 101)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>digital_ofdm_rx</key>
-    <param>
-      <key>id</key>
-      <value>digital_ofdm_rx_0</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>fft_len</key>
-      <value>fft_len</value>
-    </param>
-    <param>
-      <key>cp_len</key>
-      <value>fft_len/4</value>
-    </param>
-    <param>
-      <key>packet_len_key</key>
-      <value>"rx_len"</value>
-    </param>
-    <param>
-      <key>occupied_carriers</key>
-      <value>()</value>
-    </param>
-    <param>
-      <key>pilot_carriers</key>
-      <value>()</value>
-    </param>
-    <param>
-      <key>pilot_symbols</key>
-      <value>()</value>
-    </param>
-    <param>
-      <key>sync_word1</key>
-      <value>()</value>
-    </param>
-    <param>
-      <key>sync_word2</key>
-      <value>()</value>
-    </param>
-    <param>
-      <key>header_mod</key>
-      <value>"BPSK"</value>
-    </param>
-    <param>
-      <key>payload_mod</key>
-      <value>"BPSK"</value>
-    </param>
-    <param>
-      <key>log</key>
-      <value>False</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(92, 307)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>blocks_vector_to_stream</key>
-    <param>
-      <key>id</key>
-      <value>blocks_vector_to_stream_0</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>type</key>
-      <value>byte</value>
-    </param>
-    <param>
-      <key>num_items</key>
-      <value>4</value>
-    </param>
-    <param>
-      <key>vlen</key>
-      <value>1</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(256, 117)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>variable_slider</key>
-    <param>
-      <key>id</key>
-      <value>freq_offset</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>label</key>
-      <value>Frequency Offset (Multiples of Sub-carrier spacing)</value>
-    </param>
-    <param>
-      <key>value</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>min</key>
-      <value>-3</value>
-    </param>
-    <param>
-      <key>max</key>
-      <value>3</value>
-    </param>
-    <param>
-      <key>num_steps</key>
-      <value>100</value>
-    </param>
-    <param>
-      <key>style</key>
-      <value>wx.SL_HORIZONTAL</value>
-    </param>
-    <param>
-      <key>converver</key>
-      <value>float_converter</value>
-    </param>
-    <param>
-      <key>grid_pos</key>
-      <value></value>
-    </param>
-    <param>
-      <key>notebook</key>
-      <value></value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(727, 282)</value>
+      <value>(59, 384)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -533,7 +330,409 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(726, 457)</value>
+      <value>(695, 439)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>variable_slider</key>
+    <param>
+      <key>id</key>
+      <value>freq_offset</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>label</key>
+      <value>Frequency Offset (Multiples of Sub-carrier spacing)</value>
+    </param>
+    <param>
+      <key>value</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>min</key>
+      <value>-3</value>
+    </param>
+    <param>
+      <key>max</key>
+      <value>3</value>
+    </param>
+    <param>
+      <key>num_steps</key>
+      <value>100</value>
+    </param>
+    <param>
+      <key>style</key>
+      <value>wx.SL_HORIZONTAL</value>
+    </param>
+    <param>
+      <key>converver</key>
+      <value>float_converter</value>
+    </param>
+    <param>
+      <key>grid_pos</key>
+      <value></value>
+    </param>
+    <param>
+      <key>notebook</key>
+      <value></value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(696, 264)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>digital_ofdm_tx</key>
+    <param>
+      <key>id</key>
+      <value>digital_ofdm_tx_0</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>fft_len</key>
+      <value>fft_len</value>
+    </param>
+    <param>
+      <key>cp_len</key>
+      <value>fft_len/4</value>
+    </param>
+    <param>
+      <key>packet_len_key</key>
+      <value>len_tag_key</value>
+    </param>
+    <param>
+      <key>occupied_carriers</key>
+      <value>()</value>
+    </param>
+    <param>
+      <key>pilot_carriers</key>
+      <value>()</value>
+    </param>
+    <param>
+      <key>pilot_symbols</key>
+      <value>()</value>
+    </param>
+    <param>
+      <key>sync_word1</key>
+      <value>()</value>
+    </param>
+    <param>
+      <key>sync_word2</key>
+      <value>()</value>
+    </param>
+    <param>
+      <key>header_mod</key>
+      <value>"BPSK"</value>
+    </param>
+    <param>
+      <key>payload_mod</key>
+      <value>"QPSK"</value>
+    </param>
+    <param>
+      <key>rolloff</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>log</key>
+      <value>False</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(464, 77)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>blocks_tag_gate</key>
+    <param>
+      <key>id</key>
+      <value>blocks_tag_gate_0</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>type</key>
+      <value>complex</value>
+    </param>
+    <param>
+      <key>vlen</key>
+      <value>1</value>
+    </param>
+    <param>
+      <key>propagate_tags</key>
+      <value>False</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(508, 212)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>180</value>
+    </param>
+  </block>
+  <block>
+    <key>blocks_throttle</key>
+    <param>
+      <key>id</key>
+      <value>blocks_throttle_0</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>type</key>
+      <value>complex</value>
+    </param>
+    <param>
+      <key>samples_per_second</key>
+      <value>100e3</value>
+    </param>
+    <param>
+      <key>vlen</key>
+      <value>1</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(252, 212)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>180</value>
+    </param>
+  </block>
+  <block>
+    <key>blocks_tag_debug</key>
+    <param>
+      <key>id</key>
+      <value>blocks_tag_debug_0</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>type</key>
+      <value>byte</value>
+    </param>
+    <param>
+      <key>name</key>
+      <value>Rx Packets</value>
+    </param>
+    <param>
+      <key>num_inputs</key>
+      <value>1</value>
+    </param>
+    <param>
+      <key>vlen</key>
+      <value>1</value>
+    </param>
+    <param>
+      <key>display</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(333, 367)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>digital_ofdm_rx</key>
+    <param>
+      <key>id</key>
+      <value>digital_ofdm_rx_0</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>fft_len</key>
+      <value>fft_len</value>
+    </param>
+    <param>
+      <key>cp_len</key>
+      <value>fft_len/4</value>
+    </param>
+    <param>
+      <key>packet_len_key</key>
+      <value>"rx_len"</value>
+    </param>
+    <param>
+      <key>occupied_carriers</key>
+      <value>()</value>
+    </param>
+    <param>
+      <key>pilot_carriers</key>
+      <value>()</value>
+    </param>
+    <param>
+      <key>pilot_symbols</key>
+      <value>()</value>
+    </param>
+    <param>
+      <key>sync_word1</key>
+      <value>()</value>
+    </param>
+    <param>
+      <key>sync_word2</key>
+      <value>()</value>
+    </param>
+    <param>
+      <key>header_mod</key>
+      <value>"BPSK"</value>
+    </param>
+    <param>
+      <key>payload_mod</key>
+      <value>"QPSK"</value>
+    </param>
+    <param>
+      <key>log</key>
+      <value>False</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(59, 258)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>variable</key>
+    <param>
+      <key>id</key>
+      <value>packet_len</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>value</key>
+      <value>8*2</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(258, 64)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>variable</key>
+    <param>
+      <key>id</key>
+      <value>tx_signal</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>value</key>
+      <value>[numpy.sin(2 * numpy.pi * 1.0/8 * x) for x in range(packet_len)]</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(176, -1)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>blocks_vector_to_stream</key>
+    <param>
+      <key>id</key>
+      <value>blocks_vector_to_stream_0</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>type</key>
+      <value>byte</value>
+    </param>
+    <param>
+      <key>num_items</key>
+      <value>4</value>
+    </param>
+    <param>
+      <key>vlen</key>
+      <value>1</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(261, 140)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>blocks_vector_source_x</key>
+    <param>
+      <key>id</key>
+      <value>blocks_vector_source_x_0</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>type</key>
+      <value>float</value>
+    </param>
+    <param>
+      <key>vector</key>
+      <value>tx_signal</value>
+    </param>
+    <param>
+      <key>tags</key>
+      <value>tagged_streams.make_lengthtags((packet_len*gr.sizeof_float,), (0,), tagname=len_tag_key)</value>
+    </param>
+    <param>
+      <key>repeat</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>vlen</key>
+      <value>1</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(-1, 101)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -564,7 +763,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(369, 339)</value>
+      <value>(336, 290)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -631,7 +830,7 @@
     </param>
     <param>
       <key>trig_mode</key>
-      <value>wxgui.TRIG_MODE_AUTO</value>
+      <value>gr.gr_TRIG_MODE_AUTO</value>
     </param>
     <param>
       <key>y_axis_label</key>
@@ -639,189 +838,31 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(565, 315)</value>
+      <value>(538, 266)</value>
     </param>
     <param>
       <key>_rotation</key>
       <value>0</value>
     </param>
   </block>
-  <block>
-    <key>blocks_tag_debug</key>
-    <param>
-      <key>id</key>
-      <value>blocks_tag_debug_0</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>type</key>
-      <value>byte</value>
-    </param>
-    <param>
-      <key>name</key>
-      <value>Rx Packets</value>
-    </param>
-    <param>
-      <key>num_inputs</key>
-      <value>1</value>
-    </param>
-    <param>
-      <key>vlen</key>
-      <value>1</value>
-    </param>
-    <param>
-      <key>display</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(366, 416)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>digital_ofdm_tx</key>
-    <param>
-      <key>id</key>
-      <value>digital_ofdm_tx_0</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>fft_len</key>
-      <value>fft_len</value>
-    </param>
-    <param>
-      <key>cp_len</key>
-      <value>fft_len/4</value>
-    </param>
-    <param>
-      <key>packet_len_key</key>
-      <value>len_tag_key</value>
-    </param>
-    <param>
-      <key>occupied_carriers</key>
-      <value>()</value>
-    </param>
-    <param>
-      <key>pilot_carriers</key>
-      <value>()</value>
-    </param>
-    <param>
-      <key>pilot_symbols</key>
-      <value>()</value>
-    </param>
-    <param>
-      <key>sync_word1</key>
-      <value>()</value>
-    </param>
-    <param>
-      <key>sync_word2</key>
-      <value>()</value>
-    </param>
-    <param>
-      <key>header_mod</key>
-      <value>"BPSK"</value>
-    </param>
-    <param>
-      <key>payload_mod</key>
-      <value>"BPSK"</value>
-    </param>
-    <param>
-      <key>rolloff</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>log</key>
-      <value>False</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(455, 77)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>blocks_tag_gate</key>
-    <param>
-      <key>id</key>
-      <value>blocks_tag_gate_0</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>type</key>
-      <value>complex</value>
-    </param>
-    <param>
-      <key>vlen</key>
-      <value>1</value>
-    </param>
-    <param>
-      <key>propagate_tags</key>
-      <value>False</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(539, 230)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>180</value>
-    </param>
-  </block>
-  <block>
-    <key>channels_channel_model</key>
-    <param>
-      <key>id</key>
-      <value>channels_channel_model_0</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>noise_voltage</key>
-      <value>noise_voltage</value>
-    </param>
-    <param>
-      <key>freq_offset</key>
-      <value>1.0/fft_len * freq_offset</value>
-    </param>
-    <param>
-      <key>epsilon</key>
-      <value>1.0</value>
-    </param>
-    <param>
-      <key>taps</key>
-      <value>1.0 + 1.0j</value>
-    </param>
-    <param>
-      <key>seed</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(775, 85)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
+  <connection>
+    <source_block_id>blocks_vector_source_x_0</source_block_id>
+    <sink_block_id>blocks_vector_to_stream_0</sink_block_id>
+    <source_key>0</source_key>
+    <sink_key>0</sink_key>
+  </connection>
+  <connection>
+    <source_block_id>blocks_vector_to_stream_0</source_block_id>
+    <sink_block_id>digital_ofdm_tx_0</sink_block_id>
+    <source_key>0</source_key>
+    <sink_key>0</sink_key>
+  </connection>
+  <connection>
+    <source_block_id>digital_ofdm_tx_0</source_block_id>
+    <sink_block_id>channel_model_0</sink_block_id>
+    <source_key>0</source_key>
+    <sink_key>0</sink_key>
+  </connection>
   <connection>
     <source_block_id>blocks_throttle_0</source_block_id>
     <sink_block_id>digital_ofdm_rx_0</sink_block_id>
@@ -831,6 +872,12 @@
   <connection>
     <source_block_id>blocks_throttle_0</source_block_id>
     <sink_block_id>wxgui_fftsink2_0</sink_block_id>
+    <source_key>0</source_key>
+    <sink_key>0</sink_key>
+  </connection>
+  <connection>
+    <source_block_id>digital_ofdm_rx_0</source_block_id>
+    <sink_block_id>blocks_stream_to_vector_0</sink_block_id>
     <source_key>0</source_key>
     <sink_key>0</sink_key>
   </connection>
@@ -847,38 +894,14 @@
     <sink_key>0</sink_key>
   </connection>
   <connection>
-    <source_block_id>blocks_vector_source_x_0</source_block_id>
-    <sink_block_id>blocks_vector_to_stream_0</sink_block_id>
-    <source_key>0</source_key>
-    <sink_key>0</sink_key>
-  </connection>
-  <connection>
-    <source_block_id>blocks_vector_to_stream_0</source_block_id>
-    <sink_block_id>digital_ofdm_tx_0</sink_block_id>
-    <source_key>0</source_key>
-    <sink_key>0</sink_key>
-  </connection>
-  <connection>
-    <source_block_id>digital_ofdm_rx_0</source_block_id>
-    <sink_block_id>blocks_stream_to_vector_0</sink_block_id>
+    <source_block_id>channel_model_0</source_block_id>
+    <sink_block_id>blocks_tag_gate_0</sink_block_id>
     <source_key>0</source_key>
     <sink_key>0</sink_key>
   </connection>
   <connection>
     <source_block_id>blocks_stream_to_vector_0</source_block_id>
     <sink_block_id>wxgui_scopesink2_0</sink_block_id>
-    <source_key>0</source_key>
-    <sink_key>0</sink_key>
-  </connection>
-  <connection>
-    <source_block_id>digital_ofdm_tx_0</source_block_id>
-    <sink_block_id>channels_channel_model_0</sink_block_id>
-    <source_key>0</source_key>
-    <sink_key>0</sink_key>
-  </connection>
-  <connection>
-    <source_block_id>channels_channel_model_0</source_block_id>
-    <sink_block_id>blocks_tag_gate_0</sink_block_id>
     <source_key>0</source_key>
     <sink_key>0</sink_key>
   </connection>
