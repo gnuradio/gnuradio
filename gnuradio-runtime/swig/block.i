@@ -88,6 +88,11 @@ class gr::block : public gr::basic_block
   void unset_processor_affinity();
   std::vector<int> processor_affinity();
 
+  // Methods to manage thread priority
+  int active_thread_priority();
+  int thread_priority();
+  int set_thread_priority(int priority);
+
   // internal use
   //block_detail_sptr detail () const { return d_detail; }
   //void set_detail (block_detail_sptr detail) { d_detail = detail; }

@@ -240,6 +240,22 @@ namespace gr {
     }
   }
 
+  int 
+  block_detail::thread_priority(){
+    if(threaded) {
+      return gr::thread::thread_priority(thread);
+    }
+    return -1;
+  }
+
+  int 
+  block_detail::set_thread_priority(int priority){
+    if(threaded) {
+      return gr::thread::set_thread_priority(thread,priority);
+    }
+    return -1;
+  }
+
   void
   block_detail::start_perf_counters()
   {

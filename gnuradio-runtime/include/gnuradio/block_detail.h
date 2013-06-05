@@ -184,6 +184,18 @@ namespace gr {
      */
     void unset_processor_affinity();
 
+    /*!
+     * \brief Get the current thread priority
+     */
+    int thread_priority();
+
+    /*!
+     * \brief Set the current thread priority
+     *
+     * \param priority the new thread priority to set
+     */
+    int set_thread_priority(int priority);
+
     bool                    threaded;  // set if thread is currently running.
     gr::thread::gr_thread_t thread;    // portable thread handle
 

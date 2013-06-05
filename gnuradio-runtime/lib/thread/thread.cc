@@ -97,6 +97,20 @@ namespace gr {
       }
     }
 
+    int 
+    thread_priority(gr_thread_t thread)
+    {
+      // Not implemented on Windows
+      return -1;
+    }
+    
+    int 
+    set_thread_priority(gr_thread_t thread, int priority)
+    {
+      // Not implemented on Windows
+      return -1;
+    }
+
   } /* namespace thread */
 } /* namespace gr */
 
@@ -146,6 +160,20 @@ namespace gr {
     thread_unbind(gr_thread_t thread)
     {
       // Not implemented on OSX
+    }
+
+    int 
+    thread_priority(gr_thread_t thread)
+    {
+      // Not implemented on OSX
+      return -1;
+    }
+    
+    int 
+    set_thread_priority(gr_thread_t thread, int priority)
+    {
+      // Not implemented on OSX
+      return -1;
     }
 
   } /* namespace thread */
@@ -230,6 +258,28 @@ namespace gr {
         s << "thread_unbind failed with error: " << ret << std::endl;
         throw std::runtime_error(s.str());
       }
+    }
+
+    int 
+    thread_priority(gr_thread_t thread)
+    {
+      sched_param param;
+      int priority;
+      int policy;
+      int ret;
+      ret = pthread_getschedparam (thread, &policy, &param);
+      priority = param.sched_priority;
+      return (ret==0)?priority:ret;
+    }
+    
+    int 
+    set_thread_priority(gr_thread_t thread, int priority)
+    {
+      int policy;
+      struct sched_param param;
+      pthread_getschedparam (thread, &policy, &param);
+      param.sched_priority = priority;
+      return pthread_setschedparam(thread, policy, &param);
     }
 
   } /* namespace thread */

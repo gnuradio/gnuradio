@@ -52,6 +52,11 @@ namespace gr {
       gr::thread::thread_bind_to_processor(d->thread, block->processor_affinity());
     }
 
+    // Set thread priority if it was set before fg was started
+    if(block->thread_priority() > 0) {
+      gr::thread::set_thread_priority(d->thread, block->thread_priority());
+    }
+
     while(1) {
       boost::this_thread::interruption_point();
 

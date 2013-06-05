@@ -542,6 +542,21 @@ namespace gr {
      */
     std::vector<int> processor_affinity() { return d_affinity; }
 
+    /*!
+     * \brief Get the current thread priority in use
+     */
+    int active_thread_priority();
+
+    /*!
+     * \brief Get the current thread priority stored
+     */
+    int thread_priority();
+
+    /*!
+     * \brief Set the current thread priority
+     */
+    int set_thread_priority(int priority);
+
     // ----------------------------------------------------------------------------
 
   private:
@@ -558,6 +573,7 @@ namespace gr {
     int                   d_min_noutput_items;
     tag_propagation_policy_t d_tag_propagation_policy; // policy for moving tags downstream
     std::vector<int>      d_affinity;              // thread affinity proc. mask
+    int                   d_priority;              // thread priority level
     bool                  d_pc_rpc_set;
 
   protected:

@@ -138,6 +138,18 @@ namespace gr {
      */
     GR_RUNTIME_API void thread_unbind(gr_thread_t thread);
 
+    /*! \brief get current thread priority for a given thread ID
+     *
+     * Note: this does not work on OSX
+     */
+    GR_RUNTIME_API int thread_priority(gr_thread_t thread);
+    
+    /*! \brief get current thread priority for a given thread ID
+     *
+     * Note: this does not work on OSX
+     */
+    GR_RUNTIME_API int set_thread_priority(gr_thread_t thread, int priority);
+
   } /* namespace thread */
 } /* namespace gr */
 

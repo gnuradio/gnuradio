@@ -50,7 +50,8 @@ namespace gr {
       d_tag_propagation_policy(TPP_ALL_TO_ALL),
       d_pc_rpc_set(false),
       d_max_output_buffer(std::max(output_signature->max_streams(),1), -1),
-      d_min_output_buffer(std::max(output_signature->max_streams(),1), -1)
+      d_min_output_buffer(std::max(output_signature->max_streams(),1), -1),
+      d_priority(-1)
   {
     global_block_registry.register_primitive(alias(), this);
 
@@ -316,6 +317,31 @@ namespace gr {
     if(d_detail) {
       d_detail->unset_processor_affinity();
     }
+  }
+
+  int 
+  block::active_thread_priority()
+  {
+    if(d_detail) {
+      return d_detail->thread_priority();
+    }
+    return -1;
+  }
+
+  int 
+  block::thread_priority()
+  {
+    return d_priority;
+  }
+
+  int 
+  block::set_thread_priority(int priority)
+  {
+    d_priority = priority;
+    if(d_detail) {
+      return d_detail->set_thread_priority(priority);
+    }
+    return d_priority;
   }
 
   float
