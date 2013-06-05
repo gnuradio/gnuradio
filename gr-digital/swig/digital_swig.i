@@ -84,7 +84,7 @@ enum snr_est_type_t {
 #include "digital_scrambler_bb.h"
 #include "digital_simple_framer.h"
 #include "digital_ofdm_sync_sc_cfb.h"
-#include "digital_ofdm_chanest_vcvc.h"
+#include "digital/ofdm_chanest_vcvc.h"
 #include "digital_crc32_bb.h"
 #include "digital_ofdm_carrier_allocator_cvc.h"
 #include "digital_ofdm_equalizer_base.h"
@@ -143,27 +143,28 @@ enum snr_est_type_t {
 %include "digital_scrambler_bb.i"
 %include "digital_simple_framer.i"
 %include "digital_ofdm_sync_sc_cfb.i"
-%include "digital_ofdm_chanest_vcvc.i"
+%include "digital/ofdm_chanest_vcvc.h"
 %include "digital_crc32_bb.i"
 %include "digital_ofdm_carrier_allocator_cvc.i"
 %include "digital_ofdm_equalizer_base.i"
 %include "digital_ofdm_equalizer_simpledfe.i"
 %include "digital_ofdm_equalizer_static.i"
 %include "digital/ofdm_frame_equalizer_vcvc.h"
-GR_SWIG_BLOCK_MAGIC2(digital, ofdm_frame_equalizer_vcvc);
-
+%include "digital/ofdm_serializer_vcc.h"
 %include "digital/packet_header_default.h"
 %include "digital/packet_header_ofdm.h"
+%include "digital/packet_headergenerator_bb.h"
+%include "digital/packet_headerparser_b.h"
+%include "digital/header_payload_demux.h"
+%include "digital_simple_correlator.i"
+
+GR_SWIG_BLOCK_MAGIC2(digital, header_payload_demux);
+GR_SWIG_BLOCK_MAGIC2(digital, ofdm_chanest_vcvc);
+GR_SWIG_BLOCK_MAGIC2(digital, ofdm_frame_equalizer_vcvc);
+GR_SWIG_BLOCK_MAGIC2(digital, ofdm_serializer_vcc);
+GR_SWIG_BLOCK_MAGIC2(digital, packet_headergenerator_bb);
+GR_SWIG_BLOCK_MAGIC2(digital, packet_headerparser_b);
+
+// Properly package up non-block objects
 %include "packet_header.i"
 
-%include "digital/packet_headergenerator_bb.h"
-GR_SWIG_BLOCK_MAGIC2(digital, packet_headergenerator_bb);
-
-%include "digital/ofdm_serializer_vcc.h"
-GR_SWIG_BLOCK_MAGIC2(digital, ofdm_serializer_vcc);
-
-%include "digital/packet_headerparser_b.h"
-GR_SWIG_BLOCK_MAGIC2(digital, packet_headerparser_b);
-%include "digital/header_payload_demux.h"
-GR_SWIG_BLOCK_MAGIC2(digital, header_payload_demux);
-%include "digital_simple_correlator.i"

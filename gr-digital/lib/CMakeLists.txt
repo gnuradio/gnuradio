@@ -142,12 +142,12 @@ list(APPEND gr_digital_sources
     digital_scrambler_bb.cc
     digital_simple_framer.cc
     digital_ofdm_sync_sc_cfb.cc
-    digital_ofdm_chanest_vcvc.cc
     digital_crc32_bb.cc
     digital_ofdm_carrier_allocator_cvc.cc
     digital_ofdm_equalizer_base.cc
     digital_ofdm_equalizer_static.cc
     digital_ofdm_equalizer_simpledfe.cc
+    ofdm_chanest_vcvc_impl.cc
     ofdm_frame_equalizer_vcvc_impl.cc
     ofdm_serializer_vcc_impl.cc
     packet_header_default.cc
