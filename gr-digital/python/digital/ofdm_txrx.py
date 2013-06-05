@@ -335,18 +335,19 @@ class ofdm_rx(gr.hier_block2):
                 packet_length_tag_key,
                 frame_length_tag_key,
                 packet_num_tag_key,
-                bps_header
+                bps_header,
+                bps_payload
         )
         header_parser = digital.packet_headerparser_b(header_formatter.formatter())
         self.connect((hpd, 0), header_fft, chanest, header_eq, header_serializer, header_demod, header_parser)
         self.msg_connect(header_parser, "header_data", hpd, "header_data")
         if debug_log:
-            self.connect((chanest, 1),      blocks.file_sink(512, 'channel-estimate.dat'))
-            self.connect((chanest, 0),      blocks.file_sink(512, 'post-hdr-chanest.dat'))
-            self.connect(header_eq,         blocks.file_sink(512, 'post-hdr-eq.dat'))
-            self.connect(header_serializer, blocks.file_sink(8,   'post-hdr-serializer.dat'))
-            self.connect(header_demod,      blocks.file_sink(1,   'post-hdr-demod.dat'))
-            self.connect(header_demod,      blocks.tag_debug(1,   'post-hdr-demod.dat'))
+            self.connect((chanest, 1),      blocks.file_sink(gr.sizeof_gr_complex * fft_len, 'channel-estimate.dat'))
+            self.connect((chanest, 0),      blocks.file_sink(gr.sizeof_gr_complex * fft_len, 'post-hdr-chanest.dat'))
+            self.connect((chanest, 0),      blocks.tag_debug(gr.sizeof_gr_complex * fft_len, 'post-hdr-chanest'))
+            self.connect(header_eq,         blocks.file_sink(gr.sizeof_gr_complex * fft_len, 'post-hdr-eq.dat'))
+            self.connect(header_serializer, blocks.file_sink(gr.sizeof_gr_complex,           'post-hdr-serializer.dat'))
+            self.connect(header_demod,      blocks.file_sink(1,                              'post-hdr-demod.dat'))
         ### Payload demod ####################################################
         payload_fft = fft.fft_vcc(self.fft_len, True, (), True)
         payload_constellation = _get_constellation(bps_payload)
@@ -373,13 +374,12 @@ class ofdm_rx(gr.hier_block2):
         crc = digital.crc32_bb(True, self.packet_length_tag_key)
         self.connect((hpd, 1), payload_fft, payload_eq, payload_serializer, payload_demod, repack, crc, self)
         if debug_log:
-            self.connect((hpd, 1),           blocks.tag_debug(8*64, 'post-hpd'));
-            self.connect(payload_fft,        blocks.file_sink(8*64, 'post-payload-fft.dat'))
-            self.connect(payload_eq,         blocks.file_sink(8*64, 'post-payload-eq.dat'))
-            self.connect(payload_serializer, blocks.file_sink(8, 'post-payload-serializer.dat'))
-            self.connect(payload_demod,      blocks.file_sink(1, 'post-payload-demod.dat'))
-            self.connect(repack,             blocks.file_sink(1, 'post-payload-repack.dat'))
-            self.connect(crc,                blocks.file_sink(1, 'post-payload-crc.dat'))
-            self.connect(crc,                blocks.tag_debug(1, 'post-payload-crc'))
+            self.connect((hpd, 1),           blocks.tag_debug(gr.sizeof_gr_complex*fft_len, 'post-hpd'));
+            self.connect(payload_fft,        blocks.file_sink(gr.sizeof_gr_complex*fft_len, 'post-payload-fft.dat'))
+            self.connect(payload_eq,         blocks.file_sink(gr.sizeof_gr_complex*fft_len, 'post-payload-eq.dat'))
+            self.connect(payload_serializer, blocks.file_sink(gr.sizeof_gr_complex,         'post-payload-serializer.dat'))
+            self.connect(payload_demod,      blocks.file_sink(1,                            'post-payload-demod.dat'))
+            self.connect(repack,             blocks.file_sink(1,                            'post-payload-repack.dat'))
+            self.connect(crc,                blocks.file_sink(1,                            'post-payload-crc.dat'))
 
 

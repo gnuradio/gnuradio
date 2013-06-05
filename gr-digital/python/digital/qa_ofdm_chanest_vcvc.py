@@ -76,21 +76,20 @@ class qa_ofdm_sync_eqinit_vcvc (gr_unittest.TestCase):
         self.tb.run()
         self.assertEqual(shift_tuple(sink.data(), -carr_offset), data_symbol)
         tags = sink.tags()
-        detected_tags = {
-                'ofdm_sync_carr_offset': False,
-                'test_tag_1': False,
-                'test_tag_2': False
-        }
+        ptags = {}
         for tag in tags:
-            if pmt.symbol_to_string(tag.key) == 'ofdm_sync_carr_offset':
-                carr_offset_hat = pmt.to_long(tag.value)
-                self.assertEqual(pmt.to_long(tag.value), carr_offset)
-            if pmt.symbol_to_string(tag.key) == 'test_tag_1':
-                self.assertEqual(tag.offset, 0)
-            if pmt.symbol_to_string(tag.key) == 'test_tag_2':
-                self.assertEqual(tag.offset, 0)
-            detected_tags[pmt.symbol_to_string(tag.key)] = True
-        self.assertTrue(all(detected_tags.values()))
+            ptag = gr.tag_to_python(tag)
+            ptags[ptag.key] = (ptag.value, ptag.offset)
+            if ptag.key == 'ofdm_sync_chan_taps':
+                ptags[ptag.key] = (None, ptag.offset)
+        expected_tags = {
+                'ofdm_sync_carr_offset': (-2, 0),
+                'ofdm_sync_chan_taps': (None, 0),
+                'test_tag_1': (23, 0),
+                'test_tag_2': (42, 0),
+        }
+        self.assertEqual(ptags, expected_tags)
+
 
     def test_002_offset_1sym (self):
         """ Add a frequency offset, check if it's correctly detected.
