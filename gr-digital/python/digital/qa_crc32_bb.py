@@ -126,7 +126,7 @@ class qa_crc32_bb (gr_unittest.TestCase):
 
     def test_005_tag_propagation (self):
         """ Make sure tags on the CRC aren't lost. """
-        data = (0, 1, 2, 3, 4, 5, 6, 7, 8, 230, 166, 39, 8)
+        data = (0, 1, 2, 3, 4, 5, 6, 7, 8, 2, 67, 225, 188)
         tag_name = "len"
         tag = gr.tag_t()
         tag.offset = 0
