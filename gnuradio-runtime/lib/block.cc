@@ -48,10 +48,10 @@ namespace gr {
       d_max_noutput_items(0),
       d_min_noutput_items(0),
       d_tag_propagation_policy(TPP_ALL_TO_ALL),
+      d_priority(-1),
       d_pc_rpc_set(false),
       d_max_output_buffer(std::max(output_signature->max_streams(),1), -1),
-      d_min_output_buffer(std::max(output_signature->max_streams(),1), -1),
-      d_priority(-1)
+      d_min_output_buffer(std::max(output_signature->max_streams(),1), -1)
   {
     global_block_registry.register_primitive(alias(), this);
 
