@@ -37,7 +37,6 @@ if(ENABLE_TESTING)
   set(GR_TEST_TARGET_DEPS "")
   set(GR_TEST_LIBRARY_DIRS "")
   set(GR_TEST_PYTHON_DIRS
-    ${CMAKE_BINARY_DIR}/gruel/src/python
     ${CMAKE_BINARY_DIR}/gnuradio-runtime/python
     )
 
