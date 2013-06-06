@@ -44,6 +44,8 @@ endif(ENABLE_GR_CTRLPORT)
 list(APPEND channels_sources
   channel_model_impl.cc
   fading_model_impl.cc
+  selective_fading_model_impl.cc
+  flat_fader_impl.cc
 )
 
 #Add Windows DLL resource file if using MSVC

@@ -21,6 +21,7 @@ install(FILES
   channels_block_tree.xml
   channels_channel_model.xml
   channels_fading_model.xml
+  channels_selective_fading_model.xml
   DESTINATION ${GRC_BLOCKS_DIR}
   COMPONENT "channels_python"
 )
