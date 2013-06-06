@@ -39,6 +39,7 @@ namespace gr {
       pmt::pmt_t           d_pdu_meta;
       pmt::pmt_t           d_pdu_vector;
 
+      pmt::pmt_t           d_tag;
       std::vector<tag_t>::iterator d_tags_itr;
       std::vector<tag_t> d_tags;
       

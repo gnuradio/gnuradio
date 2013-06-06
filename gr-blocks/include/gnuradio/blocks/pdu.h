@@ -28,7 +28,6 @@
 #include <pmt/pmt.h>
 
 #define PDU_PORT_ID    pmt::mp("pdus")
-#define PDU_LENGTH_TAG pmt::mp("pdu_length")
 
 namespace gr {
   namespace blocks {

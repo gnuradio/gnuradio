@@ -45,7 +45,8 @@ namespace gr {
 	d_inpdu(false),
 	d_type(type),
 	d_pdu_meta(pmt::PMT_NIL),
-	d_pdu_vector(pmt::PMT_NIL)
+	d_pdu_vector(pmt::PMT_NIL),
+	d_tag(pmt::mp(lengthtagname))
     {
       message_port_register_out(PDU_PORT_ID);
     }
@@ -65,7 +66,7 @@ namespace gr {
 	get_tags_in_range(d_tags, 0, abs_N, abs_N+1);
 
 	for (d_tags_itr = d_tags.begin(); (d_tags_itr != d_tags.end()) && (!found_length_tag); d_tags_itr++) {
-	  if (pmt::eq((*d_tags_itr).key, PDU_LENGTH_TAG )) {
+	  if (pmt::eq((*d_tags_itr).key, d_tag)) {
 
           if ((*d_tags_itr).offset != abs_N )
 	    throw std::runtime_error("expected next pdu length tag on a different item...");
@@ -87,7 +88,7 @@ namespace gr {
       // copy any tags in this range into our meta object
       get_tags_in_range(d_tags, 0, abs_N, abs_N+ncopy);
       for (d_tags_itr = d_tags.begin(); d_tags_itr != d_tags.end(); d_tags_itr++)
-	if(!pmt::eq((*d_tags_itr).key, PDU_LENGTH_TAG ))
+	if(!pmt::eq((*d_tags_itr).key, d_tag ))
 	  d_pdu_meta = dict_add(d_pdu_meta, (*d_tags_itr).key, (*d_tags_itr).value);
 
       // copy samples for this vector into either a pmt or our save buffer
