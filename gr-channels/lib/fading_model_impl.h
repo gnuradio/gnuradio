@@ -25,6 +25,7 @@
 
 #include <gnuradio/sync_block.h>
 #include <gnuradio/channels/fading_model.h>
+#include "flat_fader_impl.h"
 
 //#include <iostream>
 #include <boost/format.hpp>
@@ -39,36 +40,7 @@ namespace gr {
     class CHANNELS_API fading_model_impl : public fading_model
     {
     private:
-        // initial theta variate generator
-        boost::mt19937 seed_1;
-        boost::uniform_real<> dist_1; // U(-pi,pi)
-        boost::variate_generator<boost::mt19937&, boost::uniform_real<> > rv_1;
-
-        // random walk variate
-        boost::mt19937 seed_2;
-        boost::uniform_real<> dist_2; // U(-pi,pi)
-        boost::variate_generator<boost::mt19937&, boost::uniform_real<> > rv_2;
-
-        int d_N; // number of sinusoids
-        float d_fDTs;  // normalized maximum doppler frequency
-        double d_theta; // random walk variable (RWP)
-        float d_theta_los;
-        float d_step;  // maximum random walk step size
-        uint64_t d_m;  // sample counter
-
-        float d_K;     // Rician factor (ratio of the specular power to the scattered power)
-        bool d_LOS;    // LOS path exists? chooses Rician (LOS) vs Rayleigh (NLOS) model.
-
-        std::vector<float> d_psi; // in-phase initial phase
-        std::vector<float> d_phi; // quadrature initial phase
-
-        std::vector<float>  d_costable;
-
-        sincostable d_table;
-
-        float scale_sin, scale_los, scale_nlos; 
-
-        void update_theta();
+      gr::channels::flat_fader_impl d_fader;
 
     public:
       fading_model_impl(unsigned int N, float fDTs, bool LOS, float K, int seed);
@@ -78,13 +50,13 @@ namespace gr {
             gr_vector_const_void_star &input_items,
             gr_vector_void_star &output_items);
 
-      virtual float fDTs(){ return d_fDTs; }
-      virtual float K(){ return d_K; }
-      virtual float step(){ return d_step; }
+      virtual float fDTs(){ return d_fader.d_fDTs; }
+      virtual float K(){ return d_fader.d_K; }
+      virtual float step(){ return d_fader.d_step; }
 
-      virtual void set_fDTs(float fDTs){ d_fDTs = fDTs;  d_step = powf(0.00125*fDTs, 1.1); }
-      virtual void set_K(float K){ d_K = K; scale_los = sqrtf(d_K)/sqrtf(d_K+1); scale_nlos = (1/sqrtf(d_K+1)); }
-      virtual void set_step(float step){ d_step = step; }
+      virtual void set_fDTs(float fDTs){ d_fader.d_fDTs = fDTs;  d_fader.d_step = powf(0.00125*fDTs, 1.1); }
+      virtual void set_K(float K){ d_fader.d_K = K; d_fader.scale_los = sqrtf(d_fader.d_K)/sqrtf(d_fader.d_K+1); d_fader.scale_nlos = (1/sqrtf(d_fader.d_K+1)); }
+      virtual void set_step(float step){ d_fader.d_step = step; }
 
     };
 

@@ -26,6 +26,9 @@ class sincostable {
         int idx = (((int)(x*d_scale)) + d_sz) % d_sz;
         return d_cos[idx];
         }
+    const float sinc(float x){
+        return x==0?1:sin(x)/x;
+        }
 };
 
 #endif
