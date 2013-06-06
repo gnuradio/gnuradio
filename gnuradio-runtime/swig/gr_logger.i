@@ -45,15 +45,19 @@
 %}
 
 %rename(logger) gr::logger;
-%rename(logger_config) gr::logger_config;
-%rename(logger_get_names) gr::logger_get_logger_names;
-%rename(logger_reset_config) gr::logger_reset_config;
+%rename(logger_config) gr_logger_config;
+%rename(logger_get_names) gr_logger_get_logger_names;
+%rename(logger_reset_config) gr_logger_reset_config;
+
+void gr_logger_config(const std::string config_filename,unsigned int watch_period = 0);
+std::vector<std::string> gr_logger_get_logger_names(void);
+void gr_logger_reset_config(void);
 
 namespace gr {
 
-  void logger_config(const std::string config_filename, unsigned int watch_period = 0);
-  std::vector<std::string> logger_get_logger_names(void);
-  void logger_reset_config(void);
+//  void logger_config(const std::string config_filename, unsigned int watch_period = 0);
+//  std::vector<std::string> logger_get_logger_names(void);
+//  void logger_reset_config(void);
 
   class logger
   {
