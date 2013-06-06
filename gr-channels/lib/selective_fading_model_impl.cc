@@ -58,11 +58,11 @@ namespace gr {
             throw std::runtime_error("magnitude and delay vectors must be the same length!");
 
         for(size_t i=0; i<mags.size(); i++){
-            d_faders.push_back(new gr::channels::flat_fader_impl(N,fDTs, LOS, K, seed+i));
+            d_faders.push_back(new gr::channels::flat_fader_impl(N, fDTs, (i==0)&&(LOS), K, seed+i));
         }
     
         // set up tap history
-//        int ntaps = 10;
+        if(ntaps < 1){ throw std::runtime_error("ntaps must be >= 1"); }
         set_history(1+ntaps);
         d_taps.resize(ntaps, gr_complex(0,0));
     }
