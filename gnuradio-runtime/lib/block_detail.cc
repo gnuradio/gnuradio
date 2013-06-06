@@ -259,13 +259,13 @@ namespace gr {
   void
   block_detail::start_perf_counters()
   {
-    d_start_of_work = gr::high_res_timer_now();
+    d_start_of_work = gr::high_res_timer_now_perfmon();
   }
 
   void
   block_detail::stop_perf_counters(int noutput_items, int nproduced)
   {
-    d_end_of_work = gr::high_res_timer_now();
+    d_end_of_work = gr::high_res_timer_now_perfmon();
     gr::high_res_timer_type diff = d_end_of_work - d_start_of_work;
 
     if(d_pc_counter == 0) {

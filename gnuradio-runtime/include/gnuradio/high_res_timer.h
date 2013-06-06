@@ -51,6 +51,9 @@ namespace gr {
     //! Get the current time in ticks
     high_res_timer_type high_res_timer_now(void);
 
+    //! Get the current time in ticks - for performance monitoring
+    high_res_timer_type high_res_timer_now_perfmon(void);
+
     //! Get the number of ticks per second
     high_res_timer_type high_res_timer_tps(void);
 
@@ -68,6 +71,12 @@ namespace gr {
 #ifdef GNURADIO_HRT_USE_CLOCK_GETTIME
     inline gr::high_res_timer_type gr::high_res_timer_now(void){
         timespec ts;
+        clock_gettime(CLOCK_MONOTONIC, &ts);
+        return ts.tv_sec*high_res_timer_tps() + ts.tv_nsec;
+    }
+
+    inline gr::high_res_timer_type gr::high_res_timer_now_perfmon(void){
+        timespec ts;
         clock_gettime(high_res_timer_source, &ts);
         return ts.tv_sec*high_res_timer_tps() + ts.tv_nsec;
     }
@@ -83,6 +92,10 @@ namespace gr {
 
     inline gr::high_res_timer_type gr::high_res_timer_now(void){
         return mach_absolute_time();
+    }
+
+    inline gr::high_res_timer_type gr::high_res_timer_now_perfmon(void){
+        return gr::high_res_timer_now();
     }
 
     inline gr::high_res_timer_type gr::high_res_timer_tps(void){
@@ -102,6 +115,10 @@ namespace gr {
         return counts.QuadPart;
     }
 
+    inline gr::high_res_timer_type gr::high_res_timer_now_perfmon(void){
+        return gr::high_res_timer_now();
+    }
+
     inline gr::high_res_timer_type gr::high_res_timer_tps(void){
         LARGE_INTEGER freq;
         QueryPerformanceFrequency(&freq);
@@ -116,6 +133,10 @@ namespace gr {
     inline gr::high_res_timer_type gr::high_res_timer_now(void){
         static const boost::posix_time::ptime epoch(boost::posix_time::from_time_t(0));
         return (boost::posix_time::microsec_clock::universal_time() - epoch).ticks();
+    }
+
+    inline gr::high_res_timer_type gr::high_res_timer_now_perfmon(void){
+        return gr::high_res_timer_now();
     }
 
     inline gr::high_res_timer_type gr::high_res_timer_tps(void){
