@@ -462,12 +462,13 @@ class MForm(QtGui.QWidget):
             except:
                 print "WARNING: Failed to get current clock setting!"
 
-            nodes = self.G.nodes();
+            nodes_stream = self.G_stream.nodes();
+            nodes_msg = self.G_msg.nodes();
     
             # get current buffer depths of all output buffers
             kl = map(lambda x: "%s::%soutput %% full" % \
                          (x, self._statistics_table[self._statistic]),
-                     nodes);
+                     nodes_stream);
 
             st = time.time()
             buf_knobs = self.radio.get(kl)
@@ -481,7 +482,7 @@ class MForm(QtGui.QWidget):
             # get work time for all blocks
             kl = map(lambda x: "%s::%swork time" % \
                          (x, self._statistics_table[self._statistic]),
-                     nodes);
+                     nodes_stream);
             st = time.time()
             wrk_knobs = self.radio.get(kl)
             td2 = time.time() - st;
@@ -491,18 +492,34 @@ class MForm(QtGui.QWidget):
             work_times = dict(zip(
                         map(lambda x: x.split("::")[0], wrk_knobs.keys()),
                         map(lambda x: x.value/total_work, wrk_knobs.values())))
+            work_times_padded = dict(zip(
+                        self.G.nodes(),
+                        [0.1]*len(self.G.nodes())))
+            work_times_padded.update(work_times)
  
-            for n in nodes:
+            for n in nodes_stream:
                 # ne is the list of edges away from this node!
                 ne = self.G.edges([n],True);
+                #for e in ne: # iterate over edges from this block
                 for e in ne: # iterate over edges from this block
                     # get the right output buffer/port weight for each edge
                     sourceport = e[2]["sourceport"];
-                    newweight = buf_vals[n][sourceport]
-                    e[2]["weight"] = newweight;
+                    if(e[2]["type"] == "stream"):
+                        newweight = buf_vals[n][sourceport]
+                        e[2]["weight"] = newweight;
 
+            for n in nodes_msg:
+                ne = self.G.edges([n],True);
+                for e in ne: # iterate over edges from this block
+                    sourceport = e[2]["sourceport"];
+                    if(e[2]["type"] == "msg"):
+                        #newweight = buf_vals[n][sourceport]
+                        newweight = 0.01;
+                        e[2]["weight"] = newweight;
+                    
             # set updated weights
-            self.node_weights = map(lambda x: 20+2000*work_times[x], nodes);
+            #self.node_weights = map(lambda x: 20+2000*work_times[x], nodes_stream);
+            self.node_weights = map(lambda x: 20+2000*work_times_padded[x], self.G.nodes());
             self.edge_weights = map(lambda x: 100.0*x[2]["weight"], self.G.edges(data=True));
 
             # draw graph updates
@@ -532,10 +549,10 @@ class MForm(QtGui.QWidget):
             return
             
     def rtt(self):
-        self.parent.newSubWindow(  DataTableRuntimes(self.radio, self.G),  "Runtime Table" );
+        self.parent.newSubWindow(  DataTableRuntimes(self.radio, self.G_stream),  "Runtime Table" );
 
     def bpt(self):
-        self.parent.newSubWindow(  DataTableBuffers(self.radio, self.G),  "Buffers Table" );
+        self.parent.newSubWindow(  DataTableBuffers(self.radio, self.G_stream),  "Buffers Table" );
 
     def stat_changed(self, index):
         self._statistic = str(self.stattype.currentText())
@@ -545,7 +562,7 @@ class MForm(QtGui.QWidget):
             return;
         idx = self.clockSel.currentIndex();
         clk = self.clocks.values()[idx]
-        print "UPDATE CLOCK!!! %d -> %d"%(idx,clk);
+#        print "UPDATE CLOCK!!! %d -> %d"%(idx,clk);
         k = self.radio.get([self.clockKey]);
         k[self.clockKey].value = clk;
         km = {};
@@ -632,12 +649,15 @@ class MForm(QtGui.QWidget):
         tmplist = []
         knobs = self.radio.get([])
         edgelist = None
+        msgedgelist = None
         for k in knobs:
             propname = k.split("::")
             blockname = propname[0]
             keyname = propname[1]
             if(keyname == "edge list"):
                 edgelist = knobs[k].value
+            elif(keyname == "msg edges list"):
+                msgedgelist = knobs[k].value
             elif(blockname not in tmplist):
                 # only take gr_blocks (no hier_block2)
                 if(knobs.has_key(input_name(blockname))):
@@ -650,14 +670,32 @@ class MForm(QtGui.QWidget):
             sys.exit(1)
 
         edges = edgelist.split("\n")[0:-1]
-        edgepairs = [];
+        msgedges = msgedgelist.split("\n")[0:-1]
+
+        edgepairs_stream = [];
+        edgepairs_msg = [];
+
+        # add stream connections
         for e in edges:
             _e = e.split("->")
-            edgepairs.append( (_e[0].split(":")[0], _e[1].split(":")[0],
-                               {"sourceport":int(_e[0].split(":")[1])}) );
+            edgepairs_stream.append( (_e[0].split(":")[0], _e[1].split(":")[0],
+                               {"type":"stream", "sourceport":int(_e[0].split(":")[1])}) );
 
+        # add msg connections
+        for e in msgedges:
+            _e = e.split("->")
+            edgepairs_msg.append( (_e[0].split(":")[0], _e[1].split(":")[0],
+                               {"type":"msg", "sourceport":_e[0].split(":")[1]}) );
+            
         self.G = nx.MultiDiGraph();
-        self.G.add_edges_from(edgepairs);
+        self.G_stream = nx.MultiDiGraph();
+        self.G_msg = nx.MultiDiGraph();
+
+        self.G.add_edges_from(edgepairs_stream);
+        self.G.add_edges_from(edgepairs_msg);
+
+        self.G_stream.add_edges_from(edgepairs_stream);
+        self.G_msg.add_edges_from(edgepairs_msg);
 
         n_edges = self.G.edges(data=True);
         for e in n_edges:
