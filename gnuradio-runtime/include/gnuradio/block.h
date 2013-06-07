@@ -321,75 +321,37 @@ namespace gr {
      * with 1 value; this is used by the flat_flowgraph to expand when
      * required to add a new value for new ports on these blocks.
      */
-    void expand_minmax_buffer(int port)
-    {
-      if((size_t)port >= d_max_output_buffer.size())
-        set_max_output_buffer(port, -1);
-      if((size_t)port >= d_min_output_buffer.size())
-        set_min_output_buffer(port, -1);
-    }
+    void expand_minmax_buffer(int port);
 
     /*!
      * \brief Returns max buffer size on output port \p i.
      */
-    long max_output_buffer(size_t i)
-    {
-      if(i >= d_max_output_buffer.size())
-        throw std::invalid_argument("basic_block::max_output_buffer: port out of range.");
-      return d_max_output_buffer[i];
-    }
+    long max_output_buffer(size_t i);
 
     /*!
      * \brief Sets max buffer size on all output ports.
      */
-    void set_max_output_buffer(long max_output_buffer)
-    { 
-      for(int i = 0; i < output_signature()->max_streams(); i++) {
-        set_max_output_buffer(i, max_output_buffer);
-      }
-    }
+    void set_max_output_buffer(long max_output_buffer);
 
     /*!
      * \brief Sets max buffer size on output port \p port.
      */
-    void set_max_output_buffer(int port, long max_output_buffer)
-    {
-      if((size_t)port >= d_max_output_buffer.size())
-        d_max_output_buffer.push_back(max_output_buffer);
-      else
-        d_max_output_buffer[port] = max_output_buffer; 
-    }
+    void set_max_output_buffer(int port, long max_output_buffer);
 
     /*!
      * \brief Returns min buffer size on output port \p i.
      */
-    long min_output_buffer(size_t i)
-    {
-      if(i >= d_min_output_buffer.size())
-        throw std::invalid_argument("basic_block::min_output_buffer: port out of range.");
-      return d_min_output_buffer[i];
-    }
+    long min_output_buffer(size_t i);
 
     /*!
      * \brief Sets min buffer size on all output ports.
      */
-    void set_min_output_buffer(long min_output_buffer)
-    {
-      for(int i=0; i<output_signature()->max_streams(); i++) {
-        set_min_output_buffer(i, min_output_buffer);
-      }
-    }
+    void set_min_output_buffer(long min_output_buffer);
 
     /*!
      * \brief Sets min buffer size on output port \p port.
      */
-    void set_min_output_buffer(int port, long min_output_buffer)
-    {
-      if((size_t)port >= d_min_output_buffer.size())
-        d_min_output_buffer.push_back(min_output_buffer);
-      else
-        d_min_output_buffer[port] = min_output_buffer; 
-    }
+    void set_min_output_buffer(int port, long min_output_buffer);
 
     // --------------- Performance counter functions -------------
 
