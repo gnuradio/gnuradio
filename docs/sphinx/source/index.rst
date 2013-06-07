@@ -54,14 +54,12 @@ Hardware Interfaces
    
    gnuradio.uhd
    gnuradio.fcd
-   gnuradio.shd
 
 .. toctree::
    :hidden:   
 
    gnuradio.uhd <uhd>
    gnuradio.fcd <fcd>
-   gnuradio.shd <shd>
 
 Utilities
 ---------
