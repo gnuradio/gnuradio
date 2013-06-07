@@ -38,7 +38,7 @@ namespace gr {
     }
 
     plateau_detector_fb_impl::plateau_detector_fb_impl(int max_len, float threshold)
-      : sync_block("plateau_detector_fb",
+      : block("plateau_detector_fb",
                       io_signature::make(1, 1, sizeof(float)),
                       io_signature::make(1, 1, sizeof(char))),
 	d_max_len(max_len),
@@ -49,15 +49,22 @@ namespace gr {
     {
     }
 
+    void
+    plateau_detector_fb_impl::forecast(int, gr_vector_int &ninput_items_required)
+    {
+        ninput_items_required[0] = 2*d_max_len;
+    }
+
     int
-    plateau_detector_fb_impl::work(int noutput_items,
-                                   gr_vector_const_void_star &input_items,
-                                   gr_vector_void_star &output_items)
+    plateau_detector_fb_impl::general_work(int noutput_items,
+                      gr_vector_int &ninput_items,
+                      gr_vector_const_void_star &input_items,
+                      gr_vector_void_star &output_items)
     {
       const float *in = (const float *) input_items[0];
       unsigned char *out = (unsigned char *) output_items[0];
       int flank_start;
-
+      noutput_items = std::min(noutput_items, ninput_items[0]);
       memset((void *) out, 0x00, noutput_items);
       int i;
       for(i = 0; i < noutput_items; i++) {
@@ -75,6 +82,7 @@ namespace gr {
         }
       }
 
+      this->consume_each(i);
       return i;
     }
 

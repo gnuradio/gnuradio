@@ -51,7 +51,7 @@ namespace gr {
      * An implicit hysteresis is provided by the fact that after detecting one plateau,
      * it waits at least max_len samples before the next plateau can be detected.
      */
-    class BLOCKS_API plateau_detector_fb : virtual public sync_block
+    class BLOCKS_API plateau_detector_fb : virtual public block
     {
     public:
        typedef boost::shared_ptr<plateau_detector_fb> sptr;
