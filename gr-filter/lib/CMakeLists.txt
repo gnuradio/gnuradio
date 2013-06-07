@@ -138,6 +138,7 @@ list(APPEND filter_sources
   fractional_resampler_ff_impl.cc
   hilbert_fc_impl.cc
   iir_filter_ffd_impl.cc
+  pfb_arb_resampler.cc
   pfb_arb_resampler_ccf_impl.cc
   pfb_arb_resampler_fff_impl.cc
   pfb_channelizer_ccf_impl.cc

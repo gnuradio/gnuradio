@@ -104,6 +104,7 @@ install(FILES
     fractional_resampler_ff.h
     hilbert_fc.h
     iir_filter_ffd.h
+    pfb_arb_resampler.h
     pfb_arb_resampler_ccf.h
     pfb_arb_resampler_fff.h
     pfb_channelizer_ccf.h
