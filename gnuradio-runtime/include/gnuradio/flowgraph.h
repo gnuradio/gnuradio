@@ -251,6 +251,20 @@ namespace gr {
     return os;
   }
 
+  inline std::ostream&
+  operator <<(std::ostream &os, const msg_endpoint endp)
+  {
+    os << endp.block()->alias() << ":" << pmt::symbol_to_string(endp.port());
+    return os;
+  }
+
+  inline std::ostream&
+  operator <<(std::ostream &os, const msg_edge edge)
+  {
+    os << edge.src() << "->" << edge.dst();
+    return os;
+  }
+
 } /* namespace gr */
 
 #endif /* INCLUDED_GR_RUNTIME_FLOWGRAPH_H */

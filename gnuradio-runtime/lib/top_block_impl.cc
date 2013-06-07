@@ -190,6 +190,15 @@ namespace gr {
       return "";
   }
 
+  std::string
+  top_block_impl::msg_edge_list()
+  {
+    if(d_ffg)
+      return d_ffg->msg_edge_list();
+    else
+      return "";
+  }
+
   void
   top_block_impl::dump()
   {
