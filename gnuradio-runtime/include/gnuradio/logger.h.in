@@ -52,6 +52,7 @@ typedef unsigned short mode_t;
 #include <time.h>
 #include <boost/filesystem.hpp>
 #include <boost/thread.hpp>
+#include <boost/format.hpp>
 #include <pmt/pmt.h>
 
 #ifdef ENABLE_GR_LOG
