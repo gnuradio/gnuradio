@@ -122,6 +122,12 @@ namespace gr {
     std::string edge_list();
 
     /*!
+     * Returns a string that lists the msg edge connections in the
+     * flattened flowgraph.
+     */
+    std::string msg_edge_list();
+
+    /*!
      * Displays flattened flowgraph edges and block connectivity
      */
     void dump();

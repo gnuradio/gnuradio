@@ -55,6 +55,9 @@ namespace gr {
     // Return a string list of edges
     std::string edge_list();
 
+    // Return a string list of msg edges
+    std::string msg_edge_list();
+
     void dump();
 
     /*!

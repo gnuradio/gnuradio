@@ -103,6 +103,12 @@ namespace gr {
     return d_impl->edge_list();
   }
 
+  std::string
+  top_block::msg_edge_list()
+  {
+    return d_impl->msg_edge_list();
+  }
+
   void
   top_block::dump()
   {
@@ -150,6 +156,16 @@ namespace gr {
 	   &top_block::edge_list,
            pmt::mp(""), pmt::mp(""), pmt::mp(""),
            "edges", "List of edges in the graph",
+           RPC_PRIVLVL_MIN, DISPNULL)));
+    }
+
+    if(prefs::singleton()->get_bool("ControlPort", "edges_list", false)) {
+      add_rpc_variable(
+        rpcbasic_sptr(new rpcbasic_register_get<top_block, std::string>(
+	   alias(), "msg edges list",
+	   &top_block::msg_edge_list,
+           pmt::mp(""), pmt::mp(""), pmt::mp(""),
+           "msg_edges", "List of msg edges in the graph",
            RPC_PRIVLVL_MIN, DISPNULL)));
     }
 

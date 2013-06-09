@@ -335,6 +335,15 @@ namespace gr {
     return s.str();
   }
 
+  std::string
+  flat_flowgraph::msg_edge_list()
+  {
+    std::stringstream s;
+    for(msg_edge_viter_t e = d_msg_edges.begin(); e != d_msg_edges.end(); e++)
+      s << (*e) << std::endl;
+    return s.str();
+  }
+
   void flat_flowgraph::dump()
   {
     for(edge_viter_t e = d_edges.begin(); e != d_edges.end(); e++)
