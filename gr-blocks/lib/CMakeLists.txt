@@ -286,7 +286,7 @@ target_link_libraries(gnuradio-blocks ${blocks_libs})
 GR_LIBRARY_FOO(gnuradio-blocks RUNTIME_COMPONENT "blocks_runtime" DEVEL_COMPONENT "blocks_devel")
 
 ########################################################################
-# QA C++ Code for gr-filter
+# QA C++ Code for gr-blocks
 ########################################################################
 if(ENABLE_TESTING)
   include(GrTest)
