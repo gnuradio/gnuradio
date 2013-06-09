@@ -38,14 +38,15 @@ namespace gr {
       bool d_output_symbols; //!< If true, output is symbols, not items
       size_t d_itemsize; //!< Bytes per item
       bool d_uses_trigger_tag; //!< If a trigger tag is used
-      int d_ninput_items_reqd; //!< Helper for forecast()
       int d_state; //!< Current read state
       int d_remaining_symbols; //!< When in payload or header state, the number of symbols still to transmit
+      std::vector<pmt::pmt_t> d_payload_tag_keys; //!< Temporary buffer for PMTs that go on the payload (keys)
+      std::vector<pmt::pmt_t> d_payload_tag_values; //!< Temporary buffer for PMTs that go on the payload (values)
 
       // Helpers to make the state machine more readable
 
-      //! Helper function that does the reading from the msg port
-      bool parse_header_data_msg();
+      //! Message handler: Reads the result from the header demod and sets length tag (and other tags)
+      void parse_header_data_msg(pmt::pmt_t header_data);
 
       //! Helper function that returns true if a trigger signal is detected.
       //  Searches input 1 (if active), then the tags. Sets \p pos to the position
