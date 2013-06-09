@@ -37,7 +37,7 @@ namespace gr {
     {
     public:
 
-      // gr::gnuradio/blocks::multiply_conjugate_cc::sptr
+      // gr::blocks::multiply_conjugate_cc::sptr
       typedef boost::shared_ptr<multiply_conjugate_cc> sptr;
 
       /*!

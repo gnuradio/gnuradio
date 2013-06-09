@@ -47,7 +47,7 @@ namespace gr {
     class BLOCKS_API burst_tagger : virtual public sync_block
     {
     public:
-      // gr::gnuradio/blocks::burst_tagger::sptr
+      // gr::blocks::burst_tagger::sptr
       typedef boost::shared_ptr<burst_tagger> sptr;
 
       /*!

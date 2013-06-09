@@ -70,7 +70,7 @@ namespace gr {
     class BLOCKS_API file_meta_sink : virtual public sync_block
     {
     public:
-      // gr::gnuradio/blocks::file_meta_sink::sptr
+      // gr::blocks::file_meta_sink::sptr
       typedef boost::shared_ptr<file_meta_sink> sptr;
 
       /*!

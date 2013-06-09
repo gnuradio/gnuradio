@@ -38,7 +38,7 @@ namespace gr {
                                  virtual public file_sink_base
     {
     public:
-      // gr::gnuradio/blocks::file_sink::sptr
+      // gr::blocks::file_sink::sptr
       typedef boost::shared_ptr<file_sink> sptr;
 
       /*!

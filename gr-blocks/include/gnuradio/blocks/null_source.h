@@ -36,7 +36,7 @@ namespace gr {
     class BLOCKS_API null_source : virtual public sync_block
     {
     public:
-      // gr::gnuradio/blocks::null_source::sptr
+      // gr::blocks::null_source::sptr
       typedef boost::shared_ptr<null_source> sptr;
 
       /*!

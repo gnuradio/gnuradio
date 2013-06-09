@@ -40,7 +40,7 @@ namespace gr {
     class BLOCKS_API head : virtual public sync_block
     {
     public:
-      // gr::gnuradio/blocks::head::sptr
+      // gr::blocks::head::sptr
       typedef boost::shared_ptr<head> sptr;
 
       static sptr make(size_t sizeof_stream_item,

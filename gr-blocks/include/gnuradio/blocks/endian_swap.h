@@ -36,7 +36,7 @@ namespace gr {
     class BLOCKS_API endian_swap : virtual public sync_block
     {
     public:
-      // gr::gnuradio/blocks::endian_swap::sptr
+      // gr::blocks::endian_swap::sptr
       typedef boost::shared_ptr<endian_swap> sptr;
 
       /*!

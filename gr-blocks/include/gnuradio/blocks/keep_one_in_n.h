@@ -37,7 +37,7 @@ namespace gr {
     {
     public:
       
-      // gr::gnuradio/blocks::keep_one_in_n::sptr
+      // gr::blocks::keep_one_in_n::sptr
       typedef boost::shared_ptr<keep_one_in_n> sptr;
 
       /*!

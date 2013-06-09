@@ -36,7 +36,7 @@ namespace gr {
     class BLOCKS_API int_to_float : virtual public sync_block
     {
     public:
-      // gr::gnuradio/blocks::int_to_float_ff::sptr
+      // gr::blocks::int_to_float_ff::sptr
       typedef boost::shared_ptr<int_to_float> sptr;
 
       /*!

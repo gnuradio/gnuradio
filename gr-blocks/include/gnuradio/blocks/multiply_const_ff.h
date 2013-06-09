@@ -40,7 +40,7 @@ namespace gr {
 
     public:
       
-      // gr::gnuradio/blocks::multiply_const_ff::sptr
+      // gr::blocks::multiply_const_ff::sptr
       typedef boost::shared_ptr<multiply_const_ff> sptr;
       
       /*!

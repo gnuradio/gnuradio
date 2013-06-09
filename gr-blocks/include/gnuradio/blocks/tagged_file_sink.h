@@ -48,7 +48,7 @@ namespace gr {
     class BLOCKS_API tagged_file_sink : virtual public sync_block
     {
     public:
-      // gr::gnuradio/blocks::tagged_file_sink::sptr
+      // gr::blocks::tagged_file_sink::sptr
       typedef boost::shared_ptr<tagged_file_sink> sptr;
       
       /*!

@@ -36,7 +36,7 @@ namespace gr {
     class BLOCKS_API complex_to_real : virtual public sync_block
     {
     public:
-      // gr::gnuradio/blocks::complex_to_real_ff::sptr
+      // gr::blocks::complex_to_real_ff::sptr
       typedef boost::shared_ptr<complex_to_real> sptr;
 
       /*!

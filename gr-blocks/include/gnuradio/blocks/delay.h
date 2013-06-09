@@ -36,7 +36,7 @@ namespace gr {
     class BLOCKS_API delay : virtual public block
     {
     public:
-      // gr::gnuradio/blocks::delay::sptr
+      // gr::blocks::delay::sptr
       typedef boost::shared_ptr<delay> sptr;
 
       /*!

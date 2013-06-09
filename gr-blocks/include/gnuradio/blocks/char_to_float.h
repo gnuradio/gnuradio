@@ -37,7 +37,7 @@ namespace gr {
     {
     public:
       
-      // gr::gnuradio/blocks::char_to_float_ff::sptr
+      // gr::blocks::char_to_float_ff::sptr
       typedef boost::shared_ptr<char_to_float> sptr;
 
       /*!

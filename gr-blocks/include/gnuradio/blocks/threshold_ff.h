@@ -41,7 +41,7 @@ namespace gr {
     class BLOCKS_API threshold_ff : virtual public sync_block
     {
     public:
-      // gr::gnuradio/blocks::threshold_ff::sptr
+      // gr::blocks::threshold_ff::sptr
       typedef boost::shared_ptr<threshold_ff> sptr;
 
       /* \brief Create a threadshold block.

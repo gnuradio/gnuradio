@@ -42,7 +42,7 @@ namespace gr {
       virtual void flush_residue() = 0;
 
     public:
-      // gr::gnuradio/blocks::file_descriptor_source::sptr
+      // gr::blocks::file_descriptor_source::sptr
       typedef boost::shared_ptr<file_descriptor_source> sptr;
 
       /*!

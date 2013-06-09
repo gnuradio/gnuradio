@@ -49,7 +49,7 @@ namespace gr {
       virtual void send_stats() = 0;
 
     public:
-      // gr::gnuradio/blocks::bin_statistics_f::sptr
+      // gr::blocks::bin_statistics_f::sptr
       typedef boost::shared_ptr<bin_statistics_f> sptr;
 
       /*!

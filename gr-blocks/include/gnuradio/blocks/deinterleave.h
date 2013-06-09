@@ -36,7 +36,7 @@ namespace gr {
     class BLOCKS_API deinterleave : virtual public sync_decimator
     {
     public:
-      // gr::gnuradio/blocks::deinterleave::sptr
+      // gr::blocks::deinterleave::sptr
       typedef boost::shared_ptr<deinterleave> sptr;
 
       /*!

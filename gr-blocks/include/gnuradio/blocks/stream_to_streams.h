@@ -40,7 +40,7 @@ namespace gr {
     class BLOCKS_API stream_to_streams : virtual public sync_decimator
     {
     public:
-      // gr::gnuradio/blocks::stream_to_streams::sptr
+      // gr::blocks::stream_to_streams::sptr
       typedef boost::shared_ptr<stream_to_streams> sptr;
 
       /*!

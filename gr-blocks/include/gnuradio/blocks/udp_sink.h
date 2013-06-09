@@ -36,7 +36,7 @@ namespace gr {
     class BLOCKS_API udp_sink : virtual public sync_block
     {
     public:
-      // gr::gnuradio/blocks::udp_sink::sptr
+      // gr::blocks::udp_sink::sptr
       typedef boost::shared_ptr<udp_sink> sptr;
 
       /*!

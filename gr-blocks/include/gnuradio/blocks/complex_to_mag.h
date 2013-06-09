@@ -36,7 +36,7 @@ namespace gr {
     class BLOCKS_API complex_to_mag : virtual public sync_block
     {
     public:
-      // gr::gnuradio/blocks::complex_to_mag_ff::sptr
+      // gr::blocks::complex_to_mag_ff::sptr
       typedef boost::shared_ptr<complex_to_mag> sptr;
 
       /*!

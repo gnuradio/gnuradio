@@ -36,7 +36,7 @@ namespace gr {
     class BLOCKS_API complex_to_interleaved_short : virtual public sync_interpolator
     {
     public:
-      // gr::gnuradio/blocks::complex_to_interleaved_short::sptr
+      // gr::blocks::complex_to_interleaved_short::sptr
       typedef boost::shared_ptr<complex_to_interleaved_short> sptr;
 
       /*!

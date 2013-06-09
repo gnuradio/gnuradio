@@ -36,7 +36,7 @@ namespace gr {
     class BLOCKS_API file_descriptor_sink : virtual public sync_block
     {
     public:
-      // gr::gnuradio/blocks::file_descriptor_sink::sptr
+      // gr::blocks::file_descriptor_sink::sptr
       typedef boost::shared_ptr<file_descriptor_sink> sptr;
 
       /*!

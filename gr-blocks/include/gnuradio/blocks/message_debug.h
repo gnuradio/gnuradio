@@ -51,7 +51,7 @@ namespace gr {
     class BLOCKS_API message_debug : virtual public block
     {
     public:
-      // gr::gnuradio/blocks::message_debug::sptr
+      // gr::blocks::message_debug::sptr
       typedef boost::shared_ptr<message_debug> sptr;
 
       /*! 

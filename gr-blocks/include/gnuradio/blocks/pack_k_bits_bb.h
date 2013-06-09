@@ -37,7 +37,7 @@ namespace gr {
     class BLOCKS_API pack_k_bits_bb : virtual public sync_decimator
     {
     public:
-      // gr::gnuradio/blocks::pack_k_bits_bb::sptr
+      // gr::blocks::pack_k_bits_bb::sptr
       typedef boost::shared_ptr<pack_k_bits_bb> sptr;
       
       /*!

@@ -40,7 +40,7 @@ namespace gr {
     class BLOCKS_API wavfile_sink : virtual public sync_block
     {
     public:
-      // gr::gnuradio/blocks::wavfile_sink::sptr
+      // gr::blocks::wavfile_sink::sptr
       typedef boost::shared_ptr<wavfile_sink> sptr;
 
       /*

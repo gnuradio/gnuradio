@@ -36,7 +36,7 @@ namespace gr {
     class BLOCKS_API interleave : virtual public sync_interpolator
     {
     public:
-      // gr::gnuradio/blocks::interleave::sptr
+      // gr::blocks::interleave::sptr
       typedef boost::shared_ptr<interleave> sptr;
 
       /*!

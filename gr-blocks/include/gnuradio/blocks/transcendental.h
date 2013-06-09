@@ -45,7 +45,7 @@ namespace gr {
     class BLOCKS_API transcendental : virtual public sync_block
     {
     public:
-      // gr::gnuradio/blocks::transcendental::sptr
+      // gr::blocks::transcendental::sptr
       typedef boost::shared_ptr<transcendental> sptr;
 
       static sptr make(const std::string &name,

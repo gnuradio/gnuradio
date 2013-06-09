@@ -45,7 +45,7 @@ namespace gr {
     class BLOCKS_API ctrlport_probe_c : virtual public sync_block
     {
     public:
-      // gr::gnuradio/blocks::ctrlport_probe_c::sptr
+      // gr::blocks::ctrlport_probe_c::sptr
       typedef boost::shared_ptr<ctrlport_probe_c> sptr;
 
       /*!

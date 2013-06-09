@@ -41,7 +41,7 @@ namespace gr {
     class BLOCKS_API lfsr_32k_source_s : virtual public sync_block
     {
     public:
-      // gr::gnuradio/blocks::lfsr_32k_source_s::sptr
+      // gr::blocks::lfsr_32k_source_s::sptr
       typedef boost::shared_ptr<lfsr_32k_source_s> sptr;
 
       /*!

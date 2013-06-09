@@ -40,7 +40,7 @@ namespace gr {
     class BLOCKS_API copy : virtual public block
     {
     public:
-      // gr::gnuradio/blocks::copy::sptr
+      // gr::blocks::copy::sptr
       typedef boost::shared_ptr<copy> sptr;
 
       static sptr make(size_t itemsize);

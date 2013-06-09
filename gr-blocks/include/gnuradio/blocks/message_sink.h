@@ -37,7 +37,7 @@ namespace gr {
     class BLOCKS_API message_sink : virtual public sync_block
     {
     public:
-      // gr::gnuradio/blocks::message_sink::sptr
+      // gr::blocks::message_sink::sptr
       typedef boost::shared_ptr<message_sink> sptr;
 
       static sptr make(size_t itemsize, gr::msg_queue::sptr msgq, bool dont_block);

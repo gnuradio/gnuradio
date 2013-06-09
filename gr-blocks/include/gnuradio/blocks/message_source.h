@@ -37,7 +37,7 @@ namespace gr {
     class BLOCKS_API message_source : virtual public sync_block
     {
     public:
-      // gr::gnuradio/blocks::message_source::sptr
+      // gr::blocks::message_source::sptr
       typedef boost::shared_ptr<message_source> sptr;
 
       static sptr make(size_t itemsize, int msgq_limit=0);

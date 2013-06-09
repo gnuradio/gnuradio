@@ -41,7 +41,7 @@ namespace gr {
     class BLOCKS_API peak_detector2_fb : virtual public sync_block
     {
     public:
-      // gr::gnuradio/blocks::peak_detector2_fb::sptr
+      // gr::blocks::peak_detector2_fb::sptr
       typedef boost::shared_ptr<peak_detector2_fb> sptr;
 
       /*!

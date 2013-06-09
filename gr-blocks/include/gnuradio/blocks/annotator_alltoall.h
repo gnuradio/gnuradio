@@ -49,7 +49,7 @@ namespace gr {
     class BLOCKS_API annotator_alltoall : virtual public sync_block
     {
     public:
-      // gr::gnuradio/blocks::annotator_alltoall::sptr
+      // gr::blocks::annotator_alltoall::sptr
       typedef boost::shared_ptr<annotator_alltoall> sptr;
 
       static sptr make(int when, size_t sizeof_stream_item);

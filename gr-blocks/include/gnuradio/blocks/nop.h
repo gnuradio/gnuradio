@@ -37,7 +37,7 @@ namespace gr {
     class BLOCKS_API nop : virtual public block
     {
     public:
-      // gr::gnuradio/blocks::nop::sptr
+      // gr::blocks::nop::sptr
       typedef boost::shared_ptr<nop> sptr;
 
       /*!

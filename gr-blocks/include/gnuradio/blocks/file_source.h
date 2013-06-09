@@ -37,7 +37,7 @@ namespace gr {
     {
     public:
 
-      // gr::gnuradio/blocks::file_source::sptr
+      // gr::blocks::file_source::sptr
       typedef boost::shared_ptr<file_source> sptr;
 
       /*!

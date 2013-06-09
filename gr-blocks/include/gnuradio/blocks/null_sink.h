@@ -38,7 +38,7 @@ namespace gr {
     class BLOCKS_API null_sink : virtual public sync_block
     {
     public:
-      // gr::gnuradio/blocks::null_sink::sptr
+      // gr::blocks::null_sink::sptr
       typedef boost::shared_ptr<null_sink> sptr;
 
       /*!

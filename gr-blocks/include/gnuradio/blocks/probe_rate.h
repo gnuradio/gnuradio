@@ -36,7 +36,7 @@ namespace gr {
     class BLOCKS_API probe_rate : virtual public sync_block
     {
     public:
-      // gr::gnuradio/blocks::probe_rate::sptr
+      // gr::blocks::probe_rate::sptr
       typedef boost::shared_ptr<probe_rate> sptr;
 
       /*!

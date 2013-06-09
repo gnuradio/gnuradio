@@ -40,7 +40,7 @@ namespace gr {
     class BLOCKS_API message_strobe : virtual public block
     {
     public:
-      // gr::gnuradio/blocks::message_strobe::sptr
+      // gr::blocks::message_strobe::sptr
       typedef boost::shared_ptr<message_strobe> sptr;
 
       /*!

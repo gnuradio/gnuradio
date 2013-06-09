@@ -36,7 +36,7 @@ namespace gr {
     class BLOCKS_API tuntap_pdu : virtual public block
     {
     public:
-      // gr::gnuradio/blocks::tuntap_pdu::sptr
+      // gr::blocks::tuntap_pdu::sptr
       typedef boost::shared_ptr<tuntap_pdu> sptr;
 
       /*!

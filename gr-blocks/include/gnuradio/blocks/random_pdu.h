@@ -37,7 +37,7 @@ namespace gr {
     class BLOCKS_API random_pdu : virtual public block
     {
     public:
-      // gr::gnuradio/blocks::random_pdu::sptr
+      // gr::blocks::random_pdu::sptr
       typedef boost::shared_ptr<random_pdu> sptr;
 
       /*!

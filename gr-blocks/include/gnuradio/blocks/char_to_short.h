@@ -37,7 +37,7 @@ namespace gr {
     {
     public:
       
-      // gr::gnuradio/blocks::char_to_short_ff::sptr
+      // gr::blocks::char_to_short_ff::sptr
       typedef boost::shared_ptr<char_to_short> sptr;
 
       static sptr make(size_t vlen=1);

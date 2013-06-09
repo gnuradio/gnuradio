@@ -40,7 +40,7 @@ namespace gr {
     class BLOCKS_API vco_f : virtual public sync_block
     {
     public:
-      // gr::gnuradio/blocks::vco_f::sptr
+      // gr::blocks::vco_f::sptr
       typedef boost::shared_ptr<vco_f> sptr;
 
       /*!

@@ -37,7 +37,7 @@ namespace gr {
     class BLOCKS_API pdu_to_tagged_stream : virtual public sync_block
     {
     public:
-      // gr::gnuradio/blocks::pdu_to_tagged_stream::sptr
+      // gr::blocks::pdu_to_tagged_stream::sptr
       typedef boost::shared_ptr<pdu_to_tagged_stream> sptr;
 
       /*!

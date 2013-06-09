@@ -38,7 +38,7 @@ namespace gr {
     class BLOCKS_API stretch_ff : virtual public sync_block
     {
     public:
-      // gr::gnuradio/blocks::stretch_ff::sptr
+      // gr::blocks::stretch_ff::sptr
       typedef boost::shared_ptr<stretch_ff> sptr;
       
       /*!

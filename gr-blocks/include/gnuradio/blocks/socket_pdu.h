@@ -36,7 +36,7 @@ namespace gr {
     class BLOCKS_API socket_pdu : virtual public block
     {
     public:
-      // gr::gnuradio/blocks::socket_pdu::sptr
+      // gr::blocks::socket_pdu::sptr
       typedef boost::shared_ptr<socket_pdu> sptr;
 
       /*!

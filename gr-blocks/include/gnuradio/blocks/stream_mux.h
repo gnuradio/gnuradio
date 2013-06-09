@@ -46,7 +46,7 @@ namespace gr {
     {
     public:
       
-      // gr::gnuradio/blocks::stream_mux::sptr
+      // gr::blocks::stream_mux::sptr
       typedef boost::shared_ptr<stream_mux> sptr;
 
       /*!

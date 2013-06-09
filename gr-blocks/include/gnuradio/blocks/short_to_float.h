@@ -36,7 +36,7 @@ namespace gr {
     class BLOCKS_API short_to_float : virtual public sync_block
     {
     public:
-      // gr::gnuradio/blocks::short_to_float_ff::sptr
+      // gr::blocks::short_to_float_ff::sptr
       typedef boost::shared_ptr<short_to_float> sptr;
 
       /*!

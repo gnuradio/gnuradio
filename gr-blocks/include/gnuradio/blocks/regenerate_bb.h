@@ -44,7 +44,7 @@ namespace gr {
     class BLOCKS_API regenerate_bb : virtual public sync_block
     {
     public:
-      // gr::gnuradio/blocks::regenerate_bb::sptr
+      // gr::blocks::regenerate_bb::sptr
       typedef boost::shared_ptr<regenerate_bb> sptr;
 
       /*!

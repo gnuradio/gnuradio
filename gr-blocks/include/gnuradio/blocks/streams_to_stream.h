@@ -40,7 +40,7 @@ namespace gr {
     class BLOCKS_API streams_to_stream : virtual public sync_interpolator
     {
     public:
-      // gr::gnuradio/blocks::streams_to_stream::sptr
+      // gr::blocks::streams_to_stream::sptr
       typedef boost::shared_ptr<streams_to_stream> sptr;
 
       /*!

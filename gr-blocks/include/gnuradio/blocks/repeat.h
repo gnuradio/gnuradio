@@ -36,7 +36,7 @@ namespace gr {
     class BLOCKS_API repeat : virtual public sync_interpolator
     {
     public:
-      // gr::gnuradio/blocks::repeat::sptr
+      // gr::blocks::repeat::sptr
       typedef boost::shared_ptr<repeat> sptr;
 
       /*!

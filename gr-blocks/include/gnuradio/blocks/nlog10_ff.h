@@ -37,7 +37,7 @@ namespace gr {
     {
     public:
       
-      // gr::gnuradio/blocks::nlog10_ff::sptr
+      // gr::blocks::nlog10_ff::sptr
       typedef boost::shared_ptr<nlog10_ff> sptr;
 
       /*!

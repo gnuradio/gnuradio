@@ -36,7 +36,7 @@ namespace gr {
     class BLOCKS_API vector_to_streams : virtual public sync_block
     {
     public:
-      // gr::gnuradio/blocks::vector_to_streams::sptr
+      // gr::blocks::vector_to_streams::sptr
       typedef boost::shared_ptr<vector_to_streams> sptr;
 
       /*!

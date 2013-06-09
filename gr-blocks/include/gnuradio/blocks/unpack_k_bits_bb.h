@@ -36,7 +36,7 @@ namespace gr {
     class BLOCKS_API unpack_k_bits_bb : virtual public sync_interpolator
     {
     public:
-      // gr::gnuradio/blocks::unpack_k_bits_bb::sptr
+      // gr::blocks::unpack_k_bits_bb::sptr
       typedef boost::shared_ptr<unpack_k_bits_bb> sptr;
       
       /*!

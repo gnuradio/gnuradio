@@ -41,7 +41,7 @@ namespace gr {
     class BLOCKS_API skiphead : virtual public block
     {
     public:
-      // gr::gnuradio/blocks::skiphead::sptr
+      // gr::blocks::skiphead::sptr
       typedef boost::shared_ptr<skiphead> sptr;
 
       static sptr make(size_t itemsize,

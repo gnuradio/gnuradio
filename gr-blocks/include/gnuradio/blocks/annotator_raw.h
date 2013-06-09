@@ -44,7 +44,7 @@ namespace gr {
     class BLOCKS_API annotator_raw : virtual public sync_block
     {
     public:
-      // gr::gnuradio/blocks::annotator_raw::sptr
+      // gr::blocks::annotator_raw::sptr
       typedef boost::shared_ptr<annotator_raw> sptr;
 
       static sptr make(size_t sizeof_stream_item);

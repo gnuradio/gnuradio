@@ -53,7 +53,7 @@ namespace gr {
     class BLOCKS_API tag_debug : virtual public sync_block
     {
     public:
-      // gr::gnuradio/blocks::tag_debug::sptr
+      // gr::blocks::tag_debug::sptr
       typedef boost::shared_ptr<tag_debug> sptr;
 
       /*!
