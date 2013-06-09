@@ -274,13 +274,13 @@ target_link_libraries(gnuradio-blocks ${blocks_libs})
 GR_LIBRARY_FOO(gnuradio-blocks RUNTIME_COMPONENT "blocks_runtime" DEVEL_COMPONENT "blocks_devel")
 
 ########################################################################
-# QA C++ Code for gr-filter
+# QA C++ Code for gr-blocks
 ########################################################################
 if(ENABLE_TESTING)
   include(GrTest)
 
   include_directories(
-    ${GR_FILTER_INCLUDE_DIRS}
+    ${GR_BLOCKS_INCLUDE_DIRS}
     ${CPPUNIT_INCLUDE_DIRS})
   link_directories(${CPPUNIT_LIBRARY_DIRS})
 
@@ -299,7 +299,6 @@ if(ENABLE_TESTING)
     test-gr-blocks
     gnuradio-core
     gnuradio-blocks
-    gnuradio-filter
     ${Boost_LIBRARIES}
     ${CPPUNIT_LIBRARIES}
   )
