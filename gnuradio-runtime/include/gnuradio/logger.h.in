@@ -302,7 +302,7 @@ namespace gr {
    * This is a singleton that cna launch a thread to wathc a config file for changes
    * \ingroup logging
    */
-  class logger_config
+  class GR_RUNTIME_API logger_config
   {
   private:
     /*! \brief filename of logger config file */
@@ -513,8 +513,7 @@ namespace gr {
    * Add console appender to a given logger
    *
    * \param logger Logger to which appender will be added
-   * \param target Std target to write 'cout' or 'cerr' (default is cout)
-   * \param pattern Formating pattern for log messages
+   * \param appender Name of appender to add to logger
    */
   GR_RUNTIME_API void logger_add_appender(logger_ptr logger,
                                           std::string appender);
