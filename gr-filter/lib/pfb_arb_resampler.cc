@@ -176,36 +176,42 @@ namespace gr {
         return d_last_filter * ph_diff;
       }
 
-      int
-      pfb_arb_resampler_ccf::filter(gr_complex *output,
-                                    gr_complex *input,
-                                    int nitems)
+      unsigned int
+      pfb_arb_resampler_ccf::taps_per_filter() const
       {
-        int i = 0, count = 0;//d_start_index;
-        unsigned int j;
+        return d_taps_per_filter;
+      }
+
+      int
+      pfb_arb_resampler_ccf::filter(gr_complex *output, gr_complex *input,
+                                    int n_to_read, int &n_read)
+      {
+        int i_out = 0, i_in = 0;
+        unsigned int j = d_last_filter;;
         gr_complex o0, o1;
-
-        j = d_last_filter;
-
-        while(i < nitems) {
+        
+        while(i_in < n_to_read) {
           // start j by wrapping around mod the number of channels
           while(j < d_int_rate) {
             // Take the current filter and derivative filter output
-            o0 = d_filters[j]->filter(&input[count]);
-            o1 = d_diff_filters[j]->filter(&input[count]);
+            o0 = d_filters[j]->filter(&input[i_in]);
+            o1 = d_diff_filters[j]->filter(&input[i_in]);
 
-            output[i] = o0 + o1*d_acc;     // linearly interpolate between samples
-            i++;
+            output[i_out] = o0 + o1*d_acc;     // linearly interpolate between samples
+            i_out++;
 
             // Adjust accumulator and index into filterbank
             d_acc += d_flt_rate;
             j += d_dec_rate + (int)floor(d_acc);
             d_acc = fmodf(d_acc, 1.0);
           }
-          count += (int)(j / d_int_rate);
+          i_in += (int)(j / d_int_rate);
           j = j % d_int_rate;
         }
-        d_last_filter = j;
+        d_last_filter = j; // save last filter state for re-entry
+
+        n_read = i_in;   // return how much we've actually read
+        return i_out;    // return how much we've produced
       }
 
     } /* namespace kernel */

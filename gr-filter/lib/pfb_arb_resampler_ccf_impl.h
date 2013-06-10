@@ -25,7 +25,7 @@
 #define	INCLUDED_PFB_ARB_RESAMPLER_CCF_IMPL_H
 
 #include <gnuradio/filter/pfb_arb_resampler_ccf.h>
-#include <gnuradio/filter/fir_filter.h>
+#include <gnuradio/filter/pfb_arb_resampler.h>
 #include <gnuradio/thread/thread.h>
 
 namespace gr {
@@ -34,33 +34,10 @@ namespace gr {
     class FILTER_API pfb_arb_resampler_ccf_impl : public pfb_arb_resampler_ccf
     {
     private:
-      std::vector<kernel::fir_filter_ccf*> d_filters;
-      std::vector<kernel::fir_filter_ccf*> d_diff_filters;
-      std::vector< std::vector<float> > d_taps;
-      std::vector< std::vector<float> > d_dtaps;
-      unsigned int d_int_rate;          // the number of filters (interpolation rate)
-      unsigned int d_dec_rate;          // the stride through the filters (decimation rate)
-      float        d_flt_rate;          // residual rate for the linear interpolation
-      float        d_acc;
-      unsigned int d_last_filter;
+      kernel::pfb_arb_resampler_ccf *d_resamp;
       int          d_start_index;
-      unsigned int d_taps_per_filter;
       bool         d_updated;
       gr::thread::mutex d_mutex; // mutex to protect set/work access
-
-      void create_diff_taps(const std::vector<float> &newtaps,
-			    std::vector<float> &difftaps);
-
-      /*!
-       * Resets the filterbank's filter taps with the new prototype filter
-       * \param newtaps    (vector of floats) The prototype filter to populate the filterbank.
-       *                   The taps should be generated at the interpolated sampling rate.
-       * \param ourtaps    (vector of floats) Reference to our internal member of holding the taps.
-       * \param ourfilter  (vector of filters) Reference to our internal filter to set the taps for.
-       */
-      void create_taps(const std::vector<float> &newtaps,
-		       std::vector< std::vector<float> > &ourtaps,
-		       std::vector<kernel::fir_filter_ccf*> &ourfilter);
 
     public:
       pfb_arb_resampler_ccf_impl(float rate,
@@ -69,13 +46,16 @@ namespace gr {
 
       ~pfb_arb_resampler_ccf_impl();
 
+      void forecast(int noutput_items, gr_vector_int &ninput_items_required);
+
       void set_taps(const std::vector<float> &taps);
       std::vector<std::vector<float> > taps() const;
       void print_taps();
-      void set_rate(float rate);
 
+      void set_rate(float rate);
       void set_phase(float ph);
       float phase() const;
+      unsigned int taps_per_filter() const;
 
       int general_work(int noutput_items,
 		       gr_vector_int &ninput_items,

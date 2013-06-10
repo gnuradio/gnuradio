@@ -23,6 +23,7 @@
 from gnuradio import gr, gr_unittest, filter, blocks
 
 import math
+from scipy import signal
 
 def sig_source_c(samp_rate, freq, amp, N):
     t = map(lambda x: float(x)/samp_rate, xrange(N))
@@ -96,11 +97,45 @@ class test_pfb_arb_resampler(gr_unittest.TestCase):
         t = map(lambda x: float(x)/(fs*rrate), xrange(L))
 
         phase = 0.53013
+        delay = ((len(taps)/nfilts) - 1.0) / 2.0
+        print "DELAY: ", delay
+        print delay/(fs*rrate)
         expected_data = map(lambda x: math.cos(2.*math.pi*freq*x+phase) + \
                                 1j*math.sin(2.*math.pi*freq*x+phase), t)
 
         dst_data = snk.data()
         self.assertComplexTuplesAlmostEqual(expected_data[-Ntest:], dst_data[-Ntest:], 3)
+
+#    def test_ccf_001(self):
+#        N = 1000         # number of samples to use
+#        fs = 1000        # baseband sampling rate
+#        rrate = 1.123    # resampling rate
+#
+#        nfilts = 32
+#        taps = filter.firdes.low_pass_2(nfilts, nfilts*fs, fs/2, fs/10,
+#                                        attenuation_dB=80,
+#                                        window=filter.firdes.WIN_BLACKMAN_hARRIS)
+#
+#        freq = 100
+#        data = sig_source_c(fs, freq, 1, N)
+#        src = blocks.vector_source_c(data)
+#        pfb = filter.pfb_arb_resampler_ccf(rrate, taps)
+#        snk = blocks.vector_sink_c()
+#
+#        self.tb.connect(src, pfb, snk)
+#        self.tb.run() 
+#
+#        Ntest = 50
+#        L = len(snk.data())
+#        t = map(lambda x: float(x)/(fs*rrate), xrange(L))
+#
+#        resamp = len(data)*rrate
+#        expected_data = signal.resample(data, resamp)
+#
+#        dst_data = snk.data()
+#        print expected_data[-Ntest:]
+#        print dst_data[-Ntest:]
+#        self.assertComplexTuplesAlmostEqual(expected_data[-Ntest:], dst_data[-Ntest:], 3)
 
 if __name__ == '__main__':
     gr_unittest.run(test_pfb_arb_resampler, "test_pfb_arb_resampler.xml")
