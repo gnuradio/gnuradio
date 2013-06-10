@@ -302,7 +302,7 @@ namespace gr {
    * This is a singleton that cna launch a thread to wathc a config file for changes
    * \ingroup logging
    */
-  class logger_config
+  class GR_RUNTIME_API logger_config
   {
   private:
     /*! \brief filename of logger config file */
