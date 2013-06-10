@@ -55,6 +55,9 @@ namespace gr {
        * \param LOS     include Line-of-Site path? selects between Rayleigh (NLOS) and Rician (LOS) models
        * \param K       Rician factor (ratio of the specular power to the scattered power)
        * \param seed    a random number to seed the noise generators
+       * \param delays  A vector of values the specify the time delay of each impulse
+       * \param mags    A vector of values that specifies the magnitude of each inpulse
+       * \param ntaps   The number of filter taps.
        */
       static sptr make(unsigned int N,
                 float fDTs,
