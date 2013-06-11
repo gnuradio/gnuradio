@@ -36,6 +36,7 @@ class grcc:
 
         self.fg = self.platform.get_new_flow_graph()
         self.fg.import_data(data)
+        self.fg.grc_file_path = os.path.abspath(grcfile)
         self.fg.validate()
 
         self.gen = self.platform.get_generator()(self.fg, out_dir)
