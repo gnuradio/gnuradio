@@ -40,16 +40,16 @@ class test_pfb_channelizer(gr_unittest.TestCase):
     def test_000(self):
         N = 1000         # number of samples to use
         M = 5            # Number of channels to channelize
-        fs = 1000        # baseband sampling rate
+        fs = 5000        # baseband sampling rate
         ifs = M*fs       # input samp rate to channelizer
 
-        taps = filter.firdes.low_pass_2(1, ifs, 500, 50,
+        taps = filter.firdes.low_pass_2(1, ifs, fs/2, fs/10,
                                         attenuation_dB=80,
                                         window=filter.firdes.WIN_BLACKMAN_hARRIS)
 
         signals = list()
         add = blocks.add_cc()
-        freqs = [-200, -100, 0, 100, 200]
+        freqs = [-230., 121., 110., -513., 203.]
         for i in xrange(len(freqs)):
             f = freqs[i] + (M/2-M+i+1)*fs
             data = sig_source_c(ifs, f, 1, N)
@@ -71,14 +71,21 @@ class test_pfb_channelizer(gr_unittest.TestCase):
 
         Ntest = 50
         L = len(snks[0].data())
-        t = map(lambda x: float(x)/fs, xrange(L))
 
         # Adjusted phase rotations for data
-        p0 = 0
-        p1 =  math.pi*0.51998885
-        p2 = -math.pi*0.96002233
-        p3 =  math.pi*0.96002233
-        p4 = -math.pi*0.51998885
+        p0 = -2*math.pi * 0 / M
+        p1 = -2*math.pi * 1 / M
+        p2 = -2*math.pi * 2 / M
+        p3 = -2*math.pi * 3 / M
+        p4 = -2*math.pi * 4 / M
+        
+        # Filter delay is the normal delay of each arm
+        tpf = math.ceil(len(taps) / float(M))
+        delay = -(tpf - 1.0) / 2.0
+        delay = int(delay)
+
+        # Create a time scale that's delayed to match the filter delay
+        t = map(lambda x: float(x)/fs, xrange(delay, L+delay))
 
         # Create known data as complex sinusoids at the different baseband freqs
         # the different channel numbering is due to channelizer output order.

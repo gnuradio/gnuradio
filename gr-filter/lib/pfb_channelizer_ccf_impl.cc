@@ -81,6 +81,9 @@ namespace gr {
 	d_output_multiple++;
       set_output_multiple(d_output_multiple);
 
+      // History is the length of each filter arm plus 1.
+      // The +1 comes from the channel mapping in the work function
+      // where we start n=1 so that we can look at in[n-1]
       set_history(d_taps_per_filter+1);
     }
 

@@ -48,7 +48,7 @@ class test_pfb_interpolator(gr_unittest.TestCase):
                                         attenuation_dB=80,
                                         window=filter.firdes.WIN_BLACKMAN_hARRIS)
 
-        freq = 100
+        freq = 123.456
         data = sig_source_c(fs, freq, 1, N)
         signal = blocks.vector_source_c(data)
         pfb = filter.pfb_interpolator_ccf(M, taps)
@@ -61,11 +61,19 @@ class test_pfb_interpolator(gr_unittest.TestCase):
 
         Ntest = 50
         L = len(snk.data())
-        t = map(lambda x: float(x)/ifs, xrange(L))
 
-        # Create known data as complex sinusoids at freq
-        # of the channel at the interpolated rate.
-        phase = 0.62833
+        # Can only get channel 0 out; no phase rotation
+        phase = 0
+
+        # Calculate the filter delay
+        delay = -(len(taps) - 1) / 2.0 - (M-1)
+        delay = int(delay)
+
+        # Create a time scale that's delayed to match the filter delay
+        t = map(lambda x: float(x)/ifs, xrange(delay, L+delay))
+
+        # Create known data as complex sinusoids for the baseband freq
+        # of the extracted channel is due to decimator output order.
         expected_data = map(lambda x: math.cos(2.*math.pi*freq*x+phase) + \
                                 1j*math.sin(2.*math.pi*freq*x+phase), t)
 

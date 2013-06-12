@@ -48,7 +48,7 @@ namespace gr {
 	polyphase_filterbank(interp, taps),
 	d_updated (false), d_rate(interp)
     {
-      set_history(d_taps_per_filter+1);
+      set_history(d_taps_per_filter);
     }
 
     pfb_interpolator_ccf_impl::~pfb_interpolator_ccf_impl()
@@ -61,7 +61,7 @@ namespace gr {
       gr::thread::scoped_lock guard(d_mutex);
 
       polyphase_filterbank::set_taps(taps);
-      set_history(d_taps_per_filter+1);
+      set_history(d_taps_per_filter);
       d_updated = true;
     }
 

@@ -53,7 +53,7 @@ namespace gr {
       d_rotator = new gr_complex[d_rate];
 
       set_relative_rate(1.0/(float)decim);
-      set_history(d_taps_per_filter+1);
+      set_history(d_taps_per_filter);
     }
 
     pfb_decimator_ccf_impl::~pfb_decimator_ccf_impl()
@@ -66,7 +66,7 @@ namespace gr {
       gr::thread::scoped_lock guard(d_mutex);
 
       polyphase_filterbank::set_taps(taps);
-      set_history(d_taps_per_filter+1);
+      set_history(d_taps_per_filter);
       d_updated = true;
     }
 
