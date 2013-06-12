@@ -123,6 +123,15 @@ install(FILES
 )
 
 ########################################################################
+# Install cmake search routine for external use
+########################################################################
+install(
+    FILES ${CMAKE_CURRENT_SOURCE_DIR}/cmake/VolkConfig.cmake
+    DESTINATION lib${LIB_SUFFIX}/cmake/volk/
+    COMPONENT "volk_devel"
+)
+
+########################################################################
 # Setup the library
 ########################################################################
 add_subdirectory(lib)
