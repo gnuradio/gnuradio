@@ -197,7 +197,8 @@ class mod_demod(gr.hier_block2):
         # TX
         self.constellation = constellation
         self.differential = differential
-        self.blocks = [self]
+        import weakref
+        self.blocks = [weakref.proxy(self)]
         # We expect a stream of unpacked bits.
         # First step is to pack them.
         self.blocks.append(
@@ -238,7 +239,7 @@ class mod_demod(gr.hier_block2):
         # connect to block output
         check_index = len(self.blocks)
         self.blocks = self.blocks[:check_index]
-        self.blocks.append(self)
+        self.blocks.append(weakref.proxy(self))
 
         self.connect(*self.blocks)
 
