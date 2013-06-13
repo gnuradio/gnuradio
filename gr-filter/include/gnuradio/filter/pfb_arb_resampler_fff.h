@@ -108,8 +108,8 @@ namespace gr {
        *			           Defaults to 32 filters.
        */
       static sptr make(float rate,
-				  const std::vector<float> &taps,
-				  unsigned int filter_size=32);
+                       const std::vector<float> &taps,
+                       unsigned int filter_size=32);
 
       /*!
        * Resets the filterbank's filter taps with the new prototype filter
@@ -141,6 +141,38 @@ namespace gr {
        * Gets the current phase of the resampler in radians (2 to 2pi).
        */
       virtual float phase() const = 0;
+
+      /*!
+       * Gets the number of taps per filter.
+       */
+      virtual unsigned int taps_per_filter() const = 0;
+
+      /*!
+       * Gets the interpolation rate of the filter.
+       */
+      virtual unsigned int interpolation_rate() const = 0;
+
+      /*!
+       * Gets the decimation rate of the filter.
+       */    
+      virtual unsigned int decimation_rate() const =0;
+      
+      /*!
+       * Gets the fractional rate of the filter.
+       */    
+      virtual float fractional_rate() const = 0;
+
+      /*!
+       * Get the group delay of the filter.
+       */
+      virtual int group_delay() const = 0;
+
+      /*!
+       * Calculates the phase offset expected by a sine wave of
+       * frequency \p freq and sampling rate \p fs (assuming input
+       * sine wave has 0 degree phase).
+       */
+      virtual float phase_offset(float freq, float fs) = 0;
     };
 
   } /* namespace filter */

@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2009,2010,2012 Free Software Foundation, Inc.
+ * Copyright 2009,2010,2013 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -35,8 +35,7 @@ namespace gr {
     {
     private:
       kernel::pfb_arb_resampler_ccf *d_resamp;
-      int          d_start_index;
-      bool         d_updated;
+      bool d_updated;
       gr::thread::mutex d_mutex; // mutex to protect set/work access
 
     public:
@@ -55,7 +54,14 @@ namespace gr {
       void set_rate(float rate);
       void set_phase(float ph);
       float phase() const;
+
+      unsigned int interpolation_rate() const;
+      unsigned int decimation_rate() const;
+      float fractional_rate() const;
       unsigned int taps_per_filter() const;
+
+      int group_delay() const;
+      float phase_offset(float freq, float fs);
 
       int general_work(int noutput_items,
 		       gr_vector_int &ninput_items,

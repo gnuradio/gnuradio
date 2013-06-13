@@ -97,6 +97,33 @@ namespace gr {
        * Gets the number of taps per filter.
        */
       virtual unsigned int taps_per_filter() const = 0;
+
+      /*!
+       * Gets the interpolation rate of the filter.
+       */
+      virtual unsigned int interpolation_rate() const = 0;
+
+      /*!
+       * Gets the decimation rate of the filter.
+       */    
+      virtual unsigned int decimation_rate() const =0;
+      
+      /*!
+       * Gets the fractional rate of the filter.
+       */    
+      virtual float fractional_rate() const = 0;
+
+      /*!
+       * Get the group delay of the filter.
+       */
+      virtual int group_delay() const = 0;
+
+      /*!
+       * Calculates the phase offset expected by a sine wave of
+       * frequency \p freq and sampling rate \p fs (assuming input
+       * sine wave has 0 degree phase).
+       */
+      virtual float phase_offset(float freq, float fs) = 0;
     };
 
   } /* namespace filter */

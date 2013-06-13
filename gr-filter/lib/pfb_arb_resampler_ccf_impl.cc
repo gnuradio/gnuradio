@@ -48,7 +48,6 @@ namespace gr {
               io_signature::make(1, 1, sizeof(gr_complex)),
               io_signature::make(1, 1, sizeof(gr_complex)))
     {
-      d_start_index = 0;
       d_updated = false;
 
       d_resamp = new kernel::pfb_arb_resampler_ccf(rate, taps, filter_size);
@@ -66,8 +65,14 @@ namespace gr {
                                          gr_vector_int &ninput_items_required)
     {
       unsigned ninputs = ninput_items_required.size();
-      for(unsigned i = 0; i < ninputs; i++)
-        ninput_items_required[i] = noutput_items/relative_rate() + history() - 1;
+      if(noutput_items / relative_rate() < 1) {
+        for(unsigned i = 0; i < ninputs; i++)
+          ninput_items_required[i] = max_output_buffer(i)-1;
+      }
+      else {
+        for(unsigned i = 0; i < ninputs; i++)
+          ninput_items_required[i] = noutput_items/relative_rate() + history() - 1;
+      }
     }
 
     void
@@ -76,7 +81,7 @@ namespace gr {
       gr::thread::scoped_lock guard(d_mutex);
 
       d_resamp->set_taps(taps);
-      set_history(d_resamp->taps_per_filter() + 1);
+      set_history(d_resamp->taps_per_filter());
       d_updated = true;
     }
  
@@ -115,9 +120,39 @@ namespace gr {
     }
 
     unsigned int
+    pfb_arb_resampler_ccf_impl::interpolation_rate() const
+    { 
+      return d_resamp->interpolation_rate();
+    }
+
+    unsigned int
+    pfb_arb_resampler_ccf_impl::decimation_rate() const
+    {
+      return d_resamp->decimation_rate();
+    }
+
+    float
+    pfb_arb_resampler_ccf_impl::fractional_rate() const
+    {
+      return d_resamp->fractional_rate();
+    }
+
+    unsigned int
     pfb_arb_resampler_ccf_impl::taps_per_filter() const
     {
       return d_resamp->taps_per_filter();
+    }
+
+    int
+    pfb_arb_resampler_ccf_impl::group_delay() const
+    {
+      return d_resamp->group_delay();
+    }
+
+    float
+    pfb_arb_resampler_ccf_impl::phase_offset(float freq, float fs)
+    {
+      return d_resamp->phase_offset(freq, fs);
     }
 
     int
