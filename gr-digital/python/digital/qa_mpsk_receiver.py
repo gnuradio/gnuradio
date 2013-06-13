@@ -78,7 +78,7 @@ class test_mpsk_receiver(gr_unittest.TestCase):
         Ncmp = 1000
         len_e = len(expected_result)
         len_d = len(dst_data)
-        expected_result = expected_result[len_e - Ncmp-1:-1]
+        expected_result = expected_result[len_e - Ncmp:]
         dst_data = dst_data[len_d - Ncmp:]
         
         #for e,d in zip(expected_result, dst_data):
@@ -130,15 +130,13 @@ class test_mpsk_receiver(gr_unittest.TestCase):
         expected_result = 10000*[complex(-0.5, +0.0), complex(+0.0, -0.5),
                                  complex(+0.5, +0.0), complex(+0.0, +0.5)]
 
-        # get data after a settling period
-        dst_data = self.snk.data()[200:]
+        dst_data = self.snk.data()
 
         # Only compare last Ncmp samples
+        Nstrt = 30000
         Ncmp = 1000
-        len_e = len(expected_result)
-        len_d = len(dst_data)
-        expected_result = expected_result[len_e - Ncmp - 1:-1]
-        dst_data = dst_data[len_d - Ncmp:]
+        expected_result = expected_result[Nstrt:Nstrt+Ncmp]
+        dst_data = dst_data[Nstrt:Nstrt+Ncmp]
 
         #for e,d in zip(expected_result, dst_data):
         #    print "{0:+.02f}  {1:+.02f}".format(e, d)

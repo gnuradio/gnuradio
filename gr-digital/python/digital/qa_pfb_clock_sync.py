@@ -70,7 +70,7 @@ class test_pfb_clock_sync(gr_unittest.TestCase):
         self.tb.connect(self.src, self.rrc_filter, self.test, self.snk)
         self.tb.run()
         
-        expected_result = 10000*[complex(-1,0), complex(1,0)]
+        expected_result = 10000*[complex(1,0), complex(-1,0)]
         dst_data = self.snk.data()
 
         # Only compare last Ncmp samples
@@ -123,7 +123,7 @@ class test_pfb_clock_sync(gr_unittest.TestCase):
         self.tb.connect(self.src, self.rrc_filter, self.test, self.snk)
         self.tb.run()
         
-        expected_result = 10000*[-1, 1]
+        expected_result = 10000*[1, -1]
         dst_data = self.snk.data()
 
         # Only compare last Ncmp samples
