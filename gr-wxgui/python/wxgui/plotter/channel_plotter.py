@@ -150,6 +150,7 @@ class channel_plotter(grid_plotter_base):
 			num_samps = len(samples)
 			if not num_samps: continue
 			if isinstance(samples, tuple): continue
+			if self.x_max <= self.x_min: continue
 			#linear interpolation
 			x_index = (num_samps-1)*(x_val-self.x_min)/(self.x_max-self.x_min)
 			x_index_low = int(math.floor(x_index))
