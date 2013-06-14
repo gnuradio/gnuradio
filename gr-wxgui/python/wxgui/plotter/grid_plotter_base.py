@@ -89,7 +89,10 @@ class grid_plotter_base(plotter_base):
 		self.unlock()
 		
 	def call_freq_callback(self, coor):
-		x, y = self._point_label_coordinate
+		try:
+			x, y = self._point_label_coordinate
+		except:
+			return
 		if x < self.padding_left or x > self.width-self.padding_right: return
 		if y < self.padding_top or y > self.height-self.padding_bottom: return
 		#scale to window bounds
