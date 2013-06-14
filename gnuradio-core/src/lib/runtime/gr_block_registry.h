@@ -34,7 +34,7 @@ class gr_block_registry {
         blockmap_t d_map;
         pmt::pmt_t d_ref_map;
         std::map< std::string, gr_block*> primitive_map;
- 
+        gruel::mutex d_mutex; 
 };
 
 extern gr_block_registry global_block_registry;

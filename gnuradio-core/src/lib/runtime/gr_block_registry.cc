@@ -12,6 +12,8 @@ gr_block_registry::gr_block_registry(){
 }
 
 long gr_block_registry::block_register(gr_basic_block* block){
+    gruel::scoped_lock guard(d_mutex);
+
     if(d_map.find(block->name()) == d_map.end()){
         d_map[block->name()] = blocksubmap_t();
         d_map[block->name()][0] = block;
@@ -28,6 +30,8 @@ long gr_block_registry::block_register(gr_basic_block* block){
 }
 
 void gr_block_registry::block_unregister(gr_basic_block* block){
+    gruel::scoped_lock guard(d_mutex);
+
     d_map[block->name()].erase( d_map[block->name()].find(block->symbolic_id()));
     d_ref_map = pmt::pmt_dict_delete(d_ref_map, pmt::pmt_intern(block->symbol_name()));
     if(block->alias_set()){
@@ -61,14 +65,20 @@ gr_basic_block_sptr gr_block_registry::block_lookup(pmt::pmt_t symbol){
 
 
 void gr_block_registry::register_primitive(std::string blk, gr_block* ref){
+    gruel::scoped_lock guard(d_mutex);
+
     primitive_map[blk] = ref;
 }
 
 void gr_block_registry::unregister_primitive(std::string blk){
+    gruel::scoped_lock guard(d_mutex);
+
     primitive_map.erase(primitive_map.find(blk));
 }
 
 void gr_block_registry::notify_blk(std::string blk){
+    gruel::scoped_lock guard(d_mutex);
+
     if(primitive_map.find(blk) == primitive_map.end()){ return; }
     if(primitive_map[blk]->detail().get())
         primitive_map[blk]->detail()->d_tpb.notify_msg();
