@@ -38,7 +38,7 @@ namespace gr {
      * This block implements an LMS-based decision-directed equalizer.
      * It uses a set of weights, w, to correlate against the inputs,
      * u, and a decisions is then made from this output. The error in
-     * the decision is used to update teh weight vector.
+     * the decision is used to update the weight vector.
      *
      * y[n] = conj(w[n]) u[n]
      * d[n] = decision(y[n])
