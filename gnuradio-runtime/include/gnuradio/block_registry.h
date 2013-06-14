@@ -59,6 +59,7 @@ namespace gr {
     blockmap_t d_map;
     pmt::pmt_t d_ref_map;
     std::map< std::string, block*> primitive_map;
+    gr::thread::mutex d_mutex;
   };
 
 } /* namespace gr */
