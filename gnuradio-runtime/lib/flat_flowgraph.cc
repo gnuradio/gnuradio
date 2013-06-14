@@ -161,7 +161,16 @@ namespace gr {
     }
 
     //  std::cout << "make_buffer(" << nitems << ", " << item_size << ", " << grblock << "\n";
-    return make_buffer(nitems, item_size, grblock);
+    // We're going to let this fail once and retry. If that fails,
+    // throw and exit.
+    buffer_sptr b;
+    try {
+      b = make_buffer(nitems, item_size, grblock);
+    }
+    catch(std::bad_alloc&) {
+      b = make_buffer(nitems, item_size, grblock);
+    }
+    return b;
   }
 
   void
