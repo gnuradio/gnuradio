@@ -29,7 +29,12 @@ line.
 # Prepare uhd swig module to make it more pythonic
 ########################################################################
 def _prepare_uhd_swig():
-    import uhd_swig
+    try:
+        import uhd_swig
+    except ImportError:
+        dirname, filename = os.path.split(os.path.abspath(__file__))
+        __path__.append(os.path.join(dirname, "..", "..", "swig"))
+        import uhd_swig
 
     #some useful typedefs for the user
     setattr(uhd_swig, 'freq_range_t', uhd_swig.meta_range_t)
