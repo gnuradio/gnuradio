@@ -24,6 +24,8 @@
 #include "config.h"
 #endif
 
+#include <vector>
+
 #include "agc3_cc_impl.h"
 #include <gnuradio/io_signature.h>
 #include <volk/volk.h>
@@ -68,12 +70,15 @@ namespace gr {
       // Compute magnitude of each sample
 #ifdef __GNUC__
         float mags[noutput_items]  __attribute__ ((aligned (16)));
-#else   
-        float mags[noutput_items];
-#endif
-      volk_32fc_magnitude_32f(mags, &in[0], noutput_items);
-      // Compute a linear average on reset (no expected)  
+		volk_32fc_magnitude_32f(mags, &in[0], noutput_items);
+		// Compute a linear average on reset (no expected)  
       if(__builtin_expect(d_reset, false)) {
+#else   
+		std::vector<float> mags(noutput_items);
+		volk_32fc_magnitude_32f(&mags[0], &in[0], noutput_items);
+		// Compute a linear average on reset (no expected)  
+      if(!d_reset) {
+#endif
         float mag;
         for(int i=0; i<noutput_items; i++) {
             mag += mags[i];
