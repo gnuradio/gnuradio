@@ -69,15 +69,15 @@ namespace gr {
       gr_complex *out = (gr_complex*)output_items[0];
       // Compute magnitude of each sample
 #ifdef __GNUC__
-        float mags[noutput_items]  __attribute__ ((aligned (16)));
-		volk_32fc_magnitude_32f(mags, &in[0], noutput_items);
-		// Compute a linear average on reset (no expected)  
+      float mags[noutput_items]  __attribute__ ((aligned (16)));
+      volk_32fc_magnitude_32f(mags, &in[0], noutput_items);
+      // Compute a linear average on reset (no expected)  
       if(__builtin_expect(d_reset, false)) {
 #else   
-		std::vector<float> mags(noutput_items);
-		volk_32fc_magnitude_32f(&mags[0], &in[0], noutput_items);
-		// Compute a linear average on reset (no expected)  
-      if(!d_reset) {
+	std::vector<float> mags(noutput_items);
+	volk_32fc_magnitude_32f(&mags[0], &in[0], noutput_items);
+	// Compute a linear average on reset (no expected)  
+	if(!d_reset) {
 #endif
         float mag;
         for(int i=0; i<noutput_items; i++) {
