@@ -159,8 +159,18 @@ gr_flat_flowgraph::allocate_buffer(gr_basic_block_sptr block, int port)
     nitems = std::max(nitems, static_cast<int>(2*(decimation*multiple+history)));
   }
 
-//  std::cout << "gr_make_buffer(" << nitems << ", " << item_size << ", " << grblock << "\n";
-  return gr_make_buffer(nitems, item_size, grblock);
+  //std::cout << "gr_make_buffer(" << nitems << ", " << item_size << ", " << grblock << "\n";
+
+  // We're going to let this fail once and retry. If that fails,
+  // throw and exit.
+  gr_buffer_sptr b;
+  try {
+    b = gr_make_buffer(nitems, item_size, grblock);
+  }
+  catch(std::bad_alloc&) {
+    b = gr_make_buffer(nitems, item_size, grblock);
+  }
+  return b;
 }
 
 void

@@ -38,6 +38,9 @@
 #include <gr_vmcircbuf_sysv_shm.h>
 #include <gr_vmcircbuf_mmap_shm_open.h>
 #include <gr_vmcircbuf_mmap_tmpfile.h>
+#include <gruel/thread.h>
+
+gruel::mutex s_vm_mutex;
 
 static const char *FACTORY_PREF_KEY = "gr_vmcircbuf_default_factory";
 
@@ -60,6 +63,8 @@ gr_vmcircbuf_sysconfig::get_default_factory ()
     return s_default_factory;
 
   bool verbose = false;
+
+  gruel::scoped_lock guard(s_vm_mutex);
 
   std::vector<gr_vmcircbuf_factory *> all = all_factories ();
 
@@ -285,6 +290,8 @@ bool
 gr_vmcircbuf_sysconfig::test_all_factories (int verbose)
 {
   bool ok = false;
+
+  gruel::scoped_lock guard(s_vm_mutex);
 
   std::vector<gr_vmcircbuf_factory *> all = all_factories ();
 

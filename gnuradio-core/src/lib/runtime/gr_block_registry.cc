@@ -48,6 +48,8 @@ std::string gr_block_registry::register_symbolic_name(gr_basic_block* block){
 }
 
 void gr_block_registry::register_symbolic_name(gr_basic_block* block, std::string name){
+    gruel::scoped_lock guard(d_mutex);
+
     if(pmt_dict_has_key(d_ref_map, pmt::pmt_intern(name))){
         throw std::runtime_error("symbol already exists, can not re-use!");
         }
@@ -55,6 +57,8 @@ void gr_block_registry::register_symbolic_name(gr_basic_block* block, std::strin
 }
 
 gr_basic_block_sptr gr_block_registry::block_lookup(pmt::pmt_t symbol){
+    gruel::scoped_lock guard(d_mutex);
+
     pmt::pmt_t ref = pmt_dict_ref(d_ref_map, symbol, pmt::PMT_NIL);
     if(pmt::pmt_eq(ref, pmt::PMT_NIL)){
         throw std::runtime_error("block lookup failed! block not found!");
