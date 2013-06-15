@@ -19,7 +19,7 @@
 # Boston, MA 02110-1301, USA.
 #
 
-from gnuradio import gr
+from gnuradio import gr, blocks
 import socket
 import os
 
@@ -56,7 +56,7 @@ class tcp_source(gr.hier_block2):
 			gr.io_signature(1, 1, itemsize),
 		)
 		fd = _get_sock_fd(addr, port, server)
-		self.connect(gr.file_descriptor_source(itemsize, fd), self)
+		self.connect(blocks.file_descriptor_source(itemsize, fd), self)
 
 class tcp_sink(gr.hier_block2):
 	def __init__(self, itemsize, addr, port, server=False):
@@ -67,4 +67,4 @@ class tcp_sink(gr.hier_block2):
 			gr.io_signature(0, 0, 0),
 		)
 		fd = _get_sock_fd(addr, port, server)
-		self.connect(self, gr.file_descriptor_sink(itemsize, fd))
+		self.connect(self, blocks.file_descriptor_sink(itemsize, fd))
