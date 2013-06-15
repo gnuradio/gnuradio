@@ -24,7 +24,10 @@
 #define GR_VMCIRCBUF_H
 
 #include <gnuradio/api.h>
+#include <gnuradio/thread/thread.h>
 #include <vector>
+
+extern gr::thread::mutex s_vm_mutex;
 
 namespace gr {
 

@@ -82,6 +82,8 @@ namespace gr {
   void
   block_registry::register_symbolic_name(basic_block* block, std::string name)
   {
+    gr::thread::scoped_lock guard(d_mutex);
+
     if(pmt::dict_has_key(d_ref_map, pmt::intern(name))) {
       throw std::runtime_error("symbol already exists, can not re-use!");
     }
@@ -91,6 +93,8 @@ namespace gr {
   basic_block_sptr
   block_registry::block_lookup(pmt::pmt_t symbol)
   {
+    gr::thread::scoped_lock guard(d_mutex);
+
     pmt::pmt_t ref = pmt::dict_ref(d_ref_map, symbol, pmt::PMT_NIL);
     if(pmt::eq(ref, pmt::PMT_NIL)) {
       throw std::runtime_error("block lookup failed! block not found!");
