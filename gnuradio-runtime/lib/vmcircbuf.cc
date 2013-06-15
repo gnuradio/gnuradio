@@ -292,8 +292,6 @@ namespace gr {
   {
     bool ok = false;
 
-    gr::thread::scoped_lock guard(s_vm_mutex);    
-    
     std::vector<vmcircbuf_factory *> all = all_factories();
 
     for(unsigned int i = 0; i < all.size (); i++)
