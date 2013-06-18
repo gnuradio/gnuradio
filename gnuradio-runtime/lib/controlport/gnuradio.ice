@@ -25,6 +25,12 @@
 #define GNURADIO_DEBUG
 
 module GNURadio {
+
+struct complex {
+  float re;
+  float im;
+};
+
 class Knob {};
 class KnobB extends Knob { bool   value; };
 class KnobC extends Knob { byte   value; };
@@ -33,6 +39,7 @@ class KnobF extends Knob { float  value; };
 class KnobD extends Knob { double value; };
 class KnobL extends Knob { long   value; };
 class KnobS extends Knob { string value; };
+class KnobZ extends Knob { complex value; };
 
 sequence<bool>   VectorB; sequence<byte>   VectorC; 
 sequence<int>    VectorI; sequence<float>  VectorF;

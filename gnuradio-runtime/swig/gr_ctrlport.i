@@ -48,6 +48,7 @@ enum priv_lvl_t {
 enum KnobType {
   KNOBBOOL,       KNOBCHAR,       KNOBINT,        KNOBFLOAT,
   KNOBDOUBLE,     KNOBSTRING,     KNOBLONG,       KNOBVECBOOL,
+  KNOBCOMPLEX,    KNOBCOMPLEXD,
   KNOBVECCHAR,    KNOBVECINT,     KNOBVECFLOAT,   KNOBVECDOUBLE,
   KNOBVECSTRING,  KNOBVECLONG
 };
@@ -91,6 +92,8 @@ class GR_RUNTIME_API rpcmanager : public virtual rpcmanager_base
 %template(RPC_get_int)      pycallback_object<int>;
 %template(RPC_get_float)    pycallback_object<float>;
 %template(RPC_get_double)   pycallback_object<double>;
+%template(RPC_get_complex)  pycallback_object<gr_complex>;
+%template(RPC_get_complexd)  pycallback_object<gr_complexd>;
 %template(RPC_get_vector_float)    pycallback_object<std::vector<float> >;
 %template(RPC_get_vector_gr_complex)    pycallback_object<std::vector<gr_complex> >;
 

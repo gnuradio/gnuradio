@@ -68,5 +68,31 @@ namespace gr {
       return noutput_items;
     }
 
+    void
+    multiply_const_cc_impl::setup_rpc()
+    {
+#ifdef GR_CTRLPORT
+      add_rpc_variable(
+        rpcbasic_sptr(new rpcbasic_register_get<multiply_const_cc, gr_complex>(
+	  alias(), "Constant",
+	  &multiply_const_cc::k,
+	  pmt::from_complex(-1000.0f, 0.0f),
+          pmt::from_complex(1000.0f, 0.0f),
+          pmt::from_complex(0.0f, 0.0f),
+	  "", "Constant to multiply", RPC_PRIVLVL_MIN,
+          DISPTIME | DISPOPTCPLX | DISPOPTSTRIP)));
+
+      add_rpc_variable(
+        rpcbasic_sptr(new rpcbasic_register_set<multiply_const_cc, gr_complex>(
+	  alias(), "Constant",
+	  &multiply_const_cc::set_k,
+	  pmt::from_complex(-1000.0f, 0.0f),
+          pmt::from_complex(1000.0f, 0.0f),
+          pmt::from_complex(0.0f, 0.0f),
+	  "", "Constant to multiply",
+	  RPC_PRIVLVL_MIN, DISPNULL)));
+#endif /* GR_CTRLPORT */
+    }
+
   } /* namespace blocks */
 } /* namespace gr */

@@ -38,6 +38,8 @@ namespace gr {
     public:
       multiply_const_cc_impl(gr_complex k, size_t vlen);
 
+      void setup_rpc();
+
       gr_complex k() const { return d_k; }
       void set_k(gr_complex k) { d_k = k; }
 

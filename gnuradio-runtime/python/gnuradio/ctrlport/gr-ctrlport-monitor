@@ -111,14 +111,21 @@ class MAINWindow(QtGui.QMainWindow):
         props = radio.properties([key])
         pmin = props[key].min.value
         pmax = props[key].max.value
+
+        # Convert from GNURadio::complex to Python complex
+        if(type(pmin) == GNURadio.complex):
+            pmin = pmin.re + pmin.im*1j
+        if(type(pmax) == GNURadio.complex):
+            pmax = pmax.re + pmax.im*1j
+
         if pmin == []:
             pmin = None
         else:
-            pmin = 1.1*pmin
+            pmin = 1.1*abs(pmin)
         if pmax == []:
             pmax = None
         else:
-            pmax = 1.1*pmax
+            pmax = 1.1*abs(pmax)
 
         # Use display option mask of item to set up available plot
         # types and default options.
@@ -141,7 +148,8 @@ class MAINWindow(QtGui.QMainWindow):
                           log, strip, stem)
 
         def newPlotterConstProxy():
-            self.newPlotConst(key, uid, title, pmin, pmax, scatter)
+            self.newPlotConst(key, uid, title, pmin, pmax,
+                              scatter, strip)
 
         def newPlotterPsdFProxy():
             self.newPlotPsdF(key, uid, title)
@@ -191,6 +199,12 @@ class MAINWindow(QtGui.QMainWindow):
         title = "{0}:{1}".format(r[3], r[5])
         pmin = knobprop.min.value
         pmax = knobprop.max.value
+
+        if(type(pmin) == GNURadio.complex):
+            pmin = pmin.re + pmin.im*1j
+        if(type(pmax) == GNURadio.complex):
+            pmax = pmax.re + pmax.im*1j
+
         if pmin == []:
             pmin = None
         else:
@@ -280,8 +294,8 @@ class MAINWindow(QtGui.QMainWindow):
                     break
 
     def newPlotConst(self, tag, uid, title="", pmin=None, pmax=None,
-                     scatter=False):
-        plot = GrDataPlotterConst(tag, 32e6, pmin, pmax)
+                     scatter=False, stripchart=False):
+        plot = GrDataPlotterConst(tag, 32e6, pmin, pmax, stripchart)
         plot.scatter(scatter)
         self.createPlot(plot, uid, title)
     
@@ -320,7 +334,10 @@ class MAINWindow(QtGui.QMainWindow):
         for plot in self.plots[uid]:
             data = []
             for n in plot.knobnames:
-                data.append(knobs[n].value)
+                d = knobs[n].value
+                if(type(d) == GNURadio.complex):
+                    d = [d.re, d.im]
+                data.append(d)
             plot.update(data)
             plot.stop()
             plot.wait()
@@ -513,7 +530,7 @@ class UpdaterWindow(QtGui.QDialog):
         self.infoLabel = QtGui.QLabel(info)
         self.layout.addWidget(self.infoLabel)
 
-        # Test here to make sure that a 'set' function
+        # Test here to make sure that a 'set' function exists
         try:
             a = radio.set(radio.get([key]))
             has_set = True
@@ -537,7 +554,11 @@ class UpdaterWindow(QtGui.QDialog):
             self.cancelButton = QtGui.QPushButton("Cancel")
 
             rv = radio.get([key])
-            self.textInput.setText(str(rv[key].value))
+            val = rv[key].value
+            if(type(val) == GNURadio.complex):
+                val = val.re + val.im*1j
+
+            self.textInput.setText(str(val))
             self.sv = rv[key]
 
             self.applyButton.connect(self.applyButton, QtCore.SIGNAL('clicked()'), self._apply)
@@ -563,12 +584,14 @@ class UpdaterWindow(QtGui.QDialog):
                 self.connect(self.slider, QtCore.SIGNAL("sliderReleased()"), self._slide)
 
                 self.layout.addLayout(self.sliderlayout)
+            else:
+                self._set_slider_value = None
 
-                self.buttonlayout = QtGui.QHBoxLayout()
-                self.buttonlayout.addWidget(self.applyButton)
-                self.buttonlayout.addWidget(self.setButton)
-                self.buttonlayout.addWidget(self.cancelButton)
-                self.layout.addLayout(self.buttonlayout)
+            self.buttonlayout = QtGui.QHBoxLayout()
+            self.buttonlayout.addWidget(self.applyButton)
+            self.buttonlayout.addWidget(self.setButton)
+            self.buttonlayout.addWidget(self.cancelButton)
+            self.layout.addLayout(self.buttonlayout)
 
         # set layout and go...
         self.setLayout(self.layout)
@@ -587,15 +610,22 @@ class UpdaterWindow(QtGui.QDialog):
             val = int(round(float(self.textInput.text())))
         elif(type(self.sv.value) == float):
             val = float(self.textInput.text())
+        elif(type(self.sv.value) == GNURadio.complex):
+            t = str(self.textInput.text())
+            t = complex(t.strip("(").strip(")").replace(" ", ""))
+            val = GNURadio.complex()
+            val.re = t.real
+            val.im = t.imag
         else:
             sys.stderr.write("set type not supported! ({0})\n".format(type(self.sv.value)))
-            sys.exit(-1)
+            return
 
         self.sv.value = val
         km = {}
         km[self.key] = self.sv
         self.radio.set(km)
-        self._set_slider_value(self.sv.value)
+        if self._set_slider_value:
+            self._set_slider_value(self.sv.value)
 
     def _set(self):
         self._apply()

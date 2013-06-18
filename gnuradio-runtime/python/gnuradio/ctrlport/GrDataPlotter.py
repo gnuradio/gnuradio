@@ -23,6 +23,7 @@
 from gnuradio import gr
 from gnuradio import blocks
 from gnuradio import filter
+from gnuradio.ctrlport import GNURadio
 import sys, time
 
 try:
@@ -248,11 +249,11 @@ class GrDataPlotterF(GrDataPlotParent):
             
 
 class GrDataPlotterConst(GrDataPlotParent):
-    def __init__(self, name, rate, pmin=None, pmax=None):
+    def __init__(self, name, rate, pmin=None, pmax=None, stripchart=False):
         GrDataPlotParent.__init__(self, name, rate, pmin, pmax)
 
         self._datasize = gr.sizeof_gr_complex
-        self._stripchart = False
+        self._stripchart = stripchart
         self._iscomplex = True
 
         self._setup(1)
@@ -422,7 +423,11 @@ class GrDataPlotterValueTable:
         items = [];
         self.treeWidget.clear()
         for k, v in knobs.iteritems():
-            items.append(QtGui.QTreeWidgetItem([str(k), str(v.value),
+            val = v.value
+            if(type(val) == GNURadio.complex):
+                val = val.re + val.im*1j
+
+            items.append(QtGui.QTreeWidgetItem([str(k), str(val),
                                                 knobprops[k].units,
                                                 knobprops[k].description]))
         self.treeWidget.insertTopLevelItems(0, items)

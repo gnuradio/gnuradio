@@ -42,7 +42,13 @@ rpcpmtconverter::from_pmt(const pmt::pmt_t& knob, const Ice::Current& c)
   }
   else if(pmt::is_uint64(knob)) {
     return new GNURadio::KnobL(pmt::to_uint64(knob));
-    //const std::complex<float>  *c32vector_elements(pmt_t v, size_t &len); //< len is in elements
+  }
+  else if(pmt::is_complex(knob)) {
+    std::complex<double> tmp = pmt::to_complex(knob);
+    GNURadio::complex cpx;
+    cpx.re = tmp.real();
+    cpx.im = tmp.imag();
+    return new GNURadio::KnobZ(cpx);
   }
   else if(pmt::is_c32vector(knob)) {  // c32 sent as interleaved floats
     size_t size(pmt::length(knob));
@@ -101,6 +107,13 @@ rpcpmtconverter::to_pmt(const GNURadio::KnobPtr& knob, const Ice::Current& c)
   else if(id == "KnobL") {
     GNURadio::KnobLPtr k(GNURadio::KnobLPtr::dynamicCast(knob));
     return pmt::mp((long)k->value);
+  } 
+  else if(id == "KnobZ") {
+    GNURadio::KnobZPtr k(GNURadio::KnobZPtr::dynamicCast(knob));
+    std::complex<double> cpx;
+    cpx.real(k->value.re);
+    cpx.imag(k->value.im);
+    return pmt::from_complex(cpx);
   } 
   else if(id == "KnobVecC") {
     GNURadio::KnobVecCPtr k(GNURadio::KnobVecCPtr::dynamicCast(knob));

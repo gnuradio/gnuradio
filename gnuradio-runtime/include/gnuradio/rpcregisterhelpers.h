@@ -170,6 +170,23 @@ public:
 };
 
 template<typename T>
+class rpcbasic_extractor<T,std::complex<float> >
+  : public virtual rpcextractor_base<T,std::complex<float> >
+{
+public:
+  rpcbasic_extractor(T* source, void (T::*func)(std::complex<float>))
+    : rpcextractor_base<T,std::complex<float> >(source, func)
+  {;}
+
+  void post(pmt::pmt_t which_port, pmt::pmt_t msg)
+  {
+    std::complex<float> k = static_cast<std::complex<float> >(pmt::to_complex(msg));
+    (rpcextractor_base<T,std::complex<float> >::
+     _source->*rpcextractor_base<T,std::complex<float> >::_func)(k);
+  }
+};
+
+template<typename T>
 class rpcbasic_extractor<T,std::complex<double> >
   : public virtual rpcextractor_base<T,std::complex<double> >
 {
@@ -302,6 +319,46 @@ public:
     std::vector< uint8_t > vec((rpcinserter_base<T,std::vector<uint8_t> >::
         _source->*rpcinserter_base<T,std::vector< uint8_t> >::_func)());
     return pmt::init_u8vector(vec.size(), &vec[0]); 
+  }
+};
+
+template<typename T> 
+class rpcbasic_inserter<T,std::complex<float> > 
+  : public virtual rpcinserter_base<T,std::complex<float > > {
+public:
+  rpcbasic_inserter(T* source, std::complex<float> (T::*func)() const) 
+    : rpcinserter_base<T,std::complex<float> >(source, func) 
+  {;}
+
+  rpcbasic_inserter(T* source, std::complex<float> (T::*func)()) 
+    : rpcinserter_base<T,std::complex<float> >(source, func) 
+  {;}
+
+  pmt::pmt_t retrieve() 
+  {
+    std::complex<float > k((rpcinserter_base<T,std::complex<float> >::
+                             _source->*rpcinserter_base<T,std::complex<float> >::_func)());
+    return pmt::from_complex(k);
+  }
+};
+
+template<typename T> 
+class rpcbasic_inserter<T,std::complex<double> > 
+  : public virtual rpcinserter_base<T,std::complex<double > > {
+public:
+  rpcbasic_inserter(T* source, std::complex<double> (T::*func)() const) 
+    : rpcinserter_base<T,std::complex<double> >(source, func) 
+  {;}
+
+  rpcbasic_inserter(T* source, std::complex<double> (T::*func)()) 
+    : rpcinserter_base<T,std::complex<double> >(source, func) 
+  {;}
+
+  pmt::pmt_t retrieve() 
+  {
+    std::complex<double > k((rpcinserter_base<T,std::complex<double> >::
+                             _source->*rpcinserter_base<T,std::complex<double> >::_func)());
+    return pmt::from_complex(k);
   }
 };
 
