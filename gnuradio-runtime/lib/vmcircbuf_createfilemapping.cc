@@ -69,6 +69,8 @@ namespace gr {
     fprintf(stderr, "%s: createfilemapping is not available\n", __FUNCTION__);
     throw std::runtime_error("gr::vmcircbuf_createfilemapping");
 #else
+    gr::thread::scoped_lock guard(s_vm_mutex);
+
     static int s_seg_counter = 0;
 
     if(size <= 0 || (size % gr::pagesize ()) != 0) {
@@ -149,6 +151,8 @@ namespace gr {
   vmcircbuf_createfilemapping::~vmcircbuf_createfilemapping()
   {
 #ifdef HAVE_CREATEFILEMAPPING
+    gr::thread::scoped_lock guard(s_vm_mutex);
+
     if(UnmapViewOfFile(d_first_copy) == 0) {
       werror("gr::vmcircbuf_createfilemapping: UnmapViewOfFile(d_first_copy)", GetLastError());
     }

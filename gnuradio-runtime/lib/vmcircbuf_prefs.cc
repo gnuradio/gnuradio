@@ -25,6 +25,7 @@
 #endif
 
 #include "vmcircbuf_prefs.h"
+#include "vmcircbuf.h"
 #include <gnuradio/sys_paths.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -69,6 +70,8 @@ namespace gr {
   {
     static char buf[1024];
 
+    gr::thread::scoped_lock guard(s_vm_mutex);
+
     FILE *fp = fopen(pathname (key), "r");
     if(fp == 0) {
       perror(pathname (key));
@@ -91,6 +94,8 @@ namespace gr {
   void
   vmcircbuf_prefs::set(const char *key, const char *value)
   {
+    gr::thread::scoped_lock guard(s_vm_mutex);
+
     ensure_dir_path();
 
     FILE *fp = fopen(pathname(key), "w");

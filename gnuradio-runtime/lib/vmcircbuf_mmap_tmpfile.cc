@@ -51,6 +51,7 @@ namespace gr {
     fprintf(stderr, "gr::vmcircbuf_mmap_tmpfile: mmap or mkstemp is not available\n");
     throw std::runtime_error("gr::vmcircbuf_mmap_tmpfile");
 #else
+    gr::thread::scoped_lock guard(s_vm_mutex);
 
     if(size <= 0 || (size % gr::pagesize ()) != 0) {
       fprintf(stderr, "gr::vmcircbuf_mmap_tmpfile: invalid size = %d\n", size);
@@ -155,6 +156,8 @@ namespace gr {
   vmcircbuf_mmap_tmpfile::~vmcircbuf_mmap_tmpfile()
   {
 #if defined(HAVE_MMAP)
+    gr::thread::scoped_lock guard(s_vm_mutex);
+
     if(munmap(d_base, 2 * d_size) == -1) {
       perror("gr::vmcircbuf_mmap_tmpfile: munmap(2)");
     }
