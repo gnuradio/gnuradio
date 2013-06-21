@@ -72,7 +72,7 @@ gr_vmcircbuf_sysconfig::get_default_factory ()
 
   if (name){
     for (unsigned int i = 0; i < all.size (); i++){
-      if (strcmp (name, all[i]->name ()) == 0){
+      if (strncmp (name, all[i]->name(), strlen(all[i]->name())) == 0){
 	s_default_factory = all[i];
 	if (verbose)
 	  fprintf (stderr, "gr_vmcircbuf_sysconfig: using %s\n",
