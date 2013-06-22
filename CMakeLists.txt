@@ -294,9 +294,13 @@ SET(cmake_configs
   ${CMAKE_BINARY_DIR}/cmake/Modules/GnuradioConfigVersion.cmake
 )
 
+if(NOT CMAKE_MODULES_DIR)
+   set(CMAKE_MODULES_DIR lib/cmake/gnuradio)
+endif(NOT CMAKE_MODULES_DIR)
+
 install(
-  FILES ${cmake_configs} 
-  DESTINATION lib/cmake/gnuradio
+  FILES ${cmake_configs}
+  DESTINATION ${CMAKE_MODULES_DIR}
   COMPONENT "runtime_devel"
 )
 
