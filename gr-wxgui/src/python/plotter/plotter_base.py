@@ -87,7 +87,7 @@ class plotter_base(wx.glcanvas.GLCanvas, common.mutex):
 		@param parent the parent widgit
 		"""
 		attribList = (wx.glcanvas.WX_GL_DOUBLEBUFFER, wx.glcanvas.WX_GL_RGBA)
-		wx.glcanvas.GLCanvas.__init__(self, parent, wx.ID_ANY, attribList);	# Specifically use the CTOR which does NOT create an implicit GL context
+		wx.glcanvas.GLCanvas.__init__(self, parent, wx.ID_ANY, attribList=attribList);	# Specifically use the CTOR which does NOT create an implicit GL context
 		self._gl_ctx = wx.glcanvas.GLContext(self)	# Create the explicit GL context
 		self.use_persistence=False
 		self.persist_alpha=2.0/15
