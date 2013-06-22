@@ -99,20 +99,25 @@ gr_tpb_thread_body::gr_tpb_thread_body(gr_block_sptr block, int max_noutput_item
       {
 	gruel::scoped_lock guard(d->d_tpb.mutex);
 	while (!d->d_tpb.input_changed){
-
+	  
 	  // wait for input or message
 	  while(!d->d_tpb.input_changed && block->empty_p())
 	    d->d_tpb.input_cond.wait(guard);
-
+	  
 	  // handle all pending messages
-      BOOST_FOREACH( gr_basic_block::msg_queue_map_t::value_type &i, block->msg_queue )
-      {
-	    while ((msg = block->delete_head_nowait(i.first))){
-	      guard.unlock();			// release lock while processing msg
-	      block->dispatch_msg(i.first, msg);
-	      guard.lock();
+	  BOOST_FOREACH( gr_basic_block::msg_queue_map_t::value_type &i, block->msg_queue )
+	    {
+	      while ((msg = block->delete_head_nowait(i.first))){
+		guard.unlock();			// release lock while processing msg
+		block->dispatch_msg(i.first, msg);
+		guard.lock();
+	      }
 	    }
-      }
+	  
+	  if (d->done()) {
+	    return;
+	    
+	  }
 	}
       }
       break;
