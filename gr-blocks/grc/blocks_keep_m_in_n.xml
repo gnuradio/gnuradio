@@ -62,7 +62,7 @@
 	</param>
 	<check>$n &gt; 0</check>
 	<check>$m &gt; 0</check>
-	<check>$m &lt; $n</check>
+	<check>$m &lt;= $n</check>
 	<sink>
 		<name>in</name>
 		<type>$type</type>
