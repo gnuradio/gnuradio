@@ -135,7 +135,6 @@ namespace gr {
         diff_filter[0] = -1;
         diff_filter[1] = 1;
 
-        difftaps.push_back(0);
         for(unsigned int i = 0; i < newtaps.size()-1; i++) {
           float tap = 0;
           for(unsigned int j = 0; j < diff_filter.size(); j++) {
@@ -347,7 +346,6 @@ namespace gr {
         diff_filter[0] = -1;
         diff_filter[1] = 1;
 
-        difftaps.push_back(0);
         for(unsigned int i = 0; i < newtaps.size()-1; i++) {
           float tap = 0;
           for(unsigned int j = 0; j < diff_filter.size(); j++) {
