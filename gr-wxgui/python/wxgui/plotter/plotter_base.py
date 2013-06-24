@@ -91,7 +91,8 @@ class plotter_base(wx.glcanvas.GLCanvas, common.mutex):
 		    parent: the parent widgit
 		"""
 		attribList = (wx.glcanvas.WX_GL_DOUBLEBUFFER, wx.glcanvas.WX_GL_RGBA)
-		wx.glcanvas.GLCanvas.__init__(self, parent, attribList=attribList);
+		wx.glcanvas.GLCanvas.__init__(self, parent, wx.ID_ANY, attribList=attribList);	# Specifically use the CTOR which does NOT create an implicit GL context
+		self._gl_ctx = wx.glcanvas.GLContext(self)	# Create the explicit GL context
 		self.use_persistence=False
 		self.persist_alpha=2.0/15
 		self.clear_accum=True
@@ -157,10 +158,14 @@ class plotter_base(wx.glcanvas.GLCanvas, common.mutex):
 		Resize the view port if the width or height changed.
 		Redraw the screen, calling the draw functions.
 		"""
+		if not self.IsShownOnScreen():	# Cannot realise a GL context on OS X if window is not yet shown
+			return
 		# create device context (needed on Windows, noop on X)
-		dc = wx.PaintDC(self)
+		dc = None
+		if event.GetEventObject():	# Only create DC if paint triggered by WM message (for OS X)
+			dc = wx.PaintDC(self)
 		self.lock()
-		self.SetCurrent()
+		self.SetCurrent(self._gl_ctx)	# Real the explicit GL context
 
 		# check if gl was initialized
 		if not self._gl_init_flag:

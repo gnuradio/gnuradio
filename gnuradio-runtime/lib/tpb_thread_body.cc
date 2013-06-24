@@ -119,6 +119,9 @@ namespace gr {
               guard.lock();
             }
           }
+	  if (d->done()) {
+	    return;
+	  }
         }
       }
       break;

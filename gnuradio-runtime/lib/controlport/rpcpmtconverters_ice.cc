@@ -110,9 +110,7 @@ rpcpmtconverter::to_pmt(const GNURadio::KnobPtr& knob, const Ice::Current& c)
   } 
   else if(id == "KnobZ") {
     GNURadio::KnobZPtr k(GNURadio::KnobZPtr::dynamicCast(knob));
-    std::complex<double> cpx;
-    cpx.real(k->value.re);
-    cpx.imag(k->value.im);
+    std::complex<double> cpx(k->value.re, k->value.im);
     return pmt::from_complex(cpx);
   } 
   else if(id == "KnobVecC") {
