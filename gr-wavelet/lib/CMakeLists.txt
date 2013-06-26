@@ -81,6 +81,12 @@ list(APPEND wavelet_libs
 
 add_library(gnuradio-wavelet SHARED ${gr_wavelet_sources})
 target_link_libraries(gnuradio-wavelet ${wavelet_libs})
+
+# we need -no-as-needed or else -lgslcblas gets stripped out on newer version of gcc
+if(CMAKE_COMPILER_IS_GNUCC)
+    SET_TARGET_PROPERTIES(gnuradio-wavelet PROPERTIES LINK_FLAGS "-Wl,--no-as-needed")
+endif(CMAKE_COMPILER_IS_GNUCC)
+
 GR_LIBRARY_FOO(gnuradio-wavelet RUNTIME_COMPONENT "wavelet_runtime" DEVEL_COMPONENT "wavelet_devel")
 add_dependencies(gnuradio-wavelet
   wavelet_generated_includes wavelet_generated_swigs
