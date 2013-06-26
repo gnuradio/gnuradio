@@ -55,13 +55,13 @@
         <name>PDP Delays (samp)</name>
         <key>delays</key>
         <value>0.0,0.1,1.3</value>
-        <type>float_vector</type>
+        <type>real_vector</type>
     </param>
     <param>
         <name>PDP Magnitudes</name>
         <key>mags</key>
         <value>1,0.99,0.97</value>
-        <type>float_vector</type>
+        <type>real_vector</type>
     </param>
 	<param>
 		<name>Num Taps</name>
