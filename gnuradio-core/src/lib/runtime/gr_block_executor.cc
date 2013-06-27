@@ -187,7 +187,7 @@ gr_block_executor::run_one_iteration()
 {
   int			noutput_items;
   int			max_items_avail;
-  int                   max_noutput_items = d_max_noutput_items;
+  int                   max_noutput_items;
   int                   new_alignment=0;
   int                   alignment_state=-1;
 
@@ -195,6 +195,8 @@ gr_block_executor::run_one_iteration()
   gr_block_detail	*d = m->detail().get();
 
   LOG(*d_log << std::endl << m);
+
+  max_noutput_items = round_down(d_max_noutput_items, m->output_multiple());
 
   if (d->done()){
     assert(0);
