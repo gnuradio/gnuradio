@@ -189,7 +189,7 @@ namespace gr {
   {
     int noutput_items;
     int max_items_avail;
-    int max_noutput_items = d_max_noutput_items;
+    int max_noutput_items;
     int new_alignment = 0;
     int alignment_state = -1;
     
@@ -198,6 +198,8 @@ namespace gr {
 
     LOG(*d_log << std::endl << m);
 
+    max_noutput_items = round_down(d_max_noutput_items, m->output_multiple());
+    
     if(d->done()){
       assert(0);
       return DONE;
