@@ -25,6 +25,7 @@
 
 #include <gnuradio/io_signature.h>
 #include <iostream>
+#include <stdint.h>
 
 #include <boost/format.hpp>
 #include <boost/random.hpp>
