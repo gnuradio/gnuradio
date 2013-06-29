@@ -38,7 +38,7 @@ The bleeding edge code can be found in our git repository at
 http://gnuradio.org/git/gnuradio.git/. To checkout the latest, use
 this command:
 
-  $ git clone git://gnuradio.org/gnuradio
+  $ git clone git://git.gnuradio.org/gnuradio
 
 For information about using Git, please see:
 http://gnuradio.org/redmine/projects/gnuradio/wiki/DevelopingWithGit
@@ -56,12 +56,6 @@ See these steps fow a quick build guide.
       dependencies are listed in the manual's build page and are not
       presented here to reduce duplication errors.
   
-      On systems using pkgsrc (e.g. NetBSD and Dragonfly), build
-      meta-packages/gnuradio, which will build a previous release and
-      force installation of the dependencies.  Then pkg_delete the
-      gnuradio package, which will leave the dependencies.  (This
-      should also work on OSX.)
-
       See the wiki at http://gnuradio.org for details.
 
 
