@@ -42,7 +42,7 @@ list(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake/Modules)
 set(VERSION_INFO_MAJOR_VERSION 3)
 set(VERSION_INFO_API_COMPAT    6)
 set(VERSION_INFO_MINOR_VERSION 5)
-set(VERSION_INFO_MAINT_VERSION 0)
+set(VERSION_INFO_MAINT_VERSION 1)
 include(GrVersion) #setup version info
 
 # Append -O2 optimization flag for Debug builds
