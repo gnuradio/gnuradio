@@ -40,8 +40,8 @@ list(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake/Modules)
 
 # Set the version information here
 set(VERSION_INFO_MAJOR_VERSION 3)
-set(VERSION_INFO_API_COMPAT    7)
-set(VERSION_INFO_MINOR_VERSION 0)
+set(VERSION_INFO_API_COMPAT    8)
+set(VERSION_INFO_MINOR_VERSION git)
 set(VERSION_INFO_MAINT_VERSION 0)
 include(GrVersion) #setup version info
 
