@@ -33,7 +33,7 @@ class monitor:
         try:
             # setup export prefs
             gr.prefs().singleton().set_bool("ControlPort","on",True);
-            if(tool == "gr-ctrlport-monitor"):
+            if(tool == "gr-perf-monitorx"):
                 gr.prefs().singleton().set_bool("ControlPort","edges_list",True);
                 gr.prefs().singleton().set_bool("PerfCounters","on",True);
                 gr.prefs().singleton().set_bool("PerfCounters","export",True);

@@ -1,0 +1,51 @@
+<?xml version="1.0"?>
+<!--
+###################################################
+##Options Block:
+## options for window size,
+## and flow graph building.
+###################################################
+ -->
+<block>
+	<name>Constellation Object</name>
+	<key>variable_constellation</key>
+        <category>Modulators</category>
+	<import>from gnuradio import digital</import>
+        <var_make>self.$(id) = $(id) = digital.constellation_calcdist($const_points, $sym_map, $rot_sym, $dims).base()</var_make>
+        <make></make>
+        <!--<callback></callback>-->
+
+        <!-- Required to 'trick' GRC into using this as a proper variable-->
+        <param>
+          <name>Ignore Me</name>
+          <key>value</key>
+          <value>"ok"</value>
+          <type>raw</type>
+          <hide>all</hide>
+        </param>
+
+	<param>
+          <name>Symbol Map</name>
+          <key>sym_map</key>
+          <value>[0, 1, 3, 2]</value>
+          <type>int_vector</type>
+	</param>
+	<param>
+          <name>Constellation Points</name>
+          <key>const_points</key>
+          <value>[-1-1j, -1+1j, 1+1j, 1-1j]</value>
+          <type>complex_vector</type>
+	</param>
+	<param>
+          <name>Rotational Symmetry</name>
+          <key>rot_sym</key>
+          <value>4</value>
+          <type>int</type>
+	</param>
+	<param>
+          <name>Dimensionality</name>
+          <key>dims</key>
+          <value>1</value>
+          <type>int</type>
+	</param>
+</block>
