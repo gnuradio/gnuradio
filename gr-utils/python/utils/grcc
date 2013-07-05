@@ -20,6 +20,9 @@
 # Boston, MA 02110-1301, USA.
 #
 
+import warnings
+warnings.simplefilter('ignore')
+
 try:
     from grc.python.Platform import Platform
 except ImportError:
