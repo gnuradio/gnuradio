@@ -2,29 +2,30 @@
 
 \section Introduction
 
-This is the gr-ctroport package. It is a tool to create distributed
-contol applications for GNU Radio. It provides blocks that can be
+This is the ControlPort package. It is a tool to create distributed
+control applications for GNU Radio. It provides blocks that can be
 connected to an output stream to plot the signal remotely. It also
 provides an API that allows blocks to export variables that can be
 set, monitored, and plotted remotely.
 
-The Python namespace is in gnuradio.ctrlport, which would be normally
-imported as:
+ControlPort-specific functions and utilities are found in the
+'ctrlport' namespace. From Python, access is done using the
+gnuradio.ctrlport module, imported as:
 
 \code
     from gnuradio import ctrlport
 \endcode
 
 
-See the Doxygen documentation for details about the blocks available
-in this package. A quick listing of the details can be found in Python
-after importing by using:
-
-\code
-    help(ctrlport)
-\endcode
-
 \section Dependencies
+
+ControlPort is an abstracted remote procedure call tool that. It is
+built on top of other middleware libraries. Currently, the only
+implemented middleware library is the Internet Communication Engine
+(ICE). It is possible to replace this library with other similar
+tools in such a way that the GNU Radio interface to ControlPort is
+unchanged. However, most clients were purpose-built around ICE and
+will need to be redone.
 
 ControlPort requires ZeroC's ICE and associated
 libraries/headers/programs. ICE is generally installed into the
@@ -35,49 +36,53 @@ to find ICE by passing to cmake the following:
 
     -DICE_MANUAL_INSTALL_PATH=\<your path here\>
 
+
 \section conf Configuration
 
 ControlPort is configured using two files. The first is the GNU Radio
-preferences configuration while the second file is specific to the
-type of transport engine used. Since we are focusing on using ICE, the
-configuration file is the ICE configuration file and format.
+preferences file while the second file is specific to the type of
+middleware used. Since we are focusing on using ICE, the configuration
+file uses the ICE configuration file and format.
 
-The GNU Radio preferences file allows you to enable or disable
-ControlPort. If enabled and a configuration file is used, this file
-also specifies the location of the configuration file.
+The GNU Radio preferences file has three options. The 'on' option is
+used to enable or disable the use of ControlPort, and is disabled by
+default. The 'config' option allows a user to specify the
+middleware-specific configuration file. The 'edges_list' is a special
+option that exports the list of nodes and edges of the flowgraph
+across ControlPort. This latter option is mainly used for redrawing
+the flowgraph for the Performance Counter applications.
 
 \code
   [ControlPort]
   on = True
   config = ctrlport.conf
+  edges_list = True
 \endcode
 
-The 'ctrlport.conf' holds specific properties related to the transport
-engine. If using ICE, more information can be found here:
-http://doc.zeroc.com/display/Ice/Properties+and+Configuration
+The ControlPort preferences are installed by default into
+'gnuradio-runtime.conf'. These can always be overridden in the local
+~/.gnuradio/config.conf file.
 
-An example ICE config file is installed with GNU Radio to show how to
-change the exposed endpoint of ControlPort. This file is installed
-as ${prefix}/etc/gnuradio/ctrlport.conf.example.
+En example ICE configuration file is installed as
+$prefix/etc/gnuradio/ctrlport.conf.example. More information on how to
+configure ICE can be found here:
+http://doc.zeroc.com/display/Ice/Properties+and+Configuration
 
 
 \section using Using ControlPort to Export Variables
 
 The ability to export variables from a block is inherited from
-gr_block. Then, when the flowgraph is started, the function
-<b>setup_rpc()</b> is called in turn for each block. If the block
-defines and exports variables using <b>setup_rpc()</b>, then they are
-now all available over ControlPort.
-
-The new block simply declares that it is overloading
-<b>setup_rpc()</b> in its header file. In the source file, it defines
-any setter and/or getting for a variable it wants.
+gr::block. Then, when the flowgraph is started, the function
+<b>setup_rpc()</b> is called in turn for each block. By default, this
+is an empty function. A block overloads this function and defines and
+exports variables in it.
 
 Say we have a class <b>gr::blocks::foo</b> that has variables <b>a</b>
 and <b>b</b> that we want to export. Specifically, we want to be able
 to read the values of both <b>a</b> and <b>b</b> and also set the
 value of <b>b</b>. The class <b>gr::blocks::foo</b> has setters and
-getters all set up. So our class declaration looks something like:
+getters all set up. So our class implementation header file looks
+something like:
 
 \code
 namespace gr {
@@ -114,7 +119,7 @@ namespace gr {
   namespace blocks {
 
     foo_impl::foo_impl(float a, float b):
-      gr_sync_bloc(....),
+      sync_bloc(....),
       d_a(a), d_b(b)
     { }
     
@@ -199,7 +204,7 @@ without requiring it.
 If using the concept above, <b>setup_rpc</b> automatically gets called
 when the flowgraph is started. In most instances, this is all we ever
 need since there's nothing interesting going on until then. However,
-if not using a gr_block or needing access before we run the flowgraph,
+if not using a gr::block or needing access before we run the flowgraph,
 the above method won't work (it comes down to when the block's alias
 has meaning).
 
@@ -248,8 +253,8 @@ need it.
 When exporting a new RPC variable over ControlPort, one argument is a
 display options mask. These options are useful to a remote client to
 tell identify activities like default plotters and initial
-conditions. The gr-ctrlport-monitor application uses this heavily in
-determining how to plot ControlPort variables.
+conditions. The <b>gr-ctrlport-monitor</b> application uses this
+heavily in determining how to plot ControlPort variables.
 
 The options mask is just a 32-bit value with options OR'd
 together. Certain options are only appropriate for certain types of
@@ -276,5 +281,69 @@ exposed through SWIG to live in the \b gr namespace.
 \li <b>DISPOPTSTEM:</b> Start plot in stem mode (time domain only).
 \li <b>DISPOPTSTRIP:</b> Run plot as a stripchart (time domain only).
 \li <b>DISPOPTSCATTER:</b> Do scatter plot instead of lines (XY plot only).
+
+
+\section probes ControlPort Probes
+
+ControlPort provides a set of probes that can be used as sinks that
+pass vectors of data across ControlPort. These probes are used to
+sample or visualize data remotely. We can place a ControlPort probe
+anywhere in the flowgraph to grab the latest sample of data from the
+block it's connected to.
+
+The main ControlPort probe to use is
+<b>blocks.ctrlport_probe2_x</b>. From GRC, this is simply "CtrlPort
+Probe", which can handle complex, floats, ints, shorts, and bytes. The
+blocks are named and given a description to identify them over
+ControlPort. The blocks also take a vector length for how many samples
+to pass back at a time. Finally, these blocks take a display hint,
+as described in the above section. This allows us to specify the
+default behavior for how to display the samples.
+
+Another block that can be used is the <b>fft.ctrlport_probe_psd</b> to
+calculate the PSD and pass that over the ControlPort interface.
+
+\section monitors ControlPort Monitors
+
+There are two main ControlPort monitor applications provided with GNU
+Radio. Both act similarly. The first is a standard ControlPort monitor
+application. This connects to a running flowgraph and displays all
+exported interfaces in a table format. The name, unit, latest sample,
+and description of all interfaces are display in a
+row. Double-clicking will open up the default display. Right clicking
+any item will allow the user to select the type of plot to use to
+display the data.
+
+When a display is active, using the buttons at the top, the subwindows
+can all be tiled or windowed as needed to manage the full
+interface. We can then drag-and-drop any other item on top of a
+currently running display plot.
+
+To launch the ControlPort monitor application, know the IP address and
+port of the ControlPort endpoint established by the flowgraph and run:
+
+<pre>
+gr-ctrlport-monitor \<ip-addr\> -p \<port\>
+</pre>
+
+
+\subsection perfmonitor Performance Monitor
+
+A second application is used to locally redraw the flowgraph and
+display some of the Performance Counters. In this application, the
+nodes are blue boxes where the size of the box is proportional to the
+work time and the color depth and line width are proportional to the
+output buffer fullness.
+
+The controls at the top of the Performance Monitor application allow
+us to select the instantaneous, average, and variance values of the
+Performance Counters. And the work time and buffer fullness can be
+displayed as a table or bar graph.
+
+To launch the Performance Monitor, run:
+
+<pre>
+gr-perf-monitorx \<ip-addr\> -p \<port\>
+</pre>
 
 */
