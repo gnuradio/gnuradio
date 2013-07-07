@@ -28,6 +28,10 @@ def convert_hier(flow_graph, python_file):
 	input_msgp = flow_graph.get_msg_pad_sources();
 	output_msgp = flow_graph.get_msg_pad_sinks();
 	parameters = flow_graph.get_parameters()
+	bussink = flow_graph.get_bussink()
+	bussrc = flow_graph.get_bussrc()
+	bus_struct_sink = flow_graph.get_bus_structure_sink()
+	bus_struct_src = flow_graph.get_bus_structure_src()
 	block_key = flow_graph.get_option('id')
 	block_name = flow_graph.get_option('title') or flow_graph.get_option('id').replace('_', ' ').title()
 	block_category = flow_graph.get_option('category')
@@ -58,6 +62,10 @@ def convert_hier(flow_graph, python_file):
 		params_n.append(param_n)
 	block_n['param'] = params_n
 	#sink data stream ports
+	if bussink:
+		block_n['bus_sink'] = '1';
+	if bussrc:
+		block_n['bus_source'] = '1';
 	block_n['sink'] = list()
 	for input_sig in input_sigs:
 		sink_n = odict()
@@ -75,6 +83,10 @@ def convert_hier(flow_graph, python_file):
 		block_n['sink'].append(sink_n)
 	#source data stream ports
 	block_n['source'] = list()
+	if bus_struct_sink:
+		block_n['bus_structure_sink'] = bus_struct_sink[0].get_param('struct').get_value();
+	if bus_struct_src:
+		block_n['bus_structure_source'] = bus_struct_src[0].get_param('struct').get_value();
 	for output_sig in output_sigs:
 		source_n = odict()
 		source_n['name'] = output_sig['label']

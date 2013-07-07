@@ -78,6 +78,7 @@ def _from_file(xml):
 	#delistify if the length of values is 1
 	for key, values in nested_data.iteritems():
 		if len(values) == 1: nested_data[key] = values[0]
+
 	return odict({tag: nested_data})
 
 def to_file(nested_data, xml_file):

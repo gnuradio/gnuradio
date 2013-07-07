@@ -38,6 +38,7 @@ class Port(Element):
 		self._type = n['type']
 		self._dir = dir
 
+	
 	def validate(self):
 		"""
 		Validate the port.
@@ -62,7 +63,14 @@ class Port(Element):
 
 	def is_port(self): return True
 	def get_color(self): return '#FFFFFF'
-	def get_name(self): return self._name
+	def get_name(self):
+		number = ''
+		if self.get_type() == 'bus':
+			busses = filter(lambda a: a._dir == self._dir, self.get_parent().get_ports_gui());
+			
+			number = str(busses.index(self)) + '#' + str(len(self.get_associated_ports()));
+		return self._name + number
+
 	def get_key(self): return self._key
 	def is_sink(self): return self._dir == 'sink'
 	def is_source(self): return self._dir == 'source'
@@ -87,3 +95,23 @@ class Port(Element):
 		    a list of connection objects
 		"""
 		return filter(lambda c: c.get_enabled(), self.get_connections())
+	
+	def get_associated_ports(self):
+		if not self.get_type() == 'bus':
+			return [self];
+		else:
+			if self.is_source():
+				get_p = self.get_parent().get_sources;
+				bus_structure = self.get_parent().current_bus_structure['source'];
+				direc = 'source'
+			else:
+				get_p = self.get_parent().get_sinks;
+				bus_structure = self.get_parent().current_bus_structure['sink'];
+				direc = 'sink'
+			
+			ports = [i for i in get_p() if not i.get_type() == 'bus'];
+			if bus_structure:
+				busses = [i for i in get_p() if i.get_type() == 'bus'];
+				bus_index = busses.index(self);
+				ports = filter(lambda a: ports.index(a) in bus_structure[bus_index], ports);
+			return ports;
