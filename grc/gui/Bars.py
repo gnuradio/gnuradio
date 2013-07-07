@@ -52,6 +52,7 @@ TOOLBAR_LIST = (
     None,
     Actions.RELOAD_BLOCKS,
     Actions.OPEN_HIER,
+    Actions.BUSSIFY_SOURCES,
 )
 
 ##The list of actions and categories for the menu bar.

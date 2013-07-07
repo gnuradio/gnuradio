@@ -22,6 +22,7 @@ from Element import Element
 
 from Cheetah.Template import Template
 from UserDict import UserDict
+from .. gui import Actions
 
 class TemplateArg(UserDict):
 	"""
@@ -63,6 +64,7 @@ class Block(Element):
 		    block a new block
 		"""
 		#build the block
+
 		Element.__init__(self, flow_graph)
 		#grab the data
 		params = n.findall('param')
@@ -73,6 +75,10 @@ class Block(Element):
 		self._category = n.find('category') or ''
 		self._grc_source = n.find('grc_source') or ''
 		self._block_wrapper_path = n.find('block_wrapper_path')
+		self._bussify_sink = n.find('bus_sink')
+		self._bussify_source = n.find('bus_source')
+		
+		
 		#create the param objects
 		self._params = list()
 		#add the id param
@@ -110,6 +116,7 @@ class Block(Element):
 				raise Exception, 'Key "%s" already exists in sources'%key
 			#store the port
 			self.get_sources().append(source)
+		self.back_ofthe_bus(self.get_sources())
 		#create the sink objects
 		self._sinks = list()
 		for sink in map(lambda n: self.get_parent().get_parent().Port(block=self, n=n, dir='sink'), sinks):
@@ -119,7 +126,21 @@ class Block(Element):
 				raise Exception, 'Key "%s" already exists in sinks'%key
 			#store the port
 			self.get_sinks().append(sink)
+		self.back_ofthe_bus(self.get_sinks())
+		self.current_bus_structure = {'source':'','sink':''};
+		
 
+	def back_ofthe_bus(self, portlist):
+		portlist.sort(key=lambda a: a.get_type() == 'bus');
+		
+
+	def filter_bus_port(self, ports): 
+		buslist = [i for i in ports if i.get_type() == 'bus'];
+		if len(buslist) == 0:
+			return ports;
+		else:
+			return buslist;
+			
 	def get_enabled(self):
 		"""
 		Get the enabled state of the block.
@@ -148,7 +169,12 @@ class Block(Element):
 	def get_category(self): return self._category
 	def get_doc(self): return ''
 	def get_ports(self): return self.get_sources() + self.get_sinks()
+	def get_ports_gui(self): return self.filter_bus_port(self.get_sources()) + self.filter_bus_port(self.get_sinks());
+		
+
+
 	def get_children(self): return self.get_ports() + self.get_params()
+	def get_children_gui(self): return self.get_ports_gui() + self.get_params()
 	def get_block_wrapper_path(self): return self._block_wrapper_path
 
 	##############################################
@@ -164,6 +190,7 @@ class Block(Element):
 	def get_sink_keys(self): return _get_keys(self._sinks)
 	def get_sink(self, key): return _get_elem(self._sinks, key)
 	def get_sinks(self): return self._sinks
+	def get_sinks_gui(self): return self.filter_bus_port(self.get_sinks())
 
 	##############################################
 	# Access Sources
@@ -171,6 +198,9 @@ class Block(Element):
 	def get_source_keys(self): return _get_keys(self._sources)
 	def get_source(self, key): return _get_elem(self._sources, key)
 	def get_sources(self): return self._sources
+	def get_sources_gui(self): return self.filter_bus_port(self.get_sources()); 
+		
+	
 
 	def get_connections(self):
 		return sum([port.get_connections() for port in self.get_ports()], [])
@@ -188,6 +218,7 @@ class Block(Element):
 		tmpl = str(tmpl)
 		if '$' not in tmpl: return tmpl
 		n = dict((p.get_key(), TemplateArg(p)) for p in self.get_params())
+
 		try: return str(Template(tmpl, n))
 		except Exception, e: return "-------->\n%s: %s\n<--------"%(e, tmpl)
 
@@ -235,6 +266,77 @@ class Block(Element):
 		"""
 		return False
 
+
+	def form_bus_structure(self, direc):
+		if direc == 'source':
+			get_p = self.get_sources;
+			get_p_gui = self.get_sources_gui;
+			bus_structure = self.get_bus_structure('source');
+		else:
+			get_p = self.get_sinks;
+			get_p_gui = self.get_sinks_gui
+			bus_structure = self.get_bus_structure('sink');
+
+		struct = [range(len(get_p()))];
+		if True in map(lambda a: isinstance(a.get_nports(), int), get_p()):
+				
+
+			structlet = [];
+			last = 0;
+			for j in [i.get_nports() for i in get_p() if isinstance(i.get_nports(), int)]:
+				structlet.extend(map(lambda a: a+last, range(j)));
+				last = structlet[-1] + 1;
+				struct = [structlet];
+		if bus_structure:
+				
+			struct = bus_structure
+
+		self.current_bus_structure[direc] = struct;
+		return struct
+
+	def bussify(self, n, direc):
+		if direc == 'source':
+			get_p = self.get_sources;
+			get_p_gui = self.get_sources_gui;
+			bus_structure = self.get_bus_structure('source');
+		else:
+			get_p = self.get_sinks;
+			get_p_gui = self.get_sinks_gui
+			bus_structure = self.get_bus_structure('sink');
+
+
+		for elt in get_p():
+			for connect in elt.get_connections():
+				self.get_parent().remove_element(connect);
+
+		
+		
+		
+		
+
+		if (not 'bus' in map(lambda a: a.get_type(), get_p())) and len(get_p()) > 0:
+
+			struct = self.form_bus_structure(direc);
+			self.current_bus_structure[direc] = struct;
+			if get_p()[0].get_nports():
+				n['nports'] = str(1);
+		
+			for i in range(len(struct)):
+				n['key'] = str(len(get_p()));
+				n = odict(n);
+				port = self.get_parent().get_parent().Port(block=self, n=n, dir=direc);
+				get_p().append(port);
+				
+
+			
+				
+		elif 'bus' in map(lambda a: a.get_type(), get_p()):
+			for elt in get_p_gui():
+				get_p().remove(elt);
+			self.current_bus_structure[direc] = ''
+			
+		
+
 	##############################################
 	## Import/Export Methods
 	##############################################
@@ -246,8 +348,14 @@ class Block(Element):
 		    a nested data odict
 		"""
 		n = odict()
+
+			
 		n['key'] = self.get_key()
 		n['param'] = map(lambda p: p.export_data(), self.get_params())
+		if 'bus' in map(lambda a: a.get_type(), self.get_sinks()):
+			n['bus_sink'] = str(1);
+		if 'bus' in map(lambda a: a.get_type(), self.get_sources()):
+			n['bus_source'] = str(1);
 		return n
 
 	def import_data(self, n):
@@ -262,6 +370,7 @@ class Block(Element):
 		Args:
 		    n: the nested data odict
 		"""
+		
 		get_hash = lambda: hash(tuple(map(hash, self.get_params())))
 		my_hash = 0
 		while get_hash() != my_hash:
@@ -275,3 +384,17 @@ class Block(Element):
 			#store hash and call rewrite
 			my_hash = get_hash()
 			self.rewrite()
+		bussinks = n.findall('bus_sink');
+		if len(bussinks) > 0 and not self._bussify_sink:
+			self.bussify({'name':'bus','type':'bus'}, 'sink')
+		elif len(bussinks) > 0:
+			self.bussify({'name':'bus','type':'bus'}, 'sink')
+			self.bussify({'name':'bus','type':'bus'}, 'sink')
+		
+		bussrcs = n.findall('bus_source');
+		if len(bussrcs) > 0 and not self._bussify_source:
+			self.bussify({'name':'bus','type':'bus'}, 'source')
+		elif len(bussrcs) > 0:
+			self.bussify({'name':'bus','type':'bus'}, 'source')
+			self.bussify({'name':'bus','type':'bus'}, 'source')
+		

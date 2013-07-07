@@ -31,6 +31,8 @@ class Block(_Block, _GUIBlock):
 	##for make sink to keep track of indexes
 	_sink_count = 0
 
+	
+
 	def __init__(self, flow_graph, n):
 		"""
 		Make a new block from nested data.
@@ -50,6 +52,8 @@ class Block(_Block, _GUIBlock):
 		self._checks = n.findall('check')
 		self._callbacks = n.findall('callback')
 		self._throttle = n.find('throttle') or ''
+		self._bus_structure_source = n.find('bus_structure_source') or ''
+		self._bus_structure_sink = n.find('bus_structure_sink') or ''
 		#build the block
 		_Block.__init__(
 			self,
@@ -57,6 +61,21 @@ class Block(_Block, _GUIBlock):
 			n=n,
 		)
 		_GUIBlock.__init__(self)
+
+	def get_bus_structure(self, direction):
+		if direction == 'source':
+			bus_structure = self._bus_structure_source;
+		else:
+			bus_structure = self._bus_structure_sink;
+		
+		bus_structure = self.resolve_dependencies(bus_structure);
+		
+		if not bus_structure: return ''
+		try:
+			clean_bus_structure = self.get_parent().evaluate(bus_structure)
+			return clean_bus_structure
+	
+		except: return ''
 
 	def throttle(self): return bool(self._throttle)
 
@@ -84,10 +103,11 @@ class Block(_Block, _GUIBlock):
 		def rectify(ports):
 			#restore integer contiguity after insertion
 			#rectify the port names with the index
+			self.back_ofthe_bus(ports);
 			for i, port in enumerate(ports):
 				port._key = str(i)
 				port._name = port._n['name']
-				if len(ports) > 1: port._name += str(i)
+				if len(ports) > 1 and not port._type == 'bus': port._name += str(i)
 
 		def insert_port(get_ports, get_port, key):
 			prev_port = get_port(str(int(key)-1))
@@ -121,14 +141,19 @@ class Block(_Block, _GUIBlock):
 				#remove excess ports and connections
 				if nports < num_ports:
 					for key in reversed(map(str, range(index_first+nports, index_first+num_ports))):
-						remove_port(get_ports, get_port, key)
+						remove_port(get_ports, get_port, key);
+						
+								
 					continue
 				#add more ports
 				if nports > num_ports:
 					for key in map(str, range(index_first+num_ports, index_first+nports)):
 						insert_port(get_ports, get_port, key)
+					
+							
 					continue
-
+		
+			
 	def port_controller_modify(self, direction):
 		"""
 		Change the port controller.
