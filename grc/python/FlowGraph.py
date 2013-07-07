@@ -20,11 +20,17 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 import expr_utils
 from .. base.FlowGraph import FlowGraph as _FlowGraph
 from .. gui.FlowGraph import FlowGraph as _GUIFlowGraph
+from .. base.odict import odict
 import re
 
 _variable_matcher = re.compile('^(variable\w*)$')
 _parameter_matcher = re.compile('^(parameter)$')
 _monitors_searcher = re.compile('(ctrlport_monitor)')
+_bussink_searcher = re.compile('^(bus_sink)$')
+_bussrc_searcher = re.compile('^(bus_source)$')
+_bus_struct_sink_searcher = re.compile('^(bus_structure_sink)$')
+_bus_struct_src_searcher = re.compile('^(bus_structure_source)$')
+
 
 class FlowGraph(_FlowGraph, _GUIFlowGraph):
 
@@ -48,6 +54,7 @@ class FlowGraph(_FlowGraph, _GUIFlowGraph):
 		if not code: raise Exception, 'Cannot evaluate empty statement.'
 		my_hash = hash(code) ^ namespace_hash
 		#cache if does not exist
+		
 		if not self._eval_cache.has_key(my_hash):
 			self._eval_cache[my_hash] = eval(code, namespace, namespace)
 		#return from cache
@@ -69,6 +76,10 @@ class FlowGraph(_FlowGraph, _GUIFlowGraph):
 		}[direction]
         # we only want stream ports
 		sorted_pads = filter(lambda b: b.get_param('type').get_evaluated() != 'message', sorted_pads);
+		expanded_pads = [];
+		for i in sorted_pads:
+			for j in range(i.get_param('num_streams').get_evaluated()):
+				expanded_pads.append(i);
 		#load io signature
 		return [{
 			'label': str(pad.get_param('label').get_evaluated()),
@@ -76,7 +87,7 @@ class FlowGraph(_FlowGraph, _GUIFlowGraph):
 			'vlen': str(pad.get_param('vlen').get_evaluated()),
 			'size': pad.get_param('type').get_opt('size'),
 			'optional': bool(pad.get_param('optional').get_evaluated()),
-		} for pad in sorted_pads]
+		} for pad in expanded_pads]
 
 	def get_pad_sources(self):
 		"""
@@ -145,12 +156,73 @@ class FlowGraph(_FlowGraph, _GUIFlowGraph):
 		monitors = filter(lambda b: _monitors_searcher.search(b.get_key()), self.get_enabled_blocks())
                 return monitors
 
+	def get_bussink(self):
+		bussink = filter(lambda b: _bussink_searcher.search(b.get_key()), self.get_enabled_blocks())
+		
+		for i in bussink:
+			for j in i.get_params():
+				if j.get_name() == 'On/Off' and j.get_value() == 'on':
+					return True;
+			
+		return False
+		
+		
+
+	def get_bussrc(self):
+		bussrc = filter(lambda b: _bussrc_searcher.search(b.get_key()), self.get_enabled_blocks())
+
+		for i in bussrc:
+			for j in i.get_params():
+				if j.get_name() == 'On/Off' and j.get_value() == 'on':
+					return True;
+			
+		return False
+
+	def get_bus_structure_sink(self):
+		bussink = filter(lambda b: _bus_struct_sink_searcher.search(b.get_key()), self.get_enabled_blocks())
+			
+		return bussink
+
+	def get_bus_structure_src(self):
+		bussrc = filter(lambda b: _bus_struct_src_searcher.search(b.get_key()), self.get_enabled_blocks())
+		
+		return bussrc
+		
+
 	def rewrite(self):
 		"""
 		Flag the namespace to be renewed.
 		"""
+		
+		
+						
+		
+		def reconnect_bus_blocks():
+			for block in self.get_blocks():
+				
+				if 'bus' in map(lambda a: a.get_type(), block.get_sources_gui()):
+					
+					
+					for i in range(len(block.get_sources_gui())):
+						if len(block.get_sources_gui()[i].get_connections()) > 0:
+							source = block.get_sources_gui()[i]
+							sink = []
+							
+							for j in range(len(source.get_connections())):
+								sink.append(source.get_connections()[j].get_sink());
+						
+									    
+							for elt in source.get_connections():
+								self.remove_element(elt);
+							for j in sink:
+								self.connect(source, j);
 		self._renew_eval_ns = True
-		_FlowGraph.rewrite(self)
+		_FlowGraph.rewrite(self);
+		reconnect_bus_blocks();
+		
+		
+		
+		
 
 	def evaluate(self, expr):
 		"""
@@ -163,6 +235,8 @@ class FlowGraph(_FlowGraph, _GUIFlowGraph):
 		Returns:
 		    the evaluated data
 		"""
+		
+	
 		if self._renew_eval_ns:
 			self._renew_eval_ns = False
 			#reload namespace
@@ -188,6 +262,8 @@ class FlowGraph(_FlowGraph, _GUIFlowGraph):
 			#make namespace public
 			self.n = n
 			self.n_hash = hash(str(n))
+		
 		#evaluate
 		e = self._eval(expr, self.n, self.n_hash)
+		
 		return e

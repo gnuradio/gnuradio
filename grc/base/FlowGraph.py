@@ -56,6 +56,48 @@ class FlowGraph(Element):
 			if not filter(lambda b: b.get_id() == id, self.get_blocks()): return id
 
 	def __str__(self): return 'FlowGraph - %s(%s)'%(self.get_option('title'), self.get_option('id'))
+	def rewrite(self):
+		def refactor_bus_structure():
+			
+			for block in self.get_blocks():
+				for direc in ['source', 'sink']:
+					if direc == 'source':
+						get_p = block.get_sources;
+						get_p_gui = block.get_sources_gui;
+						bus_structure = block.form_bus_structure('source');
+					else:
+						get_p = block.get_sinks;
+						get_p_gui = block.get_sinks_gui
+						bus_structure = block.form_bus_structure('sink');
+				
+					if 'bus' in map(lambda a: a.get_type(), get_p_gui()):
+					
+				       		
+						
+						if len(get_p_gui()) > len(bus_structure):
+							times = range(len(bus_structure), len(get_p_gui()));
+							for i in times:
+								for connect in get_p_gui()[-1].get_connections():
+									block.get_parent().remove_element(connect);
+								get_p().remove(get_p_gui()[-1]);
+						elif len(get_p_gui()) < len(bus_structure):
+							n = {'name':'bus','type':'bus'};
+							if True in map(lambda a: isinstance(a.get_nports(), int), get_p()):
+								n['nports'] = str(1);
+							
+							times = range(len(get_p_gui()), len(bus_structure));	
+							
+	       						for i in times:
+								n['key'] = str(len(get_p()));
+								n = odict(n);
+								port = block.get_parent().get_parent().Port(block=block, n=n, dir=direc);
+								get_p().append(port);
+								
+								
+								
+		for child in self.get_children(): child.rewrite()
+		refactor_bus_structure();
+		
 
 	def get_option(self, key):
 		"""
@@ -76,7 +118,15 @@ class FlowGraph(Element):
 	## Access Elements
 	##############################################
 	def get_block(self, id): return filter(lambda b: b.get_id() == id, self.get_blocks())[0]
-	def get_blocks(self): return filter(lambda e: e.is_block(), self.get_elements())
+	def get_blocks_unordered(self): return filter(lambda e: e.is_block(), self.get_elements())
+	def get_blocks(self):
+		blocks = self.get_blocks_unordered();
+		for i in range(len(blocks)):
+			if blocks[i].get_key() == 'variable':
+				blk = blocks[i];
+				blocks.remove(blk);
+				blocks.insert(1, blk);
+		return blocks;
 	def get_connections(self): return filter(lambda e: e.is_connection(), self.get_elements())
 	def get_children(self): return self.get_elements()
 	def get_elements(self):
@@ -123,10 +173,15 @@ class FlowGraph(Element):
 		Returns:
 		    the new block or None if not found
 		"""
+	
 		if key not in self.get_parent().get_block_keys(): return None
 		block = self.get_parent().get_new_block(self, key)
-		self.get_elements().append(block)
-		return block
+		self.get_elements().append(block);
+		if block._bussify_sink:
+			block.bussify({'name':'bus','type':'bus'}, 'sink')
+		if block._bussify_source:
+			block.bussify({'name':'bus','type':'bus'}, 'source')
+		return block;
 
 	def connect(self, porta, portb):
 		"""
@@ -140,7 +195,10 @@ class FlowGraph(Element):
 		Returns:
 		    the new connection
 		"""
+		
 		connection = self.get_parent().Connection(flow_graph=self, porta=porta, portb=portb)
+		
+		
 		self.get_elements().append(connection)
 		return connection
 
@@ -151,6 +209,7 @@ class FlowGraph(Element):
 		If the element is a block, remove its connections.
 		If the element is a connection, just remove the connection.
 		"""
+
 		if element not in self.get_elements(): return
 		#found a port, set to parent signal block
 		if element.is_port():
@@ -159,7 +218,14 @@ class FlowGraph(Element):
 		if element.is_block():
 			for port in element.get_ports():
 				map(self.remove_element, port.get_connections())
+		if element.is_connection():
+			if element.is_bus():
+				cons_list = []
+				for i in map(lambda a: a.get_connections(), element.get_source().get_associated_ports()):
+					cons_list.extend(i);
+				map(self.remove_element, cons_list);
 		self.get_elements().remove(element)
+		
 
 	def evaluate(self, expr):
 		"""
@@ -214,6 +280,7 @@ class FlowGraph(Element):
 			#only load the block when the block key was valid
 			if block: block.import_data(block_n)
 			else: Messages.send_error_load('Block key "%s" not found in %s'%(key, self.get_parent()))
+			
 		#build the connections
 		for connection_n in connections_n:
 			#try to make the connection

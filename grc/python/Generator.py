@@ -123,7 +123,7 @@ Add a Misc->Throttle block to your flow graph to avoid CPU congestion.''')
 		#list of regular blocks (all blocks minus the special ones)
 		blocks = filter(lambda b: b not in (imports + parameters), blocks)
 		#list of connections where each endpoint is enabled
-		connections = filter(lambda c: not (c.is_msg() or c.is_message()), self._flow_graph.get_enabled_connections())
+		connections = filter(lambda c: not (c.is_bus() or c.is_msg() or c.is_message()), self._flow_graph.get_enabled_connections())
 		messages = filter(lambda c: c.is_msg(), self._flow_graph.get_enabled_connections())
 		messages2 = filter(lambda c: c.is_message(), self._flow_graph.get_enabled_connections())
 		#list of variable names

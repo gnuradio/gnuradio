@@ -124,6 +124,7 @@ class Block(Element):
 
 	def create_shapes(self):
 		"""Update the block, parameters, and ports when a change occurs."""
+		
 		Element.create_shapes(self)
 		if self.is_horizontal(): self.add_area((0, 0), (self.W, self.H))
 		elif self.is_vertical(): self.add_area((0, 0), (self.H, self.W))
@@ -173,7 +174,10 @@ class Block(Element):
 		self.H = max(*(
 			[self.label_height+2*BLOCK_LABEL_PADDING] + [2*PORT_BORDER_SEPARATION + \
 			sum([port.H + PORT_SEPARATION for port in ports]) - PORT_SEPARATION
-			for ports in (self.get_sources(), self.get_sinks())]
+			for ports in (self.get_sources_gui(), self.get_sinks_gui())] + 
+			[4*PORT_BORDER_SEPARATION + \
+			sum([(port.H) + PORT_SEPARATION for port in ports]) - PORT_SEPARATION
+			for ports in ([i for i in self.get_sources_gui() if i.get_type() == 'bus'], [i for i in self.get_sinks_gui() if i.get_type() == 'bus'])]
 		))
 
 	def draw(self, gc, window):
@@ -196,7 +200,10 @@ class Block(Element):
 		elif self.is_vertical():
 			window.draw_drawable(gc, self.vertical_label, 0, 0, x+(self.H-self.label_height)/2, y+BLOCK_LABEL_PADDING, -1, -1)
 		#draw ports
-		for port in self.get_ports(): port.draw(gc, window)
+		
+		
+		for port in self.get_ports_gui():
+			port.draw(gc, window)
 
 	def what_is_selected(self, coor, coor_m=None):
 		"""
@@ -209,7 +216,7 @@ class Block(Element):
 		Returns:
 		    this block, a port, or None
 		"""
-		for port in self.get_ports():
+		for port in self.get_ports_gui():
 			port_selected = port.what_is_selected(coor, coor_m)
 			if port_selected: return port_selected
 		return Element.what_is_selected(self, coor, coor_m)

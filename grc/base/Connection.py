@@ -43,13 +43,31 @@ class Connection(Element):
 			if port.is_sink(): sink = port
 		if not source: raise ValueError('Connection could not isolate source')
 		if not sink: raise ValueError('Connection could not isolate sink')
+
+		busses = len(filter(lambda a: a.get_type() == 'bus', [source, sink]))%2
+		if not busses == 0: raise ValueError('busses must get with busses')
+
+		if not len(source.get_associated_ports()) == len(sink.get_associated_ports()):
+			raise ValueError('port connections must have same cardinality');
 		#ensure that this connection (source -> sink) is unique
 		for connection in self.get_parent().get_connections():
 			if connection.get_source() is source and connection.get_sink() is sink:
 				raise Exception('This connection between source and sink is not unique.')
 		self._source = source
 		self._sink = sink
-
+		
+		if source.get_type() == 'bus':
+			
+			sources = source.get_associated_ports();
+			sinks = sink.get_associated_ports();
+			
+			for i in range(len(sources)):
+				try:
+					flow_graph.connect(sources[i], sinks[i]);
+				except:
+					pass
+		
+				
 	def __str__(self):
 		return 'Connection (\n\t%s\n\t\t%s\n\t%s\n\t\t%s\n)'%(
 			self.get_source().get_parent(),
@@ -70,6 +88,8 @@ class Connection(Element):
 		sink_type = self.get_sink().get_type()
 		if source_type != sink_type:
 			self.add_error_message('Source type "%s" does not match sink type "%s".'%(source_type, sink_type))
+
+	
 
 	def get_enabled(self):
 		"""

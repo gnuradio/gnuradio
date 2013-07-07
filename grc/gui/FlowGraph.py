@@ -65,6 +65,8 @@ class FlowGraph(Element):
 			Actions.BLOCK_PARAM_MODIFY,
 			Actions.BLOCK_CREATE_HIER,
 			Actions.OPEN_HIER,
+			Actions.BUSSIFY_SOURCES,
+			Actions.BUSSIFY_SINKS,
 		]: self._context_menu.append(action.create_menu_item())
 
 	###########################################################################
@@ -141,6 +143,7 @@ class FlowGraph(Element):
 		Args:
 		    clipboard: the nested data of blocks, connections
 		"""
+
 		selected = set()
 		(x_min, y_min), blocks_n, connections_n = clipboard
 		old_id2block = dict()
@@ -158,18 +161,23 @@ class FlowGraph(Element):
 			#set params
 			params_n = block_n.findall('param')
 			for param_n in params_n:
+				
 				param_key = param_n.find('key')
 				param_value = param_n.find('value')
 				#setup id parameter
 				if param_key == 'id':
 					old_id2block[param_value] = block
 					#if the block id is not unique, get a new block id
-					if param_value in [block.get_id() for block in self.get_blocks()]:
+					if param_value in [bluck.get_id() for bluck in self.get_blocks()]:
 						param_value = self._get_unique_id(param_value)
+					
+				
 				#set value to key
+				
 				block.get_param(param_key).set_value(param_value)
 			#move block to offset coordinate
 			block.move((x_off, y_off))
+			
 		#update before creating connections
 		self.update()
 		#create connections
@@ -333,9 +341,13 @@ class FlowGraph(Element):
 		Call the top level rewrite and validate.
 		Call the top level create labels and shapes.
 		"""
+	
 		self.rewrite()
+	
 		self.validate()
+	
 		self.create_labels()
+	
 		self.create_shapes()
 
 	##########################################################################
