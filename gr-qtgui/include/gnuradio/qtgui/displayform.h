@@ -24,6 +24,7 @@
 #define DISPLAY_FORM_H
 
 #include <gnuradio/qtgui/spectrumUpdateEvents.h>
+#include <gnuradio/qtgui/api.h>
 #include <QtGui/QtGui>
 #include <vector>
 
@@ -37,7 +38,7 @@
  * \brief Base class for setting up and  managing QTGUI plot forms.
  * \ingroup qtgui_blk
  */
-class DisplayForm : public QWidget
+class QTGUI_API DisplayForm : public QWidget
 {
   Q_OBJECT
 
