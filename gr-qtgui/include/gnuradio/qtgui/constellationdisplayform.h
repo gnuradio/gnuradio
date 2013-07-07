@@ -23,6 +23,7 @@
 #ifndef CONSTELLATION_DISPLAY_FORM_H
 #define CONSTELLATION_DISPLAY_FORM_H
 
+#include <gnuradio/qtgui/api.h>
 #include <gnuradio/qtgui/spectrumUpdateEvents.h>
 #include <gnuradio/qtgui/ConstellationDisplayPlot.h>
 #include <QtGui/QtGui>
@@ -34,7 +35,7 @@
  * \brief DisplayForm child for managing constellaton (I&Q) plots.
  * \ingroup qtgui_blk
  */
-class ConstellationDisplayForm : public DisplayForm
+class QTGUI_API ConstellationDisplayForm : public DisplayForm
 {
   Q_OBJECT
 

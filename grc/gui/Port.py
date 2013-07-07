@@ -45,15 +45,22 @@ class Port(Element):
 	def create_shapes(self):
 		"""Create new areas and labels for the port."""
 		Element.create_shapes(self)
+		
 		#get current rotation
 		rotation = self.get_rotation()
 		#get all sibling ports
-		if self.is_source(): ports = self.get_parent().get_sources()
-		elif self.is_sink(): ports = self.get_parent().get_sinks()
+		if self.is_source(): ports = self.get_parent().get_sources_gui()
+		elif self.is_sink(): ports = self.get_parent().get_sinks_gui()
 		#get the max width
 		self.W = max([port.W for port in ports] + [PORT_MIN_WIDTH])
 		#get a numeric index for this port relative to its sibling ports
-		index = ports.index(self)
+		try:
+			index = ports.index(self)
+		except:
+			if hasattr(self, '_connector_length'):
+				del self._connector_length;
+			return
+		
 		length = len(ports)
 		#reverse the order of ports	for these rotations
 		if rotation in (180, 270): index = length-index-1
@@ -81,7 +88,15 @@ class Port(Element):
 			self._connector_coordinate = (x+self.H/2, y+1+self.W)
 		#the connector length
 		self._connector_length = CONNECTOR_EXTENSION_MINIMAL + CONNECTOR_EXTENSION_INCREMENT*index
-
+	
+	def modify_height(self, start_height):
+		type_dict = {'bus':(lambda a: a * 3)};
+		
+		if self.get_type() in type_dict:
+			return type_dict[self.get_type()](start_height);
+		else:
+			return start_height;
+		
 	def create_labels(self):
 		"""Create the labels for the socket."""
 		Element.create_labels(self)
@@ -91,6 +106,7 @@ class Port(Element):
 		layout.set_markup(Utils.parse_template(PORT_MARKUP_TMPL, port=self))
 		self.w, self.h = layout.get_pixel_size()
 		self.W, self.H = 2*PORT_LABEL_PADDING+self.w, 2*PORT_LABEL_PADDING+self.h
+		self.H = self.modify_height(self.H);
 		#create the pixmap
 		pixmap = self.get_parent().get_parent().new_pixmap(self.w, self.h)
 		gc = pixmap.new_gc()
@@ -111,6 +127,7 @@ class Port(Element):
 		    gc: the graphics context
 		    window: the gtk window to draw on
 		"""
+		
 		Element.draw(
 			self, gc, window, bg_color=self._bg_color,
 			border_color=self.is_highlighted() and Colors.HIGHLIGHT_COLOR or Colors.BORDER_COLOR,

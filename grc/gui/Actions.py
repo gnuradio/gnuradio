@@ -295,3 +295,13 @@ OPEN_HIER = Action(
 	tooltip='Open the source of the selected hierarchical block',
 	stock_id=gtk.STOCK_JUMP_TO,
 )
+BUSSIFY_SOURCES = Action(
+	label='Toggle So_urce Bus',
+	tooltip='Gang source ports into a single bus port',
+	stock_id=gtk.STOCK_JUMP_TO,
+)
+BUSSIFY_SINKS = Action(
+	label='Toggle S_ink Bus',
+	tooltip='Gang sink ports into a single bus port',
+	stock_id=gtk.STOCK_JUMP_TO,
+)

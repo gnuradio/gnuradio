@@ -62,7 +62,10 @@ class Connection(Element):
 		self._sink_coor = None
 		self._source_coor = None
 		#get the source coordinate
-		connector_length = self.get_source().get_connector_length()
+		try:
+			connector_length = self.get_source().get_connector_length()
+		except:
+			return
 		self.x1, self.y1 = Utils.get_rotated_coordinate((connector_length, 0), self.get_source().get_rotation())
 		#get the sink coordinate
 		connector_length = self.get_sink().get_connector_length() + CONNECTOR_ARROW_HEIGHT
@@ -133,7 +136,11 @@ class Connection(Element):
 		source = self.get_source()
 		#check for changes
 		if self._sink_rot != sink.get_rotation() or self._source_rot != source.get_rotation(): self.create_shapes()
-		elif self._sink_coor != sink.get_coordinate() or self._source_coor != source.get_coordinate(): self._update_after_move()
+		elif self._sink_coor != sink.get_coordinate() or self._source_coor != source.get_coordinate():
+			try:
+				self._update_after_move()
+			except:
+				return
 		#cache values
 		self._sink_rot = sink.get_rotation()
 		self._source_rot = source.get_rotation()
@@ -145,5 +152,8 @@ class Connection(Element):
 		else: border_color = Colors.CONNECTION_DISABLED_COLOR
 		Element.draw(self, gc, window, bg_color=None, border_color=border_color)
 		#draw arrow on sink port
-		gc.set_foreground(self._arrow_color)
-		window.draw_polygon(gc, True, self._arrow)
+		try:
+			gc.set_foreground(self._arrow_color)
+			window.draw_polygon(gc, True, self._arrow)
+		except:
+			return

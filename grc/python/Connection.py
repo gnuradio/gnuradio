@@ -33,7 +33,9 @@ class Connection(_Connection, _GUIConnection):
 
 	def is_message(self):
 		return self.get_source().get_type() == self.get_sink().get_type() == 'message'
-
+	
+	def is_bus(self):
+		return self.get_source().get_type() == self.get_sink().get_type() == 'bus'
 	def validate(self):
 		"""
 		Validate the connections.
@@ -44,3 +46,5 @@ class Connection(_Connection, _GUIConnection):
 		sink_size = Constants.TYPE_TO_SIZEOF[self.get_sink().get_type()] * self.get_sink().get_vlen()
 		if source_size != sink_size:
 			self.add_error_message('Source IO size "%s" does not match sink IO size "%s".'%(source_size, sink_size))
+
+	
