@@ -447,6 +447,23 @@ class ActionHandler:
 			for b in self.get_flow_graph().get_selected_blocks():
 				if b._grc_source:
 				    self.main_window.new_page(b._grc_source, show=True);
+		elif action == Actions.BUSSIFY_SOURCES:
+			n = {'name':'bus', 'type':'bus'}
+			for b in self.get_flow_graph().get_selected_blocks():
+				b.bussify(n, 'source');
+			self.get_flow_graph()._old_selected_port = None;
+			self.get_flow_graph()._new_selected_port = None;
+			Actions.ELEMENT_CREATE();
+			
+		elif action == Actions.BUSSIFY_SINKS:
+			n = {'name':'bus', 'type':'bus'}
+			for b in self.get_flow_graph().get_selected_blocks():
+				b.bussify(n, 'sink')
+			self.get_flow_graph()._old_selected_port = None;
+			self.get_flow_graph()._new_selected_port = None;
+			Actions.ELEMENT_CREATE();
+			
+				
 		else: print '!!! Action "%s" not handled !!!'%action
 		##################################################
 		# Global Actions for all States
@@ -466,6 +483,8 @@ class ActionHandler:
 		Actions.BLOCK_DISABLE.set_sensitive(bool(self.get_flow_graph().get_selected_blocks()))
 		Actions.BLOCK_CREATE_HIER.set_sensitive(bool(self.get_flow_graph().get_selected_blocks()))
 		Actions.OPEN_HIER.set_sensitive(bool(self.get_flow_graph().get_selected_blocks()))
+		Actions.BUSSIFY_SOURCES.set_sensitive(bool(self.get_flow_graph().get_selected_blocks()))
+		Actions.BUSSIFY_SINKS.set_sensitive(bool(self.get_flow_graph().get_selected_blocks()))
 		Actions.RELOAD_BLOCKS.set_sensitive(True)
 		#set the exec and stop buttons
 		self.update_exec_stop()

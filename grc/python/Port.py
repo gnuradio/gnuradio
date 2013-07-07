@@ -110,7 +110,8 @@ class Port(_Port, _GUIPort):
 		self._nports = n.find('nports') or ''
 		self._vlen = n.find('vlen') or ''
 		self._optional = bool(n.find('optional'))
-
+		
+	
 	def get_types(self): return Constants.TYPE_TO_SIZEOF.keys()
 
 	def is_type_empty(self): return not self._n['type']
@@ -174,6 +175,9 @@ class Port(_Port, _GUIPort):
 		try: return int(self.get_parent().get_parent().evaluate(vlen))
 		except: return 1
 
+	
+	
+
 	def get_nports(self):
 		"""
 		Get the number of ports.
@@ -190,6 +194,8 @@ class Port(_Port, _GUIPort):
 			nports = int(self.get_parent().get_parent().evaluate(nports))
 			if 0 < nports: return nports
 		except: return 1
+
+	
 
 	def get_optional(self): return bool(self._optional)
 

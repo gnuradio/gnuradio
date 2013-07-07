@@ -101,4 +101,10 @@ def parse_template(tmpl_str, **kwargs):
 	    a string of the parsed template
 	"""
 	kwargs['encode'] = gobject.markup_escape_text
+	#try:
+	#	cat = str(Template(tmpl_str, kwargs))
+	#except TypeError:
+	#	print 'guppy'
+	#	print tmpl_str
+	#	print str(kwargs['param'].get_error_messages())
 	return str(Template(tmpl_str, kwargs))

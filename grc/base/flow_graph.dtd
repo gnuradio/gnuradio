@@ -24,10 +24,12 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 <!ELEMENT flow_graph (timestamp?, block*, connection*)> <!-- optional timestamp -->
 <!ELEMENT timestamp (#PCDATA)>
 <!-- Block -->
-<!ELEMENT block (key, param*)>
+<!ELEMENT block (key, param*, bus_sink?, bus_source?)>
 <!ELEMENT param (key, value)>
 <!ELEMENT key (#PCDATA)>
 <!ELEMENT value (#PCDATA)>
+<!ELEMENT bus_sink (#PCDATA)>
+<!ELEMENT bus_source (#PCDATA)>
 <!-- Connection -->
 <!ELEMENT connection (source_block_id, sink_block_id, source_key, sink_key)>
 <!ELEMENT source_block_id (#PCDATA)>
