@@ -29,6 +29,7 @@
 #include <complex>
 #include <vector>
 #include <gnuradio/high_res_timer.h>
+#include <gnuradio/qtgui/api.h>
 
 static const int SpectrumUpdateEventType = 10005;
 static const int SpectrumWindowCaptionEventType = 10008;
@@ -173,7 +174,7 @@ private:
 /********************************************************************/
 
 
-class ConstUpdateEvent: public QEvent
+class QTGUI_API ConstUpdateEvent: public QEvent
 {
 public:
   ConstUpdateEvent(const std::vector<double*> realDataPoints,

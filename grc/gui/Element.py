@@ -69,7 +69,7 @@ class Element(object):
 		Create labels (if applicable) and call on all children.
 		Call this base method before creating labels in the element.
 		"""
-		for child in self.get_children(): child.create_labels()
+		for child in self.get_children():child.create_labels()
 
 	def create_shapes(self):
 		"""
@@ -89,6 +89,7 @@ class Element(object):
 		    border_color: the color for lines and rectangle borders
 		    bg_color: the color for the inside of the rectangle
 		"""
+		
 		X,Y = self.get_coordinate()
 		for (rX,rY),(W,H) in self._areas_list:
 			aX = X + rX
