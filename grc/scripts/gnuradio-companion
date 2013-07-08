@@ -24,36 +24,36 @@ import gtk
 
 try: from gnuradio import gr
 except ImportError, e:
-	d = gtk.MessageDialog(type=gtk.MESSAGE_ERROR, buttons=gtk.BUTTONS_CLOSE, message_format="""
+    d = gtk.MessageDialog(type=gtk.MESSAGE_ERROR, buttons=gtk.BUTTONS_CLOSE, message_format="""
 Cannot import gnuradio.
 
 Is the python path environment variable set correctly?
-	All OS: PYTHONPATH
+    All OS: PYTHONPATH
 
 Is the library path environment variable set correctly?
-	Linux: LD_LIBRARY_PATH
-	Windows: PATH
-	MacOSX: DYLD_LIBRARY_PATH
+    Linux: LD_LIBRARY_PATH
+    Windows: PATH
+    MacOSX: DYLD_LIBRARY_PATH
 """)
-	d.set_title(str(e))
-	d.run()
-	exit(-1)
+    d.set_title(str(e))
+    d.run()
+    exit(-1)
 
 from optparse import OptionParser
 import os
 
 if __name__ == "__main__":
-	if ('GR_DONT_LOAD_PREFS' in os.environ.keys() and
-		(not 'GRC_BLOCKS_PATH' in os.environ.keys() or len(os.environ['GRC_BLOCKS_PATH']) == 0)):
-		d = gtk.MessageDialog(
-			type=gtk.MESSAGE_ERROR,
-			buttons=gtk.BUTTONS_CLOSE,
-			message_format="""Can't find block definitions. Use config.conf or GRC_BLOCKS_PATH. """)
-		d.set_title("No block definitions available.")
-		d.run()
-		exit(-1)
-	usage = 'usage: %prog [options] [saved flow graphs]'
-	version = """
+    if ('GR_DONT_LOAD_PREFS' in os.environ.keys() and
+        (not 'GRC_BLOCKS_PATH' in os.environ.keys() or len(os.environ['GRC_BLOCKS_PATH']) == 0)):
+        d = gtk.MessageDialog(
+            type=gtk.MESSAGE_ERROR,
+            buttons=gtk.BUTTONS_CLOSE,
+            message_format="""Can't find block definitions. Use config.conf or GRC_BLOCKS_PATH. """)
+        d.set_title("No block definitions available.")
+        d.run()
+        exit(-1)
+    usage = 'usage: %prog [options] [saved flow graphs]'
+    version = """
 GNU Radio Companion %s
 
 This program is part of GNU Radio
@@ -61,12 +61,12 @@ GRC comes with ABSOLUTELY NO WARRANTY.
 This is free software,
 and you are welcome to redistribute it.
 """%gr.version()
-	parser = OptionParser(usage=usage, version=version)
-	(options, args) = parser.parse_args()
-	from gnuradio.grc.python.Platform import Platform
-	from gnuradio.grc.gui.ActionHandler import ActionHandler
-	#setup icon using icon theme
-	try: gtk.window_set_default_icon(gtk.IconTheme().load_icon('gnuradio-grc', 256, 0))
-	except: pass
-	ActionHandler(args, Platform())
+    parser = OptionParser(usage=usage, version=version)
+    (options, args) = parser.parse_args()
+    from gnuradio.grc.python.Platform import Platform
+    from gnuradio.grc.gui.ActionHandler import ActionHandler
+    #setup icon using icon theme
+    try: gtk.window_set_default_icon(gtk.IconTheme().load_icon('gnuradio-grc', 256, 0))
+    except: pass
+    ActionHandler(args, Platform())
 

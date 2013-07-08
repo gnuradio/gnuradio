@@ -17,9 +17,9 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 -->
 <!--
-	flow_graph.dtd
-	Josh Blum
-	The document type definition for flow graph xml files.
+    flow_graph.dtd
+    Josh Blum
+    The document type definition for flow graph xml files.
  -->
 <!ELEMENT flow_graph (timestamp?, block*, connection*)> <!-- optional timestamp -->
 <!ELEMENT timestamp (#PCDATA)>
