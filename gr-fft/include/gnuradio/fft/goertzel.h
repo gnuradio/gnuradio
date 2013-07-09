@@ -36,7 +36,6 @@ namespace gr {
     class FFT_API goertzel
     {
     public:
-      goertzel(){}
       goertzel(int rate, int len, float freq);
       
       void set_params(int rate, int len, float freq);

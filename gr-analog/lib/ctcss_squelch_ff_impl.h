@@ -38,9 +38,9 @@ namespace gr {
       int   d_len;
       bool  d_mute;
 
-      fft::goertzel d_goertzel_l;
-      fft::goertzel d_goertzel_c;
-      fft::goertzel d_goertzel_r;
+      fft::goertzel *d_goertzel_l;
+      fft::goertzel *d_goertzel_c;
+      fft::goertzel *d_goertzel_r;
 
       int find_tone(float freq);
 
