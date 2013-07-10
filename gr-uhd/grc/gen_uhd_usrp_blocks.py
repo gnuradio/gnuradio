@@ -141,8 +141,8 @@ self.\$(id).set_bandwidth(\$bw$(n), $n)
 			\#end if
 		</hide>
 		<option>
-			<name>scalar=1024</name>
-			<key>scalar=1024</key>
+			<name>peak=0.003906</name>
+			<key>peak=0.003906</key>
 		</option>
 	</param>
 	<param>
