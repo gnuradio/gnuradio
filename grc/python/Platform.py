@@ -28,43 +28,43 @@ from Port import Port as _Port
 from Param import Param as _Param
 from Generator import Generator
 from Constants import \
-	HIER_BLOCKS_LIB_DIR, BLOCK_DTD, \
-	DEFAULT_FLOW_GRAPH, BLOCKS_DIRS
+    HIER_BLOCKS_LIB_DIR, BLOCK_DTD, \
+    DEFAULT_FLOW_GRAPH, BLOCKS_DIRS
 import Constants
 
 COLORS = [(name, color) for name, key, sizeof, color in Constants.CORE_TYPES]
 
 class Platform(_Platform, _GUIPlatform):
 
-	def __init__(self):
-		"""
-		Make a platform for gnuradio.
-		"""
-		#ensure hier dir
-		if not os.path.exists(HIER_BLOCKS_LIB_DIR): os.mkdir(HIER_BLOCKS_LIB_DIR)
-		#convert block paths to absolute paths
-		block_paths = set(map(os.path.abspath, BLOCKS_DIRS))
-		#init
-		_Platform.__init__(
-			self,
-			name='GNU Radio Companion',
-			version=gr.version(),
-			key='grc',
-			license=__doc__.strip(),
-			website='http://gnuradio.org/redmine/wiki/gnuradio/GNURadioCompanion',
-			block_paths=block_paths,
-			block_dtd=BLOCK_DTD,
-			default_flow_graph=DEFAULT_FLOW_GRAPH,
-			generator=Generator,
-			colors=COLORS,
-		)
-		_GUIPlatform.__init__(self)
+    def __init__(self):
+        """
+        Make a platform for gnuradio.
+        """
+        #ensure hier dir
+        if not os.path.exists(HIER_BLOCKS_LIB_DIR): os.mkdir(HIER_BLOCKS_LIB_DIR)
+        #convert block paths to absolute paths
+        block_paths = set(map(os.path.abspath, BLOCKS_DIRS))
+        #init
+        _Platform.__init__(
+            self,
+            name='GNU Radio Companion',
+            version=gr.version(),
+            key='grc',
+            license=__doc__.strip(),
+            website='http://gnuradio.org/redmine/wiki/gnuradio/GNURadioCompanion',
+            block_paths=block_paths,
+            block_dtd=BLOCK_DTD,
+            default_flow_graph=DEFAULT_FLOW_GRAPH,
+            generator=Generator,
+            colors=COLORS,
+        )
+        _GUIPlatform.__init__(self)
 
-	##############################################
-	# Constructors
-	##############################################
-	FlowGraph = _FlowGraph
-	Connection = _Connection
-	Block = _Block
-	Port = _Port
-	Param = _Param
+    ##############################################
+    # Constructors
+    ##############################################
+    FlowGraph = _FlowGraph
+    Connection = _Connection
+    Block = _Block
+    Port = _Port
+    Param = _Param
