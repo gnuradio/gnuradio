@@ -175,3 +175,8 @@ endforeach(filename)
 set(CPACK_NSIS_MODIFY_PATH ON)
 
 set(HLKM_ENV "\\\"SYSTEM\\\\CurrentControlSet\\\\Control\\\\Session Manager\\\\Environment\\\"")
+
+IF(WIN32)
+    #Install necessary runtime DLL's
+    INCLUDE(InstallRequiredSystemLibraries)
+ENDIF(WIN32)
