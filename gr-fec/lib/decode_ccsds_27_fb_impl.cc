@@ -47,6 +47,7 @@ namespace gr {
       
       gen_met(d_mettab, 100, esn0, 0.0, 256);
       viterbi_chunks_init(d_state0);
+      viterbi_chunks_init(d_state1);
     }
 
     int
