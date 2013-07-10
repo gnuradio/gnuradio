@@ -79,7 +79,7 @@ namespace gr {
 	// Compute a linear average on reset (no expected)  
 	if(!d_reset) {
 #endif
-        float mag;
+        float mag(0.0);
         for(int i=0; i<noutput_items; i++) {
             mag += mags[i];
         }
