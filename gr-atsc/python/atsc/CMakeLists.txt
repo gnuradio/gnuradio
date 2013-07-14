@@ -32,11 +32,7 @@ GR_PYTHON_INSTALL(
 
 GR_PYTHON_INSTALL(
     PROGRAMS
-    btl-fsd.py
-    fpll.py
-    interp.py
-    xlate.py
-    viterbi-out.py
+    atsc_rx.py
     DESTINATION ${GR_PKG_DATA_DIR}/examples/atsc
     COMPONENT "atsc_examples"
 )
