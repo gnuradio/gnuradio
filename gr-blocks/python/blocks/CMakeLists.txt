@@ -48,6 +48,7 @@ if(ENABLE_TESTING)
     list(REMOVE_ITEM py_qa_test_files
       ${CMAKE_CURRENT_SOURCE_DIR}/qa_cpp_py_binding.py
       ${CMAKE_CURRENT_SOURCE_DIR}/qa_cpp_py_binding_set.py
+      ${CMAKE_CURRENT_SOURCE_DIR}/qa_ctrlport_probes.py
       )
   endif(NOT ENABLE_GR_CTRLPORT)
   
