@@ -157,4 +157,22 @@ namespace gr {
     return new_ffg;
   }
 
+  void
+  hier_block2::set_processor_affinity(const std::vector<int> &mask)
+  {
+    d_detail->set_processor_affinity(mask);
+  }
+
+  void
+  hier_block2::unset_processor_affinity()
+  {
+    d_detail->unset_processor_affinity();
+  }
+
+  std::vector<int>
+  hier_block2::processor_affinity()
+  {
+    return d_detail->processor_affinity();
+  }
+
 } /* namespace gr */

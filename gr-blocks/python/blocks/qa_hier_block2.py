@@ -393,5 +393,38 @@ class test_hier_block2(gr_unittest.TestCase):
         self.assertEquals(dst.data(), (3.0,))
 
 
+    def test_033a_set_affinity(self):
+        expected = (1.0, 2.0, 3.0, 4.0)
+        hblock = gr.top_block("test_block")
+        src = blocks.vector_source_f(expected, False)
+        snk = blocks.vector_sink_f()
+        hblock.connect(src, snk)
+        hblock.set_processor_affinity([0,])
+        hblock.run()
+        actual = snk.data()
+        self.assertEquals(expected, actual)
+
+    def test_033b_unset_affinity(self):
+        expected = (1.0, 2.0, 3.0, 4.0)
+        hblock = gr.top_block("test_block")
+        src = blocks.vector_source_f(expected, False)
+        snk = blocks.vector_sink_f()
+        hblock.connect(src, snk)
+        hblock.set_processor_affinity([0,])
+        hblock.unset_processor_affinity()
+        hblock.run()
+        actual = snk.data()
+        self.assertEquals(expected, actual)
+
+    def test_033c_get_affinity(self):
+        expected = (1.0, 2.0, 3.0, 4.0)
+        hblock = gr.top_block("test_block")
+        src = blocks.vector_source_f(expected, False)
+        snk = blocks.vector_sink_f()
+        hblock.connect(src, snk)
+        hblock.set_processor_affinity([0,])
+        procs = hblock.processor_affinity()
+        self.assertEquals((0,), procs)
+
 if __name__ == "__main__":
     gr_unittest.run(test_hier_block2, "test_hier_block2.xml")

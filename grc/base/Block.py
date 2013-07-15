@@ -125,7 +125,16 @@ class Block(Element):
             self.get_sinks().append(sink)
         self.back_ofthe_bus(self.get_sinks())
         self.current_bus_structure = {'source':'','sink':''};
-        
+
+        if len(sources) or len(sinks):
+            self.get_params().append(self.get_parent().get_parent().Param(
+                    block=self,
+                    n=odict({'name': 'Core Affinity',
+                             'key': 'affinity',
+                             'type': 'int_vector',
+                             'hide': 'part',
+                             })
+                    ))
 
     def back_ofthe_bus(self, portlist):
         portlist.sort(key=lambda a: a.get_type() == 'bus');
@@ -374,7 +383,6 @@ class Block(Element):
         elif len(bussinks) > 0:
             self.bussify({'name':'bus','type':'bus'}, 'sink')
             self.bussify({'name':'bus','type':'bus'}, 'sink')
-		
         bussrcs = n.findall('bus_source');
         if len(bussrcs) > 0 and not self._bussify_source:
             self.bussify({'name':'bus','type':'bus'}, 'source')

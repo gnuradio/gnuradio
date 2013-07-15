@@ -210,6 +210,29 @@ namespace gr {
         throw std::invalid_argument("block already has a primitive output port by this name");
       hier_message_ports_out = pmt::list_add(hier_message_ports_out, port_id);
     }
+
+    /*!
+     * \brief Set the affinity of all blocks in hier_block2 to processor core \p n.
+     *
+     * \param mask a vector of ints of the core numbers available to this block.
+     */
+    void set_processor_affinity(const std::vector<int> &mask);
+
+    /*!
+     * \brief Remove processor affinity for all blocks in hier_block2.
+     */
+    void unset_processor_affinity();
+
+    /*!
+     * \brief Get the current processor affinity.
+     *
+     * \details This returns the processor affinity value for the first
+     * block in the hier_block2's list of blocks with the assumption
+     * that they have always only been set through the hier_block2's
+     * interface. If any block has been individually set, then this
+     * call could be misleading.
+     */
+    std::vector<int> processor_affinity();
   };
 
   inline hier_block2_sptr cast_to_hier_block2_sptr(basic_block_sptr block) {

@@ -654,4 +654,29 @@ namespace gr {
       d_owner->unlock();
   }
 
+  void
+  hier_block2_detail::set_processor_affinity(const std::vector<int> &mask)
+  {
+    basic_block_vector_t tmp = d_fg->calc_used_blocks();
+    for(basic_block_viter_t p = tmp.begin(); p != tmp.end(); p++) {
+      (*p)->set_processor_affinity(mask);
+    }
+  }
+
+  void
+  hier_block2_detail::unset_processor_affinity()
+  {
+    basic_block_vector_t tmp = d_fg->calc_used_blocks();
+    for(basic_block_viter_t p = tmp.begin(); p != tmp.end(); p++) {
+      (*p)->unset_processor_affinity();
+    }
+  }
+
+  std::vector<int>
+  hier_block2_detail::processor_affinity()
+  {
+    basic_block_vector_t tmp = d_fg->calc_used_blocks();
+    return tmp[0]->processor_affinity();
+  }
+
 } /* namespace gr */
