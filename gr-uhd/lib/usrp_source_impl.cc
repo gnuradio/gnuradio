@@ -58,7 +58,7 @@ namespace gr {
     {
       check_abi();
       return usrp_source::sptr
-        (new usrp_source_impl(device_addr, stream_args));
+        (new usrp_source_impl(device_addr, stream_args_ensure(stream_args)));
     }
 
     usrp_source_impl::usrp_source_impl(const ::uhd::device_addr_t &device_addr,
@@ -67,7 +67,7 @@ namespace gr {
                     io_signature::make(0, 0, 0),
                     args_to_io_sig(stream_args)),
       _stream_args(stream_args),
-      _nchan(std::max<size_t>(1, stream_args.channels.size())),
+      _nchan(stream_args.channels.size()),
       _stream_now(_nchan == 1),
       _tag_now(false),
       _start_time_set(false)
@@ -89,6 +89,7 @@ namespace gr {
     ::uhd::dict<std::string, std::string>
     usrp_source_impl::get_usrp_info(size_t chan)
     {
+      chan = _stream_args.channels[chan];
 #ifdef UHD_USRP_MULTI_USRP_GET_USRP_INFO_API
       return _dev->get_usrp_rx_info(chan);
 #else
@@ -111,22 +112,25 @@ namespace gr {
     void
     usrp_source_impl::set_samp_rate(double rate)
     {
-      _dev->set_rx_rate(rate);
+        BOOST_FOREACH(const size_t chan, _stream_args.channels)
+        {
+            _dev->set_rx_rate(rate, chan);
+        }
       _samp_rate = this->get_samp_rate();
       _tag_now = true;
     }
 
-    double 
+    double
     usrp_source_impl::get_samp_rate(void)
     {
-      return _dev->get_rx_rate();
+      return _dev->get_rx_rate(_stream_args.channels[0]);
     }
 
     ::uhd::meta_range_t
     usrp_source_impl::get_samp_rates(void)
     {
 #ifdef UHD_USRP_MULTI_USRP_GET_RATES_API
-      return _dev->get_rx_rates();
+      return _dev->get_rx_rates(_stream_args.channels[0]);
 #else
       throw std::runtime_error("not implemented in this version");
 #endif
@@ -136,8 +140,10 @@ namespace gr {
     usrp_source_impl::set_center_freq(const ::uhd::tune_request_t tune_request,
                                       size_t chan)
     {
+      const size_t user_chan = chan;
+      chan = _stream_args.channels[chan];
       const ::uhd::tune_result_t res = _dev->set_rx_freq(tune_request, chan);
-      _center_freq = this->get_center_freq(chan);
+      _center_freq = this->get_center_freq(user_chan);
       _tag_now = true;
       return res;
     }
@@ -145,96 +151,112 @@ namespace gr {
     double
     usrp_source_impl::get_center_freq(size_t chan)
     {
+      chan = _stream_args.channels[chan];
       return _dev->get_rx_freq(chan);
     }
 
     ::uhd::freq_range_t
     usrp_source_impl::get_freq_range(size_t chan)
     {
+      chan = _stream_args.channels[chan];
       return _dev->get_rx_freq_range(chan);
     }
 
     void
     usrp_source_impl::set_gain(double gain, size_t chan)
     {
+      chan = _stream_args.channels[chan];
       return _dev->set_rx_gain(gain, chan);
     }
 
     void
     usrp_source_impl::set_gain(double gain, const std::string &name, size_t chan)
     {
+      chan = _stream_args.channels[chan];
       return _dev->set_rx_gain(gain, name, chan);
     }
 
     double
     usrp_source_impl::get_gain(size_t chan)
     {
+      chan = _stream_args.channels[chan];
       return _dev->get_rx_gain(chan);
     }
 
     double
     usrp_source_impl::get_gain(const std::string &name, size_t chan)
     {
+      chan = _stream_args.channels[chan];
       return _dev->get_rx_gain(name, chan);
     }
 
     std::vector<std::string>
     usrp_source_impl::get_gain_names(size_t chan)
     {
+      chan = _stream_args.channels[chan];
       return _dev->get_rx_gain_names(chan);
     }
 
     ::uhd::gain_range_t
     usrp_source_impl::get_gain_range(size_t chan)
     {
+      chan = _stream_args.channels[chan];
       return _dev->get_rx_gain_range(chan);
     }
 
     ::uhd::gain_range_t
     usrp_source_impl::get_gain_range(const std::string &name, size_t chan)
     {
+      chan = _stream_args.channels[chan];
       return _dev->get_rx_gain_range(name, chan);
     }
 
     void
     usrp_source_impl::set_antenna(const std::string &ant, size_t chan)
     {
+      chan = _stream_args.channels[chan];
       return _dev->set_rx_antenna(ant, chan);
     }
 
     std::string
     usrp_source_impl::get_antenna(size_t chan)
     {
+      chan = _stream_args.channels[chan];
       return _dev->get_rx_antenna(chan);
     }
 
     std::vector<std::string>
     usrp_source_impl::get_antennas(size_t chan)
     {
+      chan = _stream_args.channels[chan];
       return _dev->get_rx_antennas(chan);
     }
 
     void
     usrp_source_impl::set_bandwidth(double bandwidth, size_t chan)
     {
+      chan = _stream_args.channels[chan];
       return _dev->set_rx_bandwidth(bandwidth, chan);
     }
 
     double
     usrp_source_impl::get_bandwidth(size_t chan)
     {
+        chan = _stream_args.channels[chan];
         return _dev->get_rx_bandwidth(chan);
     }
 
     ::uhd::freq_range_t
     usrp_source_impl::get_bandwidth_range(size_t chan)
     {
+        chan = _stream_args.channels[chan];
         return _dev->get_rx_bandwidth_range(chan);
     }
 
     void
     usrp_source_impl::set_auto_dc_offset(const bool enable, size_t chan)
     {
+      chan = _stream_args.channels[chan];
 #ifdef UHD_USRP_MULTI_USRP_FRONTEND_CAL_API
       return _dev->set_rx_dc_offset(enable, chan);
 #else
@@ -246,6 +268,7 @@ namespace gr {
     usrp_source_impl::set_dc_offset(const std::complex<double> &offset,
                                     size_t chan)
     {
+      chan = _stream_args.channels[chan];
 #ifdef UHD_USRP_MULTI_USRP_FRONTEND_CAL_API
       return _dev->set_rx_dc_offset(offset, chan);
 #else
@@ -257,6 +280,7 @@ namespace gr {
     usrp_source_impl::set_iq_balance(const std::complex<double> &correction,
                                      size_t chan)
     {
+      chan = _stream_args.channels[chan];
 #ifdef UHD_USRP_MULTI_USRP_FRONTEND_CAL_API
       return _dev->set_rx_iq_balance(correction, chan);
 #else
@@ -267,12 +291,14 @@ namespace gr {
     ::uhd::sensor_value_t
     usrp_source_impl::get_sensor(const std::string &name, size_t chan)
     {
+      chan = _stream_args.channels[chan];
       return _dev->get_rx_sensor(name, chan);
     }
 
     std::vector<std::string>
     usrp_source_impl::get_sensor_names(size_t chan)
     {
+      chan = _stream_args.channels[chan];
       return _dev->get_rx_sensor_names(chan);
     }
 
@@ -423,6 +449,7 @@ namespace gr {
     ::uhd::usrp::dboard_iface::sptr
     usrp_source_impl::get_dboard_iface(size_t chan)
     {
+      chan = _stream_args.channels[chan];
       return _dev->get_rx_dboard_iface(chan);
     }
 
@@ -455,7 +482,10 @@ namespace gr {
     void
     usrp_source_impl::issue_stream_cmd(const ::uhd::stream_cmd_t &cmd)
     {
-      _dev->issue_stream_cmd(cmd);
+        for (size_t i = 0; i < _stream_args.channels.size(); i++)
+        {
+            _dev->issue_stream_cmd(cmd, _stream_args.channels[i]);
+        }
     }
 
     bool
@@ -476,7 +506,7 @@ namespace gr {
       else {
         stream_cmd.time_spec = get_time_now() + ::uhd::time_spec_t(reasonable_delay);
       }
-      _dev->issue_stream_cmd(stream_cmd);
+      this->issue_stream_cmd(stream_cmd);
       _tag_now = true;
       return true;
     }
@@ -507,7 +537,7 @@ namespace gr {
     bool
     usrp_source_impl::stop(void)
     {
-      _dev->issue_stream_cmd(::uhd::stream_cmd_t::STREAM_MODE_STOP_CONTINUOUS);
+      this->issue_stream_cmd(::uhd::stream_cmd_t::STREAM_MODE_STOP_CONTINUOUS);
 
       this->flush();
 
@@ -551,7 +581,7 @@ namespace gr {
       cmd.stream_now = _stream_now;
       static const double reasonable_delay = 0.1; //order of magnitude over RTT
       cmd.time_spec = get_time_now() + ::uhd::time_spec_t(reasonable_delay);
-      _dev->issue_stream_cmd(cmd);
+      this->issue_stream_cmd(cmd);
 
       //receive samples until timeout
       const size_t actual_num_samps = _rx_stream->recv
