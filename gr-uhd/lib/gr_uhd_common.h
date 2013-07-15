@@ -49,4 +49,19 @@ namespace gr {
   } /* namespace uhd */
 } /* namespace gr */
 
+/*!
+ * The stream args ensure function sanitizes random user input.
+ * We may extend this to handle more things in the future,
+ * but ATM it ensures that the channels are initialized.
+ */
+static inline uhd::stream_args_t stream_args_ensure(const uhd::stream_args_t &args)
+{
+    uhd::stream_args_t sanitized = args;
+    if (sanitized.channels.empty())
+    {
+        sanitized.channels.push_back(0);
+    }
+    return sanitized;
+}
+
 #endif /* INCLUDED_GR_UHD_COMMON_H */

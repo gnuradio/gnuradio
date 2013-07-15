@@ -36,7 +36,11 @@ MAIN_TMPL = """\
 		\#if \$stream_args()
 		args=\$stream_args,
 		\#end if
+		\#if \$stream_chans()
+		channels=\$stream_chans,
+		\#else
 		channels=range(\$nchan),
+		\#end if
 	),
 )
 \#if \$clock_rate()
@@ -144,6 +148,19 @@ self.\$(id).set_bandwidth(\$bw$(n), $n)
 			<name>peak=0.003906</name>
 			<key>peak=0.003906</key>
 		</option>
+	</param>
+	<param>
+		<name>Stream channels</name>
+		<key>stream_chans</key>
+		<value>[]</value>
+		<type>int_vector</type>
+		<hide>
+			\#if \$stream_chans()
+				none
+			\#else
+				part
+			\#end if
+		</hide>
 	</param>
 	<param>
 		<name>Device Addr</name>
