@@ -368,18 +368,18 @@ class Block(Element):
             #store hash and call rewrite
             my_hash = get_hash()
             self.rewrite()
-		bussinks = n.findall('bus_sink');
-		if len(bussinks) > 0 and not self._bussify_sink:
-			self.bussify({'name':'bus','type':'bus'}, 'sink')
-		elif len(bussinks) > 0:
-			self.bussify({'name':'bus','type':'bus'}, 'sink')
-			self.bussify({'name':'bus','type':'bus'}, 'sink')
+        bussinks = n.findall('bus_sink');
+        if len(bussinks) > 0 and not self._bussify_sink:
+            self.bussify({'name':'bus','type':'bus'}, 'sink')
+        elif len(bussinks) > 0:
+            self.bussify({'name':'bus','type':'bus'}, 'sink')
+            self.bussify({'name':'bus','type':'bus'}, 'sink')
 		
-		bussrcs = n.findall('bus_source');
-		if len(bussrcs) > 0 and not self._bussify_source:
-			self.bussify({'name':'bus','type':'bus'}, 'source')
-		elif len(bussrcs) > 0:
-			self.bussify({'name':'bus','type':'bus'}, 'source')
-			self.bussify({'name':'bus','type':'bus'}, 'source')
+        bussrcs = n.findall('bus_source');
+        if len(bussrcs) > 0 and not self._bussify_source:
+            self.bussify({'name':'bus','type':'bus'}, 'source')
+        elif len(bussrcs) > 0:
+            self.bussify({'name':'bus','type':'bus'}, 'source')
+            self.bussify({'name':'bus','type':'bus'}, 'source')
 
 
