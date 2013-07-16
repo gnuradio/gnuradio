@@ -103,12 +103,24 @@ GR_SWIG_BLOCK_MAGIC2(blocks, null_source);
 %{
 #include "gnuradio/blocks/ctrlport_probe_c.h"
 #include "gnuradio/blocks/ctrlport_probe2_c.h"
+#include "gnuradio/blocks/ctrlport_probe2_f.h"
+#include "gnuradio/blocks/ctrlport_probe2_s.h"
+#include "gnuradio/blocks/ctrlport_probe2_i.h"
+#include "gnuradio/blocks/ctrlport_probe2_b.h"
 %}
 
 %include "gnuradio/blocks/ctrlport_probe_c.h"
 %include "gnuradio/blocks/ctrlport_probe2_c.h"
+%include "gnuradio/blocks/ctrlport_probe2_f.h"
+%include "gnuradio/blocks/ctrlport_probe2_s.h"
+%include "gnuradio/blocks/ctrlport_probe2_i.h"
+%include "gnuradio/blocks/ctrlport_probe2_b.h"
 
 GR_SWIG_BLOCK_MAGIC2(blocks, ctrlport_probe_c);
 GR_SWIG_BLOCK_MAGIC2(blocks, ctrlport_probe2_c);
+GR_SWIG_BLOCK_MAGIC2(blocks, ctrlport_probe2_f);
+GR_SWIG_BLOCK_MAGIC2(blocks, ctrlport_probe2_s);
+GR_SWIG_BLOCK_MAGIC2(blocks, ctrlport_probe2_i);
+GR_SWIG_BLOCK_MAGIC2(blocks, ctrlport_probe2_b);
 
 #endif /* GR_CTRLPORT */

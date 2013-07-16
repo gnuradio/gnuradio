@@ -95,6 +95,36 @@ public:
 
 // Specialized Extractor Templates
 template<typename T>
+class rpcbasic_extractor<T,char> : public virtual rpcextractor_base<T,char>
+{
+public:
+  rpcbasic_extractor(T* source, void (T::*func)(char))
+    : rpcextractor_base<T,char>(source, func)
+  {;}
+
+  void post(pmt::pmt_t which_port, pmt::pmt_t msg)
+  {
+    (rpcextractor_base<T,char>::_source->*rpcextractor_base<T,char>::_func)
+      (static_cast<char>(pmt::to_long(msg)));
+  }
+};
+
+template<typename T>
+class rpcbasic_extractor<T,short> : public virtual rpcextractor_base<T,short>
+{
+public:
+  rpcbasic_extractor(T* source, void (T::*func)(short))
+    : rpcextractor_base<T,short>(source, func)
+  {;}
+
+  void post(pmt::pmt_t which_port, pmt::pmt_t msg)
+  {
+    (rpcextractor_base<T,short>::_source->*rpcextractor_base<T,char>::_func)
+      (static_cast<short>(pmt::to_long(msg)));
+  }
+};
+
+template<typename T>
 class rpcbasic_extractor<T,double> : public virtual rpcextractor_base<T,double>
 {
 public:
@@ -238,6 +268,50 @@ public:
 };
 
 template<typename T>
+class rpcbasic_inserter<T,std::vector< signed char > >
+  : public virtual rpcinserter_base<T,std::vector< signed char > >
+{
+public:
+  rpcbasic_inserter(T* source, std::vector< signed char > (T::*func)() const)
+    : rpcinserter_base<T,std::vector< signed char > >(source, func)
+  {;}
+
+  rpcbasic_inserter(T* source, std::vector< signed char > (T::*func)())
+    : rpcinserter_base<T,std::vector< signed char > >(source, func)
+  {;}
+
+  pmt::pmt_t retrieve()
+  {
+    std::vector< signed char >
+      vec((rpcinserter_base<T,std::vector< signed char > >::
+	   _source->*rpcinserter_base<T,std::vector< signed char > >::_func)()); 
+    return pmt::init_s8vector(vec.size(), &vec[0]);
+  }
+};
+
+template<typename T>
+class rpcbasic_inserter<T,std::vector< short > >
+  : public virtual rpcinserter_base<T,std::vector< short > >
+{
+public:
+  rpcbasic_inserter(T* source, std::vector< short > (T::*func)() const)
+    : rpcinserter_base<T,std::vector< short > >(source, func)
+  {;}
+
+  rpcbasic_inserter(T* source, std::vector< short > (T::*func)())
+    : rpcinserter_base<T,std::vector< short > >(source, func)
+  {;}
+
+  pmt::pmt_t retrieve()
+  {
+    std::vector< short >
+      vec((rpcinserter_base<T,std::vector< short > >::
+	   _source->*rpcinserter_base<T,std::vector< short > >::_func)()); 
+    return pmt::init_s16vector(vec.size(), &vec[0]);
+  }
+};
+
+template<typename T>
 class rpcbasic_inserter<T,std::vector< int > >
   : public virtual rpcinserter_base<T,std::vector< int > >
 {
@@ -354,7 +428,7 @@ public:
     : rpcinserter_base<T,std::complex<double> >(source, func) 
   {;}
 
-  pmt::pmt_t retrieve() 
+  pmt::pmt_t retrieve()
   {
     std::complex<double > k((rpcinserter_base<T,std::complex<double> >::
                              _source->*rpcinserter_base<T,std::complex<double> >::_func)());

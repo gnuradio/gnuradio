@@ -24,7 +24,7 @@ from gnuradio import gr
 from gnuradio import blocks
 from gnuradio import filter
 from gnuradio.ctrlport import GNURadio
-import sys, time
+import sys, time, struct
 
 try:
     from gnuradio import qtgui
@@ -426,12 +426,17 @@ class GrDataPlotterValueTable:
         numItems = self.treeWidget.topLevelItemCount()
 
         # The input knobs variable is a dict of stats to display in the tree.
+        self.treeWidget.clear()
+        for k, v in knobs.iteritems():
+            val = v.value
+            if(type(val) == GNURadio.complex):
+                val = val.re + val.im*1j
 
-        # Update tree stat values with new values found in knobs.
-        # Track found keys and track keys in tree that are not in input knobs.
-        for i in range(0, numItems):
-            item = self.treeWidget.topLevelItem(i)
-
+            # If it's a byte stream, Python thinks it's a string.
+            # Unpack and convert to floats for plotting.
+            # Ignore the edge list knob if it's being exported
+            elif(type(val) == str and k.find('edge list') == -1):
+                val = struct.unpack(len(val)*'b', val)
             # itemKey is the text in the first column of a QTreeWidgetItem
             itemKey = str(item.text(0))
             if itemKey in knobs.keys():

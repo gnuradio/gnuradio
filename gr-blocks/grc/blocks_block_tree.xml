@@ -53,6 +53,7 @@
                 <name>Control Port</name>
                 <block>blocks_ctrlport_monitor</block>
                 <block>blocks_ctrlport_monitor_performance</block>
+                <block>blocks_ctrlport_probe2_x</block>
                 <block>blocks_ctrlport_probe2_c</block>
                 <block>blocks_ctrlport_probe_c</block>
 	</cat>

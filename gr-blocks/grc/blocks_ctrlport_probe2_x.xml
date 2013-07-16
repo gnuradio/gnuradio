@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 
 <!--
- Copyright 2012-2013 Free Software Foundation, Inc.
+ Copyright 2013 Free Software Foundation, Inc.
  
  This file is part of GNU Radio
  
@@ -23,10 +23,41 @@
 
 <block>
   <name>Ctrlport Probe</name>
-  <key>blocks_ctrlport_probe2_c</key>
+  <key>blocks_ctrlport_probe2_x</key>
   <import>from gnuradio import blocks</import>
-  <make>blocks.ctrlport_probe2_c($name, $desc, $len, $disp_mask)</make>
+  <make>blocks.ctrlport_probe2_$(type.fcn)($name, $desc, $len, $disp_mask)</make>
   <callback>set_length($len)</callback>
+
+  <param>
+    <name>Input Type</name>
+    <key>type</key>
+    <type>enum</type>
+    <option>
+      <name>Complex</name>
+      <key>complex</key>
+      <opt>fcn:c</opt>
+    </option>
+    <option>
+      <name>Float</name>
+      <key>float</key>
+      <opt>fcn:f</opt>
+    </option>
+    <option>
+      <name>Int</name>
+      <key>int</key>
+      <opt>fcn:i</opt>
+    </option>
+    <option>
+      <name>Short</name>
+      <key>short</key>
+      <opt>fcn:s</opt>
+    </option>
+    <option>
+      <name>Byte</name>
+      <key>byte</key>
+      <opt>fcn:b</opt>
+    </option>
+  </param>
 
   <param>
     <name>Name</name>
@@ -78,7 +109,7 @@
 
   <sink>
     <name>in</name>
-    <type>complex</type>
+    <type>$type</type>
   </sink>
 
   <doc>

@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2012-2013 Free Software Foundation, Inc.
+ * Copyright 2013 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -20,8 +20,8 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef INCLUDED_CTRLPORT_PROBE2_C_H
-#define INCLUDED_CTRLPORT_PROBE2_C_H
+#ifndef INCLUDED_CTRLPORT_PROBE2_B_H
+#define INCLUDED_CTRLPORT_PROBE2_B_H
 
 #include <gnuradio/blocks/api.h>
 #include <gnuradio/sync_block.h>
@@ -40,11 +40,11 @@ namespace gr {
      * the latest \p len number of complex samples so that every query
      * by a ControlPort client will get the same length vector.
      */
-    class BLOCKS_API ctrlport_probe2_c : virtual public sync_block
+    class BLOCKS_API ctrlport_probe2_b : virtual public sync_block
     {
     public:
-      // gr::blocks::ctrlport_probe2_c::sptr
-      typedef boost::shared_ptr<ctrlport_probe2_c> sptr;
+      // gr::blocks::ctrlport_probe2_b::sptr
+      typedef boost::shared_ptr<ctrlport_probe2_b> sptr;
 
       /*!
        * \brief Make a ControlPort probe block.
@@ -56,7 +56,7 @@ namespace gr {
       static sptr make(const std::string &id, const std::string &desc,
                        int len, unsigned int disp_mask);
 
-      virtual std::vector<gr_complex> get() = 0;
+      virtual std::vector<signed char> get() = 0;
 
       virtual void set_length(int len) = 0;
       virtual int length() const = 0;
@@ -65,5 +65,5 @@ namespace gr {
   } /* namespace blocks */
 } /* namespace gr */
 
-#endif /* INCLUDED_CTRLPORT_PROBE2_C_H */
+#endif /* INCLUDED_CTRLPORT_PROBE2_B_H */
 
