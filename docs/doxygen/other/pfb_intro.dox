@@ -92,4 +92,67 @@ run this example.
 
 \include gr-filter/examples/channelize.py
 
+
+\section pfb_arb_resampl The PFB Arbitrary Resampler Kernel
+
+GNU Radio has a PFB arbitrary resampler block that can be used to
+resample a signal to any arbitrary and real resampling rate. The
+resampling feature is one that could easily be useful to other blocks,
+and so we have extracted the kernel of the resampler into its own
+class that can be used as such.
+
+The PFB arbitrary resampler is defined in pfb_arb_resampler.h and has
+the following constructor:
+
+\code
+namespace gr {
+  namespace filter {
+    namespace kernel {
+
+        pfb_arb_resampler_XXX(float rate,
+                              const std::vector<float> &taps,
+                              unsigned int filter_size);
+
+    } /* namespace kernel */
+  } /* namespace filter */
+} /* namespace gr */
+\endcode
+
+Currently, only a 'ccf' and 'fff' version are defined. This kernel,
+like the block itself, takes in the resampling \p rate as a floating
+point number. The \p taps are passed as the baseband prototype filter,
+and the quantization error of the filter is determined by the \p
+filter_size parameter.
+
+The prototype taps are generated like all other PFB filter
+taps. Specifically, we construct them generally as a lowpass filter at
+the maximum rate of the filter. In the case of these resamplers, the
+maximum rate is actually the number of filters.
+
+A simple example follows. We construct a filter that will pass the
+entire passband of the original signal to be resampled. To make it
+easy, we work in normalized sample rates for this. The gain of the
+filter is set to filter_size to compensate for the upsampling, the
+sampling rate itself is also set to filter_size, which is assuming
+that the incoming signal is at a sampling rate of 1.0. We defined the
+passband to be 0.5 to pass the entire width of the original signal and
+set a transition band to 0.1. Note that this causes a bit of roll-off
+outside of the original passband and could lead to introducing some
+aliasing. More care should be taken to construct the passband and
+transition width of the filter for the given signal while keeping the
+total number of taps small. A stopband attenuation of 60 dB was used
+here, and again, this is a parameter we can adjust to alter the
+performance and size of the filter.
+
+\code
+  firdes.low_pass_2(filter_size, filter_size, 0.5, 0.1, 60)
+\endcode
+
+As is typical with the PFB filters, a filter size of 32 is generally
+an appropriate trade-off of accuracy, performance, and memory. This
+should provide an error roughly equivalent to the quanization error of
+using 16-bit fixed point representation. Generally, increasing over 32
+provides some accuracy benefits without a huge increase in
+computational demands.
+
 */

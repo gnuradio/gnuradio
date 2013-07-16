@@ -42,9 +42,12 @@ More details on GNU Radio concepts:
 \li \ref page_logger
 \li \ref page_pmt
 \li \ref page_msg_passing
+\li \ref page_stream_tags
 \li \ref page_metadata
 \li \ref volk_guide
+\li \ref page_perf_counters
 \li \ref page_pfb
+\li \ref page_affinity
 \li \ref page_tagged_stream_blocks
 \li \ref page_ofdm
 \li \ref page_packet_data

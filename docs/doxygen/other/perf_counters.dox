@@ -1,0 +1,97 @@
+/*! \page page_perf_counters Performance Counters
+
+\section Introduction
+
+Each block can have a set of Performance Counters that the schedule
+keeps track of. These counters measure and store information about
+different performance metrics of their operation. The concept is
+fairly extensible, but currently, GNU Radio defines five types of
+Performance Counters:
+
+\li noutput_items: number of items the block can produce.
+\li nproduced: the number of items the block produced.
+\li input_buffers_full: % of how full each input buffer is.
+\li output_buffers_full: % of how full each output buffer is.
+\li work_time: number of CPU ticks during the call to general_work().
+
+For each Performance Counter, we can retrieve the instantaneous,
+average, and variance from the block. Access to these counters is done
+through a simple set of functions added to every block in the
+flowgraph:
+
+\code
+  float pc_<name>[_<type>]();
+\endcode
+
+In the above, the \<name\> field is one of the five counters in the
+above list of counters. The optional \<type\> suffix is either 'avg' to
+get the average value or 'var' to get the variance. Without a suffix,
+the function returns the most recent instantaneous value.
+
+We can also reset the Performance Counters back to zero to remove any
+history of the current average and variance calculations for a
+particular block.
+
+\code
+  void reset_perf_counters();
+\endcode
+
+
+\section pc_config Compile-time and Run-time Configuration
+
+Because the Performance Counters are calculated during each call to
+work for every block, they increase the computational cost and memory
+overhead. The more blocks used, the more impact this may have. So
+while it turns out after some experimentation that the Performance
+Counters add very little overhead (less than 1% speed degradation for
+a 24-block flowgraph), we err on the side of minimizing overhead in
+the scheduler. To do so, we have added compile-time and run-time
+configuration of the use of Performance Counters.
+
+
+\subsection pc_config_compile Compile-time Config
+
+By default, GNU Radio will build without Performance Counters
+enabled. To enable Performance Counters, we pass the following flag to
+cmake:
+
+\code
+  -DENABLE_PERFORMANCE_COUNTERS=True
+\endcode
+
+Note that this affects the GNU Radio block class and the scheduler
+itself. Out-of-tree projects will inherit directly from GNU Radio
+because of the inheritance with gr::block. Turning on Performance
+Counters for GNU Radio will require a recompilation of the OOT project
+but no extra configuration.
+
+
+\subsection pc_config_runtime Run-time Config
+
+Given the Performance Counters are enabled in GNU Radio at
+compile-time, we can still control if they are used or not at
+run-time. For this, we use the GNU Radio preferences file in the
+section [PerfCounters]. This section is installed into the
+gnuradio-runtime.conf file. As usual with the preferences, this
+section or any of the individual options can be overridden in the
+user's config.conf file or using a GR_CONF_ environmental variable
+(see \ref prefs for more details).
+
+The options for the [PerfCounters] section are:
+
+\li on: Turn counters on/off at run-time.
+\li export: Allow counters to be exported over ControlPort.
+\li clock: sets the type of clock used when calculating work_time
+('thread' or 'monotonic').
+
+
+\section pc_perfmonitor Performance Monitor
+
+See \ref perfmonitor for some details of using a ControlPort-based
+monitor application, gr-perf-monitorx, for visualizing the
+counters. This application is particularly useful in learning which
+blocks are the computationally complex blocks that could use extra
+optimization or work to improve their performance. It can also be used
+to understand the current 'health' of the application.
+
+*/
