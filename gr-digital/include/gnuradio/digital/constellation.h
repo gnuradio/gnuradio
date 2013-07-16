@@ -154,7 +154,15 @@ namespace gr {
     public:
       typedef boost::shared_ptr<constellation_calcdist> sptr;
 
-      // public constructor
+      /*!
+       * Make a general constellation object that calculates the Euclidean distance for hard decisions.
+       *
+       * \param constell List of constellation points (order of list matches pre_diff_code)
+       * \param pre_diff_code List of alphabet symbols (before applying any differential 
+       *                      coding) (order of list matches constell)
+       * \param rotational_symmetry Number of rotations around unit circle that have the same representation.
+       * \param dimensionality Number of dimensions to the constellation.
+       */
       static sptr make(std::vector<gr_complex> constell,
 		       std::vector<int> pre_diff_code,
 		       unsigned int rotational_symmetry,
@@ -236,7 +244,18 @@ namespace gr {
     public:
       typedef boost::shared_ptr<constellation_rect> sptr;
 
-      // public constructor
+      /*!
+       * Make a rectangular constellation object.
+       *
+       * \param constell List of constellation points (order of list matches pre_diff_code)
+       * \param pre_diff_code List of alphabet symbols (before applying any differential 
+       *                      coding) (order of list matches constell)
+       * \param rotational_symmetry Number of rotations around unit circle that have the same representation.
+       * \param real_sectors Number of sectors the real axis is split in to.
+       * \param imag_sectors Number of sectors the imag axis is split in to.
+       * \param width_real_sectors width of each real sector to calculate decision boundaries.
+       * \param width_imag_sectors width of each imag sector to calculate decision boundaries. 
+       */
       static constellation_rect::sptr make(std::vector<gr_complex> constell,
 					   std::vector<int> pre_diff_code,
 					   unsigned int rotational_symmetry,

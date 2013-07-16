@@ -60,6 +60,11 @@ rpcpmtconverter::from_pmt(const pmt::pmt_t& knob, const Ice::Current& c)
     const int* start((const int*) pmt::s32vector_elements(knob,size));
     return new GNURadio::KnobVecI(std::vector<int>(start,start+size));
   }
+  else if (pmt::is_s16vector(knob)) {
+    size_t size(pmt::length(knob));
+    const short* start((const short*) pmt::s16vector_elements(knob,size));
+    return new GNURadio::KnobVecT(std::vector<short>(start,start+size));
+  }
   else if(pmt::is_f32vector(knob)) {
     size_t size(pmt::length(knob));
     const float* start((const float*) pmt::f32vector_elements(knob,size));
@@ -68,6 +73,11 @@ rpcpmtconverter::from_pmt(const pmt::pmt_t& knob, const Ice::Current& c)
   else if (pmt::is_u8vector(knob)) {
     size_t size(pmt::length(knob));
     const uint8_t* start((const uint8_t*) pmt::u8vector_elements(knob,size));
+    return new GNURadio::KnobVecC(std::vector<Ice::Byte>(start,start+size));
+  }
+  else if (pmt::is_s8vector(knob)) {
+    size_t size(pmt::length(knob));
+    const int8_t* start((const int8_t*) pmt::s8vector_elements(knob,size));
     return new GNURadio::KnobVecC(std::vector<Ice::Byte>(start,start+size));
   }
   else {
@@ -90,6 +100,10 @@ rpcpmtconverter::to_pmt(const GNURadio::KnobPtr& knob, const Ice::Current& c)
   }
   else if(id == "KnobI") {
     GNURadio::KnobIPtr k(GNURadio::KnobIPtr::dynamicCast(knob));
+    return pmt::mp(k->value);
+  }
+  else if(id == "KnobT") {
+    GNURadio::KnobTPtr k(GNURadio::KnobTPtr::dynamicCast(knob));
     return pmt::mp(k->value);
   }
   else if(id == "KnobS") {

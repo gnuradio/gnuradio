@@ -35,6 +35,7 @@ class Knob {};
 class KnobB extends Knob { bool   value; };
 class KnobC extends Knob { byte   value; };
 class KnobI extends Knob { int 	  value; };
+class KnobT extends Knob { short  value; };
 class KnobF extends Knob { float  value; };
 class KnobD extends Knob { double value; };
 class KnobL extends Knob { long   value; };
@@ -44,11 +45,12 @@ class KnobZ extends Knob { complex value; };
 sequence<bool>   VectorB; sequence<byte>   VectorC; 
 sequence<int>    VectorI; sequence<float>  VectorF;
 sequence<double> VectorD; sequence<string> VectorS;
-sequence<long> 	 VectorL;
+sequence<long> 	 VectorL; sequence<short>  VectorT;
 
 class KnobVecB extends Knob { VectorB value; }; 
 class KnobVecC extends Knob { VectorC value; }; 
 class KnobVecI extends Knob { VectorI value; }; 
+class KnobVecT extends Knob { VectorT value; }; 
 class KnobVecF extends Knob { VectorF value; }; 
 class KnobVecD extends Knob { VectorD value; }; 
 class KnobVecL extends Knob { VectorL value; }; 
@@ -57,7 +59,7 @@ class KnobVecS extends Knob { VectorS value; };
 enum KnobType { KNOBBOOL, 	KNOBCHAR, 	KNOBINT, 	KNOBFLOAT, 
 		KNOBDOUBLE, 	KNOBSTRING, 	KNOBLONG, 	KNOBVECBOOL, 
 		KNOBVECCHAR, 	KNOBVECINT,	KNOBVECFLOAT, 	KNOBVECDOUBLE, 
-		KNOBVECSTRING, 	KNOBVECLONG };
+		KNOBVECSTRING, 	KNOBVECLONG,    KNOBSHORT};
 
 const int DISPNULL = 0x0000;
 const int DISPTIME = 0x0001;

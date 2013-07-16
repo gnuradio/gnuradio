@@ -253,6 +253,10 @@ if(ENABLE_GR_CTRLPORT)
 list(APPEND gr_blocks_sources
   ctrlport_probe_c_impl.cc
   ctrlport_probe2_c_impl.cc
+  ctrlport_probe2_f_impl.cc
+  ctrlport_probe2_s_impl.cc
+  ctrlport_probe2_i_impl.cc
+  ctrlport_probe2_b_impl.cc
 )
 endif(ENABLE_GR_CTRLPORT)
 

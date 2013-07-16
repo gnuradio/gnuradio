@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2012-2013 Free Software Foundation, Inc.
+ * Copyright 2013 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -24,38 +24,38 @@
 #include "config.h"
 #endif
 
-#include "ctrlport_probe2_c_impl.h"
+#include "ctrlport_probe2_s_impl.h"
 #include <gnuradio/io_signature.h>
 
 namespace gr {
   namespace blocks {
 
-    ctrlport_probe2_c::sptr
-    ctrlport_probe2_c::make(const std::string &id,
+    ctrlport_probe2_s::sptr
+    ctrlport_probe2_s::make(const std::string &id,
                             const std::string &desc,
-                            int len, unsigned int disp_mask)
+                            int len, unsigned disp_mask)
     {
       return gnuradio::get_initial_sptr
-        (new ctrlport_probe2_c_impl(id, desc, len, disp_mask));
+        (new ctrlport_probe2_s_impl(id, desc, len, disp_mask));
     }
 
-    ctrlport_probe2_c_impl::ctrlport_probe2_c_impl(const std::string &id,
+    ctrlport_probe2_s_impl::ctrlport_probe2_s_impl(const std::string &id,
                                                    const std::string &desc,
-                                                   int len, unsigned int disp_mask)
-      : sync_block("probe2_c",
-                      io_signature::make(1, 1, sizeof(gr_complex)),
-                      io_signature::make(0, 0, 0)),
-          d_id(id), d_desc(desc), d_len(len), d_disp_mask(disp_mask)
+                                                   int len, unsigned disp_mask)
+    : sync_block("probe2_s",
+                 io_signature::make(1, 1, sizeof(short)),
+                 io_signature::make(0, 0, 0)),
+      d_id(id), d_desc(desc), d_len(len), d_disp_mask(disp_mask)
     {
       set_length(len);
     }
 
-    ctrlport_probe2_c_impl::~ctrlport_probe2_c_impl()
+    ctrlport_probe2_s_impl::~ctrlport_probe2_s_impl()
     {
     }
 
     void
-    ctrlport_probe2_c_impl::forecast(int noutput_items,
+    ctrlport_probe2_s_impl::forecast(int noutput_items,
                                      gr_vector_int &ninput_items_required)
     {
       // make sure all inputs have noutput_items available
@@ -67,8 +67,8 @@ namespace gr {
     //    boost::shared_mutex mutex_buffer;
     //    mutable boost::mutex mutex_notify;
     //    boost::condition_variable condition_buffer_ready;
-    std::vector<gr_complex>
-    ctrlport_probe2_c_impl::get()
+    std::vector<short>
+    ctrlport_probe2_s_impl::get()
     {
       mutex_buffer.lock();
       d_buffer.clear();
@@ -79,7 +79,7 @@ namespace gr {
       condition_buffer_ready.wait(lock);
 
       mutex_buffer.lock();
-      std::vector<gr_complex> buf_copy = d_buffer;
+      std::vector<short> buf_copy = d_buffer;
       assert(buf_copy.size() == d_len);
       mutex_buffer.unlock();
 
@@ -87,10 +87,10 @@ namespace gr {
     }
 
     void
-    ctrlport_probe2_c_impl::set_length(int len)
+    ctrlport_probe2_s_impl::set_length(int len)
     {
       if(len > 8191) {
-        std::cerr << "probe2_c: length " << len
+        std::cerr << "probe2_s: length " << len
                   << " exceeds maximum buffer size of 8191" << std::endl;
         len = 8191;
       }
@@ -100,17 +100,17 @@ namespace gr {
     }
 
     int
-    ctrlport_probe2_c_impl::length() const
+    ctrlport_probe2_s_impl::length() const
     {
       return (int)d_len;
     }
 
     int
-    ctrlport_probe2_c_impl::work(int noutput_items,
+    ctrlport_probe2_s_impl::work(int noutput_items,
                                  gr_vector_const_void_star &input_items,
                                  gr_vector_void_star &output_items)
     {
-      const gr_complex *in = (const gr_complex*)input_items[0];
+      const short *in = (const short*)input_items[0];
 
       // copy samples to get buffer if we need samples
       mutex_buffer.lock();
@@ -134,26 +134,26 @@ namespace gr {
     }
 
     void
-    ctrlport_probe2_c_impl::setup_rpc()
+    ctrlport_probe2_s_impl::setup_rpc()
     {
 #ifdef GR_CTRLPORT
       int len = static_cast<int>(d_len);
       d_rpc_vars.push_back(
-        rpcbasic_sptr(new rpcbasic_register_get<ctrlport_probe2_c, std::vector<std::complex<float> > >(
-        alias(), d_id.c_str(), &ctrlport_probe2_c::get,
-        pmt::mp(-2), pmt::mp(2), pmt::mp(0), 
-        "volts", d_desc.c_str(), RPC_PRIVLVL_MIN,
-        d_disp_mask | DISPOPTCPLX)));
+          rpcbasic_sptr(new rpcbasic_register_get<ctrlport_probe2_s, std::vector<short> >(
+          alias(), d_id.c_str(), &ctrlport_probe2_s::get,
+          pmt::mp(-32768), pmt::mp(32767), pmt::mp(0), 
+          "volts", d_desc.c_str(), RPC_PRIVLVL_MIN,
+          d_disp_mask)));
 
       d_rpc_vars.push_back(
-        rpcbasic_sptr(new rpcbasic_register_get<ctrlport_probe2_c, int>(
-          alias(), "length", &ctrlport_probe2_c::length,
+        rpcbasic_sptr(new rpcbasic_register_get<ctrlport_probe2_s, int>(
+          alias(), "length", &ctrlport_probe2_s::length,
           pmt::mp(1), pmt::mp(10*len), pmt::mp(len),
           "samples", "get vector length", RPC_PRIVLVL_MIN, DISPNULL)));
 
       d_rpc_vars.push_back(
-        rpcbasic_sptr(new rpcbasic_register_set<ctrlport_probe2_c, int>(
-          alias(), "length", &ctrlport_probe2_c::set_length,
+        rpcbasic_sptr(new rpcbasic_register_set<ctrlport_probe2_s, int>(
+          alias(), "length", &ctrlport_probe2_s::set_length,
           pmt::mp(1), pmt::mp(10*len), pmt::mp(len),
           "samples", "set vector length", RPC_PRIVLVL_MIN, DISPNULL)));
 #endif /* GR_CTRLPORT */

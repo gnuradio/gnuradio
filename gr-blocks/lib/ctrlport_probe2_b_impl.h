@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2012-2013 Free Software Foundation, Inc.
+ * Copyright 2013 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -20,17 +20,17 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef INCLUDED_CTRLPORT_PROBE2_C_IMPL_H
-#define INCLUDED_CTRLPORT_PROBE2_C_IMPL_H
+#ifndef INCLUDED_CTRLPORT_PROBE2_B_IMPL_H
+#define INCLUDED_CTRLPORT_PROBE2_B_IMPL_H
 
-#include <gnuradio/blocks/ctrlport_probe2_c.h>
+#include <gnuradio/blocks/ctrlport_probe2_b.h>
 #include <gnuradio/rpcregisterhelpers.h>
 #include <boost/thread/shared_mutex.hpp>
 
 namespace gr {
   namespace blocks {
 
-    class ctrlport_probe2_c_impl : public ctrlport_probe2_c
+    class ctrlport_probe2_b_impl : public ctrlport_probe2_b
     {
     private:
       std::string d_id;
@@ -41,18 +41,18 @@ namespace gr {
       mutable boost::mutex mutex_notify;
       boost::condition_variable condition_buffer_ready;
 
-      std::vector<gr_complex> d_buffer;
+      std::vector<signed char> d_buffer;
 
     public:
-      ctrlport_probe2_c_impl(const std::string &id, const std::string &desc,
+      ctrlport_probe2_b_impl(const std::string &id, const std::string &desc,
                              int len, unsigned int disp_mask);
-      ~ctrlport_probe2_c_impl();
+      ~ctrlport_probe2_b_impl();
 
       void setup_rpc();
 
       void forecast(int noutput_items, gr_vector_int &ninput_items_required);
 
-      std::vector<gr_complex> get();
+      std::vector<signed char> get();
 
       void set_length(int len);
       int length() const;
