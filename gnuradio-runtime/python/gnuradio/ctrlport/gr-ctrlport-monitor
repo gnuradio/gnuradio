@@ -352,10 +352,6 @@ class MAINWindow(QtGui.QMainWindow):
         self.newConAct = QtGui.QAction("&New Connection",
                 self, shortcut=QtGui.QKeySequence.New,
                 statusTip="Create a new file", triggered=self.newCon)
-        #self.newAct = QtGui.QAction(QtGui.QIcon(':/images/new.png'), "&New Plot",
-        self.newPlotAct = QtGui.QAction("&New Plot",
-                self,
-                statusTip="Create a new file", triggered=self.newPlotF)
 
         self.exitAct = QtGui.QAction("E&xit", self, shortcut="Ctrl+Q",
                 statusTip="Exit the application",
@@ -408,7 +404,6 @@ class MAINWindow(QtGui.QMainWindow):
     def createMenus(self):
         self.fileMenu = self.menuBar().addMenu("&File")
         self.fileMenu.addAction(self.newConAct)
-        self.fileMenu.addAction(self.newPlotAct)
         self.fileMenu.addAction(self.urAct)
         self.fileMenu.addSeparator()
         self.fileMenu.addAction(self.exitAct)
@@ -435,7 +430,6 @@ class MAINWindow(QtGui.QMainWindow):
     def createToolBars(self):
         self.fileToolBar = self.addToolBar("File")
         self.fileToolBar.addAction(self.newConAct)
-        self.fileToolBar.addAction(self.newPlotAct)
         self.fileToolBar.addAction(self.urAct)
 
         self.fileToolBar = self.addToolBar("Window")
