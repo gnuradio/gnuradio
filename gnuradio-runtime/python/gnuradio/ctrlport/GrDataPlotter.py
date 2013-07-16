@@ -420,32 +420,38 @@ class GrDataPlotterValueTable:
         self.treeWidget.resizeColumnToContents(0)
 
     def updateItems(self, knobs, knobprops):
-        items = [];
+        items = []
         foundKeys = []
         deleteKeys = []
         numItems = self.treeWidget.topLevelItemCount()
 
         # The input knobs variable is a dict of stats to display in the tree.
-        self.treeWidget.clear()
-        for k, v in knobs.iteritems():
-            val = v.value
-            if(type(val) == GNURadio.complex):
-                val = val.re + val.im*1j
 
-            # If it's a byte stream, Python thinks it's a string.
-            # Unpack and convert to floats for plotting.
-            # Ignore the edge list knob if it's being exported
-            elif(type(val) == str and k.find('edge list') == -1):
-                val = struct.unpack(len(val)*'b', val)
+        # Update tree stat values with new values found in knobs.
+        # Track found keys and track keys in tree that are not in input knobs.
+        for i in range(0, numItems):
+            item = self.treeWidget.topLevelItem(i)
+
             # itemKey is the text in the first column of a QTreeWidgetItem
             itemKey = str(item.text(0))
             if itemKey in knobs.keys():
 
                 # This key was found in the tree, update its values.
                 foundKeys.append(itemKey)
-                v = str(knobs[itemKey].value)
+                v = knobs[itemKey].value
                 units = str(knobprops[itemKey].units)
                 descr = str(knobprops[itemKey].description)
+
+                if(type(v) == GNURadio.complex):
+                    v = v.re + v.im*1j
+                # If it's a byte stream, Python thinks it's a string.
+                # Unpack and convert to floats for plotting.
+                # Ignore the edge list knob if it's being exported
+                elif(type(v) == str and itemKey.find('edge list') == -1):
+                    v = struct.unpack(len(v)*'b', v)
+
+                # Convert the final value to a string for displaying
+                v = str(v)
 
                 if (item.text(1) != v or
                     item.text(2) != units or
@@ -461,7 +467,16 @@ class GrDataPlotterValueTable:
         # Add items to tree that are not currently in the tree.
         for k in knobs.keys():
             if k not in foundKeys:
-                item = QtGui.QTreeWidgetItem([k, str(knobs[k].value),
+                v = knobs[k].value
+                if(type(v) == GNURadio.complex):
+                    v = v.re + v.im*1j
+                # If it's a byte stream, Python thinks it's a string.
+                # Unpack and convert to floats for plotting.
+                # Ignore the edge list knob if it's being exported
+                elif(type(v) == str and k.find('edge list') == -1):
+                    v = struct.unpack(len(v)*'b', v)
+
+                item = QtGui.QTreeWidgetItem([k, str(v),
                             knobprops[k].units, knobprops[k].description])
                 self.treeWidget.addTopLevelItem(item)
 
@@ -474,4 +489,3 @@ class GrDataPlotterValueTable:
             elif (len(qtwiList) == 1):
                 i = self.treeWidget.indexOfTopLevelItem(qtwiList[0])
                 self.treeWidget.takeTopLevelItem(i)
-
