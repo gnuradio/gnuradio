@@ -421,13 +421,52 @@ class GrDataPlotterValueTable:
 
     def updateItems(self, knobs, knobprops):
         items = [];
-        self.treeWidget.clear()
-        for k, v in knobs.iteritems():
-            val = v.value
-            if(type(val) == GNURadio.complex):
-                val = val.re + val.im*1j
+        foundKeys = []
+        deleteKeys = []
+        numItems = self.treeWidget.topLevelItemCount()
 
-            items.append(QtGui.QTreeWidgetItem([str(k), str(val),
-                                                knobprops[k].units,
-                                                knobprops[k].description]))
-        self.treeWidget.insertTopLevelItems(0, items)
+        # The input knobs variable is a dict of stats to display in the tree.
+
+        # Update tree stat values with new values found in knobs.
+        # Track found keys and track keys in tree that are not in input knobs.
+        for i in range(0, numItems):
+            item = self.treeWidget.topLevelItem(i)
+
+            # itemKey is the text in the first column of a QTreeWidgetItem
+            itemKey = str(item.text(0))
+            if itemKey in knobs.keys():
+
+                # This key was found in the tree, update its values.
+                foundKeys.append(itemKey)
+                v = str(knobs[itemKey].value)
+                units = str(knobprops[itemKey].units)
+                descr = str(knobprops[itemKey].description)
+
+                if (item.text(1) != v or
+                    item.text(2) != units or
+                    item.text(3) != descr):
+
+                    item.setText(1, v)
+                    item.setText(2, units)
+                    item.setText(3, descr)
+            else:
+                # This item is not in the knobs list...track it for removal.
+                deleteKeys.append(itemKey)
+
+        # Add items to tree that are not currently in the tree.
+        for k in knobs.keys():
+            if k not in foundKeys:
+                item = QtGui.QTreeWidgetItem([k, str(knobs[k].value),
+                            knobprops[k].units, knobprops[k].description])
+                self.treeWidget.addTopLevelItem(item)
+
+        # Remove items currently in tree that are not in the knob list.
+        for itemKey in deleteKeys:
+            qtwiList = self.treeWidget.findItems(itemKey, Qt.Qt.MatchFixedString)
+            if (len(qtwiList) > 1):
+                raise Exception('More than one item with key %s in tree' %
+                                itemKey)
+            elif (len(qtwiList) == 1):
+                i = self.treeWidget.indexOfTopLevelItem(qtwiList[0])
+                self.treeWidget.takeTopLevelItem(i)
+
