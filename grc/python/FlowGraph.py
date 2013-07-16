@@ -154,6 +154,40 @@ class FlowGraph(_FlowGraph, _GUIFlowGraph):
         monitors = filter(lambda b: _monitors_searcher.search(b.get_key()), self.get_enabled_blocks())
         return monitors
 
+
+    def get_bussink(self):
+        bussink = filter(lambda b: _bussink_searcher.search(b.get_key()), self.get_enabled_blocks())
+		
+        for i in bussink:
+            for j in i.get_params():
+                if j.get_name() == 'On/Off' and j.get_value() == 'on':
+                    return True;
+			
+        return False
+		
+		
+
+    def get_bussrc(self):
+        bussrc = filter(lambda b: _bussrc_searcher.search(b.get_key()), self.get_enabled_blocks())
+
+        for i in bussrc:
+            for j in i.get_params():
+                if j.get_name() == 'On/Off' and j.get_value() == 'on':
+                    return True;
+			
+        return False
+
+    def get_bus_structure_sink(self):
+        bussink = filter(lambda b: _bus_struct_sink_searcher.search(b.get_key()), self.get_enabled_blocks())
+			
+        return bussink
+
+    def get_bus_structure_src(self):
+        bussrc = filter(lambda b: _bus_struct_src_searcher.search(b.get_key()), self.get_enabled_blocks())
+		
+        return bussrc
+		
+
     def rewrite(self):
         """
         Flag the namespace to be renewed.
