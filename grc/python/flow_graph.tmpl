@@ -161,6 +161,9 @@ gr.io_signaturev($(len($io_sigs)), $(len($io_sigs)), [$(', '.join($size_strs))])
         $indent($blk.get_make())
     #else
         self.$blk.get_id() = $indent($blk.get_make())
+        #if $blk.get_param('affinity').get_value()
+        (self.$blk.get_id()).set_processor_affinity($blk.get_param('affinity').get_value())
+        #end if
     #end if
 #end for
 ########################################################

@@ -87,6 +87,10 @@ namespace gr {
     void message_port_register_hier_in(pmt::pmt_t port_id);
     void message_port_register_hier_out(pmt::pmt_t port_id);
 
+    void set_processor_affinity(const std::vector<int> &mask);
+    void unset_processor_affinity();
+    std::vector<int> processor_affinity();
+
     gr::hier_block2_sptr to_hier_block2(); // Needed for Python type coercion
   };
 }
