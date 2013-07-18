@@ -37,7 +37,7 @@ atsc_make_field_sync_mux()
 }
 
 atsc_field_sync_mux::atsc_field_sync_mux()
-  : gr::sync_block("atsc_field_sync_mux",
+  : gr::block("atsc_field_sync_mux",
                    gr::io_signature::make(1, 1, sizeof(atsc_data_segment)),
                    gr::io_signature::make(1, 1, sizeof(atsc_data_segment)))
 {
@@ -148,21 +148,24 @@ atsc_field_sync_mux::forecast (int noutput_items, gr_vector_int &ninput_items_re
 {
   unsigned ninputs = ninput_items_required.size();
   for (unsigned i = 0; i < ninputs; i++)
-    ninput_items_required[i] = fixed_rate_noutput_to_ninput (noutput_items);
+    ninput_items_required[i] = noutput_items;
 
 }
 
 
 int
-atsc_field_sync_mux::work (int noutput_items,
+atsc_field_sync_mux::general_work (int noutput_items,
+		       gr_vector_int &ninput_items,
 		       gr_vector_const_void_star &input_items,
 		       gr_vector_void_star &output_items)
 {
+  int in_length = ninput_items[0];
   const atsc_data_segment *in = (const atsc_data_segment *) input_items[0];
   atsc_data_segment *out = (atsc_data_segment *) output_items[0];
 
-  unsigned int index = 0;
-  for (int outdex = 0; outdex < noutput_items; outdex++){
+  int index = 0;
+  int outdex = 0;
+  for (outdex = 0; outdex < noutput_items && index < in_length; outdex++){
 
     assert (in[index].pli.regular_seg_p ());
 
@@ -197,7 +200,6 @@ atsc_field_sync_mux::work (int noutput_items,
     }
   }
 
-  d_current_index += index;
-
-  return noutput_items;
+  this->consume_each(index);
+  return outdex;
 }
