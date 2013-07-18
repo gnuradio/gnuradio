@@ -59,6 +59,7 @@
     <block>digital_psk_demod</block>
     <block>digital_qam_mod</block>
     <block>digital_qam_demod</block>
+    <block>digital_constellation_modulator</block>
     <block>digital_constellation_receiver_cb</block>
     <block>variable_constellation</block>
     <block>variable_constellation_rect</block>

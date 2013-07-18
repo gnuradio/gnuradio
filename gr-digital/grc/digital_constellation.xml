@@ -12,10 +12,10 @@
         <category>Modulators</category>
 	<import>from gnuradio import digital</import>
         <var_make>self.$(id) = $(id) = digital.constellation_calcdist($const_points, $sym_map, $rot_sym, $dims).base()
-#if str($softbits_lut).lower() == 'auto'
+#if str($soft_dec_lut).lower() == '"auto"' or str($soft_dec_lut).lower() == "'auto'"
 self.$(id).gen_soft_dec_lut($precision)
-#else if str($softbits_lut) != 'None'
-self.$(id).set_softbits($softbits_lut, $precision)
+#else if str($soft_dec_lut) != 'None'
+self.$(id).set_soft_dec_lut($soft_dec_lut, $precision)
 #end if
 </var_make>
         <make></make>
@@ -55,17 +55,17 @@ self.$(id).set_softbits($softbits_lut, $precision)
           <type>int</type>
 	</param>
         <param>
-          <name>Soft bits precision</name>
+          <name>Soft Decisions Precision</name>
           <key>precision</key>
           <value>8</value>
           <type>int</type>
           <hide>part</hide>
         </param>
         <param>
-          <name>Soft bits LUT</name>
-          <key>softbits_lut</key>
+          <name>Soft Decisions LUT</name>
+          <key>soft_dec_lut</key>
           <value>None</value>
           <type>raw</type>
-          <hide>#if str($softbits_lut) == 'None' then 'part' else 'none'#</hide>
+          <hide>#if str($soft_dec_lut) == 'None' then 'part' else 'none'#</hide>
         </param>
 </block>
