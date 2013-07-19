@@ -196,6 +196,12 @@ class Block(Element):
     def get_param_keys(self): return _get_keys(self._params)
     def get_param(self, key): return _get_elem(self._params, key)
     def get_params(self): return self._params
+    def has_param(self, key):   
+        try: 
+            _get_elem(self._params, key); 
+            return True; 
+        except: 
+            return False;
 
     ##############################################
     # Access Sinks
