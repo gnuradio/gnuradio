@@ -26,7 +26,7 @@ find_package(Qt4 4.2.0 COMPONENTS QtCore QtGui)
 
 find_package(Qwt)
 
-find_package(PythonLibs)
+find_package(PythonLibs 2)
 
 include(GrPython)
 GR_PYTHON_CHECK_MODULE("PyQt4" PyQt4 True PYQT4_FOUND)
