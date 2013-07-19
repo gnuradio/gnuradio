@@ -126,7 +126,16 @@ class Block(Element):
         self.back_ofthe_bus(self.get_sinks())
         self.current_bus_structure = {'source':'','sink':''};
 
-        if len(sources) or len(sinks):
+        # Virtual source/sink and pad source/sink blocks are
+        # indistinguishable from normal GR blocks. Make explicit
+        # checks for them here since they have no work function or
+        # buffers to manage.
+        is_not_virtual_or_pad = ((self._key != "virtual_source") \
+                                     and (self._key != "virtual_sink") \
+                                     and (self._key != "pad_source") \
+                                     and (self._key != "pad_sink"))
+
+        if (len(sources) or len(sinks)) and is_not_virtual_or_pad:
             self.get_params().append(self.get_parent().get_parent().Param(
                     block=self,
                     n=odict({'name': 'Core Affinity',
@@ -135,7 +144,7 @@ class Block(Element):
                              'hide': 'part',
                              })
                     ))
-        if len(sources):
+        if len(sources) and is_not_virtual_or_pad:
             self.get_params().append(self.get_parent().get_parent().Param(
                     block=self,
                     n=odict({'name': 'Min Output Buffer',
