@@ -303,6 +303,7 @@ namespace gr {
 
 # Python block
 Templates['block_python'] = '''\#!/usr/bin/env python
+# -*- coding: utf-8 -*-
 ${str_to_python_comment($license)}
 #
 #if $blocktype == 'noblock'
@@ -457,6 +458,7 @@ namespace gr {
 
 # Python QA code
 Templates['qa_python'] = '''\#!/usr/bin/env python
+# -*- coding: utf-8 -*-
 ${str_to_python_comment($license)}
 #
 
