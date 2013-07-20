@@ -156,6 +156,7 @@ class channel_plotter(grid_plotter_base):
 			x_index_high = int(math.ceil(x_index))
 			scale = x_index - x_index_low + self._channels[channel][TRIG_OFF_KEY]
 			y_value = (samples[x_index_high] - samples[x_index_low])*scale + samples[x_index_low]
+			if math.isnan(y_value): continue
 			label_str += '\n%s: %s'%(channel, common.eng_format(y_value, self.y_units))
 		return label_str
 
