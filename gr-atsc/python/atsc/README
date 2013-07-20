@@ -1,11 +1,11 @@
-Decoding ATSC using 19.2MSps rate over 5 processes
---------------------------------------------------
+Decoding ATSC using 6.4MSps rate
+---------------------------------
 
 1) Verify signal, adjust antenna and find best gain setting using uhd_fft.py,
 station frequency from the fcc video database, and sample rate to 6.4e6.
 
 2) Capture data - adjust gain (-g) frequency (-f) and which side
-the tvrx is on to fit your local setup:
+the daughterboard is on to fit your local setup:
 
 uhd_rx_cfile.py -s --samp-rate=6.4e6 -g 65 -f 503e6 atsc_data_6-4m_complex
 
@@ -14,21 +14,6 @@ striped sata drives. Make sure there are no or very few Ou overruns. Saving
 the raw usrp data in 'short' form halves the disk space/bus bandwidth that
 the usual complex form uses.
 
-3) Make pipes:
+3) Run atsc_rx.py:
 
-mkfifo /tmp/atsc_pipe_1
-mkfifo /tmp/atsc_pipe_2
-mkfifo /tmp/atsc_pipe_3
-mkfifo /tmp/atsc_pipe_4
-mkfifo /tmp/atsc_pipe_5
-
-4) In seperate windows run processes:
-
-./interp_short.py <input rf data at 6.4Msps>
-./xlate.py
-./fpll.py
-./btl-fsd.py
-./viterbi-out.py <output mpeg transport stream>
-
-
-
+./atsc_rx.py atsc_data_6-4m_complex outfile.ts
