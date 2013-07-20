@@ -83,16 +83,16 @@ set(GRC_BLOCKS_DIR      ${GR_PKG_DATA_DIR}/grc/blocks)
 ########################################################################
 # Find gnuradio build dependencies
 ########################################################################
-find_package(GnuradioRuntime)
 find_package(CppUnit)
 
-# To run a more advanced search for GNU Radio and it's components and
-# versions, use the following. Add any components required to the list
-# of GR_REQUIRED_COMPONENTS (in all caps) and change "version" to the
-# minimum API compatible version required.
-#
+# Add any components required to the list of GR_REQUIRED_COMPONENTS
+# (in all caps).
 # set(GR_REQUIRED_COMPONENTS RUNTIME BLOCKS FILTER ...)
+set(GR_REQUIRED_COMPONENTS RUNTIME)
+
+# Set "version" to the minimum API compatible version required.
 # find_package(Gnuradio "version")
+find_package(Gnuradio)
 
 if(NOT GNURADIO_RUNTIME_FOUND)
     message(FATAL_ERROR "GnuRadio Runtime required to compile howto")
