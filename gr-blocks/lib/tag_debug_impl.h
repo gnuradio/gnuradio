@@ -43,7 +43,10 @@ namespace gr {
       tag_debug_impl(size_t sizeof_stream_item, const std::string &name);
       ~tag_debug_impl();
 
+      void setup_rpc();
+
       std::vector<tag_t> current_tags();
+      int num_tags();
 
       void set_display(bool d);
 
