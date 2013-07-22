@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2012-2013 Free Software Foundation, Inc.
+ * Copyright 2013 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -20,35 +20,33 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef INCLUDED_GR_TAG_DEBUG_IMPL_H
-#define INCLUDED_GR_TAG_DEBUG_IMPL_H
+#ifndef INCLUDED_GR_TAGS_STROBE_IMPL_H
+#define INCLUDED_GR_TAGS_STROBE_IMPL_H
 
-#include <gnuradio/blocks/tag_debug.h>
-#include <gnuradio/thread/thread.h>
-#include <stddef.h>
+#include <gnuradio/blocks/tags_strobe.h>
 
 namespace gr {
   namespace blocks {
 
-    class tag_debug_impl : public tag_debug
+    class BLOCKS_API tags_strobe_impl : public tags_strobe
     {
     private:
-      std::string d_name;
-      std::vector<tag_t> d_tags;
-      std::vector<tag_t>::iterator d_tags_itr;
-      bool d_display;
-      gr::thread::mutex d_mutex;
+      size_t d_itemsize;
+      uint64_t d_nsamps;
+      tag_t d_tag;
+      uint64_t d_offset;
+
+      void run();
 
     public:
-      tag_debug_impl(size_t sizeof_stream_item, const std::string &name);
-      ~tag_debug_impl();
+      tags_strobe_impl(size_t sizeof_stream_item,
+                       pmt::pmt_t value, uint64_t nsamps);
+      ~tags_strobe_impl();
 
-      void setup_rpc();
-
-      std::vector<tag_t> current_tags();
-      int num_tags();
-
-      void set_display(bool d);
+      void set_value(pmt::pmt_t value);
+      pmt::pmt_t value() const { return d_tag.value; }
+      void set_nsamps(uint64_t nsamps);
+      uint64_t nsamps() const { return d_nsamps; }
 
       int work(int noutput_items,
                gr_vector_const_void_star &input_items,
@@ -58,4 +56,4 @@ namespace gr {
   } /* namespace blocks */
 } /* namespace gr */
 
-#endif /* INCLUDED_GR_TAG_DEBUG_IMPL_H */
+#endif /* INCLUDED_GR_TAGS_STROBE_IMPL_H */

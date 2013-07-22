@@ -72,6 +72,11 @@ namespace gr {
       virtual std::vector<tag_t> current_tags() = 0;
 
       /*!
+       * \brief Return the total number of tags in the tag queue.
+       */
+      virtual int num_tags() = 0;
+
+      /*!
        * \brief Set the display of tags to stdout on/off.
        */
       virtual void set_display(bool d) = 0;

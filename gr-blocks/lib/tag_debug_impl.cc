@@ -60,10 +60,17 @@ namespace gr {
       return d_tags;
     }
 
+    int
+    tag_debug_impl::num_tags()
+    {
+      std::vector<tag_t> t;
+      get_tags_in_range(t, 0, 0, nitems_read(0));
+      return static_cast<int>(t.size());
+    }
+
     void
     tag_debug_impl::set_display(bool d)
     {
-      gr::thread::scoped_lock l(d_mutex);
       d_display = d;
     }
 
@@ -112,6 +119,20 @@ namespace gr {
       }
 
       return noutput_items;
+    }
+
+    void
+    tag_debug_impl::setup_rpc()
+    {
+#ifdef GR_CTRLPORT
+      add_rpc_variable(
+        rpcbasic_sptr(new rpcbasic_register_get<tag_debug, int>(
+	  alias(), "num. tags",
+	  &tag_debug::num_tags,
+	  pmt::from_long(0), pmt::from_long(10000), pmt::from_long(0),
+	  "", "Number of Tags", RPC_PRIVLVL_MIN,
+          DISPTIME | DISPOPTSTRIP)));
+#endif /* GR_CTRLPORT */
     }
 
   } /* namespace blocks */
