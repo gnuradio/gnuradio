@@ -11,6 +11,7 @@
 	<import>import pmt</import>
 	<make>blocks.message_strobe($msg, $period)</make>
     <callback>set_msg($msg)</callback>
+    <callback>set_period($period)</callback>
 	<param>
 		<name>Message PMT</name>
 		<key>msg</key>
