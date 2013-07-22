@@ -253,6 +253,11 @@ namespace gr {
     typedef std::map<pmt::pmt_t, feval_p *, pmt::comperator> msg_handlers_feval_t;
     msg_handlers_feval_t d_msg_handlers_feval;
 
+    bool has_msg_handler(pmt::pmt_t which_port)
+    {
+      return (d_msg_handlers_feval.find(which_port) != d_msg_handlers_feval.end());
+    }
+    
     void dispatch_msg(pmt::pmt_t which_port, pmt::pmt_t msg)
     {
       // Is there a handler?
