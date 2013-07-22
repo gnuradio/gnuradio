@@ -191,6 +191,7 @@ install(FILES
     tagged_file_sink.h
     tagged_stream_mux.h
     tagged_stream_to_pdu.h
+    tags_strobe.h
     threshold_ff.h
     throttle.h
     transcendental.h
