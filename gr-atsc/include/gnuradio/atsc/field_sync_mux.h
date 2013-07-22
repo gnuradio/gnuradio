@@ -38,7 +38,7 @@ ATSC_API atsc_field_sync_mux_sptr atsc_make_field_sync_mux();
  *
  * input: atsc_data_segment; output: atsc_data_segment
  */
-class ATSC_API atsc_field_sync_mux : public gr::sync_block
+class ATSC_API atsc_field_sync_mux : public gr::block
 {
   friend ATSC_API atsc_field_sync_mux_sptr atsc_make_field_sync_mux();
 
@@ -46,17 +46,20 @@ class ATSC_API atsc_field_sync_mux : public gr::sync_block
 
 public:
   void forecast (int noutput_items, gr_vector_int &ninput_items_required);
-  int work (int noutput_items,
+  int general_work (int noutput_items,
+	    gr_vector_int &ninput_items,
 	    gr_vector_const_void_star &input_items,
 	    gr_vector_void_star &output_items);
 
 
   static const int      N_SAVED_SYMBOLS = 12;
 
-  void reset() { /* nop */ }
+  void reset()
+  {
+    d_already_output_field_sync = false;
+  }
 
 protected:
-  gr_uint64             d_current_index;
   bool                  d_already_output_field_sync;
   unsigned char         d_saved_symbols[N_SAVED_SYMBOLS];
 };
