@@ -60,7 +60,11 @@ GR_SET_GLOBAL(GNURADIO_RUNTIME_PYTHONPATH ${GNURADIO_RUNTIME_PYTHONPATH})
 # Register controlport component
 ########################################################################
 
-FIND_PACKAGE(ICE)
+FIND_PACKAGE(ICE-3.5)  # check for ICE 3.5
+if(NOT ICE_FOUND)
+  message(STATUS "ICE 3.5 not found. Looking for 3.4")
+  FIND_PACKAGE(ICE) # checks for version 3.4
+endif(NOT ICE_FOUND)
 FIND_PACKAGE(SWIG)
 
 if(SWIG_FOUND)

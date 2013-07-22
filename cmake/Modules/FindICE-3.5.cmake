@@ -1,8 +1,8 @@
 # Override the search path for ICE; useful for manually installed libs.
-#    set(ICE_MANUAL_INSTALL_PATH /opt/Ice-3.4.2/)
+#    set(ICE_MANUAL_INSTALL_PATH /opt/Ice-3.5.0/)
 
 FIND_PACKAGE(PkgConfig)
-PKG_CHECK_MODULES(PC_ICE Ice-3.4 QUIET)
+PKG_CHECK_MODULES(PC_ICE Ice-3.5 QUIET)
 
 if(NOT ICE_FOUND)
   # Maybe we don't have a .pc file for Ice. Check for Config.h. If
@@ -16,7 +16,7 @@ if(NOT ICE_FOUND)
   if(ICE_CONFIG_INCLUDE_DIR)
     file(STRINGS "${ICE_CONFIG_INCLUDE_DIR}/IceUtil/Config.h"
       ICE_STRING_VERSION REGEX "ICE_STRING_VERSION")
-    string(REGEX MATCH "3.4" ICE_FOUND ${ICE_STRING_VERSION})
+    string(REGEX MATCH "3.5" ICE_FOUND ${ICE_STRING_VERSION})
     if(ICE_FOUND)
       set(ICE_FOUND TRUE)
     endif(ICE_FOUND)
@@ -24,9 +24,8 @@ if(NOT ICE_FOUND)
 endif(NOT ICE_FOUND)
 
 if(NOT ICE_FOUND)
-  message(STATUS "  package 'Ice-3.4' not found")
+  message(STATUS "  package 'Ice-3.5' not found")
 endif(NOT ICE_FOUND)
-
 
 # Recheck if we found the right version of ICE and proceed if true.
 if(ICE_FOUND)
@@ -95,17 +94,18 @@ endif(APPLE)
 FIND_LIBRARY(
   ICE_PTHREAD NAMES pthread pthread-2.13
   PATHS HINTS ${CMAKE_INSTALL_PREFIX}/lib64/ ${CMAKE_INSTALL_PREFIX}/lib/
-  PATHS ${PC_ICE_LIBDIR} ${PC_ICE_LIBRARY_DIRS} /lib/i386-linux-gnu
-        /lib/x86_64-linux-gnu /usr/lib /lib /lib64
+  PATHS ${PC_ICE_LIBDIR} ${PC_ICE_LIBRARY_DIRS} /lib/i386-linux-gnu /lib/x86_64-linux-gnu /usr/lib /lib /lib64
   ENV LD_LIBRARY_PATH
 )
 
+set(ICE_FOUND FALSE)
+
 if(ICE_ICE OR ICE_ZEROCICE)
   if(ICE_ICEUTIL)
-
     list(APPEND ICE_LIBRARY
       ${ICE_ICE}
       ${ICE_ZEROCICE}
+      ${ICE_ICEUTIL}
       )
 
     FIND_PROGRAM(ICE_SLICE2CPP slice2cpp
@@ -114,13 +114,13 @@ if(ICE_ICE OR ICE_ZEROCICE)
       HINTS ${CMAKE_INSTALL_PREFIX}/bin ${ICE_MANUAL_INSTALL_PATH}/bin/)
 
     # Check that the ICE Python package is installed
-    GR_PYTHON_CHECK_MODULE("Ice >= 3.4" Ice "Ice.stringVersion() >= '3.4.0'" PYTHON_ICE_FOUND)
+    GR_PYTHON_CHECK_MODULE("Ice >= 3.5" Ice "Ice.stringVersion() >= '3.5.0'" PYTHON_ICE_FOUND)
     if(PYTHON_ICE_FOUND)
       set(ICE_FOUND TRUE)
     endif(PYTHON_ICE_FOUND)
 
     if(ICE_FOUND)
-      message(STATUS "Ice-3.4 found")
+      message(STATUS "Ice-3.5 found")
 
       set(ICE_LIBRARIES ${ICE_LIBRARY})
       set(ICE_INCLUDE_DIRS ${ICE_INCLUDE_DIR})
