@@ -59,27 +59,12 @@ namespace gr {
 
       switch (output_items.size ()){
       case 1:
-	if(is_unaligned()) {
-	  for (int i = 0; i < noi; i++){
-	    out0[i] = in[i].real ();
-	  }
-	}
-	else {
-	  volk_32fc_deinterleave_real_32f_a(out0, in, noi);
-	}
+        volk_32fc_deinterleave_real_32f(out0, in, noi);
 	break;
 
       case 2:
 	out1 = (float *) output_items[1];
-	if(is_unaligned()) {
-	  for (int i = 0; i < noi; i++){
-	    out0[i] = in[i].real ();
-	    out1[i] = in[i].imag ();
-	  }
-	}
-	else {
-	  volk_32fc_deinterleave_32f_x2_a(out0, out1, in, noi);
-	}
+        volk_32fc_deinterleave_32f_x2(out0, out1, in, noi);
 	break;
 
       default:
