@@ -55,12 +55,7 @@ namespace gr {
       const float *in = (const float *) input_items[0];
       int8_t *out = (int8_t *) output_items[0];
 
-      if(is_unaligned()) {
-	volk_32f_s32f_convert_8i_u(out, in, d_scale, d_vlen*noutput_items);
-      }
-      else {
-	volk_32f_s32f_convert_8i_a(out, in, d_scale, d_vlen*noutput_items);
-      }
+      volk_32f_s32f_convert_8i(out, in, d_scale, d_vlen*noutput_items);
       
       return noutput_items;
     }

@@ -56,14 +56,7 @@ namespace gr {
       float *out = (float *) output_items[0];
       int noi = noutput_items * d_vlen;
 
-      if(is_unaligned()) {
-	for (int i = 0; i < noi; i++){
-	  out[i] = in[i].real ();
-	}
-      }
-      else {
-	volk_32fc_deinterleave_real_32f_a(out, in, noi);
-      }
+      volk_32fc_deinterleave_real_32f(out, in, noi);
       
       return noutput_items;
     }

@@ -55,12 +55,7 @@ namespace gr {
       const int32_t *in = (const int32_t *) input_items[0];
       float *out = (float *) output_items[0];
 
-      if(is_unaligned()) {
-	volk_32i_s32f_convert_32f_u(out, in, d_scale, d_vlen*noutput_items);
-      }
-      else {
-	volk_32i_s32f_convert_32f_a(out, in, d_scale, d_vlen*noutput_items);
-      }
+      volk_32i_s32f_convert_32f(out, in, d_scale, d_vlen*noutput_items);
       
       return noutput_items;
     }
