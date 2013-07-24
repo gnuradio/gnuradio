@@ -56,12 +56,7 @@ namespace gr {
       float *out = (float *) output_items[0];
       int noi = noutput_items * d_vlen;
 
-      if(is_unaligned()) {
-	volk_32fc_magnitude_squared_32f_u(out, in, noi);
-      }
-      else {
-	volk_32fc_magnitude_squared_32f_a(out, in, noi);
-      }
+      volk_32fc_magnitude_squared_32f(out, in, noi);
       
       return noutput_items;
     }
