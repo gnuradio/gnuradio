@@ -21,7 +21,6 @@
 #
 
 from gnuradio import gr
-from gnuradio import blocks
 from gnuradio.eng_option import eng_option
 from optparse import OptionParser
 import sys
