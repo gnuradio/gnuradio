@@ -19,8 +19,8 @@
 # 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 #
 
-from gnuradio import gr, gru, eng_notation, blks2
-from gnuradio import blocks
+from gnuradio import gr, eng_notation
+from gnuradio import blocks, filter
 from gnuradio.eng_option import eng_option
 from optparse import OptionParser
 import os
