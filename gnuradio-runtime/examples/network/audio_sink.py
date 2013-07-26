@@ -21,7 +21,7 @@
 #
 
 from gnuradio import gr
-from gnuradio import blocks
+from gnuradio import blocks, audio
 from gnuradio.eng_option import eng_option
 from optparse import OptionParser
 import sys
@@ -33,7 +33,7 @@ except ImportError:
     sys.exit(1)
 
 class audio_sink(gr.top_block):
-    def __init__(self, host, port, pkt_size, sample_rate, eof, wait):
+    def __init__(self, host, port, pkt_size, sample_rate, eof):
         gr.top_block.__init__(self, "audio_sink")
         src = blocks.udp_source(gr.sizeof_float, host, port, pkt_size, eof=eof)
         dst = audio.sink(sample_rate)
