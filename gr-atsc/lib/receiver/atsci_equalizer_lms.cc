@@ -47,7 +47,7 @@ atsci_equalizer_lms::atsci_equalizer_lms () : d_taps (NTAPS)
   for (int i = 0; i < NTAPS; i++) {
     d_taps[i] = 0.0;
   }
-  trainingfile=fopen("taps.txt","w");
+//  trainingfile=fopen("taps.txt","w");
 }
 
 atsci_equalizer_lms::~atsci_equalizer_lms ()
@@ -157,12 +157,12 @@ atsci_equalizer_lms::filter_field_sync (const float *input_samples,
   if (nsamples > n)
     filterN (&input_samples[n], &output_samples[n], nsamples - n);
 
-  if (offset == 0 && nsamples > 0){
+  /* if (offset == 0 && nsamples > 0){
     for (int i = 0; i < NTAPS; i++)
       fprintf(trainingfile,"%f ",d_taps[i]);
 
     fprintf (trainingfile,"\n");
-  }
+  } */
 
 }
 

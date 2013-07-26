@@ -28,7 +28,6 @@
 #include <gnuradio/io_signature.h>
 #include <gnuradio/atsc/consts.h>
 #include <algorithm>
-#include "fpll_btloop_coupling.h"
 #include <gnuradio/math.h>
 
 atsc_fpll_sptr
@@ -37,6 +36,18 @@ atsc_make_fpll()
   return gnuradio::get_initial_sptr(new atsc_fpll());
 }
 
+/*!
+ * Magic coupling constant between GrAtscFPLL and GrAtscBitTimingLoop.
+ * Trust me, you don't want to mess with this.
+ *
+ * The agc block buried in the FPLL indirectly sets the level of the input
+ * to the bit timing loop.  The bit timing loop's convergence properties
+ * depend on the the mean amplitude of it's input.  This constant ties
+ * them together such that you can tweak the input level of the bit timing loop
+ * (somewhat) without screwing everything.
+ */
+
+static const float FPLL_BTLOOP_COUPLING_CONST = 3.125;
 
 /*
  * I strongly suggest that you not mess with these...
@@ -77,7 +88,6 @@ atsc_fpll::initialize ()
   nco.set_freq (initial_freq / Fs * 2 * M_PI);
   nco.set_phase (initial_phase);
 }
-
 
 int
 atsc_fpll::work (int noutput_items,

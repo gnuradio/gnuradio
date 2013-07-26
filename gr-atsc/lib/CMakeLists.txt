@@ -58,45 +58,44 @@ add_custom_command(
 ########################################################################
 list(APPEND gr_atsc_sources
     ${atsci_viterbi_mux_cc}
-    atsc_derandomizer.cc
-    atsc_randomizer.cc
-    atsc_rs_decoder.cc
-    atsc_rs_encoder.cc
-    atsc_interleaver.cc
-    atsc_deinterleaver.cc
-    atsc_trellis_encoder.cc
-    atsc_viterbi_decoder.cc
-    atsc_ds_to_softds.cc
-    atsc_field_sync_mux.cc
-    atsc_field_sync_demux.cc
-    atsc_equalizer.cc
-    atsc_fs_checker.cc
-    atsc_bit_timing_loop.cc
-    atsc_fpll.cc
-    atsc_depad.cc
-    atsc_pad.cc
-    atsci_basic_trellis_encoder.cc
-    atsci_data_interleaver.cc
-    atsci_equalizer.cc
-    atsci_equalizer_lms.cc
-    atsci_equalizer_lms2.cc
-    atsci_equalizer_nop.cc
-    atsci_fake_single_viterbi.cc
-    atsci_fs_checker.cc
-    atsci_fs_checker_naive.cc
-    atsci_fs_correlator.cc
-    atsci_fs_correlator_naive.cc
-    atsci_single_viterbi.cc
-    atsci_sssr.cc
+    receiver/atsc_derandomizer.cc
+    receiver/atsc_rs_decoder.cc
+    receiver/atsc_deinterleaver.cc
+    receiver/atsc_viterbi_decoder.cc
+    receiver/atsc_field_sync_demux.cc
+    receiver/atsc_equalizer.cc
+    receiver/atsc_fs_checker.cc
+    receiver/atsc_bit_timing_loop.cc
+    receiver/atsc_fpll.cc
+    receiver/atsc_depad.cc
+    receiver/atsci_equalizer.cc
+    receiver/atsci_equalizer_lms.cc
+    receiver/atsci_equalizer_lms2.cc
+    receiver/atsci_equalizer_nop.cc
+    receiver/atsci_fake_single_viterbi.cc
+    receiver/atsci_fs_checker.cc
+    receiver/atsci_fs_checker_naive.cc
+    receiver/atsci_fs_correlator.cc
+    receiver/atsci_fs_correlator_naive.cc
+    receiver/atsci_single_viterbi.cc
+    receiver/atsci_viterbi_decoder.cc
+    receiver/create_atsci_equalizer.cc
+    receiver/create_atsci_fs_checker.cc
+    receiver/create_atsci_fs_correlator.cc
+    transmitter/atsc_randomizer.cc
+    transmitter/atsc_rs_encoder.cc
+    transmitter/atsc_interleaver.cc
+    transmitter/atsc_trellis_encoder.cc
+    transmitter/atsc_pad.cc
+    transmitter/atsci_basic_trellis_encoder.cc
+    transmitter/atsci_data_interleaver.cc
+    transmitter/atsc_field_sync_mux.cc
+    transmitter/atsc_ds_to_softds.cc
+    transmitter/atsci_randomizer.cc
+    transmitter/atsci_sliding_correlator.cc
+    transmitter/atsci_trellis_encoder.cc  
     atsci_pnXXX.cc
-    atsci_randomizer.cc
     atsci_reed_solomon.cc
-    atsci_sliding_correlator.cc
-    atsci_trellis_encoder.cc
-    atsci_viterbi_decoder.cc
-    create_atsci_equalizer.cc
-    create_atsci_fs_checker.cc
-    create_atsci_fs_correlator.cc
     plinfo.cc
 )
 
@@ -136,25 +135,25 @@ include_directories(${CPPUNIT_INCLUDE_DIRS})
 link_directories(${CPPUNIT_LIBRARY_DIRS})
 
 list(APPEND test_atsci_sources
-    qa_atsci_basic_trellis_encoder.cc
-    qa_atsci_data_interleaver.cc
-    qa_atsci_equalizer_nop.cc
-    qa_atsci_fake_single_viterbi.cc
-    qa_atsci_fs_correlator.cc
-    qa_atsci_single_viterbi.cc
-    qa_atsci_randomizer.cc
-    qa_atsci_reed_solomon.cc
-    qa_atsci_sliding_correlator.cc
-    qa_atsci_trellis_encoder.cc
-    qa_atsci_viterbi_decoder.cc
-    qa_convolutional_interleaver.cc
-    qa_atsci.cc
-    qa_interleaver_fifo.cc
+    qa/qa_atsci_basic_trellis_encoder.cc
+    qa/qa_atsci_data_interleaver.cc
+    qa/qa_atsci_equalizer_nop.cc
+    qa/qa_atsci_fake_single_viterbi.cc
+    qa/qa_atsci_fs_correlator.cc
+    qa/qa_atsci_single_viterbi.cc
+    qa/qa_atsci_randomizer.cc
+    qa/qa_atsci_reed_solomon.cc
+    qa/qa_atsci_sliding_correlator.cc
+    qa/qa_atsci_trellis_encoder.cc
+    qa/qa_atsci_viterbi_decoder.cc
+    qa/qa_convolutional_interleaver.cc
+    qa/qa_atsci.cc
+    qa/qa_interleaver_fifo.cc
 )
 
 include(GrTest)
 list(APPEND GR_TEST_TARGET_DEPS gnuradio-atsc gnuradio-fec gnuradio-filter gnuradio-analog gnuradio-fft)
-add_executable(test_atsci ${test_atsci_sources} test_atsci.cc)
+add_executable(test_atsci ${test_atsci_sources} qa/test_atsci.cc)
 target_link_libraries(test_atsci gnuradio-atsc gnuradio-runtime ${CPPUNIT_LIBRARIES})
 GR_ADD_TEST(atsci-test test_atsci)
 

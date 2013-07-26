@@ -26,6 +26,7 @@
 #include <gnuradio/atsc/api.h>
 #include <cstdio>
 #include <gnuradio/block.h>
+#include <gnuradio/filter/mmse_fir_interpolator_ff.h>
 #include <gnuradio/atsc/diag_output_impl.h>
 #include <gnuradio/atsc/sssr_impl.h>
 #include <gnuradio/atsc/syminfo_impl.h>
@@ -44,42 +45,81 @@ ATSC_API atsc_bit_timing_loop_sptr atsc_make_bit_timing_loop();
  */
 class ATSC_API atsc_bit_timing_loop : public gr::block
 {
-  friend ATSC_API atsc_bit_timing_loop_sptr atsc_make_bit_timing_loop();
+	friend ATSC_API atsc_bit_timing_loop_sptr atsc_make_bit_timing_loop();
 
-  atsc_bit_timing_loop();
+	atsc_bit_timing_loop();
 
 public:
-  int work (int noutput_items,
-	    gr_vector_const_void_star &input_items,
-	    gr_vector_void_star &output_items);
+	int work (int noutput_items,
+		gr_vector_const_void_star &input_items,
+		gr_vector_void_star &output_items);
 
-  void reset() { /* nop */ }
+	void reset();
 
-  ~atsc_bit_timing_loop () { };
+	~atsc_bit_timing_loop () { };
 
-  void forecast (int noutput_items, gr_vector_int &ninput_items_required);
+	void forecast (int noutput_items, gr_vector_int &ninput_items_required);
 
-  int  general_work (int noutput_items,
-                     gr_vector_int &ninput_items,
-                     gr_vector_const_void_star &input_items,
-                     gr_vector_void_star &output_items);
-
-
-  // debug (NOPs)
-  void set_mu (double a_mu) {  }
-  void set_no_update (bool a_no_update) {  }
-  void set_loop_filter_tap (double tap)  { }
-  void set_timing_rate (double rate)     { }
+	  int  general_work (int noutput_items,
+				gr_vector_int &ninput_items,
+				gr_vector_const_void_star &input_items,
+				gr_vector_void_star &output_items);
 
 
- protected:
+	// debug (NOPs)
+	void set_mu (double a_mu) {  }
+	void set_no_update (bool a_no_update) {  }
+	void set_loop_filter_tap (double tap)  { }
+	void set_timing_rate (double rate)     { }
 
-  atsci_sssr                    d_sssr;
-  atsci_interpolator            d_interp;
-  unsigned long long            d_next_input;
-  double                        d_rx_clock_to_symbol_freq;
-  int				d_si;
 
+protected:
+
+	static const double	LOOP_FILTER_TAP = 0.00025;	// 0.0005 works
+	static const double	ADJUSTMENT_GAIN = 1.0e-5 / (10 * ATSC_DATA_SEGMENT_LENGTH);
+	static const int	SYMBOL_INDEX_OFFSET = 3;
+	static const int	MIN_SEG_LOCK_CORRELATION_VALUE = 5;
+	static const int	SSI_MIN = -16;
+	static const int	SSI_MAX =  15;
+
+	gr::filter::single_pole_iir<float,float,float> d_loop; // ``VCO'' loop filter
+	gr::filter::mmse_fir_interpolator_ff    d_interp;
+	unsigned long long                      d_next_input;
+	double                  d_rx_clock_to_symbol_freq;
+	int                     d_si;
+	double                  d_w;	// ratio of PERIOD of Tx to Rx clocks
+	double                  d_mu;	// fractional delay [0,1]
+	int                     d_incr;
+
+	double                  d_quad_output[ATSC_DATA_SEGMENT_LENGTH];
+	double                  d_timing_adjust;
+	int                     d_counter;	// free running mod 832 counter
+	int                     d_symbol_index;
+	bool                    d_seg_locked;
+
+	float                   d_delay[4];
+
+	int                     d_sr;	// 4 bit shift register
+
+	signed char             d_integrator[ATSC_DATA_SEGMENT_LENGTH];
+
+	bool incr_counter ()
+	{
+		d_counter++;
+		if (d_counter >= ATSC_DATA_SEGMENT_LENGTH)
+		{
+			d_counter = 0;
+			return true;
+		}
+		return false;
+	}
+
+	void incr_symbol_index ()
+	{
+		d_symbol_index++;
+		if (d_symbol_index >= ATSC_DATA_SEGMENT_LENGTH)
+			d_symbol_index = 0;
+	}
 
 };
 

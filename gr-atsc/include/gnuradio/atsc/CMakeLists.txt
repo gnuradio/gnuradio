@@ -51,29 +51,6 @@ install(FILES
     fs_checker_naive_impl.h
     fs_correlator_impl.h
     fs_correlator_naive_impl.h
-    GrAtscBitTimingLoop2.h
-    GrAtscBitTimingLoop3.h
-    GrAtscBitTimingLoop.h
-    GrAtscConvert2xTo20.h
-    GrAtscDataSegToSoftDataSeg.h
-    GrAtscDeinterleaver.h
-    GrAtscDerandomizer.h
-    GrAtscEqualizer.h
-    GrAtscFieldSyncChecker.h
-    GrAtscFieldSyncCorrelator.h
-    GrAtscFieldSyncDemux.h
-    GrAtscFieldSyncMux.h
-    GrAtscFPLL.h
-    GrAtscInterleaver.h
-    GrAtscRandomizer.h
-    GrAtscRSDecoder.h
-    GrAtscRSEncoder.h
-    GrAtscSegSymSync.h
-    GrAtscSegSymSyncImpl_export.h
-    GrAtscSegSymSyncImpl.h
-    GrAtscSymbolMapper.h
-    GrAtscTrellisEncoder.h
-    GrAtscViterbiDecoder.h
     interleaver_fifo.h
     interleaver.h
     pad.h
@@ -81,14 +58,11 @@ install(FILES
     randomizer.h
     randomizer_impl.h
     reed_solomon_impl.h
-    root_raised_cosine_bandpass_impl.h
-    root_raised_cosine_impl.h
     rs_decoder.h
     rs_encoder.h
     single_viterbi_impl.h
     slicer_agc_impl.h
     sliding_correlator_impl.h
-    sssr_impl.h
     syminfo_impl.h
     sync_tag_impl.h
     trellis_encoder.h
