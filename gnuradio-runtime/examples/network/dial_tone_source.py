@@ -21,7 +21,6 @@
 #
 
 from gnuradio import gr
-from gnuradio import blocks
 from gnuradio.eng_option import eng_option
 from optparse import OptionParser
 import sys
@@ -35,6 +34,10 @@ try:
     from gnuradio import blocks
 except ImportError:
     sys.stderr.write("This example requires gr-blocks.\n")
+try:
+    from gnuradio import audio
+except ImportError:
+    sys.stderr.write("This example requires gr-audio.\n")
 
 class dial_tone_source(gr.top_block):
     def __init__(self, host, port, pkt_size, sample_rate, eof):

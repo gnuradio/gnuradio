@@ -42,6 +42,18 @@ def short_to_char(N):
 
 ######################################################################
 
+def char_to_short(N):
+    op = blocks.char_to_short()
+    tb = helper(N, op, gr.sizeof_char, gr.sizeof_short, 1, 1)
+
+######################################################################
+
+def char_to_float(N):
+    op = blocks.char_to_float()
+    tb = helper(N, op, gr.sizeof_char, gr.sizeof_float, 1, 1)
+
+#####################################################################
+
 def int_to_float(N):
     op = blocks.int_to_float()
     tb = helper(N, op, gr.sizeof_int, gr.sizeof_float, 1, 1)

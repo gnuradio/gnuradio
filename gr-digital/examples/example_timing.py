@@ -60,7 +60,7 @@ class example_timing(gr.top_block):
         self.src = blocks.vector_source_c(data.tolist(), False)
         self.rrc = filter.interp_fir_filter_ccf(sps, rrc_taps)
         self.chn = channels.channel_model(noise, foffset, toffset)
-        self.off = filter.fractional_interpolator_cc(0.20, 1.0)
+        self.off = filter.fractional_resampler_cc(0.20, 1.0)
 
         if mode == 0:
             self.clk = digital.pfb_clock_sync_ccf(sps, gain, rrc_taps_rx,
