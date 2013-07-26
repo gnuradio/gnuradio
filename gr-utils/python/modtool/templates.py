@@ -228,8 +228,16 @@ namespace gr {
 			  gr_vector_const_void_star &input_items,
 			  gr_vector_void_star &output_items)
     {
+#if $blocktype == 'source'
+#silent pass
+#else
         const <+ITYPE+> *in = (const <+ITYPE+> *) input_items[0];
+#end if
+#if $blocktype == 'sink'
+#silent pass
+#else
         <+OTYPE+> *out = (<+OTYPE+> *) output_items[0];
+#end if
 
         // Do <+signal processing+>
 
