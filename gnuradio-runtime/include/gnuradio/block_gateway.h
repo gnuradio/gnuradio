@@ -41,6 +41,12 @@ namespace gr {
     GR_BLOCK_GW_WORK_INTERP,
   };
 
+  enum tag_propagation_policy_t {
+    TPP_DONT = 0,
+    TPP_ALL_TO_ALL = 1,
+    TPP_ONE_TO_ONE = 2
+  };
+
   /*!
    * Shared message structure between python and gateway.
    * Each action type represents a scheduler-called function.
