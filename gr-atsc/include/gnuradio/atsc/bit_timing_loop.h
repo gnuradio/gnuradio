@@ -27,8 +27,8 @@
 #include <cstdio>
 #include <gnuradio/block.h>
 #include <gnuradio/filter/mmse_fir_interpolator_ff.h>
-#include <gnuradio/atsc/diag_output_impl.h>
-#include <gnuradio/atsc/sssr_impl.h>
+#include <gnuradio/filter/single_pole_iir.h>
+#include <gnuradio/atsc/consts.h>
 #include <gnuradio/atsc/syminfo_impl.h>
 
 class atsc_bit_timing_loop;
@@ -43,6 +43,9 @@ ATSC_API atsc_bit_timing_loop_sptr atsc_make_bit_timing_loop();
  * This class accepts a single real input and produces two outputs,
  *  the raw symbol (float) and the tag (atsc_syminfo)
  */
+
+#define AGC_RATE 40
+
 class ATSC_API atsc_bit_timing_loop : public gr::block
 {
 	friend ATSC_API atsc_bit_timing_loop_sptr atsc_make_bit_timing_loop();
@@ -65,17 +68,16 @@ public:
 				gr_vector_const_void_star &input_items,
 				gr_vector_void_star &output_items);
 
-
 	// debug (NOPs)
 	void set_mu (double a_mu) {  }
 	void set_no_update (bool a_no_update) {  }
-	void set_loop_filter_tap (double tap)  { }
-	void set_timing_rate (double rate)     { }
+	void set_loop_filter_tap (double tap) { }
+	void set_timing_rate (double rate) { }
 
 
 protected:
 
-	static const double	LOOP_FILTER_TAP = 0.00025;	// 0.0005 works
+	static const double	LOOP_FILTER_TAP = 0.0005;	// 0.0005 works
 	static const double	ADJUSTMENT_GAIN = 1.0e-5 / (10 * ATSC_DATA_SEGMENT_LENGTH);
 	static const int	SYMBOL_INDEX_OFFSET = 3;
 	static const int	MIN_SEG_LOCK_CORRELATION_VALUE = 5;
@@ -91,13 +93,12 @@ protected:
 	double                  d_mu;	// fractional delay [0,1]
 	int                     d_incr;
 
-	double                  d_quad_output[ATSC_DATA_SEGMENT_LENGTH];
+	float			sample_mem[ATSC_DATA_SEGMENT_LENGTH];
+
 	double                  d_timing_adjust;
 	int                     d_counter;	// free running mod 832 counter
 	int                     d_symbol_index;
 	bool                    d_seg_locked;
-
-	float                   d_delay[4];
 
 	int                     d_sr;	// 4 bit shift register
 

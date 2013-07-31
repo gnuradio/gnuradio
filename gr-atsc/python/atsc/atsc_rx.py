@@ -56,16 +56,16 @@ def graph (args):
 		infile = args[0]
         	outfile = args[1]
     	else:
-        	raise ValueError('usage: interp.py input_file output_file.ts\n')
+        	raise ValueError('usage: atsc_rx.py input_file output_file.ts\n')
 
 	input_rate = 19.2e6
 	IF_freq = 5.75e6
 
 	tb = gr.top_block()
 
-	#pll_bandwidth = 2e3
-        #atsc_carrier = -3e6 + 0.309e6
-	#pll = analog.pll_carriertracking_cc(math.pi/4000, (atsc_carrier + pll_bandwidth)/input_rate * 2 * math.pi, (atsc_carrier - pll_bandwidth)/input_rate * 2 * math.pi)
+	pll_bandwidth = 2e3
+        atsc_carrier = -3e6 + 0.309e6
+	pll = analog.pll_carriertracking_cc(math.pi/4000, (atsc_carrier + pll_bandwidth)/input_rate * 2 * math.pi, (atsc_carrier - pll_bandwidth)/input_rate * 2 * math.pi)
 
 	# Read from input file
 	srcf = blocks.file_source(gr.sizeof_short, infile)
@@ -90,7 +90,7 @@ def graph (args):
 	# fpll input is float
 	c2f = blocks.complex_to_float()
 
-	#c2r = blocks.complex_to_real()
+	c2r = blocks.complex_to_real()
 
 	# Phase locked loop
 	fpll = atsc.fpll()
@@ -120,7 +120,7 @@ def graph (args):
         derand = atsc.derandomizer()
 	depad = atsc.depad()
 
-	#agc = analog.agc_ff(0.25e-6, 3.98)
+	agc = analog.agc_cc(0.25e-6, 4)
 
 	# Write to output file
 	outf = blocks.file_sink(gr.sizeof_char,outfile)
@@ -128,9 +128,7 @@ def graph (args):
 
 	# Connect it all together
 	tb.connect( srcf, is2c, rrc, ilp, duc, c2f, fpll, lp_filter )
-	#tb.connect ( srcf, is2c, rrc, ilp, pll, c2r, agc )
-	#tb.connect ( srcf, is2c, ilp, fpll, outf)
-	#tb.connect( srcf, is2c, rrc, ilp, duc, c2f, fpll, outf )
+	#tb.connect ( srcf, is2c, rrc, ilp, agc, pll, c2r )
 	tb.connect( lp_filter, iir )
 	tb.connect( lp_filter, (remove_dc, 0) )
 	tb.connect( iir, (remove_dc, 1) )
@@ -139,29 +137,25 @@ def graph (args):
 	tb.connect( (btl, 1), (fsc, 1), (eq, 1), (fsd,1) )
 	tb.connect( fsd, viterbi, deinter, rs_dec, derand, depad, outf )
 
-	#tb.start()
-	#raw_input("Press Enter to continue...")
-	#tb.stop()
-
 	tb.run()
 
-	#print 'srcf:      ' + repr(srcf.pc_work_time()).rjust(15)
-	#print 'is2c:      ' + repr(is2c.pc_work_time()).rjust(15)
-	#print 'rrc:       ' + repr(rrc.pc_work_time()).rjust(15)
-	#print 'ilp:       ' + repr(ilp.pc_work_time()).rjust(15)
-	#print 'duc:       ' + repr(duc.pc_work_time()).rjust(15)
-	#print 'c2f:       ' + repr(c2f.pc_work_time()).rjust(15)
-	#print 'fpll:      ' + repr(fpll.pc_work_time()).rjust(15)
-	#print 'lp_filter: ' + repr(lp_filter.pc_work_time()).rjust(15)
-	#print 'btl:       ' + repr(btl.pc_work_time()).rjust(15)
-	#print 'fsc:       ' + repr(fsc.pc_work_time()).rjust(15)
-	#print 'eq:        ' + repr(eq.pc_work_time()).rjust(15)
-	#print 'fsd:       ' + repr(fsd.pc_work_time()).rjust(15)
-	#print 'viterbi:   ' + repr(viterbi.pc_work_time()).rjust(15)
-	#print 'deinter:   ' + repr(deinter.pc_work_time()).rjust(15)
-	#print 'rs_dec:    ' + repr(rs_dec.pc_work_time()).rjust(15)
-	#print 'derand:    ' + repr(derand.pc_work_time()).rjust(15)
-	#print 'depad:     ' + repr(depad.pc_work_time()).rjust(15)
+	print 'srcf:      ' + repr(srcf.pc_work_time()).rjust(15)
+	print 'is2c:      ' + repr(is2c.pc_work_time()).rjust(15)
+	print 'rrc:       ' + repr(rrc.pc_work_time()).rjust(15)
+	print 'ilp:       ' + repr(ilp.pc_work_time()).rjust(15)
+	print 'duc:       ' + repr(duc.pc_work_time()).rjust(15)
+	print 'c2f:       ' + repr(c2f.pc_work_time()).rjust(15)
+	print 'fpll:      ' + repr(fpll.pc_work_time()).rjust(15)
+	print 'lp_filter: ' + repr(lp_filter.pc_work_time()).rjust(15)
+	print 'btl:       ' + repr(btl.pc_work_time()).rjust(15)
+	print 'fsc:       ' + repr(fsc.pc_work_time()).rjust(15)
+	print 'eq:        ' + repr(eq.pc_work_time()).rjust(15)
+	print 'fsd:       ' + repr(fsd.pc_work_time()).rjust(15)
+	print 'viterbi:   ' + repr(viterbi.pc_work_time()).rjust(15)
+	print 'deinter:   ' + repr(deinter.pc_work_time()).rjust(15)
+	print 'rs_dec:    ' + repr(rs_dec.pc_work_time()).rjust(15)
+	print 'derand:    ' + repr(derand.pc_work_time()).rjust(15)
+	print 'depad:     ' + repr(depad.pc_work_time()).rjust(15)
 
 
 if __name__ == '__main__':

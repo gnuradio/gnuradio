@@ -29,6 +29,7 @@
 #include <gnuradio/atsc/consts.h>
 #include <string.h>
 #include <boost/math/special_functions/sign.hpp>
+#include <iomanip>
 
 // Input rate changed from 20MHz to 19.2 to support usrp at 3 * 6.4MHz
 float input_rate = 19.2e6;
@@ -58,14 +59,12 @@ atsc_bit_timing_loop::reset()
 	d_mu = 0.5;
 
 	for (int i = 0; i < ATSC_DATA_SEGMENT_LENGTH; i++)
-		d_quad_output[i] = 0;
+		sample_mem[i] = 0;
 
 	d_timing_adjust = 0;
 	d_counter = 0;
 	d_symbol_index = 0;
 	d_seg_locked = false;
-
-	d_delay[0] = d_delay[1] = d_delay[2] = d_delay[3] = 0;
 
 	d_sr = 0;
 
@@ -103,16 +102,12 @@ atsc_bit_timing_loop::work (int noutput_items,
 	atsc::syminfo *out_tag = (atsc::syminfo *) output_items[1];
 	float *out_timing_error = (float *) output_items[2];
 
-	assert(sizeof(float) == sizeof(atsc::syminfo));
-
 	// We are tasked with producing output.size output samples.
 	// We will consume approximately 2 * output.size input samples.
 
 	int  k; // output index
 
 	float            interp_sample;
-	int              symbol_index;
-	bool             seg_locked;
 	atsc::syminfo    tag;
 	// ammount requested in forecast
 	unsigned long input_size = noutput_items * d_rx_clock_to_symbol_freq + 1500 -1;
@@ -135,27 +130,8 @@ atsc_bit_timing_loop::work (int noutput_items,
 
 		double filter_out = 0;
 
-		#if 0
-
-  		filter_out = d_loop.filter (timing_adjustment);
-  		d_w = d_w + ADJUSTMENT_GAIN * filter_out * 1e-3;
-
-		#elif 1
-
 		filter_out = d_loop.filter (d_timing_adjust);
-		d_mu = d_mu + ADJUSTMENT_GAIN * 10e3 * filter_out;
-
-		#else
-
-		static const double alpha = 0.01;
-		static const double beta = alpha * alpha / 16;
-
-		double x = ADJUSTMENT_GAIN * 10e3 * d_timing_adjust;
-
-		d_mu = d_mu + alpha * x;	// conceptually "phase"
-		d_w  = d_w  + beta * x;	// conceptually "frequency"
-
-		#endif
+		d_mu = d_mu + ADJUSTMENT_GAIN * 5e3 * filter_out;
 
 		double s = d_mu + d_w;
 		double float_incr = floor (s);
@@ -165,20 +141,10 @@ atsc_bit_timing_loop::work (int noutput_items,
 		assert (d_incr >= 1 && d_incr <= 3);
 		d_si += d_incr;
 
+		sample_mem[d_counter] = interp_sample;
 
-		d_delay[3] = d_delay[2];
-      		d_delay[2] = d_delay[1];
-      		d_delay[1] = d_delay[0];
-      		d_delay[0] = interp_sample;
-
-      		// the coefficients are -1,-1,+1,+1
-		d_quad_output[d_counter] = d_delay[3] + d_delay[2] - d_delay[1] - d_delay[0];
-
-		int bit = boost::math::signbit (interp_sample);
-		if (bit != 0)
-			bit = 0;
-		else
-			bit = 1;
+		// Is the sample positive or negative?
+		int bit = (interp_sample < 0 ? 0 : 1);
 
 		d_sr = ((bit & 1) << 3) | (d_sr >> 1);
 		int corr_out = (d_sr == 0x9);	// 1001
@@ -189,8 +155,6 @@ atsc_bit_timing_loop::work (int noutput_items,
 		t = std::max (t, SSI_MIN);
 		t = std::min (t, SSI_MAX);
 		d_integrator[d_counter] = t;
-
-		int corr_value = t;
 
 		int best_correlation_index = -1;
 
@@ -214,7 +178,13 @@ atsc_bit_timing_loop::work (int noutput_items,
 
     			d_seg_locked = best_correlation_value >= MIN_SEG_LOCK_CORRELATION_VALUE;
     			//std::cout << "best = " << best_correlation_value << " min is " << MIN_SEG_LOCK_CORRELATION_VALUE << std::endl;
-    			d_timing_adjust = d_quad_output[best_correlation_index];
+
+			// the coefficients are -1,-1,+1,+1
+			d_timing_adjust = sample_mem[best_correlation_index - 3] + 
+			                   sample_mem[best_correlation_index - 2] - 
+			                   sample_mem[best_correlation_index - 1] - 
+			                   sample_mem[best_correlation_index];
+
 
     			d_symbol_index = SYMBOL_INDEX_OFFSET - 1 - best_correlation_index;
     			if (d_symbol_index < 0)

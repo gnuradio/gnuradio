@@ -34,7 +34,6 @@ install(FILES
     deinterleaver.h
     depad.h
     derandomizer.h
-    diag_output_impl.h
     ds_to_softds.h
     equalizer.h
     equalizer_impl.h
