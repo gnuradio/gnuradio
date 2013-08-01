@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<!--
+###################################################
+##Quantization
+###################################################
+ -->
+<block>
+  <name>Quantizer</name>
+  <key>channels_quantizer</key>
+  <import>from gnuradio import channels</import>
+  <make>channels.quantizer($bits)</make>
+  <callback>set_bits($bits)</callback>
+  <param>
+    <name>Bits</name>
+    <key>bits</key>
+    <value>16</value>
+    <type>int</type>
+  </param>
+  <sink>
+    <name>in</name>
+    <type>float</type>
+  </sink>
+  <source>
+    <name>out</name>
+    <type>float</type>
+  </source>
+</block>

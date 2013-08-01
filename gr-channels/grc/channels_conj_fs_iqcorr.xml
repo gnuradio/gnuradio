@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+<!--
+###################################################
+##Freq. Selective IQ Correction
+###################################################
+ -->
+<block>
+  <name>Freq. Selective IQ Correction</name>
+  <key>channels_conj_fs_iqcorr</key>
+  <import>from gnuradio import channels</import>
+  <make>channels.conj_fs_iqcorr($delay, $taps)</make>
+  <callback>set_delay($delay)</callback>
+  <callback>set_taps($taps)</callback>
+  <param>
+    <name>Delay</name>
+    <key>delay</key>
+    <value>0</value>
+    <type>int</type>
+  </param>
+  <param>
+    <name>Taps</name>
+    <key>taps</key>
+    <value>0</value>
+    <type>complex_vector</type>
+  </param>
+  <sink>
+    <name>in</name>
+    <type>complex</type>
+  </sink>
+  <source>
+    <name>out</name>
+    <type>complex</type>
+  </source>
+</block>

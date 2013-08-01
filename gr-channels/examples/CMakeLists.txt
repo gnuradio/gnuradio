@@ -1,4 +1,4 @@
-# Copyright 2012-2013 Free Software Foundation, Inc.
+# Copyright 2013 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -17,7 +17,17 @@
 # the Free Software Foundation, Inc., 51 Franklin Street,
 # Boston, MA 02110-1301, USA.
 
-file(GLOB xml_files "*.xml")
-install(FILES ${xml_files}
-    DESTINATION ${GRC_BLOCKS_DIR} COMPONENT "channels_python"
+include(GrPython)
+
+install(
+  FILES
+  channel_tone_response.grc
+  demo_quantization.grc
+  demo_two_tone.grc
+  demo_spec_an.grc
+  demo_gmsk.grc
+  demo_qam.grc
+  demo_ofdm.grc
+  DESTINATION ${GR_PKG_CHANNELS_EXAMPLES_DIR}
+  COMPONENT "channels_python"
 )

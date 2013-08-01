@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<!--
+###################################################
+##Amplitude balance
+###################################################
+ -->
+<block>
+  <name>Amplitude Balance</name>
+  <key>channels_amp_bal</key>
+  <import>from gnuradio import channels</import>
+  <make>channels.amp_bal($alpha)</make>
+  <callback>set_alpha($alpha)</callback>
+  <param>
+    <name>Alpha</name>
+    <key>alpha</key>
+    <value>0</value>
+    <type>float</type>
+  </param>
+  <sink>
+    <name>in</name>
+    <type>complex</type>
+  </sink>
+  <source>
+    <name>out</name>
+    <type>complex</type>
+  </source>
+</block>
