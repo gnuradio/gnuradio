@@ -180,20 +180,21 @@ public:
   // void PlotNewData(...);
 
 public slots:
-  void setYaxis(double min, double max);
-  void setXaxis(double min, double max);
-  void setLineLabel(int which, QString label);
-  QString getLineLabel(int which);
-  void setLineColor(int which, QColor color);
-  QColor getLineColor(int which) const;
-  void setLineWidth(int which, int width);
-  int getLineWidth(int which) const;
-  void setLineStyle(int which, Qt::PenStyle style);
-  const Qt::PenStyle getLineStyle(int which) const;
-  void setLineMarker(int which, QwtSymbol::Style marker);
-  const QwtSymbol::Style getLineMarker(int which) const;
-  void setMarkerAlpha(int which, int alpha);
-  int getMarkerAlpha(int which) const;
+  virtual void setYaxis(double min, double max);
+  virtual void setXaxis(double min, double max);
+  virtual void setLineLabel(int which, QString label);
+  virtual QString getLineLabel(int which);
+  virtual void setLineColor(int which, QColor color);
+  virtual QColor getLineColor(int which) const;
+  virtual void setLineWidth(int which, int width);
+  virtual int getLineWidth(int which) const;
+  virtual void setLineStyle(int which, Qt::PenStyle style);
+  virtual const Qt::PenStyle getLineStyle(int which) const;
+  virtual void setLineMarker(int which, QwtSymbol::Style marker);
+  virtual const QwtSymbol::Style getLineMarker(int which) const;
+  virtual void setMarkerAlpha(int which, int alpha);
+  virtual int getMarkerAlpha(int which) const;
+
   // Need a function for each curve for setting via stylesheet.
   // Can't use preprocessor directives because we're inside a Q_OBJECT.
   void setLineColor1 (QColor);

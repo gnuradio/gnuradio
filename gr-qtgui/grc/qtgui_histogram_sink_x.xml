@@ -1,0 +1,91 @@
+<?xml version="1.0"?>
+<!--
+###################################################
+##QT GUI Histogram Sink
+###################################################
+ -->
+<block>
+	<name>QT GUI Histogram Sink</name>
+	<key>qtgui_histogram_sink_x</key>
+	<import>from PyQt4 import Qt</import>
+	<import>from gnuradio import qtgui</import>
+	<import>import sip</import>
+	<make>#set $win = 'self._%s_win'%$id
+qtgui.histogram_sink_f(
+	$size,
+	$bins,
+        $xmin,
+        $xmax,
+	$name,
+	$nconnections
+)
+self.$(id).set_update_time($update_time)
+self._$(id)_win = sip.wrapinstance(self.$(id).pyqwidget(), Qt.QWidget)
+$(gui_hint()($win))</make>
+	<callback>set_update_time($update_time)</callback>
+	<callback>set_title($which, $title)</callback>
+	<callback>set_color($which, $color)</callback>
+	<callback>set_bins($bins)</callback>
+	<callback>set_x_axis($bins)</callback>
+	<param>
+		<name>Name</name>
+		<key>name</key>
+		<value>QT GUI Plot</value>
+		<type>string</type>
+	</param>
+	<param>
+		<name>Number of Points</name>
+		<key>size</key>
+		<value>1024</value>
+		<type>int</type>
+	</param>
+	<param>
+		<name>Number of Bins</name>
+		<key>bins</key>
+		<value>100</value>
+		<type>int</type>
+	</param>
+	<param>
+		<name>Min x-axis</name>
+		<key>xmin</key>
+		<value>-1</value>
+		<type>real</type>
+	</param>
+	<param>
+		<name>Max x-axis</name>
+		<key>xmax</key>
+		<value>1</value>
+		<type>real</type>
+	</param>
+	<param>
+		<name>Number of Inputs</name>
+		<key>nconnections</key>
+		<value>1</value>
+		<type>int</type>
+		<hide>part</hide>
+	</param>
+	<param>
+		<name>Update Period</name>
+		<key>update_time</key>
+		<value>0.10</value>
+		<type>float</type>
+		<hide>part</hide>
+	</param>
+	<param>
+		<name>GUI Hint</name>
+		<key>gui_hint</key>
+		<value></value>
+		<type>gui_hint</type>
+		<hide>part</hide>
+	</param>
+	<sink>
+		<name>in</name>
+		<type>float</type>
+		<nports>$nconnections</nports>
+	</sink>
+	<doc>
+The GUI hint can be used to position the widget within the application. \
+The hint is of the form [tab_id@tab_index]: [row, col, row_span, col_span]. \
+Both the tab specification and the grid position are optional.
+	</doc>
+</block>

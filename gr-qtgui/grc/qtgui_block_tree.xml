@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 
 <!--
- Copyright 2012 Free Software Foundation, Inc.
+ Copyright 2012-2013 Free Software Foundation, Inc.
  
  This file is part of GNU Radio
  
@@ -37,6 +37,7 @@
       <block>qtgui_const_sink_x</block>
       <block>qtgui_waterfall_sink_x</block>
       <block>qtgui_time_raster_sink_x</block>
+      <block>qtgui_histogram_sink_x</block>
       <block>qtgui_sink_x</block>
     </cat>
   </cat>

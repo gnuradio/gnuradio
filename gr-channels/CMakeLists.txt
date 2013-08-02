@@ -42,6 +42,8 @@ GR_SET_GLOBAL(GR_CHANNELS_INCLUDE_DIRS
     ${CMAKE_CURRENT_SOURCE_DIR}/include
 )
 
+SET(GR_PKG_CHANNELS_EXAMPLES_DIR ${GR_PKG_DATA_DIR}/examples/channels)
+
 ########################################################################
 # Begin conditional configuration
 ########################################################################
@@ -90,8 +92,8 @@ if(ENABLE_PYTHON)
     add_subdirectory(swig)
     add_subdirectory(python/channels)
     add_subdirectory(grc)
+    add_subdirectory(examples)
 endif(ENABLE_PYTHON)
-#add_subdirectory(examples)
 add_subdirectory(doc)
 
 ########################################################################

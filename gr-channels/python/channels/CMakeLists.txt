@@ -1,4 +1,4 @@
-# Copyright 2012 Free Software Foundation, Inc.
+# Copyright 2012-2013 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -23,6 +23,15 @@ include(GrPython)
 GR_PYTHON_INSTALL(
     FILES
     __init__.py
+    amp_bal.py
+    conj_fs_iqcorr.py
+    distortion_2_gen.py
+    distortion_3_gen.py
+    impairments.py
+    iqbal_gen.py
+    phase_bal.py
+    phase_noise_gen.py
+    quantizer.py
     DESTINATION ${GR_PYTHON_DIR}/gnuradio/channels
     COMPONENT "channels_python"
 )

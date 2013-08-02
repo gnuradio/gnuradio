@@ -33,6 +33,9 @@ install(FILES
   freq_sink_c.h
   freq_sink_f.h
   FrequencyDisplayPlot.h
+  histogram_sink_f.h
+  histogramdisplayform.h
+  HistogramDisplayPlot.h
   plot_raster.h
   plot_waterfall.h
   qtgui_types.h

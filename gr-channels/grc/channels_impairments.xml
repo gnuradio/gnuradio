@@ -1,0 +1,76 @@
+<?xml version="1.0"?>
+<!--
+###################################################
+##Impairments Model
+###################################################
+ -->
+<block>
+  <name>HW Impairments</name>
+  <key>channels_impairments</key>
+  <import>from gnuradio import channels</import>
+  <make>channels.impairments($phase_noise_mag, $magbal, $phasebal, $q_ofs, $i_ofs, $freq_offset, $gamma, $beta)</make>
+  <callback>set_phase_noise_mag($phase_noise_mag)</callback>
+  <callback>set_magbal($magbal)</callback>
+  <callback>set_phasebal($phasebal)</callback>
+  <callback>set_q_ofs($q_ofs)</callback>
+  <callback>set_i_ofs($i_ofs)</callback>
+  <callback>set_freq_offset($freq_offset)</callback>
+  <callback>set_gamma($gamma)</callback>
+  <callback>set_beta($beta)</callback>
+  <param>
+    <name>Phase Noise Mag.</name>
+    <key>phase_noise_mag</key>
+    <value>0</value>
+    <type>float</type>
+  </param>
+  <param>
+    <name>IQ Mag. Imbalance</name>
+    <key>magbal</key>
+    <value>0</value>
+    <type>float</type>
+  </param>
+  <param>
+    <name>IQ Phase. Imbalance</name>
+    <key>phasebal</key>
+    <value>0</value>
+    <type>float</type>
+  </param>
+  <param>
+    <name>Quadrature Offset</name>
+    <key>q_ofs</key>
+    <value>0</value>
+    <type>float</type>
+  </param>
+  <param>
+    <name>Inphase Offset</name>
+    <key>i_ofs</key>
+    <value>0</value>
+    <type>float</type>
+  </param>
+  <param>
+    <name>Frequency Offset</name>
+    <key>freq_offset</key>
+    <value>0</value>
+    <type>float</type>
+  </param>
+  <param>
+    <name>Second Order Distortion</name>
+    <key>gamma</key>
+    <value>0</value>
+    <type>float</type>
+  </param>
+  <param>
+    <name>Third Order Distortion</name>
+    <key>beta</key>
+    <value>0</value>
+    <type>float</type>
+  </param>
+  <sink>
+    <name>in</name>
+    <type>complex</type>
+  </sink>
+  <source>
+    <name>out</name>
+    <type>complex</type>
+  </source>
+</block>
