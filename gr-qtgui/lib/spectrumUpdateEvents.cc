@@ -439,4 +439,47 @@ TimeRasterUpdateEvent::getNumDataPoints() const
   return _numDataPoints;
 }
 
+/***************************************************************************/
+
+
+HistogramUpdateEvent::HistogramUpdateEvent(const std::vector<double*> points,
+                                           const uint64_t npoints)
+  : QEvent(QEvent::Type(SpectrumUpdateEventType))
+{
+  if(npoints < 1) {
+    _npoints = 1;
+  }
+  else {
+    _npoints = npoints;
+  }
+
+  _nplots = points.size();
+  for(size_t i = 0; i < _nplots; i++) {
+    _points.push_back(new double[_npoints]);
+    if(npoints > 0) {
+      memcpy(_points[i], points[i], _npoints*sizeof(double));
+    }
+  }
+}
+
+HistogramUpdateEvent::~HistogramUpdateEvent()
+{
+  for(size_t i = 0; i < _nplots; i++) {
+    delete[] _points[i];
+  }
+}
+
+const std::vector<double*>
+HistogramUpdateEvent::getDataPoints() const
+{
+  return _points;
+}
+
+uint64_t
+HistogramUpdateEvent::getNumDataPoints() const
+{
+  return _npoints;
+}
+
+
 #endif /* SPECTRUM_UPDATE_EVENTS_C */

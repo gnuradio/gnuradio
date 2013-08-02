@@ -262,4 +262,32 @@ private:
 };
 
 
+/********************************************************************/
+
+
+class HistogramUpdateEvent: public QEvent
+{
+public:
+  HistogramUpdateEvent(const std::vector<double*> points,
+                       const uint64_t npoints);
+
+  ~HistogramUpdateEvent();
+
+  int which() const;
+  const std::vector<double*> getDataPoints() const;
+  uint64_t getNumDataPoints() const;
+  bool getRepeatDataFlag() const;
+
+  static QEvent::Type Type()
+  { return QEvent::Type(SpectrumUpdateEventType); }
+
+protected:
+
+private:
+  size_t _nplots;
+  std::vector<double*> _points;
+  uint64_t _npoints;
+};
+
+
 #endif /* SPECTRUM_UPDATE_EVENTS_H */

@@ -77,7 +77,7 @@ public slots:
   QwtSymbol::Style lineMarker(int which);
   int markerAlpha(int which);
 
-  virtual void setSampleRate(const QString &rate) = 0;
+  virtual void setSampleRate(const QString &rate);
 
   void setStop(bool on);
   void setStop();

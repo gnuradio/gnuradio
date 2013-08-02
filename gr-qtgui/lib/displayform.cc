@@ -300,6 +300,11 @@ DisplayForm::markerAlpha(int which)
 }
 
 void
+DisplayForm::setSampleRate(const QString &rate)
+{
+}
+
+void
 DisplayForm::setStop(bool on)
 {
   if(!on) {
