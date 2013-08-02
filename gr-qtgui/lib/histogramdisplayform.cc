@@ -114,6 +114,12 @@ HistogramDisplayForm::setYaxis(double min, double max)
   getPlot()->setYaxis(min, max);
 }
 
+void
+HistogramDisplayForm::setXaxis(double min, double max)
+{
+  getPlot()->setXaxis(min, max);
+}
+
 int
 HistogramDisplayForm::getNPoints() const
 {

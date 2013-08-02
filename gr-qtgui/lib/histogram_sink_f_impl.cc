@@ -36,23 +36,25 @@ namespace gr {
     
     histogram_sink_f::sptr
     histogram_sink_f::make(int size, int bins,
-		      const std::string &name,
-		      int nconnections,
-		      QWidget *parent)
+                           double xmin, double xmax,
+                           const std::string &name,
+                           int nconnections,
+                           QWidget *parent)
     {
       return gnuradio::get_initial_sptr
-	(new histogram_sink_f_impl(size, bins, name,
+	(new histogram_sink_f_impl(size, bins, xmin, xmax, name,
                                    nconnections, parent));
     }
 
     histogram_sink_f_impl::histogram_sink_f_impl(int size, int bins,
+                                                 double xmin, double xmax,
                                                  const std::string &name,
                                                  int nconnections,
                                                  QWidget *parent)
       : sync_block("histogram_sink_f",
                    io_signature::make(nconnections, nconnections, sizeof(float)),
                    io_signature::make(0, 0, 0)),
-	d_size(size), d_bins(bins), d_name(name),
+	d_size(size), d_bins(bins), d_xmin(xmin), d_xmax(xmax), d_name(name),
 	d_nconnections(nconnections), d_parent(parent)
     {
       d_main_gui = NULL;
@@ -102,7 +104,9 @@ namespace gr {
       }
 
       d_main_gui = new HistogramDisplayForm(d_nconnections, d_parent);
+      d_main_gui->setNumBins(d_bins);
       d_main_gui->setNPoints(d_size);
+      d_main_gui->setXaxis(d_xmin, d_xmax);
 
       // initialize update time to 10 times a second
       set_update_time(0.1);
@@ -132,6 +136,12 @@ namespace gr {
     histogram_sink_f_impl::set_y_axis(double min, double max)
     {
       d_main_gui->setYaxis(min, max);
+    }
+
+    void
+    histogram_sink_f_impl::set_x_axis(double min, double max)
+    {
+      d_main_gui->setXaxis(min, max);
     }
 
     void

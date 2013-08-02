@@ -80,6 +80,9 @@ ConstellationDisplayPlot::ConstellationDisplayPlot(int nplots, QWidget* parent)
   _zoomer->setRubberBandPen(c);
   _zoomer->setTrackerPen(c);
 
+  _magnifier->setAxisEnabled(QwtPlot::xBottom, true);
+  _magnifier->setAxisEnabled(QwtPlot::yLeft, true);
+
   setAxisScaleEngine(QwtPlot::xBottom, new QwtLinearScaleEngine);
   set_xaxis(-2.0, 2.0);
   setAxisTitle(QwtPlot::xBottom, "In-phase");

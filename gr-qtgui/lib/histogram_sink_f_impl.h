@@ -40,6 +40,7 @@ namespace gr {
 
       int d_size;
       int d_bins;
+      double d_xmin, d_xmax;
       std::string d_name;
       int d_nconnections;
 
@@ -56,6 +57,7 @@ namespace gr {
 
     public:
       histogram_sink_f_impl(int size, int bins,
+                            double xmin, double xmax,
                             const std::string &name,
                             int nconnections,
                             QWidget *parent=NULL);
@@ -68,6 +70,7 @@ namespace gr {
       PyObject* pyqwidget();
 
       void set_y_axis(double min, double max);
+      void set_x_axis(double min, double max);
       void set_update_time(double t);
       void set_title(const std::string &title);
       void set_line_label(int which, const std::string &label);

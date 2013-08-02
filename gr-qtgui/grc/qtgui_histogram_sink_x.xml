@@ -14,10 +14,11 @@
 qtgui.histogram_sink_f(
 	$size,
 	$bins,
+        $xmin,
+        $xmax,
 	$name,
 	$nconnections
 )
-self.$(id).set_bins($bins)
 self.$(id).set_update_time($update_time)
 self._$(id)_win = sip.wrapinstance(self.$(id).pyqwidget(), Qt.QWidget)
 $(gui_hint()($win))</make>
@@ -25,6 +26,7 @@ $(gui_hint()($win))</make>
 	<callback>set_title($which, $title)</callback>
 	<callback>set_color($which, $color)</callback>
 	<callback>set_bins($bins)</callback>
+	<callback>set_x_axis($bins)</callback>
 	<param>
 		<name>Name</name>
 		<key>name</key>
@@ -42,6 +44,18 @@ $(gui_hint()($win))</make>
 		<key>bins</key>
 		<value>100</value>
 		<type>int</type>
+	</param>
+	<param>
+		<name>Min x-axis</name>
+		<key>xmin</key>
+		<value>-1</value>
+		<type>real</type>
+	</param>
+	<param>
+		<name>Max x-axis</name>
+		<key>xmax</key>
+		<value>1</value>
+		<type>real</type>
 	</param>
 	<param>
 		<name>Number of Inputs</name>

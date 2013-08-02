@@ -50,6 +50,7 @@ public slots:
   void customEvent(QEvent * e);
 
   void setYaxis(double min, double max);
+  void setXaxis(double min, double max);
   void setNPoints(const int);
   void autoScale(bool en);
   void setSemilogx(bool en);

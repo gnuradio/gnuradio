@@ -51,11 +51,14 @@ namespace gr {
        *
        * \param size number of points to plot at once
        * \param bins number of bins to sort the data into
+       * \param xmin minimum x-axis value
+       * \param xmax maximum x-axis value
        * \param name title for the plot
        * \param nconnections number of signals connected to sink
        * \param parent a QWidget parent object, if any
        */
       static sptr make(int size, int bins,
+                       double xmin, double xmax,
 		       const std::string &name,
 		       int nconnections=1,
 		       QWidget *parent=NULL);
@@ -64,6 +67,7 @@ namespace gr {
       virtual PyObject* pyqwidget() = 0;
 
       virtual void set_y_axis(double min, double max) = 0;
+      virtual void set_x_axis(double min, double max) = 0;
       virtual void set_update_time(double t) = 0;
       virtual void set_title(const std::string &title) = 0;
       virtual void set_line_label(int which, const std::string &line) = 0;

@@ -90,16 +90,14 @@ protected:
     QwtText t;
     QwtDoublePoint dp = QwtPlotZoomer::invTransform(p);
     if((dp.y() > 0.0001) && (dp.y() < 10000)) {
-      t.setText(QString("%1 %2, %3 V").
-		arg(dp.x(), 0, 'f', getTimePrecision()).
-		arg(_unitType.c_str()).
-		arg(dp.y(), 0, 'f', 4));
+      t.setText(QString("%1, %2").
+		arg(dp.x(), 0, 'f', 4).
+		arg(dp.y(), 0, 'f', 0));
     }
     else {
-      t.setText(QString("%1 %2, %3 V").
-		arg(dp.x(), 0, 'f', getTimePrecision()).
-		arg(_unitType.c_str()).
-		arg(dp.y(), 0, 'e', 4));
+      t.setText(QString("%1, %2").
+		arg(dp.x(), 0, 'f', 4).
+		arg(dp.y(), 0, 'e', 0));
     }
 
     return t;
@@ -137,6 +135,9 @@ HistogramDisplayPlot::HistogramDisplayPlot(int nplots, QWidget* parent)
   const QColor c(Qt::darkRed);
   _zoomer->setRubberBandPen(c);
   _zoomer->setTrackerPen(c);
+
+  _magnifier->setAxisEnabled(QwtPlot::xBottom, true);
+  _magnifier->setAxisEnabled(QwtPlot::yLeft, false);
 
   d_semilogx = false;
   d_semilogy = false;
@@ -254,20 +255,25 @@ HistogramDisplayPlot::_resetXAxisPoints(double bottom, double top)
     _xAxisPoints[loc] = bottom + loc*width;
   }
 
+  if(!_autoscale_state) {
+    bottom = axisScaleDiv(QwtPlot::xBottom)->lowerBound();
+    top = axisScaleDiv(QwtPlot::xBottom)->upperBound();
+  }
+
   // Set up zoomer base for maximum unzoom x-axis
   // and reset to maximum unzoom level
   QwtDoubleRect zbase = _zoomer->zoomBase();
 
   if(d_semilogx) {
-    setAxisScale(QwtPlot::xBottom, 1e-1, _xAxisPoints[_bins-1]);
+    setAxisScale(QwtPlot::xBottom, 1e-1, top);
     zbase.setLeft(1e-1);
   }
   else {
-    setAxisScale(QwtPlot::xBottom, _xAxisPoints[0], _xAxisPoints[_bins-1]);
-    zbase.setLeft(_xAxisPoints[0]);
+    setAxisScale(QwtPlot::xBottom, bottom, top);
+    zbase.setLeft(bottom);
   }
 
-  zbase.setRight(_xAxisPoints[_bins-1]);
+  zbase.setRight(top);
   _zoomer->zoom(zbase);
   _zoomer->setZoomBase(zbase);
   _zoomer->zoom(0);
