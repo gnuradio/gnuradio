@@ -57,7 +57,7 @@ static const float FPLL_BTLOOP_COUPLING_CONST = 3.125;
  * into the equalizer and viterbi decoder.
  */
 static const float FPLL_AGC_REFERENCE = 2.5 * FPLL_BTLOOP_COUPLING_CONST;
-static const float FPLL_AGC_RATE = 0.25e-6;
+static const float FPLL_AGC_RATE = 1e-6;
 
 
 
@@ -132,7 +132,7 @@ atsc_fpll::work (int noutput_items,
     // static const float alpha = 0.005;   // takes about 5k samples to pull in, stddev = 323
     // static const float alpha = 0.002;   // takes about 15k samples to pull in, stddev =  69
                                            //  or about 120k samples on noisy data,
-    static const float alpha = 0.001;
+    static const float alpha = 0.0005;
     static const float beta = alpha * alpha / 4;
 
     nco.adjust_phase (alpha * x);

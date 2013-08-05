@@ -29,7 +29,6 @@
 #include <gnuradio/filter/single_pole_iir.h>
 #include <gnuradio/analog/agc.h>
 #include <stdio.h>
-#include <gnuradio/atsc/diag_output_impl.h>
 
 using namespace gr;
 

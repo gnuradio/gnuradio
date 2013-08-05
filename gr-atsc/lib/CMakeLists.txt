@@ -90,6 +90,7 @@ list(APPEND gr_atsc_sources
     transmitter/atsci_basic_trellis_encoder.cc
     transmitter/atsci_data_interleaver.cc
     transmitter/atsc_field_sync_mux.cc
+    transmitter/atsc_pilot.cc
     transmitter/atsc_ds_to_softds.cc
     transmitter/atsci_randomizer.cc
     transmitter/atsci_sliding_correlator.cc

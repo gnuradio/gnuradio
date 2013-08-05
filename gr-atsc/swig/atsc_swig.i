@@ -36,6 +36,7 @@
 #include <gnuradio/atsc/viterbi_decoder.h>
 #include <gnuradio/atsc/ds_to_softds.h>
 #include <gnuradio/atsc/field_sync_mux.h>
+#include <gnuradio/atsc/pilot.h>
 #include <gnuradio/atsc/field_sync_demux.h>
 #include <gnuradio/atsc/equalizer.h>
 #include <gnuradio/atsc/fs_checker.h>
@@ -194,6 +195,20 @@ atsc_field_sync_mux_sptr atsc_make_field_sync_mux();
 class atsc_field_sync_mux : public gr::sync_block
 {
   atsc_field_sync_mux();
+
+public:
+  void reset();
+};
+
+// ----------------------------------------------------------------
+
+GR_SWIG_BLOCK_MAGIC(atsc,pilot);
+
+atsc_pilot_sptr atsc_make_pilot();
+
+class atsc_pilot : public gr::sync_block
+{
+  atsc_pilot();
 
 public:
   void reset();

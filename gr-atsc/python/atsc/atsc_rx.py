@@ -63,9 +63,9 @@ def graph (args):
 
 	tb = gr.top_block()
 
-	pll_bandwidth = 2e3
-        atsc_carrier = -3e6 + 0.309e6
-	pll = analog.pll_carriertracking_cc(math.pi/4000, (atsc_carrier + pll_bandwidth)/input_rate * 2 * math.pi, (atsc_carrier - pll_bandwidth)/input_rate * 2 * math.pi)
+	#pll_bandwidth = 2e3
+        #atsc_carrier = -3e6 + 0.309e6
+	#pll = analog.pll_carriertracking_cc(math.pi/4000, (atsc_carrier + pll_bandwidth)/input_rate * 2 * math.pi, (atsc_carrier - pll_bandwidth)/input_rate * 2 * math.pi)
 
 	# Read from input file
 	srcf = blocks.file_source(gr.sizeof_short, infile)
@@ -80,7 +80,7 @@ def graph (args):
 	rrc = filter.fir_filter_ccf(1, tt)
 
 	# Interpolate Filter our 6MHz wide signal centered at 0
-	ilp_coeffs = filter.firdes.low_pass(1, input_rate, 3.2e6, .5e6, filter.firdes.WIN_HAMMING)
+	ilp_coeffs = filter.firdes.low_pass(3, input_rate, 3.2e6, .5e6, filter.firdes.WIN_HAMMING)
 	ilp = filter.interp_fir_filter_ccf(3, ilp_coeffs)
 
 	# Move the center frequency to 5.75MHz ( this wont be needed soon )
@@ -90,7 +90,7 @@ def graph (args):
 	# fpll input is float
 	c2f = blocks.complex_to_float()
 
-	c2r = blocks.complex_to_real()
+	#c2r = blocks.complex_to_real()
 
 	# Phase locked loop
 	fpll = atsc.fpll()
@@ -120,7 +120,7 @@ def graph (args):
         derand = atsc.derandomizer()
 	depad = atsc.depad()
 
-	agc = analog.agc_cc(0.25e-6, 4)
+	#agc = analog.agc_cc(1e-6, 5.524)
 
 	# Write to output file
 	outf = blocks.file_sink(gr.sizeof_char,outfile)

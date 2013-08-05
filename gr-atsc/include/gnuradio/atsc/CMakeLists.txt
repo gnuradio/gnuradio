@@ -59,6 +59,7 @@ install(FILES
     reed_solomon_impl.h
     rs_decoder.h
     rs_encoder.h
+    pilot.h
     single_viterbi_impl.h
     slicer_agc_impl.h
     sliding_correlator_impl.h
