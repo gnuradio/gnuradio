@@ -70,7 +70,6 @@ public:
   double                        initial_phase;
   bool                          debug_no_update;
   gr::nco<float,float>          nco;
-  analog::kernel::agc_ff        agc;    // automatic gain control
   filter::single_pole_iir<float,float,float> afci;
   filter::single_pole_iir<float,float,float> afcq;
 

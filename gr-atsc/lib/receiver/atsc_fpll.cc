@@ -29,6 +29,7 @@
 #include <gnuradio/atsc/consts.h>
 #include <algorithm>
 #include <gnuradio/math.h>
+#include <iostream>
 
 atsc_fpll_sptr
 atsc_make_fpll()
@@ -36,40 +37,13 @@ atsc_make_fpll()
   return gnuradio::get_initial_sptr(new atsc_fpll());
 }
 
-/*!
- * Magic coupling constant between GrAtscFPLL and GrAtscBitTimingLoop.
- * Trust me, you don't want to mess with this.
- *
- * The agc block buried in the FPLL indirectly sets the level of the input
- * to the bit timing loop.  The bit timing loop's convergence properties
- * depend on the the mean amplitude of it's input.  This constant ties
- * them together such that you can tweak the input level of the bit timing loop
- * (somewhat) without screwing everything.
- */
-
-static const float FPLL_BTLOOP_COUPLING_CONST = 3.125;
-
-/*
- * I strongly suggest that you not mess with these...
- *
- * They are strongly coupled into the symbol timing code and
- * their value also sets the level of the symbols going
- * into the equalizer and viterbi decoder.
- */
-static const float FPLL_AGC_REFERENCE = 2.5 * FPLL_BTLOOP_COUPLING_CONST;
-static const float FPLL_AGC_RATE = 1e-6;
-
-
-
 atsc_fpll::atsc_fpll()
   : gr::sync_block("atsc_fpll",
 		  gr::io_signature::make(1, 1, sizeof(float)),
 		  gr::io_signature::make(1, 1, sizeof(float))),
 		  initial_phase(0)
 {
-  initial_freq = 5.75e6 - 3e6 + 0.31e6 + 5e3; // a_initial_freq;
-  agc.set_rate (FPLL_AGC_RATE);
-  agc.set_reference (FPLL_AGC_REFERENCE);
+  initial_freq = 5.75e6 - 3e6 + 0.309e6; // a_initial_freq;
   initialize();
 }
 
@@ -101,13 +75,11 @@ atsc_fpll::work (int noutput_items,
 
     float a_cos, a_sin;
 
-    float input = agc.scale (in[k]);
-
     nco.step ();                // increment phase
     nco.sincos (&a_sin, &a_cos);  // compute cos and sin
 
-    float I = input * a_sin;
-    float Q = input * a_cos;
+    float I = in[k] * a_sin;
+    float Q = in[k] * a_cos;
 
     out[k] = I;
 
@@ -132,7 +104,7 @@ atsc_fpll::work (int noutput_items,
     // static const float alpha = 0.005;   // takes about 5k samples to pull in, stddev = 323
     // static const float alpha = 0.002;   // takes about 15k samples to pull in, stddev =  69
                                            //  or about 120k samples on noisy data,
-    static const float alpha = 0.0005;
+    static const float alpha = 0.001;
     static const float beta = alpha * alpha / 4;
 
     nco.adjust_phase (alpha * x);
