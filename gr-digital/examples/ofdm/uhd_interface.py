@@ -42,13 +42,16 @@ def add_freq_option(parser):
                           metavar="FREQ")
 
 class uhd_interface:
-    def __init__(self, istx, args, bandwidth, freq=None,
+    def __init__(self, istx, args, bandwidth, freq=None, lo_offset=None,
                  gain=None, spec=None, antenna=None):
         
         if(istx):
             self.u = uhd.usrp_sink(device_addr=args, stream_args=uhd.stream_args('fc32'))
         else:
             self.u = uhd.usrp_source(device_addr=args, stream_args=uhd.stream_args('fc32'))
+
+        # Set clock source to external if available.
+        self.u.set_clock_source("external", 0)
 
         # Set the subdevice spec
         if(spec):
@@ -62,8 +65,8 @@ class uhd_interface:
         self._ant  = antenna
         self._spec = spec
         self._gain = self.set_gain(gain)
-        self._freq = self.set_freq(freq)
-
+        self._lo_offset = lo_offset
+        self._freq = self.set_freq(freq, lo_offset)
         self._rate = self.set_sample_rate(bandwidth)
 
     def set_sample_rate(self, bandwidth):
@@ -87,12 +90,13 @@ class uhd_interface:
         self.u.set_gain(gain, 0)
         return gain
 
-    def set_freq(self, freq=None):
+    def set_freq(self, freq=None, lo_offset=None):
         if(freq is None):
             sys.stderr.write("You must specify -f FREQ or --freq FREQ\n")
             sys.exit(1)
         
-        r = self.u.set_center_freq(freq, 0)
+        r = self.u.set_center_freq(uhd.tune_request(freq, lo_offset))
+
         if r:
             return freq
         else:
@@ -106,7 +110,7 @@ class uhd_interface:
 #-------------------------------------------------------------------#
 
 class uhd_transmitter(uhd_interface, gr.hier_block2):
-    def __init__(self, args, bandwidth, freq=None, gain=None,
+    def __init__(self, args, bandwidth, freq=None, lo_offset=None, gain=None,
                  spec=None, antenna=None, verbose=False):
         gr.hier_block2.__init__(self, "uhd_transmitter",
                                 gr.io_signature(1,1,gr.sizeof_gr_complex),
@@ -114,7 +118,7 @@ class uhd_transmitter(uhd_interface, gr.hier_block2):
 
         # Set up the UHD interface as a transmitter
         uhd_interface.__init__(self, True, args, bandwidth,
-                               freq, gain, spec, antenna)
+                               freq, lo_offset, gain, spec, antenna)
 
         self.connect(self, self.u)
 
@@ -132,6 +136,8 @@ class uhd_transmitter(uhd_interface, gr.hier_block2):
         parser.add_option("", "--tx-freq", type="eng_float", default=None,
                           help="set transmit frequency to FREQ [default=%default]",
                           metavar="FREQ")
+        parser.add_option("", "--lo-offset", type="eng_float", default=0,
+                          help="set local oscillator offset in Hz (default is 0)")
         parser.add_option("", "--tx-gain", type="eng_float", default=None,
                           help="set transmit gain in dB (default is midpoint)")
         parser.add_option("-v", "--verbose", action="store_true", default=False)
@@ -146,6 +152,7 @@ class uhd_transmitter(uhd_interface, gr.hier_block2):
         print "\nUHD Transmitter:"
         print "UHD Args:    %s"    % (self._args)
         print "Freq:        %sHz"  % (eng_notation.num_to_str(self._freq))
+        print "LO Offset:   %sHz"  % (eng_notation.num_to_str(self._lo_offset))
         print "Gain:        %f dB" % (self._gain)
         print "Sample Rate: %ssps" % (eng_notation.num_to_str(self._rate))
         print "Antenna:     %s"    % (self._ant)
@@ -159,7 +166,7 @@ class uhd_transmitter(uhd_interface, gr.hier_block2):
 
 
 class uhd_receiver(uhd_interface, gr.hier_block2):
-    def __init__(self, args, bandwidth, freq=None, gain=None,
+    def __init__(self, args, bandwidth, freq=None, lo_offset=None, gain=None,
                  spec=None, antenna=None, verbose=False):
         gr.hier_block2.__init__(self, "uhd_receiver",
                                 gr.io_signature(0,0,0),
@@ -167,7 +174,7 @@ class uhd_receiver(uhd_interface, gr.hier_block2):
       
         # Set up the UHD interface as a receiver
         uhd_interface.__init__(self, False, args, bandwidth,
-                               freq, gain, spec, antenna)
+                               freq, lo_offset, gain, spec, antenna)
 
         self.connect(self.u, self)
 
@@ -185,6 +192,8 @@ class uhd_receiver(uhd_interface, gr.hier_block2):
         parser.add_option("", "--rx-freq", type="eng_float", default=None,
                           help="set receive frequency to FREQ [default=%default]",
                           metavar="FREQ")
+        parser.add_option("", "--lo-offset", type="eng_float", default=0,
+                          help="set local oscillator offset in Hz (default is 0)")
         parser.add_option("", "--rx-gain", type="eng_float", default=None,
                           help="set receive gain in dB (default is midpoint)")
         if not parser.has_option("--verbose"):
@@ -200,6 +209,7 @@ class uhd_receiver(uhd_interface, gr.hier_block2):
         print "\nUHD Receiver:"
         print "UHD Args:    %s"    % (self._args)
         print "Freq:        %sHz"  % (eng_notation.num_to_str(self._freq))
+        print "LO Offset:   %sHz"  % (eng_notation.num_to_str(self._lo_offset))
         print "Gain:        %f dB" % (self._gain)
         print "Sample Rate: %ssps" % (eng_notation.num_to_str(self._rate))
         print "Antenna:     %s"    % (self._ant)
