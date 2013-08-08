@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2004,2007 Free Software Foundation, Inc.
+# Copyright 2004,2007,2012 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -22,22 +22,23 @@
 
 from gnuradio import gr
 from gnuradio import audio
+from gnuradio import analog
 
-def build_graph ():
+def build_graph():
     sampling_freq = 32000
     ampl = 0.1
 
-    tb = gr.top_block ()
-    src0 = gr.sig_source_f (sampling_freq, gr.GR_SIN_WAVE, 350, ampl)
-    src1 = gr.sig_source_f (sampling_freq, gr.GR_SIN_WAVE, 440, ampl)
-    dst = audio.sink (sampling_freq)
-    tb.connect (src0, (dst, 0))
-    tb.connect (src1, (dst, 1))
+    tb = gr.top_block()
+    src0 = analog.sig_source_f(sampling_freq, analog.GR_SIN_WAVE, 350, ampl)
+    src1 = analog.sig_source_f(sampling_freq, analog.GR_SIN_WAVE, 440, ampl)
+    dst = audio.sink(sampling_freq)
+    tb.connect(src0, (dst, 0))
+    tb.connect(src1, (dst, 1))
 
     return tb
 
 if __name__ == '__main__':
-    tb = build_graph ()
-    tb.start ()
-    raw_input ('Press Enter to quit: ')
-    tb.stop ()
+    tb = build_graph()
+    tb.start()
+    raw_input('Press Enter to quit: ')
+    tb.stop()

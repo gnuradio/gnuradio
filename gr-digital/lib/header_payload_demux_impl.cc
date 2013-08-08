@@ -1,5 +1,5 @@
 /* -*- c++ -*- */
-/* Copyright 2012 Free Software Foundation, Inc.
+/* Copyright 2012,2013 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -24,17 +24,20 @@
 #endif
 
 #include <climits>
-#include <gr_io_signature.h>
+#include <boost/format.hpp>
+#include <gnuradio/io_signature.h>
 #include "header_payload_demux_impl.h"
 
 namespace gr {
   namespace digital {
 
     enum demux_states_t {
-      STATE_IDLE,
-      STATE_HEADER,
-      STATE_WAIT_FOR_MSG,
-      STATE_PAYLOAD
+      STATE_FIND_TRIGGER,       // "Idle" state (waiting for burst)
+      STATE_HEADER,             // Copy header
+      STATE_WAIT_FOR_MSG,       // Null state (wait until msg from header demod)
+      STATE_HEADER_RX_SUCCESS,  // Header processing
+      STATE_HEADER_RX_FAIL,     //       "
+      STATE_PAYLOAD             // Copy payload
     };
 
 #define msg_port_id pmt::mp("header_data")
@@ -70,18 +73,21 @@ namespace gr {
 	const std::string &trigger_tag_key,
 	bool output_symbols,
 	size_t itemsize
-    ) : gr_block("header_payload_demux",
-		      gr_make_io_signature2(1, 2, itemsize, sizeof(char)),
-		      gr_make_io_signature(2, 2, (output_symbols ? itemsize * items_per_symbol : itemsize))),
+    ) : block("header_payload_demux",
+		      io_signature::make2(1, 2, itemsize, sizeof(char)),
+		      io_signature::make(2, 2, (output_symbols ? itemsize * items_per_symbol : itemsize))),
       d_header_len(header_len),
       d_items_per_symbol(items_per_symbol),
       d_gi(guard_interval),
-      d_len_tag_key(pmt::pmt_string_to_symbol(length_tag_key)),
-      d_trigger_tag_key(pmt::pmt_string_to_symbol(trigger_tag_key)),
+      d_len_tag_key(pmt::string_to_symbol(length_tag_key)),
+      d_trigger_tag_key(pmt::string_to_symbol(trigger_tag_key)),
       d_output_symbols(output_symbols),
       d_itemsize(itemsize),
       d_uses_trigger_tag(!trigger_tag_key.empty()),
-      d_state(STATE_IDLE)
+      d_state(STATE_FIND_TRIGGER),
+      d_curr_payload_len(0),
+      d_payload_tag_keys(0),
+      d_payload_tag_values(0)
     {
       if (d_header_len < 1) {
 	throw std::invalid_argument("Header length must be at least 1 symbol.");
@@ -89,8 +95,15 @@ namespace gr {
       if (d_items_per_symbol < 1 || d_gi < 0 || d_itemsize < 1) {
 	throw std::invalid_argument("Items and symbol sizes must be at least 1.");
       }
-      set_output_multiple(d_items_per_symbol);
+      if (d_output_symbols) {
+	set_relative_rate(1.0 / (d_items_per_symbol + d_gi));
+      } else {
+	set_relative_rate((double)d_items_per_symbol / (d_items_per_symbol + d_gi));
+	set_output_multiple(d_items_per_symbol);
+      }
+      set_tag_propagation_policy(TPP_DONT);
       message_port_register_in(msg_port_id);
+      set_msg_handler(msg_port_id, boost::bind(&header_payload_demux_impl::parse_header_data_msg, this, _1));
     }
 
     header_payload_demux_impl::~header_payload_demux_impl()
@@ -100,12 +113,53 @@ namespace gr {
     void
     header_payload_demux_impl::forecast (int noutput_items, gr_vector_int &ninput_items_required)
     {
-      // noutput_items is an integer multiple of d_items_per_symbol!
+      int n_items_reqd = 0;
+      if (d_state == STATE_HEADER) {
+	n_items_reqd = d_header_len * (d_items_per_symbol + d_gi);
+      } else if (d_state == STATE_PAYLOAD) {
+	n_items_reqd = d_curr_payload_len * (d_items_per_symbol + d_gi);
+      } else {
+	n_items_reqd = noutput_items * (d_items_per_symbol + d_gi);
+	if (!d_output_symbols) {
+	  // here, noutput_items is an integer multiple of d_items_per_symbol!
+	  n_items_reqd /= d_items_per_symbol;
+	}
+      }
+
       for (unsigned i = 0; i < ninput_items_required.size(); i++) {
-	ninput_items_required[i] =
-	  noutput_items / d_items_per_symbol * (d_items_per_symbol + d_gi);
+	ninput_items_required[i] = n_items_reqd;
       }
     }
+
+
+    inline bool
+    header_payload_demux_impl::check_items_available(
+	int n_symbols,
+	gr_vector_int &ninput_items,
+	int noutput_items,
+	int nread
+    )
+    {
+      // Check there's enough items on the input
+      if ((n_symbols * (d_items_per_symbol + d_gi)) > (ninput_items[0]-nread)
+	  || (ninput_items.size() == 2 && ((n_symbols * (d_items_per_symbol + d_gi)) > (ninput_items[1]-nread)))) {
+	return false;
+      }
+
+      // Check there's enough space on the output buffer
+      if (d_output_symbols) {
+	if (noutput_items < n_symbols) {
+	  return false;
+	}
+      } else {
+	if (noutput_items < n_symbols * d_items_per_symbol) {
+	  return false;
+	}
+      }
+
+      return true;
+    }
+
 
     int
     header_payload_demux_impl::general_work (int noutput_items,
@@ -118,90 +172,82 @@ namespace gr {
       unsigned char *out_payload = (unsigned char *) output_items[1];
 
       int nread = 0;
-      bool exit_loop = false;
+      int trigger_offset = 0;
 
-      int produced_hdr = 0;
-      int produced_payload = 0;
+      switch (d_state) {
+	case STATE_WAIT_FOR_MSG:
+	  // In an ideal world, this would never be called
+	  return 0;
 
-      // FIXME ninput_items[1] does not have to be defined O_o
-      while (nread < noutput_items && nread < ninput_items[0] && nread < ninput_items[1] && !exit_loop) {
-	switch (d_state) {
-	      case STATE_IDLE:
-		// 1) Search for a trigger signal on input 1 (if present)
-		// 2) Search for a trigger tag, make sure it's the first one
-		// The first trigger to be found is used!
-		// 3) Make sure the right number of items is skipped
-		// 4) If trigger found, switch to STATE_HEADER
-		if (find_trigger_signal(nread, noutput_items, input_items)) {
-		  d_remaining_symbols = d_header_len;
-		  d_state = STATE_HEADER;
-		  in += nread * d_itemsize;
-		}
-		break;
+	case STATE_HEADER_RX_FAIL:
+	  consume_each (1);
+	  in += d_itemsize;
+	  nread++;
+	  d_state = STATE_FIND_TRIGGER;
 
-	      case STATE_HEADER:
-		copy_symbol(in, out_header, 0, nread, produced_hdr);
-		if (d_remaining_symbols == 0) {
-		  d_state = STATE_WAIT_FOR_MSG;
-		  exit_loop = true;
-		}
-		break;
+	case STATE_FIND_TRIGGER:
+	  trigger_offset = find_trigger_signal(nread, noutput_items, input_items);
+	  if (trigger_offset == -1) {
+	    consume_each(noutput_items - nread);
+	    break;
+	  }
+	  consume_each (trigger_offset);
+	  in += trigger_offset * d_itemsize;
+	  d_state = STATE_HEADER;
 
-	      case STATE_WAIT_FOR_MSG:
-		// If we're in this state, nread is zero (because previous state exits loop)
-		// 1) Wait for msg (blocking call)
-		// 2) set d_remaining_symbols
-		// 3) Write tags
-		// 4) fall through to next state
-		d_remaining_symbols = -1;
-		if (!parse_header_data_msg()) {
-		  d_state = STATE_IDLE;
-		  exit_loop = true;
-		  break;
-		}
-		d_state = STATE_PAYLOAD;
 
-	      case STATE_PAYLOAD:
-		copy_symbol(in, out_payload, 1, nread, produced_payload);
-		if (d_remaining_symbols == 0) {
-		  d_state = STATE_IDLE;
-		  exit_loop = true;
-		}
-		break;
+	case STATE_HEADER:
+	  if (check_items_available(d_header_len, ninput_items, noutput_items, nread)) {
+	    copy_n_symbols(in, out_header, 0, d_header_len);
+	    d_state = STATE_WAIT_FOR_MSG;
+	    produce(0, d_header_len * (d_output_symbols ? 1 : d_items_per_symbol));
+	  }
+	  break;
 
-	      default:
-		throw std::runtime_error("invalid state");
-	} /* switch */
-      } /* while(nread < noutput_items) */
+	case STATE_HEADER_RX_SUCCESS:
+	  for (unsigned i = 0; i < d_payload_tag_keys.size(); i++) {
+	    add_item_tag(1, nitems_written(1), d_payload_tag_keys[i], d_payload_tag_values[i]);
+	  }
+	  consume_each (d_header_len * (d_items_per_symbol + d_gi));
+	  in += d_header_len * (d_items_per_symbol + d_gi) * d_itemsize;
+	  nread += d_header_len * (d_items_per_symbol + d_gi);
+	  d_state = STATE_PAYLOAD;
 
-      if (!d_output_symbols) {
-	produced_hdr *= d_items_per_symbol;
-	produced_payload *= d_items_per_symbol;
-      }
-      produce(0, produced_hdr);
-      produce(1, produced_payload);
-      consume_each (nread);
+	case STATE_PAYLOAD:
+	  if (check_items_available(d_curr_payload_len, ninput_items, noutput_items, nread)) {
+	    copy_n_symbols(in, out_payload, 1, d_curr_payload_len);
+	    produce(1, d_curr_payload_len * (d_output_symbols ? 1 : d_items_per_symbol));
+	    consume_each (d_curr_payload_len * (d_items_per_symbol + d_gi));
+	    d_state = STATE_FIND_TRIGGER;
+	    set_min_noutput_items(d_output_symbols ? 1 : (d_items_per_symbol + d_gi));
+	  }
+	  break;
+
+	default:
+	  throw std::runtime_error("invalid state");
+      } /* switch */
+
       return WORK_CALLED_PRODUCE;
     } /* general_work() */
 
 
-    bool
+    int
     header_payload_demux_impl::find_trigger_signal(
-	int &pos,
+	int nread,
 	int noutput_items,
 	gr_vector_const_void_star &input_items)
     {
       if (input_items.size() == 2) {
 	unsigned char *in_trigger = (unsigned char *) input_items[1];
-	for (int i = 0; i < noutput_items; i++) {
+	in_trigger += nread;
+	for (int i = 0; i < noutput_items-nread; i++) {
 	  if (in_trigger[i]) {
-	    pos = i;
-	    return true;
+	    return i;
 	  }
 	}
       }
       if (d_uses_trigger_tag) {
-	std::vector<gr_tag_t> tags;
+	std::vector<tag_t> tags;
 	get_tags_in_range(tags, 0, nitems_read(0), nitems_read(0)+noutput_items);
 	uint64_t min_offset = ULLONG_MAX;
 	int tag_index = -1;
@@ -212,83 +258,103 @@ namespace gr {
 	  }
 	}
 	if (tag_index != -1) {
-	  pos = min_offset - nitems_read(0);
-	  return true;
+	  return min_offset - nitems_read(0);
 	}
       }
-      pos += noutput_items;
-      return false;
+      return -1;
     }
 
-
-    bool
-    header_payload_demux_impl::parse_header_data_msg()
-    {
-      pmt::pmt_t msg(delete_head_blocking(msg_port_id));
-      if (pmt::pmt_is_integer(msg)) {
-	d_remaining_symbols = pmt::pmt_to_long(msg);
-	add_item_tag(1, nitems_written(1), d_len_tag_key, msg);
-      } else if (pmt::pmt_is_dict(msg)) {
-	pmt::pmt_t dict_items(pmt::pmt_dict_items(msg));
-	while (!pmt::pmt_is_null(dict_items)) {
-	  pmt::pmt_t this_item(pmt::pmt_car(dict_items));
-	  add_item_tag(1, nitems_written(1), pmt::pmt_car(this_item), pmt::pmt_cdr(this_item));
-	  if (pmt::pmt_equal(pmt::pmt_car(this_item), d_len_tag_key)) {
-	    d_remaining_symbols = pmt::pmt_to_long(pmt::pmt_cdr(this_item));
-	  }
-	  dict_items = pmt::pmt_cdr(dict_items);
-	}
-	if (d_remaining_symbols == -1) {
-	  throw std::runtime_error("no length tag passed from header data");
-	}
-      } else if (pmt::pmt_is_null(msg)) { // Blocking call was interrupted
-	return false;
-      } else if (msg == pmt::PMT_F) { // Header was invalid
-	return false;
-      } else {
-	throw std::runtime_error("Received illegal header data");
-      }
-      return true;
-    }
 
     void
-    header_payload_demux_impl::copy_symbol(const unsigned char *&in, unsigned char *&out, int port, int &nread, int &nproduced)
+    header_payload_demux_impl::parse_header_data_msg(pmt::pmt_t header_data)
     {
-      std::vector<gr_tag_t> tags;
-      memcpy((void *) out,
-	     (void *) (in + d_gi * d_itemsize),
-	     d_itemsize * d_items_per_symbol
-      );
-      // Tags on GI
-      get_tags_in_range(tags, 0,
-	                nitems_read(0) + nread,
-			nitems_read(0) + nread + d_gi
-      );
-      for (unsigned t = 0; t < tags.size(); t++) {
-	add_item_tag(port,
-	    nitems_written(port)+nproduced,
-	    tags[t].key,
-	    tags[t].value
+      d_payload_tag_keys.clear();
+      d_payload_tag_values.clear();
+      d_state = STATE_HEADER_RX_FAIL;
+
+      if (pmt::is_integer(header_data)) {
+	d_curr_payload_len = pmt::to_long(header_data);
+	d_payload_tag_keys.push_back(d_len_tag_key);
+	d_payload_tag_values.push_back(header_data);
+	d_state = STATE_HEADER_RX_SUCCESS;
+      } else if (pmt::is_dict(header_data)) {
+	pmt::pmt_t dict_items(pmt::dict_items(header_data));
+	while (!pmt::is_null(dict_items)) {
+	  pmt::pmt_t this_item(pmt::car(dict_items));
+	  d_payload_tag_keys.push_back(pmt::car(this_item));
+	  d_payload_tag_values.push_back(pmt::cdr(this_item));
+	  if (pmt::equal(pmt::car(this_item), d_len_tag_key)) {
+	    d_curr_payload_len = pmt::to_long(pmt::cdr(this_item));
+	    d_state = STATE_HEADER_RX_SUCCESS;
+	  }
+	  dict_items = pmt::cdr(dict_items);
+	}
+	if (d_state == STATE_HEADER_RX_FAIL) {
+	  GR_LOG_CRIT(d_logger, "no length tag passed from header data");
+	}
+      } else if (header_data == pmt::PMT_F || pmt::is_null(header_data)) {
+	GR_LOG_INFO(d_logger, boost::format("Parser returned %1%") % pmt::write_string(header_data));
+      } else {
+	GR_LOG_ALERT(d_logger, boost::format("Received illegal header data (%1%)") % pmt::write_string(header_data));
+      }
+      if (d_state == STATE_HEADER_RX_SUCCESS)
+      {
+	if ((d_curr_payload_len * (d_output_symbols ? 1 : d_items_per_symbol)) > max_output_buffer(1)) {
+	  d_state = STATE_HEADER_RX_FAIL;
+	  GR_LOG_INFO(d_logger, boost::format("Detected a packet larger than max frame size (%1% symbols)") % d_curr_payload_len);
+	} else {
+	  set_min_noutput_items(d_curr_payload_len * (d_output_symbols ? 1 : d_items_per_symbol));
+	}
+      }
+    }
+
+
+    void
+    header_payload_demux_impl::copy_n_symbols(
+	const unsigned char *in,
+	unsigned char *out,
+	int port,
+	int n_symbols
+    )
+    {
+      // Copy samples
+      if (d_gi) {
+	for (int i = 0; i < n_symbols; i++) {
+	  memcpy((void *) out, (void *) (in + d_gi * d_itemsize), d_items_per_symbol * d_itemsize);
+	  in  += d_itemsize * (d_items_per_symbol + d_gi);
+	  out += d_itemsize * d_items_per_symbol;
+	}
+      } else {
+	memcpy(
+	    (void *) out,
+	    (void *) in,
+	    n_symbols * d_items_per_symbol * d_itemsize
 	);
       }
-      // Tags on symbol
+      // Copy tags
+      std::vector<tag_t> tags;
       get_tags_in_range(
 	  tags, 0,
-	  nitems_read(port) + nread + d_gi,
-	  nitems_read(port) + nread + d_gi + d_items_per_symbol
+	  nitems_read(0),
+	  nitems_read(0) + n_symbols * (d_items_per_symbol + d_gi)
       );
       for (unsigned t = 0; t < tags.size(); t++) {
-	add_item_tag(0,
-	    tags[t].offset - nitems_read(0)-nread + nitems_written(port)+nproduced,
+	int new_offset = tags[t].offset - nitems_read(0);
+	if (d_output_symbols) {
+	  new_offset /= (d_items_per_symbol + d_gi);
+	} else if (d_gi) {
+	  int pos_on_symbol = (new_offset % (d_items_per_symbol + d_gi)) - d_gi;
+	  if (pos_on_symbol < 0) {
+	    pos_on_symbol = 0;
+	  }
+	  new_offset = (new_offset / (d_items_per_symbol + d_gi)) + pos_on_symbol;
+	}
+	add_item_tag(port,
+	    nitems_written(port) + new_offset,
 	    tags[t].key,
 	    tags[t].value
 	);
       }
-      in += d_itemsize * (d_items_per_symbol + d_gi);
-      out += d_items_per_symbol * d_itemsize;
-      nread += d_items_per_symbol + d_gi;
-      nproduced++;
-      d_remaining_symbols--;
     }
 
   } /* namespace digital */

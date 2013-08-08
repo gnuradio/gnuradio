@@ -22,6 +22,7 @@
 
 from gnuradio import gr
 from gnuradio import audio
+from gnuradio import digital
 from gnuradio.eng_option import eng_option
 from optparse import OptionParser
 
@@ -43,8 +44,8 @@ class my_top_block(gr.top_block):
         sample_rate = int(options.sample_rate)
         ampl = 0.1
 
-        src = gr.glfsr_source_b(32)     # Pseudorandom noise source
-        b2f = gr.chunks_to_symbols_bf([ampl, -ampl], 1)
+        src = digital.glfsr_source_b(32)     # Pseudorandom noise source
+        b2f = digital.chunks_to_symbols_bf([ampl, -ampl], 1)
         dst = audio.sink(sample_rate, options.audio_output)
         self.connect(src, b2f, dst)
 

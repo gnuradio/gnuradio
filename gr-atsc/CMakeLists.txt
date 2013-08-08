@@ -1,4 +1,4 @@
-# Copyright 2011 Free Software Foundation, Inc.
+# Copyright 2011,2013 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -28,11 +28,17 @@ include(GrBoost)
 include(GrComponent)
 GR_REGISTER_COMPONENT("gr-atsc" ENABLE_GR_ATSC
     Boost_FOUND
-    ENABLE_GR_CORE
+    ENABLE_GNURADIO_RUNTIME
+    ENABLE_GR_FFT
+    ENABLE_GR_BLOCKS
+    ENABLE_GR_FEC
+    ENABLE_GR_FILTER
+    ENABLE_GR_ANALOG
 )
 
 GR_SET_GLOBAL(GR_ATSC_INCLUDE_DIRS
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/lib
+    ${CMAKE_CURRENT_SOURCE_DIR}/include
+    ${CMAKE_CURRENT_BINARY_DIR}/lib
 )
 
 ########################################################################
@@ -50,21 +56,21 @@ CPACK_COMPONENT("atsc_runtime"
     GROUP        "ATSC"
     DISPLAY_NAME "Runtime"
     DESCRIPTION  "Runtime"
-    DEPENDS      "core_runtime"
+    DEPENDS      "runtime_runtime"
 )
 
 CPACK_COMPONENT("atsc_devel"
     GROUP        "ATSC"
     DISPLAY_NAME "Development"
     DESCRIPTION  "C++ headers, package config, import libraries"
-    DEPENDS      "core_devel"
+    DEPENDS      "runtime_devel"
 )
 
 CPACK_COMPONENT("atsc_python"
     GROUP        "ATSC"
     DISPLAY_NAME "Python"
     DESCRIPTION  "Python modules for runtime; GRC xml files"
-    DEPENDS      "core_python;atsc_runtime"
+    DEPENDS      "runtime_python;atsc_runtime"
 )
 
 CPACK_COMPONENT("atsc_examples"
@@ -78,15 +84,17 @@ CPACK_COMPONENT("atsc_swig"
     GROUP        "ATSC"
     DISPLAY_NAME "SWIG"
     DESCRIPTION  "SWIG development .i files"
-    DEPENDS      "core_swig;atsc_python;atsc_devel"
+    DEPENDS      "runtime_swig;atsc_python;atsc_devel"
 )
 
 ########################################################################
 # Add subdirectories
 ########################################################################
-add_subdirectory(src/lib)
+add_subdirectory(lib)
+add_subdirectory(include/gnuradio/atsc)
 if(ENABLE_PYTHON)
-    add_subdirectory(src/python)
+    add_subdirectory(swig)
+    add_subdirectory(python/atsc)
 endif(ENABLE_PYTHON)
 
 ########################################################################

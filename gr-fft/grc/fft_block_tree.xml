@@ -32,5 +32,6 @@
 		<name>Fourier Analysis</name>
 		<block>fft_vxx</block>
 		<block>goertzel_fc</block>
+		<block>logpwrfft_x</block>
 	</cat>
 </cat>

@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<!--
+###################################################
+##FM Deemphasis
+###################################################
+ -->
+<block>
+	<name>FM Deemphasis</name>
+	<key>analog_fm_deemph</key>
+	<import>from gnuradio import analog</import>
+	<make>analog.fm_deemph(fs=$samp_rate, tau=$tau)</make>
+	<param>
+		<name>Sample Rate</name>
+		<key>samp_rate</key>
+		<type>real</type>
+	</param>
+	<param>
+		<name>Tau</name>
+		<key>tau</key>
+		<value>75e-6</value>
+		<type>real</type>
+	</param>
+	<sink>
+		<name>in</name>
+		<type>float</type>
+	</sink>
+	<source>
+		<name>out</name>
+		<type>float</type>
+	</source>
+</block>

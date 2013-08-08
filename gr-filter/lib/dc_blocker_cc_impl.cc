@@ -25,7 +25,7 @@
 #endif
 
 #include "dc_blocker_cc_impl.h"
-#include <gr_io_signature.h>
+#include <gnuradio/io_signature.h>
 #include <cstdio>
 
 namespace gr {
@@ -64,9 +64,9 @@ namespace gr {
 
 
     dc_blocker_cc_impl::dc_blocker_cc_impl(int D, bool long_form)
-      : gr_sync_block("dc_blocker_cc",
-		      gr_make_io_signature (1, 1, sizeof(gr_complex)),
-		      gr_make_io_signature (1, 1, sizeof(gr_complex))),
+      : sync_block("dc_blocker_cc",
+		      io_signature::make (1, 1, sizeof(gr_complex)),
+		      io_signature::make (1, 1, sizeof(gr_complex))),
 	d_length(D), d_long_form(long_form)
     {
       if(d_long_form) {

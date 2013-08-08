@@ -25,7 +25,7 @@
 #endif
 
 #include "complex_to_mag_impl.h"
-#include <gr_io_signature.h>
+#include <gnuradio/io_signature.h>
 #include <volk/volk.h>
 
 namespace gr {
@@ -37,9 +37,9 @@ namespace gr {
     }
 
     complex_to_mag_impl::complex_to_mag_impl(size_t vlen)
-      : gr_sync_block("complex_to_mag",
-		      gr_make_io_signature (1, 1, sizeof(gr_complex)*vlen),
-		      gr_make_io_signature (1, 1, sizeof(float)*vlen)),
+      : sync_block("complex_to_mag",
+		      io_signature::make (1, 1, sizeof(gr_complex)*vlen),
+		      io_signature::make (1, 1, sizeof(float)*vlen)),
 	d_vlen(vlen)
     {
       const int alignment_multiple =

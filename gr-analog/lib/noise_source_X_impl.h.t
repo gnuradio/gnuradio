@@ -25,8 +25,8 @@
 #ifndef @GUARD_NAME@
 #define @GUARD_NAME@
 
-#include <analog/@BASE_NAME@.h>
-#include <gr_random.h>
+#include <gnuradio/analog/@BASE_NAME@.h>
+#include <gnuradio/random.h>
 
 namespace gr {
   namespace analog {
@@ -35,7 +35,7 @@ namespace gr {
     {
       noise_type_t d_type;
       float d_ampl;
-      gr_random d_rng;
+      gr::random d_rng;
 
     public:
       @IMPL_NAME@(noise_type_t type, float ampl, long seed = 0);

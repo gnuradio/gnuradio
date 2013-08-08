@@ -177,13 +177,13 @@
            <property name="sizePolicy">
             <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
              <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
+             <verstretch>1</verstretch>
             </sizepolicy>
            </property>
            <property name="minimumSize">
             <size>
-             <width>617</width>
-             <height>400</height>
+             <width>320</width>
+             <height>200</height>
             </size>
            </property>
            <property name="sizeIncrement">
@@ -283,7 +283,7 @@
              </property>
              <property name="sizeHint" stdset="0">
               <size>
-               <width>200</width>
+               <width>100</width>
                <height>20</height>
               </size>
              </property>
@@ -304,7 +304,7 @@
         <widget class="QLabel" name="textLabel1">
          <property name="maximumSize">
           <size>
-           <width>100</width>
+           <width>130</width>
            <height>16777215</height>
           </size>
          </property>
@@ -317,10 +317,10 @@
         </widget>
        </item>
        <item row="0" column="2">
-        <widget class="QwtWheel" name="WaterfallMaximumIntensityWheel">
+        <widget class="QwtSlider" name="WaterfallMaximumIntensitySlider">
          <property name="minimumSize">
           <size>
-           <width>200</width>
+           <width>50</width>
            <height>0</height>
           </size>
          </property>
@@ -328,19 +328,10 @@
           <bool>true</bool>
          </property>
          <property name="focusPolicy">
-          <enum>Qt::WheelFocus</enum>
+          <enum>Qt::ClickFocus</enum>
          </property>
          <property name="valid">
           <bool>true</bool>
-         </property>
-         <property name="totalAngle">
-          <double>200.000000000000000</double>
-         </property>
-         <property name="viewAngle">
-          <double>20.000000000000000</double>
-         </property>
-         <property name="mass">
-          <double>0.000000000000000</double>
          </property>
         </widget>
        </item>
@@ -364,8 +355,8 @@
         <widget class="QFrame" name="WaterfallPlotDisplayFrame">
          <property name="minimumSize">
           <size>
-           <width>617</width>
-           <height>338</height>
+           <width>320</width>
+           <height>200</height>
           </size>
          </property>
          <property name="frameShape">
@@ -377,24 +368,21 @@
         </widget>
        </item>
        <item row="2" column="2">
-        <widget class="QwtWheel" name="WaterfallMinimumIntensityWheel">
+        <widget class="QwtSlider" name="WaterfallMinimumIntensitySlider">
          <property name="minimumSize">
           <size>
-           <width>200</width>
+           <width>50</width>
            <height>0</height>
           </size>
          </property>
          <property name="valid">
           <bool>true</bool>
          </property>
-         <property name="totalAngle">
-          <double>200.000000000000000</double>
+         <property name="mouseTracking">
+          <bool>true</bool>
          </property>
-         <property name="viewAngle">
-          <double>20.000000000000000</double>
-         </property>
-         <property name="mass">
-          <double>0.000000000000000</double>
+         <property name="focusPolicy">
+          <enum>Qt::ClickFocus</enum>
          </property>
         </widget>
        </item>
@@ -476,8 +464,8 @@
         <widget class="QFrame" name="TimeDomainDisplayFrame">
          <property name="minimumSize">
           <size>
-           <width>617</width>
-           <height>404</height>
+           <width>320</width>
+           <height>200</height>
           </size>
          </property>
          <property name="frameShape">
@@ -499,8 +487,8 @@
         <widget class="QFrame" name="ConstellationDisplayFrame">
          <property name="minimumSize">
           <size>
-           <width>617</width>
-           <height>406</height>
+           <width>320</width>
+           <height>200</height>
           </size>
          </property>
          <property name="frameShape">
@@ -520,27 +508,27 @@
  <layoutdefault spacing="6" margin="11"/>
  <pixmapfunction>qPixmapFromMimeSource</pixmapfunction>
  <customwidgets>
-  <customwidget>
-   <class>QwtWheel</class>
+ <customwidget>
+   <class>QwtSlider</class>
    <extends>QWidget</extends>
-   <header>qwt_wheel.h</header>
-  </customwidget>
+   <header>qwt_slider.h</header>
+ </customwidget>
  </customwidgets>
  <tabstops>
   <tabstop>SpectrumTypeTab</tabstop>
   <tabstop>UseRFFrequenciesCheckBox</tabstop>
   <tabstop>FFTSizeComboBox</tabstop>
-  <tabstop>WaterfallMaximumIntensityWheel</tabstop>
-  <tabstop>WaterfallMinimumIntensityWheel</tabstop>
+  <tabstop>WaterfallMaximumIntensitySlider</tabstop>
+  <tabstop>WaterfallMinimumIntensitySlider</tabstop>
  </tabstops>
  <includes>
-  <include location="global">SpectrumGUIClass.h</include>
-  <include location="global">FrequencyDisplayPlot.h</include>
-  <include location="global">WaterfallDisplayPlot.h</include>
-  <include location="global">TimeDomainDisplayPlot.h</include>
+  <include location="global">gnuradio/qtgui/SpectrumGUIClass.h</include>
+  <include location="global">gnuradio/qtgui/FrequencyDisplayPlot.h</include>
+  <include location="global">gnuradio/qtgui/WaterfallDisplayPlot.h</include>
+  <include location="global">gnuradio/qtgui/TimeDomainDisplayPlot.h</include>
   <include location="global">qvalidator.h</include>
   <include location="global">vector</include>
-  <include location="local">qwt_wheel.h</include>
+  <include location="local">qwt_slider.h</include>
  </includes>
  <resources/>
  <connections>
@@ -548,7 +536,7 @@
    <sender>MaxHoldCheckBox</sender>
    <signal>toggled(bool)</signal>
    <receiver>SpectrumDisplayForm</receiver>
-   <slot>MaxHoldCheckBox_toggled(bool)</slot>
+   <slot>maxHoldCheckBox_toggled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
      <x>22</x>
@@ -564,7 +552,7 @@
    <sender>MaxHoldResetBtn</sender>
    <signal>clicked()</signal>
    <receiver>SpectrumDisplayForm</receiver>
-   <slot>MaxHoldResetBtn_clicked()</slot>
+   <slot>maxHoldResetBtn_clicked()</slot>
    <hints>
     <hint type="sourcelabel">
      <x>107</x>
@@ -580,7 +568,7 @@
    <sender>MinHoldCheckBox</sender>
    <signal>toggled(bool)</signal>
    <receiver>SpectrumDisplayForm</receiver>
-   <slot>MinHoldCheckBox_toggled(bool)</slot>
+   <slot>minHoldCheckBox_toggled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
      <x>22</x>
@@ -596,7 +584,7 @@
    <sender>MinHoldResetBtn</sender>
    <signal>clicked()</signal>
    <receiver>SpectrumDisplayForm</receiver>
-   <slot>MinHoldResetBtn_clicked()</slot>
+   <slot>minHoldResetBtn_clicked()</slot>
    <hints>
     <hint type="sourcelabel">
      <x>107</x>
@@ -612,7 +600,7 @@
    <sender>WindowComboBox</sender>
    <signal>activated(int)</signal>
    <receiver>SpectrumDisplayForm</receiver>
-   <slot>WindowTypeChanged(int)</slot>
+   <slot>windowTypeChanged(int)</slot>
    <hints>
     <hint type="sourcelabel">
      <x>20</x>
@@ -628,7 +616,7 @@
    <sender>UseRFFrequenciesCheckBox</sender>
    <signal>toggled(bool)</signal>
    <receiver>SpectrumDisplayForm</receiver>
-   <slot>UseRFFrequenciesCB(bool)</slot>
+   <slot>useRFFrequenciesCB(bool)</slot>
    <hints>
     <hint type="sourcelabel">
      <x>20</x>
@@ -641,7 +629,7 @@
    </hints>
   </connection>
   <connection>
-   <sender>WaterfallMaximumIntensityWheel</sender>
+   <sender>WaterfallMaximumIntensitySlider</sender>
    <signal>valueChanged(double)</signal>
    <receiver>SpectrumDisplayForm</receiver>
    <slot>waterfallMaximumIntensityChangedCB(double)</slot>
@@ -657,7 +645,7 @@
    </hints>
   </connection>
   <connection>
-   <sender>WaterfallMinimumIntensityWheel</sender>
+   <sender>WaterfallMinimumIntensitySlider</sender>
    <signal>valueChanged(double)</signal>
    <receiver>SpectrumDisplayForm</receiver>
    <slot>waterfallMinimumIntensityChangedCB(double)</slot>
@@ -676,7 +664,7 @@
    <sender>FFTSizeComboBox</sender>
    <signal>activated(QString)</signal>
    <receiver>SpectrumDisplayForm</receiver>
-   <slot>FFTComboBoxSelectedCB(QString)</slot>
+   <slot>fftComboBoxSelectedCB(QString)</slot>
    <hints>
     <hint type="sourcelabel">
      <x>20</x>
@@ -692,7 +680,7 @@
    <sender>WaterfallAutoScaleBtn</sender>
    <signal>clicked()</signal>
    <receiver>SpectrumDisplayForm</receiver>
-   <slot>WaterfallAutoScaleBtnCB()</slot>
+   <slot>waterfallAutoScaleBtnCB()</slot>
    <hints>
     <hint type="sourcelabel">
      <x>22</x>
@@ -708,7 +696,7 @@
    <sender>WaterfallIntensityComboBox</sender>
    <signal>activated(int)</signal>
    <receiver>SpectrumDisplayForm</receiver>
-   <slot>WaterfallIntensityColorTypeChanged(int)</slot>
+   <slot>waterfallIntensityColorTypeChanged(int)</slot>
    <hints>
     <hint type="sourcelabel">
      <x>92</x>
@@ -724,7 +712,7 @@
    <sender>SpectrumTypeTab</sender>
    <signal>currentChanged(int)</signal>
    <receiver>SpectrumDisplayForm</receiver>
-   <slot>TabChanged(int)</slot>
+   <slot>tabChanged(int)</slot>
    <hints>
     <hint type="sourcelabel">
      <x>314</x>
@@ -740,7 +728,7 @@
    <sender>AvgLineEdit</sender>
    <signal>valueChanged(int)</signal>
    <receiver>SpectrumDisplayForm</receiver>
-   <slot>AvgLineEdit_valueChanged(int)</slot>
+   <slot>avgLineEdit_valueChanged(int)</slot>
    <hints>
     <hint type="sourcelabel">
      <x>604</x>

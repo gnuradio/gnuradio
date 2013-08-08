@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='ASCII'?>
 <flow_graph>
-  <timestamp>Thu Jul  5 16:26:53 2012</timestamp>
+  <timestamp>Sat Nov 10 15:13:23 2012</timestamp>
   <block>
     <key>options</key>
     <param>
@@ -139,96 +139,10 @@
     </param>
   </block>
   <block>
-    <key>gr_sig_source_x</key>
+    <key>blocks_throttle</key>
     <param>
       <key>id</key>
-      <value>gr_sig_source_x_0</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>type</key>
-      <value>float</value>
-    </param>
-    <param>
-      <key>samp_rate</key>
-      <value>samp_rate</value>
-    </param>
-    <param>
-      <key>waveform</key>
-      <value>gr.GR_COS_WAVE</value>
-    </param>
-    <param>
-      <key>freq</key>
-      <value>freq</value>
-    </param>
-    <param>
-      <key>amp</key>
-      <value>1</value>
-    </param>
-    <param>
-      <key>offset</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(184, 9)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>digital_dxpsk_mod</key>
-    <param>
-      <key>id</key>
-      <value>digital_dxpsk_mod_1</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>type</key>
-      <value>dbpsk</value>
-    </param>
-    <param>
-      <key>samples_per_symbol</key>
-      <value>2</value>
-    </param>
-    <param>
-      <key>excess_bw</key>
-      <value>0.35</value>
-    </param>
-    <param>
-      <key>gray_coded</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>verbose</key>
-      <value>False</value>
-    </param>
-    <param>
-      <key>log</key>
-      <value>False</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(745, 16)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>gr_throttle</key>
-    <param>
-      <key>id</key>
-      <value>gr_throttle_0_0</value>
+      <value>blocks_throttle_0_0</value>
     </param>
     <param>
       <key>_enabled</key>
@@ -248,7 +162,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(358, 39)</value>
+      <value>(381, 51)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -291,7 +205,50 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(541, 9)</value>
+      <value>(598, 19)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>digital_dxpsk_mod</key>
+    <param>
+      <key>id</key>
+      <value>digital_dxpsk_mod_1</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>type</key>
+      <value>dbpsk</value>
+    </param>
+    <param>
+      <key>samples_per_symbol</key>
+      <value>2</value>
+    </param>
+    <param>
+      <key>excess_bw</key>
+      <value>0.35</value>
+    </param>
+    <param>
+      <key>mod_code</key>
+      <value>"gray"</value>
+    </param>
+    <param>
+      <key>verbose</key>
+      <value>False</value>
+    </param>
+    <param>
+      <key>log</key>
+      <value>False</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(806, 27)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -333,12 +290,8 @@
       <value>6.28/100.0</value>
     </param>
     <param>
-      <key>omega_relative_limit</key>
-      <value>0.005</value>
-    </param>
-    <param>
-      <key>gray_coded</key>
-      <value>True</value>
+      <key>mod_code</key>
+      <value>"gray"</value>
     </param>
     <param>
       <key>verbose</key>
@@ -354,38 +307,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(746, 135)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>180</value>
-    </param>
-  </block>
-  <block>
-    <key>blks2_packet_decoder</key>
-    <param>
-      <key>id</key>
-      <value>blks2_packet_decoder_0</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>type</key>
-      <value>float</value>
-    </param>
-    <param>
-      <key>access_code</key>
-      <value></value>
-    </param>
-    <param>
-      <key>threshold</key>
-      <value>-1</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(545, 187)</value>
+      <value>(745, 139)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -452,7 +374,7 @@
     </param>
     <param>
       <key>trig_mode</key>
-      <value>gr.gr_TRIG_MODE_AUTO</value>
+      <value>wxgui.TRIG_MODE_AUTO</value>
     </param>
     <param>
       <key>y_axis_label</key>
@@ -460,7 +382,81 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(184, 165)</value>
+      <value>(184, 163)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>180</value>
+    </param>
+  </block>
+  <block>
+    <key>analog_sig_source_x</key>
+    <param>
+      <key>id</key>
+      <value>analog_sig_source_x_0</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>type</key>
+      <value>float</value>
+    </param>
+    <param>
+      <key>samp_rate</key>
+      <value>samp_rate</value>
+    </param>
+    <param>
+      <key>waveform</key>
+      <value>analog.GR_COS_WAVE</value>
+    </param>
+    <param>
+      <key>freq</key>
+      <value>freq</value>
+    </param>
+    <param>
+      <key>amp</key>
+      <value>1</value>
+    </param>
+    <param>
+      <key>offset</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(190, 19)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>blks2_packet_decoder</key>
+    <param>
+      <key>id</key>
+      <value>blks2_packet_decoder_0</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>type</key>
+      <value>float</value>
+    </param>
+    <param>
+      <key>access_code</key>
+      <value></value>
+    </param>
+    <param>
+      <key>threshold</key>
+      <value>-1</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(545, 187)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -492,14 +488,14 @@
     <sink_key>0</sink_key>
   </connection>
   <connection>
-    <source_block_id>gr_throttle_0_0</source_block_id>
+    <source_block_id>blocks_throttle_0_0</source_block_id>
     <sink_block_id>blks2_packet_encoder_0</sink_block_id>
     <source_key>0</source_key>
     <sink_key>0</sink_key>
   </connection>
   <connection>
-    <source_block_id>gr_sig_source_x_0</source_block_id>
-    <sink_block_id>gr_throttle_0_0</sink_block_id>
+    <source_block_id>analog_sig_source_x_0</source_block_id>
+    <sink_block_id>blocks_throttle_0_0</sink_block_id>
     <source_key>0</source_key>
     <sink_key>0</sink_key>
   </connection>

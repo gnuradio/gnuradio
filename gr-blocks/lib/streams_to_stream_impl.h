@@ -23,7 +23,7 @@
 #ifndef INCLUDED_STREAMS_TO_STREAM_IMPL_H
 #define INCLUDED_STREAMS_TO_STREAM_IMPL_H
 
-#include <blocks/streams_to_stream.h>
+#include <gnuradio/blocks/streams_to_stream.h>
 
 namespace gr {
   namespace blocks {

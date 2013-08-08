@@ -1,0 +1,88 @@
+<?xml version="1.0"?>
+<!--
+###################################################
+##FFT
+###################################################
+ -->
+<block>
+	<name>FFT</name>
+	<key>fft_vxx</key>
+	<import>from gnuradio import fft</import>
+	<import>from gnuradio.fft import window</import>
+	<make>#if $type() == "complex"
+fft.fft_vcc($fft_size, $forward, $window, $shift, $nthreads)
+#else
+fft.fft_vfc($fft_size, $forward, $window, $nthreads)
+#end if</make>
+	<callback>set_nthreads($nthreads)</callback>
+	<param>
+		<name>Input Type</name>
+		<key>type</key>
+		<type>enum</type>
+		<option>
+			<name>Complex</name>
+			<key>complex</key>
+			<opt>hide_shift:</opt>
+		</option>
+		<option>
+			<name>Float</name>
+			<key>float</key>
+			<opt>hide_shift:all</opt>
+		</option>
+	</param>
+	<param>
+		<name>FFT Size</name>
+		<key>fft_size</key>
+		<value>1024</value>
+		<type>int</type>
+	</param>
+	<param>
+		<name>Forward/Reverse</name>
+		<key>forward</key>
+		<type>enum</type>
+		<option>
+			<name>Forward</name>
+			<key>True</key>
+		</option>
+		<option>
+			<name>Reverse</name>
+			<key>False</key>
+		</option>
+	</param>
+	<param>
+		<name>Window</name>
+		<key>window</key>
+		<value>window.blackmanharris(1024)</value>
+		<type>real_vector</type>
+	</param>
+	<param>
+		<name>Shift</name>
+		<key>shift</key>
+		<type>enum</type>
+		<hide>$type.hide_shift</hide>
+		<option>
+			<name>Yes</name>
+			<key>True</key>
+		</option>
+		<option>
+			<name>No</name>
+			<key>False</key>
+		</option>
+	</param>
+	<param>
+		<name>Num. Threads</name>
+		<key>nthreads</key>
+		<value>1</value>
+		<type>int</type>
+	</param>
+	<sink>
+		<name>in</name>
+		<type>$type</type>
+		<vlen>$fft_size</vlen>
+	</sink>
+	<source>
+		<name>out</name>
+		<type>complex</type>
+		<vlen>$fft_size</vlen>
+	</source>
+</block>

@@ -19,14 +19,15 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include <gr_sync_block.h>
-#include <gr_io_signature.h>
+#include <gnuradio/sync_block.h>
+#include <gnuradio/io_signature.h>
 #include <boost/foreach.hpp>
 #include <boost/format.hpp>
 #include <iostream>
 #include <complex>
 
-class tag_source_demo : public gr_sync_block{
+class tag_source_demo : public gr::sync_block
+{
 public:
 
     tag_source_demo(
@@ -36,10 +37,10 @@ public:
         const double idle_duration,
         const double burst_duration
     ):
-        gr_sync_block(
+        sync_block(
             "uhd tag source demo",
-            gr_make_io_signature(0, 0, 0),
-            gr_make_io_signature(1, 1, sizeof(std::complex<float>))
+            gr::io_signature::make(0, 0, 0),
+            gr::io_signature::make(1, 1, sizeof(std::complex<float>))
         ),
         _time_secs(start_secs),
         _time_fracs(start_fracs),
@@ -52,35 +53,38 @@ public:
         //NOP
     }
 
-    void make_time_tag(const uint64_t tag_count){;
-        const pmt::pmt_t key = pmt::pmt_string_to_symbol("tx_time");
-        const pmt::pmt_t value = pmt::pmt_make_tuple(
-            pmt::pmt_from_uint64(_time_secs),
-            pmt::pmt_from_double(_time_fracs)
+    void make_time_tag(const uint64_t tag_count)
+    {
+        const pmt::pmt_t key = pmt::string_to_symbol("tx_time");
+        const pmt::pmt_t value = pmt::make_tuple(
+            pmt::from_uint64(_time_secs),
+            pmt::from_double(_time_fracs)
         );
-        const pmt::pmt_t srcid = pmt::pmt_string_to_symbol(this->name());
+        const pmt::pmt_t srcid = pmt::string_to_symbol(this->name());
         this->add_item_tag(0/*chan0*/, tag_count, key, value, srcid);
     }
 
-    void make_sob_tag(const uint64_t tag_count){
-        const pmt::pmt_t key = pmt::pmt_string_to_symbol("tx_sob");
+    void make_sob_tag(const uint64_t tag_count)
+    {
+        const pmt::pmt_t key = pmt::string_to_symbol("tx_sob");
         const pmt::pmt_t value = pmt::PMT_T;
-        const pmt::pmt_t srcid = pmt::pmt_string_to_symbol(this->name());
+        const pmt::pmt_t srcid = pmt::string_to_symbol(this->name());
         this->add_item_tag(0/*chan0*/, tag_count, key, value, srcid);
     }
 
-    void make_eob_tag(const uint64_t tag_count){;
-        const pmt::pmt_t key = pmt::pmt_string_to_symbol("tx_eob");
+    void make_eob_tag(const uint64_t tag_count)
+    {
+        const pmt::pmt_t key = pmt::string_to_symbol("tx_eob");
         const pmt::pmt_t value = pmt::PMT_T;
-        const pmt::pmt_t srcid = pmt::pmt_string_to_symbol(this->name());
+        const pmt::pmt_t srcid = pmt::string_to_symbol(this->name());
         this->add_item_tag(0/*chan0*/, tag_count, key, value, srcid);
     }
 
     int work(
         int noutput_items,
         gr_vector_const_void_star &input_items,
-        gr_vector_void_star &output_items
-    ){
+        gr_vector_void_star &output_items)
+    {
         //load the output with a constant
         std::complex<float> *output = reinterpret_cast<std::complex<float> *>(output_items[0]);
         for (size_t i = 0; i < size_t(noutput_items); i++){

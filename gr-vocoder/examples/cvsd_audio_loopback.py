@@ -20,8 +20,10 @@
 # Boston, MA 02110-1301, USA.
 #
 
-from gnuradio import gr, blks2
+from gnuradio import gr
 from gnuradio import audio
+from gnuradio import blocks
+from gnuradio import filter
 from gnuradio import vocoder
 
 def build_graph():
@@ -30,33 +32,33 @@ def build_graph():
 
     tb = gr.top_block()
     src = audio.source(sample_rate, "plughw:0,0")
-    src_scale = gr.multiply_const_ff(scale_factor)
+    src_scale = blocks.multiply_const_ff(scale_factor)
 
-    interp = blks2.rational_resampler_fff(8, 1)
-    f2s = gr.float_to_short ()
+    interp = filter.rational_resampler_fff(8, 1)
+    f2s = blocks.float_to_short()
 
     enc = vocoder.cvsd_encode_sb()
     dec = vocoder.cvsd_decode_bs()
 
-    s2f = gr.short_to_float ()
-    decim = blks2.rational_resampler_fff(1, 8)
+    s2f = blocks.short_to_float()
+    decim = filter.rational_resampler_fff(1, 8)
 
-    sink_scale = gr.multiply_const_ff(1.0/scale_factor)
+    sink_scale = blocks.multiply_const_ff(1.0/scale_factor)
     sink = audio.sink(sample_rate, "plughw:0,0")
 
     tb.connect(src, src_scale, interp, f2s, enc)
     tb.connect(enc, dec, s2f, decim, sink_scale, sink)
 
     if 0: # debug
-        tb.conect(src, gr.file_sink(gr.sizeof_float, "source.dat"))
-        tb.conect(src_scale, gr.file_sink(gr.sizeof_float, "src_scale.dat"))
-        tb.conect(interp, gr.file_sink(gr.sizeof_float, "interp.dat"))
-        tb.conect(f2s, gr.file_sink(gr.sizeof_short, "f2s.dat"))
-        tb.conect(enc, gr.file_sink(gr.sizeof_char,  "enc.dat"))
-        tb.conect(dec, gr.file_sink(gr.sizeof_short, "dec.dat"))
-        tb.conect(s2f, gr.file_sink(gr.sizeof_float, "s2f.dat"))
-        tb.conect(decim, gr.file_sink(gr.sizeof_float, "decim.dat"))
-        tb.conect(sink_scale, gr.file_sink(gr.sizeof_float, "sink_scale.dat"))
+        tb.conect(src, blocks.file_sink(gr.sizeof_float, "source.dat"))
+        tb.conect(src_scale, blocks.file_sink(gr.sizeof_float, "src_scale.dat"))
+        tb.conect(interp, blocks.file_sink(gr.sizeof_float, "interp.dat"))
+        tb.conect(f2s, blocks.file_sink(gr.sizeof_short, "f2s.dat"))
+        tb.conect(enc, blocks.file_sink(gr.sizeof_char,  "enc.dat"))
+        tb.conect(dec, blocks.file_sink(gr.sizeof_short, "dec.dat"))
+        tb.conect(s2f, blocks.file_sink(gr.sizeof_float, "s2f.dat"))
+        tb.conect(decim, blocks.file_sink(gr.sizeof_float, "decim.dat"))
+        tb.conect(sink_scale, blocks.file_sink(gr.sizeof_float, "sink_scale.dat"))
 
     return tb
 

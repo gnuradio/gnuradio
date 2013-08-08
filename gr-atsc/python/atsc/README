@@ -1,0 +1,19 @@
+Decoding ATSC using 6.4MSps rate
+---------------------------------
+
+1) Verify signal, adjust antenna and find best gain setting using uhd_fft.py,
+station frequency from the fcc video database, and sample rate to 6.4e6.
+
+2) Capture data - adjust gain (-g) frequency (-f) and which side
+the daughterboard is on to fit your local setup:
+
+uhd_rx_cfile.py -s --samp-rate=6.4e6 -g 65 -f 503e6 atsc_data_6-4m_complex
+
+You probably still need fast disks to take the data, like a raid-0 set of
+striped sata drives. Make sure there are no or very few Ou overruns. Saving
+the raw usrp data in 'short' form halves the disk space/bus bandwidth that
+the usual complex form uses.
+
+3) Run atsc_rx.py:
+
+./atsc_rx.py atsc_data_6-4m_complex outfile.ts

@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<!--
+###################################################
+##Block Tree for gr-fec
+###################################################
+ -->
+<cat>
+	<name></name> <!-- Blank for Root Name -->
+	<cat>
+		<name>Error Coding</name>
+		<block>fec_decode_ccsds_27_fb</block>
+		<block>fec_encode_ccsds_27_bb</block>
+	</cat>
+</cat>

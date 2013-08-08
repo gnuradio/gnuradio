@@ -23,7 +23,7 @@
 #ifndef INCLUDED_DEINTERLEAVE_IMPL_H
 #define INCLUDED_DEINTERLEAVE_IMPL_H
 
-#include <blocks/deinterleave.h>
+#include <gnuradio/blocks/deinterleave.h>
 
 namespace gr {
   namespace blocks {

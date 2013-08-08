@@ -25,7 +25,7 @@
 #endif
 
 #include "dpll_bb_impl.h"
-#include <gr_io_signature.h>
+#include <gnuradio/io_signature.h>
 #include <cstdio>
 
 namespace gr {
@@ -39,9 +39,9 @@ namespace gr {
     }
 
     dpll_bb_impl::dpll_bb_impl(float period, float gain)
-      : gr_sync_block("dpll_bb",
-		      gr_make_io_signature(1, 1, sizeof(char)),
-		      gr_make_io_signature(1, 1, sizeof(char))),
+      : sync_block("dpll_bb",
+		      io_signature::make(1, 1, sizeof(char)),
+		      io_signature::make(1, 1, sizeof(char))),
 	d_restart(0), d_pulse_phase(0)
     {
       d_pulse_frequency = 1.0/period;

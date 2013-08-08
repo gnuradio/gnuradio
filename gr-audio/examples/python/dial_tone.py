@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2004,2005,2007 Free Software Foundation, Inc.
+# Copyright 2004,2005,2007,2012 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -25,6 +25,12 @@ from gnuradio import audio
 from gnuradio.eng_option import eng_option
 from optparse import OptionParser
 
+try:
+    from gnuradio import analog
+except ImportError:
+    sys.stderr.write("Error: Program requires gr-analog.\n")
+    sys.exit(1)
+
 class my_top_block(gr.top_block):
 
     def __init__(self):
@@ -35,7 +41,7 @@ class my_top_block(gr.top_block):
                           help="pcm output device name.  E.g., hw:0,0 or /dev/dsp")
         parser.add_option("-r", "--sample-rate", type="eng_float", default=48000,
                           help="set sample rate to RATE (48000)")
-        (options, args) = parser.parse_args ()
+        (options, args) = parser.parse_args()
         if len(args) != 0:
             parser.print_help()
             raise SystemExit, 1
@@ -43,12 +49,11 @@ class my_top_block(gr.top_block):
         sample_rate = int(options.sample_rate)
         ampl = 0.1
 
-        src0 = gr.sig_source_f (sample_rate, gr.GR_SIN_WAVE, 350, ampl)
-        src1 = gr.sig_source_f (sample_rate, gr.GR_SIN_WAVE, 440, ampl)
-        dst = audio.sink (sample_rate, options.audio_output)
-        self.connect (src0, (dst, 0))
-        self.connect (src1, (dst, 1))
-
+        src0 = analog.sig_source_f(sample_rate, analog.GR_SIN_WAVE, 350, ampl)
+        src1 = analog.sig_source_f(sample_rate, analog.GR_SIN_WAVE, 440, ampl)
+        dst = audio.sink(sample_rate, options.audio_output)
+        self.connect(src0, (dst, 0))
+        self.connect(src1, (dst, 1))
 
 if __name__ == '__main__':
     try:

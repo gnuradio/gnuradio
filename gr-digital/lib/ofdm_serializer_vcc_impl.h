@@ -22,7 +22,7 @@
 #ifndef INCLUDED_DIGITAL_OFDM_SERIALIZER_VCC_IMPL_H
 #define INCLUDED_DIGITAL_OFDM_SERIALIZER_VCC_IMPL_H
 
-#include <digital/ofdm_serializer_vcc.h>
+#include <gnuradio/digital/ofdm_serializer_vcc.h>
 
 namespace gr {
   namespace digital {

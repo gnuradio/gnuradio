@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='ASCII'?>
 <flow_graph>
-  <timestamp>Sat Oct  8 15:08:55 2011</timestamp>
+  <timestamp>Mon Mar 18 11:10:25 2013</timestamp>
   <block>
     <key>options</key>
     <param>
@@ -42,6 +42,10 @@
     <param>
       <key>run</key>
       <value>True</value>
+    </param>
+    <param>
+      <key>max_nouts</key>
+      <value>0</value>
     </param>
     <param>
       <key>realtime_scheduling</key>
@@ -310,10 +314,10 @@
     </param>
   </block>
   <block>
-    <key>gr_null_sink</key>
+    <key>blocks_null_sink</key>
     <param>
       <key>id</key>
-      <value>gr_null_sink_0</value>
+      <value>blocks_null_sink_0</value>
     </param>
     <param>
       <key>_enabled</key>
@@ -604,6 +608,10 @@
       <value></value>
     </param>
     <param>
+      <key>freqvar</key>
+      <value>None</value>
+    </param>
+    <param>
       <key>_coordinate</key>
       <value>(710, 236)</value>
     </param>
@@ -635,6 +643,10 @@
       <value>0.35</value>
     </param>
     <param>
+      <key>freq_bw</key>
+      <value>6.28/100.0</value>
+    </param>
+    <param>
       <key>phase_bw</key>
       <value>6.28/100.0</value>
     </param>
@@ -643,12 +655,8 @@
       <value>6.28/100.0</value>
     </param>
     <param>
-      <key>omega_relative_limit</key>
-      <value>0.005</value>
-    </param>
-    <param>
-      <key>gray_coded</key>
-      <value>True</value>
+      <key>mod_code</key>
+      <value>"gray"</value>
     </param>
     <param>
       <key>verbose</key>
@@ -793,7 +801,15 @@
     </param>
     <param>
       <key>type</key>
-      <value>complex</value>
+      <value>fc32</value>
+    </param>
+    <param>
+      <key>otw</key>
+      <value></value>
+    </param>
+    <param>
+      <key>stream_args</key>
+      <value></value>
     </param>
     <param>
       <key>dev_addr</key>
@@ -812,7 +828,11 @@
       <value>1</value>
     </param>
     <param>
-      <key>ref_source0</key>
+      <key>clock_source0</key>
+      <value></value>
+    </param>
+    <param>
+      <key>time_source0</key>
       <value></value>
     </param>
     <param>
@@ -820,7 +840,11 @@
       <value></value>
     </param>
     <param>
-      <key>ref_source1</key>
+      <key>clock_source1</key>
+      <value></value>
+    </param>
+    <param>
+      <key>time_source1</key>
       <value></value>
     </param>
     <param>
@@ -828,7 +852,11 @@
       <value></value>
     </param>
     <param>
-      <key>ref_source2</key>
+      <key>clock_source2</key>
+      <value></value>
+    </param>
+    <param>
+      <key>time_source2</key>
       <value></value>
     </param>
     <param>
@@ -836,7 +864,11 @@
       <value></value>
     </param>
     <param>
-      <key>ref_source3</key>
+      <key>clock_source3</key>
+      <value></value>
+    </param>
+    <param>
+      <key>time_source3</key>
       <value></value>
     </param>
     <param>
@@ -844,7 +876,11 @@
       <value></value>
     </param>
     <param>
-      <key>ref_source4</key>
+      <key>clock_source4</key>
+      <value></value>
+    </param>
+    <param>
+      <key>time_source4</key>
       <value></value>
     </param>
     <param>
@@ -852,7 +888,11 @@
       <value></value>
     </param>
     <param>
-      <key>ref_source5</key>
+      <key>clock_source5</key>
+      <value></value>
+    </param>
+    <param>
+      <key>time_source5</key>
       <value></value>
     </param>
     <param>
@@ -860,7 +900,11 @@
       <value></value>
     </param>
     <param>
-      <key>ref_source6</key>
+      <key>clock_source6</key>
+      <value></value>
+    </param>
+    <param>
+      <key>time_source6</key>
       <value></value>
     </param>
     <param>
@@ -868,7 +912,11 @@
       <value></value>
     </param>
     <param>
-      <key>ref_source7</key>
+      <key>clock_source7</key>
+      <value></value>
+    </param>
+    <param>
+      <key>time_source7</key>
       <value></value>
     </param>
     <param>
@@ -1406,7 +1454,7 @@
   </block>
   <connection>
     <source_block_id>digital_dxpsk_demod_0</source_block_id>
-    <sink_block_id>gr_null_sink_0</sink_block_id>
+    <sink_block_id>blocks_null_sink_0</sink_block_id>
     <source_key>0</source_key>
     <sink_key>0</sink_key>
   </connection>

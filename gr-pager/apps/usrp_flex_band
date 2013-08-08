@@ -20,7 +20,9 @@
 # Boston, MA 02110-1301, USA.
 #
 
-from gnuradio import gr, gru, uhd, optfir, eng_notation, blks2, pager
+from gnuradio import gr, uhd, eng_notation, pager
+from gnuradio import blocks
+from gnuradio import filter
 from gnuradio.eng_option import eng_option
 from optparse import OptionParser
 import sys
@@ -30,7 +32,7 @@ class app_top_block(gr.top_block):
 	gr.top_block.__init__(self, "usrp_flex_all")
 
         if options.from_file is not None:
-            self.u = gr.file_source(gr.sizeof_gr_complex, options.from_file)
+            self.u = blocks.file_source(gr.sizeof_gr_complex, options.from_file)
             if options.verbose:
                 print "Reading samples from file", options.from_file
         else:
@@ -64,20 +66,20 @@ class app_top_block(gr.top_block):
             self.u.set_gain(options.rx_gain, 0)
 
 
-        taps = gr.firdes.low_pass(1.0,
-                                  1.0,
-                                  1.0/40.0*0.4,
-                                  1.0/40.0*0.1,
-                                  gr.firdes.WIN_HANN)
+        taps = filter.firdes.low_pass(1.0,
+                                      1.0,
+                                      1.0/40.0*0.4,
+                                      1.0/40.0*0.1,
+                                      filter.firdes.WIN_HANN)
 
         if options.verbose:
             print "Channel filter has", len(taps), "taps"
 
-        bank = blks2.analysis_filterbank(40, taps)
+        bank = filter.analysis_filterbank(40, taps)
         self.connect(self.u, bank)
 
         if options.log and options.from_file == None:
-            src_sink = gr.file_sink(gr.sizeof_gr_complex, 'usrp.dat')
+            src_sink = blocks.file_sink(gr.sizeof_gr_complex, 'usrp.dat')
             self.connect(self.u, src_sink)
 
         for i in range(40):
@@ -88,7 +90,7 @@ class app_top_block(gr.top_block):
 
 	    self.connect((bank, i), pager.flex_demod(queue, freq, options.verbose, options.log))
 	    if options.log:
-		self.connect((bank, i), gr.file_sink(gr.sizeof_gr_complex, 'chan_'+'%3.3f'%(freq/1e6)+'.dat'))
+		self.connect((bank, i), blocks.file_sink(gr.sizeof_gr_complex, 'chan_'+'%3.3f'%(freq/1e6)+'.dat'))
 
 
 def get_options():

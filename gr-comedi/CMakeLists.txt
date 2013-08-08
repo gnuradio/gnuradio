@@ -1,17 +1,17 @@
-# Copyright 2011 Free Software Foundation, Inc.
-#
+# Copyright 2012 Free Software Foundation, Inc.
+# 
 # This file is part of GNU Radio
-#
+# 
 # GNU Radio is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 3, or (at your option)
 # any later version.
-#
+# 
 # GNU Radio is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-#
+# 
 # You should have received a copy of the GNU General Public License
 # along with GNU Radio; see the file COPYING.  If not, write to
 # the Free Software Foundation, Inc., 51 Franklin Street,
@@ -21,8 +21,6 @@
 # Setup dependencies
 ########################################################################
 include(GrBoost)
-
-include(FindPkgConfig)
 
 PKG_CHECK_MODULES(COMEDI comedilib)
 
@@ -34,14 +32,19 @@ GR_REGISTER_COMPONENT("gr-comedi" ENABLE_GR_COMEDI
     COMEDI_FOUND
     LINUX #comedi uses linux specific device noces
     Boost_FOUND
-    ENABLE_GR_CORE
+    ENABLE_GNURADIO_RUNTIME
 )
-
-remove_definitions(-fvisibility=hidden) #FIXME until we do symbol visibility
 
 GR_SET_GLOBAL(GR_COMEDI_INCLUDE_DIRS
-    ${CMAKE_CURRENT_SOURCE_DIR}/src
+    ${CMAKE_CURRENT_SOURCE_DIR}/include
+    ${CMAKE_CURRENT_BINARY_DIR}/include
 )
+
+GR_SET_GLOBAL(GR_COMEDI_SWIG_INCLUDE_DIRS
+    ${CMAKE_CURRENT_SOURCE_DIR}/swig
+)
+
+SET(GR_PKG_COMEDI_EXAMPLES_DIR ${GR_PKG_DATA_DIR}/examples/comedi)
 
 ########################################################################
 # Begin conditional configuration
@@ -57,35 +60,40 @@ CPACK_SET(CPACK_COMPONENT_GROUP_COMEDI_DESCRIPTION "GNU Radio Comedi Blocks")
 CPACK_COMPONENT("comedi_runtime"
     GROUP        "Comedi"
     DISPLAY_NAME "Runtime"
-    DESCRIPTION  "Runtime"
-    DEPENDS      "core_runtime"
+    DESCRIPTION  "Dynamic link libraries"
+    DEPENDS      "runtime_runtime"
 )
 
 CPACK_COMPONENT("comedi_devel"
     GROUP        "Comedi"
     DISPLAY_NAME "Development"
     DESCRIPTION  "C++ headers, package config, import libraries"
-    DEPENDS      "core_devel"
+    DEPENDS      "runtime_devel"
 )
 
 CPACK_COMPONENT("comedi_python"
     GROUP        "Comedi"
     DISPLAY_NAME "Python"
-    DESCRIPTION  "Python modules for runtime; GRC xml files"
-    DEPENDS      "core_python;comedi_runtime"
+    DESCRIPTION  "Python modules for runtime"
+    DEPENDS      "runtime_python;comedi_runtime"
 )
 
 CPACK_COMPONENT("comedi_swig"
     GROUP        "Comedi"
     DISPLAY_NAME "SWIG"
     DESCRIPTION  "SWIG development .i files"
-    DEPENDS      "core_swig;comedi_python;comedi_devel"
+    DEPENDS      "runtime_swig;comedi_python;comedi_devel"
 )
 
 ########################################################################
 # Add subdirectories
 ########################################################################
-add_subdirectory(src)
+add_subdirectory(include/gnuradio/comedi)
+add_subdirectory(lib)
+if(ENABLE_PYTHON)
+    add_subdirectory(swig)
+    add_subdirectory(python/comedi)
+endif(ENABLE_PYTHON)
 
 ########################################################################
 # Create Pkg Config File

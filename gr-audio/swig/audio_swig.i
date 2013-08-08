@@ -1,5 +1,5 @@
 /*
- * Copyright 2011 Free Software Foundation, Inc.
+ * Copyright 2011,2013 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -22,27 +22,18 @@
 
 #define GR_AUDIO_API
 
-////////////////////////////////////////////////////////////////////////
-// standard includes
-////////////////////////////////////////////////////////////////////////
 %include "gnuradio.i"
 
 //load generated python docstrings
 %include "audio_swig_doc.i"
 
-////////////////////////////////////////////////////////////////////////
-// block headers
-////////////////////////////////////////////////////////////////////////
 %{
-#include <gr_audio_source.h>
-#include <gr_audio_sink.h>
+#include <gnuradio/audio/source.h>
+#include <gnuradio/audio/sink.h>
 %}
 
-////////////////////////////////////////////////////////////////////////
-// block magic
-////////////////////////////////////////////////////////////////////////
-GR_SWIG_BLOCK_MAGIC(audio,source)
-%include <gr_audio_source.h>
+%include <gnuradio/audio/source.h>
+%include <gnuradio/audio/sink.h>
 
-GR_SWIG_BLOCK_MAGIC(audio,sink)
-%include <gr_audio_sink.h>
+GR_SWIG_BLOCK_MAGIC2(audio, source)
+GR_SWIG_BLOCK_MAGIC2(audio, sink)

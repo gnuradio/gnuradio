@@ -23,7 +23,7 @@
 #ifndef INCLUDED_ANALOG_DPLL_BB_IMPL_H
 #define INCLUDED_ANALOG_DPLL_BB_IMPL_H
 
-#include <analog/dpll_bb.h>
+#include <gnuradio/analog/dpll_bb.h>
 
 namespace gr {
   namespace analog {

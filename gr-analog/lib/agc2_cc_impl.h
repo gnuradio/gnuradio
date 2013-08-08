@@ -23,7 +23,7 @@
 #ifndef INCLUDED_ANALOG_AGC2_IMPL_CC_H
 #define INCLUDED_ANALOG_AGC2_IMPL_CC_H
 
-#include <analog/agc2_cc.h>
+#include <gnuradio/analog/agc2_cc.h>
 
 namespace gr {
   namespace analog {
@@ -32,8 +32,7 @@ namespace gr {
     {
     public:
       agc2_cc_impl(float attack_rate = 1e-1, float decay_rate = 1e-2,
-		       float reference = 1.0,
-		       float gain = 1.0, float max_gain = 0.0);
+                   float reference = 1.0, float gain = 1.0);
       ~agc2_cc_impl();
 
       float attack_rate() const { return kernel::agc2_cc::attack_rate(); }

@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2009,2012 Free Software Foundation, Inc.
+# Copyright 2009,2012,2013 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -21,21 +21,28 @@
 #
 
 from gnuradio import gr
+from gnuradio import blocks
 from gnuradio import filter
 import sys, time
+
+try:
+    from gnuradio import analog
+except ImportError:
+    sys.stderr.write("Error: Program requires gr-analog.\n")
+    sys.exit(1)
 
 try:
     import scipy
     from scipy import fftpack
 except ImportError:
-    print "Error: Program requires scipy (see: www.scipy.org)."
+    sys.stderr.write("Error: Program requires scipy (see: www.scipy.org).\n")
     sys.exit(1)
 
 try:
     import pylab
     from pylab import mlab
 except ImportError:
-    print "Error: Program requires matplotlib (see: matplotlib.sourceforge.net)."
+    sys.stderr.write("Error: Program requires matplotlib (see: matplotlib.sourceforge.net).\n")
     sys.exit(1)
 
 class pfb_top_block(gr.top_block):
@@ -78,18 +85,18 @@ class pfb_top_block(gr.top_block):
         print "Taps per channel:   ", tpc
 
         # Create a couple of signals at different frequencies
-        self.signal1 = gr.sig_source_c(self._fs, gr.GR_SIN_WAVE, freq1, 0.5)
-        self.signal2 = gr.sig_source_c(self._fs, gr.GR_SIN_WAVE, freq2, 0.5)
-        self.signal = gr.add_cc()
+        self.signal1 = analog.sig_source_c(self._fs, analog.GR_SIN_WAVE, freq1, 0.5)
+        self.signal2 = analog.sig_source_c(self._fs, analog.GR_SIN_WAVE, freq2, 0.5)
+        self.signal = blocks.add_cc()
 
-        self.head = gr.head(gr.sizeof_gr_complex, self._N)
+        self.head = blocks.head(gr.sizeof_gr_complex, self._N)
 
         # Construct the PFB interpolator filter
         self.pfb = filter.pfb.interpolator_ccf(self._interp, self._taps)
 
         # Construct the PFB arbitrary resampler filter
         self.pfb_ar = filter.pfb.arb_resampler_ccf(self._ainterp, self._taps2, flt_size)
-        self.snk_i = gr.vector_sink_c()
+        self.snk_i = blocks.vector_sink_c()
 
         #self.pfb_ar.pfb.print_taps()
         #self.pfb.pfb.print_taps()
@@ -102,8 +109,8 @@ class pfb_top_block(gr.top_block):
         self.connect(self.signal, self.snk_i)
 
         # Create the sink for the interpolated signals
-        self.snk1 = gr.vector_sink_c()
-        self.snk2 = gr.vector_sink_c()
+        self.snk1 = blocks.vector_sink_c()
+        self.snk2 = blocks.vector_sink_c()
         self.connect(self.pfb, self.snk1)
         self.connect(self.pfb_ar, self.snk2)
 

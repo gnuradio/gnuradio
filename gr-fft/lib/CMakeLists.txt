@@ -24,14 +24,18 @@ include_directories(
     ${CMAKE_CURRENT_SOURCE_DIR}
     ${CMAKE_CURRENT_BINARY_DIR}
     ${GR_FFT_INCLUDE_DIRS}
-    ${GNURADIO_CORE_INCLUDE_DIRS}
-    ${GRUEL_INCLUDE_DIRS}
+    ${GNURADIO_RUNTIME_INCLUDE_DIRS}
     ${Boost_INCLUDE_DIRS}
     ${FFTW3F_INCLUDE_DIRS}
 )
 
 link_directories(${Boost_LIBRARY_DIRS})
 link_directories(${FFTW3F_LIBRARY_DIRS})
+
+if(ENABLE_GR_CTRLPORT)
+  ADD_DEFINITIONS(-DGR_CTRLPORT)
+  include_directories(${ICE_INCLUDE_DIR})
+endif(ENABLE_GR_CTRLPORT)
 
 ########################################################################
 # Setup library
@@ -44,8 +48,14 @@ list(APPEND fft_sources
   goertzel.cc
 )
 
+if(ENABLE_GR_CTRLPORT)
+list(APPEND fft_sources
+  ctrlport_probe_psd_impl.cc
+)
+endif(ENABLE_GR_CTRLPORT)
+
 list(APPEND fft_libs
-    gnuradio-core
+    gnuradio-runtime
     ${Boost_LIBRARIES}
     ${FFTW3F_LIBRARIES}
 )

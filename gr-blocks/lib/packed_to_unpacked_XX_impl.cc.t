@@ -27,8 +27,8 @@
 #endif
 
 #include "@NAME_IMPL@.h"
-#include <gr_io_signature.h>
-#include <blocks/log2_const.h>
+#include <gnuradio/io_signature.h>
+#include <gnuradio/blocks/log2_const.h>
 #include <assert.h>
 
 namespace gr {
@@ -39,17 +39,17 @@ namespace gr {
 
     @NAME@::sptr
     @NAME@::make(unsigned int bits_per_chunk,
-                 gr_endianness_t endianness)
+                 endianness_t endianness)
     {
       return gnuradio::get_initial_sptr
         (new @NAME_IMPL@(bits_per_chunk, endianness));
     }
 
     @NAME_IMPL@::@NAME_IMPL@(unsigned int bits_per_chunk,
-                             gr_endianness_t endianness)
-    : gr_block("@NAME@",
-               gr_make_io_signature(1, -1, sizeof(@I_TYPE@)),
-               gr_make_io_signature(1, -1, sizeof(@O_TYPE@))),
+                             endianness_t endianness)
+    : block("@NAME@",
+               io_signature::make(1, -1, sizeof(@I_TYPE@)),
+               io_signature::make(1, -1, sizeof(@O_TYPE@))),
       d_bits_per_chunk(bits_per_chunk), d_endianness(endianness), d_index(0)
     {
       assert(bits_per_chunk <= BITS_PER_TYPE);

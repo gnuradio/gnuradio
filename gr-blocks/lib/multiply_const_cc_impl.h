@@ -25,7 +25,7 @@
 #ifndef INCLUDED_MULTIPLY_CONST_CC_IMPL_H
 #define INCLUDED_MULTIPLY_CONST_CC_IMPL_H
 
-#include <blocks/multiply_const_cc.h>
+#include <gnuradio/blocks/multiply_const_cc.h>
 
 namespace gr {
   namespace blocks {
@@ -37,6 +37,8 @@ namespace gr {
 
     public:
       multiply_const_cc_impl(gr_complex k, size_t vlen);
+
+      void setup_rpc();
 
       gr_complex k() const { return d_k; }
       void set_k(gr_complex k) { d_k = k; }

@@ -23,8 +23,8 @@
 #include "config.h"
 #endif
 
-#include <gr_expj.h>
-#include <gr_io_signature.h>
+#include <gnuradio/expj.h>
+#include <gnuradio/io_signature.h>
 #include "ofdm_frame_equalizer_vcvc_impl.h"
 
 #define M_TWOPI (2*M_PI)
@@ -34,7 +34,7 @@ namespace gr {
 
     ofdm_frame_equalizer_vcvc::sptr
     ofdm_frame_equalizer_vcvc::make(
-	digital_ofdm_equalizer_base_sptr equalizer,
+	ofdm_equalizer_base::sptr equalizer,
 	int cp_len,
 	const std::string &len_tag_key,
 	bool propagate_channel_state,
@@ -49,14 +49,14 @@ namespace gr {
     }
 
     ofdm_frame_equalizer_vcvc_impl::ofdm_frame_equalizer_vcvc_impl(
-	digital_ofdm_equalizer_base_sptr equalizer,
+	ofdm_equalizer_base::sptr equalizer,
 	int cp_len,
 	const std::string &len_tag_key,
 	bool propagate_channel_state,
 	int fixed_frame_len
-    ) : gr_tagged_stream_block("ofdm_frame_equalizer_vcvc",
-	  gr_make_io_signature(1, 1, sizeof (gr_complex) * equalizer->fft_len()),
-	  gr_make_io_signature(1, 1, sizeof (gr_complex) * equalizer->fft_len()),
+    ) : tagged_stream_block("ofdm_frame_equalizer_vcvc",
+	  io_signature::make(1, 1, sizeof (gr_complex) * equalizer->fft_len()),
+	  io_signature::make(1, 1, sizeof (gr_complex) * equalizer->fft_len()),
 	  len_tag_key),
       d_fft_len(equalizer->fft_len()),
       d_cp_len(cp_len),
@@ -83,15 +83,15 @@ namespace gr {
 
     void
     ofdm_frame_equalizer_vcvc_impl::parse_length_tags(
-	const std::vector<std::vector<gr_tag_t> > &tags,
+	const std::vector<std::vector<tag_t> > &tags,
 	gr_vector_int &n_input_items_reqd
     ){
       if (d_fixed_frame_len) {
 	n_input_items_reqd[0] = d_fixed_frame_len;
       } else {
 	for (unsigned k = 0; k < tags[0].size(); k++) {
-	  if (tags[0][k].key == pmt::pmt_string_to_symbol(d_length_tag_key_str)) {
-	    n_input_items_reqd[0] = pmt::pmt_to_long(tags[0][k].value);
+	  if (tags[0][k].key == pmt::string_to_symbol(d_length_tag_key_str)) {
+	    n_input_items_reqd[0] = pmt::to_long(tags[0][k].value);
 	    remove_item_tag(0, tags[0][k]);
 	  }
 	}
@@ -99,7 +99,6 @@ namespace gr {
     }
 
 
-#include <iostream>
     int
     ofdm_frame_equalizer_vcvc_impl::work(int noutput_items,
 	  gr_vector_int &ninput_items, gr_vector_const_void_star &input_items, gr_vector_void_star &output_items)
@@ -114,15 +113,15 @@ namespace gr {
 	frame_len = ninput_items[0];
       }
 
-      std::vector<gr_tag_t> tags;
+      std::vector<tag_t> tags;
       get_tags_in_range(tags, 0, nitems_read(0), nitems_read(0)+1);
       for (unsigned i = 0; i < tags.size(); i++) {
-	if (pmt::pmt_symbol_to_string(tags[i].key) == "ofdm_sync_chan_taps") {
-	  d_channel_state = pmt::pmt_c32vector_elements(tags[i].value);
+	if (pmt::symbol_to_string(tags[i].key) == "ofdm_sync_chan_taps") {
+	  d_channel_state = pmt::c32vector_elements(tags[i].value);
 	  remove_item_tag(0, tags[i]);
 	}
-	if (pmt::pmt_symbol_to_string(tags[i].key) == "ofdm_sync_carr_offset") {
-	  carrier_offset = pmt::pmt_to_long(tags[i].value);
+	if (pmt::symbol_to_string(tags[i].key) == "ofdm_sync_carr_offset") {
+	  carrier_offset = pmt::to_long(tags[i].value);
 	}
       }
 
@@ -164,12 +163,14 @@ namespace gr {
       // Housekeeping
       if (d_propagate_channel_state) {
 	add_item_tag(0, nitems_written(0),
-	    pmt::pmt_string_to_symbol("ofdm_sync_chan_taps"),
-	    pmt::pmt_init_c32vector(d_fft_len, d_channel_state));
+	    pmt::string_to_symbol("ofdm_sync_chan_taps"),
+	    pmt::init_c32vector(d_fft_len, d_channel_state));
       }
+
       if (d_fixed_frame_len && d_length_tag_key_str.empty()) {
 	consume_each(frame_len);
       }
+
       return frame_len;
     }
 

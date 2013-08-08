@@ -20,53 +20,32 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include <qtgui_util.h>
+#include <gnuradio/qtgui/utils.h>
+#include <QDebug>
 
+QwtPickerDblClickPointMachine::QwtPickerDblClickPointMachine()
 #if QWT_VERSION < 0x060000
-QwtPickerDblClickPointMachine::QwtPickerDblClickPointMachine()
     : QwtPickerMachine ()
-{
-}
 #else
-QwtPickerDblClickPointMachine::QwtPickerDblClickPointMachine()
     : QwtPickerMachine (PointSelection)
+#endif
 {
 }
-#endif
 
 QwtPickerDblClickPointMachine::~QwtPickerDblClickPointMachine()
 {
-
 }
 
 #if QWT_VERSION < 0x060000
-QwtPickerMachine::CommandList
-QwtPickerDblClickPointMachine::transition(const QwtEventPattern &eventPattern,
-					  const QEvent *e)
-{
-  QwtPickerMachine::CommandList cmdList;
-  switch(e->type()) {
-    case QEvent::MouseButtonDblClick:
-      if ( eventPattern.mouseMatch(QwtEventPattern::MouseSelect1,
-				   (const QMouseEvent *)e) ) {
-	cmdList += QwtPickerMachine::Begin;
-	cmdList += QwtPickerMachine::Append;
-	cmdList += QwtPickerMachine::End;
-      }
-      break;
-  default:
-    break;
-  }
-  return cmdList;
-}
-
+#define CMDLIST_TYPE QwtPickerMachine::CommandList
 #else
-
-QList<QwtPickerMachine::Command>
+#define CMDLIST_TYPE QList<QwtPickerMachine::Command>
+#endif
+CMDLIST_TYPE
 QwtPickerDblClickPointMachine::transition(const QwtEventPattern &eventPattern,
 					  const QEvent *e)
 {
-  QList<QwtPickerMachine::Command> cmdList;
+  CMDLIST_TYPE cmdList;
   switch(e->type()) {
     case QEvent::MouseButtonDblClick:
       if ( eventPattern.mouseMatch(QwtEventPattern::MouseSelect1,
@@ -81,7 +60,6 @@ QwtPickerDblClickPointMachine::transition(const QwtEventPattern &eventPattern,
   }
   return cmdList;
 }
-#endif
 
 QwtDblClickPlotPicker::QwtDblClickPlotPicker(QwtPlotCanvas* canvas)
   : QwtPlotPicker(canvas)

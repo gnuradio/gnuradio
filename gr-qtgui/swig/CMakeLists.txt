@@ -1,4 +1,4 @@
-# Copyright 2010-2011 Free Software Foundation, Inc.
+# Copyright 2010-2012 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -25,15 +25,22 @@ include(GrSwig)
 
 set(GR_SWIG_INCLUDE_DIRS
     ${GR_QTGUI_INCLUDE_DIRS}
-    ${GNURADIO_CORE_SWIG_INCLUDE_DIRS}
-    ${GRUEL_INCLUDE_DIRS}
+    ${GR_FFT_INCLUDE_DIRS}
+    ${GR_FILTER_INCLUDE_DIRS}
+    ${GNURADIO_RUNTIME_SWIG_INCLUDE_DIRS}
     ${QWT_INCLUDE_DIRS}
     ${QT_INCLUDE_DIRS}
     ${Boost_INCLUDE_DIRS}
 )
 
+if(ENABLE_GR_CTRLPORT)
+  list(APPEND GR_SWIG_FLAGS "-DGR_CTRLPORT")
+  list(APPEND GR_SWIG_INCLUDE_DIRS ${ICE_INCLUDE_DIR})
+endif(ENABLE_GR_CTRLPORT)
+
 set(GR_SWIG_DOC_FILE ${CMAKE_CURRENT_BINARY_DIR}/qtgui_swig_doc.i)
-set(GR_SWIG_DOC_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/../include)
+set(GR_SWIG_DOC_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/../include/gnuradio/qtgui)
+set(GR_SWIG_DOCS_TARGET_DEPS runtime_swig_swig_doc)
 
 set(GR_SWIG_LIBRARIES gnuradio-qtgui)
 
@@ -47,10 +54,6 @@ GR_SWIG_INSTALL(
 
 install(FILES
     qtgui_swig.i
-    qtgui_sink_c.i
-    qtgui_sink_f.i
-    qtgui_time_sink_c.i
-    qtgui_time_sink_f.i
     ${CMAKE_CURRENT_BINARY_DIR}/qtgui_swig_doc.i
     DESTINATION ${GR_INCLUDE_DIR}/gnuradio/swig
     COMPONENT "qtgui_swig"

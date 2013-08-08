@@ -20,7 +20,10 @@
 # Boston, MA 02110-1301, USA.
 # 
 
-from gnuradio import gr, blks2
+from gnuradio import gr, digital
+from gnuradio import blocks
+from gnuradio import filter
+from gnuradio import channels
 from gnuradio import eng_notation
 import sys
 
@@ -60,7 +63,7 @@ class dialog_box(QtGui.QMainWindow):
         self.set_time_offset(self.fg.timing_offset())
 
         self.set_gain_mu(self.fg.rx_gain_mu())
-        self.set_alpha(self.fg.rx_alpha())
+        self.set_loop_bw(self.fg.loop_bw())
 
         # Add the qtsnk widgets to the hlayout box
         self.gui.sinkLayout.addWidget(snkTx)
@@ -146,13 +149,13 @@ class dialog_box(QtGui.QMainWindow):
     def set_gain_mu(self, gain):
         self.gui.gainMuEdit.setText(QtCore.QString("%1").arg(gain))
 
-    def set_alpha(self, alpha):
-        self.gui.alphaEdit.setText(QtCore.QString("%1").arg(alpha))
+    def set_loop_bw(self, bw):
+        self.gui.alphaEdit.setText(QtCore.QString("%1").arg(bw))
 
     def alphaEditText(self):
         try:
-            alpha = self.gui.alphaEdit.text().toDouble()[0]
-            self.fg.set_rx_alpha(alpha)
+            bw = self.gui.alphaEdit.text().toDouble()[0]
+            self.fg.set_loop_bw(bw)
         except RuntimeError:
             pass
 
@@ -174,16 +177,19 @@ class my_top_block(gr.top_block):
 
         self.sps = 2
         self.excess_bw = 0.35
-        self.gray_code = True
+        self.gray_code = digital.mod_codes.GRAY_CODE
         
         fftsize = 2048
 
         self.data = scipy.random.randint(0, 255, 1000)
-        self.src = gr.vector_source_b(self.data.tolist(), True)
-        self.mod = blks2.dqpsk_mod(self.sps, self.excess_bw, self.gray_code, False, False)
+        self.src = blocks.vector_source_b(self.data.tolist(), True)
+        self.mod = digital.dqpsk_mod(self.gray_code,
+                                     samples_per_symbol=self.sps,
+                                     excess_bw=self.excess_bw,
+                                     verbose=False, log=False)
 
-        self.rrctaps = gr.firdes.root_raised_cosine(1, self.sps, 1, self.excess_bw, 21)
-        self.rx_rrc = gr.fir_filter_ccf(1, self.rrctaps)
+        self.rrctaps = filter.firdes.root_raised_cosine(1, self.sps, 1, self.excess_bw, 21)
+        self.rx_rrc = filter.fir_filter_ccf(1, self.rrctaps)
 
 
         # Set up the carrier & clock recovery parameters
@@ -194,31 +200,30 @@ class my_top_block(gr.top_block):
         self.gain_omega = .25 * self.gain_mu * self.gain_mu
         self.omega_rel_lim = 0.05
         
-        self.alpha = 0.15
-        self.beta  = 0.25 * self.alpha * self.alpha
+        self._loop_bw = 2*scipy.pi/100.0
         self.fmin = -1000/self.sample_rate()
         self.fmax = 1000/self.sample_rate()
         
-        self.receiver = gr.mpsk_receiver_cc(self.arity, 0,
-                                            self.alpha, self.beta,
-                                            self.fmin, self.fmax,
-                                            self.mu, self.gain_mu,
-                                            self.omega, self.gain_omega,
-                                            self.omega_rel_lim)
+        self.receiver = digital.mpsk_receiver_cc(self.arity, 0,
+                                                 self._loop_bw,
+                                                 self.fmin, self.fmax,
+                                                 self.mu, self.gain_mu,
+                                                 self.omega, self.gain_omega,
+                                                 self.omega_rel_lim)
         
         
         self.snr_dB = 15
         noise = self.get_noise_voltage(self.snr_dB)
         self.fo = 100/self.sample_rate()
         self.to = 1.0
-        self.channel = gr.channel_model(noise, self.fo, self.to)
+        self.channel = channels.channel_model(noise, self.fo, self.to)
 
-        self.thr = gr.throttle(gr.sizeof_char, self._sample_rate)
-        self.snk_tx = qtgui.sink_c(fftsize, gr.firdes.WIN_BLACKMAN_hARRIS, 
+        self.thr = blocks.throttle(gr.sizeof_char, self._sample_rate)
+        self.snk_tx = qtgui.sink_c(fftsize, filter.firdes.WIN_BLACKMAN_hARRIS, 
                                    0, self._sample_rate*self.sps,
                                    "Tx", True, True, True, True)
 
-        self.snk_rx = qtgui.sink_c(fftsize, gr.firdes.WIN_BLACKMAN_hARRIS,
+        self.snk_rx = qtgui.sink_c(fftsize, filter.firdes.WIN_BLACKMAN_hARRIS,
                                    0, self._sample_rate,
                                    "Rx", True, True, True, True)
 
@@ -288,18 +293,12 @@ class my_top_block(gr.top_block):
         self.receiver.set_gain_mu(self.gain_mu)
         self.receiver.set_gain_omega(self.gain_omega)
 
-    def rx_alpha(self):
-        return self.alpha
+    def set_loop_bw(self, loop_bw):
+        self._loop_bw = bw
+        self.receiver.set_loop_bw(self._loop_bw)
 
-    def rx_beta(self):
-        return self.beta
-    
-    def set_rx_alpha(self, alpha):
-        self.alpha = alpha
-        self.beta = .25 * self.alpha * self.alpha
-        self.receiver.set_alpha(self.alpha)
-        self.receiver.set_beta(self.beta)
-
+    def loop_bw(self):
+        return self._loop_bw
     
 if __name__ == "__main__":
     tb = my_top_block();

@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2010,2011 Free Software Foundation, Inc.
+# Copyright 2010,2011,2013 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -21,6 +21,7 @@
 # 
 
 from gnuradio import gr, gru
+from gnuradio import blocks
 from gnuradio import eng_notation
 from gnuradio.eng_option import eng_option
 from optparse import OptionParser
@@ -57,10 +58,10 @@ class my_top_block(gr.top_block):
 
         elif(options.from_file is not None):
             sys.stderr.write(("Reading samples from '%s'.\n\n" % (options.from_file)))
-            self.source = gr.file_source(gr.sizeof_gr_complex, options.from_file)
+            self.source = blocks.file_source(gr.sizeof_gr_complex, options.from_file)
         else:
             sys.stderr.write("No source defined, pulling samples from null source.\n\n")
-            self.source = gr.null_source(gr.sizeof_gr_complex)
+            self.source = blocks.null_source(gr.sizeof_gr_complex)
 
         # Set up receive path
         # do this after for any adjustments to the options that may

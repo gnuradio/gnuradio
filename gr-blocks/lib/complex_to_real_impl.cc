@@ -25,7 +25,7 @@
 #endif
 
 #include "complex_to_real_impl.h"
-#include <gr_io_signature.h>
+#include <gnuradio/io_signature.h>
 #include <volk/volk.h>
 
 namespace gr {
@@ -37,9 +37,9 @@ namespace gr {
     }
 
     complex_to_real_impl::complex_to_real_impl(size_t vlen)
-      : gr_sync_block("complex_to_real",
-		      gr_make_io_signature (1, 1, sizeof(gr_complex)*vlen),
-		      gr_make_io_signature (1, 1, sizeof(float)*vlen)),
+      : sync_block("complex_to_real",
+		      io_signature::make (1, 1, sizeof(gr_complex)*vlen),
+		      io_signature::make (1, 1, sizeof(float)*vlen)),
 	d_vlen(vlen)
     {
       const int alignment_multiple =
@@ -56,14 +56,7 @@ namespace gr {
       float *out = (float *) output_items[0];
       int noi = noutput_items * d_vlen;
 
-      if(is_unaligned()) {
-	for (int i = 0; i < noi; i++){
-	  out[i] = in[i].real ();
-	}
-      }
-      else {
-	volk_32fc_deinterleave_real_32f_a(out, in, noi);
-      }
+      volk_32fc_deinterleave_real_32f(out, in, noi);
       
       return noutput_items;
     }

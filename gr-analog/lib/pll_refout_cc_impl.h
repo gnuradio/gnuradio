@@ -23,14 +23,12 @@
 #ifndef INCLUDED_ANALOG_PLL_REFOUT_CC_IMPL_H
 #define INCLUDED_ANALOG_PLL_REFOUT_CC_IMPL_H
 
-#include <analog/pll_refout_cc.h>
-#include <gri_control_loop.h>
+#include <gnuradio/analog/pll_refout_cc.h>
 
 namespace gr {
   namespace analog {
     
-    class pll_refout_cc_impl
-      : public pll_refout_cc, public gri_control_loop
+    class pll_refout_cc_impl : public pll_refout_cc
     {
     private:
       float mod_2pi (float in);

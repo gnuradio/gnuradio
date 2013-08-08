@@ -23,8 +23,8 @@
 #ifndef INCLUDED_INTERLEAVED_SHORT_ARRAY_TO_COMPLEX_H
 #define INCLUDED_INTERLEAVED_SHORT_ARRAY_TO_COMPLEX_H
 
-#include <blocks/api.h>
-#include <gr_complex.h>
+#include <gnuradio/blocks/api.h>
+#include <gnuradio/gr_complex.h>
 
 /*
  * convert array of interleaved shorts to complex.

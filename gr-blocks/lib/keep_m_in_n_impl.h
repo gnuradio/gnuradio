@@ -23,7 +23,7 @@
 #ifndef INCLUDED_KEEP_M_IN_N_IMPL_H
 #define INCLUDED_KEEP_M_IN_N_IMPL_H
 
-#include <blocks/keep_m_in_n.h>
+#include <gnuradio/blocks/keep_m_in_n.h>
 
 namespace gr {
   namespace blocks {

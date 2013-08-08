@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2006,2007,2009 Free Software Foundation, Inc.
+# Copyright 2006,2007,2009,2013 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -20,7 +20,9 @@
 # Boston, MA 02110-1301, USA.
 #
 
-from gnuradio import gr, gru, uhd, optfir, eng_notation, blks2, pager
+from gnuradio import gr, uhd, eng_notation, pager
+from gnuradio import blocks
+from gnuradio import filter
 from gnuradio.eng_option import eng_option
 from optparse import OptionParser
 from string import split, join, printable
@@ -31,7 +33,7 @@ class app_top_block(gr.top_block):
 	gr.top_block.__init__(self, "usrp_flex_all")
 
         if options.from_file is not None:
-            self.u = gr.file_source(gr.sizeof_gr_complex, options.from_file)
+            self.u = blocks.file_source(gr.sizeof_gr_complex, options.from_file)
             self.nchan = options.nchan
             if options.verbose:
                 print "Reading samples from file", options.from_file
@@ -79,20 +81,20 @@ class app_top_block(gr.top_block):
             if options.verbose:
                 print "\nReceiving", rate/1e6, "MHz of bandwidth containing", self.nchan, "baseband channels."
 
-        taps = gr.firdes.low_pass(1.0,
-                                  1.0,
-                                  1.0/self.nchan*0.4,
-                                  1.0/self.nchan*0.1,
-                                  gr.firdes.WIN_HANN)
+        taps = filter.firdes.low_pass(1.0,
+                                      1.0,
+                                      1.0/self.nchan*0.4,
+                                      1.0/self.nchan*0.1,
+                                      filter.firdes.WIN_HANN)
 
         if options.verbose:
             print "Channel filter has", len(taps), "taps"
 
-        self.bank = blks2.analysis_filterbank(self.nchan, taps)
+        self.bank = filter.analysis_filterbank(self.nchan, taps)
         self.connect(self.u, self.bank)
 
         if options.log and options.from_file == None:
-            src_sink = gr.file_sink(gr.sizeof_gr_complex, 'usrp.dat')
+            src_sink = blocks.file_sink(gr.sizeof_gr_complex, 'usrp.dat')
             self.connect(self.u, src_sink)
 
         mid_chan = int(self.nchan/2)
@@ -103,11 +105,11 @@ class app_top_block(gr.top_block):
 		freq = options.freq-(self.nchan-i)*25e3
 
 	    if (freq < 929.0e6 or freq > 932.0e6):
-                self.connect((self.bank, i), gr.null_sink(gr.sizeof_gr_complex))
+                self.connect((self.bank, i), blocks.null_sink(gr.sizeof_gr_complex))
 	    else:
             	self.connect((self.bank, i), pager.flex_demod(queue, freq, options.verbose, options.log))
                 if options.log:
-                    self.connect((self.bank, i), gr.file_sink(gr.sizeof_gr_complex, 'chan_'+'%3.3f'%(freq/1e6)+'.dat'))
+                    self.connect((self.bank, i), blocks.file_sink(gr.sizeof_gr_complex, 'chan_'+'%3.3f'%(freq/1e6)+'.dat'))
 
 
 def get_options():

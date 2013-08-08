@@ -27,7 +27,7 @@
 #endif
 
 #include <@NAME_IMPL@.h>
-#include <gr_io_signature.h>
+#include <gnuradio/io_signature.h>
 
 namespace gr {
   namespace blocks {
@@ -38,9 +38,9 @@ namespace gr {
     }
 
     @NAME_IMPL@::@NAME_IMPL@(int decim)
-      : gr_sync_decimator("@NAME@",
-			  gr_make_io_signature(1, 1, sizeof (@I_TYPE@)),
-			  gr_make_io_signature(1, 1, sizeof (@O_TYPE@)),
+      : sync_decimator("@NAME@",
+			  io_signature::make(1, 1, sizeof (@I_TYPE@)),
+			  io_signature::make(1, 1, sizeof (@O_TYPE@)),
 			  decim),
       d_decim(decim),
       d_count(0)

@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2011 Free Software Foundation, Inc.
+ * Copyright 2011,2012 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -21,34 +21,52 @@
  */
 
 #include <cmath>
-#include <QColorDialog>
 #include <QMessageBox>
-#include <timedisplayform.h>
+#include <gnuradio/qtgui/timedisplayform.h>
 #include <iostream>
 
 TimeDisplayForm::TimeDisplayForm(int nplots, QWidget* parent)
-  : QWidget(parent)
+  : DisplayForm(nplots, parent)
 {
-  _systemSpecifiedFlag = false;
+  d_stem = false;
+  d_semilogx = false;
+  d_semilogy = false;
+
   _intValidator = new QIntValidator(this);
   _intValidator->setBottom(0);
 
   _layout = new QGridLayout(this);
-  _timeDomainDisplayPlot = new TimeDomainDisplayPlot(nplots, this);
-  _layout->addWidget(_timeDomainDisplayPlot, 0, 0);
-
-  _numRealDataPoints = 1024;
-
+  _displayPlot = new TimeDomainDisplayPlot(nplots, this);
+  _layout->addWidget(_displayPlot, 0, 0);
   setLayout(_layout);
+
+  NPointsMenu *nptsmenu = new NPointsMenu(this);
+  _menu->addAction(nptsmenu);
+  connect(nptsmenu, SIGNAL(whichTrigger(int)),
+	  this, SLOT(setNPoints(const int)));
+
+  d_stemmenu = new QAction("Stem Plot", this);
+  d_stemmenu->setCheckable(true);
+  _menu->addAction(d_stemmenu);
+  connect(d_stemmenu, SIGNAL(triggered(bool)),
+	  this, SLOT(setStem(bool)));
+
+  d_semilogxmenu = new QAction("Semilog X", this);
+  d_semilogxmenu->setCheckable(true);
+  _menu->addAction(d_semilogxmenu);
+  connect(d_semilogxmenu, SIGNAL(triggered(bool)),
+	  this, SLOT(setSemilogx(bool)));
+
+  d_semilogymenu = new QAction("Semilog Y", this);
+  d_semilogymenu->setCheckable(true);
+  _menu->addAction(d_semilogymenu);
+  connect(d_semilogymenu, SIGNAL(triggered(bool)),
+	  this, SLOT(setSemilogy(bool)));
 
   Reset();
 
-  // Create a timer to update plots at the specified rate
-  displayTimer = new QTimer(this);
-  connect(displayTimer, SIGNAL(timeout()), this, SLOT(updateGuiTimer()));
-
-  connect(_timeDomainDisplayPlot, SIGNAL(plotPointSelected(const QPointF)),
-	  this, SLOT(onTimePlotPointSelected(const QPointF)));
+  connect(_displayPlot, SIGNAL(plotPointSelected(const QPointF)),
+	  this, SLOT(onPlotPointSelected(const QPointF)));
 }
 
 TimeDisplayForm::~TimeDisplayForm()
@@ -57,121 +75,107 @@ TimeDisplayForm::~TimeDisplayForm()
 
   // Don't worry about deleting Display Plots - they are deleted when parents are deleted
   delete _intValidator;
+}
 
-  displayTimer->stop();
-  delete displayTimer;
+TimeDomainDisplayPlot*
+TimeDisplayForm::getPlot()
+{
+  return ((TimeDomainDisplayPlot*)_displayPlot);
 }
 
 void
-TimeDisplayForm::newData( const TimeUpdateEvent* spectrumUpdateEvent)
+TimeDisplayForm::newData(const QEvent* updateEvent)
 {
-  const std::vector<double*> timeDomainDataPoints = spectrumUpdateEvent->getTimeDomainPoints();
-  const uint64_t numTimeDomainDataPoints = spectrumUpdateEvent->getNumTimeDomainDataPoints();
+  TimeUpdateEvent *tevent = (TimeUpdateEvent*)updateEvent;
+  const std::vector<double*> dataPoints = tevent->getTimeDomainPoints();
+  const uint64_t numDataPoints = tevent->getNumTimeDomainDataPoints();
 
-  _timeDomainDisplayPlot->PlotNewData(timeDomainDataPoints,
-				      numTimeDomainDataPoints,
-				      d_update_time);
+  getPlot()->plotNewData(dataPoints,
+			 numDataPoints,
+			 d_update_time);
 }
 
 void
-TimeDisplayForm::resizeEvent( QResizeEvent *e )
+TimeDisplayForm::customEvent(QEvent * e)
 {
-  QSize s = size();
-  emit _timeDomainDisplayPlot->resizeSlot(&s);
-}
-
-void
-TimeDisplayForm::customEvent( QEvent * e)
-{
-  if(e->type() == 10005) {
-    TimeUpdateEvent* timeUpdateEvent = (TimeUpdateEvent*)e;
-    newData(timeUpdateEvent);
+  if(e->type() == TimeUpdateEvent::Type()) {
+    newData(e);
   }
-  //else if(e->type() == 10008){
-  //setWindowTitle(((SpectrumWindowCaptionEvent*)e)->getLabel());
-  //}
-  //else if(e->type() == 10009){
-  //Reset();
-  //if(_systemSpecifiedFlag){
-  //  _system->ResetPendingGUIUpdateEvents();
-  //}
-  //}
 }
 
 void
-TimeDisplayForm::updateGuiTimer()
+TimeDisplayForm::setSampleRate(const QString &samprate)
 {
-  _timeDomainDisplayPlot->canvas()->update();
+  setSampleRate(samprate.toDouble());
 }
 
 void
-TimeDisplayForm::onTimePlotPointSelected(const QPointF p)
+TimeDisplayForm::setSampleRate(const double samprate)
 {
-  emit plotPointSelected(p, 3);
-}
-
-void
-TimeDisplayForm::setFrequencyRange(const double newCenterFrequency,
-				   const double newStartFrequency,
-				   const double newStopFrequency)
-{
-  double fdiff = std::max(fabs(newStartFrequency), fabs(newStopFrequency));
-
-  if(fdiff > 0) {
+  if(samprate > 0) {
     std::string strtime[4] = {"sec", "ms", "us", "ns"};
-    double units10 = floor(log10(fdiff));
+    double units10 = floor(log10(samprate));
     double units3  = std::max(floor(units10 / 3.0), 0.0);
     double units = pow(10, (units10-fmod(units10, 3.0)));
     int iunit = static_cast<int>(units3);
 
-    _startFrequency = newStartFrequency;
-    _stopFrequency = newStopFrequency;
-
-    _timeDomainDisplayPlot->SetSampleRate(_stopFrequency - _startFrequency,
-					  units, strtime[iunit]);
+    getPlot()->setSampleRate(samprate, units, strtime[iunit]);
+  }
+  else {
+    throw std::runtime_error("TimeDisplayForm: samprate must be > 0.\n");
   }
 }
 
 void
-TimeDisplayForm::Reset()
+TimeDisplayForm::setYaxis(double min, double max)
 {
+  getPlot()->setYaxis(min, max);
 }
 
-
-void
-TimeDisplayForm::closeEvent( QCloseEvent *e )
+int
+TimeDisplayForm::getNPoints() const
 {
-  //if(_systemSpecifiedFlag){
-  //  _system->SetWindowOpenFlag(false);
-  //}
-
-  qApp->processEvents();
-
-  QWidget::closeEvent(e);
+  return d_npoints;
 }
 
 void
-TimeDisplayForm::setTimeDomainAxis(double min, double max)
+TimeDisplayForm::setNPoints(const int npoints)
 {
-  _timeDomainDisplayPlot->setYaxis(min, max);
+  d_npoints = npoints;
 }
 
 void
-TimeDisplayForm::setUpdateTime(double t)
+TimeDisplayForm::setStem(bool en)
 {
-  d_update_time = t;
-  // QTimer class takes millisecond input
-  displayTimer->start(d_update_time*1000);
+  d_stem = en;
+  d_stemmenu->setChecked(en);
+  getPlot()->stemPlot(d_stem);
+  getPlot()->replot();
 }
 
 void
-TimeDisplayForm::setTitle(int which, QString title)
+TimeDisplayForm::autoScale(bool en)
 {
-  _timeDomainDisplayPlot->setTitle(which, title);
+  _autoscale_state = en;
+  _autoscale_act->setChecked(en);
+  getPlot()->setAutoScale(_autoscale_state);
+  getPlot()->replot();
 }
 
 void
-TimeDisplayForm::setColor(int which, QString color)
+TimeDisplayForm::setSemilogx(bool en)
 {
-  _timeDomainDisplayPlot->setColor(which, color);
+  d_semilogx = en;
+  d_semilogxmenu->setChecked(en);
+  getPlot()->setSemilogx(d_semilogx);
+  getPlot()->replot();
+}
+
+void
+TimeDisplayForm::setSemilogy(bool en)
+{
+  d_semilogy = en;
+  d_semilogymenu->setChecked(en);
+  getPlot()->setSemilogy(d_semilogy);
+  getPlot()->replot();
 }

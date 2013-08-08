@@ -28,7 +28,7 @@
 
 #include <@NAME_IMPL@.h>
 #include <algorithm>
-#include <gr_io_signature.h>
+#include <gnuradio/io_signature.h>
 #include <stdexcept>
 
 namespace gr {
@@ -37,7 +37,7 @@ namespace gr {
     @NAME@::sptr
     @NAME@::make(const std::vector<@TYPE@> &data,
                  bool repeat, int vlen,
-                 const std::vector<gr_tag_t> &tags)
+                 const std::vector<tag_t> &tags)
     {
       return gnuradio::get_initial_sptr
         (new @NAME_IMPL@(data, repeat, vlen, tags));
@@ -45,10 +45,10 @@ namespace gr {
 
     @NAME_IMPL@::@NAME_IMPL@(const std::vector<@TYPE@> &data,
                              bool repeat, int vlen,
-                             const std::vector<gr_tag_t> &tags)
-    : gr_sync_block("@BASE_NAME@",
-                    gr_make_io_signature(0, 0, 0),
-                    gr_make_io_signature(1, 1, sizeof(@TYPE@) * vlen)),
+                             const std::vector<tag_t> &tags)
+    : sync_block("@BASE_NAME@",
+                    io_signature::make(0, 0, 0),
+                    io_signature::make(1, 1, sizeof(@TYPE@) * vlen)),
       d_data(data),
       d_repeat(repeat),
       d_offset(0),
@@ -72,7 +72,7 @@ namespace gr {
 
     void
     @NAME_IMPL@::set_data (const std::vector<@TYPE@> &data,
-                           const std::vector<gr_tag_t> &tags)
+                           const std::vector<tag_t> &tags)
     {
       d_data = data;
       d_tags = tags;

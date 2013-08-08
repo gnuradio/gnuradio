@@ -24,23 +24,26 @@ from .. gui.Connection import Connection as _GUIConnection
 
 class Connection(_Connection, _GUIConnection):
 
-	def __init__(self, **kwargs):
-		_Connection.__init__(self, **kwargs)
-		_GUIConnection.__init__(self)
+    def __init__(self, **kwargs):
+        _Connection.__init__(self, **kwargs)
+        _GUIConnection.__init__(self)
 
-	def is_msg(self):
-		return self.get_source().get_type() == self.get_sink().get_type() == 'msg'
+    def is_msg(self):
+        return self.get_source().get_type() == self.get_sink().get_type() == 'msg'
 
-	def is_message(self):
-		return self.get_source().get_type() == self.get_sink().get_type() == 'message'
+    def is_message(self):
+        return self.get_source().get_type() == self.get_sink().get_type() == 'message'
 
-	def validate(self):
-		"""
-		Validate the connections.
-		The ports must match in io size.
-		"""
-		Element.validate(self)
-		source_size = Constants.TYPE_TO_SIZEOF[self.get_source().get_type()] * self.get_source().get_vlen()
-		sink_size = Constants.TYPE_TO_SIZEOF[self.get_sink().get_type()] * self.get_sink().get_vlen()
-		if source_size != sink_size:
-			self.add_error_message('Source IO size "%s" does not match sink IO size "%s".'%(source_size, sink_size))
+    def is_bus(self):
+        return self.get_source().get_type() == self.get_sink().get_type() == 'bus'
+
+    def validate(self):
+        """
+        Validate the connections.
+        The ports must match in io size.
+        """
+        Element.validate(self)
+        source_size = Constants.TYPE_TO_SIZEOF[self.get_source().get_type()] * self.get_source().get_vlen()
+        sink_size = Constants.TYPE_TO_SIZEOF[self.get_sink().get_type()] * self.get_sink().get_vlen()
+        if source_size != sink_size:
+            self.add_error_message('Source IO size "%s" does not match sink IO size "%s".'%(source_size, sink_size))

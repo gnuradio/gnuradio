@@ -31,13 +31,15 @@ include(GrComponent)
 
 GR_REGISTER_COMPONENT("gr-wavelet" ENABLE_GR_WAVELET
     Boost_FOUND
-    ENABLE_GR_CORE
+    ENABLE_GNURADIO_RUNTIME
+    ENABLE_GR_BLOCKS
+    ENABLE_GR_ANALOG
     GSL_FOUND
 )
 
 GR_SET_GLOBAL(GR_WAVELET_INCLUDE_DIRS
     ${CMAKE_CURRENT_SOURCE_DIR}/lib
-    ${CMAKE_CURRENT_SOURCE_DIR}/include/wavelet
+    ${CMAKE_CURRENT_SOURCE_DIR}/include
 )
 
 ########################################################################
@@ -55,38 +57,38 @@ CPACK_COMPONENT("wavelet_runtime"
     GROUP        "WAVELET"
     DISPLAY_NAME "Runtime"
     DESCRIPTION  "Runtime"
-    DEPENDS      "core_runtime"
+    DEPENDS      "runtime_runtime"
 )
 
 CPACK_COMPONENT("wavelet_devel"
     GROUP        "WAVELET"
     DISPLAY_NAME "Development"
     DESCRIPTION  "C++ headers, package config, import libraries"
-    DEPENDS      "core_devel"
+    DEPENDS      "runtime_devel"
 )
 
 CPACK_COMPONENT("wavelet_python"
     GROUP        "WAVELET"
     DISPLAY_NAME "Python"
     DESCRIPTION  "Python modules for runtime; GRC xml files"
-    DEPENDS      "core_python;wavelet_runtime"
+    DEPENDS      "runtime_python;wavelet_runtime"
 )
 
 CPACK_COMPONENT("wavelet_swig"
     GROUP        "WAVELET"
     DISPLAY_NAME "SWIG"
     DESCRIPTION  "SWIG development .i files"
-    DEPENDS      "core_swig;wavelet_python;wavelet_devel"
+    DEPENDS      "runtime_swig;wavelet_python;wavelet_devel"
 )
 
 ########################################################################
 # Add subdirectories
 ########################################################################
-add_subdirectory(include/wavelet)
+add_subdirectory(include/gnuradio/wavelet)
 add_subdirectory(lib)
 if(ENABLE_PYTHON)
     add_subdirectory(swig)
-    add_subdirectory(python)
+    add_subdirectory(python/wavelet)
 #    add_subdirectory(grc)
 endif(ENABLE_PYTHON)
 #add_subdirectory(examples)

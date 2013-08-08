@@ -23,7 +23,7 @@
 #ifndef INCLUDED_REPEAT_IMPL_H
 #define INCLUDED_REPEAT_IMPL_H
 
-#include <blocks/repeat.h>
+#include <gnuradio/blocks/repeat.h>
 
 namespace gr {
   namespace blocks {

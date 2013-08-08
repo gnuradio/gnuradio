@@ -20,8 +20,8 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include <fft/fft.h>
-#include <gr_sys_paths.h>
+#include <gnuradio/fft/fft.h>
+#include <gnuradio/sys_paths.h>
 #include <fftw3.h>
 
 #ifdef _MSC_VER //http://www.fftw.org/install/windows.html#DLLwisdom
@@ -36,7 +36,7 @@ static int my_fftw_read_char(void *f) { return fgetc((FILE *) f); }
 #define fftwl_import_wisdom_from_file(f) fftwl_import_wisdom(my_fftw_read_char, (void*) (f))
 #endif //_MSC_VER
 
-#include <gr_complex.h>
+#include <gnuradio/gr_complex.h>
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
@@ -62,6 +62,12 @@ namespace gr {
       return (float*)fftwf_malloc(sizeof(float)*size);
     }
 
+    double *
+    malloc_double(int size)
+    {
+      return (double*)fftwf_malloc(sizeof(double)*size);
+    }
+
     void
     free(void *b)
     {
@@ -80,7 +86,7 @@ namespace gr {
     wisdom_filename()
     {
       static fs::path path;
-      path = fs::path(gr_appdata_path()) / ".gr_fftw_wisdom";
+      path = fs::path(gr::appdata_path()) / ".gr_fftw_wisdom";
       return path.string().c_str();
     }
 

@@ -8,7 +8,7 @@
 	<name>Tag Debug</name>
 	<key>blocks_tag_debug</key>
 	<import>from gnuradio import blocks</import>
-	<make>blocks.tag_debug($type.size*$vlen, $name)</make>
+	<make>blocks.tag_debug($type.size*$vlen, $name); self.$(id).set_display($display)</make>
 	<callback>set_display($display)</callback>
 	<param>
 		<name>Input Type</name>

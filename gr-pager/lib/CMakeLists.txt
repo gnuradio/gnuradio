@@ -22,10 +22,15 @@
 ########################################################################
 include_directories(
     ${GR_PAGER_INCLUDE_DIRS}
-    ${GNURADIO_CORE_INCLUDE_DIRS}
-    ${GRUEL_INCLUDE_DIRS}
+    ${GR_BLOCKS_INCLUDE_DIRS}
+    ${GNURADIO_RUNTIME_INCLUDE_DIRS}
     ${Boost_INCLUDE_DIRS}
 )
+
+if(ENABLE_GR_CTRLPORT)
+  ADD_DEFINITIONS(-DGR_CTRLPORT)
+  include_directories(${ICE_INCLUDE_DIR})
+endif(ENABLE_GR_CTRLPORT)
 
 link_directories(${Boost_LIBRARY_DIRS})
 
@@ -35,15 +40,15 @@ link_directories(${LOG4CPP_LIBRARY_DIRS})
 ########################################################################
 # Setup library
 ########################################################################
-list(APPEND gr_pager_sources
-    pager_flex_frame.cc
-    pager_slicer_fb.cc
-    pager_flex_sync.cc
-    pager_flex_deinterleave.cc
-    pager_flex_parse.cc
-    pageri_bch3221.cc
-    pageri_flex_modes.cc
-    pageri_util.cc
+list(APPEND pager_sources
+    flex_deinterleave_impl.cc
+    flex_frame_impl.cc
+    flex_parse_impl.cc
+    flex_sync_impl.cc
+    slicer_fb_impl.cc
+    bch3221.cc
+    flex_modes.cc
+    util.cc
 )
 
 #Add Windows DLL resource file if using MSVC
@@ -61,28 +66,12 @@ if(MSVC)
 endif(MSVC)
 
 list(APPEND pager_libs
-    gnuradio-core
+    gnuradio-runtime
+    gnuradio-blocks
     ${Boost_LIBRARIES}
     ${LOG4CPP_LIBRARIES}
 )
 
-add_library(gnuradio-pager SHARED ${gr_pager_sources})
+add_library(gnuradio-pager SHARED ${pager_sources})
 target_link_libraries(gnuradio-pager ${pager_libs})
 GR_LIBRARY_FOO(gnuradio-pager RUNTIME_COMPONENT "pager_runtime" DEVEL_COMPONENT "pager_devel")
-
-########################################################################
-# Install header files
-########################################################################
-install(FILES
-    pager_api.h
-    pager_slicer_fb.h
-    pager_flex_sync.h
-    pager_flex_deinterleave.h
-    pager_flex_parse.h
-    pager_flex_frame.h
-    pageri_bch3221.h
-    pageri_flex_modes.h
-    pageri_util.h
-    DESTINATION ${GR_INCLUDE_DIR}/gnuradio
-    COMPONENT "pager_devel"
-)

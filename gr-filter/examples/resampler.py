@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2009,2012 Free Software Foundation, Inc.
+# Copyright 2009,2012,2013 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -22,18 +22,25 @@
 
 from gnuradio import gr
 from gnuradio import filter
+from gnuradio import blocks
 import sys
+
+try:
+    from gnuradio import analog
+except ImportError:
+    sys.stderr.write("Error: Program requires gr-analog.\n")
+    sys.exit(1)
 
 try:
     import scipy
 except ImportError:
-    print "Error: Program requires scipy (see: www.scipy.org)."
+    sys.stderr.write("Error: Program requires scipy (see: www.scipy.org).\n")
     sys.exit(1)
 
 try:
     import pylab
 except ImportError:
-    print "Error: Program requires matplotlib (see: matplotlib.sourceforge.net)."
+    sys.stderr.write("Error: Program requires matplotlib (see: matplotlib.sourceforge.net).\n")
     sys.exit(1)
 
 class mytb(gr.top_block):
@@ -44,11 +51,11 @@ class mytb(gr.top_block):
         print "Resampling from %f to %f by %f " %(fs_in, fs_out, rerate)
 
         # Creating our own taps
-        taps = gr.firdes.low_pass_2(32, 32, 0.25, 0.1, 80)
+        taps = filter.firdes.low_pass_2(32, 32, 0.25, 0.1, 80)
 
-        self.src = gr.sig_source_c(fs_in, gr.GR_SIN_WAVE, fc, 1)
-        #self.src = gr.noise_source_c(gr.GR_GAUSSIAN, 1)
-        self.head = gr.head(gr.sizeof_gr_complex, N)
+        self.src = analog.sig_source_c(fs_in, analog.GR_SIN_WAVE, fc, 1)
+        #self.src = analog.noise_source_c(analog.GR_GAUSSIAN, 1)
+        self.head = blocks.head(gr.sizeof_gr_complex, N)
 
         # A resampler with our taps
         self.resamp_0 = filter.pfb.arb_resampler_ccf(rerate, taps,
@@ -61,9 +68,9 @@ class mytb(gr.top_block):
         # specify the out-of-band rejection (default=80).
         self.resamp_1 = filter.pfb.arb_resampler_ccf(rerate)
 
-        self.snk_in = gr.vector_sink_c()
-        self.snk_0 = gr.vector_sink_c()
-        self.snk_1 = gr.vector_sink_c()
+        self.snk_in = blocks.vector_sink_c()
+        self.snk_0 = blocks.vector_sink_c()
+        self.snk_1 = blocks.vector_sink_c()
 
         self.connect(self.src, self.head, self.snk_in)
         self.connect(self.head, self.resamp_0, self.snk_0)

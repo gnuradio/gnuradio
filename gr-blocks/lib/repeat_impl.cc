@@ -25,7 +25,7 @@
 #endif
 
 #include "repeat_impl.h"
-#include <gr_io_signature.h>
+#include <gnuradio/io_signature.h>
 
 namespace gr {
   namespace blocks {
@@ -36,9 +36,9 @@ namespace gr {
     }
 
     repeat_impl::repeat_impl(size_t itemsize, int interp)
-      : gr_sync_interpolator("repeat",
-			     gr_make_io_signature (1, 1, itemsize),
-			     gr_make_io_signature (1, 1, itemsize),
+      : sync_interpolator("repeat",
+			     io_signature::make (1, 1, itemsize),
+			     io_signature::make (1, 1, itemsize),
 			     interp),
 	d_itemsize(itemsize),
 	d_interp(interp)

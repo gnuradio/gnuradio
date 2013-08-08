@@ -17,25 +17,25 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 -->
 <!--
-	gnuradio_python.blocks.dtd
-	Josh Blum
-	The document type definition for blocks.
+    gnuradio_python.blocks.dtd
+    Josh Blum
+    The document type definition for blocks.
  -->
 <!--
-	Top level element.
-	A block contains a name, ...parameters list, and list of IO ports.
+    Top level element.
+    A block contains a name, ...parameters list, and list of IO ports.
  -->
-<!ELEMENT block (name, key, category?, throttle?, import*, var_make?, make, callback*, param*, check*, sink*, source*, doc?, grc_source?)>
+<!ELEMENT block (name, key, category?, throttle?, import*, var_make?, make, callback*, param*, bus_sink?, bus_source?, check*, sink*, source*, bus_structure_sink?, bus_structure_source?, doc?,  grc_source?)>
 <!--
-	Sub level elements.
+    Sub level elements.
  -->
 <!ELEMENT param (name, key, value?, type, hide?, option*)>
 <!ELEMENT option (name, key, opt*)>
 <!ELEMENT sink (name, type, vlen?, nports?, optional?)>
 <!ELEMENT source (name, type, vlen?, nports?, optional?)>
 <!--
-	Bottom level elements.
-	Character data only.
+    Bottom level elements.
+    Character data only.
  -->
 <!ELEMENT category (#PCDATA)>
 <!ELEMENT import (#PCDATA)>
@@ -44,11 +44,15 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 <!ELEMENT name (#PCDATA)>
 <!ELEMENT key (#PCDATA)>
 <!ELEMENT check (#PCDATA)>
+<!ELEMENT bus_sink (#PCDATA)>
+<!ELEMENT bus_source (#PCDATA)>
 <!ELEMENT opt (#PCDATA)>
 <!ELEMENT type (#PCDATA)>
 <!ELEMENT hide (#PCDATA)>
 <!ELEMENT vlen (#PCDATA)>
 <!ELEMENT nports (#PCDATA)>
+<!ELEMENT bus_structure_sink (#PCDATA)>
+<!ELEMENT bus_structure_source (#PCDATA)>
 <!ELEMENT var_make (#PCDATA)>
 <!ELEMENT make (#PCDATA)>
 <!ELEMENT value (#PCDATA)>

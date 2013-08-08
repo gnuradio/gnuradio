@@ -28,7 +28,7 @@
 
 #include <@NAME_IMPL@.h>
 #include <algorithm>
-#include <gr_io_signature.h>
+#include <gnuradio/io_signature.h>
 #include <stdexcept>
 #include <stdio.h>
 
@@ -44,9 +44,9 @@ namespace gr {
 
     @NAME_IMPL@::@NAME_IMPL@(const std::vector<@TYPE@> &data,
                              int periodicity, int offset)
-    : gr_block("@BASE_NAME@",
-               gr_make_io_signature(1, 1, sizeof(@TYPE@)),
-               gr_make_io_signature(1, 1, sizeof(@TYPE@))),
+    : block("@BASE_NAME@",
+               io_signature::make(1, 1, sizeof(@TYPE@)),
+               io_signature::make(1, 1, sizeof(@TYPE@))),
       d_data(data),
       d_offset(offset),
       d_periodicity(periodicity)

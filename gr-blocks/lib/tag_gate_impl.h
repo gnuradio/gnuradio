@@ -23,7 +23,7 @@
 #ifndef INCLUDED_BLOCKS_TAG_GATE_IMPL_H
 #define INCLUDED_BLOCKS_TAG_GATE_IMPL_H
 
-#include <blocks/tag_gate.h>
+#include <gnuradio/blocks/tag_gate.h>
 
 namespace gr {
   namespace blocks {

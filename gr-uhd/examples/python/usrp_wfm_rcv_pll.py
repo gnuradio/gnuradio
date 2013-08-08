@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2005-2007,2011 Free Software Foundation, Inc.
+# Copyright 2005-2007,2011,2012 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -20,7 +20,10 @@
 # Boston, MA 02110-1301, USA.
 #
 
-from gnuradio import gr, optfir, audio, blks2, uhd
+from gnuradio import gr, audio, uhd
+from gnuradio import blocks
+from gnuradio import filter
+from gnuradio import analog
 from gnuradio import eng_notation
 from gnuradio.eng_option import eng_option
 from gnuradio.wxgui import slider, powermate
@@ -90,24 +93,24 @@ class wfm_rx_block (stdgui2.std_top_block):
         dev_rate = self.u.get_samp_rate()
 
         nfilts = 32
-        chan_coeffs = gr.firdes.low_pass_2 (nfilts,           # gain
-                                            nfilts*usrp_rate, # sampling rate
-                                            90e3,             # passband cutoff
-                                            30e3,             # stopband cutoff
-                                            70)               # stopband attenuation
+        chan_coeffs = filter.firdes.low_pass_2(nfilts,           # gain
+                                               nfilts*usrp_rate, # sampling rate
+                                               90e3,             # passband cutoff
+                                               30e3,             # stopband cutoff
+                                               70)               # stopband attenuation
         rrate = usrp_rate / dev_rate
-        self.chan_filt = blks2.pfb_arb_resampler_ccf(rrate, chan_coeffs, nfilts)
+        self.chan_filt = filter.pfb.arb_resampler_ccf(rrate, chan_coeffs, nfilts)
 
 
-        self.guts = blks2.wfm_rcv_pll (demod_rate, audio_decim)
+        self.guts = analog.wfm_rcv_pll(demod_rate, audio_decim)
 
         chan_rate = audio_rate / (demod_rate/audio_decim)
-        self.rchan_filt = blks2.pfb_arb_resampler_fff(chan_rate)
-        self.lchan_filt = blks2.pfb_arb_resampler_fff(chan_rate)
+        self.rchan_filt = filter.pfb.arb_resampler_fff(chan_rate)
+        self.lchan_filt = filter.pfb.arb_resampler_fff(chan_rate)
 
         # FIXME rework {add,multiply}_const_* to handle multiple streams
-        self.volume_control_l = gr.multiply_const_ff(self.vol)
-        self.volume_control_r = gr.multiply_const_ff(self.vol)
+        self.volume_control_l = blocks.multiply_const_ff(self.vol)
+        self.volume_control_r = blocks.multiply_const_ff(self.vol)
 
         # sound card as final sink
         self.audio_sink = audio.sink (int (audio_rate),
@@ -311,7 +314,8 @@ class wfm_rx_block (stdgui2.std_top_block):
         """
         Set the center frequency we're interested in.
 
-        @param target_freq: frequency in Hz
+        Args:
+            target_freq: frequency in Hz
         @rypte: bool
         """
 

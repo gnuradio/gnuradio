@@ -9,6 +9,7 @@
 	<key>wxgui_histosink2</key>
 	<category>Instrumentation/WX</category>
 	<import>from gnuradio.wxgui import histosink_gl</import>
+        <import>from gnuradio import wxgui</import>
 	<make>#set $parent = $notebook() and 'self.%s.GetPage(%s)'%$notebook() or 'self'
 histosink_gl.histo_sink_f(
 	$(parent).GetWin(),

@@ -25,7 +25,7 @@
 #endif
 
 #include "pfb_decimator_ccf_impl.h"
-#include <gr_io_signature.h>
+#include <gnuradio/io_signature.h>
 
 namespace gr {
   namespace filter {
@@ -43,9 +43,9 @@ namespace gr {
     pfb_decimator_ccf_impl::pfb_decimator_ccf_impl(unsigned int decim,
 						   const std::vector<float> &taps,
 						   unsigned int channel)
-      : gr_sync_block("pfb_decimator_ccf",
-		      gr_make_io_signature(decim, decim, sizeof(gr_complex)),
-		      gr_make_io_signature(1, 1, sizeof(gr_complex))),
+      : sync_block("pfb_decimator_ccf",
+		      io_signature::make(decim, decim, sizeof(gr_complex)),
+		      io_signature::make(1, 1, sizeof(gr_complex))),
 	polyphase_filterbank(decim, taps),
 	d_updated(false), d_chan(channel)
     {
@@ -53,7 +53,7 @@ namespace gr {
       d_rotator = new gr_complex[d_rate];
 
       set_relative_rate(1.0/(float)decim);
-      set_history(d_taps_per_filter+1);
+      set_history(d_taps_per_filter);
     }
 
     pfb_decimator_ccf_impl::~pfb_decimator_ccf_impl()
@@ -63,10 +63,10 @@ namespace gr {
     void
     pfb_decimator_ccf_impl::set_taps(const std::vector<float> &taps)
     {
-      gruel::scoped_lock guard(d_mutex);
+      gr::thread::scoped_lock guard(d_mutex);
 
       polyphase_filterbank::set_taps(taps);
-      set_history(d_taps_per_filter+1);
+      set_history(d_taps_per_filter);
       d_updated = true;
     }
 
@@ -89,7 +89,7 @@ namespace gr {
 				 gr_vector_const_void_star &input_items,
 				 gr_vector_void_star &output_items)
     {
-      gruel::scoped_lock guard(d_mutex);
+      gr::thread::scoped_lock guard(d_mutex);
 
       gr_complex *in;
       gr_complex *out = (gr_complex *)output_items[0];

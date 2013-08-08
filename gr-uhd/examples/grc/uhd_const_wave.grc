@@ -1,27 +1,59 @@
 <?xml version='1.0' encoding='ASCII'?>
 <flow_graph>
-  <timestamp>Sat Oct  8 10:24:27 2011</timestamp>
+  <timestamp>Mon Mar 18 11:04:05 2013</timestamp>
   <block>
-    <key>const_source_x</key>
+    <key>options</key>
     <param>
       <key>id</key>
-      <value>const_source_x_0</value>
+      <value>uhd_const_wave</value>
     </param>
     <param>
       <key>_enabled</key>
       <value>True</value>
     </param>
     <param>
-      <key>type</key>
-      <value>complex</value>
+      <key>title</key>
+      <value>UHD Constant Wave</value>
     </param>
     <param>
-      <key>const</key>
-      <value>ampl</value>
+      <key>author</key>
+      <value>Example</value>
+    </param>
+    <param>
+      <key>description</key>
+      <value>Tune UHD Device</value>
+    </param>
+    <param>
+      <key>window_size</key>
+      <value>1280, 1024</value>
+    </param>
+    <param>
+      <key>generate_options</key>
+      <value>wx_gui</value>
+    </param>
+    <param>
+      <key>category</key>
+      <value>Custom</value>
+    </param>
+    <param>
+      <key>run_options</key>
+      <value>prompt</value>
+    </param>
+    <param>
+      <key>run</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>max_nouts</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>realtime_scheduling</key>
+      <value></value>
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(102, 193)</value>
+      <value>(10, 10)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -194,61 +226,6 @@
     </param>
   </block>
   <block>
-    <key>options</key>
-    <param>
-      <key>id</key>
-      <value>uhd_const_wave</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>title</key>
-      <value>UHD Constant Wave</value>
-    </param>
-    <param>
-      <key>author</key>
-      <value>Example</value>
-    </param>
-    <param>
-      <key>description</key>
-      <value>Tune UHD Device</value>
-    </param>
-    <param>
-      <key>window_size</key>
-      <value>1280, 1024</value>
-    </param>
-    <param>
-      <key>generate_options</key>
-      <value>wx_gui</value>
-    </param>
-    <param>
-      <key>category</key>
-      <value>Custom</value>
-    </param>
-    <param>
-      <key>run_options</key>
-      <value>prompt</value>
-    </param>
-    <param>
-      <key>run</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>realtime_scheduling</key>
-      <value></value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(10, 10)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
     <key>parameter</key>
     <param>
       <key>id</key>
@@ -319,6 +296,76 @@
     </param>
   </block>
   <block>
+    <key>parameter</key>
+    <param>
+      <key>id</key>
+      <value>freq</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>label</key>
+      <value>Default Frequency</value>
+    </param>
+    <param>
+      <key>value</key>
+      <value>2.45e9</value>
+    </param>
+    <param>
+      <key>type</key>
+      <value>eng_float</value>
+    </param>
+    <param>
+      <key>short_id</key>
+      <value>f</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(468, 14)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>parameter</key>
+    <param>
+      <key>id</key>
+      <value>gain</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>label</key>
+      <value>Default Gain</value>
+    </param>
+    <param>
+      <key>value</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>type</key>
+      <value>eng_float</value>
+    </param>
+    <param>
+      <key>short_id</key>
+      <value>g</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(616, 13)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
     <key>uhd_usrp_sink</key>
     <param>
       <key>id</key>
@@ -330,7 +377,15 @@
     </param>
     <param>
       <key>type</key>
-      <value>complex</value>
+      <value>fc32</value>
+    </param>
+    <param>
+      <key>otw</key>
+      <value></value>
+    </param>
+    <param>
+      <key>stream_args</key>
+      <value></value>
     </param>
     <param>
       <key>dev_addr</key>
@@ -349,7 +404,11 @@
       <value>1</value>
     </param>
     <param>
-      <key>ref_source0</key>
+      <key>clock_source0</key>
+      <value></value>
+    </param>
+    <param>
+      <key>time_source0</key>
       <value></value>
     </param>
     <param>
@@ -357,7 +416,11 @@
       <value></value>
     </param>
     <param>
-      <key>ref_source1</key>
+      <key>clock_source1</key>
+      <value></value>
+    </param>
+    <param>
+      <key>time_source1</key>
       <value></value>
     </param>
     <param>
@@ -365,7 +428,11 @@
       <value></value>
     </param>
     <param>
-      <key>ref_source2</key>
+      <key>clock_source2</key>
+      <value></value>
+    </param>
+    <param>
+      <key>time_source2</key>
       <value></value>
     </param>
     <param>
@@ -373,7 +440,11 @@
       <value></value>
     </param>
     <param>
-      <key>ref_source3</key>
+      <key>clock_source3</key>
+      <value></value>
+    </param>
+    <param>
+      <key>time_source3</key>
       <value></value>
     </param>
     <param>
@@ -381,7 +452,11 @@
       <value></value>
     </param>
     <param>
-      <key>ref_source4</key>
+      <key>clock_source4</key>
+      <value></value>
+    </param>
+    <param>
+      <key>time_source4</key>
       <value></value>
     </param>
     <param>
@@ -389,7 +464,11 @@
       <value></value>
     </param>
     <param>
-      <key>ref_source5</key>
+      <key>clock_source5</key>
+      <value></value>
+    </param>
+    <param>
+      <key>time_source5</key>
       <value></value>
     </param>
     <param>
@@ -397,7 +476,11 @@
       <value></value>
     </param>
     <param>
-      <key>ref_source6</key>
+      <key>clock_source6</key>
+      <value></value>
+    </param>
+    <param>
+      <key>time_source6</key>
       <value></value>
     </param>
     <param>
@@ -405,7 +488,11 @@
       <value></value>
     </param>
     <param>
-      <key>ref_source7</key>
+      <key>clock_source7</key>
+      <value></value>
+    </param>
+    <param>
+      <key>time_source7</key>
       <value></value>
     </param>
     <param>
@@ -942,69 +1029,26 @@
     </param>
   </block>
   <block>
-    <key>parameter</key>
+    <key>analog_const_source_x</key>
     <param>
       <key>id</key>
-      <value>freq</value>
+      <value>analog_const_source_x_0</value>
     </param>
     <param>
       <key>_enabled</key>
       <value>True</value>
     </param>
     <param>
-      <key>label</key>
-      <value>Default Frequency</value>
-    </param>
-    <param>
-      <key>value</key>
-      <value>2.45e9</value>
-    </param>
-    <param>
       <key>type</key>
-      <value>eng_float</value>
+      <value>complex</value>
     </param>
     <param>
-      <key>short_id</key>
-      <value>f</value>
+      <key>const</key>
+      <value>ampl</value>
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(468, 14)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>parameter</key>
-    <param>
-      <key>id</key>
-      <value>gain</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>label</key>
-      <value>Default Gain</value>
-    </param>
-    <param>
-      <key>value</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>type</key>
-      <value>eng_float</value>
-    </param>
-    <param>
-      <key>short_id</key>
-      <value>g</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(616, 13)</value>
+      <value>(74, 193)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -1012,7 +1056,7 @@
     </param>
   </block>
   <connection>
-    <source_block_id>const_source_x_0</source_block_id>
+    <source_block_id>analog_const_source_x_0</source_block_id>
     <sink_block_id>uhd_usrp_sink_0</sink_block_id>
     <source_key>0</source_key>
     <sink_key>0</sink_key>

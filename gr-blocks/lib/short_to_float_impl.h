@@ -23,7 +23,7 @@
 #ifndef INCLUDED_SHORT_TO_FLOAT_IMPL_H
 #define INCLUDED_SHORT_TO_FLOAT_IMPL_H
 
-#include <blocks/short_to_float.h>
+#include <gnuradio/blocks/short_to_float.h>
 
 namespace gr {
   namespace blocks {

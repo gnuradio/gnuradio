@@ -22,7 +22,7 @@
 #ifndef INCLUDED_DIGITAL_OFDM_FRAME_EQUALIZER_VCVC_IMPL_H
 #define INCLUDED_DIGITAL_OFDM_FRAME_EQUALIZER_VCVC_IMPL_H
 
-#include <digital/ofdm_frame_equalizer_vcvc.h>
+#include <gnuradio/digital/ofdm_frame_equalizer_vcvc.h>
 
 namespace gr {
   namespace digital {
@@ -32,20 +32,20 @@ namespace gr {
      private:
       const int d_fft_len;
       const int d_cp_len;
-      digital_ofdm_equalizer_base_sptr d_eq;
+      ofdm_equalizer_base::sptr d_eq;
       bool d_propagate_channel_state;
       const int d_fixed_frame_len;
       std::vector<gr_complex> d_channel_state;
 
      protected:
       void parse_length_tags(
-	  const std::vector<std::vector<gr_tag_t> > &tags,
+	  const std::vector<std::vector<tag_t> > &tags,
 	  gr_vector_int &n_input_items_reqd
       );
 
      public:
       ofdm_frame_equalizer_vcvc_impl(
-	  digital_ofdm_equalizer_base_sptr equalizer,
+	  ofdm_equalizer_base::sptr equalizer,
 	  int cp_len,
 	  const std::string &len_tag_key,
 	  bool propagate_channel_state,

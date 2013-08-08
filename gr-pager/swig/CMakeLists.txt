@@ -25,13 +25,18 @@ include(GrSwig)
 
 set(GR_SWIG_INCLUDE_DIRS
     ${GR_PAGER_INCLUDE_DIRS}
-    ${GNURADIO_CORE_SWIG_INCLUDE_DIRS}
-    ${GRUEL_INCLUDE_DIRS}
+    ${GNURADIO_RUNTIME_SWIG_INCLUDE_DIRS}
     ${Boost_INCLUDE_DIRS}
 )
 
+if(ENABLE_GR_CTRLPORT)
+  list(APPEND GR_SWIG_FLAGS "-DGR_CTRLPORT")
+  list(APPEND GR_SWIG_INCLUDE_DIRS ${ICE_INCLUDE_DIR})
+endif(ENABLE_GR_CTRLPORT)
+
 set(GR_SWIG_DOC_FILE ${CMAKE_CURRENT_BINARY_DIR}/pager_swig_doc.i)
-set(GR_SWIG_DOC_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/../lib)
+set(GR_SWIG_DOC_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/../include/gnuradio/pager)
+set(GR_SWIG_DOCS_TARGET_DEPS runtime_swig_swig_doc)
 
 set(GR_SWIG_LIBRARIES gnuradio-pager)
 
@@ -46,11 +51,6 @@ GR_SWIG_INSTALL(
 install(
     FILES
     pager_swig.i
-    pager_flex_deinterleave.i
-    pager_flex_frame.i
-    pager_flex_parse.i
-    pager_flex_sync.i
-    pager_slicer_fb.i
     ${CMAKE_CURRENT_BINARY_DIR}/pager_swig_doc.i
     DESTINATION ${GR_INCLUDE_DIR}/gnuradio/swig
     COMPONENT "pager_swig"

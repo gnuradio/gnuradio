@@ -25,7 +25,7 @@
 #endif
 
 #include "char_to_short_impl.h"
-#include <gr_io_signature.h>
+#include <gnuradio/io_signature.h>
 #include <volk/volk.h>
 
 namespace gr {
@@ -37,9 +37,9 @@ namespace gr {
     }
 
     char_to_short_impl::char_to_short_impl(size_t vlen)
-      : gr_sync_block("char_to_short",
-		      gr_make_io_signature (1, -1, sizeof(char)*vlen),
-		      gr_make_io_signature (1,  1, sizeof(short)*vlen)),
+      : sync_block("char_to_short",
+		      io_signature::make (1, -1, sizeof(char)*vlen),
+		      io_signature::make (1,  1, sizeof(short)*vlen)),
 	d_vlen(vlen)
     {
       const int alignment_multiple =
@@ -55,12 +55,7 @@ namespace gr {
       const int8_t *in = (const int8_t *) input_items[0];
       int16_t *out = (int16_t *) output_items[0];
 
-      if(is_unaligned()) {
-	volk_8i_convert_16i_u(out, in, d_vlen*noutput_items);
-      }
-      else {
-	volk_8i_convert_16i_a(out, in, d_vlen*noutput_items);
-      }
+      volk_8i_convert_16i(out, in, d_vlen*noutput_items);
 
       return noutput_items;
     }

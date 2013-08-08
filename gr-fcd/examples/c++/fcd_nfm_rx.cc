@@ -32,18 +32,18 @@
 #endif
 
 // Include header files for each block used in flowgraph
-#include <gr_top_block.h>
-#include <gr_firdes.h>
-#include <gr_fir_filter_ccf.h>
-#include <gr_quadrature_demod_cf.h>
-#include <gr_audio_sink.h>
-#include <fcd_source_c.h>
+#include <gnuradio/top_block.h>
+#include <gnuradio/filter/firdes.h>
+#include <gnuradio/filter/fir_filter_ccf.h>
+#include <gnuradio/analog/quadrature_demod_cf.h>
+#include <gnuradio/audio/sink.h>
+#include <gnuradio/fcd/source_c.h>
 
 // other includes
 #include <iostream>
 #include <boost/program_options.hpp>
 
-
+using namespace gr;
 namespace po = boost::program_options;
 
 int main(int argc, char **argv)
@@ -77,23 +77,24 @@ int main(int argc, char **argv)
 
 
     // Construct a top block that will contain flowgraph blocks.
-    gr_top_block_sptr tb = gr_make_top_block("fcd_nfm_rx");
+    top_block_sptr tb = make_top_block("fcd_nfm_rx");
 
     // FCD source
-    fcd_source_c_sptr fcd = fcd_make_source_c(device);
+    gr::fcd::source_c::sptr fcd = gr::fcd::source_c::make(device);
     fcd->set_freq_khz(freq);
     fcd->set_lna_gain(gain);
 
     // Low pass filter
-    std::vector<float> taps = gr_firdes::low_pass(1.0, 96000, 5000.0, 1000.0);
-    gr_fir_filter_ccf_sptr filter = gr_make_fir_filter_ccf (2, taps);
+    std::vector<float> taps = filter::firdes::low_pass(1.0, 96000, 5000.0, 1000.0);
+    filter::fir_filter_ccf::sptr filter = filter::fir_filter_ccf::make (2, taps);
 
     // FM demodulator
     // gain = sample_rate / (2*pi*max_dev)
-    gr_quadrature_demod_cf_sptr demod = gr_make_quadrature_demod_cf (rate/(2.0*pi*5000.0));
+    analog::quadrature_demod_cf::sptr demod = \
+      analog::quadrature_demod_cf::make(rate/(2.0*pi*5000.0));
 
     // Audio sink
-    audio_sink::sptr sink = audio_make_sink(rate);
+    audio::sink::sptr sink = audio::sink::make(rate);
 
     // Connect blocks
     tb->connect(fcd, 0, filter, 0);

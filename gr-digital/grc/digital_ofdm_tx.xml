@@ -9,10 +9,10 @@
 	  #if $occupied_carriers()
 	  occupied_carriers=$occupied_carriers,
 	  #end if
-	  #if $occupied_carriers()
+	  #if $pilot_carriers()
 	  pilot_carriers=$pilot_carriers,
 	  #end if
-	  #if $occupied_carriers()
+	  #if $pilot_carriers()
 	  pilot_symbols=$pilot_symbols,
 	  #end if
 	  #if $sync_word1()

@@ -25,7 +25,7 @@
 #endif
 
 #include "pack_k_bits_bb_impl.h"
-#include <gr_io_signature.h>
+#include <gnuradio/io_signature.h>
 #include <stdexcept>
 #include <iostream>
 
@@ -40,9 +40,9 @@ namespace gr {
     }
 
     pack_k_bits_bb_impl::pack_k_bits_bb_impl(unsigned k)
-      : gr_sync_decimator("pack_k_bits_bb",
-                          gr_make_io_signature(1, 1, sizeof(unsigned char)),
-                          gr_make_io_signature(1, 1, sizeof(unsigned char)),
+      : sync_decimator("pack_k_bits_bb",
+                          io_signature::make(1, 1, sizeof(unsigned char)),
+                          io_signature::make(1, 1, sizeof(unsigned char)),
                           k),
         d_k(k)
     {

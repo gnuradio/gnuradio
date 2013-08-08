@@ -25,7 +25,7 @@
 #ifndef INCLUDED_MULTIPLY_CONST_FF_IMPL_H
 #define INCLUDED_MULTIPLY_CONST_FF_IMPL_H
 
-#include <blocks/multiply_const_ff.h>
+#include <gnuradio/blocks/multiply_const_ff.h>
 
 namespace gr {
   namespace blocks {

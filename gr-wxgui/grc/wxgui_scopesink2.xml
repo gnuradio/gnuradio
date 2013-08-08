@@ -9,7 +9,7 @@
 	<key>wxgui_scopesink2</key>
 	<category>Instrumentation/WX</category>
 	<import>from gnuradio.wxgui import scopesink2</import>
-	<import>from gnuradio import gr</import>
+	<import>from gnuradio import wxgui</import>
 	<make>#set $parent = $notebook() and 'self.%s.GetPage(%s)'%$notebook() or 'self'
 scopesink2.$(type.fcn)(
 	$(parent).GetWin(),
@@ -143,19 +143,19 @@ $(parent).GridAdd(self.$(id).win, $(', '.join(map(str, $grid_pos()))))
 		<type>enum</type>
 		<option>
 			<name>Auto</name>
-			<key>gr.gr_TRIG_MODE_AUTO</key>
+			<key>wxgui.TRIG_MODE_AUTO</key>
 		</option>
 		<option>
 			<name>Normal</name>
-			<key>gr.gr_TRIG_MODE_NORM</key>
+			<key>wxgui.TRIG_MODE_NORM</key>
 		</option>
 		<option>
 			<name>Freerun</name>
-			<key>gr.gr_TRIG_MODE_FREE</key>
+			<key>wxgui.TRIG_MODE_FREE</key>
 		</option>
 		<option>
 			<name>Stripchart</name>
-			<key>gr.gr_TRIG_MODE_STRIPCHART</key>
+			<key>wxgui.TRIG_MODE_STRIPCHART</key>
 		</option>
 	</param>
 	<param>

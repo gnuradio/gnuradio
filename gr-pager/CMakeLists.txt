@@ -28,12 +28,21 @@ include(GrBoost)
 include(GrComponent)
 GR_REGISTER_COMPONENT("gr-pager" ENABLE_GR_PAGER
     Boost_FOUND
-    ENABLE_GR_CORE
+    ENABLE_GNURADIO_RUNTIME
+    ENABLE_GR_FILTER
+    ENABLE_GR_ANALOG
 )
 
 GR_SET_GLOBAL(GR_PAGER_INCLUDE_DIRS
-    ${CMAKE_CURRENT_SOURCE_DIR}/lib
+    ${CMAKE_CURRENT_SOURCE_DIR}/include
+    ${CMAKE_CURRENT_BINARY_DIR}/include
 )
+
+GR_SET_GLOBAL(GR_PAGER_SWIG_INCLUDE_DIRS
+    ${CMAKE_CURRENT_SOURCE_DIR}/swig
+)
+
+SET(GR_PKG_PAGER_EXAMPLES_DIR ${GR_PKG_DATA_DIR}/examples/pager)
 
 ########################################################################
 # Begin conditional configuration
@@ -50,36 +59,37 @@ CPACK_COMPONENT("pager_runtime"
     GROUP        "Pager"
     DISPLAY_NAME "Runtime"
     DESCRIPTION  "Runtime"
-    DEPENDS      "core_runtime"
+    DEPENDS      "runtime_runtime"
 )
 
 CPACK_COMPONENT("pager_devel"
     GROUP        "Pager"
     DISPLAY_NAME "Development"
     DESCRIPTION  "C++ headers, package config, import libraries"
-    DEPENDS      "core_devel"
+    DEPENDS      "runtime_devel"
 )
 
 CPACK_COMPONENT("pager_python"
     GROUP        "Pager"
     DISPLAY_NAME "Python"
     DESCRIPTION  "Python modules for runtime; GRC xml files"
-    DEPENDS      "core_python;pager_runtime"
+    DEPENDS      "runtime_python;pager_runtime"
 )
 
 CPACK_COMPONENT("pager_swig"
     GROUP        "Pager"
     DISPLAY_NAME "SWIG"
     DESCRIPTION  "SWIG development .i files"
-    DEPENDS      "core_swig;pager_python;pager_devel"
+    DEPENDS      "runtime_swig;pager_python;pager_devel"
 )
 
 ########################################################################
 # Add subdirectories
 ########################################################################
+add_subdirectory(include/gnuradio/pager)
 add_subdirectory(lib)
 if(ENABLE_PYTHON)
-    add_subdirectory(python)
+    add_subdirectory(python/pager)
     add_subdirectory(swig)
     add_subdirectory(grc)
     add_subdirectory(apps)

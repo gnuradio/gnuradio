@@ -13,7 +13,7 @@
 ##@param var_id2cbs variable id map to callback strings
 ########################################################
 #def indent($code)
-#set $code = '\n\t\t'.join(str($code).splitlines())
+#set $code = '\n        '.join(str($code).splitlines())
 $code#slurp
 #end def
 #import time
@@ -39,273 +39,310 @@ $imp
 
 ########################################################
 ##Create Class
-##	Write the class declaration for a top or hier block.
-##	The parameter names are the arguments to __init__.
-##	Determine the absolute icon path (wx gui only).
-##	Setup the IO signature (hier block only).
+##  Write the class declaration for a top or hier block.
+##  The parameter names are the arguments to __init__.
+##  Determine the absolute icon path (wx gui only).
+##  Setup the IO signature (hier block only).
 ########################################################
 #set $class_name = $flow_graph.get_option('id')
 #set $param_str = ', '.join(['self'] + ['%s=%s'%(param.get_id(), param.get_make()) for param in $parameters])
 #if $generate_options == 'wx_gui'
-	#import gtk
-	#set $icon = gtk.IconTheme().lookup_icon('gnuradio-grc', 32, 0)
+    #import gtk
+    #set $icon = gtk.IconTheme().lookup_icon('gnuradio-grc', 32, 0)
 class $(class_name)(grc_wxgui.top_block_gui):
 
-	def __init__($param_str):
-		grc_wxgui.top_block_gui.__init__(self, title="$title")
-	#if $icon
-		_icon_path = "$icon.get_filename()"
-		self.SetIcon(wx.Icon(_icon_path, wx.BITMAP_TYPE_ANY))
-	#end if
+    def __init__($param_str):
+        grc_wxgui.top_block_gui.__init__(self, title="$title")
+    #if $icon
+        _icon_path = "$icon.get_filename()"
+        self.SetIcon(wx.Icon(_icon_path, wx.BITMAP_TYPE_ANY))
+    #end if
 #elif $generate_options == 'qt_gui'
 class $(class_name)(gr.top_block, Qt.QWidget):
 
-	def __init__($param_str):
-		gr.top_block.__init__(self, "$title")
-		Qt.QWidget.__init__(self)
-		self.setWindowTitle("$title")
-		self.setWindowIcon(Qt.QIcon.fromTheme('gnuradio-grc'))
-		self.top_scroll_layout = Qt.QVBoxLayout()
-		self.setLayout(self.top_scroll_layout)
-		self.top_scroll = Qt.QScrollArea()
-		self.top_scroll.setFrameStyle(Qt.QFrame.NoFrame)
-		self.top_scroll_layout.addWidget(self.top_scroll)
-		self.top_scroll.setWidgetResizable(True)
-		self.top_widget = Qt.QWidget()
-		self.top_scroll.setWidget(self.top_widget)
-		self.top_layout = Qt.QVBoxLayout(self.top_widget)
-		self.top_grid_layout = Qt.QGridLayout()
-		self.top_layout.addLayout(self.top_grid_layout)
+    def __init__($param_str):
+        gr.top_block.__init__(self, "$title")
+        Qt.QWidget.__init__(self)
+        self.setWindowTitle("$title")
+        try:
+             self.setWindowIcon(Qt.QIcon.fromTheme('gnuradio-grc'))
+        except:
+             pass
+        self.top_scroll_layout = Qt.QVBoxLayout()
+        self.setLayout(self.top_scroll_layout)
+        self.top_scroll = Qt.QScrollArea()
+        self.top_scroll.setFrameStyle(Qt.QFrame.NoFrame)
+        self.top_scroll_layout.addWidget(self.top_scroll)
+        self.top_scroll.setWidgetResizable(True)
+        self.top_widget = Qt.QWidget()
+        self.top_scroll.setWidget(self.top_widget)
+        self.top_layout = Qt.QVBoxLayout(self.top_widget)
+        self.top_grid_layout = Qt.QGridLayout()
+        self.top_layout.addLayout(self.top_grid_layout)
+
+        self.settings = Qt.QSettings("GNU Radio", "$class_name")
+        self.restoreGeometry(self.settings.value("geometry").toByteArray())
 
 #elif $generate_options == 'no_gui'
 class $(class_name)(gr.top_block):
 
-	def __init__($param_str):
-		gr.top_block.__init__(self, "$title")
+    def __init__($param_str):
+        gr.top_block.__init__(self, "$title")
 #elif $generate_options == 'hb'
-	#set $in_sigs = $flow_graph.get_io_signaturev('in')
-	#set $out_sigs = $flow_graph.get_io_signaturev('out')
+    #set $in_sigs = $flow_graph.get_io_signaturev('in')
+    #set $out_sigs = $flow_graph.get_io_signaturev('out')
 class $(class_name)(gr.hier_block2):
 #def make_io_sig($io_sigs)
-	#set $size_strs = ['%s*%s'%(io_sig['size'], io_sig['vlen']) for io_sig in $io_sigs]
-	#if len($io_sigs) == 0
+    #set $size_strs = ['%s*%s'%(io_sig['size'], io_sig['vlen']) for io_sig in $io_sigs]
+    #if len($io_sigs) == 0
 gr.io_signature(0, 0, 0)#slurp
-	#elif len($io_sigs) == 1
+    #elif len($io_sigs) == 1
 gr.io_signature(1, 1, $size_strs[0])#slurp
-	#else
+    #else
 gr.io_signaturev($(len($io_sigs)), $(len($io_sigs)), [$(', '.join($size_strs))])#slurp
-	#end if
+    #end if
 #end def
 
-	def __init__($param_str):
-		gr.hier_block2.__init__(
-			self, "$title",
-			$make_io_sig($in_sigs),
-			$make_io_sig($out_sigs),
-		)
+    def __init__($param_str):
+        gr.hier_block2.__init__(
+            self, "$title",
+            $make_io_sig($in_sigs),
+            $make_io_sig($out_sigs),
+        )
 #end if
 ########################################################
 ##Create Parameters
-##	Set the parameter to a property of self.
+##  Set the parameter to a property of self.
 ########################################################
 #if $parameters
 
-		$DIVIDER
-		# Parameters
-		$DIVIDER
+        $DIVIDER
+        # Parameters
+        $DIVIDER
 #end if
 #for $param in $parameters
-		$indent($param.get_var_make())
+        $indent($param.get_var_make())
 #end for
 ########################################################
 ##Create Variables
 ########################################################
 #if $variables
 
-		$DIVIDER
-		# Variables
-		$DIVIDER
+        $DIVIDER
+        # Variables
+        $DIVIDER
 #end if
 #for $var in $variables
-		$indent($var.get_var_make())
+        $indent($var.get_var_make())
 #end for
 ########################################################
 ##Create Message Queues
 ########################################################
 #if $messages
 
-		$DIVIDER
-		# Message Queues
-		$DIVIDER
+        $DIVIDER
+        # Message Queues
+        $DIVIDER
 #end if
 #for $msg in $messages
-		$(msg.get_source().get_parent().get_id())_msgq_out = $(msg.get_sink().get_parent().get_id())_msgq_in = gr.msg_queue(2)
+        $(msg.get_source().get_parent().get_id())_msgq_out = $(msg.get_sink().get_parent().get_id())_msgq_in = gr.msg_queue(2)
 #end for
 ########################################################
 ##Create Blocks
 ########################################################
 #if $blocks
 
-		$DIVIDER
-		# Blocks
-		$DIVIDER
+        $DIVIDER
+        # Blocks
+        $DIVIDER
 #end if
 #for $blk in filter(lambda b: b.get_make(), $blocks)
-	#if $blk in $variables
-		$indent($blk.get_make())
-	#else
-		self.$blk.get_id() = $indent($blk.get_make())
-	#end if
+    #if $blk in $variables
+        $indent($blk.get_make())
+    #else
+        self.$blk.get_id() = $indent($blk.get_make())
+        #if $blk.has_param('affinity') and $blk.get_param('affinity').get_value()
+        (self.$blk.get_id()).set_processor_affinity($blk.get_param('affinity').get_value())
+        #end if
+        #if (len($blk.get_sources())>0) and $blk.has_param('affinity') and (int($blk.get_param('minoutbuf').get_value()) > 0)
+        (self.$blk.get_id()).set_min_output_buffer($blk.get_param('minoutbuf').get_value())
+        #end if
+    #end if
 #end for
 ########################################################
 ##Create Connections
-##	The port name should be the id of the parent block.
-##	However, port names for IO pads should be self.
+##  The port name should be the id of the parent block.
+##  However, port names for IO pads should be self.
 ########################################################
 #def make_port_sig($port)
-	#if $port.get_parent().get_key() == 'pad_source'
+    #if $port.get_parent().get_key() == 'pad_source'
 (self, $flow_graph.get_pad_sources().index($port.get_parent()))#slurp
-	#elif $port.get_parent().get_key() == 'pad_sink'
+    #elif $port.get_parent().get_key() == 'pad_sink'
 (self, $flow_graph.get_pad_sinks().index($port.get_parent()))#slurp
-	#else
+    #else
 (self.$port.get_parent().get_id(), $port.get_key())#slurp
-	#end if
+    #end if
 #end def
 #if $connections
 
-		$DIVIDER
-		# Connections
-		$DIVIDER
+        $DIVIDER
+        # Connections
+        $DIVIDER
 #end if
 #for $con in $connections
-	#set $source = $con.get_source()
-	#set $sink = $con.get_sink()
-	##resolve virtual sources to the actual sources
-	#if $source.get_parent().is_virtual_source()
-		#set $source = $source.resolve_virtual_source()
-	#end if
-	##do not generate connections with virtual sinks
-	#if not $sink.get_parent().is_virtual_sink()
-		self.connect($make_port_sig($source), $make_port_sig($sink))
-	#end if
+    #set $source = $con.get_source()
+    #set $sink = $con.get_sink()
+    ##resolve virtual sources to the actual sources
+    #if $source.get_parent().is_virtual_source()
+        #set $source = $source.resolve_virtual_source()
+    #end if
+    ##do not generate connections with virtual sinks
+    #if not $sink.get_parent().is_virtual_sink()
+        self.connect($make_port_sig($source), $make_port_sig($sink))
+    #end if
 #end for
 
 ########################################################
 ##Create Asynch Message Connections
 ########################################################
 #if $messages2
-		$DIVIDER
-		# Asynch Message Connections
-		$DIVIDER
+        $DIVIDER
+        # Asynch Message Connections
+        $DIVIDER
 #end if
 #for $msg in $messages2
-		#set $sr = $msg.get_source()
-		#set $source = "self.%s"%($sr.get_parent().get_id())
-		#set $source_port = $sr.get_name();
-		#if $sr.get_parent().get_key() == "pad_source"
-			#set $source = "self"
-			#set $source_port = $sr.get_parent().get_param("label").get_value();
-		#end if
-		#set $sk = $msg.get_sink()
-		#set $sink = "self.%s"%($sk.get_parent().get_id())
-		#set $sink_port = $sk.get_name();
-		#if $sk.get_parent().get_key() == "pad_sink"
-			#set $sink = "self"
-			#set $sink_port = $sk.get_parent().get_param("label").get_value();
-		#end if
-		self.msg_connect($source, "$source_port", $sink, "$sink_port")
+        #set $sr = $msg.get_source()
+        #set $source = "self.%s"%($sr.get_parent().get_id())
+        #set $source_port = $sr.get_name();
+        #if $sr.get_parent().get_key() == "pad_source"
+            #set $source = "self"
+            #set $source_port = $sr.get_parent().get_param("label").get_value();
+        #end if
+        #set $sk = $msg.get_sink()
+        #set $sink = "self.%s"%($sk.get_parent().get_id())
+        #set $sink_port = $sk.get_name();
+        #if $sk.get_parent().get_key() == "pad_sink"
+            #set $sink = "self"
+            #set $sink_port = $sk.get_parent().get_param("label").get_value();
+        #end if
+        self.msg_connect($source, "$source_port", $sink, "$sink_port")
 #end for
 
 ########################################################
+# QT sink close method reimplementation
+########################################################
+#if $generate_options == 'qt_gui'
+    def closeEvent(self, event):
+        self.settings = Qt.QSettings("GNU Radio", "$class_name")
+        self.settings.setValue("geometry", self.saveGeometry())
+        event.accept()
+#end if
+
+########################################################
 ##Create Callbacks
-##	Write a set method for this variable that calls the callbacks
+##  Write a set method for this variable that calls the callbacks
 ########################################################
 #for $var in $parameters + $variables
-	#set $id = $var.get_id()
-	def get_$(id)(self):
-		return self.$id
+    #set $id = $var.get_id()
+    def get_$(id)(self):
+        return self.$id
 
-	def set_$(id)(self, $id):
-		self.$id = $id
-	#for $callback in $var_id2cbs[$id]
-		$indent($callback)
-	#end for
+    def set_$(id)(self, $id):
+        self.$id = $id
+    #for $callback in $var_id2cbs[$id]
+        $indent($callback)
+    #end for
 
 #end for
 ########################################################
 ##Create Main
-##	For top block code, generate a main routine.
-##	Instantiate the top block and run as gui or cli.
+##  For top block code, generate a main routine.
+##  Instantiate the top block and run as gui or cli.
 ########################################################
 #def make_default($type, $param)
-	#if $type == 'eng_float'
+    #if $type == 'eng_float'
 eng_notation.num_to_str($param.get_make())#slurp
-	#else
+    #else
 $param.get_make()#slurp
-	#end if
+    #end if
 #end def
 #def make_short_id($param)
-	#set $short_id = $param.get_param('short_id').get_evaluated()
-	#if $short_id
-		#set $short_id = '-' + $short_id
-	#end if
+    #set $short_id = $param.get_param('short_id').get_evaluated()
+    #if $short_id
+        #set $short_id = '-' + $short_id
+    #end if
 $short_id#slurp
 #end def
 #if $generate_options != 'hb'
 if __name__ == '__main__':
-	parser = OptionParser(option_class=eng_option, usage="%prog: [options]")
-	#set $params_eq_list = list()
-	#for $param in $parameters
-		#set $type = $param.get_param('type').get_value()
-		#if $type
-			#silent $params_eq_list.append('%s=options.%s'%($param.get_id(), $param.get_id()))
-	parser.add_option("$make_short_id($param)", "--$param.get_id().replace('_', '-')", dest="$param.get_id()", type="$type", default=$make_default($type, $param),
-		help="Set $($param.get_param('label').get_evaluated() or $param.get_id()) [default=%default]")
-		#end if
-	#end for
-	(options, args) = parser.parse_args()
-	#if $flow_graph.get_option('realtime_scheduling')
-	if gr.enable_realtime_scheduling() != gr.RT_OK:
-		print "Error: failed to enable realtime scheduling."
-	#end if
-	#if $generate_options == 'wx_gui'
-	tb = $(class_name)($(', '.join($params_eq_list)))
-		#if $flow_graph.get_option('max_nouts')
-	tb.Run($flow_graph.get_option('run'), $flow_graph.get_option('max_nouts'))
-		#else
-	tb.Run($flow_graph.get_option('run'))
-		#end if
-	#elif $generate_options == 'qt_gui'
-	qapp = Qt.QApplication(sys.argv)
-	tb = $(class_name)($(', '.join($params_eq_list)))
-	#if $flow_graph.get_option('run')
-		#if $flow_graph.get_option('max_nouts')
-	tb.start($flow_graph.get_option('max_nouts'))
-		#else
-	tb.start()
-		#end if
-	#end if
-	tb.show()
-	qapp.exec_()
-	tb.stop()
-	#elif $generate_options == 'no_gui'
-	tb = $(class_name)($(', '.join($params_eq_list)))
-		#set $run_options = $flow_graph.get_option('run_options')
-		#if $run_options == 'prompt'
-			#if $flow_graph.get_option('max_nouts')
-	tb.start($flow_graph.get_option('max_nouts'))
-			#else
-	tb.start()
-			#end if
-	raw_input('Press Enter to quit: ')
-	tb.stop()
-		#elif $run_options == 'run'
-			#if $flow_graph.get_option('max_nouts')
-	tb.run($flow_graph.get_option('max_nouts'))
-			#else
-	tb.run()
-			#end if
-		#end if
-	#end if
+    parser = OptionParser(option_class=eng_option, usage="%prog: [options]")
+    #set $params_eq_list = list()
+    #for $param in $parameters
+        #set $type = $param.get_param('type').get_value()
+        #if $type
+            #silent $params_eq_list.append('%s=options.%s'%($param.get_id(), $param.get_id()))
+    parser.add_option("$make_short_id($param)", "--$param.get_id().replace('_', '-')", dest="$param.get_id()", type="$type", default=$make_default($type, $param),
+        help="Set $($param.get_param('label').get_evaluated() or $param.get_id()) [default=%default]")
+        #end if
+    #end for
+    (options, args) = parser.parse_args()
+    #if $flow_graph.get_option('realtime_scheduling')
+    if gr.enable_realtime_scheduling() != gr.RT_OK:
+        print "Error: failed to enable realtime scheduling."
+    #end if
+    #if $generate_options == 'wx_gui'
+    tb = $(class_name)($(', '.join($params_eq_list)))
+        #if $flow_graph.get_option('max_nouts')
+    tb.Run($flow_graph.get_option('run'), $flow_graph.get_option('max_nouts'))
+        #else
+    tb.Start($flow_graph.get_option('run'))
+        #for $m in $monitors
+    (tb.$m.get_id()).start()
+        #end for
+    tb.Wait()
+        #end if
+    #elif $generate_options == 'qt_gui'
+    qapp = Qt.QApplication(sys.argv)
+    tb = $(class_name)($(', '.join($params_eq_list)))
+    #if $flow_graph.get_option('run')
+        #if $flow_graph.get_option('max_nouts')
+    tb.start($flow_graph.get_option('max_nouts'))
+        #else
+    tb.start()
+        #end if
+    #end if
+    tb.show()
+        #for $m in $monitors
+    (tb.$m.get_id()).start()
+        #end for
+    qapp.exec_()
+    tb.stop()
+    tb = None #to clean up Qt widgets
+    #elif $generate_options == 'no_gui'
+    tb = $(class_name)($(', '.join($params_eq_list)))
+        #set $run_options = $flow_graph.get_option('run_options')
+        #if $run_options == 'prompt'
+            #if $flow_graph.get_option('max_nouts')
+    tb.start($flow_graph.get_option('max_nouts'))
+            #else
+    tb.start()
+            #end if
+        #for $m in $monitors
+    (tb.$m.get_id()).start()
+        #end for
+    raw_input('Press Enter to quit: ')
+    tb.stop()
+        #elif $run_options == 'run'
+            #if $flow_graph.get_option('max_nouts')
+    tb.start($flow_graph.get_option('max_nouts'))
+            #else
+    tb.start()
+            #end if
+        #end if
+        #for $m in $monitors
+    (tb.$m.get_id()).start()
+        #end for
+    tb.wait()
+    #end if
 #end if
 

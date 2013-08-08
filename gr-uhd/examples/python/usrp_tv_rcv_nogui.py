@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2005-2007,2011 Free Software Foundation, Inc.
+# Copyright 2005-2007,2011,2013 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -35,6 +35,8 @@ development but not yet in cvs.
 """
 
 from gnuradio import gr, eng_notation
+from gnuradio import analog
+from gnuradio import blocks
 from gnuradio import audio
 from gnuradio import uhd
 from gnuradio.eng_option import eng_option
@@ -118,10 +120,10 @@ class my_top_block(gr.top_block):
 
         if not (options.in_filename=="usrp"):
           # file is data source, capture with usr_rx_csfile.py
-          self.filesource = gr.file_source(gr.sizeof_short,
-                                           options.in_filename,
-                                           options.repeat)
-          self.istoc = gr.interleaved_short_to_complex()
+          self.filesource = blocks.file_source(gr.sizeof_short,
+                                               options.in_filename,
+                                               options.repeat)
+          self.istoc = blocks.interleaved_short_to_complex()
           self.connect(self.filesource,self.istoc)
           self.src=self.istoc
         else:
@@ -158,11 +160,11 @@ class my_top_block(gr.top_block):
               raise SystemExit, 1
 
 
-        self.agc = gr.agc_cc(1e-7,1.0,1.0) #1e-7
-        self.am_demod = gr.complex_to_mag ()
-        self.set_blacklevel = gr.add_const_ff(options.brightness +255.0)
-        self.invert_and_scale = gr.multiply_const_ff (-options.contrast *128.0*255.0/(200.0))
-        self.f2uc = gr.float_to_uchar()
+        self.agc = analog.agc_cc(1e-7,1.0,1.0) #1e-7
+        self.am_demod = blocks.complex_to_mag ()
+        self.set_blacklevel = blocks.add_const_ff(options.brightness +255.0)
+        self.invert_and_scale = blocks.multiply_const_ff(-options.contrast *128.0*255.0/(200.0))
+        self.f2uc = blocks.float_to_uchar()
 
         # sdl window as final sink
         if not (options.pal or options.ntsc):
@@ -180,8 +182,7 @@ class my_top_block(gr.top_block):
 
         if filename=="sdl":
           #Here comes the tv screen, you have to build and install
-          #gr-video-sdl for this (subproject of gnuradio, only in cvs
-          #for now)
+          #gr-video-sdl for this (subproject of gnuradio)
           try:
             video_sink = video_sdl.sink_uc(frames_per_sec, width, height, 0,
                                            show_width,height)
@@ -195,13 +196,13 @@ class my_top_block(gr.top_block):
           print "use the following line to show the demodulated TV-signal:"
           print "display -depth 8 -size " +str(width)+ "x" + str(height) + " gray:" +filename
           print "(Use the spacebar to advance to next frames)"
-          file_sink=gr.file_sink(gr.sizeof_char, filename)
+          file_sink = blocks.file_sink(gr.sizeof_char, filename)
           self.dst =file_sink
 
         if options.nframes is None:
             self.connect(self.src, self.agc)
         else:
-            self.head = gr.head(gr.sizeof_gr_complex, int(options.nframes*width*height))
+            self.head = blocks.head(gr.sizeof_gr_complex, int(options.nframes*width*height))
             self.connect(self.src, self.head, self.agc)
 
         self.connect (self.agc, self.am_demod, self.invert_and_scale,

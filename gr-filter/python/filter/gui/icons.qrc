@@ -1,0 +1,19 @@
+<RCC>
+  <qresource prefix="/">
+    <file>icons/add_pole.svg</file>
+    <file>icons/add_zero.svg</file>
+    <file>icons/conjugate.svg</file>
+    <file>icons/filtr_taps.svg</file>
+    <file>icons/group_delay.svg</file>
+    <file>icons/impulse_response.svg</file>
+    <file>icons/impulse.svg</file>
+    <file>icons/mag_response.svg</file>
+    <file>icons/overlay.svg</file>
+    <file>icons/phase_delay.svg</file>
+    <file>icons/phase_response.svg</file>
+    <file>icons/remove_red.svg</file>
+    <file>icons/step_response.svg</file>
+    <file>icons/add_zero.svg</file>
+    <file>icons/add_pole.svg</file>
+  </qresource>
+</RCC>

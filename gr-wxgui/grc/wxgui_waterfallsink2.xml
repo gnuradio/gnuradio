@@ -8,8 +8,9 @@
 	<name>WX GUI Waterfall Sink</name>
 	<key>wxgui_waterfallsink2</key>
 	<category>Instrumentation/WX</category>
-	<import>from gnuradio import window</import>
+	<import>from gnuradio.fft import window</import>
 	<import>from gnuradio.wxgui import waterfallsink2</import>
+        <import>from gnuradio import wxgui</import>
 	<make>#set $parent = $notebook() and 'self.%s.GetPage(%s)'%$notebook() or 'self'
 waterfallsink2.$(type.fcn)(
 	$(parent).GetWin(),

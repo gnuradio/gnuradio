@@ -18,6 +18,7 @@
     <key>guard_interval</key>
     <value>0</value>
     <type>int</type>
+    <hide>#if $guard_interval then 'none' else 'part'#</hide>
   </param>
   <param>
     <name>Length tag key</name>
@@ -30,6 +31,7 @@
     <key>trigger_tag_key</key>
     <value>""</value>
     <type>string</type>
+    <hide>#if $trigger_tag_key then 'none' else 'part'#</hide>
   </param>
   <param>
     <name>Output Format</name>

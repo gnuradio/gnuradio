@@ -20,7 +20,9 @@
 # Boston, MA 02110-1301, USA.
 #
 
-from gnuradio import gr, gru, uhd, optfir, audio, blks2
+from gnuradio import gr, gru, uhd, audio
+from gnuradio import filter
+from gnuradio import analog
 from gnuradio import eng_notation
 from gnuradio.eng_option import eng_option
 from optparse import OptionParser
@@ -69,9 +71,9 @@ blocks.
 
 # (device_rate, channel_rate, audio_rate, channel_pass, channel_stop, demod)
 demod_params = {
-		'AM'  : (256e3,  16e3, 16e3,  5000,   8000, blks2.demod_10k0a3e_cf),
-		'FM'  : (256e3,  32e3,  8e3,  8000,   9000, blks2.demod_20k0f3e_cf),
-		'WFM' : (320e3, 320e3, 32e3, 80000, 115000, blks2.demod_200kf3e_cf)
+		'AM'  : (256e3,  16e3, 16e3,  5000,   8000, analog.demod_10k0a3e_cf),
+		'FM'  : (256e3,  32e3,  8e3,  8000,   9000, analog.demod_20k0f3e_cf),
+		'WFM' : (320e3, 320e3, 32e3, 80000, 115000, analog.demod_200kf3e_cf)
 	       }
 
 class uhd_src(gr.hier_block2):
@@ -104,7 +106,7 @@ class uhd_src(gr.hier_block2):
 
         # Resampler to get to exactly samp_rate no matter what dev_rate is
         self._rrate = samp_rate / dev_rate
-        self._resamp = blks2.pfb_arb_resampler_ccf(self._rrate)
+        self._resamp = filter.pfb.arb_resampler_ccf(self._rrate)
 
 	# If no gain specified, set to midrange
         gain_range = self._src.get_gain_range()
@@ -142,27 +144,27 @@ class app_top_block(gr.top_block):
         channel_decim = int(if_rate // channel_rate)
 	audio_decim = int(channel_rate // audio_rate)
 
-	CHAN_taps = optfir.low_pass(1.0,          # Filter gain
-                                    if_rate, 	  # Sample rate
-                                    channel_pass, # One sided modulation bandwidth
-                                    channel_stop, # One sided channel bandwidth
-                                    0.1, 	  # Passband ripple
-                                    60) 	  # Stopband attenuation
+	CHAN_taps = filter.optfir.low_pass(1.0,          # Filter gain
+                                           if_rate, 	 # Sample rate
+                                           channel_pass, # One sided modulation bandwidth
+                                           channel_stop, # One sided channel bandwidth
+                                           0.1, 	 # Passband ripple
+                                           60) 	         # Stopband attenuation
 
-	CHAN = gr.freq_xlating_fir_filter_ccf(channel_decim, # Decimation rate
-	                                      CHAN_taps,     # Filter taps
-					      0.0, 	     # Offset frequency
-					      if_rate)	     # Sample rate
+	CHAN = filter.freq_xlating_fir_filter_ccf(channel_decim, # Decimation rate
+                                                  CHAN_taps,     # Filter taps
+                                                  0.0, 	         # Offset frequency
+                                                  if_rate)       # Sample rate
 
-	RFSQL = gr.pwr_squelch_cc(options.rf_squelch,    # Power threshold
-	                          125.0/channel_rate, 	 # Time constant
-				  int(channel_rate/20),  # 50ms rise/fall
-				  False)		 # Zero, not gate output
+	RFSQL = analog.pwr_squelch_cc(options.rf_squelch,    # Power threshold
+                                      125.0/channel_rate,    # Time constant
+                                      int(channel_rate/20),  # 50ms rise/fall
+                                      False)		     # Zero, not gate output
 
-	AGC = gr.agc_cc(1.0/channel_rate,  # Time constant
-			1.0,     	   # Reference power
-			1.0,               # Initial gain
-			1.0)		   # Maximum gain
+	AGC = analog.agc_cc(1.0/channel_rate,  # Time constant
+                            1.0,     	       # Reference power
+                            1.0,               # Initial gain
+                            1.0)	       # Maximum gain
 
 	DEMOD = demod(channel_rate, audio_decim)
 
@@ -173,8 +175,8 @@ class app_top_block(gr.top_block):
 	# Optionally add CTCSS and RSAMP if needed
 	tail = DEMOD
 	if options.ctcss != None and options.ctcss > 60.0:
-	    CTCSS = gr.ctcss_squelch_ff(audio_rate,    # Sample rate
-				        options.ctcss) # Squelch tone
+	    CTCSS = analog.ctcss_squelch_ff(audio_rate,    # Sample rate
+                                            options.ctcss) # Squelch tone
 	    self.connect(DEMOD, CTCSS)
 	    tail = CTCSS
 
@@ -182,7 +184,7 @@ class app_top_block(gr.top_block):
 	    out_lcm = gru.lcm(audio_rate, options.output_rate)
 	    out_interp = int(out_lcm // audio_rate)
 	    out_decim = int(out_lcm // options.output_rate)
-	    RSAMP = blks2.rational_resampler_fff(out_interp, out_decim)
+	    RSAMP = filter.rational_resampler_fff(out_interp, out_decim)
 	    self.connect(tail, RSAMP)
 	    tail = RSAMP
 

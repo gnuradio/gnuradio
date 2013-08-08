@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<!--
+###################################################
+##Correlate Access Code
+###################################################
+ -->
+<block>
+	<name>Correlate Access Code - Tag</name>
+	<key>digital_correlate_access_code_tag_bb</key>
+	<import>from gnuradio import digital</import>
+	<make>digital.correlate_access_code_tag_bb($access_code, $threshold, $tagname)</make>
+	<param>
+		<name>Access Code</name>
+		<key>access_code</key>
+		<value>101010</value>
+		<type>string</type>
+	</param>
+	<param>
+		<name>Threshold</name>
+		<key>threshold</key>
+		<type>int</type>
+	</param>
+	<param>
+		<name>Tag Name</name>
+		<key>tagname</key>
+		<type>string</type>
+	</param>
+	<sink>
+		<name>in</name>
+		<type>byte</type>
+	</sink>
+	<source>
+		<name>out</name>
+		<type>byte</type>
+	</source>
+</block>

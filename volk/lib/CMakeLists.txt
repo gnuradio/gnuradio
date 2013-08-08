@@ -202,7 +202,7 @@ message(STATUS "Available machines: ${available_machines}")
 #dependencies are all python, xml, and header implementation files
 file(GLOB xml_files ${CMAKE_SOURCE_DIR}/gen/*.xml)
 file(GLOB py_files ${CMAKE_SOURCE_DIR}/gen/*.py)
-file(GLOB h_files ${CMAKE_SOURCE_DIR}/include/volk/*.h)
+file(GLOB h_files ${CMAKE_SOURCE_DIR}/kernels/volk/*.h)
 
 macro(gen_template tmpl output)
     list(APPEND volk_gen_sources ${output})
@@ -253,6 +253,7 @@ endforeach(machine_name)
 include_directories(
     ${CMAKE_BINARY_DIR}/include
     ${CMAKE_SOURCE_DIR}/include
+    ${CMAKE_SOURCE_DIR}/kernels
     ${CMAKE_CURRENT_BINARY_DIR}
     ${CMAKE_CURRENT_SOURCE_DIR}
 )

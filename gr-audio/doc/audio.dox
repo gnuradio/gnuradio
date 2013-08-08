@@ -2,28 +2,41 @@
 
 \section Introduction
 
-This is the gr-audio package. This package includes all of the
-supported audio interfaces, including:
+The gnuradio audio component provides gr::audio::source and
+gr::audio::sink blocks. The audio blocks stream floating point samples
+to and from audio hardware.
 
-\li alsa
+The gr-audio component will be built automatically when
+gnuradio-runtime is enabled. Support for underlying audio
+architectures depends on OS and installed libraries. At the time of
+writing, gr-audio supports OSS, ALSA, Jack, Portaudio, Audiounit, and
+Winmm.
+
+At runtime, gr-audio will automatically select from the available
+architectures. The user can override the selection via configuration
+file by setting "audio_module" to one of the following strings:
+
 \li oss
+\li alsa
 \li jack
 \li portaudio
 \li osx
 \li windows
+
+See gr-audio.conf for an example.
+
+Import this package with:
 
 \code
     from gnuradio import audio
 \endcode
 
 See the Doxygen documentation for details about the blocks available
-in this package. The relevant blocks are listed in the \ref audio_blk group.
-
-A quick listing of the details can be found in Python after importing
-by using:
+in this package. A quick listing of the details can be found in Python
+after importing by using:
 
 \code
-    help(digital)
+    help(audio)
 \endcode
 
 

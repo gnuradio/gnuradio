@@ -7,7 +7,7 @@
 <block>
 	<name>Continuous Phase Modulation</name>
 	<key>digital_cpmmod_bc</key>
-	<import>from gnuradio import gr, digital</import>
+	<import>from gnuradio import gr, digital, analog</import>
 	<make>digital.cpmmod_bc($type, $mod_index, $samples_per_symbol, $L, $beta)</make>
 	<param>
 		<name>CPM Type</name>
@@ -15,23 +15,23 @@
 		<type>enum</type>
 		<option>
 			<name>L-REC (Rectangular phase response)</name>
-			<key>gr.cpm.LREC</key>
+			<key>analog.cpm.LREC</key>
 		</option>
 		<option>
 			<name>L-RC (Raised Cosine)</name>
-			<key>gr.cpm.LRC</key>
+			<key>analog.cpm.LRC</key>
 		</option>
 		<option>
 			<name>L-SRC (Spectral raised cosine)</name>
-			<key>gr.cpm.LSRC</key>
+			<key>analog.cpm.LSRC</key>
 		</option>
 		<option>
 			<name>TFM (Tamed frequency modulation)</name>
-			<key>gr.cpm.TFM</key>
+			<key>analog.cpm.TFM</key>
 		</option>
 		<option>
 			<name>Gaussian</name>
-			<key>gr.cpm.GAUSSIAN</key>
+			<key>analog.cpm.GAUSSIAN</key>
 		</option>
 	</param>
 	<param>

@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<!--
+###################################################
+## Random PDU
+###################################################
+ -->
+<block>
+	<name>Random PDU Generator</name>
+	<key>blocks_random_pdu</key>
+	<import>from gnuradio import blocks</import>
+	<import>import pmt</import>
+	<make>blocks.random_pdu($minsize, $maxsize)</make>
+	<param>
+		<name>Min Bytes</name>
+		<key>minsize</key>
+		<value>50</value>
+		<type>int</type>
+	</param>
+	<param>
+		<name>Max Bytes</name>
+		<key>maxsize</key>
+		<value>2000</value>
+		<type>int</type>
+	</param>
+	<sink>
+		<name>generate</name>
+		<type>message</type>
+        <optional>1</optional>
+	</sink>
+	<source>
+		<name>pdus</name>
+		<type>message</type>
+        <optional>1</optional>
+	</source>
+</block>

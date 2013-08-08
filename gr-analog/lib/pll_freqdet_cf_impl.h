@@ -23,14 +23,12 @@
 #ifndef INCLUDED_ANALOG_PLL_FREQDET_CF_IMPL_H
 #define INCLUDED_ANALOG_PLL_FREQDET_CF_IMPL_H
 
-#include <analog/pll_freqdet_cf.h>
-#include <gri_control_loop.h>
+#include <gnuradio/analog/pll_freqdet_cf.h>
 
 namespace gr {
   namespace analog {
     
-    class pll_freqdet_cf_impl :
-      public pll_freqdet_cf, public gri_control_loop
+    class pll_freqdet_cf_impl : public pll_freqdet_cf
     {
     private:
       float phase_detector(gr_complex sample,float ref_phase);

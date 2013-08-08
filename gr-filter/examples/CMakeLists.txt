@@ -27,12 +27,15 @@ GR_PYTHON_INSTALL(PROGRAMS
     fft_filter_ccc.py
     fir_filter_ccc.py
     fir_filter_fff.py
-    fmtest.py
     interpolate.py
     reconstruction.py
     resampler.py
     synth_filter.py
     synth_to_chan.py
+    gr_filtdes_api.py
+    gr_filtdes_callback.py
+    gr_filtdes_restrict.py
+    gr_filtdes_live_upd.py
     DESTINATION ${GR_PKG_FILTER_EXAMPLES_DIR}
     COMPONENT "filter_python"
 )

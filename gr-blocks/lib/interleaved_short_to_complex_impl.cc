@@ -26,21 +26,22 @@
 
 #include "interleaved_short_to_complex_impl.h"
 #include "interleaved_short_array_to_complex.h"
-#include <gr_io_signature.h>
+#include <gnuradio/io_signature.h>
 
 namespace gr {
   namespace blocks {
 
-    interleaved_short_to_complex::sptr interleaved_short_to_complex::make()
+    interleaved_short_to_complex::sptr interleaved_short_to_complex::make(bool vector_input)
     {
-      return gnuradio::get_initial_sptr(new interleaved_short_to_complex_impl());
+      return gnuradio::get_initial_sptr(new interleaved_short_to_complex_impl(vector_input));
     }
 
-    interleaved_short_to_complex_impl::interleaved_short_to_complex_impl()
-      : gr_sync_decimator("interleaved_short_to_complex",
-			  gr_make_io_signature (1, 1, sizeof(short)),
-			  gr_make_io_signature (1, 1, sizeof(gr_complex)),
-			  2)
+    interleaved_short_to_complex_impl::interleaved_short_to_complex_impl(bool vector_input)
+      : sync_decimator("interleaved_short_to_complex",
+		       gr::io_signature::make (1, 1, (vector_input?2:1)*sizeof(short)),
+		       gr::io_signature::make (1, 1, sizeof(gr_complex)),
+		       vector_input?1:2),
+        d_vector_input(vector_input)
     {
     }
 

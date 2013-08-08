@@ -24,7 +24,7 @@
 #ifndef INCLUDED_FILTER_DC_BLOCKER_CC_IMPL_H
 #define	INCLUDED_FILTER_DC_BLOCKER_CC_IMPL_H
 
-#include <filter/dc_blocker_cc.h>
+#include <gnuradio/filter/dc_blocker_cc.h>
 #include <deque>
 
 namespace gr {

@@ -1,6 +1,65 @@
 <?xml version='1.0' encoding='ASCII'?>
 <flow_graph>
-  <timestamp>Sat Oct  8 14:55:39 2011</timestamp>
+  <timestamp>Mon Mar 18 11:11:06 2013</timestamp>
+  <block>
+    <key>options</key>
+    <param>
+      <key>id</key>
+      <value>uhd_tx_dpsk</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>title</key>
+      <value>UHD TX DPSK</value>
+    </param>
+    <param>
+      <key>author</key>
+      <value></value>
+    </param>
+    <param>
+      <key>description</key>
+      <value></value>
+    </param>
+    <param>
+      <key>window_size</key>
+      <value>1280, 1024</value>
+    </param>
+    <param>
+      <key>generate_options</key>
+      <value>wx_gui</value>
+    </param>
+    <param>
+      <key>category</key>
+      <value>Custom</value>
+    </param>
+    <param>
+      <key>run_options</key>
+      <value>prompt</value>
+    </param>
+    <param>
+      <key>run</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>max_nouts</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>realtime_scheduling</key>
+      <value></value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(10, 10)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
   <block>
     <key>variable</key>
     <param>
@@ -260,10 +319,10 @@
     </param>
   </block>
   <block>
-    <key>random_source_x</key>
+    <key>analog_random_source_x</key>
     <param>
       <key>id</key>
-      <value>random_source_x_0</value>
+      <value>analog_random_source_x_0</value>
     </param>
     <param>
       <key>_enabled</key>
@@ -321,8 +380,8 @@
       <value>0.35</value>
     </param>
     <param>
-      <key>gray_coded</key>
-      <value>True</value>
+      <key>mod_code</key>
+      <value>"gray"</value>
     </param>
     <param>
       <key>verbose</key>
@@ -423,7 +482,15 @@
     </param>
     <param>
       <key>type</key>
-      <value>complex</value>
+      <value>fc32</value>
+    </param>
+    <param>
+      <key>otw</key>
+      <value></value>
+    </param>
+    <param>
+      <key>stream_args</key>
+      <value></value>
     </param>
     <param>
       <key>dev_addr</key>
@@ -442,7 +509,11 @@
       <value>1</value>
     </param>
     <param>
-      <key>ref_source0</key>
+      <key>clock_source0</key>
+      <value></value>
+    </param>
+    <param>
+      <key>time_source0</key>
       <value></value>
     </param>
     <param>
@@ -450,7 +521,11 @@
       <value></value>
     </param>
     <param>
-      <key>ref_source1</key>
+      <key>clock_source1</key>
+      <value></value>
+    </param>
+    <param>
+      <key>time_source1</key>
       <value></value>
     </param>
     <param>
@@ -458,7 +533,11 @@
       <value></value>
     </param>
     <param>
-      <key>ref_source2</key>
+      <key>clock_source2</key>
+      <value></value>
+    </param>
+    <param>
+      <key>time_source2</key>
       <value></value>
     </param>
     <param>
@@ -466,7 +545,11 @@
       <value></value>
     </param>
     <param>
-      <key>ref_source3</key>
+      <key>clock_source3</key>
+      <value></value>
+    </param>
+    <param>
+      <key>time_source3</key>
       <value></value>
     </param>
     <param>
@@ -474,7 +557,11 @@
       <value></value>
     </param>
     <param>
-      <key>ref_source4</key>
+      <key>clock_source4</key>
+      <value></value>
+    </param>
+    <param>
+      <key>time_source4</key>
       <value></value>
     </param>
     <param>
@@ -482,7 +569,11 @@
       <value></value>
     </param>
     <param>
-      <key>ref_source5</key>
+      <key>clock_source5</key>
+      <value></value>
+    </param>
+    <param>
+      <key>time_source5</key>
       <value></value>
     </param>
     <param>
@@ -490,7 +581,11 @@
       <value></value>
     </param>
     <param>
-      <key>ref_source6</key>
+      <key>clock_source6</key>
+      <value></value>
+    </param>
+    <param>
+      <key>time_source6</key>
       <value></value>
     </param>
     <param>
@@ -498,7 +593,11 @@
       <value></value>
     </param>
     <param>
-      <key>ref_source7</key>
+      <key>clock_source7</key>
+      <value></value>
+    </param>
+    <param>
+      <key>time_source7</key>
       <value></value>
     </param>
     <param>
@@ -1035,10 +1134,10 @@
     </param>
   </block>
   <block>
-    <key>gr_multiply_const_vxx</key>
+    <key>blocks_multiply_const_vxx</key>
     <param>
       <key>id</key>
-      <value>gr_multiply_const_vxx_0</value>
+      <value>blocks_multiply_const_vxx_0</value>
     </param>
     <param>
       <key>_enabled</key>
@@ -1144,6 +1243,10 @@
       <value></value>
     </param>
     <param>
+      <key>freqvar</key>
+      <value>None</value>
+    </param>
+    <param>
       <key>_coordinate</key>
       <value>(827, 299)</value>
     </param>
@@ -1152,82 +1255,27 @@
       <value>0</value>
     </param>
   </block>
-  <block>
-    <key>options</key>
-    <param>
-      <key>id</key>
-      <value>uhd_tx_dpsk</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>title</key>
-      <value>UHD TX DPSK</value>
-    </param>
-    <param>
-      <key>author</key>
-      <value></value>
-    </param>
-    <param>
-      <key>description</key>
-      <value></value>
-    </param>
-    <param>
-      <key>window_size</key>
-      <value>1280, 1024</value>
-    </param>
-    <param>
-      <key>generate_options</key>
-      <value>wx_gui</value>
-    </param>
-    <param>
-      <key>category</key>
-      <value>Custom</value>
-    </param>
-    <param>
-      <key>run_options</key>
-      <value>prompt</value>
-    </param>
-    <param>
-      <key>run</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>realtime_scheduling</key>
-      <value></value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(10, 10)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
   <connection>
-    <source_block_id>random_source_x_0</source_block_id>
+    <source_block_id>analog_random_source_x_0</source_block_id>
     <sink_block_id>digital_dxpsk_mod_0</sink_block_id>
     <source_key>0</source_key>
     <sink_key>0</sink_key>
   </connection>
   <connection>
-    <source_block_id>gr_multiply_const_vxx_0</source_block_id>
+    <source_block_id>blocks_multiply_const_vxx_0</source_block_id>
     <sink_block_id>wxgui_fftsink2_0</sink_block_id>
     <source_key>0</source_key>
     <sink_key>0</sink_key>
   </connection>
   <connection>
-    <source_block_id>gr_multiply_const_vxx_0</source_block_id>
+    <source_block_id>blocks_multiply_const_vxx_0</source_block_id>
     <sink_block_id>uhd_usrp_sink_0</sink_block_id>
     <source_key>0</source_key>
     <sink_key>0</sink_key>
   </connection>
   <connection>
     <source_block_id>digital_dxpsk_mod_0</source_block_id>
-    <sink_block_id>gr_multiply_const_vxx_0</sink_block_id>
+    <sink_block_id>blocks_multiply_const_vxx_0</sink_block_id>
     <source_key>0</source_key>
     <sink_key>0</sink_key>
   </connection>

@@ -25,6 +25,23 @@ Signal Processing Blocks
    gnuradio.digital.gmskmod_bc
    gnuradio.digital.probe_mpsk_snr_est_c
    gnuradio.digital.cpmmod_bc
+   gnuradio.digital.glfsr_source_b
+   gnuradio.digital.glfsr_source_f
+   gnuradio.digital.framer_sink_1
+   gnuradio.digital.additive_scrambler_bb
+   gnuradio.digital.descrambler_bb
+   gnuradio.digital.diff_decoder_bb
+   gnuradio.digital.diff_encoder_bb
+   gnuradio.digital.map_bb
+   gnuradio.digital.scrambler_bb
+   gnuradio.digital.pn_correlator_cc
+   gnuradio.digital.simple_framer
+   gnuradio.digital.chunks_to_symbols_bc
+   gnuradio.digital.chunks_to_symbols_bf
+   gnuradio.digital.chunks_to_symbols_ic
+   gnuradio.digital.chunks_to_symbols_if
+   gnuradio.digital.chunks_to_symbols_sc
+   gnuradio.digital.chunks_to_symbols_sf
    gnuradio.digital.generic_demod
    gnuradio.digital.generic_mod
    gnuradio.digital.bpsk.dbpsk_demod
@@ -83,14 +100,15 @@ Modulation Utilties
    :nosignatures:
 
    gnuradio.digital.utils.gray_code.gray_code
-   gnuradio.digital.utils.mod_codes.GRAY_CODE
-   gnuradio.digital.utils.mod_codes.NO_CODE
    gnuradio.digital.modulation_utils.add_type_1_constellation
    gnuradio.digital.modulation_utils.add_type_1_demod
    gnuradio.digital.modulation_utils.add_type_1_mod
    gnuradio.digital.modulation_utils.type_1_constellations
    gnuradio.digital.modulation_utils.type_1_demods
    gnuradio.digital.modulation_utils.type_1_mods
+
+.. gnuradio.digital.utils.mod_codes.GRAY_CODE
+.. gnuradio.digital.utils.mod_codes.NO_CODE
 
 Packet Utilities
 ----------------

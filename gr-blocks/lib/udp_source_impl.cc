@@ -25,8 +25,8 @@
 #endif
 
 #include "udp_source_impl.h"
-#include <gr_io_signature.h>
-#include <gr_math.h>
+#include <gnuradio/io_signature.h>
+#include <gnuradio/math.h>
 #include <stdexcept>
 #include <errno.h>
 #include <stdio.h>
@@ -48,9 +48,9 @@ namespace gr {
     udp_source_impl::udp_source_impl(size_t itemsize,
                                      const std::string &host, int port,
                                      int payload_size, bool eof)
-      : gr_sync_block("udp_source",
-                      gr_make_io_signature(0, 0, 0),
-                      gr_make_io_signature(1, 1, itemsize)),
+      : sync_block("udp_source",
+                      io_signature::make(0, 0, 0),
+                      io_signature::make(1, 1, itemsize)),
         d_itemsize(itemsize), d_payload_size(payload_size),
         d_eof(eof), d_connected(false), d_residual(0), d_sent(0), d_offset(0)
     {
@@ -100,7 +100,7 @@ namespace gr {
         d_socket->bind(d_endpoint);
 
         start_receive();
-        d_udp_thread = gruel::thread(boost::bind(&udp_source_impl::run_io_service, this));
+        d_udp_thread = gr::thread::thread(boost::bind(&udp_source_impl::run_io_service, this));
         d_connected = true;
       }
     }
@@ -108,7 +108,7 @@ namespace gr {
     void
     udp_source_impl::disconnect()
     {
-      gruel::scoped_lock lock(d_setlock);
+      gr::thread::scoped_lock lock(d_setlock);
 
       if(!d_connected)
         return;
@@ -144,7 +144,7 @@ namespace gr {
     {
       if(!error) {
         {
-          boost::lock_guard<gruel::mutex> lock(d_udp_mutex);
+          boost::lock_guard<gr::thread::mutex> lock(d_udp_mutex);
           if(d_eof && (bytes_transferred == 1) && (d_rxbuf[0] == 0x00)) {
             // If we are using EOF notification, test for it and don't
             // add anything to the output.
@@ -177,7 +177,7 @@ namespace gr {
                           gr_vector_const_void_star &input_items,
                           gr_vector_void_star &output_items)
     {
-      gruel::scoped_lock l(d_setlock);
+      gr::thread::scoped_lock l(d_setlock);
 
       char *out = (char*)output_items[0];
 
@@ -186,7 +186,9 @@ namespace gr {
       // because the conditional wait is interruptable while a
       // synchronous receive_from is not.
       boost::unique_lock<boost::mutex> lock(d_udp_mutex);
-      d_cond_wait.wait(lock);
+
+      //use timed_wait to avoid permanent blocking in the work function
+      d_cond_wait.timed_wait(lock, boost::posix_time::milliseconds(10));
 
       if(d_residual < 0)
         return -1;

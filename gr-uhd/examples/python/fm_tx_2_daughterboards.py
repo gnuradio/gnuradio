@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2005-2007,2011 Free Software Foundation, Inc.
+# Copyright 2005-2007,2011,2012 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -30,7 +30,10 @@ Side A is 600 Hz tone.
 Side B is 350 + 440 Hz tones.
 """
 
-from gnuradio import gr, uhd, blks2
+from gnuradio import gr, uhd
+from gnuradio import filter
+from gnuradio import analog
+from gnuradio import blocks
 from gnuradio.eng_notation import num_to_str, str_to_num
 from gnuradio.eng_option import eng_option
 from optparse import OptionParser
@@ -47,11 +50,11 @@ class example_signal_0(gr.hier_block2):
                                 gr.io_signature(0, 0, 0),                    # Input signature
                                 gr.io_signature(1, 1, gr.sizeof_gr_complex)) # Output signature
 
-        src = gr.sig_source_c (sample_rate,    # sample rate
-                               gr.GR_SIN_WAVE, # waveform type
-                               600,            # frequency
-                               1.0,            # amplitude
-                               0)              # DC Offset
+        src = analog.sig_source_c(sample_rate,        # sample rate
+                                  analog.GR_SIN_WAVE, # waveform type
+                                  600,                # frequency
+                                  1.0,                # amplitude
+                                  0)                 # DC Offset
 
         self.connect(src, self)
 
@@ -65,18 +68,18 @@ class example_signal_1(gr.hier_block2):
                                 gr.io_signature(0, 0, 0),                    # Input signature
                                 gr.io_signature(1, 1, gr.sizeof_gr_complex)) # Output signature
 
-        src0 = gr.sig_source_c (sample_rate,    # sample rate
-                                gr.GR_SIN_WAVE, # waveform type
-                                350,            # frequency
-                                1.0,            # amplitude
-                                0)              # DC Offset
+        src0 = analog.sig_source_c(sample_rate,        # sample rate
+                                   analog.GR_SIN_WAVE, # waveform type
+                                   350,                # frequency
+                                   1.0,                # amplitude
+                                   0)                  # DC Offset
 
-        src1 = gr.sig_source_c (sample_rate,    # sample rate
-                                gr.GR_SIN_WAVE, # waveform type
-                                440,            # frequency
-                                1.0,            # amplitude
-                                0)              # DC Offset
-        sum = gr.add_cc()
+        src1 = analog.sig_source_c(sample_rate,        # sample rate
+                                   analog.GR_SIN_WAVE, # waveform type
+                                   440,                # frequency
+                                   1.0,                # amplitude
+                                   0)                  # DC Offset
+        sum = blocks.add_cc()
         self.connect(src0, (sum, 0))
         self.connect(src1, (sum, 1))
         self.connect(sum, self)
@@ -86,7 +89,7 @@ class my_top_block(gr.top_block):
     def __init__(self):
         gr.top_block.__init__(self)
 
-        usage="%prog: [options] tx-freq0 tx-freq1"
+        usage = "%prog: [options] tx-freq0 tx-freq1"
         parser = OptionParser (option_class=eng_option, usage=usage)
         parser.add_option("-a", "--args", type="string", default="",
                           help="UHD device address args [default=%default]")
@@ -152,13 +155,13 @@ class my_top_block(gr.top_block):
         sig0 = example_signal_0(self.usrp_rate)
         sig1 = example_signal_1(self.usrp_rate)
 
-        intl = gr.interleave(gr.sizeof_gr_complex)
+        intl = blocks.interleave(gr.sizeof_gr_complex)
         self.connect(sig0, (intl, 0))
         self.connect(sig1, (intl, 1))
 
         # Correct for any difference in requested and actual rates
         rrate = self.usrp_rate / dev_rate
-        resamp = blks2.pfb_arb_resampler_ccf(rrate)
+        resamp = filter.pfb.arb_resampler_ccf(rrate)
 
         # and wire them up
         self.connect(intl, resamp, self.u)
@@ -184,8 +187,9 @@ class my_top_block(gr.top_block):
         """
         Set the center frequency we're interested in.
 
-        @param side: 0 = side A, 1 = side B
-        @param target_freq: frequency in Hz
+        Args:
+            side: 0 = side A, 1 = side B
+            target_freq: frequency in Hz
         @rtype: bool
         """
 

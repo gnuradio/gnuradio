@@ -10,14 +10,18 @@ Core Framework
    :nosignatures:
 
    gnuradio.gr
+   pmt
+   gnuradio.blocks
+   gnuradio.analog
    gnuradio.digital
-   gnuradio.blks2
    gnuradio.audio
+   gnuradio.channels
+   gnuradio.comedi
+   gnuradio.fec
+   gnuradio.filter
    gnuradio.trellis
    gnuradio.wavelet
    gnuradio.fft
-   gnuradio.window
-   gnuradio.optfir
    gnuradio.gr_unittest
    gnuradio.qtgui
    gnuradio.wxgui
@@ -26,30 +30,36 @@ Core Framework
    :hidden:   
 
    gnuradio.gr <gr/index>
+   pmt <pmt/index>
+   gnuradio.blocks <blocks/index>
+   gnuradio.analog <analog/index>
    gnuradio.digital <digital/index>
-   gnuradio.blks2 <blks2/index>
    gnuradio.audio <audio/index>
+   gnuradio.channels <channels>
+   gnuradio.comedi <comedi>
+   gnuradio.fec <fec>
+   gnuradio.filter <filter/index>
    gnuradio.gr_unittest <gr_unittest/index>
-   gnuradio.optfir <optfir/index>
    gnuradio.trellis <trellis/index>
    gnuradio.wavelet <wavelet>
    gnuradio.fft <fft>
-   gnuradio.window <window/index>
    gnuradio.qtgui <qtgui/index>
    gnuradio.wxgui <wxgui/index>
 
 Hardware Interfaces
-------------------
+-------------------
 
 .. autosummary::
    :nosignatures:
    
    gnuradio.uhd
+   gnuradio.fcd
 
 .. toctree::
    :hidden:   
 
    gnuradio.uhd <uhd>
+   gnuradio.fcd <fcd>
 
 Utilities
 ---------
@@ -96,38 +106,61 @@ Framework Extensions
 .. toctree::
    :hidden:   
    
-   coding <gr/coding_blk>
-   converter <gr/converter_blk>
-   demodulation <gr/demodulation_blk>
-   dft <gr/dft_blk>
-   filter <gr/filter_blk>
-   filter_design <gr/filter_design>
-   internal <gr/internal>
-   level <gr/level_blk>
-   math <gr/math_blk>
-   misc <gr/misc>
-   misc <gr/misc_blk>
-   modulation <gr/modulation_blk>
-   sink <gr/sink_blk>
-   slicedice <gr/slicedice_blk>
-   source <gr/source_blk>
-   sync <gr/sync_blk>
-   top_block <gr/top_block>
-
+   runtime_contents <gr/contents>
    atsc_blks <atsc/blks>
-   blks <blks2/blks>
-   blks2_utilities <blks2/utilities>
    digital_blocks <digital/blocks>
    constellations <digital/constellations>
    ofdm <digital/ofdm>
    pkt_utils <digital/pkt_utils>
    digital_utilities <digital/utilities>
-   optfir <optfir/detail>
    pager_blks <pager/blks>
    pyqt_filter <pyqt_filter>
    pyqt_plot <pyqt_plot>
    trellis_blks <trellis/blks>
    trellis_objs <trellis/objs>
    vocoder_blks <vocoder/blks>
-   window_detail <window/detail>
    wxgui_blks <wxgui/blks>
+   blocks_modulators <blocks/modulators_blk>
+   blocks_audio <blocks/audio_blk>
+   blocks_networking <blocks/networking_tools_blk>
+   blocks_boolean <blocks/boolean_operators_blk>
+   blocks_peak_detectors <blocks/peak_detectors_blk>
+   blocks_byte_operators <blocks/byte_operators_blk>
+   blocks_level_controllers <blocks/level_controllers_blk>
+   blocks_stream_operators <blocks/stream_operators_blk>
+   blocks_controlport <blocks/controlport_blk>
+   blocks_math <blocks/math_operators_blk>
+   blocks_stream_tag <blocks/stream_tag_tools_blk>
+   blocks_debug <blocks/debug_tools_blk>
+   blocks_measurement <blocks/measurement_tools_blk>
+   blocks_type_converters <blocks/type_converters_blk>
+   blocks_file <blocks/file_operators_blk>
+   blocks_message <blocks/message_tools_blk>
+   blocks_waveform <blocks/waveform_generators_blk>
+   blocks_misc <blocks/misc_blk>
+   analog_level_controllers <analog/level_controllers_blk>
+   analog_peak_detectors <analog/peak_detectors_blk>
+   analog_measurement <analog/measurement_tools_blk>
+   analog_synchronizers <analog/synchronizers_blk>
+   analog_modulators <analog/modulators_blk>
+   filter_channelizers <filter/channelizers_blk>
+   filter_resamplers <filter/resamplers_blk>
+   filter_blocks <filter/filter_blk>
+   filter_design <filter/filter_design>
+   pmt_any <pmt/any>
+   pmt_generalfunctions <pmt/generalfunctions>
+   pmt_message_accepter <pmt/message_accepter>
+   pmt_readwrite <pmt/readwrite>
+   pmt_tuple <pmt/tuple>
+   pmt_boolean <pmt/boolean>
+   pmt_misc <pmt/misc>
+   pmt_real <pmt/real>
+   pmt_vector <pmt/vector>
+   pmt_integer <pmt/integer>
+   pmt_number <pmt/number>
+   pmt_serialize <pmt/serialize>
+   pmt_dictionary <pmt/dictionary>
+   pmt_list <pmt/list>
+   pmt_pair <pmt/pair>
+   pmt_symbol <pmt/symbol>
+   

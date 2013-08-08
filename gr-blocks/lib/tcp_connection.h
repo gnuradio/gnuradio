@@ -25,11 +25,12 @@
 
 #include <boost/array.hpp>
 #include <boost/asio.hpp>
-#include <gruel/pmt.h>
-
-class gr_basic_block;
+#include <pmt/pmt.h>
 
 namespace gr {
+  
+  class basic_block;
+
   namespace blocks {
 
     class tcp_connection
@@ -38,7 +39,7 @@ namespace gr {
       boost::asio::ip::tcp::socket d_socket;
       boost::array<char, 10000> d_buf;
       std::string d_message;
-      gr_basic_block *d_block;
+      basic_block *d_block;
 
       tcp_connection(boost::asio::io_service& io_service);
       
@@ -49,7 +50,7 @@ namespace gr {
 
       boost::asio::ip::tcp::socket& socket() { return d_socket; };
 
-      void start(gr_basic_block *block);
+      void start(gr::basic_block *block);
       void send(pmt::pmt_t vector);
       void handle_read(const boost::system::error_code& error, size_t bytes_transferred);
       void handle_write(const boost::system::error_code& error, size_t bytes_transferred) { }

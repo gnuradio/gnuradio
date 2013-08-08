@@ -31,7 +31,10 @@ include(GrComponent)
 GR_REGISTER_COMPONENT("gr-uhd" ENABLE_GR_UHD
     Boost_FOUND
     UHD_FOUND
-    ENABLE_GR_CORE
+    ENABLE_GNURADIO_RUNTIME
+    ENABLE_GR_FILTER
+    ENABLE_GR_BLOCKS
+    ENABLE_GR_ANALOG
 )
 
 GR_SET_GLOBAL(GR_UHD_INCLUDE_DIRS
@@ -55,21 +58,21 @@ CPACK_COMPONENT("uhd_runtime"
     GROUP        "UHD"
     DISPLAY_NAME "Runtime"
     DESCRIPTION  "Runtime"
-    DEPENDS      "core_runtime"
+    DEPENDS      "runtime_runtime"
 )
 
 CPACK_COMPONENT("uhd_devel"
     GROUP        "UHD"
     DISPLAY_NAME "Development"
     DESCRIPTION  "C++ headers, package config, import libraries"
-    DEPENDS      "core_devel"
+    DEPENDS      "runtime_devel"
 )
 
 CPACK_COMPONENT("uhd_python"
     GROUP        "UHD"
     DISPLAY_NAME "Python"
     DESCRIPTION  "Python modules for runtime; GRC xml files"
-    DEPENDS      "core_python;uhd_runtime"
+    DEPENDS      "runtime_python;uhd_runtime"
 )
 
 CPACK_COMPONENT("uhd_examples"
@@ -83,18 +86,19 @@ CPACK_COMPONENT("uhd_swig"
     GROUP        "UHD"
     DISPLAY_NAME "SWIG"
     DESCRIPTION  "SWIG development .i files"
-    DEPENDS      "core_swig;uhd_python;uhd_devel"
+    DEPENDS      "runtime_swig;uhd_python;uhd_devel"
 )
 
 ########################################################################
 # Add subdirectories
 ########################################################################
-add_subdirectory(include)
+add_subdirectory(include/gnuradio/uhd)
 add_subdirectory(lib)
 add_subdirectory(doc)
 add_subdirectory(examples/c++)
 if(ENABLE_PYTHON)
     add_subdirectory(swig)
+    add_subdirectory(python/uhd)
     add_subdirectory(grc)
     add_subdirectory(apps)
     add_subdirectory(examples/python)

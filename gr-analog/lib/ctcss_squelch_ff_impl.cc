@@ -57,9 +57,9 @@ namespace gr {
 
     ctcss_squelch_ff_impl::ctcss_squelch_ff_impl(int rate, float freq, float level,
 						 int len, int ramp, bool gate) 
-      :	gr_block("ctcss_squelch_ff",
-		 gr_make_io_signature(1, 1, sizeof(float)),
-		 gr_make_io_signature(1, 1, sizeof(float))),
+      :	block("ctcss_squelch_ff",
+		 io_signature::make(1, 1, sizeof(float)),
+		 io_signature::make(1, 1, sizeof(float))),
 	squelch_base_ff_impl("ctcss_squelch_ff", ramp, gate)
     {
       d_freq = freq;
@@ -86,15 +86,18 @@ namespace gr {
       else
 	f_r = ctcss_tones[i+1];
 
-      d_goertzel_l = fft::goertzel(rate, d_len, f_l);
-      d_goertzel_c = fft::goertzel(rate, d_len, freq);
-      d_goertzel_r = fft::goertzel(rate, d_len, f_r);
+      d_goertzel_l = new fft::goertzel(rate, d_len, f_l);
+      d_goertzel_c = new fft::goertzel(rate, d_len, freq);
+      d_goertzel_r = new fft::goertzel(rate, d_len, f_r);
 
       d_mute = true;
     }
 
     ctcss_squelch_ff_impl::~ctcss_squelch_ff_impl()
     {
+      delete d_goertzel_l;
+      delete d_goertzel_c;
+      delete d_goertzel_r;
     }
 
     std::vector<float>
@@ -111,16 +114,16 @@ namespace gr {
     void
     ctcss_squelch_ff_impl::update_state(const float &in)
     {
-      d_goertzel_l.input(in);
-      d_goertzel_c.input(in);
-      d_goertzel_r.input(in);
+      d_goertzel_l->input(in);
+      d_goertzel_c->input(in);
+      d_goertzel_r->input(in);
 
       float rounder = 100000;
       float d_out_l, d_out_c, d_out_r;
-      if(d_goertzel_c.ready()) {
-	d_out_l = floor(rounder*abs(d_goertzel_l.output()))/rounder;
-	d_out_c = floor(rounder*abs(d_goertzel_c.output()))/rounder;
-	d_out_r = floor(rounder*abs(d_goertzel_r.output()))/rounder;
+      if(d_goertzel_c->ready()) {
+	d_out_l = floor(rounder*abs(d_goertzel_l->output()))/rounder;
+	d_out_c = floor(rounder*abs(d_goertzel_c->output()))/rounder;
+	d_out_r = floor(rounder*abs(d_goertzel_r->output()))/rounder;
 
 	//printf("d_out_l=%f d_out_c=%f d_out_r=%f\n", d_out_l, d_out_c, d_out_r);
 	d_mute = (d_out_c < d_level || d_out_c < d_out_l || d_out_c < d_out_r);

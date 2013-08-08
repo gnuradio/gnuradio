@@ -1,0 +1,24 @@
+/*! \page page_fec Forward Error Correction
+
+\section Introduction
+
+This is the gr-fec package. It contains all of the forward error
+correction (FEC) blocks, utilities, and examples. To use the FEC
+blocks, the Python namespaces is in gnuradio.fec, which would be
+normally imported as:
+
+\code
+    from gnuradio import fec
+\endcode
+
+See the Doxygen documentation for details about the blocks available
+in this package.
+
+A quick listing of the details can be found in Python after importing
+by using:
+
+\code
+    help(fec)
+\endcode
+
+*/

@@ -24,7 +24,7 @@
 #include "config.h"
 #endif
 
-#include <filter/polyphase_filterbank.h>
+#include <gnuradio/filter/polyphase_filterbank.h>
 #include <cstdio>
 
 namespace gr {
@@ -77,12 +77,16 @@ namespace gr {
 	tmp_taps.push_back(0.0);
       }
 
+      // Reverse taps here; set_taps in filter will then re-reverse,
+      // but order them propely, anyways.
+      std::reverse(tmp_taps.begin(), tmp_taps.end());
+
       // Partition the filter
       for(i = 0; i < d_nfilts; i++) {
 	// Each channel uses all d_taps_per_filter with 0's if not enough taps to fill out
 	d_taps[i] = std::vector<float>(d_taps_per_filter, 0);
 	for(j = 0; j < d_taps_per_filter; j++) {
-	  d_taps[i][j] = tmp_taps[i + j*d_nfilts];  // add taps to channels in reverse order
+	  d_taps[i][j] = tmp_taps[i + j*d_nfilts];
 	}
 
 	// Build a filter for each channel and add it's taps to it

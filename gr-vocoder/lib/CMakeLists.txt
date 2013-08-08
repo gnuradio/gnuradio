@@ -1,4 +1,4 @@
-# Copyright 2011 Free Software Foundation, Inc.
+# Copyright 2011,2013 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -22,12 +22,18 @@
 ########################################################################
 include_directories(
     ${GR_VOCODER_INCLUDE_DIRS}
-    ${GNURADIO_CORE_INCLUDE_DIRS}
-    ${GRUEL_INCLUDE_DIRS}
+    ${GNURADIO_RUNTIME_INCLUDE_DIRS}
+    ${LOG4CXX_INCLUDE_DIRS}
     ${Boost_INCLUDE_DIRS}
 )
 
+link_directories(${LOG4CXX_LIBRARY_DIRS})
 link_directories(${Boost_LIBRARY_DIRS})
+
+if(ENABLE_GR_CTRLPORT)
+  ADD_DEFINITIONS(-DGR_CTRLPORT)
+  include_directories(${ICE_INCLUDE_DIR})
+endif(ENABLE_GR_CTRLPORT)
 
 include_directories(${LOG4CPP_INCLUDE_DIRS})
 link_directories(${LOG4CPP_LIBRARY_DIRS})
@@ -36,22 +42,22 @@ link_directories(${LOG4CPP_LIBRARY_DIRS})
 # Setup library
 ########################################################################
 list(APPEND gr_vocoder_sources
-    vocoder_alaw_decode_bs.cc
-    vocoder_alaw_encode_sb.cc
-    vocoder_codec2_decode_ps.cc
-    vocoder_codec2_encode_sp.cc
-    vocoder_cvsd_decode_bs.cc
-    vocoder_cvsd_encode_sb.cc
-    vocoder_g721_decode_bs.cc
-    vocoder_g721_encode_sb.cc
-    vocoder_g723_24_decode_bs.cc
-    vocoder_g723_24_encode_sb.cc
-    vocoder_g723_40_decode_bs.cc
-    vocoder_g723_40_encode_sb.cc
-    vocoder_gsm_fr_decode_ps.cc
-    vocoder_gsm_fr_encode_sp.cc
-    vocoder_ulaw_decode_bs.cc
-    vocoder_ulaw_encode_sb.cc
+    alaw_decode_bs_impl.cc
+    alaw_encode_sb_impl.cc
+    codec2_decode_ps_impl.cc
+    codec2_encode_sp_impl.cc
+    cvsd_decode_bs_impl.cc
+    cvsd_encode_sb_impl.cc
+    g721_decode_bs_impl.cc
+    g721_encode_sb_impl.cc
+    g723_24_decode_bs_impl.cc
+    g723_24_encode_sb_impl.cc
+    g723_40_decode_bs_impl.cc
+    g723_40_encode_sb_impl.cc
+    gsm_fr_decode_ps_impl.cc
+    gsm_fr_encode_sp_impl.cc
+    ulaw_decode_bs_impl.cc
+    ulaw_encode_sb_impl.cc
 )
 
 #Add Windows DLL resource file if using MSVC
@@ -76,7 +82,7 @@ GR_INCLUDE_SUBDIRECTORY(g7xx)
 GR_INCLUDE_SUBDIRECTORY(gsm)
 
 list(APPEND vocoder_libs
-    gnuradio-core
+    gnuradio-runtime
     ${Boost_LIBRARIES}
     ${LOG4CPP_LIBRARIES}
 )

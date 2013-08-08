@@ -1,4 +1,4 @@
-# Copyright 2011 Free Software Foundation, Inc.
+# Copyright 2012 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -28,13 +28,19 @@ include(GrBoost)
 include(GrComponent)
 GR_REGISTER_COMPONENT("gr-trellis" ENABLE_GR_TRELLIS
     Boost_FOUND
-    ENABLE_GR_CORE
+    ENABLE_GNURADIO_RUNTIME
+    ENABLE_GR_ANALOG
+    ENABLE_GR_BLOCKS
     ENABLE_GR_DIGITAL
 )
 
 GR_SET_GLOBAL(GR_TRELLIS_INCLUDE_DIRS
-    ${CMAKE_CURRENT_BINARY_DIR}/src/lib
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/lib
+    ${CMAKE_CURRENT_SOURCE_DIR}/include
+    ${CMAKE_CURRENT_BINARY_DIR}/include
+)
+
+GR_SET_GLOBAL(GR_TRELLIS_SWIG_INCLUDE_DIRS
+    ${CMAKE_CURRENT_SOURCE_DIR}/swig
 )
 
 SET(GR_PKG_TRELLIS_EXAMPLES_DIR ${GR_PKG_DATA_DIR}/examples/trellis)
@@ -60,21 +66,21 @@ CPACK_COMPONENT("trellis_runtime"
     GROUP        "Trellis"
     DISPLAY_NAME "Runtime"
     DESCRIPTION  "Dynamic link libraries"
-    DEPENDS      "core_runtime"
+    DEPENDS      "runtime_runtime"
 )
 
 CPACK_COMPONENT("trellis_devel"
     GROUP        "Trellis"
     DISPLAY_NAME "Development"
     DESCRIPTION  "C++ headers, package config, import libraries"
-    DEPENDS      "core_devel"
+    DEPENDS      "runtime_devel"
 )
 
 CPACK_COMPONENT("trellis_python"
     GROUP        "Trellis"
     DISPLAY_NAME "Python"
     DESCRIPTION  "Python modules for runtime"
-    DEPENDS      "core_python;trellis_runtime"
+    DEPENDS      "runtime_python;trellis_runtime"
 )
 
 CPACK_COMPONENT("trellis_examples"
@@ -88,19 +94,21 @@ CPACK_COMPONENT("trellis_swig"
     GROUP        "Trellis"
     DISPLAY_NAME "SWIG"
     DESCRIPTION  "SWIG development .i files"
-    DEPENDS      "core_swig;trellis_python;trellis_devel"
+    DEPENDS      "runtime_swig;trellis_python;trellis_devel"
 )
 
 ########################################################################
 # Add subdirectories
 ########################################################################
-add_subdirectory(src/lib)
+add_subdirectory(include/gnuradio/trellis)
+add_subdirectory(lib)
 add_subdirectory(doc)
 if(ENABLE_PYTHON)
+    add_subdirectory(swig)
+    add_subdirectory(python/trellis)
+    add_subdirectory(examples/python)
+    add_subdirectory(examples/grc)
     add_subdirectory(grc)
-    add_subdirectory(src/python)
-    add_subdirectory(src/examples/python)
-    add_subdirectory(src/examples/grc)
 endif(ENABLE_PYTHON)
 
 ########################################################################

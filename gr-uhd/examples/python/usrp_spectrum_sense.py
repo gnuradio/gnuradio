@@ -20,8 +20,11 @@
 # Boston, MA 02110-1301, USA.
 #
 
-from gnuradio import gr, eng_notation, window
+from gnuradio import gr, eng_notation
+from gnuradio import blocks
 from gnuradio import audio
+from gnuradio import filter
+from gnuradio import fft
 from gnuradio import uhd
 from gnuradio.eng_option import eng_option
 from optparse import OptionParser
@@ -47,7 +50,7 @@ class tune(gr.feval_dd):
 
     def eval(self, ignore):
         """
-        This method is called from gr.bin_statistics_f when it wants
+        This method is called from blocks.bin_statistics_f when it wants
         to change the center frequency.  This method tunes the front
         end to the new center frequency, and returns the new frequency
         as its result.
@@ -175,19 +178,19 @@ class my_top_block(gr.top_block):
         
         self.squelch_threshold = options.squelch_threshold
         
-        s2v = gr.stream_to_vector(gr.sizeof_gr_complex, self.fft_size)
+        s2v = blocks.stream_to_vector(gr.sizeof_gr_complex, self.fft_size)
 
-        mywindow = window.blackmanharris(self.fft_size)
-        fft = gr.fft_vcc(self.fft_size, True, mywindow, True)
+        mywindow = filter.window.blackmanharris(self.fft_size)
+        ffter = fft.fft_vcc(self.fft_size, True, mywindow, True)
         power = 0
         for tap in mywindow:
             power += tap*tap
 
-        c2mag = gr.complex_to_mag_squared(self.fft_size)
+        c2mag = blocks.complex_to_mag_squared(self.fft_size)
 
         # FIXME the log10 primitive is dog slow
-        #log = gr.nlog10_ff(10, self.fft_size,
-        #                   -20*math.log10(self.fft_size)-10*math.log10(power/self.fft_size))
+        #log = blocks.nlog10_ff(10, self.fft_size,
+        #                       -20*math.log10(self.fft_size)-10*math.log10(power/self.fft_size))
 
         # Set the freq_step to 75% of the actual data throughput.
         # This allows us to discard the bins on both ends of the spectrum.
@@ -204,13 +207,13 @@ class my_top_block(gr.top_block):
 
         self.msgq = gr.msg_queue(1)
         self._tune_callback = tune(self)        # hang on to this to keep it from being GC'd
-        stats = gr.bin_statistics_f(self.fft_size, self.msgq,
-                                    self._tune_callback, tune_delay,
-                                    dwell_delay)
+        stats = blocks.bin_statistics_f(self.fft_size, self.msgq,
+                                        self._tune_callback, tune_delay,
+                                        dwell_delay)
 
         # FIXME leave out the log10 until we speed it up
-        #self.connect(self.u, s2v, fft, c2mag, log, stats)
-        self.connect(self.u, s2v, fft, c2mag, stats)
+	#self.connect(self.u, s2v, ffter, c2mag, log, stats)
+	self.connect(self.u, s2v, ffter, c2mag, stats)
 
         if options.gain is None:
             # if no gain was specified, use the mid-point in dB
@@ -237,7 +240,8 @@ class my_top_block(gr.top_block):
         """
         Set the center frequency we're interested in.
 
-        @param target_freq: frequency in Hz
+        Args:
+            target_freq: frequency in Hz
         @rypte: bool
         """
         

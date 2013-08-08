@@ -25,20 +25,18 @@
 #endif
 
 #include <qa_block_tags.h>
-#include <gr_block.h>
-#include <gr_top_block.h>
-#include <gr_null_source.h>
-#include <gr_null_sink.h>
-#include <gr_head.h>
-#include <blocks/annotator_alltoall.h>
-#include <blocks/annotator_1to1.h>
-#include <gr_keep_one_in_n.h>
-#include <gr_tags.h>
+#include <gnuradio/block.h>
+#include <gnuradio/top_block.h>
+#include <gnuradio/blocks/null_source.h>
+#include <gnuradio/blocks/null_sink.h>
+#include <gnuradio/blocks/head.h>
+#include <gnuradio/blocks/annotator_alltoall.h>
+#include <gnuradio/blocks/annotator_1to1.h>
+#include <gnuradio/blocks/keep_one_in_n.h>
+#include <gnuradio/tags.h>
 
 
 // ----------------------------------------------------------------
-
-using namespace pmt;
 
 // set to 1 to turn on debug output
 // The debug output fully checks that the tags seen are what are expected. While
@@ -53,10 +51,10 @@ void
 qa_block_tags::t0()
 {
   unsigned int N = 1000;
-  gr_top_block_sptr tb = gr_make_top_block("top");
-  gr_block_sptr src (gr_make_null_source(sizeof(int)));
-  gr_block_sptr head (gr_make_head(sizeof(int), N));
-  gr_block_sptr snk (gr_make_null_sink(sizeof(int)));
+  gr::top_block_sptr tb = gr::make_top_block("top");
+  gr::block_sptr src (gr::blocks::null_source::make(sizeof(int)));
+  gr::block_sptr head (gr::blocks::head::make(sizeof(int), N));
+  gr::block_sptr snk (gr::blocks::null_sink::make(sizeof(int)));
 
   tb->connect(src, 0, head, 0);
   tb->connect(head, 0, snk, 0);
@@ -79,16 +77,16 @@ void
 qa_block_tags::t1()
 {
   int N = 40000;
-  gr_top_block_sptr tb = gr_make_top_block("top");
-  gr_block_sptr src (gr_make_null_source(sizeof(int)));
-  gr_block_sptr head (gr_make_head(sizeof(int), N));
+  gr::top_block_sptr tb = gr::make_top_block("top");
+  gr::block_sptr src (gr::blocks::null_source::make(sizeof(int)));
+  gr::block_sptr head (gr::blocks::head::make(sizeof(int), N));
   gr::blocks::annotator_alltoall::sptr ann0(gr::blocks::annotator_alltoall::make(10000, sizeof(int)));
   gr::blocks::annotator_alltoall::sptr ann1(gr::blocks::annotator_alltoall::make(10000, sizeof(int)));
   gr::blocks::annotator_alltoall::sptr ann2(gr::blocks::annotator_alltoall::make(10000, sizeof(int)));
   gr::blocks::annotator_alltoall::sptr ann3(gr::blocks::annotator_alltoall::make(10000, sizeof(int)));
   gr::blocks::annotator_alltoall::sptr ann4(gr::blocks::annotator_alltoall::make(10000, sizeof(int)));
-  gr_block_sptr snk0 (gr_make_null_sink(sizeof(int)));
-  gr_block_sptr snk1 (gr_make_null_sink(sizeof(int)));
+  gr::block_sptr snk0 (gr::blocks::null_sink::make(sizeof(int)));
+  gr::block_sptr snk1 (gr::blocks::null_sink::make(sizeof(int)));
 
   tb->connect(src, 0, head, 0);
   tb->connect(head, 0, ann0, 0);
@@ -103,9 +101,9 @@ qa_block_tags::t1()
 
   tb->run();
 
-  std::vector<gr_tag_t> tags0 = ann0->data();
-  std::vector<gr_tag_t> tags3 = ann3->data();
-  std::vector<gr_tag_t> tags4 = ann4->data();
+  std::vector<gr::tag_t> tags0 = ann0->data();
+  std::vector<gr::tag_t> tags3 = ann3->data();
+  std::vector<gr::tag_t> tags4 = ann4->data();
 
   // The first annotator does not receive any tags from the null sink upstream
   CPPUNIT_ASSERT_EQUAL(tags0.size(), (size_t)0);
@@ -119,39 +117,39 @@ qa_block_tags::t1()
   str1 << ann1->name() << ann1->unique_id();
   str2 << ann2->name() << ann2->unique_id();
 
-  pmt_t expected_tags3[8];
-  expected_tags3[0] = mp(pmt_from_uint64(0),     mp(str1.str()), mp("seq"), mp(0));
-  expected_tags3[1] = mp(pmt_from_uint64(0),     mp(str0.str()), mp("seq"), mp(0));
-  expected_tags3[2] = mp(pmt_from_uint64(10000), mp(str1.str()), mp("seq"), mp(1));
-  expected_tags3[3] = mp(pmt_from_uint64(10000), mp(str0.str()), mp("seq"), mp(2));
-  expected_tags3[4] = mp(pmt_from_uint64(20000), mp(str1.str()), mp("seq"), mp(2));
-  expected_tags3[5] = mp(pmt_from_uint64(20000), mp(str0.str()), mp("seq"), mp(4));
-  expected_tags3[6] = mp(pmt_from_uint64(30000), mp(str1.str()), mp("seq"), mp(3));
-  expected_tags3[7] = mp(pmt_from_uint64(30000), mp(str0.str()), mp("seq"), mp(6));
+  pmt::pmt_t expected_tags3[8];
+  expected_tags3[0] = mp(pmt::from_uint64(0),     mp(str1.str()), mp("seq"), mp(0));
+  expected_tags3[1] = mp(pmt::from_uint64(0),     mp(str0.str()), mp("seq"), mp(0));
+  expected_tags3[2] = mp(pmt::from_uint64(10000), mp(str1.str()), mp("seq"), mp(1));
+  expected_tags3[3] = mp(pmt::from_uint64(10000), mp(str0.str()), mp("seq"), mp(2));
+  expected_tags3[4] = mp(pmt::from_uint64(20000), mp(str1.str()), mp("seq"), mp(2));
+  expected_tags3[5] = mp(pmt::from_uint64(20000), mp(str0.str()), mp("seq"), mp(4));
+  expected_tags3[6] = mp(pmt::from_uint64(30000), mp(str1.str()), mp("seq"), mp(3));
+  expected_tags3[7] = mp(pmt::from_uint64(30000), mp(str0.str()), mp("seq"), mp(6));
 
-  pmt_t expected_tags4[8];
-  expected_tags4[0] = mp(pmt_from_uint64(0),     mp(str2.str()), mp("seq"), mp(0));
-  expected_tags4[1] = mp(pmt_from_uint64(0),     mp(str0.str()), mp("seq"), mp(1));
-  expected_tags4[2] = mp(pmt_from_uint64(10000), mp(str2.str()), mp("seq"), mp(1));
-  expected_tags4[3] = mp(pmt_from_uint64(10000), mp(str0.str()), mp("seq"), mp(3));
-  expected_tags4[4] = mp(pmt_from_uint64(20000), mp(str2.str()), mp("seq"), mp(2));
-  expected_tags4[5] = mp(pmt_from_uint64(20000), mp(str0.str()), mp("seq"), mp(5));
-  expected_tags4[6] = mp(pmt_from_uint64(30000), mp(str2.str()), mp("seq"), mp(3));
-  expected_tags4[7] = mp(pmt_from_uint64(30000), mp(str0.str()), mp("seq"), mp(7));
+  pmt::pmt_t expected_tags4[8];
+  expected_tags4[0] = mp(pmt::from_uint64(0),     mp(str2.str()), mp("seq"), mp(0));
+  expected_tags4[1] = mp(pmt::from_uint64(0),     mp(str0.str()), mp("seq"), mp(1));
+  expected_tags4[2] = mp(pmt::from_uint64(10000), mp(str2.str()), mp("seq"), mp(1));
+  expected_tags4[3] = mp(pmt::from_uint64(10000), mp(str0.str()), mp("seq"), mp(3));
+  expected_tags4[4] = mp(pmt::from_uint64(20000), mp(str2.str()), mp("seq"), mp(2));
+  expected_tags4[5] = mp(pmt::from_uint64(20000), mp(str0.str()), mp("seq"), mp(5));
+  expected_tags4[6] = mp(pmt::from_uint64(30000), mp(str2.str()), mp("seq"), mp(3));
+  expected_tags4[7] = mp(pmt::from_uint64(30000), mp(str0.str()), mp("seq"), mp(7));
 
   std::cout << std::endl << "qa_block_tags::t1" << std::endl;
 
   // For annotator 3, we know it gets tags from ann0 and ann1, test this
   for(size_t i = 0; i < tags3.size(); i++) {
     std::cout << "tags3[" << i << "] = " << tags3[i] << "\t\t" << expected_tags3[i] << std::endl;
-    CPPUNIT_ASSERT_EQUAL(pmt_write_string(tags3[i]), pmt_write_string(expected_tags3[i]));
+    CPPUNIT_ASSERT_EQUAL(pmt::write_string(tags3[i]), pmt::write_string(expected_tags3[i]));
   }
 
   // For annotator 4, we know it gets tags from ann0 and ann2, test this
   std::cout << std::endl;
   for(size_t i = 0; i < tags4.size(); i++) {
     std::cout << "tags4[" << i << "] = " << tags4[i] << "\t\t" << expected_tags4[i] << std::endl;
-    CPPUNIT_ASSERT_EQUAL(pmt_write_string(tags4[i]), pmt_write_string(expected_tags4[i]));
+    CPPUNIT_ASSERT_EQUAL(pmt::write_string(tags4[i]), pmt::write_string(expected_tags4[i]));
   }
 #endif
 }
@@ -160,17 +158,17 @@ void
 qa_block_tags::t2 ()
 {
   int N = 40000;
-  gr_top_block_sptr tb = gr_make_top_block("top");
-  gr_block_sptr src (gr_make_null_source(sizeof(int)));
-  gr_block_sptr head (gr_make_head(sizeof(int), N));
+  gr::top_block_sptr tb = gr::make_top_block("top");
+  gr::block_sptr src (gr::blocks::null_source::make(sizeof(int)));
+  gr::block_sptr head (gr::blocks::head::make(sizeof(int), N));
   gr::blocks::annotator_alltoall::sptr ann0(gr::blocks::annotator_alltoall::make(10000, sizeof(int)));
   gr::blocks::annotator_alltoall::sptr ann1(gr::blocks::annotator_alltoall::make(10000, sizeof(int)));
   gr::blocks::annotator_alltoall::sptr ann2(gr::blocks::annotator_alltoall::make(10000, sizeof(int)));
   gr::blocks::annotator_alltoall::sptr ann3(gr::blocks::annotator_alltoall::make(10000, sizeof(int)));
   gr::blocks::annotator_alltoall::sptr ann4(gr::blocks::annotator_alltoall::make(10000, sizeof(int)));
-  gr_block_sptr snk0 (gr_make_null_sink(sizeof(int)));
-  gr_block_sptr snk1 (gr_make_null_sink(sizeof(int)));
-  gr_block_sptr snk2 (gr_make_null_sink(sizeof(int)));
+  gr::block_sptr snk0 (gr::blocks::null_sink::make(sizeof(int)));
+  gr::block_sptr snk1 (gr::blocks::null_sink::make(sizeof(int)));
+  gr::block_sptr snk2 (gr::blocks::null_sink::make(sizeof(int)));
 
   tb->connect(src, 0, head, 0);
   tb->connect(head, 0, ann0, 0);
@@ -187,11 +185,11 @@ qa_block_tags::t2 ()
 
   tb->run();
 
-  std::vector<gr_tag_t> tags0 = ann0->data();
-  std::vector<gr_tag_t> tags1 = ann1->data();
-  std::vector<gr_tag_t> tags2 = ann2->data();
-  std::vector<gr_tag_t> tags3 = ann4->data();
-  std::vector<gr_tag_t> tags4 = ann4->data();
+  std::vector<gr::tag_t> tags0 = ann0->data();
+  std::vector<gr::tag_t> tags1 = ann1->data();
+  std::vector<gr::tag_t> tags2 = ann2->data();
+  std::vector<gr::tag_t> tags3 = ann4->data();
+  std::vector<gr::tag_t> tags4 = ann4->data();
 
   // The first annotator does not receive any tags from the null sink upstream
   CPPUNIT_ASSERT_EQUAL(tags0.size(), (size_t)0);
@@ -209,33 +207,33 @@ qa_block_tags::t2 ()
   str0 << ann0->name() << ann0->unique_id();
   str1 << ann1->name() << ann1->unique_id();
 
-  pmt_t expected_tags2[12];
-  expected_tags2[0] = mp(pmt_from_uint64(0),     mp(str1.str()), mp("seq"), mp(0));
-  expected_tags2[1] = mp(pmt_from_uint64(0),     mp(str0.str()), mp("seq"), mp(0));
-  expected_tags2[2] = mp(pmt_from_uint64(0),     mp(str0.str()), mp("seq"), mp(1));
-  expected_tags2[3] = mp(pmt_from_uint64(10000), mp(str1.str()), mp("seq"), mp(3));
-  expected_tags2[4] = mp(pmt_from_uint64(10000), mp(str0.str()), mp("seq"), mp(2));
-  expected_tags2[5] = mp(pmt_from_uint64(10000), mp(str0.str()), mp("seq"), mp(3));
-  expected_tags2[6] = mp(pmt_from_uint64(20000), mp(str1.str()), mp("seq"), mp(6));
-  expected_tags2[7] = mp(pmt_from_uint64(20000), mp(str0.str()), mp("seq"), mp(4));
-  expected_tags2[8] = mp(pmt_from_uint64(20000), mp(str0.str()), mp("seq"), mp(5));
-  expected_tags2[9] = mp(pmt_from_uint64(30000), mp(str1.str()), mp("seq"), mp(9));
-  expected_tags2[10] = mp(pmt_from_uint64(30000), mp(str0.str()), mp("seq"), mp(6));
-  expected_tags2[11] = mp(pmt_from_uint64(30000), mp(str0.str()), mp("seq"), mp(7));
+  pmt::pmt_t expected_tags2[12];
+  expected_tags2[0] = mp(pmt::from_uint64(0),     mp(str1.str()), mp("seq"), mp(0));
+  expected_tags2[1] = mp(pmt::from_uint64(0),     mp(str0.str()), mp("seq"), mp(0));
+  expected_tags2[2] = mp(pmt::from_uint64(0),     mp(str0.str()), mp("seq"), mp(1));
+  expected_tags2[3] = mp(pmt::from_uint64(10000), mp(str1.str()), mp("seq"), mp(3));
+  expected_tags2[4] = mp(pmt::from_uint64(10000), mp(str0.str()), mp("seq"), mp(2));
+  expected_tags2[5] = mp(pmt::from_uint64(10000), mp(str0.str()), mp("seq"), mp(3));
+  expected_tags2[6] = mp(pmt::from_uint64(20000), mp(str1.str()), mp("seq"), mp(6));
+  expected_tags2[7] = mp(pmt::from_uint64(20000), mp(str0.str()), mp("seq"), mp(4));
+  expected_tags2[8] = mp(pmt::from_uint64(20000), mp(str0.str()), mp("seq"), mp(5));
+  expected_tags2[9] = mp(pmt::from_uint64(30000), mp(str1.str()), mp("seq"), mp(9));
+  expected_tags2[10] = mp(pmt::from_uint64(30000), mp(str0.str()), mp("seq"), mp(6));
+  expected_tags2[11] = mp(pmt::from_uint64(30000), mp(str0.str()), mp("seq"), mp(7));
 
-  pmt_t expected_tags4[12];
-  expected_tags4[0] = mp(pmt_from_uint64(0),     mp(str1.str()), mp("seq"), mp(2));
-  expected_tags4[1] = mp(pmt_from_uint64(0),     mp(str0.str()), mp("seq"), mp(0));
-  expected_tags4[2] = mp(pmt_from_uint64(0),     mp(str0.str()), mp("seq"), mp(1));
-  expected_tags4[3] = mp(pmt_from_uint64(10000), mp(str1.str()), mp("seq"), mp(5));
-  expected_tags4[4] = mp(pmt_from_uint64(10000), mp(str0.str()), mp("seq"), mp(2));
-  expected_tags4[5] = mp(pmt_from_uint64(10000), mp(str0.str()), mp("seq"), mp(3));
-  expected_tags4[6] = mp(pmt_from_uint64(20000), mp(str1.str()), mp("seq"), mp(8));
-  expected_tags4[7] = mp(pmt_from_uint64(20000), mp(str0.str()), mp("seq"), mp(4));
-  expected_tags4[8] = mp(pmt_from_uint64(20000), mp(str0.str()), mp("seq"), mp(5));
-  expected_tags4[9] = mp(pmt_from_uint64(30000), mp(str1.str()), mp("seq"), mp(11));
-  expected_tags4[10] = mp(pmt_from_uint64(30000), mp(str0.str()), mp("seq"), mp(6));
-  expected_tags4[11] = mp(pmt_from_uint64(30000), mp(str0.str()), mp("seq"), mp(7));
+  pmt::pmt_t expected_tags4[12];
+  expected_tags4[0] = mp(pmt::from_uint64(0),     mp(str1.str()), mp("seq"), mp(2));
+  expected_tags4[1] = mp(pmt::from_uint64(0),     mp(str0.str()), mp("seq"), mp(0));
+  expected_tags4[2] = mp(pmt::from_uint64(0),     mp(str0.str()), mp("seq"), mp(1));
+  expected_tags4[3] = mp(pmt::from_uint64(10000), mp(str1.str()), mp("seq"), mp(5));
+  expected_tags4[4] = mp(pmt::from_uint64(10000), mp(str0.str()), mp("seq"), mp(2));
+  expected_tags4[5] = mp(pmt::from_uint64(10000), mp(str0.str()), mp("seq"), mp(3));
+  expected_tags4[6] = mp(pmt::from_uint64(20000), mp(str1.str()), mp("seq"), mp(8));
+  expected_tags4[7] = mp(pmt::from_uint64(20000), mp(str0.str()), mp("seq"), mp(4));
+  expected_tags4[8] = mp(pmt::from_uint64(20000), mp(str0.str()), mp("seq"), mp(5));
+  expected_tags4[9] = mp(pmt::from_uint64(30000), mp(str1.str()), mp("seq"), mp(11));
+  expected_tags4[10] = mp(pmt::from_uint64(30000), mp(str0.str()), mp("seq"), mp(6));
+  expected_tags4[11] = mp(pmt::from_uint64(30000), mp(str0.str()), mp("seq"), mp(7));
 
   std::cout << std::endl << "qa_block_tags::t2" << std::endl;
 
@@ -245,13 +243,13 @@ qa_block_tags::t2 ()
   // inconceivable for ann3 to have it wrong.
   for(size_t i = 0; i < tags2.size(); i++) {
     std::cout << "tags2[" << i << "] = " << tags2[i] << "\t\t" << expected_tags2[i] << std::endl;
-    CPPUNIT_ASSERT_EQUAL(pmt_write_string(tags2[i]), pmt_write_string(expected_tags2[i]));
+    CPPUNIT_ASSERT_EQUAL(pmt::write_string(tags2[i]), pmt::write_string(expected_tags2[i]));
   }
 
   std::cout << std::endl;
   for(size_t i = 0; i < tags4.size(); i++) {
     std::cout << "tags2[" << i << "] = " << tags4[i] << "\t\t" << expected_tags4[i] << std::endl;
-    CPPUNIT_ASSERT_EQUAL(pmt_write_string(tags4[i]), pmt_write_string(expected_tags4[i]));
+    CPPUNIT_ASSERT_EQUAL(pmt::write_string(tags4[i]), pmt::write_string(expected_tags4[i]));
   }
 #endif
 }
@@ -261,16 +259,16 @@ void
 qa_block_tags::t3()
 {
   int N = 40000;
-  gr_top_block_sptr tb = gr_make_top_block("top");
-  gr_block_sptr src (gr_make_null_source(sizeof(int)));
-  gr_block_sptr head (gr_make_head(sizeof(int), N));
+  gr::top_block_sptr tb = gr::make_top_block("top");
+  gr::block_sptr src (gr::blocks::null_source::make(sizeof(int)));
+  gr::block_sptr head (gr::blocks::head::make(sizeof(int), N));
   gr::blocks::annotator_1to1::sptr ann0 (gr::blocks::annotator_1to1::make(10000, sizeof(int)));
   gr::blocks::annotator_alltoall::sptr ann1 (gr::blocks::annotator_alltoall::make(10000, sizeof(int)));
   gr::blocks::annotator_alltoall::sptr ann2 (gr::blocks::annotator_alltoall::make(10000, sizeof(int)));
   gr::blocks::annotator_1to1::sptr ann3 (gr::blocks::annotator_1to1::make(10000, sizeof(int)));
   gr::blocks::annotator_1to1::sptr ann4 (gr::blocks::annotator_1to1::make(10000, sizeof(int)));
-  gr_block_sptr snk0 (gr_make_null_sink(sizeof(int)));
-  gr_block_sptr snk1 (gr_make_null_sink(sizeof(int)));
+  gr::block_sptr snk0 (gr::blocks::null_sink::make(sizeof(int)));
+  gr::block_sptr snk1 (gr::blocks::null_sink::make(sizeof(int)));
 
   tb->connect(src, 0, head, 0);
   tb->connect(head, 0, ann0, 0);
@@ -287,9 +285,9 @@ qa_block_tags::t3()
   tb->run();
 
 
-  std::vector<gr_tag_t> tags0 = ann0->data();
-  std::vector<gr_tag_t> tags3 = ann3->data();
-  std::vector<gr_tag_t> tags4 = ann4->data();
+  std::vector<gr::tag_t> tags0 = ann0->data();
+  std::vector<gr::tag_t> tags3 = ann3->data();
+  std::vector<gr::tag_t> tags4 = ann4->data();
 
   // The first annotator does not receive any tags from the null sink upstream
   CPPUNIT_ASSERT_EQUAL(tags0.size(), (size_t)0);
@@ -303,39 +301,39 @@ qa_block_tags::t3()
   str1 << ann1->name() << ann1->unique_id();
   str2 << ann2->name() << ann2->unique_id();
 
-  pmt_t expected_tags3[8];
-  expected_tags3[0] = mp(pmt_from_uint64(0),     mp(str1.str()), mp("seq"), mp(0));
-  expected_tags3[1] = mp(pmt_from_uint64(0),     mp(str0.str()), mp("seq"), mp(0));
-  expected_tags3[2] = mp(pmt_from_uint64(10000), mp(str1.str()), mp("seq"), mp(1));
-  expected_tags3[3] = mp(pmt_from_uint64(10000), mp(str0.str()), mp("seq"), mp(2));
-  expected_tags3[4] = mp(pmt_from_uint64(20000), mp(str1.str()), mp("seq"), mp(2));
-  expected_tags3[5] = mp(pmt_from_uint64(20000), mp(str0.str()), mp("seq"), mp(4));
-  expected_tags3[6] = mp(pmt_from_uint64(30000), mp(str1.str()), mp("seq"), mp(3));
-  expected_tags3[7] = mp(pmt_from_uint64(30000), mp(str0.str()), mp("seq"), mp(6));
+  pmt::pmt_t expected_tags3[8];
+  expected_tags3[0] = mp(pmt::from_uint64(0),     mp(str1.str()), mp("seq"), mp(0));
+  expected_tags3[1] = mp(pmt::from_uint64(0),     mp(str0.str()), mp("seq"), mp(0));
+  expected_tags3[2] = mp(pmt::from_uint64(10000), mp(str1.str()), mp("seq"), mp(1));
+  expected_tags3[3] = mp(pmt::from_uint64(10000), mp(str0.str()), mp("seq"), mp(2));
+  expected_tags3[4] = mp(pmt::from_uint64(20000), mp(str1.str()), mp("seq"), mp(2));
+  expected_tags3[5] = mp(pmt::from_uint64(20000), mp(str0.str()), mp("seq"), mp(4));
+  expected_tags3[6] = mp(pmt::from_uint64(30000), mp(str1.str()), mp("seq"), mp(3));
+  expected_tags3[7] = mp(pmt::from_uint64(30000), mp(str0.str()), mp("seq"), mp(6));
 
-  pmt_t expected_tags4[8];
-  expected_tags4[0] = mp(pmt_from_uint64(0),     mp(str2.str()), mp("seq"), mp(0));
-  expected_tags4[1] = mp(pmt_from_uint64(0),     mp(str0.str()), mp("seq"), mp(1));
-  expected_tags4[2] = mp(pmt_from_uint64(10000), mp(str2.str()), mp("seq"), mp(1));
-  expected_tags4[3] = mp(pmt_from_uint64(10000), mp(str0.str()), mp("seq"), mp(3));
-  expected_tags4[4] = mp(pmt_from_uint64(20000), mp(str2.str()), mp("seq"), mp(2));
-  expected_tags4[5] = mp(pmt_from_uint64(20000), mp(str0.str()), mp("seq"), mp(5));
-  expected_tags4[6] = mp(pmt_from_uint64(30000), mp(str2.str()), mp("seq"), mp(3));
-  expected_tags4[7] = mp(pmt_from_uint64(30000), mp(str0.str()), mp("seq"), mp(7));
+  pmt::pmt_t expected_tags4[8];
+  expected_tags4[0] = mp(pmt::from_uint64(0),     mp(str2.str()), mp("seq"), mp(0));
+  expected_tags4[1] = mp(pmt::from_uint64(0),     mp(str0.str()), mp("seq"), mp(1));
+  expected_tags4[2] = mp(pmt::from_uint64(10000), mp(str2.str()), mp("seq"), mp(1));
+  expected_tags4[3] = mp(pmt::from_uint64(10000), mp(str0.str()), mp("seq"), mp(3));
+  expected_tags4[4] = mp(pmt::from_uint64(20000), mp(str2.str()), mp("seq"), mp(2));
+  expected_tags4[5] = mp(pmt::from_uint64(20000), mp(str0.str()), mp("seq"), mp(5));
+  expected_tags4[6] = mp(pmt::from_uint64(30000), mp(str2.str()), mp("seq"), mp(3));
+  expected_tags4[7] = mp(pmt::from_uint64(30000), mp(str0.str()), mp("seq"), mp(7));
 
   std::cout << std::endl << "qa_block_tags::t3" << std::endl;
 
   // For annotator 3, we know it gets tags from ann0 and ann1, test this
   for(size_t i = 0; i < tags3.size(); i++) {
     std::cout << "tags3[" << i << "] = " << tags3[i] << "\t\t" << expected_tags3[i] << std::endl;
-    CPPUNIT_ASSERT_EQUAL(pmt_write_string(tags3[i]), pmt_write_string(expected_tags3[i]));
+    CPPUNIT_ASSERT_EQUAL(pmt::write_string(tags3[i]), pmt::write_string(expected_tags3[i]));
   }
 
   // For annotator 4, we know it gets tags from ann0 and ann2, test this
   std::cout << std::endl;
   for(size_t i = 0; i < tags4.size(); i++) {
     std::cout << "tags4[" << i << "] = " << tags4[i] << "\t\t" << expected_tags4[i] << std::endl;
-    CPPUNIT_ASSERT_EQUAL(pmt_write_string(tags4[i]), pmt_write_string(expected_tags4[i]));
+    CPPUNIT_ASSERT_EQUAL(pmt::write_string(tags4[i]), pmt::write_string(expected_tags4[i]));
   }
 #endif
 }
@@ -345,14 +343,14 @@ void
 qa_block_tags::t4()
 {
   int N = 40000;
-  gr_top_block_sptr tb = gr_make_top_block("top");
-  gr_block_sptr src (gr_make_null_source(sizeof(int)));
-  gr_block_sptr head (gr_make_head(sizeof(int), N));
+  gr::top_block_sptr tb = gr::make_top_block("top");
+  gr::block_sptr src (gr::blocks::null_source::make(sizeof(int)));
+  gr::block_sptr head (gr::blocks::head::make(sizeof(int), N));
   gr::blocks::annotator_1to1::sptr ann0(gr::blocks::annotator_1to1::make(10000, sizeof(int)));
   gr::blocks::annotator_1to1::sptr ann1(gr::blocks::annotator_1to1::make(10000, sizeof(int)));
   gr::blocks::annotator_1to1::sptr ann2(gr::blocks::annotator_1to1::make(10000, sizeof(int)));
-  gr_block_sptr snk0 (gr_make_null_sink(sizeof(int)));
-  gr_block_sptr snk1 (gr_make_null_sink(sizeof(int)));
+  gr::block_sptr snk0 (gr::blocks::null_sink::make(sizeof(int)));
+  gr::block_sptr snk1 (gr::blocks::null_sink::make(sizeof(int)));
 
   // using 1-to-1 tag propagation without having equal number of
   // ins and outs. Make sure this works; will just exit run early.
@@ -364,7 +362,7 @@ qa_block_tags::t4()
   tb->connect(ann2, 0, snk1, 0);
 
   std::cerr << std::endl
-	    << "NOTE: This is supposed to produce an error from gr_block_executor"
+	    << "NOTE: This is supposed to produce an error from block_executor"
 	    << std::endl;
   tb->run();
 }
@@ -374,16 +372,16 @@ void
 qa_block_tags::t5()
 {
   int N = 40000;
-  gr_top_block_sptr tb = gr_make_top_block("top");
-  gr_block_sptr src (gr_make_null_source(sizeof(float)));
-  gr_block_sptr head (gr_make_head(sizeof(float), N));
+  gr::top_block_sptr tb = gr::make_top_block("top");
+  gr::block_sptr src (gr::blocks::null_source::make(sizeof(float)));
+  gr::block_sptr head (gr::blocks::head::make(sizeof(float), N));
   gr::blocks::annotator_alltoall::sptr ann0(gr::blocks::annotator_alltoall::make(10000, sizeof(float)));
   gr::blocks::annotator_alltoall::sptr ann1(gr::blocks::annotator_alltoall::make(10000, sizeof(float)));
   gr::blocks::annotator_alltoall::sptr ann2(gr::blocks::annotator_alltoall::make(1000,  sizeof(float)));
-  gr_block_sptr snk0 (gr_make_null_sink(sizeof(float)));
+  gr::block_sptr snk0 (gr::blocks::null_sink::make(sizeof(float)));
 
   // Rate change blocks
-  gr_keep_one_in_n_sptr dec10 (gr_make_keep_one_in_n(sizeof(float), 10));
+  gr::blocks::keep_one_in_n::sptr dec10(gr::blocks::keep_one_in_n::make(sizeof(float), 10));
 
   tb->connect(src,  0, head, 0);
   tb->connect(head, 0, ann0, 0);
@@ -394,9 +392,9 @@ qa_block_tags::t5()
 
   tb->run();
 
-  std::vector<gr_tag_t> tags0 = ann0->data();
-  std::vector<gr_tag_t> tags1 = ann1->data();
-  std::vector<gr_tag_t> tags2 = ann2->data();
+  std::vector<gr::tag_t> tags0 = ann0->data();
+  std::vector<gr::tag_t> tags1 = ann1->data();
+  std::vector<gr::tag_t> tags2 = ann2->data();
 
   // The first annotator does not receive any tags from the null sink upstream
   CPPUNIT_ASSERT_EQUAL(tags0.size(), (size_t)0);
@@ -412,22 +410,22 @@ qa_block_tags::t5()
   str2 << ann2->name() << ann2->unique_id();
 
   pmt_t expected_tags1[5];
-  expected_tags1[0] = mp(pmt_from_uint64(0),     mp(str0.str()), mp("seq"), mp(0));
-  expected_tags1[1] = mp(pmt_from_uint64(10000), mp(str0.str()), mp("seq"), mp(1));
-  expected_tags1[2] = mp(pmt_from_uint64(20000), mp(str0.str()), mp("seq"), mp(2));
-  expected_tags1[3] = mp(pmt_from_uint64(30000), mp(str0.str()), mp("seq"), mp(3));
+  expected_tags1[0] = mp(pmt::from_uint64(0),     mp(str0.str()), mp("seq"), mp(0));
+  expected_tags1[1] = mp(pmt::from_uint64(10000), mp(str0.str()), mp("seq"), mp(1));
+  expected_tags1[2] = mp(pmt::from_uint64(20000), mp(str0.str()), mp("seq"), mp(2));
+  expected_tags1[3] = mp(pmt::from_uint64(30000), mp(str0.str()), mp("seq"), mp(3));
 
   pmt_t expected_tags2[10];
-  expected_tags2[0] = mp(pmt_from_uint64(0),    mp(str1.str()), mp("seq"), mp(0));
-  expected_tags2[1] = mp(pmt_from_uint64(0),    mp(str0.str()), mp("seq"), mp(0));
-  expected_tags2[2] = mp(pmt_from_uint64(1000), mp(str1.str()), mp("seq"), mp(1));
-  expected_tags2[3] = mp(pmt_from_uint64(1000), mp(str0.str()), mp("seq"), mp(1));
-  expected_tags2[4] = mp(pmt_from_uint64(2000), mp(str1.str()), mp("seq"), mp(2));
-  expected_tags2[5] = mp(pmt_from_uint64(2000), mp(str0.str()), mp("seq"), mp(2));
-  expected_tags2[6] = mp(pmt_from_uint64(3000), mp(str1.str()), mp("seq"), mp(3));
-  expected_tags2[7] = mp(pmt_from_uint64(3000), mp(str0.str()), mp("seq"), mp(3));
-  expected_tags2[8] = mp(pmt_from_uint64(4000), mp(str1.str()), mp("seq"), mp(4));
-  expected_tags2[9] = mp(pmt_from_uint64(4000), mp(str0.str()), mp("seq"), mp(4));
+  expected_tags2[0] = mp(pmt::from_uint64(0),    mp(str1.str()), mp("seq"), mp(0));
+  expected_tags2[1] = mp(pmt::from_uint64(0),    mp(str0.str()), mp("seq"), mp(0));
+  expected_tags2[2] = mp(pmt::from_uint64(1000), mp(str1.str()), mp("seq"), mp(1));
+  expected_tags2[3] = mp(pmt::from_uint64(1000), mp(str0.str()), mp("seq"), mp(1));
+  expected_tags2[4] = mp(pmt::from_uint64(2000), mp(str1.str()), mp("seq"), mp(2));
+  expected_tags2[5] = mp(pmt::from_uint64(2000), mp(str0.str()), mp("seq"), mp(2));
+  expected_tags2[6] = mp(pmt::from_uint64(3000), mp(str1.str()), mp("seq"), mp(3));
+  expected_tags2[7] = mp(pmt::from_uint64(3000), mp(str0.str()), mp("seq"), mp(3));
+  expected_tags2[8] = mp(pmt::from_uint64(4000), mp(str1.str()), mp("seq"), mp(4));
+  expected_tags2[9] = mp(pmt::from_uint64(4000), mp(str0.str()), mp("seq"), mp(4));
 
   std::cout << std::endl << "qa_block_tags::t5" << std::endl;
 
@@ -435,7 +433,7 @@ qa_block_tags::t5()
   std::cout << "tags1.size(): " << tags1.size() << std::endl;
   for(size_t i = 0; i < tags1.size(); i++) {
     std::cout << "tags1[" << i << "] = " << tags1[i] << "\t\t" << expected_tags1[i] << std::endl;
-    CPPUNIT_ASSERT_EQUAL(pmt_write_string(tags1[i]), pmt_write_string(expected_tags1[i]));
+    CPPUNIT_ASSERT_EQUAL(pmt::write_string(tags1[i]), pmt::write_string(expected_tags1[i]));
   }
 
   // annotator 2 gets tags from annotators 0 and 1
@@ -443,7 +441,7 @@ qa_block_tags::t5()
   std::cout << "tags2.size(): " << tags2.size() << std::endl;
   for(size_t i = 0; i < tags2.size(); i++) {
     std::cout << "tags2[" << i << "] = " << tags2[i] << "\t\t" << expected_tags2[i] << std::endl;
-    CPPUNIT_ASSERT_EQUAL(pmt_write_string(tags2[i]), pmt_write_string(expected_tags2[i]));
+    CPPUNIT_ASSERT_EQUAL(pmt::write_string(tags2[i]), pmt::write_string(expected_tags2[i]));
   }
 #endif
 }

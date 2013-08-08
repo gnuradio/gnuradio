@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<!--
+###################################################
+##WBFM Receive
+###################################################
+ -->
+<block>
+	<name>WBFM Receive</name>
+	<key>analog_wfm_rcv</key>
+	<import>from gnuradio import analog</import>
+	<make>analog.wfm_rcv(
+	quad_rate=$quad_rate,
+	audio_decimation=$audio_decimation,
+)</make>
+	<param>
+		<name>Quadrature Rate</name>
+		<key>quad_rate</key>
+		<type>real</type>
+	</param>
+	<param>
+		<name>Audio Decimation</name>
+		<key>audio_decimation</key>
+		<type>int</type>
+	</param>
+	<sink>
+		<name>in</name>
+		<type>complex</type>
+	</sink>
+	<source>
+		<name>out</name>
+		<type>float</type>
+	</source>
+</block>

@@ -5,7 +5,7 @@ includedir=@includedir@
 
 Name: gnuradio-wavelet
 Description: Wavelet signal processing blocks for GNU Radio
-Requires: gnuradio-core
+Requires: gnuradio-runtime
 Version: @LIBVER@
 Libs: -L${libdir} -lgnuradio-wavelet
 Cflags: -I${includedir}

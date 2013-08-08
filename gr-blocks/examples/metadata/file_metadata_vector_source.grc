@@ -84,10 +84,10 @@
     </param>
   </block>
   <block>
-    <key>gr_file_sink</key>
+    <key>blocks_file_sink</key>
     <param>
       <key>id</key>
-      <value>gr_file_sink_1</value>
+      <value>blocks_file_sink_1</value>
     </param>
     <param>
       <key>_enabled</key>
@@ -119,10 +119,10 @@
     </param>
   </block>
   <block>
-    <key>gr_tag_debug</key>
+    <key>blocks_tag_debug</key>
     <param>
       <key>id</key>
-      <value>gr_tag_debug_0</value>
+      <value>blocks_tag_debug_0</value>
     </param>
     <param>
       <key>_enabled</key>
@@ -232,10 +232,10 @@
     </param>
   </block>
   <block>
-    <key>gr_throttle</key>
+    <key>blocks_throttle</key>
     <param>
       <key>id</key>
-      <value>gr_throttle_0</value>
+      <value>blocks_throttle_0</value>
     </param>
     <param>
       <key>_enabled</key>
@@ -306,14 +306,14 @@
     </param>
   </block>
   <connection>
-    <source_block_id>gr_throttle_0</source_block_id>
-    <sink_block_id>gr_file_sink_1</sink_block_id>
+    <source_block_id>blocks_throttle_0</source_block_id>
+    <sink_block_id>blocks_file_sink_1</sink_block_id>
     <source_key>0</source_key>
     <sink_key>0</sink_key>
   </connection>
   <connection>
-    <source_block_id>gr_throttle_0</source_block_id>
-    <sink_block_id>gr_tag_debug_0</sink_block_id>
+    <source_block_id>blocks_throttle_0</source_block_id>
+    <sink_block_id>blocks_tag_debug_0</sink_block_id>
     <source_key>0</source_key>
     <sink_key>0</sink_key>
   </connection>
@@ -324,14 +324,14 @@
     <sink_key>0</sink_key>
   </connection>
   <connection>
-    <source_block_id>gr_throttle_0</source_block_id>
+    <source_block_id>blocks_throttle_0</source_block_id>
     <sink_block_id>blocks_vector_to_stream_0</sink_block_id>
     <source_key>0</source_key>
     <sink_key>0</sink_key>
   </connection>
   <connection>
     <source_block_id>blocks_file_meta_source_0</source_block_id>
-    <sink_block_id>gr_throttle_0</sink_block_id>
+    <sink_block_id>blocks_throttle_0</sink_block_id>
     <source_key>0</source_key>
     <sink_key>0</sink_key>
   </connection>

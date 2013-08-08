@@ -1,5 +1,5 @@
 /*
- * Copyright 2011 Free Software Foundation, Inc.
+ * Copyright 2011,2013 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -37,9 +37,11 @@
  */
 
 // Include header files for each block used in flowgraph
-#include <gr_top_block.h>
-#include <gr_sig_source_f.h>
-#include <gr_audio_sink.h>
+#include <gnuradio/top_block.h>
+#include <gnuradio/analog/sig_source_f.h>
+#include <gnuradio/audio/sink.h>
+
+using namespace gr;
 
 int main(int argc, char **argv)
 {
@@ -47,16 +49,16 @@ int main(int argc, char **argv)
   float ampl = 0.1;		// Don't exceed 0.5 or clipping will occur
 
   // Construct a top block that will contain flowgraph blocks.  Alternatively,
-  // one may create a derived class from gr_top_block and hold instantiated blocks
+  // one may create a derived class from top_block and hold instantiated blocks
   // as member data for later manipulation.
-  gr_top_block_sptr tb = gr_make_top_block("dial_tone");
+  top_block_sptr tb = make_top_block("dial_tone");
 
   // Construct a real-valued signal source for each tone, at given sample rate
-  gr_sig_source_f_sptr src0 = gr_make_sig_source_f(rate, GR_SIN_WAVE, 350, ampl);
-  gr_sig_source_f_sptr src1 = gr_make_sig_source_f(rate, GR_SIN_WAVE, 440, ampl);
+  analog::sig_source_f::sptr src0 = analog::sig_source_f::make(rate, analog::GR_SIN_WAVE, 350, ampl);
+  analog::sig_source_f::sptr src1 = analog::sig_source_f::make(rate, analog::GR_SIN_WAVE, 440, ampl);
 
   // Construct an audio sink to accept audio tones
-  audio_sink::sptr sink = audio_make_sink(rate);
+  audio::sink::sptr sink = audio::sink::make(rate);
 
   // Connect output #0 of src0 to input #0 of sink (left channel)
   tb->connect(src0, 0, sink, 0);

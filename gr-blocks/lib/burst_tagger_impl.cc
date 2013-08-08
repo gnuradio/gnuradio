@@ -25,7 +25,7 @@
 #endif
 
 #include "burst_tagger_impl.h"
-#include <gr_io_signature.h>
+#include <gnuradio/io_signature.h>
 #include <string.h>
 
 namespace gr {
@@ -39,21 +39,21 @@ namespace gr {
     }
 
     burst_tagger_impl::burst_tagger_impl(size_t itemsize)
-      : gr_sync_block("burst_tagger",
-                      gr_make_io_signature2(2, 2, itemsize, sizeof(short)),
-                      gr_make_io_signature(1, 1, itemsize)),
+      : sync_block("burst_tagger",
+                      io_signature::make2(2, 2, itemsize, sizeof(short)),
+                      io_signature::make(1, 1, itemsize)),
         d_itemsize(itemsize), d_state(false)
     {
       std::stringstream str;
       str << name() << unique_id();
 
-      d_true_key = pmt::pmt_string_to_symbol("burst");
+      d_true_key = pmt::string_to_symbol("burst");
       d_true_value = pmt::PMT_T;
 
-      d_false_key = pmt::pmt_string_to_symbol("burst");
+      d_false_key = pmt::string_to_symbol("burst");
       d_false_value = pmt::PMT_F;
 
-      d_id  = pmt::pmt_string_to_symbol(str.str());
+      d_id  = pmt::string_to_symbol(str.str());
     }
 
     burst_tagger_impl::~burst_tagger_impl()
@@ -63,7 +63,7 @@ namespace gr {
     void
     burst_tagger_impl::set_true_tag(const std::string &key, bool value)
     {
-      d_true_key = pmt::pmt_string_to_symbol(key);
+      d_true_key = pmt::string_to_symbol(key);
       if(value == true) {
         d_true_value = pmt::PMT_T;
       }
@@ -75,7 +75,7 @@ namespace gr {
     void
     burst_tagger_impl::set_false_tag (const std::string &key, bool value)
     {
-      d_false_key = pmt::pmt_string_to_symbol(key);
+      d_false_key = pmt::string_to_symbol(key);
       if(value == true) {
         d_false_value = pmt::PMT_T;
       }

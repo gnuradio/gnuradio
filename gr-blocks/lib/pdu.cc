@@ -24,7 +24,7 @@
 #include "config.h"
 #endif
 
-#include <blocks/pdu.h>
+#include <gnuradio/blocks/pdu.h>
 
 namespace gr {
   namespace blocks {
@@ -50,26 +50,26 @@ namespace gr {
       {
 	switch(type) {
 	case byte_t:
-	  return pmt::pmt_is_u8vector(v);
+	  return pmt::is_u8vector(v);
 	case float_t:
-	  return pmt::pmt_is_f32vector(v);
+	  return pmt::is_f32vector(v);
 	case complex_t:
-	  return pmt::pmt_is_c32vector(v);
+	  return pmt::is_c32vector(v);
 	default:
 	  throw std::runtime_error("bad PDU type");
 	}
       }
 
       pmt::pmt_t
-      make_vector(vector_type type, const uint8_t *buf, size_t items)
+      make_pdu_vector(vector_type type, const uint8_t *buf, size_t items)
       {
 	switch(type) {
 	case byte_t:
-	  return pmt::pmt_init_u8vector(items, buf);
+	  return pmt::init_u8vector(items, buf);
 	case float_t:
-	  return pmt::pmt_init_f32vector(items, (const float *)buf);
+	  return pmt::init_f32vector(items, (const float *)buf);
 	case complex_t:
-	  return pmt::pmt_init_c32vector(items, (const gr_complex *)buf);
+	  return pmt::init_c32vector(items, (const gr_complex *)buf);
 	default:
 	  throw std::runtime_error("bad PDU type");
 	}
@@ -78,11 +78,11 @@ namespace gr {
       vector_type
       type_from_pmt(pmt::pmt_t vector)
       {
-	if(pmt_is_u8vector(vector))
+	if(pmt::is_u8vector(vector))
 	  return byte_t;
-	if(pmt_is_f32vector(vector))
+	if(pmt::is_f32vector(vector))
 	  return float_t;
-	if(pmt_is_c32vector(vector))
+	if(pmt::is_c32vector(vector))
 	  return complex_t;
 	throw std::runtime_error("bad PDU type");
       }

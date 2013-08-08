@@ -25,23 +25,23 @@
 #endif
 
 #include "agc_ff_impl.h"
-#include <gr_io_signature.h>
+#include <gnuradio/io_signature.h>
 
 namespace gr {
   namespace analog {
 
     agc_ff::sptr
-    agc_ff::make(float rate, float reference, float gain, float max_gain)
+    agc_ff::make(float rate, float reference, float gain)
     {
       return gnuradio::get_initial_sptr
-	(new agc_ff_impl(rate, reference, gain, max_gain));
+	(new agc_ff_impl(rate, reference, gain));
     }
 
-    agc_ff_impl::agc_ff_impl(float rate, float reference, float gain, float max_gain)
-      : gr_sync_block("agc_ff",
-		      gr_make_io_signature(1, 1, sizeof(float)),
-		      gr_make_io_signature(1, 1, sizeof(float))),
-	kernel::agc_ff(rate, reference, gain, max_gain)
+    agc_ff_impl::agc_ff_impl(float rate, float reference, float gain)
+      : sync_block("agc_ff",
+		      io_signature::make(1, 1, sizeof(float)),
+		      io_signature::make(1, 1, sizeof(float))),
+	kernel::agc_ff(rate, reference, gain, 65536)
     {
     }
 

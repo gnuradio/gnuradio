@@ -19,7 +19,7 @@
 Import additional python modules into the namespace.
 
 Examples:
-from gnuradio.gr import firdes
+from gnuradio.filter import firdes
 import math,cmath
 from math import pi
 	</doc>

@@ -31,7 +31,7 @@ file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/generate_helper.py "
 #!${PYTHON_EXECUTABLE}
 
 import sys, os, re
-sys.path.append('${GR_CORE_PYTHONPATH}')
+sys.path.append('${GR_RUNTIME_PYTHONPATH}')
 os.environ['srcdir'] = '${CMAKE_CURRENT_SOURCE_DIR}'
 os.chdir('${CMAKE_CURRENT_BINARY_DIR}')
 
@@ -91,8 +91,8 @@ endmacro(expand_cc_h_impl)
 # Invoke macro to generate various sources
 ########################################################################
 expand_cc_h_impl(add_XX             ss ii cc)
-expand_cc_h_impl(add_const_XX       ss ii ff cc)
-expand_cc_h_impl(add_const_vXX      ss ii ff cc)
+expand_cc_h_impl(add_const_XX       bb ss ii ff cc)
+expand_cc_h_impl(add_const_vXX      bb ss ii ff cc)
 expand_cc_h_impl(and_XX             bb ss ii)
 expand_cc_h_impl(and_const_XX       bb ss ii)
 expand_cc_h_impl(argmax_XX          fs is ss)
@@ -126,13 +126,17 @@ include_directories(
     ${CMAKE_CURRENT_BINARY_DIR}
     ${CMAKE_CURRENT_BINARY_DIR}/../include
     ${GR_BLOCKS_INCLUDE_DIRS}
-    ${GNURADIO_CORE_INCLUDE_DIRS}
+    ${GNURADIO_RUNTIME_INCLUDE_DIRS}
     ${VOLK_INCLUDE_DIRS}
-    ${GRUEL_INCLUDE_DIRS}
     ${Boost_INCLUDE_DIRS}
 )
 
 link_directories(${Boost_LIBRARY_DIRS})
+
+if(ENABLE_GR_CTRLPORT)
+  ADD_DEFINITIONS(-DGR_CTRLPORT)
+  include_directories(${ICE_INCLUDE_DIR})
+endif(ENABLE_GR_CTRLPORT)
 
 ########################################################################
 # Setup library
@@ -205,6 +209,7 @@ list(APPEND gr_blocks_sources
     tag_debug_impl.cc
     pdu_to_tagged_stream_impl.cc
     peak_detector2_fb_impl.cc
+    random_pdu_impl.cc
     plateau_detector_fb_impl.cc
     probe_rate_impl.cc
     regenerate_bb_impl.cc
@@ -225,6 +230,7 @@ list(APPEND gr_blocks_sources
     stretch_ff_impl.cc
     tagged_file_sink_impl.cc
     tagged_stream_to_pdu_impl.cc
+    tags_strobe_impl.cc
     threshold_ff_impl.cc
     throttle_impl.cc
     transcendental_impl.cc
@@ -244,6 +250,17 @@ list(APPEND gr_blocks_sources
     wavfile_source_impl.cc
 )
 
+if(ENABLE_GR_CTRLPORT)
+list(APPEND gr_blocks_sources
+  ctrlport_probe_c_impl.cc
+  ctrlport_probe2_c_impl.cc
+  ctrlport_probe2_f_impl.cc
+  ctrlport_probe2_s_impl.cc
+  ctrlport_probe2_i_impl.cc
+  ctrlport_probe2_b_impl.cc
+)
+endif(ENABLE_GR_CTRLPORT)
+
 #Add Windows DLL resource file if using MSVC
 IF(MSVC)
     include(${CMAKE_SOURCE_DIR}/cmake/Modules/GrVersion.cmake)
@@ -259,7 +276,7 @@ IF(MSVC)
 ENDIF(MSVC)
 
 list(APPEND blocks_libs
-    gnuradio-core
+    gnuradio-runtime
     volk
     ${Boost_LIBRARIES}
     ${BLOCKS_LIBRARIES}
@@ -274,18 +291,22 @@ target_link_libraries(gnuradio-blocks ${blocks_libs})
 GR_LIBRARY_FOO(gnuradio-blocks RUNTIME_COMPONENT "blocks_runtime" DEVEL_COMPONENT "blocks_devel")
 
 ########################################################################
-# QA C++ Code for gr-filter
+# QA C++ Code for gr-blocks
 ########################################################################
 if(ENABLE_TESTING)
   include(GrTest)
 
   include_directories(
-    ${GR_FILTER_INCLUDE_DIRS}
+    ${GR_BLOCKS_INCLUDE_DIRS}
     ${CPPUNIT_INCLUDE_DIRS})
   link_directories(${CPPUNIT_LIBRARY_DIRS})
 
   list(APPEND test_gr_blocks_sources
     ${CMAKE_CURRENT_SOURCE_DIR}/test_gr_blocks.cc
+    ${CMAKE_CURRENT_SOURCE_DIR}/qa_gr_block.cc
+    ${CMAKE_CURRENT_SOURCE_DIR}/qa_gr_top_block.cc
+    ${CMAKE_CURRENT_SOURCE_DIR}/qa_gr_hier_block2.cc
+    ${CMAKE_CURRENT_SOURCE_DIR}/qa_gr_hier_block2_derived.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/qa_blocks.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/qa_block_tags.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/qa_rotator.cc
@@ -297,11 +318,11 @@ if(ENABLE_TESTING)
 
   target_link_libraries(
     test-gr-blocks
-    gnuradio-core
+    gnuradio-runtime
     gnuradio-blocks
-    gnuradio-filter
     ${Boost_LIBRARIES}
     ${CPPUNIT_LIBRARIES}
+    ${LOG4CPP_LIBRARIES}
   )
 
   GR_ADD_TEST(test_gr_blocks test-gr-blocks)

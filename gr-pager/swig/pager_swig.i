@@ -1,5 +1,5 @@
 /*
- * Copyright 2005,2006,2009 Free Software Foundation, Inc.
+ * Copyright 2005,2006,2009,2012 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -19,21 +19,29 @@
  * Boston, MA 02110-1301, USA.
  */
 
+#define PAGER_API
+
 %include "gnuradio.i"
 
 //load generated python docstrings
 %include "pager_swig_doc.i"
 
 %{
-#include "pager_flex_frame.h"
-#include "pager_slicer_fb.h"
-#include "pager_flex_sync.h"
-#include "pager_flex_deinterleave.h"
-#include "pager_flex_parse.h"
+#include "gnuradio/pager/flex_frame.h"
+#include "gnuradio/pager/slicer_fb.h"
+#include "gnuradio/pager/flex_sync.h"
+#include "gnuradio/pager/flex_deinterleave.h"
+#include "gnuradio/pager/flex_parse.h"
 %}
 
-%include "pager_flex_frame.i"
-%include "pager_slicer_fb.i"
-%include "pager_flex_sync.i"
-%include "pager_flex_deinterleave.i"
-%include "pager_flex_parse.i"
+%include "gnuradio/pager/flex_frame.h"
+%include "gnuradio/pager/slicer_fb.h"
+%include "gnuradio/pager/flex_sync.h"
+%include "gnuradio/pager/flex_deinterleave.h"
+%include "gnuradio/pager/flex_parse.h"
+
+GR_SWIG_BLOCK_MAGIC2(pager, flex_frame);
+GR_SWIG_BLOCK_MAGIC2(pager, slicer_fb);
+GR_SWIG_BLOCK_MAGIC2(pager, flex_sync);
+GR_SWIG_BLOCK_MAGIC2(pager, flex_deinterleave);
+GR_SWIG_BLOCK_MAGIC2(pager, flex_parse);

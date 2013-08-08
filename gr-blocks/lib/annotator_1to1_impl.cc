@@ -25,7 +25,7 @@
 #endif
 
 #include "annotator_1to1_impl.h"
-#include <gr_io_signature.h>
+#include <gnuradio/io_signature.h>
 #include <string.h>
 #include <iostream>
 #include <iomanip>
@@ -41,9 +41,9 @@ namespace gr {
     }
 
     annotator_1to1_impl::annotator_1to1_impl(int when, size_t sizeof_stream_item)
-      : gr_sync_block("annotator_1to1",
-                      gr_make_io_signature(1, -1, sizeof_stream_item),
-                      gr_make_io_signature(1, -1, sizeof_stream_item)),
+      : sync_block("annotator_1to1",
+                      io_signature::make(1, -1, sizeof_stream_item),
+                      io_signature::make(1, -1, sizeof_stream_item)),
         d_itemsize(sizeof_stream_item), d_when((uint64_t)when)
     {
       set_tag_propagation_policy(TPP_ONE_TO_ONE);
@@ -72,18 +72,18 @@ namespace gr {
       for(int i = 0; i < ninputs; i++) {
         abs_N = nitems_read(i);
 
-        std::vector<gr_tag_t> all_tags;
+        std::vector<tag_t> all_tags;
         get_tags_in_range(all_tags, i, abs_N, abs_N + noutput_items);
 
-        std::vector<gr_tag_t>::iterator itr;
+        std::vector<tag_t>::iterator itr;
         for(itr = all_tags.begin(); itr != all_tags.end(); itr++) {
           d_stored_tags.push_back(*itr);
         }
       }
 
       // Storing the current noutput_items as the value to the "noutput_items" key
-      pmt::pmt_t srcid = pmt::pmt_string_to_symbol(str.str());
-      pmt::pmt_t key = pmt::pmt_string_to_symbol("seq");
+      pmt::pmt_t srcid = pmt::string_to_symbol(str.str());
+      pmt::pmt_t key = pmt::string_to_symbol("seq");
 
       // Work does nothing to the data stream; just copy all inputs to outputs
       // Adds a new tag when the number of items read is a multiple of d_when
@@ -95,7 +95,7 @@ namespace gr {
         // specifically designed to test the 1-to-1 propagation policy.
         for(int i = 0; i < std::min(noutputs, ninputs); i++) {
           if(abs_N % d_when == 0) {
-            pmt::pmt_t value = pmt::pmt_from_uint64(d_tag_counter++);
+            pmt::pmt_t value = pmt::from_uint64(d_tag_counter++);
             add_item_tag(i, abs_N, key, value, srcid);
           }
 

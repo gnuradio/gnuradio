@@ -23,7 +23,7 @@
 #ifndef INCLUDED_GR_FILE_DESCRIPTOR_SOURCE_IMPL_H
 #define INCLUDED_GR_FILE_DESCRIPTOR_SOURCE_IMPL_H
 
-#include <blocks/file_descriptor_source.h>
+#include <gnuradio/blocks/file_descriptor_source.h>
 
 namespace gr {
   namespace blocks {

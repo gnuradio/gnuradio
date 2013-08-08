@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2008,2009,2010,2011 Free Software Foundation, Inc.
+ * Copyright 2008-2012 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -23,12 +23,14 @@
 #ifndef TIME_DOMAIN_DISPLAY_PLOT_C
 #define TIME_DOMAIN_DISPLAY_PLOT_C
 
-#include <TimeDomainDisplayPlot.h>
+#include <gnuradio/qtgui/TimeDomainDisplayPlot.h>
 
 #include <qwt_scale_draw.h>
 #include <qwt_legend.h>
 #include <QColor>
+#include <cmath>
 #include <iostream>
+#include <volk/volk.h>
 
 class TimePrecisionClass
 {
@@ -42,12 +44,12 @@ public:
   {
   }
 
-  virtual unsigned int GetTimePrecision() const
+  virtual unsigned int getTimePrecision() const
   {
     return _timePrecision;
   }
 
-  virtual void SetTimePrecision(const unsigned int newPrecision)
+  virtual void setTimePrecision(const unsigned int newPrecision)
   {
     _timePrecision = newPrecision;
   }
@@ -73,18 +75,29 @@ public:
     updateDisplay();
   }
 
-  void SetUnitType(const std::string &type)
+  void setUnitType(const std::string &type)
   {
     _unitType = type;
   }
 
 protected:
   using QwtPlotZoomer::trackerText;
-  virtual QwtText trackerText( const QwtDoublePoint& p ) const
+  virtual QwtText trackerText( const QPoint& p ) const
   {
-    QwtText t(QString("%1 %2, %3 V").arg(p.x(), 0, 'f', GetTimePrecision()).
-	      arg(_unitType.c_str()).
-	      arg(p.y(), 0, 'f', 4));
+    QwtText t;
+    QwtDoublePoint dp = QwtPlotZoomer::invTransform(p);
+    if((dp.y() > 0.0001) && (dp.y() < 10000)) {
+      t.setText(QString("%1 %2, %3 V").
+		arg(dp.x(), 0, 'f', getTimePrecision()).
+		arg(_unitType.c_str()).
+		arg(dp.y(), 0, 'f', 4));
+    }
+    else {
+      t.setText(QString("%1 %2, %3 V").
+		arg(dp.x(), 0, 'f', getTimePrecision()).
+		arg(_unitType.c_str()).
+		arg(dp.y(), 0, 'e', 4));
+    }
 
     return t;
   }
@@ -93,11 +106,13 @@ private:
   std::string _unitType;
 };
 
-TimeDomainDisplayPlot::TimeDomainDisplayPlot(int nplots, QWidget* parent)
-  : QwtPlot(parent), _nplots(nplots)
-{
-  resize(parent->width(), parent->height());
 
+/***********************************************************************
+ * Main Time domain plotter widget
+ **********************************************************************/
+TimeDomainDisplayPlot::TimeDomainDisplayPlot(int nplots, QWidget* parent)
+  : DisplayPlot(nplots, parent)
+{
   _numPoints = 1024;
   _xAxisPoints = new double[_numPoints];
   memset(_xAxisPoints, 0x0, _numPoints*sizeof(double));
@@ -108,22 +123,17 @@ TimeDomainDisplayPlot::TimeDomainDisplayPlot(int nplots, QWidget* parent)
   _zoomer->setSelectionFlags(QwtPicker::RectSelection | QwtPicker::DragSelection);
 #endif
 
-  // Disable polygon clipping
-#if QWT_VERSION < 0x060000
-  QwtPainter::setDeviceClipping(false);
-#else
-  QwtPainter::setPolylineSplitting(false);
-#endif
+  _zoomer->setMousePattern(QwtEventPattern::MouseSelect2,
+			   Qt::RightButton, Qt::ControlModifier);
+  _zoomer->setMousePattern(QwtEventPattern::MouseSelect3,
+			   Qt::RightButton);
 
-#if QWT_VERSION < 0x060000
-  // We don't need the cache here
-  canvas()->setPaintAttribute(QwtPlotCanvas::PaintCached, false);
-  canvas()->setPaintAttribute(QwtPlotCanvas::PaintPacked, false);
-#endif
+  const QColor c(Qt::darkRed);
+  _zoomer->setRubberBandPen(c);
+  _zoomer->setTrackerPen(c);
 
-  QPalette palette;
-  palette.setColor(canvas()->backgroundRole(), QColor("white"));
-  canvas()->setPalette(palette);
+  d_semilogx = false;
+  d_semilogy = false;
 
   setAxisScaleEngine(QwtPlot::xBottom, new QwtLinearScaleEngine);
   setXaxis(0, _numPoints);
@@ -132,7 +142,7 @@ TimeDomainDisplayPlot::TimeDomainDisplayPlot(int nplots, QWidget* parent)
   setAxisScaleEngine(QwtPlot::yLeft, new QwtLinearScaleEngine);
   setYaxis(-2.0, 2.0);
   setAxisTitle(QwtPlot::yLeft, "Amplitude");
-
+  
   QList<QColor> colors;
   colors << QColor(Qt::blue) << QColor(Qt::red) << QColor(Qt::green)
 	 << QColor(Qt::black) << QColor(Qt::cyan) << QColor(Qt::magenta)
@@ -148,58 +158,22 @@ TimeDomainDisplayPlot::TimeDomainDisplayPlot(int nplots, QWidget* parent)
     _plot_curve.push_back(new QwtPlotCurve(QString("Data %1").arg(i)));
     _plot_curve[i]->attach(this);
     _plot_curve[i]->setPen(QPen(colors[i]));
+    _plot_curve[i]->setRenderHint(QwtPlotItem::RenderAntialiased);
 
+    QwtSymbol *symbol = new QwtSymbol(QwtSymbol::NoSymbol, QBrush(colors[i]),
+				      QPen(colors[i]), QSize(7,7));
+    
 #if QWT_VERSION < 0x060000
     _plot_curve[i]->setRawData(_xAxisPoints, _dataPoints[i], _numPoints);
+    _plot_curve[i]->setSymbol(*symbol);
 #else
     _plot_curve[i]->setRawSamples(_xAxisPoints, _dataPoints[i], _numPoints);
+    _plot_curve[i]->setSymbol(symbol);
 #endif
-}
+  }
 
   _sampleRate = 1;
   _resetXAxisPoints();
-
-  _zoomer->setMousePattern(QwtEventPattern::MouseSelect2,
-			   Qt::RightButton, Qt::ControlModifier);
-  _zoomer->setMousePattern(QwtEventPattern::MouseSelect3,
-			   Qt::RightButton);
-
-  _panner = new QwtPlotPanner(canvas());
-  _panner->setAxisEnabled(QwtPlot::yRight, false);
-  _panner->setMouseButton(Qt::MidButton);
-
-  // emit the position of clicks on widget
-  _picker = new QwtDblClickPlotPicker(canvas());
-
-#if QWT_VERSION < 0x060000
-  connect(_picker, SIGNAL(selected(const QwtDoublePoint &)),
-	  this, SLOT(OnPickerPointSelected(const QwtDoublePoint &)));
-#else
-  connect(_picker, SIGNAL(selected(const QPointF &)),
-	  this, SLOT(OnPickerPointSelected6(const QPointF &)));
-#endif
-
-  // Configure magnify on mouse wheel
-  _magnifier = new QwtPlotMagnifier(canvas());
-  _magnifier->setAxisEnabled(QwtPlot::xBottom, false);
-
-  // Avoid jumping when labels with more/less digits
-  // appear/disappear when scrolling vertically
-
-  const QFontMetrics fm(axisWidget(QwtPlot::yLeft)->font());
-  QwtScaleDraw *sd = axisScaleDraw(QwtPlot::yLeft);
-  sd->setMinimumExtent( fm.width("100.00") );
-
-  const QColor c(Qt::darkRed);
-  _zoomer->setRubberBandPen(c);
-  _zoomer->setTrackerPen(c);
-
-  QwtLegend* legendDisplay = new QwtLegend(this);
-  legendDisplay->setItemMode(QwtLegend::CheckableItem);
-  insertLegend(legendDisplay);
-
-  connect(this, SIGNAL( legendChecked(QwtPlotItem *, bool ) ),
-	  this, SLOT( LegendEntryChecked(QwtPlotItem *, bool ) ));
 }
 
 TimeDomainDisplayPlot::~TimeDomainDisplayPlot()
@@ -212,102 +186,123 @@ TimeDomainDisplayPlot::~TimeDomainDisplayPlot()
 }
 
 void
-TimeDomainDisplayPlot::setYaxis(double min, double max)
-{
-  setAxisScale(QwtPlot::yLeft, min, max);
-  _zoomer->setZoomBase();
-}
-
-void
-TimeDomainDisplayPlot::setXaxis(double min, double max)
-{
-  setAxisScale(QwtPlot::xBottom, min, max);
-  _zoomer->setZoomBase();
-}
-
-void
-TimeDomainDisplayPlot::setTitle(int which, QString title)
-{
-  _plot_curve[which]->setTitle(title);
-}
-
-void
-TimeDomainDisplayPlot::setColor(int which, QString color)
-{
-  _plot_curve[which]->setPen(QPen(color));
-}
-
-void TimeDomainDisplayPlot::replot()
+TimeDomainDisplayPlot::replot()
 {
   QwtPlot::replot();
 }
 
 void
-TimeDomainDisplayPlot::resizeSlot( QSize *s )
+TimeDomainDisplayPlot::plotNewData(const std::vector<double*> dataPoints,
+				   const int64_t numDataPoints,
+				   const double timeInterval)
 {
-  // -10 is to spare some room for the legend and x-axis label
-  resize(s->width()-10, s->height()-10);
-}
+  if(!_stop) {
+    if((numDataPoints > 0)) {
+      if(numDataPoints != _numPoints){
+	_numPoints = numDataPoints;
 
-void TimeDomainDisplayPlot::PlotNewData(const std::vector<double*> dataPoints,
-					const int64_t numDataPoints,
-					const double timeInterval)
-{
-  if((numDataPoints > 0)) {
-    if(numDataPoints != _numPoints){
-      _numPoints = numDataPoints;
+	delete[] _xAxisPoints;
+	_xAxisPoints = new double[_numPoints];
 
-      delete[] _xAxisPoints;
-      _xAxisPoints = new double[_numPoints];
-
-      for(int i = 0; i < _nplots; i++) {
-	delete[] _dataPoints[i];
-	_dataPoints[i] = new double[_numPoints];
+	for(int i = 0; i < _nplots; i++) {
+	  delete[] _dataPoints[i];
+	  _dataPoints[i] = new double[_numPoints];
 
 #if QWT_VERSION < 0x060000
-	_plot_curve[i]->setRawData(_xAxisPoints, _dataPoints[i], _numPoints);
+	  _plot_curve[i]->setRawData(_xAxisPoints, _dataPoints[i], _numPoints);
 #else
-	_plot_curve[i]->setRawSamples(_xAxisPoints, _dataPoints[i], _numPoints);
+	  _plot_curve[i]->setRawSamples(_xAxisPoints, _dataPoints[i], _numPoints);
 #endif
+	}
+
+	_resetXAxisPoints();
       }
 
-      setXaxis(0, numDataPoints);
-      _resetXAxisPoints();
-    }
+      for(int i = 0; i < _nplots; i++) {
+	if(d_semilogy) {
+	  for(int n = 0; n < numDataPoints; n++)
+	    _dataPoints[i][n] = fabs(dataPoints[i][n]);
+	}
+	else {
+	  memcpy(_dataPoints[i], dataPoints[i], numDataPoints*sizeof(double));
+	}
+      }
 
-    for(int i = 0; i < _nplots; i++) {
-      memcpy(_dataPoints[i], dataPoints[i], numDataPoints*sizeof(double));
-    }
+      if(_autoscale_state) {
+	double bottom=1e20, top=-1e20;
+	for(int n = 0; n < _nplots; n++) {
+	  for(int64_t point = 0; point < numDataPoints; point++) {
+	    if(_dataPoints[n][point] < bottom) {
+	      bottom = _dataPoints[n][point];
+	    }
+	    if(_dataPoints[n][point] > top) {
+	      top = _dataPoints[n][point];
+	    }
+	  }
+	}
+	_autoScale(bottom, top);
+      }      
 
-    replot();
+      replot();
+    }
   }
 }
 
-void TimeDomainDisplayPlot::_resetXAxisPoints()
+void
+TimeDomainDisplayPlot::_resetXAxisPoints()
 {
   double delt = 1.0/_sampleRate;
   for(long loc = 0; loc < _numPoints; loc++){
     _xAxisPoints[loc] = loc*delt;
   }
-  setAxisScale(QwtPlot::xBottom, 0, _numPoints*delt);
 
   // Set up zoomer base for maximum unzoom x-axis
   // and reset to maximum unzoom level
   QwtDoubleRect zbase = _zoomer->zoomBase();
-  zbase.setLeft(0);
+
+  if(d_semilogx) {
+    setAxisScale(QwtPlot::xBottom, 1e-1, _numPoints*delt);
+    zbase.setLeft(1e-1);
+  }
+  else {
+    setAxisScale(QwtPlot::xBottom, 0, _numPoints*delt);
+    zbase.setLeft(0);
+  }
+
   zbase.setRight(_numPoints*delt);
   _zoomer->zoom(zbase);
   _zoomer->setZoomBase(zbase);
   _zoomer->zoom(0);
-}
 
-void TimeDomainDisplayPlot::LegendEntryChecked(QwtPlotItem* plotItem, bool on)
-{
-  plotItem->setVisible(!on);
 }
 
 void
-TimeDomainDisplayPlot::SetSampleRate(double sr, double units,
+TimeDomainDisplayPlot::_autoScale(double bottom, double top)
+{
+  // Auto scale the y-axis with a margin of 20% (10 dB for log scale)
+  double _bot = bottom - fabs(bottom)*0.20;
+  double _top = top + fabs(top)*0.20;
+  if(d_semilogy) {
+    if(bottom > 0) {
+      setYaxis(_bot-10, _top+10);
+    }
+    else {
+      setYaxis(1e-3, _top+10);
+    }
+  }
+  else {
+    setYaxis(_bot, _top);
+  }
+}
+
+void
+TimeDomainDisplayPlot::setAutoScale(bool state)
+{
+  _autoscale_state = state;
+}
+
+void
+TimeDomainDisplayPlot::setSampleRate(double sr, double units,
 				     const std::string &strunits)
 {
   double newsr = sr/units;
@@ -320,26 +315,56 @@ TimeDomainDisplayPlot::SetSampleRate(double sr, double units,
     //double display_units = ceil(log10(units)/2.0);
     double display_units = 4;
     setAxisTitle(QwtPlot::xBottom, QString("Time (%1)").arg(strunits.c_str()));
-    ((TimeDomainDisplayZoomer*)_zoomer)->SetTimePrecision(display_units);
-    ((TimeDomainDisplayZoomer*)_zoomer)->SetUnitType(strunits);
+    ((TimeDomainDisplayZoomer*)_zoomer)->setTimePrecision(display_units);
+    ((TimeDomainDisplayZoomer*)_zoomer)->setUnitType(strunits);
   }
 }
 
-
 void
-TimeDomainDisplayPlot::OnPickerPointSelected(const QwtDoublePoint & p)
+TimeDomainDisplayPlot::stemPlot(bool en)
 {
-  QPointF point = p;
-  //fprintf(stderr,"OnPickerPointSelected %f %f\n", point.x(), point.y());
-  emit plotPointSelected(point);
+  if(en) {
+    for(int i = 0; i < _nplots; i++) {
+      _plot_curve[i]->setStyle(QwtPlotCurve::Sticks);
+      setLineMarker(i, QwtSymbol::Ellipse);
+    }
+  }
+  else {
+    for(int i = 0; i < _nplots; i++) {
+      _plot_curve[i]->setStyle(QwtPlotCurve::Lines);
+      setLineMarker(i, QwtSymbol::NoSymbol);
+    }
+  }
 }
 
 void
-TimeDomainDisplayPlot::OnPickerPointSelected6(const QPointF & p)
+TimeDomainDisplayPlot::setSemilogx(bool en)
 {
-  QPointF point = p;
-  //fprintf(stderr,"OnPickerPointSelected %f %f\n", point.x(), point.y());
-  emit plotPointSelected(point);
+  d_semilogx = en;
+  if(!d_semilogx) {
+    setAxisScaleEngine(QwtPlot::xBottom, new QwtLinearScaleEngine);
+  }
+  else {
+    setAxisScaleEngine(QwtPlot::xBottom, new QwtLog10ScaleEngine);
+  }
+  _resetXAxisPoints();
+}
+
+void
+TimeDomainDisplayPlot::setSemilogy(bool en)
+{
+  if(d_semilogy != en) {
+    d_semilogy = en;
+    double max = axisScaleDiv(QwtPlot::yLeft)->upperBound();
+    if(!d_semilogy) {
+      setAxisScaleEngine(QwtPlot::yLeft, new QwtLinearScaleEngine);
+      setYaxis(-pow(10.0, max/10.0), pow(10.0, max/10.0));
+    }
+    else {
+      setAxisScaleEngine(QwtPlot::yLeft, new QwtLog10ScaleEngine);
+      setYaxis(1e-10, 10.0*log10(max));
+    }
+  }
 }
 
 #endif /* TIME_DOMAIN_DISPLAY_PLOT_C */

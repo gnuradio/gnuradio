@@ -25,24 +25,25 @@
 #endif
 
 #include "pdu_to_tagged_stream_impl.h"
-#include <blocks/pdu.h>
-#include <gr_io_signature.h>
+#include <gnuradio/blocks/pdu.h>
+#include <gnuradio/io_signature.h>
 
 namespace gr {
   namespace blocks {
 
     pdu_to_tagged_stream::sptr
-    pdu_to_tagged_stream::make(pdu::vector_type type)
+    pdu_to_tagged_stream::make(pdu::vector_type type, const std::string& lengthtagname)
     {
-      return gnuradio::get_initial_sptr(new pdu_to_tagged_stream_impl(type));
+      return gnuradio::get_initial_sptr(new pdu_to_tagged_stream_impl(type, lengthtagname));
     }
 
-    pdu_to_tagged_stream_impl::pdu_to_tagged_stream_impl(pdu::vector_type type)
-      : gr_sync_block("pdu_to_tagged_stream",
-		      gr_make_io_signature(0, 0, 0),
-		      gr_make_io_signature(1, 1, pdu::itemsize(type))),
+    pdu_to_tagged_stream_impl::pdu_to_tagged_stream_impl(pdu::vector_type type, const std::string& lengthtagname)
+      : sync_block("pdu_to_tagged_stream",
+		      io_signature::make(0, 0, 0),
+		      io_signature::make(1, 1, pdu::itemsize(type))),
 	d_itemsize(pdu::itemsize(type)),
-	d_type(type)
+	d_type(type),
+    d_tag(pmt::mp(lengthtagname))
     {
       message_port_register_in(PDU_PORT_ID);
     }
@@ -68,48 +69,48 @@ namespace gr {
       if (noutput_items > 0) {
 
 	// grab a message if one exists
-	pmt::pmt_t msg(delete_head_blocking(PDU_PORT_ID));
+	pmt::pmt_t msg(delete_head_nowait(PDU_PORT_ID));
 	if (msg.get() == NULL)
 	  return nout;
 
 	// make sure type is valid
-	if (!pmt::pmt_is_pair(msg)) // TODO: implement pdu::is_valid()
+	if (!pmt::is_pair(msg)) // TODO: implement pdu::is_valid()
 	  throw std::runtime_error("received a malformed pdu message");
 	
 	// grab the components of the pdu message
-	pmt::pmt_t meta(pmt::pmt_car(msg));
-	pmt::pmt_t vect(pmt::pmt_cdr(msg));
+	pmt::pmt_t meta(pmt::car(msg));
+	pmt::pmt_t vect(pmt::cdr(msg));
 
 	// compute offset for output tag
 	uint64_t offset = nitems_written(0) + nout;
 
 	// add a tag for pdu length
-	add_item_tag(0, offset, PDU_LENGTH_TAG, pmt::pmt_from_long(pmt::pmt_length(vect)), pmt::mp(alias()));
+	add_item_tag(0, offset, d_tag, pmt::from_long(pmt::length(vect)), pmt::mp(alias()));
 
 	// if we recieved metadata add it as tags
-	if (!pmt_eq(meta, pmt::PMT_NIL) ) {
-	  pmt::pmt_t pair(pmt::pmt_dict_keys(meta));
+	if (!pmt::eq(meta, pmt::PMT_NIL) ) {
+	  pmt::pmt_t pair(pmt::dict_keys(meta));
 
-	  while (!pmt_eq(pair, pmt::PMT_NIL) ) {
-            pmt::pmt_t k(pmt::pmt_cdr(pair));
-            pmt::pmt_t v(pmt::pmt_dict_ref(meta, k, pmt::PMT_NIL));
+	  while (!pmt::eq(pair, pmt::PMT_NIL) ) {
+            pmt::pmt_t k(pmt::cdr(pair));
+            pmt::pmt_t v(pmt::dict_ref(meta, k, pmt::PMT_NIL));
             add_item_tag(0, offset, k, v, pmt::mp(alias()));
             }
         }
 
 	// copy vector output
-	size_t ncopy = std::min((size_t)noutput_items, (size_t)pmt::pmt_length(vect));
-	size_t nsave = pmt::pmt_length(vect) - ncopy;
+	size_t ncopy = std::min((size_t)noutput_items, (size_t)pmt::length(vect));
+	size_t nsave = pmt::length(vect) - ncopy;
  
 	// copy output
 	size_t io(0);
 	nout += ncopy;
-	memcpy(out, pmt_uniform_vector_elements(vect,io), ncopy*d_itemsize);
+	memcpy(out, uniform_vector_elements(vect,io), ncopy*d_itemsize);
 	
 	// save leftover items if needed for next work call
 	if (nsave > 0) {
 	  d_remain.resize(nsave*d_itemsize, 0);
-	  memcpy(&d_remain[0], pmt_uniform_vector_elements(vect,ncopy), nsave*d_itemsize);
+	  memcpy(&d_remain[0], uniform_vector_elements(vect,ncopy), nsave*d_itemsize);
         }
       }
       

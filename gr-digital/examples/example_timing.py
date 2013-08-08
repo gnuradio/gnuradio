@@ -1,6 +1,28 @@
 #!/usr/bin/env python
+#
+# Copyright 2011-2013 Free Software Foundation, Inc.
+# 
+# This file is part of GNU Radio
+# 
+# GNU Radio is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 3, or (at your option)
+# any later version.
+# 
+# GNU Radio is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+# 
+# You should have received a copy of the GNU General Public License
+# along with GNU Radio; see the file COPYING.  If not, write to
+# the Free Software Foundation, Inc., 51 Franklin Street,
+# Boston, MA 02110-1301, USA.
+# 
 
-from gnuradio import gr, digital
+from gnuradio import gr, digital, filter
+from gnuradio import blocks
+from gnuradio import channels
 from gnuradio import eng_notation
 from gnuradio.eng_option import eng_option
 from optparse import OptionParser
@@ -24,31 +46,31 @@ class example_timing(gr.top_block):
                  foffset, toffset, poffset, mode=0):
         gr.top_block.__init__(self)
 
-        rrc_taps = gr.firdes.root_raised_cosine(
+        rrc_taps = filter.firdes.root_raised_cosine(
             sps, sps, 1.0, rolloff, ntaps)
 
         gain = 2*scipy.pi/100.0
         nfilts = 32
-        rrc_taps_rx = gr.firdes.root_raised_cosine(
+        rrc_taps_rx = filter.firdes.root_raised_cosine(
             nfilts, sps*nfilts, 1.0, rolloff, ntaps*nfilts)
             
         data = 2.0*scipy.random.randint(0, 2, N) - 1.0
         data = scipy.exp(1j*poffset) * data
 
-        self.src = gr.vector_source_c(data.tolist(), False)
-        self.rrc = gr.interp_fir_filter_ccf(sps, rrc_taps)
-        self.chn = gr.channel_model(noise, foffset, toffset)
-        self.off = gr.fractional_interpolator_cc(0.20, 1.0)
+        self.src = blocks.vector_source_c(data.tolist(), False)
+        self.rrc = filter.interp_fir_filter_ccf(sps, rrc_taps)
+        self.chn = channels.channel_model(noise, foffset, toffset)
+        self.off = filter.fractional_resampler_cc(0.20, 1.0)
 
         if mode == 0:
-            self.clk = gr.pfb_clock_sync_ccf(sps, gain, rrc_taps_rx,
-                                             nfilts, nfilts//2, 3.5)
-            self.taps = self.clk.get_taps()
-            self.dtaps = self.clk.get_diff_taps()
+            self.clk = digital.pfb_clock_sync_ccf(sps, gain, rrc_taps_rx,
+                                                  nfilts, nfilts//2, 3.5)
+            self.taps = self.clk.taps()
+            self.dtaps = self.clk.diff_taps()
 
-            self.vsnk_err = gr.vector_sink_f()
-            self.vsnk_rat = gr.vector_sink_f()
-            self.vsnk_phs = gr.vector_sink_f()
+            self.vsnk_err = blocks.vector_sink_f()
+            self.vsnk_rat = blocks.vector_sink_f()
+            self.vsnk_phs = blocks.vector_sink_f()
 
             self.connect((self.clk,1), self.vsnk_err)
             self.connect((self.clk,2), self.vsnk_rat)
@@ -63,12 +85,12 @@ class example_timing(gr.top_block):
                                                     mu, gain_mu,
                                                     omega_rel_lim)
 
-            self.vsnk_err = gr.vector_sink_f()
+            self.vsnk_err = blocks.vector_sink_f()
 
             self.connect((self.clk,1), self.vsnk_err)
 
-        self.vsnk_src = gr.vector_sink_c()
-        self.vsnk_clk = gr.vector_sink_c()
+        self.vsnk_src = blocks.vector_sink_c()
+        self.vsnk_clk = blocks.vector_sink_c()
 
         self.connect(self.src, self.rrc, self.chn, self.off, self.clk, self.vsnk_clk)
         self.connect(self.off, self.vsnk_src)
@@ -164,6 +186,7 @@ def main():
 
         for i,d in enumerate(diff_taps):
             D = 20.0*scipy.log10(abs(fftpack.fftshift(fftpack.fft(d, 10000))))
+            #D = 20.0*scipy.log10(abs(scipy.fft(d, 10000)))
             s31.plot(t[i::nfilts].real, d, "-o")
             s32.plot(D)
 

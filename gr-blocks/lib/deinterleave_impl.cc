@@ -25,7 +25,7 @@
 #endif
 
 #include "deinterleave_impl.h"
-#include <gr_io_signature.h>
+#include <gnuradio/io_signature.h>
 
 namespace gr {
   namespace blocks {
@@ -36,9 +36,9 @@ namespace gr {
     }
 
     deinterleave_impl::deinterleave_impl(size_t itemsize)
-      : gr_sync_decimator("deinterleave",
-			  gr_make_io_signature (1, 1, itemsize),
-			  gr_make_io_signature (1, gr_io_signature::IO_INFINITE, itemsize),
+      : sync_decimator("deinterleave",
+			  io_signature::make (1, 1, itemsize),
+			  io_signature::make (1, io_signature::IO_INFINITE, itemsize),
 			  1),
 	d_itemsize(itemsize)
     {

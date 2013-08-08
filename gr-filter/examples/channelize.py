@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2009,2012 Free Software Foundation, Inc.
+# Copyright 2009,2012,2013 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -20,22 +20,29 @@
 # Boston, MA 02110-1301, USA.
 #
 
-from gnuradio import gr, blks2
+from gnuradio import gr
+from gnuradio import blocks
 from gnuradio import filter
 import sys, time
+
+try:
+    from gnuradio import analog
+except ImportError:
+    sys.stderr.write("Error: Program requires gr-analog.\n")
+    sys.exit(1)
 
 try:
     import scipy
     from scipy import fftpack
 except ImportError:
-    print "Error: Program requires scipy (see: www.scipy.org)."
+    sys.stderr.write("Error: Program requires scipy (see: www.scipy.org).\n")
     sys.exit(1)
 
 try:
     import pylab
     from pylab import mlab
 except ImportError:
-    print "Error: Program requires matplotlib (see: matplotlib.sourceforge.net)."
+    sys.stderr.write("Error: Program requires matplotlib (see: matplotlib.sourceforge.net).\n")
     sys.exit(1)
 
 class pfb_top_block(gr.top_block):
@@ -62,20 +69,20 @@ class pfb_top_block(gr.top_block):
         #   freqs lists the frequencies of the signals that get stored
         #   in the list "signals", which then get summed together
         self.signals = list()
-        self.add = gr.add_cc()
+        self.add = blocks.add_cc()
         freqs = [-70, -50, -30, -10, 10, 20, 40, 60, 80]
         for i in xrange(len(freqs)):
             f = freqs[i] + (M/2-M+i+1)*self._fs
-            self.signals.append(gr.sig_source_c(self._ifs, gr.GR_SIN_WAVE, f, 1))
+            self.signals.append(analog.sig_source_c(self._ifs, analog.GR_SIN_WAVE, f, 1))
             self.connect(self.signals[i], (self.add,i))
 
-        self.head = gr.head(gr.sizeof_gr_complex, self._N)
+        self.head = blocks.head(gr.sizeof_gr_complex, self._N)
 
         # Construct the channelizer filter
         self.pfb = filter.pfb.channelizer_ccf(self._M, self._taps, 1)
 
         # Construct a vector sink for the input signal to the channelizer
-        self.snk_i = gr.vector_sink_c()
+        self.snk_i = blocks.vector_sink_c()
 
         # Connect the blocks
         self.connect(self.add, self.head, self.pfb)
@@ -87,7 +94,7 @@ class pfb_top_block(gr.top_block):
         # Create a vector sink for each of M output channels of the filter and connect it
         self.snks = list()
         for i in xrange(self._M):
-            self.snks.append(gr.vector_sink_c())
+            self.snks.append(blocks.vector_sink_c())
             self.connect((self.pfb, i), self.snks[i])
 
 

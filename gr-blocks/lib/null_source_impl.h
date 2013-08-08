@@ -23,7 +23,7 @@
 #ifndef INCLUDED_GR_NULL_SOURCE_IMPL_H
 #define INCLUDED_GR_NULL_SOURCE_IMPL_H
 
-#include <blocks/null_source.h>
+#include <gnuradio/blocks/null_source.h>
 
 namespace gr {
   namespace blocks {

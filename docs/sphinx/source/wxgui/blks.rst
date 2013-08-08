@@ -1,6 +1,9 @@
 gnuradio.wxgui
 =====================
 
+.. autoblock:: gnuradio.wxgui.histo_sink_f
+.. autoblock:: gnuradio.wxgui.oscope_sink_f
+
 .. autopyblock:: gnuradio.wxgui.constsink_gl.const_sink_c
 .. autopyblock:: gnuradio.wxgui.fftsink2.fft_sink_c
 .. autopyblock:: gnuradio.wxgui.fftsink2.fft_sink_f

@@ -6,22 +6,22 @@ In the thread-per-block scheduler, you can set the block's core
 affinity. Each block can be pinned to a group cores or be set back
 to use the standard kernel scheduler.
 
-The implementation is done by adding new functions to the GRUEL
-library:
+The implementation is done by adding new functions to the threading
+section of the gnuradio-runtime library:
 
 \code
-  gr_thread_t get_current_thread_id();
+  gr::thread::gr_thread_t get_current_thread_id();
   void thread_bind_to_processor(unsigned int n);
   void thread_bind_to_processor(const std::vector<unsigned int> &mask);
-  void thread_bind_to_processor(gr_thread_t thread, unsigned int n);
-  void thread_bind_to_processor(gr_thread_t thread, const std::vector<unsigned int> &mask);
+  void thread_bind_to_processor(gr::thread::gr_thread_t thread, unsigned int n);
+  void thread_bind_to_processor(gr::thread::gr_thread_t thread, const std::vector<unsigned int> &mask);
   void thread_unbind();
-  void thread_unbind(gr_thread_t thread);
+  void thread_unbind(gr::thread::gr_thread_t thread);
 \endcode
 
 The ability to set a thread's affinity to a core or groups of cores is
 not implemented in the Boost thread library, and so we have made our
-own portability library. In particular, the gruel::gr_thread_t type is
+own portability library. In particular, the gr::thread::gr_thread_t type is
 defined as the thread type for the given system. The other functions
 are designed to be portable as well by calling the specific
 implementation for the thread affinity for a particular platform.
@@ -43,23 +43,57 @@ Each block has two new data members:
 
 - threaded: a boolean value that is true if the block is attached to a
   thread.
-- thread: a gruel::gr_thread_t handle to the block's thread.
+- thread: a gr::thread::gr_thread_t handle to the block's thread.
 
-A block can set and unset it's affinity at any time using the
+A block can set and unset its affinity at any time using the
 following member functions:
 
-- gr_block::set_processor_affinity(const std::vector<unsigned int> &mask)
-- gr_block::unset_processor_affinity()
+- gr::block::set_processor_affinity(const std::vector<int> &mask)
+- gr::block::unset_processor_affinity()
 
 Where \p mask is a vector of core numbers to set the thread's affinity
 to.
 
 The current core affinity can be retrieved using the member function:
  
-- gr_block::processor_affinity()
+- gr::block::processor_affinity()
 
 When set before the flowgraph is started, the scheduler will set the
 thread's affinity when it is started. When already running, the
 block's affinity will be immediately set.
+
+
+\subsection affinity_api_hier Setting Affinity for a gr::hier_block2
+
+A hierarchical block (gr::hier_block2) also has a concept of setting
+the block thread affinity. Because the hierarchical block itself does
+no work and just encapsulates a set of blocks, setting the
+hierarchical block's affinity individually sets all blocks inside it
+to that affinity setting.
+
+The gr::hier_block2 class supports the same API interface to the block
+thread affinity:
+
+- gr::hier_block2::set_processor_affinity(const std::vector<int> &mask)
+- gr::hier_block2::unset_processor_affinity()
+- gr::hier_block2::processor_affinity()
+
+Setting and unsetting the affinity does so recursively for every block
+in the hierarchical block. It is of course possible to individually set
+the affinity to any block underneath the hierarchical block. However,
+in this case, note that when asking for the current affinity value
+using 'processor_affinity()', the code returns the current processor
+affinity value of only the first block.
+
+
+\subsection affinity_api_grc GRC Access
+
+GRC supports the setting of the thread core affinity in a block's
+options. Each block now has a field 'Core Affinity' that accepts a
+vector (list) of integers and sets the affinity after the block is
+constructed.
+
+Note that GRC does not provide a callback function for changing the
+thread core affinity while the flowgraph is running.
 
 */

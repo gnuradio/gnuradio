@@ -23,7 +23,7 @@
 #ifndef INCLUDED_ANALOG_AGC_FF_IMPL_H
 #define INCLUDED_ANALOG_AGC_FF_IMPL_H
 
-#include <analog/agc_ff.h>
+#include <gnuradio/analog/agc_ff.h>
 
 namespace gr {
   namespace analog {
@@ -32,7 +32,7 @@ namespace gr {
     {
     public:
       agc_ff_impl(float rate = 1e-4, float reference = 1.0,
-		  float gain = 1.0, float max_gain = 0.0);
+		  float gain = 1.0);
       ~agc_ff_impl();
 
       float rate() const { return kernel::agc_ff::rate(); }

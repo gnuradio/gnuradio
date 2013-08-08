@@ -24,8 +24,8 @@
 #include <config.h>
 #endif
 
-#include <filter/fir_filter_with_buffer.h>
-#include <fft/fft.h>
+#include <gnuradio/filter/fir_filter_with_buffer.h>
+#include <gnuradio/fft/fft.h>
 #include <volk/volk.h>
 #include <algorithm>
 #include <cstdio>
@@ -287,7 +287,7 @@ namespace gr {
 
 	volk_32fc_x2_dot_prod_32fc_a(d_output, ar,
 				     d_aligned_taps[al],
-				     (ntaps()+al)*sizeof(gr_complex));
+				     (ntaps()+al));
 	return *d_output;
       }
 
@@ -310,7 +310,7 @@ namespace gr {
 
 	volk_32fc_x2_dot_prod_32fc_a(d_output, ar,
 				     d_aligned_taps[al],
-				     (ntaps()+al)*sizeof(gr_complex));
+				     (ntaps()+al));
 	return *d_output;
       }
 

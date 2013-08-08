@@ -61,10 +61,10 @@
     </param>
   </block>
   <block>
-    <key>gr_throttle</key>
+    <key>blocks_throttle</key>
     <param>
       <key>id</key>
-      <value>gr_throttle</value>
+      <value>blocks_throttle</value>
     </param>
     <param>
       <key>_enabled</key>
@@ -92,10 +92,10 @@
     </param>
   </block>
   <block>
-    <key>gr_add_xx</key>
+    <key>blocks_add_xx</key>
     <param>
       <key>id</key>
-      <value>gr_add_xx</value>
+      <value>blocks_add_xx</value>
     </param>
     <param>
       <key>_enabled</key>
@@ -311,10 +311,10 @@
     </param>
   </block>
   <block>
-    <key>random_source_x</key>
+    <key>analog_random_source_x</key>
     <param>
       <key>id</key>
-      <value>random_source_x</value>
+      <value>analog_random_source_x</value>
     </param>
     <param>
       <key>_enabled</key>
@@ -350,10 +350,10 @@
     </param>
   </block>
   <block>
-    <key>gr_noise_source_x</key>
+    <key>analog_noise_source_x</key>
     <param>
       <key>id</key>
-      <value>gr_noise_source_x</value>
+      <value>analog_noise_source_x</value>
     </param>
     <param>
       <key>_enabled</key>
@@ -365,7 +365,7 @@
     </param>
     <param>
       <key>noise_type</key>
-      <value>gr.GR_GAUSSIAN</value>
+      <value>analog.GR_GAUSSIAN</value>
     </param>
     <param>
       <key>amp</key>
@@ -385,10 +385,10 @@
     </param>
   </block>
   <block>
-    <key>gr_chunks_to_symbols_xx</key>
+    <key>digital_chunks_to_symbols_xx</key>
     <param>
       <key>id</key>
-      <value>gr_chunks_to_symbols_xx</value>
+      <value>digital_chunks_to_symbols_xx</value>
     </param>
     <param>
       <key>_enabled</key>
@@ -537,7 +537,7 @@
     </param>
     <param>
       <key>trig_mode</key>
-      <value>gr.gr_TRIG_MODE_AUTO</value>
+      <value>wxgui.TRIG_MODE_AUTO</value>
     </param>
     <param>
       <key>y_axis_label</key>
@@ -648,37 +648,37 @@
     <sink_key>0</sink_key>
   </connection>
   <connection>
-    <source_block_id>gr_throttle</source_block_id>
+    <source_block_id>blocks_throttle</source_block_id>
     <sink_block_id>blks2_error_rate</sink_block_id>
     <source_key>0</source_key>
     <sink_key>0</sink_key>
   </connection>
   <connection>
-    <source_block_id>gr_chunks_to_symbols_xx</source_block_id>
-    <sink_block_id>gr_add_xx</sink_block_id>
+    <source_block_id>digital_chunks_to_symbols_xx</source_block_id>
+    <sink_block_id>blocks_add_xx</sink_block_id>
     <source_key>0</source_key>
     <sink_key>0</sink_key>
   </connection>
   <connection>
-    <source_block_id>gr_noise_source_x</source_block_id>
-    <sink_block_id>gr_add_xx</sink_block_id>
+    <source_block_id>analog_noise_source_x</source_block_id>
+    <sink_block_id>blocks_add_xx</sink_block_id>
     <source_key>0</source_key>
     <sink_key>1</sink_key>
   </connection>
   <connection>
-    <source_block_id>random_source_x</source_block_id>
-    <sink_block_id>gr_throttle</sink_block_id>
+    <source_block_id>analog_random_source_x</source_block_id>
+    <sink_block_id>blocks_throttle</sink_block_id>
     <source_key>0</source_key>
     <sink_key>0</sink_key>
   </connection>
   <connection>
-    <source_block_id>random_source_x</source_block_id>
-    <sink_block_id>gr_chunks_to_symbols_xx</sink_block_id>
+    <source_block_id>analog_random_source_x</source_block_id>
+    <sink_block_id>digital_chunks_to_symbols_xx</sink_block_id>
     <source_key>0</source_key>
     <sink_key>0</sink_key>
   </connection>
   <connection>
-    <source_block_id>gr_add_xx</source_block_id>
+    <source_block_id>blocks_add_xx</source_block_id>
     <sink_block_id>wxgui_scopesink2_0</sink_block_id>
     <source_key>0</source_key>
     <sink_key>0</sink_key>
@@ -690,7 +690,7 @@
     <sink_key>1</sink_key>
   </connection>
   <connection>
-    <source_block_id>gr_add_xx</source_block_id>
+    <source_block_id>blocks_add_xx</source_block_id>
     <sink_block_id>digital_constellation_decoder_cb_0</sink_block_id>
     <source_key>0</source_key>
     <sink_key>0</sink_key>

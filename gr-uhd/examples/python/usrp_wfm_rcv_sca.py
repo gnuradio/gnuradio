@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2006,2007,2011 Free Software Foundation, Inc.
+# Copyright 2006,2007,2011,2012 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -50,7 +50,10 @@ OFDM.
 """
 
 
-from gnuradio import gr, optfir, audio, blks2, uhd
+from gnuradio import gr, audio, uhd
+from gnuradio import blocks
+from gnuradio import filter
+from gnuradio import analog
 from gnuradio.eng_option import eng_option
 from gnuradio.wxgui import slider, powermate
 from gnuradio.wxgui import stdgui2, fftsink2, form
@@ -121,19 +124,19 @@ class wfm_rx_sca_block (stdgui2.std_top_block):
         dev_rate = self.u.get_samp_rate()
 
         nfilts = 32
-        chan_coeffs = optfir.low_pass (nfilts,           # gain
-                                       nfilts*usrp_rate, # sampling rate
-                                       100e3,            # passband cutoff
-                                       140e3,            # stopband cutoff
-                                       0.1,              # passband ripple
-                                       60)               # stopband attenuation
+        chan_coeffs = filter.optfir.low_pass(nfilts,           # gain
+                                             nfilts*usrp_rate, # sampling rate
+                                             100e3,            # passband cutoff
+                                             140e3,            # stopband cutoff
+                                             0.1,              # passband ripple
+                                             60)               # stopband attenuation
         rrate = usrp_rate / dev_rate
-        self.chan_filt = blks2.pfb_arb_resampler_ccf(rrate, chan_coeffs, nfilts)
-
+        self.chan_filt = filter.pfb.arb_resampler_ccf(rrate, chan_coeffs, nfilts)
+        
         #Create demodulator block for Main FM Channel
 	max_dev = 75e3
         fm_demod_gain = demod_rate/(2*math.pi*max_dev)
-        self.fm_demod = gr.quadrature_demod_cf (fm_demod_gain)
+        self.fm_demod = analog.quadrature_demod_cf(fm_demod_gain)
 
         # Note - deemphasis is not applied to the Main FM Channel as
         # main audio is not decoded
@@ -143,20 +146,20 @@ class wfm_rx_sca_block (stdgui2.std_top_block):
         max_sca_dev = 6e3
 
 	# Create filter to get SCA channel we want
-        sca_chan_coeffs = gr.firdes.low_pass (1.0,                # gain
-                                              demod_rate,         # sampling rate
-                                              max_sca_dev,        # cutoff freq
-                                              max_sca_dev/3,      # trans. band
-                                              gr.firdes.WIN_HANN) # filter type
+        sca_chan_coeffs = filter.firdes.low_pass(1.0,                # gain
+                                                 demod_rate,         # sampling rate
+                                                 max_sca_dev,        # cutoff freq
+                                                 max_sca_dev/3,      # trans. band
+                                                 filter.firdes.WIN_HANN) # filter type
 
-        self.ddc = gr.freq_xlating_fir_filter_fcf(sca_chanfilt_decim, # decim rate
-                                                  sca_chan_coeffs,    # taps
-                                                  0,                  # freq translation amount (Gets set by the UI)
-                                                  demod_rate)   # input sample rate
+        self.ddc = filter.freq_xlating_fir_filter_fcf(sca_chanfilt_decim, # decim rate
+                                                      sca_chan_coeffs,    # taps
+                                                      0,                  # freq translation amount (Gets set by the UI)
+                                                      demod_rate)   # input sample rate
 
         #Create demodulator block for SCA Channel
         sca_demod_gain = sca_demod_rate/(2*math.pi*max_sca_dev)
-        self.fm_demod_sca = gr.quadrature_demod_cf (sca_demod_gain)
+        self.fm_demod_sca = analog.quadrature_demod_cf(sca_demod_gain)
 
 
         # SCA analog audio is bandwidth limited to 5 KHz
@@ -166,31 +169,31 @@ class wfm_rx_sca_block (stdgui2.std_top_block):
         sca_tau = 150e-6
 
         # compute FIR filter taps for SCA audio filter
-        audio_coeffs = gr.firdes.low_pass (1.0,                    # gain
-                                           sca_demod_rate,         # sampling rate
-                                           max_sca_audio_freq,     # cutoff freq
-                                           max_sca_audio_freq/2.5, # trans. band
-                                           gr.firdes.WIN_HAMMING)
+        audio_coeffs = filter.firdes.low_pass(1.0,                    # gain
+                                              sca_demod_rate,         # sampling rate
+                                              max_sca_audio_freq,     # cutoff freq
+                                              max_sca_audio_freq/2.5, # trans. band
+                                              filter.firdes.WIN_HAMMING)
 
         # input: float; output: float
-        self.audio_filter = gr.fir_filter_fff (audio_decim, audio_coeffs)
+        self.audio_filter = filter.fir_filter_fff(audio_decim, audio_coeffs)
 
 	# Create deemphasis block that is applied after SCA demodulation
-        self.deemph = blks2.fm_deemph (audio_rate, sca_tau)
+        self.deemph = analog.fm_deemph(audio_rate, sca_tau)
 
-        self.volume_control = gr.multiply_const_ff(self.vol)
+        self.volume_control = blocks.multiply_const_ff(self.vol)
 
         # sound card as final sink
-        self.audio_sink = audio.sink (int (audio_rate),
-                                      options.audio_output,
-                                      False)  # ok_to_block
+        self.audio_sink = audio.sink(int (audio_rate),
+                                     options.audio_output,
+                                     False)  # ok_to_block
 
         # now wire it all together
-        self.connect (self.u, self.chan_filt, self.fm_demod,
-                      self.ddc, self.fm_demod_sca)
-        self.connect (self.fm_demod_sca, self.audio_filter,
-                      self.deemph, self.volume_control,
-                      self.audio_sink)
+        self.connect(self.u, self.chan_filt, self.fm_demod,
+                     self.ddc, self.fm_demod_sca)
+        self.connect(self.fm_demod_sca, self.audio_filter,
+                     self.deemph, self.volume_control,
+                     self.audio_sink)
 
         self._build_gui(vbox, usrp_rate, demod_rate, sca_demod_rate, audio_rate)
 
@@ -357,7 +360,8 @@ class wfm_rx_sca_block (stdgui2.std_top_block):
         """
         Set the center frequency we're interested in.
 
-        @param target_freq: frequency in Hz
+        Args:
+            target_freq: frequency in Hz
         @rypte: bool
 
         Tuning is a two step process.  First we ask the front-end to

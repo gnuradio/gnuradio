@@ -32,8 +32,8 @@
 #include <winsock2.h>
 #endif
 
-#include <blocks/pdu.h>
-#include <gr_basic_block.h>
+#include <gnuradio/blocks/pdu.h>
+#include <gnuradio/basic_block.h>
 #include "stream_pdu_base.h"
 #include <boost/format.hpp>
 
@@ -57,11 +57,11 @@ namespace gr {
     }
 
     void
-    stream_pdu_base::start_rxthread(gr_basic_block *blk, pmt::pmt_t port)
+    stream_pdu_base::start_rxthread(basic_block *blk, pmt::pmt_t port)
     {
       d_blk = blk;
       d_port = port;
-      d_thread = gruel::thread(boost::bind(&stream_pdu_base::run, this));
+      d_thread = gr::thread::thread(boost::bind(&stream_pdu_base::run, this));
       d_started = true;
     }
 
@@ -87,8 +87,8 @@ namespace gr {
         if (result <= 0)
 	  throw std::runtime_error("stream_pdu_base, bad socket read!");
 
-        pmt::pmt_t vector = pmt::pmt_init_u8vector(result, &d_rxbuf[0]);       
-        pmt::pmt_t pdu = pmt::pmt_cons(pmt::PMT_NIL, vector);
+        pmt::pmt_t vector = pmt::init_u8vector(result, &d_rxbuf[0]);       
+        pmt::pmt_t pdu = pmt::cons(pmt::PMT_NIL, vector);
 
         d_blk->message_port_pub(d_port, pdu);
       } 
@@ -114,12 +114,12 @@ namespace gr {
     void
     stream_pdu_base::send(pmt::pmt_t msg)
     {
-      pmt::pmt_t vector = pmt::pmt_cdr(msg);
+      pmt::pmt_t vector = pmt::cdr(msg);
       size_t offset(0);
       size_t itemsize(pdu::itemsize(pdu::type_from_pmt(vector)));
-      int len(pmt::pmt_length(vector)*itemsize);
+      int len(pmt::length(vector)*itemsize);
     
-      const int rv = write(d_fd, pmt::pmt_uniform_vector_elements(vector, offset), len);
+      const int rv = write(d_fd, pmt::uniform_vector_elements(vector, offset), len);
       if (rv != len) {
         std::cerr << boost::format("WARNING: stream_pdu_base::send(pdu) write failed! (d_fd=%d, len=%d, rv=%d)")
 	  % d_fd % len % rv << std::endl;

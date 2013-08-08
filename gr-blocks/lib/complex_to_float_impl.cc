@@ -25,7 +25,7 @@
 #endif
 
 #include "complex_to_float_impl.h"
-#include <gr_io_signature.h>
+#include <gnuradio/io_signature.h>
 #include <volk/volk.h>
 
 namespace gr {
@@ -37,9 +37,9 @@ namespace gr {
     }
 
     complex_to_float_impl::complex_to_float_impl(size_t vlen)
-      : gr_sync_block("complex_to_float",
-		      gr_make_io_signature (1, 1, sizeof(gr_complex)*vlen),
-		      gr_make_io_signature (1, 2, sizeof(float)*vlen)),
+      : sync_block("complex_to_float",
+		      io_signature::make (1, 1, sizeof(gr_complex)*vlen),
+		      io_signature::make (1, 2, sizeof(float)*vlen)),
 	d_vlen(vlen)
     {
       const int alignment_multiple =
@@ -59,27 +59,12 @@ namespace gr {
 
       switch (output_items.size ()){
       case 1:
-	if(is_unaligned()) {
-	  for (int i = 0; i < noi; i++){
-	    out0[i] = in[i].real ();
-	  }
-	}
-	else {
-	  volk_32fc_deinterleave_real_32f_a(out0, in, noi);
-	}
+        volk_32fc_deinterleave_real_32f(out0, in, noi);
 	break;
 
       case 2:
 	out1 = (float *) output_items[1];
-	if(is_unaligned()) {
-	  for (int i = 0; i < noi; i++){
-	    out0[i] = in[i].real ();
-	    out1[i] = in[i].imag ();
-	  }
-	}
-	else {
-	  volk_32fc_deinterleave_32f_x2_a(out0, out1, in, noi);
-	}
+        volk_32fc_deinterleave_32f_x2(out0, out1, in, noi);
 	break;
 
       default:

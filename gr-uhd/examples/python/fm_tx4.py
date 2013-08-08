@@ -34,7 +34,8 @@ audio_to_file.py
 
 from gnuradio import gr, eng_notation
 from gnuradio import uhd
-from gnuradio import blks2
+from gnuradio import analog
+from gnuradio import blocks
 from gnuradio.eng_option import eng_option
 from optparse import OptionParser
 import math
@@ -55,26 +56,26 @@ class pipeline(gr.hier_block2):
                                 gr.io_signature(1, 1, gr.sizeof_gr_complex))
 
         try:
-            src = gr.file_source (gr.sizeof_float, filename, True)
+            src = blocks.file_source (gr.sizeof_float, filename, True)
         except RuntimeError:
             sys.stderr.write(("\nError: Could not open file '%s'\n\n" % \
                                   filename))
             sys.exit(1)
 
         print audio_rate, if_rate
-        fmtx = blks2.nbfm_tx (audio_rate, if_rate, max_dev=5e3, tau=75e-6)
+        fmtx = analog.nbfm_tx(audio_rate, if_rate, max_dev=5e3, tau=75e-6)
 
         # Local oscillator
-        lo = gr.sig_source_c (if_rate,        # sample rate
-                              gr.GR_SIN_WAVE, # waveform type
-                              lo_freq,        #frequency
-                              1.0,            # amplitude
-                              0)              # DC Offset
-        mixer = gr.multiply_cc ()
+        lo = analog.sig_source_c(if_rate,            # sample rate
+                                 analog.GR_SIN_WAVE, # waveform type
+                                 lo_freq,            # frequency
+                                 1.0,                # amplitude
+                                 0)                  # DC Offset
+        mixer = blocks.multiply_cc()
 
-        self.connect (src, fmtx, (mixer, 0))
-        self.connect (lo, (mixer, 1))
-        self.connect (mixer, self)
+        self.connect(src, fmtx, (mixer, 0))
+        self.connect(lo, (mixer, 1))
+        self.connect(mixer, self)
 
 class fm_tx_block(stdgui2.std_top_block):
     def __init__(self, frame, panel, vbox, argv):
@@ -141,7 +142,7 @@ class fm_tx_block(stdgui2.std_top_block):
         self.set_gain(options.gain)
         self.set_freq(options.freq)
 
-        self.sum = gr.add_cc ()
+        self.sum = blocks.add_cc ()
 
         # Instantiate N NBFM channels
         step = 25e3
@@ -153,7 +154,7 @@ class fm_tx_block(stdgui2.std_top_block):
                          self.audio_rate, self.usrp_rate)
             self.connect(t, (self.sum, i))
 
-        self.gain = gr.multiply_const_cc (1.0 / options.nchannels)
+        self.gain = blocks.multiply_const_cc (1.0 / options.nchannels)
 
         # connect it all
         self.connect (self.sum, self.gain)
@@ -179,7 +180,8 @@ class fm_tx_block(stdgui2.std_top_block):
         """
         Set the center frequency we're interested in.
 
-        @param target_freq: frequency in Hz
+        Args:
+            target_freq: frequency in Hz
         @rypte: bool
 
         Tuning is a two step process.  First we ask the front-end to

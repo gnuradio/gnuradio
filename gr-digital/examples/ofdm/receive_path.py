@@ -22,6 +22,7 @@
 from gnuradio import gr
 from gnuradio import eng_notation
 from gnuradio import digital
+from gnuradio import analog
 
 import copy
 import sys
@@ -51,7 +52,7 @@ class receive_path(gr.hier_block2):
         # Carrier Sensing Blocks
         alpha = 0.001
         thresh = 30   # in dB, will have to adjust
-        self.probe = gr.probe_avg_mag_sqrd_c(thresh,alpha)
+        self.probe = analog.probe_avg_mag_sqrd_c(thresh,alpha)
 
         self.connect(self, self.ofdm_rx)
         self.connect(self.ofdm_rx, self.probe)
@@ -77,8 +78,8 @@ class receive_path(gr.hier_block2):
         """
         Set carrier threshold.
 
-        @param threshold_in_db: set detection threshold
-        @type threshold_in_db:  float (dB)
+        Args:
+            threshold_in_db: set detection threshold (float (dB))
         """
         self.probe.set_threshold(threshold_in_db)
     

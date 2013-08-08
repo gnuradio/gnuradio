@@ -23,10 +23,10 @@
 #ifndef INCLUDED_GR_MESSAGE_DEBUG_IMPL_H
 #define INCLUDED_GR_MESSAGE_DEBUG_IMPL_H
 
-#include <blocks/message_debug.h>
-#include <gr_block.h>
-#include <gruel/thread.h>
-#include <gruel/pmt.h>
+#include <gnuradio/blocks/message_debug.h>
+#include <gnuradio/block.h>
+#include <gnuradio/thread/thread.h>
+#include <pmt/pmt.h>
 
 namespace gr {
   namespace blocks {
@@ -72,7 +72,7 @@ namespace gr {
        */
       void store(pmt::pmt_t msg);
 
-      gruel::mutex d_mutex;
+      gr::thread::mutex d_mutex;
       std::vector<pmt::pmt_t> d_messages;
 
     public:

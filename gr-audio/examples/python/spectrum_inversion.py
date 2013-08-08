@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2004,2005,2007 Free Software Foundation, Inc.
+# Copyright 2004,2005,2007,2013 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -28,6 +28,7 @@
 
 from gnuradio import gr
 from gnuradio import audio
+from gnuradio import blocks
 from gnuradio.eng_option import eng_option
 from optparse import OptionParser
 
@@ -53,8 +54,8 @@ class my_top_block(gr.top_block):
         dst = audio.sink (sample_rate, options.audio_output)
 
 	vec1 = [1, -1]
-	vsource = gr.vector_source_f(vec1, True)
-	multiply = gr.multiply_ff()
+	vsource = blocks.vector_source_f(vec1, True)
+	multiply = blocks.multiply_ff()
 
 	self.connect(src, (multiply, 0))
 	self.connect(vsource, (multiply, 1))

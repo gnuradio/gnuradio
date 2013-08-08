@@ -25,7 +25,7 @@
 #endif
 
 #include "check_lfsr_32k_s_impl.h"
-#include <gr_io_signature.h>
+#include <gnuradio/io_signature.h>
 #include <stdlib.h>
 #include <stdio.h>
 
@@ -40,9 +40,9 @@ namespace gr {
     }
 
     check_lfsr_32k_s_impl::check_lfsr_32k_s_impl()
-      : gr_sync_block("gr_check_lfsr_32k",
-                       gr_make_io_signature(1, 1, sizeof(short)),
-                      gr_make_io_signature(0, 0, 0)),
+      : sync_block("check_lfsr_32k",
+                       io_signature::make(1, 1, sizeof(short)),
+                      io_signature::make(0, 0, 0)),
         d_state(SEARCHING), d_history(0), d_ntotal(0), d_nright(0),
         d_runlength(0), d_index(0)
     {
@@ -127,7 +127,7 @@ namespace gr {
       d_index = 0;      // reset LFSR to beginning
 
       if(0)
-        fprintf(stdout, "gr_check_lfsr_32k: enter_SEARCHING at offset %8ld (0x%08lx)\n",
+        fprintf(stdout, "check_lfsr_32k: enter_SEARCHING at offset %8ld (0x%08lx)\n",
                 d_ntotal, d_ntotal);
 
       enter_MATCH0();
@@ -162,7 +162,7 @@ namespace gr {
       d_index = 3;      // already matched first 3 items
 
       if(0)
-        fprintf(stdout, "gr_check_lfsr_32k: enter_LOCKED at offset %8ld (0x%08lx)\n",
+        fprintf(stdout, "check_lfsr_32k: enter_LOCKED at offset %8ld (0x%08lx)\n",
                 d_ntotal, d_ntotal);
     }
 
@@ -171,7 +171,7 @@ namespace gr {
     {
       if(0)
         fprintf(stdout,
-                "gr_check_lfsr_32k: expected %5d (0x%04x) got %5d (0x%04x) offset %8ld (0x%08lx)\n",
+                "check_lfsr_32k: expected %5d (0x%04x) got %5d (0x%04x) offset %8ld (0x%08lx)\n",
                 expected, expected, actual, actual, d_ntotal, d_ntotal);
     }
 

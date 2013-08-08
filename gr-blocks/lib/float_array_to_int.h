@@ -23,7 +23,7 @@
 #ifndef INCLUDED_BLOCKS_FLOAT_ARRAY_TO_INT_H
 #define INCLUDED_BLOCKS_FLOAT_ARRAY_TO_INT_H
 
-#include <blocks/api.h>
+#include <gnuradio/blocks/api.h>
 
 /*!
  * convert array of floats to int with rounding and saturation.

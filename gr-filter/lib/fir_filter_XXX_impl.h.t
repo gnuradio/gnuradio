@@ -25,8 +25,8 @@
 #ifndef @GUARD_NAME@
 #define	@GUARD_NAME@
 
-#include <filter/fir_filter.h>
-#include <filter/@BASE_NAME@.h>
+#include <gnuradio/filter/fir_filter.h>
+#include <gnuradio/filter/@BASE_NAME@.h>
 
 namespace gr {
   namespace filter {

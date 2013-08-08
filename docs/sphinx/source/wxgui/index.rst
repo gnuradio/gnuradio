@@ -6,6 +6,8 @@ gnuradio.wxgui
 .. autosummary::
    :nosignatures:
 
+   gnuradio.wxgui.histo_sink_f
+   gnuradio.wxgui.oscope_sink_f
    gnuradio.wxgui.common.const_sink_c
    gnuradio.wxgui.fftsink2.fft_sink_c
    gnuradio.wxgui.fftsink2.fft_sink_f

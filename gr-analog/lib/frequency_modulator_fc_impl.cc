@@ -25,8 +25,8 @@
 #endif
 
 #include "frequency_modulator_fc_impl.h"
-#include <gr_io_signature.h>
-#include <gr_fxpt.h>
+#include <gnuradio/io_signature.h>
+#include <gnuradio/fxpt.h>
 #include <math.h>
 #include <boost/math/special_functions/trunc.hpp>
 
@@ -41,9 +41,9 @@ namespace gr {
     }
 
     frequency_modulator_fc_impl::frequency_modulator_fc_impl(double sensitivity)
-      : gr_sync_block("frequency_modulator_fc",
-		      gr_make_io_signature(1, 1, sizeof(float)),
-		      gr_make_io_signature(1, 1, sizeof(gr_complex))),
+      : sync_block("frequency_modulator_fc",
+		      io_signature::make(1, 1, sizeof(float)),
+		      io_signature::make(1, 1, sizeof(gr_complex))),
 	d_sensitivity(sensitivity), d_phase(0)
     {
     }
@@ -70,8 +70,8 @@ namespace gr {
 
 	float oi, oq;
 
-	gr_int32 angle = gr_fxpt::float_to_fixed (d_phase);
-	gr_fxpt::sincos(angle, &oq, &oi);
+	gr_int32 angle = gr::fxpt::float_to_fixed (d_phase);
+	gr::fxpt::sincos(angle, &oq, &oi);
 	out[i] = gr_complex(oi, oq);
       }
 

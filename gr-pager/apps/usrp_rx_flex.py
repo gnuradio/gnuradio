@@ -5,13 +5,14 @@
 # Generated: Thu Oct 29 11:03:16 2009
 ##################################################
 
-from gnuradio import blks2
 from gnuradio import eng_notation
 from gnuradio import gr
+from gnuradio import blocks
+from gnuradio import filter
 from gnuradio import pager
-from gnuradio import window
 from gnuradio.eng_option import eng_option
-from gnuradio.gr import firdes
+from gnuradio.filter import window
+from gnuradio.filter import firdes
 from gnuradio.wxgui import fftsink2
 from gnuradio.wxgui import forms
 from gnuradio.wxgui import scopesink2
@@ -175,17 +176,17 @@ class usrp_rx_flex(grc_wxgui.top_block_gui):
 		##################################################
 		self.fm_demod = gr.quadrature_demod_cf(demod_k)
 		self.gr_freq_xlating_fir_filter_xxx_0 = gr.freq_xlating_fir_filter_ccc(channel_decim, (channel_taps), band_freq-freq+offset, sample_rate)
-		self.gr_null_sink_0 = gr.null_sink(gr.sizeof_int*1)
-		self.gr_null_sink_0_0 = gr.null_sink(gr.sizeof_int*1)
-		self.gr_null_sink_0_1 = gr.null_sink(gr.sizeof_int*1)
-		self.gr_null_sink_0_2 = gr.null_sink(gr.sizeof_int*1)
+		self.blocks_null_sink_0 = blocks.null_sink(gr.sizeof_int*1)
+		self.blocks_null_sink_0_0 = blocks.null_sink(gr.sizeof_int*1)
+		self.blocks_null_sink_0_1 = blocks.null_sink(gr.sizeof_int*1)
+		self.blocks_null_sink_0_2 = blocks.null_sink(gr.sizeof_int*1)
 		self.pager_flex_deinterleave_0 = pager.flex_deinterleave()
 		self.pager_flex_deinterleave_0_0 = pager.flex_deinterleave()
 		self.pager_flex_deinterleave_0_1 = pager.flex_deinterleave()
 		self.pager_flex_deinterleave_0_1_0 = pager.flex_deinterleave()
 		self.pager_flex_sync_0 = pager.flex_sync()
 		self.pager_slicer_fb_0 = pager.slicer_fb(1e-6)
-		self.resampler = blks2.rational_resampler_fff(
+		self.resampler = filter.rational_resampler_fff(
 			interpolation=bb_interp,
 			decimation=bb_decim,
 			taps=([1.0/ma_ntaps,]*ma_ntaps*bb_interp),
@@ -255,10 +256,10 @@ class usrp_rx_flex(grc_wxgui.top_block_gui):
 		self.connect((self.pager_flex_sync_0, 2), (self.pager_flex_deinterleave_0_1, 0))
 		self.connect((self.pager_flex_sync_0, 0), (self.pager_flex_deinterleave_0, 0))
 		self.connect((self.pager_flex_sync_0, 3), (self.pager_flex_deinterleave_0_0, 0))
-		self.connect((self.pager_flex_deinterleave_0, 0), (self.gr_null_sink_0, 0))
-		self.connect((self.pager_flex_deinterleave_0_1_0, 0), (self.gr_null_sink_0_0, 0))
-		self.connect((self.pager_flex_deinterleave_0_1, 0), (self.gr_null_sink_0_1, 0))
-		self.connect((self.pager_flex_deinterleave_0_0, 0), (self.gr_null_sink_0_2, 0))
+		self.connect((self.pager_flex_deinterleave_0, 0), (self.blocks_null_sink_0, 0))
+		self.connect((self.pager_flex_deinterleave_0_1_0, 0), (self.blocks_null_sink_0_0, 0))
+		self.connect((self.pager_flex_deinterleave_0_1, 0), (self.blocks_null_sink_0_1, 0))
+		self.connect((self.pager_flex_deinterleave_0_0, 0), (self.blocks_null_sink_0_2, 0))
 
 	def set_config_filename(self, config_filename):
 		self.config_filename = config_filename

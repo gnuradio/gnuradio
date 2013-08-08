@@ -1,0 +1,127 @@
+<?xml version="1.0"?>
+<!--
+###################################################
+##Low Pass Filter: Custom wrapper
+###################################################
+ -->
+<block>
+	<name>Low Pass Filter</name>
+	<key>low_pass_filter</key>
+	<import>from gnuradio import filter</import>
+	<import>from gnuradio.filter import firdes</import>
+	<make>filter.$(type)(#if str($type).startswith('interp') then $interp else $decim#, firdes.low_pass(
+	$gain, $samp_rate, $cutoff_freq, $width, $win, $beta))</make>
+	<callback>set_taps(firdes.low_pass($gain, $samp_rate, $cutoff_freq, $width, $win, $beta))</callback>
+	<param>
+		<name>FIR Type</name>
+		<key>type</key>
+		<type>enum</type>
+		<option>
+			<name>Complex->Complex (Decimating)</name>
+			<key>fir_filter_ccf</key>
+			<opt>input:complex</opt>
+			<opt>output:complex</opt>
+		</option>
+		<option>
+			<name>Complex->Complex (Interpolating)</name>
+			<key>interp_fir_filter_ccf</key>
+			<opt>input:complex</opt>
+			<opt>output:complex</opt>
+		</option>
+		<option>
+			<name>Float->Float (Decimating)</name>
+			<key>fir_filter_fff</key>
+			<opt>input:float</opt>
+			<opt>output:float</opt>
+		</option>
+		<option>
+			<name>Float->Float (Interpolating)</name>
+			<key>interp_fir_filter_fff</key>
+			<opt>input:float</opt>
+			<opt>output:float</opt>
+		</option>
+	</param>
+	<param>
+		<name>Decimation</name>
+		<key>decim</key>
+		<value>1</value>
+		<type>int</type>
+		<hide>#if str($type).startswith('interp') then 'all' else 'none'#</hide>
+	</param>
+	<param>
+		<name>Interpolation</name>
+		<key>interp</key>
+		<value>1</value>
+		<type>int</type>
+		<hide>#if str($type).startswith('interp') then 'none' else 'all'#</hide>
+	</param>
+	<param>
+		<name>Gain</name>
+		<key>gain</key>
+		<value>1</value>
+		<type>real</type>
+	</param>
+	<param>
+		<name>Sample Rate</name>
+		<key>samp_rate</key>
+		<value>samp_rate</value>
+		<type>real</type>
+	</param>
+	<param>
+		<name>Cutoff Freq</name>
+		<key>cutoff_freq</key>
+		<type>real</type>
+	</param>
+	<param>
+		<name>Transition Width</name>
+		<key>width</key>
+		<type>real</type>
+	</param>
+	<param>
+		<name>Window</name>
+		<key>win</key>
+		<value>firdes.WIN_HAMMING</value>
+		<type>int</type>
+		<option>
+			<name>Hamming</name>
+			<key>firdes.WIN_HAMMING</key>
+		</option>
+		<option>
+			<name>Hann</name>
+			<key>firdes.WIN_HANN</key>
+		</option>
+		<option>
+			<name>Blackman</name>
+			<key>firdes.WIN_BLACKMAN</key>
+		</option>
+		<option>
+			<name>Rectangular</name>
+			<key>firdes.WIN_RECTANGULAR</key>
+		</option>
+		<option>
+			<name>Kaiser</name>
+			<key>firdes.WIN_KAISER</key>
+		</option>
+	</param>
+	<param>
+		<name>Beta</name>
+		<key>beta</key>
+		<value>6.76</value>
+		<type>real</type>
+	</param>
+	<sink>
+		<name>in</name>
+		<type>$type.input</type>
+	</sink>
+	<source>
+		<name>out</name>
+		<type>$type.output</type>
+	</source>
+	<doc>
+This filter is a convenience wrapper for an fir filter and a firdes taps generating function.
+
+Sample rate, cutoff frequency, and transition width are in Hertz.
+
+The beta paramater only applies to the Kaiser window.
+	</doc>
+</block>

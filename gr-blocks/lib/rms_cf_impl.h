@@ -23,8 +23,7 @@
 #ifndef INCLUDED_BLOCKS_RMS_CF_IMPL_H
 #define INCLUDED_BLOCKS_RMS_CF_IMPL_H
 
-#include <blocks/rms_cf.h>
-#include <gr_single_pole_iir.h>
+#include <gnuradio/blocks/rms_cf.h>
 
 namespace gr {
   namespace blocks {
@@ -36,7 +35,7 @@ namespace gr {
     class rms_cf_impl : public rms_cf
     {
     private:
-      gr_single_pole_iir<double,double,double> d_iir;
+      double d_alpha, d_beta, d_avg;
 
     public:
       rms_cf_impl(double alpha = 0.0001);

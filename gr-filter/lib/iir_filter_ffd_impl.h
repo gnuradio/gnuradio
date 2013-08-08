@@ -23,8 +23,8 @@
 #ifndef INCLUDED_IIR_FILTER_FFD_IMPL_H
 #define	INCLUDED_IIR_FILTER_FFD_IMPL_H
 
-#include <filter/iir_filter.h>
-#include <filter/iir_filter_ffd.h>
+#include <gnuradio/filter/iir_filter.h>
+#include <gnuradio/filter/iir_filter_ffd.h>
 
 namespace gr {
   namespace filter {
@@ -39,7 +39,8 @@ namespace gr {
 
     public:
       iir_filter_ffd_impl(const std::vector<double> &fftaps,
-			  const std::vector<double> &fbtaps);
+			  const std::vector<double> &fbtaps,
+			  bool oldstyle=true);
       ~iir_filter_ffd_impl();
 
       void set_taps(const std::vector<double> &fftaps,

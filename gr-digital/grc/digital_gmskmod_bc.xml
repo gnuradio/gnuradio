@@ -8,7 +8,7 @@
 	<name>GMSK Modulator</name>
 	<key>digital_gmskmod_bc</key>
 	<import>from gnuradio import digital</import>
-	<make>digital.gmskmod_bc($samples_per_symbol, $bt, $L)</make>
+	<make>digital.gmskmod_bc($samples_per_symbol, $L, $bt)</make>
 	<param>
 		<name>Samples/Symbol</name>
 		<key>samples_per_symbol</key>

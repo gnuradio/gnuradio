@@ -8,12 +8,14 @@
 	<name>Message Strobe</name>
 	<key>blocks_message_strobe</key>
 	<import>from gnuradio import blocks</import>
-	<import>from gruel import pmt</import>
+	<import>import pmt</import>
 	<make>blocks.message_strobe($msg, $period)</make>
+    <callback>set_msg($msg)</callback>
+    <callback>set_period($period)</callback>
 	<param>
 		<name>Message PMT</name>
 		<key>msg</key>
-		<value>pmt.pmt_intern("TEST")</value>
+		<value>pmt.intern("TEST")</value>
 		<type>raw</type>
 	</param>
 	<param>

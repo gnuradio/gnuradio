@@ -27,7 +27,7 @@
 #endif
 
 #include <multiply_const_cc_impl.h>
-#include <gr_io_signature.h>
+#include <gnuradio/io_signature.h>
 #include <volk/volk.h>
 
 namespace gr {
@@ -39,9 +39,9 @@ namespace gr {
     }
 
     multiply_const_cc_impl::multiply_const_cc_impl(gr_complex k, size_t vlen)
-      : gr_sync_block ("multiply_const_cc",
-		       gr_make_io_signature (1, 1, sizeof (gr_complex)*vlen),
-		       gr_make_io_signature (1, 1, sizeof (gr_complex)*vlen)),
+      : sync_block ("multiply_const_cc",
+		       io_signature::make (1, 1, sizeof (gr_complex)*vlen),
+		       io_signature::make (1, 1, sizeof (gr_complex)*vlen)),
 	d_k(k), d_vlen(vlen)
     {
       const int alignment_multiple =
@@ -66,6 +66,32 @@ namespace gr {
       }
 
       return noutput_items;
+    }
+
+    void
+    multiply_const_cc_impl::setup_rpc()
+    {
+#ifdef GR_CTRLPORT
+      add_rpc_variable(
+        rpcbasic_sptr(new rpcbasic_register_get<multiply_const_cc, gr_complex>(
+	  alias(), "Constant",
+	  &multiply_const_cc::k,
+	  pmt::from_complex(-1000.0f, 0.0f),
+          pmt::from_complex(1000.0f, 0.0f),
+          pmt::from_complex(0.0f, 0.0f),
+	  "", "Constant to multiply", RPC_PRIVLVL_MIN,
+          DISPTIME | DISPOPTCPLX | DISPOPTSTRIP)));
+
+      add_rpc_variable(
+        rpcbasic_sptr(new rpcbasic_register_set<multiply_const_cc, gr_complex>(
+	  alias(), "Constant",
+	  &multiply_const_cc::set_k,
+	  pmt::from_complex(-1000.0f, 0.0f),
+          pmt::from_complex(1000.0f, 0.0f),
+          pmt::from_complex(0.0f, 0.0f),
+	  "", "Constant to multiply",
+	  RPC_PRIVLVL_MIN, DISPNULL)));
+#endif /* GR_CTRLPORT */
     }
 
   } /* namespace blocks */

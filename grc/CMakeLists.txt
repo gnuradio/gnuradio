@@ -43,7 +43,7 @@ if(NOT CMAKE_CROSSCOMPILING)
 endif(NOT CMAKE_CROSSCOMPILING)
 
 GR_REGISTER_COMPONENT("gnuradio-companion" ENABLE_GRC
-    ENABLE_GR_CORE
+    ENABLE_GNURADIO_RUNTIME
     ENABLE_PYTHON
     ${grc_python_deps}
 )
@@ -60,7 +60,7 @@ include(GrPackage)
 CPACK_COMPONENT("grc"
     DISPLAY_NAME "GNU Radio Companion"
     DESCRIPTION  "Graphical flow graph designer"
-    DEPENDS      "core_python"
+    DEPENDS      "runtime_python"
 )
 
 ########################################################################

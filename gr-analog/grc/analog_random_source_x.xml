@@ -1,0 +1,75 @@
+<?xml version="1.0"?>
+<!--
+###################################################
+##Random Source:
+##	Custom block
+###################################################
+ -->
+<block>
+	<name>Random Source</name>
+	<key>analog_random_source_x</key>
+	<import>from gnuradio import blocks</import>
+	<import>import numpy</import>
+	<make>blocks.vector_source_$(type.fcn)(map(int, numpy.random.randint($min, $max, $num_samps)), $repeat)</make>
+	<param>
+		<name>Output Type</name>
+		<key>type</key>
+		<type>enum</type>
+		<option>
+			<name>Int</name>
+			<key>int</key>
+			<opt>fcn:i</opt>
+		</option>
+		<option>
+			<name>Short</name>
+			<key>short</key>
+			<opt>fcn:s</opt>
+		</option>
+		<option>
+			<name>Byte</name>
+			<key>byte</key>
+			<opt>fcn:b</opt>
+		</option>
+	</param>
+	<param>
+		<name>Minimum</name>
+		<key>min</key>
+		<value>0</value>
+		<type>int</type>
+	</param>
+	<param>
+		<name>Maximum</name>
+		<key>max</key>
+		<value>2</value>
+		<type>int</type>
+	</param>
+	<param>
+		<name>Num Samples</name>
+		<key>num_samps</key>
+		<value>1000</value>
+		<type>int</type>
+	</param>
+	<param>
+		<name>Repeat</name>
+		<key>repeat</key>
+		<value>True</value>
+		<type>enum</type>
+		<option>
+			<name>Yes</name>
+			<key>True</key>
+		</option>
+		<option>
+			<name>No</name>
+			<key>False</key>
+		</option>
+	</param>
+	<source>
+		<name>out</name>
+		<type>$type</type>
+	</source>
+	<doc>
+Generate num samples of random numbers of [min, max). Repeat samples if specified.
+
+Ex: With min=0 and max=2, the sequence 01110101... will be generated.
+	</doc>
+</block>

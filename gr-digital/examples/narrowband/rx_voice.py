@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2005,2006,2009,2011 Free Software Foundation, Inc.
+# Copyright 2005,2006,2009,2011,2013 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -20,11 +20,14 @@
 # Boston, MA 02110-1301, USA.
 # 
 
-from gnuradio import gr, blks2, audio, uhd
+from gnuradio import gr, audio, uhd
+from gnuradio import blocks
+from gnuradio import filter
 from gnuradio import eng_notation
 from gnuradio.eng_option import eng_option
 from optparse import OptionParser
 
+from gnuradio import blocks
 from gnuradio import digital
 from gnuradio import vocoder
 
@@ -48,10 +51,10 @@ class audio_tx(gr.hier_block2):
 				gr.io_signature(0, 0, 0)) # Output signature
 				
         self.sample_rate = sample_rate = 8000
-        self.packet_src = gr.message_source(33)
+        self.packet_src = blocks.message_source(33)
         voice_decoder = vocoder.gsm_fr_decode_ps()
-        s2f = gr.short_to_float ()
-        sink_scale = gr.multiply_const_ff(1.0/32767.)
+        s2f = blocks.short_to_float()
+        sink_scale = blocks.multiply_const_ff(1.0/32767.)
         audio_sink = audio.sink(sample_rate, audio_output_dev)
         self.connect(self.packet_src, voice_decoder, s2f, sink_scale, audio_sink)
         
@@ -75,18 +78,18 @@ class my_top_block(gr.top_block):
             audio_rate = self.audio_tx.sample_rate
             usrp_rate = self.source.get_sample_rate()
             rrate = audio_rate / usrp_rate
-            self.resampler = blks2.pfb_arb_resampler_ccf(rrate)
+            self.resampler = filter.pfb.arb_resampler_ccf(rrate)
             
             self.connect(self.source, self.resampler, self.rxpath)
 
         elif(options.from_file is not None):
-            self.thr = gr.throttle(gr.sizeof_gr_complex, options.bitrate)
-            self.source = gr.file_source(gr.sizeof_gr_complex, options.from_file)
+            self.thr = blocks.throttle(gr.sizeof_gr_complex, options.bitrate)
+            self.source = blocks.file_source(gr.sizeof_gr_complex, options.from_file)
             self.connect(self.source, self.thr, self.rxpath)
 
         else:
-            self.thr = gr.throttle(gr.sizeof_gr_complex, 1e6)
-            self.source = gr.null_source(gr.sizeof_gr_complex)
+            self.thr = blocks.throttle(gr.sizeof_gr_complex, 1e6)
+            self.source = blocks.null_source(gr.sizeof_gr_complex)
             self.connect(self.source, self.thr, self.rxpath)
 
 	self.connect(self.audio_tx)        

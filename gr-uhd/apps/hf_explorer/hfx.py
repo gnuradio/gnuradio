@@ -81,6 +81,9 @@ import os, wx, sys, math
 import wx.lib.evtmgr as em
 from gnuradio.wxgui import powermate, fftsink2
 from gnuradio import gr, audio, eng_notation
+from gnuradio import analog
+from gnuradio import filter
+from gnuradio import blocks
 from gnuradio.eng_option import eng_option
 from gnuradio import uhd
 from optparse import OptionParser
@@ -252,14 +255,14 @@ class MyFrame(wx.Frame):
             self.tune_offset = 0
 
         else:
-           self.src = gr.file_source (gr.sizeof_short,options.input_file)
+           self.src = blocks.file_source (gr.sizeof_short,options.input_file)
            self.tune_offset = 2200 # 2200 works for 3.5-4Mhz band
 
            # convert rf data in interleaved short int form to complex
-           s2ss = gr.stream_to_streams(gr.sizeof_short,2)
-           s2f1 = gr.short_to_float()
-           s2f2 = gr.short_to_float()
-           src_f2c = gr.float_to_complex()
+           s2ss = blocks.stream_to_streams(gr.sizeof_short,2)
+           s2f1 = blocks.short_to_float()
+           s2f2 = blocks.short_to_float()
+           src_f2c = blocks.float_to_complex()
            self.tb.connect(self.src,s2ss)
            self.tb.connect((s2ss,0),s2f1)
            self.tb.connect((s2ss,1),s2f2)
@@ -268,27 +271,27 @@ class MyFrame(wx.Frame):
 
         # save radio data to a file
         if SAVE_RADIO_TO_FILE:
-           radio_file = gr.file_sink(gr.sizeof_short, options.radio_file)
+           radio_file = blocks.file_sink(gr.sizeof_short, options.radio_file)
            self.tb.connect (self.src, radio_file)
 
 	# 2nd DDC
-        xlate_taps = gr.firdes.low_pass ( \
-           1.0, input_rate, 16e3, 4e3, gr.firdes.WIN_HAMMING )
-        self.xlate = gr.freq_xlating_fir_filter_ccf ( \
+        xlate_taps = filter.firdes.low_pass ( \
+           1.0, input_rate, 16e3, 4e3, filter.firdes.WIN_HAMMING )
+        self.xlate = filter.freq_xlating_fir_filter_ccf ( \
            fir_decim, xlate_taps, self.tune_offset, input_rate )
 
 	# Complex Audio filter
-        audio_coeffs = gr.firdes.complex_band_pass (
+        audio_coeffs = filter.firdes.complex_band_pass (
                 1.0,    # gain
                 self.af_sample_rate, # sample rate
                 -3000,    # low cutoff
                 0,   # high cutoff
                 100,    # transition
-                gr.firdes.WIN_HAMMING)  # window
+                filter.firdes.WIN_HAMMING)  # window
 	self.slider_fcutoff_hi.SetValue(0)
 	self.slider_fcutoff_lo.SetValue(-3000)
 
-        self.audio_filter = gr.fir_filter_ccc(1, audio_coeffs)
+        self.audio_filter = filter.fir_filter_ccc(1, audio_coeffs)
 
 	# Main +/- 16Khz spectrum display
         self.fft = fftsink2.fft_sink_c(self.panel_2, fft_size=512,
@@ -302,46 +305,46 @@ class MyFrame(wx.Frame):
                                           sample_rate=self.af_sample_rate,
                                           average=True, size=(640,240))
 
-        c2f = gr.complex_to_float()
+        c2f = blocks.complex_to_float()
 
 	# AM branch
-	self.sel_am = gr.multiply_const_cc(0)
+	self.sel_am = blocks.multiply_const_cc(0)
 	# the following frequencies turn out to be in radians/sample
-	# gr.pll_refout_cc(alpha,beta,min_freq,max_freq)
+	# analog.pll_refout_cc(alpha,beta,min_freq,max_freq)
 	# suggested alpha = X, beta = .25 * X * X
-	pll = gr.pll_refout_cc(.5,.0625,(2.*math.pi*7.5e3/self.af_sample_rate),
-                                (2.*math.pi*6.5e3/self.af_sample_rate))
-	self.pll_carrier_scale = gr.multiply_const_cc(complex(10,0))
-	am_det = gr.multiply_cc()
+	pll = analog.pll_refout_cc(.5,.0625,(2.*math.pi*7.5e3/self.af_sample_rate),
+                                    (2.*math.pi*6.5e3/self.af_sample_rate))
+	self.pll_carrier_scale = blocks.multiply_const_cc(complex(10,0))
+	am_det = blocks.multiply_cc()
 	# these are for converting +7.5kHz to -7.5kHz
-	# for some reason gr.conjugate_cc() adds noise ??
-	c2f2 = gr.complex_to_float()
-	c2f3 = gr.complex_to_float()
-	f2c = gr.float_to_complex()
-	phaser1 = gr.multiply_const_ff(1)
-	phaser2 = gr.multiply_const_ff(-1)
+	# for some reason blocks.conjugate_cc() adds noise ??
+	c2f2 = blocks.complex_to_float()
+	c2f3 = blocks.complex_to_float()
+	f2c = blocks.float_to_complex()
+	phaser1 = blocks.multiply_const_ff(1)
+	phaser2 = blocks.multiply_const_ff(-1)
 
 	# filter for pll generated carrier
-        pll_carrier_coeffs = gr.firdes.complex_band_pass (
+        pll_carrier_coeffs = filter.firdes.complex_band_pass (
                 2.0,    # gain
                 self.af_sample_rate, # sample rate
                 7400,    # low cutoff
                 7600,   # high cutoff
                 100,    # transition
-                gr.firdes.WIN_HAMMING)  # window
+                filter.firdes.WIN_HAMMING)  # window
 
-        self.pll_carrier_filter = gr.fir_filter_ccc (1, pll_carrier_coeffs)
+        self.pll_carrier_filter = filter.fir_filter_ccc (1, pll_carrier_coeffs)
 
-	self.sel_sb = gr.multiply_const_ff(1)
-	combine = gr.add_ff()
+	self.sel_sb = blocks.multiply_const_ff(1)
+	combine = blocks.add_ff()
 
 	#AGC
-	sqr1 = gr.multiply_ff()
-	intr = gr.iir_filter_ffd ( [.004, 0], [0, .999] )
-	offset = gr.add_const_ff(1)
-	agc = gr.divide_ff()
+	sqr1 = blocks.multiply_ff()
+	intr = filter.iir_filter_ffd( [.004, 0], [0, .999] )
+	offset = blocks.add_const_ff(1)
+	agc = blocks.divide_ff()
 
-        self.scale = gr.multiply_const_ff(0.00001)
+        self.scale = blocks.multiply_const_ff(0.00001)
         dst = audio.sink(long(self.af_sample_rate),
                          options.audio_output)
 
@@ -372,9 +375,9 @@ class MyFrame(wx.Frame):
 	self.tb.connect(agc,dst)
 
 	if SAVE_AUDIO_TO_FILE:
-	  f_out = gr.file_sink(gr.sizeof_short,options.audio_file)
-	  sc1 = gr.multiply_const_ff(64000)
-	  f2s1 = gr.float_to_short()
+	  f_out = blocks.file_sink(gr.sizeof_short,options.audio_file)
+	  sc1 = blocks.multiply_const_ff(64000)
+	  f2s1 = blocks.float_to_short()
 	  self.tb.connect(agc,sc1,f2s1,f_out)
 
         self.tb.start()
@@ -610,13 +613,13 @@ class MyFrame(wx.Frame):
 
     # Calculate taps and apply
     def filter(self):
-        audio_coeffs = gr.firdes.complex_band_pass (
+        audio_coeffs = filter.firdes.complex_band_pass (
                 1.0,    # gain
                 self.af_sample_rate, # sample rate
                 self.slider_fcutoff_lo.GetValue(),   # low cutoff
                 self.slider_fcutoff_hi.GetValue(),   # high cutoff
                 100,    # transition
-                gr.firdes.WIN_HAMMING)  # window
+                filter.firdes.WIN_HAMMING)  # window
         self.audio_filter.set_taps(audio_coeffs)
 
     def set_lsb(self, event):

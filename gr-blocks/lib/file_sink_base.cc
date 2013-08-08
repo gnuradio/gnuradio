@@ -24,14 +24,14 @@
 #include "config.h"
 #endif
 
-#include <blocks/file_sink_base.h>
+#include <gnuradio/blocks/file_sink_base.h>
 #include <cstdio>
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <fcntl.h>
 #include <stdexcept>
 #include <stdio.h>
-#include <gruel/thread.h>
+#include <gnuradio/thread/thread.h>
 
 // win32 (mingw/msvc) specific
 #ifdef HAVE_IO_H
@@ -72,7 +72,7 @@ namespace gr {
     bool
     file_sink_base::open(const char *filename)
     {
-      gruel::scoped_lock guard(d_mutex);	// hold mutex for duration of this function
+      gr::thread::scoped_lock guard(d_mutex);	// hold mutex for duration of this function
 
       // we use the open system call to get access to the O_LARGEFILE flag.
       int fd;
@@ -99,7 +99,7 @@ namespace gr {
     void
     file_sink_base::close()
     {
-      gruel::scoped_lock guard(d_mutex);	// hold mutex for duration of this function
+      gr::thread::scoped_lock guard(d_mutex);	// hold mutex for duration of this function
 
       if(d_new_fp) {
         fclose(d_new_fp);
@@ -112,7 +112,7 @@ namespace gr {
     file_sink_base::do_update()
     {
       if(d_updated) {
-        gruel::scoped_lock guard(d_mutex);   // hold mutex for duration of this block
+        gr::thread::scoped_lock guard(d_mutex);   // hold mutex for duration of this block
         if(d_fp)
           fclose(d_fp);
         d_fp = d_new_fp;                     // install new file pointer

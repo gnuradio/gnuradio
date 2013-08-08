@@ -23,7 +23,7 @@
 #ifndef INCLUDED_GR_NOP_IMPL_H
 #define INCLUDED_GR_NOP_IMPL_H
 
-#include <blocks/nop.h>
+#include <gnuradio/blocks/nop.h>
 
 namespace gr {
   namespace blocks {
@@ -32,6 +32,7 @@ namespace gr {
     {
     protected:
       int d_nmsgs_recvd;
+      int d_ctrlport_test;
 
       // Method that just counts any received messages.
       void count_received_msgs(pmt::pmt_t msg);
@@ -40,7 +41,12 @@ namespace gr {
       nop_impl(size_t sizeof_stream_item);
       ~nop_impl();
 
+      void setup_rpc();
+
       int nmsgs_received() const { return d_nmsgs_recvd; }
+
+      int  ctrlport_test() const { return d_ctrlport_test; }
+      void set_ctrlport_test(int x) { d_ctrlport_test = x; }
 
       int general_work(int noutput_items,
                        gr_vector_int &ninput_items,

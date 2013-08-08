@@ -1,0 +1,591 @@
+#!/usr/bin/env python
+#
+# Copyright 2012-2013 Free Software Foundation, Inc.
+#
+# This file is part of GNU Radio
+#
+# GNU Radio is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 3, or (at your option)
+# any later version.
+#
+# GNU Radio is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with GNU Radio; see the file COPYING.  If not, write to
+# the Free Software Foundation, Inc., 51 Franklin Street,
+# Boston, MA 02110-1301, USA.
+#
+
+from gnuradio import gr, ctrlport
+
+from PyQt4 import QtCore,Qt,Qwt5
+import PyQt4.QtGui as QtGui
+import sys, time, re, pprint
+import itertools
+import scipy
+
+import Ice
+from gnuradio.ctrlport.IceRadioClient import *
+from gnuradio.ctrlport.GrDataPlotter import *
+from gnuradio.ctrlport import GNURadio
+
+class MAINWindow(QtGui.QMainWindow):
+    def minimumSizeHint(self):
+        return QtGui.QSize(800,600)
+
+    def __init__(self, radio, port, interface):
+        
+        super(MAINWindow, self).__init__()
+        self.conns = []
+        self.plots = []
+        self.knobprops = []
+        self.interface = interface
+
+        self.mdiArea = QtGui.QMdiArea()
+        self.mdiArea.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarAsNeeded)
+        self.mdiArea.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAsNeeded)
+        self.setCentralWidget(self.mdiArea)
+
+        self.mdiArea.subWindowActivated.connect(self.updateMenus)
+        self.windowMapper = QtCore.QSignalMapper(self)
+        self.windowMapper.mapped[QtGui.QWidget].connect(self.setActiveSubWindow)
+
+        self.createActions()
+        self.createMenus()
+        self.createToolBars()
+        self.createStatusBar()
+        self.updateMenus()
+
+        self.setWindowTitle("GNU Radio Performance Monitor")
+        self.setUnifiedTitleAndToolBarOnMac(True)
+
+        self.newCon(radio, port)
+        icon = QtGui.QIcon(ctrlport.__path__[0] + "/icon.png" )
+        self.setWindowIcon(icon)
+
+    def newCon(self, radio=None, port=None):
+        child = MForm(radio, port, len(self.conns), self)
+        if(child.radio is not None):
+            child.setWindowTitle(str(child.radio))
+            horizbar = QtGui.QScrollArea()
+            horizbar.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarAsNeeded)
+            horizbar.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAsNeeded)
+            horizbar.setWidget(child)
+            self.mdiArea.addSubWindow(horizbar)
+            self.mdiArea.currentSubWindow().showMaximized()
+
+        self.conns.append(child)
+        self.plots.append([])
+
+    def newUpdater(self, key, radio):
+        updater = UpdaterWindow(key, radio, None)
+        updater.setWindowTitle("Updater: " + key)
+        updater.setModal(False)
+        updater.exec_()
+
+    def update(self, knobs, uid):
+        #sys.stderr.write("KNOB KEYS: {0}\n".format(knobs.keys()))
+        for plot in self.plots[uid]:
+            data = knobs[plot.name()].value
+            plot.update(data)
+            plot.stop()
+            plot.wait()
+            plot.start()
+
+    def setActiveSubWindow(self, window):
+        if window:
+            self.mdiArea.setActiveSubWindow(window)
+
+
+    def createActions(self):
+        self.newConAct = QtGui.QAction("&New Connection",
+                self, shortcut=QtGui.QKeySequence.New,
+                statusTip="Create a new file", triggered=self.newCon)
+
+        self.exitAct = QtGui.QAction("E&xit", self, shortcut="Ctrl+Q",
+                statusTip="Exit the application",
+                triggered=QtGui.qApp.closeAllWindows)
+
+        self.closeAct = QtGui.QAction("Cl&ose", self, shortcut="Ctrl+F4",
+                statusTip="Close the active window",
+                triggered=self.mdiArea.closeActiveSubWindow)
+
+        self.closeAllAct = QtGui.QAction("Close &All", self,
+                statusTip="Close all the windows",
+                triggered=self.mdiArea.closeAllSubWindows)
+
+
+        qks = QtGui.QKeySequence(QtCore.Qt.CTRL + QtCore.Qt.Key_T);
+        self.tileAct = QtGui.QAction("&Tile", self,
+                statusTip="Tile the windows",
+                triggered=self.mdiArea.tileSubWindows,
+                shortcut=qks)
+
+        qks = QtGui.QKeySequence(QtCore.Qt.CTRL + QtCore.Qt.Key_C);
+        self.cascadeAct = QtGui.QAction("&Cascade", self,
+                statusTip="Cascade the windows", shortcut=qks,
+                triggered=self.mdiArea.cascadeSubWindows)
+
+        self.nextAct = QtGui.QAction("Ne&xt", self,
+                shortcut=QtGui.QKeySequence.NextChild,
+                statusTip="Move the focus to the next window",
+                triggered=self.mdiArea.activateNextSubWindow)
+
+        self.previousAct = QtGui.QAction("Pre&vious", self,
+                shortcut=QtGui.QKeySequence.PreviousChild,
+                statusTip="Move the focus to the previous window",
+                triggered=self.mdiArea.activatePreviousSubWindow)
+
+        self.separatorAct = QtGui.QAction(self)
+        self.separatorAct.setSeparator(True)
+
+        self.aboutAct = QtGui.QAction("&About", self,
+                statusTip="Show the application's About box",
+                triggered=self.about)
+
+        self.aboutQtAct = QtGui.QAction("About &Qt", self,
+                statusTip="Show the Qt library's About box",
+                triggered=QtGui.qApp.aboutQt)
+
+    def createMenus(self):
+        self.fileMenu = self.menuBar().addMenu("&File")
+        self.fileMenu.addAction(self.newConAct)
+        self.fileMenu.addSeparator()
+        self.fileMenu.addAction(self.exitAct)
+
+        self.windowMenu = self.menuBar().addMenu("&Window")
+        self.updateWindowMenu()
+        self.windowMenu.aboutToShow.connect(self.updateWindowMenu)
+
+        self.menuBar().addSeparator()
+
+        self.helpMenu = self.menuBar().addMenu("&Help")
+        self.helpMenu.addAction(self.aboutAct)
+        self.helpMenu.addAction(self.aboutQtAct)
+
+    def createToolBars(self):
+        self.fileToolBar = self.addToolBar("File")
+        self.fileToolBar.addAction(self.newConAct)
+
+        self.fileToolBar = self.addToolBar("Window")
+        self.fileToolBar.addAction(self.tileAct)
+        self.fileToolBar.addAction(self.cascadeAct)
+
+    def createStatusBar(self):
+        self.statusBar().showMessage("Ready")
+
+
+    def activeMdiChild(self):
+        activeSubWindow = self.mdiArea.activeSubWindow()
+        if activeSubWindow:
+            return activeSubWindow.widget()
+        return None
+
+    def updateMenus(self):
+        hasMdiChild = (self.activeMdiChild() is not None)
+        self.closeAct.setEnabled(hasMdiChild)
+        self.closeAllAct.setEnabled(hasMdiChild)
+        self.tileAct.setEnabled(hasMdiChild)
+        self.cascadeAct.setEnabled(hasMdiChild)
+        self.nextAct.setEnabled(hasMdiChild)
+        self.previousAct.setEnabled(hasMdiChild)
+        self.separatorAct.setVisible(hasMdiChild)
+
+    def updateWindowMenu(self):
+        self.windowMenu.clear()
+        self.windowMenu.addAction(self.closeAct)
+        self.windowMenu.addAction(self.closeAllAct)
+        self.windowMenu.addSeparator()
+        self.windowMenu.addAction(self.tileAct)
+        self.windowMenu.addAction(self.cascadeAct)
+        self.windowMenu.addSeparator()
+        self.windowMenu.addAction(self.nextAct)
+        self.windowMenu.addAction(self.previousAct)
+        self.windowMenu.addAction(self.separatorAct)
+
+    def about(self):
+        about_info = \
+'''Copyright 2012 Free Software Foundation, Inc.\n
+This program is part of GNU Radio.\n
+GNU Radio is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 3, or (at your option) any later version.\n
+GNU Radio is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.\n
+You should have received a copy of the GNU General Public License along with GNU Radio; see the file COPYING. If not, write to the Free Software Foundation, Inc., 51 Franklin Street, Boston, MA 02110-1301, USA.'''
+
+        QtGui.QMessageBox.about(None, "gr-ctrlport-monitor", about_info)
+
+
+class ConInfoDialog(QtGui.QDialog):
+    def __init__(self, parent=None):
+        super(ConInfoDialog, self).__init__(parent)
+
+        self.gridLayout = QtGui.QGridLayout(self)
+        
+
+        self.host = QtGui.QLineEdit(self);
+        self.port = QtGui.QLineEdit(self);
+        self.host.setText("localhost");
+        self.port.setText("43243");
+
+        self.buttonBox = QtGui.QDialogButtonBox(QtGui.QDialogButtonBox.Ok |
+                                                QtGui.QDialogButtonBox.Cancel)
+
+        self.gridLayout.addWidget(self.host);
+        self.gridLayout.addWidget(self.port);
+        self.gridLayout.addWidget(self.buttonBox);
+
+        self.buttonBox.accepted.connect(self.accept)
+        self.buttonBox.rejected.connect(self.reject)
+
+
+    def accept(self):
+        self.done(1);
+
+    def reject(self):
+        self.done(0);
+
+
+class UpdaterWindow(QtGui.QDialog):
+    def __init__(self, key, radio, parent):
+        QtGui.QDialog.__init__(self, parent)
+
+        self.key = key;
+        self.radio = radio
+
+        self.resize(300,200)
+        self.layout = QtGui.QVBoxLayout()
+
+        self.props = radio.properties([key])[key]
+        info = str(self.props)
+
+        self.infoLabel = QtGui.QLabel(info)
+        self.layout.addWidget(self.infoLabel)
+
+        self.cancelButton = QtGui.QPushButton("Ok")
+        self.cancelButton.connect(self.cancelButton, QtCore.SIGNAL('clicked()'), self.reject)
+
+        self.buttonlayout = QtGui.QHBoxLayout()
+        self.buttonlayout.addWidget(self.cancelButton)
+        self.layout.addLayout(self.buttonlayout)
+ 
+        # set layout and go...
+        self.setLayout(self.layout)
+            
+    def _set_slider_value(self, val):
+        self.slider.setValue(self.steps*(val-self.props.min.value)/self.valspan)
+             
+    def _slide(self):
+        val = (self.slider.value()*self.valspan + self.props.min.value)/float(self.steps)
+        self.textInput.setText(str(val))
+
+    def _apply(self):
+        if(type(self.sv.value) == str):
+            val = str(self.textInput.text())
+        elif(type(self.sv.value) == int):
+            val = int(round(float(self.textInput.text())))
+        elif(type(self.sv.value) == float):
+            val = float(self.textInput.text())
+        else:
+            sys.stderr.write("set type not supported! ({0})\n".format(type(self.sv.value)))
+            sys.exit(-1)
+
+        self.sv.value = val
+        km = {}
+        km[self.key] = self.sv
+        self.radio.set(km)
+        self._set_slider_value(self.sv.value)
+
+    def _set(self):
+        self._apply()
+        self.done(0)
+
+
+def build_edge_graph(sources, sinks, edges):
+    '''
+    Starting from the sources, walks through all of the edges to find
+    the next connected block. The output is stored in 'allblocks'
+    where each row starts with a source and follows one path down
+    until it terminates in either a sink or as an input to a block
+    that is part of another chain.
+    '''
+    def find_edge(src, sinks, edges, row, col):
+        #print "\n\nAll blocks: "
+        #printer.pprint(allblocks)
+        #print "\nLooking for: ", src
+
+        src0 = src.split(":")[0]
+        if(src0 in sinks):
+            if(len(allblocks) <= row):
+                allblocks.append(col*[""])
+            allblocks[row].append(src)
+            return row+1
+
+        for edge in edges:
+            if(re.match(src0, edge)):
+                s = edge.split("->")[0]
+                b = edge.split("->")[1]
+                if(len(allblocks) <= row):
+                    allblocks.append(col*[""])
+                allblocks[row].append(s)
+                #print "Source: {0}     Sink: {1}".format(s, b)
+                row = find_edge(b, sinks, edges, row, col+1)
+        return row
+
+    # Recursively get all edges as a matrix of source->sink
+    n = 0
+    allblocks = []
+    for src in sources:
+        n = find_edge(src, sinks, edges, n, 0)
+
+    # Sort by longest list
+    allblocks = sorted(allblocks, key=len)
+    allblocks.reverse()
+
+    # Make all rows same length by padding '' in front of sort rows
+    maxrowlen = len(allblocks[0])
+    for i,a in enumerate(allblocks):
+        rowlen = len(a)
+        allblocks[i] = (maxrowlen-rowlen)*[''] + a
+
+    # Dedup rows
+    allblocks = sorted(allblocks)
+    allblocks = list(k for k,_ in itertools.groupby(allblocks))
+    allblocks.reverse()
+
+    return allblocks
+
+
+class MForm(QtGui.QWidget):
+    def update(self):
+        try:
+            st = time.time()
+            knobs = self.radio.get([b[0] for b in self.block_dict])
+
+            ft = time.time()
+            latency = ft-st
+            self.parent.statusBar().showMessage("Current GNU Radio Control Port Query Latency: %f ms"%\
+                                                    (latency*1000))
+            
+        except Exception, e:
+            sys.stderr.write("ctrlport-monitor: radio.get threw exception ({0}).\n".format(e))
+            if(type(self.parent) is MAINWindow):
+                # Find window of connection
+                remove = []
+                for p in self.parent.mdiArea.subWindowList():
+                    if self.parent.conns[self.uid] == p.widget():
+                        remove.append(p)
+
+                # Find any subplot windows of connection
+                for p in self.parent.mdiArea.subWindowList():
+                    for plot in self.parent.plots[self.uid]:
+                        if plot.qwidget() == p.widget():
+                            remove.append(p)
+                
+                # Clean up local references to these
+                self.parent.conns.remove(self.parent.conns[self.uid])
+                self.parent.plots.remove(self.parent.plots[self.uid])
+
+                # Remove subwindows for connection and plots
+                for r in remove:
+                    self.parent.mdiArea.removeSubWindow(r)
+
+                # Clean up self
+                self.close()
+            else:
+                sys.exit(1)
+            return
+            
+        #UPDATE TABLE:
+        self.updateItems(knobs)
+
+        #UPDATE PLOTS
+        self.parent.update(knobs, self.uid)
+    
+    def updateItems(self, knobs):
+        for b in self.block_dict:
+            if(knobs[b[0]].ice_id.im_class == GNURadio.KnobVecF):
+                b[1].setText("{0:.4f}".format(knobs[b[0]].value[b[2]]))
+            else:
+                b[1].setText("{0:.4f}".format(knobs[b[0]].value))
+
+    def __init__(self, radio=None, port=None, uid=0, parent=None):
+
+        super(MForm, self).__init__()
+
+        if(radio == None or port == None):
+            askinfo = ConInfoDialog(self);
+            if askinfo.exec_():
+                host = str(askinfo.host.text());
+                port = str(askinfo.port.text());
+                radio = parent.interface.getRadio(host, port)
+            else:
+                self.radio = None
+                return
+        
+        self.uid = uid
+        self.parent = parent
+        self.layout = QtGui.QGridLayout(self)
+        self.layout.setSizeConstraint(QtGui.QLayout.SetFixedSize)
+
+        self.radio = radio
+        self.knobprops = self.radio.properties([])
+        self.parent.knobprops.append(self.knobprops)
+        self.resize(775,500)
+        self.timer = QtCore.QTimer()
+        self.constupdatediv = 0
+        self.tableupdatediv = 0
+        plotsize=250
+
+
+        # Set up the graph of blocks
+        input_name = lambda x: x+"::avg input % full"
+        output_name = lambda x: x+"::avg output % full"
+        wtime_name = lambda x: x+"::avg work time"
+        nout_name = lambda x: x+"::avg noutput_items"
+        nprod_name = lambda x: x+"::avg nproduced"
+
+        tmplist = []
+        knobs = self.radio.get([])
+        edgelist = None
+        for k in knobs:
+            propname = k.split("::")
+            blockname = propname[0]
+            keyname = propname[1]
+            if(keyname == "edge list"):
+                edgelist = knobs[k].value
+            elif(blockname not in tmplist):
+                # only take gr_blocks (no hier_block2)
+                if(knobs.has_key(input_name(blockname))):
+                    tmplist.append(blockname)
+
+        if not edgelist:
+            sys.stderr.write("Could not find list of edges from flowgraph. " + \
+                                 "Make sure the option 'edges_list' is enabled " + \
+                                 "in the ControlPort configuration.\n\n")
+            sys.exit(1)
+
+        edges = edgelist.split("\n")[0:-1]
+        producers = []
+        consumers = []
+        for e in edges:
+            _e = e.split("->")
+            producers.append(_e[0])
+            consumers.append(_e[1])
+
+        # Get producers and consumers as sets while ignoring the
+        # ports.
+        prods = set(map(lambda x: x.split(":")[0], producers))
+        cons  = set(map(lambda x: x.split(":")[0], consumers))
+
+        # Split out all blocks, sources, and sinks based on how they
+        # appear as consumers and/or producers.
+        blocks = prods.intersection(cons)
+        sources = prods.difference(blocks)
+        sinks = cons.difference(blocks)
+
+        nblocks = len(prods) + len(cons)
+
+        allblocks = build_edge_graph(sources, sinks, edges)
+        nrows = len(allblocks)
+        ncols = len(allblocks[0])
+
+        col_width = 120
+
+        self.block_dict = []
+
+        for row, blockrow in enumerate(allblocks):
+            for col, block in enumerate(blockrow):
+                if(block == ''):
+                    continue
+                
+                bgroup = QtGui.QGroupBox(block)
+                playout = QtGui.QFormLayout()
+                bgroup.setLayout(playout)
+                self.layout.addWidget(bgroup, row, 2*col)
+
+                blockname = block.split(":")[0]
+
+                name = wtime_name(blockname)
+                wtime = knobs[name].value
+                newtime = QtGui.QLineEdit()
+                newtime.setMinimumWidth(col_width)
+                newtime.setText("{0:.4f}".format(wtime))
+                self.block_dict.append((name, newtime))
+
+                name = nout_name(blockname)
+                nout = knobs[name].value
+                newnout = QtGui.QLineEdit()
+                newnout.setText("{0:.4f}".format(nout))
+                newnout.setMinimumWidth(col_width)
+                self.block_dict.append((name, newnout))
+
+                name = nprod_name(blockname)
+                nprod = knobs[name].value
+                newnprod = QtGui.QLineEdit()
+                newnprod.setMinimumWidth(col_width)
+                newnprod.setText("{0:.4f}".format(nprod))
+                self.block_dict.append((name, newnprod))
+
+                playout.addRow("Work time", newtime)
+                playout.addRow("noutput_items", newnout)
+                playout.addRow("nproduced", newnprod)
+
+                if blockname in blocks or blockname in sources:
+                    # Add a buffer between blocks
+                    buffgroup = QtGui.QGroupBox("Buffer")
+                    bufflayout = QtGui.QFormLayout()
+                    buffgroup.setLayout(bufflayout)
+                    self.layout.addWidget(buffgroup, row, 2*col+1)
+                
+                    i = int(block.split(":")[1])
+                    name = output_name(blockname)
+                    obuff = knobs[name].value
+                    for i,o in enumerate(obuff):
+                        newobuff = QtGui.QLineEdit()
+                        newobuff.setMinimumWidth(col_width)
+                        newobuff.setText("{0:.4f}".format(o))
+                        self.block_dict.append((name, newobuff, i))
+                        bufflayout.addRow("Out Buffer {0}".format(i),
+                                          newobuff)
+                
+                if blockname in blocks or blockname in sinks:
+                    item = self.layout.itemAtPosition(row, 2*col-1)
+                    if(item):
+                        buffgroup = item.widget()
+                        bufflayout = buffgroup.layout()
+                    else:
+                        buffgroup = QtGui.QGroupBox("Buffer")
+                        bufflayout = QtGui.QFormLayout()
+                        buffgroup.setLayout(bufflayout)
+                        self.layout.addWidget(buffgroup, row, 2*col-1)
+                
+                    i = int(block.split(":")[1])
+                    name = input_name(blockname)
+                    ibuff = knobs[name].value[i]
+                    newibuff = QtGui.QLineEdit()
+                    newibuff.setMinimumWidth(col_width)
+                    newibuff.setText("{0:.4f}".format(ibuff))
+                    self.block_dict.append((name, newibuff, i))
+                    bufflayout.addRow("In Buffer {0}".format(i),
+                                      newibuff)
+
+        # set up timer
+        self.timer = QtCore.QTimer()
+        self.connect(self.timer, QtCore.SIGNAL('timeout()'), self.update)
+        self.timer.start(1000)
+
+    def openMenu(self, pos):
+        index = self.table.treeWidget.selectedIndexes()
+        item = self.table.treeWidget.itemFromIndex(index[0])
+        itemname = str(item.text(0))
+        self.parent.propertiesMenu(itemname, self.radio, self.uid)
+        
+
+class MyClient(IceRadioClient):
+    def __init__(self):
+        IceRadioClient.__init__(self, MAINWindow)
+
+sys.exit(MyClient().main(sys.argv))

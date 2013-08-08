@@ -23,7 +23,7 @@
 #ifndef INCLUDED_ANALOG_FREQUENCY_MODULATOR_FC_IMPL_H
 #define INCLUDED_ANALOG_FREQUENCY_MODULATOR_FC_IMPL_H
 
-#include <analog/frequency_modulator_fc.h>
+#include <gnuradio/analog/frequency_modulator_fc.h>
 
 namespace gr {
   namespace analog {

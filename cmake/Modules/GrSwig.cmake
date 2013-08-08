@@ -105,21 +105,35 @@ endfunction(GR_SWIG_MAKE_DOCS)
 macro(GR_SWIG_MAKE name)
     set(ifiles ${ARGN})
 
+    # Shimming this in here to take care of a SWIG bug with handling
+    # vector<size_t> and vector<unsigned int> (on 32-bit machines) and
+    # vector<long unsigned int> (on 64-bit machines). Use this to test
+    # the size of size_t, then set SIZE_T_32 if it's a 32-bit machine
+    # or not if it's 64-bit. The logic in gr_type.i handles the rest.
+    INCLUDE (CheckTypeSize)
+    CHECK_TYPE_SIZE("size_t" SIZEOF_SIZE_T)
+    CHECK_TYPE_SIZE("unsigned int" SIZEOF_UINT)
+    if(${SIZEOF_SIZE_T} EQUAL ${SIZEOF_UINT})
+      list(APPEND GR_SWIG_FLAGS -DSIZE_T_32)
+    endif(${SIZEOF_SIZE_T} EQUAL ${SIZEOF_UINT})
+
     #do swig doc generation if specified
     if (GR_SWIG_DOC_FILE)
         set(GR_SWIG_DOCS_SOURCE_DEPS ${GR_SWIG_SOURCE_DEPS})
-        set(GR_SWIG_DOCS_TARGET_DEPS ${GR_SWIG_TARGET_DEPS})
+        list(APPEND GR_SWIG_DOCS_TARGET_DEPS ${GR_SWIG_TARGET_DEPS})
         GR_SWIG_MAKE_DOCS(${GR_SWIG_DOC_FILE} ${GR_SWIG_DOC_DIRS})
         add_custom_target(${name}_swig_doc DEPENDS ${GR_SWIG_DOC_FILE})
-        list(APPEND GR_SWIG_TARGET_DEPS ${name}_swig_doc)
+        list(APPEND GR_SWIG_TARGET_DEPS ${name}_swig_doc ${GR_RUNTIME_SWIG_DOC_FILE})
     endif()
 
     #append additional include directories
-    find_package(PythonLibs)
+    find_package(PythonLibs 2)
     list(APPEND GR_SWIG_INCLUDE_DIRS ${PYTHON_INCLUDE_PATH}) #deprecated name (now dirs)
     list(APPEND GR_SWIG_INCLUDE_DIRS ${PYTHON_INCLUDE_DIRS})
-    list(APPEND GR_SWIG_INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR})
-    list(APPEND GR_SWIG_INCLUDE_DIRS ${CMAKE_CURRENT_BINARY_DIR})
+
+    #prepend local swig directories
+    list(INSERT GR_SWIG_INCLUDE_DIRS 0 ${CMAKE_CURRENT_SOURCE_DIR})
+    list(INSERT GR_SWIG_INCLUDE_DIRS 0 ${CMAKE_CURRENT_BINARY_DIR})
 
     #determine include dependencies for swig file
     execute_process(

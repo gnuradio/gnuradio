@@ -25,7 +25,7 @@
 #endif
 
 #include "regenerate_bb_impl.h"
-#include <gr_io_signature.h>
+#include <gnuradio/io_signature.h>
 
 namespace gr {
   namespace blocks {
@@ -38,9 +38,9 @@ namespace gr {
     }
 
     regenerate_bb_impl::regenerate_bb_impl(int period, unsigned int max_regen)
-      : gr_sync_block("regenerate_bb",
-                      gr_make_io_signature(1, 1, sizeof(char)),
-                      gr_make_io_signature(1, 1, sizeof(char))),
+      : sync_block("regenerate_bb",
+                      io_signature::make(1, 1, sizeof(char)),
+                      io_signature::make(1, 1, sizeof(char))),
         d_period(period),
         d_countdown(0),
         d_max_regen(max_regen),

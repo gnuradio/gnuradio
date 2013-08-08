@@ -1,0 +1,30 @@
+## Use this to create an endpoint used to export ControlPort.
+## 
+## A typical configuation would be to specify using a particular
+## interface (determined from the IP address) and port number:
+##
+##    ControlPort.Endpoints=tcp -h 192.168.1.1 -p 9000
+##
+## A similar endpoint without the port number stated will pick a
+## random, free port:
+##
+##    ControlPort.Endpoints=tcp -h 192.168.1.1
+##
+## ICE has some wildcard capabilities, as well. The following tells
+## ICE to use all available interfaces:
+##
+##    ControlPort.Endpoints=tcp -h *
+## 
+## Using 'default' for the host will use what 'hostname' resolves to.
+##
+## For more details:
+##    http://doc.zeroc.com/display/Ice/Proxy+and+Endpoint+Syntax
+##    http://www.zeroc.com/doc/Ice-3.2.1/manual/ProxyEndpointRef.51.2.html
+
+# ControlPort.Endpoints = tcp -t 300 -h 127.0.0.1 -p 23456
+
+
+## Set a default hostname (or IP) if no '-h' is used in the Endpoint
+## configuration
+
+#Ice.Default.Host = myhost

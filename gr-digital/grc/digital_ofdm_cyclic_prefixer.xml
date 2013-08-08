@@ -29,7 +29,7 @@
 	<name>OFDM Cyclic Prefixer</name>
 	<key>digital_ofdm_cyclic_prefixer</key>
 	<import>from gnuradio import digital</import>
-	<make>digital.ofdm_cyclic_prefixer($input_size, $output_size, $rolloff, $tagname)</make>
+	<make>digital.ofdm_cyclic_prefixer($input_size, $input_size+$cp_len, $rolloff, $tagname)</make>
 	<param>
 		<name>FFT Length</name>
 		<key>input_size</key>
@@ -37,9 +37,9 @@
 		<type>int</type>
 	</param>
 	<param>
-		<name>Output Size (FFT length + CP length)</name>
-		<key>output_size</key>
-		<value>fft_len+fft_len/4</value>
+		<name>CP Length</name>
+		<key>cp_len</key>
+		<value>fft_len/4</value>
 		<type>int</type>
 	</param>
 	<param>
@@ -47,6 +47,7 @@
 		<key>rolloff</key>
 		<value>0</value>
 		<type>int</type>
+		<hide>#if $rolloff then 'none' else 'part'#</hide>
 	</param>
 	<param>
 		<name>Length Tag Key</name>

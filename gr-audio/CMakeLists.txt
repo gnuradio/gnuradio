@@ -28,10 +28,12 @@ include(GrBoost)
 include(GrComponent)
 GR_REGISTER_COMPONENT("gr-audio" ENABLE_GR_AUDIO
     Boost_FOUND
-    ENABLE_GR_CORE
+    ENABLE_GNURADIO_RUNTIME
 )
 
-GR_SET_GLOBAL(GR_AUDIO_INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/include)
+GR_SET_GLOBAL(GR_AUDIO_INCLUDE_DIRS
+    ${CMAKE_CURRENT_SOURCE_DIR}/include
+)
 
 SET(GR_PKG_AUDIO_EXAMPLES_DIR ${GR_PKG_DATA_DIR}/examples/audio)
 
@@ -50,21 +52,21 @@ CPACK_COMPONENT("audio_runtime"
     GROUP        "Audio"
     DISPLAY_NAME "Runtime"
     DESCRIPTION  "Runtime"
-    DEPENDS      "core_runtime"
+    DEPENDS      "runtime_runtime"
 )
 
 CPACK_COMPONENT("audio_devel"
     GROUP        "Audio"
     DISPLAY_NAME "Development"
     DESCRIPTION  "C++ headers, package config, import libraries"
-    DEPENDS      "core_devel"
+    DEPENDS      "runtime_devel"
 )
 
 CPACK_COMPONENT("audio_python"
     GROUP        "Audio"
     DISPLAY_NAME "Python"
     DESCRIPTION  "Python modules for runtime; GRC xml files"
-    DEPENDS      "core_python;audio_runtime"
+    DEPENDS      "runtime_python;audio_runtime"
 )
 
 CPACK_COMPONENT("audio_examples"
@@ -78,22 +80,26 @@ CPACK_COMPONENT("audio_swig"
     GROUP        "Audio"
     DISPLAY_NAME "SWIG"
     DESCRIPTION  "SWIG development .i files"
-    DEPENDS      "core_swig;audio_python;audio_devel"
+    DEPENDS      "runtime_swig;audio_python;audio_devel"
 )
 
 ########################################################################
 # Add subdirectories
 ########################################################################
-add_subdirectory(include)
+add_subdirectory(include/gnuradio/audio)
 add_subdirectory(lib)
 add_subdirectory(doc)
-add_subdirectory(examples/c++)
 if(ENABLE_PYTHON)
     add_subdirectory(swig)
+    add_subdirectory(python/audio)
     add_subdirectory(grc)
     add_subdirectory(examples/python)
     add_subdirectory(examples/grc)
 endif(ENABLE_PYTHON)
+
+if(ENABLE_GR_ANALOG)
+  add_subdirectory(examples/c++)
+endif(ENABLE_GR_ANALOG)
 
 ########################################################################
 # Create Pkg Config File

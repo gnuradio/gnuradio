@@ -25,7 +25,7 @@
 #ifndef @GUARD_NAME_IMPL@
 #define @GUARD_NAME_IMPL@
 
-#include <blocks/@NAME@.h>
+#include <gnuradio/blocks/@NAME@.h>
 
 namespace gr {
   namespace blocks {
@@ -38,18 +38,18 @@ namespace gr {
       unsigned int d_offset;
       int d_vlen;
       bool d_settags;
-      std::vector<gr_tag_t> d_tags;
+      std::vector<tag_t> d_tags;
       unsigned int d_tagpos;
 
     public:
       @NAME_IMPL@(const std::vector<@TYPE@> &data,
                   bool repeat, int vlen,
-                  const std::vector<gr_tag_t> &tags);
+                  const std::vector<tag_t> &tags);
       ~@NAME_IMPL@();
 
       void rewind() { d_offset=0; }
       void set_data(const std::vector<@TYPE@> &data,
-                    const std::vector<gr_tag_t> &tags);
+                    const std::vector<tag_t> &tags);
 
       int work(int noutput_items,
                gr_vector_const_void_star &input_items,

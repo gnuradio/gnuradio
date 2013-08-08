@@ -25,11 +25,11 @@
 #endif
 
 #include "udp_sink_impl.h"
-#include <gr_io_signature.h>
+#include <gnuradio/io_signature.h>
 #include <boost/array.hpp>
 #include <boost/asio.hpp>
 #include <boost/format.hpp>
-#include <gruel/thread.h>
+#include <gnuradio/thread/thread.h>
 #include <stdexcept>
 #include <stdio.h>
 #include <string.h>
@@ -50,9 +50,9 @@ namespace gr {
     udp_sink_impl::udp_sink_impl(size_t itemsize,
                                  const std::string &host, int port,
                                  int payload_size, bool eof)
-      : gr_sync_block("udp_sink",
-                      gr_make_io_signature(1, 1, itemsize),
-                      gr_make_io_signature(0, 0, 0)),
+      : sync_block("udp_sink",
+                      io_signature::make(1, 1, itemsize),
+                      io_signature::make(0, 0, 0)),
         d_itemsize(itemsize), d_payload_size(payload_size), d_eof(eof),
         d_connected(false)
     {
@@ -96,7 +96,7 @@ namespace gr {
       if(!d_connected)
         return;
 
-      gruel::scoped_lock guard(d_mutex);  // protect d_socket from work()
+      gr::thread::scoped_lock guard(d_mutex);  // protect d_socket from work()
 
       // Send a few zero-length packets to signal receiver we are done
       boost::array<char, 1> send_buf = {{ 0 }};
@@ -121,7 +121,7 @@ namespace gr {
       ssize_t r=0, bytes_sent=0, bytes_to_send=0;
       ssize_t total_size = noutput_items*d_itemsize;
 
-      gruel::scoped_lock guard(d_mutex);  // protect d_socket
+      gr::thread::scoped_lock guard(d_mutex);  // protect d_socket
 
       while(bytes_sent <  total_size) {
         bytes_to_send = std::min((ssize_t)d_payload_size, (total_size-bytes_sent));

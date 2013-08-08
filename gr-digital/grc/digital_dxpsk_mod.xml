@@ -23,7 +23,7 @@
 
 <!--
 ###################################################
-## DPSK Mod - 2, 4, 8
+## DPSK Mod - 2, 4
 ###################################################
  -->
 <block>
@@ -33,7 +33,7 @@
 	<make>digital.$(type)_mod(
 	samples_per_symbol=$samples_per_symbol,
 	excess_bw=$excess_bw,
-	gray_coded=$gray_coded,
+	mod_code=$mod_code,
 	verbose=$verbose,
 	log=$log)
 	</make>
@@ -48,10 +48,6 @@
 		<option>
 			<name>DQPSK</name>
 			<key>dqpsk</key>
-		</option>
-		<option>
-			<name>D8PSK</name>
-			<key>d8psk</key>
 		</option>
 	</param>
 	<param>
@@ -68,16 +64,15 @@
 	</param>
 	<param>
 		<name>Gray Code</name>
-		<key>gray_coded</key>
-		<value>True</value>
+		<key>mod_code</key>
 		<type>enum</type>
 		<option>
 			<name>Yes</name>
-			<key>True</key>
+			<key>"gray"</key>
 		</option>
 		<option>
 			<name>No</name>
-			<key>False</key>
+			<key>"none"</key>
 		</option>
 	</param>
 	<param>

@@ -28,9 +28,10 @@
 #ifndef @GUARD_NAME@
 #define	@GUARD_NAME@
 
-#include <filter/api.h>
-#include <filter/fir_filter.h>
-#include <filter/@BASE_NAME@.h>
+#include <gnuradio/filter/api.h>
+#include <gnuradio/filter/fir_filter.h>
+#include <gnuradio/filter/@BASE_NAME@.h>
+#include <gnuradio/blocks/rotator.h>
 
 namespace gr {
   namespace filter {
@@ -40,7 +41,7 @@ namespace gr {
     protected:
       std::vector<@TAP_TYPE@>	d_proto_taps;
       kernel::@CFIR_TYPE@      *d_composite_fir;
-      gr_rotator		d_r;
+      blocks::rotator		d_r;
       double			d_center_freq;
       double			d_sampling_freq;
       bool			d_updated;

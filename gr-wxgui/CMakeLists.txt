@@ -1,4 +1,4 @@
-# Copyright 2011 Free Software Foundation, Inc.
+# Copyright 2011,2013 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -20,10 +20,11 @@
 ########################################################################
 # Setup dependencies
 ########################################################################
+include(GrBoost)
 include(GrPython)
 
-GR_PYTHON_CHECK_MODULE("wx >= 2.8"  wx           "wx.version().split()[0] >= '2.8'"    WX_FOUND)
-GR_PYTHON_CHECK_MODULE("numpy"      numpy        True                                  NUMPY_FOUND)
+GR_PYTHON_CHECK_MODULE("wx >= 2.8" wx "wx.version().split()[0] >= '2.8'" WX_FOUND)
+GR_PYTHON_CHECK_MODULE("numpy" numpy True NUMPY_FOUND)
 
 ########################################################################
 # Register component
@@ -37,7 +38,10 @@ if(NOT CMAKE_CROSSCOMPILING)
 endif(NOT CMAKE_CROSSCOMPILING)
 
 GR_REGISTER_COMPONENT("gr-wxgui" ENABLE_GR_WXGUI
-    ENABLE_GR_CORE
+    ENABLE_GNURADIO_RUNTIME
+    ENABLE_GR_FFT
+    ENABLE_GR_FILTER
+    ENABLE_GR_ANALOG
     ENABLE_PYTHON
     ${wxgui_python_deps}
 )
@@ -47,6 +51,13 @@ GR_REGISTER_COMPONENT("gr-wxgui" ENABLE_GR_WXGUI
 ########################################################################
 if(ENABLE_GR_WXGUI)
 
+GR_SET_GLOBAL(GR_WXGUI_INCLUDE_DIRS
+    ${CMAKE_CURRENT_SOURCE_DIR}/lib
+    ${CMAKE_CURRENT_SOURCE_DIR}/include
+    ${CMAKE_CURRENT_BINARY_DIR}/lib
+    ${CMAKE_CURRENT_BINARY_DIR}/include
+)
+
 ########################################################################
 # Setup CPack components
 ########################################################################
@@ -54,7 +65,7 @@ include(GrPackage)
 CPACK_COMPONENT("wxgui"
     DISPLAY_NAME "WxGUI"
     DESCRIPTION  "Wx GUI plotter widgets and grc wrappers"
-    DEPENDS      "core_python"
+    DEPENDS      "runtime_python"
 )
 
 ########################################################################
@@ -83,7 +94,10 @@ install(
 ########################################################################
 # Add subdirectories
 ########################################################################
+add_subdirectory(include/gnuradio/wxgui)
+add_subdirectory(lib)
 add_subdirectory(grc)
-add_subdirectory(src/python)
+add_subdirectory(python/wxgui)
+add_subdirectory(swig)
 
 endif(ENABLE_GR_WXGUI)

@@ -1,0 +1,62 @@
+<?xml version="1.0"?>
+<!--
+###################################################
+##Polyphase Channelizer
+###################################################
+ -->
+<block>
+	<name>Polyphase Channelizer</name>
+	<key>pfb_channelizer_ccf</key>
+	<import>from gnuradio.filter import pfb</import>
+	<import>from gnuradio.filter import firdes</import>
+	<make>pfb.channelizer_ccf(
+	  $nchans,
+	  $taps,
+	  $osr,
+	  $atten)
+self.$(id).set_channel_map($ch_map)
+	</make>
+	<!-- Set taps not implemented yet
+           <callback>set_taps($taps)</callback>
+         -->
+        <callback>set_channel_map($ch_map)</callback>
+
+	<param>
+		<name>Channels</name>
+		<key>nchans</key>
+		<type>int</type>
+	</param>
+	<param>
+		<name>Taps</name>
+		<key>taps</key>
+		<value></value>
+		<type>real_vector</type>
+	</param>
+	<param>
+		<name>Over Sample Ratio</name>
+		<key>osr</key>
+		<value>1.0</value>
+		<type>real</type>
+	</param>
+	<param>
+		<name>Attenuation</name>
+		<key>atten</key>
+		<value>100</value>
+		<type>real</type>
+	</param>
+	<param>
+		<name>Channel Map</name>
+		<key>ch_map</key>
+		<value>[]</value>
+		<type>int_vector</type>
+	</param>
+	<sink>
+		<name>in</name>
+		<type>complex</type>
+	</sink>
+	<source>
+		<name>out</name>
+		<type>complex</type>
+		<nports>$nchans</nports>
+	</source>
+</block>

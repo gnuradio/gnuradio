@@ -9,6 +9,7 @@
 	<key>wxgui_constellationsink2</key>
 	<category>Instrumentation/WX</category>
 	<import>from gnuradio.wxgui import constsink_gl</import>
+        <import>from gnuradio import wxgui</import>
 	<make>#set $parent = $notebook() and 'self.%s.GetPage(%s)'%$notebook() or 'self'
 constsink_gl.const_sink_c(
 	$(parent).GetWin(),

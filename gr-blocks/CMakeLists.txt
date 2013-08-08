@@ -28,7 +28,7 @@ include(GrBoost)
 include(GrComponent)
 GR_REGISTER_COMPONENT("gr-blocks" ENABLE_GR_BLOCKS
     Boost_FOUND
-    ENABLE_GR_CORE
+    ENABLE_GNURADIO_RUNTIME
 )
 
 GR_SET_GLOBAL(GR_BLOCKS_INCLUDE_DIRS
@@ -53,40 +53,40 @@ CPACK_COMPONENT("blocks_runtime"
     GROUP        "Blocks"
     DISPLAY_NAME "Runtime"
     DESCRIPTION  "Runtime"
-    DEPENDS      "core_runtime"
+    DEPENDS      "runtime_runtime"
 )
 
 CPACK_COMPONENT("blocks_devel"
     GROUP        "Blocks"
     DISPLAY_NAME "Development"
     DESCRIPTION  "C++ headers, package config, import libraries"
-    DEPENDS      "core_devel"
+    DEPENDS      "runtime_devel"
 )
 
 CPACK_COMPONENT("blocks_python"
     GROUP        "Blocks"
     DISPLAY_NAME "Python"
     DESCRIPTION  "Python modules for runtime; GRC xml files"
-    DEPENDS      "core_python;blocks_runtime"
+    DEPENDS      "runtime_python;blocks_runtime"
 )
 
 CPACK_COMPONENT("blocks_swig"
     GROUP        "Blocks"
     DISPLAY_NAME "SWIG"
     DESCRIPTION  "SWIG development .i files"
-    DEPENDS      "core_swig;blocks_python;blocks_devel"
+    DEPENDS      "runtime_swig;blocks_python;blocks_devel"
 )
 
 ########################################################################
 # Add subdirectories
 ########################################################################
-add_subdirectory(include/blocks)
+add_subdirectory(include/gnuradio/blocks)
 add_subdirectory(lib)
 #if(ENABLE_TESTING)
 #  add_subdirectory(tests)
 #endif(ENABLE_TESTING)
 if(ENABLE_PYTHON)
-     add_subdirectory(python)
+     add_subdirectory(python/blocks)
      add_subdirectory(swig)
      add_subdirectory(grc)
      add_subdirectory(doc)

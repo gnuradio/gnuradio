@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2004,2007 Free Software Foundation, Inc.
+# Copyright 2004,2007,2013 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -22,6 +22,7 @@
 
 from gnuradio import gr
 from gnuradio import audio
+from gnuradio import blocks
 from gnuradio.eng_option import eng_option
 from optparse import OptionParser
 
@@ -47,12 +48,12 @@ class my_top_block(gr.top_block):
 
         sample_rate = int(options.sample_rate)
         src = audio.source (sample_rate, options.audio_input)
-        dst = gr.file_sink (gr.sizeof_float, filename)
+        dst = blocks.file_sink (gr.sizeof_float, filename)
 
         if options.nsamples is None:
             self.connect((src, 0), dst)
         else:
-            head = gr.head(gr.sizeof_float, int(options.nsamples))
+            head = blocks.head(gr.sizeof_float, int(options.nsamples))
             self.connect((src, 0), head, dst)
 
 

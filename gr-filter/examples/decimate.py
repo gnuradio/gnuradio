@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2009,2012 Free Software Foundation, Inc.
+# Copyright 2009,2012,2013 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -21,21 +21,28 @@
 #
 
 from gnuradio import gr
+from gnuradio import blocks
 from gnuradio import filter
 import sys, time
+
+try:
+    from gnuradio import analog
+except ImportError:
+    sys.stderr.write("Error: Program requires gr-analog.\n")
+    sys.exit(1)
 
 try:
     import scipy
     from scipy import fftpack
 except ImportError:
-    print "Error: Program requires scipy (see: www.scipy.org)."
+    sys.stderr.write("Error: Program requires scipy (see: www.scipy.org).\n")
     sys.exit(1)
 
 try:
     import pylab
     from pylab import mlab
 except ImportError:
-    print "Error: Program requires matplotlib (see: matplotlib.sourceforge.net)."
+    sys.stderr.write("Error: Program requires matplotlib (see: matplotlib.sourceforge.net).\n")
     sys.exit(1)
 
 class pfb_top_block(gr.top_block):
@@ -62,13 +69,13 @@ class pfb_top_block(gr.top_block):
         # We create a list of freqs, and a sine wave is generated and added to the source
         # for each one of these frequencies.
         self.signals = list()
-        self.add = gr.add_cc()
+        self.add = blocks.add_cc()
         freqs = [10, 20, 2040]
         for i in xrange(len(freqs)):
-            self.signals.append(gr.sig_source_c(self._fs, gr.GR_SIN_WAVE, freqs[i], 1))
+            self.signals.append(analog.sig_source_c(self._fs, analog.GR_SIN_WAVE, freqs[i], 1))
             self.connect(self.signals[i], (self.add,i))
 
-        self.head = gr.head(gr.sizeof_gr_complex, self._N)
+        self.head = blocks.head(gr.sizeof_gr_complex, self._N)
 
         # Construct a PFB decimator filter
         self.pfb = filter.pfb.decimator_ccf(self._decim, self._taps, 0)
@@ -76,14 +83,14 @@ class pfb_top_block(gr.top_block):
         # Construct a standard FIR decimating filter
         self.dec = filter.fir_filter_ccf(self._decim, self._taps)
 
-        self.snk_i = gr.vector_sink_c()
+        self.snk_i = blocks.vector_sink_c()
 
         # Connect the blocks
         self.connect(self.add, self.head, self.pfb)
         self.connect(self.add, self.snk_i)
 
         # Create the sink for the decimated siganl
-        self.snk = gr.vector_sink_c()
+        self.snk = blocks.vector_sink_c()
         self.connect(self.pfb, self.snk)
 
 

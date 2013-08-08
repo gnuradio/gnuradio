@@ -106,7 +106,7 @@ interface.
 The file metadata consists of a static mandatory header and a dynamic
 optional extras header. Each header is a separate PMT
 dictionary. Headers are created by building a PMT dictionary
-(pmt::pmt_make_dict) of key:value pairs, then the dictionary is
+(pmt::make_dict) of key:value pairs, then the dictionary is
 serialized into a string to be written to file. The header is always
 the same length that is predetermined by the version of the header
 (this must be known already). The header will then indicate if there
@@ -117,27 +117,26 @@ we use PMT operators. For example, we create a simplified version of
 the header in C++ like this:
 
 \code
-  using namespace pmt;
   const char METADATA_VERSION = 0x0;
-  pmt_t header;
-  header = pmt_make_dict();
-  header = pmt_dict_add(header, mp("version"), mp(METADATA_VERSION));
-  header = pmt_dict_add(header, mp("rx_rate"), mp(samp_rate));
-  std::string hdr_str = pmt_serialize_str(header);
+  pmt::pmt_t header;
+  header = pmt::make_dict();
+  header = pmt::dict_add(header, pmt::mp("version"), pmt::mp(METADATA_VERSION));
+  header = pmt::dict_add(header, pmt::mp("rx_rate"), pmt::mp(samp_rate));
+  std::string hdr_str = pmt::serialize_str(header);
 \endcode
 
-The call to pmt::pmt_dict_add adds a new key:value pair to the
+The call to pmt::dict_add adds a new key:value pair to the
 dictionary. Notice that it both takes and returns the 'header'
 variable. This is because we are actually creating a new dictionary
 with this function, so we just assign it to the same variable.
 
 The 'mp' functions are convenience functions provided by the PMT
 library. They interpret the data type of the value being inserted and
-call the correct 'pmt_from_xxx' function. For more direct control over
+call the correct 'pmt::from_xxx' function. For more direct control over
 the data type, see PMT functions in pmt.h, such as
-pmt::pmt_from_uint64 or pmt::pmt_from_double.
+pmt::from_uint64 or pmt::from_double.
 
-We finish this off by using pmt::pmt_serialize_str to convert the PMT
+We finish this off by using pmt::serialize_str to convert the PMT
 dictionary into a specialized string format that makes it easy to
 write to a file.
 
@@ -153,10 +152,10 @@ Assuming that 'std::string str' contains the full string as read from
 a file, we can access the dictionary in C++ like this:
 
 \code
-  pmt_t hdr = pmt_deserialize_str(str);
-  if(pmt_dict_has_key(hdr, pmt_string_to_symbol("strt"))) {
-    pmt_t r = pmt_dict_ref(hdr, pmt_string_to_symbol("strt"), PMT_NIL);
-    uint64_t seg_start = pmt_to_uint64(r);
+  pmt::pmt_t hdr = pmt::deserialize_str(str);
+  if(pmt::dict_has_key(hdr, pmt::string_to_symbol("strt"))) {
+    pmt::pmt_t r = pmt::dict_ref(hdr, pmt::string_to_symbol("strt"), pmt::PMT_NIL);
+    uint64_t seg_start = pmt::to_uint64(r);
     uint64_t extra_len = seg_start - METADATA_HEADER_SIZE;
   }
 \endcode
@@ -221,7 +220,7 @@ a PMT dictionary of key:value pairs. The extras header can contain
 anything and can grow while a program is running.
 
 We can insert extra data into the header at the beginning if we
-wish. All we need to do is use the pmt::pmt_dict_add function to insert
+wish. All we need to do is use the pmt::dict_add function to insert
 our hand-made metadata. This can be useful to add our own markers and
 information.
 
@@ -239,7 +238,7 @@ When reading out data from the extras, we do not necessarily know the
 data type of the PMT value. The key is always a PMT symbol, but the
 value can be any other PMT type. There are PMT functions that allow us
 to query the PMT to test if it is a particular type. We also have the
-ability to do pmt::pmt_print on any PMT object to print it to
+ability to do pmt::print on any PMT object to print it to
 screen. Before converting from a PMT to it's natural data type, it is
 necessary to know the data type.
 
@@ -310,15 +309,15 @@ into the metadata to keep track of later. The date in this case is
 encoded as a vector of uint16 with [day, month, year].
 
 \code
-  from gruel import pmt
+  import pmt
   from gnuradio import blocks
 
-  key = pmt.pmt_intern("date")
-  val = pmt.pmt_init_u16vector(3, [13,12,2012])
+  key = pmt.intern("date")
+  val = pmt.init_u16vector(3, [13,12,2012])
 
-  extras = pmt.pmt_make_dict()
-  extras = pmt.pmt_dict_add(extras, key, val)
-  extras_str = pmt.pmt_serialize_str(extras)
+  extras = pmt.make_dict()
+  extras = pmt.dict_add(extras, key, val)
+  extras_str = pmt.serialize_str(extras)
   self.sink = blocks.file_meta_sink(gr.sizeof_gr_complex,
                                     "/tmp/metadat_file.out",
 				    samp_rate, 1,

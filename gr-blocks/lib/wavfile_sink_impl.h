@@ -23,8 +23,7 @@
 #ifndef INCLUDED_GR_WAVFILE_SINK_IMPL_H
 #define INCLUDED_GR_WAVFILE_SINK_IMPL_H
 
-#include <blocks/wavfile_sink.h>
-#include <gr_file_sink_base.h>
+#include <gnuradio/blocks/wavfile_sink.h>
 
 namespace gr {
   namespace blocks {

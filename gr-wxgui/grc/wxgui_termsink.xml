@@ -10,6 +10,7 @@
 	<category>Instrumentation/WX</category>
 
 	<import>from gnuradio.wxgui import termsink</import>
+        <import>from gnuradio import wxgui</import>
 
 	<make>#set $parent = $notebook() and 'self.%s.GetPage(%s)'%$notebook() or 'self'
 termsink.termsink(

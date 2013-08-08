@@ -20,7 +20,10 @@
 # Boston, MA 02110-1301, USA.
 #
 
-from gnuradio import gr, gru, uhd, optfir, eng_notation, pager
+from gnuradio import gr, gru, uhd, eng_notation, pager
+from gnuradio import filter
+from gnuradio.filter import optfir
+from gnuradio import blocks
 from gnuradio.eng_option import eng_option
 from optparse import OptionParser
 import time, os, sys
@@ -65,12 +68,12 @@ class app_top_block(gr.top_block):
 
         else:
             # Use supplied file as source of samples
-            self.u = gr.file_source(gr.sizeof_gr_complex, options.from_file)
+            self.u = blocks.file_source(gr.sizeof_gr_complex, options.from_file)
             if options.verbose:
                 print "Reading samples from", options.from_file
 
         if options.log and not options.from_file:
-            usrp_sink = gr.file_sink(gr.sizeof_gr_complex, 'usrp.dat')
+            usrp_sink = blocks.file_sink(gr.sizeof_gr_complex, 'usrp.dat')
             self.connect(self.u, usrp_sink)
 
         # Set up 22KHz-wide bandpass about center frequency. Decimate by 10
@@ -85,13 +88,13 @@ class app_top_block(gr.top_block):
 	if options.verbose:
 	    print "Channel filter has", len(taps), "taps."
 
-        self.chan = gr.freq_xlating_fir_filter_ccf(10,    # Decimation rate
-                                                   taps,  # Filter taps
-                                                   0.0,   # Offset frequency
-                                                   250e3) # Sample rate
+        self.chan = filter.freq_xlating_fir_filter_ccf(10,    # Decimation rate
+                                                       taps,  # Filter taps
+                                                       0.0,   # Offset frequency
+                                                       250e3) # Sample rate
 
 	if options.log:
-	    chan_sink = gr.file_sink(gr.sizeof_gr_complex, 'chan.dat')
+	    chan_sink = blocks.file_sink(gr.sizeof_gr_complex, 'chan.dat')
 	    self.connect(self.chan, chan_sink)
 
         # FLEX protocol demodulator

@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2008,2009,2011 Free Software Foundation, Inc.
+ * Copyright 2008,2009,2011,2012 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -20,19 +20,57 @@
  * Boston, MA 02110-1301, USA.
  */
 
+#define QTGUI_API
+#define FILTER_API
+
 %include "gnuradio.i"
 
 //load generated python docstrings
 %include "qtgui_swig_doc.i"
 
+// So we understand the firdes window types
+%import "gnuradio/filter/firdes.h"
+
 %{
-#include "qtgui_sink_c.h"
-#include "qtgui_sink_f.h"
-#include "qtgui_time_sink_c.h"
-#include "qtgui_time_sink_f.h"
+#include "gnuradio/qtgui/form_menus.h"
+#include "gnuradio/qtgui/DisplayPlot.h"
+#include "gnuradio/qtgui/displayform.h"
+#include "gnuradio/qtgui/sink_c.h"
+#include "gnuradio/qtgui/sink_f.h"
+#include "gnuradio/qtgui/time_sink_c.h"
+#include "gnuradio/qtgui/time_sink_f.h"
+#include "gnuradio/qtgui/time_raster_sink_b.h"
+#include "gnuradio/qtgui/time_raster_sink_f.h"
+#include "gnuradio/qtgui/freq_sink_c.h"
+#include "gnuradio/qtgui/freq_sink_f.h"
+#include "gnuradio/qtgui/const_sink_c.h"
+#include "gnuradio/qtgui/waterfall_sink_c.h"
+#include "gnuradio/qtgui/waterfall_sink_f.h"
+#include "gnuradio/qtgui/histogram_sink_f.h"
 %}
 
-%include "qtgui_sink_c.i"
-%include "qtgui_sink_f.i"
-%include "qtgui_time_sink_c.i"
-%include "qtgui_time_sink_f.i"
+%include "gnuradio/qtgui/sink_c.h"
+%include "gnuradio/qtgui/sink_f.h"
+%include "gnuradio/qtgui/time_sink_c.h"
+%include "gnuradio/qtgui/time_sink_f.h"
+%include "gnuradio/qtgui/time_raster_sink_b.h"
+%include "gnuradio/qtgui/time_raster_sink_f.h"
+%include "gnuradio/qtgui/freq_sink_c.h"
+%include "gnuradio/qtgui/freq_sink_f.h"
+%include "gnuradio/qtgui/const_sink_c.h"
+%include "gnuradio/qtgui/waterfall_sink_c.h"
+%include "gnuradio/qtgui/waterfall_sink_f.h"
+%include "gnuradio/qtgui/histogram_sink_f.h"
+
+GR_SWIG_BLOCK_MAGIC2(qtgui, sink_c);
+GR_SWIG_BLOCK_MAGIC2(qtgui, sink_f);
+GR_SWIG_BLOCK_MAGIC2(qtgui, time_sink_c);
+GR_SWIG_BLOCK_MAGIC2(qtgui, time_sink_f);
+GR_SWIG_BLOCK_MAGIC2(qtgui, time_raster_sink_b);
+GR_SWIG_BLOCK_MAGIC2(qtgui, time_raster_sink_f);
+GR_SWIG_BLOCK_MAGIC2(qtgui, freq_sink_c);
+GR_SWIG_BLOCK_MAGIC2(qtgui, freq_sink_f);
+GR_SWIG_BLOCK_MAGIC2(qtgui, const_sink_c);
+GR_SWIG_BLOCK_MAGIC2(qtgui, waterfall_sink_c);
+GR_SWIG_BLOCK_MAGIC2(qtgui, waterfall_sink_f);
+GR_SWIG_BLOCK_MAGIC2(qtgui, histogram_sink_f);

@@ -26,8 +26,8 @@
 
 #include "socket_pdu_impl.h"
 #include "tcp_connection.h"
-#include <gr_io_signature.h>
-#include <gr_pdu.h>
+#include <gnuradio/io_signature.h>
+#include <gnuradio/blocks/pdu.h>
 
 namespace gr {
   namespace blocks {
@@ -39,9 +39,9 @@ namespace gr {
     }
 
     socket_pdu_impl::socket_pdu_impl(std::string type, std::string addr, std::string port, int MTU)
-      :	gr_block("socket_pdu",
-		 gr_make_io_signature (0, 0, 0),
-		 gr_make_io_signature (0, 0, 0))
+      :	block("socket_pdu",
+		 io_signature::make (0, 0, 0),
+		 io_signature::make (0, 0, 0))
     {
       message_port_register_in(PDU_PORT_ID);
       message_port_register_out(PDU_PORT_ID);
@@ -104,7 +104,7 @@ namespace gr {
       else
 	throw std::runtime_error("gr::blocks:socket_pdu: unknown socket type");
 
-      d_thread = gruel::thread(boost::bind(&socket_pdu_impl::run_io_service, this));
+      d_thread = gr::thread::thread(boost::bind(&socket_pdu_impl::run_io_service, this));
       d_started = true;
     }
 
@@ -112,8 +112,8 @@ namespace gr {
     socket_pdu_impl::handle_tcp_read(const boost::system::error_code& error, size_t bytes_transferred)
     {
       if (!error) {
-	pmt::pmt_t vector = pmt::pmt_init_u8vector(bytes_transferred, (const uint8_t *)&d_rxbuf[0]);
-	pmt::pmt_t pdu = pmt::pmt_cons(pmt::PMT_NIL, vector);
+	pmt::pmt_t vector = pmt::init_u8vector(bytes_transferred, (const uint8_t *)&d_rxbuf[0]);
+	pmt::pmt_t pdu = pmt::cons(pmt::PMT_NIL, vector);
 	message_port_pub(PDU_PORT_ID, pdu);
 
 	d_tcp_socket->async_read_some(boost::asio::buffer(d_rxbuf),
@@ -138,7 +138,7 @@ namespace gr {
     void
     socket_pdu_impl::tcp_server_send(pmt::pmt_t msg)
     {
-      pmt::pmt_t vector = pmt::pmt_cdr(msg);
+      pmt::pmt_t vector = pmt::cdr(msg);
       for(size_t i = 0; i < d_tcp_connections.size(); i++)
         d_tcp_connections[i]->send(vector);
     }
@@ -158,22 +158,22 @@ namespace gr {
     void
     socket_pdu_impl::tcp_client_send(pmt::pmt_t msg)
     {
-      pmt::pmt_t vector = pmt::pmt_cdr(msg);
-      size_t len = pmt::pmt_length(vector);
+      pmt::pmt_t vector = pmt::cdr(msg);
+      size_t len = pmt::length(vector);
       size_t offset(0);
       boost::array<char, 10000> txbuf;
-      memcpy(&txbuf[0], pmt::pmt_uniform_vector_elements(vector, offset), len);
+      memcpy(&txbuf[0], pmt::uniform_vector_elements(vector, offset), len);
       d_tcp_socket->send(boost::asio::buffer(txbuf,len));
     }
 
     void
     socket_pdu_impl::udp_send(pmt::pmt_t msg)
     {
-      pmt::pmt_t vector = pmt::pmt_cdr(msg);
-      size_t len = pmt::pmt_length(vector);
+      pmt::pmt_t vector = pmt::cdr(msg);
+      size_t len = pmt::length(vector);
       size_t offset(0);
       boost::array<char, 10000> txbuf;
-      memcpy(&txbuf[0], pmt::pmt_uniform_vector_elements(vector, offset), len);
+      memcpy(&txbuf[0], pmt::uniform_vector_elements(vector, offset), len);
       if (d_udp_endpoint_other.address().to_string() != "0.0.0.0")
         d_udp_socket->send_to(boost::asio::buffer(txbuf,len), d_udp_endpoint_other);
     }
@@ -182,8 +182,8 @@ namespace gr {
     socket_pdu_impl::handle_udp_read(const boost::system::error_code& error, size_t bytes_transferred)
     {
       if (!error) {
-        pmt::pmt_t vector = pmt::pmt_init_u8vector(bytes_transferred, (const uint8_t*)&d_rxbuf[0]);
-        pmt::pmt_t pdu = pmt::pmt_cons( pmt::PMT_NIL, vector);
+        pmt::pmt_t vector = pmt::init_u8vector(bytes_transferred, (const uint8_t*)&d_rxbuf[0]);
+        pmt::pmt_t pdu = pmt::cons( pmt::PMT_NIL, vector);
         
         message_port_pub(PDU_PORT_ID, pdu);
     

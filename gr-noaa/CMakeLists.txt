@@ -1,4 +1,4 @@
-# Copyright 2011 Free Software Foundation, Inc.
+# Copyright 2011,2012 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -28,11 +28,17 @@ include(GrBoost)
 include(GrComponent)
 GR_REGISTER_COMPONENT("gr-noaa" ENABLE_GR_NOAA
     Boost_FOUND
-    ENABLE_GR_CORE
+    ENABLE_GNURADIO_RUNTIME
+    ENABLE_GR_BLOCKS
 )
 
 GR_SET_GLOBAL(GR_NOAA_INCLUDE_DIRS
-    ${CMAKE_CURRENT_SOURCE_DIR}/lib
+    ${CMAKE_CURRENT_SOURCE_DIR}/include
+    ${CMAKE_CURRENT_BINARY_DIR}/include
+)
+
+GR_SET_GLOBAL(GR_NOAA_SWIG_INCLUDE_DIRS
+    ${CMAKE_CURRENT_SOURCE_DIR}/swig
 )
 
 SET(GR_PKG_NOAA_EXAMPLES_DIR ${GR_PKG_DATA_DIR}/examples/noaa)
@@ -52,36 +58,38 @@ CPACK_COMPONENT("noaa_runtime"
     GROUP        "NOAA"
     DISPLAY_NAME "Runtime"
     DESCRIPTION  "Runtime"
-    DEPENDS      "core_runtime"
+    DEPENDS      "runtime_runtime"
 )
 
 CPACK_COMPONENT("noaa_devel"
     GROUP        "NOAA"
     DISPLAY_NAME "Development"
     DESCRIPTION  "C++ headers, package config, import libraries"
-    DEPENDS      "core_devel"
+    DEPENDS      "runtime_devel"
 )
 
 CPACK_COMPONENT("noaa_python"
     GROUP        "NOAA"
     DISPLAY_NAME "Python"
     DESCRIPTION  "Python modules for runtime; GRC xml files"
-    DEPENDS      "core_python;noaa_runtime"
+    DEPENDS      "runtime_python;noaa_runtime"
 )
 
 CPACK_COMPONENT("noaa_swig"
     GROUP        "NOAA"
     DISPLAY_NAME "SWIG"
     DESCRIPTION  "SWIG development .i files"
-    DEPENDS      "core_swig;noaa_python;noaa_devel"
+    DEPENDS      "runtime_swig;noaa_python;noaa_devel"
 )
 
 ########################################################################
 # Add subdirectories
 ########################################################################
+add_subdirectory(include/gnuradio/noaa)
 add_subdirectory(lib)
 if(ENABLE_PYTHON)
     add_subdirectory(swig)
+    add_subdirectory(python/noaa)
     add_subdirectory(grc)
     add_subdirectory(examples)
 endif(ENABLE_PYTHON)

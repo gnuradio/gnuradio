@@ -27,6 +27,10 @@
 #include <volk/volk.h>
 #include <stdio.h>
 #include <string.h>
+#include <assert.h>
+
+static size_t __alignment = 0;
+static intptr_t __alignment_mask = 0;
 
 struct volk_machine *get_machine(void) {
     extern struct volk_machine *volk_machines[];
@@ -46,45 +50,118 @@ struct volk_machine *get_machine(void) {
             }
         }
         printf("Using Volk machine: %s\n", machine->name);
+        __alignment = machine->alignment;
+        __alignment_mask = (intptr_t)(__alignment-1);
         return machine;
     }
 }
 
-unsigned int volk_get_alignment(void) {
-    return get_machine()->alignment;
+size_t volk_get_alignment(void)
+{
+    get_machine(); //ensures alignment is set
+    return __alignment;
 }
+
+bool volk_is_aligned(const void *ptr)
+{
+    return ((intptr_t)(ptr) & __alignment_mask) == 0;
+}
+
+#define LV_HAVE_GENERIC
+#define LV_HAVE_DISPATCHER
 
 #for $kern in $kernels
 
-void get_$(kern.name)($kern.arglist_namedefs) {
-    $kern.name = get_machine()->$(kern.name)_archs[volk_rank_archs(
-        get_machine()->$(kern.name)_indices,
-        get_machine()->$(kern.name)_arch_defs,
-        get_machine()->$(kern.name)_n_archs,
-        get_machine()->$(kern.name)_name,
-        volk_get_lvarch()
-    )];
+#if $kern.has_dispatcher
+#include <volk/$(kern.name).h> //pulls in the dispatcher
+#end if
+
+static inline void __$(kern.name)_d($kern.arglist_full)
+{
+    #if $kern.has_dispatcher
+    $(kern.name)_dispatcher($kern.arglist_names);
+    return;
+    #end if
+
+    if (volk_is_aligned(
+    #set $num_open_parens = 0
+    #for $arg_type, $arg_name in $kern.args
+        #if '*' in $arg_type
+        VOLK_OR_PTR($arg_name,
+        #set $num_open_parens += 1
+        #end if
+    #end for
+        0$(')'*$num_open_parens)
+    )){
+        $(kern.name)_a($kern.arglist_names);
+    }
+    else{
+        $(kern.name)_u($kern.arglist_names);
+    }
+}
+
+static inline void __init_$(kern.name)(void)
+{
+    const char *name = get_machine()->$(kern.name)_name;
+    const char **impl_names = get_machine()->$(kern.name)_impl_names;
+    const int *impl_deps = get_machine()->$(kern.name)_impl_deps;
+    const bool *alignment = get_machine()->$(kern.name)_impl_alignment;
+    const size_t n_impls = get_machine()->$(kern.name)_n_impls;
+    const size_t index_a = volk_rank_archs(name, impl_names, impl_deps, alignment, n_impls, true/*aligned*/);
+    const size_t index_u = volk_rank_archs(name, impl_names, impl_deps, alignment, n_impls, false/*unaligned*/);
+    $(kern.name)_a = get_machine()->$(kern.name)_impls[index_a];
+    $(kern.name)_u = get_machine()->$(kern.name)_impls[index_u];
+
+    assert($(kern.name)_a);
+    assert($(kern.name)_u);
+
+    $(kern.name) = &__$(kern.name)_d;
+}
+
+static inline void __$(kern.name)_a($kern.arglist_full)
+{
+    __init_$(kern.name)();
+    $(kern.name)_a($kern.arglist_names);
+}
+
+static inline void __$(kern.name)_u($kern.arglist_full)
+{
+    __init_$(kern.name)();
+    $(kern.name)_u($kern.arglist_names);
+}
+
+static inline void __$(kern.name)($kern.arglist_full)
+{
+    __init_$(kern.name)();
     $(kern.name)($kern.arglist_names);
 }
 
-$kern.pname $kern.name = &get_$(kern.name);
+$kern.pname $(kern.name)_a = &__$(kern.name)_a;
+$kern.pname $(kern.name)_u = &__$(kern.name)_u;
+$kern.pname $(kern.name)   = &__$(kern.name);
 
-void $(kern.name)_manual($kern.arglist_namedefs, const char* arch) {
-    const size_t index = get_index(
-        get_machine()->$(kern.name)_indices,
-        get_machine()->$(kern.name)_n_archs,
-        arch
+void $(kern.name)_manual($kern.arglist_full, const char* impl_name)
+{
+    const int index = volk_get_index(
+        get_machine()->$(kern.name)_impl_names,
+        get_machine()->$(kern.name)_n_impls,
+        impl_name
     );
-    get_machine()->$(kern.name)_archs[index](
+    get_machine()->$(kern.name)_impls[index](
         $kern.arglist_names
     );
 }
 
-struct volk_func_desc $(kern.name)_get_func_desc(void) {
-    struct volk_func_desc desc = {
-        get_machine()->$(kern.name)_indices,
-        get_machine()->$(kern.name)_arch_defs,
-        get_machine()->$(kern.name)_n_archs
+volk_func_desc_t $(kern.name)_get_func_desc(void) {
+    const char **impl_names = get_machine()->$(kern.name)_impl_names;
+    const int *impl_deps = get_machine()->$(kern.name)_impl_deps;
+    const bool *alignment = get_machine()->$(kern.name)_impl_alignment;
+    const size_t n_impls = get_machine()->$(kern.name)_n_impls;
+    volk_func_desc_t desc = {
+        impl_names,
+        impl_deps,
+        alignment,
+        n_impls
     };
     return desc;
 }

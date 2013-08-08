@@ -23,7 +23,7 @@
 #ifndef INCLUDED_FLOAT_TO_UCHAR_IMPL_H
 #define INCLUDED_FLOAT_TO_UCHAR_IMPL_H
 
-#include <blocks/float_to_uchar.h>
+#include <gnuradio/blocks/float_to_uchar.h>
 
 namespace gr {
   namespace blocks {

@@ -28,11 +28,16 @@ include(GrBoost)
 include(GrComponent)
 GR_REGISTER_COMPONENT("gr-vocoder" ENABLE_GR_VOCODER
     Boost_FOUND
-    ENABLE_GR_CORE
+    ENABLE_GNURADIO_RUNTIME
+    ENABLE_GR_FFT
+    ENABLE_GR_BLOCKS
+    ENABLE_GR_FILTER
+    ENABLE_GR_ANALOG
 )
 
 GR_SET_GLOBAL(GR_VOCODER_INCLUDE_DIRS
     ${CMAKE_CURRENT_SOURCE_DIR}/include
+    ${CMAKE_CURRENT_BINARY_DIR}/include
 )
 
 SET(GR_PKG_VOCODER_EXAMPLES_DIR ${GR_PKG_DATA_DIR}/examples/vocoder)
@@ -52,21 +57,21 @@ CPACK_COMPONENT("vocoder_runtime"
     GROUP        "Vocoder"
     DISPLAY_NAME "Runtime"
     DESCRIPTION  "Dynamic link libraries"
-    DEPENDS      "core_runtime"
+    DEPENDS      "runtime_runtime"
 )
 
 CPACK_COMPONENT("vocoder_devel"
     GROUP        "Vocoder"
     DISPLAY_NAME "Development"
     DESCRIPTION  "C++ headers, package config, import libraries"
-    DEPENDS      "core_devel"
+    DEPENDS      "runtime_devel"
 )
 
 CPACK_COMPONENT("vocoder_python"
     GROUP        "Vocoder"
     DISPLAY_NAME "Python"
     DESCRIPTION  "Python modules for runtime"
-    DEPENDS      "core_python;vocoder_runtime"
+    DEPENDS      "runtime_python;vocoder_runtime"
 )
 
 CPACK_COMPONENT("vocoder_examples"
@@ -80,18 +85,18 @@ CPACK_COMPONENT("vocoder_swig"
     GROUP        "Vocoder"
     DISPLAY_NAME "SWIG"
     DESCRIPTION  "SWIG development .i files"
-    DEPENDS      "core_swig;vocoder_python;vocoder_devel"
+    DEPENDS      "runtime_swig;vocoder_python;vocoder_devel"
 )
 
 ########################################################################
 # Add subdirectories
 ########################################################################
+add_subdirectory(include/gnuradio/vocoder)
 add_subdirectory(lib)
-add_subdirectory(include)
 add_subdirectory(doc)
 if(ENABLE_PYTHON)
     add_subdirectory(swig)
-    add_subdirectory(python)
+    add_subdirectory(python/vocoder)
     add_subdirectory(grc)
     add_subdirectory(examples)
 endif(ENABLE_PYTHON)

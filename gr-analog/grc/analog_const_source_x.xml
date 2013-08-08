@@ -1,0 +1,52 @@
+<?xml version="1.0"?>
+<!--
+###################################################
+##Constant Source: Custom wrapper
+###################################################
+ -->
+<block>
+	<name>Constant Source</name>
+	<key>analog_const_source_x</key>
+	<import>from gnuradio import analog</import>
+	<make>analog.sig_source_$(type.fcn)(0, analog.GR_CONST_WAVE, 0, 0, $const)</make>
+	<callback>set_offset($const)</callback>
+	<param>
+		<name>Output Type</name>
+		<key>type</key>
+		<type>enum</type>
+		<option>
+			<name>Complex</name>
+			<key>complex</key>
+			<opt>fcn:c</opt>
+			<opt>const_type:complex</opt>
+		</option>
+		<option>
+			<name>Float</name>
+			<key>float</key>
+			<opt>fcn:f</opt>
+			<opt>const_type:real</opt>
+		</option>
+		<option>
+			<name>Int</name>
+			<key>int</key>
+			<opt>fcn:i</opt>
+			<opt>const_type:int</opt>
+		</option>
+		<option>
+			<name>Short</name>
+			<key>short</key>
+			<opt>fcn:s</opt>
+			<opt>const_type:int</opt>
+		</option>
+	</param>
+	<param>
+		<name>Constant</name>
+		<key>const</key>
+		<value>0</value>
+		<type>$type.const_type</type>
+	</param>
+	<source>
+		<name>out</name>
+		<type>$type</type>
+	</source>
+</block>

@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2012 Free Software Foundation, Inc.
+# Copyright 2012,2013 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -27,6 +27,7 @@ outputs single precision complex float values or complex short values
 """
 
 from gnuradio import gr, gru, eng_notation
+from gnuradio import blocks
 from gnuradio import uhd
 from gnuradio.eng_option import eng_option
 from optparse import OptionParser
@@ -43,11 +44,11 @@ class rx_cfile_block(gr.top_block):
         if options.output_shorts:
             self._u = uhd.usrp_source(device_addr=options.args, stream_args=uhd.stream_args('sc16',
                                       options.wire_format, args=options.stream_args))
-            self._sink = gr.file_sink(gr.sizeof_short*2, filename)
+            self._sink = blocks.file_sink(gr.sizeof_short*2, filename)
         else:
             self._u = uhd.usrp_source(device_addr=options.args, stream_args=uhd.stream_args('fc32',
                                       options.wire_format, args=options.stream_args))
-            self._sink = gr.file_sink(gr.sizeof_gr_complex, filename)
+            self._sink = blocks.file_sink(gr.sizeof_gr_complex, filename)
 
         # Set the subdevice spec
         if(options.spec):
@@ -82,9 +83,9 @@ class rx_cfile_block(gr.top_block):
             self.connect(self._u, self._sink)
         else:
             if options.output_shorts:
-                self._head = gr.head(gr.sizeof_short*2, int(options.nsamples))
+                self._head = blocks.head(gr.sizeof_short*2, int(options.nsamples))
             else:
-                self._head = gr.head(gr.sizeof_gr_complex, int(options.nsamples))
+                self._head = blocks.head(gr.sizeof_gr_complex, int(options.nsamples))
 
             self.connect(self._u, self._head, self._sink)
 

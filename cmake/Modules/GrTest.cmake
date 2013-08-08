@@ -30,6 +30,7 @@ set(__INCLUDED_GR_TEST_CMAKE TRUE)
 # GR_TEST_TARGET_DEPS  - built targets for the library path
 # GR_TEST_LIBRARY_DIRS - directories for the library path
 # GR_TEST_PYTHON_DIRS  - directories for the python path
+# GR_TEST_ENVIRONS  - other environment key/value pairs
 ########################################################################
 function(GR_ADD_TEST test_name)
 
@@ -66,6 +67,7 @@ function(GR_ADD_TEST test_name)
     file(TO_NATIVE_PATH "${GR_TEST_PYTHON_DIRS}" pypath) #ok to use on dir list?
 
     set(environs "GR_DONT_LOAD_PREFS=1" "srcdir=${srcdir}")
+    list(APPEND environs ${GR_TEST_ENVIRONS})
 
     #http://www.cmake.org/pipermail/cmake/2009-May/029464.html
     #Replaced this add test + set environs code with the shell script generation.

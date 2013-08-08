@@ -25,7 +25,7 @@
 #endif
 
 #include "message_burst_source_impl.h"
-#include <gr_io_signature.h>
+#include <gnuradio/io_signature.h>
 #include <cstdio>
 #include <errno.h>
 #include <sys/types.h>
@@ -33,7 +33,7 @@
 #include <fcntl.h>
 #include <stdexcept>
 #include <string.h>
-#include <gr_tags.h>
+#include <gnuradio/tags.h>
 
 namespace gr {
   namespace blocks {
@@ -46,34 +46,34 @@ namespace gr {
     }
 
     message_burst_source::sptr
-    message_burst_source::make(size_t itemsize, gr_msg_queue_sptr msgq)
+    message_burst_source::make(size_t itemsize, msg_queue::sptr msgq)
     {
       return gnuradio::get_initial_sptr
         (new message_burst_source_impl(itemsize, msgq));
     }
 
     message_burst_source_impl::message_burst_source_impl(size_t itemsize, int msgq_limit)
-      : gr_sync_block("message_burst_source",
-                      gr_make_io_signature(0, 0, 0),
-                      gr_make_io_signature(1, 1, itemsize)),
-        d_itemsize(itemsize), d_msgq(gr_make_msg_queue(msgq_limit)),
+      : sync_block("message_burst_source",
+                      io_signature::make(0, 0, 0),
+                      io_signature::make(1, 1, itemsize)),
+        d_itemsize(itemsize), d_msgq(msg_queue::make(msgq_limit)),
         d_msg_offset(0), d_eof(false)
     {
       std::stringstream id;
       id << name() << unique_id();
-      d_me = pmt::pmt_string_to_symbol(id.str());
+      d_me = pmt::string_to_symbol(id.str());
     }
 
-    message_burst_source_impl::message_burst_source_impl(size_t itemsize, gr_msg_queue_sptr msgq)
-      : gr_sync_block("message_burst_source",
-                      gr_make_io_signature(0, 0, 0),
-                      gr_make_io_signature(1, 1, itemsize)),
+    message_burst_source_impl::message_burst_source_impl(size_t itemsize, msg_queue::sptr msgq)
+      : sync_block("message_burst_source",
+                      io_signature::make(0, 0, 0),
+                      io_signature::make(1, 1, itemsize)),
         d_itemsize(itemsize), d_msgq(msgq),
         d_msg_offset(0), d_eof(false)
     {
       std::stringstream id;
       id << name() << unique_id();
-      d_me = pmt::pmt_string_to_symbol(id.str());
+      d_me = pmt::string_to_symbol(id.str());
     }
 
     message_burst_source_impl::~message_burst_source_impl()
@@ -112,8 +112,8 @@ namespace gr {
 	    //tag end of burst
 	    add_item_tag(0, //stream ID
 			 abs_sample_count+nn-1, //sample number
-			 pmt::pmt_string_to_symbol("tx_eob"),      
-			 pmt::pmt_from_bool(1),
+			 pmt::string_to_symbol("tx_eob"),      
+			 pmt::from_bool(1),
 			 d_me);        //block src id
           }
         }
@@ -133,8 +133,8 @@ namespace gr {
           //tag start of burst
           add_item_tag(0, //stream ID
                        abs_sample_count+nn, //sample number
-                       pmt::pmt_string_to_symbol("tx_sob"),      
-                       pmt::pmt_from_bool(1),
+                       pmt::string_to_symbol("tx_sob"),      
+                       pmt::from_bool(1),
                        d_me);        //block src id
 
           if((d_msg->length() % d_itemsize) != 0)

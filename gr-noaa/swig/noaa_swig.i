@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2009 Free Software Foundation, Inc.
+ * Copyright 2009,2012 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -20,17 +20,23 @@
  * Boston, MA 02110-1301, USA.
  */
 
+#define NOAA_API
+
 %include "gnuradio.i"
 
 //load generated python docstrings
 %include "noaa_swig_doc.i"
 
 %{
-#include <noaa_hrpt_decoder.h>
-#include <noaa_hrpt_deframer.h>
-#include <noaa_hrpt_pll_cf.h>
+#include "gnuradio/noaa/hrpt_decoder.h"
+#include "gnuradio/noaa/hrpt_deframer.h"
+#include "gnuradio/noaa/hrpt_pll_cf.h"
 %}
 
-%include "noaa_hrpt_decoder.i"
-%include "noaa_hrpt_deframer.i"
-%include "noaa_hrpt_pll_cf.i"
+%include "gnuradio/noaa/hrpt_decoder.h"
+%include "gnuradio/noaa/hrpt_deframer.h"
+%include "gnuradio/noaa/hrpt_pll_cf.h"
+
+GR_SWIG_BLOCK_MAGIC2(noaa, hrpt_decoder);
+GR_SWIG_BLOCK_MAGIC2(noaa, hrpt_deframer);
+GR_SWIG_BLOCK_MAGIC2(noaa, hrpt_pll_cf);

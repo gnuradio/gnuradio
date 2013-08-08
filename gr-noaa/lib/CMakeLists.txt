@@ -1,4 +1,4 @@
-# Copyright 2011,2013 Free Software Foundation, Inc.
+# Copyright 2011-2013 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -22,23 +22,26 @@
 ########################################################################
 include_directories(
     ${GR_NOAA_INCLUDE_DIRS}
-    ${GNURADIO_CORE_INCLUDE_DIRS}
-    ${GRUEL_INCLUDE_DIRS}
+    ${GNURADIO_RUNTIME_INCLUDE_DIRS}
+    ${LOG4CPP_INCLUDE_DIRS}
     ${Boost_INCLUDE_DIRS}
 )
 
 link_directories(${Boost_LIBRARY_DIRS})
-
-include_directories(${LOG4CPP_INCLUDE_DIRS})
 link_directories(${LOG4CPP_LIBRARY_DIRS})
+
+if(ENABLE_GR_CTRLPORT)
+  ADD_DEFINITIONS(-DGR_CTRLPORT)
+  include_directories(${ICE_INCLUDE_DIR})
+endif(ENABLE_GR_CTRLPORT)
 
 ########################################################################
 # Setup library
 ########################################################################
-list(APPEND gr_noaa_sources
-    noaa_hrpt_decoder.cc
-    noaa_hrpt_deframer.cc
-    noaa_hrpt_pll_cf.cc
+list(APPEND noaa_sources
+    hrpt_decoder_impl.cc
+    hrpt_deframer_impl.cc
+    hrpt_pll_cf_impl.cc
 )
 
 #Add Windows DLL resource file if using MSVC
@@ -56,23 +59,11 @@ if(MSVC)
 endif(MSVC)
 
 list(APPEND noaa_libs
-    gnuradio-core
+    gnuradio-runtime
     ${Boost_LIBRARIES}
     ${LOG4CPP_LIBRARIES}
 )
 
-add_library(gnuradio-noaa SHARED ${gr_noaa_sources})
+add_library(gnuradio-noaa SHARED ${noaa_sources})
 target_link_libraries(gnuradio-noaa ${noaa_libs})
 GR_LIBRARY_FOO(gnuradio-noaa RUNTIME_COMPONENT "noaa_runtime" DEVEL_COMPONENT "noaa_devel")
-
-########################################################################
-# Install header files
-########################################################################
-install(FILES
-    noaa_api.h
-    noaa_hrpt_decoder.h
-    noaa_hrpt_deframer.h
-    noaa_hrpt_pll_cf.h
-    DESTINATION ${GR_INCLUDE_DIR}/gnuradio
-    COMPONENT "noaa_devel"
-)

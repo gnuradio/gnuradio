@@ -1,0 +1,79 @@
+<?xml version="1.0"?>
+<!--
+ Copyright 2012 Free Software Foundation, Inc.
+ 
+ This file is part of GNU Radio
+ 
+ GNU Radio is free software; you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation; either version 3, or (at your option)
+ any later version.
+ 
+ GNU Radio is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+ 
+ You should have received a copy of the GNU General Public License
+ along with GNU Radio; see the file COPYING.  If not, write to
+ the Free Software Foundation, Inc., 51 Franklin Street,
+ Boston, MA 02110-1301, USA.
+-->
+
+<!--
+###################################################
+##OFDM Frame Sink
+###################################################
+ -->
+<block>
+	<name>OFDM Frame Sink</name>
+	<key>digital_ofdm_frame_sink</key>
+	<import>from gnuradio import digital</import>
+	<make>digital.ofdm_frame_sink($syms, $vals, $queue, $occ_tones, $ph_gain, $frq_gain)</make>
+	<param>
+		<name>Symbol Points</name>
+		<key>syms</key>
+		<type>complex_vector</type>
+	</param>
+	<param>
+		<name>Symbol Values</name>
+		<key>vals</key>
+		<type>int_vector</type>
+	</param>
+	<param>
+		<name>Message Queue</name>
+		<key>queue</key>
+		<type>raw</type>
+	</param>
+	<param>
+		<name>Occupied Tones</name>
+		<key>occ_tones</key>
+		<type>int</type>
+	</param>
+	<param>
+		<name>Phase Gain</name>
+		<key>ph_gain</key>
+		<value>0.25</value>
+		<type>real</type>
+	</param>
+	<param>
+		<name>Freq. Gain</name>
+		<key>frq_gain</key>
+		<value>0.015625</value>
+		<type>real</type>
+	</param>
+	<sink>
+		<name>in</name>
+		<type>complex</type>
+		<vlen>$occ_tones</vlen>
+	</sink>
+	<sink>
+		<name>flag</name>
+		<type>byte</type>
+	</sink>
+	<source>
+		<name>out</name>
+		<type>complex</type>
+		<vlen>$occ_tones</vlen>
+	</source>
+</block>

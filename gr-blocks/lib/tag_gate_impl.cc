@@ -24,7 +24,7 @@
 #include "config.h"
 #endif
 
-#include <gr_io_signature.h>
+#include <gnuradio/io_signature.h>
 #include "tag_gate_impl.h"
 
 namespace gr {
@@ -37,9 +37,9 @@ namespace gr {
     }
 
     tag_gate_impl::tag_gate_impl(size_t item_size, bool propagate_tags)
-      : gr_sync_block("tag_gate",
-		      gr_make_io_signature(1, 1, item_size),
-		      gr_make_io_signature(1, 1, item_size)),
+      : gr::sync_block("tag_gate",
+		       gr::io_signature::make(1, 1, item_size),
+		       gr::io_signature::make(1, 1, item_size)),
       d_item_size(item_size),
       d_propagate_tags(propagate_tags)
     {

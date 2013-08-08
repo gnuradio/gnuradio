@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2005,2007,2011 Free Software Foundation, Inc.
+# Copyright 2005,2007,2011,2012 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -20,7 +20,10 @@
 # Boston, MA 02110-1301, USA.
 #
 
-from gnuradio import gr, audio, blks2, uhd
+from gnuradio import gr, audio, uhd
+from gnuradio import blocks
+from gnuradio import filter
+from gnuradio import analog
 from gnuradio.eng_option import eng_option
 from gnuradio.wxgui import slider, powermate
 from gnuradio.wxgui import stdgui2, fftsink2, form
@@ -285,24 +288,24 @@ class receive_path(gr.hier_block2):
 
         # Create filter to get actual channel we want
         nfilts = 32
-        chan_coeffs = gr.firdes.low_pass (nfilts,              # gain
-                                          nfilts*dev_rate,     # sampling rate
-                                          8e3,                 # low pass cutoff freq
-                                          2e3,                 # width of trans. band
-                                          gr.firdes.WIN_HANN)  # filter type
+        chan_coeffs = filter.firdes.low_pass(nfilts,              # gain
+                                             nfilts*dev_rate,     # sampling rate
+                                             8e3,                 # low pass cutoff freq
+                                             2e3,                 # width of trans. band
+                                             filter.firdes.WIN_HANN)  # filter type
         rrate = self.quad_rate / dev_rate
-        self.resamp = blks2.pfb_arb_resampler_ccf(rrate, chan_coeffs, nfilts)
+        self.resamp = filter.pfb.arb_resampler_ccf(rrate, chan_coeffs, nfilts)
 
         if USE_SIMPLE_SQUELCH:
-            self.squelch = gr.simple_squelch_cc(20)
+            self.squelch = analog.simple_squelch_cc(20)
         else:
-            self.squelch = blks2.standard_squelch(self.audio_rate)
+            self.squelch = analog.standard_squelch(self.audio_rate)
 
         # instantiate the guts of the single channel receiver
-        self.fmrx = blks2.nbfm_rx(self.audio_rate, self.quad_rate)
+        self.fmrx = analog.nbfm_rx(self.audio_rate, self.quad_rate)
 
         # audio gain / mute block
-        self._audio_gain = gr.multiply_const_ff(1.0)
+        self._audio_gain = blocks.multiply_const_ff(1.0)
 
         # sound card as final sink
         audio_sink = audio.sink (int(self.audio_rate), audio_output)
@@ -357,7 +360,8 @@ class receive_path(gr.hier_block2):
         """
         Set the center frequency we're interested in.
 
-        @param target_freq: frequency in Hz
+        Args:
+            target_freq: frequency in Hz
         @rypte: bool
         """
 

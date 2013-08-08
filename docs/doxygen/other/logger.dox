@@ -24,12 +24,13 @@ different levels. These levels are:
 
 The order here determines the level of output. These levels are
 hierarchical in that specifying any level also includes any level
-above it. For example, when using the WARN level, all WARN and
-higher messages are logged while DEBUG and INFO are ignored.
+above it. For example, when using the INFO level, all INFO and
+higher messages are logged and DEBUG is ignored.  A level NOTSET is provided
+to disable a logger.
 
 \subsection configfile Logging Configuration
 
-The logging configuration can be found in the gnuradio-core.conf file
+The logging configuration can be found in the gnuradio-runtime.conf file
 under the [LOG] section. This allows us fairly complete control over
 the logging facilities. The main configuration functions are to set up
 the level of the loggers and set the default output behavior of the
@@ -143,7 +144,7 @@ provided with GNU Radio can be used. After installation, the default
 configuration script is located at:
 
 <pre>
-    $prefix/etc/gnuradio/gr_log_default.xml
+    $prefix/etc/gnuradio/gr_log_default.conf
 </pre>
 
 For the following examples, we will assume that our local
@@ -151,12 +152,12 @@ For the following examples, we will assume that our local
 
 \code
 [LOG]
-log_config = /opt/gr/etc/gnuadio/gr_log_default.xml
+log_config = /opt/gr/etc/gnuadio/gr_log_default.conf
 log_level = debug
 debug_level = Off
 \endcode
 
-Inside of the XML default configuration file, we define the parameters
+Inside of the default configuration file, we define the parameters
 for the two logger's, the standard logger the separate debug logger.
 
 If the levels of the two loggers are specified in our configuration
@@ -190,7 +191,7 @@ which has a root of "gr_log." (access to the debug logger is similar
 except we would use "gr_log_debug." in the GR_LOG_GETLOGGER call):
 
 \code
-    gr_prefs *p = gr_prefs::singleton();
+    prefs *p = prefs::singleton();
     std::string log_file = p->get_string("LOG", "log_config", "");
     std::string log_level = p->get_string("LOG", "log_level", "off");
     GR_CONFIG_LOGGER(log_file);
@@ -202,4 +203,24 @@ This creates a pointer called LOG (which is instantiated as a
 log4cpp:LoggerPtr in the macro) that we can now use locally as the
 input to our logging macros like 'GR_LOG_INFO(LOG, "message")'.
 
+\section logPy Logging from Python
+
+The logging capability has been brought out python via swig. The configuration 
+of the logger can be manipulated via the following calls:
+\code
+ from gnuradio import gr
+ gr.logger_config(filename,watch_period)  # Configures the logger with conf file filename
+ names = gr.logger_get_logger_names()  # Returns the names of all loggers
+ gr.logger_reset_config()   # Resets logger config by removing all appenders
+\endcode
+
+Once the logger is configured you can manipulate a logger via a wrapper class gr.logger(). 
+You can isntantiate this by the following.  (Reference logger.h for list of methods)
+\code
+ from gnuradio import gr
+ log=gr.logger("nameOfLogger")
+ log.debug("Log a debug message")
+ log.set_level("INFO");
+
+\endcode
 */

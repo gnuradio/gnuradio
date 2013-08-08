@@ -22,7 +22,7 @@
 #ifndef INCLUDED_DIGITAL_HEADER_PAYLOAD_DEMUX_IMPL_H
 #define INCLUDED_DIGITAL_HEADER_PAYLOAD_DEMUX_IMPL_H
 
-#include <digital/header_payload_demux.h>
+#include <gnuradio/digital/header_payload_demux.h>
 
 namespace gr {
   namespace digital {
@@ -38,28 +38,37 @@ namespace gr {
       bool d_output_symbols; //!< If true, output is symbols, not items
       size_t d_itemsize; //!< Bytes per item
       bool d_uses_trigger_tag; //!< If a trigger tag is used
-      int d_ninput_items_reqd; //!< Helper for forecast()
       int d_state; //!< Current read state
-      int d_remaining_symbols; //!< When in payload or header state, the number of symbols still to transmit
+      int d_curr_payload_len; //!< Length of the next payload (symbols)
+      std::vector<pmt::pmt_t> d_payload_tag_keys; //!< Temporary buffer for PMTs that go on the payload (keys)
+      std::vector<pmt::pmt_t> d_payload_tag_values; //!< Temporary buffer for PMTs that go on the payload (values)
 
       // Helpers to make the state machine more readable
 
-      //! Helper function that does the reading from the msg port
-      bool parse_header_data_msg();
+      //! Checks if there are enough items on the inputs and enough space on the output buffers to copy \p n_symbols symbols
+      inline bool check_items_available(int n_symbols, gr_vector_int &ninput_items, int noutput_items, int nread);
+
+      //! Message handler: Reads the result from the header demod and sets length tag (and other tags)
+      void parse_header_data_msg(pmt::pmt_t header_data);
 
       //! Helper function that returns true if a trigger signal is detected.
-      //  Searches input 1 (if active), then the tags. Sets \p pos to the position
-      //  of the first tag.
-      bool find_trigger_signal(
-	int &pos,
+      //  Searches input 1 (if active), then the tags. Returns the offset in the input buffer
+      //  (or -1 if none is found)
+      int find_trigger_signal(
+	int nread,
 	int noutput_items,
 	gr_vector_const_void_star &input_items);
 
-      //! Helper function, copies one symbol from in to out and updates all pointers and counters
-      void copy_symbol(const unsigned char *&in, unsigned char *&out, int port, int &nread, int &nproduced);
+      //! Copies n symbols from in to out, makes sure tags are propagated properly
+      void copy_n_symbols(
+	  const unsigned char *in,
+	  unsigned char *out,
+	  int port,
+	  int n_symbols
+      );
+
 
      public:
-
       header_payload_demux_impl(
 	  int header_len,
 	  int items_per_symbol,

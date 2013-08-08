@@ -25,7 +25,7 @@
 #endif
 
 #include "copy_impl.h"
-#include <gr_io_signature.h>
+#include <gnuradio/io_signature.h>
 #include <string.h>
 
 namespace gr {
@@ -39,9 +39,9 @@ namespace gr {
     }
 
     copy_impl::copy_impl(size_t itemsize)
-      : gr_block("copy",
-                 gr_make_io_signature(1, -1, itemsize),
-                 gr_make_io_signature(1, -1, itemsize)),
+      : block("copy",
+                 io_signature::make(1, -1, itemsize),
+                 io_signature::make(1, -1, itemsize)),
         d_itemsize(itemsize),
         d_enabled(true)
     {

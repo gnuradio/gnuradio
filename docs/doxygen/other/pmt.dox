@@ -66,25 +66,25 @@ underneath is still a C++ typed object, and so the right type of
 set/get function must be used for the data type.
 
 Typically, a PMT object can be made from a scalar item using a call
-like "pmt::pmt_from_<type>". Similarly, when getting data out of a
-PMT, we use a call like "pmt::pmt_to_<type>". For example:
+like "pmt::from_<type>". Similarly, when getting data out of a
+PMT, we use a call like "pmt::to_<type>". For example:
 
 \code
 double a = 1.2345;
-pmt::pmt_t pmt_a = pmt::pmt_from_double(a);
-double b = pmt::pmt_to_double(pmt_a);
+pmt::pmt_t pmt_a = pmt::from_double(a);
+double b = pmt::to_double(pmt_a);
 
 int c = 12345;
-pmt::pmt_t pmt_c = pmt::pmt_from_long(c);
-int d = pmt::pmt_to_long(pmt_c);
+pmt::pmt_t pmt_c = pmt::from_long(c);
+int d = pmt::to_long(pmt_c);
 \endcode
 
 As a side-note, making a PMT from a complex number is not obvious:
 
 \code
 std::complex<double> a(1.2, 3.4);
-pmt::pmt_t pmt_a = pmt::pmt_make_rectangular(a.real(), b.imag());
-std::complex<double> b = pmt::pmt_to_complex(pmt_a);
+pmt::pmt_t pmt_a = pmt::make_rectangular(a.real(), b.imag());
+std::complex<double> b = pmt::to_complex(pmt_a);
 \endcode
 
 Pairs, dictionaries, and vectors have different constructors and ways
@@ -100,17 +100,17 @@ new symbol from a string, if that string already exists in the hash
 table, the constructor will return a reference to the existing PMT.
 
 We create strings with the following functions, where the second
-function, pmt::pmt_intern, is simply an alias of the first.
+function, pmt::intern, is simply an alias of the first.
 
 \code
-pmt::pmt_t str0 = pmt::pmt_string_to_symbol(std::string("some string"));
-pmt::pmt_t str1 = pmt::pmt_intern(std::string("some string"));
+pmt::pmt_t str0 = pmt::string_to_symbol(std::string("some string"));
+pmt::pmt_t str1 = pmt::intern(std::string("some string"));
 \endcode
 
 The string can be retrieved using the inverse function:
 
 \code
-std::string s = pmt::pmt_symbol_to_string(str0);
+std::string s = pmt::symbol_to_string(str0);
 \endcode
 
 
@@ -118,28 +118,28 @@ std::string s = pmt::pmt_symbol_to_string(str0);
 
 The PMT library comes with a number of functions to test and compare
 PMT objects. In general, for any PMT data type, there is an equivalent
-"pmt::pmt_is_<type>". We can use these to test the PMT before trying
+"pmt::is_<type>". We can use these to test the PMT before trying
 to access the data inside. Expanding our examples above, we have:
 
 \code
-pmt::pmt_t str0 = pmt::pmt_string_to_symbol(std::string("some string"));
-if(pmt::pmt_is_symbol(str0))
-    std::string s = pmt::pmt_symbol_to_string(str0);
+pmt::pmt_t str0 = pmt::string_to_symbol(std::string("some string"));
+if(pmt::is_symbol(str0))
+    std::string s = pmt::symbol_to_string(str0);
 
 double a = 1.2345;
-pmt::pmt_t pmt_a = pmt::pmt_from_double(a);
-if(pmt::pmt_is_double(pmt_a))
-    double b = pmt::pmt_to_double(pmt_a);
+pmt::pmt_t pmt_a = pmt::from_double(a);
+if(pmt::is_double(pmt_a))
+    double b = pmt::to_double(pmt_a);
 
 int c = 12345;
-pmt::pmt_t pmt_c = pmt::pmt_from_long(c);
-if(pmt::pmt_is_long(pmt_a))
-    int d = pmt::pmt_to_long(pmt_c);
+pmt::pmt_t pmt_c = pmt::from_long(c);
+if(pmt::is_long(pmt_a))
+    int d = pmt::to_long(pmt_c);
 
 \\ This will fail the test. Otherwise, trying to coerce \b pmt_c as a
 \\ double when internally it is a long will result in an exception.
-if(pmt::pmt_is_double(pmt_a))
-    double d = pmt::pmt_to_double(pmt_c);
+if(pmt::is_double(pmt_a))
+    double d = pmt::to_double(pmt_c);
 
 \endcode
 
@@ -156,15 +156,15 @@ returned dictionary is a new PMT with the changes made there.
 The following is a list of PMT dictionary functions. Click through to
 get more information on what each does.
 
-- bool pmt::pmt_is_dict(const pmt_t &obj)
-- pmt_t pmt::pmt_make_dict()
-- pmt_t pmt::pmt_dict_add(const pmt_t &dict, const pmt_t &key, const pmt_t &value)
-- pmt_t pmt::pmt_dict_delete(const pmt_t &dict, const pmt_t &key)
-- bool pmt::pmt_dict_has_key(const pmt_t &dict, const pmt_t &key)
-- pmt_t pmt::pmt_dict_ref(const pmt_t &dict, const pmt_t &key, const pmt_t &not_found)
-- pmt_t pmt::pmt_dict_items(pmt_t dict)
-- pmt_t pmt::pmt_dict_keys(pmt_t dict)
-- pmt_t pmt::pmt_dict_values(pmt_t dict)
+- bool pmt::is_dict(const pmt_t &obj)
+- pmt_t pmt::make_dict()
+- pmt_t pmt::dict_add(const pmt_t &dict, const pmt_t &key, const pmt_t &value)
+- pmt_t pmt::dict_delete(const pmt_t &dict, const pmt_t &key)
+- bool pmt::dict_has_key(const pmt_t &dict, const pmt_t &key)
+- pmt_t pmt::dict_ref(const pmt_t &dict, const pmt_t &key, const pmt_t &not_found)
+- pmt_t pmt::dict_items(pmt_t dict)
+- pmt_t pmt::dict_keys(pmt_t dict)
+- pmt_t pmt::dict_values(pmt_t dict)
 
 This example does some basic manipulations of PMT dictionaries in
 Python. Notice that we pass the dictionary \a a and return the results
@@ -173,41 +173,41 @@ reference to the old dictionary. This just keeps our number of
 variables small.
 
 \code
-from gruel import pmt
+import pmt
 
-key0 = pmt.pmt_intern("int")
-val0 = pmt.pmt_from_long(123)
-val1 = pmt.pmt_from_long(234)
+key0 = pmt.intern("int")
+val0 = pmt.from_long(123)
+val1 = pmt.from_long(234)
 
-key1 = pmt.pmt_intern("double")
-val2 = pmt.pmt_from_double(5.4321)
+key1 = pmt.tern("double")
+val2 = pmt.om_double(5.4321)
 
 # Make an empty dictionary
-a = pmt.pmt_make_dict()
+a = pmt.make_dict()
 
 # Add a key:value pair to the dictionary
-a = pmt.pmt_dict_add(a, key0, val0)
-pmt.pmt_print(a)
+a = pmt.dict_add(a, key0, val0)
+print a
 
 # Add a new value to the same key;
 # new dict will still have one item with new value
-a = pmt.pmt_dict_add(a, key0, val1)
-pmt.pmt_print(a)
+a = pmt.dict_add(a, key0, val1)
+print a
 
 # Add a new key:value pair
-a = pmt.pmt_dict_add(a, key1, val2)
-pmt.pmt_print(a)
+a = pmt.dict_add(a, key1, val2)
+print a
 
 # Test if we have a key, then delete it
-print pmt.pmt_dict_has_key(a, key1)
-a = pmt.pmt_dict_delete(a, key1)
-print pmt.pmt_dict_has_key(a, key1)
+print pmt.dict_has_key(a, key1)
+a = pmt.dict_delete(a, key1)
+print pmt.dict_has_key(a, key1)
 
-ref = pmt.pmt_dict_ref(a, key0, pmt.PMT_NIL)
-pmt.pmt_print(ref)
+ref = pmt.dict_ref(a, key0, pmt.PMT_NIL)
+print ref
 
 # The following should never print
-if(pmt.pmt_dict_has_key(a, key0) and pmt.pmt_eq(ref, pmt.PMT_NIL)):
+if(pmt.dict_has_key(a, key0) and pmt.eq(ref, pmt.PMT_NIL)):
     print "Trouble! We have key0, but it returned PMT_NIL"
 \endcode
 
@@ -232,29 +232,29 @@ both signed and unsigned.
 
 Vectors have a well-defined interface that allows us to make, set,
 get, and fill them. We can also get the length of a vector with
-pmt::pmt_length.
+pmt::length.
 
 For standard vectors, these functions look like:
 
-- bool pmt::pmt_is_vector(pmt_t x)
-- pmt_t pmt::pmt_make_vector(size_t k, pmt_t fill)
-- pmt_t pmt::pmt_vector_ref(pmt_t vector, size_t k)
-- void pmt::pmt_vector_set(pmt_t vector, size_t k, pmt_t obj)
-- void pmt::pmt_vector_fill(pmt_t vector, pmt_t fill)
+- bool pmt::is_vector(pmt_t x)
+- pmt_t pmt::make_vector(size_t k, pmt_t fill)
+- pmt_t pmt::vector_ref(pmt_t vector, size_t k)
+- void pmt::vector_set(pmt_t vector, size_t k, pmt_t obj)
+- void pmt::vector_fill(pmt_t vector, pmt_t fill)
 
 Uniform vectors have the same types of functions, but they are data
 type-dependent. The following list tries to explain them where you
 substitute the specific data type prefix for \a dtype (prefixes being:
 u8, u16, u32, u64, s8, s16, s32, s64, f32, f64, c32, c64).
 
-- bool pmt::pmt_is_(dtype)vector(pmt_t x)
-- pmt_t pmt::pmt_make_(dtype)vector(size_t k, (dtype) fill)
-- pmt_t pmt::pmt_init_(dtype)vector(size_t k, const (dtype*) data)
-- pmt_t pmt::pmt_init_(dtype)vector(size_t k, const std::vector<dtype> data)
-- pmt_t pmt::pmt_(dtype)vector_ref(pmt_t vector, size_t k)
-- void pmt::pmt_(dtype)vector_set(pmt_t vector, size_t k, (dtype) x)
-- const dtype* pmt::pmt_(dtype)vector_elements(pmt_t vector, size_t &len)
-- dtype* pmt::pmt_(dtype)vector_writable_elements(pmt_t vector, size_t &len)
+- bool pmt::is_(dtype)vector(pmt_t x)
+- pmt_t pmt::make_(dtype)vector(size_t k, (dtype) fill)
+- pmt_t pmt::init_(dtype)vector(size_t k, const (dtype*) data)
+- pmt_t pmt::init_(dtype)vector(size_t k, const std::vector<dtype> data)
+- pmt_t pmt::(dtype)vector_ref(pmt_t vector, size_t k)
+- void pmt::(dtype)vector_set(pmt_t vector, size_t k, (dtype) x)
+- const dtype* pmt::(dtype)vector_elements(pmt_t vector, size_t &len)
+- dtype* pmt::(dtype)vector_writable_elements(pmt_t vector, size_t &len)
 
 \b Note: We break the contract with vectors. The 'set' functions
 actually change the data underneath. It is important to keep track of
@@ -276,12 +276,12 @@ Pairs are inspired by LISP 'cons' data types, so you will find the
 language here comes from LISP. A pair is just a pair of PMT
 objects. They are manipulated using the following functions:
 
-- bool pmt::pmt_is_pair (const pmt_t &obj): Return true if obj is a pair, else false
-- pmt_t pmt::pmt_cons(const pmt_t &x, const pmt_t &y): construct new pair
-- pmt_t pmt::pmt_car(const pmt_t &pair): get the car of the pair (first object)
-- pmt_t pmt::pmt_cdr(const pmt_t &pair): get the cdr of the pair (second object)
-- void pmt::pmt_set_car(pmt_t pair, pmt_t value): Stores value in the car field
-- void pmt::pmt_set_cdr(pmt_t pair, pmt_t value): Stores value in the cdr field
+- bool pmt::is_pair(const pmt_t &obj): Return true if obj is a pair, else false
+- pmt_t pmt::cons(const pmt_t &x, const pmt_t &y): construct new pair
+- pmt_t pmt::car(const pmt_t &pair): get the car of the pair (first object)
+- pmt_t pmt::cdr(const pmt_t &pair): get the cdr of the pair (second object)
+- void pmt::set_car(pmt_t pair, pmt_t value): Stores value in the car field
+- void pmt::set_cdr(pmt_t pair, pmt_t value): Stores value in the cdr field
 
 
 \section serdes Serializing and Deserializing
@@ -293,38 +293,38 @@ string and then methods to deserialize the string buffer or string
 back into a PMT. We use this extensively in the metadata files (see
 \ref page_metadata).
 
-- bool pmt::pmt_serialize(pmt_t obj, std::streambuf &sink)
-- std::string pmt::pmt_serialize_str(pmt_t obj)
-- pmt_t pmt::pmt_deserialize(std::streambuf &source)
-- pmt_t pmt::pmt_deserialize_str(std::string str)
+- bool pmt::serialize(pmt_t obj, std::streambuf &sink)
+- std::string pmt::serialize_str(pmt_t obj)
+- pmt_t pmt::deserialize(std::streambuf &source)
+- pmt_t pmt::deserialize_str(std::string str)
 
 For example, we will serialize the data above to make it into a string
 ready to be written to a file and then deserialize it back to its
 original PMT.
 
 \code
-from gruel import pmt
+import pmt
 
-key0 = pmt.pmt_intern("int")
-val0 = pmt.pmt_from_long(123)
+key0 = pmt.intern("int")
+val0 = pmt.from_long(123)
 
-key1 = pmt.pmt_intern("double")
-val1 = pmt.pmt_from_double(5.4321)
+key1 = pmt.intern("double")
+val1 = pmt.from_double(5.4321)
 
 # Make an empty dictionary
-a = pmt.pmt_make_dict()
+a = pmt.make_dict()
 
 # Add a key:value pair to the dictionary
-a = pmt.pmt_dict_add(a, key0, val0)
-a = pmt.pmt_dict_add(a, key1, val1)
+a = pmt.dict_add(a, key0, val0)
+a = pmt.dict_add(a, key1, val1)
 
-pmt.pmt_print(a)
+print a
 
-ser_str = pmt.pmt_serialize_str(a)
+ser_str = pmt.serialize_str(a)
 print ser_str
 
-b = pmt.pmt_deserialize_str(ser_str)
-pmt.pmt_print(b)
+b = pmt.deserialize_str(ser_str)
+print b
 
 \endcode
 
@@ -335,13 +335,17 @@ string. This is only done here as a test.
 
 \section printing Printing
 
-We have used the pmt::pmt_print function in these examples to nicely
-print the contents of a PMT. Another way to print the contents is
-using the overloaded "<<" operator with a stream buffer object. In
-C++, we can inline print the contents of a PMT like:
+In Python, the __repr__ function of a PMT object is overloaded to call
+'pmt::write_string'. This means that any time we call a formatted
+printing operation on a PMT object, the PMT library will properly
+format the object for display.
+
+In C++, we can use the 'pmt::print(object)' function or print the
+contents is using the overloaded "<<" operator with a stream buffer
+object. In C++, we can inline print the contents of a PMT like:
 
 \code
-pmt::pmt_t a pmt::pmt_from_double(1.0);
+pmt::pmt_t a pmt::from_double(1.0);
 std::cout << "The PMT a contains " << a << std::endl;
 \endcode
 

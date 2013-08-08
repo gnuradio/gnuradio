@@ -23,7 +23,7 @@
 #ifndef INCLUDED_INTERLEAVE_IMPL_H
 #define INCLUDED_INTERLEAVE_IMPL_H
 
-#include <blocks/interleave.h>
+#include <gnuradio/blocks/interleave.h>
 
 namespace gr {
   namespace blocks {

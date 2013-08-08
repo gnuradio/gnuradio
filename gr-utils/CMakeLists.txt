@@ -1,4 +1,4 @@
-# Copyright 2011 Free Software Foundation, Inc.
+# Copyright 2011,2012 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -26,7 +26,7 @@
 ########################################################################
 include(GrComponent)
 GR_REGISTER_COMPONENT("gr-utils" ENABLE_GR_UTILS
-    ENABLE_GR_CORE
+    ENABLE_GNURADIO_RUNTIME
     ENABLE_PYTHON
 )
 
@@ -42,13 +42,14 @@ include(GrPackage)
 CPACK_COMPONENT("utils"
     DISPLAY_NAME "Utils"
     DESCRIPTION  "Misc gnuradio python utilities"
-    DEPENDS      "core_python"
+    DEPENDS      "runtime_python"
 )
 
 ########################################################################
 # Add subdirectories
 ########################################################################
-add_subdirectory(src/python)
+add_subdirectory(python/utils)
+add_subdirectory(python/modtool)
 
 
 endif(ENABLE_GR_UTILS)

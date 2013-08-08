@@ -1667,7 +1667,7 @@
     </param>
     <param>
       <key>trig_mode</key>
-      <value>gr.gr_TRIG_MODE_AUTO</value>
+      <value>wxgui.TRIG_MODE_AUTO</value>
     </param>
     <param>
       <key>y_axis_label</key>
@@ -1683,10 +1683,10 @@
     </param>
   </block>
   <block>
-    <key>gr_moving_average_xx</key>
+    <key>blocks_moving_average_xx</key>
     <param>
       <key>id</key>
-      <value>gr_moving_average_xx_0</value>
+      <value>blocks_moving_average_xx_0</value>
     </param>
     <param>
       <key>_enabled</key>
@@ -1872,7 +1872,7 @@
     </param>
   </block>
   <block>
-    <key>gr_file_sink</key>
+    <key>blocks_file_sink</key>
     <param>
       <key>id</key>
       <value>frame_sink</value>
@@ -1938,18 +1938,18 @@
   </connection>
   <connection>
     <source_block_id>pll</source_block_id>
-    <sink_block_id>gr_moving_average_xx_0</sink_block_id>
+    <sink_block_id>blocks_moving_average_xx_0</sink_block_id>
     <source_key>0</source_key>
     <sink_key>0</sink_key>
   </connection>
   <connection>
-    <source_block_id>gr_moving_average_xx_0</source_block_id>
+    <source_block_id>blocks_moving_average_xx_0</source_block_id>
     <sink_block_id>demod_scope</sink_block_id>
     <source_key>0</source_key>
     <sink_key>0</sink_key>
   </connection>
   <connection>
-    <source_block_id>gr_moving_average_xx_0</source_block_id>
+    <source_block_id>blocks_moving_average_xx_0</source_block_id>
     <sink_block_id>digital_clock_recovery_mm_xx_0</sink_block_id>
     <source_key>0</source_key>
     <sink_key>0</sink_key>

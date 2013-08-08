@@ -1,4 +1,25 @@
 #!/usr/bin/env python
+#
+# Copyright 2012,2013 Free Software Foundation, Inc.
+# 
+# This file is part of GNU Radio
+# 
+# GNU Radio is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 3, or (at your option)
+# any later version.
+# 
+# GNU Radio is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+# 
+# You should have received a copy of the GNU General Public License
+# along with GNU Radio; see the file COPYING.  If not, write to
+# the Free Software Foundation, Inc., 51 Franklin Street,
+# Boston, MA 02110-1301, USA.
+# 
+
 """
 BER simulation for QPSK signals, compare to theoretical values.
 Change the N_BITS value to simulate more bits per Eb/N0 value,
@@ -14,9 +35,21 @@ magnitude below what you chose for N_BITS.
 
 import math
 import numpy
-from scipy.special import erfc
-import pylab
 from gnuradio import gr, digital
+from gnuradio import analog
+from gnuradio import blocks
+
+try:
+    from scipy.special import erfc
+except ImportError:
+    print "Error: could not import scipy (http://www.scipy.org/)"
+    sys.exit(1)
+
+try:
+    import pylab
+except ImportError:
+    print "Error: could not import pylab (http://matplotlib.sourceforge.net/)"
+    sys.exit(1)
 
 # Best to choose powers of 10
 N_BITS = 1e7
@@ -38,16 +71,16 @@ class BitErrors(gr.hier_block2):
                 gr.io_signature(1, 1, gr.sizeof_int))
 
         # Bit comparison
-        comp = gr.xor_bb()
+        comp = blocks.xor_bb()
         intdump_decim = 100000
         if N_BITS < intdump_decim:
             intdump_decim = int(N_BITS)
         self.connect(self,
                      comp,
-                     gr.unpack_k_bits_bb(bits_per_byte),
-                     gr.uchar_to_float(),
-                     gr.integrate_ff(intdump_decim),
-                     gr.multiply_const_ff(1.0/N_BITS),
+                     blocks.unpack_k_bits_bb(bits_per_byte),
+                     blocks.uchar_to_float(),
+                     blocks.integrate_ff(intdump_decim),
+                     blocks.multiply_const_ff(1.0/N_BITS),
                      self)
         self.connect((self, 1), (comp, 1))
 
@@ -58,15 +91,15 @@ class BERAWGNSimu(gr.top_block):
         self.const = digital.qpsk_constellation()
         # Source is N_BITS bits, non-repeated
         data = map(int, numpy.random.randint(0, self.const.arity(), N_BITS/self.const.bits_per_symbol()))
-        src   = gr.vector_source_b(data, False)
-        mod   = gr.chunks_to_symbols_bc((self.const.points()), 1)
-        add   = gr.add_vcc()
-        noise = gr.noise_source_c(gr.GR_GAUSSIAN,
-                                  self.EbN0_to_noise_voltage(EbN0),
-                                  RAND_SEED)
+        src   = blocks.vector_source_b(data, False)
+        mod   = digital.chunks_to_symbols_bc((self.const.points()), 1)
+        add   = blocks.add_vcc()
+        noise = analog.noise_source_c(analog.GR_GAUSSIAN,
+                                      self.EbN0_to_noise_voltage(EbN0),
+                                      RAND_SEED)
         demod = digital.constellation_decoder_cb(self.const.base())
         ber   = BitErrors(self.const.bits_per_symbol())
-        self.sink  = gr.vector_sink_f()
+        self.sink  = blocks.vector_sink_f()
         self.connect(src, mod, add, demod, ber, self.sink)
         self.connect(noise, (add, 1))
         self.connect(src, (ber, 1))

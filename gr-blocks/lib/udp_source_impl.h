@@ -23,10 +23,10 @@
 #ifndef INCLUDED_GR_UDP_SOURCE_IMPL_H
 #define INCLUDED_GR_UDP_SOURCE_IMPL_H
 
-#include <blocks/udp_source.h>
+#include <gnuradio/blocks/udp_source.h>
 #include <boost/asio.hpp>
 #include <boost/format.hpp>
-#include <gruel/thread.h>
+#include <gnuradio/thread/thread.h>
 
 namespace gr {
   namespace blocks {
@@ -52,9 +52,9 @@ namespace gr {
       boost::asio::ip::udp::endpoint d_endpoint_rcvd;
       boost::asio::io_service d_io_service;
 
-      gruel::condition_variable d_cond_wait;
-      gruel::mutex d_udp_mutex;
-      gruel::thread d_udp_thread;
+      gr::thread::condition_variable d_cond_wait;
+      gr::thread::mutex d_udp_mutex;
+      gr::thread::thread d_udp_thread;
 
       void start_receive();
       void handle_read(const boost::system::error_code& error,

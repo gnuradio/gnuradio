@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2004,2005,2007 Free Software Foundation, Inc.
+# Copyright 2004,2005,2007,2012 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -20,11 +20,23 @@
 # Boston, MA 02110-1301, USA.
 #
 
-from gnuradio import gr, gru, blks2
+from gnuradio import gr, gru
 from gnuradio import audio
+from gnuradio import filter
 from gnuradio.eng_option import eng_option
 from optparse import OptionParser
 
+try:
+    from gnuradio import analog
+except ImportError:
+    sys.stderr.write("Error: Program requires gr-analog.\n")
+    sys.exit(1)
+
+try:
+    from gnuradio import blocks
+except ImportError:
+    sys.stderr.write("Error: Program requires gr-blocks.\n")
+    sys.exit(1)
 
 class my_top_block(gr.top_block):
 
@@ -38,7 +50,7 @@ class my_top_block(gr.top_block):
                           help="set input sample rate to RATE (%default)")
         parser.add_option("-o", "--output-rate", type="eng_float", default=48000,
                           help="set output sample rate to RATE (%default)")
-        (options, args) = parser.parse_args ()
+        (options, args) = parser.parse_args()
         if len(args) != 0:
             parser.print_help()
             raise SystemExit, 1
@@ -53,11 +65,10 @@ class my_top_block(gr.top_block):
         print "decim  =", decim
 
         ampl = 0.1
-        src0 = gr.sig_source_f (input_rate, gr.GR_SIN_WAVE, 650, ampl)
-        rr = blks2.rational_resampler_fff(interp, decim)
-        dst = audio.sink (output_rate, options.audio_output)
-        self.connect (src0, rr, (dst, 0))
-
+        src0 = analog.sig_source_f(input_rate, analog.GR_SIN_WAVE, 650, ampl)
+        rr = filter.rational_resampler_fff(interp, decim)
+        dst = audio.sink(output_rate, options.audio_output)
+        self.connect(src0, rr, (dst, 0))
 
 if __name__ == '__main__':
     try:

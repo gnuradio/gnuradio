@@ -30,10 +30,6 @@ class machine_class:
             arch = arch_dict[arch_name]
             self.archs.append(arch)
             self.arch_names.append(arch_name)
-            arch_name += '_u'
-            if arch.alignment > 1 and arch_dict.has_key(arch_name):
-                arch = arch_dict[arch_name]
-                self.archs.append(arch)
         self.alignment = max(map(lambda a: a.alignment, self.archs))
 
     def __repr__(self): return self.name

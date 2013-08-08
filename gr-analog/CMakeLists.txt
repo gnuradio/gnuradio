@@ -29,7 +29,7 @@ include(GrComponent)
 GR_REGISTER_COMPONENT("gr-analog" ENABLE_GR_ANALOG
     Boost_FOUND
     ENABLE_VOLK
-    ENABLE_GR_CORE
+    ENABLE_GNURADIO_RUNTIME
     ENABLE_GR_FFT
     ENABLE_GR_FILTER
 )
@@ -60,41 +60,42 @@ CPACK_COMPONENT("analog_runtime"
     GROUP        "Analog"
     DISPLAY_NAME "Runtime"
     DESCRIPTION  "Dynamic link libraries"
-    DEPENDS      "core_runtime"
+    DEPENDS      "runtime_runtime"
 )
 
 CPACK_COMPONENT("analog_devel"
     GROUP        "Analog"
     DISPLAY_NAME "Development"
     DESCRIPTION  "C++ headers, package config, import libraries"
-    DEPENDS      "core_devel"
+    DEPENDS      "runtime_devel"
 )
 
 CPACK_COMPONENT("analog_python"
     GROUP        "Analog"
     DISPLAY_NAME "Python"
     DESCRIPTION  "Python modules for runtime"
-    DEPENDS      "core_python;analog_runtime"
+    DEPENDS      "runtime_python;analog_runtime"
 )
 
 CPACK_COMPONENT("analog_swig"
     GROUP        "Analog"
     DISPLAY_NAME "SWIG"
     DESCRIPTION  "SWIG development .i files"
-    DEPENDS      "core_swig;analog_python;analog_devel"
+    DEPENDS      "runtime_swig;analog_python;analog_devel"
 )
 
 ########################################################################
 # Add subdirectories
 ########################################################################
-add_subdirectory(include/analog)
+add_subdirectory(include/gnuradio/analog)
 add_subdirectory(lib)
 add_subdirectory(doc)
 if(ENABLE_PYTHON)
     add_subdirectory(swig)
-    add_subdirectory(python)
+    add_subdirectory(python/analog)
     add_subdirectory(grc)
     add_subdirectory(examples)
+    add_subdirectory(examples/tags)
 endif(ENABLE_PYTHON)
 
 ########################################################################

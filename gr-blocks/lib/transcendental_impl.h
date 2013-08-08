@@ -23,7 +23,7 @@
 #ifndef INCLUDED_GR_TRANSCENDENTAL_IMPL_H
 #define INCLUDED_GR_TRANSCENDENTAL_IMPL_H
 
-#include <blocks/transcendental.h>
+#include <gnuradio/blocks/transcendental.h>
 
 namespace gr {
   namespace blocks {

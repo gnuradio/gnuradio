@@ -23,8 +23,8 @@
 #ifndef INCLUDED_FRACTIONAL_INTERPOLATOR_FF_IMPL_H
 #define	INCLUDED_FRACTIONAL_INTERPOLATOR_FF_IMPL_H
 
-#include <filter/fractional_interpolator_ff.h>
-#include <filter/mmse_fir_interpolator_ff.h>
+#include <gnuradio/filter/fractional_interpolator_ff.h>
+#include <gnuradio/filter/mmse_fir_interpolator_ff.h>
 
 namespace gr {
   namespace filter {

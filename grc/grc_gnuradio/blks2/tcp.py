@@ -19,48 +19,52 @@
 # Boston, MA 02110-1301, USA.
 #
 
-from gnuradio import gr
+from gnuradio import gr, blocks
 import socket
 import os
 
 def _get_sock_fd(addr, port, server):
-	"""
-	Get the file descriptor for the socket.
-	As a client, block on connect, dup the socket descriptor.
-	As a server, block on accept, dup the client descriptor.
-	@param addr the ip address string
-	@param port the tcp port number
-	@param server true for server mode, false for client mode
-	@return the file descriptor number
-	"""
-	sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-	if server:
-		sock.bind((addr, port))
-		sock.listen(1)
-		clientsock, address = sock.accept()
-		return os.dup(clientsock.fileno())
-	else:
-		sock.connect((addr, port))
-		return os.dup(sock.fileno())
+    """
+    Get the file descriptor for the socket.
+    As a client, block on connect, dup the socket descriptor.
+    As a server, block on accept, dup the client descriptor.
+    
+    Args:
+        addr: the ip address string
+        port: the tcp port number
+        server: true for server mode, false for client mode
+    
+    Returns:
+        the file descriptor number
+    """
+    sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    if server:
+        sock.bind((addr, port))
+        sock.listen(1)
+        clientsock, address = sock.accept()
+        return os.dup(clientsock.fileno())
+    else:
+        sock.connect((addr, port))
+        return os.dup(sock.fileno())
 
 class tcp_source(gr.hier_block2):
-	def __init__(self, itemsize, addr, port, server=True):
-		#init hier block
-		gr.hier_block2.__init__(
-			self, 'tcp_source',
-			gr.io_signature(0, 0, 0),
-			gr.io_signature(1, 1, itemsize),
-		)
-		fd = _get_sock_fd(addr, port, server)
-		self.connect(gr.file_descriptor_source(itemsize, fd), self)
+    def __init__(self, itemsize, addr, port, server=True):
+        #init hier block
+        gr.hier_block2.__init__(
+            self, 'tcp_source',
+            gr.io_signature(0, 0, 0),
+            gr.io_signature(1, 1, itemsize),
+        )
+        fd = _get_sock_fd(addr, port, server)
+        self.connect(blocks.file_descriptor_source(itemsize, fd), self)
 
 class tcp_sink(gr.hier_block2):
-	def __init__(self, itemsize, addr, port, server=False):
-		#init hier block
-		gr.hier_block2.__init__(
-			self, 'tcp_sink',
-			gr.io_signature(1, 1, itemsize),
-			gr.io_signature(0, 0, 0),
-		)
-		fd = _get_sock_fd(addr, port, server)
-		self.connect(self, gr.file_descriptor_sink(itemsize, fd))
+    def __init__(self, itemsize, addr, port, server=False):
+        #init hier block
+        gr.hier_block2.__init__(
+            self, 'tcp_sink',
+            gr.io_signature(1, 1, itemsize),
+            gr.io_signature(0, 0, 0),
+        )
+        fd = _get_sock_fd(addr, port, server)
+        self.connect(self, blocks.file_descriptor_sink(itemsize, fd))

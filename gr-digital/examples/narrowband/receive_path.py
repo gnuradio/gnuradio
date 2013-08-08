@@ -20,9 +20,10 @@
 # Boston, MA 02110-1301, USA.
 # 
 
-from gnuradio import gr, gru
+from gnuradio import gr, gru, filter
 from gnuradio import eng_notation
 from gnuradio import digital
+from gnuradio import analog
 
 import copy
 import sys
@@ -61,12 +62,12 @@ class receive_path(gr.hier_block2):
         
         # Design filter to get actual channel we want
         sw_decim = 1
-        chan_coeffs = gr.firdes.low_pass (1.0,                  # gain
-                                          sw_decim * self.samples_per_symbol(), # sampling rate
-                                          self._chbw_factor,    # midpoint of trans. band
-                                          0.5,                  # width of trans. band
-                                          gr.firdes.WIN_HANN)   # filter type
-        self.channel_filter = gr.fft_filter_ccc(sw_decim, chan_coeffs)
+        chan_coeffs = filter.firdes.low_pass(1.0,                  # gain
+                                             sw_decim * self.samples_per_symbol(), # sampling rate
+                                             self._chbw_factor,    # midpoint of trans. band
+                                             0.5,                  # width of trans. band
+                                             filter.firdes.WIN_HANN)   # filter type
+        self.channel_filter = filter.fft_filter_ccc(sw_decim, chan_coeffs)
         
         # receiver
         self.packet_receiver = \
@@ -78,7 +79,7 @@ class receive_path(gr.hier_block2):
         # Carrier Sensing Blocks
         alpha = 0.001
         thresh = 30   # in dB, will have to adjust
-        self.probe = gr.probe_avg_mag_sqrd_c(thresh,alpha)
+        self.probe = analog.probe_avg_mag_sqrd_c(thresh,alpha)
 
         # Display some information about the setup
         if self._verbose:
@@ -119,8 +120,8 @@ class receive_path(gr.hier_block2):
         """
         Set carrier threshold.
 
-        @param threshold_in_db: set detection threshold
-        @type threshold_in_db:  float (dB)
+        Args:
+            threshold_in_db: set detection threshold (float (dB))
         """
         self.probe.set_threshold(threshold_in_db)
     

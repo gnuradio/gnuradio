@@ -24,13 +24,13 @@
 #include <config.h>
 #endif
 
-#include <gruel/attributes.h>
+#include <gnuradio/attributes.h>
 #include <cppunit/TestAssert.h>
 #include <qa_rotator.h>
-#include <blocks/rotator.h>
+#include <gnuradio/blocks/rotator.h>
 #include <stdio.h>
 #include <cmath>
-#include <gr_expj.h>
+#include <gnuradio/expj.h>
 
 // error vector magnitude
 __GR_ATTR_UNUSED static float

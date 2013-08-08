@@ -23,7 +23,7 @@
 #ifndef INCLUDED_FLOAT_ARRAY_TO_UCHAR_H
 #define INCLUDED_FLOAT_ARRAY_TO_UCHAR_H
 
-#include <blocks/api.h>
+#include <gnuradio/blocks/api.h>
 
 /*!
  * convert array of floats to unsigned chars with rounding and saturation.

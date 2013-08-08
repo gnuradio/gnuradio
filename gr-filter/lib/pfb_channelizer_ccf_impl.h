@@ -23,11 +23,11 @@
 #ifndef INCLUDED_FILTER_PFB_CHANNELIZER_CCF_IMPL_H
 #define	INCLUDED_FILTER_PFB_CHANNELIZER_CCF_IMPL_H
 
-#include <filter/pfb_channelizer_ccf.h>
-#include <filter/polyphase_filterbank.h>
-#include <filter/fir_filter.h>
-#include <fft/fft.h>
-#include <gruel/thread.h>
+#include <gnuradio/filter/pfb_channelizer_ccf.h>
+#include <gnuradio/filter/polyphase_filterbank.h>
+#include <gnuradio/filter/fir_filter.h>
+#include <gnuradio/fft/fft.h>
+#include <gnuradio/thread/thread.h>
 
 namespace gr {
   namespace filter {
@@ -41,7 +41,7 @@ namespace gr {
       int              d_rate_ratio;
       int              d_output_multiple;
       std::vector<int> d_channel_map;
-      gruel::mutex     d_mutex; // mutex to protect set/work access
+      gr::thread::mutex     d_mutex; // mutex to protect set/work access
 
     public:
       pfb_channelizer_ccf_impl(unsigned int nfilts,

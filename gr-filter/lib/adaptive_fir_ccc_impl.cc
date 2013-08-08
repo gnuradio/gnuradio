@@ -25,7 +25,7 @@
 #endif
 
 #include "adaptive_fir_ccc_impl.h"
-#include <gr_io_signature.h>
+#include <gnuradio/io_signature.h>
 
 namespace gr {
   namespace filter {
@@ -39,11 +39,11 @@ namespace gr {
 
     adaptive_fir_ccc_impl::adaptive_fir_ccc_impl(const char *name, int decimation,
 						 const std::vector<gr_complex> &taps)
-      : gr_sync_decimator(name,
-			  gr_make_io_signature(1, 1, sizeof(gr_complex)),
-			  gr_make_io_signature(1, 1, sizeof(gr_complex)),
+      : sync_decimator(name,
+			  io_signature::make(1, 1, sizeof(gr_complex)),
+			  io_signature::make(1, 1, sizeof(gr_complex)),
 			  decimation),
-	kernel::fir_filter_ccc(decimation, taps),
+	kernel::adaptive_fir_ccc(decimation, taps),
 	d_updated(false)
     {
       set_history(d_ntaps);

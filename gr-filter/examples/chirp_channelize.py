@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2009,2012 Free Software Foundation, Inc.
+# Copyright 2009,2012,2013 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -20,22 +20,29 @@
 # Boston, MA 02110-1301, USA.
 #
 
-from gnuradio import gr, blks2
+from gnuradio import gr
+from gnuradio import blocks
 from gnuradio import filter
 import sys, time
+
+try:
+    from gnuradio import analog
+except ImportError:
+    sys.stderr.write("Error: Program requires gr-analog.\n")
+    sys.exit(1)
 
 try:
     import scipy
     from scipy import fftpack
 except ImportError:
-    print "Error: Program requires scipy (see: www.scipy.org)."
+    sys.stderr.write("Error: Program requires scipy (see: www.scipy.org).\n")
     sys.exit(1)
 
 try:
     import pylab
     from pylab import mlab
 except ImportError:
-    print "Error: Program requires matplotlib (see: matplotlib.sourceforge.net)."
+    sys.stderr.write("Error: Program requires matplotlib (see: matplotlib.sourceforge.net).\n")
     sys.exit(1)
 
 class pfb_top_block(gr.top_block):
@@ -59,24 +66,24 @@ class pfb_top_block(gr.top_block):
 
         repeated = True
         if(repeated):
-            self.vco_input = gr.sig_source_f(self._fs, gr.GR_SIN_WAVE, 0.25, 110)
+            self.vco_input = analog.sig_source_f(self._fs, analog.GR_SIN_WAVE, 0.25, 110)
         else:
             amp = 100
             data = scipy.arange(0, amp, amp/float(self._N))
-            self.vco_input = gr.vector_source_f(data, False)
+            self.vco_input = blocks.vector_source_f(data, False)
 
         # Build a VCO controlled by either the sinusoid or single chirp tone
         # Then convert this to a complex signal
-        self.vco = gr.vco_f(self._fs, 225, 1)
-        self.f2c = gr.float_to_complex()
+        self.vco = blocks.vco_f(self._fs, 225, 1)
+        self.f2c = blocks.float_to_complex()
 
-        self.head = gr.head(gr.sizeof_gr_complex, self._N)
+        self.head = blocks.head(gr.sizeof_gr_complex, self._N)
 
         # Construct the channelizer filter
         self.pfb = filter.pfb.channelizer_ccf(self._M, self._taps)
 
         # Construct a vector sink for the input signal to the channelizer
-        self.snk_i = gr.vector_sink_c()
+        self.snk_i = blocks.vector_sink_c()
 
         # Connect the blocks
         self.connect(self.vco_input, self.vco, self.f2c)
@@ -86,7 +93,7 @@ class pfb_top_block(gr.top_block):
         # Create a vector sink for each of M output channels of the filter and connect it
         self.snks = list()
         for i in xrange(self._M):
-            self.snks.append(gr.vector_sink_c())
+            self.snks.append(blocks.vector_sink_c())
             self.connect((self.pfb, i), self.snks[i])
 
 

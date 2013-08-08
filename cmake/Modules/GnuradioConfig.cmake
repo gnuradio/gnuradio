@@ -22,7 +22,7 @@ INCLUDE(FindPackageHandleStandardArgs)
 
 # if GR_REQUIRED_COMPONENTS is not defined, it will be set to the following list (all of them)
 if(NOT GR_REQUIRED_COMPONENTS)
-  set(GR_REQUIRED_COMPONENTS CORE RUNTIME ANALOG ATSC AUDIO BLOCKS DIGITAL FCD FFT FILTER NOAA PAGER QTGUI TRELLIS UHD VOCODER WAVELET WXGUI)
+  set(GR_REQUIRED_COMPONENTS RUNTIME ANALOG BLOCKS DIGITAL FFT FILTER PMT)
 endif()
 
 set(GNURADIO_ALL_LIBRARIES "")
@@ -59,19 +59,18 @@ function(GR_MODULE EXTVAR PCNAME INCFILE LIBFILE)
     FIND_PATH(
         ${INCVAR_NAME}
         NAMES ${INCFILE}
-        HINTS $ENV{GNURADIO_CORE_DIR}/include/gnuradio
+        HINTS $ENV{GNURADIO_RUNTIME_DIR}/include
             ${PC_INCDIR}
-            ${PC_INCDIR}/gnuradio/
-            ${CMAKE_INSTALL_PREFIX}/include/gnuradio
-        PATHS /usr/local/include/gnuradio
-              /usr/include/gnuradio
+            ${CMAKE_INSTALL_PREFIX}/include
+        PATHS /usr/local/include
+              /usr/include
     )
 
     # look for libs
     FIND_LIBRARY(
         ${LIBVAR_NAME}
         NAMES ${LIBFILE}
-        HINTS $ENV{GNURADIO_CORE_DIR}/lib
+        HINTS $ENV{GNURADIO_RUNTIME_DIR}/lib
             ${PC_LIBDIR}
             ${CMAKE_INSTALL_PREFIX}/lib/
             ${CMAKE_INSTALL_PREFIX}/lib64/
@@ -102,21 +101,23 @@ function(GR_MODULE EXTVAR PCNAME INCFILE LIBFILE)
 
 endfunction()
 
-GR_MODULE(CORE gnuradio-core gr_top_block.h gnuradio-core)
-GR_MODULE(RUNTIME gnuradio-core gr_top_block.h gnuradio-core)
-GR_MODULE(ANALOG gnuradio-analog analog/api.h gnuradio-analog)
-GR_MODULE(ATSC gnuradio-atsc atsc_api.h gnuradio-atsc)
-GR_MODULE(AUDIO gnuradio-audio gr_audio_api.h gnuradio-audio)
-GR_MODULE(BLOCKS gnuradio-blocks blocks/api.h gnuradio-blocks)
-GR_MODULE(DIGITAL gnuradio-digital digital/ofdm_frame_equalizer_vcvc.h gnuradio-digital)
-GR_MODULE(FCD gnuradio-fft fcd_api.h gnuradio-fft)
-GR_MODULE(FFT gnuradio-fft fft/api.h gnuradio-fft)
-GR_MODULE(FILTER gnuradio-filter filter/api.h gnuradio-filter)
-GR_MODULE(NOAA gnuradio-noaa noaa_api.h gnuradio-noaa)
-GR_MODULE(PAGER gnuradio-pager pager_api.h gnuradio-pager)
-GR_MODULE(QTGUI gnuradio-qtgui gr_qtgui_api.h gnuradio-qtgui)
-GR_MODULE(TRELLIS gnuradio-trellis trellis_api.h gnuradio-trellis)
-GR_MODULE(UHD gnuradio-uhd gr_uhd_api.h gnuradio-uhd)
-GR_MODULE(VOCODER gnuradio-vocoder vocoder_api.h gnuradio-vocoder)
-GR_MODULE(WAVELET gnuradio-wavelet wavelet_api.h gnuradio-wavelet)
-
+GR_MODULE(RUNTIME gnuradio-runtime gnuradio/top_block.h gnuradio-runtime)
+GR_MODULE(ANALOG gnuradio-analog gnuradio/analog/api.h gnuradio-analog)
+GR_MODULE(ATSC gnuradio-atsc gnuradio/atsc/api.h gnuradio-atsc)
+GR_MODULE(AUDIO gnuradio-audio gnuradio/audio/api.h gnuradio-audio)
+GR_MODULE(BLOCKS gnuradio-blocks gnuradio/blocks/api.h gnuradio-blocks)
+GR_MODULE(CHANNELS gnuradio-channels gnuradio/channels/api.h gnuradio-channels)
+GR_MODULE(DIGITAL gnuradio-digital gnuradio/digital/api.h gnuradio-digital)
+GR_MODULE(FCD gnuradio-fcd gnuradio/fcd_api.h gnuradio-fcd)
+GR_MODULE(FEC gnuradio-fec gnuradio/fec/api.h gnuradio-fec)
+GR_MODULE(FFT gnuradio-fft gnuradio/fft/api.h gnuradio-fft)
+GR_MODULE(FILTER gnuradio-filter gnuradio/filter/api.h gnuradio-filter)
+GR_MODULE(NOAA gnuradio-noaa gnuradio/noaa/api.h gnuradio-noaa)
+GR_MODULE(PAGER gnuradio-pager gnuradio/pager/api.h gnuradio-pager)
+GR_MODULE(QTGUI gnuradio-qtgui gnuradio/qtgui/api.h gnuradio-qtgui)
+GR_MODULE(TRELLIS gnuradio-trellis gnuradio/trellis/api.h gnuradio-trellis)
+GR_MODULE(UHD gnuradio-uhd gnuradio/uhd/api.h gnuradio-uhd)
+GR_MODULE(VOCODER gnuradio-vocoder gnuradio/vocoder/api.h gnuradio-vocoder)
+GR_MODULE(WAVELET gnuradio-wavelet gnuradio/wavelet/api.h gnuradio-wavelet)
+GR_MODULE(WXGUI gnuradio-wxgui gnuradio/wxgui/api.h gnuradio-wxgui)
+GR_MODULE(PMT gnuradio-pmt pmt/pmt.h gnuradio-pmt)

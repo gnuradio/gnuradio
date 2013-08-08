@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2005-2007,2011 Free Software Foundation, Inc.
+# Copyright 2005-2007,2011,2012 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -20,10 +20,12 @@
 # Boston, MA 02110-1301, USA.
 #
 
-from gnuradio import gr, eng_notation, optfir
+from gnuradio import gr, eng_notation
+from gnuradio import blocks
+from gnuradio import filter
+from gnuradio import analog
 from gnuradio import audio
 from gnuradio import uhd
-from gnuradio import blks2
 from gnuradio.eng_option import eng_option
 from gnuradio.wxgui import slider, powermate
 from gnuradio.wxgui import stdgui2, fftsink2, form
@@ -96,36 +98,36 @@ class wfm_rx_block (stdgui2.std_top_block):
         # Resample signal to exactly self.usrp_rate
         # FIXME: make one of the follow-on filters an arb resampler
         rrate = usrp_rate / dev_rate
-        self.resamp = blks2.pfb_arb_resampler_ccf(rrate)
+        self.resamp = filter.pfb.arb_resampler_ccf(rrate)
 
-        chan_filt_coeffs = gr.firdes.low_pass_2 (1,          # gain
-                                                 usrp_rate,  # sampling rate
-                                                 8e3,        # passband cutoff
-                                                 4e3,        # transition bw
-                                                 60)         # stopband attenuation
+        chan_filt_coeffs = filter.firdes.low_pass_2(1,          # gain
+                                                    usrp_rate,  # sampling rate
+                                                    8e3,        # passband cutoff
+                                                    4e3,        # transition bw
+                                                    60)         # stopband attenuation
 
         if self.use_IF:
           # Turn If to baseband and filter.
-          self.chan_filt = gr.freq_xlating_fir_filter_ccf (chanfilt_decim,
-                                                           chan_filt_coeffs,
-                                                           self.IF_freq,
-                                                           usrp_rate)
+          self.chan_filt = filter.freq_xlating_fir_filter_ccf(chanfilt_decim,
+                                                              chan_filt_coeffs,
+                                                              self.IF_freq,
+                                                              usrp_rate)
         else:
-          self.chan_filt = gr.fir_filter_ccf (chanfilt_decim, chan_filt_coeffs)
+          self.chan_filt = filter.fir_filter_ccf(chanfilt_decim, chan_filt_coeffs)
 
-        self.agc = gr.agc_cc(0.1, 1, 1, 100000)
-        self.am_demod = gr.complex_to_mag()
-        self.volume_control = gr.multiply_const_ff(self.vol)
+        self.agc = analog.agc_cc(0.1, 1, 1, 100000)
+        self.am_demod = blocks.complex_to_mag()
+        self.volume_control = blocks.multiply_const_ff(self.vol)
 
-        audio_filt_coeffs = gr.firdes.low_pass_2 (1,          # gain
-                                                  demod_rate, # sampling rate
-                                                  8e3,        # passband cutoff
-                                                  2e3,        # transition bw
-                                                  60)         # stopband attenuation
-        self.audio_filt=gr.fir_filter_fff(audio_decim, audio_filt_coeffs)
+        audio_filt_coeffs = filter.firdes.low_pass_2(1,          # gain
+                                                     demod_rate, # sampling rate
+                                                     8e3,        # passband cutoff
+                                                     2e3,        # transition bw
+                                                     60)         # stopband attenuation
+        self.audio_filt = filter.fir_filter_fff(audio_decim, audio_filt_coeffs)
 
         # sound card as final sink
-        self.audio_sink = audio.sink (int (audio_rate),
+        self.audio_sink = audio.sink(int (audio_rate),
                                       options.audio_output,
                                       False)  # ok_to_block
 
@@ -276,7 +278,8 @@ class wfm_rx_block (stdgui2.std_top_block):
         """
         Set the center frequency we're interested in.
 
-        @param target_freq: frequency in Hz
+        Args:
+            target_freq: frequency in Hz
         @rypte: bool
         """
         r = self.u.set_center_freq(target_freq  + self.IF_freq, 0)

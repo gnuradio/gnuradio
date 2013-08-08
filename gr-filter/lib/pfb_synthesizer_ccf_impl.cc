@@ -25,7 +25,7 @@
 #endif
 
 #include "pfb_synthesizer_ccf_impl.h"
-#include <gr_io_signature.h>
+#include <gnuradio/io_signature.h>
 #include <cstdio>
 
 namespace gr {
@@ -44,9 +44,9 @@ namespace gr {
     pfb_synthesizer_ccf_impl::pfb_synthesizer_ccf_impl(unsigned int numchans,
 						       const std::vector<float> &taps,
 						       bool twox)
-      : gr_sync_interpolator("pfb_synthesizer_ccf",
-			     gr_make_io_signature(1, numchans, sizeof(gr_complex)),
-			     gr_make_io_signature(1, 1, sizeof(gr_complex)),
+      : sync_interpolator("pfb_synthesizer_ccf",
+			     io_signature::make(1, numchans, sizeof(gr_complex)),
+			     io_signature::make(1, 1, sizeof(gr_complex)),
 			     (twox ? numchans/2 : numchans)),
 	d_updated(false), d_numchans(numchans), d_state(0)
     {
@@ -86,7 +86,7 @@ namespace gr {
     void
     pfb_synthesizer_ccf_impl::set_taps(const std::vector<float> &taps)
     {
-      gruel::scoped_lock guard(d_mutex);
+      gr::thread::scoped_lock guard(d_mutex);
 
       if(d_twox == 1)
 	set_taps1(taps);
@@ -201,7 +201,7 @@ namespace gr {
     void
     pfb_synthesizer_ccf_impl::set_channel_map(const std::vector<int> &map)
     {
-      gruel::scoped_lock guard(d_mutex);
+      gr::thread::scoped_lock guard(d_mutex);
 
       if(map.size() > 0) {
 	unsigned int max = (unsigned int)*std::max_element(map.begin(), map.end());
@@ -226,7 +226,7 @@ namespace gr {
 				   gr_vector_const_void_star &input_items,
 				   gr_vector_void_star &output_items)
     {
-      gruel::scoped_lock guard(d_mutex);
+      gr::thread::scoped_lock guard(d_mutex);
 
       gr_complex *in = (gr_complex*)input_items[0];
       gr_complex *out = (gr_complex*)output_items[0];

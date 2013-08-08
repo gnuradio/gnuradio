@@ -2,23 +2,26 @@
 #define INCLUDED_VOLK_PREFS_H
 
 #include <volk/volk_common.h>
+#include <stdlib.h>
 
 __VOLK_DECL_BEGIN
 
-struct volk_arch_pref {
-    char name[128];
-    char arch[32];
-};
+typedef struct volk_arch_pref
+{
+    char name[128];   //name of the kernel
+    char impl_a[128]; //best aligned impl
+    char impl_u[128]; //best unaligned impl
+} volk_arch_pref_t;
 
 ////////////////////////////////////////////////////////////////////////
 // get path to volk_config profiling info
 ////////////////////////////////////////////////////////////////////////
-VOLK_API void get_config_path(char *);
+VOLK_API void volk_get_config_path(char *);
 
 ////////////////////////////////////////////////////////////////////////
 // load prefs into global prefs struct
 ////////////////////////////////////////////////////////////////////////
-VOLK_API int load_preferences(struct volk_arch_pref **);
+VOLK_API size_t volk_load_preferences(volk_arch_pref_t **);
 
 __VOLK_DECL_END
 

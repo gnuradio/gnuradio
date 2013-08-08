@@ -8,7 +8,8 @@
 	<name>AGC</name>
 	<key>analog_agc_xx</key>
 	<import>from gnuradio import analog</import>
-	<make>analog.agc_$(type.fcn)($rate, $reference, $gain, $max_gain)</make>
+	<make>analog.agc_$(type.fcn)($rate, $reference, $gain)
+self.$(id).set_max_gain($max_gain)</make>
 	<callback>set_rate($rate)</callback>
 	<callback>set_reference($reference)</callback>
 	<callback>set_gain($gain)</callback>
@@ -49,7 +50,7 @@
 	<param>
 		<name>Max Gain</name>
 		<key>max_gain</key>
-		<value>0.0</value>
+		<value>65536</value>
 		<type>real</type>
 	</param>
 	<sink>

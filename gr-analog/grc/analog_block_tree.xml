@@ -32,10 +32,12 @@
     <name>Level Controllers</name>
     <block>analog_agc_xx</block>
     <block>analog_agc2_xx</block>
+    <block>analog_agc3_xx</block>
     <block>analog_feedforward_agc_cc</block>
     <block>analog_ctcss_squelch_ff</block>
     <block>analog_pwr_squelch_xx</block>
     <block>analog_simple_squelch_cc</block>
+    <block>analog_standard_squelch</block>
     <block>analog_rail_ff</block>
   </cat>
   <cat>
@@ -44,11 +46,23 @@
     <block>analog_frequency_modulator_fc</block>
     <block>analog_phase_modulator_fc</block>
     <block>analog_quadrature_demod_cf</block>
+    <block>analog_nbfm_tx</block>
+    <block>analog_nbfm_rx</block>
+    <block>analog_wfm_tx</block>
+    <block>analog_wfm_rcv</block>
+    <block>analog_wfm_rcv_pll</block>
+    <block>analog_am_demod_cf</block>
+    <block>analog_fm_demod_cf</block>
+    <block>analog_fm_deemph</block>
+    <block>analog_fm_preemph</block>
   </cat>
   <cat>
     <name>Waveform Generators</name>
     <block>analog_sig_source_x</block>
+    <block>analog_const_source_x</block>
     <block>analog_noise_source_x</block>
+    <block>analog_fastnoise_source_x</block>
+    <block>analog_random_source_x</block>
   </cat>
   <cat>
     <name>Synchronizers</name>

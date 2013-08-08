@@ -283,10 +283,10 @@
     </param>
   </block>
   <block>
-    <key>gr_moving_average_xx</key>
+    <key>blocks_moving_average_xx</key>
     <param>
       <key>id</key>
-      <value>gr_moving_average_xx_0</value>
+      <value>blocks_moving_average_xx_0</value>
     </param>
     <param>
       <key>_enabled</key>
@@ -318,7 +318,7 @@
     </param>
   </block>
   <block>
-    <key>gr_file_sink</key>
+    <key>blocks_file_sink</key>
     <param>
       <key>id</key>
       <value>frame_sink</value>
@@ -419,10 +419,10 @@
     </param>
   </block>
   <block>
-    <key>gr_interleaved_short_to_complex</key>
+    <key>blocks_interleaved_short_to_complex</key>
     <param>
       <key>id</key>
-      <value>gr_interleaved_short_to_complex_0</value>
+      <value>blocks_interleaved_short_to_complex_0</value>
     </param>
     <param>
       <key>_enabled</key>
@@ -438,7 +438,7 @@
     </param>
   </block>
   <block>
-    <key>gr_throttle</key>
+    <key>blocks_throttle</key>
     <param>
       <key>id</key>
       <value>throttle</value>
@@ -469,10 +469,10 @@
     </param>
   </block>
   <block>
-    <key>gr_file_source</key>
+    <key>blocks_file_source</key>
     <param>
       <key>id</key>
-      <value>gr_file_source_0</value>
+      <value>blocks_file_source_0</value>
     </param>
     <param>
       <key>_enabled</key>
@@ -841,14 +841,14 @@
     <sink_key>0</sink_key>
   </connection>
   <connection>
-    <source_block_id>gr_moving_average_xx_0</source_block_id>
+    <source_block_id>blocks_moving_average_xx_0</source_block_id>
     <sink_block_id>digital_clock_recovery_mm_xx_0</sink_block_id>
     <source_key>0</source_key>
     <sink_key>0</sink_key>
   </connection>
   <connection>
     <source_block_id>pll</source_block_id>
-    <sink_block_id>gr_moving_average_xx_0</sink_block_id>
+    <sink_block_id>blocks_moving_average_xx_0</sink_block_id>
     <source_key>0</source_key>
     <sink_key>0</sink_key>
   </connection>
@@ -871,19 +871,19 @@
     <sink_key>0</sink_key>
   </connection>
   <connection>
-    <source_block_id>gr_interleaved_short_to_complex_0</source_block_id>
+    <source_block_id>blocks_interleaved_short_to_complex_0</source_block_id>
     <sink_block_id>agc</sink_block_id>
     <source_key>0</source_key>
     <sink_key>0</sink_key>
   </connection>
   <connection>
     <source_block_id>throttle</source_block_id>
-    <sink_block_id>gr_interleaved_short_to_complex_0</sink_block_id>
+    <sink_block_id>blocks_interleaved_short_to_complex_0</sink_block_id>
     <source_key>0</source_key>
     <sink_key>0</sink_key>
   </connection>
   <connection>
-    <source_block_id>gr_file_source_0</source_block_id>
+    <source_block_id>blocks_file_source_0</source_block_id>
     <sink_block_id>throttle</sink_block_id>
     <source_key>0</source_key>
     <sink_key>0</sink_key>

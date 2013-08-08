@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2011 Free Software Foundation, Inc.
+# Copyright 2011,2012 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -21,6 +21,7 @@
 #
 
 from gnuradio import gr
+from gnuradio import blocks
 import sys
 
 try:
@@ -28,7 +29,19 @@ try:
     from PyQt4 import QtGui, QtCore
     import sip
 except ImportError:
-    print "Error: Program requires PyQt4 and gr-qtgui."
+    sys.stderr.write("Error: Program requires PyQt4 and gr-qtgui.\n")
+    sys.exit(1)
+
+try:
+    from gnuradio import analog
+except ImportError:
+    sys.stderr.write("Error: Program requires gr-analog.\n")
+    sys.exit(1)
+
+try:
+    from gnuradio import channels
+except ImportError:
+    sys.stderr.write("Error: Program requires gr-channels.\n")
     sys.exit(1)
 
 class dialog_box(QtGui.QWidget):
@@ -138,20 +151,24 @@ class my_top_block(gr.top_block):
         npts = 2048
 
         self.qapp = QtGui.QApplication(sys.argv)
+        ss = open('dark.qss')
+        sstext = ss.read()
+        ss.close()
+        self.qapp.setStyleSheet(sstext)
 
-        src1 = gr.sig_source_c(Rs, gr.GR_SIN_WAVE, f1, 0.1, 0)
-        src2 = gr.sig_source_c(Rs, gr.GR_SIN_WAVE, f2, 0.1, 0)
-        src  = gr.add_cc()
-        channel = gr.channel_model(0.01)
-        thr = gr.throttle(gr.sizeof_gr_complex, 100*npts)
+        src1 = analog.sig_source_c(Rs, analog.GR_SIN_WAVE, f1, 0.1, 0)
+        src2 = analog.sig_source_c(Rs, analog.GR_SIN_WAVE, f2, 0.1, 0)
+        src  = blocks.add_cc()
+        channel = channels.channel_model(0.01)
+        thr = blocks.throttle(gr.sizeof_gr_complex, 100*npts)
         self.snk1 = qtgui.time_sink_c(npts, Rs,
-                                      "Complex Time Example", 3)
+                                      "Complex Time Example", 1)
 
         self.connect(src1, (src,0))
         self.connect(src2, (src,1))
         self.connect(src,  channel, thr, (self.snk1, 0))
-        self.connect(src1, (self.snk1, 1))
-        self.connect(src2, (self.snk1, 2))
+        #self.connect(src1, (self.snk1, 1))
+        #self.connect(src2, (self.snk1, 2))
 
         self.ctrl_win = control_box()
         self.ctrl_win.attach_signal1(src1)
@@ -165,17 +182,19 @@ class my_top_block(gr.top_block):
         pyWin = sip.wrapinstance(pyQt, QtGui.QWidget)
 
         # Example of using signal/slot to set the title of a curve
-        pyWin.connect(pyWin, QtCore.SIGNAL("setTitle(int, QString)"),
-                      pyWin, QtCore.SLOT("setTitle(int, QString)"))
-        pyWin.emit(QtCore.SIGNAL("setTitle(int, QString)"), 0, "Re{sum}")
-        self.snk1.set_title(1, "Im{Sum}")
-        self.snk1.set_title(2, "Re{src1}")
-        self.snk1.set_title(3, "Im{src1}")
-        self.snk1.set_title(4, "Re{src2}")
-        self.snk1.set_title(5, "Im{src2}")
+        pyWin.connect(pyWin, QtCore.SIGNAL("setLineLabel(int, QString)"),
+                      pyWin, QtCore.SLOT("setLineLabel(int, QString)"))
+        pyWin.emit(QtCore.SIGNAL("setLineLabel(int, QString)"), 0, "Re{sum}")
+        self.snk1.set_line_label(1, "Im{Sum}")
+        #self.snk1.set_line_label(2, "Re{src1}")
+        #self.snk1.set_line_label(3, "Im{src1}")
+        #self.snk1.set_line_label(4, "Re{src2}")
+        #self.snk1.set_line_label(5, "Im{src2}")
 
         # Can also set the color of a curve
         #self.snk1.set_color(5, "blue")
+
+        self.snk1.set_update_time(0.5)
 
         #pyWin.show()
         self.main_box = dialog_box(pyWin, self.ctrl_win)

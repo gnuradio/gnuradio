@@ -27,7 +27,7 @@
 #endif
 
 #include <@NAME_IMPL@.h>
-#include <gr_io_signature.h>
+#include <gnuradio/io_signature.h>
 
 namespace gr {
   namespace blocks {
@@ -38,9 +38,9 @@ namespace gr {
     }
 
     @NAME_IMPL@::@NAME_IMPL@(std::vector<@O_TYPE@> k)
-      : gr_sync_block ("@NAME@",
-		       gr_make_io_signature (1, 1, sizeof (@I_TYPE@)*k.size()),
-		       gr_make_io_signature (1, 1, sizeof (@O_TYPE@)*k.size())),
+      : sync_block ("@NAME@",
+		       io_signature::make (1, 1, sizeof (@I_TYPE@)*k.size()),
+		       io_signature::make (1, 1, sizeof (@O_TYPE@)*k.size())),
       d_k(k)
     {
     }

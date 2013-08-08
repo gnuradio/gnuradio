@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2004,2005,2007 Free Software Foundation, Inc.
+# Copyright 2004,2005,2007,2012 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -24,6 +24,12 @@ from gnuradio import gr
 from gnuradio import audio
 from gnuradio.eng_option import eng_option
 from optparse import OptionParser
+
+try:
+    from gnuradio import analog
+except ImportError:
+    sys.stderr.write("Error: Program requires gr-analog.\n")
+    sys.exit(1)
 
 #import os
 #print os.getpid()
@@ -50,11 +56,11 @@ class my_top_block(gr.top_block):
         sample_rate = int(options.sample_rate)
         ampl = 0.1
 
-        src0 = gr.sig_source_f (sample_rate, gr.GR_SIN_WAVE, 650, ampl)
+        src0 = analog.sig_source_f(sample_rate, analog.GR_SIN_WAVE, 650, ampl)
 
-        dst = audio.sink (sample_rate,
-                          options.audio_output,
-                          options.ok_to_block)
+        dst = audio.sink(sample_rate,
+                         options.audio_output,
+                         options.ok_to_block)
 
         self.connect (src0, (dst, 0))
 

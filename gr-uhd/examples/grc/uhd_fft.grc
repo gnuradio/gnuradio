@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='ASCII'?>
 <flow_graph>
-  <timestamp>Mon Jun 18 14:20:11 2012</timestamp>
+  <timestamp>Mon Mar 18 15:42:27 2013</timestamp>
   <block>
     <key>options</key>
     <param>
@@ -248,7 +248,7 @@
     </param>
     <param>
       <key>trig_mode</key>
-      <value>gr.gr_TRIG_MODE_AUTO</value>
+      <value>wxgui.TRIG_MODE_AUTO</value>
     </param>
     <param>
       <key>y_axis_label</key>
@@ -1146,41 +1146,6 @@
     </param>
   </block>
   <block>
-    <key>parameter</key>
-    <param>
-      <key>id</key>
-      <value>address</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>label</key>
-      <value>IP Address</value>
-    </param>
-    <param>
-      <key>value</key>
-      <value></value>
-    </param>
-    <param>
-      <key>type</key>
-      <value>string</value>
-    </param>
-    <param>
-      <key>short_id</key>
-      <value>a</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(190, 15)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
     <key>wxgui_fftsink2</key>
     <param>
       <key>id</key>
@@ -1501,6 +1466,41 @@
     <param>
       <key>_coordinate</key>
       <value>(679, 130)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>parameter</key>
+    <param>
+      <key>id</key>
+      <value>address</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>label</key>
+      <value>IP Address</value>
+    </param>
+    <param>
+      <key>value</key>
+      <value>addr=192.168.11.2</value>
+    </param>
+    <param>
+      <key>type</key>
+      <value>string</value>
+    </param>
+    <param>
+      <key>short_id</key>
+      <value>a</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(190, 15)</value>
     </param>
     <param>
       <key>_rotation</key>

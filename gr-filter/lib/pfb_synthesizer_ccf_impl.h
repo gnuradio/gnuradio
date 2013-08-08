@@ -24,10 +24,10 @@
 #ifndef INCLUDED_PFB_SYNTHESIZER_CCF_IMPL_H
 #define	INCLUDED_PFB_SYNTHESIZER_CCF_IMPL_H
 
-#include <filter/pfb_synthesizer_ccf.h>
-#include <filter/fir_filter_with_buffer.h>
-#include <fft/fft.h>
-#include <gruel/thread.h>
+#include <gnuradio/filter/pfb_synthesizer_ccf.h>
+#include <gnuradio/filter/fir_filter_with_buffer.h>
+#include <gnuradio/fft/fft.h>
+#include <gnuradio/thread/thread.h>
 
 namespace gr {
   namespace filter {
@@ -48,7 +48,7 @@ namespace gr {
       int              d_state;
       std::vector<int> d_channel_map;
       unsigned int     d_twox;
-      gruel::mutex     d_mutex; // mutex to protect set/work access
+      gr::thread::mutex     d_mutex; // mutex to protect set/work access
 
       /*!
        * \brief Tap setting algorithm for critically sampled channels

@@ -105,17 +105,29 @@ install(
 # Install all headers in the include directories
 ########################################################################
 install(
-    DIRECTORY ${CMAKE_SOURCE_DIR}/include/volk
+    DIRECTORY ${CMAKE_SOURCE_DIR}/kernels/volk
     DESTINATION include COMPONENT "volk_devel"
     FILES_MATCHING PATTERN "*.h"
 )
 
 install(FILES
+    ${CMAKE_SOURCE_DIR}/include/volk/volk_prefs.h
+    ${CMAKE_SOURCE_DIR}/include/volk/volk_complex.h
+    ${CMAKE_SOURCE_DIR}/include/volk/volk_common.h
     ${CMAKE_BINARY_DIR}/include/volk/volk.h
     ${CMAKE_BINARY_DIR}/include/volk/volk_cpu.h
     ${CMAKE_BINARY_DIR}/include/volk/volk_config_fixed.h
     ${CMAKE_BINARY_DIR}/include/volk/volk_typedefs.h
     DESTINATION include/volk
+    COMPONENT "volk_devel"
+)
+
+########################################################################
+# Install cmake search routine for external use
+########################################################################
+install(
+    FILES ${CMAKE_CURRENT_SOURCE_DIR}/cmake/VolkConfig.cmake
+    DESTINATION lib${LIB_SUFFIX}/cmake/volk/
     COMPONENT "volk_devel"
 )
 
@@ -128,6 +140,7 @@ add_subdirectory(lib)
 # And the utility apps
 ########################################################################
 add_subdirectory(apps)
+add_subdirectory(python/volk_modtool)
 
 ########################################################################
 # Print summary

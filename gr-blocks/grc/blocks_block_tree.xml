@@ -49,11 +49,22 @@
                 <block>blocks_unpack_k_bits_bb</block>
 		<block>blocks_repack_bits_bb</block>
 	</cat>
+        <cat>
+                <name>Control Port</name>
+                <block>blocks_ctrlport_monitor</block>
+                <block>blocks_ctrlport_monitor_performance</block>
+                <block>blocks_ctrlport_probe2_x</block>
+                <block>blocks_ctrlport_probe2_c</block>
+                <block>blocks_ctrlport_probe_c</block>
+	</cat>
 	<cat>
 		<name>Debug Tools</name>
 		<block>blocks_vector_sink_x</block>
 		<block>blocks_tag_debug</block>
 		<block>blocks_message_debug</block>
+                <block>blocks_random_pdu</block>
+                <block>blocks_message_strobe</block>
+                <block>blocks_tags_strobe</block>
 	</cat>
 	<cat>
 	        <name>File Operators</name>
@@ -98,6 +109,8 @@
 		<block>blocks_probe_signal_x</block>
 		<block>blocks_probe_signal_vx</block>
                 <block>blocks_probe_rate</block>
+                <block>blocks_ctrlport_probe2_c</block>
+                <block>blocks_ctrlport_probe_c</block>
         </cat>
         <cat>
                 <name>Message Tools</name>
@@ -108,6 +121,7 @@
 		<block>blocks_message_debug</block>
 		<block>blocks_pdu_to_tagged_stream</block>
 		<block>blocks_tagged_stream_to_pdu</block>
+                <block>blocks_random_pdu</block>
         </cat>
 	<cat>
 	        <name>Misc</name>
@@ -120,6 +134,8 @@
 		<block>blocks_null_sink</block>
                 <block>blocks_copy</block>
                 <block>blocks_nop</block>
+                <block>blocks_ctrlport_monitor</block>
+                <block>blocks_ctrlport_monitor_performance</block>
 	</cat>
 	<cat>
 		<name>Modulators</name>
@@ -150,6 +166,7 @@
 		<block>blocks_stream_to_vector</block>
 		<block>blocks_streams_to_stream</block>
 		<block>blocks_streams_to_vector</block>
+                <block>blocks_stream_to_vector_decimator</block>
 		<block>blocks_vector_to_stream</block>
 		<block>blocks_vector_to_streams</block>
                 <block>blocks_patterned_interleaver</block>

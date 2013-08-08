@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2005-2007,2011 Free Software Foundation, Inc.
+# Copyright 2005-2007,2011-2013 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -47,6 +47,8 @@ except:
   print "FYI: gr-video-sdl is not installed"
   print "realtime SDL video output window will not be available"
 from gnuradio import uhd
+from gnuradio import analog
+from gnuradio import blocks
 from gnuradio.eng_option import eng_option
 from gnuradio.wxgui import slider, powermate
 from gnuradio.wxgui import stdgui2, fftsink2, form
@@ -122,8 +124,8 @@ class tv_rx_block (stdgui2.std_top_block):
 
         if not ((filename is None) or (filename=="usrp")):
           # file is data source
-          self.filesource = gr.file_source(gr.sizeof_short,filename,options.repeat)
-          self.istoc = gr.interleaved_short_to_complex()
+          self.filesource = blocks.file_source(gr.sizeof_short,filename,options.repeat)
+          self.istoc = blocks.interleaved_short_to_complex()
           self.connect(self.filesource,self.istoc)
           self.src=self.istoc
 
@@ -153,7 +155,7 @@ class tv_rx_block (stdgui2.std_top_block):
 
         self.gain = options.gain
 
-        f2uc=gr.float_to_uchar()
+        f2uc = blocks.float_to_uchar()
 
         # sdl window as final sink
         if not (options.pal or options.ntsc):
@@ -191,13 +193,13 @@ class tv_rx_block (stdgui2.std_top_block):
               + " gray:" + options.out_filename
           print "(Use the spacebar to advance to next frames)"
           options.repeat=False
-          file_sink=gr.file_sink(gr.sizeof_char, options.out_filename)
+          file_sink = blocks.file_sink(gr.sizeof_char, options.out_filename)
           self.dst =file_sink
 
-        self.agc=gr.agc_cc(1e-7,1.0,1.0) #1e-7
-        self.am_demod = gr.complex_to_mag ()
-        self.set_blacklevel=gr.add_const_ff(0.0)
-        self.invert_and_scale = gr.multiply_const_ff (0.0) #-self.contrast *128.0*255.0/(200.0)
+        self.agc = analog.agc_cc(1e-7,1.0,1.0) #1e-7
+        self.am_demod = blocks.complex_to_mag ()
+        self.set_blacklevel = blocks.add_const_ff(0.0)
+        self.invert_and_scale = blocks.multiply_const_ff (0.0) #-self.contrast *128.0*255.0/(200.0)
 
         # now wire it all together
         #sample_rate=options.width*options.height*options.framerate
@@ -223,8 +225,8 @@ class tv_rx_block (stdgui2.std_top_block):
 
         elif process_type=='do_nullsink':
           #self.connect (self.src, self.am_demod,self.invert_and_scale,f2uc,video_sink)
-          c2r=gr.complex_to_real()
-          nullsink=gr.null_sink(gr.sizeof_float)
+          c2r=blocks.complex_to_real()
+          nullsink=blocks.null_sink(gr.sizeof_float)
           self.connect (self.src, c2r,nullsink) #video_sink)
         elif process_type=='do_tv_sync_corr':
           frame_size=width*height #int(usrp_rate/25.0)
@@ -237,14 +239,14 @@ class tv_rx_block (stdgui2.std_top_block):
           #Note: this block is not yet in cvs
           tv_corr=gr.tv_correlator_ff(frame_size,nframes, search_window,
                                       video_alpha, corr_alpha,debug)
-          shift=gr.add_const_ff(-0.7)
+          shift = blocks.add_const_ff(-0.7)
 
           self.connect (self.src, self.agc, self.am_demod, tv_corr,
                         self.invert_and_scale, self.set_blacklevel,
                         f2uc, self.dst)
         else: # process_type=='do_test_image':
-          src_vertical_bars = gr.sig_source_f (usrp_rate, gr.GR_SIN_WAVE,
-                                               10.0 *usrp_rate/320, 255,128)
+          src_vertical_bars = analog.sig_source_f(usrp_rate, analog.GR_SIN_WAVE,
+                                                  10.0 *usrp_rate/320, 255,128)
           self.connect(src_vertical_bars, f2uc, self.dst)
 
         self._build_gui(vbox, usrp_rate, usrp_rate, usrp_rate)
@@ -403,7 +405,8 @@ class tv_rx_block (stdgui2.std_top_block):
         """
         Set the center frequency we're interested in.
 
-        @param target_freq: frequency in Hz
+        Args:
+            target_freq: frequency in Hz
         @rypte: bool
 
         Tuning is a two step process.  First we ask the front-end to

@@ -25,7 +25,7 @@
 #endif
 
 #include "vector_map_impl.h"
-#include <gr_io_signature.h>
+#include <gnuradio/io_signature.h>
 #include <string.h>
 
 namespace gr {
@@ -62,10 +62,10 @@ namespace gr {
 
     vector_map_impl::vector_map_impl(size_t item_size, std::vector<size_t> in_vlens,
                                      std::vector< std::vector< std::vector<size_t> > > mapping)
-      : gr_sync_block("vector_map",
-                      gr_make_io_signaturev(in_vlens.size(), in_vlens.size(),
+      : sync_block("vector_map",
+                      io_signature::makev(in_vlens.size(), in_vlens.size(),
                                             get_in_sizeofs(item_size, in_vlens)),
-                      gr_make_io_signaturev(mapping.size(), mapping.size(),
+                      io_signature::makev(mapping.size(), mapping.size(),
                                             get_out_sizeofs(item_size, mapping))),
         d_item_size(item_size), d_in_vlens(in_vlens)
     {
@@ -95,7 +95,7 @@ namespace gr {
           }
         }
       }
-      gruel::scoped_lock guard(d_mutex);
+      gr::thread::scoped_lock guard(d_mutex);
       d_mapping = mapping;
     }
 

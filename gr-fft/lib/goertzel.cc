@@ -25,7 +25,7 @@
 #endif
 
 #include <cmath>
-#include <fft/goertzel.h>
+#include <gnuradio/fft/goertzel.h>
 
 namespace gr {
   namespace fft {

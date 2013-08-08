@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<!--
+###################################################
+##Encode CCSDS 27
+###################################################
+ -->
+<block>
+	<name>Encode CCSDS 27</name>
+	<key>fec_encode_ccsds_27_bb</key>
+	<import>from gnuradio import fec</import>
+	<make>fec.encode_ccsds_27_bb()</make>
+	<sink>
+		<name>in</name>
+		<type>byte</type>
+	</sink>
+	<source>
+		<name>out</name>
+		<type>byte</type>
+	</source>
+</block>

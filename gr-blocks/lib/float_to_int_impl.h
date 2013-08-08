@@ -23,7 +23,7 @@
 #ifndef INCLUDED_FLOAT_TO_INT_IMPL_H
 #define INCLUDED_FLOAT_TO_INT_IMPL_H
 
-#include <blocks/float_to_int.h>
+#include <gnuradio/blocks/float_to_int.h>
 
 namespace gr {
   namespace blocks {

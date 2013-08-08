@@ -23,7 +23,7 @@
 
 <!--
 ###################################################
-##DPSK2 Mod - 2, 4, 8
+##DPSK2 Mod - 2, 4
 ###################################################
  -->
 <block>
@@ -36,7 +36,7 @@
 	freq_bw=$freq_bw,
 	phase_bw=$phase_bw,
 	timing_bw=$timing_bw,
-	gray_coded=$gray_coded,
+	mod_code=$mod_code,
 	verbose=$verbose,
 	log=$log
 )</make>
@@ -87,16 +87,15 @@
 	</param>
 	<param>
 		<name>Gray Code</name>
-		<key>gray_coded</key>
-		<value>True</value>
+		<key>mod_code</key>
 		<type>enum</type>
 		<option>
 			<name>Yes</name>
-			<key>True</key>
+			<key>"gray"</key>
 		</option>
 		<option>
 			<name>No</name>
-			<key>False</key>
+			<key>"none"</key>
 		</option>
 	</param>
 	<param>

@@ -26,8 +26,7 @@ GR_CHECK_HDR_N_DEF(sys/resource.h HAVE_SYS_RESOURCE_H)
 ########################################################################
 include_directories(
     ${GR_BLOCKS_INCLUDE_DIRS}
-    ${GNURADIO_CORE_INCLUDE_DIRS}
-    ${GRUEL_INCLUDE_DIRS}
+    ${GNURADIO_RUNTIME_INCLUDE_DIRS}
     ${Boost_INCLUDE_DIRS}
     ${CPPUNIT_INCLUDE_DIRS}
 )
@@ -51,6 +50,6 @@ set(tests_not_run #single source per test
 foreach(test_not_run_src ${tests_not_run})
     get_filename_component(name ${test_not_run_src} NAME_WE)
     add_executable(${name} ${test_not_run_src})
-    target_link_libraries(${name} test-gnuradio-core gnuradio-blocks ${LOG4CPP_LIBRARIES})
+    target_link_libraries(${name} test-gnuradio-runtime gnuradio-blocks ${LOG4CPP_LIBRARIES})
 endforeach(test_not_run_src)
 

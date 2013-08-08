@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2010,2012 Free Software Foundation, Inc.
+# Copyright 2010,2012,2013 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -22,18 +22,25 @@
 
 from gnuradio import gr
 from gnuradio import filter
+from gnuradio import blocks
 import sys
+
+try:
+    from gnuradio import analog
+except ImportError:
+    sys.stderr.write("Error: Program requires gr-analog.\n")
+    sys.exit(1)
 
 try:
     import scipy
 except ImportError:
-    print "Error: Program requires scipy (see: www.scipy.org)."
+    sys.stderr.write("Error: Program requires scipy (see: www.scipy.org).\n")
     sys.exit(1)
 
 try:
     import pylab
 except ImportError:
-    print "Error: Program requires matplotlib (see: matplotlib.sourceforge.net)."
+    sys.stderr.write("Error: Program requires matplotlib (see: matplotlib.sourceforge.net).\n")
     sys.exit(1)
 
 def main():
@@ -45,7 +52,7 @@ def main():
 
     sigs = list()
     for fi in freqs:
-        s = gr.sig_source_c(fs, gr.GR_SIN_WAVE, fi, 1)
+        s = analog.sig_source_c(fs, analog.GR_SIN_WAVE, fi, 1)
         sigs.append(s)
 
     taps = filter.firdes.low_pass_2(len(freqs), fs,
@@ -54,8 +61,8 @@ def main():
                                                      len(taps)/nchans)
     filtbank = filter.pfb_synthesizer_ccf(nchans, taps)
 
-    head = gr.head(gr.sizeof_gr_complex, N)
-    snk = gr.vector_sink_c()
+    head = blocks.head(gr.sizeof_gr_complex, N)
+    snk = blocks.vector_sink_c()
 
     tb = gr.top_block()
     tb.connect(filtbank, head, snk)

@@ -28,13 +28,21 @@ include_directories(
     ${CMAKE_CURRENT_SOURCE_DIR}/fcd
     ${GR_FCD_INCLUDE_DIRS}
     ${GR_AUDIO_INCLUDE_DIRS}
-    ${GNURADIO_CORE_INCLUDE_DIRS}
-    ${GRUEL_INCLUDE_DIRS}
+    ${GR_BLOCKS_INCLUDE_DIRS}
+    ${GNURADIO_RUNTIME_INCLUDE_DIRS}
     ${Boost_INCLUDE_DIRS}
     ${LIBUSB_INCLUDE_DIR}
 )
 
-link_directories(${Boost_LIBRARY_DIRS})
+link_directories(
+	${Boost_LIBRARY_DIRS}
+	${LIBUSB_LIBRARY_DIRS}
+)
+
+if(ENABLE_GR_CTRLPORT)
+  ADD_DEFINITIONS(-DGR_CTRLPORT)
+  include_directories(${ICE_INCLUDE_DIR})
+endif(ENABLE_GR_CTRLPORT)
 
 include_directories(${LOG4CPP_INCLUDE_DIRS})
 link_directories(${LOG4CPP_LIBRARY_DIRS})
@@ -43,11 +51,12 @@ link_directories(${LOG4CPP_LIBRARY_DIRS})
 # Setup library
 ########################################################################
 list(APPEND gr_fcd_sources
-    fcd_source_c_impl.cc
+    source_c_impl.cc
 )
 
 list(APPEND fcd_libs
-    gnuradio-core
+    gnuradio-runtime
+    gnuradio-blocks
     gnuradio-audio
     ${Boost_LIBRARIES}
 )

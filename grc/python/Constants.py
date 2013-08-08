@@ -27,11 +27,11 @@ _gr_prefs = gr.prefs()
 PATH_SEP = {'/':':', '\\':';'}[os.path.sep]
 HIER_BLOCKS_LIB_DIR = os.path.join(os.path.expanduser('~'), '.grc_gnuradio')
 BLOCKS_DIRS = filter( #filter blank strings
-	lambda x: x, PATH_SEP.join([
-		os.environ.get('GRC_BLOCKS_PATH', ''),
-		_gr_prefs.get_string('grc', 'local_blocks_path', ''),
-		_gr_prefs.get_string('grc', 'global_blocks_path', ''),
-	]).split(PATH_SEP),
+    lambda x: x, PATH_SEP.join([
+        os.environ.get('GRC_BLOCKS_PATH', ''),
+        _gr_prefs.get_string('grc', 'local_blocks_path', ''),
+        _gr_prefs.get_string('grc', 'global_blocks_path', ''),
+    ]).split(PATH_SEP),
 ) + [HIER_BLOCKS_LIB_DIR]
 
 #file creation modes
@@ -45,39 +45,40 @@ BLOCK_DTD = os.path.join(DATA_DIR, 'block.dtd')
 DEFAULT_FLOW_GRAPH = os.path.join(DATA_DIR, 'default_flow_graph.grc')
 
 CORE_TYPES = ( #name, key, sizeof, color
-	('Complex Float 64', 'fc64', 16, '#CC8C69'),
-	('Complex Float 32', 'fc32', 8, '#3399FF'),
-	('Complex Integer 64', 'sc64', 16, '#66CC00'),
-	('Complex Integer 32', 'sc32', 8, '#33cc66'),
-	('Complex Integer 16', 'sc16', 4, '#cccc00'),
-	('Complex Integer 8', 'sc8', 2, '#cc00cc'),
-	('Float 64', 'f64', 8, '#66CCCC'),
-	('Float 32', 'f32', 4, '#FF8C69'),
-	('Integer 64', 's64', 8, '#99FF33'),
-	('Integer 32', 's32', 4, '#00FF99'),
-	('Integer 16', 's16', 2, '#FFFF66'),
-	('Integer 8', 's8', 1, '#FF66FF'),
-	('Message Queue', 'msg', 0, '#777777'),
-	('Async Message', 'message', 0, '#C0C0C0'),
-	('Wildcard', '', 0, '#FFFFFF'),
+    ('Complex Float 64', 'fc64', 16, '#CC8C69'),
+    ('Complex Float 32', 'fc32', 8, '#3399FF'),
+    ('Complex Integer 64', 'sc64', 16, '#66CC00'),
+    ('Complex Integer 32', 'sc32', 8, '#33cc66'),
+    ('Complex Integer 16', 'sc16', 4, '#cccc00'),
+    ('Complex Integer 8', 'sc8', 2, '#cc00cc'),
+    ('Float 64', 'f64', 8, '#66CCCC'),
+    ('Float 32', 'f32', 4, '#FF8C69'),
+    ('Integer 64', 's64', 8, '#99FF33'),
+    ('Integer 32', 's32', 4, '#00FF99'),
+    ('Integer 16', 's16', 2, '#FFFF66'),
+    ('Integer 8', 's8', 1, '#FF66FF'),
+    ('Message Queue', 'msg', 0, '#777777'),
+    ('Async Message', 'message', 0, '#C0C0C0'),
+    ('Bus Connection', 'bus', 0, '#FFFFFF'),
+    ('Wildcard', '', 0, '#FFFFFF'),
 )
 
 ALIAS_TYPES = {
-	'complex' : (8, '#3399FF'),
-	'float'   : (4, '#FF8C69'),
-	'int'     : (4, '#00FF99'),
-	'short'   : (2, '#FFFF66'),
-	'byte'    : (1, '#FF66FF'),
+    'complex' : (8, '#3399FF'),
+    'float'   : (4, '#FF8C69'),
+    'int'     : (4, '#00FF99'),
+    'short'   : (2, '#FFFF66'),
+    'byte'    : (1, '#FF66FF'),
 }
 
 TYPE_TO_COLOR = dict()
 TYPE_TO_SIZEOF = dict()
 for name, key, sizeof, color in CORE_TYPES:
-	TYPE_TO_COLOR[key] = color
-	TYPE_TO_SIZEOF[key] = sizeof
+    TYPE_TO_COLOR[key] = color
+    TYPE_TO_SIZEOF[key] = sizeof
 for key, (sizeof, color) in ALIAS_TYPES.iteritems():
-	TYPE_TO_COLOR[key] = color
-	TYPE_TO_SIZEOF[key] = sizeof
+    TYPE_TO_COLOR[key] = color
+    TYPE_TO_SIZEOF[key] = sizeof
 
 #coloring
 COMPLEX_COLOR_SPEC = '#3399FF'

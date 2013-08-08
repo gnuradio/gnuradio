@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2005-2007,2011 Free Software Foundation, Inc.
+# Copyright 2005-2007,2011,2012 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -20,7 +20,10 @@
 # Boston, MA 02110-1301, USA.
 #
 
-from gnuradio import gr, optfir, audio, blks2, uhd
+from gnuradio import gr, audio, uhd
+from gnuradio import blocks
+from gnuradio import filter
+from gnuradio import analog
 from gnuradio.eng_option import eng_option
 from optparse import OptionParser
 import sys
@@ -94,12 +97,12 @@ class wfm_rx_block (gr.top_block):
 
         # taps for channel filter
         nfilts = 32
-        chan_coeffs = optfir.low_pass (nfilts,           # gain
-                                       nfilts*usrp_rate, # sampling rate
-                                       80e3,             # passband cutoff
-                                       115e3,            # stopband cutoff
-                                       0.1,              # passband ripple
-                                       60)               # stopband attenuation
+        chan_coeffs = filter.optfir.low_pass(nfilts,           # gain
+                                             nfilts*usrp_rate, # sampling rate
+                                             80e3,             # passband cutoff
+                                             115e3,            # stopband cutoff
+                                             0.1,              # passband ripple
+                                             60)               # stopband attenuation
         rrate = usrp_rate / dev_rate
 
         # set front end PLL to middle frequency
@@ -111,9 +114,9 @@ class wfm_rx_block (gr.top_block):
             options.gain = float(g.start()+g.stop())/2.0
 
         for n in range(2):
-           chan_filt = blks2.pfb_arb_resampler_ccf(rrate, chan_coeffs, nfilts)
-           guts = blks2.wfm_rcv (demod_rate, audio_decim)
-           volume_control = gr.multiply_const_ff(self.vol)
+           chan_filt = filter.pfb.arb_resampler_ccf(rrate, chan_coeffs, nfilts)
+           guts = analog.wfm_rcv(demod_rate, audio_decim)
+           volume_control = blocks.multiply_const_ff(self.vol)
 
            #self.connect((self.di, n), chan_filt)
            self.connect((self.u, n), chan_filt)

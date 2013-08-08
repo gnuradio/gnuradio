@@ -1,0 +1,50 @@
+<?xml version="1.0"?>
+<!--
+###################################################
+##Polyphase Decimator
+###################################################
+ -->
+<block>
+	<name>Polyphase Decimator</name>
+	<key>pfb_decimator_ccf</key>
+	<import>from gnuradio.filter import pfb</import>
+	<import>from gnuradio.filter import firdes</import>
+	<make>pfb.decimator_ccf(
+	  $decim,
+	  $taps,
+	  $channel,
+	  $atten)
+	</make>
+           <callback>set_taps($taps)</callback>
+	<param>
+		<name>Decimation</name>
+		<key>decim</key>
+		<type>int</type>
+	</param>
+	<param>
+		<name>Taps</name>
+		<key>taps</key>
+		<value></value>
+		<type>real_vector</type>
+	</param>
+	<param>
+		<name>Output Channel</name>
+		<key>channel</key>
+		<value>0</value>
+		<type>int</type>
+	</param>
+	<param>
+		<name>Stop-band Attenuation</name>
+		<key>atten</key>
+		<value>100</value>
+		<type>real</type>
+	</param>
+	<sink>
+		<name>in</name>
+		<type>complex</type>
+	</sink>
+	<source>
+		<name>out</name>
+		<type>complex</type>
+	</source>
+</block>

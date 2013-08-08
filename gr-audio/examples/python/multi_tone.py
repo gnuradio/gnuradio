@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2004,2006,2007 Free Software Foundation, Inc.
+# Copyright 2004,2006,2007,2012 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -25,6 +25,12 @@ from gnuradio import audio
 from gnuradio.eng_option import eng_option
 from optparse import OptionParser
 
+try:
+    from gnuradio import analog
+except ImportError:
+    sys.stderr.write("Error: Program requires gr-analog.\n")
+    sys.exit(1)
+
 #import os
 #print os.getpid()
 #raw_input('Attach gdb and press Enter: ')
@@ -43,7 +49,7 @@ class my_top_block(gr.top_block):
                            help="set maximum channels to use")
         parser.add_option("-D", "--dont-block", action="store_false", default=True,
                           dest="ok_to_block")
-        (options, args) = parser.parse_args ()
+        (options, args) = parser.parse_args()
         if len(args) != 0:
             parser.print_help()
             raise SystemExit, 1
@@ -69,19 +75,19 @@ class my_top_block(gr.top_block):
         # progression = (7, 11, 1, 5)
         progression = (7, 11, 1, 5, 9)
 
-        dst = audio.sink (sample_rate,
-                          options.audio_output,
-                          options.ok_to_block)
+        dst = audio.sink(sample_rate,
+                         options.audio_output,
+                         options.ok_to_block)
 
         max_chan = dst.input_signature().max_streams()
         if (max_chan == -1) or (max_chan > limit_channels):
             max_chan = limit_channels
 
-        for i in range (max_chan):
-            quo, rem = divmod (i, len (progression))
+        for i in range(max_chan):
+            quo, rem = divmod(i, len (progression))
             freq = base * ratios[progression[rem]] * (quo + 1)
-            src = gr.sig_source_f (sample_rate, gr.GR_SIN_WAVE, freq, ampl)
-            self.connect (src, (dst, i))
+            src = analog.sig_source_f(sample_rate, analog.GR_SIN_WAVE, freq, ampl)
+            self.connect(src, (dst, i))
 
 if __name__ == '__main__':
     try:

@@ -1215,10 +1215,10 @@
     </param>
   </block>
   <block>
-    <key>gr_moving_average_xx</key>
+    <key>blocks_moving_average_xx</key>
     <param>
       <key>id</key>
-      <value>gr_moving_average_xx_0</value>
+      <value>blocks_moving_average_xx_0</value>
     </param>
     <param>
       <key>_enabled</key>
@@ -1250,7 +1250,7 @@
     </param>
   </block>
   <block>
-    <key>gr_file_sink</key>
+    <key>blocks_file_sink</key>
     <param>
       <key>id</key>
       <value>frame_sink</value>
@@ -1422,14 +1422,14 @@
     <sink_key>0</sink_key>
   </connection>
   <connection>
-    <source_block_id>gr_moving_average_xx_0</source_block_id>
+    <source_block_id>blocks_moving_average_xx_0</source_block_id>
     <sink_block_id>digital_clock_recovery_mm_xx_0</sink_block_id>
     <source_key>0</source_key>
     <sink_key>0</sink_key>
   </connection>
   <connection>
     <source_block_id>pll</source_block_id>
-    <sink_block_id>gr_moving_average_xx_0</sink_block_id>
+    <sink_block_id>blocks_moving_average_xx_0</sink_block_id>
     <source_key>0</source_key>
     <sink_key>0</sink_key>
   </connection>

@@ -25,7 +25,7 @@
 #endif
 
 #include "message_strobe_impl.h"
-#include <gr_io_signature.h>
+#include <gnuradio/io_signature.h>
 #include <cstdio>
 #include <errno.h>
 #include <sys/types.h>
@@ -46,9 +46,9 @@ namespace gr {
     }
 
     message_strobe_impl::message_strobe_impl(pmt::pmt_t msg, float period_ms)
-      : gr_block("message_strobe",
-                 gr_make_io_signature(0, 0, 0),
-                 gr_make_io_signature(0, 0, 0)),
+      : block("message_strobe",
+                 io_signature::make(0, 0, 0),
+                 io_signature::make(0, 0, 0)),
         d_finished(false),
         d_period_ms(period_ms),
         d_msg(msg)

@@ -23,15 +23,17 @@
 #ifndef INCLUDED_INTERLEAVED_SHORT_TO_COMPLEX_IMPL_H
 #define INCLUDED_INTERLEAVED_SHORT_TO_COMPLEX_IMPL_H
 
-#include <blocks/interleaved_short_to_complex.h>
+#include <gnuradio/blocks/interleaved_short_to_complex.h>
 
 namespace gr {
   namespace blocks {
 
     class BLOCKS_API interleaved_short_to_complex_impl : public interleaved_short_to_complex
     {
+    private:
+      bool d_vector_input;
     public:
-      interleaved_short_to_complex_impl();
+      interleaved_short_to_complex_impl(bool vector_input=false);
 
       int work(int noutput_items,
 	       gr_vector_const_void_star &input_items,

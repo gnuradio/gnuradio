@@ -23,7 +23,7 @@
 #ifndef INCLUDED_GR_TAGGED_FILE_SINK_IMPL_H
 #define INCLUDED_GR_TAGGED_FILE_SINK_IMPL_H
 
-#include <blocks/tagged_file_sink.h>
+#include <gnuradio/blocks/tagged_file_sink.h>
 #include <cstdio>  // for FILE
 
 namespace gr {

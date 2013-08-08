@@ -23,14 +23,15 @@
 #ifndef INCLUDED_FILTER_ADAPTIVE_FIR_CCC_IMPL_H
 #define	INCLUDED_FILTER_ADAPTIVE_FIR_CCC_IMPL_H
 
-#include <filter/adaptive_fir_ccc.h>
-#include <filter/fir_filter.h>
-#include <gr_types.h>
+#include <gnuradio/filter/adaptive_fir_ccc.h>
+#include <gnuradio/filter/adaptive_fir.h>
+#include <gnuradio/types.h>
 
 namespace gr {
   namespace filter {
 
-    class FILTER_API adaptive_fir_ccc_impl : public adaptive_fir_ccc, public kernel::fir_filter_ccc
+    class FILTER_API adaptive_fir_ccc_impl :
+      public adaptive_fir_ccc, public kernel::adaptive_fir_ccc
     {
     private:
       std::vector<gr_complex> d_new_taps;

@@ -26,16 +26,11 @@
  */
 
 #include <qa_analog.h>
-#include <qa_sincos.h>
-#include <qa_rotator.h>
 
 CppUnit::TestSuite *
 qa_gr_analog::suite()
 {
   CppUnit::TestSuite *s = new CppUnit::TestSuite("gr-analog");
-
-  s->addTest(gr::analog::qa_sincos::suite());
-  s->addTest(gr::analog::qa_rotator::suite());
 
   return s;
 }

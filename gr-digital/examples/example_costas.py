@@ -1,6 +1,28 @@
 #!/usr/bin/env python
+#
+# Copyright 2011-2013 Free Software Foundation, Inc.
+# 
+# This file is part of GNU Radio
+# 
+# GNU Radio is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 3, or (at your option)
+# any later version.
+# 
+# GNU Radio is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+# 
+# You should have received a copy of the GNU General Public License
+# along with GNU Radio; see the file COPYING.  If not, write to
+# the Free Software Foundation, Inc., 51 Franklin Street,
+# Boston, MA 02110-1301, USA.
+# 
 
-from gnuradio import gr, digital
+from gnuradio import gr, digital, filter
+from gnuradio import blocks
+from gnuradio import channels
 from gnuradio import eng_notation
 from gnuradio.eng_option import eng_option
 from optparse import OptionParser
@@ -21,20 +43,20 @@ class example_costas(gr.top_block):
     def __init__(self, N, sps, rolloff, ntaps, bw, noise, foffset, toffset, poffset):
         gr.top_block.__init__(self)
 
-        rrc_taps = gr.firdes.root_raised_cosine(
+        rrc_taps = filter.firdes.root_raised_cosine(
             sps, sps, 1.0, rolloff, ntaps)
 
         data = 2.0*scipy.random.randint(0, 2, N) - 1.0
         data = scipy.exp(1j*poffset) * data
 
-        self.src = gr.vector_source_c(data.tolist(), False)
-        self.rrc = gr.interp_fir_filter_ccf(sps, rrc_taps)
-        self.chn = gr.channel_model(noise, foffset, toffset)
+        self.src = blocks.vector_source_c(data.tolist(), False)
+        self.rrc = filter.interp_fir_filter_ccf(sps, rrc_taps)
+        self.chn = channels.channel_model(noise, foffset, toffset)
         self.cst = digital.costas_loop_cc(bw, 2)
 
-        self.vsnk_src = gr.vector_sink_c()
-        self.vsnk_cst = gr.vector_sink_c()
-        self.vsnk_frq = gr.vector_sink_f()
+        self.vsnk_src = blocks.vector_sink_c()
+        self.vsnk_cst = blocks.vector_sink_c()
+        self.vsnk_frq = blocks.vector_sink_f()
 
         self.connect(self.src, self.rrc, self.chn, self.cst, self.vsnk_cst)
         self.connect(self.rrc, self.vsnk_src)

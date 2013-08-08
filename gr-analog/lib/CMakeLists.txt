@@ -27,13 +27,18 @@ include_directories(
     ${GR_ANALOG_INCLUDE_DIRS}
     ${GR_FILTER_INCLUDE_DIRS}
     ${GR_FFT_INCLUDE_DIRS}
-    ${GNURADIO_CORE_INCLUDE_DIRS}
+    ${GR_BLOCKS_INCLUDE_DIRS}
+    ${GNURADIO_RUNTIME_INCLUDE_DIRS}
     ${VOLK_INCLUDE_DIRS}
-    ${GRUEL_INCLUDE_DIRS}
     ${Boost_INCLUDE_DIRS}
 )
 
 link_directories(${Boost_LIBRARY_DIRS})
+
+if(ENABLE_GR_CTRLPORT)
+  ADD_DEFINITIONS(-DGR_CTRLPORT)
+  include_directories(${ICE_INCLUDE_DIR})
+endif(ENABLE_GR_CTRLPORT)
 
 ########################################################################
 # generate helper scripts to expand templated files
@@ -44,7 +49,7 @@ file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/generate_helper.py "
 #!${PYTHON_EXECUTABLE}
 
 import sys, os, re
-sys.path.append('${GR_CORE_PYTHONPATH}')
+sys.path.append('${GR_RUNTIME_PYTHONPATH}')
 os.environ['srcdir'] = '${CMAKE_CURRENT_SOURCE_DIR}'
 os.chdir('${CMAKE_CURRENT_BINARY_DIR}')
 
@@ -100,6 +105,7 @@ endmacro(expand_cc)
 # Invoke macro to generate various sources
 ########################################################################
 expand_cc(noise_source_X_impl     s i f c)
+expand_cc(fastnoise_source_X_impl s i f c)
 expand_cc(sig_source_X_impl     s i f c)
 
 ########################################################################
@@ -114,6 +120,7 @@ list(APPEND analog_sources
     agc_ff_impl.cc
     agc2_cc_impl.cc
     agc2_ff_impl.cc
+    agc3_cc_impl.cc
     cpfsk_bc_impl.cc
     ctcss_squelch_ff_impl.cc
     dpll_bb_impl.cc
@@ -121,7 +128,6 @@ list(APPEND analog_sources
     fmdet_cf_impl.cc
     frequency_modulator_fc_impl.cc
     phase_modulator_fc_impl.cc
-    plateau_detector_fb_impl.cc
     pll_carriertracking_cc_impl.cc
     pll_freqdet_cf_impl.cc
     pll_refout_cc_impl.cc
@@ -133,7 +139,6 @@ list(APPEND analog_sources
     quadrature_demod_cf_impl.cc
     rail_ff_impl.cc
     simple_squelch_cc_impl.cc
-    sincos.cc
 )
 
 #Add Windows DLL resource file if using MSVC
@@ -153,7 +158,8 @@ ENDIF(MSVC)
 
 list(APPEND analog_libs
     volk
-    gnuradio-core
+    gnuradio-runtime
+    gnuradio-blocks
     gnuradio-filter
     ${Boost_LIBRARIES}
 )
@@ -176,15 +182,13 @@ if(ENABLE_TESTING)
   list(APPEND test_gr_analog_sources
     ${CMAKE_CURRENT_SOURCE_DIR}/test_gr_analog.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/qa_analog.cc
-    ${CMAKE_CURRENT_SOURCE_DIR}/qa_sincos.cc
-    ${CMAKE_CURRENT_SOURCE_DIR}/qa_rotator.cc
     )
 
   add_executable(test-gr-analog ${test_gr_analog_sources})
 
   target_link_libraries(
     test-gr-analog
-    gnuradio-core
+    gnuradio-runtime
     gnuradio-analog 
     ${Boost_LIBRARIES}
     ${CPPUNIT_LIBRARIES}
@@ -194,11 +198,3 @@ if(ENABLE_TESTING)
 
   GR_ADD_TEST(test_gr_analog test-gr-analog)
 endif(ENABLE_TESTING)
-
-CHECK_CXX_SOURCE_COMPILES("
-    #define _GNU_SOURCE
-    #include <math.h>
-    int main(){double x, sin, cos; sincos(x, &sin, &cos); return 0;}
-    " HAVE_SINCOS
-)
-GR_ADD_COND_DEF(HAVE_SINCOS)

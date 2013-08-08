@@ -23,7 +23,7 @@
 #ifndef INCLUDED_GR_THROTTLE_IMPL_H
 #define INCLUDED_GR_THROTTLE_IMPL_H
 
-#include <blocks/throttle.h>
+#include <gnuradio/blocks/throttle.h>
 
 namespace gr {
   namespace blocks {
@@ -39,6 +39,8 @@ namespace gr {
     public:
       throttle_impl(size_t itemsize, double samples_per_sec);
       ~throttle_impl();
+
+      void setup_rpc();
 
       void set_sample_rate(double rate);
       double sample_rate() const;

@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2004,2007,2011 Free Software Foundation, Inc.
+# Copyright 2004,2007,2011,2012 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -26,6 +26,8 @@ Setup USRP for maximum power consumption.
 
 
 from gnuradio import gr
+from gnuradio import analog
+from gnuradio import blocks
 from gnuradio import uhd
 from gnuradio.eng_option import eng_option
 from optparse import OptionParser
@@ -63,9 +65,9 @@ class build_block(gr.top_block):
             self.u_tx = uhd.usrp_sink(device_addr=args, stream_args=stream_args)
             self.u_tx.set_samp_rate(MAX_RATE)
 
-            self.tx_src0 = gr.sig_source_c(self.u_tx.get_samp_rate(),
-                                           gr.GR_CONST_WAVE,
-                                           0, 1.0, 0)
+            self.tx_src0 = analog.sig_source_c(self.u_tx.get_samp_rate(),
+                                               analog.GR_CONST_WAVE,
+                                               0, 1.0, 0)
 
             # Get dboard gain range and select maximum
             tx_gain_range = self.u_tx.get_gain_range()
@@ -94,7 +96,7 @@ class build_block(gr.top_block):
             self.u_rx = uhd.usrp_source(device_addr=args,
                                         io_type=uhd.io_type.COMPLEX_FLOAT32,
                                         num_channels=rx_nchan)
-            self.rx_dst0 = gr.null_sink (gr.sizeof_gr_complex)
+            self.rx_dst0 = blocks.null_sink(gr.sizeof_gr_complex)
 
             self.u_rx.set_samp_rate(MAX_RATE)
 

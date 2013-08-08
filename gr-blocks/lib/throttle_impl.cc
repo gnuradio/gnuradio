@@ -25,7 +25,7 @@
 #endif
 
 #include "throttle_impl.h"
-#include <gr_io_signature.h>
+#include <gnuradio/io_signature.h>
 #include <cstring>
 #include <boost/thread/thread.hpp>
 
@@ -41,9 +41,9 @@ namespace gr {
 
     throttle_impl::throttle_impl(size_t itemsize,
                                  double samples_per_second)
-      : gr_sync_block("throttle",
-                      gr_make_io_signature(1, 1, itemsize),
-                      gr_make_io_signature(1, 1, itemsize)),
+      : sync_block("throttle",
+                      io_signature::make(1, 1, itemsize),
+                      io_signature::make(1, 1, itemsize)),
         d_itemsize(itemsize)
     {
       set_sample_rate(samples_per_second);
@@ -91,6 +91,26 @@ namespace gr {
       std::memcpy(out, in, noutput_items * d_itemsize);
       d_total_samples += noutput_items;
       return noutput_items;
+    }
+
+    void
+    throttle_impl::setup_rpc()
+    {
+#ifdef GR_CTRLPORT
+      d_rpc_vars.push_back(
+        rpcbasic_sptr(new rpcbasic_register_get<throttle, double>(
+            alias(), "sample_rate", &throttle::sample_rate,
+            pmt::mp(0.0), pmt::mp(100.0e6), pmt::mp(0.0),
+            "Hz", "Sample Rate", RPC_PRIVLVL_MIN,
+            DISPTIME | DISPOPTSTRIP)));
+
+      d_rpc_vars.push_back(
+        rpcbasic_sptr(new rpcbasic_register_set<throttle, double>(
+            alias(), "sample_rate", &throttle::set_sample_rate,
+            pmt::mp(0.0), pmt::mp(100.0e6), pmt::mp(0.0),
+            "Hz", "Sample Rate", RPC_PRIVLVL_MIN,
+            DISPTIME | DISPOPTSTRIP)));
+#endif /* GR_CTRLPORT */
     }
 
   } /* namespace blocks */

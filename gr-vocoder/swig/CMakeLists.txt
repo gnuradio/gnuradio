@@ -25,13 +25,18 @@ include(GrSwig)
 
 set(GR_SWIG_INCLUDE_DIRS
     ${GR_VOCODER_INCLUDE_DIRS}
-    ${GNURADIO_CORE_SWIG_INCLUDE_DIRS}
-    ${GRUEL_INCLUDE_DIRS}
+    ${GNURADIO_RUNTIME_SWIG_INCLUDE_DIRS}
     ${Boost_INCLUDE_DIRS}
 )
 
+if(ENABLE_GR_CTRLPORT)
+  list(APPEND GR_SWIG_FLAGS "-DGR_CTRLPORT")
+  list(APPEND GR_SWIG_INCLUDE_DIRS ${ICE_INCLUDE_DIR})
+endif(ENABLE_GR_CTRLPORT)
+
 set(GR_SWIG_DOC_FILE ${CMAKE_CURRENT_BINARY_DIR}/vocoder_swig_doc.i)
-set(GR_SWIG_DOC_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/../include)
+set(GR_SWIG_DOC_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/../include/gnuradio/vocoder)
+set(GR_SWIG_DOCS_TARGET_DEPS runtime_swig_swig_doc)
 
 set(GR_SWIG_LIBRARIES gnuradio-vocoder)
 
@@ -46,22 +51,6 @@ GR_SWIG_INSTALL(
 install(
     FILES
     vocoder_swig.i
-    vocoder_alaw_decode_bs.i
-    vocoder_alaw_encode_sb.i
-    vocoder_codec2_decode_ps.i
-    vocoder_codec2_encode_sp.i
-    vocoder_cvsd_decode_bs.i
-    vocoder_cvsd_encode_sb.i
-    vocoder_g721_decode_bs.i
-    vocoder_g721_encode_sb.i
-    vocoder_g723_24_decode_bs.i
-    vocoder_g723_24_encode_sb.i
-    vocoder_g723_40_decode_bs.i
-    vocoder_g723_40_encode_sb.i
-    vocoder_gsm_fr_encode_sp.i
-    vocoder_gsm_fr_decode_ps.i
-    vocoder_ulaw_decode_bs.i
-    vocoder_ulaw_encode_sb.i
     ${CMAKE_CURRENT_BINARY_DIR}/vocoder_swig_doc.i
     DESTINATION ${GR_INCLUDE_DIR}/gnuradio/swig
     COMPONENT "vocoder_swig"

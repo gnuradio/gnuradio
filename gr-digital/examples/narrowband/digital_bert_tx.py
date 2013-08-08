@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2008,2011 Free Software Foundation, Inc.
+# Copyright 2008,2011,2013 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -25,6 +25,7 @@ from gnuradio.eng_option import eng_option
 from optparse import OptionParser
 import sys
 
+from gnuradio import blocks
 from gnuradio import digital
 
 # from current dir
@@ -42,14 +43,15 @@ class bert_transmit(gr.hier_block2):
                                 gr.io_signature(1, 1, gr.sizeof_gr_complex)) # Input signature
         
         # Create BERT data bit stream	
-	self._bits = gr.vector_source_b([1,], True)      # Infinite stream of ones
-        self._scrambler = gr.scrambler_bb(0x8A, 0x7F, 7) # CCSDS 7-bit scrambler
+	self._bits = blocks.vector_source_b([1,], True)      # Infinite stream of ones
+        self._scrambler = digital.scrambler_bb(0x8A, 0x7F, 7) # CCSDS 7-bit scrambler
 
-        self._mod = digital.generic_mod(constellation, samples_per_symbol,
-                                        differential, excess_bw, gray_coded,
+        self._mod = digital.generic_mod(constellation, differential,
+                                        samples_per_symbol,
+                                        gray_coded, excess_bw,
                                         verbose, log)
 
-        self._pack = gr.unpacked_to_packed_bb(self._mod.bits_per_symbol(), gr.GR_MSB_FIRST)
+        self._pack = blocks.unpacked_to_packed_bb(self._mod.bits_per_symbol(), gr.GR_MSB_FIRST)
 
         self.connect(self._bits, self._scrambler, self._pack, self._mod, self)
 
@@ -76,9 +78,9 @@ class tx_psk_block(gr.top_block):
             options.samples_per_symbol = self._sink._sps
             
         elif(options.to_file is not None):
-            self._sink = gr.file_sink(gr.sizeof_gr_complex, options.to_file)
+            self._sink = blocks.file_sink(gr.sizeof_gr_complex, options.to_file)
         else:
-            self._sink = gr.null_sink(gr.sizeof_gr_complex)
+            self._sink = blocks.null_sink(gr.sizeof_gr_complex)
             
             
         self._transmitter = bert_transmit(self._modulator._constellation,
@@ -89,7 +91,7 @@ class tx_psk_block(gr.top_block):
                                           verbose=options.verbose,
                                           log=options.log)
 
-        self.amp = gr.multiply_const_cc(options.amplitude)
+        self.amp = blocks.multiply_const_cc(options.amplitude)
 	self.connect(self._transmitter, self.amp, self._sink)
 
 

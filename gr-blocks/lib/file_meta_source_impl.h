@@ -23,12 +23,12 @@
 #ifndef INCLUDED_BLOCKS_FILE_META_SOURCE_IMPL_H
 #define INCLUDED_BLOCKS_FILE_META_SOURCE_IMPL_H
 
-#include <blocks/file_meta_source.h>
-#include <gr_tags.h>
-#include <gruel/pmt.h>
-#include <gruel/thread.h>
+#include <gnuradio/blocks/file_meta_source.h>
+#include <gnuradio/tags.h>
+#include <pmt/pmt.h>
+#include <gnuradio/thread/thread.h>
 
-#include <blocks/file_meta_sink.h>
+#include <gnuradio/blocks/file_meta_sink.h>
 
 using namespace pmt;
 
@@ -50,20 +50,20 @@ namespace gr {
       bool d_updated;
       bool d_repeat;
 
-      gruel::mutex d_mutex;
+      gr::thread::mutex d_mutex;
       FILE *d_new_fp, *d_new_hdr_fp;
       FILE *d_fp, *d_hdr_fp;
       meta_state_t d_state;
 
-      std::vector<gr_tag_t> d_tags;
+      std::vector<tag_t> d_tags;
 
     protected:
       bool _open(FILE **fp, const char *filename);
       bool read_header(pmt_t &hdr, pmt_t &extras);
       void parse_header(pmt_t hdr, uint64_t offset,
-			std::vector<gr_tag_t> &tags);
+			std::vector<tag_t> &tags);
       void parse_extras(pmt_t extras, uint64_t offset,
-			std::vector<gr_tag_t> &tags);
+			std::vector<tag_t> &tags);
 
     public:
       file_meta_source_impl(const std::string &filename,

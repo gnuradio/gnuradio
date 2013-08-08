@@ -24,7 +24,7 @@
 #include "config.h"
 #endif
 
-#include <blocks/wavfile.h>
+#include <gnuradio/blocks/wavfile.h>
 #include <cstring>
 #include <stdint.h>
 #include <boost/detail/endian.hpp> //BOOST_BIG_ENDIAN
@@ -38,14 +38,14 @@ namespace gr {
     // Define host to/from worknet (little endian) short and long
 #ifdef BOOST_BIG_ENDIAN
 
-    static inline uint16_t __wav_bs16(uint16_t x)
+    static inline uint16_t __gri_wav_bs16(uint16_t x)
     {
       return (x>>8) | (x<<8);
     }
 
-    static inline uint32_t __wav_bs32(uint32_t x)
+    static inline uint32_t __gri_wav_bs32(uint32_t x)
     {
-      return (uint32_t(__wav_bs16(uint16_t(x&0xfffful)))<<16) | (__wav_bs16(uint16_t(x>>16)));
+      return (uint32_t(__gri_wav_bs16(uint16_t(x&0xfffful)))<<16) | (__gri_wav_bs16(uint16_t(x>>16)));
     }
 
     #define htowl(x) __gri_wav_bs32(x)

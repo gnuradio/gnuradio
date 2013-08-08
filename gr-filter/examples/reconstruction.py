@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2010,2012 Free Software Foundation, Inc.
+# Copyright 2010,2012,2013 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -22,6 +22,13 @@
 
 from gnuradio import gr, digital
 from gnuradio import filter
+from gnuradio import blocks
+
+try:
+    from gnuradio import channels
+except ImportError:
+    print "Error: Program requires gr-channels."
+    sys.exit(1)
 
 try:
     import scipy
@@ -62,9 +69,9 @@ def main():
     data = scipy.random.randint(0, 256, N)
     rrc_taps = filter.firdes.root_raised_cosine(1, 2, 1, 0.35, 41)
 
-    src = gr.vector_source_b(data.astype(scipy.uint8).tolist(), False)
+    src = blocks.vector_source_b(data.astype(scipy.uint8).tolist(), False)
     mod = digital.bpsk_mod(samples_per_symbol=2)
-    chan = gr.channel_model(npwr)
+    chan = filter.channel_model(npwr)
     rrc = filter.fft_filter_ccc(1, rrc_taps)
 
     # Split it up into pieces
@@ -73,8 +80,8 @@ def main():
     # Put the pieces back together again
     syn_taps = [nchans*t for t in proto_taps]
     synthesizer = filter.pfb_synthesizer_ccf(nchans, syn_taps, True)
-    src_snk = gr.vector_sink_c()
-    snk = gr.vector_sink_c()
+    src_snk = blocks.vector_sink_c()
+    snk = blocks.vector_sink_c()
 
     # Remap the location of the channels
     # Can be done in synth or channelizer (watch out for rotattions in
@@ -90,7 +97,7 @@ def main():
     for i in xrange(nchans):
         tb.connect((channelizer,i), (synthesizer, i))
 
-        vsnk.append(gr.vector_sink_c())
+        vsnk.append(blocks.vector_sink_c())
         tb.connect((channelizer,i), vsnk[i])
 
     tb.connect(synthesizer, snk)

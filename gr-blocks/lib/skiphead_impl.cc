@@ -25,7 +25,7 @@
 #endif
 
 #include "skiphead_impl.h"
-#include <gr_io_signature.h>
+#include <gnuradio/io_signature.h>
 #include <string.h>
 
 namespace gr {
@@ -39,9 +39,9 @@ namespace gr {
     }
 
     skiphead_impl::skiphead_impl(size_t itemsize, uint64_t nitems_to_skip)
-      : gr_block("skiphead",
-                 gr_make_io_signature(1, 1, itemsize),
-                 gr_make_io_signature(1, 1, itemsize)),
+      : block("skiphead",
+                 io_signature::make(1, 1, itemsize),
+                 io_signature::make(1, 1, itemsize)),
         d_nitems_to_skip(nitems_to_skip), d_nitems(0)
     {
     }

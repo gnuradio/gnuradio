@@ -23,8 +23,8 @@
 #ifndef INCLUDED_ANALOG_SIMPLE_SQUELCH_CC_IMPL_H
 #define INCLUDED_ANALOG_SIMPLE_SQUELCH_CC_IMPL_H
 
-#include <analog/simple_squelch_cc.h>
-#include <filter/single_pole_iir.h>
+#include <gnuradio/analog/simple_squelch_cc.h>
+#include <gnuradio/filter/single_pole_iir.h>
 
 namespace gr {
   namespace analog {

@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2008,2011 Free Software Foundation, Inc.
+# Copyright 2008,2011,2013 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -27,6 +27,7 @@ import gnuradio.gr.gr_threading as _threading
 import sys, time, math
 
 from gnuradio import digital
+from gnuradio import blocks
 
 # from current dir
 from uhd_interface import uhd_receiver
@@ -65,8 +66,9 @@ class bert_receiver(gr.hier_block2):
         
         self._bitrate = bitrate
 
-        self._demod = digital.generic_demod(constellation, samples_per_symbol,
-                                            differential, excess_bw, gray_coded,
+        self._demod = digital.generic_demod(constellation, differential, 
+                                            samples_per_symbol,
+                                            gray_coded, excess_bw,
                                             freq_bw, timing_bw, phase_bw,
                                             verbose, log)
 
@@ -74,14 +76,15 @@ class bert_receiver(gr.hier_block2):
         self._sample_rate = self._symbol_rate * samples_per_symbol
 
         # Add an SNR probe on the demodulated constellation
-        self._snr_probe = digital.probe_mpsk_snr_est_c(digital.SNR_EST_M2M4, alpha=10.0/self._symbol_rate)
+        self._snr_probe = digital.probe_mpsk_snr_est_c(digital.SNR_EST_M2M4, 1000,
+                                                       alpha=10.0/self._symbol_rate)
         self.connect(self._demod.time_recov, self._snr_probe)
         
         # Descramble BERT sequence.  A channel error will create 3 incorrect bits
-        self._descrambler = gr.descrambler_bb(0x8A, 0x7F, 7) # CCSDS 7-bit descrambler
+        self._descrambler = digital.descrambler_bb(0x8A, 0x7F, 7) # CCSDS 7-bit descrambler
 
         # Measure BER by the density of 0s in the stream
-        self._ber = gr.probe_density_b(1.0/self._symbol_rate)
+        self._ber = digital.probe_density_b(1.0/self._symbol_rate)
         
         self.connect(self, self._demod, self._descrambler, self._ber)
 
@@ -89,7 +92,7 @@ class bert_receiver(gr.hier_block2):
         return self._demod.freq_recov.get_frequency()*self._sample_rate/(2*math.pi)
 
     def timing_offset(self):
-        return self._demod.time_recov.get_clock_rate()
+        return self._demod.time_recov.clock_rate()
 
     def snr(self):
         return self._snr_probe.snr()
@@ -122,9 +125,9 @@ class rx_psk_block(gr.top_block):
             options.samples_per_symbol = self._source._sps
 
         elif(options.from_file is not None):
-            self._source = gr.file_source(gr.sizeof_gr_complex, options.from_file)
+            self._source = blocks.file_source(gr.sizeof_gr_complex, options.from_file)
         else:
-            self._source = gr.null_source(gr.sizeof_gr_complex)
+            self._source = blocks.null_source(gr.sizeof_gr_complex)
 
         # Create the BERT receiver
         self._receiver = bert_receiver(options.bitrate,

@@ -23,7 +23,7 @@
 #ifndef INCLUDED_ANALOG_QUADRATURE_DEMOD_CF_IMPL_H
 #define INCLUDED_ANALOG_QUADRATURE_DEMOD_CF_IMPL_H
 
-#include <analog/quadrature_demod_cf.h>
+#include <gnuradio/analog/quadrature_demod_cf.h>
 
 namespace gr {
   namespace analog {

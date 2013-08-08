@@ -24,7 +24,7 @@
 #endif
 
 #include <string.h>
-#include <digital/packet_header_default.h>
+#include <gnuradio/digital/packet_header_default.h>
 
 namespace gr {
   namespace digital {
@@ -46,8 +46,8 @@ namespace gr {
 		    const std::string &num_tag_key,
 		    int bits_per_byte)
       : d_header_len(header_len),
-      d_len_tag_key(pmt::pmt_string_to_symbol(len_tag_key)),
-      d_num_tag_key(num_tag_key.empty() ? pmt::PMT_NIL : pmt::pmt_string_to_symbol(num_tag_key)),
+      d_len_tag_key(pmt::string_to_symbol(len_tag_key)),
+      d_num_tag_key(num_tag_key.empty() ? pmt::PMT_NIL : pmt::string_to_symbol(num_tag_key)),
       d_bits_per_byte(bits_per_byte),
       d_header_number(0)
     {
@@ -64,7 +64,8 @@ namespace gr {
     bool packet_header_default::header_formatter(
 	long packet_len,
         unsigned char *out,
-	const std::vector<gr_tag_t> &tags
+
+	const std::vector<tag_t> &tags
     )
     {
       packet_len &= 0x0FFF;
@@ -91,18 +92,18 @@ namespace gr {
 
     bool packet_header_default::header_parser(
 	const unsigned char *in,
-	std::vector<gr_tag_t> &tags)
+	std::vector<tag_t> &tags)
     {
       unsigned header_len = 0;
       unsigned header_num = 0;
-      gr_tag_t tag;
+      tag_t tag;
 
       int k = 0; // Position in "in"
       for (int i = 0; i < 12 && k < d_header_len; i += d_bits_per_byte, k++) {
 	header_len |= (((int) in[k]) & d_mask) << i;
       }
       tag.key = d_len_tag_key;
-      tag.value = pmt::pmt_from_long(header_len);
+      tag.value = pmt::from_long(header_len);
       tags.push_back(tag);
       if (k >= d_header_len) {
 	return true;
@@ -114,9 +115,10 @@ namespace gr {
 	  header_num |= (((int) in[k]) & d_mask) << i;
 	}
 	tag.key = d_num_tag_key;
-	tag.value = pmt::pmt_from_long(header_num);
+	tag.value = pmt::from_long(header_num);
 	tags.push_back(tag);
       }
+
       if (k >= d_header_len) {
 	return true;
       }

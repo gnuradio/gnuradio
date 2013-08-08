@@ -23,7 +23,7 @@
 #ifndef INCLUDED_GR_ANNOTATOR_ALLTOALL_IMPL_H
 #define	INCLUDED_GR_ANNOTATOR_ALLTOALL_IMPL_H
 
-#include <blocks/annotator_alltoall.h>
+#include <gnuradio/blocks/annotator_alltoall.h>
 
 namespace gr {
   namespace blocks {
@@ -34,13 +34,13 @@ namespace gr {
       size_t d_itemsize;
       uint64_t d_when;
       uint64_t d_tag_counter;
-      std::vector<gr_tag_t> d_stored_tags;
+      std::vector<tag_t> d_stored_tags;
 
     public:
       annotator_alltoall_impl(int when, size_t sizeof_stream_item);
       ~annotator_alltoall_impl();
 
-      std::vector<gr_tag_t> data() const
+      std::vector<tag_t> data() const
       {
         return d_stored_tags;
       }

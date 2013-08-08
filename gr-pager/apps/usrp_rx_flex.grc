@@ -330,10 +330,10 @@
     </param>
   </block>
   <block>
-    <key>gr_freq_xlating_fir_filter_xxx</key>
+    <key>filter_freq_xlating_fir_filter_xxx</key>
     <param>
       <key>id</key>
-      <value>gr_freq_xlating_fir_filter_xxx_0</value>
+      <value>filter_freq_xlating_fir_filter_xxx_0</value>
     </param>
     <param>
       <key>_enabled</key>
@@ -1086,7 +1086,7 @@
     </param>
   </block>
   <block>
-    <key>gr_quadrature_demod_cf</key>
+    <key>analog_quadrature_demod_cf</key>
     <param>
       <key>id</key>
       <value>fm_demod</value>
@@ -1466,10 +1466,10 @@
     </param>
   </block>
   <block>
-    <key>gr_char_to_float</key>
+    <key>blocks_char_to_float</key>
     <param>
       <key>id</key>
-      <value>gr_char_to_float_0</value>
+      <value>blocks_char_to_float_0</value>
     </param>
     <param>
       <key>_enabled</key>
@@ -1523,10 +1523,10 @@
     </param>
   </block>
   <block>
-    <key>gr_null_sink</key>
+    <key>blocks_null_sink</key>
     <param>
       <key>id</key>
-      <value>gr_null_sink_0</value>
+      <value>blocks_null_sink_0</value>
     </param>
     <param>
       <key>_enabled</key>
@@ -1607,10 +1607,10 @@
     </param>
   </block>
   <block>
-    <key>gr_null_sink</key>
+    <key>blocks_null_sink</key>
     <param>
       <key>id</key>
-      <value>gr_null_sink_0_0</value>
+      <value>blocks_null_sink_0_0</value>
     </param>
     <param>
       <key>_enabled</key>
@@ -1634,10 +1634,10 @@
     </param>
   </block>
   <block>
-    <key>gr_null_sink</key>
+    <key>blocks_null_sink</key>
     <param>
       <key>id</key>
-      <value>gr_null_sink_0_1</value>
+      <value>blocks_null_sink_0_1</value>
     </param>
     <param>
       <key>_enabled</key>
@@ -1661,10 +1661,10 @@
     </param>
   </block>
   <block>
-    <key>gr_null_sink</key>
+    <key>blocks_null_sink</key>
     <param>
       <key>id</key>
-      <value>gr_null_sink_0_2</value>
+      <value>blocks_null_sink_0_2</value>
     </param>
     <param>
       <key>_enabled</key>
@@ -1688,14 +1688,14 @@
     </param>
   </block>
   <connection>
-    <source_block_id>gr_freq_xlating_fir_filter_xxx_0</source_block_id>
+    <source_block_id>filter_freq_xlating_fir_filter_xxx_0</source_block_id>
     <sink_block_id>wxgui_fftsink2_1</sink_block_id>
     <source_key>0</source_key>
     <sink_key>0</sink_key>
   </connection>
   <connection>
     <source_block_id>usrp_source</source_block_id>
-    <sink_block_id>gr_freq_xlating_fir_filter_xxx_0</sink_block_id>
+    <sink_block_id>filter_freq_xlating_fir_filter_xxx_0</sink_block_id>
     <source_key>0</source_key>
     <sink_key>0</sink_key>
   </connection>
@@ -1706,7 +1706,7 @@
     <sink_key>0</sink_key>
   </connection>
   <connection>
-    <source_block_id>gr_freq_xlating_fir_filter_xxx_0</source_block_id>
+    <source_block_id>filter_freq_xlating_fir_filter_xxx_0</source_block_id>
     <sink_block_id>fm_demod</sink_block_id>
     <source_key>0</source_key>
     <sink_key>0</sink_key>
@@ -1743,12 +1743,12 @@
   </connection>
   <connection>
     <source_block_id>pager_slicer_fb_0</source_block_id>
-    <sink_block_id>gr_char_to_float_0</sink_block_id>
+    <sink_block_id>blocks_char_to_float_0</sink_block_id>
     <source_key>0</source_key>
     <sink_key>0</sink_key>
   </connection>
   <connection>
-    <source_block_id>gr_char_to_float_0</source_block_id>
+    <source_block_id>blocks_char_to_float_0</source_block_id>
     <sink_block_id>wxgui_scopesink2_0</sink_block_id>
     <source_key>0</source_key>
     <sink_key>0</sink_key>
@@ -1779,25 +1779,25 @@
   </connection>
   <connection>
     <source_block_id>pager_flex_deinterleave_0</source_block_id>
-    <sink_block_id>gr_null_sink_0</sink_block_id>
+    <sink_block_id>blocks_null_sink_0</sink_block_id>
     <source_key>0</source_key>
     <sink_key>0</sink_key>
   </connection>
   <connection>
     <source_block_id>pager_flex_deinterleave_0_1_0</source_block_id>
-    <sink_block_id>gr_null_sink_0_0</sink_block_id>
+    <sink_block_id>blocks_null_sink_0_0</sink_block_id>
     <source_key>0</source_key>
     <sink_key>0</sink_key>
   </connection>
   <connection>
     <source_block_id>pager_flex_deinterleave_0_1</source_block_id>
-    <sink_block_id>gr_null_sink_0_1</sink_block_id>
+    <sink_block_id>blocks_null_sink_0_1</sink_block_id>
     <source_key>0</source_key>
     <sink_key>0</sink_key>
   </connection>
   <connection>
     <source_block_id>pager_flex_deinterleave_0_0</source_block_id>
-    <sink_block_id>gr_null_sink_0_2</sink_block_id>
+    <sink_block_id>blocks_null_sink_0_2</sink_block_id>
     <source_key>0</source_key>
     <sink_key>0</sink_key>
   </connection>

@@ -33,6 +33,7 @@ import time
 
 from gnuradio import gr, gru, eng_notation, optfir
 from gnuradio import audio
+from gnuradio import blocks
 from gnuradio import uhd
 from gnuradio import blks2
 from gnuradio.wxgui import fftsink2
@@ -305,7 +306,7 @@ def main():
     global radio_obj, sig_probe
 
     radio_obj = radio( 0 )
-    sig_probe = gr.probe_signal_f()
+    sig_probe = blocks.probe_signal_f()
     radio_obj.block.connect(radio_obj.block.agc.offs, sig_probe)
 
     thread2 = Thread( target = rssi_function )

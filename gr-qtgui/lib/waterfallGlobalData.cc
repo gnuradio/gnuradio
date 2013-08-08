@@ -1,7 +1,29 @@
+/* -*- c++ -*- */
+/*
+ * Copyright 2012 Free Software Foundation, Inc.
+ *
+ * This file is part of GNU Radio
+ *
+ * GNU Radio is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3, or (at your option)
+ * any later version.
+ *
+ * GNU Radio is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with GNU Radio; see the file COPYING.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street,
+ * Boston, MA 02110-1301, USA.
+ */
+
 #ifndef WATERFALL_GLOBAL_DATA_CPP
 #define WATERFALL_GLOBAL_DATA_CPP
 
-#include <waterfallGlobalData.h>
+#include <gnuradio/qtgui/waterfallGlobalData.h>
 #include <cstdio>
 
 WaterfallData::WaterfallData(const double minimumFrequency,
@@ -29,7 +51,7 @@ WaterfallData::WaterfallData(const double minimumFrequency,
   setInterval(Qt::ZAxis, QwtInterval(-200, 0.0));
 #endif
 
-  Reset();
+  reset();
 }
 
 WaterfallData::~WaterfallData()
@@ -37,34 +59,34 @@ WaterfallData::~WaterfallData()
   delete[] _spectrumData;
 }
 
-void WaterfallData::Reset()
+void WaterfallData::reset()
 {
   memset(_spectrumData, 0x0, _fftPoints*_historyLength*sizeof(double));
 
   _numLinesToUpdate = -1;
 }
 
-void WaterfallData::Copy(const WaterfallData* rhs)
+void WaterfallData::copy(const WaterfallData* rhs)
 {
 #if QWT_VERSION < 0x060000
-  if((_fftPoints != rhs->GetNumFFTPoints()) ||
+  if((_fftPoints != rhs->getNumFFTPoints()) ||
      (boundingRect() != rhs->boundingRect()) ){
-    _fftPoints = rhs->GetNumFFTPoints();
+    _fftPoints = rhs->getNumFFTPoints();
     setBoundingRect(rhs->boundingRect());
     delete[] _spectrumData;
     _spectrumData = new double[_fftPoints * _historyLength];
   }
 #else
-  if(_fftPoints != rhs->GetNumFFTPoints()) {
-    _fftPoints = rhs->GetNumFFTPoints();
+  if(_fftPoints != rhs->getNumFFTPoints()) {
+    _fftPoints = rhs->getNumFFTPoints();
     delete[] _spectrumData;
     _spectrumData = new double[_fftPoints * _historyLength];
   }
 #endif
 
-  Reset();
-  SetSpectrumDataBuffer(rhs->GetSpectrumDataBuffer());
-  SetNumLinesToUpdate(rhs->GetNumLinesToUpdate());
+  reset();
+  setSpectrumDataBuffer(rhs->getSpectrumDataBuffer());
+  setNumLinesToUpdate(rhs->getNumLinesToUpdate());
 
 #if QWT_VERSION < 0x060000
   setRange(rhs->range());
@@ -75,12 +97,12 @@ void WaterfallData::Copy(const WaterfallData* rhs)
 #endif
 }
 
-void WaterfallData::ResizeData(const double startFreq,
+void WaterfallData::resizeData(const double startFreq,
 			       const double stopFreq,
 			       const uint64_t fftPoints)
 {
 #if QWT_VERSION < 0x060000
-  if((fftPoints != GetNumFFTPoints()) ||
+  if((fftPoints != getNumFFTPoints()) ||
      (boundingRect().width() != (stopFreq - startFreq)) ||
      (boundingRect().left() != startFreq)){
 
@@ -93,7 +115,7 @@ void WaterfallData::ResizeData(const double startFreq,
   }
 
 #else
-  if((fftPoints != GetNumFFTPoints()) ||
+  if((fftPoints != getNumFFTPoints()) ||
      (interval(Qt::XAxis).width() != (stopFreq - startFreq)) ||
      (interval(Qt::XAxis).minValue() != startFreq)){
 
@@ -105,7 +127,7 @@ void WaterfallData::ResizeData(const double startFreq,
   }
 #endif
 
-  Reset();
+  reset();
 }
 
 QwtRasterData *WaterfallData::copy() const
@@ -120,7 +142,7 @@ QwtRasterData *WaterfallData::copy() const
 						 _fftPoints, _historyLength);
 #endif
 
-  returnData->Copy(this);
+  returnData->copy(this);
   return returnData;
 }
 
@@ -166,7 +188,7 @@ double WaterfallData::value(double x, double y) const
   return returnValue;
 }
 
-uint64_t WaterfallData::GetNumFFTPoints() const
+uint64_t WaterfallData::getNumFFTPoints() const
 {
   return _fftPoints;
 }
@@ -202,27 +224,27 @@ void WaterfallData::addFFTData(const double* fftData,
   }
 }
 
-double* WaterfallData::GetSpectrumDataBuffer() const
+double* WaterfallData::getSpectrumDataBuffer() const
 {
   return _spectrumData;
 }
 
-void WaterfallData::SetSpectrumDataBuffer(const double* newData)
+void WaterfallData::setSpectrumDataBuffer(const double* newData)
 {
   memcpy(_spectrumData, newData, _fftPoints * _historyLength * sizeof(double));
 }
 
-int WaterfallData::GetNumLinesToUpdate() const
+int WaterfallData::getNumLinesToUpdate() const
 {
   return _numLinesToUpdate;
 }
 
-void WaterfallData::SetNumLinesToUpdate(const int newNum)
+void WaterfallData::setNumLinesToUpdate(const int newNum)
 {
   _numLinesToUpdate = newNum;
 }
 
-void WaterfallData::IncrementNumLinesToUpdate()
+void WaterfallData::incrementNumLinesToUpdate()
 {
   _numLinesToUpdate++;
 }

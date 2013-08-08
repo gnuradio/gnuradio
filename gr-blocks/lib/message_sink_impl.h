@@ -23,7 +23,7 @@
 #ifndef INCLUDED_GR_MESSAGE_SINK_IMPL_H
 #define INCLUDED_GR_MESSAGE_SINK_IMPL_H
 
-#include <blocks/message_sink.h>
+#include <gnuradio/blocks/message_sink.h>
 
 namespace gr {
   namespace blocks {
@@ -32,11 +32,17 @@ namespace gr {
     {
     private:
       size_t	 	d_itemsize;
-      gr_msg_queue_sptr	d_msgq;
+      msg_queue::sptr	d_msgq;
       bool		d_dont_block;
+      bool              d_tags;
+      std::string       d_lengthtagname;
+      uint64_t          d_items_read;
 
     public:
-      message_sink_impl(size_t itemsize, gr_msg_queue_sptr msgq, bool dont_block);
+      message_sink_impl(size_t itemsize, msg_queue::sptr msgq, bool dont_block);
+      message_sink_impl(size_t itemsize, msg_queue::sptr msgq, bool dont_block,
+			const std::string& lengthtagname);
+
       ~message_sink_impl();
 
       int work(int noutput_items,

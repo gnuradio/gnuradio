@@ -25,7 +25,7 @@
 #endif
 
 #include "rms_cf_impl.h"
-#include <gr_io_signature.h>
+#include <gnuradio/io_signature.h>
 #include <cmath>
 
 namespace gr {
@@ -38,12 +38,12 @@ namespace gr {
         (new rms_cf_impl(alpha));
     }
 
-    rms_cf_impl::rms_cf_impl (double alpha)
-      : gr_sync_block("rms_cf",
-                      gr_make_io_signature(1, 1, sizeof(gr_complex)),
-                      gr_make_io_signature(1, 1, sizeof(float))),
-        d_iir(alpha)
+    rms_cf_impl::rms_cf_impl(double alpha)
+      : sync_block("rms_cf",
+                      io_signature::make(1, 1, sizeof(gr_complex)),
+                      io_signature::make(1, 1, sizeof(float)))
     {
+      set_alpha(alpha);
     }
 
     rms_cf_impl::~rms_cf_impl()
@@ -53,7 +53,9 @@ namespace gr {
     void
     rms_cf_impl::set_alpha(double alpha)
     {
-      d_iir.set_taps(alpha);
+      d_alpha = alpha;
+      d_beta = 1 - d_alpha;
+      d_avg = 0;
     }
 
     int
@@ -66,8 +68,8 @@ namespace gr {
 
       for(int i = 0; i < noutput_items; i++) {
         double mag_sqrd = in[i].real()*in[i].real() + in[i].imag()*in[i].imag();
-        double f = d_iir.filter(mag_sqrd);
-        out[i] = sqrt(f);
+        d_avg = d_beta*d_avg + d_alpha*mag_sqrd;
+        out[i] = sqrt(d_avg);
       }
 
       return noutput_items;

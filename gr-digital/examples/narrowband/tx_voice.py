@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2005-2007,2009,2011 Free Software Foundation, Inc.
+# Copyright 2005-2007,2009,2011,2013 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -20,11 +20,13 @@
 # Boston, MA 02110-1301, USA.
 # 
 
-from gnuradio import gr, blks2, audio, uhd
+from gnuradio import gr, audio, uhd
 from gnuradio import eng_notation
 from gnuradio.eng_option import eng_option
 from optparse import OptionParser
 
+from gnuradio import blocks
+from gnuradio import filter
 from gnuradio import digital
 from gnuradio import vocoder
 
@@ -49,11 +51,11 @@ class audio_rx(gr.hier_block2):
 				gr.io_signature(0, 0, 0)) # Output signature
         self.sample_rate = sample_rate = 8000
         src = audio.source(sample_rate, audio_input_dev)
-        src_scale = gr.multiply_const_ff(32767)
-        f2s = gr.float_to_short()
+        src_scale = blocks.multiply_const_ff(32767)
+        f2s = blocks.float_to_short()
         voice_coder = vocoder.gsm_fr_encode_sp()
         self.packets_from_encoder = gr.msg_queue()
-        packet_sink = gr.message_sink(33, self.packets_from_encoder, False)
+        packet_sink = blocks.message_sink(33, self.packets_from_encoder, False)
         self.connect(src, src_scale, f2s, voice_coder, packet_sink)
 
     def get_encoded_voice_packet(self):
@@ -78,13 +80,13 @@ class my_top_block(gr.top_block):
             rrate = usrp_rate / audio_rate
             
         elif(options.to_file is not None):
-            self.sink = gr.file_sink(gr.sizeof_gr_complex, options.to_file)
+            self.sink = blocks.file_sink(gr.sizeof_gr_complex, options.to_file)
             rrate = 1
         else:
-            self.sink = gr.null_sink(gr.sizeof_gr_complex)
+            self.sink = blocks.null_sink(gr.sizeof_gr_complex)
             rrate = 1
 
-        self.resampler = blks2.pfb_arb_resampler_ccf(rrate)
+        self.resampler = filter.pfb.arb_resampler_ccf(rrate)
             
 	self.connect(self.audio_rx)
 	self.connect(self.txpath, self.resampler, self.sink)

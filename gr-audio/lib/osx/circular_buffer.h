@@ -23,7 +23,7 @@
 #ifndef _CIRCULAR_BUFFER_H_
 #define _CIRCULAR_BUFFER_H_
 
-#include <gruel/thread.h>
+#include <gnuradio/thread/thread.h>
 #include <iostream>
 #include <stdexcept>
 
@@ -49,9 +49,9 @@ private:
   size_t d_n_avail_write_I, d_n_avail_read_I;
 
 // stuff to control access to class internals
-  gruel::mutex* d_internal;
-  gruel::condition_variable* d_readBlock;
-  gruel::condition_variable* d_writeBlock;
+  gr::thread::mutex* d_internal;
+  gr::thread::condition_variable* d_readBlock;
+  gr::thread::condition_variable* d_writeBlock;
 
 // booleans to decide how to control reading, writing, and aborting
   bool d_doWriteBlock, d_doFullRead, d_doAbort;
@@ -96,13 +96,13 @@ public:
   };
 
   inline size_t n_avail_write_items () {
-    gruel::scoped_lock l (*d_internal);
+    gr::thread::scoped_lock l (*d_internal);
     size_t retVal = d_n_avail_write_I;
     return (retVal);
   };
 
   inline size_t n_avail_read_items () {
-    gruel::scoped_lock l (*d_internal);
+    gr::thread::scoped_lock l (*d_internal);
     size_t retVal = d_n_avail_read_I;
     return (retVal);
   };
@@ -120,13 +120,13 @@ public:
     // create a mutex to handle contention of shared resources;
     // any routine needed access to shared resources uses lock()
     // before doing anything, then unlock() when finished.
-    d_internal = new gruel::mutex ();
+    d_internal = new gr::thread::mutex ();
     // link the internal mutex to the read and write conditions;
     // when wait() is called, the internal mutex will automatically
     // be unlock()'ed.  Upon return (from a notify_one() to the condition),
     // the internal mutex will be lock()'ed.
-    d_readBlock = new gruel::condition_variable ();
-    d_writeBlock = new gruel::condition_variable ();
+    d_readBlock = new gr::thread::condition_variable ();
+    d_writeBlock = new gr::thread::condition_variable ();
   };
 
 /*
@@ -167,7 +167,7 @@ public:
     if (!buf)
       throw std::runtime_error ("circular_buffer::enqueue(): "
 				"input buffer is NULL.\n");
-    gruel::scoped_lock l (*d_internal);
+    gr::thread::scoped_lock l (*d_internal);
     if (d_doAbort) {
       return (2);
     }
@@ -253,7 +253,7 @@ public:
       throw std::runtime_error ("circular_buffer::dequeue()");
     }
 
-    gruel::scoped_lock l (*d_internal);
+    gr::thread::scoped_lock l (*d_internal);
     if (d_doAbort) {
       return (2);
     }
@@ -305,7 +305,7 @@ public:
   };
 
   void abort () {
-    gruel::scoped_lock l (*d_internal);
+    gr::thread::scoped_lock l (*d_internal);
     d_doAbort = true;
     d_writeBlock->notify_one ();
     d_readBlock->notify_one ();

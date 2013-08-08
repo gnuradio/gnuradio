@@ -22,7 +22,7 @@
 #ifndef INCLUDED_DIGITAL_PACKET_HEADERGENERATOR_BB_IMPL_H
 #define INCLUDED_DIGITAL_PACKET_HEADERGENERATOR_BB_IMPL_H
 
-#include <digital/packet_headergenerator_bb.h>
+#include <gnuradio/digital/packet_headergenerator_bb.h>
 
 namespace gr {
   namespace digital {
@@ -39,7 +39,7 @@ namespace gr {
       );
       ~packet_headergenerator_bb_impl();
 
-      void remove_length_tags(const std::vector<std::vector<gr_tag_t> > &tags) {};
+      void remove_length_tags(const std::vector<std::vector<tag_t> > &tags) {};
       int calculate_output_stream_length(const gr_vector_int &ninput_items) { return d_formatter->header_len(); };
 
       int work(int noutput_items,

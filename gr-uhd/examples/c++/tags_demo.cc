@@ -19,9 +19,9 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include <gr_top_block.h>
-#include <gr_uhd_usrp_source.h>
-#include <gr_uhd_usrp_sink.h>
+#include <gnuradio/top_block.h>
+#include <gnuradio/uhd/usrp_source.h>
+#include <gnuradio/uhd/usrp_sink.h>
 #include <tag_source_demo.h>
 #include <tag_sink_demo.h>
 #include <boost/make_shared.hpp>
@@ -74,14 +74,13 @@ int main(int argc, char *argv[]){
     //------------------------------------------------------------------
     //-- make a top block
     //------------------------------------------------------------------
-    gr_top_block_sptr tb = gr_make_top_block("tags_demo");
+    gr::top_block_sptr tb = gr::make_top_block("tags_demo");
 
     //------------------------------------------------------------------
     //-- make the usrp source test blocks
     //------------------------------------------------------------------
-    boost::shared_ptr<uhd_usrp_source> usrp_source = uhd_make_usrp_source(
-        device_addr, uhd::stream_args_t("fc32")
-    );
+    gr::uhd::usrp_source::sptr usrp_source = gr::uhd::usrp_source::make
+      (device_addr, uhd::stream_args_t("fc32"));
     usrp_source->set_samp_rate(samp_rate);
     usrp_source->set_center_freq(center_freq);
 
@@ -95,9 +94,8 @@ int main(int argc, char *argv[]){
     //------------------------------------------------------------------
     //-- make the usrp sink test blocks
     //------------------------------------------------------------------
-    boost::shared_ptr<uhd_usrp_sink> usrp_sink = uhd_make_usrp_sink(
-        device_addr, uhd::stream_args_t("fc32")
-    );
+    gr::uhd::usrp_sink::sptr usrp_sink = gr::uhd::usrp_sink::make
+      (device_addr, uhd::stream_args_t("fc32"));
     usrp_sink->set_samp_rate(samp_rate);
     usrp_sink->set_center_freq(center_freq);
     const uhd::time_spec_t time_now = usrp_sink->get_time_now();

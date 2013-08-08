@@ -15,6 +15,7 @@
 /*! \defgroup channel_models_blk Channel Models */
 /*! \defgroup channelizers_blk Channelizers */
 /*! \defgroup coding_blk Information Coding and Decoding */
+/*! \defgroup controlport_blk ControlPort */
 /*! \defgroup debug_tools_blk Debug Tools */
 /*! \defgroup deprecated_blk Deprecated */
 /*! \defgroup equalizers_blk Equalizers */

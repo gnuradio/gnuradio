@@ -25,7 +25,7 @@
 #endif
 
 #include "file_descriptor_source_impl.h"
-#include <gr_io_signature.h>
+#include <gnuradio/io_signature.h>
 #include <cstdio>
 #include <errno.h>
 #include <sys/types.h>
@@ -52,9 +52,9 @@ namespace gr {
     file_descriptor_source_impl::file_descriptor_source_impl(size_t itemsize,
                                                              int fd,
                                                              bool repeat)
-      : gr_sync_block("file_descriptor_source",
-                      gr_make_io_signature(0, 0, 0),
-                      gr_make_io_signature(1, 1, itemsize)),
+      : sync_block("file_descriptor_source",
+                      io_signature::make(0, 0, 0),
+                      io_signature::make(1, 1, itemsize)),
         d_itemsize(itemsize), d_fd(fd), d_repeat(repeat),
         d_residue(new unsigned char[itemsize]), d_residue_len (0)
     {

@@ -1,4 +1,24 @@
 #!/usr/bin/env python
+#
+# Copyright 2011-2013 Free Software Foundation, Inc.
+# 
+# This file is part of GNU Radio
+# 
+# GNU Radio is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 3, or (at your option)
+# any later version.
+# 
+# GNU Radio is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+# 
+# You should have received a copy of the GNU General Public License
+# along with GNU Radio; see the file COPYING.  If not, write to
+# the Free Software Foundation, Inc., 51 Franklin Street,
+# Boston, MA 02110-1301, USA.
+# 
 
 import sys
 
@@ -15,7 +35,9 @@ except ImportError:
     print "Error: Program requires Matplotlib (matplotlib.sourceforge.net)."
     sys.exit(1)
     
-from gnuradio import gr, digital
+from gnuradio import gr, digital, filter
+from gnuradio import blocks
+from gnuradio import channels
 from optparse import OptionParser
 from gnuradio.eng_option import eng_option
 
@@ -145,10 +167,10 @@ def main():
         snrdB, snr = py_est(yy)        
         snr_python.append(snrdB)
 
-        gr_src = gr.vector_source_c(bits.tolist(), False)
+        gr_src = blocks.vector_source_c(bits.tolist(), False)
         gr_snr = digital.mpsk_snr_est_cc(gr_est, ntag, 0.001)
-        gr_chn = gr.channel_model(1.0/scale)
-        gr_snk = gr.null_sink(gr.sizeof_gr_complex)
+        gr_chn = channels.channel_model(1.0/scale)
+        gr_snk = blocks.null_sink(gr.sizeof_gr_complex)
         tb = gr.top_block()
         tb.connect(gr_src, gr_chn, gr_snr, gr_snk)
         tb.run()

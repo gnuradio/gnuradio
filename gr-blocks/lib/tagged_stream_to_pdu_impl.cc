@@ -25,27 +25,28 @@
 #endif
 
 #include "tagged_stream_to_pdu_impl.h"
-#include <blocks/pdu.h>
-#include <gr_io_signature.h>
+#include <gnuradio/blocks/pdu.h>
+#include <gnuradio/io_signature.h>
 
 namespace gr {
   namespace blocks {
 
     tagged_stream_to_pdu::sptr
-    tagged_stream_to_pdu::make(pdu::vector_type type)
+    tagged_stream_to_pdu::make(pdu::vector_type type, const std::string& lengthtagname)
     {
-      return gnuradio::get_initial_sptr(new tagged_stream_to_pdu_impl(type));
+      return gnuradio::get_initial_sptr(new tagged_stream_to_pdu_impl(type, lengthtagname));
     }
 
-    tagged_stream_to_pdu_impl::tagged_stream_to_pdu_impl(pdu::vector_type type)
-      : gr_sync_block("tagged_stream_to_pdu",
-		      gr_make_io_signature(1, 1, pdu::itemsize(type)),
-		      gr_make_io_signature(0, 0, 0)),
+    tagged_stream_to_pdu_impl::tagged_stream_to_pdu_impl(pdu::vector_type type, const std::string& lengthtagname)
+      : sync_block("tagged_stream_to_pdu",
+		      io_signature::make(1, 1, pdu::itemsize(type)),
+		      io_signature::make(0, 0, 0)),
 	d_itemsize(pdu::itemsize(type)),
 	d_inpdu(false),
 	d_type(type),
 	d_pdu_meta(pmt::PMT_NIL),
-	d_pdu_vector(pmt::PMT_NIL)
+	d_pdu_vector(pmt::PMT_NIL),
+	d_tag(pmt::mp(lengthtagname))
     {
       message_port_register_out(PDU_PORT_ID);
     }
@@ -65,15 +66,15 @@ namespace gr {
 	get_tags_in_range(d_tags, 0, abs_N, abs_N+1);
 
 	for (d_tags_itr = d_tags.begin(); (d_tags_itr != d_tags.end()) && (!found_length_tag); d_tags_itr++) {
-	  if (pmt::pmt_equal((*d_tags_itr).key, PDU_LENGTH_TAG )) {
+	  if (pmt::eq((*d_tags_itr).key, d_tag)) {
 
           if ((*d_tags_itr).offset != abs_N )
 	    throw std::runtime_error("expected next pdu length tag on a different item...");
 
 	  found_length_tag = true;
-	  d_pdu_length = pmt::pmt_to_long((*d_tags_itr).value);
+	  d_pdu_length = pmt::to_long((*d_tags_itr).value);
 	  d_pdu_remain = d_pdu_length;
-	  d_pdu_meta = pmt::pmt_make_dict();
+	  d_pdu_meta = pmt::make_dict();
               break;
           } // if have length tag
 	} // iter over tags
@@ -87,20 +88,20 @@ namespace gr {
       // copy any tags in this range into our meta object
       get_tags_in_range(d_tags, 0, abs_N, abs_N+ncopy);
       for (d_tags_itr = d_tags.begin(); d_tags_itr != d_tags.end(); d_tags_itr++)
-	if(!pmt_equal((*d_tags_itr).key, PDU_LENGTH_TAG ))
-	  d_pdu_meta = pmt_dict_add(d_pdu_meta, (*d_tags_itr).key, (*d_tags_itr).value);
+	if(!pmt::eq((*d_tags_itr).key, d_tag ))
+	  d_pdu_meta = dict_add(d_pdu_meta, (*d_tags_itr).key, (*d_tags_itr).value);
 
       // copy samples for this vector into either a pmt or our save buffer
       if (ncopy == d_pdu_remain) { // we will send this pdu
 	if (d_save.size() == 0) {
-	  d_pdu_vector = pdu::make_vector(d_type, in, ncopy);
+	  d_pdu_vector = pdu::make_pdu_vector(d_type, in, ncopy);
 	  send_message();
 	} 
 	else {
 	  size_t oldsize = d_save.size();
 	  d_save.resize((oldsize + ncopy)*d_itemsize, 0);
 	  memcpy(&d_save[oldsize*d_itemsize], in, ncopy*d_itemsize);
-	  d_pdu_vector = pdu::make_vector(d_type, &d_save[0], d_pdu_length);
+	  d_pdu_vector = pdu::make_pdu_vector(d_type, &d_save[0], d_pdu_length);
 	  send_message();
 	  d_save.clear();
         }
@@ -119,10 +120,10 @@ namespace gr {
     void
     tagged_stream_to_pdu_impl::send_message()
     {
-      if (pmt::pmt_length(d_pdu_vector) != d_pdu_length)
+      if (pmt::length(d_pdu_vector) != d_pdu_length)
         throw std::runtime_error("msg length not correct");
       
-      pmt::pmt_t msg = pmt::pmt_cons(d_pdu_meta, d_pdu_vector);
+      pmt::pmt_t msg = pmt::cons(d_pdu_meta, d_pdu_vector);
       message_port_pub(PDU_PORT_ID, msg);
       
       d_pdu_meta = pmt::PMT_NIL;

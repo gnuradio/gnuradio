@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2008,2009,2010,2011 Free Software Foundation, Inc.
+ * Copyright 2008-2011 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -23,10 +23,11 @@
 #ifndef SPECTRUM_GUI_CLASS_CPP
 #define SPECTRUM_GUI_CLASS_CPP
 
-#include <SpectrumGUIClass.h>
+#include <gnuradio/qtgui/SpectrumGUIClass.h>
 //Added by qt3to4:
 #include <QEvent>
 #include <QCustomEvent>
+#include <volk/volk.h>
 
 const long SpectrumGUIClass::MAX_FFT_SIZE = 32768;
 const long SpectrumGUIClass::MIN_FFT_SIZE = 256;
@@ -67,7 +68,7 @@ SpectrumGUIClass::~SpectrumGUIClass()
   // We don't need to delete this since as a QWidget, it is supposed to be destroyed
   // with it's parent. Deleting it causes a segmentation fault, and not deleting it
   // does not leave any extra memory.
-  //if(GetWindowOpenFlag()){
+  //if(getWindowOpenFlag()){
     //delete _spectrumDisplayForm;
   //}
 
@@ -79,22 +80,21 @@ SpectrumGUIClass::~SpectrumGUIClass()
 }
 
 void
-SpectrumGUIClass::OpenSpectrumWindow(QWidget* parent,
+SpectrumGUIClass::openSpectrumWindow(QWidget* parent,
 				     const bool frequency, const bool waterfall,
 				     const bool time, const bool constellation)
 {
   d_mutex.lock();
 
-  if(!_windowOpennedFlag){
+  if(!_windowOpennedFlag) {
 
-    if(!_fftBuffersCreatedFlag){
-      _fftPoints = new std::complex<float>[_dataPoints];
+    if(!_fftBuffersCreatedFlag) {
+      _fftPoints = new float[_dataPoints];
       _realTimeDomainPoints = new double[_dataPoints];
       _imagTimeDomainPoints = new double[_dataPoints];
       _fftBuffersCreatedFlag = true;
-
-
-      memset(_fftPoints, 0x0, _dataPoints*sizeof(std::complex<float>));
+      
+      memset(_fftPoints, 0x0, _dataPoints*sizeof(float));
       memset(_realTimeDomainPoints, 0x0, _dataPoints*sizeof(double));
       memset(_imagTimeDomainPoints, 0x0, _dataPoints*sizeof(double));
     }
@@ -103,10 +103,10 @@ SpectrumGUIClass::OpenSpectrumWindow(QWidget* parent,
     _spectrumDisplayForm = new SpectrumDisplayForm(parent);
 
     // Toggle Windows on/off
-    _spectrumDisplayForm->ToggleTabFrequency(frequency);
-    _spectrumDisplayForm->ToggleTabWaterfall(waterfall);
-    _spectrumDisplayForm->ToggleTabTime(time);
-    _spectrumDisplayForm->ToggleTabConstellation(constellation);
+    _spectrumDisplayForm->toggleTabFrequency(frequency);
+    _spectrumDisplayForm->toggleTabWaterfall(waterfall);
+    _spectrumDisplayForm->toggleTabTime(time);
+    _spectrumDisplayForm->toggleTabConstellation(constellation);
 
     _windowOpennedFlag = true;
 
@@ -117,8 +117,8 @@ SpectrumGUIClass::OpenSpectrumWindow(QWidget* parent,
   d_mutex.unlock();
 
 
-  SetDisplayTitle(_title);
-  Reset();
+  setDisplayTitle(_title);
+  reset();
 
   qApp->postEvent(_spectrumDisplayForm,
 		  new QEvent(QEvent::Type(QEvent::User+3)));
@@ -126,19 +126,23 @@ SpectrumGUIClass::OpenSpectrumWindow(QWidget* parent,
   _lastGUIUpdateTime = 0;
 
   // Draw Blank Display
-  UpdateWindow(false, NULL, 0, NULL, 0, NULL, 0, gruel::high_res_timer_now(), true);
+  updateWindow(false, NULL, 0, NULL, 0, NULL, 0, gr::high_res_timer_now(), true);
 
   // Set up the initial frequency axis settings
-  SetFrequencyRange(_centerFrequency, _startFrequency, _stopFrequency);
+  setFrequencyRange(_centerFrequency, _startFrequency, _stopFrequency);
 
   // GUI Thread only
   qApp->processEvents();
+
+  // Set the FFT Size combo box to display the right number
+  int idx = _spectrumDisplayForm->FFTSizeComboBox->findText(QString("%1").arg(_fftSize));
+  _spectrumDisplayForm->FFTSizeComboBox->setCurrentIndex(idx);
 }
 
 void
-SpectrumGUIClass::Reset()
+SpectrumGUIClass::reset()
 {
-  if(GetWindowOpenFlag()) {
+  if(getWindowOpenFlag()) {
     qApp->postEvent(_spectrumDisplayForm,
 		    new SpectrumFrequencyRangeEvent(_centerFrequency,
 						    _startFrequency,
@@ -151,20 +155,20 @@ SpectrumGUIClass::Reset()
 }
 
 void
-SpectrumGUIClass::SetDisplayTitle(const std::string newString)
+SpectrumGUIClass::setDisplayTitle(const std::string newString)
 {
   _title.assign(newString);
 
-  if(GetWindowOpenFlag()){
+  if(getWindowOpenFlag()){
     qApp->postEvent(_spectrumDisplayForm,
 		    new SpectrumWindowCaptionEvent(_title.c_str()));
   }
 }
 
 bool
-SpectrumGUIClass::GetWindowOpenFlag()
+SpectrumGUIClass::getWindowOpenFlag()
 {
-  gruel::scoped_lock lock(d_mutex);
+  gr::thread::scoped_lock lock(d_mutex);
   bool returnFlag = false;
   returnFlag =  _windowOpennedFlag;
   return returnFlag;
@@ -172,49 +176,49 @@ SpectrumGUIClass::GetWindowOpenFlag()
 
 
 void
-SpectrumGUIClass::SetWindowOpenFlag(const bool newFlag)
+SpectrumGUIClass::setWindowOpenFlag(const bool newFlag)
 {
-  gruel::scoped_lock lock(d_mutex);
+  gr::thread::scoped_lock lock(d_mutex);
   _windowOpennedFlag = newFlag;
 }
 
 void
-SpectrumGUIClass::SetFrequencyRange(const double centerFreq,
+SpectrumGUIClass::setFrequencyRange(const double centerFreq,
 				    const double startFreq,
 				    const double stopFreq)
 {
-  gruel::scoped_lock lock(d_mutex);
+  gr::thread::scoped_lock lock(d_mutex);
   _centerFrequency = centerFreq;
   _startFrequency = startFreq;
   _stopFrequency = stopFreq;
 
-  _spectrumDisplayForm->SetFrequencyRange(_centerFrequency,
+  _spectrumDisplayForm->setFrequencyRange(_centerFrequency,
 					  _startFrequency,
 					  _stopFrequency);
 }
 
 double
-SpectrumGUIClass::GetStartFrequency()
+SpectrumGUIClass::getStartFrequency()
 {
-  gruel::scoped_lock lock(d_mutex);
+  gr::thread::scoped_lock lock(d_mutex);
   double returnValue = 0.0;
   returnValue =  _startFrequency;
   return returnValue;
 }
 
 double
-SpectrumGUIClass::GetStopFrequency()
+SpectrumGUIClass::getStopFrequency()
 {
-  gruel::scoped_lock lock(d_mutex);
+  gr::thread::scoped_lock lock(d_mutex);
   double returnValue = 0.0;
   returnValue =  _stopFrequency;
   return returnValue;
 }
 
 double
-SpectrumGUIClass::GetCenterFrequency()
+SpectrumGUIClass::getCenterFrequency()
 {
-  gruel::scoped_lock lock(d_mutex);
+  gr::thread::scoped_lock lock(d_mutex);
   double returnValue = 0.0;
   returnValue =  _centerFrequency;
   return returnValue;
@@ -222,17 +226,17 @@ SpectrumGUIClass::GetCenterFrequency()
 
 
 void
-SpectrumGUIClass::UpdateWindow(const bool updateDisplayFlag,
-			       const std::complex<float>* fftBuffer,
+SpectrumGUIClass::updateWindow(const bool updateDisplayFlag,
+			       const float* fftBuffer,
 			       const uint64_t inputBufferSize,
 			       const float* realTimeDomainData,
 			       const uint64_t realTimeDomainDataSize,
 			       const float* complexTimeDomainData,
 			       const uint64_t complexTimeDomainDataSize,
-			       const gruel::high_res_timer_type timestamp,
+			       const gr::high_res_timer_type timestamp,
 			       const bool lastOfMultipleFFTUpdateFlag)
 {
-  //gruel::scoped_lock lock(d_mutex);
+  //gr::thread::scoped_lock lock(d_mutex);
   int64_t bufferSize = inputBufferSize;
   bool repeatDataFlag = false;
   if(bufferSize > _dataPoints){
@@ -240,11 +244,13 @@ SpectrumGUIClass::UpdateWindow(const bool updateDisplayFlag,
   }
   int64_t timeDomainBufferSize = 0;
 
-  if(updateDisplayFlag){
-    if((fftBuffer != NULL) && (bufferSize > 0)){
-      memcpy(_fftPoints, fftBuffer, bufferSize * sizeof(std::complex<float>));
+  if(updateDisplayFlag) {
+    if((fftBuffer != NULL) && (bufferSize > 0)) {
+      memcpy(_fftPoints, fftBuffer, bufferSize * sizeof(float));
     }
 
+    //ALL OF THIS SHIT SHOULD BE COMBINED WITH THE FFTSHIFT
+    //USE VOLK_32FC_DEINTERLEAVE_64F_X2_A TO GET REAL/IMAG FROM COMPLEX32
     // Can't do a memcpy since ths is going from float to double data type
     if((realTimeDomainData != NULL) && (realTimeDomainDataSize > 0)){
       const float* realTimeDomainDataPtr = realTimeDomainData;
@@ -252,48 +258,42 @@ SpectrumGUIClass::UpdateWindow(const bool updateDisplayFlag,
       double* realTimeDomainPointsPtr = _realTimeDomainPoints;
       timeDomainBufferSize = realTimeDomainDataSize;
 
-      memset( _imagTimeDomainPoints, 0x0, realTimeDomainDataSize*sizeof(double));
-      for( uint64_t number = 0; number < realTimeDomainDataSize; number++){
+      memset(_imagTimeDomainPoints, 0x0, realTimeDomainDataSize*sizeof(double));
+      for(uint64_t number = 0; number < realTimeDomainDataSize; number++){
 	*realTimeDomainPointsPtr++ = *realTimeDomainDataPtr++;
       }
     }
 
-    // Can't do a memcpy since ths is going from float to double data type
-    if((complexTimeDomainData != NULL) && (complexTimeDomainDataSize > 0)){
-      const float* complexTimeDomainDataPtr = complexTimeDomainData;
-
-      double* realTimeDomainPointsPtr = _realTimeDomainPoints;
-      double* imagTimeDomainPointsPtr = _imagTimeDomainPoints;
-
+    if((complexTimeDomainData != NULL) && (complexTimeDomainDataSize > 0)) {
+      volk_32fc_deinterleave_64f_x2_a(_realTimeDomainPoints,
+                                      _imagTimeDomainPoints,
+				      (const lv_32fc_t *)complexTimeDomainData,
+				      complexTimeDomainDataSize);
       timeDomainBufferSize = complexTimeDomainDataSize;
-      for( uint64_t number = 0; number < complexTimeDomainDataSize; number++){
-	*realTimeDomainPointsPtr++ = *complexTimeDomainDataPtr++;
-	*imagTimeDomainPointsPtr++ = *complexTimeDomainDataPtr++;
-      }
     }
   }
 
   // If bufferSize is zero, then just update the display by sending over the old data
-  if(bufferSize < 1){
+  if(bufferSize < 1) {
     bufferSize = _lastDataPointCount;
     repeatDataFlag = true;
   }
-  else{
+  else {
     // Since there is data this time, update the count
     _lastDataPointCount = bufferSize;
   }
 
-  const gruel::high_res_timer_type currentTime = gruel::high_res_timer_now();
-  const gruel::high_res_timer_type lastUpdateGUITime = GetLastGUIUpdateTime();
+  const gr::high_res_timer_type currentTime = gr::high_res_timer_now();
+  const gr::high_res_timer_type lastUpdateGUITime = getLastGUIUpdateTime();
 
-  if((currentTime - lastUpdateGUITime > (4*_updateTime)*gruel::high_res_timer_tps()) &&
-     (GetPendingGUIUpdateEvents() > 0) && lastUpdateGUITime != 0) {
+  if((currentTime - lastUpdateGUITime > (4*_updateTime)*gr::high_res_timer_tps()) &&
+     (getPendingGUIUpdateEvents() > 0) && lastUpdateGUITime != 0) {
     // Do not update the display if too much data is pending to be displayed
     _droppedEntriesCount++;
   }
-  else{
+  else {
     // Draw the Data
-    IncrementPendingGUIUpdateEvents();
+    incrementPendingGUIUpdateEvents();
     qApp->postEvent(_spectrumDisplayForm,
 		    new SpectrumUpdateEvent(_fftPoints, bufferSize,
 					    _realTimeDomainPoints,
@@ -307,46 +307,46 @@ SpectrumGUIClass::UpdateWindow(const bool updateDisplayFlag,
 
     // Only reset the dropped entries counter if this is not
     // repeat data since repeat data is dropped by the display systems
-    if(!repeatDataFlag){
+    if(!repeatDataFlag) {
       _droppedEntriesCount = 0;
     }
   }
 }
 
 float
-SpectrumGUIClass::GetPowerValue()
+SpectrumGUIClass::getPowerValue()
 {
-  gruel::scoped_lock lock(d_mutex);
+  gr::thread::scoped_lock lock(d_mutex);
   float returnValue = 0;
   returnValue = _powerValue;
   return returnValue;
 }
 
 void
-SpectrumGUIClass::SetPowerValue(const float value)
+SpectrumGUIClass::setPowerValue(const float value)
 {
-  gruel::scoped_lock lock(d_mutex);
+  gr::thread::scoped_lock lock(d_mutex);
   _powerValue = value;
 }
 
 int
-SpectrumGUIClass::GetWindowType()
+SpectrumGUIClass::getWindowType()
 {
-  gruel::scoped_lock lock(d_mutex);
+  gr::thread::scoped_lock lock(d_mutex);
   int returnValue = 0;
   returnValue = _windowType;
   return returnValue;
 }
 
 void
-SpectrumGUIClass::SetWindowType(const int newType)
+SpectrumGUIClass::setWindowType(const int newType)
 {
-  gruel::scoped_lock lock(d_mutex);
+  gr::thread::scoped_lock lock(d_mutex);
   _windowType = newType;
 }
 
 int
-SpectrumGUIClass::GetFFTSize()
+SpectrumGUIClass::getFFTSize()
 {
   int returnValue = 0;
   returnValue = _fftSize;
@@ -354,10 +354,10 @@ SpectrumGUIClass::GetFFTSize()
 }
 
 int
-SpectrumGUIClass::GetFFTSizeIndex()
+SpectrumGUIClass::getFFTSizeIndex()
 {
-  gruel::scoped_lock lock(d_mutex);
-  int fftsize = GetFFTSize();
+  gr::thread::scoped_lock lock(d_mutex);
+  int fftsize = getFFTSize();
   switch(fftsize) {
   case(1024): return 0; break;
   case(2048): return 1; break;
@@ -370,57 +370,57 @@ SpectrumGUIClass::GetFFTSizeIndex()
 }
 
 void
-SpectrumGUIClass::SetFFTSize(const int newSize)
+SpectrumGUIClass::setFFTSize(const int newSize)
 {
-  gruel::scoped_lock lock(d_mutex);
+  gr::thread::scoped_lock lock(d_mutex);
   _fftSize = newSize;
 }
 
-gruel::high_res_timer_type
-SpectrumGUIClass::GetLastGUIUpdateTime()
+gr::high_res_timer_type
+SpectrumGUIClass::getLastGUIUpdateTime()
 {
-  gruel::scoped_lock lock(d_mutex);
-  gruel::high_res_timer_type returnValue;
+  gr::thread::scoped_lock lock(d_mutex);
+  gr::high_res_timer_type returnValue;
   returnValue = _lastGUIUpdateTime;
   return returnValue;
 }
 
 void
-SpectrumGUIClass::SetLastGUIUpdateTime(const gruel::high_res_timer_type newTime)
+SpectrumGUIClass::setLastGUIUpdateTime(const gr::high_res_timer_type newTime)
 {
-  gruel::scoped_lock lock(d_mutex);
+  gr::thread::scoped_lock lock(d_mutex);
   _lastGUIUpdateTime = newTime;
 }
 
 unsigned int
-SpectrumGUIClass::GetPendingGUIUpdateEvents()
+SpectrumGUIClass::getPendingGUIUpdateEvents()
 {
-  gruel::scoped_lock lock(d_mutex);
+  gr::thread::scoped_lock lock(d_mutex);
   unsigned int returnValue = 0;
   returnValue = _pendingGUIUpdateEventsCount;
   return returnValue;
 }
 
 void
-SpectrumGUIClass::IncrementPendingGUIUpdateEvents()
+SpectrumGUIClass::incrementPendingGUIUpdateEvents()
 {
-  gruel::scoped_lock lock(d_mutex);
+  gr::thread::scoped_lock lock(d_mutex);
   _pendingGUIUpdateEventsCount++;
 }
 
 void
-SpectrumGUIClass::DecrementPendingGUIUpdateEvents()
+SpectrumGUIClass::decrementPendingGUIUpdateEvents()
 {
-  gruel::scoped_lock lock(d_mutex);
+  gr::thread::scoped_lock lock(d_mutex);
   if(_pendingGUIUpdateEventsCount > 0){
     _pendingGUIUpdateEventsCount--;
   }
 }
 
 void
-SpectrumGUIClass::ResetPendingGUIUpdateEvents()
+SpectrumGUIClass::resetPendingGUIUpdateEvents()
 {
-  gruel::scoped_lock lock(d_mutex);
+  gr::thread::scoped_lock lock(d_mutex);
   _pendingGUIUpdateEventsCount = 0;
 }
 
@@ -428,46 +428,46 @@ SpectrumGUIClass::ResetPendingGUIUpdateEvents()
 QWidget*
 SpectrumGUIClass::qwidget()
 {
-  gruel::scoped_lock lock(d_mutex);
+  gr::thread::scoped_lock lock(d_mutex);
   return (QWidget*)_spectrumDisplayForm;
 }
 
 void
-SpectrumGUIClass::SetTimeDomainAxis(double min, double max)
+SpectrumGUIClass::setTimeDomainAxis(double min, double max)
 {
-  gruel::scoped_lock lock(d_mutex);
-  _spectrumDisplayForm->SetTimeDomainAxis(min, max);
+  gr::thread::scoped_lock lock(d_mutex);
+  _spectrumDisplayForm->setTimeDomainAxis(min, max);
 }
 
 void
-SpectrumGUIClass::SetConstellationAxis(double xmin, double xmax,
+SpectrumGUIClass::setConstellationAxis(double xmin, double xmax,
 				       double ymin, double ymax)
 {
-  gruel::scoped_lock lock(d_mutex);
-  _spectrumDisplayForm->SetConstellationAxis(xmin, xmax, ymin, ymax);
+  gr::thread::scoped_lock lock(d_mutex);
+  _spectrumDisplayForm->setConstellationAxis(xmin, xmax, ymin, ymax);
 }
 
 void
-SpectrumGUIClass::SetConstellationPenSize(int size)
+SpectrumGUIClass::setConstellationPenSize(int size)
 {
-  gruel::scoped_lock lock(d_mutex);
-  _spectrumDisplayForm->SetConstellationPenSize(size);
+  gr::thread::scoped_lock lock(d_mutex);
+  _spectrumDisplayForm->setConstellationPenSize(size);
 }
 
 
 void
-SpectrumGUIClass::SetFrequencyAxis(double min, double max)
+SpectrumGUIClass::setFrequencyAxis(double min, double max)
 {
-  gruel::scoped_lock lock(d_mutex);
-  _spectrumDisplayForm->SetFrequencyAxis(min, max);
+  gr::thread::scoped_lock lock(d_mutex);
+  _spectrumDisplayForm->setFrequencyAxis(min, max);
 }
 
 void
-SpectrumGUIClass::SetUpdateTime(double t)
+SpectrumGUIClass::setUpdateTime(double t)
 {
-  gruel::scoped_lock lock(d_mutex);
+  gr::thread::scoped_lock lock(d_mutex);
   _updateTime = t;
-  _spectrumDisplayForm->SetUpdateTime(_updateTime);
+  _spectrumDisplayForm->setUpdateTime(_updateTime);
 }
 
 

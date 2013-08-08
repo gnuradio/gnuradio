@@ -21,7 +21,7 @@
  */
 
 #include "transcendental_impl.h"
-#include <gr_io_signature.h>
+#include <gnuradio/io_signature.h>
 #include <stdexcept>
 #include <complex> //complex math
 #include <cmath> //real math
@@ -126,9 +126,9 @@ namespace gr {
 
     transcendental_impl::transcendental_impl(const work_fcn_type &work_fcn,
                                              const size_t io_size)
-      : gr_sync_block("transcendental",
-                      gr_make_io_signature(1, 1, io_size),
-                      gr_make_io_signature(1, 1, io_size)),
+      : sync_block("transcendental",
+                      io_signature::make(1, 1, io_size),
+                      io_signature::make(1, 1, io_size)),
         _work_fcn(work_fcn)
     {
       // NOP

@@ -18,15 +18,17 @@
 # Boston, MA 02110-1301, USA.
 
 include_directories(
-	${GR_FCD_INCLUDE_DIRS}
-	${GR_AUDIO_INCLUDE_DIRS}
-	${GNURADIO_CORE_INCLUDE_DIRS}
-        ${GRUEL_INCLUDE_DIRS}
-	${Boost_INCLUDE_DIRS}
+    ${GR_FCD_INCLUDE_DIRS}
+    ${GR_FILTER_INCLUDE_DIRS}
+    ${GR_ANALOG_INCLUDE_DIRS}
+    ${GR_AUDIO_INCLUDE_DIRS}
+    ${GNURADIO_RUNTIME_INCLUDE_DIRS}
+    ${Boost_INCLUDE_DIRS}
 )
 
 add_executable(fcd_nfm_rx fcd_nfm_rx.cc)
-target_link_libraries(fcd_nfm_rx gnuradio-fcd)
+target_link_libraries(fcd_nfm_rx
+  gnuradio-fcd gnuradio-filter gnuradio-analog  gnuradio-audio)
 
 INSTALL(TARGETS
     fcd_nfm_rx

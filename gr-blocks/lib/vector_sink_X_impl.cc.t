@@ -27,7 +27,7 @@
 #endif
 
 #include <@NAME_IMPL@.h>
-#include <gr_io_signature.h>
+#include <gnuradio/io_signature.h>
 #include <algorithm>
 #include <iostream>
 
@@ -42,9 +42,9 @@ namespace gr {
     }
   
     @NAME_IMPL@::@NAME_IMPL@(int vlen)
-    : gr_sync_block("@NAME@",
-                    gr_make_io_signature(1, 1, sizeof(@TYPE@) * vlen),
-                    gr_make_io_signature(0, 0, 0)),
+    : sync_block("@NAME@",
+                    io_signature::make(1, 1, sizeof(@TYPE@) * vlen),
+                    io_signature::make(0, 0, 0)),
     d_vlen(vlen)
     {
     }
@@ -58,7 +58,7 @@ namespace gr {
       return d_data;
     }
 
-    std::vector<gr_tag_t>
+    std::vector<tag_t>
     @NAME_IMPL@::tags() const
     {
       return d_tags;
@@ -73,7 +73,7 @@ namespace gr {
 
       for(int i = 0; i < noutput_items * d_vlen; i++)
         d_data.push_back (iptr[i]);
-      std::vector<gr_tag_t> tags;
+      std::vector<tag_t> tags;
       get_tags_in_range(tags, 0, nitems_read(0), nitems_read(0) + noutput_items);
       d_tags.insert(d_tags.end(), tags.begin(), tags.end());
       return noutput_items;

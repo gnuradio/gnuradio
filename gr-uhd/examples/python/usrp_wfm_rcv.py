@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2005-2007,2009,2011 Free Software Foundation, Inc.
+# Copyright 2005-2007,2009,2011,2012 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -20,7 +20,10 @@
 # Boston, MA 02110-1301, USA.
 #
 
-from gnuradio import gr, optfir, audio, blks2, uhd
+from gnuradio import gr, audio, uhd
+from gnuradio import blocks
+from gnuradio import filter
+from gnuradio import analog
 from gnuradio.eng_option import eng_option
 from gnuradio.wxgui import slider, powermate
 from gnuradio.wxgui import stdgui2, fftsink2, form
@@ -88,27 +91,27 @@ class wfm_rx_block (stdgui2.std_top_block):
         dev_rate = self.u.get_samp_rate()
 
         nfilts = 32
-        chan_coeffs = optfir.low_pass (nfilts,           # gain
-                                       nfilts*usrp_rate, # sampling rate
-                                       80e3,             # passband cutoff
-                                       115e3,            # stopband cutoff
-                                       0.1,              # passband ripple
-                                       60)               # stopband attenuation
+        chan_coeffs = filter.optfir.low_pass(nfilts,           # gain
+                                             nfilts*usrp_rate, # sampling rate
+                                             80e3,             # passband cutoff
+                                             115e3,            # stopband cutoff
+                                             0.1,              # passband ripple
+                                             60)               # stopband attenuation
         rrate = usrp_rate / dev_rate
-        self.chan_filt = blks2.pfb_arb_resampler_ccf(rrate, chan_coeffs, nfilts)
+        self.chan_filt = filter.pfb.arb_resampler_ccf(rrate, chan_coeffs, nfilts)
 
-        self.guts = blks2.wfm_rcv (demod_rate, audio_decim)
+        self.guts = analog.wfm_rcv(demod_rate, audio_decim)
 
-        self.volume_control = gr.multiply_const_ff(self.vol)
+        self.volume_control = blocks.multiply_const_ff(self.vol)
 
         # sound card as final sink
-        self.audio_sink = audio.sink (int (audio_rate),
-                                      options.audio_output,
-                                      False)  # ok_to_block
+        self.audio_sink = audio.sink(int (audio_rate),
+                                     options.audio_output,
+                                     False)  # ok_to_block
 
         # now wire it all together
-        self.connect (self.u, self.chan_filt, self.guts,
-                      self.volume_control, self.audio_sink)
+        self.connect(self.u, self.chan_filt, self.guts,
+                     self.volume_control, self.audio_sink)
 
         self._build_gui(vbox, usrp_rate, demod_rate, audio_rate)
 
@@ -252,7 +255,8 @@ class wfm_rx_block (stdgui2.std_top_block):
         """
         Set the center frequency we're interested in.
 
-        @param target_freq: frequency in Hz
+        Args:
+            target_freq: frequency in Hz
         @rypte: bool
         """
 

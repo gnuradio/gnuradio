@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2010-2012 Free Software Foundation, Inc.
+ * Copyright 2010-2013 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -32,6 +32,8 @@
 ////////////////////////////////////////////////////////////////////////
 // standard includes
 ////////////////////////////////////////////////////////////////////////
+
+%include <std_vector.i>
 %include "gnuradio.i"
 
 //load generated python docstrings
@@ -41,17 +43,18 @@
 // block headers
 ////////////////////////////////////////////////////////////////////////
 %{
-#include <gr_uhd_usrp_source.h>
-#include <gr_uhd_usrp_sink.h>
-#include <gr_uhd_amsg_source.h>
+#include <gnuradio/uhd/usrp_source.h>
+#include <gnuradio/uhd/usrp_sink.h>
+#include <gnuradio/uhd/amsg_source.h>
 %}
 
 ////////////////////////////////////////////////////////////////////////
 // used types
 ////////////////////////////////////////////////////////////////////////
-%template(string_vector_t) std::vector<std::string>;
 
-%template(size_vector_t) std::vector<size_t>;
+%template(uhd_string_vector_t) std::vector<std::string>;
+
+%template(uhd_size_vector_t) std::vector<size_t>;
 
 %include <uhd/config.hpp>
 
@@ -86,12 +89,13 @@
 
 %include <uhd/types/sensors.hpp>
 
+%include <uhd/stream.hpp>
+
 ////////////////////////////////////////////////////////////////////////
 // swig dboard_iface for python access
 ////////////////////////////////////////////////////////////////////////
 %include stdint.i
 %include <uhd/types/serial.hpp>
-%template(byte_vector_t) std::vector<uint8_t>;
 %include <uhd/usrp/dboard_iface.hpp>
 
 %template(dboard_iface_sptr) boost::shared_ptr<uhd::usrp::dboard_iface>;
@@ -99,14 +103,13 @@
 ////////////////////////////////////////////////////////////////////////
 // block magic
 ////////////////////////////////////////////////////////////////////////
-GR_SWIG_BLOCK_MAGIC(uhd,usrp_source)
-%include <gr_uhd_usrp_source.h>
+%include <gnuradio/uhd/usrp_source.h>
+%include <gnuradio/uhd/usrp_sink.h>
+%include <gnuradio/uhd/amsg_source.h>
 
-GR_SWIG_BLOCK_MAGIC(uhd,usrp_sink)
-%include <gr_uhd_usrp_sink.h>
-
-GR_SWIG_BLOCK_MAGIC(uhd,amsg_source)
-%include <gr_uhd_amsg_source.h>
+GR_SWIG_BLOCK_MAGIC2(uhd, usrp_source)
+GR_SWIG_BLOCK_MAGIC2(uhd, usrp_sink)
+GR_SWIG_BLOCK_MAGIC2(uhd, amsg_source)
 
 ////////////////////////////////////////////////////////////////////////
 // device discovery (no need to %include device.hpp)

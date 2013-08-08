@@ -62,6 +62,13 @@ None;self.message_port_register_hier_in($label)
 		<value>1</value>
 		<type>int</type>
 	</param>
+
+	<param>
+		<name>Num Streams</name>
+		<key>num_streams</key>
+		<value>1</value>
+		<type>int</type>
+	</param>
 	<param>
 		<name>Optional</name>
 		<key>optional</key>
@@ -78,10 +85,12 @@ None;self.message_port_register_hier_in($label)
 		</option>
 	</param>
 	<check>$vlen &gt; 0</check>
+	<check>$num_streams &gt; 0</check>
 	<sink>
 		<name>in</name>
 		<type>$type</type>
 		<vlen>$vlen</vlen>
+		<nports>$num_streams</nports>
 	</sink>
 	<doc>
 The inputs of this block will become the outputs to this flow graph when it is instantiated as a hierarchical block.

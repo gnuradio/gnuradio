@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2011 Free Software Foundation, Inc.
+# Copyright 2011,2012 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -21,6 +21,7 @@
 #
 
 from gnuradio import gr
+from gnuradio import blocks
 import sys
 
 try:
@@ -28,7 +29,13 @@ try:
     from PyQt4 import QtGui, QtCore
     import sip
 except ImportError:
-    print "Error: Program requires PyQt4 and gr-qtgui."
+    sys.stderr.write("Error: Program requires PyQt4 and gr-qtgui.\n")
+    sys.exit(1)
+
+try:
+    from gnuradio import analog
+except ImportError:
+    sys.stderr.write("Error: Program requires gr-analog.\n")
     sys.exit(1)
 
 class dialog_box(QtGui.QWidget):
@@ -139,12 +146,12 @@ class my_top_block(gr.top_block):
 
         self.qapp = QtGui.QApplication(sys.argv)
 
-        src1 = gr.sig_source_f(Rs, gr.GR_SIN_WAVE, f1, 0.1, 0)
-        src2 = gr.sig_source_f(Rs, gr.GR_SIN_WAVE, f2, 0.1, 0)
-        src  = gr.add_ff()
-        thr = gr.throttle(gr.sizeof_float, 100*npts)
-        noise = gr.noise_source_f(gr.GR_GAUSSIAN, 0.001)
-        add = gr.add_ff()
+        src1 = analog.sig_source_f(Rs, analog.GR_SIN_WAVE, f1, 0.1, 0)
+        src2 = analog.sig_source_f(Rs, analog.GR_SIN_WAVE, f2, 0.1, 0)
+        src  = blocks.add_ff()
+        thr = blocks.throttle(gr.sizeof_float, 100*npts)
+        noise = analog.noise_source_f(analog.GR_GAUSSIAN, 0.001)
+        add = blocks.add_ff()
         self.snk1 = qtgui.time_sink_f(npts, Rs,
                                       "Complex Time Example", 3)
 
@@ -168,11 +175,11 @@ class my_top_block(gr.top_block):
         pyWin = sip.wrapinstance(pyQt, QtGui.QWidget)
 
         # Example of using signal/slot to set the title of a curve
-        pyWin.connect(pyWin, QtCore.SIGNAL("setTitle(int, QString)"),
-                      pyWin, QtCore.SLOT("setTitle(int, QString)"))
-        pyWin.emit(QtCore.SIGNAL("setTitle(int, QString)"), 0, "sum")
-        self.snk1.set_title(1, "src1")
-        self.snk1.set_title(2, "src2")
+        pyWin.connect(pyWin, QtCore.SIGNAL("setLineLabel(int, QString)"),
+                      pyWin, QtCore.SLOT("setLineLabel(int, QString)"))
+        pyWin.emit(QtCore.SIGNAL("setLineLabel(int, QString)"), 0, "sum")
+        self.snk1.set_line_label(1, "src1")
+        self.snk1.set_line_label(2, "src2")
 
         # Can also set the color of a curve
         #self.snk1.set_color(5, "blue")

@@ -21,15 +21,16 @@
 #
 
 from gnuradio import gr
+from gnuradio import filter
+from gnuradio import blocks
 from gnuradio import uhd
 from gnuradio import eng_notation
 from gnuradio.eng_option import eng_option
-from gnuradio.qtgui import qtgui
 from optparse import OptionParser
 import sys
 
 try:
-    from gnuradio.qtgui import qtgui
+    from gnuradio import qtgui
     from PyQt4 import QtGui, QtCore
     import sip
 except ImportError:
@@ -193,20 +194,20 @@ class my_top_block(gr.top_block):
         self._fftsize = options.fft_size
 
         self.snk = qtgui.sink_c(options.fft_size,
-                                gr.firdes.WIN_BLACKMAN_hARRIS,
+                                filter.firdes.WIN_BLACKMAN_hARRIS,
                                 self._freq, self._bandwidth,
                                 "UHD Display",
                                 True, True, True, False)
 
         # Set up internal amplifier
-        self.amp = gr.multiply_const_cc(0.0)
+        self.amp = blocks.multiply_const_cc(0.0)
         self.set_amplifier_gain(100)
 
         # Create a single-pole IIR filter to remove DC
         #   but don't connect it yet
         self.dc_gain = 0.001
-        self.dc = gr.single_pole_iir_filter_cc(self.dc_gain)
-        self.dc_sub = gr.sub_cc()
+        self.dc = filter.single_pole_iir_filter_cc(self.dc_gain)
+        self.dc_sub = blocks.sub_cc()
 
         self.connect(self.u, self.amp, self.snk)
 
@@ -234,7 +235,7 @@ class my_top_block(gr.top_block):
         self.lock()
 
         # Add file sink to save data
-        self.file_sink = gr.file_sink(gr.sizeof_gr_complex, name)
+        self.file_sink = blocks.file_sink(gr.sizeof_gr_complex, name)
         self.connect(self.amp, self.file_sink)
 
         self.unlock()

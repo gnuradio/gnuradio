@@ -2,12 +2,18 @@
 
 from gnuradio import gr
 from gnuradio import audio
-from gnuradio import trellis, digital
+from gnuradio import trellis, digital, filter, blocks
 from gnuradio import eng_notation
 import math
 import sys
 import random
 import fsm_utils
+
+try:
+    from gnuradio import analog
+except ImportError:
+    sys.stderr.write("Error: Program requires gr-analog.\n")
+    sys.exit(1)
 
 def run_test (f,Kb,bitspersymbol,K,channel,modulation,dimensionality,tot_constellation,N0,seed):
     tb = gr.top_block ()
@@ -22,20 +28,20 @@ def run_test (f,Kb,bitspersymbol,K,channel,modulation,dimensionality,tot_constel
     for i in range(L): # first/last L symbols set to 0
         packet[i] = 0
         packet[len(packet)-i-1] = 0
-    src = gr.vector_source_s(packet,False)
-    mod = gr.chunks_to_symbols_sf(modulation[1],modulation[0])
+    src = blocks.vector_source_s(packet,False)
+    mod = digital.chunks_to_symbols_sf(modulation[1],modulation[0])
 
     # CHANNEL
-    isi = gr.fir_filter_fff(1,channel)
-    add = gr.add_ff()
-    noise = gr.noise_source_f(gr.GR_GAUSSIAN,math.sqrt(N0/2),seed)
+    isi = filter.fir_filter_fff(1,channel)
+    add = blocks.add_ff()
+    noise = analog.noise_source_f(analog.GR_GAUSSIAN,math.sqrt(N0/2),seed)
 
     # RX
-    skip = gr.skiphead(gr.sizeof_float, L) # skip the first L samples since you know they are coming from the L zero symbols
+    skip = blocks.skiphead(gr.sizeof_float, L) # skip the first L samples since you know they are coming from the L zero symbols
     #metrics = trellis.metrics_f(f.O(),dimensionality,tot_constellation,digital.TRELLIS_EUCLIDEAN) # data preprocessing to generate metrics for Viterbi
     #va = trellis.viterbi_s(f,K+L,0,0) # Put -1 if the Initial/Final states are not set.
     va = trellis.viterbi_combined_s(f,K+L,0,0,dimensionality,tot_constellation,digital.TRELLIS_EUCLIDEAN) # using viterbi_combined_s instead of metrics_f/viterbi_s allows larger packet lengths because metrics_f is complaining for not being able to allocate large buffers. This is due to the large f.O() in this application...
-    dst = gr.vector_sink_s()
+    dst = blocks.vector_sink_s()
 
     tb.connect (src,mod)
     tb.connect (mod,isi,(add,0))

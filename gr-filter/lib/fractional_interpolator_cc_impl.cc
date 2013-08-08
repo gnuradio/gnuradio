@@ -24,7 +24,7 @@
 #include "config.h"
 #endif
 
-#include <gr_io_signature.h>
+#include <gnuradio/io_signature.h>
 #include "fractional_interpolator_cc_impl.h"
 #include <stdexcept>
 
@@ -40,12 +40,14 @@ namespace gr {
 
     fractional_interpolator_cc_impl::fractional_interpolator_cc_impl
                                      (float phase_shift, float interp_ratio)
-      : gr_block("fractional_interpolator_cc",
-		 gr_make_io_signature(1, 1, sizeof(gr_complex)),
-		 gr_make_io_signature(1, 1, sizeof(gr_complex))),
+      : block("fractional_interpolator_cc",
+		 io_signature::make(1, 1, sizeof(gr_complex)),
+		 io_signature::make(1, 1, sizeof(gr_complex))),
 	d_mu (phase_shift), d_mu_inc (interp_ratio),
 	d_interp(new mmse_fir_interpolator_cc())
     {
+      GR_LOG_WARN(d_logger, "fractional_interpolator is deprecated. Please use fractional_resampler instead.");
+
       if(interp_ratio <=  0)
 	throw std::out_of_range("interpolation ratio must be > 0");
       if(phase_shift <  0  || phase_shift > 1)

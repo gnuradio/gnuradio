@@ -25,8 +25,9 @@
 #endif
 
 #include "quadrature_demod_cf_impl.h"
-#include <gr_io_signature.h>
-#include <gr_math.h>
+#include <gnuradio/io_signature.h>
+#include <gnuradio/math.h>
+#include <volk/volk.h>
 
 namespace gr {
   namespace analog {
@@ -39,11 +40,15 @@ namespace gr {
     }
 
     quadrature_demod_cf_impl::quadrature_demod_cf_impl(float gain)
-      : gr_sync_block("quadrature_demod_cf",
-		      gr_make_io_signature(1, 1, sizeof(gr_complex)),
-		      gr_make_io_signature(1, 1, sizeof(float))),
+      : sync_block("quadrature_demod_cf",
+		      io_signature::make(1, 1, sizeof(gr_complex)),
+		      io_signature::make(1, 1, sizeof(float))),
 	d_gain(gain)
     {
+      const int alignment_multiple =
+	volk_get_alignment() / sizeof(gr_complex);
+      set_alignment(std::max(1, alignment_multiple));
+
       set_history(2); // we need to look at the previous value
     }
 
@@ -58,11 +63,11 @@ namespace gr {
     {
       gr_complex *in = (gr_complex*)input_items[0];
       float *out = (float*)output_items[0];
-      in++;	// ensure that in[-1] is valid
 
+      std::vector<gr_complex> tmp(noutput_items);
+      volk_32fc_x2_multiply_conjugate_32fc(&tmp[0], &in[1], &in[0], noutput_items);
       for(int i = 0; i < noutput_items; i++) {
-	gr_complex product = in[i] * conj(in[i-1]);
-	out[i] = d_gain * gr_fast_atan2f(imag(product), real(product));
+        out[i] = d_gain * gr::fast_atan2f(imag(tmp[i]), real(tmp[i]));
       }
 
       return noutput_items;

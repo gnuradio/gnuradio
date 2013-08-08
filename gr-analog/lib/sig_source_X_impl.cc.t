@@ -28,10 +28,10 @@
 
 #include "@IMPL_NAME@.h"
 #include <algorithm>
-#include <gr_io_signature.h>
+#include <gnuradio/io_signature.h>
 #include <stdexcept>
 #include <algorithm>
-#include <gr_complex.h>
+#include <gnuradio/gr_complex.h>
 
 namespace gr {
   namespace analog {
@@ -46,9 +46,9 @@ namespace gr {
 
     @IMPL_NAME@::@IMPL_NAME@(double sampling_freq, gr_waveform_t waveform,
 			     double frequency, double ampl, @TYPE@ offset)
-    : gr_sync_block("@BASE_NAME@",
-		    gr_make_io_signature(0, 0, 0),
-		    gr_make_io_signature(1, 1, sizeof(@TYPE@))),
+    : sync_block("@BASE_NAME@",
+		    io_signature::make(0, 0, 0),
+		    io_signature::make(1, 1, sizeof(@TYPE@))),
       d_sampling_freq(sampling_freq), d_waveform(waveform),
       d_frequency(frequency), d_ampl(ampl), d_offset(offset)
     {
@@ -211,7 +211,7 @@ namespace gr {
 #endif
 
       default:
-	throw std::runtime_error("gr_sig_source: invalid waveform");
+	throw std::runtime_error("analog::sig_source: invalid waveform");
       }
 
       return noutput_items;

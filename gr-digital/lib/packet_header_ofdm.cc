@@ -23,7 +23,7 @@
 #include "config.h"
 #endif
 
-#include <digital/packet_header_ofdm.h>
+#include <gnuradio/digital/packet_header_ofdm.h>
 
 namespace gr {
   namespace digital {
@@ -68,7 +68,7 @@ namespace gr {
 	  len_tag_key,
 	  num_tag_key,
 	  bits_per_header_sym),
-      d_frame_len_tag_key(pmt::pmt_string_to_symbol(frame_len_tag_key)),
+      d_frame_len_tag_key(pmt::string_to_symbol(frame_len_tag_key)),
       d_occupied_carriers(occupied_carriers),
       d_syms_per_set(0),
       d_bits_per_payload_sym(bits_per_payload_sym)
@@ -85,20 +85,20 @@ namespace gr {
 
     bool packet_header_ofdm::header_parser(
 	const unsigned char *in,
-	std::vector<gr_tag_t> &tags)
+	std::vector<tag_t> &tags)
     {
       if (!packet_header_default::header_parser(in, tags)) {
 	return false;
       }
-      int packet_len = 0; // # of symbols in this frame
+      int packet_len = 0; // # of bytes in this frame
       for (unsigned i = 0; i < tags.size(); i++) {
-	if (pmt::pmt_equal(tags[i].key, d_len_tag_key)) {
+	if (pmt::equal(tags[i].key, d_len_tag_key)) {
 	  // Convert bytes to complex symbols:
-	  packet_len = pmt::pmt_to_long(tags[i].value) * 8 / d_bits_per_payload_sym;
-	  if (pmt::pmt_to_long(tags[i].value) * 8 % d_bits_per_payload_sym) {
+	  packet_len = pmt::to_long(tags[i].value) * 8 / d_bits_per_payload_sym;
+	  if (pmt::to_long(tags[i].value) * 8 % d_bits_per_payload_sym) {
 	    packet_len++;
 	  }
-	  tags[i].value = pmt::pmt_from_long(packet_len);
+	  tags[i].value = pmt::from_long(packet_len);
 	  break;
 	}
       }
@@ -111,9 +111,9 @@ namespace gr {
 	frame_len++;
 	i += d_occupied_carriers[k].size();
       }
-      gr_tag_t tag;
+      tag_t tag;
       tag.key = d_frame_len_tag_key;
-      tag.value = pmt::pmt_from_long(frame_len);
+      tag.value = pmt::from_long(frame_len);
       tags.push_back(tag);
 
       return true;

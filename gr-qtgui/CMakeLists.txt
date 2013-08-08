@@ -26,7 +26,7 @@ find_package(Qt4 4.2.0 COMPONENTS QtCore QtGui)
 
 find_package(Qwt)
 
-find_package(PythonLibs)
+find_package(PythonLibs 2)
 
 include(GrPython)
 GR_PYTHON_CHECK_MODULE("PyQt4" PyQt4 True PYQT4_FOUND)
@@ -46,7 +46,10 @@ GR_REGISTER_COMPONENT("gr-qtgui" ENABLE_GR_QTGUI
     Boost_FOUND
     QT4_FOUND
     QWT_FOUND
-    ENABLE_GR_CORE
+    ENABLE_VOLK
+    ENABLE_GNURADIO_RUNTIME
+    ENABLE_GR_FFT
+    ENABLE_GR_FILTER
     PYTHONLIBS_FOUND
     ${qt_gui_python_deps}
 )
@@ -77,41 +80,42 @@ CPACK_COMPONENT("qtgui_runtime"
     GROUP        "QtGUI"
     DISPLAY_NAME "Runtime"
     DESCRIPTION  "Runtime"
-    DEPENDS      "core_runtime"
+    DEPENDS      "runtime_runtime"
 )
 
 CPACK_COMPONENT("qtgui_devel"
     GROUP        "QtGUI"
     DISPLAY_NAME "Development"
     DESCRIPTION  "C++ headers, package config, import libraries"
-    DEPENDS      "core_devel"
+    DEPENDS      "runtime_devel"
 )
 
 CPACK_COMPONENT("qtgui_python"
     GROUP        "QtGUI"
     DISPLAY_NAME "Python"
     DESCRIPTION  "Python modules for runtime; GRC xml files"
-    DEPENDS      "core_python;qtgui_runtime"
+    DEPENDS      "runtime_python;qtgui_runtime"
 )
 
 CPACK_COMPONENT("qtgui_swig"
     GROUP        "QtGUI"
     DISPLAY_NAME "SWIG"
     DESCRIPTION  "SWIG development .i files"
-    DEPENDS      "core_swig;qtgui_python;qtgui_devel"
+    DEPENDS      "runtime_swig;qtgui_python;qtgui_devel"
 )
 
 ########################################################################
 # Add subdirectories
 ########################################################################
-add_subdirectory(include)
+add_subdirectory(include/gnuradio/qtgui)
 add_subdirectory(lib)
 add_subdirectory(doc)
 if(ENABLE_PYTHON)
     add_subdirectory(grc)
     add_subdirectory(swig)
-    add_subdirectory(python)
+    add_subdirectory(python/qtgui)
     add_subdirectory(examples)
+    add_subdirectory(apps)
 endif(ENABLE_PYTHON)
 
 ########################################################################

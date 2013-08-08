@@ -25,7 +25,7 @@
 #endif
 
 #include "nop_impl.h"
-#include <gr_io_signature.h>
+#include <gnuradio/io_signature.h>
 #include <boost/bind.hpp>
 
 namespace gr {
@@ -39,9 +39,9 @@ namespace gr {
     }
 
     nop_impl::nop_impl (size_t sizeof_stream_item)
-      : gr_block("nop",
-                 gr_make_io_signature(0, -1, sizeof_stream_item),
-                 gr_make_io_signature(0, -1, sizeof_stream_item)),
+      : block("nop",
+                 io_signature::make(0, -1, sizeof_stream_item),
+                 io_signature::make(0, -1, sizeof_stream_item)),
         d_nmsgs_recvd(0)
     {
       // Arrange to have count_received_msgs called when messages are received.
@@ -72,6 +72,28 @@ namespace gr {
         consume(i, ninput_items[i]);
 
       return noutput_items;
+    }
+
+    void
+    nop_impl::setup_rpc()
+    {
+#ifdef GR_CTRLPORT
+      d_rpc_vars.push_back(
+        rpcbasic_sptr(new rpcbasic_register_get<nop, int>(
+          alias(), "test",
+          &nop::ctrlport_test,
+          pmt::mp(-256), pmt::mp(255), pmt::mp(0),
+          "", "Simple testing variable",
+          RPC_PRIVLVL_MIN, DISPNULL)));
+
+      d_rpc_vars.push_back(
+        rpcbasic_sptr(new rpcbasic_register_set<nop, int>(
+          alias(), "test",
+          &nop::set_ctrlport_test,
+          pmt::mp(-256), pmt::mp(255), pmt::mp(0),
+          "", "Simple testing variable",
+          RPC_PRIVLVL_MIN, DISPNULL)));
+#endif /* GR_CTRLPORT */
     }
 
   } /* namespace blocks */

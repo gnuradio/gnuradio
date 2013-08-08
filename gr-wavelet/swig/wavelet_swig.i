@@ -28,21 +28,15 @@
 %include "wavelet_swig_doc.i"
 
 %{
-#include "wavelet_squash_ff.h"
-#include "wavelet_wavelet_ff.h"
-#include "wavelet_wvps_ff.h"
+#include "gnuradio/wavelet/squash_ff.h"
+#include "gnuradio/wavelet/wavelet_ff.h"
+#include "gnuradio/wavelet/wvps_ff.h"
 %}
 
-%include "wavelet_squash_ff.h"
-%include "wavelet_wavelet_ff.h"
-%include "wavelet_wvps_ff.h"
+%include "gnuradio/wavelet/squash_ff.h"
+%include "gnuradio/wavelet/wavelet_ff.h"
+%include "gnuradio/wavelet/wvps_ff.h"
 
-GR_SWIG_BLOCK_MAGIC(wavelet,squash_ff);
-wavelet_squash_ff_sptr wavelet_make_squash_ff(const std::vector<float> &igrid,
-					      const std::vector<float> &ogrid);
-
-GR_SWIG_BLOCK_MAGIC(wavelet,wavelet_ff);
-wavelet_wavelet_ff_sptr wavelet_make_wavelet_ff(int size, int order, bool forward);
-
-GR_SWIG_BLOCK_MAGIC(wavelet,wvps_ff);
-wavelet_wvps_ff_sptr wavelet_make_wvps_ff(int ilen);
+GR_SWIG_BLOCK_MAGIC2(wavelet, squash_ff);
+GR_SWIG_BLOCK_MAGIC2(wavelet, wavelet_ff);
+GR_SWIG_BLOCK_MAGIC2(wavelet, wvps_ff);

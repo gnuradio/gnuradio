@@ -4,7 +4,7 @@
   2
   3  from gnuradio import gr
   4  from gnuradio import audio
-  5  from gnuradio import trellis
+  5  from gnuradio import trellis, digital, analog, filter, blocks
   6  from gnuradio import eng_notation
   7  import math
   8  import sys
@@ -24,20 +24,20 @@
  22      for i in range(L): # first/last L symbols set to 0
  23          packet[i] = 0
  24          packet[len(packet)-i-1] = 0
- 25      src = gr.vector_source_s(packet,False)
- 26      mod = gr.chunks_to_symbols_sf(modulation[1],modulation[0])
+ 25      src = blocks.vector_source_s(packet,False)
+ 26      mod = digital.chunks_to_symbols_sf(modulation[1],modulation[0])
  27
  28      # CHANNEL
- 29      isi = gr.fir_filter_fff(1,channel)
- 30      add = gr.add_ff()
- 31      noise = gr.noise_source_f(gr.GR_GAUSSIAN,math.sqrt(N0/2),seed)
+ 29      isi = filter.fir_filter_fff(1,channel)
+ 30      add = blocs.add_ff()
+ 31      noise = analog.noise_source_f(analog.GR_GAUSSIAN,math.sqrt(N0/2),seed)
  32
  33      # RX
- 34      skip = gr.skiphead(gr.sizeof_float, L) # skip the first L samples since you know they are coming from the L zero symbols
+ 34      skip = blocks.skiphead(gr.sizeof_float, L) # skip the first L samples since you know they are coming from the L zero symbols
  35      #metrics = trellis.metrics_f(f.O(),dimensionality,tot_constellation,trellis.TRELLIS_EUCLIDEAN) # data preprocessing to generate metrics for Viterbi
  36      #va = trellis.viterbi_s(f,K+L,0,0) # Put -1 if the Initial/Final states are not set.
  37      va = trellis.viterbi_combined_s(f,K+L,0,0,dimensionality,tot_constellation,trellis.TRELLIS_EUCLIDEAN) # using viterbi_combined_s instead of metrics_f/viterbi_s allows larger packet lengths because metrics_f is complaining for not being able to allocate large buffers. This is due to the large f.O() in this application...
- 38      dst = gr.vector_sink_s()
+ 38      dst = blocks.vector_sink_s()
  39
  40      tb.connect (src,mod)
  41      tb.connect (mod,isi,(add,0))

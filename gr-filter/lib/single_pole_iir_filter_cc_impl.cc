@@ -25,7 +25,7 @@
 #endif
 
 #include "single_pole_iir_filter_cc_impl.h"
-#include <gr_io_signature.h>
+#include <gnuradio/io_signature.h>
 
 
 namespace gr {
@@ -40,9 +40,9 @@ namespace gr {
 
     single_pole_iir_filter_cc_impl::single_pole_iir_filter_cc_impl
         (double alpha, unsigned int vlen)
-	  : gr_sync_block("single_pole_iir_filter_cc",
-		   gr_make_io_signature(1, 1, sizeof (gr_complex) * vlen),
-		   gr_make_io_signature(1, 1, sizeof (gr_complex) * vlen)),
+	  : sync_block("single_pole_iir_filter_cc",
+		   io_signature::make(1, 1, sizeof (gr_complex) * vlen),
+		   io_signature::make(1, 1, sizeof (gr_complex) * vlen)),
 	    d_vlen(vlen), d_iir(vlen)
     {
       set_taps(alpha);

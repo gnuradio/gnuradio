@@ -21,6 +21,7 @@
 
 from gnuradio import gr
 from gnuradio import eng_notation
+from gnuradio import blocks
 from gnuradio import digital
 
 import copy
@@ -49,7 +50,7 @@ class transmit_path(gr.hier_block2):
                                         msgq_limit=4,
                                         pad_for_usrp=False)
 
-        self.amp = gr.multiply_const_cc(1)
+        self.amp = blocks.multiply_const_cc(1)
         self.set_tx_amplitude(self._tx_amplitude)
 
         # Display some information about the setup
@@ -62,7 +63,9 @@ class transmit_path(gr.hier_block2):
     def set_tx_amplitude(self, ampl):
         """
         Sets the transmit amplitude sent to the USRP
-        @param: ampl 0 <= ampl < 1.0.  Try 0.10
+        
+        Args:
+            : ampl 0 <= ampl < 1.0.  Try 0.10
         """
         self._tx_amplitude = max(0.0, min(ampl, 1))
         self.amp.set_k(self._tx_amplitude)

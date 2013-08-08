@@ -23,7 +23,7 @@
 #ifndef INCLUDED_GR_UDP_SINK_IMPL_H
 #define INCLUDED_GR_UDP_SINK_IMPL_H
 
-#include <blocks/udp_sink.h>
+#include <gnuradio/blocks/udp_sink.h>
 #include <boost/asio.hpp>
 
 namespace gr {
@@ -37,7 +37,7 @@ namespace gr {
       int    d_payload_size;    // maximum transmission unit (packet length)
       bool   d_eof;             // send zero-length packet on disconnect
       bool   d_connected;       // are we connected?
-      gruel::mutex  d_mutex;    // protects d_socket and d_connected
+      gr::thread::mutex  d_mutex;    // protects d_socket and d_connected
 
       boost::asio::ip::udp::socket *d_socket;          // handle to socket
       boost::asio::ip::udp::endpoint d_endpoint;

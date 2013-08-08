@@ -153,17 +153,9 @@ off the bit rot we've been plagued with.
 For C++ we're using the cppunit framework.  cppunit has its bad
 smells, but it's mostly workable.  http://cppunit.sf.net
 
-Currently each directory <dirname> contains files qa_<dirname>.{h,cc}
+Currently each directory <dirname>/lib contains files qa_<dirname>.{h,cc}
 that bring together all the qa_<foo> test suites in the directory.
-We ought to be able to automate this without too much trouble.
 
-The directory gnuradio-core/src/tests contains programs that run
-the tests.  test_all runs all of the registered C++ unit tests.
-
-As far as I can tell, the cppunit TestFactoryRegistry maybe able to be
-tricked into doing what we want.  As is, I don't think it's enough by
-itself, since there's nothing dragging the qa* files out of the
-library and into the program.   I haven't tested out this idea.
 
 ** Python unit tests
 
