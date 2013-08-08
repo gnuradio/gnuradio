@@ -39,8 +39,8 @@ class my_top_block(gr.top_block):
 
         if(options.tx_freq is not None):
             self.sink = uhd_transmitter(options.args,
-                                        options.bandwidth,
-                                        options.tx_freq, options.tx_gain,
+                                        options.bandwidth, options.tx_freq, 
+                                        options.lo_offset, options.tx_gain,
                                         options.spec, options.antenna,
                                         options.verbose)
         elif(options.to_file is not None):
