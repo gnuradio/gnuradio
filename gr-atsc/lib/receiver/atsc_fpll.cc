@@ -32,34 +32,32 @@
 #include <iostream>
 
 atsc_fpll_sptr
-atsc_make_fpll()
+atsc_make_fpll( float sample_rate )
 {
-  return gnuradio::get_initial_sptr(new atsc_fpll());
+  return gnuradio::get_initial_sptr(new atsc_fpll( sample_rate ));
 }
 
-atsc_fpll::atsc_fpll()
+atsc_fpll::atsc_fpll( float sample_rate )
   : gr::sync_block("atsc_fpll",
 		  gr::io_signature::make(1, 1, sizeof(float)),
 		  gr::io_signature::make(1, 1, sizeof(float))),
 		  initial_phase(0)
 {
   initial_freq = 5.75e6 - 3e6 + 0.309e6; // a_initial_freq;
-  initialize();
+  initialize( sample_rate );
 }
 
 
 void
-atsc_fpll::initialize ()
+atsc_fpll::initialize ( float sample_rate )
 {
-  float Fs = 19.2e6;
-
-  float alpha = 1 - exp(-1.0 / Fs / 5e-6);
+  float alpha = 1 - exp(-1.0 / sample_rate / 5e-6);
 
   afci.set_taps (alpha);
   afcq.set_taps (alpha);
 
   printf("Setting initial_freq: %f\n",initial_freq);
-  nco.set_freq (initial_freq / Fs * 2 * M_PI);
+  nco.set_freq (initial_freq / sample_rate * 2 * M_PI);
   nco.set_phase (initial_phase);
 }
 

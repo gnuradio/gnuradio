@@ -261,11 +261,11 @@ public:
 
 GR_SWIG_BLOCK_MAGIC(atsc,bit_timing_loop);
 
-atsc_bit_timing_loop_sptr atsc_make_bit_timing_loop();
+atsc_bit_timing_loop_sptr atsc_make_bit_timing_loop( float input_rate );
 
 class atsc_bit_timing_loop : public gr::block
 {
-  atsc_bit_timing_loop();
+  atsc_bit_timing_loop( float input_rate );
 
 public:
   void reset();
@@ -275,11 +275,11 @@ public:
 
 GR_SWIG_BLOCK_MAGIC(atsc,fpll);
 
-atsc_fpll_sptr atsc_make_fpll();
+atsc_fpll_sptr atsc_make_fpll( float sample_rate );
 
 class atsc_fpll : public gr::sync_block
 {
-  atsc_fpll();
+  atsc_fpll( float sample_rate );
 
 public:
   void reset();

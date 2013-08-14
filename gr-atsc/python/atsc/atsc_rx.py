@@ -58,7 +58,7 @@ def graph (args):
     	else:
         	raise ValueError('usage: atsc_rx.py input_file output_file.ts\n')
 
-	input_rate = 19.2e6
+	input_rate = 6.4e6*3
 	IF_freq = 5.75e6
 
 	tb = gr.top_block()
@@ -80,14 +80,14 @@ def graph (args):
 	ilp = filter.interp_fir_filter_ccf(3, ilp_coeffs)
 
 	# Move the center frequency to 5.75MHz ( this wont be needed soon )
-	duc_coeffs = filter.firdes.low_pass ( 1, 19.2e6, 9e6, 1e6, filter.firdes.WIN_HAMMING )
-    	duc = filter.freq_xlating_fir_filter_ccf ( 1, duc_coeffs, -5.75e6, 19.2e6 )
+	duc_coeffs = filter.firdes.low_pass ( 1, input_rate, 9e6, 1e6, filter.firdes.WIN_HAMMING )
+    	duc = filter.freq_xlating_fir_filter_ccf ( 1, duc_coeffs, -5.75e6, input_rate )
 	
 	# fpll input is float
 	c2f = blocks.complex_to_float()
 
 	# Phase locked loop
-	fpll = atsc.fpll()
+	fpll = atsc.fpll( input_rate )
 
 	# Clean fpll output
 	lp_coeffs2 = filter.firdes.low_pass (1.0,
@@ -105,7 +105,7 @@ def graph (args):
 	remove_dc = blocks.sub_ff()
 
 	# Bit Timing Loop, Field Sync Checker and Equalizer
-	btl = atsc.bit_timing_loop()
+	btl = atsc.bit_timing_loop( input_rate )
 	fsc = atsc.fs_checker()
 	eq = atsc.equalizer()
 	fsd = atsc.field_sync_demux()
@@ -122,9 +122,8 @@ def graph (args):
 
 	# Connect it all together
 	tb.connect( srcf, is2c, rrc, ilp, duc, c2f, fpll, lp_filter, agc )
-	tb.connect( agc, iir )
 	tb.connect( agc, (remove_dc, 0) )
-	tb.connect( iir, (remove_dc, 1) )
+	tb.connect( agc, iir, (remove_dc, 1) )
 	tb.connect( remove_dc, btl )
 	tb.connect( (btl, 0), (fsc, 0), (eq, 0), (fsd,0) )
 	tb.connect( (btl, 1), (fsc, 1), (eq, 1), (fsd,1) )

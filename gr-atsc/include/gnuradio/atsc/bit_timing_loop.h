@@ -34,7 +34,7 @@
 class atsc_bit_timing_loop;
 typedef boost::shared_ptr<atsc_bit_timing_loop> atsc_bit_timing_loop_sptr;
 
-ATSC_API atsc_bit_timing_loop_sptr atsc_make_bit_timing_loop();
+ATSC_API atsc_bit_timing_loop_sptr atsc_make_bit_timing_loop( float input_rate );
 
 /*!
  * \brief ATSC BitTimingLoop3
@@ -44,36 +44,23 @@ ATSC_API atsc_bit_timing_loop_sptr atsc_make_bit_timing_loop();
  *  the raw symbol (float) and the tag (atsc_syminfo)
  */
 
-#define AGC_RATE 40
-
 class ATSC_API atsc_bit_timing_loop : public gr::block
 {
-	friend ATSC_API atsc_bit_timing_loop_sptr atsc_make_bit_timing_loop();
+	friend ATSC_API atsc_bit_timing_loop_sptr atsc_make_bit_timing_loop( float input_rate );
 
-	atsc_bit_timing_loop();
+	atsc_bit_timing_loop( float input_rate );
 
 public:
-	int work (int noutput_items,
-		gr_vector_const_void_star &input_items,
-		gr_vector_void_star &output_items);
-
 	void reset();
 
 	~atsc_bit_timing_loop () { };
 
 	void forecast (int noutput_items, gr_vector_int &ninput_items_required);
 
-	  int  general_work (int noutput_items,
+	int  general_work (int noutput_items,
 				gr_vector_int &ninput_items,
 				gr_vector_const_void_star &input_items,
 				gr_vector_void_star &output_items);
-
-	// debug (NOPs)
-	void set_mu (double a_mu) {  }
-	void set_no_update (bool a_no_update) {  }
-	void set_loop_filter_tap (double tap) { }
-	void set_timing_rate (double rate) { }
-
 
 protected:
 
@@ -114,14 +101,6 @@ protected:
 		}
 		return false;
 	}
-
-	void incr_symbol_index ()
-	{
-		d_symbol_index++;
-		if (d_symbol_index >= ATSC_DATA_SEGMENT_LENGTH)
-			d_symbol_index = 0;
-	}
-
 };
 
 #endif /* INCLUDED_ATSC_BIT_TIMING_LOOP_H */

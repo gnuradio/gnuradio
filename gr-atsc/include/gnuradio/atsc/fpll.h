@@ -35,7 +35,7 @@ using namespace gr;
 class atsc_fpll;
 typedef boost::shared_ptr<atsc_fpll> atsc_fpll_sptr;
 
-ATSC_API atsc_fpll_sptr atsc_make_fpll();
+ATSC_API atsc_fpll_sptr atsc_make_fpll( float sample_rate );
 
 /*!
  * \brief ATSC FPLL (2nd Version)
@@ -50,9 +50,9 @@ ATSC_API atsc_fpll_sptr atsc_make_fpll();
 
 class ATSC_API atsc_fpll : public gr::sync_block
 {
-  friend ATSC_API atsc_fpll_sptr atsc_make_fpll();
+  friend ATSC_API atsc_fpll_sptr atsc_make_fpll( float sample_rate );
 
-  atsc_fpll();
+  atsc_fpll( float sample_rate );
 
 public:
 
@@ -62,7 +62,7 @@ public:
 
   void reset() { /* nop */ }
 
-  void initialize () ;
+  void initialize ( float sample_rate ) ;
 
  protected:
 

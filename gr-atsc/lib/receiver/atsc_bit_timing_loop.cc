@@ -31,21 +31,17 @@
 #include <boost/math/special_functions/sign.hpp>
 #include <iomanip>
 
-// Input rate changed from 20MHz to 19.2 to support usrp at 3 * 6.4MHz
-float input_rate = 19.2e6;
-double ratio_of_rx_clock_to_symbol_freq = input_rate / ATSC_SYMBOL_RATE;
-
 atsc_bit_timing_loop_sptr
-atsc_make_bit_timing_loop()
+atsc_make_bit_timing_loop( float input_rate )
 {
-	return gnuradio::get_initial_sptr(new atsc_bit_timing_loop());
+	return gnuradio::get_initial_sptr( new atsc_bit_timing_loop( input_rate ) );
 }
 
-atsc_bit_timing_loop::atsc_bit_timing_loop()
+atsc_bit_timing_loop::atsc_bit_timing_loop( float input_rate )
 	: gr::block("atsc_bit_timing_loop",
 		gr::io_signature::make(1, 1, sizeof(float)),
 		gr::io_signature::make3(2, 3, sizeof(float), sizeof(float), sizeof(float))),
-	d_next_input(0), d_rx_clock_to_symbol_freq (ratio_of_rx_clock_to_symbol_freq),
+	d_next_input(0), d_rx_clock_to_symbol_freq (input_rate / ATSC_SYMBOL_RATE),
 	d_si(0)
 {
 	d_loop.set_taps( LOOP_FILTER_TAP );
@@ -86,17 +82,6 @@ atsc_bit_timing_loop::general_work (int noutput_items,
                                  gr_vector_const_void_star &input_items,
                                  gr_vector_void_star &output_items)
 {
-	int r = work( noutput_items, input_items, output_items );
-	if (r > 0)
-		consume_each( d_si );
-	return r;
-}
-
-int
-atsc_bit_timing_loop::work (int noutput_items,
-		       gr_vector_const_void_star &input_items,
-		       gr_vector_void_star &output_items)
-{
 	const float *in = (const float *) input_items[0];
 	float *out_sample = (float *) output_items[0];
 	atsc::syminfo *out_tag = (atsc::syminfo *) output_items[1];
@@ -109,8 +94,6 @@ atsc_bit_timing_loop::work (int noutput_items,
 
 	float            interp_sample;
 	atsc::syminfo    tag;
-	// ammount requested in forecast
-	unsigned long input_size = noutput_items * d_rx_clock_to_symbol_freq + 1500 -1;
 
 	memset (&tag, 0, sizeof (tag));
 
@@ -119,7 +102,8 @@ atsc_bit_timing_loop::work (int noutput_items,
 
 	for (k = 0; k < noutput_items; k++)
 	{
-		if (d_si + (unsigned long)d_interp.ntaps() > input_size)
+		// Check if we will run out of samples
+		if (d_si + (unsigned long)d_interp.ntaps() > ninput_items[0])
 		{
     			fprintf (stderr, "atsc_bit_timing_loop: ran short on data...\n");
 			break;
@@ -128,10 +112,8 @@ atsc_bit_timing_loop::work (int noutput_items,
 		// FIXME Confirm that this is right.  I think it is.  It was (1-d_mu)
 		interp_sample = d_interp.interpolate ( &in[d_si], d_mu );
 
-		double filter_out = 0;
-
-		filter_out = d_loop.filter (d_timing_adjust);
-		d_mu = d_mu + ADJUSTMENT_GAIN * 5e3 * filter_out;
+		// Apply our timing adjustment slowly over several samples
+		d_mu += ADJUSTMENT_GAIN * 5e3 * d_loop.filter (d_timing_adjust);
 
 		double s = d_mu + d_w;
 		double float_incr = floor (s);
@@ -141,43 +123,40 @@ atsc_bit_timing_loop::work (int noutput_items,
 		assert (d_incr >= 1 && d_incr <= 3);
 		d_si += d_incr;
 
+		// Remember the sample at this count position
 		sample_mem[d_counter] = interp_sample;
 
 		// Is the sample positive or negative?
 		int bit = (interp_sample < 0 ? 0 : 1);
 
+		// Put the sign bit into our shift register
 		d_sr = ((bit & 1) << 3) | (d_sr >> 1);
-		int corr_out = (d_sr == 0x9);	// 1001
 
-		int weight = corr_out ? +2 : -1;
+		// When +,-,-,+ (0x9, 1001) samples show up we have likely found a segment 
+		// sync, it is more likely the segment sync will show up at about the same 
+		// spot every ATSC_DATA_SEGMENT_LENGTH samples so we add some weight 
+		// to this spot every pass to prevent random +,-,-,+ symboles from 
+		// confusing our synchronizer
+		d_integrator[d_counter] += ((d_sr == 0x9) ? +2 : -1);
+		if(d_integrator[d_counter] < SSI_MIN) d_integrator[d_counter] = SSI_MIN;
+		if(d_integrator[d_counter] > SSI_MAX) d_integrator[d_counter] = SSI_MAX;
 
-		int t = d_integrator[d_counter] + weight;
-		t = std::max (t, SSI_MIN);
-		t = std::min (t, SSI_MAX);
-		d_integrator[d_counter] = t;
-
-		int best_correlation_index = -1;
-
-		incr_symbol_index ();
+		d_symbol_index++;
+		if (d_symbol_index >= ATSC_DATA_SEGMENT_LENGTH)
+			d_symbol_index = 0;
 		if (incr_counter ())	// counter just wrapped...
 		{
-    			int best_correlation_value;
-
-			int best_value = d_integrator[0];
-			int best_index = 0;
+			int best_correlation_value = d_integrator[0];
+			int best_correlation_index = 0;
 
 			for(int i = 1; i < ATSC_DATA_SEGMENT_LENGTH; i++)
-    				if (d_integrator[i] > best_value)
+    				if (d_integrator[i] > best_correlation_value)
 				{
-					best_value = d_integrator[i];
-					best_index = i;
+					best_correlation_value = d_integrator[i];
+					best_correlation_index = i;
 				}
 
-			best_correlation_value = best_value;
-			best_correlation_index = best_index;
-
     			d_seg_locked = best_correlation_value >= MIN_SEG_LOCK_CORRELATION_VALUE;
-    			//std::cout << "best = " << best_correlation_value << " min is " << MIN_SEG_LOCK_CORRELATION_VALUE << std::endl;
 
 			// the coefficients are -1,-1,+1,+1
 			d_timing_adjust = sample_mem[best_correlation_index - 3] + 
@@ -200,7 +179,7 @@ atsc_bit_timing_loop::work (int noutput_items,
 		tag.symbol_num = d_symbol_index;
 		out_tag[k] = tag;
 	}
-
+	consume_each( d_si );
 	return k;
 }
 
