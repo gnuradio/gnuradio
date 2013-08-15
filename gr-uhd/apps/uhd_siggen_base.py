@@ -124,7 +124,10 @@ class top_block(gr.top_block, pubsub):
             antenna = self._u.get_antenna()
 
             desc_key_str = "Motherboard: %s [%s]\n" % (mboard_id, mboard_serial)
-            desc_key_str += "Daughterboard: %s [%s]\n" % (dboard_subdev_name, dboard_serial)
+            if "B200" in mboard_id or "B210" in mboard_id:
+                desc_key_str += "Daughterboard: %s\n" % dboard_subdev_name
+            else:
+                desc_key_str += "Daughterboard: %s [%s]\n" % (dboard_subdev_name, dboard_serial)
             desc_key_str += "Subdev: %s\n" % subdev
             desc_key_str += "Antenna: %s" % antenna
         except:
