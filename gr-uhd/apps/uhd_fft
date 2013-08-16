@@ -211,7 +211,10 @@ class app_top_block(stdgui2.std_top_block):
             subdev = self.u.get_subdev_spec()
             antenna = self.u.get_antenna()
 
-            usrp_config_val = "%s (%s), %s (%s, %s, %s)" % (mboard_id, mboard_serial, dboard_subdev_name, dboard_serial, subdev, antenna)
+            if "B200" in mboard_id or "B210" in mboard_id:
+                usrp_config_val = "%s (%s), %s (%s, %s)" % (mboard_id, mboard_serial, dboard_subdev_name, subdev, antenna)
+            else:
+                usrp_config_val = "%s (%s), %s (%s, %s, %s)" % (mboard_id, mboard_serial, dboard_subdev_name, dboard_serial, subdev, antenna)
         except:
             usrp_config_val = "Not implemented in this version."
 

@@ -40,10 +40,10 @@ class my_top_block(gr.top_block):
 
         if(options.rx_freq is not None):
             self.source = uhd_receiver(options.args,
-                                       options.bandwidth,
-                                       options.rx_freq, options.rx_gain,
+                                       options.bandwidth, options.rx_freq, 
+                                       options.lo_offset, options.rx_gain,
                                        options.spec, options.antenna,
-                                       options.verbose)
+                                       options.clock_source, options.verbose)
         elif(options.from_file is not None):
             self.source = blocks.file_source(gr.sizeof_gr_complex, options.from_file)
         else:

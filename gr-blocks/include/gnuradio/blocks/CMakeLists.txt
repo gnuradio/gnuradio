@@ -146,6 +146,7 @@ install(FILES
     int_to_float.h
     interleave.h
     interleaved_short_to_complex.h
+    interleaved_char_to_complex.h
     keep_m_in_n.h
     keep_one_in_n.h
     lfsr_32k_source_s.h
