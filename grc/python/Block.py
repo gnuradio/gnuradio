@@ -101,10 +101,21 @@ class Block(_Block, _GUIBlock):
             #restore integer contiguity after insertion
             #rectify the port names with the index
             self.back_ofthe_bus(ports);
+            n = 0
+            last_basename = ''
             for i, port in enumerate(ports):
                 port._key = str(i)
                 port._name = port._n['name']
-                if len(ports) > 1 and not port._type == 'bus': port._name += str(i)
+                # add an index to the basename
+                if port.get_nports() > 1 and not port._type == 'bus':
+                    # basename = name without digits
+                    basename = ''.join([c for c in port._name if not c.isdigit()])
+                    if basename == last_basename:
+                        n += 1
+                    else:
+                        last_basename = basename
+                        n = 0
+                    port._name += str(n)
 
         def insert_port(get_ports, get_port, key):
             prev_port = get_port(str(int(key)-1))
@@ -121,14 +132,27 @@ class Block(_Block, _GUIBlock):
             get_ports().remove(port)
             rectify(get_ports())
 
+        def get_master_ports(lst):
+            port_basenames = set()
+            master_ports = list()
+            for p in lst:
+                n = p._name
+                base_n = ''.join([c for c in n if not c.isdigit()])
+                if not base_n in port_basenames:
+                    master_ports.append(p)
+                    port_basenames.add(base_n)
+            return master_ports
+
         #adjust nports
         for get_ports, get_port in (
             (self.get_sources, self.get_source),
             (self.get_sinks, self.get_sink),
         ):
-            master_ports = filter(lambda p: p.get_nports(), get_ports())
+            master_ports = get_master_ports(get_ports())
             for i, master_port in enumerate(master_ports):
                 nports = master_port.get_nports()
+                if not nports:
+                    continue
                 index_first = get_ports().index(master_port)
                 try: index_last = get_ports().index(master_ports[i+1])
                 except IndexError: index_last = len(get_ports())
