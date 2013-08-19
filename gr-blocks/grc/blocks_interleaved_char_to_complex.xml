@@ -5,7 +5,7 @@
 ###################################################
  -->
 <block>
-	<name>IShort To Complex</name>
+	<name>IChar To Complex</name>
 	<key>blocks_interleaved_char_to_complex</key>
 	<import>from gnuradio import blocks</import>
 	<make>blocks.interleaved_char_to_complex($vector_input)</make>
@@ -27,7 +27,7 @@
     </param>
 	<sink>
 		<name>in</name>
-		<type>char</type>
+		<type>byte</type>
         <vlen>$vector_input.vlen</vlen>
 	</sink>
 	<source>
