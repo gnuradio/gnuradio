@@ -216,20 +216,6 @@ public:
 
 // ----------------------------------------------------------------
 
-GR_SWIG_BLOCK_MAGIC(atsc,field_sync_demux);
-
-atsc_field_sync_demux_sptr atsc_make_field_sync_demux();
-
-class atsc_field_sync_demux : public gr::block
-{
-  atsc_field_sync_demux();
-
-public:
-  void reset();
-};
-
-// ----------------------------------------------------------------
-
 GR_SWIG_BLOCK_MAGIC(atsc,equalizer);
 
 atsc_equalizer_sptr atsc_make_equalizer();
@@ -240,7 +226,6 @@ class atsc_equalizer : public gr::sync_block
 
 public:
   void reset();
-  std::vector<double> taps();
 };
 
 // ----------------------------------------------------------------

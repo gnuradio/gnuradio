@@ -26,7 +26,7 @@
 #include <gnuradio/atsc/api.h>
 #include <gnuradio/sync_block.h>
 #include <gnuradio/atsc/equalizer_impl.h>
-#include <vector>
+#include <gnuradio/atsc/consts.h>
 
 class atsc_equalizer;
 typedef boost::shared_ptr<atsc_equalizer> atsc_equalizer_sptr;
@@ -34,36 +34,47 @@ typedef boost::shared_ptr<atsc_equalizer> atsc_equalizer_sptr;
 atsc_equalizer_sptr ATSC_API atsc_make_equalizer();
 
 /*!
- * \brief ATSC equalizer (float,syminfo --> float,syminfo)
+ * \brief ATSC equalizer (atsc_soft_data_segment --> atsc_soft_data_segment)
  * \ingroup atsc
- *
- * first inputs are data samples, second inputs are tags.
- * first outputs are equalized data samples, second outputs are tags.
  */
-class ATSC_API atsc_equalizer : public gr::sync_block
+class ATSC_API atsc_equalizer : public gr::block
 {
-  friend ATSC_API atsc_equalizer_sptr atsc_make_equalizer();
-
-  atsc_equalizer();
-
+	friend ATSC_API atsc_equalizer_sptr atsc_make_equalizer();
+	
 public:
-  void forecast (int noutput_items, gr_vector_int &ninput_items_required);
+	atsc_equalizer();
+	~atsc_equalizer () { };
 
-  std::vector<double> taps() {
-    return d_equalizer->taps();
-  }
+	int general_work (int noutput_items,
+                          gr_vector_int &ninput_items,
+                          gr_vector_const_void_star &input_items,
+                          gr_vector_void_star &output_items);
 
-  int work (int noutput_items,
-	    gr_vector_const_void_star &input_items,
-	    gr_vector_void_star &output_items);
+	void reset();
 
-  void reset() { /* nop */ }
+private:
+	static const int NTAPS = 64;
+	static const int NPRETAPS = (int) (NTAPS * 0.8); // probably should be either .2 or .8
 
-  ~atsc_equalizer ();
+	// the length of the field sync pattern that we know unequivocally
+	static const int KNOWN_FIELD_SYNC_LENGTH = 4 + 511 + 3 * 63;
 
+	float training_sequence1[KNOWN_FIELD_SYNC_LENGTH];
+	float training_sequence2[KNOWN_FIELD_SYNC_LENGTH];
 
-protected:
-  atsci_equalizer	*d_equalizer;
+	void filterN (const float *input_samples, float *output_samples, int nsamples);
+	void adaptN (const float *input_samples, const float *training_pattern,
+	         float *output_samples, int nsamples);
+
+	float d_taps[NTAPS];
+
+	float data_mem[ATSC_DATA_SEGMENT_LENGTH + NTAPS]; // Buffer for previous data packet
+	float data_mem2[ATSC_DATA_SEGMENT_LENGTH];
+	unsigned short	d_flags;
+	short	d_segno;
+
+	int d_buff_not_filled;
+
 
 };
 

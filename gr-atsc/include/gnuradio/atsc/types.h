@@ -109,11 +109,10 @@ public:
    */
   static void sanity_check (const plinfo &in);
 
+  unsigned short	_flags;		// bitmask
+  short	_segno;		// segment number [-1,311] -1 is the field sync segment
 
 protected:
-  unsigned short	_flags;		// bitmask
-  unsigned short	_segno;		// segment number [0,311]
-
   // these three are mutually exclusive
   //     This is a regular data segment.
   static const int	fl_regular_seg		= 0x0001;

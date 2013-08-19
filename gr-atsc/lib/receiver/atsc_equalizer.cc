@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2006,2010 Free Software Foundation, Inc.
+ * Copyright 2006,2010,2013 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -29,77 +29,158 @@
 #include <gnuradio/io_signature.h>
 #include <gnuradio/atsc/consts.h>
 #include <gnuradio/atsc/syminfo_impl.h>
-
+#include <gnuradio/atsc/pnXXX_impl.h>
+#include <gnuradio/atsc/types.h>
 
 atsc_equalizer_sptr
 atsc_make_equalizer()
 {
-  return gnuradio::get_initial_sptr(new atsc_equalizer());
+	return gnuradio::get_initial_sptr(new atsc_equalizer());
 }
 
-// had atsc_equalizer(atsci_equalizer *equalizer)
+static float
+bin_map (int bit)
+{
+	return bit ? +5 : -5;
+}
+
+static void
+init_field_sync_common (float *p, int mask)
+{
+	int  i = 0;
+
+	p[i++] = bin_map (1);			// data segment sync pulse
+	p[i++] = bin_map (0);
+	p[i++] = bin_map (0);
+	p[i++] = bin_map (1);
+
+	for (int j = 0; j < 511; j++)		// PN511
+		p[i++] = bin_map (atsc_pn511[j]);
+
+	for (int j = 0; j < 63; j++)		// PN63
+		p[i++] = bin_map (atsc_pn63[j]);
+
+	for (int j = 0; j < 63; j++)		// PN63, toggled on field 2
+		p[i++] = bin_map (atsc_pn63[j] ^ mask);
+
+	for (int j = 0; j < 63; j++)		// PN63
+		p[i++] = bin_map (atsc_pn63[j]);
+}
+
 atsc_equalizer::atsc_equalizer()
-  : gr::sync_block("atsc_equalizer",
-		  gr::io_signature::make(2, 2, sizeof(float)),
-		  gr::io_signature::make(2, 2, sizeof(float)))
+	: gr::block("atsc_equalizer",
+		gr::io_signature::make(1, 1, sizeof(atsc_soft_data_segment)),
+		gr::io_signature::make(1, 1, sizeof(atsc_soft_data_segment)))
 {
-  d_equalizer = create_atsci_equalizer_lms();
+	init_field_sync_common(training_sequence1, 0);
+	init_field_sync_common(training_sequence2, 1);
+	reset();
 }
 
-atsc_equalizer::~atsc_equalizer ()
+void
+atsc_equalizer::reset ()
 {
-  // Anything that isn't automatically cleaned up...
+	for (int i = 0; i < NTAPS; i++)
+	{
+		d_taps[i] = 0.0;
+	}
+	d_buff_not_filled = true;
+}
 
-  delete d_equalizer;
+void
+atsc_equalizer::filterN (const float *input_samples,
+			     float *output_samples,
+			     int nsamples)
+{
+	for (int j = 0; j < nsamples; j++)
+	{
+		output_samples[j] = 0;
+		for( int i = 0; i < NTAPS; i++ )
+			output_samples[j] += d_taps[i] * input_samples[j + i];
+	}
 }
 
 
 void
-atsc_equalizer::forecast (int noutput_items, gr_vector_int &ninput_items_required)
+atsc_equalizer::adaptN (const float *input_samples,
+			    const float *training_pattern,
+			    float *output_samples,
+			    int    nsamples)
 {
+	static const double BETA = 0.00005;	// FIXME figure out what this ought to be
+	                                        // FIXME add gear-shifting
 
-  int ntaps = d_equalizer->ntaps ();
+	for( int j = 0; j < nsamples; j++ )
+	{
+		output_samples[j] = 0;
+		for( int i = 0; i < NTAPS; i++ )
+			output_samples[j] += d_taps[i] * input_samples[j + i];
 
-  unsigned ninputs = ninput_items_required.size();
-  for (unsigned i = 0; i < ninputs; i++)
-    ninput_items_required[i] = fixed_rate_noutput_to_ninput (noutput_items + ntaps);
+		double e = output_samples[j] - training_pattern[j];
 
-
+		// update taps...
+		for( int i = 0; i < NTAPS; i++ )
+			d_taps[i] -= BETA * e * (double)(input_samples[j + i]);
+	}
 }
 
-
-
 int
-atsc_equalizer::work (int noutput_items,
-		       gr_vector_const_void_star &input_items,
-		       gr_vector_void_star &output_items)
+atsc_equalizer::general_work (int noutput_items,
+                                 gr_vector_int &ninput_items,
+                                 gr_vector_const_void_star &input_items,
+                                 gr_vector_void_star &output_items)
 {
-  const float *in = (const float *) input_items[0];
-  const atsc::syminfo *in_tags = (const atsc::syminfo *) input_items[1];
-  float *out = (float *) output_items[0];
-  atsc::syminfo *out_tags = (atsc::syminfo *) output_items[1];
+	const atsc_soft_data_segment *in = (const atsc_soft_data_segment *) input_items[0];
+  	atsc_soft_data_segment *out = (atsc_soft_data_segment *) output_items[0];
 
-  assert(sizeof(float) == sizeof(atsc::syminfo));
+	int output_produced = 0;
+	int i = 0;
 
-  int ntaps = d_equalizer->ntaps ();
-  int npretaps = d_equalizer->npretaps ();
+	if( d_buff_not_filled )
+	{
+		for( int j = 0; j < ATSC_DATA_SEGMENT_LENGTH; j++ )
+			data_mem[NPRETAPS + j] = in[i].data[j];
+		d_flags = in[i].pli._flags;
+		d_segno = in[i].pli._segno;
+		d_buff_not_filled = false;
+		i++;
+	}
 
-  assert (ntaps >= 1);
-  assert (npretaps >= 0 && npretaps < ntaps);
+	for (; i < noutput_items; i++)
+	{
+		for( int j = 0; j < NTAPS - NPRETAPS; j++ )
+			data_mem[ATSC_DATA_SEGMENT_LENGTH + NPRETAPS + j] = in[i].data[j];
+		if( d_segno == -1 )
+		{
+			if( d_flags & 0x0010 )
+			{
+				adaptN( data_mem, training_sequence2, data_mem2, KNOWN_FIELD_SYNC_LENGTH );
+				//filterN( &data_mem[KNOWN_FIELD_SYNC_LENGTH], data_mem2, ATSC_DATA_SEGMENT_LENGTH - KNOWN_FIELD_SYNC_LENGTH  );
+			}
+			else if( !(d_flags & 0x0010) )
+			{
+				adaptN( data_mem, training_sequence1, data_mem2, KNOWN_FIELD_SYNC_LENGTH );
+				//filterN( &data_mem[KNOWN_FIELD_SYNC_LENGTH], data_mem2, ATSC_DATA_SEGMENT_LENGTH - KNOWN_FIELD_SYNC_LENGTH  );
+			}
+		}
+		else
+		{
+			filterN( data_mem, data_mem2, ATSC_DATA_SEGMENT_LENGTH );
+			for( int j = 0; j < ATSC_DATA_SEGMENT_LENGTH; j++ )
+				out[output_produced].data[j] = data_mem2[j];
+			out[output_produced].pli._flags = d_flags;
+			out[output_produced].pli._segno = d_segno;
+			output_produced++;
+		}
+		for( int j = 0; j < NPRETAPS; j++ )
+			data_mem[j] = data_mem[ATSC_DATA_SEGMENT_LENGTH + j];
 
-  int offset = ntaps - npretaps - 1;
-  assert (offset >= 0 && offset < ntaps);
+		for( int j = 0; j < ATSC_DATA_SEGMENT_LENGTH; j++ )
+			data_mem[NPRETAPS + j] = in[i].data[j];
+		d_flags = in[i].pli._flags;
+		d_segno = in[i].pli._segno;
+	}
 
-
-  // peform the actual equalization
-
-  d_equalizer->filter (in, in_tags + offset,
-                       out, noutput_items);
-
-  // write the output tags
-
-  for (int i = 0; i < noutput_items; i++)
-    out_tags[i] = in_tags[i + offset];
-
-  return noutput_items;
+	consume_each( noutput_items );
+	return output_produced;
 }

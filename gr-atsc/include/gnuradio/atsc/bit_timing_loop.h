@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2006 Free Software Foundation, Inc.
+ * Copyright 2006,2013 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -30,6 +30,7 @@
 #include <gnuradio/filter/single_pole_iir.h>
 #include <gnuradio/atsc/consts.h>
 #include <gnuradio/atsc/syminfo_impl.h>
+#include <gnuradio/atsc/types.h>
 
 class atsc_bit_timing_loop;
 typedef boost::shared_ptr<atsc_bit_timing_loop> atsc_bit_timing_loop_sptr;
@@ -90,6 +91,10 @@ protected:
 	int                     d_sr;	// 4 bit shift register
 
 	signed char             d_integrator[ATSC_DATA_SEGMENT_LENGTH];
+
+	float			data_mem[ATSC_DATA_SEGMENT_LENGTH];
+
+	int			output_produced;
 
 	bool incr_counter ()
 	{

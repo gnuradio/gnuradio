@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2006,2010 Free Software Foundation, Inc.
+ * Copyright 2006,2010,2013 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -25,51 +25,103 @@
 #endif
 
 #include <gnuradio/atsc/fs_checker.h>
-#include <gnuradio/atsc/create_atsci_fs_checker.h>
-#include <gnuradio/atsc/fs_checker_impl.h>
 #include <gnuradio/io_signature.h>
 #include <gnuradio/atsc/consts.h>
 #include <gnuradio/atsc/syminfo_impl.h>
+#include <gnuradio/atsc/pnXXX_impl.h>
+#include <iostream>
+#include <cstring>
 
+using std::cerr;
+using std::endl;
+
+static const int PN511_ERROR_LIMIT = 20;	// max number of bits wrong
+static const int PN63_ERROR_LIMIT = 5;
 
 atsc_fs_checker_sptr
 atsc_make_fs_checker()
 {
-  return gnuradio::get_initial_sptr(new atsc_fs_checker());
+	return gnuradio::get_initial_sptr(new atsc_fs_checker());
 }
 
 atsc_fs_checker::atsc_fs_checker()
-  : gr::sync_block("atsc_fs_checker",
-		  gr::io_signature::make(2, 2, sizeof(float)),
-		  gr::io_signature::make(2, 2, sizeof(float)))
+	: gr::block("atsc_fs_checker",
+		gr::io_signature::make(1, 1, sizeof(atsc_soft_data_segment)),
+		gr::io_signature::make(1, 1, sizeof(atsc_soft_data_segment)))
 {
-  d_fsc = create_atsci_fs_checker();
+	reset ();
 }
 
-
-atsc_fs_checker::~atsc_fs_checker ()
+void
+atsc_fs_checker::reset()
 {
-  // Anything that isn't automatically cleaned up...
-
-  delete d_fsc;
+	d_index = 0;
+	memset (d_sample_sr, 0, sizeof (d_sample_sr));
+	memset (d_tag_sr, 0, sizeof (d_tag_sr));
+	memset (d_bit_sr, 0, sizeof (d_bit_sr));
+	d_field_num = 0;
+	d_segment_num = 0;
 }
-
 
 int
-atsc_fs_checker::work (int noutput_items,
-		       gr_vector_const_void_star &input_items,
-		       gr_vector_void_star &output_items)
+atsc_fs_checker::general_work (int noutput_items,
+                                 gr_vector_int &ninput_items,
+                                 gr_vector_const_void_star &input_items,
+                                 gr_vector_void_star &output_items)
 {
-  const float *in = (const float *) input_items[0];
-  const atsc::syminfo *tag_in = (const atsc::syminfo *) input_items[1];
-  float *out = (float *) output_items[0];
-  atsc::syminfo *tag_out = (atsc::syminfo *) output_items[1];
+	const atsc_soft_data_segment *in = (const atsc_soft_data_segment *) input_items[0];
+	atsc_soft_data_segment *out = (atsc_soft_data_segment *) output_items[0];
 
-  assert(sizeof(float) == sizeof(atsc::syminfo));
+	int output_produced = 0;
 
+	for (int i = 0; i < noutput_items; i++)
+	{
+		// check for a hit on the PN 511 pattern
+		int errors = 0;
 
-  for (int i = 0; i < noutput_items; i++)
-    d_fsc->filter (in[i], tag_in[i], &out[i], &tag_out[i]);
+		for (int j = 0; j < LENGTH_511 && errors < PN511_ERROR_LIMIT; j++)
+			errors += (in[i].data[j + OFFSET_511] >= 0) ^ atsc_pn511[j];
 
-  return noutput_items;
+		//std::cout << errors << std::endl;
+
+		if (errors < PN511_ERROR_LIMIT) // 511 pattern is good.
+		{                               // determine if this is field 1 or field 2
+			errors = 0;
+			for (int j = 0; j < LENGTH_2ND_63; j++)
+				errors += (in[i].data[j + OFFSET_2ND_63] >= 0) ^ atsc_pn63[j];
+
+			// we should have either field 1 (== PN63) or field 2 (== ~PN63)
+			if (errors <= PN63_ERROR_LIMIT)
+			{
+				//std::cout << "Found FIELD_SYNC_1" << std::endl;
+				d_field_num = 1; // We are in field number 1 now
+				d_segment_num = -1; // This is the first segment
+			}
+			else if (errors >= (LENGTH_2ND_63 - PN63_ERROR_LIMIT))
+			{
+				//std::cout << "Found FIELD_SYNC_2" << std::endl;
+				d_field_num = 2; // We are in field number 2 now
+				d_segment_num = -1; // This is the first segment
+			}
+			else
+			{
+				// should be extremely rare.
+				cerr << "!!! atsc_fs_checker: PN63 error count = " << errors << endl;
+			}
+		}
+
+		if( d_field_num == 1 || d_field_num == 2 ) // If we have sync
+		{
+			// So we copy out current packet data to an output packet and fill its plinfo
+			for( int j = 0; j < ATSC_DATA_SEGMENT_LENGTH; j++ )
+				out[output_produced].data[j] = in[i].data[j];
+			out[output_produced].pli.set_regular_seg((d_field_num == 2), d_segment_num);
+			d_segment_num++;
+			output_produced++;
+		}
+	}
+
+	consume_each( noutput_items );
+	return output_produced;
 }
+

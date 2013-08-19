@@ -62,26 +62,14 @@ list(APPEND gr_atsc_sources
     receiver/atsc_rs_decoder.cc
     receiver/atsc_deinterleaver.cc
     receiver/atsc_viterbi_decoder.cc
-    receiver/atsc_field_sync_demux.cc
     receiver/atsc_equalizer.cc
     receiver/atsc_fs_checker.cc
     receiver/atsc_bit_timing_loop.cc
     receiver/atsc_fpll.cc
     receiver/atsc_depad.cc
-    receiver/atsci_equalizer.cc
-    receiver/atsci_equalizer_lms.cc
-    receiver/atsci_equalizer_lms2.cc
-    receiver/atsci_equalizer_nop.cc
     receiver/atsci_fake_single_viterbi.cc
-    receiver/atsci_fs_checker.cc
-    receiver/atsci_fs_checker_naive.cc
-    receiver/atsci_fs_correlator.cc
-    receiver/atsci_fs_correlator_naive.cc
     receiver/atsci_single_viterbi.cc
     receiver/atsci_viterbi_decoder.cc
-    receiver/create_atsci_equalizer.cc
-    receiver/create_atsci_fs_checker.cc
-    receiver/create_atsci_fs_correlator.cc
     transmitter/atsc_randomizer.cc
     transmitter/atsc_rs_encoder.cc
     transmitter/atsc_interleaver.cc
@@ -93,7 +81,6 @@ list(APPEND gr_atsc_sources
     transmitter/atsc_pilot.cc
     transmitter/atsc_ds_to_softds.cc
     transmitter/atsci_randomizer.cc
-    transmitter/atsci_sliding_correlator.cc
     transmitter/atsci_trellis_encoder.cc  
     atsci_pnXXX.cc
     atsci_reed_solomon.cc
@@ -138,13 +125,10 @@ link_directories(${CPPUNIT_LIBRARY_DIRS})
 list(APPEND test_atsci_sources
     qa/qa_atsci_basic_trellis_encoder.cc
     qa/qa_atsci_data_interleaver.cc
-    qa/qa_atsci_equalizer_nop.cc
     qa/qa_atsci_fake_single_viterbi.cc
-    qa/qa_atsci_fs_correlator.cc
     qa/qa_atsci_single_viterbi.cc
     qa/qa_atsci_randomizer.cc
     qa/qa_atsci_reed_solomon.cc
-    qa/qa_atsci_sliding_correlator.cc
     qa/qa_atsci_trellis_encoder.cc
     qa/qa_atsci_viterbi_decoder.cc
     qa/qa_convolutional_interleaver.cc

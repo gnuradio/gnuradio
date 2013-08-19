@@ -32,13 +32,10 @@
 #include "qa_convolutional_interleaver.h"
 #include "qa_atsci_data_interleaver.h"
 #include "qa_atsci_basic_trellis_encoder.h"
-#include "qa_atsci_sliding_correlator.h"
 #include "qa_atsci_fake_single_viterbi.h"
 #include "qa_atsci_single_viterbi.h"
 #include "qa_atsci_trellis_encoder.h"
 #include "qa_atsci_viterbi_decoder.h"
-#include "qa_atsci_fs_correlator.h"
-#include "qa_atsci_equalizer_nop.h"
 
 CppUnit::TestSuite *
 qa_atsc::suite ()
@@ -51,13 +48,10 @@ qa_atsc::suite ()
   s->addTest (qa_convolutional_interleaver::suite ());
   s->addTest (qa_atsci_data_interleaver::suite ());
   s->addTest (qa_atsci_basic_trellis_encoder::suite ());
-  s->addTest (qa_atsci_sliding_correlator::suite ());
   s->addTest (qa_atsci_fake_single_viterbi::suite ());
   s->addTest (qa_atsci_single_viterbi::suite ());
   s->addTest (qa_atsci_trellis_encoder::suite ());
   s->addTest (qa_atsci_viterbi_decoder::suite ());
-  s->addTest (qa_atsci_fs_correlator::suite ());
-  s->addTest (qa_atsci_equalizer_nop::suite ());
 
   return s;
 }

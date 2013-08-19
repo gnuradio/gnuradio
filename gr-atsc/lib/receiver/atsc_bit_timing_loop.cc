@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2006,2010 Free Software Foundation, Inc.
+ * Copyright 2006,2010,2013 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -40,7 +40,7 @@ atsc_make_bit_timing_loop( float input_rate )
 atsc_bit_timing_loop::atsc_bit_timing_loop( float input_rate )
 	: gr::block("atsc_bit_timing_loop",
 		gr::io_signature::make(1, 1, sizeof(float)),
-		gr::io_signature::make3(2, 3, sizeof(float), sizeof(float), sizeof(float))),
+		gr::io_signature::make(1, 1, sizeof(atsc_soft_data_segment))),
 	d_next_input(0), d_rx_clock_to_symbol_freq (input_rate / ATSC_SYMBOL_RATE),
 	d_si(0)
 {
@@ -83,22 +83,16 @@ atsc_bit_timing_loop::general_work (int noutput_items,
                                  gr_vector_void_star &output_items)
 {
 	const float *in = (const float *) input_items[0];
-	float *out_sample = (float *) output_items[0];
-	atsc::syminfo *out_tag = (atsc::syminfo *) output_items[1];
-	float *out_timing_error = (float *) output_items[2];
+	atsc_soft_data_segment *soft_data_segment_out = (atsc_soft_data_segment *) output_items[0];
 
-	// We are tasked with producing output.size output samples.
-	// We will consume approximately 2 * output.size input samples.
+	int k; // output index
 
-	int  k; // output index
-
-	float            interp_sample;
-	atsc::syminfo    tag;
-
-	memset (&tag, 0, sizeof (tag));
+	float interp_sample;
 
 	// ammount actually consumed
 	d_si = 0;
+	
+	output_produced = 0;
 
 	for (k = 0; k < noutput_items; k++)
 	{
@@ -170,16 +164,24 @@ atsc_bit_timing_loop::general_work (int noutput_items,
       				d_symbol_index += ATSC_DATA_SEGMENT_LENGTH;
   		}
 
-		if (output_items.size() == 3)
+		// If we are locked we can start filling and producing data packets
+		// Due to the way we lock the first data packet will almost always be
+		// half full, this is OK becouse the fs_checker will not let packets though
+		// untill a non-corrupted field packet is found
+		if( d_seg_locked )
 		{
-			out_timing_error[k] = d_timing_adjust;
+			data_mem[d_symbol_index] = interp_sample;
+			
+			if( d_symbol_index >= (ATSC_DATA_SEGMENT_LENGTH - 1) )
+			{
+				for( int i = 0; i < ATSC_DATA_SEGMENT_LENGTH; i++ )
+					soft_data_segment_out[output_produced].data[i] = data_mem[i];
+				output_produced++;
+			}
 		}
-		out_sample[k] = interp_sample;
-		tag.valid = d_seg_locked;
-		tag.symbol_num = d_symbol_index;
-		out_tag[k] = tag;
 	}
+	
 	consume_each( d_si );
-	return k;
+	return output_produced;
 }
 
