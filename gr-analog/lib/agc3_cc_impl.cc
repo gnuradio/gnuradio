@@ -103,7 +103,7 @@ namespace gr {
         for(int i=0; i<noutput_items; i++) {
           float newlevel = mags[i]; // abs(in[i]);
           float rate = (newlevel > d_reference/d_gain)?d_attack:d_decay;
-          d_gain = (d_gain*(1-rate)) + (d_reference/newlevel)*rate;
+          d_gain = newlevel==0?(d_gain*(1-rate)):(d_gain*(1-rate)) + (d_reference/newlevel)*rate;
           out[i] = in[i] * d_gain;
         }
       } 

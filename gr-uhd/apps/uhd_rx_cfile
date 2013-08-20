@@ -110,7 +110,10 @@ class rx_cfile_block(gr.top_block):
                 rx_subdev_spec = info.get("rx_subdev_spec")
 
                 print "Motherboard: %s (%s)" % (mboard_id, mboard_serial)
-                print "Daughterboard: %s (%s, %s, %s)" % (rx_id, rx_serial, rx_antenna, rx_subdev_spec)
+                if "B200" in mboard_id or "B210" in mboard_id:
+                    print "Daughterboard: %s (%s, %s)" % (mboard_id, rx_antenna, rx_subdev_spec)
+                else:
+                    print "Daughterboard: %s (%s, %s, %s)" % (rx_id, rx_serial, rx_antenna, rx_subdev_spec)
             except:
                 print "Args: ", options.args
             print "Rx gain:", options.gain

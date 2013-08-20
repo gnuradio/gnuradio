@@ -22,6 +22,7 @@
 
 import math
 from numpy import fft
+from gnuradio import fft as gr_fft
 from gnuradio import gr
 from gnuradio import analog
 from gnuradio import blocks
@@ -125,7 +126,7 @@ class ofdm_receiver(gr.hier_block2):
         self.nco = analog.frequency_modulator_fc(nco_sensitivity)         # generate a signal proportional to frequency error of sync block
         self.sigmix = blocks.multiply_cc()
         self.sampler = digital.ofdm_sampler(fft_length, fft_length+cp_length)
-        self.fft_demod = fft.fft_vcc(fft_length, True, win, True)
+        self.fft_demod = gr_fft.fft_vcc(fft_length, True, win, True)
         self.ofdm_frame_acq = digital.ofdm_frame_acquisition(occupied_tones,
                                                                   fft_length,
                                                                   cp_length, ks[0])

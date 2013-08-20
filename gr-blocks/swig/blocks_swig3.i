@@ -40,6 +40,7 @@
 #include "gnuradio/blocks/integrate_cc.h"
 #include "gnuradio/blocks/interleave.h"
 #include "gnuradio/blocks/interleaved_short_to_complex.h"
+#include "gnuradio/blocks/interleaved_char_to_complex.h"
 #include "gnuradio/blocks/keep_m_in_n.h"
 #include "gnuradio/blocks/keep_one_in_n.h"
 #include "gnuradio/blocks/lfsr_32k_source_s.h"
@@ -81,6 +82,7 @@
 %include "gnuradio/blocks/integrate_cc.h"
 %include "gnuradio/blocks/interleave.h"
 %include "gnuradio/blocks/interleaved_short_to_complex.h"
+%include "gnuradio/blocks/interleaved_char_to_complex.h"
 %include "gnuradio/blocks/keep_m_in_n.h"
 %include "gnuradio/blocks/keep_one_in_n.h"
 %include "gnuradio/blocks/lfsr_32k_source_s.h"
@@ -121,6 +123,7 @@ GR_SWIG_BLOCK_MAGIC2(blocks, integrate_ff);
 GR_SWIG_BLOCK_MAGIC2(blocks, integrate_cc);
 GR_SWIG_BLOCK_MAGIC2(blocks, interleave);
 GR_SWIG_BLOCK_MAGIC2(blocks, interleaved_short_to_complex);
+GR_SWIG_BLOCK_MAGIC2(blocks, interleaved_char_to_complex);
 GR_SWIG_BLOCK_MAGIC2(blocks, keep_m_in_n);
 GR_SWIG_BLOCK_MAGIC2(blocks, keep_one_in_n);
 GR_SWIG_BLOCK_MAGIC2(blocks, lfsr_32k_source_s);
