@@ -50,10 +50,10 @@ class my_top_block(gr.top_block):
             symbol_rate = options.bitrate / demodulator(**args).bits_per_symbol()
 
             self.source = uhd_receiver(options.args, symbol_rate,
-                                       options.samples_per_symbol,
-                                       options.rx_freq, options.rx_gain,
+                                       options.samples_per_symbol, options.rx_freq, 
+                                       options.lo_offset, options.rx_gain,
                                        options.spec, options.antenna,
-                                       options.verbose)
+                                       options.clock_source, options.verbose)
             options.samples_per_symbol = self.source._sps
 
         elif(options.from_file is not None):
