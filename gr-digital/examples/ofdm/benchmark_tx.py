@@ -114,7 +114,8 @@ def main():
         pktno += 1
         
     send_pkt(eof=True)
-    tb.wait()                       # wait for it to finish
+    time.sleep(2)               # allow time for queued packets to be sent
+    tb.wait()                   # wait for it to finish
 
 if __name__ == '__main__':
     try:
