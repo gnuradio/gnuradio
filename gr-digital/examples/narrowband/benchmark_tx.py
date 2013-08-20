@@ -49,10 +49,10 @@ class my_top_block(gr.top_block):
             symbol_rate = options.bitrate / modulator(**args).bits_per_symbol()
 
             self.sink = uhd_transmitter(options.args, symbol_rate,
-                                        options.samples_per_symbol,
-                                        options.tx_freq, options.tx_gain,
+                                        options.samples_per_symbol, options.tx_freq,
+                                        options.lo_offset, options.tx_gain,
                                         options.spec, options.antenna,
-                                        options.verbose)
+                                        options.clock_source, options.verbose)
             options.samples_per_symbol = self.sink._sps
             
         elif(options.to_file is not None):
