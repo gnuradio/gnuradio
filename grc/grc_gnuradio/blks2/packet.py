@@ -237,11 +237,11 @@ class packet_demod_base(gr.hier_block2):
         self.connect(msg_source, self)
         if packet_sink._hb.output_signature().sizeof_stream_item(0):
             self.connect(packet_sink,
-                                     blocks.null_sink(packet_sink._hb.output_signature().sizeof_stream_item(0)))
+                         blocks.null_sink(packet_sink._hb.output_signature().sizeof_stream_item(0)))
 
     def recv_pkt(self, ok, payload):
-        msg = blocks.message_from_string(payload, 0, self._item_size_out,
-                                                 len(payload)/self._item_size_out)
+        msg = gr.message_from_string(payload, 0, self._item_size_out,
+                                     len(payload)/self._item_size_out)
         if ok: self._msgq_out.insert_tail(msg)
 
 class packet_demod_b(packet_demod_base): _item_size_out = gr.sizeof_char
