@@ -310,7 +310,7 @@ class MAINWindow(QtGui.QMainWindow):
 
                 # If it's a byte stream, Python thinks it's a string.
                 # Unpack and convert to floats for plotting.
-                if(type(d) == str):
+                if(type(d) == str and n.find('probe2_b') == 0):
                     d = struct.unpack(len(d)*'b', d)
                     d = [float(di) for di in d]
 
