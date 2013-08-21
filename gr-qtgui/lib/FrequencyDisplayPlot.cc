@@ -186,8 +186,6 @@ FrequencyDisplayPlot::FrequencyDisplayPlot(int nplots, QWidget* parent)
 
   _noiseFloorAmplitude = -HUGE_VAL;
 
-  replot();
-
   _zoomer = new FreqDisplayZoomer(canvas(), 0);
 
 #if QWT_VERSION < 0x060000
@@ -213,6 +211,8 @@ FrequencyDisplayPlot::FrequencyDisplayPlot(int nplots, QWidget* parent)
   ((QwtLegendItem*)w)->setChecked(true);
   w = legendDisplay->find(_max_fft_plot_curve);
   ((QwtLegendItem*)w)->setChecked(true);
+
+  replot();
 }
 
 FrequencyDisplayPlot::~FrequencyDisplayPlot()
@@ -263,8 +263,11 @@ FrequencyDisplayPlot::setFrequencyRange(const double centerfreq,
       setAxisScaleDraw(QwtPlot::xBottom, new FreqDisplayScaleDraw(display_units));
       setAxisTitle(QwtPlot::xBottom, QString("Frequency (%1)").arg(strunits.c_str()));
 
-      if(reset)
-	_resetXAxisPoints();
+      if(reset) {
+        _resetXAxisPoints();
+        clearMaxData();
+        clearMinData();
+      }
 
       ((FreqDisplayZoomer*)_zoomer)->setFrequencyPrecision(display_units);
       ((FreqDisplayZoomer*)_zoomer)->setUnitType(strunits);
@@ -343,12 +346,11 @@ FrequencyDisplayPlot::plotNewData(const std::vector<double*> dataPoints,
         clearMinData();
       }
       
-      for(int i = 0; i < _nplots; i++) {
-        memcpy(_dataPoints[i], dataPoints[i], numDataPoints*sizeof(double));
-      }
-      
       double bottom=1e20, top=-1e20;
       for(int n = 0; n < _nplots; n++) {
+
+        memcpy(_dataPoints[n], dataPoints[n], numDataPoints*sizeof(double));
+
 	for(int64_t point = 0; point < numDataPoints; point++) {
 	  if(dataPoints[n][point] < _minFFTPoints[point]) {
 	    _minFFTPoints[point] = dataPoints[n][point];
@@ -449,7 +451,7 @@ void
 FrequencyDisplayPlot::_resetXAxisPoints()
 {
   double fft_bin_size = (_stopFrequency-_startFrequency)
-    / static_cast<double>(_numPoints);
+    / static_cast<double>(_numPoints-1);
   double freqValue = _startFrequency;
   for(int64_t loc = 0; loc < _numPoints; loc++) {
     _xAxisPoints[loc] = freqValue;
@@ -461,8 +463,6 @@ FrequencyDisplayPlot::_resetXAxisPoints()
   // Set up zoomer base for maximum unzoom x-axis
   // and reset to maximum unzoom level
   QwtDoubleRect zbase = _zoomer->zoomBase();
-  zbase.setLeft(_startFrequency);
-  zbase.setRight(_stopFrequency);
   _zoomer->zoom(zbase);
   _zoomer->setZoomBase(zbase);
   _zoomer->setZoomBase(true);

@@ -115,8 +115,6 @@ private:
   std::vector<QwtPlotSpectrogram*> d_spectrogram;
 #endif
 
-  gr::high_res_timer_type _lastReplot;
-
   std::vector<int> _intensityColorMapType;
   QColor _userDefinedLowIntensityColor;
   QColor _userDefinedHighIntensityColor;

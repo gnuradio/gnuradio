@@ -136,8 +136,6 @@ WaterfallDisplayPlot::WaterfallDisplayPlot(int nplots, QWidget* parent)
   setAxisTitle(QwtPlot::yLeft, "Time (s)");
   setAxisScaleDraw(QwtPlot::yLeft, new QwtTimeScaleDraw());
 
-  _lastReplot = 0;
-
   for(int i = 0; i < _nplots; i++) {
     d_data.push_back(new WaterfallData(_startFrequency, _stopFrequency,
 				       _numPoints, 200));
@@ -206,8 +204,6 @@ WaterfallDisplayPlot::resetAxis()
 
   // Load up the new base zoom settings
   QwtDoubleRect zbase = _zoomer->zoomBase();
-  zbase.setLeft(_startFrequency);
-  zbase.setRight(_stopFrequency);
   _zoomer->zoom(zbase);
   _zoomer->setZoomBase(zbase);
   _zoomer->setZoomBase(true);
@@ -282,13 +278,6 @@ WaterfallDisplayPlot::plotNewData(const std::vector<double*> dataPoints,
 	if(isVisible()) {
 	  replot();
 	}
-
-	_lastReplot = gr::high_res_timer_now();
-      }
-
-      for(int i = 0; i < _nplots; i++) {
-	d_data[i]->addFFTData(dataPoints[i], numDataPoints, droppedFrames);
-	d_data[i]->incrementNumLinesToUpdate();
       }
 
       QwtTimeScaleDraw* timeScale = (QwtTimeScaleDraw*)axisScaleDraw(QwtPlot::yLeft);
@@ -299,6 +288,8 @@ WaterfallDisplayPlot::plotNewData(const std::vector<double*> dataPoints,
       ((WaterfallZoomer*)_zoomer)->setZeroTime(timestamp);
 
       for(int i = 0; i < _nplots; i++) {
+	d_data[i]->addFFTData(dataPoints[i], numDataPoints, droppedFrames);
+	d_data[i]->incrementNumLinesToUpdate();
 	d_spectrogram[i]->invalidateCache();
 	d_spectrogram[i]->itemChanged();
       }
@@ -567,9 +558,6 @@ WaterfallDisplayPlot::_updateIntensityRangeDisplay()
 
   // Draw again
   replot();
-
-  // Update the last replot timer
-  _lastReplot = gr::high_res_timer_now();
 }
 
 #endif /* WATERFALL_DISPLAY_PLOT_C */
