@@ -447,7 +447,7 @@ class GrDataPlotterValueTable:
                 # If it's a byte stream, Python thinks it's a string.
                 # Unpack and convert to floats for plotting.
                 # Ignore the edge list knob if it's being exported
-                elif(type(v) == str and itemKey.find('edge list') == -1):
+                elif(type(v) == str and itemKey.find('probe2_b') == 0):
                     v = struct.unpack(len(v)*'b', v)
 
                 # Convert the final value to a string for displaying
@@ -473,7 +473,7 @@ class GrDataPlotterValueTable:
                 # If it's a byte stream, Python thinks it's a string.
                 # Unpack and convert to floats for plotting.
                 # Ignore the edge list knob if it's being exported
-                elif(type(v) == str and k.find('edge list') == -1):
+                elif(type(v) == str and k.find('probe2_b') == 0):
                     v = struct.unpack(len(v)*'b', v)
 
                 item = QtGui.QTreeWidgetItem([k, str(v),
