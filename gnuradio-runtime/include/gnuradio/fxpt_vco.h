@@ -61,6 +61,17 @@ namespace gr {
       *cosx = fxpt::cos(d_phase);
     }
 
+    // compute complex sine a block at a time
+    void sincos(gr_complex *output, const float *input, int noutput_items,
+                float k, float ampl = 1.0)
+    {
+      for(int i = 0; i < noutput_items; i++) {
+        output[i] = gr_complex((float)(fxpt::cos(d_phase) * ampl),
+                               (float)(fxpt::sin(d_phase) * ampl));
+        adjust_phase(input[i] * k);
+      }
+    }
+
     // compute a block at a time
     void cos(float *output, const float *input, int noutput_items, float k, float ampl = 1.0)
     {
