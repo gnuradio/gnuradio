@@ -43,6 +43,7 @@ endif(ENABLE_GR_CTRLPORT)
 ########################################################################
 list(APPEND channels_sources
   channel_model_impl.cc
+  channel_model2_impl.cc
   fading_model_impl.cc
   selective_fading_model_impl.cc
   flat_fader_impl.cc
