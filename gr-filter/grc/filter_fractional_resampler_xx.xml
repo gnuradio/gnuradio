@@ -39,6 +39,11 @@
 		<name>in</name>
 		<type>$type</type>
 	</sink>
+	<sink>
+		<name>rate</name>
+		<type>float</type>
+                <optional>1</optional>
+	</sink>
 	<source>
 		<name>out</name>
 		<type>$type</type>
