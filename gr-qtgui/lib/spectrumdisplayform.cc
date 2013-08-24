@@ -403,14 +403,15 @@ SpectrumDisplayForm::setFrequencyRange(const double newCenterFrequency,
 				       const double newStartFrequency,
 				       const double newStopFrequency)
 {
-  double fdiff;
+  double fcenter;
   if(UseRFFrequenciesCheckBox->isChecked()) {
-    fdiff = newCenterFrequency;
+    fcenter = newCenterFrequency;
   }
   else {
-    fdiff = std::max(fabs(newStartFrequency), fabs(newStopFrequency));
+    fcenter = 0;
   }
 
+  double fdiff = std::max(fabs(newStartFrequency), fabs(newStopFrequency));
   if(fdiff > 0) {
     std::string strunits[4] = {"Hz", "kHz", "MHz", "GHz"};
     std::string strtime[4] = {"sec", "ms", "us", "ns"};
@@ -423,11 +424,11 @@ SpectrumDisplayForm::setFrequencyRange(const double newCenterFrequency,
     _stopFrequency = newStopFrequency;
     _centerFrequency = newCenterFrequency;
 
-    _frequencyDisplayPlot->setFrequencyRange(_centerFrequency, fdiff,
+    _frequencyDisplayPlot->setFrequencyRange(fcenter, fdiff,
 					     units, strunits[iunit]);
-    _waterfallDisplayPlot->setFrequencyRange(_centerFrequency, fdiff,
+    _waterfallDisplayPlot->setFrequencyRange(fcenter, fdiff,
 					     units, strunits[iunit]);
-    _timeDomainDisplayPlot->setSampleRate(_stopFrequency - _startFrequency,
+    _timeDomainDisplayPlot->setSampleRate((_stopFrequency - _startFrequency)/2.0,
 					  units, strtime[iunit]);
   }
 }

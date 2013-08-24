@@ -87,7 +87,6 @@ private:
   QIntValidator* _intValidator;
 
   double _samp_rate, _center_freq;
-  double _time_per_slice;
   int _fftsize;
   float _fftavg;
   gr::filter::firdes::win_type _fftwintype;
