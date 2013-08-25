@@ -436,8 +436,11 @@ namespace gr {
   {
     d_fg->clear();
     d_blocks.clear();
-    d_inputs.clear();
-    d_outputs.clear();
+
+    int max_inputs = d_owner->input_signature()->max_streams();
+    int max_outputs = d_owner->output_signature()->max_streams();
+    d_inputs = std::vector<endpoint_vector_t>(max_inputs);
+    d_outputs = endpoint_vector_t(max_outputs);
   }
 
   endpoint_vector_t
