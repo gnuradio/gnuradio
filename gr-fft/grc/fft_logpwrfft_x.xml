@@ -7,8 +7,8 @@
 <block>
 	<name>Log Power FFT</name>
 	<key>logpwrfft_x</key>
-	<import>from gnuradio import fft</import>
-	<make>fft.logpwrfft_$(type.fcn)(
+	<import>from gnuradio.fft import logpwrfft</import>
+	<make>logpwrfft.logpwrfft_$(type.fcn)(
 	sample_rate=$sample_rate,
 	fft_size=$fft_size,
 	ref_scale=$ref_scale,
