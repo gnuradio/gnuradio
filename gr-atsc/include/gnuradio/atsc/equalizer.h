@@ -25,7 +25,6 @@
 
 #include <gnuradio/atsc/api.h>
 #include <gnuradio/sync_block.h>
-#include <gnuradio/atsc/equalizer_impl.h>
 #include <gnuradio/atsc/consts.h>
 
 class atsc_equalizer;
