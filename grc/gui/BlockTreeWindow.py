@@ -72,8 +72,9 @@ class BlockTreeWindow(gtk.VBox):
         #try to enable the tooltips (available in pygtk 2.12 and above)
         try: self.treeview.set_tooltip_column(DOC_INDEX)
         except: pass
-                #setup sort order
+        #setup sort order
         column.set_sort_column_id(0)
+        self.treestore.set_sort_column_id(0, gtk.SORT_ASCENDING)
         #setup drag and drop
         self.treeview.enable_model_drag_source(gtk.gdk.BUTTON1_MASK, DND_TARGETS, gtk.gdk.ACTION_COPY)
         self.treeview.connect('drag-data-get', self._handle_drag_get_data)
