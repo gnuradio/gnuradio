@@ -102,6 +102,26 @@ qa_fxpt_vco::t1()
 void
 qa_fxpt_vco::t2()
 {
+  gr::vco<gr_complex,float> ref_vco;
+  gr::fxpt_vco		new_vco;
+  gr_complex		ref_block[SIN_COS_BLOCK_SIZE];
+  gr_complex		new_block[SIN_COS_BLOCK_SIZE];
+  float			input[SIN_COS_BLOCK_SIZE];
+  double max_error = 0;
+
+  for(int i = 0; i < SIN_COS_BLOCK_SIZE; i++) {
+    input[i] = sin(double(i));
+  }
+
+  ref_vco.sincos(ref_block, input, SIN_COS_BLOCK_SIZE, SIN_COS_K, SIN_COS_AMPL);
+  new_vco.sincos(new_block, input, SIN_COS_BLOCK_SIZE, SIN_COS_K, SIN_COS_AMPL);
+
+  for(int i = 0; i < SIN_COS_BLOCK_SIZE; i++) {
+    CPPUNIT_ASSERT_COMPLEXES_EQUAL(ref_block[i], new_block[i], SIN_COS_TOLERANCE);
+    max_error = max_d(max_error, abs(ref_block[i]-new_block[i]));
+  }
+  CPPUNIT_ASSERT_DOUBLES_EQUAL(ref_vco.get_phase(), new_vco.get_phase(), SIN_COS_TOLERANCE);
+  // printf ("Fxpt  max error %.9f, max phase error %.9f\n", max_error, ref_vco.get_phase()-new_vco.get_phase());
 }
 
 void

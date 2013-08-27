@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2012 Free Software Foundation, Inc.
+ * Copyright 2013 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -20,26 +20,34 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#define CHANNELS_API
+#ifndef INCLUDED_GR_VCO_F_IMPL_H
+#define INCLUDED_GR_VCO_F_IMPL_H
 
-%include "gnuradio.i"
+#include <gnuradio/blocks/vco_c.h>
+#include <gnuradio/fxpt_vco.h>
 
-//load generated python docstrings
-%include "channels_swig_doc.i"
+namespace gr {
+  namespace blocks {
 
-%{
-#include "gnuradio/channels/channel_model.h"
-#include "gnuradio/channels/channel_model2.h"
-#include "gnuradio/channels/fading_model.h"
-#include "gnuradio/channels/selective_fading_model.h"
-%}
+    class vco_c_impl : public vco_c
+    {
+    private:
+      double d_sampling_rate;
+      double d_sensitivity;
+      double d_amplitude;
+      double d_k;
+      gr::fxpt_vco d_vco;
 
-%include "gnuradio/channels/channel_model.h"
-%include "gnuradio/channels/channel_model2.h"
-%include "gnuradio/channels/fading_model.h"
-%include "gnuradio/channels/selective_fading_model.h"
+    public:
+      vco_c_impl(double sampling_rate, double sensitivity, double amplitude);
+      ~vco_c_impl();
 
-GR_SWIG_BLOCK_MAGIC2(channels, channel_model);
-GR_SWIG_BLOCK_MAGIC2(channels, channel_model2);
-GR_SWIG_BLOCK_MAGIC2(channels, fading_model);
-GR_SWIG_BLOCK_MAGIC2(channels, selective_fading_model);
+      int work(int noutput_items,
+               gr_vector_const_void_star &input_items,
+               gr_vector_void_star &output_items);
+    };
+
+  } /* namespace blocks */
+} /* namespace gr */
+
+#endif /* INCLUDED_GR_VCO_C_H */
