@@ -172,6 +172,9 @@ macro(GR_SWIG_MAKE name)
     include(UseSWIG)
     SWIG_ADD_MODULE(${name} python ${ifiles})
     SWIG_LINK_LIBRARIES(${name} ${PYTHON_LIBRARIES} ${GR_SWIG_LIBRARIES})
+    if(${name} STREQUAL "runtime_swig")
+        SET_TARGET_PROPERTIES(${SWIG_MODULE_runtime_swig_REAL_NAME} PROPERTIES DEFINE_SYMBOL "gnuradio_runtime_EXPORTS")
+    endif(${name} STREQUAL "runtime_swig")
 
 endmacro(GR_SWIG_MAKE)
 
