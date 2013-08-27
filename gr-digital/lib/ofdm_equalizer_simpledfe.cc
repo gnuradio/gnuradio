@@ -97,7 +97,8 @@ namespace gr {
 	  } else {
 	    sym_eq = frame[i*d_fft_len+k] / d_channel_state[k];
 	    d_constellation->map_to_points(d_constellation->decision_maker(&sym_eq), &sym_est);
-	    d_channel_state[k] = d_alpha * d_channel_state[k] + frame[i*d_fft_len+k] / sym_est;
+	    d_channel_state[k] = d_alpha * d_channel_state[k]
+                               + (1-d_alpha) * frame[i*d_fft_len + k] / sym_est;
 	    frame[i*d_fft_len+k] = sym_est;
 	  }
 	}
