@@ -119,14 +119,43 @@ endmacro(OVERRULE_ARCH)
 
 ########################################################################
 # eliminate AVX on GCC < 4.4
-# even though it accepts -mavx, as won't assemble xgetbv, which we need
+# even though it accepts -mavx, as won't assemble xgetbv, which we need.
+# even on GCC >= 4.4, verify that the compiler/linked accepts the xgetbv instruction,
+# and if not cross-compiling verify that the executable runs cleanly.
 ########################################################################
 if(CPU_IS_x86 AND COMPILER_NAME MATCHES "GNU")
     execute_process(COMMAND ${CMAKE_C_COMPILER} -dumpversion
         OUTPUT_VARIABLE GCC_VERSION OUTPUT_STRIP_TRAILING_WHITESPACE)
     if(GCC_VERSION VERSION_LESS "4.4")
         OVERRULE_ARCH(avx "GCC missing xgetbv")
+    else()
+        # check to make sure compiler/linker works with xgetb instruction
+        file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/test_xgetbv.c "unsigned long long _xgetbv(unsigned int index) { unsigned int eax, edx; __asm__ __volatile__(\"xgetbv\" : \"=a\"(eax), \"=d\"(edx) : \"c\"(index)); return ((unsigned long long)edx << 32) | eax; } int main (void) { (void) _xgetbv(0); return (0); }")
+        execute_process(COMMAND ${CMAKE_C_COMPILER} -o
+            ${CMAKE_CURRENT_BINARY_DIR}/test_xgetbv
+            ${CMAKE_CURRENT_BINARY_DIR}/test_xgetbv.c
+            OUTPUT_QUIET ERROR_QUIET
+            RESULT_VARIABLE avx_compile_result)
+        if(NOT ${avx_compile_result} EQUAL 0)
+            OVERRULE_ARCH(avx "Compiler or linker missing xgetbv instruction")
+        elseif(NOT CROSSCOMPILE_MULTILIB)
+            execute_process(COMMAND ${CMAKE_CURRENT_BINARY_DIR}/test_xgetbv
+                OUTPUT_QUIET ERROR_QUIET
+                RESULT_VARIABLE avx_exe_result)
+            if(NOT ${avx_exe_result} EQUAL 0)
+                OVERRULE_ARCH(avx "CPU missing xgetbv.")
+            else()
+                add_definitions(-DHAVE_XGETBV)
+            endif()
+        else()
+            # cross compiling and compiler/linker seems to work; assume working
+            add_definitions(-DHAVE_XGETBV)
+        endif()
+        file(REMOVE ${CMAKE_CURRENT_BINARY_DIR}/test_xgetbv
+            ${CMAKE_CURRENT_BINARY_DIR}/test_xgetbv.c)
     endif()
+else()
+    OVERRULE_ARCH(avx "Not using GCC; assuming no xgetbv")
 endif()
 
 ########################################################################
