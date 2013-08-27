@@ -20,6 +20,8 @@
  * Boston, MA 02110-1301, USA.
  */
 
+ #define _USE_MATH_DEFINES
+ 
 #include "channel_model2_impl.h"
 #include <gnuradio/io_signature.h>
 #include <iostream>
