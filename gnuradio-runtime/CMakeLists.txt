@@ -135,7 +135,6 @@ configure_file(
 
 install(
     FILES ${CMAKE_CURRENT_BINARY_DIR}/gnuradio-runtime.conf
-    ctrlport.conf.example
     DESTINATION ${GR_PREFSDIR}
     COMPONENT "runtime_runtime"
 )
