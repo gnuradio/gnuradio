@@ -52,7 +52,7 @@ namespace gr {
        * \param fd file descriptor (as an integer).
        * \param repeat repeat the data stream continuously.
        */
-      static sptr make(size_t itemsize, int fd, bool repeat);
+      static sptr make(size_t itemsize, int fd, bool repeat=false);
     };
 
   } /* namespace blocks */
