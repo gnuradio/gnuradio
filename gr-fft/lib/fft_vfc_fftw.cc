@@ -50,6 +50,8 @@ namespace gr {
 	d_fft_size(fft_size), d_forward(forward)
     {
       d_fft = new fft_complex(d_fft_size, forward, nthreads);
+      if(!set_window(window))
+        throw std::runtime_error("fft_vfc: window not the same length as fft_size\n");
     }
 
     fft_vfc_fftw::~fft_vfc_fftw()
