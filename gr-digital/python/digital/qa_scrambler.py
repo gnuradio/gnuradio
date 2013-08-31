@@ -21,6 +21,7 @@
 #
 
 from gnuradio import gr, gr_unittest, digital, blocks
+import pmt
 
 class test_scrambler(gr_unittest.TestCase):
 
@@ -55,6 +56,44 @@ class test_scrambler(gr_unittest.TestCase):
         src = blocks.vector_source_b(src_data, False)
         scrambler = digital.additive_scrambler_bb(0x8a, 0x7f, 7, 100)
         descrambler = digital.additive_scrambler_bb(0x8a, 0x7f, 7, 100)
+        dst = blocks.vector_sink_b()
+        self.tb.connect(src, scrambler, descrambler, dst)
+        self.tb.run()
+        self.assertEqual(src_data, dst.data())
+
+    def test_additive_scrambler_reset_3bpb(self):
+        src_data = (5,)*2000
+        src = blocks.vector_source_b(src_data, False)
+        scrambler = digital.additive_scrambler_bb(0x8a, 0x7f, 7, 100, 3)
+        descrambler = digital.additive_scrambler_bb(0x8a, 0x7f, 7, 100, 3)
+        dst = blocks.vector_sink_b()
+        dst2 = blocks.vector_sink_b()
+        self.tb.connect(src, scrambler, descrambler, dst)
+        self.tb.connect(scrambler, dst2)
+        self.tb.run()
+        if not (src_data == dst.data()):
+            self.fail('Not equal.')
+        self.assertEqual(src_data, src_data)
+
+    def test_additive_scrambler_tags(self):
+        print 'tags'
+        src_data = (1,)*1000
+        src = blocks.vector_source_b(src_data, False)
+        scrambler = digital.additive_scrambler_bb(0x8a, 0x7f, 7, 100)
+        descrambler = digital.additive_scrambler_bb(0x8a, 0x7f, 7, 100)
+        reset_tag_key = 'reset_lfsr'
+        reset_tag1 = gr.tag_t()
+        reset_tag1.key = pmt.string_to_symbol(reset_tag_key)
+        reset_tag1.offset = 17
+        reset_tag2 = gr.tag_t()
+        reset_tag2.key = pmt.string_to_symbol(reset_tag_key)
+        reset_tag2.offset = 110
+        reset_tag3 = gr.tag_t()
+        reset_tag3.key = pmt.string_to_symbol(reset_tag_key)
+        reset_tag3.offset = 523
+        src = blocks.vector_source_b(src_data, False, 1, (reset_tag1, reset_tag2, reset_tag3))
+        scrambler = digital.additive_scrambler_bb(0x8a, 0x7f, 7, 100, 1, reset_tag_key)
+        descrambler = digital.additive_scrambler_bb(0x8a, 0x7f, 7, 100, 1, reset_tag_key)
         dst = blocks.vector_sink_b()
         self.tb.connect(src, scrambler, descrambler, dst)
         self.tb.run()

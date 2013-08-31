@@ -145,7 +145,8 @@ class ofdm_tx(gr.hier_block2):
                  sync_word1=None,
                  sync_word2=None,
                  rolloff=0,
-                 debug_log=False
+                 debug_log=False,
+                 scramble_bits=False
                  ):
         gr.hier_block2.__init__(self, "ofdm_tx",
                     gr.io_signature(1, 1, gr.sizeof_char),
@@ -193,13 +194,32 @@ class ofdm_tx(gr.hier_block2):
         ### Payload modulation ###############################################
         payload_constellation = _get_constellation(bps_payload)
         payload_mod = digital.chunks_to_symbols_bc(payload_constellation.points())
+        if scramble_bits:
+            self.connect(
+                crc,
+                digital.additive_scrambler_bb(
+                    0x8a, 0x7f, 7,
+                    bits_per_byte=bps_payload,
+                    reset_tag_key=self.packet_length_tag_key
+                ),
+                blocks.repack_bits_bb(
+                    8, # Unpack 8 bits per byte
+                    bps_payload,
+                    self.packet_length_tag_key
+                ),
+                payload_mod
+            )
+        else:
+            self.connect(
+                crc,
+                blocks.repack_bits_bb(
+                    8, # Unpack 8 bits per byte
+                    bps_payload,
+                    self.packet_length_tag_key
+                ),
+                payload_mod
+            )
         self.connect(
-            crc,
-            blocks.repack_bits_bb(
-                8, # Unpack 8 bits per byte
-                bps_payload,
-                self.packet_length_tag_key
-            ),
             payload_mod,
             (header_payload_mux, 1)
         )
@@ -262,7 +282,8 @@ class ofdm_rx(gr.hier_block2):
                  bps_payload=1,
                  sync_word1=None,
                  sync_word2=None,
-                 debug_log=False
+                 debug_log=False,
+                 scramble_bits=False
                  ):
         gr.hier_block2.__init__(self, "ofdm_rx",
                     gr.io_signature(1, 1, gr.sizeof_gr_complex),
@@ -372,7 +393,16 @@ class ofdm_rx(gr.hier_block2):
         payload_demod = digital.constellation_decoder_cb(payload_constellation.base())
         repack = blocks.repack_bits_bb(bps_payload, 8, self.packet_length_tag_key, True)
         crc = digital.crc32_bb(True, self.packet_length_tag_key)
-        self.connect((hpd, 1), payload_fft, payload_eq, payload_serializer, payload_demod, repack, crc, self)
+        self.connect((hpd, 1), payload_fft, payload_eq, payload_serializer, payload_demod, repack)
+        if scramble_bits:
+            descrambler = digital.additive_scrambler_bb(
+                0x8a, 0x7f, 7,
+                bits_per_byte=bps_payload,
+                reset_tag_key=self.packet_length_tag_key
+            )
+            self.connect(repack, descrambler, crc, self)
+        else:
+            self.connect(repack, crc, self)
         if debug_log:
             self.connect((hpd, 1),           blocks.tag_debug(gr.sizeof_gr_complex*fft_len, 'post-hpd'));
             self.connect(payload_fft,        blocks.file_sink(gr.sizeof_gr_complex*fft_len, 'post-payload-fft.dat'))
