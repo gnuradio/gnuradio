@@ -58,7 +58,6 @@ install(FILES
     trellis_encoder_impl.h
     types.h
     viterbi_decoder.h
-    viterbi_decoder_impl.h
     vsbtx_lp_impl.h
     DESTINATION ${GR_INCLUDE_DIR}/gnuradio/atsc
     COMPONENT "atsc_devel"

@@ -69,7 +69,6 @@ list(APPEND gr_atsc_sources
     receiver/atsc_depad.cc
     receiver/atsci_fake_single_viterbi.cc
     receiver/atsci_single_viterbi.cc
-    receiver/atsci_viterbi_decoder.cc
     transmitter/atsc_randomizer.cc
     transmitter/atsc_rs_encoder.cc
     transmitter/atsc_interleaver.cc

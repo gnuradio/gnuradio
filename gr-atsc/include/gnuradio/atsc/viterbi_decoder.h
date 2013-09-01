@@ -25,7 +25,19 @@
 
 #include <gnuradio/atsc/api.h>
 #include <gnuradio/sync_block.h>
-#include <gnuradio/atsc/viterbi_decoder_impl.h>
+#include <gnuradio/atsc/api.h>
+#include <gnuradio/atsc/types.h>
+#include <gnuradio/atsc/interleaver_fifo.h>
+
+#define	USE_SIMPLE_SLICER  0
+
+#if (USE_SIMPLE_SLICER)
+#include <gnuradio/atsc/fake_single_viterbi_impl.h>
+typedef atsci_fake_single_viterbi	single_viterbi_t;
+#else
+#include <gnuradio/atsc/single_viterbi_impl.h>
+typedef atsci_single_viterbi		single_viterbi_t;
+#endif
 
 class atsc_viterbi_decoder;
 typedef boost::shared_ptr<atsc_viterbi_decoder> atsc_viterbi_decoder_sptr;
@@ -42,19 +54,32 @@ class ATSC_API atsc_viterbi_decoder : public gr::sync_block
 {
   friend ATSC_API atsc_viterbi_decoder_sptr atsc_make_viterbi_decoder();
 
-  atsci_viterbi_decoder	d_viterbi_decoder;
-
-  atsc_viterbi_decoder();
-
 public:
+  atsc_viterbi_decoder ();
+  ~atsc_viterbi_decoder ();
+
+  static const int	NCODERS = 12;
   int work (int noutput_items,
 	    gr_vector_const_void_star &input_items,
 	    gr_vector_void_star &output_items);
 
-  void reset() { /* nop */ }
+  void reset();
 
 protected:
   int	    last_start;
+  typedef interleaver_fifo<unsigned char>	fifo_t;
+
+  static const int SEGMENT_SIZE = ATSC_MPEG_RS_ENCODED_LENGTH;	// 207
+  static const int OUTPUT_SIZE = (SEGMENT_SIZE * 12);
+  static const int INPUT_SIZE = (ATSC_DATA_SEGMENT_LENGTH * 12);
+
+  void decode_helper (unsigned char out[OUTPUT_SIZE],
+                       const float symbols_in[INPUT_SIZE]);
+
+
+  single_viterbi_t	viterbi[NCODERS];
+  fifo_t		*fifo[NCODERS];
+  bool			debug;
 
 };
 

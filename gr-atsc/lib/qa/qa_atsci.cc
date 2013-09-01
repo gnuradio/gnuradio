@@ -35,7 +35,6 @@
 #include "qa_atsci_fake_single_viterbi.h"
 #include "qa_atsci_single_viterbi.h"
 #include "qa_atsci_trellis_encoder.h"
-#include "qa_atsci_viterbi_decoder.h"
 
 CppUnit::TestSuite *
 qa_atsc::suite ()
@@ -51,7 +50,6 @@ qa_atsc::suite ()
   s->addTest (qa_atsci_fake_single_viterbi::suite ());
   s->addTest (qa_atsci_single_viterbi::suite ());
   s->addTest (qa_atsci_trellis_encoder::suite ());
-  s->addTest (qa_atsci_viterbi_decoder::suite ());
 
   return s;
 }
