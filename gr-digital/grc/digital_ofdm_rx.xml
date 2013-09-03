@@ -24,7 +24,8 @@
 	  #end if
 	  bps_header=$header_mod.bps,
 	  bps_payload=$payload_mod.bps,
-	  debug_log=$log
+	  debug_log=$log,
+	  scramble_bits=$scramble_bits
 	 )</make>
   <param>
     <name>FFT Length</name>
@@ -142,6 +143,21 @@
       <name>8-PSK</name>
       <key>"8-PSK"</key>
       <opt>bps:3</opt>
+    </option>
+  </param>
+  <param>
+    <name>Scramble Bits</name>
+    <key>scramble_bits</key>
+    <value>False</value>
+    <type>enum</type>
+    <hide> #if $scramble_bits then 'part' else 'none'#</hide>
+    <option>
+      <name>No</name>
+      <key>False</key>
+    </option>
+    <option>
+      <name>Yes</name>
+      <key>True</key>
     </option>
   </param>
   <param>
