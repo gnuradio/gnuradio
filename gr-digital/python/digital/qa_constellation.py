@@ -21,7 +21,7 @@
 # 
 
 import random
-from cmath import exp, pi, log
+from cmath import exp, pi, log, sqrt
 
 from gnuradio import gr, gr_unittest, digital, blocks
 from gnuradio.digital.utils import mod_codes
@@ -185,6 +185,86 @@ class test_constellation(gr_unittest.TestCase):
                 first = constellation.bits_per_symbol()
                 self.assertEqual(self.src_data[first:len(data)], data[first:])
 
+    def test_soft_qpsk_gen(self):
+        prec = 8
+        constel, code = digital.psk_4_0()
+
+        rot_sym = 1
+        side = 2
+        width = 2
+        c = digital.constellation_rect(constel, code, rot_sym,
+                                       side, side, width, width)
+
+        # Get max energy/symbol in constellation
+        constel = c.points()
+        Es = max([abs(constel_i) for constel_i in constel])
+
+        table = digital.soft_dec_table_generator(digital.sd_psk_4_0, prec, Es)
+        c.set_soft_dec_lut(table, prec)
+
+        x = sqrt(2.0)/2.0
+        step = (x.real+x.real) / (2**prec - 1)
+        samples = [ -x-x*1j, -x+x*1j,
+                     x+x*1j,  x-x*1j,
+                   (-x+128*step)+(-x+128*step)*1j,
+                   (-x+64*step) +(-x+64*step)*1j,  (-x+64*step) +(-x+192*step)*1j,
+                   (-x+192*step)+(-x+192*step)*1j, (-x+192*step)+(-x+64*step)*1j,]
+
+        y_python_raw_calc = []
+        y_python_gen_calc = []
+        y_python_table = []
+        y_cpp_raw_calc = []
+        y_cpp_table = []
+        for sample in samples:
+            y_python_raw_calc += digital.calc_soft_dec(sample, constel, code)
+            y_python_gen_calc += digital.sd_psk_4_0(sample, Es)
+            y_python_table += digital.calc_soft_dec_from_table(sample, table, prec, Es)
+
+            y_cpp_raw_calc += c.calc_soft_dec(sample)
+            y_cpp_table += c.soft_decision_maker(sample)
+
+        self.assertFloatTuplesAlmostEqual(y_python_raw_calc, y_python_gen_calc, 4)
+        self.assertFloatTuplesAlmostEqual(y_python_raw_calc, y_python_table, 2)
+        self.assertFloatTuplesAlmostEqual(y_cpp_raw_calc, y_cpp_table, 4)
+        
+    def test_soft_qpsk_calc(self):
+        prec = 8
+        constel, code = digital.psk_4_0()
+
+        rot_sym = 1
+        side = 2
+        width = 2
+        c = digital.constellation_rect(constel, code, rot_sym,
+                                       side, side, width, width)
+
+        # Get max energy/symbol in constellation
+        constel = c.points()
+        Es = max([abs(constel_i) for constel_i in constel])
+
+        table = digital.soft_dec_table(constel, code, prec)
+        c.gen_soft_dec_lut(prec)
+
+        x = sqrt(2.0)/2.0
+        step = (x.real+x.real) / (2**prec - 1)
+        samples = [ -x-x*1j, -x+x*1j,
+                     x+x*1j,  x-x*1j,
+                   (-x+128*step)+(-x+128*step)*1j,
+                   (-x+64*step) +(-x+64*step)*1j,  (-x+64*step) +(-x+192*step)*1j,
+                   (-x+192*step)+(-x+192*step)*1j, (-x+192*step)+(-x+64*step)*1j,]
+
+        y_python_raw_calc = []
+        y_python_table = []
+        y_cpp_raw_calc = []
+        y_cpp_table = []
+        for sample in samples:
+            y_python_raw_calc += digital.calc_soft_dec(sample, constel, code)
+            y_python_table += digital.calc_soft_dec_from_table(sample, table, prec, Es)
+
+            y_cpp_raw_calc += c.calc_soft_dec(sample)
+            y_cpp_table += c.soft_decision_maker(sample)
+
+        self.assertFloatTuplesAlmostEqual(y_python_raw_calc, y_python_table, 4)
+        self.assertFloatTuplesAlmostEqual(y_cpp_raw_calc, y_cpp_table, 4)
 
 class mod_demod(gr.hier_block2):
     def __init__(self, constellation, differential, rotation):

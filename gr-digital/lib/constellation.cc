@@ -33,6 +33,7 @@
 #include <stdlib.h>
 #include <float.h>
 #include <stdexcept>
+#include <boost/format.hpp>
 
 namespace gr {
   namespace digital {
@@ -48,7 +49,9 @@ namespace gr {
       d_constellation(constell),
       d_pre_diff_code(pre_diff_code),
       d_rotational_symmetry(rotational_symmetry),
-      d_dimensionality(dimensionality)
+      d_dimensionality(dimensionality),
+      d_lut_precision(0),
+      d_lut_scale(0)
     {
       // Scale constellation points so that average magnitude is 1.
       float summed_mag = 0;
@@ -59,7 +62,7 @@ namespace gr {
       }
       d_scalefactor = constsize/summed_mag;
       for (unsigned int i=0; i<constsize; i++) {
-	d_constellation[i] = d_constellation[i]*d_scalefactor;
+        d_constellation[i] = d_constellation[i]*d_scalefactor;
       }
       if(pre_diff_code.size() == 0)
 	d_apply_pre_diff_code = false;
@@ -233,10 +236,154 @@ namespace gr {
     }
 
 
+    void
+    constellation::gen_soft_dec_lut(int precision, float npwr)
+    {
+      max_min_axes();
+      d_lut_scale = powf(2.0, static_cast<float>(precision));
+      float xstep = (d_re_max - d_re_min) / (d_lut_scale-1);
+      float ystep = (d_im_max - d_im_min) / (d_lut_scale-1);
+      d_soft_dec_lut.clear();
+
+      float y = d_im_min;
+      while(y < d_im_max) {
+        float x = d_re_min;
+        while(x < d_re_max) {
+          gr_complex pt = gr_complex(x, y);
+          d_soft_dec_lut.push_back(calc_soft_dec(pt, npwr));
+          x += xstep;
+        }
+        y += ystep;
+      }
+
+      d_lut_precision = precision;
+    }
+
+    std::vector<float>
+    constellation::calc_soft_dec(gr_complex sample, float npwr)
+    {
+      int M = static_cast<int>(d_constellation.size());
+      int k = static_cast<int>(log10f(static_cast<float>(M))/log10f(2.0));
+      std::vector<float> tmp(2*k, 0);
+      std::vector<float> s(k, 0);
+
+      float scale = d_scalefactor*d_scalefactor;
+      
+      for(int i = 0; i < M; i++) {
+        // Calculate the distance between the sample and the current
+        // constellation point.
+        float dist = powf(std::abs(sample - d_constellation[i]), 2.0f);
+
+        // Calculate the probability factor from the distance and
+        // the scaled noise power.
+        float d = expf(-dist / (2.0*npwr*scale));
+
+        for(int j = 0; j < k; j++) {
+          // Get the bit at the jth index
+          int mask = 1 << j;
+          int bit = (d_pre_diff_code[i] & mask) >> j;
+
+          // If the bit is a 0, add to the probability of a zero
+          if(bit == 0)
+            tmp[2*j+0] += d;
+          // else, add to the probability of a one
+          else
+            tmp[2*j+1] += d;
+        }
+      }
+
+      // Calculate the log-likelihood ratio for all bits based on the
+      // probability of ones (tmp[2*i+1]) over the probability of a zero
+      // (tmp[2*i+0]).
+      for(int i = 0; i < k; i++) {
+        s[k-1-i] = (logf(tmp[2*i+1]) - logf(tmp[2*i+0])) * scale;
+      }
+
+      return s;
+    }
+
+    void
+    constellation::set_soft_dec_lut(const std::vector< std::vector<float> > &soft_dec_lut,
+                                    int precision)
+    {
+      max_min_axes();
+
+      d_soft_dec_lut = soft_dec_lut;
+      d_lut_precision = precision;
+      d_lut_scale = powf(2.0, static_cast<float>(precision));
+    }
+
+    bool
+    constellation::has_soft_dec_lut()
+    {
+      return d_soft_dec_lut.size() > 0;
+    }
+
+    std::vector<float>
+    constellation::soft_decision_maker(gr_complex sample)
+    {
+      if(has_soft_dec_lut()) {
+        float xre = sample.real();
+        float xim = sample.imag();
+
+        float xstep = (d_re_max-d_re_min) / d_lut_scale;
+        float ystep = (d_im_max-d_im_min) / d_lut_scale;
+
+        float xscale = (d_lut_scale / (d_re_max-d_re_min)) - xstep;
+        float yscale = (d_lut_scale / (d_im_max-d_im_min)) - ystep;
+
+        xre = floorf((-d_re_min + std::min(d_re_max, std::max(d_re_min, xre))) * xscale);
+        xim = floorf((-d_im_min + std::min(d_im_max, std::max(d_im_min, xim))) * yscale);
+        int index = static_cast<int>(d_lut_scale*xim + xre);
+
+        int max_index = d_lut_scale*d_lut_scale;
+        if(index > max_index) {
+          return d_soft_dec_lut[max_index-1];
+        }
+
+        if(index < 0)
+          throw std::runtime_error("constellation::soft_decision_maker: input sample out of range.");
+
+        return d_soft_dec_lut[index];
+      }
+      else {
+        return calc_soft_dec(sample);
+      }
+    }
+
+    void
+    constellation::max_min_axes()
+    {
+      // Find min/max of constellation for both real and imag axes.
+      d_re_min = 1e20;
+      d_im_min = 1e20;
+      d_re_max = -1e20;
+      d_im_max = -1e20;
+      for(size_t i = 0; i < d_constellation.size(); i++) {
+        if(d_constellation[i].real() > d_re_max)
+          d_re_max = d_constellation[i].real();
+        if(d_constellation[i].imag() > d_im_max)
+          d_im_max = d_constellation[i].imag();
+
+        if(d_constellation[i].real() < d_re_min)
+          d_re_min = d_constellation[i].real();
+        if(d_constellation[i].imag() < d_im_min)
+          d_im_min = d_constellation[i].imag();
+      }
+      if(d_im_min == 0)
+        d_im_min = d_re_min;
+      if(d_im_max == 0)
+        d_im_max = d_re_max;
+      if(d_re_min == 0)
+        d_re_min = d_im_min;
+      if(d_re_max == 0)
+        d_re_max = d_im_max;
+    }
+
     /********************************************************************/
 
 
-    constellation_calcdist::sptr 
+    constellation_calcdist::sptr
     constellation_calcdist::make(std::vector<gr_complex> constell,
 				 std::vector<int> pre_diff_code,
 				 unsigned int rotational_symmetry,
