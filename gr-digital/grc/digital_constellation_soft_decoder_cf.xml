@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<!--
+###################################################
+##Constellation Decoder, soft bits out
+###################################################
+ -->
+<block>
+	<name>Constellation Soft Decoder</name>
+	<key>digital_constellation_soft_decoder_cf</key>
+	<import>from gnuradio import digital</import>
+	<make>digital.constellation_soft_decoder_cf($constellation)</make>
+	<param>
+		<name>Constellation Object</name>
+		<key>constellation</key>
+		<type>raw</type>
+	</param>
+	<sink>
+		<name>in</name>
+		<type>complex</type>
+	</sink>
+	<source>
+		<name>out</name>
+		<type>float</type>
+	</source>
+</block>
