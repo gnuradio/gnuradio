@@ -1,4 +1,4 @@
-# Copyright 2011,2012 Free Software Foundation, Inc.
+# Copyright 2011-2013 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -84,6 +84,7 @@ install(FILES
     constellation.h
     constellation_decoder_cb.h
     constellation_receiver_cb.h
+    constellation_soft_decoder_cf.h
     correlate_access_code_bb.h
     correlate_access_code_tag_bb.h
     costas_loop_cc.h

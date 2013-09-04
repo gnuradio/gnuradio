@@ -7,11 +7,17 @@
 ###################################################
  -->
 <block>
-	<name>Constellation Rect. Object</name>
-	<key>variable_constellation_rect</key>
+	<name>Constellation Object</name>
+	<key>variable_constellation</key>
         <category>Modulators</category>
 	<import>from gnuradio import digital</import>
-        <var_make>self.$(id) = $(id) = digital.constellation_rect($const_points, $sym_map, $rot_sym, $real_sect, $imag_sect, $w_real_sect, $w_imag_sect).base()</var_make>
+        <var_make>self.$(id) = $(id) = digital.constellation_calcdist($const_points, $sym_map, $rot_sym, $dims).base()
+#if str($softbits_lut).lower() == 'auto'
+self.$(id).gen_soft_dec_lut($precision)
+#else if str($softbits_lut) != 'None'
+self.$(id).set_softbits($softbits_lut, $precision)
+#end if
+</var_make>
         <make></make>
         <!--<callback></callback>-->
 
@@ -43,27 +49,23 @@
           <type>int</type>
 	</param>
 	<param>
-          <name>Real Sectors</name>
-          <key>real_sect</key>
-          <value>2</value>
-          <type>int</type>
-	</param>
-	<param>
-          <name>Imaginary Sectors</name>
-          <key>imag_sect</key>
-          <value>2</value>
-          <type>int</type>
-	</param>
-	<param>
-          <name>Width Real Sectors</name>
-          <key>w_real_sect</key>
+          <name>Dimensionality</name>
+          <key>dims</key>
           <value>1</value>
           <type>int</type>
 	</param>
-	<param>
-          <name>Width Imaginary Sectors</name>
-          <key>w_imag_sect</key>
-          <value>1</value>
+        <param>
+          <name>Soft bits precision</name>
+          <key>precision</key>
+          <value>8</value>
           <type>int</type>
-	</param>
+          <hide>part</hide>
+        </param>
+        <param>
+          <name>Soft bits LUT</name>
+          <key>softbits_lut</key>
+          <value>None</value>
+          <type>raw</type>
+          <hide>#if str($softbits_lut) == 'None' then 'part' else 'none'#</hide>
+        </param>
 </block>
