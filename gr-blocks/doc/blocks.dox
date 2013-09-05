@@ -1,13 +1,13 @@
-/*! \page page_digital Digital Modulation
+/*! \page page_blocks Standard GNU Radio Blocks
 
 \section Introduction
-This is the gr-digital package. It contains all of the digital
-modulation blocks, utilities, and examples. To use the digital blocks,
-the Python namespaces is in gnuradio.digital, which would be normally
-imported as:
+This is the gr-blocks package. It contains many of the generic,
+standard, or simple blocks used for many aspects of building GNU Radio
+flowgraphs. To use these blocks, the Python module is
+gnuradio.blocks, which would be normally imported as:
 
 \code
-    from gnuradio import digital
+    from gnuradio import blocks
 \endcode
 
 See the Doxygen documentation for details about the blocks available
@@ -17,7 +17,7 @@ A quick listing of the details can be found in Python after importing
 by using:
 
 \code
-    help(digital)
+    help(blocks)
 \endcode
 
 */
