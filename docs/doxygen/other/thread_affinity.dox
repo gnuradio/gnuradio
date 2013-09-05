@@ -1,6 +1,6 @@
-/*! \page page_affinity Block Thread Affinity
+/*! \page page_affinity Block Thread Affinity and Priority
 
-\section intro Introduction
+\section affinity Block Thread Affinity
 
 In the thread-per-block scheduler, you can set the block's core
 affinity. Each block can be pinned to a group cores or be set back
@@ -36,8 +36,10 @@ implements the setting of the thread's affinity to all possible
 cores. Again, the function that does not take a thread argument unsets
 the affinity for the current thread.
 
+NOTE: Not available on OSX.
 
-\section affinity_api GNU Radio Block API
+
+\subsection affinity_api GNU Radio Block API
 
 Each block has two new data members:
 
@@ -95,5 +97,27 @@ constructed.
 
 Note that GRC does not provide a callback function for changing the
 thread core affinity while the flowgraph is running.
+
+
+
+\section priority_api Setting Thread Priority
+
+Similarly to setting the core affinity for a given block, we can also
+set the thread priority. This concept adds three new function calls to
+all blocks:
+
+\li gr::block::set_thread_priority(int priority): Sets the current thread priority.
+\li gr::block::active_thread_priority(): Gets the active priority for the thread.
+\li gr::block::thread_priority(): Gets the stored thread priority.
+
+The range of the thread priority might be system dependent, so look to
+your system/OS documentation. Linux specifies this range in
+\b sched_setscheduler as a value between 1 and 99 where 1 is the lowest
+priority and 99 is the highest. POSIX systems can retrieve these min
+and max values using \b sched_get_priority_min and \b
+sched_get_priority_max and may only allow 32 distinct values to be
+set.
+
+NOTE: Not available on Windows or OSX.
 
 */
