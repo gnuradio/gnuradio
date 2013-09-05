@@ -35,22 +35,23 @@ namespace gr {
 
     agc3_cc::sptr
     agc3_cc::make(float attack_rate, float decay_rate,
-                  float reference, float gain)
+                  float reference, float gain, int iir_update_decim)
     {
       return gnuradio::get_initial_sptr
         (new agc3_cc_impl(attack_rate, decay_rate,
-                          reference, gain));
+                          reference, gain, iir_update_decim));
     }
 
     agc3_cc_impl::agc3_cc_impl(float attack_rate, float decay_rate,
-                               float reference, float gain)
+                               float reference, float gain, int iir_update_decim)
     : sync_block("agc3_cc",
                  io_signature::make(1, 1, sizeof(gr_complex)),
                  io_signature::make(1, 1, sizeof(gr_complex))),
       d_attack(attack_rate), d_decay(decay_rate),
       d_reference(reference), d_gain(gain), d_max_gain(65536),
-      d_reset(true)
+      d_reset(true), d_iir_update_decim(iir_update_decim)
     {
+      set_output_multiple(iir_update_decim*4);
       const int alignment_multiple =
 	volk_get_alignment() / sizeof(gr_complex);
       set_alignment(std::max(1, alignment_multiple));
@@ -60,6 +61,7 @@ namespace gr {
     {
     }
 
+
     int
     agc3_cc_impl::work(int noutput_items,
 		       gr_vector_const_void_star &input_items,
@@ -67,17 +69,17 @@ namespace gr {
     {
       const gr_complex *in = (const gr_complex*)input_items[0];
       gr_complex *out = (gr_complex*)output_items[0];
-      // Compute magnitude of each sample
+
 #ifdef __GNUC__
+    // Compute a linear average on reset (no expected)  
+    if(__builtin_expect(d_reset, false)) {
       float mags[noutput_items]  __attribute__ ((aligned (16)));
       volk_32fc_magnitude_32f(mags, &in[0], noutput_items);
-      // Compute a linear average on reset (no expected)  
-      if(__builtin_expect(d_reset, false)) {
 #else   
-	std::vector<float> mags(noutput_items);
-	volk_32fc_magnitude_32f(&mags[0], &in[0], noutput_items);
-	// Compute a linear average on reset (no expected)  
+    // Compute a linear average on reset (no expected)  
 	if(!d_reset) {
+	  std::vector<float> mags(noutput_items);
+      volk_32fc_magnitude_32f(&mags[0], &in[0], noutput_items);
 #endif
         float mag(0.0);
         for(int i=0; i<noutput_items; i++) {
@@ -100,13 +102,32 @@ namespace gr {
       }
       else {
         // Otherwise perform a normal iir update
-        for(int i=0; i<noutput_items; i++) {
-          float newlevel = mags[i]; // abs(in[i]);
-          float rate = (newlevel > d_reference/d_gain)?d_attack:d_decay;
-          d_gain = newlevel==0?(d_gain*(1-rate)):(d_gain*(1-rate)) + (d_reference/newlevel)*rate;
-          out[i] = in[i] * d_gain;
+        float mag_sq[noutput_items/d_iir_update_decim] __attribute__ ((aligned (16)));
+        float inv_mag[noutput_items/d_iir_update_decim] __attribute__ ((aligned (16)));
+
+        // generate squared magnitudes at decimated rate (gather operation)
+        for(int i=0; i<noutput_items/d_iir_update_decim; i++){
+            int idx = i*d_iir_update_decim;
+            mag_sq[i] = in[idx].real()*in[idx].real() + in[idx].imag()*in[idx].imag();
         }
-      } 
+
+        // compute inverse square roots 
+        volk_32f_invsqrt_32f_a(inv_mag, mag_sq, noutput_items/d_iir_update_decim);
+
+        // apply updates
+        for(int i=0; i<noutput_items/d_iir_update_decim; i++){
+            float magi = inv_mag[i];
+            if(std::isfinite(magi)){
+                float rate = (magi > d_gain/d_reference)?d_decay:d_attack;
+                d_gain = d_gain*(1-rate) + d_reference*magi*rate;
+            } else {
+                d_gain = d_gain*(1-d_decay);
+            }
+            for(int j=i*d_iir_update_decim; j<(i+1)*d_iir_update_decim; j++){
+                out[j] = in[j] * d_gain;
+            }
+        }
+      }
       return noutput_items;
     }
 

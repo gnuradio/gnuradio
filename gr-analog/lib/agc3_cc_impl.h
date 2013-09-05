@@ -32,7 +32,7 @@ namespace gr {
     {
     public:
       agc3_cc_impl(float attack_rate = 1e-1, float decay_rate = 1e-2,
-                   float reference = 1.0, float gain = 1.0);
+                   float reference = 1.0, float gain = 1.0, int iir_update_decim=1);
       ~agc3_cc_impl();
 
       float attack_rate() const { return d_attack; }
@@ -58,6 +58,7 @@ namespace gr {
       float d_gain;
       float d_max_gain;
       bool d_reset;
+      int d_iir_update_decim;
     };
 
   } /* namespace analog */

@@ -54,9 +54,11 @@ namespace gr {
        * \param decay_rate the update rate of the loop when in decay mode.
        * \param reference reference value to adjust signal power to.
        * \param gain initial gain value.
+       * \param iir_update_decim stride by this number of samples before 
+       *                         computing an IIR gain update
        */
       static sptr make(float attack_rate = 1e-1, float decay_rate = 1e-2,
-                       float reference = 1.0, float gain = 1.0);
+                       float reference = 1.0, float gain = 1.0, int iir_update_decim=1);
 
       virtual float attack_rate() const = 0;
       virtual float decay_rate() const = 0;
