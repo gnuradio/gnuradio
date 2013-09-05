@@ -644,7 +644,10 @@ class MForm(QtGui.QWidget):
         tableitems = knobs.keys()
             
         #UPDATE TABLE:
-        self.table.updateItems(knobs, self.knobprops)
+        try:
+            self.table.updateItems(knobs, self.knobprops)
+        except:
+            self.knobprops = self.radio.properties([])
 
         #UPDATE PLOTS
         self.parent.update(knobs, self.uid)
