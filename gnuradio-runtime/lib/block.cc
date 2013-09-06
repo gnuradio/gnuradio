@@ -635,6 +635,17 @@ namespace gr {
     }
   }
 
+  float
+  block::pc_work_time_total()
+  {
+    if(d_detail) {
+      return d_detail->pc_work_time_total();
+    }
+    else {
+      return 0;
+    }
+  }
+
   void
   block::reset_perf_counters()
   {
@@ -709,6 +720,13 @@ namespace gr {
         alias(), "var work time", &block::pc_work_time_var,
         pmt::mp(0), pmt::mp(1e9), pmt::mp(0),
         "", "Var. clock cycles in call to work", RPC_PRIVLVL_MIN,
+        DISPTIME | DISPOPTSTRIP)));
+
+    d_rpc_vars.push_back(
+      rpcbasic_sptr(new rpcbasic_register_get<block, float>(
+        alias(), "total work time", &block::pc_work_time_total,
+        pmt::mp(0), pmt::mp(1e9), pmt::mp(0),
+        "", "Total clock cycles in calls to work", RPC_PRIVLVL_MIN,
         DISPTIME | DISPOPTSTRIP)));
 
     d_rpc_vars.push_back(

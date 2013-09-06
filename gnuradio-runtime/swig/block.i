@@ -69,19 +69,27 @@ class gr::block : public gr::basic_block
 
   // Methods to access performance counters
   float pc_noutput_items();
+  float pc_noutput_items_avg();
   float pc_noutput_items_var();
   float pc_nproduced();
+  float pc_nproduced_avg();
   float pc_nproduced_var();
   float pc_input_buffers_full(int which);
+  float pc_input_buffers_full_avg(int which);
   float pc_input_buffers_full_var(int which);
   std::vector<float> pc_input_buffers_full();
+  std::vector<float> pc_input_buffers_full_avg();
   std::vector<float> pc_input_buffers_full_var();
   float pc_output_buffers_full(int which);
+  float pc_output_buffers_full_avg(int which);
   float pc_output_buffers_full_var(int which);
   std::vector<float> pc_output_buffers_full();
+  std::vector<float> pc_output_buffers_full_avg();
   std::vector<float> pc_output_buffers_full_var();
   float pc_work_time();
+  float pc_work_time_avg();
   float pc_work_time_var();
+  float pc_work_time_total();
   
   // Methods to manage processor affinity.
   void set_processor_affinity(const std::vector<int> &mask);
