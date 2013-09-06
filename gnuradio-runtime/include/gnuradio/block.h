@@ -461,6 +461,11 @@ namespace gr {
     float pc_work_time_var();
 
     /*!
+     * \brief Gets total clock cycles spent in work.
+     */
+    float pc_work_time_total();
+
+    /*!
      * \brief Resets the performance counters
      */
     void reset_perf_counters();
