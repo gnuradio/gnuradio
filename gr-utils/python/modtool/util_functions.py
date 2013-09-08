@@ -87,6 +87,7 @@ def strip_arg_types_grc(string):
     if len(string) == 0:
         return ""
     else:
+        string = strip_default_values(string)
         return ", ".join(['$' + part.strip().split(' ')[-1] for part in string.split(',')])
 
 def get_modname():
