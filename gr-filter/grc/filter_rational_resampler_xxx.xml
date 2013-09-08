@@ -72,7 +72,7 @@
 	<param>
 		<name>Taps</name>
 		<key>taps</key>
-                <value>None</value>
+                <value></value>
 		<type>$type.taps</type>
 	</param>
 	<param>
