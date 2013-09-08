@@ -336,8 +336,13 @@ class app_top_block(stdgui2.std_top_block):
 
 
 def main ():
-    app = stdgui2.stdapp(app_top_block, "UHD FFT", nstatus=1)
-    app.MainLoop()
+    try:
+        app = stdgui2.stdapp(app_top_block, "UHD FFT", nstatus=1)
+        app.MainLoop()
+
+    except RuntimeError, e:
+        print e
+        sys.exit(1)
 
 if __name__ == '__main__':
     main ()
