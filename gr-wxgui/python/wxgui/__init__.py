@@ -26,6 +26,7 @@ Provides a GUI interface using the Wx backend.
 try:
     from wxgui_swig import *
 except ImportError:
+    import os
     dirname, filename = os.path.split(os.path.abspath(__file__))
     __path__.append(os.path.join(dirname, "..", "..", "swig"))
     from wxgui_swig import *
