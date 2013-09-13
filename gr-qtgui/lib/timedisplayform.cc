@@ -40,9 +40,9 @@ TimeDisplayForm::TimeDisplayForm(int nplots, QWidget* parent)
   _layout->addWidget(_displayPlot, 0, 0);
   setLayout(_layout);
 
-  NPointsMenu *nptsmenu = new NPointsMenu(this);
-  _menu->addAction(nptsmenu);
-  connect(nptsmenu, SIGNAL(whichTrigger(int)),
+  d_nptsmenu = new NPointsMenu(this);
+  _menu->addAction(d_nptsmenu);
+  connect(d_nptsmenu, SIGNAL(whichTrigger(int)),
 	  this, SLOT(setNPoints(const int)));
 
   d_stemmenu = new QAction("Stem Plot", this);
@@ -71,6 +71,40 @@ TimeDisplayForm::TimeDisplayForm(int nplots, QWidget* parent)
 	    this, SLOT(tagMenuSlot(bool)));
     _lines_menu[i]->addAction(d_tagsmenu[i]);
   }
+
+  // Set up the trigger menu
+  d_triggermenu = new QMenu("Trigger", this);
+  d_tr_mode_menu = new TriggerModeMenu(this);
+  d_tr_slope_menu = new TriggerSlopeMenu(this);
+  d_tr_level_act = new PopupMenu("Level", this);
+  d_tr_delay_act = new PopupMenu("Delay", this);
+  d_tr_channel_menu = new TriggerChannelMenu(nplots, this);
+  d_triggermenu->addMenu(d_tr_mode_menu);
+  d_triggermenu->addMenu(d_tr_slope_menu);
+  d_triggermenu->addAction(d_tr_level_act);
+  d_triggermenu->addAction(d_tr_delay_act);
+  d_triggermenu->addMenu(d_tr_channel_menu);
+  _menu->addMenu(d_triggermenu);
+
+  setTriggerMode(gr::qtgui::TRIG_MODE_FREE);
+  connect(d_tr_mode_menu, SIGNAL(whichTrigger(gr::qtgui::trigger_mode)),
+	  this, SLOT(setTriggerMode(gr::qtgui::trigger_mode)));
+
+  setTriggerSlope(gr::qtgui::TRIG_SLOPE_POS);
+  connect(d_tr_slope_menu, SIGNAL(whichTrigger(gr::qtgui::trigger_slope)),
+	  this, SLOT(setTriggerSlope(gr::qtgui::trigger_slope)));
+
+  setTriggerLevel(0);
+  connect(d_tr_level_act, SIGNAL(whichTrigger(QString)),
+	  this, SLOT(setTriggerLevel(QString)));
+
+  setTriggerDelay(0);
+  connect(d_tr_delay_act, SIGNAL(whichTrigger(QString)),
+	  this, SLOT(setTriggerDelay(QString)));
+
+  setTriggerChannel(0);
+  connect(d_tr_channel_menu, SIGNAL(whichTrigger(int)),
+	  this, SLOT(setTriggerChannel(int)));
 
   Reset();
 
@@ -153,6 +187,7 @@ void
 TimeDisplayForm::setNPoints(const int npoints)
 {
   d_npoints = npoints;
+  d_nptsmenu->setDiagText(d_npoints);
 }
 
 void
@@ -204,4 +239,86 @@ TimeDisplayForm::tagMenuSlot(bool en)
   for(size_t i = 0; i < d_tagsmenu.size(); i++) {
     getPlot()->enableTagMarker(i, d_tagsmenu[i]->isChecked());
   }
+}
+
+
+/********************************************************************
+ * TRIGGER METHODS
+ *******************************************************************/
+
+void
+TimeDisplayForm::setTriggerMode(gr::qtgui::trigger_mode mode)
+{
+  d_trig_mode = mode;
+  d_tr_mode_menu->getAction(mode)->setChecked(true);
+}
+
+gr::qtgui::trigger_mode
+TimeDisplayForm::getTriggerMode() const
+{
+  return d_trig_mode;
+}
+
+void
+TimeDisplayForm::setTriggerSlope(gr::qtgui::trigger_slope slope)
+{
+  d_trig_slope = slope;
+  d_tr_slope_menu->getAction(slope)->setChecked(true);
+}
+
+gr::qtgui::trigger_slope
+TimeDisplayForm::getTriggerSlope() const
+{
+  return d_trig_slope;
+}
+
+void
+TimeDisplayForm::setTriggerLevel(QString s)
+{
+  d_trig_level = s.toFloat();
+}
+
+void
+TimeDisplayForm::setTriggerLevel(float level)
+{
+  d_trig_level = level;
+  d_tr_level_act->setText(QString().setNum(d_trig_level));
+}
+
+float
+TimeDisplayForm::getTriggerLevel() const
+{
+  return d_trig_level;
+}
+
+void
+TimeDisplayForm::setTriggerDelay(QString s)
+{
+  d_trig_delay = s.toFloat();
+}
+
+void
+TimeDisplayForm::setTriggerDelay(float delay)
+{
+  d_trig_delay = delay;
+  d_tr_delay_act->setText(QString().setNum(d_trig_delay));
+}
+
+float
+TimeDisplayForm::getTriggerDelay() const
+{
+  return d_trig_delay;
+}
+
+void
+TimeDisplayForm::setTriggerChannel(int channel)
+{
+  d_trig_channel = channel;
+  d_tr_channel_menu->getAction(d_trig_channel)->setChecked(true);
+}
+
+int
+TimeDisplayForm::getTriggerChannel() const
+{
+  return d_trig_channel;
 }

@@ -21,6 +21,7 @@ qtgui.$(type.fcn)(
 self.$(id).set_update_time($update_time)
 self.$(id).set_y_axis($ymin, $ymax)
 self.$(id).enable_tags(-1, $entags)
+self.$(id).set_trigger_mode($tr_mode, $tr_slope, $tr_level, $tr_delay, $tr_chan)
 self._$(id)_win = sip.wrapinstance(self.$(id).pyqwidget(), Qt.QWidget)
 $(gui_hint()($win))</make>
         <callback>set_time_domain_axis($min, $max)</callback>
@@ -53,20 +54,20 @@ $(gui_hint()($win))</make>
 		<name>Sample Rate</name>
 		<key>srate</key>
 		<value>samp_rate</value>
-		<type>real</type>
+		<type>float</type>
 	</param>
 	<param>
 		<name>Y min</name>
 		<key>ymin</key>
 		<value>-1</value>
-		<type>real</type>
+		<type>float</type>
 		<hide>part</hide>
 	</param>
 	<param>
 		<name>Y max</name>
 		<key>ymax</key>
 		<value>1</value>
-		<type>real</type>
+		<type>float</type>
 		<hide>part</hide>
 	</param>
 	<param>
@@ -80,9 +81,70 @@ $(gui_hint()($win))</make>
 		<name>Update Period</name>
 		<key>update_time</key>
 		<value>0.10</value>
-		<type>real</type>
+		<type>float</type>
 		<hide>part</hide>
 	</param>
+
+	<param>
+		<name>Trigger Mode</name>
+		<key>tr_mode</key>
+		<value>qtgui.TRIG_MODE_FREE</value>
+		<type>enum</type>
+		<hide>part</hide>
+		<option>
+			<name>Free</name>
+			<key>qtgui.TRIG_MODE_FREE</key>
+		</option>
+		<option>
+			<name>Auto</name>
+			<key>qtgui.TRIG_MODE_AUTO</key>
+		</option>
+		<option>
+			<name>Normal</name>
+			<key>qtgui.TRIG_MODE_NORM</key>
+		</option>
+        </param>
+
+	<param>
+		<name>Trigger Slope</name>
+		<key>tr_slope</key>
+		<value>qtgui.TRIG_MODE_POS</value>
+		<type>enum</type>
+		<hide>part</hide>
+		<option>
+			<name>Positive</name>
+			<key>qtgui.TRIG_SLOPE_POS</key>
+		</option>
+		<option>
+			<name>Negative</name>
+			<key>qtgui.TRIG_SLOPE_NEG</key>
+		</option>
+        </param>
+
+	<param>
+		<name>Trigger Level</name>
+		<key>tr_level</key>
+		<value>0.0</value>
+		<type>float</type>
+		<hide>part</hide>
+	</param>
+
+	<param>
+		<name>Trigger Delay</name>
+		<key>tr_delay</key>
+		<value>0</value>
+		<type>float</type>
+		<hide>part</hide>
+	</param>
+
+	<param>
+		<name>Trigger Channel</name>
+		<key>tr_chan</key>
+		<value>0</value>
+		<type>int</type>
+		<hide>part</hide>
+	</param>
+
 	<param>
 		<name>Disp. Tags</name>
 		<key>entags</key>
@@ -105,6 +167,9 @@ $(gui_hint()($win))</make>
 		<type>gui_hint</type>
 		<hide>part</hide>
 	</param>
+
+	<check>$tr_chan &lt; 2*$nconnections</check>
+
 	<sink>
 		<name>in</name>
 		<type>$type</type>

@@ -28,6 +28,8 @@
 //load generated python docstrings
 %include "qtgui_swig_doc.i"
 
+%include "gnuradio/qtgui/trigger_mode.h"
+
 // So we understand the firdes window types
 %import "gnuradio/filter/firdes.h"
 

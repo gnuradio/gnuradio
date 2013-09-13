@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2011,2012 Free Software Foundation, Inc.
+ * Copyright 2011-2013 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -49,8 +49,8 @@ namespace gr {
 				       int nconnections,
 				       QWidget *parent)
       : sync_block("time_sink_c",
-		      io_signature::make(nconnections, nconnections, sizeof(gr_complex)),
-		      io_signature::make(0, 0, 0)),
+                   io_signature::make(nconnections, nconnections, sizeof(gr_complex)),
+                   io_signature::make(0, 0, 0)),
 	d_size(size), d_samp_rate(samp_rate), d_name(name),
 	d_nconnections(2*nconnections), d_parent(parent)
     {
@@ -71,6 +71,10 @@ namespace gr {
       d_tags = std::vector< std::vector<gr::tag_t> >(d_nconnections/2);
 
       initialize();
+
+      d_size += 1;         // trick the next line into updating
+      set_nsamps(size);
+      set_trigger_mode(TRIG_MODE_AUTO, TRIG_SLOPE_POS, 0, 0, 0);
     }
 
     time_sink_c_impl::~time_sink_c_impl()
@@ -189,6 +193,32 @@ namespace gr {
     }
 
     void
+    time_sink_c_impl::set_trigger_mode(trigger_mode mode,
+                                       trigger_slope slope,
+                                       float level,
+                                       float delay, int channel)
+    {
+      d_trigger_mode = mode;
+      d_trigger_slope = slope;
+      d_trigger_level = level;
+      d_trigger_delay = static_cast<int>(delay*d_samp_rate);
+      d_trigger_channel = channel;
+      d_triggered = false;
+      d_trigger_count = 0;
+
+      if(d_trigger_delay > d_size)
+        throw std::runtime_error("qtgui::time_sink_c: trigger delay set outside of display range.\n");
+
+      d_main_gui->setTriggerMode(d_trigger_mode);
+      d_main_gui->setTriggerSlope(d_trigger_slope);
+      d_main_gui->setTriggerLevel(d_trigger_level);
+      d_main_gui->setTriggerDelay(delay);
+      d_main_gui->setTriggerChannel(d_trigger_channel);
+
+      set_history(d_trigger_delay + 2);
+    }
+
+    void
     time_sink_c_impl::set_size(int width, int height)
     {
       d_main_gui->resize(QSize(width, height));
@@ -267,13 +297,6 @@ namespace gr {
       d_main_gui->setSampleRate(d_samp_rate);
     }
 
-    void
-    time_sink_c_impl::npoints_resize()
-    {
-      int newsize = d_main_gui->getNPoints();
-      set_nsamps(newsize);
-    }
-
     int
     time_sink_c_impl::nsamps() const
     {
@@ -334,79 +357,161 @@ namespace gr {
       d_index = 0;
     }
 
+    void
+    time_sink_c_impl::_npoints_resize()
+    {
+      int newsize = d_main_gui->getNPoints();
+      set_nsamps(newsize);
+    }
+
+    void
+    time_sink_c_impl::_gui_update_trigger()
+    {
+      d_trigger_mode = d_main_gui->getTriggerMode();
+      d_trigger_slope = d_main_gui->getTriggerSlope();
+      d_trigger_level = d_main_gui->getTriggerLevel();
+      d_trigger_channel = d_main_gui->getTriggerChannel();
+
+      float d = d_main_gui->getTriggerDelay();
+      int delay = static_cast<int>(d*d_samp_rate);
+
+      if(delay != d_trigger_delay) {
+        if(d_trigger_delay > d_size)
+          throw std::runtime_error("qtgui::time_sink_c: trigger delay set outside of display range.\n");
+        d_trigger_delay = delay;
+        set_history(d_trigger_delay + 2);
+      }
+    }
+
+    bool
+    time_sink_c_impl::_test_trigger_slope(const gr_complex *in) const
+    {
+      float x0, x1;
+      if(d_trigger_channel % 2 == 0) {
+        x0 = in[0].real();
+        x1 = in[1].real();
+      }
+      else {
+        x0 = in[0].imag();
+        x1 = in[1].imag();
+      }
+
+      if(d_trigger_slope == TRIG_SLOPE_POS)
+        return ((x0 <= d_trigger_level) && (x1 > d_trigger_level));
+      else
+        return ((x0 >= d_trigger_level) && (x1 < d_trigger_level));
+    }
+
     int
     time_sink_c_impl::work(int noutput_items,
 			   gr_vector_const_void_star &input_items,
 			   gr_vector_void_star &output_items)
     {
-      int n=0, j=0, idx=0;
-      const gr_complex *in = (const gr_complex*)input_items[idx];
+      int n=0, j=0, idx=0, ret=0;
+      const gr_complex *in;
 
-      npoints_resize();
+      _npoints_resize();
+      _gui_update_trigger();
 
       for(int i=0; i < noutput_items; i+=d_size) {
-	unsigned int datasize = noutput_items - i;
+
+        // If auto or normal trigger, look for the trigger
+        int trigger_index = i;
+        if((d_trigger_mode != TRIG_MODE_FREE) && !d_triggered) {
+          for(; trigger_index < noutput_items; trigger_index++) {
+            d_trigger_count++;
+
+            // Test if trigger has occurred based on the input stream,
+            // channel number, and slope direction
+            in = (const gr_complex*)input_items[d_trigger_channel/2];
+            if(_test_trigger_slope(&in[trigger_index + d_trigger_delay])) {
+              d_triggered = true;
+              j = trigger_index;
+              break;
+            }
+          }
+           
+          // If using auto trigger mode, trigger periodically even
+          // without a trigger event.
+          if((d_trigger_mode == TRIG_MODE_AUTO) && (d_trigger_count > d_size)) {
+            d_triggered = true;
+            d_trigger_count = 0;
+          }
+
+          ret = trigger_index;
+          i = trigger_index;
+        }
+
+	unsigned int datasize = noutput_items - trigger_index;
 	unsigned int resid = d_size-d_index;
 	idx = 0;
 
-	// If we have enough input for one full plot, do it
-	if(datasize >= resid) {
+        // If we're in trigger mode, test if we have triggered
+        if((d_trigger_mode == TRIG_MODE_FREE) || d_triggered) {
+          // If we have enough input for one full plot, do it
+          if(datasize >= resid) {
+            // Fill up residbufs with d_size number of items
+            for(n = 0; n < d_nconnections; n+=2) {
+              in = (const gr_complex*)input_items[idx];
+              volk_32fc_deinterleave_64f_x2_u(&d_residbufs[n][d_index],
+                                              &d_residbufs[n+1][d_index],
+                                              &in[j], resid);
 
-	  // Fill up residbufs with d_size number of items
-	  for(n = 0; n < d_nconnections; n+=2) {
-	    in = (const gr_complex*)input_items[idx];
-	    volk_32fc_deinterleave_64f_x2_u(&d_residbufs[n][d_index],
-					    &d_residbufs[n+1][d_index],
-					    &in[j], resid);
+              uint64_t nr = nitems_read(idx);
+              std::vector<gr::tag_t> tags;
+              get_tags_in_range(tags, idx, nr + j, nr + j + resid);
+              for(size_t t = 0; t < tags.size(); t++) {
+                tags[t].offset = tags[t].offset - (nr + j) + d_index;
+              }
+              d_tags[idx].insert(d_tags[idx].end(), tags.begin(), tags.end());
 
-            uint64_t nr = nitems_read(idx);
-            std::vector<gr::tag_t> tags;
-            get_tags_in_range(tags, idx, nr + j, nr + j + resid);
-            for(size_t t = 0; t < tags.size(); t++)
-              tags[t].offset = tags[t].offset - (nr + j) + d_index;
-            d_tags[idx].insert(d_tags[idx].end(), tags.begin(), tags.end());
+              idx++;
+            }
 
-            idx++;
-	  }
+            // Update the plot if it's time
+            if(gr::high_res_timer_now() - d_last_time > d_update_time) {
+              d_last_time = gr::high_res_timer_now();
+              d_qApplication->postEvent(d_main_gui,
+                                        new TimeUpdateEvent(d_residbufs, d_size, d_tags));
+            }
 
-	  // Update the plot if it's time
-	  if(gr::high_res_timer_now() - d_last_time > d_update_time) {
-	    d_last_time = gr::high_res_timer_now();
-	    d_qApplication->postEvent(d_main_gui,
-				      new TimeUpdateEvent(d_residbufs, d_size, d_tags));
-	  }
+            d_index = 0;
+            j += resid;
+            d_triggered = false;
 
-	  d_index = 0;
-	  j += resid;
-
-	  for(n = 0; n < d_nconnections/2; n++) {
-            d_tags[n].clear();
+            for(n = 0; n < d_nconnections/2; n++) {
+              d_tags[n].clear();
+            }
           }
-	}
 
-	// Otherwise, copy what we received into the residbufs for next time
-	else {
-	  for(n = 0; n < d_nconnections; n+=2) {
-	    in = (const gr_complex*)input_items[idx];
-	    volk_32fc_deinterleave_64f_x2_u(&d_residbufs[n][d_index],
-					    &d_residbufs[n+1][d_index],
-					    &in[j], datasize);
+          // Otherwise, copy what we received into the residbufs for next time
+          else {
+            for(n = 0; n < d_nconnections; n+=2) {
+              in = (const gr_complex*)input_items[idx];
+              volk_32fc_deinterleave_64f_x2_u(&d_residbufs[n][d_index],
+                                              &d_residbufs[n+1][d_index],
+                                              &in[j], datasize);
 
-            uint64_t nr = nitems_read(idx);
-            std::vector<gr::tag_t> tags;
-            get_tags_in_range(tags, idx, nr + j, nr + j + datasize);
-            for(size_t t = 0; t < tags.size(); t++)
-              tags[t].offset = tags[t].offset - (nr + j) + d_index;
-            d_tags[idx].insert(d_tags[idx].end(), tags.begin(), tags.end());
+              uint64_t nr = nitems_read(idx);
+              std::vector<gr::tag_t> tags;
+              get_tags_in_range(tags, idx, nr + j, nr + j + datasize);
 
-            idx++;
-	  }
-	  d_index += datasize;
-	  j += datasize;
-	}
+              for(size_t t = 0; t < tags.size(); t++) {
+                tags[t].offset = tags[t].offset - (nr + j) + d_index;
+              }
+              d_tags[idx].insert(d_tags[idx].end(), tags.begin(), tags.end());
+
+              idx++;
+            }
+            d_index += datasize;
+            j += datasize;
+          }
+
+          ret = j;
+        }
       }
 
-      return j;
+      return ret;
     }
 
   } /* namespace qtgui */

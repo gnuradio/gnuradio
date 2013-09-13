@@ -29,6 +29,7 @@
 #include <qwt_symbol.h>
 #include <gnuradio/filter/firdes.h>
 #include <gnuradio/qtgui/qtgui_types.h>
+#include <gnuradio/qtgui/trigger_mode.h>
 
 class LineColorMenu: public QMenu
 {
@@ -475,6 +476,7 @@ public:
     : QAction("Other", parent)
   {
     d_diag = new QDialog(parent);
+    d_diag->setWindowTitle("Other");
     d_diag->setModal(true);
 
     d_text = new QLineEdit();
@@ -529,6 +531,7 @@ public:
     : QAction("Other", parent)
   {
     d_diag = new QDialog(parent);
+    d_diag->setWindowTitle("Other");
     d_diag->setModal(true);
 
     d_text0 = new QLineEdit();
@@ -816,6 +819,7 @@ public:
     : QAction("Number of Points", parent)
   {
     d_diag = new QDialog(parent);
+    d_diag->setWindowTitle("Number of Points");
     d_diag->setModal(true);
 
     d_text = new QLineEdit();
@@ -836,6 +840,11 @@ public:
 
   ~NPointsMenu()
   {}
+
+  void setDiagText(const int npts)
+  {
+    d_text->setText(QString().setNum(npts));
+  }
 
 signals:
   void whichTrigger(const int npts);
@@ -943,6 +952,208 @@ private:
 /********************************************************************/
 
 
+class TriggerModeMenu: public QMenu
+{
+  Q_OBJECT
+
+public:
+  TriggerModeMenu(QWidget *parent)
+    : QMenu("Mode", parent)
+  {
+    d_grp = new QActionGroup(this);
+    d_act.push_back(new QAction("Free", this));
+    d_act.push_back(new QAction("Auto", this));
+    d_act.push_back(new QAction("Normal", this));
+
+    connect(d_act[0], SIGNAL(triggered()), this, SLOT(getFree()));
+    connect(d_act[1], SIGNAL(triggered()), this, SLOT(getAuto()));
+    connect(d_act[2], SIGNAL(triggered()), this, SLOT(getNorm()));
+
+    QListIterator<QAction*> i(d_act);
+    while(i.hasNext()) {
+      QAction *a = i.next();
+      a->setCheckable(true);
+      a->setActionGroup(d_grp);
+      addAction(a);
+    }
+  }
+
+  ~TriggerModeMenu()
+  {}
+
+  int getNumActions() const
+  {
+    return d_act.size();
+  }
+  
+  QAction * getAction(int which)
+  {
+    if(which < d_act.size())
+      return d_act[which];
+    else
+      throw std::runtime_error("TriggerModeMenu::getAction: which out of range.\n");
+  }
+
+  QAction * getAction(gr::qtgui::trigger_mode mode)
+  {
+    switch(mode) {
+    case gr::qtgui::TRIG_MODE_FREE:
+      return d_act[0];
+      break;
+    case gr::qtgui::TRIG_MODE_AUTO:
+      return d_act[1];
+      break;
+    case gr::qtgui::TRIG_MODE_NORM:
+      return d_act[2];
+      break;
+    default:
+      throw std::runtime_error("TriggerModeMenu::getAction: unknown trigger mode.\n");
+    }
+  }
+
+signals:
+  void whichTrigger(gr::qtgui::trigger_mode mode);
+
+public slots:
+  void getFree() { emit whichTrigger(gr::qtgui::TRIG_MODE_FREE); }
+  void getAuto() { emit whichTrigger(gr::qtgui::TRIG_MODE_AUTO); }
+  void getNorm() { emit whichTrigger(gr::qtgui::TRIG_MODE_NORM); }
+
+private:
+  QList<QAction *> d_act;
+  QActionGroup *d_grp;
+};
+
+
+/********************************************************************/
+
+
+class TriggerSlopeMenu: public QMenu
+{
+  Q_OBJECT
+
+public:
+  TriggerSlopeMenu(QWidget *parent)
+    : QMenu("Slope", parent)
+  {
+    d_grp = new QActionGroup(this);
+    d_act.push_back(new QAction("Positive", this));
+    d_act.push_back(new QAction("Negative", this));
+
+    connect(d_act[0], SIGNAL(triggered()), this, SLOT(getPos()));
+    connect(d_act[1], SIGNAL(triggered()), this, SLOT(getNeg()));
+
+    QListIterator<QAction*> i(d_act);
+    while(i.hasNext()) {
+      QAction *a = i.next();
+      a->setCheckable(true);
+      a->setActionGroup(d_grp);
+      addAction(a);
+    }
+  }
+
+  ~TriggerSlopeMenu()
+  {}
+
+  int getNumActions() const
+  {
+    return d_act.size();
+  }
+  
+  QAction * getAction(int which)
+  {
+    if(which < d_act.size())
+      return d_act[which];
+    else
+      throw std::runtime_error("TriggerSlopeMenu::getAction: which out of range.\n");
+  }
+
+  QAction * getAction(gr::qtgui::trigger_slope slope)
+  {
+    switch(slope) {
+    case gr::qtgui::TRIG_SLOPE_POS:
+      return d_act[0];
+      break;
+    case gr::qtgui::TRIG_SLOPE_NEG:
+      return d_act[1];
+      break;
+    default:
+      throw std::runtime_error("TriggerSlopeMenu::getAction: unknown trigger slope.\n");
+    }
+  }
+
+signals:
+  void whichTrigger(gr::qtgui::trigger_slope slope);
+
+public slots:
+  void getPos() { emit whichTrigger(gr::qtgui::TRIG_SLOPE_POS); }
+  void getNeg() { emit whichTrigger(gr::qtgui::TRIG_SLOPE_NEG); }
+
+private:
+  QList<QAction *> d_act;
+  QActionGroup *d_grp;
+};
+
+
+/********************************************************************/
+
+
+class TriggerChannelMenu: public QMenu
+{
+  Q_OBJECT
+
+public:
+  TriggerChannelMenu(int nchans, QWidget *parent)
+    : QMenu("Channel", parent)
+  {
+    d_grp = new QActionGroup(this);
+    for(int i = 0; i < nchans; i++) {
+      d_act.push_back(new QAction(QString().setNum(i), this));
+      d_act[i]->setCheckable(true);
+      d_act[i]->setActionGroup(d_grp);
+
+      addAction(d_act[i]);
+      connect(d_act[i], SIGNAL(triggered()), this, SLOT(getChannel()));
+    }
+  }
+
+  ~TriggerChannelMenu()
+  {}
+
+  int getNumActions() const
+  {
+    return d_act.size();
+  }
+  
+  QAction * getAction(int which)
+  {
+    if(which < d_act.size())
+      return d_act[which];
+    else
+      throw std::runtime_error("TriggerChannelMenu::getAction: which out of range.\n");
+  }
+
+
+signals:
+  void whichTrigger(int n);
+
+public slots:
+  void getChannel()
+  {
+    QAction *a = d_grp->checkedAction();
+    int which = a->text().toInt();
+    emit whichTrigger(which);
+  }
+
+private:
+  QList<QAction *> d_act;
+  QActionGroup *d_grp;
+};
+
+
+/********************************************************************/
+
+
 class PopupMenu: public QAction
 {
   Q_OBJECT
@@ -952,6 +1163,7 @@ public:
     : QAction(desc, parent)
   {
     d_diag = new QDialog(parent);
+    d_diag->setWindowTitle(desc);
     d_diag->setModal(true);
 
     d_text = new QLineEdit();
@@ -972,6 +1184,11 @@ public:
 
   ~PopupMenu()
   {}
+
+  void setText(QString s)
+  {
+    d_text->setText(s);
+  }
 
 signals:
   void whichTrigger(const QString data);

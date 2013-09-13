@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2011,2012 Free Software Foundation, Inc.
+ * Copyright 2011-2013 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -53,7 +53,19 @@ namespace gr {
       gr::high_res_timer_type d_update_time;
       gr::high_res_timer_type d_last_time;
 
-      void npoints_resize();
+      void _npoints_resize();
+
+      // Members used for triggering scope
+      trigger_mode d_trigger_mode;
+      trigger_slope d_trigger_slope;
+      float d_trigger_level;
+      int d_trigger_channel;
+      int d_trigger_delay;
+      bool d_triggered;
+      int d_trigger_count;
+
+      bool _test_trigger_slope(const gr_complex *in) const;
+      void _gui_update_trigger();
 
     public:
       time_sink_c_impl(int size, double samp_rate,
@@ -79,6 +91,8 @@ namespace gr {
       void set_nsamps(const int size);
       void set_samp_rate(const double samp_rate);
       void set_line_alpha(int which, double alpha);
+      void set_trigger_mode(trigger_mode mode, trigger_slope slope,
+                            float level, float delay, int channel);
 
       std::string title();
       std::string line_label(int which);
