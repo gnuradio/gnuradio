@@ -20,10 +20,24 @@
 include(GrPython)
 
 GR_PYTHON_INSTALL(PROGRAMS
+  pyqt_const_c.py
   pyqt_example_c.py
   pyqt_example_f.py
+  pyqt_freq_c.py
+  pyqt_freq_f.py
   pyqt_time_c.py
   pyqt_time_f.py
+  pyqt_time_raster_b.py
+  pyqt_time_raster_f.py
+  pyqt_waterfall_c.py
+  pyqt_waterfall_f.py
   DESTINATION ${GR_PKG_QTGUI_EXAMPLES_DIR}
   COMPONENT "qtgui_python"
+)
+
+install(
+    FILES
+    dark.qss
+    DESTINATION ${GR_PKG_QTGUI_EXAMPLES_DIR}
+    COMPONENT "qtgui_python"
 )
