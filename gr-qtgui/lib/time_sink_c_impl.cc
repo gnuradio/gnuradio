@@ -26,6 +26,8 @@
 
 #include "time_sink_c_impl.h"
 #include <gnuradio/io_signature.h>
+#include <gnuradio/block_detail.h>
+#include <gnuradio/buffer.h>
 #include <string.h>
 #include <volk/volk.h>
 #include <gnuradio/fft/fft.h>
@@ -376,9 +378,35 @@ namespace gr {
       int delay = static_cast<int>(d*d_samp_rate);
 
       if(delay != d_trigger_delay) {
-        if(d_trigger_delay > d_size)
-          throw std::runtime_error("qtgui::time_sink_c: trigger delay set outside of display range.\n");
+        // We restrict the delay to be within the window of time being
+        // plotted. This also restrict it to be less than the number
+        // of output items since we cannot set the history greater
+        // than this. We can probably get around this latter part by
+        // not using history and doing more work inside 'work' to keep
+        // track of things.
+        int maxn;
+        
+        // If we have built the detail and buffers, we're stuck with
+        // the max number of item; otherwise the buffer will be built
+        // around this value so we just don't want to go over d_size.
+        // d_size-2 so we can see the event even at the edge.
+        block_detail_sptr d = detail();
+        if(d) {
+          int max_possible = d->input(0)->max_possible_items_available()-d_initial_delay;
+          maxn = std::min(max_possible, d_size-2);
+        }
+        else {
+          maxn = d_size-2;
+          d_initial_delay = d_trigger_delay; // store this value before we create a d_detail
+        }
+
+        if(delay > maxn) {
+          GR_LOG_INFO(d_logger, boost::format("trigger delay (%1%) set outside of max possible range (%2%)") % delay % maxn);
+          delay = maxn;
+        }
+
         d_trigger_delay = delay;
+        d_main_gui->setTriggerDelay(d_trigger_delay);
         set_history(d_trigger_delay + 2);
       }
     }

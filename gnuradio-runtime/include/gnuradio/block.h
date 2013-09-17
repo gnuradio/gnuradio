@@ -82,8 +82,41 @@ namespace gr {
      * ensure that our input contains the appropriate "history" for the
      * filter. History should be equal to the number of filter taps.
      */
-    unsigned history() const { return d_history; }
-    void  set_history(unsigned history) { d_history = history; }
+    unsigned history() const;
+    void  set_history(unsigned history);
+
+    /*!
+     * Sets the group delay of the block. Since group delay of blocks
+     * like filters is derived from the taps and not the block itself,
+     * we cannot automatically calculate this value and so leave it as
+     * a user-defined property. It defaults to 0 is not set.
+     *
+     * The group delay is mostly used to adjust the placement of the
+     * tags and is not currently used for any signal processing. When
+     * a tag is passed through a block with internal delay, its
+     * location should be moved based on the group delay of the
+     * block. This interface allows us to set this.
+     *
+     * \param which The buffer on which to set the delay.
+     * \param delay The group delay of the data stream.
+     */
+    void set_group_delay(int which, unsigned delay);
+
+    /*!
+     * Convenience wrapper to gr::block::set_group_delay(int which, unsigned delay)
+     * to set all ports to the same delay.
+     */
+    void set_group_delay(unsigned delay);
+
+    /*!
+     * Gets the group delay of the block. Since group delay of blocks
+     * like filters is derived from the taps and not the block itself,
+     * we cannot automatically calculate this value and so leave it as
+     * a user-defined property. It defaults to 0 is not set.
+     *
+     * \param which Which port from which to get the group delay.
+     */
+    unsigned group_delay(int which) const;
 
     /*!
      * \brief Return true if this block has a fixed input to output rate.
@@ -534,6 +567,7 @@ namespace gr {
     double                d_relative_rate;	// approx output_rate / input_rate
     block_detail_sptr     d_detail;		// implementation details
     unsigned              d_history;
+    unsigned              d_group_delay;
     bool                  d_fixed_rate;
     bool                  d_max_noutput_items_set;     // if d_max_noutput_items is valid
     int                   d_max_noutput_items;         // value of max_noutput_items for this block

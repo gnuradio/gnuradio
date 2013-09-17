@@ -27,6 +27,7 @@
 #include <gnuradio/block.h>
 #include <gnuradio/block_registry.h>
 #include <gnuradio/block_detail.h>
+#include <gnuradio/buffer.h>
 #include <gnuradio/prefs.h>
 #include <stdexcept>
 #include <iostream>
@@ -43,6 +44,7 @@ namespace gr {
       d_is_unaligned(false),
       d_relative_rate (1.0),
       d_history(1),
+      d_group_delay(0),
       d_fixed_rate(false),
       d_max_noutput_items_set(false),
       d_max_noutput_items(0),
@@ -105,6 +107,45 @@ namespace gr {
   block::~block()
   {
     global_block_registry.unregister_primitive(alias());
+  }
+
+  unsigned
+  block::history() const
+  {
+    return d_history;
+  }
+
+  void
+  block::set_history(unsigned history)
+  {
+    d_history = history;
+  }
+
+  void
+  block::set_group_delay(unsigned delay)
+  {
+    d_group_delay = delay;
+    if(d_detail) {
+      unsigned int nins = static_cast<unsigned int>(d_detail->ninputs());
+      for(unsigned int n = 0; n < nins; n++) {
+        d_detail->input(n)->set_group_delay(d_group_delay);
+      }
+    }
+  }
+
+  void
+  block::set_group_delay(int which, unsigned delay)
+  {
+    d_group_delay = delay;
+    if(d_detail) {
+      d_detail->input(which)->set_group_delay(d_group_delay);
+    }
+  }
+
+  unsigned
+  block::group_delay(int which) const
+  {
+    return d_group_delay;
   }
 
   // stub implementation:  1:1

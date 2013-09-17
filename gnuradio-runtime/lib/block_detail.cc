@@ -191,7 +191,7 @@ namespace gr {
   {
     // get from gr_buffer_reader's deque of tags
     d_input[which_input]->get_tags_in_range(v, abs_start, abs_end, id);
-  }
+   }
 
   void
   block_detail::get_tags_in_range(std::vector<tag_t> &v,

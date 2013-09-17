@@ -63,6 +63,7 @@ namespace gr {
       int d_trigger_delay;
       bool d_triggered;
       int d_trigger_count;
+      int d_initial_delay; // used for limiting d_trigger_delay
 
       bool _test_trigger_slope(const gr_complex *in) const;
       void _gui_update_trigger();

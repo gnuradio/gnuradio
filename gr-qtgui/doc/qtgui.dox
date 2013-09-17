@@ -50,6 +50,7 @@ with complex inputs. The time raster plots accept bits and floats.
 
 Because the time raster plots are designed to show structure over time
 in a signal, frame, packet, etc., they never drop samples. This is a
+
 fairly taxing job and performance can be an issue. Since it is
 expected that this block will work on a frame or packet structure, we
 tend to be at the lowest possible rate at this point, so that will
@@ -62,6 +63,65 @@ the point of almost being unusable. In the future, we may restrict
 compilation and installation of these plots only if QWT6 or higher is
 discovered. For now, just be aware of this limitation.
 
+
+\section qtgui_menu Drop-Down Menu and Interacting with Plots
+
+All QTGUI sinks have interactive capabilities.
+
+\li Zooming is done simply by clicking the left mouse button and
+dragging a rectangle around the area to zoom.
+\li Zooming can be done in multiple steps.
+\li A right mouse click will zoom out one step.
+\li Ctrl+Right mouse click will zoom all the way out.
+\li Ctrl+Middle mouse click and hold can drag the canvas around.
+\li Mouse wheel up/down will zoom out/in on y axis (both axes in
+constellation plot).
+\li Middle mouse button brings up a context menu.
+
+Each type of graph has a different set of menu items in the context
+menu. Most have some way to change the appearance of the lines or
+surfaces, such as changing the line width color, marker, and
+transparency. Other common features can set the sampling rate, turn a
+grid on an off, pause and unpause (stop/start) the display update, and
+save the current figure. Specific feature are things like setting the
+number of points to display, setting the FFT size, FFT window, and any
+FFT averaging.
+
+\subsection qtgui_menu_trigger Triggering Menu for Time Plots
+
+The time plots have triggering capabilities. Triggering can happen
+when the signal of a specific channel crosses (positive or negative
+slope) a certain level threshold. Or triggering can be done off a
+specific stream tag such that whenever a tag of a given key is found,
+the scope will trigger.
+
+In the signal level mode, the trigger can be either 'auto' or 'normal'
+where the latter will only trigger when the even is seen. The 'auto'
+mode will trigger on the event or every so often even if no trigger is
+found. The 'free' mode ignores ignores triggering and continuously
+plots.
+
+By default, the triggers plot the triggering event at the x=0 (i.e.,
+the left-most point in the plot). A delay can be set to delay the
+signal along the x-axis to observe any signal before the triggering
+event. The delay feature works the same for both level and tag
+triggers. The delay is set according to time in seconds, not
+samples. So the delay can be calculated as the number of samples
+divided by the sample rate given to the block.
+
+All trigger settings (mode, slope, level, delay, channel, and tag key)
+are settable in the GRC properties boxes to easily set up a repeatable
+environment.
+
+A note on the trigger delay setting. This value is limited by the
+buffer size and/or the number of points being display. It is capped by
+the minimum of these two values. The buffer size issue is generally
+only a problem when plotting a large number of samples. However, if
+the delay is set large to begin with (in the GRC properties box or
+before top_block.start() is called), then the buffers are resized
+accordingly offering more freedom. This should be a problem in a
+limited number of scenarios, but a log INFO level message is produced
+when asking for the delay outside of the available range.
 
 \section Dependencies
 
