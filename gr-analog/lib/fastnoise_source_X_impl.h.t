@@ -43,6 +43,9 @@ namespace gr {
       @IMPL_NAME@(noise_type_t type, float ampl, long seed, long samples);
       ~@IMPL_NAME@();
 
+      @TYPE@ sample();
+      @TYPE@ sample_unbiased();
+
       void set_type(noise_type_t type);
       void set_amplitude(float ampl);
       void generate();
