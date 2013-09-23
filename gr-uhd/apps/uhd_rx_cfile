@@ -95,19 +95,19 @@ class rx_cfile_block(gr.top_block):
             try:
                 info = self._u.get_usrp_info()
 
-                mboard_id = info.get("mboard_id").split(" ")[0]
-                if info.get("mboard_serial") == "":
+                mboard_id = info["mboard_id"].split(" ")[0]
+                if info["mboard_serial"] == "":
                     mboard_serial = "no serial"
                 else:
-                    mboard_serial = info.get("mboard_serial")
+                    mboard_serial = info["mboard_serial"]
                 
-                rx_id = info.get("rx_id").split(" ")[0]
-                if info.get("rx_serial") == "":
+                rx_id = info["rx_id"].split(" ")[0]
+                if info["rx_serial"] == "":
                     rx_serial = "no serial"
                 else:
-                    rx_serial = info.get("rx_serial")
-                rx_antenna = info.get("rx_antenna")
-                rx_subdev_spec = info.get("rx_subdev_spec")
+                    rx_serial = info["rx_serial"]
+                rx_antenna = info["rx_antenna"]
+                rx_subdev_spec = info["rx_subdev_spec"]
 
                 print "Motherboard: %s (%s)" % (mboard_id, mboard_serial)
                 if "B200" in mboard_id or "B210" in mboard_id:
