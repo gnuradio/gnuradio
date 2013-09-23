@@ -250,7 +250,7 @@ namespace gr {
 
     layout->setConversionPattern(pattern);
     app->setLayout(layout);
-    logger->setAppender(*app);
+    logger->setAppender(app);
   }
 
   void
