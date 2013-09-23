@@ -376,8 +376,10 @@ namespace gr {
 	if(((E[i] >= E[i-1]) && (E[i] > E[i+1]) && (E[i] > 0.0)) ||
 	   ((E[i] <= E[i-1]) && (E[i] < E[i+1]) && (E[i] < 0.0))) {
 	  // PAK: we sometimes get too many extremal frequencies
-	  if(k >= 2*r)
+	  if(k >= 2*r) {
+            free(foundExt);
 	    return -3;
+          }
 	  foundExt[k++] = i;
 	}
       }
@@ -388,14 +390,18 @@ namespace gr {
       j = gridsize-1;
       if(((E[j] > 0.0) && (E[j] > E[j-1])) ||
 	 ((E[j] < 0.0) && (E[j] < E[j-1]))) {
-	if(k >= 2*r)
+	if(k >= 2*r) {
+          free(foundExt);
 	  return -3;
+        }
 	foundExt[k++] = j;
       }
       
       // PAK: we sometimes get not enough extremal frequencies
-      if(k < r+1)
+      if(k < r+1) {
+        free(foundExt);
 	return -2;
+      }
       
       /*
        * Remove extra extremals
@@ -688,8 +694,18 @@ namespace gr {
 	calc_parms(r, Ext, Grid, D, W, ad, x, y);
 	calc_error(r, ad, x, y, gridsize, Grid, D, W, E);
 	int err = search(r, Ext, gridsize, E);
-	if(err)
+	if(err) {
+          free(Grid);
+          free(W);
+          free(D);
+          free(E);
+          free(Ext);
+          free(taps);
+          free(x);
+          free(y);
+          free(ad);
 	  return err;
+        }
 	for(int i = 0; i <= r; i++)
 	  assert(Ext[i] < gridsize);
 	if(is_done(r, Ext, E))
@@ -732,6 +748,7 @@ namespace gr {
       free(D);
       free(E);
       free(Ext);
+      free(taps);
       free(x);
       free(y);
       free(ad);
