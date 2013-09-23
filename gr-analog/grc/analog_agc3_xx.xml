@@ -8,7 +8,7 @@
 	<name>AGC3</name>
 	<key>analog_agc3_xx</key>
 	<import>from gnuradio import analog</import>
-	<make>analog.agc3_$(type.fcn)($attack_rate, $decay_rate, $reference, $gain)
+	<make>analog.agc3_$(type.fcn)($attack_rate, $decay_rate, $reference, $gain, $iir_update_decim)
 self.$(id).set_max_gain($max_gain)</make>
 	<callback>set_attack_rate($attack_rate)</callback>
 	<callback>set_decay_rate($decay_rate)</callback>
@@ -58,6 +58,12 @@ self.$(id).set_max_gain($max_gain)</make>
 		<name>Max Gain</name>
 		<key>max_gain</key>
 		<value>65536</value>
+		<type>real</type>
+	</param>
+	<param>
+		<name>IIR Update Decimation</name>
+		<key>iir_update_decim</key>
+		<value>1</value>
 		<type>real</type>
 	</param>
 	<sink>
