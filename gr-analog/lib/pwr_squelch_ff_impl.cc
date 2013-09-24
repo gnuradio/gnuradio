@@ -43,7 +43,7 @@ namespace gr {
 		 io_signature::make(1, 1, sizeof(float)),
 		 io_signature::make(1, 1, sizeof(float))),
 	squelch_base_ff_impl("pwr_squelch_ff", ramp, gate),
-	d_iir(alpha)
+	d_pwr(0), d_iir(alpha)
     {
       set_threshold(threshold);
     }
