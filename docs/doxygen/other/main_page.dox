@@ -419,8 +419,8 @@ New as of 3.6.5.
 
 Using gr_modtool, each package comes with the ability to easily locate
 the gnuradio-runtime library using the 'find_package(GnuradioRuntime)'
-cmake command. This only locates that the library and include
-directories exist, which is enough for most simple projects.
+cmake command. This only locates the gnuradio-runtime library and
+include directory, which is enough for most simple projects.
 
 As projects become more complicated and start needing to rely on other
 GNU Radio components like gnuradio-blocks or gnuradio-filter, for
@@ -456,18 +456,38 @@ part of GNU Radio, the configuration will also fail.
 
 \subsection oot_config_path_page Install Path
 
-Cmake has to know where to find these configuration files. They are
-installed into $prefix/lib/cmake/gnuradio. If $prefix is '/usr' or
-'/usr/local', then everything should work fine. If the GNU Radio
-install $prefix is something else, then Cmake must be told where to
-find it. This can be done in two ways. If you are installing the
-out-of-tree module into the same $prefix, then you would be setting
-'-DCMAKE_INSTALL_PREFIX' on the configuration command line. This is
-enough to tell Cmake where to look for the configuration files.
+Cmake has to know where to find either the package config files or the
+GnuradioConfig.cmake script. The package config files are located in
+$prefix/lib/pkgconfig while all of the Cmake scripts from GNU Radio
+are installed into $prefix/lib/cmake/gnuradio.
 
-The other way to do it is to set the CMAKE_PREFIX_PATH environmental
-variable to $prefix. You can then install your component anywhere
-you'd like and it will be able to find and configure against the
-installed GNU Radio.
+If the installed GNU Radio $prefix is '/usr' or '/usr/local', then
+everything should work fine. If the GNU Radio install $prefix is
+something else, then Cmake must be told where to find it. This can be
+done in a few ways:
+
+1. If you are installing the out-of-tree module into the same $prefix,
+then you would be setting '-DCMAKE_INSTALL_PREFIX' on the
+configuration command line. This is enough to tell Cmake where to look
+for the configuration files.
+
+2. Cmake will try to find the package config (*.pc) files. If it can,
+these files will instruct Cmake where to look for the rest of the
+configuration options. If this is not set, it can be set as:
+
+\code
+    export PKG_CONFIG_PATH=$prefix/lib/pkgconfg:$PKG_CONFIG_PATH
+\endcode
+
+3. Set the CMAKE_PREFIX_PATH environmental variable to $prefix.
+
+\code
+    export CMAKE_PREFIX_PATH=$prefix:$CMAKE_PREFIX_PATH
+\endcode
+
+
+With method 1, you will be installing your OOT project into the same
+$prefix as GNU Radio. With methods 2 and 3, you can install your
+component anywhere you like (using -DCMAKE_INSTALL_PREFIX).
 
 */
