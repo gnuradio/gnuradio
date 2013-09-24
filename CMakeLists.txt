@@ -312,7 +312,7 @@ SET(cmake_configs
 )
 
 if(NOT CMAKE_MODULES_DIR)
-   set(CMAKE_MODULES_DIR lib/cmake/gnuradio)
+   set(CMAKE_MODULES_DIR lib${LIB_SUFFIX}/cmake/gnuradio)
 endif(NOT CMAKE_MODULES_DIR)
 
 # Install all other cmake files into same directory
