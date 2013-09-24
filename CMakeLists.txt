@@ -312,11 +312,14 @@ SET(cmake_configs
 )
 
 if(NOT CMAKE_MODULES_DIR)
-   set(CMAKE_MODULES_DIR lib/cmake/gnuradio)
+   set(CMAKE_MODULES_DIR lib${LIB_SUFFIX}/cmake/gnuradio)
 endif(NOT CMAKE_MODULES_DIR)
 
 # Install all other cmake files into same directory
 file(GLOB cmake_others "cmake/Modules/*.cmake")
+list(REMOVE_ITEM cmake_others
+    "${CMAKE_SOURCE_DIR}/cmake/Modules/FindGnuradio.cmake"
+)
 
 install(
   FILES ${cmake_configs} ${cmake_others}
