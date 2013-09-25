@@ -39,7 +39,7 @@ namespace gr {
       : sync_decimator("decode_ccsds_27_fb",
 			  io_signature::make (1, 1, sizeof(float)),
 			  io_signature::make (1, 1, sizeof(char)),
-			  2*8)  // Rate 1/2 code, unpacked to packed conversion
+			  2*8), d_count(0)  // Rate 1/2 code, unpacked to packed conversion
     {
       float RATE = 0.5;
       float ebn0 = 12.0;
