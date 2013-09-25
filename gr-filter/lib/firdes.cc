@@ -746,6 +746,7 @@ namespace gr {
       case WIN_RECTANGULAR:
 	for(int n = 0; n < ntaps; n++)
 	  taps[n] = 1;
+        break;
 
       case WIN_HAMMING:
 	for(int n = 0; n < ntaps; n++)
