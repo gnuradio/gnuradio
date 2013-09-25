@@ -577,7 +577,7 @@ deserialize(std::streambuf &sb)
   case PST_COMPLEX:
     {
     double r,i;
-    if(!deserialize_untagged_f64(&r, sb) && !deserialize_untagged_f64(&i, sb))
+    if(!deserialize_untagged_f64(&r, sb) || !deserialize_untagged_f64(&i, sb))
       goto error;
     return make_rectangular( r,i );
     }
