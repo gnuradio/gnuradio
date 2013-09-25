@@ -118,7 +118,7 @@ class test_filter_delay_fc(gr_unittest.TestCase):
         dst2 = blocks.vector_sink_c()
 
         # calculate taps
-        taps = filter.firdes_hilbert(ntaps)
+        taps = filter.firdes.hilbert(ntaps, filter.firdes.WIN_HAMMING)
         hd = filter.filter_delay_fc(taps)
 
         tb.connect(src1, hd)
@@ -209,7 +209,7 @@ class test_filter_delay_fc(gr_unittest.TestCase):
         dst2 = blocks.vector_sink_c()
 
         # calculate taps
-        taps = filter.firdes_hilbert(ntaps)
+        taps = filter.firdes.hilbert(ntaps, filter.firdes.WIN_HAMMING)
         hd = filter.filter_delay_fc(taps)
 
         tb.connect(src1, (hd,0))
@@ -301,7 +301,7 @@ class test_filter_delay_fc(gr_unittest.TestCase):
         src1 = blocks.vector_source_f(data1)
         src2 = blocks.vector_source_f(data2)
 
-        taps = filter.firdes_hilbert(ntaps)
+        taps = filter.firdes.hilbert(ntaps, filter.firdes.WIN_HAMMING)
         hd = filter.filter_delay_fc(taps)
 
         dst2 = blocks.vector_sink_c()
