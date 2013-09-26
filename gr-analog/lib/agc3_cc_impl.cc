@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2006,2010,2012 Free Software Foundation, Inc.
+ * Copyright 2006,2010,2012,2013 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -24,6 +24,7 @@
 #include "config.h"
 #endif
 
+#include <float.h>
 #include <vector>
 
 #include "agc3_cc_impl.h"
@@ -102,8 +103,13 @@ namespace gr {
       }
       else {
         // Otherwise perform a normal iir update
+#ifdef _MSC_VER
+		std::vector<float> mag_sq(noutput_items/d_iir_update_decim);
+		std::vector<float> inv_mag(noutput_items/d_iir_update_decim);
+#else
         float mag_sq[noutput_items/d_iir_update_decim] __attribute__ ((aligned (16)));
         float inv_mag[noutput_items/d_iir_update_decim] __attribute__ ((aligned (16)));
+#endif
 
         // generate squared magnitudes at decimated rate (gather operation)
         for(int i=0; i<noutput_items/d_iir_update_decim; i++){
@@ -112,12 +118,16 @@ namespace gr {
         }
 
         // compute inverse square roots 
-        volk_32f_invsqrt_32f_a(inv_mag, mag_sq, noutput_items/d_iir_update_decim);
+        volk_32f_invsqrt_32f_a(&inv_mag[0], &mag_sq[0], noutput_items/d_iir_update_decim);
 
         // apply updates
         for(int i=0; i<noutput_items/d_iir_update_decim; i++){
             float magi = inv_mag[i];
+#ifdef _MSC_VER
+			if(!_finite(magi)){
+#else
             if(std::isfinite(magi)){
+#endif
                 float rate = (magi > d_gain/d_reference)?d_decay:d_attack;
                 d_gain = d_gain*(1-rate) + d_reference*magi*rate;
             } else {
