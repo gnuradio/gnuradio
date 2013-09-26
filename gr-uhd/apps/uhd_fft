@@ -200,12 +200,12 @@ class app_top_block(stdgui2.std_top_block):
                                                callback=self.set_gain)
 
         try:
-            mboard_id = self.u.get_usrp_info().get("mboard_id")
-            mboard_serial = self.u.get_usrp_info().get("mboard_serial")
+            mboard_id = self.u.get_usrp_info()["mboard_id"]
+            mboard_serial = self.u.get_usrp_info()["mboard_serial"]
             if mboard_serial == "":
                 mboard_serial = "no serial"
-            dboard_subdev_name = self.u.get_usrp_info().get("rx_subdev_name")
-            dboard_serial = self.u.get_usrp_info().get("rx_serial")
+            dboard_subdev_name = self.u.get_usrp_info()["rx_subdev_name"]
+            dboard_serial = self.u.get_usrp_info()["rx_serial"]
             if dboard_serial == "":
                 dboard_serial = "no serial"
             subdev = self.u.get_subdev_spec()
