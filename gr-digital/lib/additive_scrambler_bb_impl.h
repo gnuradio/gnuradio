@@ -34,12 +34,12 @@ namespace gr {
     {
     private:
       digital::lfsr d_lfsr;
-      int      d_count; //! Reset the LFSR after this many bytes (not bits)
-      int      d_bytes; //! Count the processed bytes
+      int      d_count; //!< Reset the LFSR after this many bytes (not bits)
+      int      d_bytes; //!< Count the processed bytes
       int      d_len;
       int      d_seed;
       int      d_bits_per_byte;
-      pmt::pmt_t d_reset_tag_key;
+      pmt::pmt_t d_reset_tag_key; //!< Reset the LFSR when this tag is received
 
       int _get_next_reset_index(int noutput_items, int last_reset_index=-1);
 
@@ -55,7 +55,6 @@ namespace gr {
       int count() const;
       int bits_per_byte() { return d_bits_per_byte; };
 
-      
       int work(int noutput_items,
 	       gr_vector_const_void_star &input_items,
 	       gr_vector_void_star &output_items);

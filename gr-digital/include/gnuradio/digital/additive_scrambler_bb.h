@@ -36,14 +36,19 @@ namespace gr {
      * Scramble an input stream using an LFSR.
      *
      * \details
-     * This block works on the LSB only of the input data stream,
-     * i.e., on an "unpacked binary" stream, and produces the same
-     * format on its output.
+     * This block scrambles up to 8 bits per byte of the input
+     * data stream, starting at the LSB.
      *
      * The scrambler works by XORing the incoming bit stream by the
      * output of the LFSR. Optionally, after 'count' bits have been
      * processed, the shift register is reset to the seed value.
      * This allows processing fixed length vectors of samples.
+     *
+     * Alternatively, the LFSR can be reset using a reset tag to
+     * scramble variable length vectors. However, it cannot be reset
+     * between bytes.
+     *
+     * For details on configuring the LFSR, see gr::digital::lfsr.
      */
     class DIGITAL_API additive_scrambler_bb : virtual public sync_block
     {
