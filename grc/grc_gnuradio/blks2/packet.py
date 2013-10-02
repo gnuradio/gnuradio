@@ -68,7 +68,7 @@ class packet_encoder(gr.hier_block2):
     Hierarchical block for wrapping packet-based modulators.
     """
 
-    def __init__(self, samples_per_symbol, bits_per_symbol, access_code='', pad_for_usrp=True):
+    def __init__(self, samples_per_symbol, bits_per_symbol, preamble='', access_code='', pad_for_usrp=True):
         """
         packet_mod constructor.
         
@@ -83,10 +83,15 @@ class packet_encoder(gr.hier_block2):
         self._samples_per_symbol = samples_per_symbol
         self._bits_per_symbol = bits_per_symbol
         self._pad_for_usrp = pad_for_usrp
+        if not preamble: #get preamble
+            preamble = packet_utils.default_preamble
         if not access_code: #get access code
             access_code = packet_utils.default_access_code
+        if not packet_utils.is_1_0_string(preamble):
+            raise ValueError, "Invalid preamble %r. Must be string of 1's and 0's" % (preamble,)
         if not packet_utils.is_1_0_string(access_code):
             raise ValueError, "Invalid access_code %r. Must be string of 1's and 0's" % (access_code,)
+        self._preamble = preamble
         self._access_code = access_code
         self._pad_for_usrp = pad_for_usrp
         #create blocks
@@ -113,6 +118,7 @@ class packet_encoder(gr.hier_block2):
             payload,
             self._samples_per_symbol,
             self._bits_per_symbol,
+            self._preamble,
             self._access_code,
             self._pad_for_usrp
         )

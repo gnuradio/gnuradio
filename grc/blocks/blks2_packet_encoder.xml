@@ -11,6 +11,7 @@
 	<make>grc_blks2.packet_mod_$(type.fcn)(grc_blks2.packet_encoder(
 		samples_per_symbol=$samples_per_symbol,
 		bits_per_symbol=$bits_per_symbol,
+		preamble=$preamble,
 		access_code=$access_code,
 		pad_for_usrp=$pad_for_usrp,
 	),
@@ -58,6 +59,12 @@
 		<type>int</type>
 	</param>
 	<param>
+		<name>Preamble</name>
+		<key>preamble</key>
+		<value></value>
+		<type>string</type>
+	</param>
+	<param>
 		<name>Access Code</name>
 		<key>access_code</key>
 		<value></value>
@@ -92,6 +99,8 @@
 	</source>
 	<doc>
 Packet encoder block, for use with the gnuradio modulator blocks: gmsk, dpsk, qam.
+
+Preamble: string of 1's and 0's, leave blank for automatic.
 
 Access Code: string of 1's and 0's, leave blank for automatic.
 
