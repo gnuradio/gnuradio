@@ -130,7 +130,42 @@ class qa_packet_headerparser_b (gr_unittest.TestCase):
         self.assertEqual(msg1, {'packet_len': 193*4, 'frame_len': 25, 'packet_num': 0})
         self.assertEqual(msg2, {'packet_len': 8*4, 'frame_len': 1, 'packet_num': 1})
 
+    def test_004_ofdm_scramble(self):
+        """
+        Test scrambling for OFDM header gen
+        """
+        header_len = 32
+        packet_length = 23
+        packet_len_tagname = "packet_len"
+        frame_len_tagname = "frame_len"
+        data, tags = tagged_streams.packets_to_vectors([range(packet_length),range(packet_length),], packet_len_tagname)
+        src = blocks.vector_source_b(data, False, 1, tags)
+        header_formatter = digital.packet_header_ofdm(
+                (range(32),), # 32 carriers are occupied (which doesn't matter here)
+                1,         # 1 OFDM symbol per header (= 32 bits)
+                packet_len_tagname,
+                frame_len_tagname,
+                "packet_num",
+                1,         # 1 bit per header symbols (BPSK)
+                2,          # 2 bits per payload symbol (QPSK)
+                scramble_header=True
+        )
+        header_gen = digital.packet_headergenerator_bb(header_formatter.base())
+        header_parser = digital.packet_headerparser_b(header_formatter.base())
+        sink = blocks.message_debug()
+        self.tb.connect(src, header_gen, header_parser)
+        self.tb.msg_connect(header_parser, "header_data", sink, "store")
+        self.tb.start()
+        time.sleep(1)
+        self.tb.stop()
+        self.tb.wait()
+        msg = pmt.to_python(sink.get_message(0))
+        self.assertEqual(msg, {'packet_len': packet_length, 'packet_num': 0, 'frame_len': 4})
+        msg = pmt.to_python(sink.get_message(1))
+        self.assertEqual(msg, {'packet_len': packet_length, 'packet_num': 1, 'frame_len': 4})
+
 if __name__ == '__main__':
-    gr_unittest.run(qa_packet_headerparser_b, "qa_packet_headerparser_b.xml")
+    #gr_unittest.run(qa_packet_headerparser_b, "qa_packet_headerparser_b.xml")
+    gr_unittest.run(qa_packet_headerparser_b)
 
 
