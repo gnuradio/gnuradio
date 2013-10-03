@@ -137,9 +137,10 @@ namespace gr {
     }
   
     // Message passing interface
-    pmt::pmt_t message_subscribers;
+    pmt::pmt_t d_message_subscribers;
   
   public:
+    pmt::pmt_t message_subscribers(pmt::pmt_t port);
     virtual ~basic_block();
     long unique_id() const { return d_unique_id; }
     long symbolic_id() const { return d_symbolic_id; }
@@ -242,7 +243,7 @@ namespace gr {
       if(msg_queue.find(which_port) != msg_queue.end()) {
         return true;
       }
-      if(pmt::dict_has_key(message_subscribers, which_port)) {
+      if(pmt::dict_has_key(d_message_subscribers, which_port)) {
         return true;
       }
       return false;
