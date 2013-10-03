@@ -55,7 +55,7 @@ namespace gr {
 		      const std::string &len_tag_key="packet_len",
 		      const std::string &num_tag_key="packet_num",
 		      int bits_per_byte=1);
-      ~packet_header_default();
+      virtual ~packet_header_default();
 
       sptr base() { return shared_from_this(); };
       sptr formatter() { return shared_from_this(); };
