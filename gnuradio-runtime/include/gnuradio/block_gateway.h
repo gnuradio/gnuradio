@@ -238,6 +238,10 @@ namespace gr {
     void block__message_port_unsub(pmt::pmt_t port_id, pmt::pmt_t target) {
       gr::basic_block::message_port_unsub(port_id, target);
     }
+
+    pmt::pmt_t block__message_subscribers(pmt::pmt_t which_port) {
+      return gr::basic_block::message_subscribers(which_port);
+    }
     
     pmt::pmt_t block__message_ports_in() {
       return gr::basic_block::message_ports_in();
