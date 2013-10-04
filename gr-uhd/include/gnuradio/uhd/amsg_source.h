@@ -37,7 +37,16 @@ namespace gr {
     public:
       // gr::uhd::amsg_source::sptr
       typedef boost::shared_ptr<amsg_source> sptr;
-      
+
+      /*!
+       * \brief Destructor
+       *
+       * This must be explicitly defined because there is no block inheritance
+       * for this class, and thus no virtual destructor pulled into the class
+       * hierarchy for sub-classes.
+       */
+      virtual ~amsg_source(){}
+
       /*!
        * \brief Make a new USRP asynchronous message-based source block.
        * \ingroup uhd_blk
