@@ -76,7 +76,6 @@ class test_scrambler(gr_unittest.TestCase):
         self.assertEqual(src_data, src_data)
 
     def test_additive_scrambler_tags(self):
-        print 'tags'
         src_data = (1,)*1000
         src = blocks.vector_source_b(src_data, False)
         scrambler = digital.additive_scrambler_bb(0x8a, 0x7f, 7, 100)

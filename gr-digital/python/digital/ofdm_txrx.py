@@ -63,6 +63,7 @@ _seq_seed = 42
 
 
 def _get_active_carriers(fft_len, occupied_carriers, pilot_carriers):
+    """ Returns a list of all carriers that at some point carry data or pilots. """
     active_carriers = list()
     for carrier in list(occupied_carriers[0]) + list(pilot_carriers[0]):
         if carrier < 0:
@@ -134,6 +135,8 @@ class ofdm_tx(gr.hier_block2):
     sync_word2: The second sync preamble symbol. This has to be filled entirely. Also used for
                 coarse frequency offset and channel estimation.
     rolloff: The rolloff length in samples. Must be smaller than the CP.
+    debug_log: Write output into log files (Warning: creates lots of data!)
+    scramble_bits: Activates the scramblers (set this to True unless debugging)
     """
     def __init__(self, fft_len=_def_fft_len, cp_len=_def_cp_len,
                  packet_length_tag_key=_def_packet_length_tag_key,
@@ -160,7 +163,6 @@ class ofdm_tx(gr.hier_block2):
         self.pilot_symbols     = pilot_symbols
         self.bps_header        = bps_header
         self.bps_payload       = bps_payload
-        n_sync_words = 1
         self.sync_word1 = sync_word1
         if sync_word1 is None:
             self.sync_word1 = _make_sync_word1(fft_len, occupied_carriers, pilot_carriers)
@@ -175,8 +177,11 @@ class ofdm_tx(gr.hier_block2):
             if len(self.sync_word2) != fft_len:
                 raise ValueError("Length of sync sequence(s) must be FFT length.")
             self.sync_word2 = list(self.sync_word2)
-            n_sync_words = 2
             self.sync_words.append(self.sync_word2)
+        if scramble_bits:
+            self.scramble_seed = 0x7f
+        else:
+            self.scramble_seed = 0x00 # We deactivate the scrambler by init'ing it with zeros
         ### Header modulation ################################################
         crc = digital.crc32_bb(False, self.packet_length_tag_key)
         header_constellation  = _get_constellation(bps_header)
@@ -184,42 +189,39 @@ class ofdm_tx(gr.hier_block2):
         formatter_object = digital.packet_header_ofdm(
             occupied_carriers=occupied_carriers, n_syms=1,
             bits_per_header_sym=self.bps_header,
-            bits_per_payload_sym=self.bps_payload
+            bits_per_payload_sym=self.bps_payload,
+            scramble_header=scramble_bits
         )
         header_gen = digital.packet_headergenerator_bb(formatter_object.base(), self.packet_length_tag_key)
         header_payload_mux = blocks.tagged_stream_mux(gr.sizeof_gr_complex*1, self.packet_length_tag_key)
-        self.connect(self, crc, header_gen, header_mod, (header_payload_mux, 0))
+        self.connect(
+                self,
+                crc,
+                header_gen,
+                header_mod,
+                (header_payload_mux, 0)
+        )
         if debug_log:
             self.connect(header_gen, blocks.file_sink(1, 'tx-hdr.dat'))
         ### Payload modulation ###############################################
         payload_constellation = _get_constellation(bps_payload)
         payload_mod = digital.chunks_to_symbols_bc(payload_constellation.points())
-        if scramble_bits:
-            self.connect(
-                crc,
-                digital.additive_scrambler_bb(
-                    0x8a, 0x7f, 7,
-                    bits_per_byte=bps_payload,
-                    reset_tag_key=self.packet_length_tag_key
-                ),
-                blocks.repack_bits_bb(
-                    8, # Unpack 8 bits per byte
-                    bps_payload,
-                    self.packet_length_tag_key
-                ),
-                payload_mod
-            )
-        else:
-            self.connect(
-                crc,
-                blocks.repack_bits_bb(
-                    8, # Unpack 8 bits per byte
-                    bps_payload,
-                    self.packet_length_tag_key
-                ),
-                payload_mod
-            )
+        payload_scrambler = digital.additive_scrambler_bb(
+            0x8a,
+            self.scramble_seed,
+            7,
+            0, # Don't reset after fixed length (let the reset tag do that)
+            bits_per_byte=bps_payload,
+            reset_tag_key=self.packet_length_tag_key
+        )
         self.connect(
+            crc,
+            payload_scrambler,
+            blocks.repack_bits_bb(
+                8, # Unpack 8 bits per byte
+                bps_payload,
+                self.packet_length_tag_key
+            ),
             payload_mod,
             (header_payload_mux, 1)
         )
@@ -246,8 +248,8 @@ class ofdm_tx(gr.hier_block2):
         )
         self.connect(header_payload_mux, allocator, ffter, cyclic_prefixer, self)
         if debug_log:
-            self.connect(allocator,         blocks.file_sink(8*64, 'tx-post-allocator.dat'))
-            self.connect(cyclic_prefixer,   blocks.file_sink(8,    'tx-signal.dat'))
+            self.connect(allocator,       blocks.file_sink(gr.sizeof_gr_complex * fft_len, 'tx-post-allocator.dat'))
+            self.connect(cyclic_prefixer, blocks.file_sink(gr.sizeof_gr_complex,           'tx-signal.dat'))
 
 
 class ofdm_rx(gr.hier_block2):
@@ -312,6 +314,10 @@ class ofdm_rx(gr.hier_block2):
                 raise ValueError("Length of sync sequence(s) must be FFT length.")
             self.sync_word2 = sync_word2
             n_sync_words = 2
+        if scramble_bits:
+            self.scramble_seed = 0x7f
+        else:
+            self.scramble_seed = 0x00 # We deactivate the scrambler by init'ing it with zeros
         ### Sync ############################################################
         sync_detect = digital.ofdm_sync_sc_cfb(fft_len, cp_len)
         delay = blocks.delay(gr.sizeof_gr_complex, fft_len+cp_len)
@@ -357,10 +363,19 @@ class ofdm_rx(gr.hier_block2):
                 frame_length_tag_key,
                 packet_num_tag_key,
                 bps_header,
-                bps_payload
+                bps_payload,
+                scramble_header=scramble_bits
         )
         header_parser = digital.packet_headerparser_b(header_formatter.formatter())
-        self.connect((hpd, 0), header_fft, chanest, header_eq, header_serializer, header_demod, header_parser)
+        self.connect(
+                (hpd, 0),
+                header_fft,
+                chanest,
+                header_eq,
+                header_serializer,
+                header_demod,
+                header_parser
+        )
         self.msg_connect(header_parser, "header_data", hpd, "header_data")
         if debug_log:
             self.connect((chanest, 1),      blocks.file_sink(gr.sizeof_gr_complex * fft_len, 'channel-estimate.dat'))
@@ -368,7 +383,7 @@ class ofdm_rx(gr.hier_block2):
             self.connect((chanest, 0),      blocks.tag_debug(gr.sizeof_gr_complex * fft_len, 'post-hdr-chanest'))
             self.connect(header_eq,         blocks.file_sink(gr.sizeof_gr_complex * fft_len, 'post-hdr-eq.dat'))
             self.connect(header_serializer, blocks.file_sink(gr.sizeof_gr_complex,           'post-hdr-serializer.dat'))
-            self.connect(header_demod,      blocks.file_sink(1,                              'post-hdr-demod.dat'))
+            self.connect(header_descrambler, blocks.file_sink(1,                             'post-hdr-demod.dat'))
         ### Payload demod ####################################################
         payload_fft = fft.fft_vcc(self.fft_len, True, (), True)
         payload_constellation = _get_constellation(bps_payload)
@@ -391,20 +406,29 @@ class ofdm_rx(gr.hier_block2):
                 1 # Skip 1 symbol (that was already in the header)
         )
         payload_demod = digital.constellation_decoder_cb(payload_constellation.base())
+        self.payload_descrambler = digital.additive_scrambler_bb(
+            0x8a,
+            self.scramble_seed,
+            7,
+            0, # Don't reset after fixed length
+            bits_per_byte=bps_payload,
+            reset_tag_key=self.packet_length_tag_key
+        )
         repack = blocks.repack_bits_bb(bps_payload, 8, self.packet_length_tag_key, True)
-        crc = digital.crc32_bb(True, self.packet_length_tag_key)
-        self.connect((hpd, 1), payload_fft, payload_eq, payload_serializer, payload_demod, repack)
-        if scramble_bits:
-            descrambler = digital.additive_scrambler_bb(
-                0x8a, 0x7f, 7,
-                bits_per_byte=bps_payload,
-                reset_tag_key=self.packet_length_tag_key
-            )
-            self.connect(repack, descrambler, crc, self)
-        else:
-            self.connect(repack, crc, self)
+        self.crc = digital.crc32_bb(True, self.packet_length_tag_key)
+        self.connect(
+                (hpd, 1),
+                payload_fft,
+                payload_eq,
+                payload_serializer,
+                payload_demod,
+                repack,
+                self.payload_descrambler,
+                self.crc,
+                self
+        )
         if debug_log:
-            self.connect((hpd, 1),           blocks.tag_debug(gr.sizeof_gr_complex*fft_len, 'post-hpd'));
+            self.connect((hpd, 1),           blocks.tag_debug(gr.sizeof_gr_complex*fft_len, 'post-hpd'))
             self.connect(payload_fft,        blocks.file_sink(gr.sizeof_gr_complex*fft_len, 'post-payload-fft.dat'))
             self.connect(payload_eq,         blocks.file_sink(gr.sizeof_gr_complex*fft_len, 'post-payload-eq.dat'))
             self.connect(payload_serializer, blocks.file_sink(gr.sizeof_gr_complex,         'post-payload-serializer.dat'))
