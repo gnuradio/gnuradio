@@ -32,6 +32,7 @@
       <param>29</param>         <!-- bit shift -->
   </check>
   <flag compiler="gnu">-m64</flag>
+  <flag compiler="clang">-m64</flag>
 </arch>
 
 <arch name="3dnow">
@@ -41,6 +42,7 @@
       <param>31</param>
   </check>
   <flag compiler="gnu">-m3dnow</flag>
+  <flag compiler="clang">-m3dnow</flag>
   <alignment>8</alignment>
 </arch>
 
@@ -51,6 +53,7 @@
       <param>5</param>
   </check>
   <flag compiler="gnu">-msse4.2</flag>
+  <flag compiler="clang">-msse4.2</flag>  
   <alignment>16</alignment>
 </arch>
 
@@ -61,6 +64,7 @@
       <param>23</param>
   </check>
   <flag compiler="gnu">-mpopcnt</flag>
+  <flag compiler="clang">-mpopcnt</flag>
   <flag compiler="msvc">/arch:AVX</flag>
 </arch>
 
@@ -71,6 +75,7 @@
       <param>23</param>
   </check>
   <flag compiler="gnu">-mmmx</flag>
+  <flag compiler="clang">-mmmx</flag>
   <flag compiler="msvc">/arch:SSE</flag>
   <alignment>8</alignment>
 </arch>
@@ -82,6 +87,7 @@
       <param>25</param>
   </check>
   <flag compiler="gnu">-msse</flag>
+  <flag compiler="clang">-msse</flag>
   <flag compiler="msvc">/arch:SSE</flag>
   <environment>_MM_SET_FLUSH_ZERO_MODE(_MM_FLUSH_ZERO_ON);</environment>
   <include>xmmintrin.h</include>
@@ -95,6 +101,7 @@
       <param>26</param>
   </check>
   <flag compiler="gnu">-msse2</flag>
+  <flag compiler="clang">-msse2</flag>
   <flag compiler="msvc">/arch:SSE2</flag>
   <alignment>16</alignment>
 </arch>
@@ -113,6 +120,7 @@
       <param>0</param>
   </check>
   <flag compiler="gnu">-msse3</flag>
+  <flag compiler="clang">-msse3</flag>
   <flag compiler="msvc">/arch:AVX</flag>
   <environment>_MM_SET_DENORMALS_ZERO_MODE(_MM_DENORMALS_ZERO_ON);</environment>
   <include>pmmintrin.h</include>
@@ -126,6 +134,7 @@
       <param>9</param>
   </check>
   <flag compiler="gnu">-mssse3</flag>
+  <flag compiler="clang">-mssse3</flag>
   <flag compiler="msvc">/arch:AVX</flag>
   <alignment>16</alignment>
 </arch>
@@ -137,6 +146,7 @@
       <param>6</param>
   </check>
   <flag compiler="gnu">-msse4a</flag>
+  <flag compiler="clang">-msse4a</flag>
   <alignment>16</alignment>
 </arch>
 
@@ -147,6 +157,7 @@
       <param>19</param>
   </check>
   <flag compiler="gnu">-msse4.1</flag>
+  <flag compiler="clang">-msse4.1</flag>
   <flag compiler="msvc">/arch:AVX</flag>
   <alignment>16</alignment>
 </arch>
@@ -158,6 +169,7 @@
       <param>20</param>
   </check>
   <flag compiler="gnu">-msse4.2</flag>
+  <flag compiler="clang">-msse4.2</flag>
   <flag compiler="msvc">/arch:AVX</flag>
   <alignment>16</alignment>
 </arch>
@@ -177,6 +189,7 @@
   <!-- check to see that the OS has enabled AVX -->
   <check name="get_avx_enabled"></check>
   <flag compiler="gnu">-mavx</flag>
+  <flag compiler="clang">-mavx</flag>
   <flag compiler="msvc">/arch:AVX</flag>
   <alignment>32</alignment>
 </arch>
