@@ -92,7 +92,7 @@ public:
   }
 
   myType get() {
-    myType rVal;
+    myType rVal = d_deflt;
     if(d_callback == NULL) {
       printf("WARNING: pycallback_object get() called without py callback set!\n");
       return rVal;
