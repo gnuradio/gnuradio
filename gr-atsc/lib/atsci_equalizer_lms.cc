@@ -52,6 +52,7 @@ atsci_equalizer_lms::atsci_equalizer_lms () : d_taps (NTAPS)
 
 atsci_equalizer_lms::~atsci_equalizer_lms ()
 {
+  fclose(trainingfile);
 }
 
 void

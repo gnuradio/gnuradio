@@ -616,7 +616,7 @@ deserialize(std::streambuf &sb)
 	goto error;
       
       deserialize_untagged_u8(&npad, sb);
-      for(size_t i; i < npad; i++)
+      for(size_t i = 0; i < npad; i++)
 	deserialize_untagged_u8(&u8, sb);
 
       switch(utag) {
