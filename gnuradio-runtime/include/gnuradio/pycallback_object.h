@@ -74,9 +74,9 @@ template <class myType> class pycallback_object
 {
 public:
   pycallback_object(std::string name, std::string functionbase,
-		    std::string units, std::string desc,
-		    myType min, myType max, myType deflt,
-		    DisplayType dtype) :
+            std::string units, std::string desc,
+            myType min, myType max, myType deflt,
+            DisplayType dtype) :
     d_callback(NULL),
     d_functionbase(functionbase), d_units(units), d_desc(desc),
     d_min(min), d_max(max), d_deflt(deflt), d_dtype(dtype),
@@ -92,7 +92,7 @@ public:
   }
 
   myType get() {
-    myType rVal;
+    myType rVal = d_deflt;
     if(d_callback == NULL) {
       printf("WARNING: pycallback_object get() called without py callback set!\n");
       return rVal;
@@ -104,14 +104,14 @@ public:
       PyObject *func;
       //PyObject *arglist;
       PyObject *result;
-   
+
       func = (PyObject *) d_callback;               // Get Python function
       //arglist = Py_BuildValue("");             // Build argument list
       result = PyEval_CallObject(func,NULL);     // Call Python
       //result = PyEval_CallObject(func,arglist);     // Call Python
       //Py_DECREF(arglist);                           // Trash arglist
       if(result) {                                 // If no errors, return double
-	rVal = pyCast(result);
+        rVal = pyCast(result);
       }
       Py_XDECREF(result);
 
@@ -120,21 +120,21 @@ public:
       return rVal;
     }
   }
-  
+
   void set_callback(PyObject *cb)
   {
     d_callback = cb;
   }
-  
+
   void setup_rpc()
   {
 #ifdef GR_CTRLPORT
     add_rpc_variable(
       rpcbasic_sptr(new rpcbasic_register_get<pycallback_object, myType>(
         (boost::format("%s%d") % d_name % d_id).str() , d_functionbase.c_str(),
-    this, &pycallback_object::get, pmt_assist<myType>::make(d_min),
-	pmt_assist<myType>::make(d_max), pmt_assist<myType>::make(d_deflt),
-	d_units.c_str(), d_desc.c_str(), RPC_PRIVLVL_MIN, d_dtype)));
+        this, &pycallback_object::get, pmt_assist<myType>::make(d_min),
+        pmt_assist<myType>::make(d_max), pmt_assist<myType>::make(d_deflt),
+        d_units.c_str(), d_desc.c_str(), RPC_PRIVLVL_MIN, d_dtype)));
 #endif /* GR_CTRLPORT */
   }
 
@@ -144,14 +144,19 @@ private:
   myType d_min, d_max, d_deflt;
   DisplayType d_dtype;
 
+  /* This is a fall-through converter in case someone tries to call pyCast on an
+   * object type for which there isn't a template specialization (located below
+   * this class) function. This function should never get called, and it is
+   * unknown if changing the return type from myType to 'void' will break
+   * something. */
   myType pyCast(PyObject* obj) {
     printf("TYPE NOT IMPLEMENTED!\n");
     assert(0);
   };
+
   std::vector<boost::any> d_rpc_vars; // container for all RPC variables
   std::string d_name;
   int d_id;
-
 };
 
 

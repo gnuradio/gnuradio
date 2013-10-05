@@ -62,24 +62,15 @@ static hid_device *fcdOpen(void)
     }
 
     pszPath=strdup(phdi->path);
-    if (pszPath==NULL)
-    {
-        return NULL;
+    if(pszPath != NULL) {
+        phd = hid_open_path(pszPath);
+
+        free(pszPath);
+    } else {
+        phd = NULL;
     }
 
     hid_free_enumeration(phdi);
-    phdi=NULL;
-
-    if ((phd=hid_open_path(pszPath)) == NULL)
-    {
-        free(pszPath);
-        pszPath=NULL;
-
-        return NULL;
-    }
-
-    free(pszPath);
-    pszPath=NULL;
 
     return phd;
 }
