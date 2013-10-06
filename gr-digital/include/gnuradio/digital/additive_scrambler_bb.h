@@ -64,7 +64,7 @@ namespace gr {
        * \param len    Shift register length
        * \param count  Number of bytes after which shift register is reset, 0=never
        * \param bits_per_byte Number of bits per byte
-       * \param reset_tag When a tag with this key is detected, the shift register is reset (when this is set, count is ignored!)
+       * \param reset_tag_key When a tag with this key is detected, the shift register is reset (when this is set, count is ignored!)
        */
       static sptr make(int mask, int seed, int len, int count=0, int bits_per_byte=1, const std::string &reset_tag_key="");
 
