@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='ASCII'?>
 <flow_graph>
-  <timestamp>Tue May 14 10:52:12 2013</timestamp>
+  <timestamp>Sun Oct  6 15:44:14 2013</timestamp>
   <block>
     <key>options</key>
     <param>
@@ -54,218 +54,6 @@
     <param>
       <key>_coordinate</key>
       <value>(0, -1)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>virtual_source</key>
-    <param>
-      <key>id</key>
-      <value>virtual_source_0_0</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>stream_id</key>
-      <value>Payload Bits</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(0, 458)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>blocks_tagged_stream_mux</key>
-    <param>
-      <key>id</key>
-      <value>blocks_tagged_stream_mux_0</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>type</key>
-      <value>complex</value>
-    </param>
-    <param>
-      <key>ninputs</key>
-      <value>2</value>
-    </param>
-    <param>
-      <key>lengthtagname</key>
-      <value>length_tag_name</value>
-    </param>
-    <param>
-      <key>vlen</key>
-      <value>1</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(510, 428)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>virtual_sink</key>
-    <param>
-      <key>id</key>
-      <value>virtual_sink_0_0</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>stream_id</key>
-      <value>Payload Bits</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(746, 312)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>virtual_source</key>
-    <param>
-      <key>id</key>
-      <value>virtual_source_0</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>stream_id</key>
-      <value>Header Bits</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(0, 384)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>digital_packet_headergenerator_bb</key>
-    <param>
-      <key>id</key>
-      <value>digital_packet_headergenerator_bb_0</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>header_formatter</key>
-      <value>header_formatter.formatter()</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(514, 231)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>blocks_repack_bits_bb</key>
-    <param>
-      <key>id</key>
-      <value>blocks_repack_bits_bb_0</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>k</key>
-      <value>8</value>
-    </param>
-    <param>
-      <key>l</key>
-      <value>payload_mod.bits_per_symbol()</value>
-    </param>
-    <param>
-      <key>len_tag_key</key>
-      <value>length_tag_name</value>
-    </param>
-    <param>
-      <key>align_output</key>
-      <value>False</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(522, 289)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>virtual_sink</key>
-    <param>
-      <key>id</key>
-      <value>header_bits</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>stream_id</key>
-      <value>Header Bits</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(748, 231)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>digital_crc32_bb</key>
-    <param>
-      <key>id</key>
-      <value>digital_crc32_bb_0</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>check</key>
-      <value>False</value>
-    </param>
-    <param>
-      <key>lengthtagname</key>
-      <value>length_tag_name</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(242, 223)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -572,6 +360,250 @@
     </param>
   </block>
   <block>
+    <key>virtual_source</key>
+    <param>
+      <key>id</key>
+      <value>virtual_source_0_0</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>stream_id</key>
+      <value>Payload Bits</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(0, 458)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>blocks_tagged_stream_mux</key>
+    <param>
+      <key>id</key>
+      <value>blocks_tagged_stream_mux_0</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>type</key>
+      <value>complex</value>
+    </param>
+    <param>
+      <key>ninputs</key>
+      <value>2</value>
+    </param>
+    <param>
+      <key>lengthtagname</key>
+      <value>length_tag_name</value>
+    </param>
+    <param>
+      <key>vlen</key>
+      <value>1</value>
+    </param>
+    <param>
+      <key>affinity</key>
+      <value></value>
+    </param>
+    <param>
+      <key>minoutbuf</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(510, 428)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>virtual_sink</key>
+    <param>
+      <key>id</key>
+      <value>virtual_sink_0_0</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>stream_id</key>
+      <value>Payload Bits</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(746, 312)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>virtual_source</key>
+    <param>
+      <key>id</key>
+      <value>virtual_source_0</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>stream_id</key>
+      <value>Header Bits</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(0, 384)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>digital_packet_headergenerator_bb</key>
+    <param>
+      <key>id</key>
+      <value>digital_packet_headergenerator_bb_0</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>header_formatter</key>
+      <value>header_formatter.formatter()</value>
+    </param>
+    <param>
+      <key>affinity</key>
+      <value></value>
+    </param>
+    <param>
+      <key>minoutbuf</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(514, 231)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>blocks_repack_bits_bb</key>
+    <param>
+      <key>id</key>
+      <value>blocks_repack_bits_bb_0</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>k</key>
+      <value>8</value>
+    </param>
+    <param>
+      <key>l</key>
+      <value>payload_mod.bits_per_symbol()</value>
+    </param>
+    <param>
+      <key>len_tag_key</key>
+      <value>length_tag_name</value>
+    </param>
+    <param>
+      <key>align_output</key>
+      <value>False</value>
+    </param>
+    <param>
+      <key>affinity</key>
+      <value></value>
+    </param>
+    <param>
+      <key>minoutbuf</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(522, 289)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>virtual_sink</key>
+    <param>
+      <key>id</key>
+      <value>header_bits</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>stream_id</key>
+      <value>Header Bits</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(748, 231)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>digital_crc32_bb</key>
+    <param>
+      <key>id</key>
+      <value>digital_crc32_bb_0</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>check</key>
+      <value>False</value>
+    </param>
+    <param>
+      <key>lengthtagname</key>
+      <value>length_tag_name</value>
+    </param>
+    <param>
+      <key>affinity</key>
+      <value></value>
+    </param>
+    <param>
+      <key>minoutbuf</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(242, 223)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
     <key>import</key>
     <param>
       <key>id</key>
@@ -664,6 +696,361 @@
     </param>
   </block>
   <block>
+    <key>virtual_sink</key>
+    <param>
+      <key>id</key>
+      <value>virtual_sink_0_0_0</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>stream_id</key>
+      <value>Pre-OFDM</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(745, 441)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>blocks_vector_source_x</key>
+    <param>
+      <key>id</key>
+      <value>blocks_vector_source_x_0</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>type</key>
+      <value>byte</value>
+    </param>
+    <param>
+      <key>vector</key>
+      <value>range(packet_len)</value>
+    </param>
+    <param>
+      <key>tags</key>
+      <value>tagged_streams.make_lengthtags((packet_len,), (0,), length_tag_name)</value>
+    </param>
+    <param>
+      <key>repeat</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>vlen</key>
+      <value>1</value>
+    </param>
+    <param>
+      <key>affinity</key>
+      <value></value>
+    </param>
+    <param>
+      <key>minoutbuf</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(0, 215)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>digital_chunks_to_symbols_xx</key>
+    <param>
+      <key>id</key>
+      <value>digital_chunks_to_symbols_xx_0_0</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>in_type</key>
+      <value>byte</value>
+    </param>
+    <param>
+      <key>out_type</key>
+      <value>complex</value>
+    </param>
+    <param>
+      <key>symbol_table</key>
+      <value>payload_mod.points()</value>
+    </param>
+    <param>
+      <key>dimension</key>
+      <value>1</value>
+    </param>
+    <param>
+      <key>num_ports</key>
+      <value>1</value>
+    </param>
+    <param>
+      <key>affinity</key>
+      <value></value>
+    </param>
+    <param>
+      <key>minoutbuf</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(212, 450)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>digital_chunks_to_symbols_xx</key>
+    <param>
+      <key>id</key>
+      <value>digital_chunks_to_symbols_xx_0</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>in_type</key>
+      <value>byte</value>
+    </param>
+    <param>
+      <key>out_type</key>
+      <value>complex</value>
+    </param>
+    <param>
+      <key>symbol_table</key>
+      <value>header_mod.points()</value>
+    </param>
+    <param>
+      <key>dimension</key>
+      <value>1</value>
+    </param>
+    <param>
+      <key>num_ports</key>
+      <value>1</value>
+    </param>
+    <param>
+      <key>affinity</key>
+      <value></value>
+    </param>
+    <param>
+      <key>minoutbuf</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(214, 376)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>virtual_source</key>
+    <param>
+      <key>id</key>
+      <value>virtual_source_0_0_0</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>stream_id</key>
+      <value>Pre-OFDM</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(0, 578)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>digital_ofdm_carrier_allocator_cvc</key>
+    <param>
+      <key>id</key>
+      <value>digital_ofdm_carrier_allocator_cvc_0</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>fft_len</key>
+      <value>fft_len</value>
+    </param>
+    <param>
+      <key>occupied_carriers</key>
+      <value>occupied_carriers</value>
+    </param>
+    <param>
+      <key>pilot_carriers</key>
+      <value>pilot_carriers</value>
+    </param>
+    <param>
+      <key>pilot_symbols</key>
+      <value>pilot_symbols</value>
+    </param>
+    <param>
+      <key>sync_words</key>
+      <value>(sync_word1, sync_word2)</value>
+    </param>
+    <param>
+      <key>len_tag_key</key>
+      <value>length_tag_name</value>
+    </param>
+    <param>
+      <key>affinity</key>
+      <value></value>
+    </param>
+    <param>
+      <key>minoutbuf</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(191, 540)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>digital_ofdm_cyclic_prefixer</key>
+    <param>
+      <key>id</key>
+      <value>digital_ofdm_cyclic_prefixer_0</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>input_size</key>
+      <value>fft_len</value>
+    </param>
+    <param>
+      <key>cp_len</key>
+      <value>fft_len/4</value>
+    </param>
+    <param>
+      <key>rolloff</key>
+      <value>rolloff</value>
+    </param>
+    <param>
+      <key>tagname</key>
+      <value>length_tag_name</value>
+    </param>
+    <param>
+      <key>affinity</key>
+      <value></value>
+    </param>
+    <param>
+      <key>minoutbuf</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(631, 563)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>virtual_sink</key>
+    <param>
+      <key>id</key>
+      <value>virtual_sink_0</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>stream_id</key>
+      <value>Time Domain</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(855, 578)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>fft_vxx</key>
+    <param>
+      <key>id</key>
+      <value>fft_vxx_0</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>type</key>
+      <value>complex</value>
+    </param>
+    <param>
+      <key>fft_size</key>
+      <value>fft_len</value>
+    </param>
+    <param>
+      <key>forward</key>
+      <value>False</value>
+    </param>
+    <param>
+      <key>window</key>
+      <value>()</value>
+    </param>
+    <param>
+      <key>shift</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>nthreads</key>
+      <value>1</value>
+    </param>
+    <param>
+      <key>affinity</key>
+      <value></value>
+    </param>
+    <param>
+      <key>minoutbuf</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(414, 548)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
     <key>blocks_multiply_const_vxx</key>
     <param>
       <key>id</key>
@@ -686,114 +1073,16 @@
       <value>1</value>
     </param>
     <param>
-      <key>_coordinate</key>
-      <value>(209, 747)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>wxgui_scopesink2</key>
-    <param>
-      <key>id</key>
-      <value>wxgui_scopesink2_0</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>type</key>
-      <value>complex</value>
-    </param>
-    <param>
-      <key>title</key>
-      <value>Scope Plot</value>
-    </param>
-    <param>
-      <key>samp_rate</key>
-      <value>samp_rate</value>
-    </param>
-    <param>
-      <key>v_scale</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>v_offset</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>t_scale</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>ac_couple</key>
-      <value>False</value>
-    </param>
-    <param>
-      <key>xy_mode</key>
-      <value>False</value>
-    </param>
-    <param>
-      <key>num_inputs</key>
-      <value>1</value>
-    </param>
-    <param>
-      <key>win_size</key>
+      <key>affinity</key>
       <value></value>
     </param>
     <param>
-      <key>grid_pos</key>
-      <value></value>
-    </param>
-    <param>
-      <key>notebook</key>
-      <value></value>
-    </param>
-    <param>
-      <key>trig_mode</key>
-      <value>wxgui.TRIG_MODE_AUTO</value>
-    </param>
-    <param>
-      <key>y_axis_label</key>
-      <value>Counts</value>
+      <key>minoutbuf</key>
+      <value>0</value>
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(584, 724)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>blocks_throttle</key>
-    <param>
-      <key>id</key>
-      <value>blocks_throttle_0</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>type</key>
-      <value>complex</value>
-    </param>
-    <param>
-      <key>samples_per_second</key>
-      <value>samp_rate</value>
-    </param>
-    <param>
-      <key>vlen</key>
-      <value>1</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(402, 747)</value>
+      <value>(209, 747)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -821,6 +1110,10 @@
     <param>
       <key>stream_args</key>
       <value></value>
+    </param>
+    <param>
+      <key>stream_chans</key>
+      <value>[]</value>
     </param>
     <param>
       <key>dev_addr</key>
@@ -1455,6 +1748,10 @@
       <value>0</value>
     </param>
     <param>
+      <key>affinity</key>
+      <value></value>
+    </param>
+    <param>
       <key>_coordinate</key>
       <value>(401, 670)</value>
     </param>
@@ -1464,139 +1761,78 @@
     </param>
   </block>
   <block>
-    <key>virtual_sink</key>
+    <key>wxgui_scopesink2</key>
     <param>
       <key>id</key>
-      <value>virtual_sink_0_0_0</value>
+      <value>wxgui_scopesink2_0</value>
     </param>
     <param>
       <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>stream_id</key>
-      <value>Pre-OFDM</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(745, 441)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>blocks_vector_source_x</key>
-    <param>
-      <key>id</key>
-      <value>blocks_vector_source_x_0</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
+      <value>False</value>
     </param>
     <param>
       <key>type</key>
-      <value>byte</value>
-    </param>
-    <param>
-      <key>vector</key>
-      <value>range(packet_len)</value>
-    </param>
-    <param>
-      <key>tags</key>
-      <value>tagged_streams.make_lengthtags((packet_len,), (0,), length_tag_name)</value>
-    </param>
-    <param>
-      <key>repeat</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>vlen</key>
-      <value>1</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(0, 215)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>digital_chunks_to_symbols_xx</key>
-    <param>
-      <key>id</key>
-      <value>digital_chunks_to_symbols_xx_0_0</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>in_type</key>
-      <value>byte</value>
-    </param>
-    <param>
-      <key>out_type</key>
       <value>complex</value>
     </param>
     <param>
-      <key>symbol_table</key>
-      <value>payload_mod.points()</value>
+      <key>title</key>
+      <value>Scope Plot</value>
     </param>
     <param>
-      <key>dimension</key>
-      <value>1</value>
+      <key>samp_rate</key>
+      <value>samp_rate</value>
     </param>
     <param>
-      <key>num_ports</key>
-      <value>1</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(212, 450)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
+      <key>v_scale</key>
       <value>0</value>
     </param>
-  </block>
-  <block>
-    <key>digital_chunks_to_symbols_xx</key>
     <param>
-      <key>id</key>
-      <value>digital_chunks_to_symbols_xx_0</value>
+      <key>v_offset</key>
+      <value>0</value>
     </param>
     <param>
-      <key>_enabled</key>
-      <value>True</value>
+      <key>t_scale</key>
+      <value>0</value>
     </param>
     <param>
-      <key>in_type</key>
-      <value>byte</value>
+      <key>ac_couple</key>
+      <value>False</value>
     </param>
     <param>
-      <key>out_type</key>
-      <value>complex</value>
+      <key>xy_mode</key>
+      <value>False</value>
     </param>
     <param>
-      <key>symbol_table</key>
-      <value>header_mod.points()</value>
-    </param>
-    <param>
-      <key>dimension</key>
+      <key>num_inputs</key>
       <value>1</value>
     </param>
     <param>
-      <key>num_ports</key>
-      <value>1</value>
+      <key>win_size</key>
+      <value></value>
+    </param>
+    <param>
+      <key>grid_pos</key>
+      <value></value>
+    </param>
+    <param>
+      <key>notebook</key>
+      <value></value>
+    </param>
+    <param>
+      <key>trig_mode</key>
+      <value>wxgui.TRIG_MODE_AUTO</value>
+    </param>
+    <param>
+      <key>y_axis_label</key>
+      <value>Counts</value>
+    </param>
+    <param>
+      <key>affinity</key>
+      <value></value>
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(214, 376)</value>
+      <value>(649, 718)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -1686,8 +1922,12 @@
       <value>None</value>
     </param>
     <param>
+      <key>affinity</key>
+      <value></value>
+    </param>
+    <param>
       <key>_coordinate</key>
-      <value>(402, 796)</value>
+      <value>(636, 832)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -1695,134 +1935,10 @@
     </param>
   </block>
   <block>
-    <key>virtual_source</key>
+    <key>blocks_throttle</key>
     <param>
       <key>id</key>
-      <value>virtual_source_0_0_0</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>stream_id</key>
-      <value>Pre-OFDM</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(0, 578)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>digital_ofdm_carrier_allocator_cvc</key>
-    <param>
-      <key>id</key>
-      <value>digital_ofdm_carrier_allocator_cvc_0</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>fft_len</key>
-      <value>fft_len</value>
-    </param>
-    <param>
-      <key>occupied_carriers</key>
-      <value>occupied_carriers</value>
-    </param>
-    <param>
-      <key>pilot_carriers</key>
-      <value>pilot_carriers</value>
-    </param>
-    <param>
-      <key>pilot_symbols</key>
-      <value>pilot_symbols</value>
-    </param>
-    <param>
-      <key>sync_words</key>
-      <value>(sync_word1, sync_word2)</value>
-    </param>
-    <param>
-      <key>len_tag_key</key>
-      <value>length_tag_name</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(191, 540)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>digital_ofdm_cyclic_prefixer</key>
-    <param>
-      <key>id</key>
-      <value>digital_ofdm_cyclic_prefixer_0</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>input_size</key>
-      <value>fft_len</value>
-    </param>
-    <param>
-      <key>cp_len</key>
-      <value>fft_len/4</value>
-    </param>
-    <param>
-      <key>rolloff</key>
-      <value>rolloff</value>
-    </param>
-    <param>
-      <key>tagname</key>
-      <value>length_tag_name</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(631, 563)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>virtual_sink</key>
-    <param>
-      <key>id</key>
-      <value>virtual_sink_0</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>stream_id</key>
-      <value>Time Domain</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(855, 578)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>fft_vxx</key>
-    <param>
-      <key>id</key>
-      <value>fft_vxx_0</value>
+      <value>blocks_throttle_0</value>
     </param>
     <param>
       <key>_enabled</key>
@@ -1833,28 +1949,24 @@
       <value>complex</value>
     </param>
     <param>
-      <key>fft_size</key>
-      <value>fft_len</value>
+      <key>samples_per_second</key>
+      <value>samp_rate</value>
     </param>
     <param>
-      <key>forward</key>
-      <value>False</value>
-    </param>
-    <param>
-      <key>window</key>
-      <value>()</value>
-    </param>
-    <param>
-      <key>shift</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>nthreads</key>
+      <key>vlen</key>
       <value>1</value>
     </param>
     <param>
+      <key>affinity</key>
+      <value></value>
+    </param>
+    <param>
+      <key>minoutbuf</key>
+      <value>0</value>
+    </param>
+    <param>
       <key>_coordinate</key>
-      <value>(414, 548)</value>
+      <value>(402, 747)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -1928,20 +2040,8 @@
     <sink_key>0</sink_key>
   </connection>
   <connection>
-    <source_block_id>blocks_throttle_0</source_block_id>
-    <sink_block_id>wxgui_scopesink2_0</sink_block_id>
-    <source_key>0</source_key>
-    <sink_key>0</sink_key>
-  </connection>
-  <connection>
     <source_block_id>blocks_multiply_const_vxx_0</source_block_id>
     <sink_block_id>blocks_throttle_0</sink_block_id>
-    <source_key>0</source_key>
-    <sink_key>0</sink_key>
-  </connection>
-  <connection>
-    <source_block_id>blocks_multiply_const_vxx_0</source_block_id>
-    <sink_block_id>wxgui_fftsink2_0</sink_block_id>
     <source_key>0</source_key>
     <sink_key>0</sink_key>
   </connection>
@@ -1972,6 +2072,18 @@
   <connection>
     <source_block_id>digital_ofdm_cyclic_prefixer_0</source_block_id>
     <sink_block_id>virtual_sink_0</sink_block_id>
+    <source_key>0</source_key>
+    <sink_key>0</sink_key>
+  </connection>
+  <connection>
+    <source_block_id>blocks_throttle_0</source_block_id>
+    <sink_block_id>wxgui_scopesink2_0</sink_block_id>
+    <source_key>0</source_key>
+    <sink_key>0</sink_key>
+  </connection>
+  <connection>
+    <source_block_id>blocks_throttle_0</source_block_id>
+    <sink_block_id>wxgui_fftsink2_0</sink_block_id>
     <source_key>0</source_key>
     <sink_key>0</sink_key>
   </connection>
