@@ -636,7 +636,7 @@ void encode_lsps(int indexes[], float lsp[], int order)
     float  wt[1];
     float  lsp_hz[LPC_MAX];
     const float * cb;
-    float se;
+    float se = 0.0;
 
     /* convert from radians to Hz so we can use human readable
        frequencies */
