@@ -38,13 +38,13 @@ class qa_packet_headerparser_b (gr_unittest.TestCase):
         """
         First header: Packet length 4, packet num 0
         Second header: Packet 2, packet num 1
-        Third header: Invalid (parity bit does not check) (would be len 4, num 2)
+        Third header: Invalid (CRC does not check) (would be len 4, num 2)
         """
         encoded_headers = (
-            #   | Number of bytes                    | Packet number                                  | Parity
-                0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0,  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,  1, 0, 0, 0,
-                0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,  1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,  0, 0, 0, 0,
-                0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0,  0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,  1, 0, 0, 0
+            #   | Number of bytes                    | Packet number                      | CRC
+                0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0,  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,  1, 0, 0, 1, 0, 0, 0, 1,
+                0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,  1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,  0, 0, 0, 1, 0, 1, 1, 1,
+                0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0,  0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,  1, 1, 1, 1, 1, 1, 1, 1
         )
         packet_len_tagname = "packet_len"
         random_tag = gr.tag_t()
@@ -99,9 +99,9 @@ class qa_packet_headerparser_b (gr_unittest.TestCase):
         2 bits per complex symbol, 32 carriers => 64 bits = 8 bytes per OFDM symbol
         """
         encoded_headers = (
-            #   | Number of bytes                    | Packet number                                  | Parity
-                1, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0,  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,  1, 0, 0, 0,
-                0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0,  1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,  0, 0, 0, 0,
+            #   | Number of bytes                    | Packet number                      | CRC
+                1, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0,  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,  1, 0, 1, 1, 0, 1, 1, 0,
+                0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0,  1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,  0, 0, 1, 0, 1, 1, 1, 0,
         )
         packet_len_tagname = "packet_len"
         frame_len_tagname = "frame_len"
@@ -165,7 +165,6 @@ class qa_packet_headerparser_b (gr_unittest.TestCase):
         self.assertEqual(msg, {'packet_len': packet_length, 'packet_num': 1, 'frame_len': 4})
 
 if __name__ == '__main__':
-    #gr_unittest.run(qa_packet_headerparser_b, "qa_packet_headerparser_b.xml")
-    gr_unittest.run(qa_packet_headerparser_b)
+    gr_unittest.run(qa_packet_headerparser_b, "qa_packet_headerparser_b.xml")
 
 
