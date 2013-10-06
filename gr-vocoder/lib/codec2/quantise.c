@@ -166,7 +166,7 @@ void lspd_quantise(
     float dlsp_[LPC_MAX];
     float  wt[1];
     const float *cb;
-    float se;
+    float se = 0.0;
     int   indexes[LPC_MAX];
 
     /* convert from radians to Hz so we can use human readable
@@ -227,7 +227,7 @@ void lspdvq_quantise(
     float dlsp_[LPC_MAX];
     float  wt[LPC_ORD];
     const float *cb;
-    float se;
+    float se = 0.0;
     int   index;
 
     dlsp[0] = lsp[0];
@@ -359,7 +359,7 @@ float lpc_model_amplitudes(
   float lsp_[LPC_MAX];
   int   roots;                  /* number of LSP roots found */
   int   index;
-  float se;
+  float se = 0.0;
   int   k,m;
   const float * cb;
   float wt[LPC_MAX];
