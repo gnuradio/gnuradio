@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2002,2007,2008,2012 Free Software Foundation, Inc.
+ * Copyright 2002,2007,2008,2012,2013 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -760,8 +760,8 @@ namespace gr {
 	
       case WIN_BLACKMAN:
 	for(int n = 0; n < ntaps; n++)
-	  taps[n] = 0.42 - 0.50 * cos((2*M_PI * n) / (M-1))
-	    - 0.08 * cos((4*M_PI * n) / (M-1));
+	  taps[n] = 0.42 - 0.50 * cos((2*M_PI * n) / M)
+	    + 0.08 * cos((4*M_PI * n) / M);
 	break;
 
       case WIN_BLACKMAN_hARRIS:
@@ -771,20 +771,24 @@ namespace gr {
 	break;
 
       case WIN_KAISER:
-	{
-	  double IBeta = 1.0/Izero(beta);
-	  double inm1 = 1.0/((double)(ntaps));
-	  double temp;
-	  //fprintf(stderr, "IBeta = %g; inm1 = %g\n", IBeta, inm1);
+        {
+          double IBeta = 1.0/Izero(beta);
+          double inm1 = 1.0/((double)(ntaps-1));
+          double temp;
 	  
-	  for(int i=0; i<ntaps; i++) {
-	    temp = i * inm1;
-	    //fprintf(stderr, "temp = %g\n", temp);
-	    taps[i] = Izero(beta*sqrt(1.0-temp*temp)) * IBeta;
-	    //fprintf(stderr, "taps[%d] = %g\n", i, taps[i]);
-	  }
-	}
-      break;
+          for(int i = 0; i <= ntaps; i++) {
+            temp = 2*i*inm1 - 1;
+            taps[i] = Izero(beta*sqrt(1.0-temp*temp)) * IBeta;
+          }
+        }
+        break;
+
+      case WIN_BARTLETT:
+	for(int n = 0; n <= ntaps/2; n++)
+	  taps[n] = 2*n / (float)M;
+        for(int n = ntaps/2 + 1; n < ntaps; n++)
+          taps[n] = 2 - 2*n / (float)M;
+        break;
 
       default:
 	throw std::out_of_range("firdes:window: type out of range");
