@@ -48,6 +48,7 @@ namespace gr {
 	WIN_KAISER = 4,          //!< Kaiser window; max attenuation a function of beta, google it
 	WIN_BLACKMAN_hARRIS = 5, //!< Blackman-harris window
 	WIN_BLACKMAN_HARRIS = 5, //!< alias to WIN_BLACKMAN_hARRIS for capitalization consistency
+        WIN_BARTLETT = 6,        //!< Barlett (triangular) window
       };
 
 
