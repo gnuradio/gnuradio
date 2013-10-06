@@ -40,14 +40,15 @@ namespace gr {
     public:
             
       enum win_type {
-	WIN_NONE = -1,	 // don't use a window
-	WIN_HAMMING = 0,	// max attenuation 53 dB
-	WIN_HANN = 1,	// max attenuation 44 dB
-	WIN_BLACKMAN = 2,	// max attenuation 74 dB
-	WIN_RECTANGULAR = 3,
-	WIN_KAISER = 4,     // max attenuation a function of beta, google it
-	WIN_BLACKMAN_hARRIS = 5,
-	WIN_BLACKMAN_HARRIS = 5, // alias for capitalization consistency
+	WIN_NONE = -1,           //!< don't use a window
+	WIN_HAMMING = 0,         //!< Hamming window; max attenuation 53 dB
+	WIN_HANN = 1,            //!< Hann window; max attenuation 44 dB
+	WIN_BLACKMAN = 2,        //!< Blackman window; max attenuation 74 dB
+	WIN_RECTANGULAR = 3,     //!< Basic rectangular window
+	WIN_KAISER = 4,          //!< Kaiser window; max attenuation a function of beta, google it
+	WIN_BLACKMAN_hARRIS = 5, //!< Blackman-harris window
+	WIN_BLACKMAN_HARRIS = 5, //!< alias to WIN_BLACKMAN_hARRIS for capitalization consistency
+        WIN_BARTLETT = 6,        //!< Barlett (triangular) window
       };
 
 
