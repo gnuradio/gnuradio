@@ -41,7 +41,8 @@ namespace gr {
 		   io_signature::make(1, 1, sizeof (char)),
 		   io_signature::make(1, 1, sizeof (char)),
 		   lengthtagname),
-	d_check(check)
+	d_check(check),
+	d_npass(0), d_nfail(0)
     {
       set_tag_propagation_policy(TPP_DONT);
     }
@@ -73,21 +74,19 @@ namespace gr {
       unsigned int crc;
 
       if (d_check) {
-    //	crc = gr::digital::crc32(in, packet_length-4);
         d_crc_impl.reset();
         d_crc_impl.process_bytes(in, packet_length-4);
         crc = d_crc_impl();
 	if (crc != *(unsigned int *)(in+packet_length-4)) { // Drop package
-      d_nfail++;
+	  d_nfail++;
 	  return 0;
 	}
-    d_npass++;
+	d_npass++;
 	memcpy((void *) out, (const void *) in, packet_length-4);
       } else {
         d_crc_impl.reset();
         d_crc_impl.process_bytes(in, packet_length);
         crc = d_crc_impl();
-	   // crc = gr::digital::crc32(in, packet_length);
 	memcpy((void *) out, (const void *) in, packet_length);
 	memcpy((void *) (out + packet_length), &crc, 4); // FIXME big-endian/little-endian, this might be wrong
       }
