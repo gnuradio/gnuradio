@@ -218,6 +218,7 @@ namespace gr {
       d_main_gui->setTriggerChannel(d_trigger_channel);
 
       set_history(d_trigger_delay + 2);
+      set_group_delay(d_trigger_delay);
     }
 
     void
