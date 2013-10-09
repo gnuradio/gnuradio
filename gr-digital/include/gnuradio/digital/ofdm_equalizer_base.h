@@ -39,7 +39,6 @@ namespace gr {
     {
      protected:
       int d_fft_len;
-      int d_carr_offset;
 
      public:
       typedef boost::shared_ptr<ofdm_equalizer_base> sptr;
@@ -49,8 +48,7 @@ namespace gr {
 
       //! Reset the channel information state knowledge
       virtual void reset() = 0;
-      //! Set the carrier offset in integer multiples
-      void set_carrier_offset(int offset) { d_carr_offset = offset; };
+      //! Run the actual equalization
       virtual void equalize(
 		      gr_complex *frame,
 		      int n_sym,

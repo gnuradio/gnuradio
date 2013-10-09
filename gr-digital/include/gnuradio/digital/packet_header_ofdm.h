@@ -91,6 +91,8 @@ namespace gr {
        *                             required to figure out how many OFDM symbols
        *                             are necessary to encode the given number of
        *                             bytes.
+       * \param scramble_header Set this to true to scramble the bits. This is highly
+       *                        recommended, as it reduces PAPR spikes.
        */
       static sptr make(
 	    const std::vector<std::vector<int> > &occupied_carriers,
