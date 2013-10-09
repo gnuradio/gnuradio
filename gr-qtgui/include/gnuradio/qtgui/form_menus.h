@@ -964,10 +964,12 @@ public:
     d_act.push_back(new QAction("Free", this));
     d_act.push_back(new QAction("Auto", this));
     d_act.push_back(new QAction("Normal", this));
+    d_act.push_back(new QAction("Tag", this));
 
     connect(d_act[0], SIGNAL(triggered()), this, SLOT(getFree()));
     connect(d_act[1], SIGNAL(triggered()), this, SLOT(getAuto()));
     connect(d_act[2], SIGNAL(triggered()), this, SLOT(getNorm()));
+    connect(d_act[3], SIGNAL(triggered()), this, SLOT(getTag()));
 
     QListIterator<QAction*> i(d_act);
     while(i.hasNext()) {
@@ -1006,6 +1008,9 @@ public:
     case gr::qtgui::TRIG_MODE_NORM:
       return d_act[2];
       break;
+    case gr::qtgui::TRIG_MODE_TAG:
+      return d_act[3];
+      break;
     default:
       throw std::runtime_error("TriggerModeMenu::getAction: unknown trigger mode.\n");
     }
@@ -1018,6 +1023,7 @@ public slots:
   void getFree() { emit whichTrigger(gr::qtgui::TRIG_MODE_FREE); }
   void getAuto() { emit whichTrigger(gr::qtgui::TRIG_MODE_AUTO); }
   void getNorm() { emit whichTrigger(gr::qtgui::TRIG_MODE_NORM); }
+  void getTag()  { emit whichTrigger(gr::qtgui::TRIG_MODE_TAG); }
 
 private:
   QList<QAction *> d_act;

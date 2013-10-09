@@ -21,7 +21,7 @@ qtgui.$(type.fcn)(
 self.$(id).set_update_time($update_time)
 self.$(id).set_y_axis($ymin, $ymax)
 self.$(id).enable_tags(-1, $entags)
-self.$(id).set_trigger_mode($tr_mode, $tr_slope, $tr_level, $tr_delay, $tr_chan)
+self.$(id).set_trigger_mode($tr_mode, $tr_slope, $tr_level, $tr_delay, $tr_chan, $tr_tag)
 self._$(id)_win = sip.wrapinstance(self.$(id).pyqwidget(), Qt.QWidget)
 $(gui_hint()($win))</make>
         <callback>set_time_domain_axis($min, $max)</callback>
@@ -103,6 +103,10 @@ $(gui_hint()($win))</make>
 			<name>Normal</name>
 			<key>qtgui.TRIG_MODE_NORM</key>
 		</option>
+		<option>
+			<name>Tag</name>
+			<key>qtgui.TRIG_MODE_TAG</key>
+		</option>
         </param>
 
 	<param>
@@ -142,6 +146,14 @@ $(gui_hint()($win))</make>
 		<key>tr_chan</key>
 		<value>0</value>
 		<type>int</type>
+		<hide>part</hide>
+	</param>
+
+	<param>
+		<name>Trigger Tag Key</name>
+		<key>tr_tag</key>
+		<value>""</value>
+		<type>string</type>
 		<hide>part</hide>
 	</param>
 

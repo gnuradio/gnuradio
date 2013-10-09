@@ -192,13 +192,15 @@ namespace gr {
     time_sink_f_impl::set_trigger_mode(trigger_mode mode,
                                        trigger_slope slope,
                                        float level,
-                                       float delay, int channel)
+                                       float delay, int channel,
+                                       const std::string &tag_key)
     {
       d_trigger_mode = mode;
       d_trigger_slope = slope;
       d_trigger_level = level;
       d_trigger_delay = static_cast<int>(delay*d_samp_rate);
       d_trigger_channel = channel;
+      d_trigger_tag_key = pmt::intern(tag_key);
       d_triggered = false;
       d_trigger_count = 0;
 
@@ -210,6 +212,7 @@ namespace gr {
       d_main_gui->setTriggerLevel(d_trigger_level);
       d_main_gui->setTriggerDelay(delay);
       d_main_gui->setTriggerChannel(d_trigger_channel);
+      d_main_gui->setTriggerTagKey(tag_key);
 
       set_history(d_trigger_delay + 2);
       set_group_delay(d_trigger_delay);
@@ -378,6 +381,9 @@ namespace gr {
         d_trigger_delay = delay;
         set_history(d_trigger_delay + 2);
       }
+
+      std::string tagkey = d_main_gui->getTriggerTagKey();
+      d_trigger_tag_key = pmt::intern(tagkey);
     }
 
     bool
@@ -398,7 +404,8 @@ namespace gr {
 			   gr_vector_const_void_star &input_items,
 			   gr_vector_void_star &output_items)
     {
-      int n=0, j=0, idx=0, ret=0;
+      int n=0, idx=0;
+      int trigger_index=0;
       const float *in;
 
       _npoints_resize();
@@ -407,29 +414,52 @@ namespace gr {
       for(int i=0; i < noutput_items; i+=d_size) {
 
         // If auto or normal trigger, look for the trigger
-        int trigger_index = i;
+        trigger_index = i;
         if((d_trigger_mode != TRIG_MODE_FREE) && !d_triggered) {
-          for(; trigger_index < noutput_items; trigger_index++) {
-            d_trigger_count++;
 
-            // Test if trigger has occurred based on the input stream,
-            // channel number, and slope direction
-            in = (const float*)input_items[d_trigger_channel];
-            if(_test_trigger_slope(&in[trigger_index + d_trigger_delay])) {
+          if(d_trigger_mode == TRIG_MODE_TAG) {
+            uint64_t nr = nitems_read(d_trigger_channel/2);
+
+            // Look for tags past the delay so we can subtract delay
+            // to calculate the trigger_index without it going
+            // negative.
+            std::vector<gr::tag_t> tags;
+            get_tags_in_range(tags, d_trigger_channel/2,
+                              nr + trigger_index + d_trigger_delay,
+                              nr + trigger_index + d_trigger_delay + noutput_items,
+                              d_trigger_tag_key);
+            if(tags.size() > 0) {
+              d_index = 0;
               d_triggered = true;
-              j = trigger_index;
+              d_trigger_count = 0;
+              trigger_index = tags[0].offset - nr - trigger_index - d_trigger_delay;
               break;
             }
+            else
+              trigger_index = noutput_items;
           }
+          else {
+            for(; trigger_index < noutput_items; trigger_index++) {
+              d_trigger_count++;
+
+              // Test if trigger has occurred based on the input stream,
+              // channel number, and slope direction
+              in = (const float*)input_items[d_trigger_channel];
+              if(_test_trigger_slope(&in[trigger_index + d_trigger_delay])) {
+                d_triggered = true;
+                d_trigger_count = 0;
+                break;
+              }
+            }
            
-          // If using auto trigger mode, trigger periodically even
-          // without a trigger event.
-          if((d_trigger_mode == TRIG_MODE_AUTO) && (d_trigger_count > d_size)) {
-            d_triggered = true;
-            d_trigger_count = 0;
+            // If using auto trigger mode, trigger periodically even
+            // without a trigger event.
+            if((d_trigger_mode == TRIG_MODE_AUTO) && (d_trigger_count > d_size)) {
+              d_triggered = true;
+              d_trigger_count = 0;
+            }
           }
 
-          ret = trigger_index;
           i = trigger_index;
         }
 
@@ -445,13 +475,14 @@ namespace gr {
             for(n = 0; n < d_nconnections; n++) {
               in = (const float*)input_items[idx];
               volk_32f_convert_64f_u(&d_residbufs[n][d_index],
-                                     &in[j], resid);
+                                     &in[trigger_index], resid);
 
               uint64_t nr = nitems_read(idx);
               std::vector<gr::tag_t> tags;
-              get_tags_in_range(tags, idx, nr + j, nr + j + resid);
+              get_tags_in_range(tags, idx, nr + trigger_index,
+                                nr + trigger_index + resid);
               for(size_t t = 0; t < tags.size(); t++) {
-                tags[t].offset = tags[t].offset - (nr + j) + d_index;
+                tags[t].offset = tags[t].offset - (nr + trigger_index) + d_index;
               }
               d_tags[idx].insert(d_tags[idx].end(), tags.begin(), tags.end());
 
@@ -466,7 +497,7 @@ namespace gr {
             }
 
             d_index = 0;
-            j += resid;
+            trigger_index += resid;
             d_triggered = false;
 
             for(n = 0; n < d_nconnections; n++) {
@@ -479,28 +510,27 @@ namespace gr {
             for(n = 0; n < d_nconnections; n++) {
               in = (const float*)input_items[idx];
               volk_32f_convert_64f_u(&d_residbufs[n][d_index],
-                                     &in[j], datasize);
+                                     &in[trigger_index], datasize);
 
               uint64_t nr = nitems_read(idx);
               std::vector<gr::tag_t> tags;
-              get_tags_in_range(tags, idx, nr + j, nr + j + datasize);
+              get_tags_in_range(tags, idx, nr + trigger_index,
+                                nr + trigger_index + datasize);
 
               for(size_t t = 0; t < tags.size(); t++) {
-                tags[t].offset = tags[t].offset - (nr + j) + d_index;
+                tags[t].offset = tags[t].offset - (nr + trigger_index) + d_index;
               }
               d_tags[idx].insert(d_tags[idx].end(), tags.begin(), tags.end());
 
               idx++;
             }
             d_index += datasize;
-            j += datasize;
+            trigger_index += datasize;
           }
-
-          ret = j;
         }
       }
 
-      return ret;
+      return trigger_index;
     }
 
   } /* namespace qtgui */

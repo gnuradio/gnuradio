@@ -50,6 +50,7 @@ class TimeDisplayForm : public DisplayForm
   float getTriggerLevel() const;
   float getTriggerDelay() const;
   int getTriggerChannel() const;
+  std::string getTriggerTagKey() const;
 
 public slots:
   void customEvent(QEvent * e);
@@ -65,6 +66,7 @@ public slots:
   void tagMenuSlot(bool en);
   void setTagMenu(int which, bool en);
 
+  void updateTrigger(gr::qtgui::trigger_mode mode);
   void setTriggerMode(gr::qtgui::trigger_mode mode);
   void setTriggerSlope(gr::qtgui::trigger_slope slope);
   void setTriggerLevel(QString s);
@@ -72,6 +74,8 @@ public slots:
   void setTriggerDelay(QString s);
   void setTriggerDelay(float delay);
   void setTriggerChannel(int chan);
+  void setTriggerTagKey(QString s);
+  void setTriggerTagKey(const std::string &s);
 
 private slots:
   void newData(const QEvent*);
@@ -100,12 +104,14 @@ private:
   PopupMenu *d_tr_level_act;
   PopupMenu *d_tr_delay_act;
   TriggerChannelMenu *d_tr_channel_menu;
-
+  PopupMenu *d_tr_tag_key_act;
+  
   gr::qtgui::trigger_mode d_trig_mode;
   gr::qtgui::trigger_slope d_trig_slope;
   float d_trig_level;
   float d_trig_delay;
   int d_trig_channel;
+  std::string d_trig_tag_key;
 };
 
 #endif /* TIME_DISPLAY_FORM_H */

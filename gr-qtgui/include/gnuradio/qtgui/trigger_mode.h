@@ -30,7 +30,7 @@ namespace gr {
       TRIG_MODE_FREE,
       TRIG_MODE_AUTO,
       TRIG_MODE_NORM,
-      TRIG_MODE_STRIPCHART,
+      TRIG_MODE_TAG,
     };
 
     enum trigger_slope {

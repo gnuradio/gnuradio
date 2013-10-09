@@ -79,16 +79,21 @@ TimeDisplayForm::TimeDisplayForm(int nplots, QWidget* parent)
   d_tr_level_act = new PopupMenu("Level", this);
   d_tr_delay_act = new PopupMenu("Delay", this);
   d_tr_channel_menu = new TriggerChannelMenu(nplots, this);
+  d_tr_tag_key_act = new PopupMenu("Tag Key", this);
   d_triggermenu->addMenu(d_tr_mode_menu);
   d_triggermenu->addMenu(d_tr_slope_menu);
   d_triggermenu->addAction(d_tr_level_act);
   d_triggermenu->addAction(d_tr_delay_act);
   d_triggermenu->addMenu(d_tr_channel_menu);
+  d_triggermenu->addAction(d_tr_tag_key_act);
   _menu->addMenu(d_triggermenu);
 
   setTriggerMode(gr::qtgui::TRIG_MODE_FREE);
   connect(d_tr_mode_menu, SIGNAL(whichTrigger(gr::qtgui::trigger_mode)),
 	  this, SLOT(setTriggerMode(gr::qtgui::trigger_mode)));
+  // updates trigger state by calling set level or set tag key.
+  connect(d_tr_mode_menu, SIGNAL(whichTrigger(gr::qtgui::trigger_mode)),
+	  this, SLOT(updateTrigger(gr::qtgui::trigger_mode)));
 
   setTriggerSlope(gr::qtgui::TRIG_SLOPE_POS);
   connect(d_tr_slope_menu, SIGNAL(whichTrigger(gr::qtgui::trigger_slope)),
@@ -105,6 +110,10 @@ TimeDisplayForm::TimeDisplayForm(int nplots, QWidget* parent)
   setTriggerChannel(0);
   connect(d_tr_channel_menu, SIGNAL(whichTrigger(int)),
 	  this, SLOT(setTriggerChannel(int)));
+
+  setTriggerTagKey(std::string(""));
+  connect(d_tr_tag_key_act, SIGNAL(whichTrigger(QString)),
+	  this, SLOT(setTriggerTagKey(QString)));
 
   Reset();
 
@@ -253,6 +262,18 @@ TimeDisplayForm::setTriggerMode(gr::qtgui::trigger_mode mode)
   d_tr_mode_menu->getAction(mode)->setChecked(true);
 }
 
+void
+TimeDisplayForm::updateTrigger(gr::qtgui::trigger_mode mode)
+{
+  // If auto or normal mode, popup trigger level box to set
+  if((d_trig_mode == gr::qtgui::TRIG_MODE_AUTO) || (d_trig_mode == gr::qtgui::TRIG_MODE_NORM))
+    d_tr_level_act->activate(QAction::Trigger);
+
+  // if tag mode, popup tag key box to set
+  if(d_trig_mode == gr::qtgui::TRIG_MODE_TAG)
+    d_tr_tag_key_act->activate(QAction::Trigger);
+}
+
 gr::qtgui::trigger_mode
 TimeDisplayForm::getTriggerMode() const
 {
@@ -322,3 +343,23 @@ TimeDisplayForm::getTriggerChannel() const
 {
   return d_trig_channel;
 }
+
+void
+TimeDisplayForm::setTriggerTagKey(QString s)
+{
+  d_trig_tag_key = s.toStdString();
+}
+
+void
+TimeDisplayForm::setTriggerTagKey(const std::string &key)
+{
+  d_trig_tag_key = key;
+  d_tr_tag_key_act->setText(QString().fromStdString(d_trig_tag_key));
+}
+
+std::string
+TimeDisplayForm::getTriggerTagKey() const
+{
+  return d_trig_tag_key;
+}
+

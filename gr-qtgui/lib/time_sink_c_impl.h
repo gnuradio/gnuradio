@@ -61,6 +61,7 @@ namespace gr {
       float d_trigger_level;
       int d_trigger_channel;
       int d_trigger_delay;
+      pmt::pmt_t d_trigger_tag_key;
       bool d_triggered;
       int d_trigger_count;
       int d_initial_delay; // used for limiting d_trigger_delay
@@ -93,7 +94,8 @@ namespace gr {
       void set_samp_rate(const double samp_rate);
       void set_line_alpha(int which, double alpha);
       void set_trigger_mode(trigger_mode mode, trigger_slope slope,
-                            float level, float delay, int channel);
+                            float level, float delay, int channel,
+                            const std::string &tag_key="");
 
       std::string title();
       std::string line_label(int which);

@@ -78,7 +78,8 @@ namespace gr {
       virtual void set_samp_rate(const double samp_rate) = 0;
       virtual void set_line_alpha(int which, double alpha) = 0;
       virtual void set_trigger_mode(trigger_mode mode, trigger_slope slope,
-                                    float level, float delay, int channel) = 0;
+                                    float level, float delay, int channel,
+                                    const std::string &tag_key="") = 0;
 
       virtual std::string title() = 0;
       virtual std::string line_label(int which) = 0;
