@@ -151,10 +151,16 @@ static int i_can_has_$arch.name (void) {
 #end for
 
 #if defined(HAVE_FENV_H)
-    #include <fenv.h>
-    static inline void set_float_rounding(void){
-        fesetround(FE_TONEAREST);
-    }
+    #if defined(FE_TONEARREST)
+        #include <fenv.h>
+        static inline void set_float_rounding(void){
+            fesetround(FE_TONEAREST);
+        }
+    #else
+        static inline void set_float_rounding(void){
+            //do nothing
+        }
+    #endif
 #elif defined(_MSC_VER)
     #include <float.h>
     static inline void set_float_rounding(void){
