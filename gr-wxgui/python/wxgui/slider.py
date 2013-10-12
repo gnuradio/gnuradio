@@ -25,12 +25,12 @@ def slider(parent, min, max, callback):
 # ----------------------------------------------------------------
 if __name__ == '__main__':
 
-    from gnuradio.wxgui import stdgui
+    from gnuradio.wxgui import stdgui2
 
-    class demo_graph(stdgui.gui_flow_graph):
+    class demo_graph(stdgui2.std_top_block):
 
         def __init__(self, frame, panel, vbox, argv):
-            stdgui.gui_flow_graph.__init__ (self, frame, panel, vbox, argv)
+            stdgui2.std_top_block.__init__ (self, frame, panel, vbox, argv)
 
             vbox.Add(slider(panel, 23, 47, self.my_callback1), 1, wx.ALIGN_CENTER)
             vbox.Add(slider(panel, -100, 100, self.my_callback2), 1, wx.ALIGN_CENTER)
@@ -42,7 +42,7 @@ if __name__ == '__main__':
             print "cb2 = ", val
 
     def main ():
-        app = stdgui.stdapp (demo_graph, "Slider Demo")
+        app = stdgui2.stdapp (demo_graph, "Slider Demo")
         app.MainLoop ()
 
     main ()
