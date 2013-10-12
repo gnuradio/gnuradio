@@ -117,6 +117,7 @@ class ModTool(object):
             self._info['includedir'] = 'include'
         self._file['cminclude'] = os.path.join(self._info['includedir'], 'CMakeLists.txt')
         self._file['cmswig'] = os.path.join('swig', 'CMakeLists.txt')
+        self._file['cmfind'] = os.path.join('cmake', 'Modules', 'howtoConfig.cmake')
 
     def _check_directory(self, directory):
         """ Guesses if dir is a valid GNU Radio module directory by looking for

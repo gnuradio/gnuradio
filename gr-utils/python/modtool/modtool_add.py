@@ -193,6 +193,7 @@ class ModToolAdd(ModTool):
                             Cheetah.Template.Template(
                                 Templates['qa_cmakeentry36'],
                                 searchList={'basename': os.path.splitext(fname_qa_cc)[0],
+                                            'upperbasename': os.path.splitext(fname_qa_cc)[0].upper(),
                                             'filename': fname_qa_cc,
                                             'modname': self._info['modname']
                                            }
