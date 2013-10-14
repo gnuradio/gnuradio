@@ -275,6 +275,16 @@ $short_id#slurp
 #end def
 #if $generate_options != 'hb'
 if __name__ == '__main__':
+    #if $generate_options in ('wx_gui', 'qt_gui')
+    import ctypes
+    import os
+    if os.name == 'posix':
+        try:
+            x11 = ctypes.cdll.LoadLibrary('libX11.so')
+            x11.XInitThreads()
+        except:
+            print "Warning: failed to XInitThreads()"
+    #end if
     parser = OptionParser(option_class=eng_option, usage="%prog: [options]")
     #set $params_eq_list = list()
     #for $param in $parameters
