@@ -89,14 +89,13 @@ namespace gr {
 
 	// if we recieved metadata add it as tags
 	if (!pmt::eq(meta, pmt::PMT_NIL) ) {
-	  pmt::pmt_t pair(pmt::dict_keys(meta));
-
-	  while (!pmt::eq(pair, pmt::PMT_NIL) ) {
-            pmt::pmt_t k(pmt::cdr(pair));
-            pmt::pmt_t v(pmt::dict_ref(meta, k, pmt::PMT_NIL));
-            add_item_tag(0, offset, k, v, pmt::mp(alias()));
-            }
+	  pmt::pmt_t klist(pmt::dict_keys(meta));
+      for(size_t i=0; i<pmt::length(klist); i++){
+        pmt::pmt_t k(pmt::nth(i, klist));
+        pmt::pmt_t v(pmt::dict_ref(meta, k, pmt::PMT_NIL));
+        add_item_tag(0, offset, k, v, pmt::mp(alias()));
         }
+    }
 
 	// copy vector output
 	size_t ncopy = std::min((size_t)noutput_items, (size_t)pmt::length(vect));
