@@ -192,6 +192,7 @@ class BlockTreeWindow(gtk.VBox):
             pass
         elif icon == gtk.ENTRY_ICON_SECONDARY:
             widget.set_text('')
+            self.search_entry.hide()
 
     def _update_search_tree(self, widget):
         key = widget.get_text().lower()
@@ -231,6 +232,12 @@ class BlockTreeWindow(gtk.VBox):
         elif event.keyval == gtk.keysyms.Escape:
             # reset the search
             self.search_entry.set_text('')
+            self.search_entry.hide()
+
+        elif event.state & gtk.gdk.CONTROL_MASK and event.keyval == gtk.keysyms.f:
+            # propagation doesn't work although treeview search is disabled =(
+            # manually trigger action...
+            Actions.FIND_BLOCKS.activate()
 
         else:
             return False # propagate event
