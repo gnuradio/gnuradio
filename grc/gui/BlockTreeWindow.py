@@ -97,17 +97,11 @@ class BlockTreeWindow(gtk.VBox):
         scrolled_window.add_with_viewport(self.treeview)
         scrolled_window.set_size_request(DEFAULT_BLOCKS_WINDOW_WIDTH, -1)
         self.pack_start(scrolled_window)
-        #add button
-        self.add_button = gtk.Button(None, gtk.STOCK_ADD)
-        self.add_button.connect('clicked', self._handle_add_button)
-        self.pack_start(self.add_button, False)
         #map categories to iters, automatic mapping for root
         self._categories = {tuple(): None}
         self._categories_search = {tuple(): None}
         #add blocks and categories
         self.platform.load_block_tree(self)
-        #initialize
-        self._update_add_button()
 
     def clear(self):
         self.treestore.clear();
@@ -159,14 +153,6 @@ class BlockTreeWindow(gtk.VBox):
         selection = self.treeview.get_selection()
         treestore, iter = selection.get_selected()
         return iter and treestore.get_value(iter, KEY_INDEX) or ''
-
-    def _update_add_button(self):
-        """
-        Update the add button's sensitivity.
-        The button should be active only if a block is selected.
-        """
-        key = self._get_selected_block_key()
-        self.add_button.set_sensitive(bool(key))
 
     def _add_selected_block(self):
         """
@@ -260,10 +246,3 @@ class BlockTreeWindow(gtk.VBox):
         """
         if event.button == 1 and event.type == gtk.gdk._2BUTTON_PRESS:
             self._add_selected_block()
-
-    def _handle_add_button(self, widget):
-        """
-        Handle the add button clicked signal.
-        Call add selected block.
-        """
-        self._add_selected_block()
