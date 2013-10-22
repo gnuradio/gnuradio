@@ -114,12 +114,12 @@ private:
 HistogramDisplayPlot::HistogramDisplayPlot(int nplots, QWidget* parent)
   : DisplayPlot(nplots, parent)
 {
-  _bins = 100;
-  _accum = false;
+  d_bins = 100;
+  d_accum = false;
 
   // Initialize x-axis data array
-  _xAxisPoints = new double[_bins];
-  memset(_xAxisPoints, 0x0, _bins*sizeof(double));
+  _xAxisPoints = new double[d_bins];
+  memset(_xAxisPoints, 0x0, d_bins*sizeof(double));
 
   _zoomer = new HistogramDisplayZoomer(canvas(), 0);
 
@@ -136,18 +136,17 @@ HistogramDisplayPlot::HistogramDisplayPlot(int nplots, QWidget* parent)
   _zoomer->setRubberBandPen(c);
   _zoomer->setTrackerPen(c);
 
-  _magnifier->setAxisEnabled(QwtPlot::xBottom, true);
-  _magnifier->setAxisEnabled(QwtPlot::yLeft, false);
-
   d_semilogx = false;
   d_semilogy = false;
+  _autoscale_state = true;
+  _autoscalex_state = false;
 
   setAxisScaleEngine(QwtPlot::xBottom, new QwtLinearScaleEngine);
   setXaxis(-1, 1);
   setAxisTitle(QwtPlot::xBottom, "Value");
 
   setAxisScaleEngine(QwtPlot::yLeft, new QwtLinearScaleEngine);
-  setYaxis(-2.0, _bins);
+  setYaxis(-2.0, d_bins);
   setAxisTitle(QwtPlot::yLeft, "Count");
   
   QList<QColor> colors;
@@ -159,8 +158,8 @@ HistogramDisplayPlot::HistogramDisplayPlot(int nplots, QWidget* parent)
   // Setup dataPoints and plot vectors
   // Automatically deleted when parent is deleted
   for(int i = 0; i < _nplots; i++) {
-    _yDataPoints.push_back(new double[_bins]);
-    memset(_yDataPoints[i], 0, _bins*sizeof(double));
+    _yDataPoints.push_back(new double[d_bins]);
+    memset(_yDataPoints[i], 0, d_bins*sizeof(double));
 
     _plot_curve.push_back(new QwtPlotCurve(QString("Data %1").arg(i)));
     _plot_curve[i]->attach(this);
@@ -176,10 +175,10 @@ HistogramDisplayPlot::HistogramDisplayPlot(int nplots, QWidget* parent)
 				      QPen(colors[i]), QSize(7,7));
 
 #if QWT_VERSION < 0x060000
-    _plot_curve[i]->setRawData(_xAxisPoints, _yDataPoints[i], _bins);
+    _plot_curve[i]->setRawData(_xAxisPoints, _yDataPoints[i], d_bins);
     _plot_curve[i]->setSymbol(*symbol);
 #else
-    _plot_curve[i]->setRawSamples(_xAxisPoints, _yDataPoints[i], _bins);
+    _plot_curve[i]->setRawSamples(_xAxisPoints, _yDataPoints[i], d_bins);
     _plot_curve[i]->setSymbol(symbol);
 #endif
   }
@@ -210,37 +209,41 @@ HistogramDisplayPlot::plotNewData(const std::vector<double*> dataPoints,
   if(!_stop) {
     if((numDataPoints > 0)) {
 
-      double bottom = *std::min_element(dataPoints[0], dataPoints[0]+numDataPoints);
-      double top = *std::max_element(dataPoints[0], dataPoints[0]+numDataPoints);
-      for(int n = 1; n < _nplots; n++) {
-        bottom = std::min(bottom, *std::min_element(dataPoints[n], dataPoints[n]+numDataPoints));
-        top = std::max(top, *std::max_element(dataPoints[n], dataPoints[n]+numDataPoints));
+      // keep track of the min/max values for when autoscaleX is called.
+      d_xmin = 1e20;
+      d_xmax = -1e20;
+      for(int n = 0; n < _nplots; n++) {
+        d_xmin = std::min(d_xmin, *std::min_element(dataPoints[n], dataPoints[n]+numDataPoints));
+        d_xmax = std::max(d_xmax, *std::max_element(dataPoints[n], dataPoints[n]+numDataPoints));
       }
 
-      _resetXAxisPoints(bottom, top);
+      // If autoscalex has been clicked, clear the data for the new
+      // bin widths and reset the x-axis.
+      if(_autoscalex_state) {
+        for(int n = 0; n < _nplots; n++)
+          memset(_yDataPoints[n], 0, d_bins*sizeof(double));
+        _resetXAxisPoints(d_xmin, d_xmax);
+        _autoscalex_state = false;
+      }
 
       int index;
-      double width = (top - bottom)/(_bins-1);
-
-      // Something's wrong with the data (NaN, Inf, or something else)
-      if((bottom == top) || (bottom > top))
-        return;
-
       for(int n = 0; n < _nplots; n++) {
-        if(!_accum)
-          memset(_yDataPoints[n], 0, _bins*sizeof(double));
+        if(!d_accum)
+          memset(_yDataPoints[n], 0, d_bins*sizeof(double));
         for(int64_t point = 0; point < numDataPoints; point++) {
-          index = boost::math::iround(1e-20 + (dataPoints[n][point] - bottom)/width);
-          index = std::max(std::min(index, _bins), 0);
-          _yDataPoints[n][static_cast<int>(index)] += 1;
+          index = boost::math::iround(1e-20 + (dataPoints[n][point] - d_left)/d_width);
+          if((index >= 0) && (index < d_bins))
+            _yDataPoints[n][static_cast<int>(index)] += 1;
         }
       }
 
-      double height = *std::max_element(_yDataPoints[0], _yDataPoints[0]+_bins);
+      double height = *std::max_element(_yDataPoints[0], _yDataPoints[0]+d_bins);
       for(int n = 1; n < _nplots; n++) {
-        height = std::max(height, *std::max_element(_yDataPoints[n], _yDataPoints[n]+_bins));
+        height = std::max(height, *std::max_element(_yDataPoints[n], _yDataPoints[n]+d_bins));
       }
-      _autoScale(0, height);
+
+      if(_autoscale_state)
+        _autoScaleY(0, height);
 
       replot();
     }
@@ -248,54 +251,68 @@ HistogramDisplayPlot::plotNewData(const std::vector<double*> dataPoints,
 }
 
 void
-HistogramDisplayPlot::_resetXAxisPoints(double bottom, double top)
+HistogramDisplayPlot::setXaxis(double min, double max)
 {
-  double width = (top - bottom)/(_bins-1);
-  for(long loc = 0; loc < _bins; loc++){
-    _xAxisPoints[loc] = bottom + loc*width;
-  }
+  _resetXAxisPoints(min, max);
+}
 
-  if(!_autoscale_state) {
-    bottom = axisScaleDiv(QwtPlot::xBottom)->lowerBound();
-    top = axisScaleDiv(QwtPlot::xBottom)->upperBound();
+void
+HistogramDisplayPlot::_resetXAxisPoints(double left, double right)
+{
+  // Something's wrong with the data (NaN, Inf, or something else)
+  if((left == right) || (left > right))
+    throw std::runtime_error("HistogramDisplayPlot::_resetXAxisPoints left and/or right values are invalid");
+
+  d_left  = left *(1 - copysign(0.1, left));
+  d_right = right*(1 + copysign(0.1, right));
+  d_width = (d_right - d_left)/(d_bins);
+  for(long loc = 0; loc < d_bins; loc++){
+    _xAxisPoints[loc] = d_left + loc*d_width;
   }
+  axisScaleDiv(QwtPlot::xBottom)->setInterval(d_left, d_right);
 
   // Set up zoomer base for maximum unzoom x-axis
   // and reset to maximum unzoom level
   QwtDoubleRect zbase = _zoomer->zoomBase();
 
   if(d_semilogx) {
-    setAxisScale(QwtPlot::xBottom, 1e-1, top);
+    setAxisScale(QwtPlot::xBottom, 1e-1, d_right);
     zbase.setLeft(1e-1);
   }
   else {
-    setAxisScale(QwtPlot::xBottom, bottom, top);
-    zbase.setLeft(bottom);
+    setAxisScale(QwtPlot::xBottom, d_left, d_right);
+    zbase.setLeft(d_left);
   }
 
-  zbase.setRight(top);
+  zbase.setRight(d_right);
   _zoomer->zoom(zbase);
   _zoomer->setZoomBase(zbase);
   _zoomer->zoom(0);
 }
 
 void
-HistogramDisplayPlot::_autoScale(double bottom, double top)
+HistogramDisplayPlot::_autoScaleY(double bottom, double top)
 {
   // Auto scale the y-axis with a margin of 20% (10 dB for log scale)
-  double _bot = bottom - fabs(bottom)*0.20;
-  double _top = top + fabs(top)*0.20;
+  double b = bottom - fabs(bottom)*0.20;
+  double t = top + fabs(top)*0.20;
   if(d_semilogy) {
     if(bottom > 0) {
-      setYaxis(_bot-10, _top+10);
+      setYaxis(b-10, t+10);
     }
     else {
-      setYaxis(1e-3, _top+10);
+      setYaxis(1e-3, t+10);
     }
   }
   else {
-    setYaxis(_bot, _top);
+    setYaxis(b, t);
   }
+}
+
+void
+HistogramDisplayPlot::setAutoScaleX()
+{
+  _autoscalex_state = true;
 }
 
 void
@@ -336,7 +353,7 @@ HistogramDisplayPlot::setSemilogy(bool en)
 void
 HistogramDisplayPlot::setAccumulate(bool state)
 {
-  _accum = state;
+  d_accum = state;
 }
 
 void
@@ -418,21 +435,21 @@ HistogramDisplayPlot::setLineColor(int which, QColor color)
 void
 HistogramDisplayPlot::setNumBins(int bins)
 {
-  _bins = bins;
+  d_bins = bins;
   
   delete [] _xAxisPoints;
-  _xAxisPoints = new double[_bins];
-  memset(_xAxisPoints, 0x0, _bins*sizeof(double));
+  _xAxisPoints = new double[d_bins];
+  _resetXAxisPoints(d_left, d_right);
 
   for(int i = 0; i < _nplots; i++) {
     delete [] _yDataPoints[i];
-    _yDataPoints[i] = new double[_bins];
-    memset(_yDataPoints[i], 0, _bins*sizeof(double));
+    _yDataPoints[i] = new double[d_bins];
+    memset(_yDataPoints[i], 0, d_bins*sizeof(double));
 
 #if QWT_VERSION < 0x060000
-    _plot_curve[i]->setRawData(_xAxisPoints, _yDataPoints[i], _bins);
+    _plot_curve[i]->setRawData(_xAxisPoints, _yDataPoints[i], d_bins);
 #else
-    _plot_curve[i]->setRawSamples(_xAxisPoints, _yDataPoints[i], _bins);
+    _plot_curve[i]->setRawSamples(_xAxisPoints, _yDataPoints[i], d_bins);
 #endif
   }
 }

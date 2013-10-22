@@ -25,6 +25,7 @@ GR_PYTHON_INSTALL(PROGRAMS
   pyqt_example_f.py
   pyqt_freq_c.py
   pyqt_freq_f.py
+  pyqt_histogram_f.py
   pyqt_time_c.py
   pyqt_time_f.py
   pyqt_time_raster_b.py

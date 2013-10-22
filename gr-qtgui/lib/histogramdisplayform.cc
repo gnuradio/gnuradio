@@ -39,15 +39,15 @@ HistogramDisplayForm::HistogramDisplayForm(int nplots, QWidget* parent)
   _layout->addWidget(_displayPlot, 0, 0);
   setLayout(_layout);
 
-  NPointsMenu *nptsmenu = new NPointsMenu(this);
-  _menu->addAction(nptsmenu);
-  connect(nptsmenu, SIGNAL(whichTrigger(int)),
+  d_nptsmenu = new NPointsMenu(this);
+  _menu->addAction(d_nptsmenu);
+  connect(d_nptsmenu, SIGNAL(whichTrigger(int)),
 	  this, SLOT(setNPoints(const int)));
 
-  NPointsMenu *nbinsmenu = new NPointsMenu(this);
-  nbinsmenu->setText("Number of Bins");
-  _menu->addAction(nbinsmenu);
-  connect(nbinsmenu, SIGNAL(whichTrigger(int)),
+  d_nbinsmenu = new NPointsMenu(this);
+  d_nbinsmenu->setText("Number of Bins");
+  _menu->addAction(d_nbinsmenu);
+  connect(d_nbinsmenu, SIGNAL(whichTrigger(int)),
 	  this, SLOT(setNumBins(const int)));
 
   QAction *accummenu = new QAction("Accumulate", this);
@@ -55,6 +55,23 @@ HistogramDisplayForm::HistogramDisplayForm(int nplots, QWidget* parent)
   _menu->addAction(accummenu);
   connect(accummenu, SIGNAL(triggered(bool)),
 	  this, SLOT(setAccumulate(bool)));
+
+  _menu->removeAction(_autoscale_act);
+  _autoscale_act->setText(tr("Auto Scale Y"));
+  _autoscale_act->setStatusTip(tr("Autoscale Y-axis"));
+  _autoscale_act->setCheckable(true);
+  _autoscale_act->setChecked(true);
+  _autoscale_state = true;
+  _menu->addAction(_autoscale_act);
+
+  _autoscalex_act = new QAction("Auto Scale X", this);
+  _autoscalex_act->setStatusTip(tr("Update X-axis scale"));
+  _autoscalex_act->setCheckable(false);
+  connect(_autoscalex_act, SIGNAL(changed()),
+	  this, SLOT(autoScaleX()));
+  _autoscalex_state = false;
+  _menu->addAction(_autoscalex_act);
+
 
 //  d_semilogxmenu = new QAction("Semilog X", this);
 //  d_semilogxmenu->setCheckable(true);
@@ -130,6 +147,7 @@ void
 HistogramDisplayForm::setNPoints(const int npoints)
 {
   d_npoints = npoints;
+  d_nptsmenu->setDiagText(npoints);
 }
 
 void
@@ -138,6 +156,13 @@ HistogramDisplayForm::autoScale(bool en)
   _autoscale_state = en;
   _autoscale_act->setChecked(en);
   getPlot()->setAutoScale(_autoscale_state);
+  getPlot()->replot();
+}
+
+void
+HistogramDisplayForm::autoScaleX()
+{
+  getPlot()->setAutoScaleX();
   getPlot()->replot();
 }
 
@@ -164,11 +189,16 @@ HistogramDisplayForm::setNumBins(const int bins)
 {
   getPlot()->setNumBins(bins);
   getPlot()->replot();
+  d_nbinsmenu->setDiagText(bins);
 }
 
 void
 HistogramDisplayForm::setAccumulate(bool en)
 {
+  // Turn on y-axis autoscaling when turning accumulate on.
+  if(en) {
+    autoScale(true);
+  }
   getPlot()->setAccumulate(en);
   getPlot()->replot();
 }

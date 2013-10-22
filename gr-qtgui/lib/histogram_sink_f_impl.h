@@ -98,6 +98,7 @@ namespace gr {
       void enable_semilogx(bool en);
       void enable_semilogy(bool en);
       void enable_accumulate(bool en);
+      void autoscalex();
       int  nsamps() const;
       int  bins() const;
       void reset();
