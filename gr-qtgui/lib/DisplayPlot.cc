@@ -30,12 +30,12 @@
 #include <QDebug>
 
 DisplayPlot::DisplayPlot(int nplots, QWidget* parent)
-  : QwtPlot(parent), _nplots(nplots), _stop(false)
+  : QwtPlot(parent), d_nplots(nplots), d_stop(false)
 {
   qRegisterMetaType<QColorList>("QColorList");
   resize(parent->width(), parent->height());
 
-  _autoscale_state = false;
+  d_autoscale_state = false;
 
   // Disable polygon clipping
 #if QWT_VERSION < 0x060000
@@ -53,25 +53,25 @@ DisplayPlot::DisplayPlot(int nplots, QWidget* parent)
   QColor default_palette_color = QColor("white");
   setPaletteColor(default_palette_color);
 
-  _panner = new QwtPlotPanner(canvas());
-  _panner->setAxisEnabled(QwtPlot::yRight, false);
-  _panner->setMouseButton(Qt::MidButton, Qt::ControlModifier);
+  d_panner = new QwtPlotPanner(canvas());
+  d_panner->setAxisEnabled(QwtPlot::yRight, false);
+  d_panner->setMouseButton(Qt::MidButton, Qt::ControlModifier);
 
   // emit the position of clicks on widget
-  _picker = new QwtDblClickPlotPicker(canvas());
+  d_picker = new QwtDblClickPlotPicker(canvas());
 
 #if QWT_VERSION < 0x060000
-  connect(_picker, SIGNAL(selected(const QwtDoublePoint &)),
+  connect(d_picker, SIGNAL(selected(const QwtDoublePoint &)),
       this, SLOT(onPickerPointSelected(const QwtDoublePoint &)));
 #else
-  _picker->setStateMachine(new QwtPickerDblClickPointMachine());
-  connect(_picker, SIGNAL(selected(const QPointF &)),
+  d_picker->setStateMachine(new QwtPickerDblClickPointMachine());
+  connect(d_picker, SIGNAL(selected(const QPointF &)),
 	  this, SLOT(onPickerPointSelected6(const QPointF &)));
 #endif
 
   // Configure magnify on mouse wheel
-  _magnifier = new QwtPlotMagnifier(canvas());
-  _magnifier->setAxisEnabled(QwtPlot::xBottom, false);
+  d_magnifier = new QwtPlotMagnifier(canvas());
+  d_magnifier->setAxisEnabled(QwtPlot::xBottom, false);
 
   // Avoid jumping when labels with more/less digits
   // appear/disappear when scrolling vertically
@@ -90,7 +90,7 @@ DisplayPlot::DisplayPlot(int nplots, QWidget* parent)
 
 DisplayPlot::~DisplayPlot()
 {
-  // _zoomer and _panner deleted when parent deleted
+  // d_zoomer and d_panner deleted when parent deleted
 }
 
 
@@ -98,59 +98,60 @@ void
 DisplayPlot::setYaxis(double min, double max)
 {
   setAxisScale(QwtPlot::yLeft, min, max);
-  if(!_autoscale_state)
-    _zoomer->setZoomBase();
+  if(!d_autoscale_state)
+    d_zoomer->setZoomBase();
 }
 
 void
 DisplayPlot::setXaxis(double min, double max)
 {
   setAxisScale(QwtPlot::xBottom, min, max);
-  _zoomer->setZoomBase();
+  d_zoomer->setZoomBase();
 }
 
 void
 DisplayPlot::setLineLabel(int which, QString label)
 {
-  _plot_curve[which]->setTitle(label);
+  d_plot_curve[which]->setTitle(label);
 }
 
 QString
 DisplayPlot::getLineLabel(int which)
 {
-  return _plot_curve[which]->title().text();
+  return d_plot_curve[which]->title().text();
 }
 
 void
 DisplayPlot::setLineColor(int which, QColor color)
 {
-  if (which < _nplots) {
+  if (which < d_nplots) {
     // Set the color of the pen
-    QPen pen(_plot_curve[which]->pen());
+    QPen pen(d_plot_curve[which]->pen());
     pen.setColor(color);
-    _plot_curve[which]->setPen(pen);
+    d_plot_curve[which]->setPen(pen);
     // And set the color of the markers
 #if QWT_VERSION < 0x060000
-    //_plot_curve[which]->setBrush(QBrush(QColor(color)));
-    _plot_curve[which]->setPen(pen);
-    QwtSymbol sym = (QwtSymbol)_plot_curve[which]->symbol();
+    //d_plot_curve[which]->setBrush(QBrush(QColor(color)));
+    d_plot_curve[which]->setPen(pen);
+    QwtSymbol sym = (QwtSymbol)d_plot_curve[which]->symbol();
     setLineMarker(which, sym.style());
 #else
-    QwtSymbol *sym = (QwtSymbol*)_plot_curve[which]->symbol();
+    QwtSymbol *sym = (QwtSymbol*)d_plot_curve[which]->symbol();
     if(sym) {
       sym->setColor(color);
       sym->setPen(pen);
-      _plot_curve[which]->setSymbol(sym);
+      d_plot_curve[which]->setSymbol(sym);
     }
 #endif
   }
 }
 
 QColor
-DisplayPlot::getLineColor(int which) const {
+DisplayPlot::getLineColor(int which) const
+{
   // If that plot doesn't exist then return black.
-  if (which < _nplots)
-    return _plot_curve[which]->pen().color();
+  if (which < d_nplots)
+    return d_plot_curve[which]->pen().color();
   return QColor("black");
 }
 
@@ -178,13 +179,13 @@ SETUPLINE(9, 8)
 
 void
 DisplayPlot::setZoomerColor(QColor c) {
-  _zoomer->setRubberBandPen(c);
-  _zoomer->setTrackerPen(c);
+  d_zoomer->setRubberBandPen(c);
+  d_zoomer->setTrackerPen(c);
 }
 
 QColor
 DisplayPlot::getZoomerColor() const {
-  return _zoomer->rubberBandPen().color();
+  return d_zoomer->rubberBandPen().color();
 }
 
 void
@@ -253,22 +254,22 @@ DisplayPlot::getAxesLabelFontSize() const {
 void
 DisplayPlot::setLineWidth(int which, int width)
 {
-  if (which < _nplots) {
+  if(which < d_nplots) {
     // Set the new line width
-    QPen pen(_plot_curve[which]->pen());
+    QPen pen(d_plot_curve[which]->pen());
     pen.setWidth(width);
-    _plot_curve[which]->setPen(pen);
+    d_plot_curve[which]->setPen(pen);
     
     // Scale the marker size proportionally
 #if QWT_VERSION < 0x060000
-    QwtSymbol sym = (QwtSymbol)_plot_curve[which]->symbol();
+    QwtSymbol sym = (QwtSymbol)d_plot_curve[which]->symbol();
     sym.setSize(7+10*log10(1.0*width), 7+10*log10(1.0*width));
-    _plot_curve[which]->setSymbol(sym);
+    d_plot_curve[which]->setSymbol(sym);
 #else
-    QwtSymbol *sym = (QwtSymbol*)_plot_curve[which]->symbol();
+    QwtSymbol *sym = (QwtSymbol*)d_plot_curve[which]->symbol();
     if(sym) {
       sym->setSize(7+10*log10(1.0*width), 7+10*log10(1.0*width));
-      _plot_curve[which]->setSymbol(sym);
+      d_plot_curve[which]->setSymbol(sym);
     }
 #endif
   }
@@ -276,9 +277,10 @@ DisplayPlot::setLineWidth(int which, int width)
 
 int
 DisplayPlot::getLineWidth(int which) const {
-  if (which < _nplots) {
-    return _plot_curve[which]->pen().width();
-  } else {
+  if (which < d_nplots) {
+    return d_plot_curve[which]->pen().width();
+  }
+  else {
     return 0;
   }
 }
@@ -286,19 +288,20 @@ DisplayPlot::getLineWidth(int which) const {
 void
 DisplayPlot::setLineStyle(int which, Qt::PenStyle style)
 {
-  if (which < _nplots) {
-    QPen pen(_plot_curve[which]->pen());
+  if(which < d_nplots) {
+    QPen pen(d_plot_curve[which]->pen());
     pen.setStyle(style);
-    _plot_curve[which]->setPen(pen);
+    d_plot_curve[which]->setPen(pen);
   }
 }
 
 const Qt::PenStyle
 DisplayPlot::getLineStyle(int which) const
 {
-  if (which < _nplots) {
-    return _plot_curve[which]->pen().style();
-  } else {
+  if(which < d_nplots) {
+    return d_plot_curve[which]->pen().style();
+  }
+  else {
     return Qt::SolidLine;
   }
 }
@@ -306,20 +309,20 @@ DisplayPlot::getLineStyle(int which) const
 void
 DisplayPlot::setLineMarker(int which, QwtSymbol::Style marker)
 {
-  if (which < _nplots) {
+  if(which < d_nplots) {
 #if QWT_VERSION < 0x060000
-    QwtSymbol sym = (QwtSymbol)_plot_curve[which]->symbol();
-    QPen pen(_plot_curve[which]->pen());
+    QwtSymbol sym = (QwtSymbol)d_plot_curve[which]->symbol();
+    QPen pen(d_plot_curve[which]->pen());
     QBrush brush(pen.color());
     sym.setStyle(marker);
     sym.setPen(pen);
     sym.setBrush(brush);
-    _plot_curve[which]->setSymbol(sym);
+    d_plot_curve[which]->setSymbol(sym);
 #else
-    QwtSymbol *sym = (QwtSymbol*)_plot_curve[which]->symbol();
+    QwtSymbol *sym = (QwtSymbol*)d_plot_curve[which]->symbol();
     if(sym) {
       sym->setStyle(marker);
-      _plot_curve[which]->setSymbol(sym);
+      d_plot_curve[which]->setSymbol(sym);
     }
 #endif
   }
@@ -328,12 +331,12 @@ DisplayPlot::setLineMarker(int which, QwtSymbol::Style marker)
 const QwtSymbol::Style
 DisplayPlot::getLineMarker(int which) const
 {
-  if(which < _nplots) {
+  if(which < d_nplots) {
 #if QWT_VERSION < 0x060000
-    QwtSymbol sym = (QwtSymbol)_plot_curve[which]->symbol();
+    QwtSymbol sym = (QwtSymbol)d_plot_curve[which]->symbol();
     return sym.style();
 #else
-    QwtSymbol *sym = (QwtSymbol*)_plot_curve[which]->symbol();
+    QwtSymbol *sym = (QwtSymbol*)d_plot_curve[which]->symbol();
     return sym->style();
 #endif
   }
@@ -345,26 +348,26 @@ DisplayPlot::getLineMarker(int which) const
 void
 DisplayPlot::setMarkerAlpha(int which, int alpha)
 {
-  if (which < _nplots) {
+  if (which < d_nplots) {
     // Get the pen color
-    QPen pen(_plot_curve[which]->pen());
+    QPen pen(d_plot_curve[which]->pen());
     QColor color = pen.color();
     
     // Set new alpha and update pen
     color.setAlpha(alpha);
     pen.setColor(color);
-    _plot_curve[which]->setPen(pen);
+    d_plot_curve[which]->setPen(pen);
     
     // And set the new color for the markers
 #if QWT_VERSION < 0x060000
-    QwtSymbol sym = (QwtSymbol)_plot_curve[which]->symbol();
+    QwtSymbol sym = (QwtSymbol)d_plot_curve[which]->symbol();
     setLineMarker(which, sym.style());
 #else
-    QwtSymbol *sym = (QwtSymbol*)_plot_curve[which]->symbol();
+    QwtSymbol *sym = (QwtSymbol*)d_plot_curve[which]->symbol();
     if(sym) {
       sym->setColor(color);
       sym->setPen(pen);
-      _plot_curve[which]->setSymbol(sym);
+      d_plot_curve[which]->setSymbol(sym);
     }
 #endif
   }
@@ -373,9 +376,10 @@ DisplayPlot::setMarkerAlpha(int which, int alpha)
 int
 DisplayPlot::getMarkerAlpha(int which) const
 {
-  if (which < _nplots) {
-    return _plot_curve[which]->pen().color().alpha();
-  } else {
+  if(which < d_nplots) {
+    return d_plot_curve[which]->pen().color().alpha();
+  }
+  else {
     return 0;
   }
 }
@@ -383,7 +387,7 @@ DisplayPlot::getMarkerAlpha(int which) const
 void
 DisplayPlot::setStop(bool on)
 {
-  _stop = on;  
+  d_stop = on;  
 }
 
 void

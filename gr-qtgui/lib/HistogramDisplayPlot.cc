@@ -37,9 +37,9 @@
 class TimePrecisionClass
 {
 public:
-  TimePrecisionClass(const int timePrecision)
+  TimePrecisionClass(const int timeprecision)
   {
-    _timePrecision = timePrecision;
+    d_time_precision = timeprecision;
   }
 
   virtual ~TimePrecisionClass()
@@ -48,23 +48,23 @@ public:
 
   virtual unsigned int getTimePrecision() const
   {
-    return _timePrecision;
+    return d_time_precision;
   }
 
-  virtual void setTimePrecision(const unsigned int newPrecision)
+  virtual void setTimePrecision(const unsigned int newprecision)
   {
-    _timePrecision = newPrecision;
+    d_time_precision = newprecision;
   }
 protected:
-  unsigned int _timePrecision;
+  unsigned int d_time_precision;
 };
 
 
 class HistogramDisplayZoomer: public QwtPlotZoomer, public TimePrecisionClass
 {
 public:
-  HistogramDisplayZoomer(QwtPlotCanvas* canvas, const unsigned int timePrecision)
-    : QwtPlotZoomer(canvas),TimePrecisionClass(timePrecision)
+  HistogramDisplayZoomer(QwtPlotCanvas* canvas, const unsigned int timeprecision)
+    : QwtPlotZoomer(canvas),TimePrecisionClass(timeprecision)
   {
     setTrackerMode(QwtPicker::AlwaysOn);
   }
@@ -80,7 +80,7 @@ public:
 
   void setUnitType(const std::string &type)
   {
-    _unitType = type;
+    d_unit_type = type;
   }
 
 protected:
@@ -104,7 +104,7 @@ protected:
   }
 
 private:
-  std::string _unitType;
+  std::string d_unit_type;
 };
 
 
@@ -118,28 +118,28 @@ HistogramDisplayPlot::HistogramDisplayPlot(int nplots, QWidget* parent)
   d_accum = false;
 
   // Initialize x-axis data array
-  _xAxisPoints = new double[d_bins];
-  memset(_xAxisPoints, 0x0, d_bins*sizeof(double));
+  d_xdata = new double[d_bins];
+  memset(d_xdata, 0x0, d_bins*sizeof(double));
 
-  _zoomer = new HistogramDisplayZoomer(canvas(), 0);
+  d_zoomer = new HistogramDisplayZoomer(canvas(), 0);
 
 #if QWT_VERSION < 0x060000
-  _zoomer->setSelectionFlags(QwtPicker::RectSelection | QwtPicker::DragSelection);
+  d_zoomer->setSelectionFlags(QwtPicker::RectSelection | QwtPicker::DragSelection);
 #endif
 
-  _zoomer->setMousePattern(QwtEventPattern::MouseSelect2,
-			   Qt::RightButton, Qt::ControlModifier);
-  _zoomer->setMousePattern(QwtEventPattern::MouseSelect3,
-			   Qt::RightButton);
+  d_zoomer->setMousePattern(QwtEventPattern::MouseSelect2,
+                            Qt::RightButton, Qt::ControlModifier);
+  d_zoomer->setMousePattern(QwtEventPattern::MouseSelect3,
+                            Qt::RightButton);
 
   const QColor c(Qt::darkRed);
-  _zoomer->setRubberBandPen(c);
-  _zoomer->setTrackerPen(c);
+  d_zoomer->setRubberBandPen(c);
+  d_zoomer->setTrackerPen(c);
 
   d_semilogx = false;
   d_semilogy = false;
-  _autoscale_state = true;
-  _autoscalex_state = false;
+  d_autoscale_state = true;
+  d_autoscalex_state = false;
 
   setAxisScaleEngine(QwtPlot::xBottom, new QwtLinearScaleEngine);
   setXaxis(-1, 1);
@@ -157,29 +157,29 @@ HistogramDisplayPlot::HistogramDisplayPlot(int nplots, QWidget* parent)
 
   // Setup dataPoints and plot vectors
   // Automatically deleted when parent is deleted
-  for(int i = 0; i < _nplots; i++) {
-    _yDataPoints.push_back(new double[d_bins]);
-    memset(_yDataPoints[i], 0, d_bins*sizeof(double));
+  for(int i = 0; i < d_nplots; i++) {
+    d_ydata.push_back(new double[d_bins]);
+    memset(d_ydata[i], 0, d_bins*sizeof(double));
 
-    _plot_curve.push_back(new QwtPlotCurve(QString("Data %1").arg(i)));
-    _plot_curve[i]->attach(this);
-    _plot_curve[i]->setPen(QPen(colors[i]));
-    _plot_curve[i]->setRenderHint(QwtPlotItem::RenderAntialiased);
+    d_plot_curve.push_back(new QwtPlotCurve(QString("Data %1").arg(i)));
+    d_plot_curve[i]->attach(this);
+    d_plot_curve[i]->setPen(QPen(colors[i]));
+    d_plot_curve[i]->setRenderHint(QwtPlotItem::RenderAntialiased);
 
     // Adjust color's transparency for the brush
-    colors[i].setAlpha(127 / _nplots);
-    _plot_curve[i]->setBrush(QBrush(colors[i]));
+    colors[i].setAlpha(127 / d_nplots);
+    d_plot_curve[i]->setBrush(QBrush(colors[i]));
 
-    colors[i].setAlpha(255 / _nplots);
+    colors[i].setAlpha(255 / d_nplots);
     QwtSymbol *symbol = new QwtSymbol(QwtSymbol::NoSymbol, QBrush(colors[i]),
 				      QPen(colors[i]), QSize(7,7));
 
 #if QWT_VERSION < 0x060000
-    _plot_curve[i]->setRawData(_xAxisPoints, _yDataPoints[i], d_bins);
-    _plot_curve[i]->setSymbol(*symbol);
+    d_plot_curve[i]->setRawData(d_xdata, d_ydata[i], d_bins);
+    d_plot_curve[i]->setSymbol(*symbol);
 #else
-    _plot_curve[i]->setRawSamples(_xAxisPoints, _yDataPoints[i], d_bins);
-    _plot_curve[i]->setSymbol(symbol);
+    d_plot_curve[i]->setRawSamples(d_xdata, d_ydata[i], d_bins);
+    d_plot_curve[i]->setSymbol(symbol);
 #endif
   }
 
@@ -188,11 +188,11 @@ HistogramDisplayPlot::HistogramDisplayPlot(int nplots, QWidget* parent)
 
 HistogramDisplayPlot::~HistogramDisplayPlot()
 {
-  for(int i = 0; i < _nplots; i++)
-    delete[] _yDataPoints[i];
-  delete[] _xAxisPoints;
+  for(int i = 0; i < d_nplots; i++)
+    delete[] d_ydata[i];
+  delete[] d_xdata;
 
-  // _zoomer and _panner deleted when parent deleted
+  // d_zoomer and _panner deleted when parent deleted
 }
 
 void
@@ -206,43 +206,43 @@ HistogramDisplayPlot::plotNewData(const std::vector<double*> dataPoints,
 				   const int64_t numDataPoints,
 				   const double timeInterval)
 {
-  if(!_stop) {
+  if(!d_stop) {
     if((numDataPoints > 0)) {
 
       // keep track of the min/max values for when autoscaleX is called.
       d_xmin = 1e20;
       d_xmax = -1e20;
-      for(int n = 0; n < _nplots; n++) {
+      for(int n = 0; n < d_nplots; n++) {
         d_xmin = std::min(d_xmin, *std::min_element(dataPoints[n], dataPoints[n]+numDataPoints));
         d_xmax = std::max(d_xmax, *std::max_element(dataPoints[n], dataPoints[n]+numDataPoints));
       }
 
       // If autoscalex has been clicked, clear the data for the new
       // bin widths and reset the x-axis.
-      if(_autoscalex_state) {
-        for(int n = 0; n < _nplots; n++)
-          memset(_yDataPoints[n], 0, d_bins*sizeof(double));
+      if(d_autoscalex_state) {
+        for(int n = 0; n < d_nplots; n++)
+          memset(d_ydata[n], 0, d_bins*sizeof(double));
         _resetXAxisPoints(d_xmin, d_xmax);
-        _autoscalex_state = false;
+        d_autoscalex_state = false;
       }
 
       int index;
-      for(int n = 0; n < _nplots; n++) {
+      for(int n = 0; n < d_nplots; n++) {
         if(!d_accum)
-          memset(_yDataPoints[n], 0, d_bins*sizeof(double));
+          memset(d_ydata[n], 0, d_bins*sizeof(double));
         for(int64_t point = 0; point < numDataPoints; point++) {
           index = boost::math::iround(1e-20 + (dataPoints[n][point] - d_left)/d_width);
           if((index >= 0) && (index < d_bins))
-            _yDataPoints[n][static_cast<int>(index)] += 1;
+            d_ydata[n][static_cast<int>(index)] += 1;
         }
       }
 
-      double height = *std::max_element(_yDataPoints[0], _yDataPoints[0]+d_bins);
-      for(int n = 1; n < _nplots; n++) {
-        height = std::max(height, *std::max_element(_yDataPoints[n], _yDataPoints[n]+d_bins));
+      double height = *std::max_element(d_ydata[0], d_ydata[0]+d_bins);
+      for(int n = 1; n < d_nplots; n++) {
+        height = std::max(height, *std::max_element(d_ydata[n], d_ydata[n]+d_bins));
       }
 
-      if(_autoscale_state)
+      if(d_autoscale_state)
         _autoScaleY(0, height);
 
       replot();
@@ -267,13 +267,13 @@ HistogramDisplayPlot::_resetXAxisPoints(double left, double right)
   d_right = right*(1 + copysign(0.1, right));
   d_width = (d_right - d_left)/(d_bins);
   for(long loc = 0; loc < d_bins; loc++){
-    _xAxisPoints[loc] = d_left + loc*d_width;
+    d_xdata[loc] = d_left + loc*d_width;
   }
   axisScaleDiv(QwtPlot::xBottom)->setInterval(d_left, d_right);
 
   // Set up zoomer base for maximum unzoom x-axis
   // and reset to maximum unzoom level
-  QwtDoubleRect zbase = _zoomer->zoomBase();
+  QwtDoubleRect zbase = d_zoomer->zoomBase();
 
   if(d_semilogx) {
     setAxisScale(QwtPlot::xBottom, 1e-1, d_right);
@@ -285,9 +285,9 @@ HistogramDisplayPlot::_resetXAxisPoints(double left, double right)
   }
 
   zbase.setRight(d_right);
-  _zoomer->zoom(zbase);
-  _zoomer->setZoomBase(zbase);
-  _zoomer->zoom(0);
+  d_zoomer->zoom(zbase);
+  d_zoomer->setZoomBase(zbase);
+  d_zoomer->zoom(0);
 }
 
 void
@@ -312,13 +312,13 @@ HistogramDisplayPlot::_autoScaleY(double bottom, double top)
 void
 HistogramDisplayPlot::setAutoScaleX()
 {
-  _autoscalex_state = true;
+  d_autoscalex_state = true;
 }
 
 void
 HistogramDisplayPlot::setAutoScale(bool state)
 {
-  _autoscale_state = state;
+  d_autoscale_state = state;
 }
 
 void
@@ -359,10 +359,10 @@ HistogramDisplayPlot::setAccumulate(bool state)
 void
 HistogramDisplayPlot::setMarkerAlpha(int which, int alpha)
 {
-  if(which < _nplots) {
+  if(which < d_nplots) {
     // Get the pen color
-    QPen pen(_plot_curve[which]->pen());
-    QBrush brush(_plot_curve[which]->brush());
+    QPen pen(d_plot_curve[which]->pen());
+    QBrush brush(d_plot_curve[which]->brush());
     QColor color = brush.color();
     
     // Set new alpha and update pen
@@ -370,19 +370,19 @@ HistogramDisplayPlot::setMarkerAlpha(int which, int alpha)
     brush.setColor(color);
     color.setAlpha(std::min(255, static_cast<int>(alpha*1.5)));
     pen.setColor(color);
-    _plot_curve[which]->setBrush(brush);
-    _plot_curve[which]->setPen(pen);
+    d_plot_curve[which]->setBrush(brush);
+    d_plot_curve[which]->setPen(pen);
 
     // And set the new color for the markers
 #if QWT_VERSION < 0x060000
-    QwtSymbol sym = (QwtSymbol)_plot_curve[which]->symbol();
+    QwtSymbol sym = (QwtSymbol)d_plot_curve[which]->symbol();
     setLineMarker(which, sym.style());
 #else
-    QwtSymbol *sym = (QwtSymbol*)_plot_curve[which]->symbol();
+    QwtSymbol *sym = (QwtSymbol*)d_plot_curve[which]->symbol();
     if(sym) {
       sym->setColor(color);
       sym->setPen(pen);
-      _plot_curve[which]->setSymbol(sym);
+      d_plot_curve[which]->setSymbol(sym);
     }
 #endif
   }
@@ -391,8 +391,8 @@ HistogramDisplayPlot::setMarkerAlpha(int which, int alpha)
 int
 HistogramDisplayPlot::getMarkerAlpha(int which) const
 {
-  if(which < _nplots) {
-    return _plot_curve[which]->brush().color().alpha();
+  if(which < d_nplots) {
+    return d_plot_curve[which]->brush().color().alpha();
   }
   else {
     return 0;
@@ -402,31 +402,31 @@ HistogramDisplayPlot::getMarkerAlpha(int which) const
 void
 HistogramDisplayPlot::setLineColor(int which, QColor color)
 {
-  if(which < _nplots) {
+  if(which < d_nplots) {
     // Adjust color's transparency for the brush
-    color.setAlpha(127 / _nplots);
+    color.setAlpha(127 / d_nplots);
 
-    QBrush brush(_plot_curve[which]->brush());
+    QBrush brush(d_plot_curve[which]->brush());
     brush.setColor(color);
-    _plot_curve[which]->setBrush(brush);
+    d_plot_curve[which]->setBrush(brush);
 
     // Adjust color's transparency darker for the pen and markers
-    color.setAlpha(255 / _nplots);
+    color.setAlpha(255 / d_nplots);
 
-    QPen pen(_plot_curve[which]->pen());
+    QPen pen(d_plot_curve[which]->pen());
     pen.setColor(color);
-    _plot_curve[which]->setPen(pen);
+    d_plot_curve[which]->setPen(pen);
 
 #if QWT_VERSION < 0x060000
-    _plot_curve[which]->setPen(pen);
-    QwtSymbol sym = (QwtSymbol)_plot_curve[which]->symbol();
+    d_plot_curve[which]->setPen(pen);
+    QwtSymbol sym = (QwtSymbol)d_plot_curve[which]->symbol();
     setLineMarker(which, sym.style());
 #else
-    QwtSymbol *sym = (QwtSymbol*)_plot_curve[which]->symbol();
+    QwtSymbol *sym = (QwtSymbol*)d_plot_curve[which]->symbol();
     if(sym) {
       sym->setColor(color);
       sym->setPen(pen);
-      _plot_curve[which]->setSymbol(sym);
+      d_plot_curve[which]->setSymbol(sym);
     }
 #endif
   }
@@ -437,19 +437,19 @@ HistogramDisplayPlot::setNumBins(int bins)
 {
   d_bins = bins;
   
-  delete [] _xAxisPoints;
-  _xAxisPoints = new double[d_bins];
+  delete [] d_xdata;
+  d_xdata = new double[d_bins];
   _resetXAxisPoints(d_left, d_right);
 
-  for(int i = 0; i < _nplots; i++) {
-    delete [] _yDataPoints[i];
-    _yDataPoints[i] = new double[d_bins];
-    memset(_yDataPoints[i], 0, d_bins*sizeof(double));
+  for(int i = 0; i < d_nplots; i++) {
+    delete [] d_ydata[i];
+    d_ydata[i] = new double[d_bins];
+    memset(d_ydata[i], 0, d_bins*sizeof(double));
 
 #if QWT_VERSION < 0x060000
-    _plot_curve[i]->setRawData(_xAxisPoints, _yDataPoints[i], d_bins);
+    d_plot_curve[i]->setRawData(d_xdata, d_ydata[i], d_bins);
 #else
-    _plot_curve[i]->setRawSamples(_xAxisPoints, _yDataPoints[i], d_bins);
+    d_plot_curve[i]->setRawSamples(d_xdata, d_ydata[i], d_bins);
 #endif
   }
 }

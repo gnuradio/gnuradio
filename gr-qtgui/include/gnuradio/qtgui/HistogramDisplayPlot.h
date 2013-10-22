@@ -63,8 +63,8 @@ private:
   void _resetXAxisPoints(double left, double right);
   void _autoScaleY(double bottom, double top);
 
-  double* _xAxisPoints;
-  std::vector<double*> _yDataPoints;
+  double* d_xdata;
+  std::vector<double*> d_ydata;
 
   int d_bins;
   bool d_accum;
@@ -73,7 +73,7 @@ private:
 
   bool d_semilogx;
   bool d_semilogy;
-  bool _autoscalex_state;
+  bool d_autoscalex_state;
 };
 
 #endif /* HISTOGRAM_DISPLAY_PLOT_H */

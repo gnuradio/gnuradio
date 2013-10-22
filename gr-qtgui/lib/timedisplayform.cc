@@ -32,44 +32,44 @@ TimeDisplayForm::TimeDisplayForm(int nplots, QWidget* parent)
   d_semilogx = false;
   d_semilogy = false;
 
-  _intValidator = new QIntValidator(this);
-  _intValidator->setBottom(0);
+  d_int_validator = new QIntValidator(this);
+  d_int_validator->setBottom(0);
 
-  _layout = new QGridLayout(this);
-  _displayPlot = new TimeDomainDisplayPlot(nplots, this);
-  _layout->addWidget(_displayPlot, 0, 0);
-  setLayout(_layout);
+  d_layout = new QGridLayout(this);
+  d_display_plot = new TimeDomainDisplayPlot(nplots, this);
+  d_layout->addWidget(d_display_plot, 0, 0);
+  setLayout(d_layout);
 
   d_nptsmenu = new NPointsMenu(this);
-  _menu->addAction(d_nptsmenu);
+  d_menu->addAction(d_nptsmenu);
   connect(d_nptsmenu, SIGNAL(whichTrigger(int)),
 	  this, SLOT(setNPoints(const int)));
 
   d_stemmenu = new QAction("Stem Plot", this);
   d_stemmenu->setCheckable(true);
-  _menu->addAction(d_stemmenu);
+  d_menu->addAction(d_stemmenu);
   connect(d_stemmenu, SIGNAL(triggered(bool)),
 	  this, SLOT(setStem(bool)));
 
   d_semilogxmenu = new QAction("Semilog X", this);
   d_semilogxmenu->setCheckable(true);
-  _menu->addAction(d_semilogxmenu);
+  d_menu->addAction(d_semilogxmenu);
   connect(d_semilogxmenu, SIGNAL(triggered(bool)),
 	  this, SLOT(setSemilogx(bool)));
 
   d_semilogymenu = new QAction("Semilog Y", this);
   d_semilogymenu->setCheckable(true);
-  _menu->addAction(d_semilogymenu);
+  d_menu->addAction(d_semilogymenu);
   connect(d_semilogymenu, SIGNAL(triggered(bool)),
 	  this, SLOT(setSemilogy(bool)));
 
-  for(int i = 0; i < _nplots; i++) {
+  for(int i = 0; i < d_nplots; i++) {
     d_tagsmenu.push_back(new QAction("Show Tag Makers", this));
     d_tagsmenu[i]->setCheckable(true);
     d_tagsmenu[i]->setChecked(true);
     connect(d_tagsmenu[i], SIGNAL(triggered(bool)),
 	    this, SLOT(tagMenuSlot(bool)));
-    _lines_menu[i]->addAction(d_tagsmenu[i]);
+    d_lines_menu[i]->addAction(d_tagsmenu[i]);
   }
 
   // Set up the trigger menu
@@ -86,7 +86,7 @@ TimeDisplayForm::TimeDisplayForm(int nplots, QWidget* parent)
   d_triggermenu->addAction(d_tr_delay_act);
   d_triggermenu->addMenu(d_tr_channel_menu);
   d_triggermenu->addAction(d_tr_tag_key_act);
-  _menu->addMenu(d_triggermenu);
+  d_menu->addMenu(d_triggermenu);
 
   setTriggerMode(gr::qtgui::TRIG_MODE_FREE);
   connect(d_tr_mode_menu, SIGNAL(whichTrigger(gr::qtgui::trigger_mode)),
@@ -117,7 +117,7 @@ TimeDisplayForm::TimeDisplayForm(int nplots, QWidget* parent)
 
   Reset();
 
-  connect(_displayPlot, SIGNAL(plotPointSelected(const QPointF)),
+  connect(d_display_plot, SIGNAL(plotPointSelected(const QPointF)),
 	  this, SLOT(onPlotPointSelected(const QPointF)));
 }
 
@@ -126,13 +126,13 @@ TimeDisplayForm::~TimeDisplayForm()
   // Qt deletes children when parent is deleted
 
   // Don't worry about deleting Display Plots - they are deleted when parents are deleted
-  delete _intValidator;
+  delete d_int_validator;
 }
 
 TimeDomainDisplayPlot*
 TimeDisplayForm::getPlot()
 {
-  return ((TimeDomainDisplayPlot*)_displayPlot);
+  return ((TimeDomainDisplayPlot*)d_display_plot);
 }
 
 void
@@ -211,9 +211,9 @@ TimeDisplayForm::setStem(bool en)
 void
 TimeDisplayForm::autoScale(bool en)
 {
-  _autoscale_state = en;
-  _autoscale_act->setChecked(en);
-  getPlot()->setAutoScale(_autoscale_state);
+  d_autoscale_state = en;
+  d_autoscale_act->setChecked(en);
+  getPlot()->setAutoScale(d_autoscale_state);
   getPlot()->replot();
 }
 

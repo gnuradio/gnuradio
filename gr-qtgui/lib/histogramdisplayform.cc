@@ -31,63 +31,63 @@ HistogramDisplayForm::HistogramDisplayForm(int nplots, QWidget* parent)
   d_semilogx = false;
   d_semilogy = false;
 
-  _intValidator = new QIntValidator(this);
-  _intValidator->setBottom(0);
+  d_int_validator = new QIntValidator(this);
+  d_int_validator->setBottom(0);
 
-  _layout = new QGridLayout(this);
-  _displayPlot = new HistogramDisplayPlot(nplots, this);
-  _layout->addWidget(_displayPlot, 0, 0);
-  setLayout(_layout);
+  d_layout = new QGridLayout(this);
+  d_display_plot = new HistogramDisplayPlot(nplots, this);
+  d_layout->addWidget(d_display_plot, 0, 0);
+  setLayout(d_layout);
 
   d_nptsmenu = new NPointsMenu(this);
-  _menu->addAction(d_nptsmenu);
+  d_menu->addAction(d_nptsmenu);
   connect(d_nptsmenu, SIGNAL(whichTrigger(int)),
 	  this, SLOT(setNPoints(const int)));
 
   d_nbinsmenu = new NPointsMenu(this);
   d_nbinsmenu->setText("Number of Bins");
-  _menu->addAction(d_nbinsmenu);
+  d_menu->addAction(d_nbinsmenu);
   connect(d_nbinsmenu, SIGNAL(whichTrigger(int)),
 	  this, SLOT(setNumBins(const int)));
 
   QAction *accummenu = new QAction("Accumulate", this);
   accummenu->setCheckable(true);
-  _menu->addAction(accummenu);
+  d_menu->addAction(accummenu);
   connect(accummenu, SIGNAL(triggered(bool)),
 	  this, SLOT(setAccumulate(bool)));
 
-  _menu->removeAction(_autoscale_act);
-  _autoscale_act->setText(tr("Auto Scale Y"));
-  _autoscale_act->setStatusTip(tr("Autoscale Y-axis"));
-  _autoscale_act->setCheckable(true);
-  _autoscale_act->setChecked(true);
-  _autoscale_state = true;
-  _menu->addAction(_autoscale_act);
+  d_menu->removeAction(d_autoscale_act);
+  d_autoscale_act->setText(tr("Auto Scale Y"));
+  d_autoscale_act->setStatusTip(tr("Autoscale Y-axis"));
+  d_autoscale_act->setCheckable(true);
+  d_autoscale_act->setChecked(true);
+  d_autoscale_state = true;
+  d_menu->addAction(d_autoscale_act);
 
-  _autoscalex_act = new QAction("Auto Scale X", this);
-  _autoscalex_act->setStatusTip(tr("Update X-axis scale"));
-  _autoscalex_act->setCheckable(false);
-  connect(_autoscalex_act, SIGNAL(changed()),
+  d_autoscalex_act = new QAction("Auto Scale X", this);
+  d_autoscalex_act->setStatusTip(tr("Update X-axis scale"));
+  d_autoscalex_act->setCheckable(false);
+  connect(d_autoscalex_act, SIGNAL(changed()),
 	  this, SLOT(autoScaleX()));
-  _autoscalex_state = false;
-  _menu->addAction(_autoscalex_act);
+  d_autoscalex_state = false;
+  d_menu->addAction(d_autoscalex_act);
 
 
 //  d_semilogxmenu = new QAction("Semilog X", this);
 //  d_semilogxmenu->setCheckable(true);
-//  _menu->addAction(d_semilogxmenu);
+//  d_menu->addAction(d_semilogxmenu);
 //  connect(d_semilogxmenu, SIGNAL(triggered(bool)),
 //	  this, SLOT(setSemilogx(bool)));
 //
 //  d_semilogymenu = new QAction("Semilog Y", this);
 //  d_semilogymenu->setCheckable(true);
-//  _menu->addAction(d_semilogymenu);
+//  d_menu->addAction(d_semilogymenu);
 //  connect(d_semilogymenu, SIGNAL(triggered(bool)),
 //	  this, SLOT(setSemilogy(bool)));
 
   Reset();
 
-  connect(_displayPlot, SIGNAL(plotPointSelected(const QPointF)),
+  connect(d_display_plot, SIGNAL(plotPointSelected(const QPointF)),
 	  this, SLOT(onPlotPointSelected(const QPointF)));
 }
 
@@ -96,13 +96,13 @@ HistogramDisplayForm::~HistogramDisplayForm()
   // Qt deletes children when parent is deleted
 
   // Don't worry about deleting Display Plots - they are deleted when parents are deleted
-  delete _intValidator;
+  delete d_int_validator;
 }
 
 HistogramDisplayPlot*
 HistogramDisplayForm::getPlot()
 {
-  return ((HistogramDisplayPlot*)_displayPlot);
+  return ((HistogramDisplayPlot*)d_display_plot);
 }
 
 void
@@ -153,9 +153,9 @@ HistogramDisplayForm::setNPoints(const int npoints)
 void
 HistogramDisplayForm::autoScale(bool en)
 {
-  _autoscale_state = en;
-  _autoscale_act->setChecked(en);
-  getPlot()->setAutoScale(_autoscale_state);
+  d_autoscale_state = en;
+  d_autoscale_act->setChecked(en);
+  getPlot()->setAutoScale(d_autoscale_state);
   getPlot()->replot();
 }
 

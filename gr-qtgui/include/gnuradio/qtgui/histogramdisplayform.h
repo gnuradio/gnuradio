@@ -64,10 +64,10 @@ private slots:
   void newData(const QEvent*);
 
 private:
-  QIntValidator* _intValidator;
+  QIntValidator* d_int_validator;
 
-  double _startFrequency;
-  double _stopFrequency;
+  double d_startFrequency;
+  double d_stopFrequency;
 
   int d_npoints;
 
@@ -79,8 +79,8 @@ private:
   QAction *d_semilogxmenu;
   QAction *d_semilogymenu;
 
-  QAction *_autoscalex_act;
-  bool _autoscalex_state;
+  QAction *d_autoscalex_act;
+  bool d_autoscalex_state;
 };
 
 #endif /* HISTOGRAM_DISPLAY_FORM_H */

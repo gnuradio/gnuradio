@@ -66,10 +66,10 @@ private:
   void _resetXAxisPoints();
   void _autoScale(double bottom, double top);
 
-  std::vector<double*> _dataPoints;
-  double* _xAxisPoints;
+  std::vector<double*> d_ydata;
+  double* d_xdata;
 
-  double _sampleRate;
+  double d_sample_rate;
 
   bool d_semilogx;
   bool d_semilogy;

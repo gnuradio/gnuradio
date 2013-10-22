@@ -271,22 +271,22 @@ protected slots:
   virtual void legendEntryChecked(QwtPlotItem *plotItem, bool on);
 
 protected:
-  int _nplots;
-  std::vector<QwtPlotCurve*> _plot_curve;
+  int d_nplots;
+  std::vector<QwtPlotCurve*> d_plot_curve;
 
-  QwtPlotPanner* _panner;
-  QwtPlotZoomer* _zoomer;
+  QwtPlotPanner* d_panner;
+  QwtPlotZoomer* d_zoomer;
 
-  QwtDblClickPlotPicker *_picker;
-  QwtPlotMagnifier *_magnifier;
+  QwtDblClickPlotPicker *d_picker;
+  QwtPlotMagnifier *d_magnifier;
 
-  int64_t _numPoints;
+  int64_t d_numPoints;
 
-  bool _stop;
+  bool d_stop;
 
-  QList<QColor> _trace_colors;
+  QList<QColor> d_trace_colors;
 
-  bool _autoscale_state;
+  bool d_autoscale_state;
 };
 
 #endif /* DOMAIN_DISPLAY_PLOT_H */
