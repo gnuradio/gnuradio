@@ -31,12 +31,16 @@ namespace gr {
     class repack_bits_bb_impl : public repack_bits_bb
     {
      private:
-      const int d_k; //! Bits on input stream
-      const int d_l; //! Bits on output stream
+      int d_k; //! Bits on input stream
+      int d_l; //! Bits on output stream
       const bool d_packet_mode;
       int d_in_index; // Current bit of input byte
       int d_out_index; // Current bit of output byte
       bool d_align_output; //! true if the output shall be aligned, false if the input shall be aligned
+      void handle_set_n_input_bits (pmt::pmt_t k_pmt);
+      void handle_set_n_output_bits (pmt::pmt_t l_pmt);
+      void set_n_input_bits (unsigned int k);
+      void set_n_output_bits (unsigned int l);
 
      protected:
       int calculate_output_stream_length(const gr_vector_int &ninput_items);
