@@ -70,6 +70,11 @@ namespace gr {
        * \param order the loop order, either 2, 4, or 8
        */
       static sptr make(float loop_bw, int order);
+
+      /*! 
+       * Returns the current value of the loop error.
+       */
+      virtual float error() const = 0;
     };
 
   } /* namespace digital */

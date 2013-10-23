@@ -29,6 +29,7 @@
 #include <gnuradio/expj.h>
 #include <gnuradio/sincos.h>
 #include <gnuradio/math.h>
+#include <boost/format.hpp>
 
 namespace gr {
   namespace digital {
@@ -42,10 +43,10 @@ namespace gr {
 
     costas_loop_cc_impl::costas_loop_cc_impl(float loop_bw, int order)
       : sync_block("costas_loop_cc",
-		      io_signature::make(1, 1, sizeof(gr_complex)),
-		      io_signature::make2(1, 2, sizeof(gr_complex), sizeof(float))),
+                   io_signature::make(1, 1, sizeof(gr_complex)),
+                   io_signature::make2(1, 2, sizeof(gr_complex), sizeof(float))),
 	blocks::control_loop(loop_bw, 1.0, -1.0),
-	d_order(order), d_phase_detector(NULL)
+	d_order(order), d_error(0), d_phase_detector(NULL)
     {
       // Set up the phase detector to use based on the constellation order
       switch(d_order) {
@@ -112,6 +113,12 @@ namespace gr {
       return (sample.real()*sample.imag());
     }
 
+    float
+    costas_loop_cc_impl::error() const
+    {
+      return d_error;
+    }
+
     int
     costas_loop_cc_impl::work(int noutput_items,
 			      gr_vector_const_void_star &input_items,
@@ -123,38 +130,86 @@ namespace gr {
 
       bool write_foptr = output_items.size() >= 2;
 
-      float error;
       gr_complex nco_out;
-  
+
       if(write_foptr) {
-	for(int i = 0; i < noutput_items; i++) {
-	  nco_out = gr_expj(-d_phase);
-	  optr[i] = iptr[i] * nco_out;
-      
-	  error = (*this.*d_phase_detector)(optr[i]);
-	  error = gr::branchless_clip(error, 1.0);
-	
-	  advance_loop(error);
-	  phase_wrap();
-	  frequency_limit();
-      
-	  foptr[i] = d_freq;
-	} 
+        for(int i = 0; i < noutput_items; i++) {
+          nco_out = gr_expj(-d_phase);
+          optr[i] = iptr[i] * nco_out;
+
+          d_error = (*this.*d_phase_detector)(optr[i]);
+          d_error = gr::branchless_clip(d_error, 1.0);
+       
+          advance_loop(d_error);
+          phase_wrap();
+          frequency_limit();
+
+          foptr[i] = d_freq;
+        } 
       }
       else {
-	for(int i = 0; i < noutput_items; i++) {
-	  nco_out = gr_expj(-d_phase);
-	  optr[i] = iptr[i] * nco_out;
-      
-	  error = (*this.*d_phase_detector)(optr[i]);
-	  error = gr::branchless_clip(error, 1.0);
+        for(int i = 0; i < noutput_items; i++) {
+          nco_out = gr_expj(-d_phase);
+          optr[i] = iptr[i] * nco_out;
 
-	  advance_loop(error);
-	  phase_wrap();
-	  frequency_limit();
-	}
+          d_error = (*this.*d_phase_detector)(optr[i]);
+          d_error = gr::branchless_clip(d_error, 1.0);
+
+          advance_loop(d_error);
+          phase_wrap();
+          frequency_limit();
+        }
       }
+
       return noutput_items;
+    }
+
+    void
+    costas_loop_cc_impl::setup_rpc()
+    {
+#ifdef GR_CTRLPORT
+      // Getters
+      add_rpc_variable(
+          rpcbasic_sptr(new rpcbasic_register_get<costas_loop_cc, float>(
+	      alias(), "error",
+	      &costas_loop_cc::error,
+	      pmt::mp(-2.0f), pmt::mp(2.0f), pmt::mp(0.0f),
+	      "", "Error signal of loop", RPC_PRIVLVL_MIN,
+              DISPTIME | DISPOPTSTRIP)));
+
+      add_rpc_variable(
+          rpcbasic_sptr(new rpcbasic_register_get<control_loop, float>(
+	      alias(), "frequency",
+	      &control_loop::get_frequency,
+	      pmt::mp(0.0f), pmt::mp(2.0f), pmt::mp(0.0f),
+	      "", "Frequency Est.", RPC_PRIVLVL_MIN,
+              DISPTIME | DISPOPTSTRIP)));
+
+      add_rpc_variable(
+          rpcbasic_sptr(new rpcbasic_register_get<control_loop, float>(
+	      alias(), "phase",
+	      &control_loop::get_phase,
+	      pmt::mp(0.0f), pmt::mp(2.0f), pmt::mp(0.0f),
+	      "", "Phase Est.", RPC_PRIVLVL_MIN,
+              DISPTIME | DISPOPTSTRIP)));
+
+      add_rpc_variable(
+          rpcbasic_sptr(new rpcbasic_register_get<control_loop, float>(
+	      alias(), "loop_bw",
+	      &control_loop::get_loop_bandwidth,
+	      pmt::mp(0.0f), pmt::mp(2.0f), pmt::mp(0.0f),
+	      "", "Loop bandwidth", RPC_PRIVLVL_MIN,
+              DISPTIME | DISPOPTSTRIP)));
+    
+      // Setters
+      add_rpc_variable(
+          rpcbasic_sptr(new rpcbasic_register_set<control_loop, float>(
+	      alias(), "loop bw",
+	      &control_loop::set_loop_bandwidth,
+	      pmt::mp(0.0f), pmt::mp(1.0f), pmt::mp(0.0f),
+	      "", "Loop bandwidth",
+	      RPC_PRIVLVL_MIN, DISPNULL)));
+#endif /* GR_CTRLPORT */
     }
 
   } /* namespace digital */
