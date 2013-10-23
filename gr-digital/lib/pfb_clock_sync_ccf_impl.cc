@@ -26,10 +26,13 @@
 
 #include <cstdio>
 #include <cmath>
+#include <algorithm>
 
 #include "pfb_clock_sync_ccf_impl.h"
 #include <gnuradio/io_signature.h>
 #include <gnuradio/math.h>
+#include <boost/format.hpp>
+#include <boost/math/special_functions/round.hpp>
 
 namespace gr {
   namespace digital {
@@ -83,6 +86,9 @@ namespace gr {
       d_rate_f = d_rate - (float)d_rate_i;
       d_filtnum = (int)floor(d_k);
 
+      //GR_LOG_DEBUG(d_logger, boost::format("rate: %1%  irate: %2%   frate: %3%") \
+      //             % d_rate % d_rate_i % d_rate_f);
+
       d_filters = std::vector<kernel::fir_filter_ccf*>(d_nfilters);
       d_diff_filters = std::vector<kernel::fir_filter_ccf*>(d_nfilters);
 
@@ -93,11 +99,18 @@ namespace gr {
 	d_diff_filters[i] = new kernel::fir_filter_ccf(1, vtaps);
       }
 
+      std::vector<float> rtaps = taps;
+      //std::reverse(rtaps.begin(), rtaps.end());
+      
       // Now, actually set the filters' taps
       std::vector<float> dtaps;
-      create_diff_taps(taps, dtaps);
-      set_taps(taps, d_taps, d_filters);
+      create_diff_taps(rtaps, dtaps);
+      set_taps(rtaps, d_taps, d_filters);
       set_taps(dtaps, d_dtaps, d_diff_filters);
+
+      set_relative_rate((float)d_osps/(float)d_sps);
+
+      d_diff_count = 0;
     }
 
     pfb_clock_sync_ccf_impl::~pfb_clock_sync_ccf_impl()
@@ -114,6 +127,14 @@ namespace gr {
       return noutputs == 1 || noutputs == 4;
     }
 
+    void
+    pfb_clock_sync_ccf_impl::forecast(int noutput_items,
+                                      gr_vector_int &ninput_items_required)
+    {
+      unsigned ninputs = ninput_items_required.size ();
+      for(unsigned i = 0; i < ninputs; i++)
+        ninput_items_required[i] = (noutput_items + history()) * (d_sps/d_osps);
+    }
 
     /*******************************************************************
      SET FUNCTIONS
@@ -256,7 +277,7 @@ namespace gr {
       }
 
       // Set the history to ensure enough input items for each filter
-      set_history(d_taps_per_filter + d_sps);
+      set_history(d_taps_per_filter + d_sps + d_sps);
 
       // Make sure there is enough output space for d_osps outputs/input.
       set_output_multiple(d_osps);
@@ -275,9 +296,9 @@ namespace gr {
 
       float pwr = 0;
       difftaps.push_back(0);
-      for(unsigned int i = 0; i < newtaps.size()-2; i++) {
+      for(unsigned int i = 0; i < newtaps.size()-1; i++) {
 	float tap = 0;
-	for(int j = 0; j < 3; j++) {
+	for(unsigned int j = 0; j < diff_filter.size(); j++) {
 	  tap += diff_filter[j]*newtaps[i+j];
 	  pwr += fabsf(tap);
 	}
@@ -385,32 +406,58 @@ namespace gr {
 	return 0;		     // history requirements may have changed.
       }
 
-      // We need this many to process one output
-      int nrequired = ninput_items[0] - d_taps_per_filter - d_osps;
+      std::vector<tag_t> tags;
+      get_tags_in_range(tags, 0, nitems_read(0),
+                        nitems_read(0)+d_sps*noutput_items,
+                        pmt::intern("time_est"));
 
       int i = 0, count = 0;
       float error_r, error_i;
 
+      int up_count=0;
+      int dn_count=0;
+      
       // produce output as long as we can and there are enough input samples
-      while((i < noutput_items) && (count < nrequired)) {
+      while(i < noutput_items) {
+        int adjuster = 0;
+        if(tags.size() > 0) {
+          size_t offset = tags[0].offset-nitems_read(0);
+          if((offset >= (size_t)count) && (offset < (size_t)(count + d_sps))) {
+            float center = (float)pmt::to_double(tags[0].value);
+            float c = boost::math::round(center);
+            float delta = center - c;
+
+            d_k = (offset-count - d_sps/2.0) * d_nfilters + (M_PI*center*d_nfilters);
+
+            //GR_LOG_DEBUG(d_logger, boost::format("tag offset: %1% ->  k: %2%") \
+            //             % tags[0].offset % d_k);
+
+            tags.erase(tags.begin());
+          }
+        }
+        
 	while(d_out_idx < d_osps) {
+
 	  d_filtnum = (int)floor(d_k);
 
 	  // Keep the current filter number in [0, d_nfilters]
 	  // If we've run beyond the last filter, wrap around and go to next sample
-	  // If we've go below 0, wrap around and go to previous sample
+	  // If we've gone below 0, wrap around and go to previous sample
 	  while(d_filtnum >= d_nfilters) {
 	    d_k -= d_nfilters;
 	    d_filtnum -= d_nfilters;
 	    count += 1;
+            up_count++;
 	  }
 	  while(d_filtnum < 0) {
 	    d_k += d_nfilters;
 	    d_filtnum += d_nfilters;
 	    count -= 1;
+            dn_count++;
 	  }
 
-	  out[i+d_out_idx] = d_filters[d_filtnum]->filter(&in[count+d_out_idx]);
+          int adj = static_cast<int>(d_out_idx+adjuster);
+	  out[i+d_out_idx] = d_filters[d_filtnum]->filter(&in[count+adj]);
 	  d_k = d_k + d_rate_i + d_rate_f; // update phase
 	  d_out_idx++;
 
@@ -422,6 +469,7 @@ namespace gr {
 
 	  // We've run out of output items we can create; return now.
 	  if(i+d_out_idx >= noutput_items) {
+            d_diff_count += up_count - dn_count;
 	    consume_each(count);
 	    return i;
 	  }
@@ -432,7 +480,8 @@ namespace gr {
 	d_out_idx = 0;
 
 	// Update the phase and rate estimates for this symbol
-	gr_complex diff = d_diff_filters[d_filtnum]->filter(&in[count]);
+        int adj = static_cast<int>(d_out_idx+adjuster);
+	gr_complex diff = d_diff_filters[d_filtnum]->filter(&in[count+adj]);
 	error_r = out[i].real() * diff.real();
 	error_i = out[i].imag() * diff.imag();
 	d_error = (error_i + error_r) / 2.0;       // average error from I&Q channel
@@ -441,7 +490,7 @@ namespace gr {
 	// tracking rate estimates based on the error value
 	d_rate_f = d_rate_f + d_beta*d_error;
 	d_k = d_k + d_alpha*d_error;
-
+        
 	// Keep our rate within a good range
 	d_rate_f = gr::branchless_clip(d_rate_f, d_max_dev);
 
@@ -449,6 +498,7 @@ namespace gr {
 	count += (int)floor(d_sps);
       }
 
+      d_diff_count += up_count - dn_count;
       consume_each(count);
       return i;
     }
