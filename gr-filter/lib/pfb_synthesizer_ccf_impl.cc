@@ -30,7 +30,7 @@
 
 namespace gr {
   namespace filter {
-    
+
     pfb_synthesizer_ccf::sptr
     pfb_synthesizer_ccf::make(unsigned int numchans,
 			      const std::vector<float> &taps,
@@ -78,6 +78,7 @@ namespace gr {
 
     pfb_synthesizer_ccf_impl::~pfb_synthesizer_ccf_impl()
     {
+      delete d_fft;
       for(unsigned int i = 0; i < d_numchans; i++) {
 	delete d_filters[i];
       }
