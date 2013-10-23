@@ -26,7 +26,9 @@
 #include <gnuradio/digital/api.h>
 #include <gnuradio/digital/metric_type.h>
 #include <boost/enable_shared_from_this.hpp>
+#include <boost/any.hpp>
 #include <gnuradio/gr_complex.h>
+#include <pmt/pmt.h>
 #include <vector>
 
 namespace gr {
@@ -107,18 +109,23 @@ namespace gr {
 
       unsigned int bits_per_symbol()
       {
-	return floor(log(double(d_constellation.size()))/d_dimensionality/log(2.0));
+        return floor(log(double(d_constellation.size()))/d_dimensionality/log(2.0));
       }
   
       unsigned int arity()
       {
-	return d_arity;
+        return d_arity;
       }
 
       constellation_sptr base()
       {
-	return shared_from_this();
+        return shared_from_this();
       }  
+
+      pmt::pmt_t as_pmt()
+      {
+        return pmt::make_any(boost::any(base()));
+      }
 
       /*! \brief Generates the soft decision LUT based on
        *         constellation and symbol map.
@@ -189,6 +196,7 @@ namespace gr {
        * \param sample The complex sample to get the soft decisions.
        */
       std::vector<float> soft_decision_maker(gr_complex sample);
+
 
     protected:
       std::vector<gr_complex> d_constellation;
@@ -353,7 +361,7 @@ namespace gr {
 			 float width_imag_sectors);
 
       unsigned int get_sector(const gr_complex *sample);
-  
+      gr_complex calc_sector_center(unsigned int sector);
       unsigned int calc_sector_value(unsigned int sector);
 
     private:
