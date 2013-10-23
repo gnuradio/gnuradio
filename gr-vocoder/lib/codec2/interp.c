@@ -212,6 +212,7 @@ float sample_log_amp_quad_nl(
     /* find closest point to centre quadratic interpolator */
 
     best_dist = 1E32;
+    m = 0;
     for (i=0; i<np; i++)
 	if (fabs(w[i] - w_sample) < best_dist) {
 	    best_dist = fabs(w[i] - w_sample);
