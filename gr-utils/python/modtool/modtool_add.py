@@ -220,7 +220,9 @@ class ModToolAdd(ModTool):
             self._write_tpl('block_cpp36', 'lib',                    fname_cc)
         if not self.options.skip_cmakefiles:
             ed = CMakeFileEditor(self._file['cmlib'])
-            if not ed.append_value('list', fname_cc, to_ignore_start='APPEND %s_sources' % self._info['modname']):
+            cmake_list_var = self._info['modname'] + '_sources'
+            if self._info['is_component']: cmake_list_var = 'gr_' + cmake_list_var
+            if not ed.append_value('list', fname_cc, to_ignore_start='APPEND ' + cmake_list_var):
                 ed.append_value('add_library', fname_cc)
             ed.write()
             ed = CMakeFileEditor(self._file['cminclude'])
@@ -266,11 +268,11 @@ class ModToolAdd(ModTool):
         - include in CMakeLists.txt
         """
         fname_py_qa = 'qa_' + self._info['blockname'] + '.py'
-        self._write_tpl('qa_python', 'python', fname_py_qa)
-        os.chmod(os.path.join('python', fname_py_qa), 0755)
+        self._write_tpl('qa_python', self._info['pydir'], fname_py_qa)
+        os.chmod(os.path.join(self._info['pydir'], fname_py_qa), 0755)
         if self.options.skip_cmakefiles or CMakeFileEditor(self._file['cmpython']).check_for_glob('qa_*.py'):
             return
-        print "Editing python/CMakeLists.txt..."
+        print "Editing %s/CMakeLists.txt..." % self._info['pydir']
         open(self._file['cmpython'], 'a').write(
                 'GR_ADD_TEST(qa_%s ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/%s)\n' % \
                   (self._info['blockname'], fname_py_qa))
@@ -283,7 +285,7 @@ class ModToolAdd(ModTool):
         - include in __init__.py
         """
         fname_py = self._info['blockname'] + '.py'
-        self._write_tpl('block_python', 'python', fname_py)
+        self._write_tpl('block_python', self._info['pydir'], fname_py)
         append_re_line_sequence(self._file['pyinit'],
                                 '(^from.*import.*\n|# import any pure.*\n)',
                                 'from %s import %s' % (self._info['blockname'], self._info['blockname']))
