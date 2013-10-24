@@ -51,7 +51,8 @@ class DrawingArea(gtk.DrawingArea):
             gtk.gdk.POINTER_MOTION_MASK | \
             gtk.gdk.BUTTON_RELEASE_MASK | \
             gtk.gdk.LEAVE_NOTIFY_MASK | \
-            gtk.gdk.ENTER_NOTIFY_MASK
+            gtk.gdk.ENTER_NOTIFY_MASK | \
+            gtk.gdk.FOCUS_CHANGE_MASK
         )
         #setup drag and drop
         self.drag_dest_set(gtk.DEST_DEFAULT_ALL, DND_TARGETS, gtk.gdk.ACTION_COPY)
@@ -59,9 +60,11 @@ class DrawingArea(gtk.DrawingArea):
         #setup the focus flag
         self._focus_flag = False
         self.get_focus_flag = lambda: self._focus_flag
-        def _handle_focus_event(widget, event, focus_flag): self._focus_flag = focus_flag
-        self.connect('leave-notify-event', _handle_focus_event, False)
-        self.connect('enter-notify-event', _handle_focus_event, True)
+        def _handle_notify_event(widget, event, focus_flag): self._focus_flag = focus_flag
+        self.connect('leave-notify-event', _handle_notify_event, False)
+        self.connect('enter-notify-event', _handle_notify_event, True)
+        self.set_can_focus(True)
+        self.connect('focus-out-event', self._handle_focus_lost_event)
 
     def new_pixmap(self, width, height): return gtk.gdk.Pixmap(self.window, width, height, -1)
     def get_pixbuf(self):
@@ -83,6 +86,7 @@ class DrawingArea(gtk.DrawingArea):
         """
         Forward button click information to the flow graph.
         """
+        self.grab_focus()
         self.ctrl_mask = event.state & gtk.gdk.CONTROL_MASK
         if event.button == 1: self._flow_graph.handle_mouse_selector_press(
             double_click=(event.type == gtk.gdk._2BUTTON_PRESS),
@@ -133,3 +137,8 @@ class DrawingArea(gtk.DrawingArea):
         gc = self.window.new_gc()
         self._flow_graph.draw(gc, self._pixmap)
         self.window.draw_drawable(gc, self._pixmap, 0, 0, 0, 0, -1, -1)
+
+    def _handle_focus_lost_event(self, widget, event):
+        self._flow_graph.unselect()
+        self._flow_graph.update_selected()
+        self._flow_graph.queue_draw()
