@@ -378,8 +378,8 @@ namespace gr {
       d_trigger_level = d_main_gui->getTriggerLevel();
       d_trigger_channel = d_main_gui->getTriggerChannel();
 
-      float d = d_main_gui->getTriggerDelay();
-      int delay = static_cast<int>(d*d_samp_rate);
+      float delayf = d_main_gui->getTriggerDelay();
+      int delay = static_cast<int>(delayf*d_samp_rate);
 
       if(delay != d_trigger_delay) {
         // We restrict the delay to be within the window of time being
@@ -410,7 +410,7 @@ namespace gr {
         }
 
         d_trigger_delay = delay;
-        d_main_gui->setTriggerDelay(d_trigger_delay);
+        d_main_gui->setTriggerDelay(delayf);
         set_history(d_trigger_delay + 2);
       }
 
