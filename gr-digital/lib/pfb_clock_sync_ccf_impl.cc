@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2009-2012 Free Software Foundation, Inc.
+ * Copyright 2009-2013 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -93,19 +93,16 @@ namespace gr {
       d_diff_filters = std::vector<kernel::fir_filter_ccf*>(d_nfilters);
 
       // Create an FIR filter for each channel and zero out the taps
-      std::vector<float> vtaps(0, d_nfilters);
+      std::vector<float> vtaps(1,0);
       for(int i = 0; i < d_nfilters; i++) {
 	d_filters[i] = new kernel::fir_filter_ccf(1, vtaps);
 	d_diff_filters[i] = new kernel::fir_filter_ccf(1, vtaps);
       }
 
-      std::vector<float> rtaps = taps;
-      //std::reverse(rtaps.begin(), rtaps.end());
-      
       // Now, actually set the filters' taps
       std::vector<float> dtaps;
-      create_diff_taps(rtaps, dtaps);
-      set_taps(rtaps, d_taps, d_filters);
+      create_diff_taps(taps, dtaps);
+      set_taps(taps, d_taps, d_filters);
       set_taps(dtaps, d_dtaps, d_diff_filters);
 
       set_relative_rate((float)d_osps/(float)d_sps);
@@ -295,19 +292,21 @@ namespace gr {
       diff_filter[2] = 1;
 
       float pwr = 0;
+      difftaps.clear();
       difftaps.push_back(0);
-      for(unsigned int i = 0; i < newtaps.size()-1; i++) {
+      for(unsigned int i = 0; i < newtaps.size()-2; i++) {
 	float tap = 0;
 	for(unsigned int j = 0; j < diff_filter.size(); j++) {
 	  tap += diff_filter[j]*newtaps[i+j];
-	  pwr += fabsf(tap);
 	}
 	difftaps.push_back(tap);
+        pwr += fabsf(tap);
       }
       difftaps.push_back(0);
 
+      // Normalize the taps
       for(unsigned int i = 0; i < difftaps.size(); i++) {
-	difftaps[i] *= pwr;
+        difftaps[i] /= pwr;
       }
     }
 
@@ -414,24 +413,13 @@ namespace gr {
       int i = 0, count = 0;
       float error_r, error_i;
 
-      int up_count=0;
-      int dn_count=0;
-      
       // produce output as long as we can and there are enough input samples
       while(i < noutput_items) {
-        int adjuster = 0;
         if(tags.size() > 0) {
           size_t offset = tags[0].offset-nitems_read(0);
           if((offset >= (size_t)count) && (offset < (size_t)(count + d_sps))) {
             float center = (float)pmt::to_double(tags[0].value);
-            float c = boost::math::round(center);
-            float delta = center - c;
-
             d_k = (offset-count - d_sps/2.0) * d_nfilters + (M_PI*center*d_nfilters);
-
-            //GR_LOG_DEBUG(d_logger, boost::format("tag offset: %1% ->  k: %2%") \
-            //             % tags[0].offset % d_k);
-
             tags.erase(tags.begin());
           }
         }
@@ -447,16 +435,14 @@ namespace gr {
 	    d_k -= d_nfilters;
 	    d_filtnum -= d_nfilters;
 	    count += 1;
-            up_count++;
 	  }
 	  while(d_filtnum < 0) {
 	    d_k += d_nfilters;
 	    d_filtnum += d_nfilters;
 	    count -= 1;
-            dn_count++;
 	  }
 
-          int adj = static_cast<int>(d_out_idx+adjuster);
+          int adj = static_cast<int>(d_out_idx);
 	  out[i+d_out_idx] = d_filters[d_filtnum]->filter(&in[count+adj]);
 	  d_k = d_k + d_rate_i + d_rate_f; // update phase
 	  d_out_idx++;
@@ -469,7 +455,6 @@ namespace gr {
 
 	  // We've run out of output items we can create; return now.
 	  if(i+d_out_idx >= noutput_items) {
-            d_diff_count += up_count - dn_count;
 	    consume_each(count);
 	    return i;
 	  }
@@ -480,7 +465,7 @@ namespace gr {
 	d_out_idx = 0;
 
 	// Update the phase and rate estimates for this symbol
-        int adj = static_cast<int>(d_out_idx+adjuster);
+        int adj = static_cast<int>(d_out_idx);
 	gr_complex diff = d_diff_filters[d_filtnum]->filter(&in[count+adj]);
 	error_r = out[i].real() * diff.real();
 	error_i = out[i].imag() * diff.imag();
@@ -490,7 +475,7 @@ namespace gr {
 	// tracking rate estimates based on the error value
 	d_rate_f = d_rate_f + d_beta*d_error;
 	d_k = d_k + d_alpha*d_error;
-        
+
 	// Keep our rate within a good range
 	d_rate_f = gr::branchless_clip(d_rate_f, d_max_dev);
 
@@ -498,7 +483,6 @@ namespace gr {
 	count += (int)floor(d_sps);
       }
 
-      d_diff_count += up_count - dn_count;
       consume_each(count);
       return i;
     }

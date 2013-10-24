@@ -272,14 +272,14 @@ namespace gr {
 	float tap = 0;
 	for(int j = 0; j < 3; j++) {
 	  tap += diff_filter[j]*newtaps[i+j];
-	  pwr += fabsf(tap);
 	}
 	difftaps.push_back(tap);
+        pwr += fabsf(tap);
       }
       difftaps.push_back(0);
 
       for(unsigned int i = 0; i < difftaps.size(); i++) {
-	difftaps[i] *= pwr;
+	difftaps[i] /= pwr;
       }
     }
 
