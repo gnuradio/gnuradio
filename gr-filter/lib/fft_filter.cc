@@ -58,6 +58,7 @@ namespace gr {
       fft_filter_fff::set_taps(const std::vector<float> &taps)
       {
 	int i = 0;
+        d_taps = taps;
 	compute_sizes(taps.size());
 	
 	d_tail.resize(tailsize());
@@ -119,6 +120,18 @@ namespace gr {
 	  d_fwdfft->set_nthreads(n);
 	if(d_invfft)
 	  d_invfft->set_nthreads(n);
+      }
+
+      std::vector<float>
+      fft_filter_fff::taps() const
+      {
+        return d_taps;
+      }
+
+      unsigned int
+      fft_filter_fff::ntaps() const
+      {
+        return d_ntaps;
       }
 
       int
@@ -198,6 +211,7 @@ namespace gr {
       fft_filter_ccc::set_taps(const std::vector<gr_complex> &taps)
       {
 	int i = 0;
+        d_taps = taps;
 	compute_sizes(taps.size());
 	
 	d_tail.resize(tailsize());
@@ -259,6 +273,18 @@ namespace gr {
 	  d_fwdfft->set_nthreads(n);
 	if(d_invfft)
 	  d_invfft->set_nthreads(n);
+      }
+
+      std::vector<gr_complex>
+      fft_filter_ccc::taps() const
+      {
+        return d_taps;
+      }
+
+      unsigned int
+      fft_filter_ccc::ntaps() const
+      {
+        return d_ntaps;
       }
 
       int
