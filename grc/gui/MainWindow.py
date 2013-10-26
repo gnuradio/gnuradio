@@ -304,7 +304,7 @@ class MainWindow(gtk.Window):
     def get_focus_flag(self):
         """
         Get the focus flag from the current page.
-        
+
         Returns:
             the focus flag
         """

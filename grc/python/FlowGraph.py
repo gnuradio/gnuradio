@@ -82,7 +82,7 @@ class FlowGraph(_FlowGraph, _GUIFlowGraph):
         return [{
             'label': str(pad.get_param('label').get_evaluated()),
             'type': str(pad.get_param('type').get_evaluated()),
-            'vlen': str(pad.get_param('vlen').get_evaluated()),
+            'vlen': str(pad.get_param('vlen').get_value()),
             'size': pad.get_param('type').get_opt('size'),
             'optional': bool(pad.get_param('optional').get_evaluated()),
         } for pad in expanded_pads]

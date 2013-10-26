@@ -225,6 +225,7 @@ list(APPEND gr_blocks_sources
     stream_mux_impl.cc
     stream_pdu_base.cc
     stream_to_streams_impl.cc
+    stream_to_tagged_stream_impl.cc
     stream_to_vector_impl.cc
     streams_to_stream_impl.cc
     streams_to_vector_impl.cc
@@ -237,6 +238,7 @@ list(APPEND gr_blocks_sources
     transcendental_impl.cc
     tcp_connection.cc
     tuntap_pdu_impl.cc
+    tag_gate_impl.cc
     tagged_stream_mux_impl.cc
     uchar_array_to_float.cc
     uchar_to_float_impl.cc
@@ -285,8 +287,7 @@ list(APPEND blocks_libs
     ${LOG4CPP_LIBRARIES}
 )
 
-add_library(gnuradio-blocks SHARED ${gr_blocks_sources}
-    tag_gate_impl.cc)
+add_library(gnuradio-blocks SHARED ${gr_blocks_sources})
 add_dependencies(gnuradio-blocks blocks_generated_includes)
 
 target_link_libraries(gnuradio-blocks ${blocks_libs})

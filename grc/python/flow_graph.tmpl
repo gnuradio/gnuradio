@@ -322,11 +322,14 @@ if __name__ == '__main__':
         #end if
     #end if
     tb.show()
+    def quitting():
+        tb.stop()
+        tb.wait()
+    qapp.connect(qapp, Qt.SIGNAL("aboutToQuit()"), quitting)
         #for $m in $monitors
     (tb.$m.get_id()).start()
         #end for
     qapp.exec_()
-    tb.stop()
     tb = None #to clean up Qt widgets
     #elif $generate_options == 'no_gui'
     tb = $(class_name)($(', '.join($params_eq_list)))

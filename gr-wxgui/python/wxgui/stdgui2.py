@@ -79,6 +79,7 @@ class stdframe (wx.Frame):
 
     def OnCloseWindow (self, event):
         self.top_block().stop()
+        self.top_block().wait()
         self.Destroy ()
 
     def top_block (self):

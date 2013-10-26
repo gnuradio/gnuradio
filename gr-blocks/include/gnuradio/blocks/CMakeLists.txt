@@ -173,7 +173,7 @@ install(FILES
     plateau_detector_fb.h
     probe_rate.h
     regenerate_bb.h
-    repack_bits_bb.h 
+    repack_bits_bb.h
     repeat.h
     rms_cf.h
     rms_ff.h
@@ -183,6 +183,7 @@ install(FILES
     socket_pdu.h
     stream_mux.h
     stream_to_streams.h
+    stream_to_tagged_stream.h
     stream_to_vector.h
     streams_to_stream.h
     streams_to_vector.h
