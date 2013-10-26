@@ -40,8 +40,8 @@ class mod_pkts(gr.hier_block2):
 
     Send packets by calling send_pkt
     """
-    def __init__(self, modulator, access_code=None, msgq_limit=2, pad_for_usrp=True,
-                 use_whitener_offset=False, modulate=True):
+    def __init__(self, modulator, preamble=None, access_code=None, msgq_limit=2,
+                 pad_for_usrp=True, use_whitener_offset=False, modulate=True):
         """
 	Hierarchical block for sending packets
 
@@ -72,6 +72,12 @@ class mod_pkts(gr.hier_block2):
         if not packet_utils.is_1_0_string(access_code):
             raise ValueError, "Invalid access_code %r. Must be string of 1's and 0's" % (access_code,)
         self._access_code = access_code
+        
+        if preamble is None:
+            preamble = packet_utils.default_preamble
+        if not packet_utils.is_1_0_string(preamble):
+            raise ValueError, "Invalid preamble %r. Must be string of 1's and 0's" % (preamble,)
+        self._preamble = preamble
 
         # accepts messages from the outside world
         self._pkt_input = blocks.message_source(gr.sizeof_char, msgq_limit)
@@ -91,6 +97,7 @@ class mod_pkts(gr.hier_block2):
             pkt = packet_utils.make_packet(payload,
                                            self._modulator.samples_per_symbol(),
                                            self._modulator.bits_per_symbol(),
+                                           self._preamble,
                                            self._access_code,
                                            self._pad_for_usrp,
                                            self._whitener_offset)
