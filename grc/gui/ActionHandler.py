@@ -121,6 +121,8 @@ class ActionHandler:
             if Preferences.file_open() in self.init_file_paths:
                 self.main_window.new_page(Preferences.file_open(), show=True)
             if not self.get_page(): self.main_window.new_page() #ensure that at least a blank page exists
+
+            self.main_window.btwin.search_entry.hide()
         elif action == Actions.APPLICATION_QUIT:
             if self.main_window.close_pages():
                 gtk.main_quit()
@@ -442,6 +444,9 @@ class ActionHandler:
             self.platform.loadblocks()
             self.main_window.btwin.clear();
             self.platform.load_block_tree(self.main_window.btwin);
+        elif action == Actions.FIND_BLOCKS:
+            self.main_window.btwin.search_entry.show()
+            self.main_window.set_focus(self.main_window.btwin.search_entry)
         elif action == Actions.OPEN_HIER:
             bn = [];
             for b in self.get_flow_graph().get_selected_blocks():
@@ -484,6 +489,7 @@ class ActionHandler:
         Actions.BUSSIFY_SOURCES.set_sensitive(bool(self.get_flow_graph().get_selected_blocks()))
         Actions.BUSSIFY_SINKS.set_sensitive(bool(self.get_flow_graph().get_selected_blocks()))
         Actions.RELOAD_BLOCKS.set_sensitive(True)
+        Actions.FIND_BLOCKS.set_sensitive(True)
         #set the exec and stop buttons
         self.update_exec_stop()
         #saved status

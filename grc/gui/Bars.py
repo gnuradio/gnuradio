@@ -50,6 +50,7 @@ TOOLBAR_LIST = (
     Actions.BLOCK_ENABLE,
     Actions.BLOCK_DISABLE,
     None,
+    Actions.FIND_BLOCKS,
     Actions.RELOAD_BLOCKS,
     Actions.OPEN_HIER,
     Actions.BUSSIFY_SOURCES,
@@ -88,6 +89,7 @@ MENU_BAR_LIST = (
     ]),
     (gtk.Action('View', '_View', None, None), [
         Actions.ERRORS_WINDOW_DISPLAY,
+        Actions.FIND_BLOCKS,
     ]),
     (gtk.Action('Build', '_Build', None, None), [
         Actions.FLOW_GRAPH_GEN,
