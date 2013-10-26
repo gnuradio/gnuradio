@@ -83,6 +83,8 @@ class ActionHandler:
         Returns:
             false to let gtk handle the key action
         """
+        # prevent key event stealing while the search box is active
+        if self.main_window.btwin.search_entry.has_focus(): return False
         if not self.get_focus_flag(): return False
         return Actions.handle_key_press(event)
 
