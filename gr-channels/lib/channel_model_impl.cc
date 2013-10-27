@@ -32,14 +32,16 @@ namespace gr {
 			double frequency_offset,
 			double epsilon,
 			const std::vector<gr_complex> &taps,
-			double noise_seed)
+			double noise_seed,
+			bool block_tags)
     {
       return gnuradio::get_initial_sptr
 	(new channel_model_impl(noise_voltage,
 				frequency_offset,
 				epsilon,
 				taps,
-				noise_seed));
+				noise_seed,
+				block_tags));
     }
 
     // Hierarchical block constructor
@@ -47,7 +49,9 @@ namespace gr {
 					   double frequency_offset,
 					   double epsilon,
 					   const std::vector<gr_complex> &taps,
-					   double noise_seed)
+					   double noise_seed,
+					   bool block_tags
+					   )
       : hier_block2("channel_model",
 		       io_signature::make(1, 1, sizeof(gr_complex)),
 		       io_signature::make(1, 1, sizeof(gr_complex)))
@@ -75,6 +79,10 @@ namespace gr {
       connect(d_mixer_offset, 0, d_noise_adder, 1);
       connect(d_noise, 0, d_noise_adder, 0);
       connect(d_noise_adder, 0, self(), 0);
+
+      if (block_tags) {
+	d_timing_offset->set_tag_propagation_policy(gr::block::TPP_DONT);
+      }
     }
 
     channel_model_impl::~channel_model_impl()
