@@ -55,7 +55,8 @@ namespace gr {
       channel_model2_impl(double noise_voltage,
                           double epsilon,
                           const std::vector<gr_complex> &taps,
-                          double noise_seed);
+                          double noise_seed,
+			  bool block_tags);
       
       ~channel_model2_impl();
 
