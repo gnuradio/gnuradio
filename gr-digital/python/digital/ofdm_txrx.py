@@ -170,9 +170,10 @@ class ofdm_tx(gr.hier_block2):
             if len(sync_word1) != self.fft_len:
                 raise ValueError("Length of sync sequence(s) must be FFT length.")
         self.sync_words = [self.sync_word1,]
-        self.sync_word2 = ()
         if sync_word2 is None:
             self.sync_word2 = _make_sync_word2(fft_len, occupied_carriers, pilot_carriers)
+        else:
+            self.sync_word2 = sync_word2
         if len(self.sync_word2):
             if len(self.sync_word2) != fft_len:
                 raise ValueError("Length of sync sequence(s) must be FFT length.")
@@ -342,8 +343,12 @@ class ofdm_rx(gr.hier_block2):
         chanest              = digital.ofdm_chanest_vcvc(self.sync_word1, self.sync_word2, 1)
         header_constellation = _get_constellation(bps_header)
         header_equalizer     = digital.ofdm_equalizer_simpledfe(
-            fft_len, header_constellation.base(),
-            occupied_carriers, pilot_carriers, pilot_symbols, 0, 0
+            fft_len,
+            header_constellation.base(),
+            occupied_carriers,
+            pilot_carriers,
+            pilot_symbols,
+            symbols_skipped=0,
         )
         header_eq = digital.ofdm_frame_equalizer_vcvc(
                 header_equalizer.base(),
@@ -388,11 +393,13 @@ class ofdm_rx(gr.hier_block2):
         payload_fft = fft.fft_vcc(self.fft_len, True, (), True)
         payload_constellation = _get_constellation(bps_payload)
         payload_equalizer = digital.ofdm_equalizer_simpledfe(
-                fft_len, payload_constellation.base(),
+                fft_len,
+                payload_constellation.base(),
                 occupied_carriers,
                 pilot_carriers,
                 pilot_symbols,
-                1 # Skip 1 symbol (that was already in the header)
+                symbols_skipped=1, # (that was already in the header)
+                alpha=0.1
         )
         payload_eq = digital.ofdm_frame_equalizer_vcvc(
                 payload_equalizer.base(),
