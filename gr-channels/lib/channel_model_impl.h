@@ -54,7 +54,8 @@ namespace gr {
 			 double frequency_offset,
 			 double epsilon,
 			 const std::vector<gr_complex> &taps,
-			 double noise_seed);
+			 double noise_seed,
+			 bool block_tags);
       
       ~channel_model_impl();
 
