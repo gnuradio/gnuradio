@@ -81,11 +81,13 @@ namespace gr {
        *                the transmitter and receiver. 1.0 is no difference.
        * \param taps Taps of a FIR filter to emulate a multipath delay profile.
        * \param noise_seed A random number generator seed for the noise source.
+       * \param block_tags If true, tags will not be able to propagate through this block.
        */
       static sptr make(double noise_voltage=0.0,
 		       double epsilon=1.0,
 		       const std::vector<gr_complex> &taps=std::vector<gr_complex>(1,1),
-		       double noise_seed=0);
+		       double noise_seed=0,
+		       bool block_tags=false);
 
       virtual void set_noise_voltage(double noise_voltage) = 0;
       virtual void set_taps(const std::vector<gr_complex> &taps) = 0;
