@@ -292,9 +292,10 @@ RELOAD_BLOCKS = Action(
 )
 FIND_BLOCKS = Action(
     label='Find Blocks',
-    tooltip='Search for a Block by Name or Key',
+    tooltip='Search for a block by bame or key',
     stock_id=gtk.STOCK_FIND,
-    keypresses=(gtk.keysyms.f, gtk.gdk.CONTROL_MASK),
+    keypresses=(gtk.keysyms.f, gtk.gdk.CONTROL_MASK,
+                gtk.keysyms.slash, NO_MODS_MASK),
 )
 OPEN_HIER = Action(
     label='Open H_ier',

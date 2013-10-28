@@ -225,6 +225,9 @@ class BlockTreeWindow(gtk.VBox):
             # manually trigger action...
             Actions.FIND_BLOCKS.activate()
 
+        elif event.keyval == gtk.keysyms.slash:
+            Actions.FIND_BLOCKS.activate()
+
         else:
             return False # propagate event
 

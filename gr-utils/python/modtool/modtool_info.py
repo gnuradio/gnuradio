@@ -67,7 +67,10 @@ class ModToolInfo(ModTool):
             else:
                 print "No module found."
             exit(1)
-        if self._info['version'] == '36' and os.path.isdir(os.path.join('include', mod_info['modname'])):
+        if self._info['version'] == '36' and (
+                os.path.isdir(os.path.join('include', mod_info['modname'])) or
+                os.path.isdir(os.path.join('include', 'gnuradio', mod_info['modname']))
+                ):
             self._info['version'] = '37'
         mod_info['version'] = self._info['version']
         if 'is_component' in self._info.keys():
