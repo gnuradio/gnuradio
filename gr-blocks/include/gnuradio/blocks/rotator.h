@@ -25,6 +25,7 @@
 
 #include <gnuradio/blocks/api.h>
 #include <gnuradio/gr_complex.h>
+#include <volk/volk.h>
 
 namespace gr {
   namespace blocks {
@@ -54,6 +55,11 @@ namespace gr {
           d_phase /= abs(d_phase);	    // Normalize to ensure multiplication is rotation
 
         return z;
+      }
+
+      void rotateN(gr_complex *out, gr_complex *in, int n)
+      {
+        volk_32fc_s32fc_x2_rotator_32fc(out, in, d_phase_incr, &d_phase, n);
       }
     };
 
