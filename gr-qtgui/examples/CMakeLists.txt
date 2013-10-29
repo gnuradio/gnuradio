@@ -38,6 +38,7 @@ GR_PYTHON_INSTALL(PROGRAMS
 install(
     FILES
     dark.qss
+    qtgui_tags_viewing.grc
     DESTINATION ${GR_PKG_QTGUI_EXAMPLES_DIR}
     COMPONENT "qtgui_python"
 )

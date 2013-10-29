@@ -20,6 +20,7 @@ qtgui.$(type.fcn)(
 )
 self.$(id).set_update_time($update_time)
 self.$(id).set_y_axis($ymin, $ymax)
+self.$(id).enable_tags(-1, $entags)
 self._$(id)_win = sip.wrapinstance(self.$(id).pyqwidget(), Qt.QWidget)
 $(gui_hint()($win))</make>
         <callback>set_time_domain_axis($min, $max)</callback>
@@ -82,6 +83,21 @@ $(gui_hint()($win))</make>
 		<type>real</type>
 		<hide>part</hide>
 	</param>
+	<param>
+		<name>Disp. Tags</name>
+		<key>entags</key>
+		<value>True</value>
+		<type>enum</type>
+		<hide>part</hide>
+		<option>
+			<name>Yes</name>
+			<key>True</key>
+		</option>
+		<option>
+			<name>No</name>
+			<key>False</key>
+		</option>
+	</param>      
 	<param>
 		<name>GUI Hint</name>
 		<key>gui_hint</key>

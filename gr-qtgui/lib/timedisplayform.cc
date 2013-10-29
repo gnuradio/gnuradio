@@ -63,6 +63,15 @@ TimeDisplayForm::TimeDisplayForm(int nplots, QWidget* parent)
   connect(d_semilogymenu, SIGNAL(triggered(bool)),
 	  this, SLOT(setSemilogy(bool)));
 
+  for(int i = 0; i < _nplots; i++) {
+    d_tagsmenu.push_back(new QAction("Show Tag Makers", this));
+    d_tagsmenu[i]->setCheckable(true);
+    d_tagsmenu[i]->setChecked(true);
+    connect(d_tagsmenu[i], SIGNAL(triggered(bool)),
+	    this, SLOT(tagMenuSlot(bool)));
+    _lines_menu[i]->addAction(d_tagsmenu[i]);
+  }
+
   Reset();
 
   connect(_displayPlot, SIGNAL(plotPointSelected(const QPointF)),
@@ -89,10 +98,12 @@ TimeDisplayForm::newData(const QEvent* updateEvent)
   TimeUpdateEvent *tevent = (TimeUpdateEvent*)updateEvent;
   const std::vector<double*> dataPoints = tevent->getTimeDomainPoints();
   const uint64_t numDataPoints = tevent->getNumTimeDomainDataPoints();
+  const std::vector< std::vector<gr::tag_t> > tags = tevent->getTags();
 
   getPlot()->plotNewData(dataPoints,
 			 numDataPoints,
-			 d_update_time);
+			 d_update_time,
+                         tags);
 }
 
 void
@@ -178,4 +189,19 @@ TimeDisplayForm::setSemilogy(bool en)
   d_semilogymenu->setChecked(en);
   getPlot()->setSemilogy(d_semilogy);
   getPlot()->replot();
+}
+
+void
+TimeDisplayForm::setTagMenu(int which, bool en)
+{
+  getPlot()->enableTagMarker(which, en);
+  d_tagsmenu[which]->setChecked(en);
+}
+
+void
+TimeDisplayForm::tagMenuSlot(bool en)
+{
+  for(size_t i = 0; i < d_tagsmenu.size(); i++) {
+    getPlot()->enableTagMarker(i, d_tagsmenu[i]->isChecked());
+  }
 }

@@ -268,7 +268,7 @@ signals:
   void plotPointSelected(const QPointF p);
 
 protected slots:
-  void legendEntryChecked(QwtPlotItem *plotItem, bool on);
+  virtual void legendEntryChecked(QwtPlotItem *plotItem, bool on);
 
 protected:
   int _nplots;

@@ -45,6 +45,7 @@ namespace gr {
 
       int d_index;
       std::vector<double*> d_residbufs;
+      std::vector< std::vector<gr::tag_t> > d_tags;
 
       QWidget *d_parent;
       TimeDisplayForm *d_main_gui;
@@ -97,6 +98,8 @@ namespace gr {
       void enable_stem_plot(bool en);
       void enable_semilogx(bool en);
       void enable_semilogy(bool en);
+      void enable_tags(int which, bool en);
+
       void reset();
 
       int work(int noutput_items,

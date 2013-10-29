@@ -57,6 +57,8 @@ public slots:
   void autoScale(bool en);
   void setSemilogx(bool en);
   void setSemilogy(bool en);
+  void tagMenuSlot(bool en);
+  void setTagMenu(int which, bool en);
 
 private slots:
   void newData(const QEvent*);
@@ -76,6 +78,7 @@ private:
   QAction *d_stemmenu;
   QAction *d_semilogxmenu;
   QAction *d_semilogymenu;
+  std::vector<QAction*> d_tagsmenu;
 };
 
 #endif /* TIME_DISPLAY_FORM_H */

@@ -204,7 +204,8 @@ SpectrumFrequencyRangeEvent::GetStopFrequency() const
 
 
 TimeUpdateEvent::TimeUpdateEvent(const std::vector<double*> timeDomainPoints,
-				 const uint64_t numTimeDomainDataPoints)
+				 const uint64_t numTimeDomainDataPoints,
+                                 const std::vector< std::vector<gr::tag_t> > tags)
   : QEvent(QEvent::Type(SpectrumUpdateEventType))
 {
   if(numTimeDomainDataPoints < 1) {
@@ -222,6 +223,8 @@ TimeUpdateEvent::TimeUpdateEvent(const std::vector<double*> timeDomainPoints,
 	     _numTimeDomainDataPoints*sizeof(double));
     }
   }
+
+  _tags = tags;
 }
 
 TimeUpdateEvent::~TimeUpdateEvent()
@@ -243,6 +246,11 @@ TimeUpdateEvent::getNumTimeDomainDataPoints() const
   return _numTimeDomainDataPoints;
 }
 
+const std::vector< std::vector<gr::tag_t> >
+TimeUpdateEvent::getTags() const
+{
+  return _tags;
+}
 
 /***************************************************************************/
 

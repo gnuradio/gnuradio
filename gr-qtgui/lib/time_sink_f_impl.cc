@@ -68,6 +68,8 @@ namespace gr {
 	volk_get_alignment() / sizeof(gr_complex);
       set_alignment(std::max(1,alignment_multiple));
 
+      d_tags = std::vector< std::vector<gr::tag_t> >(d_nconnections);
+
       initialize();
     }
 
@@ -315,6 +317,18 @@ namespace gr {
     }
 
     void
+    time_sink_f_impl::enable_tags(int which, bool en)
+    {
+      if(which == -1) {
+        for(int n = 0; n < d_nconnections; n++) {
+          d_main_gui->setTagMenu(n, en);
+        }
+      }
+      else
+        d_main_gui->setTagMenu(which, en);
+    }
+
+    void
     time_sink_f_impl::reset()
     {
       d_index = 0;
@@ -340,28 +354,50 @@ namespace gr {
 
 	  // Fill up residbufs with d_size number of items
 	  for(n = 0; n < d_nconnections; n++) {
-	    in = (const float*)input_items[idx++];
+	    in = (const float*)input_items[idx];
 	    volk_32f_convert_64f_u(&d_residbufs[n][d_index],
 				   &in[j], resid);
+
+            uint64_t nr = nitems_read(idx);
+            std::vector<gr::tag_t> tags;
+            get_tags_in_range(tags, idx, nr + j, nr + j + resid);
+            for(size_t t = 0; t < tags.size(); t++)
+              tags[t].offset = tags[t].offset - (nr + j) + d_index;
+            d_tags[idx].insert(d_tags[idx].end(), tags.begin(), tags.end());
+
+            idx++;
 	  }
 
 	  // Update the plot if its time
 	  if(gr::high_res_timer_now() - d_last_time > d_update_time) {
 	    d_last_time = gr::high_res_timer_now();
 	    d_qApplication->postEvent(d_main_gui,
-				      new TimeUpdateEvent(d_residbufs, d_size));
+				      new TimeUpdateEvent(d_residbufs, d_size, d_tags));
 	  }
 
 	  d_index = 0;
 	  j += resid;
+
+	  for(n = 0; n < d_nconnections; n++) {
+            d_tags[n].clear();
+          }
 	}
 	// Otherwise, copy what we received into the residbufs for next time
 	// because we set the output_multiple, this should never need to be called
 	else {
 	  for(n = 0; n < d_nconnections; n++) {
-	    in = (const float*)input_items[idx++];
+	    in = (const float*)input_items[idx];
 	    volk_32f_convert_64f_u(&d_residbufs[n][d_index],
 				   &in[j], datasize);
+
+            uint64_t nr = nitems_read(idx);
+            std::vector<gr::tag_t> tags;
+            get_tags_in_range(tags, idx, nr + j, nr + j + datasize);
+            for(size_t t = 0; t < tags.size(); t++)
+              tags[t].offset = tags[t].offset - (nr + j) + d_index;
+            d_tags[idx].insert(d_tags[idx].end(), tags.begin(), tags.end());
+
+            idx++;
 	  }
 	  d_index += datasize;
 	  j += datasize;

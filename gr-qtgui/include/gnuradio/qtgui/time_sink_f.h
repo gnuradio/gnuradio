@@ -93,6 +93,8 @@ namespace gr {
       virtual void enable_stem_plot(bool en=true) = 0;
       virtual void enable_semilogx(bool en=true) = 0;
       virtual void enable_semilogy(bool en=true) = 0;
+      virtual void enable_tags(int which, bool en) = 0;
+
       virtual int nsamps() const = 0;
       virtual void reset() = 0;
 

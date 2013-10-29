@@ -174,6 +174,9 @@ TimeDomainDisplayPlot::TimeDomainDisplayPlot(int nplots, QWidget* parent)
 
   _sampleRate = 1;
   _resetXAxisPoints();
+
+  d_tag_markers.resize(_nplots);
+  d_tag_markers_en = std::vector<bool>(_nplots, true);
 }
 
 TimeDomainDisplayPlot::~TimeDomainDisplayPlot()
@@ -194,7 +197,8 @@ TimeDomainDisplayPlot::replot()
 void
 TimeDomainDisplayPlot::plotNewData(const std::vector<double*> dataPoints,
 				   const int64_t numDataPoints,
-				   const double timeInterval)
+				   const double timeInterval,
+                                   const std::vector< std::vector<gr::tag_t> > &tags)
 {
   if(!_stop) {
     if((numDataPoints > 0)) {
@@ -228,6 +232,109 @@ TimeDomainDisplayPlot::plotNewData(const std::vector<double*> dataPoints,
 	}
       }
 
+      // Detach and delete any tags that were plotted last time
+      for(int n = 0; n < _nplots; n++) {
+        for(size_t i = 0; i < d_tag_markers[n].size(); i++) {
+          d_tag_markers[n][i]->detach();
+          delete d_tag_markers[n][i];
+        }
+        d_tag_markers[n].clear();
+      }
+
+      // Plot and attach any new tags found.
+      // First test if this was a complex input where real/imag get
+      // split here into two stream.
+      bool cmplx = false;
+      int mult = (int)_nplots / (int)tags.size();
+      if(mult == 2)
+        cmplx = true;
+
+      std::vector< std::vector<gr::tag_t> >::const_iterator tag = tags.begin();
+      for(int i = 0; i < _nplots; i+=mult) {
+        std::vector<gr::tag_t>::const_iterator t;
+        for(t = tag->begin(); t != tag->end(); t++) {
+          uint64_t offset = (*t).offset;
+          double sample_offset = double(offset)/_sampleRate;
+
+          std::stringstream s;
+          s << (*t).key << ": " << (*t).value;
+
+          // Select the right input stream to put the tag on. If real,
+          // just use i; if it's a complex stream, find the max of the
+          // real and imaginary parts and put the tag on that one.
+          int which = i;
+          if(cmplx) {
+            if(fabs(_dataPoints[i][offset]) < fabs(_dataPoints[i+1][offset]))
+              which = i+1;
+          }
+
+          double yval = _dataPoints[which][offset];
+
+          // Find if we already have a marker at this location
+          std::vector<QwtPlotMarker*>::iterator mitr;
+          for(mitr = d_tag_markers[which].begin(); mitr != d_tag_markers[which].end(); mitr++) {
+            if((*mitr)->xValue() == sample_offset) {
+              break;
+            }
+          }
+
+          // If no matching marker, create a new one
+          if(mitr == d_tag_markers[which].end()) {
+            bool show = _plot_curve[which]->isVisible();
+
+            QwtPlotMarker *m = new QwtPlotMarker();
+            m->setXValue(sample_offset);
+            m->setYValue(yval);
+
+            QBrush brush;
+            brush.setColor(QColor(0xC8, 0x2F, 0x1F));
+            brush.setStyle(Qt::SolidPattern);
+
+            QPen pen;
+            pen.setColor(Qt::black);
+            pen.setWidth(1);
+
+            QwtSymbol *sym = new QwtSymbol(QwtSymbol::NoSymbol, brush, pen, QSize(12,12));
+
+            if(yval >= 0) {
+              sym->setStyle(QwtSymbol::DTriangle);
+              m->setLabelAlignment(Qt::AlignTop);
+            }
+            else {
+              sym->setStyle(QwtSymbol::UTriangle);
+              m->setLabelAlignment(Qt::AlignBottom);
+            }
+
+#if QWT_VERSION < 0x060000
+            m->setSymbol(*sym);
+#else
+            m->setSymbol(sym);
+#endif
+
+            m->setLabel(QwtText(s.str().c_str()));
+            m->attach(this);
+          
+            if(!(show && d_tag_markers_en[which])) {
+              m->hide();
+            }
+
+            d_tag_markers[which].push_back(m);
+          }
+          else {
+            // Prepend the new tag to the existing marker
+            // And set it at the max value
+            if(fabs(yval) < fabs((*mitr)->yValue()))
+               (*mitr)->setYValue(yval);
+            QString orig = (*mitr)->label().text();
+            s << std::endl;
+            orig.prepend(s.str().c_str());
+            (*mitr)->setLabel(orig);
+          }
+        }
+
+        tag++;
+      }
+
       if(_autoscale_state) {
 	double bottom=1e20, top=-1e20;
 	for(int n = 0; n < _nplots; n++) {
@@ -246,6 +353,23 @@ TimeDomainDisplayPlot::plotNewData(const std::vector<double*> dataPoints,
       replot();
     }
   }
+}
+
+void
+TimeDomainDisplayPlot::legendEntryChecked(QwtPlotItem* plotItem, bool on)
+{
+  // When line is turned on/off, immediately show/hide tag markers
+  for(int n = 0; n < _nplots; n++) {
+    if(plotItem == _plot_curve[n]) {
+      for(size_t i = 0; i < d_tag_markers[n].size(); i++) {
+        if(!(!on && d_tag_markers_en[n]))
+          d_tag_markers[n][i]->hide();
+        else
+          d_tag_markers[n][i]->show();
+      }
+    }
+  }
+  DisplayPlot::legendEntryChecked(plotItem, on);
 }
 
 void
@@ -365,6 +489,15 @@ TimeDomainDisplayPlot::setSemilogy(bool en)
       setYaxis(1e-10, 10.0*log10(max));
     }
   }
+}
+
+void
+TimeDomainDisplayPlot::enableTagMarker(int which, bool en)
+{
+  if((size_t)which < d_tag_markers_en.size())
+    d_tag_markers_en[which] = en;
+  else
+    throw std::runtime_error("TimeDomainDisplayPlot: enabled tag marker does not exist.\n");
 }
 
 #endif /* TIME_DOMAIN_DISPLAY_PLOT_C */
