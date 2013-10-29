@@ -267,10 +267,11 @@ namespace gr {
       diff_filter[2] = 1;
 
       float pwr = 0;
+      difftaps.clear();
       difftaps.push_back(0);
       for(unsigned int i = 0; i < newtaps.size()-2; i++) {
 	float tap = 0;
-	for(int j = 0; j < 3; j++) {
+	for(unsigned int j = 0; j < diff_filter.size(); j++) {
 	  tap += diff_filter[j]*newtaps[i+j];
 	}
 	difftaps.push_back(tap);
@@ -278,8 +279,9 @@ namespace gr {
       }
       difftaps.push_back(0);
 
+      // Normalize the taps
       for(unsigned int i = 0; i < difftaps.size(); i++) {
-	difftaps[i] /= pwr;
+        difftaps[i] *= d_nfilters/pwr;
       }
     }
 

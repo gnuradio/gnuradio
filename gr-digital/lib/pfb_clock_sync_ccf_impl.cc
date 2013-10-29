@@ -306,7 +306,7 @@ namespace gr {
 
       // Normalize the taps
       for(unsigned int i = 0; i < difftaps.size(); i++) {
-        difftaps[i] /= pwr;
+        difftaps[i] *= d_nfilters/pwr;
       }
     }
 
