@@ -52,6 +52,7 @@ namespace gr {
       d_tag_propagation_policy(TPP_ALL_TO_ALL),
       d_priority(-1),
       d_pc_rpc_set(false),
+      d_update_rate(false),
       d_max_output_buffer(std::max(output_signature->max_streams(),1), -1),
       d_min_output_buffer(std::max(output_signature->max_streams(),1), -1)
   {
@@ -444,7 +445,20 @@ namespace gr {
     else
       d_min_output_buffer[port] = min_output_buffer; 
   }
-  
+
+
+  bool
+  block::update_rate() const
+  {
+    return d_update_rate;
+  }
+
+  void
+  block::enable_update_rate(bool en)
+  {
+    d_update_rate = en;
+  }
+
   float
   block::pc_noutput_items()
   {

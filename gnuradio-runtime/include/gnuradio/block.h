@@ -557,6 +557,8 @@ namespace gr {
      */
     int set_thread_priority(int priority);
 
+    bool update_rate() const;
+    
     // ----------------------------------------------------------------------------
 
   private:
@@ -576,6 +578,7 @@ namespace gr {
     std::vector<int>      d_affinity;              // thread affinity proc. mask
     int                   d_priority;              // thread priority level
     bool                  d_pc_rpc_set;
+    bool                  d_update_rate;           // should sched update rel rate?
 
   protected:
     block(void) {} // allows pure virtual interface sub-classes
@@ -691,6 +694,8 @@ namespace gr {
                            uint64_t abs_start,
                            uint64_t abs_end,
                            const pmt::pmt_t &key);
+
+    void enable_update_rate(bool en);
 
     std::vector<long> d_max_output_buffer;
     std::vector<long> d_min_output_buffer;

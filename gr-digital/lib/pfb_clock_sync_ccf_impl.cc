@@ -68,6 +68,9 @@ namespace gr {
 	d_max_dev(max_rate_deviation),
 	d_osps(osps), d_error(0), d_out_idx(0)
     {
+      // Let scheduler adjust our relative_rate.
+      enable_update_rate(true);
+
       d_nfilters = filter_size;
       d_sps = floor(sps);
 

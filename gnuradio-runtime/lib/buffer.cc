@@ -225,13 +225,7 @@ namespace gr {
   buffer::add_item_tag(const tag_t &tag)
   {
     gr::thread::scoped_lock guard(*mutex());
-    if(d_readers.size()) {
-      tag_t t = tag;
-      d_item_tags.push_back(t);
-    }
-    else {
-      d_item_tags.push_back(tag);
-    }
+    d_item_tags.push_back(tag);
   }
 
   void
