@@ -35,6 +35,12 @@ namespace gr {
      *
      * All this block does is add length tags in regular intervals.
      * It can be used to connect a regular stream to a gr::tagged_stream_block.
+     *
+     * \b Careful: This block is meant to be connected directly to a tagged
+     * stream block. If there are blocks between this block and a tagged
+     * stream block, make sure they either don't change the rate, or modify
+     * the tag value to make sure the length tags actually represent the
+     * packet length.
      */
     class BLOCKS_API stream_to_tagged_stream : virtual public gr::sync_block
     {

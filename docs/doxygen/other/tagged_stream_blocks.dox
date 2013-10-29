@@ -10,7 +10,8 @@ prepend a synchronisation word before every packet, or append a CRC. So while so
 blocks don't care about packet boundaries, other blocks do: These are <em>tagged
 stream blocks</em>.
 
-These blocks are different from all the other GNU Radio block types (gr_block, gr_sync_block etc.) in that they are driven by the input: The PDU length tag tells the block how to
+These blocks are different from all the other GNU Radio block types (gr::block,
+gr::sync_block etc.) in that they are driven by the input: The PDU length tag tells the block how to
 operate, whereas other blocks are output-driven (the scheduler tries to fill up the output
 buffer are much as possible).
 
@@ -18,7 +19,7 @@ buffer are much as possible).
 
 As the name implies, tagged stream blocks use tags to identify PDU boundaries.
 On the first item of a streamed PDU, there \em must be a tag with a specific
-key, which stores the length of the PDU as a pmt_integer. If anything else, or no tag,
+key, which stores the length of the PDU as a PMT integer. If anything else, or no tag,
 is on this first item, this will cause the flow graph to crash!
 
 The scheduler then takes care of everything. When the work function is called, it
@@ -30,28 +31,28 @@ the output.
 Tagged stream blocks and sync blocks are really orthogonal concepts, and a block could be
 both (gr::digital::ofdm_frame_equalizer_vcvc is such a block). However, because the work
 function is defined differently in these block types, there is no way to derive a block
-from both gr_tagged_stream_block and gr_sync_block.
+from both gr::tagged_stream_block and gr::sync_block.
 
 If a block needs the tagged stream mechanism (i.e. knowing about PDU boundaries), it must be
-derived from gr_tagged_stream_block. If it's also a sync block, it is still possible to
-set gr_block::set_relative_rate(1.0) and/or the fixed rate functions.
+derived from gr::tagged_stream_block. If it's also a sync block, it is still possible to
+set gr::block::set_relative_rate(1.0) and/or the fixed rate functions.
 
-The way gr_tagged_stream_block works, it is still beneficial to specify a relative rate,
+The way gr::tagged_stream_block works, it is still beneficial to specify a relative rate,
 if possible.
 
 
 \section creating Creating a tagged stream block
 
-To create a tagged stream block, the block must be derived from gr_tagged_stream_block.
+To create a tagged stream block, the block must be derived from gr::tagged_stream_block.
 Here's a minimal example of how the header file could look:
 \code
-#include <digital/api.h>
-#include <gr_tagged_stream_block.h>
+#include <gnuradio/digital/api.h>
+#include <gnuradio/tagged_stream_block.h>
 
 namespace gr {
   namespace digital {
 
-    class DIGITAL_API crc32_bb : virtual public gr_tagged_stream_block
+    class DIGITAL_API crc32_bb : virtual public tagged_stream_block
     {
      public:
       typedef boost::shared_ptr<crc32_bb> sptr;
@@ -65,7 +66,7 @@ namespace gr {
 \endcode
 
 It is very similar to any other block definition. Two things are stand out: First,
-gr_tagged_stream_block.h is included to allow deriving from gr_tagged_stream_block.
+gnuradio/tagged_stream_block.h is included to allow deriving from gr::tagged_stream_block.
 
 The other thing is in the make function: the second argument is a string containing
 the key of the length tags. This is not necessary (the block could get this information
@@ -96,10 +97,10 @@ namespace gr {
 \endcode
 
 First, the \p work function signature is new. The argument list looks like that from
-gr_block::general_work() (note: the arguments mean the same, too), but it's called
-\p work like with the other derived block types (such as gr_sync_block). Also, there's a new
+gr::block::general_work() (note: the arguments mean the same, too), but it's called
+\p work like with the other derived block types (such as gr::sync_block). Also, there's a new
 function: \p calculate_output_stream_length() is, in a sense, the opposite function to
-gr_block::forecast(). Given a number of input items, it calculates the required number of
+gr::block::forecast(). Given a number of input items, it calculates the required number of
 output items. Note how this relates to the fact that these blocks are input-driven.
 
 These two overrides (\p work() and \p calculate_output_stream_length() ) are what you need
@@ -109,7 +110,7 @@ than these two functions. These are discussed in \ref adv_usage.
 
 Finally, this is part of the actual block implementation (heavily cropped again, to highlight the relevant parts):
 \code
-#include <gr_io_signature.h>
+#include <gnuradio/io_signature.h>
 #include "crc32_bb_impl.h"
 
 namespace gr {
@@ -121,9 +122,9 @@ namespace gr {
     }
 
     crc32_bb_impl::crc32_bb_impl(bool check, const std::string& len_tag_key)
-      : gr_tagged_stream_block("crc32_bb",
-		   gr_make_io_signature(1, 1, sizeof (char)),
-		   gr_make_io_signature(1, 1, sizeof (char)),
+      : tagged_stream_block("crc32_bb",
+		   io_signature::make(2, 1, sizeof (char)),
+		   io_signature::make(1, 1, sizeof (char)),
 		   len_tag_key),
         d_check(check)
     {
@@ -159,11 +160,11 @@ namespace gr {
 \endcode
 
 The make function is not different to any other block. The constructor calls
-gr_tagged_stream_block::gr_tagged_stream_block() as expected, but note that it passes the
+gr::tagged_stream_block::tagged_stream_block() as expected, but note that it passes the
 key of the length tag to the parent constructor.
 
 The block in question is a CRC block, and it has two modes: It can check the CRC (which is
-then dropped), or it can append a CRC to a sequence of bytes. The \p calculate_output_stream_length() function
+then removed), or it can append a CRC to a sequence of bytes. The \p calculate_output_stream_length() function
 is thus very simple: depending on how the block is configured, the output is either 4 bytes
 longer or shorter than the input stream.
 
@@ -172,7 +173,7 @@ signal processing code, the following things must be kept in mind:
 - The work function is called for exactly one PDU, and no more (or less) may be processed
 - \p ninput_items contains the exact number of items in this PDU (at every port).
   These items \em will be consumed after \p work() exits.
-- Don't call \p consume() or \p consume_each() yourself! gr_tagged_stream_block will do that
+- Don't call \p consume() or \p consume_each() yourself! gr::tagged_stream_block will do that
   for you.
 - You can call \p produce() or \p produce_each(), if you're doing something complicated.
   Don't forget to return WORK_CALLED_PRODUCE in that case.
@@ -181,7 +182,7 @@ signal processing code, the following things must be kept in mind:
 \subsection note_on_tp A note on tag propagation
 
 Despite using tags for a special purpose, all tags that are not the length tag are treated
-exactly as before: use gr_block::set_tag_propagation_policy() in the constructor.
+exactly as before: use gr::block::set_tag_propagation_policy() in the constructor.
 
 In a lot of the cases, though, you will need to specify set_tag_propagation_policy(TPP_DONT)
 and manually handle the tag propagation in \p work(). This is because the unknown length of
@@ -189,6 +190,9 @@ the PDUs at compile time prohibits us from setting a precise relative rate of th
 which is a requirement for automatic tag propagation.
 Only if the tagged stream block is also a sync block (including interpolators and decimators,
 i.e. blocks with an integer rate change), can automatic tag propagation be reliably used.
+
+It is a general rule of GNU Radio blocks that they "properly" propagate tags, whatever this
+means for a specific application.
 
 The CRC block seems to a very simple block, but it's already complicated enough to confuse
 the automatic tag propagation. For example, what happens to tags which are on the CRC? Do
@@ -201,12 +205,35 @@ in the blocks documentation.
 
 The actual length tags \em are treated differently, though. Most importantly, you don't have
 to write the new length tag yourself. The key for the output length tag is the same as that
-on the input, if you don't want this, you must override gr_tagged_stream_block::update_length_tags().
+on the input, if you don't want this, you must override gr::tagged_stream_block::update_length_tags().
+
+
+\section connecting Connecting regular streaming blocks and tagged stream blocks
+
+From the scheduler's point of view, all blocks are equivalent, and as long as the I/O
+signatures are compatible, all of these blocks can be connected.
+
+However, it is important to note that tagged stream blocks expect correctly tagged
+streams, i.e. a length tag with a number of items at the beginning of every packet.
+If this is not the case, the <em>flow graph will crash</em>.
+The most common cases are discussed separately:
+
+Connecting a tagged stream block to a regular stream block: This is never a problem,
+since regular blocks don't care about the values of the tags.
+
+Connecting regular stream blocks to tagged stream blocks: This will usually not work.
+One solution is to use the gr::blocks:stream_to_tagged_stream adapter block. It will
+periodically add tags at regular intervals, making the input valid for the tagged stream
+block. Make sure to directly connect this block to the tagged stream block, or the
+packet size might be changed to a different value from the tag value.
+
+Mixing block types: This is possible if none of the regular stream blocks change
+the rate. The ofdm_tx and ofdm_rx hierarchical blocks do this.
 
 
 \section adv_usage Advanced Usage
 
-It is generally recommended to read the block documentation of gr_tagged_stream_block.
+It is generally recommended to read the block documentation of gr::tagged_stream_block.
 
 A few special cases are described here:
 
@@ -217,28 +244,28 @@ very loosely related, and one cannot be calculated from the other.
 
 gr::digital::ofdm_serializer_vcc is such a block. It is driven by the number of OFDM frames,
 but the output is determined by the number of complex symbols. In order to use multiple length
-tag keys, it overrides update_length_tags().
+tag keys, it overrides gr::tagged_stream_block::update_length_tags().
 
-\subsection backtogrblock Falling back to gr_block behaviour
+\subsection backtogrblock Falling back to gr::block behaviour
 
 If, at compile-time, it is uncertain whether or not a block should be a
-gr_tagged_stream_block, there is the possibility of falling back to gr_block behaviour.
+gr::tagged_stream_block, there is the possibility of falling back to gr::block behaviour.
 
 To do this, simple don't pass an empty string as length tag key. Instead of crashing,
-a tagged stream block will behave like a gr_block.
+a tagged stream block will behave like a gr::block.
 
 This has some consequences: The work function must have all the elements of a
-gr_block::general_work() function, including calls to consume(). Because such a block must
+gr::block::general_work() function, including calls to consume(). Because such a block must
 allow both modes of operation (PDUs with tags, and infinite-stream), the work function
 must check which mode is currently relevant. Checking if
-gr_tagged_stream_block::d_length_tag_key_str is empty is a good choice.
+gr::tagged_stream_block::d_length_tag_key_str is empty is a good choice.
 
 gr::digital::ofdm_cyclic_prefixer implements this.
 
 \subsection otherwaysdetermineninput Other ways to determine the number of input items
 
 If the number of input items is not stored as a pmt::pmt_integer, but there is a way to determine
-it, gr_tagged_stream_block::parse_length_tags() can be overridden to figure out the length
+it, gr::tagged_stream_block::parse_length_tags() can be overridden to figure out the length
 of the PDU.
 
 \section examples Examples
@@ -266,6 +293,19 @@ Use this to multiplex any number of tagged streams.
 
 Block: gr::digital::ofdm_cyclic_prefixer
 
-This block uses the gr_block behaviour fallback.
+This block uses the gr::block behaviour fallback.
+
+\section troubleshooting Troubleshooting
+
+<b>My flow graph crashes with the error message "Missing length tag".</b>
+
+This means the input of a tagged stream block was not correctly tagged.
+The most common cause is when connecting a regular streaming block to a tagged
+stream block. You can check the log output for the item number and port where
+this happened.
+
+
+
+
 
 */
