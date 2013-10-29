@@ -82,7 +82,7 @@ def main():
     f=trellis.fsm(fname) # get the FSM specification from a file
     # alternatively you can specify the fsm from its generator matrix
     #f=trellis.fsm(1,2,[5,7])
-    Kb=4*16  # packet size in bits (make it multiple of 16 so it can be packed in a short)
+    Kb=1024*16  # packet size in bits (make it multiple of 16 so it can be packed in a short)
     bitspersymbol = int(round(math.log(f.I())/math.log(2))) # bits per FSM input symbol
     K=Kb/bitspersymbol # packet size in trellis steps
     modulation = fsm_utils.psk4 # see fsm_utlis.py for available predefined modulations
@@ -102,7 +102,7 @@ def main():
     terr_b=0 # total number of bits in error
     terr_p=0 # total number of packets in error
     for i in range(rep):
-        (b,e)=run_test(f,Kb,bitspersymbol,K,dimensionality,constellation,N0,-(666+93+i)) # run experiment with different seed to get different noise realizations
+        (b,e)=run_test(f,Kb,bitspersymbol,K,dimensionality,constellation,N0,-(666+i)) # run experiment with different seed to get different noise realizations
         tot_b=tot_b+b
         terr_b=terr_b+e
         terr_p=terr_p+(e!=0)
