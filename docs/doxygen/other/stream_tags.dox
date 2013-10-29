@@ -186,6 +186,8 @@ tags through these blocks that respect the change in item value, we
 would have to use the TPP_DONT tag propagation policy and handle the
 propagation internally.
 
+In no case is the value of the tag modified when propagating through a
+block. This becomes relevent when using \ref page_tagged_stream_blocks.
 
 \section tags_issues Notes on How to Use Tags
 

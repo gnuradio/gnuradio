@@ -61,6 +61,15 @@ GR_PYTHON_INSTALL(PROGRAMS
     COMPONENT "digital_python"
 )
 
+install(
+    FILES
+    ofdm/tx_ofdm.grc
+    ofdm/rx_ofdm.grc
+    ofdm/ofdm_loopback.grc
+    DESTINATION ${GR_PKG_DIGITAL_EXAMPLES_DIR}/ofdm
+    COMPONENT "digital_python"
+)
+
 # DEMOD
 install(
     FILES
