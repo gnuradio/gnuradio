@@ -121,59 +121,6 @@ class qa_repack_bits_bb (gr_unittest.TestCase):
         self.assertEqual(pmt.symbol_to_string(out_tag.key), tag_name)
         self.assertEqual(pmt.to_long(out_tag.value), len(expected_data))
 
-    def test_switch_k_with_tag (self):
-        """
-        A: 3 -> 8 (3*9=27 -> 8*3+3)  It throws away extra bits.
-        B: 5 -> 8 (5*3=15 -> 8*1+7)
-        """
-        src_dataA = (0b101,) + (0b111,) * 7 + (0b001,)
-        src_dataB = (0b10101,) + (0b11111,) + (0b00110,)
-        expected_dataA = (0b11111101, 0b11111111, 0b11111111, )
-        expected_dataB = (0b11110101, )
-        kA = 3
-        kB = 5
-        l = 8
-        tag_name = "len"
-        len_tagA = gr.tag_t()
-        len_tagA.offset = 0
-        len_tagA.key = pmt.string_to_symbol(tag_name)
-        len_tagA.value = pmt.from_long(len(src_dataA))
-
-        k_tagA = gr.tag_t()
-        k_tagA.offset = 0
-        k_tagA.key = pmt.string_to_symbol("set_n_input_bits")
-        k_tagA.value = pmt.from_long(kA)
-        len_tagB = gr.tag_t()
-        len_tagB.offset = len(src_dataA)
-        len_tagB.key = pmt.string_to_symbol(tag_name)
-        len_tagB.value = pmt.from_long(len(src_dataB))
-        k_tagB = gr.tag_t()
-        k_tagB.offset = len(src_dataA)
-        k_tagB.key = pmt.string_to_symbol("set_n_input_bits")
-        k_tagB.value = pmt.from_long(kB)
-        src = blocks.vector_source_b(src_dataA+src_dataB, False, 1,
-                                     (len_tagA, k_tagA, len_tagB, k_tagB))
-        repack = blocks.repack_bits_bb(kA, l, tag_name, True)
-        sink = blocks.vector_sink_b()
-        self.tb.connect(src, repack, sink)
-        self.tb.run ()
-        self.assertEqual(sink.data(), expected_dataA+expected_dataB)
-        # The output should contains 4 tags.
-        # Two these should be length tags.
-        length_tags = []
-        for tag in sink.tags():
-            if pmt.symbol_to_string(tag.key) == tag_name:
-                length_tags.append(tag)
-        self.assertEqual(len(length_tags), 2)
-        out_tagA = length_tags[0]
-        out_tagB = length_tags[1]
-        self.assertEqual(out_tagA.offset, 0)
-        self.assertEqual(out_tagB.offset, len(expected_dataA))
-        self.assertEqual(pmt.symbol_to_string(out_tagA.key), tag_name)
-        self.assertEqual(pmt.symbol_to_string(out_tagB.key), tag_name)
-        self.assertEqual(pmt.to_long(out_tagA.value), len(expected_dataA))
-        self.assertEqual(pmt.to_long(out_tagB.value), len(expected_dataB))
-
 if __name__ == '__main__':
     gr_unittest.run(qa_repack_bits_bb, "qa_repack_bits_bb.xml")
 

@@ -47,18 +47,8 @@ namespace gr {
       d_align_output(align_output)
     {
       if (d_k > 8 || d_k < 1 || d_l > 8 || d_l < 1) {
-        throw std::invalid_argument("k and l must be in [1, 8]");
+	throw std::invalid_argument("k and l must be in [1, 8]");
       }
-      message_port_register_in(pmt::mp("set_n_input_bits"));
-      set_msg_handler(
-        pmt::mp("set_n_input_bits"),
-        boost::bind(&repack_bits_bb_impl::handle_set_n_input_bits,
-                    this, _1));
-      message_port_register_in(pmt::mp("set_n_output_bits"));
-      set_msg_handler(
-        pmt::mp("set_n_output_bits"),
-        boost::bind(&repack_bits_bb_impl::handle_set_n_output_bits,
-                    this, _1));
 
       set_relative_rate((double) d_k / d_l);
     }
@@ -72,30 +62,10 @@ namespace gr {
     {
       int n_out_bytes_required = (ninput_items[0] * d_k) / d_l;
       if ((ninput_items[0] * d_k) % d_l && (!d_packet_mode || (d_packet_mode && !d_align_output))) {
-        n_out_bytes_required++;
+	n_out_bytes_required++;
       }
 
       return n_out_bytes_required;
-    }
-
-    void
-    repack_bits_bb_impl::handle_set_n_input_bits (pmt::pmt_t k_pmt) {
-      set_n_input_bits((unsigned int)pmt::to_long(k_pmt));
-    }
-
-    void
-    repack_bits_bb_impl::handle_set_n_output_bits (pmt::pmt_t l_pmt) {
-      set_n_output_bits((unsigned int)pmt::to_long(l_pmt));
-    }
-
-    void
-    repack_bits_bb_impl::set_n_input_bits (unsigned int k) {
-      d_k = k;
-    }
-
-    void
-    repack_bits_bb_impl::set_n_output_bits (unsigned int l) {
-      d_l = l;
     }
 
     int
@@ -109,45 +79,45 @@ namespace gr {
       int bytes_to_write = noutput_items;
 
       if (d_packet_mode) { // noutput_items could be larger than necessary
-        int bytes_to_read = ninput_items[0];
-        bytes_to_write = bytes_to_read * d_k / d_l;
-        if (!d_align_output && (((bytes_to_read * d_k) % d_l) != 0)) {
-          bytes_to_write++;
-        }
+	int bytes_to_read = ninput_items[0];
+	bytes_to_write = bytes_to_read * d_k / d_l;
+	if (!d_align_output && (((bytes_to_read * d_k) % d_l) != 0)) {
+	  bytes_to_write++;
+	}
       }
 
       int n_read = 0;
       int n_written = 0;
       while(n_written < bytes_to_write && n_read < ninput_items[0]) {
-        if (d_out_index == 0) { // Starting a fresh byte
-          out[n_written] = 0;
-        }
-        out[n_written] |= ((in[n_read] >> d_in_index) & 0x01) << d_out_index;
-        
-        d_in_index = (d_in_index + 1) % d_k;
-        d_out_index = (d_out_index + 1) % d_l;
-        if (d_in_index == 0) {
-          n_read++;
-          d_in_index = 0;
-        }
-        if (d_out_index == 0) {
-          n_written++;
-          d_out_index = 0;
-        }
+	if (d_out_index == 0) { // Starting a fresh byte
+	  out[n_written] = 0;
+	}
+	out[n_written] |= ((in[n_read] >> d_in_index) & 0x01) << d_out_index;
+
+	d_in_index = (d_in_index + 1) % d_k;
+	d_out_index = (d_out_index + 1) % d_l;
+	if (d_in_index == 0) {
+	  n_read++;
+	  d_in_index = 0;
+	}
+	if (d_out_index == 0) {
+	  n_written++;
+	  d_out_index = 0;
+	}
       }
-      
+
       if (d_packet_mode) {
-        if (d_out_index) {
-          n_written++;
-          d_out_index = 0;
-        }
+	if (d_out_index) {
+	  n_written++;
+	  d_out_index = 0;
+	}
       } else {
-        consume_each(n_read);
+	consume_each(n_read);
       }
-      
+
       return n_written;
     }
-    
+
   } /* namespace blocks */
 } /* namespace gr */
 
