@@ -31,6 +31,14 @@ GR_PYTHON_INSTALL(PROGRAMS
     COMPONENT "digital_python"
 )
 
+# Other
+install(
+    FILES
+    test_corr_and_sync.grc
+    DESTINATION ${GR_PKG_DIGITAL_EXAMPLES_DIR}
+    COMPONENT "digital_python"
+)
+
 # Narrowband
 GR_PYTHON_INSTALL(PROGRAMS
     narrowband/transmit_path.py
