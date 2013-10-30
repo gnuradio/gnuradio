@@ -220,12 +220,10 @@ class BlockTreeWindow(gtk.VBox):
             self.search_entry.set_text('')
             self.search_entry.hide()
 
-        elif event.state & gtk.gdk.CONTROL_MASK and event.keyval == gtk.keysyms.f:
+        elif (event.state & gtk.gdk.CONTROL_MASK and event.keyval == gtk.keysyms.f) \
+             or event.keyval == gtk.keysyms.slash:
             # propagation doesn't work although treeview search is disabled =(
             # manually trigger action...
-            Actions.FIND_BLOCKS.activate()
-
-        elif event.keyval == gtk.keysyms.slash:
             Actions.FIND_BLOCKS.activate()
 
         else:
