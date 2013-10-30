@@ -56,6 +56,12 @@ namespace gr {
      * with negative numbers, or with indexes larger than \p fft_len/2. Index -1 and index
      * \p fft_len-1 both identify the carrier below the DC carrier.
      *
+     * Tags are propagated such that a tag on an incoming complex symbol is mapped to the
+     * corresponding OFDM symbol. There is one exception: If a tag is on the first OFDM
+     * symbol, it is assumed that this tag should stay there, so it is moved to the front
+     * even if a sync word is included (any other tags will never be attached to the
+     * sync word). This allows tags to control the transmit timing to pass through in the
+     * correct position.
      */
     class DIGITAL_API ofdm_carrier_allocator_cvc : virtual public tagged_stream_block
     {
