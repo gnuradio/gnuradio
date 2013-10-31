@@ -1,23 +1,59 @@
 <?xml version='1.0' encoding='ASCII'?>
 <flow_graph>
-  <timestamp>Tue Oct 29 14:30:34 2013</timestamp>
+  <timestamp>Thu Oct 31 10:41:10 2013</timestamp>
   <block>
-    <key>variable</key>
+    <key>options</key>
     <param>
       <key>id</key>
-      <value>bb_filter</value>
+      <value>test_corr_and_sync</value>
     </param>
     <param>
       <key>_enabled</key>
       <value>True</value>
     </param>
     <param>
-      <key>value</key>
-      <value>firdes.root_raised_cosine(sps, sps, 1, eb, 101)</value>
+      <key>title</key>
+      <value></value>
+    </param>
+    <param>
+      <key>author</key>
+      <value></value>
+    </param>
+    <param>
+      <key>description</key>
+      <value></value>
+    </param>
+    <param>
+      <key>window_size</key>
+      <value>2000,2000</value>
+    </param>
+    <param>
+      <key>generate_options</key>
+      <value>qt_gui</value>
+    </param>
+    <param>
+      <key>category</key>
+      <value>Custom</value>
+    </param>
+    <param>
+      <key>run_options</key>
+      <value>prompt</value>
+    </param>
+    <param>
+      <key>run</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>max_nouts</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>realtime_scheduling</key>
+      <value></value>
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(420, 8)</value>
+      <value>(10, 10)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -36,7 +72,7 @@
     </param>
     <param>
       <key>value</key>
-      <value>0.5</value>
+      <value>0.35</value>
     </param>
     <param>
       <key>_coordinate</key>
@@ -51,7 +87,7 @@
     <key>variable</key>
     <param>
       <key>id</key>
-      <value>payload_size</value>
+      <value>rrc_taps</value>
     </param>
     <param>
       <key>_enabled</key>
@@ -59,126 +95,11 @@
     </param>
     <param>
       <key>value</key>
-      <value>992</value>
+      <value>firdes.root_raised_cosine(nfilts, nfilts, 1.0/float(sps), eb, 5*sps*nfilts)</value>
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(10, 135)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>variable</key>
-    <param>
-      <key>id</key>
-      <value>gap</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>value</key>
-      <value>20000</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(108, 74)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>variable</key>
-    <param>
-      <key>id</key>
-      <value>samp_rate</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>value</key>
-      <value>100000</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(11, 72)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>variable</key>
-    <param>
-      <key>id</key>
-      <value>sps</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>value</key>
-      <value>4</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(269, 72)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>variable</key>
-    <param>
-      <key>id</key>
-      <value>preamble</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>value</key>
-      <value>[1,-1,1,-1,1,1,-1,-1,1,1,-1,1,1,1,-1,1,1,-1,1,-1,-1,1,-1,-1,1,1,1,-1,-1,-1,1,-1,1,1,1,1,-1,-1,1,-1,1,-1,-1,-1,1,1,-1,-1,-1,-1,1,-1,-1,-1,-1,-1,1,1,1,1,1,1,-1,-1]</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(270, 8)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>variable</key>
-    <param>
-      <key>id</key>
-      <value>matched_filter</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>value</key>
-      <value>firdes.root_raised_cosine(nfilts, nfilts, 1, eb, int(11*sps*nfilts))</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(420, 72)</value>
+      <value>(1151, 11)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -212,7 +133,7 @@
     <key>variable</key>
     <param>
       <key>id</key>
-      <value>rrc_taps</value>
+      <value>matched_filter</value>
     </param>
     <param>
       <key>_enabled</key>
@@ -220,11 +141,149 @@
     </param>
     <param>
       <key>value</key>
-      <value>firdes.root_raised_cosine(nfilts, nfilts, 1.0/float(sps), eb, 5*sps*nfilts)</value>
+      <value>firdes.root_raised_cosine(nfilts, nfilts, 1, eb, int(11*sps*nfilts))</value>
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(1151, 11)</value>
+      <value>(420, 72)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>variable</key>
+    <param>
+      <key>id</key>
+      <value>preamble</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>value</key>
+      <value>[1,-1,1,-1,1,1,-1,-1,1,1,-1,1,1,1,-1,1,1,-1,1,-1,-1,1,-1,-1,1,1,1,-1,-1,-1,1,-1,1,1,1,1,-1,-1,1,-1,1,-1,-1,-1,1,1,-1,-1,-1,-1,1,-1,-1,-1,-1,-1,1,1,1,1,1,1,-1,-1]</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(270, 8)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>variable</key>
+    <param>
+      <key>id</key>
+      <value>sps</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>value</key>
+      <value>4</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(269, 72)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>variable</key>
+    <param>
+      <key>id</key>
+      <value>samp_rate</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>value</key>
+      <value>100000</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(11, 72)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>variable</key>
+    <param>
+      <key>id</key>
+      <value>gap</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>value</key>
+      <value>20000</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(108, 74)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>variable</key>
+    <param>
+      <key>id</key>
+      <value>payload_size</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>value</key>
+      <value>992</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(10, 135)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>variable</key>
+    <param>
+      <key>id</key>
+      <value>bb_filter</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>value</key>
+      <value>firdes.root_raised_cosine(sps, sps, 1, eb, 101)</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(420, 8)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -248,61 +307,6 @@
     <param>
       <key>_coordinate</key>
       <value>(174, 9)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>variable_qtgui_range</key>
-    <param>
-      <key>id</key>
-      <value>freq_offset</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>label</key>
-      <value>Frequency Offset</value>
-    </param>
-    <param>
-      <key>value</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>start</key>
-      <value>-0.002</value>
-    </param>
-    <param>
-      <key>stop</key>
-      <value>0.002</value>
-    </param>
-    <param>
-      <key>step</key>
-      <value>0.0001</value>
-    </param>
-    <param>
-      <key>widget</key>
-      <value>slider</value>
-    </param>
-    <param>
-      <key>orient</key>
-      <value>Qt.Horizontal</value>
-    </param>
-    <param>
-      <key>min_len</key>
-      <value>200</value>
-    </param>
-    <param>
-      <key>gui_hint</key>
-      <value>3,0,1,1</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(808, 7)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -393,10 +397,6 @@
     <param>
       <key>seed</key>
       <value>0</value>
-    </param>
-    <param>
-      <key>block_tags</key>
-      <value>False</value>
     </param>
     <param>
       <key>affinity</key>
@@ -517,108 +517,6 @@
     <key>variable_qtgui_range</key>
     <param>
       <key>id</key>
-      <value>time_offset</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>label</key>
-      <value>Timing Offset</value>
-    </param>
-    <param>
-      <key>value</key>
-      <value>1</value>
-    </param>
-    <param>
-      <key>start</key>
-      <value>0.9995</value>
-    </param>
-    <param>
-      <key>stop</key>
-      <value>1.0005</value>
-    </param>
-    <param>
-      <key>step</key>
-      <value>0.00001</value>
-    </param>
-    <param>
-      <key>widget</key>
-      <value>slider</value>
-    </param>
-    <param>
-      <key>orient</key>
-      <value>Qt.Horizontal</value>
-    </param>
-    <param>
-      <key>min_len</key>
-      <value>200</value>
-    </param>
-    <param>
-      <key>gui_hint</key>
-      <value>3,1,1,1</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(950, 8)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>variable_constellation</key>
-    <param>
-      <key>id</key>
-      <value>constel</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>value</key>
-      <value>"ok"</value>
-    </param>
-    <param>
-      <key>sym_map</key>
-      <value>[0,1]</value>
-    </param>
-    <param>
-      <key>const_points</key>
-      <value>[1,- 1]</value>
-    </param>
-    <param>
-      <key>rot_sym</key>
-      <value>2</value>
-    </param>
-    <param>
-      <key>dims</key>
-      <value>1</value>
-    </param>
-    <param>
-      <key>precision</key>
-      <value>8</value>
-    </param>
-    <param>
-      <key>soft_dec_lut</key>
-      <value>None</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(1318, 464)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>variable_qtgui_range</key>
-    <param>
-      <key>id</key>
       <value>noise</value>
     </param>
     <param>
@@ -664,49 +562,6 @@
     <param>
       <key>_coordinate</key>
       <value>(584, 7)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>psk_preamble_and_payload</key>
-    <param>
-      <key>id</key>
-      <value>psk_preamble_and_payload_0</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>sps</key>
-      <value>sps</value>
-    </param>
-    <param>
-      <key>preamble</key>
-      <value>preamble</value>
-    </param>
-    <param>
-      <key>gap</key>
-      <value>gap</value>
-    </param>
-    <param>
-      <key>payload_len</key>
-      <value>payload_size</value>
-    </param>
-    <param>
-      <key>affinity</key>
-      <value></value>
-    </param>
-    <param>
-      <key>minoutbuf</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(14, 204)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -1074,41 +929,6 @@
     </param>
   </block>
   <block>
-    <key>blocks_null_source</key>
-    <param>
-      <key>id</key>
-      <value>blocks_null_source_0</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>False</value>
-    </param>
-    <param>
-      <key>type</key>
-      <value>byte</value>
-    </param>
-    <param>
-      <key>vlen</key>
-      <value>1</value>
-    </param>
-    <param>
-      <key>affinity</key>
-      <value></value>
-    </param>
-    <param>
-      <key>minoutbuf</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(16, 508)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
     <key>qtgui_const_sink_x</key>
     <param>
       <key>id</key>
@@ -1239,93 +1059,6 @@
     <param>
       <key>_coordinate</key>
       <value>(832, 300)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>qtgui_time_sink_x</key>
-    <param>
-      <key>id</key>
-      <value>qtgui_time_sink_x_0</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>type</key>
-      <value>complex</value>
-    </param>
-    <param>
-      <key>name</key>
-      <value>QT GUI Plot</value>
-    </param>
-    <param>
-      <key>size</key>
-      <value>50000</value>
-    </param>
-    <param>
-      <key>srate</key>
-      <value>samp_rate</value>
-    </param>
-    <param>
-      <key>ymin</key>
-      <value>-2</value>
-    </param>
-    <param>
-      <key>ymax</key>
-      <value>2</value>
-    </param>
-    <param>
-      <key>nconnections</key>
-      <value>1</value>
-    </param>
-    <param>
-      <key>update_time</key>
-      <value>0.10</value>
-    </param>
-    <param>
-      <key>tr_mode</key>
-      <value>qtgui.TRIG_MODE_NORM</value>
-    </param>
-    <param>
-      <key>tr_slope</key>
-      <value>qtgui.TRIG_SLOPE_POS</value>
-    </param>
-    <param>
-      <key>tr_level</key>
-      <value>0.9</value>
-    </param>
-    <param>
-      <key>tr_delay</key>
-      <value>0.0001</value>
-    </param>
-    <param>
-      <key>tr_chan</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>tr_tag</key>
-      <value>time_est</value>
-    </param>
-    <param>
-      <key>entags</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>gui_hint</key>
-      <value>0,0,1,1</value>
-    </param>
-    <param>
-      <key>affinity</key>
-      <value></value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(1129, 353)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -1490,65 +1223,6 @@
     </param>
   </block>
   <block>
-    <key>digital_pfb_clock_sync_xxx</key>
-    <param>
-      <key>id</key>
-      <value>digital_pfb_clock_sync_xxx_0</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>type</key>
-      <value>ccf</value>
-    </param>
-    <param>
-      <key>sps</key>
-      <value>sps</value>
-    </param>
-    <param>
-      <key>loop_bw</key>
-      <value>2*3.14/50.0</value>
-    </param>
-    <param>
-      <key>taps</key>
-      <value>rrc_taps</value>
-    </param>
-    <param>
-      <key>filter_size</key>
-      <value>nfilts</value>
-    </param>
-    <param>
-      <key>init_phase</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>max_dev</key>
-      <value>1.5</value>
-    </param>
-    <param>
-      <key>osps</key>
-      <value>1</value>
-    </param>
-    <param>
-      <key>affinity</key>
-      <value></value>
-    </param>
-    <param>
-      <key>minoutbuf</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(550, 316)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
     <key>blocks_null_sink</key>
     <param>
       <key>id</key>
@@ -1611,58 +1285,388 @@
     </param>
   </block>
   <block>
-    <key>options</key>
+    <key>variable_qtgui_range</key>
     <param>
       <key>id</key>
-      <value>test_corr_and_sync</value>
+      <value>time_offset</value>
     </param>
     <param>
       <key>_enabled</key>
       <value>True</value>
     </param>
     <param>
-      <key>title</key>
-      <value></value>
+      <key>label</key>
+      <value>Timing Offset</value>
     </param>
     <param>
-      <key>author</key>
-      <value></value>
+      <key>value</key>
+      <value>1</value>
     </param>
     <param>
-      <key>description</key>
-      <value></value>
+      <key>start</key>
+      <value>0.995</value>
     </param>
     <param>
-      <key>window_size</key>
-      <value>2000,2000</value>
+      <key>stop</key>
+      <value>1.005</value>
     </param>
     <param>
-      <key>generate_options</key>
-      <value>qt_gui</value>
+      <key>step</key>
+      <value>0.00001</value>
     </param>
     <param>
-      <key>category</key>
-      <value>Custom</value>
+      <key>widget</key>
+      <value>slider</value>
     </param>
     <param>
-      <key>run_options</key>
-      <value>prompt</value>
+      <key>orient</key>
+      <value>Qt.Horizontal</value>
     </param>
     <param>
-      <key>run</key>
+      <key>min_len</key>
+      <value>200</value>
+    </param>
+    <param>
+      <key>gui_hint</key>
+      <value>3,1,1,1</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(950, 8)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>qtgui_time_sink_x</key>
+    <param>
+      <key>id</key>
+      <value>qtgui_time_sink_x_0</value>
+    </param>
+    <param>
+      <key>_enabled</key>
       <value>True</value>
     </param>
     <param>
-      <key>max_nouts</key>
+      <key>type</key>
+      <value>complex</value>
+    </param>
+    <param>
+      <key>name</key>
+      <value>QT GUI Plot</value>
+    </param>
+    <param>
+      <key>size</key>
+      <value>50000</value>
+    </param>
+    <param>
+      <key>srate</key>
+      <value>samp_rate</value>
+    </param>
+    <param>
+      <key>ymin</key>
+      <value>-2</value>
+    </param>
+    <param>
+      <key>ymax</key>
+      <value>2</value>
+    </param>
+    <param>
+      <key>nconnections</key>
+      <value>1</value>
+    </param>
+    <param>
+      <key>update_time</key>
+      <value>0.10</value>
+    </param>
+    <param>
+      <key>tr_mode</key>
+      <value>qtgui.TRIG_MODE_NORM</value>
+    </param>
+    <param>
+      <key>tr_slope</key>
+      <value>qtgui.TRIG_SLOPE_POS</value>
+    </param>
+    <param>
+      <key>tr_level</key>
+      <value>0.9</value>
+    </param>
+    <param>
+      <key>tr_delay</key>
+      <value>0.0</value>
+    </param>
+    <param>
+      <key>tr_chan</key>
       <value>0</value>
     </param>
     <param>
-      <key>realtime_scheduling</key>
+      <key>tr_tag</key>
+      <value>time_est</value>
+    </param>
+    <param>
+      <key>entags</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>gui_hint</key>
+      <value>0,0,1,1</value>
+    </param>
+    <param>
+      <key>affinity</key>
       <value></value>
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(10, 10)</value>
+      <value>(1129, 353)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>digital_pfb_clock_sync_xxx</key>
+    <param>
+      <key>id</key>
+      <value>digital_pfb_clock_sync_xxx_0</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>type</key>
+      <value>ccf</value>
+    </param>
+    <param>
+      <key>sps</key>
+      <value>sps</value>
+    </param>
+    <param>
+      <key>loop_bw</key>
+      <value>2*3.14/100.0</value>
+    </param>
+    <param>
+      <key>taps</key>
+      <value>rrc_taps</value>
+    </param>
+    <param>
+      <key>filter_size</key>
+      <value>nfilts</value>
+    </param>
+    <param>
+      <key>init_phase</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>max_dev</key>
+      <value>0.5</value>
+    </param>
+    <param>
+      <key>osps</key>
+      <value>1</value>
+    </param>
+    <param>
+      <key>affinity</key>
+      <value></value>
+    </param>
+    <param>
+      <key>minoutbuf</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(550, 316)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>variable_constellation</key>
+    <param>
+      <key>id</key>
+      <value>constel</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>value</key>
+      <value>"ok"</value>
+    </param>
+    <param>
+      <key>sym_map</key>
+      <value>[0,1]</value>
+    </param>
+    <param>
+      <key>const_points</key>
+      <value>[1,- 1]</value>
+    </param>
+    <param>
+      <key>rot_sym</key>
+      <value>2</value>
+    </param>
+    <param>
+      <key>dims</key>
+      <value>1</value>
+    </param>
+    <param>
+      <key>precision</key>
+      <value>8</value>
+    </param>
+    <param>
+      <key>soft_dec_lut</key>
+      <value>None</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(1318, 464)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>psk_preamble_and_payload</key>
+    <param>
+      <key>id</key>
+      <value>psk_preamble_and_payload_0</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>sps</key>
+      <value>sps</value>
+    </param>
+    <param>
+      <key>gap</key>
+      <value>gap</value>
+    </param>
+    <param>
+      <key>payload_len</key>
+      <value>payload_size</value>
+    </param>
+    <param>
+      <key>constel</key>
+      <value>constel</value>
+    </param>
+    <param>
+      <key>preamble</key>
+      <value>preamble</value>
+    </param>
+    <param>
+      <key>excess_bw</key>
+      <value>eb</value>
+    </param>
+    <param>
+      <key>affinity</key>
+      <value></value>
+    </param>
+    <param>
+      <key>minoutbuf</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(10, 204)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>variable_qtgui_range</key>
+    <param>
+      <key>id</key>
+      <value>freq_offset</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>label</key>
+      <value>Frequency Offset</value>
+    </param>
+    <param>
+      <key>value</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>start</key>
+      <value>-0.001</value>
+    </param>
+    <param>
+      <key>stop</key>
+      <value>0.001</value>
+    </param>
+    <param>
+      <key>step</key>
+      <value>0.00002</value>
+    </param>
+    <param>
+      <key>widget</key>
+      <value>slider</value>
+    </param>
+    <param>
+      <key>orient</key>
+      <value>Qt.Horizontal</value>
+    </param>
+    <param>
+      <key>min_len</key>
+      <value>200</value>
+    </param>
+    <param>
+      <key>gui_hint</key>
+      <value>3,0,1,1</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(808, 7)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>blocks_null_source</key>
+    <param>
+      <key>id</key>
+      <value>blocks_null_source_0</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>False</value>
+    </param>
+    <param>
+      <key>type</key>
+      <value>byte</value>
+    </param>
+    <param>
+      <key>vlen</key>
+      <value>1</value>
+    </param>
+    <param>
+      <key>affinity</key>
+      <value></value>
+    </param>
+    <param>
+      <key>minoutbuf</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(32, 501)</value>
     </param>
     <param>
       <key>_rotation</key>
