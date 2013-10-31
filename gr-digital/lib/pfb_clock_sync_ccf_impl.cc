@@ -75,7 +75,9 @@ namespace gr {
       d_sps = floor(sps);
 
       // Set the damping factor for a critically damped system
-      d_damping = sqrtf(2.0f)/2.0f;
+      // FIXME: explain why this is happening. Doesn't look right, but
+      // the loop converges so much faster this way.
+      d_damping = 15;//sqrtf(2.0f)/2.0f;
 
       // Set the bandwidth, which will then call update_gains()
       set_loop_bandwidth(loop_bw);
@@ -241,6 +243,10 @@ namespace gr {
       float denom = (1.0 + 2.0*d_damping*d_loop_bw + d_loop_bw*d_loop_bw);
       d_alpha = (4*d_damping*d_loop_bw) / denom;
       d_beta = (4*d_loop_bw*d_loop_bw) / denom;
+      //GR_LOG_DEBUG(d_logger, boost::format("loop bw: %1%") % d_loop_bw);
+      //GR_LOG_DEBUG(d_logger, boost::format("damping: %1%") % d_damping);
+      //GR_LOG_DEBUG(d_logger, boost::format("alpha:   %1%") % d_alpha);
+      //GR_LOG_DEBUG(d_logger, boost::format("beta:    %1%") % d_beta);
     }
 
     void
@@ -445,8 +451,7 @@ namespace gr {
 	    count -= 1;
 	  }
 
-          int adj = static_cast<int>(d_out_idx);
-	  out[i+d_out_idx] = d_filters[d_filtnum]->filter(&in[count+adj]);
+	  out[i+d_out_idx] = d_filters[d_filtnum]->filter(&in[count+d_out_idx]);
 	  d_k = d_k + d_rate_i + d_rate_f; // update phase
 	  d_out_idx++;
 
@@ -468,16 +473,18 @@ namespace gr {
 	d_out_idx = 0;
 
 	// Update the phase and rate estimates for this symbol
-        int adj = static_cast<int>(d_out_idx);
-	gr_complex diff = d_diff_filters[d_filtnum]->filter(&in[count+adj]);
+	gr_complex diff = d_diff_filters[d_filtnum]->filter(&in[count]);
 	error_r = out[i].real() * diff.real();
 	error_i = out[i].imag() * diff.imag();
 	d_error = (error_i + error_r) / 2.0;       // average error from I&Q channel
 
-	// Run the control loop to update the current phase (k) and
-	// tracking rate estimates based on the error value
-	d_rate_f = d_rate_f + d_beta*d_error;
-	d_k = d_k + d_alpha*d_error;
+        // Run the control loop to update the current phase (k) and
+        // tracking rate estimates based on the error value
+        // Interpolating here to update rates for ever sps.
+        for(int s = 0; s < d_sps; s++) {
+          d_rate_f = d_rate_f + d_beta*d_error;
+          d_k = d_k + d_rate_f + d_alpha*d_error;
+        }
 
 	// Keep our rate within a good range
 	d_rate_f = gr::branchless_clip(d_rate_f, d_max_dev);
