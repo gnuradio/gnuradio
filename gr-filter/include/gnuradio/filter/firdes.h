@@ -57,16 +57,16 @@ namespace gr {
       /*!
        * \brief use "window method" to design a low-pass FIR filter
        *
-       * \p gain:		overall gain of filter (typically 1.0)
-       * \p sampling_freq:	sampling freq (Hz)
-       * \p cutoff_freq:	center of transition band (Hz)
-       * \p transition_width:	width of transition band (Hz).
-       *			The normalized width of the transition
-       *			band is what sets the number of taps
-       *			required.  Narrow --> more taps
-       * \p window_type: 	What kind of window to use. Determines
-       *			maximum attenuation and passband ripple.
-       * \p beta:		parameter for Kaiser window
+       * \param gain             overall gain of filter (typically 1.0)
+       * \param sampling_freq    sampling freq (Hz)
+       * \param cutoff_freq      center of transition band (Hz)
+       * \param transition_width width of transition band (Hz).
+       *                         The normalized width of the transition
+       *                         band is what sets the number of taps
+       *                         required.  Narrow --> more taps
+       * \param window           What kind of window to use. Determines
+       *                         maximum attenuation and passband ripple.
+       * \param beta             parameter for Kaiser window
        */
       static std::vector<float>
 	low_pass(double gain,
@@ -79,21 +79,20 @@ namespace gr {
       /*!
        * \brief use "window method" to design a low-pass FIR filter
        *
-       * \p gain:		overall gain of filter (typically 1.0)
-       * \p sampling_freq:	sampling freq (Hz)
-       * \p cutoff_freq:	center of transition band (Hz)
-       * \p transition_width:	width of transition band (Hz).
-       * \p attenuation_dB      required stopband attenuation
-       *			The normalized width of the transition
-       *			band and the required stop band
-       *                        attenuation is what sets the number of taps
-       *			required.  Narrow --> more taps
-       *                        More attenuatin --> more taps
-       * \p window_type: 	What kind of window to use. Determines
-       *			maximum attenuation and passband ripple.
-       * \p beta:		parameter for Kaiser window
+       * \param gain             overall gain of filter (typically 1.0)
+       * \param sampling_freq    sampling freq (Hz)
+       * \param cutoff_freq      center of transition band (Hz)
+       * \param transition_width width of transition band (Hz).
+       * \param attenuation_dB   required stopband attenuation
+       *                         The normalized width of the transition
+       *                         band and the required stop band
+       *                         attenuation is what sets the number of taps
+       *                         required.  Narrow --> more taps
+       *                         More attenuatin --> more taps
+       * \param window           What kind of window to use. Determines
+       *                         maximum attenuation and passband ripple.
+       * \param beta             parameter for Kaiser window
        */
-
       static std::vector<float>
 	low_pass_2(double gain,
 		   double sampling_freq,
@@ -106,18 +105,17 @@ namespace gr {
       /*!
        * \brief use "window method" to design a high-pass FIR filter
        *
-       * \p gain:		overall gain of filter (typically 1.0)
-       * \p sampling_freq:	sampling freq (Hz)
-       * \p cutoff_freq:	center of transition band (Hz)
-       * \p transition_width:	width of transition band (Hz).
-       *			The normalized width of the transition
-       *			band is what sets the number of taps
-       *			required.  Narrow --> more taps
-       * \p window_type: 	What kind of window to use. Determines
-       *			maximum attenuation and passband ripple.
-       * \p beta:		parameter for Kaiser window
+       * \param gain             overall gain of filter (typically 1.0)
+       * \param sampling_freq    sampling freq (Hz)
+       * \param cutoff_freq      center of transition band (Hz)
+       * \param transition_width width of transition band (Hz).
+       *			 The normalized width of the transition
+       *			 band is what sets the number of taps
+       *			 required.  Narrow --> more taps
+       * \param window           What kind of window to use. Determines
+       *                         maximum attenuation and passband ripple.
+       * \param beta             parameter for Kaiser window
        */
-      
       static std::vector<float>
 	high_pass(double gain,
 		  double sampling_freq,
@@ -129,21 +127,20 @@ namespace gr {
       /*!
        * \brief use "window method" to design a high-pass FIR filter
        *
-       * \p gain:		overall gain of filter (typically 1.0)
-       * \p sampling_freq:	sampling freq (Hz)
-       * \p cutoff_freq:	center of transition band (Hz)
-       * \p transition_width:	width of transition band (Hz).
-       * \p attenuation_dB      out of band attenuation
-       *			The normalized width of the transition
-       *			band and the required stop band
-       *                        attenuation is what sets the number of taps
-       *			required.  Narrow --> more taps
-       *                        More attenuation --> more taps
-       * \p window_type: 	What kind of window to use. Determines
-       *			maximum attenuation and passband ripple.
-       * \p beta:		parameter for Kaiser window
+       * \param gain             overall gain of filter (typically 1.0)
+       * \param sampling_freq    sampling freq (Hz)
+       * \param cutoff_freq      center of transition band (Hz)
+       * \param transition_width width of transition band (Hz).
+       * \param attenuation_dB   out of band attenuation
+       *                         The normalized width of the transition
+       *                         band and the required stop band
+       *                         attenuation is what sets the number of taps
+       *                         required.  Narrow --> more taps
+       *                         More attenuation --> more taps
+       * \param window           What kind of window to use. Determines
+       *                         maximum attenuation and passband ripple.
+       * \param beta             parameter for Kaiser window
        */
-      
       static std::vector<float>
 	high_pass_2(double gain,
 		    double sampling_freq,
@@ -156,17 +153,17 @@ namespace gr {
       /*!
        * \brief use "window method" to design a band-pass FIR filter
        *
-       * \p gain:		overall gain of filter (typically 1.0)
-       * \p sampling_freq:	sampling freq (Hz)
-       * \p low_cutoff_freq:	center of transition band (Hz)
-       * \p high_cutoff_freq:	center of transition band (Hz)
-       * \p transition_width:	width of transition band (Hz).
-       *			The normalized width of the transition
-       *			band is what sets the number of taps
-       *			required.  Narrow --> more taps
-       * \p window_type: 	What kind of window to use. Determines
-       *			maximum attenuation and passband ripple.
-       * \p beta:		parameter for Kaiser window
+       * \param gain             overall gain of filter (typically 1.0)
+       * \param sampling_freq    sampling freq (Hz)
+       * \param low_cutoff_freq  center of transition band (Hz)
+       * \param high_cutoff_freq center of transition band (Hz)
+       * \param transition_width width of transition band (Hz).
+       *                         The normalized width of the transition
+       *                         band is what sets the number of taps
+       *                         required.  Narrow --> more taps
+       * \param window           What kind of window to use. Determines
+       *                         maximum attenuation and passband ripple.
+       * \param beta             parameter for Kaiser window
        */
       static std::vector<float>
 	band_pass(double gain,
@@ -180,22 +177,21 @@ namespace gr {
       /*!
        * \brief use "window method" to design a band-pass FIR filter
        *
-       * \p gain:		overall gain of filter (typically 1.0)
-       * \p sampling_freq:	sampling freq (Hz)
-       * \p low_cutoff_freq:	center of transition band (Hz)
-       * \p high_cutoff_freq:	center of transition band (Hz)
-       * \p transition_width:	width of transition band (Hz).
-       * \p attenuation_dB      out of band attenuation
-       *			The normalized width of the transition
-       *			band and the required stop band
-       *                        attenuation is what sets the number of taps
-       *			required.  Narrow --> more taps
-       *                        More attenuation --> more taps
-       * \p window_type: 	What kind of window to use. Determines
-       *			maximum attenuation and passband ripple.
-       * \p beta:		parameter for Kaiser window
+       * \param gain             overall gain of filter (typically 1.0)
+       * \param sampling_freq    sampling freq (Hz)
+       * \param low_cutoff_freq  center of transition band (Hz)
+       * \param high_cutoff_freq center of transition band (Hz)
+       * \param transition_width width of transition band (Hz).
+       * \param attenuation_dB   out of band attenuation
+       *                         The normalized width of the transition
+       *                         band and the required stop band
+       *                         attenuation is what sets the number of taps
+       *                         required.  Narrow --> more taps
+       *                         More attenuation --> more taps
+       * \param window           What kind of window to use. Determines
+       *                         maximum attenuation and passband ripple.
+       * \param beta             parameter for Kaiser window
        */
-      
       static std::vector<float>
 	band_pass_2(double gain,
 		    double sampling_freq,
@@ -209,17 +205,17 @@ namespace gr {
       /*!
        * \brief use "window method" to design a complex band-pass FIR filter
        *
-       * \p gain:		overall gain of filter (typically 1.0)
-       * \p sampling_freq:	sampling freq (Hz)
-       * \p low_cutoff_freq:	center of transition band (Hz)
-       * \p high_cutoff_freq:	center of transition band (Hz)
-       * \p transition_width:	width of transition band (Hz).
-       *			The normalized width of the transition
-       *			band is what sets the number of taps
-       *			required.  Narrow --> more taps
-       * \p window_type: 	What kind of window to use. Determines
-       *			maximum attenuation and passband ripple.
-       * \p beta:		parameter for Kaiser window
+       * \param gain             overall gain of filter (typically 1.0)
+       * \param sampling_freq    sampling freq (Hz)
+       * \param low_cutoff_freq  center of transition band (Hz)
+       * \param high_cutoff_freq center of transition band (Hz)
+       * \param transition_width width of transition band (Hz).
+       *                         The normalized width of the transition
+       *                         band is what sets the number of taps
+       *                         required.  Narrow --> more taps
+       * \param window           What kind of window to use. Determines
+       *                         maximum attenuation and passband ripple.
+       * \param beta             parameter for Kaiser window
        */
       static std::vector<gr_complex>
 	complex_band_pass(double gain,
@@ -233,22 +229,21 @@ namespace gr {
       /*!
        * \brief use "window method" to design a complex band-pass FIR filter
        *
-       * \p gain:		overall gain of filter (typically 1.0)
-       * \p sampling_freq:	sampling freq (Hz)
-       * \p low_cutoff_freq:	center of transition band (Hz)
-       * \p high_cutoff_freq:	center of transition band (Hz)
-       * \p transition_width:	width of transition band (Hz).
-       * \p attenuation_dB      out of band attenuation
-       *			The normalized width of the transition
-       *			band and the required stop band
-       *                        attenuation is what sets the number of taps
-       *			required.  Narrow --> more taps
-       *                        More attenuation --> more taps
-       * \p window_type: 	What kind of window to use. Determines
-       *			maximum attenuation and passband ripple.
-       * \p beta:		parameter for Kaiser window
+       * \param gain             overall gain of filter (typically 1.0)
+       * \param sampling_freq    sampling freq (Hz)
+       * \param low_cutoff_freq  center of transition band (Hz)
+       * \param high_cutoff_freq center of transition band (Hz)
+       * \param transition_width width of transition band (Hz).
+       * \param attenuation_dB   out of band attenuation
+       *                         The normalized width of the transition
+       *                         band and the required stop band
+       *                         attenuation is what sets the number of taps
+       *                         required.  Narrow --> more taps
+       *                         More attenuation --> more taps
+       * \param window           What kind of window to use. Determines
+       *                         maximum attenuation and passband ripple.
+       * \param beta             parameter for Kaiser window
        */
-      
       static std::vector<gr_complex>
 	complex_band_pass_2(double gain,
 			    double sampling_freq,
@@ -262,19 +257,18 @@ namespace gr {
       /*!
        * \brief use "window method" to design a band-reject FIR filter
        *
-       * \p gain:		overall gain of filter (typically 1.0)
-       * \p sampling_freq:	sampling freq (Hz)
-       * \p low_cutoff_freq:	center of transition band (Hz)
-       * \p high_cutoff_freq:	center of transition band (Hz)
-       * \p transition_width:	width of transition band (Hz).
-       *			The normalized width of the transition
-       *			band is what sets the number of taps
-       *			required.  Narrow --> more taps
-       * \p window_type: 	What kind of window to use. Determines
-       *			maximum attenuation and passband ripple.
-       * \p beta:		parameter for Kaiser window
+       * \param gain             overall gain of filter (typically 1.0)
+       * \param sampling_freq    sampling freq (Hz)
+       * \param low_cutoff_freq  center of transition band (Hz)
+       * \param high_cutoff_freq center of transition band (Hz)
+       * \param transition_width width of transition band (Hz).
+       *                         The normalized width of the transition
+       *                         band is what sets the number of taps
+       *                         required.  Narrow --> more taps
+       * \param window           What kind of window to use. Determines
+       *                         maximum attenuation and passband ripple.
+       * \param beta             parameter for Kaiser window
        */
-      
       static std::vector<float>
 	band_reject(double gain,
 		    double sampling_freq,
@@ -287,22 +281,21 @@ namespace gr {
       /*!
        * \brief use "window method" to design a band-reject FIR filter
        *
-       * \p gain:		overall gain of filter (typically 1.0)
-       * \p sampling_freq:	sampling freq (Hz)
-       * \p low_cutoff_freq:	center of transition band (Hz)
-       * \p high_cutoff_freq:	center of transition band (Hz)
-       * \p transition_width:	width of transition band (Hz).
-       * \p attenuation_dB      out of band attenuation
-       *			The normalized width of the transition
-       *			band and the required stop band
-       *                        attenuation is what sets the number of taps
-       *			required.  Narrow --> more taps
-       *                        More attenuation --> more taps
-       * \p window_type: 	What kind of window to use. Determines
-       *			maximum attenuation and passband ripple.
-       * \p beta:		parameter for Kaiser window
+       * \param gain             overall gain of filter (typically 1.0)
+       * \param sampling_freq    sampling freq (Hz)
+       * \param low_cutoff_freq  center of transition band (Hz)
+       * \param high_cutoff_freq center of transition band (Hz)
+       * \param transition_width width of transition band (Hz).
+       * \param attenuation_dB   out of band attenuation
+       *                         The normalized width of the transition
+       *                         band and the required stop band
+       *                         attenuation is what sets the number of taps
+       *                         required.  Narrow --> more taps
+       *                         More attenuation --> more taps
+       * \param window           What kind of window to use. Determines
+       *                         maximum attenuation and passband ripple.
+       * \param beta             parameter for Kaiser window
        */
-      
       static std::vector<float>
 	band_reject_2(double gain,
 		      double sampling_freq,
@@ -315,9 +308,9 @@ namespace gr {
       
       /*!\brief design a Hilbert Transform Filter
        *
-       * \p ntaps:              Number of taps, must be odd
-       * \p window_type:        What kind of window to use
-       * \p beta:               Only used for Kaiser
+       * \param ntaps       Number of taps, must be odd
+       * \param windowtype  What kind of window to use
+       * \param beta        Only used for Kaiser
        */
       static std::vector<float>
 	hilbert(unsigned int ntaps = 19,
@@ -327,11 +320,11 @@ namespace gr {
       /*!
        * \brief design a Root Cosine FIR Filter (do we need a window?)
        *
-       * \p gain:		overall gain of filter (typically 1.0)
-       * \p sampling_freq:	sampling freq (Hz)
-       * \p symbol rate:	symbol rate, must be a factor of sample rate
-       * \p alpha:		excess bandwidth factor
-       * \p ntaps:		number of taps
+       * \param gain          overall gain of filter (typically 1.0)
+       * \param sampling_freq sampling freq (Hz)
+       * \param symbol_rate   symbol rate, must be a factor of sample rate
+       * \param alpha         excess bandwidth factor
+       * \param ntaps         number of taps
        */
       static std::vector<float>
 	root_raised_cosine(double gain,
@@ -343,9 +336,10 @@ namespace gr {
       /*!
        * \brief design a Gaussian filter
        *
-       * \p gain:		overall gain of filter (typically 1.0)
-       * \p symbols per bit:	symbol rate, must be a factor of sample rate
-       * \p ntaps:		number of taps
+       * \param gain  overall gain of filter (typically 1.0)
+       * \param spb   samples per baud
+       * \param bt    bandwidth-time product factor
+       * \param ntaps number of taps
        */
       static std::vector<float>
 	gaussian(double gain,
@@ -353,8 +347,14 @@ namespace gr {
 		 double bt,     // Bandwidth to bitrate ratio
 		 int ntaps);
       
-      // window functions ...
-      static std::vector<float> window (win_type type, int ntaps, double beta);
+      /*!
+       * \brief build a window of a \p type and size \p ntaps.
+       *
+       * \param type  type of window (as a win_type)
+       * \param ntaps size of the window
+       * \param beta  beta value for Kaiser windows
+       */
+      static std::vector<float> window(win_type type, int ntaps, double beta=6.76);
       
     private:
       static double bessi0(double x);
