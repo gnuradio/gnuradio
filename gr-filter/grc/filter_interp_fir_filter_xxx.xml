@@ -10,10 +10,9 @@
 	<import>from gnuradio import filter</import>
 	<import>from gnuradio.filter import firdes</import>
 	<make>filter.interp_fir_filter_$(type)($interp, $taps)
-self.$(id).set_group_delay($grp_delay)
+self.$(id).declare_sample_delay($samp_delay)
 </make>
 	<callback>set_taps($taps)</callback>
-	<callback>set_group_delay($grp_delay)</callback>
 	<param>
 		<name>Type</name>
 		<key>type</key>
@@ -73,8 +72,8 @@ self.$(id).set_group_delay($grp_delay)
 		<type>$type.taps</type>
 	</param>
 	<param>
-		<name>Group Delay</name>
-		<key>grp_delay</key>
+		<name>Sample Delay</name>
+		<key>samp_delay</key>
                 <value>0</value>
 		<type>int</type>
                 <hide>part</hide>

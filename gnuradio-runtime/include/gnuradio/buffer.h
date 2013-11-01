@@ -140,7 +140,7 @@ namespace gr {
     char			       *d_base;		// base address of buffer
     unsigned int			d_bufsize;	// in items
 
-    // Keep track of maximum group delay of any reader; Only prune tags past this.
+    // Keep track of maximum sample delay of any reader; Only prune tags past this.
     unsigned d_max_reader_delay;
 
   private:
@@ -210,7 +210,7 @@ namespace gr {
    * \param buf is the buffer the \p gr::buffer_reader reads from.
    * \param nzero_preload -- number of zero items to "preload" into buffer.
    * \param link is the block that reads from the buffer using this gr::buffer_reader.
-   * \param delay Optional setting for the buffer's group delay.
+   * \param delay Optional setting to declare the buffer's sample delay.
    */
   GR_RUNTIME_API buffer_reader_sptr
     buffer_add_reader(buffer_sptr buf, int nzero_preload, block_sptr link=block_sptr(), int delay=0);
@@ -231,20 +231,20 @@ namespace gr {
     ~buffer_reader();
 
     /*!
-     * Set group delay for this reader.
+     * Declares the sample delay for this reader.
      *
-     * See gr::block::set_group_delay for details.
+     * See gr::block::declare_sample_delay for details.
      *
-     * \param delay The new group delay
+     * \param delay The new sample delay
      */
-    void set_group_delay(unsigned delay);
+    void declare_sample_delay(unsigned delay);
 
     /*!
-     * Gets the group delay for this reader.
+     * Gets the sample delay for this reader.
      *
-     * See gr::block::group_delay for details.
+     * See gr::block::sample_delay for details.
      */
-    unsigned group_delay() const;
+    unsigned sample_delay() const;
 
     /*!
      * \brief Return number of items available for reading.
@@ -318,7 +318,7 @@ namespace gr {
     unsigned int d_read_index;       // in items [0,d->buffer.d_bufsize)
     uint64_t     d_abs_read_offset;  // num items seen since the start
     boost::weak_ptr<block> d_link;   // block that reads via this buffer reader
-    unsigned d_group_delay;          // group delay for tag propagation
+    unsigned d_attr_delay;           // sample delay attribute for tag propagation
 
     //! constructor is private.  Use gr::buffer::add_reader to create instances
     buffer_reader(buffer_sptr buffer, unsigned int read_index,

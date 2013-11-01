@@ -44,7 +44,7 @@ namespace gr {
       d_is_unaligned(false),
       d_relative_rate (1.0),
       d_history(1),
-      d_group_delay(0),
+      d_attr_delay(0),
       d_fixed_rate(false),
       d_max_noutput_items_set(false),
       d_max_noutput_items(0),
@@ -123,30 +123,30 @@ namespace gr {
   }
 
   void
-  block::set_group_delay(unsigned delay)
+  block::declare_sample_delay(unsigned delay)
   {
-    d_group_delay = delay;
+    d_attr_delay = delay;
     if(d_detail) {
       unsigned int nins = static_cast<unsigned int>(d_detail->ninputs());
       for(unsigned int n = 0; n < nins; n++) {
-        d_detail->input(n)->set_group_delay(d_group_delay);
+        d_detail->input(n)->declare_sample_delay(d_attr_delay);
       }
     }
   }
 
   void
-  block::set_group_delay(int which, unsigned delay)
+  block::declare_sample_delay(int which, unsigned delay)
   {
-    d_group_delay = delay;
+    d_attr_delay = delay;
     if(d_detail) {
-      d_detail->input(which)->set_group_delay(d_group_delay);
+      d_detail->input(which)->declare_sample_delay(d_attr_delay);
     }
   }
 
   unsigned
-  block::group_delay(int which) const
+  block::sample_delay(int which) const
   {
-    return d_group_delay;
+    return d_attr_delay;
   }
 
   // stub implementation:  1:1

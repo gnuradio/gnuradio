@@ -200,7 +200,7 @@ namespace gr {
         std::cout << "Setting input " << dst_port << " from edge " << (*e) << std::endl;
 
       detail->set_input(dst_port, buffer_add_reader(src_buffer, grblock->history()-1, grblock,
-                                                    grblock->group_delay(src_port)));
+                                                    grblock->sample_delay(src_port)));
     }
   }
 

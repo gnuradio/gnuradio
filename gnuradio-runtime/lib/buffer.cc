@@ -203,7 +203,7 @@ namespace gr {
                                            buf->index_sub(buf->d_write_index,
                                                           nzero_preload),
                                            link));
-    r->set_group_delay(delay);
+    r->declare_sample_delay(delay);
     buf->d_readers.push_back(r.get ());
 
     return r;
@@ -262,7 +262,7 @@ namespace gr {
     // therefore lose little time this way.
     while(itr != d_item_tags.end()) {
       item_time = (*itr).offset;
-      if(item_time+d_max_reader_delay < max_time) {
+      if(item_time+d_max_reader_delay + bufsize() < max_time) {
         d_item_tags.erase(itr);
         itr = d_item_tags.begin();
       }
@@ -282,7 +282,7 @@ namespace gr {
   buffer_reader::buffer_reader(buffer_sptr buffer, unsigned int read_index,
                                block_sptr link)
     : d_buffer(buffer), d_read_index(read_index), d_abs_read_offset(0), d_link(link),
-      d_group_delay(0)
+      d_attr_delay(0)
   {
     s_buffer_reader_count++;
 
@@ -296,17 +296,17 @@ namespace gr {
   }
 
   void
-  buffer_reader::set_group_delay(unsigned delay)
+  buffer_reader::declare_sample_delay(unsigned delay)
   {
-    d_group_delay = delay;
-    d_buffer->d_max_reader_delay = std::max(d_group_delay,
+    d_attr_delay = delay;
+    d_buffer->d_max_reader_delay = std::max(d_attr_delay,
                                             d_buffer->d_max_reader_delay);
   }
 
   unsigned
-  buffer_reader::group_delay() const
+  buffer_reader::sample_delay() const
   {
-    return d_group_delay;
+    return d_attr_delay;
   }
 
   int
@@ -342,7 +342,7 @@ namespace gr {
 
     uint64_t item_time;
     while(itr != d_buffer->get_tags_end()) {
-      item_time = (*itr).offset + d_group_delay;
+      item_time = (*itr).offset + d_attr_delay;
 
       if((item_time >= abs_start) && (item_time < abs_end)) {
 	std::vector<long>::iterator id_itr;
@@ -351,7 +351,7 @@ namespace gr {
         // If id is not in the vector of marked blocks
 	if(id_itr == itr->marked_deleted.end()) {
           tag_t t = *itr;
-          t.offset += d_group_delay;
+          t.offset += d_attr_delay;
 	  v.push_back(t);
 	  v.back().marked_deleted.clear();
 	}
