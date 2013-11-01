@@ -26,6 +26,8 @@
 
 #include "time_sink_f_impl.h"
 #include <gnuradio/io_signature.h>
+#include <gnuradio/block_detail.h>
+#include <gnuradio/buffer.h>
 #include <string.h>
 #include <volk/volk.h>
 #include <gnuradio/fft/fft.h>
@@ -71,6 +73,11 @@ namespace gr {
       d_tags = std::vector< std::vector<gr::tag_t> >(d_nconnections);
 
       initialize();
+
+      d_size += 1;         // trick the next line into updating
+      set_nsamps(size);
+      set_trigger_mode(TRIG_MODE_AUTO, TRIG_SLOPE_POS, 0, 0, 0);
+      d_initial_delay = d_trigger_delay;
     }
 
     time_sink_f_impl::~time_sink_f_impl()
@@ -204,8 +211,11 @@ namespace gr {
       d_triggered = false;
       d_trigger_count = 0;
 
-      if(d_trigger_delay > d_size)
-        throw std::runtime_error("qtgui::time_sink_f: trigger delay set outside of display range.\n");
+      if(d_trigger_delay >= d_size) {
+        GR_LOG_WARN(d_logger, boost::format("Trigger delay (%1%) outside of display range (%2%).") \
+                    % d_trigger_delay % d_size);
+        d_trigger_delay = d_size-1;
+      }
 
       d_main_gui->setTriggerMode(d_trigger_mode);
       d_main_gui->setTriggerSlope(d_trigger_slope);
@@ -215,7 +225,7 @@ namespace gr {
       d_main_gui->setTriggerTagKey(tag_key);
 
       set_history(d_trigger_delay + 2);
-      set_group_delay(d_trigger_delay);
+      declare_sample_delay(d_trigger_delay+1);
     }
 
     void
@@ -372,14 +382,42 @@ namespace gr {
       d_trigger_level = d_main_gui->getTriggerLevel();
       d_trigger_channel = d_main_gui->getTriggerChannel();
 
-      float d = d_main_gui->getTriggerDelay();
-      int delay = static_cast<int>(d*d_samp_rate);
+      float delayf = d_main_gui->getTriggerDelay();
+      int delay = static_cast<int>(delayf*d_samp_rate);
 
       if(delay != d_trigger_delay) {
-        if(d_trigger_delay > d_size)
-          throw std::runtime_error("qtgui::time_sink_f: trigger delay set outside of display range.\n");
+        // We restrict the delay to be within the window of time being
+        // plotted. This also restrict it to be less than the number
+        // of output items since we cannot set the history greater
+        // than this. We can probably get around this latter part by
+        // not using history and doing more work inside 'work' to keep
+        // track of things.
+        int maxn;
+        
+        // If we have built the detail and buffers, we're stuck with
+        // the max number of item; otherwise the buffer will be built
+        // around this value so we just don't want to go over d_size.
+        int correction = 5; // give us a bit of room at the edge.
+        block_detail_sptr d = detail();
+        if(d) {
+          int max_possible = d->input(d_trigger_channel)->max_possible_items_available()/2 - d_initial_delay;
+          maxn = std::max(1, std::min(max_possible, d_size) - correction);
+        }
+        else {
+          maxn = d_size-correction;
+          d_initial_delay = d_trigger_delay; // store this value before we create a d_detail
+        }
+
+        if(delay > maxn) {
+          GR_LOG_WARN(d_logger, boost::format("Trigger delay (%1% / %2% sec) outside of max range (%3% / %4% sec)") \
+                      % delay % delayf % maxn % (maxn/d_samp_rate));
+          delay = maxn - d_initial_delay;
+          delayf = delay/d_samp_rate;
+        }
+
         d_trigger_delay = delay;
-        set_history(d_trigger_delay + 2);
+        d_main_gui->setTriggerDelay(delayf);
+        set_history(d_trigger_delay+1);
       }
 
       std::string tagkey = d_main_gui->getTriggerTagKey();

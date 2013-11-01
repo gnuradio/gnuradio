@@ -77,6 +77,7 @@ namespace gr {
       d_size += 1;         // trick the next line into updating
       set_nsamps(size);
       set_trigger_mode(TRIG_MODE_AUTO, TRIG_SLOPE_POS, 0, 0, 0);
+      d_initial_delay = d_trigger_delay;
     }
 
     time_sink_c_impl::~time_sink_c_impl()
@@ -210,8 +211,11 @@ namespace gr {
       d_triggered = false;
       d_trigger_count = 0;
 
-      if(d_trigger_delay > d_size)
-        throw std::runtime_error("qtgui::time_sink_c: trigger delay set outside of display range.\n");
+      if(d_trigger_delay >= d_size) {
+        GR_LOG_WARN(d_logger, boost::format("Trigger delay (%1%) outside of display range (%2%).") \
+                    % d_trigger_delay % d_size);
+        d_trigger_delay = d_size-1;
+      }
 
       d_main_gui->setTriggerMode(d_trigger_mode);
       d_main_gui->setTriggerSlope(d_trigger_slope);
@@ -221,7 +225,7 @@ namespace gr {
       d_main_gui->setTriggerTagKey(tag_key);
 
       set_history(d_trigger_delay + 2);
-      set_group_delay(d_trigger_delay);
+      declare_sample_delay(d_trigger_delay+1);
     }
 
     void
@@ -393,25 +397,27 @@ namespace gr {
         // If we have built the detail and buffers, we're stuck with
         // the max number of item; otherwise the buffer will be built
         // around this value so we just don't want to go over d_size.
-        // d_size-2 so we can see the event even at the edge.
+        int correction = 5; // give us a bit of room at the edge.
         block_detail_sptr d = detail();
         if(d) {
-          int max_possible = d->input(0)->max_possible_items_available()-d_initial_delay;
-          maxn = std::min(max_possible, d_size-2);
+          int max_possible = d->input(d_trigger_channel/2)->max_possible_items_available()/2 - d_initial_delay;
+          maxn = std::max(1, std::min(max_possible, d_size) - correction);
         }
         else {
-          maxn = d_size-2;
+          maxn = d_size-correction;
           d_initial_delay = d_trigger_delay; // store this value before we create a d_detail
         }
 
         if(delay > maxn) {
-          GR_LOG_INFO(d_logger, boost::format("trigger delay (%1%) set outside of max possible range (%2%)") % delay % maxn);
-          delay = maxn;
+          GR_LOG_WARN(d_logger, boost::format("Trigger delay (%1% / %2% sec) outside of max range (%3% / %4% sec)") \
+                      % delay % delayf % maxn % (maxn/d_samp_rate));
+          delay = maxn - d_initial_delay;
+          delayf = delay/d_samp_rate;
         }
 
         d_trigger_delay = delay;
         d_main_gui->setTriggerDelay(delayf);
-        set_history(d_trigger_delay + 2);
+        set_history(d_trigger_delay+1);
       }
 
       std::string tagkey = d_main_gui->getTriggerTagKey();

@@ -64,6 +64,7 @@ namespace gr {
       pmt::pmt_t d_trigger_tag_key;
       bool d_triggered;
       int d_trigger_count;
+      int d_initial_delay; // used for limiting d_trigger_delay
 
       bool _test_trigger_slope(const float *in) const;
       void _gui_update_trigger();
