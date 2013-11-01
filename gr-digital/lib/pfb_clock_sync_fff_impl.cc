@@ -72,7 +72,7 @@ namespace gr {
       d_sps = floor(sps);
 
       // Set the damping factor for a critically damped system
-      d_damping = sqrtf(2.0f)/2.0f;
+      d_damping = 2*d_nfilters;
 
       // Set the bandwidth, which will then call update_gains()
       set_loop_bandwidth(loop_bw);
@@ -431,8 +431,11 @@ namespace gr {
 
 	// Run the control loop to update the current phase (k) and
 	// tracking rate estimates based on the error value
-	d_rate_f = d_rate_f + d_beta*d_error;
-	d_k = d_k + d_alpha*d_error;
+        // Interpolating here to update rates for ever sps.
+        for(int s = 0; s < d_sps; s++) {
+          d_rate_f = d_rate_f + d_beta*d_error;
+          d_k = d_k + d_rate_f + d_alpha*d_error;
+        }
 
 	// Keep our rate within a good range
 	d_rate_f = gr::branchless_clip(d_rate_f, d_max_dev);

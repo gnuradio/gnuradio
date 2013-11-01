@@ -75,9 +75,7 @@ namespace gr {
       d_sps = floor(sps);
 
       // Set the damping factor for a critically damped system
-      // FIXME: explain why this is happening. Doesn't look right, but
-      // the loop converges so much faster this way.
-      d_damping = 15;//sqrtf(2.0f)/2.0f;
+      d_damping = 2*d_nfilters;
 
       // Set the bandwidth, which will then call update_gains()
       set_loop_bandwidth(loop_bw);

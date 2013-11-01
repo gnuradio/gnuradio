@@ -54,6 +54,7 @@ namespace gr {
        *                preamble).
        * \param filter  Baseband matched filter (e.g., RRC)
        * \param sps     Samples per symbol
+       * \param nfilts  Number of filters in the internal PFB
        */
       static sptr make(const std::vector<gr_complex> &symbols,
                        const std::vector<float> &filter,
