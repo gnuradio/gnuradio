@@ -33,12 +33,13 @@ namespace gr {
     {
      private:
       size_t d_itemsize;
+      unsigned int d_tag_preserve_head_pos;
 
      protected:
-      int calculate_output_stream_length(const std::vector<int> &ninput_items);
+      int calculate_output_stream_length(const gr_vector_int &ninput_items);
 
      public:
-      tagged_stream_mux_impl(size_t itemsize, const std::string &lengthtagname);
+      tagged_stream_mux_impl(size_t itemsize, const std::string &lengthtagname, unsigned int d_tag_preserve_head_pos);
       ~tagged_stream_mux_impl();
 
       int work(int noutput_items,

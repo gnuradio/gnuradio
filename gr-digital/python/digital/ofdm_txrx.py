@@ -194,7 +194,11 @@ class ofdm_tx(gr.hier_block2):
             scramble_header=scramble_bits
         )
         header_gen = digital.packet_headergenerator_bb(formatter_object.base(), self.packet_length_tag_key)
-        header_payload_mux = blocks.tagged_stream_mux(gr.sizeof_gr_complex*1, self.packet_length_tag_key)
+        header_payload_mux = blocks.tagged_stream_mux(
+                itemsize=gr.sizeof_gr_complex*1,
+                lengthtagname=self.packet_length_tag_key,
+                tag_preserve_head_pos=1 # Head tags on the payload stream stay on the head
+        )
         self.connect(
                 self,
                 crc,
@@ -212,17 +216,18 @@ class ofdm_tx(gr.hier_block2):
             self.scramble_seed,
             7,
             0, # Don't reset after fixed length (let the reset tag do that)
-            bits_per_byte=bps_payload,
+            bits_per_byte=8, # This is before unpacking
             reset_tag_key=self.packet_length_tag_key
+        )
+        payload_unpack = blocks.repack_bits_bb(
+            8, # Unpack 8 bits per byte
+            bps_payload,
+            self.packet_length_tag_key
         )
         self.connect(
             crc,
             payload_scrambler,
-            blocks.repack_bits_bb(
-                8, # Unpack 8 bits per byte
-                bps_payload,
-                self.packet_length_tag_key
-            ),
+            payload_unpack,
             payload_mod,
             (header_payload_mux, 1)
         )
@@ -418,10 +423,10 @@ class ofdm_rx(gr.hier_block2):
             self.scramble_seed,
             7,
             0, # Don't reset after fixed length
-            bits_per_byte=bps_payload,
+            bits_per_byte=8, # This is after packing
             reset_tag_key=self.packet_length_tag_key
         )
-        repack = blocks.repack_bits_bb(bps_payload, 8, self.packet_length_tag_key, True)
+        payload_pack = blocks.repack_bits_bb(bps_payload, 8, self.packet_length_tag_key, True)
         self.crc = digital.crc32_bb(True, self.packet_length_tag_key)
         self.connect(
                 (hpd, 1),
@@ -429,7 +434,7 @@ class ofdm_rx(gr.hier_block2):
                 payload_eq,
                 payload_serializer,
                 payload_demod,
-                repack,
+                payload_pack,
                 self.payload_descrambler,
                 self.crc,
                 self
@@ -440,7 +445,7 @@ class ofdm_rx(gr.hier_block2):
             self.connect(payload_eq,         blocks.file_sink(gr.sizeof_gr_complex*fft_len, 'post-payload-eq.dat'))
             self.connect(payload_serializer, blocks.file_sink(gr.sizeof_gr_complex,         'post-payload-serializer.dat'))
             self.connect(payload_demod,      blocks.file_sink(1,                            'post-payload-demod.dat'))
-            self.connect(repack,             blocks.file_sink(1,                            'post-payload-repack.dat'))
+            self.connect(payload_pack,       blocks.file_sink(1,                            'post-payload-pack.dat'))
             self.connect(crc,                blocks.file_sink(1,                            'post-payload-crc.dat'))
 
 
