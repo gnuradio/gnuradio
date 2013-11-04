@@ -48,7 +48,6 @@ namespace gr {
       float gain_mu() const { return d_gain_mu;}
       float gain_omega() const { return d_gain_omega;}
 
-      void set_verbose (bool verbose) { d_verbose = verbose; }
       void set_gain_mu (float gain_mu) { d_gain_mu = gain_mu; }
       void set_gain_omega (float gain_omega) { d_gain_omega = gain_omega; }
       void set_mu (float mu) { d_mu = mu; }
@@ -72,7 +71,6 @@ namespace gr {
       float d_last_sample;
       filter::mmse_fir_interpolator_ff *d_interp;
 
-      bool d_verbose;
     };
 
   } /* namespace digital */
