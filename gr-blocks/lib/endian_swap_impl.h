@@ -31,7 +31,6 @@ namespace gr {
     class endian_swap_impl : public endian_swap
     {
     private:
-      size_t item_size_bytes;
 
     public:
       endian_swap_impl(size_t item_size_bytes);
