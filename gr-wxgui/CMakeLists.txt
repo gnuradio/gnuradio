@@ -62,10 +62,31 @@ GR_SET_GLOBAL(GR_WXGUI_INCLUDE_DIRS
 # Setup CPack components
 ########################################################################
 include(GrPackage)
-CPACK_COMPONENT("wxgui"
+CPACK_COMPONENT("wxgui_runtime"
     DISPLAY_NAME "WxGUI"
     DESCRIPTION  "Wx GUI plotter widgets and grc wrappers"
     DEPENDS      "runtime_python"
+)
+
+CPACK_COMPONENT("wxgui_devel"
+    GROUP        "WxGUI"
+    DISPLAY_NAME "Development"
+    DESCRIPTION  "C++ headers, package config, import libraries"
+    DEPENDS      "runtime_devel"
+)
+
+CPACK_COMPONENT("wxgui_python"
+    GROUP        "WxGUI"
+    DISPLAY_NAME "Python"
+    DESCRIPTION  "Python modules for runtime; GRC xml files"
+    DEPENDS      "runtime_python;wxgui_runtime"
+)
+
+CPACK_COMPONENT("wxgui_swig"
+    GROUP        "WxGUI"
+    DISPLAY_NAME "SWIG"
+    DESCRIPTION  "SWIG development .i files"
+    DEPENDS      "runtime_swig;wxgui_python;wxgui_devel"
 )
 
 ########################################################################
