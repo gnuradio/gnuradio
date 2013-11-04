@@ -292,7 +292,7 @@ RELOAD_BLOCKS = Action(
 )
 FIND_BLOCKS = Action(
     label='Find Blocks',
-    tooltip='Search for a block by bame or key',
+    tooltip='Search for a block by name (and key)',
     stock_id=gtk.STOCK_FIND,
     keypresses=(gtk.keysyms.f, gtk.gdk.CONTROL_MASK,
                 gtk.keysyms.slash, NO_MODS_MASK),
