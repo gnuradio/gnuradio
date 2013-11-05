@@ -27,6 +27,7 @@
 #include <vector>
 #include <cmath>
 #include <gnuradio/gr_complex.h>
+#include <gnuradio/fft/window.h>
 
 namespace gr {
   namespace filter {
@@ -38,7 +39,9 @@ namespace gr {
     
     class FILTER_API firdes {
     public:
-            
+
+      // WARNING: deprecated, now located in gr::fft::window.
+      // We will be removing this in 3.8.
       enum win_type {
 	WIN_NONE = -1,           //!< don't use a window
 	WIN_HAMMING = 0,         //!< Hamming window; max attenuation 53 dB
@@ -49,8 +52,10 @@ namespace gr {
 	WIN_BLACKMAN_hARRIS = 5, //!< Blackman-harris window
 	WIN_BLACKMAN_HARRIS = 5, //!< alias to WIN_BLACKMAN_hARRIS for capitalization consistency
         WIN_BARTLETT = 6,        //!< Barlett (triangular) window
+        WIN_FLATTOP = 7,         //!< flat top window; useful in FFTs
       };
 
+      static std::vector<float> window(win_type type, int ntaps, double beta);
 
       // ... class methods ...
       
@@ -352,9 +357,6 @@ namespace gr {
 		 double spb,
 		 double bt,     // Bandwidth to bitrate ratio
 		 int ntaps);
-      
-      // window functions ...
-      static std::vector<float> window (win_type type, int ntaps, double beta);
       
     private:
       static double bessi0(double x);
