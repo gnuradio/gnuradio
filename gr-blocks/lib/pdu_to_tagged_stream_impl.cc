@@ -60,7 +60,7 @@ namespace gr {
       if (d_remain.size() > 0) {
 	nout = std::min((size_t)d_remain.size()/d_itemsize, (size_t)noutput_items);
 	memcpy(out, &d_remain[0], nout*d_itemsize);
-	d_remain.erase(d_remain.begin(), d_remain.begin()+nout);
+	d_remain.erase(d_remain.begin(), d_remain.begin()+nout*d_itemsize);
 	noutput_items -= nout;
 	out += nout*d_itemsize;
       }
