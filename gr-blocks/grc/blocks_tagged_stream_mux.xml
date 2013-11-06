@@ -2,7 +2,7 @@
   <name>Tagged Stream Mux</name>
   <key>blocks_tagged_stream_mux</key>
   <import>from gnuradio import blocks</import>
-  <make>blocks.tagged_stream_mux($type.size*$vlen, $lengthtagname)</make>
+  <make>blocks.tagged_stream_mux($type.size*$vlen, $lengthtagname, $tag_preserve_head_pos)</make>
 	<param>
 		<name>IO Type</name>
 		<key>type</key>
@@ -48,6 +48,13 @@
     <key>vlen</key>
     <value>1</value>
     <type>int</type>
+  </param>
+  <param>
+    <name>Tags: Preserve head position on input</name>
+    <key>tag_preserve_head_pos</key>
+    <value>0</value>
+    <type>int</type>
+    <hide>part</hide>
   </param>
   <sink>
     <name>in</name>

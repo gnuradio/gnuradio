@@ -31,17 +31,18 @@ namespace gr {
   namespace blocks {
 
     tagged_stream_mux::sptr
-    tagged_stream_mux::make(size_t itemsize, const std::string &lengthtagname)
+    tagged_stream_mux::make(size_t itemsize, const std::string &lengthtagname, unsigned int tag_preserve_head_pos)
     {
-      return gnuradio::get_initial_sptr (new tagged_stream_mux_impl(itemsize, lengthtagname));
+      return gnuradio::get_initial_sptr (new tagged_stream_mux_impl(itemsize, lengthtagname, tag_preserve_head_pos));
     }
 
-    tagged_stream_mux_impl::tagged_stream_mux_impl(size_t itemsize, const std::string &lengthtagname)
+    tagged_stream_mux_impl::tagged_stream_mux_impl(size_t itemsize, const std::string &lengthtagname, unsigned int tag_preserve_head_pos)
       : tagged_stream_block("tagged_stream_mux",
                  io_signature::make(1, -1, itemsize),
                  io_signature::make(1,  1, itemsize),
 		 lengthtagname),
-        d_itemsize(itemsize)
+        d_itemsize(itemsize),
+	d_tag_preserve_head_pos(tag_preserve_head_pos)
     {
       set_tag_propagation_policy(TPP_DONT);
     }
@@ -77,7 +78,10 @@ namespace gr {
 	std::vector<tag_t> tags;
 	get_tags_in_range(tags, i, nitems_read(i), nitems_read(i)+ninput_items[i]);
 	for (unsigned int j = 0; j < tags.size(); j++) {
-	  const uint64_t offset = tags[j].offset - nitems_read(i) + nitems_written(0) + n_produced;
+	  uint64_t offset = tags[j].offset - nitems_read(i) + nitems_written(0) + n_produced;
+	  if (i == d_tag_preserve_head_pos && tags[j].offset == nitems_read(i)) {
+	    offset -= n_produced;
+	  }
 	  add_item_tag(0, offset, tags[j].key, tags[j].value);
 	}
 	memcpy((void *) out, (const void *) in, ninput_items[i] * d_itemsize);

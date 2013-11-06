@@ -104,6 +104,40 @@ class qa_tagged_stream_mux (gr_unittest.TestCase):
         ]
         self.assertEqual(tags, tags_expected)
 
+    def test_preserve_tag_head_pos(self):
+        """ Test the 'preserve head position' function.
+        This will add a 'special' tag to item 0 on stream 1.
+        It should be on item 0 of the output stream. """
+        special_tag = gr.tag_t()
+        special_tag.key = pmt.string_to_symbol('spam')
+        special_tag.offset = 0
+        special_tag.value = pmt.to_pmt('eggs')
+        len_tag_key = "length"
+        packet_len_1 = 5
+        packet_len_2 = 3
+        mux = blocks.tagged_stream_mux(gr.sizeof_float, len_tag_key, 1)
+        sink = blocks.vector_sink_f()
+        self.tb.connect(
+            blocks.vector_source_f(range(packet_len_1)),
+            blocks.stream_to_tagged_stream(gr.sizeof_float, 1, packet_len_1, len_tag_key),
+            (mux, 0)
+        )
+        self.tb.connect(
+            blocks.vector_source_f(range(packet_len_2), False, 1, (special_tag,)),
+            blocks.stream_to_tagged_stream(gr.sizeof_float, 1, packet_len_2, len_tag_key),
+            (mux, 1)
+        )
+        self.tb.connect(mux, sink)
+        self.tb.run()
+        self.assertEqual(sink.data(), tuple(range(packet_len_1) + range(packet_len_2)))
+        tags = [gr.tag_to_python(x) for x in sink.tags()]
+        tags = sorted([(x.offset, x.key, x.value) for x in tags])
+        tags_expected = [
+                (0, 'length', packet_len_1 + packet_len_2),
+                (0, 'spam', 'eggs'),
+        ]
+        self.assertEqual(tags, tags_expected)
+
 
 if __name__ == '__main__':
     gr_unittest.run(qa_tagged_stream_mux, "qa_tagged_stream_mux.xml")

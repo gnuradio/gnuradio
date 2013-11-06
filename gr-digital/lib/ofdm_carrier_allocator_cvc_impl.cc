@@ -150,7 +150,7 @@ namespace gr {
       }
 
       // Copy data symbols
-      long n_ofdm_symbols = 0;
+      long n_ofdm_symbols = 0; // Number of output items
       int curr_set = 0;
       int symbols_to_allocate = d_occupied_carriers[0].size();
       int symbols_allocated = 0;
@@ -162,9 +162,12 @@ namespace gr {
 	      nitems_read(0)+std::min(i+symbols_to_allocate, (int) ninput_items[0])
 	  );
 	  for (unsigned t = 0; t < tags.size(); t++) {
-	    add_item_tag(0, nitems_written(0)+n_ofdm_symbols,
+	    add_item_tag(
+		0,
+		nitems_written(0) + n_ofdm_symbols + (n_ofdm_symbols == 0 ? 0 : d_sync_words.size()),
 		tags[t].key,
-		tags[t].value);
+		tags[t].value
+	    );
 	  }
 	  n_ofdm_symbols++;
 	}
