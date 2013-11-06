@@ -40,6 +40,7 @@
 #include <qa_math.h>
 #include <qa_vmcircbuf.h>
 #include <qa_sincos.h>
+#include <qa_fast_atan2f.h>
 
 CppUnit::TestSuite *
 qa_runtime::suite()
@@ -56,6 +57,7 @@ qa_runtime::suite()
   s->addTest(qa_math::suite());
   s->addTest(qa_vmcircbuf::suite());
   s->addTest(qa_sincos::suite());
+  s->addTest(qa_fast_atan2f::suite());
 
   return s;
 }
