@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2012 Free Software Foundation, Inc.
+ * Copyright 2013 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -20,38 +20,32 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#define FFT_API
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif
 
-%include "gnuradio.i"
+#include <qa_fast_atan2f.h>
+#include <gnuradio/math.h>
+#include <cppunit/TestAssert.h>
+#include <cmath>
 
-//load generated python docstrings
-%include "fft_swig_doc.i"
-
-%{
-#include "gnuradio/fft/fft_vcc.h"
-#include "gnuradio/fft/fft_vfc.h"
-#include "gnuradio/fft/goertzel_fc.h"
-#include "gnuradio/fft/window.h"
-%}
-
-%include "gnuradio/fft/fft_vcc.h"
-%include "gnuradio/fft/fft_vfc.h"
-%include "gnuradio/fft/goertzel_fc.h"
-%include "gnuradio/fft/window.h"
-
-GR_SWIG_BLOCK_MAGIC2(fft, fft_vcc);
-GR_SWIG_BLOCK_MAGIC2(fft, fft_vfc);
-GR_SWIG_BLOCK_MAGIC2(fft, goertzel_fc);
-
-#ifdef GR_CTRLPORT
-
-%{
-#include "gnuradio/fft/ctrlport_probe_psd.h"
-%}
-
-%include "gnuradio/fft/ctrlport_probe_psd.h"
-
-GR_SWIG_BLOCK_MAGIC2(fft, ctrlport_probe_psd);
-
-#endif /* GR_CTRLPORT */
+void
+qa_fast_atan2f::t1()
+{
+  static const unsigned int N = 100;
+  float c_atan2;
+  float gr_atan2f;
+  
+  for(float i = -N/2; i < N/2; i++) {
+    for(float j =-N/2; i < N/2; i++) {
+      float x = i/10.0;
+      float y = j/10.0;
+      c_atan2 = atan2(x, y);
+      
+      gr_atan2f = gr::fast_atan2f(x, y);
+      
+      CPPUNIT_ASSERT_DOUBLES_EQUAL(c_atan2, gr_atan2f, 0.0001);
+    }
+  }
+}
 

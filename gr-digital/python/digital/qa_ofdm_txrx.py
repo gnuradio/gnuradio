@@ -23,7 +23,11 @@
 import random
 import numpy
 
-from gnuradio import gr, gr_unittest, digital, blocks, channels
+import pmt
+from gnuradio import gr, gr_unittest
+from gnuradio import digital
+from gnuradio import blocks
+from gnuradio import channels
 from gnuradio.digital.ofdm_txrx import ofdm_tx, ofdm_rx
 from gnuradio.digital.utils import tagged_streams
 
@@ -31,10 +35,10 @@ from gnuradio.digital.utils import tagged_streams
 LOG_DEBUG_INFO=False
 
 class ofdm_tx_fg (gr.top_block):
-    def __init__(self, data, len_tag_key, scramble_bits=False):
+    def __init__(self, data, len_tag_key, scramble_bits=False, additional_tags=[]):
         gr.top_block.__init__(self, "ofdm_tx")
         tx_data, tags = tagged_streams.packets_to_vectors((data,), len_tag_key)
-        src = blocks.vector_source_b(data, False, 1, tags)
+        src = blocks.vector_source_b(data, False, 1, tags + additional_tags)
         self.tx = ofdm_tx(packet_length_tag_key=len_tag_key, debug_log=LOG_DEBUG_INFO, scramble_bits=scramble_bits)
         self.sink = blocks.vector_sink_c()
         self.connect(src, self.tx, self.sink)
@@ -69,16 +73,26 @@ class test_ofdm_txrx (gr_unittest.TestCase):
 
     def test_001_tx (self):
         """ Just make sure the Tx works in general """
+        # This tag gets put onto the first item of the transmit data,
+        # it should be transmitted first, too
+        timing_tag = gr.tag_t()
+        timing_tag.offset = 0
+        timing_tag.key = pmt.string_to_symbol('tx_timing')
+        timing_tag.value = pmt.to_pmt('now')
         len_tag_key = 'frame_len'
         n_bytes = 52
         n_samples_expected = (numpy.ceil(1.0 * (n_bytes + 4) / 6) + 3) * 80
         test_data = [random.randint(0, 255) for x in range(n_bytes)]
-        tx_data, tags = tagged_streams.packets_to_vectors((test_data,), len_tag_key)
-        src = blocks.vector_source_b(test_data, False, 1, tags)
-        tx = ofdm_tx(packet_length_tag_key=len_tag_key)
-        tx_fg = ofdm_tx_fg(test_data, len_tag_key)
+        tx_fg = ofdm_tx_fg(test_data, len_tag_key, additional_tags=[timing_tag,])
         tx_fg.run()
         self.assertEqual(len(tx_fg.get_tx_samples()), n_samples_expected)
+        tags_rx = [gr.tag_to_python(x) for x in tx_fg.sink.tags()]
+        tags_rx = sorted([(x.offset, x.key, x.value) for x in tags_rx])
+        tags_expected = [
+                (0, 'frame_len', n_samples_expected),
+                (0, 'tx_timing', 'now'),
+        ]
+        self.assertEqual(tags_rx, tags_expected)
 
     def test_002_rx_only_noise(self):
         """ Run the RX with only noise, check it doesn't crash
