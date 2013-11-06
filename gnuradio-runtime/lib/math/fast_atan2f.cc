@@ -128,13 +128,13 @@ namespace gr {
     float alpha, angle, base_angle;
     int index;
 
-    /* don't divide by zero! */		// FIXME could get hosed with -0.0
-    if((y == 0.0) && (x == 0.0))
-      return 0.0;
-
     /* normalize to +/- 45 degree range */
     y_abs = fabsf(y);
     x_abs = fabsf(x);
+    /* don't divide by zero! */
+    if((y_abs < 1.5E-5) && (x_abs < 1.5E-5))
+      return 0.0;
+
     //z = (y_abs < x_abs ? y_abs / x_abs : x_abs / y_abs);
     if(y_abs < x_abs)
       z = y_abs / x_abs;
