@@ -255,6 +255,12 @@ TimeDomainDisplayPlot::plotNewData(const std::vector<double*> dataPoints,
         std::vector<gr::tag_t>::const_iterator t;
         for(t = tag->begin(); t != tag->end(); t++) {
           uint64_t offset = (*t).offset;
+
+          // Ignore tag if its offset is outside our plottable vector.
+          if(offset >= (uint64_t)d_numPoints) {
+            continue;
+          }
+
           double sample_offset = double(offset)/d_sample_rate;
 
           std::stringstream s;
@@ -265,8 +271,20 @@ TimeDomainDisplayPlot::plotNewData(const std::vector<double*> dataPoints,
           // real and imaginary parts and put the tag on that one.
           int which = i;
           if(cmplx) {
-            if(fabs(d_ydata[i][offset]) < fabs(d_ydata[i+1][offset]))
-              which = i+1;
+            bool show0 = d_plot_curve[i]->isVisible();
+            bool show1 = d_plot_curve[i+1]->isVisible();
+
+            // If we are showing both streams, select the inptu stream
+            // with the larger value
+            if(show0 && show1) {
+              if(fabs(d_ydata[i][offset]) < fabs(d_ydata[i+1][offset]))
+                which = i+1;
+            }
+            else {
+              // If show0, we keep which = i; otherwise, use i+1.
+              if(show1)
+                which = i+1;
+            }
           }
 
           double yval = d_ydata[which][offset];
