@@ -133,13 +133,9 @@ namespace gr {
       gr_complex nco_out;
 
       std::vector<tag_t> tags;
-      std::vector<tag_t> adj_tags;
       get_tags_in_range(tags, 0, nitems_read(0),
                         nitems_read(0)+noutput_items,
                         pmt::intern("phase_est"));
-      get_tags_in_range(adj_tags, 0, nitems_read(0),
-                        nitems_read(0)+noutput_items,
-                        pmt::intern("phase_adj"));
 
       if(write_foptr) {
         for(int i = 0; i < noutput_items; i++) {

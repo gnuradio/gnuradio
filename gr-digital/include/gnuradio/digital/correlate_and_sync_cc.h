@@ -39,7 +39,24 @@ namespace gr {
      * Output 0: pass through complex samples
      * tag 'phase_est': estimate of phase offset
      * tag 'timing_est': estimate of symbol timing offset
+     * tag 'corr_est': the correlation value of the estimates
      *
+     * This block is designed to search for a preamble by correlation
+     * and uses the results of the correlation to get a time and phase
+     * offset estimate. These estimates are passed downstream as
+     * stream tags for use by follow-on synchronization blocks.
+     *
+     * The preamble is provided as a set of symbols along with a
+     * baseband matched filter which we use to create the filtered and
+     * upsampled symbol that we will receive over-the-air.
+     *
+     * The phase_est tag is used to adjust the phase estimation of any
+     * downstream synchronization blocks and is currently used by the
+     * gr::digital::costas_loop_cc block.
+     *
+     * The time_est tag is used to adjust the sampling timing
+     * estimation of any downstream synchronization blocks and is
+     * currently used by the gr::digital::pfb_clock_sync_ccf block.
      */
     class DIGITAL_API correlate_and_sync_cc : virtual public sync_block
     {
