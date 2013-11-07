@@ -58,16 +58,19 @@ class FlowGraph(Element):
             Actions.BLOCK_COPY,
             Actions.BLOCK_PASTE,
             Actions.ELEMENT_DELETE,
+            None,
             Actions.BLOCK_ROTATE_CCW,
             Actions.BLOCK_ROTATE_CW,
             Actions.BLOCK_ENABLE,
             Actions.BLOCK_DISABLE,
-            Actions.BLOCK_PARAM_MODIFY,
+            None,
             Actions.BLOCK_CREATE_HIER,
             Actions.OPEN_HIER,
             Actions.BUSSIFY_SOURCES,
             Actions.BUSSIFY_SINKS,
-        ]: self._context_menu.append(action.create_menu_item())
+            None,
+            Actions.BLOCK_PARAM_MODIFY
+        ]: self._context_menu.append(action.create_menu_item() if action else gtk.SeparatorMenuItem())
         self.get_context_menu = lambda: self._context_menu
 
     ###########################################################################
