@@ -154,8 +154,8 @@ class MainWindow(gtk.Window):
         """
         self.text_display.insert(line)
         vadj = self.reports_scrolled_window.get_vadjustment()
-        vadj.set_value(vadj.upper)
-        vadj.emit('changed')
+        vadj.value = vadj.upper - vadj.page_size
+        vadj.changed()
 
     ############################################################
     # Pages: create and close
