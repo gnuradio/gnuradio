@@ -68,6 +68,7 @@ class FlowGraph(Element):
             Actions.BUSSIFY_SOURCES,
             Actions.BUSSIFY_SINKS,
         ]: self._context_menu.append(action.create_menu_item())
+        self.get_context_menu = lambda: self._context_menu
 
     ###########################################################################
     # Access Drawing Area
