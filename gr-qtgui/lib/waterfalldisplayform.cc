@@ -29,59 +29,58 @@
 WaterfallDisplayForm::WaterfallDisplayForm(int nplots, QWidget* parent)
   : DisplayForm(nplots, parent)
 {
-  _intValidator = new QIntValidator(this);
-  _intValidator->setBottom(0);
+  d_int_validator = new QIntValidator(this);
+  d_int_validator->setBottom(0);
 
-  _layout = new QGridLayout(this);
-  _displayPlot = new WaterfallDisplayPlot(nplots, this);
-  _layout->addWidget(_displayPlot, 0, 0);
-  setLayout(_layout);
+  d_layout = new QGridLayout(this);
+  d_display_plot = new WaterfallDisplayPlot(nplots, this);
+  d_layout->addWidget(d_display_plot, 0, 0);
+  setLayout(d_layout);
 
-  _center_freq = 0;
-  _samp_rate = 0;
+  d_center_freq = 0;
+  d_samp_rate = 0;
 
-  _numRealDataPoints = 1024;
-  _fftsize = 1024;
-  _fftavg = 1.0;
+  d_fftsize = 1024;
+  d_fftavg = 1.0;
 
-  _min_val =  1000;
-  _max_val = -1000;
+  d_min_val =  1000;
+  d_max_val = -1000;
 
   // We don't use the normal menus that are part of the displayform.
   // Clear them out to get rid of their resources.
   for(int i = 0; i < nplots; i++) {
-    _lines_menu[i]->clear();
+    d_lines_menu[i]->clear();
   }
-  _line_title_act.clear();
-  _line_color_menu.clear();
-  _line_width_menu.clear();
-  _line_style_menu.clear();
-  _line_marker_menu.clear();
-  _marker_alpha_menu.clear();
+  d_line_title_act.clear();
+  d_line_color_menu.clear();
+  d_line_width_menu.clear();
+  d_line_style_menu.clear();
+  d_line_marker_menu.clear();
+  d_marker_alpha_menu.clear();
 
   // Now create our own menus
   for(int i = 0; i < nplots; i++) {
     ColorMapMenu *colormap = new ColorMapMenu(i, this);
     connect(colormap, SIGNAL(whichTrigger(int, const int, const QColor&, const QColor&)),
 	    this, SLOT(setColorMap(int, const int, const QColor&, const QColor&)));
-    _lines_menu[i]->addMenu(colormap);
+    d_lines_menu[i]->addMenu(colormap);
 
-    _marker_alpha_menu.push_back(new MarkerAlphaMenu(i, this));
-    connect(_marker_alpha_menu[i], SIGNAL(whichTrigger(int, int)),
+    d_marker_alpha_menu.push_back(new MarkerAlphaMenu(i, this));
+    connect(d_marker_alpha_menu[i], SIGNAL(whichTrigger(int, int)),
 	    this, SLOT(setAlpha(int, int)));
-    _lines_menu[i]->addMenu(_marker_alpha_menu[i]);
+    d_lines_menu[i]->addMenu(d_marker_alpha_menu[i]);
   }
 
   // One scales once when clicked, so no on/off toggling
-  _autoscale_act->setText(tr("Auto Scale"));
-  _autoscale_act->setCheckable(false);
+  d_autoscale_act->setText(tr("Auto Scale"));
+  d_autoscale_act->setCheckable(false);
 
   FFTSizeMenu *sizemenu = new FFTSizeMenu(this);
   FFTAverageMenu *avgmenu = new FFTAverageMenu(this);
   FFTWindowMenu *winmenu = new FFTWindowMenu(this);
-  _menu->addMenu(sizemenu);
-  _menu->addMenu(avgmenu);
-  _menu->addMenu(winmenu);
+  d_menu->addMenu(sizemenu);
+  d_menu->addMenu(avgmenu);
+  d_menu->addMenu(winmenu);
   connect(sizemenu, SIGNAL(whichTrigger(int)),
 	  this, SLOT(setFFTSize(const int)));
   connect(avgmenu, SIGNAL(whichTrigger(float)),
@@ -91,7 +90,7 @@ WaterfallDisplayForm::WaterfallDisplayForm(int nplots, QWidget* parent)
 
   Reset();
 
-  connect(_displayPlot, SIGNAL(plotPointSelected(const QPointF)),
+  connect(d_display_plot, SIGNAL(plotPointSelected(const QPointF)),
 	  this, SLOT(onPlotPointSelected(const QPointF)));
 }
 
@@ -100,13 +99,13 @@ WaterfallDisplayForm::~WaterfallDisplayForm()
   // Qt deletes children when parent is deleted
 
   // Don't worry about deleting Display Plots - they are deleted when parents are deleted
-  delete _intValidator;
+  delete d_int_validator;
 }
 
 WaterfallDisplayPlot*
 WaterfallDisplayForm::getPlot()
 {
-  return ((WaterfallDisplayPlot*)_displayPlot);
+  return ((WaterfallDisplayPlot*)d_display_plot);
 }
 
 void
@@ -117,15 +116,15 @@ WaterfallDisplayForm::newData(const QEvent *updateEvent)
   const uint64_t numDataPoints = event->getNumDataPoints();
   const gr::high_res_timer_type dataTimestamp = event->getDataTimestamp();
 
-  _min_val =  1000;
-  _max_val = -1000;
+  d_min_val =  1000;
+  d_max_val = -1000;
   for(size_t i=0; i < dataPoints.size(); i++) {
     double *min_val = std::min_element(&dataPoints[i][0], &dataPoints[i][numDataPoints-1]);
     double *max_val = std::max_element(&dataPoints[i][0], &dataPoints[i][numDataPoints-1]);
-    if(*min_val < _min_val)
-      _min_val = *min_val;
-    if(*max_val > _max_val)
-      _max_val = *max_val;
+    if(*min_val < d_min_val)
+      d_min_val = *min_val;
+    if(*max_val > d_max_val)
+      d_max_val = *max_val;
   }
 
   getPlot()->plotNewData(dataPoints, numDataPoints, d_update_time, dataTimestamp, 0);
@@ -142,19 +141,19 @@ WaterfallDisplayForm::customEvent( QEvent * e)
 int
 WaterfallDisplayForm::getFFTSize() const
 {
-  return _fftsize;
+  return d_fftsize;
 }
 
 float
 WaterfallDisplayForm::getFFTAverage() const
 {
-  return _fftavg;
+  return d_fftavg;
 }
 
 gr::filter::firdes::win_type
 WaterfallDisplayForm::getFFTWindowType() const
 {
-  return _fftwintype;
+  return d_fftwintype;
 }
 
 int
@@ -184,25 +183,25 @@ WaterfallDisplayForm::getMaxIntensity(int which)
 void
 WaterfallDisplayForm::setSampleRate(const QString &samprate)
 {
-  setFrequencyRange(_center_freq, samprate.toDouble());
+  setFrequencyRange(d_center_freq, samprate.toDouble());
 }
 
 void
 WaterfallDisplayForm::setFFTSize(const int newsize)
 {
-  _fftsize = newsize;
+  d_fftsize = newsize;
 }
 
 void
 WaterfallDisplayForm::setFFTAverage(const float newavg)
 {
-  _fftavg = newavg;
+  d_fftavg = newavg;
 }
 
 void
 WaterfallDisplayForm::setFFTWindowType(const gr::filter::firdes::win_type newwin)
 {
-  _fftwintype = newwin;
+  d_fftwintype = newwin;
 }
 
 void
@@ -215,8 +214,8 @@ WaterfallDisplayForm::setFrequencyRange(const double centerfreq,
   double units = pow(10, (units10-fmod(units10, 3.0)));
   int iunit = static_cast<int>(units3);
 
-  _center_freq = centerfreq;
-  _samp_rate = bandwidth;
+  d_center_freq = centerfreq;
+  d_samp_rate = bandwidth;
 
   getPlot()->setFrequencyRange(centerfreq, bandwidth,
 			       units, strunits[iunit]);
@@ -252,8 +251,8 @@ WaterfallDisplayForm::setIntensityRange(const double minIntensity,
 void
 WaterfallDisplayForm::autoScale(bool en)
 {
-  double min_int = _min_val - 5;
-  double max_int = _max_val + 10;
+  double min_int = d_min_val - 5;
+  double max_int = d_max_val + 10;
 
   getPlot()->setIntensityRange(min_int, max_int);
   getPlot()->replot();

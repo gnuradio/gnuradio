@@ -60,7 +60,7 @@ private slots:
   void newData(const QEvent*);
 
 private:
-  QIntValidator* _intValidator;
+  QIntValidator* d_int_validator;
   int d_npoints;
 };
 

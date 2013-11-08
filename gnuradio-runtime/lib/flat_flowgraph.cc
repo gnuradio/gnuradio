@@ -199,7 +199,8 @@ namespace gr {
       if(FLAT_FLOWGRAPH_DEBUG)
         std::cout << "Setting input " << dst_port << " from edge " << (*e) << std::endl;
 
-      detail->set_input(dst_port, buffer_add_reader(src_buffer, grblock->history()-1, grblock));
+      detail->set_input(dst_port, buffer_add_reader(src_buffer, grblock->history()-1, grblock,
+                                                    grblock->sample_delay(src_port)));
     }
   }
 

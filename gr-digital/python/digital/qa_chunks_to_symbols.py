@@ -20,6 +20,7 @@
 # Boston, MA 02110-1301, USA.
 #
 
+import pmt
 from gnuradio import gr, gr_unittest, digital, blocks
 
 class test_chunks_to_symbols(gr_unittest.TestCase):
@@ -128,6 +129,58 @@ class test_chunks_to_symbols(gr_unittest.TestCase):
         op = digital.chunks_to_symbols_sf(const)
 
         dst = blocks.vector_sink_f()
+        self.tb.connect(src, op)
+        self.tb.connect(op, dst)
+        self.tb.run()
+
+        actual_result = dst.data()
+        self.assertEqual(expected_result, actual_result)
+
+    def test_sf_tag(self):
+        constA = [-3.0, -1.0, 1.0, 3]
+        constB = [12.0, -12.0, 6.0, -6]
+        src_data = (0, 1, 2, 3, 3, 2, 1, 0)
+        expected_result = (-3, -1, 1, 3,
+                            -6, 6, -12, 12)
+        first_tag = gr.tag_t()
+        first_tag.key = pmt.intern("set_symbol_table")
+        first_tag.value = pmt.init_f32vector(len(constA), constA)
+        first_tag.offset = 0
+        second_tag = gr.tag_t()
+        second_tag.key = pmt.intern("set_symbol_table")
+        second_tag.value = pmt.init_f32vector(len(constB), constB)
+        second_tag.offset = 4
+
+        src = blocks.vector_source_s(src_data, False, 1, [first_tag, second_tag])
+        op = digital.chunks_to_symbols_sf(constB)
+
+        dst = blocks.vector_sink_f()
+        self.tb.connect(src, op)
+        self.tb.connect(op, dst)
+        self.tb.run()
+
+        actual_result = dst.data()
+        self.assertEqual(expected_result, actual_result)
+
+    def test_sc_tag(self):
+        constA = [-3.0+1j, -1.0-1j, 1.0+1j, 3-1j]
+        constB = [12.0+1j, -12.0-1j, 6.0+1j, -6-1j]
+        src_data = (0, 1, 2, 3, 3, 2, 1, 0)
+        expected_result = (-3+1j, -1-1j, 1+1j, 3-1j,
+                            -6-1j, 6+1j, -12-1j, 12+1j)
+        first_tag = gr.tag_t()
+        first_tag.key = pmt.intern("set_symbol_table")
+        first_tag.value = pmt.init_c32vector(len(constA), constA)
+        first_tag.offset = 0
+        second_tag = gr.tag_t()
+        second_tag.key = pmt.intern("set_symbol_table")
+        second_tag.value = pmt.init_c32vector(len(constB), constB)
+        second_tag.offset = 4
+
+        src = blocks.vector_source_s(src_data, False, 1, [first_tag, second_tag])
+        op = digital.chunks_to_symbols_sc(constB)
+
+        dst = blocks.vector_sink_c()
         self.tb.connect(src, op)
         self.tb.connect(op, dst)
         self.tb.run()

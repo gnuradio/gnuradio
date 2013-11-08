@@ -53,6 +53,7 @@ install(FILES
   time_raster_sink_f.h
   time_sink_c.h
   time_sink_f.h
+  trigger_mode.h
   utils.h
   waterfalldisplayform.h
   WaterfallDisplayPlot.h

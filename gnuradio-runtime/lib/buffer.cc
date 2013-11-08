@@ -80,7 +80,7 @@ namespace gr {
 
 
   buffer::buffer(int nitems, size_t sizeof_item, block_sptr link) 
-    : d_base(0), d_bufsize(0), d_vmcircbuf(0),
+    : d_base(0), d_bufsize(0), d_max_reader_delay(0), d_vmcircbuf(0),
       d_sizeof_item(sizeof_item), d_link(link),
       d_write_index(0), d_abs_write_offset(0), d_done(false),
       d_last_min_items_read(0)
@@ -194,7 +194,7 @@ namespace gr {
   }
 
   buffer_reader_sptr
-  buffer_add_reader(buffer_sptr buf, int nzero_preload, block_sptr link)
+  buffer_add_reader(buffer_sptr buf, int nzero_preload, block_sptr link, int delay)
   {
     if(nzero_preload < 0)
       throw std::invalid_argument("buffer_add_reader: nzero_preload must be >= 0");
@@ -203,6 +203,7 @@ namespace gr {
                                            buf->index_sub(buf->d_write_index,
                                                           nzero_preload),
                                            link));
+    r->declare_sample_delay(delay);
     buf->d_readers.push_back(r.get ());
 
     return r;
@@ -261,7 +262,7 @@ namespace gr {
     // therefore lose little time this way.
     while(itr != d_item_tags.end()) {
       item_time = (*itr).offset;
-      if(item_time < max_time) {
+      if(item_time+d_max_reader_delay + bufsize() < max_time) {
         d_item_tags.erase(itr);
         itr = d_item_tags.begin();
       }
@@ -280,15 +281,32 @@ namespace gr {
 
   buffer_reader::buffer_reader(buffer_sptr buffer, unsigned int read_index,
                                block_sptr link)
-    : d_buffer(buffer), d_read_index(read_index), d_abs_read_offset(0), d_link(link)
+    : d_buffer(buffer), d_read_index(read_index), d_abs_read_offset(0), d_link(link),
+      d_attr_delay(0)
   {
     s_buffer_reader_count++;
+
+    buffer->d_max_reader_delay = 0;
   }
 
   buffer_reader::~buffer_reader()
   {
     d_buffer->drop_reader(this);
     s_buffer_reader_count--;
+  }
+
+  void
+  buffer_reader::declare_sample_delay(unsigned delay)
+  {
+    d_attr_delay = delay;
+    d_buffer->d_max_reader_delay = std::max(d_attr_delay,
+                                            d_buffer->d_max_reader_delay);
+  }
+
+  unsigned
+  buffer_reader::sample_delay() const
+  {
+    return d_attr_delay;
   }
 
   int
@@ -324,13 +342,17 @@ namespace gr {
 
     uint64_t item_time;
     while(itr != d_buffer->get_tags_end()) {
-      item_time = (*itr).offset;
+      item_time = (*itr).offset + d_attr_delay;
 
       if((item_time >= abs_start) && (item_time < abs_end)) {
 	std::vector<long>::iterator id_itr;
 	id_itr = std::find(itr->marked_deleted.begin(), itr->marked_deleted.end(), id);
-	if (id_itr == itr->marked_deleted.end()) { // If id is not in the vector of marked blocks
-	  v.push_back(*itr);
+
+        // If id is not in the vector of marked blocks
+	if(id_itr == itr->marked_deleted.end()) {
+          tag_t t = *itr;
+          t.offset += d_attr_delay;
+	  v.push_back(t);
 	  v.back().marked_deleted.clear();
 	}
       }

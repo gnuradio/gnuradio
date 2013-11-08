@@ -47,7 +47,7 @@ namespace gr {
 	fft::fft_real_rev       *d_invfft;          // inverse "plan"
 	int                      d_nthreads;        // number of FFTW threads to use
 	std::vector<float>       d_tail;	    // state carried between blocks for overlap-add
-	std::vector<float>       d_new_taps;
+	std::vector<float>       d_taps;            // stores time domain taps
 	gr_complex              *d_xformed_taps;    // Fourier xformed taps
 	
 	void compute_sizes(int ntaps);
@@ -82,6 +82,16 @@ namespace gr {
 	 * \brief Set number of threads to use.
 	 */
 	void set_nthreads(int n);
+
+	/*!
+	 * \brief Returns the taps.
+	 */
+	std::vector<float> taps() const;
+
+	/*!
+	 * \brief Returns the number of taps in the filter.
+	 */
+        unsigned int ntaps() const;
 	
 	/*!
 	 * \brief Get number of threads being used.
@@ -89,7 +99,7 @@ namespace gr {
 	int nthreads() const;
 	
 	/*!
-	 * \brief Perform the filter operation
+l	 * \brief Perform the filter operation
 	 *
 	 * \param nitems  The number of items to produce
 	 * \param input   The input vector to be filtered
@@ -114,7 +124,7 @@ namespace gr {
 	fft::fft_complex        *d_invfft;          // inverse "plan"
 	int                      d_nthreads;        // number of FFTW threads to use
 	std::vector<gr_complex>  d_tail;	    // state carried between blocks for overlap-add
-	std::vector<gr_complex>  d_new_taps;
+	std::vector<gr_complex>  d_taps;            // stores time domain taps
 	gr_complex              *d_xformed_taps;    // Fourier xformed taps
 	
 	void compute_sizes(int ntaps);
@@ -149,6 +159,16 @@ namespace gr {
 	 * \brief Set number of threads to use.
 	 */
 	void set_nthreads(int n);
+	
+	/*!
+	 * \brief Returns the taps.
+	 */
+	std::vector<gr_complex> taps() const;
+
+	/*!
+	 * \brief Returns the number of taps in the filter.
+	 */
+        unsigned int ntaps() const;
 	
 	/*!
 	 * \brief Get number of threads being used.

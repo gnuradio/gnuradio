@@ -103,9 +103,9 @@ signals:
 private:
   void _updateIntensityRangeDisplay();
 
-  double _startFrequency;
-  double _stopFrequency;
-  int    _xAxisMultiplier;
+  double d_start_frequency;
+  double d_stop_frequency;
+  int    d_xaxis_multiplier;
 
   std::vector<WaterfallData*> d_data;
 
@@ -115,9 +115,9 @@ private:
   std::vector<QwtPlotSpectrogram*> d_spectrogram;
 #endif
 
-  std::vector<int> _intensityColorMapType;
-  QColor _userDefinedLowIntensityColor;
-  QColor _userDefinedHighIntensityColor;
+  std::vector<int> d_intensity_color_map_type;
+  QColor d_user_defined_low_intensity_color;
+  QColor d_user_defined_high_intensity_color;
 };
 
 #endif /* WATERFALL_DISPLAY_PLOT_H */

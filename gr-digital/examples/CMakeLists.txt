@@ -80,6 +80,9 @@ install(
     demod/ber_simulation.grc
     demod/dpsk_loopback.grc   
     demod/gfsk_loopback.grc
+    demod/test_corr_and_sync.grc
+    demod/uhd_corr_and_sync_tx.grc
+    demod/uhd_corr_and_sync_rx.grc
     DESTINATION ${GR_PKG_DIGITAL_EXAMPLES_DIR}/demod
     COMPONENT "digital_python"
 )

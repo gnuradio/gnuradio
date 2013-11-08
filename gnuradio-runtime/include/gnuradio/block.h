@@ -82,8 +82,45 @@ namespace gr {
      * ensure that our input contains the appropriate "history" for the
      * filter. History should be equal to the number of filter taps.
      */
-    unsigned history() const { return d_history; }
-    void  set_history(unsigned history) { d_history = history; }
+    unsigned history() const;
+    void  set_history(unsigned history);
+
+    /*!
+     * Declares the block's delay in samples. Since the delay of
+     * blocks like filters is derived from the taps and not the block
+     * itself, we cannot automatically calculate this value and so
+     * leave it as a user-defined property. It defaults to 0 is not
+     * set.
+     *
+     * This does not actively set the delay; it just tells the
+     * scheduler what the delay is.
+     *
+     * This delay is mostly used to adjust the placement of the tags
+     * and is not currently used for any signal processing. When a tag
+     * is passed through a block with internal delay, its location
+     * should be moved based on the delay of the block. This interface
+     * allows us to tell the scheduler this value.
+     *
+     * \param which The buffer on which to set the delay.
+     * \param delay The sample delay of the data stream.
+     */
+    void declare_sample_delay(int which, unsigned delay);
+
+    /*!
+     * Convenience wrapper to gr::block::declare_delay(int which, unsigned delay)
+     * to set all ports to the same delay.
+     */
+    void declare_sample_delay(unsigned delay);
+
+    /*!
+     * Gets the delay of the block. Since the delay of blocks like
+     * filters is derived from the taps and not the block itself, we
+     * cannot automatically calculate this value and so leave it as a
+     * user-defined property. It defaults to 0 is not set.
+     *
+     * \param which Which port from which to get the sample delay.
+     */
+    unsigned sample_delay(int which) const;
 
     /*!
      * \brief Return true if this block has a fixed input to output rate.
@@ -524,6 +561,8 @@ namespace gr {
      */
     int set_thread_priority(int priority);
 
+    bool update_rate() const;
+    
     // ----------------------------------------------------------------------------
 
   private:
@@ -534,6 +573,7 @@ namespace gr {
     double                d_relative_rate;	// approx output_rate / input_rate
     block_detail_sptr     d_detail;		// implementation details
     unsigned              d_history;
+    unsigned              d_attr_delay;         // the block's sample delay
     bool                  d_fixed_rate;
     bool                  d_max_noutput_items_set;     // if d_max_noutput_items is valid
     int                   d_max_noutput_items;         // value of max_noutput_items for this block
@@ -542,6 +582,7 @@ namespace gr {
     std::vector<int>      d_affinity;              // thread affinity proc. mask
     int                   d_priority;              // thread priority level
     bool                  d_pc_rpc_set;
+    bool                  d_update_rate;           // should sched update rel rate?
 
   protected:
     block(void) {} // allows pure virtual interface sub-classes
@@ -657,6 +698,8 @@ namespace gr {
                            uint64_t abs_start,
                            uint64_t abs_end,
                            const pmt::pmt_t &key);
+
+    void enable_update_rate(bool en);
 
     std::vector<long> d_max_output_buffer;
     std::vector<long> d_min_output_buffer;

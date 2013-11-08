@@ -45,6 +45,12 @@ class TimeDisplayForm : public DisplayForm
   TimeDomainDisplayPlot* getPlot();
 
   int getNPoints() const;
+  gr::qtgui::trigger_mode getTriggerMode() const;
+  gr::qtgui::trigger_slope getTriggerSlope() const;
+  float getTriggerLevel() const;
+  float getTriggerDelay() const;
+  int getTriggerChannel() const;
+  std::string getTriggerTagKey() const;
 
 public slots:
   void customEvent(QEvent * e);
@@ -57,15 +63,28 @@ public slots:
   void autoScale(bool en);
   void setSemilogx(bool en);
   void setSemilogy(bool en);
+  void tagMenuSlot(bool en);
+  void setTagMenu(int which, bool en);
+
+  void updateTrigger(gr::qtgui::trigger_mode mode);
+  void setTriggerMode(gr::qtgui::trigger_mode mode);
+  void setTriggerSlope(gr::qtgui::trigger_slope slope);
+  void setTriggerLevel(QString s);
+  void setTriggerLevel(float level);
+  void setTriggerDelay(QString s);
+  void setTriggerDelay(float delay);
+  void setTriggerChannel(int chan);
+  void setTriggerTagKey(QString s);
+  void setTriggerTagKey(const std::string &s);
 
 private slots:
   void newData(const QEvent*);
 
 private:
-  QIntValidator* _intValidator;
+  QIntValidator* d_int_validator;
 
-  double _startFrequency;
-  double _stopFrequency;
+  double d_start_frequency;
+  double d_stop_frequency;
 
   int d_npoints;
 
@@ -73,9 +92,26 @@ private:
   bool d_semilogx;
   bool d_semilogy;
   
+  NPointsMenu *d_nptsmenu;
   QAction *d_stemmenu;
   QAction *d_semilogxmenu;
   QAction *d_semilogymenu;
+  std::vector<QAction*> d_tagsmenu;
+
+  QMenu *d_triggermenu;
+  TriggerModeMenu *d_tr_mode_menu;
+  TriggerSlopeMenu *d_tr_slope_menu;
+  PopupMenu *d_tr_level_act;
+  PopupMenu *d_tr_delay_act;
+  TriggerChannelMenu *d_tr_channel_menu;
+  PopupMenu *d_tr_tag_key_act;
+  
+  gr::qtgui::trigger_mode d_trig_mode;
+  gr::qtgui::trigger_slope d_trig_slope;
+  float d_trig_level;
+  float d_trig_delay;
+  int d_trig_channel;
+  std::string d_trig_tag_key;
 };
 
 #endif /* TIME_DISPLAY_FORM_H */

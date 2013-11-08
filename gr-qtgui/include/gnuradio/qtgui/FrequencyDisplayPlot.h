@@ -120,45 +120,45 @@ private:
   void _resetXAxisPoints();
   void _autoScale(double bottom, double top);
 
-  std::vector<double*> _dataPoints;
+  std::vector<double*> d_ydata;
 
-  QwtPlotCurve* _min_fft_plot_curve;
-  QwtPlotCurve* _max_fft_plot_curve;
-  QColor _min_fft_color;
-  bool _min_fft_visible;
-  QColor _max_fft_color;
-  bool _max_fft_visible;
-  QColor _marker_lower_intensity_color;
-  bool _marker_lower_intensity_visible;
-  QColor _marker_upper_intensity_color;
-  bool _marker_upper_intensity_visible;
-  QColor _marker_peak_amplitude_color;
-  QColor _marker_noise_floor_amplitude_color;
-  bool _marker_noise_floor_amplitude_visible;
-  QColor _marker_CF_color;
+  QwtPlotCurve* d_min_fft_plot_curve;
+  QwtPlotCurve* d_max_fft_plot_curve;
+  QColor d_min_fft_color;
+  bool d_min_fft_visible;
+  QColor d_max_fft_color;
+  bool d_max_fft_visible;
+  QColor d_marker_lower_intensity_color;
+  bool d_marker_lower_intensity_visible;
+  QColor d_marker_upper_intensity_color;
+  bool d_marker_upper_intensity_visible;
+  QColor d_marker_peak_amplitude_color;
+  QColor d_marker_noise_floor_amplitude_color;
+  bool d_marker_noise_floor_amplitude_visible;
+  QColor d_marker_cf_color;
 
-  double _startFrequency;
-  double _stopFrequency;
-  double _maxYAxis;
-  double _minYAxis;
+  double d_start_frequency;
+  double d_stop_frequency;
+  double d_ymax;
+  double d_ymin;
 
-  QwtPlotMarker* _lower_intensity_marker;
-  QwtPlotMarker* _upper_intensity_marker;
+  QwtPlotMarker* d_lower_intensity_marker;
+  QwtPlotMarker* d_upper_intensity_marker;
 
-  QwtPlotMarker *_markerPeakAmplitude;
-  QwtPlotMarker *_markerNoiseFloorAmplitude;
-  QwtPlotMarker *_markerCF;
+  QwtPlotMarker *d_marker_peak_amplitude;
+  QwtPlotMarker *d_marker_noise_floor_amplitude;
+  QwtPlotMarker *d_marker_cf;
 
-  double* _xAxisPoints;
-  int     _xAxisMultiplier;
+  double* d_xdata;
+  int     d_xdata_multiplier;
 
-  double* _minFFTPoints;
-  double* _maxFFTPoints;
+  double* d_min_fft_data;
+  double* d_max_fft_data;
 
-  double _peakFrequency;
-  double _peakAmplitude;
+  double d_peak_frequency;
+  double d_peak_amplitude;
 
-  double _noiseFloorAmplitude;
+  double d_noise_floor_amplitude;
 };
 
 #endif /* FREQUENCY_DISPLAY_PLOT_HPP */

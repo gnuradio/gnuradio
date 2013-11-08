@@ -35,11 +35,31 @@ class TextDisplay(gtk.TextView):
         text_buffer = gtk.TextBuffer()
         text_buffer.set_text(text)
         self.set_text = text_buffer.set_text
-        self.insert = lambda line: text_buffer.insert(text_buffer.get_end_iter(), line)
         gtk.TextView.__init__(self, text_buffer)
         self.set_editable(False)
         self.set_cursor_visible(False)
         self.set_wrap_mode(gtk.WRAP_WORD_CHAR)
+
+    def insert(self, line):
+        # make backspaces work
+        line = self._consume_backspaces(line)
+        # add the remaining text to buffer
+        self.get_buffer().insert(self.get_buffer().get_end_iter(), line)
+
+    def _consume_backspaces(self, line):
+        """removes text from the buffer if line starts with \b*"""
+        if not line: return
+        # for each \b delete one char from the buffer
+        back_count = 0
+        start_iter = self.get_buffer().get_end_iter()
+        while line[back_count] == '\b':
+            # stop at the beginning of a line
+            if not start_iter.starts_line(): start_iter.backward_char()
+            back_count += 1
+        # remove chars
+        self.get_buffer().delete(start_iter, self.get_buffer().get_end_iter())
+        # return remaining text
+        return line[back_count:]
 
 def MessageDialogHelper(type, buttons, title=None, markup=None):
     """

@@ -65,10 +65,10 @@ public slots:
 private:
   void _autoScale(double bottom, double top);
 
-  std::vector<double*> _realDataPoints;
-  std::vector<double*> _imagDataPoints;
+  std::vector<double*> d_real_data;
+  std::vector<double*> d_imag_data;
 
-  int64_t _penSize;
+  int64_t d_pen_size;
 };
 
 #endif /* CONSTELLATION_DISPLAY_PLOT_H */

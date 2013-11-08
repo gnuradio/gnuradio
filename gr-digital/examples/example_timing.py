@@ -49,7 +49,7 @@ class example_timing(gr.top_block):
         rrc_taps = filter.firdes.root_raised_cosine(
             sps, sps, 1.0, rolloff, ntaps)
 
-        gain = 2*scipy.pi/100.0
+        gain = bw
         nfilts = 32
         rrc_taps_rx = filter.firdes.root_raised_cosine(
             nfilts, sps*nfilts, 1.0, rolloff, ntaps*nfilts)
@@ -64,9 +64,13 @@ class example_timing(gr.top_block):
 
         if mode == 0:
             self.clk = digital.pfb_clock_sync_ccf(sps, gain, rrc_taps_rx,
-                                                  nfilts, nfilts//2, 3.5)
+                                                  nfilts, nfilts//2, 1)
             self.taps = self.clk.taps()
             self.dtaps = self.clk.diff_taps()
+
+            self.delay = int(scipy.ceil(((len(rrc_taps)-1)/2 + 
+                                         (len(self.taps[0])-1)/2)/float(sps))) + 1
+
 
             self.vsnk_err = blocks.vector_sink_f()
             self.vsnk_rat = blocks.vector_sink_f()
@@ -78,7 +82,7 @@ class example_timing(gr.top_block):
             
         else: # mode == 1
             mu = 0.5
-            gain_mu = 0.1
+            gain_mu = bw
             gain_omega = 0.25*gain_mu*gain_mu
             omega_rel_lim = 0.02
             self.clk = digital.clock_recovery_mm_cc(sps, gain_omega,
@@ -93,7 +97,7 @@ class example_timing(gr.top_block):
         self.vsnk_clk = blocks.vector_sink_c()
 
         self.connect(self.src, self.rrc, self.chn, self.off, self.clk, self.vsnk_clk)
-        self.connect(self.off, self.vsnk_src)
+        self.connect(self.src, self.vsnk_src)
 
 
 def main():
@@ -105,7 +109,7 @@ def main():
     parser.add_option("-r", "--rolloff", type="eng_float", default=0.35,
                       help="Set the rolloff factor [default=%default]")
     parser.add_option("-W", "--bandwidth", type="eng_float", default=2*scipy.pi/100.0,
-                      help="Set the loop bandwidth [default=%default]")
+                      help="Set the loop bandwidth (PFB) or gain (M&M) [default=%default]")
     parser.add_option("-n", "--ntaps", type="int", default=45,
                       help="Set the number of taps in the filters [default=%default]")
     parser.add_option("", "--noise", type="eng_float", default=0.0,
@@ -151,19 +155,25 @@ def main():
         s1.set_ylim([-2, 2])
 
         # Plot the symbols in time
+        delay = put.delay
+        m = len(data_clk.real)
         s2 = f1.add_subplot(2,2,2)
-        s2.plot(data_src.real, "bo-")
-        s2.plot(data_clk.real, "ro")
+        s2.plot(data_src.real, "bs", markersize=10, label="Input")
+        s2.plot(data_clk.real[delay:], "ro", label="Recovered")
         s2.set_title("Symbols")
         s2.set_xlabel("Samples")
         s2.set_ylabel("Real Part of Signals")
+        s2.legend()
 
         # Plot the clock recovery loop's error
         s3 = f1.add_subplot(2,2,3)
-        s3.plot(data_err)
+        s3.plot(data_err, label="Error")
+        s3.plot(data_rat, 'r', label="Update rate")
         s3.set_title("Clock Recovery Loop Error")
         s3.set_xlabel("Samples")
         s3.set_ylabel("Error")
+        s3.set_ylim([-0.5, 0.5])
+        s3.legend()
 
         # Plot the clock recovery loop's error
         s4 = f1.add_subplot(2,2,4)
@@ -185,10 +195,10 @@ def main():
         s32.set_title("FFT of Differential Filters")
 
         for i,d in enumerate(diff_taps):
-            D = 20.0*scipy.log10(abs(fftpack.fftshift(fftpack.fft(d, 10000))))
-            #D = 20.0*scipy.log10(abs(scipy.fft(d, 10000)))
+            D = 20.0*scipy.log10(1e-20+abs(fftpack.fftshift(fftpack.fft(d, 10000))))
             s31.plot(t[i::nfilts].real, d, "-o")
             s32.plot(D)
+        s32.set_ylim([-120, 10])
 
     # If testing the M&M clock recovery loop
     else:
@@ -211,11 +221,12 @@ def main():
 
         # Plot the symbols in time
         s2 = f1.add_subplot(2,2,2)
-        s2.plot(data_src.real, "o-")
-        s2.plot(data_clk.real, "ro")
+        s2.plot(data_src.real, "bs", markersize=10, label="Input")
+        s2.plot(data_clk.real, "ro", label="Recovered")
         s2.set_title("Symbols")
         s2.set_xlabel("Samples")
         s2.set_ylabel("Real Part of Signals")
+        s2.legend()
 
         # Plot the clock recovery loop's error
         s3 = f1.add_subplot(2,2,3)

@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2011,2012 Free Software Foundation, Inc.
+ * Copyright 2011-2013 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -49,18 +49,16 @@ namespace gr {
 				       int nconnections,
 				       QWidget *parent)
       : sync_block("time_sink_c",
-		      io_signature::make(nconnections, nconnections, sizeof(gr_complex)),
-		      io_signature::make(0, 0, 0)),
-	d_size(size), d_samp_rate(samp_rate), d_name(name),
+                   io_signature::make(nconnections, nconnections, sizeof(gr_complex)),
+                   io_signature::make(0, 0, 0)),
+	d_size(size), d_buffer_size(2*size), d_samp_rate(samp_rate), d_name(name),
 	d_nconnections(2*nconnections), d_parent(parent)
     {
       d_main_gui = NULL;
 
-      d_index = 0;
-
-      for(int i = 0; i < d_nconnections; i++) {
-	d_residbufs.push_back(fft::malloc_double(d_size));
-	memset(d_residbufs[i], 0, d_size*sizeof(double));
+      for(int n = 0; n < d_nconnections; n++) {
+	d_buffers.push_back(fft::malloc_double(d_buffer_size));
+	memset(d_buffers[n], 0, d_buffer_size*sizeof(double));
       }
 
       // Set alignment properties for VOLK
@@ -68,7 +66,15 @@ namespace gr {
 	volk_get_alignment() / sizeof(gr_complex);
       set_alignment(std::max(1,alignment_multiple));
 
+      d_tags = std::vector< std::vector<gr::tag_t> >(d_nconnections/2);
+
       initialize();
+
+      d_main_gui->setNPoints(d_size); // setup GUI box with size
+      set_trigger_mode(TRIG_MODE_FREE, TRIG_SLOPE_POS, 0, 0, 0);
+
+      set_history(2);          // so we can look ahead for the trigger slope
+      declare_sample_delay(1); // delay the tags for a history of 2
     }
 
     time_sink_c_impl::~time_sink_c_impl()
@@ -77,8 +83,8 @@ namespace gr {
         d_main_gui->close();
 
       // d_main_gui is a qwidget destroyed with its parent
-      for(int i = 0; i < d_nconnections; i++) {
-	fft::free(d_residbufs[i]);
+      for(int n = 0; n < d_nconnections; n++) {
+	fft::free(d_buffers[n]);
       }
     }
 
@@ -187,6 +193,41 @@ namespace gr {
     }
 
     void
+    time_sink_c_impl::set_trigger_mode(trigger_mode mode,
+                                       trigger_slope slope,
+                                       float level,
+                                       float delay, int channel,
+                                       const std::string &tag_key)
+    {
+      gr::thread::scoped_lock lock(d_mutex);
+
+      d_trigger_mode = mode;
+      d_trigger_slope = slope;
+      d_trigger_level = level;
+      d_trigger_delay = static_cast<int>(delay*d_samp_rate);
+      d_trigger_channel = channel;
+      d_trigger_tag_key = pmt::intern(tag_key);
+      d_triggered = false;
+      d_trigger_count = 0;
+
+      if((d_trigger_delay < 0) || (d_trigger_delay >= d_size)) {
+        GR_LOG_WARN(d_logger, boost::format("Trigger delay (%1%) outside of display range (0:%2%).") \
+                    % (d_trigger_delay/d_samp_rate) % ((d_size-1)/d_samp_rate));
+        d_trigger_delay = std::max(0, std::min(d_size-1, d_trigger_delay));
+        delay = d_trigger_delay/d_samp_rate;
+      }
+
+      d_main_gui->setTriggerMode(d_trigger_mode);
+      d_main_gui->setTriggerSlope(d_trigger_slope);
+      d_main_gui->setTriggerLevel(d_trigger_level);
+      d_main_gui->setTriggerDelay(delay);
+      d_main_gui->setTriggerChannel(d_trigger_channel);
+      d_main_gui->setTriggerTagKey(tag_key);
+
+      _reset();
+    }
+
+    void
     time_sink_c_impl::set_size(int width, int height)
     {
       d_main_gui->resize(QSize(width, height));
@@ -237,23 +278,31 @@ namespace gr {
     void
     time_sink_c_impl::set_nsamps(const int newsize)
     {
-      gr::thread::scoped_lock lock(d_mutex);
-
       if(newsize != d_size) {
-	// Resize residbuf and replace data
-	for(int i = 0; i < d_nconnections; i++) {
-	  fft::free(d_residbufs[i]);
-	  d_residbufs[i] = fft::malloc_double(newsize);
-
-	  memset(d_residbufs[i], 0, newsize*sizeof(double));
-	}
+        gr::thread::scoped_lock lock(d_mutex);
 
 	// Set new size and reset buffer index 
 	// (throws away any currently held data, but who cares?) 
 	d_size = newsize;
-	d_index = 0;
+        d_buffer_size = 2*d_size;
+
+	// Resize buffers and replace data
+	for(int n = 0; n < d_nconnections; n++) {
+	  fft::free(d_buffers[n]);
+	  d_buffers[n] = fft::malloc_double(d_buffer_size);
+	  memset(d_buffers[n], 0, d_buffer_size*sizeof(double));
+	}
+
+        // If delay was set beyond the new boundary, pull it back.
+        if(d_trigger_delay >= d_size) {
+          GR_LOG_WARN(d_logger, boost::format("Trigger delay (%1%) outside of display range (0:%2%). Moving to 50%% point.") \
+                      % (d_trigger_delay/d_samp_rate) % ((d_size-1)/d_samp_rate));
+          d_trigger_delay = d_size/2;
+          d_main_gui->setTriggerDelay(d_trigger_delay/d_samp_rate);
+        }
 
 	d_main_gui->setNPoints(d_size);
+        _reset();
       }
     }
 
@@ -263,13 +312,6 @@ namespace gr {
       gr::thread::scoped_lock lock(d_mutex);
       d_samp_rate = samp_rate;
       d_main_gui->setSampleRate(d_samp_rate);
-    }
-
-    void
-    time_sink_c_impl::npoints_resize()
-    {
-      int newsize = d_main_gui->getNPoints();
-      set_nsamps(newsize);
     }
 
     int
@@ -315,9 +357,186 @@ namespace gr {
     }
 
     void
+    time_sink_c_impl::enable_tags(int which, bool en)
+    {
+      if(which == -1) {
+        for(int n = 0; n < d_nconnections; n++) {
+          d_main_gui->setTagMenu(n, en);
+        }
+      }
+      else
+        d_main_gui->setTagMenu(which, en);
+    }
+
+    void
     time_sink_c_impl::reset()
     {
-      d_index = 0;
+      gr::thread::scoped_lock lock(d_mutex);
+      _reset();
+    }
+
+    void
+    time_sink_c_impl::_reset()
+    {
+      // Move the tail of the buffers to the front. This section
+      // represents data that might have to be plotted again if a
+      // trigger occurs and we have a trigger delay set.  The tail
+      // section is between (d_end-d_trigger_delay) and d_end.
+      int n;
+      if(d_trigger_delay) {
+        for(n = 0; n < d_nconnections; n++) {
+          memmove(d_buffers[n], &d_buffers[n][d_size-d_trigger_delay], d_trigger_delay*sizeof(double));
+        }
+
+        // Also move the offsets of any tags that occur in the tail
+        // section so they would be plotted again, too.
+        for(n = 0; n < d_nconnections/2; n++) {
+          std::vector<gr::tag_t> tmp_tags;
+          for(size_t t = 0; t < d_tags[n].size(); t++) {
+            if(d_tags[n][t].offset > (d_size - d_trigger_delay)) {
+              d_tags[n][t].offset = d_tags[n][t].offset - (d_size - d_trigger_delay);
+              tmp_tags.push_back(d_tags[n][t]);
+            }
+          }
+          d_tags[n] = tmp_tags;
+        }
+      }
+      // Otherwise, just clear the local list of tags.
+      else {
+        for(n = 0; n < d_nconnections/2; n++) {
+          d_tags[n].clear();
+        }
+      }
+
+      // Reset the start and end indices.
+      d_start = 0;
+      d_end = d_size;
+
+      // Reset the trigger. If in free running mode, ignore the
+      // trigger delay and always set trigger to true.
+      if(d_trigger_mode == TRIG_MODE_FREE) {
+        d_index = 0;
+        d_triggered = true;
+      }
+      else {
+        d_index = d_trigger_delay;
+        d_triggered = false;
+      }
+    }
+
+    void
+    time_sink_c_impl::_npoints_resize()
+    {
+      int newsize = d_main_gui->getNPoints();
+      set_nsamps(newsize);
+    }
+
+    void
+    time_sink_c_impl::_adjust_tags(int adj)
+    {
+      for(size_t n = 0; n < d_tags.size(); n++) {
+        for(size_t t = 0; t < d_tags[n].size(); t++) {
+          d_tags[n][t].offset += adj;
+        }
+      }
+    }
+
+    void
+    time_sink_c_impl::_gui_update_trigger()
+    {
+      d_trigger_mode = d_main_gui->getTriggerMode();
+      d_trigger_slope = d_main_gui->getTriggerSlope();
+      d_trigger_level = d_main_gui->getTriggerLevel();
+      d_trigger_channel = d_main_gui->getTriggerChannel();
+      d_trigger_count = 0;
+
+      float delayf = d_main_gui->getTriggerDelay();
+      int delay = static_cast<int>(delayf*d_samp_rate);
+
+      if(delay != d_trigger_delay) {
+        // We restrict the delay to be within the window of time being
+        // plotted.
+        if((delay < 0) || (delay >= d_size)) {
+          GR_LOG_WARN(d_logger, boost::format("Trigger delay (%1%) outside of display range (0:%2%).") \
+                      % (delay/d_samp_rate) % ((d_size-1)/d_samp_rate));
+          delay = std::max(0, std::min(d_size-1, delay));
+          delayf = delay/d_samp_rate;
+        }
+
+        d_trigger_delay = delay;
+        d_main_gui->setTriggerDelay(delayf);
+        _reset();
+      }
+
+      std::string tagkey = d_main_gui->getTriggerTagKey();
+      d_trigger_tag_key = pmt::intern(tagkey);
+    }
+
+    void
+    time_sink_c_impl::_test_trigger_tags(int nitems)
+    {
+      int trigger_index;
+
+      uint64_t nr = nitems_read(d_trigger_channel/2);
+      std::vector<gr::tag_t> tags;
+      get_tags_in_range(tags, d_trigger_channel/2,
+                        nr, nr + nitems,
+                        d_trigger_tag_key);
+      if(tags.size() > 0) {
+        d_triggered = true;
+        trigger_index = tags[0].offset - nr;
+        d_start = d_index + trigger_index - d_trigger_delay - 1;
+        d_end = d_start + d_size;
+        d_trigger_count = 0;
+        _adjust_tags(-d_start);
+      }
+    }
+
+    void
+    time_sink_c_impl::_test_trigger_norm(int nitems, gr_vector_const_void_star inputs)
+    {
+      int trigger_index;
+      const gr_complex *in = (const gr_complex*)inputs[d_trigger_channel/2];
+      for(trigger_index = 0; trigger_index < nitems; trigger_index++) {
+        d_trigger_count++;
+
+        // Test if trigger has occurred based on the input stream,
+        // channel number, and slope direction
+        if(_test_trigger_slope(&in[trigger_index])) {
+          d_triggered = true;
+          d_start = d_index + trigger_index - d_trigger_delay;
+          d_end = d_start + d_size;
+          d_trigger_count = 0;
+          _adjust_tags(-d_start);
+          break;
+        }
+      }
+
+      // If using auto trigger mode, trigger periodically even
+      // without a trigger event.
+      if((d_trigger_mode == TRIG_MODE_AUTO) && (d_trigger_count > d_size)) {
+        d_triggered = true;
+        d_trigger_count = 0;
+      }
+    }
+
+    bool
+    time_sink_c_impl::_test_trigger_slope(const gr_complex *in) const
+    {
+      float x0, x1;
+      if(d_trigger_channel % 2 == 0) {
+        x0 = in[0].real();
+        x1 = in[1].real();
+      }
+      else {
+        x0 = in[0].imag();
+        x1 = in[1].imag();
+      }
+
+      if(d_trigger_slope == TRIG_SLOPE_POS)
+        return ((x0 <= d_trigger_level) && (x1 > d_trigger_level));
+      else
+        return ((x0 >= d_trigger_level) && (x1 < d_trigger_level));
     }
 
     int
@@ -325,52 +544,71 @@ namespace gr {
 			   gr_vector_const_void_star &input_items,
 			   gr_vector_void_star &output_items)
     {
-      int n=0, j=0, idx=0;
-      const gr_complex *in = (const gr_complex*)input_items[idx];
+      int n=0, idx=0;
+      const gr_complex *in;
 
-      npoints_resize();
+      _npoints_resize();
+      _gui_update_trigger();
 
-      for(int i=0; i < noutput_items; i+=d_size) {
-	unsigned int datasize = noutput_items - i;
-	unsigned int resid = d_size-d_index;
-	idx = 0;
+      gr::thread::scoped_lock lock(d_mutex);
 
-	// If we have enough input for one full plot, do it
-	if(datasize >= resid) {
+      int nfill = d_end - d_index;                 // how much room left in buffers
+      int nitems = std::min(noutput_items, nfill); // num items we can put in buffers
 
-	  // Fill up residbufs with d_size number of items
-	  for(n = 0; n < d_nconnections; n+=2) {
-	    in = (const gr_complex*)input_items[idx++];
-	    volk_32fc_deinterleave_64f_x2_u(&d_residbufs[n][d_index],
-					    &d_residbufs[n+1][d_index],
-					    &in[j], resid);
-	  }
-
-	  // Update the plot if its time
-	  if(gr::high_res_timer_now() - d_last_time > d_update_time) {
-	    d_last_time = gr::high_res_timer_now();
-	    d_qApplication->postEvent(d_main_gui,
-				      new TimeUpdateEvent(d_residbufs, d_size));
-	  }
-
-	  d_index = 0;
-	  j += resid;
-	}
-
-	// Otherwise, copy what we received into the residbufs for next time
-	else {
-	  for(n = 0; n < d_nconnections; n+=2) {
-	    in = (const gr_complex*)input_items[idx++];
-	    volk_32fc_deinterleave_64f_x2_u(&d_residbufs[n][d_index],
-					    &d_residbufs[n+1][d_index],
-					    &in[j], datasize);
-	  }
-	  d_index += datasize;
-	  j += datasize;
-	}
+      // If auto, normal, or tag trigger, look for the trigger
+      if((d_trigger_mode != TRIG_MODE_FREE) && !d_triggered) {
+        // trigger off a tag key (first one found)
+        if(d_trigger_mode == TRIG_MODE_TAG) {
+          _test_trigger_tags(nitems);
+        }
+        // Normal or Auto trigger
+        else {
+          _test_trigger_norm(nitems, input_items);
+        }
       }
 
-      return j;
+      // Copy data into the buffers.
+      for(n = 0; n < d_nconnections; n+=2) {
+        in = (const gr_complex*)input_items[idx];
+        volk_32fc_deinterleave_64f_x2(&d_buffers[n][d_index],
+                                      &d_buffers[n+1][d_index],
+                                      &in[0], nitems);
+
+        uint64_t nr = nitems_read(idx);
+        std::vector<gr::tag_t> tags;
+        get_tags_in_range(tags, idx, nr, nr + nitems);
+        for(size_t t = 0; t < tags.size(); t++) {
+          tags[t].offset = tags[t].offset - nr + (d_index-d_start);
+        }
+        d_tags[idx].insert(d_tags[idx].end(), tags.begin(), tags.end());
+        idx++;
+      }
+      d_index += nitems;
+
+      // If we've have a trigger and a full d_size of items in the buffers, plot.
+      if((d_triggered) && (d_index == d_end)) {
+        // Copy data to be plotted to start of buffers.
+        for(n = 0; n < d_nconnections; n++) {
+          memmove(d_buffers[n], &d_buffers[n][d_start], d_size*sizeof(double));
+        }
+
+        // Plot if we are able to update
+        if(gr::high_res_timer_now() - d_last_time > d_update_time) {
+          d_last_time = gr::high_res_timer_now();
+          d_qApplication->postEvent(d_main_gui,
+                                    new TimeUpdateEvent(d_buffers, d_size, d_tags));
+        }
+
+        // We've plotting, so reset the state
+        _reset();
+      }
+
+      // If we've filled up the buffers but haven't triggered, reset.
+      if(d_index == d_end) {
+        _reset();
+      }
+
+      return nitems;
     }
 
   } /* namespace qtgui */
