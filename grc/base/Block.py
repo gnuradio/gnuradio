@@ -154,6 +154,16 @@ class Block(Element):
                              'value': '0'
                              })
                     ))
+            self.get_params().append(self.get_parent().get_parent().Param(
+                    block=self,
+                    n=odict({'name': 'Max Output Buffer',
+                             'key': 'maxoutbuf',
+                             'type': 'int',
+                             'hide': 'part',
+                             'value': '0'
+                             })
+                    ))
+
 
     def back_ofthe_bus(self, portlist):
         portlist.sort(key=lambda a: a.get_type() == 'bus');

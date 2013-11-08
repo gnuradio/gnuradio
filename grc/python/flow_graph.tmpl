@@ -167,6 +167,9 @@ gr.io_signaturev($(len($io_sigs)), $(len($io_sigs)), [$(', '.join($size_strs))])
         #if (len($blk.get_sources())>0) and $blk.has_param('minoutbuf') and (int($blk.get_param('minoutbuf').get_evaluated()) > 0)
         (self.$blk.get_id()).set_min_output_buffer($blk.get_param('minoutbuf').get_evaluated())
         #end if
+        #if (len($blk.get_sources())>0) and $blk.has_param('maxoutbuf') and (int($blk.get_param('maxoutbuf').get_evaluated()) > 0)
+        (self.$blk.get_id()).set_max_output_buffer($blk.get_param('maxoutbuf').get_evaluated())
+        #end if
     #end if
 #end for
 ########################################################
