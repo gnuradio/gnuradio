@@ -31,8 +31,11 @@
   <cat>
     <name>Channel Models</name>
     <block>channels_channel_model</block>
+    <block>channels_channel_model2</block>
+    <block>channels_conj_fs_iqcorr</block>
     <block>channels_fading_model</block>
     <block>channels_dynamic_channel_model</block>
+    <block>channels_selective_fading_model</block>
   </cat>
   <cat>
     <name>Impairment Models</name>
@@ -48,3 +51,4 @@
     <block>channels_sro_model</block>
   </cat>
 </cat>
+
