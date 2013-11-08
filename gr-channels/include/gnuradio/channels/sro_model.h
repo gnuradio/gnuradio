@@ -35,7 +35,7 @@ namespace gr {
      * \ingroup channel_models_blk
      *
      * \details
-     * This block implements a model that varries sample rate offset
+     * This block implements a model that varies sample rate offset
      * with respect to time by performing a random walk on the 
      * interpolation rate.
      */
@@ -45,6 +45,14 @@ namespace gr {
       // gr::channels::sro_model::sptr
       typedef boost::shared_ptr<sro_model> sptr;
 
+      /*! \brief Build the sample rate offset model
+       *
+       * \param sample_rate_hz Sample rate of the input signal in Hz
+       * \param std_dev_hz  Desired standard deviation of the random walk
+                            process every sample in Hz
+       * \param max_dev_hz Maximum sample rate deviation from zero in Hz.
+       * \param noise_seed A random number generator seed for the noise source.
+       */
       static sptr make(
                 double sample_rate_hz,
                 double std_dev_hz,

@@ -73,7 +73,7 @@ namespace gr {
     {
       d_noise_adder = blocks::add_cc::make();
       d_noise = analog::fastnoise_source_c::make(analog::GR_GAUSSIAN,
-						 1.0, noise_seed, 1024*8);
+						 noise_amp, noise_seed, 1024*8);
       d_sro_model = channels::sro_model::make(samp_rate, sro_std_dev, sro_max_dev, noise_seed);
       d_cfo_model = channels::cfo_model::make(samp_rate, cfo_std_dev, cfo_max_dev, noise_seed);
       d_fader = channels::selective_fading_model::make(N, doppler_freq / samp_rate, LOS_model, K, noise_seed, delays, mags, ntaps_mpath);

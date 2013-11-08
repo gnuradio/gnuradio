@@ -31,19 +31,19 @@ namespace gr {
   namespace channels {
     
     /*!
-     * \brief channel simulator
+     * \brief dynamic channel simulator
      * \ingroup dynamic_channel_models_blk
      *
      * \details
-     * This block implements a basic channel model simulator that can
+     * This block implements a dynamic channel model simulator that can
      * be used to help evaluate, design, and test various signals,
-     * waveforms, and algorithms. This model allows the user to set
-     * the voltage of an AWGN noise source, a (normalized) frequency
-     * offset, a sample timing offset, and a noise seed to randomize
-     * the AWGN noise source.
+     * waveforms, and algorithms. 
      *
-     * Multipath can be approximated in this model by using a FIR
-     * filter representation of a multipath delay profile..
+     * This model allows the user to set up an AWGN noise cource, a 
+     * random walk process to simulate carrier frequency drift, a random
+     * walk process to simulate sample rate offset drive, and a frequency
+     * selective fading channel response that is either Rayleigh or Ricean
+     * for a user specified power delay profile.
      */
     class CHANNELS_API dynamic_channel_model : virtual public hier_block2
     {
@@ -51,18 +51,25 @@ namespace gr {
       // gr::channels::dynamic_channel_model::sptr
       typedef boost::shared_ptr<dynamic_channel_model> sptr;
 
-      /*! \brief Build the channel simulator.
+      /*! \brief Build the dynamic channel simulator.
        *
-       * \param noise_voltage The AWGN noise level as a voltage (to be
-       *                      calculated externally to meet, say, a
-       *                      desired SNR).
-       * \param frequency_offset The normalized frequency offset. 0 is
-       *                         no offset; 0.25 would be, for a digital
-       *                         modem, one quarter of the symbol rate.
-       * \param epsilon The sample timing offset to emulate the
-       *                different rates between the sample clocks of
-       *                the transmitter and receiver. 1.0 is no difference.
-       * \param taps Taps of a FIR filter to emulate a multipath delay profile.
+       * \param samp_rate   Input sample rate in Hz
+       * \param sro_std_dev  sample rate drift process standard deviation per sample in Hz
+       * \param sro_max_dev  maximum sample rate offset in Hz
+       * \param cfo_std_dev  carrier frequnecy drift process standard deviation per sample in Hz
+       * \param cfo_max_dev  maximum carrier frequency offset in Hz
+
+       * \param N   number of sinusoids used in frequency selective fading simulation
+       * \param doppler_freq    maximum doppler frequency used in fading simulation in Hz
+       * \param LOS_model   defines whether the fading model should include a line of site
+                            component. LOS->Rician, NLOS->Rayleigh
+       * \param K Rician K-factor, the ratio of specular to diffuse power in the model
+       * \param delays  A list of fractional sample delays making up the power delay profile
+       * \param mags    A list of magnitudes corresponding to each delay time in the power delay profile
+       * \param ntaps_mpath The length of the filter to interpolate the power delay profile over. 
+                            Delays in the PDP must lie between 0 and ntaps_mpath, fractional delays
+                            will be sinc-interpolated only to the width of this filter.
+       * \param noise_amp Specifies the standard deviation of the AWGN process
        * \param noise_seed A random number generator seed for the noise source.
        */
       static sptr make(

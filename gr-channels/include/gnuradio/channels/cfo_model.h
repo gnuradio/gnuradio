@@ -35,15 +35,11 @@ namespace gr {
      * \ingroup channel_models_blk
      *
      * \details
-     * This block implements a basic channel model simulator that can
-     * be used to help evaluate, design, and test various signals,
-     * waveforms, and algorithms. This model allows the user to set
-     * the voltage of an AWGN noise source, a (normalized) frequency
-     * offset, a sample timing offset, and a noise seed to randomize
-     * the AWGN noise source.
-     *
-     * Multipath can be approximated in this model by using a FIR
-     * filter representation of a multipath delay profile..
+     * This block implements a carrier frequency offset model that
+     * can be used to simulate carrier frequency drift typically from
+     * mixer LO drift on either transmit or receive hardware.
+     * 
+     * A clipped gaussian random walk process is used.
      */
     class CHANNELS_API cfo_model : virtual public sync_block
     {
@@ -51,6 +47,14 @@ namespace gr {
       // gr::channels::cfo_model::sptr
       typedef boost::shared_ptr<cfo_model> sptr;
 
+      /*! \brief Build the carrier frequency offset model
+       *
+       * \param sample_rate_hz Sample rate of the input signal in Hz
+       * \param std_dev_hz  Desired standard deviation of the random walk
+                            process every sample in Hz
+       * \param max_dev_hz Maximum carrier frequency deviation in Hz.
+       * \param noise_seed A random number generator seed for the noise source.
+       */
       static sptr make(
                 double sample_rate_hz,
                 double std_dev_hz,
