@@ -34,6 +34,10 @@
 #include <gnuradio/math.h>
 #include <boost/math/special_functions/round.hpp>
 
+#ifdef _MSC_VER
+#define copysign _copysign
+#endif
+
 class TimePrecisionClass
 {
 public:
