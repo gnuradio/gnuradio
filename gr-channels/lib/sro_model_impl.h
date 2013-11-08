@@ -40,8 +40,10 @@ namespace gr {
       float d_sro;
       float d_samp_rate;
       float d_max_dev_hz;
+      float d_std_dev_hz;
       gr::filter::mmse_fir_interpolator_cc *d_interp;
       gr::analog::fastnoise_source_f::sptr d_noise;
+      double d_noise_seed;
 
     public:
       sro_model_impl(
@@ -63,6 +65,14 @@ namespace gr {
       void set_mu(float mu);
       void set_interp_ratio(float interp_ratio);
       void setup_rpc();
+
+      void set_std_dev(double _dev){ d_std_dev_hz = _dev; d_noise = gr::analog::fastnoise_source_f::make(analog::GR_GAUSSIAN, _dev, d_noise_seed); }
+      void set_max_dev(double _dev){ d_max_dev_hz = _dev; }
+      void set_samp_rate(double _rate){ d_samp_rate = _rate; }
+
+      double std_dev() const { return d_std_dev_hz; }
+      double max_dev() const { return d_max_dev_hz; }
+      double samp_rate() const { return d_samp_rate; }
 
     };
 

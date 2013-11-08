@@ -61,6 +61,14 @@ namespace gr {
                 double max_dev_hz,
 		        double noise_seed=0);
 
+      virtual void set_std_dev(double _dev) = 0;
+      virtual void set_max_dev(double _dev) = 0;
+      virtual void set_samp_rate(double _rate) = 0;
+
+      virtual double std_dev() const = 0;
+      virtual double max_dev() const = 0;
+      virtual double samp_rate() const = 0;
+
     };
 
   } /* namespace channels */

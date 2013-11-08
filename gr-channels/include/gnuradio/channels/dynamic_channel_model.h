@@ -88,6 +88,24 @@ namespace gr {
                                             double noise_amp,
                                             double noise_seed );
 
+      virtual double samp_rate() const = 0;
+      virtual double sro_dev_std() const = 0;
+      virtual double sro_dev_max() const = 0;
+      virtual double cfo_dev_std() const = 0;
+      virtual double cfo_dev_max() const = 0;
+      virtual double noise_amp() const = 0;
+      virtual double doppler_freq() const = 0;
+      virtual double K() const = 0;
+
+      virtual void set_samp_rate(double) = 0;
+      virtual void set_sro_dev_std(double) = 0;
+      virtual void set_sro_dev_max(double) = 0;
+      virtual void set_cfo_dev_std(double) = 0;
+      virtual void set_cfo_dev_max(double) = 0;
+      virtual void set_noise_amp(double) = 0;
+      virtual void set_doppler_freq(double) = 0;
+      virtual void set_K(double) = 0;
+
     };
 
   } /* namespace channels */

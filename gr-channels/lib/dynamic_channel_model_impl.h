@@ -68,6 +68,27 @@ namespace gr {
 
       void setup_rpc();
 
+      double samp_rate() const   { return d_sro_model->samp_rate(); }
+      double sro_dev_std() const { return d_sro_model->std_dev(); }
+      double sro_dev_max() const { return d_sro_model->max_dev(); }
+      double cfo_dev_std() const { return d_cfo_model->std_dev(); }
+      double cfo_dev_max() const { return d_cfo_model->max_dev(); }
+      double noise_amp() const   { return d_noise->amplitude();   }
+      double doppler_freq() const { return d_fader->fDTs()*samp_rate(); }
+      double K() const { return d_fader->K(); }
+
+      void set_samp_rate(double sr) { 
+            d_fader->set_fDTs( doppler_freq()/samp_rate() );
+            d_sro_model->set_samp_rate(sr); 
+            d_cfo_model->set_samp_rate(sr);  }
+      void set_sro_dev_std(double dev) { d_sro_model->set_max_dev(dev); }
+      void set_sro_dev_max(double dev) { d_sro_model->set_max_dev(dev); }
+      void set_cfo_dev_std(double dev) { d_cfo_model->set_std_dev(dev); }
+      void set_cfo_dev_max(double dev) { d_cfo_model->set_max_dev(dev); }
+      void set_noise_amp(double amp) { d_noise->set_amplitude(amp); }
+      void set_doppler_freq(double f){ d_fader->set_fDTs(f/samp_rate()); }
+      void set_K(double K){ d_fader->set_K(K); }
+
     };
 
   } /* namespace channels */
