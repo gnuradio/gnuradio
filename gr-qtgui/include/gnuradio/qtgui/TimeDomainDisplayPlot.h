@@ -27,6 +27,7 @@
 #include <cstdio>
 #include <vector>
 #include <gnuradio/qtgui/DisplayPlot.h>
+#include <gnuradio/tags.h>
 
 /*!
  * \brief QWidget for displaying time domain plots.
@@ -41,7 +42,9 @@ public:
   virtual ~TimeDomainDisplayPlot();
 
   void plotNewData(const std::vector<double*> dataPoints,
-		   const int64_t numDataPoints, const double timeInterval);
+		   const int64_t numDataPoints, const double timeInterval,
+                   const std::vector< std::vector<gr::tag_t> > &tags \
+                   = std::vector< std::vector<gr::tag_t> >());
 
   void replot();
 
@@ -55,17 +58,24 @@ public slots:
   void setSemilogx(bool en);
   void setSemilogy(bool en);
 
+  void legendEntryChecked(QwtPlotItem *plotItem, bool on);
+
+  void enableTagMarker(int which, bool en);
+
 private:
   void _resetXAxisPoints();
   void _autoScale(double bottom, double top);
 
-  std::vector<double*> _dataPoints;
-  double* _xAxisPoints;
+  std::vector<double*> d_ydata;
+  double* d_xdata;
 
-  double _sampleRate;
+  double d_sample_rate;
 
   bool d_semilogx;
   bool d_semilogy;
+
+  std::vector< std::vector<QwtPlotMarker*> > d_tag_markers;
+  std::vector<bool> d_tag_markers_en;
 };
 
 #endif /* TIME_DOMAIN_DISPLAY_PLOT_H */

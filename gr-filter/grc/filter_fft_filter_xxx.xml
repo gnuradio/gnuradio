@@ -9,7 +9,9 @@
 	<key>fft_filter_xxx</key>
 	<import>from gnuradio import filter</import>
 	<import>from gnuradio.filter import firdes</import>
-	<make>filter.fft_filter_$(type)($decim, $taps, $nthreads)</make>
+	<make>filter.fft_filter_$(type)($decim, $taps, $nthreads)
+self.$(id).declare_sample_delay($samp_delay)
+</make>
 	<callback>set_taps($taps)</callback>
 	<callback>set_nthreads($nthreads)</callback>
 	<param>
@@ -41,6 +43,13 @@
 		<name>Taps</name>
 		<key>taps</key>
 		<type>$type.taps</type>
+	</param>
+	<param>
+		<name>Sample Delay</name>
+		<key>samp_delay</key>
+                <value>0</value>
+		<type>int</type>
+                <hide>part</hide>
 	</param>
 	<param>
 		<name>Num. Threads</name>

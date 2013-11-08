@@ -28,22 +28,22 @@
 ConstellationDisplayForm::ConstellationDisplayForm(int nplots, QWidget* parent)
   : DisplayForm(nplots, parent)
 {
-  _intValidator = new QIntValidator(this);
-  _intValidator->setBottom(0);
+  d_int_validator = new QIntValidator(this);
+  d_int_validator->setBottom(0);
 
-  _layout = new QGridLayout(this);
-  _displayPlot = new ConstellationDisplayPlot(nplots, this);
-  _layout->addWidget(_displayPlot, 0, 0);
-  setLayout(_layout);
+  d_layout = new QGridLayout(this);
+  d_display_plot = new ConstellationDisplayPlot(nplots, this);
+  d_layout->addWidget(d_display_plot, 0, 0);
+  setLayout(d_layout);
 
   NPointsMenu *nptsmenu = new NPointsMenu(this);
-  _menu->addAction(nptsmenu);
+  d_menu->addAction(nptsmenu);
   connect(nptsmenu, SIGNAL(whichTrigger(int)),
 	  this, SLOT(setNPoints(const int)));
 
   Reset();
 
-  connect(_displayPlot, SIGNAL(plotPointSelected(const QPointF)),
+  connect(d_display_plot, SIGNAL(plotPointSelected(const QPointF)),
 	  this, SLOT(onPlotPointSelected(const QPointF)));
 }
 
@@ -52,13 +52,13 @@ ConstellationDisplayForm::~ConstellationDisplayForm()
   // Qt deletes children when parent is deleted
 
   // Don't worry about deleting Display Plots - they are deleted when parents are deleted
-  delete _intValidator;
+  delete d_int_validator;
 }
 
 ConstellationDisplayPlot*
 ConstellationDisplayForm::getPlot()
 {
-  return ((ConstellationDisplayPlot*)_displayPlot);
+  return ((ConstellationDisplayPlot*)d_display_plot);
 }
 
 void
@@ -110,9 +110,9 @@ ConstellationDisplayForm::setXaxis(double min, double max)
 void
 ConstellationDisplayForm::autoScale(bool en)
 {
-  _autoscale_state = en;
-  _autoscale_act->setChecked(en);
-  getPlot()->setAutoScale(_autoscale_state);
+  d_autoscale_state = en;
+  d_autoscale_act->setChecked(en);
+  getPlot()->setAutoScale(d_autoscale_state);
   getPlot()->replot();
 }
 

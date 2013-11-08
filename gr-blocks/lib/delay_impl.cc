@@ -72,6 +72,7 @@ namespace gr {
         gr::thread::scoped_lock l(d_mutex_delay);
         int old = dly();
         set_history(d+1);
+        declare_sample_delay(history()-1);
         d_delta += dly() - old;
       }
     }

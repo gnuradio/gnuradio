@@ -27,6 +27,7 @@
 #include <gnuradio/block.h>
 #include <gnuradio/block_registry.h>
 #include <gnuradio/block_detail.h>
+#include <gnuradio/buffer.h>
 #include <gnuradio/prefs.h>
 #include <stdexcept>
 #include <iostream>
@@ -43,6 +44,7 @@ namespace gr {
       d_is_unaligned(false),
       d_relative_rate (1.0),
       d_history(1),
+      d_attr_delay(0),
       d_fixed_rate(false),
       d_max_noutput_items_set(false),
       d_max_noutput_items(0),
@@ -50,6 +52,7 @@ namespace gr {
       d_tag_propagation_policy(TPP_ALL_TO_ALL),
       d_priority(-1),
       d_pc_rpc_set(false),
+      d_update_rate(false),
       d_max_output_buffer(std::max(output_signature->max_streams(),1), -1),
       d_min_output_buffer(std::max(output_signature->max_streams(),1), -1)
   {
@@ -105,6 +108,45 @@ namespace gr {
   block::~block()
   {
     global_block_registry.unregister_primitive(alias());
+  }
+
+  unsigned
+  block::history() const
+  {
+    return d_history;
+  }
+
+  void
+  block::set_history(unsigned history)
+  {
+    d_history = history;
+  }
+
+  void
+  block::declare_sample_delay(unsigned delay)
+  {
+    d_attr_delay = delay;
+    if(d_detail) {
+      unsigned int nins = static_cast<unsigned int>(d_detail->ninputs());
+      for(unsigned int n = 0; n < nins; n++) {
+        d_detail->input(n)->declare_sample_delay(d_attr_delay);
+      }
+    }
+  }
+
+  void
+  block::declare_sample_delay(int which, unsigned delay)
+  {
+    d_attr_delay = delay;
+    if(d_detail) {
+      d_detail->input(which)->declare_sample_delay(d_attr_delay);
+    }
+  }
+
+  unsigned
+  block::sample_delay(int which) const
+  {
+    return d_attr_delay;
   }
 
   // stub implementation:  1:1
@@ -403,7 +445,20 @@ namespace gr {
     else
       d_min_output_buffer[port] = min_output_buffer; 
   }
-  
+
+
+  bool
+  block::update_rate() const
+  {
+    return d_update_rate;
+  }
+
+  void
+  block::enable_update_rate(bool en)
+  {
+    d_update_rate = en;
+  }
+
   float
   block::pc_noutput_items()
   {

@@ -23,6 +23,8 @@
 import random
 import math
 
+import pmt
+
 from gnuradio import gr, gr_unittest, filter, analog, blocks, digital
 from gnuradio.digital.utils import mod_codes, alignment
 from gnuradio.digital import packet_utils
@@ -128,7 +130,29 @@ class test_constellation_receiver(gr_unittest.TestCase):
                     print("Constellation is {0}. Differential is {1}.  Required correct is {2}. Correct is {3}. FAIL.".
                           format(constellation, differential, req_correct, correct))
                 self.assertTrue(correct > req_correct)
-            
+
+    def test_tag(self):
+        # Send data through bpsk receiver
+        # followed by qpsk receiver
+        data = [0.9+0j, 0.1+0.9j, -1-0.1j, -0.1-0.6j]*2
+        bpsk_data = [1, 1, 0, 0]
+        qpsk_data = [1, 3, 0, 0]
+        first_tag = gr.tag_t()
+        first_tag.key = pmt.intern("set_constellation")
+        first_tag.value = digital.bpsk_constellation().as_pmt()
+        first_tag.offset = 0
+        second_tag = gr.tag_t()
+        second_tag.key = pmt.intern("set_constellation")
+        second_tag.value = digital.qpsk_constellation().as_pmt()
+        second_tag.offset = 4
+        src = blocks.vector_source_c(data, False, 1, [first_tag, second_tag])
+        decoder = digital.constellation_receiver_cb(
+            digital.bpsk_constellation().base(), 0, 0, 0)
+        snk = blocks.vector_sink_b()
+        tb = gr.top_block()
+        tb.connect(src, decoder, snk)
+        tb.run()
+        self.assertEqual(list(snk.data()), bpsk_data+qpsk_data)
 
 class rec_test_tb(gr.top_block):
     """

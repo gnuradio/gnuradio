@@ -86,8 +86,8 @@ private slots:
   void newData(const QEvent *updateEvent);
 
 private:
-  double _min_val;
-  double _max_val;
+  double d_min_val;
+  double d_max_val;
 };
 
 #endif /* TIMERASTER_DISPLAY_FORM_H */

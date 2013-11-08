@@ -39,6 +39,24 @@ namespace gr {
      * \details
      * This is a QT-based graphical sink the displays a histogram of
      * the data.
+     *
+     * This histogram allows you to set and change at runtime the
+     * number of points to plot at once and the number of bins in the
+     * histogram. Both x and y-axis have their own auto-scaling
+     * behavior. By default, auto-scaling the y-axis is turned on and
+     * continuously updates the y-axis max value based on the
+     * currently plotted histogram.
+     *
+     * The x-axis auto-scaling function only updates once when
+     * clicked. This resets the x-axis to the current range of minimum
+     * and maximum values represented in the histogram. It resets any
+     * values currently displayed because the location and width of
+     * the bins may have changed.
+     *
+     * The histogram also has an accumulate function that simply
+     * accumulates the data between calls to work. When accumulate is
+     * activated, the y-axis autoscaling is turned on by default as
+     * the values will quickly grow in the this direction.
      */
     class QTGUI_API histogram_sink_f : virtual public sync_block
     {
@@ -66,19 +84,7 @@ namespace gr {
       virtual void exec_() = 0;
       virtual PyObject* pyqwidget() = 0;
 
-      virtual void set_y_axis(double min, double max) = 0;
-      virtual void set_x_axis(double min, double max) = 0;
-      virtual void set_update_time(double t) = 0;
-      virtual void set_title(const std::string &title) = 0;
-      virtual void set_line_label(int which, const std::string &line) = 0;
-      virtual void set_line_color(int which, const std::string &color) = 0;
-      virtual void set_line_width(int which, int width) = 0;
-      virtual void set_line_style(int which, int style) = 0;
-      virtual void set_line_marker(int which, int marker) = 0;
-      virtual void set_line_alpha(int which, double alpha) = 0;
-      virtual void set_nsamps(const int newsize) = 0;
-      virtual void set_bins(const int bins) = 0;
-
+    public:
       virtual std::string title() = 0;
       virtual std::string line_label(int which) = 0;
       virtual std::string line_color(int which) = 0;
@@ -95,11 +101,25 @@ namespace gr {
       virtual void enable_semilogx(bool en=true) = 0;
       virtual void enable_semilogy(bool en=true) = 0;
       virtual void enable_accumulate(bool en=true) = 0;
+      virtual void autoscalex() = 0;
       virtual int nsamps() const = 0;
       virtual int bins() const = 0;
       virtual void reset() = 0;
 
       QApplication *d_qApplication;
+
+      virtual void set_y_axis(double min, double max) = 0;
+      virtual void set_x_axis(double min, double max) = 0;
+      virtual void set_update_time(double t) = 0;
+      virtual void set_title(const std::string &title) = 0;
+      virtual void set_line_label(int which, const std::string &line) = 0;
+      virtual void set_line_color(int which, const std::string &color) = 0;
+      virtual void set_line_width(int which, int width) = 0;
+      virtual void set_line_style(int which, int style) = 0;
+      virtual void set_line_marker(int which, int marker) = 0;
+      virtual void set_line_alpha(int which, double alpha) = 0;
+      virtual void set_nsamps(const int newsize) = 0;
+      virtual void set_bins(const int bins) = 0;
     };
 
   } /* namespace qtgui */

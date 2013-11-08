@@ -331,6 +331,12 @@ namespace gr {
     }
 
     void
+    histogram_sink_f_impl::autoscalex()
+    {
+      d_main_gui->autoScaleX();
+    }
+
+    void
     histogram_sink_f_impl::reset()
     {
       d_index = 0;

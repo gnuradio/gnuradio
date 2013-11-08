@@ -28,16 +28,17 @@
 
 #include "@NAME@.h"
 #include <gnuradio/io_signature.h>
+#include <gnuradio/tag_checker.h>
 #include <assert.h>
 
 namespace gr {
   namespace digital {
-    
+
     @BASE_NAME@::sptr
     @BASE_NAME@::make(const std::vector<@O_TYPE@> &symbol_table, const int D)
     {
       return gnuradio::get_initial_sptr
-	(new @IMPL_NAME@(symbol_table, D));
+        (new @IMPL_NAME@(symbol_table, D));
     }
 
     @IMPL_NAME@::@IMPL_NAME@(const std::vector<@O_TYPE@> &symbol_table, const int D)
@@ -47,10 +48,51 @@ namespace gr {
 			   D),
       d_D(D), d_symbol_table(symbol_table)
     {
+      message_port_register_in(pmt::mp("set_symbol_table"));
+      set_msg_handler(
+        pmt::mp("set_symbol_table"),
+        boost::bind(&@IMPL_NAME@::handle_set_symbol_table,
+                    this, _1));
     }
 
     @IMPL_NAME@::~@IMPL_NAME@()
     {
+    }
+
+
+    void
+    @IMPL_NAME@::set_vector_from_pmt(std::vector<gr_complex> &symbol_table, pmt::pmt_t &symbol_table_pmt) {
+      symbol_table.resize(0);
+      for (unsigned int i=0; i<pmt::length(symbol_table_pmt); i++) {
+        symbol_table.push_back(pmt::c32vector_ref(symbol_table_pmt, i));
+      }      
+    }
+
+    void
+    @IMPL_NAME@::set_vector_from_pmt(std::vector<float> &symbol_table, pmt::pmt_t &symbol_table_pmt) {
+      symbol_table.resize(0);
+      for (unsigned int i=0; i<pmt::length(symbol_table_pmt); i++) {
+        float f = pmt::f32vector_ref(symbol_table_pmt, i);
+        symbol_table.push_back(f);
+      }
+    }
+    
+    void
+    @IMPL_NAME@::handle_set_symbol_table(pmt::pmt_t symbol_table_pmt)
+    {
+      std::vector<@O_TYPE@> symbol_table;
+      set_vector_from_pmt(symbol_table, symbol_table_pmt);
+      set_symbol_table(symbol_table);
+    }
+
+    
+    void
+    @IMPL_NAME@::set_symbol_table(std::vector<@O_TYPE@> &symbol_table)
+    {
+      d_symbol_table.resize(0);
+      for (unsigned int i=0; i<symbol_table.size(); i++) {
+        d_symbol_table.push_back(symbol_table[i]);
+      }
     }
 
     int
@@ -63,15 +105,26 @@ namespace gr {
       int nstreams = input_items.size();
 
       for(int m = 0; m < nstreams; m++) {
-	const @I_TYPE@ *in = (@I_TYPE@*)input_items[m];
-	@O_TYPE@ *out = (@O_TYPE@*)output_items[m];
+        const @I_TYPE@ *in = (@I_TYPE@*)input_items[m];
+        @O_TYPE@ *out = (@O_TYPE@*)output_items[m];
 
-	// per stream processing
-	for(int i = 0; i < noutput_items / d_D; i++) {
-	  assert(((unsigned int)in[i]*d_D+d_D) <= d_symbol_table.size());
-	  memcpy(out, &d_symbol_table[(unsigned int)in[i]*d_D], d_D*sizeof(@O_TYPE@));
-	  out+=d_D;
-	}
+        std::vector<tag_t> tags;
+        get_tags_in_range(tags, m, nitems_read(m), nitems_read(m)+noutput_items/d_D);
+        tag_checker tchecker(tags);
+
+        // per stream processing
+        for(int i = 0; i < noutput_items / d_D; i++) {
+          
+          std::vector<tag_t> tags_now;
+          tchecker.get_tags(tags_now, i+nitems_read(m));
+          for (unsigned int j=0; j<tags_now.size(); j++) {
+            tag_t tag = tags_now[j];
+            dispatch_msg(tag.key, tag.value);
+          }
+          assert(((unsigned int)in[i]*d_D+d_D) <= d_symbol_table.size());
+          memcpy(out, &d_symbol_table[(unsigned int)in[i]*d_D], d_D*sizeof(@O_TYPE@));
+          out+=d_D;
+        }
       }
       return noutput_items;
     }

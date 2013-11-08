@@ -44,6 +44,10 @@ class gr::block : public gr::basic_block
 
   unsigned history () const;
 
+  void declare_sample_delay(int which, int delay);
+  void declare_sample_delay(unsigned int delay);
+  unsigned sample_delay(int which) const;
+
   int  output_multiple () const;
   double relative_rate () const;
 

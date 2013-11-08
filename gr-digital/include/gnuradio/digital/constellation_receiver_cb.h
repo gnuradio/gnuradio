@@ -50,15 +50,14 @@ namespace gr {
       typedef boost::shared_ptr<constellation_receiver_cb> sptr;
 
       /*!
-       * \brief Constructor to synchronize incoming M-PSK symbols
+       * \brief Constructs a constellation receiver that (phase/fine
+       * freq) synchronizes and decodes constellation points specified
+       * by a constellation object.
        *
        * \param constellation constellation of points for generic modulation
        * \param loop_bw	Loop  bandwidth of the Costas Loop (~ 2pi/100)
        * \param fmin          minimum normalized frequency value the loop can achieve
        * \param fmax          maximum normalized frequency value the loop can achieve
-       *
-       * The constructor chooses which phase detector and decision
-       * maker to use in the work loop based on the value of M.
        */
       static sptr make(constellation_sptr constellation, 
 		       float loop_bw, float fmin, float fmax);

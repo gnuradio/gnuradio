@@ -62,26 +62,26 @@ ConstellationDisplayPlot::ConstellationDisplayPlot(int nplots, QWidget* parent)
 {
   resize(parent->width(), parent->height());
 
-  _numPoints = 1024;
-  _penSize = 5;
+  d_numPoints = 1024;
+  d_pen_size = 5;
 
-  _zoomer = new ConstellationDisplayZoomer(canvas());
+  d_zoomer = new ConstellationDisplayZoomer(canvas());
 
 #if QWT_VERSION < 0x060000
-  _zoomer->setSelectionFlags(QwtPicker::RectSelection | QwtPicker::DragSelection);
+  d_zoomer->setSelectionFlags(QwtPicker::RectSelection | QwtPicker::DragSelection);
 #endif
 
-  _zoomer->setMousePattern(QwtEventPattern::MouseSelect2,
-			   Qt::RightButton, Qt::ControlModifier);
-  _zoomer->setMousePattern(QwtEventPattern::MouseSelect3,
-			   Qt::RightButton);
+  d_zoomer->setMousePattern(QwtEventPattern::MouseSelect2,
+                            Qt::RightButton, Qt::ControlModifier);
+  d_zoomer->setMousePattern(QwtEventPattern::MouseSelect3,
+                            Qt::RightButton);
 
   const QColor c(Qt::darkRed);
-  _zoomer->setRubberBandPen(c);
-  _zoomer->setTrackerPen(c);
+  d_zoomer->setRubberBandPen(c);
+  d_zoomer->setTrackerPen(c);
 
-  _magnifier->setAxisEnabled(QwtPlot::xBottom, true);
-  _magnifier->setAxisEnabled(QwtPlot::yLeft, true);
+  d_magnifier->setAxisEnabled(QwtPlot::xBottom, true);
+  d_magnifier->setAxisEnabled(QwtPlot::yLeft, true);
 
   setAxisScaleEngine(QwtPlot::xBottom, new QwtLinearScaleEngine);
   set_xaxis(-2.0, 2.0);
@@ -100,24 +100,25 @@ ConstellationDisplayPlot::ConstellationDisplayPlot(int nplots, QWidget* parent)
 
   // Setup dataPoints and plot vectors
   // Automatically deleted when parent is deleted
-  for(int i = 0; i < _nplots; i++) {
-    _realDataPoints.push_back(new double[_numPoints]);
-    _imagDataPoints.push_back(new double[_numPoints]);
-    memset(_realDataPoints[i], 0x0, _numPoints*sizeof(double));
-    memset(_imagDataPoints[i], 0x0, _numPoints*sizeof(double));
+  for(int i = 0; i < d_nplots; i++) {
+    d_real_data.push_back(new double[d_numPoints]);
+    d_imag_data.push_back(new double[d_numPoints]);
+    memset(d_real_data[i], 0x0, d_numPoints*sizeof(double));
+    memset(d_imag_data[i], 0x0, d_numPoints*sizeof(double));
 
-    _plot_curve.push_back(new QwtPlotCurve(QString("Data %1").arg(i)));
-    _plot_curve[i]->attach(this);
-    _plot_curve[i]->setPen(QPen(colors[i]));
+    d_plot_curve.push_back(new QwtPlotCurve(QString("Data %1").arg(i)));
+    d_plot_curve[i]->attach(this);
+    d_plot_curve[i]->setPen(QPen(colors[i]));
     
-    QwtSymbol *symbol = new QwtSymbol(QwtSymbol::NoSymbol, QBrush(colors[i]), QPen(colors[i]), QSize(7,7));
+    QwtSymbol *symbol = new QwtSymbol(QwtSymbol::NoSymbol, QBrush(colors[i]),
+                                      QPen(colors[i]), QSize(7,7));
 
 #if QWT_VERSION < 0x060000
-    _plot_curve[i]->setRawData(_realDataPoints[i], _imagDataPoints[i], _numPoints);
-    _plot_curve[i]->setSymbol(*symbol);
+    d_plot_curve[i]->setRawData(d_real_data[i], d_imag_data[i], d_numPoints);
+    d_plot_curve[i]->setSymbol(*symbol);
 #else
-    _plot_curve[i]->setRawSamples(_realDataPoints[i], _imagDataPoints[i], _numPoints);
-    _plot_curve[i]->setSymbol(symbol);
+    d_plot_curve[i]->setRawSamples(d_real_data[i], d_imag_data[i], d_numPoints);
+    d_plot_curve[i]->setSymbol(symbol);
 #endif
 
     setLineStyle(i, Qt::NoPen);
@@ -127,13 +128,13 @@ ConstellationDisplayPlot::ConstellationDisplayPlot(int nplots, QWidget* parent)
 
 ConstellationDisplayPlot::~ConstellationDisplayPlot()
 {
-  for(int i = 0; i < _nplots; i++) {
-    delete [] _realDataPoints[i];
-    delete [] _imagDataPoints[i];
+  for(int i = 0; i < d_nplots; i++) {
+    delete [] d_real_data[i];
+    delete [] d_imag_data[i];
   }
 
-  // _fft_plot_curves deleted when parent deleted
-  // _zoomer and _panner deleted when parent deleted
+  // d_plot_curves deleted when parent deleted
+  // d_zoomer and d_panner deleted when parent deleted
 }
 
 void
@@ -160,9 +161,10 @@ void
 ConstellationDisplayPlot::set_pen_size(int size)
 {
   if(size > 0 && size < 30){
-    _penSize = size;
-    for(int i = 0; i < _nplots; i++) {
-      _plot_curve[i]->setPen(QPen(Qt::blue, _penSize, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
+    d_pen_size = size;
+    for(int i = 0; i < d_nplots; i++) {
+      d_plot_curve[i]->setPen(QPen(Qt::blue, d_pen_size, Qt::SolidLine,
+                                   Qt::RoundCap, Qt::RoundJoin));
     }
   }
 }
@@ -180,33 +182,33 @@ ConstellationDisplayPlot::plotNewData(const std::vector<double*> realDataPoints,
 				      const int64_t numDataPoints,
 				      const double timeInterval)
 {
-  if(!_stop) {
+  if(!d_stop) {
     if((numDataPoints > 0)) {
-      if(numDataPoints != _numPoints) {
-	_numPoints = numDataPoints;
+      if(numDataPoints != d_numPoints) {
+	d_numPoints = numDataPoints;
       
-	for(int i = 0; i < _nplots; i++) {
-	  delete [] _realDataPoints[i];
-	  delete [] _imagDataPoints[i];
-	  _realDataPoints[i] = new double[_numPoints];
-	  _imagDataPoints[i] = new double[_numPoints];
+	for(int i = 0; i < d_nplots; i++) {
+	  delete [] d_real_data[i];
+	  delete [] d_imag_data[i];
+	  d_real_data[i] = new double[d_numPoints];
+	  d_imag_data[i] = new double[d_numPoints];
 
 #if QWT_VERSION < 0x060000
-	  _plot_curve[i]->setRawData(_realDataPoints[i], _imagDataPoints[i], _numPoints);
+	  d_plot_curve[i]->setRawData(d_real_data[i], d_imag_data[i], d_numPoints);
 #else
-	  _plot_curve[i]->setRawSamples(_realDataPoints[i], _imagDataPoints[i], _numPoints);
+	  d_plot_curve[i]->setRawSamples(d_real_data[i], d_imag_data[i], d_numPoints);
 #endif
 	}
       }
 
-      for(int i = 0; i < _nplots; i++) {
-	memcpy(_realDataPoints[i], realDataPoints[i], numDataPoints*sizeof(double));
-	memcpy(_imagDataPoints[i], imagDataPoints[i], numDataPoints*sizeof(double));
+      for(int i = 0; i < d_nplots; i++) {
+	memcpy(d_real_data[i], realDataPoints[i], numDataPoints*sizeof(double));
+	memcpy(d_imag_data[i], imagDataPoints[i], numDataPoints*sizeof(double));
       }
 
-      if(_autoscale_state) {
+      if(d_autoscale_state) {
 	double bottom=1e20, top=-1e20;
-	for(int n = 0; n < _nplots; n++) {
+	for(int n = 0; n < d_nplots; n++) {
 	  for(int64_t point = 0; point < numDataPoints; point++) {
             double b = std::min(realDataPoints[n][point], imagDataPoints[n][point]);
             double t = std::max(realDataPoints[n][point], imagDataPoints[n][point]);
@@ -253,7 +255,7 @@ ConstellationDisplayPlot::_autoScale(double bottom, double top)
 void
 ConstellationDisplayPlot::setAutoScale(bool state)
 {
-  _autoscale_state = state;
+  d_autoscale_state = state;
 }
 
 #endif /* CONSTELLATION_DISPLAY_PLOT_C */

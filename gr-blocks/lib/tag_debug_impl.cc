@@ -34,19 +34,22 @@ namespace gr {
 
     tag_debug::sptr
     tag_debug::make(size_t sizeof_stream_item,
-                    const std::string &name)
+                    const std::string &name,
+                    const std::string &key_filter)
     {
       return gnuradio::get_initial_sptr
-        (new tag_debug_impl(sizeof_stream_item, name));
+        (new tag_debug_impl(sizeof_stream_item, name, key_filter));
     }
 
     tag_debug_impl::tag_debug_impl(size_t sizeof_stream_item,
-                                   const std::string &name)
+                                   const std::string &name,
+                                   const std::string &key_filter)
       : sync_block("tag_debug",
-                      io_signature::make(1, -1, sizeof_stream_item),
-                      io_signature::make(0, 0, 0)),
+                   io_signature::make(1, -1, sizeof_stream_item),
+                   io_signature::make(0, 0, 0)),
         d_name(name), d_display(true)
     {
+      set_key_filter(key_filter);
     }
 
     tag_debug_impl::~tag_debug_impl()
@@ -74,6 +77,21 @@ namespace gr {
       d_display = d;
     }
 
+    void
+    tag_debug_impl::set_key_filter(const std::string &key_filter)
+    {
+      if(key_filter == "")
+        d_filter = pmt::PMT_NIL;
+      else
+        d_filter = pmt::intern(key_filter);
+    }
+
+    std::string
+    tag_debug_impl::key_filter() const
+    {
+      return pmt::symbol_to_string(d_filter);
+    }
+
     int
     tag_debug_impl::work(int noutput_items,
                          gr_vector_const_void_star &input_items,
@@ -94,7 +112,10 @@ namespace gr {
         end_N = abs_N + (uint64_t)(noutput_items);
 
         d_tags.clear();
-        get_tags_in_range(d_tags, i, abs_N, end_N);
+        if(pmt::is_null(d_filter))
+          get_tags_in_range(d_tags, i, abs_N, end_N);
+        else
+          get_tags_in_range(d_tags, i, abs_N, end_N, d_filter);
 
         if(d_display) {
           sout << "Input Stream: " << std::setw(2) << std::setfill('0') 
