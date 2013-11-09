@@ -145,7 +145,11 @@ namespace gr {
     }
 
 #ifndef FASTNOISE_RANDOM_SIGN
+#ifdef _MSC_VER
+#define FASTNOISE_RANDOM_SIGN       ((rand()%2==0)?1:-1)
+#else
 #define FASTNOISE_RANDOM_SIGN       ((lrand48()%2==0)?1:-1)
+#endif
 #endif
 
     @TYPE@ @IMPL_NAME@::sample_unbiased()
