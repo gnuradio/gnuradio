@@ -59,6 +59,8 @@ namespace gr {
       std::vector<double*> d_magbufs;
       float *d_fbuf;
 
+      int d_argc;
+      char *d_argv;
       QWidget *d_parent;
       FreqDisplayForm *d_main_gui;
 

@@ -47,6 +47,8 @@ namespace gr {
       int d_index;
       std::vector<double*> d_residbufs;
 
+      int d_argc;
+      char *d_argv;
       QWidget *d_parent;
       HistogramDisplayForm *d_main_gui;
 

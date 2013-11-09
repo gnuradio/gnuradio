@@ -54,6 +54,14 @@ namespace gr {
 	d_size(size), d_buffer_size(2*size), d_samp_rate(samp_rate), d_name(name),
 	d_nconnections(2*nconnections), d_parent(parent)
     {
+      // Required now for Qt; argc must be greater than 0 and argv
+      // must have at least one valid character. Must be valid through
+      // life of the qApplication:
+      // http://harmattan-dev.nokia.com/docs/library/html/qt4/qapplication.html
+      d_argc = 1;
+      d_argv = new char;
+      d_argv = '\0';
+
       d_main_gui = NULL;
 
       for(int n = 0; n < d_nconnections; n++) {
@@ -86,6 +94,8 @@ namespace gr {
       for(int n = 0; n < d_nconnections; n++) {
 	fft::free(d_buffers[n]);
       }
+
+      delete d_argv;
     }
 
     bool
@@ -101,9 +111,7 @@ namespace gr {
 	d_qApplication = qApp;
       }
       else {
-	int argc=0;
-	char **argv = NULL;
-	d_qApplication = new QApplication(argc, argv);
+	d_qApplication = new QApplication(d_argc, &d_argv);
       }
 
       d_main_gui = new TimeDisplayForm(d_nconnections, d_parent);
@@ -393,7 +401,7 @@ namespace gr {
         for(n = 0; n < d_nconnections/2; n++) {
           std::vector<gr::tag_t> tmp_tags;
           for(size_t t = 0; t < d_tags[n].size(); t++) {
-            if(d_tags[n][t].offset > (d_size - d_trigger_delay)) {
+            if(d_tags[n][t].offset > (uint64_t)(d_size - d_trigger_delay)) {
               d_tags[n][t].offset = d_tags[n][t].offset - (d_size - d_trigger_delay);
               tmp_tags.push_back(d_tags[n][t]);
             }

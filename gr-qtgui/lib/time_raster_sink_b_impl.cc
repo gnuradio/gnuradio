@@ -66,6 +66,14 @@ namespace gr {
 	d_offset(std::vector<float>(nconnections,0)),
 	d_samp_rate(samp_rate)
     {
+      // Required now for Qt; argc must be greater than 0 and argv
+      // must have at least one valid character. Must be valid through
+      // life of the qApplication:
+      // http://harmattan-dev.nokia.com/docs/library/html/qt4/qapplication.html
+      d_argc = 1;
+      d_argv = new char;
+      d_argv = '\0';
+
       d_main_gui = NULL;
 
       d_index = 0;
@@ -96,6 +104,8 @@ namespace gr {
       for(int i = 0; i < d_nconnections; i++) {
 	fft::free(d_residbufs[i]);
       }
+
+      delete d_argv;
     }
 
     bool
@@ -111,9 +121,7 @@ namespace gr {
 	d_qApplication = qApp;
       }
       else {
-	int argc = 0;
-	char **argv = NULL;
-	d_qApplication = new QApplication(argc, argv);
+	d_qApplication = new QApplication(d_argc, &d_argv);
       }
 
       // Create time raster plot; as a bit input, we expect to see 1's
