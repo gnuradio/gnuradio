@@ -44,6 +44,7 @@ namespace gr {
       gr::analog::fastnoise_source_f::sptr d_noise;
       double d_cfo;
       float d_angle;
+      double d_noise_seed;
 
     public:
       cfo_model_impl(
@@ -55,6 +56,15 @@ namespace gr {
       ~cfo_model_impl();
       void setup_rpc();
       int work(int, gr_vector_const_void_star&, gr_vector_void_star&);
+
+      void set_std_dev(double _dev){ d_std_dev_hz = _dev; d_noise = gr::analog::fastnoise_source_f::make(analog::GR_GAUSSIAN, d_std_dev_hz, d_noise_seed); }
+      void set_max_dev(double _dev){ d_max_dev_hz = _dev; }
+      void set_samp_rate(double _rate){ d_samp_rate = _rate; }
+
+      double std_dev() const { return d_std_dev_hz; }
+      double max_dev() const { return d_max_dev_hz; }
+      double samp_rate() const { return d_samp_rate; }
+
     };
 
   } /* namespace channels */

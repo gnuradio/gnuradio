@@ -54,7 +54,8 @@ namespace gr {
         d_table(8*1024),
         d_noise(gr::analog::fastnoise_source_f::make(analog::GR_GAUSSIAN, std_dev_hz, noise_seed)),
         d_cfo(0),
-        d_angle(0)
+        d_angle(0),
+        d_noise_seed(noise_seed)
     {
     }
 
@@ -68,7 +69,7 @@ namespace gr {
 
         const gr_complex* in = (const gr_complex*) input_items[0];
         gr_complex* out = (gr_complex*) output_items[0];
-        for(size_t i=0; i<noutput_items; i++){
+        for(int i=0; i<noutput_items; i++){
             // update and bound cfo
             // we multiply by a random {1,-1} to remove any sign
             // bias that may exist in our random sample pool

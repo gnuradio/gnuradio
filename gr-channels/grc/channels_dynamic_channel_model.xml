@@ -9,7 +9,14 @@
 	<key>channels_dynamic_channel_model</key>
 	<import>from gnuradio import channels</import>
 	<make>channels.dynamic_channel_model( $samp_rate, $sro_stdev, $sro_maxdev, $cfo_stdev, $cfo_maxdev, $N, $fD, $LOS, $K, $delays, $mags, $ntaps, $noise_amp, $seed )</make>
-    <callback>set_fDTs($fDTs)</callback>
+
+    <callback>set_samp_rate($samp_rate)</callback>
+    <callback>set_sro_dev_std($sro_stdev)</callback>
+    <callback>set_sro_dev_max($sro_maxdev)</callback>
+    <callback>set_cfo_dev_std($cfo_stdev)</callback>
+    <callback>set_cfo_dev_max($cfo_maxdev)</callback>
+    <callback>set_noise_amp($noise_amp)</callback>
+    <callback>set_doppler_freq($fD)</callback>
     <callback>set_K($K)</callback>
 
     <param>
