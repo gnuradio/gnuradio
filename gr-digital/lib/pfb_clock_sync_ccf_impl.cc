@@ -89,9 +89,6 @@ namespace gr {
       d_rate_f = d_rate - (float)d_rate_i;
       d_filtnum = (int)floor(d_k);
 
-      //GR_LOG_DEBUG(d_logger, boost::format("rate: %1%  irate: %2%   frate: %3%") \
-      //             % d_rate % d_rate_i % d_rate_f);
-
       d_filters = std::vector<kernel::fir_filter_ccf*>(d_nfilters);
       d_diff_filters = std::vector<kernel::fir_filter_ccf*>(d_nfilters);
 
@@ -109,8 +106,6 @@ namespace gr {
       set_taps(dtaps, d_dtaps, d_diff_filters);
 
       set_relative_rate((float)d_osps/(float)d_sps);
-
-      d_diff_count = 0;
     }
 
     pfb_clock_sync_ccf_impl::~pfb_clock_sync_ccf_impl()
@@ -241,10 +236,6 @@ namespace gr {
       float denom = (1.0 + 2.0*d_damping*d_loop_bw + d_loop_bw*d_loop_bw);
       d_alpha = (4*d_damping*d_loop_bw) / denom;
       d_beta = (4*d_loop_bw*d_loop_bw) / denom;
-      //GR_LOG_DEBUG(d_logger, boost::format("loop bw: %1%") % d_loop_bw);
-      //GR_LOG_DEBUG(d_logger, boost::format("damping: %1%") % d_damping);
-      //GR_LOG_DEBUG(d_logger, boost::format("alpha:   %1%") % d_alpha);
-      //GR_LOG_DEBUG(d_logger, boost::format("beta:    %1%") % d_beta);
     }
 
     void

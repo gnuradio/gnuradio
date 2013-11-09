@@ -41,7 +41,7 @@ class test_pfb_clock_sync(gr_unittest.TestCase):
         loop_bw = cmath.pi/100.0
         nfilts = 32
         init_phase = nfilts/2
-        max_rate_deviation = 1.5
+        max_rate_deviation = 0.5
         osps = 1
         
         ntaps = 11 * int(sps*nfilts)
@@ -94,7 +94,7 @@ class test_pfb_clock_sync(gr_unittest.TestCase):
         loop_bw = cmath.pi/100.0
         nfilts = 32
         init_phase = nfilts/2
-        max_rate_deviation = 1.5
+        max_rate_deviation = 0.5
         osps = 1
         
         ntaps = 11 * int(sps*nfilts)
@@ -136,7 +136,7 @@ class test_pfb_clock_sync(gr_unittest.TestCase):
         #for e,d in zip(expected_result, dst_data):
         #    print e, d
         
-        self.assertComplexTuplesAlmostEqual(expected_result, dst_data, 1)
+        self.assertFloatTuplesAlmostEqual(expected_result, dst_data, 1)
 
 
 if __name__ == '__main__':

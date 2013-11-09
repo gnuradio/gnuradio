@@ -58,8 +58,6 @@ namespace gr {
       float d_error;
       int   d_out_idx;
 
-      int d_diff_count;
-
       void create_diff_taps(const std::vector<float> &newtaps,
 			    std::vector<float> &difftaps);
 

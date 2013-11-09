@@ -90,7 +90,7 @@ namespace gr {
       d_diff_filters = std::vector<kernel::fir_filter_fff*>(d_nfilters);
 
       // Create an FIR filter for each channel and zero out the taps
-      std::vector<float> vtaps(0, d_nfilters);
+      std::vector<float> vtaps(1,0);
       for(int i = 0; i < d_nfilters; i++) {
 	d_filters[i] = new kernel::fir_filter_fff(1, vtaps);
 	d_diff_filters[i] = new kernel::fir_filter_fff(1, vtaps);
@@ -128,7 +128,6 @@ namespace gr {
         ninput_items_required[i] = (noutput_items + history()) * (d_sps/d_osps);
     }
 
-
     /*******************************************************************
      SET FUNCTIONS
     *******************************************************************/
@@ -137,7 +136,7 @@ namespace gr {
     pfb_clock_sync_fff_impl::set_loop_bandwidth(float bw)
     {
       if(bw < 0) {
-	throw std::out_of_range("pfb_clock_sync_fff_impl: invalid bandwidth. Must be >= 0.");
+	throw std::out_of_range("pfb_clock_sync_fff: invalid bandwidth. Must be >= 0.");
       }
 
       d_loop_bw = bw;
@@ -148,7 +147,7 @@ namespace gr {
     pfb_clock_sync_fff_impl::set_damping_factor(float df)
     {
       if(df < 0 || df > 1.0) {
-	throw std::out_of_range("pfb_clock_sync_fff_impl: invalid damping factor. Must be in [0,1].");
+	throw std::out_of_range("pfb_clock_sync_fff: invalid damping factor. Must be in [0,1].");
       }
 
       d_damping = df;
@@ -159,7 +158,7 @@ namespace gr {
     pfb_clock_sync_fff_impl::set_alpha(float alpha)
     {
       if(alpha < 0 || alpha > 1.0) {
-	throw std::out_of_range("pfb_clock_sync_fff_impl: invalid alpha. Must be in [0,1].");
+	throw std::out_of_range("pfb_clock_sync_fff: invalid alpha. Must be in [0,1].");
       }
       d_alpha = alpha;
     }
@@ -168,7 +167,7 @@ namespace gr {
     pfb_clock_sync_fff_impl::set_beta(float beta)
     {
       if(beta < 0 || beta > 1.0) {
-	throw std::out_of_range("pfb_clock_sync_fff_impl: invalid beta. Must be in [0,1].");
+	throw std::out_of_range("pfb_clock_sync_fff: invalid beta. Must be in [0,1].");
       }
       d_beta = beta;
     }
@@ -252,7 +251,7 @@ namespace gr {
       }
 
       // Set the history to ensure enough input items for each filter
-      set_history(d_taps_per_filter + d_sps);
+      set_history(d_taps_per_filter + d_sps + d_sps);
 
       // Make sure there is enough output space for d_osps outputs/input.
       set_output_multiple(d_osps);
@@ -392,7 +391,7 @@ namespace gr {
       
 	  // Keep the current filter number in [0, d_nfilters]
 	  // If we've run beyond the last filter, wrap around and go to next sample
-	  // If we've go below 0, wrap around and go to previous sample
+	  // If we've gone below 0, wrap around and go to previous sample
 	  while(d_filtnum >= d_nfilters) {
 	    d_k -= d_nfilters;
 	    d_filtnum -= d_nfilters;
