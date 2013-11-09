@@ -64,6 +64,14 @@ namespace gr {
 	d_plottime(plottime), d_plotconst(plotconst),
 	d_parent(parent)
     {
+      // Required now for Qt; argc must be greater than 0 and argv
+      // must have at least one valid character. Must be valid through
+      // life of the qApplication:
+      // http://harmattan-dev.nokia.com/docs/library/html/qt4/qapplication.html
+      d_argc = 1;
+      d_argv = new char;
+      d_argv = '\0';
+
       d_main_gui = NULL;
 
       // Perform fftshift operation;
@@ -87,6 +95,7 @@ namespace gr {
       delete [] d_residbuf;
       delete [] d_magbuf;
       delete d_fft;
+      delete d_argv;
     }
 
     bool
@@ -111,9 +120,7 @@ namespace gr {
 	d_qApplication = qApp;
       }
       else {
-	int argc;
-	char **argv = NULL;
-	d_qApplication = new QApplication(argc, argv);
+	d_qApplication = new QApplication(d_argc, &d_argv);
       }
 
       uint64_t maxBufferSize = 32768;

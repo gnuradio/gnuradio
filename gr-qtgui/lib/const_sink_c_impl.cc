@@ -54,6 +54,14 @@ namespace gr {
 	d_size(size), d_name(name),
 	d_nconnections(nconnections), d_parent(parent)
     {
+      // Required now for Qt; argc must be greater than 0 and argv
+      // must have at least one valid character. Must be valid through
+      // life of the qApplication:
+      // http://harmattan-dev.nokia.com/docs/library/html/qt4/qapplication.html
+      d_argc = 1;
+      d_argv = new char;
+      d_argv = '\0';
+
       d_main_gui = NULL;
 
       d_index = 0;
@@ -83,6 +91,8 @@ namespace gr {
 	fft::free(d_residbufs_real[i]);
 	fft::free(d_residbufs_imag[i]);
       }
+
+      delete d_argv;
     }
 
     bool
@@ -98,9 +108,7 @@ namespace gr {
 	d_qApplication = qApp;
       }
       else {
-	int argc=0;
-	char **argv = NULL;
-	d_qApplication = new QApplication(argc, argv);
+	d_qApplication = new QApplication(d_argc, &d_argv);
       }
 
       d_main_gui = new ConstellationDisplayForm(d_nconnections, d_parent);

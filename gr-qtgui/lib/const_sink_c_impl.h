@@ -46,6 +46,8 @@ namespace gr {
       std::vector<double*> d_residbufs_real;
       std::vector<double*> d_residbufs_imag;
 
+      int d_argc;
+      char *d_argv;
       QWidget *d_parent;
       ConstellationDisplayForm *d_main_gui;
 

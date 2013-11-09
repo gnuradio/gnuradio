@@ -46,6 +46,8 @@ namespace gr {
 
       float *d_tmpflt;
 
+      int d_argc;
+      char *d_argv;
       QWidget *d_parent;
       TimeRasterDisplayForm *d_main_gui;
 
