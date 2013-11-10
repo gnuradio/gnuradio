@@ -24,7 +24,7 @@ from gnuradio import blocks
 import sys, math
 
 import fft_swig as fft
-import window
+from fft_swig import window
 
 try:
     from gnuradio import filter
