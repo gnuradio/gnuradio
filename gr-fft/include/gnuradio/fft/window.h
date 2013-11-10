@@ -20,6 +20,9 @@
  * Boston, MA 02110-1301, USA.
  */
 
+#ifndef INCLUDED_FFT_WINDOW_H
+#define INCLUDED_FFT_WINDOW_H
+
 #include <gnuradio/fft/api.h>
 #include <vector>
 #include <cmath>
@@ -268,3 +271,5 @@ namespace gr {
 
   } /* namespace fft */
 } /* namespace gr */
+
+#endif /* INCLUDED_FFT_WINDOW_H */
