@@ -15,7 +15,8 @@
 	  $channel,
 	  $atten)
 	</make>
-           <callback>set_taps($taps)</callback>
+    <callback>set_taps($taps)</callback>
+    <callback>set_channel(int($channel))</callback>
 	<param>
 		<name>Decimation</name>
 		<key>decim</key>
