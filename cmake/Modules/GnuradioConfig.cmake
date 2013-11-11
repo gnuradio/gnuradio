@@ -50,6 +50,10 @@ function(GR_MODULE EXTVAR PCNAME INCFILE LIBFILE)
     # check for .pc hints
     PKG_CHECK_MODULES(PC_GNURADIO_${EXTVAR} ${PCNAME})
 
+    if(NOT PC_GNURADIO_${EXTVAR}_FOUND)
+        set(PC_GNURADIO_${EXTVAR}_LIBRARIES ${LIBFILE})
+    endif()
+
     set(INCVAR_NAME "GNURADIO_${EXTVAR}_INCLUDE_DIRS")
     set(LIBVAR_NAME "GNURADIO_${EXTVAR}_LIBRARIES")
     set(PC_INCDIR ${PC_GNURADIO_${EXTVAR}_INCLUDEDIR})
@@ -67,26 +71,29 @@ function(GR_MODULE EXTVAR PCNAME INCFILE LIBFILE)
     )
 
     # look for libs
-    FIND_LIBRARY(
-        ${LIBVAR_NAME}
-        NAMES ${LIBFILE}
-        HINTS $ENV{GNURADIO_RUNTIME_DIR}/lib
-            ${PC_LIBDIR}
-            ${CMAKE_INSTALL_PREFIX}/lib/
-            ${CMAKE_INSTALL_PREFIX}/lib64/
-        PATHS /usr/local/lib
-              /usr/local/lib64
-              /usr/lib
-              /usr/lib64
-    )
+    foreach(libname ${PC_GNURADIO_${EXTVAR}_LIBRARIES})
+        FIND_LIBRARY(
+            ${LIBVAR_NAME}_${libname}
+            NAMES ${libname}
+            HINTS $ENV{GNURADIO_RUNTIME_DIR}/lib
+                ${PC_LIBDIR}
+                ${CMAKE_INSTALL_PREFIX}/lib/
+                ${CMAKE_INSTALL_PREFIX}/lib64/
+            PATHS /usr/local/lib
+                  /usr/local/lib64
+                  /usr/lib
+                  /usr/lib64
+        )
+	list(APPEND ${LIBVAR_NAME} ${${LIBVAR_NAME}_${libname}})
+    endforeach(libname)
 
     # show results
     message(" * INCLUDES=${GNURADIO_${EXTVAR}_INCLUDE_DIRS}")
     message(" * LIBS=${GNURADIO_${EXTVAR}_LIBRARIES}")
 
     # append to all includes and libs list
-    LIST(APPEND GNURADIO_ALL_INCLUDE_DIRS ${GNURADIO_${EXTVAR}_INCLUDE_DIRS})
-    LIST(APPEND GNURADIO_ALL_LIBRARIES ${GNURADIO_${EXTVAR}_LIBRARIES})
+    set(GNURADIO_ALL_INCLUDE_DIRS ${GNURADIO_ALL_INCLUDE_DIRS} ${GNURADIO_${EXTVAR}_INCLUDE_DIRS} PARENT_SCOPE)
+    set(GNURADIO_ALL_LIBRARIES    ${GNURADIO_ALL_LIBRARIES}    ${GNURADIO_${EXTVAR}_LIBRARIES}    PARENT_SCOPE)
 
     FIND_PACKAGE_HANDLE_STANDARD_ARGS(GNURADIO_${EXTVAR} DEFAULT_MSG GNURADIO_${EXTVAR}_LIBRARIES GNURADIO_${EXTVAR}_INCLUDE_DIRS)
     message("GNURADIO_${EXTVAR}_FOUND = ${GNURADIO_${EXTVAR}_FOUND}")
@@ -121,3 +128,6 @@ GR_MODULE(VOCODER gnuradio-vocoder gnuradio/vocoder/api.h gnuradio-vocoder)
 GR_MODULE(WAVELET gnuradio-wavelet gnuradio/wavelet/api.h gnuradio-wavelet)
 GR_MODULE(WXGUI gnuradio-wxgui gnuradio/wxgui/api.h gnuradio-wxgui)
 GR_MODULE(PMT gnuradio-runtime pmt/pmt.h gnuradio-pmt)
+
+list(REMOVE_DUPLICATES GNURADIO_ALL_INCLUDE_DIRS)
+list(REMOVE_DUPLICATES GNURADIO_ALL_LIBRARIES)
