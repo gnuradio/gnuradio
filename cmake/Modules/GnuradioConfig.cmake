@@ -87,6 +87,8 @@ function(GR_MODULE EXTVAR PCNAME INCFILE LIBFILE)
 	list(APPEND ${LIBVAR_NAME} ${${LIBVAR_NAME}_${libname}})
     endforeach(libname)
 
+    set(${LIBVAR_NAME} ${${LIBVAR_NAME}} PARENT_SCOPE)
+
     # show results
     message(" * INCLUDES=${GNURADIO_${EXTVAR}_INCLUDE_DIRS}")
     message(" * LIBS=${GNURADIO_${EXTVAR}_LIBRARIES}")
