@@ -25,6 +25,10 @@ if(NOT GR_REQUIRED_COMPONENTS)
   set(GR_REQUIRED_COMPONENTS RUNTIME ANALOG BLOCKS DIGITAL FFT FILTER PMT)
 endif()
 
+# Allows us to use all .cmake files in this directory
+list(INSERT CMAKE_MODULE_PATH 0 ${CMAKE_CURRENT_LIST_DIR})
+
+# Easily access all libraries and includes of GNU Radio
 set(GNURADIO_ALL_LIBRARIES "")
 set(GNURADIO_ALL_INCLUDE_DIRS "")
 
