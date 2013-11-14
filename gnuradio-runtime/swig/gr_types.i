@@ -23,7 +23,6 @@
 #ifndef SWIG_GR_TYPES_I
 #define SWIG_GR_TYPES_I
 
-%include "std_string.i"
 %include "stdint.i"
 
 %{

@@ -28,6 +28,7 @@
 // SWIG interface definition
 ////////////////////////////////////////////////////////////////////////
 
+%include "std_string.i"
 %include <gr_extras.i>
 
 #ifdef SW_RUNTIME
