@@ -104,7 +104,7 @@ namespace gr {
 	// copy output
 	size_t io(0);
 	nout += ncopy;
-	const uint8_t* ptr = uniform_vector_elements(vect, io);
+	const uint8_t* ptr = (uint8_t*) uniform_vector_elements(vect, io);
 	memcpy(out, ptr, ncopy*d_itemsize);
 	
 	// save leftover items if needed for next work call
