@@ -535,7 +535,7 @@ namespace gr {
 	std::reverse(d_taps.begin(), d_taps.end());
 
 	// Make a set of taps at all possible arch alignments
-	d_aligned_taps = (gr_complex**)malloc(d_naligned*sizeof(gr_complex**));
+	d_aligned_taps = (gr_complex**)malloc(d_naligned*sizeof(gr_complex*));
 	for(int i = 0; i < d_naligned; i++) {
 	  d_aligned_taps[i] = fft::malloc_complex(d_ntaps+d_naligned-1);
 	  memset(d_aligned_taps[i], 0, sizeof(gr_complex)*(d_ntaps+d_naligned-1));
