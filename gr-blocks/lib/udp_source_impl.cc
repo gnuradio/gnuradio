@@ -85,7 +85,8 @@ namespace gr {
       if(host.size() > 0) {
         boost::asio::ip::udp::resolver resolver(d_io_service);
         boost::asio::ip::udp::resolver::query query(boost::asio::ip::udp::v4(),
-                                                    host, s_port);
+                                                    d_host, s_port,
+                                                    boost::asio::ip::resolver_query_base::passive);
         d_endpoint = *resolver.resolve(query);
 
         d_socket = new boost::asio::ip::udp::socket(d_io_service);
@@ -113,7 +114,9 @@ namespace gr {
       if(!d_connected)
         return;
 
+      d_io_service.reset();
       d_io_service.stop();
+      d_udp_thread.join();
 
       d_socket->close();
       delete d_socket;
@@ -156,11 +159,11 @@ namespace gr {
             // Make sure we never go beyond the boundary of the
             // residual buffer.  This will just drop the last bit of
             // data in the buffer if we've run out of room.
-            if((int)(d_residual + bytes_transferred) > (50*d_payload_size)) {
+            if((int)(d_residual + bytes_transferred) >= (50*d_payload_size)) {
               GR_LOG_WARN(d_logger, "Too much data; dropping packet.");
             }
             else {
-              // otherwise, copy receid data into local buffer for
+              // otherwise, copy received data into local buffer for
               // copying later.
               memcpy(d_residbuf+d_residual, d_rxbuf, bytes_transferred);
               d_residual += bytes_transferred;
