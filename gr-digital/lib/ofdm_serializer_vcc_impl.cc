@@ -171,7 +171,7 @@ namespace gr {
 	// recalc frame length from noutput_items
 	frame_length = 0;
 	int sym_per_frame = 0;
-	while ((sym_per_frame + d_occupied_carriers[(frame_length + 1) % d_occupied_carriers.size()].size()) < noutput_items) {
+	while ((sym_per_frame + d_occupied_carriers[(frame_length + 1) % d_occupied_carriers.size()].size()) < (size_t)noutput_items) {
 	  frame_length++;
 	  sym_per_frame += d_occupied_carriers[(frame_length + 1) % d_occupied_carriers.size()].size();
 	}

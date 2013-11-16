@@ -39,7 +39,7 @@ class test_udp_sink_source(gr_unittest.TestCase):
     def test_001(self):
         # Tests calling disconnect/reconnect.
 
-        port = 65500
+        port = 65510
 
         n_data = 16
         src_data = [x for x in range(n_data)]
@@ -56,7 +56,7 @@ class test_udp_sink_source(gr_unittest.TestCase):
         self.tb_snd.run()
 
     def test_002(self):
-        port = 65500
+        port = 65520
 
         n_data = 100
         src_data = [float(x) for x in range(n_data)]
@@ -83,10 +83,12 @@ class test_udp_sink_source(gr_unittest.TestCase):
         self.assert_(not self.timeout)
 
     def test_003(self):
+        port = 65530
+
         udp_rcv = blocks.udp_source(gr.sizeof_float, '0.0.0.0', 0, eof=False)
         rcv_port = udp_rcv.get_port()
 
-        udp_snd = blocks.udp_sink(gr.sizeof_float, '127.0.0.1', 65500)
+        udp_snd = blocks.udp_sink(gr.sizeof_float, '127.0.0.1', port)
         udp_snd.connect('localhost', rcv_port)
 
         n_data = 16
