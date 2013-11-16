@@ -26,6 +26,8 @@ import os
 from os.path import getsize
 
 g_in_file = os.path.join(os.getenv("srcdir"), "test_16bit_1chunk.wav")
+g_extra_header_offset = 36
+g_extra_header_len = 18
 
 class test_wavefile(gr_unittest.TestCase):
 
@@ -52,7 +54,8 @@ class test_wavefile(gr_unittest.TestCase):
 	self.tb.run()
 	wf_out.close()
 
-	self.assertEqual(getsize(infile), getsize(outfile))
+	# we're loosing all extra header chunks
+	self.assertEqual(getsize(infile) - g_extra_header_len, getsize(outfile))
 
 	in_f  = file(infile,  'rb')
 	out_f = file(outfile, 'rb')
@@ -61,8 +64,9 @@ class test_wavefile(gr_unittest.TestCase):
 	out_data = out_f.read()
         out_f.close()
 	os.remove(outfile)
-
-	self.assertEqual(in_data, out_data)
+	# cut extra header chunks input file
+	self.assertEqual(in_data[:g_extra_header_offset] + \
+	                 in_data[g_extra_header_offset + g_extra_header_len:], out_data)
 
 if __name__ == '__main__':
     gr_unittest.run(test_wavefile, "test_wavefile.xml")
