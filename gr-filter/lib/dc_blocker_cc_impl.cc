@@ -79,6 +79,8 @@ namespace gr {
       else {
 	d_ma_0 = new moving_averager_c(D);
 	d_ma_1 = new moving_averager_c(D);
+        d_ma_2 = NULL;
+        d_ma_3 = NULL;
       }
     }
 
