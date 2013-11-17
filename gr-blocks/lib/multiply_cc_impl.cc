@@ -56,14 +56,9 @@ namespace gr {
       int noi = d_vlen*noutput_items;
       
       memcpy(out, input_items[0], noi*sizeof(gr_complex));
-      if(is_unaligned()) {
-	for(size_t i = 1; i < input_items.size(); i++)
-	  volk_32fc_x2_multiply_32fc_u(out, out, (gr_complex*)input_items[i], noi);
-      }
-      else {
-	for(size_t i = 1; i < input_items.size(); i++)
-	  volk_32fc_x2_multiply_32fc_a(out, out, (gr_complex*)input_items[i], noi);
-      }
+      for(size_t i = 1; i < input_items.size(); i++)
+        volk_32fc_x2_multiply_32fc(out, out, (gr_complex*)input_items[i], noi);
+
       return noutput_items;
     }
 
