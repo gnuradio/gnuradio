@@ -23,6 +23,7 @@
 from gnuradio import gr, digital
 from gnuradio import filter
 from gnuradio import blocks
+import sys
 
 try:
     from gnuradio import channels
