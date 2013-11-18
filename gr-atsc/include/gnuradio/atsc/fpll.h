@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2006 Free Software Foundation, Inc.
+ * Copyright 2006,2013 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -37,43 +37,29 @@ typedef boost::shared_ptr<atsc_fpll> atsc_fpll_sptr;
 
 ATSC_API atsc_fpll_sptr atsc_make_fpll( float sample_rate );
 
-/*!
- * \brief ATSC FPLL (2nd Version)
- * \ingroup atsc
- *
- *  A/D --> GrFIRfilterFFF ----> GrAtscFPLL ---->
- *
- * We use GrFIRfilterFFF to bandpass filter the signal of interest.
- *
- * This class accepts a single real input and produces a single real output
- */
-
 class ATSC_API atsc_fpll : public gr::sync_block
 {
-  friend ATSC_API atsc_fpll_sptr atsc_make_fpll( float sample_rate );
+	friend ATSC_API atsc_fpll_sptr atsc_make_fpll( float sample_rate );
 
-  atsc_fpll( float sample_rate );
+	atsc_fpll( float sample_rate );
 
 public:
 
-  int work (int noutput_items,
-	    gr_vector_const_void_star &input_items,
-	    gr_vector_void_star &output_items);
+	int work (int noutput_items,
+		gr_vector_const_void_star &input_items,
+		gr_vector_void_star &output_items);
 
-  void reset() { /* nop */ }
+	void reset() { /* nop */ }
 
-  void initialize ( float sample_rate ) ;
+	void initialize ( float sample_rate ) ;
 
- protected:
+protected:
 
-  double                        initial_freq;
-  double                        initial_phase;
-  bool                          debug_no_update;
-  gr::nco<float,float>          nco;
-  filter::single_pole_iir<float,float,float> afci;
-  filter::single_pole_iir<float,float,float> afcq;
-
-
+	double                        initial_freq;
+	double                        initial_phase;
+	bool                          debug_no_update;
+	gr::nco<float,float>          nco;
+	filter::single_pole_iir<gr_complex,gr_complex,float> afc;
 };
 
 

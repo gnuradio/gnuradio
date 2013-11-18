@@ -78,24 +78,12 @@ def graph (args):
 	# Interpolate Filter our 6MHz wide signal centered at 0
 	ilp_coeffs = filter.firdes.low_pass(3, input_rate, 3.2e6, .5e6, filter.firdes.WIN_HAMMING)
 	ilp = filter.interp_fir_filter_ccf(3, ilp_coeffs)
-
-	# Move the center frequency to 5.75MHz ( this wont be needed soon )
-	duc_coeffs = filter.firdes.low_pass ( 1, input_rate, 9e6, 1e6, filter.firdes.WIN_HAMMING )
-    	duc = filter.freq_xlating_fir_filter_ccf ( 1, duc_coeffs, -5.75e6, input_rate )
 	
-	# fpll input is float
-	c2f = blocks.complex_to_float()
-
 	# Phase locked loop
 	fpll = atsc.fpll( input_rate )
 
-	# Clean fpll output
-	lp_coeffs2 = filter.firdes.low_pass (1.0,
-			   input_rate,
-			   5.75e6,
-                           800e3,
-                           filter.firdes.WIN_HAMMING);
-	lp_filter = filter.fir_filter_fff (1, lp_coeffs2)
+	# fpll input is float
+	c2f = blocks.complex_to_float()
 
 	# Automatic gain control
 	agc = analog.agc_ff(1e-6, 4)
@@ -120,7 +108,7 @@ def graph (args):
 	outf = blocks.file_sink(gr.sizeof_char,outfile)
 
 	# Connect it all together
-	tb.connect( srcf, is2c, rrc, ilp, duc, c2f, fpll, lp_filter, agc )
+	tb.connect( srcf, is2c, rrc, ilp, fpll, c2f, agc)
 	tb.connect( agc, (remove_dc, 0) )
 	tb.connect( agc, iir, (remove_dc, 1) )
 	tb.connect( remove_dc, btl, fsc, eq, viterbi, deinter, rs_dec, derand, depad, outf)
@@ -131,10 +119,8 @@ def graph (args):
 	print 'is2c:      ' + repr(is2c.pc_work_time()).rjust(15)
 	print 'rrc:       ' + repr(rrc.pc_work_time()).rjust(15)
 	print 'ilp:       ' + repr(ilp.pc_work_time()).rjust(15)
-	print 'duc:       ' + repr(duc.pc_work_time()).rjust(15)
-	print 'c2f:       ' + repr(c2f.pc_work_time()).rjust(15)
 	print 'fpll:      ' + repr(fpll.pc_work_time()).rjust(15)
-	print 'lp_filter: ' + repr(lp_filter.pc_work_time()).rjust(15)
+	print 'c2f:       ' + repr(c2f.pc_work_time()).rjust(15)
 	print 'agc:       ' + repr(agc.pc_work_time()).rjust(15)
 	print 'btl:       ' + repr(btl.pc_work_time()).rjust(15)
 	print 'fsc:       ' + repr(fsc.pc_work_time()).rjust(15)

@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2006,2010 Free Software Foundation, Inc.
+ * Copyright 2006,2010, 2013 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -34,31 +34,29 @@
 atsc_fpll_sptr
 atsc_make_fpll( float sample_rate )
 {
-  return gnuradio::get_initial_sptr(new atsc_fpll( sample_rate ));
+	return gnuradio::get_initial_sptr(new atsc_fpll( sample_rate ));
 }
 
 atsc_fpll::atsc_fpll( float sample_rate )
-  : gr::sync_block("atsc_fpll",
-		  gr::io_signature::make(1, 1, sizeof(float)),
-		  gr::io_signature::make(1, 1, sizeof(float))),
-		  initial_phase(0)
+	: gr::sync_block("atsc_fpll",
+		gr::io_signature::make(1, 1, sizeof(gr_complex)),
+		gr::io_signature::make(1, 1, sizeof(gr_complex))),
+		initial_phase(0)
 {
-  initial_freq = 5.75e6 - 3e6 + 0.309e6; // a_initial_freq;
-  initialize( sample_rate );
+	initial_freq = -3e6 + 0.309e6; // a_initial_freq;
+	initialize( sample_rate );
 }
-
 
 void
 atsc_fpll::initialize ( float sample_rate )
 {
-  float alpha = 1 - exp(-1.0 / sample_rate / 5e-6);
+	float alpha = 1 - exp(-1.0 / sample_rate / 5e-6);
 
-  afci.set_taps (alpha);
-  afcq.set_taps (alpha);
+	afc.set_taps (alpha);
 
-  printf("Setting initial_freq: %f\n",initial_freq);
-  nco.set_freq (initial_freq / sample_rate * 2 * M_PI);
-  nco.set_phase (initial_phase);
+	printf("Setting initial_freq: %f\n",initial_freq);
+	nco.set_freq (initial_freq / sample_rate * 2 * M_PI);
+	nco.set_phase (initial_phase);
 }
 
 int
@@ -66,51 +64,48 @@ atsc_fpll::work (int noutput_items,
 		       gr_vector_const_void_star &input_items,
 		       gr_vector_void_star &output_items)
 {
-  const float *in = (const float *) input_items[0];
-  float *out = (float *) output_items[0];
+	const gr_complex *in = (const gr_complex *) input_items[0];
+	gr_complex *out = (gr_complex *) output_items[0];
 
-  for (int k = 0; k < noutput_items; k++){
+	for (int k = 0; k < noutput_items; k++)
+	{
+		float a_cos, a_sin;
 
-    float a_cos, a_sin;
+		nco.step ();                // increment phase
+		nco.sincos (&a_sin, &a_cos);  // compute cos and sin
 
-    nco.step ();                // increment phase
-    nco.sincos (&a_sin, &a_cos);  // compute cos and sin
+		gr_complex result = in[k] * gr_complex(a_sin, a_cos);
 
-    float I = in[k] * a_sin;
-    float Q = in[k] * a_cos;
+    		out[k] = result;
 
-    out[k] = I;
+		gr_complex filtered = afc.filter (result);
 
-    float filtered_I = afci.filter (I);
-    float filtered_Q = afcq.filter (Q);
+		// phase detector
 
-    // phase detector
+		// float x = atan2 (filtered_Q, filtered_I);
+		float x = gr::fast_atan2f(filtered.imag(), filtered.real());
 
-    // float x = atan2 (filtered_Q, filtered_I);
-    float x = gr::fast_atan2f(filtered_Q, filtered_I);
+		// avoid slamming filter with big transitions
 
-    // avoid slamming filter with big transitions
+		static const float limit = M_PI / 2;
 
-    static const float limit = M_PI / 2;
+		if (x > limit)
+			x = limit;
+		else if (x < -limit)
+			x = -limit;
 
-    if (x > limit)
-      x = limit;
-    else if (x < -limit)
-      x = -limit;
-
-    // static const float alpha = 0.037;   // Max value
-    // static const float alpha = 0.005;   // takes about 5k samples to pull in, stddev = 323
-    // static const float alpha = 0.002;   // takes about 15k samples to pull in, stddev =  69
+		// static const float alpha = 0.037;   // Max value
+		// static const float alpha = 0.005;   // takes about 5k samples to pull in, stddev = 323
+		// static const float alpha = 0.002;   // takes about 15k samples to pull in, stddev =  69
                                            //  or about 120k samples on noisy data,
-    static const float alpha = 0.001;
-    static const float beta = alpha * alpha / 4;
+		static const float alpha = 0.0002;
+		static const float beta = alpha * alpha / 4;
 
-    nco.adjust_phase (alpha * x);
-    nco.adjust_freq (beta * x);
+		nco.adjust_phase (alpha * x);
+		nco.adjust_freq (beta * x);
+	}
 
-  }
-
-  return noutput_items;
+	return noutput_items;
 }
 
 
