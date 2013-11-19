@@ -92,6 +92,10 @@ private:
 
   double d_min_val;
   double d_max_val;
+
+  FFTSizeMenu *d_sizemenu;
+  FFTAverageMenu *d_avgmenu;
+  FFTWindowMenu *d_winmenu;
 };
 
 #endif /* WATERFALL_DISPLAY_FORM_H */

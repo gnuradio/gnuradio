@@ -73,6 +73,11 @@ private:
   int d_fftsize;
   float d_fftavg;
   gr::filter::firdes::win_type d_fftwintype;
+
+  FFTSizeMenu *d_sizemenu;
+  FFTAverageMenu *d_avgmenu;
+  FFTWindowMenu *d_winmenu;
+
 };
 
 #endif /* FREQ_DISPLAY_FORM_H */
