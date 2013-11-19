@@ -91,7 +91,7 @@ class test_freq_xlating_filter(gr_unittest.TestCase):
     def generate_scf_source(self):
         self.fs = fs = 1
         self.fc = fc = 0.3
-        self.bw = bw = 0.1
+        self.bw = bw = 0.12
         self.taps = filter.firdes.low_pass(1, fs, bw, bw/4)
         times = xrange(100)
         self.src_data = map(lambda t: int(100*math.sin(2*cmath.pi*fc/fs*(t/100.0))), times)
@@ -99,7 +99,7 @@ class test_freq_xlating_filter(gr_unittest.TestCase):
     def generate_scc_source(self):
         self.fs = fs = 1
         self.fc = fc = 0.3
-        self.bw = bw = 0.1
+        self.bw = bw = 0.12
         self.taps = filter.firdes.complex_band_pass(1, fs, -bw/2, bw/2, bw/4)
         times = xrange(100)
         self.src_data = map(lambda t: int(100*math.sin(2*cmath.pi*fc/fs*(t/100.0))), times)

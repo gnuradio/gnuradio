@@ -658,21 +658,6 @@ namespace gr {
     //	=== Utilities ===
     //
 
-    // delta_f / width_factor gives number of taps required.
-    const int MAX_WIDTH_FACTOR = 8;
-    static const float width_factor[8] = {   // indexed by win_type
-      3.3,		// WIN_HAMMING
-      3.1,		// WIN_HANN
-      5.5,              // WIN_BLACKMAN
-      2.0,              // WIN_RECTANGULAR
-      //5.0             // WIN_KAISER  (guesstimate compromise)
-      //2.0             // WIN_KAISER  (guesstimate compromise)
-      10.0,		// WIN_KAISER
-      6.0,              // WIN_BLACKMAN_HARRIS (est.)
-      3.0,              // WIN_BARTLETT (est.)
-      5.5,              // WIN_FLATTOP (est.)
-    };
-
     int
     firdes::compute_ntaps_windes(double sampling_freq,
 			         double transition_width, // this is frequency, not relative frequency
@@ -692,14 +677,8 @@ namespace gr {
 			  win_type window_type,
 			  double beta)
     {
-      // normalized transition width
-      double delta_f = transition_width / sampling_freq;
-
-      // compute number of taps required for given transition width
-      if(window_type >= MAX_WIDTH_FACTOR)
-        throw std::runtime_error("firdes::compute_ntaps: window_type out of range.");
-
-      int ntaps = (int)(width_factor[window_type] / delta_f + 0.5);
+      double a = fft::window::max_attenuation(static_cast<fft::window::win_type>(window_type), beta);
+      int ntaps = (int)(a*sampling_freq/(22.0*transition_width));
       if((ntaps & 1) == 0)	// if even...
 	ntaps++;		// ...make odd
 

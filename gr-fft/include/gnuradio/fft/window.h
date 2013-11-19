@@ -35,19 +35,41 @@ namespace gr {
     public:
             
       enum win_type {
-	WIN_NONE = -1,           //!< don't use a window
-	WIN_HAMMING = 0,         //!< Hamming window; max attenuation 53 dB
-	WIN_HANN = 1,            //!< Hann window; max attenuation 44 dB
-	WIN_BLACKMAN = 2,        //!< Blackman window; max attenuation 74 dB
-	WIN_RECTANGULAR = 3,     //!< Basic rectangular window
-	WIN_KAISER = 4,          //!< Kaiser window; max attenuation a function of beta, google it
-	WIN_BLACKMAN_hARRIS = 5, //!< Blackman-harris window
-	WIN_BLACKMAN_HARRIS = 5, //!< alias to WIN_BLACKMAN_hARRIS for capitalization consistency
-        WIN_BARTLETT = 6,        //!< Barlett (triangular) window
-        WIN_FLATTOP = 7,         //!< flat top window; useful in FFTs
+ 	WIN_HAMMING = 0,         //!< Hamming window; max attenuation 53 dB
+ 	WIN_HANN = 1,            //!< Hann window; max attenuation 44 dB
+ 	WIN_BLACKMAN = 2,        //!< Blackman window; max attenuation 74 dB
+	WIN_RECTANGULAR = 3,     //!< Basic rectangular window; max attenuation 21 dB
+	WIN_KAISER = 4,          //!< Kaiser window; max attenuation see window::max_attenuation
+	WIN_BLACKMAN_hARRIS = 5, //!< Blackman-harris window; max attenuation 92 dB
+ 	WIN_BLACKMAN_HARRIS = 5, //!< alias to WIN_BLACKMAN_hARRIS for capitalization consistency
+        WIN_BARTLETT = 6,        //!< Barlett (triangular) window; max attenuation 26 dB
+        WIN_FLATTOP = 7,         //!< flat top window; useful in FFTs; max attenuation 93 dB
       };
 
       /*!
+       * \brief Given a window::win_type, this tells you the maximum
+       * attenuation you can expect.
+       *
+       * \details
+       * For most windows, this is a set value. For the Kaiser window,
+       * the attenuation is based on the value of beta. The actual
+       * relationship is a piece-wise exponential relationship to
+       * calculate beta from the desired attenuation and can be found
+       * on page 542 of Oppenheim and Schafer (Discrete-Time Signal
+       * Processing, 3rd edition). To simplify this function to solve
+       * for A given beta, we use a linear form that is exact for
+       * attenuation >= 50 dB.
+       *
+       * For an attenuation of 50 dB, beta = 4.55.
+       *
+       * For an attenuation of 70 dB, beta = 6.76.
+       *
+       * \param type The window::win_type enumeration of the window type.
+       * \param beta Beta value only used for the Kaiser window.
+       */
+      static double max_attenuation(win_type type, double beta=6.76);
+
+     /*!
        * \brief Helper function to build cosine-based windows. 3-coefficient version.
        */
       static std::vector<float> coswindow(int ntaps, float c0, float c1, float c2);
