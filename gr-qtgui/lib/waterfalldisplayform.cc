@@ -75,17 +75,17 @@ WaterfallDisplayForm::WaterfallDisplayForm(int nplots, QWidget* parent)
   d_autoscale_act->setText(tr("Auto Scale"));
   d_autoscale_act->setCheckable(false);
 
-  FFTSizeMenu *sizemenu = new FFTSizeMenu(this);
-  FFTAverageMenu *avgmenu = new FFTAverageMenu(this);
-  FFTWindowMenu *winmenu = new FFTWindowMenu(this);
-  d_menu->addMenu(sizemenu);
-  d_menu->addMenu(avgmenu);
-  d_menu->addMenu(winmenu);
-  connect(sizemenu, SIGNAL(whichTrigger(int)),
+  d_sizemenu = new FFTSizeMenu(this);
+  d_avgmenu = new FFTAverageMenu(this);
+  d_winmenu = new FFTWindowMenu(this);
+  d_menu->addMenu(d_sizemenu);
+  d_menu->addMenu(d_avgmenu);
+  d_menu->addMenu(d_winmenu);
+  connect(d_sizemenu, SIGNAL(whichTrigger(int)),
 	  this, SLOT(setFFTSize(const int)));
-  connect(avgmenu, SIGNAL(whichTrigger(float)),
+  connect(d_avgmenu, SIGNAL(whichTrigger(float)),
 	  this, SLOT(setFFTAverage(const float)));
-  connect(winmenu, SIGNAL(whichTrigger(gr::filter::firdes::win_type)),
+  connect(d_winmenu, SIGNAL(whichTrigger(gr::filter::firdes::win_type)),
 	  this, SLOT(setFFTWindowType(const gr::filter::firdes::win_type)));
 
   Reset();
@@ -190,18 +190,24 @@ void
 WaterfallDisplayForm::setFFTSize(const int newsize)
 {
   d_fftsize = newsize;
+  d_sizemenu->getActionFromSize(newsize)->setChecked(true);
+  getPlot()->replot();
 }
 
 void
 WaterfallDisplayForm::setFFTAverage(const float newavg)
 {
   d_fftavg = newavg;
+  d_avgmenu->getActionFromAvg(newavg)->setChecked(true);
+  getPlot()->replot();
 }
 
 void
 WaterfallDisplayForm::setFFTWindowType(const gr::filter::firdes::win_type newwin)
 {
   d_fftwintype = newwin;
+  d_winmenu->getActionFromWindow(newwin)->setChecked(true);
+  getPlot()->replot();
 }
 
 void
