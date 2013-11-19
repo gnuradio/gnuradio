@@ -245,113 +245,115 @@ TimeDomainDisplayPlot::plotNewData(const std::vector<double*> dataPoints,
       // Plot and attach any new tags found.
       // First test if this was a complex input where real/imag get
       // split here into two stream.
-      bool cmplx = false;
-      int mult = (int)d_nplots / (int)tags.size();
-      if(mult == 2)
-        cmplx = true;
+      if(tags.size() > 0) {
+        bool cmplx = false;
+        int mult = (int)d_nplots / (int)tags.size();
+        if(mult == 2)
+          cmplx = true;
 
-      std::vector< std::vector<gr::tag_t> >::const_iterator tag = tags.begin();
-      for(int i = 0; i < d_nplots; i+=mult) {
-        std::vector<gr::tag_t>::const_iterator t;
-        for(t = tag->begin(); t != tag->end(); t++) {
-          uint64_t offset = (*t).offset;
+        std::vector< std::vector<gr::tag_t> >::const_iterator tag = tags.begin();
+        for(int i = 0; i < d_nplots; i+=mult) {
+          std::vector<gr::tag_t>::const_iterator t;
+          for(t = tag->begin(); t != tag->end(); t++) {
+            uint64_t offset = (*t).offset;
 
-          // Ignore tag if its offset is outside our plottable vector.
-          if(offset >= (uint64_t)d_numPoints) {
-            continue;
-          }
-
-          double sample_offset = double(offset)/d_sample_rate;
-
-          std::stringstream s;
-          s << (*t).key << ": " << (*t).value;
-
-          // Select the right input stream to put the tag on. If real,
-          // just use i; if it's a complex stream, find the max of the
-          // real and imaginary parts and put the tag on that one.
-          int which = i;
-          if(cmplx) {
-            bool show0 = d_plot_curve[i]->isVisible();
-            bool show1 = d_plot_curve[i+1]->isVisible();
-
-            // If we are showing both streams, select the inptu stream
-            // with the larger value
-            if(show0 && show1) {
-              if(fabs(d_ydata[i][offset]) < fabs(d_ydata[i+1][offset]))
-                which = i+1;
+            // Ignore tag if its offset is outside our plottable vector.
+            if(offset >= (uint64_t)d_numPoints) {
+              continue;
             }
-            else {
-              // If show0, we keep which = i; otherwise, use i+1.
-              if(show1)
-                which = i+1;
+
+            double sample_offset = double(offset)/d_sample_rate;
+
+            std::stringstream s;
+            s << (*t).key << ": " << (*t).value;
+
+            // Select the right input stream to put the tag on. If real,
+            // just use i; if it's a complex stream, find the max of the
+            // real and imaginary parts and put the tag on that one.
+            int which = i;
+            if(cmplx) {
+              bool show0 = d_plot_curve[i]->isVisible();
+              bool show1 = d_plot_curve[i+1]->isVisible();
+
+              // If we are showing both streams, select the inptu stream
+              // with the larger value
+              if(show0 && show1) {
+                if(fabs(d_ydata[i][offset]) < fabs(d_ydata[i+1][offset]))
+                  which = i+1;
+              }
+              else {
+                // If show0, we keep which = i; otherwise, use i+1.
+                if(show1)
+                  which = i+1;
+              }
             }
-          }
 
-          double yval = d_ydata[which][offset];
+            double yval = d_ydata[which][offset];
 
-          // Find if we already have a marker at this location
-          std::vector<QwtPlotMarker*>::iterator mitr;
-          for(mitr = d_tag_markers[which].begin(); mitr != d_tag_markers[which].end(); mitr++) {
-            if((*mitr)->xValue() == sample_offset) {
-              break;
+            // Find if we already have a marker at this location
+            std::vector<QwtPlotMarker*>::iterator mitr;
+            for(mitr = d_tag_markers[which].begin(); mitr != d_tag_markers[which].end(); mitr++) {
+              if((*mitr)->xValue() == sample_offset) {
+                break;
+              }
             }
-          }
 
-          // If no matching marker, create a new one
-          if(mitr == d_tag_markers[which].end()) {
-            bool show = d_plot_curve[which]->isVisible();
+            // If no matching marker, create a new one
+            if(mitr == d_tag_markers[which].end()) {
+              bool show = d_plot_curve[which]->isVisible();
 
-            QwtPlotMarker *m = new QwtPlotMarker();
-            m->setXValue(sample_offset);
-            m->setYValue(yval);
+              QwtPlotMarker *m = new QwtPlotMarker();
+              m->setXValue(sample_offset);
+              m->setYValue(yval);
 
-            QBrush brush;
-            brush.setColor(QColor(0xC8, 0x2F, 0x1F));
-            brush.setStyle(Qt::SolidPattern);
+              QBrush brush;
+              brush.setColor(QColor(0xC8, 0x2F, 0x1F));
+              brush.setStyle(Qt::SolidPattern);
 
-            QPen pen;
-            pen.setColor(Qt::black);
-            pen.setWidth(1);
+              QPen pen;
+              pen.setColor(Qt::black);
+              pen.setWidth(1);
 
-            QwtSymbol *sym = new QwtSymbol(QwtSymbol::NoSymbol, brush, pen, QSize(12,12));
+              QwtSymbol *sym = new QwtSymbol(QwtSymbol::NoSymbol, brush, pen, QSize(12,12));
 
-            if(yval >= 0) {
-              sym->setStyle(QwtSymbol::DTriangle);
-              m->setLabelAlignment(Qt::AlignTop);
-            }
-            else {
-              sym->setStyle(QwtSymbol::UTriangle);
-              m->setLabelAlignment(Qt::AlignBottom);
-            }
+              if(yval >= 0) {
+                sym->setStyle(QwtSymbol::DTriangle);
+                m->setLabelAlignment(Qt::AlignTop);
+              }
+              else {
+                sym->setStyle(QwtSymbol::UTriangle);
+                m->setLabelAlignment(Qt::AlignBottom);
+              }
 
 #if QWT_VERSION < 0x060000
-            m->setSymbol(*sym);
+              m->setSymbol(*sym);
 #else
-            m->setSymbol(sym);
+              m->setSymbol(sym);
 #endif
 
-            m->setLabel(QwtText(s.str().c_str()));
-            m->attach(this);
+              m->setLabel(QwtText(s.str().c_str()));
+              m->attach(this);
           
-            if(!(show && d_tag_markers_en[which])) {
-              m->hide();
+              if(!(show && d_tag_markers_en[which])) {
+                m->hide();
+              }
+
+              d_tag_markers[which].push_back(m);
             }
+            else {
+              // Prepend the new tag to the existing marker
+              // And set it at the max value
+              if(fabs(yval) < fabs((*mitr)->yValue()))
+                (*mitr)->setYValue(yval);
+              QString orig = (*mitr)->label().text();
+              s << std::endl;
+              orig.prepend(s.str().c_str());
+              (*mitr)->setLabel(orig);
+            }
+          }
 
-            d_tag_markers[which].push_back(m);
-          }
-          else {
-            // Prepend the new tag to the existing marker
-            // And set it at the max value
-            if(fabs(yval) < fabs((*mitr)->yValue()))
-               (*mitr)->setYValue(yval);
-            QString orig = (*mitr)->label().text();
-            s << std::endl;
-            orig.prepend(s.str().c_str());
-            (*mitr)->setLabel(orig);
-          }
+          tag++;
         }
-
-        tag++;
       }
 
       if(d_autoscale_state) {
