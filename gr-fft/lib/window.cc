@@ -81,7 +81,7 @@ namespace gr {
       float M = static_cast<float>(ntaps - 1);
 
       for(int n = 0; n < ntaps; n++)
-        taps[n] = c0 - c1*cos((2*M_PI*n)/M) + c2*cos((4*M_PI*n)/M);
+        taps[n] = c0 - c1*cosf((2.0f*M_PI*n)/M) + c2*cosf((4.0f*M_PI*n)/M);
       return taps;
     }
 
@@ -92,7 +92,8 @@ namespace gr {
       float M = static_cast<float>(ntaps - 1);
 
       for(int n = 0; n < ntaps; n++)
-        taps[n] = c0 - c1*cos((2*M_PI*n)/M) + c2*cos((4*M_PI*n)/M) - c3*cos((6*M_PI*n)/M);
+        taps[n] = c0 - c1*cosf((2.0f*M_PI*n)/M) + c2*cosf((4.0f*M_PI*n)/M) \
+          - c3*cosf((6.0f*M_PI*n)/M);
       return taps;
     }
 
@@ -103,7 +104,8 @@ namespace gr {
       float M = static_cast<float>(ntaps - 1);
 
       for(int n = 0; n < ntaps; n++)
-        taps[n] = c0 - c1*cos((2*M_PI*n)/M) + c2*cos((4*M_PI*n)/M) - c3*cos((6*M_PI*n)/M) + c4*cos((8*M_PI*n)/M);
+        taps[n] = c0 - c1*cosf((2.0f*M_PI*n)/M) + c2*cosf((4.0f*M_PI*n)/M) \
+          - c3*cosf((6.0f*M_PI*n)/M) + c4*cosf((8.0f*M_PI*n)/M);
       return taps;
     }
 
@@ -224,7 +226,7 @@ namespace gr {
       double inm1 = 1.0/((double)(ntaps-1));
       double temp;
 
-      for(int i = 0; i <= ntaps; i++) {
+      for(int i = 0; i < ntaps; i++) {
         temp = 2*i*inm1 - 1;
         taps[i] = Izero(beta*sqrt(1.0-temp*temp)) * IBeta;
       }
