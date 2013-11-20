@@ -259,7 +259,7 @@ namespace gr {
     constellation::calc_soft_dec(gr_complex sample, float npwr)
     {
       int M = static_cast<int>(d_constellation.size());
-      int k = static_cast<int>(log10f(static_cast<float>(M))/log10f(2.0));
+      int k = static_cast<int>(log(static_cast<double>(M))/log(2.0));
       std::vector<float> tmp(2*k, 0);
       std::vector<float> s(k, 0);
 
