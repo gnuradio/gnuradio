@@ -626,7 +626,7 @@ public:
       d_act[t]->setActionGroup(d_grp);
     }
 
-    QIntValidator *valid = new QIntValidator(32, 4096);
+    QIntValidator *valid = new QIntValidator(32, 4096, this);
     ((OtherAction*)d_act[d_act.size()-1])->setValidator(valid);
 
     connect(d_act[0], SIGNAL(triggered()), this, SLOT(get05()));
@@ -741,7 +741,7 @@ public:
     }
     d_act[0]->setChecked(true);
 
-    QDoubleValidator *valid = new QDoubleValidator(0.0, 1.0, 2);
+    QDoubleValidator *valid = new QDoubleValidator(0.0, 1.0, 2, this);
     ((OtherAction*)d_act[d_act.size()-1])->setValidator(valid);
 
     connect(d_act[0], SIGNAL(triggered()), this, SLOT(getOff()));
