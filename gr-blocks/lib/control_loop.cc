@@ -99,8 +99,8 @@ namespace gr {
     void
     control_loop::set_damping_factor(float df)
     {
-      if(df < 0 || df > 1.0) {
-        throw std::out_of_range ("control_loop: invalid damping factor. Must be in [0,1].");
+      if(df <= 0) {
+        throw std::out_of_range ("control_loop: invalid damping factor. Must be > 0.");
       }
 
       d_damping = df;
