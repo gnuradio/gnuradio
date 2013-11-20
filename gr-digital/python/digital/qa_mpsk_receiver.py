@@ -71,15 +71,14 @@ class test_mpsk_receiver(gr_unittest.TestCase):
         self.tb.connect(self.src, self.rrc0, self.rrc1, self.test, self.snk)
         self.tb.run()
         
-        expected_result = [0.5*d for d in data]
+        expected_result = [-0.5*d for d in data]
         dst_data = self.snk.data()
 
-        # Only compare last Ncmp samples
+        # Only Ncmp samples after Nstrt samples
+        Nstrt = 9000
         Ncmp = 1000
-        len_e = len(expected_result)
-        len_d = len(dst_data)
-        expected_result = expected_result[len_e - Ncmp:]
-        dst_data = dst_data[len_d - Ncmp:]
+        expected_result = expected_result[Nstrt:Nstrt+Ncmp]
+        dst_data = dst_data[Nstrt:Nstrt+Ncmp]
         
         #for e,d in zip(expected_result, dst_data):
         #    print "{0:+.02f}  {1:+.02f}".format(e, d)
@@ -132,8 +131,8 @@ class test_mpsk_receiver(gr_unittest.TestCase):
 
         dst_data = self.snk.data()
 
-        # Only compare last Ncmp samples
-        Nstrt = 30000
+        # Only Ncmp samples after Nstrt samples
+        Nstrt = 9000
         Ncmp = 1000
         expected_result = expected_result[Nstrt:Nstrt+Ncmp]
         dst_data = dst_data[Nstrt:Nstrt+Ncmp]
