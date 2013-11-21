@@ -184,6 +184,7 @@ namespace gr {
 	  in += d_itemsize;
 	  nread++;
 	  d_state = STATE_FIND_TRIGGER;
+	  // Fall through
 
 	case STATE_FIND_TRIGGER:
 	  trigger_offset = find_trigger_signal(nread, noutput_items, input_items);
@@ -194,6 +195,7 @@ namespace gr {
 	  consume_each (trigger_offset);
 	  in += trigger_offset * d_itemsize;
 	  d_state = STATE_HEADER;
+	  // Fall through
 
 
 	case STATE_HEADER:
@@ -212,6 +214,7 @@ namespace gr {
 	  in += d_header_len * (d_items_per_symbol + d_gi) * d_itemsize;
 	  nread += d_header_len * (d_items_per_symbol + d_gi);
 	  d_state = STATE_PAYLOAD;
+	  // Fall through
 
 	case STATE_PAYLOAD:
 	  if (check_items_available(d_curr_payload_len, ninput_items, noutput_items, nread)) {
@@ -258,6 +261,7 @@ namespace gr {
 	  }
 	}
 	if (tag_index != -1) {
+	  remove_item_tag(0, tags[tag_index]);
 	  return min_offset - nitems_read(0);
 	}
       }
@@ -299,7 +303,7 @@ namespace gr {
       }
       if (d_state == STATE_HEADER_RX_SUCCESS)
       {
-	if ((d_curr_payload_len * (d_output_symbols ? 1 : d_items_per_symbol)) > max_output_buffer(1)) {
+	if ((d_curr_payload_len * (d_output_symbols ? 1 : d_items_per_symbol)) > max_output_buffer(1)/2) {
 	  d_state = STATE_HEADER_RX_FAIL;
 	  GR_LOG_INFO(d_logger, boost::format("Detected a packet larger than max frame size (%1% symbols)") % d_curr_payload_len);
 	} else {
