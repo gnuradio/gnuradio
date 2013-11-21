@@ -104,12 +104,13 @@ namespace gr {
 	// copy output
 	size_t io(0);
 	nout += ncopy;
-	memcpy(out, uniform_vector_elements(vect,io), ncopy*d_itemsize);
+	const uint8_t* ptr = (uint8_t*) uniform_vector_elements(vect, io);
+	memcpy(out, ptr, ncopy*d_itemsize);
 	
 	// save leftover items if needed for next work call
 	if (nsave > 0) {
 	  d_remain.resize(nsave*d_itemsize, 0);
-	  memcpy(&d_remain[0], uniform_vector_elements(vect,ncopy), nsave*d_itemsize);
+	  memcpy(&d_remain[0], ptr + ncopy*d_itemsize, nsave*d_itemsize);
         }
       }
       

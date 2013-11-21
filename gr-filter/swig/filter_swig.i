@@ -30,8 +30,6 @@
 %{
 #include "gnuradio/filter/firdes.h"
 #include "gnuradio/filter/pm_remez.h"
-#include "gnuradio/filter/adaptive_fir_ccc.h"
-#include "gnuradio/filter/adaptive_fir_ccf.h"
 #include "gnuradio/filter/dc_blocker_cc.h"
 #include "gnuradio/filter/dc_blocker_ff.h"
 #include "gnuradio/filter/filter_delay_fc.h"
@@ -79,8 +77,6 @@
 
 %include "gnuradio/filter/firdes.h"
 %include "gnuradio/filter/pm_remez.h"
-%include "gnuradio/filter/adaptive_fir_ccc.h"
-%include "gnuradio/filter/adaptive_fir_ccf.h"
 %include "gnuradio/filter/dc_blocker_cc.h"
 %include "gnuradio/filter/dc_blocker_ff.h"
 %include "gnuradio/filter/filter_delay_fc.h"
@@ -125,8 +121,6 @@
 %include "gnuradio/filter/single_pole_iir_filter_cc.h"
 %include "gnuradio/filter/single_pole_iir_filter_ff.h"
 
-GR_SWIG_BLOCK_MAGIC2(filter, adaptive_fir_ccc);
-GR_SWIG_BLOCK_MAGIC2(filter, adaptive_fir_ccf);
 GR_SWIG_BLOCK_MAGIC2(filter, dc_blocker_cc);
 GR_SWIG_BLOCK_MAGIC2(filter, dc_blocker_ff);
 GR_SWIG_BLOCK_MAGIC2(filter, filter_delay_fc);
