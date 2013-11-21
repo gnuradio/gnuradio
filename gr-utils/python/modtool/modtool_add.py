@@ -126,6 +126,8 @@ class ModToolAdd(ModTool):
             return open('LICENSE').read()
         elif os.path.isfile('LICENCE'):
             return open('LICENCE').read()
+        elif self._info['is_component']:
+            return Templates['grlicense']
         else:
             return Templates['defaultlicense']
 
@@ -221,8 +223,7 @@ class ModToolAdd(ModTool):
             self._write_tpl('block_cpp36', 'lib',                    fname_cc)
         if not self.options.skip_cmakefiles:
             ed = CMakeFileEditor(self._file['cmlib'])
-            cmake_list_var = self._info['modname'] + '_sources'
-            if self._info['is_component']: cmake_list_var = 'gr_' + cmake_list_var
+            cmake_list_var = '[a-z]*_?' + self._info['modname'] + '_sources'
             if not ed.append_value('list', fname_cc, to_ignore_start='APPEND ' + cmake_list_var):
                 ed.append_value('add_library', fname_cc)
             ed.write()
@@ -251,7 +252,7 @@ class ModToolAdd(ModTool):
         swig_block_magic_str = get_template('swig_block_magic', **self._info)
         open(self._file['swig'], 'a').write(swig_block_magic_str)
         include_str = '#include "%s%s%s.h"' % (
-                self._info['modname'],
+                {True: 'gnuradio/' + self._info['modname'], False: self._info['modname']}[self._info['is_component']],
                 mod_block_sep,
                 self._info['blockname'])
         if re.search('#include', open(self._file['swig'], 'r').read()):

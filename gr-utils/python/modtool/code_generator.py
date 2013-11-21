@@ -48,6 +48,10 @@ class GRMTemplate(Cheetah.Template.Template):
         searchList['strip_arg_types_grc'] = strip_arg_types_grc
         Cheetah.Template.Template.__init__(self, src, searchList=searchList)
         self.grblocktype = self.grtypelist[searchList['blocktype']]
+        if searchList['is_component']:
+            self.include_dir_prefix = "gnuradio/" + searchList['modname']
+        else:
+            self.include_dir_prefix = searchList['modname']
 
 def get_template(tpl_id, **kwargs):
     """ Return the template given by tpl_id, parsed through Cheetah """
