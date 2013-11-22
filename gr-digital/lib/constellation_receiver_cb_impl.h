@@ -51,8 +51,6 @@ namespace gr {
       void phase_error_tracking(float phase_error);
 
     private:
-      unsigned int d_M;
-
       constellation_sptr d_constellation;
       unsigned int d_current_const_point;
 

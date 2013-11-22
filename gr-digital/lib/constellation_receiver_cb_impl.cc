@@ -30,7 +30,6 @@
 #include <gnuradio/expj.h>
 #include <gnuradio/tag_checker.h>
 #include <stdexcept>
-#include <iostream>
 
 namespace gr {
   namespace digital {

@@ -36,7 +36,6 @@ namespace gr {
     {
     private:
       std::vector<gr_complex> d_new_taps;
-      bool d_updated;
       gr_complex d_error;
 
       float d_mu;
