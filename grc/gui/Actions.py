@@ -233,6 +233,16 @@ ERRORS_WINDOW_DISPLAY = Action(
     tooltip='View flow graph errors',
     stock_id=gtk.STOCK_DIALOG_ERROR,
 )
+TOGGLE_REPORT_WIDGET = Action(
+    label='_Reports',
+    tooltip='Toggle visibility of the Report widget',
+    keypresses=(gtk.keysyms.r, gtk.gdk.CONTROL_MASK),
+)
+TOGGLE_BLOCKTREE_WIDGET = Action(
+    label='_Block Tree',
+    tooltip='Toggle visibility of the block tree widget',
+    keypresses=(gtk.keysyms.b, gtk.gdk.CONTROL_MASK),
+)
 ABOUT_WINDOW_DISPLAY = Action(
     label='_About',
     tooltip='About this program',
