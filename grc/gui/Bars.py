@@ -88,7 +88,10 @@ MENU_BAR_LIST = (
         Actions.BLOCK_PARAM_MODIFY,
     ]),
     (gtk.Action('View', '_View', None, None), [
+        Actions.TOGGLE_BLOCKTREE_WIDGET,
+        Actions.TOGGLE_REPORT_WIDGET,
         Actions.ERRORS_WINDOW_DISPLAY,
+        None,
         Actions.FIND_BLOCKS,
     ]),
     (gtk.Action('Build', '_Build', None, None), [
