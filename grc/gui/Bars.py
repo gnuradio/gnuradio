@@ -57,6 +57,7 @@ TOOLBAR_LIST = (
 )
 
 ##The list of actions and categories for the menu bar.
+
 MENU_BAR_LIST = (
     (gtk.Action('File', '_File', None, None), [
         Actions.FLOW_GRAPH_NEW,
@@ -88,10 +89,10 @@ MENU_BAR_LIST = (
         Actions.BLOCK_PARAM_MODIFY,
     ]),
     (gtk.Action('View', '_View', None, None), [
-        Actions.TOGGLE_BLOCKTREE_WIDGET,
-        Actions.TOGGLE_REPORT_WIDGET,
-        Actions.ERRORS_WINDOW_DISPLAY,
+        Actions.TOGGLE_BLOCKS_WINDOW,
+        Actions.TOGGLE_REPORTS_WINDOW,
         None,
+        Actions.ERRORS_WINDOW_DISPLAY,
         Actions.FIND_BLOCKS,
     ]),
     (gtk.Action('Build', '_Build', None, None), [
@@ -106,7 +107,6 @@ MENU_BAR_LIST = (
         Actions.ABOUT_WINDOW_DISPLAY,
     ]),
 )
-
 class Toolbar(gtk.Toolbar):
     """The gtk toolbar with actions added from the toolbar list."""
 
