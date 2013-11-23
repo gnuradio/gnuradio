@@ -140,7 +140,7 @@ class DrawingArea(gtk.DrawingArea):
 
     def _handle_focus_lost_event(self, widget, event):
         # don't clear selection while context menu is active
-        if self._flow_graph.get_context_menu().get_active(): return
+        if self._flow_graph.get_context_menu().get_visible(): return
         self._flow_graph.unselect()
         self._flow_graph.update_selected()
         self._flow_graph.queue_draw()
