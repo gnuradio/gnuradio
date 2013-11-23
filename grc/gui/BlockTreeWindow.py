@@ -226,6 +226,10 @@ class BlockTreeWindow(gtk.VBox):
             # manually trigger action...
             Actions.FIND_BLOCKS.activate()
 
+        elif event.state & gtk.gdk.CONTROL_MASK and event.keyval == gtk.keysyms.b:
+            # ugly...
+            Actions.TOGGLE_BLOCKTREE_WIDGET.activate()
+
         else:
             return False # propagate event
 

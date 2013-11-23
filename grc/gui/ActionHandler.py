@@ -113,7 +113,8 @@ class ActionHandler:
                 Actions.FLOW_GRAPH_OPEN, Actions.FLOW_GRAPH_SAVE_AS,
                 Actions.FLOW_GRAPH_CLOSE, Actions.ABOUT_WINDOW_DISPLAY,
                 Actions.FLOW_GRAPH_SCREEN_CAPTURE, Actions.HELP_WINDOW_DISPLAY,
-                Actions.TYPES_WINDOW_DISPLAY,
+                Actions.TYPES_WINDOW_DISPLAY, Actions.TOGGLE_BLOCKTREE_WIDGET,
+                Actions.TOGGLE_REPORT_WIDGET,
             ): action.set_sensitive(True)
             if not self.init_file_paths:
                 self.init_file_paths = Preferences.files_open()
@@ -349,6 +350,12 @@ class ActionHandler:
             Dialogs.TypesDialog(self.get_flow_graph().get_parent())
         elif action == Actions.ERRORS_WINDOW_DISPLAY:
             Dialogs.ErrorsDialog(self.get_flow_graph())
+        elif action == Actions.TOGGLE_REPORT_WIDGET:
+            widget = self.main_window.reports_scrolled_window
+            widget.set_visible(not widget.get_visible())
+        elif action == Actions.TOGGLE_BLOCKTREE_WIDGET:
+            widget = self.main_window.btwin
+            widget.set_visible(not widget.get_visible())
         ##################################################
         # Param Modifications
         ##################################################
@@ -447,6 +454,7 @@ class ActionHandler:
             self.main_window.btwin.clear();
             self.platform.load_block_tree(self.main_window.btwin);
         elif action == Actions.FIND_BLOCKS:
+            self.main_window.btwin.show()
             self.main_window.btwin.search_entry.show()
             self.main_window.set_focus(self.main_window.btwin.search_entry)
         elif action == Actions.OPEN_HIER:
