@@ -24,16 +24,17 @@ import os
 import re
 from optparse import OptionParser, OptionGroup
 
+from gnuradio import gr
 from util_functions import get_modname
-
+from scm import SCMRepoFactory
 
 class ModToolException(BaseException):
     """ Standard exception for modtool classes. """
     pass
 
-
 class ModTool(object):
     """ Base class for all modtool command classes. """
+    name = 'base'
     def __init__(self):
         self._subdirs = ['lib', 'include', 'python', 'swig', 'grc'] # List subdirs where stuff happens
         self._has_subdirs = {}
@@ -68,6 +69,9 @@ class ModTool(object):
                 help="Don't do anything in the python/ subdirectory.")
         ogroup.add_option("--skip-grc", action="store_true", default=False,
                 help="Don't do anything in the grc/ subdirectory.")
+        ogroup.add_option("--scm-mode", type="choice", choices=('yes', 'no', 'auto'),
+                default=gr.prefs().get_string('modtool', 'scm_mode', 'no'),
+                help="Use source control management (yes, no or auto).")
         ogroup.add_option("-y", "--yes", action="store_true", default=False,
                 help="Answer all questions with 'yes'. This can overwrite and delete your files, so be careful.")
         parser.add_option_group(ogroup)
@@ -101,6 +105,8 @@ class ModTool(object):
         self._info['blockname'] = options.block_name
         self._setup_files()
         self._info['yes'] = options.yes
+        self.options = options
+        self._setup_scm()
 
     def _setup_files(self):
         """ Initialise the self._file[] dictionary """
@@ -123,6 +129,17 @@ class ModTool(object):
         self._file['cminclude'] = os.path.join(self._info['includedir'], 'CMakeLists.txt')
         self._file['cmswig'] = os.path.join('swig', 'CMakeLists.txt')
         self._file['cmfind'] = os.path.join('cmake', 'Modules', 'howtoConfig.cmake')
+
+
+    def _setup_scm(self, mode='active'):
+        """ Initialize source control management. """
+        if mode == 'active':
+            self.scm = SCMRepoFactory(self.options, '.').make_active_scm_manager()
+        else:
+            self.scm = SCMRepoFactory(self.options, '.').make_empty_scm_manager()
+        if self.scm is None:
+            print "Error: Can't set up SCM."
+            exit(1)
 
     def _check_directory(self, directory):
         """ Guesses if dir is a valid GNU Radio module directory by looking for

@@ -53,6 +53,7 @@ class ModToolDisable(ModTool):
         def _handle_py_qa(cmake, fname):
             """ Do stuff for py qa """
             cmake.comment_out_lines('GR_ADD_TEST.*'+fname)
+            self.scm.mark_file_updated(cmake.filename)
             return True
         def _handle_py_mod(cmake, fname):
             """ Do stuff for py extra files """
@@ -64,6 +65,7 @@ class ModToolDisable(ModTool):
             pymodname = os.path.splitext(fname)[0]
             initfile = re.sub(r'((from|import)\s+\b'+pymodname+r'\b)', r'#\1', initfile)
             open(self._file['pyinit'], 'w').write(initfile)
+            self.scm.mark_file_updated(self._file['pyinit'])
             return False
         def _handle_cc_qa(cmake, fname):
             """ Do stuff for cc qa """
@@ -74,10 +76,12 @@ class ModToolDisable(ModTool):
                 ed.comment_out_lines('#include\s+"%s.h"' % fname_base, comment_str='//')
                 ed.comment_out_lines('%s::suite\(\)' % fname_base, comment_str='//')
                 ed.write()
+                self.scm.mark_file_updated(self._file['qalib'])
             elif self._info['version'] == '36':
                 cmake.comment_out_lines('add_executable.*'+fname)
                 cmake.comment_out_lines('target_link_libraries.*'+os.path.splitext(fname)[0])
                 cmake.comment_out_lines('GR_ADD_TEST.*'+os.path.splitext(fname)[0])
+            self.scm.mark_file_updated(cmake.filename)
             return True
         def _handle_h_swig(cmake, fname):
             """ Comment out include files from the SWIG file,
@@ -96,6 +100,7 @@ class ModToolDisable(ModTool):
                 if nsubs > 1:
                     print "Hm, changed more then expected while editing %s." % self._file['swig']
             open(self._file['swig'], 'w').write(swigfile)
+            self.scm.mark_file_updated(self._file['swig'])
             return False
         def _handle_i_swig(cmake, fname):
             """ Comment out include files from the SWIG file,
@@ -108,6 +113,7 @@ class ModToolDisable(ModTool):
             print "Changing %s..." % self._file['swig']
             swigfile = re.sub('(GR_SWIG_BLOCK_MAGIC2?.+'+blockname+'.+;)', r'//\1', swigfile)
             open(self._file['swig'], 'w').write(swigfile)
+            self.scm.mark_file_updated(self._file['swig'])
             return False
         # List of special rules: 0: subdir, 1: filename re match, 2: callback
         special_treatments = (
@@ -145,5 +151,6 @@ class ModToolDisable(ModTool):
                 if not file_disabled:
                     cmake.disable_file(fname)
             cmake.write()
+            self.scm.mark_files_updated((os.path.join(subdir, 'CMakeLists.txt'),))
         print "Careful: 'gr_modtool disable' does not resolve dependencies."
 

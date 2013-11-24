@@ -66,16 +66,19 @@ class ModToolRemove(ModTool):
                                              '^\s*s->addTest\(gr::%s::%s::suite\(\)\);\s*$' % (
                                                     self._info['modname'], base)
                                             )
+                    self.scm.mark_file_updated(self._file['qalib'])
                 elif ext == '.cc':
                     ed.remove_value('list',
                                     '\$\{CMAKE_CURRENT_SOURCE_DIR\}/%s' % filename,
                                     to_ignore_start='APPEND test_%s_sources' % self._info['modname'])
+                    self.scm.mark_file_updated(ed.filename)
             else:
                 filebase = os.path.splitext(filename)[0]
                 ed.delete_entry('add_executable', filebase)
                 ed.delete_entry('target_link_libraries', filebase)
                 ed.delete_entry('GR_ADD_TEST', filebase)
                 ed.remove_double_newlines()
+                self.scm.mark_file_updated(ed.filename)
 
         def _remove_py_test_case(filename=None, ed=None):
             """ Special function that removes the occurrences of a qa*.{cc,h} file
@@ -103,6 +106,7 @@ class ModToolRemove(ModTool):
             for f in incl_files_deleted + swig_files_deleted:
                 # TODO do this on all *.i files
                 remove_pattern_from_file(self._file['swig'], _make_swig_regex(f))
+                self.scm.mark_file_updated(self._file['swig'])
         if not self._skip_subdirs['python']:
             py_files_deleted = self._run_subdir('python', ('*.py',), ('GR_PYTHON_INSTALL',),
                                                 cmakeedit_func=_remove_py_test_case)
@@ -148,6 +152,7 @@ class ModToolRemove(ModTool):
                     continue
             files_deleted.append(b)
             print "Deleting %s." % f
+            self.scm.remove_file(f)
             os.unlink(f)
             print "Deleting occurrences of %s from %s/CMakeLists.txt..." % (b, path)
             for var in makefile_vars:
@@ -155,4 +160,5 @@ class ModToolRemove(ModTool):
             if cmakeedit_func is not None:
                 cmakeedit_func(b, ed)
         ed.write()
+        self.scm.mark_files_updated(('%s/CMakeLists.txt' % path,))
         return files_deleted

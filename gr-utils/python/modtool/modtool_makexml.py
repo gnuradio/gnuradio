@@ -66,6 +66,7 @@ class ModToolMakeXML(ModTool):
                 (params, iosig, blockname) = self._parse_cc_h(f)
                 self._make_grc_xml_from_block_data(params, iosig, blockname)
         # 2) Go through python/
+        # TODO
 
     def _search_files(self, path, path_glob):
         """ Search for files matching pattern in the given path. """
@@ -84,6 +85,7 @@ class ModToolMakeXML(ModTool):
         generator. Also, check the makefile if the .xml file is in there.
         If necessary, add. """
         fname_xml = '%s_%s.xml' % (self._info['modname'], blockname)
+        path_to_xml = os.path.join('grc', fname_xml)
         # Some adaptions for the GRC
         for inout in ('in', 'out'):
             if iosig[inout]['max_ports'] == '-1':
@@ -93,11 +95,13 @@ class ModToolMakeXML(ModTool):
                                'name': 'Num %sputs' % inout,
                                'default': '2',
                                'in_constructor': False})
-        if os.path.isfile(os.path.join('grc', fname_xml)):
+        file_exists = False
+        if os.path.isfile(path_to_xml):
             if not self._info['yes']:
                 if not ask_yes_no('Overwrite existing GRC file?', False):
                     return
             else:
+                file_exists = True
                 print "Warning: Overwriting existing GRC file."
         grc_generator = GRCXMLGenerator(
                 modname=self._info['modname'],
@@ -105,13 +109,18 @@ class ModToolMakeXML(ModTool):
                 params=params,
                 iosig=iosig
         )
-        grc_generator.save(os.path.join('grc', fname_xml))
+        grc_generator.save(path_to_xml)
+        if file_exists:
+            self.scm.mark_files_updated((path_to_xml,))
+        else:
+            self.scm.add_files((path_to_xml,))
         if not self._skip_subdirs['grc']:
             ed = CMakeFileEditor(self._file['cmgrc'])
             if re.search(fname_xml, ed.cfile) is None and not ed.check_for_glob('*.xml'):
                 print "Adding GRC bindings to grc/CMakeLists.txt..."
                 ed.append_value('install', fname_xml, to_ignore_end='DESTINATION[^()]+')
                 ed.write()
+                self.scm.mark_files_updated(self._file['cmgrc'])
 
     def _parse_cc_h(self, fname_cc):
         """ Go through a .cc and .h-file defining a block and return info """

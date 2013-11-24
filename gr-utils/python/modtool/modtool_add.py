@@ -135,8 +135,10 @@ class ModToolAdd(ModTool):
 
     def _write_tpl(self, tpl, path, fname):
         """ Shorthand for writing a substituted template to a file"""
-        print "Adding file '%s'..." % fname
-        open(os.path.join(path, fname), 'w').write(get_template(tpl, **self._info))
+        path_to_file = os.path.join(path, fname)
+        print "Adding file '%s'..." % path_to_file
+        open(path_to_file, 'w').write(get_template(tpl, **self._info))
+        self.scm.add_files((path_to_file,))
 
     def run(self):
         """ Go, go, go. """
@@ -185,6 +187,7 @@ class ModToolAdd(ModTool):
                                             '  s->addTest(gr::%s::qa_%s::suite());' % (self._info['modname'],
                                                                                        self._info['blockname'])
                                             )
+                    self.scm.mark_files_updated((self._file['qalib'],))
                 except IOError:
                     print "Can't add C++ QA files."
         def _add_qa36():
@@ -193,16 +196,16 @@ class ModToolAdd(ModTool):
             self._write_tpl('qa_cpp36', 'lib', fname_qa_cc)
             if not self._skip_cmakefiles:
                 open(self._file['cmlib'], 'a').write(
-                        str(
-                            Cheetah.Template.Template(
-                                Templates['qa_cmakeentry36'],
-                                searchList={'basename': os.path.splitext(fname_qa_cc)[0],
-                                            'upperbasename': os.path.splitext(fname_qa_cc)[0].upper(),
-                                            'filename': fname_qa_cc,
-                                            'modname': self._info['modname']
-                                           }
-                            )
-                         )
+                    str(
+                        Cheetah.Template.Template(
+                            Templates['qa_cmakeentry36'],
+                            searchList={'basename': os.path.splitext(fname_qa_cc)[0],
+                                        'upperbasename': os.path.splitext(fname_qa_cc)[0].upper(),
+                                        'filename': fname_qa_cc,
+                                        'modname': self._info['modname']
+                                       }
+                        )
+                     )
                 )
                 ed = CMakeFileEditor(self._file['cmlib'])
                 ed.remove_double_newlines()
@@ -223,6 +226,13 @@ class ModToolAdd(ModTool):
             fname_cc = self._info['fullblockname'] + '.cc'
             self._write_tpl('block_h36',   self._info['includedir'], fname_h)
             self._write_tpl('block_cpp36', 'lib',                    fname_cc)
+        if self._add_cc_qa:
+            if self._info['version'] == '37':
+                _add_qa()
+            elif self._info['version'] == '36':
+                _add_qa36()
+            elif self._info['version'] == 'autofoo':
+                print "Warning: C++ QA files not supported for autotools."
         if not self._skip_cmakefiles:
             ed = CMakeFileEditor(self._file['cmlib'])
             cmake_list_var = '[a-z]*_?' + self._info['modname'] + '_sources'
@@ -232,13 +242,7 @@ class ModToolAdd(ModTool):
             ed = CMakeFileEditor(self._file['cminclude'])
             ed.append_value('install', fname_h, to_ignore_end='DESTINATION[^()]+')
             ed.write()
-        if self._add_cc_qa:
-            if self._info['version'] == '37':
-                _add_qa()
-            elif self._info['version'] == '36':
-                _add_qa36()
-            elif self._info['version'] == 'autofoo':
-                print "Warning: C++ QA files not supported for autotools."
+            self.scm.mark_files_updated((self._file['cminclude'], self._file['cmlib']))
 
     def _run_swig(self):
         """ Do everything that needs doing in the subdir 'swig'.
@@ -264,6 +268,7 @@ class ModToolAdd(ModTool):
             regexp = re.compile('^%\{\n', re.MULTILINE)
             oldfile = regexp.sub('%%{\n%s\n' % include_str, oldfile, count=1)
             open(self._file['swig'], 'w').write(oldfile)
+        self.scm.mark_files_updated((self._file['swig'],))
 
     def _run_python_qa(self):
         """ Do everything that needs doing in the subdir 'python' to add
@@ -274,12 +279,14 @@ class ModToolAdd(ModTool):
         fname_py_qa = 'qa_' + self._info['blockname'] + '.py'
         self._write_tpl('qa_python', self._info['pydir'], fname_py_qa)
         os.chmod(os.path.join(self._info['pydir'], fname_py_qa), 0755)
+        self.scm.mark_files_updated((os.path.join(self._info['pydir'], fname_py_qa),))
         if self._skip_cmakefiles or CMakeFileEditor(self._file['cmpython']).check_for_glob('qa_*.py'):
             return
         print "Editing %s/CMakeLists.txt..." % self._info['pydir']
         open(self._file['cmpython'], 'a').write(
                 'GR_ADD_TEST(qa_%s ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/%s)\n' % \
                   (self._info['blockname'], fname_py_qa))
+        self.scm.mark_files_updated((self._file['cmpython'],))
 
     def _run_python(self):
         """ Do everything that needs doing in the subdir 'python' to add
@@ -293,11 +300,13 @@ class ModToolAdd(ModTool):
         append_re_line_sequence(self._file['pyinit'],
                                 '(^from.*import.*\n|# import any pure.*\n)',
                                 'from %s import %s' % (self._info['blockname'], self._info['blockname']))
+        self.scm.mark_files_updated((self._file['pyinit'],))
         if self._skip_cmakefiles:
             return
         ed = CMakeFileEditor(self._file['cmpython'])
         ed.append_value('GR_PYTHON_INSTALL', fname_py, to_ignore_end='DESTINATION[^()]+')
         ed.write()
+        self.scm.mark_files_updated((self._file['cmpython'],))
 
     def _run_grc(self):
         """ Do everything that needs doing in the subdir 'grc' to add
@@ -313,4 +322,5 @@ class ModToolAdd(ModTool):
         print "Editing grc/CMakeLists.txt..."
         ed.append_value('install', fname_grc, to_ignore_end='DESTINATION[^()]+')
         ed.write()
+        self.scm.mark_files_updated((self._file['cmgrc'],))
 

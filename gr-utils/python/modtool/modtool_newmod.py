@@ -26,6 +26,7 @@ import re
 from optparse import OptionGroup
 from gnuradio import gr
 from modtool_base import ModTool, ModToolException
+from scm import SCMRepoFactory
 
 class ModToolNewModule(ModTool):
     """ Create a new out-of-tree module """
@@ -45,6 +46,7 @@ class ModToolNewModule(ModTool):
         return parser
 
     def setup(self, options, args):
+        # Don't call ModTool.setup(), that assumes an existing module.
         self._info['modname'] = options.module_name
         if self._info['modname'] is None:
             if len(args) >= 2:
@@ -67,6 +69,8 @@ class ModToolNewModule(ModTool):
         self._srcdir = gr.prefs().get_string('modtool', 'newmod_path', options.srcdir)
         if not os.path.isdir(self._srcdir):
             raise ModToolException('Could not find gr-newmod source dir.')
+        self.options = options
+        self._setup_scm(mode='new')
 
     def run(self):
         """
@@ -92,5 +96,7 @@ class ModToolNewModule(ModTool):
             if os.path.basename(root) == 'howto':
                 os.rename(root, os.path.join(os.path.dirname(root), self._info['modname']))
         print "Done."
+        if self.scm.init_repo(path_to_repo="."):
+            print "Created repository... you might want to commit before continuing."
         print "Use 'gr_modtool add' to add a new block to this currently empty module."
 
