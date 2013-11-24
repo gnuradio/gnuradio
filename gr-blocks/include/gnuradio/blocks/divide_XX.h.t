@@ -32,7 +32,7 @@ namespace gr {
   namespace blocks {
 
     /*!
-     * \brief output = input_0 / input_1 / input_x ...)
+     * \brief output = input[0] / input[1] / ... / input[M-1]
      * \ingroup math_operators_blk
      *
      * \details

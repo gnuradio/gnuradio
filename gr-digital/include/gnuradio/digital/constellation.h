@@ -148,13 +148,13 @@ namespace gr {
        *
        * This is a very costly algorithm (especially for higher order
        * modulations) and should be used sparingly. It uses the
-       * gen_soft_dec_lut function to generate the LUT, which
+       * #gen_soft_dec_lut function to generate the LUT, which
        * should be done once or if a large change in the noise floor
        * is detected.
        *
        * Instead of using this function, generate the LUT using the
-       * gen_soft_dec_lut after creating the constellation object
-       * and then use the soft_decision_maker function to return the
+       * #gen_soft_dec_lut after creating the constellation object
+       * and then use the #soft_decision_maker function to return the
        * answer from the LUT.
        *
        * \param sample The complex sample to get the soft decisions.
@@ -169,8 +169,8 @@ namespace gr {
        * levels of accuracy and complexity, this function allows
        * users to create a LUT in their own way.
        *
-       * Setting the LUT here means that has_soft_dec_lut will return
-       * true. Decision vectors returned by soft_decision_maker will
+       * Setting the LUT here means that #has_soft_dec_lut will return
+       * true. Decision vectors returned by #soft_decision_maker will
        * be calculated using this LUT.
        *
        * \param soft_dec_lut The soft decision LUT as a vector of
@@ -229,6 +229,7 @@ namespace gr {
     /*! \brief Calculate Euclidian distance for any constellation
      *  \ingroup digital
      *
+     * \details
      * Constellation which calculates the distance to each point in the
      * constellation for decision making. Inefficient for large
      * constellations.
@@ -274,14 +275,24 @@ namespace gr {
      * \brief Sectorized digital constellation
      * \ingroup digital
      *
+     * \details
      * Constellation space is divided into sectors. Each sector is
      * associated with the nearest constellation point.
-     *
      */
     class DIGITAL_API constellation_sector : public constellation
     {
     public:
 
+      /*!
+       * Make a sectorized constellation object.
+       *
+       * \param constell List of constellation points (order of list matches pre_diff_code)
+       * \param pre_diff_code List of alphabet symbols (before applying any differential 
+       *                      coding) (order of list matches constell)
+       * \param rotational_symmetry Number of rotations around unit circle that have the same representation.
+       * \param dimensionality Number of z-axis dimensions to the constellation
+       * \param n_sectors Number of sectors in the constellation.
+       */
       constellation_sector(std::vector<gr_complex> constell,
 			   std::vector<int> pre_diff_code,
 			   unsigned int rotational_symmetry,
@@ -321,8 +332,6 @@ namespace gr {
      * Works for any generic constellation provided sectors are not
      * too large.
      */
-
-
     class DIGITAL_API constellation_rect
       : public constellation_sector
     {
@@ -377,9 +386,10 @@ namespace gr {
     /************************************************************/
 
     /*!
-     * \brief Rectangular digital constellation
+     * \brief Rectangular digital constellation.
      * \ingroup digital
      *
+     * \details
      * Only implemented for 1-(complex)dimensional constellation.
      *
      * Constellation space is divided into rectangular sectors. Each
@@ -473,8 +483,13 @@ namespace gr {
     /************************************************************/
 
     /*! 
-     * \brief Digital constellation for BPSK 
+     * \brief Digital constellation for BPSK .
      * \ingroup digital
+     *
+     * \details
+     * \verbatim
+       0 | 1
+       \endverbatim
      */
     class DIGITAL_API constellation_bpsk : public constellation
     {
@@ -504,9 +519,12 @@ namespace gr {
      * \brief Digital constellation for QPSK
      * \ingroup digital
      *
-     * 01 | 11
-     * -------
-     * 00 | 10
+     * \details
+     * \verbatim
+       01 | 11
+       -------
+       00 | 10
+       \endverbatim
      */
     class DIGITAL_API constellation_qpsk : public constellation
     {
@@ -533,12 +551,15 @@ namespace gr {
     /************************************************************/
 
     /*!
-     * \brief Digital constellation for DQPSK
+     * \brief Digital constellation for DQPSK.
      * \ingroup digital
      *
-     * 01 | 00
-     * -------
-     * 11 | 10
+     * \details
+     * \verbatim
+       01 | 00
+       -------
+       11 | 10
+       \endverbatim
      */
     class DIGITAL_API constellation_dqpsk : public constellation
     {
@@ -565,14 +586,17 @@ namespace gr {
     /************************************************************/
 
     /*! 
-     * \brief Digital constellation for 8PSK
+     * \brief Digital constellation for 8PSK.
      * \ingroup digital
      *
-     *     101 | 100
-     * 001     |     000
-     * -----------------
-     * 011     |     010
-     *     111 | 110
+     * \details
+     * \verbatim
+           101 | 100
+       001     |     000
+       -----------------
+       011     |     010
+           111 | 110
+       \endverbatim
      */
     class DIGITAL_API constellation_8psk : public constellation
     {

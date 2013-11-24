@@ -30,8 +30,17 @@ namespace gr {
   namespace blocks {
 
     /*!
-     * \brief Convert stream of complex to a stream of interleaved shorts
+     * \brief Convert stream of complex to a stream of interleaved shorts.
      * \ingroup type_converters_blk
+     *
+     * \details
+     * The output stream contains shorts with twice as many output
+     * items as input items. For every complex input item, we produce
+     * two output shorts that contain the real part and imaginary part
+     * converted to shorts:
+     *
+     * \li output[0][n] = static_cast<short>(input[0][m].real());
+     * \li output[0][n+1] = static_cast<short>(input[0][m].imag());
      */
     class BLOCKS_API complex_to_interleaved_short : virtual public sync_interpolator
     {

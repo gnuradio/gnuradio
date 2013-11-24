@@ -36,7 +36,7 @@ namespace gr {
      *
      * \details
      * Decode a constellation's points from a complex space to soft
-     * bits based on the map and soft decision lUT of the \p
+     * bits based on the map and soft decision LUT of the \p
      * consetllation object.
      */
     class DIGITAL_API constellation_soft_decoder_cf
