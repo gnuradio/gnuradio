@@ -228,7 +228,7 @@ class BlockTreeWindow(gtk.VBox):
 
         elif event.state & gtk.gdk.CONTROL_MASK and event.keyval == gtk.keysyms.b:
             # ugly...
-            Actions.TOGGLE_BLOCKTREE_WIDGET.activate()
+            Actions.TOGGLE_BLOCKS_WINDOW.activate()
 
         else:
             return False # propagate event
