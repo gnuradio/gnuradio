@@ -370,7 +370,6 @@ PMT_API size_t blob_length(pmt_t blob);
 
 /*!
  * <pre>
- * ------------------------------------------------------------------------
  *		       Uniform Numeric Vectors
  *
  * A uniform numeric vector is a vector whose elements are all of single
@@ -393,7 +392,6 @@ PMT_API size_t blob_length(pmt_t blob);
  *   f64  the C++ type double
  *   c32  the C++ type complex<float>
  *   c64  the C++ type complex<double>
- * ------------------------------------------------------------------------
  * </pre>
  */
 
