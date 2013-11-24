@@ -31,21 +31,25 @@ namespace gr {
   namespace channels {
     
     /*!
-     * \brief channel simulator
+     * \brief Basic channel simulator.
      * \ingroup channel_models_blk
      *
      * \details
      * This block implements a basic channel model simulator that can
      * be used to help evaluate, design, and test various signals,
-     * waveforms, and algorithms. This model allows the user to set
-     * the voltage of an AWGN noise source, a (normalized) frequency
-     * offset, a sample timing offset, and a noise seed to randomize
-     * the AWGN noise source.
+     * waveforms, and algorithms.
+     *
+     * This model allows the user to set the voltage of an AWGN noise
+     * source (\p noise_voltage), a (normalized) frequency offset (\p
+     * frequency_offset), a sample timing offset (\p epsilon), and a
+     * seed (\p noise_seed) to randomize or make reproducable the AWGN
+     * noise source.
      *
      * Multipath can be approximated in this model by using a FIR
-     * filter representation of a multipath delay profile.
+     * filter representation of a multipath delay profile with the
+     * parameter \p taps.
      *
-     * To simulate a channel with time-variant channel, use a
+     * To simulate a channel with time-variant channel, use
      * gr::channels::channel_model2.
      */
     class CHANNELS_API channel_model : virtual public hier_block2

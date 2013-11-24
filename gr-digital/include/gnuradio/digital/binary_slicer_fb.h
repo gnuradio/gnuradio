@@ -30,12 +30,12 @@ namespace gr {
   namespace digital {
     
     /*!
-     * \brief slice float binary symbol outputting 1 bit output
+     * \brief Slice float binary symbol producing 1 bit output
      * \ingroup symbol_coding_blk
      *
      * \details
-     * x <  0 --> 0
-     * x >= 0 --> 1
+     * \li input[0][n] < 0 --> 0
+     * \li input[0][n] >= 0 --> 1
      */
     class DIGITAL_API binary_slicer_fb : virtual public sync_block
     {

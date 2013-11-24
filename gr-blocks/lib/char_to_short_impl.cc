@@ -38,8 +38,8 @@ namespace gr {
 
     char_to_short_impl::char_to_short_impl(size_t vlen)
       : sync_block("char_to_short",
-		      io_signature::make (1, -1, sizeof(char)*vlen),
-		      io_signature::make (1,  1, sizeof(short)*vlen)),
+                   io_signature::make(1, 1, sizeof(char)*vlen),
+                   io_signature::make(1, 1, sizeof(short)*vlen)),
 	d_vlen(vlen)
     {
       const int alignment_multiple =
@@ -52,8 +52,8 @@ namespace gr {
 			     gr_vector_const_void_star &input_items,
 			     gr_vector_void_star &output_items)
     {
-      const int8_t *in = (const int8_t *) input_items[0];
-      int16_t *out = (int16_t *) output_items[0];
+      const int8_t *in = (const int8_t *)input_items[0];
+      int16_t *out = (int16_t *)output_items[0];
 
       volk_8i_convert_16i(out, in, d_vlen*noutput_items);
 

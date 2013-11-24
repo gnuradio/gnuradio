@@ -30,8 +30,14 @@ namespace gr {
   namespace blocks {
 
     /*!
-     * \brief convert a stream of gr_complex to 1 or 2 streams of float
+     * \brief Convert a stream of gr_complex to 1 or 2 streams of float.
      * \ingroup type_converters_blk
+     *
+     * \details
+     * If a single output stream is attached, this will output the
+     * real part of the input complex samples. If a second output
+     * stream is connected, output[0] is the real part and output[1]
+     * is the imaginary part.
      */
     class BLOCKS_API complex_to_float : virtual public sync_block
     {

@@ -30,7 +30,7 @@ namespace gr {
   namespace blocks {
 
     /*!
-     * \brief complex in, real out (float)
+     * \brief Produces the real part (as a float0 of a complex stream.
      * \ingroup type_converters_blk
      */
     class BLOCKS_API complex_to_real : virtual public sync_block

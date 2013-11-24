@@ -48,6 +48,7 @@ CPACK_COMPONENT("docs"
 # Add subdirectories
 ########################################################################
 add_subdirectory(doxygen)
+add_subdirectory(exploring-gnuradio)
 
 endif(ENABLE_DOXYGEN)
 

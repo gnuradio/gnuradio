@@ -45,22 +45,18 @@ namespace gr {
      * new style by setting this to FALSE.
      *
      * The input and output satisfy a difference equation of the form
-     \htmlonly
-     \f{
-     y[n] - \sum_{k=1}^{M} a_k y[n-k] = \sum_{k=0}^{N} b_k x[n-k]
-     \f}
-     \endhtmlonly
+     \f[
+       y[n] - \sum_{k=1}^{M} a_k y[n-k] = \sum_{k=0}^{N} b_k x[n-k]
+     \f]
 
      \xmlonly
      y[n] - \sum_{k=1}^{M} a_k y[n-k] = \sum_{k=0}^{N} b_k x[n-k]
      \endxmlonly
 
      * with the corresponding rational system function
-     \htmlonly
-     \f{
-     H(z) = \ frac{\sum_{k=0}^{M} b_k z^{-k}}{1 - \sum_{k=1}^{N} a_k z^{-k}}
-     \f}
-     \endhtmlonly
+     \f[
+     H(z) = \frac{\sum_{k=0}^{M} b_k z^{-k}}{1 - \sum_{k=1}^{N} a_k z^{-k}}
+     \f]
 
      \xmlonly
      H(z) = \ frac{\sum_{k=0}^{M} b_k z^{-k}}{1 - \sum_{k=1}^{N} a_k z^{-k}}

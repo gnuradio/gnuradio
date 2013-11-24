@@ -31,7 +31,8 @@ namespace gr {
   namespace channels {
     
     /*!
-     * \brief channel model2
+     * \brief Basic channel simulator allowing time-varying frequency
+     * and timing inputs.
      * \ingroup channel_models_blk
      *
      * \details
@@ -40,11 +41,13 @@ namespace gr {
      * waveforms, and algorithms.
      *
      * This model allows the user to set the voltage of an AWGN noise
-     * source, an initial timing offset, and a noise seed to randomize
-     * the AWGN noise source.
+     * source (\p noise_voltage), an initial timing offset (\p
+     * epsilon), and a seed (\p noise_seed) to randomize the AWGN
+     * noise source.
      *
      * Multipath can be approximated in this model by using a FIR
-     * filter representation of a multipath delay profile.
+     * filter representation of a multipath delay profile with the
+     * parameter \p taps.
      *
      * Unlike gr::channels::channel_model, this block is designed to
      * enable time-varying frequency and timing offsets.

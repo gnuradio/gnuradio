@@ -32,6 +32,11 @@ namespace gr {
     /*!
      * \brief Convert stream of chars to a stream of short
      * \ingroup type_converters_blk
+     *
+     * \details
+     * Converts \p vlen length vectors of input char samples to shorts:
+     *
+     * \li output[0][m:m+vlen] = static_cast<short>(input[0][m:m+vlen])
      */
     class BLOCKS_API char_to_short : virtual public sync_block
     {

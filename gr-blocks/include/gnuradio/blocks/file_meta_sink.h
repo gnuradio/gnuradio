@@ -53,13 +53,13 @@ namespace gr {
      * type of data and properties of the data in the next segment of
      * samples. The information includes:
      *
-     *   rx_rate (double): sample rate of data.
-     *   rx_time (uint64_t, double): time stamp of first sample in segment.
-     *   size (uint32_t): item size in bytes.
-     *   type (gr_file_types as int32_t): data type.
-     *   cplx (bool): Is data complex?
-     *   strt (uint64_t): Starting byte of data in this segment.
-     *   bytes (uint64_t): Size in bytes of data in this segment.
+     *   \li rx_rate (double): sample rate of data.
+     *   \li rx_time (uint64_t, double): time stamp of first sample in segment.
+     *   \li size (uint32_t): item size in bytes.
+     *   \li type (::gr_file_types as int32_t): data type.
+     *   \li cplx (bool): Is data complex?
+     *   \li strt (uint64_t): Starting byte of data in this segment.
+     *   \li bytes (uint64_t): Size in bytes of data in this segment.
      *
      * Tags can be sent to the file to update the information, which
      * will create a new header. Headers are found by searching from

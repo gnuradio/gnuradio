@@ -30,7 +30,7 @@ namespace gr {
   namespace blocks {
 
     /*!
-     * \brief complex in, arg out (float)
+     * \brief complex in, arg (arctan) out (float)
      * \ingroup type_converters_blk
      */
     class BLOCKS_API complex_to_arg : virtual public sync_block

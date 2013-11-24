@@ -32,10 +32,11 @@ namespace gr {
   namespace blocks {
 
     /*!
-     * \brief output = input_0 & input_1 & , ... & input_N)
+     * \brief output = input[0] & input[1] & ... & input[M-1]
      * \ingroup boolean_operators_blk
      *
-     * bitwise boolean and across all input streams.
+     * \details
+     * bitwise boolean AND across all input streams.
      */
     class BLOCKS_API @NAME@ : virtual public sync_block
     {

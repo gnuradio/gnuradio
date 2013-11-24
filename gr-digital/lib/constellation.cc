@@ -50,8 +50,8 @@ namespace gr {
       d_rotational_symmetry(rotational_symmetry),
       d_dimensionality(dimensionality),
       d_re_min(1e20),
-      d_im_min(1e20),
       d_re_max(1e20),
+      d_im_min(1e20),
       d_im_max(1e20),
       d_lut_precision(0),
       d_lut_scale(0)
@@ -83,8 +83,8 @@ namespace gr {
       d_dimensionality(1),
       d_scalefactor(1.0),
       d_re_min(1e20),
-      d_im_min(1e20),
       d_re_max(1e20),
+      d_im_min(1e20),
       d_im_max(1e20),
       d_lut_precision(0.0),
       d_lut_scale(0.0)

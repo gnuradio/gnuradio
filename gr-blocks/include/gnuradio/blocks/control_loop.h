@@ -28,6 +28,36 @@
 namespace gr {
   namespace blocks {
 
+    /*!
+     * \brief A second-order control loop implementation class.
+     *
+     * \details
+     * This class implements a second order control loop and is
+     * inteded to act as a parent class to blocks which need a control
+     * loop (e.g., gr::digital::costas_loop_cc,
+     * gr::analog::pll_refout_cc, etc.). It takes in a loop bandwidth
+     * as well as a max and min frequency and provides the functions
+     * that control the update of the loop.
+     *
+     * The loop works of alpha and beta gains. These gains are
+     * calculated using the input loop bandwidth and a pre-set damping
+     * factor. The damping factor can be changed using the
+     * #set_damping_factor after the block is
+     * constructed. The alpha and beta values can be set using their
+     * respective #set_alpha or #set_beta functions if very precise
+     * control over these is required.
+     *
+     * The class tracks both phase and frequency of a signal based on
+     * an error signal. The error calculation is unique for each
+     * algorithm and is calculated externally and passed to the
+     * advance_loop function, which uses this to update its phase and
+     * frequency estimates.
+     *
+     * This class also provides the functions #phase_wrap and
+     * #frequency_limit to easily keep the phase and frequency
+     * estimates within our set bounds (phase_wrap keeps it within
+     * +/-2pi).
+     */
     class BLOCKS_API control_loop
     {
     protected:
@@ -41,12 +71,13 @@ namespace gr {
       control_loop(float loop_bw, float max_freq, float min_freq);
       virtual ~control_loop();
 
-      /*! \brief update the system gains from the loop bandwidth and damping factor
+      /*! \brief Update the system gains from the loop bandwidth and damping factor.
        *
-       *  This function updates the system gains based on the loop
-       *  bandwidth and damping factor of the system. These two
-       *  factors can be set separately through their own set
-       *  functions.
+       * \details
+       * This function updates the system gains based on the loop
+       * bandwidth and damping factor of the system. These two
+       * factors can be set separately through their own set
+       * functions.
        */
       void update_gains();
 
@@ -55,8 +86,9 @@ namespace gr {
        */
       void advance_loop(float error);
 
-      /*! \brief Keep the phase between -2pi and 2pi
+      /*! \brief Keep the phase between -2pi and 2pi.
        *
+       * \details
        * This function keeps the phase between -2pi and 2pi. If the
        * phase is greater than 2pi by d, it wraps around to be -2pi+d;
        * similarly if it is less than -2pi by d, it wraps around to
@@ -69,8 +101,9 @@ namespace gr {
        */
       void phase_wrap();
 
-      /*! \brief Keep the frequency between d_min_freq and d_max_freq
+      /*! \brief Keep the frequency between d_min_freq and d_max_freq.
        *
+       * \details
        * This function keeps the frequency between d_min_freq and
        * d_max_freq. If the frequency is greater than d_max_freq, it
        * is set to d_max_freq.  If the frequency is less than
@@ -88,8 +121,9 @@ namespace gr {
        *******************************************************************/
 
       /*!
-       * \brief Set the loop bandwidth
+       * \brief Set the loop bandwidth.
        *
+       * \details
        * Set the loop filter's bandwidth to \p bw. This should be
        * between 2*pi/200 and 2*pi/100 (in rads/samp). It must also be
        * a positive number.
@@ -102,8 +136,9 @@ namespace gr {
       virtual void set_loop_bandwidth(float bw);
 
       /*!
-       * \brief Set the loop damping factor
+       * \brief Set the loop damping factor.
        *
+       * \details
        * Set the loop filter's damping factor to \p df. The damping
        * factor should be sqrt(2)/2.0 for critically damped systems.
        * Set it to anything else only if you know what you are
@@ -117,22 +152,23 @@ namespace gr {
       void set_damping_factor(float df);
 
       /*!
-       * \brief Set the loop gain alpha
+       * \brief Set the loop gain alpha.
        *
-       * Set's the loop filter's alpha gain parameter.
+       * \details
+       * Sets the loop filter's alpha gain parameter.
        *
        * This value should really only be set by adjusting the loop
        * bandwidth and damping factor.
        *
        * \param alpha    (float) new alpha gain
-       *
        */
       void set_alpha(float alpha);
 
       /*!
-       * \brief Set the loop gain beta
+       * \brief Set the loop gain beta.
        *
-       * Set's the loop filter's beta gain parameter.
+       * \details
+       * Sets the loop filter's beta gain parameter.
        *
        * This value should really only be set by adjusting the loop
        * bandwidth and damping factor.
@@ -144,7 +180,8 @@ namespace gr {
       /*!
        * \brief Set the control loop's frequency.
        *
-       * Set's the control loop's frequency. While this is normally
+       * \details
+       * Sets the control loop's frequency. While this is normally
        * updated by the inner loop of the algorithm, it could be
        * useful to manually initialize, set, or reset this under
        * certain circumstances.
@@ -156,7 +193,8 @@ namespace gr {
       /*!
        * \brief Set the control loop's phase.
        *
-       * Set's the control loop's phase. While this is normally
+       * \details
+       * Sets the control loop's phase. While this is normally
        * updated by the inner loop of the algorithm, it could be
        * useful to manually initialize, set, or reset this under
        * certain circumstances.
@@ -168,6 +206,7 @@ namespace gr {
       /*!
        * \brief Set the control loop's maximum frequency.
        *
+       * \details
        * Set the maximum frequency the control loop can track. 
        *
        * \param freq    (float) new max frequency
@@ -177,6 +216,7 @@ namespace gr {
       /*!
        * \brief Set the control loop's minimum frequency.
        *
+       * \details
        * Set the minimum frequency the control loop can track. 
        *
        * \param freq    (float) new min frequency
@@ -188,32 +228,32 @@ namespace gr {
        *******************************************************************/
 
       /*!
-       * \brief Returns the loop bandwidth
+       * \brief Returns the loop bandwidth.
        */
       float get_loop_bandwidth() const;
 
       /*!
-       * \brief Returns the loop damping factor
+       * \brief Returns the loop damping factor.
        */
       float get_damping_factor() const;
 
       /*!
-       * \brief Returns the loop gain alpha
+       * \brief Returns the loop gain alpha.
        */
       float get_alpha() const;
 
       /*!
-       * \brief Returns the loop gain beta
+       * \brief Returns the loop gain beta.
        */
       float get_beta() const;
 
       /*!
-       * \brief Get the control loop's frequency estimate
+       * \brief Get the control loop's frequency estimate.
        */
       float get_frequency() const;
 
       /*!
-       * \brief Get the control loop's phase estimate
+       * \brief Get the control loop's phase estimate.
        */
       float get_phase() const;
 
