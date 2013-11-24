@@ -9,13 +9,17 @@ href="http://gnuradio.org" target="_blank"><b>main project page</b></a>.
 
 Other information about the project and discussion about GNU Radio,
 software radio, and communication theory in general can be found at
-the <a href="http://gnuradio.squarespace.com" target="_blank"><b>GNU Radio blog</b></a>.
+the <a href="http://www.trondeau.com" target="_blank"><b>GNU Radio blog</b></a>.
 
 
 \section build Building GNU Radio
 
 See the \ref build_guide page for details about the project's
 dependencies and build process.
+
+Once built, look on <a href="http://gnuradio.org" target="_blank">gnuradio.org</a> for
+tutorials on using the software system and see \ref
+page_exploring_gnuradio for a few simple examples exploring GNU Radio.
 
 
 \section blocks GNU Radio Blocks
