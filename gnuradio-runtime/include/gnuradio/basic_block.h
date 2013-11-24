@@ -62,13 +62,13 @@ namespace gr {
   
   private:
     //msg_handler_t d_msg_handler;
-    typedef std::map<pmt::pmt_t , msg_handler_t, pmt::comperator> d_msg_handlers_t;
+    typedef std::map<pmt::pmt_t , msg_handler_t, pmt::comparator> d_msg_handlers_t;
     d_msg_handlers_t d_msg_handlers;
   
     typedef std::deque<pmt::pmt_t> msg_queue_t;
-    typedef std::map<pmt::pmt_t, msg_queue_t, pmt::comperator> msg_queue_map_t;
-    typedef std::map<pmt::pmt_t, msg_queue_t, pmt::comperator>::iterator msg_queue_map_itr;
-    std::map<pmt::pmt_t, boost::shared_ptr<boost::condition_variable>, pmt::comperator> msg_queue_ready;
+    typedef std::map<pmt::pmt_t, msg_queue_t, pmt::comparator> msg_queue_map_t;
+    typedef std::map<pmt::pmt_t, msg_queue_t, pmt::comparator>::iterator msg_queue_map_itr;
+    std::map<pmt::pmt_t, boost::shared_ptr<boost::condition_variable>, pmt::comparator> msg_queue_ready;
   
     gr::thread::mutex mutex;          //< protects all vars
   

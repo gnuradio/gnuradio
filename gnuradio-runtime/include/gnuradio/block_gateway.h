@@ -260,7 +260,7 @@ namespace gr {
     }
 
   protected:
-    typedef std::map<pmt::pmt_t, feval_p *, pmt::comperator> msg_handlers_feval_t;
+    typedef std::map<pmt::pmt_t, feval_p *, pmt::comparator> msg_handlers_feval_t;
     msg_handlers_feval_t d_msg_handlers_feval;
 
     bool has_msg_handler(pmt::pmt_t which_port)
