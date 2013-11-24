@@ -21,19 +21,25 @@
 #
 """ A tool for editing GNU Radio out-of-tree modules. """
 
-import sys
 from gnuradio.modtool import *
+
 
 def main():
     """ Here we go. Parse command, choose class and run. """
     cmd_dict = get_class_dict(globals().values())
     command = get_command_from_argv(cmd_dict.keys())
     if command is None:
-        print 'Usage:' + templates.Templates['usage']
+        print 'Usage:' + Templates['usage']
         exit(2)
     modtool = cmd_dict[command]()
-    modtool.setup()
-    modtool.run()
+    try:
+        (options, args) = modtool.parser.parse_args()
+        modtool.setup(options, args)
+        modtool.run()
+
+    except ModToolException as err:
+        print >> sys.stderr, err
+        exit(1)
 
 if __name__ == '__main__':
     try:

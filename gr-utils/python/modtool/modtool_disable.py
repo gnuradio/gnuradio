@@ -23,25 +23,26 @@
 import os
 import re
 import sys
-from optparse import OptionGroup
 
 from modtool_base import ModTool
 from cmakefile_editor import CMakeFileEditor
+
 
 class ModToolDisable(ModTool):
     """ Disable block (comments out CMake entries for files) """
     name = 'disable'
     aliases = ('dis',)
+
     def __init__(self):
         ModTool.__init__(self)
 
-    def setup(self):
-        ModTool.setup(self)
-        options = self.options
+    def setup(self, options, args):
+        ModTool.setup(self, options, args)
+
         if options.block_name is not None:
             self._info['pattern'] = options.block_name
-        elif len(self.args) >= 2:
-            self._info['pattern'] = self.args[1]
+        elif len(args) >= 2:
+            self._info['pattern'] = args[1]
         else:
             self._info['pattern'] = raw_input('Which blocks do you want to disable? (Regex): ')
         if len(self._info['pattern']) == 0:

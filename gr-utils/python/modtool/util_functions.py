@@ -29,13 +29,8 @@ def get_command_from_argv(possible_cmds):
     """ Read the requested command from argv. This can't be done with optparse,
     since the option parser isn't defined before the command is known, and
     optparse throws an error."""
-    command = None
     for arg in sys.argv:
-        if arg[0] == "-":
-            continue
-        else:
-            command = arg
-        if command in possible_cmds:
+        if arg[0] != "-" and arg in possible_cmds:
             return arg
     return None
 
@@ -111,7 +106,7 @@ def get_modname():
         return None
 
 def is_number(s):
-    " Return True if the string s contains a number. "
+    """ Return True if the string s contains a number. """
     try:
         float(s)
         return True

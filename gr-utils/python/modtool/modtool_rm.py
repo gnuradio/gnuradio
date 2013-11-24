@@ -24,26 +24,27 @@ import os
 import re
 import sys
 import glob
-from optparse import OptionGroup
 
 from util_functions import remove_pattern_from_file
 from modtool_base import ModTool
 from cmakefile_editor import CMakeFileEditor
 
+
 class ModToolRemove(ModTool):
     """ Remove block (delete files and remove Makefile entries) """
     name = 'remove'
     aliases = ('rm', 'del')
+
     def __init__(self):
         ModTool.__init__(self)
 
-    def setup(self):
-        ModTool.setup(self)
-        options = self.options
+    def setup(self, options, args):
+        ModTool.setup(self, options, args)
+
         if options.block_name is not None:
             self._info['pattern'] = options.block_name
-        elif len(self.args) >= 2:
-            self._info['pattern'] = self.args[1]
+        elif len(args) >= 2:
+            self._info['pattern'] = args[1]
         else:
             self._info['pattern'] = raw_input('Which blocks do you want to delete? (Regex): ')
         if len(self._info['pattern']) == 0:
@@ -111,7 +112,6 @@ class ModToolRemove(ModTool):
         if not self._skip_subdirs['grc']:
             self._run_subdir('grc', ('*.xml',), ('install',))
 
-
     def _run_subdir(self, path, globs, makefile_vars, cmakeedit_func=None):
         """ Delete all files that match a certain pattern in path.
         path - The directory in which this will take place
@@ -132,7 +132,7 @@ class ModToolRemove(ModTool):
         if len(files_filt) == 0:
             print "None found."
             return []
-        # 2. Delete files, Makefile entries and other occurences
+        # 2. Delete files, Makefile entries and other occurrences
         files_deleted = []
         ed = CMakeFileEditor('%s/CMakeLists.txt' % path)
         yes = self._info['yes']
@@ -156,4 +156,3 @@ class ModToolRemove(ModTool):
                 cmakeedit_func(b, ed)
         ed.write()
         return files_deleted
-

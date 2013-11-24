@@ -20,32 +20,32 @@
 #
 """ Automatically create XML bindings for GRC from block code """
 
-import sys
 import os
 import re
 import glob
-from optparse import OptionGroup
 
-from modtool_base import ModTool
+from modtool_base import ModTool, ModToolException
 from parser_cc_block import ParserCCBlock
 from grc_xml_generator import GRCXMLGenerator
 from cmakefile_editor import CMakeFileEditor
 from util_functions import ask_yes_no
 
+
 class ModToolMakeXML(ModTool):
     """ Make XML file for GRC block bindings """
     name = 'makexml'
     aliases = ('mx',)
+
     def __init__(self):
         ModTool.__init__(self)
 
-    def setup(self):
-        ModTool.setup(self)
-        options = self.options
+    def setup(self, options, args):
+        ModTool.setup(self, options, args)
+
         if options.block_name is not None:
             self._info['pattern'] = options.block_name
-        elif len(self.args) >= 2:
-            self._info['pattern'] = self.args[1]
+        elif len(args) >= 2:
+            self._info['pattern'] = args[1]
         else:
             self._info['pattern'] = raw_input('Which blocks do you want to parse? (Regex): ')
         if len(self._info['pattern']) == 0:
@@ -66,7 +66,6 @@ class ModToolMakeXML(ModTool):
                 (params, iosig, blockname) = self._parse_cc_h(f)
                 self._make_grc_xml_from_block_data(params, iosig, blockname)
         # 2) Go through python/
-
 
     def _search_files(self, path, path_glob):
         """ Search for files matching pattern in the given path. """
@@ -152,7 +151,7 @@ class ModToolMakeXML(ModTool):
                                    _type_translate
                                   )
         except IOError:
-            print "Can't open some of the files necessary to parse %s." % fname_cc
-            sys.exit(1)
+            raise ModToolException("Can't open some of the files necessary to parse {}.".format(fname_cc))
+
         return (parser.read_params(), parser.read_io_signature(), blockname)
 

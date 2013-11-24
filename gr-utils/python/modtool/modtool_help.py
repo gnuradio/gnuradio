@@ -26,8 +26,8 @@ from templates import Templates
 
 
 def print_class_descriptions():
-    ''' Go through all ModTool* classes and print their name,
-        alias and description. '''
+    """ Go through all ModTool* classes and print their name,
+        alias and description. """
     desclist = []
     for gvar in globals().values():
         try:
@@ -40,14 +40,16 @@ def print_class_descriptions():
     for description in desclist:
         print '%-8s  %-12s    %s' % description
 
+
 class ModToolHelp(ModTool):
-    ''' Show some help. '''
+    """ Show some help. """
     name = 'help'
     aliases = ('h', '?')
+
     def __init__(self):
         ModTool.__init__(self)
 
-    def setup(self):
+    def setup(self, options, args):
         pass
 
     def run(self):
