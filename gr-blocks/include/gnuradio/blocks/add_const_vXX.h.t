@@ -32,7 +32,7 @@ namespace gr {
   namespace blocks {
 
     /*!
-     * \brief output = input + constant vector
+     * \brief output[m] = input[m] + constant vector for all M streams.
      * \ingroup math_operators_blk
      */
     class BLOCKS_API @NAME@ : virtual public sync_block

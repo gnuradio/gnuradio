@@ -35,11 +35,14 @@ namespace gr {
      * \ingroup synchronizers_blk
      *
      * \details
-     * Input: complex samples.
-     * Output 0: pass through complex samples
-     * tag 'phase_est': estimate of phase offset
-     * tag 'timing_est': estimate of symbol timing offset
-     * tag 'corr_est': the correlation value of the estimates
+     * Input:
+     * \li Stream of complex samples.
+     *
+     * Output:
+     * \li Output stream that just passes the input complex samples
+     * \li tag 'phase_est': estimate of phase offset
+     * \li tag 'timing_est': estimate of symbol timing offset
+     * \li tag 'corr_est': the correlation value of the estimates
      *
      * This block is designed to search for a preamble by correlation
      * and uses the results of the correlation to get a time and phase

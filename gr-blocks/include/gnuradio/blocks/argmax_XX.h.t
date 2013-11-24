@@ -40,11 +40,13 @@ namespace gr {
      * \details
      * Data is passed in as a vector of length \p vlen from multiple
      * input sources. It will look through these streams of \p vlen
-     * data items and output two streams.
-     *    Stream 0 will contain the index value in the vector where
-     *    the maximum value occurred.
-     *    Stream 1 will contain the number of the input stream that
-     *    held the maximum value.
+     * data items and output two streams:
+     *
+     * \li Stream 0 will contain the index value in the vector where
+     *     the maximum value occurred.
+     *
+     * \li Stream 1 will contain the number of the input stream that
+     *     held the maximum value.
      */
     class BLOCKS_API @NAME@ : virtual public sync_block
     {

@@ -32,11 +32,16 @@ namespace gr {
   namespace blocks {
 
     /*!
-     * \brief output = sum (input_0, input_1, ...)
+     * \brief output = sum(input[0], input[1], ..., input[M-1])
      * \ingroup math_operators_blk
      *
-     * \details
-     * Add across all input streams.
+     * \details 
+     * Add samples across all input streams. For all \f$n\f$ samples
+     * on all \f$M\f$ input streams \f$x_m\f$:
+     *
+     * \f[
+     *   y[n] = \sum_{m=0}^{M-1} x_m[n]
+     * \f]
      */
     class BLOCKS_API @NAME@ : virtual public sync_block
     {

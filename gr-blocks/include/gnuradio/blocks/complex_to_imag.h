@@ -30,7 +30,7 @@ namespace gr {
   namespace blocks {
 
     /*!
-     * \brief complex in, imag out (float)
+     * \brief Produces the imaginary part (as a float0 of a complex stream.
      * \ingroup type_converters_blk
      */
     class BLOCKS_API complex_to_imag : virtual public sync_block

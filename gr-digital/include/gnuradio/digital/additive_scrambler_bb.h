@@ -40,8 +40,8 @@ namespace gr {
      * data stream, starting at the LSB.
      *
      * The scrambler works by XORing the incoming bit stream by the
-     * output of the LFSR. Optionally, after 'count' bits have been
-     * processed, the shift register is reset to the seed value.
+     * output of the LFSR. Optionally, after \p count bits have been
+     * processed, the shift register is reset to the \p seed value.
      * This allows processing fixed length vectors of samples.
      *
      * Alternatively, the LFSR can be reset using a reset tag to

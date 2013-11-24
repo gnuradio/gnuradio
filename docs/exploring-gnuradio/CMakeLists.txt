@@ -1,5 +1,4 @@
-#
-# Copyright 2004 Free Software Foundation, Inc.
+# Copyright 2013 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -17,14 +16,15 @@
 # along with GNU Radio; see the file COPYING.  If not, write to
 # the Free Software Foundation, Inc., 51 Franklin Street,
 # Boston, MA 02110-1301, USA.
-#
 
-TARGETS = exploring-gnuradio.html
+include(GrPython)
 
-all: $(TARGETS)
-
-clean:
-	-rm -f $(TARGETS)
-
-%.html : %.xml
-	xmlto html-nochunks $<
+install(
+    FILES
+    dial_tone.py
+    fm_tx.grc
+    fm_rx.grc
+    fm_demod.py
+    DESTINATION ${GR_PKG_DOC_DIR}
+    COMPONENT "docs"
+)
