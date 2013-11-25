@@ -40,11 +40,12 @@ namespace gr {
     static void
     print_taps(std::ostream &s, vector<float> &v)
     {
-      s << std::setprecision(9);
+      std::streamsize tmp = s.precision(9);
       for(unsigned int i = 0; i < v.size(); i++) {
 	s << v[i] << ", ";
       }
       s << std::endl;
+      s.precision(tmp);
     }
 #endif
 
