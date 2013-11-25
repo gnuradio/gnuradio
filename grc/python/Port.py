@@ -177,7 +177,7 @@ class Port(_Port, _GUIPort):
         """
         Get the number of ports.
         If already blank, return a blank
-        If the evaluation of nports cannot be cast to an integer, return 1.
+        If the evaluation of nports cannot be cast to a positive integer, return 1.
         
         Returns:
             the number of ports or 1
@@ -186,9 +186,9 @@ class Port(_Port, _GUIPort):
         #return blank if nports is blank
         if not nports: return ''
         try:
-            nports = int(self.get_parent().get_parent().evaluate(nports))
-            if 0 < nports: return nports
-        except: return 1
+            return max(1, int(self.get_parent().get_parent().evaluate(nports)))
+        except:
+            return 1
 
     def get_optional(self): return bool(self._optional)
 
