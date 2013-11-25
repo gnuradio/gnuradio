@@ -101,20 +101,14 @@ class Block(_Block, _GUIBlock):
             #restore integer contiguity after insertion
             #rectify the port names with the index
             self.back_ofthe_bus(ports);
-            n = 0
-            last_basename = ''
+            current_master_port_name = ''  # name of the currently expanded master port
+            n = 0  # master port index
             for i, port in enumerate(ports):
                 port._key = str(i)
                 port._name = port._n['name']
-                # add an index to the basename
                 if port.get_nports() > 1 and not port._type == 'bus':
-                    # basename = name without digits
-                    basename = ''.join([c for c in port._name if not c.isdigit()])
-                    if basename == last_basename:
-                        n += 1
-                    else:
-                        last_basename = basename
-                        n = 0
+                    n = n + 1 if port._name == current_master_port_name else 0  # next master port --> reset.
+                    current_master_port_name = port._name  # remember last master port name
                     port._name += str(n)
 
         def insert_port(get_ports, get_port, key):
@@ -132,12 +126,11 @@ class Block(_Block, _GUIBlock):
             get_ports().remove(port)
             rectify(get_ports())
 
-        def get_master_ports(lst):
+        def get_master_ports(get_ports):
             port_basenames = set()
             master_ports = list()
-            for p in lst:
-                n = p._name
-                base_n = ''.join([c for c in n if not c.isdigit()])
+            for p in get_ports():
+                base_n = ''.join([c for c in p._name if not c.isdigit()])
                 if not base_n in port_basenames:
                     master_ports.append(p)
                     port_basenames.add(base_n)
@@ -148,7 +141,9 @@ class Block(_Block, _GUIBlock):
             (self.get_sources, self.get_source),
             (self.get_sinks, self.get_sink),
         ):
-            master_ports = get_master_ports(get_ports())
+            master_ports2 = get_master_ports(get_ports)
+            master_ports = filter(lambda p: p.get_nports(), get_ports())
+            assert master_ports == master_ports2
             for i, master_port in enumerate(master_ports):
                 nports = master_port.get_nports()
                 if not nports:
