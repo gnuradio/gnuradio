@@ -31,11 +31,11 @@
 
 namespace gr {
   namespace filter {
-    
+
 #define	NELEM(x) (sizeof(x) / sizeof(x[0]))
 
     using std::vector;
-    
+
 #if 1
     static void
     print_taps(std::ostream &s, vector<float> &v)
@@ -47,13 +47,13 @@ namespace gr {
       s << std::endl;
     }
 #endif
-    
+
     static void
     check_symmetry(vector<float> &v)
     {
       int n = v.size();
       int m = n / 2;
-      
+
       for(int i = 0; i < m; i++)
 	CPPUNIT_ASSERT_DOUBLES_EQUAL(v[i], v[n - i - 1], 1e-9);
     }
@@ -79,7 +79,7 @@ namespace gr {
       -0.00685472786, 0.00665180339, 0.00586195057, -0.00198445749, -0.0036777542,
       -2.30611317e-18, 0.00192370394, 0.000582886743, -0.00111255341
     };
-    
+
     const static float t3_exp[77] = {
       0.000119983582, 0.000607753696, 0.000897691818, -0.0010834164, 2.31763315e-05,
       -0.00179765455, 0.000822491478, 0.0014836716, 0.000661226455, 0.00204213755,
@@ -98,7 +98,7 @@ namespace gr {
       0.000822491478, -0.00179765455, 2.31763315e-05, -0.0010834164, 0.000897691818,
       0.000607753696, 0.000119983582
     };
-    
+
     const static float t4_exp[49] = { // low pass
       0.00105995836, 0.000226392993, -0.00127760693, -0.000967577624, 0.00159226439,
       0.00243603508, -0.00145168288, -0.00476933597, 5.28154159e-18, 0.0075675128,
@@ -109,7 +109,7 @@ namespace gr {
       0.0423667729, -0.00726737641, -0.0306062996, -0.0049355682, 0.0193619132,
       0.00963691529, -0.010118301, -0.00976149458, 0.00365885533, 0.0075675128,
       5.28154159e-18, -0.00476933597, -0.00145168288, 0.00243603508, 0.00159226439,
-      -0.000967577624, -0.00127760693, 0.000226392993, 0.00105995836 
+      -0.000967577624, -0.00127760693, 0.000226392993, 0.00105995836
     };
 
     const static float t5_exp[49] = { //high pass
@@ -124,7 +124,7 @@ namespace gr {
       -5.2923301e-18, 0.00477907853, 0.00145464821, -0.00244101114, -0.00159551692,
       0.000969554123, 0.00128021673, -0.000226855438, -0.00106212357
     };
-    
+
     const static float t6_exp[] = { // bandpass
       0.000280927314, -0.00104732765, 7.93654181e-05, -0.000427086081, 0.000759583549,
       0.000896608108, -0.0004236323, 0.000242393609, -0.00221229903, 0.000480753428,
@@ -157,7 +157,7 @@ namespace gr {
 			 1750,
 			 500,
 			 firdes::WIN_HAMMING);
-      
+
       // std::cout << "ntaps: " << taps.size() << std::endl;
       // print_taps(std::cout, taps);
 
@@ -167,7 +167,7 @@ namespace gr {
 
       check_symmetry(taps);
     }
-    
+
     void
     qa_firdes::t2()
     {
@@ -180,12 +180,12 @@ namespace gr {
 
       // std::cout << "ntaps: " << taps.size() << std::endl;
       // print_taps(std::cout, taps);
-      
+
       CPPUNIT_ASSERT_EQUAL(NELEM(t2_exp), taps.size());
 
       for(unsigned int i = 0; i < taps.size(); i++)
 	CPPUNIT_ASSERT_DOUBLES_EQUAL(t2_exp[i], taps[i], 1e-9);
-      
+
       check_symmetry(taps);
     }
 
@@ -250,7 +250,7 @@ namespace gr {
 
       for(unsigned int i = 0; i < taps.size(); i++)
 	CPPUNIT_ASSERT_DOUBLES_EQUAL(t5_exp[i], taps[i], 1e-9);
-      
+
       check_symmetry(taps);
 }
 
