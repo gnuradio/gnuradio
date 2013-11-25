@@ -1,0 +1,38 @@
+<?xml version="1.0"?>
+<block>
+  <name>source_pushpull</name>
+  <key>zmqblocks_source_pushpull</key>
+  <category>zmqblocks</category>
+  <import>import zmqblocks</import>
+  <make>zmqblocks.source_pushpull($itemsize, $*address)</make>
+  <!-- Make one 'param' node for every Parameter you want settable from the GUI.
+       Sub-nodes:
+       * name
+       * key (makes the value accessible as $keyname, e.g. in the make node)
+       * type -->
+  <param>
+    <name>...</name>
+    <key>...</key>
+    <type>...</type>
+  </param>
+
+  <!-- Make one 'sink' node per input. Sub-nodes:
+       * name (an identifier for the GUI)
+       * type
+       * vlen
+       * optional (set to 1 for optional inputs) -->
+  <sink>
+    <name>in</name>
+    <type><!-- e.g. int, float, complex, byte, short, xxx_vector, ...--></type>
+  </sink>
+
+  <!-- Make one 'source' node per output. Sub-nodes:
+       * name (an identifier for the GUI)
+       * type
+       * vlen
+       * optional (set to 1 for optional inputs) -->
+  <source>
+    <name>out</name>
+    <type><!-- e.g. int, float, complex, byte, short, xxx_vector, ...--></type>
+  </source>
+</block>
