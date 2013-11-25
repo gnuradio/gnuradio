@@ -36,8 +36,7 @@ namespace gr {
 
     using std::vector;
 
-#if 1
-    static void
+    void
     print_taps(std::ostream &s, vector<float> &v)
     {
       std::streamsize tmp = s.precision(9);
@@ -47,7 +46,6 @@ namespace gr {
       s << std::endl;
       s.precision(tmp);
     }
-#endif
 
     static void
     check_symmetry(vector<float> &v)
