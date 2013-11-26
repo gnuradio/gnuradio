@@ -97,6 +97,7 @@ if(ICE_ICE AND ICE_ICEUTIL)
     HINTS ${CMAKE_INSTALL_PREFIX}/bin ${ICE_MANUAL_INSTALL_PATH}/bin/)
 
   # Check that the ICE Python package is installed
+  include(GrPython)
   GR_PYTHON_CHECK_MODULE("Ice >= 3.4" Ice "Ice.stringVersion() >= '3.4.0'" PYTHON_ICE_FOUND)
   if(PYTHON_ICE_FOUND)
     set(ICE_FOUND TRUE)
