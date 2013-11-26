@@ -47,6 +47,11 @@ namespace gr {
      * to any block and watch all tags streaming out of that block for
      * debugging purposes.
      *
+     * Specifying a key will allow this block to filter out all other
+     * tags and only display tags that match the given key. This can
+     * help clean up the output and allow you to focus in on a
+     * particular tag of interest.
+     *
      * The tags from the last call to this work function are stored
      * and can be retrieved using the function 'current_tags'.
      */
@@ -61,9 +66,11 @@ namespace gr {
        *
        * \param sizeof_stream_item size of the items in the incoming stream.
        * \param name name to identify which debug sink generated the info.
+       * \param key_filter Specify a tag's key value to use as a filter.
        */
       static sptr make(size_t sizeof_stream_item,
-                       const std::string &name);
+                       const std::string &name,
+                       const std::string &key_filter="");
 
       /*!
        * \brief Returns a vector of tag_t items as of the last call to
@@ -72,9 +79,24 @@ namespace gr {
       virtual std::vector<tag_t> current_tags() = 0;
 
       /*!
+       * \brief Return the total number of tags in the tag queue.
+       */
+      virtual int num_tags() = 0;
+
+      /*!
        * \brief Set the display of tags to stdout on/off.
        */
       virtual void set_display(bool d) = 0;
+
+      /*!
+       * \brief Set a new key to filter with.
+       */
+      virtual void set_key_filter(const std::string &key_filter) = 0;
+
+      /*!
+       * \brief Get the current filter key.
+       */
+      virtual std::string key_filter() const = 0;
     };
 
   } /* namespace blocks */

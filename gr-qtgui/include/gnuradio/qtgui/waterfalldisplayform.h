@@ -83,17 +83,19 @@ private slots:
   void newData(const QEvent *updateEvent);
 
 private:
-  uint64_t _numRealDataPoints;
-  QIntValidator* _intValidator;
+  QIntValidator* d_int_validator;
 
-  double _samp_rate, _center_freq;
-  double _time_per_slice;
-  int _fftsize;
-  float _fftavg;
-  gr::filter::firdes::win_type _fftwintype;
+  double d_samp_rate, d_center_freq;
+  int d_fftsize;
+  float d_fftavg;
+  gr::filter::firdes::win_type d_fftwintype;
 
-  double _min_val;
-  double _max_val;
+  double d_min_val;
+  double d_max_val;
+
+  FFTSizeMenu *d_sizemenu;
+  FFTAverageMenu *d_avgmenu;
+  FFTWindowMenu *d_winmenu;
 };
 
 #endif /* WATERFALL_DISPLAY_FORM_H */

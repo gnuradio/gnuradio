@@ -63,6 +63,8 @@
 		<block>blocks_tag_debug</block>
 		<block>blocks_message_debug</block>
                 <block>blocks_random_pdu</block>
+                <block>blocks_message_strobe</block>
+                <block>blocks_tags_strobe</block>
 	</cat>
 	<cat>
 	        <name>File Operators</name>
@@ -118,6 +120,7 @@
                 <block>blocks_message_strobe</block>
 		<block>blocks_message_debug</block>
 		<block>blocks_pdu_to_tagged_stream</block>
+		<block>blocks_tagged_stream_multiply_length</block>
 		<block>blocks_tagged_stream_to_pdu</block>
                 <block>blocks_random_pdu</block>
         </cat>
@@ -181,6 +184,7 @@
 		<block>blocks_tag_gate</block>
 		<block>blocks_tagged_file_sink</block>
 		<block>blocks_tagged_stream_mux</block>
+		<block>blocks_stream_to_tagged_stream</block>
 	</cat>
 	<cat>
 	        <name>Type Converters</name>

@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+<!--
+###################################################
+##Phase Noise Generator
+###################################################
+ -->
+<block>
+  <name>Phase Noise Generator</name>
+  <key>channels_phase_noise_gen</key>
+  <import>from gnuradio import channels</import>
+  <make>channels.phase_noise_gen($noise_mag, $alpha)</make>
+  <callback>set_noise_mag($noise_mag)</callback>
+  <callback>set_alpha($alpha)</callback>
+  <param>
+    <name>Noise Magnitude</name>
+    <key>noise_mag</key>
+    <value>0</value>
+    <type>float</type>
+  </param>
+  <param>
+    <name>Alpha</name>
+    <key>alpha</key>
+    <value>0.1</value>
+    <type>float</type>
+  </param>
+  <sink>
+    <name>in</name>
+    <type>complex</type>
+  </sink>
+  <source>
+    <name>out</name>
+    <type>complex</type>
+  </source>
+</block>

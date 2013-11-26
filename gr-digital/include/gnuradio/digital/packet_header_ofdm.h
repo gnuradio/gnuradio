@@ -45,8 +45,22 @@ namespace gr {
 		      const std::string &frame_len_tag_key,
 		      const std::string &num_tag_key,
 		      int bits_per_header_sym,
-		      int bits_per_payload_sym);
+		      int bits_per_payload_sym,
+		      bool scramble_header);
       ~packet_header_ofdm();
+
+      /*!
+       * \brief Header formatter.
+       *
+       * Does the same as packet_header_default::header_formatter(), but
+       * optionally scrambles the bits (this is more important for OFDM to avoid
+       * PAPR spikes).
+       */
+      bool header_formatter(
+	  long packet_len,
+	  unsigned char *out,
+	  const std::vector<tag_t> &tags
+      );
 
       /*!
        * \brief Inverse function to header_formatter().
@@ -55,7 +69,7 @@ namespace gr {
        * adds another tag that stores the number of OFDM symbols in the
        * packet.
        * Note that there is usually no linear connection between the number
-       * of OFDM symbols and the packet length, because, a packet might
+       * of OFDM symbols and the packet length because a packet might
        * finish mid-OFDM-symbol.
        */
       bool header_parser(
@@ -77,6 +91,8 @@ namespace gr {
        *                             required to figure out how many OFDM symbols
        *                             are necessary to encode the given number of
        *                             bytes.
+       * \param scramble_header Set this to true to scramble the bits. This is highly
+       *                        recommended, as it reduces PAPR spikes.
        */
       static sptr make(
 	    const std::vector<std::vector<int> > &occupied_carriers,
@@ -85,15 +101,17 @@ namespace gr {
 	    const std::string &frame_len_tag_key="frame_len",
 	    const std::string &num_tag_key="packet_num",
 	    int bits_per_header_sym=1,
-	    int bits_per_payload_sym=1
+	    int bits_per_payload_sym=1,
+	    bool scramble_header=false
       );
 
 
      protected:
-      pmt::pmt_t d_frame_len_tag_key;
+      pmt::pmt_t d_frame_len_tag_key; //!< Tag key of the additional frame length tag
       const std::vector<std::vector<int> > d_occupied_carriers; //!< Which carriers/symbols carry data
       int d_syms_per_set; //!< Helper variable: Total number of elements in d_occupied_carriers
       int d_bits_per_payload_sym;
+      std::vector<unsigned char> d_scramble_mask; //!< Bits are xor'd with this before tx'ing
     };
 
   } // namespace digital

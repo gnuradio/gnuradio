@@ -1,0 +1,79 @@
+<?xml version="1.0"?>
+<!--
+###################################################
+##Channel Model
+###################################################
+ -->
+<block>
+	<name>Channel Model 2</name>
+	<key>channels_channel_model2</key>
+	<import>from gnuradio import channels</import>
+	<import>from gnuradio.filter import firdes</import>
+	<make>channels.channel_model2(
+	noise_voltage=$noise_voltage,
+	epsilon=$epsilon,
+	taps=$taps,
+	noise_seed=$seed,
+	block_tags=$block_tags
+)</make>
+	<callback>set_noise_voltage($noise_voltage)</callback>
+	<callback>set_taps($taps)</callback>
+	<callback>set_timing_offset($epsilon)</callback>
+	<param>
+		<name>Noise Voltage</name>
+		<key>noise_voltage</key>
+		<value>0.0</value>
+		<type>real</type>
+	</param>
+	<param>
+		<name>Time Offset</name>
+		<key>epsilon</key>
+		<value>1.0</value>
+		<type>real</type>
+	</param>
+	<param>
+		<name>Taps</name>
+		<key>taps</key>
+		<value>1.0 + 1.0j</value>
+		<type>complex_vector</type>
+	</param>
+	<param>
+		<name>Seed</name>
+		<key>seed</key>
+		<value>0</value>
+		<type>int</type>
+	</param>
+	<param>
+		<name>Block Tag Propagation</name>
+		<key>block_tags</key>
+		<value>False</value>
+		<type>enum</type>
+		<hide>$block_tags.hide_block</hide>
+		<option>
+			<name>Yes</name>
+			<key>True</key>
+			<opt>hide_block:</opt>
+		</option>
+		<option>
+			<name>No</name>
+			<key>False</key>
+			<opt>hide_block:part</opt>
+		</option>
+	</param>
+	<sink>
+		<name>in</name>
+		<type>complex</type>
+	</sink>
+	<sink>
+		<name>freq</name>
+		<type>float</type>
+	</sink>
+	<sink>
+		<name>time</name>
+		<type>float</type>
+	</sink>
+	<source>
+		<name>out</name>
+		<type>complex</type>
+	</source>
+</block>

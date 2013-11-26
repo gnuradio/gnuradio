@@ -73,6 +73,8 @@ namespace gr {
       void setup_rpc();
 
       void update_gains();
+      
+      void forecast(int noutput_items, gr_vector_int &ninput_items_required);
 
       void set_taps(const std::vector<float> &taps,
 		    std::vector< std::vector<float> > &ourtaps,

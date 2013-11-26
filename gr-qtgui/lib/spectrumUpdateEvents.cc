@@ -204,7 +204,8 @@ SpectrumFrequencyRangeEvent::GetStopFrequency() const
 
 
 TimeUpdateEvent::TimeUpdateEvent(const std::vector<double*> timeDomainPoints,
-				 const uint64_t numTimeDomainDataPoints)
+				 const uint64_t numTimeDomainDataPoints,
+                                 const std::vector< std::vector<gr::tag_t> > tags)
   : QEvent(QEvent::Type(SpectrumUpdateEventType))
 {
   if(numTimeDomainDataPoints < 1) {
@@ -222,6 +223,8 @@ TimeUpdateEvent::TimeUpdateEvent(const std::vector<double*> timeDomainPoints,
 	     _numTimeDomainDataPoints*sizeof(double));
     }
   }
+
+  _tags = tags;
 }
 
 TimeUpdateEvent::~TimeUpdateEvent()
@@ -243,6 +246,11 @@ TimeUpdateEvent::getNumTimeDomainDataPoints() const
   return _numTimeDomainDataPoints;
 }
 
+const std::vector< std::vector<gr::tag_t> >
+TimeUpdateEvent::getTags() const
+{
+  return _tags;
+}
 
 /***************************************************************************/
 
@@ -438,5 +446,48 @@ TimeRasterUpdateEvent::getNumDataPoints() const
 {
   return _numDataPoints;
 }
+
+/***************************************************************************/
+
+
+HistogramUpdateEvent::HistogramUpdateEvent(const std::vector<double*> points,
+                                           const uint64_t npoints)
+  : QEvent(QEvent::Type(SpectrumUpdateEventType))
+{
+  if(npoints < 1) {
+    _npoints = 1;
+  }
+  else {
+    _npoints = npoints;
+  }
+
+  _nplots = points.size();
+  for(size_t i = 0; i < _nplots; i++) {
+    _points.push_back(new double[_npoints]);
+    if(npoints > 0) {
+      memcpy(_points[i], points[i], _npoints*sizeof(double));
+    }
+  }
+}
+
+HistogramUpdateEvent::~HistogramUpdateEvent()
+{
+  for(size_t i = 0; i < _nplots; i++) {
+    delete[] _points[i];
+  }
+}
+
+const std::vector<double*>
+HistogramUpdateEvent::getDataPoints() const
+{
+  return _points;
+}
+
+uint64_t
+HistogramUpdateEvent::getNumDataPoints() const
+{
+  return _npoints;
+}
+
 
 #endif /* SPECTRUM_UPDATE_EVENTS_C */

@@ -41,6 +41,12 @@ namespace gr {
     GR_BLOCK_GW_WORK_INTERP,
   };
 
+  enum tag_propagation_policy_t {
+    TPP_DONT = 0,
+    TPP_ALL_TO_ALL = 1,
+    TPP_ONE_TO_ONE = 2
+  };
+
   /*!
    * Shared message structure between python and gateway.
    * Each action type represents a scheduler-called function.
@@ -232,6 +238,10 @@ namespace gr {
     void block__message_port_unsub(pmt::pmt_t port_id, pmt::pmt_t target) {
       gr::basic_block::message_port_unsub(port_id, target);
     }
+
+    pmt::pmt_t block__message_subscribers(pmt::pmt_t which_port) {
+      return gr::basic_block::message_subscribers(which_port);
+    }
     
     pmt::pmt_t block__message_ports_in() {
       return gr::basic_block::message_ports_in();
@@ -250,7 +260,7 @@ namespace gr {
     }
 
   protected:
-    typedef std::map<pmt::pmt_t, feval_p *, pmt::comperator> msg_handlers_feval_t;
+    typedef std::map<pmt::pmt_t, feval_p *, pmt::comparator> msg_handlers_feval_t;
     msg_handlers_feval_t d_msg_handlers_feval;
 
     bool has_msg_handler(pmt::pmt_t which_port)

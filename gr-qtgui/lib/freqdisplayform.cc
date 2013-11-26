@@ -28,34 +28,34 @@
 FreqDisplayForm::FreqDisplayForm(int nplots, QWidget* parent)
   : DisplayForm(nplots, parent)
 {
-  _intValidator = new QIntValidator(this);
-  _intValidator->setBottom(0);
+  d_int_validator = new QIntValidator(this);
+  d_int_validator->setBottom(0);
 
-  _layout = new QGridLayout(this);
-  _displayPlot = new FrequencyDisplayPlot(nplots, this);
-  _layout->addWidget(_displayPlot, 0, 0);
-  setLayout(_layout);
+  d_layout = new QGridLayout(this);
+  d_display_plot = new FrequencyDisplayPlot(nplots, this);
+  d_layout->addWidget(d_display_plot, 0, 0);
+  setLayout(d_layout);
 
-  _numRealDataPoints = 1024;
-  _fftsize = 1024;
-  _fftavg = 1.0;
+  d_num_real_data_points = 1024;
+  d_fftsize = 1024;
+  d_fftavg = 1.0;
   
-  FFTSizeMenu *sizemenu = new FFTSizeMenu(this);
-  FFTAverageMenu *avgmenu = new FFTAverageMenu(this);
-  FFTWindowMenu *winmenu = new FFTWindowMenu(this);
-  _menu->addMenu(sizemenu);
-  _menu->addMenu(avgmenu);
-  _menu->addMenu(winmenu);
-  connect(sizemenu, SIGNAL(whichTrigger(int)),
+  d_sizemenu = new FFTSizeMenu(this);
+  d_avgmenu = new FFTAverageMenu(this);
+  d_winmenu = new FFTWindowMenu(this);
+  d_menu->addMenu(d_sizemenu);
+  d_menu->addMenu(d_avgmenu);
+  d_menu->addMenu(d_winmenu);
+  connect(d_sizemenu, SIGNAL(whichTrigger(int)),
 	  this, SLOT(setFFTSize(const int)));
-  connect(avgmenu, SIGNAL(whichTrigger(float)),
+  connect(d_avgmenu, SIGNAL(whichTrigger(float)),
 	  this, SLOT(setFFTAverage(const float)));
-  connect(winmenu, SIGNAL(whichTrigger(gr::filter::firdes::win_type)),
+  connect(d_winmenu, SIGNAL(whichTrigger(gr::filter::firdes::win_type)),
 	  this, SLOT(setFFTWindowType(const gr::filter::firdes::win_type)));
 
   Reset();
 
-  connect(_displayPlot, SIGNAL(plotPointSelected(const QPointF)),
+  connect(d_display_plot, SIGNAL(plotPointSelected(const QPointF)),
 	  this, SLOT(onPlotPointSelected(const QPointF)));
 }
 
@@ -64,13 +64,13 @@ FreqDisplayForm::~FreqDisplayForm()
   // Qt deletes children when parent is deleted
 
   // Don't worry about deleting Display Plots - they are deleted when parents are deleted
-  delete _intValidator;
+  delete d_int_validator;
 }
 
 FrequencyDisplayPlot*
 FreqDisplayForm::getPlot()
 {
-  return ((FrequencyDisplayPlot*)_displayPlot);
+  return ((FrequencyDisplayPlot*)d_display_plot);
 }
 
 void
@@ -95,45 +95,48 @@ FreqDisplayForm::customEvent( QEvent * e)
 int
 FreqDisplayForm::getFFTSize() const
 {
-  return _fftsize;
+  return d_fftsize;
 }
 
 float
 FreqDisplayForm::getFFTAverage() const
 {
-  return _fftavg;
+  return d_fftavg;
 }
 
 gr::filter::firdes::win_type
 FreqDisplayForm::getFFTWindowType() const
 {
-  return _fftwintype;
+  return d_fftwintype;
 }
 
 void
 FreqDisplayForm::setSampleRate(const QString &samprate)
 {
-  setFrequencyRange(_center_freq, samprate.toDouble());
+  setFrequencyRange(d_center_freq, samprate.toDouble());
 }
 
 void
 FreqDisplayForm::setFFTSize(const int newsize)
 {
-  _fftsize = newsize;
+  d_fftsize = newsize;
+  d_sizemenu->getActionFromSize(newsize)->setChecked(true);
   getPlot()->replot();
 }
 
 void
 FreqDisplayForm::setFFTAverage(const float newavg)
 {
-  _fftavg = newavg;
+  d_fftavg = newavg;
+  d_avgmenu->getActionFromAvg(newavg)->setChecked(true);
   getPlot()->replot();
 }
 
 void
 FreqDisplayForm::setFFTWindowType(const gr::filter::firdes::win_type newwin)
 {
-  _fftwintype = newwin;
+  d_fftwintype = newwin;
+  d_winmenu->getActionFromWindow(newwin)->setChecked(true);
   getPlot()->replot();
 }
 
@@ -147,8 +150,8 @@ FreqDisplayForm::setFrequencyRange(const double centerfreq,
   double units = pow(10, (units10-fmod(units10, 3.0)));
   int iunit = static_cast<int>(units3);
 
-  _center_freq = centerfreq;
-  _samp_rate = bandwidth;
+  d_center_freq = centerfreq;
+  d_samp_rate = bandwidth;
 
   getPlot()->setFrequencyRange(centerfreq, bandwidth,
 			       units, strunits[iunit]);
@@ -164,12 +167,12 @@ void
 FreqDisplayForm::autoScale(bool en)
 {
   if(en) {
-    _autoscale_state = true;
+    d_autoscale_state = true;
   }
   else {
-    _autoscale_state = false;
+    d_autoscale_state = false;
   }
 
-  getPlot()->setAutoScale(_autoscale_state);
+  getPlot()->setAutoScale(d_autoscale_state);
   getPlot()->replot();
 }

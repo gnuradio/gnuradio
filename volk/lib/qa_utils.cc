@@ -268,6 +268,9 @@ bool run_volk_tests(volk_func_desc_t desc,
                    ) {
     std::cout << "RUN_VOLK_TESTS: " << name << std::endl;
 
+    const float tol_f = tol;
+    const unsigned int tol_i = static_cast<unsigned int>(tol);
+
     //first let's get a list of available architectures for the test
     std::vector<std::string> arch_list = get_arch_list(desc);
 
@@ -393,39 +396,39 @@ bool run_volk_tests(volk_func_desc_t desc,
             for(size_t j=0; j<both_sigs.size(); j++) {
                 if(both_sigs[j].is_float) {
                     if(both_sigs[j].size == 8) {
-                        fail = fcompare((double *) test_data[generic_offset][j], (double *) test_data[i][j], vlen*(both_sigs[j].is_complex ? 2 : 1), tol);
+                        fail = fcompare((double *) test_data[generic_offset][j], (double *) test_data[i][j], vlen*(both_sigs[j].is_complex ? 2 : 1), tol_f);
                     } else {
-                        fail = fcompare((float *) test_data[generic_offset][j], (float *) test_data[i][j], vlen*(both_sigs[j].is_complex ? 2 : 1), tol);
+                        fail = fcompare((float *) test_data[generic_offset][j], (float *) test_data[i][j], vlen*(both_sigs[j].is_complex ? 2 : 1), tol_f);
                     }
                 } else {
                     //i could replace this whole switch statement with a memcmp if i wasn't interested in printing the outputs where they differ
                     switch(both_sigs[j].size) {
                     case 8:
                         if(both_sigs[j].is_signed) {
-                            fail = icompare((int64_t *) test_data[generic_offset][j], (int64_t *) test_data[i][j], vlen*(both_sigs[j].is_complex ? 2 : 1), tol);
+                            fail = icompare((int64_t *) test_data[generic_offset][j], (int64_t *) test_data[i][j], vlen*(both_sigs[j].is_complex ? 2 : 1), tol_i);
                         } else {
-                            fail = icompare((uint64_t *) test_data[generic_offset][j], (uint64_t *) test_data[i][j], vlen*(both_sigs[j].is_complex ? 2 : 1), tol);
+                            fail = icompare((uint64_t *) test_data[generic_offset][j], (uint64_t *) test_data[i][j], vlen*(both_sigs[j].is_complex ? 2 : 1), tol_i);
                         }
                         break;
                     case 4:
                         if(both_sigs[j].is_signed) {
-                            fail = icompare((int32_t *) test_data[generic_offset][j], (int32_t *) test_data[i][j], vlen*(both_sigs[j].is_complex ? 2 : 1), tol);
+                            fail = icompare((int32_t *) test_data[generic_offset][j], (int32_t *) test_data[i][j], vlen*(both_sigs[j].is_complex ? 2 : 1), tol_i);
                         } else {
-                            fail = icompare((uint32_t *) test_data[generic_offset][j], (uint32_t *) test_data[i][j], vlen*(both_sigs[j].is_complex ? 2 : 1), tol);
+                            fail = icompare((uint32_t *) test_data[generic_offset][j], (uint32_t *) test_data[i][j], vlen*(both_sigs[j].is_complex ? 2 : 1), tol_i);
                         }
                         break;
                     case 2:
                         if(both_sigs[j].is_signed) {
-                            fail = icompare((int16_t *) test_data[generic_offset][j], (int16_t *) test_data[i][j], vlen*(both_sigs[j].is_complex ? 2 : 1), tol);
+                            fail = icompare((int16_t *) test_data[generic_offset][j], (int16_t *) test_data[i][j], vlen*(both_sigs[j].is_complex ? 2 : 1), tol_i);
                         } else {
-                            fail = icompare((uint16_t *) test_data[generic_offset][j], (uint16_t *) test_data[i][j], vlen*(both_sigs[j].is_complex ? 2 : 1), tol);
+                            fail = icompare((uint16_t *) test_data[generic_offset][j], (uint16_t *) test_data[i][j], vlen*(both_sigs[j].is_complex ? 2 : 1), tol_i);
                         }
                         break;
                     case 1:
                         if(both_sigs[j].is_signed) {
-                            fail = icompare((int8_t *) test_data[generic_offset][j], (int8_t *) test_data[i][j], vlen*(both_sigs[j].is_complex ? 2 : 1), tol);
+                            fail = icompare((int8_t *) test_data[generic_offset][j], (int8_t *) test_data[i][j], vlen*(both_sigs[j].is_complex ? 2 : 1), tol_i);
                         } else {
-                            fail = icompare((uint8_t *) test_data[generic_offset][j], (uint8_t *) test_data[i][j], vlen*(both_sigs[j].is_complex ? 2 : 1), tol);
+                            fail = icompare((uint8_t *) test_data[generic_offset][j], (uint8_t *) test_data[i][j], vlen*(both_sigs[j].is_complex ? 2 : 1), tol_i);
                         }
                         break;
                     default:

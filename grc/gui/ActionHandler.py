@@ -83,6 +83,8 @@ class ActionHandler:
         Returns:
             false to let gtk handle the key action
         """
+        # prevent key event stealing while the search box is active
+        if self.main_window.btwin.search_entry.has_focus(): return False
         if not self.get_focus_flag(): return False
         return Actions.handle_key_press(event)
 
@@ -111,7 +113,8 @@ class ActionHandler:
                 Actions.FLOW_GRAPH_OPEN, Actions.FLOW_GRAPH_SAVE_AS,
                 Actions.FLOW_GRAPH_CLOSE, Actions.ABOUT_WINDOW_DISPLAY,
                 Actions.FLOW_GRAPH_SCREEN_CAPTURE, Actions.HELP_WINDOW_DISPLAY,
-                Actions.TYPES_WINDOW_DISPLAY,
+                Actions.TYPES_WINDOW_DISPLAY, Actions.TOGGLE_BLOCKS_WINDOW,
+                Actions.TOGGLE_REPORTS_WINDOW,
             ): action.set_sensitive(True)
             if not self.init_file_paths:
                 self.init_file_paths = Preferences.files_open()
@@ -121,6 +124,10 @@ class ActionHandler:
             if Preferences.file_open() in self.init_file_paths:
                 self.main_window.new_page(Preferences.file_open(), show=True)
             if not self.get_page(): self.main_window.new_page() #ensure that at least a blank page exists
+
+            self.main_window.btwin.search_entry.hide()
+            Actions.TOGGLE_REPORTS_WINDOW.set_active(Preferences.reports_window_visibility())
+            Actions.TOGGLE_BLOCKS_WINDOW.set_active(Preferences.blocks_window_visibility())
         elif action == Actions.APPLICATION_QUIT:
             if self.main_window.close_pages():
                 gtk.main_quit()
@@ -345,6 +352,14 @@ class ActionHandler:
             Dialogs.TypesDialog(self.get_flow_graph().get_parent())
         elif action == Actions.ERRORS_WINDOW_DISPLAY:
             Dialogs.ErrorsDialog(self.get_flow_graph())
+        elif action == Actions.TOGGLE_REPORTS_WINDOW:
+            visible = action.get_active()
+            self.main_window.reports_scrolled_window.set_visible(visible)
+            Preferences.reports_window_visibility(visible)
+        elif action == Actions.TOGGLE_BLOCKS_WINDOW:
+            visible = action.get_active()
+            self.main_window.btwin.set_visible(visible)
+            Preferences.blocks_window_visibility(visible)
         ##################################################
         # Param Modifications
         ##################################################
@@ -442,6 +457,10 @@ class ActionHandler:
             self.platform.loadblocks()
             self.main_window.btwin.clear();
             self.platform.load_block_tree(self.main_window.btwin);
+        elif action == Actions.FIND_BLOCKS:
+            self.main_window.btwin.show()
+            self.main_window.btwin.search_entry.show()
+            self.main_window.set_focus(self.main_window.btwin.search_entry)
         elif action == Actions.OPEN_HIER:
             bn = [];
             for b in self.get_flow_graph().get_selected_blocks():
@@ -484,6 +503,7 @@ class ActionHandler:
         Actions.BUSSIFY_SOURCES.set_sensitive(bool(self.get_flow_graph().get_selected_blocks()))
         Actions.BUSSIFY_SINKS.set_sensitive(bool(self.get_flow_graph().get_selected_blocks()))
         Actions.RELOAD_BLOCKS.set_sensitive(True)
+        Actions.FIND_BLOCKS.set_sensitive(True)
         #set the exec and stop buttons
         self.update_exec_stop()
         #saved status

@@ -87,6 +87,8 @@ namespace gr {
 
     fll_band_edge_cc_impl::~fll_band_edge_cc_impl()
     {
+      delete d_filter_upper;
+      delete d_filter_lower;
     }
 
     /*******************************************************************

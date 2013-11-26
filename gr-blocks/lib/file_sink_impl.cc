@@ -32,17 +32,17 @@ namespace gr {
   namespace blocks {
 
     file_sink::sptr
-    file_sink::make(size_t itemsize, const char *filename)
+    file_sink::make(size_t itemsize, const char *filename, bool append)
     {
       return gnuradio::get_initial_sptr
-        (new file_sink_impl(itemsize, filename));
+        (new file_sink_impl(itemsize, filename, append));
     }
 
-    file_sink_impl::file_sink_impl(size_t itemsize, const char *filename)
+    file_sink_impl::file_sink_impl(size_t itemsize, const char *filename, bool append)
       : sync_block("file_sink",
                       io_signature::make(1, 1, itemsize),
                       io_signature::make(0, 0, 0)),
-        file_sink_base(filename, true),
+        file_sink_base(filename, true, append),
         d_itemsize(itemsize)
     {
     }

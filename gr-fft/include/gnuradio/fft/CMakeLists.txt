@@ -27,6 +27,7 @@ install(FILES
     fft_vfc.h
     goertzel.h
     goertzel_fc.h
+    window.h
     DESTINATION ${GR_INCLUDE_DIR}/gnuradio/fft
     COMPONENT "fft_devel"
 )

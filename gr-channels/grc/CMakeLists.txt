@@ -1,4 +1,4 @@
-# Copyright 2012 Free Software Foundation, Inc.
+# Copyright 2012-2013 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -17,11 +17,7 @@
 # the Free Software Foundation, Inc., 51 Franklin Street,
 # Boston, MA 02110-1301, USA.
 
-install(FILES
-  channels_block_tree.xml
-  channels_channel_model.xml
-  channels_fading_model.xml
-  channels_selective_fading_model.xml
-  DESTINATION ${GRC_BLOCKS_DIR}
-  COMPONENT "channels_python"
+file(GLOB xml_files "*.xml")
+install(FILES ${xml_files}
+    DESTINATION ${GRC_BLOCKS_DIR} COMPONENT "channels_python"
 )

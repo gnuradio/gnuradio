@@ -44,6 +44,7 @@ namespace gr {
     void lock();
     void unlock() throw (std::runtime_error);
     std::string edge_list();
+    std::string msg_edge_list();
     void dump();
 
     int max_noutput_items();

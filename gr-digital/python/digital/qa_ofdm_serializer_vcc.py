@@ -192,7 +192,7 @@ class qa_ofdm_serializer_vcc (gr_unittest.TestCase):
                        pilot_symbols, (),
                        tag_name)
         tx_ifft = fft.fft_vcc(fft_len, False, (1.0/fft_len,)*fft_len, True)
-        oscillator = analog.sig_source_c(1.0, analog.GR_COS_WAVE, freq_offset, 1.0/fft_len)
+        oscillator = analog.sig_source_c(1.0, analog.GR_COS_WAVE, freq_offset, 1.0)
         mixer = blocks.multiply_cc()
         rx_fft  = fft.fft_vcc(fft_len, True, (), True)
         sink2 = blocks.vector_sink_c(fft_len)

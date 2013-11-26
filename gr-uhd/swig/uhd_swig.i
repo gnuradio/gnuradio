@@ -64,6 +64,11 @@
 %include <uhd/types/dict.hpp>
 %template(string_string_dict_t) uhd::dict<std::string, std::string>; //define after dict
 
+%extend uhd::dict<std::string, std::string>{
+    std::string __getitem__(std::string key) {return (*self)[key];}
+    void __setitem__(std::string key, std::string val) {(*self)[key] = val;}
+};
+
 %include <uhd/types/device_addr.hpp>
 
 %include <uhd/types/io_type.hpp>

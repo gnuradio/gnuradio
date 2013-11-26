@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2011 Free Software Foundation, Inc.
+ * Copyright 2011-2013 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -25,6 +25,7 @@
 
 #include <Python.h>
 #include <gnuradio/qtgui/api.h>
+#include <gnuradio/qtgui/trigger_mode.h>
 #include <gnuradio/sync_block.h>
 #include <qapplication.h>
 
@@ -76,6 +77,9 @@ namespace gr {
       virtual void set_nsamps(const int newsize) = 0;
       virtual void set_samp_rate(const double samp_rate) = 0;
       virtual void set_line_alpha(int which, double alpha) = 0;
+      virtual void set_trigger_mode(trigger_mode mode, trigger_slope slope,
+                                    float level, float delay, int channel,
+                                    const std::string &tag_key="") = 0;
 
       virtual std::string title() = 0;
       virtual std::string line_label(int which) = 0;
@@ -93,6 +97,8 @@ namespace gr {
       virtual void enable_stem_plot(bool en=true) = 0;
       virtual void enable_semilogx(bool en=true) = 0;
       virtual void enable_semilogy(bool en=true) = 0;
+      virtual void enable_tags(int which, bool en) = 0;
+
       virtual int nsamps() const = 0;
       virtual void reset() = 0;
 

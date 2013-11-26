@@ -15,6 +15,7 @@
 	epsilon=$epsilon,
 	taps=$taps,
 	noise_seed=$seed,
+	block_tags=$block_tags
 )</make>
 	<callback>set_noise_voltage($noise_voltage)</callback>
 	<callback>set_frequency_offset($freq_offset)</callback>
@@ -49,6 +50,23 @@
 		<key>seed</key>
 		<value>0</value>
 		<type>int</type>
+	</param>
+	<param>
+		<name>Block Tag Propagation</name>
+		<key>block_tags</key>
+		<value>False</value>
+		<type>enum</type>
+		<hide>$block_tags.hide_block</hide>
+		<option>
+			<name>Yes</name>
+			<key>True</key>
+			<opt>hide_block:</opt>
+		</option>
+		<option>
+			<name>No</name>
+			<key>False</key>
+			<opt>hide_block:part</opt>
+		</option>
 	</param>
 	<sink>
 		<name>in</name>

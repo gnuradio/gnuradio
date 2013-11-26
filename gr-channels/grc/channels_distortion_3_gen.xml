@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<!--
+###################################################
+##Third Order Distortion Generator
+###################################################
+ -->
+<block>
+  <name>Third Order Distortion</name>
+  <key>channels_distortion_3_gen</key>
+  <import>from gnuradio import channels</import>
+  <make>channels.distortion_3_gen($beta)</make>
+  <callback>set_beta($beta)</callback>
+  <param>
+    <name>Distortion</name>
+    <key>beta</key>
+    <value>0</value>
+    <type>float</type>
+  </param>
+  <sink>
+    <name>in</name>
+    <type>complex</type>
+  </sink>
+  <source>
+    <name>out</name>
+    <type>complex</type>
+  </source>
+</block>

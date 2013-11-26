@@ -25,6 +25,7 @@
 #include <gnuradio/tags.h>
 #include <gnuradio/digital/api.h>
 #include <boost/enable_shared_from_this.hpp>
+#include <boost/crc.hpp>
 
 namespace gr {
   namespace digital {
@@ -55,7 +56,7 @@ namespace gr {
 		      const std::string &len_tag_key="packet_len",
 		      const std::string &num_tag_key="packet_num",
 		      int bits_per_byte=1);
-      ~packet_header_default();
+      virtual ~packet_header_default();
 
       sptr base() { return shared_from_this(); };
       sptr formatter() { return shared_from_this(); };
@@ -69,12 +70,15 @@ namespace gr {
        *
        * Uses the following header format:
        * Bits 0-11: The packet length (what was stored in the tag with key \p len_tag_key)
-       * Bits 12-27: The header number (counts up everytime this function is called)
-       * Bit 28: Even parity bit
+       * Bits 12-23: The header number (counts up everytime this function is called)
+       * Bit 24-31: 8-Bit CRC
        * All other bits: Are set to zero
        *
-       * If the header length is smaller than 29, bits are simply left out. For this
+       * If the header length is smaller than 32, bits are simply left out. For this
        * reason, they always start with the LSB.
+       *
+       * However, it is recommended to stay above 32 Bits, in order to have a working
+       * CRC.
        */
       virtual bool header_formatter(
 	  long packet_len,
@@ -104,6 +108,7 @@ namespace gr {
       int d_bits_per_byte;
       unsigned d_header_number;
       unsigned d_mask;
+      boost::crc_optimal<8, 0x07, 0xFF, 0x00, false, false>  d_crc_impl;
     };
 
   } // namespace digital

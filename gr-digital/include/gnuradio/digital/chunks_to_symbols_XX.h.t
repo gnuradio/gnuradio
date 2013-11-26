@@ -32,19 +32,20 @@ namespace gr {
   namespace digital {
     
     /*!
-     * \brief Map a stream of symbol indexes (unpacked bytes or
-     * shorts) to stream of float or complex constellation points in D
-     * dimensions (D = 1 by default)
-     * \ingroup converter_blk
+     * \brief Map a stream of unpacked symbol indexes to stream of
+     * float or complex constellation points in D dimensions (D = 1 by
+     * default) \ingroup converter_blk
      *
-     * input: stream of @I_TYPE@; output: stream of @O_TYPE@
+     * \details
+     * \li input: stream of @I_TYPE@
+     * \li output: stream of @O_TYPE@
      *
-     * out[n D + k] = symbol_table[in[n] D + k], k=0,1,...,D-1
+     * \li out[n D + k] = symbol_table[in[n] D + k], k=0,1,...,D-1
      *
-     * The combination of gr::blocks::packed_to_unpacked_XX followed by
-     * digital_chunks_to_symbols_XY handles the general case of mapping
-     * from a stream of bytes or shorts into arbitrary float
-     * or complex symbols.
+     * The combination of gr::blocks::packed_to_unpacked_XX followed
+     * by gr::digital::chunks_to_symbols_XY handles the general case
+     * of mapping from a stream of bytes or shorts into arbitrary
+     * float or complex symbols.
      *
      * \sa gr::blocks::packed_to_unpacked_bb, gr::blocks::unpacked_to_packed_bb,
      * \sa gr::blocks::packed_to_unpacked_ss, gr::blocks::unpacked_to_packed_ss,

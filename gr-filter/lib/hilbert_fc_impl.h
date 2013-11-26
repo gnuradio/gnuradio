@@ -37,8 +37,10 @@ namespace gr {
       kernel::fir_filter_fff *d_hilb;
 
     public:
-      hilbert_fc_impl(unsigned int ntaps);
-      
+      hilbert_fc_impl(unsigned int ntaps,
+                      firdes::win_type window=firdes::WIN_HAMMING,
+                      double beta=6.76);
+
       ~hilbert_fc_impl();
       
       int work(int noutput_items,

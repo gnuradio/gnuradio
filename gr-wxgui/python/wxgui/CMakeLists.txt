@@ -55,7 +55,7 @@ GR_PYTHON_INSTALL(
     slider.py
     stdgui2.py
     DESTINATION ${GR_PYTHON_DIR}/gnuradio/wxgui
-    COMPONENT "wxgui"
+    COMPONENT "wxgui_python"
 )
 
 ########################################################################
@@ -67,7 +67,7 @@ GR_PYTHON_INSTALL(
     forms/forms.py
     forms/converters.py
     DESTINATION ${GR_PYTHON_DIR}/gnuradio/wxgui/forms
-    COMPONENT "wxgui"
+    COMPONENT "wxgui_python"
 )
 
 ########################################################################
@@ -84,5 +84,5 @@ GR_PYTHON_INSTALL(
     plotter/plotter_base.py
     plotter/waterfall_plotter.py
     DESTINATION ${GR_PYTHON_DIR}/gnuradio/wxgui/plotter
-    COMPONENT "wxgui"
+    COMPONENT "wxgui_python"
 )

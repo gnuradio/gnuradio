@@ -5,7 +5,7 @@
 Each block can have a set of Performance Counters that the schedule
 keeps track of. These counters measure and store information about
 different performance metrics of their operation. The concept is
-fairly extensible, but currently, GNU Radio defines five types of
+fairly extensible, but currently, GNU Radio defines the following
 Performance Counters:
 
 \li noutput_items: number of items the block can produce.
@@ -13,20 +13,21 @@ Performance Counters:
 \li input_buffers_full: % of how full each input buffer is.
 \li output_buffers_full: % of how full each output buffer is.
 \li work_time: number of CPU ticks during the call to general_work().
+\li work_time_total: Accumulated sum of work_time.
 
-For each Performance Counter, we can retrieve the instantaneous,
-average, and variance from the block. Access to these counters is done
-through a simple set of functions added to every block in the
-flowgraph:
+For each Performance Counter except the work_time_total, we can
+retrieve the instantaneous, average, and variance from the
+block. Access to these counters is done through a simple set of
+functions added to every block in the flowgraph:
 
 \code
   float pc_<name>[_<type>]();
 \endcode
 
-In the above, the \<name\> field is one of the five counters in the
-above list of counters. The optional \<type\> suffix is either 'avg' to
-get the average value or 'var' to get the variance. Without a suffix,
-the function returns the most recent instantaneous value.
+In the above, the \<name\> field is one of the counters in the above
+list of counters. The optional \<type\> suffix is either 'avg' to get
+the average value or 'var' to get the variance. Without a suffix, the
+function returns the most recent instantaneous value.
 
 We can also reset the Performance Counters back to zero to remove any
 history of the current average and variance calculations for a

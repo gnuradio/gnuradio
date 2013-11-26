@@ -44,13 +44,34 @@ the Free Software Foundation, Inc., 51 Franklin Street,
 Boston, MA 02110-1301, USA.
 ''' % datetime.now().year
 
+Templates['grlicense'] = '''
+Copyright %d Free Software Foundation, Inc.
+
+This file is part of GNU Radio
+
+GNU Radio is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 3, or (at your option)
+any later version.
+
+GNU Radio is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with GNU Radio; see the file COPYING.  If not, write to
+the Free Software Foundation, Inc., 51 Franklin Street,
+Boston, MA 02110-1301, USA.
+''' % datetime.now().year
+
 # Header file of a sync/decimator/interpolator block
 Templates['block_impl_h'] = '''/* -*- c++ -*- */
 ${str_to_fancyc_comment($license)}
 \#ifndef INCLUDED_${modname.upper()}_${blockname.upper()}_IMPL_H
 \#define INCLUDED_${modname.upper()}_${blockname.upper()}_IMPL_H
 
-\#include <${modname}/${blockname}.h>
+\#include <${include_dir_prefix}/${blockname}.h>
 
 namespace gr {
   namespace ${modname} {
@@ -107,7 +128,7 @@ ${str_to_fancyc_comment($license)}
 
 \#include <gnuradio/io_signature.h>
 #if $blocktype == 'noblock'
-\#include <${modname}/${blockname}.h>
+\#include <${include_dir_prefix}/${blockname}.h>
 #else
 \#include "${blockname}_impl.h"
 #end if
@@ -228,8 +249,16 @@ namespace gr {
 			  gr_vector_const_void_star &input_items,
 			  gr_vector_void_star &output_items)
     {
+#if $blocktype == 'source'
+#silent pass
+#else
         const <+ITYPE+> *in = (const <+ITYPE+> *) input_items[0];
+#end if
+#if $blocktype == 'sink'
+#silent pass
+#else
         <+OTYPE+> *out = (<+OTYPE+> *) output_items[0];
+#end if
 
         // Do <+signal processing+>
 
@@ -251,7 +280,7 @@ ${str_to_fancyc_comment($license)}
 \#ifndef INCLUDED_${modname.upper()}_${blockname.upper()}_H
 \#define INCLUDED_${modname.upper()}_${blockname.upper()}_H
 
-\#include <${modname}/api.h>
+\#include <${include_dir_prefix}/api.h>
 #if $blocktype != 'noblock'
 \#include <gnuradio/${grblocktype}.h>
 #end if
@@ -406,10 +435,10 @@ class ${blockname}(${parenttype}):
 Templates['qa_cpp'] = '''/* -*- c++ -*- */
 ${str_to_fancyc_comment($license)}
 
-\#include "qa_${blockname}.h"
+\#include <gnuradio/attributes.h>
 \#include <cppunit/TestAssert.h>
-
-\#include <$modname/${blockname}.h>
+\#include "qa_${blockname}.h"
+\#include <${include_dir_prefix}/${blockname}.h>
 
 namespace gr {
   namespace ${modname} {
@@ -463,6 +492,7 @@ ${str_to_python_comment($license)}
 #
 
 from gnuradio import gr, gr_unittest
+from gnuradio import blocks
 #if $lang == 'cpp'
 import ${modname}_swig as ${modname}
 #else
@@ -540,7 +570,7 @@ GR_SWIG_BLOCK_MAGIC($modname, $blockname);
 #end if
 %include "${modname}_${blockname}.h"
 #else
-%include "${modname}/${blockname}.h"
+%include "${include_dir_prefix}/${blockname}.h"
 #if $blocktype != 'noblock'
 GR_SWIG_BLOCK_MAGIC2($modname, $blockname);
 #end if

@@ -39,10 +39,10 @@ class my_top_block(gr.top_block):
 
         if(options.tx_freq is not None):
             self.sink = uhd_transmitter(options.args,
-                                        options.bandwidth,
-                                        options.tx_freq, options.tx_gain,
+                                        options.bandwidth, options.tx_freq, 
+                                        options.lo_offset, options.tx_gain,
                                         options.spec, options.antenna,
-                                        options.verbose)
+                                        options.clock_source, options.verbose)
         elif(options.to_file is not None):
             self.sink = blocks.file_sink(gr.sizeof_gr_complex, options.to_file)
         else:
@@ -114,7 +114,8 @@ def main():
         pktno += 1
         
     send_pkt(eof=True)
-    tb.wait()                       # wait for it to finish
+    time.sleep(2)               # allow time for queued packets to be sent
+    tb.wait()                   # wait for it to finish
 
 if __name__ == '__main__':
     try:

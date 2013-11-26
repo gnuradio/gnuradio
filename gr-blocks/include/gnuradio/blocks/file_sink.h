@@ -45,8 +45,10 @@ namespace gr {
        * \brief Make a file sink.
        * \param itemsize size of the input data items.
        * \param filename name of the file to open and write output to.
+       * \param append if true, data is appended to the file instead of
+       *        overwriting the initial content.
        */
-      static sptr make(size_t itemsize, const char *filename);
+      static sptr make(size_t itemsize, const char *filename, bool append=false);
     };
 
   } /* namespace blocks */

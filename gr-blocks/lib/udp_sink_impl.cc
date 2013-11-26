@@ -77,7 +77,8 @@ namespace gr {
       if(host.size() > 0) {
         boost::asio::ip::udp::resolver resolver(d_io_service);
         boost::asio::ip::udp::resolver::query query(boost::asio::ip::udp::v4(),
-                                                    host, s_port);
+                                                    host, s_port,
+                                                    boost::asio::ip::resolver_query_base::passive);
         d_endpoint = *resolver.resolve(query);
 
         d_socket = new boost::asio::ip::udp::socket(d_io_service);

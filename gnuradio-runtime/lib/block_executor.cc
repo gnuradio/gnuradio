@@ -192,6 +192,7 @@ namespace gr {
     int max_noutput_items;
     int new_alignment = 0;
     int alignment_state = -1;
+    double rrate;
     
     block        *m = d_block.get();
     block_detail *d = m->detail().get();
@@ -450,6 +451,17 @@ namespace gr {
         m->set_is_unaligned(m->unaligned() != 0);
       }
 
+      // For some blocks that can change their produce/consume ratio
+      // (the relative_rate), we might want to automatically update
+      // based on the amount of items written/read.
+      // In the block constructor, use enable_update_rate(true).
+      if(m->update_rate()) {
+        rrate = ((double)(m->nitems_written(0)+n)) / ((double)m->nitems_read(0));
+        if(rrate > 0)
+          m->set_relative_rate(rrate);
+      }
+
+      // Now propagate the tags based on the new relative rate
       if(!propagate_tags(m->tag_propagation_policy(), d,
                          d_start_nitems_read, m->relative_rate(),
                          d_returned_tags, m->unique_id()))
@@ -459,9 +471,9 @@ namespace gr {
         goto were_done;
 
       if(n != block::WORK_CALLED_PRODUCE)
-        d->produce_each (n);	// advance write pointers
+        d->produce_each(n);     // advance write pointers
 
-      if(d->d_produce_or > 0)	// block produced something
+      if(d->d_produce_or > 0)   // block produced something
         return READY;
 
       // We didn't produce any output even though we called general_work.

@@ -30,7 +30,7 @@ namespace gr {
   namespace digital {
 
     /*!
-     * \brief Implements constant modulus adaptive filter on complex stream
+     * \brief Implements constant modulus adaptive filter on complex stream.
      * \ingroup equalizers_blk
      *
      * \details

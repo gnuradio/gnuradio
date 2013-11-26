@@ -40,6 +40,8 @@ namespace gr {
 
       ~constellation_receiver_cb_impl();
 
+      void setup_rpc();
+
       int general_work(int noutput_items,
 		       gr_vector_int &ninput_items,
 		       gr_vector_const_void_star &input_items,
@@ -49,10 +51,18 @@ namespace gr {
       void phase_error_tracking(float phase_error);
 
     private:
-      unsigned int d_M;
-
       constellation_sptr d_constellation;
       unsigned int d_current_const_point;
+
+      //! Set the phase and the frequency.
+      //! Typically used when we receive a tag with values for these.
+      void set_phase_freq(float phase, float freq);
+
+      void handle_set_constellation(pmt::pmt_t constellation_pmt);
+
+      //! Set the constellation used.
+      //! Typically used when we receive a tag with a value for this.
+      void set_constellation(constellation_sptr constellation);
 
       //! delay line length.
       static const unsigned int DLLEN = 8;

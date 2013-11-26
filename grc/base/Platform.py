@@ -143,15 +143,15 @@ class Platform(_Element):
                     print >> sys.stderr, 'Warning: Block key "%s" not found when loading category tree.'%(block_key)
                     continue
                 block = self.get_block(block_key)
-                #if it exists, the block's category overrides the block tree
-                if not block.get_category(): block_tree.add_block(parent, block)
-        #load the block tree
+                #if it exists, the block's category shall not be overridden by the xml tree
+                if not block.get_category(): block.set_category(parent)
+        #load the block tree and update the categories for each block
         for block_tree_file in self._block_tree_files:
-            #recursivly add all blocks in the tree
+            #recursivly put categories in blocks
             load_category(ParseXML.from_file(block_tree_file).find('cat'))
-        #add all other blocks, use the catgory tag
+        #add blocks to block tree
         for block in self.get_blocks():
-            #blocks with empty categories are in the xml block tree or hidden
+            #blocks with empty categories are hidden
             if not block.get_category(): continue
             block_tree.add_block(block.get_category(), block)
 

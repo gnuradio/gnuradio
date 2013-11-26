@@ -133,11 +133,16 @@ namespace gr {
   private:
     friend class buffer_reader;
     friend GR_RUNTIME_API buffer_sptr make_buffer(int nitems, size_t sizeof_item, block_sptr link);
-    friend GR_RUNTIME_API buffer_reader_sptr buffer_add_reader(buffer_sptr buf, int nzero_preload, block_sptr link);
+    friend GR_RUNTIME_API buffer_reader_sptr buffer_add_reader
+      (buffer_sptr buf, int nzero_preload, block_sptr link, int delay);
 
   protected:
     char			       *d_base;		// base address of buffer
     unsigned int			d_bufsize;	// in items
+
+    // Keep track of maximum sample delay of any reader; Only prune tags past this.
+    unsigned d_max_reader_delay;
+
   private:
     gr::vmcircbuf		       *d_vmcircbuf;
     size_t	 			d_sizeof_item;	// in bytes
@@ -152,7 +157,7 @@ namespace gr {
     unsigned int			d_write_index;	// in items [0,d_bufsize)
     uint64_t                            d_abs_write_offset; // num items written since the start
     bool				d_done;
-    std::deque<tag_t>                d_item_tags;
+    std::deque<tag_t>                   d_item_tags;
     uint64_t                            d_last_min_items_read;
 
     unsigned index_add(unsigned a, unsigned b)
@@ -205,9 +210,10 @@ namespace gr {
    * \param buf is the buffer the \p gr::buffer_reader reads from.
    * \param nzero_preload -- number of zero items to "preload" into buffer.
    * \param link is the block that reads from the buffer using this gr::buffer_reader.
+   * \param delay Optional setting to declare the buffer's sample delay.
    */
   GR_RUNTIME_API buffer_reader_sptr
-    buffer_add_reader(buffer_sptr buf, int nzero_preload, block_sptr link=block_sptr());
+    buffer_add_reader(buffer_sptr buf, int nzero_preload, block_sptr link=block_sptr(), int delay=0);
 
   //! returns # of buffers currently allocated
   GR_RUNTIME_API long buffer_ncurrently_allocated();
@@ -223,6 +229,22 @@ namespace gr {
   {
   public:
     ~buffer_reader();
+
+    /*!
+     * Declares the sample delay for this reader.
+     *
+     * See gr::block::declare_sample_delay for details.
+     *
+     * \param delay The new sample delay
+     */
+    void declare_sample_delay(unsigned delay);
+
+    /*!
+     * Gets the sample delay for this reader.
+     *
+     * See gr::block::sample_delay for details.
+     */
+    unsigned sample_delay() const;
 
     /*!
      * \brief Return number of items available for reading.
@@ -290,15 +312,17 @@ namespace gr {
   private:
     friend class buffer;
     friend GR_RUNTIME_API buffer_reader_sptr
-      buffer_add_reader(buffer_sptr buf, int nzero_preload, block_sptr link);
+      buffer_add_reader(buffer_sptr buf, int nzero_preload, block_sptr link, int delay);
 
     buffer_sptr  d_buffer;
     unsigned int d_read_index;       // in items [0,d->buffer.d_bufsize)
     uint64_t     d_abs_read_offset;  // num items seen since the start
     boost::weak_ptr<block> d_link;   // block that reads via this buffer reader
+    unsigned d_attr_delay;           // sample delay attribute for tag propagation
 
     //! constructor is private.  Use gr::buffer::add_reader to create instances
-    buffer_reader(buffer_sptr buffer, unsigned int read_index, block_sptr link);
+    buffer_reader(buffer_sptr buffer, unsigned int read_index,
+                  block_sptr link);
   };
 
   //! returns # of buffer_readers currently allocated

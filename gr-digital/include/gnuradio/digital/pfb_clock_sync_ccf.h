@@ -145,6 +145,13 @@ namespace gr {
      * per symbol, sampled at the exact sample value. This osps value
      * was added to better work with equalizers, which do a better job
      * of modeling the channel if they have 2 samps/sym.
+     *
+     * Reference:
+     * f. j. harris and M. Rice, "Multirate Digital Filters for Symbol
+     * Timing Synchronization in Software Defined Radios", IEEE
+     * Selected Areas in Communications, Vol. 19, No. 12, Dec., 2001.
+     *
+     * http://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.127.1757
      */
     class DIGITAL_API pfb_clock_sync_ccf : virtual public block
     {

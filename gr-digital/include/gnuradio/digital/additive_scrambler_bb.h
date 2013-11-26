@@ -36,14 +36,19 @@ namespace gr {
      * Scramble an input stream using an LFSR.
      *
      * \details
-     * This block works on the LSB only of the input data stream,
-     * i.e., on an "unpacked binary" stream, and produces the same
-     * format on its output.
+     * This block scrambles up to 8 bits per byte of the input
+     * data stream, starting at the LSB.
      *
      * The scrambler works by XORing the incoming bit stream by the
-     * output of the LFSR. Optionally, after 'count' bits have been
-     * processed, the shift register is reset to the seed value.
+     * output of the LFSR. Optionally, after \p count bits have been
+     * processed, the shift register is reset to the \p seed value.
      * This allows processing fixed length vectors of samples.
+     *
+     * Alternatively, the LFSR can be reset using a reset tag to
+     * scramble variable length vectors. However, it cannot be reset
+     * between bytes.
+     *
+     * For details on configuring the LFSR, see gr::digital::lfsr.
      */
     class DIGITAL_API additive_scrambler_bb : virtual public sync_block
     {
@@ -57,15 +62,17 @@ namespace gr {
        * \param mask   Polynomial mask for LFSR
        * \param seed   Initial shift register contents
        * \param len    Shift register length
-       * \param count  Number of bits after which shift register is reset, 0=never
-       *
+       * \param count  Number of bytes after which shift register is reset, 0=never
+       * \param bits_per_byte Number of bits per byte
+       * \param reset_tag_key When a tag with this key is detected, the shift register is reset (when this is set, count is ignored!)
        */
-      static sptr make(int mask, int seed, int len, int count=0);
+      static sptr make(int mask, int seed, int len, int count=0, int bits_per_byte=1, const std::string &reset_tag_key="");
 
       virtual int mask() const = 0;
       virtual int seed() const = 0;
       virtual int len() const = 0;
       virtual int count() const = 0;
+      virtual int bits_per_byte() = 0;
     };
 
   } /* namespace digital */

@@ -37,13 +37,13 @@ namespace gr {
      * \details
      * The information in the metadata headers includes:
      *
-     *   rx_rate (double): sample rate of data.
-     *   rx_time (uint64_t, double): time stamp of first sample in segment.
-     *   size (uint32_t): item size in bytes.
-     *   type (gr_file_types as int32_t): data type.
-     *   cplx (bool): Is data complex?
-     *   strt (uint64_t): Starting byte of data in this segment.
-     *   bytes (uint64_t): Size in bytes of data in this segment.
+     *  \li rx_rate (double): sample rate of data.
+     *  \li rx_time (uint64_t, double): time stamp of first sample in segment.
+     *  \li size (uint32_t): item size in bytes.
+     *  \li type (::gr_file_types as int32_t): data type.
+     *  \li cplx (bool): Is data complex?
+     *  \li strt (uint64_t): Starting byte of data in this segment.
+     *  \li bytes (uint64_t): Size in bytes of data in this segment.
      *
      * Any item inside of the extra header dictionary is ready out and
      * made into a stream tag.

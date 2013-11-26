@@ -41,8 +41,8 @@ namespace gr {
     fractional_resampler_ff_impl::fractional_resampler_ff_impl
                                      (float phase_shift, float resamp_ratio)
       : block("fractional_resampler_ff",
-		 io_signature::make(1, 1, sizeof(float)),
-		 io_signature::make(1, 1, sizeof(float))),
+              io_signature::make(1, 2, sizeof(float)),
+              io_signature::make(1, 1, sizeof(float))),
 	d_mu (phase_shift), d_mu_inc (resamp_ratio),
 	d_resamp(new mmse_fir_interpolator_ff())
     {
@@ -82,19 +82,37 @@ namespace gr {
       int ii = 0; // input index
       int oo = 0; // output index
 
-      while(oo < noutput_items) {
-	out[oo++] = d_resamp->interpolate(&in[ii], d_mu);
+      if(ninput_items.size() == 1) {
+        while(oo < noutput_items) {
+          out[oo++] = d_resamp->interpolate(&in[ii], d_mu);
 
-	double s = d_mu + d_mu_inc;
-	double f = floor(s);
-	int incr = (int)f;
-	d_mu = s - f;
-	ii += incr;
+          double s = d_mu + d_mu_inc;
+          double f = floor(s);
+          int incr = (int)f;
+          d_mu = s - f;
+          ii += incr;
+        }
+
+        consume_each(ii);
+        return noutput_items;
       }
+      else {
+        const float *rr = (const float*)input_items[1];
+        while(oo < noutput_items) {
+          out[oo++] = d_resamp->interpolate(&in[ii], d_mu);
+          d_mu_inc = rr[ii];
 
-      consume_each(ii);
+          double s = d_mu + d_mu_inc;
+          double f = floor(s);
+          int incr = (int)f;
+          d_mu = s - f;
+          ii += incr;
+        }
 
-      return noutput_items;
+        set_relative_rate(1.0 / d_mu_inc);
+        consume_each(ii);
+        return noutput_items;
+      }
     }
 
     float

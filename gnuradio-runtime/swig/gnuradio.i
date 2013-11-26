@@ -28,6 +28,7 @@
 // SWIG interface definition
 ////////////////////////////////////////////////////////////////////////
 
+%include "std_string.i"
 %include <gr_extras.i>
 
 #ifdef SW_RUNTIME
@@ -72,5 +73,7 @@
 #include <gnuradio/block_gateway.h>
 #include <gnuradio/feval.h>
 #include <gnuradio/py_feval.h>
+#include <gnuradio/high_res_timer.h>
 %}
 
+%include <gnuradio/high_res_timer.h>

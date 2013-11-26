@@ -206,7 +206,7 @@ namespace gr {
     void message_port_register_hier_out(pmt::pmt_t port_id) {
       if(pmt::list_has(hier_message_ports_out, port_id))
         throw std::invalid_argument("hier msg out port by this name already registered");
-      if(pmt::dict_has_key(message_subscribers, port_id))
+      if(pmt::dict_has_key(d_message_subscribers, port_id))
         throw std::invalid_argument("block already has a primitive output port by this name");
       hier_message_ports_out = pmt::list_add(hier_message_ports_out, port_id);
     }

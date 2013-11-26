@@ -55,6 +55,8 @@ namespace gr {
        */
       static sptr make(noise_type_t type, float ampl,
 		       long seed = 0, long samples=1024*16);
+      virtual @TYPE@ sample() = 0;
+      virtual @TYPE@ sample_unbiased() = 0;
 
       virtual void set_type(noise_type_t type) = 0;
       virtual void set_amplitude(float ampl) = 0;

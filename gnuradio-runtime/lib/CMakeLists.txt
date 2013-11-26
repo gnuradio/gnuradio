@@ -213,6 +213,7 @@ list(APPEND test_gnuradio_runtime_sources
   math/qa_fxpt_vco.cc
   math/qa_math.cc
   math/qa_sincos.cc
+  math/qa_fast_atan2f.cc
   qa_buffer.cc
   qa_io_signature.cc
   qa_circular_file.cc

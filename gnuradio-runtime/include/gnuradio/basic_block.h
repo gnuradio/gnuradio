@@ -62,13 +62,13 @@ namespace gr {
   
   private:
     //msg_handler_t d_msg_handler;
-    typedef std::map<pmt::pmt_t , msg_handler_t, pmt::comperator> d_msg_handlers_t;
+    typedef std::map<pmt::pmt_t , msg_handler_t, pmt::comparator> d_msg_handlers_t;
     d_msg_handlers_t d_msg_handlers;
   
     typedef std::deque<pmt::pmt_t> msg_queue_t;
-    typedef std::map<pmt::pmt_t, msg_queue_t, pmt::comperator> msg_queue_map_t;
-    typedef std::map<pmt::pmt_t, msg_queue_t, pmt::comperator>::iterator msg_queue_map_itr;
-    std::map<pmt::pmt_t, boost::shared_ptr<boost::condition_variable>, pmt::comperator> msg_queue_ready;
+    typedef std::map<pmt::pmt_t, msg_queue_t, pmt::comparator> msg_queue_map_t;
+    typedef std::map<pmt::pmt_t, msg_queue_t, pmt::comparator>::iterator msg_queue_map_itr;
+    std::map<pmt::pmt_t, boost::shared_ptr<boost::condition_variable>, pmt::comparator> msg_queue_ready;
   
     gr::thread::mutex mutex;          //< protects all vars
   
@@ -137,9 +137,10 @@ namespace gr {
     }
   
     // Message passing interface
-    pmt::pmt_t message_subscribers;
+    pmt::pmt_t d_message_subscribers;
   
   public:
+    pmt::pmt_t message_subscribers(pmt::pmt_t port);
     virtual ~basic_block();
     long unique_id() const { return d_unique_id; }
     long symbolic_id() const { return d_symbolic_id; }
@@ -242,7 +243,7 @@ namespace gr {
       if(msg_queue.find(which_port) != msg_queue.end()) {
         return true;
       }
-      if(pmt::dict_has_key(message_subscribers, which_port)) {
+      if(pmt::dict_has_key(d_message_subscribers, which_port)) {
         return true;
       }
       return false;

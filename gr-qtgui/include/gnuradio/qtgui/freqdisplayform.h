@@ -66,13 +66,18 @@ private slots:
   void newData(const QEvent *updateEvent);
 
 private:
-  uint64_t _numRealDataPoints;
-  QIntValidator* _intValidator;
+  uint64_t d_num_real_data_points;
+  QIntValidator* d_int_validator;
 
-  double _samp_rate, _center_freq;
-  int _fftsize;
-  float _fftavg;
-  gr::filter::firdes::win_type _fftwintype;
+  double d_samp_rate, d_center_freq;
+  int d_fftsize;
+  float d_fftavg;
+  gr::filter::firdes::win_type d_fftwintype;
+
+  FFTSizeMenu *d_sizemenu;
+  FFTAverageMenu *d_avgmenu;
+  FFTWindowMenu *d_winmenu;
+
 };
 
 #endif /* FREQ_DISPLAY_FORM_H */

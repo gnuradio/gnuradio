@@ -44,7 +44,7 @@ struct VOLK_CPU volk_cpu;
      * This function will bomb on non-AVX-capable machines, so
      * check for AVX capability before executing.
      */
-    #if __GNUC__ > 4 || __GNUC__ == 4 && __GNUC_MINOR__ >= 4
+    #if (__GNUC__ > 4 || __GNUC__ == 4 && __GNUC_MINOR__ >= 4) && defined(HAVE_XGETBV)
     static inline unsigned long long _xgetbv(unsigned int index){
         unsigned int eax, edx;
         __asm__ __volatile__("xgetbv" : "=a"(eax), "=d"(edx) : "c"(index));
@@ -151,10 +151,16 @@ static int i_can_has_$arch.name (void) {
 #end for
 
 #if defined(HAVE_FENV_H)
-    #include <fenv.h>
-    static inline void set_float_rounding(void){
-        fesetround(FE_TONEAREST);
-    }
+    #if defined(FE_TONEAREST)
+        #include <fenv.h>
+        static inline void set_float_rounding(void){
+            fesetround(FE_TONEAREST);
+        }
+    #else
+        static inline void set_float_rounding(void){
+            //do nothing
+        }
+    #endif
 #elif defined(_MSC_VER)
     #include <float.h>
     static inline void set_float_rounding(void){

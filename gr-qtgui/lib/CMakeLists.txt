@@ -29,6 +29,7 @@ set(qtgui_moc_hdrs
     ${qtgui_mod_includedir}/freqdisplayform.h
     ${qtgui_mod_includedir}/constellationdisplayform.h
     ${qtgui_mod_includedir}/waterfalldisplayform.h
+    ${qtgui_mod_includedir}/histogramdisplayform.h
     ${qtgui_mod_includedir}/form_menus.h
     ${qtgui_mod_includedir}/DisplayPlot.h
     ${qtgui_mod_includedir}/FrequencyDisplayPlot.h
@@ -36,6 +37,7 @@ set(qtgui_moc_hdrs
     ${qtgui_mod_includedir}/TimeRasterDisplayPlot.h
     ${qtgui_mod_includedir}/WaterfallDisplayPlot.h
     ${qtgui_mod_includedir}/ConstellationDisplayPlot.h
+    ${qtgui_mod_includedir}/HistogramDisplayPlot.h
 )
 QT4_WRAP_CPP(qtgui_moc_srcs ${qtgui_moc_hdrs})
 QT4_WRAP_UI(qtgui_ui_hdrs spectrumdisplayform.ui)
@@ -58,12 +60,14 @@ set(qtgui_srcs
     WaterfallDisplayPlot.cc
     waterfallGlobalData.cc
     ConstellationDisplayPlot.cc
+    HistogramDisplayPlot.cc
     spectrumdisplayform.cc
     displayform.cc
     timedisplayform.cc
     timerasterdisplayform.cc
     freqdisplayform.cc
     constellationdisplayform.cc
+    histogramdisplayform.cc
     waterfalldisplayform.cc
     SpectrumGUIClass.cc
     spectrumUpdateEvents.cc
@@ -80,6 +84,7 @@ set(qtgui_srcs
     const_sink_c_impl.cc
     waterfall_sink_c_impl.cc
     waterfall_sink_f_impl.cc
+    histogram_sink_f_impl.cc
     qtgui_util.cc
 )
 

@@ -46,6 +46,7 @@ list(APPEND fft_sources
   fft_vfc_fftw.cc
   goertzel_fc_impl.cc
   goertzel.cc
+  window.cc
 )
 
 if(ENABLE_GR_CTRLPORT)

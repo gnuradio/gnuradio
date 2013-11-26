@@ -65,11 +65,14 @@ namespace gr {
 	d_max_dev(max_rate_deviation),
 	d_osps(osps), d_error(0), d_out_idx(0)
     {
+      // Let scheduler adjust our relative_rate.
+      enable_update_rate(true);
+
       d_nfilters = filter_size;
       d_sps = floor(sps);
 
       // Set the damping factor for a critically damped system
-      d_damping = sqrtf(2.0f)/2.0f;
+      d_damping = 2*d_nfilters;
 
       // Set the bandwidth, which will then call update_gains()
       set_loop_bandwidth(loop_bw);
@@ -87,7 +90,7 @@ namespace gr {
       d_diff_filters = std::vector<kernel::fir_filter_fff*>(d_nfilters);
 
       // Create an FIR filter for each channel and zero out the taps
-      std::vector<float> vtaps(0, d_nfilters);
+      std::vector<float> vtaps(1,0);
       for(int i = 0; i < d_nfilters; i++) {
 	d_filters[i] = new kernel::fir_filter_fff(1, vtaps);
 	d_diff_filters[i] = new kernel::fir_filter_fff(1, vtaps);
@@ -98,6 +101,8 @@ namespace gr {
       create_diff_taps(taps, dtaps);
       set_taps(taps, d_taps, d_filters);
       set_taps(dtaps, d_dtaps, d_diff_filters);
+
+      set_relative_rate((float)d_osps/(float)d_sps);
     }
 
     pfb_clock_sync_fff_impl::~pfb_clock_sync_fff_impl()
@@ -114,6 +119,15 @@ namespace gr {
       return noutputs == 1 || noutputs == 4;
     }
 
+    void
+    pfb_clock_sync_fff_impl::forecast(int noutput_items,
+                                      gr_vector_int &ninput_items_required)
+    {
+      unsigned ninputs = ninput_items_required.size ();
+      for(unsigned i = 0; i < ninputs; i++)
+        ninput_items_required[i] = (noutput_items + history()) * (d_sps/d_osps);
+    }
+
     /*******************************************************************
      SET FUNCTIONS
     *******************************************************************/
@@ -122,7 +136,7 @@ namespace gr {
     pfb_clock_sync_fff_impl::set_loop_bandwidth(float bw)
     {
       if(bw < 0) {
-	throw std::out_of_range("pfb_clock_sync_fff_impl: invalid bandwidth. Must be >= 0.");
+	throw std::out_of_range("pfb_clock_sync_fff: invalid bandwidth. Must be >= 0.");
       }
 
       d_loop_bw = bw;
@@ -133,7 +147,7 @@ namespace gr {
     pfb_clock_sync_fff_impl::set_damping_factor(float df)
     {
       if(df < 0 || df > 1.0) {
-	throw std::out_of_range("pfb_clock_sync_fff_impl: invalid damping factor. Must be in [0,1].");
+	throw std::out_of_range("pfb_clock_sync_fff: invalid damping factor. Must be in [0,1].");
       }
 
       d_damping = df;
@@ -144,7 +158,7 @@ namespace gr {
     pfb_clock_sync_fff_impl::set_alpha(float alpha)
     {
       if(alpha < 0 || alpha > 1.0) {
-	throw std::out_of_range("pfb_clock_sync_fff_impl: invalid alpha. Must be in [0,1].");
+	throw std::out_of_range("pfb_clock_sync_fff: invalid alpha. Must be in [0,1].");
       }
       d_alpha = alpha;
     }
@@ -153,7 +167,7 @@ namespace gr {
     pfb_clock_sync_fff_impl::set_beta(float beta)
     {
       if(beta < 0 || beta > 1.0) {
-	throw std::out_of_range("pfb_clock_sync_fff_impl: invalid beta. Must be in [0,1].");
+	throw std::out_of_range("pfb_clock_sync_fff: invalid beta. Must be in [0,1].");
       }
       d_beta = beta;
     }
@@ -237,7 +251,7 @@ namespace gr {
       }
 
       // Set the history to ensure enough input items for each filter
-      set_history(d_taps_per_filter + d_sps);
+      set_history(d_taps_per_filter + d_sps + d_sps);
 
       // Make sure there is enough output space for d_osps outputs/input.
       set_output_multiple(d_osps);
@@ -255,19 +269,21 @@ namespace gr {
       diff_filter[2] = 1;
 
       float pwr = 0;
+      difftaps.clear();
       difftaps.push_back(0);
       for(unsigned int i = 0; i < newtaps.size()-2; i++) {
 	float tap = 0;
-	for(int j = 0; j < 3; j++) {
+	for(unsigned int j = 0; j < diff_filter.size(); j++) {
 	  tap += diff_filter[j]*newtaps[i+j];
-	  pwr += fabsf(tap);
 	}
 	difftaps.push_back(tap);
+        pwr += fabsf(tap);
       }
       difftaps.push_back(0);
 
+      // Normalize the taps
       for(unsigned int i = 0; i < difftaps.size(); i++) {
-	difftaps[i] *= pwr;
+        difftaps[i] *= d_nfilters/pwr;
       }
     }
 
@@ -366,19 +382,16 @@ namespace gr {
 	return 0;		     // history requirements may have changed.
       }
 
-      // We need this many to process one output
-      int nrequired = ninput_items[0] - d_taps_per_filter - d_osps;
-
       int i = 0, count = 0;
 
       // produce output as long as we can and there are enough input samples
-      while((i < noutput_items) && (count < nrequired)) {
+      while(i < noutput_items) {
 	while(d_out_idx < d_osps) {
 	  d_filtnum = (int)floor(d_k);
       
 	  // Keep the current filter number in [0, d_nfilters]
 	  // If we've run beyond the last filter, wrap around and go to next sample
-	  // If we've go below 0, wrap around and go to previous sample
+	  // If we've gone below 0, wrap around and go to previous sample
 	  while(d_filtnum >= d_nfilters) {
 	    d_k -= d_nfilters;
 	    d_filtnum -= d_nfilters;
@@ -417,8 +430,11 @@ namespace gr {
 
 	// Run the control loop to update the current phase (k) and
 	// tracking rate estimates based on the error value
-	d_rate_f = d_rate_f + d_beta*d_error;
-	d_k = d_k + d_alpha*d_error;
+        // Interpolating here to update rates for ever sps.
+        for(int s = 0; s < d_sps; s++) {
+          d_rate_f = d_rate_f + d_beta*d_error;
+          d_k = d_k + d_rate_f + d_alpha*d_error;
+        }
 
 	// Keep our rate within a good range
 	d_rate_f = gr::branchless_clip(d_rate_f, d_max_dev);

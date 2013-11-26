@@ -376,7 +376,7 @@ namespace gr {
 	      new kernel::fir_filter_with_buffer_ccf(f1_taps);
 
 	    // zero the output, then do the filtering
-	    memset(actual_output, 0, sizeof(OUTPUT_LEN*sizeof(gr_complex)));
+	    memset(actual_output, 0, OUTPUT_LEN*sizeof(gr_complex));
 	    f1->filterNdec(actual_output, input, ol/decimate, decimate);
 
 	    // check results

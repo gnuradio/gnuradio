@@ -161,11 +161,14 @@ gr.io_signaturev($(len($io_sigs)), $(len($io_sigs)), [$(', '.join($size_strs))])
         $indent($blk.get_make())
     #else
         self.$blk.get_id() = $indent($blk.get_make())
-        #if $blk.has_param('affinity') and $blk.get_param('affinity').get_value()
-        (self.$blk.get_id()).set_processor_affinity($blk.get_param('affinity').get_value())
+        #if $blk.has_param('affinity') and $blk.get_param('affinity').get_evaluated()
+        (self.$blk.get_id()).set_processor_affinity($blk.get_param('affinity').get_evaluated())
         #end if
-        #if (len($blk.get_sources())>0) and $blk.has_param('affinity') and (int($blk.get_param('minoutbuf').get_value()) > 0)
-        (self.$blk.get_id()).set_min_output_buffer($blk.get_param('minoutbuf').get_value())
+        #if (len($blk.get_sources())>0) and $blk.has_param('minoutbuf') and (int($blk.get_param('minoutbuf').get_evaluated()) > 0)
+        (self.$blk.get_id()).set_min_output_buffer($blk.get_param('minoutbuf').get_evaluated())
+        #end if
+        #if (len($blk.get_sources())>0) and $blk.has_param('maxoutbuf') and (int($blk.get_param('maxoutbuf').get_evaluated()) > 0)
+        (self.$blk.get_id()).set_max_output_buffer($blk.get_param('maxoutbuf').get_evaluated())
         #end if
     #end if
 #end for
@@ -275,6 +278,16 @@ $short_id#slurp
 #end def
 #if $generate_options != 'hb'
 if __name__ == '__main__':
+    #if $generate_options in ('wx_gui', 'qt_gui')
+    import ctypes
+    import os
+    if os.name == 'posix':
+        try:
+            x11 = ctypes.cdll.LoadLibrary('libX11.so')
+            x11.XInitThreads()
+        except:
+            print "Warning: failed to XInitThreads()"
+    #end if
     parser = OptionParser(option_class=eng_option, usage="%prog: [options]")
     #set $params_eq_list = list()
     #for $param in $parameters
@@ -312,11 +325,14 @@ if __name__ == '__main__':
         #end if
     #end if
     tb.show()
+    def quitting():
+        tb.stop()
+        tb.wait()
+    qapp.connect(qapp, Qt.SIGNAL("aboutToQuit()"), quitting)
         #for $m in $monitors
     (tb.$m.get_id()).start()
         #end for
     qapp.exec_()
-    tb.stop()
     tb = None #to clean up Qt widgets
     #elif $generate_options == 'no_gui'
     tb = $(class_name)($(', '.join($params_eq_list)))

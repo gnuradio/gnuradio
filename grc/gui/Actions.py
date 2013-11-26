@@ -57,27 +57,13 @@ def get_all_actions(): return _all_actions_list
 _accel_group = gtk.AccelGroup()
 def get_accel_group(): return _accel_group
 
-class Action(gtk.Action):
+
+class _ActionBase(object):
     """
-    A custom Action class based on gtk.Action.
-    Pass additional arguments such as keypresses.
+    Base class for Action and ToggleAction
     Register actions and keypresses with this module.
     """
-
-    def __init__(self, keypresses=(), name=None, label=None, tooltip=None, stock_id=None):
-        """
-        Create a new Action instance.
-        
-        Args:
-            key_presses: a tuple of (keyval1, mod_mask1, keyval2, mod_mask2, ...)
-            the: regular gtk.Action parameters (defaults to None)
-        """
-        if name is None: name = label
-        gtk.Action.__init__(self,
-            name=name, label=label,
-            tooltip=tooltip, stock_id=stock_id,
-        )
-        #register this action
+    def __init__(self, label, keypresses):
         _all_actions_list.append(self)
         for i in range(len(keypresses)/2):
             keyval, mod_mask = keypresses[i*2:(i+1)*2]
@@ -110,6 +96,52 @@ class Action(gtk.Action):
         Emit the activate signal when called with ().
         """
         self.emit('activate')
+
+
+class Action(gtk.Action, _ActionBase):
+    """
+    A custom Action class based on gtk.Action.
+    Pass additional arguments such as keypresses.
+    """
+
+    def __init__(self, keypresses=(), name=None, label=None, tooltip=None, stock_id=None):
+        """
+        Create a new Action instance.
+
+        Args:
+            key_presses: a tuple of (keyval1, mod_mask1, keyval2, mod_mask2, ...)
+            the: regular gtk.Action parameters (defaults to None)
+        """
+        if name is None: name = label
+        gtk.Action.__init__(self,
+            name=name, label=label,
+            tooltip=tooltip, stock_id=stock_id,
+        )
+        #register this action
+        _ActionBase.__init__(self, label, keypresses)
+
+
+class ToggleAction(gtk.ToggleAction, _ActionBase):
+    """
+    A custom Action class based on gtk.ToggleAction.
+    Pass additional arguments such as keypresses.
+    """
+
+    def __init__(self, keypresses=(), name=None, label=None, tooltip=None, stock_id=None):
+        """
+        Create a new ToggleAction instance.
+
+        Args:
+            key_presses: a tuple of (keyval1, mod_mask1, keyval2, mod_mask2, ...)
+            the: regular gtk.Action parameters (defaults to None)
+        """
+        if name is None: name = label
+        gtk.ToggleAction.__init__(self,
+            name=name, label=label,
+            tooltip=tooltip, stock_id=stock_id,
+        )
+        #register this action
+        _ActionBase.__init__(self, label, keypresses)
 
 ########################################################################
 # Actions
@@ -233,6 +265,16 @@ ERRORS_WINDOW_DISPLAY = Action(
     tooltip='View flow graph errors',
     stock_id=gtk.STOCK_DIALOG_ERROR,
 )
+TOGGLE_REPORTS_WINDOW = ToggleAction(
+    label='Show _Reports',
+    tooltip='Toggle visibility of the Report widget',
+    keypresses=(gtk.keysyms.r, gtk.gdk.CONTROL_MASK),
+)
+TOGGLE_BLOCKS_WINDOW = ToggleAction(
+    label='Show _Block Tree',
+    tooltip='Toggle visibility of the block tree widget',
+    keypresses=(gtk.keysyms.b, gtk.gdk.CONTROL_MASK),
+)
 ABOUT_WINDOW_DISPLAY = Action(
     label='_About',
     tooltip='About this program',
@@ -289,6 +331,13 @@ RELOAD_BLOCKS = Action(
     label='Reload _Blocks',
     tooltip='Reload Blocks',
     stock_id=gtk.STOCK_REFRESH
+)
+FIND_BLOCKS = Action(
+    label='_Find Blocks',
+    tooltip='Search for a block by name (and key)',
+    stock_id=gtk.STOCK_FIND,
+    keypresses=(gtk.keysyms.f, gtk.gdk.CONTROL_MASK,
+                gtk.keysyms.slash, NO_MODS_MASK),
 )
 OPEN_HIER = Action(
     label='Open H_ier',

@@ -113,7 +113,7 @@ class error_rate(gr.hier_block2):
             #write sample
             arr[i] = float(self._num_errs)/float(self._num_samps*self._bits_per_symbol)
         #write message
-        msg = blocks.message_from_string(arr.tostring(), 0, gr.sizeof_float, num)
+        msg = gr.message_from_string(arr.tostring(), 0, gr.sizeof_float, num)
         self._msgq_source.insert_tail(msg)
 
     def _handler_ser(self, samples):
@@ -136,5 +136,5 @@ class error_rate(gr.hier_block2):
             #write sample
             arr[i] = float(self._num_errs)/float(self._num_samps)
         #write message
-        msg = blocks.message_from_string(arr.tostring(), 0, gr.sizeof_float, num)
+        msg = gr.message_from_string(arr.tostring(), 0, gr.sizeof_float, num)
         self._msgq_source.insert_tail(msg)

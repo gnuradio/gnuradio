@@ -1,0 +1,70 @@
+<block>
+  <name>Tagged Stream Multiply Length Tag</name>
+  <key>blocks_tagged_stream_multiply_length</key>
+  <import>from gnuradio import blocks</import>
+  <make>blocks.tagged_stream_multiply_length($type.size*$vlen, $lengthtagname, $c)</make>
+  <callback>set_scalar($c)</callback>
+	<param>
+		<name>IO Type</name>
+		<key>type</key>
+		<type>enum</type>
+		<option>
+			<name>Complex</name>
+			<key>complex</key>
+			<opt>size:gr.sizeof_gr_complex</opt>
+		</option>
+		<option>
+			<name>Float</name>
+			<key>float</key>
+			<opt>size:gr.sizeof_float</opt>
+		</option>
+		<option>
+			<name>Int</name>
+			<key>int</key>
+			<opt>size:gr.sizeof_int</opt>
+		</option>
+		<option>
+			<name>Short</name>
+			<key>short</key>
+			<opt>size:gr.sizeof_short</opt>
+		</option>
+		<option>
+			<name>Byte</name>
+			<key>byte</key>
+			<opt>size:gr.sizeof_char</opt>
+		</option>
+	</param>
+  <param>
+    <name>Length tag names</name>
+    <key>lengthtagname</key>
+    <type>string</type>
+  </param>
+  <param>
+    <name>Vector Length</name>
+    <key>vlen</key>
+    <value>1</value>
+    <type>int</type>
+  </param>
+  <param>
+    <name>Length Scalar</name>
+    <key>c</key>
+    <value>1.0</value>
+    <type>real</type>
+  </param>
+  <sink>
+    <name>in</name>
+    <type>$type</type>
+    <vlen>$vlen</vlen>
+  </sink>
+  <sink>
+    <name>set_scalar</name>
+    <type>message</type>
+    <optional>1</optional>
+  </sink>
+  <source>
+    <name>out</name>
+    <type>$type</type>
+    <vlen>$vlen</vlen>
+  </source>
+</block>
+

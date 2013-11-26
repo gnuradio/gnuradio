@@ -55,6 +55,8 @@ namespace gr {
                                int max_noutput_items)
     : scheduler(ffg, max_noutput_items)
   {
+    int block_max_noutput_items;
+    
     // Get a topologically sorted vector of all the blocks in use.
     // Being topologically sorted probably isn't going to matter, but
     // there's a non-zero chance it might help...
@@ -76,12 +78,16 @@ namespace gr {
       name << "thread-per-block[" << i << "]: " << blocks[i];
 
       // If set, use internal value instead of global value
-      if(blocks[i]->is_set_max_noutput_items())
-        max_noutput_items = blocks[i]->max_noutput_items();
+      if(blocks[i]->is_set_max_noutput_items()) {
+        block_max_noutput_items = blocks[i]->max_noutput_items();
+      }
+      else {
+        block_max_noutput_items = max_noutput_items;
+      }
     
       d_threads.create_thread(
 	    gr::thread::thread_body_wrapper<tpb_container>
-            (tpb_container(blocks[i], max_noutput_items),
+            (tpb_container(blocks[i], block_max_noutput_items),
              name.str()));
     }
   }

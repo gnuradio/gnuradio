@@ -32,6 +32,7 @@ def _prepare_uhd_swig():
     try:
         import uhd_swig
     except ImportError:
+        import os
         dirname, filename = os.path.split(os.path.abspath(__file__))
         __path__.append(os.path.join(dirname, "..", "..", "swig"))
         import uhd_swig

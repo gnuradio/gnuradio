@@ -69,26 +69,27 @@ namespace gr {
     )
     {
       packet_len &= 0x0FFF;
+      d_crc_impl.reset();
+      d_crc_impl.process_bytes((void const *) &packet_len, 2);
+      d_crc_impl.process_bytes((void const *) &d_header_number, 2);
+      unsigned char crc = d_crc_impl();
 
       memset(out, 0x00, d_header_len);
-      int parity = 0;
       int k = 0; // Position in out
       for (int i = 0; i < 12 && k < d_header_len; i += d_bits_per_byte, k++) {
 	out[k] = (unsigned char) ((packet_len >> i) & d_mask);
-	parity += out[k];
       }
-      for (int i = 0; i < 16 && k < d_header_len; i += d_bits_per_byte, k++) {
+      for (int i = 0; i < 12 && k < d_header_len; i += d_bits_per_byte, k++) {
 	out[k] = (unsigned char) ((d_header_number >> i) & d_mask);
-	parity += out[k];
       }
-      if (k < d_header_len) {
-	out[k] = (unsigned char) (parity % 2);
+      for (int i = 0; i < 8 && k < d_header_len; i += d_bits_per_byte, k++) {
+	out[k] = (unsigned char) ((crc >> i) & d_mask);
       }
       d_header_number++;
+      d_header_number &= 0x0FFF;
 
       return true;
     }
-
 
     bool packet_header_default::header_parser(
 	const unsigned char *in,
@@ -109,25 +110,30 @@ namespace gr {
 	return true;
       }
       if (d_num_tag_key == pmt::PMT_NIL) {
-	k += 16;
+	k += 12;
       } else {
-	for (int i = 0; i < 16 && k < d_header_len; i += d_bits_per_byte, k++) {
+	for (int i = 0; i < 12 && k < d_header_len; i += d_bits_per_byte, k++) {
 	  header_num |= (((int) in[k]) & d_mask) << i;
 	}
 	tag.key = d_num_tag_key;
 	tag.value = pmt::from_long(header_num);
 	tags.push_back(tag);
       }
-
       if (k >= d_header_len) {
 	return true;
       }
 
-      int parity = in[k];
-      for (int i = 0; i < 28; i++) {
-	parity += in[i];
+      d_crc_impl.reset();
+      d_crc_impl.process_bytes((void const *) &header_len, 2);
+      d_crc_impl.process_bytes((void const *) &header_num, 2);
+      unsigned char crc_calcd = d_crc_impl();
+      for (int i = 0; i < 8 && k < d_header_len; i += d_bits_per_byte, k++) {
+	  if ( (((int) in[k]) & d_mask) != (((int) crc_calcd >> i) & d_mask) ) {
+	    return false;
+	  }
       }
-      return !(parity % 2);
+
+      return true;
     }
 
   } /* namespace digital */

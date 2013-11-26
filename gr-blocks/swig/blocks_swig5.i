@@ -51,7 +51,9 @@
 #include "gnuradio/blocks/sub_cc.h"
 #include "gnuradio/blocks/tag_gate.h"
 #include "gnuradio/blocks/tagged_stream_mux.h"
+#include "gnuradio/blocks/tagged_stream_multiply_length.h"
 #include "gnuradio/blocks/tagged_stream_to_pdu.h"
+#include "gnuradio/blocks/tags_strobe.h"
 #include "gnuradio/blocks/threshold_ff.h"
 #include "gnuradio/blocks/transcendental.h"
 #include "gnuradio/blocks/tuntap_pdu.h"
@@ -63,6 +65,7 @@
 #include "gnuradio/blocks/unpacked_to_packed_ss.h"
 #include "gnuradio/blocks/unpacked_to_packed_ii.h"
 #include "gnuradio/blocks/vco_f.h"
+#include "gnuradio/blocks/vco_c.h"
 #include "gnuradio/blocks/xor_bb.h"
 #include "gnuradio/blocks/xor_ss.h"
 #include "gnuradio/blocks/xor_ii.h"
@@ -88,7 +91,9 @@
 %include "gnuradio/blocks/sub_cc.h"
 %include "gnuradio/blocks/tag_gate.h"
 %include "gnuradio/blocks/tagged_stream_mux.h"
+%include "gnuradio/blocks/tagged_stream_multiply_length.h"
 %include "gnuradio/blocks/tagged_stream_to_pdu.h"
+%include "gnuradio/blocks/tags_strobe.h"
 %include "gnuradio/blocks/threshold_ff.h"
 %include "gnuradio/blocks/transcendental.h"
 %include "gnuradio/blocks/tuntap_pdu.h"
@@ -100,6 +105,7 @@
 %include "gnuradio/blocks/unpacked_to_packed_ss.h"
 %include "gnuradio/blocks/unpacked_to_packed_ii.h"
 %include "gnuradio/blocks/vco_f.h"
+%include "gnuradio/blocks/vco_c.h"
 %include "gnuradio/blocks/xor_bb.h"
 %include "gnuradio/blocks/xor_ss.h"
 %include "gnuradio/blocks/xor_ii.h"
@@ -124,7 +130,9 @@ GR_SWIG_BLOCK_MAGIC2(blocks, sub_ii);
 GR_SWIG_BLOCK_MAGIC2(blocks, sub_cc);
 GR_SWIG_BLOCK_MAGIC2(blocks, tag_gate);
 GR_SWIG_BLOCK_MAGIC2(blocks, tagged_stream_mux);
+GR_SWIG_BLOCK_MAGIC2(blocks, tagged_stream_multiply_length);
 GR_SWIG_BLOCK_MAGIC2(blocks, tagged_stream_to_pdu);
+GR_SWIG_BLOCK_MAGIC2(blocks, tags_strobe);
 GR_SWIG_BLOCK_MAGIC2(blocks, threshold_ff);
 GR_SWIG_BLOCK_MAGIC2(blocks, transcendental);
 GR_SWIG_BLOCK_MAGIC2(blocks, tuntap_pdu);
@@ -136,6 +144,7 @@ GR_SWIG_BLOCK_MAGIC2(blocks, unpacked_to_packed_bb);
 GR_SWIG_BLOCK_MAGIC2(blocks, unpacked_to_packed_ss);
 GR_SWIG_BLOCK_MAGIC2(blocks, unpacked_to_packed_ii);
 GR_SWIG_BLOCK_MAGIC2(blocks, vco_f);
+GR_SWIG_BLOCK_MAGIC2(blocks, vco_c);
 GR_SWIG_BLOCK_MAGIC2(blocks, xor_bb);
 GR_SWIG_BLOCK_MAGIC2(blocks, xor_ss);
 GR_SWIG_BLOCK_MAGIC2(blocks, xor_ii);

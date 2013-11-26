@@ -191,7 +191,7 @@ namespace gr {
   {
     // get from gr_buffer_reader's deque of tags
     d_input[which_input]->get_tags_in_range(v, abs_start, abs_end, id);
-  }
+   }
 
   void
   block_detail::get_tags_in_range(std::vector<tag_t> &v,
@@ -272,6 +272,7 @@ namespace gr {
       d_ins_work_time = diff;
       d_avg_work_time = diff;
       d_var_work_time = 0;
+      d_total_work_time = diff;
       d_ins_nproduced = nproduced;
       d_avg_nproduced = nproduced;
       d_var_nproduced = 0;
@@ -300,6 +301,7 @@ namespace gr {
       d_ins_work_time = diff;
       d_avg_work_time = d_avg_work_time + d/d_pc_counter;
       d_var_work_time = d_var_work_time + d*d;
+      d_total_work_time += diff;
 
       d = nproduced - d_avg_nproduced;
       d_ins_nproduced = nproduced;
@@ -491,6 +493,12 @@ namespace gr {
   block_detail::pc_work_time_var()
   {
     return d_var_work_time/(d_pc_counter-1);
+  }
+
+  float
+  block_detail::pc_work_time_total()
+  {
+    return d_total_work_time;
   }
 
 } /* namespace gr */

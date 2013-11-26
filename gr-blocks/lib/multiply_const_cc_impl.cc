@@ -58,12 +58,7 @@ namespace gr {
       gr_complex *out = (gr_complex *) output_items[0];
       int noi = d_vlen*noutput_items;
 
-      if(is_unaligned()) {
-	volk_32fc_s32fc_multiply_32fc_u(out, in, d_k, noi);
-      }
-      else {
-	volk_32fc_s32fc_multiply_32fc_a(out, in, d_k, noi);
-      }
+      volk_32fc_s32fc_multiply_32fc(out, in, d_k, noi);
 
       return noutput_items;
     }

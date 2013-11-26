@@ -86,6 +86,27 @@ class test_pdu(gr_unittest.TestCase):
         actual_data = 16*[0xFF,]
         self.assertEqual(actual_data, list(result_data))
         self.assertEqual(actual_data, msg_data)
+        
+    def test_001(self):
+        #Test the overflow buffer in pdu_to_tagged_stream
+        src_data = [1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0, 10.0]
+        src = blocks.pdu_to_tagged_stream(blocks.float_t)
+        snk = blocks.vector_sink_f()
+ 
+        self.tb.connect(src, snk)
+        port = pmt.intern("pdus")
+ 
+        msg = pmt.cons( pmt.PMT_NIL, pmt.init_f32vector(10, src_data))
+        src.to_basic_block()._post(port, msg)
+ 
+        src.set_max_noutput_items(5)
+ 
+        self.tb.start()
+        #ideally, would wait until we get ten samples
+        time.sleep(0.2)
+        self.tb.stop()
+ 
+        self.assertEqual(src_data, list(snk.data()) )
 
 if __name__ == '__main__':
     gr_unittest.run(test_pdu, "test_pdu.xml")

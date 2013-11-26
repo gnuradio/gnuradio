@@ -60,47 +60,24 @@ namespace gr {
       char *out = (char*)output_items[0];
 
       int nbytes(output_signature()->sizeof_stream_item(0));
-      if(is_unaligned()) {
-        switch(nbytes){
-        case 1:
-          memcpy(out,in,noutput_items);
-          break;
-        case 2:
-          memcpy(out,in,2*noutput_items);
-          volk_16u_byteswap_u((uint16_t*)out,noutput_items);
-          break;
-        case 4:
-          memcpy(out,in,4*noutput_items);
-          volk_32u_byteswap_u((uint32_t*)out,noutput_items);
-          break;
-        case 8:
-          memcpy(out,in,8*noutput_items);
-          volk_64u_byteswap_u((uint64_t*)out,noutput_items);
-          break;
-        default:
-          throw std::runtime_error("itemsize is not valid for endian_swap!");
-        } 
-      }
-      else {
-        switch(nbytes) {
-        case 1:
-          memcpy(out,in,noutput_items);
-          break;
-        case 2:
-          memcpy(out,in,2*noutput_items);
-          volk_16u_byteswap_a((uint16_t*)out,noutput_items);
-          break;
-        case 4:
-          memcpy(out,in,4*noutput_items);
-          volk_32u_byteswap_a((uint32_t*)out,noutput_items);
-          break;
-        case 8:
-          memcpy(out,in,8*noutput_items);
-          volk_64u_byteswap_a((uint64_t*)out,noutput_items);
-          break;
-        default:
-          throw std::runtime_error("itemsize is not valid for endian_swap!");
-        }
+      switch(nbytes){
+      case 1:
+        memcpy(out,in,noutput_items);
+        break;
+      case 2:
+        memcpy(out,in,2*noutput_items);
+        volk_16u_byteswap((uint16_t*)out,noutput_items);
+        break;
+      case 4:
+        memcpy(out,in,4*noutput_items);
+        volk_32u_byteswap((uint32_t*)out,noutput_items);
+        break;
+      case 8:
+        memcpy(out,in,8*noutput_items);
+        volk_64u_byteswap((uint64_t*)out,noutput_items);
+        break;
+      default:
+        throw std::runtime_error("itemsize is not valid for endian_swap!");
       }
 
       return noutput_items;

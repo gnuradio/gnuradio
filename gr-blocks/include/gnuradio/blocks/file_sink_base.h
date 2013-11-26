@@ -42,9 +42,10 @@ namespace gr {
       bool         d_is_binary;
       boost::mutex d_mutex;
       bool         d_unbuffered;
+      bool         d_append;
 
     protected:
-      file_sink_base(const char *filename, bool is_binary);
+      file_sink_base(const char *filename, bool is_binary, bool append);
 
     public:
       file_sink_base() {}

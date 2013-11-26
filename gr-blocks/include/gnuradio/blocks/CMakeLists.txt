@@ -146,6 +146,7 @@ install(FILES
     int_to_float.h
     interleave.h
     interleaved_short_to_complex.h
+    interleaved_char_to_complex.h
     keep_m_in_n.h
     keep_one_in_n.h
     lfsr_32k_source_s.h
@@ -172,7 +173,7 @@ install(FILES
     plateau_detector_fb.h
     probe_rate.h
     regenerate_bb.h
-    repack_bits_bb.h 
+    repack_bits_bb.h
     repeat.h
     rms_cf.h
     rms_ff.h
@@ -182,6 +183,7 @@ install(FILES
     socket_pdu.h
     stream_mux.h
     stream_to_streams.h
+    stream_to_tagged_stream.h
     stream_to_vector.h
     streams_to_stream.h
     streams_to_vector.h
@@ -190,7 +192,9 @@ install(FILES
     tag_gate.h
     tagged_file_sink.h
     tagged_stream_mux.h
+    tagged_stream_multiply_length.h
     tagged_stream_to_pdu.h
+    tags_strobe.h
     threshold_ff.h
     throttle.h
     transcendental.h
@@ -200,6 +204,7 @@ install(FILES
     udp_source.h
     unpack_k_bits_bb.h
     vco_f.h
+    vco_c.h
     vector_map.h
     vector_to_stream.h
     vector_to_streams.h

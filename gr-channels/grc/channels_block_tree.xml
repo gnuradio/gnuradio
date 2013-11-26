@@ -31,6 +31,24 @@
   <cat>
     <name>Channel Models</name>
     <block>channels_channel_model</block>
+    <block>channels_channel_model2</block>
+    <block>channels_conj_fs_iqcorr</block>
     <block>channels_fading_model</block>
+    <block>channels_dynamic_channel_model</block>
+    <block>channels_selective_fading_model</block>
+  </cat>
+  <cat>
+    <name>Impairment Models</name>
+    <block>channels_impairments</block>
+    <block>channels_quantizer</block>
+    <block>channels_phase_noise_gen</block>
+    <block>channels_iqbal_gen</block>
+    <block>channels_distortion_2_gen</block>
+    <block>channels_distortion_3_gen</block>
+    <block>channels_amp_bal</block>
+    <block>channels_phase_bal</block>
+    <block>channels_cfo_model</block>
+    <block>channels_sro_model</block>
   </cat>
 </cat>
+

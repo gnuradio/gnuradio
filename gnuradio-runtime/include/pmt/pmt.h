@@ -370,7 +370,6 @@ PMT_API size_t blob_length(pmt_t blob);
 
 /*!
  * <pre>
- * ------------------------------------------------------------------------
  *		       Uniform Numeric Vectors
  *
  * A uniform numeric vector is a vector whose elements are all of single
@@ -393,7 +392,6 @@ PMT_API size_t blob_length(pmt_t blob);
  *   f64  the C++ type double
  *   c32  the C++ type complex<float>
  *   c64  the C++ type complex<double>
- * ------------------------------------------------------------------------
  * </pre>
  */
 
@@ -873,11 +871,18 @@ PMT_API pmt_t deserialize_str(std::string str);
 /*!
  * \brief Provide a comparator function object to allow pmt use in stl types
  */
+class comparator {
+    public:
+        bool operator()(pmt::pmt_t const& p1, pmt::pmt_t const& p2) const
+            { return pmt::eqv(p1,p2)?false:p1.get()>p2.get(); }
+};
+
+// FIXME: Remove in 3.8.
 class comperator {
     public:
         bool operator()(pmt::pmt_t const& p1, pmt::pmt_t const& p2) const
             { return pmt::eqv(p1,p2)?false:p1.get()>p2.get(); }
-    };
+};
 
 } /* namespace pmt */
 

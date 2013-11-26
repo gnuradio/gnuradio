@@ -1,5 +1,5 @@
 #
-# Copyright 2012 Free Software Foundation, Inc.
+# Copyright 2012-2013 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -31,3 +31,14 @@ except ImportError:
     dirname, filename = os.path.split(os.path.abspath(__file__))
     __path__.append(os.path.join(dirname, "..", "..", "swig"))
     from channels_swig import *
+
+# Blocks for Hardware Impairments
+from amp_bal import *
+from conj_fs_iqcorr import *
+from distortion_2_gen import *
+from distortion_3_gen import *
+from iqbal_gen import *
+from impairments import *
+from phase_bal import *
+from phase_noise_gen import *
+from quantizer import *

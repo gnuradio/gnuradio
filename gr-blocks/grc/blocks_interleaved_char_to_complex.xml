@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+<!--
+###################################################
+##Interleaved Char to Complex:
+###################################################
+ -->
+<block>
+	<name>IChar To Complex</name>
+	<key>blocks_interleaved_char_to_complex</key>
+	<import>from gnuradio import blocks</import>
+	<make>blocks.interleaved_char_to_complex($vector_input)</make>
+    <param>
+        <name>Vector Input</name>
+        <key>vector_input</key>
+        <value>False</value>
+        <type>enum</type>
+        <option>
+            <name>No</name>
+            <key>False</key>
+            <opt>vlen:1</opt>
+        </option>
+        <option>
+            <name>Yes</name>
+            <key>True</key>
+            <opt>vlen:2</opt>
+        </option>
+    </param>
+	<sink>
+		<name>in</name>
+		<type>byte</type>
+        <vlen>$vector_input.vlen</vlen>
+	</sink>
+	<source>
+		<name>out</name>
+		<type>complex</type>
+	</source>
+</block>

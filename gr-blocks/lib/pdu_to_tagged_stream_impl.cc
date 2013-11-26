@@ -60,7 +60,7 @@ namespace gr {
       if (d_remain.size() > 0) {
 	nout = std::min((size_t)d_remain.size()/d_itemsize, (size_t)noutput_items);
 	memcpy(out, &d_remain[0], nout*d_itemsize);
-	d_remain.erase(d_remain.begin(), d_remain.begin()+nout);
+	d_remain.erase(d_remain.begin(), d_remain.begin()+nout*d_itemsize);
 	noutput_items -= nout;
 	out += nout*d_itemsize;
       }
@@ -89,14 +89,13 @@ namespace gr {
 
 	// if we recieved metadata add it as tags
 	if (!pmt::eq(meta, pmt::PMT_NIL) ) {
-	  pmt::pmt_t pair(pmt::dict_keys(meta));
-
-	  while (!pmt::eq(pair, pmt::PMT_NIL) ) {
-            pmt::pmt_t k(pmt::cdr(pair));
-            pmt::pmt_t v(pmt::dict_ref(meta, k, pmt::PMT_NIL));
-            add_item_tag(0, offset, k, v, pmt::mp(alias()));
-            }
+	  pmt::pmt_t klist(pmt::dict_keys(meta));
+      for(size_t i=0; i<pmt::length(klist); i++){
+        pmt::pmt_t k(pmt::nth(i, klist));
+        pmt::pmt_t v(pmt::dict_ref(meta, k, pmt::PMT_NIL));
+        add_item_tag(0, offset, k, v, pmt::mp(alias()));
         }
+    }
 
 	// copy vector output
 	size_t ncopy = std::min((size_t)noutput_items, (size_t)pmt::length(vect));
@@ -105,12 +104,13 @@ namespace gr {
 	// copy output
 	size_t io(0);
 	nout += ncopy;
-	memcpy(out, uniform_vector_elements(vect,io), ncopy*d_itemsize);
+	const uint8_t* ptr = (uint8_t*) uniform_vector_elements(vect, io);
+	memcpy(out, ptr, ncopy*d_itemsize);
 	
 	// save leftover items if needed for next work call
 	if (nsave > 0) {
 	  d_remain.resize(nsave*d_itemsize, 0);
-	  memcpy(&d_remain[0], uniform_vector_elements(vect,ncopy), nsave*d_itemsize);
+	  memcpy(&d_remain[0], ptr + ncopy*d_itemsize, nsave*d_itemsize);
         }
       }
       

@@ -58,12 +58,7 @@ namespace gr {
       float *out = (float *) output_items[0];
       int noi = d_vlen*noutput_items;
 
-      if(is_unaligned()) {
-	volk_32f_s32f_multiply_32f_u(out, in, d_k, noi);
-      }
-      else {
-	volk_32f_s32f_multiply_32f_a(out, in, d_k, noi);
-      }
+      volk_32f_s32f_multiply_32f(out, in, d_k, noi);
 
       return noutput_items;
     }

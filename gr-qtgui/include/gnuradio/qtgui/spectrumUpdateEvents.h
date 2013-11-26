@@ -30,6 +30,7 @@
 #include <vector>
 #include <gnuradio/high_res_timer.h>
 #include <gnuradio/qtgui/api.h>
+#include <gnuradio/tags.h>
 
 static const int SpectrumUpdateEventType = 10005;
 static const int SpectrumWindowCaptionEventType = 10008;
@@ -122,7 +123,8 @@ class TimeUpdateEvent: public QEvent
 {
 public:
   TimeUpdateEvent(const std::vector<double*> timeDomainPoints,
-		  const uint64_t numTimeDomainDataPoints);
+		  const uint64_t numTimeDomainDataPoints,
+                  const std::vector< std::vector<gr::tag_t> > tags);
 
   ~TimeUpdateEvent();
 
@@ -130,6 +132,8 @@ public:
   const std::vector<double*> getTimeDomainPoints() const;
   uint64_t getNumTimeDomainDataPoints() const;
   bool getRepeatDataFlag() const;
+
+  const std::vector< std::vector<gr::tag_t> > getTags() const;
 
   static QEvent::Type Type()
       { return QEvent::Type(SpectrumUpdateEventType); }
@@ -140,6 +144,7 @@ private:
   size_t _nplots;
   std::vector<double*> _dataTimeDomainPoints;
   uint64_t _numTimeDomainDataPoints;
+  std::vector< std::vector<gr::tag_t> > _tags;
 };
 
 
@@ -259,6 +264,34 @@ private:
   size_t _nplots;
   std::vector<double*> _dataPoints;
   uint64_t _numDataPoints;
+};
+
+
+/********************************************************************/
+
+
+class HistogramUpdateEvent: public QEvent
+{
+public:
+  HistogramUpdateEvent(const std::vector<double*> points,
+                       const uint64_t npoints);
+
+  ~HistogramUpdateEvent();
+
+  int which() const;
+  const std::vector<double*> getDataPoints() const;
+  uint64_t getNumDataPoints() const;
+  bool getRepeatDataFlag() const;
+
+  static QEvent::Type Type()
+  { return QEvent::Type(SpectrumUpdateEventType); }
+
+protected:
+
+private:
+  size_t _nplots;
+  std::vector<double*> _points;
+  uint64_t _npoints;
 };
 
 

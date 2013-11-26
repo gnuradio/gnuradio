@@ -87,7 +87,10 @@ class ModTool(object):
             print "No GNU Radio module found in the given directory. Quitting."
             sys.exit(1)
         print "GNU Radio module name identified: " + self._info['modname']
-        if self._info['version'] == '36' and os.path.isdir(os.path.join('include', self._info['modname'])):
+        if self._info['version'] == '36' and (
+                os.path.isdir(os.path.join('include', self._info['modname'])) or
+                os.path.isdir(os.path.join('include', 'gnuradio', self._info['modname']))
+                ):
             self._info['version'] = '37'
         if options.skip_lib or not self._has_subdirs['lib']:
             self._skip_subdirs['lib'] = True
@@ -106,17 +109,23 @@ class ModTool(object):
         """ Initialise the self._file[] dictionary """
         if not self._skip_subdirs['swig']:
             self._file['swig'] = os.path.join('swig',   self._get_mainswigfile())
+        self._info['pydir'] = 'python'
+        if os.path.isdir(os.path.join('python', self._info['modname'])):
+            self._info['pydir'] = os.path.join('python', self._info['modname'])
         self._file['qalib']    = os.path.join('lib',    'qa_%s.cc' % self._info['modname'])
-        self._file['pyinit']   = os.path.join('python', '__init__.py')
+        self._file['pyinit']   = os.path.join(self._info['pydir'], '__init__.py')
         self._file['cmlib']    = os.path.join('lib',    'CMakeLists.txt')
         self._file['cmgrc']    = os.path.join('grc',    'CMakeLists.txt')
-        self._file['cmpython'] = os.path.join('python', 'CMakeLists.txt')
-        if self._info['version'] in ('37', 'component'):
+        self._file['cmpython'] = os.path.join(self._info['pydir'], 'CMakeLists.txt')
+        if self._info['is_component']:
+            self._info['includedir'] = os.path.join('include', 'gnuradio', self._info['modname'])
+        elif self._info['version'] == '37':
             self._info['includedir'] = os.path.join('include', self._info['modname'])
         else:
             self._info['includedir'] = 'include'
         self._file['cminclude'] = os.path.join(self._info['includedir'], 'CMakeLists.txt')
         self._file['cmswig'] = os.path.join('swig', 'CMakeLists.txt')
+        self._file['cmfind'] = os.path.join('cmake', 'Modules', 'howtoConfig.cmake')
 
     def _check_directory(self, directory):
         """ Guesses if dir is a valid GNU Radio module directory by looking for
@@ -129,9 +138,10 @@ class ModTool(object):
         except OSError:
             print "Can't read or chdir to directory %s." % directory
             return False
+        self._info['is_component'] = False
         for f in files:
             if os.path.isfile(f) and f == 'CMakeLists.txt':
-                if re.search('find_package\(GnuradioRuntime\)', open(f).read()) is not None:
+                if re.search('find_package\(Gnuradio', open(f).read()) is not None:
                     self._info['version'] = '36' # Might be 37, check that later
                     has_makefile = True
                 elif re.search('GR_REGISTER_COMPONENT', open(f).read()) is not None:

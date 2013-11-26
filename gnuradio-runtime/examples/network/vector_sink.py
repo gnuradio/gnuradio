@@ -26,7 +26,7 @@ from gnuradio.eng_option import eng_option
 from optparse import OptionParser
 
 class vector_sink(gr.top_block):
-    def __init__(self, host, port, pkt_size, eof, wait):
+    def __init__(self, host, port, pkt_size, eof):
         gr.top_block.__init__(self, "vector_sink")
 
         udp = blocks.udp_source(gr.sizeof_float, host, port, pkt_size, eof=eof)

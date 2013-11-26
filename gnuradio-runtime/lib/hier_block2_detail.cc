@@ -197,14 +197,41 @@ namespace gr {
   {
     if(HIER_BLOCK2_DETAIL_DEBUG)
       std::cout << "disconnecting message port..." << std::endl;
-    
+
+    // remove edge for this message connection
+    bool hier_out = (d_owner == src.get()) && src->message_port_is_hier_out(srcport);
+    bool hier_in = (d_owner == dst.get()) && dst->message_port_is_hier_in(dstport);
+
+    d_fg->disconnect(msg_endpoint(src, srcport, hier_out), msg_endpoint(dst, dstport, hier_in));
+
+    hier_block2_sptr src_block(cast_to_hier_block2_sptr(src));
+    hier_block2_sptr dst_block(cast_to_hier_block2_sptr(dst));
+
+    if (src_block && src.get() != d_owner) {
+        // if the source is hier, we need to resolve the endpoint before calling unsub
+        msg_edge_vector_t edges = src_block->d_detail->d_fg->msg_edges();
+        for (msg_edge_viter_t it = edges.begin(); it != edges.end(); ++it) {
+            if ((*it).dst().block() == src) {
+                src = (*it).src().block();
+                srcport = (*it).src().port();
+            }
+        }
+    }
+
+    if (dst_block && dst.get() != d_owner) {
+        // if the destination is hier, we need to resolve the endpoint before calling unsub
+        msg_edge_vector_t edges = dst_block->d_detail->d_fg->msg_edges();
+        for (msg_edge_viter_t it = edges.begin(); it != edges.end(); ++it) {
+            if ((*it).src().block() == dst) {
+                dst = (*it).dst().block();
+                dstport = (*it).dst().port();
+            }
+        }
+    }
+
     // unregister the subscription - if already subscribed
     src->message_port_unsub(srcport, pmt::cons(dst->alias_pmt(), dstport));
 
-    // remove edge for this message connection
-    bool hier_out = (d_owner == src.get()) && src->message_port_is_hier_out(srcport);;
-    bool hier_in = (d_owner == dst.get()) && dst->message_port_is_hier_in(dstport);
-    d_fg->disconnect(msg_endpoint(src, srcport, hier_out), msg_endpoint(dst, dstport, hier_in));
   }
 
   void
@@ -436,8 +463,11 @@ namespace gr {
   {
     d_fg->clear();
     d_blocks.clear();
-    d_inputs.clear();
-    d_outputs.clear();
+
+    int max_inputs = d_owner->input_signature()->max_streams();
+    int max_outputs = d_owner->output_signature()->max_streams();
+    d_inputs = std::vector<endpoint_vector_t>(max_inputs);
+    d_outputs = endpoint_vector_t(max_outputs);
   }
 
   endpoint_vector_t

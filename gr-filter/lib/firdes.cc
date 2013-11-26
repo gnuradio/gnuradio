@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2002,2007,2008,2012 Free Software Foundation, Inc.
+ * Copyright 2002,2007,2008,2012,2013 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -31,26 +31,12 @@ using std::vector;
 
 namespace gr {
   namespace filter {
-    
-#define IzeroEPSILON 1E-21               /* Max error acceptable in Izero */
 
-    static double Izero(double x)
+    std::vector<float>
+    firdes::window(win_type type, int ntaps, double beta)
     {
-      double sum, u, halfx, temp;
-      int n;
-      
-      sum = u = n = 1;
-      halfx = x/2.0;
-      do {
-	temp = halfx/(double)n;
-	n += 1;
-	temp *= temp;
-	u *= temp;
-	sum += u;
-      } while (u >= IzeroEPSILON*sum);
-      return(sum);
+      return fft::window::build(static_cast<fft::window::win_type>(type), ntaps, beta);
     }
-    
     
     //
     //	=== Low Pass ===
@@ -672,17 +658,6 @@ namespace gr {
     //	=== Utilities ===
     //
 
-    // delta_f / width_factor gives number of taps required.
-    static const float width_factor[5] = {   // indexed by win_type
-      3.3,		// WIN_HAMMING
-      3.1,		// WIN_HANN
-      5.5,              // WIN_BLACKMAN
-      2.0,              // WIN_RECTANGULAR
-      //5.0             // WIN_KAISER  (guesstimate compromise)
-      //2.0             // WIN_KAISER  (guesstimate compromise)
-      10.0		// WIN_KAISER
-    };
-
     int
     firdes::compute_ntaps_windes(double sampling_freq,
 			         double transition_width, // this is frequency, not relative frequency
@@ -702,11 +677,8 @@ namespace gr {
 			  win_type window_type,
 			  double beta)
     {
-      // normalized transition width
-      double delta_f = transition_width / sampling_freq;
-
-      // compute number of taps required for given transition width
-      int ntaps = (int)(width_factor[window_type] / delta_f + 0.5);
+      double a = fft::window::max_attenuation(static_cast<fft::window::win_type>(window_type), beta);
+      int ntaps = (int)(a*sampling_freq/(22.0*transition_width));
       if((ntaps & 1) == 0)	// if even...
 	ntaps++;		// ...make odd
 
@@ -734,62 +706,6 @@ namespace gr {
 			+y*0.392377e-2))))))));
 	}
 	return ans;
-    }
-
-    vector<float>
-    firdes::window (win_type type, int ntaps, double beta)
-    {
-      vector<float> taps(ntaps);
-      int M = ntaps - 1;          // filter order
-
-      switch (type) {
-      case WIN_RECTANGULAR:
-	for(int n = 0; n < ntaps; n++)
-	  taps[n] = 1;
-
-      case WIN_HAMMING:
-	for(int n = 0; n < ntaps; n++)
-	  taps[n] = 0.54 - 0.46 * cos((2 * M_PI * n) / M);
-	break;
-	
-      case WIN_HANN:
-	for(int n = 0; n < ntaps; n++)
-	  taps[n] = 0.5 - 0.5 * cos((2 * M_PI * n) / M);
-	break;
-	
-      case WIN_BLACKMAN:
-	for(int n = 0; n < ntaps; n++)
-	  taps[n] = 0.42 - 0.50 * cos((2*M_PI * n) / (M-1))
-	    - 0.08 * cos((4*M_PI * n) / (M-1));
-	break;
-
-      case WIN_BLACKMAN_hARRIS:
-	for(int n = -ntaps/2; n < ntaps/2; n++)
-	  taps[n+ntaps/2] = 0.35875 + 0.48829*cos((2*M_PI * n) / (float)M) +
-	    0.14128*cos((4*M_PI * n) / (float)M) + 0.01168*cos((6*M_PI * n) / (float)M);
-	break;
-
-      case WIN_KAISER:
-	{
-	  double IBeta = 1.0/Izero(beta);
-	  double inm1 = 1.0/((double)(ntaps));
-	  double temp;
-	  //fprintf(stderr, "IBeta = %g; inm1 = %g\n", IBeta, inm1);
-	  
-	  for(int i=0; i<ntaps; i++) {
-	    temp = i * inm1;
-	    //fprintf(stderr, "temp = %g\n", temp);
-	    taps[i] = Izero(beta*sqrt(1.0-temp*temp)) * IBeta;
-	    //fprintf(stderr, "taps[%d] = %g\n", i, taps[i]);
-	  }
-	}
-      break;
-
-      default:
-	throw std::out_of_range("firdes:window: type out of range");
-      }
-      
-      return taps;
     }
 
     void

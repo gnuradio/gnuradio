@@ -32,7 +32,6 @@ namespace gr {
     {
       int d_m;
       int d_n;
-      int d_count;
       int d_offset;
       int d_itemsize;
 

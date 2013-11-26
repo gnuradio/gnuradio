@@ -192,8 +192,9 @@ namespace gr {
 
     // make sure free standing message blocks are included
     for(msg_edge_viter_t p = d_msg_edges.begin(); p != d_msg_edges.end(); p++) {
-      //for now only blocks receiving messages get a thread context - uncomment to allow senders to also obtain one
-      //  tmp.push_back(p->src().block());
+      // all msg blocks need a thread context - otherwise start() will never be called!
+      // even if it is a sender that never does anything
+      tmp.push_back(p->src().block());
       tmp.push_back(p->dst().block());
     }
 

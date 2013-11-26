@@ -32,6 +32,19 @@ namespace gr {
     /*!
      * \brief complex in, magnitude squared out (float)
      * \ingroup type_converters_blk
+     *
+     * \details
+     * Calculates the magnitude squared of the complex samples:
+     *
+     * \li output[0][m] = |input[0][m]|^2
+     *
+     * Or:
+     * \li output[0][m] = Re{input[0][m]}^2 + Im{input[0][m]}^2
+     *
+     * The input stream can be a vector of length \p vlen, and for
+     * each vector, each item is converted using the above
+     * function. So above, m is from 0 to noutput_items*vlen for each
+     * call to work.
      */
     class BLOCKS_API complex_to_mag_squared : virtual public sync_block
     {

@@ -113,6 +113,55 @@ class qa_digital_carrier_allocator_cvc (gr_unittest.TestCase):
         self.tb.run ()
         self.assertEqual(sink.data(), expected_result)
 
+    def test_002_t (self):
+        """
+        once again, but this time add a sync word
+        """
+        fft_len = 6
+        sync_word = (0,) * fft_len
+        tx_symbols = (1, 2, 3, 4, 5, 6)
+        pilot_symbols = ((1j,),)
+        occupied_carriers = ((-1, 1, 2),)
+        pilot_carriers = ((3,),)
+        expected_result = sync_word + (1j, 0, 1, 0, 2, 3) + (1j, 0, 4, 0, 5, 6)
+        tag_name = "len"
+        tag = gr.tag_t()
+        tag.offset = 0
+        tag.key = pmt.string_to_symbol(tag_name)
+        tag.value = pmt.from_long(len(tx_symbols))
+        special_tag1 = gr.tag_t()
+        special_tag1.offset = 0
+        special_tag1.key = pmt.string_to_symbol("spam")
+        special_tag1.value = pmt.to_pmt(23)
+        special_tag2 = gr.tag_t()
+        special_tag2.offset = 4
+        special_tag2.key = pmt.string_to_symbol("eggs")
+        special_tag2.value = pmt.to_pmt(42)
+        src = blocks.vector_source_c(
+            tx_symbols, False, 1,
+            (tag, special_tag1, special_tag2)
+        )
+        alloc = digital.ofdm_carrier_allocator_cvc(
+            fft_len,
+            occupied_carriers,
+            pilot_carriers,
+            pilot_symbols,
+            sync_words=(sync_word,),
+            len_tag_key=tag_name
+        )
+        sink = blocks.vector_sink_c(fft_len)
+        self.tb.connect(src, alloc, sink)
+        self.tb.run ()
+        self.assertEqual(sink.data(), expected_result)
+        tags = [gr.tag_to_python(x) for x in sink.tags()]
+        tags = sorted([(x.offset, x.key, x.value) for x in tags])
+        tags_expected = [
+                (0, 'len', 3),
+                (0, 'spam', 23),
+                (2, 'eggs', 42),
+        ]
+        self.assertEqual(tags, tags_expected)
+
     def test_003_t (self):
         """
         more advanced:
@@ -156,7 +205,7 @@ class qa_digital_carrier_allocator_cvc (gr_unittest.TestCase):
         testtag4.offset = 2*len(tx_symbols)-1 # Last OFDM symbol of packet 2
         testtag4.key = pmt.string_to_symbol('tag4')
         testtag4.value = pmt.from_long(0)
-        src = blocks.vector_source_c(tx_symbols * 2, False, 1, 
+        src = blocks.vector_source_c(tx_symbols * 2, False, 1,
                                      (tag1, tag2, testtag1, testtag2, testtag3, testtag4))
         alloc = digital.ofdm_carrier_allocator_cvc(fft_len,
                        occupied_carriers,

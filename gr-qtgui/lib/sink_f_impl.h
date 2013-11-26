@@ -57,6 +57,8 @@ namespace gr {
 
       double d_update_time;
 
+      int d_argc;
+      char *d_argv;
       QWidget *d_parent;
       SpectrumGUIClass *d_main_gui;
 

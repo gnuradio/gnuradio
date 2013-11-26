@@ -9,9 +9,9 @@ if(NOT ICE_FOUND)
   # that exists, get the version string and parse it for the proper
   # version.
   FIND_PATH(
-    ICE_CONFIG_INCLUDE_DIR 
+    ICE_CONFIG_INCLUDE_DIR
     NAMES IceUtil/Config.h
-    HINTS ${CMAKE_INSTALL_PREFIX}/${HEADER_DIR} ${ICE_MANUAL_INSTALL_PATH}/include/
+    HINTS ${ICE_MANUAL_INSTALL_PATH}/include/ ${CMAKE_INSTALL_PREFIX}/${HEADER_DIR}
     )
   if(ICE_CONFIG_INCLUDE_DIR)
     file(STRINGS "${ICE_CONFIG_INCLUDE_DIR}/IceUtil/Config.h"
@@ -31,105 +31,88 @@ endif(NOT ICE_FOUND)
 # Recheck if we found the right version of ICE and proceed if true.
 if(ICE_FOUND)
 
+# Prepare the path hint for the libraries based on the include
+# directory found.
+string(REGEX REPLACE "/include" "" ICE_PATH ${ICE_CONFIG_INCLUDE_DIR})
+
 FIND_PATH(
-    ICE_INCLUDE_DIR 
-    NAMES IceUtil/IceUtil.h Ice/Ice.h IceStorm/IceStorm.h icestorm_publisher_template.h 
-    HINTS ${CMAKE_INSTALL_PREFIX}/${HEADER_DIR} ${ICE_MANUAL_INSTALL_PATH}/include/
+  ICE_INCLUDE_DIR
+  NAMES IceUtil/IceUtil.h Ice/Ice.h
+  NO_DEFAULT_PATH
+  HINTS ${ICE_PATH}/include
 )
 
 set(ICE_LIBRARY )
 
-FIND_LIBRARY(
-    ICE_ICESTORM IceStorm 
-    PATHS ENV LD_LIBRARY_PATH 
-    HINTS ${PC_ICE_LIBDIR} ${PC_ICE_LIBRARY_DIRS}
-          ${ICE_MANUAL_INSTALL_PATH}/lib64/ ${ICE_MANUAL_INSTALL_PATH}/lib/
-)
-
-FIND_LIBRARY(
-  ICE_ICESTORM IceStorm
-  PATHS HINTS ${CMAKE_INSTALL_PREFIX}/lib64/ ${CMAKE_INSTALL_PREFIX}/lib/
-  PATHS ${PC_ICE_LIBDIR} ${PC_ICE_LIBRARY_DIRS}
-        ${ICE_MANUAL_INSTALL_PATH}/lib64/ ${ICE_MANUAL_INSTALL_PATH}/lib/
-  ENV LD_LIBRARY_PATH
-)
-FIND_LIBRARY(
-  ICE_ICE Ice
-  PATHS HINTS ${CMAKE_INSTALL_PREFIX}/lib64/ ${CMAKE_INSTALL_PREFIX}/lib/
-  PATHS ${PC_ICE_LIBDIR} ${PC_ICE_LIBRARY_DIRS}
-        ${ICE_MANUAL_INSTALL_PATH}/lib64/ ${ICE_MANUAL_INSTALL_PATH}/lib/
-  ENV LD_LIBRARY_PATH
-)
-FIND_LIBRARY(
-  ICE_ICEGRID IceGrid
-  PATHS HINTS ${CMAKE_INSTALL_PREFIX}/lib64/ ${CMAKE_INSTALL_PREFIX}/lib/
-  PATHS ${PC_ICE_LIBDIR} ${PC_ICE_LIBRARY_DIRS}
-        ${ICE_MANUAL_INSTALL_PATH}/lib64/ ${ICE_MANUAL_INSTALL_PATH}/lib/
-  ENV LD_LIBRARY_PATH
-)
-FIND_LIBRARY(
-  ICE_ICEUTIL IceUtil
-  PATHS HINTS ${CMAKE_INSTALL_PREFIX}/lib64/ ${CMAKE_INSTALL_PREFIX}/lib/
-  PATHS ${PC_ICE_LIBDIR} ${PC_ICE_LIBRARY_DIRS}
-        ${ICE_MANUAL_INSTALL_PATH}/lib64/ ${ICE_MANUAL_INSTALL_PATH}/lib/
-  ENV LD_LIBRARY_PATH
-)
-FIND_LIBRARY(
-  ICE_GLACIER2 Glacier2
-  PATHS HINTS ${CMAKE_INSTALL_PREFIX}/lib64/ ${CMAKE_INSTALL_PREFIX}/lib/
-  PATHS ${PC_ICE_LIBDIR} ${PC_ICE_LIBRARY_DIRS}
-        ${ICE_MANUAL_INSTALL_PATH}/lib64/ ${ICE_MANUAL_INSTALL_PATH}/lib/
-  ENV LD_LIBRARY_PATH
-)
-
 if(APPLE)
-  FIND_LIBRARY(
-    ICE_ZEROCICE ZeroCIce
-    PATHS HINTS ${CMAKE_INSTALL_PREFIX}/lib64/ ${CMAKE_INSTALL_PREFIX}/lib/
-    PATHS ${PC_ICE_LIBDIR} ${PC_ICE_LIBRARY_DIRS}
-          ${ICE_MANUAL_INSTALL_PATH}/lib64/ ${ICE_MANUAL_INSTALL_PATH}/lib/
-    ENV LD_LIBRARY_PATH
-    )
+  set(ICE_LIB_PREFIX "Zeroc")
+else()
+  set(ICE_LIB_PREFIX "")
 endif(APPLE)
 
 FIND_LIBRARY(
+  ICE_ICE ${ICE_LIB_PREFIX}Ice
+  NO_DEFAULT_PATH
+  HINTS ${ICE_PATH}/lib ${ICE_PATH}/lib64
+)
+FIND_LIBRARY(
+  ICE_ICESTORM ${ICE_LIB_PREFIX}IceStorm
+  NO_DEFAULT_PATH
+  HINTS ${ICE_PATH}/lib ${ICE_PATH}/lib64
+)
+FIND_LIBRARY(
+  ICE_ICEGRID ${ICE_LIB_PREFIX}IceGrid
+  NO_DEFAULT_PATH
+  HINTS ${ICE_PATH}/lib ${ICE_PATH}/lib64
+)
+FIND_LIBRARY(
+  ICE_ICEUTIL ${ICE_LIB_PREFIX}IceUtil
+  NO_DEFAULT_PATH
+  HINTS ${ICE_PATH}/lib ${ICE_PATH}/lib64
+)
+FIND_LIBRARY(
+  ICE_GLACIER2 Glacier2
+  NO_DEFAULT_PATH
+  HINTS ${ICE_PATH}/lib ${ICE_PATH}/lib64
+)
+
+FIND_LIBRARY(
   ICE_PTHREAD NAMES pthread pthread-2.13
-  PATHS HINTS ${CMAKE_INSTALL_PREFIX}/lib64/ ${CMAKE_INSTALL_PREFIX}/lib/
-  PATHS ${PC_ICE_LIBDIR} ${PC_ICE_LIBRARY_DIRS} /lib/i386-linux-gnu
-        /lib/x86_64-linux-gnu /usr/lib /lib /lib64
+  HINTS ${CMAKE_INSTALL_PREFIX}/lib64/ ${CMAKE_INSTALL_PREFIX}/lib/
+  HINTS ${PC_ICE_LIBDIR} ${PC_ICE_LIBRARY_DIRS} /lib/i386-linux-gnu /lib/x86_64-linux-gnu /usr/lib /lib /lib64
   ENV LD_LIBRARY_PATH
 )
 
-if(ICE_ICE OR ICE_ZEROCICE)
-  if(ICE_ICEUTIL)
+set(ICE_FOUND FALSE)
 
-    list(APPEND ICE_LIBRARY
-      ${ICE_ICE}
-      ${ICE_ZEROCICE}
-      )
+if(ICE_ICE AND ICE_ICEUTIL)
+  list(APPEND ICE_LIBRARY
+    ${ICE_ICE}
+    ${ICE_ICEUTIL}
+    )
 
-    FIND_PROGRAM(ICE_SLICE2CPP slice2cpp
-      HINTS ${CMAKE_INSTALL_PREFIX}/bin ${ICE_MANUAL_INSTALL_PATH}/bin/)
-    FIND_PROGRAM(ICE_SLICE2PY slice2py
-      HINTS ${CMAKE_INSTALL_PREFIX}/bin ${ICE_MANUAL_INSTALL_PATH}/bin/)
+  FIND_PROGRAM(ICE_SLICE2CPP slice2cpp
+    HINTS ${CMAKE_INSTALL_PREFIX}/bin ${ICE_MANUAL_INSTALL_PATH}/bin/)
+  FIND_PROGRAM(ICE_SLICE2PY slice2py
+    HINTS ${CMAKE_INSTALL_PREFIX}/bin ${ICE_MANUAL_INSTALL_PATH}/bin/)
 
-    # Check that the ICE Python package is installed
-    GR_PYTHON_CHECK_MODULE("Ice >= 3.4" Ice "Ice.stringVersion() >= '3.4.0'" PYTHON_ICE_FOUND)
-    if(PYTHON_ICE_FOUND)
-      set(ICE_FOUND TRUE)
-    endif(PYTHON_ICE_FOUND)
+  # Check that the ICE Python package is installed
+  include(GrPython)
+  GR_PYTHON_CHECK_MODULE("Ice >= 3.4" Ice "Ice.stringVersion() >= '3.4.0'" PYTHON_ICE_FOUND)
+  if(PYTHON_ICE_FOUND)
+    set(ICE_FOUND TRUE)
+  endif(PYTHON_ICE_FOUND)
 
-    if(ICE_FOUND)
-      message(STATUS "Ice-3.4 found")
+  if(ICE_FOUND)
+    message(STATUS "Ice-3.4 found")
 
-      set(ICE_LIBRARIES ${ICE_LIBRARY})
-      set(ICE_INCLUDE_DIRS ${ICE_INCLUDE_DIR})
+    set(ICE_LIBRARIES ${ICE_LIBRARY})
+    set(ICE_INCLUDE_DIRS ${ICE_INCLUDE_DIR})
 
-      include(FindPackageHandleStandardArgs)
-      find_package_handle_standard_args(ICE DEFAULT_MSG ICE_LIBRARY ICE_INCLUDE_DIR)
-      mark_as_advanced(ICE_INCLUDE_DIR ICE_LIBRARY)
-    endif(ICE_FOUND)
-  endif(ICE_ICEUTIL)
-endif(ICE_ICE OR ICE_ZEROCICE)
+    include(FindPackageHandleStandardArgs)
+    find_package_handle_standard_args(ICE DEFAULT_MSG ICE_LIBRARY ICE_INCLUDE_DIR)
+    mark_as_advanced(ICE_INCLUDE_DIR ICE_LIBRARY)
+  endif(ICE_FOUND)
+endif(ICE_ICE AND ICE_ICEUTIL)
 
 endif(ICE_FOUND)

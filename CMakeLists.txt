@@ -41,7 +41,7 @@ list(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake/Modules)
 # Set the version information here
 set(VERSION_INFO_MAJOR_VERSION 3)
 set(VERSION_INFO_API_COMPAT    7)
-set(VERSION_INFO_MINOR_VERSION 1)
+set(VERSION_INFO_MINOR_VERSION 3)
 set(VERSION_INFO_MAINT_VERSION git)
 include(GrVersion) #setup version info
 
@@ -165,7 +165,7 @@ add_custom_target(uninstall
 ########################################################################
 # Enable python component
 ########################################################################
-find_package(PythonLibs)
+find_package(PythonLibs 2)
 find_package(SWIG)
 
 if(SWIG_FOUND)
@@ -312,11 +312,17 @@ SET(cmake_configs
 )
 
 if(NOT CMAKE_MODULES_DIR)
-   set(CMAKE_MODULES_DIR lib/cmake/gnuradio)
+   set(CMAKE_MODULES_DIR lib${LIB_SUFFIX}/cmake/gnuradio)
 endif(NOT CMAKE_MODULES_DIR)
 
+# Install all other cmake files into same directory
+file(GLOB cmake_others "cmake/Modules/*.cmake")
+list(REMOVE_ITEM cmake_others
+    "${CMAKE_SOURCE_DIR}/cmake/Modules/FindGnuradio.cmake"
+)
+
 install(
-  FILES ${cmake_configs}
+  FILES ${cmake_configs} ${cmake_others}
   DESTINATION ${CMAKE_MODULES_DIR}
   COMPONENT "runtime_devel"
 )

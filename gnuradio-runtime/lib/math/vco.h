@@ -64,6 +64,9 @@ namespace gr {
     // compute sin and cos for current phase angle
     void sincos(float *sinx, float *cosx) const;
 
+    void sincos(gr_complex *output, const float *input,
+                int noutput_items, double k, double ampl = 1.0);
+
     // compute cos or sin for current phase angle
     float cos() const { return std::cos(d_phase); }
     float sin() const { return std::sin(d_phase); }
@@ -81,6 +84,17 @@ namespace gr {
   vco<o_type,i_type>::sincos(float *sinx, float *cosx) const
   {
     gr::sincosf(d_phase, sinx, cosx);
+  }
+
+  template<class o_type, class i_type>
+  void
+  vco<o_type,i_type>::sincos(gr_complex *output, const float *input,
+                             int noutput_items, double k, double ampl)
+  {
+    for(int i = 0; i < noutput_items; i++) {
+      output[i] = gr_complex(cos() * ampl, sin() * ampl);
+      adjust_phase(input[i] * k);
+    }
   }
 
   template<class o_type, class i_type>

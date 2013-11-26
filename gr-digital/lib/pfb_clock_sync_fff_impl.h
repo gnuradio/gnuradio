@@ -72,6 +72,8 @@ namespace gr {
 
       void update_gains();
 
+      void forecast(int noutput_items, gr_vector_int &ninput_items_required);
+
       void set_taps(const std::vector<float> &taps,
 		    std::vector< std::vector<float> > &ourtaps,
 		    std::vector<kernel::fir_filter_fff*> &ourfilter);

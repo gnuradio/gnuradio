@@ -28,7 +28,7 @@ from optparse import OptionParser
 class dial_tone_sink(gr.top_block):
     def __init__(self, host, port, pkt_size, sample_rate, eof):
         gr.top_block.__init__(self, "dial_tone_sink")
-        udp = blokcs.udp_source(gr.sizeof_float, host, port, pkt_size, eof=eof)
+        udp = blocks.udp_source(gr.sizeof_float, host, port, pkt_size, eof=eof)
         sink = audio.sink(sample_rate)
         self.connect(udp, sink)
 

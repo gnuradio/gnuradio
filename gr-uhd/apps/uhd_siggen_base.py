@@ -112,19 +112,22 @@ class top_block(gr.top_block, pubsub):
         # Setup USRP Configuration value
         try:
             usrp_info = self._u.get_usrp_info()
-            mboard_id = usrp_info.get("mboard_id")
-            mboard_serial = usrp_info.get("mboard_serial")
+            mboard_id = usrp_info["mboard_id"]
+            mboard_serial = usrp_info["mboard_serial"]
             if mboard_serial == "":
                 mboard_serial = "no serial"
-            dboard_subdev_name = usrp_info.get("tx_subdev_name")
-            dboard_serial = usrp_info.get("tx_serial")
+            dboard_subdev_name = usrp_info["tx_subdev_name"]
+            dboard_serial = usrp_info["tx_serial"]
             if dboard_serial == "":
                 dboard_serial = "no serial"
             subdev = self._u.get_subdev_spec()
             antenna = self._u.get_antenna()
 
             desc_key_str = "Motherboard: %s [%s]\n" % (mboard_id, mboard_serial)
-            desc_key_str += "Daughterboard: %s [%s]\n" % (dboard_subdev_name, dboard_serial)
+            if "B200" in mboard_id or "B210" in mboard_id:
+                desc_key_str += "Daughterboard: %s\n" % dboard_subdev_name
+            else:
+                desc_key_str += "Daughterboard: %s [%s]\n" % (dboard_subdev_name, dboard_serial)
             desc_key_str += "Subdev: %s\n" % subdev
             desc_key_str += "Antenna: %s" % antenna
         except:

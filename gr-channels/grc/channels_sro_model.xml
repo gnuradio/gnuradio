@@ -1,0 +1,52 @@
+<?xml version="1.0"?>
+<!--
+###################################################
+##SRO Model
+###################################################
+ -->
+<block>
+	<name>SRO Model</name>
+	<key>channels_sro_model</key>
+	<import>from gnuradio import channels</import>
+	<make>channels.sro_model(
+        $srate,
+        $stdev,
+        $maxdev,
+        $seed
+)</make>
+    <callback>set_std_dev($stdev)</callback>
+    <callback>set_max_dev($maxdev)</callback>
+    <callback>set_samp_rate($srate)</callback>
+	<param>
+		<name>Sample Rate Hz</name>
+		<key>srate</key>
+		<value>samp_rate</value>
+		<type>real</type>
+	</param>
+	<param>
+		<name>SRO Standard Deviation Hz per sample</name>
+		<key>stdev</key>
+		<value>0.01</value>
+		<type>real</type>
+	</param>
+	<param>
+		<name>Max SRO Bound Hz</name>
+		<key>maxdev</key>
+		<value>1e3</value>
+		<type>real</type>
+	</param>
+	<param>
+		<name>Seed</name>
+		<key>seed</key>
+		<value>0</value>
+		<type>int</type>
+	</param>
+	<sink>
+		<name>in</name>
+		<type>complex</type>
+	</sink>
+	<source>
+		<name>out</name>
+		<type>complex</type>
+	</source>
+</block>

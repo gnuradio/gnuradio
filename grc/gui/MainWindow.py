@@ -109,6 +109,8 @@ class MainWindow(gtk.Window):
         self.flow_graph_vpaned.set_position(Preferences.reports_window_position())
         self.hpaned.set_position(Preferences.blocks_window_position())
         self.show_all()
+        self.reports_scrolled_window.hide()
+        self.btwin.hide()
 
     ############################################################
     # Event Handlers
@@ -154,8 +156,8 @@ class MainWindow(gtk.Window):
         """
         self.text_display.insert(line)
         vadj = self.reports_scrolled_window.get_vadjustment()
-        vadj.set_value(vadj.upper)
-        vadj.emit('changed')
+        vadj.value = vadj.upper - vadj.page_size
+        vadj.changed()
 
     ############################################################
     # Pages: create and close
@@ -304,7 +306,7 @@ class MainWindow(gtk.Window):
     def get_focus_flag(self):
         """
         Get the focus flag from the current page.
-        
+
         Returns:
             the focus flag
         """

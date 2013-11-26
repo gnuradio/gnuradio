@@ -134,7 +134,9 @@ namespace gr {
     for(int i = 0; i < (int) d_n_input_items_reqd.size(); i++) {
       consume(i, d_n_input_items_reqd[i]);
     }
-    update_length_tags(n_produced, output_items.size());
+    if (n_produced > 0) {
+      update_length_tags(n_produced, output_items.size());
+    }
 
     d_n_input_items_reqd.assign(input_items.size(), 0);
 

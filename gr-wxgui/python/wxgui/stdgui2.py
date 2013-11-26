@@ -21,6 +21,8 @@
 
 '''A simple wx gui for GNU Radio applications'''
 
+import ctypes
+import os
 import wx
 import sys
 from gnuradio import gr
@@ -33,6 +35,13 @@ class stdapp (wx.App):
         self.title = title
         self._nstatus = nstatus
         self._max_noutput_items = max_noutput_items
+        # If we're on Linux, also enable multi-threading Xlib access
+        if os.name == 'posix':
+            try:
+                x11 = ctypes.cdll.LoadLibrary('libX11.so')
+                x11.XInitThreads()
+            except:
+                print "Warning: failed to XInitThreads()"
         # All our initialization must come before calling wx.App.__init__.
         # OnInit is called from somewhere in the guts of __init__.
         wx.App.__init__ (self, redirect=False)
@@ -70,6 +79,7 @@ class stdframe (wx.Frame):
 
     def OnCloseWindow (self, event):
         self.top_block().stop()
+        self.top_block().wait()
         self.Destroy ()
 
     def top_block (self):

@@ -36,12 +36,16 @@ namespace gr {
      *
      * \details
      * The Costas loop locks to the center frequency of a signal and
-     * downconverts it to baseband. The second (order=2) order loop
-     * is used for BPSK where the real part of the output signal is
-     * the baseband BPSK signal and the imaginary part is the error
-     * signal. When order=4, it can be used for quadrature
-     * modulations where both I and Q (real and imaginary) are
-     * outputted.
+     * downconverts it to baseband.
+     *
+     * \li When order=2: used for BPSK where the real part of the
+     * output signal is the baseband BPSK signal and the imaginary
+     * part is the error signal.
+     *
+     * \li When order=4: can be used for QPSK where both I and Q (real
+     * and imaginary) are outputted.
+     *
+     * \li When order=8: used for 8PSK.
      *
      * More details can be found online:
      *
@@ -52,8 +56,8 @@ namespace gr {
      * http://rfdesign.com/images/archive/0102Feigin20.pdf
      *  
      * The Costas loop can have two output streams:
-     *    stream 1 is the baseband I and Q;
-     *    stream 2 is the normalized frequency of the loop
+     * \li stream 1 (required) is the baseband I and Q;
+     * \li stream 2 (optional) is the normalized frequency of the loop
      */
     class DIGITAL_API costas_loop_cc
       : virtual public sync_block, 
@@ -70,6 +74,11 @@ namespace gr {
        * \param order the loop order, either 2, 4, or 8
        */
       static sptr make(float loop_bw, int order);
+
+      /*! 
+       * Returns the current value of the loop error.
+       */
+      virtual float error() const = 0;
     };
 
   } /* namespace digital */

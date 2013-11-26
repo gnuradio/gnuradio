@@ -169,6 +169,12 @@ class decimator_ccf(gr.hier_block2):
 
         self.connect(self.pfb, self)
 
+    def set_taps(self, taps):
+        self.pfb.set_taps(taps)
+
+    def set_channel(self, chan):
+        self.pfb.set_channel(chan)
+
 
 class arb_resampler_ccf(gr.hier_block2):
     '''

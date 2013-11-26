@@ -33,6 +33,9 @@ install(FILES
   freq_sink_c.h
   freq_sink_f.h
   FrequencyDisplayPlot.h
+  histogram_sink_f.h
+  histogramdisplayform.h
+  HistogramDisplayPlot.h
   plot_raster.h
   plot_waterfall.h
   qtgui_types.h
@@ -50,6 +53,7 @@ install(FILES
   time_raster_sink_f.h
   time_sink_c.h
   time_sink_f.h
+  trigger_mode.h
   utils.h
   waterfalldisplayform.h
   WaterfallDisplayPlot.h

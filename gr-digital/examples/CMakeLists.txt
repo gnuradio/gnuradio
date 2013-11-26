@@ -61,6 +61,15 @@ GR_PYTHON_INSTALL(PROGRAMS
     COMPONENT "digital_python"
 )
 
+install(
+    FILES
+    ofdm/tx_ofdm.grc
+    ofdm/rx_ofdm.grc
+    ofdm/ofdm_loopback.grc
+    DESTINATION ${GR_PKG_DIGITAL_EXAMPLES_DIR}/ofdm
+    COMPONENT "digital_python"
+)
+
 # DEMOD
 install(
     FILES
@@ -71,6 +80,9 @@ install(
     demod/ber_simulation.grc
     demod/dpsk_loopback.grc   
     demod/gfsk_loopback.grc
+    demod/test_corr_and_sync.grc
+    demod/uhd_corr_and_sync_tx.grc
+    demod/uhd_corr_and_sync_rx.grc
     DESTINATION ${GR_PKG_DIGITAL_EXAMPLES_DIR}/demod
     COMPONENT "digital_python"
 )

@@ -42,6 +42,9 @@ class grcc:
         self.fg.grc_file_path = os.path.abspath(grcfile)
         self.fg.validate()
 
+        if not self.fg.is_valid():
+            raise StandardError("Compilation error")
+
         self.gen = self.platform.get_generator()(self.fg, out_dir)
         self.gen.write()
 
@@ -64,7 +67,11 @@ if __name__ == "__main__":
         sys.stderr.write("Please specify a GRC file name to compile.\n")
         sys.exit(1)
 
-    g = grcc(args[0], options.directory+"/")
+    try:
+        g = grcc(args[0], options.directory+"/")
+    except:
+        sys.stderr.write("Error during file compilation.\n");
+        sys.exit(1)
 
     if(options.execute):
         g.exec_program()

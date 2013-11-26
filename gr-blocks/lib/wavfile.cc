@@ -133,13 +133,31 @@ namespace gr {
 
       fmt_hdr_skip -= 16;
       if(fmt_hdr_skip) {
-	fseek(fp, fmt_hdr_skip, SEEK_CUR);
+	if (fseek(fp, fmt_hdr_skip, SEEK_CUR) != 0) {
+	  return false;
+	}
       }
 
-      // data chunk
+      // find data chunk
       fresult = fread(str_buf, 1, 4, fp);
-      if(strncmp(str_buf, "data", 4)) {
-	return false;
+      // keep parsing chunk until we hit the data chunk
+      while(fresult != 4 || strncmp(str_buf, "data", 4))
+      {
+	// all good?
+	if(fresult != 4 || ferror(fp) || feof(fp)) {
+	  return false;
+	}
+	// get chunk body size and skip
+	fresult = fread(&chunk_size, 1, 4, fp);
+	if(fresult != 4 || ferror(fp) || feof(fp)) {
+	  return false;
+        }
+	chunk_size = wav_to_host(chunk_size);
+	if(fseek(fp, chunk_size, SEEK_CUR) != 0) {
+	  return false;
+	}
+        // read next chunk type
+        fresult = fread(str_buf, 1, 4, fp);
       }
 
       fresult = fread(&chunk_size, 1, 4, fp);
@@ -165,7 +183,7 @@ namespace gr {
     {
       int16_t buf_16bit;
 
-      if(!fread(&buf_16bit, bytes_per_sample, 1, fp)) {
+      if(fread(&buf_16bit, bytes_per_sample, 1, fp) != 1) {
 	return 0;
       }
       if(bytes_per_sample == 1) {
@@ -238,12 +256,16 @@ namespace gr {
       uint32_t chunk_size = (uint32_t)byte_count;
       chunk_size = host_to_wav(chunk_size);
 
-      fseek(fp, 40, SEEK_SET);
+      if (fseek(fp, 40, SEEK_SET) != 0) {
+	return false;
+      }
       fwrite(&chunk_size, 1, 4, fp);
 
       chunk_size = (uint32_t)byte_count + 36; // fmt chunk and data header
       chunk_size = host_to_wav(chunk_size);
-      fseek(fp, 4, SEEK_SET);
+      if (fseek(fp, 4, SEEK_SET) != 0) {
+	return false;
+      }
 
       fwrite(&chunk_size, 1, 4, fp);
 
