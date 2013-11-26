@@ -122,6 +122,7 @@ endmacro(OVERRULE_ARCH)
 # the xgetbv instruction, or {if not cross-compiling and the xgetbv
 # executable does not function correctly}.
 ########################################################################
+set(HAVE_XGETBV 0)
 if(CPU_IS_x86)
     # check to see if the compiler/linker works with xgetb instruction
     file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/test_xgetbv.c "unsigned long long _xgetbv(unsigned int index) { unsigned int eax, edx; __asm__ __volatile__(\"xgetbv\" : \"=a\"(eax), \"=d\"(edx) : \"c\"(index)); return ((unsigned long long)edx << 32) | eax; } int main (void) { (void) _xgetbv(0); return (0); }")
@@ -139,14 +140,38 @@ if(CPU_IS_x86)
         if(NOT ${avx_exe_result} EQUAL 0)
             OVERRULE_ARCH(avx "CPU missing xgetbv.")
         else()
-            add_definitions(-DHAVE_XGETBV)
+            set(HAVE_XGETBV 1)
         endif()
     else()
         # cross compiling and compiler/linker seems to work; assume working
-        add_definitions(-DHAVE_XGETBV)
+        set(HAVE_XGETBV 1)
     endif()
     file(REMOVE ${CMAKE_CURRENT_BINARY_DIR}/test_xgetbv
         ${CMAKE_CURRENT_BINARY_DIR}/test_xgetbv.c)
+endif()
+
+########################################################################
+# eliminate AVX if cvtpi32_ps intrinsic fails on Apple
+########################################################################
+
+if(${HAVE_XGETBV} AND APPLE)
+    # check to see if the compiler/linker works with cvtpi32_ps instrinsic
+    file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/test_cvtpi32_ps.c "#include <immintrin.h>\nint main (void) {__m128 __a; __m64 __b; __m128 foo = _mm_cvtpi32_ps(__a, __b); return (0); }")
+    execute_process(COMMAND ${CMAKE_C_COMPILER} -mavx -o
+        ${CMAKE_CURRENT_BINARY_DIR}/test_cvtpi32_ps
+        ${CMAKE_CURRENT_BINARY_DIR}/test_cvtpi32_ps.c
+        OUTPUT_QUIET ERROR_QUIET
+        RESULT_VARIABLE avx_compile_result)
+   if(NOT ${avx_compile_result} EQUAL 0)
+        OVERRULE_ARCH(avx "Compiler missing cvtpi32_ps instrinsic")
+	set(HAVE_XGETBV 0)
+    endif()
+    file(REMOVE ${CMAKE_CURRENT_BINARY_DIR}/test_cvtpi32_ps
+        ${CMAKE_CURRENT_BINARY_DIR}/test_cvtpi32_ps.c)
+endif()
+
+if(${HAVE_XGETBV})
+    add_definitions(-DHAVE_XGETBV)
 endif()
 
 ########################################################################
