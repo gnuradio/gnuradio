@@ -25,7 +25,6 @@
 #endif
 
 #include <gnuradio/atsc/equalizer.h>
-#include <gnuradio/atsc/create_atsci_equalizer.h>
 #include <gnuradio/io_signature.h>
 #include <gnuradio/atsc/consts.h>
 #include <gnuradio/atsc/syminfo_impl.h>

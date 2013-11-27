@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2006 Free Software Foundation, Inc.
+ * Copyright 2006,2013 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -76,6 +76,5 @@ private:
 
 
 };
-
 
 #endif /* INCLUDED_ATSC_EQUALIZER_H */

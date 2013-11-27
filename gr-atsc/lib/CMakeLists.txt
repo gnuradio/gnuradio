@@ -80,10 +80,7 @@ list(APPEND gr_atsc_sources
     transmitter/atsc_pilot.cc
     transmitter/atsc_ds_to_softds.cc
     transmitter/atsci_randomizer.cc
-    transmitter/atsci_trellis_encoder.cc  
-    atsci_pnXXX.cc
-    atsci_reed_solomon.cc
-    plinfo.cc
+    transmitter/atsci_trellis_encoder.cc
 )
 
 #Add Windows DLL resource file under MSVC

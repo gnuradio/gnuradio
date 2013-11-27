@@ -38,11 +38,8 @@ typedef boost::shared_ptr<atsc_bit_timing_loop> atsc_bit_timing_loop_sptr;
 ATSC_API atsc_bit_timing_loop_sptr atsc_make_bit_timing_loop( float input_rate );
 
 /*!
- * \brief ATSC BitTimingLoop3
+ * \brief ATSC bit_timing_loop
  * \ingroup atsc
- *
- * This class accepts a single real input and produces two outputs,
- *  the raw symbol (float) and the tag (atsc_syminfo)
  */
 
 class ATSC_API atsc_bit_timing_loop : public gr::block
@@ -109,6 +106,4 @@ protected:
 };
 
 #endif /* INCLUDED_ATSC_BIT_TIMING_LOOP_H */
-
-
 

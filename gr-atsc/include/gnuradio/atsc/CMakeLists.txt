@@ -27,16 +27,13 @@ install(FILES
     CMakeLists.txt
     consts.h
     convolutional_interleaver.h
-    create_atsci_equalizer.h
     data_interleaver_impl.h
     deinterleaver.h
     depad.h
     derandomizer.h
     ds_to_softds.h
     equalizer.h
-    exp2_lp_impl.h
     fake_single_viterbi_impl.h
-    field_sync_demux.h
     field_sync_mux.h
     fpll.h
     fs_checker.h
@@ -51,14 +48,11 @@ install(FILES
     rs_encoder.h
     pilot.h
     single_viterbi_impl.h
-    slicer_agc_impl.h
     syminfo_impl.h
-    sync_tag_impl.h
     trellis_encoder.h
     trellis_encoder_impl.h
     types.h
     viterbi_decoder.h
-    vsbtx_lp_impl.h
     DESTINATION ${GR_INCLUDE_DIR}/gnuradio/atsc
     COMPONENT "atsc_devel"
 )

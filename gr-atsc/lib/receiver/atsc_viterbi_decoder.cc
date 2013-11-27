@@ -100,7 +100,7 @@ atsc_viterbi_decoder::decode_helper (unsigned char out[OUTPUT_SIZE],
 {
 	int encoder;
 	unsigned int i;
-	int dbi;
+	//int dbi;
 	int dbwhere;
 	int dbindex;
 	int shift;
@@ -111,7 +111,7 @@ atsc_viterbi_decoder::decode_helper (unsigned char out[OUTPUT_SIZE],
 	the input symbols */
 	for (encoder = 0; encoder < NCODERS; encoder++)
 	{
-		dbi = 0;			/* Reinitialize dibit index for new encoder */
+		//dbi = 0;			/* Reinitialize dibit index for new encoder */
 		fifo_t	*dibit_fifo = fifo[encoder];
 
 		/* Feed all the incoming symbols into one encoder;
@@ -128,58 +128,7 @@ atsc_viterbi_decoder::decode_helper (unsigned char out[OUTPUT_SIZE],
 			out[dbindex] = (out[dbindex] & ~(0x03 << shift)) | (dibit << shift);
 		} /* Symbols fed into one encoder */
 	} /* Encoders */
-
-	// fflush (stdout);
 }
-
-/*void
-atsc_viterbi_decoder::decode_helper (unsigned char out[OUTPUT_SIZE],
-				     const float symbols_in[INPUT_SIZE])
-{
-	int trellis = 0;
-        int bytes = 0;
-        int bits = 0;
-        int symbol = 0;
-	int symbol_offset = 4;
-        int byte_reset = 0;
-	out[bytes] = (out[bytes] & ~(0x03 << (6 - (bits*2)))) | ((fifo[trellis]->stuff(viterbi[trellis].decode(symbols_in[symbol + symbol_offset])))<< (6 - (bits*2)));
-	while( symbol < (828 * 12) - 1 )
-        {
-	    symbol++;
-            trellis++;
-            bytes++;
-            byte_reset++;
-            if( symbol % 12 == 0 )
-            {
-                bits++;
-                if( bits >= 4 )
-                {
-                    bits = 0;
-                    bytes += 12;
-                    if( symbol % 864 == 0 )
-                    {
-                        bytes -= 4;
-                        byte_reset -= 4;
-                    }
-                }
-            }
-            if( byte_reset >= 12 )
-            {
-                bytes -= 12;
-                byte_reset = 0;
-            }
-            if( (symbol % 828) == 0 )
-            {
-                trellis += 4;
-		symbol_offset += 4;
-                bytes += 4;
-                byte_reset += 4;
-            }
-            if( trellis >= 12 )
-                trellis -= 12;
-	    out[bytes] = (out[bytes] & ~(0x03 << (6 - (bits*2)))) | ((fifo[trellis]->stuff(viterbi[trellis].decode(symbols_in[symbol + symbol_offset])))<< (6 - (bits*2)));
-        }
-}*/
 
 int
 atsc_viterbi_decoder::work (int noutput_items,

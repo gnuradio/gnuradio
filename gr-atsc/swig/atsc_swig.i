@@ -37,7 +37,6 @@
 #include <gnuradio/atsc/ds_to_softds.h>
 #include <gnuradio/atsc/field_sync_mux.h>
 #include <gnuradio/atsc/pilot.h>
-#include <gnuradio/atsc/field_sync_demux.h>
 #include <gnuradio/atsc/equalizer.h>
 #include <gnuradio/atsc/fs_checker.h>
 #include <gnuradio/atsc/bit_timing_loop.h>

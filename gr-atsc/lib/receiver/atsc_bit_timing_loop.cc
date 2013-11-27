@@ -97,7 +97,7 @@ atsc_bit_timing_loop::general_work (int noutput_items,
 	for (k = 0; k < noutput_items; k++)
 	{
 		// Check if we will run out of samples
-		if (d_si + (unsigned long)d_interp.ntaps() > ninput_items[0])
+		if (d_si + (int)d_interp.ntaps() > ninput_items[0])
 		{
     			fprintf (stderr, "atsc_bit_timing_loop: ran short on data...\n");
 			break;
