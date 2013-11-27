@@ -27,7 +27,7 @@
 #include <cppunit/TestCase.h>
 
 #include <stdio.h>
-#include <gnuradio/atsc/viterbi_decoder_impl.h>
+#include <gnuradio/atsc/viterbi_decoder.h>
 
 class qa_atsci_viterbi_decoder : public CppUnit::TestCase {
 
@@ -44,7 +44,7 @@ class qa_atsci_viterbi_decoder : public CppUnit::TestCase {
   CPPUNIT_TEST_SUITE_END ();
 
  private:
-  atsci_viterbi_decoder	viterbi;
+  atsc_viterbi_decoder viterbi;
 
   void t0 ();
   void t1 ();

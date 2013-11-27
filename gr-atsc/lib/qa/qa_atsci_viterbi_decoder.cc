@@ -35,7 +35,7 @@
 #define	NELEM(x) (sizeof (x) / sizeof (x[0]))
 
 
-static const int NCODERS = atsci_viterbi_decoder::NCODERS;
+static const int NCODERS = atsc_viterbi_decoder::NCODERS;
 
 #if 0
 static void
