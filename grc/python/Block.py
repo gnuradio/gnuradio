@@ -109,7 +109,7 @@ class Block(_Block, _GUIBlock):
                     # remove excess connections
                     for connection in port.get_connections():
                         self.get_parent().remove_element(connection)
-                    master_port.remove_duplicate(port)
+                    master_port.remove_clone(port)
                     ports.remove(port)
                 # add more ports
                 for i in range(num_ports, nports):

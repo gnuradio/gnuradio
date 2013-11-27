@@ -247,7 +247,7 @@ class Port(_Port, _GUIPort):
         self._clones.append(port)
         return port
 
-    def remove_duplicate(self, port):
+    def remove_clone(self, port):
         """
         Remove a cloned port from the internal list
         Remove to index 0 of the master port name if there are no more clones
