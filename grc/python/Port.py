@@ -235,7 +235,7 @@ class Port(_Port, _GUIPort):
         if not self._clones:  # add index to master port name
             self._name = self._n['name'] + '0'
             if not self._key.isdigit():
-                self._n['key'] = self._name
+                self._key = self._name
 
         # Prepare a copy of the odict for the clone
         n = self._n.copy()
@@ -254,4 +254,6 @@ class Port(_Port, _GUIPort):
         """
         self._clones.remove(port)
         if not self._clones:
-            self._name = self._n['key'] = self._n['name']
+            self._name = self._n['name']
+            if not self._key.isdigit():
+                self._key = self._name
