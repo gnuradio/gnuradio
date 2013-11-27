@@ -219,41 +219,47 @@ class Port(_Port, _GUIPort):
 
     def get_clones(self):
         """
-        Get clones of this master port
+        Get the clones of this master port (nports > 1)
+
+        Returns:
+            a list of ports
         """
         return self._clones
 
     def add_clone(self):
         """
-        Create a clone of this (master) port and store it internally
-        This clone will have the same key. The name get an index
-        If this is the first clone, this (master) port will get a 0 appended to its name
+        Create a clone of this (master) port and store a reference in self._clones.
+
+        The new port name (and key for message ports) will have index 1... appended.
+        If this is the first clone, this (master) port will get a 0 appended to its name (and key)
 
         Returns:
-            the newly create clone
+            the cloned port
         """
-        if not self._clones:  # add index to master port name
+        # add index to master port name if there are no clones yet
+        if not self._clones:
             self._name = self._n['name'] + '0'
-            if not self._key.isdigit():
+            if not self._key.isdigit():  # also update key for none stream ports
                 self._key = self._name
 
         # Prepare a copy of the odict for the clone
         n = self._n.copy()
         if 'nports' in n: n.pop('nports')  # remove nports from the key so the copy cannot be a duplicator
         n['name'] = self._n['name'] + str(len(self._clones) + 1)
-        n['key'] = '99999' if self._key.isdigit() else n['name']
+        n['key'] = '99999' if self._key.isdigit() else n['name']  # dummy value 99999 will be fixed later
 
-        port = self.__class__(self.get_parent(), n, self._dir)
+        port = self.__class__(self.get_parent(), n, self._dir)  # clone
         self._clones.append(port)
         return port
 
     def remove_clone(self, port):
         """
-        Remove a cloned port from the internal list
-        Remove to index 0 of the master port name if there are no more clones
+        Remove a cloned port (from the list of clones only)
+        Remove the index 0 of the master port name (and key9 if there are no more clones left
         """
         self._clones.remove(port)
+        # remove index from master port name if there are no more clones
         if not self._clones:
             self._name = self._n['name']
-            if not self._key.isdigit():
+            if not self._key.isdigit():  # also update key for none stream ports
                 self._key = self._name

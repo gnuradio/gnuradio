@@ -97,26 +97,27 @@ class Block(_Block, _GUIBlock):
         """
         _Block.rewrite(self)
 
-        #adjust nports
+        # adjust nports
         for ports in (self.get_sources(), self.get_sinks()):
             for i, master_port in enumerate(ports):
                 nports = master_port.get_nports() or 1
                 num_ports = 1 + len(master_port.get_clones())
-                if not nports and num_ports == 1:  # no/former master port? skip
+                if not nports and num_ports == 1:  # not a master port and no left-over clones
                     continue
-                # remove excess ports
+                # remove excess cloned ports
                 for port in master_port.get_clones()[nports-1:]:
                     # remove excess connections
                     for connection in port.get_connections():
                         self.get_parent().remove_element(connection)
                     master_port.remove_clone(port)
                     ports.remove(port)
-                # add more ports
+                # add more cloned ports
                 for i in range(num_ports, nports):
                     port = master_port.add_clone()
                     ports.insert(ports.index(master_port) + i, port)
 
             self.back_ofthe_bus(ports)
+            # renumber non-message/-msg ports
             for i, port in enumerate(filter(lambda p: p.get_key().isdigit(), ports)):
                 port._key = str(i)
 
