@@ -54,9 +54,10 @@ namespace gr {
        * \param sizeof_stream_item size of the stream items in bytes.
        * \param value The value of the tags to send, as a PMT.
        * \param nsamps the number of samples between each tag.
+       * \param key The tag key to sent
        */
       static sptr make(size_t sizeof_stream_item,
-                       pmt::pmt_t value, uint64_t nsamps);
+                       pmt::pmt_t value, uint64_t nsamps, pmt::pmt_t key = pmt::intern("strobe"));
 
       /*!
        * Reset the value of the tags being sent.
@@ -65,9 +66,19 @@ namespace gr {
       virtual void set_value(pmt::pmt_t value) = 0;
 
       /*!
+       * Change the tag key we are sending
+       */
+      virtual void set_key(pmt::pmt_t key) = 0;
+
+      /*!
        * Get the value of the tags being sent.
        */
       virtual pmt::pmt_t value() const = 0;
+
+      /*!
+       * Get the key of the tags being sent.
+       */
+      virtual pmt::pmt_t key() const = 0;
 
       /*!
        * Reset the sending interval.
@@ -79,6 +90,7 @@ namespace gr {
        * Get the number of samples between the tag strobe.
        */
       virtual uint64_t nsamps() const = 0;
+
     };
 
   } /* namespace blocks */
