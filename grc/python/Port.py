@@ -184,9 +184,9 @@ class Port(_Port, _GUIPort):
         Returns:
             the number of ports or 1
         """
+        if self._nports == '': return ''
+
         nports = self.get_parent().resolve_dependencies(self._nports)
-        if not nports:  # return blank if nports is blank
-            return ''
         try:
             return max(1, int(self.get_parent().get_parent().evaluate(nports)))
         except:
