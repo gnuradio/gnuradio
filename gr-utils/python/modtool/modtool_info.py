@@ -23,18 +23,23 @@
 import os
 from optparse import OptionGroup
 
-from modtool_base import ModTool
+from modtool_base import ModTool, ModToolException
 from util_functions import get_modname
+
 
 class ModToolInfo(ModTool):
     """ Return information about a given module """
     name = 'info'
     aliases = ('getinfo', 'inf')
+
     def __init__(self):
         ModTool.__init__(self)
+        self._directory = None
+        self._python_readable = False
+        self._suggested_dirs = None
 
     def setup_parser(self):
-        " Initialise the option parser for 'gr_modtool info' "
+        """ Initialise the option parser for 'gr_modtool info' """
         parser = ModTool.setup_parser(self)
         parser.usage = '%prog info [options]. \n Call %prog without any options to run it interactively.'
         ogroup = OptionGroup(parser, "Info options")
@@ -45,28 +50,22 @@ class ModToolInfo(ModTool):
         parser.add_option_group(ogroup)
         return parser
 
-    def setup(self):
+    def setup(self, options, args):
         # Won't call parent's setup(), because that's too chatty
-        (self.options, self.args) = self.parser.parse_args()
+        self._directory = options.directory
+        self._python_readable = options.python_readable
+        self._suggested_dirs = options.suggested_dirs
 
     def run(self):
         """ Go, go, go! """
-        mod_info = {}
-        mod_info['base_dir'] = self._get_base_dir(self.options.directory)
+        mod_info = dict()
+        mod_info['base_dir'] = self._get_base_dir(self._directory)
         if mod_info['base_dir'] is None:
-            if self.options.python_readable:
-                print '{}'
-            else:
-                print "No module found."
-            exit(1)
+            raise ModToolException('{}' if self._python_readable else "No module found.")
         os.chdir(mod_info['base_dir'])
         mod_info['modname'] = get_modname()
         if mod_info['modname'] is None:
-            if self.options.python_readable:
-                print '{}'
-            else:
-                print "No module found."
-            exit(1)
+            raise ModToolException('{}' if self._python_readable else "No module found.")
         if self._info['version'] == '36' and (
                 os.path.isdir(os.path.join('include', mod_info['modname'])) or
                 os.path.isdir(os.path.join('include', 'gnuradio', mod_info['modname']))
@@ -85,7 +84,7 @@ class ModToolInfo(ModTool):
         if build_dir is not None:
             mod_info['build_dir'] = build_dir
             mod_info['incdirs'] += self._get_include_dirs(mod_info)
-        if self.options.python_readable:
+        if self._python_readable:
             print str(mod_info)
         else:
             self._pretty_print(mod_info)
@@ -134,8 +133,8 @@ class ModToolInfo(ModTool):
                     inc_dirs += line.replace('GNURADIO_RUNTIME_INCLUDE_DIRS:%s=' % path_or_internal, '').strip().split(';')
         except IOError:
             pass
-        if len(inc_dirs) == 0 and self.options.suggested_dirs is not None:
-            inc_dirs = [os.path.normpath(path) for path in self.options.suggested_dirs.split(':') if os.path.isdir(path)]
+        if len(inc_dirs) == 0 and self._suggested_dirs is not None:
+            inc_dirs = [os.path.normpath(path) for path in self._suggested_dirs.split(':') if os.path.isdir(path)]
         return inc_dirs
 
     def _pretty_print(self, mod_info):
@@ -154,4 +153,3 @@ class ModToolInfo(ModTool):
                         }[mod_info['version']]
             else:
                 print '%19s: %s' % (index_names[key], mod_info[key])
-
