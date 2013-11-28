@@ -22,15 +22,19 @@
 
 import os
 import re
-import sys
 from optparse import OptionParser, OptionGroup
 
+from gnuradio import gr
 from util_functions import get_modname
-from templates import Templates
+from scm import SCMRepoFactory
 
+class ModToolException(BaseException):
+    """ Standard exception for modtool classes. """
+    pass
 
 class ModTool(object):
     """ Base class for all modtool command classes. """
+    name = 'base'
     def __init__(self):
         self._subdirs = ['lib', 'include', 'python', 'swig', 'grc'] # List subdirs where stuff happens
         self._has_subdirs = {}
@@ -41,8 +45,6 @@ class ModTool(object):
             self._has_subdirs[subdir] = False
             self._skip_subdirs[subdir] = False
         self.parser = self.setup_parser()
-        self.args = None
-        self.options = None
         self._dir = None
 
     def setup_parser(self):
@@ -67,25 +69,25 @@ class ModTool(object):
                 help="Don't do anything in the python/ subdirectory.")
         ogroup.add_option("--skip-grc", action="store_true", default=False,
                 help="Don't do anything in the grc/ subdirectory.")
+        ogroup.add_option("--scm-mode", type="choice", choices=('yes', 'no', 'auto'),
+                default=gr.prefs().get_string('modtool', 'scm_mode', 'no'),
+                help="Use source control management (yes, no or auto).")
         ogroup.add_option("-y", "--yes", action="store_true", default=False,
                 help="Answer all questions with 'yes'. This can overwrite and delete your files, so be careful.")
         parser.add_option_group(ogroup)
         return parser
 
-    def setup(self):
+    def setup(self, options, args):
         """ Initialise all internal variables, such as the module name etc. """
-        (options, self.args) = self.parser.parse_args()
         self._dir = options.directory
         if not self._check_directory(self._dir):
-            print "No GNU Radio module found in the given directory. Quitting."
-            sys.exit(1)
+            raise ModToolException('No GNU Radio module found in the given directory.')
         if options.module_name is not None:
             self._info['modname'] = options.module_name
         else:
             self._info['modname'] = get_modname()
         if self._info['modname'] is None:
-            print "No GNU Radio module found in the given directory. Quitting."
-            sys.exit(1)
+            raise ModToolException('No GNU Radio module found in the given directory.')
         print "GNU Radio module name identified: " + self._info['modname']
         if self._info['version'] == '36' and (
                 os.path.isdir(os.path.join('include', self._info['modname'])) or
@@ -101,9 +103,10 @@ class ModTool(object):
         if options.skip_grc or not self._has_subdirs['grc']:
             self._skip_subdirs['grc'] = True
         self._info['blockname'] = options.block_name
-        self.options = options
         self._setup_files()
         self._info['yes'] = options.yes
+        self.options = options
+        self._setup_scm()
 
     def _setup_files(self):
         """ Initialise the self._file[] dictionary """
@@ -126,6 +129,17 @@ class ModTool(object):
         self._file['cminclude'] = os.path.join(self._info['includedir'], 'CMakeLists.txt')
         self._file['cmswig'] = os.path.join('swig', 'CMakeLists.txt')
         self._file['cmfind'] = os.path.join('cmake', 'Modules', 'howtoConfig.cmake')
+
+
+    def _setup_scm(self, mode='active'):
+        """ Initialize source control management. """
+        if mode == 'active':
+            self.scm = SCMRepoFactory(self.options, '.').make_active_scm_manager()
+        else:
+            self.scm = SCMRepoFactory(self.options, '.').make_empty_scm_manager()
+        if self.scm is None:
+            print "Error: Can't set up SCM."
+            exit(1)
 
     def _check_directory(self, directory):
         """ Guesses if dir is a valid GNU Radio module directory by looking for
@@ -170,6 +184,7 @@ class ModTool(object):
     def run(self):
         """ Override this. """
         pass
+
 
 def get_class_dict(the_globals):
     " Return a dictionary of the available commands in the form command->class "
