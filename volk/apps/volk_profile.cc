@@ -102,7 +102,6 @@ int main(int argc, char *argv[]) {
     VOLK_PROFILE(volk_8ic_x2_multiply_conjugate_16ic, 0, 0, 204602, 400, &results);
     VOLK_PROFILE(volk_8ic_x2_s32f_multiply_conjugate_32fc, 1e-4, 100, 204602, 400, &results);
     VOLK_PROFILE(volk_8i_convert_16i, 0, 0, 204602, 20000, &results);
-    VOLK_PROFILE(volk_8i_convert_16i, 0, 0, 204602, 2000, &results);
     VOLK_PROFILE(volk_8i_s32f_convert_32f, 1e-4, 100, 204602, 2000, &results);
     //VOLK_PROFILE(volk_32fc_s32fc_multiply_32fc, 1e-4, lv_32fc_t(1.0, 0.5), 204602, 1000, &results);
     VOLK_PROFILE(volk_32fc_s32fc_multiply_32fc, 1e-4, 0, 204602, 1000, &results);
