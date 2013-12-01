@@ -4,22 +4,24 @@
 #include <inttypes.h>
 #include <stdio.h>
 #include <math.h>
+#include <string.h>
 
 static inline float Q_rsqrt( float number )
 {
-        long i;
-        float x2, y;
-        const float threehalfs = 1.5F;
+  float x2;
+  const float threehalfs = 1.5F;
+  union f32_to_i32 {
+    int32_t i;
+    float f;
+  } u;
+
+  x2 = number * 0.5F;
+  u.f = number;
+  u.i = 0x5f3759df - ( u.i >> 1 );               // what the fuck?
+  u.f = u.f * ( threehalfs - ( x2 * u.f * u.f ) );   // 1st iteration
+  //u.f  = u.f * ( threehalfs - ( x2 * u.f * u.f ) );   // 2nd iteration, this can be removed
  
-        x2 = number * 0.5F;
-        y  = number;
-        i  = * ( long * ) &y;                       // evil floating point bit level hacking
-        i  = 0x5f3759df - ( i >> 1 );               // what the fuck?
-        y  = * ( float * ) &i;
-        y  = y * ( threehalfs - ( x2 * y * y ) );   // 1st iteration
-//      y  = y * ( threehalfs - ( x2 * y * y ) );   // 2nd iteration, this can be removed
- 
-        return y;
+  return u.f;
 }
 
 #ifdef LV_HAVE_SSE
