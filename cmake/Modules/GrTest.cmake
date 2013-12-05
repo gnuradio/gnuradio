@@ -91,7 +91,11 @@ function(GR_ADD_TEST test_name)
         list(APPEND environs "PATH=${binpath}" "${LD_PATH_VAR}=${libpath}" "PYTHONPATH=${pypath}")
 
         #generate a bat file that sets the environment and runs the test
-        find_program(SHELL sh)
+	if (CMAKE_CROSSCOMPILING)
+                set(SHELL "/bin/sh")
+        else(CMAKE_CROSSCOMPILING)
+                find_program(SHELL sh)
+        endif(CMAKE_CROSSCOMPILING)
         set(sh_file ${CMAKE_CURRENT_BINARY_DIR}/${test_name}_test.sh)
         file(WRITE ${sh_file} "#!${SHELL}\n")
         #each line sets an environment variable

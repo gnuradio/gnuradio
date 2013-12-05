@@ -149,7 +149,7 @@ class dqpsk_mod(qpsk_mod):
     __doc__ += shared_mod_args
 
     def __init__(self, mod_code=_def_mod_code, *args, **kwargs):
-        super(dqpsk_mod, self).__init__(mod_code,
+        super(dqpsk_mod, self).__init__(mod_code, True,
                                         *args, **kwargs)
 
 # /////////////////////////////////////////////////////////////////////////////
@@ -171,7 +171,7 @@ class dqpsk_demod(qpsk_demod):
     __doc__ += shared_demod_args
 
     def __init__(self, mod_code=_def_mod_code, *args, **kwargs):
-        super(dqpsk_demod, self).__init__(mod_code,
+        super(dqpsk_demod, self).__init__(mod_code, True,
                                           *args, **kwargs)
 
 #
