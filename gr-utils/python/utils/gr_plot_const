@@ -114,7 +114,7 @@ class draw_constellation:
         self.sp_const = self.fig.add_subplot(2,2,1, position=[0.575, 0.2, 0.4, 0.6])
         self.sp_const.set_title(("Constellation"), fontsize=self.title_font_size, fontweight="bold")
         self.sp_const.set_xlabel("Inphase", fontsize=self.label_font_size, fontweight="bold")
-        self.sp_const.set_ylabel("Qaudrature", fontsize=self.label_font_size, fontweight="bold")
+        self.sp_const.set_ylabel("Quadrature", fontsize=self.label_font_size, fontweight="bold")
         self.plot_const  = self.sp_const.plot(self.reals, self.imags, 'bo')
 
         # Add plots to mark current location of point between time and constellation plots
