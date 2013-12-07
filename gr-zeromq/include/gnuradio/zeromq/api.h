@@ -1,7 +1,7 @@
 /*
- * Copyright 2011 Free Software Foundation, Inc.
+ * Copyright 2013 Free Software Foundation, Inc.
  *
- * This file is part of GNU Radio
+ * This file is part of GNU Radio.
  *
  * GNU Radio is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,15 +19,15 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef INCLUDED_ZMQBLOCKS_API_H
-#define INCLUDED_ZMQBLOCKS_API_H
+#ifndef INCLUDED_ZEROMQ_API_H
+#define INCLUDED_ZEROMQ_API_H
 
 #include <gnuradio/attributes.h>
 
-#ifdef gnuradio_zmqblocks_EXPORTS
-#  define ZMQBLOCKS_API __GR_ATTR_EXPORT
+#ifdef gnuradio_zeromq_EXPORTS
+#  define ZEROMQ_API __GR_ATTR_EXPORT
 #else
-#  define ZMQBLOCKS_API __GR_ATTR_IMPORT
+#  define ZEROMQ_API __GR_ATTR_IMPORT
 #endif
 
-#endif /* INCLUDED_ZMQBLOCKS_API_H */
+#endif /* INCLUDED_ZEROMQ_API_H */

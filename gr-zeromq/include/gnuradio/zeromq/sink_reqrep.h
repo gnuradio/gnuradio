@@ -1,9 +1,8 @@
 /* -*- c++ -*- */
 /* 
- * Copyright 2013 Institute for Theoretical Information Technology,
- *                RWTH Aachen University
- * 
- * Authors: Johannes Schmitz <schmitz@ti.rwth-aachen.de>
+ * Copyright 2013 Free Software Foundation, Inc.
+ *
+ * This file is part of GNU Radio.
  * 
  * This is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,39 +20,37 @@
  * Boston, MA 02110-1301, USA.
  */
 
+#ifndef INCLUDED_ZEROMQ_SINK_REQREP_H
+#define INCLUDED_ZEROMQ_SINK_REQREP_H
 
-#ifndef INCLUDED_ZMQBLOCKS_SOURCE_REQREP_NOPOLL_H
-#define INCLUDED_ZMQBLOCKS_SOURCE_REQREP_NOPOLL_H
-
-#include <zmqblocks/api.h>
+#include <gnuradio/zeromq/api.h>
 #include <gnuradio/sync_block.h>
 
 namespace gr {
-  namespace zmqblocks {
+  namespace zeromq {
 
     /*!
      * \brief <+description of block+>
-     * \ingroup zmqblocks
+     * \ingroup zeromq
      *
      */
-    class ZMQBLOCKS_API source_reqrep_nopoll : virtual public gr::sync_block
+    class ZEROMQ_API sink_reqrep : virtual public gr::sync_block
     {
-     public:
-      typedef boost::shared_ptr<source_reqrep_nopoll> sptr;
-
+    public:
+      typedef boost::shared_ptr<sink_reqrep> sptr;
+      
       /*!
-       * \brief Return a shared_ptr to a new instance of zmqblocks::source_reqrep_nopoll.
+       * \brief Return a shared_ptr to a new instance of zeromq::sink_reqrep.
        *
-       * To avoid accidental use of raw pointers, zmqblocks::source_reqrep_nopoll's
+       * To avoid accidental use of raw pointers, zeromq::sink_reqrep's
        * constructor is in a private implementation
-       * class. zmqblocks::source_reqrep_nopoll::make is the public interface for
+       * class. zeromq::sink_reqrep::make is the public interface for
        * creating new instances.
        */
       static sptr make(size_t itemsize, char *address);
     };
-
-  } // namespace zmqblocks
+    
+  } // namespace zeromq
 } // namespace gr
 
-#endif /* INCLUDED_ZMQBLOCKS_SOURCE_REQREP_NOPOLL_H */
-
+#endif /* INCLUDED_ZEROMQ_SINK_REQREP_H */

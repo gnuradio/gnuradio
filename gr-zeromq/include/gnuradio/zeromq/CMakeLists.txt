@@ -1,4 +1,4 @@
-# Copyright 2011,2012 Free Software Foundation, Inc.
+# Copyright 2013 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -18,17 +18,18 @@
 # Boston, MA 02110-1301, USA.
 
 ########################################################################
-# Install public header files
+# Install header files
 ########################################################################
 install(FILES
-    api.h
-    sink_reqrep.h
-    source_reqrep.h
-    sink_reqrep_nopoll.h
-    source_reqrep_nopoll.h
-    sink_pushpull.h
-    source_pushpull.h
-    source_pushpull_feedback.h
-    sink_pubsub.h
-    DESTINATION include/zmqblocks
+  api.h
+  sink_pubsub.h
+  sink_pushpull.h
+  sink_reqrep.h
+  sink_reqrep_nopoll.h
+  source_pushpull_feedback.h
+  source_pushpull.h
+  source_reqrep.h
+  source_reqrep_nopoll.h
+  DESTINATION ${GR_INCLUDE_DIR}/gnuradio/zeromq
+  COMPONENT "zeromq_devel"
 )

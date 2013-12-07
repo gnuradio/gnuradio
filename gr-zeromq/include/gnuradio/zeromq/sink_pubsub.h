@@ -1,7 +1,9 @@
 /* -*- c++ -*- */
 /* 
- * Copyright 2013 <+YOU OR YOUR COMPANY+>.
+ * Copyright 2013 Free Software Foundation, Inc.
  * 
+ * This file is part of GNU Radio.
+ *
  * This is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3, or (at your option)
@@ -18,39 +20,37 @@
  * Boston, MA 02110-1301, USA.
  */
 
+#ifndef INCLUDED_ZEROMQ_SINK_PUBSUB_H
+#define INCLUDED_ZEROMQ_SINK_PUBSUB_H
 
-#ifndef INCLUDED_ZMQBLOCKS_SINK_PUBSUB_H
-#define INCLUDED_ZMQBLOCKS_SINK_PUBSUB_H
-
-#include <zmqblocks/api.h>
+#include <gnuradio/zeromq/api.h>
 #include <gnuradio/sync_block.h>
 
 namespace gr {
-  namespace zmqblocks {
+  namespace zeromq {
 
     /*!
      * \brief <+description of block+>
-     * \ingroup zmqblocks
+     * \ingroup zeromq
      *
      */
-    class ZMQBLOCKS_API sink_pubsub : virtual public gr::sync_block
+    class ZEROMQ_API sink_pubsub : virtual public gr::sync_block
     {
-     public:
+    public:
       typedef boost::shared_ptr<sink_pubsub> sptr;
 
       /*!
-       * \brief Return a shared_ptr to a new instance of zmqblocks::sink_pubsub.
+       * \brief Return a shared_ptr to a new instance of zeromq::sink_pubsub.
        *
-       * To avoid accidental use of raw pointers, zmqblocks::sink_pubsub's
+       * To avoid accidental use of raw pointers, zeromq::sink_pubsub's
        * constructor is in a private implementation
-       * class. zmqblocks::sink_pubsub::make is the public interface for
+       * class. zeromq::sink_pubsub::make is the public interface for
        * creating new instances.
        */
       static sptr make(size_t itemsize, char *address);
     };
 
-  } // namespace zmqblocks
+  } // namespace zeromq
 } // namespace gr
 
-#endif /* INCLUDED_ZMQBLOCKS_SINK_PUBSUB_H */
-
+#endif /* INCLUDED_ZEROMQ_SINK_PUBSUB_H */
