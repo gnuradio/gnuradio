@@ -31,7 +31,7 @@
 #include <deque>
 
 namespace gr {
-  
+
   class vmcircbuf;
 
   /*!
