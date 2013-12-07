@@ -40,7 +40,7 @@ namespace gr {
 
   /* ----------------------------------------------------------------------------
   			Notes on storage management
-  
+
    Pretty much all the fundamental classes are now using the
    shared_ptr stuff for automatic reference counting. To ensure that
    no mistakes are made, we make the constructors for classes private,
@@ -68,7 +68,7 @@ namespace gr {
   /*
    * Compute the minimum number of buffer items that work (i.e.,
    * address space wrap-around works).  To work is to satisfy this
-   * contraint for integer buffer_size and k:
+   * constraint for integer buffer_size and k:
    *
    *     type_size * nitems == k * page_size
    */
@@ -79,7 +79,7 @@ namespace gr {
   }
 
 
-  buffer::buffer(int nitems, size_t sizeof_item, block_sptr link) 
+  buffer::buffer(int nitems, size_t sizeof_item, block_sptr link)
     : d_base(0), d_bufsize(0), d_max_reader_delay(0), d_vmcircbuf(0),
       d_sizeof_item(sizeof_item), d_link(link),
       d_write_index(0), d_abs_write_offset(0), d_done(false),
@@ -356,7 +356,7 @@ namespace gr {
 	  v.back().marked_deleted.clear();
 	}
       }
-      
+
       itr++;
     }
   }
