@@ -86,7 +86,7 @@ CPACK_COMPONENT("zeromq_swig"
 # Add subdirectories
 ########################################################################
 add_subdirectory(include/gnuradio/zeromq)
-#add_subdirectory(lib)
+add_subdirectory(lib)
 #if(ENABLE_PYTHON)
 #    add_subdirectory(swig)
 #    add_subdirectory(python/zeromq)

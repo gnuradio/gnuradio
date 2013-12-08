@@ -1,9 +1,8 @@
 /* -*- c++ -*- */
 /* 
- * Copyright 2013 Institute for Theoretical Information Technology,
- *                RWTH Aachen University
+ * Copyright 2013 Free Software Foundation, Inc.
  * 
- * Authors: Johannes Schmitz <schmitz@ti.rwth-aachen.de>
+ * This file is part of GNU Radio.
  * 
  * This is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -24,11 +23,11 @@
 #ifndef INCLUDED_ZMQBLOCKS_SINK_REQREP_NOPOLL_IMPL_H
 #define INCLUDED_ZMQBLOCKS_SINK_REQREP_NOPOLL_IMPL_H
 
-#include <zmqblocks/sink_reqrep_nopoll.h>
-#include "zmq.hpp"
+#include <gnuradio/zeromq/sink_reqrep_nopoll.h>
+#include <zmq.hpp>
 
 namespace gr {
-  namespace zmqblocks {
+  namespace zeromq {
 
     class sink_reqrep_nopoll_impl : public sink_reqrep_nopoll
     {
@@ -46,7 +45,7 @@ namespace gr {
                  gr_vector_void_star &output_items);
     };
 
-  } // namespace zmqblocks
+  } // namespace zeromq
 } // namespace gr
 
 #endif /* INCLUDED_ZMQBLOCKS_SINK_REQREP_NOPOLL_IMPL_H */

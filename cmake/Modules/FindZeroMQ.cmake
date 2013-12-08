@@ -1,45 +1,26 @@
-# - Try to find ZeroMQ headers and libraries
-# - THANKS CUBIT FOR THIS FIND MODULE
-#
-# Usage of this module as follows:
-#
-#     find_package(ZeroMQ)
-#
-# Variables used by this module, they can change the default behaviour and need
-# to be set before calling find_package:
-#
-#  ZeroMQ_ROOT_DIR  Set this variable to the root installation of
-#                            ZeroMQ if the module has problems finding
-#                            the proper installation path.
-#
-# Variables defined by this module:
-#
-#  ZEROMQ_FOUND              System has ZeroMQ libs/headers
-#  ZeroMQ_LIBRARIES          The ZeroMQ libraries
-#  ZeroMQ_INCLUDE_DIRS       The location of ZeroMQ headers
+INCLUDE(FindPkgConfig)
+PKG_CHECK_MODULES(PC_ZEROMQ "libzmq")
 
-find_path(ZeroMQ_ROOT_DIR
-    NAMES include/zmq.h
-)
-
-find_library(ZeroMQ_LIBRARIES
-    NAMES zmq libzmq
-    HINTS ${ZeroMQ_ROOT_DIR}/lib
-)
-
-find_path(ZeroMQ_INCLUDE_DIRS
+FIND_PATH(ZEROMQ_INCLUDE_DIRS
     NAMES zmq.h
-    HINTS ${ZeroMQ_ROOT_DIR}/include
+    HINTS ${PC_ZEROMQ_INCLUDE_DIR}
+    ${CMAKE_INSTALL_PREFIX}/include
+    PATHS
+    /usr/local/include
+    /usr/include
 )
 
-include(FindPackageHandleStandardArgs)
-find_package_handle_standard_args(ZeroMQ DEFAULT_MSG
-    ZeroMQ_LIBRARIES
-    ZeroMQ_INCLUDE_DIRS
+FIND_LIBRARY(ZEROMQ_LIBRARIES
+    NAMES zmq
+    HINTS ${PC_ZEROMQ_LIBDIR}
+    ${CMAKE_INSTALL_PREFIX}/lib
+    ${CMAKE_INSTALL_PREFIX}/lib64
+    PATHS
+    ${ZEROMQ_INCLUDE_DIRS}/../lib
+    /usr/local/lib
+    /usr/lib
 )
 
-mark_as_advanced(
-    ZeroMQ_ROOT_DIR
-    ZeroMQ_LIBRARIES
-    ZeroMQ_INCLUDE_DIRS
-)
+INCLUDE(FindPackageHandleStandardArgs)
+FIND_PACKAGE_HANDLE_STANDARD_ARGS(ZEROMQ DEFAULT_MSG ZEROMQ_LIBRARIES ZEROMQ_INCLUDE_DIRS)
+MARK_AS_ADVANCED(ZEROMQ_LIBRARIES ZEROMQ_INCLUDE_DIRS)

@@ -1,9 +1,8 @@
 /* -*- c++ -*- */
 /* 
- * Copyright 2013 Institute for Theoretical Information Technology,
- *                RWTH Aachen University
- * 
- * Authors: Johannes Schmitz <schmitz@ti.rwth-aachen.de>
+ * Copyright 2013 Free Software Foundation, Inc.
+ *
+ * This file is part of GNU Radio.
  * 
  * This is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -29,54 +28,46 @@
 #include "sink_pubsub_impl.h"
 
 namespace gr {
-  namespace zmqblocks {
-
+  namespace zeromq {
+    
     sink_pubsub::sptr
     sink_pubsub::make(size_t itemsize, char *address)
     {
-        return gnuradio::get_initial_sptr
-            (new sink_pubsub_impl(itemsize, address));
+      return gnuradio::get_initial_sptr
+	(new sink_pubsub_impl(itemsize, address));
     }
-
-    /*
-     * The private constructor
-     */
+    
     sink_pubsub_impl::sink_pubsub_impl(size_t itemsize, char *address)
       : gr::sync_block("sink_pubsub",
                        gr::io_signature::make(1, 1, itemsize),
                        gr::io_signature::make(0, 0, 0)),
         d_itemsize(itemsize)
     {
-        d_context = new zmq::context_t(1);
-        d_socket = new zmq::socket_t(*d_context, ZMQ_PUB);
-        d_socket->bind(address);
-        std::cout << "sink_pubsub on " << address << std::endl;
+      d_context = new zmq::context_t(1);
+      d_socket = new zmq::socket_t(*d_context, ZMQ_PUB);
+      d_socket->bind(address);
     }
-
-    /*
-     * Our virtual destructor.
-     */
+    
     sink_pubsub_impl::~sink_pubsub_impl()
     {
-        delete(d_socket);
-        delete(d_context);
+      delete d_socket;
+      delete d_context;
     }
-
+    
     int
     sink_pubsub_impl::work(int noutput_items,
                            gr_vector_const_void_star &input_items,
                            gr_vector_void_star &output_items)
     {
-        const char *in = (const char *) input_items[0];
-        // create message copy and send
-        zmq::message_t msg(d_itemsize*noutput_items);
-        memcpy((void *)msg.data(), in, d_itemsize*noutput_items);
-        d_socket->send(msg);
+      const char *in = (const char *)input_items[0];
 
-        return noutput_items;
-
+      // create message copy and send
+      zmq::message_t msg(d_itemsize*noutput_items);
+      memcpy((void *)msg.data(), in, d_itemsize*noutput_items);
+      d_socket->send(msg);
+      
+      return noutput_items;
     }
-
-  } /* namespace zmqblocks */
+    
+  } /* namespace zeromq */
 } /* namespace gr */
-

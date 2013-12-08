@@ -1,9 +1,8 @@
 /* -*- c++ -*- */
 /* 
- * Copyright 2013 Institute for Theoretical Information Technology,
- *                RWTH Aachen University
+ * Copyright 2013 Free Software Foundation, Inc.
  * 
- * Authors: Johannes Schmitz <schmitz@ti.rwth-aachen.de>
+ * This file is part of GNU Radio.
  * 
  * This is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -29,7 +28,7 @@
 #include "sink_reqrep_impl.h"
 
 namespace gr {
-  namespace zmqblocks {
+  namespace zeromq {
 
     sink_reqrep::sptr
     sink_reqrep::make(size_t itemsize, char *address)
@@ -93,6 +92,6 @@ namespace gr {
         }
         return 0;
     }
-  } /* namespace zmqblocks */
+  } /* namespace zeromq */
 } /* namespace gr */
 
