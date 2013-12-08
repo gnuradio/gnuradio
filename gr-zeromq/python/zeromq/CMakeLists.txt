@@ -33,7 +33,7 @@ GR_PYTHON_INSTALL(
     __init__.py
     rpc_manager.py
     probe_manager.py
-    DESTINATION ${GR_PYTHON_DIR}/zmqblocks
+    DESTINATION ${GR_PYTHON_DIR}/gnuradio/zeromq
 )
 
 ########################################################################
@@ -41,5 +41,5 @@ GR_PYTHON_INSTALL(
 ########################################################################
 include(GrTest)
 
-set(GR_TEST_TARGET_DEPS gnuradio-zmqblocks)
+set(GR_TEST_TARGET_DEPS gnuradio-zeromq)
 set(GR_TEST_PYTHON_DIRS ${CMAKE_BINARY_DIR}/swig)
