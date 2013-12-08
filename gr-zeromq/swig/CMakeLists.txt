@@ -1,4 +1,4 @@
-# Copyright 2011 Free Software Foundation, Inc.
+# Copyright 2013 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -18,40 +18,40 @@
 # Boston, MA 02110-1301, USA.
 
 ########################################################################
-# Include swig generation macros
-########################################################################
-find_package(SWIG)
-find_package(PythonLibs)
-if(NOT SWIG_FOUND OR NOT PYTHONLIBS_FOUND)
-    return()
-endif()
-include(GrSwig)
-include(GrPython)
-
-########################################################################
 # Setup swig generation
 ########################################################################
-foreach(incdir ${GNURADIO_RUNTIME_INCLUDE_DIRS})
-    list(APPEND GR_SWIG_INCLUDE_DIRS ${incdir}/gnuradio/swig)
-endforeach(incdir)
+include(GrPython)
+include(GrSwig)
 
-set(GR_SWIG_LIBRARIES gnuradio-zmqblocks)
-set(GR_SWIG_DOC_FILE ${CMAKE_CURRENT_BINARY_DIR}/zmqblocks_swig_doc.i)
-set(GR_SWIG_DOC_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/../include)
+set(GR_SWIG_INCLUDE_DIRS
+    ${GR_ZEROMQ_INCLUDE_DIRS}
+    ${GNURADIO_RUNTIME_SWIG_INCLUDE_DIRS}
+    ${Boost_INCLUDE_DIRS}
+    ${ZEROMQ_INCLUDE_DIRS}
+)
 
-GR_SWIG_MAKE(zmqblocks_swig zmqblocks_swig.i)
+if(ENABLE_GR_CTRLPORT)
+  list(APPEND GR_SWIG_FLAGS "-DGR_CTRLPORT")
+  list(APPEND GR_SWIG_INCLUDE_DIRS ${ICE_INCLUDE_DIR})
+endif(ENABLE_GR_CTRLPORT)
 
-########################################################################
-# Install the build swig module
-########################################################################
-GR_SWIG_INSTALL(TARGETS zmqblocks_swig DESTINATION ${GR_PYTHON_DIR}/zmqblocks)
+set(GR_SWIG_DOC_FILE ${CMAKE_CURRENT_BINARY_DIR}/zeromq_swig_doc.i)
+set(GR_SWIG_DOC_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/../include/gnuradio/zeromq)
+set(GR_SWIG_DOCS_TARGET_DEPS runtime_swig_swig_doc)
+set(GR_SWIG_LIBRARIES gnuradio-zeromq)
 
-########################################################################
-# Install swig .i files for development
-########################################################################
+GR_SWIG_MAKE(zeromq_swig zeromq_swig.i)
+
+GR_SWIG_INSTALL(
+    TARGETS zeromq_swig
+    DESTINATION ${GR_PYTHON_DIR}/gnuradio/zeromq
+    COMPONENT "zeromq_python"
+)
+
 install(
     FILES
-    zmqblocks_swig.i
-    ${CMAKE_CURRENT_BINARY_DIR}/zmqblocks_swig_doc.i
-    DESTINATION ${GR_INCLUDE_DIR}/zmqblocks/swig
+    zeromq_swig.i
+    ${CMAKE_CURRENT_BINARY_DIR}/zeromq_swig_doc.i
+    DESTINATION ${GR_INCLUDE_DIR}/gnuradio/swig
+    COMPONENT "zeromq_swig"
 )
