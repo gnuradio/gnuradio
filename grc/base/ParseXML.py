@@ -20,6 +20,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 from lxml import etree
 from . import odict
 
+xml_failures = {};
+
 class XMLSyntaxError(Exception):
     def __init__(self, error_log):
         self._error_log = error_log
@@ -38,11 +40,15 @@ def validate_dtd(xml_file, dtd_file=None):
     #perform parsing, use dtd validation if dtd file is not specified
     parser = etree.XMLParser(dtd_validation=not dtd_file)
     xml = etree.parse(xml_file, parser=parser)
-    if parser.error_log: raise XMLSyntaxError(parser.error_log)
+    if parser.error_log: 
+        xml_failures[xml_file] = parser.error_log;
+        raise XMLSyntaxError(parser.error_log)
     #perform dtd validation if the dtd file is specified
     if not dtd_file: return
     dtd = etree.DTD(dtd_file)
-    if not dtd.validate(xml.getroot()): raise XMLSyntaxError(dtd.error_log)
+    if not dtd.validate(xml.getroot()): 
+        xml_failures[xml_file] = dtd.error_log;
+        raise XMLSyntaxError(dtd.error_log)
 
 def from_file(xml_file):
     """

@@ -39,6 +39,7 @@ GR_PYTHON_INSTALL(FILES
     MainWindow.py
     Messages.py
     NotebookPage.py
+    ParseDialog.py
     PropsDialog.py
     Preferences.py
     StateCache.py

@@ -99,6 +99,8 @@ class Platform(_Element):
                 try: #try to add the xml file as a block tree
                     ParseXML.validate_dtd(xml_file, BLOCK_TREE_DTD)
                     self._block_tree_files.append(xml_file)
+                    # remove the block DTD error, since iti s a valid block tree
+                    ParseXML.xml_failures.pop(xml_file)
                 except ParseXML.XMLSyntaxError, e:
                     print >> sys.stderr, 'Warning: Block validation failed:\n\t%s\n\tIgnoring: %s'%(e, xml_file)
             except Exception, e:

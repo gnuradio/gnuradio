@@ -354,3 +354,8 @@ BUSSIFY_SINKS = Action(
     tooltip='Gang sink ports into a single bus port',
     stock_id=gtk.STOCK_JUMP_TO,
 )
+PARSER_ERRORS = Action(
+    label='_Parser Errors',
+    tooltip='View errors that occured while parsing XML files',
+    stock_id=gtk.STOCK_DIALOG_ERROR,
+)

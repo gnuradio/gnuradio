@@ -31,6 +31,7 @@ import Messages
 from .. base import ParseXML
 from MainWindow import MainWindow
 from PropsDialog import PropsDialog
+from ParseDialog import ParseDialog
 import Dialogs
 from FileDialogs import OpenFlowGraphFileDialog, SaveFlowGraphFileDialog, SaveImageFileDialog
 
@@ -114,7 +115,7 @@ class ActionHandler:
                 Actions.FLOW_GRAPH_CLOSE, Actions.ABOUT_WINDOW_DISPLAY,
                 Actions.FLOW_GRAPH_SCREEN_CAPTURE, Actions.HELP_WINDOW_DISPLAY,
                 Actions.TYPES_WINDOW_DISPLAY, Actions.TOGGLE_BLOCKS_WINDOW,
-                Actions.TOGGLE_REPORTS_WINDOW,
+                Actions.TOGGLE_REPORTS_WINDOW, Actions.PARSER_ERRORS,
             ): action.set_sensitive(True)
             if not self.init_file_paths:
                 self.init_file_paths = Preferences.files_open()
@@ -376,6 +377,11 @@ class ActionHandler:
                     n = self.get_page().get_state_cache().get_current_state()
                     self.get_flow_graph().import_data(n)
                     self.get_flow_graph().update()
+        ##################################################
+        # View Parser Errors
+        ##################################################
+        elif action == Actions.PARSER_ERRORS:
+            ParseDialog(ParseXML.xml_failures).run()
         ##################################################
         # Undo/Redo
         ##################################################
