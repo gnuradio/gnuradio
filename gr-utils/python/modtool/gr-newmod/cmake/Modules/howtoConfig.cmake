@@ -6,7 +6,7 @@ FIND_PATH(
     NAMES howto/api.h
     HINTS $ENV{HOWTO_DIR}/include
         ${PC_HOWTO_INCLUDEDIR}
-    PATHS ${CMAKE_INSTALL_PREEFIX}/include
+    PATHS ${CMAKE_INSTALL_PREFIX}/include
           /usr/local/include
           /usr/include
 )
