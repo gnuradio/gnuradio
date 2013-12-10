@@ -67,16 +67,18 @@ namespace gr {
       jack_source *self = (jack_source *)arg;
       unsigned int write_size = nframes*sizeof(sample_t);
       
-      if(jack_ringbuffer_write_space (self->d_ringbuffer) < write_size) {
-        self->d_noverruns++;
-        // FIXME: move this fputs out, we shouldn't use blocking calls in process()
-        fputs ("jO", stderr);
-        return 0;
+      for(int i = 0; i < self->d_portcount; i++) {
+        if(jack_ringbuffer_write_space (self->d_ringbuffer[i]) < write_size) {
+          self->d_noverruns++;
+          // FIXME: move this fputs out, we shouldn't use blocking calls in process()
+          fputs ("jO", stderr);
+          return 0;
+        }
+        
+        char *buffer = (char *)jack_port_get_buffer(self->d_jack_input_port[i], nframes);
+
+        jack_ringbuffer_write (self->d_ringbuffer[i], buffer, write_size);
       }
-
-      char *buffer = (char *)jack_port_get_buffer(self->d_jack_input_port, nframes);
-
-      jack_ringbuffer_write (self->d_ringbuffer, buffer, write_size);
 
 #ifndef NO_PTHREAD
       // Tell the source thread there is data in the ringbuffer.
@@ -106,7 +108,9 @@ namespace gr {
         d_device_name(device_name.empty() ? default_device_name() : device_name),
         d_ok_to_block(ok_to_block),
         d_jack_client(0),
-        d_ringbuffer(0),
+        d_portcount(0),
+        d_jack_input_port(),        
+        d_ringbuffer(),
         d_noverruns(0)
     {
 #ifndef NO_PTHREAD
@@ -136,20 +140,12 @@ namespace gr {
 
       //jack_on_shutdown (d_jack_client, &jack_shutdown, (void*)this);
 
-      d_jack_input_port = jack_port_register(d_jack_client, "in",
-                                             JACK_DEFAULT_AUDIO_TYPE,
-                                             JackPortIsInput, 0);
-
       d_jack_buffer_size = jack_get_buffer_size(d_jack_client);
 
       set_output_multiple(d_jack_buffer_size);
 
-      d_ringbuffer = jack_ringbuffer_create(N_BUFFERS*d_jack_buffer_size*sizeof(sample_t));
-      if(d_ringbuffer == NULL)
-        bail("jack_ringbuffer_create failed", 0);
-
       assert(sizeof(float)==sizeof(sample_t));
-      set_output_signature(io_signature::make(1, 1, sizeof(sample_t)));
+      set_output_signature(io_signature::make(1, MAX_PORTS, sizeof(sample_t)));
 
       jack_nframes_t sample_rate = jack_get_sample_rate(d_jack_client);
 
@@ -163,6 +159,24 @@ namespace gr {
     bool
     jack_source::check_topology(int ninputs, int noutputs)
     {
+
+      if(noutputs > MAX_PORTS)
+        return false;
+
+      d_portcount = noutputs;  // # of channels we're really using
+
+      // Create ports and ringbuffers
+      for(int i = 0; i < d_portcount; i++) {
+        std::string portname("in" + boost::to_string(i));
+
+        d_jack_input_port[i] = jack_port_register(d_jack_client, portname.c_str(),
+          JACK_DEFAULT_AUDIO_TYPE, JackPortIsInput, 0);
+
+        d_ringbuffer[i] = jack_ringbuffer_create(N_BUFFERS*d_jack_buffer_size*sizeof(sample_t));
+        if(d_ringbuffer[i] == NULL)
+          bail("jack_ringbuffer_create failed", 0);
+      }
+
       // tell the JACK server that we are ready to roll
       if(jack_activate (d_jack_client))
         throw std::runtime_error("audio_jack_source");
@@ -173,7 +187,10 @@ namespace gr {
     jack_source::~jack_source()
     {
       jack_client_close(d_jack_client);
-      jack_ringbuffer_free(d_ringbuffer);
+
+
+      for(int i = 0; i < d_portcount; i++)
+        jack_ringbuffer_free(d_ringbuffer[i]);
     }
 
     int
@@ -181,42 +198,51 @@ namespace gr {
                       gr_vector_const_void_star &input_items,
                       gr_vector_void_star &output_items)
     {
-      // read_size and work_size are in bytes
-      unsigned int read_size;
+
+      const float **out = (const float **)&output_items[0];
 
       // Minimize latency
       noutput_items = std::min (noutput_items, (int)d_jack_buffer_size);
 
-      int work_size = noutput_items*sizeof(sample_t);
+      for(int i = 0; i < d_portcount; i++) {
 
-      while(work_size > 0) {
-        unsigned int read_space;    // bytes
+        int k = 0;
+
+        // read_size and work_size are in bytes
+        unsigned int read_size;
+
+        int work_size = noutput_items*sizeof(sample_t);
+
+        while(work_size > 0) {
+          unsigned int read_space;    // bytes
 
 #ifdef NO_PTHREAD
-        while((read_space=jack_ringbuffer_read_space (d_ringbuffer)) <
-              d_jack_buffer_size*sizeof(sample_t)) {
-          usleep(1000000*((d_jack_buffer_size-read_space/sizeof(sample_t))/d_sampling_rate));
-        }
+          while((read_space=jack_ringbuffer_read_space (d_ringbuffer[i])) <
+                d_jack_buffer_size*sizeof(sample_t)) {
+            usleep(1000000*((d_jack_buffer_size-read_space/sizeof(sample_t))/d_sampling_rate));
+          }
 #else
 
-        // JACK actually requires POSIX
-        pthread_mutex_lock(&d_jack_process_lock);
-        while((read_space = jack_ringbuffer_read_space(d_ringbuffer)) <
-              d_jack_buffer_size*sizeof(sample_t)) {
-          // wait until jack_source_process() signals more data
-          pthread_cond_wait(&d_ringbuffer_ready, &d_jack_process_lock);
-        }
-        pthread_mutex_unlock(&d_jack_process_lock);
+          // JACK actually requires POSIX
+          pthread_mutex_lock(&d_jack_process_lock);
+          while((read_space = jack_ringbuffer_read_space(d_ringbuffer[i])) <
+                d_jack_buffer_size*sizeof(sample_t)) {
+            // wait until jack_source_process() signals more data
+            pthread_cond_wait(&d_ringbuffer_ready, &d_jack_process_lock);
+          }
+          pthread_mutex_unlock(&d_jack_process_lock);
 #endif
 
-        read_space -= read_space%(d_jack_buffer_size*sizeof(sample_t));
-        read_size = std::min(read_space, (unsigned int)work_size);
+          read_space -= read_space%(d_jack_buffer_size*sizeof(sample_t));
+          read_size = std::min(read_space, (unsigned int)work_size);
 
-        if(jack_ringbuffer_read(d_ringbuffer, (char *) output_items[0],
-                                read_size) < read_size) {
-          bail("jack_ringbuffer_read failed", 0);
+          if(jack_ringbuffer_read(d_ringbuffer[i], (char *) &(out[i][k]),
+                                  read_size) < read_size) {
+            bail("jack_ringbuffer_read failed", 0);
+          }
+          work_size -= read_size;
+          k += read_size/sizeof(sample_t);
         }
-        work_size -= read_size;
       }
 
       return noutput_items;
