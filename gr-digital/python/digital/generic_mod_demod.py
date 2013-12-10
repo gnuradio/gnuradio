@@ -125,7 +125,7 @@ class generic_mod(gr.hier_block2):
         self.pre_diff_code = pre_diff_code and self._constellation.apply_pre_diff_code()
 
         if self._samples_per_symbol < 2:
-            raise TypeError, ("sbp must be >= 2, is %f" % self._samples_per_symbol)
+            raise TypeError, ("sps must be >= 2, is %f" % self._samples_per_symbol)
         
         arity = pow(2,self.bits_per_symbol())
         
@@ -263,7 +263,7 @@ class generic_demod(gr.hier_block2):
         self._differential = differential
 
         if self._samples_per_symbol < 2:
-            raise TypeError, ("sbp must be >= 2, is %d" % self._samples_per_symbol)
+            raise TypeError, ("sps must be >= 2, is %d" % self._samples_per_symbol)
 
         # Only apply a predifferential coding if the constellation also supports it.
         self.pre_diff_code = pre_diff_code and self._constellation.apply_pre_diff_code()
