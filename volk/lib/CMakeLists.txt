@@ -154,7 +154,7 @@ endif()
 # eliminate AVX if cvtpi32_ps intrinsic fails on Apple
 ########################################################################
 
-if(${HAVE_XGETBV} AND APPLE)
+if(${HAVE_XGETBV})
     # check to see if the compiler/linker works with cvtpi32_ps instrinsic
     file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/test_cvtpi32_ps.c "#include <immintrin.h>\nint main (void) {__m128 __a; __m64 __b; __m128 foo = _mm_cvtpi32_ps(__a, __b); return (0); }")
     execute_process(COMMAND ${CMAKE_C_COMPILER} -mavx -o
