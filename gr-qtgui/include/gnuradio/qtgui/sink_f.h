@@ -23,7 +23,10 @@
 #ifndef INCLUDED_QTGUI_SINK_F_H
 #define INCLUDED_QTGUI_SINK_F_H
 
+#ifdef ENABLE_PYTHON
 #include <Python.h>
+#endif
+
 #include <gnuradio/qtgui/api.h>
 #include <gnuradio/block.h>
 #include <qapplication.h>
@@ -74,7 +77,10 @@ namespace gr {
 		       QWidget *parent=NULL);
 
       virtual void exec_() = 0;
+
+#ifdef ENABLE_PYTHON
       virtual PyObject* pyqwidget() = 0;
+#endif
 
       virtual void set_fft_size(const int fftsize) = 0;
       virtual int fft_size() const = 0;

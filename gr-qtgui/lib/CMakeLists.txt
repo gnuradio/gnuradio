@@ -143,10 +143,15 @@ list(APPEND qtgui_libs
     volk
     ${QWT_LIBRARIES}
     ${QT_LIBRARIES}
-    ${PYTHON_LIBRARIES}
     ${FFTW3F_LIBRARIES}
     ${LOG4CPP_LIBRARIES}
 )
+
+if(ENABLE_PYTHON)
+  list(APPEND qtgui_libs
+    ${PYTHON_LIBRARIES}
+  )
+endif(ENABLE_PYTHON)
 
 add_definitions(-DQWT_DLL) #setup QWT library linkage
 add_library(gnuradio-qtgui SHARED ${qtgui_srcs})

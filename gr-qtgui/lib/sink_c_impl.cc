@@ -160,6 +160,7 @@ namespace gr {
       return d_main_gui->qwidget();
     }
 
+#ifdef ENABLE_PYTHON
     PyObject*
     sink_c_impl::pyqwidget()
     {
@@ -167,6 +168,7 @@ namespace gr {
       PyObject *retarg = Py_BuildValue("N", w);
       return retarg;
     }
+#endif
 
     void
     sink_c_impl::set_fft_size(const int fftsize)
