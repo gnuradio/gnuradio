@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2006,2009,2013 Free Software Foundation, Inc.
+ * Copyright 2013 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -24,56 +24,40 @@
 #include <config.h>
 #endif
 
-#include <gnuradio/constants.h>
+#include <volk/constants.h>
 
-namespace gr {
+char*
+volk_prefix()
+{
+  return "@prefix@";
+}
 
-  const std::string
-  prefix()
-  {
-    return "@prefix@";
-  }
+char*
+volk_build_date()
+{
+  return "@BUILD_DATE@";
+}
 
-  const std::string
-  sysconfdir()
-  {
-    return "@SYSCONFDIR@";
-  }
+char*
+volk_version()
+{
+  return "@VERSION@";
+}
 
-  const std::string
-  prefsdir()
-  {
-    return "@GR_PREFSDIR@";
-  }
+char*
+volk_c_compiler()
+{
+  return "@cmake_c_compiler_version@";
+}    
 
-  const std::string
-  build_date()
-  {
-    return "@BUILD_DATE@";
-  }
+char*
+volk_compiler_flags()
+{
+  return "@COMPILER_INFO@";
+}    
 
-  const std::string
-  version()
-  {
-    return "@VERSION@";
-  }
-
-  const std::string
-  c_compiler()
-  {
-    return "@cmake_c_compiler_version@";
-  }    
-
-  const std::string
-  cxx_compiler()
-  {
-    return "@cmake_cxx_compiler_version@";
-  }    
-
-  const std::string
-  compiler_flags()
-  {
-    return "@COMPILER_INFO@";
-  }    
-
-} /* namespace gr */
+char*
+volk_available_machines()
+{
+  return "@available_machines@";
+}    

@@ -20,60 +20,20 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#if HAVE_CONFIG_H
-#include <config.h>
-#endif
+#ifndef INCLUDED_VOLK_CONSTANTS_H
+#define INCLUDED_VOLK_CONSTANTS_H
 
-#include <gnuradio/constants.h>
+#include <volk/volk_common.h>
 
-namespace gr {
+__VOLK_DECL_BEGIN
 
-  const std::string
-  prefix()
-  {
-    return "@prefix@";
-  }
+VOLK_API char* volk_prefix();
+VOLK_API char* volk_build_date();
+VOLK_API char* volk_version();
+VOLK_API char* volk_c_compiler();
+VOLK_API char* volk_compiler_flags();
+VOLK_API char* volk_available_machines();
 
-  const std::string
-  sysconfdir()
-  {
-    return "@SYSCONFDIR@";
-  }
+__VOLK_DECL_END
 
-  const std::string
-  prefsdir()
-  {
-    return "@GR_PREFSDIR@";
-  }
-
-  const std::string
-  build_date()
-  {
-    return "@BUILD_DATE@";
-  }
-
-  const std::string
-  version()
-  {
-    return "@VERSION@";
-  }
-
-  const std::string
-  c_compiler()
-  {
-    return "@cmake_c_compiler_version@";
-  }    
-
-  const std::string
-  cxx_compiler()
-  {
-    return "@cmake_cxx_compiler_version@";
-  }    
-
-  const std::string
-  compiler_flags()
-  {
-    return "@COMPILER_INFO@";
-  }    
-
-} /* namespace gr */
+#endif /* INCLUDED_VOLK_CONSTANTS_H */
