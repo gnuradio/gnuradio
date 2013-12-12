@@ -25,6 +25,7 @@
 #endif
 
 #include <volk/constants.h>
+#include "volk/volk.h"
 #include <boost/program_options.hpp>
 #include <iostream>
 
@@ -42,12 +43,21 @@ main(int argc, char **argv)
     ("builddate", "print VOLK build date (RFC2822 format)")
     ("cc", "print VOLK C compiler version")
     ("cflags", "print VOLK CFLAGS")
-    ("machines", "print VOLK machines ")
+    ("all-machines", "print VOLK machines built into library")
+    ("avail-machines", "print VOLK machines the current platform can use")
+    ("machine", "print the VOLK machine that will be used")
     ("version,v", "print VOLK version")
     ;
 
-  po::store(po::parse_command_line(argc, argv, desc), vm);
-  po::notify(vm);
+  try {
+    po::store(po::parse_command_line(argc, argv, desc), vm);
+    po::notify(vm);
+  }
+  catch (po::error& error){
+    std::cerr << "Error: " << error.what() << std::endl << std::endl;
+    std::cerr << desc << std::endl;
+    return 1;
+  }
 
   if(vm.size() == 0 || vm.count("help")) {
     std::cout << desc << std::endl;
@@ -69,8 +79,18 @@ main(int argc, char **argv)
   if(vm.count("cflags"))
     std::cout << volk_compiler_flags() << std::endl;
 
-  if(vm.count("machines"))
-    std::cout << volk_available_machines() << std::endl;
+  // stick an extra ';' to make output of this and avail-machines the
+  // same structure for easier parsing
+  if(vm.count("all-machines"))
+    std::cout << volk_available_machines() << ";" << std::endl;
+
+  if(vm.count("avail-machines")) {
+    volk_list_machines();
+  }
+
+  if(vm.count("machine")) {
+    std::cout << volk_get_machine() << std::endl;
+  }
 
   return 0;
 }

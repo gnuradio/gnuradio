@@ -48,8 +48,15 @@ main(int argc, char **argv)
     ("version,v", "print gnuradio version")
     ;
 
-  po::store(po::parse_command_line(argc, argv, desc), vm);
-  po::notify(vm);
+  try {
+    po::store(po::parse_command_line(argc, argv, desc), vm);
+    po::notify(vm);
+  }
+  catch (po::error& error){
+    std::cerr << "Error: " << error.what() << std::endl << std::endl;
+    std::cerr << desc << std::endl;
+    return 1;
+  }
 
   if(vm.size() == 0 || vm.count("help")) {
     std::cout << desc << std::endl;
