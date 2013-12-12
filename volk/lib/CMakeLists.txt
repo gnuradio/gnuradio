@@ -278,7 +278,6 @@ MESSAGE(STATUS "Base cflags = ${CMAKE_C_FLAGS_${CBTU}} ${CMAKE_C_FLAGS}")
 set(COMPILER_INFO "")
 execute_process(COMMAND ${CMAKE_C_COMPILER} --version
         OUTPUT_VARIABLE cmake_c_compiler_version)
-MESSAGE(STATUS "Compiler Version: ${cmake_c_compiler_version}")
 
 foreach(machine_name ${available_machines})
     #generate machine source
@@ -303,7 +302,12 @@ foreach(machine_name ${available_machines})
     list(APPEND machine_defs ${machine_def})
 endforeach(machine_name)
 
-FILE(WRITE ${CMAKE_CURRENT_BINARY_DIR}/compilerinfo.csv "${COMPILER_INFO}\nVERSION:${cmake_c_compiler_version}")
+# Convert to a C string to compile and display properly
+string(STRIP "${cmake_c_compiler_version}" cmake_c_compiler_version)
+string(STRIP ${COMPILER_INFO} COMPILER_INFO)
+MESSAGE(STATUS "Compiler Version: ${cmake_c_compiler_version}")
+string(REPLACE "\n" " \\n" cmake_c_compiler_version ${cmake_c_compiler_version})
+string(REPLACE "\n" " \\n" COMPILER_INFO ${COMPILER_INFO})
 
 ########################################################################
 # Set local include directories first
@@ -344,6 +348,28 @@ if(ORC_FOUND)
 else()
     message(STATUS "Did not find liborc and orcc, disabling orc support...")
 endif()
+
+
+########################################################################
+# Handle the generated constants
+########################################################################
+
+execute_process(COMMAND ${PYTHON_EXECUTABLE} -c
+    "import time;print time.strftime('%a, %d %b %Y %H:%M:%S', time.gmtime())"
+    OUTPUT_VARIABLE BUILD_DATE OUTPUT_STRIP_TRAILING_WHITESPACE
+)
+message(STATUS "Loading build date ${BUILD_DATE} into constants...")
+message(STATUS "Loading version ${VERSION} into constants...")
+
+#double escape for windows backslash path separators
+string(REPLACE "\\" "\\\\" prefix ${prefix})
+
+configure_file(
+    ${CMAKE_CURRENT_SOURCE_DIR}/constants.c.in
+    ${CMAKE_CURRENT_BINARY_DIR}/constants.c
+@ONLY)
+
+list(APPEND volk_sources ${CMAKE_CURRENT_BINARY_DIR}/constants.c)
 
 ########################################################################
 # Setup the volk sources list and library

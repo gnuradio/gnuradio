@@ -33,6 +33,7 @@ include_directories(
     ${Boost_INCLUDE_DIRS}
 )
 
+# MAKE volk_profile
 add_executable(volk_profile
     ${CMAKE_CURRENT_SOURCE_DIR}/volk_profile.cc
     ${CMAKE_SOURCE_DIR}/lib/qa_utils.cc
@@ -42,6 +43,16 @@ target_link_libraries(volk_profile volk ${Boost_LIBRARIES})
 
 install(
     TARGETS volk_profile
+    DESTINATION bin
+    COMPONENT "volk"
+)
+
+# MAKE volk-config-info
+add_executable(volk-config-info volk-config-info.cc)
+target_link_libraries(volk-config-info volk ${Boost_LIBRARIES})
+
+install(
+    TARGETS volk-config-info
     DESTINATION bin
     COMPONENT "volk"
 )

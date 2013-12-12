@@ -122,13 +122,6 @@ install(FILES
     COMPONENT "volk_devel"
 )
 
-install(FILES
-    ${CMAKE_BINARY_DIR}/lib/compilerinfo.csv
-    DESTINATION ${GR_PYTHON_DIR}/volk_modtool
-    COMPONENT "volk"
-)
-
-
 ########################################################################
 # Install cmake search routine for external use
 ########################################################################
