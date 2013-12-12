@@ -82,7 +82,10 @@ namespace gr {
 
       void exec_();
       QWidget*  qwidget();
+
+#ifdef ENABLE_PYTHON
       PyObject* pyqwidget();
+#endif
 
       void clear_data();
 

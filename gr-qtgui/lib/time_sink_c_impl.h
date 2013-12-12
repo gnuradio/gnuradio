@@ -85,7 +85,10 @@ namespace gr {
 
       void exec_();
       QWidget*  qwidget();
+
+#ifdef ENABLE_PYTHON
       PyObject* pyqwidget();
+#endif
 
       void set_y_axis(double min, double max);
       void set_update_time(double t);

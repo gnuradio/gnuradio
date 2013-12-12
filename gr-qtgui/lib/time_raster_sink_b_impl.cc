@@ -149,6 +149,7 @@ namespace gr {
       return d_main_gui;
     }
 
+#ifdef ENABLE_PYTHON
     PyObject*
     time_raster_sink_b_impl::pyqwidget()
     {
@@ -156,6 +157,7 @@ namespace gr {
       PyObject *retarg = Py_BuildValue("N", w);
       return retarg;
     }
+#endif
 
     void
     time_raster_sink_b_impl::set_update_time(double t)

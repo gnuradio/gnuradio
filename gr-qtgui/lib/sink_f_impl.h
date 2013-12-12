@@ -80,7 +80,10 @@ namespace gr {
 
       void exec_();
       QWidget*  qwidget();
+
+#ifdef ENABLE_PYTHON
       PyObject* pyqwidget();
+#endif
 
       void set_fft_size(const int fftsize);
       int fft_size() const;
