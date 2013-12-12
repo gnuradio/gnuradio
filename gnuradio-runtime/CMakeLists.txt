@@ -175,12 +175,6 @@ install(
     COMPONENT "runtime_devel"
 )
 
-install(
-    FILES   ${CMAKE_BINARY_DIR}/compilerinfo.csv
-    DESTINATION ${GR_PYTHON_DIR}/gnuradio/gr
-    COMPONENT "runtime_python"
-)
-
 ########################################################################
 # Setup ControlPort preferences file and installation information
 ########################################################################

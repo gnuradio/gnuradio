@@ -42,6 +42,9 @@ main(int argc, char **argv)
     ("sysconfdir", "print gnuradio system configuration directory")
     ("prefsdir", "print gnuradio preferences directory")
     ("builddate", "print gnuradio build date (RFC2822 format)")
+    ("cc", "print gnuradio C compiler version")
+    ("cxx", "print gnuradio C++ compiler version")
+    ("cflags", "print gnuradio CFLAGS")
     ("version,v", "print gnuradio version")
     ;
 
@@ -67,6 +70,15 @@ main(int argc, char **argv)
 
   if(vm.count("version"))
     std::cout << gr::version() << std::endl;
+
+  if(vm.count("cc"))
+    std::cout << gr::c_compiler() << std::endl;
+
+  if(vm.count("cxx"))
+    std::cout << gr::cxx_compiler() << std::endl;
+
+  if(vm.count("cflags"))
+    std::cout << gr::compiler_flags() << std::endl;
 
   return 0;
 }
