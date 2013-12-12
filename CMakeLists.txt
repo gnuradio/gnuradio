@@ -103,6 +103,18 @@ if(MSVC)
     add_definitions(/bigobj) #allow for larger object files
 endif(MSVC)
 
+# Record Compiler Info for record
+STRING(TOUPPER ${CMAKE_BUILD_TYPE} GRCBTU)
+set(COMPILER_INFO "")
+execute_process(COMMAND ${CMAKE_C_COMPILER} --version
+        OUTPUT_VARIABLE cmake_c_compiler_version)
+execute_process(COMMAND ${CMAKE_CXX_COMPILER} --version
+        OUTPUT_VARIABLE cmake_cxx_compiler_version)
+MESSAGE(STATUS "Compiler Version: ${cmake_c_compiler_version}")
+set(COMPILER_INFO "${CMAKE_C_COMPILER}:::${CMAKE_C_FLAGS_${GRCBTU}} ${CMAKE_C_FLAGS}\n${CMAKE_CXX_COMPILER}:::${CMAKE_CXX_FLAGS_${GRCBTU}} ${CMAKE_CXX_FLAGS}\n" )
+MESSAGE(STATUS "Compiler Flags: ${COMPILER_INFO}")
+FILE(WRITE ${CMAKE_BINARY_DIR}/compilerinfo.csv "${COMPILER_INFO}\nVERSION:${cmake_c_compiler_version}\nVERSION:${cmake_cxx_compiler_version}")
+
 ########################################################################
 # Install directories
 ########################################################################

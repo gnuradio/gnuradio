@@ -264,9 +264,10 @@ bool run_volk_tests(volk_func_desc_t desc,
                     int vlen,
                     int iter,
                     std::vector<std::string> *best_arch_vector = 0,
-                    std::string puppet_master_name = "NULL"
+                    std::string puppet_master_name = "NULL",
+                    bool benchmark_mode
                    ) {
-    std::cout << "RUN_VOLK_TESTS: " << name << std::endl;
+    std::cout << "RUN_VOLK_TESTS: " << name << "(" << vlen << "," << iter << ")" << std::endl;
 
     const float tol_f = tol;
     const unsigned int tol_i = static_cast<unsigned int>(tol);
@@ -274,7 +275,7 @@ bool run_volk_tests(volk_func_desc_t desc,
     //first let's get a list of available architectures for the test
     std::vector<std::string> arch_list = get_arch_list(desc);
 
-    if(arch_list.size() < 2) {
+    if((!benchmark_mode) && (arch_list.size() < 2)) {
         std::cout << "no architectures to test" << std::endl;
         return false;
     }
@@ -372,8 +373,8 @@ bool run_volk_tests(volk_func_desc_t desc,
         }
 
         end = clock();
-        double arch_time = (double)(end-start)/(double)CLOCKS_PER_SEC;
-        std::cout << arch_list[i] << " completed in " << arch_time << "s" << std::endl;
+        double arch_time = 1000.0 * (double)(end-start)/(double)CLOCKS_PER_SEC;
+        std::cout << arch_list[i] << " completed in " << arch_time << "ms" << std::endl;
 
         profile_times.push_back(arch_time);
     }

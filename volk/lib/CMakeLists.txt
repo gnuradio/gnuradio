@@ -271,6 +271,15 @@ gen_template(${CMAKE_SOURCE_DIR}/tmpl/volk_config_fixed.tmpl.h ${CMAKE_BINARY_DI
 gen_template(${CMAKE_SOURCE_DIR}/tmpl/volk_machines.tmpl.h     ${CMAKE_BINARY_DIR}/lib/volk_machines.h)
 gen_template(${CMAKE_SOURCE_DIR}/tmpl/volk_machines.tmpl.c     ${CMAKE_BINARY_DIR}/lib/volk_machines.c)
 
+set(BASE_CFLAGS NONE)
+STRING(TOUPPER ${CMAKE_BUILD_TYPE} CBTU)
+MESSAGE(STATUS BUILT TYPE ${CBTU})
+MESSAGE(STATUS "Base cflags = ${CMAKE_C_FLAGS_${CBTU}} ${CMAKE_C_FLAGS}")
+set(COMPILER_INFO "")
+execute_process(COMMAND ${CMAKE_C_COMPILER} --version
+        OUTPUT_VARIABLE cmake_c_compiler_version)
+MESSAGE(STATUS "Compiler Version: ${cmake_c_compiler_version}")
+
 foreach(machine_name ${available_machines})
     #generate machine source
     set(machine_source ${CMAKE_CURRENT_BINARY_DIR}/volk_machine_${machine_name}.c)
@@ -283,6 +292,8 @@ foreach(machine_name ${available_machines})
         --mode "machine_flags" --machine "${machine_name}" --compiler "${COMPILER_NAME}"
         OUTPUT_VARIABLE ${machine_name}_flags OUTPUT_STRIP_TRAILING_WHITESPACE
     )
+    MESSAGE(STATUS "BUILD INFO ::: ${machine_name} ::: ${COMPILER_NAME} ::: ${CMAKE_C_FLAGS_${CBTU}} ${CMAKE_C_FLAGS} ${${machine_name}_flags}")
+    set(COMPILER_INFO "${COMPILER_INFO}${machine_name}:::${COMPILER_NAME}:::${CMAKE_C_FLAGS_${CBTU}} ${CMAKE_C_FLAGS} ${${machine_name}_flags}\n" )
     if(${machine_name}_flags)
         set_source_files_properties(${machine_source} PROPERTIES COMPILE_FLAGS "${${machine_name}_flags}")
     endif()
@@ -291,6 +302,8 @@ foreach(machine_name ${available_machines})
     string(TOUPPER LV_MACHINE_${machine_name} machine_def)
     list(APPEND machine_defs ${machine_def})
 endforeach(machine_name)
+
+FILE(WRITE ${CMAKE_CURRENT_BINARY_DIR}/compilerinfo.csv "${COMPILER_INFO}\nVERSION:${cmake_c_compiler_version}")
 
 ########################################################################
 # Set local include directories first
