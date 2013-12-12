@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2009 Free Software Foundation, Inc.
+ * Copyright 2013 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -24,7 +24,8 @@
 #include <config.h>
 #endif
 
-#include <gnuradio/constants.h>
+#include <volk/constants.h>
+#include "volk/volk.h"
 #include <boost/program_options.hpp>
 #include <iostream>
 
@@ -33,19 +34,19 @@ namespace po = boost::program_options;
 int
 main(int argc, char **argv)
 {
-  po::options_description desc("Program options: gnuradio [options]");
+  po::options_description desc("Program options: volk-config-info [options]");
   po::variables_map vm;
 
   desc.add_options()
     ("help,h", "print help message")
-    ("prefix", "print gnuradio installation prefix")
-    ("sysconfdir", "print gnuradio system configuration directory")
-    ("prefsdir", "print gnuradio preferences directory")
-    ("builddate", "print gnuradio build date (RFC2822 format)")
-    ("cc", "print gnuradio C compiler version")
-    ("cxx", "print gnuradio C++ compiler version")
-    ("cflags", "print gnuradio CFLAGS")
-    ("version,v", "print gnuradio version")
+    ("prefix", "print VOLK installation prefix")
+    ("builddate", "print VOLK build date (RFC2822 format)")
+    ("cc", "print VOLK C compiler version")
+    ("cflags", "print VOLK CFLAGS")
+    ("all-machines", "print VOLK machines built into library")
+    ("avail-machines", "print VOLK machines the current platform can use")
+    ("machine", "print the VOLK machine that will be used")
+    ("version,v", "print VOLK version")
     ;
 
   try {
@@ -64,28 +65,32 @@ main(int argc, char **argv)
   }
 
   if(vm.count("prefix"))
-    std::cout << gr::prefix() << std::endl;
-
-  if(vm.count("sysconfdir"))
-    std::cout << gr::sysconfdir() << std::endl;
-
-  if(vm.count("prefsdir"))
-    std::cout << gr::prefsdir() << std::endl;
+    std::cout << volk_prefix() << std::endl;
 
   if(vm.count("builddate"))
-    std::cout << gr::build_date() << std::endl;
+    std::cout << volk_build_date() << std::endl;
 
   if(vm.count("version"))
-    std::cout << gr::version() << std::endl;
+    std::cout << volk_version() << std::endl;
 
   if(vm.count("cc"))
-    std::cout << gr::c_compiler() << std::endl;
-
-  if(vm.count("cxx"))
-    std::cout << gr::cxx_compiler() << std::endl;
+    std::cout << volk_c_compiler() << std::endl;
 
   if(vm.count("cflags"))
-    std::cout << gr::compiler_flags() << std::endl;
+    std::cout << volk_compiler_flags() << std::endl;
+
+  // stick an extra ';' to make output of this and avail-machines the
+  // same structure for easier parsing
+  if(vm.count("all-machines"))
+    std::cout << volk_available_machines() << ";" << std::endl;
+
+  if(vm.count("avail-machines")) {
+    volk_list_machines();
+  }
+
+  if(vm.count("machine")) {
+    std::cout << volk_get_machine() << std::endl;
+  }
 
   return 0;
 }

@@ -53,6 +53,21 @@ namespace gr {
    */
   GR_RUNTIME_API const std::string version();
 
+  /*!
+   * \brief return C compiler used to build this version of GNU Radio
+   */
+  GR_RUNTIME_API const std::string c_compiler();
+
+  /*!
+   * \brief return C++ compiler used to build this version of GNU Radio
+   */
+  GR_RUNTIME_API const std::string cxx_compiler();
+
+  /*!
+   * \brief return C and C++ compiler flags used to build this version of GNU Radio
+   */
+  GR_RUNTIME_API const std::string  compiler_flags();
+
 } /* namespace gr */
 
 #endif /* INCLUDED_GR_CONSTANTS_H */

@@ -64,7 +64,10 @@ namespace gr {
 
       void exec_();
       QWidget*  qwidget();
+
+#ifdef ENABLE_PYTHON
       PyObject* pyqwidget();
+#endif
 
       void set_update_time(double t);
       void set_title(const std::string &title);

@@ -153,6 +153,7 @@ namespace gr {
       return d_main_gui;
     }
 
+#ifdef ENABLE_PYTHON
     PyObject*
     freq_sink_c_impl::pyqwidget()
     {
@@ -160,6 +161,7 @@ namespace gr {
       PyObject *retarg = Py_BuildValue("N", w);
       return retarg;
     }
+#endif
 
     void
     freq_sink_c_impl::set_fft_size(const int fftsize)

@@ -40,6 +40,12 @@ typedef struct volk_func_desc
     const size_t n_impls;
 } volk_func_desc_t;
 
+//! Prints a list of machines available
+VOLK_API void volk_list_machines(void);
+
+//! Returns the name of the machine this instance will use
+VOLK_API const char* volk_get_machine(void);
+
 //! Get the machine alignment in bytes
 VOLK_API size_t volk_get_alignment(void);
 
