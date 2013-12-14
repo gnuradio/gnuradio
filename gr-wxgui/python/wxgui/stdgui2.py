@@ -22,7 +22,6 @@
 '''A simple wx gui for GNU Radio applications'''
 
 import ctypes
-import os
 import wx
 import sys
 from gnuradio import gr
@@ -36,7 +35,7 @@ class stdapp (wx.App):
         self._nstatus = nstatus
         self._max_noutput_items = max_noutput_items
         # If we're on Linux, also enable multi-threading Xlib access
-        if os.name == 'posix':
+        if sys.platform.startswith('linux'):
             try:
                 x11 = ctypes.cdll.LoadLibrary('libX11.so')
                 x11.XInitThreads()
