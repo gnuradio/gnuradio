@@ -1,4 +1,4 @@
-# Copyright 2012 Free Software Foundation, Inc.
+# Copyright 2012-2013 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -37,79 +37,20 @@ if(ENABLE_GR_CTRLPORT)
   include_directories(${ICE_INCLUDE_DIR})
 endif(ENABLE_GR_CTRLPORT)
 
-#######################################################################
-# generate the python helper script which calls into the build utils
 ########################################################################
-include(GrPython)
-
-file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/generate_helper.py "
-#!${PYTHON_EXECUTABLE}
-
-import sys, os, re
-sys.path.append('${GR_RUNTIME_PYTHONPATH}')
-os.environ['srcdir'] = '${CMAKE_CURRENT_SOURCE_DIR}'
-os.chdir('${CMAKE_CURRENT_BINARY_DIR}')
-
-if __name__ == '__main__':
-    import build_utils
-    root, inp = sys.argv[1:3]
-    for sig in sys.argv[3:]:
-        name = re.sub ('X+', sig, root)
-        d = build_utils.standard_impl_dict2(name, sig, 'trellis')
-        build_utils.expand_template(d, inp)
-")
-
-macro(expand_cc root)
-  #make a list of all the generated files
-  unset(expanded_files_cc)
-  unset(expanded_files_h)
-  foreach(sig ${ARGN})
-    string(REGEX REPLACE "X+" ${sig} name ${root})
-    list(APPEND expanded_files_cc ${CMAKE_CURRENT_BINARY_DIR}/${name}.cc)
-    list(APPEND expanded_files_h  ${CMAKE_CURRENT_BINARY_DIR}/${name}.h)
-  endforeach(sig)
-  
-  #create a command to generate the source files
-  add_custom_command(
-    OUTPUT ${expanded_files_cc}
-    DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/${root}.cc.t
-    COMMAND ${PYTHON_EXECUTABLE} ${PYTHON_DASH_B}
-    ${CMAKE_CURRENT_BINARY_DIR}/generate_helper.py
-    ${root} ${root}.cc.t ${ARGN}
-  )
-
-  #create a command to generate the header file
-  add_custom_command(
-    OUTPUT ${expanded_files_h}
-    DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/${root}.h.t
-    COMMAND ${PYTHON_EXECUTABLE} ${PYTHON_DASH_B}
-    ${CMAKE_CURRENT_BINARY_DIR}/generate_helper.py
-    ${root} ${root}.h.t ${ARGN}
-  )
-  
-  #make source files depends on headers to force generation
-  set_source_files_properties(${expanded_files_cc}
-    PROPERTIES OBJECT_DEPENDS "${expanded_files_h}"
-  )
-  
-  #install rules for the generated cc files
-  list(APPEND generated_sources ${expanded_files_cc})  
-  list(APPEND generated_headers ${expanded_files_h})  
-endmacro(expand_cc)
-
+# Invoke macro to generate various sources and headers
 ########################################################################
-# Invoke macro to generate various sources
-########################################################################
-expand_cc(encoder_XX_impl                bb bs bi ss si ii)
-expand_cc(sccc_encoder_XX_impl           bb bs bi ss si ii)
-expand_cc(pccc_encoder_XX_impl           bb bs bi ss si ii)
-expand_cc(metrics_X_impl                 s i f c)
-expand_cc(viterbi_X_impl                 b s i)
-expand_cc(viterbi_combined_XX_impl       sb ss si ib is ii fb fs fi cb cs ci)
-expand_cc(sccc_decoder_X_impl            b s i)
-expand_cc(sccc_decoder_combined_XX_impl  fb fs fi cb cs ci)
-expand_cc(pccc_decoder_X_impl            b s i)
-expand_cc(pccc_decoder_combined_XX_impl  fb fs fi cb cs ci)
+include(GrMiscUtils)
+GR_EXPAND_X_CC_H(trellis encoder_XX_impl                bb bs bi ss si ii)
+GR_EXPAND_X_CC_H(trellis sccc_encoder_XX_impl           bb bs bi ss si ii)
+GR_EXPAND_X_CC_H(trellis pccc_encoder_XX_impl           bb bs bi ss si ii)
+GR_EXPAND_X_CC_H(trellis metrics_X_impl                 s i f c)
+GR_EXPAND_X_CC_H(trellis viterbi_X_impl                 b s i)
+GR_EXPAND_X_CC_H(trellis viterbi_combined_XX_impl       sb ss si ib is ii fb fs fi cb cs ci)
+GR_EXPAND_X_CC_H(trellis sccc_decoder_X_impl            b s i)
+GR_EXPAND_X_CC_H(trellis sccc_decoder_combined_XX_impl  fb fs fi cb cs ci)
+GR_EXPAND_X_CC_H(trellis pccc_decoder_X_impl            b s i)
+GR_EXPAND_X_CC_H(trellis pccc_decoder_combined_XX_impl  fb fs fi cb cs ci)
 
 ########################################################################
 # Setup library
