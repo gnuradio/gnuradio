@@ -46,16 +46,20 @@ class stdapp (wx.App):
         wx.App.__init__ (self, redirect=False)
 
     def OnInit (self):
-        frame = stdframe (self.top_block_maker, self.title, self._nstatus,
-                          self._max_noutput_items)
+        frame = stdframe (self.top_block_maker, self.title, self._nstatus)
         frame.Show (True)
         self.SetTopWindow (frame)
+
+        if(self._max_noutput_items is not None):
+            frame.top_block().start (self._max_noutput_items)
+        else:
+            frame.top_block().start ()
+
         return True
 
 
 class stdframe (wx.Frame):
-    def __init__ (self, top_block_maker, title="GNU Radio", nstatus=2,
-                  max_nouts=None):
+    def __init__ (self, top_block_maker, title="GNU Radio", nstatus=2):
         # print "stdframe.__init__"
         wx.Frame.__init__(self, None, -1, title)
 
@@ -69,7 +73,7 @@ class stdframe (wx.Frame):
         self.SetMenuBar (mainmenu)
 
         self.Bind (wx.EVT_CLOSE, self.OnCloseWindow)
-        self.panel = stdpanel (self, self, top_block_maker, max_nouts)
+        self.panel = stdpanel (self, self, top_block_maker)
         vbox = wx.BoxSizer(wx.VERTICAL)
         vbox.Add(self.panel, 1, wx.EXPAND)
         self.SetSizer(vbox)
@@ -85,8 +89,7 @@ class stdframe (wx.Frame):
         return self.panel.top_block
 
 class stdpanel (wx.Panel):
-    def __init__ (self, parent, frame, top_block_maker,
-                  max_nouts=None):
+    def __init__ (self, parent, frame, top_block_maker):
         # print "stdpanel.__init__"
         wx.Panel.__init__ (self, parent, -1)
         self.frame = frame
@@ -96,11 +99,6 @@ class stdpanel (wx.Panel):
         self.SetSizer (vbox)
         self.SetAutoLayout (True)
         vbox.Fit (self)
-
-        if(max_nouts is not None):
-            self.top_block.start (max_nouts)
-        else:
-            self.top_block.start ()
 
 class std_top_block (gr.top_block):
     def __init__ (self, parent, panel, vbox, argv):
