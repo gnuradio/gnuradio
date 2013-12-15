@@ -147,7 +147,9 @@ list(APPEND qtgui_libs
     ${LOG4CPP_LIBRARIES}
 )
 
+include(GrPython)
 if(ENABLE_PYTHON)
+  add_definitions(-DENABLE_PYTHON)
   list(APPEND qtgui_libs
     ${PYTHON_LIBRARIES}
   )
