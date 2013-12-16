@@ -273,6 +273,7 @@ namespace gr {
       std::vector<float> s(k, 0);
 
       float scale = d_scalefactor*d_scalefactor;
+      int v;
       
       for(int i = 0; i < M; i++) {
         // Calculate the distance between the sample and the current
@@ -283,10 +284,15 @@ namespace gr {
         // the scaled noise power.
         float d = expf(-dist / (2.0*npwr*scale));
 
+        if(d_apply_pre_diff_code)
+          v = d_pre_diff_code[i];
+        else
+          v = i;
+
         for(int j = 0; j < k; j++) {
           // Get the bit at the jth index
           int mask = 1 << j;
-          int bit = (d_pre_diff_code[i] & mask) >> j;
+          int bit = (v & mask) >> j;
 
           // If the bit is a 0, add to the probability of a zero
           if(bit == 0)
