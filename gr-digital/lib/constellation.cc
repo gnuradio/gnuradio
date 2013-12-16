@@ -285,8 +285,7 @@ namespace gr {
 
         for(int j = 0; j < k; j++) {
           // Get the bit at the jth index
-          int mask = 1 << j;
-          int bit = (d_pre_diff_code[i] & mask) >> j;
+          int bit = ((d_apply_pre_diff_code ? d_pre_diff_code[i] : i) >> j) & 0x1;
 
           // If the bit is a 0, add to the probability of a zero
           if(bit == 0)
