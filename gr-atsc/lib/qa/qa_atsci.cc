@@ -42,7 +42,7 @@ qa_atsc::suite ()
   CppUnit::TestSuite	*s = new CppUnit::TestSuite ("atsc");
 
   s->addTest (qa_atsci_randomizer::suite ());
-  s->addTest (qa_atsci_reed_solomon::suite ());
+//  s->addTest (qa_atsci_reed_solomon::suite ());
   s->addTest (qa_interleaver_fifo::suite ());
   s->addTest (qa_convolutional_interleaver::suite ());
   s->addTest (qa_atsci_data_interleaver::suite ());

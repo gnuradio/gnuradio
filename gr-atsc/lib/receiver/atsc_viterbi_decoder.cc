@@ -138,7 +138,7 @@ atsc_viterbi_decoder::work (int noutput_items,
 	const atsc_soft_data_segment *in = (const atsc_soft_data_segment *) input_items[0];
 	atsc_mpeg_packet_rs_encoded *out = (atsc_mpeg_packet_rs_encoded *) output_items[0];
 
-	assert (noutput_items % atsci_viterbi_decoder::NCODERS == 0);
+	assert (noutput_items % atsc_viterbi_decoder::NCODERS == 0);
 
 	// The way the fs_checker works ensures we start getting packets starting with 
 	// a field sync, and out input multiple is set to 12, so we should always get a

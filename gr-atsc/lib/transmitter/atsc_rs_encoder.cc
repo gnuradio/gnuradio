@@ -27,7 +27,18 @@
 #include <gnuradio/atsc/rs_encoder.h>
 #include <gnuradio/io_signature.h>
 #include <gnuradio/atsc/consts.h>
+#include <assert.h>
 
+static const int rs_init_symsize =     8;
+static const int rs_init_gfpoly  = 0x11d;
+static const int rs_init_fcr     =     0;	// first consecutive root
+static const int rs_init_prim    =     1;	// primitive is 1 (alpha)
+static const int rs_init_nroots  =    20;
+
+static const int N = (1 << rs_init_symsize) - 1;	// 255
+static const int K = N - rs_init_nroots;		// 235
+
+static const int amount_of_pad	 = N - ATSC_MPEG_RS_ENCODED_LENGTH;	  // 48
 
 atsc_rs_encoder_sptr
 atsc_make_rs_encoder()
@@ -40,7 +51,33 @@ atsc_rs_encoder::atsc_rs_encoder()
 		  gr::io_signature::make(1, 1, sizeof(atsc_mpeg_packet_no_sync)),
 		  gr::io_signature::make(1, 1, sizeof(atsc_mpeg_packet_rs_encoded)))
 {
+  d_rs = init_rs_char (rs_init_symsize, rs_init_gfpoly, rs_init_fcr, rs_init_prim, rs_init_nroots);
+  assert (d_rs != 0);
   reset();
+}
+
+atsc_rs_encoder::~atsc_rs_encoder()
+{
+  if (d_rs)
+    free_rs_char (d_rs);
+  d_rs = 0;
+}
+
+void atsc_rs_encoder::encode (atsc_mpeg_packet_rs_encoded &out, const atsc_mpeg_packet_no_sync &in)
+{
+  unsigned char tmp[K];
+
+  assert ((int)(amount_of_pad + sizeof (in.data)) == K);
+
+  // add missing prefix zero padding to message
+  memset (tmp, 0, amount_of_pad);
+  memcpy (&tmp[amount_of_pad], in.data, sizeof (in.data));
+
+  // copy message portion to output packet
+  memcpy (out.data, in.data, sizeof (in.data));
+
+  // now compute parity bytes and add them to tail end of output packet
+  encode_rs_char (d_rs, tmp, &out.data[sizeof (in.data)]);
 }
 
 int
@@ -55,7 +92,7 @@ atsc_rs_encoder::work (int noutput_items,
 
     assert(in[i].pli.regular_seg_p());
     out[i].pli = in[i].pli;			// copy pipeline info...
-    d_rs_encoder.encode(out[i], in[i]);
+    encode(out[i], in[i]);
   }
 
   return noutput_items;

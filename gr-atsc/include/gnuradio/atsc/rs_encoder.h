@@ -25,7 +25,11 @@
 
 #include <gnuradio/atsc/api.h>
 #include <gnuradio/sync_block.h>
-#include <gnuradio/atsc/reed_solomon_impl.h>
+#include <gnuradio/atsc/types.h>
+
+extern "C" {
+#include <gnuradio/fec/rs.h>
+}
 
 class atsc_rs_encoder;
 typedef boost::shared_ptr<atsc_rs_encoder> atsc_rs_encoder_sptr;
@@ -36,22 +40,32 @@ ATSC_API atsc_rs_encoder_sptr atsc_make_rs_encoder();
  * \brief Reed-Solomon encoder for ATSC
  * \ingroup atsc
  *
+ * The t=10 (207,187) code described in ATSC standard A/53B.
+ * See figure D5 on page 55.
+ *
  * input: atsc_mpeg_packet_no_sync; output: atsc_mpeg_packet_rs_encoded
  */
 class ATSC_API atsc_rs_encoder : public gr::sync_block
 {
   friend ATSC_API atsc_rs_encoder_sptr atsc_make_rs_encoder();
 
-  atsci_reed_solomon	d_rs_encoder;
-
   atsc_rs_encoder();
+  ~atsc_rs_encoder();
 
 public:
+/*!
+ * \brief Add RS error correction encoding
+ */
+  void encode (atsc_mpeg_packet_rs_encoded &out, const atsc_mpeg_packet_no_sync &in);
+
   int work (int noutput_items,
 	    gr_vector_const_void_star &input_items,
 	    gr_vector_void_star &output_items);
 
   void reset() { /* nop */ }
+
+private:
+  void *d_rs;
 };
 
 

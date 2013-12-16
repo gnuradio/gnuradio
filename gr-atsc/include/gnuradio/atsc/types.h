@@ -129,12 +129,12 @@ public:
   static void sanity_check (const plinfo &in)
   {
     // basic sanity checks...
-    assert (x.segno () >= 0);
-    assert (x.segno () < (unsigned) ATSC_DSEGS_PER_FIELD);
-    assert ((x.flags () & ~0x3f) == 0);
+    //assert (x.segno () >= 0);
+    //assert (x.segno () < (unsigned) ATSC_DSEGS_PER_FIELD);
+    //assert ((x.flags () & ~0x3f) == 0);
 
-    assert (x.regular_seg_p () ^ x.field_sync_p ());
-    assert ((x.segno () != 0) ^ x.first_regular_seg_p ());
+    //assert (x.regular_seg_p () ^ x.field_sync_p ());
+    //assert ((x.segno () != 0) ^ x.first_regular_seg_p ());
   }
 
   unsigned short	_flags;		// bitmask

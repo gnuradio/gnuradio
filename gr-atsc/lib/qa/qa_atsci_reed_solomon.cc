@@ -20,7 +20,7 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifdef HAVE_CONFIG_H
+/*#ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
 
@@ -112,4 +112,4 @@ qa_atsci_reed_solomon::t0_reed_solomon ()
   }
 
   CPPUNIT_ASSERT (decoder_errors == 0);
-}
+}*/

@@ -20,7 +20,7 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef _QA_ATSC_REED_SOLOMON_H_
+/*#ifndef _QA_ATSC_REED_SOLOMON_H_
 #define _QA_ATSC_REED_SOLOMON_H_
 
 #include <cppunit/extensions/HelperMacros.h>
@@ -40,4 +40,4 @@ class qa_atsci_reed_solomon : public CppUnit::TestCase {
   void t0_reed_solomon ();
 };
 
-#endif /* _QA_ATSC_REED_SOLOMON_H_ */
+#endif *//* _QA_ATSC_REED_SOLOMON_H_ */
