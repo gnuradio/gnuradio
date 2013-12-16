@@ -49,10 +49,11 @@ class ATSC_API atsc_rs_decoder : public gr::sync_block
 {
   friend ATSC_API atsc_rs_decoder_sptr atsc_make_rs_decoder();
 
+public:
+
   atsc_rs_decoder();
   ~atsc_rs_decoder();
 
-public:
   /*!
    * Decode RS encoded packet.
    * \returns a count of corrected symbols, or -1 if the block was uncorrectible.

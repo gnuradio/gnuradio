@@ -49,10 +49,11 @@ class ATSC_API atsc_rs_encoder : public gr::sync_block
 {
   friend ATSC_API atsc_rs_encoder_sptr atsc_make_rs_encoder();
 
+public:  
+
   atsc_rs_encoder();
   ~atsc_rs_encoder();
 
-public:
 /*!
  * \brief Add RS error correction encoding
  */
