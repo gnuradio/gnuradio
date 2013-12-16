@@ -22,8 +22,16 @@ int main(int argc, char *argv[]) {
       ("benchmark,b", boost::program_options::value<bool>()->default_value( false ), "run all kernels (benchmark mode)");
       //("benchmark,b", boost::program_options::value<bool>(&benchmark_mode)->default_value( false ), "run all kernels (benchmark mode)");
     boost::program_options::variables_map vm;
-    boost::program_options::store(boost::program_options::parse_command_line(argc, argv, desc),  vm);
-    boost::program_options::notify(vm);
+    bool benchmark_mode = false;
+    try {
+        boost::program_options::store(boost::program_options::parse_command_line(argc, argv, desc),  vm);
+        boost::program_options::notify(vm);
+        benchmark_mode = vm.count("benchmark")?vm["benchmark"].as<bool>():false;
+    } catch (boost::program_options::error& error) {
+        std::cerr << "Error: " << error.what() << std::endl << std::endl;
+        std::cerr << desc << std::endl;
+        return 1;
+    }
     /** --help option
        */
       if ( vm.count("help")  )
@@ -32,7 +40,6 @@ int main(int argc, char *argv[]) {
                   << desc << std::endl;
         return 0;
       }
-    bool benchmark_mode = vm.count("benchmark")?vm["benchmark"].as<bool>():false;
 
 
     std::vector<std::string> results;
