@@ -58,6 +58,7 @@ namespace gr {
 
     pfb_decimator_ccf_impl::~pfb_decimator_ccf_impl()
     {
+      delete d_rotator;
     }
 
     void
