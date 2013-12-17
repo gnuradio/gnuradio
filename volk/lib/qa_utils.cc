@@ -93,7 +93,8 @@ volk_type_t volk_type_from_string(std::string name) {
 
     //get the data size
     size_t last_size_pos = name.find_last_of("0123456789");
-    if(last_size_pos < 0) throw std::string("no size spec in type ").append(name);
+    if(last_size_pos == std::string::npos)
+      throw std::string("no size spec in type ").append(name);
     //will throw if malformed
     int size = boost::lexical_cast<int>(name.substr(0, last_size_pos+1));
 
