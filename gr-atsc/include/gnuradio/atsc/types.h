@@ -71,7 +71,7 @@ public:
 
   void set_regular_seg (bool field2, int segno)
   {
-    assert (0 <= segno && segno < ATSC_DSEGS_PER_FIELD);
+    //assert (0 <= segno && segno < ATSC_DSEGS_PER_FIELD);
     _segno = segno;
     _flags = fl_regular_seg;
     if (segno == 0)

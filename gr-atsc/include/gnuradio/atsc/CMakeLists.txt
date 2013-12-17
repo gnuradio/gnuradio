@@ -43,7 +43,6 @@ install(FILES
     pnXXX_impl.h
     randomizer.h
     randomizer_impl.h
-    reed_solomon_impl.h
     rs_decoder.h
     rs_encoder.h
     pilot.h
