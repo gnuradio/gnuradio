@@ -81,7 +81,13 @@ DisplayPlot::DisplayPlot(int nplots, QWidget* parent)
   sd->setMinimumExtent( fm.width("100.00") );
 
   QwtLegend* legendDisplay = new QwtLegend(this);
+
+#if QWT_VERSION < 0x060100
   legendDisplay->setItemMode(QwtLegend::CheckableItem);
+#else /* QWT_VERSION < 0x060100 */
+  legendDisplay->setDefaultItemMode(QwtLegendData::Checkable);
+#endif /* QWT_VERSION < 0x060100 */
+
   insertLegend(legendDisplay);
 
   connect(this, SIGNAL(legendChecked(QwtPlotItem *, bool)),

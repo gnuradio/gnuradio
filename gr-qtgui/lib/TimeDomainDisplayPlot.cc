@@ -61,7 +61,11 @@ protected:
 class TimeDomainDisplayZoomer: public QwtPlotZoomer, public TimePrecisionClass
 {
 public:
+#if QWT_VERSION < 0x060100
   TimeDomainDisplayZoomer(QwtPlotCanvas* canvas, const unsigned int timePrecision)
+#else /* QWT_VERSION < 0x060100 */
+  TimeDomainDisplayZoomer(QWidget* canvas, const unsigned int timePrecision)
+#endif /* QWT_VERSION < 0x060100 */
     : QwtPlotZoomer(canvas),TimePrecisionClass(timePrecision)
   {
     setTrackerMode(QwtPicker::AlwaysOn);
@@ -490,7 +494,11 @@ TimeDomainDisplayPlot::setSemilogx(bool en)
     setAxisScaleEngine(QwtPlot::xBottom, new QwtLinearScaleEngine);
   }
   else {
+#if QWT_VERSION < 0x060100
     setAxisScaleEngine(QwtPlot::xBottom, new QwtLog10ScaleEngine);
+#else /* QWT_VERSION < 0x060100 */
+    setAxisScaleEngine(QwtPlot::xBottom, new QwtLogScaleEngine);
+#endif /*QWT_VERSION < 0x060100 */
   }
   _resetXAxisPoints();
 }
@@ -500,13 +508,23 @@ TimeDomainDisplayPlot::setSemilogy(bool en)
 {
   if(d_semilogy != en) {
     d_semilogy = en;
+
+#if QWT_VERSION < 0x060100
     double max = axisScaleDiv(QwtPlot::yLeft)->upperBound();
+#else /* QWT_VERSION < 0x060100 */
+    double max = axisScaleDiv(QwtPlot::yLeft).upperBound();
+#endif /* QWT_VERSION < 0x060100 */
+
     if(!d_semilogy) {
       setAxisScaleEngine(QwtPlot::yLeft, new QwtLinearScaleEngine);
       setYaxis(-pow(10.0, max/10.0), pow(10.0, max/10.0));
     }
     else {
+#if QWT_VERSION < 0x060100
       setAxisScaleEngine(QwtPlot::yLeft, new QwtLog10ScaleEngine);
+#else /* QWT_VERSION < 0x060100 */
+      setAxisScaleEngine(QwtPlot::yLeft, new QwtLogScaleEngine);
+#endif /*QWT_VERSION < 0x060100 */
       setYaxis(1e-10, 10.0*log10(max));
     }
   }
