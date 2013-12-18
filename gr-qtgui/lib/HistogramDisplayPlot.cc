@@ -67,7 +67,11 @@ protected:
 class HistogramDisplayZoomer: public QwtPlotZoomer, public TimePrecisionClass
 {
 public:
+#if QWT_VERSION < 0x060100
   HistogramDisplayZoomer(QwtPlotCanvas* canvas, const unsigned int timeprecision)
+#else /* QWT_VERSION < 0x060100 */
+  HistogramDisplayZoomer(QWidget* canvas, const unsigned int timeprecision)
+#endif /* QWT_VERSION < 0x060100 */
     : QwtPlotZoomer(canvas),TimePrecisionClass(timeprecision)
   {
     setTrackerMode(QwtPicker::AlwaysOn);
@@ -273,7 +277,12 @@ HistogramDisplayPlot::_resetXAxisPoints(double left, double right)
   for(long loc = 0; loc < d_bins; loc++){
     d_xdata[loc] = d_left + loc*d_width;
   }
+#if QWT_VERSION < 0x060100
   axisScaleDiv(QwtPlot::xBottom)->setInterval(d_left, d_right);
+#else /* QWT_VERSION < 0x060100 */
+  QwtScaleDiv scalediv(d_left, d_right);
+  setAxisScaleDiv(QwtPlot::xBottom, scalediv);
+#endif /* QWT_VERSION < 0x060100 */
 
   // Set up zoomer base for maximum unzoom x-axis
   // and reset to maximum unzoom level
@@ -333,7 +342,11 @@ HistogramDisplayPlot::setSemilogx(bool en)
     setAxisScaleEngine(QwtPlot::xBottom, new QwtLinearScaleEngine);
   }
   else {
+#if QWT_VERSION < 0x060100
     setAxisScaleEngine(QwtPlot::xBottom, new QwtLog10ScaleEngine);
+#else /* QWT_VERSION < 0x060100 */
+    setAxisScaleEngine(QwtPlot::xBottom, new QwtLogScaleEngine);
+#endif /* QWT_VERSION < 0x060100 */
   }
 }
 
@@ -342,13 +355,23 @@ HistogramDisplayPlot::setSemilogy(bool en)
 {
   if(d_semilogy != en) {
     d_semilogy = en;
+
+#if QWT_VERSION < 0x060100
     double max = axisScaleDiv(QwtPlot::yLeft)->upperBound();
+#else /* QWT_VERSION < 0x060100 */
+    double max = axisScaleDiv(QwtPlot::yLeft).upperBound();
+#endif /* QWT_VERSION < 0x060100 */
+
     if(!d_semilogy) {
       setAxisScaleEngine(QwtPlot::yLeft, new QwtLinearScaleEngine);
       setYaxis(-pow(10.0, max/10.0), pow(10.0, max/10.0));
     }
     else {
+#if QWT_VERSION < 0x060100
       setAxisScaleEngine(QwtPlot::yLeft, new QwtLog10ScaleEngine);
+#else /* QWT_VERSION < 0x060100 */
+    setAxisScaleEngine(QwtPlot::yLeft, new QwtLogScaleEngine);
+#endif /* QWT_VERSION < 0x060100 */
       setYaxis(1e-10, 10.0*log10(100*max));
     }
   }

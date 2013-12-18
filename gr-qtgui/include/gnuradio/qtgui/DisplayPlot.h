@@ -269,6 +269,7 @@ signals:
 
 protected slots:
   virtual void legendEntryChecked(QwtPlotItem *plotItem, bool on);
+  virtual void legendEntryChecked(const QVariant &plotItem, bool on, int index);
 
 protected:
   int d_nplots;
