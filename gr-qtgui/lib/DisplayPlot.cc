@@ -85,10 +85,6 @@ DisplayPlot::DisplayPlot(int nplots, QWidget* parent)
 
 #if QWT_VERSION < 0x060100
   legendDisplay->setItemMode(QwtLegend::CheckableItem);
-#else /* QWT_VERSION < 0x060100 */
-  legendDisplay->setDefaultItemMode(QwtLegendData::Checkable);
-#endif /* QWT_VERSION < 0x060100 */
-
   insertLegend(legendDisplay);
   connect(this, SIGNAL(legendChecked(QwtPlotItem *, bool)),
 	  this, SLOT(legendEntryChecked(QwtPlotItem *, bool)));
