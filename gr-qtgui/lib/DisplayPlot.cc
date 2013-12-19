@@ -27,6 +27,7 @@
 #include <QColor>
 #include <cmath>
 #include <iostream>
+#include <stdexcept>
 #include <QDebug>
 
 DisplayPlot::DisplayPlot(int nplots, QWidget* parent)
@@ -89,9 +90,15 @@ DisplayPlot::DisplayPlot(int nplots, QWidget* parent)
 #endif /* QWT_VERSION < 0x060100 */
 
   insertLegend(legendDisplay);
-
   connect(this, SIGNAL(legendChecked(QwtPlotItem *, bool)),
 	  this, SLOT(legendEntryChecked(QwtPlotItem *, bool)));
+#else /* QWT_VERSION < 0x060100 */
+  legendDisplay->setDefaultItemMode(QwtLegendData::Checkable);
+  insertLegend(legendDisplay);
+  connect(legendDisplay, SIGNAL(checked(const QVariant&, bool, int)),
+	  this, SLOT(legendEntryChecked(const QVariant&, bool, int)));
+#endif /* QWT_VERSION < 0x060100 */
+
 }
 
 DisplayPlot::~DisplayPlot()
@@ -407,6 +414,16 @@ void DisplayPlot::legendEntryChecked(QwtPlotItem* plotItem, bool on)
 {
   plotItem->setVisible(!on);
   replot();
+}
+
+void DisplayPlot::legendEntryChecked(const QVariant &plotItem, bool on, int index)
+{
+#if QWT_VERSION < 0x060100
+  std::runtime_error("DisplayPlot::legendEntryChecked with QVariant not enabled in this version of QWT.\n");
+#else
+  QwtPlotItem *p = infoToItem(plotItem);
+  legendEntryChecked(p, on);
+#endif /* QWT_VERSION < 0x060100 */
 }
 
 void

@@ -398,6 +398,17 @@ TimeDomainDisplayPlot::legendEntryChecked(QwtPlotItem* plotItem, bool on)
 }
 
 void
+TimeDomainDisplayPlot::legendEntryChecked(const QVariant &plotItem, bool on, int index)
+{
+#if QWT_VERSION < 0x060100
+  std::runtime_error("TimeDomainDisplayPlot::legendEntryChecked with QVariant not enabled in this version of QWT.\n");
+#else
+  QwtPlotItem *p = infoToItem(plotItem);
+  legendEntryChecked(p, on);
+#endif /* QWT_VERSION < 0x060100 */
+}
+
+void
 TimeDomainDisplayPlot::_resetXAxisPoints()
 {
   double delt = 1.0/d_sample_rate;
