@@ -1,4 +1,4 @@
-# Copyright 2010-2011 Free Software Foundation, Inc.
+# Copyright 2010-2011,2013 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -17,10 +17,10 @@
 # the Free Software Foundation, Inc., 51 Franklin Street,
 # Boston, MA 02110-1301, USA.
 
-if(DEFINED __INCLUDED_GR_PYTHON_CMAKE)
+if(DEFINED __INCLUDED_VOLK_PYTHON_CMAKE)
     return()
 endif()
-set(__INCLUDED_GR_PYTHON_CMAKE TRUE)
+set(__INCLUDED_VOLK_PYTHON_CMAKE TRUE)
 
 ########################################################################
 # Setup the python interpreter:
@@ -70,7 +70,7 @@ endif(PYTHON_EXECUTABLE)
 # - cmd an additional command to run
 # - have the result variable to set
 ########################################################################
-macro(GR_PYTHON_CHECK_MODULE desc mod cmd have)
+macro(VOLK_PYTHON_CHECK_MODULE desc mod cmd have)
     message(STATUS "")
     message(STATUS "Python checking for ${desc}")
     execute_process(
@@ -92,40 +92,40 @@ except: exit(-1)
         message(STATUS "Python checking for ${desc} - not found")
         set(${have} FALSE)
     endif(${have} EQUAL 0)
-endmacro(GR_PYTHON_CHECK_MODULE)
+endmacro(VOLK_PYTHON_CHECK_MODULE)
 
 ########################################################################
-# Sets the python installation directory GR_PYTHON_DIR
+# Sets the python installation directory VOLK_PYTHON_DIR
 ########################################################################
 execute_process(COMMAND ${PYTHON_EXECUTABLE} -c "
 from distutils import sysconfig
 print sysconfig.get_python_lib(plat_specific=True, prefix='')
-" OUTPUT_VARIABLE GR_PYTHON_DIR OUTPUT_STRIP_TRAILING_WHITESPACE
+" OUTPUT_VARIABLE VOLK_PYTHON_DIR OUTPUT_STRIP_TRAILING_WHITESPACE
 )
-file(TO_CMAKE_PATH ${GR_PYTHON_DIR} GR_PYTHON_DIR)
+file(TO_CMAKE_PATH ${VOLK_PYTHON_DIR} VOLK_PYTHON_DIR)
 
 ########################################################################
 # Create an always-built target with a unique name
-# Usage: GR_UNIQUE_TARGET(<description> <dependencies list>)
+# Usage: VOLK_UNIQUE_TARGET(<description> <dependencies list>)
 ########################################################################
-function(GR_UNIQUE_TARGET desc)
+function(VOLK_UNIQUE_TARGET desc)
     file(RELATIVE_PATH reldir ${CMAKE_BINARY_DIR} ${CMAKE_CURRENT_BINARY_DIR})
     execute_process(COMMAND ${PYTHON_EXECUTABLE} -c "import re, hashlib
 unique = hashlib.md5('${reldir}${ARGN}').hexdigest()[:5]
 print(re.sub('\\W', '_', '${desc} ${reldir} ' + unique))"
     OUTPUT_VARIABLE _target OUTPUT_STRIP_TRAILING_WHITESPACE)
     add_custom_target(${_target} ALL DEPENDS ${ARGN})
-endfunction(GR_UNIQUE_TARGET)
+endfunction(VOLK_UNIQUE_TARGET)
 
 ########################################################################
 # Install python sources (also builds and installs byte-compiled python)
 ########################################################################
-function(GR_PYTHON_INSTALL)
+function(VOLK_PYTHON_INSTALL)
     include(CMakeParseArgumentsCopy)
-    CMAKE_PARSE_ARGUMENTS(GR_PYTHON_INSTALL "" "DESTINATION;COMPONENT" "FILES;PROGRAMS" ${ARGN})
+    CMAKE_PARSE_ARGUMENTS(VOLK_PYTHON_INSTALL "" "DESTINATION;COMPONENT" "FILES;PROGRAMS" ${ARGN})
 
     ####################################################################
-    if(GR_PYTHON_INSTALL_FILES)
+    if(VOLK_PYTHON_INSTALL_FILES)
     ####################################################################
         install(${ARGN}) #installs regular python files
 
@@ -133,7 +133,7 @@ function(GR_PYTHON_INSTALL)
         unset(pysrcfiles)
         unset(pycfiles)
         unset(pyofiles)
-        foreach(pyfile ${GR_PYTHON_INSTALL_FILES})
+        foreach(pyfile ${VOLK_PYTHON_INSTALL_FILES})
             get_filename_component(pyfile ${pyfile} ABSOLUTE)
             list(APPEND pysrcfiles ${pyfile})
 
@@ -173,13 +173,13 @@ function(GR_PYTHON_INSTALL)
         #create install rule and add generated files to target list
         set(python_install_gen_targets ${pycfiles} ${pyofiles})
         install(FILES ${python_install_gen_targets}
-            DESTINATION ${GR_PYTHON_INSTALL_DESTINATION}
-            COMPONENT ${GR_PYTHON_INSTALL_COMPONENT}
+            DESTINATION ${VOLK_PYTHON_INSTALL_DESTINATION}
+            COMPONENT ${VOLK_PYTHON_INSTALL_COMPONENT}
         )
 
 
     ####################################################################
-    elseif(GR_PYTHON_INSTALL_PROGRAMS)
+    elseif(VOLK_PYTHON_INSTALL_PROGRAMS)
     ####################################################################
         file(TO_NATIVE_PATH ${PYTHON_EXECUTABLE} pyexe_native)
 
@@ -187,7 +187,7 @@ function(GR_PYTHON_INSTALL)
            set(pyexe_native /usr/bin/env python)
         endif()
 
-        foreach(pyfile ${GR_PYTHON_INSTALL_PROGRAMS})
+        foreach(pyfile ${VOLK_PYTHON_INSTALL_PROGRAMS})
             get_filename_component(pyfile_name ${pyfile} NAME)
             get_filename_component(pyfile ${pyfile} ABSOLUTE)
             string(REPLACE "${CMAKE_SOURCE_DIR}" "${CMAKE_BINARY_DIR}" pyexefile "${pyfile}.exe")
@@ -210,16 +210,16 @@ function(GR_PYTHON_INSTALL)
             endif()
 
             install(PROGRAMS ${pyexefile} RENAME ${pyfile_name}
-                DESTINATION ${GR_PYTHON_INSTALL_DESTINATION}
-                COMPONENT ${GR_PYTHON_INSTALL_COMPONENT}
+                DESTINATION ${VOLK_PYTHON_INSTALL_DESTINATION}
+                COMPONENT ${VOLK_PYTHON_INSTALL_COMPONENT}
             )
         endforeach(pyfile)
 
     endif()
 
-    GR_UNIQUE_TARGET("pygen" ${python_install_gen_targets})
+    VOLK_UNIQUE_TARGET("pygen" ${python_install_gen_targets})
 
-endfunction(GR_PYTHON_INSTALL)
+endfunction(VOLK_PYTHON_INSTALL)
 
 ########################################################################
 # Write the python helper script that generates byte code files
