@@ -22,18 +22,18 @@
 ########################################################################
 include(GrPython)
 
-GR_PYTHON_INSTALL(
+VOLK_PYTHON_INSTALL(
     FILES
     __init__.py
     cfg.py
     volk_modtool_generate.py
-    DESTINATION ${GR_PYTHON_DIR}/volk_modtool
+    DESTINATION ${VOLK_PYTHON_DIR}/volk_modtool
     COMPONENT "volk"
 )
 
-GR_PYTHON_INSTALL(
+VOLK_PYTHON_INSTALL(
     PROGRAMS
     volk_modtool
-    DESTINATION ${GR_RUNTIME_DIR}
+    DESTINATION ${VOLK_RUNTIME_DIR}
     COMPONENT "volk"
 )

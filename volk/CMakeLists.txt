@@ -51,8 +51,8 @@ SET(CROSSCOMPILE_MULTILIB ${CROSSCOMPILE_MULTILIB} CACHE STRING "Define \"true\"
 # Dependencies setup
 ########################################################################
 include(GrPython) #sets PYTHON_EXECUTABLE and PYTHON_DASH_B
-GR_PYTHON_CHECK_MODULE("python >= 2.5"     sys          "sys.version.split()[0] >= '2.5'"           PYTHON_MIN_VER_FOUND)
-GR_PYTHON_CHECK_MODULE("Cheetah >= 2.0.0"  Cheetah      "Cheetah.Version >= '2.0.0'"                CHEETAH_FOUND)
+VOLK_PYTHON_CHECK_MODULE("python >= 2.5" sys "sys.version.split()[0] >= '2.5'" PYTHON_MIN_VER_FOUND)
+VOLK_PYTHON_CHECK_MODULE("Cheetah >= 2.0.0" Cheetah "Cheetah.Version >= '2.0.0'" CHEETAH_FOUND)
 
 if(NOT PYTHON_MIN_VER_FOUND)
     message(FATAL_ERROR "Python 2.5 or greater required to build VOLK")
@@ -104,6 +104,10 @@ install(
 ########################################################################
 # Install all headers in the include directories
 ########################################################################
+set(VOLK_RUNTIME_DIR   bin)
+set(VOLK_LIBRARY_DIR   lib${LIB_SUFFIX})
+set(VOLK_INCLUDE_DIR   include)
+
 install(
     DIRECTORY ${CMAKE_SOURCE_DIR}/kernels/volk
     DESTINATION include COMPONENT "volk_devel"
