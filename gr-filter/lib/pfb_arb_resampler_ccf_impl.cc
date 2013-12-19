@@ -67,7 +67,7 @@ namespace gr {
       unsigned ninputs = ninput_items_required.size();
       if(noutput_items / relative_rate() < 1) {
         for(unsigned i = 0; i < ninputs; i++)
-          ninput_items_required[i] = max_output_buffer(i)-1;
+          ninput_items_required[i] = relative_rate() + history() - 1;
       }
       else {
         for(unsigned i = 0; i < ninputs; i++)

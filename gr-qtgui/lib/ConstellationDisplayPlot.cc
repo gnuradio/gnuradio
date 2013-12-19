@@ -33,7 +33,12 @@
 class ConstellationDisplayZoomer: public QwtPlotZoomer
 {
 public:
-  ConstellationDisplayZoomer(QwtPlotCanvas* canvas):QwtPlotZoomer(canvas)
+#if QWT_VERSION < 0x060100
+  ConstellationDisplayZoomer(QwtPlotCanvas* canvas)
+#else /* QWT_VERSION < 0x060100 */
+  ConstellationDisplayZoomer(QWidget* canvas)
+#endif /* QWT_VERSION < 0x060100 */
+    : QwtPlotZoomer(canvas)
   {
     setTrackerMode(QwtPicker::AlwaysOn);
   }
