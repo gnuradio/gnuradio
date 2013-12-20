@@ -73,6 +73,7 @@ THE_TABLE = ( #python type, check pmt type, to python, from python
     (None, pmt.is_null, lambda x: None, lambda x: pmt.PMT_NIL),
     (bool, pmt.is_bool, pmt.to_bool, pmt.from_bool),
     (str, pmt.is_symbol, pmt.symbol_to_string, pmt.string_to_symbol),
+    (unicode, lambda x: False, None, lambda x: pmt.string_to_symbol(x.encode('utf-8'))),
     (int, pmt.is_integer, pmt.to_long, pmt.from_long),
     (long, pmt.is_uint64, lambda x: long(pmt.to_uint64(x)), pmt.from_uint64),
     (float, pmt.is_real, pmt.to_double, pmt.from_double),
