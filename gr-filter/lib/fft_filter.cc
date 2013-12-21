@@ -39,7 +39,7 @@ namespace gr {
 				     const std::vector<float> &taps,
 				     int nthreads)
 	: d_fftsize(-1), d_decimation(decimation), d_fwdfft(0),
-	  d_invfft(0), d_nthreads(nthreads)
+	  d_invfft(0), d_nthreads(nthreads), d_xformed_taps(NULL)
       {
 	set_taps(taps);
       }
@@ -192,7 +192,7 @@ namespace gr {
 				     const std::vector<gr_complex> &taps,
 				     int nthreads)
 	: d_fftsize(-1), d_decimation(decimation), d_fwdfft(0),
-	  d_invfft(0), d_nthreads(nthreads)
+	  d_invfft(0), d_nthreads(nthreads), d_xformed_taps(NULL)
       {
 	set_taps(taps);
       }

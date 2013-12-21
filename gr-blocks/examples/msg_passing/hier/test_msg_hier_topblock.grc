@@ -134,10 +134,10 @@
     </param>
   </block>
   <block>
-    <key>TEST_MSG_HIER</key>
+    <key>test_msg_hier</key>
     <param>
       <key>id</key>
-      <value>TEST_MSG_HIER_0</value>
+      <value>test_msg_hier_0</value>
     </param>
     <param>
       <key>_enabled</key>
@@ -153,31 +153,31 @@
     </param>
   </block>
   <connection>
-    <source_block_id>TEST_MSG_HIER_0</source_block_id>
+    <source_block_id>test_msg_hier_0</source_block_id>
     <sink_block_id>blocks_message_debug_0</sink_block_id>
     <source_key>0</source_key>
     <sink_key>0</sink_key>
   </connection>
   <connection>
     <source_block_id>blocks_message_strobe_0</source_block_id>
-    <sink_block_id>TEST_MSG_HIER_0</sink_block_id>
+    <sink_block_id>test_msg_hier_0</sink_block_id>
     <source_key>0</source_key>
     <sink_key>0</sink_key>
   </connection>
   <connection>
     <source_block_id>blocks_message_strobe_0_0</source_block_id>
-    <sink_block_id>TEST_MSG_HIER_0</sink_block_id>
+    <sink_block_id>test_msg_hier_0</sink_block_id>
     <source_key>0</source_key>
     <sink_key>1</sink_key>
   </connection>
   <connection>
-    <source_block_id>TEST_MSG_HIER_0</source_block_id>
+    <source_block_id>test_msg_hier_0</source_block_id>
     <sink_block_id>blocks_message_debug_0</sink_block_id>
     <source_key>0</source_key>
     <sink_key>1</sink_key>
   </connection>
   <connection>
-    <source_block_id>TEST_MSG_HIER_0</source_block_id>
+    <source_block_id>test_msg_hier_0</source_block_id>
     <sink_block_id>blocks_message_debug_0</sink_block_id>
     <source_key>1</source_key>
     <sink_key>0</sink_key>
