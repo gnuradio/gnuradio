@@ -34,10 +34,8 @@
 #include <gnuradio/filter/firdes.h>
 #include <gnuradio/filter/fir_filter_ccf.h>
 #include <gnuradio/filter/interp_fir_filter_ccf.h>
-#include <gnuradio/blocks/complex_to_float.h>
 #include <gnuradio/atsc/fpll.h>
-#include <gnuradio/filter/fir_filter_fff.h>
-#include <gnuradio/filter/freq_xlating_fir_filter_ccf.h>
+#include <gnuradio/blocks/complex_to_float.h>
 #include <gnuradio/analog/agc_ff.h>
 #include <gnuradio/filter/single_pole_iir_filter_ff.h>
 #include <gnuradio/blocks/sub_ff.h>
@@ -54,7 +52,6 @@
 #define INPUT_RATE (6.4e6)
 #define INTERPOLATION (3)
 #define INTERPOLATED_RATE (INPUT_RATE*INTERPOLATION)
-#define INTERMEDIARY_FREQUENCY (5.75e6)
 
 using namespace gr;
 
@@ -84,19 +81,11 @@ int main(int argc, char **argv)
 	std::vector<float> ilp_coeffs = filter::firdes::low_pass(3, INTERPOLATED_RATE, 3.2e6, 0.5e6, filter::firdes::WIN_HAMMING);
 	filter::interp_fir_filter_ccf::sptr ilp = filter::interp_fir_filter_ccf::make(3, ilp_coeffs);
 
-	// Move the center frequency to 5.75MHz ( this wont be needed soon )
-	std::vector<float> duc_coeffs = filter::firdes::low_pass(1, INTERPOLATED_RATE, 9e6, 1e6, filter::firdes::WIN_HAMMING);
-    	filter::freq_xlating_fir_filter_ccf::sptr duc = filter::freq_xlating_fir_filter_ccf::make(1, duc_coeffs, -INTERMEDIARY_FREQUENCY, INTERPOLATED_RATE);
-
-	// fpll input is float
-	blocks::complex_to_float::sptr c2f = blocks::complex_to_float::make();
-
 	// Phase locked loop
 	atsc_fpll_sptr fpll = atsc_make_fpll(INTERPOLATED_RATE);
 
-	// Clean fpll output
-	std::vector<float> lp_coeffs2 = filter::firdes::low_pass(1.0, INTERPOLATED_RATE, INTERMEDIARY_FREQUENCY, 800e3, filter::firdes::WIN_HAMMING);
-	filter::fir_filter_fff::sptr lp_filter = filter::fir_filter_fff::make(1, lp_coeffs2);
+	//fpll output is complex, we need floats
+	blocks::complex_to_float::sptr c2f = blocks::complex_to_float::make();
 
 	// Automatic gain control
 	analog::agc_ff::sptr agc = analog::agc_ff::make(1e-6, 4);
@@ -110,7 +99,7 @@ int main(int argc, char **argv)
 	atsc_fs_checker_sptr fsc = atsc_make_fs_checker();
 	atsc_equalizer_sptr eq = atsc_make_equalizer();
 
-	// Viterbi
+	// Viterbi, Deinterleaver, Reed_solomon, Derandomizer, and Depad
 	atsc_viterbi_decoder_sptr viterbi = atsc_make_viterbi_decoder();
         atsc_deinterleaver_sptr deinter = atsc_make_deinterleaver();
         atsc_rs_decoder_sptr rs_dec = atsc_make_rs_decoder();
@@ -124,11 +113,9 @@ int main(int argc, char **argv)
 	tb->connect(srcf, 0, is2c, 0);
 	tb->connect(is2c, 0, rrc, 0);
 	tb->connect(rrc, 0, ilp, 0);
-	tb->connect(ilp, 0, duc, 0);
-	tb->connect(duc, 0, c2f, 0);
-	tb->connect(c2f, 0, fpll, 0);
-	tb->connect(fpll, 0, lp_filter, 0);
-	tb->connect(lp_filter, 0, agc, 0);
+	tb->connect(ilp, 0, fpll, 0);
+	tb->connect(fpll, 0, c2f, 0);
+	tb->connect(c2f, 0, agc, 0);
 	tb->connect(agc, 0, remove_dc, 0);
 	tb->connect(agc, 0, iir, 0);
 	tb->connect(iir, 0, remove_dc, 1);

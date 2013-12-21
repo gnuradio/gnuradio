@@ -40,7 +40,7 @@
 # field, this then adjusts the timing so the amplitude will be sampled at the
 # correct sample ( sub-sample is used in this case ). 
 #
-# Output is float.
+# Output is an MPEG-TS.
 
 from gnuradio import gr, analog, atsc
 from gnuradio import blocks
@@ -59,7 +59,6 @@ def graph (args):
         	raise ValueError('usage: atsc_rx.py input_file output_file.ts\n')
 
 	input_rate = 6.4e6*3
-	IF_freq = 5.75e6
 
 	tb = gr.top_block()
 
@@ -82,7 +81,7 @@ def graph (args):
 	# Phase locked loop
 	fpll = atsc.fpll( input_rate )
 
-	# fpll input is float
+	# fpll output is complex, we need floats
 	c2f = blocks.complex_to_float()
 
 	# Automatic gain control
@@ -97,7 +96,7 @@ def graph (args):
 	fsc = atsc.fs_checker()
 	eq = atsc.equalizer()
 
-	# Viterbi
+	# Viterbi, Deinterleaver, Reed_solomon, Derandomizer, and Depad
 	viterbi = atsc.viterbi_decoder()
         deinter = atsc.deinterleaver()
         rs_dec = atsc.rs_decoder()
