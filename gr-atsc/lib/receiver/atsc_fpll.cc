@@ -40,7 +40,7 @@ atsc_make_fpll( float sample_rate )
 atsc_fpll::atsc_fpll( float sample_rate )
 	: gr::sync_block("atsc_fpll",
 		gr::io_signature::make(1, 1, sizeof(gr_complex)),
-		gr::io_signature::make(1, 1, sizeof(gr_complex))),
+		gr::io_signature::make(1, 1, sizeof(float))),
 		initial_phase(0)
 {
 	initial_freq = -3e6 + 0.309e6; // a_initial_freq;
@@ -65,7 +65,7 @@ atsc_fpll::work (int noutput_items,
 		       gr_vector_void_star &output_items)
 {
 	const gr_complex *in = (const gr_complex *) input_items[0];
-	gr_complex *out = (gr_complex *) output_items[0];
+	float *out = (float *) output_items[0];
 
 	for (int k = 0; k < noutput_items; k++)
 	{
@@ -76,7 +76,7 @@ atsc_fpll::work (int noutput_items,
 
 		gr_complex result = in[k] * gr_complex(a_sin, a_cos);
 
-    		out[k] = result;
+    		out[k] = result.real();
 
 		gr_complex filtered = afc.filter (result);
 

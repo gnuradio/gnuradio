@@ -74,11 +74,8 @@ def graph (args):
 	tt = filter.firdes.root_raised_cosine (1.0, input_rate, symbol_rate, .1152, NTAPS)
 	ilp = filter.interp_fir_filter_ccf(3, tt)
 
-	# Phase locked loop
+	# Phase locked loop and complex-to-real conversion
 	fpll = atsc.fpll( input_rate )
-
-	# fpll output is complex, we need floats
-	c2f = blocks.complex_to_float()
 
 	# Automatic gain control
 	agc = analog.agc_ff(1e-6, 4)
@@ -103,7 +100,7 @@ def graph (args):
 	outf = blocks.file_sink(gr.sizeof_char,outfile)
 
 	# Connect it all together
-	tb.connect( srcf, is2c, ilp, fpll, c2f, agc)
+	tb.connect( srcf, is2c, ilp, fpll, agc)
 	tb.connect( agc, (remove_dc, 0) )
 	tb.connect( agc, iir, (remove_dc, 1) )
 	tb.connect( remove_dc, btl, fsc, eq, viterbi, deinter, rs_dec, derand, depad, outf)
@@ -114,7 +111,6 @@ def graph (args):
 	print 'is2c:      ' + repr(is2c.pc_work_time()).rjust(15)
 	print 'ilp:       ' + repr(ilp.pc_work_time()).rjust(15)
 	print 'fpll:      ' + repr(fpll.pc_work_time()).rjust(15)
-	print 'c2f:       ' + repr(c2f.pc_work_time()).rjust(15)
 	print 'agc:       ' + repr(agc.pc_work_time()).rjust(15)
 	print 'btl:       ' + repr(btl.pc_work_time()).rjust(15)
 	print 'fsc:       ' + repr(fsc.pc_work_time()).rjust(15)
