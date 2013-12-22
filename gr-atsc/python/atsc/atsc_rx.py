@@ -68,16 +68,12 @@ def graph (args):
 	# Convert interleaved shorts (I,Q,I,Q) to complex
 	is2c = blocks.interleaved_short_to_complex()
 
-	# 1/2 as wide because we're designing lp filter
+	# RRC filter (symbol matched filter) and interpolate by 3
 	symbol_rate = atsc.ATSC_SYMBOL_RATE/2.
-	NTAPS = 279
-	tt = filter.firdes.root_raised_cosine (1.0, input_rate / 3, symbol_rate, .1152, NTAPS)
-	rrc = filter.fir_filter_ccf(1, tt)
+	NTAPS = 279*3
+	tt = filter.firdes.root_raised_cosine (1.0, input_rate, symbol_rate, .1152, NTAPS)
+	ilp = filter.interp_fir_filter_ccf(3, tt)
 
-	# Interpolate Filter our 6MHz wide signal centered at 0
-	ilp_coeffs = filter.firdes.low_pass(3, input_rate, 3.2e6, .5e6, filter.firdes.WIN_HAMMING)
-	ilp = filter.interp_fir_filter_ccf(3, ilp_coeffs)
-	
 	# Phase locked loop
 	fpll = atsc.fpll( input_rate )
 
@@ -107,7 +103,7 @@ def graph (args):
 	outf = blocks.file_sink(gr.sizeof_char,outfile)
 
 	# Connect it all together
-	tb.connect( srcf, is2c, rrc, ilp, fpll, c2f, agc)
+	tb.connect( srcf, is2c, ilp, fpll, c2f, agc)
 	tb.connect( agc, (remove_dc, 0) )
 	tb.connect( agc, iir, (remove_dc, 1) )
 	tb.connect( remove_dc, btl, fsc, eq, viterbi, deinter, rs_dec, derand, depad, outf)
@@ -116,7 +112,6 @@ def graph (args):
 
 	print 'srcf:      ' + repr(srcf.pc_work_time()).rjust(15)
 	print 'is2c:      ' + repr(is2c.pc_work_time()).rjust(15)
-	print 'rrc:       ' + repr(rrc.pc_work_time()).rjust(15)
 	print 'ilp:       ' + repr(ilp.pc_work_time()).rjust(15)
 	print 'fpll:      ' + repr(fpll.pc_work_time()).rjust(15)
 	print 'c2f:       ' + repr(c2f.pc_work_time()).rjust(15)
