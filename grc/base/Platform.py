@@ -81,7 +81,7 @@ class Platform(_Element):
         self._blocks_n = odict()
         self._block_tree_files = list()
         for xml_file in xml_files:
-            try: #try to add the xml file as a block wrapper
+            try:  # try to add the xml file as a block wrapper
                 ParseXML.validate_dtd(xml_file, self._block_dtd)
                 n = ParseXML.from_file(xml_file).find('block')
                 #inject block wrapper path
@@ -96,13 +96,15 @@ class Platform(_Element):
                     self._blocks[key] = block
                     self._blocks_n[key] = n
             except ParseXML.XMLSyntaxError, e:
-                try: #try to add the xml file as a block tree
+                try:  # try to add the xml file as a block tree
                     ParseXML.validate_dtd(xml_file, BLOCK_TREE_DTD)
                     self._block_tree_files.append(xml_file)
-                    # remove the block DTD error, since iti s a valid block tree
-                    ParseXML.xml_failures.pop(xml_file)
+                    # remove the block DTD error, since it is a valid block tree
                 except ParseXML.XMLSyntaxError, e:
                     print >> sys.stderr, 'Warning: Block validation failed:\n\t%s\n\tIgnoring: %s'%(e, xml_file)
+                else:
+                    del ParseXML.xml_failures[xml_file]
+
             except Exception, e:
                 print >> sys.stderr, 'Warning: Block loading failed:\n\t%s\n\tIgnoring: %s'%(e, xml_file)
 

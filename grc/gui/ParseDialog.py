@@ -19,76 +19,74 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 
 import pygtk
 pygtk.require('2.0')
-import gtk, glib
+import gtk
 
-from Dialogs import TextDisplay
 from Constants import MIN_DIALOG_WIDTH, MIN_DIALOG_HEIGHT
 
-def get_title_label(title):
-    """
-    Get a title label for the params window.
-    The title will be bold, underlined, and left justified.
-    
-    Args:
-        title: the text of the title
-    
-    Returns:
-        a gtk object
-    """
-    label = gtk.Label()
-    label.set_markup('\n<b><span underline="low">%s</span>:</b>\n'%title)
-    hbox = gtk.HBox()
-    hbox.pack_start(label, False, False, padding=11)
-    return hbox
 
 class ParseDialog(gtk.Dialog):
     """
     A dialog for viewing parser errors
     """
 
-    def __init__(self, errors):
+    def __init__(self, error_logs):
         """
-        Properties dialog contructor.
+        Properties dialog constructor.
         
         Args:
             block: a block instance
         """
-        self._hash = 0
-        LABEL_SPACING = 7
-        gtk.Dialog.__init__(self,
-            title='Parser Errors',
-            buttons=(gtk.STOCK_OK, gtk.RESPONSE_ACCEPT),
-        )
+        gtk.Dialog.__init__(self, title='Parser Errors', buttons=(gtk.STOCK_CLOSE, gtk.RESPONSE_ACCEPT))
 
-        self._errors = errors;
- 
-        # set up data model   
-        model = gtk.TreeStore(str)
-        for k in self._errors.keys():
-            n = model.append(None, [str(k)]);
-            for e in self._errors[k]:
-                # http://lxml.de/api/lxml.etree._LogEntry-class.html
-                em = model.append(n, [ "(%s:%s:%s) %s %s %s"%(e.filename, e.line, e.column, e.level_name, e.domain_name, e.message) ] )
-                try:
-                    sf = open(e.filename,'r');
-                    lc = sf.readlines()[e.line].rstrip('\n');
-                    model.append(em, [ lc]  )
-                except:
-                    model.append(em, ["could not access source file"]  )
-                    
+        self._error_logs = None
+        self.tree_store = gtk.TreeStore(str)
+        self.update_tree_store(error_logs)
 
-        view = gtk.TreeView(model)
-        tvcolumn = gtk.TreeViewColumn('XML Parser Errors by Filename')
-        view.append_column(tvcolumn)
-        cell = gtk.CellRendererText()
-        tvcolumn.pack_start(cell, True)
-        tvcolumn.add_attribute(cell, 'text', 0)
-        view.set_search_column(0)
-        tvcolumn.set_sort_column_id(0)
-        view.set_reorderable(True)
+        column = gtk.TreeViewColumn('XML Parser Errors by Filename')
+        renderer = gtk.CellRendererText()
+        column.pack_start(renderer, True)
+        column.add_attribute(renderer, 'text', 0)
+        column.set_sort_column_id(0)
 
-        self.vbox.add(view);
+        self.tree_view = tree_view = gtk.TreeView(self.tree_store)
+        tree_view.set_enable_search(False) #disable pop up search box
+        tree_view.set_search_column(-1) # really disable search
+        tree_view.set_reorderable(False)
+        tree_view.set_headers_visible(False)
+        tree_view.get_selection().set_mode(gtk.SELECTION_NONE)
+        tree_view.append_column(column)
+
+        for row in self.tree_store:
+            tree_view.expand_row(row.path, False)
+
+        scrolled_window = gtk.ScrolledWindow()
+        scrolled_window.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
+        scrolled_window.add_with_viewport(tree_view)
+
+        self.vbox.pack_start(scrolled_window, True)
+        self.set_size_request(2*MIN_DIALOG_WIDTH, MIN_DIALOG_HEIGHT)
         self.show_all()
+
+    def update_tree_store(self, error_logs):
+        """set up data model"""
+        self.tree_store.clear()
+        self._error_logs = error_logs
+        for filename, errors in error_logs.iteritems():
+            parent = self.tree_store.append(None, [str(filename)])
+            try:
+                with open(filename, 'r') as fp:
+                    code = fp.readlines()
+            except EnvironmentError:
+                code = None
+            for error in errors:
+                # http://lxml.de/api/lxml.etree._LogEntry-class.html
+                em = self.tree_store.append(parent, ["Line {e.line}: {e.message}".format(e=error)])
+                if code:
+                    self.tree_store.append(em, ["\n".join(
+                        "{} {}{}".format(line, code[line - 1].replace("\t", "    ").strip("\n"),
+                                         " " * 20 + "<!-- ERROR -->" if line == error.line else "")
+                        for line in range(error.line - 2, error.line + 3) if 0 < line <= len(code)
+                    )])
 
     def run(self):
         """
