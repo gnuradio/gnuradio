@@ -462,7 +462,7 @@ class ActionHandler:
         elif action == Actions.PAGE_CHANGE: #pass and run the global actions
             pass
         elif action == Actions.RELOAD_BLOCKS:
-            self.platform.loadblocks()
+            self.platform.load_blocks()
             self.main_window.btwin.clear()
             self.platform.load_block_tree(self.main_window.btwin)
             Actions.PARSER_ERRORS.set_sensitive(bool(ParseXML.xml_failures))
