@@ -9,6 +9,7 @@
 	<name>QT GUI Range</name>
 	<key>variable_qtgui_range</key>
 	<import>from PyQt4 import Qt</import>
+	<import>from PyQt4.QtCore import QObject, pyqtSlot</import>
 	<import>import PyQt4.Qwt5 as Qwt</import>
 	<var_make>self.$(id) = $(id) = $value</var_make>
 	<make>#set $win = 'self._%s_layout'%$id
@@ -53,7 +54,13 @@ $(win).addWidget(self._$(id)_label)
 ########################################################################
 $win = Qt.QHBoxLayout()
 $(win).addWidget(Qt.QLabel($label+": "))
-self._$(id)_counter = Qwt.QwtCounter()
+class qwt_counter_fixed(Qwt.QwtCounter):
+    def __init__(self, parent=None):
+        Qwt.QwtCounter.__init__(self, parent)
+    @pyqtSlot('double')
+    def setValue(self, value):
+        super(Qwt.QwtCounter, self).setValue(value)
+self._$(id)_counter = qwt_counter_fixed()
 self._$(id)_counter.setRange($start, $stop, $step)
 self._$(id)_counter.setNumButtons(2)
 self._$(id)_counter.setMinimumWidth($min_len)
@@ -88,7 +95,13 @@ $win = Qt.QVBoxLayout()
 self._$(id)_tool_bar = Qt.QToolBar(self)
 $(win).addWidget(self._$(id)_tool_bar)
 self._$(id)_tool_bar.addWidget(Qt.QLabel($label+": "))
-self._$(id)_counter = Qwt.QwtCounter()
+class qwt_counter_fixed(Qwt.QwtCounter):
+    def __init__(self, parent=None):
+        Qwt.QwtCounter.__init__(self, parent)
+    @pyqtSlot('double')
+    def setValue(self, value):
+        super(Qwt.QwtCounter, self).setValue(value)
+self._$(id)_counter = qwt_counter_fixed()
 self._$(id)_counter.setRange($start, $stop, $step)
 self._$(id)_counter.setNumButtons(2)
 self._$(id)_counter.setValue(self.$id)
@@ -104,20 +117,20 @@ $(win).addWidget(self._$(id)_slider)
 $(gui_hint()($win))</make>
 	<callback>self.set_$(id)($value)</callback>
 	<callback>#if $widget() == "knob"
-self._$(id)_knob.setValue($id)
+Qt.QMetaObject.invokeMethod(self._$(id)_knob, "setValue", Qt.Q_ARG("double", $id))
 #end if
 #if $widget() == "thermo"
-self._$(id)_thermo.setValue($id)
+Qt.QMetaObject.invokeMethod(self._$(id)_thermo, "setValue", Qt.Q_ARG("double", $id))
 #end if
 #if $widget() == "counter"
-self._$(id)_counter.setValue($id)
+Qt.QMetaObject.invokeMethod(self._$(id)_counter, "setValue", Qt.Q_ARG("double", $id))
 #end if
 #if $widget() == "slider"
-self._$(id)_slider.setValue($id)
+Qt.QMetaObject.invokeMethod(self._$(id)_slider, "setValue", Qt.Q_ARG("double", $id))
 #end if
 #if $widget() == "counter_slider"
-self._$(id)_counter.setValue($id)
-self._$(id)_slider.setValue($id)
+Qt.QMetaObject.invokeMethod(self._$(id)_counter, "setValue", Qt.Q_ARG("double", $id))
+Qt.QMetaObject.invokeMethod(self._$(id)_slider, "setValue", Qt.Q_ARG("double", $id))
 #end if</callback>
 	<param>
 		<name>Label</name>
