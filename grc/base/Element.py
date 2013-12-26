@@ -89,6 +89,7 @@ class Element(object):
     def is_flow_graph(self): return False
     def is_connection(self): return False
     def is_block(self): return False
+    def is_dummy_block(self): return False
     def is_source(self): return False
     def is_sink(self): return False
     def is_port(self): return False

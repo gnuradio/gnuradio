@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<!--
+###################################################
+##Dummy Block
+###################################################
+-->
+<block>
+    <name>Missing Block</name>
+    <key>dummy_block</key>
+    <make>raise NotImplementedError()</make>
+</block>

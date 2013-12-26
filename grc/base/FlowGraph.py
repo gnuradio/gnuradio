@@ -268,16 +268,20 @@ class FlowGraph(Element):
         #build the blocks
         for block_n in blocks_n:
             key = block_n.find('key')
-            if key == 'options': block = self._options_block
-            else: block = self.get_new_block(key)
-            #only load the block when the block key was valid
-            if block: block.import_data(block_n)
-            else: Messages.send_error_load('Block key "%s" not found in %s'%(key, self.get_parent()))
+            block = self._options_block if key == 'options' else self.get_new_block(key)
+
+            if not block:  # looks like this block key cannot be found
+                # create a dummy block instead
+                block = self.get_new_block('dummy_block')
+                # Ugly ugly ugly
+                _initialize_dummy_block(block, block_n)
+                Messages.send_error_load('Block key "%s" not found in %s' % (key, self.get_parent()))
+
+            block.import_data(block_n)
         #build the connections
         block_ids = map(lambda b: b.get_id(), self.get_blocks())
         for connection_n in connections_n:
-            #try to make the connection
-            try:
+            try:  # to make the connection
                 #get the block ids
                 source_block_id = connection_n.find('source_block_id')
                 sink_block_id = connection_n.find('sink_block_id')
@@ -297,9 +301,17 @@ class FlowGraph(Element):
                 sink_key = self.update_message_port_key(sink_key, sink_block.get_sinks())
                 #verify the ports
                 if source_key not in source_block.get_source_keys():
-                    raise LookupError('source key "%s" not in source block keys'%source_key)
+                    # dummy blocks learn their ports here
+                    if source_block.is_dummy_block():
+                        _dummy_block_add_port(source_block, source_key, dir='source')
+                    else:
+                        raise LookupError('source key "%s" not in source block keys' % source_key)
                 if sink_key not in sink_block.get_sink_keys():
-                    raise LookupError('sink key "%s" not in sink block keys'%sink_key)
+                    # dummy blocks learn their ports here
+                    if sink_block.is_dummy_block():
+                        _dummy_block_add_port(sink_block, sink_key, dir='sink')
+                    else:
+                        raise LookupError('sink key "%s" not in sink block keys' % sink_key)
                 #get the ports
                 source = source_block.get_source(source_key)
                 sink = sink_block.get_sink(sink_key)
@@ -327,7 +339,35 @@ class FlowGraph(Element):
         :returns: the updated key or the original one
         """
         if key.isdigit():  # don't bother current message port keys
-            port = ports[int(key)]  # get port (assuming liner indexed keys)
-            if port.get_type() == "message":
-                return port.get_key()  # for message ports get updated key
+            try:
+                port = ports[int(key)]  # get port (assuming liner indexed keys)
+                if port.get_type() == "message":
+                    return port.get_key()  # for message ports get updated key
+            except IndexError:
+                pass
         return key  # do nothing
+
+
+def _initialize_dummy_block(block, block_n):
+    """This is so ugly... dummy-fy a block
+
+    Modify block object to get the behaviour for a missing block
+    """
+    block._key = block_n.find('key')
+    block.is_dummy_block = lambda: True
+    block.is_valid =  lambda: False
+    block.get_enabled = lambda: False
+    for param_n in block_n.findall('param'):
+        if param_n['key'] not in block.get_param_keys():
+            new_param_n = odict({'key': param_n['key'], 'name': param_n['key'], 'type': 'string'})
+            block.get_params().append(block.get_parent().get_parent().Param(block=block, n=new_param_n))
+
+
+def _dummy_block_add_port(block, key, dir):
+    """This is so ugly... Add a port to a dummy-fied block"""
+    port_n = odict({'name': '?', 'key': key, 'type': ''})
+    port = block.get_parent().get_parent().Port(block=block, n=port_n, dir=dir)
+    if port.is_source():
+        block.get_sources().append(port)
+    else:
+        block.get_sinks().append(port)

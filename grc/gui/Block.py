@@ -139,7 +139,10 @@ class Block(Element):
         layout.set_markup(Utils.parse_template(BLOCK_MARKUP_TMPL, block=self))
         self.label_width, self.label_height = layout.get_pixel_size()
         #display the params
-        markups = [param.get_markup() for param in self.get_params() if param.get_hide() not in ('all', 'part')]
+        if self.is_dummy_block():
+            markups = ['<span foreground="black" font_desc="Sans 7.5"><b>key: </b>{}</span>'.format(self._key)]
+        else:
+            markups = [param.get_markup() for param in self.get_params() if param.get_hide() not in ('all', 'part')]
         if markups:
             layout = gtk.DrawingArea().create_pango_layout('')
             layout.set_spacing(LABEL_SEPARATION*pango.SCALE)
