@@ -54,13 +54,13 @@ $(win).addWidget(self._$(id)_label)
 ########################################################################
 $win = Qt.QHBoxLayout()
 $(win).addWidget(Qt.QLabel($label+": "))
-class qwt_counter_fixed(Qwt.QwtCounter):
+class qwt_counter_pyslot(Qwt.QwtCounter):
     def __init__(self, parent=None):
         Qwt.QwtCounter.__init__(self, parent)
     @pyqtSlot('double')
     def setValue(self, value):
         super(Qwt.QwtCounter, self).setValue(value)
-self._$(id)_counter = qwt_counter_fixed()
+self._$(id)_counter = qwt_counter_pyslot()
 self._$(id)_counter.setRange($start, $stop, $step)
 self._$(id)_counter.setNumButtons(2)
 self._$(id)_counter.setMinimumWidth($min_len)
@@ -95,13 +95,13 @@ $win = Qt.QVBoxLayout()
 self._$(id)_tool_bar = Qt.QToolBar(self)
 $(win).addWidget(self._$(id)_tool_bar)
 self._$(id)_tool_bar.addWidget(Qt.QLabel($label+": "))
-class qwt_counter_fixed(Qwt.QwtCounter):
+class qwt_counter_pyslot(Qwt.QwtCounter):
     def __init__(self, parent=None):
         Qwt.QwtCounter.__init__(self, parent)
     @pyqtSlot('double')
     def setValue(self, value):
         super(Qwt.QwtCounter, self).setValue(value)
-self._$(id)_counter = qwt_counter_fixed()
+self._$(id)_counter = qwt_counter_pyslot()
 self._$(id)_counter.setRange($start, $stop, $step)
 self._$(id)_counter.setNumButtons(2)
 self._$(id)_counter.setValue(self.$id)
