@@ -176,6 +176,21 @@ if(${HAVE_CVTPI32_PS})
     add_definitions(-DHAVE_CVTPI32_PS)
 endif()
 
+if("${CMAKE_C_COMPILER_ID}" STREQUAL "Clang")
+  execute_process(COMMAND ${CMAKE_C_COMPILER} --version
+    OUTPUT_VARIABLE cmake_c_compiler_version)
+
+  # Exctract the Clang version from the --version string.
+  # In cmake 2.8.10, we can just use CMAKE_C_COMPILER_VERSION
+  # without having to go through these string manipulations
+  string(FIND ${cmake_c_compiler_version} "LLVM " clang_version_index)
+  string(SUBSTRING ${cmake_c_compiler_version} ${clang_version_index} 8 clang_version)
+  string(SUBSTRING ${clang_version} 5 3 CMAKE_C_COMPILER_VERSION)
+  if(CMAKE_C_COMPILER_VERSION VERSION_LESS "3.2")
+    OVERRULE_ARCH(sse4_a "Clang >= 3.2 required for SSE4a")
+  endif(CMAKE_C_COMPILER_VERSION VERSION_LESS "3.2")
+endif("${CMAKE_C_COMPILER_ID}" STREQUAL "Clang")
+
 ########################################################################
 # implement overruling in the ORC case,
 # since ORC always passes flag detection
