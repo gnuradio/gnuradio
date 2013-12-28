@@ -150,28 +150,30 @@ if(CPU_IS_x86)
         ${CMAKE_CURRENT_BINARY_DIR}/test_xgetbv.c)
 endif()
 
-########################################################################
-# eliminate AVX if cvtpi32_ps intrinsic fails on Apple
-########################################################################
-
-if(${HAVE_XGETBV})
-    # check to see if the compiler/linker works with cvtpi32_ps instrinsic
-    file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/test_cvtpi32_ps.c "#include <immintrin.h>\nint main (void) {__m128 __a; __m64 __b; __m128 foo = _mm_cvtpi32_ps(__a, __b); return (0); }")
-    execute_process(COMMAND ${CMAKE_C_COMPILER} -mavx -o
-        ${CMAKE_CURRENT_BINARY_DIR}/test_cvtpi32_ps
-        ${CMAKE_CURRENT_BINARY_DIR}/test_cvtpi32_ps.c
-        OUTPUT_QUIET ERROR_QUIET
-        RESULT_VARIABLE avx_compile_result)
-   if(NOT ${avx_compile_result} EQUAL 0)
-        OVERRULE_ARCH(avx "Compiler missing cvtpi32_ps instrinsic")
-	set(HAVE_XGETBV 0)
-    endif()
-    file(REMOVE ${CMAKE_CURRENT_BINARY_DIR}/test_cvtpi32_ps
-        ${CMAKE_CURRENT_BINARY_DIR}/test_cvtpi32_ps.c)
-endif()
-
 if(${HAVE_XGETBV})
     add_definitions(-DHAVE_XGETBV)
+endif()
+
+#########################################################################
+# eliminate AVX if cvtpi32_ps intrinsic fails like some versions of clang
+#########################################################################
+
+# check to see if the compiler/linker works with cvtpi32_ps instrinsic
+file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/test_cvtpi32_ps.c "#include <immintrin.h>\nint main (void) {__m128 __a; __m64 __b; __m128 foo = _mm_cvtpi32_ps(__a, __b); return (0); }")
+execute_process(COMMAND ${CMAKE_C_COMPILER} -mavx -o
+  ${CMAKE_CURRENT_BINARY_DIR}/test_cvtpi32_ps
+  ${CMAKE_CURRENT_BINARY_DIR}/test_cvtpi32_ps.c
+  OUTPUT_QUIET ERROR_QUIET
+  RESULT_VARIABLE avx_compile_result)
+if(NOT ${avx_compile_result} EQUAL 0)
+  OVERRULE_ARCH(avx "Compiler missing cvtpi32_ps instrinsic")
+  set(HAVE_CVTPI32_PS 0)
+endif()
+file(REMOVE ${CMAKE_CURRENT_BINARY_DIR}/test_cvtpi32_ps
+  ${CMAKE_CURRENT_BINARY_DIR}/test_cvtpi32_ps.c)
+
+if(${HAVE_CVTPI32_PS})
+    add_definitions(-DHAVE_CVTPI32_PS)
 endif()
 
 ########################################################################
