@@ -23,6 +23,9 @@
 include(GrPython)
 include(GrSwig)
 
+add_definitions(-DENABLE_PYTHON)
+list(APPEND GR_SWIG_FLAGS "-DENABLE_PYTHON")
+
 set(GR_SWIG_INCLUDE_DIRS
     ${GR_QTGUI_INCLUDE_DIRS}
     ${GR_FFT_INCLUDE_DIRS}

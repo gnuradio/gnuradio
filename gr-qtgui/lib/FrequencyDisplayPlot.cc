@@ -28,9 +28,15 @@
 #include <gnuradio/qtgui/qtgui_types.h>
 #include <qwt_scale_draw.h>
 #include <qwt_legend.h>
-#include <qwt_legend_item.h>
 #include <QColor>
 #include <iostream>
+
+#if QWT_VERSION < 0x060100
+#include <qwt_legend_item.h>
+#else /* QWT_VERSION < 0x060100 */
+#include <qwt_legend_data.h>
+#include <qwt_legend_label.h>
+#endif /* QWT_VERSION < 0x060100 */
 
 /***********************************************************************
  * Widget to provide mouse pointer coordinate text
@@ -38,7 +44,11 @@
 class FreqDisplayZoomer: public QwtPlotZoomer, public FreqOffsetAndPrecisionClass
 {
 public:
+#if QWT_VERSION < 0x060100
   FreqDisplayZoomer(QwtPlotCanvas* canvas, const unsigned int freqPrecision)
+#else /* QWT_VERSION < 0x060100 */
+  FreqDisplayZoomer(QWidget* canvas, const unsigned int freqPrecision)
+#endif /* QWT_VERSION < 0x060100 */
     : QwtPlotZoomer(canvas),
       FreqOffsetAndPrecisionClass(freqPrecision)
   {
@@ -205,12 +215,20 @@ FrequencyDisplayPlot::FrequencyDisplayPlot(int nplots, QWidget* parent)
   _resetXAxisPoints();
 
   // Turn off min/max hold plots in legend
+#if QWT_VERSION < 0x060100
   QWidget *w;
   QwtLegend* legendDisplay = legend();
   w = legendDisplay->find(d_min_fft_plot_curve);
   ((QwtLegendItem*)w)->setChecked(true);
   w = legendDisplay->find(d_max_fft_plot_curve);
   ((QwtLegendItem*)w)->setChecked(true);
+#else /* QWT_VERSION < 0x060100 */
+  QWidget *w;
+  w = ((QwtLegend*)legend())->legendWidget(itemToInfo(d_min_fft_plot_curve));
+  ((QwtLegendLabel*)w)->setChecked(true);
+  w = ((QwtLegend*)legend())->legendWidget(itemToInfo(d_max_fft_plot_curve));
+  ((QwtLegendLabel*)w)->setChecked(true);
+#endif /* QWT_VERSION < 0x060100 */
 
   replot();
 }

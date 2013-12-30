@@ -23,7 +23,10 @@
 #ifndef INCLUDED_QTGUI_TIME_SINK_C_H
 #define INCLUDED_QTGUI_TIME_SINK_C_H
 
+#ifdef ENABLE_PYTHON
 #include <Python.h>
+#endif
+
 #include <gnuradio/qtgui/api.h>
 #include <gnuradio/qtgui/trigger_mode.h>
 #include <gnuradio/sync_block.h>
@@ -66,7 +69,10 @@ namespace gr {
 		       QWidget *parent=NULL);
 
       virtual void exec_() = 0;
+
+#ifdef ENABLE_PYTHON
       virtual PyObject* pyqwidget() = 0;
+#endif
 
       virtual void set_y_axis(double min, double max) = 0;
       virtual void set_update_time(double t) = 0;

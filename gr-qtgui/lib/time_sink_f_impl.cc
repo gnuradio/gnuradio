@@ -136,6 +136,7 @@ namespace gr {
       return d_main_gui;
     }
 
+#ifdef ENABLE_PYTHON
     PyObject*
     time_sink_f_impl::pyqwidget()
     {
@@ -143,6 +144,7 @@ namespace gr {
       PyObject *retarg = Py_BuildValue("N", w);
       return retarg;
     }
+#endif
 
     void
     time_sink_f_impl::set_y_axis(double min, double max)

@@ -29,22 +29,26 @@
 #include <cstring>
 #include <boost/thread/thread.hpp>
 
+pmt::pmt_t throttle_rx_rate_pmt(pmt::intern("rx_rate"));
+
 namespace gr {
   namespace blocks {
 
     throttle::sptr
-    throttle::make(size_t itemsize, double samples_per_sec)
+    throttle::make(size_t itemsize, double samples_per_sec, bool ignore_tags)
     {
       return gnuradio::get_initial_sptr
-        (new throttle_impl(itemsize, samples_per_sec));
+        (new throttle_impl(itemsize, samples_per_sec, ignore_tags));
     }
 
     throttle_impl::throttle_impl(size_t itemsize,
-                                 double samples_per_second)
+                                 double samples_per_second,
+                                 bool ignore_tags)
       : sync_block("throttle",
                       io_signature::make(1, 1, itemsize),
                       io_signature::make(1, 1, itemsize)),
-        d_itemsize(itemsize)
+        d_itemsize(itemsize),
+        d_ignore_tags(ignore_tags)
     {
       set_sample_rate(samples_per_second);
     }
@@ -74,6 +78,20 @@ namespace gr {
                         gr_vector_const_void_star &input_items,
                         gr_vector_void_star &output_items)
     {
+      // check for updated rx_rate tag
+      if(!d_ignore_tags){
+        uint64_t abs_N = nitems_read(0);
+        std::vector<tag_t> all_tags;
+        get_tags_in_range(all_tags, 0, abs_N, abs_N + noutput_items);
+        std::vector<tag_t>::iterator itr;
+        for(itr = all_tags.begin(); itr != all_tags.end(); itr++) {
+          if(pmt::eq( (*itr).key, throttle_rx_rate_pmt)){
+            double new_rate = pmt::to_double( (*itr).value );
+            set_sample_rate(new_rate);
+            }
+          }
+        }
+
       //calculate the expected number of samples to have passed through
       boost::system_time now = boost::get_system_time();
       boost::int64_t ticks = (now - d_start).ticks();

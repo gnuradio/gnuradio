@@ -59,6 +59,7 @@ public slots:
   void setSemilogy(bool en);
 
   void legendEntryChecked(QwtPlotItem *plotItem, bool on);
+  void legendEntryChecked(const QVariant &plotItem, bool on, int index);
 
   void enableTagMarker(int which, bool en);
 

@@ -23,7 +23,10 @@
 #ifndef INCLUDED_QTGUI_HISTOGRAM_SINK_F_H
 #define INCLUDED_QTGUI_HISTOGRAM_SINK_F_H
 
+#ifdef ENABLE_PYTHON
 #include <Python.h>
+#endif
+
 #include <gnuradio/qtgui/api.h>
 #include <gnuradio/sync_block.h>
 #include <qapplication.h>
@@ -82,7 +85,10 @@ namespace gr {
 		       QWidget *parent=NULL);
 
       virtual void exec_() = 0;
+
+#ifdef ENABLE_PYTHON
       virtual PyObject* pyqwidget() = 0;
+#endif
 
     public:
       virtual std::string title() = 0;

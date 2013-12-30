@@ -274,6 +274,7 @@ class FlowGraph(Element):
             if block: block.import_data(block_n)
             else: Messages.send_error_load('Block key "%s" not found in %s'%(key, self.get_parent()))
         #build the connections
+        block_ids = map(lambda b: b.get_id(), self.get_blocks())
         for connection_n in connections_n:
             #try to make the connection
             try:
@@ -284,7 +285,6 @@ class FlowGraph(Element):
                 source_key = connection_n.find('source_key')
                 sink_key = connection_n.find('sink_key')
                 #verify the blocks
-                block_ids = map(lambda b: b.get_id(), self.get_blocks())
                 if source_block_id not in block_ids:
                     raise LookupError('source block id "%s" not in block ids'%source_block_id)
                 if sink_block_id not in block_ids:
@@ -292,6 +292,9 @@ class FlowGraph(Element):
                 #get the blocks
                 source_block = self.get_block(source_block_id)
                 sink_block = self.get_block(sink_block_id)
+                # update numeric message ports keys
+                source_key = self.update_message_port_key(source_key, source_block.get_sources())
+                sink_key = self.update_message_port_key(sink_key, sink_block.get_sinks())
                 #verify the ports
                 if source_key not in source_block.get_source_keys():
                     raise LookupError('source key "%s" not in source block keys'%source_key)
@@ -308,3 +311,23 @@ class FlowGraph(Element):
                 )
             )
         self.rewrite() #global rewrite
+
+
+    def update_message_port_key(self, key, ports):
+        """Backward compatibility for message port keys
+
+        Message ports use their names as key (like in the 'connect' method).
+        Flowgraph files from former versions still have numeric keys stored for
+        message connections. These have to be replaced by the name of the
+        respective port. The correct message port is deduced from the integer
+        value of the key (assuming the order has not changed).
+
+        :param key: the port key to be updated
+        :param ports: list of candidate ports
+        :returns: the updated key or the original one
+        """
+        if key.isdigit():  # don't bother current message port keys
+            port = ports[int(key)]  # get port (assuming liner indexed keys)
+            if port.get_type() == "message":
+                return port.get_key()  # for message ports get updated key
+        return key  # do nothing

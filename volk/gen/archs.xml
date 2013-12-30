@@ -10,9 +10,16 @@
   <check name="has_ppc"></check>
 </arch>
 
+<arch name="softfp">
+  <flag compiler="gnu">-mfloat-abi=softfp</flag>
+</arch>
+
+<arch name="hardfp">
+  <flag compiler="gnu">-mfloat-abi=hard</flag>
+</arch>
+
 <arch name="neon">
   <flag compiler="gnu">-mfpu=neon</flag>
-  <flag compiler="gnu">-mfloat-abi=softfp</flag>
   <flag compiler="gnu">-funsafe-math-optimizations</flag>
   <alignment>16</alignment>
   <check name="has_neon"></check>

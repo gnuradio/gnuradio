@@ -88,27 +88,27 @@ namespace gr {
       // copy any tags in this range into our meta object
       get_tags_in_range(d_tags, 0, abs_N, abs_N+ncopy);
       for (d_tags_itr = d_tags.begin(); d_tags_itr != d_tags.end(); d_tags_itr++)
-	if(!pmt::eq((*d_tags_itr).key, d_tag ))
-	  d_pdu_meta = dict_add(d_pdu_meta, (*d_tags_itr).key, (*d_tags_itr).value);
+        if(!pmt::eq((*d_tags_itr).key, d_tag ))
+            d_pdu_meta = dict_add(d_pdu_meta, (*d_tags_itr).key, (*d_tags_itr).value);
 
       // copy samples for this vector into either a pmt or our save buffer
       if (ncopy == d_pdu_remain) { // we will send this pdu
-	if (d_save.size() == 0) {
-	  d_pdu_vector = pdu::make_pdu_vector(d_type, in, ncopy);
-	  send_message();
-	} 
-	else {
-	  size_t oldsize = d_save.size();
-	  d_save.resize((oldsize + ncopy)*d_itemsize, 0);
-	  memcpy(&d_save[oldsize*d_itemsize], in, ncopy*d_itemsize);
-	  d_pdu_vector = pdu::make_pdu_vector(d_type, &d_save[0], d_pdu_length);
-	  send_message();
-	  d_save.clear();
+        if (d_save.size() == 0) {
+            d_pdu_vector = pdu::make_pdu_vector(d_type, in, ncopy);
+            send_message();
+        } 
+        else {
+            size_t oldsize = d_save.size()/d_itemsize;
+            d_save.resize((oldsize + ncopy)*d_itemsize, 0);
+            memcpy(&d_save[oldsize*d_itemsize], in, ncopy*d_itemsize);
+            d_pdu_vector = pdu::make_pdu_vector(d_type, &d_save[0], d_pdu_length);
+            send_message();
+            d_save.clear();
         }
       } 
       else {
+        size_t oldsize = d_save.size()/d_itemsize;
         d_inpdu = true;
-        size_t oldsize = d_save.size();
         d_save.resize((oldsize+ncopy)*d_itemsize);
         memcpy(&d_save[oldsize*d_itemsize], in, ncopy*d_itemsize);
         d_pdu_remain -= ncopy;

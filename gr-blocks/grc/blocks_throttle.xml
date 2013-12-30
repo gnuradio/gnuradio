@@ -9,7 +9,7 @@
 	<key>blocks_throttle</key>
 	<throttle>1</throttle>
 	<import>from gnuradio import blocks</import>
-	<make>blocks.throttle($type.size*$vlen, $samples_per_second)</make>
+	<make>blocks.throttle($type.size*$vlen, $samples_per_second,$ignoretag)</make>
         <callback>set_sample_rate($samples_per_second)</callback>
 	<param>
 		<name>Type</name>
@@ -53,6 +53,12 @@
 		<value>1</value>
 		<type>int</type>
 	</param>
+    <param>
+        <name>Ignore rx_rate tag</name>
+        <key>ignoretag</key>
+        <value>True</value>
+        <type>bool</type>
+    </param>
 	<check>$vlen &gt; 0</check>
 	<sink>
 		<name>in</name>

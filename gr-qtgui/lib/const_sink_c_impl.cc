@@ -129,6 +129,7 @@ namespace gr {
       return d_main_gui;
     }
 
+#ifdef ENABLE_PYTHON
     PyObject*
     const_sink_c_impl::pyqwidget()
     {
@@ -136,6 +137,7 @@ namespace gr {
       PyObject *retarg = Py_BuildValue("N", w);
       return retarg;
     }
+#endif
 
     void
     const_sink_c_impl::set_y_axis(double min, double max)

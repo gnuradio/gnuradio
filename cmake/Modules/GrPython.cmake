@@ -48,8 +48,15 @@ else(PYTHON_EXECUTABLE)
 
 endif(PYTHON_EXECUTABLE)
 
+if (CMAKE_CROSSCOMPILING)
+    set(QA_PYTHON_EXECUTABLE "/usr/bin/python")
+else (CMAKE_CROSSCOMPILING)
+    set(QA_PYTHON_EXECUTABLE ${PYTHON_EXECUTABLE})
+endif(CMAKE_CROSSCOMPILING)
+
 #make the path to the executable appear in the cmake gui
 set(PYTHON_EXECUTABLE ${PYTHON_EXECUTABLE} CACHE FILEPATH "python interpreter")
+set(QA_PYTHON_EXECUTABLE ${QA_PYTHON_EXECUTABLE} CACHE FILEPATH "python interpreter for QA tests")
 
 #make sure we can use -B with python (introduced in 2.6)
 if(PYTHON_EXECUTABLE)

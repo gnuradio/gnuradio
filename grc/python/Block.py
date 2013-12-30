@@ -97,54 +97,29 @@ class Block(_Block, _GUIBlock):
         """
         _Block.rewrite(self)
 
-        def rectify(ports):
-            #restore integer contiguity after insertion
-            #rectify the port names with the index
-            self.back_ofthe_bus(ports);
-            for i, port in enumerate(ports):
+        # adjust nports
+        for ports in (self.get_sources(), self.get_sinks()):
+            for i, master_port in enumerate(ports):
+                nports = master_port.get_nports() or 1
+                num_ports = 1 + len(master_port.get_clones())
+                if not nports and num_ports == 1:  # not a master port and no left-over clones
+                    continue
+                # remove excess cloned ports
+                for port in master_port.get_clones()[nports-1:]:
+                    # remove excess connections
+                    for connection in port.get_connections():
+                        self.get_parent().remove_element(connection)
+                    master_port.remove_clone(port)
+                    ports.remove(port)
+                # add more cloned ports
+                for i in range(num_ports, nports):
+                    port = master_port.add_clone()
+                    ports.insert(ports.index(master_port) + i, port)
+
+            self.back_ofthe_bus(ports)
+            # renumber non-message/-msg ports
+            for i, port in enumerate(filter(lambda p: p.get_key().isdigit(), ports)):
                 port._key = str(i)
-                port._name = port._n['name']
-                if len(ports) > 1 and not port._type == 'bus': port._name += str(i)
-
-        def insert_port(get_ports, get_port, key):
-            prev_port = get_port(str(int(key)-1))
-            get_ports().insert(
-                get_ports().index(prev_port)+1,
-                prev_port.copy(new_key=key),
-            )
-            rectify(get_ports())
-
-        def remove_port(get_ports, get_port, key):
-            port = get_port(key)
-            for connection in port.get_connections():
-                self.get_parent().remove_element(connection)
-            get_ports().remove(port)
-            rectify(get_ports())
-
-        #adjust nports
-        for get_ports, get_port in (
-            (self.get_sources, self.get_source),
-            (self.get_sinks, self.get_sink),
-        ):
-            master_ports = filter(lambda p: p.get_nports(), get_ports())
-            for i, master_port in enumerate(master_ports):
-                nports = master_port.get_nports()
-                index_first = get_ports().index(master_port)
-                try: index_last = get_ports().index(master_ports[i+1])
-                except IndexError: index_last = len(get_ports())
-                num_ports = index_last - index_first
-                #do nothing if nports is already num ports
-                if nports == num_ports: continue
-                #remove excess ports and connections
-                if nports < num_ports:
-                    for key in reversed(map(str, range(index_first+nports, index_first+num_ports))):
-                        remove_port(get_ports, get_port, key);
-                    continue
-                #add more ports
-                if nports > num_ports:
-                    for key in map(str, range(index_first+num_ports, index_first+nports)):
-                        insert_port(get_ports, get_port, key)
-                    continue
 
     def port_controller_modify(self, direction):
         """

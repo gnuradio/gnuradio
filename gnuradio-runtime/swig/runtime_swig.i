@@ -59,6 +59,7 @@
 #include <gnuradio/tagged_stream_block.h>
 #include <gnuradio/top_block.h>
 #include <gnuradio/logger.h>
+#include <gnuradio/math.h>
 %}
 
 %constant int sizeof_char 	= sizeof(char);
@@ -92,3 +93,5 @@
 %include "gr_logger.i"
 %include "gr_swig_block_magic.i"
 %include "gr_ctrlport.i"
+
+%include "gnuradio/math.h"

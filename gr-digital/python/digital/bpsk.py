@@ -117,7 +117,7 @@ class dbpsk_mod(bpsk_mod):
 
     def __init__(self, mod_code=None, *args, **kwargs):
 
-        super(dbpsk_mod, self).__init__(*args, **kwargs)
+        super(dbpsk_mod, self).__init__(differential=True, *args, **kwargs)
 
 # /////////////////////////////////////////////////////////////////////////////
 #                           DBPSK demodulator
@@ -139,7 +139,7 @@ class dbpsk_demod(bpsk_demod):
 
     def __init__(self, mod_code=None, *args, **kwargs):
 
-        super(dbpsk_demod, self).__init__(*args, **kwargs)
+        super(dbpsk_demod, self).__init__(differential=True, *args, **kwargs)
 
 #
 # Add these to the mod/demod registry

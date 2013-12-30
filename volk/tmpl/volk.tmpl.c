@@ -56,6 +56,43 @@ struct volk_machine *get_machine(void) {
     }
 }
 
+void volk_list_machines(void)
+{
+  extern struct volk_machine *volk_machines[];
+  extern unsigned int n_volk_machines;
+
+  unsigned int i;
+  for(i=0; i<n_volk_machines; i++) {
+    if(!(volk_machines[i]->caps & (~volk_get_lvarch()))) {
+        printf("%s;", volk_machines[i]->name);
+    }
+  }
+  printf("\n");
+}
+
+const char* volk_get_machine(void)
+{
+  extern struct volk_machine *volk_machines[];
+  extern unsigned int n_volk_machines;
+  static struct volk_machine *machine = NULL;
+
+  if(machine != NULL)
+    return machine->name;
+  else {
+    unsigned int max_score = 0;
+    unsigned int i;
+    for(i=0; i<n_volk_machines; i++) {
+      if(!(volk_machines[i]->caps & (~volk_get_lvarch()))) {
+        if(volk_machines[i]->caps > max_score) {
+          max_score = volk_machines[i]->caps;
+          machine = volk_machines[i];
+        }
+      }
+    }
+    return machine->name;
+  }
+}
+
 size_t volk_get_alignment(void)
 {
     get_machine(); //ensures alignment is set

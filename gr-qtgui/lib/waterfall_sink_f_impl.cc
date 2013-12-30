@@ -151,6 +151,7 @@ namespace gr {
       return d_main_gui;
     }
 
+#ifdef ENABLE_PYTHON
     PyObject*
     waterfall_sink_f_impl::pyqwidget()
     {
@@ -158,6 +159,7 @@ namespace gr {
       PyObject *retarg = Py_BuildValue("N", w);
       return retarg;
     }
+#endif
 
     void
     waterfall_sink_f_impl::clear_data()

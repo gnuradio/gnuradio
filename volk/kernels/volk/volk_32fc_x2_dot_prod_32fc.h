@@ -16,45 +16,168 @@ static inline void volk_32fc_x2_dot_prod_32fc_generic(lv_32fc_t* result, const l
   float * in = (float*) input;
   float * tp = (float*) taps;
   unsigned int n_2_ccomplex_blocks = num_points/2;
-  unsigned int isodd = num_points &1;
-
-
+  unsigned int isodd = num_points & 1;
 
   float sum0[2] = {0,0};
   float sum1[2] = {0,0};
   unsigned int i = 0;
 
-
   for(i = 0; i < n_2_ccomplex_blocks; ++i) {
-
-
     sum0[0] += in[0] * tp[0] - in[1] * tp[1];
     sum0[1] += in[0] * tp[1] + in[1] * tp[0];
     sum1[0] += in[2] * tp[2] - in[3] * tp[3];
     sum1[1] += in[2] * tp[3] + in[3] * tp[2];
 
-
     in += 4;
     tp += 4;
-
   }
-
 
   res[0] = sum0[0] + sum1[0];
   res[1] = sum0[1] + sum1[1];
 
-
-
+  // Cleanup if we had an odd number of points
   for(i = 0; i < isodd; ++i) {
-
-
     *result += input[num_points - 1] * taps[num_points - 1];
-
   }
-
 }
 
 #endif /*LV_HAVE_GENERIC*/
+
+
+
+#if LV_HAVE_SSE && LV_HAVE_64
+
+static inline void volk_32fc_x2_dot_prod_32fc_u_sse_64(lv_32fc_t* result, const lv_32fc_t* input, const lv_32fc_t* taps, unsigned int num_points) {
+
+  const unsigned int num_bytes = num_points*8;
+  unsigned int isodd = num_points & 1;
+
+  asm
+    (
+     "#  ccomplex_dotprod_generic (float* result, const float *input,\n\t"
+     "#                         const float *taps, unsigned num_bytes)\n\t"
+     "#    float sum0 = 0;\n\t"
+     "#    float sum1 = 0;\n\t"
+     "#    float sum2 = 0;\n\t"
+     "#    float sum3 = 0;\n\t"
+     "#    do {\n\t"
+     "#      sum0 += input[0] * taps[0] - input[1] * taps[1];\n\t"
+     "#      sum1 += input[0] * taps[1] + input[1] * taps[0];\n\t"
+     "#      sum2 += input[2] * taps[2] - input[3] * taps[3];\n\t"
+     "#      sum3 += input[2] * taps[3] + input[3] * taps[2];\n\t"
+     "#      input += 4;\n\t"
+     "#      taps += 4;  \n\t"
+     "#    } while (--n_2_ccomplex_blocks != 0);\n\t"
+     "#    result[0] = sum0 + sum2;\n\t"
+     "#    result[1] = sum1 + sum3;\n\t"
+     "# TODO: prefetch and better scheduling\n\t"
+     "  xor    %%r9,  %%r9\n\t"
+     "  xor    %%r10, %%r10\n\t"
+     "  movq   %%rcx, %%rax\n\t"
+     "  movq   %%rcx, %%r8\n\t"
+     "  movq   %[rsi],  %%r9\n\t"
+     "  movq   %[rdx], %%r10\n\t"
+     "	xorps	%%xmm6, %%xmm6		# zero accumulators\n\t"
+     "	movups	0(%%r9), %%xmm0\n\t"
+     "	xorps	%%xmm7, %%xmm7		# zero accumulators\n\t"
+     "	movups	0(%%r10), %%xmm2\n\t"
+     "	shr	$5, %%rax		# rax = n_2_ccomplex_blocks / 2\n\t"
+     "  shr     $4, %%r8\n\t"
+     "	jmp	.%=L1_test\n\t"
+     "	# 4 taps / loop\n\t"
+     "	# something like ?? cycles / loop\n\t"
+     ".%=Loop1:	\n\t"
+     "# complex prod: C += A * B,  w/ temp Z & Y (or B), xmmPN=$0x8000000080000000\n\t"
+     "#	movups	(%%r9), %%xmmA\n\t"
+     "#	movups	(%%r10), %%xmmB\n\t"
+     "#	movups	%%xmmA, %%xmmZ\n\t"
+     "#	shufps	$0xb1, %%xmmZ, %%xmmZ	# swap internals\n\t"
+     "#	mulps	%%xmmB, %%xmmA\n\t"
+     "#	mulps	%%xmmZ, %%xmmB\n\t"
+     "#	# SSE replacement for: pfpnacc %%xmmB, %%xmmA\n\t"
+     "#	xorps	%%xmmPN, %%xmmA\n\t"
+     "#	movups	%%xmmA, %%xmmZ\n\t"
+     "#	unpcklps %%xmmB, %%xmmA\n\t"
+     "#	unpckhps %%xmmB, %%xmmZ\n\t"
+     "#	movups	%%xmmZ, %%xmmY\n\t"
+     "#	shufps	$0x44, %%xmmA, %%xmmZ	# b01000100\n\t"
+     "#	shufps	$0xee, %%xmmY, %%xmmA	# b11101110\n\t"
+     "#	addps	%%xmmZ, %%xmmA\n\t"
+     "#	addps	%%xmmA, %%xmmC\n\t"
+     "# A=xmm0, B=xmm2, Z=xmm4\n\t"
+     "# A'=xmm1, B'=xmm3, Z'=xmm5\n\t"
+     "	movups	16(%%r9), %%xmm1\n\t"
+     "	movups	%%xmm0, %%xmm4\n\t"
+     "	mulps	%%xmm2, %%xmm0\n\t"
+     "	shufps	$0xb1, %%xmm4, %%xmm4	# swap internals\n\t"
+     "	movups	16(%%r10), %%xmm3\n\t"
+     "	movups	%%xmm1, %%xmm5\n\t"
+     "	addps	%%xmm0, %%xmm6\n\t"
+     "	mulps	%%xmm3, %%xmm1\n\t"
+     "	shufps	$0xb1, %%xmm5, %%xmm5	# swap internals\n\t"
+     "	addps	%%xmm1, %%xmm6\n\t"
+     "	mulps	%%xmm4, %%xmm2\n\t"
+     "	movups	32(%%r9), %%xmm0\n\t"
+     "	addps	%%xmm2, %%xmm7\n\t"
+     "	mulps	%%xmm5, %%xmm3\n\t"
+     "	add	$32, %%r9\n\t"
+     "	movups	32(%%r10), %%xmm2\n\t"
+     "	addps	%%xmm3, %%xmm7\n\t"
+     "	add	$32, %%r10\n\t"
+     ".%=L1_test:\n\t"
+     "	dec	%%rax\n\t"
+     "	jge	.%=Loop1\n\t"
+     "	# We've handled the bulk of multiplies up to here.\n\t"
+     "	# Let's sse if original n_2_ccomplex_blocks was odd.\n\t"
+     "	# If so, we've got 2 more taps to do.\n\t"
+     "	and	$1, %%r8\n\t"
+     "	je	.%=Leven\n\t"
+     "	# The count was odd, do 2 more taps.\n\t"
+     "	# Note that we've already got mm0/mm2 preloaded\n\t"
+     "	# from the main loop.\n\t"
+     "	movups	%%xmm0, %%xmm4\n\t"
+     "	mulps	%%xmm2, %%xmm0\n\t"
+     "	shufps	$0xb1, %%xmm4, %%xmm4	# swap internals\n\t"
+     "	addps	%%xmm0, %%xmm6\n\t"
+     "	mulps	%%xmm4, %%xmm2\n\t"
+     "	addps	%%xmm2, %%xmm7\n\t"
+     ".%=Leven:\n\t"
+     "	# neg inversor\n\t"
+     "	xorps	%%xmm1, %%xmm1\n\t"
+     "	mov	$0x80000000, %%r9\n\t"
+     "	movd	%%r9, %%xmm1\n\t"
+     "	shufps	$0x11, %%xmm1, %%xmm1	# b00010001 # 0 -0 0 -0\n\t"
+     "	# pfpnacc\n\t"
+     "	xorps	%%xmm1, %%xmm6\n\t"
+     "	movups	%%xmm6, %%xmm2\n\t"
+     "	unpcklps %%xmm7, %%xmm6\n\t"
+     "	unpckhps %%xmm7, %%xmm2\n\t"
+     "	movups	%%xmm2, %%xmm3\n\t"
+     "	shufps	$0x44, %%xmm6, %%xmm2	# b01000100\n\t"
+     "	shufps	$0xee, %%xmm3, %%xmm6	# b11101110\n\t"
+     "	addps	%%xmm2, %%xmm6\n\t"
+     "					# xmm6 = r1 i2 r3 i4\n\t"
+     "	movhlps	%%xmm6, %%xmm4		# xmm4 = r3 i4 ?? ??\n\t"
+     "	addps	%%xmm4, %%xmm6		# xmm6 = r1+r3 i2+i4 ?? ??\n\t"
+     "	movlps	%%xmm6, (%[rdi])		# store low 2x32 bits (complex) to memory\n\t"
+     :
+     :[rsi] "r" (input), [rdx] "r" (taps), "c" (num_bytes), [rdi] "r" (result)
+     :"rax", "r8", "r9", "r10"
+     );
+
+
+  if(isodd) {
+    *result += input[num_points - 1] * taps[num_points - 1];
+  }
+
+  return;
+
+}
+
+#endif /* LV_HAVE_SSE && LV_HAVE_64 */
+
+
+
 
 #ifdef LV_HAVE_SSE3
 
@@ -62,12 +185,12 @@ static inline void volk_32fc_x2_dot_prod_32fc_generic(lv_32fc_t* result, const l
 
 static inline void volk_32fc_x2_dot_prod_32fc_u_sse3(lv_32fc_t* result, const lv_32fc_t* input, const lv_32fc_t* taps, unsigned int num_points) {
 
-
   lv_32fc_t dotProduct;
   memset(&dotProduct, 0x0, 2*sizeof(float));
 
   unsigned int number = 0;
   const unsigned int halfPoints = num_points/2;
+  unsigned int isodd = num_points & 1;
 
   __m128 x, y, yl, yh, z, tmp1, tmp2, dotProdVal;
 
@@ -104,14 +227,97 @@ static inline void volk_32fc_x2_dot_prod_32fc_u_sse3(lv_32fc_t* result, const lv
 
   dotProduct += ( dotProductVector[0] + dotProductVector[1] );
 
-  if(num_points % 1 != 0) {
-    dotProduct += (*a) * (*b);
+  if(isodd) {
+    dotProduct += input[num_points - 1] * taps[num_points - 1];
   }
 
   *result = dotProduct;
 }
 
 #endif /*LV_HAVE_SSE3*/
+
+#ifdef LV_HAVE_SSE4_1
+
+#include <smmintrin.h>
+
+static inline void volk_32fc_x2_dot_prod_32fc_u_sse4_1(lv_32fc_t* result, const lv_32fc_t* input, const lv_32fc_t* taps, unsigned int num_points) {
+
+  unsigned int i = 0;
+  const unsigned int qtr_points = num_points/4;
+  const unsigned int isodd = num_points & 3;
+
+  __m128 xmm0, xmm1, xmm2, xmm3, xmm4, xmm5, xmm6, xmm7, real0, real1, im0, im1;
+  float *p_input, *p_taps;
+  __m64 *p_result;
+
+  p_result = (__m64*)result;
+  p_input = (float*)input;
+  p_taps = (float*)taps;
+
+  static const __m128i neg = {0x000000000000000080000000};
+
+  real0 = _mm_setzero_ps();
+  real1 = _mm_setzero_ps();
+  im0 = _mm_setzero_ps();
+  im1 = _mm_setzero_ps();
+
+  for(; i < qtr_points; ++i) {
+    xmm0 = _mm_loadu_ps(p_input);
+    xmm1 = _mm_loadu_ps(p_taps);
+
+    p_input += 4;
+    p_taps += 4;
+
+    xmm2 = _mm_loadu_ps(p_input);
+    xmm3 = _mm_loadu_ps(p_taps);
+
+    p_input += 4;
+    p_taps += 4;
+
+    xmm4 = _mm_unpackhi_ps(xmm0, xmm2);
+    xmm5 = _mm_unpackhi_ps(xmm1, xmm3);
+    xmm0 = _mm_unpacklo_ps(xmm0, xmm2);
+    xmm2 = _mm_unpacklo_ps(xmm1, xmm3);
+
+    //imaginary vector from input
+    xmm1 = _mm_unpackhi_ps(xmm0, xmm4);
+    //real vector from input
+    xmm3 = _mm_unpacklo_ps(xmm0, xmm4);
+    //imaginary vector from taps
+    xmm0 = _mm_unpackhi_ps(xmm2, xmm5);
+    //real vector from taps
+    xmm2 = _mm_unpacklo_ps(xmm2, xmm5);
+
+    xmm4 = _mm_dp_ps(xmm3, xmm2, 0xf1);
+    xmm5 = _mm_dp_ps(xmm1, xmm0, 0xf1);
+
+    xmm6 = _mm_dp_ps(xmm3, xmm0, 0xf2);
+    xmm7 = _mm_dp_ps(xmm1, xmm2, 0xf2);
+
+    real0 = _mm_add_ps(xmm4, real0);
+    real1 = _mm_add_ps(xmm5, real1);
+    im0 = _mm_add_ps(xmm6, im0);
+    im1 = _mm_add_ps(xmm7, im1);
+  }
+
+  real1 = _mm_xor_ps(real1, bit128_p(&neg)->float_vec);
+
+  im0 = _mm_add_ps(im0, im1);
+  real0 = _mm_add_ps(real0, real1);
+
+  im0 = _mm_add_ps(im0, real0);
+
+  _mm_storel_pi(p_result, im0);
+
+  for(i = num_points-isodd; i < num_points; i++) {
+    *result += input[i] * taps[i];
+  }
+}
+
+#endif /*LV_HAVE_SSE4_1*/
+
+
+
 
 #endif /*INCLUDED_volk_32fc_x2_dot_prod_32fc_u_H*/
 #ifndef INCLUDED_volk_32fc_x2_dot_prod_32fc_a_H
@@ -134,7 +340,7 @@ static inline void volk_32fc_x2_dot_prod_32fc_a_generic(lv_32fc_t* result, const
   float * in = (float*) input;
   float * tp = (float*) taps;
   unsigned int n_2_ccomplex_blocks = num_bytes >> 4;
-  unsigned int isodd = (num_bytes >> 3) &1;
+  unsigned int isodd = num_points & 1;
 
   float sum0[2] = {0,0};
   float sum1[2] = {0,0};
@@ -154,7 +360,7 @@ static inline void volk_32fc_x2_dot_prod_32fc_a_generic(lv_32fc_t* result, const
   res[1] = sum0[1] + sum1[1];
 
   for(i = 0; i < isodd; ++i) {
-    *result += input[(num_bytes >> 3) - 1] * taps[(num_bytes >> 3) - 1];
+    *result += input[num_points - 1] * taps[num_points - 1];
   }
 }
 
@@ -167,6 +373,7 @@ static inline void volk_32fc_x2_dot_prod_32fc_a_generic(lv_32fc_t* result, const
 static inline void volk_32fc_x2_dot_prod_32fc_a_sse_64(lv_32fc_t* result, const lv_32fc_t* input, const lv_32fc_t* taps, unsigned int num_points) {
 
   const unsigned int num_bytes = num_points*8;
+  unsigned int isodd = num_points & 1;
 
   asm
     (
@@ -282,8 +489,8 @@ static inline void volk_32fc_x2_dot_prod_32fc_a_sse_64(lv_32fc_t* result, const 
      );
 
 
-  if(((num_bytes >> 3) & 1)) {
-    *result += (input[(num_bytes >> 3) - 1] * taps[(num_bytes >> 3) - 1]);
+  if(isodd) {
+    *result += input[num_points - 1] * taps[num_points - 1];
   }
 
   return;
@@ -295,10 +502,13 @@ static inline void volk_32fc_x2_dot_prod_32fc_a_sse_64(lv_32fc_t* result, const 
 #if LV_HAVE_SSE && LV_HAVE_32
 
 static inline void volk_32fc_x2_dot_prod_32fc_a_sse_32(lv_32fc_t* result, const lv_32fc_t* input, const lv_32fc_t* taps, unsigned int num_points) {
+
   volk_32fc_x2_dot_prod_32fc_a_generic(result, input, taps, num_points);
 
 #if 0
   const unsigned int num_bytes = num_points*8;
+  unsigned int isodd = num_points & 1;
+
   asm volatile
     (
      "	#pushl	%%ebp\n\t"
@@ -401,11 +611,8 @@ static inline void volk_32fc_x2_dot_prod_32fc_a_sse_32(lv_32fc_t* result, const 
 
   int getem = num_bytes % 16;
 
-  for(; getem > 0; getem -= 8) {
-
-
-    *result += (input[(num_bytes >> 3) - 1] * taps[(num_bytes >> 3) - 1]);
-
+  if(isodd) {
+    *result += (input[num_points - 1] * taps[num_points - 1]);
   }
 
   return;
@@ -421,6 +628,7 @@ static inline void volk_32fc_x2_dot_prod_32fc_a_sse_32(lv_32fc_t* result, const 
 static inline void volk_32fc_x2_dot_prod_32fc_a_sse3(lv_32fc_t* result, const lv_32fc_t* input, const lv_32fc_t* taps, unsigned int num_points) {
 
   const unsigned int num_bytes = num_points*8;
+  unsigned int isodd = num_points & 1;
 
   lv_32fc_t dotProduct;
   memset(&dotProduct, 0x0, 2*sizeof(float));
@@ -463,8 +671,8 @@ static inline void volk_32fc_x2_dot_prod_32fc_a_sse3(lv_32fc_t* result, const lv
 
   dotProduct += ( dotProductVector[0] + dotProductVector[1] );
 
-  if(((num_bytes >> 3) & 1) != 0) {
-    dotProduct += (*a) * (*b);
+  if(isodd) {
+    dotProduct += input[num_points - 1] * taps[num_points - 1];
   }
 
   *result = dotProduct;
@@ -478,31 +686,26 @@ static inline void volk_32fc_x2_dot_prod_32fc_a_sse3(lv_32fc_t* result, const lv
 
 static inline void volk_32fc_x2_dot_prod_32fc_a_sse4_1(lv_32fc_t* result, const lv_32fc_t* input, const lv_32fc_t* taps, unsigned int num_points) {
 
-    const unsigned int num_bytes = num_points*8;
+  unsigned int i = 0;
+  const unsigned int qtr_points = num_points/4;
+  const unsigned int isodd = num_points & 3;
 
-    __m128 xmm0, xmm1, xmm2, xmm3, xmm4, xmm5, xmm6, xmm7, real0, real1, im0, im1;
-    float *p_input, *p_taps;
-    __m64 *p_result;
+  __m128 xmm0, xmm1, xmm2, xmm3, xmm4, xmm5, xmm6, xmm7, real0, real1, im0, im1;
+  float *p_input, *p_taps;
+  __m64 *p_result;
 
-    p_result = (__m64*)result;
-    p_input = (float*)input;
-    p_taps = (float*)taps;
+  static const __m128i neg = {0x000000000000000080000000};
 
-    static const __m128i neg = {0x000000000000000080000000};
+  p_result = (__m64*)result;
+  p_input = (float*)input;
+  p_taps = (float*)taps;
 
-    int i = 0;
+  real0 = _mm_setzero_ps();
+  real1 = _mm_setzero_ps();
+  im0 = _mm_setzero_ps();
+  im1 = _mm_setzero_ps();
 
-    int bound = (num_bytes >> 5);
-    int leftovers = (num_bytes & 24) >> 3;
-
-    real0 = _mm_sub_ps(real0, real0);
-    real1 = _mm_sub_ps(real1, real1);
-    im0 = _mm_sub_ps(im0, im0);
-    im1 = _mm_sub_ps(im1, im1);
-
-    for(; i < bound; ++i) {
-
-
+  for(; i < qtr_points; ++i) {
     xmm0 = _mm_load_ps(p_input);
     xmm1 = _mm_load_ps(p_taps);
 
@@ -539,22 +742,20 @@ static inline void volk_32fc_x2_dot_prod_32fc_a_sse4_1(lv_32fc_t* result, const 
     real1 = _mm_add_ps(xmm5, real1);
     im0 = _mm_add_ps(xmm6, im0);
     im1 = _mm_add_ps(xmm7, im1);
+  }
 
-    }
+  real1 = _mm_xor_ps(real1, bit128_p(&neg)->float_vec);
 
-    real1 = _mm_xor_ps(real1, bit128_p(&neg)->float_vec);
+  im0 = _mm_add_ps(im0, im1);
+  real0 = _mm_add_ps(real0, real1);
 
-    im0 = _mm_add_ps(im0, im1);
-    real0 = _mm_add_ps(real0, real1);
+  im0 = _mm_add_ps(im0, real0);
 
-    im0 = _mm_add_ps(im0, real0);
+  _mm_storel_pi(p_result, im0);
 
-    _mm_storel_pi(p_result, im0);
-
-    for(i = bound * 4; i < (bound * 4) + leftovers; ++i) {
-
+  for(i = num_points-isodd; i < num_points; i++) {
     *result += input[i] * taps[i];
-    }
+  }
 }
 
 #endif /*LV_HAVE_SSE4_1*/
