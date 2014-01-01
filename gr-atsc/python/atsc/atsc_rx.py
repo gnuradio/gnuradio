@@ -40,7 +40,7 @@
 # field, this then adjusts the timing so the amplitude will be sampled at the
 # correct sample ( sub-sample is used in this case ). 
 #
-# Output is float.
+# Output is an MPEG-TS.
 
 from gnuradio import gr, analog, atsc
 from gnuradio import blocks
@@ -115,21 +115,21 @@ def graph (args):
 
 	tb.run()
 
-	print 'srcf:      ' + repr(srcf.pc_work_time()).rjust(15)
-	print 'is2c:      ' + repr(is2c.pc_work_time()).rjust(15)
-	print 'rrc:       ' + repr(rrc.pc_work_time()).rjust(15)
-	print 'ilp:       ' + repr(ilp.pc_work_time()).rjust(15)
-	print 'fpll:      ' + repr(fpll.pc_work_time()).rjust(15)
-	print 'c2f:       ' + repr(c2f.pc_work_time()).rjust(15)
-	print 'agc:       ' + repr(agc.pc_work_time()).rjust(15)
-	print 'btl:       ' + repr(btl.pc_work_time()).rjust(15)
-	print 'fsc:       ' + repr(fsc.pc_work_time()).rjust(15)
-	print 'eq:        ' + repr(eq.pc_work_time()).rjust(15)
-	print 'viterbi:   ' + repr(viterbi.pc_work_time()).rjust(15)
-	print 'deinter:   ' + repr(deinter.pc_work_time()).rjust(15)
-	print 'rs_dec:    ' + repr(rs_dec.pc_work_time()).rjust(15)
-	print 'derand:    ' + repr(derand.pc_work_time()).rjust(15)
-	print 'depad:     ' + repr(depad.pc_work_time()).rjust(15)
+	print 'srcf:      ' + repr(srcf.pc_work_time()).rjust(15) + ' / ' + repr(srcf.pc_nproduced()).rjust(8)
+	print 'is2c:      ' + repr(is2c.pc_work_time()).rjust(15) + ' / ' + repr(is2c.pc_nproduced()).rjust(8)
+	print 'rrc:       ' + repr(rrc.pc_work_time()).rjust(15) + ' / ' + repr(rrc.pc_nproduced()).rjust(8)
+	print 'ilp:       ' + repr(ilp.pc_work_time()).rjust(15) + ' / ' + repr(ilp.pc_nproduced()).rjust(8)
+	print 'fpll:      ' + repr(fpll.pc_work_time()).rjust(15) + ' / ' + repr(fpll.pc_nproduced()).rjust(8)
+	print 'c2f:       ' + repr(c2f.pc_work_time()).rjust(15) + ' / ' + repr(c2f.pc_nproduced()).rjust(8)
+	print 'agc:       ' + repr(agc.pc_work_time()).rjust(15) + ' / ' + repr(agc.pc_nproduced()).rjust(8)
+	print 'btl:       ' + repr(btl.pc_work_time()).rjust(15) + ' / ' + repr(btl.pc_nproduced()).rjust(8)
+	print 'fsc:       ' + repr(fsc.pc_work_time()).rjust(15) + ' / ' + repr(fsc.pc_nproduced()).rjust(8)
+	print 'eq:        ' + repr(eq.pc_work_time()).rjust(15) + ' / ' + repr(eq.pc_nproduced()).rjust(8)
+	print 'viterbi:   ' + repr(viterbi.pc_work_time()).rjust(15) + ' / ' + repr(viterbi.pc_nproduced()).rjust(8)
+	print 'deinter:   ' + repr(deinter.pc_work_time()).rjust(15) + ' / ' + repr(deinter.pc_nproduced()).rjust(8)
+	print 'rs_dec:    ' + repr(rs_dec.pc_work_time()).rjust(15) + ' / ' + repr(rs_dec.pc_nproduced()).rjust(8)
+	print 'derand:    ' + repr(derand.pc_work_time()).rjust(15) + ' / ' + repr(derand.pc_nproduced()).rjust(8)
+	print 'depad:     ' + repr(depad.pc_work_time()).rjust(15) + ' / ' + repr(depad.pc_nproduced()).rjust(8)
 
 
 if __name__ == '__main__':

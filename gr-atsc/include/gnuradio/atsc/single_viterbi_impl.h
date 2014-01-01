@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2002 Free Software Foundation, Inc.
+ * Copyright 2002, 2014 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -48,8 +48,8 @@ public:
   int delay () { return TB_LEN - 1; }
 
 protected:
-  static const int transition_table[32];
-  static const float was_sent[32];
+  static const int transition_table[8][4];
+  static const int was_sent[8][4];
   float path_metrics [2][8];
   unsigned long long traceback [2][8];
   unsigned char phase;

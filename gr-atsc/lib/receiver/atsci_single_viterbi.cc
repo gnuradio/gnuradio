@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2002 Free Software Foundation, Inc.
+ * Copyright 2002, 2014 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -24,36 +24,43 @@
 #include <gnuradio/atsc/single_viterbi_impl.h>
 #include <iostream>
 
-using std::cerr;
-using std::cout;
-
-const float atsci_single_viterbi::was_sent[32] = {
-  -7,-3,-7,-3,-7,-3,-7,-3,
-  -5,-1,-5,-1,-5,-1,-5,-1,
-  1,5,1,5,1,5,1,5,
-  3,7,3,7,3,7,3,7
+/* was_sent is a table of what symbol we get given what bit pair 
+    was sent and what state we end up in [state][pair]
+    symbols are indexes into a precomputed distance table */
+const int atsci_single_viterbi::was_sent[8][4] = {
+	{0,2,0,2},
+	{0,2,0,2},
+	{1,3,1,3},
+	{1,3,1,3},
+	{4,6,4,6},
+	{4,6,4,6},
+	{5,7,5,7},
+	{5,7,5,7}
 };
 
-const int atsci_single_viterbi::transition_table[32] = {
-  0,2,4,6,
-  2,0,6,4,
-  1,3,5,7,
-  3,1,7,5,
-  4,6,0,2,
-  6,4,2,0,
-  5,7,1,3,
-  7,5,3,1
+/* transition_table is a table of what state we were in
+    given current state and bit pair sent [state][pair] */
+const int atsci_single_viterbi::transition_table[8][4] = {
+	{0,2,4,6},
+	{2,0,6,4},
+	{1,3,5,7},
+	{3,1,7,5},
+	{4,6,0,2},
+	{6,4,2,0},
+	{5,7,1,3},
+	{7,5,3,1}
 };
 
 void
 atsci_single_viterbi::reset()
 {
-  for (unsigned int i = 0; i<2; i++)
-    for (unsigned int j = 0; j<8; j++) {
-      path_metrics[i][j] = 0;
-      traceback[i][j] = 0;
-    }
-  phase = 0;
+	for (unsigned int i = 0; i<2; i++)
+		for (unsigned int j = 0; j<8; j++)
+		{
+			path_metrics[i][j] = 0;
+			traceback[i][j] = 0;
+		}
+	phase = 0;
 }
 
 atsci_single_viterbi::atsci_single_viterbi()
@@ -64,37 +71,52 @@ atsci_single_viterbi::atsci_single_viterbi()
 char
 atsci_single_viterbi::decode(float input)
 {
-  for (unsigned int next_state = 0; next_state < 8; next_state++) {
-    unsigned int index = next_state << 2;
-    int min_metric_symb = 0;
-    float min_metric = fabs(input - was_sent[index + 0]) +
-      path_metrics[phase][transition_table[index + 0]];
+	unsigned int best_state = 0;
+	float best_state_metric = 100000;
+	/* Precompute distances from input to each possable symbol */
+	float distances[8] = { (float)fabs( input + 7 ), (float)fabs( input + 5 ),
+	                       (float)fabs( input + 3 ), (float)fabs( input + 1 ),
+	                       (float)fabs( input - 1 ), (float)fabs( input - 3 ),
+	                       (float)fabs( input - 5 ), (float)fabs( input - 7 ) };
+	/* We start by iterating over all possible states */
+	for (unsigned int next_state = 0; next_state < 8; next_state++)
+	{
+		/* Next we find the most probable path from the previous states to the state 
+		    we are testing, we only need to look at the 4 paths that can be taken
+		    given the 2-bit input */
+		int min_metric_symb = 0;
+		float min_metric = distances[was_sent[next_state][0]] + path_metrics[phase][transition_table[next_state][0]];
+		for (unsigned int symbol_sent = 1; symbol_sent < 4; symbol_sent++)
+			if( (distances[was_sent[next_state][symbol_sent]] + path_metrics[phase][transition_table[next_state][symbol_sent]]) < min_metric)
+			{
+				min_metric = distances[was_sent[next_state][symbol_sent]] + path_metrics[phase][transition_table[next_state][symbol_sent]];
+				min_metric_symb = symbol_sent;
+			}
 
-    for (unsigned int symbol_sent = 1; symbol_sent < 4; symbol_sent++)
-      if( (fabs(input-was_sent[index+symbol_sent]) +
-	   path_metrics[phase][transition_table[index+symbol_sent]])
-	  < min_metric) {
-	min_metric = fabs(input-was_sent[index+symbol_sent]) +
-	  path_metrics[phase][transition_table[index+symbol_sent]];
-	min_metric_symb = symbol_sent;
-      }
+		path_metrics[phase^1][next_state] = min_metric;
+		traceback[phase^1][next_state] = (((unsigned long long)min_metric_symb) << 62) | (traceback[phase][transition_table[next_state][min_metric_symb]] >> 2);
+	
+		/* If this is the most probable state so far remember it,
+		    this only needs to be checked when we are about to output a path
+		    so this test can be saved till later if needed, if perfomed later
+		    it could also be optimized with SIMD instructions. Even better this
+		    check could be eliminated as we are outputing the tail of our traceback
+		    not the head, for any head state path will tend towards the optimal path
+		    in with a probability approaching 1 in just 8 or so jumps */
+		if(min_metric < best_state_metric)
+		{
+			best_state = next_state;
+			best_state_metric = min_metric;
+		}
+	}
+	if(best_state_metric > 10000)
+	{
+		for(unsigned int state = 0; state < 8; state++)
+			path_metrics[phase^1][state] -= best_state_metric;
+		// std::cout << "Resetting Path Metrics from " << best_state_metric << " to 0\n";
+	}
+	phase ^= 1;
 
-    path_metrics[phase^1][next_state] = min_metric;
-    traceback[phase^1][next_state] = (((unsigned long long)min_metric_symb) << 62) |
-      (traceback[phase][transition_table[index+min_metric_symb]] >> 2);
-  }
-  unsigned int best_state = 0;
-  float best_state_metric = path_metrics[phase^1][0];
-  for (unsigned int state = 1; state < 8; state++)
-    if(path_metrics[phase^1][state] < best_state_metric) {
-      best_state = state;
-      best_state_metric = path_metrics[phase^1][state];
-    }
-  if(best_state_metric > 10000) {
-    for(unsigned int state = 0; state < 8; state++)
-      path_metrics[phase^1][state] -= best_state_metric;
-    // cerr << "Resetting Path Metrics from " << best_state_metric << " to 0\n";
-  }
-  phase ^= 1;
-  return (0x3 & traceback[phase][best_state]);
+	return (0x3 & traceback[phase][best_state]);
 }
+

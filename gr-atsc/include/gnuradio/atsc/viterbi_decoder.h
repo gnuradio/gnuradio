@@ -73,10 +73,6 @@ protected:
   static const int OUTPUT_SIZE = (SEGMENT_SIZE * 12);
   static const int INPUT_SIZE = (ATSC_DATA_SEGMENT_LENGTH * 12);
 
-  void decode_helper (unsigned char out[OUTPUT_SIZE],
-                       const float symbols_in[INPUT_SIZE]);
-
-
   single_viterbi_t	viterbi[NCODERS];
   fifo_t		*fifo[NCODERS];
   bool			debug;

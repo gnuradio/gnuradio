@@ -34,16 +34,8 @@
 #include "atsci_viterbi_mux.cc"
 #include <string.h>
 
-using std::cerr;
-using std::endl;
-
 /* How many separate Trellis encoders / Viterbi decoders run in parallel */
 static const int	NCODERS = 12;
-
-static const float	DSEG_SYNC_SYM1 =  5;
-static const float	DSEG_SYNC_SYM2 = -5;
-static const float	DSEG_SYNC_SYM3 = -5;
-static const float	DSEG_SYNC_SYM4 =  5;
 
 atsc_viterbi_decoder_sptr
 atsc_make_viterbi_decoder()
@@ -94,42 +86,6 @@ atsc_viterbi_decoder::reset ()
 	}
 }
 
-void
-atsc_viterbi_decoder::decode_helper (unsigned char out[OUTPUT_SIZE],
-				     const float symbols_in[INPUT_SIZE])
-{
-	int encoder;
-	unsigned int i;
-	//int dbi;
-	int dbwhere;
-	int dbindex;
-	int shift;
-	unsigned char dibit;
-	float symbol;
-
-	/* Now run each of the 12 Trellis encoders over their subset of
-	the input symbols */
-	for (encoder = 0; encoder < NCODERS; encoder++)
-	{
-		//dbi = 0;			/* Reinitialize dibit index for new encoder */
-		fifo_t	*dibit_fifo = fifo[encoder];
-
-		/* Feed all the incoming symbols into one encoder;
-		pump them into the relevant dibits. */
-		for (i = 0; i < enco_which_max; i++)
-		{
-			symbol = symbols_in[enco_which_syms[encoder][i]];
-			dibit = dibit_fifo->stuff (viterbi[encoder].decode (symbol));
-			// printf ("%d\n", dibit);
-			/* Store the dibit into the output data segment */
-			dbwhere = enco_which_dibits[encoder][i];
-			dbindex = dbwhere >> 3;
-			shift = dbwhere & 0x7;
-			out[dbindex] = (out[dbindex] & ~(0x03 << shift)) | (dibit << shift);
-		} /* Symbols fed into one encoder */
-	} /* Encoders */
-}
-
 int
 atsc_viterbi_decoder::work (int noutput_items,
                             gr_vector_const_void_star &input_items,
@@ -140,26 +96,40 @@ atsc_viterbi_decoder::work (int noutput_items,
 
 	assert (noutput_items % atsc_viterbi_decoder::NCODERS == 0);
 
+	int encoder;
+	int dbwhere;
+	int dbindex;
+	int shift;
+	unsigned char dibit;
+	float symbol;
+
 	// The way the fs_checker works ensures we start getting packets starting with 
 	// a field sync, and out input multiple is set to 12, so we should always get a
 	// mod 12 numbered first packet
 
 	unsigned char out_copy[OUTPUT_SIZE];
-	float in_copy[INPUT_SIZE];
 
-	for (int i = 0; i < NCODERS; i += NCODERS)
+	for (int i = 0; i < noutput_items; i += NCODERS)
 	{
-		// copy input into continguous temporary buffer
-		for (int j = 0; j < NCODERS; j++)
+		/* Now run each of the 12 Viterbi decoders over their subset of
+		the input symbols */
+		for (encoder = 0; encoder < NCODERS; encoder++)
 		{
-			assert (in[i + j].pli.regular_seg_p ());
-			memcpy (&in_copy[j * INPUT_SIZE/NCODERS],
-			        &in[i + j].data[0],
-			        ATSC_DATA_SEGMENT_LENGTH * sizeof (in_copy[0]));
-		}
+			fifo_t	*dibit_fifo = fifo[encoder];
 
-		// do the deed...
-		decode_helper (out_copy, in_copy);
+			/* Feed all the incoming symbols into one decoder;
+			pump them into the relevant dibits. */
+			for (unsigned int k = 0; k < enco_which_max; k++)
+			{
+				symbol = in[i + (enco_which_syms[encoder][k] / 832)].data[enco_which_syms[encoder][k] % 832];
+				dibit = dibit_fifo->stuff( viterbi[encoder].decode(symbol) );
+				/* Store the dibit into the output data segment */
+				dbwhere = enco_which_dibits[encoder][k];
+				dbindex = dbwhere >> 3;
+				shift = dbwhere & 0x7;
+				out_copy[dbindex] = (out_copy[dbindex] & ~(0x03 << shift)) | (dibit << shift);
+			} /* Symbols fed into one encoder */
+		} /* Encoders */
 
 		// copy output from contiguous temp buffer into final output
 		for (int j = 0; j < NCODERS; j++)
@@ -173,6 +143,6 @@ atsc_viterbi_decoder::work (int noutput_items,
 		}
 	}
 
-	return NCODERS;
+	return noutput_items;
 }
 
