@@ -68,21 +68,14 @@ def graph (args):
 	# Convert interleaved shorts (I,Q,I,Q) to complex
 	is2c = blocks.interleaved_short_to_complex()
 
-	# 1/2 as wide because we're designing lp filter
+	# RRC filter (symbol matched filter) and interpolate by 3
 	symbol_rate = atsc.ATSC_SYMBOL_RATE/2.
-	NTAPS = 279
-	tt = filter.firdes.root_raised_cosine (1.0, input_rate / 3, symbol_rate, .1152, NTAPS)
-	rrc = filter.fir_filter_ccf(1, tt)
+	NTAPS = 279*3
+	tt = filter.firdes.root_raised_cosine (1.0, input_rate, symbol_rate, .1152, NTAPS)
+	ilp = filter.interp_fir_filter_ccf(3, tt)
 
-	# Interpolate Filter our 6MHz wide signal centered at 0
-	ilp_coeffs = filter.firdes.low_pass(3, input_rate, 3.2e6, .5e6, filter.firdes.WIN_HAMMING)
-	ilp = filter.interp_fir_filter_ccf(3, ilp_coeffs)
-	
-	# Phase locked loop
+	# Phase locked loop and complex-to-real conversion
 	fpll = atsc.fpll( input_rate )
-
-	# fpll output is complex, we need floats
-	c2f = blocks.complex_to_float()
 
 	# Automatic gain control
 	agc = analog.agc_ff(1e-6, 4)
@@ -107,28 +100,26 @@ def graph (args):
 	outf = blocks.file_sink(gr.sizeof_char,outfile)
 
 	# Connect it all together
-	tb.connect( srcf, is2c, rrc, ilp, fpll, c2f, agc)
+	tb.connect( srcf, is2c, ilp, fpll, agc)
 	tb.connect( agc, (remove_dc, 0) )
 	tb.connect( agc, iir, (remove_dc, 1) )
 	tb.connect( remove_dc, btl, fsc, eq, viterbi, deinter, rs_dec, derand, depad, outf)
 
 	tb.run()
 
-	print 'srcf:      ' + repr(srcf.pc_work_time()).rjust(15) + ' / ' + repr(srcf.pc_nproduced()).rjust(8)
-	print 'is2c:      ' + repr(is2c.pc_work_time()).rjust(15) + ' / ' + repr(is2c.pc_nproduced()).rjust(8)
-	print 'rrc:       ' + repr(rrc.pc_work_time()).rjust(15) + ' / ' + repr(rrc.pc_nproduced()).rjust(8)
-	print 'ilp:       ' + repr(ilp.pc_work_time()).rjust(15) + ' / ' + repr(ilp.pc_nproduced()).rjust(8)
-	print 'fpll:      ' + repr(fpll.pc_work_time()).rjust(15) + ' / ' + repr(fpll.pc_nproduced()).rjust(8)
-	print 'c2f:       ' + repr(c2f.pc_work_time()).rjust(15) + ' / ' + repr(c2f.pc_nproduced()).rjust(8)
-	print 'agc:       ' + repr(agc.pc_work_time()).rjust(15) + ' / ' + repr(agc.pc_nproduced()).rjust(8)
-	print 'btl:       ' + repr(btl.pc_work_time()).rjust(15) + ' / ' + repr(btl.pc_nproduced()).rjust(8)
-	print 'fsc:       ' + repr(fsc.pc_work_time()).rjust(15) + ' / ' + repr(fsc.pc_nproduced()).rjust(8)
-	print 'eq:        ' + repr(eq.pc_work_time()).rjust(15) + ' / ' + repr(eq.pc_nproduced()).rjust(8)
-	print 'viterbi:   ' + repr(viterbi.pc_work_time()).rjust(15) + ' / ' + repr(viterbi.pc_nproduced()).rjust(8)
-	print 'deinter:   ' + repr(deinter.pc_work_time()).rjust(15) + ' / ' + repr(deinter.pc_nproduced()).rjust(8)
-	print 'rs_dec:    ' + repr(rs_dec.pc_work_time()).rjust(15) + ' / ' + repr(rs_dec.pc_nproduced()).rjust(8)
-	print 'derand:    ' + repr(derand.pc_work_time()).rjust(15) + ' / ' + repr(derand.pc_nproduced()).rjust(8)
-	print 'depad:     ' + repr(depad.pc_work_time()).rjust(15) + ' / ' + repr(depad.pc_nproduced()).rjust(8)
+	print 'srcf:      ' + repr(srcf.pc_work_time()).rjust(15)
+	print 'is2c:      ' + repr(is2c.pc_work_time()).rjust(15)
+	print 'ilp:       ' + repr(ilp.pc_work_time()).rjust(15)
+	print 'fpll:      ' + repr(fpll.pc_work_time()).rjust(15)
+	print 'agc:       ' + repr(agc.pc_work_time()).rjust(15)
+	print 'btl:       ' + repr(btl.pc_work_time()).rjust(15)
+	print 'fsc:       ' + repr(fsc.pc_work_time()).rjust(15)
+	print 'eq:        ' + repr(eq.pc_work_time()).rjust(15)
+	print 'viterbi:   ' + repr(viterbi.pc_work_time()).rjust(15)
+	print 'deinter:   ' + repr(deinter.pc_work_time()).rjust(15)
+	print 'rs_dec:    ' + repr(rs_dec.pc_work_time()).rjust(15)
+	print 'derand:    ' + repr(derand.pc_work_time()).rjust(15)
+	print 'depad:     ' + repr(depad.pc_work_time()).rjust(15)
 
 
 if __name__ == '__main__':
