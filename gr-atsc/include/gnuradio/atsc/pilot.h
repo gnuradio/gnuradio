@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2006 Free Software Foundation, Inc.
+ * Copyright 2013 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -20,54 +20,38 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef INCLUDED_ATSC_RS_ENCODER_H
-#define INCLUDED_ATSC_RS_ENCODER_H
+#ifndef INCLUDED_ATSC_PILOT_H
+#define INCLUDED_ATSC_PILOT_H
 
 #include <gnuradio/atsc/api.h>
 #include <gnuradio/sync_block.h>
 #include <gnuradio/atsc/types.h>
 
-extern "C" {
-#include <gnuradio/fec/rs.h>
-}
+class atsc_pilot;
+typedef boost::shared_ptr<atsc_pilot> atsc_pilot_sptr;
 
-class atsc_rs_encoder;
-typedef boost::shared_ptr<atsc_rs_encoder> atsc_rs_encoder_sptr;
-
-ATSC_API atsc_rs_encoder_sptr atsc_make_rs_encoder();
+ATSC_API atsc_pilot_sptr atsc_make_pilot();
 
 /*!
- * \brief Reed-Solomon encoder for ATSC
+ * \brief Insert ATSC pilot offset (atsc_data_segment --> char)
  * \ingroup atsc
  *
- * The t=10 (207,187) code described in ATSC standard A/53B.
- * See figure D5 on page 55.
- *
- * input: atsc_mpeg_packet_no_sync; output: atsc_mpeg_packet_rs_encoded
+ * input: atsc_data_segment; output: char
  */
-class ATSC_API atsc_rs_encoder : public gr::sync_block
+class ATSC_API atsc_pilot : public gr::block
 {
-  friend ATSC_API atsc_rs_encoder_sptr atsc_make_rs_encoder();
+  friend ATSC_API atsc_pilot_sptr atsc_make_pilot();
 
-public:  
+  atsc_pilot();
 
-  atsc_rs_encoder();
-  ~atsc_rs_encoder();
-
-/*!
- * \brief Add RS error correction encoding
- */
-  void encode (atsc_mpeg_packet_rs_encoded &out, const atsc_mpeg_packet_no_sync &in);
-
-  int work (int noutput_items,
+public:
+  int general_work (int noutput_items,
+	    gr_vector_int &ninput_items,
 	    gr_vector_const_void_star &input_items,
 	    gr_vector_void_star &output_items);
 
-  void reset() { /* nop */ }
-
-private:
-  void *d_rs;
+  void reset() { } // Nop
 };
 
 
-#endif /* INCLUDED_ATSC_RS_ENCODER_H */
+#endif /* INCLUDED_ATSC_PILOT_H */

@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2002, 2014 Free Software Foundation, Inc.
+ * Copyright 2002 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -20,39 +20,35 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef _ATSCSINGLEVITERBI_H_
-#define _ATSCSINGLEVITERBI_H_
+#ifndef _QA_ATSC_VITERBI_DECODER_H_
+#define _QA_ATSC_VITERBI_DECODER_H_
 
-#include <gnuradio/atsc/api.h>
+#include <cppunit/extensions/HelperMacros.h>
+#include <cppunit/TestCase.h>
 
-/*!
- * \brief single channel viterbi decoder
- */
-class ATSC_API atsci_single_viterbi
-{
+#include <stdio.h>
+#include <gnuradio/atsc/viterbi_decoder.h>
 
-public:
-  atsci_single_viterbi ();
+class qa_atsci_viterbi_decoder : public CppUnit::TestCase {
 
-  static const unsigned int TB_LEN = 32;
+ public:
 
-  /*!
-   * \p INPUT ideally takes on the values +/- 1,3,5,7
-   * return is decoded dibit in the range [0, 3]
-   */
-  char decode (float input);
+  void setUp (void)
+  {
+    viterbi.reset ();
+  }
 
-  void reset ();
+  CPPUNIT_TEST_SUITE (qa_atsci_viterbi_decoder);
+  CPPUNIT_TEST (t0);
+  CPPUNIT_TEST (t1);
+  CPPUNIT_TEST_SUITE_END ();
 
-  //! internal delay of decoder
-  int delay () { return TB_LEN - 1; }
+ private:
+  atsc_viterbi_decoder viterbi;
 
-protected:
-  static const int transition_table[8][4];
-  static const int was_sent[8][4];
-  float path_metrics [2][8];
-  unsigned long long traceback [2][8];
-  unsigned char phase;
+  void t0 ();
+  void t1 ();
 };
 
-#endif
+
+#endif /* _QA_ATSC_VITERBI_DECODER_H_ */

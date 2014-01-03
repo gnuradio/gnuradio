@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2006 Free Software Foundation, Inc.
+ * Copyright 2006,2013 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -29,53 +29,37 @@
 #include <gnuradio/filter/single_pole_iir.h>
 #include <gnuradio/analog/agc.h>
 #include <stdio.h>
-#include <gnuradio/atsc/diag_output_impl.h>
 
 using namespace gr;
 
 class atsc_fpll;
 typedef boost::shared_ptr<atsc_fpll> atsc_fpll_sptr;
 
-ATSC_API atsc_fpll_sptr atsc_make_fpll();
-
-/*!
- * \brief ATSC FPLL (2nd Version)
- * \ingroup atsc
- *
- *  A/D --> GrFIRfilterFFF ----> GrAtscFPLL ---->
- *
- * We use GrFIRfilterFFF to bandpass filter the signal of interest.
- *
- * This class accepts a single real input and produces a single real output
- */
+ATSC_API atsc_fpll_sptr atsc_make_fpll( float sample_rate );
 
 class ATSC_API atsc_fpll : public gr::sync_block
 {
-  friend ATSC_API atsc_fpll_sptr atsc_make_fpll();
+	friend ATSC_API atsc_fpll_sptr atsc_make_fpll( float sample_rate );
 
-  atsc_fpll();
+	atsc_fpll( float sample_rate );
 
 public:
 
-  int work (int noutput_items,
-	    gr_vector_const_void_star &input_items,
-	    gr_vector_void_star &output_items);
+	int work (int noutput_items,
+		gr_vector_const_void_star &input_items,
+		gr_vector_void_star &output_items);
 
-  void reset() { /* nop */ }
+	void reset() { /* nop */ }
 
-  void initialize () ;
+	void initialize ( float sample_rate ) ;
 
- protected:
+protected:
 
-  double                        initial_freq;
-  double                        initial_phase;
-  bool                          debug_no_update;
-  gr::nco<float,float>          nco;
-  analog::kernel::agc_ff        agc;    // automatic gain control
-  filter::single_pole_iir<float,float,float> afci;
-  filter::single_pole_iir<float,float,float> afcq;
-
-
+	double                        initial_freq;
+	double                        initial_phase;
+	bool                          debug_no_update;
+	gr::nco<float,float>          nco;
+	filter::single_pole_iir<gr_complex,gr_complex,float> afc;
 };
 
 

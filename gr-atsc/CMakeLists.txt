@@ -76,8 +76,8 @@ CPACK_COMPONENT("atsc_python"
 CPACK_COMPONENT("atsc_examples"
     GROUP        "ATSC"
     DISPLAY_NAME "Examples"
-    DESCRIPTION  "Python examples for ATSC"
-    DEPENDS      "atsc_python"
+    DESCRIPTION  "Examples for ATSC"
+    DEPENDS      "atsc_runtime"
 )
 
 CPACK_COMPONENT("atsc_swig"
@@ -96,6 +96,10 @@ if(ENABLE_PYTHON)
     add_subdirectory(swig)
     add_subdirectory(python/atsc)
 endif(ENABLE_PYTHON)
+
+if(ENABLE_GR_ATSC)
+    add_subdirectory(apps)
+endif(ENABLE_GR_ATSC)
 
 ########################################################################
 # Create Pkg Config File

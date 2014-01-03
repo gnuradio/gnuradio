@@ -36,7 +36,7 @@
 #include <gnuradio/atsc/viterbi_decoder.h>
 #include <gnuradio/atsc/ds_to_softds.h>
 #include <gnuradio/atsc/field_sync_mux.h>
-#include <gnuradio/atsc/field_sync_demux.h>
+#include <gnuradio/atsc/pilot.h>
 #include <gnuradio/atsc/equalizer.h>
 #include <gnuradio/atsc/fs_checker.h>
 #include <gnuradio/atsc/bit_timing_loop.h>
@@ -201,13 +201,13 @@ public:
 
 // ----------------------------------------------------------------
 
-GR_SWIG_BLOCK_MAGIC(atsc,field_sync_demux);
+GR_SWIG_BLOCK_MAGIC(atsc,pilot);
 
-atsc_field_sync_demux_sptr atsc_make_field_sync_demux();
+atsc_pilot_sptr atsc_make_pilot();
 
-class atsc_field_sync_demux : public gr::block
+class atsc_pilot : public gr::sync_block
 {
-  atsc_field_sync_demux();
+  atsc_pilot();
 
 public:
   void reset();
@@ -225,7 +225,6 @@ class atsc_equalizer : public gr::sync_block
 
 public:
   void reset();
-  std::vector<double> taps();
 };
 
 // ----------------------------------------------------------------
@@ -246,11 +245,11 @@ public:
 
 GR_SWIG_BLOCK_MAGIC(atsc,bit_timing_loop);
 
-atsc_bit_timing_loop_sptr atsc_make_bit_timing_loop();
+atsc_bit_timing_loop_sptr atsc_make_bit_timing_loop( float input_rate );
 
 class atsc_bit_timing_loop : public gr::block
 {
-  atsc_bit_timing_loop();
+  atsc_bit_timing_loop( float input_rate );
 
 public:
   void reset();
@@ -260,11 +259,11 @@ public:
 
 GR_SWIG_BLOCK_MAGIC(atsc,fpll);
 
-atsc_fpll_sptr atsc_make_fpll();
+atsc_fpll_sptr atsc_make_fpll( float sample_rate );
 
 class atsc_fpll : public gr::sync_block
 {
-  atsc_fpll();
+  atsc_fpll( float sample_rate );
 
 public:
   void reset();

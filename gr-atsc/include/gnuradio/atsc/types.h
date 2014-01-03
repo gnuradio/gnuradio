@@ -71,7 +71,7 @@ public:
 
   void set_regular_seg (bool field2, int segno)
   {
-    assert (0 <= segno && segno < ATSC_DSEGS_PER_FIELD);
+    //assert (0 <= segno && segno < ATSC_DSEGS_PER_FIELD);
     _segno = segno;
     _flags = fl_regular_seg;
     if (segno == 0)
@@ -102,18 +102,45 @@ public:
    * Set \p OUT such that it reflects a \p NSEGS_OF_DELAY
    * pipeline delay from \p IN.
    */
-  static void delay (plinfo &out, const plinfo &in, int nsegs_of_delay);
+  static void delay (plinfo &out, const plinfo &in, int nsegs_of_delay)
+  {
+    assert (in.regular_seg_p ());
+    assert (nsegs_of_delay >= 0);
+
+    int	s = in.segno ();
+    if (in.in_field2_p ())
+      s += ATSC_DSEGS_PER_FIELD;
+
+    s -= nsegs_of_delay;
+    if (s < 0)
+      s += 2 * ATSC_DSEGS_PER_FIELD;
+
+    assert (0 <= s && s < 2 * ATSC_DSEGS_PER_FIELD);
+
+    if (s < ATSC_DSEGS_PER_FIELD)
+      out.set_regular_seg (false, s);				// field 1
+    else
+      out.set_regular_seg (true, s - ATSC_DSEGS_PER_FIELD);	// field 2
+  }
 
   /*!
    * confirm that \p X is plausible
    */
-  static void sanity_check (const plinfo &in);
+  static void sanity_check (const plinfo &in)
+  {
+    // basic sanity checks...
+    //assert (x.segno () >= 0);
+    //assert (x.segno () < (unsigned) ATSC_DSEGS_PER_FIELD);
+    //assert ((x.flags () & ~0x3f) == 0);
 
+    //assert (x.regular_seg_p () ^ x.field_sync_p ());
+    //assert ((x.segno () != 0) ^ x.first_regular_seg_p ());
+  }
+
+  unsigned short	_flags;		// bitmask
+  short	_segno;		// segment number [-1,311] -1 is the field sync segment
 
 protected:
-  unsigned short	_flags;		// bitmask
-  unsigned short	_segno;		// segment number [0,311]
-
   // these three are mutually exclusive
   //     This is a regular data segment.
   static const int	fl_regular_seg		= 0x0001;

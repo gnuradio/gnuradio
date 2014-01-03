@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2002, 2014 Free Software Foundation, Inc.
+ * Copyright 2002 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -20,39 +20,24 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef _ATSCSINGLEVITERBI_H_
-#define _ATSCSINGLEVITERBI_H_
+/*#ifndef _QA_ATSC_REED_SOLOMON_H_
+#define _QA_ATSC_REED_SOLOMON_H_
 
-#include <gnuradio/atsc/api.h>
+#include <cppunit/extensions/HelperMacros.h>
+#include <cppunit/TestCase.h>
 
-/*!
- * \brief single channel viterbi decoder
- */
-class ATSC_API atsci_single_viterbi
-{
+#include <gnuradio/atsc/reed_solomon_impl.h>
 
-public:
-  atsci_single_viterbi ();
+class qa_atsci_reed_solomon : public CppUnit::TestCase {
 
-  static const unsigned int TB_LEN = 32;
+  CPPUNIT_TEST_SUITE (qa_atsci_reed_solomon);
+  CPPUNIT_TEST (t0_reed_solomon);
+  CPPUNIT_TEST_SUITE_END ();
 
-  /*!
-   * \p INPUT ideally takes on the values +/- 1,3,5,7
-   * return is decoded dibit in the range [0, 3]
-   */
-  char decode (float input);
+ private:
+  atsci_reed_solomon	rs;
 
-  void reset ();
-
-  //! internal delay of decoder
-  int delay () { return TB_LEN - 1; }
-
-protected:
-  static const int transition_table[8][4];
-  static const int was_sent[8][4];
-  float path_metrics [2][8];
-  unsigned long long traceback [2][8];
-  unsigned char phase;
+  void t0_reed_solomon ();
 };
 
-#endif
+#endif *//* _QA_ATSC_REED_SOLOMON_H_ */

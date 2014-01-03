@@ -40,12 +40,12 @@
 # field, this then adjusts the timing so the amplitude will be sampled at the
 # correct sample ( sub-sample is used in this case ). 
 #
-# Output is float.
+# Output is an MPEG-TS.
 
 from gnuradio import gr, analog, atsc
 from gnuradio import blocks
 from gnuradio import filter
-import sys, math, os
+import sys, math, os, time
 
 def graph (args):
 
@@ -56,10 +56,9 @@ def graph (args):
 		infile = args[0]
         	outfile = args[1]
     	else:
-        	raise ValueError('usage: interp.py input_file output_file.ts\n')
+        	raise ValueError('usage: atsc_rx.py input_file output_file.ts\n')
 
-	input_rate = 19.2e6
-	IF_freq = 5.75e6
+	input_rate = 6.4e6*3
 
 	tb = gr.top_block()
 
@@ -69,45 +68,28 @@ def graph (args):
 	# Convert interleaved shorts (I,Q,I,Q) to complex
 	is2c = blocks.interleaved_short_to_complex()
 
-	# 1/2 as wide because we're designing lp filter
+	# RRC filter (symbol matched filter) and interpolate by 3
 	symbol_rate = atsc.ATSC_SYMBOL_RATE/2.
-	NTAPS = 279
-	tt = filter.firdes.root_raised_cosine (1.0, input_rate / 3, symbol_rate, .1152, NTAPS)
-	rrc = filter.fir_filter_ccf(1, tt)
+	NTAPS = 279*3
+	tt = filter.firdes.root_raised_cosine (1.0, input_rate, symbol_rate, .1152, NTAPS)
+	ilp = filter.interp_fir_filter_ccf(3, tt)
 
-	# Interpolate Filter our 6MHz wide signal centered at 0
-	ilp_coeffs = filter.firdes.low_pass(1, input_rate, 3.2e6, .5e6, filter.firdes.WIN_HAMMING)
-	ilp = filter.interp_fir_filter_ccf(3, ilp_coeffs)
+	# Phase locked loop and complex-to-real conversion
+	fpll = atsc.fpll( input_rate )
 
-	# Move the center frequency to 5.75MHz ( this wont be needed soon )
-	duc_coeffs = filter.firdes.low_pass ( 1, 19.2e6, 9e6, 1e6, filter.firdes.WIN_HAMMING )
-    	duc = filter.freq_xlating_fir_filter_ccf ( 1, duc_coeffs, -5.75e6, 19.2e6 )
-	
-	# fpll input is float
-	c2f = blocks.complex_to_float()
-
-	# Phase locked loop
-	fpll = atsc.fpll()
-
-	# Clean fpll output
-	lp_coeffs2 = filter.firdes.low_pass (1.0,
-			   input_rate,
-			   5.75e6,
-                           120e3,
-                           filter.firdes.WIN_HAMMING);
-	lp_filter = filter.fir_filter_fff (1, lp_coeffs2)
+	# Automatic gain control
+	agc = analog.agc_ff(1e-6, 4)
 
 	# Remove pilot ( at DC now )
 	iir = filter.single_pole_iir_filter_ff(1e-5)
 	remove_dc = blocks.sub_ff()
 
 	# Bit Timing Loop, Field Sync Checker and Equalizer
-	btl = atsc.bit_timing_loop()
+	btl = atsc.bit_timing_loop( input_rate )
 	fsc = atsc.fs_checker()
 	eq = atsc.equalizer()
-	fsd = atsc.field_sync_demux()
 
-	# Viterbi
+	# Viterbi, Deinterleaver, Reed_solomon, Derandomizer, and Depad
 	viterbi = atsc.viterbi_decoder()
         deinter = atsc.deinterleaver()
         rs_dec = atsc.rs_decoder()
@@ -118,16 +100,27 @@ def graph (args):
 	outf = blocks.file_sink(gr.sizeof_char,outfile)
 
 	# Connect it all together
-	tb.connect( srcf, is2c, rrc, ilp, duc, c2f, fpll, lp_filter)
-	tb.connect( lp_filter, iir )
-	tb.connect( lp_filter, (remove_dc, 0) )
-	tb.connect( iir, (remove_dc, 1) )
-	tb.connect( remove_dc, btl )
-	tb.connect( (btl, 0), (fsc, 0), (eq, 0), (fsd,0) )
-	tb.connect( (btl, 1), (fsc, 1), (eq, 1), (fsd,1) )
-	tb.connect( fsd, viterbi, deinter, rs_dec, derand, depad, outf )
+	tb.connect( srcf, is2c, ilp, fpll, agc)
+	tb.connect( agc, (remove_dc, 0) )
+	tb.connect( agc, iir, (remove_dc, 1) )
+	tb.connect( remove_dc, btl, fsc, eq, viterbi, deinter, rs_dec, derand, depad, outf)
 
 	tb.run()
+
+	print 'srcf:      ' + repr(srcf.pc_work_time()).rjust(15) + ' / ' + repr(srcf.pc_nproduced()).rjust(8)
+	print 'is2c:      ' + repr(is2c.pc_work_time()).rjust(15) + ' / ' + repr(is2c.pc_nproduced()).rjust(8)
+	print 'ilp:       ' + repr(ilp.pc_work_time()).rjust(15) + ' / ' + repr(ilp.pc_nproduced()).rjust(8)
+	print 'fpll:      ' + repr(fpll.pc_work_time()).rjust(15) + ' / ' + repr(fpll.pc_nproduced()).rjust(8)
+	print 'agc:       ' + repr(agc.pc_work_time()).rjust(15) + ' / ' + repr(agc.pc_nproduced()).rjust(8)
+	print 'btl:       ' + repr(btl.pc_work_time()).rjust(15) + ' / ' + repr(btl.pc_nproduced()).rjust(8)
+	print 'fsc:       ' + repr(fsc.pc_work_time()).rjust(15) + ' / ' + repr(fsc.pc_nproduced()).rjust(8)
+	print 'eq:        ' + repr(eq.pc_work_time()).rjust(15) + ' / ' + repr(eq.pc_nproduced()).rjust(8)
+	print 'viterbi:   ' + repr(viterbi.pc_work_time()).rjust(15) + ' / ' + repr(viterbi.pc_nproduced()).rjust(8)
+	print 'deinter:   ' + repr(deinter.pc_work_time()).rjust(15) + ' / ' + repr(deinter.pc_nproduced()).rjust(8)
+	print 'rs_dec:    ' + repr(rs_dec.pc_work_time()).rjust(15) + ' / ' + repr(rs_dec.pc_nproduced()).rjust(8)
+	print 'derand:    ' + repr(derand.pc_work_time()).rjust(15) + ' / ' + repr(derand.pc_nproduced()).rjust(8)
+	print 'depad:     ' + repr(depad.pc_work_time()).rjust(15) + ' / ' + repr(depad.pc_nproduced()).rjust(8)
+
 
 if __name__ == '__main__':
 	graph (sys.argv[1:])
