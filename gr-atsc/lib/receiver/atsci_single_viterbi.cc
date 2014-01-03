@@ -65,7 +65,7 @@ atsci_single_viterbi::reset()
 
 atsci_single_viterbi::atsci_single_viterbi()
 {
-  reset();
+	reset();
 }
 
 char
@@ -73,7 +73,7 @@ atsci_single_viterbi::decode(float input)
 {
 	unsigned int best_state = 0;
 	float best_state_metric = 100000;
-	/* Precompute distances from input to each possable symbol */
+	/* Precompute distances from input to each possible symbol */
 	float distances[8] = { (float)fabs( input + 7 ), (float)fabs( input + 5 ),
 	                       (float)fabs( input + 3 ), (float)fabs( input + 1 ),
 	                       (float)fabs( input - 1 ), (float)fabs( input - 3 ),
@@ -81,7 +81,7 @@ atsci_single_viterbi::decode(float input)
 	/* We start by iterating over all possible states */
 	for (unsigned int next_state = 0; next_state < 8; next_state++)
 	{
-		/* Next we find the most probable path from the previous states to the state 
+		/* Next we find the most probable path from the previous states to the state
 		    we are testing, we only need to look at the 4 paths that can be taken
 		    given the 2-bit input */
 		int min_metric_symb = 0;
@@ -102,11 +102,11 @@ atsci_single_viterbi::decode(float input)
 		    it could also be optimized with SIMD instructions. Even better this
 		    check could be eliminated as we are outputing the tail of our traceback
 		    not the head, for any head state path will tend towards the optimal path
-		    in with a probability approaching 1 in just 8 or so jumps */
+		    with a probability approaching 1 in just 8 or so transitions */
 		if(min_metric < best_state_metric)
 		{
-			best_state = next_state;
 			best_state_metric = min_metric;
+			best_state = next_state;
 		}
 	}
 	if(best_state_metric > 10000)
