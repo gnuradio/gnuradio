@@ -46,7 +46,7 @@ class fm_demod_cf(gr.hier_block2):
         audio_pass: audio low pass filter passband frequency (float)
         audio_stop: audio low pass filter stop frequency (float)
         gain: gain applied to audio output (default = 1.0) (float)
-        tau: deemphasis time constant (default = 75e-6), specify 'None' to prevent deemphasis
+        tau: deemphasis time constant (default = 75e-6), specify tau=0.0 to prevent deemphasis (float)
     """
     def __init__(self, channel_rate, audio_decim, deviation,
                  audio_pass, audio_stop, gain=1.0, tau=75e-6):
@@ -67,7 +67,7 @@ class fm_demod_cf(gr.hier_block2):
         )
         LPF = filter.fir_filter_fff(audio_decim, audio_taps)
 
-        if tau is not None:
+        if tau is not None and tau > 0.0:  # None should be deprecated someday
             DEEMPH = fm_deemph(channel_rate, tau)
             self.connect(self, QUAD, DEEMPH, LPF, self)
         else:
