@@ -117,8 +117,10 @@ class ActionHandler:
                 Actions.TYPES_WINDOW_DISPLAY, Actions.TOGGLE_BLOCKS_WINDOW,
                 Actions.TOGGLE_REPORTS_WINDOW,
             ): action.set_sensitive(True)
-            Actions.PARSER_ERRORS.set_sensitive(bool(ParseXML.xml_failures))
-            
+            if ParseXML.xml_failures:
+                Messages.send_xml_errors_if_any(ParseXML.xml_failures)
+                Actions.PARSER_ERRORS.set_sensitive(True)
+
             if not self.init_file_paths:
                 self.init_file_paths = Preferences.files_open()
             if not self.init_file_paths: self.init_file_paths = ['']
@@ -466,6 +468,7 @@ class ActionHandler:
             self.main_window.btwin.clear()
             self.platform.load_block_tree(self.main_window.btwin)
             Actions.PARSER_ERRORS.set_sensitive(bool(ParseXML.xml_failures))
+            Messages.send_xml_errors_if_any(ParseXML.xml_failures)
         elif action == Actions.FIND_BLOCKS:
             self.main_window.btwin.show()
             self.main_window.btwin.search_entry.show()
