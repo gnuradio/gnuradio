@@ -34,25 +34,25 @@ import math
 # See "Digital Signal Processing: A Practical Approach" by Ifeachor and Jervis
 #
 
+
 class fm_deemph(gr.hier_block2):
     """
     FM Deemphasis IIR filter.
     """
 
-
     def __init__(self, fs, tau=75e-6):
         """
-        
+
         Args:
             fs: sampling frequency in Hz (float)
             tau: Time constant in seconds (75us in US, 50us in EUR) (float)
         """
         gr.hier_block2.__init__(self, "fm_deemph",
-				gr.io_signature(1, 1, gr.sizeof_float), # Input signature
-				gr.io_signature(1, 1, gr.sizeof_float)) # Output signature
+                                gr.io_signature(1, 1, gr.sizeof_float),  # Input signature
+                                gr.io_signature(1, 1, gr.sizeof_float))  # Output signature
 
         w_p = 1/tau
-        w_pp = math.tan(w_p / (fs * 2)) # prewarped analog freq
+        w_pp = math.tan(w_p / (fs * 2))  # prewarped analog freq
 
         a1 = (w_pp - 1)/(w_pp + 1)
         b0 = w_pp/(1 + w_pp)
@@ -68,7 +68,7 @@ class fm_deemph(gr.hier_block2):
             plot1 = gru.gnuplot_freqz(gru.freqz(btaps, ataps), fs, True)
 
         deemph = filter.iir_filter_ffd(btaps, ataps)
-	self.connect(self, deemph, self)
+        self.connect(self, deemph, self)
 
 #
 #         1 + s*t1
@@ -119,21 +119,21 @@ class fm_deemph(gr.hier_block2):
 # See "Digital Signal Processing: A Practical Approach" by Ifeachor and Jervis
 #
 
+
 class fm_preemph(gr.hier_block2):
     """
     FM Preemphasis IIR filter.
     """
     def __init__(self, fs, tau=75e-6):
         """
-        
+
         Args:
             fs: sampling frequency in Hz (float)
             tau: Time constant in seconds (75us in US, 50us in EUR) (float)
         """
-
-	gr.hier_block2.__init__(self, "fm_deemph",
-				gr.io_signature(1, 1, gr.sizeof_float), # Input signature
-				gr.io_signature(1, 1, gr.sizeof_float)) # Output signature
+        gr.hier_block2.__init__(self, "fm_deemph",
+                                gr.io_signature(1, 1, gr.sizeof_float),  # Input signature
+                                gr.io_signature(1, 1, gr.sizeof_float))  # Output signature
 
         # FIXME make this compute the right answer
 
@@ -147,4 +147,4 @@ class fm_preemph(gr.hier_block2):
             plot2 = gru.gnuplot_freqz(gru.freqz(btaps, ataps), fs, True)
 
         preemph = filter.iir_filter_ffd(btaps, ataps)
-	self.connect(self, preemph, self)
+        self.connect(self, preemph, self)

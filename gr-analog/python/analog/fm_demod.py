@@ -28,6 +28,7 @@ try:
 except ImportError:
     import analog_swig as analog
 
+
 class fm_demod_cf(gr.hier_block2):
     """
     Generalized FM demodulation block with deemphasis and audio
@@ -36,7 +37,7 @@ class fm_demod_cf(gr.hier_block2):
     This block demodulates a band-limited, complex down-converted FM
     channel into the the original baseband signal, optionally applying
     deemphasis. Low pass filtering is done on the resultant signal. It
-    produces an output float strem in the range of [-1.0, +1.0].
+    produces an output float stream in the range of [-1.0, +1.0].
 
     Args:
         channel_rate: incoming sample rate of the FM baseband (integer)
@@ -49,26 +50,29 @@ class fm_demod_cf(gr.hier_block2):
     """
     def __init__(self, channel_rate, audio_decim, deviation,
                  audio_pass, audio_stop, gain=1.0, tau=75e-6):
-	gr.hier_block2.__init__(self, "fm_demod_cf",
-				gr.io_signature(1, 1, gr.sizeof_gr_complex), # Input signature
-				gr.io_signature(1, 1, gr.sizeof_float))      # Output signature
+        gr.hier_block2.__init__(self, "fm_demod_cf",
+                                gr.io_signature(1, 1, gr.sizeof_gr_complex),  # Input signature
+                                gr.io_signature(1, 1, gr.sizeof_float))       # Output signature
 
-	k = channel_rate/(2*pi*deviation)
-	QUAD = analog.quadrature_demod_cf(k)
+        k = channel_rate/(2*pi*deviation)
+        QUAD = analog.quadrature_demod_cf(k)
 
-	audio_taps = filter.optfir.low_pass(gain, 	 # Filter gain
-                                           channel_rate, # Sample rate
-                                           audio_pass,   # Audio passband
-                                           audio_stop,   # Audio stopband
-                                           0.1, 	 # Passband ripple
-                                           60)	         # Stopband attenuation
-	LPF = filter.fir_filter_fff(audio_decim, audio_taps)
+        audio_taps = filter.optfir.low_pass(
+            gain,          # Filter gain
+            channel_rate,  # Sample rate
+            audio_pass,    # Audio passband
+            audio_stop,    # Audio stopband
+            0.1,           # Passband ripple
+            60             # Stopband attenuation
+        )
+        LPF = filter.fir_filter_fff(audio_decim, audio_taps)
 
-	if tau is not None:
-	    DEEMPH = fm_deemph(channel_rate, tau)
-	    self.connect(self, QUAD, DEEMPH, LPF, self)
+        if tau is not None:
+            DEEMPH = fm_deemph(channel_rate, tau)
+            self.connect(self, QUAD, DEEMPH, LPF, self)
         else:
             self.connect(self, QUAD, LPF, self)
+
 
 class demod_20k0f3e_cf(fm_demod_cf):
     """
@@ -84,9 +88,10 @@ class demod_20k0f3e_cf(fm_demod_cf):
     """
     def __init__(self, channel_rate, audio_decim):
         fm_demod_cf.__init__(self, channel_rate, audio_decim,
-                             5000,	# Deviation
-                             3000,	# Audio passband frequency
-                             4500)	# Audio stopband frequency
+                             5000,  # Deviation
+                             3000,  # Audio passband frequency
+                             4500)  # Audio stopband frequency
+
 
 class demod_200kf3e_cf(fm_demod_cf):
     """
@@ -101,8 +106,8 @@ class demod_200kf3e_cf(fm_demod_cf):
         audio_decim: input to output decimation rate (integer)
     """
     def __init__(self, channel_rate, audio_decim):
-	fm_demod_cf.__init__(self, channel_rate, audio_decim,
-			     75000,	# Deviation
-			     15000,	# Audio passband
-			     16000,	# Audio stopband
-			     20.0)	# Audio gain
+        fm_demod_cf.__init__(self, channel_rate, audio_decim,
+                             75000,  # Deviation
+                             15000,  # Audio passband
+                             16000,  # Audio stopband
+                             20.0)   # Audio gain
