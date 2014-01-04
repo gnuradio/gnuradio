@@ -261,7 +261,7 @@ BLOCK_PASTE = Action(
     keypresses=(gtk.keysyms.v, gtk.gdk.CONTROL_MASK),
 )
 ERRORS_WINDOW_DISPLAY = Action(
-    label='_Errors',
+    label='Flowgraph _Errors',
     tooltip='View flow graph errors',
     stock_id=gtk.STOCK_DIALOG_ERROR,
 )
@@ -354,7 +354,7 @@ BUSSIFY_SINKS = Action(
     tooltip='Gang sink ports into a single bus port',
     stock_id=gtk.STOCK_JUMP_TO,
 )
-PARSER_ERRORS = Action(
+XML_PARSER_ERRORS_DISPLAY = Action(
     label='_Parser Errors',
     tooltip='View errors that occured while parsing XML files',
     stock_id=gtk.STOCK_DIALOG_ERROR,

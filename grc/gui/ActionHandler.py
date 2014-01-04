@@ -31,7 +31,7 @@ import Messages
 from .. base import ParseXML
 from MainWindow import MainWindow
 from PropsDialog import PropsDialog
-from ParseDialog import ParseDialog
+from ParserErrorsDialog import ParserErrorsDialog
 import Dialogs
 from FileDialogs import OpenFlowGraphFileDialog, SaveFlowGraphFileDialog, SaveImageFileDialog
 
@@ -119,7 +119,7 @@ class ActionHandler:
             ): action.set_sensitive(True)
             if ParseXML.xml_failures:
                 Messages.send_xml_errors_if_any(ParseXML.xml_failures)
-                Actions.PARSER_ERRORS.set_sensitive(True)
+                Actions.XML_PARSER_ERRORS_DISPLAY.set_sensitive(True)
 
             if not self.init_file_paths:
                 self.init_file_paths = Preferences.files_open()
@@ -384,8 +384,8 @@ class ActionHandler:
         ##################################################
         # View Parser Errors
         ##################################################
-        elif action == Actions.PARSER_ERRORS:
-            ParseDialog(ParseXML.xml_failures).run()
+        elif action == Actions.XML_PARSER_ERRORS_DISPLAY:
+            ParserErrorsDialog(ParseXML.xml_failures).run()
         ##################################################
         # Undo/Redo
         ##################################################
@@ -467,7 +467,7 @@ class ActionHandler:
             self.platform.load_blocks()
             self.main_window.btwin.clear()
             self.platform.load_block_tree(self.main_window.btwin)
-            Actions.PARSER_ERRORS.set_sensitive(bool(ParseXML.xml_failures))
+            Actions.XML_PARSER_ERRORS_DISPLAY.set_sensitive(bool(ParseXML.xml_failures))
             Messages.send_xml_errors_if_any(ParseXML.xml_failures)
         elif action == Actions.FIND_BLOCKS:
             self.main_window.btwin.show()

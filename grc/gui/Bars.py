@@ -103,7 +103,7 @@ MENU_BAR_LIST = (
     (gtk.Action('Help', '_Help', None, None), [
         Actions.HELP_WINDOW_DISPLAY,
         Actions.TYPES_WINDOW_DISPLAY,
-        Actions.PARSER_ERRORS,
+        Actions.XML_PARSER_ERRORS_DISPLAY,
         None,
         Actions.ABOUT_WINDOW_DISPLAY,
     ]),

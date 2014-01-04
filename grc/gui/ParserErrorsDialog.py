@@ -24,7 +24,7 @@ import gtk
 from Constants import MIN_DIALOG_WIDTH, MIN_DIALOG_HEIGHT
 
 
-class ParseDialog(gtk.Dialog):
+class ParserErrorsDialog(gtk.Dialog):
     """
     A dialog for viewing parser errors
     """
@@ -32,7 +32,7 @@ class ParseDialog(gtk.Dialog):
     def __init__(self, error_logs):
         """
         Properties dialog constructor.
-        
+
         Args:
             block: a block instance
         """
@@ -49,8 +49,8 @@ class ParseDialog(gtk.Dialog):
         column.set_sort_column_id(0)
 
         self.tree_view = tree_view = gtk.TreeView(self.tree_store)
-        tree_view.set_enable_search(False) #disable pop up search box
-        tree_view.set_search_column(-1) # really disable search
+        tree_view.set_enable_search(False)  # disable pop up search box
+        tree_view.set_search_column(-1)  # really disable search
         tree_view.set_reorderable(False)
         tree_view.set_headers_visible(False)
         tree_view.get_selection().set_mode(gtk.SELECTION_NONE)
@@ -91,7 +91,7 @@ class ParseDialog(gtk.Dialog):
     def run(self):
         """
         Run the dialog and get its response.
-        
+
         Returns:
             true if the response was accept
         """
