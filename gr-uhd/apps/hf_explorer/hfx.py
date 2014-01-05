@@ -184,14 +184,6 @@ class MyFrame(wx.Frame):
 	self.af_sample_rate = 32000
 	fir_decim = long (input_rate / self.af_sample_rate)
 
-	print "usrp_center, ddc_freq: " + str(self.usrp_center)
-	print "input_rate: " + str(input_rate)
-	print "slider_range: " + str(self.slider_range)
-	print "f_lo: " + str(self.f_lo)
-	print "f_hi: " + str(self.f_hi)
-	print "af_sample_rate: " + str(self.af_sample_rate)
-	print "fir_decim: " + str(fir_decim)
-
 	self.tb = gr.top_block()
 
         # radio variables, initial conditions
@@ -203,9 +195,6 @@ class MyFrame(wx.Frame):
         self.text_ctrl_1.SetValue(str(int(self.usrp_center)))
         self.slider_5.SetValue(0)
 	self.AM_mode = False
-
-	print "f_slider_offset: " + str(self.f_slider_offset)
-	print "f_slider_scale: " + str(self.f_slider_scale)
 
         self.slider_3.SetValue((self.frequency-self.f_slider_offset)/self.f_slider_scale)
         self.spin_ctrl_1.SetValue(int(self.frequency))
@@ -281,8 +270,8 @@ class MyFrame(wx.Frame):
 	# Main +/- 16Khz spectrum display
         self.fft = fftsink2.fft_sink_c(self.panel_2, fft_size=512,
                                        sample_rate=self.af_sample_rate,
-                                       average=True, size=(640,240))
-
+                                       average=True, size=(640,240),
+				       baseband_freq=self.usrp_center)
         c2f = blocks.complex_to_float()
 
 	# AM branch
@@ -358,9 +347,7 @@ class MyFrame(wx.Frame):
 
         self.tb.start()
 
-        # for mouse position reporting on fft display
-        self.fft.win.Bind(wx.EVT_LEFT_UP, self.Mouse)
-        # and left click to re-tune
+        # left click to re-tune
         self.fft.win.Bind(wx.EVT_LEFT_DOWN, self.Click)
 
         # start a timer to check for web commands
@@ -391,11 +378,11 @@ class MyFrame(wx.Frame):
     def __set_properties(self):
         # begin wxGlade: MyFrame.__set_properties
         self.SetTitle("HF Explorer")
-        self.slider_fcutoff_hi.SetMinSize((450, 38))
-        self.slider_fcutoff_lo.SetMinSize((450, 38))
-        self.panel_2.SetMinSize((640, 320))
+        self.slider_fcutoff_hi.SetMinSize((650, 38))
+        self.slider_fcutoff_lo.SetMinSize((650, 38))
+        self.panel_2.SetMinSize((800, 400))
         self.button_7.SetValue(1)
-        self.slider_3.SetMinSize((450, 19))
+        self.slider_3.SetMinSize((650, 19))
         self.slider_4.SetMinSize((275, 19))
         self.slider_5.SetMinSize((275, 19))
         # end wxGlade
@@ -418,10 +405,10 @@ class MyFrame(wx.Frame):
         grid_sizer_1.Add(sizer_2, 1, wx.EXPAND, 0)
         grid_sizer_1.Add(self.button_5, 0, wx.ADJUST_MINSIZE, 0)
         grid_sizer_1.Add(self.slider_fcutoff_hi, 0,
-                         wx.ALIGN_CENTER_HORIZONTAL|wx.ADJUST_MINSIZE, 0)
+                         wx.ALIGN_LEFT|wx.ADJUST_MINSIZE, 0)
         grid_sizer_1.Add(self.button_6, 0, wx.ADJUST_MINSIZE, 0)
         grid_sizer_1.Add(self.slider_fcutoff_lo, 0,
-                         wx.ALIGN_CENTER_HORIZONTAL|wx.ADJUST_MINSIZE, 0)
+                         wx.ALIGN_LEFT|wx.ADJUST_MINSIZE, 0)
         sizer_6.Add(self.panel_5, 1, wx.EXPAND, 0)
         sizer_6.Add(self.label_1, 0,
                     wx.ALIGN_CENTER_HORIZONTAL|wx.ADJUST_MINSIZE, 0)
@@ -483,8 +470,10 @@ class MyFrame(wx.Frame):
            self.spin_ctrl_1.SetValue(self.frequency)
 	   if self.AM_mode == False:
              self.xlate.set_center_freq( (self.frequency - self.tune_offset) - self.usrp_center)
+             self.fft.set_baseband_freq( self.frequency - self.tune_offset )
 	   else:
 	     self.xlate.set_center_freq( (self.frequency - self.tune_offset - 7.5e3) - self.usrp_center)
+             self.fft.set_baseband_freq( self.frequency - self.tune_offset - 7.5e3 )
 	if self.active_button == 8:
            new = max(0, min(500, self.slider_4.GetValue() + event.delta))
            self.slider_4.SetValue(new)
@@ -582,6 +571,7 @@ class MyFrame(wx.Frame):
     def set_lsb(self, event):
 	self.AM_mode = False
 	self.xlate.set_center_freq( (self.frequency - self.tune_offset) - self.usrp_center)
+	self.fft.set_baseband_freq( self.frequency - self.tune_offset )
 	self.sel_sb.set_k(1)
 	self.sel_am.set_k(0)
 	self.slider_fcutoff_hi.SetValue(0)
@@ -591,6 +581,7 @@ class MyFrame(wx.Frame):
     def set_usb(self, event):
 	self.AM_mode = False
 	self.xlate.set_center_freq( (self.frequency - self.tune_offset) - self.usrp_center)
+        self.fft.set_baseband_freq( self.frequency - self.tune_offset )
 	self.sel_sb.set_k(1)
 	self.sel_am.set_k(0)
 	self.slider_fcutoff_hi.SetValue(3000)
@@ -600,6 +591,7 @@ class MyFrame(wx.Frame):
     def set_am(self, event):
 	self.AM_mode = True
 	self.xlate.set_center_freq( (self.frequency - self.tune_offset - 7.5e3) - self.usrp_center)
+        self.fft.set_baseband_freq( self.frequency - self.tune_offset - 7.5e3 )
 	self.sel_sb.set_k(0)
 	self.sel_am.set_k(1)
 	self.slider_fcutoff_hi.SetValue(12500)
@@ -609,6 +601,7 @@ class MyFrame(wx.Frame):
     def set_cw(self, event):
 	self.AM_mode = False
 	self.xlate.set_center_freq( (self.frequency - self.tune_offset) - self.usrp_center)
+        self.fft.set_baseband_freq( self.frequency - self.tune_offset )
 	self.AM_mode = False
 	self.sel_sb.set_k(1)
 	self.sel_am.set_k(0)
@@ -627,16 +620,20 @@ class MyFrame(wx.Frame):
         self.frequency = (self.f_slider_scale * self.slider_3.GetValue()) + self.f_slider_offset
 	if self.AM_mode == False:
           self.xlate.set_center_freq( (self.frequency - self.tune_offset) - self.usrp_center)
+          self.fft.set_baseband_freq( self.frequency - self.tune_offset )
 	else:
 	  self.xlate.set_center_freq( (self.frequency - self.tune_offset - 7.5e3) - self.usrp_center)
+          self.fft.set_baseband_freq( self.frequency - self.tune_offset - 7.5e3 )
         self.spin_ctrl_1.SetValue(self.frequency)
 
     def spin_tune(self, event):
 	self.frequency = self.spin_ctrl_1.GetValue()
 	if self.AM_mode == False:
            self.xlate.set_center_freq( (self.frequency - self.tune_offset) - self.usrp_center)
+           self.fft.set_baseband_freq( self.frequency - self.tune_offset )
 	else:
 	   self.xlate.set_center_freq( (self.frequency - self.tune_offset - 7.5e3) - self.usrp_center)
+           self.fft.set_baseband_freq( self.frequency - self.tune_offset - 7.5e3 )
         self.slider_3.SetValue(int((self.frequency-self.f_slider_offset)/self.f_slider_scale))
 
     # Seek forwards in file
@@ -659,6 +656,7 @@ class MyFrame(wx.Frame):
 
     # Mouse clicked on fft display - change frequency
     def Click(self,event):
+        print "In Click"
         fRel = ( event.GetX() - 330. ) / 14.266666
 	if self.AM_mode == False:
            self.frequency = self.frequency + (fRel*1e3)
@@ -668,8 +666,10 @@ class MyFrame(wx.Frame):
         self.slider_3.SetValue(int((self.frequency-self.f_slider_offset)/self.f_slider_scale))
         if self.AM_mode == False:
 	   self.xlate.set_center_freq ( ( self.frequency - self.tune_offset ) - self.usrp_center)
+           self.fft.set_baseband_freq( self.frequency - self.tune_offset )
 	else:
 	   self.xlate.set_center_freq( (self.frequency - self.tune_offset - 7.5e3) - self.usrp_center)
+           self.fft.set_baseband_freq( self.frequency - self.tune_offset - 7.5e3 )
 
 
     # Timer events - check for web commands
@@ -688,8 +688,10 @@ class MyFrame(wx.Frame):
                self.spin_ctrl_1.SetValue(self.frequency)
                if self.AM_mode:
                  self.xlate.set_center_freq ( ( self.frequency - self.tune_offset - 7.5e3 ) - self.usrp_center)
+                 self.fft.set_baseband_freq( self.frequency - self.tune_offset )
                else:
                  self.xlate.set_center_freq ( ( self.frequency - self.tune_offset ) - self.usrp_center)
+                 self.fft.set_baseband_freq( self.frequency - self.tune_offset - 7.5e3 )
 
         if cmds[0]=='chvolume':
           fd=open("/var/www/cgi-bin/commands/chvolume","r")
