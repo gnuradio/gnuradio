@@ -9,6 +9,7 @@
 	<name>QT GUI Chooser</name>
 	<key>variable_qtgui_chooser</key>
 	<import>from PyQt4 import Qt</import>
+	<import>from PyQt4.QtCore import QObject, pyqtSlot</import>
 	<var_make>self.$(id) = $(id) = $value</var_make>
 	<make>#slurp
 #set $all_options = [$option0, $option1, $option2, $option3, $option4][:int($num_opts())]
@@ -56,7 +57,7 @@ $(win).addWidget(Qt.QLabel($label+": "))
 self._$(id)_combo_box = Qt.QComboBox()
 $(win).addWidget(self._$(id)_combo_box)
 for label in self._$(id)_labels: self._$(id)_combo_box.addItem(label)
-self._$(id)_callback = lambda i: self._$(id)_combo_box.setCurrentIndex(self._$(id)_options.index(i))
+self._$(id)_callback = lambda i: Qt.QMetaObject.invokeMethod(self._$(id)_combo_box, "setCurrentIndex", Qt.Q_ARG("int", self._$(id)_options.index(i)))
 self._$(id)_callback(self.$id)
 self._$(id)_combo_box.currentIndexChanged.connect(
 	lambda i: self.set_$(id)(self._$(id)_options[i]))
@@ -68,13 +69,19 @@ self._$(id)_combo_box.currentIndexChanged.connect(
 #set $win = 'self._%s_group_box'%$id
 $win = Qt.QGroupBox($label)
 self._$(id)_box = $(orient)()
-self._$(id)_button_group = Qt.QButtonGroup()
+class variable_chooser_button_group(Qt.QButtonGroup):
+    def __init__(self, parent=None):
+        Qt.QButtonGroup.__init__(self, parent)
+    @pyqtSlot(int)
+    def updateButtonChecked(self, button_id):
+        self.button(button_id).setChecked(True)
+self._$(id)_button_group = variable_chooser_button_group()
 $(win).setLayout(self._$(id)_box)
 for i, label in enumerate(self._$(id)_labels):
 	radio_button = Qt.QRadioButton(label)
 	self._$(id)_box.addWidget(radio_button)
 	self._$(id)_button_group.addButton(radio_button, i)
-self._$(id)_callback = lambda i: self._$(id)_button_group.button(self._$(id)_options.index(i)).setChecked(True)
+self._$(id)_callback = lambda i: Qt.QMetaObject.invokeMethod(self._$(id)_button_group, "updateButtonChecked", Qt.Q_ARG("int", self._$(id)_options.index(i)))
 self._$(id)_callback(self.$id)
 self._$(id)_button_group.buttonClicked[int].connect(
 	lambda i: self.set_$(id)(self._$(id)_options[i]))

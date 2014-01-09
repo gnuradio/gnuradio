@@ -71,7 +71,7 @@ def convert_hier(flow_graph, python_file):
         sink_n = odict()
         sink_n['name'] = input_sig['label']
         sink_n['type'] = input_sig['type']
-        sink_n['vlen'] = input_sig['vlen']
+        sink_n['vlen'] = var_or_value(input_sig['vlen'], parameters)
         if input_sig['optional']: sink_n['optional'] = '1'
         block_n['sink'].append(sink_n)
     #sink data msg ports
@@ -91,7 +91,7 @@ def convert_hier(flow_graph, python_file):
         source_n = odict()
         source_n['name'] = output_sig['label']
         source_n['type'] = output_sig['type']
-        source_n['vlen'] = output_sig['vlen']
+        source_n['vlen'] = var_or_value(output_sig['vlen'], parameters)
         if output_sig['optional']: source_n['optional'] = '1'
         block_n['source'].append(source_n)
     #source data msg ports
@@ -108,3 +108,9 @@ def convert_hier(flow_graph, python_file):
     xml_file = python_file + '.xml'
     ParseXML.to_file({'block': block_n}, xml_file)
     ParseXML.validate_dtd(xml_file, BLOCK_DTD)
+
+
+def var_or_value(name, parameters):
+    if name in map(lambda p: p.get_id(), parameters):
+        return "$"+name
+    return name
