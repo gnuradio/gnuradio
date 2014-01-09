@@ -48,10 +48,10 @@ namespace gr {
 
       /*! \brief Make a fast noise source
        * \param type    the random distribution to use (see gnuradio/analog/noise_type.h)
-       * \param ampl    a scaling factor for the output
+       * \param ampl    a scaling factor for the output; for Gaussian sources, this is the std. dev.
        * \param seed    seed for random generators. Note that for uniform and
+       *                Gaussian distributions, this should be a negative number.
        * \param samples Number of samples to pre-generate
-       * Gaussian distributions, this should be a negative number.
        */
       static sptr make(noise_type_t type, float ampl,
 		       long seed = 0, long samples=1024*16);
