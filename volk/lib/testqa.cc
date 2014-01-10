@@ -39,7 +39,7 @@ VOLK_RUN_TESTS(volk_32fc_index_max_16u, 3, 0, 20462, 1);
 VOLK_RUN_TESTS(volk_32fc_s32f_magnitude_16i, 1, 32768, 20462, 1);
 VOLK_RUN_TESTS(volk_32fc_magnitude_32f, 1e-4, 0, 20462, 1);
 VOLK_RUN_TESTS(volk_32f_s32f_convert_16i, 1, 32768, 20462, 1);
-VOLK_RUN_TESTS(volk_32f_s32f_convert_32i, 1, 2<<31, 20462, 1);
+VOLK_RUN_TESTS(volk_32f_s32f_convert_32i, 1, 1<<31, 20462, 1);
 VOLK_RUN_TESTS(volk_32f_convert_64f, 1e-4, 0, 20462, 1);
 VOLK_RUN_TESTS(volk_32f_s32f_convert_8i, 1, 128, 20462, 1);
 //VOLK_RUN_TESTS(volk_32fc_s32f_x2_power_spectral_density_32f, 1e-4, 2046, 10000);
