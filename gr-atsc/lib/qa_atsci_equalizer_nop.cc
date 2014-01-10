@@ -200,9 +200,9 @@ qa_atsci_equalizer_nop::t0 ()
 
   try {
 
-    memset (input_data, 0, sizeof (input_data));
-    memset (input_tags, 0, sizeof (input_tags));
-    memset (output_data, 0, sizeof (output_data));
+    memset (input_data, 0, sizeof(*input_data)*INPUT_SIZE);
+    memset (input_tags, 0, sizeof(*input_tags)*INPUT_SIZE);
+    memset (output_data, 0, sizeof(*output_data)*INPUT_SIZE);
 
     setup_test_data (input_data, input_tags);
 

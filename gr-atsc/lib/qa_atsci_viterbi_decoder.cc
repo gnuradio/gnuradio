@@ -51,7 +51,7 @@ map_to_soft_symbols (atsc_soft_data_segment &out,
 static void
 pad_decoder_input (atsc_soft_data_segment out[NCODERS])
 {
-  memset (out,  0, sizeof (out));
+  memset(out,  0, sizeof(*out)*NCODERS);
 
   // add data segment sync
   for (int i = 0; i < NCODERS; i++){

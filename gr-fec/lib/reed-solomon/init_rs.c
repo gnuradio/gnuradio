@@ -13,7 +13,9 @@
 #include "char.h"
 #endif
 
+#ifndef NULL
 #define NULL ((void *)0)
+#endif
 
 void FREE_RS(void *p){
   struct rs *rs = (struct rs *)p;

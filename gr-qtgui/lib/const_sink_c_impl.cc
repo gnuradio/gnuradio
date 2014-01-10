@@ -60,7 +60,7 @@ namespace gr {
       // http://harmattan-dev.nokia.com/docs/library/html/qt4/qapplication.html
       d_argc = 1;
       d_argv = new char;
-      d_argv = '\0';
+      d_argv[0] = '\0';
 
       d_main_gui = NULL;
 

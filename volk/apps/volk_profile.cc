@@ -86,7 +86,7 @@ int main(int argc, char *argv[]) {
     VOLK_PROFILE(volk_32fc_x2_multiply_conjugate_32fc, 1e-4, 0, 204602, 1000, &results, benchmark_mode);
     VOLK_PROFILE(volk_32fc_conjugate_32fc, 1e-4, 0, 204602, 1000, &results, benchmark_mode);
     VOLK_PROFILE(volk_32f_s32f_convert_16i, 1, 32768, 204602, 10000, &results, benchmark_mode);
-    VOLK_PROFILE(volk_32f_s32f_convert_32i, 1, 2<<31, 204602, 10000, &results, benchmark_mode);
+    VOLK_PROFILE(volk_32f_s32f_convert_32i, 1, 1<<31, 204602, 10000, &results, benchmark_mode);
     VOLK_PROFILE(volk_32f_convert_64f, 1e-4, 0, 204602, 10000, &results, benchmark_mode);
     VOLK_PROFILE(volk_32f_s32f_convert_8i, 1, 128, 204602, 10000, &results, benchmark_mode);
     //VOLK_PROFILE(volk_32fc_s32f_x2_power_spectral_density_32f, 1e-4, 2046, 10000, &results, benchmark_mode);
@@ -132,7 +132,6 @@ int main(int argc, char *argv[]) {
     //VOLK_PROFILE(volk_32fc_s32fc_multiply_32fc, 1e-4, lv_32fc_t(1.0, 0.5), 204602, 1000, &results, benchmark_mode);
     VOLK_PROFILE(volk_32fc_s32fc_multiply_32fc, 1e-4, 0, 204602, 1000, &results, benchmark_mode);
     VOLK_PROFILE(volk_32f_s32f_multiply_32f, 1e-4, 1.0, 204602, 10000, &results, benchmark_mode);
-
 
     char path[1024];
     volk_get_config_path(path);
