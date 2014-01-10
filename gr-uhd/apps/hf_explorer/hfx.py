@@ -274,6 +274,7 @@ class MyFrame(wx.Frame):
 				       baseband_freq=self.usrp_center)
         c2f = blocks.complex_to_float()
 
+
 	# AM branch
 	self.sel_am = blocks.multiply_const_cc(0)
 	# the following frequencies turn out to be in radians/sample
@@ -348,7 +349,7 @@ class MyFrame(wx.Frame):
         self.tb.start()
 
         # left click to re-tune
-        self.fft.win.Bind(wx.EVT_LEFT_DOWN, self.Click)
+        self.fft.win.plotter.Bind(wx.EVT_LEFT_DOWN, self.Click)
 
         # start a timer to check for web commands
         if WEB_CONTROL:
@@ -646,18 +647,9 @@ class MyFrame(wx.Frame):
 	if self.PLAY_FROM_USRP == False:
 	   self.src.seek(-10000000,gr.SEEK_CUR)
 
-    # Mouse over fft display - show frequency in tooltip
-    def Mouse(self,event):
-	if self.AM_mode:
-	   fRel = ( event.GetX() - 330. ) / 14.266666 - 7.5
-	else:
-	   fRel = ( event.GetX() - 330. ) / 14.266666
-        self.fft.win.SetToolTip(wx.ToolTip(eng_notation.num_to_str(self.frequency + (fRel*1e3))))
-
     # Mouse clicked on fft display - change frequency
     def Click(self,event):
-        print "In Click"
-        fRel = ( event.GetX() - 330. ) / 14.266666
+        fRel = ( event.GetX() - 340. ) / 18.125
 	if self.AM_mode == False:
            self.frequency = self.frequency + (fRel*1e3)
 	else:
