@@ -9,7 +9,7 @@
 static inline lv_32fc_t __volk_s32fc_s32f_power_s32fc_a(const lv_32fc_t exp, const float power){
     const float arg = power*atan2f(lv_creal(exp), lv_cimag(exp));
     const float mag = powf(lv_creal(exp)*lv_creal(exp) + lv_cimag(exp)*lv_cimag(exp), power/2);
-    return mag*lv_cmake(cosf(arg), sinf(arg));
+    return mag*lv_cmake(-cosf(arg), sinf(arg));
 }
 
 #ifdef LV_HAVE_SSE
