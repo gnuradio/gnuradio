@@ -20,7 +20,7 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef INCLUDED_BLOCKS_SOCKET_PDU_IMPL_H
+#ifndef INCLUDED_BLOCKS_RANDOM_PDU_IMPL_H
 #define INCLUDED_BLOCKS_RANDOM_PDU_IMPL_H
 
 #include <gnuradio/blocks/random_pdu.h>

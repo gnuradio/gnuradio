@@ -9,7 +9,10 @@
 
 #include <string.h>
 
+#ifndef NULL
 #define NULL ((void *)0)
+#endif
+
 #define	min(a,b)	((a) < (b) ? (a) : (b))
 
 #ifdef FIXED
