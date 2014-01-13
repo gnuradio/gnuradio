@@ -280,8 +280,8 @@ $short_id#slurp
 if __name__ == '__main__':
     #if $generate_options in ('wx_gui', 'qt_gui')
     import ctypes
-    import os
-    if os.name == 'posix':
+    import sys
+    if sys.platform.startswith('linux'):
         try:
             x11 = ctypes.cdll.LoadLibrary('libX11.so')
             x11.XInitThreads()
