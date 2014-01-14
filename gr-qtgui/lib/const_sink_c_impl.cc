@@ -67,8 +67,10 @@ namespace gr {
       d_index = 0;
 
       for(int i = 0; i < d_nconnections; i++) {
-	d_residbufs_real.push_back(fft::malloc_double(d_size));
-	d_residbufs_imag.push_back(fft::malloc_double(d_size));
+	d_residbufs_real.push_back((double*)volk_malloc(d_size*sizeof(double),
+                                                        volk_get_alignment()));
+	d_residbufs_imag.push_back((double*)volk_malloc(d_size*sizeof(double),
+                                                        volk_get_alignment()));
 	memset(d_residbufs_real[i], 0, d_size*sizeof(double));
 	memset(d_residbufs_imag[i], 0, d_size*sizeof(double));
       }
@@ -88,8 +90,8 @@ namespace gr {
 
       // d_main_gui is a qwidget destroyed with its parent
       for(int i = 0; i < d_nconnections; i++) {
-	fft::free(d_residbufs_real[i]);
-	fft::free(d_residbufs_imag[i]);
+	volk_free(d_residbufs_real[i]);
+	volk_free(d_residbufs_imag[i]);
       }
 
       delete d_argv;
@@ -259,10 +261,12 @@ namespace gr {
       if(newsize != d_size) {
 	// Resize residbuf and replace data
 	for(int i = 0; i < d_nconnections; i++) {
-	  fft::free(d_residbufs_real[i]);
-	  fft::free(d_residbufs_imag[i]);
-	  d_residbufs_real[i] = fft::malloc_double(newsize);
-	  d_residbufs_imag[i] = fft::malloc_double(newsize);
+	  volk_free(d_residbufs_real[i]);
+	  volk_free(d_residbufs_imag[i]);
+	  d_residbufs_real[i] = (double*)volk_malloc(newsize*sizeof(double),
+                                                     volk_get_alignment());
+	  d_residbufs_imag[i] = (double*)volk_malloc(newsize*sizeof(double),
+                                                     volk_get_alignment());
 
 	  memset(d_residbufs_real[i], 0, newsize*sizeof(double));
 	  memset(d_residbufs_imag[i], 0, newsize*sizeof(double));
