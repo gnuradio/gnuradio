@@ -45,41 +45,41 @@ namespace gr {
 	set_taps(taps);
 
 	// Make sure the output sample is always aligned, too.
-	d_output = fft::malloc_float(1);
+	d_output = (float*)volk_malloc(1*sizeof(float), d_align);
       }
 
       fir_filter_with_buffer_fff::~fir_filter_with_buffer_fff()
       {
 	if(d_buffer_ptr != NULL) {
-	  fft::free(d_buffer_ptr);
+	  volk_free(d_buffer_ptr);
 	  d_buffer_ptr = NULL;
 	}
 	
 	// Free aligned taps
 	if(d_aligned_taps != NULL) {
 	  for(int i = 0; i < d_naligned; i++) {
-	    fft::free(d_aligned_taps[i]);
+	    volk_free(d_aligned_taps[i]);
 	  }
 	  ::free(d_aligned_taps);
 	  d_aligned_taps = NULL;
 	}
 
 	// Free output sample
-	fft::free(d_output);
+	volk_free(d_output);
       }
 
       void
       fir_filter_with_buffer_fff::set_taps(const std::vector<float> &taps)
       {
 	if(d_buffer_ptr != NULL) {
-	  fft::free(d_buffer_ptr);
+	  volk_free(d_buffer_ptr);
 	  d_buffer_ptr = NULL;
 	}
 
 	// Free the taps if already allocated
 	if(d_aligned_taps != NULL) {
 	  for(int i = 0; i < d_naligned; i++) {
-	    fft::free(d_aligned_taps[i]);
+	    volk_free(d_aligned_taps[i]);
 	  }
 	  ::free(d_aligned_taps);
 	  d_aligned_taps = NULL;
@@ -95,14 +95,15 @@ namespace gr {
 	// problems). We then set d_buffer to the position in the
 	// d_buffer_ptr such that we only touch the internally
 	// allocated space.
-	d_buffer_ptr = fft::malloc_float(2*(d_ntaps + d_naligned));
+        d_buffer_ptr = (float*)volk_malloc((2*(d_ntaps + d_naligned))*sizeof(float), d_align);
+
 	memset(d_buffer_ptr, 0, 2*(d_ntaps + d_naligned)*sizeof(float));
 	d_buffer = d_buffer_ptr + d_naligned;
 
 	// Allocate aligned taps
 	d_aligned_taps = (float**)malloc(d_naligned*sizeof(float*));
 	for(int i = 0; i < d_naligned; i++) {
-	  d_aligned_taps[i] = fft::malloc_float(d_ntaps+d_naligned-1);
+	  d_aligned_taps[i] = (float*)volk_malloc((d_ntaps+d_naligned-1)*sizeof(float), d_align);
 	  memset(d_aligned_taps[i], 0, sizeof(float)*(d_ntaps+d_naligned-1));
 	  for(unsigned int j = 0; j < d_ntaps; j++)
 	    d_aligned_taps[i][i+j] = d_taps[j];
@@ -198,41 +199,41 @@ namespace gr {
 	set_taps(taps);
 
 	// Make sure the output sample is always aligned, too.
-	d_output = fft::malloc_complex(1);
+	d_output = (gr_complex*)volk_malloc(1*sizeof(gr_complex), d_align);
       }
 
       fir_filter_with_buffer_ccc::~fir_filter_with_buffer_ccc()
       {
 	if(d_buffer_ptr != NULL) {
-	  fft::free(d_buffer_ptr);
+	  volk_free(d_buffer_ptr);
 	  d_buffer_ptr = NULL;
 	}
 	
 	// Free aligned taps
 	if(d_aligned_taps != NULL) {
 	  for(int i = 0; i < d_naligned; i++) {
-	    fft::free(d_aligned_taps[i]);
+	    volk_free(d_aligned_taps[i]);
 	  }
 	  ::free(d_aligned_taps);
 	  d_aligned_taps = NULL;
 	}
 
 	// Free output sample
-	fft::free(d_output);
+	volk_free(d_output);
       }
 
       void
       fir_filter_with_buffer_ccc::set_taps(const std::vector<gr_complex> &taps)
       {
 	if(d_buffer_ptr != NULL) {
-	  fft::free(d_buffer_ptr);
+	  volk_free(d_buffer_ptr);
 	  d_buffer_ptr = NULL;
 	}
 
 	// Free the taps if already allocated
 	if(d_aligned_taps != NULL) {
 	  for(int i = 0; i < d_naligned; i++) {
-	    fft::free(d_aligned_taps[i]);
+	    volk_free(d_aligned_taps[i]);
 	  }
 	  ::free(d_aligned_taps);
 	  d_aligned_taps = NULL;
@@ -248,14 +249,14 @@ namespace gr {
 	// problems). We then set d_buffer to the position in the
 	// d_buffer_ptr such that we only touch the internally
 	// allocated space.
-	d_buffer_ptr = fft::malloc_complex(2*(d_ntaps + d_naligned));
+        d_buffer_ptr = (gr_complex*)volk_malloc((2*(d_ntaps + d_naligned))*sizeof(gr_complex), d_align);
 	memset(d_buffer_ptr, 0, 2*(d_ntaps + d_naligned)*sizeof(gr_complex));
 	d_buffer = d_buffer_ptr + d_naligned;
 
 	// Allocate aligned taps
 	d_aligned_taps = (gr_complex**)malloc(d_naligned*sizeof(gr_complex*));
 	for(int i = 0; i < d_naligned; i++) {
-	  d_aligned_taps[i] = fft::malloc_complex(d_ntaps+d_naligned-1);
+	  d_aligned_taps[i] = (gr_complex*)volk_malloc((d_ntaps+d_naligned-1)*sizeof(gr_complex), d_align);
 	  memset(d_aligned_taps[i], 0, sizeof(gr_complex)*(d_ntaps+d_naligned-1));
 	  for(unsigned int j = 0; j < d_ntaps; j++)
 	    d_aligned_taps[i][i+j] = d_taps[j];
@@ -351,41 +352,41 @@ namespace gr {
 	set_taps(taps);
 
 	// Make sure the output sample is always aligned, too.
-	d_output = fft::malloc_complex(1);
+	d_output = (gr_complex*)volk_malloc(1*sizeof(gr_complex), d_align);
       }
 
       fir_filter_with_buffer_ccf::~fir_filter_with_buffer_ccf()
       {
 	if(d_buffer_ptr != NULL) {
-	  fft::free(d_buffer_ptr);
+	  volk_free(d_buffer_ptr);
 	  d_buffer_ptr = NULL;
 	}
 	
 	// Free aligned taps
 	if(d_aligned_taps != NULL) {
 	  for(int i = 0; i < d_naligned; i++) {
-	    fft::free(d_aligned_taps[i]);
+	    volk_free(d_aligned_taps[i]);
 	  }
 	  ::free(d_aligned_taps);
 	  d_aligned_taps = NULL;
 	}
 
 	// Free output sample
-	fft::free(d_output);
+	volk_free(d_output);
       }
 
       void
       fir_filter_with_buffer_ccf::set_taps(const std::vector<float> &taps)
       {
 	if(d_buffer_ptr != NULL) {
-	  fft::free(d_buffer_ptr);
+	  volk_free(d_buffer_ptr);
 	  d_buffer_ptr = NULL;
 	}
 
 	// Free the taps if already allocated
 	if(d_aligned_taps != NULL) {
 	  for(int i = 0; i < d_naligned; i++) {
-	    fft::free(d_aligned_taps[i]);
+	    volk_free(d_aligned_taps[i]);
 	  }
 	  ::free(d_aligned_taps);
 	  d_aligned_taps = NULL;
@@ -401,14 +402,14 @@ namespace gr {
 	// problems). We then set d_buffer to the position in the
 	// d_buffer_ptr such that we only touch the internally
 	// allocated space.
-	d_buffer_ptr = fft::malloc_complex(2*(d_ntaps + d_naligned));
+        d_buffer_ptr = (gr_complex*)volk_malloc((2*(d_ntaps + d_naligned))*sizeof(gr_complex), d_align);
 	memset(d_buffer_ptr, 0, 2*(d_ntaps + d_naligned)*sizeof(gr_complex));
 	d_buffer = d_buffer_ptr + d_naligned;
 
 	// Allocate aligned taps
 	d_aligned_taps = (float**)malloc(d_naligned*sizeof(float*));
 	for(int i = 0; i < d_naligned; i++) {
-	  d_aligned_taps[i] = fft::malloc_float(d_ntaps+d_naligned-1);
+	  d_aligned_taps[i] = (float*)volk_malloc((d_ntaps+d_naligned-1)*sizeof(float), d_align);
 	  memset(d_aligned_taps[i], 0, sizeof(float)*(d_ntaps+d_naligned-1));
 	  for(unsigned int j = 0; j < d_ntaps; j++)
 	    d_aligned_taps[i][i+j] = d_taps[j];

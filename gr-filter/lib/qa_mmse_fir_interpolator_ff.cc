@@ -28,6 +28,7 @@
 #include <qa_mmse_fir_interpolator_ff.h>
 #include <gnuradio/filter/mmse_fir_interpolator_ff.h>
 #include <gnuradio/fft/fft.h>
+#include <volk/volk.h>
 #include <cstdio>
 #include <cmath>
 
@@ -47,7 +48,7 @@ namespace gr {
       // use aligned malloc and make sure that everything in this
       // buffer is properly initialized.
       static const unsigned N = 100;
-      float *input = fft::malloc_float(N + 10);
+      float *input = (float*)volk_malloc((N + 10)*sizeof(float), volk_get_alignment());
 
       for(unsigned i = 0; i < N+10; i++)
 	input[i] = test_fcn((double) i);
@@ -64,7 +65,7 @@ namespace gr {
 	  // printf ("%9.6f  %9.6f  %9.6f\n", expected, actual, expected - actual);
 	}
       }
-      fft::free(input);
+      volk_free(input);
     }
 
   } /* namespace filter */
