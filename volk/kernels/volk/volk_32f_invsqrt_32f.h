@@ -24,6 +24,37 @@ static inline float Q_rsqrt( float number )
   return u.f;
 }
 
+#ifdef LV_HAVE_AVX
+#include <immintrin.h>
+/*!
+\brief Sqrts the two input vectors and store their results in the third vector
+\param cVector The vector where the results will be stored
+\param aVector One of the vectors to be invsqrted
+\param num_points The number of values in aVector and bVector to be invsqrted together and stored into cVector
+*/
+static inline void volk_32f_invsqrt_32f_a_avx(float* cVector, const float* aVector, unsigned int num_points){
+    unsigned int number = 0;
+    const unsigned int eighthPoints = num_points / 8;
+
+    float* cPtr = cVector;
+    const float* aPtr = aVector;
+    __m256 aVal, cVal;
+    for (; number < eighthPoints; number++)
+    {
+        aVal = _mm256_load_ps(aPtr);
+        cVal = _mm256_rsqrt_ps(aVal);
+        _mm256_store_ps(cPtr, cVal);
+        aPtr += 8;
+	cPtr += 8;
+    }
+   
+    number = eighthPoints * 8;
+    for(;number < num_points; number++)
+      *cPtr++ = Q_rsqrt(*aPtr++);
+
+}
+#endif /* LV_HAVE_AVX */
+
 #ifdef LV_HAVE_SSE
 #include <xmmintrin.h>
 /*!
@@ -75,5 +106,38 @@ static inline void volk_32f_invsqrt_32f_generic(float* cVector, const float* aVe
     }
 }
 #endif /* LV_HAVE_GENERIC */
+
+#ifdef LV_HAVE_AVX
+#include <immintrin.h>
+/*!
+\brief Sqrts the two input vectors and store their results in the third vector
+\param cVector The vector where the results will be stored
+\param aVector One of the vectors to be invsqrted
+\param num_points The number of values in aVector and bVector to be invsqrted together and stored into cVector
+*/
+static inline void volk_32f_invsqrt_32f_u_avx(float* cVector, const float* aVector, unsigned int num_points){
+    unsigned int number = 0;
+    const unsigned int eighthPoints = num_points / 8;
+
+    float* cPtr = cVector;
+    const float* aPtr = aVector;
+    __m256 aVal, cVal;
+    for (; number < eighthPoints; number++)
+    {
+        aVal = _mm256_loadu_ps(aPtr);
+        cVal = _mm256_rsqrt_ps(aVal);
+        _mm256_storeu_ps(cPtr, cVal);
+        aPtr += 8;
+	cPtr += 8;
+    }
+   
+    number = eighthPoints * 8;
+    for(;number < num_points; number++)
+      *cPtr++ = Q_rsqrt(*aPtr++);
+
+}
+#endif /* LV_HAVE_AVX */
+
+
 
 #endif /* INCLUDED_volk_32f_invsqrt_32f_a_H */
