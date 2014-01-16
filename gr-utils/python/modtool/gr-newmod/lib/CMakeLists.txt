@@ -32,6 +32,12 @@ add_library(gnuradio-howto SHARED ${howto_sources})
 target_link_libraries(gnuradio-howto ${Boost_LIBRARIES} ${GNURADIO_ALL_LIBRARIES})
 set_target_properties(gnuradio-howto PROPERTIES DEFINE_SYMBOL "gnuradio_howto_EXPORTS")
 
+if(APPLE)
+    set_target_properties(gnuradio-howto PROPERTIES
+        INSTALL_NAME_DIR "${CMAKE_INSTALL_PREFIX}/lib"
+    )
+endif(APPLE)
+
 ########################################################################
 # Install built library files
 ########################################################################
