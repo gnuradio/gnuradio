@@ -56,6 +56,11 @@ namespace gr {
      * with negative numbers, or with indexes larger than \p fft_len/2. Index -1 and index
      * \p fft_len-1 both identify the carrier below the DC carrier.
      *
+     * There are some basic checks in place during initialization which check that the
+     * carrier allocation table is valid. However, it is possible to overwrite data symbols
+     * with pilot symbols, or provide a carrier allocation that has mismatching pilot symbol
+     * positions and -values.
+     *
      * Tags are propagated such that a tag on an incoming complex symbol is mapped to the
      * corresponding OFDM symbol. There is one exception: If a tag is on the first OFDM
      * symbol, it is assumed that this tag should stay there, so it is moved to the front

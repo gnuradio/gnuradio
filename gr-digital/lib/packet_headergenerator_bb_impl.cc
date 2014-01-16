@@ -80,7 +80,10 @@ namespace gr {
                        gr_vector_void_star &output_items)
     {
       unsigned char *out = (unsigned char *) output_items[0];
-      if (!d_formatter->header_formatter(ninput_items[0], out)) {
+
+      std::vector<tag_t> tags;
+      get_tags_in_range(tags, 0, nitems_read(0), nitems_read(0) + ninput_items[0]);
+      if (!d_formatter->header_formatter(ninput_items[0], out, tags)) {
 	GR_LOG_FATAL(d_logger, boost::format("header_formatter() returned false (this shouldn't happen). Offending header started at %1%") % nitems_read(0));
 	throw std::runtime_error("header formatter returned false.");
       }
