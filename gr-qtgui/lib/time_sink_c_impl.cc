@@ -65,7 +65,8 @@ namespace gr {
       d_main_gui = NULL;
 
       for(int n = 0; n < d_nconnections; n++) {
-	d_buffers.push_back(fft::malloc_double(d_buffer_size));
+	d_buffers.push_back((double*)volk_malloc(d_buffer_size*sizeof(double),
+                                              volk_get_alignment()));
 	memset(d_buffers[n], 0, d_buffer_size*sizeof(double));
       }
 
@@ -92,7 +93,7 @@ namespace gr {
 
       // d_main_gui is a qwidget destroyed with its parent
       for(int n = 0; n < d_nconnections; n++) {
-	fft::free(d_buffers[n]);
+	volk_free(d_buffers[n]);
       }
 
       delete d_argv;
@@ -298,8 +299,9 @@ namespace gr {
 
 	// Resize buffers and replace data
 	for(int n = 0; n < d_nconnections; n++) {
-	  fft::free(d_buffers[n]);
-	  d_buffers[n] = fft::malloc_double(d_buffer_size);
+	  volk_free(d_buffers[n]);
+	  d_buffers[n] = (double*)volk_malloc(d_buffer_size*sizeof(double),
+                                              volk_get_alignment());
 	  memset(d_buffers[n], 0, d_buffer_size*sizeof(double));
 	}
 

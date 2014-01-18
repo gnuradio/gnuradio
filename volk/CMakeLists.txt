@@ -122,6 +122,7 @@ install(FILES
     ${CMAKE_BINARY_DIR}/include/volk/volk_cpu.h
     ${CMAKE_BINARY_DIR}/include/volk/volk_config_fixed.h
     ${CMAKE_BINARY_DIR}/include/volk/volk_typedefs.h
+    ${CMAKE_SOURCE_DIR}/include/volk/volk_malloc.h
     DESTINATION include/volk
     COMPONENT "volk_devel"
 )

@@ -48,7 +48,8 @@ namespace gr {
       {
 	delete d_fwdfft;
 	delete d_invfft;
-	fft::free(d_xformed_taps);
+        if(d_xformed_taps != NULL)
+          volk_free(d_xformed_taps);
       }
 
       /*
@@ -106,9 +107,12 @@ namespace gr {
 	if(d_fftsize != old_fftsize) {
 	  delete d_fwdfft;
 	  delete d_invfft;
+          if(d_xformed_taps != NULL)
+            volk_free(d_xformed_taps);
 	  d_fwdfft = new fft::fft_real_fwd(d_fftsize);
 	  d_invfft = new fft::fft_real_rev(d_fftsize);
-	  d_xformed_taps = fft::malloc_complex(d_fftsize/2+1);
+	  d_xformed_taps = (gr_complex*)volk_malloc(sizeof(gr_complex)*d_fftsize/2+1,
+                                                    volk_get_alignment());
 	}
       }
 
@@ -201,7 +205,8 @@ namespace gr {
       {
 	delete d_fwdfft;
 	delete d_invfft;
-	fft::free(d_xformed_taps);
+        if(d_xformed_taps != NULL)
+          volk_free(d_xformed_taps);
       }
 
       /*
@@ -259,9 +264,12 @@ namespace gr {
 	if(d_fftsize != old_fftsize) {
 	  delete d_fwdfft;
 	  delete d_invfft;
+          if(d_xformed_taps != NULL)
+            volk_free(d_xformed_taps);
 	  d_fwdfft = new fft::fft_complex(d_fftsize, true, d_nthreads);
 	  d_invfft = new fft::fft_complex(d_fftsize, false, d_nthreads);
-	  d_xformed_taps = fft::malloc_complex(d_fftsize);
+	  d_xformed_taps = (gr_complex*)volk_malloc(sizeof(gr_complex)*d_fftsize,
+                                                    volk_get_alignment());
 	}
       }
 
