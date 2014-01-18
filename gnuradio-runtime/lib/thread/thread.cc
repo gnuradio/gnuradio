@@ -125,6 +125,7 @@ namespace gr {
     get_current_thread_id()
     {
       // Not implemented on OSX
+      return;
     }
 
     void

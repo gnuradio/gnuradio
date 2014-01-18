@@ -74,13 +74,16 @@ namespace gr {
       d_shift = true;
 
       d_fft = new fft::fft_complex(d_fftsize, true);
-      d_fbuf = fft::malloc_float(d_fftsize);
+      d_fbuf = (float*)volk_malloc(d_fftsize*sizeof(float),
+                                   volk_get_alignment());
       memset(d_fbuf, 0, d_fftsize*sizeof(float));
 
       d_index = 0;
       for(int i = 0; i < d_nconnections; i++) {
-	d_residbufs.push_back(fft::malloc_float(d_fftsize));
-	d_magbufs.push_back(fft::malloc_double(d_fftsize));
+	d_residbufs.push_back((float*)volk_malloc(d_fftsize*sizeof(float),
+                                                  volk_get_alignment()));
+	d_magbufs.push_back((double*)volk_malloc(d_fftsize*sizeof(double),
+                                                 volk_get_alignment()));
 	memset(d_residbufs[i], 0, d_fftsize*sizeof(float));
 	memset(d_magbufs[i], 0, d_fftsize*sizeof(double));
       }
@@ -96,11 +99,11 @@ namespace gr {
         d_main_gui->close();
 
       for(int i = 0; i < d_nconnections; i++) {
-	fft::free(d_residbufs[i]);
-	fft::free(d_magbufs[i]);
+	volk_free(d_residbufs[i]);
+	volk_free(d_magbufs[i]);
       }
       delete d_fft;
-      fft::free(d_fbuf);
+      volk_free(d_fbuf);
 
       delete d_argv;
     }
@@ -369,11 +372,13 @@ namespace gr {
 
 	// Resize residbuf and replace data
 	for(int i = 0; i < d_nconnections; i++) {
-	  fft::free(d_residbufs[i]);
-	  fft::free(d_magbufs[i]);
+	  volk_free(d_residbufs[i]);
+	  volk_free(d_magbufs[i]);
 
-	  d_residbufs[i] = fft::malloc_float(newfftsize);
-	  d_magbufs[i] = fft::malloc_double(newfftsize);
+	  d_residbufs[i] = (float*)volk_malloc(newfftsize*sizeof(float),
+                                               volk_get_alignment());
+	  d_magbufs[i] = (double*)volk_malloc(newfftsize*sizeof(double),
+                                              volk_get_alignment());
 
 	  memset(d_residbufs[i], 0, newfftsize*sizeof(float));
 	  memset(d_magbufs[i], 0, newfftsize*sizeof(double));
@@ -391,8 +396,9 @@ namespace gr {
 	delete d_fft;
 	d_fft = new fft::fft_complex(d_fftsize, true);
 
-	fft::free(d_fbuf);
-	d_fbuf = fft::malloc_float(d_fftsize);
+	volk_free(d_fbuf);
+	d_fbuf = (float*)volk_malloc(d_fftsize*sizeof(float),
+                                     volk_get_alignment());
 	memset(d_fbuf, 0, d_fftsize*sizeof(float));
       }
     }

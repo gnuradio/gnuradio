@@ -28,6 +28,7 @@
 #include <qa_mmse_fir_interpolator_cc.h>
 #include <gnuradio/filter/mmse_fir_interpolator_cc.h>
 #include <gnuradio/fft/fft.h>
+#include <volk/volk.h>
 #include <cstdio>
 #include <cmath>
 #include <stdexcept>
@@ -61,7 +62,8 @@ namespace gr {
     qa_mmse_fir_interpolator_cc::t1()
     {
       static const unsigned N = 100;
-      gr_complex *input = fft::malloc_complex(N + 10);
+      gr_complex *input = (gr_complex*)volk_malloc((N + 10)*sizeof(gr_complex),
+                                                   volk_get_alignment());
 
       for(unsigned i = 0; i < N+10; i++)
 	input[i] = test_fcn((double) i);
@@ -78,7 +80,7 @@ namespace gr {
 	  // printf ("%9.6f  %9.6f  %9.6f\n", expected, actual, expected - actual);
 	}
       }
-      fft::free(input);
+      volk_free(input);
     }
 
     /*

@@ -79,11 +79,13 @@ namespace gr {
       d_index = 0;
 
       d_icols = static_cast<int>(ceil(d_cols));
-      d_tmpflt = fft::malloc_float(d_icols);
+      d_tmpflt = (float*)volk_malloc(d_icols*sizeof(float),
+                                     volk_get_alignment());
       memset(d_tmpflt, 0, d_icols*sizeof(float));
       
       for(int i = 0; i < d_nconnections; i++) {
-	d_residbufs.push_back(fft::malloc_double(d_icols));
+	d_residbufs.push_back((double*)volk_malloc(d_icols*sizeof(double),
+                                                   volk_get_alignment()));
 	memset(d_residbufs[i], 0, d_icols*sizeof(double));
       }
 
@@ -98,9 +100,9 @@ namespace gr {
       if(!d_main_gui->isClosed())
         d_main_gui->close();
 
-      fft::free(d_tmpflt);
+      volk_free(d_tmpflt);
       for(int i = 0; i < d_nconnections; i++) {
-	fft::free(d_residbufs[i]);
+	volk_free(d_residbufs[i]);
       }
 
       delete d_argv;
@@ -379,12 +381,14 @@ namespace gr {
 	d_cols = cols;
 	d_index = 0;
         d_icols = static_cast<int>(ceil(d_cols));
-	fft::free(d_tmpflt);
-	d_tmpflt = fft::malloc_float(d_icols);
+	volk_free(d_tmpflt);
+	d_tmpflt = (float*)volk_malloc(d_icols*sizeof(float),
+                                       volk_get_alignment());
 	memset(d_tmpflt, 0, d_icols*sizeof(float));
 	for(int i = 0; i < d_nconnections; i++) {
-	  fft::free(d_residbufs[i]);
-	  d_residbufs[i] = fft::malloc_double(d_icols);
+	  volk_free(d_residbufs[i]);
+	  d_residbufs[i] = (double*)volk_malloc(d_icols*sizeof(double),
+                                                volk_get_alignment());
 	  memset(d_residbufs[i], 0, d_icols*sizeof(double));
 	}
       }
