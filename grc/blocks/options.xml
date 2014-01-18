@@ -58,15 +58,15 @@ else: self.stop(); self.wait()</callback>
 	<param>
 		<name>Generate Options</name>
 		<key>generate_options</key>
-		<value>wx_gui</value>
+		<value>qt_gui</value>
 		<type>enum</type>
-		<option>
-			<name>WX GUI</name>
-			<key>wx_gui</key>
-		</option>
 		<option>
 			<name>QT GUI</name>
 			<key>qt_gui</key>
+		</option>
+		<option>
+			<name>WX GUI</name>
+			<key>wx_gui</key>
 		</option>
 		<option>
 			<name>No GUI</name>
