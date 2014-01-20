@@ -93,9 +93,10 @@ class rpc_manager():
         if self.interfaces.has_key(id_str):
             callback_func = self.interfaces.get(id_str)
             if not args == None:
-                return(callback_func(args))
+                # use unpacking or splat operator * to unpack argument list
+                return(callback_func(*args))
             else:
                 return(callback_func())
         else:
             print "[RPC] ERROR: id_str not found"
-            return 0
+            return None
