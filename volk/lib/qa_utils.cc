@@ -213,6 +213,19 @@ inline void run_cast_test3_s32fc(volk_fn_3arg_s32fc func, std::vector<void *> &b
     while(iter--) func(buffs[0], buffs[1], buffs[2], scalar, vlen, arch.c_str());
 }
 
+// This function is a nop that helps resolve GNU Radio bugs 582 and 583.
+// Without this the cast in run_volk_tests for tol_i = static_cast<int>(float tol)
+// won't happen on armhf (reported on cortex A9 and A15).
+void lv_force_cast_hf( int tol_i, float tol_f)
+{
+    int diff_i = 1;
+    float diff_f = 1;
+    if( diff_i > tol_i )
+        std::cout << "" ;
+    if( diff_f > tol_f )
+        std::cout << "" ;
+}
+
 template <class t>
 bool fcompare(t *in1, t *in2, unsigned int vlen, float tol) {
     bool fail = false;
@@ -269,8 +282,15 @@ bool run_volk_tests(volk_func_desc_t desc,
                    ) {
     std::cout << "RUN_VOLK_TESTS: " << name << std::endl;
 
-    const float tol_f = tol;
-    const unsigned int tol_i = static_cast<unsigned int>(tol);
+    // The multiply and lv_force_cast_hf are work arounds for GNU Radio bugs 582 and 583
+    // The bug is the casting/assignment below do not happen, which results in false
+    // positives when testing for errors in fcompare and icompare.
+    // Since this only happens on armhf (reported for Cortex A9 and A15) combined with
+    // the following fixes it is suspected to be a compiler bug. 
+    // Bug 1272024 on launchpad has been filed with Linaro GCC.
+    const float tol_f = tol*1.0000001;
+    const unsigned int tol_i = static_cast<const unsigned int>(tol);
+    lv_force_cast_hf( tol_i, tol_f );
 
     //first let's get a list of available architectures for the test
     std::vector<std::string> arch_list = get_arch_list(desc);
