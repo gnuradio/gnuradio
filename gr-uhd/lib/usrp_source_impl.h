@@ -22,6 +22,7 @@
 
 #include <gnuradio/uhd/usrp_source.h>
 #include <uhd/convert.hpp>
+#include <boost/thread/mutex.hpp>
 
 static const pmt::pmt_t TIME_KEY = pmt::string_to_symbol("rx_time");
 static const pmt::pmt_t RATE_KEY = pmt::string_to_symbol("rx_rate");
@@ -121,7 +122,7 @@ namespace gr {
       int work(int noutput_items,
                gr_vector_const_void_star &input_items,
                gr_vector_void_star &output_items);
- 
+
     private:
       ::uhd::usrp::multi_usrp::sptr _dev;
       const ::uhd::stream_args_t _stream_args;
@@ -142,6 +143,8 @@ namespace gr {
       //tag shadows
       double _samp_rate;
       double _center_freq;
+
+      boost::recursive_mutex d_mutex;
     };
 
   } /* namespace uhd */
