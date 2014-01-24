@@ -110,6 +110,7 @@ class Port(_Port, _GUIPort):
         self._nports = n.find('nports') or ''
         self._vlen = n.find('vlen') or ''
         self._optional = bool(n.find('optional'))
+        self._clones = []  # references to cloned ports (for nports > 1)
 
     def get_types(self): return Constants.TYPE_TO_SIZEOF.keys()
 
@@ -178,18 +179,18 @@ class Port(_Port, _GUIPort):
         """
         Get the number of ports.
         If already blank, return a blank
-        If the evaluation of nports cannot be cast to an integer, return 1.
+        If the evaluation of nports cannot be cast to a positive integer, return 1.
         
         Returns:
             the number of ports or 1
         """
+        if self._nports == '': return ''
+
         nports = self.get_parent().resolve_dependencies(self._nports)
-        #return blank if nports is blank
-        if not nports: return ''
         try:
-            nports = int(self.get_parent().get_parent().evaluate(nports))
-            if 0 < nports: return nports
-        except: return 1
+            return max(1, int(self.get_parent().get_parent().evaluate(nports)))
+        except:
+            return 1
 
     def get_optional(self): return bool(self._optional)
 
@@ -216,9 +217,49 @@ class Port(_Port, _GUIPort):
             return '#%.2x%.2x%.2x'%(r, g, b)
         except: return _Port.get_color(self)
 
-    def copy(self, new_key=None):
+    def get_clones(self):
+        """
+        Get the clones of this master port (nports > 1)
+
+        Returns:
+            a list of ports
+        """
+        return self._clones
+
+    def add_clone(self):
+        """
+        Create a clone of this (master) port and store a reference in self._clones.
+
+        The new port name (and key for message ports) will have index 1... appended.
+        If this is the first clone, this (master) port will get a 0 appended to its name (and key)
+
+        Returns:
+            the cloned port
+        """
+        # add index to master port name if there are no clones yet
+        if not self._clones:
+            self._name = self._n['name'] + '0'
+            if not self._key.isdigit():  # also update key for none stream ports
+                self._key = self._name
+
+        # Prepare a copy of the odict for the clone
         n = self._n.copy()
-        #remove nports from the key so the copy cannot be a duplicator
-        if n.has_key('nports'): n.pop('nports')
-        if new_key: n['key'] = new_key
-        return self.__class__(self.get_parent(), n, self._dir)
+        if 'nports' in n: n.pop('nports')  # remove nports from the key so the copy cannot be a duplicator
+        n['name'] = self._n['name'] + str(len(self._clones) + 1)
+        n['key'] = '99999' if self._key.isdigit() else n['name']  # dummy value 99999 will be fixed later
+
+        port = self.__class__(self.get_parent(), n, self._dir)  # clone
+        self._clones.append(port)
+        return port
+
+    def remove_clone(self, port):
+        """
+        Remove a cloned port (from the list of clones only)
+        Remove the index 0 of the master port name (and key9 if there are no more clones left
+        """
+        self._clones.remove(port)
+        # remove index from master port name if there are no more clones
+        if not self._clones:
+            self._name = self._n['name']
+            if not self._key.isdigit():  # also update key for none stream ports
+                self._key = self._name

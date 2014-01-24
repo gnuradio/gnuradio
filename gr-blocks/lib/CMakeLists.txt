@@ -232,6 +232,7 @@ list(APPEND gr_blocks_sources
     stretch_ff_impl.cc
     tagged_file_sink_impl.cc
     tagged_stream_to_pdu_impl.cc
+    tagged_stream_multiply_length_impl.cc
     tags_strobe_impl.cc
     threshold_ff_impl.cc
     throttle_impl.cc

@@ -120,6 +120,7 @@
                 <block>blocks_message_strobe</block>
 		<block>blocks_message_debug</block>
 		<block>blocks_pdu_to_tagged_stream</block>
+		<block>blocks_tagged_stream_multiply_length</block>
 		<block>blocks_tagged_stream_to_pdu</block>
                 <block>blocks_random_pdu</block>
         </cat>

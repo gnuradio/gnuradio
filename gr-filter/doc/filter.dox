@@ -54,11 +54,6 @@ impulse response (IIR) filtering.
 an IIR filter with a single pole (also known as a moving average
 filter).
 
-\li Adaptive FIR filters (see adaptive_fir.h): FIR filters that define
-an \b error and \b update_tap virtual interface to create filters that
-update the taps based on some criteria. \sa
-gr::digital::lms_dd_equalizer_cc, gr::digital::cma_equalizer_cc
-
 \li PFB arbitrary resampler (see pfb_arb_resampler.h): performs
 arbitrary resampling (i.e., using any real number) using the polyphase
 filterbank method. \sa \ref pfb_arb_resampl
@@ -93,11 +88,6 @@ blocks.
   <ul>
   <li>gr::filter::single_pole_iir_filter_cc</li>
   <li>gr::filter::single_pole_iir_filter_ff</li>
-  </ul>
-<li>Adaptive FIR Filters</li>
-  <ul>
-  <li>gr::filter::adaptive_fir_ccc</li>
-  <li>gr::filter::adaptive_fir_ccf</li>
   </ul>
 <li>Polyphase Filterbanks</li>
   <ul>

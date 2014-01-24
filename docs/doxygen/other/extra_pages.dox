@@ -119,7 +119,7 @@ built or installed.
 
 The -DENABLE_DEFAULT=False can be used to disable all
 components. Individual components can then be selectively turned back
-on. For example, just buidling the Volk library can be
+on. For example, just buidling the VOLK library can be
 done with this:
 
 \code
@@ -160,27 +160,27 @@ cmake -DCMAKE_CXX_FLAGS:STRING="-mcpu=cortex-a8 -mfpu=neon -mfloat-abi=softfp -g
 
 
 
-/*! \page volk_guide Instructions for using Volk in GNU Radio
+/*! \page volk_guide Instructions for using VOLK in GNU Radio
 
 \section volk_intro Introduction
 
-Volk is the Vector-Optimized Library of Kernels. It is a library that
+VOLK is the Vector-Optimized Library of Kernels. It is a library that
 contains kernels of hand-written SIMD code for different mathematical
 operations. Since each SIMD architecture can be greatly different and
 no compiler has yet come along to handle vectorization properly or
-highly efficiently, Volk approaches the problem differently. For each
+highly efficiently, VOLK approaches the problem differently. For each
 architecture or platform that a developer wishes to vectorize for, a
-new proto-kernel is added to Volk. At runtime, Volk will select the
-correct proto-kernel. In this way, the users of Volk call a kernel for
+new proto-kernel is added to VOLK. At runtime, VOLK will select the
+correct proto-kernel. In this way, the users of VOLK call a kernel for
 performing the operation that is platform/architecture agnostic. This
 allows us to write portable SIMD code.
 
-Volk kernels are always defined with a 'generic' proto-kernel, which
+VOLK kernels are always defined with a 'generic' proto-kernel, which
 is written in plain C. With the generic kernel, the kernel becomes
 portable to any platform. Kernels are then extended by adding
 proto-kernels for new platforms in which they are desired.
 
-A good example of a Volk kernel with multiple proto-kernels defined is
+A good example of a VOLK kernel with multiple proto-kernels defined is
 the volk_32f_s32f_multiply_32f_a. This kernel implements a scalar
 multiplication of a vector of floating point numbers (each item in the
 vector is multiplied by the same value). This kernel has the following
@@ -193,10 +193,10 @@ proto-kernels that are defined for 'generic,' 'avx,' 'sse,' and 'orc.'
     void volk_32f_s32f_multiply_32f_a_orc
 \endcode
 
-These proto-kernels means that on platforms with AVX support, Volk can
+These proto-kernels means that on platforms with AVX support, VOLK can
 select this option or the SSE option, depending on which is faster. On
 other platforms, the ORC SIMD compiler might provide a solution. If
-all else fails, Volk can fall back on the generic proto-kernel, which
+all else fails, VOLK can fall back on the generic proto-kernel, which
 will always work.
 
 Just a note on ORC. ORC is a SIMD compiler library that uses a generic
@@ -210,13 +210,13 @@ step to performance improvements until a specific hand-tuned
 proto-kernel can be made for a given platform.
 
 See <a
-href="http://gnuradio.org/redmine/projects/gnuradio/wiki/Volk">Volk on
-gnuradio.org</a> for details on the Volk naming scheme.
+href="http://gnuradio.org/redmine/projects/gnuradio/wiki/Volk">VOLK on
+gnuradio.org</a> for details on the VOLK naming scheme.
 
 
 \section volk_alignment Setting and Using Memory Alignment Information
 
-For Volk to work as best as possible, we want to use memory-aligned
+For VOLK to work as best as possible, we want to use memory-aligned
 SIMD calls, which means we have to have some way of knowing and
 controlling the alignment of the buffers passed to gr_block's work
 function. We set the alignment requirement for SIMD aligned memory
@@ -228,7 +228,7 @@ calls with:
   set_alignment(std::max(1,alignment_multiple));
 \endcode
 
-The Volk function 'volk_get_alignment' provides the alignment of the
+The VOLK function 'volk_get_alignment' provides the alignment of the
 the machine architecture. We then base the alignment on the number of
 output items required to maintain the alignment, so we divide the
 number of alignment bytes by the number of bytes in an output items
@@ -249,13 +249,16 @@ do. The next section discusses the use of the aligned/unaligned
 information in a gr_block's work function.
 
 
-\section volk_work Using Alignment Properties in Work()
+\section volk_work Calling VOLK kernels in Work()
 
 The buffers passed to work/general_work in a gr_block are not
 guaranteed to be aligned, but they will mostly be aligned whenever
-possible. When not aligned, the 'is_unaligned()' flag will be set. So
-a block can know if its buffers are aligned and make the right
-decisions. This looks like:
+possible. When not aligned, the 'is_unaligned()' flag will be set so
+the scheduler knows to try to realign the buffers. We actually make
+calls to the VOLK dispatcher, which is mainly designed to check the
+buffer alignments and call the correct version of the kernel for
+us. From the user-level view of VOLK, calling the dispatcher allows us
+to ignore the concept of aligned versus unaligned. This looks like:
 
 \code
 int
@@ -266,15 +269,9 @@ gr_some_block::work (int noutput_items,
   const float *in = (const float *) input_items[0];
   float *out = (float *) output_items[0];
 
-  if(is_unaligned()) {
-    // do something with unaligned data. This can either be a manual
-    // handling of the items or a call to an unaligned Volk function.
-    volk_32f_something_32f_u(out, in, noutput_items);
-  }
-  else {
-    // Buffers are aligned; can call the aligned Volk function.
-    volk_32f_something_32f_a(out, in, noutput_items);
-  }
+  // Call the dispatcher to check alignment and call the _a or _u
+  // version of the kernel.
+  volk_32f_something_32f(out, in, noutput_items);
 
   return noutput_items;
 }
@@ -282,7 +279,7 @@ gr_some_block::work (int noutput_items,
 
 
 
-\section volk_tuning Tuning Volk Performance
+\section volk_tuning Tuning VOLK Performance
 
 VOLK comes with a profiler that will build a config file for the best
 SIMD architecture for your processor. Run volk_profile that is

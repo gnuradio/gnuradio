@@ -113,7 +113,8 @@ class ActionHandler:
                 Actions.FLOW_GRAPH_OPEN, Actions.FLOW_GRAPH_SAVE_AS,
                 Actions.FLOW_GRAPH_CLOSE, Actions.ABOUT_WINDOW_DISPLAY,
                 Actions.FLOW_GRAPH_SCREEN_CAPTURE, Actions.HELP_WINDOW_DISPLAY,
-                Actions.TYPES_WINDOW_DISPLAY,
+                Actions.TYPES_WINDOW_DISPLAY, Actions.TOGGLE_BLOCKS_WINDOW,
+                Actions.TOGGLE_REPORTS_WINDOW,
             ): action.set_sensitive(True)
             if not self.init_file_paths:
                 self.init_file_paths = Preferences.files_open()
@@ -125,6 +126,8 @@ class ActionHandler:
             if not self.get_page(): self.main_window.new_page() #ensure that at least a blank page exists
 
             self.main_window.btwin.search_entry.hide()
+            Actions.TOGGLE_REPORTS_WINDOW.set_active(Preferences.reports_window_visibility())
+            Actions.TOGGLE_BLOCKS_WINDOW.set_active(Preferences.blocks_window_visibility())
         elif action == Actions.APPLICATION_QUIT:
             if self.main_window.close_pages():
                 gtk.main_quit()
@@ -349,6 +352,14 @@ class ActionHandler:
             Dialogs.TypesDialog(self.get_flow_graph().get_parent())
         elif action == Actions.ERRORS_WINDOW_DISPLAY:
             Dialogs.ErrorsDialog(self.get_flow_graph())
+        elif action == Actions.TOGGLE_REPORTS_WINDOW:
+            visible = action.get_active()
+            self.main_window.reports_scrolled_window.set_visible(visible)
+            Preferences.reports_window_visibility(visible)
+        elif action == Actions.TOGGLE_BLOCKS_WINDOW:
+            visible = action.get_active()
+            self.main_window.btwin.set_visible(visible)
+            Preferences.blocks_window_visibility(visible)
         ##################################################
         # Param Modifications
         ##################################################
@@ -447,6 +458,7 @@ class ActionHandler:
             self.main_window.btwin.clear();
             self.platform.load_block_tree(self.main_window.btwin);
         elif action == Actions.FIND_BLOCKS:
+            self.main_window.btwin.show()
             self.main_window.btwin.search_entry.show()
             self.main_window.set_focus(self.main_window.btwin.search_entry)
         elif action == Actions.OPEN_HIER:

@@ -42,11 +42,21 @@ main(int argc, char **argv)
     ("sysconfdir", "print gnuradio system configuration directory")
     ("prefsdir", "print gnuradio preferences directory")
     ("builddate", "print gnuradio build date (RFC2822 format)")
+    ("cc", "print gnuradio C compiler version")
+    ("cxx", "print gnuradio C++ compiler version")
+    ("cflags", "print gnuradio CFLAGS")
     ("version,v", "print gnuradio version")
     ;
 
-  po::store(po::parse_command_line(argc, argv, desc), vm);
-  po::notify(vm);
+  try {
+    po::store(po::parse_command_line(argc, argv, desc), vm);
+    po::notify(vm);
+  }
+  catch (po::error& error){
+    std::cerr << "Error: " << error.what() << std::endl << std::endl;
+    std::cerr << desc << std::endl;
+    return 1;
+  }
 
   if(vm.size() == 0 || vm.count("help")) {
     std::cout << desc << std::endl;
@@ -67,6 +77,15 @@ main(int argc, char **argv)
 
   if(vm.count("version"))
     std::cout << gr::version() << std::endl;
+
+  if(vm.count("cc"))
+    std::cout << gr::c_compiler() << std::endl;
+
+  if(vm.count("cxx"))
+    std::cout << gr::cxx_compiler() << std::endl;
+
+  if(vm.count("cflags"))
+    std::cout << gr::compiler_flags() << std::endl;
 
   return 0;
 }

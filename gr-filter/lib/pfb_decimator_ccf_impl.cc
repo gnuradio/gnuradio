@@ -83,6 +83,13 @@ namespace gr {
       return polyphase_filterbank::taps();
     }
 
+    void
+    pfb_decimator_ccf_impl::set_channel(const unsigned int chan)
+    {
+        gr::thread::scoped_lock guard(d_mutex);
+        d_chan = chan;
+    }
+
 #define ROTATEFFT
 
     int

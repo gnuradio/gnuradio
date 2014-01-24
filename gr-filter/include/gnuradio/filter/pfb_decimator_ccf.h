@@ -120,7 +120,7 @@ namespace gr {
        */
       virtual void print_taps() = 0;
 
-      //virtual void set_channel(unsigned int channel) = 0;
+      virtual void set_channel(const unsigned int channel) = 0;
     };
 
   } /* namespace filter */

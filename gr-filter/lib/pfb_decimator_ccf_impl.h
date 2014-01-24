@@ -52,7 +52,7 @@ namespace gr {
       void set_taps(const std::vector<float> &taps);
       void print_taps();
       std::vector<std::vector<float> > taps() const;
-      //void set_channel(unsigned int channel);
+      void set_channel(const unsigned int channel);
 
       int work(int noutput_items,
 	       gr_vector_const_void_star &input_items,

@@ -303,6 +303,14 @@ gen_template(${CMAKE_SOURCE_DIR}/tmpl/volk_config_fixed.tmpl.h ${CMAKE_BINARY_DI
 gen_template(${CMAKE_SOURCE_DIR}/tmpl/volk_machines.tmpl.h     ${CMAKE_BINARY_DIR}/lib/volk_machines.h)
 gen_template(${CMAKE_SOURCE_DIR}/tmpl/volk_machines.tmpl.c     ${CMAKE_BINARY_DIR}/lib/volk_machines.c)
 
+set(BASE_CFLAGS NONE)
+STRING(TOUPPER ${CMAKE_BUILD_TYPE} CBTU)
+MESSAGE(STATUS BUILT TYPE ${CBTU})
+MESSAGE(STATUS "Base cflags = ${CMAKE_C_FLAGS_${CBTU}} ${CMAKE_C_FLAGS}")
+set(COMPILER_INFO "")
+execute_process(COMMAND ${CMAKE_C_COMPILER} --version
+        OUTPUT_VARIABLE cmake_c_compiler_version)
+
 foreach(machine_name ${available_machines})
     #generate machine source
     set(machine_source ${CMAKE_CURRENT_BINARY_DIR}/volk_machine_${machine_name}.c)
@@ -315,6 +323,8 @@ foreach(machine_name ${available_machines})
         --mode "machine_flags" --machine "${machine_name}" --compiler "${COMPILER_NAME}"
         OUTPUT_VARIABLE ${machine_name}_flags OUTPUT_STRIP_TRAILING_WHITESPACE
     )
+    MESSAGE(STATUS "BUILD INFO ::: ${machine_name} ::: ${COMPILER_NAME} ::: ${CMAKE_C_FLAGS_${CBTU}} ${CMAKE_C_FLAGS} ${${machine_name}_flags}")
+    set(COMPILER_INFO "${COMPILER_INFO}${machine_name}:::${COMPILER_NAME}:::${CMAKE_C_FLAGS_${CBTU}} ${CMAKE_C_FLAGS} ${${machine_name}_flags}\n" )
     if(${machine_name}_flags)
         set_source_files_properties(${machine_source} PROPERTIES COMPILE_FLAGS "${${machine_name}_flags}")
     endif()
@@ -323,6 +333,13 @@ foreach(machine_name ${available_machines})
     string(TOUPPER LV_MACHINE_${machine_name} machine_def)
     list(APPEND machine_defs ${machine_def})
 endforeach(machine_name)
+
+# Convert to a C string to compile and display properly
+string(STRIP "${cmake_c_compiler_version}" cmake_c_compiler_version)
+string(STRIP ${COMPILER_INFO} COMPILER_INFO)
+MESSAGE(STATUS "Compiler Version: ${cmake_c_compiler_version}")
+string(REPLACE "\n" " \\n" cmake_c_compiler_version ${cmake_c_compiler_version})
+string(REPLACE "\n" " \\n" COMPILER_INFO ${COMPILER_INFO})
 
 ########################################################################
 # Set local include directories first
@@ -364,6 +381,28 @@ else()
     message(STATUS "Did not find liborc and orcc, disabling orc support...")
 endif()
 
+
+########################################################################
+# Handle the generated constants
+########################################################################
+
+execute_process(COMMAND ${PYTHON_EXECUTABLE} -c
+    "import time;print time.strftime('%a, %d %b %Y %H:%M:%S', time.gmtime())"
+    OUTPUT_VARIABLE BUILD_DATE OUTPUT_STRIP_TRAILING_WHITESPACE
+)
+message(STATUS "Loading build date ${BUILD_DATE} into constants...")
+message(STATUS "Loading version ${VERSION} into constants...")
+
+#double escape for windows backslash path separators
+string(REPLACE "\\" "\\\\" prefix ${prefix})
+
+configure_file(
+    ${CMAKE_CURRENT_SOURCE_DIR}/constants.c.in
+    ${CMAKE_CURRENT_BINARY_DIR}/constants.c
+@ONLY)
+
+list(APPEND volk_sources ${CMAKE_CURRENT_BINARY_DIR}/constants.c)
+
 ########################################################################
 # Setup the volk sources list and library
 ########################################################################
@@ -374,6 +413,7 @@ endif()
 list(APPEND volk_sources
     ${CMAKE_CURRENT_SOURCE_DIR}/volk_prefs.c
     ${CMAKE_CURRENT_SOURCE_DIR}/volk_rank_archs.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/volk_malloc.c
     ${volk_gen_sources}
 )
 

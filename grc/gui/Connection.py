@@ -21,6 +21,7 @@ import Utils
 from Element import Element
 import Colors
 from Constants import CONNECTOR_ARROW_BASE, CONNECTOR_ARROW_HEIGHT
+import gtk
 
 class Connection(Element):
     """
@@ -150,7 +151,11 @@ class Connection(Element):
         if self.is_highlighted(): border_color = Colors.HIGHLIGHT_COLOR
         elif self.get_enabled(): border_color = Colors.CONNECTION_ENABLED_COLOR
         else: border_color = Colors.CONNECTION_DISABLED_COLOR
+        # make message connections dashed (no areas here)
+        normal_line_style = gc.line_style
+        if source.get_type() == "message": gc.line_style = gtk.gdk.LINE_ON_OFF_DASH
         Element.draw(self, gc, window, bg_color=None, border_color=border_color)
+        gc.line_style = normal_line_style  # restore line style
         #draw arrow on sink port
         try:
             gc.set_foreground(self._arrow_color)

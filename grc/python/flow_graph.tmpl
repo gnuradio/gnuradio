@@ -216,7 +216,7 @@ gr.io_signaturev($(len($io_sigs)), $(len($io_sigs)), [$(', '.join($size_strs))])
 #for $msg in $messages2
         #set $sr = $msg.get_source()
         #set $source = "self.%s"%($sr.get_parent().get_id())
-        #set $source_port = $sr.get_name();
+        #set $source_port = $sr.get_key();
         #if $sr.get_parent().get_key() == "pad_source"
             #set $source = "self"
             #set $source_port = $sr.get_parent().get_param("label").get_value();

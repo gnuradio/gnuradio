@@ -2,11 +2,17 @@
   <name>Packet Header Generator</name>
   <key>digital_packet_headergenerator_bb</key>
   <import>from gnuradio import digital</import>
-  <make>digital.packet_headergenerator_bb($header_formatter)</make>
+  <make>digital.packet_headergenerator_bb($header_formatter, $len_tag_key)</make>
   <param>
     <name>Formatter Object</name>
     <key>header_formatter</key>
     <type>raw</type>
+  </param>
+  <param>
+    <name>Length Tag Name</name>
+    <key>len_tag_key</key>
+    <value>"packet_len"</value>
+    <type>string</type>
   </param>
   <sink>
     <name>in</name>
