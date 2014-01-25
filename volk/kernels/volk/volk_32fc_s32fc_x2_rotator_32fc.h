@@ -26,7 +26,11 @@ static inline void volk_32fc_s32fc_x2_rotator_32fc_generic(lv_32fc_t* outVector,
             *outVector++ = *inVector++ * (*phase);
             (*phase) *= phase_inc;
         }
-        (*phase) /= abs((*phase));
+#ifdef __cplusplus
+        (*phase) /= std::abs((*phase));
+#else
+        (*phase) /= cabsf((*phase));
+#endif
     }
     for(i = 0; i < num_points%ROTATOR_RELOAD; ++i) {
         *outVector++ = *inVector++ * (*phase);
