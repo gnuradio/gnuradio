@@ -2,7 +2,18 @@
   <name>Header/Payload Demux</name>
   <key>digital_header_payload_demux</key>
   <import>from gnuradio import digital</import>
-  <make>digital.header_payload_demux($header_len, $items_per_symbol, $guard_interval, $length_tag_key, $trigger_tag_key, $output_symbols, $(type.itemsize))</make>
+  <make>digital.header_payload_demux(
+	  $header_len,
+	  $items_per_symbol,
+	  $guard_interval,
+	  $length_tag_key,
+	  $trigger_tag_key,
+	  $output_symbols,
+	  $(type.itemsize),
+	  $timing_tag_key,
+          $samp_rate,
+          $special_tags,
+    )</make>
   <param>
     <name>Header Length (Symbols)</name>
     <key>header_len</key>
@@ -70,6 +81,24 @@
       <key>short</key>
       <opt>itemsize:gr.sizeof_short</opt>
     </option>
+  </param>
+  <param>
+    <name>Timing tag key</name>
+    <key>timing_tag_key</key>
+    <value>"rx_time"</value>
+    <type>string</type>
+  </param>
+  <param>
+    <name>Sampling Rate</name>
+    <key>samp_rate</key>
+    <value>samp_rate</value>
+    <type>int</type>
+  </param>
+  <param>
+    <name>Special Tag Keys</name>
+    <key>special_tags</key>
+    <value>(,)</value>
+    <type>raw</type>
   </param>
   <sink>
     <name>in</name>
