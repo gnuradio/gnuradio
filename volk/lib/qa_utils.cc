@@ -3,6 +3,7 @@
 #include <boost/foreach.hpp>
 #include <boost/assign/list_of.hpp>
 #include <boost/tokenizer.hpp>
+#include <boost/xpressive/xpressive.hpp>
 #include <iostream>
 #include <vector>
 #include <list>
@@ -257,6 +258,8 @@ public:
 private: std::list<std::vector<char> > _mems;
 };
 
+// TODO: we have some default values here, and some in header. consolidate them
+// also, the header has some named arguments in signature but mostly unnamed.
 bool run_volk_tests(volk_func_desc_t desc,
                     void (*manual_func)(),
                     std::string name,
@@ -266,9 +269,19 @@ bool run_volk_tests(volk_func_desc_t desc,
                     int iter,
                     std::vector<std::string> *best_arch_vector = 0,
                     std::string puppet_master_name = "NULL",
-                    bool benchmark_mode
+                    bool benchmark_mode,
+                    std::string kernel_regexp
                    ) {
+    
+    boost::xpressive::sregex kernel_expression = boost::xpressive::sregex::compile(kernel_regexp);
+    if( !boost::xpressive::regex_search(name, kernel_expression) ) {
+        // TODO: in this case we should just be testing a specific kernel and
+        // don't really care about a config generator. Does it matter what
+        // we return?
+        return false;
+    }
     std::cout << "RUN_VOLK_TESTS: " << name << "(" << vlen << "," << iter << ")" << std::endl;
+
 
     const float tol_f = tol;
     const unsigned int tol_i = static_cast<unsigned int>(tol);
