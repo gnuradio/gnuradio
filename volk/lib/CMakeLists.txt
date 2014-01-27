@@ -464,6 +464,7 @@ if(Boost_FOUND)
     )
     target_link_libraries(test_all volk ${Boost_LIBRARIES})
     add_test(qa_volk_test_all test_all)
+    set_tests_properties(qa_volk_test_all PROPERTIES ENVIRONMENT "LD_LIBRARY_PATH=.:$LD_LIBRARY_PATH")
 
 endif(Boost_FOUND)
 
