@@ -1,6 +1,6 @@
 Here we have several test programs for use with the gr-trellis implementation.
 Documentation can be found in
-http://gnuradio.utah.edu/svn/gnuradio/trunk/gr-trellis/doc/gr-trellis.html
+http://gnuradio.org/doc/doxygen/group__trellis__coding__blk.html
 
 fsm_utils.py contains several useful functions.
 

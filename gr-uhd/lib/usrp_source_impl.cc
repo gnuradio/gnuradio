@@ -491,9 +491,12 @@ namespace gr {
     bool
     usrp_source_impl::start(void)
     {
+      boost::recursive_mutex::scoped_lock lock(d_mutex);
 #ifdef GR_UHD_USE_STREAM_API
-      _rx_stream = _dev->get_rx_stream(_stream_args);
-      _samps_per_packet = _rx_stream->get_max_num_samps();
+      if(not _rx_stream){
+        _rx_stream = _dev->get_rx_stream(_stream_args);
+        _samps_per_packet = _rx_stream->get_max_num_samps();
+      }
 #endif
       //setup a stream command that starts streaming slightly in the future
       static const double reasonable_delay = 0.1; //order of magnitude over RTT
@@ -537,8 +540,8 @@ namespace gr {
     bool
     usrp_source_impl::stop(void)
     {
+      boost::recursive_mutex::scoped_lock lock(d_mutex);
       this->issue_stream_cmd(::uhd::stream_cmd_t::STREAM_MODE_STOP_CONTINUOUS);
-
       this->flush();
 
       return true;
@@ -603,6 +606,7 @@ namespace gr {
                            gr_vector_const_void_star &input_items,
                            gr_vector_void_star &output_items)
     {
+      boost::recursive_mutex::scoped_lock lock(d_mutex);
 #ifdef GR_UHD_USE_STREAM_API
       //In order to allow for low-latency:
       //We receive all available packets without timeout.

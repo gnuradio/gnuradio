@@ -1,4 +1,4 @@
-gnuradio.blocks: Netwroking Tools
+gnuradio.blocks: Networking Tools
 =================================
 
 .. autoblock:: gnuradio.blocks.socket_pdu

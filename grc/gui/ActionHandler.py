@@ -31,6 +31,7 @@ import Messages
 from .. base import ParseXML
 from MainWindow import MainWindow
 from PropsDialog import PropsDialog
+from ParserErrorsDialog import ParserErrorsDialog
 import Dialogs
 from FileDialogs import OpenFlowGraphFileDialog, SaveFlowGraphFileDialog, SaveImageFileDialog
 
@@ -116,6 +117,10 @@ class ActionHandler:
                 Actions.TYPES_WINDOW_DISPLAY, Actions.TOGGLE_BLOCKS_WINDOW,
                 Actions.TOGGLE_REPORTS_WINDOW,
             ): action.set_sensitive(True)
+            if ParseXML.xml_failures:
+                Messages.send_xml_errors_if_any(ParseXML.xml_failures)
+                Actions.XML_PARSER_ERRORS_DISPLAY.set_sensitive(True)
+
             if not self.init_file_paths:
                 self.init_file_paths = Preferences.files_open()
             if not self.init_file_paths: self.init_file_paths = ['']
@@ -377,6 +382,11 @@ class ActionHandler:
                     self.get_flow_graph().import_data(n)
                     self.get_flow_graph().update()
         ##################################################
+        # View Parser Errors
+        ##################################################
+        elif action == Actions.XML_PARSER_ERRORS_DISPLAY:
+            ParserErrorsDialog(ParseXML.xml_failures).run()
+        ##################################################
         # Undo/Redo
         ##################################################
         elif action == Actions.FLOW_GRAPH_UNDO:
@@ -454,9 +464,11 @@ class ActionHandler:
         elif action == Actions.PAGE_CHANGE: #pass and run the global actions
             pass
         elif action == Actions.RELOAD_BLOCKS:
-            self.platform.loadblocks()
-            self.main_window.btwin.clear();
-            self.platform.load_block_tree(self.main_window.btwin);
+            self.platform.load_blocks()
+            self.main_window.btwin.clear()
+            self.platform.load_block_tree(self.main_window.btwin)
+            Actions.XML_PARSER_ERRORS_DISPLAY.set_sensitive(bool(ParseXML.xml_failures))
+            Messages.send_xml_errors_if_any(ParseXML.xml_failures)
         elif action == Actions.FIND_BLOCKS:
             self.main_window.btwin.show()
             self.main_window.btwin.search_entry.show()

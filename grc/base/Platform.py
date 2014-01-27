@@ -28,11 +28,11 @@ from Port import Port as _Port
 from Param import Param as _Param
 from Constants import BLOCK_TREE_DTD, FLOW_GRAPH_DTD
 
-class Platform(_Element):
 
+class Platform(_Element):
     def __init__(self, name, version, key,
-        block_paths, block_dtd, default_flow_graph, generator,
-        license='', website=None, colors=[]):
+                 block_paths, block_dtd, default_flow_graph, generator,
+                 license='', website=None, colors=None):
         """
         Make a platform from the arguments.
         
@@ -61,48 +61,65 @@ class Platform(_Element):
         self._block_dtd = block_dtd
         self._default_flow_graph = default_flow_graph
         self._generator = generator
-        self._colors = colors
+        self._colors = colors or []
         #create a dummy flow graph for the blocks
         self._flow_graph = _Element(self)
-        #search for *.xml files in the given search path
 
-        self.loadblocks();
-    
-    def loadblocks(self):
-        xml_files = list()
+        self._blocks = None
+        self._blocks_n = None
+        self._category_trees_n = None
+        self.load_blocks()
+
+    def load_blocks(self):
+        """load the blocks and block tree from the search paths"""
+        # reset
+        self._blocks = odict()
+        self._blocks_n = odict()
+        self._category_trees_n = list()
+        ParseXML.xml_failures.clear()
+        # try to parse and load blocks
+        for xml_file in self.iter_xml_files():
+            try:
+                if xml_file.endswith("block_tree.xml"):
+                    self.load_category_tree_xml(xml_file)
+                else:
+                    self.load_block_xml(xml_file)
+            except ParseXML.XMLSyntaxError as e:
+                # print >> sys.stderr, 'Warning: Block validation failed:\n\t%s\n\tIgnoring: %s' % (e, xml_file)
+                pass
+            except Exception as e:
+                print >> sys.stderr, 'Warning: Block loading failed:\n\t%s\n\tIgnoring: %s' % (e, xml_file)
+
+    def iter_xml_files(self):
+        """Iterator for block descriptions and category trees"""
         for block_path in self._block_paths:
-            if os.path.isfile(block_path): xml_files.append(block_path)
+            if os.path.isfile(block_path):
+                yield block_path
             elif os.path.isdir(block_path):
                 for dirpath, dirnames, filenames in os.walk(block_path):
                     for filename in sorted(filter(lambda f: f.endswith('.xml'), filenames)):
-                        xml_files.append(os.path.join(dirpath, filename))
-        #load the blocks
-        self._blocks = odict()
-        self._blocks_n = odict()
-        self._block_tree_files = list()
-        for xml_file in xml_files:
-            try: #try to add the xml file as a block wrapper
-                ParseXML.validate_dtd(xml_file, self._block_dtd)
-                n = ParseXML.from_file(xml_file).find('block')
-                #inject block wrapper path
-                n['block_wrapper_path'] = xml_file
-                block = self.Block(self._flow_graph, n)
-                key = block.get_key()
-                #test against repeated keys
-                if key in self.get_block_keys():
-                    print >> sys.stderr, 'Warning: Block with key "%s" already exists.\n\tIgnoring: %s'%(key, xml_file)
-                #store the block
-                else:
-                    self._blocks[key] = block
-                    self._blocks_n[key] = n
-            except ParseXML.XMLSyntaxError, e:
-                try: #try to add the xml file as a block tree
-                    ParseXML.validate_dtd(xml_file, BLOCK_TREE_DTD)
-                    self._block_tree_files.append(xml_file)
-                except ParseXML.XMLSyntaxError, e:
-                    print >> sys.stderr, 'Warning: Block validation failed:\n\t%s\n\tIgnoring: %s'%(e, xml_file)
-            except Exception, e:
-                print >> sys.stderr, 'Warning: Block loading failed:\n\t%s\n\tIgnoring: %s'%(e, xml_file)
+                        yield os.path.join(dirpath, filename)
+
+    def load_block_xml(self, xml_file):
+        """Load block description from xml file"""
+        # validate and import
+        ParseXML.validate_dtd(xml_file, self._block_dtd)
+        n = ParseXML.from_file(xml_file).find('block')
+        n['block_wrapper_path'] = xml_file  # inject block wrapper path
+        # get block instance and add it to the list of blocks
+        block = self.Block(self._flow_graph, n)
+        key = block.get_key()
+        if key in self.get_block_keys():  # test against repeated keys
+            print >> sys.stderr, 'Warning: Block with key "%s" already exists.\n\tIgnoring: %s' % (key, xml_file)
+        else:  # store the block
+            self._blocks[key] = block
+            self._blocks_n[key] = n
+
+    def load_category_tree_xml(self, xml_file):
+        """Validate and parse category tree file and add it to list"""
+        ParseXML.validate_dtd(xml_file, BLOCK_TREE_DTD)
+        n = ParseXML.from_file(xml_file).find('cat')
+        self._category_trees_n.append(n)
 
     def parse_flow_graph(self, flow_graph_file):
         """
@@ -117,7 +134,7 @@ class Platform(_Element):
         @throws exception if the validation fails
         """
         flow_graph_file = flow_graph_file or self._default_flow_graph
-        open(flow_graph_file, 'r') #test open
+        open(flow_graph_file, 'r')  # test open
         ParseXML.validate_dtd(flow_graph_file, FLOW_GRAPH_DTD)
         return ParseXML.from_file(flow_graph_file)
 
@@ -131,24 +148,26 @@ class Platform(_Element):
             block_tree: the block tree object
         """
         #recursive function to load categories and blocks
-        def load_category(cat_n, parent=[]):
+        def load_category(cat_n, parent=None):
             #add this category
-            parent = parent + [cat_n.find('name')]
+            parent = (parent or []) + [cat_n.find('name')]
             block_tree.add_block(parent)
             #recursive call to load sub categories
             map(lambda c: load_category(c, parent), cat_n.findall('cat'))
             #add blocks in this category
             for block_key in cat_n.findall('block'):
                 if block_key not in self.get_block_keys():
-                    print >> sys.stderr, 'Warning: Block key "%s" not found when loading category tree.'%(block_key)
+                    print >> sys.stderr, 'Warning: Block key "%s" not found when loading category tree.' % (block_key)
                     continue
                 block = self.get_block(block_key)
                 #if it exists, the block's category shall not be overridden by the xml tree
-                if not block.get_category(): block.set_category(parent)
-        #load the block tree and update the categories for each block
-        for block_tree_file in self._block_tree_files:
-            #recursivly put categories in blocks
-            load_category(ParseXML.from_file(block_tree_file).find('cat'))
+                if not block.get_category():
+                    block.set_category(parent)
+
+        # recursively load the category trees and update the categories for each block
+        for category_tree_n in self._category_trees_n:
+            load_category(category_tree_n)
+
         #add blocks to block tree
         for block in self.get_blocks():
             #blocks with empty categories are hidden

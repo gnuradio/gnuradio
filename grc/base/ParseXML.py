@@ -20,11 +20,17 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 from lxml import etree
 from . import odict
 
+xml_failures = {}
+
+
 class XMLSyntaxError(Exception):
     def __init__(self, error_log):
         self._error_log = error_log
+        xml_failures[error_log.last_error.filename] = error_log
+
     def __str__(self):
         return '\n'.join(map(str, self._error_log.filter_from_errors()))
+
 
 def validate_dtd(xml_file, dtd_file=None):
     """
@@ -36,13 +42,23 @@ def validate_dtd(xml_file, dtd_file=None):
     @throws Exception validation fails
     """
     #perform parsing, use dtd validation if dtd file is not specified
-    parser = etree.XMLParser(dtd_validation=not dtd_file)
-    xml = etree.parse(xml_file, parser=parser)
-    if parser.error_log: raise XMLSyntaxError(parser.error_log)
-    #perform dtd validation if the dtd file is specified
-    if not dtd_file: return
-    dtd = etree.DTD(dtd_file)
-    if not dtd.validate(xml.getroot()): raise XMLSyntaxError(dtd.error_log)
+    try:
+        parser = etree.XMLParser(dtd_validation=not dtd_file)
+        xml = etree.parse(xml_file, parser=parser)
+    except etree.LxmlError:
+        pass
+    if parser.error_log:
+        raise XMLSyntaxError(parser.error_log)
+
+    # perform dtd validation if the dtd file is specified
+    if not dtd_file:
+        return
+    try:
+        dtd = etree.DTD(dtd_file)
+        if not dtd.validate(xml.getroot()):
+            raise XMLSyntaxError(dtd.error_log)
+    except etree.LxmlError:
+        raise XMLSyntaxError(dtd.error_log)
 
 def from_file(xml_file):
     """
@@ -56,6 +72,7 @@ def from_file(xml_file):
     """
     xml = etree.parse(xml_file).getroot()
     return _from_file(xml)
+
 
 def _from_file(xml):
     """
@@ -81,6 +98,7 @@ def _from_file(xml):
 
     return odict({tag: nested_data})
 
+
 def to_file(nested_data, xml_file):
     """
     Write an xml file and use the to xml helper method to load it.
@@ -91,6 +109,7 @@ def to_file(nested_data, xml_file):
     """
     xml = _to_file(nested_data)[0]
     open(xml_file, 'w').write(etree.tostring(xml, xml_declaration=True, pretty_print=True))
+
 
 def _to_file(nested_data):
     """
