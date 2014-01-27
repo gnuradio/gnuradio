@@ -231,8 +231,19 @@ bool fcompare(t *in1, t *in2, unsigned int vlen, float tol) {
     bool fail = false;
     int print_max_errs = 10;
     for(unsigned int i=0; i<vlen; i++) {
-        if(((t *)(in1))[i] < 1e-30) continue; //this is a hack: below around here we'll start to get roundoff errors due to limited precision
-        if(fabs(((t *)(in1))[i] - ((t *)(in2))[i])/(((t *)in1)[i]) > tol) {
+        // for very small numbers we'll see round off errors due to limited 
+        // precision. So a special test case... 
+        if(fabs(((t *)(in1))[i]) < 1e-30) {
+            if( fabs( ((t *)(in2))[i] ) > tol )
+            {
+                fail=true;
+                if(print_max_errs-- > 0) {
+                    std::cout << "offset " << i << " in1: " << t(((t *)(in1))[i]) << " in2: " << t(((t *)(in2))[i]) << std::endl;
+                }
+            }
+        }
+        // the primary test is the percent different greater than given tol
+        else if(fabs(((t *)(in1))[i] - ((t *)(in2))[i])/(((t *)in1)[i]) > tol) {
             fail=true;
             if(print_max_errs-- > 0) {
                 std::cout << "offset " << i << " in1: " << t(((t *)(in1))[i]) << " in2: " << t(((t *)(in2))[i]) << std::endl;
