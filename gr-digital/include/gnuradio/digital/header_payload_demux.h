@@ -58,6 +58,9 @@ namespace gr {
      * should go on the payload.
      * A special case are tags on items that make up the guard interval. These are copied
      * to the first item of the following symbol.
+     * If a tag is situated very close to the end of the payload, it might be unclear if
+     * it belongs to this packet or the following. In this case, the tag might be propagated
+     * twice.
      *
      * Tags outside of packets are generally discarded. If this information is important,
      * there are two additional mechanisms to preserve the tags:

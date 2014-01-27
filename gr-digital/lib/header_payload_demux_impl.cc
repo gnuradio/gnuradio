@@ -266,10 +266,11 @@ namespace gr {
 
 	case STATE_PAYLOAD:
 	  if (check_items_available(d_curr_payload_len, ninput_items, noutput_items, nread)) {
-	    update_special_tags(0, d_curr_payload_len * (d_items_per_symbol + d_gi));
+	    // The -1 because we won't consume the last item, it might hold the next trigger.
+	    update_special_tags(0, (d_curr_payload_len - 1) * (d_items_per_symbol + d_gi));
 	    copy_n_symbols(in, out_payload, PORT_PAYLOAD, d_curr_payload_len);
 	    produce(PORT_PAYLOAD, d_curr_payload_len * (d_output_symbols ? 1 : d_items_per_symbol));
-	    consume_each (d_curr_payload_len * (d_items_per_symbol + d_gi));
+	    consume_each ((d_curr_payload_len - 1) * (d_items_per_symbol + d_gi)); // Same here
 	    set_min_noutput_items(d_output_symbols ? 1 : (d_items_per_symbol + d_gi));
 	    d_state = STATE_FIND_TRIGGER;
 	  }
