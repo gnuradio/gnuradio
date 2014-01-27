@@ -100,7 +100,7 @@ class MainWindow(gtk.Window):
         #house the reports in a scrolled window
         self.reports_scrolled_window = gtk.ScrolledWindow()
         self.reports_scrolled_window.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
-        self.reports_scrolled_window.add_with_viewport(self.text_display)
+        self.reports_scrolled_window.add(self.text_display)
         self.reports_scrolled_window.set_size_request(-1, DEFAULT_REPORTS_WINDOW_WIDTH)
         self.flow_graph_vpaned.pack2(self.reports_scrolled_window, False) #dont allow resize
         #load preferences and show the main window
@@ -155,9 +155,7 @@ class MainWindow(gtk.Window):
             line: the new text
         """
         self.text_display.insert(line)
-        vadj = self.reports_scrolled_window.get_vadjustment()
-        vadj.value = vadj.upper - vadj.page_size
-        vadj.changed()
+        self.text_display.scroll_mark_onscreen(self.text_display.get_buffer().get_insert())
 
     ############################################################
     # Pages: create and close

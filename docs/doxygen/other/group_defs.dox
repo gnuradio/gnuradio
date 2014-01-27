@@ -31,7 +31,7 @@
 /*! \defgroup message_tools_blk Message Tools */
 /*! \defgroup misc_blk Miscellaneous */
 /*! \defgroup modulators_blk Modulators and Demodulators */
-/*! \defgroup networking_tools_blk Netwroking Tools */
+/*! \defgroup networking_tools_blk Networking Tools */
 /*! \defgroup noaa_blk NOAA Blocks */
 /*! \defgroup ofdm_blk OFDM Blocks */
 /*! \defgroup packet_operators_blk Packet/Frame Operators */
