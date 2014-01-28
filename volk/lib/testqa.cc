@@ -61,7 +61,7 @@ VOLK_RUN_TESTS(volk_32f_sqrt_32f, 1e-4, 0, 20462, 1);
 VOLK_RUN_TESTS(volk_32f_s32f_stddev_32f, 1e-4, 100, 20462, 1);
 VOLK_RUN_TESTS(volk_32f_stddev_and_mean_32f_x2, 1e-4, 0, 20462, 1);
 VOLK_RUN_TESTS(volk_32f_x2_subtract_32f, 1e-4, 0, 20462, 1);
-VOLK_RUN_TESTS(volk_32f_x3_sum_of_poly_32f, 1e-4, 0, 20462, 1);
+VOLK_RUN_TESTS(volk_32f_x3_sum_of_poly_32f, 1e-2, 0, 20462, 1);
 VOLK_RUN_TESTS(volk_32i_x2_and_32i, 0, 0, 20462, 1);
 VOLK_RUN_TESTS(volk_32i_s32f_convert_32f, 1e-4, 100, 20462, 1);
 VOLK_RUN_TESTS(volk_32i_x2_or_32i, 0, 0, 20462, 1);
