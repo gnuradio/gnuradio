@@ -177,6 +177,7 @@ install(FILES
     repeat.h
     rms_cf.h
     rms_ff.h
+    rotator_cc.h
     short_to_char.h
     short_to_float.h
     skiphead.h

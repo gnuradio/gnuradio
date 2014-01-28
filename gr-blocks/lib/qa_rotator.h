@@ -30,10 +30,12 @@ class qa_rotator : public CppUnit::TestCase
 {
   CPPUNIT_TEST_SUITE(qa_rotator);
   CPPUNIT_TEST(t1);
+  CPPUNIT_TEST(t2);
   CPPUNIT_TEST_SUITE_END();
 
  private:
   void t1();
+  void t2();
 };
 
 #endif /* _QA_GR_ROTATOR_H_ */

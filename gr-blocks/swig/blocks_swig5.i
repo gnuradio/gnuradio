@@ -37,6 +37,7 @@
 #include "gnuradio/blocks/repeat.h"
 #include "gnuradio/blocks/rms_cf.h"
 #include "gnuradio/blocks/rms_ff.h"
+#include "gnuradio/blocks/rotator_cc.h"
 #include "gnuradio/blocks/sample_and_hold_bb.h"
 #include "gnuradio/blocks/sample_and_hold_ss.h"
 #include "gnuradio/blocks/sample_and_hold_ii.h"
@@ -77,6 +78,7 @@
 %include "gnuradio/blocks/repeat.h"
 %include "gnuradio/blocks/rms_cf.h"
 %include "gnuradio/blocks/rms_ff.h"
+%include "gnuradio/blocks/rotator_cc.h"
 %include "gnuradio/blocks/sample_and_hold_bb.h"
 %include "gnuradio/blocks/sample_and_hold_ss.h"
 %include "gnuradio/blocks/sample_and_hold_ii.h"
@@ -116,6 +118,7 @@ GR_SWIG_BLOCK_MAGIC2(blocks, repack_bits_bb);
 GR_SWIG_BLOCK_MAGIC2(blocks, repeat);
 GR_SWIG_BLOCK_MAGIC2(blocks, rms_cf);
 GR_SWIG_BLOCK_MAGIC2(blocks, rms_ff);
+GR_SWIG_BLOCK_MAGIC2(blocks, rotator_cc);
 GR_SWIG_BLOCK_MAGIC2(blocks, sample_and_hold_bb);
 GR_SWIG_BLOCK_MAGIC2(blocks, sample_and_hold_ss);
 GR_SWIG_BLOCK_MAGIC2(blocks, sample_and_hold_ii);
