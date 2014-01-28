@@ -60,8 +60,6 @@ static inline void volk_32fc_s32fc_x2_rotator_32fc_a_sse4_1(lv_32fc_t* outVector
 
     /*printf("%f, %f\n", lv_creal(phase_Ptr[0]), lv_cimag(phase_Ptr[0]));
     printf("%f, %f\n", lv_creal(phase_Ptr[1]), lv_cimag(phase_Ptr[1]));
-    printf("%f, %f\n", lv_creal(phase_Ptr[2]), lv_cimag(phase_Ptr[2]));
-    printf("%f, %f\n", lv_creal(phase_Ptr[3]), lv_cimag(phase_Ptr[3]));
     printf("incr: %f, %f\n", lv_creal(incr), lv_cimag(incr));*/
     __m128 aVal, phase_Val, inc_Val, yl, yh, tmp1, tmp2, z, ylp, yhp, tmp1p, tmp2p;
     
@@ -168,8 +166,6 @@ static inline void volk_32fc_s32fc_x2_rotator_32fc_u_sse4_1(lv_32fc_t* outVector
 
     /*printf("%f, %f\n", lv_creal(phase_Ptr[0]), lv_cimag(phase_Ptr[0]));
     printf("%f, %f\n", lv_creal(phase_Ptr[1]), lv_cimag(phase_Ptr[1]));
-    printf("%f, %f\n", lv_creal(phase_Ptr[2]), lv_cimag(phase_Ptr[2]));
-    printf("%f, %f\n", lv_creal(phase_Ptr[3]), lv_cimag(phase_Ptr[3]));
     printf("incr: %f, %f\n", lv_creal(incr), lv_cimag(incr));*/
     __m128 aVal, phase_Val, inc_Val, yl, yh, tmp1, tmp2, z, ylp, yhp, tmp1p, tmp2p;
     
