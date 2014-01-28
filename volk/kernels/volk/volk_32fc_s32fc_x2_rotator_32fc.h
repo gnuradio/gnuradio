@@ -34,6 +34,7 @@ static inline void volk_32fc_s32fc_x2_rotator_32fc_generic(lv_32fc_t* outVector,
     }
     
 }
+
 #endif /* LV_HAVE_GENERIC */
 
 
@@ -133,6 +134,11 @@ static inline void volk_32fc_s32fc_x2_rotator_32fc_a_sse4_1(lv_32fc_t* outVector
 
 }
 
+#endif /* LV_HAVE_SSE4_1 for aligned */
+
+
+#ifdef LV_HAVE_SSE4_1
+#include <smmintrin.h>
 
 /*!
   \brief rotate input vector at fixed rate per sample from initial phase offset
@@ -341,8 +347,11 @@ static inline void volk_32fc_s32fc_x2_rotator_32fc_a_avx(lv_32fc_t* outVector, c
 
 }
 
+#endif /* LV_HAVE_AVX for aligned */
 
 
+#ifdef LV_HAVE_AVX
+#include <immintrin.h>
 
 /*!
   \brief rotate input vector at fixed rate per sample from initial phase offset
