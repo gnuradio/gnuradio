@@ -32,28 +32,32 @@
 static size_t __alignment = 0;
 static intptr_t __alignment_mask = 0;
 
-struct volk_machine *get_machine(void) {
-    extern struct volk_machine *volk_machines[];
-    extern unsigned int n_volk_machines;
-    static struct volk_machine *machine = NULL;
-    
-    if(machine != NULL) return machine;
-    else {
-        unsigned int max_score = 0;
-        unsigned int i;
-        for(i=0; i<n_volk_machines; i++) {
-            if(!(volk_machines[i]->caps & (~volk_get_lvarch()))) {
-                if(volk_machines[i]->caps > max_score) {
-                    max_score = volk_machines[i]->caps;
-                    machine = volk_machines[i];
-                }
-            }
+struct volk_machine *get_machine(void)
+{
+  extern struct volk_machine *volk_machines[];
+  extern unsigned int n_volk_machines;
+  static struct volk_machine *machine = NULL;
+
+  if(machine != NULL)
+    return machine;
+  else {
+    unsigned int max_score = 0;
+    unsigned int i;
+    struct volk_machine *max_machine = NULL;
+    for(i=0; i<n_volk_machines; i++) {
+      if(!(volk_machines[i]->caps & (~volk_get_lvarch()))) {
+        if(volk_machines[i]->caps > max_score) {
+          max_score = volk_machines[i]->caps;
+          max_machine = volk_machines[i];
         }
-        printf("Using Volk machine: %s\n", machine->name);
-        __alignment = machine->alignment;
-        __alignment_mask = (intptr_t)(__alignment-1);
-        return machine;
+      }
     }
+    machine = max_machine;
+    printf("Using Volk machine: %s\n", machine->name);
+    __alignment = machine->alignment;
+    __alignment_mask = (intptr_t)(__alignment-1);
+    return machine;
+  }
 }
 
 void volk_list_machines(void)
