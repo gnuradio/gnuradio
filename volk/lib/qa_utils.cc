@@ -3,6 +3,7 @@
 #include <boost/foreach.hpp>
 #include <boost/assign/list_of.hpp>
 #include <boost/tokenizer.hpp>
+#include <boost/xpressive/xpressive.hpp>
 #include <iostream>
 #include <vector>
 #include <list>
@@ -322,8 +323,14 @@ bool run_volk_tests(volk_func_desc_t desc,
                     int iter,
                     std::vector<std::string> *best_arch_vector = 0,
                     std::string puppet_master_name = "NULL",
-                    bool benchmark_mode
+                    bool benchmark_mode,
+                    std::string kernel_regex
                    ) {
+    boost::xpressive::sregex kernel_expression = boost::xpressive::sregex::compile(kernel_regex);
+    if( !boost::xpressive::regex_search(name, kernel_expression) ) {
+        // in this case we have a regex and are only looking to test one kernel
+        return false;
+    }
     std::cout << "RUN_VOLK_TESTS: " << name << "(" << vlen << "," << iter << ")" << std::endl;
 
     // The multiply and lv_force_cast_hf are work arounds for GNU Radio bugs 582 and 583
