@@ -73,3 +73,47 @@ qa_rotator::t1()
       phase -= 2*M_PI;
   }
 }
+
+void
+qa_rotator::t2()
+{
+  static const unsigned	int N = 100000;
+
+  gr::blocks::rotator r;
+  gr_complex *input  = new gr_complex[N];
+  gr_complex *output = new gr_complex[N];
+
+  double phase_incr = 2*M_PI / 1003;
+  double phase = 0;
+
+  r.set_phase(gr_complex(1,0));
+  r.set_phase_incr(gr_expj(phase_incr));
+
+  // Generate a unity sequence
+  for(unsigned i = 0; i < N; i++)
+    input[i] = gr_complex(1.0f, 0.0f);
+
+  // Rotate it
+  r.rotateN(output, input, N);
+
+  // Compare with expected result
+  for(unsigned i = 0; i < N; i++) {
+    gr_complex expected = gr_expj(phase);
+    gr_complex actual   = output[i];
+
+#if 0
+    float evm = error_vector_mag(expected, actual);
+    printf("[%6d] expected: (%8.6f, %8.6f)  actual: (%8.6f, %8.6f)  evm: %8.6f\n",
+	   i, expected.real(), expected.imag(), actual.real(), actual.imag(), evm);
+#endif
+
+    CPPUNIT_ASSERT_COMPLEXES_EQUAL(expected, actual, 0.0001);
+
+    phase += phase_incr;
+    if(phase >= 2*M_PI)
+      phase -= 2*M_PI;
+  }
+
+  delete[] output;
+  delete[] input;
+}

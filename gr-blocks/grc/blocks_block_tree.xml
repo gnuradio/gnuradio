@@ -98,6 +98,7 @@
 		<block>blocks_integrate_xx</block>
 		<block>blocks_nlog10_ff</block>
                 <block>blocks_rms_xx</block>
+                <block>blocks_rotator_cc</block>
                 <block>blocks_transcendental</block>
                 <block>blocks_argmax_xx</block>
                 <block>blocks_max_xx</block>

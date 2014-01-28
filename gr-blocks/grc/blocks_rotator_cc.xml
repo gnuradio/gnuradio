@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<!--
+###################################################
+## Complex rotator
+###################################################
+ -->
+<block>
+	<name>Rotator</name>
+	<key>blocks_rotator_cc</key>
+	<import>from gnuradio import blocks</import>
+	<make>blocks.rotator_cc($phase_inc)</make>
+	<callback>set_phase_inc($phase_inc)</callback>
+	<param>
+		<name>Phase Increment</name>
+		<key>phase_inc</key>
+                <value>0.0</value>
+		<type>real</type>
+	</param>
+	<sink>
+		<name>in</name>
+		<type>complex</type>
+	</sink>
+	<source>
+		<name>out</name>
+		<type>complex</type>
+	</source>
+</block>

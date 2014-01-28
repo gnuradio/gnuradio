@@ -57,7 +57,7 @@ namespace gr {
         return z;
       }
 
-      void rotateN(gr_complex *out, gr_complex *in, int n)
+      void rotateN(gr_complex *out, const gr_complex *in, int n)
       {
         volk_32fc_s32fc_x2_rotator_32fc(out, in, d_phase_incr, &d_phase, n);
       }
