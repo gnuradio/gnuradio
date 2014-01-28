@@ -85,14 +85,16 @@ const char* volk_get_machine(void)
   else {
     unsigned int max_score = 0;
     unsigned int i;
+    struct volk_machine *max_machine = NULL;
     for(i=0; i<n_volk_machines; i++) {
       if(!(volk_machines[i]->caps & (~volk_get_lvarch()))) {
         if(volk_machines[i]->caps > max_score) {
           max_score = volk_machines[i]->caps;
-          machine = volk_machines[i];
+          max_machine = volk_machines[i];
         }
       }
     }
+    machine = max_machine;
     return machine->name;
   }
 }
