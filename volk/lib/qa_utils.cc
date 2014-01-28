@@ -255,6 +255,38 @@ bool fcompare(t *in1, t *in2, unsigned int vlen, float tol) {
 }
 
 template <class t>
+bool ccompare(t *in1, t *in2, unsigned int vlen, float tol) {
+    bool fail = false;
+    int print_max_errs = 10;
+    for(unsigned int i=0; i<2*vlen; i+=2) {
+        t diff[2] = { in1[i] - in2[i], in1[i+1] - in2[i+1] };
+        t err  = std::sqrt(diff[0] * diff[0] + diff[1] * diff[1]);
+        t norm = std::sqrt(in1[i] * in1[i] + in1[i+1] * in1[i+1]);
+
+        // for very small numbers we'll see round off errors due to limited 
+        // precision. So a special test case... 
+        if (norm < 1e-30) {
+            if (err > tol)
+            {
+                fail=true;
+                if(print_max_errs-- > 0) {
+                    std::cout << "offset " << i/2 << " in1: " << in1[i] << " + " << in1[i+1] << "j  in2: " << in2[i] << " + " << in2[i+1] << "j" << std::endl;
+                }
+            }
+        }
+        // the primary test is the percent different greater than given tol
+        else if((err / norm) > tol) {
+            fail=true;
+            if(print_max_errs-- > 0) {
+                std::cout << "offset " << i/2 << " in1: " << in1[i] << " + " << in1[i+1] << "j  in2: " << in2[i] << " + " << in2[i+1] << "j" << std::endl;
+            }
+        }
+    }
+
+    return fail;
+}
+
+template <class t>
 bool icompare(t *in1, t *in2, unsigned int vlen, unsigned int tol) {
     bool fail = false;
     int print_max_errs = 10;
@@ -428,9 +460,18 @@ bool run_volk_tests(volk_func_desc_t desc,
             for(size_t j=0; j<both_sigs.size(); j++) {
                 if(both_sigs[j].is_float) {
                     if(both_sigs[j].size == 8) {
-                        fail = fcompare((double *) test_data[generic_offset][j], (double *) test_data[i][j], vlen*(both_sigs[j].is_complex ? 2 : 1), tol_f);
+                        if (both_sigs[j].is_complex) {
+                            fail = ccompare((double *) test_data[generic_offset][j], (double *) test_data[i][j], vlen, tol_f);
+
+                        } else {
+                            fail = fcompare((double *) test_data[generic_offset][j], (double *) test_data[i][j], vlen, tol_f);
+                        }
                     } else {
-                        fail = fcompare((float *) test_data[generic_offset][j], (float *) test_data[i][j], vlen*(both_sigs[j].is_complex ? 2 : 1), tol_f);
+                        if (both_sigs[j].is_complex) {
+                            fail = ccompare((float *) test_data[generic_offset][j], (float *) test_data[i][j], vlen, tol_f);
+                        } else {
+                            fail = fcompare((float *) test_data[generic_offset][j], (float *) test_data[i][j], vlen, tol_f);
+                        }
                     }
                 } else {
                     //i could replace this whole switch statement with a memcmp if i wasn't interested in printing the outputs where they differ
