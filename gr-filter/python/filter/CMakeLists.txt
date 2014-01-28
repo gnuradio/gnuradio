@@ -24,6 +24,7 @@ GR_PYTHON_INSTALL(
     FILES
     __init__.py
     filterbank.py
+    freq_xlating_fft_filter.py
     optfir.py
     pfb.py
     rational_resampler.py

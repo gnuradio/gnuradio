@@ -56,6 +56,7 @@
 	</cat>
 	<cat>
 		<name>Channelizers</name>
+		<block>freq_xlating_fft_filter_ccc</block>
 		<block>freq_xlating_fir_filter_xxx</block>
 		<block>pfb_channelizer_ccf</block>
 		<block>pfb_channelizer_hier_ccf</block>
