@@ -100,7 +100,8 @@ static inline void volk_32fc_s32fc_x2_rotator_32fc_a_sse4_1(lv_32fc_t* outVector
         tmp1 = _mm_mul_ps(phase_Val, phase_Val);
         tmp2 = _mm_hadd_ps(tmp1, tmp1);
         tmp1 = _mm_shuffle_ps(tmp2, tmp2, 0xD8);
-        phase_Val = _mm_div_ps(phase_Val, tmp1);
+        tmp2 = _mm_sqrt_ps(tmp1);
+        phase_Val = _mm_div_ps(phase_Val, tmp2);
     }
     for(i = 0; i < halfPoints%ROTATOR_RELOAD; ++i) {
         aVal = _mm_load_ps((float*)aPtr);
@@ -207,7 +208,8 @@ static inline void volk_32fc_s32fc_x2_rotator_32fc_u_sse4_1(lv_32fc_t* outVector
         tmp1 = _mm_mul_ps(phase_Val, phase_Val);
         tmp2 = _mm_hadd_ps(tmp1, tmp1);
         tmp1 = _mm_shuffle_ps(tmp2, tmp2, 0xD8);
-        phase_Val = _mm_div_ps(phase_Val, tmp1);
+        tmp2 = _mm_sqrt_ps(tmp1);
+        phase_Val = _mm_div_ps(phase_Val, tmp2);
     }
     for(i = 0; i < halfPoints%ROTATOR_RELOAD; ++i) {
         aVal = _mm_loadu_ps((float*)aPtr);
@@ -313,7 +315,8 @@ static inline void volk_32fc_s32fc_x2_rotator_32fc_a_avx(lv_32fc_t* outVector, c
         tmp1 = _mm256_mul_ps(phase_Val, phase_Val);
         tmp2 = _mm256_hadd_ps(tmp1, tmp1);
         tmp1 = _mm256_shuffle_ps(tmp2, tmp2, 0xD8);
-        phase_Val = _mm256_div_ps(phase_Val, tmp1);
+        tmp2 = _mm256_sqrt_ps(tmp1);
+        phase_Val = _mm256_div_ps(phase_Val, tmp2);
     }
     for(i = 0; i < fourthPoints%ROTATOR_RELOAD; ++i) {
         aVal = _mm256_load_ps((float*)aPtr);
@@ -419,7 +422,8 @@ static inline void volk_32fc_s32fc_x2_rotator_32fc_u_avx(lv_32fc_t* outVector, c
         tmp1 = _mm256_mul_ps(phase_Val, phase_Val);
         tmp2 = _mm256_hadd_ps(tmp1, tmp1);
         tmp1 = _mm256_shuffle_ps(tmp2, tmp2, 0xD8);
-        phase_Val = _mm256_div_ps(phase_Val, tmp1);
+        tmp2 = _mm256_sqrt_ps(tmp1);
+        phase_Val = _mm256_div_ps(phase_Val, tmp2);
     }
     for(i = 0; i < fourthPoints%ROTATOR_RELOAD; ++i) {
         aVal = _mm256_loadu_ps((float*)aPtr);
