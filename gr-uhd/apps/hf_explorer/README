@@ -14,28 +14,14 @@ frequency. Preset filter settings for LSB (-3000 to 0kHz), USB (0 to
 +3000kHz), CW (-400 to -800Hz) and AM (-5kHz from carrier to +5kHz).
 
 AM now switches in a synchronous PLL detector with the carriers at
-7.5kHz. The PLL carrier is displayed in the bottom display and helps
-show where on the upper spectrum the demodulated signal
-lies. Everything gets shifted up 7.5kHz in AM, center frequency,
+7.5kHz. Everything gets shifted up 7.5kHz in AM, center frequency,
 tooltips, etc.  The target AM carrier needs to be closely tuned in, it
-will have a hollow sound untill it is locked, and then the PLL carrier
-in the bottom display will jump up and remain relatively
-constant. There is a slider "AM sync carrier" to play with different
-levels to mix with the signal for demodulation.  The filter in AM is
+will have a hollow sound until it is locked.  The filter in AM is
 preset to 2500/12500 (7.5kHz +/- 5kHz) and is handy for removing
-adjacent channel interference.  Change AM_SYNC_DISPLAY in script for
-whether to show AM Sync carrier or not.
+adjacent channel interference. 
 
-Run with "-h" for command line help with setting USRP ddc center
-frequency, decimation, rf data record, playback and audio data
-recording.
-
-There are some controls for controlling a varactor and tuning an
-antenna - just ignore them unless you want to build a voltage tuned
-antenna to track frequency.
-
-There is also code for Web based control of frequency and volume - so
-I can tune the radio with an Ipaq from bed.  Disabled by default - it
+There is code for Web based control of frequency and volume - so
+I can tune the radio with a handheld device.  Disabled by default - it
 takes a web server, some directories and scripts to use.
 
 
