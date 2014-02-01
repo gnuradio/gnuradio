@@ -28,6 +28,7 @@ from Constants import \
     HIER_BLOCKS_LIB_DIR, FLOW_GRAPH_TEMPLATE
 import convert_hier
 from .. gui import Messages
+from gnuradio import gr
 
 class Generator(object):
 
@@ -90,8 +91,9 @@ Add a Misc->Throttle block to your flow graph to avoid CPU congestion.''')
         cmds = [python_exe, '-u', self.get_file_path()] #-u is unbuffered stdio
 
         #when in no gui mode on linux, use an xterm (looks nice)
+        xterm_executable = gr.prefs().get_string('grc', 'xterm_executable', 'xterm')
         if self._generate_options == 'no_gui' and 'linux' in sys.platform.lower():
-            cmds = ['xterm', '-e'] + cmds
+            cmds = [xterm_executable, '-e'] + cmds
 
         p = subprocess.Popen(args=cmds, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, shell=False, universal_newlines=True)
         return p
