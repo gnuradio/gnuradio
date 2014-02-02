@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='ASCII'?>
 <flow_graph>
-  <timestamp>Sun Oct 27 16:24:42 2013</timestamp>
+  <timestamp>Sun Feb  2 14:07:51 2014</timestamp>
   <block>
     <key>options</key>
     <param>
@@ -467,6 +467,10 @@
       <value>0</value>
     </param>
     <param>
+      <key>maxoutbuf</key>
+      <value>0</value>
+    </param>
+    <param>
       <key>_coordinate</key>
       <value>(2, 167)</value>
     </param>
@@ -495,6 +499,10 @@
     </param>
     <param>
       <key>minoutbuf</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>maxoutbuf</key>
       <value>0</value>
     </param>
     <param>
@@ -529,59 +537,24 @@
       <value>1</value>
     </param>
     <param>
+      <key>ignoretag</key>
+      <value>True</value>
+    </param>
+    <param>
       <key>affinity</key>
       <value></value>
     </param>
     <param>
       <key>minoutbuf</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>maxoutbuf</key>
       <value>0</value>
     </param>
     <param>
       <key>_coordinate</key>
       <value>(440, 187)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>blocks_delay</key>
-    <param>
-      <key>id</key>
-      <value>blocks_delay_0</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>type</key>
-      <value>complex</value>
-    </param>
-    <param>
-      <key>delay</key>
-      <value>fft_len+fft_len/4</value>
-    </param>
-    <param>
-      <key>num_ports</key>
-      <value>1</value>
-    </param>
-    <param>
-      <key>vlen</key>
-      <value>1</value>
-    </param>
-    <param>
-      <key>affinity</key>
-      <value></value>
-    </param>
-    <param>
-      <key>minoutbuf</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(637, 294)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -616,6 +589,10 @@
     </param>
     <param>
       <key>minoutbuf</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>maxoutbuf</key>
       <value>0</value>
     </param>
     <param>
@@ -658,6 +635,10 @@
       <value>0</value>
     </param>
     <param>
+      <key>maxoutbuf</key>
+      <value>0</value>
+    </param>
+    <param>
       <key>_coordinate</key>
       <value>(627, 175)</value>
     </param>
@@ -689,6 +670,10 @@
       <value>0</value>
     </param>
     <param>
+      <key>maxoutbuf</key>
+      <value>0</value>
+    </param>
+    <param>
       <key>_coordinate</key>
       <value>(634, 529)</value>
     </param>
@@ -717,6 +702,10 @@
     </param>
     <param>
       <key>minoutbuf</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>maxoutbuf</key>
       <value>0</value>
     </param>
     <param>
@@ -768,6 +757,10 @@
     </param>
     <param>
       <key>minoutbuf</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>maxoutbuf</key>
       <value>0</value>
     </param>
     <param>
@@ -837,63 +830,12 @@
       <value>0</value>
     </param>
     <param>
+      <key>maxoutbuf</key>
+      <value>0</value>
+    </param>
+    <param>
       <key>_coordinate</key>
       <value>(171, 182)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>digital_header_payload_demux</key>
-    <param>
-      <key>id</key>
-      <value>digital_header_payload_demux_0</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>header_len</key>
-      <value>3</value>
-    </param>
-    <param>
-      <key>items_per_symbol</key>
-      <value>fft_len</value>
-    </param>
-    <param>
-      <key>guard_interval</key>
-      <value>fft_len/4</value>
-    </param>
-    <param>
-      <key>length_tag_key</key>
-      <value>length_tag_key</value>
-    </param>
-    <param>
-      <key>trigger_tag_key</key>
-      <value>""</value>
-    </param>
-    <param>
-      <key>output_symbols</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>type</key>
-      <value>complex</value>
-    </param>
-    <param>
-      <key>affinity</key>
-      <value></value>
-    </param>
-    <param>
-      <key>minoutbuf</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(775, 408)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -940,6 +882,10 @@
     </param>
     <param>
       <key>minoutbuf</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>maxoutbuf</key>
       <value>0</value>
     </param>
     <param>
@@ -994,6 +940,10 @@
       <value>0</value>
     </param>
     <param>
+      <key>maxoutbuf</key>
+      <value>0</value>
+    </param>
+    <param>
       <key>_coordinate</key>
       <value>(675, 577)</value>
     </param>
@@ -1019,61 +969,6 @@
     <param>
       <key>_coordinate</key>
       <value>(0, 732)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>digital_ofdm_serializer_vcc</key>
-    <param>
-      <key>id</key>
-      <value>digital_ofdm_serializer_vcc_header</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>fft_len</key>
-      <value>fft_len</value>
-    </param>
-    <param>
-      <key>occupied_carriers</key>
-      <value>occupied_carriers</value>
-    </param>
-    <param>
-      <key>len_tag_key</key>
-      <value>length_tag_key</value>
-    </param>
-    <param>
-      <key>packet_len_tag_key</key>
-      <value></value>
-    </param>
-    <param>
-      <key>symbols_skipped</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>carr_offset_key</key>
-      <value></value>
-    </param>
-    <param>
-      <key>input_is_shifted</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>affinity</key>
-      <value></value>
-    </param>
-    <param>
-      <key>minoutbuf</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(914, 584)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -1169,6 +1064,10 @@
       <value>0</value>
     </param>
     <param>
+      <key>maxoutbuf</key>
+      <value>0</value>
+    </param>
+    <param>
       <key>_coordinate</key>
       <value>(221, 702)</value>
     </param>
@@ -1220,6 +1119,10 @@
       <value>0</value>
     </param>
     <param>
+      <key>maxoutbuf</key>
+      <value>0</value>
+    </param>
+    <param>
       <key>_coordinate</key>
       <value>(672, 702)</value>
     </param>
@@ -1252,61 +1155,6 @@
     </param>
   </block>
   <block>
-    <key>digital_ofdm_serializer_vcc</key>
-    <param>
-      <key>id</key>
-      <value>digital_ofdm_serializer_vcc_payload</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>fft_len</key>
-      <value>fft_len</value>
-    </param>
-    <param>
-      <key>occupied_carriers</key>
-      <value>occupied_carriers</value>
-    </param>
-    <param>
-      <key>len_tag_key</key>
-      <value>length_tag_key</value>
-    </param>
-    <param>
-      <key>packet_len_tag_key</key>
-      <value>packet_length_tag_key</value>
-    </param>
-    <param>
-      <key>symbols_skipped</key>
-      <value>1</value>
-    </param>
-    <param>
-      <key>carr_offset_key</key>
-      <value></value>
-    </param>
-    <param>
-      <key>input_is_shifted</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>affinity</key>
-      <value></value>
-    </param>
-    <param>
-      <key>minoutbuf</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(916, 710)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
     <key>digital_crc32_bb</key>
     <param>
       <key>id</key>
@@ -1330,6 +1178,10 @@
     </param>
     <param>
       <key>minoutbuf</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>maxoutbuf</key>
       <value>0</value>
     </param>
     <param>
@@ -1376,6 +1228,10 @@
       <value>0</value>
     </param>
     <param>
+      <key>maxoutbuf</key>
+      <value>0</value>
+    </param>
+    <param>
       <key>_coordinate</key>
       <value>(430, 826)</value>
     </param>
@@ -1404,6 +1260,10 @@
     </param>
     <param>
       <key>minoutbuf</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>maxoutbuf</key>
       <value>0</value>
     </param>
     <param>
@@ -1455,6 +1315,10 @@
     <param>
       <key>name</key>
       <value>Rx Bytes</value>
+    </param>
+    <param>
+      <key>filter</key>
+      <value>""</value>
     </param>
     <param>
       <key>num_inputs</key>
@@ -1521,6 +1385,10 @@
     </param>
     <param>
       <key>minoutbuf</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>maxoutbuf</key>
       <value>0</value>
     </param>
     <param>
@@ -1603,8 +1471,248 @@
       <value>0</value>
     </param>
     <param>
+      <key>maxoutbuf</key>
+      <value>0</value>
+    </param>
+    <param>
       <key>_coordinate</key>
       <value>(58, 327)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>digital_header_payload_demux</key>
+    <param>
+      <key>id</key>
+      <value>digital_header_payload_demux_0</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>header_len</key>
+      <value>3</value>
+    </param>
+    <param>
+      <key>items_per_symbol</key>
+      <value>fft_len</value>
+    </param>
+    <param>
+      <key>guard_interval</key>
+      <value>fft_len/4</value>
+    </param>
+    <param>
+      <key>length_tag_key</key>
+      <value>length_tag_key</value>
+    </param>
+    <param>
+      <key>trigger_tag_key</key>
+      <value>""</value>
+    </param>
+    <param>
+      <key>output_symbols</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>type</key>
+      <value>complex</value>
+    </param>
+    <param>
+      <key>timing_tag_key</key>
+      <value>"rx_time"</value>
+    </param>
+    <param>
+      <key>samp_rate</key>
+      <value>samp_rate</value>
+    </param>
+    <param>
+      <key>special_tags</key>
+      <value>()</value>
+    </param>
+    <param>
+      <key>affinity</key>
+      <value></value>
+    </param>
+    <param>
+      <key>minoutbuf</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>maxoutbuf</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(766, 363)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>digital_ofdm_serializer_vcc</key>
+    <param>
+      <key>id</key>
+      <value>digital_ofdm_serializer_vcc_header</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>fft_len</key>
+      <value>fft_len</value>
+    </param>
+    <param>
+      <key>occupied_carriers</key>
+      <value>occupied_carriers</value>
+    </param>
+    <param>
+      <key>len_tag_key</key>
+      <value>length_tag_key</value>
+    </param>
+    <param>
+      <key>packet_len_tag_key</key>
+      <value></value>
+    </param>
+    <param>
+      <key>symbols_skipped</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>carr_offset_key</key>
+      <value></value>
+    </param>
+    <param>
+      <key>input_is_shifted</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>affinity</key>
+      <value></value>
+    </param>
+    <param>
+      <key>minoutbuf</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>maxoutbuf</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(914, 584)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>digital_ofdm_serializer_vcc</key>
+    <param>
+      <key>id</key>
+      <value>digital_ofdm_serializer_vcc_payload</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>fft_len</key>
+      <value>fft_len</value>
+    </param>
+    <param>
+      <key>occupied_carriers</key>
+      <value>occupied_carriers</value>
+    </param>
+    <param>
+      <key>len_tag_key</key>
+      <value>length_tag_key</value>
+    </param>
+    <param>
+      <key>packet_len_tag_key</key>
+      <value>packet_length_tag_key</value>
+    </param>
+    <param>
+      <key>symbols_skipped</key>
+      <value>1</value>
+    </param>
+    <param>
+      <key>carr_offset_key</key>
+      <value></value>
+    </param>
+    <param>
+      <key>input_is_shifted</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>affinity</key>
+      <value></value>
+    </param>
+    <param>
+      <key>minoutbuf</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>maxoutbuf</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(916, 710)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>blocks_delay</key>
+    <param>
+      <key>id</key>
+      <value>blocks_delay_0</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>type</key>
+      <value>complex</value>
+    </param>
+    <param>
+      <key>delay</key>
+      <value>fft_len+fft_len/4</value>
+    </param>
+    <param>
+      <key>num_ports</key>
+      <value>1</value>
+    </param>
+    <param>
+      <key>vlen</key>
+      <value>1</value>
+    </param>
+    <param>
+      <key>affinity</key>
+      <value></value>
+    </param>
+    <param>
+      <key>minoutbuf</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>maxoutbuf</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(622, 273)</value>
     </param>
     <param>
       <key>_rotation</key>
