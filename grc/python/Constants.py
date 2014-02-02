@@ -34,6 +34,9 @@ BLOCKS_DIRS = filter( #filter blank strings
     ]).split(PATH_SEP),
 ) + [HIER_BLOCKS_LIB_DIR]
 
+#user settings
+XTERM_EXECUTABLE = _gr_prefs.get_string('grc', 'xterm_executable', 'xterm')
+
 #file creation modes
 TOP_BLOCK_FILE_MODE = stat.S_IRUSR | stat.S_IWUSR | stat.S_IXUSR | stat.S_IRGRP | stat.S_IWGRP | stat.S_IXGRP | stat.S_IROTH
 HIER_BLOCK_FILE_MODE = stat.S_IRUSR | stat.S_IWUSR | stat.S_IRGRP | stat.S_IWGRP | stat.S_IROTH
