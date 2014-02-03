@@ -1,11 +1,11 @@
 <?xml version='1.0' encoding='ASCII'?>
 <flow_graph>
-  <timestamp>Thu Dec 27 13:49:53 2012</timestamp>
+  <timestamp>Sat Nov 10 15:34:26 2012</timestamp>
   <block>
     <key>options</key>
     <param>
       <key>id</key>
-      <value>sccc1</value>
+      <value>sccc</value>
     </param>
     <param>
       <key>_enabled</key>
@@ -84,6 +84,45 @@
     </param>
   </block>
   <block>
+    <key>analog_random_source_x</key>
+    <param>
+      <key>id</key>
+      <value>analog_random_source_x_0</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>type</key>
+      <value>short</value>
+    </param>
+    <param>
+      <key>min</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>max</key>
+      <value>2</value>
+    </param>
+    <param>
+      <key>num_samps</key>
+      <value>1000</value>
+    </param>
+    <param>
+      <key>repeat</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(21, 170)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
     <key>variable</key>
     <param>
       <key>id</key>
@@ -95,7 +134,7 @@
     </param>
     <param>
       <key>value</key>
-      <value>"/n/harrisville/x/anastas/gnuradio_trunk/"</value>
+      <value>"${CMAKE_INSTALL_PREFIX}"</value>
     </param>
     <param>
       <key>_coordinate</key>
@@ -123,6 +162,95 @@
     <param>
       <key>_coordinate</key>
       <value>(764, 16)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>blocks_sub_xx</key>
+    <param>
+      <key>id</key>
+      <value>blocks_sub_xx_0</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>type</key>
+      <value>short</value>
+    </param>
+    <param>
+      <key>vlen</key>
+      <value>1</value>
+    </param>
+    <param>
+      <key>num_inputs</key>
+      <value>2</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(445, 517)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>blocks_multiply_xx</key>
+    <param>
+      <key>id</key>
+      <value>blocks_multiply_xx_2_0</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>type</key>
+      <value>short</value>
+    </param>
+    <param>
+      <key>num_inputs</key>
+      <value>2</value>
+    </param>
+    <param>
+      <key>vlen</key>
+      <value>1</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(228.25, 798.39170361874085)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>blocks_short_to_float</key>
+    <param>
+      <key>id</key>
+      <value>blocks_short_to_float_1_0</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>vlen</key>
+      <value>1</value>
+    </param>
+    <param>
+      <key>scale</key>
+      <value>1</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(416, 815)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -185,30 +313,22 @@
     </param>
   </block>
   <block>
-    <key>blocks_multiply_xx</key>
+    <key>variable</key>
     <param>
       <key>id</key>
-      <value>blocks_multiply_xx_2_0</value>
+      <value>R</value>
     </param>
     <param>
       <key>_enabled</key>
       <value>True</value>
     </param>
     <param>
-      <key>type</key>
-      <value>short</value>
-    </param>
-    <param>
-      <key>num_inputs</key>
-      <value>2</value>
-    </param>
-    <param>
-      <key>vlen</key>
-      <value>1</value>
+      <key>value</key>
+      <value>10e3</value>
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(392, 591)</value>
+      <value>(482, 17)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -216,26 +336,121 @@
     </param>
   </block>
   <block>
-    <key>blocks_short_to_float</key>
+    <key>wxgui_scopesink2</key>
     <param>
       <key>id</key>
-      <value>blocks_short_to_float_1_0</value>
+      <value>wxgui_scopesink2_0</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>False</value>
+    </param>
+    <param>
+      <key>type</key>
+      <value>complex</value>
+    </param>
+    <param>
+      <key>title</key>
+      <value>Scope Plot</value>
+    </param>
+    <param>
+      <key>samp_rate</key>
+      <value>R</value>
+    </param>
+    <param>
+      <key>v_scale</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>v_offset</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>t_scale</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>ac_couple</key>
+      <value>False</value>
+    </param>
+    <param>
+      <key>xy_mode</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>num_inputs</key>
+      <value>1</value>
+    </param>
+    <param>
+      <key>win_size</key>
+      <value></value>
+    </param>
+    <param>
+      <key>grid_pos</key>
+      <value></value>
+    </param>
+    <param>
+      <key>notebook</key>
+      <value></value>
+    </param>
+    <param>
+      <key>trig_mode</key>
+      <value>wxgui.TRIG_MODE_AUTO</value>
+    </param>
+    <param>
+      <key>y_axis_label</key>
+      <value>Counts</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(952, 73)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>trellis_sccc_encoder_xx</key>
+    <param>
+      <key>id</key>
+      <value>trellis_sccc_encoder_xx_0</value>
     </param>
     <param>
       <key>_enabled</key>
       <value>True</value>
     </param>
     <param>
-      <key>vlen</key>
-      <value>1</value>
+      <key>type</key>
+      <value>ss</value>
     </param>
     <param>
-      <key>scale</key>
-      <value>1</value>
+      <key>o_fsm_args</key>
+      <value>prefix+"/${GR_PKG_TRELLIS_EXAMPLES_DIR}/fsm_files/awgn1o2_4.fsm"</value>
+    </param>
+    <param>
+      <key>o_init_state</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>i_fsm_args</key>
+      <value>prefix+"/${GR_PKG_TRELLIS_EXAMPLES_DIR}/fsm_files/awgn2o3_4.fsm"</value>
+    </param>
+    <param>
+      <key>i_init_state</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>interleaver_args</key>
+      <value>trellis.interleaver(block,666)</value>
+    </param>
+    <param>
+      <key>bl</key>
+      <value>block</value>
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(535, 609)</value>
+      <value>(242, 154)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -322,7 +537,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(713, 426)</value>
+      <value>(688, 572)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -330,85 +545,10 @@
     </param>
   </block>
   <block>
-    <key>wxgui_scopesink2</key>
+    <key>trellis_sccc_decoder_combined_xx</key>
     <param>
       <key>id</key>
-      <value>wxgui_scopesink2_0</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>False</value>
-    </param>
-    <param>
-      <key>type</key>
-      <value>float</value>
-    </param>
-    <param>
-      <key>title</key>
-      <value>Scope Plot</value>
-    </param>
-    <param>
-      <key>samp_rate</key>
-      <value>R</value>
-    </param>
-    <param>
-      <key>v_scale</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>v_offset</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>t_scale</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>ac_couple</key>
-      <value>False</value>
-    </param>
-    <param>
-      <key>xy_mode</key>
-      <value>False</value>
-    </param>
-    <param>
-      <key>num_inputs</key>
-      <value>1</value>
-    </param>
-    <param>
-      <key>win_size</key>
-      <value></value>
-    </param>
-    <param>
-      <key>grid_pos</key>
-      <value></value>
-    </param>
-    <param>
-      <key>notebook</key>
-      <value></value>
-    </param>
-    <param>
-      <key>trig_mode</key>
-      <value>wxgui.TRIG_MODE_AUTO</value>
-    </param>
-    <param>
-      <key>y_axis_label</key>
-      <value>Counts</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(952, 73)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>analog_random_source_x</key>
-    <param>
-      <key>id</key>
-      <value>analog_random_source_x_0</value>
+      <value>trellis_sccc_decoder_combined_xx_0</value>
     </param>
     <param>
       <key>_enabled</key>
@@ -416,116 +556,7 @@
     </param>
     <param>
       <key>type</key>
-      <value>short</value>
-    </param>
-    <param>
-      <key>min</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>max</key>
-      <value>2</value>
-    </param>
-    <param>
-      <key>num_samps</key>
-      <value>1000</value>
-    </param>
-    <param>
-      <key>repeat</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(21, 170)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>trellis_pccc_encoder_xx</key>
-    <param>
-      <key>id</key>
-      <value>trellis_pccc_encoder_xx_0</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>type</key>
-      <value>ss</value>
-    </param>
-    <param>
-      <key>o_fsm_args</key>
-      <value>prefix+"gr-trellis/src/examples/fsm_files/awgn1o2_4.fsm"</value>
-    </param>
-    <param>
-      <key>o_init_state</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>i_fsm_args</key>
-      <value>prefix+"gr-trellis/src/examples/fsm_files/awgn1o2_4.fsm"</value>
-    </param>
-    <param>
-      <key>i_init_state</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>interleaver_args</key>
-      <value>trellis.interleaver(block,666)</value>
-    </param>
-    <param>
-      <key>bl</key>
-      <value>block</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(236, 147)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>variable</key>
-    <param>
-      <key>id</key>
-      <value>R</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>value</key>
-      <value>100e3</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(482, 17)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>trellis_pccc_decoder_combined_xx</key>
-    <param>
-      <key>id</key>
-      <value>trellis_pccc_decoder_combined_xx_0</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>type</key>
-      <value>f</value>
+      <value>c</value>
     </param>
     <param>
       <key>out_type</key>
@@ -533,7 +564,7 @@
     </param>
     <param>
       <key>o_fsm_args</key>
-      <value>prefix+"gr-trellis/src/examples/fsm_files/awgn1o2_4.fsm"</value>
+      <value>prefix+"/${GR_PKG_TRELLIS_EXAMPLES_DIR}/fsm_files/awgn1o2_4.fsm"</value>
     </param>
     <param>
       <key>o_init_state</key>
@@ -545,7 +576,7 @@
     </param>
     <param>
       <key>i_fsm_args</key>
-      <value>prefix+"gr-trellis/src/examples/fsm_files/awgn1o2_4.fsm"</value>
+      <value>prefix+"/${GR_PKG_TRELLIS_EXAMPLES_DIR}/fsm_files/awgn2o3_4.fsm"</value>
     </param>
     <param>
       <key>i_init_state</key>
@@ -565,7 +596,7 @@
     </param>
     <param>
       <key>iterations</key>
-      <value>10</value>
+      <value>5</value>
     </param>
     <param>
       <key>dim</key>
@@ -573,7 +604,7 @@
     </param>
     <param>
       <key>table</key>
-      <value>-7,0, -5,0, -3,0, -1,0, 1,0, 3,0, 5,0, 7,0,   0,-7,0, -5,0, -3,0, -1,0, 1,0, 3,0, 5,0, 7</value>
+      <value>1,0,1j,0,-1j,0,-1,0,   0,1,0,1j,0,-1j,0,-1</value>
     </param>
     <param>
       <key>metric_type</key>
@@ -581,7 +612,7 @@
     </param>
     <param>
       <key>siso_type</key>
-      <value>trellis.TRELLIS_MIN_SUM</value>
+      <value>trellis.TRELLIS_SUM_PRODUCT</value>
     </param>
     <param>
       <key>scaling</key>
@@ -589,73 +620,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(196, 274)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>blocks_sub_xx</key>
-    <param>
-      <key>id</key>
-      <value>blocks_sub_xx_0</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>type</key>
-      <value>short</value>
-    </param>
-    <param>
-      <key>vlen</key>
-      <value>1</value>
-    </param>
-    <param>
-      <key>num_inputs</key>
-      <value>2</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(217, 597)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>analog_noise_source_x</key>
-    <param>
-      <key>id</key>
-      <value>analog_noise_source_x_0</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>type</key>
-      <value>float</value>
-    </param>
-    <param>
-      <key>noise_type</key>
-      <value>analog.GR_GAUSSIAN</value>
-    </param>
-    <param>
-      <key>amp</key>
-      <value>noisevar</value>
-    </param>
-    <param>
-      <key>seed</key>
-      <value>-42</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(584, 259)</value>
+      <value>(159, 335)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -686,7 +651,38 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(517, 103)</value>
+      <value>(514, 105)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>blocks_add_xx</key>
+    <param>
+      <key>id</key>
+      <value>blocks_add_xx_1</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>type</key>
+      <value>complex</value>
+    </param>
+    <param>
+      <key>num_inputs</key>
+      <value>2</value>
+    </param>
+    <param>
+      <key>vlen</key>
+      <value>1</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(951, 256)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -709,11 +705,11 @@
     </param>
     <param>
       <key>out_type</key>
-      <value>float</value>
+      <value>complex</value>
     </param>
     <param>
       <key>symbol_table</key>
-      <value>-7,0,-5,0,-3,0,-1,0,1,0,3,0,5,0,7,0,-7,0,-5,0,-3,0,-1,0,1,0,3,0,5,0,7</value>
+      <value>1,0,1j,0,-1j,0,-1,0,0,1,0,1j,0,-1j,0,01</value>
     </param>
     <param>
       <key>dimension</key>
@@ -725,7 +721,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(559, 180)</value>
+      <value>(551, 181)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -733,10 +729,10 @@
     </param>
   </block>
   <block>
-    <key>blocks_add_xx</key>
+    <key>analog_noise_source_x</key>
     <param>
       <key>id</key>
-      <value>blocks_add_xx_1</value>
+      <value>analog_noise_source_x_0</value>
     </param>
     <param>
       <key>_enabled</key>
@@ -744,19 +740,23 @@
     </param>
     <param>
       <key>type</key>
-      <value>float</value>
+      <value>complex</value>
     </param>
     <param>
-      <key>num_inputs</key>
-      <value>2</value>
+      <key>noise_type</key>
+      <value>analog.GR_GAUSSIAN</value>
     </param>
     <param>
-      <key>vlen</key>
-      <value>1</value>
+      <key>amp</key>
+      <value>noisevar</value>
+    </param>
+    <param>
+      <key>seed</key>
+      <value>-42</value>
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(951, 256)</value>
+      <value>(651, 270)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -774,6 +774,30 @@
     <sink_block_id>wxgui_scopesink2_0</sink_block_id>
     <source_key>0</source_key>
     <sink_key>0</sink_key>
+  </connection>
+  <connection>
+    <source_block_id>analog_random_source_x_0</source_block_id>
+    <sink_block_id>trellis_sccc_encoder_xx_0</sink_block_id>
+    <source_key>0</source_key>
+    <sink_key>0</sink_key>
+  </connection>
+  <connection>
+    <source_block_id>trellis_sccc_encoder_xx_0</source_block_id>
+    <sink_block_id>blocks_throttle_0</sink_block_id>
+    <source_key>0</source_key>
+    <sink_key>0</sink_key>
+  </connection>
+  <connection>
+    <source_block_id>blocks_add_xx_1</source_block_id>
+    <sink_block_id>trellis_sccc_decoder_combined_xx_0</sink_block_id>
+    <source_key>0</source_key>
+    <sink_key>0</sink_key>
+  </connection>
+  <connection>
+    <source_block_id>trellis_sccc_decoder_combined_xx_0</source_block_id>
+    <sink_block_id>blocks_sub_xx_0</sink_block_id>
+    <source_key>0</source_key>
+    <sink_key>1</sink_key>
   </connection>
   <connection>
     <source_block_id>blocks_multiply_xx_2_0</source_block_id>
@@ -800,40 +824,16 @@
     <sink_key>1</sink_key>
   </connection>
   <connection>
-    <source_block_id>analog_random_source_x_0</source_block_id>
-    <sink_block_id>trellis_pccc_encoder_xx_0</sink_block_id>
+    <source_block_id>blocks_throttle_0</source_block_id>
+    <sink_block_id>digital_chunks_to_symbols_xx_0</sink_block_id>
     <source_key>0</source_key>
     <sink_key>0</sink_key>
-  </connection>
-  <connection>
-    <source_block_id>trellis_pccc_encoder_xx_0</source_block_id>
-    <sink_block_id>blocks_throttle_0</sink_block_id>
-    <source_key>0</source_key>
-    <sink_key>0</sink_key>
-  </connection>
-  <connection>
-    <source_block_id>blocks_add_xx_1</source_block_id>
-    <sink_block_id>trellis_pccc_decoder_combined_xx_0</sink_block_id>
-    <source_key>0</source_key>
-    <sink_key>0</sink_key>
-  </connection>
-  <connection>
-    <source_block_id>trellis_pccc_decoder_combined_xx_0</source_block_id>
-    <sink_block_id>blocks_sub_xx_0</sink_block_id>
-    <source_key>0</source_key>
-    <sink_key>1</sink_key>
   </connection>
   <connection>
     <source_block_id>analog_noise_source_x_0</source_block_id>
     <sink_block_id>blocks_add_xx_1</sink_block_id>
     <source_key>0</source_key>
     <sink_key>1</sink_key>
-  </connection>
-  <connection>
-    <source_block_id>blocks_throttle_0</source_block_id>
-    <sink_block_id>digital_chunks_to_symbols_xx_0</sink_block_id>
-    <source_key>0</source_key>
-    <sink_key>0</sink_key>
   </connection>
   <connection>
     <source_block_id>digital_chunks_to_symbols_xx_0</source_block_id>

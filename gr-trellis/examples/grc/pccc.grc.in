@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='ASCII'?>
 <flow_graph>
-  <timestamp>Sat Nov 10 15:36:08 2012</timestamp>
+  <timestamp>Thu Dec 27 13:49:53 2012</timestamp>
   <block>
     <key>options</key>
     <param>
@@ -95,7 +95,7 @@
     </param>
     <param>
       <key>value</key>
-      <value>"/n/harrisville/x/anastas/gnuradio_trunk/"</value>
+      <value>"${CMAKE_INSTALL_PREFIX}"</value>
     </param>
     <param>
       <key>_coordinate</key>
@@ -444,6 +444,159 @@
     </param>
   </block>
   <block>
+    <key>trellis_pccc_encoder_xx</key>
+    <param>
+      <key>id</key>
+      <value>trellis_pccc_encoder_xx_0</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>type</key>
+      <value>ss</value>
+    </param>
+    <param>
+      <key>o_fsm_args</key>
+      <value>prefix+"/${GR_PKG_TRELLIS_EXAMPLES_DIR}/fsm_files/awgn1o2_4.fsm"</value>
+    </param>
+    <param>
+      <key>o_init_state</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>i_fsm_args</key>
+      <value>prefix+"/${GR_PKG_TRELLIS_EXAMPLES_DIR}/fsm_files/awgn1o2_4.fsm"</value>
+    </param>
+    <param>
+      <key>i_init_state</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>interleaver_args</key>
+      <value>trellis.interleaver(block,666)</value>
+    </param>
+    <param>
+      <key>bl</key>
+      <value>block</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(236, 147)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>variable</key>
+    <param>
+      <key>id</key>
+      <value>R</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>value</key>
+      <value>100e3</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(482, 17)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>trellis_pccc_decoder_combined_xx</key>
+    <param>
+      <key>id</key>
+      <value>trellis_pccc_decoder_combined_xx_0</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>type</key>
+      <value>f</value>
+    </param>
+    <param>
+      <key>out_type</key>
+      <value>s</value>
+    </param>
+    <param>
+      <key>o_fsm_args</key>
+      <value>prefix+"/${GR_PKG_TRELLIS_EXAMPLES_DIR}/fsm_files/awgn1o2_4.fsm"</value>
+    </param>
+    <param>
+      <key>o_init_state</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>o_final_state</key>
+      <value>-1</value>
+    </param>
+    <param>
+      <key>i_fsm_args</key>
+      <value>prefix+"/${GR_PKG_TRELLIS_EXAMPLES_DIR}/fsm_files/awgn1o2_4.fsm"</value>
+    </param>
+    <param>
+      <key>i_init_state</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>i_final_state</key>
+      <value>-1</value>
+    </param>
+    <param>
+      <key>interleaver</key>
+      <value>trellis.interleaver(block,666)</value>
+    </param>
+    <param>
+      <key>block_size</key>
+      <value>block</value>
+    </param>
+    <param>
+      <key>iterations</key>
+      <value>10</value>
+    </param>
+    <param>
+      <key>dim</key>
+      <value>2</value>
+    </param>
+    <param>
+      <key>table</key>
+      <value>-7,0, -5,0, -3,0, -1,0, 1,0, 3,0, 5,0, 7,0,   0,-7,0, -5,0, -3,0, -1,0, 1,0, 3,0, 5,0, 7</value>
+    </param>
+    <param>
+      <key>metric_type</key>
+      <value>digital.TRELLIS_EUCLIDEAN</value>
+    </param>
+    <param>
+      <key>siso_type</key>
+      <value>trellis.TRELLIS_MIN_SUM</value>
+    </param>
+    <param>
+      <key>scaling</key>
+      <value>1.0</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(196, 274)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
     <key>blocks_sub_xx</key>
     <param>
       <key>id</key>
@@ -475,10 +628,10 @@
     </param>
   </block>
   <block>
-    <key>trellis_pccc_encoder_xx</key>
+    <key>analog_noise_source_x</key>
     <param>
       <key>id</key>
-      <value>trellis_pccc_encoder_xx_0</value>
+      <value>analog_noise_source_x_0</value>
     </param>
     <param>
       <key>_enabled</key>
@@ -486,160 +639,23 @@
     </param>
     <param>
       <key>type</key>
-      <value>ss</value>
+      <value>float</value>
     </param>
     <param>
-      <key>o_fsm_args</key>
-      <value>prefix+"gr-trellis/src/examples/fsm_files/awgn1o2_4.fsm"</value>
+      <key>noise_type</key>
+      <value>analog.GR_GAUSSIAN</value>
     </param>
     <param>
-      <key>o_init_state</key>
-      <value>0</value>
+      <key>amp</key>
+      <value>noisevar</value>
     </param>
     <param>
-      <key>i_fsm_args</key>
-      <value>prefix+"gr-trellis/src/examples/fsm_files/awgn1o2_4.fsm"</value>
-    </param>
-    <param>
-      <key>i_init_state</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>interleaver_args</key>
-      <value>trellis.interleaver(block,666)</value>
-    </param>
-    <param>
-      <key>bl</key>
-      <value>block</value>
+      <key>seed</key>
+      <value>-42</value>
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(236, 147)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>trellis_pccc_decoder_x</key>
-    <param>
-      <key>id</key>
-      <value>trellis_pccc_decoder_x_0</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>out_type</key>
-      <value>s</value>
-    </param>
-    <param>
-      <key>o_fsm_args</key>
-      <value>prefix+"gr-trellis/src/examples/fsm_files/awgn1o2_4.fsm"</value>
-    </param>
-    <param>
-      <key>o_init_state</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>o_final_state</key>
-      <value>-1</value>
-    </param>
-    <param>
-      <key>i_fsm_args</key>
-      <value>prefix+"gr-trellis/src/examples/fsm_files/awgn1o2_4.fsm"</value>
-    </param>
-    <param>
-      <key>i_init_state</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>i_final_state</key>
-      <value>-1</value>
-    </param>
-    <param>
-      <key>interleaver</key>
-      <value>trellis.interleaver(block,666)</value>
-    </param>
-    <param>
-      <key>block_size</key>
-      <value>block</value>
-    </param>
-    <param>
-      <key>iterations</key>
-      <value>10</value>
-    </param>
-    <param>
-      <key>siso_type</key>
-      <value>trellis.TRELLIS_MIN_SUM</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(357, 304)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>trellis_metrics_x</key>
-    <param>
-      <key>id</key>
-      <value>trellis_metrics_x_0</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>type</key>
-      <value>f</value>
-    </param>
-    <param>
-      <key>card</key>
-      <value>16</value>
-    </param>
-    <param>
-      <key>dim</key>
-      <value>2</value>
-    </param>
-    <param>
-      <key>table</key>
-      <value>-7,0, -5,0, -3,0, -1,0, 1,0, 3,0, 5,0, 7,0,   0,-7,0, -5,0, -3,0, -1,0, 1,0, 3,0, 5,0, 7</value>
-    </param>
-    <param>
-      <key>metric_type</key>
-      <value>digital.TRELLIS_EUCLIDEAN</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(58, 354)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>variable</key>
-    <param>
-      <key>id</key>
-      <value>R</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>value</key>
-      <value>100e3</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(482, 17)</value>
+      <value>(584, 259)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -678,37 +694,6 @@
     </param>
   </block>
   <block>
-    <key>blocks_add_xx</key>
-    <param>
-      <key>id</key>
-      <value>blocks_add_xx_1</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>type</key>
-      <value>float</value>
-    </param>
-    <param>
-      <key>num_inputs</key>
-      <value>2</value>
-    </param>
-    <param>
-      <key>vlen</key>
-      <value>1</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(951, 256)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
     <key>digital_chunks_to_symbols_xx</key>
     <param>
       <key>id</key>
@@ -740,7 +725,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(552, 178)</value>
+      <value>(559, 180)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -748,10 +733,10 @@
     </param>
   </block>
   <block>
-    <key>analog_noise_source_x</key>
+    <key>blocks_add_xx</key>
     <param>
       <key>id</key>
-      <value>analog_noise_source_x_0</value>
+      <value>blocks_add_xx_1</value>
     </param>
     <param>
       <key>_enabled</key>
@@ -762,20 +747,16 @@
       <value>float</value>
     </param>
     <param>
-      <key>noise_type</key>
-      <value>analog.GR_GAUSSIAN</value>
+      <key>num_inputs</key>
+      <value>2</value>
     </param>
     <param>
-      <key>amp</key>
-      <value>noisevar</value>
-    </param>
-    <param>
-      <key>seed</key>
-      <value>-42</value>
+      <key>vlen</key>
+      <value>1</value>
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(622, 257)</value>
+      <value>(951, 256)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -819,12 +800,6 @@
     <sink_key>1</sink_key>
   </connection>
   <connection>
-    <source_block_id>blocks_add_xx_1</source_block_id>
-    <sink_block_id>trellis_metrics_x_0</sink_block_id>
-    <source_key>0</source_key>
-    <sink_key>0</sink_key>
-  </connection>
-  <connection>
     <source_block_id>analog_random_source_x_0</source_block_id>
     <sink_block_id>trellis_pccc_encoder_xx_0</sink_block_id>
     <source_key>0</source_key>
@@ -837,14 +812,20 @@
     <sink_key>0</sink_key>
   </connection>
   <connection>
-    <source_block_id>trellis_metrics_x_0</source_block_id>
-    <sink_block_id>trellis_pccc_decoder_x_0</sink_block_id>
+    <source_block_id>blocks_add_xx_1</source_block_id>
+    <sink_block_id>trellis_pccc_decoder_combined_xx_0</sink_block_id>
     <source_key>0</source_key>
     <sink_key>0</sink_key>
   </connection>
   <connection>
-    <source_block_id>trellis_pccc_decoder_x_0</source_block_id>
+    <source_block_id>trellis_pccc_decoder_combined_xx_0</source_block_id>
     <sink_block_id>blocks_sub_xx_0</sink_block_id>
+    <source_key>0</source_key>
+    <sink_key>1</sink_key>
+  </connection>
+  <connection>
+    <source_block_id>analog_noise_source_x_0</source_block_id>
+    <sink_block_id>blocks_add_xx_1</sink_block_id>
     <source_key>0</source_key>
     <sink_key>1</sink_key>
   </connection>
@@ -859,11 +840,5 @@
     <sink_block_id>blocks_add_xx_1</sink_block_id>
     <source_key>0</source_key>
     <sink_key>0</sink_key>
-  </connection>
-  <connection>
-    <source_block_id>analog_noise_source_x_0</source_block_id>
-    <sink_block_id>blocks_add_xx_1</sink_block_id>
-    <source_key>0</source_key>
-    <sink_key>1</sink_key>
   </connection>
 </flow_graph>
