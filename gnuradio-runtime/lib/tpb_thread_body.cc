@@ -73,8 +73,10 @@ namespace gr {
         else {
           // If we don't have a handler but are building up messages,
           // prune the queue from the front to keep memory in check.
-          if(block->nmsgs(i.first) > max_nmsgs)
+          if(block->nmsgs(i.first) > max_nmsgs){
+            GR_LOG_WARN(LOG,"asynchronous message buffer overflowing, dropping message");
             msg = block->delete_head_nowait(i.first);
+            }
         }
       }
 
@@ -121,8 +123,10 @@ namespace gr {
             else {
                 // leave msg in queue if no handler is defined
                 // start dropping if we have too many
-                if(block->nmsgs(i.first) > max_nmsgs)
+                if(block->nmsgs(i.first) > max_nmsgs){
+                    GR_LOG_WARN(LOG,"asynchronous message buffer overflowing, dropping message");
                     msg = block->delete_head_nowait(i.first);
+                }
             }
           }
 	  if (d->done()) {
@@ -152,8 +156,10 @@ namespace gr {
             else {
                 // leave msg in queue if no handler is defined
                 // start dropping if we have too many
-                if(block->nmsgs(i.first) > max_nmsgs)
+                if(block->nmsgs(i.first) > max_nmsgs){
+                    GR_LOG_WARN(LOG,"asynchronous message buffer overflowing, dropping message");
                     msg = block->delete_head_nowait(i.first);
+                    }
                 }
             }
         }
