@@ -43,7 +43,7 @@ namespace gr {
       {
 	set_taps(taps);
       }
-      
+
       fft_filter_fff::~fft_filter_fff()
       {
 	delete d_fwdfft;
@@ -61,33 +61,33 @@ namespace gr {
 	int i = 0;
         d_taps = taps;
 	compute_sizes(taps.size());
-	
+
 	d_tail.resize(tailsize());
 	for(i = 0; i < tailsize(); i++)
 	  d_tail[i] = 0;
-	
+
 	float *in = d_fwdfft->get_inbuf();
 	gr_complex *out = d_fwdfft->get_outbuf();
-	
+
 	float scale = 1.0 / d_fftsize;
-	
+
 	// Compute forward xform of taps.
 	// Copy taps into first ntaps slots, then pad with zeros
 	for (i = 0; i < d_ntaps; i++)
 	  in[i] = taps[i] * scale;
-	
+
 	for (; i < d_fftsize; i++)
 	  in[i] = 0;
-	
+
 	d_fwdfft->execute();		// do the xform
-	
+
 	// now copy output to d_xformed_taps
 	for (i = 0; i < d_fftsize/2+1; i++)
 	  d_xformed_taps[i] = out[i];
-	
+
 	return d_nsamples;
       }
-      
+
       // determine and set d_ntaps, d_nsamples, d_fftsize
       void
       fft_filter_fff::compute_sizes(int ntaps)
@@ -96,7 +96,7 @@ namespace gr {
 	d_ntaps = ntaps;
 	d_fftsize = (int) (2 * pow(2.0, ceil(log(double(ntaps)) / log(2.0))));
 	d_nsamples = d_fftsize - d_ntaps + 1;
-	
+
 	if(VERBOSE) {
 	  std::cerr << "fft_filter_fff: ntaps = " << d_ntaps
 		    << " fftsize = " << d_fftsize
@@ -111,7 +111,7 @@ namespace gr {
             volk_free(d_xformed_taps);
 	  d_fwdfft = new fft::fft_real_fwd(d_fftsize);
 	  d_invfft = new fft::fft_real_rev(d_fftsize);
-	  d_xformed_taps = (gr_complex*)volk_malloc(sizeof(gr_complex)*d_fftsize/2+1,
+	  d_xformed_taps = (gr_complex*)volk_malloc(sizeof(gr_complex)*(d_fftsize/2+1),
                                                     volk_get_alignment());
 	}
       }
@@ -143,35 +143,35 @@ namespace gr {
       {
 	return d_nthreads;
       }
-      
+
       int
       fft_filter_fff::filter(int nitems, const float *input, float *output)
       {
 	int dec_ctr = 0;
 	int j = 0;
 	int ninput_items = nitems * d_decimation;
-	
+
 	for (int i = 0; i < ninput_items; i += d_nsamples){
-	  
+
 	  memcpy(d_fwdfft->get_inbuf(), &input[i], d_nsamples * sizeof(float));
-	  
+
 	  for (j = d_nsamples; j < d_fftsize; j++)
 	    d_fwdfft->get_inbuf()[j] = 0;
-	  
+
 	  d_fwdfft->execute();	// compute fwd xform
-	  
+
 	  gr_complex *a = d_fwdfft->get_outbuf();
 	  gr_complex *b = d_xformed_taps;
 	  gr_complex *c = d_invfft->get_inbuf();
-	  
+
 	  volk_32fc_x2_multiply_32fc_a(c, a, b, d_fftsize/2+1);
-	  
+
 	  d_invfft->execute();	// compute inv xform
-	  
-	  // add in the overlapping tail	  
+
+	  // add in the overlapping tail
 	  for (j = 0; j < tailsize(); j++)
 	    d_invfft->get_outbuf()[j] += d_tail[j];
-	  
+
 	  // copy nsamples to output
 	  j = dec_ctr;
 	  while (j < d_nsamples) {
@@ -179,19 +179,19 @@ namespace gr {
 	    j += d_decimation;
 	  }
 	  dec_ctr = (j - d_nsamples);
-	  
+
 	  // stash the tail
 	  memcpy(&d_tail[0], d_invfft->get_outbuf() + d_nsamples,
 		 tailsize() * sizeof(float));
 	}
-	
+
 	return nitems;
       }
 
 
       /**************************************************************/
 
-    
+
       fft_filter_ccc::fft_filter_ccc(int decimation,
 				     const std::vector<gr_complex> &taps,
 				     int nthreads)
@@ -200,7 +200,7 @@ namespace gr {
       {
 	set_taps(taps);
       }
-      
+
       fft_filter_ccc::~fft_filter_ccc()
       {
 	delete d_fwdfft;
@@ -218,33 +218,33 @@ namespace gr {
 	int i = 0;
         d_taps = taps;
 	compute_sizes(taps.size());
-	
+
 	d_tail.resize(tailsize());
 	for(i = 0; i < tailsize(); i++)
 	  d_tail[i] = 0;
-	
+
 	gr_complex *in = d_fwdfft->get_inbuf();
 	gr_complex *out = d_fwdfft->get_outbuf();
-	
+
 	float scale = 1.0 / d_fftsize;
-	
+
 	// Compute forward xform of taps.
 	// Copy taps into first ntaps slots, then pad with zeros
 	for(i = 0; i < d_ntaps; i++)
 	  in[i] = taps[i] * scale;
-	
+
 	for(; i < d_fftsize; i++)
 	  in[i] = 0;
-	
+
 	d_fwdfft->execute();		// do the xform
-	
+
 	// now copy output to d_xformed_taps
 	for(i = 0; i < d_fftsize; i++)
 	  d_xformed_taps[i] = out[i];
-	
+
 	return d_nsamples;
       }
-      
+
       // determine and set d_ntaps, d_nsamples, d_fftsize
       void
       fft_filter_ccc::compute_sizes(int ntaps)
@@ -253,7 +253,7 @@ namespace gr {
 	d_ntaps = ntaps;
 	d_fftsize = (int) (2 * pow(2.0, ceil(log(double(ntaps)) / log(2.0))));
 	d_nsamples = d_fftsize - d_ntaps + 1;
-	
+
 	if(VERBOSE) {
 	  std::cerr << "fft_filter_ccc: ntaps = " << d_ntaps
 		    << " fftsize = " << d_fftsize
@@ -300,17 +300,17 @@ namespace gr {
       {
 	return d_nthreads;
       }
-      
+
       int
       fft_filter_ccc::filter(int nitems, const gr_complex *input, gr_complex *output)
       {
 	int dec_ctr = 0;
 	int j = 0;
 	int ninput_items = nitems * d_decimation;
-	
+
 	for(int i = 0; i < ninput_items; i += d_nsamples) {
 	  memcpy(d_fwdfft->get_inbuf(), &input[i], d_nsamples * sizeof(gr_complex));
-	  
+
 	  for(j = d_nsamples; j < d_fftsize; j++)
 	    d_fwdfft->get_inbuf()[j] = 0;
 
@@ -319,16 +319,16 @@ namespace gr {
 	  gr_complex *a = d_fwdfft->get_outbuf();
 	  gr_complex *b = d_xformed_taps;
 	  gr_complex *c = d_invfft->get_inbuf();
-	  
+
 	  volk_32fc_x2_multiply_32fc_a(c, a, b, d_fftsize);
-	  
+
 	  d_invfft->execute();	// compute inv xform
-	  
+
 	  // add in the overlapping tail
-	  
+
 	  for(j = 0; j < tailsize(); j++)
 	    d_invfft->get_outbuf()[j] += d_tail[j];
-	  
+
 	  // copy nsamples to output
 	  j = dec_ctr;
 	  while(j < d_nsamples) {
@@ -336,7 +336,7 @@ namespace gr {
 	    j += d_decimation;
 	  }
 	  dec_ctr = (j - d_nsamples);
-	  
+
 	  // stash the tail
 	  memcpy(&d_tail[0], d_invfft->get_outbuf() + d_nsamples,
 		 tailsize() * sizeof(gr_complex));
