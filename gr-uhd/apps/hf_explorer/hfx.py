@@ -99,7 +99,7 @@ ID_SLIDER_3 = wx.NewId()	# Frequency
 ID_SLIDER_4 = wx.NewId()	# Volume
 ID_SLIDER_5 = wx.NewId()	# Programmable Gain Amp, PGA, RF gain
 ID_SLIDER_7 = wx.NewId()	# AT control voltage output
-ID_EXIT	= wx.NewId()		# Menu Exit
+ID_EXIT = wx.NewId()            # Menu Exit
 
 
 class MyFrame(wx.Frame):
@@ -157,9 +157,9 @@ class MyFrame(wx.Frame):
         # end wxGlade
 
         parser = OptionParser (option_class=eng_option)
-        parser.add_option("", "--address", type="string", default="addr=''",
-                          help="Address of UHD device, [default=%default]")
-        parser.add_option("", "--spec", type="string", default="A:A",
+        parser.add_option("", "--args", type="string", default="addr=''",
+                          help="Arguments for UHD device, [default=%default]")
+        parser.add_option("", "--spec", type="string", default="A:0",
                           help="UHD device subdev spec, [default=%default]")
         parser.add_option ("-c", "--ddc-freq", type="eng_float", default=3.9e6,
                            help="set Rx DDC frequency to FREQ", metavar="FREQ")
@@ -173,18 +173,18 @@ class MyFrame(wx.Frame):
                            help="radio input file", metavar="FILE")
         parser.add_option ("-O", "--audio-output", type="string", default="",
                            help="audio output device name. E.g., hw:0,0, /dev/dsp, or pulse")
+        parser.add_option ("", "--audio-rate", type="int", default=32000,
+                           help="audio output sample rate [default=%default]")
 
         (options, args) = parser.parse_args ()
 
         self.usrp_center = options.ddc_freq
-        input_rate = options.samp_rate
+        self.input_rate = input_rate = options.samp_rate
         self.slider_range = input_rate * 0.9375
         self.f_lo = self.usrp_center - (self.slider_range/2)
         self.f_hi = self.usrp_center + (self.slider_range/2)
-	self.af_sample_rate = 32000
-	fir_decim = long (input_rate / self.af_sample_rate)
-
-	self.tb = gr.top_block()
+        self.af_sample_rate = options.audio_rate
+        self.tb = gr.top_block()
 
         # radio variables, initial conditions
         self.frequency = self.usrp_center
@@ -194,7 +194,7 @@ class MyFrame(wx.Frame):
         self.spin_ctrl_1.SetRange(self.f_lo,self.f_hi)
         self.text_ctrl_1.SetValue(str(int(self.usrp_center)))
         self.slider_5.SetValue(0)
-	self.AM_mode = False
+        self.AM_mode = False
 
         self.slider_3.SetValue((self.frequency-self.f_slider_offset)/self.f_slider_scale)
         self.spin_ctrl_1.SetValue(int(self.frequency))
@@ -209,7 +209,7 @@ class MyFrame(wx.Frame):
         if POWERMATE:
           powermate.EVT_POWERMATE_ROTATE(self, self.on_rotate)
           powermate.EVT_POWERMATE_BUTTON(self, self.on_pmButton)
-	self.active_button = 7
+          self.active_button = 7
 
         # command line options
         if options.audio_file == "": SAVE_AUDIO_TO_FILE = False
@@ -220,79 +220,98 @@ class MyFrame(wx.Frame):
         else: self.PLAY_FROM_USRP = False
 
         if self.PLAY_FROM_USRP:
-            self.src = uhd.usrp_source("",stream_args=uhd.stream_args('fc32'))
+            self.src = uhd.usrp_source(options.args, stream_args=uhd.stream_args('fc32'))
             self.src.set_samp_rate(input_rate)
             self.src.set_subdev_spec(options.spec)
-            input_rate = self.src.get_samp_rate()
+            self.input_rate = input_rate = self.src.get_samp_rate()
 
-            self.src.set_center_freq(self.usrp_center, 0)	
+            self.src.set_center_freq(self.usrp_center, 0)
             self.tune_offset = 0
 
-        else:
-           self.src = blocks.file_source (gr.sizeof_short,options.input_file)
-           self.tune_offset = 2200 # 2200 works for 3.5-4Mhz band
+            fir_decim = long(self.input_rate / self.af_sample_rate)
+            rrate = self.af_sample_rate / (self.input_rate / float(fir_decim))
 
-           # convert rf data in interleaved short int form to complex
-           s2ss = blocks.stream_to_streams(gr.sizeof_short,2)
-           s2f1 = blocks.short_to_float()
-           s2f2 = blocks.short_to_float()
-           src_f2c = blocks.float_to_complex()
-           self.tb.connect(self.src,s2ss)
-           self.tb.connect((s2ss,0),s2f1)
-           self.tb.connect((s2ss,1),s2f2)
-           self.tb.connect(s2f1,(src_f2c,0))
-           self.tb.connect(s2f2,(src_f2c,1))
+
+            print "Actual Input Rate: ", self.input_rate
+            print "FIR DECIM: ", fir_decim
+            print "Remaining resampling: ", rrate
+            print "Sampling Rate at Audio Sink: ", (self.input_rate / fir_decim) * rrate
+            print "Request Rate at Audio Sink: ", self.af_sample_rate
+
+        else:
+            self.src = blocks.file_source (gr.sizeof_short,options.input_file)
+            self.tune_offset = 2200 # 2200 works for 3.5-4Mhz band
+
+            # convert rf data in interleaved short int form to complex
+            s2ss = blocks.stream_to_streams(gr.sizeof_short,2)
+            s2f1 = blocks.short_to_float()
+            s2f2 = blocks.short_to_float()
+            src_f2c = blocks.float_to_complex()
+            self.tb.connect(self.src,s2ss)
+            self.tb.connect((s2ss,0),s2f1)
+            self.tb.connect((s2ss,1),s2f2)
+            self.tb.connect(s2f1,(src_f2c,0))
+            self.tb.connect(s2f2,(src_f2c,1))
+
+            fir_decim = long(self.input_rate / self.af_sample_rate)
+            rrate = self.af_sample_rate / (self.input_rate / float(fir_decim))
+
+            print "FIR DECIM: ", fir_decim
+            print "Remaining resampling: ", rrate
+            print "Sampling Rate at Audio Sink: ", (self.input_rate / fir_decim) * rrate
+            print "Request Rate at Audio Sink: ", self.af_sample_rate
 
         # save radio data to a file
         if SAVE_RADIO_TO_FILE:
            radio_file = blocks.file_sink(gr.sizeof_short, options.radio_file)
            self.tb.connect (self.src, radio_file)
 
-	# 2nd DDC
+        # 2nd DDC
         xlate_taps = filter.firdes.low_pass ( \
            1.0, input_rate, 16e3, 4e3, filter.firdes.WIN_HAMMING )
         self.xlate = filter.freq_xlating_fir_filter_ccf ( \
            fir_decim, xlate_taps, self.tune_offset, input_rate )
 
-	# Complex Audio filter
+        nflts = 32
         audio_coeffs = filter.firdes.complex_band_pass (
-                1.0,    # gain
-                self.af_sample_rate, # sample rate
-                -3000,    # low cutoff
-                0,   # high cutoff
-                100,    # transition
-                filter.firdes.WIN_HAMMING)  # window
-	self.slider_fcutoff_hi.SetValue(0)
-	self.slider_fcutoff_lo.SetValue(-3000)
+            nflts,                     # gain
+            self.input_rate*nflts,     # sample rate
+            -3000.0,                   # low cutoff
+            0.0,                       # high cutoff
+            100.0,                     # transition
+            filter.firdes.WIN_KAISER, 7.0)  # window
+        self.slider_fcutoff_hi.SetValue(0)
+        self.slider_fcutoff_lo.SetValue(-3000)
 
-        self.audio_filter = filter.fir_filter_ccc(1, audio_coeffs)
+        # Filter and resample based on actual radio's sample rate
+        self.audio_filter = filter.pfb.arb_resampler_ccc(rrate, audio_coeffs)
 
-	# Main +/- 16Khz spectrum display
+        # Main +/- 16Khz spectrum display
         self.fft = fftsink2.fft_sink_c(self.panel_2, fft_size=512,
                                        sample_rate=self.af_sample_rate,
                                        average=True, size=(640,240),
-				       baseband_freq=self.usrp_center)
+                                       baseband_freq=self.usrp_center)
         c2f = blocks.complex_to_float()
 
 
-	# AM branch
-	self.sel_am = blocks.multiply_const_cc(0)
-	# the following frequencies turn out to be in radians/sample
-	# analog.pll_refout_cc(alpha,beta,min_freq,max_freq)
-	# suggested alpha = X, beta = .25 * X * X
-	pll = analog.pll_refout_cc(.05,(2.*math.pi*7.5e3/self.af_sample_rate),
+        # AM branch
+        self.sel_am = blocks.multiply_const_cc(0)
+        # the following frequencies turn out to be in radians/sample
+        # analog.pll_refout_cc(alpha,beta,min_freq,max_freq)
+        # suggested alpha = X, beta = .25 * X * X
+        pll = analog.pll_refout_cc(.05,(2.*math.pi*7.5e3/self.af_sample_rate),
                                     (2.*math.pi*6.5e3/self.af_sample_rate))
-	self.pll_carrier_scale = blocks.multiply_const_cc(complex(10,0))
-	am_det = blocks.multiply_cc()
-	# these are for converting +7.5kHz to -7.5kHz
-	# for some reason blocks.conjugate_cc() adds noise ??
-	c2f2 = blocks.complex_to_float()
-	c2f3 = blocks.complex_to_float()
-	f2c = blocks.float_to_complex()
-	phaser1 = blocks.multiply_const_ff(1)
-	phaser2 = blocks.multiply_const_ff(-1)
+        self.pll_carrier_scale = blocks.multiply_const_cc(complex(10,0))
+        am_det = blocks.multiply_cc()
+        # these are for converting +7.5kHz to -7.5kHz
+        # for some reason blocks.conjugate_cc() adds noise ??
+        c2f2 = blocks.complex_to_float()
+        c2f3 = blocks.complex_to_float()
+        f2c = blocks.float_to_complex()
+        phaser1 = blocks.multiply_const_ff(1)
+        phaser2 = blocks.multiply_const_ff(-1)
 
-	# filter for pll generated carrier
+        # filter for pll generated carrier
         pll_carrier_coeffs = filter.firdes.complex_band_pass (
                 2.0,    # gain
                 self.af_sample_rate, # sample rate
@@ -303,14 +322,14 @@ class MyFrame(wx.Frame):
 
         self.pll_carrier_filter = filter.fir_filter_ccc (1, pll_carrier_coeffs)
 
-	self.sel_sb = blocks.multiply_const_ff(1)
-	combine = blocks.add_ff()
+        self.sel_sb = blocks.multiply_const_ff(1)
+        combine = blocks.add_ff()
 
-	#AGC
-	sqr1 = blocks.multiply_ff()
-	intr = filter.iir_filter_ffd( [.004, 0], [0, .999] )
-	offset = blocks.add_const_ff(1)
-	agc = blocks.divide_ff()
+        #AGC
+        sqr1 = blocks.multiply_ff()
+        intr = filter.iir_filter_ffd( [.004, 0], [0, .999] )
+        offset = blocks.add_const_ff(1)
+        agc = blocks.divide_ff()
 
         self.scale = blocks.multiply_const_ff(0.00001)
         dst = audio.sink(long(self.af_sample_rate),
@@ -323,28 +342,29 @@ class MyFrame(wx.Frame):
             self.tb.connect(src_f2c, self.xlate, self.fft)
 
         self.tb.connect(self.xlate,self.audio_filter,self.sel_am,(am_det,0))
-	self.tb.connect(self.sel_am,pll,self.pll_carrier_scale,
+        self.tb.connect(self.sel_am,pll,self.pll_carrier_scale,
                         self.pll_carrier_filter,c2f3)
-	self.tb.connect((c2f3,0),phaser1,(f2c,0))
-	self.tb.connect((c2f3,1),phaser2,(f2c,1))
-	self.tb.connect(f2c,(am_det,1))
-	self.tb.connect(am_det,c2f2,(combine,0))
-	self.tb.connect(self.audio_filter,c2f,
+        self.tb.connect((c2f3,0),phaser1,(f2c,0))
+        self.tb.connect((c2f3,1),phaser2,(f2c,1))
+        self.tb.connect(f2c,(am_det,1))
+        self.tb.connect(am_det,c2f2,(combine,0))
+        self.tb.connect(self.audio_filter,c2f,
                         self.sel_sb,(combine,1))
 
 
-	self.tb.connect(combine,self.scale)
-	self.tb.connect(self.scale,(sqr1,0))
-	self.tb.connect(self.scale,(sqr1,1))
-	self.tb.connect(sqr1, intr, offset, (agc, 1))
-	self.tb.connect(self.scale,(agc, 0))
-	self.tb.connect(agc,dst)
+        self.tb.connect(combine,self.scale)
+        self.tb.connect(self.scale,(sqr1,0))
+        self.tb.connect(self.scale,(sqr1,1))
+        self.tb.connect(sqr1, intr, offset, (agc, 1))
+        self.tb.connect(self.scale,(agc, 0))
+        self.tb.connect(agc, blocks.null_sink(gr.sizeof_float))
+        self.tb.connect(c2f3, dst)
 
-	if SAVE_AUDIO_TO_FILE:
-	  f_out = blocks.file_sink(gr.sizeof_short,options.audio_file)
-	  sc1 = blocks.multiply_const_ff(64000)
-	  f2s1 = blocks.float_to_short()
-	  self.tb.connect(agc,sc1,f2s1,f_out)
+        if SAVE_AUDIO_TO_FILE:
+            f_out = blocks.file_sink(gr.sizeof_short,options.audio_file)
+            sc1 = blocks.multiply_const_ff(64000)
+            f2s1 = blocks.float_to_short()
+            self.tb.connect(agc,sc1,f2s1,f_out)
 
         self.tb.start()
 
@@ -353,25 +373,25 @@ class MyFrame(wx.Frame):
 
         # start a timer to check for web commands
         if WEB_CONTROL:
-	   self.timer = UpdateTimer(self, 1000) # every 1000 mSec, 1 Sec
+            self.timer = UpdateTimer(self, 1000) # every 1000 mSec, 1 Sec
 
 
-	wx.EVT_BUTTON(self,ID_BUTTON_1,self.set_lsb)
-	wx.EVT_BUTTON(self,ID_BUTTON_2,self.set_usb)
-	wx.EVT_BUTTON(self,ID_BUTTON_3,self.set_am)
-	wx.EVT_BUTTON(self,ID_BUTTON_4,self.set_cw)
-	wx.EVT_BUTTON(self,ID_BUTTON_10,self.fwd)
-	wx.EVT_BUTTON(self,ID_BUTTON_11,self.rew)
-	wx.EVT_TOGGLEBUTTON(self,ID_BUTTON_5,self.on_button)
-	wx.EVT_TOGGLEBUTTON(self,ID_BUTTON_6,self.on_button)
-	wx.EVT_TOGGLEBUTTON(self,ID_BUTTON_7,self.on_button)
-	wx.EVT_TOGGLEBUTTON(self,ID_BUTTON_8,self.on_button)
-	wx.EVT_TOGGLEBUTTON(self,ID_BUTTON_9,self.on_button)
+        wx.EVT_BUTTON(self,ID_BUTTON_1,self.set_lsb)
+        wx.EVT_BUTTON(self,ID_BUTTON_2,self.set_usb)
+        wx.EVT_BUTTON(self,ID_BUTTON_3,self.set_am)
+        wx.EVT_BUTTON(self,ID_BUTTON_4,self.set_cw)
+        wx.EVT_BUTTON(self,ID_BUTTON_10,self.fwd)
+        wx.EVT_BUTTON(self,ID_BUTTON_11,self.rew)
+        wx.EVT_TOGGLEBUTTON(self,ID_BUTTON_5,self.on_button)
+        wx.EVT_TOGGLEBUTTON(self,ID_BUTTON_6,self.on_button)
+        wx.EVT_TOGGLEBUTTON(self,ID_BUTTON_7,self.on_button)
+        wx.EVT_TOGGLEBUTTON(self,ID_BUTTON_8,self.on_button)
+        wx.EVT_TOGGLEBUTTON(self,ID_BUTTON_9,self.on_button)
         wx.EVT_SLIDER(self,ID_SLIDER_1,self.set_filter)
         wx.EVT_SLIDER(self,ID_SLIDER_2,self.set_filter)
         wx.EVT_SLIDER(self,ID_SLIDER_3,self.slide_tune)
         wx.EVT_SLIDER(self,ID_SLIDER_4,self.set_volume)
-	wx.EVT_SLIDER(self,ID_SLIDER_5,self.set_pga)
+        wx.EVT_SLIDER(self,ID_SLIDER_5,self.set_pga)
         wx.EVT_SPINCTRL(self,ID_SPIN_1,self.spin_tune)
 
         wx.EVT_MENU(self, ID_EXIT,  self.TimeToQuit)
@@ -454,32 +474,32 @@ class MyFrame(wx.Frame):
 
     # Powermate being turned
     def on_rotate(self, event):
-	if self.active_button == 5:
-	   self.slider_fcutoff_hi.SetValue(self.slider_fcutoff_hi.GetValue()+event.delta)
+        if self.active_button == 5:
+           self.slider_fcutoff_hi.SetValue(self.slider_fcutoff_hi.GetValue()+event.delta)
            if self.slider_fcutoff_lo.GetValue() > (self.slider_fcutoff_hi.GetValue() - 200) :
               self.slider_fcutoff_lo.SetValue(self.slider_fcutoff_hi.GetValue() - 200)
-	   self.filter()
-	if self.active_button == 6:
-	   self.slider_fcutoff_lo.SetValue(self.slider_fcutoff_lo.GetValue()+event.delta)
-	   if self.slider_fcutoff_hi.GetValue() < (self.slider_fcutoff_lo.GetValue() + 200) :
-	      self.slider_fcutoff_hi.SetValue(self.slider_fcutoff_lo.GetValue() + 200)
-	   self.filter()
-	if self.active_button == 7:
+           self.filter()
+        if self.active_button == 6:
+           self.slider_fcutoff_lo.SetValue(self.slider_fcutoff_lo.GetValue()+event.delta)
+           if self.slider_fcutoff_hi.GetValue() < (self.slider_fcutoff_lo.GetValue() + 200) :
+              self.slider_fcutoff_hi.SetValue(self.slider_fcutoff_lo.GetValue() + 200)
+           self.filter()
+        if self.active_button == 7:
            new = max(0, min(6000, self.slider_3.GetValue() + event.delta))
            self.slider_3.SetValue(new)
            self.frequency = (self.f_slider_scale * new) + self.f_slider_offset
            self.spin_ctrl_1.SetValue(self.frequency)
-	   if self.AM_mode == False:
+           if self.AM_mode == False:
              self.xlate.set_center_freq( (self.frequency - self.tune_offset) - self.usrp_center)
              self.fft.set_baseband_freq( self.frequency - self.tune_offset )
-	   else:
-	     self.xlate.set_center_freq( (self.frequency - self.tune_offset - 7.5e3) - self.usrp_center)
+           else:
+             self.xlate.set_center_freq( (self.frequency - self.tune_offset - 7.5e3) - self.usrp_center)
              self.fft.set_baseband_freq( self.frequency - self.tune_offset - 7.5e3 )
-	if self.active_button == 8:
+        if self.active_button == 8:
            new = max(0, min(500, self.slider_4.GetValue() + event.delta))
            self.slider_4.SetValue(new)
            self.scale.set_k(math.pow(10.,((self.slider_4.GetValue()-500.)/100.)))
-	if self.active_button == 9:
+        if self.active_button == 9:
            if self.PLAY_FROM_USRP == False:
               if event.delta == -1:
                  self.src.seek(-1000000,gr.SEEK_CUR)
@@ -489,39 +509,39 @@ class MyFrame(wx.Frame):
 
     # Powermate pressed to switch controlled function
     def on_pmButton(self, event):
-	if event.value == 0:
-	   if self.active_button == 5:
-	      self.active_button = 6
-	      self.button_5.SetValue(False)
-	      self.button_6.SetValue(True)
-	   elif self.active_button == 6:
-	      self.active_button = 7
-	      self.button_6.SetValue(False)
-	      self.button_7.SetValue(True)
-	   elif self.active_button == 7:
-	      self.active_button = 8
-	      self.button_7.SetValue(False)
-	      self.button_8.SetValue(True)
-	   elif self.active_button == 8:
-	      self.active_button = 9
-	      self.button_8.SetValue(False)
-	      self.button_9.SetValue(True)
-	   elif self.active_button == 9:
-	      self.active_button = 5
-	      self.button_9.SetValue(False)
-	      self.button_5.SetValue(True)
+        if event.value == 0:
+           if self.active_button == 5:
+              self.active_button = 6
+              self.button_5.SetValue(False)
+              self.button_6.SetValue(True)
+           elif self.active_button == 6:
+              self.active_button = 7
+              self.button_6.SetValue(False)
+              self.button_7.SetValue(True)
+           elif self.active_button == 7:
+              self.active_button = 8
+              self.button_7.SetValue(False)
+              self.button_8.SetValue(True)
+           elif self.active_button == 8:
+              self.active_button = 9
+              self.button_8.SetValue(False)
+              self.button_9.SetValue(True)
+           elif self.active_button == 9:
+              self.active_button = 5
+              self.button_9.SetValue(False)
+              self.button_5.SetValue(True)
 
     # Clicking one PM control button turns the rest off
     def on_button(self, event):
-	id = event.GetId()
-	if id == ID_BUTTON_5:
-	   self.active_button = 5
-	   self.button_6.SetValue(False)
-	   self.button_7.SetValue(False)
-	   self.button_8.SetValue(False)
-	   self.button_9.SetValue(False)
-	if id == ID_BUTTON_6:
-	   self.active_button = 6
+        id = event.GetId()
+        if id == ID_BUTTON_5:
+           self.active_button = 5
+           self.button_6.SetValue(False)
+           self.button_7.SetValue(False)
+           self.button_8.SetValue(False)
+           self.button_9.SetValue(False)
+        if id == ID_BUTTON_6:
+           self.active_button = 6
            self.button_5.SetValue(False)
            self.button_7.SetValue(False)
            self.button_8.SetValue(False)
@@ -556,112 +576,113 @@ class MyFrame(wx.Frame):
         elif slider == ID_SLIDER_2:
            if slider1 < (self.slider_fcutoff_lo.GetValue() + 200) :
               self.slider_fcutoff_hi.SetValue(slider2 + 200)
-	self.filter()
+        self.filter()
 
     # Calculate taps and apply
     def filter(self):
+        nflts = 32
         audio_coeffs = filter.firdes.complex_band_pass (
-                1.0,    # gain
-                self.af_sample_rate, # sample rate
-                self.slider_fcutoff_lo.GetValue(),   # low cutoff
-                self.slider_fcutoff_hi.GetValue(),   # high cutoff
-                100,    # transition
-                filter.firdes.WIN_HAMMING)  # window
+            nflts,                             # gain
+            self.input_rate*nflts,             # sample rate
+            self.slider_fcutoff_lo.GetValue(), # low cutoff
+            self.slider_fcutoff_hi.GetValue(), # high cutoff
+            100.0,                             # transition
+            filter.firdes.WIN_KAISER, 7.0)     # window
         self.audio_filter.set_taps(audio_coeffs)
 
     def set_lsb(self, event):
-	self.AM_mode = False
-	self.xlate.set_center_freq( (self.frequency - self.tune_offset) - self.usrp_center)
-	self.fft.set_baseband_freq( self.frequency - self.tune_offset )
-	self.sel_sb.set_k(1)
-	self.sel_am.set_k(0)
-	self.slider_fcutoff_hi.SetValue(0)
-	self.slider_fcutoff_lo.SetValue(-3000)
-	self.filter()
+        self.AM_mode = False
+        self.xlate.set_center_freq( (self.frequency - self.tune_offset) - self.usrp_center)
+        self.fft.set_baseband_freq( self.frequency - self.tune_offset )
+        self.sel_sb.set_k(1)
+        self.sel_am.set_k(0)
+        self.slider_fcutoff_hi.SetValue(0)
+        self.slider_fcutoff_lo.SetValue(-3000)
+        self.filter()
 
     def set_usb(self, event):
-	self.AM_mode = False
-	self.xlate.set_center_freq( (self.frequency - self.tune_offset) - self.usrp_center)
+        self.AM_mode = False
+        self.xlate.set_center_freq( (self.frequency - self.tune_offset) - self.usrp_center)
         self.fft.set_baseband_freq( self.frequency - self.tune_offset )
-	self.sel_sb.set_k(1)
-	self.sel_am.set_k(0)
-	self.slider_fcutoff_hi.SetValue(3000)
-	self.slider_fcutoff_lo.SetValue(0)
-	self.filter()
+        self.sel_sb.set_k(1)
+        self.sel_am.set_k(0)
+        self.slider_fcutoff_hi.SetValue(3000)
+        self.slider_fcutoff_lo.SetValue(0)
+        self.filter()
 
     def set_am(self, event):
-	self.AM_mode = True
-	self.xlate.set_center_freq( (self.frequency - self.tune_offset - 7.5e3) - self.usrp_center)
+        self.AM_mode = True
+        self.xlate.set_center_freq( (self.frequency - self.tune_offset - 7.5e3) - self.usrp_center)
         self.fft.set_baseband_freq( self.frequency - self.tune_offset - 7.5e3 )
-	self.sel_sb.set_k(0)
-	self.sel_am.set_k(1)
-	self.slider_fcutoff_hi.SetValue(12500)
-	self.slider_fcutoff_lo.SetValue(2500)
-	self.filter()
+        self.sel_sb.set_k(0)
+        self.sel_am.set_k(1)
+        self.slider_fcutoff_hi.SetValue(12500)
+        self.slider_fcutoff_lo.SetValue(2500)
+        self.filter()
 
     def set_cw(self, event):
-	self.AM_mode = False
-	self.xlate.set_center_freq( (self.frequency - self.tune_offset) - self.usrp_center)
+        self.AM_mode = False
+        self.xlate.set_center_freq( (self.frequency - self.tune_offset) - self.usrp_center)
         self.fft.set_baseband_freq( self.frequency - self.tune_offset )
-	self.AM_mode = False
-	self.sel_sb.set_k(1)
-	self.sel_am.set_k(0)
-	self.slider_fcutoff_hi.SetValue(-400)
-	self.slider_fcutoff_lo.SetValue(-800)
-	self.filter()
+        self.AM_mode = False
+        self.sel_sb.set_k(1)
+        self.sel_am.set_k(0)
+        self.slider_fcutoff_hi.SetValue(-400)
+        self.slider_fcutoff_lo.SetValue(-800)
+        self.filter()
 
     def set_volume(self, event):
         self.scale.set_k(math.pow(10.,((self.slider_4.GetValue()-500.)/100.)))
 
     def set_pga(self,event):
-	if self.PLAY_FROM_USRP:
-	   self.src.set_gain(self.slider_5.GetValue())
+        if self.PLAY_FROM_USRP:
+           self.src.set_gain(self.slider_5.GetValue())
 
     def slide_tune(self, event):
         self.frequency = (self.f_slider_scale * self.slider_3.GetValue()) + self.f_slider_offset
-	if self.AM_mode == False:
+        if self.AM_mode == False:
           self.xlate.set_center_freq( (self.frequency - self.tune_offset) - self.usrp_center)
           self.fft.set_baseband_freq( self.frequency - self.tune_offset )
-	else:
-	  self.xlate.set_center_freq( (self.frequency - self.tune_offset - 7.5e3) - self.usrp_center)
+        else:
+          self.xlate.set_center_freq( (self.frequency - self.tune_offset - 7.5e3) - self.usrp_center)
           self.fft.set_baseband_freq( self.frequency - self.tune_offset - 7.5e3 )
         self.spin_ctrl_1.SetValue(self.frequency)
 
     def spin_tune(self, event):
-	self.frequency = self.spin_ctrl_1.GetValue()
-	if self.AM_mode == False:
+        self.frequency = self.spin_ctrl_1.GetValue()
+        if self.AM_mode == False:
            self.xlate.set_center_freq( (self.frequency - self.tune_offset) - self.usrp_center)
            self.fft.set_baseband_freq( self.frequency - self.tune_offset )
-	else:
-	   self.xlate.set_center_freq( (self.frequency - self.tune_offset - 7.5e3) - self.usrp_center)
+        else:
+           self.xlate.set_center_freq( (self.frequency - self.tune_offset - 7.5e3) - self.usrp_center)
            self.fft.set_baseband_freq( self.frequency - self.tune_offset - 7.5e3 )
         self.slider_3.SetValue(int((self.frequency-self.f_slider_offset)/self.f_slider_scale))
 
     # Seek forwards in file
     def fwd(self, event):
-	if self.PLAY_FROM_USRP == False:
-	   self.src.seek(10000000,gr.SEEK_CUR)
+        if self.PLAY_FROM_USRP == False:
+            self.src.seek(10000000,gr.SEEK_CUR)
 
     # Seek backwards in file
     def rew(self, event):
-	if self.PLAY_FROM_USRP == False:
-	   self.src.seek(-10000000,gr.SEEK_CUR)
+        if self.PLAY_FROM_USRP == False:
+            self.src.seek(-10000000,gr.SEEK_CUR)
 
     # Mouse clicked on fft display - change frequency
     def Click(self,event):
         fRel = ( event.GetX() - 340. ) / 18.125
-	if self.AM_mode == False:
-           self.frequency = self.frequency + (fRel*1e3)
-	else:
-	   self.frequency = self.frequency + (fRel*1e3) - 7.5e3
+        if self.AM_mode == False:
+            self.frequency = self.frequency + (fRel*1e3)
+        else:
+            self.frequency = self.frequency + (fRel*1e3) - 7.5e3
         self.spin_ctrl_1.SetValue(int(self.frequency))
         self.slider_3.SetValue(int((self.frequency-self.f_slider_offset)/self.f_slider_scale))
         if self.AM_mode == False:
-	   self.xlate.set_center_freq ( ( self.frequency - self.tune_offset ) - self.usrp_center)
-           self.fft.set_baseband_freq( self.frequency - self.tune_offset )
-	else:
-	   self.xlate.set_center_freq( (self.frequency - self.tune_offset - 7.5e3) - self.usrp_center)
-           self.fft.set_baseband_freq( self.frequency - self.tune_offset - 7.5e3 )
+            self.xlate.set_center_freq ( ( self.frequency - self.tune_offset ) - self.usrp_center)
+            self.fft.set_baseband_freq( self.frequency - self.tune_offset )
+        else:
+            self.xlate.set_center_freq( (self.frequency - self.tune_offset - 7.5e3) - self.usrp_center)
+            self.fft.set_baseband_freq( self.frequency - self.tune_offset - 7.5e3 )
 
 
     # Timer events - check for web commands
