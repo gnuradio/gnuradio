@@ -47,7 +47,7 @@ macro(expand_h root)
     string(REGEX REPLACE "X+" ${sig} name ${root})
     list(APPEND expanded_files_h ${CMAKE_CURRENT_BINARY_DIR}/${name}.h)
   endforeach(sig)
-  
+
   #create a command to generate the files
   add_custom_command(
     OUTPUT ${expanded_files_h}
@@ -103,6 +103,7 @@ install(FILES
     iir_filter_ffd.h
     pfb_arb_resampler.h
     pfb_arb_resampler_ccf.h
+    pfb_arb_resampler_ccc.h
     pfb_arb_resampler_fff.h
     pfb_channelizer_ccf.h
     pfb_decimator_ccf.h

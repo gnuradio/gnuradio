@@ -60,6 +60,7 @@
 #include "gnuradio/filter/interp_fir_filter_fsf.h"
 #include "gnuradio/filter/interp_fir_filter_scc.h"
 #include "gnuradio/filter/pfb_arb_resampler_ccf.h"
+#include "gnuradio/filter/pfb_arb_resampler_ccc.h"
 #include "gnuradio/filter/pfb_arb_resampler_fff.h"
 #include "gnuradio/filter/pfb_channelizer_ccf.h"
 #include "gnuradio/filter/pfb_decimator_ccf.h"
@@ -107,6 +108,7 @@
 %include "gnuradio/filter/interp_fir_filter_fsf.h"
 %include "gnuradio/filter/interp_fir_filter_scc.h"
 %include "gnuradio/filter/pfb_arb_resampler_ccf.h"
+%include "gnuradio/filter/pfb_arb_resampler_ccc.h"
 %include "gnuradio/filter/pfb_arb_resampler_fff.h"
 %include "gnuradio/filter/pfb_channelizer_ccf.h"
 %include "gnuradio/filter/pfb_decimator_ccf.h"
@@ -151,6 +153,7 @@ GR_SWIG_BLOCK_MAGIC2(filter, interp_fir_filter_fff);
 GR_SWIG_BLOCK_MAGIC2(filter, interp_fir_filter_fsf);
 GR_SWIG_BLOCK_MAGIC2(filter, interp_fir_filter_scc);
 GR_SWIG_BLOCK_MAGIC2(filter, pfb_arb_resampler_ccf);
+GR_SWIG_BLOCK_MAGIC2(filter, pfb_arb_resampler_ccc);
 GR_SWIG_BLOCK_MAGIC2(filter, pfb_arb_resampler_fff);
 GR_SWIG_BLOCK_MAGIC2(filter, pfb_channelizer_ccf);
 GR_SWIG_BLOCK_MAGIC2(filter, pfb_decimator_ccf);

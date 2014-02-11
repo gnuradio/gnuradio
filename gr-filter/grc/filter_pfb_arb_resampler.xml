@@ -38,6 +38,13 @@
 			<opt>output:float</opt>
 			<opt>taps:real_vector</opt>
 		</option>
+		<option>
+			<name>Complex->Complex (Complex Taps)</name>
+			<key>ccc</key>
+			<opt>input:complex</opt>
+			<opt>output:complex</opt>
+			<opt>taps:complex_vector</opt>
+		</option>
 	</param>
 	<param>
 		<name>Resampling Rate</name>
