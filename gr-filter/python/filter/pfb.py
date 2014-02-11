@@ -37,9 +37,9 @@ class channelizer_ccf(gr.hier_block2):
     It will then output a stream for each channel.
     '''
     def __init__(self, numchans, taps=None, oversample_rate=1, atten=100):
-	gr.hier_block2.__init__(self, "pfb_channelizer_ccf",
-				gr.io_signature(1, 1, gr.sizeof_gr_complex),
-				gr.io_signature(numchans, numchans, gr.sizeof_gr_complex))
+        gr.hier_block2.__init__(self, "pfb_channelizer_ccf",
+                                gr.io_signature(1, 1, gr.sizeof_gr_complex),
+                                gr.io_signature(numchans, numchans, gr.sizeof_gr_complex))
 
         self._nchans = numchans
         self._oversample_rate = oversample_rate
@@ -89,9 +89,9 @@ class interpolator_ccf(gr.hier_block2):
     other PFB block.
     '''
     def __init__(self, interp, taps=None, atten=100):
-	gr.hier_block2.__init__(self, "pfb_interpolator_ccf",
-				gr.io_signature(1, 1, gr.sizeof_gr_complex),
-				gr.io_signature(1, 1, gr.sizeof_gr_complex))
+        gr.hier_block2.__init__(self, "pfb_interpolator_ccf",
+                                gr.io_signature(1, 1, gr.sizeof_gr_complex),
+                                gr.io_signature(1, 1, gr.sizeof_gr_complex))
 
         self._interp = interp
         self._taps = taps
@@ -131,9 +131,9 @@ class decimator_ccf(gr.hier_block2):
     It will then output a stream that is the decimated output stream.
     '''
     def __init__(self, decim, taps=None, channel=0, atten=100):
-	gr.hier_block2.__init__(self, "pfb_decimator_ccf",
-				gr.io_signature(1, 1, gr.sizeof_gr_complex),
-				gr.io_signature(1, 1, gr.sizeof_gr_complex))
+        gr.hier_block2.__init__(self, "pfb_decimator_ccf",
+                                gr.io_signature(1, 1, gr.sizeof_gr_complex),
+                                gr.io_signature(1, 1, gr.sizeof_gr_complex))
 
         self._decim = decim
         self._channel = channel
@@ -186,9 +186,9 @@ class arb_resampler_ccf(gr.hier_block2):
     other PFB block.
     '''
     def __init__(self, rate, taps=None, flt_size=32, atten=100):
-	gr.hier_block2.__init__(self, "pfb_arb_resampler_ccf",
-				gr.io_signature(1, 1, gr.sizeof_gr_complex), # Input signature
-				gr.io_signature(1, 1, gr.sizeof_gr_complex)) # Output signature
+        gr.hier_block2.__init__(self, "pfb_arb_resampler_ccf",
+                                gr.io_signature(1, 1, gr.sizeof_gr_complex), # Input signature
+                                gr.io_signature(1, 1, gr.sizeof_gr_complex)) # Output signature
 
         self._rate = rate
         self._size = flt_size
@@ -239,9 +239,9 @@ class arb_resampler_fff(gr.hier_block2):
     other PFB block.
     '''
     def __init__(self, rate, taps=None, flt_size=32, atten=100):
-	gr.hier_block2.__init__(self, "pfb_arb_resampler_fff",
-				gr.io_signature(1, 1, gr.sizeof_float), # Input signature
-				gr.io_signature(1, 1, gr.sizeof_float)) # Output signature
+        gr.hier_block2.__init__(self, "pfb_arb_resampler_fff",
+                                gr.io_signature(1, 1, gr.sizeof_float), # Input signature
+                                gr.io_signature(1, 1, gr.sizeof_float)) # Output signature
 
         self._rate = rate
         self._size = flt_size
@@ -269,6 +269,59 @@ class arb_resampler_fff(gr.hier_block2):
                         raise RuntimeError("optfir could not generate an appropriate filter.")
 
         self.pfb = filter.pfb_arb_resampler_fff(self._rate, self._taps, self._size)
+        #print "PFB has %d taps\n" % (len(self._taps),)
+
+        self.connect(self, self.pfb)
+        self.connect(self.pfb, self)
+
+    # Note -- set_taps not implemented in base class yet
+    def set_taps(self, taps):
+        self.pfb.set_taps(taps)
+
+    def set_rate(self, rate):
+        self.pfb.set_rate(rate)
+
+
+class arb_resampler_ccc(gr.hier_block2):
+    '''
+    Convenience wrapper for the polyphase filterbank arbitrary resampler.
+
+    The block takes a single complex stream in and outputs a single complex
+    stream out. As such, it requires no extra glue to handle the input/output
+    streams. This block is provided to be consistent with the interface to the
+    other PFB block.
+    '''
+    def __init__(self, rate, taps=None, flt_size=32, atten=100):
+        gr.hier_block2.__init__(self, "pfb_arb_resampler_ccc",
+                                gr.io_signature(1, 1, gr.sizeof_gr_complex), # Input signature
+                                gr.io_signature(1, 1, gr.sizeof_gr_complex)) # Output signature
+
+        self._rate = rate
+        self._size = flt_size
+
+        if (taps is not None) and (len(taps) > 0):
+            self._taps = taps
+        else:
+            # Create a filter that covers the full bandwidth of the input signal
+            bw = 0.4
+            tb = 0.2
+            ripple = 0.1
+            #self._taps = filter.firdes.low_pass_2(self._size, self._size, bw, tb, atten)
+            made = False
+            while not made:
+                try:
+                    self._taps = optfir.low_pass(self._size, self._size, bw, bw+tb, ripple, atten)
+                    made = True
+                except RuntimeError:
+                    ripple += 0.01
+                    made = False
+                    print("Warning: set ripple to %.4f dB. If this is a problem, adjust the attenuation or create your own filter taps." % (ripple))
+
+                    # Build in an exit strategy; if we've come this far, it ain't working.
+                    if(ripple >= 1.0):
+                        raise RuntimeError("optfir could not generate an appropriate filter.")
+
+        self.pfb = filter.pfb_arb_resampler_ccc(self._rate, self._taps, self._size)
         #print "PFB has %d taps\n" % (len(self._taps),)
 
         self.connect(self, self.pfb)

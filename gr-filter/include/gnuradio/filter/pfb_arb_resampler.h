@@ -217,6 +217,132 @@ namespace gr {
       /**************************************************************/
 
 
+      class FILTER_API pfb_arb_resampler_ccc
+      {
+      private:
+        std::vector<fir_filter_ccc*> d_filters;
+        std::vector<fir_filter_ccc*> d_diff_filters;
+        std::vector< std::vector<gr_complex> > d_taps;
+        std::vector< std::vector<gr_complex> > d_dtaps;
+        unsigned int d_int_rate;          // the number of filters (interpolation rate)
+        unsigned int d_dec_rate;          // the stride through the filters (decimation rate)
+        float        d_flt_rate;          // residual rate for the linear interpolation
+        float        d_acc;               // accumulator; holds fractional part of sample
+        unsigned int d_last_filter;       // stores filter for re-entry
+        unsigned int d_taps_per_filter;   // num taps for each arm of the filterbank
+        int d_delay;                      // filter's group delay
+        float d_est_phase_change;         // est. of phase change of a sine wave through filt.
+
+        /*!
+         * Takes in the taps and convolves them with [-1,0,1], which
+         * creates a differential set of taps that are used in the
+         * difference filterbank.
+         * \param newtaps (vector of complex) The prototype filter.
+         * \param difftaps (vector of complex) (out) The differential filter taps.
+         */
+        void create_diff_taps(const std::vector<gr_complex> &newtaps,
+                              std::vector<gr_complex> &difftaps);
+
+        /*!
+         * Resets the filterbank's filter taps with the new prototype filter
+         * \param newtaps    (vector of complex) The prototype filter to populate the filterbank.
+         *                   The taps should be generated at the interpolated sampling rate.
+         * \param ourtaps    (vector of complex) Reference to our internal member of holding the taps.
+         * \param ourfilter  (vector of ccc filters) Reference to our internal filter to set the taps for.
+         */
+        void create_taps(const std::vector<gr_complex> &newtaps,
+                         std::vector< std::vector<gr_complex> > &ourtaps,
+                         std::vector<kernel::fir_filter_ccc*> &ourfilter);
+
+      public:
+        /*!
+         * Creates a kernel to perform arbitrary resampling on a set of samples.
+         * \param rate  (float) Specifies the resampling rate to use
+         * \param taps  (vector/list of complex) The prototype filter to populate the filterbank. The taps       *              should be generated at the filter_size sampling rate.
+         * \param filter_size (unsigned int) The number of filters in the filter bank. This is directly
+         *                    related to quantization noise introduced during the resampling.
+         *                    Defaults to 32 filters.
+         */
+        pfb_arb_resampler_ccc(float rate,
+                              const std::vector<gr_complex> &taps,
+                              unsigned int filter_size);
+
+        ~pfb_arb_resampler_ccc();
+
+        /*!
+         * Resets the filterbank's filter taps with the new prototype filter
+         * \param taps (vector/list of complex) The prototype filter to populate the filterbank.
+         */
+        void set_taps(const std::vector<gr_complex> &taps);
+
+        /*!
+         * Return a vector<vector<>> of the filterbank taps
+         */
+        std::vector<std::vector<gr_complex> > taps() const;
+
+        /*!
+         * Print all of the filterbank taps to screen.
+         */
+        void print_taps();
+
+        /*!
+         * Sets the resampling rate of the block.
+         */
+        void set_rate(float rate);
+
+        /*!
+         * Sets the current phase offset in radians (0 to 2pi).
+         */
+        void set_phase(float ph);
+
+        /*!
+         * Gets the current phase of the resampler in radians (2 to 2pi).
+         */
+        float phase() const;
+
+        /*!
+         * Gets the number of taps per filter.
+         */
+        unsigned int taps_per_filter() const;
+
+        unsigned int interpolation_rate() const { return d_int_rate; }
+        unsigned int decimation_rate() const { return d_dec_rate; }
+        float fractional_rate() const { return d_flt_rate; }
+
+        /*!
+         * Get the group delay of the filter.
+         */
+        int group_delay() const { return d_delay; }
+
+        /*!
+         * Calculates the phase offset expected by a sine wave of
+         * frequency \p freq and sampling rate \p fs (assuming input
+         * sine wave has 0 degree phase).
+         */
+        float phase_offset(float freq, float fs);
+
+        /*!
+         * Performs the filter operation that resamples the signal.
+         *
+         * This block takes in a stream of samples and outputs a
+         * resampled and filtered stream. This block should be called
+         * such that the output has \p rate * \p n_to_read amount of
+         * space available in the \p output buffer.
+         *
+         * \param input An input vector of samples to be resampled
+         * \param output The output samples at the new sample rate.
+         * \param n_to_read Number of samples to read from \p input.
+         * \param n_read (out) Number of samples actually read from \p input.
+         * \return Number of samples put into \p output.
+         */
+        int filter(gr_complex *input, gr_complex *output,
+                   int n_to_read, int &n_read);
+      };
+
+
+      /**************************************************************/
+
+
       /*!
        * \brief Polyphase filterbank arbitrary resampler with
        *        float input, float output and float taps
