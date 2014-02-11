@@ -31,7 +31,7 @@
 
 namespace gr {
   namespace qtgui {
-    
+
     sink_f::sptr
     sink_f::make(int fftsize, int wintype,
 		 double fc, double bw,
@@ -78,11 +78,13 @@ namespace gr {
       // this is usually desired when plotting
       d_shift = true;
 
-      d_fft = new fft::fft_complex (d_fftsize, true);
+      d_fft = new fft::fft_complex(d_fftsize, true);
 
       d_index = 0;
-      d_residbuf = new float[d_fftsize];
-      d_magbuf = new float[d_fftsize];
+      d_residbuf = (float*)volk_malloc(d_fftsize*sizeof(float),
+                                       volk_get_alignment());
+      d_magbuf = (float*)volk_malloc(d_fftsize*sizeof(float),
+                                     volk_get_alignment());
 
       buildwindow();
 
@@ -92,10 +94,10 @@ namespace gr {
     sink_f_impl::~sink_f_impl()
     {
       delete d_main_gui;
-      delete [] d_residbuf;
-      delete [] d_magbuf;
       delete d_fft;
       delete d_argv;
+      volk_free(d_residbuf);
+      volk_free(d_magbuf);
     }
 
     bool
@@ -267,14 +269,16 @@ namespace gr {
       if(newfftsize != d_fftsize) {
 
 	// Resize residbuf and replace data
-	delete [] d_residbuf;
-	d_residbuf = new float[newfftsize];
+        volk_free(d_residbuf);
+        d_residbuf = (float*)volk_malloc(newfftsize*sizeof(float),
+                                         volk_get_alignment());
 
-	delete [] d_magbuf;
-	d_magbuf = new float[newfftsize];
+        volk_free(d_magbuf);
+        d_magbuf = (float*)volk_malloc(newfftsize*sizeof(float),
+                                       volk_get_alignment());
 
-	// Set new fft size and reset buffer index 
-	// (throws away any currently held data, but who cares?) 
+	// Set new fft size and reset buffer index
+	// (throws away any currently held data, but who cares?)
 	d_fftsize = newfftsize;
 	d_index = 0;
 
@@ -314,7 +318,7 @@ namespace gr {
 
 	  j += resid;
 	  fft(d_magbuf, d_residbuf, d_fftsize);
-      
+
 	  d_main_gui->updateWindow(true, d_magbuf, d_fftsize,
 				   (float*)d_residbuf, d_fftsize, NULL, 0,
 				   currentTime, true);
