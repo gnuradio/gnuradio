@@ -28,6 +28,12 @@ link_directories(${Boost_LIBRARY_DIRS})
 list(APPEND howto_sources
 )
 
+set(howto_sources "${howto_sources}" PARENT_SCOPE)
+if(NOT howto_sources)
+	MESSAGE(STATUS "No C++ sources... skipping lib/")
+	return()
+endif(NOT howto_sources)
+
 add_library(gnuradio-howto SHARED ${howto_sources})
 target_link_libraries(gnuradio-howto ${Boost_LIBRARIES} ${GNURADIO_ALL_LIBRARIES})
 set_target_properties(gnuradio-howto PROPERTIES DEFINE_SYMBOL "gnuradio_howto_EXPORTS")

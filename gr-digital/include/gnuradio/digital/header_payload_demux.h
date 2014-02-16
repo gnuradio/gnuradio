@@ -58,6 +58,22 @@ namespace gr {
      * should go on the payload.
      * A special case are tags on items that make up the guard interval. These are copied
      * to the first item of the following symbol.
+     * If a tag is situated very close to the end of the payload, it might be unclear if
+     * it belongs to this packet or the following. In this case, the tag might be propagated
+     * twice.
+     *
+     * Tags outside of packets are generally discarded. If this information is important,
+     * there are two additional mechanisms to preserve the tags:
+     * - Timing tags might be relevant to know <em>when</em> a packet was received. By
+     *   specifying the name of a timestamp tag and the sample rate at this block, it
+     *   keeps track of the time and will add the time to the first item of every packet.
+     *   The name of the timestamp tag is usually 'rx_time' (see gr::uhd::usrp_source::make()).
+     *   The time value must be specified in the UHD time format.
+     * - Other tags are simply stored and updated. As an example, the user might want to know the
+     *   rx frequency, which UHD stores in the rx_freq tag. In this case, add the tag name 'rx_freq'
+     *   to the list of \p special_tags. This block will then always save the most current value of
+     *   'rx_freq' and add it to the beginning of every packet.
+     *
      */
     class DIGITAL_API header_payload_demux : virtual public block
     {
@@ -72,6 +88,9 @@ namespace gr {
        * \param trigger_tag_key Key of the trigger tag
        * \param output_symbols Output symbols (true) or items (false)?
        * \param itemsize Item size (bytes per item)
+       * \param timing_tag_key The name of the tag with timing information, usually 'rx_time' or empty (this means timing info is discarded)
+       * \param samp_rate Sampling rate at the input. Necessary to calculate the rx time of packets.
+       * \param special_tags A vector of strings denoting tags which shall be preserved.
        */
       static sptr make(
 	int header_len,
@@ -80,7 +99,10 @@ namespace gr {
 	const std::string &length_tag_key="frame_len",
 	const std::string &trigger_tag_key="",
 	bool output_symbols=false,
-	size_t itemsize=sizeof(gr_complex)
+	size_t itemsize=sizeof(gr_complex),
+	const std::string &timing_tag_key="",
+	const double samp_rate=1.0,
+	const std::vector<std::string> &special_tags=std::vector<std::string>()
       );
     };
 

@@ -43,7 +43,7 @@ namespace gr {
       /*!
        * \brief Construct a random PDU generator
        */
-      static sptr make(int mintime, int maxtime);
+      static sptr make(int mintime, int maxtime, char byte_mask = 0xFF, int length_modulo = 1);
     };
 
   } /* namespace blocks */

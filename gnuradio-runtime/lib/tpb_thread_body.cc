@@ -47,6 +47,31 @@ namespace gr {
     prefs *p = prefs::singleton();
     size_t max_nmsgs = static_cast<size_t>(p->get_long("DEFAULT", "max_messages", 100));
 
+    // Setup the logger for the scheduler
+#ifdef ENABLE_GR_LOG
+#ifdef HAVE_LOG4CPP
+    #undef LOG
+    std::string config_file = p->get_string("LOG", "log_config", "");
+    std::string log_level = p->get_string("LOG", "log_level", "");
+    std::string log_file = p->get_string("LOG", "log_file", "");
+    GR_LOG_GETLOGGER(LOG, "gr_log.tpb_thread_body");
+    GR_LOG_SET_LEVEL(LOG, log_level);
+    GR_CONFIG_LOGGER(config_file);
+    if(log_file.size() > 0) {
+      if(log_file == "stdout") {
+        GR_LOG_ADD_CONSOLE_APPENDER(LOG, "cout","gr::log :%p: %c{1} - %m%n");
+      }
+      else if(log_file == "stderr") {
+        GR_LOG_ADD_CONSOLE_APPENDER(LOG, "cerr","gr::log :%p: %c{1} - %m%n");
+      }
+      else {
+        GR_LOG_ADD_FILE_APPENDER(LOG, log_file , true,"%r :%p: %c{1} - %m%n");
+      }
+    }
+#endif /* HAVE_LOG4CPP */
+#endif /* ENABLE_GR_LOG */
+
+
     // Set thread affinity if it was set before fg was started.
     if(block->processor_affinity().size() > 0) {
       gr::thread::thread_bind_to_processor(d->thread, block->processor_affinity());
@@ -73,8 +98,10 @@ namespace gr {
         else {
           // If we don't have a handler but are building up messages,
           // prune the queue from the front to keep memory in check.
-          if(block->nmsgs(i.first) > max_nmsgs)
+          if(block->nmsgs(i.first) > max_nmsgs){
+            GR_LOG_WARN(LOG,"asynchronous message buffer overflowing, dropping message");
             msg = block->delete_head_nowait(i.first);
+            }
         }
       }
 
@@ -117,12 +144,14 @@ namespace gr {
                   block->dispatch_msg(i.first, msg);
                   guard.lock();
                 }
-            } 
+            }
             else {
                 // leave msg in queue if no handler is defined
                 // start dropping if we have too many
-                if(block->nmsgs(i.first) > max_nmsgs)
+                if(block->nmsgs(i.first) > max_nmsgs){
+                    GR_LOG_WARN(LOG,"asynchronous message buffer overflowing, dropping message");
                     msg = block->delete_head_nowait(i.first);
+                }
             }
           }
 	  if (d->done()) {
@@ -148,12 +177,14 @@ namespace gr {
                   block->dispatch_msg(i.first, msg);
                   guard.lock();
                 }
-            } 
+            }
             else {
                 // leave msg in queue if no handler is defined
                 // start dropping if we have too many
-                if(block->nmsgs(i.first) > max_nmsgs)
+                if(block->nmsgs(i.first) > max_nmsgs){
+                    GR_LOG_WARN(LOG,"asynchronous message buffer overflowing, dropping message");
                     msg = block->delete_head_nowait(i.first);
+                    }
                 }
             }
         }

@@ -1,0 +1,69 @@
+<?xml version="1.0"?>
+<!--
+###################################################
+##Message Strobe 
+###################################################
+ -->
+<block>
+	<name>Message Strobe Random-Delay</name>
+	<key>blocks_message_strobe_random</key>
+	<import>from gnuradio import blocks</import>
+	<import>import pmt</import>
+	<make>blocks.message_strobe_random($msg, $dist, $mean, $std)</make>
+    <callback>set_msg($msg)</callback>
+    <callback>set_dist($period)</callback>
+    <callback>set_mean($mean)</callback>
+    <callback>set_std($std)</callback>
+	<param>
+		<name>Message PMT</name>
+		<key>msg</key>
+		<value>pmt.intern("TEST")</value>
+		<type>raw</type>
+	</param>
+	<param>
+		<name>Distribution</name>
+		<key>dist</key>
+		<type>enum</type>
+        <option>
+            <name>Poisson</name>
+            <key>blocks.STROBE_POISSON</key>
+        </option>
+        <option>
+            <name>Uniform</name>
+            <key>blocks.STROBE_UNIFORM</key>
+        </option>
+        <option>
+            <name>Gaussian</name>
+            <key>blocks.STROBE_GAUSSIAN</key>
+        </option>
+	</param>
+	<param>
+		<name>Mean (ms)</name>
+		<key>mean</key>
+		<value>1000</value>
+		<type>real</type>
+	</param>
+	<param>
+		<name>Std (ms)</name>
+		<key>std</key>
+		<value>100</value>
+		<type>real</type>
+	</param>
+	<sink>
+		<name>set_msg</name>
+		<type>message</type>
+        <optional>1</optional>
+	</sink>
+	<source>
+		<name>strobe</name>
+		<type>message</type>
+        <optional>1</optional>
+	</source>
+    
+    <doc>
+        Please note some peculiarities below:
+            - poisson does not care about your std
+            - gaussian operates as expected
+            - uniform is actually of the range (mean-std, mean+std) - thus we are lieing and it is not actually an std here
+    </doc>
+</block>
