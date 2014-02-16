@@ -194,6 +194,7 @@ list(APPEND gr_blocks_sources
     message_sink_impl.cc
     message_source_impl.cc
     message_strobe_impl.cc
+    message_strobe_random_impl.cc
     message_burst_source_impl.cc
     multiply_cc_impl.cc
     multiply_ff_impl.cc
