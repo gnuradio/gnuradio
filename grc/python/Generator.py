@@ -24,10 +24,10 @@ import tempfile
 from Cheetah.Template import Template
 import expr_utils
 from Constants import \
-    TOP_BLOCK_FILE_MODE, HIER_BLOCK_FILE_MODE, \
-    HIER_BLOCKS_LIB_DIR, FLOW_GRAPH_TEMPLATE
+    TOP_BLOCK_FILE_MODE, HIER_BLOCK_FILE_MODE, HIER_BLOCKS_LIB_DIR, FLOW_GRAPH_TEMPLATE, XTERM_EXECUTABLE
 import convert_hier
 from .. gui import Messages
+
 
 class Generator(object):
 
@@ -91,7 +91,7 @@ Add a Misc->Throttle block to your flow graph to avoid CPU congestion.''')
 
         #when in no gui mode on linux, use an xterm (looks nice)
         if self._generate_options == 'no_gui' and 'linux' in sys.platform.lower():
-            cmds = ['xterm', '-e'] + cmds
+            cmds = [XTERM_EXECUTABLE, '-e'] + cmds
 
         p = subprocess.Popen(args=cmds, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, shell=False, universal_newlines=True)
         return p
