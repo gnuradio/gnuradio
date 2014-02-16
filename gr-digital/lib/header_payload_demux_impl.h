@@ -42,8 +42,15 @@ namespace gr {
       int d_curr_payload_len; //!< Length of the next payload (symbols)
       std::vector<pmt::pmt_t> d_payload_tag_keys; //!< Temporary buffer for PMTs that go on the payload (keys)
       std::vector<pmt::pmt_t> d_payload_tag_values; //!< Temporary buffer for PMTs that go on the payload (values)
+      bool d_track_time; //!< Whether or not to keep track of the rx time
+      pmt::pmt_t d_timing_key; //!< Key of the timing tag (usually 'rx_time')
+      uint64_t d_last_time_offset; //!< Item number of the last time tag
+      pmt::pmt_t d_last_time; //!< The actual time that was indicated
+      double d_sampling_time; //!< Inverse sampling rate
+      std::vector<pmt::pmt_t> d_special_tags; //!< List of special tags
+      std::vector<pmt::pmt_t> d_special_tags_last_value; //!< The current value of the special tags
 
-      // Helpers to make the state machine more readable
+      // Helper functions to make the state machine more readable
 
       //! Checks if there are enough items on the inputs and enough space on the output buffers to copy \p n_symbols symbols
       inline bool check_items_available(int n_symbols, gr_vector_int &ninput_items, int noutput_items, int nread);
@@ -59,7 +66,7 @@ namespace gr {
 	int noutput_items,
 	gr_vector_const_void_star &input_items);
 
-      //! Copies n symbols from in to out, makes sure tags are propagated properly
+      //! Copies n symbols from in to out, makes sure tags are propagated properly. Does neither consume nor produce.
       void copy_n_symbols(
 	  const unsigned char *in,
 	  unsigned char *out,
@@ -67,16 +74,29 @@ namespace gr {
 	  int n_symbols
       );
 
+      //! Scans a given range for tags in d_special_tags
+      void update_special_tags(
+	  int range_start,
+	  int range_end
+      );
+
+      //! Adds all tags in d_special_tags and timing info to the first item of the header.
+      void add_special_tags();
+
 
      public:
       header_payload_demux_impl(
-	  int header_len,
-	  int items_per_symbol,
-	  int guard_interval,
-	  const std::string &length_tag_key,
-	  const std::string &trigger_tag_key,
-	  bool output_symbols,
-	  size_t itemsize);
+	int header_len,
+	int items_per_symbol,
+	int guard_interval,
+	const std::string &length_tag_key,
+	const std::string &trigger_tag_key,
+	bool output_symbols,
+	size_t itemsize,
+	const std::string &timing_tag_key,
+	const double samp_rate,
+	const std::vector<std::string> &special_tags
+      );
       ~header_payload_demux_impl();
 
       void forecast (int noutput_items, gr_vector_int &ninput_items_required);
