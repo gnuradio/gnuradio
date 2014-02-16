@@ -100,7 +100,6 @@
   <cat>
     <name>Symbol Coding</name>
     <block>digital_binary_slicer_fb</block>
-    <block>digital_bytes_to_syms</block>
     <block>digital_chunks_to_symbols_xx</block>
     <block>digital_constellation_decoder_cb</block>
     <block>digital_constellation_receiver_cb</block>
