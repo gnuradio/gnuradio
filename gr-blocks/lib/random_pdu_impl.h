@@ -38,9 +38,10 @@ namespace gr {
       boost::uniform_int<> d_brange;
       boost::variate_generator< boost::mt19937, boost::uniform_int<> > d_rvar; // pdu length
       boost::variate_generator< boost::mt19937, boost::uniform_int<> > d_bvar; // pdu contents
-      
+      char d_mask;
+
     public:
-      random_pdu_impl(int min_items, int max_items);
+      random_pdu_impl(int min_items, int max_items, char byte_mask);
 
       bool start();
       void output_random();

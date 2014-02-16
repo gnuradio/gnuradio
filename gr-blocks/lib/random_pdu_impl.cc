@@ -32,19 +32,20 @@ namespace gr {
   namespace blocks {
 
     random_pdu::sptr
-    random_pdu::make(int min_items, int max_items)
+    random_pdu::make(int min_items, int max_items, char byte_mask)
     {
-      return gnuradio::get_initial_sptr(new random_pdu_impl(min_items, max_items));
+      return gnuradio::get_initial_sptr(new random_pdu_impl(min_items, max_items, byte_mask));
     }
 
-    random_pdu_impl::random_pdu_impl(int min_items, int max_items)
+    random_pdu_impl::random_pdu_impl(int min_items, int max_items, char byte_mask)
       :	block("random_pdu",
 		 io_signature::make (0, 0, 0),
 		 io_signature::make (0, 0, 0)),
 	d_urange(min_items, max_items),
 	d_brange(0, 255),
 	d_rvar(d_rng, d_urange),
-	d_bvar(d_rng, d_brange)
+	d_bvar(d_rng, d_brange),
+    d_mask(byte_mask)
     {
       message_port_register_out(PDU_PORT_ID);
       message_port_register_in(pmt::mp("generate"));
@@ -65,9 +66,9 @@ namespace gr {
       int len = d_rvar();
 
       // fill it with random bytes
-      std::vector<unsigned char> vec;
+      std::vector<unsigned char> vec(len);
       for (int i=0; i<len; i++)
-        vec.push_back((unsigned char) d_bvar());
+        vec[i] = ((unsigned char) d_bvar()) & d_mask;
       
       // send the vector
       pmt::pmt_t vecpmt(pmt::make_blob(&vec[0], len));
