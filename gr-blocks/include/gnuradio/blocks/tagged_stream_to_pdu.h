@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2013 Free Software Foundation, Inc.
+ * Copyright 2013,2014 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -25,16 +25,19 @@
 
 #include <gnuradio/blocks/api.h>
 #include <gnuradio/blocks/pdu.h>
-#include <gnuradio/sync_block.h>
+#include <gnuradio/tagged_stream_block.h>
 
 namespace gr {
   namespace blocks {
 
     /*!
-     * \brief Turns received stream data and tags into PDUs
+     * \brief Turns received stream data and tags into PDUs and sends them through a message port.
      * \ingroup message_tools_blk
+     *
+     * The sent message is a PMT-pair (created by pmt::cons()). The first element is a dictionary
+     * containing all the tags. The second is a vector containing the actual data.
      */
-    class BLOCKS_API tagged_stream_to_pdu : virtual public sync_block
+    class BLOCKS_API tagged_stream_to_pdu : virtual public tagged_stream_block
     {
     public:
       // gr::blocks::tagged_stream_to_pdu::sptr
@@ -44,7 +47,6 @@ namespace gr {
        * \brief Construct a tagged_stream_to_pdu block
        * \param type PDU type of pdu::vector_type
        * \param lengthtagname The name of the tag that specifies how long the packet is.
-       *                      Defaults to 'packet_len'.
        */
       static sptr make(pdu::vector_type type,
                        const std::string& lengthtagname="packet_len");

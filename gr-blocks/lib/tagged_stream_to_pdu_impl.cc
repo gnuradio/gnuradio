@@ -38,100 +38,43 @@ namespace gr {
     }
 
     tagged_stream_to_pdu_impl::tagged_stream_to_pdu_impl(pdu::vector_type type, const std::string& lengthtagname)
-      : sync_block("tagged_stream_to_pdu",
+      : tagged_stream_block("tagged_stream_to_pdu",
 		      io_signature::make(1, 1, pdu::itemsize(type)),
-		      io_signature::make(0, 0, 0)),
-	d_itemsize(pdu::itemsize(type)),
-	d_inpdu(false),
+		      io_signature::make(0, 0, 0), lengthtagname),
 	d_type(type),
 	d_pdu_meta(pmt::PMT_NIL),
-	d_pdu_vector(pmt::PMT_NIL),
-	d_tag(pmt::mp(lengthtagname))
+	d_pdu_vector(pmt::PMT_NIL)
     {
       message_port_register_out(PDU_PORT_ID);
     }
 
     int
-    tagged_stream_to_pdu_impl::work(int noutput_items,
-				    gr_vector_const_void_star &input_items,
-				    gr_vector_void_star &output_items)
+    tagged_stream_to_pdu_impl::work (int noutput_items,
+                       gr_vector_int &ninput_items,
+                       gr_vector_const_void_star &input_items,
+                       gr_vector_void_star &output_items)
     {
       const uint8_t *in = (const uint8_t*) input_items[0];
-      uint64_t abs_N = nitems_read(0);
 
-      // if we are not in a pdu already, start a new one 
-      if (!d_inpdu) {
-	bool found_length_tag(false);
-
-	get_tags_in_range(d_tags, 0, abs_N, abs_N+1);
-
-	for (d_tags_itr = d_tags.begin(); (d_tags_itr != d_tags.end()) && (!found_length_tag); d_tags_itr++) {
-	  if (pmt::eq((*d_tags_itr).key, d_tag)) {
-
-          if ((*d_tags_itr).offset != abs_N )
-	    throw std::runtime_error("expected next pdu length tag on a different item...");
-
-	  found_length_tag = true;
-	  d_pdu_length = pmt::to_long((*d_tags_itr).value);
-	  d_pdu_remain = d_pdu_length;
-	  d_pdu_meta = pmt::make_dict();
-              break;
-          } // if have length tag
-	} // iter over tags
-
-	if (!found_length_tag)
-	  throw std::runtime_error("tagged stream does not contain a pdu_length tag");
+      // Grab tags, throw them into dict
+      get_tags_in_range(d_tags, 0,
+	  nitems_read(0),
+	  nitems_read(0) + ninput_items[0]
+      );
+      d_pdu_meta = pmt::make_dict();
+      for (d_tags_itr = d_tags.begin(); d_tags_itr != d_tags.end(); d_tags_itr++) {
+	  d_pdu_meta = dict_add(d_pdu_meta, (*d_tags_itr).key, (*d_tags_itr).value);
       }
 
-      size_t ncopy = std::min((size_t)noutput_items, d_pdu_remain);
+      // Grab data, throw into vector
+      d_pdu_vector = pdu::make_pdu_vector(d_type, in, ninput_items[0]);
 
-      // copy any tags in this range into our meta object
-      get_tags_in_range(d_tags, 0, abs_N, abs_N+ncopy);
-      for (d_tags_itr = d_tags.begin(); d_tags_itr != d_tags.end(); d_tags_itr++)
-        if(!pmt::eq((*d_tags_itr).key, d_tag ))
-            d_pdu_meta = dict_add(d_pdu_meta, (*d_tags_itr).key, (*d_tags_itr).value);
-
-      // copy samples for this vector into either a pmt or our save buffer
-      if (ncopy == d_pdu_remain) { // we will send this pdu
-        if (d_save.size() == 0) {
-            d_pdu_vector = pdu::make_pdu_vector(d_type, in, ncopy);
-            send_message();
-        } 
-        else {
-            size_t oldsize = d_save.size()/d_itemsize;
-            d_save.resize((oldsize + ncopy)*d_itemsize, 0);
-            memcpy(&d_save[oldsize*d_itemsize], in, ncopy*d_itemsize);
-            d_pdu_vector = pdu::make_pdu_vector(d_type, &d_save[0], d_pdu_length);
-            send_message();
-            d_save.clear();
-        }
-      } 
-      else {
-        size_t oldsize = d_save.size()/d_itemsize;
-        d_inpdu = true;
-        d_save.resize((oldsize+ncopy)*d_itemsize);
-        memcpy(&d_save[oldsize*d_itemsize], in, ncopy*d_itemsize);
-        d_pdu_remain -= ncopy;
-      }
-
-      return ncopy;
-    }
-
-    void
-    tagged_stream_to_pdu_impl::send_message()
-    {
-      if (pmt::length(d_pdu_vector) != d_pdu_length)
-        throw std::runtime_error("msg length not correct");
-      
+      // Send msg
       pmt::pmt_t msg = pmt::cons(d_pdu_meta, d_pdu_vector);
       message_port_pub(PDU_PORT_ID, msg);
-      
-      d_pdu_meta = pmt::PMT_NIL;
-      d_pdu_vector = pmt::PMT_NIL;
-      d_pdu_length = 0;
-      d_pdu_remain = 0;
-      d_inpdu = false;
+
+      return ninput_items[0];
     }
-    
+
   } /* namespace blocks */
 } /* namespace gr */

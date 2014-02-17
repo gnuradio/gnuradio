@@ -30,27 +30,20 @@ namespace gr {
 
     class BLOCKS_API tagged_stream_to_pdu_impl : public tagged_stream_to_pdu
     {
-      size_t               d_itemsize;
-      size_t               d_pdu_length;
-      size_t               d_pdu_remain;
-      bool                 d_inpdu;
       pdu::vector_type     d_type;
-      std::vector<uint8_t> d_save;
       pmt::pmt_t           d_pdu_meta;
       pmt::pmt_t           d_pdu_vector;
-
-      pmt::pmt_t           d_tag;
       std::vector<tag_t>::iterator d_tags_itr;
-      std::vector<tag_t> d_tags;
-      
+      std::vector<tag_t>   d_tags;
+
     public:
       tagged_stream_to_pdu_impl(pdu::vector_type type, const std::string& lengthtagname);
 
       int work(int noutput_items,
+               gr_vector_int &ninput_items,
 	       gr_vector_const_void_star &input_items,
 	       gr_vector_void_star &output_items);
 
-      void send_message();
     };
 
   } /* namespace blocks */
