@@ -49,7 +49,7 @@ SpectrumDisplayForm::SpectrumDisplayForm(QWidget* parent)
   AvgLineEdit->setRange(0, 500);                 // Set range of Average box value from 0 to 500
   minHoldCheckBox_toggled( false );
   maxHoldCheckBox_toggled( false );
-  
+
 #if QWT_VERSION < 0x060100
   WaterfallMaximumIntensitySlider->setRange(-200, 0);
   WaterfallMinimumIntensitySlider->setRange(-200, 0);
@@ -59,7 +59,10 @@ SpectrumDisplayForm::SpectrumDisplayForm(QWidget* parent)
   WaterfallMinimumIntensitySlider->setScale(-200, 0);
   WaterfallMinimumIntensitySlider->setValue(-200);
 #endif /* QWT_VERSION < 0x060100 */
-  
+
+  WaterfallMaximumIntensitySlider->setOrientation(Qt::Horizontal);
+  WaterfallMinimumIntensitySlider->setOrientation(Qt::Horizontal);
+
   _peakFrequency = 0;
   _peakAmplitude = -HUGE_VAL;
 
@@ -169,12 +172,12 @@ static void fftshift_and_sum(double *outFFT, const float *inFFT,
       peak_ampl = *outptr;
     }
     sum_mean += *outptr;
-    
+
     inptr++;
     outptr++;
   }
-  
-  // This loop takes the first half of the input data and puts it in the 
+
+  // This loop takes the first half of the input data and puts it in the
   // second half of the plotted data
   inptr = inFFT;
   for(uint64_t point = 0; point < num_points/2; point++) {

@@ -154,6 +154,7 @@ install(FILES
     message_sink.h
     message_source.h
     message_strobe.h
+    message_strobe_random.h
     message_burst_source.h
     multiply_cc.h
     multiply_ff.h
@@ -177,6 +178,7 @@ install(FILES
     repeat.h
     rms_cf.h
     rms_ff.h
+    rotator_cc.h
     short_to_char.h
     short_to_float.h
     skiphead.h

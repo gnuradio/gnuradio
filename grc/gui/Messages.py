@@ -56,7 +56,7 @@ def send_page_switch(file_path):
 ################# functions for loading blocks ########################################
 def send_xml_errors_if_any(xml_failures):
     if xml_failures:
-        send('\nXML parser: Found {} erroneous XML file{} while loading the block tree '
+        send('\nXML parser: Found {0} erroneous XML file{1} while loading the block tree '
              '(see "Help/Parser errors" for details)\n'.format(len(xml_failures), 's' if len(xml_failures) > 1 else ''))
 
 ################# functions for loading flow graphs ########################################

@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2013 Free Software Foundation, Inc.
+ * Copyright 2014 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -20,33 +20,35 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef INCLUDED_BLOCKS_RANDOM_PDU_H
-#define INCLUDED_BLOCKS_RANDOM_PDU_H
+#ifndef INCLUDED_BLOCKS_ROTATOR_CC_H
+#define INCLUDED_BLOCKS_ROTATOR_CC_H
 
 #include <gnuradio/blocks/api.h>
-#include <gnuradio/block.h>
+#include <gnuradio/sync_block.h>
 
 namespace gr {
   namespace blocks {
 
     /*!
-     * \brief Sends a random PDU at intervals
-     * \ingroup message_tools_blk
-     * \ingroup debug_tools_blk
+     * \brief Complex rotator
+     * \ingroup math_operators_blk
      */
-    class BLOCKS_API random_pdu : virtual public block
+    class BLOCKS_API rotator_cc : virtual public sync_block
     {
     public:
-      // gr::blocks::random_pdu::sptr
-      typedef boost::shared_ptr<random_pdu> sptr;
+      // gr::blocks::rotator_cc::sptr
+      typedef boost::shared_ptr<rotator_cc> sptr;
 
       /*!
-       * \brief Construct a random PDU generator
+       * \brief Make an complex rotator block
+       * \param phase_inc rotational velocity
        */
-      static sptr make(int mintime, int maxtime, char byte_mask = 0xFF, int length_modulo = 1);
+      static sptr make(double phase_inc = 0.0);
+
+      virtual void set_phase_inc(double phase_inc) = 0;
     };
 
   } /* namespace blocks */
 } /* namespace gr */
 
-#endif /* INCLUDED_BLOCKS_RANDOM_PDU_H */
+#endif /* INCLUDED_BLOCKS_ROTATOR_CC_H */

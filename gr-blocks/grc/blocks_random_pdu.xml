@@ -9,7 +9,7 @@
 	<key>blocks_random_pdu</key>
 	<import>from gnuradio import blocks</import>
 	<import>import pmt</import>
-	<make>blocks.random_pdu($minsize, $maxsize)</make>
+	<make>blocks.random_pdu($minsize, $maxsize, chr($mask), $length_modulo)</make>
 	<param>
 		<name>Min Bytes</name>
 		<key>minsize</key>
@@ -20,6 +20,18 @@
 		<name>Max Bytes</name>
 		<key>maxsize</key>
 		<value>2000</value>
+		<type>int</type>
+	</param>
+	<param>
+		<name>Byte Mask</name>
+		<key>mask</key>
+		<value>0xFF</value>
+		<type>int</type>
+	</param>
+	<param>
+		<name>Length Modulo</name>
+		<key>length_modulo</key>
+		<value>2</value>
 		<type>int</type>
 	</param>
 	<sink>

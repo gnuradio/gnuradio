@@ -7,7 +7,7 @@ verbose = False
 
 # The maximum number of messages a block will store up before pruning
 # the queue by popping messages from the front.
-max_messages = 100
+max_messages = 8192
 
 
 [LOG]

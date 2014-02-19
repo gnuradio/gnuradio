@@ -59,7 +59,7 @@ class test_pfb_arb_resampler(gr_unittest.TestCase):
         snk = blocks.vector_sink_f()
 
         self.tb.connect(signal, pfb, snk)
-        self.tb.run() 
+        self.tb.run()
 
         Ntest = 50
         L = len(snk.data())
@@ -67,7 +67,7 @@ class test_pfb_arb_resampler(gr_unittest.TestCase):
         # Get group delay and estimate of phase offset from the filter itself.
         delay = pfb.group_delay()
         phase = pfb.phase_offset(freq, fs)
-        
+
         # Create a timeline offset by the filter's group delay
         t = map(lambda x: float(x)/(fs*rrate), xrange(delay, L+delay))
 
@@ -93,7 +93,7 @@ class test_pfb_arb_resampler(gr_unittest.TestCase):
         signal = blocks.vector_source_c(data)
         pfb = filter.pfb_arb_resampler_ccf(rrate, taps, nfilts)
         snk = blocks.vector_sink_c()
-        
+
         self.tb.connect(signal, pfb, snk)
         self.tb.run()
 
@@ -129,6 +129,80 @@ class test_pfb_arb_resampler(gr_unittest.TestCase):
         data = sig_source_c(fs, freq, 1, N)
         signal = blocks.vector_source_c(data)
         pfb = filter.pfb_arb_resampler_ccf(rrate, taps, nfilts)
+        snk = blocks.vector_sink_c()
+
+        self.tb.connect(signal, pfb, snk)
+        self.tb.run()
+
+        Ntest = 50
+        L = len(snk.data())
+
+        # Get group delay and estimate of phase offset from the filter itself.
+        delay = pfb.group_delay()
+        phase = pfb.phase_offset(freq, fs)
+
+        # Create a timeline offset by the filter's group delay
+        t = map(lambda x: float(x)/(fs*rrate), xrange(delay, L+delay))
+
+        # Data of the sinusoid at frequency freq with the delay and phase offset.
+        expected_data = map(lambda x: math.cos(2.*math.pi*freq*x+phase) + \
+                                1j*math.sin(2.*math.pi*freq*x+phase), t)
+
+        dst_data = snk.data()
+
+        self.assertComplexTuplesAlmostEqual(expected_data[-Ntest:], dst_data[-Ntest:], 2)
+
+    def test_ccc_000(self):
+        N = 5000         # number of samples to use
+        fs = 5000.0      # baseband sampling rate
+        rrate = 3.4321   # resampling rate
+
+        nfilts = 32
+        taps = filter.firdes.complex_band_pass_2(nfilts, nfilts*fs, 50, 400, fs/10,
+                                                 attenuation_dB=80,
+                                                 window=filter.firdes.WIN_BLACKMAN_hARRIS)
+
+        freq = 211.123
+        data = sig_source_c(fs, freq, 1, N)
+        signal = blocks.vector_source_c(data)
+        pfb = filter.pfb_arb_resampler_ccc(rrate, taps, nfilts)
+        snk = blocks.vector_sink_c()
+
+        self.tb.connect(signal, pfb, snk)
+        self.tb.run()
+
+        Ntest = 50
+        L = len(snk.data())
+
+        # Get group delay and estimate of phase offset from the filter itself.
+        delay = pfb.group_delay()
+        phase = pfb.phase_offset(freq, fs)
+
+        # Create a timeline offset by the filter's group delay
+        t = map(lambda x: float(x)/(fs*rrate), xrange(delay, L+delay))
+
+        # Data of the sinusoid at frequency freq with the delay and phase offset.
+        expected_data = map(lambda x: math.cos(2.*math.pi*freq*x+phase) + \
+                                1j*math.sin(2.*math.pi*freq*x+phase), t)
+
+        dst_data = snk.data()
+
+        self.assertComplexTuplesAlmostEqual(expected_data[-Ntest:], dst_data[-Ntest:], 2)
+
+    def test_ccc_001(self):
+        N = 50000        # number of samples to use
+        fs = 5000.0      # baseband sampling rate
+        rrate = 0.715    # resampling rate
+
+        nfilts = 32
+        taps = filter.firdes.complex_band_pass_2(nfilts, nfilts*fs, 50, 400, fs/10,
+                                                 attenuation_dB=80,
+                                                 window=filter.firdes.WIN_BLACKMAN_hARRIS)
+
+        freq = 211.123
+        data = sig_source_c(fs, freq, 1, N)
+        signal = blocks.vector_source_c(data)
+        pfb = filter.pfb_arb_resampler_ccc(rrate, taps, nfilts)
         snk = blocks.vector_sink_c()
 
         self.tb.connect(signal, pfb, snk)

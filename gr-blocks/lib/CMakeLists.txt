@@ -194,6 +194,7 @@ list(APPEND gr_blocks_sources
     message_sink_impl.cc
     message_source_impl.cc
     message_strobe_impl.cc
+    message_strobe_random_impl.cc
     message_burst_source_impl.cc
     multiply_cc_impl.cc
     multiply_ff_impl.cc
@@ -218,6 +219,7 @@ list(APPEND gr_blocks_sources
     repeat_impl.cc
     rms_cf_impl.cc
     rms_ff_impl.cc
+    rotator_cc_impl.cc
     short_to_char_impl.cc
     short_to_float_impl.cc
     skiphead_impl.cc

@@ -5,3 +5,4 @@
 [grc]
 global_blocks_path = @blocksdir@
 local_blocks_path =
+xterm_executable = xterm
