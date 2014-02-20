@@ -90,6 +90,7 @@ endmacro(expand_cc_h_impl)
 ########################################################################
 # Invoke macro to generate various sources
 ########################################################################
+expand_cc_h_impl(abs_XX             ss ii ff)
 expand_cc_h_impl(add_XX             ss ii cc)
 expand_cc_h_impl(add_const_XX       bb ss ii ff cc)
 expand_cc_h_impl(add_const_vXX      bb ss ii ff cc)
