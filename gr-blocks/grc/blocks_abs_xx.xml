@@ -1,0 +1,49 @@
+<?xml version="1.0"?>
+<!--
+###################################################
+## Abs Block
+###################################################
+ -->
+<block>
+	<name>Abs</name>
+	<key>blocks_abs_xx</key>
+	<import>from gnuradio import blocks</import>
+	<make>blocks.abs_$(type.fcn)()</make>
+	<param>
+		<name>IO Type</name>
+		<key>type</key>
+		<type>enum</type>
+		<option>
+			<name>Int</name>
+			<key>int</key>
+			<opt>fcn:ii</opt>
+		</option>
+		<option>
+			<name>Short</name>
+			<key>short</key>
+			<opt>fcn:ss</opt>
+		</option>
+		<option>
+			<name>Float</name>
+			<key>float</key>
+			<opt>fcn:ff</opt>
+		</option>
+	</param>
+	<param>
+		<name>Num Inputs</name>
+		<key>num_inputs</key>
+		<value>1</value>
+		<type>int</type>
+	</param>
+	<check>$num_inputs &gt;= 1</check>
+	<sink>
+		<name>in</name>
+		<type>$type</type>
+		<nports>$num_inputs</nports>
+	</sink>
+	<source>
+		<name>out</name>
+		<type>$type</type>
+		<nports>$num_inputs</nports>
+	</source>
+</block>
