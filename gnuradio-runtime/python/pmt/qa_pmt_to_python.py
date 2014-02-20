@@ -22,6 +22,7 @@
 
 import unittest
 import pmt
+import numpy
 
 class test_pmt_to_python(unittest.TestCase):
 
@@ -29,6 +30,10 @@ class test_pmt_to_python(unittest.TestCase):
         b = pmt.from_double(123765)
         self.assertEqual(pmt.to_python(b), 123765)
         t = pmt.to_pmt(range(5))
+
+    def test02 (self):
+        b1 = numpy.fromstring("testing...", numpy.uint8);
+        b2 = pmt.to_pmt(b1);
 
 if __name__ == '__main__':
     unittest.main()
