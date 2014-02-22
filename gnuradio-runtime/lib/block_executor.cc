@@ -121,7 +121,6 @@ namespace gr {
         else {
           for(t = rtags.begin(); t != rtags.end(); t++) {
             tag_t new_tag = *t;
-            //new_tag.offset *= rrate;
             new_tag.offset = ((double)new_tag.offset * rrate) + 0.5;
             for(int o = 0; o < d->noutputs(); o++)
               d->output(o)->add_item_tag(new_tag);
@@ -141,7 +140,6 @@ namespace gr {
           std::vector<tag_t>::iterator t;
           for(t = rtags.begin(); t != rtags.end(); t++) {
             tag_t new_tag = *t;
-            //new_tag.offset *= rrate;
             new_tag.offset = ((double)new_tag.offset * rrate) + 0.5;
             d->output(i)->add_item_tag(new_tag);
           }
