@@ -20,8 +20,8 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef INCLUDED_GR_MESSAGE_STROBE_IMPL_H
-#define INCLUDED_GR_MESSAGE_STROBE_IMPL_H
+#ifndef INCLUDED_GR_MESSAGE_STROBE_RANDOM_IMPL_H
+#define INCLUDED_GR_MESSAGE_STROBE_RANDOM_IMPL_H
 
 #include <gnuradio/blocks/message_strobe_random.h>
 #include <boost/random/variate_generator.hpp>
@@ -70,4 +70,4 @@ namespace gr {
   } /* namespace blocks */
 } /* namespace gr */
 
-#endif /* INCLUDED_GR_MESSAGE_STROBE_IMPL_H */
+#endif /* INCLUDED_GR_MESSAGE_STROBE_RANDOM_IMPL_H */
