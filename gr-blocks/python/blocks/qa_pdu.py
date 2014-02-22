@@ -86,27 +86,58 @@ class test_pdu(gr_unittest.TestCase):
         actual_data = 16*[0xFF,]
         self.assertEqual(actual_data, list(result_data))
         self.assertEqual(actual_data, msg_data)
-        
+
     def test_001(self):
         #Test the overflow buffer in pdu_to_tagged_stream
         src_data = [1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0, 10.0]
         src = blocks.pdu_to_tagged_stream(blocks.float_t)
         snk = blocks.vector_sink_f()
- 
+
         self.tb.connect(src, snk)
         port = pmt.intern("pdus")
- 
+
         msg = pmt.cons( pmt.PMT_NIL, pmt.init_f32vector(10, src_data))
         src.to_basic_block()._post(port, msg)
- 
+
         src.set_max_noutput_items(5)
- 
+
         self.tb.start()
         #ideally, would wait until we get ten samples
         time.sleep(0.2)
         self.tb.stop()
- 
+
         self.assertEqual(src_data, list(snk.data()) )
+
+
+    def test_002_tags_plus_data(self):
+        packet_len = 16
+        src_data = range(packet_len)
+        tag1 = gr.tag_t()
+        tag1.offset = 0
+        tag1.key = pmt.string_to_symbol('spam')
+        tag1.value = pmt.from_long(23)
+        tag2 = gr.tag_t()
+        tag2.offset = 10 # Must be < packet_len
+        tag2.key = pmt.string_to_symbol('eggs')
+        tag2.value = pmt.from_long(42)
+        src = blocks.vector_source_f(src_data, tags=(tag1, tag2))
+        s2ts = blocks.stream_to_tagged_stream(gr.sizeof_float, vlen=1, packet_len=packet_len, len_tag_key="packet_len")
+        ts2pdu = blocks.tagged_stream_to_pdu(blocks.float_t, "packet_len")
+        dbg = blocks.message_debug()
+        self.tb.connect(src, s2ts, ts2pdu)
+        self.tb.msg_connect(ts2pdu, "pdus", dbg, "store")
+        self.tb.start()
+        while dbg.num_messages() < 1:
+            time.sleep(0.1)
+        self.tb.stop()
+        self.tb.wait()
+        result_msg = dbg.get_message(0)
+        metadata = pmt.to_python(pmt.car(result_msg))
+        vector   = pmt.f32vector_elements(pmt.cdr(result_msg))
+        self.assertEqual(metadata, {'eggs': 42, 'spam': 23})
+        self.assertFloatTuplesAlmostEqual(tuple(vector), src_data)
+
 
 if __name__ == '__main__':
     gr_unittest.run(test_pdu, "test_pdu.xml")
+

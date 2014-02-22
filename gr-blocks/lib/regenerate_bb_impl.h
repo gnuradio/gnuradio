@@ -20,7 +20,7 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef INCLUDED_GR_REGENERATE_BB_H
+#ifndef INCLUDED_GR_REGENERATE_BB_IMPL_H
 #define INCLUDED_GR_REGENERATE_BB_IMPL_H
 
 #include <gnuradio/blocks/regenerate_bb.h>

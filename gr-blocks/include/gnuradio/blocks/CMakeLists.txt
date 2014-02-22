@@ -64,6 +64,7 @@ endmacro(expand_h)
 ########################################################################
 # Invoke macro to generate various sources
 ########################################################################
+expand_h(abs_XX             ss ii ff)
 expand_h(add_XX             ss ii cc)
 expand_h(add_const_XX       bb ss ii ff cc)
 expand_h(add_const_vXX      bb ss ii ff cc)
