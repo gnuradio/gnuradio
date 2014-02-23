@@ -87,6 +87,7 @@
 	</cat>
 	<cat>
 		<name>Math Operators</name>
+        <block>blocks_abs_xx</block>
 		<block>blocks_add_xx</block>
 		<block>blocks_add_const_vxx</block>
 		<block>blocks_divide_xx</block>

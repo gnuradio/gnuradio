@@ -31,6 +31,9 @@
 %include "feval.i"
 
 %{
+#include "gnuradio/blocks/abs_ff.h"
+#include "gnuradio/blocks/abs_ss.h"
+#include "gnuradio/blocks/abs_ii.h"
 #include "gnuradio/blocks/add_ff.h"
 #include "gnuradio/blocks/add_ss.h"
 #include "gnuradio/blocks/add_ii.h"
@@ -74,6 +77,9 @@
 #include "gnuradio/blocks/divide_cc.h"
 %}
 
+%include "gnuradio/blocks/abs_ff.h"
+%include "gnuradio/blocks/abs_ss.h"
+%include "gnuradio/blocks/abs_ii.h"
 %include "gnuradio/blocks/add_ff.h"
 %include "gnuradio/blocks/add_ss.h"
 %include "gnuradio/blocks/add_ii.h"
@@ -116,6 +122,9 @@
 %include "gnuradio/blocks/divide_ii.h"
 %include "gnuradio/blocks/divide_cc.h"
 
+GR_SWIG_BLOCK_MAGIC2(blocks, abs_ff);
+GR_SWIG_BLOCK_MAGIC2(blocks, abs_ss);
+GR_SWIG_BLOCK_MAGIC2(blocks, abs_ii);
 GR_SWIG_BLOCK_MAGIC2(blocks, add_ff);
 GR_SWIG_BLOCK_MAGIC2(blocks, add_ss);
 GR_SWIG_BLOCK_MAGIC2(blocks, add_ii);
