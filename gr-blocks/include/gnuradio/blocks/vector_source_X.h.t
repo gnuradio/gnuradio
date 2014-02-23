@@ -32,8 +32,19 @@ namespace gr {
   namespace blocks {
 
     /*!
-     * \brief source of @TYPE@'s that gets its data from a vector
+     * \brief Source that streams @TYPE@ items based on the input \data vector.
      * \ingroup misc_blk
+     *
+     * \details
+     * This block produces a stream of samples based on an input
+     * vector. In C++, this is a std::vector<@TYPE@>, and in Python,
+     * this is either a list or tuple. The data can repeat infinitely
+     * until the flowgraph is terminated by some other event or, the
+     * default, run the data once and stop.
+     *
+     * The vector source can also produce stream tags with the
+     * data. Pass in a vector of gr::tag_t objects and they will be
+     * emitted based on the specified offset of the tag.
      */
     class BLOCKS_API @NAME@ : virtual public sync_block
     {
