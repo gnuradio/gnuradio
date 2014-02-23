@@ -32,7 +32,7 @@ namespace gr {
   namespace blocks {
 
     /*!
-     * \brief Source that streams @TYPE@ items based on the input \data vector.
+     * \brief Source that streams @TYPE@ items based on the input \p data vector.
      * \ingroup misc_blk
      *
      * \details
@@ -45,6 +45,23 @@ namespace gr {
      * The vector source can also produce stream tags with the
      * data. Pass in a vector of gr::tag_t objects and they will be
      * emitted based on the specified offset of the tag.
+     *
+     * GNU Radio provides a utility Python module in gr.tag_utils to
+     * convert between tags and Python objects:
+     * gr.tag_utils.python_to_tag.
+     *
+     * We can create tags as Python lists (or tuples) using the list
+     * structure [int offset, pmt key, pmt value, pmt srcid]. It is
+     * important to define the list/tuple with the values in the
+     * correct order and with the correct data type. A python
+     * dictionary can also be used using the keys: "offset", "key",
+     * "value", and "srcid" with the same data types as for the lists.
+     *
+     * When given a list of tags, the vector source will emit the tags
+     * repeatedly by updating the offset relative to the vector stream
+     * length. That is, if the vector has 500 items and a tag has an
+     * offset of 0, that tag will be placed on item 0, 500, 1000,
+     * 1500, etc.
      */
     class BLOCKS_API @NAME@ : virtual public sync_block
     {
