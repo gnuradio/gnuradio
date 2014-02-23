@@ -43,8 +43,11 @@ namespace gr {
      * \ingroup message_tools_blk
      *
      * \details
-     * Takes a PMT message and sends it out every \p period_ms
-     * milliseconds. Useful for testing/debugging the message system.
+
+     * Takes a PMT message and sends it out every at random
+     * intervals. The interval is basedon a random distribution, \p
+     * dist, with specified mean (\p mean_ms) and variance (\p
+     * std_ms). Useful for testing/debugging the message system.
      */
     class BLOCKS_API message_strobe_random : virtual public block
     {
@@ -53,12 +56,14 @@ namespace gr {
       typedef boost::shared_ptr<message_strobe_random> sptr;
 
       /*!
-       * Make a message stobe block to send message \p msg every \p
-       * period_ms milliseconds.
+       * Make a message stobe block to sends message \p msg at random
+       * intervals defined by the distribution \p dist with mean \p
+       * mean_ms and standard deviation \p std_ms.
        *
        * \param msg The message to send as a PMT.
-       * \param period_ms the time period in milliseconds in which to
-       *                  send \p msg.
+       * \param dist The random distribution from which to draw events.
+       * \param mean_ms The mean of the distribution.
+       * \param std_ms The standard deviation of the distribution.
        */
       static sptr make(pmt::pmt_t msg, message_strobe_random_distribution_t dist, float mean_ms, float std_ms);
 
@@ -104,7 +109,7 @@ namespace gr {
        * Get the std of strobe_random.
        */
       virtual float std() const = 0;
-   
+
     };
 
   } /* namespace blocks */

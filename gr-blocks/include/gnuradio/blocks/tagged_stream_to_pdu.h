@@ -31,11 +31,13 @@ namespace gr {
   namespace blocks {
 
     /*!
-     * \brief Turns received stream data and tags into PDUs and sends them through a message port.
+     * \brief Turns received stream data and tags into PDUs and sends
+     * them through a message port.
      * \ingroup message_tools_blk
      *
-     * The sent message is a PMT-pair (created by pmt::cons()). The first element is a dictionary
-     * containing all the tags. The second is a vector containing the actual data.
+     * The sent message is a PMT-pair (created by pmt::cons()). The
+     * first element is a dictionary containing all the tags. The
+     * second is a vector containing the actual data.
      */
     class BLOCKS_API tagged_stream_to_pdu : virtual public tagged_stream_block
     {
@@ -46,7 +48,8 @@ namespace gr {
       /*!
        * \brief Construct a tagged_stream_to_pdu block
        * \param type PDU type of pdu::vector_type
-       * \param lengthtagname The name of the tag that specifies how long the packet is.
+       * \param lengthtagname The name of the tag that specifies
+       *        how long the packet is.
        */
       static sptr make(pdu::vector_type type,
                        const std::string& lengthtagname="packet_len");
