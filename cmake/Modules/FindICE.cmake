@@ -116,12 +116,12 @@ if(ICE_ICE AND ICE_ICEUTIL)
       execute_process(COMMAND ${CMAKE_CXX_COMPILER} --version
         OUTPUT_VARIABLE gcc_version)
       string(REGEX MATCH "[0-9].[0-9].[0-9]" gcc_version_num ${gcc_version})
-      if(${gcc_version_num} VERSION_LESS "4.7")
+      if(NOT ${gcc_version_num} VERSION_LESS "4.7")
         message(STATUS "-- Found GCC version: ${gcc_version_num}")
         message(STATUS "-- GCC incompatible with Ice 3.4, disabling ControlPort")
         set(ICE_FOUND FALSE)
         return() # exit now
-      endif(${gcc_version_num} VERSION_LESS "4.7")
+      endif(NOT ${gcc_version_num} VERSION_LESS "4.7")
     endif(CMAKE_COMPILER_IS_GNUCXX)
 
     set(ICE_LIBRARIES ${ICE_LIBRARY})
