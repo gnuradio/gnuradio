@@ -35,7 +35,11 @@ GR_PYTHON_INSTALL(
 if(ENABLE_TESTING)
 
   set(GR_TEST_TARGET_DEPS "")
-  set(GR_TEST_LIBRARY_DIRS ".")
+  set(GR_TEST_LIBRARY_DIRS
+	  ${CMAKE_BINARY_DIR}/gnuradio-runtime/lib
+	  ${CMAKE_BINARY_DIR}/gnuradio-runtime/lib/pmt
+	  ${CMAKE_BINARY_DIR}/volk/lib
+	  )
   set(GR_TEST_PYTHON_DIRS
     ${CMAKE_BINARY_DIR}/gnuradio-runtime/python
     )

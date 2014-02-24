@@ -39,7 +39,8 @@ GR_PYTHON_INSTALL(FILES
 ########################################################################
 if(ENABLE_TESTING)
   set(GR_TEST_TARGET_DEPS "")
-  set(GR_TEST_LIBRARY_DIRS ".")
+  set(GR_TEST_LIBRARY_DIRS
+	  "${CMAKE_BINARY_DIR}/gnuradio-runtime/lib:${CMAKE_BINARY_DIR}/gnuradio-runtime/lib/pmt")
   set(GR_TEST_PYTHON_DIRS
     ${CMAKE_BINARY_DIR}/gruel/src/python
     ${CMAKE_BINARY_DIR}/gnuradio-runtime/python
