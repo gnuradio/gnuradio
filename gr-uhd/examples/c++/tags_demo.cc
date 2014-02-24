@@ -43,7 +43,7 @@ void sig_int_handler(int){stop_signal_called = true;}
  **********************************************************************/
 int main(int argc, char *argv[]){
 
-    std::string device_addr;
+    std::string device_addr, length_tag;
     double center_freq, samp_rate, burst_dur, idle_dur;
 
     //setup the program options
@@ -55,6 +55,7 @@ int main(int argc, char *argv[]){
         ("freq", po::value<double>(&center_freq)->default_value(10e6), "the center frequency in Hz")
         ("burst", po::value<double>(&burst_dur)->default_value(0.1), "the duration of each burst in seconds")
         ("idle", po::value<double>(&idle_dur)->default_value(0.05), "idle time between bursts in seconds")
+        ("length_tag", po::value<std::string>(&length_tag)->default_value(""), "the length tag key name")
     ;
     po::variables_map vm;
     po::store(po::parse_command_line(argc, argv, desc), vm);
@@ -95,14 +96,15 @@ int main(int argc, char *argv[]){
     //-- make the usrp sink test blocks
     //------------------------------------------------------------------
     gr::uhd::usrp_sink::sptr usrp_sink = gr::uhd::usrp_sink::make
-      (device_addr, uhd::stream_args_t("fc32"));
+      (device_addr, uhd::stream_args_t("fc32"), length_tag);
     usrp_sink->set_samp_rate(samp_rate);
     usrp_sink->set_center_freq(center_freq);
     const uhd::time_spec_t time_now = usrp_sink->get_time_now();
+    const double actual_samp_rate = usrp_sink->get_samp_rate();
 
     boost::shared_ptr<tag_source_demo> tag_source = boost::make_shared<tag_source_demo>(
         time_now.get_full_secs() + 1, time_now.get_frac_secs(), //time now + 1 second
-        samp_rate, idle_dur, burst_dur
+        actual_samp_rate, idle_dur, burst_dur
     );
 
     //------------------------------------------------------------------

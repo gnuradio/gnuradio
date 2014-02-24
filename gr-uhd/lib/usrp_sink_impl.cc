@@ -32,7 +32,8 @@ namespace gr {
     usrp_sink::sptr
     usrp_sink::make(const ::uhd::device_addr_t &device_addr,
                     const ::uhd::io_type_t &io_type,
-                    size_t num_channels)
+                    size_t num_channels,
+                    const std::string &length_tag_key)
     {
       //fill in the streamer args
       ::uhd::stream_args_t stream_args;
@@ -46,27 +47,31 @@ namespace gr {
       for(size_t chan = 0; chan < num_channels; chan++)
         stream_args.channels.push_back(chan); //linear mapping
 
-      return usrp_sink::make(device_addr, stream_args);
+      return usrp_sink::make(device_addr, stream_args, length_tag_key);
     }
 
     usrp_sink::sptr
     usrp_sink::make(const ::uhd::device_addr_t &device_addr,
-                    const ::uhd::stream_args_t &stream_args)
+                    const ::uhd::stream_args_t &stream_args,
+                    const std::string &length_tag_key)
     {
       check_abi();
       return usrp_sink::sptr
-        (new usrp_sink_impl(device_addr, stream_args_ensure(stream_args)));
+        (new usrp_sink_impl(device_addr, stream_args_ensure(stream_args), length_tag_key));
     }
 
     usrp_sink_impl::usrp_sink_impl(const ::uhd::device_addr_t &device_addr,
-                                   const ::uhd::stream_args_t &stream_args)
+                                   const ::uhd::stream_args_t &stream_args,
+                                   const std::string &length_tag_key)
       : sync_block("gr uhd usrp sink",
                       args_to_io_sig(stream_args),
                       io_signature::make(0, 0, 0)),
         _stream_args(stream_args),
         _nchan(stream_args.channels.size()),
         _stream_now(_nchan == 1),
-        _start_time_set(false)
+        _start_time_set(false),
+        _length_tag_key(length_tag_key),
+        _nitems_to_send(0)
     {
       if(stream_args.cpu_format == "fc32")
         _type = boost::make_shared< ::uhd::io_type_t >(::uhd::io_type_t::COMPLEX_FLOAT32);
@@ -476,6 +481,16 @@ namespace gr {
       if(not _tags.empty())
         this->tag_work(ninput_items);
 
+      //check if there is data left to send from a burst tagged with length_tag
+      //note: if a burst is started during this call to work(), tag_work() should
+      //have been called and we should have _nitems_to_send > 0.
+      if(not _length_tag_key.empty() and _nitems_to_send > 0) {
+        ninput_items = std::min<long>(_nitems_to_send, ninput_items);
+        //if we run out of items to send, it's the end of the burst
+        if(_nitems_to_send - long(ninput_items) == 0)
+          _metadata.end_of_burst = true;
+      }
+
 #ifdef GR_UHD_USE_STREAM_API
       //send all ninput_items with metadata
       const size_t num_sent = _tx_stream->send
@@ -485,6 +500,10 @@ namespace gr {
         (input_items, ninput_items, _metadata,
          *_type, ::uhd::device::SEND_MODE_FULL_BUFF, 1.0);
 #endif
+
+      //if using length_tags, decrement items left to send by the number of samples sent
+      if(not _length_tag_key.empty() and _nitems_to_send > 0)
+        _nitems_to_send -= long(num_sent);
 
       //increment the timespec by the number of samples sent
       _metadata.time_spec += ::uhd::time_spec_t(0, num_sent, _sample_rate);
@@ -528,16 +547,31 @@ namespace gr {
           break;
         }
 
-        //handle end of burst with a mini end of burst packet
-        else if(pmt::equal(key, EOB_KEY)) {
+        //handle end of burst with a mini end of burst packet; ignore if we have a nonempty length_tag_key string
+        else if(_length_tag_key.empty() and pmt::equal(key, EOB_KEY)) {
           _metadata.end_of_burst = pmt::to_bool(value);
           ninput_items = 1;
           return;
         }
 
-        //set the start of burst flag in the metadata
-        else if(pmt::equal(key, SOB_KEY)) {
+        //set the start of burst flag in the metadata; ignore if we have a nonempty length_tag_key string
+        else if(_length_tag_key.empty() and pmt::equal(key, SOB_KEY)) {
           _metadata.start_of_burst = pmt::to_bool(value);
+        }
+
+        //length_tag found; set the start of burst flag in the metadata
+        else if(not _length_tag_key.empty() and pmt::equal(key, pmt::string_to_symbol(_length_tag_key))) {
+          //If there are still items left to send, we will truncate the previous burst 
+          //by setting the end of burst flag in a mini end of burst packet. The next 
+          //call to work will start at the new burst.
+          if(_nitems_to_send > 0) {
+              ninput_items = 0;
+              _nitems_to_send = 0;
+              _metadata.end_of_burst = true;
+              return;
+          }
+          _nitems_to_send = pmt::to_long(value);
+          _metadata.start_of_burst = true;
         }
 
         //set the time specification in the metadata
@@ -570,6 +604,7 @@ namespace gr {
       _metadata.start_of_burst = true;
       _metadata.end_of_burst = false;
       _metadata.has_time_spec = not _stream_now;
+      _nitems_to_send = 0;
       if(_start_time_set) {
         _start_time_set = false; //cleared for next run
         _metadata.time_spec = _start_time;
@@ -597,6 +632,7 @@ namespace gr {
       _metadata.start_of_burst = false;
       _metadata.end_of_burst = true;
       _metadata.has_time_spec = false;
+      _nitems_to_send = 0;
 
 #ifdef GR_UHD_USE_STREAM_API
       _tx_stream->send(gr_vector_const_void_star(_nchan), 0, _metadata, 1.0);

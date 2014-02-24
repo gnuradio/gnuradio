@@ -35,7 +35,8 @@ public:
         const double start_fracs,
         const double samp_rate,
         const double idle_duration,
-        const double burst_duration
+        const double burst_duration,
+        const std::string &length_tag_key = ""
     ):
         sync_block(
             "uhd tag source demo",
@@ -48,7 +49,9 @@ public:
         _samps_per_burst(samp_rate*burst_duration),
         _cycle_duration(idle_duration + burst_duration),
         _samps_left_in_burst(1), //immediate EOB
-        _do_new_burst(false)
+        _do_new_burst(false),
+        _firstrun(not length_tag_key.empty()),
+        _length_tag_key(length_tag_key)
     {
         //NOP
     }
@@ -80,6 +83,19 @@ public:
         this->add_item_tag(0/*chan0*/, tag_count, key, value, srcid);
     }
 
+    void make_length_tag(const uint64_t tag_count, const uint64_t burst_len)
+    {
+        if (_length_tag_key.empty()){
+            //no length_tag was specified at initialization; make a tx_sob tag instead
+            this->make_sob_tag(tag_count);
+            return;
+        }
+        const pmt::pmt_t key = pmt::string_to_symbol(_length_tag_key);
+        const pmt::pmt_t value = pmt::from_long((long)burst_len);
+        const pmt::pmt_t srcid = pmt::string_to_symbol(this->name());
+        this->add_item_tag(0/*chan0*/, tag_count, key, value, srcid);
+    }
+
     int work(
         int noutput_items,
         gr_vector_const_void_star &input_items,
@@ -98,7 +114,18 @@ public:
             _do_new_burst = false;
             _samps_left_in_burst = _samps_per_burst;
 
-            this->make_sob_tag(this->nitems_written(0));
+            if (_length_tag_key.empty())
+                this->make_sob_tag(this->nitems_written(0));
+            else
+#if 1
+                this->make_length_tag(this->nitems_written(0), _samps_left_in_burst);
+#else
+                //Test usrp_sink's ability to cancel remainder of burst if new length_tag is found early
+                //sets burst time to 10% greater than the cycle duration to guarantee early length_tag
+                //In a real implementation the user should guard against this so that the number of
+                //samples promised by the length_tag are actually processed by the usrp_sink.
+                this->make_length_tag(this->nitems_written(0), uint64_t(1.1 * _samp_rate * _cycle_duration));
+#endif
             this->make_time_tag(this->nitems_written(0));
 
             _time_fracs += _cycle_duration;
@@ -111,7 +138,12 @@ public:
         //Tag an end of burst and return early.
         //the next work call will be a start of burst.
         if (_samps_left_in_burst < size_t(noutput_items)){
-            this->make_eob_tag(this->nitems_written(0) + _samps_left_in_burst - 1);
+            if (_length_tag_key.empty())
+                this->make_eob_tag(this->nitems_written(0) + _samps_left_in_burst - 1);
+            else if (_firstrun){
+                _firstrun = false;
+                this->make_length_tag(this->nitems_written(0), 1);
+            }
             _do_new_burst = true;
             noutput_items = _samps_left_in_burst;
         }
@@ -128,5 +160,7 @@ private:
     const double _cycle_duration;
     uint64_t _samps_left_in_burst;
     bool _do_new_burst;
+    bool _firstrun;
+    const std::string _length_tag_key;
 
 };

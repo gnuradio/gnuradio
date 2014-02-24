@@ -53,7 +53,8 @@ namespace gr {
     {
     public:
        usrp_sink_impl(const ::uhd::device_addr_t &device_addr,
-                      const ::uhd::stream_args_t &stream_args);
+                      const ::uhd::stream_args_t &stream_args,
+                      const std::string &length_tag_key);
       ~usrp_sink_impl();
 
       void setup_rpc();
@@ -135,6 +136,8 @@ namespace gr {
 
       //stream tags related stuff
       std::vector<tag_t> _tags;
+      const std::string _length_tag_key;
+      long _nitems_to_send;
     };
 
   } /* namespace uhd */
