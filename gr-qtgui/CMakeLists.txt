@@ -132,4 +132,13 @@ install(
     COMPONENT "qtgui_devel"
 )
 
+########################################################################
+# Install the conf file
+########################################################################
+install(
+    FILES ${CMAKE_CURRENT_SOURCE_DIR}/gr-qtgui.conf
+    DESTINATION ${GR_PREFSDIR}
+    COMPONENT "qtgui"
+)
+
 endif(ENABLE_GR_QTGUI)

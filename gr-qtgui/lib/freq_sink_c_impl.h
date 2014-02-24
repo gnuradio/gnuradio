@@ -32,7 +32,7 @@
 
 namespace gr {
   namespace qtgui {
-    
+
     class QTGUI_API freq_sink_c_impl : public freq_sink_c
     {
     private:

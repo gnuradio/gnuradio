@@ -39,7 +39,7 @@ FreqDisplayForm::FreqDisplayForm(int nplots, QWidget* parent)
   d_num_real_data_points = 1024;
   d_fftsize = 1024;
   d_fftavg = 1.0;
-  
+
   d_sizemenu = new FFTSizeMenu(this);
   d_avgmenu = new FFTAverageMenu(this);
   d_winmenu = new FFTWindowMenu(this);
