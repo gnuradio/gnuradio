@@ -26,12 +26,13 @@
 
 #include "time_raster_sink_b_impl.h"
 #include <gnuradio/io_signature.h>
+#include <gnuradio/prefs.h>
 #include <string.h>
 #include <volk/volk.h>
 
 namespace gr {
   namespace qtgui {
-    
+
     time_raster_sink_b::sptr
     time_raster_sink_b::make(double samp_rate,
 			     double rows, double cols,
@@ -84,7 +85,7 @@ namespace gr {
       d_tmpflt = (float*)volk_malloc(d_icols*sizeof(float),
                                      volk_get_alignment());
       memset(d_tmpflt, 0, d_icols*sizeof(float));
-      
+
       for(int i = 0; i < d_nconnections; i++) {
 	d_residbufs.push_back((double*)volk_malloc(d_icols*sizeof(double),
                                                    volk_get_alignment()));
@@ -123,6 +124,8 @@ namespace gr {
 	d_qApplication = qApp;
       }
       else {
+        std::string style = prefs::singleton()->get_string("qtgui", "style", "raster");
+        QApplication::setGraphicsSystem(QString(style.c_str()));
 	d_qApplication = new QApplication(d_argc, &d_argv);
       }
 
@@ -417,7 +420,7 @@ namespace gr {
 	    volk_32f_convert_64f_u(&d_residbufs[n][d_index],
 				   d_tmpflt, resid);
 	  }
-      
+
 	  if(gr::high_res_timer_now() - d_last_time > d_update_time) {
 	    d_last_time = gr::high_res_timer_now();
 	    d_qApplication->postEvent(d_main_gui,

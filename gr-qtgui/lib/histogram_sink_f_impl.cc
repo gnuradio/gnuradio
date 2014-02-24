@@ -26,14 +26,14 @@
 
 #include "histogram_sink_f_impl.h"
 #include <gnuradio/io_signature.h>
+#include <gnuradio/prefs.h>
 #include <string.h>
 #include <volk/volk.h>
-#include <gnuradio/fft/fft.h>
 #include <qwt_symbol.h>
 
 namespace gr {
   namespace qtgui {
-    
+
     histogram_sink_f::sptr
     histogram_sink_f::make(int size, int bins,
                            double xmin, double xmax,
@@ -109,6 +109,8 @@ namespace gr {
 	d_qApplication = qApp;
       }
       else {
+        std::string style = prefs::singleton()->get_string("qtgui", "style", "raster");
+        QApplication::setGraphicsSystem(QString(style.c_str()));
 	d_qApplication = new QApplication(d_argc, &d_argv);
       }
 
@@ -270,8 +272,8 @@ namespace gr {
 	  memset(d_residbufs[i], 0, newsize*sizeof(double));
 	}
 
-	// Set new size and reset buffer index 
-	// (throws away any currently held data, but who cares?) 
+	// Set new size and reset buffer index
+	// (throws away any currently held data, but who cares?)
 	d_size = newsize;
 	d_index = 0;
 

@@ -315,6 +315,7 @@ if __name__ == '__main__':
     tb.Wait()
         #end if
     #elif $generate_options == 'qt_gui'
+    Qt.QApplication.setGraphicsSystem(gr.prefs().get_string('qtgui','style','raster'))
     qapp = Qt.QApplication(sys.argv)
     tb = $(class_name)($(', '.join($params_eq_list)))
     #if $flow_graph.get_option('run')

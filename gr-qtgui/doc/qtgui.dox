@@ -181,4 +181,26 @@ style, markers, etc.), the ability to start and stop the display, the
 ability to save to a file, and other plot-specific controls (FFT size
 for the frequency and waterfall plots, etc.).
 
+\section Configuration
+
+There is currently a single configuration option in the preferences
+files to set the rendering engine of the QTGUI sinks. Located in
+etc/gnuradio/conf.d/gr-qtgui.conf:
+
+\verbatim
+[qtgui]
+style = raster
+\endverbatim
+
+The available styles are:
+
+\li opengl: the fastest but not likely to always work
+\li raster: fast and stable; terrible X forwarding performance
+\li native: most compute intensive; very good over X
+
+We default this setting to raster for the mix of performance and
+usability. When using QTGUI sinks through an X-forwarding session over
+SSH, switch to using 'native' for a significant speed boost on the
+remote end.
+
 */

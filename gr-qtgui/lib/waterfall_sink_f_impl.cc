@@ -26,12 +26,13 @@
 
 #include "waterfall_sink_f_impl.h"
 #include <gnuradio/io_signature.h>
+#include <gnuradio/prefs.h>
 #include <string.h>
 #include <volk/volk.h>
 
 namespace gr {
   namespace qtgui {
-    
+
     waterfall_sink_f::sptr
     waterfall_sink_f::make(int fftsize, int wintype,
 			   double fc, double bw,
@@ -130,6 +131,8 @@ namespace gr {
 	d_qApplication = qApp;
       }
       else {
+        std::string style = prefs::singleton()->get_string("qtgui", "style", "raster");
+        QApplication::setGraphicsSystem(QString(style.c_str()));
 	d_qApplication = new QApplication(d_argc, &d_argv);
       }
 
@@ -326,13 +329,13 @@ namespace gr {
 
       if(d_window.size()) {
 	volk_32fc_32f_multiply_32fc_a(d_fft->get_inbuf(), dst,
-				      &d_window.front(), size);
+                                     &d_window.front(), size);
       }
 
       d_fft->execute();     // compute the fft
 
       volk_32fc_s32f_x2_power_spectral_density_32f_a(data_out, d_fft->get_outbuf(),
-						     size, 1.0, size);
+                                                    size, 1.0, size);
 
       // Perform shift operation
       unsigned int len = (unsigned int)(floor(size/2.0));
@@ -384,8 +387,8 @@ namespace gr {
 	  memset(d_magbufs[i], 0, newfftsize*sizeof(double));
 	}
 
-	// Set new fft size and reset buffer index 
-	// (throws away any currently held data, but who cares?) 
+	// Set new fft size and reset buffer index
+	// (throws away any currently held data, but who cares?)
 	d_fftsize = newfftsize;
 	d_index = 0;
 
@@ -434,7 +437,7 @@ namespace gr {
               }
               //volk_32f_convert_64f_a(d_magbufs[n], d_fbuf, d_fftsize);
             }
-      
+
 	    d_last_time = gr::high_res_timer_now();
 	    d_qApplication->postEvent(d_main_gui,
 				      new WaterfallUpdateEvent(d_magbufs,
