@@ -324,7 +324,8 @@ namespace gr {
     waterfall_sink_c_impl::fft(float *data_out, const gr_complex *data_in, int size)
     {
       if(d_window.size()) {
-	volk_32fc_32f_multiply_32fc_a(d_fft->get_inbuf(), data_in, &d_window.front(), size);
+	volk_32fc_32f_multiply_32fc(d_fft->get_inbuf(), data_in,
+                                    &d_window.front(), size);
       }
       else {
 	memcpy(d_fft->get_inbuf(), data_in, sizeof(gr_complex)*size);
@@ -332,9 +333,8 @@ namespace gr {
 
       d_fft->execute();     // compute the fft
 
-      volk_32fc_s32f_x2_power_spectral_density_32f_a(data_out, d_fft->get_outbuf(),
-                                                    size, 1.0, size);
-
+      volk_32fc_s32f_x2_power_spectral_density_32f(data_out, d_fft->get_outbuf(),
+                                                   size, 1.0, size);
       // Perform shift operation
       unsigned int len = (unsigned int)(floor(size/2.0));
       float *tmp = (float*)malloc(sizeof(float)*len);

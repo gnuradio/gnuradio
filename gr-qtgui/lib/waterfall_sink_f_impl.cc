@@ -328,14 +328,14 @@ namespace gr {
 	dst[i] = data_in[i];
 
       if(d_window.size()) {
-	volk_32fc_32f_multiply_32fc_a(d_fft->get_inbuf(), dst,
-                                     &d_window.front(), size);
+	volk_32fc_32f_multiply_32fc(d_fft->get_inbuf(), dst,
+                                    &d_window.front(), size);
       }
 
       d_fft->execute();     // compute the fft
 
-      volk_32fc_s32f_x2_power_spectral_density_32f_a(data_out, d_fft->get_outbuf(),
-                                                    size, 1.0, size);
+      volk_32fc_s32f_x2_power_spectral_density_32f(data_out, d_fft->get_outbuf(),
+                                                   size, 1.0, size);
 
       // Perform shift operation
       unsigned int len = (unsigned int)(floor(size/2.0));
