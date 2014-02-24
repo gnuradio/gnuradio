@@ -129,7 +129,6 @@ protected:
   PopupMenu *d_samp_rate_act;
   QAction *d_save_act;
 
-  QTimer *d_display_timer;
   double d_update_time;
 };
 
