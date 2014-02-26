@@ -58,6 +58,7 @@ ENDIF()
 
 if(ENABLE_GR_CTRLPORT)
   set(GR_CTRLPORT True)
+  add_definitions(-DGR_CTRLPORT)
 endif(ENABLE_GR_CTRLPORT)
 
 ########################################################################
