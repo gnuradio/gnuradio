@@ -47,7 +47,7 @@ macro(expand_h root)
     string(REGEX REPLACE "X+" ${sig} name ${root})
     list(APPEND expanded_files_h ${CMAKE_CURRENT_BINARY_DIR}/${name}.h)
   endforeach(sig)
-  
+
   #create a command to generate the files
   add_custom_command(
     OUTPUT ${expanded_files_h}
@@ -94,6 +94,7 @@ install(FILES
     dc_blocker_ff.h
     filter_delay_fc.h
     fft_filter_ccc.h
+    fft_filter_ccf.h
     fft_filter_fff.h
     fractional_interpolator_cc.h
     fractional_interpolator_ff.h

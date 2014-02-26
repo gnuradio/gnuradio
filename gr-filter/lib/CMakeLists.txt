@@ -48,7 +48,7 @@ macro(expand_cc root)
     list(APPEND expanded_files_cc ${CMAKE_CURRENT_BINARY_DIR}/${name}.cc)
     list(APPEND expanded_files_h  ${CMAKE_CURRENT_BINARY_DIR}/${name}.h)
   endforeach(sig)
-  
+
   #create a command to generate the source files
   add_custom_command(
     OUTPUT ${expanded_files_cc}
@@ -66,15 +66,15 @@ macro(expand_cc root)
     ${CMAKE_CURRENT_BINARY_DIR}/generate_helper.py
     ${root} ${root}.h.t ${ARGN}
   )
-  
+
   #make source files depends on headers to force generation
   set_source_files_properties(${expanded_files_cc}
     PROPERTIES OBJECT_DEPENDS "${expanded_files_h}"
   )
-  
+
   #install rules for the generated cc files
-  list(APPEND generated_sources ${expanded_files_cc})  
-  list(APPEND generated_headers ${expanded_files_h})  
+  list(APPEND generated_sources ${expanded_files_cc})
+  list(APPEND generated_headers ${expanded_files_h})
 endmacro(expand_cc)
 
 ########################################################################
@@ -128,6 +128,7 @@ list(APPEND filter_sources
   dc_blocker_ff_impl.cc
   filter_delay_fc_impl.cc
   fft_filter_ccc_impl.cc
+  fft_filter_ccf_impl.cc
   fft_filter_fff_impl.cc
   fractional_interpolator_cc_impl.cc
   fractional_interpolator_ff_impl.cc
