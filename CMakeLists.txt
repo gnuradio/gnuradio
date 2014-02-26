@@ -325,7 +325,7 @@ configure_file(
   ${CMAKE_BINARY_DIR}/cmake/Modules/GnuradioConfigVersion.cmake
 @ONLY)
 
-SET(cmake_configs 
+SET(cmake_configs
   ${CMAKE_SOURCE_DIR}/cmake/Modules/GnuradioConfig.cmake
   ${CMAKE_BINARY_DIR}/cmake/Modules/GnuradioConfigVersion.cmake
 )
@@ -360,13 +360,13 @@ message(STATUS "Building for version: ${VERSION} / ${LIBVER}")
 # Create a config.h with some definitions to export to other projects.
 CONFIGURE_FILE(
   ${CMAKE_CURRENT_SOURCE_DIR}/config.h.in
-  ${CMAKE_CURRENT_BINARY_DIR}/config.h
+  ${CMAKE_CURRENT_BINARY_DIR}/gnuradio-runtime/include/gnuradio/config.h
 )
 
 # Install config.h in include/gnuradio
 install(
     FILES
-    ${CMAKE_CURRENT_BINARY_DIR}/config.h
+    ${CMAKE_CURRENT_BINARY_DIR}/gnuradio-runtime/include/gnuradio/config.h
     DESTINATION ${GR_INCLUDE_DIR}/gnuradio
     COMPONENT "runtime_devel"
 )
