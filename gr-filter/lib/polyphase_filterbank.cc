@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2012 Free Software Foundation, Inc.
+ * Copyright 2012,2014 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -32,29 +32,33 @@ namespace gr {
     namespace kernel {
 
       polyphase_filterbank::polyphase_filterbank(unsigned int nfilts,
-						 const std::vector<float> &taps)
+						 const std::vector<float> &taps,
+                                                 bool fft_forward)
 	: d_nfilts(nfilts)
     {
-      d_filters = std::vector<kernel::fir_filter_ccf*>(d_nfilts);
+      d_fir_filters = std::vector<kernel::fir_filter_ccf*>(d_nfilts);
+      d_fft_filters = std::vector<kernel::fft_filter_ccf*>(d_nfilts);
 
       // Create an FIR filter for each channel and zero out the taps
-      std::vector<float> vtaps(0, d_nfilts);
+      std::vector<float> vtaps(1, 0.0f);
       for(unsigned int i = 0; i < d_nfilts; i++) {
-	d_filters[i] = new kernel::fir_filter_ccf(1, vtaps);
+	d_fir_filters[i] = new kernel::fir_filter_ccf(1, vtaps);
+        d_fft_filters[i] = new kernel::fft_filter_ccf(1, vtaps);
       }
 
       // Now, actually set the filters' taps
       set_taps(taps);
 
       // Create the FFT to handle the output de-spinning of the channels
-      d_fft = new fft::fft_complex(d_nfilts, false);
+      d_fft = new fft::fft_complex(d_nfilts, fft_forward);
     }
 
     polyphase_filterbank::~polyphase_filterbank()
     {
       delete d_fft;
       for(unsigned int i = 0; i < d_nfilts; i++) {
-	delete d_filters[i];
+        delete d_fir_filters[i];
+        delete d_fft_filters[i];
       }
     }
 
@@ -62,7 +66,6 @@ namespace gr {
     polyphase_filterbank::set_taps(const std::vector<float> &taps)
     {
       unsigned int i,j;
-
       unsigned int ntaps = taps.size();
       d_taps_per_filter = (unsigned int)ceil((double)ntaps/(double)d_nfilts);
 
@@ -71,14 +74,11 @@ namespace gr {
 
       // Make a vector of the taps plus fill it out with 0's to fill
       // each polyphase filter with exactly d_taps_per_filter
-      std::vector<float> tmp_taps;
-      tmp_taps = taps;
+      std::vector<float> tmp_taps = taps;
       while((float)(tmp_taps.size()) < d_nfilts*d_taps_per_filter) {
-	tmp_taps.push_back(0.0);
+        tmp_taps.push_back(0.0);
       }
 
-      // Reverse taps here; set_taps in filter will then re-reverse,
-      // but order them propely, anyways.
       std::reverse(tmp_taps.begin(), tmp_taps.end());
 
       // Partition the filter
@@ -89,8 +89,9 @@ namespace gr {
 	  d_taps[i][j] = tmp_taps[i + j*d_nfilts];
 	}
 
-	// Build a filter for each channel and add it's taps to it
-	d_filters[i]->set_taps(d_taps[i]);
+	// Set the filter taps for each channel
+	d_fir_filters[i]->set_taps(d_taps[i]);
+	d_fft_filters[i]->set_taps(d_taps[i]);
       }
     }
 

@@ -77,7 +77,11 @@ class channelizer_ccf(gr.hier_block2):
     def set_channel_map(self, newmap):
         self.pfb.set_channel_map(newmap)
 
+    def set_taps(self, taps):
+        self.pfb.set_taps(taps)
 
+    def taps(self):
+        return self.pfb.taps()
 
 class interpolator_ccf(gr.hier_block2):
     '''
@@ -122,6 +126,8 @@ class interpolator_ccf(gr.hier_block2):
         self.connect(self, self.pfb)
         self.connect(self.pfb, self)
 
+    def set_taps(self, taps):
+        self.pfb.set_taps(taps)
 
 class decimator_ccf(gr.hier_block2):
     '''
@@ -130,7 +136,8 @@ class decimator_ccf(gr.hier_block2):
     This simplifies the interface by allowing a single input stream to connect to this block.
     It will then output a stream that is the decimated output stream.
     '''
-    def __init__(self, decim, taps=None, channel=0, atten=100):
+    def __init__(self, decim, taps=None, channel=0, atten=100,
+                 use_fft_rotators=True, use_fft_filters=True):
 	gr.hier_block2.__init__(self, "pfb_decimator_ccf",
 				gr.io_signature(1, 1, gr.sizeof_gr_complex),
 				gr.io_signature(1, 1, gr.sizeof_gr_complex))
@@ -160,7 +167,8 @@ class decimator_ccf(gr.hier_block2):
                         raise RuntimeError("optfir could not generate an appropriate filter.")
 
         self.s2ss = blocks.stream_to_streams(gr.sizeof_gr_complex, self._decim)
-        self.pfb = filter.pfb_decimator_ccf(self._decim, self._taps, self._channel)
+        self.pfb = filter.pfb_decimator_ccf(self._decim, self._taps, self._channel,
+                                            use_fft_rotators, use_fft_filters)
 
         self.connect(self, self.s2ss)
 
