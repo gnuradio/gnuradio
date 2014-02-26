@@ -39,8 +39,8 @@ namespace gr {
 
     null_sink_impl::null_sink_impl(size_t sizeof_stream_item)
       : sync_block("null_sink",
-                      io_signature::make(1, 1, sizeof_stream_item),
-                      io_signature::make(0, 0, 0))
+                   io_signature::make(1, -1, sizeof_stream_item),
+                   io_signature::make(0, 0, 0))
     {
     }
 
