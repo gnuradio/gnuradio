@@ -29,6 +29,7 @@
 #include <gnuradio/block_detail.h>
 #include <gnuradio/buffer.h>
 #include <gnuradio/prefs.h>
+#include <gnuradio/config.h>
 #include <stdexcept>
 #include <iostream>
 
@@ -736,7 +737,7 @@ namespace gr {
   block::setup_pc_rpc()
   {
     d_pc_rpc_set = true;
-#ifdef GR_CTRLPORT
+#if defined(GR_CTRLPORT) && defined(GR_PERFORMANCE_COUNTERS)
     d_rpc_vars.push_back(
       rpcbasic_sptr(new rpcbasic_register_get<block, float>(
         alias(), "noutput_items", &block::pc_noutput_items,
@@ -848,7 +849,7 @@ namespace gr {
         pmt::make_c32vector(0,0), pmt::make_c32vector(0,1), pmt::make_c32vector(0,0),
         "", "Var. of how full output buffers are", RPC_PRIVLVL_MIN,
         DISPTIME | DISPOPTSTRIP)));
-#endif /* GR_CTRLPORT */
+#endif /* defined(GR_CTRLPORT) && defined(GR_PERFORMANCE_COUNTERS) */
   }
 
   std::ostream&
