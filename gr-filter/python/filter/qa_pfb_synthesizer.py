@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2012,2013 Free Software Foundation, Inc.
+# Copyright 2012-2014 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -62,7 +62,14 @@ class test_pfb_synthesizer(gr_unittest.TestCase):
 
         self.tb.connect(pfb, snk)
 
-        self.tb.run() 
+        self.tb.run()
+
+        # Adjusted phase rotations for data
+        p0 = 0
+        p1 = 2*math.pi*1.0/M
+        p2 = 2*math.pi*2.0/M
+        p3 = 2*math.pi*3.0/M
+        p4 = 2*math.pi*4.0/M
 
         Ntest = 1000
         L = len(snk.data())
@@ -73,20 +80,19 @@ class test_pfb_synthesizer(gr_unittest.TestCase):
         freqs = [-2200, -1100, 0, 1100, 2200]
         expected_data = len(t)*[0,]
         for i in xrange(len(t)):
-            expected_data[i] = math.cos(2.*math.pi*freqs[0]*t[i]) + \
-                            1j*math.sin(2.*math.pi*freqs[0]*t[i]) + \
-                               math.cos(2.*math.pi*freqs[1]*t[i]) + \
-                            1j*math.sin(2.*math.pi*freqs[1]*t[i]) + \
-                               math.cos(2.*math.pi*freqs[2]*t[i]) + \
-                            1j*math.sin(2.*math.pi*freqs[2]*t[i]) + \
-                               math.cos(2.*math.pi*freqs[3]*t[i]) + \
-                            1j*math.sin(2.*math.pi*freqs[3]*t[i]) + \
-                               math.cos(2.*math.pi*freqs[4]*t[i]) + \
-                            1j*math.sin(2.*math.pi*freqs[4]*t[i])
+            expected_data[i] = math.cos(2.*math.pi*freqs[0]*t[i] + p3) + \
+                            1j*math.sin(2.*math.pi*freqs[0]*t[i] + p3) + \
+                               math.cos(2.*math.pi*freqs[1]*t[i] + p4) + \
+                            1j*math.sin(2.*math.pi*freqs[1]*t[i] + p4) + \
+                               math.cos(2.*math.pi*freqs[2]*t[i] + p0) + \
+                            1j*math.sin(2.*math.pi*freqs[2]*t[i] + p0) + \
+                               math.cos(2.*math.pi*freqs[3]*t[i] + p1) + \
+                            1j*math.sin(2.*math.pi*freqs[3]*t[i] + p1) + \
+                               math.cos(2.*math.pi*freqs[4]*t[i] + p2) + \
+                            1j*math.sin(2.*math.pi*freqs[4]*t[i] + p2)
         dst_data = snk.data()
 
-        offset = 25
-        self.assertComplexTuplesAlmostEqual(expected_data[2000-offset:2000-offset+Ntest],
+        self.assertComplexTuplesAlmostEqual(expected_data[2000:2000+Ntest],
                                             dst_data[2000:2000+Ntest], 4)
 
 if __name__ == '__main__':

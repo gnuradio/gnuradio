@@ -79,8 +79,6 @@ namespace gr {
         tmp_taps.push_back(0.0);
       }
 
-      std::reverse(tmp_taps.begin(), tmp_taps.end());
-
       // Partition the filter
       for(i = 0; i < d_nfilts; i++) {
 	// Each channel uses all d_taps_per_filter with 0's if not enough taps to fill out

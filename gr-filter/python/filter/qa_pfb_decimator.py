@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2012,2013 Free Software Foundation, Inc.
+# Copyright 2012-2014 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -61,8 +61,13 @@ def run_test(tb, channel, fft_rotate, fft_filter):
 
         L = len(snk.data())
 
-        # Each channel is rotated by 2pi/M
-        phase = -2*math.pi * channel / M
+        # Adjusted phase rotations for data
+        phase = [ 0.11058476216852586,
+                  4.5108246571401693,
+                  3.9739891674564594,
+                  2.2820531095511924,
+                  1.3782797467397869]
+        phase = phase[channel]
 
         # Filter delay is the normal delay of each arm
         tpf = math.ceil(len(taps) / float(M))
