@@ -29,6 +29,8 @@
 #include <gnuradio/flowgraph.h>
 #include "hier_block2_detail.h"
 #include <iostream>
+#include <stdio.h>
+#include <gnuradio/flowgraph.h>
 
 namespace gr {
 
@@ -159,6 +161,35 @@ namespace gr {
   }
 
   void
+  hier_block2::flatten_dot(flat_flowgraph_sptr new_ffg, std::stringstream *dot_out) const
+  {
+    d_detail->flatten_aux(new_ffg, dot_out);
+  }
+
+  std::string
+  dot_graph(hier_block2_sptr hierblock2)
+  {
+    flat_flowgraph_sptr new_ffg = make_flat_flowgraph();
+    std::stringstream dot_out;
+    // write dot-graph string
+    dot_out << "digraph flowgraph {" << std::endl;
+    // flatten flowgraph, recursively writes strings of edges/nodes
+    hierblock2->flatten_dot(new_ffg, &dot_out);
+    // Define edges
+    edge_vector_t edges = new_ffg->edges();
+    for (edge_viter_t edge = edges.begin(); edge != edges.end(); ++edge) {
+      // write dot-graph string
+      dot_out << edge->src().block()->unique_id()
+        << " -> "
+        << edge->dst().block()->unique_id()
+        << std::endl;
+    }
+    dot_out << "}";
+
+    return dot_out.str();
+  }
+
+  void
   hier_block2::set_processor_affinity(const std::vector<int> &mask)
   {
     d_detail->set_processor_affinity(mask);
@@ -174,12 +205,6 @@ namespace gr {
   hier_block2::processor_affinity()
   {
     return d_detail->processor_affinity();
-  }
-
-  std::string
-  dot_graph(hier_block2_sptr hierblock2)
-  {
-    return dot_graph_fg(hierblock2->flatten());
   }
 
 } /* namespace gr */

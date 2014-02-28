@@ -500,10 +500,17 @@ namespace gr {
   }
 
   void
-  hier_block2_detail::flatten_aux(flat_flowgraph_sptr sfg) const
+  hier_block2_detail::flatten_aux(flat_flowgraph_sptr sfg, std::stringstream *dot_out/* = NULL*/) const
   {
     if(HIER_BLOCK2_DETAIL_DEBUG)
       std::cout << " ** Flattening " << d_owner->name() << std::endl;
+
+    // write dot-graph string
+    if (dot_out != NULL) {
+      *dot_out << "subgraph cluster" << (d_owner)->unique_id()
+        << "{ label=\""
+        << d_owner->name() << "\"" << std::endl;
+    }
 
     // Add my edges to the flow graph, resolving references to actual endpoints
     edge_vector_t edges = d_fg->edges();
@@ -655,8 +662,20 @@ namespace gr {
         if(HIER_BLOCK2_DETAIL_DEBUG)
           std::cout << "flatten_aux: recursing into hierarchical block "
                     << hier_block2 << std::endl;
-        hier_block2->d_detail->flatten_aux(sfg);
+        hier_block2->d_detail->flatten_aux(sfg,dot_out);
       }
+      else{
+        // write dot-graph string
+        if (dot_out != NULL) {
+          *dot_out <<  (*p)->unique_id() 
+            << " [ label=\"" << (*p)->name() << "\" ]"
+            << std::endl;
+        }
+      }
+    }
+    // write dot-graph string
+    if (dot_out != NULL) {
+      *dot_out << "}" << std::endl;
     }
   }
 
