@@ -65,6 +65,18 @@ def reference_filter_fff(dec, taps, input):
     tb.run()
     return dst.data()
 
+def reference_filter_ccf(dec, taps, input):
+    """
+    compute result using conventional fir filter
+    """
+    tb = gr.top_block()
+    src = blocks.vector_source_c(input)
+    op = filter.fir_filter_ccf(dec, taps)
+    dst = blocks.vector_sink_c()
+    tb.connect(src, op, dst)
+    tb.run()
+    return dst.data()
+
 
 def print_complex(x):
     for i in x:
@@ -194,6 +206,125 @@ class test_fft_filter(gr_unittest.TestCase):
             ntaps = int(random.uniform(2, 100))
             taps = make_random_complex_tuple(ntaps)
             expected_result = reference_filter_ccc(dec, taps, src_data)
+
+            src = blocks.vector_source_c(src_data)
+            op = filter.fft_filter_ccc(dec, taps, nthreads)
+            dst = blocks.vector_sink_c()
+            tb = gr.top_block()
+	    tb.connect(src, op, dst)
+            tb.run()
+            del tb
+	    result_data = dst.data()
+
+            self.assert_fft_ok2(expected_result, result_data)
+
+    # ----------------------------------------------------------------
+    # test _ccf version
+    # ----------------------------------------------------------------
+
+    def test_ccf_001(self):
+	tb = gr.top_block()
+        src_data = (0,1,2,3,4,5,6,7)
+        taps = (1,)
+        expected_result = tuple([complex(x) for x in (0,1,2,3,4,5,6,7)])
+        src = blocks.vector_source_c(src_data)
+        op =  filter.fft_filter_ccf(1, taps)
+        dst = blocks.vector_sink_c()
+        tb.connect(src, op, dst)
+        tb.run()
+        result_data = dst.data()
+        #print 'expected:', expected_result
+        #print 'results: ', result_data
+        self.assertComplexTuplesAlmostEqual (expected_result, result_data, 5)
+
+
+    def test_ccf_002(self):
+        # Test nthreads
+	tb = gr.top_block()
+        src_data = (0,1,2,3,4,5,6,7)
+        taps = (2,)
+        nthreads = 2
+        expected_result = tuple([2 * complex(x) for x in (0,1,2,3,4,5,6,7)])
+        src = blocks.vector_source_c(src_data)
+        op = filter.fft_filter_ccf(1, taps, nthreads)
+        dst = blocks.vector_sink_c()
+        tb.connect(src, op, dst)
+        tb.run()
+        result_data = dst.data()
+        #print 'expected:', expected_result
+        #print 'results: ', result_data
+        self.assertComplexTuplesAlmostEqual (expected_result, result_data, 5)
+
+    def test_ccf_003(self):
+	tb = gr.top_block()
+        src_data = (0,1,2,3,4,5,6,7)
+        taps = (2,)
+        expected_result = tuple([2 * complex(x) for x in (0,1,2,3,4,5,6,7)])
+        src = blocks.vector_source_c(src_data)
+        op = filter.fft_filter_ccf(1, taps)
+        dst = blocks.vector_sink_c()
+        tb.connect(src, op, dst)
+        tb.run()
+        result_data = dst.data()
+        #print 'expected:', expected_result
+        #print 'results: ', result_data
+        self.assertComplexTuplesAlmostEqual (expected_result, result_data, 5)
+
+
+    def test_ccf_004(self):
+        random.seed(0)
+        for i in xrange(25):
+            # sys.stderr.write("\n>>> Loop = %d\n" % (i,))
+            src_len = 4*1024
+            src_data = make_random_complex_tuple(src_len)
+            ntaps = int(random.uniform(2, 1000))
+            taps = make_random_float_tuple(ntaps)
+            expected_result = reference_filter_ccf(1, taps, src_data)
+
+            src = blocks.vector_source_c(src_data)
+            op = filter.fft_filter_ccf(1, taps)
+            dst = blocks.vector_sink_c()
+	    tb = gr.top_block()
+            tb.connect(src, op, dst)
+            tb.run()
+            result_data = dst.data()
+	    del tb
+            self.assert_fft_ok2(expected_result, result_data)
+
+    def test_ccf_005(self):
+        random.seed(0)
+        for i in xrange(25):
+            # sys.stderr.write("\n>>> Loop = %d\n" % (i,))
+            dec = i + 1
+            src_len = 4*1024
+            src_data = make_random_complex_tuple(src_len)
+            ntaps = int(random.uniform(2, 100))
+            taps = make_random_float_tuple(ntaps)
+            expected_result = reference_filter_ccf(dec, taps, src_data)
+
+            src = blocks.vector_source_c(src_data)
+            op = filter.fft_filter_ccf(dec, taps)
+            dst = blocks.vector_sink_c()
+            tb = gr.top_block()
+	    tb.connect(src, op, dst)
+            tb.run()
+            del tb
+	    result_data = dst.data()
+
+            self.assert_fft_ok2(expected_result, result_data)
+
+    def test_ccf_006(self):
+        # Test decimating with nthreads=2
+        random.seed(0)
+        nthreads = 2
+        for i in xrange(25):
+            # sys.stderr.write("\n>>> Loop = %d\n" % (i,))
+            dec = i + 1
+            src_len = 4*1024
+            src_data = make_random_complex_tuple(src_len)
+            ntaps = int(random.uniform(2, 100))
+            taps = make_random_float_tuple(ntaps)
+            expected_result = reference_filter_ccf(dec, taps, src_data)
 
             src = blocks.vector_source_c(src_data)
             op = filter.fft_filter_ccc(dec, taps, nthreads)

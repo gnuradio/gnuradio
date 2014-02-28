@@ -101,8 +101,14 @@ namespace gr {
      *    <B><EM>f. harris, "Multirate Signal Processing for Communication
      *       Systems," Upper Saddle River, NJ: Prentice Hall, Inc. 2004.</EM></B>
      *
+     * When dealing with oversampling, the above book is still a good
+     * reference along with this paper:
+     *
+     *    <B><EM>E. Venosa, X. Chen, and fred harris, “Polyphase analysis
+     *       filter bank down-converts unequal channel bandwidths with
+     *       arbitrary center frequencies - design I,” in SDR’10-WinnComm,
+     *       2010.</EM></B>
      */
-    
     class FILTER_API pfb_channelizer_ccf : virtual public block
     {
     public:
@@ -151,7 +157,7 @@ namespace gr {
        * Print all of the filterbank taps to screen.
        */
       virtual void print_taps() = 0;
-      
+
       /*!
        * Return a vector<vector<>> of the filterbank taps
        */
@@ -189,7 +195,7 @@ namespace gr {
        * the map is [0...M-1] with M = N.
        */
       virtual void set_channel_map(const std::vector<int> &map) = 0;
-      
+
       /*!
        * Gets the current channel map.
        */

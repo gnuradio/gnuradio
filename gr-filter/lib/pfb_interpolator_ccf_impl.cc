@@ -29,7 +29,7 @@
 
 namespace gr {
   namespace filter {
-    
+
     pfb_interpolator_ccf::sptr
     pfb_interpolator_ccf::make(unsigned int interp,
 			       const std::vector<float> &taps)
@@ -94,7 +94,7 @@ namespace gr {
 
       while(i < noutput_items) {
 	for(unsigned int j = 0; j < d_rate; j++) {
-	  out[i] = d_filters[j]->filter(&in[count]);
+	  out[i] = d_fir_filters[j]->filter(&in[count]);
 	  i++;
 	}
 	count++;

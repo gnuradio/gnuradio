@@ -72,7 +72,7 @@ def main():
 
     src = blocks.vector_source_b(data.astype(scipy.uint8).tolist(), False)
     mod = digital.bpsk_mod(samples_per_symbol=2)
-    chan = filter.channel_model(npwr)
+    chan = channels.channel_model(npwr)
     rrc = filter.fft_filter_ccc(1, rrc_taps)
 
     # Split it up into pieces
@@ -122,7 +122,7 @@ def main():
     s12.set_title("Original Signal in Time")
 
     start = 1
-    skip  = 4
+    skip  = 2
     s13 = f1.add_subplot(2,2,3)
     s13.plot(sin.real[start::skip], sin.imag[start::skip], "o")
     s13.set_title("Constellation")
@@ -153,7 +153,7 @@ def main():
     s32.plot(sout.imag[1000:1500], "o-r")
     s32.set_title("Reconstructed Signal in Time")
 
-    start = 2
+    start = 0
     skip  = 4
     s33 = f3.add_subplot(2,2,3)
     s33.plot(sout.real[start::skip], sout.imag[start::skip], "o")

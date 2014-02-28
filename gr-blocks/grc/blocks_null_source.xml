@@ -45,10 +45,26 @@
 		<value>1</value>
 		<type>int</type>
 	</param>
+	<param>
+		<name>Num Outputs</name>
+		<key>num_outputs</key>
+		<value>1</value>
+		<type>int</type>
+	</param>
+	<param>
+		<name>Bus Connections</name>
+		<key>bus_conns</key>
+                <value>[[0,],]</value>
+		<type>raw</type>
+                <hide>part</hide>
+	</param>
+	<check>$num_outputs &gt;= 1</check>
 	<check>$vlen &gt; 0</check>
 	<source>
 		<name>out</name>
 		<type>$type</type>
 		<vlen>$vlen</vlen>
+		<nports>$num_outputs</nports>
 	</source>
+        <bus_structure_source>$bus_conns</bus_structure_source>
 </block>

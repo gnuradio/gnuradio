@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2009,2010,2012 Free Software Foundation, Inc.
+ * Copyright 2009,2010,2012,2014 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -26,34 +26,53 @@
 
 #include "pfb_decimator_ccf_impl.h"
 #include <gnuradio/io_signature.h>
+#include <gnuradio/expj.h>
+#include <volk/volk.h>
 
 namespace gr {
   namespace filter {
-    
+
     pfb_decimator_ccf::sptr
     pfb_decimator_ccf::make(unsigned int decim,
 			    const std::vector<float> &taps,
-			    unsigned int channel)
+			    unsigned int channel,
+                            bool use_fft_rotator,
+                            bool use_fft_filters)
     {
       return gnuradio::get_initial_sptr
-	(new pfb_decimator_ccf_impl(decim, taps, channel));
+	(new pfb_decimator_ccf_impl(decim, taps, channel,
+                                    use_fft_rotator,
+                                    use_fft_filters));
     }
-
 
     pfb_decimator_ccf_impl::pfb_decimator_ccf_impl(unsigned int decim,
 						   const std::vector<float> &taps,
-						   unsigned int channel)
+						   unsigned int channel,
+                                                   bool use_fft_rotator,
+                                                   bool use_fft_filters)
       : sync_block("pfb_decimator_ccf",
-		      io_signature::make(decim, decim, sizeof(gr_complex)),
-		      io_signature::make(1, 1, sizeof(gr_complex))),
+                   io_signature::make(decim, decim, sizeof(gr_complex)),
+                   io_signature::make(1, 1, sizeof(gr_complex))),
 	polyphase_filterbank(decim, taps),
-	d_updated(false), d_chan(channel)
+	d_updated(false), d_chan(channel),
+        d_use_fft_rotator(use_fft_rotator),
+        d_use_fft_filters(use_fft_filters)
     {
       d_rate = decim;
       d_rotator = new gr_complex[d_rate];
+      for(unsigned int i = 0; i < d_rate; i++) {
+        d_rotator[i] = gr_expj(i*d_chan*2*M_PI/d_rate);
+      }
 
       set_relative_rate(1.0/(float)decim);
-      set_history(d_taps_per_filter);
+
+      if(d_use_fft_filters) {
+        set_history(1);
+        set_output_multiple(d_fft_filters[0]->filtersize() - d_fft_filters[0]->ntaps() + 1);
+      }
+      else {
+        set_history(d_taps_per_filter);
+      }
     }
 
     pfb_decimator_ccf_impl::~pfb_decimator_ccf_impl()
@@ -90,8 +109,6 @@ namespace gr {
         d_chan = chan;
     }
 
-#define ROTATEFFT
-
     int
     pfb_decimator_ccf_impl::work(int noutput_items,
 				 gr_vector_const_void_star &input_items,
@@ -99,47 +116,145 @@ namespace gr {
     {
       gr::thread::scoped_lock guard(d_mutex);
 
-      gr_complex *in;
-      gr_complex *out = (gr_complex *)output_items[0];
-
       if(d_updated) {
 	d_updated = false;
 	return 0;		     // history requirements may have changed.
       }
+
+      if(d_use_fft_rotator) {
+        if(d_use_fft_filters) {
+          return work_fft_fft(noutput_items, input_items, output_items);
+        }
+        else {
+          return work_fir_fft(noutput_items, input_items, output_items);
+        }
+      }
+      else {
+        if(d_use_fft_filters) {
+          return work_fft_exp(noutput_items, input_items, output_items);
+        }
+        else {
+          return work_fir_exp(noutput_items, input_items, output_items);
+        }
+      }
+    }
+
+    int
+    pfb_decimator_ccf_impl::work_fir_exp(int noutput_items,
+                                         gr_vector_const_void_star &input_items,
+                                         gr_vector_void_star &output_items)
+    {
+      gr_complex *in;
+      gr_complex *out = (gr_complex *)output_items[0];
 
       int i;
       for(i = 0; i < noutput_items; i++) {
 	// Move through filters from bottom to top
 	out[i] = 0;
 	for(int j = d_rate-1; j >= 0; j--) {
-	  // Take in the items from the first input stream to d_rate
+	  // Take items from M-1 to 0; filter and rotate
 	  in = (gr_complex*)input_items[d_rate - 1 - j];
-
-	  // Filter current input stream from bottom filter to top
-	  // The rotate them by expj(j*k*2pi/M) where M is the number of filters
-	  // (the decimation rate) and k is the channel number to extract
-
-	  // This is the real math that goes on; we abuse the FFT to do this quickly
-	  // for decimation rates > N where N is a small number (~5):
-	  //       out[i] += d_filters[j]->filter(&in[i])*gr_expj(j*d_chan*2*M_PI/d_rate);
-#ifdef ROTATEFFT
-	  d_fft->get_inbuf()[j] = d_filters[j]->filter(&in[i]);
-#else
-	  out[i] += d_filters[j]->filter(&in[i])*d_rotator[i];
-#endif
+          out[i] += d_fir_filters[j]->filter(&in[i])*d_rotator[j];
 	}
-
-#ifdef ROTATEFFT
-	// Perform the FFT to do the complex multiply despinning for all channels
-	d_fft->execute();
-
-	// Select only the desired channel out
-	out[i] = d_fft->get_outbuf()[d_chan];
-#endif
       }
 
       return noutput_items;
     }
+
+    int
+    pfb_decimator_ccf_impl::work_fir_fft(int noutput_items,
+                                         gr_vector_const_void_star &input_items,
+                                         gr_vector_void_star &output_items)
+    {
+      gr_complex *in;
+      gr_complex *out = (gr_complex *)output_items[0];
+
+      int i;
+      for(i = 0; i < noutput_items; i++) {
+	// Move through filters from bottom to top
+	out[i] = 0;
+	for(unsigned int j = 0; j < d_rate; j++) {
+	  // Take in the items from the first input stream to d_rate
+	  in = (gr_complex*)input_items[d_rate-1-j];
+          d_fft->get_inbuf()[j] = d_fir_filters[j]->filter(&in[i]);
+	}
+
+        // Perform the FFT to do the complex multiply despinning for all channels
+        d_fft->execute();
+
+        // Select only the desired channel out
+        out[i] = d_fft->get_outbuf()[d_chan];
+      }
+
+      return noutput_items;
+    }
+
+    int
+    pfb_decimator_ccf_impl::work_fft_exp(int noutput_items,
+                                         gr_vector_const_void_star &input_items,
+                                         gr_vector_void_star &output_items)
+    {
+      gr_complex *in;
+      gr_complex *out = (gr_complex *)output_items[0];
+
+      int i;
+      gr_complex *tmp = fft::malloc_complex(noutput_items*d_rate);
+
+      // Filter each input stream by the FFT filters; do all
+      // noutput_items at once to avoid repeated calls to the FFT
+      // setup and operation.
+      for(unsigned int j = 0; j < d_rate; j++) {
+        in = (gr_complex*)input_items[d_rate-j-1];
+        d_fft_filters[j]->filter(noutput_items, in, &(tmp[j*noutput_items]));
+      }
+
+      // Rotate and add filter outputs (k=channel number; M=number of
+      // channels; and x[j] is the output of filter j.
+      //   y[i] = \sum_{j=0}{M-1} (x[j][i]*exp(2j \pi j k / M))
+      for(i = 0; i < noutput_items; i++) {
+        out[i] = 0;
+        for(unsigned int j = 0; j < d_rate; j++) {
+          out[i] += tmp[j*noutput_items+i]*d_rotator[j];
+        }
+      }
+
+      return noutput_items;
+    }
+
+    int
+    pfb_decimator_ccf_impl::work_fft_fft(int noutput_items,
+                                         gr_vector_const_void_star &input_items,
+                                         gr_vector_void_star &output_items)
+    {
+      gr_complex *in;
+      gr_complex *out = (gr_complex *)output_items[0];
+
+      int i;
+      gr_complex *tmp = fft::malloc_complex(noutput_items*d_rate);
+
+      for(unsigned int j = 0; j < d_rate; j++) {
+        in = (gr_complex*)input_items[d_rate-j-1];
+        d_fft_filters[j]->filter(noutput_items, in, &tmp[j*noutput_items]);
+      }
+
+      // Performs the rotate and add operations by implementing it as
+      // an FFT.
+      for(i = 0; i < noutput_items; i++) {
+        for(unsigned int j = 0; j < d_rate; j++) {
+          d_fft->get_inbuf()[j] = tmp[j*noutput_items + i];
+        }
+
+        // Perform the FFT to do the complex multiply despinning for all channels
+        d_fft->execute();
+
+        // Select only the desired channel out
+        out[i] = d_fft->get_outbuf()[d_chan];
+      }
+
+      fft::free(tmp);
+      return noutput_items;
+    }
+
 
   } /* namespace filter */
 } /* namespace gr */
