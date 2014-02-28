@@ -265,7 +265,6 @@ namespace gr {
     return os;
   }
 
-  std::string dot_graph_fg (flowgraph_sptr fg);
 
 } /* namespace gr */
 

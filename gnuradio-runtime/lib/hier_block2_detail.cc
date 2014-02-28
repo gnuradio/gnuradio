@@ -709,4 +709,179 @@ namespace gr {
     return tmp[0]->processor_affinity();
   }
 
+
+void
+  hier_block2_detail::flatten_aux(flat_flowgraph_sptr sfg, std::stringstream &out) const
+  {
+    if(HIER_BLOCK2_DETAIL_DEBUG)
+      std::cout << " ** Flattening " << d_owner->name() << std::endl;
+
+    // write dot-graph string
+    out << "subgraph cluster" << (d_owner)->unique_id()
+        << "{ label=\""
+        << d_owner->name() << "\"" << std::endl;
+
+    // Add my edges to the flow graph, resolving references to actual endpoints
+    edge_vector_t edges = d_fg->edges();
+    msg_edge_vector_t msg_edges = d_fg->msg_edges();
+    edge_viter_t p;
+    msg_edge_viter_t q,u;
+
+    // Only run setup_rpc if ControlPort config param is enabled.
+    bool ctrlport_on = prefs::singleton()->get_bool("ControlPort", "on", false);
+
+    // For every block (gr::block and gr::hier_block2), set up the RPC
+    // interface.
+    for(p = edges.begin(); p != edges.end(); p++) {
+      basic_block_sptr b;
+      b = p->src().block();
+
+      if(ctrlport_on) {
+        if(!b->is_rpc_set()) {
+          b->setup_rpc();
+          b->rpc_set();
+        }
+      }
+
+      b = p->dst().block();
+      if(ctrlport_on) {
+        if(!b->is_rpc_set()) {
+          b->setup_rpc();
+          b->rpc_set();
+        }
+      }
+    }
+
+    if(HIER_BLOCK2_DETAIL_DEBUG)
+      std::cout << "Flattening stream connections: " << std::endl;
+
+    for(p = edges.begin(); p != edges.end(); p++) {
+      if(HIER_BLOCK2_DETAIL_DEBUG)
+        std::cout << "Flattening edge " << (*p) << std::endl;
+
+      endpoint_vector_t src_endps = resolve_endpoint(p->src(), false);
+      endpoint_vector_t dst_endps = resolve_endpoint(p->dst(), true);
+
+      endpoint_viter_t s, d;
+      for(s = src_endps.begin(); s != src_endps.end(); s++) {
+        for(d = dst_endps.begin(); d != dst_endps.end(); d++) {
+          if(HIER_BLOCK2_DETAIL_DEBUG)
+            std::cout << (*s) << "->" << (*d) << std::endl;
+          sfg->connect(*s, *d);
+        }
+      }
+    }
+
+    // loop through flattening hierarchical connections
+    if(HIER_BLOCK2_DETAIL_DEBUG)
+      std::cout << "Flattening msg connections: " << std::endl;
+
+    std::vector<std::pair<msg_endpoint, bool> > resolved_endpoints;
+    for(q = msg_edges.begin(); q != msg_edges.end(); q++) {
+      if(HIER_BLOCK2_DETAIL_DEBUG)
+        std::cout << boost::format(" flattening edge ( %s, %s, %d) -> ( %s, %s, %d)\n") % \
+          q->src().block() % q->src().port() % q->src().is_hier() % q->dst().block() % \
+          q->dst().port() % q->dst().is_hier();
+
+      bool normal_connection = true;
+
+      // resolve existing connections to hier ports
+      if(q->dst().is_hier()) {
+        if(HIER_BLOCK2_DETAIL_DEBUG)
+          std::cout << boost::format("  resolve hier output (%s, %s)") % \
+            q->dst().block() % q->dst().port() << std::endl;
+        sfg->replace_endpoint( q->dst(), q->src(), true );
+        resolved_endpoints.push_back(std::pair<msg_endpoint, bool>(q->dst(),true));
+        normal_connection = false;
+      }
+
+      if(q->src().is_hier()) {
+        if(HIER_BLOCK2_DETAIL_DEBUG)
+          std::cout << boost::format("  resolve hier input (%s, %s)") % \
+            q->src().block() % q->src().port() << std::endl;
+        sfg->replace_endpoint( q->src(), q->dst(), false );
+        resolved_endpoints.push_back(std::pair<msg_endpoint, bool>(q->src(),false));
+        normal_connection = false;
+      }
+
+      // propogate non hier connections through
+      if(normal_connection){
+        sfg->connect( q->src(), q->dst() );
+      } 
+    }
+
+    for(std::vector<std::pair<msg_endpoint, bool> >::iterator it = resolved_endpoints.begin();
+        it != resolved_endpoints.end(); it++) {
+      sfg->clear_endpoint((*it).first, (*it).second);
+    }
+
+    /*
+    // connect primitive edges in the new fg
+    for(q = msg_edges.begin(); q != msg_edges.end(); q++) {
+      if((!q->src().is_hier()) && (!q->dst().is_hier())) {
+        sfg->connect(q->src(), q->dst());
+      }
+      else {
+        std::cout << "not connecting hier connection!" << std::endl;
+      }
+    }
+    */
+    
+    // Construct unique list of blocks used either in edges, inputs,
+    // outputs, or by themselves.  I still hate STL.
+    basic_block_vector_t blocks; // unique list of used blocks
+    basic_block_vector_t tmp = d_fg->calc_used_blocks();
+
+    // First add the list of singleton blocks
+    std::vector<basic_block_sptr>::const_iterator b;   // Because flatten_aux is const
+    for(b = d_blocks.begin(); b != d_blocks.end(); b++)
+      tmp.push_back(*b);
+
+    // Now add the list of connected input blocks
+    std::stringstream msg;
+    for(unsigned int i = 0; i < d_inputs.size(); i++) {
+      if(d_inputs[i].size() == 0) {
+        msg << "In hierarchical block " << d_owner->name() << ", input " << i
+            << " is not connected internally";
+        throw std::runtime_error(msg.str());
+      }
+
+      for(unsigned int j = 0; j < d_inputs[i].size(); j++)
+        tmp.push_back(d_inputs[i][j].block());
+    }
+
+    for(unsigned int i = 0; i < d_outputs.size(); i++) {
+      basic_block_sptr blk = d_outputs[i].block();
+      if(!blk) {
+        msg << "In hierarchical block " << d_owner->name() << ", output " << i
+            << " is not connected internally";
+        throw std::runtime_error(msg.str());
+      }
+      tmp.push_back(blk);
+    }
+    sort(tmp.begin(), tmp.end());
+
+    std::insert_iterator<basic_block_vector_t> inserter(blocks, blocks.begin());
+    unique_copy(tmp.begin(), tmp.end(), inserter);
+
+    // Recurse hierarchical children
+    for(basic_block_viter_t p = blocks.begin(); p != blocks.end(); p++) {
+      hier_block2_sptr hier_block2(cast_to_hier_block2_sptr(*p));
+      if(hier_block2 && (hier_block2.get() != d_owner)) {
+        if(HIER_BLOCK2_DETAIL_DEBUG)
+          std::cout << "flatten_aux: recursing into hierarchical block "
+                    << hier_block2 << std::endl;
+        hier_block2->d_detail->flatten_aux(sfg,out);
+      }
+      else{
+        // write dot-graph string
+        out <<  (*p)->unique_id() 
+            << " [ label=\"" << (*p)->name() << "\" ]"
+            << std::endl;
+      }
+    }
+    // write dot-graph string
+    out<<"}"<< std::endl;
+  }
+
 } /* namespace gr */
