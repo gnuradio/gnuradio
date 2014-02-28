@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2012,2013 Free Software Foundation, Inc.
+# Copyright 2012-2014 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -42,9 +42,9 @@ class test_pfb_interpolator(gr_unittest.TestCase):
         N = 1000         # number of samples to use
         M = 5            # Number of channels
         fs = 1000        # baseband sampling rate
-        ifs = M*fs       # input samp rate to decimator
+        ofs = M*fs       # output samp rate of interpolator
 
-        taps = filter.firdes.low_pass_2(M, ifs, fs/2, fs/10,
+        taps = filter.firdes.low_pass_2(M, ofs, fs/4, fs/10,
                                         attenuation_dB=80,
                                         window=filter.firdes.WIN_BLACKMAN_hARRIS)
 
@@ -57,20 +57,16 @@ class test_pfb_interpolator(gr_unittest.TestCase):
         self.tb.connect(signal, pfb)
         self.tb.connect(pfb, snk)
 
-        self.tb.run() 
+        self.tb.run()
 
         Ntest = 50
         L = len(snk.data())
 
-        # Can only get channel 0 out; no phase rotation
-        phase = 0
+        # Phase rotation through the filters
+        phase = 4.8870112969978994
 
-        # Calculate the filter delay
-        delay = -(len(taps) - 1) / 2.0 - (M-1)
-        delay = int(delay)
-
-        # Create a time scale that's delayed to match the filter delay
-        t = map(lambda x: float(x)/ifs, xrange(delay, L+delay))
+        # Create a time scale
+        t = map(lambda x: float(x)/ofs, xrange(0, L))
 
         # Create known data as complex sinusoids for the baseband freq
         # of the extracted channel is due to decimator output order.

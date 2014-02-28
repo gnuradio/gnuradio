@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2012,2013 Free Software Foundation, Inc.
+# Copyright 2012-2014 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -67,18 +67,18 @@ class test_pfb_channelizer(gr_unittest.TestCase):
             self.tb.connect((s2ss,i), (pfb,i))
             self.tb.connect((pfb, i), snks[i])
 
-        self.tb.run() 
+        self.tb.run()
 
         Ntest = 50
         L = len(snks[0].data())
 
         # Adjusted phase rotations for data
-        p0 = -2*math.pi * 0 / M
-        p1 = -2*math.pi * 1 / M
-        p2 = -2*math.pi * 2 / M
-        p3 = -2*math.pi * 3 / M
-        p4 = -2*math.pi * 4 / M
-        
+        p0 = 0.11058379158914133
+        p1 = 4.5108246571401693
+        p2 = 3.9739891674564594
+        p3 = 2.2820531095511924
+        p4 = 1.3782797467397869
+
         # Filter delay is the normal delay of each arm
         tpf = math.ceil(len(taps) / float(M))
         delay = -(tpf - 1.0) / 2.0

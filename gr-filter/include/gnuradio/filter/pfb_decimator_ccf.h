@@ -99,10 +99,19 @@ namespace gr {
        * \param decim   (unsigned integer) Specifies the decimation rate to use
        * \param taps    (vector/list of floats) The prototype filter to populate the filterbank.
        * \param channel (unsigned integer) Selects the channel to return [default=0].
+       * \param use_fft_rotator (bool) Rotate channels using FFT method instead of exp(phi).
+       *                For larger values of \p channel, the FFT method will perform better.
+       *                Generally, this value of \p channel is small (~5), but could be
+       *                architecture-specific (Default: true).
+       * \param use_fft_filters (bool) Use FFT filters (fast convolution) instead of FIR filters.
+       *                FFT filters perform better for larger numbers of taps but is
+       *                architecture-specific (Default: true).
        */
       static sptr make(unsigned int decim,
-				  const std::vector<float> &taps,
-				  unsigned int channel);
+                       const std::vector<float> &taps,
+                       unsigned int channel,
+                       bool use_fft_rotator=true,
+                       bool use_fft_filters=true);
 
       /*!
        * Resets the filterbank's filter taps with the new prototype filter

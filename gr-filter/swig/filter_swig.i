@@ -40,6 +40,7 @@
 #include "gnuradio/filter/fir_filter_fsf.h"
 #include "gnuradio/filter/fir_filter_scc.h"
 #include "gnuradio/filter/fft_filter_ccc.h"
+#include "gnuradio/filter/fft_filter_ccf.h"
 #include "gnuradio/filter/fft_filter_fff.h"
 #include "gnuradio/filter/fractional_interpolator_cc.h"
 #include "gnuradio/filter/fractional_interpolator_ff.h"
@@ -88,6 +89,7 @@
 %include "gnuradio/filter/fir_filter_fsf.h"
 %include "gnuradio/filter/fir_filter_scc.h"
 %include "gnuradio/filter/fft_filter_ccc.h"
+%include "gnuradio/filter/fft_filter_ccf.h"
 %include "gnuradio/filter/fft_filter_fff.h"
 %include "gnuradio/filter/fractional_interpolator_cc.h"
 %include "gnuradio/filter/fractional_interpolator_ff.h"
@@ -133,6 +135,7 @@ GR_SWIG_BLOCK_MAGIC2(filter, fir_filter_fff);
 GR_SWIG_BLOCK_MAGIC2(filter, fir_filter_fsf);
 GR_SWIG_BLOCK_MAGIC2(filter, fir_filter_scc);
 GR_SWIG_BLOCK_MAGIC2(filter, fft_filter_ccc);
+GR_SWIG_BLOCK_MAGIC2(filter, fft_filter_ccf);
 GR_SWIG_BLOCK_MAGIC2(filter, fft_filter_fff);
 GR_SWIG_BLOCK_MAGIC2(filter, fractional_interpolator_cc);
 GR_SWIG_BLOCK_MAGIC2(filter, fractional_interpolator_ff);

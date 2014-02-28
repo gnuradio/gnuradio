@@ -13,7 +13,9 @@
 	  $decim,
 	  $taps,
 	  $channel,
-	  $atten)
+	  $atten,
+          $fft_rot,
+          $fft_filts)
 	</make>
     <callback>set_taps($taps)</callback>
     <callback>set_channel(int($channel))</callback>
@@ -39,6 +41,36 @@
 		<key>atten</key>
 		<value>100</value>
 		<type>real</type>
+	</param>
+	<param>
+		<name>Use FFT Rotator</name>
+                <key>fft_rot</key>
+		<value>True</value>
+		<type>raw</type>
+                <hide>part</hide>
+		<option>
+                  <name>True</name>
+                  <key>True</key>
+		</option>
+		<option>
+                  <name>False</name>
+                  <key>False</key>
+		</option>
+	</param>
+	<param>
+		<name>Use FFT Filters</name>
+                <key>fft_filts</key>
+		<value>True</value>
+		<type>raw</type>
+                <hide>part</hide>
+		<option>
+                  <name>True</name>
+                  <key>True</key>
+		</option>
+		<option>
+                  <name>False</name>
+                  <key>False</key>
+		</option>
 	</param>
 	<sink>
 		<name>in</name>
