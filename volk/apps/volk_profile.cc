@@ -21,7 +21,8 @@ int main(int argc, char *argv[]) {
     desc.add_options()
       ("help,h", "Print help messages")
       ("benchmark,b",
-            boost::program_options::value<bool>()->default_value( false ),
+            boost::program_options::value<bool>()->default_value( false )
+                                                ->implicit_value( true ),
             "Run all kernels (benchmark mode)")
       ("tests-regex,R",
             boost::program_options::value<std::string>(),
