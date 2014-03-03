@@ -38,8 +38,8 @@ namespace gr {
       fft_filter_fff::fft_filter_fff(int decimation,
 				     const std::vector<float> &taps,
 				     int nthreads)
-	: d_fftsize(-1), d_decimation(decimation), d_fwdfft(0),
-	  d_invfft(0), d_nthreads(nthreads), d_xformed_taps(NULL)
+	: d_fftsize(-1), d_decimation(decimation), d_fwdfft(NULL),
+	  d_invfft(NULL), d_nthreads(nthreads), d_xformed_taps(NULL)
       {
 	set_taps(taps);
       }
@@ -195,8 +195,8 @@ namespace gr {
       fft_filter_ccc::fft_filter_ccc(int decimation,
 				     const std::vector<gr_complex> &taps,
 				     int nthreads)
-	: d_fftsize(-1), d_decimation(decimation), d_fwdfft(0),
-	  d_invfft(0), d_nthreads(nthreads), d_xformed_taps(NULL)
+	: d_fftsize(-1), d_decimation(decimation), d_fwdfft(NULL),
+	  d_invfft(NULL), d_nthreads(nthreads), d_xformed_taps(NULL)
       {
 	set_taps(taps);
       }
@@ -352,8 +352,8 @@ namespace gr {
       fft_filter_ccf::fft_filter_ccf(int decimation,
 				     const std::vector<float> &taps,
 				     int nthreads)
-	: d_fftsize(-1), d_decimation(decimation), d_fwdfft(0),
-	  d_invfft(0), d_nthreads(nthreads), d_xformed_taps(NULL)
+	: d_fftsize(-1), d_decimation(decimation), d_fwdfft(NULL),
+	  d_invfft(NULL), d_nthreads(nthreads), d_xformed_taps(NULL)
       {
 	set_taps(taps);
       }
