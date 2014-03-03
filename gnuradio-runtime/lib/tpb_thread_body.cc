@@ -52,7 +52,7 @@ namespace gr {
 #ifdef HAVE_LOG4CPP
     #undef LOG
     std::string config_file = p->get_string("LOG", "log_config", "");
-    std::string log_level = p->get_string("LOG", "log_level", "");
+    std::string log_level = p->get_string("LOG", "log_level", "off");
     std::string log_file = p->get_string("LOG", "log_file", "");
     GR_LOG_GETLOGGER(LOG, "gr_log.tpb_thread_body");
     GR_LOG_SET_LEVEL(LOG, log_level);
