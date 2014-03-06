@@ -62,6 +62,8 @@ class gr::block : public gr::basic_block
   void set_max_noutput_items(int m);
   void unset_max_noutput_items();
   bool is_set_max_noutput_items();
+  void set_min_noutput_items(int m);
+  int min_noutput_items() const;
 
   // Methods to manage block's min/max buffer sizes.
   long max_output_buffer(int i);
@@ -94,7 +96,7 @@ class gr::block : public gr::basic_block
   float pc_work_time_avg();
   float pc_work_time_var();
   float pc_work_time_total();
-  
+
   // Methods to manage processor affinity.
   void set_processor_affinity(const std::vector<int> &mask);
   void unset_processor_affinity();
