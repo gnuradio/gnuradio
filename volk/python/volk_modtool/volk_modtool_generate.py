@@ -20,6 +20,7 @@
 # 
 
 import os
+import glob
 import sys
 import re
 import glob
@@ -150,11 +151,23 @@ class volk_modtool:
         newrelpath = re.sub(oldvolk, 'volk_' + self.my_dict['name'], relpath);    
         dest = os.path.join(self.my_dict['destination'], 'volk_' + self.my_dict['name'], os.path.dirname(newrelpath), newname);        
                               
-
-
         if not os.path.exists(os.path.dirname(dest)):
             os.makedirs(os.path.dirname(dest))
         open(dest, 'w+').write(outstring);
+
+        # copy orc proto-kernels if they exist
+        for orcfile in glob.glob(inpath + '/orc/' + top + name + '*.orc'):
+            if os.path.isfile(orcfile):
+                instring = open(orcfile, 'r').read();
+                outstring = re.sub(oldvolk, 'volk_' + self.my_dict['name'], instring);
+                newname = 'volk_' + self.my_dict['name'] + '_' + name + '.orc';
+                relpath = os.path.relpath(orcfile, base);
+                newrelpath = re.sub(oldvolk, 'volk_' + self.my_dict['name'], relpath);
+                dest = os.path.join(self.my_dict['destination'], 'volk_' + self.my_dict['name'], os.path.dirname(newrelpath), newname);
+                if not os.path.exists(os.path.dirname(dest)):
+                    os.makedirs(os.path.dirname(dest));
+                open(dest, 'w+').write(outstring)
+
 
     def remove_kernel(self, name):
         basename = self.my_dict['name'];
@@ -215,6 +228,13 @@ class volk_modtool:
             print "Removing kernel %s"%(kernel.pattern)
             if os.path.exists(infile):
                 os.remove(infile);
+        # remove the orc proto-kernels if they exist. There are no puppets here
+        # so just need to glob for files matching kernel name
+        print glob.glob(inpath + '/orc/' + top + name + '*.orc');
+        for orcfile in glob.glob(inpath + '/orc/' + top + name + '*.orc'):
+            print orcfile
+            if(os.path.exists(orcfile)):
+                os.remove(orcfile);
     
     def import_kernel(self, name, base):
         if not (base):
