@@ -65,7 +65,7 @@ endif(MSVC)
 list(APPEND zeromq_libs
     gnuradio-runtime
     ${Boost_LIBRARIES}
-    ${ZeroMQ_LIBRARIES}
+    ${ZEROMQ_LIBRARIES}
 )
 
 add_library(gnuradio-zeromq SHARED ${zeromq_sources})
