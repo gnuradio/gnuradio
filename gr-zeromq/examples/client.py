@@ -25,7 +25,7 @@
 ###############################################################################
 # Imports
 ###############################################################################
-import zmqblocks
+from gnuradio import zeromq
 from gnuradio import gr
 from gnuradio import blocks
 from gnuradio import analog
@@ -52,17 +52,17 @@ class top_block(gr.top_block):
         source_adr = "tcp://"+self.options.servername+":5555"
 
         # blocks
-        #self.zmq_source = zmqblocks.source_reqrep_nopoll(gr.sizeof_float,source_adr)
-        self.zmq_source = zmqblocks.source_reqrep(gr.sizeof_float,source_adr)
-        #self.zmq_source = zmqblocks.source_pushpull(gr.sizeof_float,source_adr)
-        #self.zmq_probe = zmqblocks.sink_pushpull(gr.sizeof_float,probe_adr)
-        self.zmq_probe = zmqblocks.sink_pubsub(gr.sizeof_float,probe_adr)
+        #self.zmq_source = zeromq.source_reqrep_nopoll(gr.sizeof_float,source_adr)
+        self.zmq_source = zeromq.source_reqrep(gr.sizeof_float,source_adr)
+        #self.zmq_source = zeromq.source_pushpull(gr.sizeof_float,source_adr)
+        #self.zmq_probe = zeromq.sink_pushpull(gr.sizeof_float,probe_adr)
+        self.zmq_probe = zeromq.sink_pubsub(gr.sizeof_float,probe_adr)
 
         # connects
         self.connect(self.zmq_source, self.zmq_probe)
 
         # ZeroMQ
-        self.rpc_manager = zmqblocks.rpc_manager()
+        self.rpc_manager = zeromq.rpc_manager()
         self.rpc_manager.set_reply_socket(rpc_adr)
         self.rpc_manager.add_interface("start_fg",self.start_fg)
         self.rpc_manager.add_interface("stop_fg",self.stop_fg)

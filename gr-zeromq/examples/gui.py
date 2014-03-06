@@ -30,7 +30,7 @@ import sys
 import os
 from PyQt4 import Qt, QtGui, QtCore, uic
 import PyQt4.Qwt5 as Qwt
-import zmqblocks
+import zeromq
 import signal
 
 class gui(QtGui.QMainWindow):
@@ -51,13 +51,13 @@ class gui(QtGui.QMainWindow):
         probe_adr_client = "tcp://"+options.clientname+":5557"
 
         # ZeroMQ
-        self.probe_manager = zmqblocks.probe_manager()
+        self.probe_manager = zeromq.probe_manager()
         self.probe_manager.add_socket(probe_adr_server, 'float32', self.plot_data_server)
         self.probe_manager.add_socket(probe_adr_client, 'float32', self.plot_data_client)
 
-        self.rpc_mgr_server = zmqblocks.rpc_manager()
+        self.rpc_mgr_server = zeromq.rpc_manager()
         self.rpc_mgr_server.set_request_socket(rpc_adr_server)
-        self.rpc_mgr_client = zmqblocks.rpc_manager()
+        self.rpc_mgr_client = zeromq.rpc_manager()
         self.rpc_mgr_client.set_request_socket(rpc_adr_client)
 
         self.gui.setWindowTitle(window_name)

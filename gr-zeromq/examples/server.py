@@ -24,7 +24,7 @@
 ###############################################################################
 # Imports
 ###############################################################################
-import zmqblocks
+from gnuradio import zeromq
 from gnuradio import gr
 from gnuradio import blocks
 from gnuradio import analog
@@ -58,11 +58,11 @@ class top_block(gr.top_block):
         self.gr_sig_source = analog.sig_source_f(samp_rate, analog.GR_SIN_WAVE , 1000, 1, 0)
         self.throttle = blocks.throttle(gr.sizeof_float, samp_rate)
         self.mult = blocks.multiply_const_ff(1)
-        #self.zmq_sink = zmqblocks.sink_reqrep_nopoll(gr.sizeof_float, sink_adr)
-        self.zmq_sink = zmqblocks.sink_reqrep(gr.sizeof_float, sink_adr)
-        #self.zmq_sink = zmqblocks.sink_pushpull(gr.sizeof_float, sink_adr)
-        #self.zmq_probe = zmqblocks.sink_pushpull(gr.sizeof_float, probe_adr)
-        self.zmq_probe = zmqblocks.sink_pubsub(gr.sizeof_float, probe_adr)
+        #self.zmq_sink = zeromq.sink_reqrep_nopoll(gr.sizeof_float, sink_adr)
+        self.zmq_sink = zeromq.sink_reqrep(gr.sizeof_float, sink_adr)
+        #self.zmq_sink = zeromq.sink_pushpull(gr.sizeof_float, sink_adr)
+        #self.zmq_probe = zeromq.sink_pushpull(gr.sizeof_float, probe_adr)
+        self.zmq_probe = zeromq.sink_pubsub(gr.sizeof_float, probe_adr)
         #self.null_sink = blocks.null_sink(gr.sizeof_float)
 
         # connects
@@ -70,7 +70,7 @@ class top_block(gr.top_block):
         self.connect(self.throttle, self.zmq_probe)
 
         # ZeroMQ
-        self.rpc_manager = zmqblocks.rpc_manager()
+        self.rpc_manager = zeromq.rpc_manager()
         self.rpc_manager.set_reply_socket(rpc_adr)
         self.rpc_manager.add_interface("start_fg",self.start_fg)
         self.rpc_manager.add_interface("stop_fg",self.stop_fg)
