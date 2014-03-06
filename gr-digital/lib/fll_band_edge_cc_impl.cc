@@ -1,19 +1,19 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2009-2012 Free Software Foundation, Inc.
- * 
+ * Copyright 2009-2012,2014 Free Software Foundation, Inc.
+ *
  * This file is part of GNU Radio
- * 
+ *
  * GNU Radio is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3, or (at your option)
  * any later version.
- * 
+ *
  * GNU Radio is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with GNU Radio; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 51 Franklin Street,
@@ -67,22 +67,21 @@ namespace gr {
 	throw std::out_of_range("fll_band_edge_cc: invalid number of sps. Must be > 0.");
       }
       d_sps = samps_per_sym;
-  
+
       // Initialize rolloff factor
       if(rolloff < 0 || rolloff > 1.0) {
 	throw std::out_of_range("fll_band_edge_cc: invalid rolloff factor. Must be in [0,1].");
       }
       d_rolloff = rolloff;
-  
+
       // Initialize filter length
       if(filter_size <= 0) {
 	throw std::out_of_range("fll_band_edge_cc: invalid filter size. Must be > 0.");
       }
       d_filter_size = filter_size;
-  
+
       // Build the band edge filters
       design_filter(d_sps, d_rolloff, d_filter_size);
-      d_output_hist.resize(filter_size,0);
     }
 
     fll_band_edge_cc_impl::~fll_band_edge_cc_impl()
@@ -163,7 +162,7 @@ namespace gr {
 	float k = -M + i*2.0/samps_per_sym;
 	float tap = sinc(rolloff*k - 0.5) + sinc(rolloff*k + 0.5);
 	power += tap;
-    
+
 	bb_taps.push_back(tap);
       }
 
@@ -185,13 +184,13 @@ namespace gr {
 	d_taps_lower[filter_size-i-1] = t1;
 	d_taps_upper[filter_size-i-1] = t2;
       }
-  
+
       d_updated = true;
 
       // Set the history to ensure enough input items for each filter
       set_history(filter_size+1);
-      d_filter_upper = new gr::filter::kernel::fir_filter_ccc(1, d_taps_upper);
-      d_filter_lower = new gr::filter::kernel::fir_filter_ccc(1, d_taps_lower);
+      d_filter_upper = new gr::filter::kernel::fir_filter_with_buffer_ccc(d_taps_upper);
+      d_filter_lower = new gr::filter::kernel::fir_filter_with_buffer_ccc(d_taps_lower);
     }
 
     void
@@ -220,8 +219,6 @@ namespace gr {
       const gr_complex *in = (const gr_complex*)input_items[0];
       gr_complex *out = (gr_complex*)output_items[0];
 
-      d_fllbuffer.reserve(d_filter_size+noutput_items);
-	
       float *frq = NULL;
       float *phs = NULL;
       float *err = NULL;
@@ -241,18 +238,15 @@ namespace gr {
       gr_complex nco_out;
       gr_complex out_upper, out_lower;
       gr_complex out_uppersse, out_lowersse;
-      copy(d_output_hist.begin(), d_output_hist.end(), d_fllbuffer.begin());
 
       for(i = 0; i < noutput_items; i++) {
 	nco_out = gr_expj(d_phase);
-	d_fllbuffer[i+d_filter_size] = in[i] * nco_out;
-	// Perform the dot product of the output with the filters
-	out_upper = 0;
-	out_lower = 0;
+	out[i] = in[i] * nco_out;
 
-	out_upper = d_filter_lower->filter(&d_fllbuffer[i]);
-	out_lower = d_filter_upper->filter(&d_fllbuffer[i]);
-    
+	// Perform the dot product of the output with the filters
+	out_upper = d_filter_lower->filter(out[i]);
+	out_lower = d_filter_upper->filter(out[i]);
+
 	error = norm(out_lower) - norm(out_upper);
 
 	advance_loop(error);
@@ -265,11 +259,6 @@ namespace gr {
 	  err[i] = error;
 	}
       }
-
-      copy(d_fllbuffer.begin(), d_fllbuffer.begin()+noutput_items, out);
-      copy(d_fllbuffer.begin()+noutput_items,
-	   d_fllbuffer.begin()+noutput_items+d_filter_size,
-	   d_output_hist.begin());
 
       return noutput_items;
     }
