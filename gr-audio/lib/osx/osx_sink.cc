@@ -47,7 +47,7 @@ namespace gr {
     default_device_name()
     {
       return prefs::singleton()->get_string
-        ("audio_osx", "default_input_device", "built-in");
+        ("audio_osx", "default_output_device", "built-in");
     }
 
     osx_sink::osx_sink(int sample_rate,
