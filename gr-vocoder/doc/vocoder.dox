@@ -20,4 +20,14 @@ by using:
     help(vocoder)
 \endcode
 
+\section using Using the vocoders
+
+Note that most vocoders use short inputs instead of floats. This means you
+must convert audio signals from float to short by using a type conversion
+and a scaling factor. See the examples.
+
+The format of the encoded audio is different for every encoder. See the
+individual block's documention for the data format. Encoded data is usually
+a vector of fixed length, and can either be packed or unpacked.
+
 */

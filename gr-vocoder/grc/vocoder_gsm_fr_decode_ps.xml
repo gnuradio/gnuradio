@@ -12,6 +12,7 @@
 	<sink>
 		<name>in</name>
 		<type>byte</type>
+		<vlen>33</vlen>
 	</sink>
 	<source>
 		<name>out</name>
