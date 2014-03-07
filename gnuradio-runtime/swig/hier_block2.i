@@ -93,4 +93,6 @@ namespace gr {
 
     gr::hier_block2_sptr to_hier_block2(); // Needed for Python type coercion
   };
+
+  std::string dot_graph(hier_block2_sptr hierblock2);
 }

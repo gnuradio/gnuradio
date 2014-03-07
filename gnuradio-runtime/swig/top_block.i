@@ -53,7 +53,7 @@ namespace gr {
     gr::top_block_sptr to_top_block(); // Needed for Python type coercion
   };
 }
-  
+
 #ifdef SWIGPYTHON
 
 %inline %{
@@ -88,6 +88,13 @@ void top_block_stop_unlocked(gr::top_block_sptr r) throw (std::runtime_error)
         r->stop();
     )
 }
+
+std::string
+dot_graph_tb(gr::top_block_sptr r)
+{
+  return dot_graph(r);
+}
+
 %}
 
 #endif
