@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2011,2013 Free Software Foundation, Inc.
+ * Copyright 2011,2013,2014 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -32,13 +32,19 @@ namespace gr {
     /*!
      * \brief CODEC2 Vocoder Decoder
      * \ingroup audio_blk
+     *
+     * Input: A vector of 50 unpacked bits forming a Codec2 frame.
+     *
+     * Output: 16-bit short values of an audio signal with sampling rate 8 kHz.
+     *
+     * See also gr::vocoder::codec2_encode_sp.
      */
     class VOCODER_API codec2_decode_ps : virtual public sync_interpolator
     {
     public:
       // gr::vocoder::codec2_decode_ps::sptr
       typedef boost::shared_ptr<codec2_decode_ps> sptr;
-      
+
       /*!
        * \brief Make Codec2 decoder block.
        */

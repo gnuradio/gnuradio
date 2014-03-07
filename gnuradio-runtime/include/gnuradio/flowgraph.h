@@ -165,7 +165,7 @@ namespace gr {
 
     // Connect two msg endpoints
     void connect(const msg_endpoint &src, const msg_endpoint &dst);
-  
+
     // Disconnect two msg endpoints
     void disconnect(const msg_endpoint &src, const msg_endpoint &dst);
 
@@ -177,7 +177,7 @@ namespace gr {
 
     // Return vector of edges
     const edge_vector_t &edges() const { return d_edges; }
-  
+
     // Return vector of msg edges
     const msg_edge_vector_t &msg_edges() const { return d_msg_edges; }
 
@@ -264,6 +264,8 @@ namespace gr {
     os << edge.src() << "->" << edge.dst();
     return os;
   }
+
+  std::string dot_graph_fg (flowgraph_sptr fg);
 
 } /* namespace gr */
 

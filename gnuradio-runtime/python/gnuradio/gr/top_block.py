@@ -21,7 +21,8 @@
 
 from runtime_swig import top_block_swig, \
     top_block_wait_unlocked, top_block_run_unlocked, \
-    top_block_start_unlocked, top_block_stop_unlocked
+    top_block_start_unlocked, top_block_stop_unlocked, \
+    dot_graph_tb
 
 #import gnuradio.gr.gr_threading as _threading
 import gr_threading as _threading
@@ -92,18 +93,18 @@ class top_block(object):
     python subclassing.
     """
     def __init__(self, name="top_block"):
-	self._tb = top_block_swig(name)
+        self._tb = top_block_swig(name)
 
     def __getattr__(self, name):
         if not hasattr(self, "_tb"):
             raise RuntimeError("top_block: invalid state--did you forget to call gr.top_block.__init__ in a derived class?")
-	return getattr(self._tb, name)
+        return getattr(self._tb, name)
 
     def start(self, max_noutput_items=10000000):
-    	top_block_start_unlocked(self._tb, max_noutput_items)
+        top_block_start_unlocked(self._tb, max_noutput_items)
 
     def stop(self):
-    	top_block_stop_unlocked(self._tb)
+        top_block_stop_unlocked(self._tb)
 
     def run(self, max_noutput_items=10000000):
         self.start(max_noutput_items)
@@ -122,16 +123,16 @@ class top_block(object):
         '''
         if len (points) < 1:
             raise ValueError, ("connect requires at least one endpoint; %d provided." % (len (points),))
-	else:
-	    if len(points) == 1:
-		self._tb.primitive_connect(points[0].to_basic_block())
-	    else:
-		for i in range (1, len (points)):
-        	    self._connect(points[i-1], points[i])
+        else:
+            if len(points) == 1:
+                self._tb.primitive_connect(points[0].to_basic_block())
+            else:
+                for i in range (1, len (points)):
+                    self._connect(points[i-1], points[i])
 
     def msg_connect(self, src, srcport, dst, dstport):
         self.primitive_msg_connect(src.to_basic_block(), srcport, dst.to_basic_block(), dstport);
-    
+
     def msg_disconnect(self, src, srcport, dst, dstport):
         self.primitive_msg_disconnect(src.to_basic_block(), srcport, dst.to_basic_block(), dstport);
 
@@ -169,3 +170,6 @@ class top_block(object):
         self._tb.primitive_disconnect(src_block.to_basic_block(), src_port,
                                       dst_block.to_basic_block(), dst_port)
 
+    def dot_graph(self):
+        '''Return graph representation in dot language'''
+        return dot_graph_tb(self._tb)

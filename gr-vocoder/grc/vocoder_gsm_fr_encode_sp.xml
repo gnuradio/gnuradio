@@ -16,6 +16,7 @@
 	<source>
 		<name>out</name>
 		<type>byte</type>
+		<vlen>33</vlen>
 	</source>
 </block>
 

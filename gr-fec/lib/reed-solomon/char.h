@@ -19,6 +19,7 @@ struct rs {
   unsigned char fcr;        /* First consecutive root, index form */
   unsigned char prim;       /* Primitive element, index form */
   unsigned char iprim;      /* prim-th root of 1, index form */
+  int *modnn_table;         /* modnn lookup table, 512 entries */
 };
 
 static inline unsigned int modnn(struct rs *rs, unsigned int x){

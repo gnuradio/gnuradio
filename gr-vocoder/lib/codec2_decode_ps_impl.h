@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2011,2013 Free Software Foundation, Inc.
+ * Copyright 2011,2013,2014 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -32,6 +32,9 @@ namespace gr {
     {
     private:
       void *d_codec2;
+      std::vector<unsigned char> d_frame_buf; //!< Store 1 packed frame for decoding
+
+      void pack_frame(const unsigned char *in_unpacked, unsigned char *out_packed); //!< Pack the bytes from unpacked bits for codec2
 
     public:
       codec2_decode_ps_impl();
@@ -43,6 +46,6 @@ namespace gr {
     };
 
   } /* namespace vocoder */
-} /* namespace gr */       
+} /* namespace gr */
 
 #endif /* INCLUDED_VOCODER_CODEC2_DECODE_PS_IMPL_H */

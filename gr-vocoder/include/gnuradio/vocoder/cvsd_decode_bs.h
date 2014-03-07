@@ -75,12 +75,15 @@ namespace gr {
      * the CVSD encoder.
      *
      * References:
+     *
      * 1.  Continuously Variable Slope Delta Modulation (CVSD) A Tutorial,
      *         Available: http://www.eetkorea.com/ARTICLES/2003AUG/A/2003AUG29_NTEK_RFD_AN02.PDF.
+     *
      * 2.  Specification of The Bluetooth System
      *         Available: http://grouper.ieee.org/groups/802/15/Bluetooth/core_10_b.pdf.
+     *
      * 3.  McGarrity, S., Bluetooth Full Duplex Voice and Data Transmission. 2002.
-     *         Bluetooth Voice Simulink® Model, Available:
+     *         Bluetooth Voice Simulink Model, Available:
      *         http://www.mathworks.com/company/newsletters/digest/nov01/bluetooth.html
      */
     class VOCODER_API cvsd_decode_bs : virtual public sync_interpolator
