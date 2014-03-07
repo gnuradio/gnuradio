@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2005,2011,2013 Free Software Foundation, Inc.
+ * Copyright 2005,2011,2013,2014 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -33,14 +33,15 @@ namespace gr {
      * \brief GSM 06.10 Full Rate Vocoder Encoder
      * \ingroup audio_blk
      *
-     * shorts in; 33 byte packets out
+     * Input: 16-bit shorts representing speech samples
+     * Output: Vector of 33 bytes per 160 input samples
      */
     class VOCODER_API gsm_fr_encode_sp : virtual public sync_decimator
     {
     public:
       // gr::vocoder::gsm_fr_encode_sp::sptr
       typedef boost::shared_ptr<gsm_fr_encode_sp> sptr;
-      
+
       /*!
        * \brief Make GSM encoder block.
        */
@@ -48,6 +49,6 @@ namespace gr {
     };
 
   } /* namespace vocoder */
-} /* namespace gr */       
+} /* namespace gr */
 
 #endif /* INCLUDED_VOCODER_GSM_FR_ENCODE_SP_H */

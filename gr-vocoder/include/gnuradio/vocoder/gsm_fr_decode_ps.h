@@ -32,13 +32,16 @@ namespace gr {
     /*!
      * \brief GSM 06.10 Full Rate Vocoder Decoder
      * \ingroup audio_blk
+     *
+     * Input: Vector of 33 bytes per 160 input samples
+     * Output: 16-bit shorts representing speech samples
      */
     class VOCODER_API gsm_fr_decode_ps : virtual public sync_interpolator
     {
     public:
       // gr::vocoder::gsm_fr_decode_ps::sptr
       typedef boost::shared_ptr<gsm_fr_decode_ps> sptr;
-      
+
       /*!
        * \brief Make GSM decoder block.
        */

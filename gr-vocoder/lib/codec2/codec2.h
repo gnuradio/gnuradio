@@ -31,6 +31,7 @@
 
 #define CODEC2_SAMPLES_PER_FRAME 160
 #define CODEC2_BITS_PER_FRAME     50
+#define CODEC2_BYTES_PER_FRAME  ((CODEC2_BITS_PER_FRAME + 7) / 8) // == 8 bytes when packing the 50 bits
 
 void *codec2_create();
 void codec2_destroy(void *codec2_state);
