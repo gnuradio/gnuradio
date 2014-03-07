@@ -111,7 +111,11 @@ volk_malloc(size_t size, size_t alignment)
   // Find and return the first aligned boundary of the pointer
   void *aptr = ptr;
   if((unsigned long)ptr % alignment != 0)
+#ifdef _MSC_VER
+    aptr = (void*)((unsigned long)ptr + (alignment - ((unsigned long)ptr % alignment)));
+#else
     aptr = ptr + (alignment - ((unsigned long)ptr % alignment));
+#endif
 
   // Store original pointer and aligned pointers
   mbuf *n = (mbuf*)malloc(sizeof(mbuf));
