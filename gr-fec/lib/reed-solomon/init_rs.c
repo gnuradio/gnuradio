@@ -23,6 +23,11 @@ void FREE_RS(void *p){
   free(rs->alpha_to);
   free(rs->index_of);
   free(rs->genpoly);
+#ifdef FIXED
+#elif defined(BIGSYM)
+#else
+  free(rs->modnn_table);
+#endif
   free(rs);
 }
 
@@ -119,6 +124,24 @@ void *INIT_RS(unsigned int symsize,unsigned int gfpoly,unsigned fcr,unsigned pri
   /* convert rs->genpoly[] to index form for quicker encoding */
   for (i = 0; i <= nroots; i++)
     rs->genpoly[i] = rs->index_of[rs->genpoly[i]];
+
+#ifdef FIXED
+#elif defined(BIGSYM)
+#else
+  /* Form modnn lookup table */
+  rs->modnn_table = (int *)malloc(sizeof(int)*(2<<((sizeof(unsigned char))*8)));
+  if(rs->modnn_table == NULL){
+    free(rs->genpoly);
+    free(rs->alpha_to);
+    free(rs->index_of);
+    free(rs);
+    return NULL;
+  }
+  for(i = 0; i < (2<<((sizeof(unsigned char))*8)); i++){
+    j = i;
+    rs->modnn_table[i] = modnn(rs,j);
+  }
+#endif
 
 #if 0
   printf ("genpoly:\n");
