@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2005,2011 Free Software Foundation, Inc.
+ * Copyright 2005,2011,2014 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -32,6 +32,8 @@ extern "C" {
 
 #include <gnuradio/io_signature.h>
 #include <stdexcept>
+#include <iostream>
+#include <iomanip>
 
 namespace gr {
   namespace vocoder {
@@ -47,7 +49,8 @@ namespace gr {
       : sync_decimator("vocoder_codec2_encode_sp",
 			  io_signature::make(1, 1, sizeof(short)),
 			  io_signature::make(1, 1, CODEC2_BITS_PER_FRAME * sizeof(char)),
-			  CODEC2_SAMPLES_PER_FRAME)
+			  CODEC2_SAMPLES_PER_FRAME),
+      d_frame_buf(CODEC2_BYTES_PER_FRAME, 0)
     {
       if((d_codec2 = codec2_create()) == 0)
 	throw std::runtime_error("codec2_encode_sp_impl: codec2_create failed");
@@ -67,12 +70,26 @@ namespace gr {
       unsigned char *out = (unsigned char*)output_items[0];
 
       for(int i = 0; i < noutput_items; i++) {
-	codec2_encode(d_codec2, out, const_cast<short*>(in));
+	codec2_encode(d_codec2, &d_frame_buf[0], const_cast<short*>(in));
+	unpack_frame((const unsigned char *) &d_frame_buf[0], out);
 	in += CODEC2_SAMPLES_PER_FRAME;
 	out += CODEC2_BITS_PER_FRAME * sizeof(char);
       }
 
       return noutput_items;
+    }
+
+    void
+    codec2_encode_sp_impl::unpack_frame(const unsigned char *packed, unsigned char *out)
+    {
+      int byte_idx = 0, bit_idx = 0;
+      for(int k = 0; k < CODEC2_BITS_PER_FRAME; k++) {
+	out[k] = (packed[byte_idx] >> (7-bit_idx)) & 0x01;
+	bit_idx = (bit_idx + 1) % 8;
+	if (bit_idx == 0) {
+	  byte_idx++;
+	}
+      }
     }
 
   } /* namespace vocoder */
