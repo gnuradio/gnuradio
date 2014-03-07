@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2006-2011,2013 Free Software Foundation, Inc.
+ * Copyright 2006-2011,2013-2014 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio.
  *
@@ -25,91 +25,212 @@
 #endif
 
 #include "audio_registry.h"
-#include <osx_sink.h>
-#include <osx_impl.h>
+#include "osx_sink.h"
+
 #include <gnuradio/io_signature.h>
+#include <gnuradio/prefs.h>
 #include <stdexcept>
 
 namespace gr {
   namespace audio {
 
-#define _OSX_AU_DEBUG_ 0
-
-    AUDIO_REGISTER_SINK(REG_PRIO_HIGH, osx)(int sampling_rate,
-                                            const std::string &device_name,
-                                            bool ok_to_block)
+    AUDIO_REGISTER_SINK(REG_PRIO_HIGH, osx)
+      (int sampling_rate,
+       const std::string& device_name,
+       bool ok_to_block)
     {
       return sink::sptr
         (new osx_sink(sampling_rate, device_name, ok_to_block));
     }
 
+    static std::string
+    default_device_name()
+    {
+      return prefs::singleton()->get_string
+        ("audio_osx", "default_input_device", "built-in");
+    }
+
     osx_sink::osx_sink(int sample_rate,
-                       const std::string device_name,
-                       bool do_block,
-                       int channel_config,
-                       int max_sample_count)
+                       const std::string& device_name,
+                       bool ok_to_block)
       : sync_block("audio_osx_sink",
                       io_signature::make(0, 0, 0),
                       io_signature::make(0, 0, 0)),
-        d_sample_rate(0.0), d_channel_config(0), d_n_channels(0),
-        d_queueSampleCount(0), d_max_sample_count(0),
-        d_do_block(do_block), d_internal(0), d_cond_data(0),
-        d_OutputAU(0)
+        d_input_sample_rate(0.0), d_n_user_channels(0),
+	d_n_dev_channels(0), d_queue_sample_count(0),
+	d_buffer_sample_count(0), d_ok_to_block(ok_to_block),
+	d_do_reset(false), d_hardware_changed(false),
+	d_using_default_device(false), d_waiting_for_data(false),
+	d_desired_name(device_name.empty() ? default_device_name()
+		       : device_name),
+	d_output_au(0), d_output_ad_id(0)
     {
       if(sample_rate <= 0) {
-        std::cerr << "Invalid Sample Rate: " << sample_rate << std::endl;
-        throw std::invalid_argument ("audio_osx_sink::audio_osx_sink");
+	GR_LOG_ERROR(d_logger, boost::format
+		     ("Invalid Sample Rate: %d")
+		     % sample_rate);
+        throw std::invalid_argument("audio_osx_sink");
       }
-      else
-        d_sample_rate = (Float64)sample_rate;
-
-      if(channel_config <= 0 & channel_config != -1) {
-        std::cerr << "Invalid Channel Config: " << channel_config << std::endl;
-        throw std::invalid_argument ("audio_osx_sink::audio_osx_sink");
-      }
-      else if(channel_config == -1) {
-        // no user input; try "device name" instead
-        int l_n_channels = (int)strtol(device_name.data(), (char**)NULL, 10);
-        if((l_n_channels == 0) & errno) {
-          std::cerr << "Error Converting Device Name: " << errno << std::endl;
-          throw std::invalid_argument("audio_osx_sink::audio_osx_sink");
-        }
-        if(l_n_channels <= 0)
-          channel_config = 2;
-        else
-          channel_config = l_n_channels;
+      else {
+        d_input_sample_rate = (Float64)sample_rate;
       }
 
-      d_n_channels = d_channel_config = channel_config;
+      // set up for audio output using the stored desired parameters
 
-      // set the input signature
+      setup();
+    }
 
-      set_input_signature(io_signature::make(1, d_n_channels, sizeof(float)));
-
-      // check that the max # of samples to store is valid
-
-      if(max_sample_count == -1)
-        max_sample_count = sample_rate;
-      else if(max_sample_count <= 0) {
-        std::cerr << "Invalid Max Sample Count: " << max_sample_count << std::endl;
-        throw std::invalid_argument ("audio_osx_sink::audio_osx_sink");
-      }
-
-      d_max_sample_count = max_sample_count;
-
-      // allocate the output circular buffer(s), one per channel
-
-      d_buffers = (circular_buffer<float>**) new
-        circular_buffer<float>* [d_n_channels];
-      UInt32 n_alloc = (UInt32) ceil((double)d_max_sample_count);
-      for(UInt32 n = 0; n < d_n_channels; n++) {
-        d_buffers[n] = new circular_buffer<float>(n_alloc, false, false);
-      }
-
-      // create the default AudioUnit for output
+    void osx_sink::setup()
+    {
       OSStatus err = noErr;
 
+      // set the default output audio device id to "unknown"
+
+      d_output_ad_id = kAudioDeviceUnknown;
+
+      // try to find the output audio device, if specified
+
+      std::vector < AudioDeviceID > all_ad_ids;
+      std::vector < std::string > all_names;
+
+      osx::find_audio_devices
+	(d_desired_name, false,
+	 &all_ad_ids, &all_names);
+
+      // check number of device(s) returned
+
+      if (d_desired_name.length() != 0) {
+	if (all_ad_ids.size() == 1) {
+
+	  // exactly 1 match was found; see if it was partial
+
+	  if (all_names[0].compare(d_desired_name) != 0) {
+
+	    // yes: log the full device name
+	    GR_LOG_INFO(d_logger, boost::format
+			("Using output audio device '%s'.")
+			% all_names[0]);
+
+	  }
+
+	  // store info on this device
+
+	  d_output_ad_id = all_ad_ids[0];
+	  d_selected_name = all_names[0];
+
+	} else {
+
+	  // either 0 or more than 1 device was found; get all output
+	  // device names, print those, and error out.
+
+	  osx::find_audio_devices("", false, NULL, &all_names);
+
+	  std::string err_str("\n\nA unique output audio device name "
+			      "matching the string '");
+	  err_str += d_desired_name;
+	  err_str += "' was not found.\n\n";
+	  err_str += "The current known output audio device name";
+	  err_str += ((all_names.size() > 1) ? "s are" : " is");
+	  err_str += ":\n";
+	  for (UInt32 nn = 0; nn < all_names.size(); ++nn) {
+	    err_str += "    " + all_names[nn] + "\n";
+	  }
+	  GR_LOG_ERROR(d_logger, boost::format(err_str));
+	  throw std::runtime_error("audio_osx_sink::setup");
+
+	}
+      }
+
+      // if no output audio device id was found, use the default
+      // output audio device as set in System Preferences.
+
+      if (d_output_ad_id == kAudioDeviceUnknown) {
+
+        UInt32 size = sizeof(AudioDeviceID);
+        AudioObjectPropertyAddress ao_address = {
+	  kAudioHardwarePropertyDefaultOutputDevice,
+	  kAudioObjectPropertyScopeGlobal,
+	  kAudioObjectPropertyElementMaster
+        };
+
+        err = AudioObjectGetPropertyData
+	  (kAudioObjectSystemObject, &ao_address,
+	   0, NULL, &size, &d_output_ad_id);
+	check_error_and_throw
+	  (err, "Getting the default output audio device ID failed",
+	   "audio_osx_sink::setup");
+
+	{
+	  // retrieve the device name; max name length is 64 characters.
+
+	  UInt32 prop_size = 65;
+	  char c_name_buf[prop_size];
+	  bzero((void*)c_name_buf, prop_size);
+	  --prop_size;
+
+	  AudioObjectPropertyAddress ao_address = {
+	    kAudioDevicePropertyDeviceName,
+	    kAudioDevicePropertyScopeOutput, 0
+	  };
+
+	  if ((err = AudioObjectGetPropertyData
+	       (d_output_ad_id, &ao_address, 0, NULL,
+		&prop_size, (void*)c_name_buf)) != noErr) {
+
+	    check_error(err, "Unable to retrieve output audio device name");
+
+	  } else {
+
+	    GR_LOG_INFO(d_logger, boost::format
+			 ("\n\nUsing output audio device '%s'.\n  ... "
+			  "which is the current default output audio"
+			  " device.\n  Changing the default output"
+			  " audio device in the System Preferences"
+			  " will \n  result in changing it here, too "
+			  "(with an internal reconfiguration).\n") %
+			std::string(c_name_buf));
+
+	  }
+
+	  d_selected_name = c_name_buf;
+
+	}
+
+	d_using_default_device = true;
+
+      }
+
+      // retrieve the total number of channels for the selected audio
+      // output device
+
+      osx::get_num_channels_for_audio_device_id
+	(d_output_ad_id, NULL, &d_n_dev_channels);
+
+      // set the block input signature, if not already set
+      // (d_n_user_channels is set in check_topology, which is called
+      // before the flow-graph is running)
+
+      if (d_n_user_channels == 0) {
+	set_input_signature(io_signature::make
+			     (1, d_n_dev_channels, sizeof(float)));
+      }
+
+      // set the interim buffer size; to work with the GR scheduler,
+      // must be at least 16kB.  Pick 50 kB since that's plenty yet
+      // not very much.
+
+      d_buffer_sample_count = (d_input_sample_rate < 50000.0 ?
+			       50000 : (UInt32)d_input_sample_rate);
+
+#if _OSX_AU_DEBUG_
+      std::cerr << "sink(): max # samples = "
+		<< d_buffer_sample_count << std::endl;
+#endif
+
+      // create the default AudioUnit for output:
+
       // Open the default output unit
+
 #ifndef GR_USE_OLD_AUDIO_UNIT
       AudioComponentDescription desc;
 #else
@@ -123,119 +244,415 @@ namespace gr {
       desc.componentFlagsMask = 0;
 
 #ifndef GR_USE_OLD_AUDIO_UNIT
+
       AudioComponent comp = AudioComponentFindNext(NULL, &desc);
-      if(comp == NULL) {
-        std::cerr << "AudioComponentFindNext Error" << std::endl;
-        throw std::runtime_error("audio_osx_sink::audio_osx_sink");
+      if(!comp) {
+        GR_LOG_FATAL(d_logger, boost::format
+		     ("AudioComponentFindNext Failed"));
+        throw std::runtime_error("audio_osx_sink::setup");
       }
+      err = AudioComponentInstanceNew(comp, &d_output_au);
+      check_error_and_throw(err, "AudioComponentInstanceNew Failed",
+                         "audio_osx_sink::setup");
+
 #else
+
       Component comp = FindNextComponent(NULL, &desc);
       if(comp == NULL) {
-        std::cerr << "FindNextComponent Error" << std::endl;
-        throw std::runtime_error("audio_osx_sink::audio_osx_sink");
+        GR_LOG_FATAL(d_logger, boost::format
+		     ("FindNextComponent Failed"));
+        throw std::runtime_error("audio_osx_sink::setup");
       }
+      err = OpenAComponent(comp, &d_output_au);
+      check_error_and_throw(err, "OpenAComponent Failed",
+			    "audio_osx_sink::setup");
+
 #endif
 
-#ifndef GR_USE_OLD_AUDIO_UNIT
-      err = AudioComponentInstanceNew(comp, &d_OutputAU);
-      CheckErrorAndThrow(err, "AudioComponentInstanceNew",
-                         "audio_osx_sink::audio_osx_sink");
-#else
-      err = OpenAComponent(comp, &d_OutputAU);
-      CheckErrorAndThrow(err, "OpenAComponent",
-                         "audio_osx_sink::audio_osx_sink");
-#endif
+      // set the selected device ID as the current output device
+
+      err = AudioUnitSetProperty
+	(d_output_au, kAudioOutputUnitProperty_CurrentDevice,
+	 kAudioUnitScope_Global, 0,
+	 &d_output_ad_id, sizeof(d_output_ad_id));
+      check_error_and_throw
+	(err, "Setting selected output device as current failed",
+	 "audio_osx_sink::setup");
 
       // Set up a callback function to generate output to the output unit
 
-      AURenderCallbackStruct input;
-      input.inputProc = (AURenderCallback)(osx_sink::AUOutputCallback);
-      input.inputProcRefCon = this;
+      AURenderCallbackStruct au_callback = {
+	reinterpret_cast<AURenderCallback>
+	  (&osx_sink::au_output_callback),
+        reinterpret_cast<void*>(this)
+      };
+      UInt32 prop_size = (UInt32)sizeof(au_callback);
 
-      err = AudioUnitSetProperty(d_OutputAU,
-                                 kAudioUnitProperty_SetRenderCallback,
-                                 kAudioUnitScope_Input,
-                                 0,
-                                 &input,
-                                 sizeof (input));
-      CheckErrorAndThrow(err, "AudioUnitSetProperty Render Callback",
-                         "audio_osx_sink::audio_osx_sink");
+      err = AudioUnitSetProperty
+	(d_output_au,
+	 kAudioUnitProperty_SetRenderCallback,
+	 kAudioUnitScope_Input, 0,
+	 &au_callback, prop_size);
+      check_error_and_throw
+	(err, "Set Render Callback",
+	 "audio_osx_sink::setup");
 
-      // tell the Output Unit what format data will be supplied to it
-      // so that it handles any format conversions
+      // create the stream format for the output unit, so that it
+      // handles any format conversions.  Set number of channels in
+      // ::start, once the actual number of channels is known.
 
-      AudioStreamBasicDescription streamFormat;
-      streamFormat.mSampleRate = (Float64)(sample_rate);
-      streamFormat.mFormatID = kAudioFormatLinearPCM;
-      streamFormat.mFormatFlags = (kLinearPCMFormatFlagIsFloat |
+      memset((void*)(&d_stream_format), 0, sizeof(d_stream_format));
+      d_stream_format.mSampleRate = d_input_sample_rate;
+      d_stream_format.mFormatID = kAudioFormatLinearPCM;
+      d_stream_format.mFormatFlags = (kLinearPCMFormatFlagIsFloat |
                                    GR_PCM_ENDIANNESS |
                                    kLinearPCMFormatFlagIsPacked |
                                    kAudioFormatFlagIsNonInterleaved);
-      streamFormat.mBytesPerPacket = 4;
-      streamFormat.mFramesPerPacket = 1;
-      streamFormat.mBytesPerFrame = 4;
-      streamFormat.mChannelsPerFrame = d_n_channels;
-      streamFormat.mBitsPerChannel = 32;
+      d_stream_format.mBytesPerPacket = sizeof(float);
+      d_stream_format.mFramesPerPacket = 1;
+      d_stream_format.mBytesPerFrame = sizeof(float);
+      d_stream_format.mBitsPerChannel = 8*sizeof(float);
 
-      err = AudioUnitSetProperty(d_OutputAU,
-                                 kAudioUnitProperty_StreamFormat,
-                                 kAudioUnitScope_Input,
-                                 0,
-                                 &streamFormat,
-                                 sizeof(AudioStreamBasicDescription));
-      CheckErrorAndThrow(err, "AudioUnitSetProperty StreamFormat",
-                         "audio_osx_sink::audio_osx_sink");
+      // set the render quality to maximum
 
-      // create the stuff to regulate I/O
+      UInt32 render_quality = kRenderQuality_Max;
+      prop_size = (UInt32)sizeof(render_quality);
+      err = AudioUnitSetProperty
+	(d_output_au,
+	 kAudioUnitProperty_RenderQuality,
+	 kAudioUnitScope_Global, 0,
+	 &render_quality, prop_size);
+      check_error(err, "Setting render quality failed");
 
-      d_cond_data = new gr::thread::condition_variable();
-      if(d_cond_data == NULL)
-        CheckErrorAndThrow(errno, "new condition (data)",
-                           "audio_osx_sink::audio_osx_sink");
+      // clear the RunLoop (whatever that is); needed, for some
+      // reason, before a listener will work.
 
-      d_internal = new gr::thread::mutex();
-      if(d_internal == NULL)
-        CheckErrorAndThrow(errno, "new mutex (internal)",
-                           "audio_osx_sink::audio_osx_sink");
+      {
+	CFRunLoopRef the_run_loop = NULL;
+	AudioObjectPropertyAddress property = {
+	  kAudioHardwarePropertyRunLoop,
+	  kAudioObjectPropertyScopeGlobal,
+	  kAudioObjectPropertyElementMaster
+	};
+	prop_size = (UInt32)sizeof(the_run_loop);
+	err = AudioObjectSetPropertyData
+	  (kAudioObjectSystemObject, &property, 0, NULL,
+	   prop_size, &the_run_loop);
+	check_error(err, "Clearing RunLoop failed; "
+		    "Audio Output Device Listener might not work.");
+      }
 
-      // initialize the AU for output
+      // set up listeners
 
-      err = AudioUnitInitialize(d_OutputAU);
-      CheckErrorAndThrow(err, "AudioUnitInitialize",
-                         "audio_osx_sink::audio_osx_sink");
+#ifndef GR_USE_OLD_AUDIO_UNIT
+
+      // 10.4 and newer
+
+      {
+
+	// set up a listener if hardware changes (at all)
+
+	AudioObjectPropertyAddress property = {
+	  kAudioHardwarePropertyDevices,
+	  kAudioObjectPropertyScopeGlobal,
+	  kAudioObjectPropertyElementMaster
+	};
+
+	err = AudioObjectAddPropertyListener
+	  (kAudioObjectSystemObject, &property,
+	   reinterpret_cast<AudioObjectPropertyListenerProc>
+	     (&osx_sink::hardware_listener),
+	   reinterpret_cast<void*>(this));
+	check_error(err, "Adding Audio Hardware Listener failed");
+      }
+
+      if (d_using_default_device) {
+
+	// set up a listener for the default output device so that if
+	// the device changes, this routine will be called and we can
+	// internally handle this change (if/as necesary)
+
+	{
+	  AudioObjectPropertyAddress property = {
+	    kAudioHardwarePropertyDefaultOutputDevice,
+	    kAudioObjectPropertyScopeGlobal,
+	    kAudioObjectPropertyElementMaster
+	  };
+	  err = AudioObjectAddPropertyListener
+	    (kAudioObjectSystemObject, &property,
+	     reinterpret_cast<AudioObjectPropertyListenerProc>
+	       (&osx_sink::hardware_listener),
+	     reinterpret_cast<void*>(this));
+	  check_error(err, "Adding Default Output Audio Listener failed");
+	}
+      }
+
+#else
+
+      // 10.5 and older
+
+      err = AudioHardwareAddPropertyListener
+	(kAudioHardwarePropertyDevices,
+	 reinterpret_cast<AudioHardwarePropertyListenerProc>
+	   (&osx_sink::hardware_listener),
+	 reinterpret_cast<void*>(this));
+      check_error(err, "Adding Audio Hardware Listener failed");
+
+      if (d_using_default_device) {
+
+	err = AudioHardwareAddPropertyListener
+	  (kAudioHardwarePropertyDefaultOutputDevice,
+	   reinterpret_cast<AudioHardwarePropertyListenerProc>
+	     (&osx_sink::default_listener),
+	   reinterpret_cast<void*>(this));
+	check_error(err, "Adding Default Output Audio Listener failed");
+
+      }
+
+#endif
+
+      // initialize the AU for output, so that it is ready to be used
+
+      err = AudioUnitInitialize(d_output_au);
+      check_error_and_throw
+	(err, "AudioUnit Initialize Failed",
+	 "audio_osx_sink::setup");
+
 
 #if _OSX_AU_DEBUG_
-      std::cerr << "audio_osx_sink Parameters:" << std::endl;
-      std::cerr << "  Sample Rate is " << d_sample_rate << std::endl;
-      std::cerr << "  Number of Channels is " << d_n_channels << std::endl;
-      std::cerr << "  Max # samples to store per channel is " << d_max_sample_count << std::endl;
+      std::cerr << "audio_osx_sink Parameters:" << std::endl
+		<< "  Sample Rate is " << d_input_sample_rate << std::endl
+		<< "  Max # samples to store per channel is "
+		<< d_buffer_sample_count << std::endl;
 #endif
-}
+    }
+
+    void osx_sink::teardown()
+    {
+      OSStatus err = noErr;
+
+      // stop the AudioUnit
+
+      stop();
+
+      if (d_using_default_device) {
+	// remove the listener
+
+	OSStatus err = noErr;
+	AudioObjectPropertyAddress property = {
+	  kAudioHardwarePropertyDefaultOutputDevice,
+	  kAudioObjectPropertyScopeGlobal,
+	  kAudioObjectPropertyElementMaster
+	};
+	err = AudioObjectRemovePropertyListener
+	  (kAudioObjectSystemObject, &property,
+	   reinterpret_cast<AudioObjectPropertyListenerProc>
+	     (&osx_sink::hardware_listener),
+	   reinterpret_cast<void*>(this));
+#if _OSX_AU_DEBUG_
+	check_error(err, "teardown: AudioObjectRemovePropertyListener "
+		    "hardware failed");
+#endif
+      }
+
+      // uninitialize the AudioUnit
+
+      err = AudioUnitUninitialize(d_output_au);
+#if _OSX_AU_DEBUG_
+      check_error(err, "teardown: AudioUnitUninitialize failed");
+#endif
+
+      // dispose / close the AudioUnit
+
+#ifndef GR_USE_OLD_AUDIO_UNIT
+      err = AudioComponentInstanceDispose(d_output_au);
+#if _OSX_AU_DEBUG_
+      check_error(err, "teardown: AudioComponentInstanceDispose failed");
+#endif
+#else
+      CloseComponent(d_output_au);
+#if _OSX_AU_DEBUG_
+      check_error(err, "teardown: CloseComponent failed");
+#endif
+#endif
+
+      // delete buffers
+
+      for(UInt32 nn = 0; nn < d_buffers.size(); ++nn) {
+        delete d_buffers[nn];
+        d_buffers[nn] = 0;
+      }
+      d_buffers.resize(0);
+
+      // clear important variables; not # user channels
+
+      d_n_dev_channels = d_n_buffer_channels =
+	d_queue_sample_count = d_buffer_sample_count = 0;
+      d_using_default_device = false;
+      d_output_au = 0;
+      d_output_ad_id = 0;
+    }
 
     bool
-    osx_sink::IsRunning()
+    osx_sink::is_running()
     {
-      UInt32 AURunning = 0, AUSize = sizeof(UInt32);
+      UInt32 au_running = 0;
 
-      OSStatus err = AudioUnitGetProperty(d_OutputAU,
-                                          kAudioOutputUnitProperty_IsRunning,
-                                          kAudioUnitScope_Global,
-                                          0,
-                                          &AURunning,
-                                          &AUSize);
-      CheckErrorAndThrow(err, "AudioUnitGetProperty IsRunning",
-                         "audio_osx_sink::IsRunning");
+      if (d_output_au) {
 
-      return (AURunning);
+	UInt32 prop_size = (UInt32)sizeof(UInt32);
+	OSStatus err = AudioUnitGetProperty
+	  (d_output_au,
+	   kAudioOutputUnitProperty_IsRunning,
+	   kAudioUnitScope_Global, 0,
+	   &au_running, &prop_size);
+	check_error_and_throw
+	  (err, "AudioUnitGetProperty IsRunning",
+	   "audio_osx_sink::is_running");
+
+      }
+
+      return(au_running != 0);
+    }
+
+    bool
+    osx_sink::check_topology(int ninputs, int noutputs)
+    {
+      // check # output to make sure it's valid
+      if(noutputs != 0) {
+
+        GR_LOG_FATAL(d_logger, boost::format
+		     ("check_topology(): number of output "
+		      "streams provided (%d) should be 0.")
+		     % noutputs);
+        throw std::runtime_error
+          ("audio_osx_sink::check_topology");
+
+      }
+
+      // check # outputs to make sure it's valid
+      if((ninputs < 1) | (ninputs > (int) d_n_dev_channels)) {
+
+        GR_LOG_FATAL(d_logger, boost::format
+		     ("check_topology(): number of input "
+		      "streams provided (%d) should be in [1,%d] "
+		      "for the selected output audio device.")
+		     % ninputs % d_n_dev_channels);
+        throw std::runtime_error("audio_osx_sink::check_topology");
+
+      }
+
+      // save the actual number of input (user) channels
+
+      d_n_user_channels = ninputs;
+
+#if _OSX_AU_DEBUG_
+      std::cerr << "chk_topo: Actual # user input channels = "
+                << d_n_user_channels << std::endl;
+#endif
+
+      return (true);
+    }
+
+    void
+    osx_sink::check_channels(bool force_reset)
+    {
+      if (d_buffers.size() == 0) {
+
+	// allocate the output circular buffer(s), one per user channel
+
+	d_buffers.resize(d_n_user_channels);
+	for(UInt32 nn = 0; nn < d_n_user_channels; ++nn) {
+	  d_buffers[nn] = new circular_buffer<float>
+	    (d_buffer_sample_count, false, false);
+	}
+      }
+      else {
+	if(d_buffers.size() == d_n_user_channels) {
+	  if (force_reset) {
+	    for(UInt32 nn = 0; nn < d_buffers.size(); ++nn) {
+	      d_buffers[nn]->reset();
+	    }
+	  }
+	  return;
+	}
+
+	// reallocate the output circular buffer(s)
+
+	if (d_n_user_channels < d_buffers.size()) {
+
+	  // too many buffers; delete some
+
+	  for (UInt32 nn = d_n_user_channels; nn < d_buffers.size(); ++nn) {
+	    delete d_buffers[nn];
+	    d_buffers[nn] = 0;
+	  }
+	  d_buffers.resize(d_n_user_channels);
+
+	  // reset remaining buffers
+
+	  for(UInt32 nn = 0; nn < d_buffers.size(); ++nn) {
+	    d_buffers[nn]->reset();
+	  }
+	}
+	else {
+
+	  // too few buffers; create some more
+
+	  // reset old buffers first
+
+	  for(UInt32 nn = 0; nn < d_buffers.size(); ++nn) {
+	    d_buffers[nn]->reset();
+	  }
+
+	  d_buffers.resize(d_n_user_channels);
+	  for (UInt32 nn = d_buffers.size(); nn < d_n_user_channels; ++nn) {
+	    d_buffers[nn] = new circular_buffer<float>
+	      (d_buffer_sample_count, false, false);
+	  }
+	}
+      }
+
+      // reset the output audio unit for the correct number of channels
+      // have to uninitialize, set, initialize.
+
+      OSStatus err = AudioUnitUninitialize(d_output_au);
+      check_error(err, "AudioUnitUninitialize");
+
+      d_stream_format.mChannelsPerFrame = d_n_user_channels;
+
+      err = AudioUnitSetProperty
+	(d_output_au,
+	 kAudioUnitProperty_StreamFormat,
+	 kAudioUnitScope_Input, 0,
+	 &d_stream_format, sizeof(d_stream_format));
+      check_error_and_throw
+	(err, "AudioUnitSetProperty StreamFormat",
+	 "audio_osx_sink::check_channels");
+
+      // initialize the AU for output, so that it is ready to be used
+
+      err = AudioUnitInitialize(d_output_au);
+      check_error_and_throw
+	(err, "AudioUnitInitialize",
+	 "audio_osx_sink::check_channels");
     }
 
     bool
     osx_sink::start()
     {
-      if(!IsRunning()) {
-        OSStatus err = AudioOutputUnitStart(d_OutputAU);
-        CheckErrorAndThrow(err, "AudioOutputUnitStart",
-                           "audio_osx_sink::start");
+      if(!is_running() && d_output_au) {
+
+	// check channels, (re)allocate and reset buffers if/as necessary
+
+	check_channels(true);
+
+	// start the audio unit (should never fail)
+
+        OSStatus err = AudioOutputUnitStart(d_output_au);
+        check_error_and_throw
+	  (err, "AudioOutputUnitStart",
+	   "audio_osx_sink::start");
       }
 
       return (true);
@@ -244,43 +661,23 @@ namespace gr {
     bool
     osx_sink::stop()
     {
-      if(IsRunning ()) {
-        OSStatus err = AudioOutputUnitStop(d_OutputAU);
-        CheckErrorAndThrow(err, "AudioOutputUnitStop",
-                           "audio_osx_sink::stop");
+      if(is_running()) {
 
-        for(UInt32 n = 0; n < d_n_channels; n++) {
-          d_buffers[n]->abort();
+	// stop the audio unit (should never fail)
+
+        OSStatus err = AudioOutputUnitStop(d_output_au);
+        check_error_and_throw
+	  (err, "AudioOutputUnitStop",
+	   "audio_osx_sink::stop");
+
+	// abort all buffers
+
+        for(UInt32 nn = 0; nn < d_n_user_channels; ++nn) {
+          d_buffers[nn]->abort();
         }
       }
 
-      return (true);
-    }
-
-    osx_sink::~osx_sink()
-    {
-      // stop and close the AudioUnit
-      stop();
-      AudioUnitUninitialize(d_OutputAU);
-#ifndef GR_USE_OLD_AUDIO_UNIT
-      AudioComponentInstanceDispose(d_OutputAU);
-#else
-      CloseComponent(d_OutputAU);
-#endif
-
-      // empty and delete the queues
-      for(UInt32 n = 0; n < d_n_channels; n++) {
-        delete d_buffers[n];
-        d_buffers[n] = 0;
-      }
-      delete [] d_buffers;
-      d_buffers = 0;
-
-      // close and delete control stuff
-      delete d_cond_data;
-      d_cond_data = 0;
-      delete d_internal;
-      d_internal = 0;
+      return(true);
     }
 
     int
@@ -288,19 +685,90 @@ namespace gr {
                    gr_vector_const_void_star &input_items,
                    gr_vector_void_star &output_items)
     {
-      gr::thread::scoped_lock l(*d_internal);
+#if _OSX_AU_DEBUG_RENDER_
+      std::cerr << ((void*)(pthread_self()))
+		<< " : audio_osx_sink::work: Starting." << std::endl;
+#endif
+      if (d_do_reset) {
+	if (d_hardware_changed) {
 
-      /* take the input data, copy it, and push it to the bottom of the queue
-         mono input are pushed onto queue[0];
-         stereo input are pushed onto queue[1].
-         Start the AudioUnit if necessary. */
+	  // see if the current AudioDeviceID is still available
+
+	  std::vector < AudioDeviceID > all_ad_ids;
+	  osx::find_audio_devices
+	    (d_desired_name, false,
+	     &all_ad_ids, NULL);
+	  bool found = false;
+	  for (UInt32 nn = 0; (nn < all_ad_ids.size()) && (!found);
+	       ++nn) {
+	    found = (all_ad_ids[nn] == d_output_ad_id);
+	  }
+	  if (!found) {
+
+	    GR_LOG_FATAL(d_logger, boost::format
+			 ("The selected output audio device ('%s') "
+			  "is no longer available.\n")
+			 % d_selected_name);
+	    return(gr::block::WORK_DONE);
+
+	  }
+
+	  d_do_reset = d_hardware_changed = false;
+
+	}
+	else {
+
+#if _OSX_AU_DEBUG_RENDER_
+	  std::cerr << "audio_osx_sink::work: doing reset."
+		    << std::endl;
+#endif
+
+	  GR_LOG_WARN(d_logger, boost::format
+		      ("\n\nThe default output audio device has "
+		       "changed; resetting audio.\nThere may "
+		       "be a sound glitch while resetting.\n"));
+
+	  // for any changes, just tear down the current
+	  // configuration, then set it up again using the user's
+	  // parameters to try to make selections.
+
+	  teardown();
+
+	  gr::thread::scoped_lock l(d_internal);
+
+#if _OSX_AU_DEBUG_RENDER_
+	  std::cerr << "audio_osx_sink::work: mutex locked."
+		    << std::endl;
+#endif
+
+	  setup();
+	  start();
+
+#if _OSX_AU_DEBUG_RENDER_
+	  std::cerr << "audio_osx_sink: returning after reset."
+		    << std::endl;
+#endif
+	  return(0);
+	}
+      }
+
+      gr::thread::scoped_lock l(d_internal);
+
+      // take the input data, copy it, and push it to the bottom of
+      // the queue mono input are pushed onto queue[0]; stereo input
+      // are pushed onto queue[1].  If the number of user/graph
+      // channels is less than the number of device channels, copy the
+      // data from the last / highest number channel to remaining
+      // device channels.
 
       UInt32 l_max_count;
-      int diff_count = d_max_sample_count - noutput_items;
-      if(diff_count < 0)
+      int diff_count = d_buffer_sample_count - noutput_items;
+      if(diff_count < 0) {
         l_max_count = 0;
-      else
+      }
+      else {
         l_max_count = (UInt32)diff_count;
+      }
 
 #if 0
       if(l_max_count < d_queueItemLength->back()) {
@@ -309,47 +777,66 @@ namespace gr {
       }
 #endif
 
-#if _OSX_AU_DEBUG_
-      std::cerr << "work1: qSC = " << d_queueSampleCount
+#if _OSX_AU_DEBUG_RENDER_
+      std::cerr << "work1: qSC = " << d_queue_sample_count
                 << ", lMC = "<< l_max_count
-                << ", dmSC = " << d_max_sample_count
+                << ", dmSC = " << d_buffer_sample_count
                 << ", nOI = " << noutput_items << std::endl;
 #endif
 
-      if(d_queueSampleCount > l_max_count) {
-        // data coming in too fast; do_block decides what to do
-        if(d_do_block == true) {
-          // block until there is data to return
-          while(d_queueSampleCount > l_max_count) {
-            // release control so-as to allow data to be retrieved;
-            // block until there is data to return
-            d_cond_data->wait(l);
-            // the condition's 'notify' was called; acquire control
-            // to keep thread safe
-          }
-        }
+      if(d_queue_sample_count > l_max_count) {
+        // data coming in too fast; ok_to_block decides what to do
+        if(d_ok_to_block == true) {
+          // block until there is data to return, or on reset
+          while(d_queue_sample_count > l_max_count) {
+	    // release control so-as to allow data to be retrieved;
+	    // block until there is data to return
+#if _OSX_AU_DEBUG_RENDER_
+	    std::cerr << "audio_osx_sink::work: waiting." << std::endl;
+#endif
+	    d_waiting_for_data = true;
+	    d_cond_data.wait(l);
+	    d_waiting_for_data = false;
+#if _OSX_AU_DEBUG_RENDER_
+	    std::cerr << "audio_osx_sink::work: done waiting." << std::endl;
+#endif
+	    // the condition's 'notify' was called; acquire control to
+	    // keep thread safe
+
+	    // if doing a reset, just return here; reset will pick
+	    // up the next time this method is called.
+	    if (d_do_reset) {
+#if _OSX_AU_DEBUG_RENDER_
+	      std::cerr << "audio_osx_sink::work: "
+		"returning for reset." << std::endl;
+#endif
+	      return(0);
+	    }
+	  }
+	}
       }
+
       // not blocking case and overflow is handled by the circular buffer
 
       // add the input frames to the buffers' queue, checking for overflow
 
-      UInt32 l_counter;
+      UInt32 nn;
       int res = 0;
       float* inBuffer = (float*)input_items[0];
       const UInt32 l_size = input_items.size();
-      for(l_counter = 0; l_counter < l_size; l_counter++) {
-        inBuffer = (float*)input_items[l_counter];
-        int l_res = d_buffers[l_counter]->enqueue(inBuffer,
-                                                  noutput_items);
-        if(l_res == -1)
+      for(nn = 0; nn < l_size; ++nn) {
+        inBuffer = (float*)input_items[nn];
+        int l_res = d_buffers[nn]->enqueue(inBuffer, noutput_items);
+        if(l_res == -1) {
           res = -1;
+	}
       }
-      while(l_counter < d_n_channels) {
+      while(nn < d_n_user_channels) {
         // for extra channels, copy the last input's data
-        int l_res = d_buffers[l_counter++]->enqueue(inBuffer,
-                                                    noutput_items);
-        if(l_res == -1)
+        int l_res = d_buffers[nn++]->enqueue(inBuffer, noutput_items);
+        if(l_res == -1) {
           res = -1;
+	}
       }
 
       if(res == -1) {
@@ -358,71 +845,125 @@ namespace gr {
         fputs("aO", stderr);
         fflush(stderr);
         // set the local number of samples available to the max
-        d_queueSampleCount = d_buffers[0]->buffer_length_items();
+        d_queue_sample_count = d_buffers[0]->buffer_length_items();
       }
       else {
         // keep up the local sample count
-        d_queueSampleCount += noutput_items;
+        d_queue_sample_count += noutput_items;
       }
 
-#if _OSX_AU_DEBUG_
+#if _OSX_AU_DEBUG_RENDER_
       std::cerr << "work2: #OI = "
                 << noutput_items << ", #Cnt = "
-                << d_queueSampleCount << ", mSC = "
-                << d_max_sample_count << std::endl;
+                << d_queue_sample_count << ", mSC = "
+                << d_buffer_sample_count << std::endl;
 #endif
 
       return (noutput_items);
     }
 
     OSStatus
-    osx_sink::AUOutputCallback(void *inRefCon,
-                               AudioUnitRenderActionFlags *ioActionFlags,
-                               const AudioTimeStamp *inTimeStamp,
-                               UInt32 inBusNumber,
-                               UInt32 inNumberFrames,
-                               AudioBufferList *ioData)
+    osx_sink::au_output_callback
+    (void* in_ref_con,
+     AudioUnitRenderActionFlags* io_action_flags,
+     const AudioTimeStamp* in_time_stamp,
+     UInt32 in_bus_number,
+     UInt32 in_number_frames,
+     AudioBufferList* io_data)
     {
-      osx_sink* This = (osx_sink*)inRefCon;
+      osx_sink* This = reinterpret_cast<osx_sink*>(in_ref_con);
       OSStatus err = noErr;
 
-      gr::thread::scoped_lock l(*This->d_internal);
+      gr::thread::scoped_lock l(This->d_internal);
 
-#if _OSX_AU_DEBUG_
-      std::cerr << "cb_in: SC = " << This->d_queueSampleCount
-                << ", in#F = " << inNumberFrames << std::endl;
+#if _OSX_AU_DEBUG_RENDER_
+      std::cerr << "cb_in: SC = " << This->d_queue_sample_count
+                << ", in#F = " << in_number_frames << std::endl;
 #endif
 
-      if(This->d_queueSampleCount < inNumberFrames) {
+      if(This->d_queue_sample_count < in_number_frames) {
         // not enough data to fill request
         err = -1;
       }
       else {
         // enough data; remove data from our buffers into the AU's buffers
-        int l_counter = This->d_n_channels;
+        int nn = This->d_n_user_channels;
 
-        while(--l_counter >= 0) {
-          size_t t_n_output_items = inNumberFrames;
-          float* outBuffer = (float*)ioData->mBuffers[l_counter].mData;
-          This->d_buffers[l_counter]->dequeue(outBuffer, &t_n_output_items);
-          if(t_n_output_items != inNumberFrames) {
-            throw std::runtime_error("audio_osx_sink::AUOutputCallback(): "
-                                     "number of available items changing "
-                                     "unexpectedly.\n");
+        while(--nn >= 0) {
+          size_t t_n_output_items = in_number_frames;
+          float* out_buffer = (float*)(io_data->mBuffers[nn].mData);
+          This->d_buffers[nn]->dequeue(out_buffer, &t_n_output_items);
+          if(t_n_output_items != in_number_frames) {
+            throw std::runtime_error
+	      ("audio_osx_sink::au_output_callback: "
+	       "number of available items changing "
+	       "unexpectedly (should never happen).");
           }
         }
 
-        This->d_queueSampleCount -= inNumberFrames;
+        This->d_queue_sample_count -= in_number_frames;
       }
 
-#if _OSX_AU_DEBUG_
-      std::cerr << "cb_out: SC = " << This->d_queueSampleCount << std::endl;
+#if _OSX_AU_DEBUG_RENDER_
+      std::cerr << "cb_out: SC = "
+                << This->d_queue_sample_count << std::endl;
 #endif
 
-      // signal that data is available
-      This->d_cond_data->notify_one();
+      // signal that data is available, if appropraite
+
+      if (This->d_waiting_for_data) {
+	This->d_cond_data.notify_one();
+      }
 
       return (err);
+    }
+
+#ifndef GR_USE_OLD_AUDIO_UNIT
+
+    OSStatus
+    osx_sink::hardware_listener
+    (AudioObjectID in_object_id,
+     UInt32 in_num_addresses,
+     const AudioObjectPropertyAddress in_addresses[],
+     void* in_client_data)
+
+#else
+
+    OSStatus
+    osx_sink::hardware_listener
+    (AudioHardwarePropertyID in_property_id,
+     void* in_client_data)
+
+#endif
+    {
+      osx_sink* This = static_cast
+	<osx_sink*>(in_client_data);
+      This->reset(true);
+      return(noErr);
+    }
+
+#ifndef GR_USE_OLD_AUDIO_UNIT
+
+    OSStatus
+    osx_sink::default_listener
+    (AudioObjectID in_object_id,
+     UInt32 in_num_addresses,
+     const AudioObjectPropertyAddress in_addresses[],
+     void* in_client_data)
+
+#else
+
+    OSStatus
+    osx_sink::default_listener
+    (AudioHardwarePropertyID in_property_id,
+     void* in_client_data)
+
+#endif
+    {
+      osx_sink* This = reinterpret_cast
+	<osx_sink*>(in_client_data);
+      This->reset(false);
+      return(noErr);
     }
 
   } /* namespace audio */

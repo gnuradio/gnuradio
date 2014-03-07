@@ -106,6 +106,8 @@ CHECK_INCLUDE_FILE_CXX(AudioToolbox/AudioToolbox.h AUDIO_TOOLBOX_H)
 
 if(AUDIO_UNIT_H AND AUDIO_TOOLBOX_H)
 
+    set(OSX_AUDIO_VALID 1 CACHE INTERNAL "OSX Audio is valid")
+
     include_directories(BEFORE ${CMAKE_CURRENT_SOURCE_DIR}/osx)
     list(APPEND gr_audio_libs
         "-framework AudioUnit"
@@ -114,9 +116,16 @@ if(AUDIO_UNIT_H AND AUDIO_TOOLBOX_H)
         "-framework Carbon"
     )
     list(APPEND gr_audio_sources
+        ${CMAKE_CURRENT_SOURCE_DIR}/osx/osx_impl.cc
         ${CMAKE_CURRENT_SOURCE_DIR}/osx/osx_source.cc
         ${CMAKE_CURRENT_SOURCE_DIR}/osx/osx_sink.cc
     )
+
+    list(APPEND gr_audio_confs ${CMAKE_CURRENT_SOURCE_DIR}/osx/gr-audio-osx.conf)
+
+else(AUDIO_UNIT_H AND AUDIO_TOOLBOX_H)
+
+    set(OSX_AUDIO_VALID 0 CACHE INTERNAL "OSX Audio is not valid")
 
 endif(AUDIO_UNIT_H AND AUDIO_TOOLBOX_H)
 
