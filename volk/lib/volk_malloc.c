@@ -24,7 +24,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-/* 
+/*
  * For #defines used to determine support for allocation functions,
  * see: http://linux.die.net/man/3/aligned_alloc
 */
@@ -111,11 +111,7 @@ volk_malloc(size_t size, size_t alignment)
   // Find and return the first aligned boundary of the pointer
   void *aptr = ptr;
   if((unsigned long)ptr % alignment != 0)
-#ifdef _MSC_VER
     aptr = (void*)((unsigned long)ptr + (alignment - ((unsigned long)ptr % alignment)));
-#else
-    aptr = ptr + (alignment - ((unsigned long)ptr % alignment));
-#endif
 
   // Store original pointer and aligned pointers
   mbuf *n = (mbuf*)malloc(sizeof(mbuf));
@@ -128,7 +124,7 @@ volk_malloc(size_t size, size_t alignment)
   else {
     volk_last_ptr->next = n;
   }
-  volk_last_ptr = n;  
+  volk_last_ptr = n;
   volk_nptrs++;
 
   return aptr;
@@ -139,7 +135,7 @@ void volk_free(void *ptr)
   unsigned long aptr = (unsigned long)ptr;
   mbuf *prev = volk_first_ptr;
   mbuf *p = volk_first_ptr;
-  
+
   // Look for the aligned pointer until we either find it or have
   // walked the entire list of allocated pointers
   while(p != NULL) {
