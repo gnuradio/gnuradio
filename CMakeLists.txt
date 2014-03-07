@@ -1,4 +1,4 @@
-# Copyright 2010-2012 Free Software Foundation, Inc.
+# Copyright 2010-2012,2014 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -107,10 +107,26 @@ endif(MSVC)
 # Record Compiler Info for record
 STRING(TOUPPER ${CMAKE_BUILD_TYPE} GRCBTU)
 set(COMPILER_INFO "")
-execute_process(COMMAND ${CMAKE_C_COMPILER} --version
-        OUTPUT_VARIABLE cmake_c_compiler_version)
-execute_process(COMMAND ${CMAKE_CXX_COMPILER} --version
-        OUTPUT_VARIABLE cmake_cxx_compiler_version)
+IF(MSVC)
+    IF(MSVC90)   #Visual Studio 9
+        SET(cmake_c_compiler_version "Microsoft Visual Studio 9.0")
+        SET(cmake_cxx_compiler_version "Microsoft Visual Studio 9.0")
+    ELSE(MSVC10) #Visual Studio 10
+        SET(cmake_c_compiler_version "Microsoft Visual Studio 10.0")
+        SET(cmake_cxx_compiler_version "Microsoft Visual Studio 10.0")
+    ELSE(MSVC11) #Visual Studio 11
+        SET(cmake_c_compiler_version "Microsoft Visual Studio 11.0")
+        SET(cmake_cxx_compiler_version "Microsoft Visual Studio 11.0")
+    ELSE(MSVC12) #Visual Studio 12
+        SET(cmake_c_compiler_version "Microsoft Visual Studio 12.0")
+        SET(cmake_cxx_compiler_version "Microsoft Visual Studio 12.0")
+    ENDIF()
+ELSE()
+    execute_process(COMMAND ${CMAKE_C_COMPILER} --version
+            OUTPUT_VARIABLE cmake_c_compiler_version)
+    execute_process(COMMAND ${CMAKE_CXX_COMPILER} --version
+            OUTPUT_VARIABLE cmake_cxx_compiler_version)
+ENDIF(MSVC)
 set(COMPILER_INFO "${CMAKE_C_COMPILER}:::${CMAKE_C_FLAGS_${GRCBTU}} ${CMAKE_C_FLAGS}\n${CMAKE_CXX_COMPILER}:::${CMAKE_CXX_FLAGS_${GRCBTU}} ${CMAKE_CXX_FLAGS}\n" )
 
 # Convert to a C string to compile and display properly
