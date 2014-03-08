@@ -128,6 +128,13 @@ namespace gr {
 	d_qApplication = new QApplication(d_argc, &d_argv);
       }
 
+      // If a style sheet is set in the prefs file, enable it here.
+      std::string qssfile = prefs::singleton()->get_string("qtgui","qss","");
+      if(qssfile.size() > 0) {
+        QString sstext = get_qt_style_sheet(QString(qssfile.c_str()));
+        d_qApplication->setStyleSheet(sstext);
+      }
+
       if(d_center_freq < 0) {
 	throw std::runtime_error("sink_c_impl: Received bad center frequency.\n");
       }

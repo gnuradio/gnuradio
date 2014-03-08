@@ -118,6 +118,13 @@ namespace gr {
 	d_qApplication = new QApplication(d_argc, &d_argv);
       }
 
+      // If a style sheet is set in the prefs file, enable it here.
+      std::string qssfile = prefs::singleton()->get_string("qtgui","qss","");
+      if(qssfile.size() > 0) {
+        QString sstext = get_qt_style_sheet(QString(qssfile.c_str()));
+        d_qApplication->setStyleSheet(sstext);
+      }
+
       d_main_gui = new TimeDisplayForm(d_nconnections, d_parent);
       d_main_gui->setNPoints(d_size);
       d_main_gui->setSampleRate(d_samp_rate);

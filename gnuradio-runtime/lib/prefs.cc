@@ -76,7 +76,7 @@ namespace gr {
     fs::directory_iterator diritr(dir);
     while(diritr != fs::directory_iterator()) {
       fs::path p = *diritr++;
-      if(p.extension() != ".swp")
+      if(p.extension() == ".conf")
         fnames.push_back(p.string());
     }
     std::sort(fnames.begin(), fnames.end());
@@ -111,16 +111,46 @@ namespace gr {
           // remove any comments in the line
           size_t hash = t.find("#");
 
+          // Remove any white space unless it's between quotes
+          // Search if the string has any quotes in it
+          size_t quote1 = t.find("\"");
+          if(quote1 != std::string::npos) {
+            // If yes, find where the start and end quotes are.
+            // Note that this isn't robust if there are multiple
+            // quoted strings in the line; this will just take the
+            // first and last, and if there is only a single quote,
+            // this will treat the entire line after the quote as the
+            // quoted text.
+            // the inq variable is strips the quotes as well.
+            size_t quote2 = t.find_last_of("\"");
+            std::string sol = t.substr(0, quote1);
+            std::string inq = t.substr(quote1+1, quote2-quote1-1);
+            std::string eol = t.substr(quote2+1, t.size()-quote2-1);
+
+            // Remove all white space of the text before the first quote
+            sol.erase(std::remove_if(sol.begin(), sol.end(),
+                                     ::isspace), sol.end());
+
+            // Remove all white space of the text after the end quote
+            eol.erase(std::remove_if(eol.begin(), eol.end(),
+                                     ::isspace), eol.end());
+
+            // Pack the stripped start and end of lines with the part
+            // of the string in quotes (but without the quotes).
+            t = sol + inq + eol;
+          }
+          else {
+            // No quotes, just strip all white space
+            t.erase(std::remove_if(t.begin(), t.end(),
+                                   ::isspace), t.end());
+          }
+
           // Use hash marks at the end of each segment as a delimiter
           config += t.substr(0, hash) + '#';
         }
       }
       fin.close();
     }
-
-    // Remove all whitespace.
-    config.erase(std::remove_if(config.begin(), config.end(),
-                                ::isspace), config.end());
 
     // Convert the string into a map
     _convert_to_map(config);
@@ -136,11 +166,11 @@ namespace gr {
     size_t sec_start = sub.find("[");
     while(sec_start != std::string::npos) {
       sub = sub.substr(sec_start);
-    
+
       size_t sec_end = sub.find("]");
       if(sec_end == std::string::npos)
         throw std::runtime_error("Config file error: Mismatched section label.\n");
-   
+
       std::string sec = sub.substr(1, sec_end-1);
       size_t next_sec_start = sub.find("[", sec_end);
       std::string subsec = sub.substr(sec_end+1, next_sec_start-sec_end-2);
@@ -154,7 +184,7 @@ namespace gr {
       while(next_opt < subsec.size()-1) {
         next_val = subsec.find("=", next_opt);
         std::string option = subsec.substr(next_opt+1, next_val-next_opt-1);
-      
+
         next_opt = subsec.find("#", next_val);
         std::string value = subsec.substr(next_val+1, next_opt-next_val-1);
 
