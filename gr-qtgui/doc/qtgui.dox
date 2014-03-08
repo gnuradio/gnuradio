@@ -203,4 +203,10 @@ usability. When using QTGUI sinks through an X-forwarding session over
 SSH, switch to using 'native' for a significant speed boost on the
 remote end.
 
+We can also set a QT Style Sheet (QSS) file to adjust the look of our
+plotting tools. Set the 'qss' option of the 'qtgui' section in our
+configuration file to a QSS file. An example QSS file is distributed
+with the QTGUI examples found in
+share/gnuradio/examples/qt-gui/dark.qss.
+
 */

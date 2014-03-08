@@ -27,6 +27,15 @@
 #include <gnuradio/qtgui/api.h>
 #include <qwt_plot_picker.h>
 #include <qwt_picker_machine.h>
+#include <QString>
+
+/*!
+ * From QSS file name, extracts the file contents and returns a
+ * QString that contains the QSS information. Designed to be passed to
+ * the qApplication. The QSS file is typically retrieved using the
+ * [qtgui] qss=<filename> section of the preferences files.
+ */
+QTGUI_API QString get_qt_style_sheet(QString filename);
 
 class QTGUI_API QwtDblClickPlotPicker: public QwtPlotPicker
 {

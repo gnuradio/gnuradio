@@ -127,6 +127,13 @@ namespace gr {
 	d_qApplication = new QApplication(d_argc, &d_argv);
       }
 
+      // If a style sheet is set in the prefs file, enable it here.
+      std::string qssfile = prefs::singleton()->get_string("qtgui","qss","");
+      if(qssfile.size() > 0) {
+        QString sstext = get_qt_style_sheet(QString(qssfile.c_str()));
+        d_qApplication->setStyleSheet(sstext);
+      }
+
       // Create time raster plot; as a bit input, we expect to see 1's
       // and 0's from each stream, so we set the maximum intensity
       // (zmax) to the number of connections so after adding the
