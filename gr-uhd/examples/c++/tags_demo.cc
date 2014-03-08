@@ -104,7 +104,7 @@ int main(int argc, char *argv[]){
 
     boost::shared_ptr<tag_source_demo> tag_source = boost::make_shared<tag_source_demo>(
         time_now.get_full_secs() + 1, time_now.get_frac_secs(), //time now + 1 second
-        actual_samp_rate, idle_dur, burst_dur
+        actual_samp_rate, idle_dur, burst_dur, length_tag
     );
 
     //------------------------------------------------------------------
