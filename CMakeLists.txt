@@ -308,6 +308,7 @@ list(APPEND GR_TEST_PYTHON_DIRS
 ########################################################################
 # Add subdirectories (in order of deps)
 ########################################################################
+add_subdirectory(docs)
 add_subdirectory(gnuradio-runtime)
 add_subdirectory(gr-blocks)
 add_subdirectory(grc)
@@ -331,7 +332,6 @@ add_subdirectory(gr-vocoder)
 add_subdirectory(gr-fcd)
 add_subdirectory(gr-wavelet)
 add_subdirectory(gr-wxgui)
-add_subdirectory(docs)
 
 # Install our Cmake modules into $prefix/lib/cmake/gnuradio
 # See "Package Configuration Files" on page:
