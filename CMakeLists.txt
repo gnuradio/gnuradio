@@ -56,11 +56,6 @@ IF(NOT DEFINED BOOST_ROOT)
     SET(BOOST_ROOT ${CMAKE_INSTALL_PREFIX})
 ENDIF()
 
-if(ENABLE_GR_CTRLPORT)
-  set(GR_CTRLPORT True)
-  add_definitions(-DGR_CTRLPORT)
-endif(ENABLE_GR_CTRLPORT)
-
 ########################################################################
 # Import executables from a native build (for cross compiling)
 # http://www.vtk.org/Wiki/CMake_Cross_Compiling#Using_executables_in_the_build_created_during_the_build
@@ -166,7 +161,7 @@ endif(isusr)
 
 set(GR_PREFSDIR         ${SYSCONFDIR}/${CMAKE_PROJECT_NAME}/conf.d)
 
-OPTION(ENABLE_PERFORMANCE_COUNTERS "Enable block performance counters" OFF)
+OPTION(ENABLE_PERFORMANCE_COUNTERS "Enable block performance counters" ON)
 if(ENABLE_PERFORMANCE_COUNTERS)
   message(STATUS "ADDING PERF COUNTERS")
   SET(GR_PERFORMANCE_COUNTERS True)
@@ -308,6 +303,7 @@ list(APPEND GR_TEST_PYTHON_DIRS
 ########################################################################
 # Add subdirectories (in order of deps)
 ########################################################################
+add_subdirectory(docs)
 add_subdirectory(gnuradio-runtime)
 add_subdirectory(gr-blocks)
 add_subdirectory(grc)
@@ -331,7 +327,12 @@ add_subdirectory(gr-vocoder)
 add_subdirectory(gr-fcd)
 add_subdirectory(gr-wavelet)
 add_subdirectory(gr-wxgui)
-add_subdirectory(docs)
+
+# Defining GR_CTRLPORT for gnuradio/config.h
+if(ENABLE_GR_CTRLPORT)
+  set(GR_CTRLPORT True)
+  add_definitions(-DGR_CTRLPORT)
+endif(ENABLE_GR_CTRLPORT)
 
 # Install our Cmake modules into $prefix/lib/cmake/gnuradio
 # See "Package Configuration Files" on page:
