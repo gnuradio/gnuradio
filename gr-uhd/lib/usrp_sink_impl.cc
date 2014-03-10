@@ -33,7 +33,7 @@ namespace gr {
     usrp_sink::make(const ::uhd::device_addr_t &device_addr,
                     const ::uhd::io_type_t &io_type,
                     size_t num_channels,
-                    const std::string &length_tag_key)
+                    const std::string &length_tag_name)
     {
       //fill in the streamer args
       ::uhd::stream_args_t stream_args;
@@ -47,22 +47,22 @@ namespace gr {
       for(size_t chan = 0; chan < num_channels; chan++)
         stream_args.channels.push_back(chan); //linear mapping
 
-      return usrp_sink::make(device_addr, stream_args, length_tag_key);
+      return usrp_sink::make(device_addr, stream_args, length_tag_name);
     }
 
     usrp_sink::sptr
     usrp_sink::make(const ::uhd::device_addr_t &device_addr,
                     const ::uhd::stream_args_t &stream_args,
-                    const std::string &length_tag_key)
+                    const std::string &length_tag_name)
     {
       check_abi();
       return usrp_sink::sptr
-        (new usrp_sink_impl(device_addr, stream_args_ensure(stream_args), length_tag_key));
+        (new usrp_sink_impl(device_addr, stream_args_ensure(stream_args), length_tag_name));
     }
 
     usrp_sink_impl::usrp_sink_impl(const ::uhd::device_addr_t &device_addr,
                                    const ::uhd::stream_args_t &stream_args,
-                                   const std::string &length_tag_key)
+                                   const std::string &length_tag_name)
       : sync_block("gr uhd usrp sink",
                       args_to_io_sig(stream_args),
                       io_signature::make(0, 0, 0)),
@@ -70,7 +70,7 @@ namespace gr {
         _nchan(stream_args.channels.size()),
         _stream_now(_nchan == 1),
         _start_time_set(false),
-        _length_tag_key(length_tag_key),
+        _length_tag_key(length_tag_name.empty() ? pmt::PMT_NIL : pmt::string_to_symbol(length_tag_name)),
         _nitems_to_send(0)
     {
       if(stream_args.cpu_format == "fc32")
@@ -484,7 +484,7 @@ namespace gr {
       //check if there is data left to send from a burst tagged with length_tag
       //note: if a burst is started during this call to work(), tag_work() should
       //have been called and we should have _nitems_to_send > 0.
-      if(not _length_tag_key.empty() and _nitems_to_send > 0) {
+      if(not pmt::is_null(_length_tag_key) and _nitems_to_send > 0) {
         ninput_items = std::min<long>(_nitems_to_send, ninput_items);
         //if we run out of items to send, it's the end of the burst
         if(_nitems_to_send - long(ninput_items) == 0)
@@ -502,8 +502,9 @@ namespace gr {
 #endif
 
       //if using length_tags, decrement items left to send by the number of samples sent
-      if(not _length_tag_key.empty() and _nitems_to_send > 0)
+      if(not pmt::is_null(_length_tag_key) and _nitems_to_send > 0) {
         _nitems_to_send -= long(num_sent);
+      }
 
       //increment the timespec by the number of samples sent
       _metadata.time_spec += ::uhd::time_spec_t(0, num_sent, _sample_rate);
@@ -547,20 +548,20 @@ namespace gr {
           break;
         }
 
-        //handle end of burst with a mini end of burst packet; ignore if we have a nonempty length_tag_key string
-        else if(_length_tag_key.empty() and pmt::equal(key, EOB_KEY)) {
+        //handle end of burst with a mini end of burst packet; ignore if length_tag_key is not null
+        else if(pmt::is_null(_length_tag_key) and pmt::equal(key, EOB_KEY)) {
           _metadata.end_of_burst = pmt::to_bool(value);
           ninput_items = 1;
           return;
         }
 
-        //set the start of burst flag in the metadata; ignore if we have a nonempty length_tag_key string
-        else if(_length_tag_key.empty() and pmt::equal(key, SOB_KEY)) {
+        //set the start of burst flag in the metadata; ignore if length_tag_key is not null
+        else if(pmt::is_null(_length_tag_key) and pmt::equal(key, SOB_KEY)) {
           _metadata.start_of_burst = pmt::to_bool(value);
         }
 
         //length_tag found; set the start of burst flag in the metadata
-        else if(not _length_tag_key.empty() and pmt::equal(key, pmt::string_to_symbol(_length_tag_key))) {
+        else if(not pmt::is_null(_length_tag_key) and pmt::equal(key, _length_tag_key)) {
           //If there are still items left to send, we will truncate the previous burst 
           //by setting the end of burst flag in a mini end of burst packet. The next 
           //call to work will start at the new burst.

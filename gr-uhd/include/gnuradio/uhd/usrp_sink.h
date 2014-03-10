@@ -72,12 +72,12 @@ namespace gr {
        *  - pmt::string_to_symbol("tx_sob")
        *  - pmt::string_to_symbol("tx_eob")
        *  - pmt::string_to_symbol("tx_time")
-       *  - pmt::string_to_symbol(length_tag_key)
+       *  - pmt::string_to_symbol(length_tag_name)
        *
        * The sob and eob (start and end of burst) tag values are pmt booleans.
        * When present, burst tags should be set to true (pmt::PMT_T).
        *
-       * If length_tag_key is not an empty string, all "tx_sob" and "tx_eob" 
+       * If length_tag_name is not an empty string, all "tx_sob" and "tx_eob"
        * tags will be ignored.
        *
        * The length tag value should be a pmt long specifying the number
@@ -92,13 +92,13 @@ namespace gr {
        * \param device_addr the address to identify the hardware
        * \param io_type the desired input data type
        * \param num_channels number of stream from the device
-       * \param length_tag_key the key of the tag identifying tagged stream length
+       * \param length_tag_name the name of the tag identifying tagged stream length
        * \return a new USRP sink block object
        */
       static sptr make(const ::uhd::device_addr_t &device_addr,
                        const ::uhd::io_type_t &io_type,
                        size_t num_channels,
-                       const std::string &length_tag_key = "");
+                       const std::string &length_tag_name = "");
 
       /*!
        * \brief Make a new USRP sink block.
@@ -112,12 +112,12 @@ namespace gr {
        *  - pmt::string_to_symbol("tx_sob")
        *  - pmt::string_to_symbol("tx_eob")
        *  - pmt::string_to_symbol("tx_time")
-       *  - pmt::string_to_symbol(length_tag_key)
+       *  - pmt::string_to_symbol(length_tag_name)
        *
        * The sob and eob (start and end of burst) tag values are pmt booleans.
        * When present, burst tags should be set to true (pmt::PMT_T).
        *
-       * If length_tag_key is not an empty string, all "tx_sob" and "tx_eob" 
+       * If length_tag_name is not an empty string, all "tx_sob" and "tx_eob"
        * tags will be ignored.
        *
        * The length tag value should be a pmt long specifying the number
@@ -131,12 +131,12 @@ namespace gr {
        *
        * \param device_addr the address to identify the hardware
        * \param stream_args the IO format and channel specification
-       * \param length_tag_key the key of the tag identifying tagged stream length
+       * \param length_tag_name the name of the tag identifying tagged stream length
        * \return a new USRP sink block object
        */
       static sptr make(const ::uhd::device_addr_t &device_addr,
                        const ::uhd::stream_args_t &stream_args,
-                       const std::string &length_tag_key = "");
+                       const std::string &length_tag_name = "");
 
       /*!
        * Set the start time for outgoing samples.
