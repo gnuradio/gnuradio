@@ -32,6 +32,7 @@
 #include <gnuradio/filter/firdes.h>
 #include <gnuradio/qtgui/qtgui_types.h>
 #include <gnuradio/qtgui/trigger_mode.h>
+#include <gnuradio/qtgui/number_sink.h>
 
 class LineColorMenu: public QMenu
 {
@@ -81,7 +82,7 @@ public:
   {
     return d_act.size();
   }
-  
+
   QAction * getAction(int which)
   {
     if(which < d_act.size())
@@ -160,7 +161,7 @@ public:
   {
     return d_act.size();
   }
-  
+
   QAction * getAction(int which)
   {
     if(which < d_act.size())
@@ -229,7 +230,7 @@ public:
   {
     return d_act.size();
   }
-  
+
   QAction * getAction(int which)
   {
     if(which < d_act.size())
@@ -312,7 +313,7 @@ public:
   {
     return d_act.size();
   }
-  
+
   QAction * getAction(int which)
   {
     if(which < d_act.size())
@@ -384,7 +385,7 @@ public:
   {
     return d_act.size();
   }
-  
+
   QAction * getAction(int which)
   {
     if(which < d_act.size())
@@ -441,7 +442,7 @@ public:
 
   ~LineTitleAction()
   {}
-  
+
 signals:
   void whichTrigger(int which, const QString &text);
 
@@ -453,7 +454,7 @@ public slots:
 
 private slots:
   void getText()
-  { 
+  {
     emit whichTrigger(d_which, d_text->text());
     d_diag->accept();
   }
@@ -521,7 +522,7 @@ public slots:
 
 private slots:
   void getText()
-  { 
+  {
     emit whichTrigger(d_text->text());
     d_diag->accept();
   }
@@ -548,7 +549,7 @@ public:
 
     d_text0 = new QLineEdit();
     d_text1 = new QLineEdit();
-    
+
     QLabel *_label0 = new QLabel(label0);
     QLabel *_label1 = new QLabel(label1);
 
@@ -584,7 +585,7 @@ public slots:
 
 private slots:
   void getText()
-  { 
+  {
     emit whichTrigger(d_text0->text(), d_text1->text());
     d_diag->accept();
   }
@@ -699,7 +700,7 @@ public slots:
   //void get13() { emit whichTrigger(8192); }
   //void get14() { emit whichTrigger(16384); }
   //void get15() { emit whichTrigger(32768); }
-  void getOther(const QString &str) 
+  void getOther(const QString &str)
   {
     int value = str.toInt();
     emit whichTrigger(value);
@@ -741,7 +742,7 @@ public:
     }
     d_act[0]->setChecked(true);
 
-    QDoubleValidator *valid = new QDoubleValidator(0.0, 1.0, 2, this);
+    QDoubleValidator *valid = new QDoubleValidator(0.0, 1.0, 3, this);
     ((OtherAction*)d_act[d_act.size()-1])->setValidator(valid);
 
     connect(d_act[0], SIGNAL(triggered()), this, SLOT(getOff()));
@@ -792,6 +793,21 @@ public:
     return d_act[static_cast<int>(which)];
   }
 
+  void setHigh(float x)
+  {
+    d_high = x;
+  }
+
+  void setMedium(float x)
+  {
+    d_medium = x;
+  }
+
+  void setLow(float x)
+  {
+    d_low = x;
+  }
+
  signals:
    void whichTrigger(float alpha);
 
@@ -800,7 +816,7 @@ public:
    void getHigh() { emit whichTrigger(d_high); }
    void getMedium() { emit whichTrigger(d_medium); }
    void getLow() { emit whichTrigger(d_low); }
-   void getOther(const QString &str) 
+   void getOther(const QString &str)
    {
      float value = str.toFloat();
      emit whichTrigger(value);
@@ -863,7 +879,7 @@ public:
   {
     return d_act.size();
   }
-  
+
   QAction * getAction(int which)
   {
     if(which < d_act.size())
@@ -958,7 +974,7 @@ public slots:
 
 private slots:
   void getText()
-  { 
+  {
     emit whichTrigger(d_text->text().toInt());
     d_diag->accept();
   }
@@ -1088,7 +1104,7 @@ public:
   {
     return d_act.size();
   }
-  
+
   QAction * getAction(int which)
   {
     if(which < d_act.size())
@@ -1166,7 +1182,7 @@ public:
   {
     return d_act.size();
   }
-  
+
   QAction * getAction(int which)
   {
     if(which < d_act.size())
@@ -1231,7 +1247,7 @@ public:
   {
     return d_act.size();
   }
-  
+
   QAction * getAction(int which)
   {
     if(which < d_act.size())
@@ -1255,6 +1271,162 @@ public slots:
 private:
   QList<QAction *> d_act;
   QActionGroup *d_grp;
+};
+
+
+/********************************************************************/
+
+
+class NumberLayoutMenu: public QMenu
+{
+  Q_OBJECT
+
+public:
+  NumberLayoutMenu(QWidget *parent)
+    : QMenu("Layout", parent)
+  {
+    d_grp = new QActionGroup(this);
+    d_act.push_back(new QAction("Horizontal", this));
+    d_act.push_back(new QAction("Vertical", this));
+    d_act.push_back(new QAction("None", this));
+
+    connect(d_act[0], SIGNAL(triggered()), this, SLOT(getHoriz()));
+    connect(d_act[1], SIGNAL(triggered()), this, SLOT(getVert()));
+    connect(d_act[2], SIGNAL(triggered()), this, SLOT(getNone()));
+
+    QListIterator<QAction*> i(d_act);
+    while(i.hasNext()) {
+      QAction *a = i.next();
+      a->setCheckable(true);
+      a->setActionGroup(d_grp);
+      addAction(a);
+    }
+  }
+
+  ~NumberLayoutMenu()
+  {}
+
+  int getNumActions() const
+  {
+    return d_act.size();
+  }
+
+  QAction * getAction(int which)
+  {
+    if(which < d_act.size())
+      return d_act[which];
+    else
+      throw std::runtime_error("NumberLayoutMenu::getAction: which out of range.\n");
+  }
+
+  QAction * getAction(gr::qtgui::graph_t layout)
+  {
+    switch(layout) {
+    case gr::qtgui::NUM_GRAPH_HORIZ:
+      return d_act[0];
+      break;
+    case gr::qtgui::NUM_GRAPH_VERT:
+      return d_act[1];
+      break;
+    case gr::qtgui::NUM_GRAPH_NONE:
+      return d_act[1];
+      break;
+    default:
+      throw std::runtime_error("NumberLayoutMenu::getAction: unknown layout type.\n");
+    }
+  }
+
+signals:
+  void whichTrigger(gr::qtgui::graph_t layout);
+
+public slots:
+  void getHoriz() { emit whichTrigger(gr::qtgui::NUM_GRAPH_HORIZ); }
+  void getVert() { emit whichTrigger(gr::qtgui::NUM_GRAPH_VERT); }
+  void getNone() { emit whichTrigger(gr::qtgui::NUM_GRAPH_NONE); }
+
+private:
+  QList<QAction *> d_act;
+  QActionGroup *d_grp;
+};
+
+
+/********************************************************************/
+
+
+class NumberColorMapMenu: public QMenu
+{
+  Q_OBJECT
+
+public:
+  NumberColorMapMenu(int which, QWidget *parent)
+    : QMenu("Color Map", parent), d_which(which)
+  {
+    d_act.push_back(new QAction("Black", this));
+    d_act.push_back(new QAction("Blue-Red", this));
+    d_act.push_back(new QAction("White Hot", this));
+    d_act.push_back(new QAction("Black Hot", this));
+    d_act.push_back(new QAction("Black-Red", this));
+    d_act.push_back(new QAction("Other", this));
+
+    connect(d_act[0], SIGNAL(triggered()), this, SLOT(getBlack()));
+    connect(d_act[1], SIGNAL(triggered()), this, SLOT(getBlueRed()));
+    connect(d_act[2], SIGNAL(triggered()), this, SLOT(getWhiteHot()));
+    connect(d_act[3], SIGNAL(triggered()), this, SLOT(getBlackHot()));
+    connect(d_act[4], SIGNAL(triggered()), this, SLOT(getBlackRed()));
+    connect(d_act[5], SIGNAL(triggered()), this, SLOT(getOther()));
+
+     QListIterator<QAction*> i(d_act);
+     while(i.hasNext()) {
+       QAction *a = i.next();
+       addAction(a);
+     }
+
+     d_max_value = QColor("black");
+     d_min_value = QColor("black");
+   }
+
+   ~NumberColorMapMenu()
+   {}
+
+   int getNumActions() const
+   {
+     return d_act.size();
+   }
+
+   QAction * getAction(int which)
+   {
+     if(which < d_act.size())
+       return d_act[which];
+     else
+       throw std::runtime_error("ColorMapMenu::getAction: which out of range.\n");
+   }
+
+ signals:
+  void whichTrigger(int which,
+		    const QColor &min_color,
+		    const QColor &max_color);
+
+ public slots:
+  void getBlack() { emit whichTrigger(d_which, QColor("black"), QColor("black")); }
+  void getBlueRed() { emit whichTrigger(d_which, QColor("blue"), QColor("red")); }
+  void getWhiteHot() { emit whichTrigger(d_which, QColor("black"), QColor("white")); }
+  void getBlackHot() { emit whichTrigger(d_which, QColor("white"), QColor("black")); }
+  void getBlackRed() { emit whichTrigger(d_which, QColor("black"), QColor("red")); }
+  void getOther()
+  {
+    QMessageBox::information(this, "Set low and high intensities",
+       "In the next windows, select the low and then the high intensity colors.",
+       QMessageBox::Ok);
+    d_min_value = QColorDialog::getColor(d_min_value, this);
+    d_max_value = QColorDialog::getColor(d_max_value, this);
+
+    emit whichTrigger(d_which, d_min_value, d_max_value);
+  }
+
+private:
+  QList<QAction *> d_act;
+  QColor d_max_value, d_min_value;
+  int d_which;
 };
 
 
@@ -1308,7 +1480,7 @@ public slots:
 
 private slots:
   void getText()
-  { 
+  {
     emit whichTrigger(d_text->text());
     d_diag->accept();
   }

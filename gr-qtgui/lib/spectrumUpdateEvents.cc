@@ -490,4 +490,26 @@ HistogramUpdateEvent::getNumDataPoints() const
 }
 
 
+
+/***************************************************************************/
+
+
+NumberUpdateEvent::NumberUpdateEvent(const std::vector<float> samples)
+  : QEvent(QEvent::Type(SpectrumUpdateEventType))
+{
+  _samples = samples;
+  _nplots = samples.size();
+}
+
+NumberUpdateEvent::~NumberUpdateEvent()
+{
+}
+
+const std::vector<float>
+NumberUpdateEvent::getSamples() const
+{
+  return _samples;
+}
+
+
 #endif /* SPECTRUM_UPDATE_EVENTS_C */

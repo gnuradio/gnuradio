@@ -50,7 +50,8 @@ Q_DECLARE_METATYPE ( QColorList )
  * \brief QWidget base plot to build QTGUI plotting tools.
  * \ingroup qtgui_blk
  */
-class DisplayPlot:public QwtPlot{
+class DisplayPlot:public QwtPlot
+{
   Q_OBJECT
 
   Q_PROPERTY ( QColor line_color1 READ getLineColor1 WRITE setLineColor1 )
