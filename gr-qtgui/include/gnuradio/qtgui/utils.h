@@ -33,7 +33,7 @@
  * From QSS file name, extracts the file contents and returns a
  * QString that contains the QSS information. Designed to be passed to
  * the qApplication. The QSS file is typically retrieved using the
- * [qtgui] qss=<filename> section of the preferences files.
+ * [qtgui] qss=\<filename\> section of the preferences files.
  */
 QTGUI_API QString get_qt_style_sheet(QString filename);
 
