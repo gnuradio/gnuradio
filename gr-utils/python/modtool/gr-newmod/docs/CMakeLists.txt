@@ -25,11 +25,11 @@ find_package(Doxygen)
 ########################################################################
 # Begin conditional configuration
 ########################################################################
-if(ENABLE_DOXYGEN)
+if(DOXYGEN_FOUND)
 
 ########################################################################
 # Add subdirectories
 ########################################################################
 add_subdirectory(doxygen)
 
-endif(ENABLE_DOXYGEN)
+endif(DOXYGEN_FOUND)
