@@ -86,8 +86,8 @@ namespace gr {
         d_access_code = (d_access_code << 1) | (access_code[i] & 1);
       }
       if(VERBOSE) {
-          std::cout << "Access code: " << std::hex << d_access_code << std::dec << std::endl;
-          std::cout << "Mask: " << std::hex << d_mask << std::dec << std::endl;
+          std::cerr << "Access code: " << std::hex << d_access_code << std::dec << std::endl;
+          std::cerr << "Mask: " << std::hex << d_mask << std::dec << std::endl;
       }
 
       return true;
@@ -103,38 +103,31 @@ namespace gr {
 
       uint64_t abs_out_sample_cnt = nitems_written(0);
 
-      int size = noutput_items-d_len;
-      if(size<=0) return 0;
-
-      for(int i = 0; i < size; i++) {
+      for(int i = 0; i < noutput_items; i++) {
 	out[i] = in[i];
 
 	// compute hamming distance between desired access code and current data
 	uint64_t wrong_bits = 0;
 	uint64_t nwrong = d_threshold+1;
-	int new_flag = 0;
 
 	wrong_bits  = (d_data_reg ^ d_access_code) & d_mask;
 	volk_64u_popcnt(&nwrong, wrong_bits);
 
-	// test for access code with up to threshold errors
-	new_flag = (nwrong <= d_threshold);
-
 	// shift in new data and new flag
 	d_data_reg = (d_data_reg << 1) | (in[i] & 0x1);
-	if(new_flag) {
+	if(nwrong <= d_threshold) {
 	  if(VERBOSE)
 	    std::cerr << "writing tag at sample " << abs_out_sample_cnt + i << std::endl;
 	  add_item_tag(0, //stream ID
 		       abs_out_sample_cnt + i, //sample
 		       d_key,      //frame info
-		       pmt::from_long(nwrong), //data (unused)
+		       pmt::from_long(nwrong), //data (number wrong)
 		       d_me        //block src id
 		       );
 	}
       }
 
-      return size;
+      return noutput_items;
     }
 
   } /* namespace digital */
