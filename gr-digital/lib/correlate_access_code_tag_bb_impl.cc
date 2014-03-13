@@ -27,7 +27,8 @@
 #include "correlate_access_code_tag_bb_impl.h"
 #include <gnuradio/io_signature.h>
 #include <stdexcept>
-#include <gnuradio/blocks/count_bits.h>
+//#include <gnuradio/blocks/count_bits.h>
+#include <volk/volk.h>
 #include <cstdio>
 #include <iostream>
 
@@ -75,16 +76,18 @@ namespace gr {
     {
       d_len = access_code.length();	// # of bytes in string
       if(d_len > 64)
-	return false;
+        return false;
 
-      // set len top bits to 1.
-      d_mask = ((~0ULL) >> (64 - d_len)) << (64 - d_len);
+      // set d_len bottom bits to 1.
+      d_mask = (1 << d_len) - 1;
 
       d_access_code = 0;
-      for(unsigned i=0; i < 64; i++){
-	d_access_code <<= 1;
-	if(i < d_len)
-	  d_access_code |= access_code[i] & 1;	// look at LSB only
+      for(unsigned i=0; i < d_len; i++){
+        d_access_code = (d_access_code << 1) | (access_code[i] & 1);
+      }
+      if(VERBOSE) {
+          std::cout << "Access code: " << std::hex << d_access_code << std::dec << std::endl;
+          std::cout << "Mask: " << std::hex << d_mask << std::dec << std::endl;
       }
 
       return true;
@@ -100,16 +103,19 @@ namespace gr {
 
       uint64_t abs_out_sample_cnt = nitems_written(0);
 
-      for(int i = 0; i < noutput_items; i++) {
+      int size = noutput_items-d_len;
+      if(size<=0) return 0;
+
+      for(int i = 0; i < size; i++) {
 	out[i] = in[i];
 
 	// compute hamming distance between desired access code and current data
-	unsigned long long wrong_bits = 0;
-	unsigned int nwrong = d_threshold+1;
+	uint64_t wrong_bits = 0;
+	uint64_t nwrong = d_threshold+1;
 	int new_flag = 0;
 
 	wrong_bits  = (d_data_reg ^ d_access_code) & d_mask;
-	nwrong = gr::blocks::count_bits64(wrong_bits);
+	volk_64u_popcnt(&nwrong, wrong_bits);
 
 	// test for access code with up to threshold errors
 	new_flag = (nwrong <= d_threshold);
@@ -120,15 +126,15 @@ namespace gr {
 	  if(VERBOSE)
 	    std::cerr << "writing tag at sample " << abs_out_sample_cnt + i << std::endl;
 	  add_item_tag(0, //stream ID
-		       abs_out_sample_cnt + i - 64 + d_len, //sample
+		       abs_out_sample_cnt + i, //sample
 		       d_key,      //frame info
-		       pmt::pmt_t(), //data (unused)
+		       pmt::from_long(nwrong), //data (unused)
 		       d_me        //block src id
 		       );
 	}
       }
 
-      return noutput_items;
+      return size;
     }
 
   } /* namespace digital */
