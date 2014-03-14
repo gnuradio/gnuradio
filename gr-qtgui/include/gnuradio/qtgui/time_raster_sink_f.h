@@ -76,6 +76,8 @@ namespace gr {
 
 #ifdef ENABLE_PYTHON
       virtual PyObject* pyqwidget() = 0;
+#else
+      virtual void* pyqwidget() = 0;
 #endif
 
       virtual void set_update_time(double t) = 0;
