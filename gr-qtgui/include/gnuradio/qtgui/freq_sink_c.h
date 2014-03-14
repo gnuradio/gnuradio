@@ -71,6 +71,7 @@ namespace gr {
 		       QWidget *parent=NULL);
 
       virtual void exec_() = 0;
+      virtual QWidget* qwidget() = 0;
 
 #ifdef ENABLE_PYTHON
       virtual PyObject* pyqwidget() = 0;
