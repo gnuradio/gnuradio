@@ -25,6 +25,7 @@ import pygtk
 pygtk.require('2.0')
 import gtk
 import gobject
+import subprocess
 import Preferences
 from threading import Thread
 import Messages
@@ -116,6 +117,7 @@ class ActionHandler:
                 Actions.FLOW_GRAPH_SCREEN_CAPTURE, Actions.HELP_WINDOW_DISPLAY,
                 Actions.TYPES_WINDOW_DISPLAY, Actions.TOGGLE_BLOCKS_WINDOW,
                 Actions.TOGGLE_REPORTS_WINDOW, Actions.TOGGLE_HIDE_DISABLED_BLOCKS,
+                Actions.TOOLS_RUN_FDESIGN,
             ): action.set_sensitive(True)
             if ParseXML.xml_failures:
                 Messages.send_xml_errors_if_any(ParseXML.xml_failures)
@@ -485,23 +487,29 @@ class ActionHandler:
             bn = [];
             for b in self.get_flow_graph().get_selected_blocks():
                 if b._grc_source:
-                    self.main_window.new_page(b._grc_source, show=True);
+                    self.main_window.new_page(b._grc_source, show=True)
         elif action == Actions.BUSSIFY_SOURCES:
             n = {'name':'bus', 'type':'bus'}
             for b in self.get_flow_graph().get_selected_blocks():
-                b.bussify(n, 'source');
-            self.get_flow_graph()._old_selected_port = None;
-            self.get_flow_graph()._new_selected_port = None;
-            Actions.ELEMENT_CREATE();
+                b.bussify(n, 'source')
+            self.get_flow_graph()._old_selected_port = None
+            self.get_flow_graph()._new_selected_port = None
+            Actions.ELEMENT_CREATE()
             
         elif action == Actions.BUSSIFY_SINKS:
             n = {'name':'bus', 'type':'bus'}
             for b in self.get_flow_graph().get_selected_blocks():
                 b.bussify(n, 'sink')
-            self.get_flow_graph()._old_selected_port = None;
-            self.get_flow_graph()._new_selected_port = None;
-            Actions.ELEMENT_CREATE();
-        else: print '!!! Action "%s" not handled !!!'%action
+            self.get_flow_graph()._old_selected_port = None
+            self.get_flow_graph()._new_selected_port = None
+            Actions.ELEMENT_CREATE()
+
+        elif action == Actions.TOOLS_RUN_FDESIGN:
+            subprocess.Popen('gr_filter_design',
+                             shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+
+        else:
+            print '!!! Action "%s" not handled !!!' % action
         ##################################################
         # Global Actions for all States
         ##################################################
