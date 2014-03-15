@@ -131,7 +131,8 @@ class Block(Element):
     def create_labels(self):
         """Create the labels for the signal block."""
         Element.create_labels(self)
-        self._bg_color = self.get_enabled() and Colors.BLOCK_ENABLED_COLOR or Colors.BLOCK_DISABLED_COLOR
+        self._bg_color = self.is_dummy_block() and Colors.MISSING_BLOCK_BACKGROUND_COLOR or \
+                         self.get_enabled() and Colors.BLOCK_ENABLED_COLOR or Colors.BLOCK_DISABLED_COLOR
         layouts = list()
         #create the main layout
         layout = gtk.DrawingArea().create_pango_layout('')
@@ -194,7 +195,8 @@ class Block(Element):
         #draw main block
         Element.draw(
             self, gc, window, bg_color=self._bg_color,
-            border_color=self.is_highlighted() and Colors.HIGHLIGHT_COLOR or Colors.BORDER_COLOR,
+            border_color=self.is_highlighted() and Colors.HIGHLIGHT_COLOR or
+                         self.is_dummy_block() and Colors.MISSING_BLOCK_BORDER_COLOR or Colors.BORDER_COLOR,
         )
         #draw label image
         if self.is_horizontal():
