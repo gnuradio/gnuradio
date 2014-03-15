@@ -49,6 +49,7 @@
 #include "gnuradio/qtgui/waterfall_sink_c.h"
 #include "gnuradio/qtgui/waterfall_sink_f.h"
 #include "gnuradio/qtgui/histogram_sink_f.h"
+#include "gnuradio/qtgui/number_sink.h"
 %}
 
 %include "gnuradio/qtgui/sink_c.h"
@@ -63,6 +64,7 @@
 %include "gnuradio/qtgui/waterfall_sink_c.h"
 %include "gnuradio/qtgui/waterfall_sink_f.h"
 %include "gnuradio/qtgui/histogram_sink_f.h"
+%include "gnuradio/qtgui/number_sink.h"
 
 GR_SWIG_BLOCK_MAGIC2(qtgui, sink_c);
 GR_SWIG_BLOCK_MAGIC2(qtgui, sink_f);
@@ -76,3 +78,4 @@ GR_SWIG_BLOCK_MAGIC2(qtgui, const_sink_c);
 GR_SWIG_BLOCK_MAGIC2(qtgui, waterfall_sink_c);
 GR_SWIG_BLOCK_MAGIC2(qtgui, waterfall_sink_f);
 GR_SWIG_BLOCK_MAGIC2(qtgui, histogram_sink_f);
+GR_SWIG_BLOCK_MAGIC2(qtgui, number_sink);
