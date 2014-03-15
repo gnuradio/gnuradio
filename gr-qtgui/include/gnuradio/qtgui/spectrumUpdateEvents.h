@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2008-2013 Free Software Foundation, Inc.
+ * Copyright 2008-2014 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -293,6 +293,30 @@ private:
   std::vector<double*> _points;
   uint64_t _npoints;
 };
+
+
+/********************************************************************/
+
+
+class NumberUpdateEvent: public QEvent
+{
+public:
+  NumberUpdateEvent(const std::vector<float> samples);
+  ~NumberUpdateEvent();
+
+  int which() const;
+  const std::vector<float> getSamples() const;
+
+  static QEvent::Type Type()
+      { return QEvent::Type(SpectrumUpdateEventType); }
+
+protected:
+
+private:
+  size_t _nplots;
+  std::vector<float> _samples;
+};
+
 
 
 #endif /* SPECTRUM_UPDATE_EVENTS_H */

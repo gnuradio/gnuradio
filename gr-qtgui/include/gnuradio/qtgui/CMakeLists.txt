@@ -36,6 +36,9 @@ install(FILES
   histogram_sink_f.h
   histogramdisplayform.h
   HistogramDisplayPlot.h
+  number_sink.h
+  numberdisplayform.h
+  NumberDisplayPlot.h
   plot_raster.h
   plot_waterfall.h
   qtgui_types.h
