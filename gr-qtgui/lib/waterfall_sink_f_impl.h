@@ -85,6 +85,8 @@ namespace gr {
 
 #ifdef ENABLE_PYTHON
       PyObject* pyqwidget();
+#else
+      void* pyqwidget();
 #endif
 
       void clear_data();

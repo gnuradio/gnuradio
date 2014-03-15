@@ -88,6 +88,8 @@ namespace gr {
 
 #ifdef ENABLE_PYTHON
       PyObject* pyqwidget();
+#else
+      void* pyqwidget();
 #endif
 
       void set_y_axis(double min, double max);
