@@ -61,14 +61,12 @@ namespace gr {
        * \brief Build a number sink
        *
        * \param itemsize Size of input item stream
-       * \param name title for the plot
        * \param average Averaging coefficient (0 - 1)
        * \param graph_type Type of graph to use (number_sink::graph_t)
        * \param nconnections number of signals connected to sink
        * \param parent a QWidget parent object, if any
        */
       static sptr make(size_t itemsize,
-		       const std::string &name,
                        float average=0,
                        graph_t graph_type=NUM_GRAPH_HORIZ,
 		       int nconnections=1,
@@ -81,7 +79,6 @@ namespace gr {
 #endif
 
       virtual void set_update_time(double t) = 0;
-      virtual void set_title(const std::string &title) = 0;
       virtual void set_average(const float avg) = 0;
       virtual void set_graph_type(const graph_t type) = 0;
       virtual void set_color(int which,
@@ -89,15 +86,19 @@ namespace gr {
                              const std::string &max) = 0;
       virtual void set_color(int which, int min, int max) = 0;
       virtual void set_label(int which, const std::string &label) = 0;
+      virtual void set_min(int which, float min) = 0;
+      virtual void set_max(int which, float max) = 0;
 
-      virtual std::string title() = 0;
       virtual float average() const = 0;
       virtual graph_t graph_type() const = 0;
-      virtual std::string color_min() const = 0;
-      virtual std::string color_max() const = 0;
+      virtual std::string color_min(int which) const = 0;
+      virtual std::string color_max(int which) const = 0;
       virtual std::string label(int which) const = 0;
+      virtual float min(int which) const = 0;
+      virtual float max(int which) const = 0;
 
       virtual void enable_menu(bool en=true) = 0;
+      virtual void enable_autoscale(bool en=true) = 0;
 
       virtual void reset() = 0;
 

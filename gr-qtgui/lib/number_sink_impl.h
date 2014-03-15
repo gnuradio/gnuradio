@@ -40,7 +40,6 @@ namespace gr {
       gr::thread::mutex d_mutex;
 
       size_t d_itemsize;
-      std::string d_name;
       float d_average;
       graph_t d_type;
       int d_nconnections;
@@ -66,7 +65,6 @@ namespace gr {
 
     public:
       number_sink_impl(size_t itemsize,
-		       const std::string &name,
                        float average=0,
                        graph_t graph_type=NUM_GRAPH_HORIZ,
 		       int nconnections=1,
@@ -83,7 +81,6 @@ namespace gr {
 #endif
 
       void set_update_time(double t);
-      void set_title(const std::string &title);
       void set_average(const float avg);
       void set_graph_type(const graph_t type);
       void set_color(int which,
@@ -91,15 +88,19 @@ namespace gr {
                      const std::string &max);
       void set_color(int which, int min, int max);
       void set_label(int which, const std::string &label);
+      void set_min(int which, float min);
+      void set_max(int which, float max);
 
-      std::string title();
       float average() const;
       graph_t graph_type() const;
-      std::string color_min() const;
-      std::string color_max() const;
+      std::string color_min(int which) const;
+      std::string color_max(int which) const;
       std::string label(int which) const;
+      float min(int which) const;
+      float max(int which) const;
 
       void enable_menu(bool en);
+      void enable_autoscale(bool en=true);
 
       void reset();
 

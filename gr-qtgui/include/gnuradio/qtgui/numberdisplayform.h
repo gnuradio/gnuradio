@@ -45,11 +45,13 @@ class NumberDisplayForm : public QWidget
   ~NumberDisplayForm();
 
   gr::qtgui::graph_t graphType() const;
-  QColor colorMin() const;
-  QColor colorMax() const;
+  QColor colorMin(int which) const;
+  QColor colorMax(int which) const;
   std::string label(int which) const;
   float average() const;
   float updateTime() const;
+  int scaleMin(int which);
+  int scaleMax(int which);
 
 public slots:
   void mousePressEvent(QMouseEvent * e);
@@ -66,6 +68,9 @@ public slots:
   void setUpdateTime(const float time);
   void setUpdateTime(QString time);
   void saveFigure();
+  void setScale(int which, int min, int max);
+  void setScaleMin(int which, int min);
+  void setScaleMax(int which, int max);
   void autoScale(bool on);
 
 private slots:

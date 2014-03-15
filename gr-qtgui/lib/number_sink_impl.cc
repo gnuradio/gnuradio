@@ -36,19 +36,17 @@ namespace gr {
 
     number_sink::sptr
     number_sink::make(size_t itemsize,
-                      const std::string &name,
                       float average,
                       graph_t graph_type,
                       int nconnections,
                       QWidget *parent)
     {
       return gnuradio::get_initial_sptr
-	(new number_sink_impl(itemsize, name, average,
+	(new number_sink_impl(itemsize, average,
                               graph_type, nconnections, parent));
     }
 
     number_sink_impl::number_sink_impl(size_t itemsize,
-                                       const std::string &name,
                                        float average,
                                        graph_t graph_type,
                                        int nconnections,
@@ -56,7 +54,7 @@ namespace gr {
       : sync_block("number_sink",
                    io_signature::make(nconnections, nconnections, itemsize),
                    io_signature::make(0, 0, 0)),
-	d_itemsize(itemsize), d_name(name), d_average(average),
+	d_itemsize(itemsize), d_average(average),
 	d_type(graph_type), d_nconnections(nconnections), d_parent(parent),
         d_avg_value(nconnections), d_iir(nconnections)
     {
@@ -146,12 +144,6 @@ namespace gr {
     }
 
     void
-    number_sink_impl::set_title(const std::string &title)
-    {
-      //d_main_gui->setTitle(title.c_str());
-    }
-
-    void
     number_sink_impl::set_average(const float avg)
     {
       d_average = avg;
@@ -189,11 +181,16 @@ namespace gr {
       d_main_gui->setLabel(which, label);
     }
 
-    std::string
-    number_sink_impl::title()
+    void
+    number_sink_impl::set_min(int which, float min)
     {
-      //return d_main_gui->title().toStdString();
-      return "";
+      d_main_gui->setScaleMin(which, min);
+    }
+
+    void
+    number_sink_impl::set_max(int which, float max)
+    {
+      return d_main_gui->setScaleMax(which, max);
     }
 
     float
@@ -209,16 +206,15 @@ namespace gr {
     }
 
     std::string
-    number_sink_impl::color_min() const
+    number_sink_impl::color_min(int which) const
     {
-      //return d_main_gui->colorMin();
-      return "min color";
+      return d_main_gui->colorMin(which).name().toStdString();
     }
 
     std::string
-    number_sink_impl::color_max() const
+    number_sink_impl::color_max(int which) const
     {
-      return d_main_gui->colorMax().name().toStdString();
+      return d_main_gui->colorMax(which).name().toStdString();
     }
 
     std::string
@@ -227,10 +223,28 @@ namespace gr {
       return d_main_gui->label(which);
     }
 
+    float
+    number_sink_impl::min(int which) const
+    {
+      return d_main_gui->scaleMin(which);
+    }
+
+    float
+    number_sink_impl::max(int which) const
+    {
+      return d_main_gui->scaleMax(which);
+    }
+
     void
     number_sink_impl::enable_menu(bool en)
     {
       //d_main_gui->enableMenu(en);
+    }
+
+    void
+    number_sink_impl::enable_autoscale(bool en)
+    {
+      d_main_gui->autoScale(en);
     }
 
     void

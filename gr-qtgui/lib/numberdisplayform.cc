@@ -285,13 +285,13 @@ NumberDisplayForm::setColor(int which, const QColor &min, const QColor &max)
 void
 NumberDisplayForm::setColorMin(int which, QString min)
 {
-  setColor(which, QColor(min), colorMax());
+  setColor(which, QColor(min), colorMax(which));
 }
 
 void
 NumberDisplayForm::setColorMax(int which, QString max)
 {
-  setColor(which, colorMin(), QColor(max));
+  setColor(which, colorMin(which), QColor(max));
 }
 
 void
@@ -324,6 +324,26 @@ NumberDisplayForm::setUpdateTime(QString time)
   setUpdateTime(time.toFloat());
 }
 
+void
+NumberDisplayForm::setScale(int which, int min, int max)
+{
+  d_min[which] = min;
+  d_max[which] = max;
+  d_indicator[which]->setScale(min, max);
+}
+
+void
+NumberDisplayForm::setScaleMin(int which, int min)
+{
+  setScale(which, min, d_max[which]);
+}
+
+void
+NumberDisplayForm::setScaleMax(int which, int max)
+{
+  setScale(which, d_min[which], max);
+}
+
 gr::qtgui::graph_t
 NumberDisplayForm::graphType() const
 {
@@ -331,16 +351,16 @@ NumberDisplayForm::graphType() const
 }
 
 QColor
-NumberDisplayForm::colorMin() const
+NumberDisplayForm::colorMin(int which) const
 {
-  QwtLinearColorMap *map = static_cast<QwtLinearColorMap*>(d_indicator[0]->colorMap());
+  QwtLinearColorMap *map = static_cast<QwtLinearColorMap*>(d_indicator[which]->colorMap());
   return map->color1();
 }
 
 QColor
-NumberDisplayForm::colorMax() const
+NumberDisplayForm::colorMax(int which) const
 {
-  QwtLinearColorMap *map = static_cast<QwtLinearColorMap*>(d_indicator[0]->colorMap());
+  QwtLinearColorMap *map = static_cast<QwtLinearColorMap*>(d_indicator[which]->colorMap());
   return map->color2();
 }
 
@@ -360,6 +380,18 @@ float
 NumberDisplayForm::updateTime() const
 {
   return d_update_time;
+}
+
+int
+NumberDisplayForm::scaleMin(int which)
+{
+  return d_min[which];
+}
+
+int
+NumberDisplayForm::scaleMax(int which)
+{
+  return d_max[which];
 }
 
 void
