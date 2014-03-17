@@ -26,6 +26,9 @@ try:
 
     HIGHLIGHT_COLOR = get_color('#00FFFF')
     BORDER_COLOR = get_color('black')
+    # missing blocks stuff
+    MISSING_BLOCK_BACKGROUND_COLOR = get_color('#FFF2F2')
+    MISSING_BLOCK_BORDER_COLOR = get_color('red')
     #param entry boxes
     PARAM_ENTRY_TEXT_COLOR = get_color('black')
     ENTRYENUM_CUSTOM_COLOR = get_color('#EEEEEE')
