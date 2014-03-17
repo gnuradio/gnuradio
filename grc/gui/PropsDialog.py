@@ -85,12 +85,11 @@ class PropsDialog(gtk.Dialog):
         for tab in block.get_param_tab_labels():
             label = gtk.Label()
             vbox = gtk.VBox()
-            input_objects = []
             scroll_box = gtk.ScrolledWindow()
             scroll_box.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
             scroll_box.add_with_viewport(vbox)
             notebook.append_page(scroll_box, label)
-            self._params_boxes.append((tab, label, vbox, input_objects))
+            self._params_boxes.append((tab, label, vbox))
 
         # Docs for the block
         self._docs_text_display = TextDisplay()
@@ -152,21 +151,17 @@ class PropsDialog(gtk.Dialog):
         #update the params box
         if self._params_changed():
             #hide params box before changing
-            for tab, label, vbox, input_objects in self._params_boxes:
+            for tab, label, vbox in self._params_boxes:
                 vbox.hide_all()
                 # empty the params box
-                for io_param in input_objects:
-                    vbox.remove(io_param)
-                    input_objects.remove(io_param)
-                    io_param.destroy()
+                vbox.forall(lambda c: vbox.remove(c) or c.destroy())
                 # repopulate the params box
                 box_all_valid = True
                 for param in filter(lambda p: p.get_tab_label() == tab, self._block.get_params()):
-                    if param.get_hide() == 'all': continue
-                    io_param = param.get_input(self._handle_changed)
-                    input_objects.append(io_param)
-                    vbox.pack_start(io_param, False)
+                    if param.get_hide() == 'all':
+                        continue
                     box_all_valid = box_all_valid and param.is_valid()
+                    vbox.pack_start(param.get_input(self._handle_changed), False)
                 label.set_markup(Utils.parse_template(TAB_LABEL_MARKUP_TMPL, valid=box_all_valid, tab=tab))
                 #show params box with new params
                 vbox.show_all()
