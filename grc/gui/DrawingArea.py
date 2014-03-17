@@ -63,7 +63,7 @@ class DrawingArea(gtk.DrawingArea):
         def _handle_notify_event(widget, event, focus_flag): self._focus_flag = focus_flag
         self.connect('leave-notify-event', _handle_notify_event, False)
         self.connect('enter-notify-event', _handle_notify_event, True)
-        self.set_can_focus(True)
+        self.set_flags(gtk.CAN_FOCUS)  # self.set_can_focus(True)
         self.connect('focus-out-event', self._handle_focus_lost_event)
 
     def new_pixmap(self, width, height): return gtk.gdk.Pixmap(self.window, width, height, -1)
@@ -140,7 +140,7 @@ class DrawingArea(gtk.DrawingArea):
 
     def _handle_focus_lost_event(self, widget, event):
         # don't clear selection while context menu is active
-        if self._flow_graph.get_context_menu().get_visible(): return
-        self._flow_graph.unselect()
-        self._flow_graph.update_selected()
-        self._flow_graph.queue_draw()
+        if not self._flow_graph.get_context_menu().flags() & gtk.VISIBLE:
+            self._flow_graph.unselect()
+            self._flow_graph.update_selected()
+            self._flow_graph.queue_draw()
