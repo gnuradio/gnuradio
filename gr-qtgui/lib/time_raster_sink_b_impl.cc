@@ -169,6 +169,12 @@ namespace gr {
       PyObject *retarg = Py_BuildValue("N", w);
       return retarg;
     }
+#else
+    void *
+    time_raster_sink_b_impl::pyqwidget()
+    {
+      return NULL;
+    }
 #endif
 
     void

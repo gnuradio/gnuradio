@@ -153,6 +153,12 @@ namespace gr {
       PyObject *retarg = Py_BuildValue("N", w);
       return retarg;
     }
+#else
+    void *
+    time_sink_c_impl::pyqwidget()
+    {
+      return NULL;
+    }
 #endif
 
     void
