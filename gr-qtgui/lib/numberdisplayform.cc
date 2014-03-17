@@ -40,18 +40,30 @@ NumberDisplayForm::NumberDisplayForm(int nplots, gr::qtgui::graph_t type,
 
     d_indicator.push_back(new QwtThermo());
     d_indicator[i]->setScale(-1, 1);
+
+#if QWT_VERSION < 0x060100
+#else
     d_indicator[i]->setOriginMode(QwtThermo::OriginCustom);
     d_indicator[i]->setOrigin(0.0);
+#endif /* if QWT_VERSION < 0x060100 */
 
     switch(type) {
     case(gr::qtgui::NUM_GRAPH_HORIZ):
+#if QWT_VERSION < 0x060100
+      d_indicator[i]->setOrientation(Qt::Horizontal, QwtThermo::BottomScale);
+#else
       d_indicator[i]->setOrientation(Qt::Horizontal);
+#endif /* if QWT_VERSION < 0x060100 */
       d_layout->addWidget(d_label[i], 2*i, 0);
       d_layout->addWidget(d_text_box[i], 2*i, 1);
       d_layout->addWidget(d_indicator[i], 2*i+1, 1);
       break;
     case(gr::qtgui::NUM_GRAPH_VERT):
+#if QWT_VERSION < 0x060100
+      d_indicator[i]->setOrientation(Qt::Vertical, QwtThermo::LeftScale);
+#else
       d_indicator[i]->setOrientation(Qt::Vertical);
+#endif /* if QWT_VERSION < 0x060100 */
       d_layout->addWidget(d_label[i], 0, i);
       d_layout->addWidget(d_text_box[i], 1, i);
       d_layout->addWidget(d_indicator[i], 2, i);
@@ -223,7 +235,6 @@ NumberDisplayForm::newData(const QEvent* updateEvent)
       d_max[i] = std::max(d_max[i], samples[i]);
 
       if(d_autoscale_state) {
-        //d_indicator[i]->setRange(d_min[i], d_max[i], false);
         d_indicator[i]->setScale(d_min[i], d_max[i]);
       }
     }
@@ -250,14 +261,22 @@ NumberDisplayForm::setGraphType(const gr::qtgui::graph_t type)
 
     switch(d_graph_type) {
     case(gr::qtgui::NUM_GRAPH_HORIZ):
+#if QWT_VERSION < 0x060100
+      d_indicator[i]->setOrientation(Qt::Horizontal, QwtThermo::BottomScale);
+#else
       d_indicator[i]->setOrientation(Qt::Horizontal);
+#endif /* if QWT_VERSION < 0x060100 */
       d_indicator[i]->setVisible(true);
       d_layout->addWidget(d_label[i], 2*i, 0);
       d_layout->addWidget(d_text_box[i], 2*i, 1);
       d_layout->addWidget(d_indicator[i], 2*i+1, 1);
       break;
     case(gr::qtgui::NUM_GRAPH_VERT):
+#if QWT_VERSION < 0x060100
+      d_indicator[i]->setOrientation(Qt::Vertical, QwtThermo::LeftScale);
+#else
       d_indicator[i]->setOrientation(Qt::Vertical);
+#endif /* if QWT_VERSION < 0x060100 */
       d_indicator[i]->setVisible(true);
       d_layout->addWidget(d_label[i], 0, i);
       d_layout->addWidget(d_text_box[i], 1, i);
@@ -279,7 +298,12 @@ NumberDisplayForm::setColor(int which, const QColor &min, const QColor &max)
 {
   QwtLinearColorMap *map = new QwtLinearColorMap();
   map->setColorInterval(min, max);
+
+#if QWT_VERSION < 0x060000
+  d_indicator[which]->setFillColor(max);
+#else
   d_indicator[which]->setColorMap(map);
+#endif /* QWT_VERSION < 0x060000 */
 }
 
 void
@@ -353,15 +377,23 @@ NumberDisplayForm::graphType() const
 QColor
 NumberDisplayForm::colorMin(int which) const
 {
+#if QWT_VERSION < 0x060000
+  return d_indicator[which]->fillColor();
+#else
   QwtLinearColorMap *map = static_cast<QwtLinearColorMap*>(d_indicator[which]->colorMap());
   return map->color1();
+#endif /* QWT_VERSION < 0x060000 */
 }
 
 QColor
 NumberDisplayForm::colorMax(int which) const
 {
+#if QWT_VERSION < 0x060000
+  return d_indicator[which]->fillColor();
+#else
   QwtLinearColorMap *map = static_cast<QwtLinearColorMap*>(d_indicator[which]->colorMap());
   return map->color2();
+#endif /* QWT_VERSION < 0x060000 */
 }
 
 std::string
@@ -398,6 +430,7 @@ void
 NumberDisplayForm::autoScale(bool on)
 {
   d_autoscale_state = on;
+  d_autoscale_act->setChecked(on);
 
   // Reset the autoscale limits
   for(int i = 0; i < d_nplots; i++) {
