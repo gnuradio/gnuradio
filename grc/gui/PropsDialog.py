@@ -103,8 +103,8 @@ class PropsDialog(gtk.Dialog):
         self._error_box = gtk.ScrolledWindow()
         self._error_box.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
         self._error_box.add_with_viewport(self._error_messages_text_display)
-        self._error_box.set_size_request(-1, 40)
         vpaned.pack2(self._error_box)
+        vpaned.set_position(int(0.65 * MIN_DIALOG_HEIGHT))
 
         # Connect events
         self.connect('key-press-event', self._handle_key_press)
