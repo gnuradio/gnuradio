@@ -131,6 +131,12 @@ namespace gr {
       PyObject *retarg = Py_BuildValue("N", w);
       return retarg;
     }
+#else
+    void *
+    number_sink_impl::pyqwidget()
+    {
+      return NULL;
+    }
 #endif
 
     void
