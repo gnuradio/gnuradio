@@ -58,7 +58,7 @@ namespace gr {
     public:
       // gr::uhd::usrp_sink::sptr
       typedef boost::shared_ptr<usrp_sink> sptr;
-      
+
       /*!
        * \brief Make a new USRP sink block.
        * \ingroup uhd_blk
@@ -291,8 +291,8 @@ namespace gr {
 
       /*!
        * Set the bandpass filter on the RF frontend.
-       * \param chan the channel index 0 to N-1
        * \param bandwidth the filter bandwidth in Hz
+       * \param chan the channel index 0 to N-1
        */
       virtual void set_bandwidth(double bandwidth, size_t chan = 0) = 0;
 
