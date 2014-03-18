@@ -22,6 +22,7 @@
 
 #include <gnuradio/qtgui/utils.h>
 #include <QDebug>
+#include <QFile>
 
 QString
 get_qt_style_sheet(QString filename)
