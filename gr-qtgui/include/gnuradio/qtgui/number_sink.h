@@ -29,18 +29,12 @@
 
 #include <gnuradio/qtgui/api.h>
 #include <gnuradio/qtgui/trigger_mode.h>
+#include <gnuradio/qtgui/qtgui_types.h>
 #include <gnuradio/sync_block.h>
 #include <qapplication.h>
 
 namespace gr {
   namespace qtgui {
-
-    enum graph_t {
-      NUM_GRAPH_NONE = 0,
-      NUM_GRAPH_HORIZ,
-      NUM_GRAPH_VERT,
-    };
-
 
     /*!
      * \brief A graphical sink to display numerical values of input streams.
