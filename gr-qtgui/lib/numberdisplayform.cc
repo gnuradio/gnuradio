@@ -22,6 +22,7 @@
 
 #include <cmath>
 #include <QMessageBox>
+#include <QFileDialog>
 #include <gnuradio/qtgui/numberdisplayform.h>
 #include <iostream>
 #include <qwt_color_map.h>
