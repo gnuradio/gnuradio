@@ -91,7 +91,7 @@ DisplayForm::DisplayForm(int nplots, QWidget* parent)
       connect(d_marker_alpha_menu[i], SIGNAL(whichTrigger(int, int)),
 	      this, SLOT(setMarkerAlpha(int, int)));
     }
-    
+
     d_lines_menu.push_back(new QMenu(tr(""), this));
     d_lines_menu[i]->addAction(d_line_title_act[i]);
     d_lines_menu[i]->addMenu(d_line_color_menu[i]);
@@ -122,10 +122,6 @@ DisplayForm::DisplayForm(int nplots, QWidget* parent)
   d_menu->addAction(d_save_act);
 
   Reset();
-
-  // Create a timer to update plots at the specified rate
-  d_display_timer = new QTimer(this);
-  connect(d_display_timer, SIGNAL(timeout()), this, SLOT(updateGuiTimer()));
 }
 
 DisplayForm::~DisplayForm()
@@ -133,11 +129,7 @@ DisplayForm::~DisplayForm()
   d_isclosed = true;
 
   // Qt deletes children when parent is deleted
-
   // Don't worry about deleting Display Plots - they are deleted when parents are deleted
-
-  d_display_timer->stop();
-  delete d_display_timer;
 }
 
 void
@@ -206,7 +198,6 @@ void
 DisplayForm::setUpdateTime(double t)
 {
   d_update_time = t;
-  d_display_timer->start(d_update_time);
 }
 
 void

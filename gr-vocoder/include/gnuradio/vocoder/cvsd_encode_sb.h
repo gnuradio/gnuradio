@@ -81,7 +81,7 @@ namespace gr {
      *     Available: http://grouper.ieee.org/groups/802/15/Bluetooth/core_10_b.pdf.
      *
      * 3.  McGarrity, S., Bluetooth Full Duplex Voice and Data Transmission. 2002.
-     *     Bluetooth Voice Simulink® Model, Available:
+     *     Bluetooth Voice Simulink Model, Available:
      *     http://www.mathworks.com/company/newsletters/digest/nov01/bluetooth.html
      */
     class VOCODER_API cvsd_encode_sb : virtual public sync_decimator
@@ -89,7 +89,7 @@ namespace gr {
     public:
       // gr::vocoder::cvsd_encode_sb::sptr
       typedef boost::shared_ptr<cvsd_encode_sb> sptr;
-      
+
       /*!
        * \brief Constructor parameters to initialize the CVSD encoder.
        * The default values are modeled after the Bluetooth standard and
@@ -116,7 +116,7 @@ namespace gr {
 		       short pos_accum_max=32767, short neg_accum_max=-32767);
 
       virtual short min_step() = 0;
-      virtual short max_step() = 0; 
+      virtual short max_step() = 0;
       virtual double step_decay() = 0;
       virtual double accum_decay() = 0;
       virtual int K() = 0;

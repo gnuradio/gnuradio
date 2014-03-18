@@ -179,7 +179,7 @@ namespace gr {
     bool has_msg_port(pmt::pmt_t which_port) {
       return message_port_is_hier(which_port) || basic_block::has_msg_port(which_port);
     }
-  
+
     bool message_port_is_hier(pmt::pmt_t port_id) {
       return message_port_is_hier_in(port_id) || message_port_is_hier_out(port_id);
     }
@@ -234,6 +234,11 @@ namespace gr {
      */
     std::vector<int> processor_affinity();
   };
+
+  /*!
+   * \brief Return hierarchical block's flow graph represented in dot language
+   */
+  GR_RUNTIME_API std::string dot_graph(hier_block2_sptr hierblock2);
 
   inline hier_block2_sptr cast_to_hier_block2_sptr(basic_block_sptr block) {
     return boost::dynamic_pointer_cast<hier_block2, basic_block>(block);

@@ -41,7 +41,7 @@ namespace gr {
     null_source_impl::null_source_impl (size_t sizeof_stream_item)
       : sync_block("null_source",
                       io_signature::make(0, 0, 0),
-                      io_signature::make(1, 1, sizeof_stream_item))
+                      io_signature::make(1, -1, sizeof_stream_item))
     {
     }
 
@@ -54,8 +54,11 @@ namespace gr {
                            gr_vector_const_void_star &input_items,
                            gr_vector_void_star &output_items)
     {
-      void *optr = (void*)output_items[0];
-      memset(optr, 0, noutput_items * output_signature()->sizeof_stream_item(0));
+      void *optr;
+      for(size_t n = 0; n < input_items.size(); n++) {
+        optr = (void*)output_items[n];
+        memset(optr, 0, noutput_items * output_signature()->sizeof_stream_item(n));
+      }
       return noutput_items;
     }
 

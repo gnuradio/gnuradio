@@ -1,5 +1,5 @@
 #
-# Copyright 2011-2012 Free Software Foundation, Inc.
+# Copyright 2011-2012,2014 Free Software Foundation, Inc.
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -308,8 +308,21 @@ STRING(TOUPPER ${CMAKE_BUILD_TYPE} CBTU)
 MESSAGE(STATUS BUILT TYPE ${CBTU})
 MESSAGE(STATUS "Base cflags = ${CMAKE_C_FLAGS_${CBTU}} ${CMAKE_C_FLAGS}")
 set(COMPILER_INFO "")
-execute_process(COMMAND ${CMAKE_C_COMPILER} --version
-        OUTPUT_VARIABLE cmake_c_compiler_version)
+IF(MSVC)
+    IF(MSVC90)   #Visual Studio 9
+        SET(cmake_c_compiler_version "Microsoft Visual Studio 9.0")
+    ELSE(MSVC10) #Visual Studio 10
+        SET(cmake_c_compiler_version "Microsoft Visual Studio 10.0")
+    ELSE(MSVC11) #Visual Studio 11
+        SET(cmake_c_compiler_version "Microsoft Visual Studio 11.0")
+    ELSE(MSVC12) #Visual Studio 12
+        SET(cmake_c_compiler_version "Microsoft Visual Studio 12.0")
+    ENDIF()
+ELSE()
+    execute_process(COMMAND ${CMAKE_C_COMPILER} --version
+            OUTPUT_VARIABLE cmake_c_compiler_version)
+ENDIF(MSVC)
+set(COMPILER_INFO "${CMAKE_C_COMPILER}:::${CMAKE_C_FLAGS_${GRCBTU}} ${CMAKE_C_FLAGS}\n${CMAKE_CXX_COMPILER}:::${CMAKE_CXX_FLAGS_${GRCBTU}} ${CMAKE_CXX_FLAGS}\n" )
 
 foreach(machine_name ${available_machines})
     #generate machine source

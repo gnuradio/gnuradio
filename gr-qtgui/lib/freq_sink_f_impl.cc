@@ -26,6 +26,7 @@
 
 #include "freq_sink_f_impl.h"
 #include <gnuradio/io_signature.h>
+#include <gnuradio/prefs.h>
 #include <string.h>
 #include <volk/volk.h>
 #include <qwt_symbol.h>
@@ -55,7 +56,7 @@ namespace gr {
       : sync_block("freq_sink_f",
 		      io_signature::make(1, -1, sizeof(float)),
 		      io_signature::make(0, 0, 0)),
-	d_fftsize(fftsize), d_fftavg(1.0), 
+	d_fftsize(fftsize), d_fftavg(1.0),
 	d_wintype((filter::firdes::win_type)(wintype)),
 	d_center_freq(fc), d_bandwidth(bw), d_name(name),
 	d_nconnections(nconnections), d_parent(parent)
@@ -132,7 +133,16 @@ namespace gr {
 	d_qApplication = qApp;
       }
       else {
+        std::string style = prefs::singleton()->get_string("qtgui", "style", "raster");
+        QApplication::setGraphicsSystem(QString(style.c_str()));
 	d_qApplication = new QApplication(d_argc, &d_argv);
+      }
+
+      // If a style sheet is set in the prefs file, enable it here.
+      std::string qssfile = prefs::singleton()->get_string("qtgui","qss","");
+      if(qssfile.size() > 0) {
+        QString sstext = get_qt_style_sheet(QString(qssfile.c_str()));
+        d_qApplication->setStyleSheet(sstext);
       }
 
       d_main_gui = new FreqDisplayForm(d_nconnections, d_parent);
@@ -177,7 +187,7 @@ namespace gr {
     {
       return d_fftsize;
     }
- 
+
     void
     freq_sink_f_impl::set_fft_average(const float fftavg)
     {
@@ -350,13 +360,13 @@ namespace gr {
 	dst[i] = data_in[i];
 
       if(d_window.size()) {
-	volk_32fc_32f_multiply_32fc_a(d_fft->get_inbuf(), dst,
-				      &d_window.front(), size);
+	volk_32fc_32f_multiply_32fc(d_fft->get_inbuf(), dst,
+                                    &d_window.front(), size);
       }
 
       d_fft->execute();     // compute the fft
-      volk_32fc_s32f_x2_power_spectral_density_32f_a(data_out, d_fft->get_outbuf(),
-						     size, 1.0, size);
+      volk_32fc_s32f_x2_power_spectral_density_32f(data_out, d_fft->get_outbuf(),
+                                                   size, 1.0, size);
 
       // Perform shift operation
       unsigned int len = (unsigned int)(floor(size/2.0));
@@ -412,8 +422,8 @@ namespace gr {
 	  memset(d_magbufs[i], 0, newfftsize*sizeof(double));
 	}
 
-	// Set new fft size and reset buffer index 
-	// (throws away any currently held data, but who cares?) 
+	// Set new fft size and reset buffer index
+	// (throws away any currently held data, but who cares?)
 	d_fftsize = newfftsize;
 	d_index = 0;
 
@@ -462,7 +472,7 @@ namespace gr {
               }
               //volk_32f_convert_64f_a(d_magbufs[n], d_fbuf, d_fftsize);
             }
-      
+
 	    d_last_time = gr::high_res_timer_now();
 	    d_qApplication->postEvent(d_main_gui,
 				      new FreqUpdateEvent(d_magbufs, d_fftsize));

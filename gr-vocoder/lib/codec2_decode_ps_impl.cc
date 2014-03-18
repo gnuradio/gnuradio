@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2005,2011,2013 Free Software Foundation, Inc.
+ * Copyright 2005,2011,2013,2014 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -49,7 +49,8 @@ namespace gr {
       : sync_interpolator("vocoder_codec2_decode_ps",
 			     io_signature::make(1, 1, CODEC2_BITS_PER_FRAME * sizeof(char)),
 			     io_signature::make (1, 1, sizeof(short)),
-			     CODEC2_SAMPLES_PER_FRAME)
+			     CODEC2_SAMPLES_PER_FRAME),
+      d_frame_buf(CODEC2_BYTES_PER_FRAME, 0)
     {
       if((d_codec2 = codec2_create()) == 0)
 	throw std::runtime_error("codec2_decode_ps_impl: codec2_create failed");
@@ -71,12 +72,28 @@ namespace gr {
       assert((noutput_items % CODEC2_SAMPLES_PER_FRAME) == 0);
 
       for(int i = 0; i < noutput_items; i += CODEC2_SAMPLES_PER_FRAME) {
-	codec2_decode (d_codec2, out, const_cast<unsigned char*>(in));
+	pack_frame(in, &d_frame_buf[0]);
+	codec2_decode (d_codec2, out, const_cast<unsigned char*>(&d_frame_buf[0]));
 	in += CODEC2_BITS_PER_FRAME * sizeof (char);
 	out += CODEC2_SAMPLES_PER_FRAME;
       }
 
       return noutput_items;
+    }
+
+    void
+    codec2_decode_ps_impl::pack_frame(const unsigned char *in_unpacked, unsigned char *out_packed)
+    {
+      memset((void *) &d_frame_buf[0], 0x00, CODEC2_BYTES_PER_FRAME);
+
+      int byte_idx = 0, bit_idx = 0;
+      for(int k = 0; k < CODEC2_BITS_PER_FRAME; k++) {
+	out_packed[byte_idx] |= ((in_unpacked[k] & 0x01) << (7-bit_idx));
+	bit_idx = (bit_idx + 1) % 8;
+	if (bit_idx == 0) {
+	  byte_idx++;
+	}
+      }
     }
 
   } /* namespace vocoder */

@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2010,2012 Free Software Foundation, Inc.
+ * Copyright 2010,2012,2014 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -49,7 +49,7 @@ namespace gr {
 	std::vector<float>       d_tail;	    // state carried between blocks for overlap-add
 	std::vector<float>       d_taps;            // stores time domain taps
 	gr_complex              *d_xformed_taps;    // Fourier xformed taps
-	
+
 	void compute_sizes(int ntaps);
 	int tailsize() const { return d_ntaps - 1; }
 
@@ -77,7 +77,7 @@ namespace gr {
 	 * \param taps       The filter taps (complex)
 	 */
 	int set_taps(const std::vector<float> &taps);
-	
+
 	/*!
 	 * \brief Set number of threads to use.
 	 */
@@ -92,12 +92,12 @@ namespace gr {
 	 * \brief Returns the number of taps in the filter.
 	 */
         unsigned int ntaps() const;
-	
+
 	/*!
 	 * \brief Get number of threads being used.
 	 */
 	int nthreads() const;
-	
+
 	/*!
 l	 * \brief Perform the filter operation
 	 *
@@ -108,7 +108,7 @@ l	 * \brief Perform the filter operation
 	int filter(int nitems, const float *input, float *output);
       };
 
-    
+
       /*!
        * \brief Fast FFT filter with gr_complex input, gr_complex output and gr_complex taps
        * \ingroup filter_blk
@@ -126,7 +126,7 @@ l	 * \brief Perform the filter operation
 	std::vector<gr_complex>  d_tail;	    // state carried between blocks for overlap-add
 	std::vector<gr_complex>  d_taps;            // stores time domain taps
 	gr_complex              *d_xformed_taps;    // Fourier xformed taps
-	
+
 	void compute_sizes(int ntaps);
 	int tailsize() const { return d_ntaps - 1; }
 
@@ -154,12 +154,12 @@ l	 * \brief Perform the filter operation
 	 * \param taps       The filter taps (complex)
 	 */
 	int set_taps(const std::vector<gr_complex> &taps);
-	
+
 	/*!
 	 * \brief Set number of threads to use.
 	 */
 	void set_nthreads(int n);
-	
+
 	/*!
 	 * \brief Returns the taps.
 	 */
@@ -169,12 +169,100 @@ l	 * \brief Perform the filter operation
 	 * \brief Returns the number of taps in the filter.
 	 */
         unsigned int ntaps() const;
-	
+
 	/*!
 	 * \brief Get number of threads being used.
 	 */
 	int nthreads() const;
-	
+
+	/*!
+	 * \brief Perform the filter operation
+	 *
+	 * \param nitems  The number of items to produce
+	 * \param input   The input vector to be filtered
+	 * \param output  The result of the filter operation
+	 */
+	int filter(int nitems, const gr_complex *input, gr_complex *output);
+      };
+
+
+
+      /*!
+       * \brief Fast FFT filter with gr_complex input, gr_complex output and float taps
+       * \ingroup filter_blk
+       */
+      class FILTER_API fft_filter_ccf
+      {
+      private:
+	int			 d_ntaps;
+	int			 d_nsamples;
+	int			 d_fftsize;         // fftsize = ntaps + nsamples - 1
+	int                      d_decimation;
+	fft::fft_complex        *d_fwdfft;	    // forward "plan"
+	fft::fft_complex        *d_invfft;          // inverse "plan"
+	int                      d_nthreads;        // number of FFTW threads to use
+	std::vector<gr_complex>  d_tail;	    // state carried between blocks for overlap-add
+	std::vector<float>       d_taps;            // stores time domain taps
+	gr_complex              *d_xformed_taps;    // Fourier xformed taps
+
+	void compute_sizes(int ntaps);
+	int tailsize() const { return d_ntaps - 1; }
+
+      public:
+	/*!
+	 * \brief Construct an FFT filter for complex vectors with the given taps and decimation rate.
+	 *
+	 * This is the basic implementation for performing FFT filter for fast convolution
+	 * in other blocks for complex vectors (such as fft_filter_ccf).
+	 *
+	 * \param decimation The decimation rate of the filter (int)
+	 * \param taps       The filter taps (complex)
+	 * \param nthreads   The number of threads for the FFT to use (int)
+	 */
+	fft_filter_ccf(int decimation,
+		       const std::vector<float> &taps,
+		       int nthreads=1);
+
+	~fft_filter_ccf();
+
+	/*!
+	 * \brief Set new taps for the filter.
+	 *
+	 * Sets new taps and resets the class properties to handle different sizes
+	 * \param taps       The filter taps (complex)
+	 */
+	int set_taps(const std::vector<float> &taps);
+
+	/*!
+	 * \brief Set number of threads to use.
+	 */
+	void set_nthreads(int n);
+
+	/*!
+	 * \brief Returns the taps.
+	 */
+	std::vector<float> taps() const;
+
+	/*!
+	 * \brief Returns the number of taps in the filter.
+	 */
+        unsigned int ntaps() const;
+
+	/*!
+	 * \brief Returns the actual size of the filter.
+         *
+         * \details This value could be equal to ntaps, but we ofter
+         * build a longer filter to allow us to calculate a more
+         * efficient FFT. This value is the actual size of the filters
+         * used in the calculation of the overlap-and-save operation.
+	 */
+        unsigned int filtersize() const;
+
+	/*!
+	 * \brief Get number of threads being used.
+	 */
+	int nthreads() const;
+
 	/*!
 	 * \brief Perform the filter operation
 	 *

@@ -31,7 +31,7 @@
 
 namespace gr {
   namespace filter {
-    
+
     class FILTER_API pfb_channelizer_ccf_impl : public pfb_channelizer_ccf, kernel::polyphase_filterbank
     {
     private:

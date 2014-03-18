@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2011,2013 Free Software Foundation, Inc.
+# Copyright 2011,2013,2014 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -54,4 +54,6 @@ class test_codec2_vocoder (gr_unittest.TestCase):
         self.assertEqual(expected_data, actual_result)
 
 if __name__ == '__main__':
+    # Note: The Vocoder is stateful, which means this test will produce failure when removing the xml option.
+    # Perhaps this is not the best way to test such a vocoder.
     gr_unittest.run(test_codec2_vocoder, "test_codec2_vocoder.xml")

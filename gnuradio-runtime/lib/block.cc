@@ -29,6 +29,7 @@
 #include <gnuradio/block_detail.h>
 #include <gnuradio/buffer.h>
 #include <gnuradio/prefs.h>
+#include <gnuradio/config.h>
 #include <stdexcept>
 #include <iostream>
 
@@ -288,19 +289,42 @@ namespace gr {
 
   void
   block::get_tags_in_range(std::vector<tag_t> &v,
-                           unsigned int which_output,
+                           unsigned int which_input,
                            uint64_t start, uint64_t end)
   {
-    d_detail->get_tags_in_range(v, which_output, start, end, unique_id());
+    d_detail->get_tags_in_range(v, which_input, start, end, unique_id());
   }
 
   void
   block::get_tags_in_range(std::vector<tag_t> &v,
-                           unsigned int which_output,
+                           unsigned int which_input,
                            uint64_t start, uint64_t end,
                            const pmt::pmt_t &key)
   {
-    d_detail->get_tags_in_range(v, which_output, start, end, key, unique_id());
+    d_detail->get_tags_in_range(v, which_input, start, end, key, unique_id());
+  }
+
+  void
+  block::get_tags_in_window(std::vector<tag_t> &v,
+                            unsigned int which_input,
+                            uint64_t start, uint64_t end)
+  {
+    d_detail->get_tags_in_range(v, which_input,
+                                nitems_read(which_input) + start,
+                                nitems_read(which_input) + end,
+                                unique_id());
+  }
+
+  void
+  block::get_tags_in_window(std::vector<tag_t> &v,
+                            unsigned int which_input,
+                            uint64_t start, uint64_t end,
+                            const pmt::pmt_t &key)
+  {
+    d_detail->get_tags_in_range(v, which_input,
+                                nitems_read(which_input) + start,
+                                nitems_read(which_input) + end,
+                                key, unique_id());
   }
 
   block::tag_propagation_policy_t
@@ -361,7 +385,7 @@ namespace gr {
     }
   }
 
-  int 
+  int
   block::active_thread_priority()
   {
     if(d_detail) {
@@ -370,13 +394,13 @@ namespace gr {
     return -1;
   }
 
-  int 
+  int
   block::thread_priority()
   {
     return d_priority;
   }
 
-  int 
+  int
   block::set_thread_priority(int priority)
   {
     d_priority = priority;
@@ -402,10 +426,10 @@ namespace gr {
       throw std::invalid_argument("basic_block::max_output_buffer: port out of range.");
     return d_max_output_buffer[i];
   }
-  
+
   void
   block::set_max_output_buffer(long max_output_buffer)
-  { 
+  {
     for(int i = 0; i < output_signature()->max_streams(); i++) {
       set_max_output_buffer(i, max_output_buffer);
     }
@@ -417,9 +441,9 @@ namespace gr {
     if((size_t)port >= d_max_output_buffer.size())
       d_max_output_buffer.push_back(max_output_buffer);
     else
-      d_max_output_buffer[port] = max_output_buffer; 
+      d_max_output_buffer[port] = max_output_buffer;
   }
-  
+
   long
   block::min_output_buffer(size_t i)
   {
@@ -427,7 +451,7 @@ namespace gr {
       throw std::invalid_argument("basic_block::min_output_buffer: port out of range.");
     return d_min_output_buffer[i];
   }
-  
+
   void
   block::set_min_output_buffer(long min_output_buffer)
   {
@@ -436,14 +460,14 @@ namespace gr {
       set_min_output_buffer(i, min_output_buffer);
     }
   }
-  
+
   void
   block::set_min_output_buffer(int port, long min_output_buffer)
   {
     if((size_t)port >= d_min_output_buffer.size())
       d_min_output_buffer.push_back(min_output_buffer);
     else
-      d_min_output_buffer[port] = min_output_buffer; 
+      d_min_output_buffer[port] = min_output_buffer;
   }
 
 
@@ -713,7 +737,7 @@ namespace gr {
   block::setup_pc_rpc()
   {
     d_pc_rpc_set = true;
-#ifdef GR_CTRLPORT
+#if defined(GR_CTRLPORT) && defined(GR_PERFORMANCE_COUNTERS)
     d_rpc_vars.push_back(
       rpcbasic_sptr(new rpcbasic_register_get<block, float>(
         alias(), "noutput_items", &block::pc_noutput_items,
@@ -825,7 +849,7 @@ namespace gr {
         pmt::make_c32vector(0,0), pmt::make_c32vector(0,1), pmt::make_c32vector(0,0),
         "", "Var. of how full output buffers are", RPC_PRIVLVL_MIN,
         DISPTIME | DISPOPTSTRIP)));
-#endif /* GR_CTRLPORT */
+#endif /* defined(GR_CTRLPORT) && defined(GR_PERFORMANCE_COUNTERS) */
   }
 
   std::ostream&

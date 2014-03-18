@@ -94,6 +94,7 @@ install(FILES
     dc_blocker_ff.h
     filter_delay_fc.h
     fft_filter_ccc.h
+    fft_filter_ccf.h
     fft_filter_fff.h
     fractional_interpolator_cc.h
     fractional_interpolator_ff.h

@@ -1,24 +1,24 @@
 #!/usr/bin/env python
 #
 # Copyright 2011-2013 Free Software Foundation, Inc.
-# 
+#
 # This file is part of GNU Radio
-# 
+#
 # GNU Radio is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 3, or (at your option)
 # any later version.
-# 
+#
 # GNU Radio is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU General Public License
 # along with GNU Radio; see the file COPYING.  If not, write to
 # the Free Software Foundation, Inc., 51 Franklin Street,
 # Boston, MA 02110-1301, USA.
-# 
+#
 
 from gnuradio import gr, digital, filter
 from gnuradio import blocks
@@ -26,6 +26,7 @@ from gnuradio import channels
 from gnuradio import eng_notation
 from gnuradio.eng_option import eng_option
 from optparse import OptionParser
+import sys
 
 try:
     import scipy
@@ -53,7 +54,7 @@ class example_timing(gr.top_block):
         nfilts = 32
         rrc_taps_rx = filter.firdes.root_raised_cosine(
             nfilts, sps*nfilts, 1.0, rolloff, ntaps*nfilts)
-            
+
         data = 2.0*scipy.random.randint(0, 2, N) - 1.0
         data = scipy.exp(1j*poffset) * data
 
@@ -68,7 +69,7 @@ class example_timing(gr.top_block):
             self.taps = self.clk.taps()
             self.dtaps = self.clk.diff_taps()
 
-            self.delay = int(scipy.ceil(((len(rrc_taps)-1)/2 + 
+            self.delay = int(scipy.ceil(((len(rrc_taps)-1)/2 +
                                          (len(self.taps[0])-1)/2)/float(sps))) + 1
 
 
@@ -79,7 +80,7 @@ class example_timing(gr.top_block):
             self.connect((self.clk,1), self.vsnk_err)
             self.connect((self.clk,2), self.vsnk_rat)
             self.connect((self.clk,3), self.vsnk_phs)
-            
+
         else: # mode == 1
             mu = 0.5
             gain_mu = bw
@@ -208,7 +209,7 @@ def main():
         data_err = scipy.array(put.vsnk_err.data()[20:])
 
         f1 = pylab.figure(1, figsize=(12,10), facecolor='w')
-        
+
         # Plot the IQ symbols
         s1 = f1.add_subplot(2,2,1)
         s1.plot(data_src.real, data_src.imag, "o")
@@ -236,7 +237,7 @@ def main():
         s3.set_ylabel("Error")
 
     pylab.show()
-    
+
 if __name__ == "__main__":
     try:
         main()

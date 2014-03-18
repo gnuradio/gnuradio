@@ -47,6 +47,36 @@ class test_tag_utils (gr_unittest.TestCase):
         self.assertEqual(pt.value, 23)
         self.assertEqual(pt.offset, 10)
 
+    def test_002(self):
+        offset = 10
+        key = pmt.string_to_symbol('key')
+        value = pmt.from_long(23)
+        srcid = pmt.from_bool(False)
+
+        format_dict = {'offset': offset,
+                       'key': key,
+                       'value': value,
+                       'srcid': srcid}
+        format_list = [offset, key, value, srcid]
+        format_tuple = (offset, key, value, srcid)
+
+        t_dict = gr.python_to_tag(format_dict)
+        t_list = gr.python_to_tag(format_list)
+        t_tuple = gr.python_to_tag(format_tuple)
+
+        self.assertTrue(pmt.equal(t_dict.key, key))
+        self.assertTrue(pmt.equal(t_dict.value, value))
+        self.assertEqual(t_dict.offset, offset)
+
+        self.assertTrue(pmt.equal(t_list.key, key))
+        self.assertTrue(pmt.equal(t_list.value, value))
+        self.assertEqual(t_list.offset, offset)
+
+        self.assertTrue(pmt.equal(t_tuple.key, key))
+        self.assertTrue(pmt.equal(t_tuple.value, value))
+        self.assertEqual(t_tuple.offset, offset)
+
+
 
 if __name__ == '__main__':
     print 'hi'

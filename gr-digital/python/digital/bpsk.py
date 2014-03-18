@@ -1,23 +1,23 @@
 #
 # Copyright 2005,2006,2011 Free Software Foundation, Inc.
-# 
+#
 # This file is part of GNU Radio
-# 
+#
 # GNU Radio is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 3, or (at your option)
 # any later version.
-# 
+#
 # GNU Radio is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU General Public License
 # along with GNU Radio; see the file COPYING.  If not, write to
 # the Free Software Foundation, Inc., 51 Franklin Street,
 # Boston, MA 02110-1301, USA.
-# 
+#
 
 """
 BPSK modulation and demodulation.
@@ -46,12 +46,11 @@ def bpsk_constellation():
 class bpsk_mod(generic_mod):
     """
     Hierarchical block for RRC-filtered BPSK modulation.
-    
+
     The input is a byte stream (unsigned char) and the
     output is the complex modulated signal at baseband.
-    
-    
-    Args: 
+
+    Args:
         mod_code: Argument is not used.  It exists purely to simplify generation of the block in grc.
         differential: Whether to use differential encoding (boolean).
     """
@@ -72,14 +71,14 @@ class bpsk_mod(generic_mod):
 
 class bpsk_demod(generic_demod):
     """
-    Hierarchical block for RRC-filtered BPSK modulation.
-    
-    The input is a byte stream (unsigned char) and the
-    output is the complex modulated signal at baseband.
+    Hierarchical block for RRC-filtered BPSK demodulation.
 
-    Args: 
+    The input is the complex modulated signal at baseband and the
+    output is a stream of bits packed 1 bit per byte (LSB)
+
+    Args:
         mod_code: Argument is not used.  It exists purely to simplify generation of the block in grc.
-        differential: whether to use differential encoding (boolean)                  
+        differential: whether to use differential encoding (boolean)
     """
     # See generic_demod for additional arguments
     __doc__ += shared_demod_args
@@ -105,11 +104,11 @@ def dbpsk_constellation():
 class dbpsk_mod(bpsk_mod):
     """
     Hierarchical block for RRC-filtered DBPSK modulation.
-    
+
     The input is a byte stream (unsigned char) and the
     output is the complex modulated signal at baseband.
-    
-    Args: 
+
+    Args:
         mod_code: Argument is not used.  It exists purely to simplify generation of the block in grc.
     """
     # See generic_mod for additional arguments
@@ -126,12 +125,12 @@ class dbpsk_mod(bpsk_mod):
 
 class dbpsk_demod(bpsk_demod):
     """
-    Hierarchical block for RRC-filtered DBPSK modulation.
-    
-    The input is a byte stream (unsigned char) and the
-    output is the complex modulated signal at baseband.
-    
-    Args: 
+    Hierarchical block for RRC-filtered DBPSK demodulation.
+
+    The input is the complex modulated signal at baseband and the
+    output is a stream of bits packed 1 bit per byte (LSB)
+
+    Args:
         mod_code: Argument is not used.  It exists purely to simplify generation of the block in grc.
     """
     # See generic_demod for additional arguments

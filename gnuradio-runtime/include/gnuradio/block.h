@@ -562,7 +562,7 @@ namespace gr {
     int set_thread_priority(int priority);
 
     bool update_rate() const;
-    
+
     // ----------------------------------------------------------------------------
 
   private:
@@ -699,6 +699,50 @@ namespace gr {
                            uint64_t abs_end,
                            const pmt::pmt_t &key);
 
+    /*!
+     * \brief Gets all tags within the relative window of the current call to work.
+     *
+     * \details
+     *
+     * This opperates much like get_tags_in_range but allows us to
+     * work within the current window of items. Item range is
+     * therefore within the possible range of 0 to
+     * ninput_items[whic_input].
+     *
+     * Range of items counts from \p rel_start to \p rel_end-1 within
+     * current window.
+     *
+     * Tags are tuples of:
+     *      (item count, source id, key, value)
+     *
+     * \param v            a vector reference to return tags into
+     * \param which_input  an integer of which input stream to pull from
+     * \param rel_start    a uint64 count of the start of the range of interest
+     * \param rel_end      a uint64 count of the end of the range of interest
+     */
+    void get_tags_in_window(std::vector<tag_t> &v,
+                            unsigned int which_input,
+                            uint64_t rel_start,
+                            uint64_t rel_end);
+
+    /*!
+     * \brief Operates like gr::block::get_tags_in_window with the
+     * ability to only return tags with the specified \p key.
+     *
+     * \details
+     *
+     * \param v            a vector reference to return tags into
+     * \param which_input  an integer of which input stream to pull from
+     * \param rel_start    a uint64 count of the start of the range of interest
+     * \param rel_end      a uint64 count of the end of the range of interest
+     * \param key          a PMT symbol key to filter only tags of this key
+     */
+    void get_tags_in_window(std::vector<tag_t> &v,
+                            unsigned int which_input,
+                            uint64_t rel_start,
+                            uint64_t rel_end,
+                            const pmt::pmt_t &key);
+
     void enable_update_rate(bool en);
 
     std::vector<long> d_max_output_buffer;
@@ -708,11 +752,11 @@ namespace gr {
      * setting/resetting of parameters thread-safe.
      *
      * Used by calling gr::thread::scoped_lock l(d_setlock);
-     */ 
+     */
     gr::thread::mutex d_setlock;
 
     /*! Used by blocks to access the logger system.
-     */ 
+     */
     gr::logger_ptr d_logger;
     gr::logger_ptr d_debug_logger;
 

@@ -28,6 +28,7 @@
 #include <gnuradio/io_signature.h>
 #include <gnuradio/block_detail.h>
 #include <gnuradio/buffer.h>
+#include <gnuradio/prefs.h>
 #include <string.h>
 #include <volk/volk.h>
 #include <gnuradio/fft/fft.h>
@@ -35,7 +36,7 @@
 
 namespace gr {
   namespace qtgui {
-    
+
     time_sink_f::sptr
     time_sink_f::make(int size, double samp_rate,
 		      const std::string &name,
@@ -114,7 +115,16 @@ namespace gr {
 	d_qApplication = qApp;
       }
       else {
+        std::string style = prefs::singleton()->get_string("qtgui", "style", "raster");
+        QApplication::setGraphicsSystem(QString(style.c_str()));
 	d_qApplication = new QApplication(d_argc, &d_argv);
+      }
+
+      // If a style sheet is set in the prefs file, enable it here.
+      std::string qssfile = prefs::singleton()->get_string("qtgui","qss","");
+      if(qssfile.size() > 0) {
+        QString sstext = get_qt_style_sheet(QString(qssfile.c_str()));
+        d_qApplication->setStyleSheet(sstext);
       }
 
       d_main_gui = new TimeDisplayForm(d_nconnections, d_parent);
@@ -294,8 +304,8 @@ namespace gr {
       if(newsize != d_size) {
         gr::thread::scoped_lock lock(d_mutex);
 
-	// Set new size and reset buffer index 
-	// (throws away any currently held data, but who cares?) 
+	// Set new size and reset buffer index
+	// (throws away any currently held data, but who cares?)
 	d_size = newsize;
         d_buffer_size = 2*d_size;
 

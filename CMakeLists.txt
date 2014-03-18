@@ -1,4 +1,4 @@
-# Copyright 2010-2012 Free Software Foundation, Inc.
+# Copyright 2010-2012,2014 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -41,7 +41,7 @@ list(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake/Modules)
 # Set the version information here
 set(VERSION_INFO_MAJOR_VERSION 3)
 set(VERSION_INFO_API_COMPAT    7)
-set(VERSION_INFO_MINOR_VERSION 3)
+set(VERSION_INFO_MINOR_VERSION 4)
 set(VERSION_INFO_MAINT_VERSION git)
 include(GrVersion) #setup version info
 
@@ -55,10 +55,6 @@ SET(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} -O2")
 IF(NOT DEFINED BOOST_ROOT)
     SET(BOOST_ROOT ${CMAKE_INSTALL_PREFIX})
 ENDIF()
-
-if(ENABLE_GR_CTRLPORT)
-  set(GR_CTRLPORT True)
-endif(ENABLE_GR_CTRLPORT)
 
 ########################################################################
 # Import executables from a native build (for cross compiling)
@@ -106,10 +102,26 @@ endif(MSVC)
 # Record Compiler Info for record
 STRING(TOUPPER ${CMAKE_BUILD_TYPE} GRCBTU)
 set(COMPILER_INFO "")
-execute_process(COMMAND ${CMAKE_C_COMPILER} --version
-        OUTPUT_VARIABLE cmake_c_compiler_version)
-execute_process(COMMAND ${CMAKE_CXX_COMPILER} --version
-        OUTPUT_VARIABLE cmake_cxx_compiler_version)
+IF(MSVC)
+    IF(MSVC90)   #Visual Studio 9
+        SET(cmake_c_compiler_version "Microsoft Visual Studio 9.0")
+        SET(cmake_cxx_compiler_version "Microsoft Visual Studio 9.0")
+    ELSE(MSVC10) #Visual Studio 10
+        SET(cmake_c_compiler_version "Microsoft Visual Studio 10.0")
+        SET(cmake_cxx_compiler_version "Microsoft Visual Studio 10.0")
+    ELSE(MSVC11) #Visual Studio 11
+        SET(cmake_c_compiler_version "Microsoft Visual Studio 11.0")
+        SET(cmake_cxx_compiler_version "Microsoft Visual Studio 11.0")
+    ELSE(MSVC12) #Visual Studio 12
+        SET(cmake_c_compiler_version "Microsoft Visual Studio 12.0")
+        SET(cmake_cxx_compiler_version "Microsoft Visual Studio 12.0")
+    ENDIF()
+ELSE()
+    execute_process(COMMAND ${CMAKE_C_COMPILER} --version
+            OUTPUT_VARIABLE cmake_c_compiler_version)
+    execute_process(COMMAND ${CMAKE_CXX_COMPILER} --version
+            OUTPUT_VARIABLE cmake_cxx_compiler_version)
+ENDIF(MSVC)
 set(COMPILER_INFO "${CMAKE_C_COMPILER}:::${CMAKE_C_FLAGS_${GRCBTU}} ${CMAKE_C_FLAGS}\n${CMAKE_CXX_COMPILER}:::${CMAKE_CXX_FLAGS_${GRCBTU}} ${CMAKE_CXX_FLAGS}\n" )
 
 # Convert to a C string to compile and display properly
@@ -149,7 +161,7 @@ endif(isusr)
 
 set(GR_PREFSDIR         ${SYSCONFDIR}/${CMAKE_PROJECT_NAME}/conf.d)
 
-OPTION(ENABLE_PERFORMANCE_COUNTERS "Enable block performance counters" OFF)
+OPTION(ENABLE_PERFORMANCE_COUNTERS "Enable block performance counters" ON)
 if(ENABLE_PERFORMANCE_COUNTERS)
   message(STATUS "ADDING PERF COUNTERS")
   SET(GR_PERFORMANCE_COUNTERS True)
@@ -316,6 +328,12 @@ add_subdirectory(gr-fcd)
 add_subdirectory(gr-wavelet)
 add_subdirectory(gr-wxgui)
 
+# Defining GR_CTRLPORT for gnuradio/config.h
+if(ENABLE_GR_CTRLPORT)
+  set(GR_CTRLPORT True)
+  add_definitions(-DGR_CTRLPORT)
+endif(ENABLE_GR_CTRLPORT)
+
 # Install our Cmake modules into $prefix/lib/cmake/gnuradio
 # See "Package Configuration Files" on page:
 #    http://www.cmake.org/Wiki/CMake/Tutorials/Packaging
@@ -325,7 +343,7 @@ configure_file(
   ${CMAKE_BINARY_DIR}/cmake/Modules/GnuradioConfigVersion.cmake
 @ONLY)
 
-SET(cmake_configs 
+SET(cmake_configs
   ${CMAKE_SOURCE_DIR}/cmake/Modules/GnuradioConfig.cmake
   ${CMAKE_BINARY_DIR}/cmake/Modules/GnuradioConfigVersion.cmake
 )
@@ -360,13 +378,13 @@ message(STATUS "Building for version: ${VERSION} / ${LIBVER}")
 # Create a config.h with some definitions to export to other projects.
 CONFIGURE_FILE(
   ${CMAKE_CURRENT_SOURCE_DIR}/config.h.in
-  ${CMAKE_CURRENT_BINARY_DIR}/config.h
+  ${CMAKE_CURRENT_BINARY_DIR}/gnuradio-runtime/include/gnuradio/config.h
 )
 
 # Install config.h in include/gnuradio
 install(
     FILES
-    ${CMAKE_CURRENT_BINARY_DIR}/config.h
+    ${CMAKE_CURRENT_BINARY_DIR}/gnuradio-runtime/include/gnuradio/config.h
     DESTINATION ${GR_INCLUDE_DIR}/gnuradio
     COMPONENT "runtime_devel"
 )

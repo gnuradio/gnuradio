@@ -26,13 +26,14 @@
 
 #include "waterfall_sink_c_impl.h"
 #include <gnuradio/io_signature.h>
+#include <gnuradio/prefs.h>
 #include <string.h>
 #include <volk/volk.h>
 #include <qwt_symbol.h>
 
 namespace gr {
   namespace qtgui {
-    
+
     waterfall_sink_c::sptr
     waterfall_sink_c::make(int fftsize, int wintype,
 			   double fc, double bw,
@@ -131,7 +132,16 @@ namespace gr {
 	d_qApplication = qApp;
       }
       else {
+        std::string style = prefs::singleton()->get_string("qtgui", "style", "raster");
+        QApplication::setGraphicsSystem(QString(style.c_str()));
 	d_qApplication = new QApplication(d_argc, &d_argv);
+      }
+
+      // If a style sheet is set in the prefs file, enable it here.
+      std::string qssfile = prefs::singleton()->get_string("qtgui","qss","");
+      if(qssfile.size() > 0) {
+        QString sstext = get_qt_style_sheet(QString(qssfile.c_str()));
+        d_qApplication->setStyleSheet(sstext);
       }
 
       d_main_gui = new WaterfallDisplayForm(d_nconnections, d_parent);
@@ -321,7 +331,8 @@ namespace gr {
     waterfall_sink_c_impl::fft(float *data_out, const gr_complex *data_in, int size)
     {
       if(d_window.size()) {
-	volk_32fc_32f_multiply_32fc_a(d_fft->get_inbuf(), data_in, &d_window.front(), size);
+	volk_32fc_32f_multiply_32fc(d_fft->get_inbuf(), data_in,
+                                    &d_window.front(), size);
       }
       else {
 	memcpy(d_fft->get_inbuf(), data_in, sizeof(gr_complex)*size);
@@ -329,9 +340,8 @@ namespace gr {
 
       d_fft->execute();     // compute the fft
 
-      volk_32fc_s32f_x2_power_spectral_density_32f_a(data_out, d_fft->get_outbuf(),
-						     size, 1.0, size);
-
+      volk_32fc_s32f_x2_power_spectral_density_32f(data_out, d_fft->get_outbuf(),
+                                                   size, 1.0, size);
       // Perform shift operation
       unsigned int len = (unsigned int)(floor(size/2.0));
       float *tmp = (float*)malloc(sizeof(float)*len);
@@ -383,8 +393,8 @@ namespace gr {
 	  memset(d_magbufs[i], 0, newfftsize*sizeof(double));
 	}
 
-	// Set new fft size and reset buffer index 
-	// (throws away any currently held data, but who cares?) 
+	// Set new fft size and reset buffer index
+	// (throws away any currently held data, but who cares?)
 	d_fftsize = newfftsize;
 	d_index = 0;
 
@@ -433,7 +443,7 @@ namespace gr {
               }
               //volk_32f_convert_64f_a(d_magbufs[n], d_fbuf, d_fftsize);
             }
-      
+
 	    d_last_time = gr::high_res_timer_now();
 	    d_qApplication->postEvent(d_main_gui,
 				      new WaterfallUpdateEvent(d_magbufs,

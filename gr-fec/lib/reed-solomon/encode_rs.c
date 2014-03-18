@@ -35,12 +35,26 @@ DTYPE *data, DTYPE *bb){
       feedback = MODNN(NN - GENPOLY[NROOTS] + feedback);
 #endif
       for(j=1;j<NROOTS;j++)
+#ifdef FIXED
 	bb[j] ^= ALPHA_TO[MODNN(feedback + GENPOLY[NROOTS-j])];
+#elif defined(BIGSYM)
+        // Same as above; keeping as a separate line in case these change.
+	bb[j] ^= ALPHA_TO[MODNN(feedback + GENPOLY[NROOTS-j])];
+#else
+	bb[j] ^= ALPHA_TO[rs->modnn_table[feedback + GENPOLY[NROOTS-j]]];
+#endif
     }
     /* Shift */
     memmove(&bb[0],&bb[1],sizeof(DTYPE)*(NROOTS-1));
     if(feedback != A0)
+#ifdef FIXED
       bb[NROOTS-1] = ALPHA_TO[MODNN(feedback + GENPOLY[0])];
+#elif defined(BIGSYM)
+      // Same as above; keeping as a separate line in case these change.
+      bb[NROOTS-1] = ALPHA_TO[MODNN(feedback + GENPOLY[0])];
+#else
+      bb[NROOTS-1] = ALPHA_TO[rs->modnn_table[feedback + GENPOLY[0]]];
+#endif
     else
       bb[NROOTS-1] = 0;
   }

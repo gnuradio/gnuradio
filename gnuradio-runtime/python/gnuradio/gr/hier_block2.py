@@ -19,7 +19,7 @@
 # Boston, MA 02110-1301, USA.
 #
 
-from runtime_swig import hier_block2_swig
+from runtime_swig import hier_block2_swig, dot_graph
 import pmt
 
 #
@@ -125,4 +125,8 @@ class hier_block2(object):
 
     def message_port_register_hier_out(self, portname):
         self.primitive_message_port_register_hier_out(pmt.intern(portname));
+
+    def dot_graph(self):
+        '''Return graph representation in dot language'''
+        return dot_graph(self._hb)
 

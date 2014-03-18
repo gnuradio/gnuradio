@@ -23,6 +23,24 @@
 #include <gnuradio/qtgui/utils.h>
 #include <QDebug>
 
+QString
+get_qt_style_sheet(QString filename)
+{
+  QString sstext;
+  QFile ss(filename);
+  if(!ss.open(QIODevice::ReadOnly | QIODevice::Text)) {
+    return sstext;
+  }
+
+  QTextStream sstream(&ss);
+  while(!sstream.atEnd()) {
+    sstext += sstream.readLine();
+  }
+  ss.close();
+
+  return sstext;
+}
+
 QwtPickerDblClickPointMachine::QwtPickerDblClickPointMachine()
 #if QWT_VERSION < 0x060000
     : QwtPickerMachine ()
@@ -82,4 +100,3 @@ QwtDblClickPlotPicker::stateMachine(int n) const
 {
   return new QwtPickerDblClickPointMachine;
 }
-

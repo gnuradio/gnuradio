@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2009,2010,2012 Free Software Foundation, Inc.
+ * Copyright 2009,2010,2012,2014 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -26,25 +26,28 @@
 
 #include "pfb_channelizer_ccf_impl.h"
 #include <gnuradio/io_signature.h>
+#include <stdio.h>
 
 namespace gr {
   namespace filter {
-    
-    pfb_channelizer_ccf::sptr pfb_channelizer_ccf::make(unsigned int nfilts,
-							const std::vector<float> &taps,
-							float oversample_rate)
+
+    pfb_channelizer_ccf::sptr
+    pfb_channelizer_ccf::make(unsigned int nfilts,
+                              const std::vector<float> &taps,
+                              float oversample_rate)
     {
-      return gnuradio::get_initial_sptr(new pfb_channelizer_ccf_impl(nfilts, taps,
-								     oversample_rate));
+      return gnuradio::get_initial_sptr
+        (new pfb_channelizer_ccf_impl(nfilts, taps,
+                                      oversample_rate));
     }
 
     pfb_channelizer_ccf_impl::pfb_channelizer_ccf_impl(unsigned int nfilts,
 						       const std::vector<float> &taps,
 						       float oversample_rate)
       : block("pfb_channelizer_ccf",
-		 io_signature::make(nfilts, nfilts, sizeof(gr_complex)),
-		 io_signature::make(1, nfilts, sizeof(gr_complex))),
-	polyphase_filterbank(nfilts, taps),
+              io_signature::make(nfilts, nfilts, sizeof(gr_complex)),
+              io_signature::make(1, nfilts, sizeof(gr_complex))),
+	polyphase_filterbank(nfilts, taps, false),
 	d_updated(false), d_oversample_rate(oversample_rate)
     {
       // The over sampling rate must be rationally related to the number of channels
@@ -59,15 +62,22 @@ namespace gr {
 
       set_relative_rate(1.0/intp);
 
-      // Default channel map
+      // Default channel map. The channel map specifies which input
+      // goes to which output channel; so out[0] comes from
+      // channel_map[0].
       d_channel_map.resize(d_nfilts);
       for(unsigned int i = 0; i < d_nfilts; i++) {
 	d_channel_map[i] = i;
       }
 
-      // Although the filters change, we use this look up table
-      // to set the index of the FFT input buffer, which equivalently
-      // performs the FFT shift operation on every other turn.
+      // We use a look up table to set the index of the FFT input
+      // buffer, which equivalently performs the FFT shift operation
+      // on every other turn when the rate_ratio>1.  Also, this
+      // performs the index 'flip' where the first input goes into the
+      // last filter. In the pfb_decimator_ccf, we directly index the
+      // input_items buffers starting with this last; here we start
+      // with the first and put it into the fft object properly for
+      // the same effect.
       d_rate_ratio = (int)rintf(d_nfilts / d_oversample_rate);
       d_idxlut = new int[d_nfilts];
       for(unsigned int i = 0; i < d_nfilts; i++) {
@@ -81,10 +91,8 @@ namespace gr {
 	d_output_multiple++;
       set_output_multiple(d_output_multiple);
 
-      // History is the length of each filter arm plus 1.
-      // The +1 comes from the channel mapping in the work function
-      // where we start n=1 so that we can look at in[n-1]
-      set_history(d_taps_per_filter+1);
+      // Use set_taps to also set the history requirement
+      set_taps(taps);
     }
 
     pfb_channelizer_ccf_impl::~pfb_channelizer_ccf_impl()
@@ -118,7 +126,7 @@ namespace gr {
     pfb_channelizer_ccf_impl::set_channel_map(const std::vector<int> &map)
     {
       gr::thread::scoped_lock guard(d_mutex);
-      
+
       if(map.size() > 0) {
 	unsigned int max = (unsigned int)*std::max_element(map.begin(), map.end());
 	if(max >= d_nfilts) {
@@ -142,15 +150,27 @@ namespace gr {
     {
       gr::thread::scoped_lock guard(d_mutex);
 
-      gr_complex *in = (gr_complex *) input_items[0];
-      gr_complex *out = (gr_complex *) output_items[0];
-      
+      gr_complex *in = (gr_complex*)input_items[0];
+      gr_complex *out = (gr_complex*)output_items[0];
+
       if(d_updated) {
 	d_updated = false;
 	return 0;		     // history requirements may have changed.
       }
 
       size_t noutputs = output_items.size();
+
+      // The following algorithm looks more complex in order to handle
+      // the cases where we want more that 1 sps for each
+      // channel. Otherwise, this would boil down into a single loop
+      // that operates from input_items[0] to [d_nfilts].
+
+      // When dealing with osps>1, we start not at the last filter,
+      // but nfilts/osps and then wrap around to the next symbol into
+      // the other set of filters.
+      // For details of this operation, see:
+      // fred harris, Multirate Signal Processing For Communication
+      // Systems. Upper Saddle River, NJ: Prentice Hall, 2004.
 
       int n=1, i=-1, j=0, oo=0, last;
       int toconsume = (int)rintf(noutput_items/d_oversample_rate);
@@ -159,16 +179,16 @@ namespace gr {
 	i = (i + d_rate_ratio) % d_nfilts;
 	last = i;
 	while(i >= 0) {
-	  in = (gr_complex*)input_items[j];
-	  d_fft->get_inbuf()[d_idxlut[j]] = d_filters[i]->filter(&in[n]);
+          in = (gr_complex*)input_items[j];
+	  d_fft->get_inbuf()[d_idxlut[j]] = d_fir_filters[i]->filter(&in[n]);
 	  j++;
 	  i--;
 	}
 
 	i = d_nfilts-1;
 	while(i > last) {
-	  in = (gr_complex*)input_items[j];
-	  d_fft->get_inbuf()[d_idxlut[j]] = d_filters[i]->filter(&in[n-1]);
+          in = (gr_complex*)input_items[j];
+	  d_fft->get_inbuf()[d_idxlut[j]] = d_fir_filters[i]->filter(&in[n-1]);
 	  j++;
 	  i--;
 	}

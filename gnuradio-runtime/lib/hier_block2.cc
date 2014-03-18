@@ -26,6 +26,7 @@
 
 #include <gnuradio/hier_block2.h>
 #include <gnuradio/io_signature.h>
+#include <gnuradio/flowgraph.h>
 #include "hier_block2_detail.h"
 #include <iostream>
 
@@ -173,6 +174,12 @@ namespace gr {
   hier_block2::processor_affinity()
   {
     return d_detail->processor_affinity();
+  }
+
+  std::string
+  dot_graph(hier_block2_sptr hierblock2)
+  {
+    return dot_graph_fg(hierblock2->flatten());
   }
 
 } /* namespace gr */

@@ -63,15 +63,26 @@ at <em>nitems_written(0)+i</em> for the 0th output port.
 The stream tags API consists of four functions, two to add and two to
 get the stream tags. These functions are:
 
-\li add_item_tag: Adds an item tag to a particular output port using a
+\li gr::block::add_item_tag: Adds an item tag to a particular output port using a
 gr::tag_t data type.
-\li add_item_tag: Adds an item tag to a particular output port where
-each value of the tag is explicitly given.
-\li get_tags_in_range: Gets all tags from a particular input port between
-a certain range of items (in absolute item time).
-\li get_tags_in_range: Gets any tag that has a specified key from a
-particular input port between a certain range of items (in absolute
-item time).
+
+\li gr::block::add_item_tag: Adds an item tag to a particular output
+port where each value of the tag is explicitly given.
+
+\li gr::block::get_tags_in_range: Gets all tags from a particular
+input port between a certain range of items (in absolute item time).
+
+\li gr::block::get_tags_in_range: Gets any tag that has a specified
+key from a particular input port between a certain range of items (in
+absolute item time).
+
+\li gr::block::get_tags_in_window: Gets all tags from a particular
+input port between a certain range of items (in relative item time
+within the work function).
+
+\li gr::block::get_tags_in_range: Gets any tag that has a specified
+key from a particular input port between a certain range of items (in
+relative item time within the work function).
 
 
 \subsection add_item_tag Adding a Tag to a Stream

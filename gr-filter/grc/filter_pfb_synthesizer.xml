@@ -45,6 +45,13 @@ self.$(id).set_channel_map($ch_map)
 		<value>[]</value>
 		<type>int_vector</type>
 	</param>
+	<param>
+		<name>Bus Connections</name>
+		<key>bus_conns</key>
+                <value>[[0,],]</value>
+		<type>raw</type>
+                <hide>part</hide>
+	</param>
 	<sink>
 		<name>in</name>
 		<type>complex</type>
@@ -54,4 +61,5 @@ self.$(id).set_channel_map($ch_map)
 		<name>out</name>
 		<type>complex</type>
 	</source>
+        <bus_structure_sink>$bus_conns</bus_structure_sink>
 </block>

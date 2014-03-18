@@ -26,26 +26,42 @@
 
 #include <gnuradio/filter/pfb_decimator_ccf.h>
 #include <gnuradio/filter/polyphase_filterbank.h>
-#include <gnuradio/filter/fir_filter.h>
-#include <gnuradio/fft/fft.h>
 #include <gnuradio/thread/thread.h>
 
 namespace gr {
   namespace filter {
-    
+
     class FILTER_API pfb_decimator_ccf_impl : public pfb_decimator_ccf, kernel::polyphase_filterbank
     {
     private:
       bool         d_updated;
       unsigned int d_rate;
       unsigned int d_chan;
+      bool         d_use_fft_rotator;
+      bool         d_use_fft_filters;
       gr_complex  *d_rotator;
       gr::thread::mutex d_mutex; // mutex to protect set/work access
-    
+
+      inline int work_fir_exp(int noutput_items,
+                              gr_vector_const_void_star &input_items,
+                              gr_vector_void_star &output_items);
+      inline int work_fir_fft(int noutput_items,
+                              gr_vector_const_void_star &input_items,
+                              gr_vector_void_star &output_items);
+      inline int work_fft_exp(int noutput_items,
+                              gr_vector_const_void_star &input_items,
+                              gr_vector_void_star &output_items);
+      inline int work_fft_fft(int noutput_items,
+                              gr_vector_const_void_star &input_items,
+                              gr_vector_void_star &output_items);
+
+
     public:
       pfb_decimator_ccf_impl(unsigned int decim,
 			     const std::vector<float> &taps,
-			     unsigned int channel);
+			     unsigned int channel,
+                             bool use_fft_rotator=true,
+                             bool use_fft_filters=true);
 
       ~pfb_decimator_ccf_impl();
 

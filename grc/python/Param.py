@@ -377,11 +377,17 @@ class Param(_Param, _GUIParam):
                 (False, False): 'self.top_layout.addWidget(%(widget)s)',
             }[bool(tab), bool(pos)])%{'tab': tab, 'index': index, 'widget': '%s', 'pos': pos}
 
-            def gui_hint(ws, w):
-                if 'layout' in w: ws = ws.replace('addWidget', 'addLayout')
-                return ws%w
+            # FIXME: Move replace(...) into the make template of the qtgui blocks and return a string here
+            class GuiHint(object):
+                def __init__(self, ws):
+                    self._ws = ws
 
-            return lambda w: gui_hint(widget_str, w)
+                def __call__(self, w):
+                    return (self._ws.replace('addWidget', 'addLayout') if 'layout' in w else self._ws) % w
+
+                def __str__(self):
+                    return self._ws
+            return GuiHint(widget_str)
         #########################
         # Grid Position Type
         #########################
