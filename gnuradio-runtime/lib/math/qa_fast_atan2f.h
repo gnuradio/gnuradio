@@ -30,10 +30,12 @@ class qa_fast_atan2f : public CppUnit::TestCase
 {
   CPPUNIT_TEST_SUITE(qa_fast_atan2f);
   CPPUNIT_TEST(t1);
+  CPPUNIT_TEST(t2);
   CPPUNIT_TEST_SUITE_END();
-  
+
 private:
   void t1();
+  void t2();
 };
 
 #endif /* _QA_FAST_ATAN2F_H_ */
