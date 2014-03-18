@@ -148,7 +148,7 @@ namespace gr {
     else {
       /* find index and interpolation value */
       alpha = z * (float)TAN_MAP_SIZE - .5;
-      index = (int)alpha;
+      index = (int)alpha & 0xff;
       alpha -= (float)index;
       /* determine base angle based on quadrant and */
       /* add or subtract table value from base angle based on quadrant */
