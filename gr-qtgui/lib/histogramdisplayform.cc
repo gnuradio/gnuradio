@@ -50,10 +50,10 @@ HistogramDisplayForm::HistogramDisplayForm(int nplots, QWidget* parent)
   connect(d_nbinsmenu, SIGNAL(whichTrigger(int)),
 	  this, SLOT(setNumBins(const int)));
 
-  QAction *accummenu = new QAction("Accumulate", this);
-  accummenu->setCheckable(true);
-  d_menu->addAction(accummenu);
-  connect(accummenu, SIGNAL(triggered(bool)),
+  QAction *d_accum_act = new QAction("Accumulate", this);
+  d_accum_act->setCheckable(true);
+  d_menu->addAction(d_accum_act);
+  connect(d_accum_act, SIGNAL(triggered(bool)),
 	  this, SLOT(setAccumulate(bool)));
 
   d_menu->removeAction(d_autoscale_act);
@@ -199,6 +199,7 @@ HistogramDisplayForm::setAccumulate(bool en)
   if(en) {
     autoScale(true);
   }
+  d_accum_act->setChecked(en);
   getPlot()->setAccumulate(en);
   getPlot()->replot();
 }

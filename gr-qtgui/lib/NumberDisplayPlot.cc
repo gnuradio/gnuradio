@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2013 Free Software Foundation, Inc.
+ * Copyright 2014 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -20,22 +20,44 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef _QA_FAST_ATAN2F_H_
-#define _QA_FAST_ATAN2F_H_
+#ifndef NUMBER_DISPLAY_PLOT_C
+#define NUMBER_DISPLAY_PLOT_C
 
-#include <cppunit/extensions/HelperMacros.h>
-#include <cppunit/TestCase.h>
+#include <gnuradio/qtgui/NumberDisplayPlot.h>
 
-class qa_fast_atan2f : public CppUnit::TestCase
+#include <qwt_scale_draw.h>
+#include <QColor>
+#include <cmath>
+#include <iostream>
+#include <volk/volk.h>
+
+NumberDisplayPlot::NumberDisplayPlot(int nplots, QWidget* parent)
+  : DisplayPlot(nplots, parent)
 {
-  CPPUNIT_TEST_SUITE(qa_fast_atan2f);
-  CPPUNIT_TEST(t1);
-  CPPUNIT_TEST(t2);
-  CPPUNIT_TEST_SUITE_END();
+  resize(0, 0);
 
-private:
-  void t1();
-  void t2();
-};
+  // Setup dataPoints and plot vectors
+  // Automatically deleted when parent is deleted
+  for(int i = 0; i < d_nplots; i++) {
 
-#endif /* _QA_FAST_ATAN2F_H_ */
+  }
+}
+
+NumberDisplayPlot::~NumberDisplayPlot()
+{
+}
+
+void
+NumberDisplayPlot::replot()
+{
+  QwtPlot::replot();
+}
+
+void
+NumberDisplayPlot::plotNewData(const std::vector<double> samples)
+{
+  if(!d_stop) {
+  }
+}
+
+#endif /* NUMBER_DISPLAY_PLOT_C */

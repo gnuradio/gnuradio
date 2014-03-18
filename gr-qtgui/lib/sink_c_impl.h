@@ -85,6 +85,8 @@ namespace gr {
 
 #ifdef ENABLE_PYTHON
       PyObject* pyqwidget();
+#else
+      void* pyqwidget();
 #endif
 
       void set_fft_size(const int fftsize);

@@ -173,6 +173,7 @@ FreqDisplayForm::autoScale(bool en)
     d_autoscale_state = false;
   }
 
+  d_autoscale_act->setChecked(en);
   getPlot()->setAutoScale(d_autoscale_state);
   getPlot()->replot();
 }

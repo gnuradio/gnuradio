@@ -61,6 +61,11 @@ TimeRasterDisplayForm::TimeRasterDisplayForm(int nplots,
 
   // Now create our own menus
   for(int i = 0; i < nplots; i++) {
+    d_line_title_act.push_back(new LineTitleAction(i, this));
+    connect(d_line_title_act[i], SIGNAL(whichTrigger(int, const QString&)),
+	    this, SLOT(setLineLabel(int, const QString&)));
+    d_lines_menu[i]->addAction(d_line_title_act[i]);
+
     ColorMapMenu *colormap = new ColorMapMenu(i, this);
     connect(colormap, SIGNAL(whichTrigger(int, const int, const QColor&, const QColor&)),
 	    this, SLOT(setColorMap(int, const int, const QColor&, const QColor&)));

@@ -126,7 +126,8 @@ class Port(Element):
         """
         Element.draw(
             self, gc, window, bg_color=self._bg_color,
-            border_color=self.is_highlighted() and Colors.HIGHLIGHT_COLOR or Colors.BORDER_COLOR,
+            border_color=self.is_highlighted() and Colors.HIGHLIGHT_COLOR or
+                         self.get_parent().is_dummy_block() and Colors.MISSING_BLOCK_BORDER_COLOR or Colors.BORDER_COLOR,
         )
         X,Y = self.get_coordinate()
         (x,y),(w,h) = self._areas_list[0] #use the first area's sizes to place the labels

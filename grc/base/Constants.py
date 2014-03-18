@@ -23,3 +23,7 @@ import os
 DATA_DIR = os.path.dirname(__file__)
 FLOW_GRAPH_DTD = os.path.join(DATA_DIR, 'flow_graph.dtd')
 BLOCK_TREE_DTD = os.path.join(DATA_DIR, 'block_tree.dtd')
+
+# Param tabs
+DEFAULT_PARAM_TAB = "General"
+ADVANCED_PARAM_TAB = "Advanced"

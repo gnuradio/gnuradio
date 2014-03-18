@@ -71,9 +71,12 @@ namespace gr {
 		       QWidget *parent=NULL);
 
       virtual void exec_() = 0;
+      virtual QWidget* qwidget() = 0;
 
 #ifdef ENABLE_PYTHON
       virtual PyObject* pyqwidget() = 0;
+#else
+      virtual void* pyqwidget() = 0;
 #endif
 
       virtual void set_fft_size(const int fftsize) = 0;

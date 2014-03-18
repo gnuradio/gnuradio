@@ -73,12 +73,13 @@ private:
 
   bool d_semilogx;
   bool d_semilogy;
-  
+
   NPointsMenu *d_nptsmenu;
-  NPointsMenu *d_nbinsmenu;  
+  NPointsMenu *d_nbinsmenu;
   QAction *d_semilogxmenu;
   QAction *d_semilogymenu;
 
+  QAction *d_accum_act;
   QAction *d_autoscalex_act;
   bool d_autoscalex_state;
 };

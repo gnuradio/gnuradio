@@ -18,11 +18,12 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 """
 
 from . import odict
+from . Constants import ADVANCED_PARAM_TAB, DEFAULT_PARAM_TAB
 from Element import Element
 
 from Cheetah.Template import Template
 from UserDict import UserDict
-from .. gui import Actions
+
 
 class TemplateArg(UserDict):
     """
@@ -76,6 +77,11 @@ class Block(Element):
         self._block_wrapper_path = n.find('block_wrapper_path')
         self._bussify_sink = n.find('bus_sink')
         self._bussify_source = n.find('bus_source')
+
+        # get list of param tabs
+        n_tabs = n.find('param_tab_order') or None
+        self._param_tab_labels = n_tabs.findall('tab') if n_tabs is not None else [DEFAULT_PARAM_TAB]
+
         #create the param objects
         self._params = list()
         #add the id param
@@ -142,6 +148,7 @@ class Block(Element):
                              'key': 'affinity',
                              'type': 'int_vector',
                              'hide': 'part',
+                             'tab': ADVANCED_PARAM_TAB
                              })
                     ))
         if len(sources) and is_not_virtual_or_pad:
@@ -151,7 +158,8 @@ class Block(Element):
                              'key': 'minoutbuf',
                              'type': 'int',
                              'hide': 'part',
-                             'value': '0'
+                             'value': '0',
+                             'tab': ADVANCED_PARAM_TAB
                              })
                     ))
             self.get_params().append(self.get_parent().get_parent().Param(
@@ -160,14 +168,14 @@ class Block(Element):
                              'key': 'maxoutbuf',
                              'type': 'int',
                              'hide': 'part',
-                             'value': '0'
+                             'value': '0',
+                             'tab': ADVANCED_PARAM_TAB
                              })
                     ))
 
 
     def back_ofthe_bus(self, portlist):
         portlist.sort(key=lambda a: a.get_type() == 'bus');
-        
 
     def filter_bus_port(self, ports): 
         buslist = [i for i in ports if i.get_type() == 'bus'];
@@ -213,6 +221,7 @@ class Block(Element):
     ##############################################
     # Access Params
     ##############################################
+    def get_param_tab_labels(self): return self._param_tab_labels
     def get_param_keys(self): return _get_keys(self._params)
     def get_param(self, key): return _get_elem(self._params, key)
     def get_params(self): return self._params

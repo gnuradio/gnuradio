@@ -173,6 +173,12 @@ namespace gr {
       PyObject *retarg = Py_BuildValue("N", w);
       return retarg;
     }
+#else
+    void *
+    waterfall_sink_c_impl::pyqwidget()
+    {
+      return NULL;
+    }
 #endif
 
     void

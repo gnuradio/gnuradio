@@ -131,7 +131,8 @@ class Block(Element):
     def create_labels(self):
         """Create the labels for the signal block."""
         Element.create_labels(self)
-        self._bg_color = self.get_enabled() and Colors.BLOCK_ENABLED_COLOR or Colors.BLOCK_DISABLED_COLOR
+        self._bg_color = self.is_dummy_block() and Colors.MISSING_BLOCK_BACKGROUND_COLOR or \
+                         self.get_enabled() and Colors.BLOCK_ENABLED_COLOR or Colors.BLOCK_DISABLED_COLOR
         layouts = list()
         #create the main layout
         layout = gtk.DrawingArea().create_pango_layout('')
@@ -139,7 +140,10 @@ class Block(Element):
         layout.set_markup(Utils.parse_template(BLOCK_MARKUP_TMPL, block=self))
         self.label_width, self.label_height = layout.get_pixel_size()
         #display the params
-        markups = [param.get_markup() for param in self.get_params() if param.get_hide() not in ('all', 'part')]
+        if self.is_dummy_block():
+            markups = ['<span foreground="black" font_desc="Sans 7.5"><b>key: </b>{}</span>'.format(self._key)]
+        else:
+            markups = [param.get_markup() for param in self.get_params() if param.get_hide() not in ('all', 'part')]
         if markups:
             layout = gtk.DrawingArea().create_pango_layout('')
             layout.set_spacing(LABEL_SEPARATION*pango.SCALE)
@@ -191,7 +195,8 @@ class Block(Element):
         #draw main block
         Element.draw(
             self, gc, window, bg_color=self._bg_color,
-            border_color=self.is_highlighted() and Colors.HIGHLIGHT_COLOR or Colors.BORDER_COLOR,
+            border_color=self.is_highlighted() and Colors.HIGHLIGHT_COLOR or
+                         self.is_dummy_block() and Colors.MISSING_BLOCK_BORDER_COLOR or Colors.BORDER_COLOR,
         )
         #draw label image
         if self.is_horizontal():

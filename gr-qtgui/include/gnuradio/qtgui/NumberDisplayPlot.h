@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2013 Free Software Foundation, Inc.
+ * Copyright 2014 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -20,22 +20,35 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef _QA_FAST_ATAN2F_H_
-#define _QA_FAST_ATAN2F_H_
+#ifndef NUMBER_DISPLAY_PLOT_H
+#define NUMBER_DISPLAY_PLOT_H
 
-#include <cppunit/extensions/HelperMacros.h>
-#include <cppunit/TestCase.h>
+#include <stdint.h>
+#include <cstdio>
+#include <vector>
+#include <gnuradio/qtgui/DisplayPlot.h>
+#include <gnuradio/tags.h>
+#include <qwt_plot.h>
 
-class qa_fast_atan2f : public CppUnit::TestCase
+/*!
+ * \brief QWidget for displaying number plots.
+ * \ingroup qtgui_blk
+ */
+class NumberDisplayPlot: public DisplayPlot
 {
-  CPPUNIT_TEST_SUITE(qa_fast_atan2f);
-  CPPUNIT_TEST(t1);
-  CPPUNIT_TEST(t2);
-  CPPUNIT_TEST_SUITE_END();
+  Q_OBJECT
+
+public:
+  NumberDisplayPlot(int nplots, QWidget*);
+  virtual ~NumberDisplayPlot();
+
+  void plotNewData(const std::vector<double> samples);
+
+  void replot();
+
+public slots:
 
 private:
-  void t1();
-  void t2();
 };
 
-#endif /* _QA_FAST_ATAN2F_H_ */
+#endif /* NUMBER_DISPLAY_PLOT_H */

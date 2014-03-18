@@ -359,11 +359,17 @@ class ActionHandler:
             Dialogs.ErrorsDialog(self.get_flow_graph())
         elif action == Actions.TOGGLE_REPORTS_WINDOW:
             visible = action.get_active()
-            self.main_window.reports_scrolled_window.set_visible(visible)
+            if visible:
+                self.main_window.reports_scrolled_window.show()
+            else:
+                self.main_window.reports_scrolled_window.hide()
             Preferences.reports_window_visibility(visible)
         elif action == Actions.TOGGLE_BLOCKS_WINDOW:
             visible = action.get_active()
-            self.main_window.btwin.set_visible(visible)
+            if visible:
+                self.main_window.btwin.show()
+            else:
+                self.main_window.btwin.hide()
             Preferences.blocks_window_visibility(visible)
         ##################################################
         # Param Modifications
@@ -472,7 +478,7 @@ class ActionHandler:
         elif action == Actions.FIND_BLOCKS:
             self.main_window.btwin.show()
             self.main_window.btwin.search_entry.show()
-            self.main_window.set_focus(self.main_window.btwin.search_entry)
+            self.main_window.btwin.search_entry.grab_focus()
         elif action == Actions.OPEN_HIER:
             bn = [];
             for b in self.get_flow_graph().get_selected_blocks():
