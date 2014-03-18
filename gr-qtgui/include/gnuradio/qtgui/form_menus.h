@@ -32,7 +32,6 @@
 #include <gnuradio/filter/firdes.h>
 #include <gnuradio/qtgui/qtgui_types.h>
 #include <gnuradio/qtgui/trigger_mode.h>
-#include <gnuradio/qtgui/number_sink.h>
 
 class LineColorMenu: public QMenu
 {

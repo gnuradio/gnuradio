@@ -28,6 +28,27 @@
 //load generated python docstrings
 %include "qtgui_swig_doc.i"
 
+namespace gr {
+  namespace qtgui {
+
+    enum graph_t {
+      NUM_GRAPH_NONE = 0,
+      NUM_GRAPH_HORIZ,
+      NUM_GRAPH_VERT,
+    };
+
+  } /* namespace qtgui */
+} /* namespace gr */
+
+
+enum{
+  INTENSITY_COLOR_MAP_TYPE_MULTI_COLOR = 0,
+  INTENSITY_COLOR_MAP_TYPE_WHITE_HOT = 1,
+  INTENSITY_COLOR_MAP_TYPE_BLACK_HOT = 2,
+  INTENSITY_COLOR_MAP_TYPE_INCANDESCENT = 3,
+  INTENSITY_COLOR_MAP_TYPE_USER_DEFINED = 4
+};
+
 %include "gnuradio/qtgui/trigger_mode.h"
 
 // So we understand the firdes window types

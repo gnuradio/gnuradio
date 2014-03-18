@@ -75,16 +75,16 @@ public:
     _zeroTime = 0;
     _secondsPerLine = 1.0;
   }
-  
+
   virtual ~TimeScaleData()
-  {    
+  {
   }
 
   virtual gr::high_res_timer_type getZeroTime() const
   {
     return _zeroTime;
   }
-  
+
   virtual void setZeroTime(const gr::high_res_timer_type newTime)
   {
     _zeroTime = newTime - gr::high_res_timer_epoch();
@@ -100,13 +100,13 @@ public:
     return _secondsPerLine;
   }
 
-  
+
 protected:
-  
+
 private:
   gr::high_res_timer_type _zeroTime;
   double _secondsPerLine;
-  
+
 };
 
 /***********************************************************************
@@ -135,6 +135,19 @@ protected:
 private:
 
 };
+
+namespace gr {
+  namespace qtgui {
+
+    enum graph_t {
+      NUM_GRAPH_NONE = 0,
+      NUM_GRAPH_HORIZ,
+      NUM_GRAPH_VERT,
+    };
+
+  } /* namespace qtgui */
+} /* namespace gr */
+
 
 enum{
   INTENSITY_COLOR_MAP_TYPE_MULTI_COLOR = 0,
