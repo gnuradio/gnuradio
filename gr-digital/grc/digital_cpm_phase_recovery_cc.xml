@@ -1,0 +1,49 @@
+<?xml version="1.0"?>
+<block>
+  <name>cpm_phase_recovery_cc</name>
+  <key>digital_cpm_phase_recovery_cc</key>
+  <category>digital</category>
+  <import>from gnuradio import digital</import>
+  <make>digital.cpm_phase_recovery_cc($p, $len, $sps)</make>
+  <!-- Make one 'param' node for every Parameter you want settable from the GUI.
+       Sub-nodes:
+       * name
+       * key (makes the value accessible as $keyname, e.g. in the make node)
+       * type -->
+  <param>
+    <name>P</name>
+    <key>p</key>
+    <type>int</type>
+  </param>
+  <param>
+    <name>Observation length</name>
+    <key>len</key>
+    <type>int</type>
+  </param>
+  <param>
+    <name>Samples per symbol</name>
+    <key>sps</key>
+    <type>int</type>
+  </param>
+
+
+  <!-- Make one 'sink' node per input. Sub-nodes:
+       * name (an identifier for the GUI)
+       * type
+       * vlen
+       * optional (set to 1 for optional inputs) -->
+  <sink>
+    <name>in</name>
+    <type>complex</type>
+  </sink>
+
+  <!-- Make one 'source' node per output. Sub-nodes:
+       * name (an identifier for the GUI)
+       * type
+       * vlen
+       * optional (set to 1 for optional inputs) -->
+  <source>
+    <name>out</name>
+    <type>complex</type>
+  </source>
+</block>

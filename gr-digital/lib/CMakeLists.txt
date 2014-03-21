@@ -66,6 +66,7 @@ list(APPEND digital_sources
     correlate_access_code_ff_ts_impl.cc
     correlate_and_sync_cc_impl.cc
     costas_loop_cc_impl.cc
+    cpm_phase_recovery_cc_impl.cc
     cpmmod_bc_impl.cc
     crc32.cc
     crc32_bb_impl.cc
@@ -88,6 +89,8 @@ list(APPEND digital_sources
     mpsk_receiver_cc_impl.cc
     mpsk_snr_est.cc
     mpsk_snr_est_cc_impl.cc
+    msk_correlate_cc_impl.cc
+    msk_timing_recovery_cc_impl.cc
     ofdm_carrier_allocator_cvc_impl.cc
     ofdm_chanest_vcvc_impl.cc
     ofdm_cyclic_prefixer_impl.cc
