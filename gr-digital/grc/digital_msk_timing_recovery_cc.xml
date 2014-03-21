@@ -1,0 +1,67 @@
+<?xml version="1.0"?>
+<block>
+  <name>msk_timing_recovery_cc</name>
+  <key>digital_msk_timing_recovery_cc</key>
+  <category>digital</category>
+  <import>from gnuradio import digital</import>
+  <make>digital.msk_timing_recovery_cc($sps, $gain, $limit, $osps)</make>
+  <callback>set_gain($gain)</callback>
+  <callback>set_sps($sps)</callback>
+  <callback>set_limit($limit)</callback>
+  <!-- Make one 'param' node for every Parameter you want settable from the GUI.
+       Sub-nodes:
+       * name
+       * key (makes the value accessible as $keyname, e.g. in the make node)
+       * type -->
+  <param>
+    <name>Gain</name>
+    <key>gain</key>
+    <type>float</type>
+  </param>
+  <param>
+    <name>Samples per symbol</name>
+    <key>sps</key>
+    <type>float</type>
+  </param>
+  <param>
+    <name>Error limit</name>
+    <key>limit</key>
+    <type>float</type>
+  </param>
+  <param>
+    <name>Output samples per symbol</name>
+    <key>osps</key>
+    <type>int</type>
+  </param>
+
+  <!-- Make one 'sink' node per input. Sub-nodes:
+       * name (an identifier for the GUI)
+       * type
+       * vlen
+       * optional (set to 1 for optional inputs) -->
+  <sink>
+    <name>in</name>
+    <type>complex</type>
+  </sink>
+
+  <!-- Make one 'source' node per output. Sub-nodes:
+       * name (an identifier for the GUI)
+       * type
+       * vlen
+       * optional (set to 1 for optional inputs) -->
+  <source>
+    <name>out</name>
+    <type>complex</type>
+  </source>
+  <source>
+    <name>err</name>
+    <type>float</type>
+    <optional>1</optional>
+  </source>
+  <source>
+    <name>omega</name>
+    <type>float</type>
+    <optional>1</optional>
+  </source>
+
+</block>

@@ -48,6 +48,7 @@ install(FILES
     correlate_access_code_ff_ts.h
     correlate_and_sync_cc.h
     costas_loop_cc.h
+    cpm_phase_recovery_cc.h
     cpmmod_bc.h
     crc32.h
     crc32_bb.h
@@ -72,6 +73,8 @@ install(FILES
     mpsk_receiver_cc.h
     mpsk_snr_est.h
     mpsk_snr_est_cc.h
+    msk_correlate_cc.h
+    msk_timing_recovery_cc.h
     ofdm_carrier_allocator_cvc.h
     ofdm_chanest_vcvc.h
     ofdm_cyclic_prefixer.h
