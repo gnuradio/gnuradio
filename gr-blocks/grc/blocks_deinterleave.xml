@@ -8,7 +8,7 @@
 	<name>Deinterleave</name>
 	<key>blocks_deinterleave</key>
 	<import>from gnuradio import blocks</import>
-	<make>blocks.deinterleave($type.size*$vlen)</make>
+	<make>blocks.deinterleave($type.size*$vlen, $blocksize)</make>
 	<param>
 		<name>IO Type</name>
 		<key>type</key>
@@ -44,6 +44,13 @@
 		<key>num_streams</key>
 		<value>2</value>
 		<type>int</type>
+	</param>
+  <param>
+		<name>Block Size</name>
+		<key>blocksize</key>
+		<value>1</value>
+		<type>int</type>
+    <hide>part</hide>
 	</param>
 	<param>
 		<name>Vec Length</name>

@@ -24,7 +24,7 @@
 #define INCLUDED_BLOCKS_INTERLEAVE_H
 
 #include <gnuradio/blocks/api.h>
-#include <gnuradio/sync_interpolator.h>
+#include <gnuradio/block.h>
 
 namespace gr {
   namespace blocks {
@@ -33,7 +33,7 @@ namespace gr {
      * \brief interleave N inputs into a single output
      * \ingroup stream_operators_blk
      */
-    class BLOCKS_API interleave : virtual public sync_interpolator
+    class BLOCKS_API interleave : virtual public block
     {
     public:
       // gr::blocks::interleave::sptr
@@ -44,7 +44,7 @@ namespace gr {
        *
        * \param itemsize stream itemsize
        */
-      static sptr make(size_t itemsize);
+      static sptr make(size_t itemsize, unsigned int blocksize = 1);
     };
 
   } /* namespace blocks */
