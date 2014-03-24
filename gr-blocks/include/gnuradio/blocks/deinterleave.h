@@ -24,7 +24,7 @@
 #define INCLUDED_BLOCKS_DEINTERLEAVE_H
 
 #include <gnuradio/blocks/api.h>
-#include <gnuradio/sync_decimator.h>
+#include <gnuradio/block.h>
 
 namespace gr {
   namespace blocks {
@@ -33,7 +33,7 @@ namespace gr {
      * \brief deinterleave a single input into N outputs
      * \ingroup stream_operators_blk
      */
-    class BLOCKS_API deinterleave : virtual public sync_decimator
+    class BLOCKS_API deinterleave : virtual public block
     {
     public:
       // gr::blocks::deinterleave::sptr
@@ -44,7 +44,7 @@ namespace gr {
        *
        * \param itemsize stream itemsize
        */
-      static sptr make(size_t itemsize);
+      static sptr make(size_t itemsize, unsigned int blocksize = 1);
     };
 
   } /* namespace blocks */
