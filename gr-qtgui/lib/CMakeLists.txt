@@ -91,6 +91,7 @@ set(qtgui_srcs
     histogram_sink_f_impl.cc
     number_sink_impl.cc
     qtgui_util.cc
+    ber_sink_b_impl.cc
 )
 
 #Add Windows DLL resource file if using MSVC
