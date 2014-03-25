@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2012 Free Software Foundation, Inc.
+ * Copyright 2012,2014 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -26,10 +26,8 @@
 
 #include "stream_mux_impl.h"
 #include <gnuradio/io_signature.h>
-#include <string.h>
-#include <cstdio>
-
-#define VERBOSE 0
+#include <boost/foreach.hpp>
+#include <cstring>
 
 namespace gr {
   namespace blocks {
@@ -48,8 +46,11 @@ namespace gr {
 	d_residual(0),
 	d_lengths(lengths)
     {
-      if(d_lengths[d_stream] == 0) {
-	increment_stream();
+      while (d_lengths[d_stream] == 0) {
+        d_stream++;
+        if (d_stream == d_lengths.size()) {
+          throw std::invalid_argument("At least one size must be non-zero.");
+        }
       }
       d_residual = d_lengths[d_stream];
     }
@@ -58,69 +59,57 @@ namespace gr {
     stream_mux_impl::forecast(int noutput_items, gr_vector_int &ninput_items_required)
     {
       unsigned ninputs = ninput_items_required.size ();
-      for (unsigned i = 0; i < ninputs; i++)
-	ninput_items_required[i] = (d_lengths[i] == 0 ? 0 : 1);
-    }
-
-    void 
-    stream_mux_impl::increment_stream()
-    {
-      do {
-	d_stream = (d_stream+1) % d_lengths.size();
-      } while(d_lengths[d_stream] == 0);
-      
-      d_residual = d_lengths[d_stream];
+      for (unsigned i = 0; i < ninputs; i++) {
+	// Only active inputs *need* items, for the rest, it would just be nice
+	ninput_items_required[i] = (d_stream == i ? 1 : 0);
+      }
     }
 
 
     int
     stream_mux_impl::general_work(int noutput_items,
-				   gr_vector_int &ninput_items,
-				   gr_vector_const_void_star &input_items,
-				   gr_vector_void_star &output_items)
-    {
+          gr_vector_int &ninput_items,
+          gr_vector_const_void_star &input_items,
+          gr_vector_void_star &output_items
+    ){
       char *out = (char *) output_items[0];
       const char *in;
-      int out_index = 0;
-      std::vector<int> input_index(d_lengths.size(), 0);
-      
-      if(VERBOSE) {
-	printf("mux: nouput_items: %d   d_stream: %d\n", noutput_items, d_stream);
-	for(size_t i = 0; i < d_lengths.size(); i++)
-	  printf("\tninput_items[%zu]: %d\n", i, ninput_items[i]);
+      int out_index = 0; // Items written
+      gr_vector_int input_index(d_lengths.size(), 0); // Items read
+
+      while (out_index < noutput_items) {
+        if (ninput_items[d_stream] <= input_index[d_stream]) {
+          break;
+        }
+        int space_left_in_buffers = std::min(
+              noutput_items - out_index, // Space left in output buffer
+              ninput_items[d_stream] - input_index[d_stream] // Space left in input buffer
+        );
+        int items_to_copy = std::min(
+            space_left_in_buffers,
+            d_residual
+        );
+        in = (const char *) input_items[d_stream] + input_index[d_stream]*d_itemsize;
+        memcpy(&out[out_index*d_itemsize], in, items_to_copy*d_itemsize);
+        out_index += items_to_copy;
+        input_index[d_stream] += items_to_copy;
+        d_residual -= items_to_copy;
+        if (d_residual == 0) {
+	  do { // Skip all those inputs with zero length
+	    d_stream = (d_stream+1) % d_lengths.size();
+	  } while (d_lengths[d_stream] == 0);
+          d_residual = d_lengths[d_stream];
+        } else {
+          break;
+        }
+      } // while
+
+      for (size_t i = 0; i < input_index.size(); i++) {
+	consume((int) i, input_index[i]);
       }
-      
-      while (1) {
-	int r = std::min(noutput_items - out_index,
-			 std::min(d_residual,
-				  ninput_items[d_stream] - input_index[d_stream]));
-	if(VERBOSE) {
-	  printf("mux: r=%d\n", r);
-	  printf("\tnoutput_items - out_index: %d\n",
-		 noutput_items - out_index);
-	  printf("\td_residual: %d\n",
-		 d_residual);
-	  printf("\tninput_items[d_stream] - input_index[d_stream]: %d\n",
-		 ninput_items[d_stream] - input_index[d_stream]);
-	}
-	
-	if(r <= 0) {
-	  return out_index;
-	}
-	
-	in = (const char *) input_items[d_stream] + input_index[d_stream]*d_itemsize;
-	
-	memcpy(&out[out_index*d_itemsize], in, r*d_itemsize);
-	out_index += r;
-	input_index[d_stream] += r;
-	d_residual -= r;
-	
-	consume(d_stream, r);
-	
-	if(d_residual == 0) {
-	  increment_stream();
-	}
-      }
-    }
+
+      return out_index;
+    } /* work */
+
   } /* namespace blocks */
 } /* namespace gr */

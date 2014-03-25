@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2004,2005,2007,2010,2012,2013 Free Software Foundation, Inc.
+# Copyright 2004,2005,2007,2010,2012,2013,2014 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -166,6 +166,20 @@ class test_stream_mux (gr_unittest.TestCase):
                     2.0, 2.0, 2.0)
 
         self.assertEqual (exp_data, result_data)
+
+    def test_largeN_ff(self):
+        stream_sizes = [3, 8191]
+        r1 = (1,) * stream_sizes[0]
+        r2 = (2,) * stream_sizes[1]
+        v0 = blocks.vector_source_f(r1, repeat=False)
+        v1 = blocks.vector_source_f(r2, repeat=False)
+        mux = blocks.stream_mux(gr.sizeof_float, stream_sizes)
+        dst = blocks.vector_sink_f ()
+        self.tb.connect (v0, (mux,0))
+        self.tb.connect (v1, (mux,1))
+        self.tb.connect (mux, dst)
+        self.tb.run ()
+        self.assertEqual (r1 + r2, dst.data())
 
 if __name__ == '__main__':
     gr_unittest.run(test_stream_mux, "test_stream_mux.xml")

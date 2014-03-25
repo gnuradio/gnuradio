@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2012 Free Software Foundation, Inc.
+ * Copyright 2012,2014 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -36,10 +36,8 @@ namespace gr {
       int d_residual;           // number if items left to put into current stream
       gr_vector_int d_lengths;  // number if items to pack per stream
 
-      void increment_stream();
-
       void forecast(int noutput_items, gr_vector_int &ninput_items_required);
-      
+
     public:
       stream_mux_impl(size_t itemsize, const std::vector<int> &lengths);
 
