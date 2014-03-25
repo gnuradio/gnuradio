@@ -1,4 +1,4 @@
-# Copyright 2012-2013 Free Software Foundation, Inc.
+# Copyright 2012-2014 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -30,6 +30,8 @@ include_directories(
     ${CMAKE_CURRENT_BINARY_DIR}
     ${GR_FEC_INCLUDE_DIRS}
     ${GNURADIO_RUNTIME_INCLUDE_DIRS}
+    ${VOLK_INCLUDE_DIRS}
+    ${LOG4CPP_INCLUDE_DIRS}
     ${Boost_INCLUDE_DIRS}
 )
 
@@ -38,14 +40,28 @@ if(ENABLE_GR_CTRLPORT)
   include_directories(${ICE_INCLUDE_DIR})
 endif(ENABLE_GR_CTRLPORT)
 
-link_directories(${Boost_LIBRARY_DIRS})
+link_directories(
+  ${Boost_LIBRARY_DIRS}
+  ${LOG4CPP_LIBRARIES}
+)
 
 ########################################################################
 # Setup library
 ########################################################################
 list(APPEND gnuradio_fec_sources
-    decode_ccsds_27_fb_impl.cc
-    encode_ccsds_27_bb_impl.cc
+  generic_decoder.cc
+  generic_encoder.cc
+  encoder_impl.cc
+  decoder_impl.cc
+  cc_decoder_impl.cc
+  cc_encoder_impl.cc
+  decode_ccsds_27_fb_impl.cc
+  encode_ccsds_27_bb_impl.cc
+  ber_tools.cc
+  ber_bf_impl.cc
+  conv_bit_corr_bb_impl.cc
+  puncture_ff_impl.cc
+  depuncture_bb_impl.cc
 )
 
 #Add Windows DLL resource file if using MSVC
@@ -64,6 +80,7 @@ endif(MSVC)
 
 list(APPEND gnuradio_fec_libs
     gnuradio-runtime
+    volk
     ${Boost_LIBRARIES}
 )
 

@@ -1,0 +1,69 @@
+<?xml version="1.0"?>
+<!--
+###################################################
+## BER Curve Generator
+###################################################
+ -->
+<block>
+  <name>BER Curve Gen.</name>
+  <key>fec_bercurve_generator</key>
+  <import>from gnuradio import fec</import>
+  <import>import numpy</import>
+  <make>fec.bercurve_generator(
+	$encoder_list, \#size
+	$decoder_list, \#name
+	$esno, \#range of esnos
+	$samp_rate, \#throttle
+	$puncpat \#puncture pattern
+)
+  </make>
+
+  <param>
+    <name>esno</name>
+    <key>esno</key>
+    <value>numpy.arange(0.0, 4.0, .5)</value>
+    <type>raw</type>
+  </param>
+
+  <param>
+    <name>samp_rate</name>
+    <key>samp_rate</key>
+    <value>3200000</value>
+    <type>raw</type>
+  </param>
+
+  <param>
+    <name>encoder_list</name>
+    <key>encoder_list</key>
+    <value>0</value>
+    <type>raw</type>
+  </param>
+
+  <param>
+    <name>decoder_list</name>
+    <key>decoder_list</key>
+    <value>0</value>
+    <type>raw</type>
+  </param>
+
+  <param>
+    <name>puncpat</name>
+    <key>puncpat</key>
+    <value>'11'</value>
+    <type>string</type>
+  </param>
+
+  <bus_source>1</bus_source>
+
+  <source>
+    <name>out</name>
+    <type>byte</type>
+    <nports>len($esno)*2</nports>
+  </source>
+
+  <doc>
+    The GUI hint can be used to position the widget within the application. \
+    The hint is of the form [tab_id@tab_index]: [row, col, row_span, col_span]. \
+    Both the tab specification and the grid position are optional.
+  </doc>
+</block>

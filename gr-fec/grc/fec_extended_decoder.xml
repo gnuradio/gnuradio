@@ -1,0 +1,72 @@
+<?xml version="1.0"?>
+<block>
+  <name>FEC Extended Decoder</name>
+  <key>fec_extended_decoder</key>
+  <import>from gnuradio import fec</import>
+  <make>self.$(id) = $(id) = fec.extended_decoder(decoder_obj_list=$decoder_list, threading=$threadtype.arg, ann=$ann, puncpat=$puncpat, integration_period=10000)</make>
+
+  <param>
+    <name>fake val</name>
+    <key>value</key>
+    <value>fec_extended_decoder</value>
+    <type>string</type>
+    <hide>all</hide>
+  </param>
+
+  <param>
+    <name>Decoder Objects</name>
+    <key>decoder_list</key>
+    <value>decoder_variable</value>
+    <type>raw</type>
+  </param>
+
+  <param>
+    <name>Threading Type</name>
+    <key>threadtype</key>
+    <type>enum</type>
+    <option>
+      <name>Capillary</name>
+      <key>capillary</key>
+      <opt>arg:'capillary'</opt>
+    </option>
+    <option>
+      <name>Ordinary</name>
+      <key>ordinary</key>
+      <opt>arg:'ordinary'</opt>
+    </option>
+    <option>
+      <name>None</name>
+      <key>none</key>
+      <opt>arg: None</opt>
+    </option>
+  </param>
+
+  <param>
+    <name>Annihilator</name>
+    <key>ann</key>
+    <value>None</value>
+    <type>raw</type>
+  </param>
+
+  <param>
+    <name>Puncture Pattern</name>
+    <key>puncpat</key>
+    <value>'11'</value>
+    <type>string</type>
+  </param>
+
+  <sink>
+    <name>in</name>
+    <type>float</type>
+  </sink>
+
+  <source>
+    <name>out</name>
+    <type>byte</type>
+  </source>
+
+  <doc>
+
+  </doc>
+
+</block>

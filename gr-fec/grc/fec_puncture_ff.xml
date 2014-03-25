@@ -1,0 +1,42 @@
+<?xml version="1.0"?>
+<block>
+  <name>Puncture</name>
+  <key>fec_puncture_ff</key>
+  <import>from gnuradio import fec</import>
+  <make>fec.puncture_ff($delay, $puncpat, $puncholes, $puncsize)</make>
+
+  <param>
+    <name>Delay</name>
+    <key>delay</key>
+    <type>int</type>
+  </param>
+
+  <param>
+    <name>Puncture Pattern</name>
+    <key>puncpat</key>
+    <type>int</type>
+  </param>
+
+  <param>
+    <name>Puncture Holes</name>
+    <key>puncholes</key>
+    <type>int</type>
+  </param>
+
+  <param>
+    <name>Puncture Size</name>
+    <key>puncsize</key>
+    <type>int</type>
+  </param>
+
+  <sink>
+    <name>in</name>
+    <type>float</type>
+  </sink>
+
+  <source>
+    <name>out</name>
+    <type>float</type>
+  </source>
+
+</block>
