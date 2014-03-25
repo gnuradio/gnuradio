@@ -31,6 +31,7 @@ from sets import Set
 class volk_modtool:
     def __init__(self, cfg):
         self.volk = re.compile('volk');
+        self.LV = re.compile('LV_');
         self.remove_after_underscore = re.compile("_.*");
         self.volk_run_tests = re.compile('^\s*VOLK_RUN_TESTS.*\n', re.MULTILINE);
         self.volk_profile = re.compile('^\s*(VOLK_PROFILE|VOLK_PUPPET_PROFILE).*\n', re.MULTILINE);
@@ -110,6 +111,7 @@ class volk_modtool:
                     infile = os.path.join(root, name);
                     instring = open(infile, 'r').read();
                     outstring = re.sub(self.volk, 'volk_' + self.my_dict['name'], instring);
+                    outstring = re.sub(self.LV, 'LV_' + self.my_dict['name'].upper() + '_', outstring);
                     newname = re.sub(self.volk, 'volk_' + self.my_dict['name'], name);
                     relpath = os.path.relpath(infile, self.my_dict['base']);
                     newrelpath = re.sub(self.volk, 'volk_' + self.my_dict['name'], relpath);
@@ -119,7 +121,6 @@ class volk_modtool:
                         os.makedirs(os.path.dirname(dest))
                     open(dest, 'w+').write(outstring);
                     
-
         infile = os.path.join(self.my_dict['destination'], 'volk_' + self.my_dict['name'], 'lib/testqa.cc');
         instring = open(infile, 'r').read();
         outstring = re.sub(self.volk_run_tests, '', instring);
@@ -146,6 +147,7 @@ class volk_modtool:
         infile = os.path.join(inpath, 'kernels/' + top[:-1] + '/' + top + name + '.h');
         instring = open(infile, 'r').read();
         outstring = re.sub(oldvolk, 'volk_' + self.my_dict['name'], instring);
+        outstring = re.sub(self.LV, 'LV_' + self.my_dict['name'].upper() + '_', outstring);
         newname = 'volk_' + self.my_dict['name'] + '_' + name + '.h';
         relpath = os.path.relpath(infile, base);
         newrelpath = re.sub(oldvolk, 'volk_' + self.my_dict['name'], relpath);    
