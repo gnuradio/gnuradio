@@ -103,7 +103,7 @@ include_directories(
 
 link_directories(
   ${Boost_LIBRARY_DIRS}
-  ${LOG4CPP_LIBRARIES}
+  ${LOG4CPP_LIBRARY_DIRS}
 )
 
 if(ENABLE_GR_CTRLPORT)
