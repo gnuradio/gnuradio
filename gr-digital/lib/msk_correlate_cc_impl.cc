@@ -54,10 +54,26 @@ namespace gr {
     {
       d_last_index = 0;
       d_sps = sps;
-      // Construct a RRC filter with the specified BT
-      // We combine it with a resampler to scale up the symbols to the desired sps
-      const int nfilts = 32;
-      std::vector<float> taps = firdes::root_raised_cosine(nfilts, nfilts, 1.0, bt, nfilts*20);
+      // Construct a Gaussian symbol filter with the specified BT
+      // We use a gain of 1 because the convolution below will integrate
+      // to the appropriate magnitude.
+      const int nfilts=32;
+      std::vector<float> taps1 = firdes::gaussian(1, nfilts, bt, 20*nfilts);
+      // Create an integrating rectangular window to convolve with the Gaussian filter
+      std::vector<float> taps2(nfilts, 1);
+      //convolve the Gaussian symbol filter with the rectangular window
+      //taps2 is symmetric so i don't care about reversing
+      //this would be so much nicer in python
+      std::vector<float> taps(taps1.size()+taps2.size()-1, 0);
+      for(int i=0; i<taps.size(); i++) {
+          int idx = i-taps2.size()+1;
+          int lb = std::max(0, -idx);
+          int ub = std::min(taps2.size(), taps1.size() - idx);
+          for(int k=lb; k<ub; k++) {
+              taps[i] += taps1[idx+k]*taps2[k];
+          }
+      }
+
       filter::kernel::pfb_arb_resampler_fff resamp = filter::kernel::pfb_arb_resampler_fff(sps, taps, nfilts);
 
       // We want to add padding to the beginning of the symbols so we
@@ -69,10 +85,10 @@ namespace gr {
       int nread;
       std::vector<float> resampled_symbols(symbols.size()*sps, 0);
       resamp.filter(&resampled_symbols[0], &padded_symbols[0], symbols.size(), nread);
-/*      for(int i=0; i<resampled_symbols.size(); i++) {
+      for(int i=0; i<resampled_symbols.size(); i++) {
           std::cout << resampled_symbols[i] << ", ";
       }
-*/
+
       d_symbols.resize(resampled_symbols.size(), 0);
       //phase modulation of the PAM symbols
       float phase = 0;
