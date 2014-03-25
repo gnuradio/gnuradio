@@ -22,6 +22,7 @@
 ########################################################################
 install(FILES
   api.h
+  ber_sink_b.h
   CMakeLists.txt
   constellationdisplayform.h
   ConstellationDisplayPlot.h

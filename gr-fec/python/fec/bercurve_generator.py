@@ -58,7 +58,7 @@ class bercurve_generator(gr.hier_block2):
                     samp_rate=samp_rate,
                     threading=threading,
                     puncpat=puncpat)
-                self.ber_generators.append(ber_generator_temp);
+            self.ber_generators.append(ber_generator_temp);
 
         for i in range(0, len(esno)):
             self.connect((self.deinterleave, i), (self.ber_generators[i]))

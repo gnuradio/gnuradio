@@ -10,8 +10,8 @@
 #include <mmintrin.h>
 #include <stdio.h>
 
-static inline void volk_8u_x4_conv_k7_r2_8u_spiral(unsigned char* Y, unsigned char* X, const unsigned char* syms, unsigned char* dec, unsigned int framebits, unsigned int excess, unsigned char* Branchtab) {
-  int i9;
+static inline void volk_8u_x4_conv_k7_r2_8u_spiral(unsigned char* Y, unsigned char* X, unsigned char* syms, unsigned char* dec, unsigned int framebits, unsigned int excess, unsigned char* Branchtab) {
+  unsigned int i9;
   for(i9 = 0; i9 < (framebits >> 1) + (excess >> 1); i9++) {
     unsigned char a75, a81;
     int a73, a92;
@@ -291,7 +291,7 @@ typedef union {
 
 
 //helper BFLY for GENERIC version
-static inline void BFLY(int i, int s, const unsigned char * syms, unsigned char *Y, unsigned char *X, decision_t * d, unsigned char* Branchtab) {
+static inline void BFLY(int i, int s, unsigned char * syms, unsigned char *Y, unsigned char *X, decision_t * d, unsigned char* Branchtab) {
   int j, decision0, decision1;
   unsigned char metric,m0,m1,m2,m3;
 
@@ -301,10 +301,11 @@ static inline void BFLY(int i, int s, const unsigned char * syms, unsigned char 
   int PRECISIONSHIFT = 2;
 
   metric =0;
-  for (j=0;j<RATE;j++) metric += (Branchtab[i+j*NUMSTATES/2] ^ syms[s*RATE+j])>>METRICSHIFT ;
+  for(j=0;j<RATE;j++)
+    metric += (Branchtab[i+j*NUMSTATES/2] ^ syms[s*RATE+j])>>METRICSHIFT ;
   metric=metric>>PRECISIONSHIFT;
 
-  const unsigned char max = ((RATE*((256 -1)>>METRICSHIFT))>>PRECISIONSHIFT);
+  unsigned char max = ((RATE*((256 -1)>>METRICSHIFT))>>PRECISIONSHIFT);
 
   m0 = X[i] + metric;
   m1 = X[i+NUMSTATES/2] + (max - metric);
@@ -326,7 +327,7 @@ static inline void BFLY(int i, int s, const unsigned char * syms, unsigned char 
 #if LV_HAVE_GENERIC
 
 
-static inline void volk_8u_x4_conv_k7_r2_8u_generic(unsigned char* Y, unsigned char* X, const unsigned char* syms, unsigned char* dec, unsigned int framebits, unsigned int excess, unsigned char* Branchtab) {
+static inline void volk_8u_x4_conv_k7_r2_8u_generic(unsigned char* Y, unsigned char* X, unsigned char* syms, unsigned char* dec, unsigned int framebits, unsigned int excess, unsigned char* Branchtab) {
   int nbits = framebits + excess;
   int NUMSTATES = 64;
   int RENORMALIZE_THRESHOLD = 137;

@@ -34,7 +34,7 @@ namespace gr {
     namespace code {
 
     typedef void(*conv_kernel)(unsigned char  *Y, unsigned char  *X,
-                               const unsigned char *syms, unsigned char *dec,
+                               unsigned char *syms, unsigned char *dec,
                                unsigned int framebits, unsigned int excess,
                                unsigned char  *Branchtab);
 

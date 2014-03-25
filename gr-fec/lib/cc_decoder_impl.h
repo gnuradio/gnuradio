@@ -48,7 +48,7 @@ namespace gr {
         void create_viterbi();
         int init_viterbi(struct v* vp, int starting_state);
         int init_viterbi_unbiased(struct v* vp);
-        int update_viterbi_blk(const COMPUTETYPE* syms, int nbits);
+        int update_viterbi_blk(COMPUTETYPE* syms, int nbits);
         int chainback_viterbi(unsigned char* data, unsigned int nbits,
                               unsigned int endstate, unsigned int tailsize);
         int find_endstate();

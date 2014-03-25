@@ -25,6 +25,7 @@ from gnuradio import gr
 import fec_swig as fec
 from threaded_encoder import threaded_encoder
 from capillary_threaded_encoder import capillary_threaded_encoder
+from bitflip import read_bitlist
 
 class extended_encoder(gr.hier_block2):
     def __init__(self, encoder_obj_list, threading, puncpat=None):
@@ -43,7 +44,7 @@ class extended_encoder(gr.hier_block2):
             self.blocks.append(fec.encoder(encoder_obj_list[0]))
 
         if self.puncpat != '11':
-            self.blocks.append(fec.puncture_ff(0, fec.read_bitlist(puncpat),
+            self.blocks.append(fec.puncture_ff(0, read_bitlist(puncpat),
                                                puncpat.count('0'), len(puncpat)))
 
         self.connect((self, 0), (self.blocks[0], 0));

@@ -20,7 +20,7 @@
 # Boston, MA 02110-1301, USA.
 #
 
-from gnuradio import gr, blocks
+from gnuradio import gr, blocks, analog
 import math
 
 class fec_raw_test(gr.hier_block2):

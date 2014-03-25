@@ -79,7 +79,9 @@ namespace gr {
         if(d_tailbiting) {
           d_end_state = &d_end_state_chaining;
           d_veclen = d_framebits + (6 * (d_k - 1));
-          if(posix_memalign((void**)&d_managed_in, 16, d_veclen * d_rate * sizeof(COMPUTETYPE))) {
+          d_managed_in = (COMPUTETYPE*)volk_malloc(d_veclen*d_rate*sizeof(COMPUTETYPE),
+                                                   volk_get_alignment());
+          if(d_managed_in) {
             printf("allocation failed\n");
             exit(1);
           }
@@ -341,7 +343,7 @@ namespace gr {
       }
 
       int
-      cc_decoder_impl::update_viterbi_blk(const COMPUTETYPE* syms, int nbits)
+      cc_decoder_impl::update_viterbi_blk(COMPUTETYPE* syms, int nbits)
       {
         DECISIONTYPE *d;
 
@@ -470,7 +472,7 @@ namespace gr {
         */
 
         else if(d_truncated) {
-          update_viterbi_blk(&in[0], d_veclen);
+          update_viterbi_blk((COMPUTETYPE*)(&in[0]), d_veclen);
           d_end_state_chaining = find_endstate();
           //printf("...end %d\n", d_end_state_chaining);
           for(unsigned int i = 0; i < d_k-1; ++i) {
@@ -486,7 +488,7 @@ namespace gr {
         }
         //terminated or streaming
         else {
-          update_viterbi_blk(&in[0], d_veclen);
+          update_viterbi_blk((COMPUTETYPE*)(&in[0]), d_veclen);
           d_end_state_chaining = find_endstate();
           //printf("es: %d\n", d_end_state_chaining);
           d_start_state_chaining = chainback_viterbi(&out[0], d_framebits, *d_end_state,
