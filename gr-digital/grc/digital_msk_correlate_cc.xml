@@ -2,45 +2,27 @@
 <block>
   <name>msk_correlate</name>
   <key>digital_msk_correlate</key>
-  <category>digital</category>
   <import>from gnuradio import digital</import>
-  <make>digital.msk_correlate_cc($symbols, $filter, $sps)</make>
-  <!-- Make one 'param' node for every Parameter you want settable from the GUI.
-       Sub-nodes:
-       * name
-       * key (makes the value accessible as $keyname, e.g. in the make node)
-       * type -->
+  <make>digital.msk_correlate_cc($symbols, $bt, $sps)</make>
   <param>
     <name>Data symbols</name>
     <key>symbols</key>
     <type>raw</type>
   </param>
   <param>
-    <name>Filter taps</name>
-    <key>filter</key>
-    <type>raw</type>
+    <name>BT</name>
+    <key>bt</key>
+    <type>float</type>
   </param>
   <param>
     <name>Samples per symbol</name>
     <key>sps</key>
-    <type>int</type>
+    <type>float</type>
   </param>
-
-  <!-- Make one 'sink' node per input. Sub-nodes:
-       * name (an identifier for the GUI)
-       * type
-       * vlen
-       * optional (set to 1 for optional inputs) -->
   <sink>
     <name>in</name>
     <type>complex</type>
   </sink>
-
-  <!-- Make one 'source' node per output. Sub-nodes:
-       * name (an identifier for the GUI)
-       * type
-       * vlen
-       * optional (set to 1 for optional inputs) -->
   <source>
     <name>out</name>
     <type>complex</type>

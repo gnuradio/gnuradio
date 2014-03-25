@@ -31,48 +31,55 @@
 #include <boost/format.hpp>
 #include <boost/math/special_functions/round.hpp>
 #include <gnuradio/filter/firdes.h>
+#include <gnuradio/filter/pfb_arb_resampler.h>
 
 namespace gr {
   namespace digital {
 
     msk_correlate_cc::sptr
     msk_correlate_cc::make(const std::vector<float> &symbols,
-                           const std::vector<float> &filter,
-                           unsigned int sps)
+                           float bt,
+                           float sps)
     {
       return gnuradio::get_initial_sptr
-        (new msk_correlate_cc_impl(symbols, filter, sps));
+        (new msk_correlate_cc_impl(symbols, bt, sps));
     }
 
     msk_correlate_cc_impl::msk_correlate_cc_impl(const std::vector<float> &symbols,
-                                                 const std::vector<float> &filter,
-                                                 unsigned int sps)
+                                                 float bt,
+                                                 float sps)
       : sync_block("msk_correlate_cc",
                    io_signature::make(1, 1, sizeof(gr_complex)),
                    io_signature::make(2, 2, sizeof(gr_complex)))
     {
       d_last_index = 0;
       d_sps = sps;
-      //OK, instead of providing 1sps symbols and reshaping them to d_sps,
-      //we take a list of bits, MSK-modulate them, apply filter taps, and set
-      //thresholds from there.
-      //How do we handle differential encoding? do we care? let the user do it.
-      //
-      //MSK modulation, the cheesy way.
+      // Construct a RRC filter with the specified BT
+      // We combine it with a resampler to scale up the symbols to the desired sps
+      const int nfilts = 32;
+      std::vector<float> taps = firdes::root_raised_cosine(nfilts, nfilts, 1.0, bt, nfilts*20);
+      filter::kernel::pfb_arb_resampler_fff resamp = filter::kernel::pfb_arb_resampler_fff(sps, taps, nfilts);
 
       // We want to add padding to the beginning of the symbols so we
       // can do the convolution of the symbols with the pulse shape.
-//      std::vector<gr_complex> padding((1+filter.size())/2, 0);
-//      std::vector<gr_complex> padded_symbols = symbols;
-//      padded_symbols.insert(padded_symbols.begin(), padding.begin(), padding.end());
+      std::vector<float> padding((1+taps.size()/nfilts)/2, 0);
+      std::vector<float> padded_symbols = symbols;
+      padded_symbols.insert(padded_symbols.begin(), padding.begin(), padding.end());
 
-      d_symbols.resize(d_sps*symbols.size(), 0);
+      int nread;
+      std::vector<float> resampled_symbols(symbols.size()*sps, 0);
+      resamp.filter(&resampled_symbols[0], &padded_symbols[0], symbols.size(), nread);
+/*      for(int i=0; i<resampled_symbols.size(); i++) {
+          std::cout << resampled_symbols[i] << ", ";
+      }
+*/
+      d_symbols.resize(resampled_symbols.size(), 0);
+      //phase modulation of the PAM symbols
       float phase = 0;
-      float phase_inc = M_PI/(2*d_sps);
-      for(int i=0; i<d_sps*symbols.size(); i++) {
+      float phase_inc = -M_PI/(2*d_sps);
+      for(unsigned int i=0; i<resampled_symbols.size(); i++) {
         d_symbols[i] = exp(gr_complex(0,1)*phase);
-        if(symbols[i/d_sps] > 0) phase -= phase_inc;
-        else                     phase += phase_inc;
+        phase += phase_inc*resampled_symbols[i];
       }
 
       std::reverse(d_symbols.begin(), d_symbols.end());
@@ -80,9 +87,9 @@ namespace gr {
       float corr = 0;
       for(size_t i=0; i < d_symbols.size(); i++)
         corr += abs(d_symbols[i]*conj(d_symbols[i]));
-      d_thresh = 0.8*corr*corr;
+      d_thresh = 0.9*corr*corr;
 
-      d_center_first_symbol = (/*padding.size()*/0 + 0.5) * d_sps;
+      d_center_first_symbol = (padding.size() + 0.5) * d_sps;
 
       //d_filter = new kernel::fft_filter_ccc(1, d_symbols);
       d_filter = new kernel::fir_filter_ccc(1, d_symbols);
@@ -103,15 +110,6 @@ namespace gr {
     msk_correlate_cc_impl::symbols() const
     {
       return d_symbols;
-    }
-
-    void
-    msk_correlate_cc_impl::set_symbols(const std::vector<gr_complex> &symbols)
-    {
-      gr::thread::scoped_lock lock(d_setlock);
-      d_symbols = symbols;
-      d_filter->set_taps(symbols);
-      set_history(d_filter->ntaps());
     }
 
     int

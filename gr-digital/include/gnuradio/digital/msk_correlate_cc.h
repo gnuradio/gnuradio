@@ -47,10 +47,9 @@ namespace gr {
        * class. digital::msk_correlate::make is the public interface for
        * creating new instances.
        */
-      static sptr make(const std::vector<float> &symbols, const std::vector<float> &filter, unsigned int sps);
+      static sptr make(const std::vector<float> &symbols, float bt, float sps);
 
       virtual std::vector<gr_complex> symbols() const = 0;
-      virtual void set_symbols(const std::vector<gr_complex> &symbols) = 0;
     };
 
   } // namespace digital

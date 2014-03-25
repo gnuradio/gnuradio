@@ -43,15 +43,14 @@ namespace gr {
       //kernel::fft_filter_ccc  *d_filter;
 
       int d_last_index;
-      
+
     public:
       msk_correlate_cc_impl(const std::vector<float> &symbols,
-                            const std::vector<float> &filter,
-                            unsigned int sps);
+                            float bt,
+                            float sps);
       ~msk_correlate_cc_impl();
 
       std::vector<gr_complex> symbols() const;
-      void set_symbols(const std::vector<gr_complex> &symbols);
 
       int work(int noutput_items,
                gr_vector_const_void_star &input_items,
