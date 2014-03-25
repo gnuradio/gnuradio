@@ -65,7 +65,7 @@ namespace gr {
       //taps2 is symmetric so i don't care about reversing
       //this would be so much nicer in python
       std::vector<float> taps(taps1.size()+taps2.size()-1, 0);
-      for(int i=0; i<taps.size(); i++) {
+      for(unsigned int i=0; i<taps.size(); i++) {
           int idx = i-taps2.size()+1;
           int lb = std::max(0, -idx);
           int ub = std::min(taps2.size(), taps1.size() - idx);
@@ -85,7 +85,7 @@ namespace gr {
       int nread;
       std::vector<float> resampled_symbols(symbols.size()*sps, 0);
       resamp.filter(&resampled_symbols[0], &padded_symbols[0], symbols.size(), nread);
-      for(int i=0; i<resampled_symbols.size(); i++) {
+      for(unsigned int i=0; i<resampled_symbols.size(); i++) {
           std::cout << resampled_symbols[i] << ", ";
       }
 
