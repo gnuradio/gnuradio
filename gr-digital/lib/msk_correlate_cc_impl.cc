@@ -85,9 +85,6 @@ namespace gr {
       int nread;
       std::vector<float> resampled_symbols(symbols.size()*sps, 0);
       resamp.filter(&resampled_symbols[0], &padded_symbols[0], symbols.size(), nread);
-      for(unsigned int i=0; i<resampled_symbols.size(); i++) {
-          std::cout << resampled_symbols[i] << ", ";
-      }
 
       d_symbols.resize(resampled_symbols.size(), 0);
       //phase modulation of the PAM symbols
