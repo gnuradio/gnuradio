@@ -30,9 +30,18 @@ namespace gr {
   namespace digital {
 
     /*!
-     * \brief <+description of block+>
+     * \brief MSK/GMSK timing recovery
      * \ingroup digital
      *
+     * This block performs timing synchronization on CPM modulations using a
+     * fourth-order nonlinearity feedback method which is non-data-aided. The
+     * block does not require prior phase synchronization but is relatively
+     * sensitive to frequency offset (keep offset to 0.1x symbol rate).
+     *
+     * For details on the algorithm, see:
+     * A.N. D'Andrea, U. Mengali, R. Reggiannini: A digital approach to clock
+     * recovery in generalized minimum shift keying. IEEE Transactions on
+     * Vehicular Technology, Vol. 39, Issue 3.
      */
     class DIGITAL_API msk_timing_recovery_cc : virtual public gr::block
     {
@@ -40,12 +49,7 @@ namespace gr {
       typedef boost::shared_ptr<msk_timing_recovery_cc> sptr;
 
       /*!
-       * \brief Make an MSK clock recovery block.
-       *
-       * This block performs timing synchronization on CPM modulations using a
-       * fourth-order nonlinearity feedback method which is non-data-aided. The
-       * block does not require prior phase synchronization and is relatively
-       * insensitive to frequency offset.
+       * \brief Make an MSK timing recovery block.
        *
        * \param sps: Samples per symbol
        * \param gain: Loop gain of timing error filter (try 0.05)
@@ -63,8 +67,6 @@ namespace gr {
 
       virtual void set_sps(float sps)=0;
       virtual float get_sps(void)=0;
-
-      virtual void set_delay(float delay)=0;
     };
 
   } // namespace digital

@@ -53,8 +53,7 @@ namespace gr {
       d_dly_diff_1(0),
       d_mu(0.5),
       d_div(0),
-      d_osps(osps),
-      d_elay(3)
+      d_osps(osps)
     {
         set_sps(sps);
         enable_update_rate(true); //fixes tag propagation through variable rate blox
@@ -96,10 +95,6 @@ namespace gr {
         return d_limit;
     }
 
-    void msk_timing_recovery_cc_impl::set_delay(float delay) {
-        d_elay = delay;
-    }
-
     void
     msk_timing_recovery_cc_impl::forecast (int noutput_items, gr_vector_int &ninput_items_required)
     {
@@ -127,9 +122,6 @@ namespace gr {
             return(0);
         }
 
-        //the actual equation for the nonlinearity is as follows:
-        //e(n) = in[n]^2 * in[n-sps].conj()^2
-        //we then differentiate the error by subtracting the sample delayed by d_sps/2
         std::vector<tag_t> tags;
         get_tags_in_range(tags,
                           0,
@@ -137,32 +129,22 @@ namespace gr {
                           nitems_read(0)+ninp,
                           pmt::intern("time_est"));
 
-        gr_complex sq, //Squared input
-                   dly_conj, //Input delayed sps and conjugated
-                   nlin_out, //output of the nonlinearity
-                   in_interp;//interpolated input
-        float      err_out=0;  //error output
+        gr_complex sq,        //Squared input
+                   dly_conj,  //Input delayed sps and conjugated
+                   nlin_out,  //output of the nonlinearity
+                   in_interp; //interpolated input
+        float      err_out=0; //error output
 
         while(oidx < noutput_items && iidx < ninp) {
-            //check to see if there's a tag
+            //check to see if there's a tag to reset the timing estimate
             if(tags.size() > 0) {
-                size_t offset = tags[0].offset - nitems_read(0);
-                if((offset >= iidx) && (offset < (iidx+d_omega))) {
+                int offset = tags[0].offset - nitems_read(0);
+                if((offset >= iidx) && (offset < (iidx+d_sps))) {
                     float center = (float) pmt::to_double(tags[0].value);
                     if(center != center) { //test for NaN, it happens somehow
                        goto out;
                     }
-                    float new_mu = (offset-iidx-d_elay)+(M_PI*center*d_sps*4);
-                    //new_mu should be the, well, new mu value.
-/*
-                    std::cout << "D_mu was " << d_mu
-                              << ". Center is " << center
-                              << ". New_mu is " << new_mu
-                              << ". d_omega is " << d_omega
-                              << ". iidx was " << iidx
-                              << ". Offset is " << offset
-                              ;
-*/
+                    float new_mu = (offset-iidx-d_sps/2.0)+(M_PI*center);
                     //this keeps the block from outputting an odd number of
                     //samples and throwing off downstream blocks which depend
                     //on proper alignment -- for instance, a decimating FIR
@@ -171,22 +153,17 @@ namespace gr {
                     //d_div = 0;
                     d_omega = d_sps;
                     d_mu = new_mu;
-                    int old_iidx = iidx;
                     iidx += (int)floor(d_mu);
                     d_mu -= floor(d_mu);
                     d_dly_conj_2 = d_dly_conj_1;
-/*
-                    if(abs(iidx - old_iidx) > 0) {
-                        std::cout << "DEBUG: old iidx: " << old_iidx 
-                                  << " new iidx: " << iidx 
-                                  << " new mu: " << d_mu
-                                  << std::endl;
-                    }*/
                     tags.erase(tags.begin());
                 }
             }
 
 out:
+            //the actual equation for the nonlinearity is as follows:
+            //e(n) = in[n]^2 * in[n-sps].conj()^2
+            //we then differentiate the error by subtracting the sample delayed by d_sps/2
             in_interp = d_interp->interpolate(&in[iidx], d_mu);
             sq = in_interp*in_interp;
             //conjugation is distributive.
@@ -204,12 +181,6 @@ out:
             }
             //output every other d_sps by default.
             if(!(d_div % 2) or d_osps==2) {
-                /*
-                float sample_offset = d_mu + d_elay;//should be d_sps/d_osps
-                int sample_offset_int = int(sample_offset);
-                float sample_offset_mu = sample_offset - sample_offset_int;
-                while(sample_offset_mu < 0) { sample_offset_mu++; sample_offset_int--; }
-                */
                 out[oidx] = in_interp;
                 if(output_items.size() >= 2) out2[oidx] = err_out;
                 if(output_items.size() >= 3) out3[oidx] = d_mu;
@@ -227,11 +198,7 @@ out:
             d_mu    -= floor(d_mu);
         }
 
-        // Tell runtime system how many input items we consumed on
-        // each input stream.
         consume_each (iidx);
-        //std::cout << "timing: called with " << ninp << " in and " << noutput_items << " out" << ", consumed " << iidx << ", produced " << oidx << std::endl;
-        // Tell runtime system how many output items we produced.
         return oidx;
     }
 

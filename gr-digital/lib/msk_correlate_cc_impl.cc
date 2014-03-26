@@ -157,7 +157,9 @@ namespace gr {
             nom += (s+1)*corr_mag[i+s-1];
             den += corr_mag[i+s-1];
           }
-          double center = nom / den;
+          double center;
+          if(den <= 1e-9) center = 0;
+          else center = nom / den;
           center = (center - 2.0);
 
           int index = i;

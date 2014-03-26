@@ -30,8 +30,27 @@ namespace gr {
   namespace digital {
 
     /*!
-     * \brief <+description of block+>
+     * \brief Preamble correlator for (G)MSK-modulated burst transmissions
      * \ingroup digital
+     *
+     * Correlate against a preamble sequence to provide timing, frequency, and
+     * phase estimates for downstream blocks.
+     *
+     * This block outputs the original stream, tagging samples which correspond
+     * to the preamble sequence. Four tags are issued:
+     *
+     * corr_est: the correlator output, useful for SNR estimation
+     *
+     * time_est: the fractional sample timing offset (how early/late the
+     * closest sample to the peak is to the estimated actual peak)
+     *
+     * phase_est: the phase of the received preamble
+     *
+     * freq_est: the estimated frequency offset in radians/sample
+     *
+     * Note that at least coarse frequency offset correction must have been
+     * performed before this block. Also note that an AGC should be used to
+     * normalize the amplitude of the incoming signal.
      *
      */
     class DIGITAL_API msk_correlate_cc : virtual public gr::sync_block
@@ -42,10 +61,11 @@ namespace gr {
       /*!
        * \brief Return a shared_ptr to a new instance of digital::msk_correlate.
        *
-       * To avoid accidental use of raw pointers, digital::msk_correlate's
-       * constructor is in a private implementation
-       * class. digital::msk_correlate::make is the public interface for
-       * creating new instances.
+       * \param symbols: Vector of symbols containing the preamble sequence; e.g.,
+       * [1,0,1,0,1,0,1,0]
+       * \param bt: The bandwidth-time product. For GMSK this number is usually
+       * between 0.3 and 0.6. For MSK, use a large value, e.g. 10.
+       * \param sps: Samples per symbol
        */
       static sptr make(const std::vector<float> &symbols, float bt, float sps);
 
