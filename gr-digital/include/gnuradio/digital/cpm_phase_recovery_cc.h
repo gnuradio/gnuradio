@@ -30,7 +30,7 @@ namespace gr {
   namespace digital {
 
     /*!
-     * \brief <+description of block+>
+     * \brief Derotate a CPM (MSK, GMSK, etc.) signal.
      * \ingroup digital
      *
      */
@@ -42,10 +42,10 @@ namespace gr {
       /*!
        * \brief Return a shared_ptr to a new instance of digital::cpm_phase_recovery_cc.
        *
-       * To avoid accidental use of raw pointers, digital::cpm_phase_recovery_cc's
-       * constructor is in a private implementation
-       * class. digital::cpm_phase_recovery_cc::make is the public interface for
-       * creating new instances.
+       * \param p: The modulation index of the CPM modulation.
+       * For MSK, GMSK, etc., use 2.
+       * \param len: The number of symbols to average at a time.
+       * \param sps: Samples per symbol.
        */
       static sptr make(int p, int len, int sps);
     };

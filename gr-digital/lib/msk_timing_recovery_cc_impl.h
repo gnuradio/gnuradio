@@ -43,7 +43,6 @@ namespace gr {
         float d_mu, d_omega, d_gain_omega;
         int d_div;
         int d_osps;
-        float d_elay;
         int d_loop_rate;
 
      public:
@@ -65,8 +64,6 @@ namespace gr {
 
       void set_sps(float sps);
       float get_sps(void);
-
-      void set_delay(float delay);
     };
   } // namespace digital
 } // namespace gr
