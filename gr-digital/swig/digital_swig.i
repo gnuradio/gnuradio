@@ -67,6 +67,7 @@
 #include "gnuradio/digital/framer_sink_1.h"
 #include "gnuradio/digital/glfsr_source_b.h"
 #include "gnuradio/digital/glfsr_source_f.h"
+#include "gnuradio/digital/hdlc_deframer_bp.h"
 #include "gnuradio/digital/header_payload_demux.h"
 #include "gnuradio/digital/kurtotic_equalizer_cc.h"
 #include "gnuradio/digital/lfsr.h"
@@ -138,6 +139,7 @@
 %include "gnuradio/digital/framer_sink_1.h"
 %include "gnuradio/digital/glfsr_source_b.h"
 %include "gnuradio/digital/glfsr_source_f.h"
+%include "gnuradio/digital/hdlc_deframer_bp.h"
 %include "gnuradio/digital/header_payload_demux.h"
 %include "gnuradio/digital/kurtotic_equalizer_cc.h"
 %include "gnuradio/digital/lfsr.h"
@@ -203,6 +205,7 @@ GR_SWIG_BLOCK_MAGIC2(digital, fll_band_edge_cc);
 GR_SWIG_BLOCK_MAGIC2(digital, framer_sink_1);
 GR_SWIG_BLOCK_MAGIC2(digital, glfsr_source_b);
 GR_SWIG_BLOCK_MAGIC2(digital, glfsr_source_f);
+GR_SWIG_BLOCK_MAGIC2(digital, hdlc_deframer_bp);
 GR_SWIG_BLOCK_MAGIC2(digital, header_payload_demux);
 GR_SWIG_BLOCK_MAGIC2(digital, kurtotic_equalizer_cc);
 GR_SWIG_BLOCK_MAGIC2(digital, lms_dd_equalizer_cc);

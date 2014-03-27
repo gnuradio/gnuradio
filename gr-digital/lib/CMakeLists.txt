@@ -137,6 +137,7 @@ list(APPEND digital_sources
     glfsr.cc
     glfsr_source_b_impl.cc
     glfsr_source_f_impl.cc
+    hdlc_deframer_bp_impl.cc
     header_payload_demux_impl.cc
     kurtotic_equalizer_cc_impl.cc
     lms_dd_equalizer_cc_impl.cc
