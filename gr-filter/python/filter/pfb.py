@@ -401,8 +401,6 @@ class channelizer_hier_ccf(gr.hier_block2):
             for j in range(cpp):
                 combiner_mapping[0].append((i, j))
         self.combiner = blocks.vector_map(gr.sizeof_gr_complex, cpps, combiner_mapping)
-        self.prefft_snk = blocks.vector_sink_c(n_chans)
-        self.connect(self.combiner, self.prefft_snk)
         # Add the final FFT to the channelizer.
         self.fft = fft.fft_vcc(n_chans, forward=True, window=[1.0]*n_chans)
         # Select the desired channels
