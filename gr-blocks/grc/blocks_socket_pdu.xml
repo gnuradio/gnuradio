@@ -8,7 +8,7 @@
   <name>Socket PDU</name>
   <key>blocks_socket_pdu</key>
   <import>from gnuradio import blocks</import>
-  <make>blocks.socket_pdu($type, $host, $port, $mtu)</make>
+  <make>blocks.socket_pdu($type, $host, $port, $mtu, $tcp_no_delay)</make>
   <param>
     <name>Type</name>
     <key>type</key>
@@ -49,6 +49,31 @@
     <value>10000</value>
     <type>int</type>
   </param>
+  <param>
+    <name>TCP No Delay</name>
+    <key>tcp_no_delay</key>
+    <value>False</value>
+    <type>enum</type>
+    <hide>
+#if (($type() == '"TCP_CLIENT"') or ($type() == '"TCP_SERVER"'))
+#if (str($tcp_no_delay()) == 'False')
+part
+#else
+none
+#end if
+#else
+all
+#end if
+</hide>
+    <option>
+      <name>Enabled</name>
+      <key>True</key>
+    </option>
+    <option>
+      <name>Disabled</name>
+      <key>False</key>
+    </option>
+  </param>
   <sink>
     <name>pdus</name>
     <type>message</type>
@@ -59,4 +84,5 @@
     <type>message</type>
     <optional>1</optional>
   </source>
+  <doc>For server modes, leave Host blank to bind to all interfaces (equivalent to 0.0.0.0).</doc>
 </block>
