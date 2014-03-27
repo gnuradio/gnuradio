@@ -361,6 +361,8 @@ class channelizer_hier_ccf(gr.hier_block2):
 
     def __init__(self, n_chans, n_filterbanks=1, taps=None, outchans=None,
                  atten=100, bw=1.0, tb=0.2, ripple=0.1):
+        if n_filterbanks > n_chans:
+            n_filterbanks = n_chans
         if outchans is None:
             outchans = range(n_chans)
         gr.hier_block2.__init__(

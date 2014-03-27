@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<!--
+###################################################
+## Generic Filterbank
+###################################################
+ -->
+<block>
+	<name>Generic Filterbank</name>
+	<key>filterbank_vcvcf</key>
+	<import>from gnuradio import filter</import>
+	<make>filter.filterbank_vcvcf($taps)</make>
+	<callback>set_taps($taps)</callback>
+	<param>
+		<name>Taps(list of lists)</name>
+		<key>taps</key>
+		<value></value>
+		<type>raw</type>
+	</param>
+	<sink>
+		<name>in</name>
+		<type>complex</type>
+    <vlen>len($taps)</vlen>
+	</sink>
+	<source>
+		<name>out</name>
+		<type>complex</type>
+    <vlen>len($taps)</vlen>
+	</source>
+</block>
