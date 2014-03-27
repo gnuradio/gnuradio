@@ -90,7 +90,7 @@ install(FILES
     pm_remez.h
     polyphase_filterbank.h
     filterbank.h
-    filterbank_ccf.h
+    filterbank_vcvcf.h
     single_pole_iir.h
     dc_blocker_cc.h
     dc_blocker_ff.h
