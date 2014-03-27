@@ -81,6 +81,11 @@
       <key>short</key>
       <opt>itemsize:gr.sizeof_short</opt>
     </option>
+     <option>
+      <name>Byte</name>
+      <key>byte</key>
+      <opt>itemsize:gr.sizeof_char</opt>
+    </option>
   </param>
   <param>
     <name>Timing tag key</name>
