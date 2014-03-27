@@ -127,6 +127,8 @@ list(APPEND filter_sources
   dc_blocker_cc_impl.cc
   dc_blocker_ff_impl.cc
   filter_delay_fc_impl.cc
+  filterbank.cc
+  filterbank_vcvcf_impl.cc
   fft_filter_ccc_impl.cc
   fft_filter_ccf_impl.cc
   fft_filter_fff_impl.cc
