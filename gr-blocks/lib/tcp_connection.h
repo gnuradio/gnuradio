@@ -37,16 +37,16 @@ namespace gr {
     {
     private:
       boost::asio::ip::tcp::socket d_socket;
-      boost::array<char, 10000> d_buf;
-      std::string d_message;
+      std::vector<char> d_buf;
       basic_block *d_block;
+      bool d_no_delay;
 
-      tcp_connection(boost::asio::io_service& io_service);
+      tcp_connection(boost::asio::io_service& io_service, int MTU=10000, bool no_delay=false);
       
     public:
       typedef boost::shared_ptr<tcp_connection> sptr;
       
-      static sptr make(boost::asio::io_service& io_service);
+      static sptr make(boost::asio::io_service& io_service, int MTU=10000, bool no_delay=false);
 
       boost::asio::ip::tcp::socket& socket() { return d_socket; };
 

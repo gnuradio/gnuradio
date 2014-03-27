@@ -31,55 +31,69 @@
 namespace gr {
   namespace blocks {
 
-    tcp_connection::sptr tcp_connection::make(boost::asio::io_service& io_service)
+    tcp_connection::sptr tcp_connection::make(boost::asio::io_service& io_service, int MTU/*= 10000*/, bool no_delay/*=false*/)
     {
-      return sptr(new tcp_connection(io_service));
+      return sptr(new tcp_connection(io_service, MTU, no_delay));
     }
 
-    tcp_connection::tcp_connection(boost::asio::io_service& io_service)
+    tcp_connection::tcp_connection(boost::asio::io_service& io_service, int MTU/*= 10000*/, bool no_delay/*=false*/)
       : d_socket(io_service)
+      , d_block(NULL)
+      , d_no_delay(no_delay)
     {
+      d_buf.resize(MTU);
+      try {
+        d_socket.set_option(boost::asio::ip::tcp::no_delay(no_delay));
+      }
+      catch (...) {
+        // Silently ignore failure (socket might be current in accept stage) and try again in 'start'
+      }
     }
 
     void
     tcp_connection::send(pmt::pmt_t vector)
     {
       size_t len = pmt::length(vector);
-      size_t offset(0);
-      boost::array<char, 10000> txbuf;
-      memcpy(&txbuf[0], pmt::uniform_vector_elements(vector, offset), len);
-      boost::asio::async_write(d_socket, boost::asio::buffer(txbuf, len),
+      size_t offset = 0;
+      std::vector<char> txbuf(std::min(len, d_buf.size()));
+      while (offset < len) {
+        size_t send_len = std::min((len - offset), txbuf.size());
+        memcpy(&txbuf[0], pmt::uniform_vector_elements(vector, offset), send_len);
+        offset += send_len;
+        boost::asio::async_write(d_socket, boost::asio::buffer(txbuf, send_len),
 			       boost::bind(&tcp_connection::handle_write, this,
 					   boost::asio::placeholders::error,
 					   boost::asio::placeholders::bytes_transferred));
+      }
     }
 
     void
     tcp_connection::start(gr::basic_block *block)
     {
       d_block = block;
+      d_socket.set_option(boost::asio::ip::tcp::no_delay(d_no_delay));
       d_socket.async_read_some(boost::asio::buffer(d_buf),
-			       boost::bind(&tcp_connection::handle_read, this, 
-					   boost::asio::placeholders::error,
-					   boost::asio::placeholders::bytes_transferred));
+        boost::bind(&tcp_connection::handle_read, this, 
+          boost::asio::placeholders::error,
+          boost::asio::placeholders::bytes_transferred));
     }
 
     void
     tcp_connection::handle_read(const boost::system::error_code& error, size_t bytes_transferred)
     {
       if (!error) {
-        pmt::pmt_t vector = pmt::init_u8vector(bytes_transferred, (const uint8_t*)&d_buf[0]);
-        pmt::pmt_t pdu = pmt::cons( pmt::PMT_NIL, vector);
+        if (d_block) {
+          pmt::pmt_t vector = pmt::init_u8vector(bytes_transferred, (const uint8_t*)&d_buf[0]);
+          pmt::pmt_t pdu = pmt::cons(pmt::PMT_NIL, vector);
 
-        d_block->message_port_pub(PDU_PORT_ID, pdu);
+          d_block->message_port_pub(PDU_PORT_ID, pdu);
+        }
 
         d_socket.async_read_some(boost::asio::buffer(d_buf),
-				 boost::bind(&tcp_connection::handle_read, this,
-					     boost::asio::placeholders::error,
-					     boost::asio::placeholders::bytes_transferred));
-
+          boost::bind(&tcp_connection::handle_read, this,
+            boost::asio::placeholders::error,
+            boost::asio::placeholders::bytes_transferred));
       }
     }
-
   } /* namespace blocks */
 }/* namespace gr */
