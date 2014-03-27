@@ -1,10 +1,8 @@
 #ifndef INCLUDED_volk_8u_conv_k7_r2puppet_8u_H
 #define INCLUDED_volk_8u_conv_k7_r2puppet_8u_H
 
-
-#include<volk/volk_malloc.h>
-#include<volk/volk_8u_x4_conv_k7_r2_8u.h>
-
+#include <volk/volk.h>
+#include <volk/volk_8u_x4_conv_k7_r2_8u.h>
 
 typedef union {
   //decision_t is a BIT vector
@@ -18,8 +16,6 @@ static inline int parity(int x, unsigned char* Partab)
   x ^= (x >> 8);
   return Partab[x];
 }
-
-
 
 static inline int chainback_viterbi(unsigned char* data,
                                     unsigned int nbits,
@@ -38,14 +34,14 @@ static inline int chainback_viterbi(unsigned char* data,
   /* Make room beyond the end of the encoder register so we can
    * accumulate a full byte of decoded data
    */
-  
+
   endstate = (endstate%d_numstates) << d_ADDSHIFT;
-  
+
   /* The store into data[] only needs to be done every 8 bits.
    * But this avoids a conditional branch, and the writes will
    * combine in the cache anyway
    */
-  
+
   d += tailsize * d_decision_t_size ; /* Look past tail */
   int retval;
   int dif = tailsize - (d_k - 1);
@@ -55,23 +51,23 @@ static inline int chainback_viterbi(unsigned char* data,
     int k;
     dec.t =  &d[nbits * d_decision_t_size];
     k = (dec.w[(endstate>>d_ADDSHIFT)/32] >> ((endstate>>d_ADDSHIFT)%32)) & 1;
-    
+
     endstate = (endstate >> 1) | (k << (d_k-2+d_ADDSHIFT));
     //data[((nbits+dif)%nbits)>>3] = endstate>>d_SUBSHIFT;
     //printf("%d, %d\n", k, (nbits+dif)%d_framebits);
     data[((nbits+dif)%d_framebits)] = k;
-    
+
     retval = endstate;
   }
   nbits += 1;
-  
+
   while(nbits-- != 0) {
     int k;
-    
+
     dec.t = &d[nbits * d_decision_t_size];
-    
+
     k = (dec.w[(endstate>>d_ADDSHIFT)/32] >> ((endstate>>d_ADDSHIFT)%32)) & 1;
-    
+
     endstate = (endstate >> 1) | (k << (d_k-2+d_ADDSHIFT));
     data[((nbits+dif)%d_framebits)] = k;
   }
@@ -106,19 +102,19 @@ static inline void volk_8u_conv_k7_r2puppet_8u_spiral(unsigned char* syms, unsig
   static unsigned int excess = 6;
   static unsigned char* Branchtab;
   static unsigned char Partab[256];
-  
+
   int d_polys[2] = {79, 109};
 
-  
+
   if(once) {
-    
+
     X = (unsigned char*)volk_malloc(2*d_numstates, volk_get_alignment());
     Y = X + d_numstates;
     Branchtab = (unsigned char*)volk_malloc(d_numstates/2*rate, volk_get_alignment());
     D = (unsigned char*)volk_malloc((d_numstates/8) * (framebits + 6), volk_get_alignment());
     int state, i;
     int cnt,ti;
-    
+
     /* Initialize parity lookup table */
     for(i=0;i<256;i++){
       cnt = 0;
@@ -136,15 +132,15 @@ static inline void volk_8u_conv_k7_r2puppet_8u_spiral(unsigned char* syms, unsig
         Branchtab[i*d_numstates/2+state] = (d_polys[i] < 0) ^ parity((2*state) & abs(d_polys[i]), Partab) ? 255 : 0;
       }
     }
-    
+
     once = 0;
   }
 
     //unbias the old_metrics
-  memset(X, 31, d_numstates); 
-  
+  memset(X, 31, d_numstates);
+
   volk_8u_x4_conv_k7_r2_8u_spiral(Y, X, syms, D, framebits/2 - excess, excess, Branchtab);
-  
+
   unsigned int min = X[0];
   int i = 0, state = 0;
   for(i = 0; i < (d_numstates); ++i) {
@@ -153,7 +149,7 @@ static inline void volk_8u_conv_k7_r2puppet_8u_spiral(unsigned char* syms, unsig
       state = i;
     }
   }
-  
+
   chainback_viterbi(dec, framebits/2 -excess, state, excess, D);
 
   return;
@@ -171,7 +167,7 @@ static inline void volk_8u_conv_k7_r2puppet_8u_spiral(unsigned char* syms, unsig
 static inline void volk_8u_conv_k7_r2puppet_8u_generic(unsigned char* syms, unsigned char* dec, unsigned int framebits) {
 
 
-  
+
   static int once = 1;
   int d_numstates = (1 << 6);
   int rate = 2;
@@ -181,20 +177,20 @@ static inline void volk_8u_conv_k7_r2puppet_8u_generic(unsigned char* syms, unsi
   static unsigned int excess = 6;
   static unsigned char* Branchtab;
   static unsigned char Partab[256];
-  
+
   int d_polys[2] = {79, 109};
 
-  
+
   if(once) {
-    
+
     X = (unsigned char*)volk_malloc(2*d_numstates, volk_get_alignment());
     Y = X + d_numstates;
     Branchtab = (unsigned char*)volk_malloc(d_numstates/2*rate, volk_get_alignment());
     D = (unsigned char*)volk_malloc((d_numstates/8) * (framebits + 6), volk_get_alignment());
-     
+
     int state, i;
     int cnt,ti;
-    
+
     /* Initialize parity lookup table */
     for(i=0;i<256;i++){
       cnt = 0;
@@ -212,16 +208,16 @@ static inline void volk_8u_conv_k7_r2puppet_8u_generic(unsigned char* syms, unsi
         Branchtab[i*d_numstates/2+state] = (d_polys[i] < 0) ^ parity((2*state) & abs(d_polys[i]), Partab) ? 255 : 0;
       }
     }
-    
+
     once = 0;
   }
 
 
-  
+
 
     //unbias the old_metrics
-  memset(X, 31, d_numstates); 
-  
+  memset(X, 31, d_numstates);
+
   volk_8u_x4_conv_k7_r2_8u_generic(Y, X, syms, D, framebits/2 - excess, excess, Branchtab);
 
   unsigned int min = X[0];
@@ -232,12 +228,12 @@ static inline void volk_8u_conv_k7_r2puppet_8u_generic(unsigned char* syms, unsi
       state = i;
     }
   }
-  
-  chainback_viterbi(dec, framebits/2 -excess, state, excess, D); 
-  
+
+  chainback_viterbi(dec, framebits/2 -excess, state, excess, D);
+
   return;
 
-  
+
 }
 
 #endif /* LV_HAVE_GENERIC */
