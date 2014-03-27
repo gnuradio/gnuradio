@@ -102,6 +102,7 @@ install(FILES
     glfsr_source_b.h
     glfsr_source_f.h
     hdlc_deframer_bp.h
+    hdlc_framer_pb.h
     header_payload_demux.h
     kurtotic_equalizer_cc.h
     lfsr.h

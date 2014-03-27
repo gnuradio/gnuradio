@@ -82,7 +82,8 @@ namespace gr {
 
     //pack unpacked (1 bit per byte) data into bytes, in reverse bit order
     //we reverse the bit order because HDLC uses LSbit format.
-    std::vector<unsigned char> pack(std::vector<unsigned char> &data)
+    std::vector<unsigned char>
+    hdlc_deframer_bp_impl::pack(std::vector<unsigned char> &data)
     {
         std::vector<unsigned char> output(std::ceil(data.size()/8.0f), 0);
         for(size_t i=0; i<data.size(); i++) {
@@ -91,7 +92,8 @@ namespace gr {
         return output;
     }
 
-    unsigned int crc_ccitt(std::vector<unsigned char> &data) {
+    unsigned int
+    hdlc_deframer_bp_impl::crc_ccitt(std::vector<unsigned char> &data) {
         unsigned int POLY=0x8408; //reflected 0x1021
         unsigned short crc=0xFFFF;
         for(size_t i=0; i<data.size(); i++) {
@@ -121,8 +123,8 @@ namespace gr {
         if(frame_tags.size() == 1) return start_pos; //start here next time
         int end_pos   = frame_tags[1].offset - abs_sample_cnt;
         int pkt_len   = frame_tags[1].offset - frame_tags[0].offset - 8; //omit EOF delim
-        if(pkt_len > 500) return end_pos; //arbitrary, too long for a real pkt
-        if(pkt_len <= 32)  return end_pos;
+        if(pkt_len > d_length_max) return end_pos; //arbitrary, too long for a real pkt
+        if(pkt_len <= d_length_min)  return end_pos;
 
         //get bit array
         std::vector<unsigned char> pkt_bits(pkt_len);
