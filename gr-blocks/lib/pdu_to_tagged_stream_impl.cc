@@ -27,23 +27,26 @@
 #include "pdu_to_tagged_stream_impl.h"
 #include <gnuradio/blocks/pdu.h>
 #include <gnuradio/io_signature.h>
+#include <boost/thread/thread.hpp> //sleep
 
 namespace gr {
   namespace blocks {
 
     pdu_to_tagged_stream::sptr
-    pdu_to_tagged_stream::make(pdu::vector_type type, const std::string& lengthtagname)
+    pdu_to_tagged_stream::make(pdu::vector_type type, const std::string& lengthtagname, int sleep_duration)
     {
-      return gnuradio::get_initial_sptr(new pdu_to_tagged_stream_impl(type, lengthtagname));
+      return gnuradio::get_initial_sptr(new pdu_to_tagged_stream_impl(type, lengthtagname, sleep_duration));
     }
 
-    pdu_to_tagged_stream_impl::pdu_to_tagged_stream_impl(pdu::vector_type type, const std::string& lengthtagname)
+    pdu_to_tagged_stream_impl::pdu_to_tagged_stream_impl(pdu::vector_type type, const std::string& lengthtagname, int sleep_duration)
       : sync_block("pdu_to_tagged_stream",
 		      io_signature::make(0, 0, 0),
 		      io_signature::make(1, 1, pdu::itemsize(type))),
 	d_itemsize(pdu::itemsize(type)),
 	d_type(type),
-    d_tag(pmt::mp(lengthtagname))
+    d_tag(pmt::mp(lengthtagname)),
+    d_sleep_duration(sleep_duration),
+    d_no_message(false)
     {
       message_port_register_in(PDU_PORT_ID);
     }
@@ -70,8 +73,14 @@ namespace gr {
 
 	// grab a message if one exists
 	pmt::pmt_t msg(delete_head_nowait(PDU_PORT_ID));
-	if (msg.get() == NULL)
+	if (msg.get() == NULL) {
+	  if ((d_no_message) && (d_sleep_duration > 0))
+	    boost::this_thread::sleep(boost::posix_time::milliseconds(d_sleep_duration));
+	  d_no_message = true;
 	  return nout;
+	}
+
+	d_no_message = false;
 
 	// make sure type is valid
 	if (!pmt::is_pair(msg)) // TODO: implement pdu::is_valid()

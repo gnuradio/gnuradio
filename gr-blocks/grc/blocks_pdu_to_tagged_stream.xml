@@ -8,7 +8,7 @@
   <name>PDU to Tagged Stream</name>
   <key>blocks_pdu_to_tagged_stream</key>
   <import>from gnuradio import blocks</import>
-  <make>blocks.pdu_to_tagged_stream($type.tv, $tag)</make>
+  <make>blocks.pdu_to_tagged_stream($type.tv, $tag, $sleep_duration)</make>
   <param>
     <name>Item Type</name>
     <key>type</key>
@@ -35,6 +35,12 @@
     <value>packet_len</value>
     <type>string</type>
   </param>
+  <param>
+    <name>Sleep duration</name>
+    <key>sleep_duration</key>
+    <value>0</value>
+    <type>int</type>
+  </param>
   <sink>
     <name>pdus</name>
     <type>message</type>
@@ -43,4 +49,5 @@
     <name>out</name>
     <type>$type</type>
   </source>
+  <doc>Sleep duration (ms): set to > 0 to allow thread to sleep while waiting for a message</doc>
 </block>
