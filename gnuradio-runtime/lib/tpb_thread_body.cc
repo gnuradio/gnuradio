@@ -85,6 +85,7 @@ namespace gr {
     while(1) {
       boost::this_thread::interruption_point();
 
+      bool messages_pending = false;
       // handle any queued up messages
       BOOST_FOREACH(basic_block::msg_queue_map_t::value_type &i, block->msg_queue) {
         // Check if we have a message handler attached before getting
@@ -96,6 +97,9 @@ namespace gr {
           }
         }
         else {
+          if (block->nmsgs(i.first) > 0) {
+            messages_pending = true;    // If any message queues are not empty, we'll have processing to do
+          }
           // If we don't have a handler but are building up messages,
           // prune the queue from the front to keep memory in check.
           if(block->nmsgs(i.first) > max_nmsgs){
@@ -107,7 +111,8 @@ namespace gr {
 
       d->d_tpb.clear_changed();
       // run one iteration if we are a connected stream block
-      if(d->noutputs() >0 || d->ninputs()>0){
+      if(d->noutputs() >0 || d->ninputs()>0 ||
+        ((messages_pending) && (d->noutputs() == 0) && (d->ninputs() == 0))) {  // Special case where messages are pending, but block has no normal (stream) ports
         s = d_exec.run_one_iteration();
       }
       else {
@@ -130,12 +135,19 @@ namespace gr {
       case block_executor::BLKD_IN:		// Wait for input.
       {
         gr::thread::scoped_lock guard(d->d_tpb.mutex);
-        while(!d->d_tpb.input_changed) {
+        bool run_work = false;
+        while(!d->d_tpb.input_changed && !run_work) {
 
           // wait for input or message
-          while(!d->d_tpb.input_changed && block->empty_handled_p())
+          while(!d->d_tpb.input_changed && block->empty_handled_p()) {
             d->d_tpb.input_cond.wait(guard);
-
+            
+            if ((d->noutputs() == 0) && (d->ninputs() == 0)) {  // We have a new message for a block with no normal (stream) ports
+              run_work = true;                                  // Jump out of this BLKD_IN loop and return the top of the main loop to call 'work'
+              break;                                            //  so the block can process the pending message(s)
+            }
+          }
+          
           // handle all pending messages
           BOOST_FOREACH(basic_block::msg_queue_map_t::value_type &i, block->msg_queue) {
             if(block->has_msg_handler(i.first)) {

@@ -116,7 +116,8 @@ class gateway_block(object):
         prefix = 'block__'
         for attr in [x for x in dir(self.__gateway) if x.startswith(prefix)]:
             setattr(self, attr.replace(prefix, ''), getattr(self.__gateway, attr))
-        self.pop_msg_queue = lambda: gr.block_gw_pop_msg_queue_safe(self.__gateway)
+        self.pop_msg_queue = lambda x: gr.block_gw_pop_msg_queue_safe(self.__gateway, x)
+        self.post_msg = lambda x, y: gr.block_gw_post_msg_safe(self.__gateway, x, y)
 
     def to_basic_block(self):
         """

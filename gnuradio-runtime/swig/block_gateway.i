@@ -47,3 +47,20 @@ block_gateway_sptr.__repr__ = lambda self: "<block_gateway>"
 block_gateway = block_gateway.make;
 %}
 
+%inline %{
+
+pmt::pmt_t block_gw_pop_msg_queue_safe(boost::shared_ptr<gr::block_gateway> block_gw, pmt::pmt_t which_port){
+    pmt::pmt_t msg;
+    GR_PYTHON_BLOCKING_CODE(
+        msg = block_gw->block__pop_msg_queue(which_port);
+    )
+    return msg;
+}
+
+void block_gw_post_msg_safe(boost::shared_ptr<gr::block_gateway> block_gw, pmt::pmt_t port_id, pmt::pmt_t msg){
+    GR_PYTHON_BLOCKING_CODE(
+        block_gw->block__message_port_pub(port_id, msg);
+    )
+}
+
+%}

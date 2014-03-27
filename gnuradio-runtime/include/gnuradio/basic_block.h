@@ -68,7 +68,8 @@ namespace gr {
     typedef std::deque<pmt::pmt_t> msg_queue_t;
     typedef std::map<pmt::pmt_t, msg_queue_t, pmt::comparator> msg_queue_map_t;
     typedef std::map<pmt::pmt_t, msg_queue_t, pmt::comparator>::iterator msg_queue_map_itr;
-    std::map<pmt::pmt_t, boost::shared_ptr<boost::condition_variable>, pmt::comparator> msg_queue_ready;
+    std::map<pmt::pmt_t, boost::shared_ptr<boost::condition_variable>, pmt::comparator> msg_queue_ready, msg_queue_waiting;
+    std::map<pmt::pmt_t, bool, pmt::comparator> msg_queue_blocking_setting;
   
     gr::thread::mutex mutex;          //< protects all vars
   
@@ -155,7 +156,7 @@ namespace gr {
     void set_block_alias(std::string name);
   
     // ** Message passing interface **
-    void message_port_register_in(pmt::pmt_t port_id);
+    void message_port_register_in(pmt::pmt_t port_id, bool blocking = false);
     void message_port_register_out(pmt::pmt_t port_id);
     void message_port_pub(pmt::pmt_t port_id, pmt::pmt_t msg);
     void message_port_sub(pmt::pmt_t port_id, pmt::pmt_t target);
