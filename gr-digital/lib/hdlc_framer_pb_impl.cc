@@ -128,8 +128,8 @@ namespace gr {
         }
 
         //get PDU
-        pmt::pmt_t msg(delete_head_nowait(pmt::string_to_symbol("in")));
-        if(msg.get() == NULL) return 0;
+        pmt::pmt_t msg(delete_head_nowait(pmt::mp("in")));
+        if(msg.get() == NULL) return oidx;
 
         pmt::pmt_t len(pmt::car(msg)); //TODO for non-mult-8 nbits
         pmt::pmt_t blob(pmt::cdr(msg));

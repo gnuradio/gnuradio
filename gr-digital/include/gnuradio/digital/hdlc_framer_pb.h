@@ -30,10 +30,17 @@ namespace gr {
   namespace digital {
 
     /*!
-     * \brief HDLC framer which takes in PDU blobs (char data) and outputs HDLC
+     * \brief HDLC framer which takes in PMT binary blobs and outputs HDLC
      * frames as unpacked bits, with CRC and bit stuffing added. The first sample
      * of the frame is tagged with the tag frame_tag_name and includes a
      * length field for tagged_stream use.
+     *
+     * This block outputs one whole frame at a time; if there is not enough
+     * output buffer space to fit a frame, it is pushed onto a queue. As a result
+     * flowgraphs which only run for a finite number of samples may not receive
+     * all frames in the queue, due to the scheduler's granularity. For
+     * flowgraphs that stream continuously (anything using a USRP) this should
+     * not be an issue.
      *
      * \ingroup digital
      *

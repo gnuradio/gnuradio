@@ -118,37 +118,39 @@ namespace gr {
         uint64_t abs_sample_cnt = nitems_read(0);
         get_tags_in_range(frame_tags, 0, abs_sample_cnt, abs_sample_cnt + noutput_items, pmt::string_to_symbol(d_frame_tag_name));
 
-        if(frame_tags.size() == 0) return noutput_items;
-        int start_pos = frame_tags[0].offset - abs_sample_cnt;
-        if(frame_tags.size() == 1) return start_pos; //start here next time
-        int end_pos   = frame_tags[1].offset - abs_sample_cnt;
-        int pkt_len   = frame_tags[1].offset - frame_tags[0].offset - 8; //omit EOF delim
-        if(pkt_len > d_length_max) return end_pos; //arbitrary, too long for a real pkt
-        if(pkt_len <= d_length_min)  return end_pos;
+        int end_pos = 0;
+        while(frame_tags.size() > 0) {
+            int start_pos = frame_tags[0].offset - abs_sample_cnt;
+            if(frame_tags.size() == 1) return start_pos; //start here next time
+            end_pos   = frame_tags[1].offset - abs_sample_cnt;
+            int pkt_len   = frame_tags[1].offset - frame_tags[0].offset - 8; //omit EOF delim
+            if(pkt_len > d_length_max) return end_pos; //arbitrary, too long for a real pkt
+            if(pkt_len <= d_length_min)  return end_pos;
 
-        //get bit array
-        std::vector<unsigned char> pkt_bits(pkt_len);
-        memcpy(&pkt_bits[0], &in[start_pos], pkt_bits.size());
+            //get bit array
+            std::vector<unsigned char> pkt_bits(pkt_len);
+            memcpy(&pkt_bits[0], &in[start_pos], pkt_bits.size());
 
-        unstuff(pkt_bits);
+            unstuff(pkt_bits);
 
-        //pack into bytes (and correct bit order)
-        std::vector<unsigned char> pkt_bytes = pack(pkt_bits);
+            //pack into bytes (and correct bit order)
+            std::vector<unsigned char> pkt_bytes = pack(pkt_bits);
 
-        //strip off the CRC
-        unsigned int crc = (int(pkt_bytes[pkt_bytes.size()-1]) << 8)
-                         + pkt_bytes[pkt_bytes.size()-2];
-        pkt_bytes.erase(pkt_bytes.end()-2, pkt_bytes.end());
-        unsigned int calc_crc = crc_ccitt(pkt_bytes);
+            //strip off the CRC
+            unsigned int crc = (int(pkt_bytes[pkt_bytes.size()-1]) << 8)
+                                    + pkt_bytes[pkt_bytes.size()-2];
+            pkt_bytes.erase(pkt_bytes.end()-2, pkt_bytes.end());
+            unsigned int calc_crc = crc_ccitt(pkt_bytes);
 
-        if(crc == calc_crc) {
-            //publish
-            //TODO manage padding
-            pmt::pmt_t pdu(pmt::cons(pmt::PMT_NIL,
-                                     pmt::make_blob(&pkt_bytes[0], pkt_bytes.size())));
-            message_port_pub(pmt::mp("out"), pdu);
+            if(crc == calc_crc) {
+                //publish
+                //TODO manage padding
+                pmt::pmt_t pdu(pmt::cons(pmt::PMT_NIL,
+                                        pmt::make_blob(&pkt_bytes[0], pkt_bytes.size())));
+                message_port_pub(pmt::mp("out"), pdu);
+            }
+            frame_tags.erase(frame_tags.begin());
         }
-
         // Tell runtime system how many output items we produced.
         return end_pos;
     }
