@@ -2,6 +2,65 @@
 #define INCLUDED_volk_8u_x4_conv_k7_r2_8u_H
 
 
+
+typedef union {
+  unsigned char/*DECISIONTYPE*/ t[64/*NUMSTATES*//8/*DECISIONTYPE_BITSIZE*/];
+  unsigned int w[64/*NUMSTATES*//32];
+  unsigned short s[64/*NUMSTATES*//16];
+  unsigned char c[64/*NUMSTATES*//8];
+} decision_t __attribute__ ((aligned (16)));
+
+static inline void renormalize(unsigned char* X, unsigned char threshold){
+  int NUMSTATES = 64;
+  int i;
+
+    unsigned char min=X[0];
+    //if(min > threshold) {
+    for(i=0;i<NUMSTATES;i++)
+    if (min>X[i])
+      min=X[i];
+    for(i=0;i<NUMSTATES;i++)
+      X[i]-=min;
+    //}
+}
+
+
+
+//helper BFLY for GENERIC version
+static inline void BFLY(int i, int s, unsigned char * syms, unsigned char *Y, unsigned char *X, decision_t * d, unsigned char* Branchtab) {
+  int j, decision0, decision1;
+  unsigned char metric,m0,m1,m2,m3;
+
+  int NUMSTATES = 64;
+  int RATE = 2;
+  int METRICSHIFT = 1;
+  int PRECISIONSHIFT = 2;
+
+  
+
+  metric =0;
+  for(j=0;j<RATE;j++)
+    metric += (Branchtab[i+j*NUMSTATES/2] ^ syms[s*RATE+j])>>METRICSHIFT ;
+  metric=metric>>PRECISIONSHIFT;
+
+  unsigned char max = ((RATE*((256 -1)>>METRICSHIFT))>>PRECISIONSHIFT);
+
+  m0 = X[i] + metric;
+  m1 = X[i+NUMSTATES/2] + (max - metric);
+  m2 = X[i] + (max - metric);
+  m3 = X[i+NUMSTATES/2] + metric;
+
+  decision0 = (signed int)(m0-m1) > 0;
+  decision1 = (signed int)(m2-m3) > 0;
+
+  Y[2*i] = decision0 ? m1 : m0;
+  Y[2*i+1] =  decision1 ? m3 : m2;
+
+  d->w[i/(sizeof(unsigned int)*8/2)+s*(sizeof(decision_t)/sizeof(unsigned int))] |=
+    (decision0|decision1<<1) << ((2*i)&(sizeof(unsigned int)*8-1));
+}
+
+
 #if LV_HAVE_SSE3
 
 #include <pmmintrin.h>
@@ -12,7 +71,7 @@
 
 static inline void volk_8u_x4_conv_k7_r2_8u_spiral(unsigned char* Y, unsigned char* X, unsigned char* syms, unsigned char* dec, unsigned int framebits, unsigned int excess, unsigned char* Branchtab) {
   unsigned int i9;
-  for(i9 = 0; i9 < (framebits >> 1) + (excess >> 1); i9++) {
+  for(i9 = 0; i9 < ((framebits + excess) >> 1); i9++) {
     unsigned char a75, a81;
     int a73, a92;
     short int s20, s21, s26, s27;
@@ -261,6 +320,32 @@ static inline void volk_8u_x4_conv_k7_r2_8u_spiral(unsigned char* Y, unsigned ch
       ((__m128i  *) X)[3] = _mm_subs_epu8(((__m128i  *) X)[3], m13);
     }
   }
+
+  renormalize(X, 210);
+
+  /*int ch;
+  for(ch = 0; ch < 64; ch++) {
+    printf("%d,", X[ch]);
+  }
+  printf("\n");*/
+
+  unsigned int j;
+  for(j=0; j < (framebits + excess) % 2; ++j) {
+    int i;
+    for(i=0;i<64/2;i++){
+      BFLY(i, (((framebits+excess) >> 1) << 1) + j , syms, Y, X, (decision_t *)dec, Branchtab);
+    }
+    
+
+    renormalize(Y, 210);
+
+    /*printf("\n");
+    for(ch = 0; ch < 64; ch++) {
+      printf("%d,", Y[ch]);
+    }
+    printf("\n");*/
+    
+  }
   /*skip*/
   return;
 }
@@ -268,59 +353,8 @@ static inline void volk_8u_x4_conv_k7_r2_8u_spiral(unsigned char* Y, unsigned ch
 #endif /*LV_HAVE_SSE3*/
 
 
-static inline void renormalize(unsigned char* X, unsigned char threshold){
-  int NUMSTATES = 64;
-  int i;
-  if (X[0]>threshold){
-    unsigned char min=X[0];
-    for(i=0;i<NUMSTATES;i++)
-    if (min>X[i])
-      min=X[i];
-    for(i=0;i<NUMSTATES;i++)
-      X[i]-=min;
-      }
-}
-
-typedef union {
-  unsigned char/*DECISIONTYPE*/ t[64/*NUMSTATES*//8/*DECISIONTYPE_BITSIZE*/];
-  unsigned int w[64/*NUMSTATES*//32];
-  unsigned short s[64/*NUMSTATES*//16];
-  unsigned char c[64/*NUMSTATES*//8];
-} decision_t __attribute__ ((aligned (16)));
 
 
-
-//helper BFLY for GENERIC version
-static inline void BFLY(int i, int s, unsigned char * syms, unsigned char *Y, unsigned char *X, decision_t * d, unsigned char* Branchtab) {
-  int j, decision0, decision1;
-  unsigned char metric,m0,m1,m2,m3;
-
-  int NUMSTATES = 64;
-  int RATE = 2;
-  int METRICSHIFT = 1;
-  int PRECISIONSHIFT = 2;
-
-  metric =0;
-  for(j=0;j<RATE;j++)
-    metric += (Branchtab[i+j*NUMSTATES/2] ^ syms[s*RATE+j])>>METRICSHIFT ;
-  metric=metric>>PRECISIONSHIFT;
-
-  unsigned char max = ((RATE*((256 -1)>>METRICSHIFT))>>PRECISIONSHIFT);
-
-  m0 = X[i] + metric;
-  m1 = X[i+NUMSTATES/2] + (max - metric);
-  m2 = X[i] + (max - metric);
-  m3 = X[i+NUMSTATES/2] + metric;
-
-  decision0 = (signed int)(m0-m1) > 0;
-  decision1 = (signed int)(m2-m3) > 0;
-
-  Y[2*i] = decision0 ? m1 : m0;
-  Y[2*i+1] =  decision1 ? m3 : m2;
-
-  d->w[i/(sizeof(unsigned int)*8/2)+s*(sizeof(decision_t)/sizeof(unsigned int))] |=
-    (decision0|decision1<<1) << ((2*i)&(sizeof(unsigned int)*8-1));
-}
 
 
 
@@ -330,14 +364,20 @@ static inline void BFLY(int i, int s, unsigned char * syms, unsigned char *Y, un
 static inline void volk_8u_x4_conv_k7_r2_8u_generic(unsigned char* Y, unsigned char* X, unsigned char* syms, unsigned char* dec, unsigned int framebits, unsigned int excess, unsigned char* Branchtab) {
   int nbits = framebits + excess;
   int NUMSTATES = 64;
-  int RENORMALIZE_THRESHOLD = 137;
+  int RENORMALIZE_THRESHOLD = 210;
+
 
   int s,i;
+  
+
+  
   for (s=0;s<nbits;s++){
     void *tmp;
     for(i=0;i<NUMSTATES/2;i++){
       BFLY(i, s, syms, Y, X, (decision_t *)dec, Branchtab);
     }
+
+   
 
     renormalize(Y, RENORMALIZE_THRESHOLD);
 
@@ -346,6 +386,7 @@ static inline void volk_8u_x4_conv_k7_r2_8u_generic(unsigned char* Y, unsigned c
     X = Y;
     Y = (unsigned char*)tmp;
   }
+
 
   return;
 }

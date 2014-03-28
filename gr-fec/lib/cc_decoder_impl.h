@@ -71,6 +71,7 @@ namespace gr {
         std::vector<int> d_polys;
         struct v* d_vp;
         COMPUTETYPE* d_managed_in;
+        unsigned int d_managed_in_size;
         int d_numstates;
         int d_decision_t_size;
         int *d_start_state;

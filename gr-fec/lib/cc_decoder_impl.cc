@@ -76,33 +76,18 @@ namespace gr {
 
         d_decision_t_size = d_numstates/8; //packed bit array
 
+        d_managed_in_size = 0;
         if(d_tailbiting) {
           d_end_state = &d_end_state_chaining;
           d_veclen = d_framebits + (6 * (d_k - 1));
           d_managed_in = (COMPUTETYPE*)volk_malloc(d_veclen*d_rate*sizeof(COMPUTETYPE),
                                                    volk_get_alignment());
-          if(d_managed_in) {
-            printf("allocation failed\n");
-            exit(1);
+          d_managed_in_size = d_veclen * d_rate;
+          if(d_managed_in == NULL) {
+            throw std::runtime_error("bad alloc for d_managed_in!\n");
           }
         }
-        /*
-        else if(d_trunc_intrinsic) {
-          d_end_state = &d_end_state_nonchaining;
-          d_veclen = d_framebits + d_k - 1;
-          if(posix_memalign((void**)&d_managed_in, 16, d_veclen * d_rate * sizeof(COMPUTETYPE))){
-            printf("allocation failed\n");
-            exit(1);
-          }
-          int cnt = 0;
-          for(int i = 0; i < d_rate; ++i) {
-            if (d_polys[i] != 1) {
-              cnt++;
-            }
-          }
-          d_partial_rate = cnt;
-        }
-        */
+        
         else if(d_truncated) {
           d_end_state = &d_end_state_chaining;
           d_veclen = d_framebits;
@@ -118,23 +103,29 @@ namespace gr {
           d_veclen = d_framebits + d_k - 1;
         }
 
-        if(posix_memalign((void**)&d_vp->metrics, 16, 2 * d_numstates * sizeof(COMPUTETYPE))) {
-          printf("allocation failed\n");
-          exit(1);
+        d_vp->metrics = (COMPUTETYPE*) volk_malloc(2 * sizeof(COMPUTETYPE) * d_numstates, volk_get_alignment());
+        if(d_vp->metrics == NULL) {
+          throw std::runtime_error("bad alloc for d_vp->metrics!\n");
         }
+
+        
 
         d_vp->metrics1.t = d_vp->metrics;
         d_vp->metrics2.t = d_vp->metrics + d_numstates;
 
-        if(posix_memalign((void**)&d_vp->decisions, 16,d_veclen*d_decision_t_size)) {
-          printf("allocation failed\n");
-          exit(1);
+        d_vp->decisions = (DECISIONTYPE*) volk_malloc(d_veclen*d_decision_t_size, volk_get_alignment());
+        if(d_vp->decisions == NULL) {
+          throw std::runtime_error("bad alloc for d_vp->decisions!\n");
         }
 
-        if(posix_memalign((void**)&Branchtab, 16, sizeof(COMPUTETYPE) * d_numstates/2*rate)) {
-          printf("allocation failed\n");
-          exit(1);
+        
+
+        Branchtab = (COMPUTETYPE*) volk_malloc(sizeof(COMPUTETYPE) * d_numstates/2*rate, volk_get_alignment());
+        if(Branchtab == NULL) {
+          throw std::runtime_error("bad alloc for d_vp->decisions!\n");
         }
+
+        
 
         create_viterbi();
 
@@ -182,17 +173,7 @@ namespace gr {
         if(d_terminated) {
           return d_rate * (d_framebits + d_k - 1);
         }
-        /*
-        else if(d_trunc_intrinsic) {
-          int cnt = 0;
-          for(int i = 0; i < d_rate; ++i) {
-            if (d_polys[i] != 1) {
-              cnt++;
-            }
-          }
-          return (d_rate * (d_framebits)) + (cnt * (d_k - 1));
-        }
-        */
+        
         else {
           return d_rate * d_framebits;
         }
@@ -215,9 +196,7 @@ namespace gr {
         }
       }
 
-      /*const char* cc_decoder_impl::get_output_conversion() {
-        return "unpack";
-        }*/
+      
 
       float
       cc_decoder_impl::get_shift()
@@ -330,7 +309,8 @@ namespace gr {
       int
       cc_decoder_impl::find_endstate()
       {
-        COMPUTETYPE* met = (d_k%2 == 0)? d_vp->new_metrics.t : d_vp->old_metrics.t;
+        COMPUTETYPE* met = ((d_k + d_veclen)%2 == 0)? d_vp->new_metrics.t : d_vp->old_metrics.t;
+
         COMPUTETYPE min = met[0];
         int state = 0;
         for(int i = 1; i < d_numstates; ++i) {
@@ -338,7 +318,10 @@ namespace gr {
             min = met[i];
             state = i;
           }
+
+          
         }
+        //printf("min %d\n", state);
         return state;
       }
 
@@ -348,11 +331,11 @@ namespace gr {
         DECISIONTYPE *d;
 
         d = d_vp->decisions;
-        //going to have to use nbits for tailbiting?
-        //memset(d,0,d_decision_t_size * (d_framebits+d_k-1));//use volk here?
-        memset(d,0,d_decision_t_size * nbits);//use volk here?
 
-        //d_kernel( d_vp->new_metrics.t, d_vp->old_metrics.t, syms, d, d_framebits, d_k - 1, Branchtab);
+        
+        memset(d,0,d_decision_t_size * nbits);
+
+
         d_kernel( d_vp->new_metrics.t, d_vp->old_metrics.t, syms, d, nbits - (d_k - 1), d_k -1, Branchtab);
 
         return 0;
@@ -418,6 +401,9 @@ namespace gr {
         d_framebits = framebits;
         if(d_tailbiting) {
           d_veclen = d_framebits + (6 * (d_k - 1));
+          if(d_veclen * d_rate > d_managed_in_size) {
+            throw std::runtime_error("attempt to resize beyond d_managed_in buffer size!\n");
+          }
         }
         else if(d_truncated) {
           d_veclen = d_framebits;
@@ -446,30 +432,7 @@ namespace gr {
           init_viterbi_unbiased(d_vp);
         }
 
-        /*
-        else if(d_trunc_intrinsic) {
-          memcpy(d_managed_in, in, d_framebits * d_rate * sizeof(COMPUTETYPE));
-          for(int i = 0; i < (d_k - 1); ++i) {
-            int cnt = 0;
-            for(int j = 0; j < d_rate; ++j) {
-              if(d_polys[j] != 1) {
-
-                d_managed_in[(d_framebits * d_rate) + (i * d_rate) + j] =
-                  in[(d_framebits * d_rate) + (i * d_partial_rate) + cnt++];
-              }
-              else {
-
-                d_managed_in[(d_framebits * d_rate) + (i * d_rate) + j] =
-                  (((*d_end_state) >> (d_k - 2 - i)) & 1) * ((1 << (sizeof(COMPUTETYPE) * 8)) - 1);
-              }
-            }
-          }
-          update_viterbi_blk(d_managed_in, d_veclen);
-          d_end_state_chaining = find_endstate();
-          chainback_viterbi(&out[0], d_framebits, *d_end_state, d_veclen - d_framebits);
-          init_viterbi(d_vp, *d_start_state);
-        }
-        */
+        
 
         else if(d_truncated) {
           update_viterbi_blk((COMPUTETYPE*)(&in[0]), d_veclen);
@@ -490,7 +453,7 @@ namespace gr {
         else {
           update_viterbi_blk((COMPUTETYPE*)(&in[0]), d_veclen);
           d_end_state_chaining = find_endstate();
-          //printf("es: %d\n", d_end_state_chaining);
+          //printf("es: %d, %d\n", d_end_state_chaining, *d_end_state);
           d_start_state_chaining = chainback_viterbi(&out[0], d_framebits, *d_end_state,
                                                      d_veclen - d_framebits);
 
