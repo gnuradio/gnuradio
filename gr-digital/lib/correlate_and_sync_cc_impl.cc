@@ -1,19 +1,19 @@
 /* -*- c++ -*- */
-/* 
+/*
  * Copyright 2013 Free Software Foundation, Inc.
- * 
+ *
  * This file is part of GNU Radio
- * 
+ *
  * GNU Radio is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3, or (at your option)
  * any later version.
- * 
+ *
  * GNU Radio is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with GNU Radio; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 51 Franklin Street,
@@ -83,7 +83,7 @@ namespace gr {
         volk_get_alignment() / sizeof(gr_complex);
       set_alignment(std::max(1,alignment_multiple));
     }
-    
+
     correlate_and_sync_cc_impl::~correlate_and_sync_cc_impl()
     {
       delete d_filter;
@@ -120,7 +120,7 @@ namespace gr {
       // Calculate the correlation with the known symbol
       //d_filter->filter(noutput_items, in, corr);
       d_filter->filterN(corr, in, noutput_items);
-      
+
       // Find the magnitude squared of the correlation
       std::vector<float> corr_mag(noutput_items);
       volk_32fc_magnitude_squared_32f(&corr_mag[0], corr, noutput_items);
