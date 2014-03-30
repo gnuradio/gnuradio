@@ -113,7 +113,9 @@ def make_packet(payload, samples_per_symbol, bits_per_symbol,
         bits_per_symbol: (needed for padding calculation) (int)
         preamble: string of ascii 0's and 1's
         access_code: string of ascii 0's and 1's
+        pad_for_usrp: If true, packets are padded such that they end up a multiple of 128 samples(512 bytes)
         whitener_offset: offset into whitener string to use [0-16)
+        whitening: Whether to turn on data whitening(scrambling) (boolean)
     
     Packet will have access code at the beginning, followed by length, payload
     and finally CRC-32.
