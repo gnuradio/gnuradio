@@ -50,7 +50,7 @@ private:
   template<class T, typename Tcallback>
   struct registerConfigureCallback_f: public std::unary_function<T,void>
   {
-    registerConfigureCallback_f(const std::string &_id,  const Tcallback _callback)
+    registerConfigureCallback_f(const std::string &_id,  const Tcallback& _callback)
       : id(_id), callback(_callback)
     {;}
 
@@ -72,7 +72,7 @@ private:
   template<class T, typename Tcallback>
   struct registerQueryCallback_f: public std::unary_function<T,void>
   {
-    registerQueryCallback_f(const std::string &_id,  const Tcallback _callback)
+    registerQueryCallback_f(const std::string &_id,  const Tcallback& _callback)
       : id(_id), callback(_callback)
     {;}
 
