@@ -58,6 +58,7 @@
         <key>ignoretag</key>
         <value>True</value>
         <type>bool</type>
+        <hide>#if str($ignoretag()) == 'True' then 'part' else 'none'#</hide>
     </param>
 	<check>$vlen &gt; 0</check>
 	<sink>
