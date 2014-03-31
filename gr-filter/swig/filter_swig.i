@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2012 Free Software Foundation, Inc.
+ * Copyright 2012,2014 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -33,6 +33,7 @@
 #include "gnuradio/filter/dc_blocker_cc.h"
 #include "gnuradio/filter/dc_blocker_ff.h"
 #include "gnuradio/filter/filter_delay_fc.h"
+#include "gnuradio/filter/filterbank_vcvcf.h"
 #include "gnuradio/filter/fir_filter_ccc.h"
 #include "gnuradio/filter/fir_filter_ccf.h"
 #include "gnuradio/filter/fir_filter_fcc.h"
@@ -82,6 +83,7 @@
 %include "gnuradio/filter/dc_blocker_cc.h"
 %include "gnuradio/filter/dc_blocker_ff.h"
 %include "gnuradio/filter/filter_delay_fc.h"
+%include "gnuradio/filter/filterbank_vcvcf.h"
 %include "gnuradio/filter/fir_filter_ccc.h"
 %include "gnuradio/filter/fir_filter_ccf.h"
 %include "gnuradio/filter/fir_filter_fcc.h"
@@ -128,6 +130,7 @@
 GR_SWIG_BLOCK_MAGIC2(filter, dc_blocker_cc);
 GR_SWIG_BLOCK_MAGIC2(filter, dc_blocker_ff);
 GR_SWIG_BLOCK_MAGIC2(filter, filter_delay_fc);
+GR_SWIG_BLOCK_MAGIC2(filter, filterbank_vcvcf);
 GR_SWIG_BLOCK_MAGIC2(filter, fir_filter_ccc);
 GR_SWIG_BLOCK_MAGIC2(filter, fir_filter_ccf);
 GR_SWIG_BLOCK_MAGIC2(filter, fir_filter_fcc);

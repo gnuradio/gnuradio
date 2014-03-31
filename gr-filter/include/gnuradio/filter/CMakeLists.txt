@@ -89,6 +89,8 @@ install(FILES
     mmse_fir_interpolator_ff.h
     pm_remez.h
     polyphase_filterbank.h
+    filterbank.h
+    filterbank_vcvcf.h
     single_pole_iir.h
     dc_blocker_cc.h
     dc_blocker_ff.h
