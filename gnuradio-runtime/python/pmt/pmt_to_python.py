@@ -63,11 +63,36 @@ def pmt_from_dict(p):
         d = pmt.dict_add(d, python_to_pmt(k), python_to_pmt(v))
     return d
 
-def numpy_to_blob(p):
-    p = p.view(numpy.uint8)
-    b = pmt.make_blob(len(p))
-    pmt.blob_data(b)[:] = p
-    return b
+numpy_mappings = {
+    (numpy.float32,pmt.init_f32vector, float, pmt.f32vector_elements, pmt.is_f32vector),
+    (numpy.float64,pmt.init_f64vector, float, pmt.f64vector_elements, pmt.is_f64vector),
+    (numpy.complex64,pmt.init_c32vector, complex, pmt.c32vector_elements, pmt.is_c32vector),
+    (numpy.complex128,pmt.init_c64vector, complex, pmt.c64vector_elements, pmt.is_c64vector),
+    (numpy.int8,pmt.init_s8vector, int, pmt.s8vector_elements, pmt.is_s8vector),
+    (numpy.int16,pmt.init_s16vector, int, pmt.s16vector_elements, pmt.is_s16vector),
+    (numpy.int32,pmt.init_s32vector, int, pmt.s32vector_elements, pmt.is_s32vector),
+#    (numpy.int64,pmt.init_s64vector, int, pmt.s64vector_elements, pmt.is_s64vector),
+    (numpy.uint8,pmt.init_u8vector, int, pmt.u8vector_elements, pmt.is_u8vector),
+    (numpy.uint16,pmt.init_u16vector, int, pmt.u16vector_elements, pmt.is_u16vector),
+    (numpy.uint32,pmt.init_u32vector, int, pmt.u32vector_elements, pmt.is_u32vector),
+#    (numpy.uint64,pmt.init_u64vector, int, pmt.u64vector_elements, pmt.is_u64vector),
+    (numpy.byte,pmt.init_u8vector, int, pmt.u8vector_elements, pmt.is_u8vector),
+    }
+
+def numpy_to_uvector(p):
+    if not p.dtype in map(lambda x: x[0], numpy_mappings):
+        raise ValueError("unsupported numpy array dtype for converstion to pmt %s"%(p.dtype))
+    for m in numpy_mappings:
+        if(m[0] == p.dtype):
+            pc = map(lambda i: m[2](i), p)
+            return m[1](p.size, pc);
+
+def uvector_to_numpy(p):
+    for m in numpy_mappings:
+        if(m[4](p)):
+            a= m[3](p);
+            return numpy.array(m[3](p), dtype=m[0]);
+    raise ValueError("unsupported numpy array dtype for converstion from pmt %s"%(p))
 
 THE_TABLE = ( #python type, check pmt type, to python, from python
     (None, pmt.is_null, lambda x: None, lambda x: pmt.PMT_NIL),
@@ -81,18 +106,18 @@ THE_TABLE = ( #python type, check pmt type, to python, from python
     (tuple, pmt.is_tuple, pmt_to_tuple, pmt_from_tuple),
     (list, pmt.is_vector, pmt_to_vector, pmt_from_vector),
     (dict, pmt.is_dict, pmt_to_dict, pmt_from_dict),
-    (numpy.ndarray, pmt.is_blob, pmt.blob_data, numpy_to_blob),
+    (numpy.ndarray, pmt.is_uniform_vector, uvector_to_numpy, numpy_to_uvector),
 )
 
 def pmt_to_python(p):
     for python_type, pmt_check, to_python, from_python in THE_TABLE:
         if pmt_check(p): return to_python(p)
-    return p #give up, we return the same
+    raise ValueError("can't convert %s type to pmt (%s)"%(type(p),p))
 
 def python_to_pmt(p):
     for python_type, pmt_check, to_python, from_python in THE_TABLE:
         if python_type is None:
             if p == None: return from_python(p)
         elif isinstance(p, python_type): return from_python(p)
-    return p #give up, we return the same
+    raise ValueError("can't convert %s type to pmt (%s)"%(type(p),p))
 

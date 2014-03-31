@@ -942,8 +942,7 @@ msg_accepter_ref(const pmt_t &obj)
 bool
 is_blob(pmt_t x)
 {
-  // return is_u8vector(x);
-  return is_uniform_vector(x);
+  return is_u8vector(x);
 }
 
 pmt_t
