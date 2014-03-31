@@ -45,8 +45,9 @@ namespace gr {
        * \param addr network address to use
        * \param port network port to use
        * \param MTU maximum transmission unit
+       * \param tcp_no_delay TCP No Delay option (set to True to disable Nagle algorithm)
        */
-      static sptr make(std::string type, std::string addr, std::string port, int MTU=10000);
+      static sptr make(std::string type, std::string addr, std::string port, int MTU=10000, bool tcp_no_delay=false);
     };
 
   } /* namespace blocks */
