@@ -152,6 +152,9 @@ private:
   myType pyCast(PyObject* obj) {
     printf("TYPE NOT IMPLEMENTED!\n");
     assert(0);
+    // the following is to make compilers happy only.
+    myType dummy;
+    return(dummy);
   };
 
   std::vector<boost::any> d_rpc_vars; // container for all RPC variables
