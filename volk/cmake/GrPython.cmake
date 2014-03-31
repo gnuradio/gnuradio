@@ -199,8 +199,9 @@ function(VOLK_PYTHON_INSTALL)
             add_custom_command(
                 OUTPUT ${pyexefile} DEPENDS ${pyfile}
                 COMMAND ${PYTHON_EXECUTABLE} -c
-                \"open('${pyexefile}', 'w').write('\#!${pyexe_native}\\n'+open('${pyfile}').read())\"
+                "open('${pyexefile}','w').write('\#!${pyexe_native}\\n'+open('${pyfile}').read())"
                 COMMENT "Shebangin ${pyfile_name}"
+                VERBATIM
             )
 
             #on windows, python files need an extension to execute
