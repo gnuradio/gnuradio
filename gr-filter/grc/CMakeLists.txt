@@ -23,6 +23,7 @@ install(FILES
     filter_fft_filter_xxx.xml
     filter_fir_filter_xxx.xml
     filter_filter_delay_fc.xml
+    filter_filterbank_vcvcf.xml
     filter_fractional_interpolator_xx.xml
     filter_fractional_resampler_xx.xml
     filter_freq_xlating_fir_filter_xxx.xml
@@ -31,6 +32,7 @@ install(FILES
     filter_interp_fir_filter_xxx.xml
     filter_pfb_arb_resampler.xml
     filter_pfb_channelizer.xml
+    filter_pfb_channelizer_hier.xml
     filter_pfb_decimator.xml
     filter_pfb_interpolator.xml
     filter_pfb_synthesizer.xml

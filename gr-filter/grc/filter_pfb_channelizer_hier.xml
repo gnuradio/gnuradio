@@ -1,0 +1,80 @@
+<?xml version="1.0"?>
+<!--
+###################################################
+##Hierarchical Polyphase Channelizer
+###################################################
+ -->
+<block>
+	<name>Hierarchical Polyphase Channelizer</name>
+	<key>pfb_channelizer_hier_ccf</key>
+	<import>from gnuradio.filter import pfb</import>
+	<make>pfb.channelizer_hier_ccf(
+	$nchans,
+	$n_filterbanks,
+	$taps,
+	$outchans,
+  $atten,
+  $bw,
+  $tb,
+  $ripple
+  )
+	</make>
+  <callback>set_taps($taps)</callback>
+  <param>
+    <name>Number of Channels</name>
+    <key>nchans</key>
+    <value>3</value>
+    <type>int</type>
+  </param>
+	<param>
+    <name>Number of Filterbanks</name>
+    <key>n_filterbanks</key>
+    <value>4</value>
+    <type>int</type>
+  </param>
+	<param>
+		<name>Taps</name>
+		<key>taps</key>
+		<value>None</value>
+		<type>raw</type>
+	</param>
+	<param>
+		<name>Output Channels</name>
+		<key>outchans</key>
+		<value>None</value>
+		<type>raw</type>
+	</param>
+	<param>
+		<name>Attenuation</name>
+		<key>atten</key>
+		<value>100</value>
+		<type>real</type>
+	</param>
+	<param>
+		<name>Fraction of Channel to Keep</name>
+		<key>bw</key>
+    <value>1.0</value>
+		<type>real</type>
+	</param>
+  <param>
+    <name>Transition Band (as a fraction of channel width)</name>
+    <key>tb</key>
+    <value>0.2</value>
+    <type>real</type>
+  </param>
+  <param>
+    <name>Passband Ripple in dB</name>
+    <key>ripple</key>
+    <value>0.1</value>
+    <type>real</type>
+  </param>
+	<sink>
+		<name>in</name>
+		<type>complex</type>
+	</sink>
+	<source>
+		<name>out</name>
+		<type>complex</type>
+		<nports>$nchans</nports>
+	</source>
+</block>
