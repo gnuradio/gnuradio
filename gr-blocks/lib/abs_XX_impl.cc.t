@@ -51,10 +51,12 @@ namespace gr {
     {
       @I_TYPE@ *iptr = (@I_TYPE@ *) input_items[0];
       @O_TYPE@ *optr = (@O_TYPE@ *) output_items[0];
-      
-      for(int i=0; i<noutput_items; i++)
-        optr[i] = abs(iptr[i]);
-      
+
+      for(int i=0; i<noutput_items; i++) {
+        @I_TYPE@ val = iptr[i];
+        optr[i] = ((val < ((@I_TYPE@)0)) ? -val : val);
+      }
+
       return noutput_items;
     }
 
