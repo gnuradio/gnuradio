@@ -27,6 +27,7 @@
 #include <gnuradio/filter/filterbank.h>
 #include <cstdio>
 #include <iostream>
+#include <stdexcept>
 
 namespace gr {
   namespace filter {
@@ -82,7 +83,7 @@ namespace gr {
               break;
             }
           }
-          
+
           d_fir_filters[i]->set_taps(d_taps[i]);
         }
       }
@@ -99,7 +100,7 @@ namespace gr {
           printf("]\n\n");
         }
       }
-      
+
       std::vector< std::vector<float> >
       filterbank::taps() const
       {
