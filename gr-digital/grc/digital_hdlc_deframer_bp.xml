@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<block>
+  <name>hdlc_deframer_bp</name>
+  <key>digital_hdlc_deframer_bp</key>
+  <category>digital</category>
+  <import>from gnuradio import digital</import>
+  <make>digital.hdlc_deframer_bp($frame_tag_name, $min, $max)</make>
+  <param>
+    <name>Frame tag name</name>
+    <key>frame_tag_name</key>
+    <type>string</type>
+  </param>
+  <param>
+    <name>Min length</name>
+    <key>min</key>
+    <value>32</value>
+    <type>int</type>
+  </param>
+  <param>
+    <name>Max length</name>
+    <key>max</key>
+    <value>500</value>
+    <type>int</type>
+  </param>
+  <sink>
+    <name>in</name>
+    <type>byte</type>
+  </sink>
+  <source>
+    <name>out</name>
+    <type>message</type>
+  </source>
+</block>
