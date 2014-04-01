@@ -26,34 +26,32 @@ aren't done differently, etc, etc,
 
 * Boost 1.35
 
-Until boost 1.35 or later is common in distributions, you'll need to
-build boost from source yourself.  See README.building-boost.
-
+Boost 1.35 and later is fairly common in modern distributions.
+If it isn't available for your system, please refer to
+README.building-boost for instructions
 
 * C++ and Python
 
-GNU Radio is now a hybrid system.  Some parts of the system are built
-in C++ and some of it in Python.  In general, prefer Python to C++.
-Signal processing primitives are still built in C++ for performance.
+GNU Radio is a hybrid system.  Some parts of the system are built
+in C++ and some of it in Python.  In general, prefer Python to C++ for
+its simplicity; for performance-critical and system-related
+functionality. Signal processing primitives are still built in C++ for
+performance; the Vector-Optimized Library of Kernels (VOLK) is directly
+accessible from C++.
 
 
 * C++ namespaces
 
-In the cleanup process, I considered putting everything in the
-gnuradio namespace and dropping the Gr|gr prefix.  In fact, I think
-it's probably the right idea, but when I tested it out, I ran into
-problems with SWIG's handling of namespaces.  Bottom line, SWIG
-(1.3.21) got confused and generated bad code when I started playing
-around with namespaces in a not particularly convoluted way.  I saw
-problems using the boost::shared_ptr template in combination with
-classes defined in the gnuradio namespace.  It wasn't pretty...
-
+GNU Radio is organized in modules. For example, the blocks of the gr-digital
+module reside in the namespace gr::digital. Out-Of-Tree modules follow the
+same convention, but should take care not to clash with the official modules.
 
 * Naming conventions
 
 Death to CamelCaseNames!  We've returned to a kinder, gentler era.
 We're now using the "STL style" naming convention with a couple of
-modifications since we're not using namespaces.
+modifications. Refer to the classes in the official source tree for
+examples.
 
 With the exception of macros and other constant values, all
 identifiers shall be lower case with words_separated_like_this.
@@ -62,50 +60,22 @@ Macros and constant values (e.g., enumerated values,
 static const int FOO = 23) shall be in UPPER_CASE.
 
 
-** Global names
-
-All globally visible names (types, functions, variables, consts, etc)
-shall begin with a "package prefix", followed by an '_'.  The bulk of
-the code in GNU Radio logically belongs to the "gr" package, hence
-names look like gr_open_file (...).
-
-Large coherent bodies of code may use other package prefixes, but
-let's try to keep them to a well thought out list.  See the list
-below.
-
-*** Package prefixes
-
-These are the current package prefixes:
-
-    gr_		Almost everything
-
-    gri_	Implementation primitives.  Sometimes we
-		have both a gr_<foo> and a gri_<foo>.  In that case,
-		gr_<foo> would be derived from gr_block and gri_<foo>
-		would be the low level guts of the function.
-
-    atsc_	Code related to the Advanced Television
-	       	Standards Committee HDTV implementation
-
-    qa_		Quality Assurance.  Test code.
-
-
 ** Class data members (instance variables)
 
 All class data members shall begin with d_<foo>.
 
-The big win is when you're staring at a block of code it's obvious
+The big benefit is when you're staring at a block of code it's obvious
 which of the things being assigned to persist outside of the block.
 This also keeps you from having to be creative with parameter names
 for methods and constructors.  You just use the same name as the
 instance variable, without the d_.
 
-class gr_wonderfulness {
+class wonderfulness {
   std::string	d_name;
   double	d_wonderfulness_factor;
 
 public:
-  gr_wonderfulness (std::string name, double wonderfulness_factor)
+  wonderfulness (std::string name, double wonderfulness_factor)
     : d_name (name), d_wonderfulness_factor (wonderfulness_factor)
   {
     ...
@@ -121,11 +91,7 @@ All class static data members shall begin with s_<foo>.
 
 ** File names
 
-Each significant class shall be contained in it's own file.  The
-declaration of class gr_foo shall be in gr_foo.h, the definition in
-gr_foo.cc.
-
-
+Each significant class shall be contained in it's own file. 
 
 * Storage management
 
@@ -141,26 +107,13 @@ See http://www.boost.org/libs/smart_ptr/smart_ptr.htm
 
 * Unit tests
 
-Build unit tests for everything non-trivial and run them after every
-change.  Check out Extreme Programming:
-http://c2.com/cgi/wiki?ExtremeProgrammingRoadmap
+Unit tests are a useful tool for development -- they  are less of a tool
+to prove others that you can write code that works like you defined it but help 
+you and later maintainers identify corner cases, regressions and other malfunctions
+of code. 
 
-Unit tests should also be written for all examples.  This should kill
-off the bit rot we've been plagued with.
-
-** C++ unit tests
-
-For C++ we're using the cppunit framework.  cppunit has its bad
-smells, but it's mostly workable.  http://cppunit.sf.net
-
-Currently each directory <dirname>/lib contains files qa_<dirname>.{h,cc}
-that bring together all the qa_<foo> test suites in the directory.
-
-
-** Python unit tests
-
-We use the standard unittest package for unit testing of Python code.
-
+GNU Radio has integrated versatile, easy to use testing facilities. Please refer to
+http://gnuradio.org/redmine/projects/gnuradio/wiki/Coding_guide_impl#Unit-testing
 
 
 * Standard command line options
@@ -171,7 +124,10 @@ and long) and types of the arguments.  We list them below using the
 Python optparse syntax.  In general, the default value should be coded
 into the help string using the "... [default=%default]" syntax.
 
-** Mandatory options by gr_block
+** Mandatory options by gr::block
+
+When designing flow graphs with the GNU Radio Companion, appropriate
+option parsing will automatically be set up for you. 
 
 *** Audio source
 
