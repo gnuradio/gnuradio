@@ -6,6 +6,29 @@ If running a distribution that requires boost 1.35 (or later) be built
 from scratch, these instructions explain how to do so, and in a way
 that allows it to peacefully coexist with earlier versions of boost.
 
+There are two recommended methods: 
+Installing boost using the PyBOMBS utility, or building it from a source
+tarball.
+
+1. Installing Boost using ByBOMBS
+---------------------------------
+
+Following http://gnuradio.org/redmine/projects/pybombs/wiki/Using you can
+install a recent boost by downloading and executing the PyBombs utility:
+
+# go to a directory you have write access to
+$ git clone git://github.com/pybombs/pybombs
+$ cd pybombs
+$ ./pybombs install boost
+
+The utility will take care of everything from thereon, install it from a
+package source if a recent version is available for your system or build
+it from source if necessary.
+
+
+2. Building Boost from a source tarball
+---------------------------------------
+
 Download the latest version of boost from boost.sourceforge.net.
 (boost_1_49_0.tar.bz2 was the latest when this was written). Different
 Boost versions often have different installations. If these
@@ -36,7 +59,7 @@ required will just save compilation time.
 
 Installing GNU Radio with new Boost libraries.
 
-Tell cmake to look for the Boost libraries and header files in the new location with the folloing command:
+Tell Cmake to look for the Boost libraries and header files in the new location with the following command:
 
 $ cd <build directory>
 $ cmake -DBOOST_ROOT=$BOOST_PREFIX -DBoost_INCLUDE_DIR=$BOOST_PREFIX/include/boost-1_49/ -DBoost_LIBRARY_DIRS=$BOOST_PREFIX/lib  <path to gnuradio source tree>
