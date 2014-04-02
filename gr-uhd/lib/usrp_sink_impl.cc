@@ -469,7 +469,7 @@ namespace gr {
                          gr_vector_const_void_star &input_items,
                          gr_vector_void_star &output_items)
     {
-      int ninput_items = noutput_items; //cuz its a sync block
+      int ninput_items = noutput_items; //cuz it's a sync block
 
       //send a mid-burst packet with time spec
       _metadata.start_of_burst = false;
@@ -481,14 +481,23 @@ namespace gr {
       if(not _tags.empty())
         this->tag_work(ninput_items);
 
-      //check if there is data left to send from a burst tagged with length_tag
-      //note: if a burst is started during this call to work(), tag_work() should
-      //have been called and we should have _nitems_to_send > 0.
-      if(not pmt::is_null(_length_tag_key) and _nitems_to_send > 0) {
-        ninput_items = std::min<long>(_nitems_to_send, ninput_items);
-        //if we run out of items to send, it's the end of the burst
-        if(_nitems_to_send - long(ninput_items) == 0)
-          _metadata.end_of_burst = true;
+      if(not pmt::is_null(_length_tag_key)) {
+        //check if there is data left to send from a burst tagged with length_tag
+        //If a burst is started during this call to work(), tag_work() should have
+        //been called and we should have _nitems_to_send > 0.
+        if (_nitems_to_send > 0) {
+          ninput_items = std::min<long>(_nitems_to_send, ninput_items);
+          //if we run out of items to send, it's the end of the burst
+          if(_nitems_to_send - long(ninput_items) == 0)
+            _metadata.end_of_burst = true;
+        }
+        else {
+          //There is a tag gap since no length_tag was found immediately following
+          //the last sample of the previous burst. Drop samples until the next
+          //length_tag is found. Notify the user of the tag gap.
+          std::cerr << "tG" << std::flush;
+          return ninput_items;
+        }
       }
 
 #ifdef GR_UHD_USE_STREAM_API
@@ -562,13 +571,15 @@ namespace gr {
 
         //length_tag found; set the start of burst flag in the metadata
         else if(not pmt::is_null(_length_tag_key) and pmt::equal(key, _length_tag_key)) {
-          //If there are still items left to send, we will truncate the previous burst 
-          //by setting the end of burst flag in a mini end of burst packet. The next 
-          //call to work will start at the new burst.
+          //If there are still items left to send, the current burst has been preempted.
+          //Truncate the current burst by setting the end of burst flag in a mini end of
+          //burst packet. The next call to work will start at the new burst. Notify the
+          //user of the tag preemption.
           if(_nitems_to_send > 0) {
               ninput_items = 0;
               _nitems_to_send = 0;
               _metadata.end_of_burst = true;
+              std::cerr << "tP" << std::flush;
               return;
           }
           _nitems_to_send = pmt::to_long(value);
