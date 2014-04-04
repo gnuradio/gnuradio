@@ -67,6 +67,9 @@ namespace gr {
        */
       void close_wav();
 
+    protected:
+      bool stop();
+
     public:
       wavfile_sink_impl(const char *filename,
 			int n_channels,
