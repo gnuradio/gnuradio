@@ -41,7 +41,7 @@ MAIN_TMPL = """\
 		\#else
 		channels=range(\$nchan),
 		\#end if
-	),
+	),$lentag_arg
 )
 \#if \$clock_rate()
 self.\$(id).set_clock_rate(\$clock_rate, uhd.ALL_MBOARDS)
@@ -165,7 +165,7 @@ self.\$(id).set_bandwidth(\$bw$(n), $n)
 	<param>
 		<name>Device Addr</name>
 		<key>dev_addr</key>
-		<value></value>
+		<value>""</value>
 		<type>string</type>
 		<hide>
 			\#if \$dev_addr()
@@ -372,6 +372,10 @@ To use the default bandwidth filter setting, this should be zero. \\
 Only certain subdevices have configurable bandwidth filters. \\
 See the daughterboard application notes for possible configurations.
 
+Length tag key (Sink only):
+When a nonempty string is given, the USRP sink will look for length tags \\
+to determine transmit burst lengths.
+
 See the UHD manual for more detailed documentation:
 http://code.ettus.com/redmine/ettus/projects/uhd/wiki
 	</doc>
@@ -425,6 +429,18 @@ PARAMS_TMPL = """
 	</param>
 """
 
+LENTAG_PARAM = """	<param>
+		<name>Length tag name</name>
+		<key>len_tag_name</key>
+		<value></value>
+		<type>string</type>
+	</param>"""
+
+LENTAG_ARG = """
+	#if $len_tag_name()
+	length_tag_name=$len_tag_name,
+	#end if"""
+
 def parse_tmpl(_tmpl, **kwargs):
 	from Cheetah import Template
 	return str(Template.Template(_tmpl, kwargs))
@@ -444,7 +460,12 @@ if __name__ == '__main__':
 		else: raise Exception, 'is %s a source or sink?'%file
 
 		params = ''.join([parse_tmpl(PARAMS_TMPL, n=n) for n in range(max_num_channels)])
+		if sourk == 'sink':
+			params += LENTAG_PARAM
+			lentag_arg = LENTAG_ARG
+		else: lentag_arg = ''
 		open(file, 'w').write(parse_tmpl(MAIN_TMPL,
+			lentag_arg=lentag_arg,
 			max_nchan=max_num_channels,
 			max_mboards=max_num_mboards,
 			params=params,
