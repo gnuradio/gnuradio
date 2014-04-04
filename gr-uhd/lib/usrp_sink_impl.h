@@ -26,6 +26,8 @@
 static const pmt::pmt_t SOB_KEY = pmt::string_to_symbol("tx_sob");
 static const pmt::pmt_t EOB_KEY = pmt::string_to_symbol("tx_eob");
 static const pmt::pmt_t TIME_KEY = pmt::string_to_symbol("tx_time");
+static const pmt::pmt_t FREQ_KEY = pmt::string_to_symbol("tx_freq");
+static const pmt::pmt_t LO_OFFS_KEY = pmt::string_to_symbol("tx_lo_offset");
 
 namespace gr {
   namespace uhd {
@@ -120,6 +122,13 @@ namespace gr {
       inline void tag_work(int &ninput_items);
 
     private:
+      //! Like set_center_freq(), but uses _curr_freq and _curr_lo_offset
+      ::uhd::tune_result_t _set_center_freq_from_internals(size_t chan);
+      //! Receives commands and handles them
+      void msg_handler_command(pmt::pmt_t msg);
+      //! Receives queries and posts a response
+      void msg_handler_query(pmt::pmt_t msg);
+
       ::uhd::usrp::multi_usrp::sptr _dev;
       const ::uhd::stream_args_t _stream_args;
       boost::shared_ptr< ::uhd::io_type_t > _type;
@@ -138,6 +147,16 @@ namespace gr {
       std::vector<tag_t> _tags;
       const pmt::pmt_t _length_tag_key;
       long _nitems_to_send;
+
+      //! Stores the last value we told the USRP to tune to for every channel
+      // (this is not necessarily the true value the USRP is currently tuned to!).
+      // We could theoretically ask the device, but during streaming, we want to minimize
+      // communication with the USRP.
+      std::vector<double> _curr_freq;
+      //! Stores the last value we told the USRP to have the LO offset for every channel.
+      std::vector<double> _curr_lo_offset;
+      //! Stores the last gain value we told the USRP to have for every channel.
+      std::vector<double> _curr_gain;
     };
 
   } /* namespace uhd */

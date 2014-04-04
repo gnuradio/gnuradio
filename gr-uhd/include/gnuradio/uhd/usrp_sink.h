@@ -72,6 +72,7 @@ namespace gr {
        *  - pmt::string_to_symbol("tx_sob")
        *  - pmt::string_to_symbol("tx_eob")
        *  - pmt::string_to_symbol("tx_time")
+       *  - pmt::string_to_symbol("tx_freq")
        *  - pmt::string_to_symbol(length_tag_name)
        *
        * The sob and eob (start and end of burst) tag values are pmt booleans.
@@ -86,10 +87,13 @@ namespace gr {
        * The timstamp tag value is a pmt tuple of the following:
        * (uint64 seconds, and double fractional seconds).
        *
+       * The tx_freq tag has to be a double, and will re-tune the USRP to the given frequency,
+       * if possible.
+       *
        * See the UHD manual for more detailed documentation:
        * http://code.ettus.com/redmine/ettus/projects/uhd/wiki
        *
-       * \param device_addr the address to identify the hardware
+       * \param device_addr the address to identify the hardware (e.g. "type=b200", "addr=192.168.10.2")
        * \param io_type the desired input data type
        * \param num_channels number of stream from the device
        * \param length_tag_name the name of the tag identifying tagged stream length
@@ -112,6 +116,7 @@ namespace gr {
        *  - pmt::string_to_symbol("tx_sob")
        *  - pmt::string_to_symbol("tx_eob")
        *  - pmt::string_to_symbol("tx_time")
+       *  - pmt::string_to_symbol("tx_freq")
        *  - pmt::string_to_symbol(length_tag_name)
        *
        * The sob and eob (start and end of burst) tag values are pmt booleans.
@@ -125,6 +130,9 @@ namespace gr {
        *
        * The timstamp tag value is a pmt tuple of the following:
        * (uint64 seconds, and double fractional seconds).
+       *
+       * The tx_freq tag has to be a double, and will re-tune the USRP to the given frequency,
+       * if possible.
        *
        * See the UHD manual for more detailed documentation:
        * http://code.ettus.com/redmine/ettus/projects/uhd/wiki

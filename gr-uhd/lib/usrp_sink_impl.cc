@@ -71,13 +71,27 @@ namespace gr {
         _stream_now(_nchan == 1),
         _start_time_set(false),
         _length_tag_key(length_tag_name.empty() ? pmt::PMT_NIL : pmt::string_to_symbol(length_tag_name)),
-        _nitems_to_send(0)
+        _nitems_to_send(0),
+	_curr_freq(stream_args.channels.size(), 0.0),
+	_curr_lo_offset(stream_args.channels.size(), 0.0),
+	_curr_gain(stream_args.channels.size(), 0.0)
     {
       if(stream_args.cpu_format == "fc32")
         _type = boost::make_shared< ::uhd::io_type_t >(::uhd::io_type_t::COMPLEX_FLOAT32);
       if(stream_args.cpu_format == "sc16")
         _type = boost::make_shared< ::uhd::io_type_t >(::uhd::io_type_t::COMPLEX_INT16);
       _dev = ::uhd::usrp::multi_usrp::make(device_addr);
+
+      message_port_register_in(pmt::mp("command"));
+      set_msg_handler(
+	  pmt::mp("command"),
+	  boost::bind(&usrp_sink_impl::msg_handler_command, this, _1)
+      );
+      message_port_register_in(pmt::mp("query"));
+      set_msg_handler(
+	  pmt::mp("query"),
+	  boost::bind(&usrp_sink_impl::msg_handler_query, this, _1)
+      );
     }
 
     usrp_sink_impl::~usrp_sink_impl()
@@ -138,8 +152,27 @@ namespace gr {
     usrp_sink_impl::set_center_freq(const ::uhd::tune_request_t tune_request,
                                     size_t chan)
     {
+      _curr_freq[chan] = tune_request.target_freq;
+      if (tune_request.rf_freq_policy == ::uhd::tune_request_t::POLICY_MANUAL) {
+        _curr_lo_offset[chan] = tune_request.rf_freq - tune_request.target_freq;
+      } else {
+        _curr_lo_offset[chan] = 0.0;
+      }
       chan = _stream_args.channels[chan];
       return _dev->set_tx_freq(tune_request, chan);
+    }
+
+    ::uhd::tune_result_t
+    usrp_sink_impl::_set_center_freq_from_internals(size_t chan)
+    {
+      if (_curr_lo_offset[chan] == 0.0) {
+	return _dev->set_tx_freq(_curr_freq[chan], _stream_args.channels[chan]);
+      } else {
+	return _dev->set_tx_freq(
+	    ::uhd::tune_request_t(_curr_freq[chan], _curr_lo_offset[chan]),
+	    _stream_args.channels[chan]
+	);
+      }
     }
 
     double
@@ -159,6 +192,7 @@ namespace gr {
     void
     usrp_sink_impl::set_gain(double gain, size_t chan)
     {
+      _curr_gain[chan] = gain;
       chan = _stream_args.channels[chan];
       return _dev->set_tx_gain(gain, chan);
     }
@@ -168,6 +202,7 @@ namespace gr {
                              const std::string &name,
                              size_t chan)
     {
+      _curr_gain[chan] = gain;
       chan = _stream_args.channels[chan];
       return _dev->set_tx_gain(gain, name, chan);
     }
@@ -546,6 +581,8 @@ namespace gr {
       //time will not be set unless a time tag is found
       _metadata.has_time_spec = false;
 
+      bool call_tune_loop = false;
+      std::vector<bool> do_tune(_nchan, false);
       //process all of the tags found with the same count as tag0
       BOOST_FOREACH(const tag_t &my_tag, _tags) {
         const uint64_t my_tag_count = my_tag.offset;
@@ -590,8 +627,38 @@ namespace gr {
             (pmt::to_uint64(pmt::tuple_ref(value, 0)),
              pmt::to_double(pmt::tuple_ref(value, 1)));
         }
-      }
-    }
+
+        //set the new tx frequency
+        else if(pmt::equal(key, FREQ_KEY)) {
+          int chan = pmt::to_long(pmt::tuple_ref(value, 0));
+          double new_freq = pmt::to_double(pmt::tuple_ref(value, 1));
+          if (new_freq != _curr_freq[chan]) {
+            call_tune_loop = true;
+            do_tune[chan] = true;
+            _curr_freq[chan] = new_freq;
+          }
+        }
+
+        //set the new lo offset
+        else if(pmt::equal(key, LO_OFFS_KEY)) {
+          int chan = pmt::to_long(pmt::tuple_ref(value, 0));
+          double new_lo_offs = pmt::to_double(pmt::tuple_ref(value, 1));
+          if (new_lo_offs != _curr_lo_offset[chan]) {
+            call_tune_loop = true;
+            do_tune[chan] = true;
+            _curr_lo_offset[chan] = new_lo_offs;
+          }
+        }
+      } // end foreach
+      // If there was a freq tag, tune the transmitter(s)
+      if (call_tune_loop) {
+        for (size_t chan = 0; chan < _nchan; chan++) {
+          if (do_tune[chan]) {
+	    _set_center_freq_from_internals(chan);
+          }
+        }
+      } // end if call_tune_loop
+    } // end tag_work()
 
     void
     usrp_sink_impl::set_start_time(const ::uhd::time_spec_t &time)
@@ -651,6 +718,50 @@ namespace gr {
          *_type, ::uhd::device::SEND_MODE_ONE_PACKET, 1.0);
 #endif
       return true;
+    }
+
+
+    /************** External interfaces (RPC + Message passing) ********************/
+    // Helper function for msg_handler_command: Extracts chan and command value from
+    // the 2-tuple in cmd_val, updates the value in vector_to_update[chan] and returns
+    // true if it was different from the old value.
+    bool _unpack_chan_command(pmt::pmt_t &cmd_val, int &chan, std::vector<double> &vector_to_update)
+    {
+      chan = pmt::to_long(pmt::tuple_ref(cmd_val, 0));
+      double new_value = pmt::to_double(pmt::tuple_ref(cmd_val, 1));
+      if (new_value == vector_to_update[chan]) {
+	return false;
+      } else {
+	vector_to_update[chan] = new_value;
+	return true;
+      }
+    }
+
+    void usrp_sink_impl::msg_handler_command(pmt::pmt_t msg)
+    {
+      const std::string command(pmt::symbol_to_string(pmt::car(msg)));
+      pmt::pmt_t value(pmt::cdr(msg));
+      int chan = 0;
+      if (command == "freq") {
+	if (_unpack_chan_command(value, chan, _curr_freq)) {
+	  _set_center_freq_from_internals(chan);
+	}
+      } else if (command == "lo_offset") {
+	if (_unpack_chan_command(value, chan, _curr_lo_offset)) {
+	  _set_center_freq_from_internals(chan);
+	}
+      } else if (command == "gain") {
+	if (_unpack_chan_command(value, chan, _curr_gain)) {
+	  set_gain(_curr_gain[chan], chan);
+	}
+      } else {
+	GR_LOG_ALERT(d_logger, boost::format("Received unknown command: %s") % command);
+      }
+    }
+
+    void usrp_sink_impl::msg_handler_query(pmt::pmt_t msg)
+    {
+    
     }
 
     void
