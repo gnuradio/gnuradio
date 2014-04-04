@@ -25,7 +25,7 @@ _gr_prefs = gr.prefs()
 
 #setup paths
 PATH_SEP = {'/':':', '\\':';'}[os.path.sep]
-HIER_BLOCKS_LIB_DIR = os.path.join(os.path.expanduser('~'), '.grc_gnuradio')
+HIER_BLOCKS_LIB_DIR = os.path.join(os.path.expanduser('~'), os.environ.get('GRC_HIER_PATH', '.grc_gnuradio'))
 BLOCKS_DIRS = filter( #filter blank strings
     lambda x: x, PATH_SEP.join([
         os.environ.get('GRC_BLOCKS_PATH', ''),

@@ -18,6 +18,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 """
 
 import os
+from collections import OrderedDict
 from gnuradio import gr
 from .. base.Platform import Platform as _Platform
 from .. gui.Platform import Platform as _GUIPlatform
@@ -43,7 +44,20 @@ class Platform(_Platform, _GUIPlatform):
         #ensure hier dir
         if not os.path.exists(HIER_BLOCKS_LIB_DIR): os.mkdir(HIER_BLOCKS_LIB_DIR)
         #convert block paths to absolute paths
-        block_paths = set(map(os.path.abspath, BLOCKS_DIRS))
+        # Create a mapping from the absolute path to what was passed in
+        user_to_abs_path = map(lambda x: (os.path.abspath(x), x), BLOCKS_DIRS)
+        # Keep each unique absolute path and maintain order
+        paths_dict = OrderedDict(user_to_abs_path)
+        # Prepare the ordered, unique absolute path list for _Platform
+        block_paths = paths_dict.keys()
+        # Print out the paths that are used (differently, depending on whether they
+        #   were transformed from their original state)
+        print "Block paths:"
+        for p in block_paths:
+            if p != paths_dict[p]:
+                print "\t%s (%s)" % (paths_dict[p], p)
+            else:
+                print "\t%s" % (p)
         #init
         _Platform.__init__(
             self,
