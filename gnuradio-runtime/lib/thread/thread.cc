@@ -24,6 +24,7 @@
 #endif
 
 #include <gnuradio/thread/thread.h>
+#include <boost/format.hpp>
 
 #if defined(_WIN32) || defined(__WIN32__) || defined(WIN32)
 
@@ -110,6 +111,41 @@ namespace gr {
       // Not implemented on Windows
       return -1;
     }
+#pragma pack(push,8)
+    typedef struct tagTHREADNAME_INFO
+    {
+      DWORD dwType;     // Must be 0x1000
+      LPCSTR szName;    // Pointer to name (in user addr space)
+      DWORD dwThreadID; // Thread ID (-1 = caller thread)
+      DWORD dwFlags;    // Reserved for future use, must be zero
+    } THREADNAME_INFO;
+#pragma pack(pop)
+    void
+    set_thread_name(gr_thread_t thread, std::string name)
+    {
+      const DWORD SET_THREAD_NAME_EXCEPTION = 0x406D1388;
+      
+      DWORD dwThreadId = GetThreadId(thread);
+      if (dwThreadId == 0)
+        return;
+      
+      if (name.empty())
+        name = boost::str(boost::format("thread %lu") % dwThreadId);
+      
+      THREADNAME_INFO info;
+      info.dwType = 0x1000;
+      info.szName = name.c_str();
+      info.dwThreadID = dwThreadId;
+      info.dwFlags = 0;
+      
+      __try
+      {
+        RaiseException(SET_THREAD_NAME_EXCEPTION, 0, sizeof(info)/sizeof(ULONG_PTR), (ULONG_PTR*)&info);
+      }
+      __except(EXCEPTION_EXECUTE_HANDLER)
+      {
+      }
+    }
 
   } /* namespace thread */
 } /* namespace gr */
@@ -177,6 +213,12 @@ namespace gr {
       // Not implemented on OSX
       return -1;
     }
+    
+    void
+    set_thread_name(gr_thread_t thread, std::string name)
+    {
+      // Not implemented on OSX
+    }
 
   } /* namespace thread */
 } /* namespace gr */
@@ -186,6 +228,7 @@ namespace gr {
 #include <sstream>
 #include <stdexcept>
 #include <pthread.h>
+#include <sys/prctl.h>
 
 namespace gr {
   namespace thread {
@@ -282,6 +325,34 @@ namespace gr {
       pthread_getschedparam (thread, &policy, &param);
       param.sched_priority = priority;
       return pthread_setschedparam(thread, policy, &param);
+    }
+    
+    void
+    set_thread_name(gr_thread_t thread, std::string name)
+    {
+      if (thread != pthread_self()) // Naming another thread is not supported
+        return;
+      
+      if (name.empty())
+        name = boost::str(boost::format("thread %llu") % ((unsigned long long)thread));
+      
+      const int max_len = 16; // Maximum accepted by PR_SET_NAME
+      
+      if ((int)name.size() > max_len) // Shorten the name if necessary by taking as many characters from the front
+      {                               // so that the unique_id can still fit on the end
+        int i = name.size() - 1;
+        for (; i >= 0; --i)
+        {
+          std::string s = name.substr(i, 1);
+          int n = atoi(s.c_str());
+          if ((n == 0) && (s != "0"))
+            break;
+        }
+        
+        name = name.substr(0, std::max(0, max_len - ((int)name.size() - (i + 1)))) + name.substr(i + 1);
+      }
+      
+      prctl(PR_SET_NAME, name.c_str(), 0, 0, 0);
     }
 
   } /* namespace thread */
