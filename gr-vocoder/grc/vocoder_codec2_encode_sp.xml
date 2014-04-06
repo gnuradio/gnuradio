@@ -13,7 +13,7 @@
 	<param>
 		<name>Bit rate</name>
 		<key>mode</key>
-		<value>1</value>
+		<value>codec2.MODE_2400</value>
 		<type>int</type>
 		<option>
 			<name>3200 bps</name>
