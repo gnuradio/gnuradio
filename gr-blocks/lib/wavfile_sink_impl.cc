@@ -164,11 +164,19 @@ namespace gr {
 
     wavfile_sink_impl::~wavfile_sink_impl()
     {
+      stop();
+    }
+
+    bool wavfile_sink_impl::stop()
+    {
       if(d_new_fp) {
-	fclose(d_new_fp);
+        fclose(d_new_fp);
+        d_new_fp = NULL;
       }
 
       close();
+      
+      return true;
     }
 
     int
