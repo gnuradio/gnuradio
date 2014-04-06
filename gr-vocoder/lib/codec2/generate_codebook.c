@@ -1,9 +1,9 @@
 /*---------------------------------------------------------------------------*\
-
+                                                                             
   FILE........: generate_codebook.c
-  AUTHOR......: Bruce Perens
-  DATE CREATED: 29 Sep 2010
-
+  AUTHOR......: Bruce Perens                                        
+  DATE CREATED: 29 Sep 2010                                                     
+                                                                             
   Generate header files containing LSP quantisers, runs at compile time.
 
 \*---------------------------------------------------------------------------*/
@@ -92,7 +92,7 @@ get_float(FILE * in, const char * name, char * * cursor, char * buffer,
 
     while ( (c = *s) != '\0' && !isdigit(c) && c != '-' && c != '.' )
       s++;
-
+     
     /* Comments start with "#" and continue to the end of the line. */
     if ( c != '\0' && c != '#' ) {
       char *	end = 0;

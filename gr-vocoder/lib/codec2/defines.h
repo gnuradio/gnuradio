@@ -1,11 +1,11 @@
 /*---------------------------------------------------------------------------*\
 
-  FILE........: defines.h
-  AUTHOR......: David Rowe
-  DATE CREATED: 23/4/93
-
-  Defines and structures used throughout the codec.
-
+  FILE........: defines.h                                                     
+  AUTHOR......: David Rowe 
+  DATE CREATED: 23/4/93                                                       
+                                                                             
+  Defines and structures used throughout the codec.			     
+                                                                             
 \*---------------------------------------------------------------------------*/
 
 /*
@@ -29,9 +29,9 @@
 #define __DEFINES__
 
 /*---------------------------------------------------------------------------*\
-
-				DEFINES
-
+                                                                             
+				DEFINES                                       
+                                                                             
 \*---------------------------------------------------------------------------*/
 
 /* General defines */
@@ -58,9 +58,9 @@
 #define P_MAX    160		/* maximum pitch                        */
 
 /*---------------------------------------------------------------------------*\
-
-				TYPEDEFS
-
+                                                                             
+				TYPEDEFS                                      
+                                                                             
 \*---------------------------------------------------------------------------*/
 
 /* Structure to hold model parameters for one frame */
@@ -68,8 +68,8 @@
 typedef struct {
   float Wo;		/* fundamental frequency estimate in radians  */
   int   L;		/* number of harmonics                        */
-  float A[MAX_AMP];	/* amplitiude of each harmonic                */
-  float phi[MAX_AMP];	/* phase of each harmonic                     */
+  float A[MAX_AMP+1];	/* amplitiude of each harmonic                */
+  float phi[MAX_AMP+1];	/* phase of each harmonic                     */
   int   voiced;	        /* non-zero if this frame is voiced           */
 } MODEL;
 
@@ -81,8 +81,14 @@ struct lsp_codebook {
     int			m;        /* elements in codebook	*/
     const float	*	cb;	  /* The elements		*/
 };
+
 extern const struct lsp_codebook lsp_cb[];
 extern const struct lsp_codebook lsp_cbd[];
-extern const struct lsp_codebook lsp_cbdvq[];
+extern const struct lsp_codebook lsp_cbvq[];
+extern const struct lsp_codebook lsp_cbjnd[];
+extern const struct lsp_codebook lsp_cbdt[];
+extern const struct lsp_codebook lsp_cbjvm[];
+extern const struct lsp_codebook lsp_cbvqanssi[];
+extern const struct lsp_codebook ge_cb[];
 
 #endif

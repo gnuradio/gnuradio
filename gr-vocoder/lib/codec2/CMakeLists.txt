@@ -17,76 +17,156 @@
 # the Free Software Foundation, Inc., 51 Franklin Street,
 # Boston, MA 02110-1301, USA.
 
-########################################################################
-# Create executable to generate other sources
-# http://www.vtk.org/Wiki/CMake_Cross_Compiling#Using_executables_in_the_build_created_during_the_build
-########################################################################
+set(D ${CMAKE_CURRENT_SOURCE_DIR}/codebook)
+
+# lsp quantisers
+
+set(CODEBOOKS
+    ${D}/lsp1.txt
+    ${D}/lsp2.txt
+    ${D}/lsp3.txt
+    ${D}/lsp4.txt
+    ${D}/lsp5.txt
+    ${D}/lsp6.txt
+    ${D}/lsp7.txt
+    ${D}/lsp8.txt
+    ${D}/lsp9.txt
+    ${D}/lsp10.txt
+)
+
+# lspd quantisers
+
+set(CODEBOOKSD
+    ${D}/dlsp1.txt
+    ${D}/dlsp2.txt
+    ${D}/dlsp3.txt
+    ${D}/dlsp4.txt
+    ${D}/dlsp5.txt
+    ${D}/dlsp6.txt
+    ${D}/dlsp7.txt
+    ${D}/dlsp8.txt
+    ${D}/dlsp9.txt
+    ${D}/dlsp10.txt
+)
+
+# lspd VQ quantisers
+
+set(CODEBOOKSVQ
+    ${D}/lsp1.txt
+    ${D}/lsp2.txt
+    ${D}/lsp3.txt
+    ${D}/lsp4.txt
+)
+
+set(CODEBOOKSJND
+    ${D}/lsp1.txt
+    ${D}/lsp2.txt
+    ${D}/lsp3.txt
+    ${D}/lsp4.txt
+)
+
+set(CODEBOOKSDT
+    ${D}/lspdt1.txt
+    ${D}/lspdt2.txt
+    ${D}/lspdt3.txt
+    ${D}/lspdt4.txt
+    ${D}/lspdt5.txt
+    ${D}/lspdt6.txt
+    ${D}/lspdt7.txt
+    ${D}/lspdt8.txt
+    ${D}/lspdt9.txt
+    ${D}/lspdt10.txt
+)
+
+set(CODEBOOKSJVM
+    ${D}/lspjvm1.txt
+    ${D}/lspjvm2.txt
+    ${D}/lspjvm3.txt
+)
+
+set(CODEBOOKSVQANSSI
+    ${D}/lspvqanssi1.txt
+    ${D}/lspvqanssi2.txt
+    ${D}/lspvqanssi3.txt
+    ${D}/lspvqanssi4.txt
+)
+
+set(CODEBOOKSGE ${D}/gecb.txt)
+
+# when crosscompiling import the executable targets from a file
+if(CMAKE_CROSSCOMPILING)
+    SET(IMPORT_EXECUTABLES "IMPORTFILE-NOTFOUND" CACHE FILEPATH "Point it to the export file from a native build")
+    INCLUDE(${IMPORT_EXECUTABLES})
+endif(CMAKE_CROSSCOMPILING)
+
+# Build code generator binaries. These do not get installed.
 if(NOT CMAKE_CROSSCOMPILING)
     include_directories(BEFORE ${CMAKE_CURRENT_SOURCE_DIR})
+    # generate_codebook
     add_executable(generate_codebook ${CMAKE_CURRENT_SOURCE_DIR}/generate_codebook.c)
     target_link_libraries(generate_codebook -lm)
-    export(TARGETS generate_codebook APPEND FILE ${EXPORT_FILE})
-endif()
+    # genlspdtcb
+    add_executable(genlspdtcb ${CMAKE_CURRENT_SOURCE_DIR}/genlspdtcb.c)
+    target_link_libraries(genlspdtcb -lm)
+    # Make native builds available for cross-compiling.
+    export(TARGETS generate_codebook genlspdtcb
+        FILE ${CMAKE_BINARY_DIR}/ImportExecutables.cmake)
+endif(NOT CMAKE_CROSSCOMPILING)
 
-########################################################################
-# Create codebook
-########################################################################
-set(CODEBOOKS
-    ${CMAKE_CURRENT_SOURCE_DIR}/codebook/lsp1.txt
-    ${CMAKE_CURRENT_SOURCE_DIR}/codebook/lsp2.txt
-    ${CMAKE_CURRENT_SOURCE_DIR}/codebook/lsp3.txt
-    ${CMAKE_CURRENT_SOURCE_DIR}/codebook/lsp4.txt
-    ${CMAKE_CURRENT_SOURCE_DIR}/codebook/lsp5.txt
-    ${CMAKE_CURRENT_SOURCE_DIR}/codebook/lsp6.txt
-    ${CMAKE_CURRENT_SOURCE_DIR}/codebook/lsp7.txt
-    ${CMAKE_CURRENT_SOURCE_DIR}/codebook/lsp8.txt
-    ${CMAKE_CURRENT_SOURCE_DIR}/codebook/lsp9.txt
-    ${CMAKE_CURRENT_SOURCE_DIR}/codebook/lsp10.txt
-)
-
+# codebook.c
 add_custom_command(
     OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/codebook.c
-    DEPENDS generate_codebook ${CODEBOOKS}
     COMMAND generate_codebook lsp_cb ${CODEBOOKS} > ${CMAKE_CURRENT_BINARY_DIR}/codebook.c
+    DEPENDS generate_codebook ${CODEBOOKS}
 )
 
-########################################################################
-# Create codebookd
-########################################################################
-set(CODEBOOKSD
-    ${CMAKE_CURRENT_SOURCE_DIR}/codebook/dlsp1.txt
-    ${CMAKE_CURRENT_SOURCE_DIR}/codebook/dlsp2.txt
-    ${CMAKE_CURRENT_SOURCE_DIR}/codebook/dlsp3.txt
-    ${CMAKE_CURRENT_SOURCE_DIR}/codebook/dlsp4.txt
-    ${CMAKE_CURRENT_SOURCE_DIR}/codebook/dlsp5.txt
-    ${CMAKE_CURRENT_SOURCE_DIR}/codebook/dlsp6.txt
-    ${CMAKE_CURRENT_SOURCE_DIR}/codebook/dlsp7.txt
-    ${CMAKE_CURRENT_SOURCE_DIR}/codebook/dlsp8.txt
-    ${CMAKE_CURRENT_SOURCE_DIR}/codebook/dlsp9.txt
-    ${CMAKE_CURRENT_SOURCE_DIR}/codebook/dlsp10.txt
-)
-
+# codebookd.c
 add_custom_command(
     OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/codebookd.c
-    DEPENDS generate_codebook ${CODEBOOKSD}
     COMMAND generate_codebook lsp_cbd ${CODEBOOKSD} > ${CMAKE_CURRENT_BINARY_DIR}/codebookd.c
+    DEPENDS generate_codebook ${CODEBOOKSD}
 )
 
-########################################################################
-# Create codebookdvq
-########################################################################
-set(CODEBOOKSDVQ
-    ${CMAKE_CURRENT_SOURCE_DIR}/codebook/dlsp1.txt
-    ${CMAKE_CURRENT_SOURCE_DIR}/codebook/dlsp2.txt
-    ${CMAKE_CURRENT_SOURCE_DIR}/codebook/dlsp3.txt
-    ${CMAKE_CURRENT_SOURCE_DIR}/codebook/dlsp4.txt
-    ${CMAKE_CURRENT_SOURCE_DIR}/codebook/dlsp5.txt
-)
-
+# codebookdt.c
 add_custom_command(
-    OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/codebookdvq.c
-    DEPENDS generate_codebook ${CODEBOOKSDVQ}
-    COMMAND generate_codebook lsp_cbdvq ${CODEBOOKSDVQ} > ${CMAKE_CURRENT_BINARY_DIR}/codebookdvq.c
+    OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/codebookdt.c
+    COMMAND generate_codebook lsp_cbdt ${CODEBOOKSDT} > ${CMAKE_CURRENT_BINARY_DIR}/codebookdt.c
+    DEPENDS generate_codebook ${CODEBOOKSDT}
+)
+
+# codebookvq.c
+add_custom_command(
+    OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/codebookvq.c
+    COMMAND generate_codebook lsp_cbvq ${CODEBOOKSVQ} > ${CMAKE_CURRENT_BINARY_DIR}/codebookvq.c
+    DEPENDS generate_codebook ${CODEBOOKSVQ}
+)
+
+# codebookjnd.c
+add_custom_command(
+    OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/codebookjnd.c
+    COMMAND generate_codebook lsp_cbjnd ${CODEBOOKSJND} > ${CMAKE_CURRENT_BINARY_DIR}/codebookjnd.c
+    DEPENDS generate_codebook ${CODEBOOKSJND}
+)
+
+# codebookjvm.c
+add_custom_command(
+    OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/codebookjvm.c
+    COMMAND generate_codebook lsp_cbjvm ${CODEBOOKSJVM} > ${CMAKE_CURRENT_BINARY_DIR}/codebookjvm.c
+    DEPENDS generate_codebook ${CODEBOOKSJVM}
+)
+
+# codebookvqanssi.c
+add_custom_command(
+    OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/codebookvqanssi.c
+    COMMAND generate_codebook lsp_cbvqanssi ${CODEBOOKSVQANSSI} > ${CMAKE_CURRENT_BINARY_DIR}/codebookvqanssi.c
+    DEPENDS generate_codebook ${CODEBOOKSVQANSSI}
+)
+
+# codebookge.c
+add_custom_command(
+    OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/codebookge.c
+    COMMAND generate_codebook ge_cb ${CODEBOOKSGE} > ${CMAKE_CURRENT_BINARY_DIR}/codebookge.c
+    DEPENDS generate_codebook ${CODEBOOKSGE}
 )
 
 ########################################################################
@@ -95,7 +175,12 @@ add_custom_command(
 list(APPEND gr_vocoder_sources
     ${CMAKE_CURRENT_BINARY_DIR}/codebook.c
     ${CMAKE_CURRENT_BINARY_DIR}/codebookd.c
-    ${CMAKE_CURRENT_BINARY_DIR}/codebookdvq.c
+    ${CMAKE_CURRENT_BINARY_DIR}/codebookvq.c
+    ${CMAKE_CURRENT_BINARY_DIR}/codebookjnd.c
+    ${CMAKE_CURRENT_BINARY_DIR}/codebookjvm.c
+    ${CMAKE_CURRENT_BINARY_DIR}/codebookvqanssi.c
+    ${CMAKE_CURRENT_BINARY_DIR}/codebookdt.c
+    ${CMAKE_CURRENT_BINARY_DIR}/codebookge.c
 
     ${CMAKE_CURRENT_SOURCE_DIR}/dump.c
     ${CMAKE_CURRENT_SOURCE_DIR}/lpc.c
@@ -103,11 +188,13 @@ list(APPEND gr_vocoder_sources
     ${CMAKE_CURRENT_SOURCE_DIR}/postfilter.c
     ${CMAKE_CURRENT_SOURCE_DIR}/sine.c
     ${CMAKE_CURRENT_SOURCE_DIR}/codec2.c
-    ${CMAKE_CURRENT_SOURCE_DIR}/fft.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/fifo.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/fdmdv.c
     ${CMAKE_CURRENT_SOURCE_DIR}/kiss_fft.c
     ${CMAKE_CURRENT_SOURCE_DIR}/interp.c
     ${CMAKE_CURRENT_SOURCE_DIR}/lsp.c
     ${CMAKE_CURRENT_SOURCE_DIR}/phase.c
     ${CMAKE_CURRENT_SOURCE_DIR}/quantise.c
     ${CMAKE_CURRENT_SOURCE_DIR}/pack.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/golay23.c
 )
