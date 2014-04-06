@@ -149,6 +149,9 @@ namespace gr {
      * Note: this does not work on OSX
      */
     GR_RUNTIME_API int set_thread_priority(gr_thread_t thread, int priority);
+    
+    GR_RUNTIME_API void set_thread_name(gr_thread_t thread,
+                                        std::string name);
 
   } /* namespace thread */
 } /* namespace gr */
