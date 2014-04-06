@@ -53,7 +53,7 @@ namespace gr {
       /*!
        * \brief Make Codec2 encoder block.
        */
-      static sptr make();
+      static sptr make(int mode);
     };
 
   } /* namespace vocoder */

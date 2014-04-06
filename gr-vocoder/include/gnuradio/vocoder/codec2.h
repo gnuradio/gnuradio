@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2005,2013,2014 Free Software Foundation, Inc.
+ * Copyright 2014 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -20,33 +20,35 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef INCLUDED_VOCODER_CODEC2_ENCODE_SP_IMPL_H
-#define INCLUDED_VOCODER_CODEC2_ENCODE_SP_IMPL_H
+#ifndef _VOCODER_CODEC2_H_
+#define _VOCODER_CODEC2_H_
 
-#include <gnuradio/vocoder/codec2_encode_sp.h>
+#include <gnuradio/vocoder/api.h>
+
+extern "C" {
+#include "../lib/codec2/codec2.h"
+}
 
 namespace gr {
   namespace vocoder {
 
-    class codec2_encode_sp_impl : public codec2_encode_sp
-    {
-    private:
-      CODEC2 *d_codec2;
-      int d_samples_per_frame, d_bits_per_frame;
-      std::vector<unsigned char> d_frame_buf; //!< Save 1 CODEC2 frame
-
-      void unpack_frame(const unsigned char *packed, unsigned char *out); //!< Unpack the bytes from codec2 into unpacked bits
-
+    class VOCODER_API codec2 {
     public:
-      codec2_encode_sp_impl(int mode, int samples_per_frame, int bits_per_frame);
-      ~codec2_encode_sp_impl();
 
-      int work(int noutput_items,
-	       gr_vector_const_void_star &input_items,
-	       gr_vector_void_star &output_items);
+      enum bit_rate {
+	MODE_3200 = CODEC2_MODE_3200,
+	MODE_2400 = CODEC2_MODE_2400,
+	MODE_1600 = CODEC2_MODE_1600,
+	MODE_1400 = CODEC2_MODE_1400,
+	MODE_1300 = CODEC2_MODE_1300,
+	MODE_1200 = CODEC2_MODE_1200,
+      };
+      
+    private:
+
     };
-
+    
   } /* namespace vocoder */
 } /* namespace gr */
 
-#endif /* INCLUDED_VOCODER_CODEC2_ENCODE_SP_IMPL_H */
+#endif /* _VOCODER_CODEC2_H_ */
