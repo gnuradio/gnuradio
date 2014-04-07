@@ -53,7 +53,8 @@ $(gui_hint()($win))</make>
 	<callback>set_title($which, $title)</callback>
 	<callback>set_color($which, $color)</callback>
 	<callback>set_bins($bins)</callback>
-	<callback>set_x_axis($bins)</callback>
+	<callback>set_bins($bins)</callback>
+        <callback>set_x_axis($xmin, $xmax)</callback>
 
         <param_tab_order>
           <tab>General</tab>
