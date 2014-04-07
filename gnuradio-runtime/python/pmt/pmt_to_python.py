@@ -65,35 +65,39 @@ def pmt_from_dict(p):
 
     #(numpy.float32,pmt.init_f32vector, float, pmt.f32vector_elements, pmt.is_f32vector),
 numpy_mappings = {
-    numpy.float32: (pmt.init_f32vector, float, pmt.f32vector_elements, pmt.is_f32vector),
-    numpy.float64: (pmt.init_f64vector, float, pmt.f64vector_elements, pmt.is_f64vector),
-    numpy.complex64: (pmt.init_c32vector, complex, pmt.c32vector_elements, pmt.is_c32vector),
-    numpy.complex128: (pmt.init_c64vector, complex, pmt.c64vector_elements, pmt.is_c64vector),
-    numpy.int8: (pmt.init_s8vector, int, pmt.s8vector_elements, pmt.is_s8vector),
-    numpy.int16: (pmt.init_s16vector, int, pmt.s16vector_elements, pmt.is_s16vector),
-    numpy.int32: (pmt.init_s32vector, int, pmt.s32vector_elements, pmt.is_s32vector),
-#    numpy.int64: (pmt.init_s64vector, int, pmt.s64vector_elements, pmt.is_s64vector),
-    numpy.uint8: (pmt.init_u8vector, int, pmt.u8vector_elements, pmt.is_u8vector),
-    numpy.uint16: (pmt.init_u16vector, int, pmt.u16vector_elements, pmt.is_u16vector),
-    numpy.uint32: (pmt.init_u32vector, int, pmt.u32vector_elements, pmt.is_u32vector),
-#    numpy.uint64: (pmt.init_u64vector, int, pmt.u64vector_elements, pmt.is_u64vector),
-    numpy.byte: (pmt.init_u8vector, int, pmt.u8vector_elements, pmt.is_u8vector),
-    }
+    numpy.dtype(numpy.float32): (pmt.init_f32vector, float, pmt.f32vector_elements, pmt.is_f32vector),
+    numpy.dtype(numpy.float64): (pmt.init_f64vector, float, pmt.f64vector_elements, pmt.is_f64vector),
+    numpy.dtype(numpy.complex64): (pmt.init_c32vector, complex, pmt.c32vector_elements, pmt.is_c32vector),
+    numpy.dtype(numpy.complex128): (pmt.init_c64vector, complex, pmt.c64vector_elements, pmt.is_c64vector),
+    numpy.dtype(numpy.int8): (pmt.init_s8vector, int, pmt.s8vector_elements, pmt.is_s8vector),
+    numpy.dtype(numpy.int16): (pmt.init_s16vector, int, pmt.s16vector_elements, pmt.is_s16vector),
+    numpy.dtype(numpy.int32): (pmt.init_s32vector, int, pmt.s32vector_elements, pmt.is_s32vector),
+#    numpy.dtype(numpy.int64): (pmt.init_s64vector, int, pmt.s64vector_elements, pmt.is_s64vector),
+    numpy.dtype(numpy.uint8): (pmt.init_u8vector, int, pmt.u8vector_elements, pmt.is_u8vector),
+    numpy.dtype(numpy.uint16): (pmt.init_u16vector, int, pmt.u16vector_elements, pmt.is_u16vector),
+    numpy.dtype(numpy.uint32): (pmt.init_u32vector, int, pmt.u32vector_elements, pmt.is_u32vector),
+#    numpy.dtype(numpy.uint64): (pmt.init_u64vector, int, pmt.u64vector_elements, pmt.is_u64vector),
+    numpy.dtype(numpy.byte): (pmt.init_u8vector, int, pmt.u8vector_elements, pmt.is_u8vector),
+}
 
-def numpy_to_uvector(p):
+uvector_mappings = dict([ (numpy_mappings[key][3], (numpy_mappings[key][2], key)) for key in numpy_mappings ])
+
+def numpy_to_uvector(numpy_array):
     try:
-        mapping = numpy_mappings
-        pc = map(mapping[1], p)
-        return mapping[0](p.size, pc)
+        mapping = numpy_mappings[numpy_array.dtype]
+        pc = map(mapping[1], numpy.ravel(numpy_array))
+        return mapping[0](numpy_array.size, pc)
     except KeyError:
-        raise ValueError("unsupported numpy array dtype for converstion to pmt %s"%(p.dtype))
+        raise ValueError("unsupported numpy array dtype for converstion to pmt %s"%(numpy_array.dtype))
 
-def uvector_to_numpy(p):
-    for key in numpy_mappings:
-        m = numpy_mappings[key]
-        if(m[3](p)):
-            return numpy.array(m[2](p), dtype=key);
-    raise ValueError("unsupported numpy array dtype for converstion from pmt %s"%(p))
+def uvector_to_numpy(uvector):
+	match = None
+	for test_func in uvector_mappings.keys():
+		if test_func(uvector):
+			match = uvector_mappings[test_func]
+			return numpy.array(match[0](uvector), dtype = match[1])
+	else:
+		raise ValueError("unsupported uvector data type for conversion to numpy array %s"%(uvector))
 
 THE_TABLE = ( #python type, check pmt type, to python, from python
     (None, pmt.is_null, lambda x: None, lambda x: pmt.PMT_NIL),
