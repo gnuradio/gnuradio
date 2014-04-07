@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2010-2013 Free Software Foundation, Inc.
+ * Copyright 2010-2014 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -27,7 +27,7 @@ static const pmt::pmt_t SOB_KEY = pmt::string_to_symbol("tx_sob");
 static const pmt::pmt_t EOB_KEY = pmt::string_to_symbol("tx_eob");
 static const pmt::pmt_t TIME_KEY = pmt::string_to_symbol("tx_time");
 static const pmt::pmt_t FREQ_KEY = pmt::string_to_symbol("tx_freq");
-static const pmt::pmt_t LO_OFFS_KEY = pmt::string_to_symbol("tx_lo_offset");
+static const pmt::pmt_t COMMAND_KEY = pmt::string_to_symbol("tx_command");
 
 namespace gr {
   namespace uhd {
@@ -124,6 +124,8 @@ namespace gr {
     private:
       //! Like set_center_freq(), but uses _curr_freq and _curr_lo_offset
       ::uhd::tune_result_t _set_center_freq_from_internals(size_t chan);
+      //! Calls _set_center_freq_from_internals() on all channels
+      void _set_center_freq_from_internals_allchans();
       //! Receives commands and handles them
       void msg_handler_command(pmt::pmt_t msg);
       //! Receives queries and posts a response
@@ -157,6 +159,8 @@ namespace gr {
       std::vector<double> _curr_lo_offset;
       //! Stores the last gain value we told the USRP to have for every channel.
       std::vector<double> _curr_gain;
+      std::vector<bool> _chans_to_tune;
+      bool _call_tune;
     };
 
   } /* namespace uhd */
