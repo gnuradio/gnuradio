@@ -63,7 +63,6 @@ def pmt_from_dict(p):
         d = pmt.dict_add(d, python_to_pmt(k), python_to_pmt(v))
     return d
 
-    #(numpy.float32,pmt.init_f32vector, float, pmt.f32vector_elements, pmt.is_f32vector),
 numpy_mappings = {
     numpy.dtype(numpy.float32): (pmt.init_f32vector, float, pmt.f32vector_elements, pmt.is_f32vector),
     numpy.dtype(numpy.float64): (pmt.init_f64vector, float, pmt.f64vector_elements, pmt.is_f64vector),
@@ -99,7 +98,7 @@ def uvector_to_numpy(uvector):
 	else:
 		raise ValueError("unsupported uvector data type for conversion to numpy array %s"%(uvector))
 
-THE_TABLE = ( #python type, check pmt type, to python, from python
+type_mappings = ( #python type, check pmt type, to python, from python
     (None, pmt.is_null, lambda x: None, lambda x: pmt.PMT_NIL),
     (bool, pmt.is_bool, pmt.to_bool, pmt.from_bool),
     (str, pmt.is_symbol, pmt.symbol_to_string, pmt.string_to_symbol),
@@ -115,12 +114,12 @@ THE_TABLE = ( #python type, check pmt type, to python, from python
 )
 
 def pmt_to_python(p):
-    for python_type, pmt_check, to_python, from_python in THE_TABLE:
+    for python_type, pmt_check, to_python, from_python in type_mappings:
         if pmt_check(p): return to_python(p)
     raise ValueError("can't convert %s type to pmt (%s)"%(type(p),p))
 
 def python_to_pmt(p):
-    for python_type, pmt_check, to_python, from_python in THE_TABLE:
+    for python_type, pmt_check, to_python, from_python in type_mappings:
         if python_type is None:
             if p == None: return from_python(p)
         elif isinstance(p, python_type): return from_python(p)
