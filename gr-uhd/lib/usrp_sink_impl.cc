@@ -20,19 +20,20 @@
  * Boston, MA 02110-1301, USA.
  */
 
+#include <climits>
+#include <stdexcept>
 #include "usrp_sink_impl.h"
 #include "gr_uhd_common.h"
 #include <gnuradio/io_signature.h>
 #include <boost/make_shared.hpp>
-#include <stdexcept>
 
 namespace gr {
   namespace uhd {
 
     usrp_sink::sptr
     usrp_sink::make(const ::uhd::device_addr_t &device_addr,
-                    const ::uhd::io_type_t &io_type,
-                    size_t num_channels)
+		    const ::uhd::io_type_t &io_type,
+		    size_t num_channels)
     {
       //fill in the streamer args
       ::uhd::stream_args_t stream_args;
@@ -44,7 +45,7 @@ namespace gr {
 
       stream_args.otw_format = "sc16"; //only sc16 known to work
       for(size_t chan = 0; chan < num_channels; chan++)
-        stream_args.channels.push_back(chan); //linear mapping
+	stream_args.channels.push_back(chan); //linear mapping
 
       return usrp_sink::make(device_addr, stream_args, "");
     }
@@ -67,7 +68,7 @@ namespace gr {
                       io_signature::make(0, 0, 0)),
         _stream_args(stream_args),
         _nchan(stream_args.channels.size()),
-        _stream_now(_nchan == 1),
+        _stream_now(_nchan == 1 and length_tag_name.empty()),
         _start_time_set(false),
         _length_tag_key(length_tag_name.empty() ? pmt::PMT_NIL : pmt::string_to_symbol(length_tag_name)),
         _nitems_to_send(0),
@@ -549,6 +550,10 @@ namespace gr {
         }
       }
 
+      // We send the EOB manually to avoid sending several EOBs in case of fragmentation
+      bool eob = _metadata.end_of_burst;
+      _metadata.end_of_burst = false;
+
 #ifdef GR_UHD_USE_STREAM_API
       //send all ninput_items with metadata
       const size_t num_sent = _tx_stream->send
@@ -564,13 +569,29 @@ namespace gr {
         _nitems_to_send -= long(num_sent);
       }
 
-      if (_call_tune) {
-        _set_center_freq_from_internals_allchans();
-	_call_tune = false;
-      }
-
       //increment the timespec by the number of samples sent
       _metadata.time_spec += ::uhd::time_spec_t(0, num_sent, _sample_rate);
+
+      // Some post-processing tasks if we actually transmitted the entire burst
+      if (num_sent == size_t(ninput_items)) {
+        if (_call_tune) {
+          _set_center_freq_from_internals_allchans();
+          _call_tune = false;
+        }
+
+        if (eob) {
+#ifdef GR_UHD_USE_STREAM_API
+          _metadata.end_of_burst = true;
+          _tx_stream->send
+            (gr_vector_const_void_star(_nchan), 0, _metadata, 1.0);
+#else
+          _dev->get_device()->send
+            (gr_vector_const_void_star(_nchan), 0, _metadata,
+             *_type, ::uhd::device::SEND_MODE_ONE_PACKET, 1.0);
+#endif
+        }
+      }
+
       return num_sent;
     }
 
@@ -589,16 +610,21 @@ namespace gr {
 
       // Go through tag list until something indicates the end of a burst.
       bool found_eob = false;
-      bool found_in_burst_cmd_tag = false;
-      uint64_t in_burst_cmd_offset = 0;
+      bool found_freq_tag_in_burst = false;
+      uint64_t freq_cmd_offset = 0;
+      double freq_cmd_freq;
+      int freq_cmd_chan;
       BOOST_FOREACH(const tag_t &my_tag, _tags) {
         const uint64_t my_tag_count = my_tag.offset;
         const pmt::pmt_t &key = my_tag.key;
         const pmt::pmt_t &value = my_tag.value;
 
-        if (my_tag_count > max_count) {
+        if (my_tag_count >= max_count) {
           break;
         }
+	else if (not pmt::is_null(_length_tag_key) and my_tag_count > samp0_count + _nitems_to_send) {
+          break;
+	}
 
         /* I. Bursts that can only be on the first sample of burst
          *
@@ -612,7 +638,7 @@ namespace gr {
          * we stop before that tag so they are on the first item the next time round.
          */
         else if (pmt::equal(key, COMMAND_KEY)) {
-          if (my_tag.offset != samp0_count) {
+          if (my_tag_count != samp0_count) {
             max_count = my_tag_count;
             break;
           }
@@ -621,7 +647,7 @@ namespace gr {
 
         //set the time specification in the metadata
         else if(pmt::equal(key, TIME_KEY)) {
-          if (my_tag.offset != samp0_count) {
+          if (my_tag_count != samp0_count) {
             max_count = my_tag_count;
             break;
           }
@@ -642,14 +668,14 @@ namespace gr {
 
         //length_tag found; set the start of burst flag in the metadata
         else if(not pmt::is_null(_length_tag_key) and pmt::equal(key, _length_tag_key)) {
-          if (my_tag.offset != samp0_count) {
+          if (my_tag_count != samp0_count) {
             max_count = my_tag_count;
-            break;
+	    break;
           }
           //If there are still items left to send, the current burst has been preempted.
           //Set the items remaining counter to the new burst length. Notify the user of
           //the tag preemption.
-          if(_nitems_to_send > 0) {
+	  else if(_nitems_to_send > 0) {
               std::cerr << "tP" << std::flush;
           }
           _nitems_to_send = pmt::to_long(value);
@@ -659,23 +685,30 @@ namespace gr {
         /* II. Bursts that can be on the first OR last sample of a burst
          *
          * This includes:
-         * - tx_freq
+         * - tx_freq (tags that don't actually change the frequency are ignored)
          *
          * With these tags, we check if they're at the start of a burst, and do
          * the appropriate action. Otherwise, make sure the corresponding sample
          * is the last one.
          */
-        else if(pmt::equal(key, FREQ_KEY)) {
-          if (my_tag.offset != samp0_count) {
-            max_count = my_tag_count + 1;
-          }
+	else if (pmt::equal(key, FREQ_KEY) and my_tag_count == samp0_count) {
           int chan = pmt::to_long(pmt::tuple_ref(value, 0));
           double new_freq = pmt::to_double(pmt::tuple_ref(value, 1));
           if (new_freq != _curr_freq[chan]) {
-            found_in_burst_cmd_tag = true;
-            in_burst_cmd_offset = my_tag_count;
-            _chans_to_tune[chan] = true;
-            _curr_freq[chan] = new_freq;
+	      _curr_freq[chan] = new_freq;
+	      _set_center_freq_from_internals(chan);
+	  }
+	}
+
+        else if(pmt::equal(key, FREQ_KEY) and not found_freq_tag_in_burst) {
+          int chan = pmt::to_long(pmt::tuple_ref(value, 0));
+          double new_freq = pmt::to_double(pmt::tuple_ref(value, 1));
+          if (new_freq != _curr_freq[chan]) {
+	    freq_cmd_freq = new_freq;
+            freq_cmd_chan = chan;
+	    freq_cmd_offset = my_tag_count;
+	    max_count = my_tag_count + 1;
+	    found_freq_tag_in_burst = true;
           }
         }
 
@@ -697,30 +730,25 @@ namespace gr {
         found_eob = true;
       }
 
-      if (found_in_burst_cmd_tag and in_burst_cmd_offset == samp0_count) {
-        // Currently, this means there's a tx_freq tag in there
-        // If it's at the beginning of the burst, tune immediately
-        for (size_t chan = 0; chan < _nchan; chan++) {
-          if (_chans_to_tune[chan]) {
-            _set_center_freq_from_internals(chan);
-          }
+      if (found_freq_tag_in_burst) {
+        if (not found_eob) {
+          // If it's in the middle of a burst, only send() until before the tag
+          max_count = freq_cmd_offset;
+        } else if (freq_cmd_offset < max_count) {
+          // Otherwise, tune after work()
+	  _curr_freq[freq_cmd_chan] = freq_cmd_freq;
+	  _chans_to_tune[freq_cmd_chan] = true;
+          _call_tune = true;
         }
-      } else if (not found_eob) {
-        // If it's in the middle of a burst, only send() until before the tag
-        max_count = in_burst_cmd_offset;
-      } else {
-	// Otherwise, tune after work()
-        _call_tune = true;
       }
 
       // Only transmit up to and including end of burst,
       // or everything if no burst boundaries are found.
-      ninput_items = max_count - samp0_count;
+      ninput_items = int(max_count - samp0_count);
 
       // TODO unset has_time_spec for bursty behaviour w/o time!
-
       //time will not be set unless a time tag is found
-      _metadata.has_time_spec = false;
+      //_metadata.has_time_spec = false;
 
     } // end tag_work()
 

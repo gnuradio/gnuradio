@@ -27,6 +27,7 @@
 #include <gnuradio/sync_block.h>
 #include <uhd/usrp/multi_usrp.hpp>
 
+// TODO In 3.8, UHD 3.4 will be required and we can remove all these ifdefs
 #ifndef INCLUDED_UHD_STREAM_HPP
 namespace uhd {
   struct GR_UHD_API stream_args_t
@@ -61,11 +62,14 @@ namespace gr {
 
       /*!
        * \brief DEPRECATED Make a new USRP sink block using the deprecated io_type_t.
+       *
+       * This function will go away in 3.8.
+       *
        * \ingroup uhd_blk
        */
       static sptr make(const ::uhd::device_addr_t &device_addr,
-                       const ::uhd::io_type_t &io_type,
-                       size_t num_channels);
+		       const ::uhd::io_type_t &io_type,
+		       size_t num_channels);
 
       /*!
        * \brief Make a new USRP sink block.

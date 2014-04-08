@@ -27,8 +27,8 @@ MAIN_TMPL = """\
 	<import>from gnuradio import uhd</import>
 	<import>import time</import>
 	<make>uhd.usrp_$(sourk)(
-	device_addr=\$dev_addr,
-	stream_args=uhd.stream_args(
+	\$dev_addr,
+	uhd.stream_args(
 		cpu_format="\$type",
 		\#if \$otw()
 		otw_format=\$otw,
@@ -438,7 +438,7 @@ LENTAG_PARAM = """	<param>
 
 LENTAG_ARG = """
 	#if $len_tag_name()
-	length_tag_name=$len_tag_name,
+	$len_tag_name,
 	#end if"""
 
 def parse_tmpl(_tmpl, **kwargs):
