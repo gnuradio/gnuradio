@@ -212,7 +212,7 @@ int lpc_to_lsp (float *a, int lpcrdr, float *freq, int nb, float delta)
            interval between xl and xr and repeat till root is located
            within the specified limits  */
 
-	    if((psumr*psuml)<0.0){
+	    if(((psumr*psuml)<0.0) || (psumr == 0.0)){
 		roots++;
 
 		psumm=psuml;
