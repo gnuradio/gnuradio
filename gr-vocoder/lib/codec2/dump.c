@@ -32,6 +32,13 @@
 #include <string.h>
 #include <math.h>
 
+#ifdef __EMBEDDED__
+#include "gdb_stdio.h"
+#define fprintf gdb_stdio_fprintf
+#define fopen gdb_stdio_fopen
+#define fclose gdb_stdio_fclose
+#endif
+
 #ifdef DUMP
 static int dumpon = 0;
 
@@ -41,8 +48,12 @@ static FILE *few = NULL;
 static FILE *fsw_ = NULL;
 static FILE *fmodel = NULL;
 static FILE *fqmodel = NULL;
+static FILE *fpwb = NULL;
 static FILE *fpw = NULL;
+static FILE *frw = NULL;
 static FILE *flsp = NULL;
+static FILE *fweights = NULL;
+static FILE *flsp_ = NULL;
 static FILE *fphase = NULL;
 static FILE *fphase_ = NULL;
 static FILE *ffw = NULL;
@@ -50,11 +61,13 @@ static FILE *fe = NULL;
 static FILE *fsq = NULL;
 static FILE *fdec = NULL;
 static FILE *fsnr = NULL;
+static FILE *flpcsnr = NULL;
 static FILE *fak = NULL;
+static FILE *fak_ = NULL;
 static FILE *fbg = NULL;
 static FILE *fE = NULL;
 static FILE *frk = NULL;
-static FILE *fres = NULL;
+static FILE *fhephase = NULL;
 
 static char  prefix[MAX_STR];
 
@@ -76,10 +89,18 @@ void dump_off(){
 	fclose(fmodel);
     if (fqmodel != NULL)
 	fclose(fqmodel);
+    if (fpwb != NULL)
+	fclose(fpwb);
     if (fpw != NULL)
 	fclose(fpw);
+    if (frw != NULL)
+	fclose(frw);
     if (flsp != NULL)
 	fclose(flsp);
+    if (fweights != NULL)
+	fclose(fweights);
+    if (flsp_ != NULL)
+	fclose(flsp_);
     if (fphase != NULL)
 	fclose(fphase);
     if (fphase_ != NULL)
@@ -94,16 +115,20 @@ void dump_off(){
 	fclose(fdec);
     if (fsnr != NULL)
 	fclose(fsnr);
+    if (flpcsnr != NULL)
+	fclose(flpcsnr);
     if (fak != NULL)
 	fclose(fak);
+    if (fak_ != NULL)
+	fclose(fak_);
     if (fbg != NULL)
 	fclose(fbg);
     if (fE != NULL)
 	fclose(fE);
     if (frk != NULL)
 	fclose(frk);
-    if (fres != NULL)
-	fclose(fres);
+    if (fhephase != NULL)
+	fclose(fhephase);
 }
 
 void dump_Sn(float Sn[]) {
@@ -186,6 +211,7 @@ void dump_Ew(COMP Ew[]) {
 void dump_model(MODEL *model) {
     int l;
     char s[MAX_STR];
+    char line[2048];
 
     if (!dumpon) return;
 
@@ -195,18 +221,25 @@ void dump_model(MODEL *model) {
 	assert(fmodel != NULL);
     }
 
-    fprintf(fmodel,"%f\t%d\t", model->Wo, model->L);
-    for(l=1; l<=model->L; l++)
-	fprintf(fmodel,"%f\t",model->A[l]);
-    for(l=model->L+1; l<MAX_AMP; l++)
-	fprintf(fmodel,"0.0\t");
-    fprintf(fmodel,"%d\t",model->voiced);
-    fprintf(fmodel,"\n");
+    sprintf(line,"%12f %12d ", model->Wo, model->L);
+    for(l=1; l<=model->L; l++) {
+	sprintf(s,"%12f ",model->A[l]);
+        strcat(line, s);
+    }
+    for(l=model->L+1; l<=MAX_AMP; l++) {
+	sprintf(s,"%12f ", 0.0);
+        strcat(line,s);
+    }
+
+    sprintf(s,"%d\n",model->voiced);
+    strcat(line,s);
+    fprintf(fmodel,"%s",line);
 }
 
 void dump_quantised_model(MODEL *model) {
     int l;
     char s[MAX_STR];
+    char line[2048];
 
     if (!dumpon) return;
 
@@ -216,32 +249,19 @@ void dump_quantised_model(MODEL *model) {
 	assert(fqmodel != NULL);
     }
 
-    fprintf(fqmodel,"%f\t%d\t", model->Wo, model->L);
-    for(l=1; l<=model->L; l++)
-	fprintf(fqmodel,"%f\t",model->A[l]);
-    for(l=model->L+1; l<MAX_AMP; l++)
-	fprintf(fqmodel,"0.0\t");
-    fprintf(fqmodel,"\n");
-}
-
-void dump_resample(float w[], float A[], int n) {
-    int l;
-    char s[MAX_STR];
-
-    if (!dumpon) return;
-
-    if (fres == NULL) {
-	sprintf(s,"%s_res.txt", prefix);
-	fres = fopen(s, "wt");
-	assert(fres != NULL);
+    sprintf(line,"%12f %12d ", model->Wo, model->L);
+    for(l=1; l<=model->L; l++) {
+	sprintf(s,"%12f ",model->A[l]);
+        strcat(line, s);
+    }
+    for(l=model->L+1; l<=MAX_AMP; l++) {
+	sprintf(s,"%12f ", 0.0);
+        strcat(line, s);
     }
 
-    fprintf(fres,"%d\t",n);
-    for(l=0; l<n; l++)
-	fprintf(fres,"%f\t",w[l]);
-    for(l=0; l<n; l++)
-	fprintf(fres,"%f\t",A[l]);
-    fprintf(fres,"\n");
+    sprintf(s,"%d\n",model->voiced);
+    strcat(line, s);
+    fprintf(fqmodel, "%s", line);
 }
 
 void dump_phase(float phase[], int L) {
@@ -258,7 +278,7 @@ void dump_phase(float phase[], int L) {
 
     for(l=1; l<=L; l++)
 	fprintf(fphase,"%f\t",phase[l]);
-    for(l=L+1; l<MAX_AMP; l++)
+    for(l=L+1; l<=MAX_AMP; l++)
 	fprintf(fphase,"%f\t",0.0);
     fprintf(fphase,"\n");
 }
@@ -282,6 +302,25 @@ void dump_phase_(float phase_[], int L) {
     fprintf(fphase_,"\n");
 }
 
+
+void dump_hephase(int ind[], int dim) {
+    int m;
+    char s[MAX_STR];
+
+    if (!dumpon) return;
+
+    if (fhephase == NULL) {
+	sprintf(s,"%s_hephase.txt", prefix);
+	fhephase = fopen(s, "wt");
+	assert(fhephase != NULL);
+    }
+
+    for(m=0; m<dim; m++)
+	fprintf(fhephase,"%d\t",ind[m]);
+    fprintf(fhephase,"\n");
+}
+
+
 void dump_snr(float snr) {
     char s[MAX_STR];
 
@@ -296,6 +335,39 @@ void dump_snr(float snr) {
     fprintf(fsnr,"%f\n",snr);
 }
 
+void dump_lpc_snr(float snr) {
+    char s[MAX_STR];
+
+    if (!dumpon) return;
+
+    if (flpcsnr == NULL) {
+	sprintf(s,"%s_lpc_snr.txt", prefix);
+	flpcsnr = fopen(s, "wt");
+	assert(flpcsnr != NULL);
+    }
+
+    fprintf(flpcsnr,"%f\n",snr);
+}
+
+/* Pw "before" post filter so we can plot before and after */
+
+void dump_Pwb(COMP Pwb[]) {
+    int i;
+    char s[MAX_STR];
+
+    if (!dumpon) return;
+
+    if (fpwb == NULL) {
+	sprintf(s,"%s_pwb.txt", prefix);
+	fpwb = fopen(s, "wt");
+	assert(fpwb != NULL);
+    }
+
+    for(i=0; i<FFT_ENC/2; i++)
+	fprintf(fpwb,"%f\t",Pwb[i].real);
+    fprintf(fpwb,"\n");
+}
+
 void dump_Pw(COMP Pw[]) {
     int i;
     char s[MAX_STR];
@@ -308,9 +380,43 @@ void dump_Pw(COMP Pw[]) {
 	assert(fpw != NULL);
     }
 
-    for(i=0; i<FFT_DEC/2; i++)
+    for(i=0; i<FFT_ENC/2; i++)
 	fprintf(fpw,"%f\t",Pw[i].real);
     fprintf(fpw,"\n");
+}
+
+void dump_Rw(float Rw[]) {
+    int i;
+    char s[MAX_STR];
+
+    if (!dumpon) return;
+
+    if (frw == NULL) {
+	sprintf(s,"%s_rw.txt", prefix);
+	frw = fopen(s, "wt");
+	assert(frw != NULL);
+    }
+
+    for(i=0; i<FFT_ENC/2; i++)
+	fprintf(frw,"%f\t",Rw[i]);
+    fprintf(frw,"\n");
+}
+
+void dump_weights(float w[], int order) {
+    int i;
+    char s[MAX_STR];
+
+    if (!dumpon) return;
+
+    if (fweights == NULL) {
+	sprintf(s,"%s_weights.txt", prefix);
+	fweights = fopen(s, "wt");
+	assert(fweights != NULL);
+    }
+
+    for(i=0; i<order; i++)
+	fprintf(fweights,"%f\t", w[i]);
+    fprintf(fweights,"\n");
 }
 
 void dump_lsp(float lsp[]) {
@@ -330,6 +436,23 @@ void dump_lsp(float lsp[]) {
     fprintf(flsp,"\n");
 }
 
+void dump_lsp_(float lsp_[]) {
+    int i;
+    char s[MAX_STR];
+
+    if (!dumpon) return;
+
+    if (flsp_ == NULL) {
+	sprintf(s,"%s_lsp_.txt", prefix);
+	flsp_ = fopen(s, "wt");
+	assert(flsp_ != NULL);
+    }
+
+    for(i=0; i<10; i++)
+	fprintf(flsp_,"%f\t",lsp_[i]);
+    fprintf(flsp_,"\n");
+}
+
 void dump_ak(float ak[], int order) {
     int i;
     char s[MAX_STR];
@@ -345,6 +468,23 @@ void dump_ak(float ak[], int order) {
     for(i=0; i<=order; i++)
 	fprintf(fak,"%f\t",ak[i]);
     fprintf(fak,"\n");
+}
+
+void dump_ak_(float ak_[], int order) {
+    int i;
+    char s[MAX_STR];
+
+    if (!dumpon) return;
+
+    if (fak_ == NULL) {
+	sprintf(s,"%s_ak_.txt", prefix);
+	fak_ = fopen(s, "wt");
+	assert(fak_ != NULL);
+    }
+
+    for(i=0; i<=order; i++)
+	fprintf(fak_,"%f\t",ak_[i]);
+    fprintf(fak_,"\n");
 }
 
 void dump_Fw(COMP Fw[]) {

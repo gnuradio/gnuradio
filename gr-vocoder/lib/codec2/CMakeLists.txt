@@ -73,20 +73,101 @@ add_custom_command(
 )
 
 ########################################################################
-# Create codebookdvq
+# Create codebookvq
 ########################################################################
-set(CODEBOOKSDVQ
-    ${CMAKE_CURRENT_SOURCE_DIR}/codebook/dlsp1.txt
-    ${CMAKE_CURRENT_SOURCE_DIR}/codebook/dlsp2.txt
-    ${CMAKE_CURRENT_SOURCE_DIR}/codebook/dlsp3.txt
-    ${CMAKE_CURRENT_SOURCE_DIR}/codebook/dlsp4.txt
-    ${CMAKE_CURRENT_SOURCE_DIR}/codebook/dlsp5.txt
+set(CODEBOOKSVQ
+    ${CMAKE_CURRENT_SOURCE_DIR}/codebook/lsp1.txt
+    ${CMAKE_CURRENT_SOURCE_DIR}/codebook/lsp2.txt
+    ${CMAKE_CURRENT_SOURCE_DIR}/codebook/lsp3.txt
+    ${CMAKE_CURRENT_SOURCE_DIR}/codebook/lsp4.txt
+    ${CMAKE_CURRENT_SOURCE_DIR}/codebook/lsp45678910.txt
 )
 
 add_custom_command(
-    OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/codebookdvq.c
-    DEPENDS generate_codebook ${CODEBOOKSDVQ}
-    COMMAND generate_codebook lsp_cbdvq ${CODEBOOKSDVQ} > ${CMAKE_CURRENT_BINARY_DIR}/codebookdvq.c
+    OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/codebookvq.c
+    DEPENDS generate_codebook ${CODEBOOKSVQ}
+    COMMAND generate_codebook lsp_cbvq ${CODEBOOKSVQ} > ${CMAKE_CURRENT_BINARY_DIR}/codebookvq.c
+)
+
+########################################################################
+# Create codebookjnd
+########################################################################
+set(CODEBOOKSJND
+    ${CMAKE_CURRENT_SOURCE_DIR}/codebook/lsp1.txt
+    ${CMAKE_CURRENT_SOURCE_DIR}/codebook/lsp2.txt
+    ${CMAKE_CURRENT_SOURCE_DIR}/codebook/lsp3.txt
+    ${CMAKE_CURRENT_SOURCE_DIR}/codebook/lsp4.txt
+    ${CMAKE_CURRENT_SOURCE_DIR}/codebook/lspjnd5-10.txt
+)
+
+add_custom_command(
+    OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/codebookjnd.c
+    DEPENDS generate_codebook ${CODEBOOKSJND}
+    COMMAND generate_codebook lsp_cbjnd ${CODEBOOKSJND} > ${CMAKE_CURRENT_BINARY_DIR}/codebookjnd.c
+)
+
+########################################################################
+# Create codebookjvm
+########################################################################
+set(CODEBOOKSJVM
+    ${CMAKE_CURRENT_SOURCE_DIR}/codebook/lspjvm1.txt
+    ${CMAKE_CURRENT_SOURCE_DIR}/codebook/lspjvm2.txt
+    ${CMAKE_CURRENT_SOURCE_DIR}/codebook/lspjvm3.txt
+)
+
+add_custom_command(
+    OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/codebookjvm.c
+    DEPENDS generate_codebook ${CODEBOOKSJVM}
+    COMMAND generate_codebook lsp_cbjvm ${CODEBOOKSJVM} > ${CMAKE_CURRENT_BINARY_DIR}/codebookjvm.c
+)
+
+########################################################################
+# Create codebookvqanssi
+########################################################################
+set(CODEBOOKSVQANSSI
+    ${CMAKE_CURRENT_SOURCE_DIR}/codebook/lspvqanssi1.txt
+    ${CMAKE_CURRENT_SOURCE_DIR}/codebook/lspvqanssi2.txt
+    ${CMAKE_CURRENT_SOURCE_DIR}/codebook/lspvqanssi3.txt
+    ${CMAKE_CURRENT_SOURCE_DIR}/codebook/lspvqanssi4.txt
+)
+
+add_custom_command(
+    OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/codebookvqanssi.c
+    DEPENDS generate_codebook ${CODEBOOKSVQANSSI}
+    COMMAND generate_codebook lsp_cbvqanssi ${CODEBOOKSVQANSSI} > ${CMAKE_CURRENT_BINARY_DIR}/codebookvqanssi.c
+)
+
+########################################################################
+# Create codebookdt
+########################################################################
+set(CODEBOOKSDT
+    ${CMAKE_CURRENT_SOURCE_DIR}/codebook/lspdt1.txt
+    ${CMAKE_CURRENT_SOURCE_DIR}/codebook/lspdt2.txt
+    ${CMAKE_CURRENT_SOURCE_DIR}/codebook/lspdt3.txt
+    ${CMAKE_CURRENT_SOURCE_DIR}/codebook/lspdt4.txt
+    ${CMAKE_CURRENT_SOURCE_DIR}/codebook/lspdt5.txt
+    ${CMAKE_CURRENT_SOURCE_DIR}/codebook/lspdt6.txt
+    ${CMAKE_CURRENT_SOURCE_DIR}/codebook/lspdt7.txt
+    ${CMAKE_CURRENT_SOURCE_DIR}/codebook/lspdt8.txt
+    ${CMAKE_CURRENT_SOURCE_DIR}/codebook/lspdt9.txt
+    ${CMAKE_CURRENT_SOURCE_DIR}/codebook/lspdt10.txt
+)
+
+add_custom_command(
+    OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/codebookdt.c
+    DEPENDS generate_codebook ${CODEBOOKSDT}
+    COMMAND generate_codebook lsp_cbdt ${CODEBOOKSDT} > ${CMAKE_CURRENT_BINARY_DIR}/codebookdt.c
+)
+
+########################################################################
+# Create codebookge
+########################################################################
+set(CODEBOOKSGE ${CMAKE_CURRENT_SOURCE_DIR}/codebook/gecb.txt)
+
+add_custom_command(
+    OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/codebookge.c
+    DEPENDS generate_codebook ${CODEBOOKSGE}
+    COMMAND generate_codebook ge_cb ${CODEBOOKSGE} > ${CMAKE_CURRENT_BINARY_DIR}/codebookge.c
 )
 
 ########################################################################
@@ -95,7 +176,13 @@ add_custom_command(
 list(APPEND gr_vocoder_sources
     ${CMAKE_CURRENT_BINARY_DIR}/codebook.c
     ${CMAKE_CURRENT_BINARY_DIR}/codebookd.c
-    ${CMAKE_CURRENT_BINARY_DIR}/codebookdvq.c
+    ${CMAKE_CURRENT_BINARY_DIR}/codebookvq.c
+    ${CMAKE_CURRENT_BINARY_DIR}/codebookjnd.c
+    ${CMAKE_CURRENT_BINARY_DIR}/codebookjvm.c
+    ${CMAKE_CURRENT_BINARY_DIR}/codebookvqanssi.c
+    ${CMAKE_CURRENT_BINARY_DIR}/codebookdt.c
+    ${CMAKE_CURRENT_BINARY_DIR}/codebookge.c
+
 
     ${CMAKE_CURRENT_SOURCE_DIR}/dump.c
     ${CMAKE_CURRENT_SOURCE_DIR}/lpc.c
@@ -103,7 +190,8 @@ list(APPEND gr_vocoder_sources
     ${CMAKE_CURRENT_SOURCE_DIR}/postfilter.c
     ${CMAKE_CURRENT_SOURCE_DIR}/sine.c
     ${CMAKE_CURRENT_SOURCE_DIR}/codec2.c
-    ${CMAKE_CURRENT_SOURCE_DIR}/fft.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/fifo.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/fdmdv.c
     ${CMAKE_CURRENT_SOURCE_DIR}/kiss_fft.c
     ${CMAKE_CURRENT_SOURCE_DIR}/interp.c
     ${CMAKE_CURRENT_SOURCE_DIR}/lsp.c
