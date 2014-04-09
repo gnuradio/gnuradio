@@ -370,3 +370,6 @@ TOOLS_RUN_FDESIGN = Action(
     tooltip='Execute gr_filter_design',
     stock_id=gtk.STOCK_EXECUTE,
 )
+TOOLS_MORE_TO_COME = Action(
+    label='More to come',
+)
