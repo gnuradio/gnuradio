@@ -24,7 +24,6 @@ _platform = None
 _config_parser = ConfigParser.ConfigParser()
 
 def file_extension(): return '.'+_platform.get_key()
-def _prefs_file(): return os.environ.get('GRC_PREFS_PATH', os.path.join(os.path.expanduser('~'), file_extension()))
 
 def load(platform):
     global _platform
@@ -32,12 +31,10 @@ def load(platform):
     #create sections
     _config_parser.add_section('main')
     _config_parser.add_section('files_open')
-    print "Reading preferences from:", _prefs_file()
-    try: _config_parser.read(_prefs_file())
+    try: _config_parser.read(_platform.get_prefs_file())
     except: pass
 def save():
-    print "Writing preferences to:", _prefs_file()
-    try: _config_parser.write(open(_prefs_file(), 'w'))
+    try: _config_parser.write(open(_platform.get_prefs_file(), 'w'))
     except: pass
 
 ###########################################################################

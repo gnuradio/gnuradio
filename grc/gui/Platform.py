@@ -20,4 +20,9 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 from Element import Element
 
 class Platform(Element):
-    def __init__(self): Element.__init__(self)
+    def __init__(self, prefs_file):
+        Element.__init__(self)
+
+        self._prefs_file = prefs_file
+
+    def get_prefs_file(self): return self._prefs_file

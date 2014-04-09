@@ -30,7 +30,7 @@ from Param import Param as _Param
 from Generator import Generator
 from Constants import \
     HIER_BLOCKS_LIB_DIR, BLOCK_DTD, \
-    DEFAULT_FLOW_GRAPH, BLOCKS_DIRS
+    DEFAULT_FLOW_GRAPH, BLOCKS_DIRS, PREFS_FILE
 import Constants
 
 COLORS = [(name, color) for name, key, sizeof, color in Constants.CORE_TYPES]
@@ -43,21 +43,10 @@ class Platform(_Platform, _GUIPlatform):
         """
         #ensure hier dir
         if not os.path.exists(HIER_BLOCKS_LIB_DIR): os.mkdir(HIER_BLOCKS_LIB_DIR)
-        #convert block paths to absolute paths
-        # Create a mapping from the absolute path to what was passed in
-        user_to_abs_path = map(lambda x: (os.path.abspath(x), x), BLOCKS_DIRS)
-        # Keep each unique absolute path and maintain order
-        paths_dict = OrderedDict(user_to_abs_path)
-        # Prepare the ordered, unique absolute path list for _Platform
-        block_paths = paths_dict.keys()
-        # Print out the paths that are used (differently, depending on whether they
-        #   were transformed from their original state)
-        print "Block paths:"
-        for p in block_paths:
-            if p != paths_dict[p]:
-                print "\t%s (%s)" % (paths_dict[p], p)
-            else:
-                print "\t%s" % (p)
+        # Convert block paths to absolute paths:
+        # - Create a mapping from the absolute path to what was passed in
+        # - Keep each unique absolute path and maintain order
+        block_paths = OrderedDict(map(lambda x: (os.path.abspath(x), x), BLOCKS_DIRS))
         #init
         _Platform.__init__(
             self,
@@ -72,7 +61,11 @@ class Platform(_Platform, _GUIPlatform):
             generator=Generator,
             colors=COLORS,
         )
-        _GUIPlatform.__init__(self)
+
+        _GUIPlatform.__init__(
+            self,
+            prefs_file=PREFS_FILE
+        )
 
     ##############################################
     # Constructors
