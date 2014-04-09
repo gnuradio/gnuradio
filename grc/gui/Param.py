@@ -23,6 +23,7 @@ import pygtk
 pygtk.require('2.0')
 import gtk
 import Colors
+import os
 
 class InputParam(gtk.HBox):
     """The base class for an input parameter inside the input parameters dialog."""
@@ -130,6 +131,44 @@ class EnumEntryParam(InputParam):
             self._input.get_child().modify_base(gtk.STATE_NORMAL, Colors.ENTRYENUM_CUSTOM_COLOR)
             self._input.get_child().modify_text(gtk.STATE_NORMAL, Colors.PARAM_ENTRY_TEXT_COLOR)
 
+
+class FileParam(EntryParam):
+    """Provide an entry box for filename and a button to browse for a file."""
+
+    def __init__(self, *args, **kwargs):
+        EntryParam.__init__(self, *args, **kwargs)
+        input = gtk.Button('...')
+        input.connect('clicked', self._handle_clicked)
+        self.pack_start(input, False)
+
+    def _handle_clicked(self, widget=None):
+        """
+        If the button was clicked, open a file dialog in open/save format.
+        Replace the text in the entry with the new filename from the file dialog.
+        """
+        #get the paths
+        file_path = self.param.is_valid() and self.param.get_evaluated() or ''
+        (dirname, basename) = os.path.isfile(file_path) and os.path.split(file_path) or (file_path, '')
+        if not os.path.exists(dirname): dirname = os.getcwd() #fix bad paths
+        #build the dialog
+        if self.param.get_type() == 'file_open':
+            file_dialog = gtk.FileChooserDialog('Open a Data File...', None,
+                gtk.FILE_CHOOSER_ACTION_OPEN, ('gtk-cancel',gtk.RESPONSE_CANCEL,'gtk-open',gtk.RESPONSE_OK))
+        elif self.param.get_type() == 'file_save':
+            file_dialog = gtk.FileChooserDialog('Save a Data File...', None,
+                gtk.FILE_CHOOSER_ACTION_SAVE, ('gtk-cancel',gtk.RESPONSE_CANCEL, 'gtk-save',gtk.RESPONSE_OK))
+            file_dialog.set_do_overwrite_confirmation(True)
+            file_dialog.set_current_name(basename) #show the current filename
+        file_dialog.set_current_folder(dirname) #current directory
+        file_dialog.set_select_multiple(False)
+        file_dialog.set_local_only(True)
+        if gtk.RESPONSE_OK == file_dialog.run(): #run the dialog
+            file_path = file_dialog.get_filename() #get the file path
+            self._input.set_text(file_path)
+            self._handle_changed()
+        file_dialog.destroy() #destroy the dialog
+
+
 PARAM_MARKUP_TMPL="""\
 #set $foreground = $param.is_valid() and 'black' or 'red'
 <span foreground="$foreground" font_desc="Sans 7.5"><b>$encode($param.get_name()): </b>$encode(repr($param))</span>"""
@@ -179,8 +218,15 @@ class Param(Element):
         Returns:
             gtk input class
         """
-        if self.is_enum(): return EnumParam(self, *args, **kwargs)
-        if self.get_options(): return EnumEntryParam(self, *args, **kwargs)
+        if self.get_type() in ('file_open', 'file_save'):
+            return FileParam(self, *args, **kwargs)
+
+        elif self.is_enum():
+            return EnumParam(self, *args, **kwargs)
+
+        elif self.get_options():
+            return EnumEntryParam(self, *args, **kwargs)
+
         return EntryParam(self, *args, **kwargs)
 
     def get_markup(self):
