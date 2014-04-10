@@ -37,10 +37,10 @@ namespace gr {
       : public mpsk_receiver_cc, public blocks::control_loop
     {
     public:
-      mpsk_receiver_cc_impl(unsigned int M, float theta, 
+      mpsk_receiver_cc_impl(unsigned int M, float theta,
 			    float loop_bw,
 			    float fmin, float fmax,
-			    float mu, float gain_mu, 
+			    float mu, float gain_mu,
 			    float omega, float gain_omega, float omega_rel);
       ~mpsk_receiver_cc_impl();
 
@@ -79,9 +79,9 @@ namespace gr {
 
       //! Sets value of mu
       void set_mu(float mu) { d_mu = mu; }
-  
-      //! Sets value of omega and its min and max values 
-      void set_omega(float omega) { 
+
+      //! Sets value of omega and its min and max values
+      void set_omega(float omega) {
 	d_omega = omega;
 	d_min_omega = omega*(1.0 - d_omega_rel);
 	d_max_omega = omega*(1.0 + d_omega_rel);
@@ -96,7 +96,7 @@ namespace gr {
 
       //! Sets the relative omega limit and resets omega min/max values
       void set_gain_omega_rel(float omega_rel);
-  
+
     protected:
       void make_constellation();
       void mm_sampler(const gr_complex symbol);
@@ -174,7 +174,7 @@ namespace gr {
        * \returns the index to d_constellation that minimizes the error/
        */
       unsigned int decision_bpsk(gr_complex sample) const;
-  
+
       /*!
        * \brief Decision maker for QPSK constellation.
        *
@@ -193,7 +193,7 @@ namespace gr {
       float        d_theta;
 
       /*!
-       * \brief Decision maker function pointer 
+       * \brief Decision maker function pointer
        *
        * \param sample the baseband I&Q sample from which to make the decision
        *
@@ -215,7 +215,7 @@ namespace gr {
       gr_complex d_c_2T, d_c_1T, d_c_0T;
 
       /*!
-       * \brief Phase error detector function pointer 
+       * \brief Phase error detector function pointer
        *
        * \param sample the I&Q sample from which to determine the phase error
        *
@@ -227,13 +227,13 @@ namespace gr {
 
       //! get interpolated value
       gr::filter::mmse_fir_interpolator_cc *d_interp;
-  
+
       //! delay line length.
       static const unsigned int DLLEN = 8;
-  
+
       //! delay line plus some length for overflow protection
       __GR_ATTR_ALIGNED(8) gr_complex d_dl[2*DLLEN];
-  
+
       //! index to delay line
       unsigned int d_dl_idx;
     };

@@ -1,19 +1,19 @@
 /* -*- c++ -*- */
 /*
  * Copyright 2006,2011,2012 Free Software Foundation, Inc.
- * 
+ *
  * This file is part of GNU Radio
- * 
+ *
  * GNU Radio is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3, or (at your option)
  * any later version.
- * 
+ *
  * GNU Radio is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with GNU Radio; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 51 Franklin Street,
@@ -30,7 +30,7 @@
 namespace gr {
   namespace digital {
 
-    /*! 
+    /*!
      * \brief A Costas loop carrier recovery module.
      * \ingroup synchronizers_blk
      *
@@ -54,20 +54,20 @@ namespace gr {
      * signal processing, pp. 20-36, 2002.
      *
      * http://rfdesign.com/images/archive/0102Feigin20.pdf
-     *  
+     *
      * The Costas loop can have two output streams:
      * \li stream 1 (required) is the baseband I and Q;
      * \li stream 2 (optional) is the normalized frequency of the loop
      */
     class DIGITAL_API costas_loop_cc
-      : virtual public sync_block, 
+      : virtual public sync_block,
         virtual public blocks::control_loop
     {
     public:
       // gr::digital::costas_loop_cc::sptr
       typedef boost::shared_ptr<costas_loop_cc> sptr;
 
-      /*! 
+      /*!
        * Make a Costas loop carrier recovery block.
        *
        * \param loop_bw  internal 2nd order loop bandwidth (~ 2pi/100)
@@ -75,7 +75,7 @@ namespace gr {
        */
       static sptr make(float loop_bw, int order);
 
-      /*! 
+      /*!
        * Returns the current value of the loop error.
        */
       virtual float error() const = 0;

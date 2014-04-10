@@ -37,35 +37,35 @@ namespace gr {
 #define VERBOSE_MM     0     // Used for debugging symbol timing loop
 #define VERBOSE_COSTAS 0     // Used for debugging phase and frequency tracking
 
-    mpsk_receiver_cc::sptr 
+    mpsk_receiver_cc::sptr
     mpsk_receiver_cc::make(unsigned int M, float theta,
 			   float loop_bw,
 			   float fmin, float fmax,
-			   float mu, float gain_mu, 
+			   float mu, float gain_mu,
 			   float omega, float gain_omega, float omega_rel)
     {
       return gnuradio::get_initial_sptr
 	(new mpsk_receiver_cc_impl(M, theta,
 				   loop_bw,
 				   fmin, fmax,
-				   mu, gain_mu, 
-				   omega, gain_omega, 
+				   mu, gain_mu,
+				   omega, gain_omega,
 				   omega_rel));
     }
 
-    mpsk_receiver_cc_impl::mpsk_receiver_cc_impl(unsigned int M, float theta, 
+    mpsk_receiver_cc_impl::mpsk_receiver_cc_impl(unsigned int M, float theta,
 						 float loop_bw,
 						 float fmin, float fmax,
-						 float mu, float gain_mu, 
+						 float mu, float gain_mu,
 						 float omega, float gain_omega,
 						 float omega_rel)
       : block("mpsk_receiver_cc",
-		 io_signature::make(1, 1, sizeof(gr_complex)),
-		 io_signature::make(1, 1, sizeof(gr_complex))),
-	blocks::control_loop(loop_bw, fmax, fmin),  
-	d_M(M), d_theta(theta), 
+              io_signature::make(1, 1, sizeof(gr_complex)),
+              io_signature::make(1, 1, sizeof(gr_complex))),
+	blocks::control_loop(loop_bw, fmax, fmin),
+	d_M(M), d_theta(theta),
 	d_current_const_point(0),
-	d_mu(mu), d_gain_mu(gain_mu), d_gain_omega(gain_omega), 
+	d_mu(mu), d_gain_mu(gain_mu), d_gain_omega(gain_omega),
 	d_omega_rel(omega_rel), d_max_omega(0), d_min_omega(0),
 	d_p_2T(0), d_p_1T(0), d_p_0T(0), d_c_2T(0), d_c_1T(0), d_c_0T(0)
     {
@@ -78,13 +78,13 @@ namespace gr {
 	throw std::out_of_range("clock rate must be > 0");
       if(gain_mu <  0  || gain_omega < 0)
 	throw std::out_of_range("Gains must be non-negative");
-  
+
       assert(d_interp->ntaps() <= DLLEN);
-  
+
       // zero double length delay line.
       for(unsigned int i = 0; i < 2 * DLLEN; i++)
 	d_dl[i] = gr_complex(0.0,0.0);
-  
+
       set_modulation_order(d_M);
     }
 
@@ -98,7 +98,7 @@ namespace gr {
     {
       // build the constellation vector from M
       make_constellation();
-  
+
       // Select a phase detector and a decision maker for the modulation order
       switch(d_M) {
       case 2:  // optimized algorithms for BPSK
@@ -150,7 +150,7 @@ namespace gr {
 	else
 	  phase_error = -sample.real();
       }
-  
+
       return phase_error;
     }
 
@@ -193,7 +193,7 @@ namespace gr {
       // the Euclidean distance (error) with the sample
       for(unsigned int m = 0; m < d_M; m++) {
 	gr_complex diff = norm(d_constellation[m] - sample);
-    
+
 	if(fabs(diff.real()) < min_s) {
 	  min_s = fabs(diff.real());
 	  min_m = m;
@@ -224,10 +224,10 @@ namespace gr {
 	d_phase -= M_TWOPI;
       while(d_phase < -M_TWOPI)
 	d_phase += M_TWOPI;
-  
+
       nco = gr_expj(d_phase+d_theta);   // get the NCO value for derotating the current sample
       sample = nco*symbol;      // get the downconverted symbol
-  
+
       // Fill up the delay line for the interpolator
       d_dl[d_dl_idx] = sample;
       d_dl[(d_dl_idx + DLLEN)] = sample;  // put this in the second half of the buffer for overflows
@@ -248,24 +248,24 @@ namespace gr {
       d_p_0T = sample;
       d_c_2T = d_c_1T;
       d_c_1T = d_c_0T;
-  
+
       d_current_const_point = (*this.*d_decision)(d_p_0T);  // make a decision on the sample value
       d_c_0T = d_constellation[d_current_const_point];
-  
+
       x = (d_c_0T - d_c_2T) * conj(d_p_1T);
       y = (d_p_0T - d_p_2T) * conj(d_c_1T);
       u = y - x;
       mm_error = u.real();   // the error signal is in the real part
       mm_error = gr::branchless_clip(mm_error, 1.0); // limit mm_val
-    
+
       d_omega = d_omega + d_gain_omega * mm_error;  // update omega based on loop error
       d_omega = d_omega_mid + gr::branchless_clip(d_omega-d_omega_mid, d_omega_rel);   // make sure we don't walk away
-  
+
       d_mu += d_omega + d_gain_mu * mm_error;   // update mu based on loop error
-  
+
 #if VERBOSE_MM
-      printf("mm: mu: %f   omega: %f  mm_error: %f  sample: %f+j%f  constellation: %f+j%f\n", 
-	     d_mu, d_omega, mm_error, sample.real(), sample.imag(), 
+      printf("mm: mu: %f   omega: %f  mm_error: %f  sample: %f+j%f  constellation: %f+j%f\n",
+	     d_mu, d_omega, mm_error, sample.real(), sample.imag(),
 	     d_constellation[d_current_const_point].real(), d_constellation[d_current_const_point].imag());
 #endif
     }
@@ -278,14 +278,14 @@ namespace gr {
 
       // Make phase and frequency corrections based on sampled value
       phase_error = (*this.*d_phase_error_detector)(sample);
-  
+
       advance_loop(phase_error);
       phase_wrap();
       frequency_limit();
-  
+
 #if VERBOSE_COSTAS
       printf("cl: phase_error: %f  phase: %f  freq: %f  sample: %f+j%f  constellation: %f+j%f\n",
-	     phase_error, d_phase, d_freq, sample.real(), sample.imag(), 
+	     phase_error, d_phase, d_freq, sample.real(), sample.imag(),
 	     d_constellation[d_current_const_point].real(), d_constellation[d_current_const_point].imag());
 #endif
 }
@@ -306,7 +306,7 @@ namespace gr {
 	  mm_sampler(in[i]);   // puts symbols into a buffer and adjusts d_mu
 	  i++;
 	}
-    
+
 	if(i < ninput_items[0]) {
 	  gr_complex interp_sample = d_interp->interpolate(&d_dl[d_dl_idx], d_mu);
 

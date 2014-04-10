@@ -74,27 +74,27 @@ namespace gr {
       /*!
        * \brief Make a M-PSK receiver block.
        *
-       * \param M	        modulation order of the M-PSK modulation
-       * \param theta	    any constant phase rotation from the real axis of the constellation
-       * \param loop_bw	    Loop bandwidth to set gains of phase/freq tracking loop
-       * \param fmin        minimum normalized frequency value the loop can achieve
-       * \param fmax        maximum normalized frequency value the loop can achieve
-       * \param mu          initial parameter for the interpolator [0,1]
-       * \param gain_mu     gain parameter of the M&M error signal to adjust mu (~0.05)
-       * \param omega       initial value for the number of symbols between samples (~number of samples/symbol)
-       * \param gain_omega  gain parameter to adjust omega based on the error (~omega^2/4)
-       * \param omega_rel   sets the maximum (omega*(1+omega_rel)) and minimum (omega*(1+omega_rel)) omega (~0.005)
+       * \param M	   modulation order of the M-PSK modulation
+       * \param theta	   any constant phase rotation from the real axis of the constellation
+       * \param loop_bw	   Loop bandwidth to set gains of phase/freq tracking loop
+       * \param fmin       minimum normalized frequency value the loop can achieve
+       * \param fmax       maximum normalized frequency value the loop can achieve
+       * \param mu         initial parameter for the interpolator [0,1]
+       * \param gain_mu    gain parameter of the M&M error signal to adjust mu (~0.05)
+       * \param omega      initial value for the number of symbols between samples (~number of samples/symbol)
+       * \param gain_omega gain parameter to adjust omega based on the error (~omega^2/4)
+       * \param omega_rel  sets the maximum (omega*(1+omega_rel)) and minimum (omega*(1+omega_rel)) omega (~0.005)
        *
        * The constructor also chooses which phase detector and
        * decision maker to use in the work loop based on the value of
        * M.
        */
-      static sptr make(unsigned int M, float theta, 
+      static sptr make(unsigned int M, float theta,
 		       float loop_bw,
 		       float fmin, float fmax,
-		       float mu, float gain_mu, 
+		       float mu, float gain_mu,
 		       float omega, float gain_omega, float omega_rel);
-      
+
       //! Returns the modulation order (M) currently set
       virtual float modulation_order() const = 0;
 
@@ -124,8 +124,8 @@ namespace gr {
 
       //! Sets value of mu
       virtual void set_mu(float mu) = 0;
-  
-      //! Sets value of omega and its min and max values 
+
+      //! Sets value of omega and its min and max values
       virtual void set_omega(float omega) = 0;
 
       //! Sets value for mu gain factor
