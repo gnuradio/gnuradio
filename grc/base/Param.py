@@ -68,11 +68,19 @@ class Param(Element):
             block: the parent element
             n: the nested odict
         """
-        #grab the data
+        # if the base key is a valid param key, copy its data and overlay this params data
+        base_key = n.find('base_key')
+        if base_key and base_key in block.get_param_keys():
+            n_expanded = block.get_param(base_key)._n.copy()
+            n_expanded.update(n)
+            n = n_expanded
+        # save odict in case this param will be base for another
+        self._n = n
+        # parse the data
         self._name = n.find('name')
         self._key = n.find('key')
         value = n.find('value') or ''
-        self._type = n.find('type')
+        self._type = n.find('type') or 'raw'
         self._hide = n.find('hide') or ''
         self._tab_label = n.find('tab') or block.get_param_tab_labels()[0]
         if not self._tab_label in block.get_param_tab_labels():

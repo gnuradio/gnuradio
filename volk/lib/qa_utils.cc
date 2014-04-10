@@ -14,6 +14,7 @@
 #include <volk/volk.h>
 #include <volk/volk_cpu.h>
 #include <volk/volk_common.h>
+#include <volk/volk_malloc.h>
 #include <boost/typeof/typeof.hpp>
 #include <boost/type_traits.hpp>
 #include <stdio.h>
@@ -171,7 +172,7 @@ static void get_signatures_from_name(std::vector<volk_type_t> &inputsig,
     }
     //we don't need an output signature (some fn's operate on the input data, "in place"), but we do need at least one input!
     assert(inputsig.size() != 0);
-    
+
 }
 
 inline void run_cast_test1(volk_fn_1arg func, std::vector<void *> &buffs, unsigned int vlen, unsigned int iter, std::string arch) {
@@ -232,8 +233,8 @@ bool fcompare(t *in1, t *in2, unsigned int vlen, float tol) {
     bool fail = false;
     int print_max_errs = 10;
     for(unsigned int i=0; i<vlen; i++) {
-        // for very small numbers we'll see round off errors due to limited 
-        // precision. So a special test case... 
+        // for very small numbers we'll see round off errors due to limited
+        // precision. So a special test case...
         if(fabs(((t *)(in1))[i]) < 1e-30) {
             if( fabs( ((t *)(in2))[i] ) > tol )
             {
@@ -264,8 +265,8 @@ bool ccompare(t *in1, t *in2, unsigned int vlen, float tol) {
         t err  = std::sqrt(diff[0] * diff[0] + diff[1] * diff[1]);
         t norm = std::sqrt(in1[i] * in1[i] + in1[i+1] * in1[i+1]);
 
-        // for very small numbers we'll see round off errors due to limited 
-        // precision. So a special test case... 
+        // for very small numbers we'll see round off errors due to limited
+        // precision. So a special test case...
         if (norm < 1e-30) {
             if (err > tol)
             {
@@ -307,11 +308,17 @@ class volk_qa_aligned_mem_pool{
 public:
     void *get_new(size_t size){
         size_t alignment = volk_get_alignment();
-        _mems.push_back(std::vector<char>(size + alignment-1, 0));
-        size_t ptr = size_t(&_mems.back().front());
-        return (void *)((ptr + alignment-1) & ~(alignment-1));
+        void* ptr = volk_malloc(size, alignment);
+        memset(ptr, 0x00, size);
+        _mems.push_back(ptr);
+        return ptr;
     }
-private: std::list<std::vector<char> > _mems;
+    ~volk_qa_aligned_mem_pool() {
+        for(unsigned int ii = 0; ii < _mems.size(); ++ii) {
+            volk_free(_mems[ii]);
+        }
+    }
+private: std::vector<void * > _mems;
 };
 
 bool run_volk_tests(volk_func_desc_t desc,
@@ -337,7 +344,7 @@ bool run_volk_tests(volk_func_desc_t desc,
     // The bug is the casting/assignment below do not happen, which results in false
     // positives when testing for errors in fcompare and icompare.
     // Since this only happens on armhf (reported for Cortex A9 and A15) combined with
-    // the following fixes it is suspected to be a compiler bug. 
+    // the following fixes it is suspected to be a compiler bug.
     // Bug 1272024 on launchpad has been filed with Linaro GCC.
     const float tol_f = tol*1.0000001;
     const unsigned int tol_i = static_cast<const unsigned int>(tol);
@@ -357,7 +364,7 @@ bool run_volk_tests(volk_func_desc_t desc,
     //now we have to get a function signature by parsing the name
     std::vector<volk_type_t> inputsig, outputsig;
     get_signatures_from_name(inputsig, outputsig, name);
-    
+
     //pull the input scalars into their own vector
     std::vector<volk_type_t> inputsc;
     for(size_t i=0; i<inputsig.size(); i++) {

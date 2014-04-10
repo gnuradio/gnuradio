@@ -79,7 +79,7 @@ namespace gr {
         return false;
 
       // set d_len bottom bits to 1.
-      d_mask = (1 << d_len) - 1;
+      d_mask = (1ULL << d_len) - 1;
 
       d_access_code = 0;
       for(unsigned i=0; i < d_len; i++){

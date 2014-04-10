@@ -23,7 +23,7 @@ from Element import Element
 
 from Cheetah.Template import Template
 from UserDict import UserDict
-
+from itertools import imap
 
 class TemplateArg(UserDict):
     """
@@ -103,7 +103,7 @@ class Block(Element):
                 'hide': 'all',
             })
         ))
-        for param in map(lambda n: self.get_parent().get_parent().Param(block=self, n=n), params):
+        for param in imap(lambda n: self.get_parent().get_parent().Param(block=self, n=n), params):
             key = param.get_key()
             #test against repeated keys
             if key in self.get_param_keys():

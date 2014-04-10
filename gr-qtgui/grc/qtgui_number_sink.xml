@@ -20,14 +20,17 @@ qtgui.number_sink(
 self.$(id).set_update_time($update_time)
 
 labels = [$label1, $label2, $label3, $label4, $label5,
-          $label6, $label7, $label8, $label9]
+          $label6, $label7, $label8, $label9, $label10]
 colors = [$color1, $color2, $color3, $color4, $color5,
-          $color6, $color7, $color8, $color9]
+          $color6, $color7, $color8, $color9, $color10]
 for i in xrange($nconnections):
     self.$(id).set_min(i, $min)
     self.$(id).set_max(i, $max)
-    self.$(id).set_label(i, labels[i])
     self.$(id).set_color(i, colors[i][0], colors[i][1])
+    if len(labels[i]) == 0:
+        self.$(id).set_label(i, "Data {0}".format(i))
+    else:
+        self.$(id).set_label(i, labels[i])
 
 self.$(id).enable_autoscale($autoscale)
 self._$(id)_win = sip.wrapinstance(self.$(id).pyqwidget(), Qt.QWidget)
@@ -188,299 +191,139 @@ $(gui_hint()($win))</make>
 
 
   <param>
+    <base_key>label1</base_key>
     <name>Line 2 Label</name>
     <key>label2</key>
-    <type>string</type>
     <hide>#if int($nconnections()) >= 2 then 'part' else 'all'#</hide>
-    <tab>Config</tab>
   </param>
 
   <param>
+    <base_key>color1</base_key>
     <name>Line 2 Color</name>
     <key>color2</key>
-    <type>enum</type>
     <hide>#if int($nconnections()) >= 2 then 'part' else 'all'#</hide>
-    <option>
-      <name>Black</name>
-      <key>("black", "black")</key>
-    </option>
-    <option>
-      <name>Blue-Red</name>
-      <key>("blue", "red")</key>
-    </option>
-    <option>
-      <name>White Hot</name>
-      <key>("black", "white")</key>
-    </option>
-    <option>
-      <name>Black Hot</name>
-      <key>("white", "black")</key>
-    </option>
-    <option>
-      <name>Black-Red</name>
-      <key>("black", "red")</key>
-    </option>
-    <tab>Config</tab>
   </param>
 
 
   <param>
+    <base_key>label1</base_key>
     <name>Line 3 Label</name>
     <key>label3</key>
-    <type>string</type>
     <hide>#if int($nconnections()) >= 3 then 'part' else 'all'#</hide>
-    <tab>Config</tab>
   </param>
 
   <param>
+    <base_key>color1</base_key>
     <name>Line 3 Color</name>
     <key>color3</key>
-    <type>enum</type>
     <hide>#if int($nconnections()) >= 3 then 'part' else 'all'#</hide>
-    <option>
-      <name>Black</name>
-      <key>("black", "black")</key>
-    </option>
-    <option>
-      <name>Blue-Red</name>
-      <key>("blue", "red")</key>
-    </option>
-    <option>
-      <name>White Hot</name>
-      <key>("black", "white")</key>
-    </option>
-    <option>
-      <name>Black Hot</name>
-      <key>("white", "black")</key>
-    </option>
-    <option>
-      <name>Black-Red</name>
-      <key>("black", "red")</key>
-    </option>
-    <tab>Config</tab>
   </param>
 
 
   <param>
+    <base_key>label1</base_key>
     <name>Line 4 Label</name>
     <key>label4</key>
-    <type>string</type>
     <hide>#if int($nconnections()) >= 4 then 'part' else 'all'#</hide>
-    <tab>Config</tab>
   </param>
 
   <param>
+    <base_key>color1</base_key>
     <name>Line 4 Color</name>
     <key>color4</key>
-    <type>enum</type>
     <hide>#if int($nconnections()) >= 4 then 'part' else 'all'#</hide>
-    <option>
-      <name>Black</name>
-      <key>("black", "black")</key>
-    </option>
-    <option>
-      <name>Blue-Red</name>
-      <key>("blue", "red")</key>
-    </option>
-    <option>
-      <name>White Hot</name>
-      <key>("black", "white")</key>
-    </option>
-    <option>
-      <name>Black Hot</name>
-      <key>("white", "black")</key>
-    </option>
-    <option>
-      <name>Black-Red</name>
-      <key>("black", "red")</key>
-    </option>
-    <tab>Config</tab>
   </param>
 
 
   <param>
+    <base_key>label1</base_key>
     <name>Line 5 Label</name>
     <key>label5</key>
-    <type>string</type>
     <hide>#if int($nconnections()) >= 5 then 'part' else 'all'#</hide>
-    <tab>Config</tab>
   </param>
 
   <param>
+    <base_key>color1</base_key>
     <name>Line 5 Color</name>
     <key>color5</key>
-    <type>enum</type>
     <hide>#if int($nconnections()) >= 5 then 'part' else 'all'#</hide>
-    <option>
-      <name>Black</name>
-      <key>("black", "black")</key>
-    </option>
-    <option>
-      <name>Blue-Red</name>
-      <key>("blue", "red")</key>
-    </option>
-    <option>
-      <name>White Hot</name>
-      <key>("black", "white")</key>
-    </option>
-    <option>
-      <name>Black Hot</name>
-      <key>("white", "black")</key>
-    </option>
-    <option>
-      <name>Black-Red</name>
-      <key>("black", "red")</key>
-    </option>
-    <tab>Config</tab>
   </param>
 
 
   <param>
+    <base_key>label1</base_key>
     <name>Line 6 Label</name>
     <key>label6</key>
-    <type>string</type>
     <hide>#if int($nconnections()) >= 6 then 'part' else 'all'#</hide>
-    <tab>Config</tab>
   </param>
 
   <param>
+    <base_key>color1</base_key>
     <name>Line 6 Color</name>
     <key>color6</key>
-    <type>enum</type>
     <hide>#if int($nconnections()) >= 6 then 'part' else 'all'#</hide>
-    <option>
-      <name>Black</name>
-      <key>("black", "black")</key>
-    </option>
-    <option>
-      <name>Blue-Red</name>
-      <key>("blue", "red")</key>
-    </option>
-    <option>
-      <name>White Hot</name>
-      <key>("black", "white")</key>
-    </option>
-    <option>
-      <name>Black Hot</name>
-      <key>("white", "black")</key>
-    </option>
-    <option>
-      <name>Black-Red</name>
-      <key>("black", "red")</key>
-    </option>
-    <tab>Config</tab>
   </param>
 
 
   <param>
+    <base_key>label1</base_key>
     <name>Line 7 Label</name>
     <key>label7</key>
-    <type>string</type>
     <hide>#if int($nconnections()) >= 7 then 'part' else 'all'#</hide>
-    <tab>Config</tab>
   </param>
 
   <param>
+    <base_key>color1</base_key>
     <name>Line 7 Color</name>
     <key>color7</key>
-    <type>enum</type>
     <hide>#if int($nconnections()) >= 7 then 'part' else 'all'#</hide>
-    <option>
-      <name>Black</name>
-      <key>("black", "black")</key>
-    </option>
-    <option>
-      <name>Blue-Red</name>
-      <key>("blue", "red")</key>
-    </option>
-    <option>
-      <name>White Hot</name>
-      <key>("black", "white")</key>
-    </option>
-    <option>
-      <name>Black Hot</name>
-      <key>("white", "black")</key>
-    </option>
-    <option>
-      <name>Black-Red</name>
-      <key>("black", "red")</key>
-    </option>
-    <tab>Config</tab>
   </param>
 
 
   <param>
+    <base_key>label1</base_key>
     <name>Line 8 Label</name>
     <key>label8</key>
-    <type>string</type>
     <hide>#if int($nconnections()) >= 8 then 'part' else 'all'#</hide>
-    <tab>Config</tab>
   </param>
 
   <param>
+    <base_key>color1</base_key>
     <name>Line 8 Color</name>
     <key>color8</key>
-    <type>enum</type>
     <hide>#if int($nconnections()) >= 8 then 'part' else 'all'#</hide>
-    <option>
-      <name>Black</name>
-      <key>("black", "black")</key>
-    </option>
-    <option>
-      <name>Blue-Red</name>
-      <key>("blue", "red")</key>
-    </option>
-    <option>
-      <name>White Hot</name>
-      <key>("black", "white")</key>
-    </option>
-    <option>
-      <name>Black Hot</name>
-      <key>("white", "black")</key>
-    </option>
-    <option>
-      <name>Black-Red</name>
-      <key>("black", "red")</key>
-    </option>
-    <tab>Config</tab>
   </param>
 
 
   <param>
+    <base_key>label1</base_key>
     <name>Line 9 Label</name>
     <key>label9</key>
-    <type>string</type>
     <hide>#if int($nconnections()) >= 9 then 'part' else 'all'#</hide>
-    <tab>Config</tab>
   </param>
 
   <param>
+    <base_key>color1</base_key>
     <name>Line 9 Color</name>
     <key>color9</key>
-    <type>enum</type>
     <hide>#if int($nconnections()) >= 9 then 'part' else 'all'#</hide>
-    <option>
-      <name>Black</name>
-      <key>("black", "black")</key>
-    </option>
-    <option>
-      <name>Blue-Red</name>
-      <key>("blue", "red")</key>
-    </option>
-    <option>
-      <name>White Hot</name>
-      <key>("black", "white")</key>
-    </option>
-    <option>
-      <name>Black Hot</name>
-      <key>("white", "black")</key>
-    </option>
-    <option>
-      <name>Black-Red</name>
-      <key>("black", "red")</key>
-    </option>
-    <tab>Config</tab>
   </param>
+
+
+  <param>
+    <base_key>label1</base_key>
+    <name>Line 10 Label</name>
+    <key>label10</key>
+    <hide>#if int($nconnections()) >= 10 then 'part' else 'all'#</hide>
+  </param>
+
+  <param>
+    <base_key>color1</base_key>
+    <name>Line 10 Color</name>
+    <key>color10</key>
+    <hide>#if int($nconnections()) >= 10 then 'part' else 'all'#</hide>
+  </param>
+
 
   <sink>
     <name>in</name>

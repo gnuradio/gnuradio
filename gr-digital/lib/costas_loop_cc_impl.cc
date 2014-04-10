@@ -1,19 +1,19 @@
 /* -*- c++ -*- */
 /*
  * Copyright 2006,2010-2012 Free Software Foundation, Inc.
- * 
+ *
  * This file is part of GNU Radio
- * 
+ *
  * GNU Radio is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3, or (at your option)
  * any later version.
- * 
+ *
  * GNU Radio is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with GNU Radio; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 51 Franklin Street,
@@ -62,7 +62,7 @@ namespace gr {
 	d_phase_detector = &costas_loop_cc_impl::phase_detector_8;
 	break;
 
-      default: 
+      default:
 	throw std::invalid_argument("order must be 2, 4, or 8");
 	break;
       }
@@ -145,19 +145,19 @@ namespace gr {
               tags.erase(tags.begin());
             }
           }
-          
+
           nco_out = gr_expj(-d_phase);
           optr[i] = iptr[i] * nco_out;
 
           d_error = (*this.*d_phase_detector)(optr[i]);
           d_error = gr::branchless_clip(d_error, 1.0);
-       
+
           advance_loop(d_error);
           phase_wrap();
           frequency_limit();
 
           foptr[i] = d_freq;
-        } 
+        }
       }
       else {
         for(int i = 0; i < noutput_items; i++) {
@@ -219,7 +219,7 @@ namespace gr {
 	      pmt::mp(0.0f), pmt::mp(2.0f), pmt::mp(0.0f),
 	      "", "Loop bandwidth", RPC_PRIVLVL_MIN,
               DISPTIME | DISPOPTSTRIP)));
-    
+
       // Setters
       add_rpc_variable(
           rpcbasic_sptr(new rpcbasic_register_set<control_loop, float>(
