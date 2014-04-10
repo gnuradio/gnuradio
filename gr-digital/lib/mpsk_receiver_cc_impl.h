@@ -25,7 +25,6 @@
 
 #include <gnuradio/digital/mpsk_receiver_cc.h>
 #include <gnuradio/attributes.h>
-#include <gnuradio/blocks/control_loop.h>
 #include <gnuradio/gr_complex.h>
 #include <fstream>
 #include <gnuradio/filter/mmse_fir_interpolator_cc.h>
@@ -33,8 +32,7 @@
 namespace gr {
   namespace digital {
 
-    class mpsk_receiver_cc_impl
-      : public mpsk_receiver_cc, public blocks::control_loop
+    class mpsk_receiver_cc_impl : public mpsk_receiver_cc
     {
     public:
       mpsk_receiver_cc_impl(unsigned int M, float theta,

@@ -25,6 +25,7 @@
 
 #include <gnuradio/digital/api.h>
 #include <gnuradio/block.h>
+#include <gnuradio/blocks/control_loop.h>
 
 namespace gr {
   namespace digital {
@@ -65,7 +66,9 @@ namespace gr {
      * self-noise.
      *
      */
-    class DIGITAL_API mpsk_receiver_cc : virtual public block
+    class DIGITAL_API mpsk_receiver_cc
+      : virtual public block,
+        virtual public blocks::control_loop
     {
     public:
       // gr::digital::mpsk_receiver_cc::sptr
