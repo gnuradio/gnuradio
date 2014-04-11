@@ -64,14 +64,14 @@ class InputParam(gtk.HBox):
         if self.param.get_hide() == 'all': self.hide_all()
         else: self.show_all()
 
-    def _handle_changed(self, *args):
+    def _mark_changed(self, *args):
         """
         Mark this param as modified on change, but validate only on focus-lost
         """
         self._changed_but_unchecked = True
         self._update_gui()
 
-    def _handle_focus_out(self, *args):
+    def _apply_change(self, *args):
         """
         Handle a gui change by setting the new param value,
         calling the callback (if applicable), and updating.
@@ -92,8 +92,8 @@ class EntryParam(InputParam):
         InputParam.__init__(self, *args, **kwargs)
         self._input = gtk.Entry()
         self._input.set_text(self.param.get_value())
-        self._input.connect('changed', self._handle_changed)
-        self._input.connect('focus-out-event', self._handle_focus_out)
+        self._input.connect('changed', self._mark_changed)
+        self._input.connect('focus-out-event', self._apply_change)
         self.pack_start(self._input, True)
     def get_text(self): return self._input.get_text()
     def set_color(self, color):
@@ -109,8 +109,7 @@ class EnumParam(InputParam):
         self._input = gtk.combo_box_new_text()
         for option in self.param.get_options(): self._input.append_text(option.get_name())
         self._input.set_active(self.param.get_option_keys().index(self.param.get_value()))
-        self._input.connect('changed', self._handle_changed)
-        self._input.connect('focus-out-event', self._handle_focus_out)
+        self._input.connect('changed', self._apply_change)
         self.pack_start(self._input, False)
     def get_text(self): return self.param.get_option_keys()[self._input.get_active()]
     def set_tooltip_text(self, text): self._input.set_tooltip_text(text)
@@ -126,10 +125,9 @@ class EnumEntryParam(InputParam):
         except:
             self._input.set_active(-1)
             self._input.get_child().set_text(self.param.get_value())
-        self._input.connect('changed', self._handle_changed)
-        self._input.connect('focus-out-event', self._handle_focus_out)
-        self._input.get_child().connect('changed', self._handle_changed)
-        self._input.get_child().connect('focus-out-event', self._handle_focus_out)
+        self._input.connect('changed', self._apply_change)
+        self._input.get_child().connect('changed', self._mark_changed)
+        self._input.get_child().connect('focus-out-event', self._apply_change)
         self.pack_start(self._input, False)
     def get_text(self):
         if self._input.get_active() == -1: return self._input.get_child().get_text()
@@ -180,7 +178,7 @@ class FileParam(EntryParam):
         if gtk.RESPONSE_OK == file_dialog.run(): #run the dialog
             file_path = file_dialog.get_filename() #get the file path
             self._input.set_text(file_path)
-            self._handle_changed()
+            self._apply_change()
         file_dialog.destroy() #destroy the dialog
 
 
