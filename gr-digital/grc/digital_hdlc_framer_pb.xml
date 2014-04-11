@@ -1,8 +1,7 @@
 <?xml version="1.0"?>
 <block>
-  <name>hdlc_framer_pb</name>
+  <name>HDLC Framer</name>
   <key>digital_hdlc_framer_pb</key>
-  <category>digital</category>
   <import>from gnuradio import digital</import>
   <make>digital.hdlc_framer_pb($frame_tag_name)</make>
   <param>
