@@ -148,7 +148,7 @@ namespace gr {
       d_main_gui = new FreqDisplayForm(d_nconnections, d_parent);
       set_fft_window(d_wintype);
       set_fft_size(d_fftsize);
-      set_frequency_range(d_center_freq, d_bandwidth/2.0);
+      set_frequency_range(d_center_freq, d_bandwidth);
 
       // initialize update time to 10 times a second
       set_update_time(0.1);
