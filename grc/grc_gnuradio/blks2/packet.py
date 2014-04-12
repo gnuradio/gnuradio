@@ -75,9 +75,9 @@ class packet_encoder(gr.hier_block2):
         Args:
             samples_per_symbol: number of samples per symbol
             bits_per_symbol: number of bits per symbol
+            preamble: string of ascii 0's and 1's
             access_code: AKA sync vector
             pad_for_usrp: If true, packets are padded such that they end up a multiple of 128 samples
-            payload_length: number of bytes in a data-stream slice
         """
         #setup parameters
         self._samples_per_symbol = samples_per_symbol
