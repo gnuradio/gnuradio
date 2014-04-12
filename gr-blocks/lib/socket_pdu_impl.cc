@@ -57,7 +57,9 @@ namespace gr {
       }
       else if ((type == "TCP_SERVER") || (type == "TCP_CLIENT")) {
         boost::asio::ip::tcp::resolver resolver(d_io_service);
-        boost::asio::ip::tcp::resolver::query query(boost::asio::ip::tcp::v4(), addr, port);
+        boost::asio::ip::tcp::resolver::query query(boost::asio::ip::tcp::v4(),
+			addr, port,
+			boost::asio::ip::resolver_query_base::passive);
         d_tcp_endpoint = *resolver.resolve(query);
       }
       else if ((type == "UDP_SERVER") && ((addr.empty()) || (addr == "0.0.0.0"))) {  // Bind on all interfaces
@@ -68,7 +70,9 @@ namespace gr {
       }
       else if ((type == "UDP_SERVER") || (type == "UDP_CLIENT")) {
         boost::asio::ip::udp::resolver resolver(d_io_service);
-        boost::asio::ip::udp::resolver::query query(boost::asio::ip::udp::v4(), addr, port);
+        boost::asio::ip::udp::resolver::query query(boost::asio::ip::udp::v4(),
+			addr, port,
+			boost::asio::ip::resolver_query_base::passive);
 
         if (type == "UDP_SERVER")
           d_udp_endpoint = *resolver.resolve(query);
