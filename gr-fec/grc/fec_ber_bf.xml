@@ -3,13 +3,29 @@
   <name>BER</name>
   <key>fec_ber_bf</key>
   <import>from gnuradio import fec</import>
-  <make>fec.ber_bf($berminerrors, $berlimit)</make>
+  <make>fec.ber_bf($test_mode, $berminerrors, $berlimit)</make>
+
+  <param>
+    <name>Test Mode</name>
+    <key>test_mode</key>
+    <value>False</value>
+    <type>enum</type>
+    <option>
+      <name>False</name>
+      <key>False</key>
+    </option>
+    <option>
+      <name>True</name>
+      <key>True</key>
+    </option>
+  </param>
 
   <param>
     <name>BER Min. Errors</name>
     <key>berminerrors</key>
     <value>100</value>
     <type>int</type>
+    <hide>#if $test_mode() then 'part' else 'all'#</hide>
   </param>
 
   <param>
@@ -17,6 +33,7 @@
     <key>berlimit</key>
     <value>-7.0</value>
     <type>float</type>
+    <hide>#if $test_mode() then 'part' else 'all'#</hide>
   </param>
 
   <sink>

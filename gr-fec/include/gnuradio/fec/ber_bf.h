@@ -43,7 +43,7 @@ namespace gr {
       // gr::fec::ber_bf::sptr
       typedef boost::shared_ptr<ber_bf> sptr;
 
-      static sptr make(int berminerrors = 100, float ber_limit = -7.0);
+      static sptr make(bool test_mode = false, int berminerrors=100, float ber_limit=-7.0);
     };
 
   } /* namespace fec */

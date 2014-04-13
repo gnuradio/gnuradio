@@ -32,21 +32,22 @@ namespace gr {
     {
     private:
       int d_total_errors;
+      int d_total;
+      bool d_test_mode;
       int d_berminerrors;
       float d_ber_limit;
-      int d_total;
 
     public:
-    ber_bf_impl(int berminerrors = 100, float ber_limit = -7.0);
-    ~ber_bf_impl();
+      ber_bf_impl(bool d_test_mode = false, int berminerrors=100, float ber_limit=-7.0);
+      ~ber_bf_impl();
 
-    int general_work(int noutput_items,
-                     gr_vector_int& ninput_items,
-                     gr_vector_const_void_star &input_items,
-                     gr_vector_void_star &output_items);
+      int general_work(int noutput_items,
+                       gr_vector_int& ninput_items,
+                       gr_vector_const_void_star &input_items,
+                       gr_vector_void_star &output_items);
 
-    void forecast(int noutput_items,
-		  gr_vector_int& ninput_items_required);
+      void forecast(int noutput_items,
+                    gr_vector_int& ninput_items_required);
     };
 
   } /* namespace fec */
