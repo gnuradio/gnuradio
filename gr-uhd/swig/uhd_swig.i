@@ -84,6 +84,21 @@
 
 %include <uhd/types/time_spec.hpp>
 
+%extend uhd::time_spec_t{
+    uhd::time_spec_t __add__(const uhd::time_spec_t &what)
+    {
+        uhd::time_spec_t temp = *self;
+        temp += what;
+        return temp;
+    }
+    uhd::time_spec_t __sub__(const uhd::time_spec_t &what)
+    {
+        uhd::time_spec_t temp = *self;
+        temp -= what;
+        return temp;
+    }
+};
+
 %include <uhd/types/stream_cmd.hpp>
 
 %include <uhd/types/clock_config.hpp>
