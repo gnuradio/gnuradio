@@ -85,9 +85,15 @@ class psk_mod(generic_mod):
     """
     Hierarchical block for RRC-filtered PSK modulation.
     
-    The input is a byte stream (unsigned char) and the
-    output is the complex modulated signal at baseband.
-    
+    The input is a byte stream (unsigned char), treated as a series of packed
+    symbols. Symbols are grouped from MSB to LSB.
+
+    The output is the complex modulated signal at baseband, with a given number
+    of samples per symbol.
+
+    If "Samples/Symbol" is 2, and "Number of Constellation Points" is 4, a
+    single byte contains four symbols, and will produce eight samples.
+
     Args:
         constellation_points: Number of constellation points (must be a power of two) (integer).
         mod_code: Whether to use a gray_code (digital.mod_codes.GRAY_CODE) or not (digital.mod_codes.NO_CODE).
@@ -113,8 +119,10 @@ class psk_demod(generic_demod):
     """
     Hierarchical block for RRC-filtered PSK modulation.
     
-    The input is a byte stream (unsigned char) and the
-    output is the complex modulated signal at baseband.
+    The input is a complex modulated signal at baseband.
+
+    The output is a stream of bytes, each representing a recovered bit.
+    The most significant bit is reported first.
 
     Args:
         constellation_points: Number of constellation points (must be a power of two) (integer).
