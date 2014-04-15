@@ -739,6 +739,11 @@ namespace gr {
     d_pc_rpc_set = true;
 #if defined(GR_CTRLPORT) && defined(GR_PERFORMANCE_COUNTERS)
     d_rpc_vars.push_back(
+      rpcbasic_sptr(new rpcbasic_register_trigger<block>(
+        alias(), "reset_perf_counters", &block::reset_perf_counters,
+        "Reset the Performance Counters", RPC_PRIVLVL_MIN)));
+
+    d_rpc_vars.push_back(
       rpcbasic_sptr(new rpcbasic_register_get<block, float>(
         alias(), "noutput_items", &block::pc_noutput_items,
         pmt::mp(0), pmt::mp(32768), pmt::mp(0),
