@@ -79,13 +79,15 @@ namespace gr {
 
   //  - register a new input message port
   void
-  basic_block::message_port_register_in(pmt::pmt_t port_id)
+  basic_block::message_port_register_in(pmt::pmt_t port_id, bool blocking/* = false*/)
   {
     if(!pmt::is_symbol(port_id)) {
       throw std::runtime_error("message_port_register_in: bad port id");
     }
     msg_queue[port_id] = msg_queue_t();
     msg_queue_ready[port_id] = boost::shared_ptr<boost::condition_variable>(new boost::condition_variable());
+    msg_queue_waiting[port_id] = boost::shared_ptr<boost::condition_variable>(new boost::condition_variable());
+    msg_queue_blocking_setting[port_id] = blocking;
   }
 
   pmt::pmt_t
@@ -194,6 +196,13 @@ namespace gr {
       throw std::runtime_error("attempted to insert_tail on invalid queue!");
     }
 
+    bool blocking = msg_queue_blocking_setting[which_port];
+    if (blocking) {
+        while (!empty_p(which_port)) {
+            msg_queue_waiting[which_port]->wait(guard);
+        }
+    }
+
     msg_queue[which_port].push_back(msg);
     msg_queue_ready[which_port]->notify_one();
 
@@ -212,6 +221,7 @@ namespace gr {
 
     pmt::pmt_t m(msg_queue[which_port].front());
     msg_queue[which_port].pop_front();
+    msg_queue_waiting[which_port]->notify_one();
 
     return m;
   }
@@ -227,6 +237,8 @@ namespace gr {
 
     pmt::pmt_t m(msg_queue[which_port].front());
     msg_queue[which_port].pop_front();
+    msg_queue_waiting[which_port]->notify_one();
+
     return m;
   }
 

@@ -219,8 +219,8 @@ namespace gr {
     }
 
     /* Message passing interface */
-    void block__message_port_register_in(pmt::pmt_t port_id) {
-      gr::basic_block::message_port_register_in(port_id);
+    void block__message_port_register_in(pmt::pmt_t port_id, bool blocking = false) {
+      gr::basic_block::message_port_register_in(port_id, blocking);
     }
 
     void block__message_port_register_out(pmt::pmt_t port_id) {
@@ -257,6 +257,19 @@ namespace gr {
         throw std::runtime_error("attempt to set_msg_handler_feval() on bad input message port!"); 
       }
       d_msg_handlers_feval[which_port] = msg_handler;
+    }
+    
+    pmt::pmt_t block__delete_head_nowait(pmt::pmt_t which_port)
+    {
+      return gr::basic_block::delete_head_nowait(which_port);
+    }
+    
+    pmt::pmt_t block__pop_msg_queue(pmt::pmt_t which_port)
+    {
+      pmt::pmt_t msg = block__delete_head_nowait(which_port);
+      if (msg.get() == NULL)    // Cannot return 'NULL' to Python, so in this special case we return 'PMT_NIL'
+        msg = pmt::PMT_NIL;
+      return msg;
     }
 
   protected:
