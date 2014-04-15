@@ -18,6 +18,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 """
 
 import os
+from collections import OrderedDict
 from gnuradio import gr
 from .. base.Platform import Platform as _Platform
 from .. gui.Platform import Platform as _GUIPlatform
@@ -29,7 +30,7 @@ from Param import Param as _Param
 from Generator import Generator
 from Constants import \
     HIER_BLOCKS_LIB_DIR, BLOCK_DTD, \
-    DEFAULT_FLOW_GRAPH, BLOCKS_DIRS
+    DEFAULT_FLOW_GRAPH, BLOCKS_DIRS, PREFS_FILE
 import Constants
 
 COLORS = [(name, color) for name, key, sizeof, color in Constants.CORE_TYPES]
@@ -42,8 +43,10 @@ class Platform(_Platform, _GUIPlatform):
         """
         #ensure hier dir
         if not os.path.exists(HIER_BLOCKS_LIB_DIR): os.mkdir(HIER_BLOCKS_LIB_DIR)
-        #convert block paths to absolute paths
-        block_paths = set(map(os.path.abspath, BLOCKS_DIRS))
+        # Convert block paths to absolute paths:
+        # - Create a mapping from the absolute path to what was passed in
+        # - Keep each unique absolute path and maintain order
+        block_paths = OrderedDict(map(lambda x: (os.path.abspath(x), x), BLOCKS_DIRS))
         #init
         _Platform.__init__(
             self,
@@ -58,7 +61,11 @@ class Platform(_Platform, _GUIPlatform):
             generator=Generator,
             colors=COLORS,
         )
-        _GUIPlatform.__init__(self)
+
+        _GUIPlatform.__init__(
+            self,
+            prefs_file=PREFS_FILE
+        )
 
     ##############################################
     # Constructors

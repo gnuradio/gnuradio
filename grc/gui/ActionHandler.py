@@ -115,7 +115,7 @@ class ActionHandler:
                 Actions.FLOW_GRAPH_CLOSE, Actions.ABOUT_WINDOW_DISPLAY,
                 Actions.FLOW_GRAPH_SCREEN_CAPTURE, Actions.HELP_WINDOW_DISPLAY,
                 Actions.TYPES_WINDOW_DISPLAY, Actions.TOGGLE_BLOCKS_WINDOW,
-                Actions.TOGGLE_REPORTS_WINDOW,
+                Actions.TOGGLE_REPORTS_WINDOW, Actions.TOGGLE_HIDE_DISABLED_BLOCKS,
             ): action.set_sensitive(True)
             if ParseXML.xml_failures:
                 Messages.send_xml_errors_if_any(ParseXML.xml_failures)
@@ -371,6 +371,8 @@ class ActionHandler:
             else:
                 self.main_window.btwin.hide()
             Preferences.blocks_window_visibility(visible)
+        elif action == Actions.TOGGLE_HIDE_DISABLED_BLOCKS:
+            Actions.NOTHING_SELECT()
         ##################################################
         # Param Modifications
         ##################################################

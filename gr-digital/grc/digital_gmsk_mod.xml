@@ -42,7 +42,7 @@
 		</option>
 	</param>
 	<param>
-		<name>Logging</name>
+		<name>Log</name>
 		<key>log</key>
 		<value>False</value>
 		<type>bool</type>

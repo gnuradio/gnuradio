@@ -66,7 +66,7 @@ class gmsk_mod(gr.hier_block2):
         samples_per_symbol: samples per baud >= 2 (integer)
         bt: Gaussian filter bandwidth * symbol time (float)
         verbose: Print information about modulator? (boolean)
-        debug: Print modulation data to files? (boolean)
+        log: Print modulation data to files? (boolean)
     """
 
     def __init__(self,
@@ -176,12 +176,12 @@ class gmsk_demod(gr.hier_block2):
     
     Args:
         samples_per_symbol: samples per baud (integer)
-        verbose: Print information about modulator? (boolean)
-        log: Print modualtion data to files? (boolean)
         gain_mu: controls rate of mu adjustment (float)
         mu: fractional delay [0.0, 1.0] (float)
         omega_relative_limit: sets max variation in omega (float)
         freq_error: bit rate error as a fraction (float)
+        verbose: Print information about modulator? (boolean)
+        log: Print modualtion data to files? (boolean)
     """
     
     def __init__(self,

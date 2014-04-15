@@ -196,6 +196,7 @@ class Platform(_Element):
     def get_license(self): return self._license
     def get_website(self): return self._website
     def get_colors(self): return self._colors
+    def get_block_paths(self): return self._block_paths
 
     ##############################################
     # Constructors
