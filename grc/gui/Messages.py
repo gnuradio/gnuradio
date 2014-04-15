@@ -48,7 +48,16 @@ register_messenger(sys.stdout.write)
 # Special functions for specific program functionalities
 ###########################################################################
 def send_init(platform):
-    send("""<<< Welcome to %s %s >>>\n"""%(platform.get_name(), platform.get_version()))
+    p = platform
+    send('\n'.join([
+        "<<< Welcome to %s %s >>>" % (p.get_name(), p.get_version()),
+        "",
+        "Preferences file: " + p.get_prefs_file(),
+        "Block paths:"
+    ] + [
+        "\t%s" % path + (" (%s)" % opath if opath != path else "")
+            for path, opath in p.get_block_paths().iteritems()
+    ]) + "\n")
 
 def send_page_switch(file_path):
     send('\nShowing: "%s"\n'%file_path)
