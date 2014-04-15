@@ -32,6 +32,15 @@ namespace gr {
     /*!
      * \brief Converts a stream of bytes with 1 bit in the LSB to a
      * byte with k relevent bits.
+     *
+     * This block takes in K bytes at a time, and uses the least significant
+     * bit to form a new byte.
+     *
+     * Example:
+     * k = 4
+     * in = [0,1,0,1, 0x81,0x00,0x00,0x00]
+     * out = [0x05, 0x08]
+     *
      * \ingroup byte_operators_blk
      */
     class BLOCKS_API pack_k_bits_bb : virtual public sync_decimator

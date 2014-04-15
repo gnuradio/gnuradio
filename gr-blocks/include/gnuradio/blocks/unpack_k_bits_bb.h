@@ -31,6 +31,14 @@ namespace gr {
     
     /*!
      * \brief Converts a byte with k relevent bits to k output bytes with 1 bit in the LSB.
+     *
+     * This block picks the K least significant bits from a byte, and expands
+     * them into K bytes of 0 or 1.
+     *
+     * Example:
+     * k = 4
+     * in = [0xf5, 0x08]
+     * out = [0,1,0,1, 1,0,0,0]
      * \ingroup byte_operators_blk
      */
     class BLOCKS_API unpack_k_bits_bb : virtual public sync_interpolator
