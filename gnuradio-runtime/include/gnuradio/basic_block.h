@@ -59,26 +59,26 @@ namespace gr {
                                      public boost::enable_shared_from_this<basic_block>
   {
     typedef boost::function<void(pmt::pmt_t)> msg_handler_t;
-  
+
   private:
     //msg_handler_t d_msg_handler;
     typedef std::map<pmt::pmt_t , msg_handler_t, pmt::comparator> d_msg_handlers_t;
     d_msg_handlers_t d_msg_handlers;
-  
+
     typedef std::deque<pmt::pmt_t> msg_queue_t;
     typedef std::map<pmt::pmt_t, msg_queue_t, pmt::comparator> msg_queue_map_t;
     typedef std::map<pmt::pmt_t, msg_queue_t, pmt::comparator>::iterator msg_queue_map_itr;
     std::map<pmt::pmt_t, boost::shared_ptr<boost::condition_variable>, pmt::comparator> msg_queue_ready;
-  
+
     gr::thread::mutex mutex;          //< protects all vars
-  
+
   protected:
     friend class flowgraph;
     friend class flat_flowgraph; // TODO: will be redundant
     friend class tpb_thread_body;
-  
+
     enum vcolor { WHITE, GREY, BLACK };
-  
+
     std::string       d_name;
     gr::io_signature::sptr d_input_signature;
     gr::io_signature::sptr d_output_signature;
@@ -91,24 +91,24 @@ namespace gr {
 
     msg_queue_map_t msg_queue;
     std::vector<boost::any> d_rpc_vars; // container for all RPC variables
-  
+
     basic_block(void) {} // allows pure virtual interface sub-classes
-  
+
     //! Protected constructor prevents instantiation by non-derived classes
     basic_block(const std::string &name,
                 gr::io_signature::sptr input_signature,
                 gr::io_signature::sptr output_signature);
-  
+
     //! may only be called during constructor
     void set_input_signature(gr::io_signature::sptr iosig) {
       d_input_signature = iosig;
     }
-  
+
     //! may only be called during constructor
     void set_output_signature(gr::io_signature::sptr iosig) {
       d_output_signature = iosig;
     }
-  
+
     /*!
      * \brief Allow the flowgraph to set for sorting and partitioning
      */
@@ -135,10 +135,10 @@ namespace gr {
         d_msg_handlers[which_port](msg); // Yes, invoke it.
       }
     }
-  
+
     // Message passing interface
     pmt::pmt_t d_message_subscribers;
-  
+
   public:
     pmt::pmt_t message_subscribers(pmt::pmt_t port);
     virtual ~basic_block();
@@ -153,18 +153,18 @@ namespace gr {
     std::string alias(){ return alias_set()?d_symbol_alias:symbol_name(); }
     pmt::pmt_t alias_pmt(){ return pmt::intern(alias()); }
     void set_block_alias(std::string name);
-  
+
     // ** Message passing interface **
     void message_port_register_in(pmt::pmt_t port_id);
     void message_port_register_out(pmt::pmt_t port_id);
     void message_port_pub(pmt::pmt_t port_id, pmt::pmt_t msg);
     void message_port_sub(pmt::pmt_t port_id, pmt::pmt_t target);
     void message_port_unsub(pmt::pmt_t port_id, pmt::pmt_t target);
-  
+
     virtual bool message_port_is_hier(pmt::pmt_t port_id) { (void) port_id; std::cout << "is_hier\n"; return false; }
     virtual bool message_port_is_hier_in(pmt::pmt_t port_id) { (void) port_id; std::cout << "is_hier_in\n"; return false; }
     virtual bool message_port_is_hier_out(pmt::pmt_t port_id) { (void) port_id; std::cout << "is_hier_out\n"; return false; }
-  
+
     /*!
      * \brief Get input message port names.
      *
@@ -172,7 +172,7 @@ namespace gr {
      * return object is a PMT vector that is filled with PMT symbols.
      */
     pmt::pmt_t message_ports_in();
-  
+
     /*!
      * \brief Get output message port names.
      *
@@ -180,19 +180,19 @@ namespace gr {
      * return object is a PMT vector that is filled with PMT symbols.
      */
     pmt::pmt_t message_ports_out();
-  
+
     /*!
      * Accept msg, place in queue, arrange for thread to be awakened if it's not already.
      */
     void _post(pmt::pmt_t which_port, pmt::pmt_t msg);
-  
+
     //! is the queue empty?
-    bool empty_p(pmt::pmt_t which_port) { 
+    bool empty_p(pmt::pmt_t which_port) {
       if(msg_queue.find(which_port) == msg_queue.end())
         throw std::runtime_error("port does not exist!");
-      return msg_queue[which_port].empty(); 
+      return msg_queue[which_port].empty();
     }
-    bool empty_p() { 
+    bool empty_p() {
       bool rv = true;
       BOOST_FOREACH(msg_queue_map_t::value_type &i, msg_queue) {
         rv &= msg_queue[i.first].empty();
@@ -204,7 +204,7 @@ namespace gr {
     bool empty_handled_p(pmt::pmt_t which_port){
         return (empty_p(which_port) || !has_msg_handler(which_port));
     }
-    bool empty_handled_p() { 
+    bool empty_handled_p() {
       bool rv = true;
       BOOST_FOREACH(msg_queue_map_t::value_type &i, msg_queue) {
         rv &= empty_handled_p(i.first);
@@ -213,24 +213,24 @@ namespace gr {
     }
 
     //! How many messages in the queue?
-    size_t nmsgs(pmt::pmt_t which_port) { 
+    size_t nmsgs(pmt::pmt_t which_port) {
       if(msg_queue.find(which_port) == msg_queue.end())
         throw std::runtime_error("port does not exist!");
-      return msg_queue[which_port].size(); 
+      return msg_queue[which_port].size();
     }
-  
+
     //| Acquires and release the mutex
     void insert_tail( pmt::pmt_t which_port, pmt::pmt_t msg);
     /*!
      * \returns returns pmt at head of queue or pmt::pmt_t() if empty.
      */
     pmt::pmt_t delete_head_nowait( pmt::pmt_t which_port);
-  
+
     /*!
      * \returns returns pmt at head of queue or pmt::pmt_t() if empty.
      */
     pmt::pmt_t delete_head_blocking( pmt::pmt_t which_port);
-  
+
     msg_queue_t::iterator get_iterator(pmt::pmt_t which_port) {
       return msg_queue[which_port].begin();
     }
@@ -238,7 +238,7 @@ namespace gr {
     void erase_msg(pmt::pmt_t which_port, msg_queue_t::iterator it) {
       msg_queue[which_port].erase(it);
     }
-  
+
     virtual bool has_msg_port(pmt::pmt_t which_port) {
       if(msg_queue.find(which_port) != msg_queue.end()) {
         return true;
@@ -290,7 +290,7 @@ namespace gr {
      * \brief When the block is registered with the RPC, set this.
      */
     void rpc_set() { d_rpc_set = true; }
-  
+
     /*!
      * \brief Confirm that ninputs and noutputs is an acceptable combination.
      *
@@ -304,12 +304,12 @@ namespace gr {
      * This check is in addition to the constraints specified by the
      * input and output gr::io_signatures.
      */
-    virtual bool check_topology(int ninputs, int noutputs) { 
+    virtual bool check_topology(int ninputs, int noutputs) {
       (void)ninputs;
       (void)noutputs;
       return true;
     }
-  
+
     /*!
      * \brief Set the callback that is fired when messages are available.
      *
