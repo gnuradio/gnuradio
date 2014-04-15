@@ -37,7 +37,7 @@ class FlowGraph(Element):
 
     def __init__(self):
         """
-        FlowGraph contructor.
+        FlowGraph constructor.
         Create a list for signal blocks and connections. Connect mouse handlers.
         """
         Element.__init__(self)
@@ -309,6 +309,8 @@ class FlowGraph(Element):
             window.draw_rectangle(gc, False, x, y, w, h)
         #draw blocks on top of connections
         for element in self.get_connections() + self.get_blocks():
+            if Actions.TOGGLE_HIDE_DISABLED_BLOCKS.get_active() and not element.get_enabled():
+                continue  # skip hidden disabled blocks and connections
             element.draw(gc, window)
         #draw selected blocks on top of selected connections
         for selected_element in self.get_selected_connections() + self.get_selected_blocks():
@@ -374,6 +376,13 @@ class FlowGraph(Element):
         for element in reversed(self.get_elements()):
             selected_element = element.what_is_selected(coor, coor_m)
             if not selected_element: continue
+            # hidden disabled connections, blocks and their ports can not be selected
+            if Actions.TOGGLE_HIDE_DISABLED_BLOCKS.get_active() and (
+                selected_element.is_block() and not selected_element.get_enabled() or
+                selected_element.is_connection() and not selected_element.get_enabled() or
+                selected_element.is_port() and not selected_element.get_parent().get_enabled()
+            ):
+                continue
             #update the selected port information
             if selected_element.is_port():
                 if not coor_m: selected_port = selected_element

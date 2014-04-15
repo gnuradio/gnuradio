@@ -49,6 +49,7 @@ TOOLBAR_LIST = (
     None,
     Actions.BLOCK_ENABLE,
     Actions.BLOCK_DISABLE,
+    Actions.TOGGLE_HIDE_DISABLED_BLOCKS,
     None,
     Actions.FIND_BLOCKS,
     Actions.RELOAD_BLOCKS,
