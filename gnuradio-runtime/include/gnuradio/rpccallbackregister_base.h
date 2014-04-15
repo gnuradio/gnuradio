@@ -1,9 +1,9 @@
 /* -*- c++ -*- */
-/* 
+/*
  * Copyright 2012 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
- * 
+ *
  * GNU Radio is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3, or (at your option)
@@ -28,7 +28,7 @@
 
 typedef uint32_t DisplayType;
 
-// DisplayType Plotting types
+//! DisplayType Plotting types
 const uint32_t DISPNULL = 0x0000;
 const uint32_t DISPTIME = 0x0001;
 const uint32_t DISPXY   = 0x0002;
@@ -36,7 +36,7 @@ const uint32_t DISPPSD  = 0x0004;
 const uint32_t DISPSPEC = 0x0008;
 const uint32_t DISPRAST = 0x0010;
 
-// DisplayType Options
+//! DisplayType Options
 const uint32_t DISPOPTCPLX    = 0x0100;
 const uint32_t DISPOPTLOG     = 0x0200;
 const uint32_t DISPOPTSTEM    = 0x0400;
@@ -80,10 +80,16 @@ struct callbackregister_base
   class callback_t : public callback_base_t
   {
   public:
-    callback_t(T* callback_, priv_lvl_t priv_, 
+    callback_t(T* callback_, priv_lvl_t priv_,
 	       const std::string& units_, const DisplayType display_, const:: std::string& desc_,
 	       const pmt::pmt_t& min_, const pmt::pmt_t& max_, const pmt::pmt_t& def_) :
       callback_base_t(priv_, units_, display_, desc_, min_, max_, def_),
+      callback(callback_)
+    {
+    }
+
+    callback_t(T* callback_, priv_lvl_t priv_, const:: std::string& desc_) :
+      callback_base_t(priv_, "", 0, desc_, pmt::pmt_t(), pmt::pmt_t(), pmt::pmt_t()),
       callback(callback_)
     {
     }
