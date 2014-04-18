@@ -1,19 +1,19 @@
 /* -*- c++ -*- */
-/* 
+/*
  * Copyright 2013 Free Software Foundation, Inc.
- * 
+ *
  * This file is part of GNU Radio
- * 
+ *
  * GNU Radio is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3, or (at your option)
  * any later version.
- * 
+ *
  * GNU Radio is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with GNU Radio; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 51 Franklin Street,
@@ -24,7 +24,6 @@
 #define INCLUDED_DIGITAL_CORRELATE_AND_SYNC_CC_IMPL_H
 
 #include <gnuradio/digital/correlate_and_sync_cc.h>
-#include <gnuradio/filter/fir_filter.h>
 #include <gnuradio/filter/fft_filter.h>
 
 using namespace gr::filter;
@@ -39,11 +38,10 @@ namespace gr {
       unsigned int d_sps;
       float d_center_first_symbol;
       float d_thresh;
-      kernel::fir_filter_ccc  *d_filter;
-      //kernel::fft_filter_ccc  *d_filter;
+      kernel::fft_filter_ccc  *d_filter;
 
       int d_last_index;
-      
+
     public:
       correlate_and_sync_cc_impl(const std::vector<gr_complex> &symbols,
                                  const std::vector<float> &filter,
