@@ -48,7 +48,7 @@ namespace gr {
       /*!
        * \brief Make Codec2 decoder block.
        */
-      static sptr make();
+      static sptr make(int mode);
     };
 
   } /* namespace vocoder */

@@ -1,15 +1,15 @@
 /*---------------------------------------------------------------------------*\
-
-  FILE........: lpc.c
-  AUTHOR......: David Rowe
-  DATE CREATED: 30/9/90
-
-  Linear Prediction functions written in C.
-
+                                                                           
+  FILE........: lpc.c                                                              
+  AUTHOR......: David Rowe                                                      
+  DATE CREATED: 30 Sep 1990 (!)                                                 
+                                                                          
+  Linear Prediction functions written in C.                                
+                                                                          
 \*---------------------------------------------------------------------------*/
 
 /*
-  Copyright (C) 2009 David Rowe
+  Copyright (C) 2009-2012 David Rowe
 
   All rights reserved.
 
@@ -28,17 +28,74 @@
 #define LPC_MAX_N 512		/* maximum no. of samples in frame */
 #define PI 3.141592654		/* mathematical constant */
 
+#define ALPHA 1.0
+#define BETA  0.94
+
 #include <assert.h>
 #include <math.h>
 #include "defines.h"
 #include "lpc.h"
 
 /*---------------------------------------------------------------------------*\
+                                                                         
+  pre_emp()                                                        
+                                                                         
+  Pre-emphasise (high pass filter with zero close to 0 Hz) a frame of
+  speech samples.  Helps reduce dynamic range of LPC spectrum, giving
+  greater weight and hensea better match to low energy formants.  
 
-  hanning_window()
+  Should be balanced by de-emphasis of the output speech.
+                                                                           
+\*---------------------------------------------------------------------------*/
 
-  Hanning windows a frame of speech samples.
+void pre_emp(
+  float  Sn_pre[], /* output frame of speech samples                     */
+  float  Sn[],	   /* input frame of speech samples                      */
+  float *mem,      /* Sn[-1]single sample memory                         */
+  int   Nsam	   /* number of speech samples to use                    */
+)
+{
+    int   i;
 
+    for(i=0; i<Nsam; i++) {
+	Sn_pre[i] = Sn[i] - ALPHA * mem[0];
+	mem[0] = Sn[i];
+    }
+
+}
+
+
+/*---------------------------------------------------------------------------*\
+                                                                         
+  de_emp()                                                        
+                                                                         
+  De-emphasis filter (low pass filter with polse close to 0 Hz).
+                                                                           
+\*---------------------------------------------------------------------------*/
+
+void de_emp(
+  float  Sn_de[],  /* output frame of speech samples                     */
+  float  Sn[],	   /* input frame of speech samples                      */
+  float *mem,      /* Sn[-1]single sample memory                         */
+  int    Nsam	   /* number of speech samples to use                    */
+)
+{
+    int   i;
+
+    for(i=0; i<Nsam; i++) {
+	Sn_de[i] = Sn[i] + BETA * mem[0];
+	mem[0] = Sn_de[i];
+    }
+
+}
+
+
+/*---------------------------------------------------------------------------*\
+                                                                         
+  hanning_window()                                                        
+                                                                         
+  Hanning windows a frame of speech samples.                              
+                                                                           
 \*---------------------------------------------------------------------------*/
 
 void hanning_window(
@@ -50,16 +107,16 @@ void hanning_window(
   int i;	/* loop variable */
 
   for(i=0; i<Nsam; i++)
-    Wn[i] = Sn[i]*(0.5 - 0.5*cos(2*PI*(float)i/(Nsam-1)));
+    Wn[i] = Sn[i]*(0.5 - 0.5*cosf(2*PI*(float)i/(Nsam-1)));
 }
 
 /*---------------------------------------------------------------------------*\
-
-  autocorrelate()
-
-  Finds the first P autocorrelation values of an array of windowed speech
-  samples Sn[].
-
+                                                                           
+  autocorrelate()                                                          
+                                                                          
+  Finds the first P autocorrelation values of an array of windowed speech 
+  samples Sn[].                                                            
+                                                                          
 \*---------------------------------------------------------------------------*/
 
 void autocorrelate(
@@ -79,45 +136,18 @@ void autocorrelate(
 }
 
 /*---------------------------------------------------------------------------*\
-
-  autocorrelate_freq()
-
-  Finds the first P autocorrelation values from an array of frequency domain
-  power samples.
-
-\*---------------------------------------------------------------------------*/
-
-void autocorrelate_freq(
-  float Pw[],	/* Nsam frequency domain power spectrum samples    */
-  float  w[],	/* frequency of each sample in Pw[]                */
-  float  R[],	/* array of order+1 autocorrelation coefficients   */
-  int Nsam,	/* number of windowed samples to use               */
-  int order	/* order of LPC analysis                           */
-)
-{
-  int i,j;	/* loop variables */
-
-  for(j=0; j<order+1; j++) {
-    R[j] = 0.0;
-    for(i=0; i<Nsam; i++)
-	R[j] += Pw[i]*cos(j*w[i]);
-  }
-  R[j] /= Nsam;
-}
-
-/*---------------------------------------------------------------------------*\
-
-  levinson_durbin()
-
-  Given P+1 autocorrelation coefficients, finds P Linear Prediction Coeff.
+                                                                            
+  levinson_durbin()                                                        
+                                                                           
+  Given P+1 autocorrelation coefficients, finds P Linear Prediction Coeff. 
   (LPCs) where P is the order of the LPC all-pole model. The Levinson-Durbin
-  algorithm is used, and is described in:
-
-    J. Makhoul
-    "Linear prediction, a tutorial review"
-    Proceedings of the IEEE
-    Vol-63, No. 4, April 1975
-
+  algorithm is used, and is described in:                                   
+                                                                           
+    J. Makhoul                                                               
+    "Linear prediction, a tutorial review"                                   
+    Proceedings of the IEEE                                                
+    Vol-63, No. 4, April 1975                                               
+                                                                             
 \*---------------------------------------------------------------------------*/
 
 void levinson_durbin(
@@ -139,7 +169,7 @@ void levinson_durbin(
     for(j=1; j<=i-1; j++)
       sum += a[i-1][j]*R[i-j];
     k[i] = -1.0*(R[i] + sum)/E[i-1];	/* Equation 38b, Makhoul */
-    if (fabs(k[i]) > 1.0)
+    if (fabsf(k[i]) > 1.0)
       k[i] = 0.0;
 
     a[i][i] = k[i];
@@ -152,18 +182,18 @@ void levinson_durbin(
 
   for(i=1; i<=order; i++)
     lpcs[i] = a[order][i];
-  lpcs[0] = 1.0;
+  lpcs[0] = 1.0;  
 }
 
 /*---------------------------------------------------------------------------*\
-
-  inverse_filter()
-
+                                                                             
+  inverse_filter()                                                          
+                                                                           
   Inverse Filter, A(z).  Produces an array of residual samples from an array
-  of input samples and linear prediction coefficients.
-
+  of input samples and linear prediction coefficients.                      
+                                                                             
   The filter memory is stored in the first order samples of the input array.
-
+                                                                             
 \*---------------------------------------------------------------------------*/
 
 void inverse_filter(
@@ -180,26 +210,26 @@ void inverse_filter(
     res[i] = 0.0;
     for(j=0; j<=order; j++)
       res[i] += Sn[i-j]*a[j];
-  }
+  }    
 }
 
 /*---------------------------------------------------------------------------*\
-
- synthesis_filter()
-
- C version of the Speech Synthesis Filter, 1/A(z).  Given an array of
+                                                                            
+ synthesis_filter()                                                        
+                                                                           
+ C version of the Speech Synthesis Filter, 1/A(z).  Given an array of   
  residual or excitation samples, and the the LP filter coefficients, this
  function will produce an array of speech samples.  This filter structure is
- IIR.
-
- The synthesis filter has memory as well, this is treated in the same way
- as the memory for the inverse filter (see inverse_filter() notes above).
- The difference is that the memory for the synthesis filter is stored in
+ IIR.                                                                       
+                                                                           
+ The synthesis filter has memory as well, this is treated in the same way 
+ as the memory for the inverse filter (see inverse_filter() notes above). 
+ The difference is that the memory for the synthesis filter is stored in  
  the output array, wheras the memory of the inverse filter is stored in the
- input array.
-
- Note: the calling function must update the filter memory.
-
+ input array.                                                              
+                                                                           
+ Note: the calling function must update the filter memory.                
+                                                                             
 \*---------------------------------------------------------------------------*/
 
 void synthesis_filter(
@@ -222,12 +252,12 @@ void synthesis_filter(
 }
 
 /*---------------------------------------------------------------------------*\
-
-  find_aks()
-
-  This function takes a frame of samples, and determines the linear
-  prediction coefficients for that frame of samples.
-
+                                                                            
+  find_aks()                                                                 
+                                                                            
+  This function takes a frame of samples, and determines the linear           
+  prediction coefficients for that frame of samples.                         
+                                                                            
 \*---------------------------------------------------------------------------*/
 
 void find_aks(
@@ -257,11 +287,11 @@ void find_aks(
 }
 
 /*---------------------------------------------------------------------------*\
-
-  weight()
-
-  Weights a vector of LPCs.
-
+                                                                            
+  weight()                                                                  
+                                                                          
+  Weights a vector of LPCs.						   
+                                                                          
 \*---------------------------------------------------------------------------*/
 
 void weight(
@@ -272,8 +302,8 @@ void weight(
 )
 {
   int i;
-
+  
   for(i=1; i<=order; i++)
-    akw[i] = ak[i]*pow(gamma,(float)i);
+    akw[i] = ak[i]*powf(gamma,(float)i);
 }
-
+    

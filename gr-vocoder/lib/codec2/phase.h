@@ -1,11 +1,11 @@
 /*---------------------------------------------------------------------------*\
-
-  FILE........: phase.h
-  AUTHOR......: David Rowe
-  DATE CREATED: 1/2/09
-
+                                                                             
+  FILE........: phase.h                                          
+  AUTHOR......: David Rowe                                             
+  DATE CREATED: 1/2/09                                                 
+                                                                             
   Functions for modelling phase.
-
+                                                                             
 \*---------------------------------------------------------------------------*/
 
 /*
@@ -28,7 +28,12 @@
 #ifndef __PHASE__
 #define __PHASE__
 
-void phase_synth_zero_order(MODEL *model, float aks[], float *ex_phase,
+#include "kiss_fft.h"
+
+void phase_synth_zero_order(kiss_fft_cfg fft_dec_cfg, 
+			    MODEL *model, 
+			    float aks[], 
+                            float *ex_phase, 
 			    int order);
 
 #endif

@@ -1,20 +1,20 @@
 /*
   Copyright (C) 2010 Perens LLC <bruce@perens.com>
 
-  This program is free software: you can redistribute it and/or modify
-  it under the terms of the GNU General Public License as published by
-  the Free Software Foundation, either version 3 of the License, or
-  (at your option) any later version.
+  All rights reserved.
 
-  This program is distributed in the hope that it will be useful,
-  but WITHOUT ANY WARRANTY; without even the implied warranty of
-  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  GNU General Public License for more details.
+  This program is free software; you can redistribute it and/or modify
+  it under the terms of the GNU Lesser General Public License version 2.1, as
+  published by the Free Software Foundation.  This program is
+  distributed in the hope that it will be useful, but WITHOUT ANY
+  WARRANTY; without even the implied warranty of MERCHANTABILITY or
+  FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public
+  License for more details.
 
-  You should have received a copy of the GNU General Public License
-  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  You should have received a copy of the GNU Lesser General Public License
+  along with this program; if not, see <http://www.gnu.org/licenses/>.
+*/
 
- */
 #include "defines.h"
 #include "quantise.h"
 #include <stdio.h>
@@ -65,7 +65,7 @@ pack(
     bitArray[wordIndex] |=
      ((unsigned char)((field >> (fieldWidth - sliceWidth))
      << (bitsLeft - sliceWidth)));
-
+    
     *bitIndex = bI + sliceWidth;
     fieldWidth -= sliceWidth;
   } while ( fieldWidth != 0 );
@@ -91,7 +91,7 @@ unpack(
 			 bitsLeft < fieldWidth ? bitsLeft : fieldWidth;
 
     field |= (((bitArray[bI >> ShiftRight] >> (bitsLeft - sliceWidth)) & ((1 << sliceWidth) - 1)) << (fieldWidth - sliceWidth));
-
+    
     *bitIndex = bI + sliceWidth;
     fieldWidth -= sliceWidth;
   } while ( fieldWidth != 0 );
