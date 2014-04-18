@@ -16,14 +16,17 @@
 # along with GNU Radio; see the file COPYING.  If not, write to
 # the Free Software Foundation, Inc., 51 Franklin Street,
 # Boston, MA 02110-1301, USA.
+
 install(FILES
-    zmqblocks_sink_reqrep.xml
-    zmqblocks_source_reqrep.xml
-    zmqblocks_sink_reqrep_nopoll.xml
-    zmqblocks_source_reqrep_nopoll.xml
-    zmqblocks_sink_pushpull.xml
-    zmqblocks_source_pushpull.xml
-    zmqblocks_source_pushpull_feedback.xml
-    zmqblocks_sink_pubsub.xml
-    zmqblocks_probe_pubsub.xml DESTINATION share/gnuradio/grc/blocks
+    zeromq_sink_pubsub.xml
+    zeromq_sink_pushpull.xml
+    zeromq_source_pushpull.xml
+
+    DESTINATION share/gnuradio/grc/blocks
 )
+#    zeromq_sink_reqrep.xml
+#    zeromq_source_reqrep.xml
+#    zeromq_sink_reqrep_nopoll.xml
+#    zeromq_source_reqrep_nopoll.xml
+#    zeromq_source_pushpull.xml
+#    zeromq_source_pushpull_feedback.xml

@@ -1,10 +1,10 @@
 <?xml version="1.0"?>
 <block>
-  <name>sink_pubsub</name>
-  <key>zmqblocks_sink_pubsub</key>
-  <category>zmqblocks</category>
-  <import>import zmqblocks</import>
-  <make>zmqblocks.sink_pubsub($itemsize, $*address)</make>
+  <name>source_reqrep</name>
+  <key>zeromq_source_reqrep</key>
+  <category>zeromq</category>
+  <import>import zeromq</import>
+  <make>zeromq.source_reqrep($itemsize, $*address)</make>
   <!-- Make one 'param' node for every Parameter you want settable from the GUI.
        Sub-nodes:
        * name

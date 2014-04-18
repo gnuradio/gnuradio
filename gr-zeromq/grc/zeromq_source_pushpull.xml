@@ -1,0 +1,58 @@
+<?xml version="1.0"?>
+<block>
+  <name>ZMQ PUSH/PULL Source</name>
+  <key>zeromq_source_pushpull</key>
+  <category>ZeroMQ Interfaces</category>
+  <import>from gnuradio import zeromq</import>
+  <make>zeromq.source_pushpull($type.itemsize, $address, $timeout)</make>
+
+  <param>
+    <name>IO Type</name>
+    <key>type</key>
+    <type>enum</type>
+    <option>
+      <name>Complex</name>
+      <key>complex</key>
+      <opt>itemsize:gr.sizeof_gr_complex</opt>
+    </option>
+    <option>
+      <name>Float</name>
+      <key>float</key>
+      <opt>itemsize:gr.sizeof_float</opt>
+    </option>
+    <option>
+      <name>Int</name>
+      <key>int</key>
+      <opt>itemsize:gr.sizeof_int</opt>
+    </option>
+    <option>
+      <name>Short</name>
+      <key>short</key>
+      <opt>itemsize:gr.sizeof_short</opt>
+    </option>
+    <option>
+      <name>Byte</name>
+      <key>byte</key>
+      <opt>itemsize:gr.sizeof_char</opt>
+    </option>
+  </param>
+
+  <param>
+    <name>Address</name>
+    <key>address</key>
+    <type>string</type>
+  </param>
+
+  <param>
+    <name>Timeout (sec)</name>
+    <key>timeout</key>
+    <value>0.1</value>
+    <type>float</type>
+  </param>
+
+  <source>
+    <name>out</name>
+    <type>$type</type>
+  </source>
+
+</block>

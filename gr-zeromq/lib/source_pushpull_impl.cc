@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2013 Free Software Foundation, Inc.
+ * Copyright 2013,2014 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio.
  *
@@ -31,18 +31,19 @@ namespace gr {
   namespace zeromq {
 
     source_pushpull::sptr
-    source_pushpull::make(size_t itemsize, char *address)
+    source_pushpull::make(size_t itemsize, char *address, float timeout)
     {
       return gnuradio::get_initial_sptr
-        (new source_pushpull_impl(itemsize, address));
+        (new source_pushpull_impl(itemsize, address, timeout));
     }
 
-    source_pushpull_impl::source_pushpull_impl(size_t itemsize, char *address)
+    source_pushpull_impl::source_pushpull_impl(size_t itemsize, char *address, float timeout)
       : gr::sync_block("source_pushpull",
                        gr::io_signature::make(0, 0, 0),
                        gr::io_signature::make(1, 1, itemsize)),
         d_itemsize(itemsize)
     {
+      d_timeout = timeout >=0 ? (int)(timeout*1e6) : 0;
       d_context = new zmq::context_t(1);
       d_socket = new zmq::socket_t(*d_context, ZMQ_PULL);
       d_socket->connect (address);
@@ -65,7 +66,7 @@ namespace gr {
       char *out = (char*)output_items[0];
 
       zmq::pollitem_t items[] = { { *d_socket, 0, ZMQ_POLLIN, 0 } };
-      zmq::poll (&items[0], 1, 1000);
+      zmq::poll (&items[0], 1, d_timeout);
 
       //  If we got a reply, process
       if (items[0].revents & ZMQ_POLLIN) {
@@ -87,7 +88,7 @@ namespace gr {
 	}
       }
       else {
-	return 0;
+	return 0; // FIXME: someday when the scheduler does all the poll/selects
       }
     }
 

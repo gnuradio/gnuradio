@@ -33,11 +33,12 @@ namespace gr {
     {
     private:
       size_t          d_itemsize;
+      bool            d_blocking;
       zmq::context_t  *d_context;
       zmq::socket_t   *d_socket;
 
     public:
-      sink_pubsub_impl(size_t itemsize, char *address);
+      sink_pubsub_impl(size_t itemsize, char *address, bool blocking);
       ~sink_pubsub_impl();
 
       int work(int noutput_items,

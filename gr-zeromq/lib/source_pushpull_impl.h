@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2013 Free Software Foundation, Inc.
+ * Copyright 2013,2014 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio.
  *
@@ -33,11 +33,12 @@ namespace gr {
     {
     private:
       size_t          d_itemsize;
+      int             d_timeout; // microseconds, -1 is blocking
       zmq::context_t  *d_context;
       zmq::socket_t   *d_socket;
 
     public:
-      source_pushpull_impl(size_t itemsize, char *address);
+      source_pushpull_impl(size_t itemsize, char *address, float timeout);
       ~source_pushpull_impl();
 
       int work(int noutput_items,

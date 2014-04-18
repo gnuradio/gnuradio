@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2013 Free Software Foundation, Inc.
+ * Copyright 2013,2014 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio.
  *
@@ -30,8 +30,15 @@ namespace gr {
   namespace zeromq {
 
     /*!
-     * \brief <+description of block+>
+     * \brief Sink the contents of a stream to a ZMQ PUSH socket
      * \ingroup zeromq
+     *
+     * \details
+     * This block acts a a streaming sink for a GNU Radio flowgraph
+     * and writes its contents to a ZMQ PUSH socket.  A PUSH socket
+     * will round-robin send its messages to each connected ZMQ PULL
+     * socket, either another gr-zeromq source block or a regular,
+     * non-GNU Radio ZMQ socket.
      *
      */
     class ZEROMQ_API sink_pushpull : virtual public gr::sync_block
@@ -40,14 +47,14 @@ namespace gr {
       typedef boost::shared_ptr<sink_pushpull> sptr;
 
       /*!
-       * \brief Return a shared_ptr to a new instance of zeromq::sink_pushpull.
+       * \brief Return a shared_ptr to a new instance of gr::zeromq::sink_pushpull
        *
-       * To avoid accidental use of raw pointers, zeromq::sink_pushpull's
-       * constructor is in a private implementation
-       * class. zeromq::sink_pushpull::make is the public interface for
-       * creating new instances.
+       * \param itemsize Size of a stream item in bytes
+       * \param address  ZMQ socket address specifier
+       * \param blocking Indicate whether blocking sends should be used, default true.
+       *
        */
-      static sptr make(size_t itemsize, char *address);
+      static sptr make(size_t itemsize, char *address, bool blocking=true);
     };
 
   } // namespace zeromq

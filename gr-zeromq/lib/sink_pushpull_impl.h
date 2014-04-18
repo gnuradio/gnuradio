@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2013 Free Software Foundation, Inc.
+ * Copyright 2013,2014 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio.
  *
@@ -33,11 +33,12 @@ namespace gr {
     {
     private:
       size_t          d_itemsize;
+      bool            d_blocking;
       zmq::context_t  *d_context;
       zmq::socket_t   *d_socket;
 
     public:
-      sink_pushpull_impl(size_t itemsize, char *address);
+      sink_pushpull_impl(size_t itemsize, char *address, bool blocking);
       ~sink_pushpull_impl();
 
       int work(int noutput_items,

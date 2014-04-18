@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2013 Free Software Foundation, Inc.
+ * Copyright 2013,2014 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio.
  *
@@ -30,9 +30,12 @@ namespace gr {
   namespace zeromq {
 
     /*!
-     * \brief <+description of block+>
+     * \brief Receive messages on ZMQ PULL socket and source stream
      * \ingroup zeromq
      *
+     * \details
+     * This block will connect to a ZMQ PUSH socket, then produce all
+     * incoming messages as streaming output.
      */
     class ZEROMQ_API source_pushpull : virtual public gr::sync_block
     {
@@ -40,14 +43,14 @@ namespace gr {
       typedef boost::shared_ptr<source_pushpull> sptr;
 
       /*!
-       * \brief Return a shared_ptr to a new instance of zeromq::source_pushpull.
+       * \brief Return a shared_ptr to a new instance of gr::zeromq::source_pushpull.
        *
-       * To avoid accidental use of raw pointers, zeromq::source_pushpull's
-       * constructor is in a private implementation
-       * class. zeromq::source_pushpull::make is the public interface for
-       * creating new instances.
+       * \param itemsize Size of a stream item in bytes
+       * \param address  ZMQ socket address specifier
+       * \param timeout  Receive timeout in seconds, default is 100ms, 1us increments
+       *
        */
-      static sptr make(size_t itemsize, char *address);
+      static sptr make(size_t itemsize, char *address, float timeout=0.1);
     };
 
   } // namespace zeromq

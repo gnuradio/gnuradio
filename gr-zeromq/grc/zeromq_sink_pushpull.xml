@@ -1,0 +1,58 @@
+<?xml version="1.0"?>
+<block>
+  <name>ZMQ PUSH/PULL Sink</name>
+  <key>zeromq_sink_pushpull</key>
+  <category>ZeroMQ Interfaces</category>
+  <import>from gnuradio import zeromq</import>
+  <make>zeromq.sink_pushpull($type.itemsize, $address, $blocking)</make>
+
+  <param>
+    <name>IO Type</name>
+    <key>type</key>
+    <type>enum</type>
+    <option>
+      <name>Complex</name>
+      <key>complex</key>
+      <opt>itemsize:gr.sizeof_gr_complex</opt>
+    </option>
+    <option>
+      <name>Float</name>
+      <key>float</key>
+      <opt>itemsize:gr.sizeof_float</opt>
+    </option>
+    <option>
+      <name>Int</name>
+      <key>int</key>
+      <opt>itemsize:gr.sizeof_int</opt>
+    </option>
+    <option>
+      <name>Short</name>
+      <key>short</key>
+      <opt>itemsize:gr.sizeof_short</opt>
+    </option>
+    <option>
+      <name>Byte</name>
+      <key>byte</key>
+      <opt>itemsize:gr.sizeof_char</opt>
+    </option>
+  </param>
+
+  <param>
+    <name>Address</name>
+    <key>address</key>
+    <type>string</type>
+  </param>
+
+  <param>
+    <name>Blocking</name>
+    <key>blocking</key>
+    <value>True</value>
+    <type>bool</type>
+  </param>
+
+  <sink>
+    <name>in</name>
+    <type>$type</type>
+  </sink>
+
+</block>
