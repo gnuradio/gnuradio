@@ -101,6 +101,11 @@ MENU_BAR_LIST = (
         Actions.FLOW_GRAPH_EXEC,
         Actions.FLOW_GRAPH_KILL,
     ]),
+    (gtk.Action('Tools', '_Tools', None, None), [
+        Actions.TOOLS_RUN_FDESIGN,
+        None,
+        Actions.TOOLS_MORE_TO_COME,
+    ]),
     (gtk.Action('Help', '_Help', None, None), [
         Actions.HELP_WINDOW_DISPLAY,
         Actions.TYPES_WINDOW_DISPLAY,

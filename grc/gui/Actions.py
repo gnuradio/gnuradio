@@ -365,3 +365,11 @@ XML_PARSER_ERRORS_DISPLAY = Action(
     tooltip='View errors that occured while parsing XML files',
     stock_id=gtk.STOCK_DIALOG_ERROR,
 )
+TOOLS_RUN_FDESIGN = Action(
+    label='Filter design tool',
+    tooltip='Execute gr_filter_design',
+    stock_id=gtk.STOCK_EXECUTE,
+)
+TOOLS_MORE_TO_COME = Action(
+    label='More to come',
+)
