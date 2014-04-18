@@ -60,6 +60,7 @@ list(APPEND gnuradio_fec_sources
   ber_tools.cc
   ber_bf_impl.cc
   conv_bit_corr_bb_impl.cc
+  puncture_bb_impl.cc
   puncture_ff_impl.cc
   depuncture_bb_impl.cc
 )

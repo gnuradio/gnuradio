@@ -22,8 +22,8 @@
     <block>fec_generic_decoder</block>
     <block>fec_decode_ccsds_27_fb</block>
     <block>fec_encode_ccsds_27_bb</block>
-    <block>fec_puncture_ff</block>
-    <block>fec_depuncture_ff</block>
+    <block>fec_puncture_xx</block>
+    <block>fec_depuncture_bb</block>
     <block>fec_ber_bf</block>
     <block>fec_bercurve_generator</block>
   </cat>

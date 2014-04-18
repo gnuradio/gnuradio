@@ -133,10 +133,10 @@ namespace gr {
       }
 
       void
-      cc_encoder_impl::generic_work(void *inBuffer, void *outBuffer)
+      cc_encoder_impl::generic_work(void *in_buffer, void *out_buffer)
       {
-        const unsigned char *in = (const unsigned char *) inBuffer;
-        float *out = (float *) outBuffer;
+        const unsigned char *in = (const unsigned char *) in_buffer;
+        unsigned char *out = (unsigned char *) out_buffer;
 
         int my_state = d_start_state;
         //printf("ms: %d\n", my_state);
@@ -151,7 +151,7 @@ namespace gr {
         for(unsigned int i = 0; i < d_framebits; ++i) {
           my_state = (my_state << 1) | (in[i] & 1);
           for(unsigned int j = 0; j < d_rate; ++j) {
-            out[i * d_rate + j] = parity(my_state & d_polys[j]) == 0 ? -1.0 : 1.0;
+            out[i * d_rate + j] = parity(my_state & d_polys[j]) == 0 ? 0 : 1;
           }
         }
 
@@ -159,7 +159,7 @@ namespace gr {
           for(unsigned int i = 0; i < d_k - 1; ++i) {
             my_state = (my_state << 1) | ((d_start_state >> (d_k - 2 - i)) & 1);
             for(unsigned int j = 0; j < d_rate; ++j) {
-              out[(i + d_framebits) * d_rate + j] = parity(my_state & d_polys[j]) == 0 ? -1.0 : 1.0;
+              out[(i + d_framebits) * d_rate + j] = parity(my_state & d_polys[j]) == 0 ? 0 : 1;
             }
           }
         }
@@ -171,7 +171,7 @@ namespace gr {
             int cnt = 0;
             for(int j = 0; j < d_rate; ++j) {
               if(d_polys[j] != 1) {
-                out[(i + d_framebits) * d_rate + cnt] = parity(my_state & d_polys[j]) == 0 ? -1.0 : 1.0;
+                out[(i + d_framebits) * d_rate + cnt] = parity(my_state & d_polys[j]) == 0 ? 0 : 1;
                 cnt++;
               }
             }
@@ -191,7 +191,7 @@ namespace gr {
         /*
         for(int i = d_framebits * d_rate - 25; i < d_framebits * d_rate; ++i) {
           //for(int i = 0; i < 25; ++i) {
-          printf("...%f : %u\n", out[i], i);
+          printf("...%d : %u\n", out[i], i);
         }
         */
       }

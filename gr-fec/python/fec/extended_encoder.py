@@ -29,27 +29,36 @@ from bitflip import read_bitlist
 
 class extended_encoder(gr.hier_block2):
     def __init__(self, encoder_obj_list, threading, puncpat=None):
-        gr.hier_block2.__init__(
-            self, "extended_encoder",
-            gr.io_signature(1, 1, gr.sizeof_char),
-            gr.io_signature(1, 1, gr.sizeof_float))
+        gr.hier_block2.__init__(self, "extended_encoder",
+                                gr.io_signature(1, 1, gr.sizeof_char),
+                                gr.io_signature(1, 1, gr.sizeof_char))
 
         self.blocks=[]
         self.puncpat=puncpat
         if threading == 'capillary':
-            self.blocks.append(capillary_threaded_encoder(encoder_obj_list))
+            self.blocks.append(capillary_threaded_encoder(encoder_obj_list,
+                                                          gr.sizeof_char,
+                                                          gr.sizeof_char))
         elif threading == 'ordinary':
-            self.blocks.append(threaded_encoder(encoder_obj_list))
+            self.blocks.append(threaded_encoder(encoder_obj_list,
+                                                gr.sizeof_char,
+                                                gr.sizeof_char))
         else:
-            self.blocks.append(fec.encoder(encoder_obj_list[0]))
+            self.blocks.append(fec.encoder(encoder_obj_list[0],
+                                           gr.sizeof_char,
+                                           gr.sizeof_char))
 
         if self.puncpat != '11':
-            self.blocks.append(fec.puncture_ff(0, read_bitlist(puncpat),
+            self.blocks.append(fec.puncture_bb(0, read_bitlist(puncpat),
                                                puncpat.count('0'), len(puncpat)))
 
+        # Connect the input to the encoder and the output to the
+        # puncture if used or the encoder if not.
         self.connect((self, 0), (self.blocks[0], 0));
         self.connect((self.blocks[-1], 0), (self, 0));
 
+        # If using the puncture block, add it into the flowgraph after
+        # the encoder.
         for i in range(len(self.blocks) - 1):
             self.connect((self.blocks[i], 0), (self.blocks[i+1], 0));
 

@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2013-2014 Free Software Foundation, Inc.
+ * Copyright 2014 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -20,34 +20,25 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef INCLUDED_FEC_GENERIC_ENCODER_H
-#define INCLUDED_FEC_GENERIC_ENCODER_H
+#ifndef INCLUDED_FEC_PUNCTURE_BB_H
+#define INCLUDED_FEC_PUNCTURE_BB_H
 
 #include <gnuradio/fec/api.h>
 #include <gnuradio/block.h>
-#include <boost/shared_ptr.hpp>
 
 namespace gr {
   namespace fec {
 
-    class FEC_API generic_encoder
+    class FEC_API puncture_bb : virtual public block
     {
     public:
-      friend class encoder;
-      virtual void generic_work(void *in_buffer, void *out_buffer) = 0;
-    public:
-      typedef boost::shared_ptr<generic_encoder> sptr;
+      // gr::fec::puncture_bb::sptr
+      typedef boost::shared_ptr<puncture_bb> sptr;
 
-      virtual int get_input_size() = 0;
-      virtual int get_output_size() = 0;
-      generic_encoder(void) {};
-      virtual ~generic_encoder();
+      static sptr make(int delay, int puncpat, int puncholes, int puncsize);
     };
-
-    FEC_API int get_encoder_output_size(generic_encoder::sptr my_encoder);
-    FEC_API int get_encoder_input_size(generic_encoder::sptr my_encoder);
 
   } /* namespace fec */
 } /* namespace gr */
 
-#endif /* INCLUDED_FEC_GENERIC_ENCODER_H */
+#endif /* INCLUDED_FEC_PUNCTURE_BB_H */

@@ -25,27 +25,29 @@ import fec_swig as fec
 import math
 
 class capillary_threaded_encoder(gr.hier_block2):
-    def __init__(self, encoder_list_0, input_size=gr.sizeof_char, output_size=gr.sizeof_float):
-        gr.hier_block2.__init__(
-            self, "Capillary Threaded Encoder",
-            gr.io_signature(1, 1, input_size),
-            gr.io_signature(1, 1, output_size))
+    def __init__(self, encoder_list_0, input_size=gr.sizeof_char, output_size=gr.sizeof_char):
+        gr.hier_block2.__init__(self, "Capillary Threaded Encoder",
+                                gr.io_signature(1, 1, input_size),
+                                gr.io_signature(1, 1, output_size))
 
         self.encoder_list_0 = encoder_list_0
 
         self.deinterleaves_0 = [];
         for i in range(int(math.log(len(encoder_list_0), 2))):
             for j in range(int(math.pow(2, i))):
-                self.deinterleaves_0.append(blocks.deinterleave(input_size, fec.get_encoder_input_size(encoder_list_0[0])))
+                self.deinterleaves_0.append(blocks.deinterleave(input_size,
+                                                                fec.get_encoder_input_size(encoder_list_0[0])))
 
        	self.generic_encoders_0 = [];
         for i in range(len(encoder_list_0)):
-            self.generic_encoders_0.append(fec.encoder(encoder_list_0[i], input_size, output_size))
+            self.generic_encoders_0.append(fec.encoder(encoder_list_0[i],
+                                                       input_size, output_size))
 
         self.interleaves_0 = [];
         for i in range(int(math.log(len(encoder_list_0), 2))):
             for j in range(int(math.pow(2, i))):
-                self.interleaves_0.append(blocks.interleave(output_size, fec.get_encoder_output_size(encoder_list_0[0])))
+                self.interleaves_0.append(blocks.interleave(output_size,
+                                                            fec.get_encoder_output_size(encoder_list_0[0])))
 
         rootcount = 0;
         branchcount = 1;

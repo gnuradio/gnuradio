@@ -33,7 +33,7 @@ class threaded_encoder(gr.hier_block2):
         self.encoder_list_0 = encoder_list_0
 
         self.fec_deinterleave_0 = blocks.deinterleave(input_size,
-                                                   fec.get_encoder_input_size(encoder_list_0[0]))
+                                                      fec.get_encoder_input_size(encoder_list_0[0]))
 
         self.generic_encoders_0 = [];
         for i in range(len(encoder_list_0)):

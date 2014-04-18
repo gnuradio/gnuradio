@@ -88,6 +88,7 @@ install(FILES
     viterbi.h
     ber_bf.h
     conv_bit_corr_bb.h
+    puncture_bb.h
     puncture_ff.h
     depuncture_bb.h
     DESTINATION ${GR_INCLUDE_DIR}/gnuradio/fec

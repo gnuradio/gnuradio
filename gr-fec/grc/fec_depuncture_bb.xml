@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <block>
   <name>Depuncture</name>
-  <key>fec_depuncture_ff</key>
+  <key>fec_depuncture_bb</key>
   <import>from gnuradio import fec</import>
   <make>fec.depucture_bb($delay, $puncpat, $puncholes, $puncsize)</make>
 

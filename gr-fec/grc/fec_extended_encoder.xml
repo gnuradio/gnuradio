@@ -47,7 +47,7 @@
 
   <source>
     <name>out</name>
-    <type>float</type>
+    <type>byte</type>
   </source>
 
   <doc>

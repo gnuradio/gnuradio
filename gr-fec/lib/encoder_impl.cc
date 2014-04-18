@@ -89,14 +89,9 @@ namespace gr {
       char *outBuffer = (char*)output_items[0];
 
       for(int i = 0; i < noutput_items/output_multiple(); ++i) {
-        //printf("%u inp %u oup\n", d_input_item_size, d_output_item_size);
-        //printf("%u, %u\n", (i*d_encoder->get_input_size()*d_input_item_size), (i*d_encoder->get_output_size()*d_output_item_size));
-
         d_encoder->generic_work((void*)(inBuffer+(i*d_encoder->get_input_size()*d_input_item_size)),
                                 (void*)(outBuffer+(i*d_encoder->get_output_size()*d_output_item_size)));
       }
-
-      //printf("%d, %u, %u\n", (int)(((1.0/relative_rate()) * noutput_items) + .5), noutput_items, output_multiple());
 
       consume_each((int)(((1.0/relative_rate()) * noutput_items) + .5));
       return noutput_items;
