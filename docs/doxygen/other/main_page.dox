@@ -79,7 +79,7 @@ done. A single source and sink are used with a FIR filter between
 them.
 
 \code
-    from gnuradio import gr, filter, analog
+    from gnuradio import gr, blocks, filter, analog
 
     class my_topblock(gr.top_block):
         def __init__(self):
@@ -88,7 +88,7 @@ them.
             amp = 1
             taps = filter.firdes.low_pass(1, 1, 0.1, 0.01)
 
-            self.src = analog.noise_source_c(gr.GR_GAUSSIAN, amp)
+            self.src = analog.noise_source_c(analog.GR_GAUSSIAN, amp)
             self.flt = filter.fir_filter_ccf(1, taps)
             self.snk = blocks.null_sink(gr.sizeof_gr_complex)
 
