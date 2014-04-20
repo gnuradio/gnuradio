@@ -30,6 +30,7 @@
 #include <gnuradio/buffer.h>
 #include <gnuradio/prefs.h>
 #include <gnuradio/config.h>
+#include <gnuradio/rpcregisterhelpers.h>
 #include <stdexcept>
 #include <iostream>
 
