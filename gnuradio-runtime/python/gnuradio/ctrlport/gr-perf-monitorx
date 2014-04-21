@@ -412,6 +412,8 @@ class DataTableRuntimes(DataTable):
 
         # strip values out of ctrlport response
         total_work = sum(map(lambda x: x.value, wrk_knobs.values()))
+        if(total_work == 0):
+            total_work = 1
         work_times = dict(zip(
                     map(lambda x: x.split("::")[0], wrk_knobs.keys()),
                     map(lambda x: x.value/total_work, wrk_knobs.values())))
@@ -489,6 +491,8 @@ class MForm(QtGui.QWidget):
 
             # strip values out of ctrlport response
             total_work = sum(map(lambda x: x.value, wrk_knobs.values()))
+            if(total_work == 0):
+                total_work = 1
             work_times = dict(zip(
                         map(lambda x: x.split("::")[0], wrk_knobs.keys()),
                         map(lambda x: x.value/total_work, wrk_knobs.values())))
