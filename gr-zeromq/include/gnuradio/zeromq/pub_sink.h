@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2013 Free Software Foundation, Inc.
+ * Copyright 2013,2014 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio.
  *
@@ -20,8 +20,8 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef INCLUDED_ZEROMQ_SOURCE_PUSHPULL_FEEDBACK_H
-#define INCLUDED_ZEROMQ_SOURCE_PUSHPULL_FEEDBACK_H
+#ifndef INCLUDED_ZEROMQ_PUB_SINK_H
+#define INCLUDED_ZEROMQ_PUB_SINK_H
 
 #include <gnuradio/zeromq/api.h>
 #include <gnuradio/sync_block.h>
@@ -30,27 +30,32 @@ namespace gr {
   namespace zeromq {
 
     /*!
-     * \brief <+description of block+>
+     * \brief Sink the contents of a stream to a ZMQ PUB socket
      * \ingroup zeromq
      *
+     * \details
+     * This block acts a a streaming sink for a GNU Radio flowgraph
+     * and writes its contents to a ZMQ PUB socket.  A PUB socket may
+     * have subscribers and will pass all incoming stream data to each
+     * subscriber.  Subscribers can be either another gr-zeromq source
+     * block or a non-GNU Radio ZMQ socket.
      */
-    class ZEROMQ_API source_pushpull_feedback : virtual public gr::sync_block
+    class ZEROMQ_API pub_sink : virtual public gr::sync_block
     {
     public:
-      typedef boost::shared_ptr<source_pushpull_feedback> sptr;
+      typedef boost::shared_ptr<pub_sink> sptr;
 
       /*!
-       * \brief Return a shared_ptr to a new instance of zeromq::source_pushpull_feedback.
+       * \brief Return a shared_ptr to a new instance of zeromq::pub_sink.
        *
-       * To avoid accidental use of raw pointers, zeromq::source_pushpull_feedback's
-       * constructor is in a private implementation
-       * class. zeromq::source_pushpull_feedback::make is the public interface for
-       * creating new instances.
+       * \param itemsize Size of a stream item in bytes
+       * \param address  ZMQ socket address specifier
+       * \param blocking Indicate whether blocking sends should be used, default true.
        */
-      static sptr make(size_t itemsize, char *address);
+      static sptr make(size_t itemsize, char *address, bool blocking=true);
     };
 
   } // namespace zeromq
 } // namespace gr
 
-#endif /* INCLUDED_ZEROMQ_SOURCE_PUSHPULL_FEEDBACK_H */
+#endif /* INCLUDED_ZEROMQ_PUB_SINK_H */

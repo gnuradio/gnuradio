@@ -20,8 +20,8 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef INCLUDED_ZEROMQ_SINK_PUBSUB_H
-#define INCLUDED_ZEROMQ_SINK_PUBSUB_H
+#ifndef INCLUDED_ZEROMQ_PULL_FEEDBACK_SOURCE_H
+#define INCLUDED_ZEROMQ_PULL_FEEDBACK_SOURCE_H
 
 #include <gnuradio/zeromq/api.h>
 #include <gnuradio/sync_block.h>
@@ -30,32 +30,30 @@ namespace gr {
   namespace zeromq {
 
     /*!
-     * \brief Sink the contents of a stream to a ZMQ PUB socket
+     * \brief Receive messages on ZMQ PULL socket and source stream
      * \ingroup zeromq
      *
      * \details
-     * This block acts a a streaming sink for a GNU Radio flowgraph
-     * and writes its contents to a ZMQ PUB socket.  A PUB socket may
-     * have subscribers and will pass all incoming stream data to each
-     * subscriber.  Subscribers can be either another gr-zeromq source
-     * block or a non-GNU Radio ZMQ socket.
+     * This block will connect to a ZMQ PULL socket, then produce all
+     * incoming messages as streaming output.
      */
-    class ZEROMQ_API sink_pubsub : virtual public gr::sync_block
+    class ZEROMQ_API pull_feedback_source : virtual public gr::sync_block
     {
     public:
-      typedef boost::shared_ptr<sink_pubsub> sptr;
+      typedef boost::shared_ptr<pull_feedback_source> sptr;
 
       /*!
-       * \brief Return a shared_ptr to a new instance of zeromq::sink_pubsub.
+       * \brief Return a shared_ptr to a new instance of gr::zeromq::pull_source.
        *
        * \param itemsize Size of a stream item in bytes
        * \param address  ZMQ socket address specifier
-       * \param blocking Indicate whether blocking sends should be used, default true.
+       * \param timeout  Receive timeout in seconds, default is 100ms, 1us increments
+       *
        */
-      static sptr make(size_t itemsize, char *address, bool blocking=true);
+      static sptr make(size_t itemsize, char *address, float timeout=0.1);
     };
 
   } // namespace zeromq
 } // namespace gr
 
-#endif /* INCLUDED_ZEROMQ_SINK_PUBSUB_H */
+#endif /* INCLUDED_ZEROMQ_PULL_FEEDBACK_SOURCE_H */

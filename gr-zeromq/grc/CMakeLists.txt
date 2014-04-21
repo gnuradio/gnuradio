@@ -18,7 +18,7 @@
 # Boston, MA 02110-1301, USA.
 
 install(FILES
-    zeromq_sink_pubsub.xml
+    zeromq_pub_sink.xml
     zeromq_push_sink.xml
     zeromq_pull_source.xml
 

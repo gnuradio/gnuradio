@@ -25,20 +25,20 @@
 #endif
 
 #include <gnuradio/io_signature.h>
-#include "sink_pubsub_impl.h"
+#include "pub_sink_impl.h"
 
 namespace gr {
   namespace zeromq {
 
-    sink_pubsub::sptr
-    sink_pubsub::make(size_t itemsize, char *address, bool blocking)
+    pub_sink::sptr
+    pub_sink::make(size_t itemsize, char *address, bool blocking)
     {
       return gnuradio::get_initial_sptr
-	(new sink_pubsub_impl(itemsize, address, blocking));
+	(new pub_sink_impl(itemsize, address, blocking));
     }
 
-    sink_pubsub_impl::sink_pubsub_impl(size_t itemsize, char *address, bool blocking)
-      : gr::sync_block("sink_pubsub",
+    pub_sink_impl::pub_sink_impl(size_t itemsize, char *address, bool blocking)
+      : gr::sync_block("pub_sink",
                        gr::io_signature::make(1, 1, itemsize),
                        gr::io_signature::make(0, 0, 0)),
         d_itemsize(itemsize), d_blocking(blocking)
@@ -48,16 +48,16 @@ namespace gr {
       d_socket->bind(address);
     }
 
-    sink_pubsub_impl::~sink_pubsub_impl()
+    pub_sink_impl::~pub_sink_impl()
     {
       delete d_socket;
       delete d_context;
     }
 
     int
-    sink_pubsub_impl::work(int noutput_items,
-                           gr_vector_const_void_star &input_items,
-                           gr_vector_void_star &output_items)
+    pub_sink_impl::work(int noutput_items,
+                        gr_vector_const_void_star &input_items,
+                        gr_vector_void_star &output_items)
     {
       const char *in = (const char *)input_items[0];
 

@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2013 Free Software Foundation, Inc.
+ * Copyright 2013, 2014 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio.
  *
@@ -25,45 +25,45 @@
 #endif
 
 #include <gnuradio/io_signature.h>
-#include "source_pushpull_feedback_impl.h"
+#include "pull_feedback_source_impl.h"
 
 namespace gr {
   namespace zeromq {
 
-    source_pushpull_feedback::sptr
-    source_pushpull_feedback::make(size_t itemsize, char *address)
+    pull_feedback_source::sptr
+    pull_feedback_source::make(size_t itemsize, char *address, float timeout)
     {
       return gnuradio::get_initial_sptr
-        (new source_pushpull_feedback_impl(itemsize, address));
+        (new pull_feedback_source_impl(itemsize, address, timeout));
     }
 
-    source_pushpull_feedback_impl::source_pushpull_feedback_impl(size_t itemsize, char *address)
-      : gr::sync_block("source_pushpull_feedback",
+    pull_feedback_source_impl::pull_feedback_source_impl(size_t itemsize, char *address, float timeout)
+      : gr::sync_block("pull_feedback_source",
                        gr::io_signature::make(0, 0, 0),
                        gr::io_signature::make(1, 1, itemsize)),
         d_itemsize(itemsize), d_first_work(true)
     {
+      d_timeout = timeout >= 0 ? (int)(timeout*1e6) : 0;
       d_context = new zmq::context_t(1);
       d_socket = new zmq::socket_t(*d_context, ZMQ_PULL);
-      d_socket->connect (address);
-      std::cout << "source_pushpull on " << address << std::endl;
+      d_socket->connect(address);
     }
 
-    source_pushpull_feedback_impl::~source_pushpull_feedback_impl()
+    pull_feedback_source_impl::~pull_feedback_source_impl()
     {
       delete(d_socket);
       delete(d_context);
     }
 
     int
-    source_pushpull_feedback_impl::work(int noutput_items,
-                                        gr_vector_const_void_star &input_items,
-                                        gr_vector_void_star &output_items)
+    pull_feedback_source_impl::work(int noutput_items,
+                                    gr_vector_const_void_star &input_items,
+                                    gr_vector_void_star &output_items)
     {
       char *out = (char*)output_items[0];
 
       zmq::pollitem_t items[] = { { *d_socket, 0, ZMQ_POLLIN, 0 } };
-      zmq::poll (&items[0], 1, 1000);
+      zmq::poll (&items[0], 1, d_timeout);
 
       //  If we got a reply, process
       if (items[0].revents & ZMQ_POLLIN) {

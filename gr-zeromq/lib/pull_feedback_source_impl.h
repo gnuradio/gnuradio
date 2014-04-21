@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2013 Free Software Foundation, Inc.
+ * Copyright 2013,2014 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio.
  *
@@ -20,26 +20,27 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef INCLUDED_ZMQBLOCKS_SOURCE_PUSHPULL_FEEDBACK_IMPL_H
-#define INCLUDED_ZMQBLOCKS_SOURCE_PUSHPULL_FEEDBACK_IMPL_H
+#ifndef INCLUDED_ZMQBLOCKS_PULL_FEEDBACK_SOURCE_IMPL_H
+#define INCLUDED_ZMQBLOCKS_PULL_FEEDBACK_SOURCE_IMPL_H
 
-#include <gnuradio/zeromq/source_pushpull_feedback.h>
+#include <gnuradio/zeromq/pull_feedback_source.h>
 #include <zmq.hpp>
 
 namespace gr {
   namespace zeromq {
 
-    class source_pushpull_feedback_impl : public source_pushpull_feedback
+    class pull_feedback_source_impl : public pull_feedback_source
     {
     private:
       size_t          d_itemsize;
+      int             d_timeout;
       zmq::context_t  *d_context;
       zmq::socket_t   *d_socket;
       bool            d_first_work;
 
     public:
-      source_pushpull_feedback_impl(size_t itemsize, char *address);
-      ~source_pushpull_feedback_impl();
+      pull_feedback_source_impl(size_t itemsize, char *address);
+      ~pull_feedback_source_impl();
 
       int work(int noutput_items,
                gr_vector_const_void_star &input_items,
@@ -48,4 +49,4 @@ namespace gr {
   } // namespace zeromq
 } // namespace gr
 
-#endif /* INCLUDED_ZMQBLOCKS_SOURCE_PUSHPULL_FEEDBACK_IMPL_H */
+#endif /* INCLUDED_ZMQBLOCKS_PULL_FEEDBACK_SOURCE_IMPL_H */

@@ -20,16 +20,16 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef INCLUDED_ZMQBLOCKS_SINK_PUBSUB_IMPL_H
-#define INCLUDED_ZMQBLOCKS_SINK_PUBSUB_IMPL_H
+#ifndef INCLUDED_ZMQBLOCKS_PUB_SINK_IMPL_H
+#define INCLUDED_ZMQBLOCKS_PUB_SINK_IMPL_H
 
-#include <gnuradio/zeromq/sink_pubsub.h>
+#include <gnuradio/zeromq/pub_sink.h>
 #include <zmq.hpp>
 
 namespace gr {
   namespace zeromq {
 
-    class sink_pubsub_impl : public sink_pubsub
+    class pub_sink_impl : public pub_sink
     {
     private:
       size_t          d_itemsize;
@@ -38,8 +38,8 @@ namespace gr {
       zmq::socket_t   *d_socket;
 
     public:
-      sink_pubsub_impl(size_t itemsize, char *address, bool blocking);
-      ~sink_pubsub_impl();
+      pub_sink_impl(size_t itemsize, char *address, bool blocking);
+      ~pub_sink_impl();
 
       int work(int noutput_items,
 	       gr_vector_const_void_star &input_items,
@@ -49,4 +49,4 @@ namespace gr {
   } // namespace zeromq
 } // namespace gr
 
-#endif /* INCLUDED_ZMQBLOCKS_SINK_PUBSUB_IMPL_H */
+#endif /* INCLUDED_ZMQBLOCKS_PUB_SINK_IMPL_H */

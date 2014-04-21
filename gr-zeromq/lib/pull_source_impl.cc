@@ -43,7 +43,7 @@ namespace gr {
                        gr::io_signature::make(1, 1, itemsize)),
         d_itemsize(itemsize)
     {
-      d_timeout = timeout >=0 ? (int)(timeout*1e6) : 0;
+      d_timeout = timeout >= 0 ? (int)(timeout*1e6) : 0;
       d_context = new zmq::context_t(1);
       d_socket = new zmq::socket_t(*d_context, ZMQ_PULL);
       d_socket->connect (address);
