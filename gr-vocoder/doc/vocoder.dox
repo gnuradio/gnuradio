@@ -20,7 +20,7 @@ by using:
     help(vocoder)
 \endcode
 
-\section using Using the vocoders
+\section using_vocoders Using the vocoders
 
 Note that most vocoders use short inputs instead of floats. This means you
 must convert audio signals from float to short by using a type conversion
