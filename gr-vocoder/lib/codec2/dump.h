@@ -26,7 +26,10 @@
 #ifndef __DUMP__
 #define __DUMP__
 
+#include "defines.h"
 #include "comp.h"
+#include "kiss_fft.h"
+#include "codec2_internal.h"
 
 void dump_on(char filename_prefix[]);
 void dump_off();
@@ -40,17 +43,23 @@ void dump_Ew(COMP Ew[]);
 
 void dump_model(MODEL *m);
 void dump_quantised_model(MODEL *m);
+void dump_Pwn(COMP Pw[]);
 void dump_Pw(COMP Pw[]);
+void dump_Rw(float Rw[]);
 void dump_lsp(float lsp[]);
+void dump_weights(float w[], int ndim);
+void dump_lsp_(float lsp_[]);
 void dump_ak(float ak[], int order);
+void dump_ak_(float ak[], int order);
 void dump_E(float E);
-void dump_resample(float w[], float A[], int n);
+void dump_lpc_snr(float snr);
 
 /* phase modelling */
 
 void dump_snr(float snr);
 void dump_phase(float phase[], int L);
 void dump_phase_(float phase[], int L);
+void dump_hephase(int ind[], int dim);
 
 /* NLP states */
 
@@ -63,5 +72,6 @@ void dump_Rk(float Rk[]);
 /* post filter */
 
 void dump_bg(float e, float bg_est, float percent_uv);
+void dump_Pwb(COMP Pwb[]);
 
 #endif

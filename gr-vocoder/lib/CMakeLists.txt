@@ -100,6 +100,7 @@ link_directories(${LOG4CPP_LIBRARY_DIRS})
 list(APPEND gr_vocoder_sources
     alaw_decode_bs_impl.cc
     alaw_encode_sb_impl.cc
+    codec2.cc
     codec2_decode_ps_impl.cc
     codec2_encode_sp_impl.cc
     cvsd_decode_bs_impl.cc

@@ -24,6 +24,7 @@
 #define INCLUDED_VOCODER_CODEC2_DECODE_PS_H
 
 #include <gnuradio/vocoder/api.h>
+#include <gnuradio/vocoder/codec2.h>
 #include <gnuradio/sync_interpolator.h>
 
 namespace gr {
@@ -33,7 +34,7 @@ namespace gr {
      * \brief CODEC2 Vocoder Decoder
      * \ingroup audio_blk
      *
-     * Input: A vector of 50 unpacked bits forming a Codec2 frame.
+     * Input: A vector of unpacked bits forming a Codec2 frame.
      *
      * Output: 16-bit short values of an audio signal with sampling rate 8 kHz.
      *
@@ -47,8 +48,10 @@ namespace gr {
 
       /*!
        * \brief Make Codec2 decoder block.
+       *
+       * \param mode Encoded bit rate/mode
        */
-      static sptr make();
+      static sptr make(int mode=codec2::MODE_2400);
     };
 
   } /* namespace vocoder */

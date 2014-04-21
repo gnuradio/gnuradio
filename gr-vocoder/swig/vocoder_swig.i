@@ -30,6 +30,7 @@
 %{
 #include "gnuradio/vocoder/alaw_decode_bs.h"
 #include "gnuradio/vocoder/alaw_encode_sb.h"
+#include "gnuradio/vocoder/codec2.h"
 #include "gnuradio/vocoder/codec2_decode_ps.h"
 #include "gnuradio/vocoder/codec2_encode_sp.h"
 #include "gnuradio/vocoder/cvsd_decode_bs.h"
@@ -48,6 +49,7 @@
 
 %include "gnuradio/vocoder/alaw_decode_bs.h"
 %include "gnuradio/vocoder/alaw_encode_sb.h"
+%include "gnuradio/vocoder/codec2.h"
 %include "gnuradio/vocoder/codec2_decode_ps.h"
 %include "gnuradio/vocoder/codec2_encode_sp.h"
 %include "gnuradio/vocoder/cvsd_decode_bs.h"
