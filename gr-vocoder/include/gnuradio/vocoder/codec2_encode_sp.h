@@ -24,6 +24,7 @@
 #define INCLUDED_VOCODER_CODEC2_ENCODE_SP_H
 
 #include <gnuradio/vocoder/api.h>
+#include <gnuradio/vocoder/codec2.h>
 #include <gnuradio/sync_decimator.h>
 
 namespace gr {
@@ -35,13 +36,7 @@ namespace gr {
      *
      * Input: Speech (audio) signal as 16-bit shorts, sampling rate 8 kHz.
      *
-     * Output: Vector of 50 unpacked bits, forming one Codec2 frame, per 160 input samples.
-     *
-     * Note that the Codec2 library produces 7 bytes with a total of 50 bits
-     * per frame. The bits are MSB-first on these 7 bytes, so the first item
-     * of the output vector is the MSB of the first byte of the frame.
-     * If this block is combined with the gr::vocoder::codec2_decode_ps block,
-     * this will work out of the box.
+     * Output: Vector of unpacked bits, forming one Codec2 frame, per 160 input samples.
      *
      */
     class VOCODER_API codec2_encode_sp : virtual public sync_decimator
@@ -52,8 +47,10 @@ namespace gr {
 
       /*!
        * \brief Make Codec2 encoder block.
+       *
+       * \param mode Encoded bit rate/mode
        */
-      static sptr make(int mode);
+      static sptr make(int mode=codec2::MODE_2400);
     };
 
   } /* namespace vocoder */
