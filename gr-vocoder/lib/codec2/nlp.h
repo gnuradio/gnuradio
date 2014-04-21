@@ -30,10 +30,9 @@
 
 #include "comp.h"
 
-void *nlp_create();
+void *nlp_create(int m);
 void nlp_destroy(void *nlp_state);
-float nlp(void *nlp_state, float Sn[], int n, int m, int pmin, int pmax,
-	  float *pitch, COMP Sw[], float *prev_Wo);
-float test_candidate_mbe(COMP Sw[], float f0, COMP Sw_[]);
+float nlp(void *nlp_state, float Sn[], int n, int pmin, int pmax,
+	  float *pitch, COMP Sw[], COMP W[], float *prev_Wo);
 
 #endif

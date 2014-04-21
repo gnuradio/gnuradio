@@ -27,16 +27,15 @@
 
 #include "defines.h"
 #include "phase.h"
-#include "fft.h"
+#include "kiss_fft.h"
 #include "comp.h"
-#include "glottal.c"
+#include "sine.h"
 
 #include <assert.h>
+#include <ctype.h>
 #include <math.h>
 #include <string.h>
 #include <stdlib.h>
-
-#define GLOTTAL_FFT_SIZE 512
 
 /*---------------------------------------------------------------------------*\
 
@@ -48,6 +47,7 @@
 \*---------------------------------------------------------------------------*/
 
 void aks_to_H(
+              kiss_fft_cfg fft_fwd_cfg,
 	      MODEL *model,	/* model parameters */
 	      float  aks[],	/* LPC's */
 	      float  G,	        /* energy term */
@@ -55,7 +55,8 @@ void aks_to_H(
 	      int    order
 )
 {
-  COMP  Pw[FFT_DEC];	/* power spectrum */
+  COMP  pw[FFT_ENC];	/* power spectrum (input) */
+  COMP  Pw[FFT_ENC];	/* power spectrum (output) */
   int   i,m;		/* loop variables */
   int   am,bm;		/* limits of current band */
   float r;		/* no. rads/bin */
@@ -64,35 +65,35 @@ void aks_to_H(
   int   b;		/* centre bin of harmonic */
   float phi_;		/* phase of LPC spectra */
 
-  r = TWO_PI/(FFT_DEC);
+  r = TWO_PI/(FFT_ENC);
 
   /* Determine DFT of A(exp(jw)) ------------------------------------------*/
 
-  for(i=0; i<FFT_DEC; i++) {
-    Pw[i].real = 0.0;
-    Pw[i].imag = 0.0;
+  for(i=0; i<FFT_ENC; i++) {
+    pw[i].real = 0.0;
+    pw[i].imag = 0.0;
   }
 
   for(i=0; i<=order; i++)
-    Pw[i].real = aks[i];
+    pw[i].real = aks[i];
 
-  fft(&Pw[0].real,FFT_DEC,-1);
+  kiss_fft(fft_fwd_cfg, (kiss_fft_cpx *)pw, (kiss_fft_cpx *)Pw);
 
   /* Sample magnitude and phase at harmonics */
 
   for(m=1; m<=model->L; m++) {
-    am = floor((m - 0.5)*model->Wo/r + 0.5);
-    bm = floor((m + 0.5)*model->Wo/r + 0.5);
-    b = floor(m*model->Wo/r + 0.5);
+      am = (int)((m - 0.5)*model->Wo/r + 0.5);
+      bm = (int)((m + 0.5)*model->Wo/r + 0.5);
+      b = (int)(m*model->Wo/r + 0.5);
 
-    Em = 0.0;
-    for(i=am; i<bm; i++)
-      Em += G/(Pw[i].real*Pw[i].real + Pw[i].imag*Pw[i].imag);
-    Am = sqrt(fabs(Em/(bm-am)));
+      Em = 0.0;
+      for(i=am; i<bm; i++)
+          Em += G/(Pw[i].real*Pw[i].real + Pw[i].imag*Pw[i].imag);
+      Am = sqrtf(fabsf(Em/(bm-am)));
 
-    phi_ = -atan2(Pw[b].imag,Pw[b].real);
-    H[m].real = Am*cos(phi_);
-    H[m].imag = Am*sin(phi_);
+      phi_ = -atan2f(Pw[b].imag,Pw[b].real);
+      H[m].real = Am*cosf(phi_);
+      H[m].imag = Am*sinf(phi_);
   }
 }
 
@@ -188,6 +189,7 @@ void aks_to_H(
 \*---------------------------------------------------------------------------*/
 
 void phase_synth_zero_order(
+    kiss_fft_cfg fft_fwd_cfg,
     MODEL *model,
     float  aks[],
     float *ex_phase,            /* excitation phase of fundamental */
@@ -196,16 +198,13 @@ void phase_synth_zero_order(
 {
   int   m;
   float new_phi;
-  COMP  Ex[MAX_AMP];		/* excitation samples */
-  COMP  A_[MAX_AMP];		/* synthesised harmonic samples */
-  COMP  H[MAX_AMP];             /* LPC freq domain samples */
+  COMP  Ex[MAX_AMP+1];		/* excitation samples */
+  COMP  A_[MAX_AMP+1];		/* synthesised harmonic samples */
+  COMP  H[MAX_AMP+1];           /* LPC freq domain samples */
   float G;
-  float jitter = 0.0;
-  float r;
-  int   b;
 
   G = 1.0;
-  aks_to_H(model, aks, G, H, order);
+  aks_to_H(fft_fwd_cfg, model, aks, G, H, order);
 
   /*
      Update excitation fundamental phase track, this sets the position
@@ -213,50 +212,42 @@ void phase_synth_zero_order(
      I found that using just this frame's Wo improved quality for UV
      sounds compared to interpolating two frames Wo like this:
 
-     ex_phase[0] += (*prev_Wo+mode->Wo)*N/2;
+     ex_phase[0] += (*prev_Wo+model->Wo)*N/2;
   */
 
   ex_phase[0] += (model->Wo)*N;
-  ex_phase[0] -= TWO_PI*floor(ex_phase[0]/TWO_PI + 0.5);
-  r = TWO_PI/GLOTTAL_FFT_SIZE;
+  ex_phase[0] -= TWO_PI*floorf(ex_phase[0]/TWO_PI + 0.5);
 
   for(m=1; m<=model->L; m++) {
 
-      /* generate excitation */
+    /* generate excitation */
 
       if (model->voiced) {
-	  /* I think adding a little jitter helps improve low pitch
-	     males like hts1a. This moves the onset of each harmonic
-	     over at +/- 0.25 of a sample.
-	  */
-	  jitter = 0.25*(1.0 - 2.0*rand()/RAND_MAX);
-	  b = floor(m*model->Wo/r + 0.5);
-	  if (b > ((GLOTTAL_FFT_SIZE/2)-1)) {
-	      b = (GLOTTAL_FFT_SIZE/2)-1;
-	  }
-	  Ex[m].real = cos(ex_phase[0]*m - jitter*model->Wo*m + glottal[b]);
-	  Ex[m].imag = sin(ex_phase[0]*m - jitter*model->Wo*m + glottal[b]);
-      }
-      else {
 
-	  /* When a few samples were tested I found that LPC filter
-	     phase is not needed in the unvoiced case, but no harm in
-	     keeping it.
-	  */
-	  float phi = TWO_PI*(float)rand()/RAND_MAX;
-	  Ex[m].real = cos(phi);
-	  Ex[m].imag = sin(phi);
-      }
+	Ex[m].real = cosf(ex_phase[0]*m);
+	Ex[m].imag = sinf(ex_phase[0]*m);
+    }
+    else {
 
-      /* filter using LPC filter */
+	/* When a few samples were tested I found that LPC filter
+	   phase is not needed in the unvoiced case, but no harm in
+	   keeping it.
+        */
+	float phi = TWO_PI*(float)codec2_rand()/CODEC2_RAND_MAX;
+        Ex[m].real = cosf(phi);
+	Ex[m].imag = sinf(phi);
+    }
 
-      A_[m].real = H[m].real*Ex[m].real - H[m].imag*Ex[m].imag;
-      A_[m].imag = H[m].imag*Ex[m].real + H[m].real*Ex[m].imag;
+    /* filter using LPC filter */
 
-      /* modify sinusoidal phase */
+    A_[m].real = H[m].real*Ex[m].real - H[m].imag*Ex[m].imag;
+    A_[m].imag = H[m].imag*Ex[m].real + H[m].real*Ex[m].imag;
 
-      new_phi = atan2(A_[m].imag, A_[m].real+1E-12);
-      model->phi[m] = new_phi;
+    /* modify sinusoidal phase */
+
+    new_phi = atan2f(A_[m].imag, A_[m].real+1E-12);
+    model->phi[m] = new_phi;
   }
 
 }
+

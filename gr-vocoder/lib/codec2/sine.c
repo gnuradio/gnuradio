@@ -37,7 +37,7 @@
 
 #include "defines.h"
 #include "sine.h"
-#include "fft.h"
+#include "kiss_fft.h"
 
 #define HPF_BETA 0.125
 
@@ -66,9 +66,10 @@ void hs_pitch_refinement(MODEL *model, COMP Sw[], float pmin, float pmax,
 
 \*---------------------------------------------------------------------------*/
 
-void make_analysis_window(float w[],COMP W[])
+void make_analysis_window(kiss_fft_cfg fft_fwd_cfg, float w[], COMP W[])
 {
   float m;
+  COMP  wshift[FFT_ENC];
   COMP  temp;
   int   i,j;
 
@@ -87,7 +88,7 @@ void make_analysis_window(float w[],COMP W[])
   for(i=0; i<M/2-NW/2; i++)
     w[i] = 0.0;
   for(i=M/2-NW/2,j=0; i<M/2+NW/2; i++,j++) {
-    w[i] = 0.5 - 0.5*cos(TWO_PI*j/(NW-1));
+    w[i] = 0.5 - 0.5*cosf(TWO_PI*j/(NW-1));
     m += w[i]*w[i];
   }
   for(i=M/2+NW/2; i<M; i++)
@@ -96,7 +97,7 @@ void make_analysis_window(float w[],COMP W[])
   /* Normalise - makes freq domain amplitude estimation straight
      forward */
 
-  m = 1.0/sqrt(m*FFT_ENC);
+  m = 1.0/sqrtf(m*FFT_ENC);
   for(i=0; i<M; i++) {
     w[i] *= m;
   }
@@ -123,15 +124,15 @@ void make_analysis_window(float w[],COMP W[])
   */
 
   for(i=0; i<FFT_ENC; i++) {
-    W[i].real = 0.0;
-    W[i].imag = 0.0;
+    wshift[i].real = 0.0;
+    wshift[i].imag = 0.0;
   }
   for(i=0; i<NW/2; i++)
-    W[i].real = w[i+M/2];
+    wshift[i].real = w[i+M/2];
   for(i=FFT_ENC-NW/2,j=M/2-NW/2; i<FFT_ENC; i++,j++)
-    W[i].real = w[j];
+   wshift[i].real = w[j];
 
-  fft(&W[0].real,FFT_ENC,-1);         /* "Numerical Recipes in C" FFT */
+  kiss_fft(fft_fwd_cfg, (kiss_fft_cpx *)wshift, (kiss_fft_cpx *)W);
 
   /*
       Re-arrange W[] to be symmetrical about FFT_ENC/2.  Makes later
@@ -198,13 +199,14 @@ float hpf(float x, float states[])
 
 \*---------------------------------------------------------------------------*/
 
-void dft_speech(COMP Sw[], float Sn[], float w[])
+void dft_speech(kiss_fft_cfg fft_fwd_cfg, COMP Sw[], float Sn[], float w[])
 {
-  int i;
+  int  i;
+  COMP sw[FFT_ENC];
 
   for(i=0; i<FFT_ENC; i++) {
-    Sw[i].real = 0.0;
-    Sw[i].imag = 0.0;
+    sw[i].real = 0.0;
+    sw[i].imag = 0.0;
   }
 
   /* Centre analysis window on time axis, we need to arrange input
@@ -213,14 +215,14 @@ void dft_speech(COMP Sw[], float Sn[], float w[])
   /* move 2nd half to start of FFT input vector */
 
   for(i=0; i<NW/2; i++)
-    Sw[i].real = Sn[i+M/2]*w[i+M/2];
+    sw[i].real = Sn[i+M/2]*w[i+M/2];
 
   /* move 1st half to end of FFT input vector */
 
   for(i=0; i<NW/2; i++)
-    Sw[FFT_ENC-NW/2+i].real = Sn[i+M/2-NW/2]*w[i+M/2-NW/2];
+    sw[FFT_ENC-NW/2+i].real = Sn[i+M/2-NW/2]*w[i+M/2-NW/2];
 
-  fft(&Sw[0].real,FFT_ENC,-1);
+  kiss_fft(fft_fwd_cfg, (kiss_fft_cpx *)sw, (kiss_fft_cpx *)Sw);
 }
 
 /*---------------------------------------------------------------------------*\
@@ -287,7 +289,7 @@ void hs_pitch_refinement(MODEL *model, COMP Sw[], float pmin, float pmax, float 
   float Wo;		/* current "test" fundamental freq. */
   float Wom;		/* Wo that maximises E */
   float Em;		/* mamimum energy */
-  float r;		/* number of rads/bin */
+  float r, one_on_r;	/* number of rads/bin */
   float p;		/* current pitch */
 
   /* Initialisation */
@@ -296,6 +298,7 @@ void hs_pitch_refinement(MODEL *model, COMP Sw[], float pmin, float pmax, float 
   Wom = model->Wo;
   Em = 0.0;
   r = TWO_PI/FFT_ENC;
+  one_on_r = 1.0/r;
 
   /* Determine harmonic sum for a range of Wo values */
 
@@ -304,12 +307,10 @@ void hs_pitch_refinement(MODEL *model, COMP Sw[], float pmin, float pmax, float 
     Wo = TWO_PI/p;
 
     /* Sum harmonic magnitudes */
-
     for(m=1; m<=model->L; m++) {
-      b = floor(m*Wo/r + 0.5);
-      E += Sw[b].real*Sw[b].real + Sw[b].imag*Sw[b].imag;
+        b = (int)(m*Wo*one_on_r + 0.5);
+        E += Sw[b].real*Sw[b].real + Sw[b].imag*Sw[b].imag;
     }
-
     /* Compare to see if this is a maximum */
 
     if (E > Em) {
@@ -331,40 +332,45 @@ void hs_pitch_refinement(MODEL *model, COMP Sw[], float pmin, float pmax, float 
 
 \*---------------------------------------------------------------------------*/
 
-void estimate_amplitudes(MODEL *model, COMP Sw[], COMP W[])
+void estimate_amplitudes(MODEL *model, COMP Sw[], COMP W[], int est_phase)
 {
   int   i,m;		/* loop variables */
   int   am,bm;		/* bounds of current harmonic */
   int   b;		/* DFT bin of centre of current harmonic */
   float den;		/* denominator of amplitude expression */
-  float r;		/* number of rads/bin */
+  float r, one_on_r;	/* number of rads/bin */
   int   offset;
   COMP  Am;
 
   r = TWO_PI/FFT_ENC;
+  one_on_r = 1.0/r;
 
   for(m=1; m<=model->L; m++) {
     den = 0.0;
-    am = floor((m - 0.5)*model->Wo/r + 0.5);
-    bm = floor((m + 0.5)*model->Wo/r + 0.5);
-    b = floor(m*model->Wo/r + 0.5);
+    am = (int)((m - 0.5)*model->Wo*one_on_r + 0.5);
+    bm = (int)((m + 0.5)*model->Wo*one_on_r + 0.5);
+    b = (int)(m*model->Wo/r + 0.5);
 
     /* Estimate ampltude of harmonic */
 
     den = 0.0;
     Am.real = Am.imag = 0.0;
+    offset = FFT_ENC/2 - (int)(m*model->Wo*one_on_r + 0.5);
     for(i=am; i<bm; i++) {
       den += Sw[i].real*Sw[i].real + Sw[i].imag*Sw[i].imag;
-      offset = i + FFT_ENC/2 - floor(m*model->Wo/r + 0.5);
-      Am.real += Sw[i].real*W[offset].real;
-      Am.imag += Sw[i].imag*W[offset].real;
+      Am.real += Sw[i].real*W[i + offset].real;
+      Am.imag += Sw[i].imag*W[i + offset].real;
     }
 
-    model->A[m] = sqrt(den);
+    model->A[m] = sqrtf(den);
 
-    /* Estimate phase of harmonic */
+    if (est_phase) {
 
-    model->phi[m] = atan2(Sw[b].imag,Sw[b].real);
+        /* Estimate phase of harmonic, this is expensive in CPU for
+           embedded devicesso we make it an option */
+
+        model->phi[m] = atan2(Sw[b].imag,Sw[b].real);
+    }
   }
 }
 
@@ -396,9 +402,9 @@ float est_voicing_mbe(
     float Wo;
     float sig, snr;
     float elow, ehigh, eratio;
-    float dF0, sixty;
+    float sixty;
 
-    sig = 0.0;
+    sig = 1E-4;
     for(l=1; l<=model->L/4; l++) {
 	sig += model->A[l]*model->A[l];
     }
@@ -410,7 +416,7 @@ float est_voicing_mbe(
     }
 
     Wo = model->Wo;
-    error = 0.0;
+    error = 1E-4;
 
     /* Just test across the harmonics in the first 1000 Hz (L/4) */
 
@@ -423,11 +429,11 @@ float est_voicing_mbe(
 
 	/* Estimate amplitude of harmonic assuming harmonic is totally voiced */
 
+        offset = FFT_ENC/2 - l*Wo*FFT_ENC/TWO_PI + 0.5;
 	for(m=al; m<bl; m++) {
-	    offset = FFT_ENC/2 + m - l*Wo*FFT_ENC/TWO_PI + 0.5;
-	    Am.real += Sw[m].real*W[offset].real + Sw[m].imag*W[offset].imag;
-	    Am.imag += Sw[m].imag*W[offset].real - Sw[m].real*W[offset].imag;
-	    den += W[offset].real*W[offset].real + W[offset].imag*W[offset].imag;
+	    Am.real += Sw[m].real*W[offset+m].real;
+	    Am.imag += Sw[m].imag*W[offset+m].real;
+	    den += W[offset+m].real*W[offset+m].real;
         }
 
         Am.real = Am.real/den;
@@ -435,10 +441,10 @@ float est_voicing_mbe(
 
         /* Determine error between estimated harmonic and original */
 
+        offset = FFT_ENC/2 - l*Wo*FFT_ENC/TWO_PI + 0.5;
         for(m=al; m<bl; m++) {
-	    offset = FFT_ENC/2 + m - l*Wo*FFT_ENC/TWO_PI + 0.5;
-	    Sw_[m].real = Am.real*W[offset].real - Am.imag*W[offset].imag;
-	    Sw_[m].imag = Am.real*W[offset].imag + Am.imag*W[offset].real;
+	    Sw_[m].real = Am.real*W[offset+m].real;
+	    Sw_[m].imag = Am.imag*W[offset+m].real;
 	    Ew[m].real = Sw[m].real - Sw_[m].real;
 	    Ew[m].imag = Sw[m].imag - Sw_[m].imag;
 	    error += Ew[m].real*Ew[m].real;
@@ -446,7 +452,7 @@ float est_voicing_mbe(
 	}
     }
 
-    snr = 10.0*log10(sig/error);
+    snr = 10.0*log10f(sig/error);
     if (snr > V_THRESH)
 	model->voiced = 1;
     else
@@ -455,21 +461,20 @@ float est_voicing_mbe(
     /* post processing, helps clean up some voicing errors ------------------*/
 
     /*
-       Determine the ratio of low freancy to high frequency energy,
+       Determine the ratio of low freqency to high frequency energy,
        voiced speech tends to be dominated by low frequency energy,
        unvoiced by high frequency. This measure can be used to
        determine if we have made any gross errors.
     */
 
-    elow = ehigh = 0.0;
+    elow = ehigh = 1E-4;
     for(l=1; l<=model->L/2; l++) {
 	elow += model->A[l]*model->A[l];
     }
     for(l=model->L/2; l<=model->L; l++) {
 	ehigh += model->A[l]*model->A[l];
     }
-    eratio = 10.0*log10(elow/ehigh);
-    dF0 = 0.0;
+    eratio = 10.0*log10f(elow/ehigh);
 
     /* Look for Type 1 errors, strongly V speech that has been
        accidentally declared UV */
@@ -485,16 +490,10 @@ float est_voicing_mbe(
 	if (eratio < -10.0)
 	    model->voiced = 0;
 
-	/* If pitch is jumping about it's likely this is UV */
-
-	dF0 = (model->Wo - prev_Wo)*FS/TWO_PI;
-	if (fabs(dF0) > 15.0)
-	    model->voiced = 0;
-
 	/* A common source of Type 2 errors is the pitch estimator
 	   gives a low (50Hz) estimate for UV speech, which gives a
 	   good match with noise due to the close harmoonic spacing.
-	   These errors are much more common than people with 50Hz
+	   These errors are much more common than people with 50Hz3
 	   pitch, so we have just a small eratio threshold. */
 
 	sixty = 60.0*TWO_PI/FS;
@@ -551,6 +550,7 @@ void make_synthesis_window(float Pn[])
 \*---------------------------------------------------------------------------*/
 
 void synthesise(
+  kiss_fft_cfg fft_inv_cfg,
   float  Sn_[],		/* time domain synthesised signal              */
   MODEL *model,		/* ptr to model parameters for this frame      */
   float  Pn[],		/* time domain Parzen window                   */
@@ -559,10 +559,10 @@ void synthesise(
 {
     int   i,l,j,b;	/* loop variables */
     COMP  Sw_[FFT_DEC];	/* DFT of synthesised signal */
+    COMP  sw_[FFT_DEC];	/* synthesised signal */
 
     if (shift) {
 	/* Update memories */
-
 	for(i=0; i<N-1; i++) {
 	    Sn_[i] = Sn_[i+N];
 	}
@@ -578,7 +578,7 @@ void synthesise(
       Nov 2010 - found that synthesis using time domain cos() functions
       gives better results for synthesis frames greater than 10ms.  Inverse
       FFT synthesis using a 512 pt FFT works well for 10ms window.  I think
-      (but am not sure) that the problem is realted to the quantisation of
+      (but am not sure) that the problem is related to the quantisation of
       the harmonic frequencies to the FFT bin size, e.g. there is a
       8000/512 Hz step between FFT bins.  For some reason this makes
       the speech from longer frame > 10ms sound poor.  The effect can also
@@ -592,19 +592,21 @@ void synthesise(
 #ifdef FFT_SYNTHESIS
     /* Now set up frequency domain synthesised speech */
     for(l=1; l<=model->L; l++) {
-	b = floor(l*model->Wo*FFT_DEC/TWO_PI + 0.5);
+    //for(l=model->L/2; l<=model->L; l++) {
+    //for(l=1; l<=model->L/4; l++) {
+	b = (int)(l*model->Wo*FFT_DEC/TWO_PI + 0.5);
 	if (b > ((FFT_DEC/2)-1)) {
 		b = (FFT_DEC/2)-1;
 	}
-	Sw_[b].real = model->A[l]*cos(model->phi[l]);
-	Sw_[b].imag = model->A[l]*sin(model->phi[l]);
+	Sw_[b].real = model->A[l]*cosf(model->phi[l]);
+	Sw_[b].imag = model->A[l]*sinf(model->phi[l]);
 	Sw_[FFT_DEC-b].real = Sw_[b].real;
 	Sw_[FFT_DEC-b].imag = -Sw_[b].imag;
     }
 
     /* Perform inverse DFT */
 
-    fft(&Sw_[0].real,FFT_DEC,1);
+    kiss_fft(fft_inv_cfg, (kiss_fft_cpx *)Sw_, (kiss_fft_cpx *)sw_);
 #else
     /*
        Direct time domain synthesis using the cos() function.  Works
@@ -625,14 +627,22 @@ void synthesise(
     /* Overlap add to previous samples */
 
     for(i=0; i<N-1; i++) {
-	Sn_[i] += Sw_[FFT_DEC-N+1+i].real*Pn[i];
+	Sn_[i] += sw_[FFT_DEC-N+1+i].real*Pn[i];
     }
 
     if (shift)
 	for(i=N-1,j=0; i<2*N; i++,j++)
-	    Sn_[i] = Sw_[j].real*Pn[i];
+	    Sn_[i] = sw_[j].real*Pn[i];
     else
 	for(i=N-1,j=0; i<2*N; i++,j++)
-	    Sn_[i] += Sw_[j].real*Pn[i];
+	    Sn_[i] += sw_[j].real*Pn[i];
+}
+
+
+static unsigned long next = 1;
+
+int codec2_rand(void) {
+    next = next * 1103515245 + 12345;
+    return((unsigned)(next/65536) % 32768);
 }
 

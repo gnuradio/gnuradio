@@ -28,7 +28,9 @@
 #include "defines.h"
 #include "nlp.h"
 #include "dump.h"
-#include "fft.h"
+#include "kiss_fft.h"
+#undef TIMER
+#include "machdep.h"
 
 #include <assert.h>
 #include <math.h>
@@ -50,6 +52,8 @@
 #define F0_MAX      500
 #define CNLP        0.3	        /* post processor constant              */
 #define NLP_NTAP 48	        /* Decimation LPF order */
+
+#undef DUMP
 
 /*---------------------------------------------------------------------------*\
 
@@ -111,12 +115,16 @@ const float nlp_fir[] = {
 };
 
 typedef struct {
-    float sq[PMAX_M];	     /* squared speech samples */
-    float mem_x,mem_y;       /* memory for notch filter */
-    float mem_fir[NLP_NTAP]; /* decimation FIR filter memory */
+    int           m;
+    float         w[PMAX_M/DEC];     /* DFT window                   */
+    float         sq[PMAX_M];	     /* squared speech samples       */
+    float         mem_x,mem_y;       /* memory for notch filter      */
+    float         mem_fir[NLP_NTAP]; /* decimation FIR filter memory */
+    kiss_fft_cfg  fft_cfg;           /* kiss FFT config              */
 } NLP;
 
-float post_process_mbe(COMP Fw[], int pmin, int pmax, float gmax);
+float test_candidate_mbe(COMP Sw[], COMP W[], float f0);
+float post_process_mbe(COMP Fw[], int pmin, int pmax, float gmax, COMP Sw[], COMP W[], float *prev_Wo);
 float post_process_sub_multiples(COMP Fw[],
 				 int pmin, int pmax, float gmax, int gmax_bin,
 				 float *prev_Wo);
@@ -129,14 +137,23 @@ float post_process_sub_multiples(COMP Fw[],
 
 \*---------------------------------------------------------------------------*/
 
-void *nlp_create()
+void *nlp_create(
+int    m			/* analysis window size */
+)
 {
     NLP *nlp;
     int  i;
 
+    assert(m <= PMAX_M);
+
     nlp = (NLP*)malloc(sizeof(NLP));
     if (nlp == NULL)
 	return NULL;
+
+    nlp->m = m;
+    for(i=0; i<m/DEC; i++) {
+	nlp->w[i] = 0.5 - 0.5*cosf(2*PI*i/(m/DEC-1));
+    }
 
     for(i=0; i<PMAX_M; i++)
 	nlp->sq[i] = 0.0;
@@ -145,20 +162,27 @@ void *nlp_create()
     for(i=0; i<NLP_NTAP; i++)
 	nlp->mem_fir[i] = 0.0;
 
+    nlp->fft_cfg = kiss_fft_alloc (PE_FFT_SIZE, 0, NULL, NULL);
+    assert(nlp->fft_cfg != NULL);
+
     return (void*)nlp;
 }
 
 /*---------------------------------------------------------------------------*\
 
-  nlp_destory()
+  nlp_destroy()
 
-  Initialisation function for NLP pitch estimator.
+  Shut down function for NLP pitch estimator.
 
 \*---------------------------------------------------------------------------*/
 
 void nlp_destroy(void *nlp_state)
 {
+    NLP   *nlp;
     assert(nlp_state != NULL);
+    nlp = (NLP*)nlp_state;
+
+    KISS_FFT_FREE(nlp->fft_cfg);
     free(nlp_state);
 }
 
@@ -196,28 +220,33 @@ float nlp(
   void *nlp_state,
   float  Sn[],			/* input speech vector */
   int    n,			/* frames shift (no. new samples in Sn[]) */
-  int    m,			/* analysis window size */
-  int    pmin,			/* minimum pitch value */
+  int    pmin,                  /* minimum pitch value */
   int    pmax,			/* maximum pitch value */
   float *pitch,			/* estimated pitch period in samples */
   COMP   Sw[],                  /* Freq domain version of Sn[] */
+  COMP   W[],                   /* Freq domain window */
   float *prev_Wo
 )
 {
     NLP   *nlp;
-    float  notch;		    /* current notch filter output */
-    COMP   Fw[PE_FFT_SIZE];	    /* DFT of squared signal */
+    float  notch;		    /* current notch filter output    */
+    COMP   fw[PE_FFT_SIZE];	    /* DFT of squared signal (input)  */
+    COMP   Fw[PE_FFT_SIZE];	    /* DFT of squared signal (output) */
     float  gmax;
     int    gmax_bin;
-    int   i,j;
-    float best_f0;
+    int    m, i,j;
+    float  best_f0;
+    TIMER_VAR(start, tnotch, filter, peakpick, window, fft, magsq, shiftmem);
 
     assert(nlp_state != NULL);
     nlp = (NLP*)nlp_state;
+    m = nlp->m;
+
+    TIMER_SAMPLE(start);
 
     /* Square, notch filter at DC, and LP filter vector */
 
-    for(i=m-n; i<M; i++) 	    /* square latest speech samples */
+    for(i=m-n; i<m; i++) 	    /* square latest speech samples */
 	nlp->sq[i] = Sn[i]*Sn[i];
 
     for(i=m-n; i<m; i++) {	/* notch filter at DC */
@@ -225,8 +254,17 @@ float nlp(
 	notch += COEFF*nlp->mem_y;
 	nlp->mem_x = nlp->sq[i];
 	nlp->mem_y = notch;
-	nlp->sq[i] = notch;
+	nlp->sq[i] = notch + 1.0;  /* With 0 input vectors to codec,
+				      kiss_fft() would take a long
+				      time to execute when running in
+				      real time.  Problem was traced
+				      to kiss_fft function call in
+				      this function. Adding this small
+				      constant fixed problem.  Not
+				      exactly sure why. */
     }
+
+    TIMER_SAMPLE_AND_LOG(tnotch, start, "      square and notch");
 
     for(i=m-n; i<m; i++) {	/* FIR filter vector */
 
@@ -239,26 +277,33 @@ float nlp(
 	    nlp->sq[i] += nlp->mem_fir[j]*nlp_fir[j];
     }
 
+    TIMER_SAMPLE_AND_LOG(filter, tnotch, "      filter");
+
     /* Decimate and DFT */
 
     for(i=0; i<PE_FFT_SIZE; i++) {
-	Fw[i].real = 0.0;
-	Fw[i].imag = 0.0;
+	fw[i].real = 0.0;
+	fw[i].imag = 0.0;
     }
     for(i=0; i<m/DEC; i++) {
-	Fw[i].real = nlp->sq[i*DEC]*(0.5 - 0.5*cos(2*PI*i/(m/DEC-1)));
+	fw[i].real = nlp->sq[i*DEC]*nlp->w[i];
     }
-#ifdef DUMP
+    TIMER_SAMPLE_AND_LOG(window, filter, "      window");
+    #ifdef DUMP
     dump_dec(Fw);
-#endif
-    fft(&Fw[0].real,PE_FFT_SIZE,1);
+    #endif
+
+    kiss_fft(nlp->fft_cfg, (kiss_fft_cpx *)fw, (kiss_fft_cpx *)Fw);
+    TIMER_SAMPLE_AND_LOG(fft, window, "      fft");
+
     for(i=0; i<PE_FFT_SIZE; i++)
 	Fw[i].real = Fw[i].real*Fw[i].real + Fw[i].imag*Fw[i].imag;
 
-#ifdef DUMP
+    TIMER_SAMPLE_AND_LOG(magsq, fft, "      mag sq");
+    #ifdef DUMP
     dump_sq(nlp->sq);
     dump_Fw(Fw);
-#endif
+    #endif
 
     /* find global peak */
 
@@ -271,8 +316,16 @@ float nlp(
 	}
     }
 
-    best_f0 = post_process_sub_multiples(Fw, pmin, pmax, gmax, gmax_bin,
-					 prev_Wo);
+    TIMER_SAMPLE_AND_LOG(peakpick, magsq, "      peak pick");
+
+    //#define POST_PROCESS_MBE
+    #ifdef POST_PROCESS_MBE
+    best_f0 = post_process_mbe(Fw, pmin, pmax, gmax, Sw, W, prev_Wo);
+    #else
+    best_f0 = post_process_sub_multiples(Fw, pmin, pmax, gmax, gmax_bin, prev_Wo);
+    #endif
+
+    TIMER_SAMPLE_AND_LOG(shiftmem, peakpick,  "      post process");
 
     /* Shift samples in buffer to make room for new samples */
 
@@ -282,6 +335,11 @@ float nlp(
     /* return pitch and F0 estimate */
 
     *pitch = (float)SAMPLE_RATE/best_f0;
+
+    TIMER_SAMPLE_AND_LOG2(shiftmem,  "      shift mem");
+
+    TIMER_SAMPLE_AND_LOG2(start,  "      nlp int");
+
     return(best_f0);
 }
 
@@ -289,7 +347,7 @@ float nlp(
 
   post_process_sub_multiples()
 
-  Given the global maximma of Fw[] we search interger submultiples for
+  Given the global maximma of Fw[] we search integer submultiples for
   local maxima.  If local maxima exist and they are above an
   experimentally derived threshold (OK a magic number I pulled out of
   the air) we choose the submultiple as the F0 estimate.
@@ -314,7 +372,7 @@ float post_process_sub_multiples(COMP Fw[],
     int   mult;
     float thresh, best_f0;
     int   b, bmin, bmax, lmax_bin;
-    float lmax, cmax;
+    float lmax;
     int   prev_f0_bin;
 
     /* post process estimate by searching submultiples */
@@ -342,7 +400,7 @@ float post_process_sub_multiples(COMP Fw[],
 
 	lmax = 0;
 	lmax_bin = bmin;
-	for (b=bmin; b<=bmax; b++) 		/* look for maximum in interval */
+	for (b=bmin; b<=bmax; b++) 	     /* look for maximum in interval */
 	    if (Fw[b].real > lmax) {
 		lmax = Fw[b].real;
 		lmax_bin = b;
@@ -350,7 +408,6 @@ float post_process_sub_multiples(COMP Fw[],
 
 	if (lmax > thresh)
 	    if ((lmax > Fw[lmax_bin-1].real) && (lmax > Fw[lmax_bin+1].real)) {
-		cmax = lmax;
 		cmax_bin = lmax_bin;
 	    }
 
@@ -360,5 +417,173 @@ float post_process_sub_multiples(COMP Fw[],
     best_f0 = (float)cmax_bin*SAMPLE_RATE/(PE_FFT_SIZE*DEC);
 
     return best_f0;
+}
+
+/*---------------------------------------------------------------------------*\
+
+  post_process_mbe()
+
+  Use the MBE pitch estimation algorithm to evaluate pitch candidates.  This
+  works OK but the accuracy at low F0 is affected by NW, the analysis window
+  size used for the DFT of the input speech Sw[].  Also favours high F0 in
+  the presence of background noise which causes periodic artifacts in the
+  synthesised speech.
+
+\*---------------------------------------------------------------------------*/
+
+float post_process_mbe(COMP Fw[], int pmin, int pmax, float gmax, COMP Sw[], COMP W[], float *prev_Wo)
+{
+  float candidate_f0;
+  float f0,best_f0;		/* fundamental frequency */
+  float e,e_min;                /* MBE cost function */
+  int   i;
+  #ifdef DUMP
+  float e_hz[F0_MAX];
+  #endif
+  #if !defined(NDEBUG) || defined(DUMP)
+  int   bin;
+  #endif
+  float f0_min, f0_max;
+  float f0_start, f0_end;
+
+  f0_min = (float)SAMPLE_RATE/pmax;
+  f0_max = (float)SAMPLE_RATE/pmin;
+
+  /* Now look for local maxima.  Each local maxima is a candidate
+     that we test using the MBE pitch estimation algotithm */
+
+  #ifdef DUMP
+  for(i=0; i<F0_MAX; i++)
+      e_hz[i] = -1;
+  #endif
+  e_min = 1E32;
+  best_f0 = 50;
+  for(i=PE_FFT_SIZE*DEC/pmax; i<=PE_FFT_SIZE*DEC/pmin; i++) {
+    if ((Fw[i].real > Fw[i-1].real) && (Fw[i].real > Fw[i+1].real)) {
+
+	/* local maxima found, lets test if it's big enough */
+
+	if (Fw[i].real > T*gmax) {
+
+	    /* OK, sample MBE cost function over +/- 10Hz range in 2.5Hz steps */
+
+	    candidate_f0 = (float)i*SAMPLE_RATE/(PE_FFT_SIZE*DEC);
+	    f0_start = candidate_f0-20;
+	    f0_end = candidate_f0+20;
+	    if (f0_start < f0_min) f0_start = f0_min;
+	    if (f0_end > f0_max) f0_end = f0_max;
+
+	    for(f0=f0_start; f0<=f0_end; f0+= 2.5) {
+		e = test_candidate_mbe(Sw, W, f0);
+		#if !defined(NDEBUG) || defined(DUMP)
+		bin = floor(f0); assert((bin > 0) && (bin < F0_MAX));
+		#endif
+		#ifdef DUMP
+                e_hz[bin] = e;
+                #endif
+		if (e < e_min) {
+		    e_min = e;
+		    best_f0 = f0;
+		}
+	    }
+
+	}
+    }
+  }
+
+  /* finally sample MBE cost function around previous pitch estimate
+     (form of pitch tracking) */
+
+  candidate_f0 = *prev_Wo * SAMPLE_RATE/TWO_PI;
+  f0_start = candidate_f0-20;
+  f0_end = candidate_f0+20;
+  if (f0_start < f0_min) f0_start = f0_min;
+  if (f0_end > f0_max) f0_end = f0_max;
+
+  for(f0=f0_start; f0<=f0_end; f0+= 2.5) {
+      e = test_candidate_mbe(Sw, W, f0);
+      #if !defined(NDEBUG) || defined(DUMP)
+      bin = floor(f0); assert((bin > 0) && (bin < F0_MAX));
+      #endif
+      #ifdef DUMP
+      e_hz[bin] = e;
+      #endif
+      if (e < e_min) {
+	  e_min = e;
+	  best_f0 = f0;
+      }
+  }
+
+  #ifdef DUMP
+  dump_e(e_hz);
+  #endif
+
+  return best_f0;
+}
+
+/*---------------------------------------------------------------------------*\
+
+  test_candidate_mbe()
+
+  Returns the error of the MBE cost function for the input f0.
+
+  Note: I think a lot of the operations below can be simplified as
+  W[].imag = 0 and has been normalised such that den always equals 1.
+
+\*---------------------------------------------------------------------------*/
+
+float test_candidate_mbe(
+    COMP  Sw[],
+    COMP  W[],
+    float f0
+)
+{
+    COMP  Sw_[FFT_ENC];   /* DFT of all voiced synthesised signal */
+    int   l,al,bl,m;      /* loop variables */
+    COMP  Am;             /* amplitude sample for this band */
+    int   offset;         /* centers Hw[] about current harmonic */
+    float den;            /* denominator of Am expression */
+    float error;          /* accumulated error between originl and synthesised */
+    float Wo;             /* current "test" fundamental freq. */
+    int   L;
+
+    L = floor((SAMPLE_RATE/2.0)/f0);
+    Wo = f0*(2*PI/SAMPLE_RATE);
+
+    error = 0.0;
+
+    /* Just test across the harmonics in the first 1000 Hz (L/4) */
+
+    for(l=1; l<L/4; l++) {
+	Am.real = 0.0;
+	Am.imag = 0.0;
+	den = 0.0;
+	al = ceil((l - 0.5)*Wo*FFT_ENC/TWO_PI);
+	bl = ceil((l + 0.5)*Wo*FFT_ENC/TWO_PI);
+
+	/* Estimate amplitude of harmonic assuming harmonic is totally voiced */
+
+	for(m=al; m<bl; m++) {
+	    offset = FFT_ENC/2 + m - l*Wo*FFT_ENC/TWO_PI + 0.5;
+	    Am.real += Sw[m].real*W[offset].real + Sw[m].imag*W[offset].imag;
+	    Am.imag += Sw[m].imag*W[offset].real - Sw[m].real*W[offset].imag;
+	    den += W[offset].real*W[offset].real + W[offset].imag*W[offset].imag;
+        }
+
+        Am.real = Am.real/den;
+        Am.imag = Am.imag/den;
+
+        /* Determine error between estimated harmonic and original */
+
+        for(m=al; m<bl; m++) {
+	    offset = FFT_ENC/2 + m - l*Wo*FFT_ENC/TWO_PI + 0.5;
+	    Sw_[m].real = Am.real*W[offset].real - Am.imag*W[offset].imag;
+	    Sw_[m].imag = Am.real*W[offset].imag + Am.imag*W[offset].real;
+	    error += (Sw[m].real - Sw_[m].real)*(Sw[m].real - Sw_[m].real);
+	    error += (Sw[m].imag - Sw_[m].imag)*(Sw[m].imag - Sw_[m].imag);
+	}
+    }
+
+    return error;
 }
 

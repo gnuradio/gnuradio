@@ -2,14 +2,14 @@
 
   FILE........: lpc.c
   AUTHOR......: David Rowe
-  DATE CREATED: 30/9/90
+  DATE CREATED: 30 Sep 1990 (!)
 
   Linear Prediction functions written in C.
 
 \*---------------------------------------------------------------------------*/
 
 /*
-  Copyright (C) 2009 David Rowe
+  Copyright (C) 2009-2012 David Rowe
 
   All rights reserved.
 
@@ -28,10 +28,67 @@
 #define LPC_MAX_N 512		/* maximum no. of samples in frame */
 #define PI 3.141592654		/* mathematical constant */
 
+#define ALPHA 1.0
+#define BETA  0.94
+
 #include <assert.h>
 #include <math.h>
 #include "defines.h"
 #include "lpc.h"
+
+/*---------------------------------------------------------------------------*\
+
+  pre_emp()
+
+  Pre-emphasise (high pass filter with zero close to 0 Hz) a frame of
+  speech samples.  Helps reduce dynamic range of LPC spectrum, giving
+  greater weight and hensea better match to low energy formants.
+
+  Should be balanced by de-emphasis of the output speech.
+
+\*---------------------------------------------------------------------------*/
+
+void pre_emp(
+  float  Sn_pre[], /* output frame of speech samples                     */
+  float  Sn[],	   /* input frame of speech samples                      */
+  float *mem,      /* Sn[-1]single sample memory                         */
+  int   Nsam	   /* number of speech samples to use                    */
+)
+{
+    int   i;
+
+    for(i=0; i<Nsam; i++) {
+	Sn_pre[i] = Sn[i] - ALPHA * mem[0];
+	mem[0] = Sn[i];
+    }
+
+}
+
+
+/*---------------------------------------------------------------------------*\
+
+  de_emp()
+
+  De-emphasis filter (low pass filter with polse close to 0 Hz).
+
+\*---------------------------------------------------------------------------*/
+
+void de_emp(
+  float  Sn_de[],  /* output frame of speech samples                     */
+  float  Sn[],	   /* input frame of speech samples                      */
+  float *mem,      /* Sn[-1]single sample memory                         */
+  int    Nsam	   /* number of speech samples to use                    */
+)
+{
+    int   i;
+
+    for(i=0; i<Nsam; i++) {
+	Sn_de[i] = Sn[i] + BETA * mem[0];
+	mem[0] = Sn_de[i];
+    }
+
+}
+
 
 /*---------------------------------------------------------------------------*\
 
@@ -50,7 +107,7 @@ void hanning_window(
   int i;	/* loop variable */
 
   for(i=0; i<Nsam; i++)
-    Wn[i] = Sn[i]*(0.5 - 0.5*cos(2*PI*(float)i/(Nsam-1)));
+    Wn[i] = Sn[i]*(0.5 - 0.5*cosf(2*PI*(float)i/(Nsam-1)));
 }
 
 /*---------------------------------------------------------------------------*\
@@ -76,33 +133,6 @@ void autocorrelate(
     for(i=0; i<Nsam-j; i++)
       Rn[j] += Sn[i]*Sn[i+j];
   }
-}
-
-/*---------------------------------------------------------------------------*\
-
-  autocorrelate_freq()
-
-  Finds the first P autocorrelation values from an array of frequency domain
-  power samples.
-
-\*---------------------------------------------------------------------------*/
-
-void autocorrelate_freq(
-  float Pw[],	/* Nsam frequency domain power spectrum samples    */
-  float  w[],	/* frequency of each sample in Pw[]                */
-  float  R[],	/* array of order+1 autocorrelation coefficients   */
-  int Nsam,	/* number of windowed samples to use               */
-  int order	/* order of LPC analysis                           */
-)
-{
-  int i,j;	/* loop variables */
-
-  for(j=0; j<order+1; j++) {
-    R[j] = 0.0;
-    for(i=0; i<Nsam; i++)
-	R[j] += Pw[i]*cos(j*w[i]);
-  }
-  R[j] /= Nsam;
 }
 
 /*---------------------------------------------------------------------------*\
@@ -139,7 +169,7 @@ void levinson_durbin(
     for(j=1; j<=i-1; j++)
       sum += a[i-1][j]*R[i-j];
     k[i] = -1.0*(R[i] + sum)/E[i-1];	/* Equation 38b, Makhoul */
-    if (fabs(k[i]) > 1.0)
+    if (fabsf(k[i]) > 1.0)
       k[i] = 0.0;
 
     a[i][i] = k[i];
@@ -274,6 +304,6 @@ void weight(
   int i;
 
   for(i=1; i<=order; i++)
-    akw[i] = ak[i]*pow(gamma,(float)i);
+    akw[i] = ak[i]*powf(gamma,(float)i);
 }
 
