@@ -90,17 +90,33 @@ if(ICE_ICE AND ICE_ICEUTIL)
     ${ICE_ICEUTIL}
     )
 
-  FIND_PROGRAM(ICE_SLICE2CPP slice2cpp
-    HINTS ${CMAKE_INSTALL_PREFIX}/bin ${ICE_MANUAL_INSTALL_PATH}/bin/)
-  FIND_PROGRAM(ICE_SLICE2PY slice2py
-    HINTS ${CMAKE_INSTALL_PREFIX}/bin ${ICE_MANUAL_INSTALL_PATH}/bin/)
+  if(CMAKE_CROSSCOMPILING)
+    # When cross-compiling, we set up the environment/toolchain to put
+    # the right slice2cpp/py in the path. We just need to grab that here.
+    FIND_PROGRAM(ICE_SLICE2CPP slice2cpp)
+    FIND_PROGRAM(ICE_SLICE2PY slice2py)
 
-  # Check that the ICE Python package is installed
-  include(GrPython)
-  GR_PYTHON_CHECK_MODULE("Ice >= 3.5" Ice "Ice.stringVersion() >= '3.5.0'" PYTHON_ICE_FOUND)
-  if(PYTHON_ICE_FOUND)
+    # We also don't need to look for Python in this case, so just
+    # force this to TRUE here.
     set(ICE_FOUND TRUE)
-  endif(PYTHON_ICE_FOUND)
+
+  else(CMAKE_CROSSCOMPILING)
+
+    FIND_PROGRAM(ICE_SLICE2CPP slice2cpp
+      HINTS ${CMAKE_INSTALL_PREFIX}/bin ${ICE_MANUAL_INSTALL_PATH}/bin/)
+    FIND_PROGRAM(ICE_SLICE2PY slice2py
+      HINTS ${CMAKE_INSTALL_PREFIX}/bin ${ICE_MANUAL_INSTALL_PATH}/bin/)
+
+    # Check that the ICE Python package is installed
+    include(GrPython)
+    GR_PYTHON_CHECK_MODULE("Ice >= 3.5" Ice "Ice.stringVersion() >= '3.5.0'" PYTHON_ICE_FOUND)
+    if(PYTHON_ICE_FOUND)
+      set(ICE_FOUND TRUE)
+    endif(PYTHON_ICE_FOUND)
+  endif(CMAKE_CROSSCOMPILING)
+
+  message(STATUS "  SLICE2CPP: ${ICE_SLICE2CPP}")
+  message(STATUS "  SLICE2PY: ${ICE_SLICE2PY}")
 
   if(ICE_FOUND)
     message(STATUS "Ice-3.5 found")
