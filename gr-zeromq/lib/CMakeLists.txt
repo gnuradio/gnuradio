@@ -39,11 +39,11 @@ endif(ENABLE_GR_CTRLPORT)
 ########################################################################
 list(APPEND zeromq_sources
   sink_pubsub_impl.cc
+  pull_source_impl.cc
   push_sink_impl.cc
   sink_reqrep_impl.cc
   sink_reqrep_nopoll_impl.cc
   source_pushpull_feedback_impl.cc
-  source_pushpull_impl.cc
   source_reqrep_impl.cc
   source_reqrep_nopoll_impl.cc
 )

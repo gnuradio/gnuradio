@@ -25,20 +25,20 @@
 #endif
 
 #include <gnuradio/io_signature.h>
-#include "sink_pushpull_impl.h"
+#include "push_sink_impl.h"
 
 namespace gr {
   namespace zeromq {
 
-    sink_pushpull::sptr
-    sink_pushpull::make(size_t itemsize, char *address, bool blocking)
+    push_sink::sptr
+    push_sink::make(size_t itemsize, char *address, bool blocking)
     {
       return gnuradio::get_initial_sptr
-        (new sink_pushpull_impl(itemsize, address, blocking));
+        (new push_sink_impl(itemsize, address, blocking));
     }
 
-    sink_pushpull_impl::sink_pushpull_impl(size_t itemsize, char *address, bool blocking)
-      : gr::sync_block("sink_pushpull",
+    push_sink_impl::push_sink_impl(size_t itemsize, char *address, bool blocking)
+      : gr::sync_block("push_sink",
                        gr::io_signature::make(1, 1, itemsize),
                        gr::io_signature::make(0, 0, 0)),
         d_itemsize(itemsize)
@@ -49,21 +49,21 @@ namespace gr {
       d_socket->bind (address);
     }
 
-    sink_pushpull_impl::~sink_pushpull_impl()
+    push_sink_impl::~push_sink_impl()
     {
       delete(d_socket);
       delete(d_context);
     }
 
     int
-    sink_pushpull_impl::work(int noutput_items,
-                             gr_vector_const_void_star &input_items,
-                             gr_vector_void_star &output_items)
+    push_sink_impl::work(int noutput_items,
+                         gr_vector_const_void_star &input_items,
+                         gr_vector_void_star &output_items)
     {
       const char *in = (const char *) input_items[0];
 
       // create message copy and send
-      zmq::message_t msg(d_itemsize*noutput_items); // FIXME: make blocking optional
+      zmq::message_t msg(d_itemsize*noutput_items);
       memcpy((void *)msg.data(), in, d_itemsize*noutput_items);
       d_socket->send(msg, d_blocking ? 0 : ZMQ_NOBLOCK);
 

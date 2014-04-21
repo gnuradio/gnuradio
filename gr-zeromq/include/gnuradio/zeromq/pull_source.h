@@ -20,8 +20,8 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef INCLUDED_ZEROMQ_SOURCE_PUSHPULL_H
-#define INCLUDED_ZEROMQ_SOURCE_PUSHPULL_H
+#ifndef INCLUDED_ZEROMQ_PULL_SOURCE_H
+#define INCLUDED_ZEROMQ_PULL_SOURCE_H
 
 #include <gnuradio/zeromq/api.h>
 #include <gnuradio/sync_block.h>
@@ -34,16 +34,16 @@ namespace gr {
      * \ingroup zeromq
      *
      * \details
-     * This block will connect to a ZMQ PUSH socket, then produce all
+     * This block will connect to a ZMQ PULL socket, then produce all
      * incoming messages as streaming output.
      */
-    class ZEROMQ_API source_pushpull : virtual public gr::sync_block
+    class ZEROMQ_API pull_source : virtual public gr::sync_block
     {
     public:
-      typedef boost::shared_ptr<source_pushpull> sptr;
+      typedef boost::shared_ptr<pull_source> sptr;
 
       /*!
-       * \brief Return a shared_ptr to a new instance of gr::zeromq::source_pushpull.
+       * \brief Return a shared_ptr to a new instance of gr::zeromq::pull_source.
        *
        * \param itemsize Size of a stream item in bytes
        * \param address  ZMQ socket address specifier
@@ -56,4 +56,4 @@ namespace gr {
   } // namespace zeromq
 } // namespace gr
 
-#endif /* INCLUDED_ZEROMQ_SOURCE_PUSHPULL_H */
+#endif /* INCLUDED_ZEROMQ_PULL_SOURCE_H */

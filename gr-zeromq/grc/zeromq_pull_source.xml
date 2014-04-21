@@ -1,10 +1,10 @@
 <?xml version="1.0"?>
 <block>
-  <name>ZMQ PUSH/PULL Source</name>
-  <key>zeromq_source_pushpull</key>
+  <name>ZMQ PULL Source</name>
+  <key>zeromq_pull_source</key>
   <category>ZeroMQ Interfaces</category>
   <import>from gnuradio import zeromq</import>
-  <make>zeromq.source_pushpull($type.itemsize, $address, $timeout)</make>
+  <make>zeromq.pull_source($type.itemsize, $address, $timeout)</make>
 
   <param>
     <name>IO Type</name>

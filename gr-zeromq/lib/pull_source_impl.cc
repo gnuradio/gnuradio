@@ -25,20 +25,20 @@
 #endif
 
 #include <gnuradio/io_signature.h>
-#include "source_pushpull_impl.h"
+#include "pull_source_impl.h"
 
 namespace gr {
   namespace zeromq {
 
-    source_pushpull::sptr
-    source_pushpull::make(size_t itemsize, char *address, float timeout)
+    pull_source::sptr
+    pull_source::make(size_t itemsize, char *address, float timeout)
     {
       return gnuradio::get_initial_sptr
-        (new source_pushpull_impl(itemsize, address, timeout));
+        (new pull_source_impl(itemsize, address, timeout));
     }
 
-    source_pushpull_impl::source_pushpull_impl(size_t itemsize, char *address, float timeout)
-      : gr::sync_block("source_pushpull",
+    pull_source_impl::pull_source_impl(size_t itemsize, char *address, float timeout)
+      : gr::sync_block("pull_source",
                        gr::io_signature::make(0, 0, 0),
                        gr::io_signature::make(1, 1, itemsize)),
         d_itemsize(itemsize)
@@ -52,16 +52,16 @@ namespace gr {
     /*
      * Our virtual destructor.
      */
-    source_pushpull_impl::~source_pushpull_impl()
+    pull_source_impl::~pull_source_impl()
     {
       delete d_socket;
       delete d_context;
     }
 
     int
-    source_pushpull_impl::work(int noutput_items,
-                               gr_vector_const_void_star &input_items,
-                               gr_vector_void_star &output_items)
+    pull_source_impl::work(int noutput_items,
+                           gr_vector_const_void_star &input_items,
+                           gr_vector_void_star &output_items)
     {
       char *out = (char*)output_items[0];
 

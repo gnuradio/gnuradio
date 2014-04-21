@@ -20,16 +20,16 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef INCLUDED_ZMQBLOCKS_SOURCE_PUSHPULL_IMPL_H
-#define INCLUDED_ZMQBLOCKS_SOURCE_PUSHPULL_IMPL_H
+#ifndef INCLUDED_ZMQBLOCKS_PULL_SOURCE_IMPL_H
+#define INCLUDED_ZMQBLOCKS_PULL_SOURCE_IMPL_H
 
-#include <gnuradio/zeromq/source_pushpull.h>
+#include <gnuradio/zeromq/pull_source.h>
 #include <zmq.hpp>
 
 namespace gr {
   namespace zeromq {
 
-    class source_pushpull_impl : public source_pushpull
+    class pull_source_impl : public pull_source
     {
     private:
       size_t          d_itemsize;
@@ -38,8 +38,8 @@ namespace gr {
       zmq::socket_t   *d_socket;
 
     public:
-      source_pushpull_impl(size_t itemsize, char *address, float timeout);
-      ~source_pushpull_impl();
+      pull_source_impl(size_t itemsize, char *address, float timeout);
+      ~pull_source_impl();
 
       int work(int noutput_items,
                gr_vector_const_void_star &input_items,
@@ -49,4 +49,4 @@ namespace gr {
   } // namespace zeromq
 } // namespace gr
 
-#endif /* INCLUDED_ZMQBLOCKS_SOURCE_PUSHPULL_IMPL_H */
+#endif /* INCLUDED_ZMQBLOCKS_PULL_SOURCE_IMPL_H */

@@ -71,7 +71,7 @@ class top_block(gr.top_block):
         self.gr_sig_source = analog.sig_source_f(samp_rate, analog.GR_SIN_WAVE , 1000, 1, 0)
         self.null_source = blocks.null_source(gr.sizeof_float)
         self.throttle = blocks.throttle(gr.sizeof_float, samp_rate)
-        self.zmq_source = zeromq.source_pushpull_feedback(gr.sizeof_float,source_adr)
+        self.zmq_source = zeromq.pull_source_feedback(gr.sizeof_float,source_adr)
         self.mult_a = blocks.multiply_const_ff(1)
         self.mult_b = blocks.multiply_const_ff(0.5)
         self.add = blocks.add_ff(1)
