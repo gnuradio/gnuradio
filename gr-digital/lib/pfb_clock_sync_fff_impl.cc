@@ -65,6 +65,9 @@ namespace gr {
 	d_max_dev(max_rate_deviation),
 	d_osps(osps), d_error(0), d_out_idx(0)
     {
+      if(taps.size() == 0)
+        throw std::runtime_error("pfb_clock_sync_ccf: please specify a filter.\n");
+
       // Let scheduler adjust our relative_rate.
       enable_update_rate(true);
 
@@ -388,7 +391,7 @@ namespace gr {
       while(i < noutput_items) {
 	while(d_out_idx < d_osps) {
 	  d_filtnum = (int)floor(d_k);
-      
+
 	  // Keep the current filter number in [0, d_nfilters]
 	  // If we've run beyond the last filter, wrap around and go to next sample
 	  // If we've gone below 0, wrap around and go to previous sample

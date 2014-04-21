@@ -68,6 +68,9 @@ namespace gr {
 	d_max_dev(max_rate_deviation),
 	d_osps(osps), d_error(0), d_out_idx(0)
     {
+      if(taps.size() == 0)
+        throw std::runtime_error("pfb_clock_sync_ccf: please specify a filter.\n");
+
       // Let scheduler adjust our relative_rate.
       enable_update_rate(true);
 
@@ -421,7 +424,7 @@ namespace gr {
             tags.erase(tags.begin());
           }
         }
-        
+
 	while(d_out_idx < d_osps) {
 
 	  d_filtnum = (int)floor(d_k);
@@ -498,7 +501,7 @@ namespace gr {
 	      pmt::mp(-2.0f), pmt::mp(2.0f), pmt::mp(0.0f),
 	      "", "Error signal of loop", RPC_PRIVLVL_MIN,
               DISPTIME | DISPOPTSTRIP)));
-    
+
       add_rpc_variable(
           rpcbasic_sptr(new rpcbasic_register_get<pfb_clock_sync_ccf, float>(
 	      alias(), "rate",
