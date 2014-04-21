@@ -36,7 +36,9 @@ namespace gr {
      *
      * Input: Speech (audio) signal as 16-bit shorts, sampling rate 8 kHz.
      *
-     * Output: Vector of unpacked bits, forming one Codec2 frame, per 160 input samples.
+     * Output: Vector of unpacked bits, forming one Codec2 frame, per 160
+     *         input samples (in 2400 and 3200 bps modes) or per 320 input
+     *         samples (in 1200, 1300, 1400 and 1600 bps modes).
      *
      */
     class VOCODER_API codec2_encode_sp : virtual public sync_decimator
