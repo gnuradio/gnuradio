@@ -20,8 +20,8 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef INCLUDED_ZEROMQ_SINK_PUSHPULL_H
-#define INCLUDED_ZEROMQ_SINK_PUSHPULL_H
+#ifndef INCLUDED_ZEROMQ_PUSH_SINK_H
+#define INCLUDED_ZEROMQ_PUSH_SINK_H
 
 #include <gnuradio/zeromq/api.h>
 #include <gnuradio/sync_block.h>
@@ -41,13 +41,13 @@ namespace gr {
      * non-GNU Radio ZMQ socket.
      *
      */
-    class ZEROMQ_API sink_pushpull : virtual public gr::sync_block
+    class ZEROMQ_API push_sink : virtual public gr::sync_block
     {
     public:
-      typedef boost::shared_ptr<sink_pushpull> sptr;
+      typedef boost::shared_ptr<push_sink> sptr;
 
       /*!
-       * \brief Return a shared_ptr to a new instance of gr::zeromq::sink_pushpull
+       * \brief Return a shared_ptr to a new instance of gr::zeromq::push_sink
        *
        * \param itemsize Size of a stream item in bytes
        * \param address  ZMQ socket address specifier
@@ -60,4 +60,4 @@ namespace gr {
   } // namespace zeromq
 } // namespace gr
 
-#endif /* INCLUDED_ZEROMQ_SINK_PUSHPULL_H */
+#endif /* INCLUDED_ZEROMQ_PUSH_SINK_H */

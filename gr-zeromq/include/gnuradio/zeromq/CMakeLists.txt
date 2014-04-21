@@ -23,7 +23,7 @@
 install(FILES
   api.h
   sink_pubsub.h
-  sink_pushpull.h
+  push_sink.h
   sink_reqrep.h
   sink_reqrep_nopoll.h
   source_pushpull_feedback.h

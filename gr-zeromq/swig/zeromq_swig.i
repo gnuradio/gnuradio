@@ -29,7 +29,7 @@
 
 %{
 #include "gnuradio/zeromq/sink_pubsub.h"
-#include "gnuradio/zeromq/sink_pushpull.h"
+#include "gnuradio/zeromq/push_sink.h"
 #include "gnuradio/zeromq/sink_reqrep.h"
 #include "gnuradio/zeromq/sink_reqrep_nopoll.h"
 #include "gnuradio/zeromq/source_pushpull_feedback.h"
@@ -39,7 +39,7 @@
 %}
 
 %include "gnuradio/zeromq/sink_pubsub.h"
-%include "gnuradio/zeromq/sink_pushpull.h"
+%include "gnuradio/zeromq/push_sink.h"
 %include "gnuradio/zeromq/sink_reqrep.h"
 %include "gnuradio/zeromq/sink_reqrep_nopoll.h"
 %include "gnuradio/zeromq/source_pushpull_feedback.h"
@@ -48,7 +48,7 @@
 %include "gnuradio/zeromq/source_reqrep_nopoll.h"
 
 GR_SWIG_BLOCK_MAGIC2(zeromq, sink_pubsub);
-GR_SWIG_BLOCK_MAGIC2(zeromq, sink_pushpull);
+GR_SWIG_BLOCK_MAGIC2(zeromq, push_sink);
 GR_SWIG_BLOCK_MAGIC2(zeromq, sink_reqrep);
 GR_SWIG_BLOCK_MAGIC2(zeromq, sink_reqrep_nopoll);
 GR_SWIG_BLOCK_MAGIC2(zeromq, source_pushpull_feedback);

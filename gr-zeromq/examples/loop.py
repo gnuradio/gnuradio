@@ -77,8 +77,8 @@ class top_block(gr.top_block):
         self.add = blocks.add_ff(1)
         #self.zmq_sink = zeromq.sink_reqrep_nopoll(gr.sizeof_float, sink_adr)
         #self.zmq_sink = zeromq.sink_reqrep(gr.sizeof_float, sink_adr)
-        self.zmq_sink = zeromq.sink_pushpull(gr.sizeof_float, sink_adr)
-        self.zmq_probe = zeromq.sink_pushpull(gr.sizeof_float, probe_adr_fg)
+        self.zmq_sink = zeromq.push_sink(gr.sizeof_float, sink_adr)
+        self.zmq_probe = zeromq.push_sink(gr.sizeof_float, probe_adr_fg)
         #self.null_sink = blocks.null_sink(gr.sizeof_float)
 
         # connects

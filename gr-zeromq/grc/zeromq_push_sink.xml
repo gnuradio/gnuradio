@@ -1,10 +1,10 @@
 <?xml version="1.0"?>
 <block>
-  <name>ZMQ PUSH/PULL Sink</name>
-  <key>zeromq_sink_pushpull</key>
+  <name>ZMQ PUSH Sink</name>
+  <key>zeromq_push_sink</key>
   <category>ZeroMQ Interfaces</category>
   <import>from gnuradio import zeromq</import>
-  <make>zeromq.sink_pushpull($type.itemsize, $address, $blocking)</make>
+  <make>zeromq.push_sink($type.itemsize, $address, $blocking)</make>
 
   <param>
     <name>IO Type</name>

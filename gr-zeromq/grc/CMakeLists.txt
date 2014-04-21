@@ -19,7 +19,7 @@
 
 install(FILES
     zeromq_sink_pubsub.xml
-    zeromq_sink_pushpull.xml
+    zeromq_push_sink.xml
     zeromq_source_pushpull.xml
 
     DESTINATION share/gnuradio/grc/blocks

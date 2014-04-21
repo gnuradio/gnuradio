@@ -55,7 +55,7 @@ class top_block(gr.top_block):
         #self.zmq_source = zeromq.source_reqrep_nopoll(gr.sizeof_float,source_adr)
         self.zmq_source = zeromq.source_reqrep(gr.sizeof_float,source_adr)
         #self.zmq_source = zeromq.source_pushpull(gr.sizeof_float,source_adr)
-        #self.zmq_probe = zeromq.sink_pushpull(gr.sizeof_float,probe_adr)
+        #self.zmq_probe = zeromq.push_sink(gr.sizeof_float,probe_adr)
         self.zmq_probe = zeromq.sink_pubsub(gr.sizeof_float,probe_adr)
 
         # connects
