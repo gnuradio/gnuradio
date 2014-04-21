@@ -46,7 +46,7 @@ class MAINWindow(QtGui.QMainWindow):
         return QtGui.QSize(800,600)
 
     def __init__(self, radio, port, interface):
-        
+
         super(MAINWindow, self).__init__()
         self.conns = []
         self.plots = []
@@ -74,7 +74,6 @@ class MAINWindow(QtGui.QMainWindow):
         self.newCon(radio, port)
         icon = QtGui.QIcon(ctrlport.__path__[0] + "/icon.png" )
         self.setWindowIcon(icon)
-
 
     def newSubWindow(self, window, title):
         child = window;
@@ -130,7 +129,6 @@ class MAINWindow(QtGui.QMainWindow):
         self.closeAllAct = QtGui.QAction("Close &All", self,
                 statusTip="Close all the windows",
                 triggered=self.mdiArea.closeAllSubWindows)
-
 
         qks = QtGui.QKeySequence(QtCore.Qt.CTRL + QtCore.Qt.Key_T);
         self.tileAct = QtGui.QAction("&Tile", self,
@@ -236,7 +234,7 @@ class ConInfoDialog(QtGui.QDialog):
         super(ConInfoDialog, self).__init__(parent)
 
         self.gridLayout = QtGui.QGridLayout(self)
-        
+
 
         self.host = QtGui.QLineEdit(self);
         self.port = QtGui.QLineEdit(self);
@@ -267,7 +265,7 @@ class DataTable(QtGui.QWidget):
 
     def __init__(self, radio, G):
         QtGui.QWidget.__init__( self)
-        
+
         self.layout = QtGui.QVBoxLayout(self);
         self.hlayout = QtGui.QHBoxLayout();
         self.layout.addLayout(self.hlayout);
@@ -325,7 +323,7 @@ class DataTable(QtGui.QWidget):
         self.timer.start(500)
 
         for i in range(0,len(nodes)):
-            self.perfTable.setItem( 
+            self.perfTable.setItem(
                 i,0,
                 Qt.QTableWidgetItem(nodes[i][0]))
 
@@ -370,7 +368,7 @@ class DataTableBuffers(DataTable):
         for blk in buffer_fullness:
             for port in range(0,len(buffer_fullness[blk])):
                 blockport_fullness["%s:%d"%(blk,port)] =  buffer_fullness[blk][port];
-        
+
         self.table_update(blockport_fullness);
 
         if(self._sort):
@@ -429,8 +427,8 @@ class DataTableRuntimes(DataTable):
                     sorted_work[self._keymap.index(b)] = (b, work_times[b])
             else:
                 sorted_work = work_times.items()
-            
-        self.sp.clear();  
+
+        self.sp.clear();
         plt.figure(self.f.number)
         plt.subplot(111);
         self.sp.bar(range(0,len(sorted_work)), map(lambda x: x[1], sorted_work),
@@ -439,7 +437,7 @@ class DataTableRuntimes(DataTable):
         self.sp.set_xticks( map(lambda x: x+0.5, range(0,len(sorted_work))))
         self.sp.set_xticklabels( map(lambda x: "  " + x[0], sorted_work),
                                  rotation="vertical", verticalalignment="bottom" )
-    
+
         self.canvas.draw();
         self.canvas.show();
 
@@ -464,7 +462,7 @@ class MForm(QtGui.QWidget):
 
             nodes_stream = self.G_stream.nodes();
             nodes_msg = self.G_msg.nodes();
-    
+
             # get current buffer depths of all output buffers
             kl = map(lambda x: "%s::%soutput %% full" % \
                          (x, self._statistics_table[self._statistic]),
@@ -496,7 +494,7 @@ class MForm(QtGui.QWidget):
                         self.G.nodes(),
                         [0.1]*len(self.G.nodes())))
             work_times_padded.update(work_times)
- 
+
             for n in nodes_stream:
                 # ne is the list of edges away from this node!
                 ne = self.G.edges([n],True);
@@ -516,7 +514,7 @@ class MForm(QtGui.QWidget):
                         #newweight = buf_vals[n][sourceport]
                         newweight = 0.01;
                         e[2]["weight"] = newweight;
-                    
+
             # set updated weights
             #self.node_weights = map(lambda x: 20+2000*work_times[x], nodes_stream);
             self.node_weights = map(lambda x: 20+2000*work_times_padded[x], self.G.nodes());
@@ -528,7 +526,7 @@ class MForm(QtGui.QWidget):
             latency = td1 + td2;
             self.parent.statusBar().showMessage("Current GNU Radio Control Port Query Latency: %f ms"%\
                                                     (latency*1000))
-            
+
         except Exception, e:
             sys.stderr.write("ctrlport-monitor: radio.get threw exception ({0}).\n".format(e))
             if(type(self.parent) is MAINWindow):
@@ -547,12 +545,41 @@ class MForm(QtGui.QWidget):
             else:
                 sys.exit(1)
             return
-            
+
     def rtt(self):
         self.parent.newSubWindow(  DataTableRuntimes(self.radio, self.G_stream),  "Runtime Table" );
 
     def bpt(self):
         self.parent.newSubWindow(  DataTableBuffers(self.radio, self.G_stream),  "Buffers Table" );
+
+    def resetPCs(self):
+        knob = GNURadio.KnobB()
+        knob.value = False
+        km = {}
+        for b in self.blocks_list:
+            km[b + "::reset_perf_counters"] = knob
+        k = self.radio.set(km)
+
+    def toggleFlowgraph(self):
+        if self.pauseFGAct.isChecked():
+            self.pauseFlowgraph()
+        else:
+            self.unpauseFlowgraph()
+
+    def pauseFlowgraph(self):
+        knob = GNURadio.KnobB()
+        knob.value = False
+        km = {}
+        km[self.top_block + "::lock"] = knob
+        km[self.top_block + "::stop"] = knob
+        k = self.radio.set(km)
+
+    def unpauseFlowgraph(self):
+        knob = GNURadio.KnobB()
+        knob.value = False
+        km = {}
+        km[self.top_block + "::unlock"] = knob
+        k = self.radio.set(km)
 
     def stat_changed(self, index):
         self._statistic = str(self.stattype.currentText())
@@ -582,7 +609,7 @@ class MForm(QtGui.QWidget):
             else:
                 self.radio = None
                 return
-        
+
 
         self.uid = uid
         self.parent = parent
@@ -593,7 +620,7 @@ class MForm(QtGui.QWidget):
 
         self.layoutTop.addLayout(self.ctlBox);
         self.layoutTop.addLayout(self.layout);
-        
+
         self.rttAct = QtGui.QAction("Runtime Table",
                 self, statusTip="Runtime Table", triggered=self.rtt)
         self.rttBut = Qt.QToolButton()
@@ -605,6 +632,21 @@ class MForm(QtGui.QWidget):
         self.bptBut = Qt.QToolButton()
         self.bptBut.setDefaultAction(self.bptAct);
         self.ctlBox.addWidget(self.bptBut);
+
+        self.resetPCsAct = QtGui.QAction("Reset", self,
+                statusTip="Reset all Performance Counters",
+                triggered=self.resetPCs)
+        self.resetPCsBut = Qt.QToolButton()
+        self.resetPCsBut.setDefaultAction(self.resetPCsAct);
+        self.ctlBox.addWidget(self.resetPCsBut);
+
+        self.pauseFGAct = QtGui.QAction("Pause", self,
+                statusTip="Pause the Flowgraph",
+                triggered=self.toggleFlowgraph)
+        self.pauseFGAct.setCheckable(True)
+        self.pauseFGBut = Qt.QToolButton()
+        self.pauseFGBut.setDefaultAction(self.pauseFGAct);
+        self.ctlBox.addWidget(self.pauseFGBut);
 
         self.prevent_clock_change = True;
         self.clockKey = None;
@@ -656,6 +698,7 @@ class MForm(QtGui.QWidget):
             keyname = propname[1]
             if(keyname == "edge list"):
                 edgelist = knobs[k].value
+                self.top_block = blockname
             elif(keyname == "msg edges list"):
                 msgedgelist = knobs[k].value
             elif(blockname not in tmplist):
@@ -663,12 +706,14 @@ class MForm(QtGui.QWidget):
                 if(knobs.has_key(input_name(blockname))):
                     tmplist.append(blockname)
 
+
         if not edgelist:
             sys.stderr.write("Could not find list of edges from flowgraph. " + \
                                  "Make sure the option 'edges_list' is enabled " + \
                                  "in the ControlPort configuration.\n\n")
             sys.exit(1)
 
+        self.blocks_list = tmplist
         edges = edgelist.split("\n")[0:-1]
         msgedges = msgedgelist.split("\n")[0:-1]
 
@@ -686,7 +731,7 @@ class MForm(QtGui.QWidget):
             _e = e.split("->")
             edgepairs_msg.append( (_e[0].split(":")[0], _e[1].split(":")[0],
                                {"type":"msg", "sourceport":_e[0].split(":")[1]}) );
-            
+
         self.G = nx.MultiDiGraph();
         self.G_stream = nx.MultiDiGraph();
         self.G_msg = nx.MultiDiGraph();
@@ -769,14 +814,14 @@ class MForm(QtGui.QWidget):
         item = self.table.treeWidget.itemFromIndex(index[0])
         itemname = str(item.text(0))
         self.parent.propertiesMenu(itemname, self.radio, self.uid)
- 
+
     def updateGraph(self):
 
         self.canvas.updateGeometry()
-        self.sp.clear();  
+        self.sp.clear();
         plt.figure(self.f.number)
         plt.subplot(111);
-        nx.draw(self.G, self.pos, 
+        nx.draw(self.G, self.pos,
                 edge_color=self.edge_weights,
                 node_color='#A0CBE2',
                 width=map(lambda x: 3+math.log(x), self.edge_weights),
