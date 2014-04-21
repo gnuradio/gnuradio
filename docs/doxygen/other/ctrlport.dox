@@ -69,7 +69,7 @@ configure ICE can be found here:
 http://doc.zeroc.com/display/Ice/Properties+and+Configuration
 
 
-\section using Using ControlPort to Export Variables
+\section using_ctrlport Using ControlPort to Export Variables
 
 The ability to export variables from a block is inherited from
 gr::block. Then, when the flowgraph is started, the function
@@ -122,7 +122,7 @@ namespace gr {
       sync_bloc(....),
       d_a(a), d_b(b)
     { }
-    
+
     foo_impl::~foo_impl()
     { }
 
@@ -215,9 +215,9 @@ gets. These take the form:
   rpcbasic_register_get(const std::string& name,
 			const char* functionbase,
                         T* obj,
-			Tfrom (T::*function)(), 
+			Tfrom (T::*function)(),
 			const pmt::pmt_t &min, const pmt::pmt_t &max, const pmt::pmt_t &def,
-			const char* units_ = "", 
+			const char* units_ = "",
 			const char* desc_ = "",
 			priv_lvl_t minpriv_ = RPC_PRIVLVL_MIN,
 			DisplayType display_ = DISPNULL)
@@ -225,9 +225,9 @@ gets. These take the form:
   rpcbasic_register_set(const std::string& name,
 			const char* functionbase,
                         T* obj,
-			void (T::*function)(Tto), 
+			void (T::*function)(Tto),
 			const pmt::pmt_t &min, const pmt::pmt_t &max, const pmt::pmt_t &def,
-			const char* units_ = "", 
+			const char* units_ = "",
 			const char* desc_ = "",
 			priv_lvl_t minpriv_ = RPC_PRIVLVL_MIN,
 			DisplayType display_ = DISPNULL)
