@@ -29,4 +29,4 @@ install(FILES
 #    zeromq_sink_reqrep_nopoll.xml
 #    zeromq_source_reqrep_nopoll.xml
 #    zeromq_pull_source.xml
-#    zeromq_source_pushpull_feedback.xml
+

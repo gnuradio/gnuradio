@@ -23,12 +23,10 @@
 install(FILES
   api.h
   pub_sink.h
-  pull_feedback_source.h
   pull_source.h
   push_sink.h
   sink_reqrep.h
   sink_reqrep_nopoll.h
-  source_pushpull_feedback.h
   source_reqrep.h
   source_reqrep_nopoll.h
 
