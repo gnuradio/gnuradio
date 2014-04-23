@@ -1330,7 +1330,7 @@ public:
    * \param def          Expected default value the parameter can hold
    * \param units_       A string to describe what units to represent the variable with
    * \param desc_        A string to describing the variable.
-   * \param minpriv_     The required minimum privilege level
+   * \param minpriv      The required minimum privilege level
    * \param display_     The display mask
    */
   rpcbasic_register_variable_rw(
