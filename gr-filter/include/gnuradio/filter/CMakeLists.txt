@@ -104,6 +104,10 @@ install(FILES
     fractional_resampler_ff.h
     hilbert_fc.h
     iir_filter_ffd.h
+    iir_filter_ccc.h
+    iir_filter_ccf.h
+    iir_filter_ccd.h
+    iir_filter_ccz.h
     pfb_arb_resampler.h
     pfb_arb_resampler_ccf.h
     pfb_arb_resampler_ccc.h

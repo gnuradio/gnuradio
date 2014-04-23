@@ -24,6 +24,7 @@
 #define INCLUDED_IIR_FILTER_H
 
 #include <gnuradio/filter/api.h>
+#include <gnuradio/gr_complex.h>
 #include <vector>
 #include <stdexcept>
 
@@ -134,7 +135,7 @@ namespace gr {
 	std::vector<tap_type>	d_fbtaps;
 	int 			d_latest_n;
 	int 			d_latest_m;
-	std::vector<tap_type>	d_prev_output;
+	std::vector<o_type>	d_prev_output;
 	std::vector<i_type>	d_prev_input;
       };
 
@@ -145,7 +146,7 @@ namespace gr {
       o_type
       iir_filter<i_type, o_type, tap_type>::filter(const i_type input)
       {
-	tap_type acc;
+	o_type acc;
 	unsigned i = 0;
 	unsigned n = ntaps_ff();
 	unsigned m = ntaps_fb();
@@ -189,6 +190,18 @@ namespace gr {
 	for(int i = 0; i < n; i++)
 	  output[i] = filter(input[i]);
       }
+
+      template<>
+      gr_complex
+      iir_filter<gr_complex, gr_complex, float>::filter(const gr_complex input);
+
+      template<>
+      gr_complex
+      iir_filter<gr_complex, gr_complex, double>::filter(const gr_complex input);
+
+      template<>
+      gr_complex
+      iir_filter<gr_complex, gr_complex, gr_complexd>::filter(const gr_complex input);
 
     } /* namespace kernel */
   } /* namespace filter */

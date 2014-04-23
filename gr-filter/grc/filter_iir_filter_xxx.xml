@@ -1,0 +1,93 @@
+<?xml version="1.0"?>
+<!--
+###################################################
+##IIR Filter
+###################################################
+ -->
+<block>
+  <name>IIR Filter</name>
+  <key>iir_filter_xxx</key>
+  <import>from gnuradio import filter</import>
+  <make>filter.iir_filter_$(type)($fftaps, $fbtaps, $oldstyle)</make>
+  <callback>set_taps($fftaps, $fbtaps)</callback>
+
+  <param>
+    <name>Type</name>
+    <key>type</key>
+    <type>enum</type>
+    <option>
+      <name>Float->Float (Double Taps)</name>
+      <key>ffd</key>
+      <opt>input:float</opt>
+      <opt>output:float</opt>
+      <opt>taps:real_vector</opt>
+    </option>
+    <option>
+      <name>Complex->Complex (Float Taps)</name>
+      <key>ccf</key>
+      <opt>input:complex</opt>
+      <opt>output:complex</opt>
+      <opt>taps:real_vector</opt>
+    </option>
+    <option>
+      <name>Complex->Complex (Double Taps)</name>
+      <key>ccd</key>
+      <opt>input:complex</opt>
+      <opt>output:complex</opt>
+      <opt>taps:real_vector</opt>
+    </option>
+    <option>
+      <name>Complex->Complex (Complex Taps)</name>
+      <key>ccc</key>
+      <opt>input:complex</opt>
+      <opt>output:complex</opt>
+      <opt>taps:complex_vector</opt>
+    </option>
+    <option>
+      <name>Complex->Complex (Complex Double Taps)</name>
+      <key>ccz</key>
+      <opt>input:complex</opt>
+      <opt>output:complex</opt>
+      <opt>taps:complex_vector</opt>
+    </option>
+  </param>
+
+  <param>
+    <name>Feed-forward Taps</name>
+    <key>fftaps</key>
+    <type>$type.taps</type>
+  </param>
+
+  <param>
+    <name>Feedback Taps</name>
+    <key>fbtaps</key>
+    <type>$type.taps</type>
+  </param>
+
+  <param>
+    <name>Old Style of Taps</name>
+    <key>oldstyle</key>
+    <value>True</value>
+    <type>enum</type>
+    <hide>part</hide>
+    <option>
+      <name>True</name>
+      <key>True</key>
+    </option>
+    <option>
+      <name>False</name>
+      <key>False</key>
+    </option>
+  </param>
+
+  <sink>
+    <name>in</name>
+    <type>$type.input</type>
+  </sink>
+
+  <source>
+    <name>out</name>
+    <type>$type.output</type>
+  </source>
+
+</block>

@@ -151,6 +151,148 @@ class test_iir_filter(gr_unittest.TestCase):
         result_data = dst.data()
         self.assertFloatTuplesAlmostEqual (expected_result, result_data)
 
+    def test_iir_ccf_001(self):
+        src_data = (1+1j, 2+2j, 3+3j, 4+4j, 5+5j, 6+6j, 7+7j, 8+8j)
+        expected_result = (2+2j, (6+6j), (12+12j), (20+20j), (30+30j), (42+42j), (56+56j), (72+72j))
+        fftaps = (2,)
+        fbtaps = (0, 1)
+        src = blocks.vector_source_c(src_data)
+        op = filter.iir_filter_ccf(fftaps, fbtaps)
+        dst = blocks.vector_sink_c()
+
+        self.tb.connect(src, op)
+        self.tb.connect(op, dst)
+        self.tb.run()
+
+        result_data = dst.data()
+        self.assertFloatTuplesAlmostEqual (expected_result, result_data)
+
+    def test_iir_ccf_002(self):
+        src_data = (1+1j, 2+2j, 3+3j, 4+4j, 5+5j, 6+6j, 7+7j, 8+8j)
+        expected_result = (2+2j, (6+6j), (12+12j), (20+20j), (30+30j), (42+42j), (56+56j), (72+72j))
+
+        src = blocks.vector_source_c(src_data)
+        op = filter.iir_filter_ccf([1], [1])
+        dst = blocks.vector_sink_c()
+
+        fftaps = (2,)
+        fbtaps = (0, 1)
+        op.set_taps(fftaps, fbtaps)
+
+        self.tb.connect(src, op)
+        self.tb.connect(op, dst)
+        self.tb.run()
+
+        result_data = dst.data()
+        self.assertFloatTuplesAlmostEqual (expected_result, result_data)
+
+
+    def test_iir_ccd_001(self):
+        src_data = (1+1j, 2+2j, 3+3j, 4+4j, 5+5j, 6+6j, 7+7j, 8+8j)
+        expected_result = (2+2j, (6+6j), (12+12j), (20+20j), (30+30j), (42+42j), (56+56j), (72+72j))
+        fftaps = (2,)
+        fbtaps = (0, 1)
+        src = blocks.vector_source_c(src_data)
+        op = filter.iir_filter_ccd(fftaps, fbtaps)
+        dst = blocks.vector_sink_c()
+
+        self.tb.connect(src, op)
+        self.tb.connect(op, dst)
+        self.tb.run()
+
+        result_data = dst.data()
+        self.assertFloatTuplesAlmostEqual (expected_result, result_data)
+
+    def test_iir_ccd_002(self):
+        src_data = (1+1j, 2+2j, 3+3j, 4+4j, 5+5j, 6+6j, 7+7j, 8+8j)
+        expected_result = (2+2j, (6+6j), (12+12j), (20+20j), (30+30j), (42+42j), (56+56j), (72+72j))
+
+        src = blocks.vector_source_c(src_data)
+        op = filter.iir_filter_ccd([1], [1])
+        dst = blocks.vector_sink_c()
+
+        fftaps = (2,)
+        fbtaps = (0, 1)
+        op.set_taps(fftaps, fbtaps)
+
+        self.tb.connect(src, op)
+        self.tb.connect(op, dst)
+        self.tb.run()
+
+        result_data = dst.data()
+        self.assertFloatTuplesAlmostEqual (expected_result, result_data)
+
+
+    def test_iir_ccc_001(self):
+        src_data = (1+1j, 2+2j, 3+3j, 4+4j, 5+5j, 6+6j, 7+7j, 8+8j)
+        expected_result = (4j, 12j, 24j, 40j, 60j, 84j, 112j, 144j)
+        fftaps = (2+2j,)
+        fbtaps = (0, 1)
+        src = blocks.vector_source_c(src_data)
+        op = filter.iir_filter_ccc(fftaps, fbtaps)
+        dst = blocks.vector_sink_c()
+
+        self.tb.connect(src, op)
+        self.tb.connect(op, dst)
+        self.tb.run()
+
+        result_data = dst.data()
+        self.assertFloatTuplesAlmostEqual (expected_result, result_data)
+
+    def test_iir_ccc_002(self):
+        src_data = (1+1j, 2+2j, 3+3j, 4+4j, 5+5j, 6+6j, 7+7j, 8+8j)
+        expected_result = (4j, 12j, 24j, 40j, 60j, 84j, 112j, 144j)
+
+        src = blocks.vector_source_c(src_data)
+        op = filter.iir_filter_ccc([1], [1])
+        dst = blocks.vector_sink_c()
+
+        fftaps = (2+2j,)
+        fbtaps = (0, 1)
+        op.set_taps(fftaps, fbtaps)
+
+        self.tb.connect(src, op)
+        self.tb.connect(op, dst)
+        self.tb.run()
+
+        result_data = dst.data()
+        self.assertFloatTuplesAlmostEqual (expected_result, result_data)
+
+    def test_iir_ccz_001(self):
+        src_data = (1+1j, 2+2j, 3+3j, 4+4j, 5+5j, 6+6j, 7+7j, 8+8j)
+        expected_result = (4j, 12j, 24j, 40j, 60j, 84j, 112j, 144j)
+        fftaps = (2+2j,)
+        fbtaps = (0, 1)
+        src = blocks.vector_source_c(src_data)
+        op = filter.iir_filter_ccz(fftaps, fbtaps)
+        dst = blocks.vector_sink_c()
+
+        self.tb.connect(src, op)
+        self.tb.connect(op, dst)
+        self.tb.run()
+
+        result_data = dst.data()
+        self.assertFloatTuplesAlmostEqual (expected_result, result_data)
+
+    def test_iir_ccz_002(self):
+        src_data = (1+1j, 2+2j, 3+3j, 4+4j, 5+5j, 6+6j, 7+7j, 8+8j)
+        expected_result = (4j, 12j, 24j, 40j, 60j, 84j, 112j, 144j)
+
+        src = blocks.vector_source_c(src_data)
+        op = filter.iir_filter_ccz([1], [1])
+        dst = blocks.vector_sink_c()
+
+        fftaps = (2+2j,)
+        fbtaps = (0, 1)
+        op.set_taps(fftaps, fbtaps)
+
+        self.tb.connect(src, op)
+        self.tb.connect(op, dst)
+        self.tb.run()
+
+        result_data = dst.data()
+        self.assertFloatTuplesAlmostEqual (expected_result, result_data)
+
 if __name__ == '__main__':
     gr_unittest.run(test_iir_filter, "test_iir_filter.xml")
 
