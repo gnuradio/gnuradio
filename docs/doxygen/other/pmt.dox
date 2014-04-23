@@ -9,6 +9,134 @@ message passing interfaces. The most complete list of PMT function is,
 of course, the source code, specifically the header file pmt.h. This
 manual page summarizes the most important features and points of PMTs.
 
+Let's dive straight into some Python code and see how we can use
+PMTs:
+
+\code
+>>> import pmt
+>>> P = pmt.from_long(23)
+>>> type(P)
+<class 'pmt.pmt_swig.swig_int_ptr'>
+>>> print P
+23
+>>> P2 = pmt.from_complex(1j)
+>>> type(P2)
+<class 'pmt.pmt_swig.swig_int_ptr'>
+>>> print P2
+0+1i
+>>> pmt.is_complex(P2)
+True
+\endcode
+
+First, the pmt module is imported. We assign two values (P and P2)
+with PMTs using the from_long() and from_complex() calls,
+respectively. As we can see, they are both of the same type! This
+means we can pass these variables to C++ through SWIG, and C++ can
+handle this type accordingly.
+
+The same code as above in C++ would look like this:
+
+\code
+#include <pmt/pmt.h>
+// [...]
+pmt::pmt_t P = pmt::from_long(23);
+std::cout << P << std::endl;
+pmt::pmt_t P2 = pmt::from_complex(gr_complex(0, 1)); // Alternatively: pmt::from_complex(0, 1)
+std::cout << P2 << std::endl;
+std::cout << pmt::is_complex(P2) << std::endl;
+\endcode
+
+Two things stand out in both Python and C++: First we can simply print
+the contents of a PMT. How is this possible? Well, the PMTs have
+in-built capability to cast their value to a string (this is not
+possible with all types, though). Second, PMTs must obviously know
+their type, so we can query that, e.g. by calling the is_complex()
+method.
+
+When assigning a non-PMT value to a PMT, we can use the from_*
+methods, and use the to_* methods to convert back:
+
+\code
+pmt::pmt_t P_int = pmt::from_long(42);
+int i = pmt::to_long(P_int);
+pmt::pmt_t P_double = pmt::from_double(0.2);
+double d = pmt::to_double(P_double);
+\endcode
+
+String types play a bit of a special role in PMTs, as we will see
+later, and have their own converter:
+
+\code
+pmt::pmt_t P_str = pmt::string_to_symbol("spam");
+pmt::pmt_t P_str2 = pmt::intern("spam");
+std::string str = pmt::symbol_to_string(P_str);
+\endcode
+
+The pmt::intern is another way of saying pmt::string_to_symbol.
+
+In Python, we can make use of the weak typing, and there's actually a
+helper function to do these conversions (C++ also has a helper
+function for converting to PMTs called pmt::mp(), but its less
+powerful, and not quite as useful, because types are always strictly
+known in C++):
+
+\code
+P_int = pmt.to_pmt(42)
+i = pmt.to_python(P_int)
+P_double = pmt.to_pmt(0.2)
+d = pmt.to_double(P_double)
+\endcode
+
+On a side note, there are three useful PMT constants, which can be
+used in both Python and C++ domains. In C++, these can be used as
+such:
+
+\code
+pmt::pmt_t P_true = pmt::PMT_T;
+pmt::pmt_t P_false = pmt::PMT_F;
+pmt::pmt_t P_nil = pmt::PMT_NIL;
+\endcode
+
+In Python:
+
+\code
+P_true = pmt.PMT_T
+P_false = pmt.PMT_F
+P_nil = pmt.PMT_NIL
+\endcode
+
+pmt.PMT_T and pmt.PMT_F are boolean PMT types.
+
+To be able to go back to C++ data types, we need to be able to find
+out the type from a PMT. The family of is_* methods helps us do that:
+
+\code
+double d;
+if (pmt::is_integer(P)) {
+    d = (double) pmt::to_long(P);
+} else if (pmt::is_real(P)) {
+    d = pmt::to_double(P);
+} else {
+    // We really expected an integer or a double here, so we don't know what to do
+    throw std::runtime_error("expected an integer!");
+}
+\endcode
+
+It is important to do type checking since we cannot unpack a PMT of
+the wrong data type.
+
+We can compare PMTs without knowing their type by using the
+pmt::equal() function:
+
+\code
+if (pmt::eq(P_int, P_double)) {
+    std::cout << "Equal!" << std::endl; // This line will never be reached
+\endcode
+
+The rest of this page provides more depth into how to handle different
+data types with the PMT library.
+
+
 
 \section datatype PMT Data Type
 
