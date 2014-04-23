@@ -43,7 +43,7 @@
 		<block>filterbank_vcvcf</block>
 		<block>filter_delay_fc</block>
 		<block>hilbert_fc</block>
-		<block>iir_filter_ffd</block>
+		<block>iir_filter_xxx</block>
 		<block>interp_fir_filter_xxx</block>
 		<block>single_pole_iir_filter_xx</block>
 	</cat>

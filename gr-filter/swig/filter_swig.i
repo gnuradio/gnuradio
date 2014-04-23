@@ -55,6 +55,10 @@
 #include "gnuradio/filter/freq_xlating_fir_filter_scc.h"
 #include "gnuradio/filter/hilbert_fc.h"
 #include "gnuradio/filter/iir_filter_ffd.h"
+#include "gnuradio/filter/iir_filter_ccc.h"
+#include "gnuradio/filter/iir_filter_ccf.h"
+#include "gnuradio/filter/iir_filter_ccd.h"
+#include "gnuradio/filter/iir_filter_ccz.h"
 #include "gnuradio/filter/interp_fir_filter_ccc.h"
 #include "gnuradio/filter/interp_fir_filter_ccf.h"
 #include "gnuradio/filter/interp_fir_filter_fcc.h"
@@ -105,6 +109,10 @@
 %include "gnuradio/filter/freq_xlating_fir_filter_scc.h"
 %include "gnuradio/filter/hilbert_fc.h"
 %include "gnuradio/filter/iir_filter_ffd.h"
+%include "gnuradio/filter/iir_filter_ccc.h"
+%include "gnuradio/filter/iir_filter_ccf.h"
+%include "gnuradio/filter/iir_filter_ccd.h"
+%include "gnuradio/filter/iir_filter_ccz.h"
 %include "gnuradio/filter/interp_fir_filter_ccc.h"
 %include "gnuradio/filter/interp_fir_filter_ccf.h"
 %include "gnuradio/filter/interp_fir_filter_fcc.h"
@@ -152,6 +160,10 @@ GR_SWIG_BLOCK_MAGIC2(filter, freq_xlating_fir_filter_scf);
 GR_SWIG_BLOCK_MAGIC2(filter, freq_xlating_fir_filter_scc);
 GR_SWIG_BLOCK_MAGIC2(filter, hilbert_fc);
 GR_SWIG_BLOCK_MAGIC2(filter, iir_filter_ffd);
+GR_SWIG_BLOCK_MAGIC2(filter, iir_filter_ccc);
+GR_SWIG_BLOCK_MAGIC2(filter, iir_filter_ccf);
+GR_SWIG_BLOCK_MAGIC2(filter, iir_filter_ccd);
+GR_SWIG_BLOCK_MAGIC2(filter, iir_filter_ccz);
 GR_SWIG_BLOCK_MAGIC2(filter, interp_fir_filter_ccc);
 GR_SWIG_BLOCK_MAGIC2(filter, interp_fir_filter_ccf);
 GR_SWIG_BLOCK_MAGIC2(filter, interp_fir_filter_fcc);

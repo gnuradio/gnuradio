@@ -119,6 +119,7 @@ list(APPEND filter_sources
   fir_filter_with_buffer.cc
   fft_filter.cc
   firdes.cc
+  iir_filter.cc
   mmse_fir_interpolator_cc.cc
   mmse_fir_interpolator_ff.cc
   pm_remez.cc
@@ -138,6 +139,10 @@ list(APPEND filter_sources
   fractional_resampler_ff_impl.cc
   hilbert_fc_impl.cc
   iir_filter_ffd_impl.cc
+  iir_filter_ccc_impl.cc
+  iir_filter_ccf_impl.cc
+  iir_filter_ccd_impl.cc
+  iir_filter_ccz_impl.cc
   pfb_arb_resampler.cc
   pfb_arb_resampler_ccf_impl.cc
   pfb_arb_resampler_ccc_impl.cc
