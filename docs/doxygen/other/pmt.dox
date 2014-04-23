@@ -307,8 +307,8 @@ key0 = pmt.intern("int")
 val0 = pmt.from_long(123)
 val1 = pmt.from_long(234)
 
-key1 = pmt.tern("double")
-val2 = pmt.om_double(5.4321)
+key1 = pmt.intern("double")
+val2 = pmt.from_double(5.4321)
 
 # Make an empty dictionary
 a = pmt.make_dict()
