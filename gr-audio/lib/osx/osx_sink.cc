@@ -933,6 +933,10 @@ namespace gr {
      UInt32 in_number_frames,
      AudioBufferList* io_data)
     {
+      // NOTE: This is a callback from the OS, so throwing here does
+      // not work; return an error instead when something does not go
+      // as planned.
+
       osx_sink* This = reinterpret_cast<osx_sink*>(in_ref_con);
       OSStatus err = noErr;
 
@@ -948,22 +952,34 @@ namespace gr {
 #endif
 
       if(This->d_queue_sample_count < in_number_frames) {
-        // not enough data to fill request
-        err = -1;
+
+        // not enough data to fill request; probably happened on
+        // start-up, where this callback was called before ::work was.
+
+        fputs("aU", stderr);
+        fflush(stderr);
+        err = kAudioUnitErr_Initialized;
+
       }
       else {
         // enough data; remove data from our buffers into the AU's buffers
         int nn = This->d_n_user_channels;
-
         while(--nn >= 0) {
+
           size_t t_n_output_items = in_number_frames;
           float* out_buffer = (float*)(io_data->mBuffers[nn].mData);
-          This->d_buffers[nn]->dequeue(out_buffer, &t_n_output_items);
-          if(t_n_output_items != in_number_frames) {
-            throw std::runtime_error
-	      ("audio_osx_sink::au_output_callback: "
-	       "number of available items changing "
-	       "unexpectedly (should never happen).");
+          int rv = This->d_buffers[nn]->dequeue
+            (out_buffer, &t_n_output_items);
+
+          if((rv != 1) || (t_n_output_items != in_number_frames)) {
+
+            std::cerr << "audio_osx_sink::au_output_callback: "
+                      << "number of available items changing "
+                      << "unexpectedly (should never happen): was "
+                      << in_number_frames << " now "
+                      << t_n_output_items<< std::endl;
+	    err = kAudioUnitErr_TooManyFramesToProcess;
+
           }
         }
 
