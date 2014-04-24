@@ -815,7 +815,7 @@ namespace gr {
       // find the maximum amount of buffer space available right now
 
       UInt32 l_max_count;
-      int diff_count = d_buffer_sample_count - noutput_items;
+      int diff_count = ((int)d_buffer_sample_count) - noutput_items;
       if(diff_count < 0) {
         l_max_count = 0;
       }
