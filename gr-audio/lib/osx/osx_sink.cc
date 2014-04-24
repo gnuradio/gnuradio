@@ -700,6 +700,16 @@ namespace gr {
 		  << std::endl;
 #endif
 
+	// if waiting in ::work, signal to wake up
+	if (d_waiting_for_data) {
+#if _OSX_AU_DEBUG_
+	  std::cerr << ((void*)(pthread_self()))
+		    << " : audio_osx_sink::stop: "
+		    << "signaling waiting condition" << std::endl;
+#endif
+	  d_cond_data.notify_one();
+	}
+
 	// stop the audio unit (should never fail)
 
         OSStatus err = AudioOutputUnitStop(d_output_au);
@@ -707,11 +717,17 @@ namespace gr {
 	  (err, "AudioOutputUnitStop",
 	   "audio_osx_sink::stop");
 
-	// abort all buffers
+	// abort and reset all buffers
 
         for(UInt32 nn = 0; nn < d_n_user_channels; ++nn) {
           d_buffers[nn]->abort();
+          d_buffers[nn]->reset();
         }
+
+	// reset local knowledge of amount of data in queues
+
+	d_queue_sample_count = 0;
+
       }
 #if _OSX_AU_DEBUG_
       else {
