@@ -34,7 +34,7 @@
 
 namespace gr {
   namespace qtgui {
-    
+
     /*!
      * \brief A graphical sink to display multiple signals in time.
      * \ingroup instrumentation_blk
@@ -86,6 +86,45 @@ namespace gr {
       virtual void set_nsamps(const int newsize) = 0;
       virtual void set_samp_rate(const double samp_rate) = 0;
       virtual void set_line_alpha(int which, double alpha) = 0;
+
+      /*!
+       * Set up a trigger for the sink to know when to start
+       * plotting. Useful to isolate events and avoid noise.
+       *
+       * The trigger modes are Free, Auto, Normal, and Tag (see
+       * gr::qtgui::trigger_mode). The first three are like a normal
+       * oscope trigger function. Free means free running with no
+       * trigger, auto will trigger if the trigger event is seen, but
+       * will still plot otherwise, and normal will hold until the
+       * trigger event is observed. The Tag trigger mode allows us to
+       * trigger off a specific stream tag. The tag trigger is based
+       * only on the name of the tag, so when a tag of the given name
+       * is seen, the trigger is activated.
+       *
+       * In auto and normal mode, we look for the slope of the of the
+       * signal. Given a gr::qtgui::trigger_slope as either Positive
+       * or Negative, if the value between two samples moves in the
+       * given direction (x[1] > x[0] for Positive or x[1] < x[0] for
+       * Negative), then the trigger is activated.
+       *
+       * The \p delay value is specified in time based off the sample
+       * rate. If the sample rate of the block is set to 1, the delay
+       * is then also the sample number offset. This is the offset
+       * from the left-hand y-axis of the plot. It delays the signal
+       * to show the trigger event at the given delay along with some
+       * portion of the signal before the event. The delay must be
+       * within 0 - t_max where t_max is the maximum amount of time
+       * displayed on the time plot.
+       *
+       * \param mode The trigger_mode: free, auto, normal, or tag.
+       * \param slope The trigger_slope: positive or negative. Only
+       *              used for auto and normal modes.
+       * \param level The magnitude of the trigger even for auto or normal modes.
+       * \param delay The delay (in units of time) for where the trigger happens.
+       * \param channel Which input channel to use for the trigger events.
+       * \param tag_key The name (as a string) of the tag to trigger off
+       *                 of if using the tag mode.
+       */
       virtual void set_trigger_mode(trigger_mode mode, trigger_slope slope,
                                     float level, float delay, int channel,
                                     const std::string &tag_key="") = 0;

@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2012 Free Software Foundation, Inc.
+ * Copyright 2012,2014 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -46,6 +46,11 @@ public:
   ConstellationDisplayPlot* getPlot();
 
   int getNPoints() const;
+  gr::qtgui::trigger_mode getTriggerMode() const;
+  gr::qtgui::trigger_slope getTriggerSlope() const;
+  float getTriggerLevel() const;
+  int getTriggerChannel() const;
+  std::string getTriggerTagKey() const;
 
 public slots:
   void customEvent(QEvent * e);
@@ -56,12 +61,36 @@ public slots:
   void setXaxis(double min, double max);
   void autoScale(bool en);
 
+  void updateTrigger(gr::qtgui::trigger_mode mode);
+  void setTriggerMode(gr::qtgui::trigger_mode mode);
+  void setTriggerSlope(gr::qtgui::trigger_slope slope);
+  void setTriggerLevel(QString s);
+  void setTriggerLevel(float level);
+  void setTriggerChannel(int chan);
+  void setTriggerTagKey(QString s);
+  void setTriggerTagKey(const std::string &s);
+
 private slots:
   void newData(const QEvent*);
 
 private:
   QIntValidator* d_int_validator;
   int d_npoints;
+
+  NPointsMenu *d_nptsmenu;
+
+  QMenu *d_triggermenu;
+  TriggerModeMenu *d_tr_mode_menu;
+  TriggerSlopeMenu *d_tr_slope_menu;
+  PopupMenu *d_tr_level_act;
+  TriggerChannelMenu *d_tr_channel_menu;
+  PopupMenu *d_tr_tag_key_act;
+
+  gr::qtgui::trigger_mode d_trig_mode;
+  gr::qtgui::trigger_slope d_trig_slope;
+  float d_trig_level;
+  int d_trig_channel;
+  std::string d_trig_tag_key;
 };
 
 #endif /* CONSTELLATION_DISPLAY_FORM_H */

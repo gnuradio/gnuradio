@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2012 Free Software Foundation, Inc.
+ * Copyright 2012,2014 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -49,9 +49,9 @@ namespace gr {
 					 int nconnections,
 					 QWidget *parent)
       : sync_block("const_sink_c",
-		      io_signature::make(nconnections, nconnections, sizeof(gr_complex)),
-		      io_signature::make(0, 0, 0)),
-	d_size(size), d_name(name),
+		   io_signature::make(nconnections, nconnections, sizeof(gr_complex)),
+		   io_signature::make(0, 0, 0)),
+	d_size(size), d_buffer_size(2*size), d_name(name),
 	d_nconnections(nconnections), d_parent(parent)
     {
       // Required now for Qt; argc must be greater than 0 and argv
@@ -67,12 +67,12 @@ namespace gr {
       d_index = 0;
 
       for(int i = 0; i < d_nconnections; i++) {
-	d_residbufs_real.push_back((double*)volk_malloc(d_size*sizeof(double),
+	d_residbufs_real.push_back((double*)volk_malloc(d_buffer_size*sizeof(double),
                                                         volk_get_alignment()));
-	d_residbufs_imag.push_back((double*)volk_malloc(d_size*sizeof(double),
+	d_residbufs_imag.push_back((double*)volk_malloc(d_buffer_size*sizeof(double),
                                                         volk_get_alignment()));
-	memset(d_residbufs_real[i], 0, d_size*sizeof(double));
-	memset(d_residbufs_imag[i], 0, d_size*sizeof(double));
+	memset(d_residbufs_real[i], 0, d_buffer_size*sizeof(double));
+	memset(d_residbufs_imag[i], 0, d_buffer_size*sizeof(double));
       }
 
       // Set alignment properties for VOLK
@@ -81,7 +81,12 @@ namespace gr {
       set_alignment(std::max(1,alignment_multiple));
 
       initialize();
-    }
+
+      set_trigger_mode(TRIG_MODE_FREE, TRIG_SLOPE_POS, 0, 0);
+
+      set_history(2);          // so we can look ahead for the trigger slope
+      declare_sample_delay(1); // delay the tags for a history of 2
+   }
 
     const_sink_c_impl::~const_sink_c_impl()
     {
@@ -221,6 +226,32 @@ namespace gr {
     }
 
     void
+    const_sink_c_impl::set_trigger_mode(trigger_mode mode,
+					trigger_slope slope,
+					float level,
+					int channel,
+					const std::string &tag_key)
+    {
+      gr::thread::scoped_lock lock(d_mutex);
+
+      d_trigger_mode = mode;
+      d_trigger_slope = slope;
+      d_trigger_level = level;
+      d_trigger_channel = channel;
+      d_trigger_tag_key = pmt::intern(tag_key);
+      d_triggered = false;
+      d_trigger_count = 0;
+
+      d_main_gui->setTriggerMode(d_trigger_mode);
+      d_main_gui->setTriggerSlope(d_trigger_slope);
+      d_main_gui->setTriggerLevel(d_trigger_level);
+      d_main_gui->setTriggerChannel(d_trigger_channel);
+      d_main_gui->setTriggerTagKey(tag_key);
+
+      _reset();
+    }
+
+    void
     const_sink_c_impl::set_size(int width, int height)
     {
       d_main_gui->resize(QSize(width, height));
@@ -274,33 +305,27 @@ namespace gr {
       gr::thread::scoped_lock lock(d_mutex);
 
       if(newsize != d_size) {
+	// Set new size and reset buffer index
+	// (throws away any currently held data, but who cares?)
+	d_size = newsize;
+        d_buffer_size = 2*d_size;
+	d_index = 0;
+
 	// Resize residbuf and replace data
 	for(int i = 0; i < d_nconnections; i++) {
 	  volk_free(d_residbufs_real[i]);
 	  volk_free(d_residbufs_imag[i]);
-	  d_residbufs_real[i] = (double*)volk_malloc(newsize*sizeof(double),
+	  d_residbufs_real[i] = (double*)volk_malloc(d_buffer_size*sizeof(double),
                                                      volk_get_alignment());
-	  d_residbufs_imag[i] = (double*)volk_malloc(newsize*sizeof(double),
+	  d_residbufs_imag[i] = (double*)volk_malloc(d_buffer_size*sizeof(double),
                                                      volk_get_alignment());
 
-	  memset(d_residbufs_real[i], 0, newsize*sizeof(double));
-	  memset(d_residbufs_imag[i], 0, newsize*sizeof(double));
+	  memset(d_residbufs_real[i], 0, d_buffer_size*sizeof(double));
+	  memset(d_residbufs_imag[i], 0, d_buffer_size*sizeof(double));
 	}
-
-	// Set new size and reset buffer index
-	// (throws away any currently held data, but who cares?)
-	d_size = newsize;
-	d_index = 0;
 
 	d_main_gui->setNPoints(d_size);
       }
-    }
-
-    void
-    const_sink_c_impl::npoints_resize()
-    {
-      int newsize = d_main_gui->getNPoints();
-      set_nsamps(newsize);
     }
 
     int
@@ -324,7 +349,104 @@ namespace gr {
     void
     const_sink_c_impl::reset()
     {
+      gr::thread::scoped_lock lock(d_mutex);
+      _reset();
+    }
+
+    void
+    const_sink_c_impl::_reset()
+    {
+      // Reset the start and end indices.
+      d_start = 0;
+      d_end = d_size;
       d_index = 0;
+
+      // Reset the trigger.
+      if(d_trigger_mode == TRIG_MODE_FREE) {
+        d_triggered = true;
+      }
+      else {
+        d_triggered = false;
+      }
+    }
+
+    void
+    const_sink_c_impl::_npoints_resize()
+    {
+      int newsize = d_main_gui->getNPoints();
+      set_nsamps(newsize);
+    }
+
+    void
+    const_sink_c_impl::_gui_update_trigger()
+    {
+      d_trigger_mode = d_main_gui->getTriggerMode();
+      d_trigger_slope = d_main_gui->getTriggerSlope();
+      d_trigger_level = d_main_gui->getTriggerLevel();
+      d_trigger_channel = d_main_gui->getTriggerChannel();
+      d_trigger_count = 0;
+
+      std::string tagkey = d_main_gui->getTriggerTagKey();
+      d_trigger_tag_key = pmt::intern(tagkey);
+    }
+
+    void
+    const_sink_c_impl::_test_trigger_tags(int nitems)
+    {
+      int trigger_index;
+
+      uint64_t nr = nitems_read(d_trigger_channel);
+      std::vector<gr::tag_t> tags;
+      get_tags_in_range(tags, d_trigger_channel,
+                        nr, nr + nitems,
+                        d_trigger_tag_key);
+      if(tags.size() > 0) {
+        d_triggered = true;
+        trigger_index = tags[0].offset - nr;
+        d_start = d_index + trigger_index - 1;
+        d_end = d_start + d_size;
+        d_trigger_count = 0;
+      }
+    }
+
+    void
+    const_sink_c_impl::_test_trigger_norm(int nitems, gr_vector_const_void_star inputs)
+    {
+      int trigger_index;
+      const gr_complex *in = (const gr_complex*)inputs[d_trigger_channel];
+      for(trigger_index = 0; trigger_index < nitems; trigger_index++) {
+        d_trigger_count++;
+
+        // Test if trigger has occurred based on the input stream,
+        // channel number, and slope direction
+        if(_test_trigger_slope(&in[trigger_index])) {
+          d_triggered = true;
+          d_start = d_index + trigger_index;
+          d_end = d_start + d_size;
+          d_trigger_count = 0;
+          break;
+        }
+      }
+
+      // If using auto trigger mode, trigger periodically even
+      // without a trigger event.
+      if((d_trigger_mode == TRIG_MODE_AUTO) && (d_trigger_count > d_size)) {
+        d_triggered = true;
+        d_trigger_count = 0;
+      }
+    }
+
+    bool
+    const_sink_c_impl::_test_trigger_slope(const gr_complex *in) const
+    {
+      float x0, x1;
+      x0 = abs(in[0]);
+      x1 = abs(in[1]);
+
+      if(d_trigger_slope == TRIG_SLOPE_POS)
+        return ((x0 <= d_trigger_level) && (x1 > d_trigger_level));
+      else
+        return ((x0 >= d_trigger_level) && (x1 < d_trigger_level));
     }
 
     int
@@ -332,54 +454,64 @@ namespace gr {
 			    gr_vector_const_void_star &input_items,
 			    gr_vector_void_star &output_items)
     {
-      int n=0, j=0, idx=0;
-      const gr_complex *in = (const gr_complex*)input_items[idx];
+      int n=0;
+      const gr_complex *in;
 
-      npoints_resize();
+      _npoints_resize();
+      _gui_update_trigger();
 
-      for(int i=0; i < noutput_items; i+=d_size) {
-	unsigned int datasize = noutput_items - i;
-	unsigned int resid = d_size-d_index;
-	idx = 0;
+      int nfill = d_end - d_index;                 // how much room left in buffers
+      int nitems = std::min(noutput_items, nfill); // num items we can put in buffers
 
-	// If we have enough input for one full plot, do it
-	if(datasize >= resid) {
-
-	  // Fill up residbufs with d_size number of items
-	  for(n = 0; n < d_nconnections; n++) {
-	    in = (const gr_complex*)input_items[idx++];
-	    volk_32fc_deinterleave_64f_x2_u(&d_residbufs_real[n][d_index],
-					    &d_residbufs_imag[n][d_index],
-					    &in[j], resid);
-	  }
-
-	  // Update the plot if its time
-	  if(gr::high_res_timer_now() - d_last_time > d_update_time) {
-	    d_last_time = gr::high_res_timer_now();
-	    d_qApplication->postEvent(d_main_gui,
-				      new ConstUpdateEvent(d_residbufs_real,
-							   d_residbufs_imag,
-							   d_size));
-	  }
-
-	  d_index = 0;
-	  j += resid;
-	}
-
-	// Otherwise, copy what we received into the residbufs for next time
-	else {
-	  for(n = 0; n < d_nconnections; n++) {
-	    in = (const gr_complex*)input_items[idx++];
-	    volk_32fc_deinterleave_64f_x2_u(&d_residbufs_real[n][d_index],
-					    &d_residbufs_imag[n][d_index],
-					    &in[j], datasize);
-	  }
-	  d_index += datasize;
-	  j += datasize;
-	}
+      // If auto, normal, or tag trigger, look for the trigger
+      if((d_trigger_mode != TRIG_MODE_FREE) && !d_triggered) {
+        // trigger off a tag key (first one found)
+        if(d_trigger_mode == TRIG_MODE_TAG) {
+          _test_trigger_tags(nitems);
+        }
+        // Normal or Auto trigger
+        else {
+          _test_trigger_norm(nitems, input_items);
+        }
       }
 
-      return j;
+      // Copy data into the buffers.
+      for(n = 0; n < d_nconnections; n++) {
+        in = (const gr_complex*)input_items[n];
+        volk_32fc_deinterleave_64f_x2(&d_residbufs_real[n][d_index],
+                                      &d_residbufs_imag[n][d_index],
+                                      &in[0], nitems);
+      }
+      d_index += nitems;
+
+
+      // If we've have a trigger and a full d_size of items in the buffers, plot.
+      if((d_triggered) && (d_index == d_end)) {
+        // Copy data to be plotted to start of buffers.
+        for(n = 0; n < d_nconnections; n++) {
+          memmove(d_residbufs_real[n], &d_residbufs_real[n][d_start], d_size*sizeof(double));
+          memmove(d_residbufs_imag[n], &d_residbufs_imag[n][d_start], d_size*sizeof(double));
+        }
+
+        // Plot if we are able to update
+        if(gr::high_res_timer_now() - d_last_time > d_update_time) {
+          d_last_time = gr::high_res_timer_now();
+          d_qApplication->postEvent(d_main_gui,
+                                    new ConstUpdateEvent(d_residbufs_real,
+							 d_residbufs_imag,
+							 d_size));
+        }
+
+        // We've plotting, so reset the state
+        _reset();
+      }
+
+      // If we've filled up the buffers but haven't triggered, reset.
+      if(d_index == d_end) {
+        _reset();
+      }
+
+      return nitems;
     }
 
   } /* namespace qtgui */
