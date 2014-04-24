@@ -216,14 +216,15 @@ namespace gr {
       }
 
       // set the interim buffer size; to work with the GR scheduler,
-      // must be at least 16kB.  Pick 50 kB since that's plenty yet
+      // must be at least 16kB.  Pick 50 kS since that's plenty yet
       // not very much.
 
       d_buffer_sample_count = (d_input_sample_rate < 50000.0 ?
 			       50000 : (UInt32)d_input_sample_rate);
 
 #if _OSX_AU_DEBUG_
-      std::cerr << "sink(): max # samples = "
+      std::cerr << ((void*)(pthread_self()))
+		<< " : audio_osx_sink: max # samples = "
 		<< d_buffer_sample_count << std::endl;
 #endif
 
@@ -420,7 +421,8 @@ namespace gr {
 
 
 #if _OSX_AU_DEBUG_
-      std::cerr << "audio_osx_sink Parameters:" << std::endl
+      std::cerr << ((void*)(pthread_self()))
+		<< " : audio_osx_sink Parameters:" << std::endl
 		<< "  Sample Rate is " << d_input_sample_rate << std::endl
 		<< "  Max # samples to store per channel is "
 		<< d_buffer_sample_count << std::endl;
@@ -429,6 +431,12 @@ namespace gr {
 
     void osx_sink::teardown()
     {
+#if _OSX_AU_DEBUG_
+      std::cerr << ((void*)(pthread_self()))
+		<< " : audio_osx_sink::teardown: starting"
+		<< std::endl;
+#endif
+
       OSStatus err = noErr;
 
       // stop the AudioUnit
@@ -491,6 +499,12 @@ namespace gr {
       d_using_default_device = false;
       d_output_au = 0;
       d_output_ad_id = 0;
+
+#if _OSX_AU_DEBUG_
+      std::cerr << ((void*)(pthread_self()))
+		<< " : audio_osx_sink::teardown: finished"
+		<< std::endl;
+#endif
     }
 
     bool
@@ -547,7 +561,9 @@ namespace gr {
       d_n_user_channels = ninputs;
 
 #if _OSX_AU_DEBUG_
-      std::cerr << "chk_topo: Actual # user input channels = "
+      std::cerr << ((void*)(pthread_self()))
+		<< " : audio_osx_sink::check_topology: "
+		<< "Actual # user input channels = "
                 << d_n_user_channels << std::endl;
 #endif
 
@@ -643,6 +659,12 @@ namespace gr {
     {
       if(!is_running() && d_output_au) {
 
+#if _OSX_AU_DEBUG_
+	std::cerr << ((void*)(pthread_self()))
+		<< " : audio_osx_sink::start: starting Output AudioUnit."
+		  << std::endl;
+#endif
+
 	// check channels, (re)allocate and reset buffers if/as necessary
 
 	check_channels(true);
@@ -655,6 +677,14 @@ namespace gr {
 	   "audio_osx_sink::start");
       }
 
+#if _OSX_AU_DEBUG_
+      else {
+	std::cerr << ((void*)(pthread_self()))
+		  << " : audio_osx_sink::start: "
+		  << "already running." << std::endl;
+      }
+#endif
+
       return (true);
     }
 
@@ -662,6 +692,13 @@ namespace gr {
     osx_sink::stop()
     {
       if(is_running()) {
+
+#if _OSX_AU_DEBUG_
+	std::cerr << ((void*)(pthread_self()))
+		  << " : audio_osx_sink::stop: "
+		  << "stopping Output AudioUnit."
+		  << std::endl;
+#endif
 
 	// stop the audio unit (should never fail)
 
@@ -676,6 +713,13 @@ namespace gr {
           d_buffers[nn]->abort();
         }
       }
+#if _OSX_AU_DEBUG_
+      else {
+	std::cerr << ((void*)(pthread_self()))
+		  << " : audio_osx_sink::stop: "
+		  << "already stopped." << std::endl;
+      }
+#endif
 
       return(true);
     }
@@ -686,8 +730,14 @@ namespace gr {
                    gr_vector_void_star &output_items)
     {
 #if _OSX_AU_DEBUG_RENDER_
-      std::cerr << ((void*)(pthread_self()))
-		<< " : audio_osx_sink::work: Starting." << std::endl;
+      {
+	gr::thread::scoped_lock l(d_internal);
+	std::cerr << ((void*)(pthread_self()))
+		  << " : audio_osx_sink::work: "
+		  << "Starting: #OI = "
+		  << noutput_items << ", reset = "
+		  << (d_do_reset ? "true" : "false") << std::endl;
+      }
 #endif
       if (d_do_reset) {
 	if (d_hardware_changed) {
@@ -719,8 +769,12 @@ namespace gr {
 	else {
 
 #if _OSX_AU_DEBUG_RENDER_
-	  std::cerr << "audio_osx_sink::work: doing reset."
-		    << std::endl;
+	  {
+	    gr::thread::scoped_lock l(d_internal);
+	    std::cerr << ((void*)(pthread_self()))
+		      << " : audio_osx_sink::work: "
+		      << "doing reset." << std::endl;
+	  }
 #endif
 
 	  GR_LOG_WARN(d_logger, boost::format
@@ -736,16 +790,13 @@ namespace gr {
 
 	  gr::thread::scoped_lock l(d_internal);
 
-#if _OSX_AU_DEBUG_RENDER_
-	  std::cerr << "audio_osx_sink::work: mutex locked."
-		    << std::endl;
-#endif
-
 	  setup();
 	  start();
 
 #if _OSX_AU_DEBUG_RENDER_
-	  std::cerr << "audio_osx_sink: returning after reset."
+	  std::cerr << ((void*)(pthread_self()))
+		    << " : audio_osx_sink: "
+		    << "returning 0 after reset."
 		    << std::endl;
 #endif
 	  return(0);
@@ -755,11 +806,13 @@ namespace gr {
       gr::thread::scoped_lock l(d_internal);
 
       // take the input data, copy it, and push it to the bottom of
-      // the queue mono input are pushed onto queue[0]; stereo input
-      // are pushed onto queue[1].  If the number of user/graph
+      // the queue.  mono input is pushed onto queue[0]; stereo input
+      // is pushed onto queue[1].  If the number of user/graph
       // channels is less than the number of device channels, copy the
       // data from the last / highest number channel to remaining
       // device channels.
+
+      // find the maximum amount of buffer space available right now
 
       UInt32 l_max_count;
       int diff_count = d_buffer_sample_count - noutput_items;
@@ -770,35 +823,39 @@ namespace gr {
         l_max_count = (UInt32)diff_count;
       }
 
-#if 0
-      if(l_max_count < d_queueItemLength->back()) {
-        // allow 2 buffers at a time, regardless of length
-        l_max_count = d_queueItemLength->back();
-      }
-#endif
-
 #if _OSX_AU_DEBUG_RENDER_
-      std::cerr << "work1: qSC = " << d_queue_sample_count
+      std::cerr << ((void*)(pthread_self()))
+		<< " : audio_osx_sink::work: "
+		<< "qSC = " << d_queue_sample_count
                 << ", lMC = "<< l_max_count
-                << ", dmSC = " << d_buffer_sample_count
-                << ", nOI = " << noutput_items << std::endl;
+                << ", dBSC = " << d_buffer_sample_count
+                << ", #OI = " << noutput_items << std::endl;
 #endif
 
       if(d_queue_sample_count > l_max_count) {
-        // data coming in too fast; ok_to_block decides what to do
+
+        // data coming in too fast; ok_to_block decides what to do: if
+        // ok to block, then wait until the render callback makes
+        // enough space.  If not blocking, detect overflow via writing
+        // data to the circular buffer.
+
         if(d_ok_to_block == true) {
           // block until there is data to return, or on reset
           while(d_queue_sample_count > l_max_count) {
 	    // release control so-as to allow data to be retrieved;
 	    // block until there is data to return
 #if _OSX_AU_DEBUG_RENDER_
-	    std::cerr << "audio_osx_sink::work: waiting." << std::endl;
+	    std::cerr << ((void*)(pthread_self()))
+		      << " : audio_osx_sink::work: "
+		      << "waiting." << std::endl;
 #endif
 	    d_waiting_for_data = true;
 	    d_cond_data.wait(l);
 	    d_waiting_for_data = false;
 #if _OSX_AU_DEBUG_RENDER_
-	    std::cerr << "audio_osx_sink::work: done waiting." << std::endl;
+	    std::cerr << ((void*)(pthread_self()))
+		      << " : audio_osx_sink::work: "
+		      << "done waiting." << std::endl;
 #endif
 	    // the condition's 'notify' was called; acquire control to
 	    // keep thread safe
@@ -807,8 +864,9 @@ namespace gr {
 	    // up the next time this method is called.
 	    if (d_do_reset) {
 #if _OSX_AU_DEBUG_RENDER_
-	      std::cerr << "audio_osx_sink::work: "
-		"returning for reset." << std::endl;
+	      std::cerr << ((void*)(pthread_self()))
+			<< " : audio_osx_sink::work: "
+			<< "returning 0 for reset." << std::endl;
 #endif
 	      return(0);
 	    }
@@ -816,7 +874,8 @@ namespace gr {
 	}
       }
 
-      // not blocking case and overflow is handled by the circular buffer
+      // not blocking and overflow is handled by the circular buffer,
+      // or enough data space is available
 
       // add the input frames to the buffers' queue, checking for overflow
 
@@ -839,23 +898,26 @@ namespace gr {
 	}
       }
 
+      // did overflow occur?
+
       if(res == -1) {
-        // data coming in too fast
-        // drop oldest buffer
+        // yes: data coming in too fast; drop oldest data.
         fputs("aO", stderr);
         fflush(stderr);
         // set the local number of samples available to the max
         d_queue_sample_count = d_buffers[0]->buffer_length_items();
       }
       else {
-        // keep up the local sample count
+        // no: keep up the local sample count
         d_queue_sample_count += noutput_items;
       }
 
 #if _OSX_AU_DEBUG_RENDER_
-      std::cerr << "work2: #OI = "
-                << noutput_items << ", #Cnt = "
-                << d_queue_sample_count << ", mSC = "
+      std::cerr << ((void*)(pthread_self()))
+		<< " : audio_osx_sink::work: "
+		<< "returning: #OI = "
+                << noutput_items << ", qSC = "
+                << d_queue_sample_count << ", bSS = "
                 << d_buffer_sample_count << std::endl;
 #endif
 
@@ -877,8 +939,12 @@ namespace gr {
       gr::thread::scoped_lock l(This->d_internal);
 
 #if _OSX_AU_DEBUG_RENDER_
-      std::cerr << "cb_in: SC = " << This->d_queue_sample_count
-                << ", in#F = " << in_number_frames << std::endl;
+      std::cerr << ((void*)(pthread_self()))
+		<< " : audio_osx_sink::au_output_callback: "
+		<< "starting: qSC = "
+		<< This->d_queue_sample_count
+                << ", in#F = " << in_number_frames
+		<< ", in#C = " << This->d_n_user_channels << std::endl;
 #endif
 
       if(This->d_queue_sample_count < in_number_frames) {
@@ -904,16 +970,24 @@ namespace gr {
         This->d_queue_sample_count -= in_number_frames;
       }
 
-#if _OSX_AU_DEBUG_RENDER_
-      std::cerr << "cb_out: SC = "
-                << This->d_queue_sample_count << std::endl;
-#endif
-
       // signal that data is available, if appropraite
 
       if (This->d_waiting_for_data) {
+#if _OSX_AU_DEBUG_RENDER_
+	std::cerr << ((void*)(pthread_self()))
+		  << " : audio_osx_sink::au_output_callback: "
+		  << "signaling waiting condition" << std::endl;
+#endif
 	This->d_cond_data.notify_one();
       }
+
+#if _OSX_AU_DEBUG_RENDER_
+      std::cerr << ((void*)(pthread_self()))
+		<< " : audio_osx_sink::au_output_callback: "
+		<< "returning: qSC = "
+                << This->d_queue_sample_count
+		<< ", err = " << err << std::endl;
+#endif
 
       return (err);
     }
