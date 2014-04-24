@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2006,2009,2010 Free Software Foundation, Inc.
+ * Copyright 2006,2009,2010,2014 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio.
  *
@@ -218,13 +218,17 @@ public:
  * inputs:
  *     buf: a pointer to the buffer into which to copy the data
  *
- *     bufLen_I: pointer to the number of items to remove in items
- *         (of the instantiated type)
+ *     bufLen_I: pointer to the requested number of items to remove
+ *
+ * outputs:
+ *     bufLen_I: pointer to the actual number of items removed
  *
  * returns:
  *     0: if nothing to do (0 length buffer)
  *     1: if success
  *     2: in the process of aborting, do doing nothing
+ *     3: if the number of requested items to remove is not the same
+ *        as the actual number of items removed.
  *
  * will throw runtime errors if inputs are improper:
  *     buffer pointer is NULL
@@ -297,11 +301,14 @@ public:
       d_readNdx_I = n_start_I;
     } else
       d_readNdx_I += n_now_I;
+    int rv = 1;
+    if (*bufLen_I != l_bufLen_I)
+      rv = 3;
     *bufLen_I = l_bufLen_I;
     d_n_avail_read_I -= l_bufLen_I;
     d_n_avail_write_I += l_bufLen_I;
     d_writeBlock->notify_one ();
-    return (1);
+    return (rv);
   };
 
   void abort () {
