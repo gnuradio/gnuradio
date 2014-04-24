@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2012-2013 Free Software Foundation, Inc.
+ * Copyright 2012-2014 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -72,7 +72,7 @@ namespace gr {
       DWORD_PTR ret = SetThreadAffinityMask(thread, dword_mask);
       if(ret == 0) {
         std::stringstream s;
-        s << "thread_bind_to_processor failed with error: " 
+        s << "thread_bind_to_processor failed with error: "
           << GetLastError() << std::endl;
         throw std::runtime_error(s.str());
       }
@@ -97,14 +97,14 @@ namespace gr {
       }
     }
 
-    int 
+    int
     thread_priority(gr_thread_t thread)
     {
       // Not implemented on Windows
       return -1;
     }
-    
-    int 
+
+    int
     set_thread_priority(gr_thread_t thread, int priority)
     {
       // Not implemented on Windows
@@ -164,14 +164,14 @@ namespace gr {
       // Not implemented on OSX
     }
 
-    int 
+    int
     thread_priority(gr_thread_t thread)
     {
       // Not implemented on OSX
       return -1;
     }
-    
-    int 
+
+    int
     set_thread_priority(gr_thread_t thread, int priority)
     {
       // Not implemented on OSX
@@ -262,7 +262,7 @@ namespace gr {
       }
     }
 
-    int 
+    int
     thread_priority(gr_thread_t thread)
     {
       sched_param param;
@@ -273,8 +273,8 @@ namespace gr {
       priority = param.sched_priority;
       return (ret==0)?priority:ret;
     }
-    
-    int 
+
+    int
     set_thread_priority(gr_thread_t thread, int priority)
     {
       int policy;
