@@ -59,6 +59,8 @@ namespace gr {
       d_min_output_buffer(std::max(output_signature->max_streams(),1), -1)
   {
     global_block_registry.register_primitive(alias(), this);
+    message_port_register_in(pmt::mp("system"));
+    set_msg_handler(pmt::mp("system"), boost::bind(&block::system_handler, this, _1));
 
 #ifdef ENABLE_GR_LOG
 #ifdef HAVE_LOG4CPP
@@ -733,6 +735,61 @@ namespace gr {
       d_detail->reset_perf_counters();
     }
   }
+
+
+  void
+  block::system_handler(pmt::pmt_t msg)
+  {
+    //std::cout << "system_handler " << msg << "\n";
+    pmt::pmt_t op = pmt::car(msg);
+    if(pmt::eqv(op, pmt::mp("done"))){
+        d_finished = pmt::to_long(pmt::cdr(msg));
+        global_block_registry.notify_blk(alias());
+    } else {
+        std::cout << "WARNING: bad message op on system port!\n";
+        pmt::print(msg);
+    }
+  }
+
+  void
+  block::notify_msg_neighbors()
+  {
+    size_t len = pmt::length(d_message_subscribers);
+    pmt::pmt_t port_names = pmt::make_vector(len, pmt::PMT_NIL);
+    pmt::pmt_t keys = pmt::dict_keys(d_message_subscribers);
+    for(size_t i = 0; i < len; i++) {
+      // for each output port
+      pmt::pmt_t oport = pmt::nth(i,keys);
+
+      // for each subscriber on this port
+      pmt::pmt_t currlist = pmt::dict_ref(d_message_subscribers, oport, pmt::PMT_NIL);
+
+      // iterate through subscribers on port
+      while(pmt::is_pair(currlist)) {
+        pmt::pmt_t target = pmt::car(currlist);
+
+        pmt::pmt_t block = pmt::car(target);
+        pmt::pmt_t port = pmt::mp("system");
+
+        currlist = pmt::cdr(currlist);
+        basic_block_sptr blk = global_block_registry.block_lookup(block);
+        blk->post(port, pmt::cons(pmt::mp("done"), pmt::mp(true)));
+
+        //std::cout << "notify finished --> ";
+        //pmt::print(pmt::cons(block,port));
+        //std::cout << "\n";
+
+        }
+    }
+  }
+
+  bool
+  block::finished()
+  {
+    return d_finished;
+  }
+
+
 
   void
   block::setup_pc_rpc()
