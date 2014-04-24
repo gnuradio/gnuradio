@@ -210,7 +210,7 @@ of the logger can be manipulated via the following calls:
 \code
  from gnuradio import gr
  gr.logger_config(filename,watch_period)  # Configures the logger with conf file filename
- names = gr.logger_get_logger_names()  # Returns the names of all loggers
+ names = gr.logger_get_names()  # Returns the names of all loggers
  gr.logger_reset_config()   # Resets logger config by removing all appenders
 \endcode
 
