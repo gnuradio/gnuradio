@@ -58,7 +58,7 @@ namespace gr {
                       io_signature::make(0, 0, 0)),
         d_input_sample_rate(0.0), d_n_user_channels(0),
         d_n_dev_channels(0), d_queue_sample_count(0),
-        d_buffer_sample_count(0), d_ok_to_block(ok_to_block),
+        d_buffer_size_samples(0), d_ok_to_block(ok_to_block),
         d_do_reset(false), d_hardware_changed(false),
         d_using_default_device(false), d_waiting_for_data(false),
         d_desired_name(device_name.empty() ? default_device_name()
@@ -219,13 +219,13 @@ namespace gr {
       // must be at least 16kB.  Pick 50 kS since that's plenty yet
       // not very much.
 
-      d_buffer_sample_count = (d_input_sample_rate < 50000.0 ?
+      d_buffer_size_samples = (d_input_sample_rate < 50000.0 ?
                                50000 : (UInt32)d_input_sample_rate);
 
 #if _OSX_AU_DEBUG_
       std::cerr << ((void*)(pthread_self()))
                 << " : audio_osx_sink: max # samples = "
-                << d_buffer_sample_count << std::endl;
+                << d_buffer_size_samples << std::endl;
 #endif
 
       // create the default AudioUnit for output:
@@ -425,7 +425,7 @@ namespace gr {
                 << " : audio_osx_sink Parameters:" << std::endl
                 << "  Sample Rate is " << d_input_sample_rate << std::endl
                 << "  Max # samples to store per channel is "
-                << d_buffer_sample_count << std::endl;
+                << d_buffer_size_samples << std::endl;
 #endif
     }
 
@@ -495,7 +495,7 @@ namespace gr {
       // clear important variables; not # user channels
 
       d_n_dev_channels = d_n_buffer_channels =
-        d_queue_sample_count = d_buffer_sample_count = 0;
+        d_queue_sample_count = d_buffer_size_samples = 0;
       d_using_default_device = false;
       d_output_au = 0;
       d_output_ad_id = 0;
@@ -580,7 +580,7 @@ namespace gr {
         d_buffers.resize(d_n_user_channels);
         for(UInt32 nn = 0; nn < d_n_user_channels; ++nn) {
           d_buffers[nn] = new circular_buffer<float>
-            (d_buffer_sample_count, false, false);
+            (d_buffer_size_samples, false, false);
         }
       }
       else {
@@ -624,7 +624,7 @@ namespace gr {
           d_buffers.resize(d_n_user_channels);
           for (UInt32 nn = d_buffers.size(); nn < d_n_user_channels; ++nn) {
             d_buffers[nn] = new circular_buffer<float>
-              (d_buffer_sample_count, false, false);
+              (d_buffer_size_samples, false, false);
           }
         }
       }
@@ -831,7 +831,7 @@ namespace gr {
       // find the maximum amount of buffer space available right now
 
       UInt32 l_max_count;
-      int diff_count = ((int)d_buffer_sample_count) - noutput_items;
+      int diff_count = ((int)d_buffer_size_samples) - noutput_items;
       if(diff_count < 0) {
         l_max_count = 0;
       }
@@ -844,7 +844,7 @@ namespace gr {
                 << " : audio_osx_sink::work: "
                 << "qSC = " << d_queue_sample_count
                 << ", lMC = "<< l_max_count
-                << ", dBSC = " << d_buffer_sample_count
+                << ", dBSC = " << d_buffer_size_samples
                 << ", #OI = " << noutput_items << std::endl;
 #endif
 
@@ -934,7 +934,7 @@ namespace gr {
                 << "returning: #OI = "
                 << noutput_items << ", qSC = "
                 << d_queue_sample_count << ", bSS = "
-                << d_buffer_sample_count << std::endl;
+                << d_buffer_size_samples << std::endl;
 #endif
 
       return (noutput_items);
