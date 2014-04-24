@@ -167,15 +167,23 @@ namespace gr {
     int
     thread_priority(gr_thread_t thread)
     {
-      // Not implemented on OSX
-      return -1;
+      sched_param param;
+      int priority;
+      int policy;
+      int ret;
+      ret = pthread_getschedparam (thread, &policy, &param);
+      priority = param.sched_priority;
+      return (ret==0)?priority:ret;
     }
 
     int
     set_thread_priority(gr_thread_t thread, int priority)
     {
-      // Not implemented on OSX
-      return -1;
+      int policy;
+      struct sched_param param;
+      pthread_getschedparam (thread, &policy, &param);
+      param.sched_priority = priority;
+      return pthread_setschedparam(thread, policy, &param);
     }
 
   } /* namespace thread */
