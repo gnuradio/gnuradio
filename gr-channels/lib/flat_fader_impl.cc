@@ -64,7 +64,7 @@ namespace gr {
         gr_complex H(0,0);
 
         for(int n=1; n<d_N; n++){
-            float alpha_n = (2*M_PI*n - M_PI + d_theta)/4*d_N;
+	  float alpha_n = (2*M_PI*n - M_PI + d_theta)/(4*d_N);
 #if FASTSINCOS == 1
             float s_i = scale_sin*gr::fxpt::cos(gr::fxpt::float_to_fixed(2*M_PI*d_fDTs*d_m*gr::fxpt::cos(gr::fxpt::float_to_fixed(alpha_n))+d_psi[n+1]));
             float s_q = scale_sin*gr::fxpt::cos(gr::fxpt::float_to_fixed(2*M_PI*d_fDTs*d_m*gr::fxpt::sin(gr::fxpt::float_to_fixed(alpha_n))+d_phi[n+1]));
