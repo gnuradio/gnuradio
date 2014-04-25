@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2013 Free Software Foundation, Inc.
+ * Copyright 2013,2014 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio.
  *
@@ -25,44 +25,45 @@
 #endif
 
 #include <gnuradio/io_signature.h>
-#include "sink_reqrep_impl.h"
+#include "rep_sink_impl.h"
 
 namespace gr {
   namespace zeromq {
 
-    sink_reqrep::sptr
-    sink_reqrep::make(size_t itemsize, char *address)
+    rep_sink::sptr
+    rep_sink::make(size_t itemsize, char *address, float timeout, bool blocking)
     {
       return gnuradio::get_initial_sptr
-        (new sink_reqrep_impl(itemsize, address));
+        (new rep_sink_impl(itemsize, address, timeout, blocking));
     }
 
-    sink_reqrep_impl::sink_reqrep_impl(size_t itemsize, char *address)
-      : gr::sync_block("sink_reqrep",
+    rep_sink_impl::rep_sink_impl(size_t itemsize, char *address, float timeout, bool blocking)
+      : gr::sync_block("rep_sink",
 		       gr::io_signature::make(1, 1, itemsize),
 		       gr::io_signature::make(0, 0, 0)),
-        d_itemsize(itemsize)
+        d_itemsize(itemsize), d_blocking(blocking)
     {
+      d_timeout = timeout >= 0 ? (int)(timeout*1e6) : 0;
       d_context = new zmq::context_t(1);
       d_socket = new zmq::socket_t(*d_context, ZMQ_REP);
       d_socket->bind (address);
     }
 
-    sink_reqrep_impl::~sink_reqrep_impl()
+    rep_sink_impl::~rep_sink_impl()
     {
       delete d_socket;
       delete d_context;
     }
 
     int
-    sink_reqrep_impl::work(int noutput_items,
-			   gr_vector_const_void_star &input_items,
-			   gr_vector_void_star &output_items)
+    rep_sink_impl::work(int noutput_items,
+                        gr_vector_const_void_star &input_items,
+                        gr_vector_void_star &output_items)
     {
       const char *in = (const char *) input_items[0];
 
       zmq::pollitem_t items[] = { { *d_socket, 0, ZMQ_POLLIN, 0 } };
-      zmq::poll (&items[0], 1, 1000);
+      zmq::poll (&items[0], 1, d_timeout);
 
       //  If we got a reply, process
       if (items[0].revents & ZMQ_POLLIN) {
@@ -75,14 +76,14 @@ namespace gr {
 	if (noutput_items < req_output_items) {
 	  zmq::message_t msg(d_itemsize*noutput_items);
 	  memcpy((void *)msg.data(), in, d_itemsize*noutput_items);
-	  d_socket->send(msg);
+	  d_socket->send(msg, d_blocking ? 0 : ZMQ_NOBLOCK);
 
 	  return noutput_items;
 	}
 	else {
 	  zmq::message_t msg(d_itemsize*req_output_items);
 	  memcpy((void *)msg.data(), in, d_itemsize*req_output_items);
-	  d_socket->send(msg);
+	  d_socket->send(msg, d_blocking ? 0 : ZMQ_NOBLOCK);
 
 	  return req_output_items;
 	}

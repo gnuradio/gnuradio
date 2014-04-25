@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2013 Free Software Foundation, Inc.
+ * Copyright 2013,204 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio.
  *
@@ -20,37 +20,34 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef INCLUDED_ZEROMQ_SINK_REQREP_H
-#define INCLUDED_ZEROMQ_SINK_REQREP_H
+#ifndef INCLUDED_ZMQBLOCKS_REP_SINK_IMPL_H
+#define INCLUDED_ZMQBLOCKS_REP_SINK_IMPL_H
 
-#include <gnuradio/zeromq/api.h>
-#include <gnuradio/sync_block.h>
+#include <gnuradio/zeromq/rep_sink.h>
+#include <zmq.hpp>
 
 namespace gr {
   namespace zeromq {
 
-    /*!
-     * \brief <+description of block+>
-     * \ingroup zeromq
-     *
-     */
-    class ZEROMQ_API sink_reqrep : virtual public gr::sync_block
+    class rep_sink_impl : public rep_sink
     {
-    public:
-      typedef boost::shared_ptr<sink_reqrep> sptr;
+    private:
+      size_t          d_itemsize;
+      int             d_timeout;
+      zmq::context_t  *d_context;
+      zmq::socket_t   *d_socket;
+      bool            d_blocking;
 
-      /*!
-       * \brief Return a shared_ptr to a new instance of zeromq::sink_reqrep.
-       *
-       * To avoid accidental use of raw pointers, zeromq::sink_reqrep's
-       * constructor is in a private implementation
-       * class. zeromq::sink_reqrep::make is the public interface for
-       * creating new instances.
-       */
-      static sptr make(size_t itemsize, char *address);
+    public:
+      rep_sink_impl(size_t itemsize, char *address, float timeout, bool blocking);
+      ~rep_sink_impl();
+
+      int work(int noutput_items,
+               gr_vector_const_void_star &input_items,
+               gr_vector_void_star &output_items);
     };
 
   } // namespace zeromq
 } // namespace gr
 
-#endif /* INCLUDED_ZEROMQ_SINK_REQREP_H */
+#endif /* INCLUDED_ZMQBLOCKS_REP_SINK_IMPL_H */

@@ -21,10 +21,11 @@ install(FILES
     zeromq_pub_sink.xml
     zeromq_push_sink.xml
     zeromq_pull_source.xml
+    zeromq_rep_sink.xml
 
     DESTINATION share/gnuradio/grc/blocks
 )
-#    zeromq_sink_reqrep.xml
+
 #    zeromq_source_reqrep.xml
 #    zeromq_sink_reqrep_nopoll.xml
 #    zeromq_source_reqrep_nopoll.xml
