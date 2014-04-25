@@ -67,7 +67,7 @@ namespace gr {
 
       for(int n = 0; n < d_nconnections; n++) {
 	d_buffers.push_back((double*)volk_malloc(d_buffer_size*sizeof(double),
-                                              volk_get_alignment()));
+						 volk_get_alignment()));
 	memset(d_buffers[n], 0, d_buffer_size*sizeof(double));
       }
 

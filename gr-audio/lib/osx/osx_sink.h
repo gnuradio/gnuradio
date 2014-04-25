@@ -45,7 +45,7 @@ namespace gr {
 
       Float64 d_input_sample_rate;
       UInt32  d_n_user_channels, d_n_dev_channels, d_n_buffer_channels;
-      UInt32  d_queue_sample_count, d_buffer_sample_count;
+      UInt32  d_queue_sample_count, d_buffer_size_samples;
       bool    d_ok_to_block, d_do_reset, d_hardware_changed;
       bool    d_using_default_device, d_waiting_for_data;
       gr::thread::mutex d_internal;
