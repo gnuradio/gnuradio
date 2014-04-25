@@ -348,6 +348,28 @@ single bit of data. A block like 'pack_k_bits' can be used following
 this to convert the data back into bytes.
 
 
+\section digital_constellation_modulator Constellation Modulator
+
+The Constellation Modulator, Constellation Receiver, and Constellation
+Decoder can all take Constellation Objects to define what they are
+meant to transmit and receive.
+
+The gr::digital::constellation_modulator block takes as a parameter
+the reference to the constellation object. The block is very generic
+in that the mapping from bits to symbols is done based on the
+constellation object passed to it. The modulator block requires packed
+bits as the input stream (that is, all 8 bits of the stream contain
+information).
+
+The other parameters of this block include a setting as to whether or
+not to differentially encode the symbols, the number of samples per
+symbols, and the excess bandwidth of the transmitted pulse-shaped
+signal.
+
+We can set up the transmitter using the constellation modulator block
+and use the same constellation object at the receiver so we know the
+same constellation settings are being used.
+
 \section digital_softbits Support for Soft Decisions
 
 To support soft decisions of the receivers instead of the current hard
