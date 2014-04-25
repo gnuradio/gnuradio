@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2007,2013 Free Software Foundation, Inc.
+ * Copyright 2007,2013-2014 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -39,9 +39,8 @@ namespace gr {
      * \details
      * Data is passed in as a vector of length \p vlen from multiple
      * input sources. It will look through these streams of \p vlen
-     * data items and output two streams.
-     *    Stream 0 will contain the index value in the vector where
-     *    the maximum value occurred.
+     * data items and the output stream will contain the maximum value
+     * in the vector.
      */
     class BLOCKS_API @NAME@ : virtual public sync_block
     {
@@ -56,4 +55,3 @@ namespace gr {
 } /* namespace gr */
 
 #endif /* @GUARD_NAME@ */
-
