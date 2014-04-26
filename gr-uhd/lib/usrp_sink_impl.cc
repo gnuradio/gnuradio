@@ -89,11 +89,11 @@ namespace gr {
 	  pmt::mp("command"),
 	  boost::bind(&usrp_sink_impl::msg_handler_command, this, _1)
       );
-      message_port_register_in(pmt::mp("query"));
-      set_msg_handler(
-	  pmt::mp("query"),
-	  boost::bind(&usrp_sink_impl::msg_handler_query, this, _1)
-      );
+      //message_port_register_in(pmt::mp("query"));
+      //set_msg_handler(
+	  //pmt::mp("query"),
+	  //boost::bind(&usrp_sink_impl::msg_handler_query, this, _1)
+      //);
     }
 
     usrp_sink_impl::~usrp_sink_impl()
@@ -519,7 +519,7 @@ namespace gr {
     {
       int ninput_items = noutput_items; //cuz it's a sync block
 
-      //send a mid-burst packet with time spec
+      // default to send a mid-burst packet
       _metadata.start_of_burst = false;
       _metadata.end_of_burst = false;
 
@@ -550,10 +550,6 @@ namespace gr {
         }
       }
 
-      // We send the EOB manually to avoid sending several EOBs in case of fragmentation
-      bool eob = _metadata.end_of_burst;
-      _metadata.end_of_burst = false;
-
 #ifdef GR_UHD_USE_STREAM_API
       //send all ninput_items with metadata
       const size_t num_sent = _tx_stream->send
@@ -573,23 +569,9 @@ namespace gr {
       _metadata.time_spec += ::uhd::time_spec_t(0, num_sent, _sample_rate);
 
       // Some post-processing tasks if we actually transmitted the entire burst
-      if (num_sent == size_t(ninput_items)) {
-        if (_call_tune) {
-          _set_center_freq_from_internals_allchans();
-          _call_tune = false;
-        }
-
-        if (eob) {
-#ifdef GR_UHD_USE_STREAM_API
-          _metadata.end_of_burst = true;
-          _tx_stream->send
-            (gr_vector_const_void_star(_nchan), 0, _metadata, 1.0);
-#else
-          _dev->get_device()->send
-            (gr_vector_const_void_star(_nchan), 0, _metadata,
-             *_type, ::uhd::device::SEND_MODE_ONE_PACKET, 1.0);
-#endif
-        }
+      if (_call_tune and num_sent == size_t(ninput_items)) {
+	_set_center_freq_from_internals_allchans();
+	_call_tune = false;
       }
 
       return num_sent;
@@ -609,6 +591,7 @@ namespace gr {
       uint64_t max_count = samp0_count + ninput_items;
 
       // Go through tag list until something indicates the end of a burst.
+      bool found_time_tag = false;
       bool found_eob = false;
       bool found_freq_tag_in_burst = false;
       uint64_t freq_cmd_offset = 0;
@@ -651,6 +634,7 @@ namespace gr {
             max_count = my_tag_count;
             break;
           }
+	  found_time_tag = true;
           _metadata.has_time_spec = true;
           _metadata.time_spec = ::uhd::time_spec_t
             (pmt::to_uint64(pmt::tuple_ref(value, 0)),
@@ -663,6 +647,8 @@ namespace gr {
             max_count = my_tag_count;
             break;
           }
+	  // Bursty tx will not use time specs, unless a tx_time tag is also given.
+	  _metadata.has_time_spec = false;
           _metadata.start_of_burst = pmt::to_bool(value);
         }
 
@@ -742,13 +728,13 @@ namespace gr {
         }
       }
 
+      if (found_time_tag) {
+	_metadata.has_time_spec = true;
+      }
+
       // Only transmit up to and including end of burst,
       // or everything if no burst boundaries are found.
       ninput_items = int(max_count - samp0_count);
-
-      // TODO unset has_time_spec for bursty behaviour w/o time!
-      //time will not be set unless a time tag is found
-      //_metadata.has_time_spec = false;
 
     } // end tag_work()
 
@@ -771,7 +757,8 @@ namespace gr {
 
       _metadata.start_of_burst = true;
       _metadata.end_of_burst = false;
-      _metadata.has_time_spec = not _stream_now;
+      // Bursty tx will need to send a tx_time to activate time spec
+      _metadata.has_time_spec = not _stream_now and pmt::is_null(_length_tag_key);
       _nitems_to_send = 0;
       if(_start_time_set) {
         _start_time_set = false; //cleared for next run

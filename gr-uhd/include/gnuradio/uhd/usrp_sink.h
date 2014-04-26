@@ -63,7 +63,8 @@ namespace gr {
       /*!
        * \brief DEPRECATED Make a new USRP sink block using the deprecated io_type_t.
        *
-       * This function will go away in 3.8.
+       * This function will be removed in the future. Please use the other make function,
+       * gr::uhd::make(const ::uhd::device_addr_t, const ::uhd::stream_args_t, const std::string).
        *
        * \ingroup uhd_blk
        */
@@ -105,8 +106,9 @@ namespace gr {
        * The timestamp tag value is a PMT tuple of the following:
        * (uint64 seconds, and double fractional seconds).
        *
-       * The tx_freq tag has to be a double, and will re-tune the USRP to the given frequency,
-       * if possible.
+       * The tx_freq tag has to be a double, and will issue a tune command to the USRP
+       * to the given frequency, if possible. Note that oscillators need some time
+       * to stabilize after this! Don't expect clean data to be sent immediately after this command.
        *
        * The command tag can carry a PMT command. See the following section.
        *
@@ -115,7 +117,7 @@ namespace gr {
        * There are two ways of passing commands to this block:
        * 1) tx_command tag. The command is attached to a sample, and will executed
        *    before the sample is transmitted, and after the previous sample.
-       * 2) 'command' message interface. The command is executed asynchronously,
+       * 2) The 'command' message port. The command is executed asynchronously,
        *    as soon as possible.
        *
        * In both cases, the payload of the command is a PMT pair, with the first
