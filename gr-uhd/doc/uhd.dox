@@ -1,3 +1,4 @@
+// vim: set ft=doxygen:
 /*! \page page_uhd UHD Interface
 
 \section Introduction
@@ -27,12 +28,12 @@ Ettus Research keeps the comprehensive documentation to the underlying UHD drive
 
     http://files.ettus.com/uhd_docs/manual/html/
 
-The UHD Doxygen page is located:
+The UHD Doxygen page is located at:
 
     http://files.ettus.com/uhd_docs/doxygen/html/index.html
 
 
-\section Typical Setup
+\section Configuring a UHD object
 
 A typical option parser setup for a UHD device looks like
 
