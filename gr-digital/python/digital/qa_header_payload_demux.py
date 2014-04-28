@@ -73,7 +73,7 @@ class qa_header_payload_demux (gr_unittest.TestCase):
         hpd = digital.header_payload_demux(
             len(header), 1, 0, "frame_len", "detect", False, gr.sizeof_float
         )
-        self.assertEqual(pmt.length(hpd.message_ports_in()), 1)
+        self.assertEqual(pmt.length(hpd.message_ports_in()), 2) #extra system port defined for you
         header_sink = blocks.vector_sink_f()
         payload_sink = blocks.vector_sink_f()
 
@@ -157,7 +157,7 @@ class qa_header_payload_demux (gr_unittest.TestCase):
             True,                           # Output symbols (not items)
             gr.sizeof_float                 # Bytes per item
         )
-        self.assertEqual(pmt.length(hpd.message_ports_in()), 1)
+        self.assertEqual(pmt.length(hpd.message_ports_in()), 2) #extra system port defined for you
         header_sink = blocks.vector_sink_f(items_per_symbol)
         payload_sink = blocks.vector_sink_f(items_per_symbol)
         self.tb.connect(data_src,    (hpd, 0))
@@ -248,7 +248,7 @@ class qa_header_payload_demux (gr_unittest.TestCase):
             samp_rate=sampling_rate,
             special_tags=('rx_freq',),
         )
-        self.assertEqual(pmt.length(hpd.message_ports_in()), 1)
+        self.assertEqual(pmt.length(hpd.message_ports_in()), 2) #extra system port defined for you
         header_sink = blocks.vector_sink_f()
         payload_sink = blocks.vector_sink_f()
         self.tb.connect(data_src,    (hpd, 0))
