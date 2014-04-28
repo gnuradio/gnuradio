@@ -572,6 +572,7 @@ namespace gr {
 
 	/*!
      * \brief returns true when execution has completed due to a message connection
+    */
     bool finished();
 
   private:
