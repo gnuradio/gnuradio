@@ -53,6 +53,7 @@ namespace gr {
       d_resamp = new kernel::pfb_arb_resampler_ccc(rate, taps, filter_size);
       set_history(d_resamp->taps_per_filter());
       set_relative_rate(rate);
+      enable_update_rate(true);
     }
 
     pfb_arb_resampler_ccc_impl::~pfb_arb_resampler_ccc_impl()
