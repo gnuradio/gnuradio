@@ -16,6 +16,7 @@
 	  $atten,
           $fft_rot,
           $fft_filts)
+self.$(id).declare_sample_delay($samp_delay)
 	</make>
     <callback>set_taps($taps)</callback>
     <callback>set_channel(int($channel))</callback>
@@ -71,6 +72,13 @@
                   <name>False</name>
                   <key>False</key>
 		</option>
+	</param>
+	<param>
+		<name>Sample Delay</name>
+		<key>samp_delay</key>
+        <value>0</value>
+		<type>int</type>
+        <hide>part</hide>
 	</param>
 	<sink>
 		<name>in</name>

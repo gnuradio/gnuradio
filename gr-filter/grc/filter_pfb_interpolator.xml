@@ -13,6 +13,7 @@
 	  $interp,
 	  $taps,
 	  $atten)
+self.$(id).declare_sample_delay($samp_delay)
 	</make>
            <callback>set_taps($taps)</callback>
 	<param>
@@ -31,6 +32,13 @@
 		<key>atten</key>
 		<value>100</value>
 		<type>real</type>
+	</param>
+	<param>
+		<name>Sample Delay</name>
+		<key>samp_delay</key>
+        <value>0</value>
+		<type>int</type>
+        <hide>part</hide>
 	</param>
 	<sink>
 		<name>in</name>

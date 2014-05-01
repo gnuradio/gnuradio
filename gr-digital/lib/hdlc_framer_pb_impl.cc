@@ -115,7 +115,8 @@ namespace gr {
         //this is much, much simpler.
         int oidx = 0;
         while(d_leftovers.size() > 0) {
-            if(noutput_items < (oidx+d_leftovers[0].size())) return oidx;
+            if((size_t)noutput_items < (oidx+d_leftovers[0].size()))
+                return oidx;
             memcpy(out+oidx, &d_leftovers[0][0], d_leftovers[0].size());
             //start tag
             add_item_tag(0,
@@ -160,7 +161,7 @@ namespace gr {
         //make sure we have the space. unfortunately, we didn't know
         //until now, since the stuffing must be calculated. we'll just
         //save it for next time.
-        if(noutput_items < (oidx+pkt_bits.size())) {
+        if((size_t)noutput_items < (oidx+pkt_bits.size())) {
             d_leftovers.insert(d_leftovers.end(), pkt_bits);
             return oidx;
         }
@@ -181,4 +182,3 @@ namespace gr {
 
   } /* namespace digital */
 } /* namespace gr */
-
