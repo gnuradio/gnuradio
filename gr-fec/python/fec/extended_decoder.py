@@ -22,6 +22,7 @@
 
 from gnuradio import gr, blocks, digital
 import fec_swig as fec
+from bitflip import *
 
 from threaded_decoder import threaded_decoder
 from capillary_threaded_decoder import capillary_threaded_decoder
@@ -123,8 +124,8 @@ class extended_decoder(gr.hier_block2):
 
         #print puncpat
         if self.puncpat != '11':
-            self.blocks.append(fec.reinflate_bb(0, fec.read_bitlist(puncpat),
-                                                puncpat.count('0'), len(puncpat)))
+            self.blocks.append(fec.depuncture_bb(0, read_bitlist(puncpat),
+                                                 puncpat.count('0'), len(puncpat)))
 
         if fec.get_conversion(decoder_obj_list[0]) == "packed_bits":
             self.blocks.append(blocks.uchar_to_float())

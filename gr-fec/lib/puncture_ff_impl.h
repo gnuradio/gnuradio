@@ -31,14 +31,13 @@ namespace gr {
     class FEC_API puncture_ff_impl : public puncture_ff
     {
     private:
+      int d_puncsize;
       int d_delay;
       int d_puncholes;
-      int d_puncsize;
       int d_puncpat;
 
     public:
-      puncture_ff_impl(int delay, int puncpat,
-                       int puncholes, int puncsize);
+      puncture_ff_impl(int puncsize, int puncpat, int delay);
       ~puncture_ff_impl();
 
       //void catch_msg(pmt::pmt_t msg);

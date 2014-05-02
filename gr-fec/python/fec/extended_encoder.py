@@ -49,8 +49,7 @@ class extended_encoder(gr.hier_block2):
                                            gr.sizeof_char))
 
         if self.puncpat != '11':
-            self.blocks.append(fec.puncture_bb(0, read_bitlist(puncpat),
-                                               puncpat.count('0'), len(puncpat)))
+            self.blocks.append(fec.puncture_bb(len(puncpat), read_bitlist(puncpat), 0))
 
         # Connect the input to the encoder and the output to the
         # puncture if used or the encoder if not.
@@ -61,4 +60,3 @@ class extended_encoder(gr.hier_block2):
         # the encoder.
         for i in range(len(self.blocks) - 1):
             self.connect((self.blocks[i], 0), (self.blocks[i+1], 0));
-

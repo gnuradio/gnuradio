@@ -44,6 +44,7 @@
 #include "gnuradio/fec/encode_ccsds_27_bb.h"
 #include "gnuradio/fec/ber_bf.h"
 #include "gnuradio/fec/conv_bit_corr_bb.h"
+#include "gnuradio/fec/puncture_bb.h"
 #include "gnuradio/fec/puncture_ff.h"
 #include "gnuradio/fec/depuncture_bb.h"
 %}
@@ -58,6 +59,7 @@
 %include "gnuradio/fec/encode_ccsds_27_bb.h"
 %include "gnuradio/fec/ber_bf.h"
 %include "gnuradio/fec/conv_bit_corr_bb.h"
+%include "gnuradio/fec/puncture_bb.h"
 %include "gnuradio/fec/puncture_ff.h"
 %include "gnuradio/fec/depuncture_bb.h"
 
@@ -67,5 +69,6 @@ GR_SWIG_BLOCK_MAGIC2(fec, decode_ccsds_27_fb);
 GR_SWIG_BLOCK_MAGIC2(fec, encode_ccsds_27_bb);
 GR_SWIG_BLOCK_MAGIC2(fec, ber_bf);
 GR_SWIG_BLOCK_MAGIC2(fec, conv_bit_corr_bb);
+GR_SWIG_BLOCK_MAGIC2(fec, puncture_bb);
 GR_SWIG_BLOCK_MAGIC2(fec, puncture_ff);
 GR_SWIG_BLOCK_MAGIC2(fec, depuncture_bb);

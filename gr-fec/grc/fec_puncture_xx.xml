@@ -3,27 +3,27 @@
   <name>Puncture</name>
   <key>fec_puncture_xx</key>
   <import>from gnuradio import fec</import>
-  <make>fec.puncture_$(type.fcn)($delay, $puncpat, $puncholes, $puncsize)</make>
+  <make>fec.puncture_$(type.fcn)($puncsize, $puncpat, $puncholes, $delay)</make>
 
   <param>
     <name>Type</name>
     <key>type</key>
     <type>enum</type>
     <option>
-      <name>Float</name>
-      <key>float</key>
-      <opt>fcn:ff</opt>
-    </option>
-    <option>
       <name>Byte</name>
       <key>byte</key>
       <opt>fcn:bb</opt>
     </option>
+    <option>
+      <name>Float</name>
+      <key>float</key>
+      <opt>fcn:ff</opt>
+    </option>
   </param>
 
   <param>
-    <name>Delay</name>
-    <key>delay</key>
+    <name>Puncture Size</name>
+    <key>puncsize</key>
     <type>int</type>
   </param>
 
@@ -34,14 +34,9 @@
   </param>
 
   <param>
-    <name>Puncture Holes</name>
-    <key>puncholes</key>
-    <type>int</type>
-  </param>
-
-  <param>
-    <name>Puncture Size</name>
-    <key>puncsize</key>
+    <name>Delay</name>
+    <key>delay</key>
+    <value>0</value>
     <type>int</type>
   </param>
 

@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2004,2007,2010,2012,2013 Free Software Foundation, Inc.
+# Copyright 2004,2007,2010,2012-2014 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -50,17 +50,17 @@ class test_interleave (gr_unittest.TestCase):
         self.assertFloatTuplesAlmostEqual (expected_result, result_data)
 
     def test_int_002 (self):
-        blksize = 4;
-        lenx = 64;
-        plusup_big = lambda a: a + (blksize * 4);
-        plusup_little = lambda a: a + blksize;
-        a_vec = range(0,blksize);
+        blksize = 4
+        lenx = 64
+        plusup_big = lambda a: a + (blksize * 4)
+        plusup_little = lambda a: a + blksize
+        a_vec = range(0,blksize)
         for i in range(0,(lenx/(4 * blksize)) - 1):
-            a_vec += map(plusup_big, a_vec[len(a_vec) - blksize:]);
-        
-        b_vec = map(plusup_little, a_vec);
-        c_vec = map(plusup_little, b_vec);
-        d_vec = map(plusup_little, c_vec);
+            a_vec += map(plusup_big, a_vec[len(a_vec) - blksize:])
+
+        b_vec = map(plusup_little, a_vec)
+        c_vec = map(plusup_little, b_vec)
+        d_vec = map(plusup_little, c_vec)
 
         src0 = blocks.vector_source_f (a_vec)
         src1 = blocks.vector_source_f (b_vec)
@@ -107,8 +107,8 @@ class test_interleave (gr_unittest.TestCase):
         self.assertFloatTuplesAlmostEqual (expected_result3, dst3.data ())
 
     def test_deint_002 (self):
-        blksize = 4;
-        lenx = 64;
+        blksize = 4
+        lenx = 64
         src = blocks.vector_source_f (range (lenx))
         op = blocks.deinterleave (gr.sizeof_float, blksize)
         dst0 = blocks.vector_sink_f ()
@@ -123,15 +123,15 @@ class test_interleave (gr_unittest.TestCase):
         self.tb.connect ((op, 3), dst3)
         self.tb.run ()
 
-        plusup_big = lambda a: a + (blksize * 4);
-        plusup_little = lambda a: a + blksize;
-        a_vec = range(0,blksize);
+        plusup_big = lambda a: a + (blksize * 4)
+        plusup_little = lambda a: a + blksize
+        a_vec = range(0,blksize)
         for i in range(0,(lenx/(4 * blksize)) - 1):
-            a_vec += map(plusup_big, a_vec[len(a_vec) - blksize:]);
-        
-        b_vec = map(plusup_little, a_vec);
-        c_vec = map(plusup_little, b_vec);
-        d_vec = map(plusup_little, c_vec);
+            a_vec += map(plusup_big, a_vec[len(a_vec) - blksize:])
+
+        b_vec = map(plusup_little, a_vec)
+        c_vec = map(plusup_little, b_vec)
+        d_vec = map(plusup_little, c_vec)
 
         expected_result0 = tuple (a_vec)
         expected_result1 = tuple (b_vec)
@@ -145,4 +145,3 @@ class test_interleave (gr_unittest.TestCase):
 
 if __name__ == '__main__':
     gr_unittest.run(test_interleave, "test_interleave.xml")
-
