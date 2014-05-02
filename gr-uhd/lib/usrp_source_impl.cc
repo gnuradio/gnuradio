@@ -63,7 +63,7 @@ namespace gr {
 
     usrp_source_impl::usrp_source_impl(const ::uhd::device_addr_t &device_addr,
                                        const ::uhd::stream_args_t &stream_args):
-      sync_block("gr uhd usrp source",
+      sync_block("usrp_source",
                     io_signature::make(0, 0, 0),
                     args_to_io_sig(stream_args)),
       _stream_args(stream_args),
