@@ -298,6 +298,7 @@ self.\$(id).set_bandwidth(\$bw$(n), $n)
 	<check>$max_mboards >= \$num_mboards</check>
 	<check>\$num_mboards > 0</check>
 	<check>\$nchan >= \$num_mboards</check>
+	<check>(not \$stream_chans()) or (\$nchan == len(\$stream_chans))</check>
 	<$sourk>
 		<name>$direction</name>
 		<type>\$type.type</type>
