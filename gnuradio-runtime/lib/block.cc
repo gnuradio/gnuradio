@@ -109,7 +109,7 @@ namespace gr {
 
   block::~block()
   {
-    global_block_registry.unregister_primitive(alias());
+    global_block_registry.unregister_primitive(symbol_name());
   }
 
   unsigned
