@@ -94,6 +94,7 @@
 		<block>blocks_multiply_xx</block>
 		<block>blocks_multiply_const_vxx</block>
 		<block>blocks_multiply_conjugate_cc</block>
+		<block>blocks_multiply_matrix_xx</block>
 		<block>blocks_sub_xx</block>
 		<block>blocks_conjugate_cc</block>
 		<block>blocks_integrate_xx</block>
