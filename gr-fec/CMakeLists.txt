@@ -41,6 +41,8 @@ GR_SET_GLOBAL(GR_FEC_INCLUDE_DIRS
     ${CMAKE_CURRENT_SOURCE_DIR}/include
 )
 
+SET(GR_PKG_FEC_EXAMPLES_DIR ${GR_PKG_DATA_DIR}/examples/fec)
+
 ########################################################################
 # Begin conditional configuration
 ########################################################################
@@ -90,7 +92,7 @@ if(ENABLE_PYTHON)
     add_subdirectory(python/fec)
     add_subdirectory(grc)
 endif(ENABLE_PYTHON)
-#add_subdirectory(examples)
+add_subdirectory(examples)
 add_subdirectory(doc)
 
 ########################################################################

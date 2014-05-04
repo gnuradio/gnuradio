@@ -51,9 +51,12 @@ namespace gr {
         d_output_item_size(output_item_size)
     {
       set_fixed_rate(true);
-      set_relative_rate((double)my_encoder->get_output_size()/my_encoder->get_input_size());
+      set_relative_rate((double)my_encoder->get_output_size()/(double)my_encoder->get_input_size());
       set_output_multiple(my_encoder->get_output_size());
       d_encoder = my_encoder;
+
+      d_input_size = d_encoder->get_input_size()*d_input_item_size;
+      d_output_size = d_encoder->get_output_size()*d_output_item_size;
     }
 
     encoder_impl::~encoder_impl()
@@ -63,20 +66,20 @@ namespace gr {
     int
     encoder_impl::fixed_rate_ninput_to_noutput(int ninput)
     {
-      return (int)(((d_encoder->get_output_size()/(double)d_encoder->get_input_size()) * ninput) + .5);
+      return (int)(0.5 + ninput*relative_rate());
     }
 
     int
     encoder_impl::fixed_rate_noutput_to_ninput(int noutput)
     {
-      return (int)(((d_encoder->get_input_size()/(double)d_encoder->get_output_size()) * noutput) + .5);
+      return (int)(0.5 + noutput/relative_rate());
     }
 
     void
     encoder_impl::forecast(int noutput_items,
                            gr_vector_int& ninput_items_required)
     {
-      ninput_items_required[0] = (int)(((d_encoder->get_input_size()/(double)d_encoder->get_output_size()) * noutput_items) + .5);
+      ninput_items_required[0] = fixed_rate_noutput_to_ninput(noutput_items);
     }
 
     int
@@ -85,15 +88,24 @@ namespace gr {
                                gr_vector_const_void_star &input_items,
                                gr_vector_void_star &output_items)
     {
-      char *inBuffer  = (char*)input_items[0];
-      char *outBuffer = (char*)output_items[0];
+      char *inbuffer  = (char*)input_items[0];
+      char *outbuffer = (char*)output_items[0];
 
-      for(int i = 0; i < noutput_items/output_multiple(); ++i) {
-        d_encoder->generic_work((void*)(inBuffer+(i*d_encoder->get_input_size()*d_input_item_size)),
-                                (void*)(outBuffer+(i*d_encoder->get_output_size()*d_output_item_size)));
+      GR_LOG_DEBUG(d_debug_logger, boost::format("%1%, %2%, %3%")      \
+                   % noutput_items % ninput_items[0] % (noutput_items/output_multiple()));
+
+
+      for(int i = 0; i < noutput_items/output_multiple(); i++) {
+        d_encoder->generic_work((void*)(inbuffer+(i*d_input_size)),
+                                (void*)(outbuffer+(i*d_output_size)));
       }
 
-      consume_each((int)(((1.0/relative_rate()) * noutput_items) + .5));
+      GR_LOG_DEBUG(d_debug_logger, boost::format("consuming: %1%") \
+                   % (fixed_rate_noutput_to_ninput(noutput_items)));
+      GR_LOG_DEBUG(d_debug_logger, boost::format("returning: %1%") \
+                   % (noutput_items));
+
+      consume_each(fixed_rate_noutput_to_ninput(noutput_items));
       return noutput_items;
     }
 

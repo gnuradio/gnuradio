@@ -26,6 +26,7 @@
 
 #include "depuncture_bb_impl.h"
 #include <gnuradio/io_signature.h>
+#include <volk/volk.h>
 #include <boost/bind.hpp>
 #include <pmt/pmt.h>
 #include <string>
@@ -35,23 +36,42 @@ namespace gr {
   namespace fec {
 
     depuncture_bb::sptr
-    depuncture_bb::make(int delay, int puncpat, int puncholes, int puncsize)
+    depuncture_bb::make(int puncsize, int puncpat,
+                        int delay, char symbol)
     {
       return gnuradio::get_initial_sptr
-        (new depuncture_bb_impl(delay, puncpat, puncholes, puncsize));
+        (new depuncture_bb_impl(puncsize, puncpat,
+                                delay, symbol));
     }
 
-    depuncture_bb_impl::depuncture_bb_impl(int delay, int puncpat,
-                                           int puncholes, int puncsize)
+    depuncture_bb_impl::depuncture_bb_impl(int puncsize, int puncpat,
+                                           int delay, char symbol)
       : block("depuncture_bb",
               io_signature::make(1, 1, sizeof(unsigned char)),
               io_signature::make(1, 1, sizeof(unsigned char))),
-        d_delay(delay), d_puncholes(puncholes), d_puncsize(puncsize)
+        d_puncsize(puncsize), d_delay(delay), d_sym(symbol)
     {
+      // Create a mask of all 1's of puncsize length
+      int mask = 0;
+      for(int i = 0; i < d_puncsize; i++)
+        mask |= 1 << i;
+
+      // Rotate the pattern for the delay value; then mask it if there
+      // are any excess 1's in the pattern.
       for(int i = 0; i < d_delay; ++i) {
 	puncpat = ((puncpat & 1) << (d_puncsize - 1)) + (puncpat >> 1);
       }
-      d_puncpat = puncpat;
+      d_puncpat = puncpat & mask;
+
+      // Calculate the number of holes in the pattern. The mask is all
+      // 1's given puncsize and puncpat is a pattern with >= puncsize
+      // 0's (masked to ensure this). The difference between the
+      // number of 1's in the mask and the puncpat is the number of
+      // holes.
+      uint32_t count_mask=0, count_pat=0;
+      volk_32u_popcnt(&count_mask, static_cast<uint32_t>(mask));
+      volk_32u_popcnt(&count_pat, static_cast<uint32_t>(d_puncpat));
+      d_puncholes = count_mask - count_pat;
 
       set_fixed_rate(true);
       set_relative_rate((double)d_puncsize/(d_puncsize - d_puncholes));
@@ -103,24 +123,27 @@ namespace gr {
 
       for(int i=0, k=0; i < noutput_items/output_multiple(); ++i) {
         for(int j = 0; j < output_multiple(); ++j) {
-	  out[i*output_multiple() + j] = ((d_puncpat >> (d_puncsize - 1 - j)) & 1) ? in[k++] : 127;
+	  out[i*output_multiple() + j] = ((d_puncpat >> (d_puncsize - 1 - j)) & 1) ? in[k++] : d_sym;
         }
       }
 
       /*
-      printf(">>>>>>start\n");
+      GR_LOG_DEBUG(d_debug_logger, ">>>>>> start");
       for(int i = 0, k=0; i < noutput_items; ++i) {
         if((d_puncpat >> (d_puncsize - 1 - (i % d_puncsize))) & 1) {
-	  printf("%d...%d\n", out[i], in[k++]);
+          GR_LOG_DEBUG(d_debug_logger, boost::format("%1%...%2%") \
+                       % out[i] % in[k++]);
         }
         else {
-	  printf("snit %d\n", out[i]);
+          GR_LOG_DEBUG(d_debug_logger, boost::format("snit %1%") % out[i]);
         }
       }
-      */
 
-      /*printf("comp: %d, %d\n", noutput_items, ninput_items[0]);
-      printf("consuming %d\n", (int)(((1.0/relative_rate()) * noutput_items) + .5));*/
+      GR_LOG_DEBUG(d_debug_logger, boost::format("comp: %1%, %2%\n") \
+                   % noutput_items % ninput_items[0]);
+      GR_LOG_DEBUG(d_debug_logger, boost::format("consuming %1%") \
+                   % ((int)(((1.0/relative_rate()) * noutput_items) + .5)));
+      */
 
       consume_each((int)(((1.0/relative_rate()) * noutput_items) + .5));
       return noutput_items;
@@ -128,5 +151,3 @@ namespace gr {
 
   } /* namespace fec */
 } /* namespace gr */
-
-

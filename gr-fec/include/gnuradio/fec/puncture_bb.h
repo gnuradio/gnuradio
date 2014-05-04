@@ -34,8 +34,8 @@ namespace gr {
      * \ingroup error_coding_blk
      *
      * \details
-     * For a given block of input samples of \p puncsize, the items
-     * produced is based on \p puncpat. Basically, if:
+     * Puncture a given block of input samples of \p puncsize. The
+     * items produced is based on pattern \p puncpat. Basically, if:
      *
      * \code
      *    k = 0

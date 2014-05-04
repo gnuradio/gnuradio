@@ -47,7 +47,7 @@ class capillary_threaded_decoder(gr.hier_block2):
         for i in range(int(math.log(len(decoder_list_0), 2))):
             for j in range(int(math.pow(2, i))):
                 self.interleaves_0.append(blocks.interleave(output_size,
-                                                         fec.get_decoder_output_size(decoder_list_0[0])))
+                                                            fec.get_decoder_output_size(decoder_list_0[0])))
 
         rootcount = 0
         branchcount = 1

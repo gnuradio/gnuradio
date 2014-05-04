@@ -20,7 +20,7 @@
 # Boston, MA 02110-1301, USA.
 #
 
-from gnuradio import gr
+from gnuradio import gr, blocks
 
 import fec_swig as fec
 from threaded_encoder import threaded_encoder
@@ -28,13 +28,22 @@ from capillary_threaded_encoder import capillary_threaded_encoder
 from bitflip import read_bitlist
 
 class extended_encoder(gr.hier_block2):
-    def __init__(self, encoder_obj_list, threading, puncpat=None):
+    def __init__(self, encoder_obj_list, threading, puncpat=None,
+                 lentagname=None):
         gr.hier_block2.__init__(self, "extended_encoder",
                                 gr.io_signature(1, 1, gr.sizeof_char),
                                 gr.io_signature(1, 1, gr.sizeof_char))
 
         self.blocks=[]
         self.puncpat=puncpat
+
+        if type(lentagname) == str:
+            if(lentagname.lower() == 'none'):
+                lentagname = None
+
+        if fec.get_encoder_input_conversion(encoder_obj_list[0]) == "pack":
+            self.blocks.append(blocks.pack_k_bits_bb(8))
+
         if threading == 'capillary':
             self.blocks.append(capillary_threaded_encoder(encoder_obj_list,
                                                           gr.sizeof_char,
@@ -44,9 +53,15 @@ class extended_encoder(gr.hier_block2):
                                                 gr.sizeof_char,
                                                 gr.sizeof_char))
         else:
-            self.blocks.append(fec.encoder(encoder_obj_list[0],
-                                           gr.sizeof_char,
-                                           gr.sizeof_char))
+            if(not lentagname):
+                self.blocks.append(fec.encoder(encoder_obj_list[0],
+                                               gr.sizeof_char,
+                                               gr.sizeof_char))
+            else:
+                self.blocks.append(fec.tagged_encoder(encoder_obj_list[0],
+                                                      gr.sizeof_char,
+                                                      gr.sizeof_char,
+                                                      lentagname))
 
         if self.puncpat != '11':
             self.blocks.append(fec.puncture_bb(len(puncpat), read_bitlist(puncpat), 0))

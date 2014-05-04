@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2013-2014 Free Software Foundation, Inc.
+ * Copyright 2014 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -20,8 +20,8 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef INCLUDED_FEC_CC_DECODER_H
-#define INCLUDED_FEC_CC_DECODER_H
+#ifndef INCLUDED_FEC_CCSDS_DECODER_H
+#define INCLUDED_FEC_CCSDS_DECODER_H
 
 #include <gnuradio/fec/api.h>
 #include <gnuradio/fec/generic_decoder.h>
@@ -33,41 +33,24 @@ namespace gr {
   namespace fec {
     namespace code {
 
-      typedef void(*conv_kernel)(unsigned char  *Y, unsigned char  *X,
-                                 unsigned char *syms, unsigned char *dec,
-                                 unsigned int framebits, unsigned int excess,
-                                 unsigned char  *Branchtab);
-
       /*!
        * \brief Convolutional Code Decoding class.
        * \ingroup error_coding_blk
        *
        * \details
        * This class performs convolutional decoding via the Viterbi
-       * algorithm. While it is set up to take variable values for K,
-       * rate, and the polynomials, currently, the block is only
-       * capable of handling the following settings:
+       * algorithm specific to the CCSDS code:
        *
        * \li K = 7
-       * \li rate = 1/2 (given as 2 to the constructor)
+       * \li rate = 1/2
        * \li polynomials = [109, 79]
        *
-       * This is the well-known convolutional part of the Voyager code
-       * implemented in the CCSDS encoder. See
-       * gr::fec::code::ccsds_decoder for another variation on this
-       * block.
+       * This is the well-known convolutional part of the Voyager
+       * code. See the discussion in gr::fec::code::cc_decoder for
+       * the current state of convolutional decoding.
        *
-       * Currently, in profiling tests run, the VOLK-accelerated
-       * Viterbi code used in this block specific to the CCSDS code
-       * runs faster than the ccsds_decoder version. Furthenr, due to
-       * I/O issues, the ccsds_decoder does not fully handle all
-       * streaming behaviors, only 'Streaming' mode. This block
-       * enables all four streaming modes.
-       *
-       * The intent of having both FECAPI code classes is to
-       * eventually allow this block to take on generic settings, much
-       * like the cc_encoder class. The ccsds_decoder would then
-       * handle this specific code case as optimized as possible.
+       * Currently, this block is transitional and only implements
+       * parts of the FECAPI.
        *
        * The encoder is set up wtih a number of bits per frame in the
        * constructor. When not being used in a tagged stream mode,
@@ -75,7 +58,7 @@ namespace gr {
        * here. If used in a tagged stream block, this setting becomes
        * the maximum allowable frame size that the block may process.
        */
-      class FEC_API cc_decoder : virtual public generic_decoder
+      class FEC_API ccsds_decoder : virtual public generic_decoder
       {
       public:
 
@@ -85,17 +68,12 @@ namespace gr {
          * \param frame_size Number of bits per frame. If using in the
          *        tagged stream style, this is the maximum allowable
          *        number of bits per frame.
-         * \param k Constraint length (K) of the encoder.
-         * \param rate Inverse of the coder's rate
-         *             (rate=2 means 2 output bits per 1 input).
-         * \param polys Vector of polynomials as integers.
          * \param start_state Initialization state of the shift register.
          * \param end_state Ending state of the shift register.
          * \param mode cc_mode_t mode of the encoding.
          */
         static generic_decoder::sptr make
-          (int frame_size, int k,
-           int rate, std::vector<int> polys,
+          (int frame_size,
            int start_state=0, int end_state=-1,
            cc_mode_t mode=CC_STREAMING);
 
@@ -118,4 +96,4 @@ namespace gr {
   } /* namespace fec */
 } /* namespace gr */
 
-#endif /* INCLUDED_FEC_CC_DECODER_H */
+#endif /* INCLUDED_FEC_CCSDS_DECODER_H */

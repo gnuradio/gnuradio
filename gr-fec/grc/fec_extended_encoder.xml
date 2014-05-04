@@ -3,7 +3,7 @@
   <name>FEC Extended Encoder</name>
   <key>fec_extended_encoder</key>
   <import>from gnuradio import fec</import>
-  <make>fec.extended_encoder(encoder_obj_list=$encoder_list, threading=$threadtype.arg, puncpat=$puncpat, )</make>
+  <make>fec.extended_encoder(encoder_obj_list=$encoder_list, threading=$threadtype.arg, puncpat=$puncpat, lentagname=$lentagname)</make>
 
   <param>
     <name>Encoder Objects</name>
@@ -37,6 +37,13 @@
     <name>Puncture Pattern</name>
     <key>puncpat</key>
     <value>'11'</value>
+    <type>string</type>
+  </param>
+
+  <param>
+    <name>Length Tag Name</name>
+    <key>lentagname</key>
+    <value>None</value>
     <type>string</type>
   </param>
 

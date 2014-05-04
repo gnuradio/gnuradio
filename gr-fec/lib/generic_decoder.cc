@@ -25,6 +25,7 @@
 #endif
 
 #include <gnuradio/fec/generic_decoder.h>
+#include <gnuradio/prefs.h>
 #include <stdio.h>
 
 namespace gr {
@@ -34,6 +35,35 @@ namespace gr {
     {
       d_name = name;
       my_id = base_unique_id++;
+
+#ifdef ENABLE_GR_LOG
+#ifdef HAVE_LOG4CPP
+      prefs *p = prefs::singleton();
+      std::string config_file = p->get_string("LOG", "log_config", "");
+      std::string log_level = p->get_string("LOG", "log_level", "off");
+      std::string log_file = p->get_string("LOG", "log_file", "");
+
+      GR_CONFIG_LOGGER(config_file);
+
+      GR_LOG_GETLOGGER(LOG, "gr_log." + alias());
+      GR_LOG_SET_LEVEL(LOG, log_level);
+      if(log_file.size() > 0) {
+        if(log_file == "stdout") {
+          GR_LOG_ADD_CONSOLE_APPENDER(LOG, "cout","gr::log :%p: %c{1} - %m%n");
+        }
+        else if(log_file == "stderr") {
+          GR_LOG_ADD_CONSOLE_APPENDER(LOG, "cerr","gr::log :%p: %c{1} - %m%n");
+        }
+        else {
+          GR_LOG_ADD_FILE_APPENDER(LOG, log_file , true,"%r :%p: %c{1} - %m%n");
+        }
+      }
+      d_logger = LOG;
+
+#endif /* HAVE_LOG4CPP */
+#else /* ENABLE_GR_LOG */
+      d_logger = NULL;
+#endif /* ENABLE_GR_LOG */
     }
 
     generic_decoder::~generic_decoder()
@@ -52,22 +82,22 @@ namespace gr {
       return 0.0;
     }
 
-    const char*
-    generic_decoder::get_conversion()
-    {
-      return "none";
-    }
-
     int
     generic_decoder::get_input_item_size()
     {
-      return 4;
+      return sizeof(float);
     }
 
     int
     generic_decoder::get_output_item_size()
     {
-      return 1;
+      return sizeof(char);
+    }
+
+    const char*
+    generic_decoder::get_input_conversion()
+    {
+      return "none";
     }
 
     const char*
@@ -123,13 +153,13 @@ namespace gr {
     }
 
     const char*
-    get_conversion(generic_decoder::sptr my_decoder)
+    get_decoder_input_conversion(generic_decoder::sptr my_decoder)
     {
-      return my_decoder->get_conversion();
+      return my_decoder->get_input_conversion();
     }
 
     const char*
-    get_output_conversion(generic_decoder::sptr my_decoder)
+    get_decoder_output_conversion(generic_decoder::sptr my_decoder)
     {
       return my_decoder->get_output_conversion();
     }

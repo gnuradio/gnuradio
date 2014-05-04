@@ -42,7 +42,7 @@ endif(ENABLE_GR_CTRLPORT)
 
 link_directories(
   ${Boost_LIBRARY_DIRS}
-  ${LOG4CPP_LIBRARIES}
+  ${LOG4CPP_LIBRARY_DIRS}
 )
 
 ########################################################################
@@ -51,10 +51,14 @@ link_directories(
 list(APPEND gnuradio_fec_sources
   generic_decoder.cc
   generic_encoder.cc
-  encoder_impl.cc
   decoder_impl.cc
+  encoder_impl.cc
+  tagged_decoder_impl.cc
+  tagged_encoder_impl.cc
   cc_decoder_impl.cc
   cc_encoder_impl.cc
+  ccsds_decoder_impl.cc
+  ccsds_encoder_impl.cc
   decode_ccsds_27_fb_impl.cc
   encode_ccsds_27_bb_impl.cc
   ber_tools.cc
@@ -83,9 +87,9 @@ list(APPEND gnuradio_fec_libs
     gnuradio-runtime
     volk
     ${Boost_LIBRARIES}
+    ${LOG4CPP_LIBRARIES}
 )
 
 add_library(gnuradio-fec SHARED ${gnuradio_fec_sources})
 target_link_libraries(gnuradio-fec ${gnuradio_fec_libs})
 GR_LIBRARY_FOO(gnuradio-fec RUNTIME_COMPONENT "fec_runtime" DEVEL_COMPONENT "fec_devel")
-

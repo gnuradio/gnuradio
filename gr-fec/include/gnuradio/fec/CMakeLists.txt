@@ -78,10 +78,14 @@ install(FILES
     api.h
     generic_decoder.h
     generic_encoder.h
-    encoder.h
     decoder.h
-    cc_encoder.h
+    encoder.h
+    tagged_decoder.h
+    tagged_encoder.h
     cc_decoder.h
+    cc_encoder.h
+    ccsds_decoder.h
+    ccsds_encoder.h
     decode_ccsds_27_fb.h
     encode_ccsds_27_bb.h
     rs.h

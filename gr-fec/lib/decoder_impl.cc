@@ -50,13 +50,14 @@ namespace gr {
     {
       set_fixed_rate(true);
       set_relative_rate((double)(my_decoder->get_output_size())/my_decoder->get_input_size());
+      GR_LOG_DEBUG(d_debug_logger, boost::format("relative_rate: %1%") % relative_rate());
 
       //want to guarantee you have enough to run at least one time...
       //remember! this is not a sync block... set_output_multiple does not
       //actually guarantee the output multiple... it DOES guarantee how many
       //outputs (hence inputs) are made available... this is WEIRD to do in
       //GNU Radio, and the algorithm is sensitive to this value
-      set_output_multiple(my_decoder->get_output_size() + (my_decoder->get_history() ) );
+      set_output_multiple(my_decoder->get_output_size() + (my_decoder->get_history()));
       d_inbuf = buf_sptr(new unsigned char[(my_decoder->get_input_size() + my_decoder->get_history())*input_item_size]);
       d_decoder = my_decoder;
     }
@@ -64,20 +65,20 @@ namespace gr {
     int
     decoder_impl::fixed_rate_ninput_to_noutput(int ninput)
     {
-      return (int)(((d_decoder->get_output_size()/(double)d_decoder->get_input_size()) * ninput) + .5);
+      return (int)(0.5 + ninput*relative_rate());
     }
 
     int
     decoder_impl::fixed_rate_noutput_to_ninput(int noutput)
     {
-      return (int)(((d_decoder->get_input_size()/(double)d_decoder->get_output_size()) * noutput) + .5);
+      return (int)(0.5 + noutput/relative_rate());
     }
 
     void
     decoder_impl::forecast(int noutput_items,
                            gr_vector_int& ninput_items_required)
     {
-      ninput_items_required[0] = (int)(((d_decoder->get_input_size()/(double)d_decoder->get_output_size()) * noutput_items) + .5);
+      ninput_items_required[0] = 0.5 + fixed_rate_noutput_to_ninput(noutput_items);
     }
 
     int
@@ -86,35 +87,39 @@ namespace gr {
                                gr_vector_const_void_star &input_items,
                                gr_vector_void_star &output_items)
     {
-      const unsigned char *inBuffer = (unsigned char*)input_items[0];
-      unsigned char *outBuffer = (unsigned char *)output_items[0];
+      const unsigned char *in = (unsigned char*)input_items[0];
+      unsigned char *out = (unsigned char *)output_items[0];
 
-      int outnum = (int)(((1.0/relative_rate()) * noutput_items) + .5);
-      int innum = (int)(relative_rate() * (ninput_items[0] - d_decoder->get_history()) + .5)/(output_multiple() - d_decoder->get_history());
+      int outnum = (int)(((1.0/relative_rate()) * noutput_items) + 0.5);
+      int innum = (int)(relative_rate() * (ninput_items[0] - d_decoder->get_history()) + 0.5)/(output_multiple() - d_decoder->get_history());
 
       int items = (outnum <= ninput_items[0] - d_decoder->get_history()) ?
 	noutput_items/(output_multiple() - d_decoder->get_history()) :
 	innum;
 
-      //GR_LOG_DEBUG(d_debug_logger, boost::formt("%1%, %2%, %3%")        \
-      //             % outnum % ninput_items[0] % items);
+      GR_LOG_DEBUG(d_debug_logger, boost::format("%1%, %2%, %3%")      \
+                   % outnum % ninput_items[0] % items);
 
       for(int i = 0; i < items; ++i) {
         memcpy((void *)d_inbuf.get(),
-               inBuffer+(i*(d_decoder->get_input_size()) * d_input_item_size),
+               in+(i*(d_decoder->get_input_size()) * d_input_item_size),
                (d_decoder->get_input_size() + d_decoder->get_history()) * d_input_item_size);
 
         d_decoder->generic_work((void*)d_inbuf.get(),
-                                (void*)(outBuffer+(i*d_decoder->get_output_size()*d_output_item_size)));
+                                (void*)(out+(i*d_decoder->get_output_size()*d_output_item_size)));
+
+        add_item_tag(0, nitems_written(0) + ((i+1)*d_decoder->get_output_size()*d_output_item_size),
+                     pmt::intern(d_decoder->alias()), pmt::PMT_T, pmt::intern(alias()));
       }
 
-     // GR_LOG_DEBUG(d_debug_logger, boost::format("consumed %1%")        \
-     //              % (int)(((1.0/relative_rate())*items*(output_multiple() - d_decoder->get_history())) + .5));
-     // GR_LOG_DEBUG(d_debug_logger, boost::format("returned %1%")        \
-     //              % (items * (output_multiple() - d_decoder->get_history())));
+      int consumed = static_cast<int>(items/relative_rate()*(output_multiple() - d_decoder->get_history()) + 0.5);
+      int returned = items*(output_multiple() - d_decoder->get_history());
 
-      consume_each((int)(((1.0/relative_rate()) * items * (output_multiple() - d_decoder->get_history())) + .5));
-      return items * (output_multiple() - d_decoder->get_history());
+      GR_LOG_DEBUG(d_debug_logger, boost::format("consumed %1%") % consumed);
+      GR_LOG_DEBUG(d_debug_logger, boost::format("returned %1%") % returned);
+
+      consume_each(consumed);
+      return returned;
     }
 
   } /* namespace fec */

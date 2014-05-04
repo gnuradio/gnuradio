@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2013-2014 Free Software Foundation, Inc.
+ * Copyright 2014 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -20,8 +20,8 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef INCLUDED_FEC_CC_ENCODER_H
-#define INCLUDED_FEC_CC_ENCODER_H
+#ifndef INCLUDED_FEC_CCSDS_ENCODER_H
+#define INCLUDED_FEC_CCSDS_ENCODER_H
 
 #include <gnuradio/fec/api.h>
 #include <gnuradio/fec/encoder.h>
@@ -34,29 +34,17 @@ namespace gr {
     namespace code {
 
       /*!
-       * \brief Convolutional Code Encoding class.
+       * \brief CCSDS Encoding class for convolutional encoding with
+       * rate 1/2, K=7, and polynomials [109, 79].
        * \ingroup error_coding_blk
        *
        * \details
-       * This class performs convolutional encoding for unpacked bits
-       * for frames of a constant length. This class is general in its
-       * application of the convolutional encoding and allows us to
-       * specify the constraint length, the coding rate, and the
-       * polynomials used in the coding process.
        *
-       * The parameter \p k sets the constraint length directly. We
-       * set the coding rate by setting \p rate to R given a desired
-       * rate of 1/R. That is, for a rate 1/2 coder, we would set \p
-       * rate to 2. And the polynomial is specified as a vector of
-       * integers, where each integer represents the coding polynomial
-       * for a different arm of the code. The number of polynomials
-       * given must be the same as the value \p rate.
-       *
-       * The encoding object holds a shift register that takes in each
-       * bit from the input stream and then ANDs the shift register
-       * with each polynomial, and places the parity of the result
-       * into the output stream. The output stream is therefore also
-       * unpakced bits.
+       * Uses Phil Karn's (KA9Q) implementation of the CCSDS encoder
+       * for rate 1/2, K=7, and CC polynomial [109, 79]. These are
+       * non-adjustable in this encoder. For an adjustable CC encoder
+       * where we can set the rate, constraint length, and polynomial,
+       * see gr::fec::code::cc_encoder.
        *
        * The encoder is set up wtih a number of bits per frame in the
        * constructor. When not being used in a tagged stream mode,
@@ -88,32 +76,23 @@ namespace gr {
        * Polynomials=[109, 79]. This is the Voyager code from NASA:
        * \li   109: b(1101101) --> 1 + x   + x^3 + x^4 + x^6
        * \li   79:  b(1001111) --> 1 + x^3 + x^4 + x^5 + x^6
-       *
-       * Another encoder class is providee with gr-fec called the
-       * gr::fec::code::ccsds_encoder, which implements the above code
-       * that is more highly optimized for just those specific
-       * settings.
        */
-      class FEC_API cc_encoder : virtual public generic_encoder
+      class FEC_API ccsds_encoder : virtual public generic_encoder
       {
       public:
 
         /*!
-         * Build a convolutional code encoding FECAPI object.
+         * Build the CCSDS (rate=1/2, K=7, polys=[109,79]
+         * convolutional code FECAPI object.
          *
          * \param frame_size Number of bits per frame. If using in the
          *        tagged stream style, this is the maximum allowable
          *        number of bits per frame.
-         * \param k Constraint length (K) of the encoder.
-         * \param rate Inverse of the coder's rate
-         *             (rate=2 means 2 output bits per 1 input).
-         * \param polys Vector of polynomials as integers.
          * \param start_state Initialization state of the shift register.
          * \param mode cc_mode_t mode of the encoding.
          */
         static generic_encoder::sptr make
-          (int frame_size, int k, int rate,
-           std::vector<int> polys, int start_state = 0,
+          (int frame_size, int start_state = 0,
            cc_mode_t mode=CC_STREAMING);
 
         /*!
@@ -135,4 +114,4 @@ namespace gr {
   } /* namespace fec */
 } /* namespace gr */
 
-#endif /* INCLUDED_FEC_CC_ENCODER_H */
+#endif /* INCLUDED_FEC_CCSDS_ENCODER_H */

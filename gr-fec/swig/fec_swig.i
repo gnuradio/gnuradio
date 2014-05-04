@@ -27,6 +27,8 @@
 //load generated python docstrings
 %include "fec_swig_doc.i"
 
+%include "gnuradio/fec/cc_common.h"
+
 %nodefaultctor gr::fec::generic_encoder;
 %template(generic_encoder_sptr) boost::shared_ptr<gr::fec::generic_encoder>;
 
@@ -34,12 +36,16 @@
 %template(generic_decoder_sptr) boost::shared_ptr<gr::fec::generic_decoder>;
 
 %{
-#include "gnuradio/fec/generic_encoder.h"
 #include "gnuradio/fec/generic_decoder.h"
-#include "gnuradio/fec/encoder.h"
+#include "gnuradio/fec/generic_encoder.h"
 #include "gnuradio/fec/decoder.h"
-#include "gnuradio/fec/cc_encoder.h"
+#include "gnuradio/fec/encoder.h"
+#include "gnuradio/fec/tagged_decoder.h"
+#include "gnuradio/fec/tagged_encoder.h"
 #include "gnuradio/fec/cc_decoder.h"
+#include "gnuradio/fec/cc_encoder.h"
+#include "gnuradio/fec/ccsds_decoder.h"
+#include "gnuradio/fec/ccsds_encoder.h"
 #include "gnuradio/fec/decode_ccsds_27_fb.h"
 #include "gnuradio/fec/encode_ccsds_27_bb.h"
 #include "gnuradio/fec/ber_bf.h"
@@ -49,12 +55,16 @@
 #include "gnuradio/fec/depuncture_bb.h"
 %}
 
-%include "gnuradio/fec/generic_encoder.h"
 %include "gnuradio/fec/generic_decoder.h"
-%include "gnuradio/fec/encoder.h"
+%include "gnuradio/fec/generic_encoder.h"
 %include "gnuradio/fec/decoder.h"
-%include "gnuradio/fec/cc_encoder.h"
+%include "gnuradio/fec/encoder.h"
+%include "gnuradio/fec/tagged_decoder.h"
+%include "gnuradio/fec/tagged_encoder.h"
 %include "gnuradio/fec/cc_decoder.h"
+%include "gnuradio/fec/cc_encoder.h"
+%include "gnuradio/fec/ccsds_decoder.h"
+%include "gnuradio/fec/ccsds_encoder.h"
 %include "gnuradio/fec/decode_ccsds_27_fb.h"
 %include "gnuradio/fec/encode_ccsds_27_bb.h"
 %include "gnuradio/fec/ber_bf.h"
@@ -63,8 +73,10 @@
 %include "gnuradio/fec/puncture_ff.h"
 %include "gnuradio/fec/depuncture_bb.h"
 
-GR_SWIG_BLOCK_MAGIC2(fec, encoder);
 GR_SWIG_BLOCK_MAGIC2(fec, decoder);
+GR_SWIG_BLOCK_MAGIC2(fec, encoder);
+GR_SWIG_BLOCK_MAGIC2(fec, tagged_decoder);
+GR_SWIG_BLOCK_MAGIC2(fec, tagged_encoder);
 GR_SWIG_BLOCK_MAGIC2(fec, decode_ccsds_27_fb);
 GR_SWIG_BLOCK_MAGIC2(fec, encode_ccsds_27_bb);
 GR_SWIG_BLOCK_MAGIC2(fec, ber_bf);

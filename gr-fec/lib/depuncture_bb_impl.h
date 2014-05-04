@@ -31,14 +31,15 @@ namespace gr {
     class FEC_API depuncture_bb_impl : public depuncture_bb
     {
     private:
+      int d_puncsize;
       int d_delay;
       int d_puncholes;
-      int d_puncsize;
       int d_puncpat;
+      char d_sym;
 
     public:
-      depuncture_bb_impl(int delay, int puncpat,
-                         int puncholes, int puncsize);
+      depuncture_bb_impl(int puncsize, int puncpat,
+                         int delay=0, char symbol=127);
       ~depuncture_bb_impl();
 
       int general_work(int noutput_items,

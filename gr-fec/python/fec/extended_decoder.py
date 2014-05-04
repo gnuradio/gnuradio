@@ -76,28 +76,33 @@ class extended_decoder(gr.hier_block2):
     }
 
     def __init__(self, decoder_obj_list, threading, ann=None, puncpat='11',
-                 integration_period=10000, flush=None, rotator=None):
-        gr.hier_block2.__init__(
-            self, "extended_decoder",
-            gr.io_signature(1, 1, gr.sizeof_float),
-            gr.io_signature(1, 1, gr.sizeof_char))
+                 integration_period=10000, flush=None, rotator=None, lentagname=None):
+        gr.hier_block2.__init__(self, "extended_decoder",
+                                gr.io_signature(1, 1, gr.sizeof_float),
+                                gr.io_signature(1, 1, gr.sizeof_char))
         self.blocks=[]
         self.ann=ann
         self.puncpat=puncpat
         self.flush=flush
 
+        if type(lentagname) == str:
+            if(lentagname.lower() == 'none'):
+                lentagname = None
+
         message_collector_connected=False
 
         ##anything going through the annihilator needs shifted, uchar vals
-        if fec.get_conversion(decoder_obj_list[0]) == "uchar" or fec.get_conversion(decoder_obj_list[0]) == "packed_bits":
+        if fec.get_decoder_input_conversion(decoder_obj_list[0]) == "uchar" or \
+           fec.get_decoder_input_conversion(decoder_obj_list[0]) == "packed_bits":
             self.blocks.append(blocks.multiply_const_ff(48.0))
 
         if fec.get_shift(decoder_obj_list[0]) != 0.0:
             self.blocks.append(blocks.add_const_ff(fec.get_shift(decoder_obj_list[0])))
-        elif fec.get_conversion(decoder_obj_list[0]) == "packed_bits":
+        elif fec.get_decoder_input_conversion(decoder_obj_list[0]) == "packed_bits":
             self.blocks.append(blocks.add_const_ff(128.0))
 
-        if fec.get_conversion(decoder_obj_list[0]) == "uchar" or fec.get_conversion(decoder_obj_list[0]) == "packed_bits":
+        if fec.get_decoder_input_conversion(decoder_obj_list[0]) == "uchar" or \
+           fec.get_decoder_input_conversion(decoder_obj_list[0]) == "packed_bits":
             self.blocks.append(blocks.float_to_uchar());
 
         const_index = 0; #index that corresponds to mod order for specinvert purposes
@@ -122,12 +127,10 @@ class extended_decoder(gr.hier_block2):
             self.blocks.append(fec.corr_bb(cat, len(puncpat) - puncpat.count('0'),
                                            len(ann), integration_period, flush, synd_garble))
 
-        #print puncpat
         if self.puncpat != '11':
-            self.blocks.append(fec.depuncture_bb(0, read_bitlist(puncpat),
-                                                 puncpat.count('0'), len(puncpat)))
+            self.blocks.append(fec.depuncture_bb(len(puncpat), read_bitlist(puncpat), 0))
 
-        if fec.get_conversion(decoder_obj_list[0]) == "packed_bits":
+        if fec.get_decoder_input_conversion(decoder_obj_list[0]) == "packed_bits":
             self.blocks.append(blocks.uchar_to_float())
             self.blocks.append(blocks.add_const_ff(-128.0))
             self.blocks.append(digital.binary_slicer_fb())
@@ -135,6 +138,7 @@ class extended_decoder(gr.hier_block2):
 
         if(len(decoder_obj_list) > 1):
             assert fec.get_history(decoder_obj_list[0]) == 0
+
         if threading == 'capillary':
             self.blocks.append(capillary_threaded_decoder(decoder_obj_list,
                                                           fec.get_decoder_input_item_size(decoder_obj_list[0]),
@@ -146,11 +150,17 @@ class extended_decoder(gr.hier_block2):
                                                 fec.get_decoder_output_item_size(decoder_obj_list[0])))
 
         else:
-            self.blocks.append(fec.decoder(decoder_obj_list[0],
-                                           fec.get_decoder_input_item_size(decoder_obj_list[0]),
-                                           fec.get_decoder_output_item_size(decoder_obj_list[0])))
+            if(not lentagname):
+                self.blocks.append(fec.decoder(decoder_obj_list[0],
+                                               fec.get_decoder_input_item_size(decoder_obj_list[0]),
+                                               fec.get_decoder_output_item_size(decoder_obj_list[0])))
+            else:
+                self.blocks.append(fec.tagged_decoder(decoder_obj_list[0],
+                                                      fec.get_decoder_input_item_size(decoder_obj_list[0]),
+                                                      fec.get_decoder_output_item_size(decoder_obj_list[0]),
+                                                      lentagname))
 
-        if fec.get_output_conversion(decoder_obj_list[0]) == "unpack":
+        if fec.get_decoder_output_conversion(decoder_obj_list[0]) == "unpack":
             self.blocks.append(blocks.packed_to_unpacked_bb(1, gr.GR_MSB_FIRST));
 
         self.connect((self, 0), (self.blocks[0], 0));

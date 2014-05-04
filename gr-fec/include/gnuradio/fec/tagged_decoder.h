@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2013-2014 Free Software Foundation, Inc.
+ * Copyright 2014 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -20,12 +20,12 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef INCLUDED_FEC_DECODER_H
-#define INCLUDED_FEC_DECODER_H
+#ifndef INCLUDED_FEC_TAGGED_DECODER_H
+#define INCLUDED_FEC_TAGGED_DECODER_H
 
 #include <gnuradio/fec/api.h>
 #include <gnuradio/fec/generic_decoder.h>
-#include <gnuradio/block.h>
+#include <gnuradio/tagged_stream_block.h>
 #include <boost/shared_ptr.hpp>
 #include <boost/shared_array.hpp>
 #include <boost/format.hpp>
@@ -63,10 +63,10 @@ namespace gr {
      * FECAPI variable object can set if using this block directly and
      * not as part of the fec.extended_decoder.
      */
-    class FEC_API decoder : virtual public block
+    class FEC_API tagged_decoder : virtual public tagged_stream_block
     {
     public:
-      typedef boost::shared_ptr<decoder> sptr;
+      typedef boost::shared_ptr<tagged_decoder> sptr;
       typedef boost::shared_array<unsigned char> buf_sptr;
 
       /*!
@@ -76,22 +76,21 @@ namespace gr {
        * \param my_decoder An FECAPI decoder object (See gr::fec::generic_decoder).
        * \param input_item_size The size of the input items (often the my_decoder object can tell us this).
        * \param output_item_size The size of the output items (often the my_decoder object can tell us this).
+       * \param lengthtagname Key name of the tagged stream frame size.
        */
       static sptr make(generic_decoder::sptr my_decoder,
                        size_t input_item_size,
-                       size_t output_item_size);
+                       size_t output_item_size,
+                       const std::string &lengthtagname="packet_len");
 
-      virtual int general_work(int noutput_items,
-                               gr_vector_int& ninput_items,
-                               gr_vector_const_void_star &input_items,
-                               gr_vector_void_star &output_items) = 0;
-      virtual int fixed_rate_ninput_to_noutput(int ninput) = 0;
-      virtual int fixed_rate_noutput_to_ninput(int noutput) = 0;
-      virtual void forecast(int noutput_items,
-                            gr_vector_int& ninput_items_required) = 0;
+      virtual int work(int noutput_items,
+                       gr_vector_int& ninput_items,
+                       gr_vector_const_void_star &input_items,
+                       gr_vector_void_star &output_items) = 0;
+      virtual int calculate_output_stream_length(const gr_vector_int &ninput_items) = 0;
     };
 
   } /* namespace fec */
 } /* namespace gr */
 
-#endif /* INCLUDED_FEC_DECODER_H */
+#endif /* INCLUDED_FEC_TAGGED_DECODER_H */

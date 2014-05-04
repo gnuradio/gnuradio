@@ -40,32 +40,32 @@ namespace gr {
     namespace code {
 
       generic_encoder::sptr
-      cc_encoder::make(int framebits, int k,
-                       int rate, std::vector<int> polys,
-                       int start_state, int end_state,
-                       bool tailbiting, bool terminated,
-                       bool truncated, bool streaming)
+      cc_encoder::make(int frame_size, int k, int rate,
+                       std::vector<int> polys, int start_state,
+                        cc_mode_t mode)
       {
         return generic_encoder::sptr
-          (new cc_encoder_impl(framebits, k,
-                               rate, polys,
-                               start_state, end_state,
-                               tailbiting, terminated,
-                               truncated, streaming));
+          (new cc_encoder_impl(frame_size, k, rate,
+                               polys, start_state,
+                               mode));
       }
 
-      cc_encoder_impl::cc_encoder_impl(int framebits, int k,
-                                       int rate, std::vector<int> polys,
-                                       int start_state, int end_state,
-                                       bool tailbiting, bool terminated,
-                                       bool truncated, bool streaming)
-        : d_framebits(framebits),
+      cc_encoder_impl::cc_encoder_impl(int frame_size, int k, int rate,
+                                       std::vector<int> polys, int start_state,
+                                       cc_mode_t mode)
+        : generic_encoder("cc_encoder"),
           d_rate(rate), d_k(k), d_polys(polys),
           d_start_state(start_state),
-          d_tailbiting(tailbiting), d_terminated(terminated),
-          d_truncated(truncated), d_streaming(streaming)
+          d_mode(mode)
       {
+        if(static_cast<size_t>(d_rate) != d_polys.size()) {
+          throw std::runtime_error("cc_encoder: Number of polynomials must be the same as the value of rate");
+        }
+
         partab_init();
+
+        d_max_frame_size = frame_size;
+        set_frame_size(frame_size);
       }
 
       cc_encoder_impl::~cc_encoder_impl()
@@ -75,8 +75,30 @@ namespace gr {
       int
       cc_encoder_impl::get_output_size()
       {
-        if(d_terminated) {
-          return d_rate * (d_framebits + d_k - 1);
+        return d_output_size;
+      }
+
+      int
+      cc_encoder_impl::get_input_size()
+      {
+        return d_frame_size;
+      }
+
+      bool
+      cc_encoder_impl::set_frame_size(unsigned int frame_size)
+      {
+        bool ret = true;
+        if(frame_size > d_max_frame_size) {
+          GR_LOG_INFO(d_logger, boost::format("tried to set frame to %1%; max possible is %2%") \
+                      % frame_size % d_max_frame_size);
+          frame_size = d_max_frame_size;
+          ret = false;
+        }
+
+        d_frame_size = frame_size;
+
+        if(d_mode == CC_TERMINATED) {
+          d_output_size = d_rate * (d_frame_size + d_k - 1);
         }
         /*
         else if(d_trunc_intrinsic) {
@@ -86,18 +108,20 @@ namespace gr {
               cnt++;
             }
           }
-          return (d_rate * (d_framebits)) + (cnt * (d_k - 1));
+          d_output_size = (d_rate * (d_frame_size)) + (cnt * (d_k - 1));
         }
         */
         else {
-          return d_rate * d_framebits;
+          d_output_size = d_rate * d_frame_size;
         }
+
+        return ret;
       }
 
-      int
-      cc_encoder_impl::get_input_size()
+      double
+      cc_encoder_impl::rate()
       {
-        return d_framebits;
+        return 1.0/static_cast<double>(d_rate);
       }
 
       int
@@ -138,65 +162,37 @@ namespace gr {
         const unsigned char *in = (const unsigned char *) in_buffer;
         unsigned char *out = (unsigned char *) out_buffer;
 
-        int my_state = d_start_state;
-        //printf("ms: %d\n", my_state);
+        unsigned char my_state = d_start_state;
 
-        if(d_tailbiting) {
+        if(d_mode == CC_TAILBITING) {
           for(unsigned int i = 0; i < d_k - 1; ++i) {
-            my_state = (my_state << 1) | (in[d_framebits - (d_k - 1)  + i] & 1);
+            my_state = (my_state << 1) | (in[d_frame_size - (d_k - 1)  + i] & 1);
           }
         }
-        //printf("start... %d\n", my_state & ((1 << (d_k - 1)) - 1));
 
-        for(unsigned int i = 0; i < d_framebits; ++i) {
+        for(unsigned int i = 0; i < d_frame_size; ++i) {
           my_state = (my_state << 1) | (in[i] & 1);
           for(unsigned int j = 0; j < d_rate; ++j) {
             out[i * d_rate + j] = parity(my_state & d_polys[j]) == 0 ? 0 : 1;
           }
         }
 
-        if(d_terminated) {
+        if(d_mode == CC_TERMINATED) {
           for(unsigned int i = 0; i < d_k - 1; ++i) {
             my_state = (my_state << 1) | ((d_start_state >> (d_k - 2 - i)) & 1);
             for(unsigned int j = 0; j < d_rate; ++j) {
-              out[(i + d_framebits) * d_rate + j] = parity(my_state & d_polys[j]) == 0 ? 0 : 1;
+              out[(i + d_frame_size) * d_rate + j] = parity(my_state & d_polys[j]) == 0 ? 0 : 1;
             }
           }
         }
 
-        /*
-        if(d_trunc_intrinsic) {
-          for(int i = 0; i < d_k - 1; ++i) {
-            my_state = (my_state << 1) | ((d_start_state >> d_k - 2 - i) & 1);
-            int cnt = 0;
-            for(int j = 0; j < d_rate; ++j) {
-              if(d_polys[j] != 1) {
-                out[(i + d_framebits) * d_rate + cnt] = parity(my_state & d_polys[j]) == 0 ? 0 : 1;
-                cnt++;
-              }
-            }
-          }
-        }
-        */
-
-        if(d_truncated) {
-          //printf("end... %d\n", my_state & ((1 << (d_k - 1)) - 1));
+        if(d_mode == CC_TRUNCATED) {
           my_state = d_start_state;
         }
 
         d_start_state = my_state;
-        //d_start_state = my_state & (1 << d_k -1) - 1;
-        //printf("ms: %d\n", d_start_state);
-
-        /*
-        for(int i = d_framebits * d_rate - 25; i < d_framebits * d_rate; ++i) {
-          //for(int i = 0; i < 25; ++i) {
-          printf("...%d : %u\n", out[i], i);
-        }
-        */
       }
 
     } /* namespace code */
   } /* namespace fec */
 } /* namespace gr */
-

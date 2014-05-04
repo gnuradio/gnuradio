@@ -23,25 +23,29 @@
 #ifndef INCLUDED_FEC_CC_COMMON_H
 #define INCLUDED_FEC_CC_COMMON_H
 
-typedef unsigned char DECISIONTYPE;
-typedef unsigned char COMPUTETYPE;
+typedef enum _cc_mode_t {
+  CC_STREAMING = 0,
+  CC_TERMINATED,
+  CC_TRUNCATED,
+  CC_TAILBITING
+} cc_mode_t;
 
 typedef union {
   //decision_t is a BIT vector
-  DECISIONTYPE* t;
+  unsigned char* t;
   unsigned int* w;
   unsigned short* s;
   unsigned char* c;
 } decision_t;
 
 typedef union {
-  COMPUTETYPE* t;
+  unsigned char* t;
 } metric_t;
 
 struct v {
-  COMPUTETYPE *metrics;
+  unsigned char *metrics;
   metric_t old_metrics,new_metrics,metrics1,metrics2; /* Pointers to path metrics, swapped on every bit */
-  DECISIONTYPE *decisions;
+  unsigned char *decisions;
 };
 
 #endif /*INCLUDED_FEC_CC_COMMON_H*/

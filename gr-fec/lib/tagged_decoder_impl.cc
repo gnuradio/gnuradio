@@ -1,0 +1,100 @@
+/* -*- c++ -*- */
+/*
+ * Copyright 2014 Free Software Foundation, Inc.
+ *
+ * This file is part of GNU Radio
+ *
+ * GNU Radio is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3, or (at your option)
+ * any later version.
+ *
+ * GNU Radio is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with GNU Radio; see the file COPYING.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street,
+ * Boston, MA 02110-1301, USA.
+ */
+
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
+
+#include "tagged_decoder_impl.h"
+#include <gnuradio/io_signature.h>
+#include <stdio.h>
+
+namespace gr {
+  namespace fec {
+
+    tagged_decoder::sptr
+    tagged_decoder::make(generic_decoder::sptr my_decoder,
+                         size_t input_item_size,
+                         size_t output_item_size,
+                         const std::string &lengthtagname)
+    {
+      return gnuradio::get_initial_sptr
+        ( new tagged_decoder_impl(my_decoder, input_item_size,
+                                  output_item_size, lengthtagname));
+    }
+
+    tagged_decoder_impl::tagged_decoder_impl(generic_decoder::sptr my_decoder,
+                                             size_t input_item_size,
+                                             size_t output_item_size,
+                                             const std::string &lengthtagname)
+      : tagged_stream_block("fec_tagged_decoder",
+                            io_signature::make(1, 1, input_item_size),
+                            io_signature::make(1, 1, output_item_size),
+                            lengthtagname),
+        d_input_item_size(input_item_size), d_output_item_size(output_item_size)
+    {
+      d_inbuf = buf_sptr(new unsigned char[(my_decoder->get_input_size() + my_decoder->get_history())*input_item_size]);
+      d_decoder = my_decoder;
+
+      set_relative_rate(d_decoder->rate());
+    }
+
+    int
+    tagged_decoder_impl::calculate_output_stream_length(const gr_vector_int &ninput_items)
+    {
+      return d_decoder->get_output_size();
+    }
+
+    tagged_decoder_impl::~tagged_decoder_impl()
+    {
+    }
+
+    int
+    tagged_decoder_impl::work(int noutput_items,
+                              gr_vector_int& ninput_items,
+                              gr_vector_const_void_star &input_items,
+                              gr_vector_void_star &output_items)
+    {
+      const unsigned char *in = (unsigned char*)input_items[0];
+      unsigned char *out = (unsigned char *)output_items[0];
+
+      d_decoder->set_frame_size(ninput_items[0]/2);
+      if(noutput_items < d_decoder->get_output_size())
+        return 0;
+
+      GR_LOG_DEBUG(d_debug_logger, boost::format("%1%, %2%, %3%")      \
+                   % noutput_items % ninput_items[0] % d_decoder->get_output_size());
+
+      memcpy((void *)d_inbuf.get(),
+             in+(d_decoder->get_input_size() * d_input_item_size),
+             (d_decoder->get_input_size() + d_decoder->get_history()) * d_input_item_size);
+
+      d_decoder->generic_work((void*)d_inbuf.get(), (void*)(out));
+
+      add_item_tag(0, nitems_written(0) + d_decoder->get_output_size()*d_output_item_size,
+                   pmt::intern(d_decoder->alias()), pmt::PMT_T, pmt::intern(alias()));
+
+      return d_decoder->get_output_size();
+    }
+
+  } /* namespace fec */
+} /* namespace gr */

@@ -26,7 +26,6 @@
 #include <map>
 #include <string>
 #include <gnuradio/fec/cc_decoder.h>
-#include <gnuradio/fec/cc_common.h>
 
 namespace gr {
   namespace fec {
@@ -41,36 +40,36 @@ namespace gr {
         int get_history();
         float get_shift();
         int get_input_item_size();
-        const char* get_conversion();
+        const char* get_input_conversion();
         //const char* get_output_conversion();
 
         //everything else...
         void create_viterbi();
         int init_viterbi(struct v* vp, int starting_state);
         int init_viterbi_unbiased(struct v* vp);
-        int update_viterbi_blk(COMPUTETYPE* syms, int nbits);
+        int update_viterbi_blk(unsigned char* syms, int nbits);
         int chainback_viterbi(unsigned char* data, unsigned int nbits,
                               unsigned int endstate, unsigned int tailsize);
         int find_endstate();
         int tester[12];
 
-        COMPUTETYPE *Branchtab;
+        unsigned char *Branchtab;
         unsigned char Partab[256];
 
-        bool d_tailbiting;
-        bool d_terminated;
-        bool d_truncated;
-        bool d_streaming;
+
         int d_ADDSHIFT;
         int d_SUBSHIFT;
         conv_kernel d_kernel;
-        unsigned int d_framebits;
+        unsigned int d_max_frame_size;
+        unsigned int d_frame_size;
         unsigned int d_k;
         unsigned int d_rate;
         unsigned int d_partial_rate;
         std::vector<int> d_polys;
+        cc_mode_t d_mode;
+
         struct v* d_vp;
-        COMPUTETYPE* d_managed_in;
+        unsigned char* d_managed_in;
         unsigned int d_managed_in_size;
         int d_numstates;
         int d_decision_t_size;
@@ -81,21 +80,22 @@ namespace gr {
         int d_end_state_chaining;
         int d_end_state_nonchaining;
         unsigned int d_veclen;
+
         int parity(int x);
         int parityb(unsigned char x);
         void partab_init(void);
         std::map<std::string, conv_kernel> yp_kernel;
 
       public:
-        cc_decoder_impl(int framebits, int k,
+        cc_decoder_impl(int frame_size, int k,
                         int rate, std::vector<int> polys,
                         int start_state = 0, int end_state = -1,
-                        bool tailbiting = false, bool terminated = false,
-                        bool truncated = false, bool streaming = false);
+                        cc_mode_t mode=CC_STREAMING);
         ~cc_decoder_impl();
 
-        void set_framebits(int framebits);
-        void generic_work(void *inBuffer, void *outbuffer);
+        void generic_work(void *inbuffer, void *outbuffer);
+        bool set_frame_size(unsigned int frame_size);
+        double rate();
       };
 
     } /* namespace code */
