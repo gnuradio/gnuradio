@@ -60,7 +60,7 @@ namespace gr {
       if(fabsf(srate - rsrate) > 0.00001)
 	throw std::invalid_argument("pfb_channelizer: oversample rate must be N/i for i in [1, N]");
 
-      set_relative_rate(1.0/srate);
+      set_relative_rate(srate);
 
       // Default channel map. The channel map specifies which input
       // goes to which output channel; so out[0] comes from
@@ -93,6 +93,10 @@ namespace gr {
 
       // Use set_taps to also set the history requirement
       set_taps(taps);
+
+      // because we need a stream_to_streams block for the input,
+      // only send tags from in[i] -> out[i].
+      set_tag_propagation_policy(TPP_ONE_TO_ONE);
     }
 
     pfb_channelizer_ccf_impl::~pfb_channelizer_ccf_impl()
