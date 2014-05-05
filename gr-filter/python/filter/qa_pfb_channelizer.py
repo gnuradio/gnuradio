@@ -112,5 +112,18 @@ class test_pfb_channelizer(gr_unittest.TestCase):
         self.assertComplexTuplesAlmostEqual(expected3_data[-Ntest:], dst3_data[-Ntest:], 3)
         self.assertComplexTuplesAlmostEqual(expected4_data[-Ntest:], dst4_data[-Ntest:], 3)
 
+    def test_0002(self):
+        """Test roundig error handling for oversample rate (ok)."""
+        channels, oversample = 36, 25.
+        filter.pfb.channelizer_ccf(channels, taps=self.taps,
+                                   oversample_rate=channels/oversample)
+
+    def test_0003(self):
+        """Test roundig error handling for oversample rate, (bad)."""
+        self.assertRaises(RuntimeError,
+                          filter.pfb.channelizer_ccf,
+                          36, taps=self.taps, oversample_rate=10.1334)
+
+
 if __name__ == '__main__':
     gr_unittest.run(test_pfb_channelizer, "test_pfb_channelizer.xml")
