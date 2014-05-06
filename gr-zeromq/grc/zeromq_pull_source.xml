@@ -4,7 +4,7 @@
   <key>zeromq_pull_source</key>
   <category>ZeroMQ Interfaces</category>
   <import>from gnuradio import zeromq</import>
-  <make>zeromq.pull_source($type.itemsize, $address, $timeout)</make>
+  <make>zeromq.pull_source($type.itemsize, $vlen, $address, $timeout)</make>
 
   <param>
     <name>IO Type</name>
@@ -35,6 +35,13 @@
       <key>byte</key>
       <opt>itemsize:gr.sizeof_char</opt>
     </option>
+  </param>
+
+  <param>
+		<name>Vec Length</name>
+		<key>vlen</key>
+		<value>1</value>
+		<type>int</type>
   </param>
 
   <param>

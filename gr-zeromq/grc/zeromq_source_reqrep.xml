@@ -1,38 +1,58 @@
 <?xml version="1.0"?>
 <block>
-  <name>source_reqrep</name>
+  <name>ZMQ REQ Source</name>
   <key>zeromq_source_reqrep</key>
-  <category>zeromq</category>
-  <import>import zeromq</import>
-  <make>zeromq.source_reqrep($itemsize, $*address)</make>
-  <!-- Make one 'param' node for every Parameter you want settable from the GUI.
-       Sub-nodes:
-       * name
-       * key (makes the value accessible as $keyname, e.g. in the make node)
-       * type -->
+  <category>ZeroMQ Interfaces</category>
+  <import>from gnuradio import zeromq</import>
+  <make>zeromq.source_reqrep($type.itemsize, $vlen, $address)</make>
+
   <param>
-    <name>...</name>
-    <key>...</key>
-    <type>...</type>
+    <name>IO Type</name>
+    <key>type</key>
+    <type>enum</type>
+    <option>
+      <name>Complex</name>
+      <key>complex</key>
+      <opt>itemsize:gr.sizeof_gr_complex</opt>
+    </option>
+    <option>
+      <name>Float</name>
+      <key>float</key>
+      <opt>itemsize:gr.sizeof_float</opt>
+    </option>
+    <option>
+      <name>Int</name>
+      <key>int</key>
+      <opt>itemsize:gr.sizeof_int</opt>
+    </option>
+    <option>
+      <name>Short</name>
+      <key>short</key>
+      <opt>itemsize:gr.sizeof_short</opt>
+    </option>
+    <option>
+      <name>Byte</name>
+      <key>byte</key>
+      <opt>itemsize:gr.sizeof_char</opt>
+    </option>
   </param>
 
-  <!-- Make one 'sink' node per input. Sub-nodes:
-       * name (an identifier for the GUI)
-       * type
-       * vlen
-       * optional (set to 1 for optional inputs) -->
-  <sink>
-    <name>in</name>
-    <type><!-- e.g. int, float, complex, byte, short, xxx_vector, ...--></type>
-  </sink>
+  <param>
+		<name>Vec Length</name>
+		<key>vlen</key>
+		<value>1</value>
+		<type>int</type>
+  </param>
 
-  <!-- Make one 'source' node per output. Sub-nodes:
-       * name (an identifier for the GUI)
-       * type
-       * vlen
-       * optional (set to 1 for optional inputs) -->
+  <param>
+    <name>Address</name>
+    <key>address</key>
+    <type>string</type>
+  </param>
+
   <source>
     <name>out</name>
-    <type><!-- e.g. int, float, complex, byte, short, xxx_vector, ...--></type>
+    <type>$type</type>
   </source>
+
 </block>

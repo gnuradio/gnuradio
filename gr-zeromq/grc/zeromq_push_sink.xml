@@ -4,7 +4,7 @@
   <key>zeromq_push_sink</key>
   <category>ZeroMQ Interfaces</category>
   <import>from gnuradio import zeromq</import>
-  <make>zeromq.push_sink($type.itemsize, $address, $blocking)</make>
+  <make>zeromq.push_sink($type.itemsize, $vlen, $address, $blocking)</make>
 
   <param>
     <name>IO Type</name>
@@ -37,6 +37,13 @@
     </option>
   </param>
 
+  <param>
+		<name>Vec Length</name>
+		<key>vlen</key>
+		<value>1</value>
+		<type>int</type>
+  </param>
+ 
   <param>
     <name>Address</name>
     <key>address</key>

@@ -38,7 +38,7 @@ namespace gr {
       zmq::socket_t   *d_socket;
 
     public:
-      pull_source_impl(size_t itemsize, char *address, float timeout);
+      pull_source_impl(size_t itemsize, size_t vlen, char *address, float timeout);
       ~pull_source_impl();
 
       int work(int noutput_items,

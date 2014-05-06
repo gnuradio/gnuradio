@@ -31,16 +31,16 @@ namespace gr {
   namespace zeromq {
 
     pull_source::sptr
-    pull_source::make(size_t itemsize, char *address, float timeout)
+    pull_source::make(size_t itemsize, size_t vlen, char *address, float timeout)
     {
       return gnuradio::get_initial_sptr
-        (new pull_source_impl(itemsize, address, timeout));
+        (new pull_source_impl(itemsize, vlen, address, timeout));
     }
 
-    pull_source_impl::pull_source_impl(size_t itemsize, char *address, float timeout)
+    pull_source_impl::pull_source_impl(size_t itemsize, size_t vlen, char *address, float timeout)
       : gr::sync_block("pull_source",
                        gr::io_signature::make(0, 0, 0),
-                       gr::io_signature::make(1, 1, itemsize)),
+                       gr::io_signature::make(1, 1, itemsize * vlen)),
         d_itemsize(itemsize)
     {
       d_timeout = timeout >= 0 ? (int)(timeout*1e6) : 0;

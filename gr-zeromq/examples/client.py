@@ -26,6 +26,7 @@
 # Imports
 ###############################################################################
 from gnuradio import zeromq
+#import zeromq
 from gnuradio import gr
 from gnuradio import blocks
 from gnuradio import analog
@@ -53,8 +54,8 @@ class top_block(gr.top_block):
 
         # blocks
         #self.zmq_source = zeromq.source_reqrep_nopoll(gr.sizeof_float,source_adr)
-        self.zmq_source = zeromq.source_reqrep(gr.sizeof_float,source_adr)
-        #self.zmq_source = zeromq.pull_source(gr.sizeof_float,source_adr)
+        self.zmq_source = zeromq.source_reqrep(gr.sizeof_float, 1, source_adr)
+        #self.zmq_source = zeromq.pull_source(gr.sizeof_float, 1, source_adr)
         #self.zmq_probe = zeromq.push_sink(gr.sizeof_float,probe_adr)
         self.zmq_probe = zeromq.pub_sink(gr.sizeof_float,probe_adr)
 

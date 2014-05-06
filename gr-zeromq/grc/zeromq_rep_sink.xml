@@ -4,7 +4,7 @@
   <key>zeromq_rep_sink</key>
   <category>ZeroMQ Interfaces</category>
   <import>from gnuradio import zeromq</import>
-  <make>zeromq.rep_sink($type.itemsize, $address, $blocking)</make>
+  <make>zeromq.rep_sink($type.itemsize, $vlen, $address, $blocking)</make>
 
   <param>
     <name>IO Type</name>
@@ -35,6 +35,13 @@
       <key>byte</key>
       <opt>itemsize:gr.sizeof_char</opt>
     </option>
+  </param>
+
+  <param>
+		<name>Vec Length</name>
+		<key>vlen</key>
+		<value>1</value>
+		<type>int</type>
   </param>
 
   <param>

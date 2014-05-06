@@ -37,7 +37,7 @@ namespace gr {
       zmq::socket_t   *d_socket;
 
     public:
-      source_reqrep_impl(size_t itemsize, char *address);
+      source_reqrep_impl(size_t itemsize, size_t vlen, char *address);
       ~source_reqrep_impl();
 
       int work(int noutput_items,

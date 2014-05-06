@@ -31,16 +31,16 @@ namespace gr {
   namespace zeromq {
 
     source_reqrep::sptr
-    source_reqrep::make(size_t itemsize, char *address)
+    source_reqrep::make(size_t itemsize, size_t vlen, char *address)
     {
       return gnuradio::get_initial_sptr
-        (new source_reqrep_impl(itemsize, address));
+        (new source_reqrep_impl(itemsize, vlen, address));
     }
 
-    source_reqrep_impl::source_reqrep_impl(size_t itemsize, char *address)
+    source_reqrep_impl::source_reqrep_impl(size_t itemsize, size_t vlen, char *address)
       : gr::sync_block("source_reqrep",
 		       gr::io_signature::make(0, 0, 0),
-		       gr::io_signature::make(1, 1, itemsize)),
+		       gr::io_signature::make(1, 1, itemsize * vlen)),
         d_itemsize(itemsize)
     {
       d_context = new zmq::context_t(1);

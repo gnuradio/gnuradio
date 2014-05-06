@@ -39,7 +39,7 @@ namespace gr {
       bool            d_blocking;
 
     public:
-      rep_sink_impl(size_t itemsize, char *address, float timeout, bool blocking);
+      rep_sink_impl(size_t itemsize, size_t vlen, char *address, float timeout, bool blocking);
       ~rep_sink_impl();
 
       int work(int noutput_items,

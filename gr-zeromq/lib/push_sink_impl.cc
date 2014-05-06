@@ -31,15 +31,15 @@ namespace gr {
   namespace zeromq {
 
     push_sink::sptr
-    push_sink::make(size_t itemsize, char *address, bool blocking)
+    push_sink::make(size_t itemsize, size_t vlen, char *address, bool blocking)
     {
       return gnuradio::get_initial_sptr
-        (new push_sink_impl(itemsize, address, blocking));
+        (new push_sink_impl(itemsize, vlen, address, blocking));
     }
 
-    push_sink_impl::push_sink_impl(size_t itemsize, char *address, bool blocking)
+    push_sink_impl::push_sink_impl(size_t itemsize, size_t vlen, char *address, bool blocking)
       : gr::sync_block("push_sink",
-                       gr::io_signature::make(1, 1, itemsize),
+                       gr::io_signature::make(1, 1, itemsize * vlen),
                        gr::io_signature::make(0, 0, 0)),
         d_itemsize(itemsize)
     {

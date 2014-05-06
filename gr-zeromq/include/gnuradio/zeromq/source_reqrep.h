@@ -47,7 +47,7 @@ namespace gr {
        * class. zeromq::source_reqrep::make is the public interface for
        * creating new instances.
        */
-      static sptr make(size_t itemsize, char *address);
+      static sptr make(size_t itemsize, size_t vlen, char *address);
     };
 
   } // namespace zeromq

@@ -38,7 +38,7 @@ namespace gr {
       zmq::socket_t   *d_socket;
 
     public:
-      push_sink_impl(size_t itemsize, char *address, bool blocking);
+      push_sink_impl(size_t itemsize, size_t vlen, char *address, bool blocking);
       ~push_sink_impl();
 
       int work(int noutput_items,
