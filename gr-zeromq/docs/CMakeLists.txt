@@ -1,4 +1,4 @@
-# Copyright 2011 Free Software Foundation, Inc.
+# Copyright 2014 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -17,19 +17,7 @@
 # the Free Software Foundation, Inc., 51 Franklin Street,
 # Boston, MA 02110-1301, USA.
 
-########################################################################
-# Setup dependencies
-########################################################################
-find_package(Doxygen)
-
-########################################################################
-# Begin conditional configuration
-########################################################################
-if(ENABLE_DOXYGEN)
-
-########################################################################
-# Add subdirectories
-########################################################################
-add_subdirectory(doxygen)
-
-endif(ENABLE_DOXYGEN)
+install(
+    FILES README.zeromq
+    DESTINATION ${GR_PKG_DOC_DIR}
+)

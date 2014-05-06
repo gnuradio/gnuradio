@@ -1,4 +1,4 @@
-# Copyright 2011 Free Software Foundation, Inc.
+# Copyright 2014 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -19,7 +19,8 @@
 
 include(GrPython)
 
-GR_PYTHON_INSTALL(
-    PROGRAMS
-    DESTINATION bin
+# Base stuff
+GR_PYTHON_INSTALL(PROGRAMS
+    DESTINATION ${GR_PKG_ZEROMQ_EXAMPLES_DIR}
+    COMPONENT "zeromq_python"
 )

@@ -91,9 +91,8 @@ if(ENABLE_PYTHON)
     add_subdirectory(swig)
     add_subdirectory(python/zeromq)
     add_subdirectory(grc)
-#    add_subdirectory(examples)
+    add_subdirectory(examples)
 endif(ENABLE_PYTHON)
-#add_subdirectory(doc)
 
 ########################################################################
 # Create Pkg Config File
