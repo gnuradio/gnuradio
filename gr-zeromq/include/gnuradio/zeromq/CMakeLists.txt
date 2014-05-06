@@ -31,5 +31,3 @@ install(FILES
   DESTINATION ${GR_INCLUDE_DIR}/gnuradio/zeromq
   COMPONENT "zeromq_devel"
 )
-# sink_reqrep_nopoll.h
-# source_reqrep_nopoll.h

@@ -27,6 +27,4 @@ install(FILES
     DESTINATION share/gnuradio/grc/blocks
 )
 
-#    zeromq_sink_reqrep_nopoll.xml
-#    zeromq_source_reqrep_nopoll.xml
 
