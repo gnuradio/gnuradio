@@ -169,6 +169,9 @@ install(FILES
     pack_k_bits_bb.h
     patterned_interleaver.h
     pdu.h
+    pdu_filter.h
+    pdu_set.h
+    pdu_remove.h
     pdu_to_tagged_stream.h
     peak_detector2_fb.h
     random_pdu.h
