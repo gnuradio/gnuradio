@@ -20,16 +20,16 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef INCLUDED_ZMQBLOCKS_SOURCE_REQREP_IMPL_H
-#define INCLUDED_ZMQBLOCKS_SOURCE_REQREP_IMPL_H
+#ifndef INCLUDED_ZMQBLOCKS_REQ_SOURCE_IMPL_H
+#define INCLUDED_ZMQBLOCKS_REQ_SOURCE_IMPL_H
 
-#include <gnuradio/zeromq/source_reqrep.h>
+#include <gnuradio/zeromq/req_source.h>
 #include <zmq.hpp>
 
 namespace gr {
   namespace zeromq {
 
-    class source_reqrep_impl : public source_reqrep
+    class req_source_impl : public req_source
     {
     private:
       size_t          d_itemsize;
@@ -37,8 +37,8 @@ namespace gr {
       zmq::socket_t   *d_socket;
 
     public:
-      source_reqrep_impl(size_t itemsize, size_t vlen, char *address);
-      ~source_reqrep_impl();
+      req_source_impl(size_t itemsize, size_t vlen, char *address);
+      ~req_source_impl();
 
       int work(int noutput_items,
                gr_vector_const_void_star &input_items,
@@ -48,4 +48,4 @@ namespace gr {
   } // namespace zeromq
 } // namespace gr
 
-#endif /* INCLUDED_ZMQBLOCKS_SOURCE_REQREP_IMPL_H */
+#endif /* INCLUDED_ZMQBLOCKS_REQ_SOURCE_IMPL_H */

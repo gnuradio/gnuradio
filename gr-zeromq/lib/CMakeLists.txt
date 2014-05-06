@@ -42,8 +42,8 @@ list(APPEND zeromq_sources
   pull_source_impl.cc
   push_sink_impl.cc
   rep_sink_impl.cc
+  req_source_impl.cc
   sink_reqrep_nopoll_impl.cc
-  source_reqrep_impl.cc
   source_reqrep_nopoll_impl.cc
 )
 

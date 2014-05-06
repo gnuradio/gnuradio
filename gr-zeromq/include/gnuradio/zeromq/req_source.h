@@ -20,8 +20,8 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef INCLUDED_ZEROMQ_SOURCE_REQREP_H
-#define INCLUDED_ZEROMQ_SOURCE_REQREP_H
+#ifndef INCLUDED_ZEROMQ_REQ_SOURCE_H
+#define INCLUDED_ZEROMQ_REQ_SOURCE_H
 
 #include <gnuradio/zeromq/api.h>
 #include <gnuradio/sync_block.h>
@@ -30,22 +30,27 @@ namespace gr {
   namespace zeromq {
 
     /*!
-     * \brief <+description of block+>
+     * \brief Receive messages on ZMQ REQ socket and source stream
      * \ingroup zeromq
      *
+     * \details
+     * This block will connect to a ZMQ REP socket, then produce all
+     * incoming messages as streaming output.
      */
-    class ZEROMQ_API source_reqrep : virtual public gr::sync_block
+    class ZEROMQ_API req_source : virtual public gr::sync_block
     {
     public:
-      typedef boost::shared_ptr<source_reqrep> sptr;
+      typedef boost::shared_ptr<req_source> sptr;
 
       /*!
-       * \brief Return a shared_ptr to a new instance of zeromq::source_reqrep.
+       * \brief Return a shared_ptr to a new instance of zeromq::req_source.
        *
-       * To avoid accidental use of raw pointers, zeromq::source_reqrep's
-       * constructor is in a private implementation
-       * class. zeromq::source_reqrep::make is the public interface for
-       * creating new instances.
+       *
+       * \param itemsize Size of a stream item in bytes
+       * \param vlen of the input items.
+       * \param address  ZMQ socket address specifier
+       * \param timeout  Receive timeout in seconds, default is 100ms, 1us increments
+       *
        */
       static sptr make(size_t itemsize, size_t vlen, char *address);
     };

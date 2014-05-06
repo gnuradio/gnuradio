@@ -25,20 +25,20 @@
 #endif
 
 #include <gnuradio/io_signature.h>
-#include "source_reqrep_impl.h"
+#include "req_source_impl.h"
 
 namespace gr {
   namespace zeromq {
 
-    source_reqrep::sptr
-    source_reqrep::make(size_t itemsize, size_t vlen, char *address)
+    req_source::sptr
+    req_source::make(size_t itemsize, size_t vlen, char *address)
     {
       return gnuradio::get_initial_sptr
-        (new source_reqrep_impl(itemsize, vlen, address));
+        (new req_source_impl(itemsize, vlen, address));
     }
 
-    source_reqrep_impl::source_reqrep_impl(size_t itemsize, size_t vlen, char *address)
-      : gr::sync_block("source_reqrep",
+    req_source_impl::req_source_impl(size_t itemsize, size_t vlen, char *address)
+      : gr::sync_block("req_source",
 		       gr::io_signature::make(0, 0, 0),
 		       gr::io_signature::make(1, 1, itemsize * vlen)),
         d_itemsize(itemsize)
@@ -48,14 +48,14 @@ namespace gr {
       d_socket->connect (address);
     }
 
-    source_reqrep_impl::~source_reqrep_impl()
+    req_source_impl::~req_source_impl()
     {
       delete d_socket;
       delete d_context;
     }
 
     int
-    source_reqrep_impl::work(int noutput_items,
+    req_source_impl::work(int noutput_items,
 			     gr_vector_const_void_star &input_items,
 			     gr_vector_void_star &output_items)
     {

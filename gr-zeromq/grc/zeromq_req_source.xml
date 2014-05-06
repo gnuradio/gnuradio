@@ -1,10 +1,10 @@
 <?xml version="1.0"?>
 <block>
   <name>ZMQ REQ Source</name>
-  <key>zeromq_source_reqrep</key>
+  <key>zeromq_req_source</key>
   <category>ZeroMQ Interfaces</category>
   <import>from gnuradio import zeromq</import>
-  <make>zeromq.source_reqrep($type.itemsize, $vlen, $address)</make>
+  <make>zeromq.req_source($type.itemsize, $vlen, $address)</make>
 
   <param>
     <name>IO Type</name>

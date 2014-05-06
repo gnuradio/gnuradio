@@ -26,10 +26,10 @@ install(FILES
   pull_source.h
   push_sink.h
   rep_sink.h
+  req_source.h
 
   DESTINATION ${GR_INCLUDE_DIR}/gnuradio/zeromq
   COMPONENT "zeromq_devel"
 )
 # sink_reqrep_nopoll.h
-# source_reqrep.h
 # source_reqrep_nopoll.h
