@@ -20,8 +20,8 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef INCLUDED_ZMQBLOCKS_REP_SINK_IMPL_H
-#define INCLUDED_ZMQBLOCKS_REP_SINK_IMPL_H
+#ifndef INCLUDED_ZEROMQ_REP_SINK_IMPL_H
+#define INCLUDED_ZEROMQ_REP_SINK_IMPL_H
 
 #include <gnuradio/zeromq/rep_sink.h>
 #include <zmq.hpp>
@@ -50,4 +50,4 @@ namespace gr {
   } // namespace zeromq
 } // namespace gr
 
-#endif /* INCLUDED_ZMQBLOCKS_REP_SINK_IMPL_H */
+#endif /* INCLUDED_ZEROMQ_REP_SINK_IMPL_H */

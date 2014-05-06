@@ -20,8 +20,8 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef INCLUDED_ZMQBLOCKS_REQ_SOURCE_IMPL_H
-#define INCLUDED_ZMQBLOCKS_REQ_SOURCE_IMPL_H
+#ifndef INCLUDED_ZEROMQ_REQ_SOURCE_IMPL_H
+#define INCLUDED_ZEROMQ_REQ_SOURCE_IMPL_H
 
 #include <gnuradio/zeromq/req_source.h>
 #include <zmq.hpp>
@@ -48,4 +48,4 @@ namespace gr {
   } // namespace zeromq
 } // namespace gr
 
-#endif /* INCLUDED_ZMQBLOCKS_REQ_SOURCE_IMPL_H */
+#endif /* INCLUDED_ZEROMQ_REQ_SOURCE_IMPL_H */
