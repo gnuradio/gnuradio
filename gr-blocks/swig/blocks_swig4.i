@@ -40,6 +40,8 @@
 #include "gnuradio/blocks/packed_to_unpacked_bb.h"
 #include "gnuradio/blocks/packed_to_unpacked_ss.h"
 #include "gnuradio/blocks/packed_to_unpacked_ii.h"
+#include "gnuradio/blocks/pdu_filter.h"
+#include "gnuradio/blocks/pdu_set.h"
 #include "gnuradio/blocks/pdu_to_tagged_stream.h"
 #include "gnuradio/blocks/peak_detector_fb.h"
 #include "gnuradio/blocks/peak_detector_ib.h"
@@ -84,6 +86,8 @@
 %include "gnuradio/blocks/packed_to_unpacked_ss.h"
 %include "gnuradio/blocks/packed_to_unpacked_ii.h"
 %include "gnuradio/blocks/patterned_interleaver.h"
+%include "gnuradio/blocks/pdu_filter.h"
+%include "gnuradio/blocks/pdu_set.h"
 %include "gnuradio/blocks/pdu_to_tagged_stream.h"
 %include "gnuradio/blocks/peak_detector_fb.h"
 %include "gnuradio/blocks/peak_detector_ib.h"
@@ -106,6 +110,8 @@ GR_SWIG_BLOCK_MAGIC2(blocks, peak_detector_ib);
 GR_SWIG_BLOCK_MAGIC2(blocks, peak_detector_sb);
 GR_SWIG_BLOCK_MAGIC2(blocks, peak_detector2_fb);
 GR_SWIG_BLOCK_MAGIC2(blocks, plateau_detector_fb);
+GR_SWIG_BLOCK_MAGIC2(blocks, pdu_filter);
+GR_SWIG_BLOCK_MAGIC2(blocks, pdu_set);
 GR_SWIG_BLOCK_MAGIC2(blocks, pdu_to_tagged_stream);
 GR_SWIG_BLOCK_MAGIC2(blocks, probe_rate);
 GR_SWIG_BLOCK_MAGIC2(blocks, or_bb);

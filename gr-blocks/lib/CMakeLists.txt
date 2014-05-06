@@ -210,6 +210,8 @@ list(APPEND gr_blocks_sources
     patterned_interleaver_impl.cc
     pdu.cc
     tag_debug_impl.cc
+    pdu_filter_impl.cc
+    pdu_set_impl.cc
     pdu_to_tagged_stream_impl.cc
     peak_detector2_fb_impl.cc
     random_pdu_impl.cc
