@@ -813,6 +813,19 @@ dict_add(const pmt_t &dict, const pmt_t &key, const pmt_t &value)
 }
 
 pmt_t
+dict_update(const pmt_t &dict1, const pmt_t &dict2)
+{
+  pmt_t d(dict1);
+  pmt_t k(dict_keys(dict2));
+  while(is_pair(k)){
+    d = dict_add(d, car(k), dict_ref(dict2, car(k), PMT_NIL));
+    k = cdr(k);
+    }
+  return d;
+}
+
+
+pmt_t
 dict_delete(const pmt_t &dict, const pmt_t &key)
 {
   if (is_null(dict))
