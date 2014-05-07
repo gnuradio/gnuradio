@@ -35,12 +35,10 @@ class qa_zeromq_reqrep (gr_unittest.TestCase):
 
     def test_001_t (self):
         src_data = [1,2,3,4,5,6,7,8,9]*100
-        print src_data
         src = blocks.vector_source_c(src_data, False, 1)
-        zeromq_rep_sink = zeromq.rep_sink(gr.sizeof_gr_complex, 1, "tcp://*:5555", 0.1, True)
-        zeromq_req_source = zeromq.req_source(gr.sizeof_gr_complex, 1, "tcp://localhost:5555")
+        zeromq_rep_sink = zeromq.rep_sink(gr.sizeof_gr_complex, 1, "tcp://127.0.0.1:5555", 0.1, True)
+        zeromq_req_source = zeromq.req_source(gr.sizeof_gr_complex, 1, "tcp://127.0.0.1:5555")
         sink = blocks.vector_sink_c()
-#        print sink.data
         self.tb.connect(src, zeromq_rep_sink)
         self.tb.connect(zeromq_req_source, sink)
         self.tb.run ()
