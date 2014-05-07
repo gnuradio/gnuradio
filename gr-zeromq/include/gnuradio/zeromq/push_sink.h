@@ -50,6 +50,7 @@ namespace gr {
        * \brief Return a shared_ptr to a new instance of gr::zeromq::push_sink
        *
        * \param itemsize Size of a stream item in bytes
+       * \param vlen Vector length of the input items. Note that one vector is one item.
        * \param address  ZMQ socket address specifier
        * \param blocking Indicate whether blocking sends should be used, default true.
        *

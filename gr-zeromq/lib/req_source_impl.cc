@@ -41,7 +41,7 @@ namespace gr {
       : gr::sync_block("req_source",
 		       gr::io_signature::make(0, 0, 0),
 		       gr::io_signature::make(1, 1, itemsize * vlen)),
-        d_itemsize(itemsize)
+        d_itemsize(itemsize), d_vlen(vlen)
     {
       d_context = new zmq::context_t(1);
       d_socket = new zmq::socket_t(*d_context, ZMQ_REQ);
@@ -56,8 +56,8 @@ namespace gr {
 
     int
     req_source_impl::work(int noutput_items,
-			     gr_vector_const_void_star &input_items,
-			     gr_vector_void_star &output_items)
+                          gr_vector_const_void_star &input_items,
+                          gr_vector_void_star &output_items)
     {
       char *out = (char*)output_items[0];
 
@@ -66,10 +66,10 @@ namespace gr {
 
       //  If we got a reply, process
       if (itemsout[0].revents & ZMQ_POLLOUT) {
-	// Request data, FIXME non portable
-	zmq::message_t request(sizeof(int));
-	memcpy ((void *) request.data (), &noutput_items, sizeof(int));
-	d_socket->send(request);
+        // Request data, FIXME non portable
+        zmq::message_t request(sizeof(int));
+        memcpy ((void *) request.data (), &noutput_items, sizeof(int));
+        d_socket->send(request);
       }
 
       zmq::pollitem_t itemsin[] = { { *d_socket, 0, ZMQ_POLLIN, 0 } };
@@ -77,14 +77,13 @@ namespace gr {
 
       //  If we got a reply, process
       if (itemsin[0].revents & ZMQ_POLLIN) {
-	// Receive data
-	zmq::message_t reply;
-	d_socket->recv(&reply);
+        // Receive data
+        zmq::message_t reply;
+        d_socket->recv(&reply);
 
-	// Copy to ouput buffer and return
-	memcpy(out, (void *)reply.data(), reply.size());
-
-	return reply.size()/d_itemsize;
+        // Copy to ouput buffer and return
+        memcpy(out, (void *)reply.data(), reply.size());
+        return reply.size()/(d_itemsize*d_vlen);
       }
 
       return 0;
