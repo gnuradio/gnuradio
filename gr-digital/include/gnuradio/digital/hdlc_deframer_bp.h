@@ -31,12 +31,9 @@ namespace gr {
 
     /*!
      * \brief HDLC deframer which takes in unpacked bits, and outputs PDU 
-     * binary blobs. This is intended for use with the 
-     * correlate_access_code_tag_bb block, which should have an access code
-     * of "01111110" for use with HDLC frames. Frames which do not pass CRC are
-     * rejected.
+     * binary blobs. Frames which do not pass CRC are rejected.
      *
-     * \ingroup digital
+     * \ingroup pkt_operators_blk
      *
      */
     class DIGITAL_API hdlc_deframer_bp : virtual public gr::sync_block
@@ -47,12 +44,10 @@ namespace gr {
       /*!
        * \brief Return a shared_ptr to a new instance of digital::hdlc_deframer.
        *
-       * \param frame_tag_name: The tag name from an upstream 
-       * correlate_access_code_tag_bb block.
        * \param length_min: Minimum frame size (default: 32)
        * \param length_max: Maximum frame size (default: 500)
        */
-      static sptr make(const std::string frame_tag_name, int length_min, int length_max);
+      static sptr make(int length_min, int length_max);
     };
 
   } // namespace digital
