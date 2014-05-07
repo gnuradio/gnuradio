@@ -49,10 +49,11 @@ namespace gr {
        * \brief Return a shared_ptr to a new instance of zeromq::pub_sink.
        *
        * \param itemsize Size of a stream item in bytes
+       * \param vlen Vector length of the input items. Note that one vector is one item.
        * \param address  ZMQ socket address specifier
        * \param blocking Indicate whether blocking sends should be used, default true.
        */
-      static sptr make(size_t itemsize, char *address, bool blocking=true);
+      static sptr make(size_t itemsize, size_t vlen, char *address, bool blocking=true);
     };
 
   } // namespace zeromq

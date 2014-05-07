@@ -33,6 +33,7 @@ namespace gr {
     {
     private:
       size_t          d_itemsize;
+      size_t          d_vlen;
       int             d_timeout; // microseconds, -1 is blocking
       zmq::context_t  *d_context;
       zmq::socket_t   *d_socket;

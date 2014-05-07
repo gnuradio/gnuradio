@@ -41,7 +41,7 @@ namespace gr {
       : gr::sync_block("push_sink",
                        gr::io_signature::make(1, 1, itemsize * vlen),
                        gr::io_signature::make(0, 0, 0)),
-        d_itemsize(itemsize)
+        d_itemsize(itemsize), d_vlen(vlen)
     {
       d_blocking = blocking;
       d_context = new zmq::context_t(1);
@@ -63,10 +63,11 @@ namespace gr {
       const char *in = (const char *) input_items[0];
 
       // create message copy and send
-      zmq::message_t msg(d_itemsize*noutput_items);
-      memcpy((void *)msg.data(), in, d_itemsize*noutput_items);
+      zmq::message_t msg(d_itemsize*d_vlen*noutput_items);
+      memcpy((void *)msg.data(), in, d_itemsize*d_vlen*noutput_items);
+      std::cout << "before" << std::endl;
       d_socket->send(msg, d_blocking ? 0 : ZMQ_NOBLOCK);
-
+      std::cout << "after" << std::endl;
       return noutput_items;
     }
 

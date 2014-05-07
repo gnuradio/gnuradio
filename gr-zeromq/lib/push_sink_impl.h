@@ -33,6 +33,7 @@ namespace gr {
     {
     private:
       size_t          d_itemsize;
+      size_t          d_vlen;
       bool            d_blocking;
       zmq::context_t  *d_context;
       zmq::socket_t   *d_socket;

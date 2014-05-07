@@ -41,7 +41,7 @@ namespace gr {
       : gr::sync_block("rep_sink",
 		       gr::io_signature::make(1, 1, itemsize * vlen),
 		       gr::io_signature::make(0, 0, 0)),
-        d_itemsize(itemsize), d_blocking(blocking)
+        d_itemsize(itemsize), d_vlen(vlen), d_blocking(blocking)
     {
       d_timeout = timeout >= 0 ? (int)(timeout*1e6) : 0;
       d_context = new zmq::context_t(1);
@@ -74,15 +74,15 @@ namespace gr {
 
 	// create message copy and send
 	if (noutput_items < req_output_items) {
-	  zmq::message_t msg(d_itemsize*noutput_items);
-	  memcpy((void *)msg.data(), in, d_itemsize*noutput_items);
+	  zmq::message_t msg(d_itemsize*d_vlen*noutput_items);
+	  memcpy((void *)msg.data(), in, d_itemsize*d_vlen*noutput_items);
 	  d_socket->send(msg, d_blocking ? 0 : ZMQ_NOBLOCK);
 
 	  return noutput_items;
 	}
 	else {
-	  zmq::message_t msg(d_itemsize*req_output_items);
-	  memcpy((void *)msg.data(), in, d_itemsize*req_output_items);
+	  zmq::message_t msg(d_itemsize*d_vlen*req_output_items);
+	  memcpy((void *)msg.data(), in, d_itemsize*d_vlen*req_output_items);
 	  d_socket->send(msg, d_blocking ? 0 : ZMQ_NOBLOCK);
 
 	  return req_output_items;
