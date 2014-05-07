@@ -239,6 +239,7 @@ namespace pmt{
   pmt_t dict_ref(const pmt_t &dict, const pmt_t &key, const pmt_t &not_found);
   pmt_t dict_items(pmt_t dict);
   pmt_t dict_keys(pmt_t dict);
+  pmt_t dict_update(const pmt_t &dict1, const pmt_t &dict2);
   pmt_t dict_values(pmt_t dict);
 
   bool is_any(pmt_t obj);
