@@ -566,7 +566,7 @@ namespace gr {
     // ----------------------------------------------------------------------------
 
 	/*!
-	 * \breif the system message handler
+	 * \brief the system message handler
      */
     void system_handler(pmt::pmt_t msg);
 
