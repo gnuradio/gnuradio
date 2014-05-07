@@ -46,6 +46,8 @@ namespace gr {
       d_timeout = timeout >= 0 ? (int)(timeout*1e6) : 0;
       d_context = new zmq::context_t(1);
       d_socket = new zmq::socket_t(*d_context, ZMQ_REP);
+      int time = 0;
+      d_socket->setsockopt(ZMQ_LINGER, &time, sizeof(time));
       d_socket->bind (address);
     }
 
