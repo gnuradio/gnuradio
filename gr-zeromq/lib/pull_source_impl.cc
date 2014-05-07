@@ -71,22 +71,20 @@ namespace gr {
       //  If we got a reply, process
       if (items[0].revents & ZMQ_POLLIN) {
 
-	    // Receive data
-	    zmq::message_t msg;
-        std::cout << "pull before" << std::endl;
-	    d_socket->recv(&msg);
-        std::cout << "pull after" << std::endl;
-	    // Copy to ouput buffer and return
-	    if (msg.size() >= d_itemsize*d_vlen*noutput_items) {
-	      memcpy(out, (void *)msg.data(), d_itemsize*d_vlen*noutput_items);
+        // Receive data
+        zmq::message_t msg;
+        d_socket->recv(&msg);
+        // Copy to ouput buffer and return
+        if (msg.size() >= d_itemsize*d_vlen*noutput_items) {
+          memcpy(out, (void *)msg.data(), d_itemsize*d_vlen*noutput_items);
 
-	      return noutput_items;
-	    }
-	    else {
-	      memcpy(out, (void *)msg.data(), msg.size());
+          return noutput_items;
+        }
+        else {
+          memcpy(out, (void *)msg.data(), msg.size());
 
-	      return msg.size()/(d_itemsize*d_vlen);
-	    }
+          return msg.size()/(d_itemsize*d_vlen);
+        }
       }
       else {
 	return 0; // FIXME: someday when the scheduler does all the poll/selects

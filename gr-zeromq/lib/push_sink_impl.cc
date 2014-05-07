@@ -65,9 +65,7 @@ namespace gr {
       // create message copy and send
       zmq::message_t msg(d_itemsize*d_vlen*noutput_items);
       memcpy((void *)msg.data(), in, d_itemsize*d_vlen*noutput_items);
-      std::cout << "before" << std::endl;
       d_socket->send(msg, d_blocking ? 0 : ZMQ_NOBLOCK);
-      std::cout << "after" << std::endl;
       return noutput_items;
     }
 
