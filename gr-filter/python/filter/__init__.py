@@ -31,6 +31,7 @@ except ImportError:
     __path__.append(os.path.join(dirname, "..", "..", "swig"))
     from filter_swig import *
 from filterbank import *
+from freq_xlating_fft_filter import *
 from rational_resampler import *
 import pfb
 import optfir
