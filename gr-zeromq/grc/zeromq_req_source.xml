@@ -50,6 +50,20 @@
     <type>string</type>
   </param>
 
+  <param>
+    <name>Timeout (sec)</name>
+    <key>timeout</key>
+    <value>0.1</value>
+    <type>float</type>
+  </param>
+
+  <param>
+    <name>Blocking</name>
+    <key>blocking</key>
+    <value>True</value>
+    <type>bool</type>
+  </param>
+
   <source>
     <name>out</name>
     <type>$type</type>
