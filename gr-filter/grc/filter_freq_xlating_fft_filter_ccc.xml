@@ -1,0 +1,62 @@
+<?xml version="1.0"?>
+<!--
+###################################################
+##Frequency Xlating FFT Filter
+###################################################
+ -->
+<block>
+	<name>Frequency Xlating FFT Filter</name>
+	<key>freq_xlating_fft_filter_ccc</key>
+	<import>from gnuradio import filter</import>
+	<import>from gnuradio.filter import firdes</import>
+	<make>filter.freq_xlating_fft_filter_ccc($decim, $taps, $center_freq, $samp_rate)
+self.$(id).set_nthreads($nthreads)
+self.$(id).declare_sample_delay($samp_delay)</make>
+	<callback>set_taps($taps)</callback>
+	<callback>set_center_freq($center_freq)</callback>
+	<callback>set_nthreads($nthreads)</callback>
+	<param>
+		<name>Decimation</name>
+		<key>decim</key>
+		<value>1</value>
+		<type>int</type>
+	</param>
+	<param>
+		<name>Taps</name>
+		<key>taps</key>
+		<type>complex_vector</type>
+	</param>
+	<param>
+		<name>Center Frequency</name>
+		<key>center_freq</key>
+		<value>0</value>
+		<type>real</type>
+	</param>
+	<param>
+		<name>Sample Rate</name>
+		<key>samp_rate</key>
+		<value>samp_rate</value>
+		<type>real</type>
+	</param>
+	<param>
+		<name>Sample Delay</name>
+		<key>samp_delay</key>
+                <value>0</value>
+		<type>int</type>
+                <hide>part</hide>
+	</param>
+	<param>
+		<name>Num. Threads</name>
+		<key>nthreads</key>
+		<value>1</value>
+		<type>int</type>
+	</param>
+	<sink>
+		<name>in</name>
+		<type>complex</type>
+	</sink>
+	<source>
+		<name>out</name>
+		<type>complex</type>
+	</source>
+</block>
