@@ -98,10 +98,8 @@ class test_python_message_passing(gr_unittest.TestCase):
         self.tb.msg_connect(msg_gen, 'out_port', msg_cons, 'in_port')
 
         # Verify that the messgae port query functions work
-        self.assertEqual(pmt.symbol_to_string(pmt.vector_ref(
-                    msg_gen.message_ports_out(), 0)), 'out_port')
-        self.assertEqual(pmt.symbol_to_string(pmt.vector_ref(
-                    msg_cons.message_ports_in(), 0)), 'in_port')
+        self.assertEqual(pmt.to_python(msg_gen.message_ports_out())[0], 'out_port')
+        self.assertEqual('in_port' in pmt.to_python(msg_cons.message_ports_in()), True)
         
         # Run to verify message passing
         self.tb.start()
