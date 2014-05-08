@@ -31,18 +31,19 @@ namespace gr {
   namespace zeromq {
 
     req_source::sptr
-    req_source::make(size_t itemsize, size_t vlen, char *address)
+    req_source::make(size_t itemsize, size_t vlen, char *address, float timeout, bool blocking)
     {
       return gnuradio::get_initial_sptr
-        (new req_source_impl(itemsize, vlen, address));
+        (new req_source_impl(itemsize, vlen, address, timeout, blocking));
     }
 
-    req_source_impl::req_source_impl(size_t itemsize, size_t vlen, char *address)
+    req_source_impl::req_source_impl(size_t itemsize, size_t vlen, char *address, float timeout, bool blocking)
       : gr::sync_block("req_source",
 		       gr::io_signature::make(0, 0, 0),
 		       gr::io_signature::make(1, 1, itemsize * vlen)),
-        d_itemsize(itemsize), d_vlen(vlen)
+        d_itemsize(itemsize), d_vlen(vlen), d_timeout(timeout), d_blocking(blocking)
     {
+      d_timeout = timeout >= 0 ? (int)(timeout*1e6) : 0;
       d_context = new zmq::context_t(1);
       d_socket = new zmq::socket_t(*d_context, ZMQ_REQ);
       int time = 0;
@@ -68,14 +69,15 @@ namespace gr {
 
       //  If we got a reply, process
       if (itemsout[0].revents & ZMQ_POLLOUT) {
-        // Request data, FIXME non portable
+        // Request data, FIXME non portable?
         zmq::message_t request(sizeof(int));
         memcpy ((void *) request.data (), &noutput_items, sizeof(int));
-        d_socket->send(request);
+        d_socket->send(request, d_blocking ? 0 : ZMQ_NOBLOCK);
+
       }
 
       zmq::pollitem_t itemsin[] = { { *d_socket, 0, ZMQ_POLLIN, 0 } };
-      zmq::poll (&itemsin[0], 1, 0);
+      zmq::poll (&itemsin[0], 1, d_timeout);
 
       //  If we got a reply, process
       if (itemsin[0].revents & ZMQ_POLLIN) {

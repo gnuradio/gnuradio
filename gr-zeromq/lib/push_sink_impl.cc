@@ -31,18 +31,19 @@ namespace gr {
   namespace zeromq {
 
     push_sink::sptr
-    push_sink::make(size_t itemsize, size_t vlen, char *address, bool blocking)
+    push_sink::make(size_t itemsize, size_t vlen, char *address, float timeout, bool blocking)
     {
       return gnuradio::get_initial_sptr
-        (new push_sink_impl(itemsize, vlen, address, blocking));
+        (new push_sink_impl(itemsize, vlen, address, timeout, blocking));
     }
 
-    push_sink_impl::push_sink_impl(size_t itemsize, size_t vlen, char *address, bool blocking)
+    push_sink_impl::push_sink_impl(size_t itemsize, size_t vlen, char *address, float timeout, bool blocking)
       : gr::sync_block("push_sink",
                        gr::io_signature::make(1, 1, itemsize * vlen),
                        gr::io_signature::make(0, 0, 0)),
         d_itemsize(itemsize), d_vlen(vlen)
     {
+      d_timeout = timeout >= 0 ? (int)(timeout*1e6) : 0;
       d_blocking = blocking;
       d_context = new zmq::context_t(1);
       d_socket = new zmq::socket_t(*d_context, ZMQ_PUSH);
@@ -64,11 +65,21 @@ namespace gr {
     {
       const char *in = (const char *) input_items[0];
 
-      // create message copy and send
-      zmq::message_t msg(d_itemsize*d_vlen*noutput_items);
-      memcpy((void *)msg.data(), in, d_itemsize*d_vlen*noutput_items);
-      d_socket->send(msg, d_blocking ? 0 : ZMQ_NOBLOCK);
-      return noutput_items;
+      zmq::pollitem_t itemsout[] = { { *d_socket, 0, ZMQ_POLLOUT, 0 } };
+      zmq::poll (&itemsout[0], 1, d_timeout);
+
+      //  If we got a reply, process
+      if (itemsout[0].revents & ZMQ_POLLOUT) {
+        // create message copy and send
+        zmq::message_t msg(d_itemsize*d_vlen*noutput_items);
+        memcpy((void *)msg.data(), in, d_itemsize*d_vlen*noutput_items);
+        d_socket->send(msg, d_blocking ? 0 : ZMQ_NOBLOCK);
+
+        return noutput_items;
+      }
+      else {
+        return 0;
+      }
     }
 
   } /* namespace zeromq */

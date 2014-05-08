@@ -34,12 +34,13 @@ namespace gr {
     private:
       size_t          d_itemsize;
       size_t          d_vlen;
+      float           d_timeout;
       bool            d_blocking;
       zmq::context_t  *d_context;
       zmq::socket_t   *d_socket;
 
     public:
-      push_sink_impl(size_t itemsize, size_t vlen, char *address, bool blocking);
+      push_sink_impl(size_t itemsize, size_t vlen, char *address, float timeout, bool blocking);
       ~push_sink_impl();
 
       int work(int noutput_items,
