@@ -31,7 +31,7 @@ namespace gr {
 
     /*!
      * \brief MSK/GMSK timing recovery
-     * \ingroup digital
+     * \ingroup synchronizers_blk
      *
      * This block performs timing synchronization on CPM modulations using a
      * fourth-order nonlinearity feedback method which is non-data-aided. The

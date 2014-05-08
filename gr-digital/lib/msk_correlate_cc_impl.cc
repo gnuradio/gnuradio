@@ -76,6 +76,14 @@ namespace gr {
 
       filter::kernel::pfb_arb_resampler_fff resamp = filter::kernel::pfb_arb_resampler_fff(sps, taps, nfilts);
 
+      //Make incoming symbols NRZ.
+      //It's just really convenient to use the same mapping for bits
+      //as everything else does; otherwise the user would have to
+      //specify their bits in [1, -1], and it's going to trip users up.
+      for(int i=0; i<symbols.size(); i++) {
+          symbols[i] = symbols[i] > 0 ? 1 : -1;
+      }
+
       // We want to add padding to the beginning of the symbols so we
       // can do the convolution of the symbols with the pulse shape.
       std::vector<float> padding((1+taps.size()/nfilts)/2, 0);
