@@ -31,7 +31,7 @@ namespace gr {
 
     /*!
      * \brief Preamble correlator for (G)MSK-modulated burst transmissions
-     * \ingroup digital
+     * \ingroup synchronizers_blk
      *
      * Correlate against a preamble sequence to provide timing, frequency, and
      * phase estimates for downstream blocks.

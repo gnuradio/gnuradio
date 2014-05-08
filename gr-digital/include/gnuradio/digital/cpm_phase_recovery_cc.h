@@ -31,7 +31,7 @@ namespace gr {
 
     /*!
      * \brief Derotate a CPM (MSK, GMSK, etc.) signal.
-     * \ingroup digital
+     * \ingroup synchronizers_blk
      *
      */
     class DIGITAL_API cpm_phase_recovery_cc : virtual public gr::sync_block
