@@ -51,7 +51,7 @@ namespace gr {
       /*!
        * Build a complex to interleaved shorts block.
        */
-      static sptr make();
+      static sptr make(bool vector=false);
     };
 
   } /* namespace blocks */
