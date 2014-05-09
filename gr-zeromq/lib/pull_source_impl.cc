@@ -43,6 +43,11 @@ namespace gr {
                        gr::io_signature::make(1, 1, itemsize * vlen)),
         d_itemsize(itemsize), d_vlen(vlen), d_timeout(timeout)
     {
+      int major, minor, patch;
+      zmq::version (&major, &minor, &patch);
+      if (major < 3) {
+        d_timeout = timeout*1000;
+      }
       d_context = new zmq::context_t(1);
       d_socket = new zmq::socket_t(*d_context, ZMQ_PULL);
       int time = 0;
