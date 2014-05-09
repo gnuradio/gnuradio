@@ -571,6 +571,9 @@ PMT_API pmt_t dict_items(pmt_t dict);
 //! Return list of keys
 PMT_API pmt_t dict_keys(pmt_t dict);
 
+//! Return a new dictionary \p dict1 with k=>v pairs from \p dict2 added.
+PMT_API pmt_t dict_update(const pmt_t &dict1, const pmt_t &dict2);
+
 //! Return list of values
 PMT_API pmt_t dict_values(pmt_t dict);
 

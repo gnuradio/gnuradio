@@ -39,10 +39,9 @@ class test_hdlc_framer(gr_unittest.TestCase):
         npkts = 20
         src_data = [0xFE, 0xDA, 0xAC, 0x29, 0x7F, 0xA2, 0x90, 0x0F, 0xF8]
         frame   = digital.hdlc_framer_pb("wat")
-        corr    = digital.correlate_access_code_tag_bb("01111110", 0, "frame")
-        deframe = digital.hdlc_deframer_bp("frame", 32, 500)
+        deframe = digital.hdlc_deframer_bp(8, 500)
         debug   = blocks.message_debug()
-        self.tb.connect(frame, corr, deframe)
+        self.tb.connect(frame, deframe)
         self.tb.msg_connect(deframe, "out", debug, "store")
         self.tb.start()
         msg = pmt.cons(pmt.PMT_NIL, pmt.init_u8vector(len(src_data),src_data))
