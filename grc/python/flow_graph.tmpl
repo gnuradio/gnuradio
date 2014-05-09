@@ -334,7 +334,11 @@ if __name__ == '__main__':
         tb.wait()
     qapp.connect(qapp, Qt.SIGNAL("aboutToQuit()"), quitting)
         #for $m in $monitors
-    (tb.$m.get_id()).start()
+    if $m.has_param('en'):
+        if $m.get_param('en').get_value():
+            (tb.$m.get_id()).start()
+    else:
+        sys.stderr.write("Monitor '{0}' does not have an enable ('en') parameter.".format("tb.$m.get_id()"))
         #end for
     qapp.exec_()
     tb = None #to clean up Qt widgets
