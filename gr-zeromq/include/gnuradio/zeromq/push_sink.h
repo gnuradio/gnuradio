@@ -55,7 +55,7 @@ namespace gr {
        * \param blocking Indicate whether blocking sends should be used, default true.
        *
        */
-      static sptr make(size_t itemsize, size_t vlen, char *address, float timeout=0.1, bool blocking=true);
+      static sptr make(size_t itemsize, size_t vlen, char *address, int timeout=100, bool blocking=true);
     };
 
   } // namespace zeromq

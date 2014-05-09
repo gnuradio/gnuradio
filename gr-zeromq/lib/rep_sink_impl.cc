@@ -31,19 +31,18 @@ namespace gr {
   namespace zeromq {
 
     rep_sink::sptr
-    rep_sink::make(size_t itemsize, size_t vlen, char *address, float timeout, bool blocking)
+    rep_sink::make(size_t itemsize, size_t vlen, char *address, int timeout, bool blocking)
     {
       return gnuradio::get_initial_sptr
         (new rep_sink_impl(itemsize, vlen, address, timeout, blocking));
     }
 
-    rep_sink_impl::rep_sink_impl(size_t itemsize, size_t vlen, char *address, float timeout, bool blocking)
+    rep_sink_impl::rep_sink_impl(size_t itemsize, size_t vlen, char *address, int timeout, bool blocking)
       : gr::sync_block("rep_sink",
-		       gr::io_signature::make(1, 1, itemsize * vlen),
-		       gr::io_signature::make(0, 0, 0)),
-        d_itemsize(itemsize), d_vlen(vlen), d_blocking(blocking)
+                       gr::io_signature::make(1, 1, itemsize * vlen),
+                       gr::io_signature::make(0, 0, 0)),
+        d_itemsize(itemsize), d_vlen(vlen), d_timeout(timeout), d_blocking(blocking)
     {
-      d_timeout = timeout >= 0 ? (int)(timeout*1e6) : 0;
       d_context = new zmq::context_t(1);
       d_socket = new zmq::socket_t(*d_context, ZMQ_REP);
       int time = 0;
@@ -53,6 +52,8 @@ namespace gr {
 
     rep_sink_impl::~rep_sink_impl()
     {
+      d_socket->close();
+      d_context->close();
       delete d_socket;
       delete d_context;
     }
@@ -69,26 +70,26 @@ namespace gr {
 
       //  If we got a reply, process
       if (items[0].revents & ZMQ_POLLIN) {
-	// receive data request
-	zmq::message_t request;
-	d_socket->recv(&request);
-	int req_output_items = *(static_cast<int*>(request.data()));
+        // receive data request
+        zmq::message_t request;
+        d_socket->recv(&request);
+        int req_output_items = *(static_cast<int*>(request.data()));
 
-	// create message copy and send
-	if (noutput_items < req_output_items) {
-	  zmq::message_t msg(d_itemsize*d_vlen*noutput_items);
-	  memcpy((void *)msg.data(), in, d_itemsize*d_vlen*noutput_items);
-	  d_socket->send(msg, d_blocking ? 0 : ZMQ_NOBLOCK);
+        // create message copy and send
+        if (noutput_items < req_output_items) {
+          zmq::message_t msg(d_itemsize*d_vlen*noutput_items);
+          memcpy((void *)msg.data(), in, d_itemsize*d_vlen*noutput_items);
+          d_socket->send(msg, d_blocking ? 0 : ZMQ_NOBLOCK);
 
-	  return noutput_items;
-	}
-	else {
-	  zmq::message_t msg(d_itemsize*d_vlen*req_output_items);
-	  memcpy((void *)msg.data(), in, d_itemsize*d_vlen*req_output_items);
-	  d_socket->send(msg, d_blocking ? 0 : ZMQ_NOBLOCK);
+          return noutput_items;
+        }
+        else {
+          zmq::message_t msg(d_itemsize*d_vlen*req_output_items);
+          memcpy((void *)msg.data(), in, d_itemsize*d_vlen*req_output_items);
+          d_socket->send(msg, d_blocking ? 0 : ZMQ_NOBLOCK);
 
-	  return req_output_items;
-	}
+          return req_output_items;
+        }
       }
 
       return 0;

@@ -31,19 +31,18 @@ namespace gr {
   namespace zeromq {
 
     pull_source::sptr
-    pull_source::make(size_t itemsize, size_t vlen, char *address, float timeout)
+    pull_source::make(size_t itemsize, size_t vlen, char *address, int timeout)
     {
       return gnuradio::get_initial_sptr
         (new pull_source_impl(itemsize, vlen, address, timeout));
     }
 
-    pull_source_impl::pull_source_impl(size_t itemsize, size_t vlen, char *address, float timeout)
+    pull_source_impl::pull_source_impl(size_t itemsize, size_t vlen, char *address, int timeout)
       : gr::sync_block("pull_source",
                        gr::io_signature::make(0, 0, 0),
                        gr::io_signature::make(1, 1, itemsize * vlen)),
-        d_itemsize(itemsize), d_vlen(vlen)
+        d_itemsize(itemsize), d_vlen(vlen), d_timeout(timeout)
     {
-      d_timeout = timeout >= 0 ? (int)(timeout*1e6) : 0;
       d_context = new zmq::context_t(1);
       d_socket = new zmq::socket_t(*d_context, ZMQ_PULL);
       int time = 0;
@@ -56,6 +55,8 @@ namespace gr {
      */
     pull_source_impl::~pull_source_impl()
     {
+      d_socket->close();
+      d_context->close();
       delete d_socket;
       delete d_context;
     }
@@ -89,7 +90,7 @@ namespace gr {
         }
       }
       else {
-	return 0; // FIXME: someday when the scheduler does all the poll/selects
+        return 0; // FIXME: someday when the scheduler does all the poll/selects
       }
     }
 

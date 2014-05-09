@@ -40,12 +40,12 @@ namespace gr {
       zmq::socket_t   *d_socket;
 
     public:
-      push_sink_impl(size_t itemsize, size_t vlen, char *address, float timeout, bool blocking);
+      push_sink_impl(size_t itemsize, size_t vlen, char *address, int timeout, bool blocking);
       ~push_sink_impl();
 
       int work(int noutput_items,
-	       gr_vector_const_void_star &input_items,
-	       gr_vector_void_star &output_items);
+               gr_vector_const_void_star &input_items,
+               gr_vector_void_star &output_items);
     };
 
   } // namespace zeromq

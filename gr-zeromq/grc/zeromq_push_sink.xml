@@ -38,10 +38,10 @@
   </param>
 
   <param>
-		<name>Vec Length</name>
-		<key>vlen</key>
-		<value>1</value>
-		<type>int</type>
+    <name>Vec Length</name>
+    <key>vlen</key>
+    <value>1</value>
+    <type>int</type>
   </param>
  
   <param>
@@ -51,7 +51,7 @@
   </param>
 
   <param>
-    <name>Timeout (sec)</name>
+    <name>Timeout (msec)</name>
     <key>timeout</key>
     <value>0.1</value>
     <type>float</type>

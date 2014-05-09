@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='ASCII'?>
 <flow_graph>
-  <timestamp>Wed May  7 12:06:31 2014</timestamp>
+  <timestamp>Fri May  9 15:00:28 2014</timestamp>
   <block>
     <key>options</key>
     <param>
@@ -382,7 +382,7 @@
     </param>
     <param>
       <key>timeout</key>
-      <value>0.1</value>
+      <value>100</value>
     </param>
     <param>
       <key>affinity</key>
@@ -425,7 +425,11 @@
     </param>
     <param>
       <key>address</key>
-      <value>tcp://*:5555</value>
+      <value>tcp://127.0.0.1:5555</value>
+    </param>
+    <param>
+      <key>timeout</key>
+      <value>100</value>
     </param>
     <param>
       <key>blocking</key>
@@ -437,7 +441,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(752, 96)</value>
+      <value>(751, 96)</value>
     </param>
     <param>
       <key>_rotation</key>

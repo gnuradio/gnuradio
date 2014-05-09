@@ -40,7 +40,7 @@ namespace gr {
       zmq::socket_t   *d_socket;
 
     public:
-      req_source_impl(size_t itemsize, size_t vlen, char *address, float timeout, bool blocking);
+      req_source_impl(size_t itemsize, size_t vlen, char *address, int timeout, bool blocking);
       ~req_source_impl();
 
       int work(int noutput_items,

@@ -34,7 +34,7 @@ namespace gr {
     pub_sink::make(size_t itemsize, size_t vlen, char *address, bool blocking)
     {
       return gnuradio::get_initial_sptr
-	(new pub_sink_impl(itemsize, vlen, address, blocking));
+        (new pub_sink_impl(itemsize, vlen, address, blocking));
     }
 
     pub_sink_impl::pub_sink_impl(size_t itemsize, size_t vlen, char *address, bool blocking)
@@ -52,6 +52,8 @@ namespace gr {
 
     pub_sink_impl::~pub_sink_impl()
     {
+      d_socket->close();
+      d_context->close();
       delete d_socket;
       delete d_context;
     }
