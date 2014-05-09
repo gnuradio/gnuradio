@@ -35,12 +35,11 @@ namespace gr {
       size_t          d_itemsize;
       size_t          d_vlen;
       int             d_timeout;
-      bool            d_blocking;
       zmq::context_t  *d_context;
       zmq::socket_t   *d_socket;
 
     public:
-      req_source_impl(size_t itemsize, size_t vlen, char *address, int timeout, bool blocking);
+      req_source_impl(size_t itemsize, size_t vlen, char *address, int timeout);
       ~req_source_impl();
 
       int work(int noutput_items,

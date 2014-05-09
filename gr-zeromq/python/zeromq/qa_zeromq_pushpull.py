@@ -34,8 +34,8 @@ class qa_zeromq_pushpull (gr_unittest.TestCase):
         print "test_001_t"
         src_data = [1,2,3,4,5,6,7,8,9,0]*100
         src = blocks.vector_source_c(src_data, False, 1)
-        zeromq_push_sink = zeromq.push_sink(gr.sizeof_gr_complex, 10, "tcp://127.0.0.1:5555", True)
-        zeromq_pull_source = zeromq.pull_source(gr.sizeof_gr_complex, 10, "tcp://127.0.0.1:5555", 0, True)
+        zeromq_push_sink = zeromq.push_sink(gr.sizeof_gr_complex, 10, "tcp://127.0.0.1:5555")
+        zeromq_pull_source = zeromq.pull_source(gr.sizeof_gr_complex, 10, "tcp://127.0.0.1:5555", 0)
         sink = blocks.vector_sink_c()
         self.tb.connect(src, zeromq_push_sink)
         self.tb.connect(zeromq_pull_source, sink)
