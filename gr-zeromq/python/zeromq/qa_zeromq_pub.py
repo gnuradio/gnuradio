@@ -33,8 +33,8 @@ class qa_zeromq_pub (gr_unittest.TestCase):
     def tearDown (self):
         self.tb = None
 
-    def test_001_t (self):
-        print "test_001_t"
+    def test_001 (self):
+        print "test_001"
         src_data = [1,2,3,4,5,6,7,8,9,0]*100
         src = blocks.vector_source_f(src_data, False, 1)
         zeromq_pub_sink = zeromq.pub_sink(gr.sizeof_float, 10 , "tcp://127.0.0.1:5555")
@@ -42,6 +42,7 @@ class qa_zeromq_pub (gr_unittest.TestCase):
         self.probe_manager = zeromq.probe_manager()
         self.probe_manager.add_socket("tcp://127.0.0.1:5555", 'float32', self.recv_data)
         self.tb.run ()
+        print self.rx_data
         self.assertEqual(self.rx_data, src_data)
 
     def recv_data (self, data):

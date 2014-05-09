@@ -33,8 +33,8 @@ class qa_zeromq_reqrep (gr_unittest.TestCase):
     def tearDown (self):
         self.tb = None
 
-    def test_001_t (self):
-        print "test_001_t"
+    def test_001 (self):
+        print "test_001"
         src_data = [1,2,3,4,5,6,7,8,9,0]*100
         src = blocks.vector_source_c(src_data, False, 1)
         zeromq_rep_sink = zeromq.rep_sink(gr.sizeof_gr_complex, 10, "tcp://127.0.0.1:5555", 0)
