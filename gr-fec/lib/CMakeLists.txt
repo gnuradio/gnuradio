@@ -59,6 +59,10 @@ list(APPEND gnuradio_fec_sources
   cc_encoder_impl.cc
   ccsds_decoder_impl.cc
   ccsds_encoder_impl.cc
+  dummy_decoder_impl.cc
+  dummy_encoder_impl.cc
+  repetition_decoder_impl.cc
+  repetition_encoder_impl.cc
   decode_ccsds_27_fb_impl.cc
   encode_ccsds_27_bb_impl.cc
   ber_tools.cc

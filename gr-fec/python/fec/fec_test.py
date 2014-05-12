@@ -21,7 +21,7 @@
 #
 
 from gnuradio.fec.bitflip import read_bitlist
-from gnuradio import gr, blocks, analog
+from gnuradio import gr, blocks, analog, digital
 import math
 
 from extended_encoder import extended_encoder
@@ -43,32 +43,41 @@ class fec_test(gr.hier_block2):
         self.threading = threading
         self.puncpat = puncpat
 
-        self.gr_unpacked_to_packed_xx_0_0 = blocks.unpacked_to_packed_bb(1, gr.GR_LSB_FIRST)
-        self.gr_unpacked_to_packed_xx_0 = blocks.unpacked_to_packed_bb(1, gr.GR_LSB_FIRST)
-        self.gr_throttle_0 = blocks.throttle(gr.sizeof_char*1, samp_rate)
-        self.encoder_interface_0 = extended_encoder(encoder_obj_list=generic_encoder,
-                                                    threading='capillary',
-                                                    puncpat=puncpat)
+        self.map_bb = digital.map_bb(([-1, 1]))
+        self.b2f = blocks.char_to_float(1, 1)
+
+        self.unpack8 = blocks.unpack_k_bits_bb(8)
+        self.pack8 = blocks.pack_k_bits_bb(8)
+
+        self.encoder = extended_encoder(encoder_obj_list=generic_encoder,
+                                        threading='capillary',
+                                        puncpat=puncpat)
+
+        self.decoder = extended_decoder(decoder_obj_list=generic_decoder,
+                                        threading='capillary',
+                                        ann=None, puncpat=puncpat,
+                                        integration_period=10000, rotator=None)
 
         noise = math.sqrt((10.0**(-esno/10.0))/2.0)
         self.fastnoise = analog.fastnoise_source_f(analog.GR_GAUSSIAN, noise, 0, 8192)
-        self.gaussnoise_ff_0 = blocks.add_ff(1)
-        self.connect(self.fastnoise, (self.gaussnoise_ff_0,1))
+        self.addnoise = blocks.add_ff(1)
 
-        self.decoder_interface_0 = extended_decoder(decoder_obj_list=generic_decoder,
-                                                    threading='capillary',
-                                                    ann=None, puncpat=puncpat,
-                                                    integration_period=10000, rotator=None)
+        # Send packed input directly to the second output
+        self.copy_packed = blocks.copy(gr.sizeof_char)
+        self.connect(self, self.copy_packed)
+        self.connect(self.copy_packed, (self, 1))
 
-        self.connect((self.gr_unpacked_to_packed_xx_0_0, 0), (self, 0))
-        self.connect((self.gr_unpacked_to_packed_xx_0, 0), (self, 1))
-        self.connect((self.gr_throttle_0, 0), (self.gr_unpacked_to_packed_xx_0, 0))
+        # Unpack inputl encode, convert to +/-1, add noise, decode, repack
+        self.connect(self, self.unpack8)
+        self.connect(self.unpack8, self.encoder)
+        self.connect(self.encoder, self.map_bb)
+        self.connect(self.map_bb, self.b2f)
+        self.connect(self.b2f, (self.addnoise, 0))
+        self.connect(self.fastnoise, (self.addnoise,1))
+        self.connect(self.addnoise, self.decoder)
+        self.connect(self.decoder, self.pack8)
+        self.connect(self.pack8, (self, 0))
 
-        self.connect((self.decoder_interface_0, 0), (self.gr_unpacked_to_packed_xx_0_0, 0))
-        self.connect((self.gaussnoise_ff_0, 0), (self.decoder_interface_0, 0))
-        self.connect(self, (self.gr_throttle_0, 0))
-        self.connect((self.gr_throttle_0, 0), (self.encoder_interface_0, 0))
-        self.connect((self.encoder_interface_0, 0), (self.gaussnoise_ff_0, 0))
 
     def get_generic_encoder(self):
         return self.generic_encoder

@@ -86,6 +86,10 @@ install(FILES
     cc_encoder.h
     ccsds_decoder.h
     ccsds_encoder.h
+    dummy_encoder.h
+    dummy_decoder.h
+    repetition_encoder.h
+    repetition_decoder.h
     decode_ccsds_27_fb.h
     encode_ccsds_27_bb.h
     rs.h

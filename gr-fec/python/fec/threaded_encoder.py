@@ -20,7 +20,7 @@
 # Boston, MA 02110-1301, USA.
 #
 
-from gnuradio import gr
+from gnuradio import gr, blocks
 import fec_swig as fec
 
 class threaded_encoder(gr.hier_block2):

@@ -12,11 +12,15 @@
       <name>Decoders</name>
       <block>variable_cc_decoder_def</block>
       <block>variable_ccsds_decoder_def</block>
+      <block>variable_repetition_decoder_def</block>
+      <block>variable_dummy_decoder_def</block>
     </cat>
     <cat>
       <name>Encoders</name>
       <block>variable_cc_encoder_def</block>
       <block>variable_ccsds_encoder_def</block>
+      <block>variable_repetition_encoder_def</block>
+      <block>variable_dummy_encoder_def</block>
     </cat>
     <block>fec_extended_encoder</block>
     <block>fec_extended_decoder</block>

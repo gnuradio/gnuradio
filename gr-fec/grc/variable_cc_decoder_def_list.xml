@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!--
 ###################################################
-# FEC MAKING FOR GREAT JUSTICE
+# FEC CC DECODER
 ###################################################
  -->
 <block>
@@ -30,20 +30,19 @@ self.$(id) = $(id) = map( (lambda b: map( ( lambda a: fec.cc_decoder.make($frame
         <value></value>
         <type>enum</type>
         <option>
-            <name>2</name>
-            <key>2</key>
-        </option>
-        <option>
             <name>1</name>
             <key>1</key>
         </option>
-
+        <option>
+            <name>2</name>
+            <key>2</key>
+        </option>
     </param>
 
     <param>
         <name>Dimension 1</name>
         <key>dim1</key>
-        <value>4</value>
+        <value>1</value>
         <type>int</type>
         <hide>#if (int($ndim()) >= 1) then 'none' else 'all' #</hide>
     </param>
@@ -51,7 +50,7 @@ self.$(id) = $(id) = map( (lambda b: map( ( lambda a: fec.cc_decoder.make($frame
     <param>
         <name>Dimension 2</name>
         <key>dim2</key>
-        <value>4</value>
+        <value>1</value>
         <type>int</type>
         <hide>#if (int($ndim()) >= 2) then 'none' else 'all' #</hide>
     </param>

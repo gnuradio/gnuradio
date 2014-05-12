@@ -24,7 +24,6 @@ from gnuradio import gr, blocks
 import numpy
 
 from fec_test import fec_test
-from fec_raw_test import fec_raw_test
 
 class bercurve_generator(gr.hier_block2):
 
@@ -46,18 +45,13 @@ class bercurve_generator(gr.hier_block2):
         self.connect(self.random_gen_b_0, self.deinterleave)
         self.ber_generators = []
         for i in range(0, len(esno)):
-            if(encoder_list is None):
-                ber_generator_temp = fec_raw_test(
-                    esno=esno[i],
-                    samp_rate=samp_rate)
-            else:
-                ber_generator_temp = fec_test(
-                    generic_encoder=encoder_list[i],
-                    generic_decoder=decoder_list[i],
-                    esno=esno[i],
-                    samp_rate=samp_rate,
-                    threading=threading,
-                    puncpat=puncpat)
+            ber_generator_temp = fec_test(
+                generic_encoder=encoder_list[i],
+                generic_decoder=decoder_list[i],
+                esno=esno[i],
+                samp_rate=samp_rate,
+                threading=threading,
+                puncpat=puncpat)
             self.ber_generators.append(ber_generator_temp);
 
         for i in range(0, len(esno)):

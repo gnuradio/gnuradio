@@ -21,6 +21,8 @@ include(GrPython)
 
 install(
     FILES
+    ber_test.grc
+    ber_curve_gen.grc
     fecapi_decoders.grc
     fecapi_encoders.grc
     fecapi_tagged_decoders.grc

@@ -41,5 +41,4 @@ from capillary_threaded_encoder import capillary_threaded_encoder
 
 
 from fec_test import fec_test
-from fec_raw_test import fec_raw_test
 from bercurve_generator import bercurve_generator

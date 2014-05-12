@@ -31,7 +31,6 @@ GR_PYTHON_INSTALL(
     threaded_decoder.py
     threaded_encoder.py
     fec_test.py
-    fec_raw_test.py
     bercurve_generator.py
     DESTINATION ${GR_PYTHON_DIR}/gnuradio/fec
     COMPONENT "fec_python"
