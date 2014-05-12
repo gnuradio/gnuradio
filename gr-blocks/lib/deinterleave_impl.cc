@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2012 Free Software Foundation, Inc.
+ * Copyright 2012,2014 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -30,16 +30,20 @@
 namespace gr {
   namespace blocks {
 
-    deinterleave::sptr deinterleave::make(size_t itemsize, unsigned int blocksize)
+    deinterleave::sptr deinterleave::make(size_t itemsize, unsigned int blocksize,
+                                          bool set_rel_rate)
     {
-      return gnuradio::get_initial_sptr(new deinterleave_impl(itemsize, blocksize));
+      return gnuradio::get_initial_sptr
+        (new deinterleave_impl(itemsize, blocksize, set_rel_rate));
     }
-    
-    deinterleave_impl::deinterleave_impl(size_t itemsize, unsigned int blocksize)
+
+    deinterleave_impl::deinterleave_impl(size_t itemsize, unsigned int blocksize,
+                                         bool set_rel_rate)
       : block("deinterleave",
               io_signature::make (1, 1, itemsize),
               io_signature::make (1, io_signature::IO_INFINITE, itemsize)),
-        d_itemsize(itemsize), d_blocksize(blocksize), d_current_output(0)
+        d_itemsize(itemsize), d_blocksize(blocksize), d_current_output(0),
+        d_set_rel_rate(set_rel_rate)
     {
       set_output_multiple(blocksize);
     }
@@ -47,11 +51,12 @@ namespace gr {
     bool
     deinterleave_impl::check_topology(int ninputs, int noutputs)
     {
-      set_relative_rate((double)noutputs);
+      if(d_set_rel_rate)
+        set_relative_rate(1.0/static_cast<double>(noutputs));
       d_noutputs = noutputs;
       return true;
     }
-    
+
     int
     deinterleave_impl::general_work(int noutput_items,
                                     gr_vector_int& ninput_items,
@@ -60,14 +65,14 @@ namespace gr {
     {
       const char *in = (const char*)input_items[0];
       char **out = (char**)&output_items[0];
-      
+
       memcpy(out[d_current_output], in, d_itemsize * d_blocksize);
       consume_each(d_blocksize);
       produce(d_current_output, d_blocksize);
       d_current_output = (d_current_output + 1) % d_noutputs;
       return WORK_CALLED_PRODUCE;
     }
-    
-    
+
+
   } /* namespace blocks */
 } /* namespace gr */

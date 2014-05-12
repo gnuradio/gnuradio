@@ -30,15 +30,16 @@ namespace gr {
 
     class BLOCKS_API deinterleave_impl : public deinterleave
     {
-      
+
       size_t d_itemsize;
       unsigned int d_blocksize;
       unsigned int d_current_output;
       unsigned int d_noutputs;
-
+      bool d_set_rel_rate;
 
     public:
-      deinterleave_impl(size_t itemsize, unsigned int blocksize);
+      deinterleave_impl(size_t itemsize, unsigned int blocksize,
+                        bool set_rel_rate=true);
 
       bool check_topology(int ninputs, int noutputs);
 
@@ -51,6 +52,6 @@ namespace gr {
 
   } /* namespace blocks */
 } /* namespace gr */
-   
+
 
 #endif /* INCLUDED_DEINTERLEAVE_IMPL_H */
