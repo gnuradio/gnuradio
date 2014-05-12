@@ -58,7 +58,6 @@ namespace gr {
     rep_sink_impl::~rep_sink_impl()
     {
       d_socket->close();
-      d_context->close();
       delete d_socket;
       delete d_context;
     }
