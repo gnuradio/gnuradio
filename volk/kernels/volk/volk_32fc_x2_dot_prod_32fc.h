@@ -316,10 +316,67 @@ static inline void volk_32fc_x2_dot_prod_32fc_u_sse4_1(lv_32fc_t* result, const 
 
 #endif /*LV_HAVE_SSE4_1*/
 
+#ifdef LV_HAVE_AVX
 
+#include <immintrin.h>
+
+static inline void volk_32fc_x2_dot_prod_32fc_u_avx(lv_32fc_t* result, const lv_32fc_t* input, const lv_32fc_t* taps, unsigned int num_points) {
+
+  unsigned int isodd = num_points & 3;
+  unsigned int i = 0;
+  lv_32fc_t dotProduct;
+  memset(&dotProduct, 0x0, 2*sizeof(float));
+
+  unsigned int number = 0;
+  const unsigned int quarterPoints = num_points / 4;
+
+  __m256 x, y, yl, yh, z, tmp1, tmp2, dotProdVal;
+
+  const lv_32fc_t* a = input;
+  const lv_32fc_t* b = taps;
+
+  dotProdVal = _mm256_setzero_ps();
+
+  for(;number < quarterPoints; number++){
+
+    x = _mm256_loadu_ps((float*)a); // Load a,b,e,f as ar,ai,br,bi,er,ei,fr,fi
+    y = _mm256_loadu_ps((float*)b); // Load c,d,g,h as cr,ci,dr,di,gr,gi,hr,hi
+
+    yl = _mm256_moveldup_ps(y); // Load yl with cr,cr,dr,dr,gr,gr,hr,hr
+    yh = _mm256_movehdup_ps(y); // Load yh with ci,ci,di,di,gi,gi,hi,hi
+
+    tmp1 = _mm256_mul_ps(x,yl); // tmp1 = ar*cr,ai*cr,br*dr,bi*dr ...
+
+    x = _mm256_shuffle_ps(x,x,0xB1); // Re-arrange x to be ai,ar,bi,br,ei,er,fi,fr
+
+    tmp2 = _mm256_mul_ps(x,yh); // tmp2 = ai*ci,ar*ci,bi*di,br*di ...
+
+    z = _mm256_addsub_ps(tmp1,tmp2); // ar*cr-ai*ci, ai*cr+ar*ci, br*dr-bi*di, bi*dr+br*di
+
+    dotProdVal = _mm256_add_ps(dotProdVal, z); // Add the complex multiplication results together
+
+    a += 4;
+    b += 4;
+  }
+
+  __VOLK_ATTR_ALIGNED(32) lv_32fc_t dotProductVector[4];
+
+  _mm256_storeu_ps((float*)dotProductVector,dotProdVal); // Store the results back into the dot product vector
+
+  dotProduct += ( dotProductVector[0] + dotProductVector[1] + dotProductVector[2] + dotProductVector[3]);
+
+  for(i = num_points-isodd; i < num_points; i++) {
+    dotProduct += input[i] * taps[i];
+  }
+
+  *result = dotProduct;
+}
+
+#endif /*LV_HAVE_AVX*/
 
 
 #endif /*INCLUDED_volk_32fc_x2_dot_prod_32fc_u_H*/
+
 #ifndef INCLUDED_volk_32fc_x2_dot_prod_32fc_a_H
 #define INCLUDED_volk_32fc_x2_dot_prod_32fc_a_H
 
@@ -680,6 +737,7 @@ static inline void volk_32fc_x2_dot_prod_32fc_a_sse3(lv_32fc_t* result, const lv
 
 #endif /*LV_HAVE_SSE3*/
 
+
 #ifdef LV_HAVE_SSE4_1
 
 #include <smmintrin.h>
@@ -759,5 +817,63 @@ static inline void volk_32fc_x2_dot_prod_32fc_a_sse4_1(lv_32fc_t* result, const 
 }
 
 #endif /*LV_HAVE_SSE4_1*/
+
+#ifdef LV_HAVE_AVX
+
+#include <immintrin.h>
+
+static inline void volk_32fc_x2_dot_prod_32fc_a_avx(lv_32fc_t* result, const lv_32fc_t* input, const lv_32fc_t* taps, unsigned int num_points) {
+
+  unsigned int isodd = num_points & 3;
+  unsigned int i = 0;
+  lv_32fc_t dotProduct;
+  memset(&dotProduct, 0x0, 2*sizeof(float));
+
+  unsigned int number = 0;
+  const unsigned int quarterPoints = num_points / 4;
+
+  __m256 x, y, yl, yh, z, tmp1, tmp2, dotProdVal;
+
+  const lv_32fc_t* a = input;
+  const lv_32fc_t* b = taps;
+
+  dotProdVal = _mm256_setzero_ps();
+
+  for(;number < quarterPoints; number++){
+
+    x = _mm256_load_ps((float*)a); // Load a,b,e,f as ar,ai,br,bi,er,ei,fr,fi
+    y = _mm256_load_ps((float*)b); // Load c,d,g,h as cr,ci,dr,di,gr,gi,hr,hi
+
+    yl = _mm256_moveldup_ps(y); // Load yl with cr,cr,dr,dr,gr,gr,hr,hr
+    yh = _mm256_movehdup_ps(y); // Load yh with ci,ci,di,di,gi,gi,hi,hi
+
+    tmp1 = _mm256_mul_ps(x,yl); // tmp1 = ar*cr,ai*cr,br*dr,bi*dr ...
+
+    x = _mm256_shuffle_ps(x,x,0xB1); // Re-arrange x to be ai,ar,bi,br,ei,er,fi,fr
+
+    tmp2 = _mm256_mul_ps(x,yh); // tmp2 = ai*ci,ar*ci,bi*di,br*di ...
+
+    z = _mm256_addsub_ps(tmp1,tmp2); // ar*cr-ai*ci, ai*cr+ar*ci, br*dr-bi*di, bi*dr+br*di
+
+    dotProdVal = _mm256_add_ps(dotProdVal, z); // Add the complex multiplication results together
+
+    a += 4;
+    b += 4;
+  }
+
+  __VOLK_ATTR_ALIGNED(32) lv_32fc_t dotProductVector[4];
+
+  _mm256_store_ps((float*)dotProductVector,dotProdVal); // Store the results back into the dot product vector
+
+  dotProduct += ( dotProductVector[0] + dotProductVector[1] + dotProductVector[2] + dotProductVector[3]);
+
+  for(i = num_points-isodd; i < num_points; i++) {
+    dotProduct += input[i] * taps[i];
+  }
+
+  *result = dotProduct;
+}
+
+#endif /*LV_HAVE_AVX*/
 
 #endif /*INCLUDED_volk_32fc_x2_dot_prod_32fc_a_H*/
