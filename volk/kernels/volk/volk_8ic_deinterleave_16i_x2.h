@@ -13,6 +13,7 @@
   \param qBuffer The Q buffer output data
   \param num_points The number of complex data values to be deinterleaved
 */
+
 static inline void volk_8ic_deinterleave_16i_x2_a_sse4_1(int16_t* iBuffer, int16_t* qBuffer, const lv_8sc_t* complexVector, unsigned int num_points){
   unsigned int number = 0;
   const int8_t* complexVectorPtr = (int8_t*)complexVector;
