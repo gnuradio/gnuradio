@@ -23,6 +23,7 @@
 from gnuradio import gr, blocks, digital
 import fec_swig as fec
 from bitflip import *
+import sys
 
 from threaded_decoder import threaded_decoder
 from capillary_threaded_decoder import capillary_threaded_decoder
@@ -137,7 +138,9 @@ class extended_decoder(gr.hier_block2):
             self.blocks.append(blocks.unpacked_to_packed_bb(1,0))
 
         if(len(decoder_obj_list) > 1):
-            assert fec.get_history(decoder_obj_list[0]) == 0
+            if(fec.get_history(decoder_obj_list[0]) != 0):
+                gr.log.info("fec.extended_decoder: Cannot use multi-threaded parallelism on a decoder with history.")
+                raise AttributeError
 
         if threading == 'capillary':
             self.blocks.append(capillary_threaded_decoder(decoder_obj_list,
