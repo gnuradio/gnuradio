@@ -20,7 +20,10 @@
 include(GrPython)
 
 # Base stuff
-GR_PYTHON_INSTALL(PROGRAMS
+INSTALL(FILES
+    zeromq_pubsub.grc
+    zeromq_pushpull.grc
+    zeromq_reqrep.grc
     DESTINATION ${GR_PKG_ZEROMQ_EXAMPLES_DIR}
     COMPONENT "zeromq_python"
 )
