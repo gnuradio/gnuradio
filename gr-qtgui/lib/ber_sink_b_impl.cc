@@ -47,33 +47,33 @@ namespace gr {
 
     int
     ber_sink_b_impl::compBER(unsigned char *inBuffer1, unsigned char *inBuffer2,int buffSize)
-    { 
+    {
       int i,totalDiff=0;
       int popCnt[256] =
-        { 
-          0, 1, 1, 2, 1, 2, 2, 3, 1, 2, 2, 3, 2, 3, 3, 4, 
-          1, 2, 2, 3, 2, 3, 3, 4, 2, 3, 3, 4, 3, 4, 4, 5, 
-          1, 2, 2, 3, 2, 3, 3, 4, 2, 3, 3, 4, 3, 4, 4, 5, 
-          2, 3, 3, 4, 3, 4, 4, 5, 3, 4, 4, 5, 4, 5, 5, 6, 
-          1, 2, 2, 3, 2, 3, 3, 4, 2, 3, 3, 4, 3, 4, 4, 5, 
-          2, 3, 3, 4, 3, 4, 4, 5, 3, 4, 4, 5, 4, 5, 5, 6, 
-          2, 3, 3, 4, 3, 4, 4, 5, 3, 4, 4, 5, 4, 5, 5, 6, 
-          3, 4, 4, 5, 4, 5, 5, 6, 4, 5, 5, 6, 5, 6, 6, 7, 
-          1, 2, 2, 3, 2, 3, 3, 4, 2, 3, 3, 4, 3, 4, 4, 5, 
-          2, 3, 3, 4, 3, 4, 4, 5, 3, 4, 4, 5, 4, 5, 5, 6, 
-          2, 3, 3, 4, 3, 4, 4, 5, 3, 4, 4, 5, 4, 5, 5, 6, 
-          3, 4, 4, 5, 4, 5, 5, 6, 4, 5, 5, 6, 5, 6, 6, 7, 
-          2, 3, 3, 4, 3, 4, 4, 5, 3, 4, 4, 5, 4, 5, 5, 6, 
-          3, 4, 4, 5, 4, 5, 5, 6, 4, 5, 5, 6, 5, 6, 6, 7, 
-          3, 4, 4, 5, 4, 5, 5, 6, 4, 5, 5, 6, 5, 6, 6, 7, 
+        {
+          0, 1, 1, 2, 1, 2, 2, 3, 1, 2, 2, 3, 2, 3, 3, 4,
+          1, 2, 2, 3, 2, 3, 3, 4, 2, 3, 3, 4, 3, 4, 4, 5,
+          1, 2, 2, 3, 2, 3, 3, 4, 2, 3, 3, 4, 3, 4, 4, 5,
+          2, 3, 3, 4, 3, 4, 4, 5, 3, 4, 4, 5, 4, 5, 5, 6,
+          1, 2, 2, 3, 2, 3, 3, 4, 2, 3, 3, 4, 3, 4, 4, 5,
+          2, 3, 3, 4, 3, 4, 4, 5, 3, 4, 4, 5, 4, 5, 5, 6,
+          2, 3, 3, 4, 3, 4, 4, 5, 3, 4, 4, 5, 4, 5, 5, 6,
+          3, 4, 4, 5, 4, 5, 5, 6, 4, 5, 5, 6, 5, 6, 6, 7,
+          1, 2, 2, 3, 2, 3, 3, 4, 2, 3, 3, 4, 3, 4, 4, 5,
+          2, 3, 3, 4, 3, 4, 4, 5, 3, 4, 4, 5, 4, 5, 5, 6,
+          2, 3, 3, 4, 3, 4, 4, 5, 3, 4, 4, 5, 4, 5, 5, 6,
+          3, 4, 4, 5, 4, 5, 5, 6, 4, 5, 5, 6, 5, 6, 6, 7,
+          2, 3, 3, 4, 3, 4, 4, 5, 3, 4, 4, 5, 4, 5, 5, 6,
+          3, 4, 4, 5, 4, 5, 5, 6, 4, 5, 5, 6, 5, 6, 6, 7,
+          3, 4, 4, 5, 4, 5, 5, 6, 4, 5, 5, 6, 5, 6, 6, 7,
           4, 5, 5, 6, 5, 6, 6, 7, 5, 6, 6, 7, 6, 7, 7, 8
         };
-      
-      
+
+
       for (i=0;i<buffSize;i++)
         {
-          totalDiff += popCnt[inBuffer1[i]^inBuffer2[i]];	  
-      
+          totalDiff += popCnt[inBuffer1[i]^inBuffer2[i]];
+
         }
 
       return totalDiff;
@@ -354,17 +354,6 @@ namespace gr {
         return -1;
       }
 
-      /*
-      for(int i = 0; i < d_nconnections; ++i) {
-        printf("%f, ", d_residbufs_imag[0][i]);
-      }
-      printf("\n");
-      for(int i = 0; i < d_nconnections; ++i) {
-        printf("%f, ", d_residbufs_real[0][i]);
-      }
-      printf("\n");
-      */
-
       for(unsigned int i = 0; i < ninput_items.size(); i += 2) {
         if((d_totalErrors[i >> 1] < d_berminerrors) && (log10(((double)d_berminerrors)/(d_total[i >> 1] * 8.0)) >= d_berLimit)) {
           int items = ninput_items[i] <= ninput_items[i+1] ? ninput_items[i] : ninput_items[i+1];
@@ -384,10 +373,9 @@ namespace gr {
 
           if(d_totalErrors[i >> 1] >= d_berminerrors) {
             printf("    %u over %d\n", d_totalErrors[i >> 1], d_total[i >> 1] * 8);
-            //outBuffer[0] = log10(((double)d_totalErrors)/(d_total * 8.0));
           }
           else if(log10(((double)d_berminerrors)/(d_total[i >> 1] * 8.0)) < d_berLimit) {
-            printf("crapout\n");
+            printf("BER Limit Reached\n");
             d_residbufs_imag[i/(d_nconnections * 2)][(i%(d_nconnections * 2)) >> 1] = d_berLimit;
             d_totalErrors[i >> 1] = d_berminerrors + 1;
           }
@@ -404,5 +392,3 @@ namespace gr {
 
   } /* namespace qtgui */
 } /* namespace gr */
-
-
