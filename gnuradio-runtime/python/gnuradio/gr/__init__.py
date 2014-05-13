@@ -49,8 +49,10 @@ from gateway import basic_block, sync_block, decim_block, interp_block
 # Force the preference database to be initialized
 prefs = prefs.singleton
 
-log = gr.logger("gr_log")
+log = gr.logger("log")
+log.add_console_appender(prefs().get_string("LOG", "log_level", "off"), 'gr::log %d :%p: %m%n')
 log.set_level(prefs().get_string("LOG", "log_level", "notset"))
 
-log_debug = gr.logger("gr_log_debug")
+log_debug = gr.logger("log_debug")
+log_debug.add_console_appender(prefs().get_string("LOG", "debug_level", "off"), 'gr::debug %d :%p: %m%n')
 log_debug.set_level(prefs().get_string("LOG", "debug_level", "notset"))

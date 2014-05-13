@@ -38,24 +38,25 @@ namespace gr {
 
       gr::thread::mutex d_mutex;
 
-      std::vector<double*> d_residbufs_real;
-      std::vector<double*> d_residbufs_imag;
-      
+      std::vector<double*> d_esno_buffers;
+      std::vector<double*> d_ber_buffers;
+
       ConstellationDisplayForm *d_main_gui;
       gr::high_res_timer_type d_update_time;
-      std::vector<int> d_totalErrors;
-      int d_berminerrors;
-      float d_berLimit;
+      std::vector<int> d_total_errors;
+      int d_ber_min_errors;
+      float d_ber_limit;
       QWidget *d_parent;
       int d_nconnections;
+      int d_curves;
       gr::high_res_timer_type d_last_time;
       std::vector<int> d_total;
 
-      int compBER(unsigned char *inBuffer1, unsigned char *inBuffer2,int buffSize);
+      //int compBER(unsigned char *inBuffer1, unsigned char *inBuffer2,int buffSize);
 
     public:
       ber_sink_b_impl(std::vector<float> esnos, int curves = 1,
-                      int berminerrors = 100, float berLimit = -7.0,
+                      int ber_min_errors = 100, float ber_limit = -7.0,
                       std::vector<std::string> curvenames = std::vector<std::string>(),
                       QWidget *parent=NULL);
       ~ber_sink_b_impl();

@@ -22,9 +22,10 @@
 
 #include "ber_sink_b_impl.h"
 #include <gnuradio/io_signature.h>
+#include <gnuradio/math.h>
 #include <gnuradio/fft/fft.h>
-//#include <fec/libbertools.h>
-#include <math.h>
+#include <volk/volk.h>
+//#include <math.h>
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>
@@ -35,89 +36,73 @@ namespace gr {
 
     ber_sink_b::sptr
     ber_sink_b::make(std::vector<float> esnos, int curves,
-                     int berminerrors, float berLimit,
+                     int ber_min_errors, float ber_limit,
                      std::vector<std::string> curvenames,
                      QWidget *parent)
     {
       return gnuradio::get_initial_sptr
         (new ber_sink_b_impl(esnos, curves,
-                             berminerrors, berLimit,
+                             ber_min_errors, ber_limit,
                              curvenames, parent));
     }
 
-    int
-    ber_sink_b_impl::compBER(unsigned char *inBuffer1, unsigned char *inBuffer2,int buffSize)
-    {
-      int i,totalDiff=0;
-      int popCnt[256] =
-        {
-          0, 1, 1, 2, 1, 2, 2, 3, 1, 2, 2, 3, 2, 3, 3, 4,
-          1, 2, 2, 3, 2, 3, 3, 4, 2, 3, 3, 4, 3, 4, 4, 5,
-          1, 2, 2, 3, 2, 3, 3, 4, 2, 3, 3, 4, 3, 4, 4, 5,
-          2, 3, 3, 4, 3, 4, 4, 5, 3, 4, 4, 5, 4, 5, 5, 6,
-          1, 2, 2, 3, 2, 3, 3, 4, 2, 3, 3, 4, 3, 4, 4, 5,
-          2, 3, 3, 4, 3, 4, 4, 5, 3, 4, 4, 5, 4, 5, 5, 6,
-          2, 3, 3, 4, 3, 4, 4, 5, 3, 4, 4, 5, 4, 5, 5, 6,
-          3, 4, 4, 5, 4, 5, 5, 6, 4, 5, 5, 6, 5, 6, 6, 7,
-          1, 2, 2, 3, 2, 3, 3, 4, 2, 3, 3, 4, 3, 4, 4, 5,
-          2, 3, 3, 4, 3, 4, 4, 5, 3, 4, 4, 5, 4, 5, 5, 6,
-          2, 3, 3, 4, 3, 4, 4, 5, 3, 4, 4, 5, 4, 5, 5, 6,
-          3, 4, 4, 5, 4, 5, 5, 6, 4, 5, 5, 6, 5, 6, 6, 7,
-          2, 3, 3, 4, 3, 4, 4, 5, 3, 4, 4, 5, 4, 5, 5, 6,
-          3, 4, 4, 5, 4, 5, 5, 6, 4, 5, 5, 6, 5, 6, 6, 7,
-          3, 4, 4, 5, 4, 5, 5, 6, 4, 5, 5, 6, 5, 6, 6, 7,
-          4, 5, 5, 6, 5, 6, 6, 7, 5, 6, 6, 7, 6, 7, 7, 8
-        };
-
-
-      for (i=0;i<buffSize;i++)
-        {
-          totalDiff += popCnt[inBuffer1[i]^inBuffer2[i]];
-
-        }
-
-      return totalDiff;
-    }
-
     ber_sink_b_impl::ber_sink_b_impl(std::vector<float> esnos, int curves,
-                                     int berminerrors, float berLimit,
+                                     int ber_min_errors, float ber_limit,
                                      std::vector<std::string> curvenames,
                                      QWidget *parent)
       : block("ber_sink_b",
               io_signature::make(curves*esnos.size()*2, curves*esnos.size()*2, sizeof(unsigned char)),
               io_signature::make(0, 0, 0)),
-        d_berminerrors(berminerrors),
-        d_berLimit(berLimit),
+        d_ber_min_errors(ber_min_errors),
+        d_ber_limit(ber_limit),
         d_parent(parent),
         d_nconnections(esnos.size()),
         d_last_time(0)
     {
       d_main_gui = NULL;
 
-      d_residbufs_real.reserve(curves);
-      d_residbufs_imag.reserve(curves);
+      // Enough curves for the input streams plus the BPSK AWGN curve.
+      d_curves = curves;
+      d_esno_buffers.reserve(curves + 1);
+      d_ber_buffers.reserve(curves + 1);
       d_total.reserve(curves * esnos.size());
-      d_totalErrors.reserve(curves * esnos.size());
+      d_total_errors.reserve(curves * esnos.size());
 
-      for(int j= 0; j < curves; j++) {
-        d_residbufs_real.push_back(fft::malloc_double(esnos.size()));
-        d_residbufs_imag.push_back(fft::malloc_double(esnos.size()));
+      for(int j = 0; j < curves; j++) {
+	d_esno_buffers.push_back((double*)volk_malloc(esnos.size()*sizeof(double),
+                                                        volk_get_alignment()));
+	d_ber_buffers.push_back((double*)volk_malloc(esnos.size()*sizeof(double),
+                                                        volk_get_alignment()));
+
         for(int i = 0; i < d_nconnections; i++) {
-          d_residbufs_real[j][i] = esnos[i];
-          d_residbufs_imag[j][i] = 0.0;
+          d_esno_buffers[j][i] = esnos[i];
+          d_ber_buffers[j][i] = 0.0;
           d_total.push_back(0);
-          d_totalErrors.push_back(1);
+          d_total_errors.push_back(1);
         }
       }
 
+      // Now add the known curves
+      d_esno_buffers.push_back((double*)volk_malloc(esnos.size()*sizeof(double),
+                                                      volk_get_alignment()));
+      d_ber_buffers.push_back((double*)volk_malloc(esnos.size()*sizeof(double),
+                                                      volk_get_alignment()));
+      for(size_t i = 0; i < esnos.size(); i++) {
+        double e = pow(10.0, esnos[i]/10.0);
+        d_esno_buffers[curves][i] = esnos[i];
+        d_ber_buffers[curves][i] = log10(erfc(sqrt(e)));
+      }
+
+
+      // Initialize and set up some of the curve visual properties
       initialize();
       for(int j= 0; j < curves; j++) {
         set_line_width(j, 1);
         //35 unique styles supported
         set_line_style(j, (j%5) + 1);
         set_line_marker(j, (j%7));
-
       }
+
       if(curvenames.size() == (unsigned int)curves) {
         for(int j = 0; j < curves; j++) {
           if(curvenames[j] != "") {
@@ -125,6 +110,11 @@ namespace gr {
           }
         }
       }
+
+      set_line_label(d_curves, "BPSK AWGN");
+      set_line_style(d_curves, 5);    // non-solid line
+      set_line_marker(d_curves, -1);  // no marker
+      set_line_alpha(d_curves, 0.25); // high transparency
     }
 
     ber_sink_b_impl::~ber_sink_b_impl()
@@ -133,16 +123,16 @@ namespace gr {
         d_main_gui->close();
       }
 
-      for(unsigned int i = 0; i < d_residbufs_real.size(); i++) {
-        gr::fft::free(d_residbufs_real[i]);
-        gr::fft::free(d_residbufs_imag[i]);
+      for(unsigned int i = 0; i < d_esno_buffers.size(); i++) {
+	volk_free(d_esno_buffers[i]);
+	volk_free(d_ber_buffers[i]);
       }
     }
 
     bool
     ber_sink_b_impl::check_topology(int ninputs, int noutputs)
     {
-      return ninputs == (int)(d_residbufs_real.size() * d_nconnections * 2);
+      return ninputs == (int)(d_curves * d_nconnections * 2);
     }
 
     void
@@ -157,7 +147,7 @@ namespace gr {
         d_qApplication = new QApplication(argc, argv);
       }
 
-      d_main_gui = new ConstellationDisplayForm(d_residbufs_real.size(), d_parent);
+      d_main_gui = new ConstellationDisplayForm(d_esno_buffers.size(), d_parent);
 
       d_main_gui->setNPoints(d_nconnections);
       d_main_gui->getPlot()->setAxisTitle(QwtPlot::yLeft, "LogScale BER");
@@ -178,7 +168,7 @@ namespace gr {
       return d_main_gui;
     }
 
-    //#ifdef ENABLE_PYTHON
+#ifdef ENABLE_PYTHON
     PyObject*
     ber_sink_b_impl::pyqwidget()
     {
@@ -186,7 +176,13 @@ namespace gr {
       PyObject *retarg = Py_BuildValue("N", w);
       return retarg;
     }
-    //#endif
+#else
+    void *
+    ber_sink_b_impl::pyqwidget()
+    {
+      return NULL;
+    }
+#endif
 
     void
     ber_sink_b_impl::set_y_axis(double min, double max)
@@ -327,57 +323,68 @@ namespace gr {
       if(gr::high_res_timer_now() - d_last_time > d_update_time) {
         d_last_time = gr::high_res_timer_now();
         d_qApplication->postEvent(d_main_gui,
-                                  new ConstUpdateEvent(d_residbufs_real,
-                                                       d_residbufs_imag,
+                                  new ConstUpdateEvent(d_esno_buffers,
+                                                       d_ber_buffers,
                                                        d_nconnections));
       }
 
       //check stopping condition
       int done=0, maxed=0;
-      for(unsigned int j = 0; j < d_residbufs_real.size(); ++j) {
+      for(int j = 0; j < d_curves; ++j) {
         for(int i = 0; i < d_nconnections; ++i) {
 
-          if (d_totalErrors[j * d_nconnections + i] >= d_berminerrors) {
+          if(d_total_errors[j * d_nconnections + i] >= d_ber_min_errors) {
             done++;
           }
-          else if(log10(((double)d_berminerrors)/(d_total[j * d_nconnections + i] * 8.0)) < d_berLimit) {
+          else if(log10(((double)d_ber_min_errors)/(d_total[j * d_nconnections + i] * 8.0)) < d_ber_limit) {
             maxed++;
           }
         }
       }
 
-      if(done+maxed == (int)(d_nconnections * d_residbufs_real.size())) {
+      if(done+maxed == (int)(d_nconnections * d_curves)) {
         d_qApplication->postEvent(d_main_gui,
-                                  new ConstUpdateEvent(d_residbufs_real,
-                                                       d_residbufs_imag,
+                                  new ConstUpdateEvent(d_esno_buffers,
+                                                       d_ber_buffers,
                                                        d_nconnections));
         return -1;
       }
 
+      float ber;
       for(unsigned int i = 0; i < ninput_items.size(); i += 2) {
-        if((d_totalErrors[i >> 1] < d_berminerrors) && (log10(((double)d_berminerrors)/(d_total[i >> 1] * 8.0)) >= d_berLimit)) {
+
+        if((d_total_errors[i >> 1] < d_ber_min_errors) && \
+           (log10(((double)d_ber_min_errors)/(d_total[i >> 1] * 8.0)) >= d_ber_limit)) {
+
           int items = ninput_items[i] <= ninput_items[i+1] ? ninput_items[i] : ninput_items[i+1];
 
-          unsigned char *inBuffer0 = (unsigned char *)input_items[i];
-          unsigned char *inBuffer1 = (unsigned char *)input_items[i+1];
+          unsigned char *inbuffer0 = (unsigned char *)input_items[i];
+          unsigned char *inbuffer1 = (unsigned char *)input_items[i+1];
 
           if(items > 0) {
-            d_totalErrors[i >> 1] += compBER(inBuffer0, inBuffer1, items);
+            uint32_t ret;
+            for(int j = 0; j < items; j++) {
+              volk_32u_popcnt(&ret, static_cast<uint32_t>(inbuffer0[j]^inbuffer1[j]));
+              d_total_errors[i >> 1] += ret;
+            }
+
             d_total[i >> 1] += items;
 
-            d_residbufs_imag[i/(d_nconnections * 2)][(i%(d_nconnections * 2)) >> 1] = log10(((double)d_totalErrors[i >> 1])/(d_total[i >> 1] * 8.0));
+            ber = log10(((double)d_total_errors[i >> 1])/(d_total[i >> 1] * 8.0));
+            d_ber_buffers[i/(d_nconnections * 2)][(i%(d_nconnections * 2)) >> 1] = ber;
 
           }
           consume(i, items);
           consume(i + 1, items);
 
-          if(d_totalErrors[i >> 1] >= d_berminerrors) {
-            printf("    %u over %d\n", d_totalErrors[i >> 1], d_total[i >> 1] * 8);
+          if(d_total_errors[i >> 1] >= d_ber_min_errors) {
+            GR_LOG_INFO(d_logger, boost::format("    %1% over %2%  -->  %3%") \
+                        % d_total_errors[i >> 1] % (d_total[i >> 1] * 8) % ber);
           }
-          else if(log10(((double)d_berminerrors)/(d_total[i >> 1] * 8.0)) < d_berLimit) {
-            printf("BER Limit Reached\n");
-            d_residbufs_imag[i/(d_nconnections * 2)][(i%(d_nconnections * 2)) >> 1] = d_berLimit;
-            d_totalErrors[i >> 1] = d_berminerrors + 1;
+          else if(log10(((double)d_ber_min_errors)/(d_total[i >> 1] * 8.0)) < d_ber_limit) {
+            GR_LOG_INFO(d_logger, "BER Limit Reached");
+            d_ber_buffers[i/(d_nconnections * 2)][(i%(d_nconnections * 2)) >> 1] = d_ber_limit;
+            d_total_errors[i >> 1] = d_ber_min_errors + 1;
           }
         }
         else {

@@ -25,7 +25,7 @@ self.$(id) = $(id) = map( (lambda b: map( ( lambda a: fec.dummy_encoder_make($fr
     </param>
 
     <param>
-        <name>Threading Dimensions</name>
+        <name>Parallelism</name>
         <key>ndim</key>
         <value></value>
         <type>enum</type>

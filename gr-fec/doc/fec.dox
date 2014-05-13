@@ -21,4 +21,61 @@ by using:
     help(fec)
 \endcode
 
+
+\section fec_coding_vars Encoding/Decoding Variables
+
+\subsection fec_parallelism Parallelism
+
+The code variables in GNU Radio Companion have the ability to create
+multiple encoder/decoder variables by selecting the level of
+parallelism. It is up the encoder to understand how to handle the
+parallelism. The following discussion explains the difference between
+the two levels and how and when to use. Generally, normal applications
+will just use a single level of parallelism.
+
+The GRC variable declarations for the different coders has a setting
+for <i>Parallelism</i>, which can be either 1 or 2. If set to 1, then
+the resulting variable is a list of coder blocks with the same
+settings. If set to 2, then the resulting variable is a list of lists
+of coder blocks. The code that accepts these variables must understand
+how to handle the parallelism. Most applications would set this to 1.
+
+The standard fec.extended_encoder ("FEC Extended Encoder" in GRC) and
+fec.exended_decoder ("FEC Extended Decoder" in GRC) can handle a
+Parallelism of 1. They accept a list of coder variables as defined by
+Dimension 1 and can multithread the application based on the
+"Threading Type" setting:
+
+\li <b>None</b>: does no parallel threading of the coders. Even if
+Dimension 1 is > 1, the encoder/decoder will ignore this setting and
+only use the first object in the list.
+
+\li <b>Ordinary</b>: all "Dimension 1" number (N) of encoder/decoder
+blocks will be used in parallel. The hier_block2 will block
+deinterleave the packets into N streams (using
+gr::blocks::deinterleave with a value of blocksize as the frame length
+and no relative rate changes) and pass these to each of the N coders
+to process the frames in parallel. The output of each coder is then
+interleaved back together to make a single output stream.
+
+\li <b>Capillary</b>: all "Dimension 1" number (N) of encoder/decoder
+blocks will be used in parallel, much like in the <b>Ordinary</b>
+mode. In this mode, however, the frames get split up in a tree-like
+fashion, where each branch launches 2 more branches. This means that N
+must be a factor of 2 for this mode to work. It tends to handle the
+load of the encoders/decoders better than the <b>Ordinary</b> mode.
+
+Note that the threading modes only work when using constant-length
+frames. If using the coders in tagged stream mode where the frame
+lengths may change, the <b>Ordinary</b> and <b>Capillary</b> modes are
+not available.
+
+The GRC example "ber_curve_gen.grc" uses a Parallelism of 2. This
+creates a list of lists of coders. The first dimension of the list
+corresponds to the number of Es/N0 values being used in the BER
+simulation. This allows the application to process all values of Es/N0
+simultaneously. Dimension 2 in this case allows the same concept of
+parallelism discussed above with the <b>None</b>, <b>Ordinary</b>, and
+<b>Capillary</b> models of threading.
+
 */

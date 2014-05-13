@@ -25,7 +25,7 @@ self.$(id) = $(id) = map( (lambda b: map( ( lambda a: fec.repetition_encoder_mak
     </param>
 
     <param>
-        <name>Threading Dimensions</name>
+        <name>Parallelism</name>
         <key>ndim</key>
         <value></value>
         <type>enum</type>

@@ -11,7 +11,6 @@
     <cat>
       <name>Decoders</name>
       <block>variable_cc_decoder_def</block>
-      <block>variable_ccsds_decoder_def</block>
       <block>variable_repetition_decoder_def</block>
       <block>variable_dummy_decoder_def</block>
     </cat>

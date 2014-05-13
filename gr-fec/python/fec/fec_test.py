@@ -30,11 +30,11 @@ from extended_decoder import extended_decoder
 class fec_test(gr.hier_block2):
 
     def __init__(self, generic_encoder=0, generic_decoder=0, esno=0,
-                 samp_rate=3200000, threading="capillary", puncpat='11'):
-        gr.hier_block2.__init__(
-            self, "fec_test",
-            gr.io_signature(1, 1, gr.sizeof_char*1),
-            gr.io_signature(2, 2, gr.sizeof_char*1))
+                 samp_rate=3200000, threading="capillary", puncpat='11',
+                 seed=0):
+        gr.hier_block2.__init__(self, "fec_test",
+                                gr.io_signature(1, 1, gr.sizeof_char*1),
+                                gr.io_signature(2, 2, gr.sizeof_char*1))
 
         self.generic_encoder = generic_encoder
         self.generic_decoder = generic_decoder
@@ -50,16 +50,17 @@ class fec_test(gr.hier_block2):
         self.pack8 = blocks.pack_k_bits_bb(8)
 
         self.encoder = extended_encoder(encoder_obj_list=generic_encoder,
-                                        threading='capillary',
+                                        threading=threading,
                                         puncpat=puncpat)
 
         self.decoder = extended_decoder(decoder_obj_list=generic_decoder,
-                                        threading='capillary',
+                                        threading=threading,
                                         ann=None, puncpat=puncpat,
                                         integration_period=10000, rotator=None)
 
         noise = math.sqrt((10.0**(-esno/10.0))/2.0)
-        self.fastnoise = analog.fastnoise_source_f(analog.GR_GAUSSIAN, noise, 0, 8192)
+        #self.fastnoise = analog.fastnoise_source_f(analog.GR_GAUSSIAN, noise, seed, 8192)
+        self.fastnoise = analog.noise_source_f(analog.GR_GAUSSIAN, noise, seed)
         self.addnoise = blocks.add_ff(1)
 
         # Send packed input directly to the second output

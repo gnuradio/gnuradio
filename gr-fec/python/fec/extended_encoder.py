@@ -37,9 +37,17 @@ class extended_encoder(gr.hier_block2):
         self.blocks=[]
         self.puncpat=puncpat
 
+        if(type(encoder_obj_list[0]) == list):
+            gr.log.info("fec.extended_encoder: Parallelism must be 1.")
+            raise AttributeError
+
         if type(lentagname) == str:
             if(lentagname.lower() == 'none'):
                 lentagname = None
+
+        if lentagname and threading:
+            gr.log.info("fec.extended_decoder: Cannot use threading with tagged_stream mode.")
+            raise AttributeError
 
         if fec.get_encoder_input_conversion(encoder_obj_list[0]) == "pack":
             self.blocks.append(blocks.pack_k_bits_bb(8))

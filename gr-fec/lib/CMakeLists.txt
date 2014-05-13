@@ -57,7 +57,6 @@ list(APPEND gnuradio_fec_sources
   tagged_encoder_impl.cc
   cc_decoder_impl.cc
   cc_encoder_impl.cc
-  ccsds_decoder_impl.cc
   ccsds_encoder_impl.cc
   dummy_decoder_impl.cc
   dummy_encoder_impl.cc

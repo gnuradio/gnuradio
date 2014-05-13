@@ -50,7 +50,6 @@ namespace gr {
     {
       set_fixed_rate(true);
       set_relative_rate((double)(my_decoder->get_output_size())/my_decoder->get_input_size());
-      GR_LOG_DEBUG(d_debug_logger, boost::format("relative_rate: %1%") % relative_rate());
 
       //want to guarantee you have enough to run at least one time...
       //remember! this is not a sync block... set_output_multiple does not
@@ -58,7 +57,6 @@ namespace gr {
       //outputs (hence inputs) are made available... this is WEIRD to do in
       //GNU Radio, and the algorithm is sensitive to this value
       set_output_multiple(my_decoder->get_output_size() + (my_decoder->get_history()));
-      d_inbuf = buf_sptr(new unsigned char[(my_decoder->get_input_size() + my_decoder->get_history())*input_item_size]);
       d_decoder = my_decoder;
     }
 
@@ -101,11 +99,7 @@ namespace gr {
                    % outnum % ninput_items[0] % items);
 
       for(int i = 0; i < items; ++i) {
-        memcpy((void *)d_inbuf.get(),
-               in+(i*(d_decoder->get_input_size()) * d_input_item_size),
-               (d_decoder->get_input_size() + d_decoder->get_history()) * d_input_item_size);
-
-        d_decoder->generic_work((void*)d_inbuf.get(),
+        d_decoder->generic_work((void*)(in+(i*d_decoder->get_input_size()*d_input_item_size)),
                                 (void*)(out+(i*d_decoder->get_output_size()*d_output_item_size)));
 
         add_item_tag(0, nitems_written(0) + ((i+1)*d_decoder->get_output_size()*d_output_item_size),

@@ -14,43 +14,72 @@
 	$decoder_list, \#name
 	$esno, \#range of esnos
 	$samp_rate, \#throttle
-	$puncpat \#puncture pattern
+        $threadtype, \#threading mode
+	$puncpat, \#puncture pattern
+        $seed \# noise gen. seed
 )
   </make>
 
   <param>
-    <name>esno</name>
+    <name>Es/N0</name>
     <key>esno</key>
     <value>numpy.arange(0.0, 4.0, .5)</value>
     <type>raw</type>
   </param>
 
   <param>
-    <name>samp_rate</name>
+    <name>Sample Rate</name>
     <key>samp_rate</key>
     <value>3200000</value>
-    <type>raw</type>
+    <type>float</type>
   </param>
 
   <param>
-    <name>encoder_list</name>
+    <name>Encoder list</name>
     <key>encoder_list</key>
     <value>0</value>
     <type>raw</type>
   </param>
 
   <param>
-    <name>decoder_list</name>
+    <name>Decoder list</name>
     <key>decoder_list</key>
     <value>0</value>
     <type>raw</type>
   </param>
 
   <param>
-    <name>puncpat</name>
+    <name>Puncture Pat.</name>
     <key>puncpat</key>
     <value>'11'</value>
     <type>string</type>
+  </param>
+
+  <param>
+    <name>Threading Type</name>
+    <key>threadtype</key>
+    <type>enum</type>
+    <hide>part</hide>
+    <option>
+      <name>Capillary</name>
+      <key>"capillary"</key>
+    </option>
+    <option>
+      <name>Ordinary</name>
+      <key>"ordinary"</key>
+    </option>
+    <option>
+      <name>None</name>
+      <key>"none"</key>
+    </option>
+  </param>
+
+  <param>
+    <name>Noise Seed</name>
+    <key>seed</key>
+    <value>0</value>
+    <type>int</type>
+    <hide>part</hide>
   </param>
 
   <bus_source>1</bus_source>
@@ -62,8 +91,5 @@
   </source>
 
   <doc>
-    The GUI hint can be used to position the widget within the application. \
-    The hint is of the form [tab_id@tab_index]: [row, col, row_span, col_span]. \
-    Both the tab specification and the grid position are optional.
   </doc>
 </block>

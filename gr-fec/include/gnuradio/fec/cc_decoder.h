@@ -53,21 +53,12 @@ namespace gr {
        * \li polynomials = [109, 79]
        *
        * This is the well-known convolutional part of the Voyager code
-       * implemented in the CCSDS encoder. See
-       * gr::fec::code::ccsds_decoder for another variation on this
-       * block.
+       * implemented in the CCSDS encoder.
        *
-       * Currently, in profiling tests run, the VOLK-accelerated
-       * Viterbi code used in this block specific to the CCSDS code
-       * runs faster than the ccsds_decoder version. Furthenr, due to
-       * I/O issues, the ccsds_decoder does not fully handle all
-       * streaming behaviors, only 'Streaming' mode. This block
-       * enables all four streaming modes.
-       *
-       * The intent of having both FECAPI code classes is to
-       * eventually allow this block to take on generic settings, much
-       * like the cc_encoder class. The ccsds_decoder would then
-       * handle this specific code case as optimized as possible.
+       * The intent of having this FECAPI code classes fully
+       * parameterizable is to eventually allow it to take on generic
+       * settings, much like the cc_encoder class where the CCSDS
+       * settings would be a highly-optimized version of this.
        *
        * The encoder is set up wtih a number of bits per frame in the
        * constructor. When not being used in a tagged stream mode,

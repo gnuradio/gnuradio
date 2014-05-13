@@ -28,7 +28,7 @@ from fec_test import fec_test
 class bercurve_generator(gr.hier_block2):
 
     def __init__(self, encoder_list, decoder_list, esno=numpy.arange(0.0, 3.0, .25),
-                 samp_rate=3200000, threading='capillary', puncpat='11'):
+                 samp_rate=3200000, threading='capillary', puncpat='11', seed=0):
         gr.hier_block2.__init__(
             self, "ber_curve_generator",
             gr.io_signature(0, 0, 0),
@@ -51,7 +51,8 @@ class bercurve_generator(gr.hier_block2):
                 esno=esno[i],
                 samp_rate=samp_rate,
                 threading=threading,
-                puncpat=puncpat)
+                puncpat=puncpat,
+                seed=seed)
             self.ber_generators.append(ber_generator_temp);
 
         for i in range(0, len(esno)):

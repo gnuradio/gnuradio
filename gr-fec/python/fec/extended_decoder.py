@@ -86,9 +86,17 @@ class extended_decoder(gr.hier_block2):
         self.puncpat=puncpat
         self.flush=flush
 
+        if(type(decoder_obj_list[0]) == list):
+            gr.log.info("fec.extended_decoder: Parallelism must be 1.")
+            raise AttributeError
+
         if type(lentagname) == str:
             if(lentagname.lower() == 'none'):
                 lentagname = None
+
+        if lentagname and threading:
+            gr.log.info("fec.extended_decoder: Cannot use threading with tagged_stream mode.")
+            raise AttributeError
 
         message_collector_connected=False
 

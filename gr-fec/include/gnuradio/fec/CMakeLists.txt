@@ -84,7 +84,6 @@ install(FILES
     tagged_encoder.h
     cc_decoder.h
     cc_encoder.h
-    ccsds_decoder.h
     ccsds_encoder.h
     dummy_encoder.h
     dummy_decoder.h
