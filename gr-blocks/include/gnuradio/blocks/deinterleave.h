@@ -67,12 +67,8 @@ namespace gr {
        *
        * \param itemsize stream itemsize
        * \param blocksize size of block to deinterleave
-       * \param set_rel_rate should the block set the relative_rate
-       *        - changes tags locations and may not be appropriate
-       *        for all circumstances.
        */
-      static sptr make(size_t itemsize, unsigned int blocksize = 1,
-                       bool set_rel_rate=true);
+      static sptr make(size_t itemsize, unsigned int blocksize = 1);
     };
 
   } /* namespace blocks */

@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2012,2014 Free Software Foundation, Inc.
+ * Copyright 2012 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -33,11 +33,9 @@ namespace gr {
       size_t d_itemsize;
       unsigned int d_blocksize;
       unsigned int d_ninputs;
-      bool d_set_rel_rate;
 
     public:
-      interleave_impl(size_t itemsize, unsigned int blocksize,
-                      bool set_rel_rate=true);
+      interleave_impl(size_t itemsize, unsigned int blocksize);
 
       bool check_topology(int ninputs, int noutputs);
 
@@ -60,6 +58,6 @@ namespace gr {
 
   } /* namespace blocks */
 } /* namespace gr */
-
+   
 
 #endif /* INCLUDED_INTERLEAVE_IMPL_H */
