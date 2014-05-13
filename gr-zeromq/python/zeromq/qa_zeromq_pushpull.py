@@ -43,4 +43,4 @@ class qa_zeromq_pushpull (gr_unittest.TestCase):
         self.assertEqual(sink.data(), src_data)
 
 if __name__ == '__main__':
-    gr_unittest.run(qa_zeromq_pushpull, "qa_zeromq_pushpull.xml")
+    gr_unittest.run(qa_zeromq_pushpull)

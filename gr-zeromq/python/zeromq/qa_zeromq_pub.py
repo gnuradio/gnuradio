@@ -50,4 +50,4 @@ class qa_zeromq_pub (gr_unittest.TestCase):
 
 
 if __name__ == '__main__':
-    gr_unittest.run(qa_zeromq_pub, "qa_zeromq_pub.xml")
+    gr_unittest.run(qa_zeromq_pub)
