@@ -53,7 +53,7 @@
   <param>
     <name>Timeout (msec)</name>
     <key>timeout</key>
-    <value>0.1</value>
+    <value>100</value>
     <type>float</type>
   </param>
 

@@ -4,7 +4,7 @@
   <key>zeromq_push_sink</key>
   <category>ZeroMQ Interfaces</category>
   <import>from gnuradio import zeromq</import>
-  <make>zeromq.push_sink($type.itemsize, $vlen, $address, $blocking)</make>
+  <make>zeromq.push_sink($type.itemsize, $vlen, $address, $timeout)</make>
 
   <param>
     <name>IO Type</name>
@@ -53,15 +53,8 @@
   <param>
     <name>Timeout (msec)</name>
     <key>timeout</key>
-    <value>0.1</value>
+    <value>100</value>
     <type>float</type>
-  </param>
-
-  <param>
-    <name>Blocking</name>
-    <key>blocking</key>
-    <value>True</value>
-    <type>bool</type>
   </param>
 
   <sink>
