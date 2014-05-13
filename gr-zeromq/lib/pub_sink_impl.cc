@@ -31,18 +31,23 @@ namespace gr {
   namespace zeromq {
 
     pub_sink::sptr
-    pub_sink::make(size_t itemsize, size_t vlen, char *address)
+    pub_sink::make(size_t itemsize, size_t vlen, char *address, int timeout)
     {
       return gnuradio::get_initial_sptr
-        (new pub_sink_impl(itemsize, vlen, address));
+        (new pub_sink_impl(itemsize, vlen, address, timeout));
     }
 
-    pub_sink_impl::pub_sink_impl(size_t itemsize, size_t vlen, char *address)
+    pub_sink_impl::pub_sink_impl(size_t itemsize, size_t vlen, char *address, int timeout)
       : gr::sync_block("pub_sink",
                        gr::io_signature::make(1, 1, itemsize * vlen),
                        gr::io_signature::make(0, 0, 0)),
-        d_itemsize(itemsize), d_vlen(vlen)
+        d_itemsize(itemsize), d_vlen(vlen), d_timeout(timeout)
     {
+      int major, minor, patch;
+      zmq::version (&major, &minor, &patch);
+      if (major < 3) {
+        d_timeout = timeout*1000;
+      }
       d_context = new zmq::context_t(1);
       d_socket = new zmq::socket_t(*d_context, ZMQ_PUB);
       int time = 0;

@@ -1,10 +1,10 @@
 <?xml version="1.0"?>
 <block>
-  <name>ZMQ PUB Sink</name>
-  <key>zeromq_pub_sink</key>
+  <name>ZMQ SUB Source</name>
+  <key>zeromq_sub_source</key>
   <category>ZeroMQ Interfaces</category>
   <import>from gnuradio import zeromq</import>
-  <make>zeromq.pub_sink($type.itemsize, $vlen, $address, $blocking)</make>
+  <make>zeromq.sub_source($type.itemsize, $vlen, $address, $timeout)</make>
 
   <param>
     <name>IO Type</name>
@@ -43,7 +43,7 @@
     <value>1</value>
     <type>int</type>
   </param>
- 
+
   <param>
     <name>Address</name>
     <key>address</key>
@@ -57,16 +57,9 @@
     <type>float</type>
   </param>
 
-  <param>
-    <name>Blocking</name>
-    <key>blocking</key>
-    <value>True</value>
-    <type>bool</type>
-  </param>
-
-  <sink>
-    <name>in</name>
+  <source>
+    <name>out</name>
     <type>$type</type>
-  </sink>
+  </source>
 
 </block>

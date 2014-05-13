@@ -19,6 +19,7 @@
 
 install(FILES
     zeromq_pub_sink.xml
+    zeromq_sub_source.xml
     zeromq_push_sink.xml
     zeromq_pull_source.xml
     zeromq_rep_sink.xml

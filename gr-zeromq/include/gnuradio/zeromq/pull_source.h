@@ -34,7 +34,7 @@ namespace gr {
      * \ingroup zeromq
      *
      * \details
-     * This block will connect to a ZMQ PULL socket, then produce all
+     * This block will connect to a ZMQ PUSH socket, then produce all
      * incoming messages as streaming output.
      */
     class ZEROMQ_API pull_source : virtual public gr::sync_block

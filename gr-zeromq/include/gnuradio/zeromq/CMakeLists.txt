@@ -23,6 +23,7 @@
 install(FILES
   api.h
   pub_sink.h
+  sub_source.h
   pull_source.h
   push_sink.h
   rep_sink.h
