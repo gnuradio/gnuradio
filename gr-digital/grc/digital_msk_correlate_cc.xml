@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <block>
-  <name>msk_correlate</name>
-  <key>digital_msk_correlate</key>
+  <name>MSK Correlate and Sync</name>
+  <key>digital_msk_correlate_cc</key>
   <import>from gnuradio import digital</import>
   <make>digital.msk_correlate_cc($symbols, $bt, $sps)</make>
   <param>
@@ -30,6 +30,5 @@
   <source>
     <name>corr</name>
     <type>complex</type>
-    <optional>1</optional>
   </source>
 </block>

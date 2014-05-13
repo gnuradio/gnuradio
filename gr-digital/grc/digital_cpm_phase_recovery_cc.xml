@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <block>
-  <name>cpm_phase_recovery_cc</name>
+  <name>CPM Phase Recovery</name>
   <key>digital_cpm_phase_recovery_cc</key>
   <import>from gnuradio import digital</import>
   <make>digital.cpm_phase_recovery_cc($p, $len, $sps)</make>
