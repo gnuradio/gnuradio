@@ -52,7 +52,6 @@ namespace gr {
                             lengthtagname),
         d_input_item_size(input_item_size), d_output_item_size(output_item_size)
     {
-      d_inbuf = buf_sptr(new unsigned char[(my_decoder->get_input_size() + my_decoder->get_history())*input_item_size]);
       d_decoder = my_decoder;
 
       set_relative_rate(d_decoder->rate());
@@ -77,18 +76,14 @@ namespace gr {
       const unsigned char *in = (unsigned char*)input_items[0];
       unsigned char *out = (unsigned char *)output_items[0];
 
-      d_decoder->set_frame_size(ninput_items[0]/2);
+      d_decoder->set_frame_size(ninput_items[0]*d_decoder->rate());
       if(noutput_items < d_decoder->get_output_size())
         return 0;
 
       GR_LOG_DEBUG(d_debug_logger, boost::format("%1%, %2%, %3%")      \
                    % noutput_items % ninput_items[0] % d_decoder->get_output_size());
 
-      memcpy((void *)d_inbuf.get(),
-             in+(d_decoder->get_input_size() * d_input_item_size),
-             (d_decoder->get_input_size() + d_decoder->get_history()) * d_input_item_size);
-
-      d_decoder->generic_work((void*)d_inbuf.get(), (void*)(out));
+      d_decoder->generic_work((void*)in, (void*)out);
 
       add_item_tag(0, nitems_written(0) + d_decoder->get_output_size()*d_output_item_size,
                    pmt::intern(d_decoder->alias()), pmt::PMT_T, pmt::intern(alias()));

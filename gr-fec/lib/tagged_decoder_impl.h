@@ -34,7 +34,6 @@ namespace gr {
       generic_decoder::sptr d_decoder;
       size_t d_input_item_size;
       size_t d_output_item_size;
-      buf_sptr d_inbuf;
 
     public:
       tagged_decoder_impl(generic_decoder::sptr my_decoder,

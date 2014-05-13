@@ -125,7 +125,7 @@ namespace gr {
       repetition_decoder_impl::generic_work(void *inbuffer, void *outbuffer)
       {
         const float *in = (const float*)inbuffer;
-        int8_t *out = (int8_t*)outbuffer;
+        unsigned char *out = (unsigned char *) outbuffer;
 
         for(unsigned int i = 0; i < d_frame_size; i++) {
           for(unsigned int r = 0; r < d_rep; r++) {

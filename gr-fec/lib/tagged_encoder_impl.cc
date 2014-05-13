@@ -54,6 +54,8 @@ namespace gr {
         d_input_item_size(input_item_size), d_output_item_size(output_item_size)
     {
       d_encoder = my_encoder;
+
+      set_relative_rate(d_encoder->rate());
     }
 
     tagged_encoder_impl::~tagged_encoder_impl()

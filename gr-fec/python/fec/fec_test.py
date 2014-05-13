@@ -21,8 +21,14 @@
 #
 
 from gnuradio.fec.bitflip import read_bitlist
-from gnuradio import gr, blocks, analog, digital
+from gnuradio import gr, blocks, analog
 import math
+import sys
+
+if sys.modules.has_key("gnuradio.digital"):
+    digital = sys.modules["gnuradio.digital"]
+else:
+    from gnuradio import digital
 
 from extended_encoder import extended_encoder
 from extended_decoder import extended_decoder

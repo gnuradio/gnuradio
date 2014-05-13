@@ -87,7 +87,7 @@ namespace gr {
       double
       repetition_encoder_impl::rate()
       {
-        return 1.0/static_cast<double>(d_rep);
+        return static_cast<double>(d_rep);
       }
 
       void
