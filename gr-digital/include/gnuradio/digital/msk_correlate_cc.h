@@ -33,20 +33,18 @@ namespace gr {
      * \brief Preamble correlator for (G)MSK-modulated burst transmissions
      * \ingroup synchronizers_blk
      *
+     * \details
      * Correlate against a preamble sequence to provide timing, frequency, and
      * phase estimates for downstream blocks.
      *
      * This block outputs the original stream, tagging samples which correspond
      * to the preamble sequence. Four tags are issued:
      *
-     * corr_est: the correlator output, useful for SNR estimation
-     *
-     * time_est: the fractional sample timing offset (how early/late the
+     * \li corr_est: the correlator output, useful for SNR estimation
+     * \li time_est: the fractional sample timing offset (how early/late the
      * closest sample to the peak is to the estimated actual peak)
-     *
-     * phase_est: the phase of the received preamble
-     *
-     * freq_est: the estimated frequency offset in radians/sample
+     * \li phase_est: the phase of the received preamble
+     * \li freq_est: the estimated frequency offset in radians/sample
      *
      * Note that at least coarse frequency offset correction must have been
      * performed before this block. Also note that an AGC should be used to

@@ -80,14 +80,15 @@ namespace gr {
       //It's just really convenient to use the same mapping for bits
       //as everything else does; otherwise the user would have to
       //specify their bits in [1, -1], and it's going to trip users up.
-      for(int i=0; i<symbols.size(); i++) {
-          symbols[i] = symbols[i] > 0 ? 1 : -1;
+      std::vector<float> nrz_symbols(symbols);
+      for(size_t i=0; i<symbols.size(); i++) {
+          nrz_symbols[i] = symbols[i] > 0.0f ? 1.0f : -1.0f;
       }
 
       // We want to add padding to the beginning of the symbols so we
       // can do the convolution of the symbols with the pulse shape.
       std::vector<float> padding((1+taps.size()/nfilts)/2, 0);
-      std::vector<float> padded_symbols = symbols;
+      std::vector<float> padded_symbols = nrz_symbols;
       padded_symbols.insert(padded_symbols.begin(), padding.begin(), padding.end());
 
       int nread;
