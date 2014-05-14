@@ -760,6 +760,14 @@ is_uniform_vector(pmt_t x)
   return x->is_uniform_vector();
 }
 
+size_t
+uniform_vector_itemsize(pmt_t vector)
+{
+  if (!vector->is_uniform_vector())
+    throw wrong_type("pmt_uniform_vector_itemsize", vector);
+  return _uniform_vector(vector)->itemsize();
+}
+
 const void *
 uniform_vector_elements(pmt_t vector, size_t &len)
 {
@@ -775,6 +783,8 @@ uniform_vector_writable_elements(pmt_t vector, size_t &len)
     throw wrong_type("pmt_uniform_vector_writable_elements", vector);
   return _uniform_vector(vector)->uniform_writable_elements(len);
 }
+
+
 
 ////////////////////////////////////////////////////////////////////////////
 //                            Dictionaries
