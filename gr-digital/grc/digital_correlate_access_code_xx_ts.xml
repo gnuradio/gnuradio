@@ -8,7 +8,8 @@
   <name>Correlate Access Code - Tag Stream</name>
   <key>digital_correlate_access_code_xx_ts</key>
   <import>from gnuradio import digital</import>
-  <make>digital.correlate_access_code_$(type.fcn)_ts($access_code, $threshold, $tagname)</make>
+  <make>digital.correlate_access_code_$(type.fcn)_ts($access_code,
+  $threshold, $tagname, $fec_rate, $fec_extra)</make>
 
   <param>
     <name>IO Type</name>
@@ -43,6 +44,20 @@
     <name>Tag Name</name>
     <key>tagname</key>
     <type>string</type>
+  </param>
+
+  <param>
+    <name>FEC Rate</name>
+    <key>fec_rate</key>
+    <value>1</value>
+    <type>float</type>
+  </param>
+
+  <param>
+    <name>FEC Extras</name>
+    <key>fec_extra</key>
+    <value>0</value>
+    <type>int</type>
   </param>
 
   <sink>

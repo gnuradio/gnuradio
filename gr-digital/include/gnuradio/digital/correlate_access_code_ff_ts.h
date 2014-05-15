@@ -35,12 +35,25 @@ namespace gr {
      * \ingroup packet_operators_blk
      *
      * \details
-     * input:  stream of bits, 1 bit per input byte (data in LSB)
-     * output: unaltered stream of bits (plus tags)
+     * input:  stream of floats (generally, soft decisions)
+     * output: unaltered stream of floats in a tagged stream
      *
-     * This block annotates the input stream with tags. The tags have
-     * key name [tag_name], specified in the constructor. Used for
-     * searching an input data stream for preambles, etc.
+     * This block searches for the given access code by slicing the
+     * soft decision symbol inputs. Once found, it expects the
+     * following 32 samples to contain a header that includes the
+     * frame length. It decodes the header to get the frame length in
+     * order to set up the the tagged stream key information.
+     *
+     * If the block is given a \p fec_rate and/or \p fec_extra, this
+     * information is used to adjust the tagged stream information
+     * based on the follow-on FEC decoding. The header provides
+     * information about the uncoded frame size (in bytes), so the
+     * actual frame length based on the FEC code used will be:
+     *
+     * pkt_len = fec_rate*8*frame_size + fec_extra
+     *
+     * The output of this block is appropriate for use with tagged
+     * stream blocks.
      */
     class DIGITAL_API correlate_access_code_ff_ts : virtual public block
     {
@@ -53,16 +66,27 @@ namespace gr {
        *                    e.g., "010101010111000100"
        * \param threshold maximum number of bits that may be wrong
        * \param tag_name key of the tag inserted into the tag stream
+       * \param fec_rate Rate of the FEC used to adjust the frame length info
+       * \param fec_extra Any extra samples added by the FEC
+       *        (e.g., the 2(K-1) tail used in the terminated CC codes).
        */
       static sptr make(const std::string &access_code,
 		       int threshold,
-		       const std::string &tag_name);
+		       const std::string &tag_name,
+                       float fec_rate=1,
+                       int fec_extra=0);
 
       /*!
        * \param access_code is represented with 1 byte per bit,
        *                    e.g., "010101010111000100"
        */
       virtual bool set_access_code(const std::string &access_code) = 0;
+      virtual void set_fec_rate(float rate) = 0;
+      virtual void set_fec_extra(int extra) = 0;
+
+      virtual unsigned long long access_code() const = 0;
+      virtual float fec_rate() const = 0;
+      virtual int fec_extra() const = 0;
     };
 
   } /* namespace digital */

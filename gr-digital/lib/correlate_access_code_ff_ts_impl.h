@@ -32,6 +32,10 @@ namespace gr {
       public correlate_access_code_ff_ts
     {
     private:
+      enum state_t {STATE_SYNC_SEARCH, STATE_HAVE_SYNC, STATE_HAVE_HEADER};
+
+      state_t d_state;
+
       unsigned long long d_access_code;	// access code to locate start of packet
                                         //   access code is left justified in the word
       unsigned long long d_data_reg;	// used to look for access_code
@@ -40,14 +44,28 @@ namespace gr {
       unsigned int d_threshold; 	// how many bits may be wrong in sync vector
       unsigned int d_len;               // the length of the access code
 
-      pmt::pmt_t d_key, d_me; //d_key is the tag name, d_me is the block name + unique ID
-      pmt::pmt_t d_pkt_key;
+      unsigned long long d_hdr_reg;	// used to look for header
+      int d_hdr_count;
+
+      pmt::pmt_t d_key, d_me; // d_key is the tag name, d_me is the block name + unique ID
       int d_pkt_len, d_pkt_count;
+
+      float d_fec_rate;
+      int   d_fec_extra;
+
+      void enter_search();
+      void enter_have_sync();
+      void enter_have_header(int payload_len);
+
+      bool header_ok();
+      int header_payload();
 
     public:
       correlate_access_code_ff_ts_impl(const std::string &access_code,
                                        int threshold,
-                                       const std::string &tag_name);
+                                       const std::string &tag_name,
+                                       float fec_rate=1,
+                                       int fec_extra=0);
       ~correlate_access_code_ff_ts_impl();
 
       int general_work(int noutput_items,
@@ -56,6 +74,12 @@ namespace gr {
                        gr_vector_void_star &output_items);
 
       bool set_access_code(const std::string &access_code);
+      void set_fec_rate(float rate);
+      void set_fec_extra(int extra);
+
+      unsigned long long access_code() const;
+      float fec_rate() const;
+      int fec_extra() const;
     };
 
   } /* namespace digital */
