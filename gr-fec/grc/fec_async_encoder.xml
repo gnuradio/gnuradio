@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<block>
+  <name>FEC Async Encoder</name>
+  <key>fec_async_encoder</key>
+  <import>from gnuradio import fec</import>
+  <make>fec.async_encoder($encoder)</make>
+
+  <param>
+    <name>Constituent Encoder</name>
+    <key>encoder</key>
+    <value>encoder_variable</value>
+    <type>raw</type>
+  </param>
+
+  <sink>
+    <name>pdus</name>
+    <type>message</type>
+    <optional>1</optional>
+  </sink>
+
+  <source>
+    <name>pdus</name>
+    <type>message</type>
+    <optional>1</optional>
+  </source>
+
+  <doc>
+  </doc>
+
+</block>

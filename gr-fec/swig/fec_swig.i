@@ -42,6 +42,8 @@
 #include "gnuradio/fec/encoder.h"
 #include "gnuradio/fec/tagged_decoder.h"
 #include "gnuradio/fec/tagged_encoder.h"
+#include "gnuradio/fec/async_decoder.h"
+#include "gnuradio/fec/async_encoder.h"
 #include "gnuradio/fec/cc_decoder.h"
 #include "gnuradio/fec/cc_encoder.h"
 #include "gnuradio/fec/ccsds_encoder.h"
@@ -64,6 +66,8 @@
 %include "gnuradio/fec/encoder.h"
 %include "gnuradio/fec/tagged_decoder.h"
 %include "gnuradio/fec/tagged_encoder.h"
+%include "gnuradio/fec/async_decoder.h"
+%include "gnuradio/fec/async_encoder.h"
 %include "gnuradio/fec/cc_decoder.h"
 %include "gnuradio/fec/cc_encoder.h"
 %include "gnuradio/fec/ccsds_encoder.h"
@@ -83,6 +87,8 @@ GR_SWIG_BLOCK_MAGIC2(fec, decoder);
 GR_SWIG_BLOCK_MAGIC2(fec, encoder);
 GR_SWIG_BLOCK_MAGIC2(fec, tagged_decoder);
 GR_SWIG_BLOCK_MAGIC2(fec, tagged_encoder);
+GR_SWIG_BLOCK_MAGIC2(fec, async_decoder);
+GR_SWIG_BLOCK_MAGIC2(fec, async_encoder);
 GR_SWIG_BLOCK_MAGIC2(fec, decode_ccsds_27_fb);
 GR_SWIG_BLOCK_MAGIC2(fec, encode_ccsds_27_bb);
 GR_SWIG_BLOCK_MAGIC2(fec, ber_bf);

@@ -1,0 +1,62 @@
+<?xml version="1.0"?>
+<block>
+  <name>FEC Async Decoder</name>
+  <key>fec_async_decoder</key>
+  <import>from gnuradio import fec</import>
+  <make>fec.async_decoder($decoder, $itype.size, $otype.size)</make>
+
+  <param>
+    <name>Constituent Decoder</name>
+    <key>decoder</key>
+    <value>decoder_variable</value>
+    <type>raw</type>
+  </param>
+
+  <param>
+    <name>Input Type</name>
+    <key>itype</key>
+    <type>enum</type>
+    <option>
+      <name>Byte</name>
+      <key>byte</key>
+      <opt>size:gr.sizeof_char</opt>
+    </option>
+    <option>
+      <name>Float</name>
+      <key>float</key>
+      <opt>size:gr.sizeof_float</opt>
+    </option>
+  </param>
+
+  <param>
+    <name>Output Type</name>
+    <key>otype</key>
+    <type>enum</type>
+    <option>
+      <name>Byte</name>
+      <key>byte</key>
+      <opt>size:gr.sizeof_char</opt>
+    </option>
+    <option>
+      <name>Float</name>
+      <key>float</key>
+      <opt>size:gr.sizeof_float</opt>
+    </option>
+  </param>
+
+  <sink>
+    <name>pdus</name>
+    <type>message</type>
+    <optional>1</optional>
+  </sink>
+
+  <source>
+    <name>pdus</name>
+    <type>message</type>
+    <optional>1</optional>
+  </source>
+
+  <doc>
+  </doc>
+
+</block>

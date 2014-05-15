@@ -28,7 +28,6 @@
 #include <gnuradio/tagged_stream_block.h>
 #include <boost/shared_ptr.hpp>
 #include <boost/shared_array.hpp>
-#include <boost/format.hpp>
 
 namespace gr {
   namespace fec {

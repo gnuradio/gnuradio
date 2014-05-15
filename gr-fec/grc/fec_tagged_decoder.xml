@@ -1,0 +1,67 @@
+<?xml version="1.0"?>
+<block>
+  <name>FEC Tagged Decoder</name>
+  <key>fec_tagged_decoder</key>
+  <import>from gnuradio import fec</import>
+  <make>fec.tagged_decoder($decoder, $itype.size, $otype.size, $lentagname)</make>
+
+  <param>
+    <name>Constituent Decoder</name>
+    <key>decoder</key>
+    <value>decoder_variable</value>
+    <type>raw</type>
+  </param>
+
+  <param>
+    <name>Input Type</name>
+    <key>itype</key>
+    <type>enum</type>
+    <option>
+      <name>Byte</name>
+      <key>byte</key>
+      <opt>size:gr.sizeof_char</opt>
+    </option>
+    <option>
+      <name>Float</name>
+      <key>float</key>
+      <opt>size:gr.sizeof_float</opt>
+    </option>
+  </param>
+
+  <param>
+    <name>Output Type</name>
+    <key>otype</key>
+    <type>enum</type>
+    <option>
+      <name>Byte</name>
+      <key>byte</key>
+      <opt>size:gr.sizeof_char</opt>
+    </option>
+    <option>
+      <name>Float</name>
+      <key>float</key>
+      <opt>size:gr.sizeof_float</opt>
+    </option>
+  </param>
+
+  <param>
+    <name>Length Tag Name</name>
+    <key>lentagname</key>
+    <value>"pkt_len"</value>
+    <type>string</type>
+  </param>
+
+  <sink>
+    <name>in</name>
+    <type>$itype</type>
+  </sink>
+
+  <source>
+    <name>out</name>
+    <type>$otype</type>
+  </source>
+
+  <doc>
+  </doc>
+
+</block>

@@ -25,6 +25,10 @@
     <block>fec_extended_decoder</block>
     <block>fec_generic_encoder</block>
     <block>fec_generic_decoder</block>
+    <block>fec_tagged_encoder</block>
+    <block>fec_tagged_decoder</block>
+    <block>fec_async_encoder</block>
+    <block>fec_async_decoder</block>
     <block>fec_decode_ccsds_27_fb</block>
     <block>fec_encode_ccsds_27_bb</block>
     <block>fec_puncture_xx</block>
