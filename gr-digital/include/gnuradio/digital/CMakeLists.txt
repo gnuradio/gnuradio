@@ -94,6 +94,7 @@ install(FILES
     cpmmod_bc.h
     crc32.h
     crc32_bb.h
+    crc32_async_bb.h
     descrambler_bb.h
     diff_decoder_bb.h
     diff_encoder_bb.h
@@ -146,4 +147,3 @@ install(FILES
     DESTINATION ${GR_INCLUDE_DIR}/gnuradio/digital
     COMPONENT "digital_devel"
 )
-

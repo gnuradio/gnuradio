@@ -61,6 +61,7 @@
 #include "gnuradio/digital/cpmmod_bc.h"
 #include "gnuradio/digital/crc32.h"
 #include "gnuradio/digital/crc32_bb.h"
+#include "gnuradio/digital/crc32_async_bb.h"
 #include "gnuradio/digital/descrambler_bb.h"
 #include "gnuradio/digital/diff_decoder_bb.h"
 #include "gnuradio/digital/diff_encoder_bb.h"
@@ -136,6 +137,7 @@
 %include "gnuradio/digital/cpmmod_bc.h"
 %include "gnuradio/digital/crc32.h"
 %include "gnuradio/digital/crc32_bb.h"
+%include "gnuradio/digital/crc32_async_bb.h"
 %include "gnuradio/digital/descrambler_bb.h"
 %include "gnuradio/digital/diff_decoder_bb.h"
 %include "gnuradio/digital/diff_encoder_bb.h"
@@ -204,6 +206,7 @@ GR_SWIG_BLOCK_MAGIC2(digital, correlate_access_code_ff_ts);
 GR_SWIG_BLOCK_MAGIC2(digital, correlate_and_sync_cc);
 GR_SWIG_BLOCK_MAGIC2(digital, costas_loop_cc);
 GR_SWIG_BLOCK_MAGIC2(digital, crc32_bb);
+GR_SWIG_BLOCK_MAGIC2(digital, crc32_async_bb);
 GR_SWIG_BLOCK_MAGIC2(digital, cpmmod_bc);
 GR_SWIG_BLOCK_MAGIC2(digital, descrambler_bb);
 GR_SWIG_BLOCK_MAGIC2(digital, diff_decoder_bb);

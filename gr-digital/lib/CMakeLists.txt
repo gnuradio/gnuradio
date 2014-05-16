@@ -130,6 +130,7 @@ list(APPEND digital_sources
     cpmmod_bc_impl.cc
     crc32.cc
     crc32_bb_impl.cc
+    crc32_async_bb_impl.cc
     descrambler_bb_impl.cc
     diff_decoder_bb_impl.cc
     diff_encoder_bb_impl.cc
