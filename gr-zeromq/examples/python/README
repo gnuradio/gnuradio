@@ -1,0 +1,71 @@
+THIS IS EXPERIMENTAL SOFTWARE AND API IS SUBJECT TO CHANGE
+
+How to run the example
+----------------------
+
+Assuming that the module has been compiled but not installed, in the
+gr-zeromq folder do
+
+    cd examples
+    ./run_app.sh server
+
+on another terminal or machine
+
+    ./run_app.sh client -s hostname
+
+You can also run a (remote) GUI on any of the two or a third machine for monitoring and control.
+
+    ./run_app.sh gui.py -s servername -c hostname
+
+in doing so the order of starting the scripts is arbitrary. When installing the
+module, the run\_app.sh script is of course not needed.
+
+
+How to use the API
+------------------
+
+### PROBE API
+Connect a zmq pubsub sink to the block you want to monitor
+
+        self.zmq_probe = zeromq.sink_pubsub(gr.sizeof_float, "tcp://*:5556")
+
+add a probe manager to your Python GUI
+
+        # ZeroMQ
+        probe_manager = zeromq.probe_manager()
+        probe_manager.add_socket("tcp://localhost:5556",
+                                 'float32', self.plot_data)
+
+        def plot_data(self,samples):
+            [...]
+
+basically creates a watcher thread that calls the call back functions and
+unpacks sample data. Now you can use a timer to update the plot, e.g. in PyQt
+
+        update_timer = Qt.QTimer()
+        self.connect(update_timer,
+                     QtCore.SIGNAL("timeout()"),
+                     probe_manager.watcher)
+        update_timer.start(30)
+
+### RPC API
+Add an rpc manager to your Python app to receive RPCs
+
+        rpc_manager = zeromq.rpc_manager()
+        rpc_manager.set_reply_socket("tcp://*:6666")
+        rpc_manager.add_interface("start_fg",self.start)
+        rpc_manager.start_watcher()
+
+to be able to send requests also add one on the other side
+
+        rpc_manager = zeromq.rpc_manager()
+        rpc_manager.set_request_socket("tcp://localhost:6666")
+
+send a request
+
+        rpc_mganager.request("start_fg")
+        rpc_mgr_server.request("set_k",gain)
+
+RPCs use GNU Radio pmt's to serialize arguments, the watcher thread will
+regularly poll for incoming RPC requests, deserializes arguments and call the
+interface callback function accordingly.

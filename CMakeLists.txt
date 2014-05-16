@@ -327,6 +327,7 @@ add_subdirectory(gr-vocoder)
 add_subdirectory(gr-fcd)
 add_subdirectory(gr-wavelet)
 add_subdirectory(gr-wxgui)
+add_subdirectory(gr-zeromq)
 
 # Defining GR_CTRLPORT for gnuradio/config.h
 if(ENABLE_GR_CTRLPORT)
