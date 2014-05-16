@@ -64,6 +64,7 @@ namespace gr {
      */
     hdlc_deframer_bp_impl::~hdlc_deframer_bp_impl()
     {
+        delete[] d_pktbuf;
     }
 
     unsigned int
@@ -94,12 +95,13 @@ namespace gr {
                 if(bit) { //six ones is a frame delimiter
                     if(d_bytectr >= d_length_min) {
                         //check CRC, publish frame
+                        int len = d_bytectr - 2; //make Coverity happy
                         unsigned short crc = d_pktbuf[d_bytectr-1] << 8
                                            | d_pktbuf[d_bytectr-2];
-                        unsigned short calc_crc = crc_ccitt(d_pktbuf, d_bytectr-2);
+                        unsigned short calc_crc = crc_ccitt(d_pktbuf, len);
                         if (crc==calc_crc) {
                             pmt::pmt_t pdu(pmt::cons(pmt::PMT_NIL,
-                                                     pmt::make_blob(&d_pktbuf[0], d_bytectr-2)));
+                                                     pmt::make_blob(d_pktbuf, len)));
                             message_port_pub(pmt::mp("out"), pdu);
                         }
                         else {
