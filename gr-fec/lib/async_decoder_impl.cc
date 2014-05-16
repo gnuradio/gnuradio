@@ -49,8 +49,8 @@ namespace gr {
         d_input_item_size(input_item_size), d_output_item_size(output_item_size)
     {
       d_decoder = my_decoder;
-      message_port_register_in(pmt::mp("pdus"));
-      message_port_register_out(pmt::mp("pdus"));
+      message_port_register_in(pmt::mp("in"));
+      message_port_register_out(pmt::mp("out"));
       set_msg_handler(pmt::mp("pdus"), boost::bind(&async_decoder_impl::decode, this ,_1));
     }
 

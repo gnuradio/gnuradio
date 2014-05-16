@@ -45,13 +45,13 @@
   </param>
 
   <sink>
-    <name>pdus</name>
+    <name>in</name>
     <type>message</type>
     <optional>1</optional>
   </sink>
 
   <source>
-    <name>pdus</name>
+    <name>out</name>
     <type>message</type>
     <optional>1</optional>
   </source>

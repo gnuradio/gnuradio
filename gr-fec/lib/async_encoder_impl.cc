@@ -26,6 +26,7 @@
 
 #include "async_encoder_impl.h"
 #include <gnuradio/io_signature.h>
+#include <volk/volk.h>
 #include <stdio.h>
 
 namespace gr {
@@ -44,10 +45,13 @@ namespace gr {
               io_signature::make(0,0,0)),
         d_input_item_size(sizeof(char)), d_output_item_size(sizeof(char))
     {
+      d_in_port = pmt::mp("in");
+      d_out_port = pmt::mp("out");
+
       d_encoder = my_encoder;
-      message_port_register_in(pmt::mp("pdus"));
-      message_port_register_out(pmt::mp("pdus"));
-      set_msg_handler(pmt::mp("pdus"), boost::bind(&async_encoder_impl::encode, this ,_1) );
+      message_port_register_in(d_in_port);
+      message_port_register_out(d_out_port);
+      set_msg_handler(d_in_port, boost::bind(&async_encoder_impl::encode, this ,_1) );
     }
 
     async_encoder_impl::~async_encoder_impl()
@@ -59,50 +63,53 @@ namespace gr {
     {
       // extract input pdu
       pmt::pmt_t meta(pmt::car(msg));
-      pmt::pmt_t bits(pmt::cdr(msg));
+      pmt::pmt_t bytes(pmt::cdr(msg));
 
-      int nbits = pmt::length(bits);
-      int blksize_in = d_encoder->get_input_size();
-      int blksize_out = (int)d_encoder->rate();
-      int nblocks = nbits/blksize_in;
+      int nbytes = pmt::length(bytes);
+      int nbits = 8*nbytes;
+      size_t o0(0);
+      const uint8_t* bytes_in = pmt::u8vector_elements(bytes, o0);
+      uint8_t* bits_in = (uint8_t*)volk_malloc(nbits*sizeof(uint8_t),
+                                               volk_get_alignment());
 
-      printf("async_encoder: blksize_in = %d, blksize_out = %d nblocks=%d\n",
-             blksize_in, blksize_out, nblocks);
+      // Stolen from unpack_k_bits
+      int n = 0;
+      for(int i = 0; i < nbytes; i++) {
+        uint8_t t = bytes_in[i];
+        for(int j = 7; j >= 0; j--)
+          bits_in[n++] = (t >> j) & 0x01;
+      }
 
-      pmt::pmt_t outvec(pmt::make_u8vector(blksize_out * nblocks, 0xFF));
+      d_encoder->set_frame_size(nbits);
 
-      printf("encoder: outvec len = %d\n", blksize_out * nblocks);
+      int nbits_out = d_encoder->get_output_size();
+      int nbytes_out = nbits_out/8;
 
       // get pmt buffer pointers
-      size_t o0(0);
-      const uint8_t* u8in = pmt::u8vector_elements(bits,o0);
-      uint8_t* u8tmp = pmt::u8vector_writable_elements(bits,o0);
-      uint8_t* u8out = pmt::u8vector_writable_elements(outvec,o0);
+      uint8_t* bits_out = (uint8_t*)volk_malloc(nbits_out*sizeof(uint8_t),
+                                                volk_get_alignment());
+      uint8_t* bytes_out = (uint8_t*)volk_malloc(nbytes_out*sizeof(uint8_t),
+                                                 volk_get_alignment());
 
-      // alloc playspace
-      std::vector<uint8_t> blks_out(blksize_out);
+      // ENCODE!
+      d_encoder->generic_work((void*)bits_in, (void*)bits_out);
 
-      // loop over n fec blocks
-      for(int i = 0; i < nblocks; i++) {
-        size_t offset_in = i * blksize_in;
-        size_t offset_out = i * blksize_out;
-
-        for(int jj = 0; jj < blksize_in; jj++) {
-          u8tmp[offset_in + jj] = 0x01 & u8in[offset_in + jj];
-          //printf("in[%zd]=%u ", offset_in+jj, u8tmp[offset_in + jj]);
-          //fflush(stdout);
-        }
-
-        // ENCODE!
-        d_encoder->generic_work((void*)&u8tmp[offset_in], (void*)&blks_out[0]);
-
-        // convert float -> u8
-        for(int j = 0; j < blksize_out; j++) {
-          u8out[offset_out + j] = (blks_out[j] > 0);
+      // Stolen from pack_k_bits
+      for(int i = 0; i < nbytes_out; i++) {
+        bytes_out[i] = 0x00;
+        for(int j = 0; j < 8; j++) {
+          bytes_out[i] |= (0x01 & bits_out[i*8+j])<<(8-j-1);
         }
       }
 
-      message_port_pub(pmt::mp("pdus"), pmt::cons(meta, outvec));
+      //pmt::pmt_t outvec = pmt::init_u8vector(nouts, u8out);
+      pmt::pmt_t outvec = pmt::init_u8vector(nbytes_out, bytes_out);
+      pmt::pmt_t msg_pair = pmt::cons(meta, outvec);
+      message_port_pub(d_out_port, msg_pair);
+
+      volk_free(bits_in);
+      volk_free(bits_out);
+      volk_free(bytes_out);
     }
 
     int

@@ -35,6 +35,9 @@ namespace gr {
       size_t d_input_item_size;
       size_t d_output_item_size;
 
+      pmt::pmt_t d_in_port;
+      pmt::pmt_t d_out_port;
+
       void encode(pmt::pmt_t msg);
 
     public:
