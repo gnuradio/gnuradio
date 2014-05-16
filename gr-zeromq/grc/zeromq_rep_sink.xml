@@ -60,6 +60,7 @@
   <sink>
     <name>in</name>
     <type>$type</type>
+    <vlen>$vlen</vlen>
   </sink>
 
 </block>

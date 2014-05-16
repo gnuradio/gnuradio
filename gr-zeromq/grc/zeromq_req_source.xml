@@ -60,6 +60,7 @@
   <source>
     <name>out</name>
     <type>$type</type>
+    <vlen>$vlen</vlen>
   </source>
 
 </block>

@@ -43,7 +43,7 @@
     <value>1</value>
     <type>int</type>
   </param>
- 
+
   <param>
     <name>Address</name>
     <key>address</key>
@@ -60,6 +60,7 @@
   <sink>
     <name>in</name>
     <type>$type</type>
+    <vlen>$vlen</vlen>
   </sink>
 
 </block>
