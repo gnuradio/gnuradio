@@ -40,19 +40,15 @@ namespace gr {
     correlate_access_code_ff_ts::sptr
     correlate_access_code_ff_ts::make(const std::string &access_code,
                                       int threshold,
-                                      const std::string &tag_name,
-                                      float fec_rate, int fec_extra)
+                                      const std::string &tag_name)
     {
       return gnuradio::get_initial_sptr
 	(new correlate_access_code_ff_ts_impl(access_code,
-                                              threshold, tag_name,
-                                              fec_rate, fec_extra));
+                                              threshold, tag_name));
     }
 
-
     correlate_access_code_ff_ts_impl::correlate_access_code_ff_ts_impl(
-      const std::string &access_code, int threshold, const std::string &tag_name,
-      float fec_rate, int fec_extra)
+      const std::string &access_code, int threshold, const std::string &tag_name)
       : block("correlate_access_code_ff_ts",
               io_signature::make(1, 1, sizeof(float)),
               io_signature::make(1, 1, sizeof(float))),
@@ -75,9 +71,6 @@ namespace gr {
       d_pkt_count = 0;
       d_hdr_reg = 0;
       d_hdr_count = 0;
-
-      set_fec_rate(fec_rate);
-      set_fec_extra(fec_extra);
     }
 
     correlate_access_code_ff_ts_impl::~correlate_access_code_ff_ts_impl()
@@ -106,40 +99,10 @@ namespace gr {
       return true;
     }
 
-    void
-    correlate_access_code_ff_ts_impl::set_fec_rate(float rate)
-    {
-      if(rate <= 0) {
-        throw std::runtime_error("correlate_access_code_ff_ts: FEC rate must be > 0");
-      }
-      d_fec_rate = rate;
-    }
-
-    void
-    correlate_access_code_ff_ts_impl::set_fec_extra(int extra)
-    {
-      if(extra < 0) {
-        throw std::runtime_error("correlate_access_code_ff_ts: FEC extra bits must be >= 0");
-      }
-      d_fec_extra = extra;
-    }
-
     unsigned long long
     correlate_access_code_ff_ts_impl::access_code() const
     {
       return d_access_code;
-    }
-
-    float
-    correlate_access_code_ff_ts_impl::fec_rate() const
-    {
-      return d_fec_rate;
-    }
-
-    int
-    correlate_access_code_ff_ts_impl::fec_extra() const
-    {
-      return d_fec_extra;
     }
 
     inline void
@@ -160,7 +123,7 @@ namespace gr {
     correlate_access_code_ff_ts_impl::enter_have_header(int payload_len)
     {
       d_state = STATE_HAVE_HEADER;
-      d_pkt_len = d_fec_rate*8*payload_len + d_fec_extra;
+      d_pkt_len = 8*payload_len;
       d_pkt_count = 0;
     }
 

@@ -50,8 +50,6 @@ namespace gr {
       pmt::pmt_t d_key, d_me; // d_key is the tag name, d_me is the block name + unique ID
       int d_pkt_len, d_pkt_count;
 
-      float d_fec_rate;
-      int   d_fec_extra;
 
       void enter_search();
       void enter_have_sync();
@@ -63,9 +61,7 @@ namespace gr {
     public:
       correlate_access_code_ff_ts_impl(const std::string &access_code,
                                        int threshold,
-                                       const std::string &tag_name,
-                                       float fec_rate=1,
-                                       int fec_extra=0);
+                                       const std::string &tag_name);
       ~correlate_access_code_ff_ts_impl();
 
       int general_work(int noutput_items,
@@ -74,12 +70,7 @@ namespace gr {
                        gr_vector_void_star &output_items);
 
       bool set_access_code(const std::string &access_code);
-      void set_fec_rate(float rate);
-      void set_fec_extra(int extra);
-
       unsigned long long access_code() const;
-      float fec_rate() const;
-      int fec_extra() const;
     };
 
   } /* namespace digital */
