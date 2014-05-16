@@ -24,6 +24,7 @@
 from gnuradio import gr, gr_unittest
 from gnuradio import blocks, zeromq
 from gnuradio import eng_notation
+import time
 
 class qa_zeromq_reqrep (gr_unittest.TestCase):
 
@@ -42,8 +43,11 @@ class qa_zeromq_reqrep (gr_unittest.TestCase):
         sink = blocks.vector_sink_f(vlen)
         self.tb.connect(src, zeromq_rep_sink)
         self.tb.connect(zeromq_req_source, sink)
-        self.tb.run ()
-        self.assertEqual(sink.data(), src_data)
+        self.tb.start()
+        time.sleep(0.25)
+        self.tb.stop()
+        self.tb.wait()
+        self.assertFloatTuplesAlmostEqual(sink.data(), src_data)
 
 if __name__ == '__main__':
     gr_unittest.run(qa_zeromq_reqrep)

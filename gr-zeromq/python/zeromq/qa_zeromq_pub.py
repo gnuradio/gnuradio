@@ -43,7 +43,8 @@ class qa_zeromq_pub (gr_unittest.TestCase):
         self.probe_manager = zeromq.probe_manager()
         self.probe_manager.add_socket("tcp://127.0.0.1:5555", 'float32', self.recv_data)
         self.tb.run()
-        self.assertEqual(self.rx_data, src_data)
+        self.probe_manager.watcher()
+        self.assertFloatTuplesAlmostEqual(self.rx_data, src_data)
 
     def recv_data (self, data):
         self.rx_data = data
