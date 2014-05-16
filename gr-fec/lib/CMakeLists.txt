@@ -29,6 +29,7 @@ include_directories(
     ${CMAKE_CURRENT_SOURCE_DIR}
     ${CMAKE_CURRENT_BINARY_DIR}
     ${GR_FEC_INCLUDE_DIRS}
+    ${GR_BLOCKS_INCLUDE_DIRS}
     ${GNURADIO_RUNTIME_INCLUDE_DIRS}
     ${VOLK_INCLUDE_DIRS}
     ${LOG4CPP_INCLUDE_DIRS}
@@ -89,6 +90,7 @@ if(MSVC)
 endif(MSVC)
 
 list(APPEND gnuradio_fec_libs
+    gnuradio-blocks
     gnuradio-runtime
     volk
     ${Boost_LIBRARIES}

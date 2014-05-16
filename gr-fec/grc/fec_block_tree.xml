@@ -22,6 +22,7 @@
       <block>variable_dummy_encoder_def</block>
     </cat>
     <block>fec_extended_encoder</block>
+    <block>fec_extended_async_encoder</block>
     <block>fec_extended_decoder</block>
     <block>fec_generic_encoder</block>
     <block>fec_generic_decoder</block>
