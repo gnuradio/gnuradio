@@ -182,12 +182,16 @@ def _npadding_bytes(pkt_byte_len, samples_per_symbol, bits_per_symbol):
     return byte_modulus - r
 
 
-def unmake_packet(whitened_payload_with_crc, whitener_offset=0, dewhitening=True):
+def unmake_packet(whitened_payload_with_crc, whitener_offset=0,
+                  dewhitening=True, check_crc=True):
     """
     Return (ok, payload)
 
     Args:
         whitened_payload_with_crc: string
+        whitener_offset: integer offset into whitener table
+        dewhitening: True if we should run this through the dewhitener
+        check_crc: True if we should check the CRC of the packet
     """
 
     if dewhitening:
@@ -195,7 +199,11 @@ def unmake_packet(whitened_payload_with_crc, whitener_offset=0, dewhitening=True
     else:
         payload_with_crc = (whitened_payload_with_crc)
 
-    ok, payload = crc.check_crc32(payload_with_crc)
+    if check_crc:
+        ok, payload = crc.check_crc32(payload_with_crc)
+    else:
+        payload = payload_with_crc
+        ok = True
 
     if 0:
         print "payload_with_crc =", string_to_hex_list(payload_with_crc)
