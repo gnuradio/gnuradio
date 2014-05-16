@@ -33,6 +33,12 @@ class test_pfb_channelizer(gr_unittest.TestCase):
 
     def setUp(self):
         self.tb = gr.top_block()
+        M = 5            # Number of channels to channelize
+        fs = 5000        # baseband sampling rate
+        ifs = M*fs       # input samp rate to channelizer
+        self.taps = filter.firdes.low_pass_2(1, ifs, fs/2, fs/10,
+                                        attenuation_dB=80,
+                                        window=filter.firdes.WIN_BLACKMAN_hARRIS)
 
     def tearDown(self):
         self.tb = None
@@ -42,10 +48,6 @@ class test_pfb_channelizer(gr_unittest.TestCase):
         M = 5            # Number of channels to channelize
         fs = 5000        # baseband sampling rate
         ifs = M*fs       # input samp rate to channelizer
-
-        taps = filter.firdes.low_pass_2(1, ifs, fs/2, fs/10,
-                                        attenuation_dB=80,
-                                        window=filter.firdes.WIN_BLACKMAN_hARRIS)
 
         signals = list()
         add = blocks.add_cc()
@@ -57,7 +59,7 @@ class test_pfb_channelizer(gr_unittest.TestCase):
             self.tb.connect(signals[i], (add,i))
 
         s2ss = blocks.stream_to_streams(gr.sizeof_gr_complex, M)
-        pfb = filter.pfb_channelizer_ccf(M, taps, 1)
+        pfb = filter.pfb_channelizer_ccf(M, self.taps, 1)
 
         self.tb.connect(add, s2ss)
 
@@ -80,7 +82,7 @@ class test_pfb_channelizer(gr_unittest.TestCase):
         p4 = 1.3782797467397869
 
         # Filter delay is the normal delay of each arm
-        tpf = math.ceil(len(taps) / float(M))
+        tpf = math.ceil(len(self.taps) / float(M))
         delay = -(tpf - 1.0) / 2.0
         delay = int(delay)
 
