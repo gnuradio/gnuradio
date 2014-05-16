@@ -49,6 +49,9 @@ namespace gr {
       d_out_port = pmt::mp("out");
 
       d_encoder = my_encoder;
+      d_unpack = new blocks::kernel::unpack_k_bits(8);
+      d_pack   = new blocks::kernel::pack_k_bits(8);
+
       message_port_register_in(d_in_port);
       message_port_register_out(d_out_port);
       set_msg_handler(d_in_port, boost::bind(&async_encoder_impl::encode, this ,_1) );
@@ -56,6 +59,8 @@ namespace gr {
 
     async_encoder_impl::~async_encoder_impl()
     {
+      delete d_unpack;
+      delete d_pack;
     }
 
     void
@@ -72,20 +77,16 @@ namespace gr {
       uint8_t* bits_in = (uint8_t*)volk_malloc(nbits*sizeof(uint8_t),
                                                volk_get_alignment());
 
-      // Stolen from unpack_k_bits
-      int n = 0;
-      for(int i = 0; i < nbytes; i++) {
-        uint8_t t = bytes_in[i];
-        for(int j = 7; j >= 0; j--)
-          bits_in[n++] = (t >> j) & 0x01;
-      }
+      // Encoder takes a stream of bits, but PDU's are received as
+      // bytes, so we unpack them here.
+      d_unpack->unpack(bits_in, bytes_in, nbytes);
 
       d_encoder->set_frame_size(nbits);
 
       int nbits_out = d_encoder->get_output_size();
       int nbytes_out = nbits_out/8;
 
-      // get pmt buffer pointers
+      // buffers for bits/bytes to go to
       uint8_t* bits_out = (uint8_t*)volk_malloc(nbits_out*sizeof(uint8_t),
                                                 volk_get_alignment());
       uint8_t* bytes_out = (uint8_t*)volk_malloc(nbytes_out*sizeof(uint8_t),
@@ -95,12 +96,7 @@ namespace gr {
       d_encoder->generic_work((void*)bits_in, (void*)bits_out);
 
       // Stolen from pack_k_bits
-      for(int i = 0; i < nbytes_out; i++) {
-        bytes_out[i] = 0x00;
-        for(int j = 0; j < 8; j++) {
-          bytes_out[i] |= (0x01 & bits_out[i*8+j])<<(8-j-1);
-        }
-      }
+      d_pack->pack(bytes_out, bits_out, nbytes_out);
 
       //pmt::pmt_t outvec = pmt::init_u8vector(nouts, u8out);
       pmt::pmt_t outvec = pmt::init_u8vector(nbytes_out, bytes_out);

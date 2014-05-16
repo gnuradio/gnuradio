@@ -24,6 +24,8 @@
 #define INCLUDED_FEC_ASYNC_ENCODER_IMPL_H
 
 #include <gnuradio/fec/async_encoder.h>
+#include <gnuradio/blocks/unpack_k_bits.h>
+#include <gnuradio/blocks/pack_k_bits.h>
 
 namespace gr {
   namespace fec {
@@ -39,6 +41,8 @@ namespace gr {
       pmt::pmt_t d_out_port;
 
       void encode(pmt::pmt_t msg);
+      blocks::kernel::unpack_k_bits *d_unpack;
+      blocks::kernel::pack_k_bits   *d_pack;
 
     public:
       async_encoder_impl(generic_encoder::sptr my_encoder);
