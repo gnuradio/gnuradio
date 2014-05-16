@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2006,2013-2014 Free Software Foundation, Inc.
+ * Copyright 2014 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -20,30 +20,47 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef INCLUDED_GR_UNPACK_K_BITS_BB_IMPL_H
-#define	INCLUDED_GR_UNPACK_K_BITS_BB_IMPL_H
+#if HAVE_CONFIG_H
+#include "config.h"
+#endif
 
-#include <gnuradio/blocks/unpack_k_bits_bb.h>
 #include <gnuradio/blocks/unpack_k_bits.h>
+#include <gnuradio/io_signature.h>
+#include <stdexcept>
+#include <iostream>
 
 namespace gr {
   namespace blocks {
+    namespace kernel {
 
-    class unpack_k_bits_bb_impl : public unpack_k_bits_bb
-    {
-    private:
-      kernel::unpack_k_bits *d_unpack;
+      unpack_k_bits::unpack_k_bits(unsigned k)
+        : d_k(k)
+      {
+        if(d_k == 0)
+          throw std::out_of_range("unpack_k_bits: k must be > 0");
+      }
 
-    public:
-      unpack_k_bits_bb_impl(unsigned k);
-      ~unpack_k_bits_bb_impl();
+      unpack_k_bits::~unpack_k_bits()
+      {
+      }
 
-      int work(int noutput_items,
-               gr_vector_const_void_star &input_items,
-               gr_vector_void_star &output_items);
-    };
+      void
+      unpack_k_bits::unpack(unsigned char *bits, const unsigned char *bytes, int nbytes) const
+      {
+        int n = 0;
+        for(int i = 0; i < nbytes; i++) {
+          unsigned int t = bytes[i];
+          for(int j = d_k - 1; j >= 0; j--)
+            bits[n++] = (t >> j) & 0x01;
+        }
+      }
 
+      int
+      unpack_k_bits::k() const
+      {
+        return d_k;
+      }
+
+    } /* namespace kernel */
   } /* namespace blocks */
 } /* namespace gr */
-
-#endif /* INCLUDED_GR_UNPACK_K_BITS_BB_IMPL_H */
