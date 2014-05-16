@@ -170,6 +170,7 @@ namespace pmt{
   bool is_f64vector(pmt_t x);
   bool is_c32vector(pmt_t x);
   bool is_c64vector(pmt_t x);
+  size_t uniform_vector_itemsize(pmt_t x);
   pmt_t make_u8vector(size_t k, uint8_t fill);
   pmt_t make_s8vector(size_t k, int8_t fill);
   pmt_t make_u16vector(size_t k, uint16_t fill);

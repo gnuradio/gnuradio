@@ -43,6 +43,7 @@ class test_pmt(unittest.TestCase):
         s = pmt.serialize_str(v)
         d = pmt.deserialize_str(s)
         self.assertTrue(pmt.equal(v, d))
+        self.assertEqual(pmt.uniform_vector_itemsize(v), 4)
 
     def test04(self):
         v = pmt.init_f64vector(3, [11, -22, 33])
@@ -91,6 +92,7 @@ class test_pmt(unittest.TestCase):
         s = pmt.serialize_str(v)
         d = pmt.deserialize_str(s)
         self.assertTrue(pmt.equal(v, d))
+        self.assertEqual(pmt.uniform_vector_itemsize(v), 8)
 
     def test12(self):
         v = pmt.init_c64vector(3, [11 + -101j, -22 + 202j, 33 + -303j])
