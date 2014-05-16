@@ -14,6 +14,7 @@ public:
 
   bool is_@TAG@vector() const { return true; }
   size_t length() const { return d_v.size(); }
+  size_t itemsize() const { return sizeof(@TYPE@); }
   @TYPE@ ref(size_t k) const;
   void set(size_t k, @TYPE@ x);
   const @TYPE@ *elements(size_t &len);

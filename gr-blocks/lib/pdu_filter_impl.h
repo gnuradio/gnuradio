@@ -33,9 +33,10 @@ namespace gr {
     private:
       pmt::pmt_t d_k;
       pmt::pmt_t d_v;
+      bool d_invert;
 
     public:
-      pdu_filter_impl(pmt::pmt_t k, pmt::pmt_t v);
+      pdu_filter_impl(pmt::pmt_t k, pmt::pmt_t v, bool invert);
       void handle_msg(pmt::pmt_t msg);
     };
 

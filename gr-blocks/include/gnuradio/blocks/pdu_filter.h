@@ -43,7 +43,7 @@ namespace gr {
       /*!
        * \brief Construct a PDU filter
        */
-      static sptr make(pmt::pmt_t k, pmt::pmt_t v);
+      static sptr make(pmt::pmt_t k, pmt::pmt_t v, bool invert = false);
     };
 
   } /* namespace blocks */
