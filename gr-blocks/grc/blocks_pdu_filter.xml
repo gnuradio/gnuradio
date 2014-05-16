@@ -9,7 +9,7 @@
 	<key>blocks_pdu_filter</key>
 	<import>from gnuradio import blocks</import>
 	<import>import pmt</import>
-	<make>blocks.pdu_filter($k, $v)</make>
+	<make>blocks.pdu_filter($k, $v, $invert)</make>
 	<param>
 		<name>Key</name>
 		<key>k</key>
@@ -22,6 +22,20 @@
 		<value>pmt.intern("value")</value>
 		<type>raw</type>
 	</param>
+    <param>
+        <name>Invert Filter</name>
+        <key>invert</key>
+        <value>False</value>
+        <type>enum</type>
+        <option>
+            <name>No</name>
+            <key>False</key>
+        </option>
+        <option>
+            <name>Yes</name>
+            <key>True</key>
+        </option>
+    </param>
 	<sink>
 		<name>pdus</name>
 		<type>message</type>
