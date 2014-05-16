@@ -121,6 +121,18 @@ class qa_repack_bits_bb (gr_unittest.TestCase):
         self.assertEqual(pmt.symbol_to_string(out_tag.key), tag_name)
         self.assertEqual(pmt.to_long(out_tag.value), len(expected_data))
 
+    def test_006_msb0 (self):
+        """ 8 -> 3 """
+        src_data = 200*(0b11110100, 0b11111111, 0b00111111)
+        expected_data = 200*((0b001,) + (0b011,) + (0b111,)*5 + (0b100,))
+        k = 8
+        l = 3
+        src = blocks.vector_source_b(src_data, False, 1)
+        repack = blocks.repack_bits_bb(k, l, swap=True)
+        sink = blocks.vector_sink_b()
+        self.tb.connect(src, repack, sink)
+        self.tb.run ()
+        self.assertEqual(sink.data(), expected_data)
+
 if __name__ == '__main__':
     gr_unittest.run(qa_repack_bits_bb, "qa_repack_bits_bb.xml")
-

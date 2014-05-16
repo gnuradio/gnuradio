@@ -2,25 +2,29 @@
   <name>Repack Bits</name>
   <key>blocks_repack_bits_bb</key>
   <import>from gnuradio import blocks</import>
-  <make>blocks.repack_bits_bb($k, $l, $len_tag_key, $align_output)</make>
+  <make>blocks.repack_bits_bb($k, $l, $len_tag_key, $align_output, $swap)</make>
+
   <param>
     <name>Bits per input byte</name>
     <key>k</key>
     <value>1</value>
     <type>int</type>
   </param>
+
   <param>
     <name>Bits per output byte</name>
     <key>l</key>
     <value>8</value>
     <type>int</type>
   </param>
+
   <param>
     <name>Length Tag Key</name>
     <key>len_tag_key</key>
     <value>""</value>
     <type>string</type>
   </param>
+
   <param>
     <name>Packet Alignment</name>
     <key>align_output</key>
@@ -35,6 +39,22 @@
         <key>False</key>
     </option>
   </param>
+
+  <param>
+    <name>Swap Bits</name>
+    <key>swap</key>
+    <value>False</value>
+    <type>enum</type>
+    <option>
+      <name>Yes</name>
+      <key>True</key>
+    </option>
+    <option>
+      <name>No</name>
+      <key>False</key>
+    </option>
+  </param>
+
   <sink>
     <name>in</name>
     <type>byte</type>
