@@ -29,7 +29,7 @@ self.$(id) = $(id) = map((lambda b: map((lambda a: fec.dummy_encoder_make($frame
     <param>
         <name>Parallelism</name>
         <key>ndim</key>
-        <value></value>
+        <value>0</value>
         <type>enum</type>
         <option>
             <name>0</name>

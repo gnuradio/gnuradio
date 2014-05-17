@@ -3,13 +3,43 @@
   <name>FEC Async Encoder</name>
   <key>fec_async_encoder</key>
   <import>from gnuradio import fec</import>
-  <make>fec.async_encoder($encoder)</make>
+  <make>fec.async_encoder($encoder, $rev_unpack, $rev_pack)</make>
 
   <param>
-    <name>Constituent Encoder</name>
+    <name>Encoder Obj.</name>
     <key>encoder</key>
     <value>encoder_variable</value>
     <type>raw</type>
+  </param>
+
+  <param>
+    <name>Rev. Unpacking</name>
+    <key>rev_unpack</key>
+    <value>True</value>
+    <type>enum</type>
+    <option>
+      <name>Yes</name>
+      <key>True</key>
+    </option>
+    <option>
+      <name>No</name>
+      <key>False</key>
+    </option>
+  </param>
+
+  <param>
+    <name>Rev. Packing</name>
+    <key>rev_pack</key>
+    <value>True</value>
+    <type>enum</type>
+    <option>
+      <name>Yes</name>
+      <key>True</key>
+    </option>
+    <option>
+      <name>No</name>
+      <key>False</key>
+    </option>
   </param>
 
   <sink>

@@ -54,6 +54,17 @@ namespace gr {
         }
       }
 
+      void
+      pack_k_bits::pack_rev(unsigned char *bytes, const unsigned char *bits, int nbytes) const
+      {
+        for(int i = 0; i < nbytes; i++) {
+          bytes[i] = 0x00;
+          for(unsigned int j = 0; j < d_k; j++) {
+            bytes[i] |= (0x01 & bits[i*d_k+j])<<j;
+          }
+        }
+      }
+
     } /* namespace kernel */
   } /* namespace blocks */
 } /* namespace gr */

@@ -58,7 +58,7 @@ namespace gr {
         /*!
          * \brief Perform the unpacking.
          *
-         * This block performs no bounds checking. It assumes that the
+         * This function performs no bounds checking. It assumes that the
          * input, \p in, has of length \p nbytes and that the output
          * vector, \p out, has k*nbytes available for writing.
          *
@@ -67,6 +67,11 @@ namespace gr {
          * \param nbytes The number of input bytes
          */
         void unpack(unsigned char *bits, const unsigned char *bytes, int nbytes) const;
+
+        /*!
+         * Unpacks in reverse order from unpack().
+         */
+        void unpack_rev(unsigned char *bits, const unsigned char *bytes, int nbytes) const;
 
         int k() const;
 

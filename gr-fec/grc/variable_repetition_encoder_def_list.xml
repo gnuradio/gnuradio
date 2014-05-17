@@ -12,9 +12,9 @@
 #if int($ndim())==0 #
 self.$(id) = $(id) = fec.repetition_encoder_make($framebits, $rep)
 #else if int($ndim())==1 #
-self.$(id) = $(id) = map( (lambda a: fec.repetition_encoder_make($framebits, $rep)), range(0,$dim1) ) #slurp
+self.$(id) = $(id) = map((lambda a: fec.repetition_encoder_make($framebits, $rep)), range(0,$dim1)) #slurp
 #else
-self.$(id) = $(id) = map( (lambda b: map( ( lambda a: fec.repetition_encoder_make($framebits, $rep)), range(0,$dim2) ) ), range(0,$dim1)) #slurp
+self.$(id) = $(id) = map((lambda b: map((lambda a: fec.repetition_encoder_make($framebits, $rep)), range(0,$dim2))), range(0,$dim1)) #slurp
 #end if</var_make>
     <make></make>
 

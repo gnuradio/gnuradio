@@ -50,8 +50,11 @@ namespace gr {
        * Build the PDU-based FEC encoder block from an FECAPI encoder object.
        *
        * \param my_encoder An FECAPI encoder object child of the generic_encoder class.
+       * \param rev_unpack Reverse the unpacking order from input bytes to bits
+       * \param rev_pack Reverse the packing order from bits to output bytes
        */
-      static sptr make(generic_encoder::sptr my_encoder);
+      static sptr make(generic_encoder::sptr my_encoder,
+                       bool rev_unpack=true, bool rev_pack=true);
 
       virtual int general_work(int noutput_items,
                                gr_vector_int& ninput_items,

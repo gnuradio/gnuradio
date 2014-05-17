@@ -9,7 +9,9 @@
     <key>variable_cc_decoder_def</key>
     <import>from gnuradio import fec</import>
     <var_make>
-#if int($ndim())==1 #
+#if int($ndim())==0 #
+self.$(id) = $(id) = fec.cc_decoder.make($framebits, $k, $rate, $polys, $state_start, $state_end,  $mode)
+#else if int($ndim())==1 #
 self.$(id) = $(id) = map( (lambda a: fec.cc_decoder.make($framebits, $k, $rate, $polys, $state_start, $state_end,  $mode)), range(0,$dim1) ); #slurp
 #else
 self.$(id) = $(id) = map( (lambda b: map( ( lambda a: fec.cc_decoder.make($framebits, $k, $rate, $polys, $state_start, $state_end, $mode)), range(0,$dim2) ) ), range(0,$dim1)); #slurp
@@ -27,8 +29,12 @@ self.$(id) = $(id) = map( (lambda b: map( ( lambda a: fec.cc_decoder.make($frame
     <param>
         <name>Parallelism</name>
         <key>ndim</key>
-        <value></value>
+        <value>0</value>
         <type>enum</type>
+        <option>
+            <name>0</name>
+            <key>0</key>
+        </option>
         <option>
             <name>1</name>
             <key>1</key>

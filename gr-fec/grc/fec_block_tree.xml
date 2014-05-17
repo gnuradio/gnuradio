@@ -23,7 +23,9 @@
     </cat>
     <block>fec_extended_encoder</block>
     <block>fec_extended_async_encoder</block>
+    <block>fec_extended_tagged_encoder</block>
     <block>fec_extended_decoder</block>
+    <block>fec_extended_tagged_decoder</block>
     <block>fec_generic_encoder</block>
     <block>fec_generic_decoder</block>
     <block>fec_tagged_encoder</block>

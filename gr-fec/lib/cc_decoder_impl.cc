@@ -64,7 +64,8 @@ namespace gr {
         // Set max frame size here; all buffers and settings will be
         // based on this value.
         d_max_frame_size = frame_size;
-        set_frame_size(frame_size);
+        d_frame_size = frame_size;
+        //set_frame_size(frame_size);
 
         d_vp = new struct v;
 
@@ -78,6 +79,7 @@ namespace gr {
           d_end_state = &d_end_state_chaining;
           d_managed_in = (unsigned char*)volk_malloc(d_veclen*d_rate*sizeof(unsigned char),
                                                      volk_get_alignment());
+          d_veclen = d_frame_size + (6 * (d_k - 1));
           d_managed_in_size = d_veclen * d_rate;
           if(d_managed_in == NULL) {
             throw std::runtime_error("cc_decoder: bad alloc for d_managed_in\n");
@@ -85,14 +87,17 @@ namespace gr {
           break;
 
         case(CC_TRUNCATED):
+          d_veclen = d_frame_size;
           d_end_state = &d_end_state_chaining;
           break;
 
         case(CC_TERMINATED):
+          d_veclen = d_frame_size + d_k - 1;
           d_end_state = (end_state == -1) ? &d_end_state_chaining : &d_end_state_nonchaining;
           break;
 
         case(CC_STREAMING):
+          d_veclen = d_frame_size + d_k - 1;
           d_end_state = &d_end_state_chaining;
           break;
 

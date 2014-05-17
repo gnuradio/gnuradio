@@ -55,6 +55,17 @@ namespace gr {
         }
       }
 
+      void
+      unpack_k_bits::unpack_rev(unsigned char *bits, const unsigned char *bytes, int nbytes) const
+      {
+        int n = 0;
+        for(int i = 0; i < nbytes; i++) {
+          unsigned int t = bytes[i];
+          for(int j = 0; j < d_k; j++)
+            bits[n++] = (t >> j) & 0x01;
+        }
+      }
+
       int
       unpack_k_bits::k() const
       {

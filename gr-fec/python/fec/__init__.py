@@ -39,6 +39,8 @@ from threaded_decoder import threaded_decoder
 from capillary_threaded_decoder import capillary_threaded_decoder
 from capillary_threaded_encoder import capillary_threaded_encoder
 from extended_async_encoder import extended_async_encoder
+from extended_tagged_encoder import extended_tagged_encoder
+from extended_tagged_decoder import extended_tagged_decoder
 
 
 from fec_test import fec_test

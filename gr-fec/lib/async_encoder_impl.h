@@ -43,9 +43,12 @@ namespace gr {
       void encode(pmt::pmt_t msg);
       blocks::kernel::unpack_k_bits *d_unpack;
       blocks::kernel::pack_k_bits   *d_pack;
+      bool d_rev_unpack;
+      bool d_rev_pack;
 
     public:
-      async_encoder_impl(generic_encoder::sptr my_encoder);
+      async_encoder_impl(generic_encoder::sptr my_encoder,
+                         bool rev_unpack=true, bool rev_pack=true);
       ~async_encoder_impl();
 
       int general_work(int noutput_items,

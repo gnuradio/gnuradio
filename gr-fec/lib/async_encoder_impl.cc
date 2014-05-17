@@ -33,13 +33,15 @@ namespace gr {
   namespace fec {
 
     async_encoder::sptr
-    async_encoder::make(generic_encoder::sptr my_encoder)
+    async_encoder::make(generic_encoder::sptr my_encoder,
+                        bool rev_unpack, bool rev_pack)
     {
       return gnuradio::get_initial_sptr
-        (new async_encoder_impl(my_encoder));
+        (new async_encoder_impl(my_encoder, rev_unpack, rev_pack));
     }
 
-    async_encoder_impl::async_encoder_impl(generic_encoder::sptr my_encoder)
+    async_encoder_impl::async_encoder_impl(generic_encoder::sptr my_encoder,
+                                           bool rev_unpack, bool rev_pack)
       : block("async_encoder",
               io_signature::make(0,0,0),
               io_signature::make(0,0,0)),
@@ -51,6 +53,9 @@ namespace gr {
       d_encoder = my_encoder;
       d_unpack = new blocks::kernel::unpack_k_bits(8);
       d_pack   = new blocks::kernel::pack_k_bits(8);
+
+      d_rev_unpack = rev_unpack;
+      d_rev_pack = rev_pack;
 
       message_port_register_in(d_in_port);
       message_port_register_out(d_out_port);
@@ -72,40 +77,44 @@ namespace gr {
 
       int nbytes = pmt::length(bytes);
       int nbits = 8*nbytes;
-      size_t o0(0);
+      size_t o0 = 0;
       const uint8_t* bytes_in = pmt::u8vector_elements(bytes, o0);
       uint8_t* bits_in = (uint8_t*)volk_malloc(nbits*sizeof(uint8_t),
                                                volk_get_alignment());
 
       // Encoder takes a stream of bits, but PDU's are received as
       // bytes, so we unpack them here.
-      d_unpack->unpack(bits_in, bytes_in, nbytes);
+      if(d_rev_unpack)
+        d_unpack->unpack_rev(bits_in, bytes_in, nbytes);
+      else
+        d_unpack->unpack(bits_in, bytes_in, nbytes);
 
       d_encoder->set_frame_size(nbits);
 
       int nbits_out = d_encoder->get_output_size();
-      int nbytes_out = nbits_out/8;
+      int nbytes_out = ceilf(static_cast<float>(nbits_out)/8.0f);
 
       // buffers for bits/bytes to go to
       uint8_t* bits_out = (uint8_t*)volk_malloc(nbits_out*sizeof(uint8_t),
                                                 volk_get_alignment());
-      uint8_t* bytes_out = (uint8_t*)volk_malloc(nbytes_out*sizeof(uint8_t),
-                                                 volk_get_alignment());
+
+      pmt::pmt_t outvec = pmt::make_u8vector(nbytes_out, 0x00);
+      uint8_t* bytes_out = pmt::u8vector_writable_elements(outvec, o0);
 
       // ENCODE!
       d_encoder->generic_work((void*)bits_in, (void*)bits_out);
 
-      // Stolen from pack_k_bits
-      d_pack->pack(bytes_out, bits_out, nbytes_out);
+      // Encoder produces bits, so repack them here to bytes.
+      if(d_rev_pack)
+        d_pack->pack_rev(bytes_out, bits_out, nbytes_out);
+      else
+        d_pack->pack(bytes_out, bits_out, nbytes_out);
 
-      //pmt::pmt_t outvec = pmt::init_u8vector(nouts, u8out);
-      pmt::pmt_t outvec = pmt::init_u8vector(nbytes_out, bytes_out);
       pmt::pmt_t msg_pair = pmt::cons(meta, outvec);
       message_port_pub(d_out_port, msg_pair);
 
       volk_free(bits_in);
       volk_free(bits_out);
-      volk_free(bytes_out);
     }
 
     int

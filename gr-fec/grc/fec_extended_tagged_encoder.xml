@@ -1,0 +1,43 @@
+<?xml version="1.0"?>
+<block>
+  <name>FEC Extended Tagged Encoder</name>
+  <key>fec_extended_tagged_encoder</key>
+  <import>from gnuradio import fec</import>
+  <make>fec.extended_tagged_encoder(encoder_obj_list=$encoder_list, puncpat=$puncpat, lentagname=$lentagname)</make>
+
+  <param>
+    <name>Encoder Objects</name>
+    <key>encoder_list</key>
+    <value>encoder_variable</value>
+    <type>raw</type>
+  </param>
+
+  <param>
+    <name>Puncture Pattern</name>
+    <key>puncpat</key>
+    <value>'11'</value>
+    <type>string</type>
+  </param>
+
+  <param>
+    <name>Length Tag Name</name>
+    <key>lentagname</key>
+    <value>None</value>
+    <type>string</type>
+  </param>
+
+  <sink>
+    <name>in</name>
+    <type>byte</type>
+  </sink>
+
+  <source>
+    <name>out</name>
+    <type>byte</type>
+  </source>
+
+  <doc>
+
+  </doc>
+
+</block>

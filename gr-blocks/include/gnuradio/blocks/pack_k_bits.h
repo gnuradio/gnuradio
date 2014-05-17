@@ -67,6 +67,11 @@ namespace gr {
          */
         void pack(unsigned char *bytes, const unsigned char *bits, int nbytes) const;
 
+        /*!
+         * Same as pack() but reverses the bits.
+         */
+        void pack_rev(unsigned char *bytes, const unsigned char *bits, int nbytes) const;
+
         int k() const;
 
       private:

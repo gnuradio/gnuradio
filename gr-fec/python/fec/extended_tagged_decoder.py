@@ -30,10 +30,7 @@ if sys.modules.has_key("gnuradio.digital"):
 else:
     from gnuradio import digital
 
-from threaded_decoder import threaded_decoder
-from capillary_threaded_decoder import capillary_threaded_decoder
-
-class extended_decoder(gr.hier_block2):
+class extended_tagged_decoder(gr.hier_block2):
 
 #solution to log_(1-2*t)(1-2*.0335) = 1/taps where t is thresh (syndrome density)
 #for i in numpy.arange(.1, .499, .01):
@@ -81,8 +78,8 @@ class extended_decoder(gr.hier_block2):
         0.0177274208353:0.49,
     }
 
-    def __init__(self, decoder_obj_list, threading, ann=None, puncpat='11',
-                 integration_period=10000, flush=None, rotator=None):
+    def __init__(self, decoder_obj_list, ann=None, puncpat='11',
+                 integration_period=10000, flush=None, rotator=None, lentagname=None):
         gr.hier_block2.__init__(self, "extended_decoder",
                                 gr.io_signature(1, 1, gr.sizeof_float),
                                 gr.io_signature(1, 1, gr.sizeof_char))
@@ -92,27 +89,38 @@ class extended_decoder(gr.hier_block2):
         self.flush=flush
 
         if(type(decoder_obj_list) == list):
+            # This block doesn't handle parallelism of > 1
+            # We could just grab encoder [0][0], but we don't want to encourage this.
             if(type(decoder_obj_list[0]) == list):
-                gr.log.info("fec.extended_decoder: Parallelism must be 1.")
+                gr.log.info("fec.extended_tagged_decoder: Parallelism must be 1.")
                 raise AttributeError
+
+            decoder_obj = decoder_obj_list[0]
+
+        # Otherwise, just take it as is
         else:
-            # If it has parallelism of 0, force it into a list of 1
-            decoder_obj_list = [decoder_obj_list,]
+            decoder_obj = decoder_obj_list
+
+        # If lentagname is None, fall back to using the non tagged
+        # stream version
+        if type(lentagname) == str:
+            if(lentagname.lower() == 'none'):
+                lentagname = None
 
         message_collector_connected=False
 
         ##anything going through the annihilator needs shifted, uchar vals
-        if fec.get_decoder_input_conversion(decoder_obj_list[0]) == "uchar" or \
-           fec.get_decoder_input_conversion(decoder_obj_list[0]) == "packed_bits":
+        if fec.get_decoder_input_conversion(decoder_obj) == "uchar" or \
+           fec.get_decoder_input_conversion(decoder_obj) == "packed_bits":
             self.blocks.append(blocks.multiply_const_ff(48.0))
 
-        if fec.get_shift(decoder_obj_list[0]) != 0.0:
-            self.blocks.append(blocks.add_const_ff(fec.get_shift(decoder_obj_list[0])))
-        elif fec.get_decoder_input_conversion(decoder_obj_list[0]) == "packed_bits":
+        if fec.get_shift(decoder_obj) != 0.0:
+            self.blocks.append(blocks.add_const_ff(fec.get_shift(decoder_obj)))
+        elif fec.get_decoder_input_conversion(decoder_obj) == "packed_bits":
             self.blocks.append(blocks.add_const_ff(128.0))
 
-        if fec.get_decoder_input_conversion(decoder_obj_list[0]) == "uchar" or \
-           fec.get_decoder_input_conversion(decoder_obj_list[0]) == "packed_bits":
+        if fec.get_decoder_input_conversion(decoder_obj) == "uchar" or \
+           fec.get_decoder_input_conversion(decoder_obj) == "packed_bits":
             self.blocks.append(blocks.float_to_uchar());
 
         const_index = 0; #index that corresponds to mod order for specinvert purposes
@@ -135,38 +143,29 @@ class extended_decoder(gr.hier_block2):
             print 'using syndrom garble threshold ' + str(synd_garble) + 'for conv_bit_corr_bb'
             print 'ceiling: .0335 data garble rate'
             self.blocks.append(fec.conv_bit_corr_bb(cat, len(puncpat) - puncpat.count('0'),
-                                                    len(ann), integration_period, flush, synd_garble))
+                                           len(ann), integration_period, flush, synd_garble))
 
         if self.puncpat != '11':
             self.blocks.append(fec.depuncture_bb(len(puncpat), read_bitlist(puncpat), 0))
 
-        if fec.get_decoder_input_conversion(decoder_obj_list[0]) == "packed_bits":
+        if fec.get_decoder_input_conversion(decoder_obj) == "packed_bits":
             self.blocks.append(blocks.uchar_to_float())
             self.blocks.append(blocks.add_const_ff(-128.0))
             self.blocks.append(digital.binary_slicer_fb())
             self.blocks.append(blocks.unpacked_to_packed_bb(1,0))
 
-        if(len(decoder_obj_list) > 1):
-            if(fec.get_history(decoder_obj_list[0]) != 0):
-                gr.log.info("fec.extended_decoder: Cannot use multi-threaded parallelism on a decoder with history.")
-                raise AttributeError
-
-        if threading == 'capillary':
-            self.blocks.append(capillary_threaded_decoder(decoder_obj_list,
-                                                          fec.get_decoder_input_item_size(decoder_obj_list[0]),
-                                                          fec.get_decoder_output_item_size(decoder_obj_list[0])))
-
-        elif threading == 'ordinary':
-            self.blocks.append(threaded_decoder(decoder_obj_list,
-                                                fec.get_decoder_input_item_size(decoder_obj_list[0]),
-                                                fec.get_decoder_output_item_size(decoder_obj_list[0])))
-
         else:
-            self.blocks.append(fec.decoder(decoder_obj_list[0],
-                                           fec.get_decoder_input_item_size(decoder_obj_list[0]),
-                                           fec.get_decoder_output_item_size(decoder_obj_list[0])))
+            if(not lentagname):
+                self.blocks.append(fec.decoder(decoder_obj,
+                                               fec.get_decoder_input_item_size(decoder_obj),
+                                               fec.get_decoder_output_item_size(decoder_obj)))
+            else:
+                self.blocks.append(fec.tagged_decoder(decoder_obj,
+                                                      fec.get_decoder_input_item_size(decoder_obj),
+                                                      fec.get_decoder_output_item_size(decoder_obj),
+                                                      lentagname))
 
-        if fec.get_decoder_output_conversion(decoder_obj_list[0]) == "unpack":
+        if fec.get_decoder_output_conversion(decoder_obj) == "unpack":
             self.blocks.append(blocks.packed_to_unpacked_bb(1, gr.GR_MSB_FIRST));
 
         self.connect((self, 0), (self.blocks[0], 0));
