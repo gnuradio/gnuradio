@@ -92,7 +92,7 @@ namespace gr {
       d_encoder->set_frame_size(nbits);
 
       int nbits_out = d_encoder->get_output_size();
-      int nbytes_out = ceilf(static_cast<float>(nbits_out)/8.0f);
+      int nbytes_out = nbits_out/8;
 
       // buffers for bits/bytes to go to
       uint8_t* bits_out = (uint8_t*)volk_malloc(nbits_out*sizeof(uint8_t),

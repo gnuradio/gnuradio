@@ -110,11 +110,13 @@ namespace gr {
          * \param polys Vector of polynomials as integers.
          * \param start_state Initialization state of the shift register.
          * \param mode cc_mode_t mode of the encoding.
+         * \param padded true if the encoded frame should be padded
+         *               to the nearest byte.
          */
         static generic_encoder::sptr make
           (int frame_size, int k, int rate,
            std::vector<int> polys, int start_state = 0,
-           cc_mode_t mode=CC_STREAMING);
+           cc_mode_t mode=CC_STREAMING, bool padded=false);
 
         /*!
          * Sets the uncoded frame size to \p frame_size. If \p

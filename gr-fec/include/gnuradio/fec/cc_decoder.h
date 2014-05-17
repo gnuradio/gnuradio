@@ -36,7 +36,7 @@ namespace gr {
       typedef void(*conv_kernel)(unsigned char  *Y, unsigned char  *X,
                                  unsigned char *syms, unsigned char *dec,
                                  unsigned int framebits, unsigned int excess,
-                                 unsigned char  *Branchtab);
+                                 unsigned char *Branchtab);
 
       /*!
        * \brief Convolutional Code Decoding class.
@@ -83,12 +83,15 @@ namespace gr {
          * \param start_state Initialization state of the shift register.
          * \param end_state Ending state of the shift register.
          * \param mode cc_mode_t mode of the encoding.
+         * \param padded true if the encoded frame is padded
+         *               to the nearest byte.
          */
         static generic_decoder::sptr make
           (int frame_size, int k,
            int rate, std::vector<int> polys,
            int start_state=0, int end_state=-1,
-           cc_mode_t mode=CC_STREAMING);
+           cc_mode_t mode=CC_STREAMING,
+           bool padded=false);
 
         /*!
          * Sets the uncoded frame size to \p frame_size. If \p

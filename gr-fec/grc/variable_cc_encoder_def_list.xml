@@ -10,11 +10,11 @@
     <import>from gnuradio import fec</import>
     <var_make>
 #if int($ndim())==0 #
-self.$(id) = $(id) = fec.cc_encoder_make($framebits, $k, $rate, $polys, $state_start, $mode)
+self.$(id) = $(id) = fec.cc_encoder_make($framebits, $k, $rate, $polys, $state_start, $mode, $padding)
 #else if int($ndim())==1 #
-self.$(id) = $(id) = map( (lambda a: fec.cc_encoder_make($framebits, $k, $rate, $polys, $state_start, $mode)), range(0,$dim1) ); #slurp
+self.$(id) = $(id) = map( (lambda a: fec.cc_encoder_make($framebits, $k, $rate, $polys, $state_start, $mode, $padding)), range(0,$dim1) ); #slurp
 #else
-self.$(id) = $(id) = map( (lambda b: map( ( lambda a: fec.cc_encoder_make($framebits, $k, $rate, $polys, $state_start, $mode)), range(0,$dim2) ) ), range(0,$dim1)); #slurp
+self.$(id) = $(id) = map( (lambda b: map( ( lambda a: fec.cc_encoder_make($framebits, $k, $rate, $polys, $state_start, $mode, $padding)), range(0,$dim2) ) ), range(0,$dim1)); #slurp
 #end if</var_make>
     <make></make>
 
@@ -119,8 +119,21 @@ self.$(id) = $(id) = map( (lambda b: map( ( lambda a: fec.cc_encoder_make($frame
         </option>
     </param>
 
+    <param>
+        <name>Byte Padding</name>
+        <key>padding</key>
+        <value>False</value>
+        <type>enum</type>
+        <option>
+            <name>No</name>
+            <key>False</key>
+        </option>
+        <option>
+            <name>Yes</name>
+            <key>True</key>
+        </option>
+    </param>
+
     <doc>
-        This instantiates a 1-dim array of encoders or a 2-dim array of encoders
-        See Nick if things break.
     </doc>
 </block>

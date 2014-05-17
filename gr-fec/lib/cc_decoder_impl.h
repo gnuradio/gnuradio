@@ -67,6 +67,7 @@ namespace gr {
         unsigned int d_partial_rate;
         std::vector<int> d_polys;
         cc_mode_t d_mode;
+        int d_padding;
 
         struct v* d_vp;
         unsigned char* d_managed_in;
@@ -90,7 +91,7 @@ namespace gr {
         cc_decoder_impl(int frame_size, int k,
                         int rate, std::vector<int> polys,
                         int start_state = 0, int end_state = -1,
-                        cc_mode_t mode=CC_STREAMING);
+                        cc_mode_t mode=CC_STREAMING, bool padded=false);
         ~cc_decoder_impl();
 
         void generic_work(void *inbuffer, void *outbuffer);

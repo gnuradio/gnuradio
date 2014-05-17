@@ -40,23 +40,24 @@ namespace gr {
       cc_decoder::make(int frame_size, int k,
                        int rate, std::vector<int> polys,
                        int start_state, int end_state,
-                       cc_mode_t mode)
+                       cc_mode_t mode, bool padded)
       {
         return generic_decoder::sptr
           (new cc_decoder_impl(frame_size, k, rate, polys,
-                               start_state, end_state, mode));
+                               start_state, end_state, mode, padded));
       }
 
       cc_decoder_impl::cc_decoder_impl(int frame_size, int k,
                                        int rate, std::vector<int> polys,
                                        int start_state, int end_state,
-                                       cc_mode_t mode)
+                                       cc_mode_t mode, bool padded)
         : generic_decoder("cc_decoder"),
           d_k(k),
           d_rate(rate),
           d_partial_rate(rate),
           d_polys(polys),
           d_mode(mode),
+          d_padding(0),
           d_start_state_chaining(start_state),
           d_start_state_nonchaining(start_state),
           d_end_state_nonchaining(end_state)
@@ -65,7 +66,12 @@ namespace gr {
         // based on this value.
         d_max_frame_size = frame_size;
         d_frame_size = frame_size;
-        //set_frame_size(frame_size);
+
+        // set up a padding factor. If padding, the encoded frame was exteded
+        // by this many bits to fit into a full byte.
+        if(padded && (mode == CC_TERMINATED)) {
+          d_padding = static_cast<int>(8.0f*ceilf(d_rate*(d_k-1)/8.0f) - (d_rate*(d_k-1)));
+        }
 
         d_vp = new struct v;
 
@@ -170,7 +176,7 @@ namespace gr {
       cc_decoder_impl::get_input_size()
       {
         if(d_mode == CC_TERMINATED) {
-          return d_rate * (d_frame_size + d_k - 1);
+          return d_rate * (d_frame_size + d_k - 1) + d_padding;
         }
         else {
           return d_rate * d_frame_size;
@@ -365,7 +371,6 @@ namespace gr {
         d += tailsize * d_decision_t_size ; /* Look past tail */
         int retval;
         int dif = tailsize - (d_k - 1);
-        //printf("break, %d, %d\n", dif, (nbits+dif)%d_frame_size);
         decision_t dec;
         while(nbits-- > d_frame_size - (d_k - 1)) {
           int k;
@@ -373,8 +378,6 @@ namespace gr {
           k = (dec.w[(endstate>>d_ADDSHIFT)/32] >> ((endstate>>d_ADDSHIFT)%32)) & 1;
 
           endstate = (endstate >> 1) | (k << (d_k-2+d_ADDSHIFT));
-          //data[((nbits+dif)%nbits)>>3] = endstate>>d_SUBSHIFT;
-          //printf("%d, %d\n", k, (nbits+dif)%d_frame_size);
           data[((nbits+dif)%d_frame_size)] = k;
 
           retval = endstate;
@@ -400,7 +403,7 @@ namespace gr {
       {
         bool ret = true;
         if(frame_size > d_max_frame_size) {
-          GR_LOG_INFO(d_logger, boost::format("tried to set frame to %1%; max possible is %2%") \
+          GR_LOG_INFO(d_logger, boost::format("cc_decoder: tried to set frame to %1%; max possible is %2%") \
                       % frame_size % d_max_frame_size);
           frame_size = d_max_frame_size;
           ret = false;
@@ -412,7 +415,7 @@ namespace gr {
         case(CC_TAILBITING):
           d_veclen = d_frame_size + (6 * (d_k - 1));
           if(d_veclen * d_rate > d_managed_in_size) {
-            throw std::runtime_error("attempt to resize beyond d_managed_in buffer size!\n");
+            throw std::runtime_error("cc_decoder: attempt to resize beyond d_managed_in buffer size!\n");
           }
           break;
 
@@ -421,7 +424,13 @@ namespace gr {
           break;
 
         case(CC_STREAMING):
+          d_veclen = d_frame_size + d_k - 1;
+          break;
+
         case(CC_TERMINATED):
+          // If the input is being padded out to a byte, we know the
+          // real frame size is without the padding.
+          d_frame_size -= d_padding * d_rate;
           d_veclen = d_frame_size + d_k - 1;
           break;
 

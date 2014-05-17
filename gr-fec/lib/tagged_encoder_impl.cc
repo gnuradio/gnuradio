@@ -86,9 +86,6 @@ namespace gr {
 
       d_encoder->generic_work((void*)(inbuffer), (void*)(outbuffer));
 
-      add_item_tag(0, nitems_written(0) + (d_encoder->get_output_size()*d_output_item_size),
-                   pmt::intern(d_encoder->alias()), pmt::PMT_T, pmt::intern(alias()));
-
       return d_encoder->get_output_size();
     }
 

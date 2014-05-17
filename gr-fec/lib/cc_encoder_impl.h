@@ -51,6 +51,7 @@ namespace gr {
         int d_decision_t_size;
         int d_start_state;
         cc_mode_t d_mode;
+        int d_padding;
         int d_output_size;
 
         int parity(int x);
@@ -60,7 +61,7 @@ namespace gr {
       public:
         cc_encoder_impl(int frame_size, int k, int rate,
                         std::vector<int> polys, int start_state = 0,
-                        cc_mode_t mode=CC_STREAMING);
+                        cc_mode_t mode=CC_STREAMING, bool padded=false);
         ~cc_encoder_impl();
 
         bool set_frame_size(unsigned int frame_size);

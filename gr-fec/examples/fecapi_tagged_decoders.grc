@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='ASCII'?>
 <flow_graph>
-  <timestamp>Sat May 17 17:05:02 2014</timestamp>
+  <timestamp>Sat May 17 19:22:20 2014</timestamp>
   <block>
     <key>options</key>
     <param>
@@ -576,136 +576,6 @@
     <param>
       <key>_coordinate</key>
       <value>(551, 160)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>variable_cc_encoder_def</key>
-    <param>
-      <key>id</key>
-      <value>enc_cc</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>value</key>
-      <value>"ok"</value>
-    </param>
-    <param>
-      <key>ndim</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>dim1</key>
-      <value>1</value>
-    </param>
-    <param>
-      <key>dim2</key>
-      <value>1</value>
-    </param>
-    <param>
-      <key>framebits</key>
-      <value>MTU*8</value>
-    </param>
-    <param>
-      <key>k</key>
-      <value>k</value>
-    </param>
-    <param>
-      <key>rate</key>
-      <value>rate</value>
-    </param>
-    <param>
-      <key>polys</key>
-      <value>polys</value>
-    </param>
-    <param>
-      <key>state_start</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>mode</key>
-      <value>fec.CC_STREAMING</value>
-    </param>
-    <param>
-      <key>alias</key>
-      <value></value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(166, 519)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>variable_cc_decoder_def</key>
-    <param>
-      <key>id</key>
-      <value>dec_cc</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>value</key>
-      <value>"ok"</value>
-    </param>
-    <param>
-      <key>ndim</key>
-      <value>1</value>
-    </param>
-    <param>
-      <key>dim1</key>
-      <value>1</value>
-    </param>
-    <param>
-      <key>dim2</key>
-      <value>4</value>
-    </param>
-    <param>
-      <key>framebits</key>
-      <value>MTU*8</value>
-    </param>
-    <param>
-      <key>k</key>
-      <value>k</value>
-    </param>
-    <param>
-      <key>rate</key>
-      <value>rate</value>
-    </param>
-    <param>
-      <key>polys</key>
-      <value>polys</value>
-    </param>
-    <param>
-      <key>state_start</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>state_end</key>
-      <value>-1</value>
-    </param>
-    <param>
-      <key>mode</key>
-      <value>fec.CC_STREAMING</value>
-    </param>
-    <param>
-      <key>alias</key>
-      <value></value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(166, 678)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -1917,6 +1787,73 @@
     </param>
   </block>
   <block>
+    <key>variable_cc_encoder_def</key>
+    <param>
+      <key>id</key>
+      <value>enc_cc</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>value</key>
+      <value>"ok"</value>
+    </param>
+    <param>
+      <key>ndim</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>dim1</key>
+      <value>1</value>
+    </param>
+    <param>
+      <key>dim2</key>
+      <value>1</value>
+    </param>
+    <param>
+      <key>framebits</key>
+      <value>MTU*8</value>
+    </param>
+    <param>
+      <key>k</key>
+      <value>k</value>
+    </param>
+    <param>
+      <key>rate</key>
+      <value>rate</value>
+    </param>
+    <param>
+      <key>polys</key>
+      <value>polys</value>
+    </param>
+    <param>
+      <key>state_start</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>mode</key>
+      <value>fec.CC_TERMINATED</value>
+    </param>
+    <param>
+      <key>padding</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>alias</key>
+      <value></value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(166, 519)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
     <key>variable_repetition_decoder_def</key>
     <param>
       <key>id</key>
@@ -1961,6 +1898,77 @@
     <param>
       <key>_coordinate</key>
       <value>(362, 631)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>variable_cc_decoder_def</key>
+    <param>
+      <key>id</key>
+      <value>dec_cc</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>value</key>
+      <value>"ok"</value>
+    </param>
+    <param>
+      <key>ndim</key>
+      <value>1</value>
+    </param>
+    <param>
+      <key>dim1</key>
+      <value>1</value>
+    </param>
+    <param>
+      <key>dim2</key>
+      <value>4</value>
+    </param>
+    <param>
+      <key>framebits</key>
+      <value>MTU*8</value>
+    </param>
+    <param>
+      <key>k</key>
+      <value>k</value>
+    </param>
+    <param>
+      <key>rate</key>
+      <value>rate</value>
+    </param>
+    <param>
+      <key>polys</key>
+      <value>polys</value>
+    </param>
+    <param>
+      <key>state_start</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>state_end</key>
+      <value>-1</value>
+    </param>
+    <param>
+      <key>mode</key>
+      <value>fec.CC_TERMINATED</value>
+    </param>
+    <param>
+      <key>padding</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>alias</key>
+      <value></value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(166, 693)</value>
     </param>
     <param>
       <key>_rotation</key>

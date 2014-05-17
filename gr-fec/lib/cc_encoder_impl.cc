@@ -42,27 +42,33 @@ namespace gr {
       generic_encoder::sptr
       cc_encoder::make(int frame_size, int k, int rate,
                        std::vector<int> polys, int start_state,
-                        cc_mode_t mode)
+                       cc_mode_t mode, bool padded)
       {
         return generic_encoder::sptr
           (new cc_encoder_impl(frame_size, k, rate,
                                polys, start_state,
-                               mode));
+                               mode, padded));
       }
 
       cc_encoder_impl::cc_encoder_impl(int frame_size, int k, int rate,
                                        std::vector<int> polys, int start_state,
-                                       cc_mode_t mode)
+                                       cc_mode_t mode, bool padded)
         : generic_encoder("cc_encoder"),
           d_rate(rate), d_k(k), d_polys(polys),
           d_start_state(start_state),
-          d_mode(mode)
+          d_mode(mode), d_padding(0)
       {
         if(static_cast<size_t>(d_rate) != d_polys.size()) {
           throw std::runtime_error("cc_encoder: Number of polynomials must be the same as the value of rate");
         }
 
         partab_init();
+
+        // set up a padding factor. If padding, extends the encoding
+        // by this many bits to fit into a full byte.
+        if(padded && (mode == CC_TERMINATED)) {
+          d_padding = static_cast<int>(8.0f*ceilf(d_rate*(d_k-1)/8.0f) - (d_rate*(d_k-1)));
+        }
 
         d_max_frame_size = frame_size;
         set_frame_size(frame_size);
@@ -98,7 +104,7 @@ namespace gr {
         d_frame_size = frame_size;
 
         if(d_mode == CC_TERMINATED) {
-          d_output_size = d_rate * (d_frame_size + d_k - 1);
+          d_output_size = d_rate * (d_frame_size + d_k - 1) + d_padding;
         }
         /*
         else if(d_trunc_intrinsic) {
