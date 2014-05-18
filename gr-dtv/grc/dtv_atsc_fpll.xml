@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<!--
+###################################################
+## ATSC Receiver PLL
+###################################################
+ -->
+<block>
+  <name>ATSC Receiver FPLL</name>
+  <key>dtv_atsc_fpll</key>
+  <import>from gnuradio import dtv</import>
+  <make>dtv.atsc_fpll($rate)</make>
+
+  <param>
+    <name>Sample Rate</name>
+    <key>rate</key>
+    <type>float</type>
+  </param>
+
+  <sink>
+    <name>in</name>
+    <type>complex</type>
+  </sink>
+
+  <source>
+    <name>out</name>
+    <type>float</type>
+  </source>
+
+</block>

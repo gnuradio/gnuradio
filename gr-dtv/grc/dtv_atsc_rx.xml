@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<!--
+###################################################
+## ATSC Receive Pipeline
+###################################################
+ -->
+<block>
+  <name>ATSC Receive Pipeline</name>
+  <key>dtv_atsc_rx</key>
+  <import>from gnuradio import dtv</import>
+  <make>dtv.atsc_rx($rate,$sps)</make>
+
+  <param>
+    <name>Input Rate</name>
+    <key>rate</key>
+    <type>float</type>
+  </param>
+
+  <param>
+    <name>Oversampling Ratio</name>
+    <key>sps</key>
+    <type>float</type>
+  </param>
+
+  <sink>
+    <name>in</name>
+    <type>complex</type>
+  </sink>
+
+  <source>
+    <name>out</name>
+    <type>byte</type>
+    <vlen>256</vlen>
+  </source>
+
+</block>
