@@ -24,6 +24,7 @@
 #define INCLUDED_FEC_ASYNC_DECODER_IMPL_H
 
 #include <gnuradio/fec/async_decoder.h>
+#include <gnuradio/blocks/pack_k_bits.h>
 
 namespace gr {
   namespace fec {
@@ -35,12 +36,25 @@ namespace gr {
       size_t d_input_item_size;
       size_t d_output_item_size;
 
-      void decode(pmt::pmt_t msg);
+      pmt::pmt_t d_in_port;
+      pmt::pmt_t d_out_port;
+
+      blocks::kernel::pack_k_bits *d_pack;
+
+      bool d_packed;
+      bool d_rev_pack;
+
+      int d_max_bits_in;
+      float *d_tmp_f32;
+      int8_t *d_tmp_u8;
+      uint8_t *d_bits_out;
+
+      void decode_packed(pmt::pmt_t msg);
+      void decode_unpacked(pmt::pmt_t msg);
 
     public:
       async_decoder_impl(generic_decoder::sptr my_decoder,
-                         size_t input_item_size,
-                         size_t output_item_size);
+                         bool packed=false, bool rev_pack=true);
       ~async_decoder_impl();
 
       int general_work(int noutput_items,

@@ -28,6 +28,7 @@ install(
     fecapi_async_decoders.grc
     fecapi_async_encoders.grc
     fecapi_async_to_stream.grc
+    fecapi_async_packed_decoders.grc
     fecapi_tagged_decoders.grc
     fecapi_tagged_encoders.grc
     DESTINATION ${GR_PKG_FEC_EXAMPLES_DIR}

@@ -50,12 +50,11 @@ namespace gr {
        * Build the PDU-based FEC decoder block from an FECAPI decoder object.
        *
        * \param my_decoder An FECAPI decoder object child of the generic_decoder class.
-       * \param input_item_size size of a block of data for the decoder.
-       * \param output_item_size size of a block of data the decoder will produce.
+       * \param packed Sets output to packed bytes if true; otherwise, 1 bit per byte
+       * \param rev_pack If packing bits, should they be reversed?
        */
       static sptr make(generic_decoder::sptr my_decoder,
-                       size_t input_item_size,
-                       size_t output_item_size);
+                       bool packed=false, bool rev_pack=true);
 
       virtual int general_work(int noutput_items,
                                gr_vector_int& ninput_items,

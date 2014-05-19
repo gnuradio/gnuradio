@@ -40,14 +40,19 @@ namespace gr {
       pmt::pmt_t d_in_port;
       pmt::pmt_t d_out_port;
 
-      void encode(pmt::pmt_t msg);
       blocks::kernel::unpack_k_bits *d_unpack;
       blocks::kernel::pack_k_bits   *d_pack;
+
+      bool d_packed;
       bool d_rev_unpack;
       bool d_rev_pack;
 
+      void encode_packed(pmt::pmt_t msg);
+      void encode_unpacked(pmt::pmt_t msg);
+
     public:
       async_encoder_impl(generic_encoder::sptr my_encoder,
+                         bool packed=false,
                          bool rev_unpack=true, bool rev_pack=true);
       ~async_encoder_impl();
 

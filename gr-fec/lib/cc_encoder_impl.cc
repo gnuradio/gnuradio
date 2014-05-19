@@ -127,7 +127,7 @@ namespace gr {
       double
       cc_encoder_impl::rate()
       {
-        return 1.0/static_cast<double>(d_rate);
+        return static_cast<double>(d_rate);
       }
 
       int

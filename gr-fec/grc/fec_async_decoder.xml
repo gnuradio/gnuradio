@@ -3,44 +3,43 @@
   <name>FEC Async Decoder</name>
   <key>fec_async_decoder</key>
   <import>from gnuradio import fec</import>
-  <make>fec.async_decoder($decoder, $itype.size, $otype.size)</make>
+  <make>fec.async_decoder($decoder, $packed, $rev_pack)</make>
 
   <param>
-    <name>Constituent Decoder</name>
+    <name>Decoder Obj.</name>
     <key>decoder</key>
-    <value>decoder_variable</value>
     <type>raw</type>
   </param>
 
   <param>
-    <name>Input Type</name>
-    <key>itype</key>
+    <name>Packed</name>
+    <key>packed</key>
+    <value>False</value>
     <type>enum</type>
+    <hide>part</hide>
     <option>
-      <name>Byte</name>
-      <key>byte</key>
-      <opt>size:gr.sizeof_char</opt>
+      <name>No</name>
+      <key>False</key>
     </option>
     <option>
-      <name>Float</name>
-      <key>float</key>
-      <opt>size:gr.sizeof_float</opt>
+      <name>Yes</name>
+      <key>True</key>
     </option>
   </param>
 
   <param>
-    <name>Output Type</name>
-    <key>otype</key>
+    <name>Rev. Packing</name>
+    <key>rev_pack</key>
+    <value>True</value>
     <type>enum</type>
+    <hide>#if $packed() == 'True' then 'part' else 'all'#</hide>
     <option>
-      <name>Byte</name>
-      <key>byte</key>
-      <opt>size:gr.sizeof_char</opt>
+      <name>Yes</name>
+      <key>True</key>
     </option>
     <option>
-      <name>Float</name>
-      <key>float</key>
-      <opt>size:gr.sizeof_float</opt>
+      <name>No</name>
+      <key>False</key>
     </option>
   </param>
 
