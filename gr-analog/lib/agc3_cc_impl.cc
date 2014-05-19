@@ -118,7 +118,7 @@ namespace gr {
         }
 
         // compute inverse square roots 
-        volk_32f_invsqrt_32f_a(&inv_mag[0], &mag_sq[0], noutput_items/d_iir_update_decim);
+        volk_32f_invsqrt_32f(&inv_mag[0], &mag_sq[0], noutput_items/d_iir_update_decim);
 
         // apply updates
         for(int i=0; i<noutput_items/d_iir_update_decim; i++){
