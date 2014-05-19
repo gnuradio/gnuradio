@@ -53,14 +53,14 @@ namespace pmt {
 
   //! Make pmt uint64
   static inline pmt_t
-  mp(uint64_t x){
+  mp(long unsigned x){
     return from_uint64(x);
   }
 
-  //! Make pmt long
+  //! Make pmt uint64
   static inline pmt_t
   mp(long long unsigned x){
-    return from_long(x);
+    return from_uint64(x);
   }
 
   //! Make pmt long
