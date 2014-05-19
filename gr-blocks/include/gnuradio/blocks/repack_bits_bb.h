@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2012,2014 Free Software Foundation, Inc.
+ * Copyright 2012 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -25,7 +25,6 @@
 
 #include <gnuradio/blocks/api.h>
 #include <gnuradio/tagged_stream_block.h>
-#include <gnuradio/endianness.h>
 
 namespace gr {
   namespace blocks {
@@ -51,18 +50,17 @@ namespace gr {
       typedef boost::shared_ptr<repack_bits_bb> sptr;
 
       /*!
-       * \param k Number of relevant bits on the input stream.
-       * \param l Number of relevant bits on the output stream.
+       * \param k Number of relevant bits on the input stream
+       * \param l Number of relevant bits on the output stream
        * \param len_tag_key If not empty, this is the key for the length tag.
        * \param align_output If len_tag_key is given, this controls if the input
        *                     or the output is aligned.
-       * \param swap Swaps the output bits
        */
-      static sptr make(int k, int l=8, const std::string &len_tag_key="",
-                       bool align_output=false, bool swap=false);
+      static sptr make(int k, int l=8, const std::string &len_tag_key="", bool align_output=false);
     };
 
   } // namespace blocks
 } // namespace gr
 
 #endif /* INCLUDED_BLOCKS_REPACK_BITS_BB_H */
+

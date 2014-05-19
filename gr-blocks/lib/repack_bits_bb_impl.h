@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2012,2014 Free Software Foundation, Inc.
+ * Copyright 2012 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -37,14 +37,12 @@ namespace gr {
       int d_in_index; // Current bit of input byte
       int d_out_index; // Current bit of output byte
       bool d_align_output; //! true if the output shall be aligned, false if the input shall be aligned
-      bool d_swap;
 
      protected:
       int calculate_output_stream_length(const gr_vector_int &ninput_items);
 
      public:
-      repack_bits_bb_impl(int k, int l, const std::string &len_tag_key,
-                          bool align_output, bool swap=false);
+      repack_bits_bb_impl(int k, int l, const std::string &len_tag_key, bool align_output);
       ~repack_bits_bb_impl();
 
       int work(int noutput_items,
@@ -57,3 +55,4 @@ namespace gr {
 } // namespace gr
 
 #endif /* INCLUDED_BLOCKS_REPACK_BITS_BB_IMPL_H */
+
