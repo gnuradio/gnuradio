@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='ASCII'?>
 <flow_graph>
-  <timestamp>Sat May 17 16:52:55 2014</timestamp>
+  <timestamp>Mon May 19 20:50:43 2014</timestamp>
   <block>
     <key>options</key>
     <param>
@@ -68,7 +68,7 @@
     <key>variable</key>
     <param>
       <key>id</key>
-      <value>polys</value>
+      <value>samp_rate</value>
     </param>
     <param>
       <key>_enabled</key>
@@ -76,7 +76,7 @@
     </param>
     <param>
       <key>value</key>
-      <value>[109, 79]</value>
+      <value>50000</value>
     </param>
     <param>
       <key>alias</key>
@@ -84,34 +84,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(98, 623)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>variable</key>
-    <param>
-      <key>id</key>
-      <value>rate</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>value</key>
-      <value>2</value>
-    </param>
-    <param>
-      <key>alias</key>
-      <value></value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(123, 562)</value>
+      <value>(10, 74)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -149,7 +122,7 @@
     <key>variable</key>
     <param>
       <key>id</key>
-      <value>samp_rate</value>
+      <value>rate</value>
     </param>
     <param>
       <key>_enabled</key>
@@ -157,7 +130,7 @@
     </param>
     <param>
       <key>value</key>
-      <value>50000</value>
+      <value>2</value>
     </param>
     <param>
       <key>alias</key>
@@ -165,7 +138,34 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(10, 74)</value>
+      <value>(123, 562)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>variable</key>
+    <param>
+      <key>id</key>
+      <value>polys</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>value</key>
+      <value>[109, 79]</value>
+    </param>
+    <param>
+      <key>alias</key>
+      <value></value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(98, 623)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -368,49 +368,6 @@
     </param>
   </block>
   <block>
-    <key>variable_dummy_encoder_def</key>
-    <param>
-      <key>id</key>
-      <value>enc_dummy</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>value</key>
-      <value>"ok"</value>
-    </param>
-    <param>
-      <key>ndim</key>
-      <value>1</value>
-    </param>
-    <param>
-      <key>dim1</key>
-      <value>1</value>
-    </param>
-    <param>
-      <key>dim2</key>
-      <value>1</value>
-    </param>
-    <param>
-      <key>framebits</key>
-      <value>frame_size*8</value>
-    </param>
-    <param>
-      <key>alias</key>
-      <value></value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(370, 562)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
     <key>variable_cc_decoder_def</key>
     <param>
       <key>id</key>
@@ -463,6 +420,10 @@
     <param>
       <key>mode</key>
       <value>fec.CC_TAILBITING</value>
+    </param>
+    <param>
+      <key>padding</key>
+      <value>False</value>
     </param>
     <param>
       <key>alias</key>
@@ -1832,6 +1793,49 @@
     <param>
       <key>_coordinate</key>
       <value>(322, 152)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>variable_dummy_encoder_def</key>
+    <param>
+      <key>id</key>
+      <value>enc_dummy</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>value</key>
+      <value>"ok"</value>
+    </param>
+    <param>
+      <key>ndim</key>
+      <value>2</value>
+    </param>
+    <param>
+      <key>dim1</key>
+      <value>1</value>
+    </param>
+    <param>
+      <key>dim2</key>
+      <value>4</value>
+    </param>
+    <param>
+      <key>framebits</key>
+      <value>frame_size*8</value>
+    </param>
+    <param>
+      <key>alias</key>
+      <value></value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(370, 562)</value>
     </param>
     <param>
       <key>_rotation</key>

@@ -33,6 +33,11 @@ class capillary_threaded_decoder(gr.hier_block2):
 
         self.decoder_list_0 = decoder_list_0
 
+        check = math.log10(len(self.decoder_list_0)) / math.log10(2.0)
+        if(abs(check - int(check)) > 0):
+            gr.log.info("fec.capillary_threaded_decoder: number of decoders must be a power of 2.")
+            raise AttributeError
+
         self.deinterleaves_0 = []
         for i in range(int(math.log(len(decoder_list_0), 2))):
             for j in range(int(math.pow(2, i))):
