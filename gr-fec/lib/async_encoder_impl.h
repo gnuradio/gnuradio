@@ -47,6 +47,9 @@ namespace gr {
       bool d_rev_unpack;
       bool d_rev_pack;
 
+      uint8_t* d_bits_in;
+      uint8_t* d_bits_out;
+
       void encode_packed(pmt::pmt_t msg);
       void encode_unpacked(pmt::pmt_t msg);
 

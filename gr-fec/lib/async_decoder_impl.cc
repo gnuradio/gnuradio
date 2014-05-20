@@ -91,7 +91,7 @@ namespace gr {
     {
       if(d_packed) {
         delete d_pack;
-        delete d_bits_out;
+        volk_free(d_bits_out);
       }
 
       volk_free(d_tmp_f32);

@@ -60,12 +60,29 @@ namespace gr {
       message_port_register_out(d_out_port);
 
       if(d_packed) {
-        d_unpack = new blocks::kernel::unpack_k_bits(8);
-        d_pack   = new blocks::kernel::pack_k_bits(8);
         set_msg_handler(d_in_port, boost::bind(&async_encoder_impl::encode_packed, this ,_1) );
+
+        d_unpack = new blocks::kernel::unpack_k_bits(8);
+
+        int max_bits_out = d_encoder->get_output_size();
+        d_bits_out = (uint8_t*)volk_malloc(max_bits_out*sizeof(uint8_t),
+                                           volk_get_alignment());
+
       }
       else {
         set_msg_handler(d_in_port, boost::bind(&async_encoder_impl::encode_unpacked, this ,_1) );
+      }
+
+      if(d_packed || (strncmp(d_encoder->get_input_conversion(), "pack", 4) == 0)) {
+        // encode_unpacked: if input conversion is 'pack', pack the input bits
+        // encode_packed: used to repack the output
+        d_pack = new blocks::kernel::pack_k_bits(8);
+
+        // encode_unpacked: Holds packed bits in when input conversion is packed
+        // encode_packed: holds the output bits of the encoder to be packed
+        int max_bits_in = d_encoder->get_input_size();
+        d_bits_in = (uint8_t*)volk_malloc(max_bits_in*sizeof(uint8_t),
+                                          volk_get_alignment());
       }
     }
 
@@ -73,7 +90,12 @@ namespace gr {
     {
       if(d_packed) {
         delete d_unpack;
+        volk_free(d_bits_out);
+      }
+
+      if(d_packed || (strncmp(d_encoder->get_input_conversion(), "pack", 4) == 0)) {
         delete d_pack;
+        volk_free(d_bits_in);
       }
     }
 
@@ -96,8 +118,13 @@ namespace gr {
       pmt::pmt_t outvec = pmt::make_u8vector(nbits_out, 0x00);
       uint8_t* bits_out = pmt::u8vector_writable_elements(outvec, o0);
 
-      // ENCODE!
-      d_encoder->generic_work((void*)bits_in, (void*)bits_out);
+      if(strncmp(d_encoder->get_input_conversion(), "pack", 4) == 0) {
+        d_pack->pack(d_bits_in, bits_in, nbits_in/8);
+        d_encoder->generic_work((void*)d_bits_in, (void*)bits_out);
+      }
+      else {
+        d_encoder->generic_work((void*)bits_in, (void*)bits_out);
+      }
 
       pmt::pmt_t msg_pair = pmt::cons(meta, outvec);
       message_port_pub(d_out_port, msg_pair);
@@ -114,41 +141,44 @@ namespace gr {
       int nbytes_in = pmt::length(bytes);
       int nbits_in = 8*nbytes_in;
       const uint8_t* bytes_in = pmt::u8vector_elements(bytes, o0);
-      uint8_t* bits_in = (uint8_t*)volk_malloc(nbits_in*sizeof(uint8_t),
-                                               volk_get_alignment());
 
       d_encoder->set_frame_size(nbits_in);
 
       int nbits_out = d_encoder->get_output_size();
       int nbytes_out = nbits_out/8;
 
-      // Encoder takes a stream of bits, but PDU's are received as
-      // bytes, so we unpack them here.
-      if(d_rev_unpack)
-        d_unpack->unpack_rev(bits_in, bytes_in, nbytes_in);
-      else
-        d_unpack->unpack(bits_in, bytes_in, nbytes_in);
+      if(strncmp(d_encoder->get_input_conversion(), "pack", 4) == 0) {
+        // If the input takes packed, anyways, don't go through the
+        // unpacker. Note that if we need the unpacking to reverse,
+        // we won't get that here and might have to correct for it in
+        // the decoder.
+        // d_bits_in > bytes_in, so we're abusing the existence of
+        // this allocated memory here
+        memcpy(d_bits_in, bytes_in, nbytes_in*sizeof(uint8_t));
+      }
+      else {
+        // Encoder takes a stream of bits, but PDU's are received as
+        // bytes, so we unpack them here.
+        if(d_rev_unpack)
+          d_unpack->unpack_rev(d_bits_in, bytes_in, nbytes_in);
+        else
+          d_unpack->unpack(d_bits_in, bytes_in, nbytes_in);
+      }
 
-      // buffers for bits/bytes to go to
-      uint8_t* bits_out = (uint8_t*)volk_malloc(nbits_out*sizeof(uint8_t),
-                                                volk_get_alignment());
-
+      // buffers for output bytes to go to
       pmt::pmt_t outvec = pmt::make_u8vector(nbytes_out, 0x00);
       uint8_t* bytes_out = pmt::u8vector_writable_elements(outvec, o0);
 
       // ENCODE!
-      d_encoder->generic_work((void*)bits_in, (void*)bits_out);
+      d_encoder->generic_work((void*)d_bits_in, (void*)d_bits_out);
 
       if(d_rev_pack)
-        d_pack->pack_rev(bytes_out, bits_out, nbytes_out);
+        d_pack->pack_rev(bytes_out, d_bits_out, nbytes_out);
       else
-        d_pack->pack(bytes_out, bits_out, nbytes_out);
+        d_pack->pack(bytes_out, d_bits_out, nbytes_out);
 
       pmt::pmt_t msg_pair = pmt::cons(meta, outvec);
       message_port_pub(d_out_port, msg_pair);
-
-      volk_free(bits_in);
-      volk_free(bits_out);
     }
 
     int

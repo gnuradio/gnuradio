@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='ASCII'?>
 <flow_graph>
-  <timestamp>Mon May 19 17:07:45 2014</timestamp>
+  <timestamp>Tue May 20 15:21:44 2014</timestamp>
   <block>
     <key>options</key>
     <param>
@@ -1889,6 +1889,49 @@
     </param>
   </block>
   <block>
+    <key>digital_crc32_bb</key>
+    <param>
+      <key>id</key>
+      <value>digital_crc32_bb_0</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>check</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>lengthtagname</key>
+      <value>pkt_len</value>
+    </param>
+    <param>
+      <key>alias</key>
+      <value></value>
+    </param>
+    <param>
+      <key>affinity</key>
+      <value></value>
+    </param>
+    <param>
+      <key>minoutbuf</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>maxoutbuf</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(1214, 332)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
     <key>fec_async_encoder</key>
     <param>
       <key>id</key>
@@ -1933,49 +1976,6 @@
     <param>
       <key>_coordinate</key>
       <value>(429, 148)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>digital_crc32_bb</key>
-    <param>
-      <key>id</key>
-      <value>digital_crc32_bb_0</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>check</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>lengthtagname</key>
-      <value>pkt_len</value>
-    </param>
-    <param>
-      <key>alias</key>
-      <value></value>
-    </param>
-    <param>
-      <key>affinity</key>
-      <value></value>
-    </param>
-    <param>
-      <key>minoutbuf</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>maxoutbuf</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(1214, 332)</value>
     </param>
     <param>
       <key>_rotation</key>

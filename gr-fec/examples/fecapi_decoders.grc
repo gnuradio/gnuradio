@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='ASCII'?>
 <flow_graph>
-  <timestamp>Mon May 19 20:50:43 2014</timestamp>
+  <timestamp>Tue May 20 13:32:56 2014</timestamp>
   <block>
     <key>options</key>
     <param>
@@ -318,49 +318,6 @@
     <param>
       <key>_coordinate</key>
       <value>(553, 562)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>variable_dummy_decoder_def</key>
-    <param>
-      <key>id</key>
-      <value>dec_dummy</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>value</key>
-      <value>"ok"</value>
-    </param>
-    <param>
-      <key>ndim</key>
-      <value>1</value>
-    </param>
-    <param>
-      <key>dim1</key>
-      <value>1</value>
-    </param>
-    <param>
-      <key>dim2</key>
-      <value>1</value>
-    </param>
-    <param>
-      <key>framebits</key>
-      <value>frame_size*8</value>
-    </param>
-    <param>
-      <key>alias</key>
-      <value></value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(370, 656)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -1815,7 +1772,7 @@
     </param>
     <param>
       <key>ndim</key>
-      <value>2</value>
+      <value>1</value>
     </param>
     <param>
       <key>dim1</key>
@@ -1835,7 +1792,50 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(370, 562)</value>
+      <value>(371, 562)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>variable_dummy_decoder_def</key>
+    <param>
+      <key>id</key>
+      <value>dec_dummy</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>value</key>
+      <value>"ok"</value>
+    </param>
+    <param>
+      <key>ndim</key>
+      <value>1</value>
+    </param>
+    <param>
+      <key>dim1</key>
+      <value>1</value>
+    </param>
+    <param>
+      <key>dim2</key>
+      <value>1</value>
+    </param>
+    <param>
+      <key>framebits</key>
+      <value>frame_size*8</value>
+    </param>
+    <param>
+      <key>alias</key>
+      <value></value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(371, 656)</value>
     </param>
     <param>
       <key>_rotation</key>

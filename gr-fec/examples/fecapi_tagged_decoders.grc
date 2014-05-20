@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='ASCII'?>
 <flow_graph>
-  <timestamp>Tue May 20 10:51:56 2014</timestamp>
+  <timestamp>Tue May 20 15:45:42 2014</timestamp>
   <block>
     <key>options</key>
     <param>
@@ -68,7 +68,7 @@
     <key>variable</key>
     <param>
       <key>id</key>
-      <value>rep</value>
+      <value>polys</value>
     </param>
     <param>
       <key>_enabled</key>
@@ -76,7 +76,7 @@
     </param>
     <param>
       <key>value</key>
-      <value>3</value>
+      <value>[109, 79]</value>
     </param>
     <param>
       <key>alias</key>
@@ -84,88 +84,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(365, 759)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>variable</key>
-    <param>
-      <key>id</key>
-      <value>k</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>value</key>
-      <value>7</value>
-    </param>
-    <param>
-      <key>alias</key>
-      <value></value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(30, 520)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>variable</key>
-    <param>
-      <key>id</key>
-      <value>length_tag</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>value</key>
-      <value>"packet_len"</value>
-    </param>
-    <param>
-      <key>alias</key>
-      <value></value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(101, 73)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>variable</key>
-    <param>
-      <key>id</key>
-      <value>samp_rate</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>value</key>
-      <value>50000</value>
-    </param>
-    <param>
-      <key>alias</key>
-      <value></value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(12, 73)</value>
+      <value>(72, 584)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -203,7 +122,7 @@
     <key>variable</key>
     <param>
       <key>id</key>
-      <value>polys</value>
+      <value>samp_rate</value>
     </param>
     <param>
       <key>_enabled</key>
@@ -211,7 +130,7 @@
     </param>
     <param>
       <key>value</key>
-      <value>[109, 79]</value>
+      <value>50000</value>
     </param>
     <param>
       <key>alias</key>
@@ -219,7 +138,88 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(72, 584)</value>
+      <value>(12, 73)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>variable</key>
+    <param>
+      <key>id</key>
+      <value>length_tag</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>value</key>
+      <value>"packet_len"</value>
+    </param>
+    <param>
+      <key>alias</key>
+      <value></value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(101, 73)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>variable</key>
+    <param>
+      <key>id</key>
+      <value>k</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>value</key>
+      <value>7</value>
+    </param>
+    <param>
+      <key>alias</key>
+      <value></value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(30, 520)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>variable</key>
+    <param>
+      <key>id</key>
+      <value>rep</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>value</key>
+      <value>3</value>
+    </param>
+    <param>
+      <key>alias</key>
+      <value></value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(365, 759)</value>
     </param>
     <param>
       <key>_rotation</key>
