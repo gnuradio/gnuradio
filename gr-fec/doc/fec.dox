@@ -22,49 +22,83 @@ by using:
 \endcode
 
 
-\section fec_using Using the FEC Encoders and Decoders
+\section fec_using Using the FEC API
 
-The FECAPI consists of two layers, the coding blocks themselves and
-the coder objects. The coding blocks are the encoders or decoders that
-fit into the GNU Radio flowgraph and act as shells to move data to and
-from the coder objects. It is in the objects that the actual
-coding/decoding gets done. The coding blocks use the API of the coder
-objects to interact with the scheduler and set up the input/output
-item buffers that move data between blocks.
+FEC is a complex issue to implement in a generic, generally usable
+way. To help with these issues, the FEC API operates on two levels:
+the coder variables and the coder deployments. The variables implement
+the encoding and decoding methods whereas the deployments set up the
+variables, make sure the input data is formatted properly, run the
+coder variable, and then pass on the data for follow-on processing.
 
-The gr::fec::encoder block is a relatively simple wrapper for the
-encoding objects. It uses the encoding object information about the
-input/output sizes and input/output item sizes to set up the
-interaction with the scheduler. Typically, a coder will add redundancy
-to the stream making the output longer by some amount than the input
-stream. This block simply takes in an encoder object, specifically an
-object that derives from gr::fec::generic_encoder. It also takes in
-the input and output items sizes that the encoder will expect, which
-we can just ask the encoder for. Typically, the encodes expect
-unpacked bytes in and unpacked bytes out.
+In a GNU Radio flowgraph, the deployments are GNU Radio blocks that we
+insert into the flowgraph. The deployments use the API of the coder
+variables to interact with the scheduler and set up the input/output
+item buffers that move data between blocks. The intent of the API is
+to be able to build the coding variables that are general enough for
+easy use in multiple situations. We then construct deployments to
+control the interaction between the data and the variable. GNU Radio
+provides deployments for a number of situations, but these should not
+be considered the only ways to deploy the decoders.
 
-The gr::fec::decoder block is similarly simple to wrap the decoding
-objects. It uses the decoding object information about the
-input/output sizes and input/output item sizes to set up the
+
+\subsection fec_deployments Deployments
+
+Generally speaking, encoder deployments take in bits and produce
+bits (i.e., unpacked bytes with 1 bit per byte). Decoder deployments
+take in floats and produce bits. The floats are generally meant to
+represent soft decisions. If the demodulator does not produce soft
+decisions, an easy alternative is to convert the hard decision 0's and
+1's to -1 and +1 floats. The main departure from this model is when
+using a PDU-based modulator or demodulator, for which we can look at
+using the asynchronous message passing system. In this instance,
+passing bits is not natural, so we need to create a deployment that
+can handle packed bytes. GNU Radio has the gr::fec::asycn_encoder and
+gr::fec::async_decoder deployments that work in this mode.
+
+Some coding variables handle inputs and outputs differently than the
+described deployments. Using the FEC API provides concepts of input
+and output conversion properties that help us create deployments to
+convert the data streams to the required format of the variable.
+
+\subsubsection fec_deploy_simple Streaming Deployments
+
+For the encoder deployments, the gr::fec::encoder block is a
+relatively simple deployment for the encoding variables. It uses the
+encoding object information about the input/output sizes and
+input/output item sizes to set up the interaction with the
+scheduler. Typically, a coder will add redundancy to the stream making
+the output longer by some amount than the input stream. This block
+simply takes in an encoder object, specifically an object that derives
+from gr::fec::generic_encoder. It also takes in the input and output
+items sizes that the encoder will expect, which we can just ask the
+encoder for. Typically, the encodes expect unpacked bytes in and
+unpacked bytes out.
+
+The gr::fec::decoder block is a similarly simple deployment for the
+decoding variables. It uses the decoding variable information about
+the input/output sizes and input/output item sizes to set up the
 interaction with the scheduler. Since a decoder typically uses the
 redundancy from the input stream to correct for errors, the input
 stream will be longer than the output stream by the rate of the
 code. This block simply takes in an decoder object, specifically an
 object that derives from gr::fec::generic_decoder. It also takes in
 the input and output items sizes that the decoder will expect, which
-we can just ask the encoder for. The decoders may take a float input
-or a byte. The byte may be a hard decision or a quantized soft
-decision, depending on how the decoder object behaves.
+we can just ask the encoder for. The deployment expects a floating
+point stream input, though the decoder variables may take a float
+input or a byte. If using a byte format, it could be a hard decision
+or a quantized soft decision, depending on how the decoder object
+behaves.
 
-Normally, though, we don't work directly with the encoder() or
-decoder() blocks but a wrapper around those blocks. GNU Radio's gr-fec
-package comes with Python classes, fec.extended_encoder and
-fec.extended_decoder, to make things easier. For one thing, these
-extended hier_block2 blocks take care of the puncturing and
-depuncturing operations often found in FEC codes. The other thing that
-these blocks do for us is reads the API of the encoder/decoder objects
-to properly convert the data in or out, depending on how the coding
-object works.
+Normally, though, we don't work directly with these simple encoder()
+or decoder() deployments but a wrapper around those blocks. GNU
+Radio's gr-fec package comes with two Python deployments to make
+things easier: fec.extended_encoder and fec.extended_decoder. For one
+thing, these extended hier_block2 blocks take care of the puncturing
+and depuncturing operations often found in FEC codes. The other thing
+that these blocks do for us is read the API of the encoder/decoder
+variables to properly convert the data in or out, depending on how the
+coding object works.
 
 For instance, a generic_decoder takes in floating point values (which
 should be soft decisions). However, a decoder might instead want to
@@ -80,15 +114,116 @@ the particular code we want to use. We can find these codes under the
 [Error Coding] category in GRC. The encoders are found under
 [Encoders] and similarly the decoders under the [Decoders]
 categories. Putting these onto the canvas creates a variable that we
-can then pass to the extended encoder or decoder blocks.
+can then pass to the extended encoder or decoder deployment blocks.
 
 Most of the parameters of the encoder and decoder definitions should
 be fairly obvious based on the type of code. See the documentation for
 each coding object for more details. In the following section \ref
 fec_parallelism, we explain the Parallelism and Dimension properties.
 
+See fec/fecapi_encoders.grc and fec/fecapi_decoders.grc in the
+installed examples for an example of how to work with these
+deployments given the three initial FEC coders available.
 
-\section fec_coding_vars Encoding/Decoding Variables
+\subsubsection fec_deploy_tag_stream Tagged Stream Deployments
+
+GNU Radio's gr-fec also comes with simple deployments for \ref
+page_tagged_stream_blocks blocks. These deployments work similarly to
+the normal streaming deployments but fit into a tagged stream system
+by setting a tagged stream tag to control the frame size. Like all
+tagged stream blocks, they expect the tag to be located in the stream
+in order to properly function.
+
+The simplest form of the tagged stream deployments are just the C++
+blocks gr::fec::tagged_encoder and gr::fec::tagged_decoder. These do
+not handle any input or output conversion. They expect the inputs to
+be already properly formatted for the encoding/decoding variables, and
+the outputs will be whatever the variable naturally produce.
+
+In the tagged stream deployments, the frame size set for a variable is
+no longer the static frame size like we expected in the streaming data
+implementations. Instead, we look at the frame size of the
+encoder/decoder variable during construction of the deployment as the
+maximum frame size, or a maximum transmission unit (MTU). This allows
+us to set up some internal memory to handle up to the required maximum
+length. When a tagged stream comes into this block, the frame size is
+then set based on that tagged stream information. If the frame is
+larger than the established MTU, a warning is sent out and the
+deployment only handles up to the MTU of the given frame.
+
+The extended Python tagged deployments, fec.extended_tagged_encoder
+and fec.extended_tagged_decoder, offer additional handling of the FEC
+API like we saw with the fec.extended_encoder and
+fec.extended_decoder. These extended deployments wrap up the
+puncturing and depuncturing as well as use the FEC API to do any input
+and output translation for the formatting of data streams. The
+fec.extended_tagged_encoder expects unpacked bits in and produces
+unpacked bits out. The fec.extended_tagged_decoder takes in floats
+(generally soft decisions from -1 to 1) and produces unpacked bits.
+
+See fec/fecapi_tagged_encoders.grc and fec/fecapi_tagged_decoders.grc
+in the installed examples for an example of how to work with these
+deployments given the three initial FEC coders available.
+
+
+
+\subsubsection fec_deploy_async Asynchronous Deployments
+
+The final standard deployment shipped with GNU Radio is for
+asynchronous \ref page_msg_passing and handling PDUs:
+gr::fec::async_encoder and gr::fec::async_decoder.
+
+Unlike the other deployments, these C++ deployments do not also have
+an extended Python deployment. Because this deployment uses message
+passing, we cannot easily build up a hierarchical block of message
+passing blocks to satisfy the input/output translations like we've
+done with the other forms of deployment. Instead, the input/output
+formatting is taken care of inside this deployment itself. Further,
+because this form of moving data anticipates data being moved in
+packets, these deployments cannot work with any FEC code that requires
+a history (see generic_decoder::get_history). Right now, this means
+that the async message passing deployments cannot work with
+convolutional codes (gr::fec::code::cc_encoder and
+gr::fec::code::cc_decoder) in streaming mode because it would require
+data from the next frame to finish off decoding the current frame.
+
+These deployments also work in two distinct modes. They can work in
+unpacked mode where inputs are messages of bits, or they may work in
+packed mode where messages are PDUs. The distinction is that the
+packed mode PDU's are the standard protocol data units (PDUs) that
+encompass full packets of data. This allows these async deployments to
+be used easily within PDU-based applications, such as encoding a
+packet with a CRC attached.
+
+When in packed or PDU mode, the encoder deployment has the option of
+reversing the bits during unpacking and packing. Like the extended
+deployments for the other data modes, these deployments manipulate the
+input data to the format expected by the encoding or decoding
+variables using calls to the FEC API. Because most of the coders work
+off unpacked bits, the incoming PDUs must first be unpacked into bits
+and the repacked again into the original PDU. The
+gr::blocks::kernel::pack_k_bits and gr::blocks::kernel::unpack_k_bits
+kernels are used here, and they can change the direction on how to
+pack and unpack. Because different data processing blocks, framing,
+deframing, and other operations may arbitrarily set the format of the
+bits and the ordering, we provide the options of unpacking and packing
+directions in the deployments. However, the gr::fec::async_decoder
+still expects the input to be soft decisions with one decision per
+item, so we only say whether this deployment outputs packed PDUs or
+not and the packing direction.
+
+For an example of using the asynchronous in PDU mode, see
+fec/fecapi_async_packed_decoders.grc. See
+fec/fecapi_async_to_stream.grc for an example of mixing the packed PDU
+mode encoder with a tagged stream decoder. This example shows the PDU
+input having a CRC32 appended to the uncoded stream that is then
+checked after the packet is decoded.
+
+For an example of the async deployment using unpacked bits, see
+fec/fecapi_async_encoders.grc and fec/fecapi_async_decoders.grc.
+
+
+\subsection fec_coding_vars Encoding/Decoding Variables
 
 GNU Radio currently has a minor subset of coders available:
 
@@ -105,7 +240,7 @@ Decoders:
 \li gr::fec::code::cc_decoder
 
 
-When building a new FECAPI encoder or decoder, the dummy
+When building a new FECAPI encoder or decoder variable, the dummy
 encoder/decoder block would be a good place to start. This coding set
 does no processing on the data. For the encoder, each bit is simply
 passed through directly. For the dummy decoder, the input data are
@@ -127,6 +262,7 @@ default of [109, 79] is typically. Eventually, we will make this block
 more generic for different rates and constraint lengths and take this
 particular code implementation as the set CCSDS decoder, much like we
 have the ccsds_encoder class.
+
 
 \subsection fec_parallelism Parallelism
 
@@ -229,5 +365,8 @@ going into an encoder and the number of bits coming out of a decoder.
 \li fecapi_encoders.grc
 \li fecapi_tagged_decoders.grc
 \li fecapi_tagged_encoders.grc
+\li fecapi_async_decoders.grc
+\li fecapi_async_encoders.grc
+\li fecapi_async_to_stream.grc
 
 */

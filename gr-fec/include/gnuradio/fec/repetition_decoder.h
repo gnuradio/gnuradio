@@ -46,7 +46,7 @@ namespace gr {
       public:
 
         /*!
-         * Build a repetition decoding FECAPI object.
+         * Build a repetition decoding FEC API object.
          *
          * \param frame_size Number of bits per frame. If using in the
          *        tagged stream style, this is the maximum allowable

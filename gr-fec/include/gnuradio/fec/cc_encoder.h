@@ -56,9 +56,9 @@ namespace gr {
        * bit from the input stream and then ANDs the shift register
        * with each polynomial, and places the parity of the result
        * into the output stream. The output stream is therefore also
-       * unpakced bits.
+       * unpacked bits.
        *
-       * The encoder is set up wtih a number of bits per frame in the
+       * The encoder is set up with a number of bits per frame in the
        * constructor. When not being used in a tagged stream mode,
        * this encoder will only process frames of the length provided
        * here. If used in a tagged stream block, this setting becomes
@@ -89,7 +89,7 @@ namespace gr {
        * \li   109: b(1101101) --> 1 + x   + x^3 + x^4 + x^6
        * \li   79:  b(1001111) --> 1 + x^3 + x^4 + x^5 + x^6
        *
-       * Another encoder class is providee with gr-fec called the
+       * Another encoder class is provided with gr-fec called the
        * gr::fec::code::ccsds_encoder, which implements the above code
        * that is more highly optimized for just those specific
        * settings.
@@ -99,7 +99,7 @@ namespace gr {
       public:
 
         /*!
-         * Build a convolutional code encoding FECAPI object.
+         * Build a convolutional code encoding FEC API object.
          *
          * \param frame_size Number of bits per frame. If using in the
          *        tagged stream style, this is the maximum allowable

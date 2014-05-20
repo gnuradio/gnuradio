@@ -38,7 +38,7 @@ namespace gr {
        *
        * \details
        * A dummy encoder class that simply passes the input to the
-       * output. It is meant to allow us to easily use the FECAPI
+       * output. It is meant to allow us to easily use the FEC API
        * encoder and decoder blocks in an application with no coding.
        */
       class FEC_API dummy_encoder : virtual public generic_encoder
@@ -46,7 +46,7 @@ namespace gr {
       public:
 
         /*!
-         * Build a dummy encoding FECAPI object.
+         * Build a dummy encoding FEC API object.
          *
          * \param frame_size Number of bits per frame. If using in the
          *        tagged stream style, this is the maximum allowable

@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='ASCII'?>
 <flow_graph>
-  <timestamp>Sat May 17 19:22:20 2014</timestamp>
+  <timestamp>Tue May 20 10:51:56 2014</timestamp>
   <block>
     <key>options</key>
     <param>
@@ -1536,10 +1536,6 @@
     </param>
     <param>
       <key>align_output</key>
-      <value>False</value>
-    </param>
-    <param>
-      <key>swap</key>
       <value>False</value>
     </param>
     <param>

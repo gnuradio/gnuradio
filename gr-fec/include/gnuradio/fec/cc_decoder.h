@@ -60,18 +60,47 @@ namespace gr {
        * settings, much like the cc_encoder class where the CCSDS
        * settings would be a highly-optimized version of this.
        *
-       * The encoder is set up wtih a number of bits per frame in the
+       * The decoder is set up with a number of bits per frame in the
        * constructor. When not being used in a tagged stream mode,
        * this encoder will only process frames of the length provided
        * here. If used in a tagged stream block, this setting becomes
        * the maximum allowable frame size that the block may process.
+       *
+       * The \p mode is a cc_mode_t that specifies how the convolutional
+       * encoder will behave and under what conditions.
+       *
+       * \li 'CC_STREAMING': mode expects an uninterrupted flow of
+       * samples into the encoder, and the output stream is
+       * continually encoded. This mode is the only mode for this
+       * decoder that has a history requirement because it requires
+       * rate*(K-1) bits more to finish the decoding properly. This
+       * mode does not work with any deployments that do not allow
+       * history.
+       *
+       * \li 'CC_TERMINATED': is a mode designed for packet-based
+       * systems. This mode adds rate*(k-1) bits to the output as a
+       * way to help flush the decoder.
+       *
+       * \li 'CC_TAILBITING': is another packet-based method. Instead of
+       * adding bits onto the end of the packet, this mode will
+       * continue the code between the payloads of packets by
+       * pre-initializing the state of the new packet based on the
+       * state of the last packet for (k-1) bits.
+       *
+       * \li 'CC_TRUNCATED': a truncated code always resets the registers
+       * to the \p start_state between frames.
+       *
+       * A common convolutional encoder uses K=7, Rate=1/2,
+       * Polynomials=[109, 79]. This is the Voyager code from NASA:
+       * \li   109: b(1101101) --> 1 + x   + x^3 + x^4 + x^6
+       * \li   79:  b(1001111) --> 1 + x^3 + x^4 + x^5 + x^6
        */
       class FEC_API cc_decoder : virtual public generic_decoder
       {
       public:
 
         /*!
-         * Build a convolutional code decoding FECAPI object.
+         * Build a convolutional code decoding FEC API object.
          *
          * \param frame_size Number of bits per frame. If using in the
          *        tagged stream style, this is the maximum allowable

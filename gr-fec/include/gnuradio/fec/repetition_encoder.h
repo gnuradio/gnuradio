@@ -46,7 +46,7 @@ namespace gr {
       public:
 
         /*!
-         * Build a repetition encoding FECAPI object.
+         * Build a repetition encoding FEC API object.
          *
          * \param frame_size Number of bits per frame. If using in the
          *        tagged stream style, this is the maximum allowable
@@ -54,8 +54,7 @@ namespace gr {
          * \param rep Repetition rate; encoder rate is rep bits out
          *        for each input bit.
          */
-        static generic_encoder::sptr make(int frame_size,
-                                          int rep);
+        static generic_encoder::sptr make(int frame_size, int rep);
 
         /*!
          * Sets the uncoded frame size to \p frame_size. If \p
