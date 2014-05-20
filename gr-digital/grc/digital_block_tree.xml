@@ -67,7 +67,9 @@
   <cat>
     <name>Packet Operators</name>
     <block>digital_correlate_access_code_tag_bb</block>
+    <block>digital_correlate_access_code_xx_ts</block>
     <block>digital_crc32_bb</block>
+    <block>digital_crc32_async_bb</block>
     <block>digital_framer_sink_1</block>
     <block>digital_header_payload_demux</block>
     <block>digital_packet_headergenerator_bb</block>

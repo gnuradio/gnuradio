@@ -1,4 +1,4 @@
-# Copyright 2012-2013 Free Software Foundation, Inc.
+# Copyright 2012-2014 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -29,7 +29,10 @@ include_directories(
     ${CMAKE_CURRENT_SOURCE_DIR}
     ${CMAKE_CURRENT_BINARY_DIR}
     ${GR_FEC_INCLUDE_DIRS}
+    ${GR_BLOCKS_INCLUDE_DIRS}
     ${GNURADIO_RUNTIME_INCLUDE_DIRS}
+    ${VOLK_INCLUDE_DIRS}
+    ${LOG4CPP_INCLUDE_DIRS}
     ${Boost_INCLUDE_DIRS}
 )
 
@@ -38,14 +41,38 @@ if(ENABLE_GR_CTRLPORT)
   include_directories(${ICE_INCLUDE_DIR})
 endif(ENABLE_GR_CTRLPORT)
 
-link_directories(${Boost_LIBRARY_DIRS})
+link_directories(
+  ${Boost_LIBRARY_DIRS}
+  ${LOG4CPP_LIBRARY_DIRS}
+)
 
 ########################################################################
 # Setup library
 ########################################################################
 list(APPEND gnuradio_fec_sources
-    decode_ccsds_27_fb_impl.cc
-    encode_ccsds_27_bb_impl.cc
+  generic_decoder.cc
+  generic_encoder.cc
+  decoder_impl.cc
+  encoder_impl.cc
+  tagged_decoder_impl.cc
+  tagged_encoder_impl.cc
+  async_decoder_impl.cc
+  async_encoder_impl.cc
+  cc_decoder_impl.cc
+  cc_encoder_impl.cc
+  ccsds_encoder_impl.cc
+  dummy_decoder_impl.cc
+  dummy_encoder_impl.cc
+  repetition_decoder_impl.cc
+  repetition_encoder_impl.cc
+  decode_ccsds_27_fb_impl.cc
+  encode_ccsds_27_bb_impl.cc
+  ber_tools.cc
+  ber_bf_impl.cc
+  conv_bit_corr_bb_impl.cc
+  puncture_bb_impl.cc
+  puncture_ff_impl.cc
+  depuncture_bb_impl.cc
 )
 
 #Add Windows DLL resource file if using MSVC
@@ -63,11 +90,13 @@ if(MSVC)
 endif(MSVC)
 
 list(APPEND gnuradio_fec_libs
+    gnuradio-blocks
     gnuradio-runtime
+    volk
     ${Boost_LIBRARIES}
+    ${LOG4CPP_LIBRARIES}
 )
 
 add_library(gnuradio-fec SHARED ${gnuradio_fec_sources})
 target_link_libraries(gnuradio-fec ${gnuradio_fec_libs})
 GR_LIBRARY_FOO(gnuradio-fec RUNTIME_COMPONENT "fec_runtime" DEVEL_COMPONENT "fec_devel")
-

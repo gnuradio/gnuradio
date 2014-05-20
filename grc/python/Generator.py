@@ -35,7 +35,7 @@ class Generator(object):
         """
         Initialize the generator object.
         Determine the file to generate.
-        
+
         Args:
             flow_graph: the flow graph object
             file_path: the path to write the file to
@@ -74,7 +74,7 @@ Add a Misc->Throttle block to your flow graph to avoid CPU congestion.''')
     def get_popen(self):
         """
         Execute this python flow graph.
-        
+
         Returns:
             a popen object
         """
@@ -99,7 +99,7 @@ Add a Misc->Throttle block to your flow graph to avoid CPU congestion.''')
     def __str__(self):
         """
         Convert the flow graph to python code.
-        
+
         Returns:
             a string of python code
         """
@@ -147,7 +147,7 @@ Add a Misc->Throttle block to your flow graph to avoid CPU congestion.''')
             'flow_graph': self._flow_graph,
             'variables': variables,
             'parameters': parameters,
-                        'monitors': monitors,
+            'monitors': monitors,
             'blocks': blocks,
             'connections': connections,
             'messages': messages,

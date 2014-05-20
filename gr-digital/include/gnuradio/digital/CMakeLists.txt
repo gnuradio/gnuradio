@@ -47,7 +47,7 @@ macro(expand_h root)
     string(REGEX REPLACE "X+" ${sig} name ${root})
     list(APPEND expanded_files_h ${CMAKE_CURRENT_BINARY_DIR}/${name}.h)
   endforeach(sig)
-  
+
   #create a command to generate the files
   add_custom_command(
     OUTPUT ${expanded_files_h}
@@ -87,11 +87,14 @@ install(FILES
     constellation_soft_decoder_cf.h
     correlate_access_code_bb.h
     correlate_access_code_tag_bb.h
+    correlate_access_code_bb_ts.h
+    correlate_access_code_ff_ts.h
     correlate_and_sync_cc.h
     costas_loop_cc.h
     cpmmod_bc.h
     crc32.h
     crc32_bb.h
+    crc32_async_bb.h
     descrambler_bb.h
     diff_decoder_bb.h
     diff_encoder_bb.h
@@ -144,4 +147,3 @@ install(FILES
     DESTINATION ${GR_INCLUDE_DIR}/gnuradio/digital
     COMPONENT "digital_devel"
 )
-

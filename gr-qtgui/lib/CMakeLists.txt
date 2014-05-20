@@ -39,7 +39,6 @@ set(qtgui_moc_hdrs
     ${qtgui_mod_includedir}/WaterfallDisplayPlot.h
     ${qtgui_mod_includedir}/ConstellationDisplayPlot.h
     ${qtgui_mod_includedir}/HistogramDisplayPlot.h
-    ${qtgui_mod_includedir}/NumberDisplayPlot.h
 )
 QT4_WRAP_CPP(qtgui_moc_srcs ${qtgui_moc_hdrs})
 QT4_WRAP_UI(qtgui_ui_hdrs spectrumdisplayform.ui)
@@ -70,7 +69,6 @@ set(qtgui_srcs
     freqdisplayform.cc
     constellationdisplayform.cc
     histogramdisplayform.cc
-    NumberDisplayPlot.cc
     numberdisplayform.cc
     waterfalldisplayform.cc
     SpectrumGUIClass.cc
@@ -91,6 +89,7 @@ set(qtgui_srcs
     histogram_sink_f_impl.cc
     number_sink_impl.cc
     qtgui_util.cc
+    ber_sink_b_impl.cc
 )
 
 #Add Windows DLL resource file if using MSVC

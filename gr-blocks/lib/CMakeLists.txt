@@ -54,7 +54,7 @@ macro(expand_cc_h_impl root)
     list(APPEND expanded_files_h_impl ${CMAKE_CURRENT_BINARY_DIR}/${name}_impl.h)
     list(APPEND expanded_files_h ${CMAKE_CURRENT_BINARY_DIR}/../include/${name}.h)
   endforeach(sig)
-  
+
   #create a command to generate the _impl.cc files
   add_custom_command(
     OUTPUT ${expanded_files_cc_impl}
@@ -63,7 +63,7 @@ macro(expand_cc_h_impl root)
     ${CMAKE_CURRENT_BINARY_DIR}/generate_helper.py
     ${root} ${root}_impl.cc.t ${ARGN}
   )
-  
+
   #create a command to generate the _impl.h files
   add_custom_command(
     OUTPUT ${expanded_files_h_impl}
@@ -72,19 +72,19 @@ macro(expand_cc_h_impl root)
     ${CMAKE_CURRENT_BINARY_DIR}/generate_helper.py
     ${root} ${root}_impl.h.t ${ARGN}
   )
-  
+
   #make _impl.cc source files depend on headers to force generation
   set_source_files_properties(${expanded_files_cc_impl}
     PROPERTIES OBJECT_DEPENDS "${expanded_files_h_impl}"
   )
-  
+
   #make _impl.h source files depend on headers to force generation
   set_source_files_properties(${expanded_files_h_impl}
     PROPERTIES OBJECT_DEPENDS "${expanded_files_h}"
   )
 
   #install rules for the generated cc files
-  list(APPEND generated_sources ${expanded_files_cc_impl})  
+  list(APPEND generated_sources ${expanded_files_cc_impl})
 endmacro(expand_cc_h_impl)
 
 ########################################################################
@@ -147,6 +147,8 @@ list(APPEND gr_blocks_sources
     control_loop.cc
     count_bits.cc
     file_sink_base.cc
+    pack_k_bits.cc
+    unpack_k_bits.cc
     wavfile.cc
     add_ff_impl.cc
     annotator_1to1_impl.cc

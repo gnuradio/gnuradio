@@ -1,23 +1,23 @@
 #
 # Copyright 2005,2006,2007,2009,2011 Free Software Foundation, Inc.
-# 
+#
 # This file is part of GNU Radio
-# 
+#
 # GNU Radio is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 3, or (at your option)
 # any later version.
-# 
+#
 # GNU Radio is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU General Public License
 # along with GNU Radio; see the file COPYING.  If not, write to
 # the Free Software Foundation, Inc., 51 Franklin Street,
 # Boston, MA 02110-1301, USA.
-# 
+#
 
 # See gnuradio-examples/python/digital for examples
 
@@ -54,7 +54,7 @@ _def_log = False
 
 # Frequency correction
 _def_freq_bw = 2*math.pi/100.0
-# Symbol timing recovery 
+# Symbol timing recovery
 _def_timing_bw = 2*math.pi/100.0
 _def_timing_max_dev = 1.5
 # Fine frequency / Phase correction
@@ -82,7 +82,7 @@ def add_common_options(parser):
                             % (', '.join(mod_codes.codes),))
     parser.add_option("", "--excess-bw", type="float", default=_def_excess_bw,
                       help="set RRC excess bandwith factor [default=%default]")
-    
+
 
 # /////////////////////////////////////////////////////////////////////////////
 #                             Generic modulator
@@ -91,7 +91,7 @@ def add_common_options(parser):
 class generic_mod(gr.hier_block2):
     """
     Hierarchical block for RRC-filtered differential generic modulation.
-    
+
     The input is a byte stream (unsigned char) and the
     output is the complex modulated signal at baseband.
 
@@ -126,9 +126,9 @@ class generic_mod(gr.hier_block2):
 
         if self._samples_per_symbol < 2:
             raise TypeError, ("sps must be >= 2, is %f" % self._samples_per_symbol)
-        
+
         arity = pow(2,self.bits_per_symbol())
-        
+
         # turn bytes into k-bit vectors
         self.bytes2chunks = \
             blocks.packed_to_unpacked_bb(self.bits_per_symbol(), gr.GR_MSB_FIRST)
@@ -154,7 +154,8 @@ class generic_mod(gr.hier_block2):
                                                        self.rrc_taps)
 
 	# Connect
-        self._blocks = [self, self.bytes2chunks]
+        #self._blocks = [self, self.bytes2chunks]
+        self._blocks = [self,]
         if self.pre_diff_code:
             self._blocks.append(self.symbol_mapper)
         if differential:
@@ -164,10 +165,10 @@ class generic_mod(gr.hier_block2):
 
         if verbose:
             self._print_verbage()
-            
+
         if log:
             self._setup_logging()
-            
+
 
     def samples_per_symbol(self):
         return self._samples_per_symbol
@@ -209,7 +210,7 @@ class generic_mod(gr.hier_block2):
                      blocks.file_sink(gr.sizeof_gr_complex, "tx_chunks2symbols.32fc"))
         self.connect(self.rrc_filter,
                      blocks.file_sink(gr.sizeof_gr_complex, "tx_rrc_filter.32fc"))
-              
+
 
 # /////////////////////////////////////////////////////////////////////////////
 #                             Generic demodulator
@@ -221,10 +222,10 @@ class generic_mod(gr.hier_block2):
 class generic_demod(gr.hier_block2):
     """
     Hierarchical block for RRC-filtered differential generic demodulation.
-    
+
     The input is the complex modulated signal at baseband.
     The output is a stream of bits packed 1 bit per byte (LSB)
-    
+
     Args:
         constellation: determines the modulation type (gnuradio.digital.digital_constellation)
         samples_per_symbol: samples per baud >= 2 (float)
@@ -248,11 +249,11 @@ class generic_demod(gr.hier_block2):
                  phase_bw=_def_phase_bw,
                  verbose=_def_verbose,
                  log=_def_log):
-        
+
 	gr.hier_block2.__init__(self, "generic_demod",
 				gr.io_signature(1, 1, gr.sizeof_gr_complex), # Input signature
 				gr.io_signature(1, 1, gr.sizeof_char))       # Output signature
-				
+
         self._constellation = constellation
         self._samples_per_symbol = samples_per_symbol
         self._excess_bw = excess_bw
@@ -310,7 +311,7 @@ class generic_demod(gr.hier_block2):
 
         if log:
             self._setup_logging()
-        
+
         # Connect and Initialize base class
         self._blocks = [self, self.agc, self.freq_recov,
                         self.time_recov, self.receiver]
@@ -371,7 +372,7 @@ class generic_demod(gr.hier_block2):
                          blocks.file_sink(gr.sizeof_char, "rx_symbol_mapper.8b"))
         self.connect(self.unpack,
                      blocks.file_sink(gr.sizeof_char, "rx_unpack.8b"))
-        
+
     def add_options(parser):
         """
         Adds generic demodulation options to the standard parser
@@ -386,7 +387,7 @@ class generic_demod(gr.hier_block2):
         parser.add_option("", "--timing-bw", type="float", default=_def_timing_bw,
                           help="set timing symbol sync loop gain lock-in bandwidth [default=%default]")
     add_options=staticmethod(add_options)
-    
+
     def extract_kwargs_from_options(cls, options):
         """
         Given command line options, create dictionary suitable for passing to __init__

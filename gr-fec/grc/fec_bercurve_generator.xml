@@ -1,0 +1,95 @@
+<?xml version="1.0"?>
+<!--
+###################################################
+## BER Curve Generator
+###################################################
+ -->
+<block>
+  <name>BER Curve Gen.</name>
+  <key>fec_bercurve_generator</key>
+  <import>from gnuradio import fec</import>
+  <import>import numpy</import>
+  <make>fec.bercurve_generator(
+	$encoder_list, \#size
+	$decoder_list, \#name
+	$esno, \#range of esnos
+	$samp_rate, \#throttle
+        $threadtype, \#threading mode
+	$puncpat, \#puncture pattern
+        $seed \# noise gen. seed
+)
+  </make>
+
+  <param>
+    <name>Es/N0</name>
+    <key>esno</key>
+    <value>numpy.arange(0.0, 4.0, .5)</value>
+    <type>raw</type>
+  </param>
+
+  <param>
+    <name>Sample Rate</name>
+    <key>samp_rate</key>
+    <value>3200000</value>
+    <type>float</type>
+  </param>
+
+  <param>
+    <name>Encoder list</name>
+    <key>encoder_list</key>
+    <value>0</value>
+    <type>raw</type>
+  </param>
+
+  <param>
+    <name>Decoder list</name>
+    <key>decoder_list</key>
+    <value>0</value>
+    <type>raw</type>
+  </param>
+
+  <param>
+    <name>Puncture Pat.</name>
+    <key>puncpat</key>
+    <value>'11'</value>
+    <type>string</type>
+  </param>
+
+  <param>
+    <name>Threading Type</name>
+    <key>threadtype</key>
+    <type>enum</type>
+    <hide>part</hide>
+    <option>
+      <name>Capillary</name>
+      <key>"capillary"</key>
+    </option>
+    <option>
+      <name>Ordinary</name>
+      <key>"ordinary"</key>
+    </option>
+    <option>
+      <name>None</name>
+      <key>"none"</key>
+    </option>
+  </param>
+
+  <param>
+    <name>Noise Seed</name>
+    <key>seed</key>
+    <value>0</value>
+    <type>int</type>
+    <hide>part</hide>
+  </param>
+
+  <bus_source>1</bus_source>
+
+  <source>
+    <name>out</name>
+    <type>byte</type>
+    <nports>len($esno)*2</nports>
+  </source>
+
+  <doc>
+  </doc>
+</block>
