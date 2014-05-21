@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2014 Free Software Foundation, Inc.
+ * Copyright 2013-2014 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -20,44 +20,33 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef NUMBER_DISPLAY_PLOT_C
-#define NUMBER_DISPLAY_PLOT_C
+#ifndef INCLUDED_FEC_BER_BF_H
+#define INCLUDED_FEC_BER_BF_H
 
-#include <gnuradio/qtgui/NumberDisplayPlot.h>
+#include <gnuradio/fec/api.h>
+#include <gnuradio/block.h>
 
-#include <qwt_scale_draw.h>
-#include <QColor>
-#include <cmath>
-#include <iostream>
-#include <volk/volk.h>
+namespace gr {
+  namespace fec {
 
-NumberDisplayPlot::NumberDisplayPlot(int nplots, QWidget* parent)
-  : DisplayPlot(nplots, parent)
-{
-  resize(0, 0);
+    /*!
+     * \brief BER block in FECAPI
+     * \ingroup error_coding_blk
+     *
+     * \details
+     *
+     * What does this block do?
+     */
+    class FEC_API ber_bf : virtual public block
+    {
+    public:
+      // gr::fec::ber_bf::sptr
+      typedef boost::shared_ptr<ber_bf> sptr;
 
-  // Setup dataPoints and plot vectors
-  // Automatically deleted when parent is deleted
-  for(int i = 0; i < d_nplots; i++) {
+      static sptr make(bool test_mode = false, int berminerrors=100, float ber_limit=-7.0);
+    };
 
-  }
-}
+  } /* namespace fec */
+} /* namespace gr */
 
-NumberDisplayPlot::~NumberDisplayPlot()
-{
-}
-
-void
-NumberDisplayPlot::replot()
-{
-  QwtPlot::replot();
-}
-
-void
-NumberDisplayPlot::plotNewData(const std::vector<double> samples)
-{
-  if(!d_stop) {
-  }
-}
-
-#endif /* NUMBER_DISPLAY_PLOT_C */
+#endif /* INCLUDED_FEC_BER_BF_H */

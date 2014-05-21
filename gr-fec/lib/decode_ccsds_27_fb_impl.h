@@ -40,7 +40,7 @@ namespace gr {
       struct viterbi_state d_state0[64];
       struct viterbi_state d_state1[64];
       unsigned char d_viterbi_in[16];
-      
+
       int d_count;
 
     public:

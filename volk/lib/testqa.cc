@@ -1,3 +1,25 @@
+/* -*- c++ -*- */
+/*
+ * Copyright 2012-2014 Free Software Foundation, Inc.
+ *
+ * This file is part of GNU Radio
+ *
+ * GNU Radio is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3, or (at your option)
+ * any later version.
+ *
+ * GNU Radio is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with GNU Radio; see the file COPYING.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street,
+ * Boston, MA 02110-1301, USA.
+ */
+
 #include "qa_utils.h"
 #include <volk/volk.h>
 #include <boost/test/unit_test.hpp>
@@ -88,4 +110,5 @@ VOLK_RUN_TESTS(volk_32f_x2_multiply_32f, 1e-4, 0, 20462, 1);
 VOLK_RUN_TESTS(volk_32fc_s32fc_multiply_32fc, 1e-4, 0, 20462, 1);
 VOLK_RUN_TESTS(volk_32f_s32f_multiply_32f, 1e-4, 0, 20462, 1);
 VOLK_RUN_TESTS(volk_32fc_s32fc_rotatorpuppet_32fc, 1e-3, (lv_32fc_t)lv_cmake(0.953939201, 0.3), 20462, 1);
+VOLK_RUN_TESTS(volk_8u_conv_k7_r2puppet_8u, 0, 0, 2060, 1);
 VOLK_RUN_TESTS(volk_32f_invsqrt_32f, 1e-2, 0, 20462, 1);

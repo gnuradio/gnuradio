@@ -1,19 +1,19 @@
 /* -*- c++ -*- */
-/* 
+/*
  * Copyright 2013 Free Software Foundation, Inc.
- * 
+ *
  * This file is part of GNU Radio
- * 
+ *
  * GNU Radio is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3, or (at your option)
  * any later version.
- * 
+ *
  * GNU Radio is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with GNU Radio; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 51 Franklin Street,
@@ -74,8 +74,7 @@ namespace gr {
 
       d_center_first_symbol = (padding.size() + 0.5) * d_sps;
 
-      //d_filter = new kernel::fft_filter_ccc(1, d_symbols);
-      d_filter = new kernel::fir_filter_ccc(1, d_symbols);
+      d_filter = new kernel::fft_filter_ccc(1, d_symbols);
 
       set_history(d_filter->ntaps());
 
@@ -83,7 +82,7 @@ namespace gr {
         volk_get_alignment() / sizeof(gr_complex);
       set_alignment(std::max(1,alignment_multiple));
     }
-    
+
     correlate_and_sync_cc_impl::~correlate_and_sync_cc_impl()
     {
       delete d_filter;
@@ -118,9 +117,8 @@ namespace gr {
       memcpy(out, in, sizeof(gr_complex)*noutput_items);
 
       // Calculate the correlation with the known symbol
-      //d_filter->filter(noutput_items, in, corr);
-      d_filter->filterN(corr, in, noutput_items);
-      
+      d_filter->filter(noutput_items, in, corr);
+
       // Find the magnitude squared of the correlation
       std::vector<float> corr_mag(noutput_items);
       volk_32fc_magnitude_squared_32f(&corr_mag[0], corr, noutput_items);
@@ -139,9 +137,18 @@ namespace gr {
           double center = nom / den;
           center = (center - 2.0);
 
-          int index = i;
+          // Adjust the results of the fft filter by moving back the
+          // length of the filter offset by the number of sps.
+          int index = i - d_symbols.size() + d_sps + 1;
 
+          // Calculate the phase offset of the incoming signal; always
+          // adjust it based on the proper rotation of the expected
+          // known word; rotate by pi is the real part is < 0 since
+          // the atan doesn't understand the ambiguity.
           float phase = fast_atan2f(corr[index].imag(), corr[index].real());
+          if(corr[index].real() < 0.0)
+            phase += M_PI;
+
           add_item_tag(0, nitems_written(0) + index, pmt::intern("phase_est"),
                        pmt::from_double(phase), pmt::intern(alias()));
           add_item_tag(0, nitems_written(0) + index, pmt::intern("time_est"),

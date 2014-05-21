@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2014 Free Software Foundation, Inc.
+ * Copyright 2013-2014 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -20,35 +20,32 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef NUMBER_DISPLAY_PLOT_H
-#define NUMBER_DISPLAY_PLOT_H
+#ifndef INCLUDED_FEC_CC_COMMON_H
+#define INCLUDED_FEC_CC_COMMON_H
 
-#include <stdint.h>
-#include <cstdio>
-#include <vector>
-#include <gnuradio/qtgui/DisplayPlot.h>
-#include <gnuradio/tags.h>
-#include <qwt_plot.h>
+typedef enum _cc_mode_t {
+  CC_STREAMING = 0,
+  CC_TERMINATED,
+  CC_TRUNCATED,
+  CC_TAILBITING
+} cc_mode_t;
 
-/*!
- * \brief QWidget for displaying number plots.
- * \ingroup qtgui_blk
- */
-class NumberDisplayPlot: public DisplayPlot
-{
-  Q_OBJECT
+typedef union {
+  //decision_t is a BIT vector
+  unsigned char* t;
+  unsigned int* w;
+  unsigned short* s;
+  unsigned char* c;
+} decision_t;
 
-public:
-  NumberDisplayPlot(int nplots, QWidget*);
-  virtual ~NumberDisplayPlot();
+typedef union {
+  unsigned char* t;
+} metric_t;
 
-  void plotNewData(const std::vector<double> samples);
-
-  void replot();
-
-public slots:
-
-private:
+struct v {
+  unsigned char *metrics;
+  metric_t old_metrics,new_metrics,metrics1,metrics2; /* Pointers to path metrics, swapped on every bit */
+  unsigned char *decisions;
 };
 
-#endif /* NUMBER_DISPLAY_PLOT_H */
+#endif /*INCLUDED_FEC_CC_COMMON_H*/

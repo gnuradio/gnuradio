@@ -27,7 +27,6 @@
 #include "correlate_access_code_tag_bb_impl.h"
 #include <gnuradio/io_signature.h>
 #include <stdexcept>
-//#include <gnuradio/blocks/count_bits.h>
 #include <volk/volk.h>
 #include <cstdio>
 #include <iostream>
@@ -78,8 +77,8 @@ namespace gr {
       if(d_len > 64)
         return false;
 
-      // set d_len bottom bits to 1.
-      d_mask = (1ULL << d_len) - 1;
+      // set len top bits to 1.
+      d_mask = ((~0ULL) >> (64 - d_len)) << (64 - d_len);
 
       d_access_code = 0;
       for(unsigned i=0; i < d_len; i++){
@@ -113,7 +112,7 @@ namespace gr {
 	wrong_bits  = (d_data_reg ^ d_access_code) & d_mask;
 	volk_64u_popcnt(&nwrong, wrong_bits);
 
-	// shift in new data and new flag
+	// shift in new data
 	d_data_reg = (d_data_reg << 1) | (in[i] & 0x1);
 	if(nwrong <= d_threshold) {
 	  if(VERBOSE)
@@ -132,4 +131,3 @@ namespace gr {
 
   } /* namespace digital */
 } /* namespace gr */
-

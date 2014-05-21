@@ -1,3 +1,25 @@
+/* -*- c++ -*- */
+/*
+ * Copyright 2012-2014 Free Software Foundation, Inc.
+ *
+ * This file is part of GNU Radio
+ *
+ * GNU Radio is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3, or (at your option)
+ * any later version.
+ *
+ * GNU Radio is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with GNU Radio; see the file COPYING.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street,
+ * Boston, MA 02110-1301, USA.
+ */
+
 #include "qa_utils.h"
 
 #include <volk/volk.h>
@@ -67,6 +89,7 @@ int main(int argc, char *argv[]) {
 
     //VOLK_PROFILE(volk_16i_x5_add_quad_16i_x4, 1e-4, 2046, 10000, &results, benchmark_mode, kernel_regex);
     //VOLK_PROFILE(volk_16i_branch_4_state_8, 1e-4, 2046, 10000, &results, benchmark_mode, kernel_regex);
+    VOLK_PUPPET_PROFILE(volk_8u_conv_k7_r2puppet_8u, volk_8u_x4_conv_k7_r2_8u, 0, 0, 2060, 10000, &results, benchmark_mode, kernel_regex);
     VOLK_PUPPET_PROFILE(volk_32fc_s32fc_rotatorpuppet_32fc, volk_32fc_s32fc_x2_rotator_32fc, 1e-2, (lv_32fc_t)lv_cmake(0.953939201, 0.3), 20462, 10000, &results, benchmark_mode, kernel_regex);
     VOLK_PROFILE(volk_16ic_s32f_deinterleave_real_32f, 1e-5, 32768.0, 204602, 10000, &results, benchmark_mode, kernel_regex);
     VOLK_PROFILE(volk_16ic_deinterleave_real_8i, 0, 0, 204602, 10000, &results, benchmark_mode, kernel_regex);

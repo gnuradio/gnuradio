@@ -161,6 +161,9 @@ gr.io_signaturev($(len($io_sigs)), $(len($io_sigs)), [$(', '.join($size_strs))])
         $indent($blk.get_make())
     #else
         self.$blk.get_id() = $indent($blk.get_make())
+        #if $blk.has_param('alias') and $blk.get_param('alias').get_evaluated()
+        (self.$blk.get_id()).set_block_alias("$blk.get_param('alias').get_evaluated()")
+        #end if
         #if $blk.has_param('affinity') and $blk.get_param('affinity').get_evaluated()
         (self.$blk.get_id()).set_processor_affinity($blk.get_param('affinity').get_evaluated())
         #end if
@@ -331,7 +334,11 @@ if __name__ == '__main__':
         tb.wait()
     qapp.connect(qapp, Qt.SIGNAL("aboutToQuit()"), quitting)
         #for $m in $monitors
-    (tb.$m.get_id()).start()
+    if $m.has_param('en'):
+        if $m.get_param('en').get_value():
+            (tb.$m.get_id()).start()
+    else:
+        sys.stderr.write("Monitor '{0}' does not have an enable ('en') parameter.".format("tb.$m.get_id()"))
         #end for
     qapp.exec_()
     tb = None #to clean up Qt widgets
@@ -362,4 +369,3 @@ if __name__ == '__main__':
     tb.wait()
     #end if
 #end if
-

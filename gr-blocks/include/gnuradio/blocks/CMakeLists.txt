@@ -47,7 +47,7 @@ macro(expand_h root)
     string(REGEX REPLACE "X+" ${sig} name ${root})
     list(APPEND expanded_files_h ${CMAKE_CURRENT_BINARY_DIR}/${name}.h)
   endforeach(sig)
-  
+
   #create a command to generate the files
   add_custom_command(
     OUTPUT ${expanded_files_h}
@@ -109,7 +109,9 @@ install(FILES
     lfsr_15_1_0.h
     lfsr_32k.h
     log2_const.h
+    pack_k_bits.h
     rotator.h
+    unpack_k_bits.h
     wavfile.h
     add_ff.h
     annotator_1to1.h

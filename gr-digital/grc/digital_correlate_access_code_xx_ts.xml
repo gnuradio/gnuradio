@@ -1,0 +1,58 @@
+<?xml version="1.0"?>
+<!--
+###################################################
+## Correlate Access Code - to tag stream
+###################################################
+ -->
+<block>
+  <name>Correlate Access Code - Tag Stream</name>
+  <key>digital_correlate_access_code_xx_ts</key>
+  <import>from gnuradio import digital</import>
+  <make>digital.correlate_access_code_$(type.fcn)_ts($access_code,
+  $threshold, $tagname)</make>
+
+  <param>
+    <name>IO Type</name>
+    <key>type</key>
+    <type>enum</type>
+    <option>
+      <name>Float</name>
+      <key>float</key>
+      <opt>fcn:ff</opt>
+    </option>
+    <option>
+      <name>Byte</name>
+      <key>byte</key>
+      <opt>fcn:bb</opt>
+    </option>
+  </param>
+
+  <param>
+    <name>Access Code</name>
+    <key>access_code</key>
+    <value>101010</value>
+    <type>string</type>
+  </param>
+
+  <param>
+    <name>Threshold</name>
+    <key>threshold</key>
+    <type>int</type>
+  </param>
+
+  <param>
+    <name>Tag Name</name>
+    <key>tagname</key>
+    <type>string</type>
+  </param>
+
+  <sink>
+    <name>in</name>
+    <type>$type</type>
+  </sink>
+
+  <source>
+    <name>out</name>
+    <type>$type</type>
+  </source>
+</block>

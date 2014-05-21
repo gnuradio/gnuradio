@@ -1,0 +1,61 @@
+<?xml version="1.0"?>
+<block>
+  <name>FEC Async Decoder</name>
+  <key>fec_async_decoder</key>
+  <import>from gnuradio import fec</import>
+  <make>fec.async_decoder($decoder, $packed, $rev_pack)</make>
+
+  <param>
+    <name>Decoder Obj.</name>
+    <key>decoder</key>
+    <type>raw</type>
+  </param>
+
+  <param>
+    <name>Packed</name>
+    <key>packed</key>
+    <value>False</value>
+    <type>enum</type>
+    <hide>part</hide>
+    <option>
+      <name>No</name>
+      <key>False</key>
+    </option>
+    <option>
+      <name>Yes</name>
+      <key>True</key>
+    </option>
+  </param>
+
+  <param>
+    <name>Rev. Packing</name>
+    <key>rev_pack</key>
+    <value>True</value>
+    <type>enum</type>
+    <hide>#if $packed() == 'True' then 'part' else 'all'#</hide>
+    <option>
+      <name>Yes</name>
+      <key>True</key>
+    </option>
+    <option>
+      <name>No</name>
+      <key>False</key>
+    </option>
+  </param>
+
+  <sink>
+    <name>in</name>
+    <type>message</type>
+    <optional>1</optional>
+  </sink>
+
+  <source>
+    <name>out</name>
+    <type>message</type>
+    <optional>1</optional>
+  </source>
+
+  <doc>
+  </doc>
+
+</block>

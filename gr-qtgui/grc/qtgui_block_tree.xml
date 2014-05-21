@@ -37,6 +37,7 @@
       <block>qtgui_const_sink_x</block>
       <block>qtgui_waterfall_sink_x</block>
       <block>qtgui_time_raster_sink_x</block>
+      <block>qtgui_bercurve_sink</block>
       <block>qtgui_histogram_sink_x</block>
       <block>qtgui_number_sink</block>
       <block>qtgui_sink_x</block>

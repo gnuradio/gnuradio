@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2006,2013 Free Software Foundation, Inc.
+ * Copyright 2006,2013-2014 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -24,6 +24,7 @@
 #define	INCLUDED_GR_UNPACK_K_BITS_BB_IMPL_H
 
 #include <gnuradio/blocks/unpack_k_bits_bb.h>
+#include <gnuradio/blocks/unpack_k_bits.h>
 
 namespace gr {
   namespace blocks {
@@ -31,7 +32,7 @@ namespace gr {
     class unpack_k_bits_bb_impl : public unpack_k_bits_bb
     {
     private:
-      unsigned d_k;    // number of relevent bits to unpack into k output bytes
+      kernel::unpack_k_bits *d_unpack;
 
     public:
       unpack_k_bits_bb_impl(unsigned k);
