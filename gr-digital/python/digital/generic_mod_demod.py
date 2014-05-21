@@ -154,8 +154,7 @@ class generic_mod(gr.hier_block2):
                                                        self.rrc_taps)
 
 	# Connect
-        #self._blocks = [self, self.bytes2chunks]
-        self._blocks = [self,]
+        self._blocks = [self, self.bytes2chunks]
         if self.pre_diff_code:
             self._blocks.append(self.symbol_mapper)
         if differential:
