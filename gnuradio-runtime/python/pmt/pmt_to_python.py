@@ -110,12 +110,17 @@ type_mappings = ( #python type, check pmt type, to python, from python
     (tuple, pmt.is_tuple, pmt_to_tuple, pmt_from_tuple),
     (list, pmt.is_vector, pmt_to_vector, pmt_from_vector),
     (dict, pmt.is_dict, pmt_to_dict, pmt_from_dict),
+    (tuple, pmt.is_pair, lambda x: (pmt_to_python(pmt.car(x)), pmt_to_python(pmt.cdr(x))), lambda x: pmt.cons(python_to_pmt(x[0]), python_to_pmt(x[1]))),
     (numpy.ndarray, pmt.is_uniform_vector, uvector_to_numpy, numpy_to_uvector),
 )
 
 def pmt_to_python(p):
     for python_type, pmt_check, to_python, from_python in type_mappings:
-        if pmt_check(p): return to_python(p)
+        if pmt_check(p): 
+            try:
+                return to_python(p)
+            except:
+                pass
     raise ValueError("can't convert %s type to pmt (%s)"%(type(p),p))
 
 def python_to_pmt(p):
