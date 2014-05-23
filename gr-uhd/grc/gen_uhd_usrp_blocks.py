@@ -1,5 +1,5 @@
 """
-Copyright 2010-2011 Free Software Foundation, Inc.
+Copyright 2010-2011,2014 Free Software Foundation, Inc.
 
 This file is part of GNU Radio
 
@@ -27,7 +27,7 @@ MAIN_TMPL = """\
 	<import>from gnuradio import uhd</import>
 	<import>import time</import>
 	<make>uhd.usrp_$(sourk)(
-	\$dev_addr,
+	",".join((\$dev_addr, \$dev_args)),
 	uhd.stream_args(
 		cpu_format="\$type",
 		\#if \$otw()
@@ -163,12 +163,25 @@ self.\$(id).set_bandwidth(\$bw$(n), $n)
 		</hide>
 	</param>
 	<param>
-		<name>Device Addr</name>
+		<name>Device Address</name>
 		<key>dev_addr</key>
 		<value>""</value>
 		<type>string</type>
 		<hide>
 			\#if \$dev_addr()
+				none
+			\#else
+				part
+			\#end if
+		</hide>
+	</param>
+	<param>
+		<name>Device Arguments</name>
+		<key>dev_args</key>
+		<value>""</value>
+		<type>string</type>
+		<hide>
+			\#if \$dev_args()
 				none
 			\#else
 				part
