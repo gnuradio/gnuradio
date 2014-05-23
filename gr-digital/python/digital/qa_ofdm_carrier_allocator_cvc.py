@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# Copyright 2012,2013 Free Software Foundation, Inc.
+# Copyright 2012-2014 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -26,13 +26,14 @@ class qa_digital_carrier_allocator_cvc (gr_unittest.TestCase):
 
     def setUp (self):
         self.tb = gr.top_block ()
+        self.tsb_key = "ts_last"
 
     def tearDown (self):
         self.tb = None
 
     def test_001_t (self):
         """
-        pretty simple (the carrier allocation is not a practical OFDM configuration!)
+        pretty simple (the carrier allocation here is not a practical OFDM configuration!)
         """
         fft_len = 6
         tx_symbols = (1, 2, 3)
@@ -43,21 +44,21 @@ class qa_digital_carrier_allocator_cvc (gr_unittest.TestCase):
         sync_word = (range(fft_len),)
         expected_result = tuple(sync_word[0] + [1j, 0, 0, 1, 2, 3])
         #                                                 ^ DC carrier
-        tag_name = "len"
-        tag = gr.tag_t()
-        tag.offset = 0
-        tag.key = pmt.string_to_symbol(tag_name)
-        tag.value = pmt.from_long(len(tx_symbols))
-        src = blocks.vector_source_c(tx_symbols, False, 1, (tag,))
+        src = blocks.vector_source_c(tx_symbols, False, 1)
         alloc = digital.ofdm_carrier_allocator_cvc(fft_len,
                        occupied_carriers,
                        pilot_carriers,
                        pilot_symbols, sync_word,
-                       tag_name)
-        sink = blocks.vector_sink_c(fft_len)
-        self.tb.connect(src, alloc, sink)
-        self.tb.run ()
-        self.assertEqual(sink.data(), expected_result)
+                       self.tsb_key)
+        sink = blocks.tsb_vector_sink_c(vlen=fft_len, tsb_key=self.tsb_key)
+        self.tb.connect(
+                src,
+                blocks.stream_to_tagged_stream(gr.sizeof_gr_complex, 1, len(tx_symbols), self.tsb_key),
+                alloc,
+                sink
+        )
+        self.tb.run()
+        self.assertEqual(sink.data()[0], expected_result)
 
     def test_001_t2 (self):
         """
@@ -71,21 +72,18 @@ class qa_digital_carrier_allocator_cvc (gr_unittest.TestCase):
         pilot_symbols = ((1j,),)
         expected_result = (1j, 0, 1, 2, 3)
         #                         ^ DC carrier
-        tag_name = "len"
-        tag = gr.tag_t()
-        tag.offset = 0
-        tag.key = pmt.string_to_symbol(tag_name)
-        tag.value = pmt.from_long(len(tx_symbols))
-        src = blocks.vector_source_c(tx_symbols, False, 1, (tag,))
-        alloc = digital.ofdm_carrier_allocator_cvc(fft_len,
-                       occupied_carriers,
-                       pilot_carriers,
-                       pilot_symbols, (),
-                       tag_name)
-        sink = blocks.vector_sink_c(fft_len)
-        self.tb.connect(src, alloc, sink)
+        src = blocks.vector_source_c(tx_symbols, False, 1)
+        alloc = digital.ofdm_carrier_allocator_cvc(
+                fft_len,
+                occupied_carriers,
+                pilot_carriers,
+                pilot_symbols, (),
+                self.tsb_key
+        )
+        sink = blocks.tsb_vector_sink_c(vlen=fft_len, tsb_key=self.tsb_key)
+        self.tb.connect(src, blocks.stream_to_tagged_stream(gr.sizeof_gr_complex, 1, len(tx_symbols), self.tsb_key), alloc, sink)
         self.tb.run ()
-        self.assertEqual(sink.data(), expected_result)
+        self.assertEqual(sink.data()[0], expected_result)
 
     def test_002_t (self):
         """
@@ -97,21 +95,21 @@ class qa_digital_carrier_allocator_cvc (gr_unittest.TestCase):
         occupied_carriers = ((-1, 1, 2),)
         pilot_carriers = ((3,),)
         expected_result = (1j, 0, 1, 0, 2, 3)
-        tag_name = "len"
-        tag = gr.tag_t()
-        tag.offset = 0
-        tag.key = pmt.string_to_symbol(tag_name)
-        tag.value = pmt.from_long(len(tx_symbols))
-        src = blocks.vector_source_c(tx_symbols, False, 1, (tag,))
+        src = blocks.vector_source_c(tx_symbols, False, 1)
         alloc = digital.ofdm_carrier_allocator_cvc(fft_len,
                        occupied_carriers,
                        pilot_carriers,
                        pilot_symbols, (),
-                       tag_name)
-        sink = blocks.vector_sink_c(fft_len)
-        self.tb.connect(src, alloc, sink)
+                       self.tsb_key)
+        sink = blocks.tsb_vector_sink_c(fft_len)
+        self.tb.connect(
+                src,
+                blocks.stream_to_tagged_stream(gr.sizeof_gr_complex, 1, len(tx_symbols), self.tsb_key),
+                alloc,
+                sink
+        )
         self.tb.run ()
-        self.assertEqual(sink.data(), expected_result)
+        self.assertEqual(sink.data()[0], expected_result)
 
     def test_002_t (self):
         """
@@ -124,11 +122,6 @@ class qa_digital_carrier_allocator_cvc (gr_unittest.TestCase):
         occupied_carriers = ((-1, 1, 2),)
         pilot_carriers = ((3,),)
         expected_result = sync_word + (1j, 0, 1, 0, 2, 3) + (1j, 0, 4, 0, 5, 6)
-        tag_name = "len"
-        tag = gr.tag_t()
-        tag.offset = 0
-        tag.key = pmt.string_to_symbol(tag_name)
-        tag.value = pmt.from_long(len(tx_symbols))
         special_tag1 = gr.tag_t()
         special_tag1.offset = 0
         special_tag1.key = pmt.string_to_symbol("spam")
@@ -139,7 +132,7 @@ class qa_digital_carrier_allocator_cvc (gr_unittest.TestCase):
         special_tag2.value = pmt.to_pmt(42)
         src = blocks.vector_source_c(
             tx_symbols, False, 1,
-            (tag, special_tag1, special_tag2)
+            (special_tag1, special_tag2)
         )
         alloc = digital.ofdm_carrier_allocator_cvc(
             fft_len,
@@ -147,16 +140,15 @@ class qa_digital_carrier_allocator_cvc (gr_unittest.TestCase):
             pilot_carriers,
             pilot_symbols,
             sync_words=(sync_word,),
-            len_tag_key=tag_name
+            len_tag_key=self.tsb_key
         )
-        sink = blocks.vector_sink_c(fft_len)
-        self.tb.connect(src, alloc, sink)
+        sink = blocks.tsb_vector_sink_c(fft_len)
+        self.tb.connect(src, blocks.stream_to_tagged_stream(gr.sizeof_gr_complex, 1, len(tx_symbols), self.tsb_key), alloc, sink)
         self.tb.run ()
-        self.assertEqual(sink.data(), expected_result)
+        self.assertEqual(sink.data()[0], expected_result)
         tags = [gr.tag_to_python(x) for x in sink.tags()]
         tags = sorted([(x.offset, x.key, x.value) for x in tags])
         tags_expected = [
-                (0, 'len', 3),
                 (0, 'spam', 23),
                 (2, 'eggs', 42),
         ]
@@ -180,15 +172,6 @@ class qa_digital_carrier_allocator_cvc (gr_unittest.TestCase):
                            0, 7,  8,  3j,  9, 0, 0, 0, 0, 0, 0, 10, 4j, 11, 12, 0,
                            0, 13, 1j, 14, 15, 0, 0, 0, 0, 0, 0, 0,  0,  2j, 0,  0)
         fft_len = 16
-        tag_name = "len"
-        tag1 = gr.tag_t()
-        tag1.offset = 0
-        tag1.key = pmt.string_to_symbol(tag_name)
-        tag1.value = pmt.from_long(len(tx_symbols))
-        tag2 = gr.tag_t()
-        tag2.offset = len(tx_symbols)
-        tag2.key = pmt.string_to_symbol(tag_name)
-        tag2.value = pmt.from_long(len(tx_symbols))
         testtag1 = gr.tag_t()
         testtag1.offset = 0
         testtag1.key = pmt.string_to_symbol('tag1')
@@ -205,18 +188,17 @@ class qa_digital_carrier_allocator_cvc (gr_unittest.TestCase):
         testtag4.offset = 2*len(tx_symbols)-1 # Last OFDM symbol of packet 2
         testtag4.key = pmt.string_to_symbol('tag4')
         testtag4.value = pmt.from_long(0)
-        src = blocks.vector_source_c(tx_symbols * 2, False, 1,
-                                     (tag1, tag2, testtag1, testtag2, testtag3, testtag4))
+        src = blocks.vector_source_c(tx_symbols * 2, False, 1, (testtag1, testtag2, testtag3, testtag4))
         alloc = digital.ofdm_carrier_allocator_cvc(fft_len,
                        occupied_carriers,
                        pilot_carriers,
                        pilot_symbols, (),
-                       tag_name,
+                       self.tsb_key,
                        False)
-        sink = blocks.vector_sink_c(fft_len)
-        self.tb.connect(src, alloc, sink)
+        sink = blocks.tsb_vector_sink_c(fft_len)
+        self.tb.connect(src, blocks.stream_to_tagged_stream(gr.sizeof_gr_complex, 1, len(tx_symbols), self.tsb_key), alloc, sink)
         self.tb.run ()
-        self.assertEqual(sink.data(), expected_result * 2)
+        self.assertEqual(sink.data()[0], expected_result)
         tags_found = {'tag1': False, 'tag2': False, 'tag3': False, 'tag4': False}
         correct_offsets = {'tag1': 0, 'tag2': 1, 'tag3': 3, 'tag4': 5}
         for tag in sink.tags():
@@ -224,9 +206,6 @@ class qa_digital_carrier_allocator_cvc (gr_unittest.TestCase):
             if key in tags_found.keys():
                 tags_found[key] = True
                 self.assertEqual(correct_offsets[key], tag.offset)
-            if key == tag_name:
-                self.assertTrue(tag.offset == 0 or tag.offset == 3)
-                self.assertTrue(pmt.to_long(tag.value) == 3)
         self.assertTrue(all(tags_found.values()))
 
 

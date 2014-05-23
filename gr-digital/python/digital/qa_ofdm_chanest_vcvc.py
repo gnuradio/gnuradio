@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# Copyright 2012,2013 Free Software Foundation, Inc.
+# Copyright 2012-2014 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -22,7 +22,6 @@
 import sys
 import numpy
 import random
-
 import numpy
 
 from gnuradio import gr, gr_unittest, blocks, analog, digital
@@ -41,7 +40,7 @@ def rand_range(min_val, max_val):
     return random.random() * (max_val - min_val) + min_val
 
 
-class qa_ofdm_sync_eqinit_vcvc (gr_unittest.TestCase):
+class qa_ofdm_chanest_vcvc (gr_unittest.TestCase):
 
     def setUp (self):
         self.tb = gr.top_block ()
@@ -284,5 +283,5 @@ class qa_ofdm_sync_eqinit_vcvc (gr_unittest.TestCase):
 
 
 if __name__ == '__main__':
-    gr_unittest.run(qa_ofdm_sync_eqinit_vcvc, "qa_ofdm_sync_eqinit_vcvc.xml")
+    gr_unittest.run(qa_ofdm_chanest_vcvc, "qa_ofdm_chanest_vcvc.xml")
 
