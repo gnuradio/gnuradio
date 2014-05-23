@@ -20,8 +20,6 @@
 # Boston, MA 02110-1301, USA.
 # 
 
-# DEPRECATED -- Marked for removal in 3.8
-
 from gnuradio import gr
 import pmt
 
@@ -42,9 +40,9 @@ def string_to_vector(string):
         v.append(ord(s))
     return v
 
-def strings_to_vectors(strings, lengthtagname):
+def strings_to_vectors(strings, tsb_tag_key):
     vs = [string_to_vector(string) for string in strings]
-    return packets_to_vectors(vs, lengthtagname)
+    return packets_to_vectors(vs, tsb_tag_key)
 
 def vector_to_string(v):
     s = []
@@ -52,19 +50,19 @@ def vector_to_string(v):
         s.append(chr(d))
     return ''.join(s)
 
-def vectors_to_strings(data, tags, lengthtagname):
-    packets = vectors_to_packets(data, tags, lengthtagname)
+def vectors_to_strings(data, tags, tsb_tag_key):
+    packets = vectors_to_packets(data, tags, tsb_tag_key)
     return [vector_to_string(packet) for packet in packets]
 
-def count_bursts(data, tags, lengthtagname, vlen=1):
+def count_bursts(data, tags, tsb_tag_key, vlen=1):
     lengthtags = [t for t in tags
-                  if pmt.symbol_to_string(t.key) == lengthtagname]
+                  if pmt.symbol_to_string(t.key) == tsb_tag_key]
     lengths = {}
     for tag in lengthtags:
         if tag.offset in lengths:
             raise ValueError(
                 "More than one tags with key {0} with the same offset={1}."
-                .format(lengthtagname, tag.offset))
+                .format(tsb_tag_key, tag.offset))
         lengths[tag.offset] = pmt.to_long(tag.value)*vlen
     in_burst = False
     in_packet = False
@@ -91,26 +89,26 @@ def count_bursts(data, tags, lengthtagname, vlen=1):
                 packet_pos = None
     return burst_count
 
-def vectors_to_packets(data, tags, lengthtagname, vlen=1):
+def vectors_to_packets(data, tags, tsb_tag_key, vlen=1):
     lengthtags = [t for t in tags
-                  if pmt.symbol_to_string(t.key) == lengthtagname]
+                  if pmt.symbol_to_string(t.key) == tsb_tag_key]
     lengths = {}
     for tag in lengthtags:
         if tag.offset in lengths:
             raise ValueError(
                 "More than one tags with key {0} with the same offset={1}."
-                .format(lengthtagname, tag.offset))
+                .format(tsb_tag_key, tag.offset))
         lengths[tag.offset] = pmt.to_long(tag.value)*vlen
     if 0 not in lengths:
         raise ValueError("There is no tag with key {0} and an offset of 0"
-                         .format(lengthtagname))
+                         .format(tsb_tag_key))
     pos = 0
     packets = []
     while pos < len(data):
         if pos not in lengths:
             raise ValueError("There is no tag with key {0} and an offset of {1}."
                              "We were expecting one."
-                             .format(lengthtagname, pos))
+                             .format(tsb_tag_key, pos))
         length = lengths[pos]
         if length == 0:
             raise ValueError("Packets cannot have zero length.")
@@ -120,7 +118,10 @@ def vectors_to_packets(data, tags, lengthtagname, vlen=1):
         pos += length
     return packets
 
-def packets_to_vectors(packets, lengthtagname, vlen=1):
+def packets_to_vectors(packets, tsb_tag_key, vlen=1):
+    """ Returns a single data vector and a set of tags.
+    If used with blocks.vector_source_X, this set of data
+    and tags will produced a correct tagged stream. """
     tags = []
     data = []
     offset = 0
@@ -128,8 +129,9 @@ def packets_to_vectors(packets, lengthtagname, vlen=1):
         data.extend(packet)
         tag = gr.tag_t()
         tag.offset = offset/vlen
-        tag.key = pmt.string_to_symbol(lengthtagname)
+        tag.key = pmt.string_to_symbol(tsb_tag_key)
         tag.value = pmt.from_long(len(packet)/vlen)
         tags.append(tag)
         offset = offset + len(packet)
     return data, tags
+

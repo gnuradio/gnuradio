@@ -28,6 +28,7 @@ class qa_repack_bits_bb (gr_unittest.TestCase):
 
     def setUp (self):
         self.tb = gr.top_block ()
+        self.tsb_key = "length"
 
     def tearDown (self):
         self.tb = None
@@ -77,24 +78,18 @@ class qa_repack_bits_bb (gr_unittest.TestCase):
         expected_data = (0b101,) + (0b111,) * 4 + (0b001,)
         k = 8
         l = 3
-        tag_name = "len"
-        tag = gr.tag_t()
-        tag.offset = 0
-        tag.key = pmt.string_to_symbol(tag_name)
-        tag.value = pmt.from_long(len(src_data))
-        src = blocks.vector_source_b(src_data, False, 1, (tag,))
-        repack = blocks.repack_bits_bb(k, l, tag_name)
-        sink = blocks.vector_sink_b()
-        self.tb.connect(src, repack, sink)
+        src = blocks.vector_source_b(src_data, False, 1)
+        repack = blocks.repack_bits_bb(k, l, self.tsb_key)
+        sink = blocks.tsb_vector_sink_b(tsb_key=self.tsb_key)
+        self.tb.connect(
+            src,
+            blocks.stream_to_tagged_stream(gr.sizeof_char, 1, len(src_data), self.tsb_key),
+            repack,
+            sink
+        )
         self.tb.run ()
-        self.assertEqual(sink.data(), expected_data)
-        try:
-            out_tag = sink.tags()[0]
-        except:
-            self.assertFail()
-        self.assertEqual(out_tag.offset, 0)
-        self.assertEqual(pmt.symbol_to_string(out_tag.key), tag_name)
-        self.assertEqual(pmt.to_long(out_tag.value), len(expected_data))
+        self.assertEqual(len(sink.data()), 1)
+        self.assertEqual(sink.data()[0], expected_data)
 
     def test_005_three_with_tags_trailing (self):
         """ 3 -> 8, trailing bits """
@@ -102,24 +97,18 @@ class qa_repack_bits_bb (gr_unittest.TestCase):
         expected_data = (0b11111101, 0b11111111)
         k = 3
         l = 8
-        tag_name = "len"
-        tag = gr.tag_t()
-        tag.offset = 0
-        tag.key = pmt.string_to_symbol(tag_name)
-        tag.value = pmt.from_long(len(src_data))
-        src = blocks.vector_source_b(src_data, False, 1, (tag,))
-        repack = blocks.repack_bits_bb(k, l, tag_name, True)
-        sink = blocks.vector_sink_b()
-        self.tb.connect(src, repack, sink)
+        src = blocks.vector_source_b(src_data, False, 1)
+        repack = blocks.repack_bits_bb(k, l, self.tsb_key, True)
+        sink = blocks.tsb_vector_sink_b(tsb_key=self.tsb_key)
+        self.tb.connect(
+            src,
+            blocks.stream_to_tagged_stream(gr.sizeof_char, 1, len(src_data), self.tsb_key),
+            repack,
+            sink
+        )
         self.tb.run ()
-        self.assertEqual(sink.data(), expected_data)
-        try:
-            out_tag = sink.tags()[0]
-        except:
-            self.assertFail()
-        self.assertEqual(out_tag.offset, 0)
-        self.assertEqual(pmt.symbol_to_string(out_tag.key), tag_name)
-        self.assertEqual(pmt.to_long(out_tag.value), len(expected_data))
+        self.assertEqual(len(sink.data()), 1)
+        self.assertEqual(sink.data()[0], expected_data)
 
 if __name__ == '__main__':
     gr_unittest.run(qa_repack_bits_bb, "qa_repack_bits_bb.xml")

@@ -1,5 +1,6 @@
 #!/usr/bin/env python
-# Copyright 2012 Free Software Foundation, Inc.
+#
+#Copyright 2012-2014 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -14,40 +15,35 @@
 # GNU General Public License for more details.
 # 
 # You should have received a copy of the GNU General Public License
-# along with GNU Radio; see the file COPYING.  If not, write to
+#  along with GNU Radio; see the file COPYING.  If not, write to
 # the Free Software Foundation, Inc., 51 Franklin Street,
 # Boston, MA 02110-1301, USA.
 # 
 
 from gnuradio import gr, gr_unittest, digital, blocks
+from gnuradio.gr import packet_utils
 import pmt
 
 class qa_packet_headergenerator_bb (gr_unittest.TestCase):
 
     def setUp (self):
         self.tb = gr.top_block ()
+        self.tsb_key = "tsb_key"
 
     def tearDown (self):
         self.tb = None
 
+    def setup_data_tags(self, data):
+        return packet_utils.packets_to_vectors(
+                data,
+                self.tsb_key
+        )
+
     def test_001_12bits (self):
-        # 3 PDUs: |           |       |
-        data   = (1, 2, 3, 4, 1, 2) + tuple(range(25))
-        tagname = "packet_len"
-        tag1 = gr.tag_t()
-        tag1.offset = 0
-        tag1.key = pmt.string_to_symbol(tagname)
-        tag1.value = pmt.from_long(4)
-        tag2 = gr.tag_t()
-        tag2.offset = 4
-        tag2.key = pmt.string_to_symbol(tagname)
-        tag2.value = pmt.from_long(2)
-        tag3 = gr.tag_t()
-        tag3.offset = 6
-        tag3.key = pmt.string_to_symbol(tagname)
-        tag3.value = pmt.from_long(25)
-        src = blocks.vector_source_b(data, False, 1, (tag1, tag2, tag3))
-        header = digital.packet_headergenerator_bb(12, tagname)
+        # 3 packets:                       |             |       |
+        data, tags = self.setup_data_tags(((1, 2, 3, 4), (1, 2), tuple(range(25))))
+        src = blocks.vector_source_b(data, tags=tags)
+        header = digital.packet_headergenerator_bb(12, self.tsb_key)
         sink = blocks.vector_sink_b()
         self.tb.connect(src, header, sink)
         self.tb.run()
@@ -58,25 +54,11 @@ class qa_packet_headergenerator_bb (gr_unittest.TestCase):
         )
         self.assertEqual(sink.data(), expected_data)
 
-
     def test_002_32bits (self):
-        # 3 PDUs: |           |     |         |
-        data   = (1, 2, 3, 4, 1, 2, 1, 2, 3, 4)
-        tagname = "packet_len"
-        tag1 = gr.tag_t()
-        tag1.offset = 0
-        tag1.key = pmt.string_to_symbol(tagname)
-        tag1.value = pmt.from_long(4)
-        tag2 = gr.tag_t()
-        tag2.offset = 4
-        tag2.key = pmt.string_to_symbol(tagname)
-        tag2.value = pmt.from_long(2)
-        tag3 = gr.tag_t()
-        tag3.offset = 6
-        tag3.key = pmt.string_to_symbol(tagname)
-        tag3.value = pmt.from_long(4)
-        src = blocks.vector_source_b(data, False, 1, (tag1, tag2, tag3))
-        header = digital.packet_headergenerator_bb(32, tagname)
+        # 3 packets:                       |             |       |           |
+        data, tags = self.setup_data_tags(((1, 2, 3, 4), (1, 2), (1, 2, 3, 4)))
+        src = blocks.vector_source_b(data, tags=tags)
+        header = digital.packet_headergenerator_bb(32, self.tsb_key)
         sink = blocks.vector_sink_b()
         self.tb.connect(src, header, sink)
         self.tb.run()
@@ -88,26 +70,12 @@ class qa_packet_headergenerator_bb (gr_unittest.TestCase):
         )
         self.assertEqual(sink.data(), expected_data)
 
-
     def test_003_12bits_formatter_object (self):
-        # 3 PDUs: |           |     |         |
-        data   = (1, 2, 3, 4, 1, 2, 1, 2, 3, 4)
-        tagname = "packet_len"
-        tag1 = gr.tag_t()
-        tag1.offset = 0
-        tag1.key = pmt.string_to_symbol(tagname)
-        tag1.value = pmt.from_long(4)
-        tag2 = gr.tag_t()
-        tag2.offset = 4
-        tag2.key = pmt.string_to_symbol(tagname)
-        tag2.value = pmt.from_long(2)
-        tag3 = gr.tag_t()
-        tag3.offset = 6
-        tag3.key = pmt.string_to_symbol(tagname)
-        tag3.value = pmt.from_long(4)
-        src = blocks.vector_source_b(data, False, 1, (tag1, tag2, tag3))
-        formatter_object = digital.packet_header_default(12, tagname)
-        header = digital.packet_headergenerator_bb(formatter_object.formatter(), tagname)
+        # 3 packets:                       |             |       |           |
+        data, tags = self.setup_data_tags(((1, 2, 3, 4), (1, 2), (1, 2, 3, 4)))
+        src = blocks.vector_source_b(data, tags=tags)
+        formatter_object = digital.packet_header_default(12, self.tsb_key)
+        header = digital.packet_headergenerator_bb(formatter_object.formatter(), self.tsb_key)
         sink = blocks.vector_sink_b()
         self.tb.connect(src, header, sink)
         self.tb.run()
@@ -120,26 +88,13 @@ class qa_packet_headergenerator_bb (gr_unittest.TestCase):
 
     def test_004_8bits_formatter_ofdm (self):
         occupied_carriers = ((1, 2, 3, 5, 6, 7),)
-        # 3 PDUs: |           |     |         |
-        data   = (1, 2, 3, 4, 1, 2, 1, 2, 3, 4)
-        tagname = "packet_len"
-        tag1 = gr.tag_t()
-        tag1.offset = 0
-        tag1.key = pmt.string_to_symbol(tagname)
-        tag1.value = pmt.from_long(4)
-        tag2 = gr.tag_t()
-        tag2.offset = 4
-        tag2.key = pmt.string_to_symbol(tagname)
-        tag2.value = pmt.from_long(2)
-        tag3 = gr.tag_t()
-        tag3.offset = 6
-        tag3.key = pmt.string_to_symbol(tagname)
-        tag3.value = pmt.from_long(4)
-        src = blocks.vector_source_b(data, False, 1, (tag1, tag2, tag3))
-        formatter_object = digital.packet_header_ofdm(occupied_carriers, 1, tagname)
+        # 3 packets:                       |             |       |           |
+        data, tags = self.setup_data_tags(((1, 2, 3, 4), (1, 2), (1, 2, 3, 4)))
+        src = blocks.vector_source_b(data, tags=tags)
+        formatter_object = digital.packet_header_ofdm(occupied_carriers, 1, self.tsb_key)
         self.assertEqual(formatter_object.header_len(), 6)
-        self.assertEqual(pmt.symbol_to_string(formatter_object.len_tag_key()), tagname)
-        header = digital.packet_headergenerator_bb(formatter_object.formatter(), tagname)
+        self.assertEqual(pmt.symbol_to_string(formatter_object.len_tag_key()), self.tsb_key)
+        header = digital.packet_headergenerator_bb(formatter_object.formatter(), self.tsb_key)
         sink = blocks.vector_sink_b()
         self.tb.connect(src, header, sink)
         self.tb.run()
