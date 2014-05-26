@@ -155,8 +155,14 @@ namespace gr {
     if(FLOWGRAPH_DEBUG)
       std::cout << "check_valid_port( " << e.block() << ", " << e.port() << ")\n";
 
-    if(!e.block()->has_msg_port(e.port()))
+    if(!e.block()->has_msg_port(e.port())) {
+      const gr::basic_block::msg_queue_map_t& msg_map = e.block()->get_msg_map();
+      std::cout << "Could not find port: " << e.port() << " in:" << std::endl;
+      for (gr::basic_block::msg_queue_map_t::const_iterator it = msg_map.begin(); it != msg_map.end(); ++it)
+        std::cout << it->first << std::endl;
+      std::cout << std::endl;
       throw std::invalid_argument("invalid msg port in connect() or disconnect()");
+    }
   }
 
   void
