@@ -587,13 +587,19 @@ int main(int argc, char *argv[])
 			mel[i]++;
 		}
 
+                #ifdef DUMP
+                dump_mel(mel);
+                #endif
+
 		for(i=0; i<LPC_ORD; i++) {
 		    f_ = 700.0*( pow(10.0, (float)mel[i]/100.0) - 1.0);
 		    lsps_[i] = f_*(PI/4000.0);
 		}
-		for(i=5; i<10; i++) {
+                /*
+                for(i=5; i<10; i++) {
 		    lsps_[i] = lsps[i];
 		}
+                */
 
 		lsp_to_lpc(lsps_, ak, LPC_ORD);
 	    }

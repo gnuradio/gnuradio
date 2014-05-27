@@ -38,6 +38,7 @@ struct CODEC2 {
     float         Sn[M];                   /* input speech                              */
     float         hpf_states[2];           /* high pass filter states                   */
     void         *nlp;                     /* pitch predictor states                    */
+    int           gray;                    /* non-zero for gray encoding                */
 
     kiss_fft_cfg  fft_inv_cfg;             /* inverse FFT config                        */
     float         Sn_[2*N];	           /* synthesised output speech                 */

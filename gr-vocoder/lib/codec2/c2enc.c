@@ -41,11 +41,12 @@ int main(int argc, char *argv[])
     FILE          *fout;
     short         *buf;
     unsigned char *bits;
-    int            nsam, nbit, nbyte;
+    int            nsam, nbit, nbyte, gray;
 
-    if (argc != 4) {
-	printf("usage: c2enc 3200|2400|1600|1400|1300|1200 InputRawspeechFile OutputBitFile\n");
+    if (argc < 4) {
+	printf("usage: c2enc 3200|2400|1600|1400|1300|1200 InputRawspeechFile OutputBitFile [--natural]\n");
 	printf("e.g    c2enc 1400 ../raw/hts1a.raw hts1a.c2\n");
+	printf("e.g    c2enc 1300 ../raw/hts1a.raw hts1a.c2 --natural\n");
 	exit(1);
     }
 
@@ -87,6 +88,14 @@ int main(int argc, char *argv[])
     nbyte = (nbit + 7) / 8;
 
     bits = (unsigned char*)malloc(nbyte*sizeof(char));
+
+    if (argc == 5) {
+        if (strcmp(argv[4], "--natural") == 0)
+            gray = 0;
+        else
+            gray = 1;
+        codec2_set_natural_or_gray(codec2, gray);
+    }
 
     while(fread(buf, sizeof(short), nsam, fin) == (size_t)nsam) {
 	codec2_encode(codec2, bits, buf);
