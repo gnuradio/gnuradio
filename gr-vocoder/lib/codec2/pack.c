@@ -52,8 +52,22 @@ pack(
  unsigned int		fieldWidth/* Width of the field in BITS, not bytes. */
  )
 {
-  /* Convert the field to Gray code */
-  field = (field >> 1) ^ field;
+    pack_natural_or_gray(bitArray, bitIndex, field, fieldWidth, 1);
+}
+
+void
+pack_natural_or_gray(
+ unsigned char *	bitArray,  /* The output bit string. */
+ unsigned int *		bitIndex,  /* Index into the string in BITS, not bytes.*/
+ int			field,	   /* The bit field to be packed. */
+ unsigned int		fieldWidth,/* Width of the field in BITS, not bytes. */
+ unsigned int           gray       /* non-zero for gray coding */
+ )
+{
+  if (gray) {
+    /* Convert the field to Gray code */
+    field = (field >> 1) ^ field;
+  }
 
   do {
     unsigned int  	bI = *bitIndex;
@@ -81,6 +95,21 @@ unpack(
  unsigned int		fieldWidth/* Width of the field in BITS, not bytes. */
  )
 {
+    return unpack_natural_or_gray(bitArray, bitIndex, fieldWidth, 1);
+}
+
+/** Unpack a field from a bit string, to binary, optionally using
+ * natural or Gray code.
+ *
+ */
+int
+unpack_natural_or_gray(
+ const unsigned char *	bitArray,  /* The input bit string. */
+ unsigned int *		bitIndex,  /* Index into the string in BITS, not bytes.*/
+ unsigned int		fieldWidth,/* Width of the field in BITS, not bytes. */
+ unsigned int           gray       /* non-zero for Gray coding */
+ )
+{
   unsigned int	field = 0;
   unsigned int	t;
 
@@ -96,10 +125,16 @@ unpack(
     fieldWidth -= sliceWidth;
   } while ( fieldWidth != 0 );
 
-  /* Convert from Gray code to binary. Works for maximum 8-bit fields. */
-  t = field ^ (field >> 8);
-  t ^= (t >> 4);
-  t ^= (t >> 2);
-  t ^= (t >> 1);
+  if (gray) {
+    /* Convert from Gray code to binary. Works for maximum 8-bit fields. */
+    t = field ^ (field >> 8);
+    t ^= (t >> 4);
+    t ^= (t >> 2);
+    t ^= (t >> 1);
+  }
+  else {
+    t = field;
+  }
+
   return t;
 }

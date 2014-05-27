@@ -138,6 +138,8 @@ struct CODEC2 * CODEC2_WIN32SUPPORT codec2_create(int mode)
 	return NULL;
     }
 
+    c2->gray = 1;
+
     c2->lpc_pf = 1; c2->bass_boost = 1; c2->beta = LPCPF_BETA; c2->gamma = LPCPF_GAMMA;
 
     c2->xq_enc[0] = c2->xq_enc[1] = 0.0;
@@ -248,7 +250,12 @@ void CODEC2_WIN32SUPPORT codec2_encode(struct CODEC2 *c2, unsigned char *bits, s
 	codec2_encode_1200(c2, bits, speech);
 }
 
-void CODEC2_WIN32SUPPORT codec2_decode(struct CODEC2 *c2, short speech[], const unsigned char *bits, float ber_est)
+void CODEC2_WIN32SUPPORT codec2_decode(struct CODEC2 *c2, short speech[], const unsigned char *bits)
+{
+    codec2_decode_ber(c2, speech, bits, 0.0);
+}
+
+void CODEC2_WIN32SUPPORT codec2_decode_ber(struct CODEC2 *c2, short speech[], const unsigned char *bits, float ber_est)
 {
     assert(c2 != NULL);
     assert(
@@ -978,36 +985,36 @@ void codec2_encode_1300(struct CODEC2 *c2, unsigned char * bits, short speech[])
     /* frame 1: - voicing ---------------------------------------------*/
 
     analyse_one_frame(c2, &model, speech);
-    pack(bits, &nbit, model.voiced, 1);
+    pack_natural_or_gray(bits, &nbit, model.voiced, 1, c2->gray);
 
     /* frame 2: - voicing ---------------------------------------------*/
 
     analyse_one_frame(c2, &model, &speech[N]);
-    pack(bits, &nbit, model.voiced, 1);
+    pack_natural_or_gray(bits, &nbit, model.voiced, 1, c2->gray);
 
     /* frame 3: - voicing ---------------------------------------------*/
 
     analyse_one_frame(c2, &model, &speech[2*N]);
-    pack(bits, &nbit, model.voiced, 1);
+    pack_natural_or_gray(bits, &nbit, model.voiced, 1, c2->gray);
 
     /* frame 4: - voicing, scalar Wo & E, scalar LSPs ------------------*/
 
     analyse_one_frame(c2, &model, &speech[3*N]);
-    pack(bits, &nbit, model.voiced, 1);
+    pack_natural_or_gray(bits, &nbit, model.voiced, 1, c2->gray);
 
     Wo_index = encode_Wo(model.Wo);
-    pack(bits, &nbit, Wo_index, WO_BITS);
+    pack_natural_or_gray(bits, &nbit, Wo_index, WO_BITS, c2->gray);
 
     #ifdef TIMER
     quant_start = machdep_timer_sample();
     #endif
     e = speech_to_uq_lsps(lsps, ak, c2->Sn, c2->w, LPC_ORD);
     e_index = encode_energy(e);
-    pack(bits, &nbit, e_index, E_BITS);
+    pack_natural_or_gray(bits, &nbit, e_index, E_BITS, c2->gray);
 
     encode_lsps_scalar(lsp_indexes, lsps, LPC_ORD);
     for(i=0; i<LSP_SCALAR_INDEXES; i++) {
-	pack(bits, &nbit, lsp_indexes[i], lsp_bits(i));
+	pack_natural_or_gray(bits, &nbit, lsp_indexes[i], lsp_bits(i), c2->gray);
     }
     #ifdef TIMER
     machdep_timer_sample_and_log(quant_start, "    quant/packing");
@@ -1054,20 +1061,20 @@ void codec2_decode_1300(struct CODEC2 *c2, short speech[], const unsigned char *
     /* this will partially fill the model params for the 4 x 10ms
        frames */
 
-    model[0].voiced = unpack(bits, &nbit, 1);
-    model[1].voiced = unpack(bits, &nbit, 1);
-    model[2].voiced = unpack(bits, &nbit, 1);
-    model[3].voiced = unpack(bits, &nbit, 1);
+    model[0].voiced = unpack_natural_or_gray(bits, &nbit, 1, c2->gray);
+    model[1].voiced = unpack_natural_or_gray(bits, &nbit, 1, c2->gray);
+    model[2].voiced = unpack_natural_or_gray(bits, &nbit, 1, c2->gray);
+    model[3].voiced = unpack_natural_or_gray(bits, &nbit, 1, c2->gray);
 
-    Wo_index = unpack(bits, &nbit, WO_BITS);
+    Wo_index = unpack_natural_or_gray(bits, &nbit, WO_BITS, c2->gray);
     model[3].Wo = decode_Wo(Wo_index);
     model[3].L  = PI/model[3].Wo;
 
-    e_index = unpack(bits, &nbit, E_BITS);
+    e_index = unpack_natural_or_gray(bits, &nbit, E_BITS, c2->gray);
     e[3] = decode_energy(e_index);
 
     for(i=0; i<LSP_SCALAR_INDEXES; i++) {
-	lsp_indexes[i] = unpack(bits, &nbit, lsp_bits(i));
+	lsp_indexes[i] = unpack_natural_or_gray(bits, &nbit, lsp_bits(i), c2->gray);
     }
     decode_lsps_scalar(&lsps[3][0], lsp_indexes, LPC_ORD);
     check_lsp_order(&lsps[3][0], LPC_ORD);
@@ -1101,6 +1108,10 @@ void codec2_decode_1300(struct CODEC2 *c2, short speech[], const unsigned char *
 	apply_lpc_correction(&model[i]);
     }
     TIMER_SAMPLE_AND_LOG2(recover_start, "    recover");
+    #ifdef DUMP
+    dump_lsp_(&lsps[3][0]);
+    dump_ak_(&ak[3][0], LPC_ORD);
+    #endif
 
     /* synthesise ------------------------------------------------*/
 
@@ -1519,3 +1530,10 @@ int CODEC2_WIN32SUPPORT codec2_rebuild_spare_bit(struct CODEC2 *c2, int unpacked
 
     return -1;
 }
+
+void CODEC2_WIN32SUPPORT codec2_set_natural_or_gray(struct CODEC2 *c2, int gray)
+{
+    assert(c2 != NULL);
+    c2->gray = gray;
+}
+

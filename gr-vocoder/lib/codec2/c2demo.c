@@ -33,6 +33,7 @@
 
 #include "codec2.h"
 #include "sine.h"
+#include "dump.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -85,7 +86,7 @@ int main(int argc, char *argv[])
 
     while(fread(buf, sizeof(short), nsam, fin) == (size_t)nsam) {
 	codec2_encode(codec2, bits, buf);
-	codec2_decode(codec2, buf, bits, 0.0);
+	codec2_decode(codec2, buf, bits);
 	fwrite(buf, sizeof(short), nsam, fout);
     }
 
