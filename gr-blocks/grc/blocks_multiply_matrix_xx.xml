@@ -14,6 +14,11 @@
 		<key>float</key>
 		<opt>fcn:ff</opt>
 	</option>
+	<option>
+		<name>Complex</name>
+		<key>complex</key>
+		<opt>fcn:cc</opt>
+	</option>
   </param>
   <param>
     <name>Matrix A</name>

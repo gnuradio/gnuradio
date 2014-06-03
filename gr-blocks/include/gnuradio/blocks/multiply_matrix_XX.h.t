@@ -20,8 +20,10 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef INCLUDED_BLOCKS_MULTIPLY_MATRIX_FF_H
-#define INCLUDED_BLOCKS_MULTIPLY_MATRIX_FF_H
+// @WARNING@
+
+#ifndef @GUARD_NAME@
+#define @GUARD_NAME@
 
 #include <gnuradio/blocks/api.h>
 #include <gnuradio/sync_block.h>
@@ -36,9 +38,9 @@ namespace gr {
      * This block is similar to gr::blocks::multiply_const_ff, the difference
      * being it can handle several inputs and outputs, and the input-to-output
      * relation can be described by the following mathematical equation:
-     * \[
+     * \f[
      *    y(k) = A x(k) \, , \, y \in \mathbb{R}^N, x \in \mathbb{R}^M, A \in \mathbb{R}^{N \times M}
-     * \]
+     * \f]
      * \$y(k)\$ and \$x(i)\$ are column-vectors describing the elements on the input port
      * at time step \$k\$ (this is a sync block with no memory).
      *
@@ -47,16 +49,16 @@ namespace gr {
      * - Simulation of static MIMO-Channels (in that case, \$A\$ is the channel matrix)
      *
      * This block features a special tag propagation mode: When setting the tag propagation policy
-     * to gr::blocks::multiply_matrix_ff::TPP_SELECT_BY_MATRIX, a tag is propagated from input k
-     * to output l if \$(A)_{l,k} \neq 0\$.
+     * to gr::blocks::@NAME@::TPP_SELECT_BY_MATRIX, a tag is propagated from input k
+     * to output l if \f$(A)_{l,k} \neq 0\f$.
      *
      * A message port (\p set_A) allows to set the matrix. *Note*: It is not possible to change
      * the dimension of the matrix after initialization, as this affects the I/O signature!
      */
-    class BLOCKS_API multiply_matrix_ff : virtual public gr::sync_block
+    class BLOCKS_API @NAME@ : virtual public gr::sync_block
     {
      public:
-      typedef boost::shared_ptr<multiply_matrix_ff> sptr;
+      typedef boost::shared_ptr<@NAME@> sptr;
 
       /*!
        * \param A The matrix
@@ -64,14 +66,14 @@ namespace gr {
        *                               Note this can be any gr::block::tag_propagation_policy_t value, or TPP_SELECT_BY_MATRIX.
        */
       static sptr make(
-          std::vector<std::vector<float> > A,
+          std::vector<std::vector<@O_TYPE@> > A,
           gr::block::tag_propagation_policy_t tag_propagation_policy=gr::block::TPP_ALL_TO_ALL
       );
 
       //! Returns the current matrix
-      virtual const std::vector<std::vector<float> >& get_A() const = 0;
+      virtual const std::vector<std::vector<@O_TYPE@> >& get_A() const = 0;
       //! Sets the matrix to a new value \p new_A. Returns true if the new matrix was valid and could be changed.
-      virtual bool set_A(const std::vector<std::vector<float> > &new_A) = 0;
+      virtual bool set_A(const std::vector<std::vector<@O_TYPE@> > &new_A) = 0;
 
       /*!
        * \brief Set the policy by the scheduler to determine how tags are moved downstream.
@@ -83,10 +85,10 @@ namespace gr {
       static const int TPP_SELECT_BY_MATRIX = 999;
       static const std::string MSG_PORT_NAME_SET_A;
     };
-    const std::string multiply_matrix_ff::MSG_PORT_NAME_SET_A = "set_A";
+    const std::string @NAME@::MSG_PORT_NAME_SET_A = "set_A";
 
   } // namespace blocks
 } // namespace gr
 
-#endif /* INCLUDED_BLOCKS_MULTIPLY_MATRIX_FF_H */
+#endif /* @GUARD_NAME */
 

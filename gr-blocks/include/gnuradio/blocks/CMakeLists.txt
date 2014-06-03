@@ -78,6 +78,7 @@ expand_h(moving_average_XX  ss ii ff cc)
 expand_h(multiply_XX        ss ii)
 expand_h(multiply_const_XX  ss ii)
 expand_h(multiply_const_vXX ss ii ff cc)
+expand_h(multiply_matrix_XX ff cc)
 expand_h(mute_XX            ss ii ff cc)
 expand_h(not_XX             bb ss ii)
 expand_h(or_XX              bb ss ii)
@@ -219,7 +220,7 @@ install(FILES
     vector_to_streams.h
     wavfile_sink.h
     wavfile_source.h
-    multiply_matrix_ff.h DESTINATION ${GR_INCLUDE_DIR}/gnuradio/blocks
+    DESTINATION ${GR_INCLUDE_DIR}/gnuradio/blocks
     COMPONENT "blocks_devel"
 )
 
