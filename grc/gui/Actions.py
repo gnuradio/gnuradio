@@ -281,6 +281,10 @@ TOGGLE_BLOCKS_WINDOW = ToggleAction(
     tooltip='Toggle visibility of the block tree widget',
     keypresses=(gtk.keysyms.b, gtk.gdk.CONTROL_MASK),
 )
+TOGGLE_SCROLL_LOCK = ToggleAction(
+    label='_Scroll Lock',
+    tooltip='Toggle scrool lock of the logging window',
+)
 ABOUT_WINDOW_DISPLAY = Action(
     label='_About',
     tooltip='About this program',
@@ -344,6 +348,11 @@ FIND_BLOCKS = Action(
     stock_id=gtk.STOCK_FIND,
     keypresses=(gtk.keysyms.f, gtk.gdk.CONTROL_MASK,
                 gtk.keysyms.slash, NO_MODS_MASK),
+)
+CLEAR_REPORTS = Action(
+    label='_Clear Logs',
+    tooltip='Clear Logs',
+    stock_id=gtk.STOCK_CLEAR,
 )
 OPEN_HIER = Action(
     label='Open H_ier',

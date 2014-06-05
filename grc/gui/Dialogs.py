@@ -39,12 +39,20 @@ class TextDisplay(gtk.TextView):
         self.set_editable(False)
         self.set_cursor_visible(False)
         self.set_wrap_mode(gtk.WRAP_WORD_CHAR)
+        
+        # Added for scroll locking
+        self.scroll_lock = True
+        
+        # Add a signal for populating the popup menu
+        self.connect("populate-popup", self.populate_popup)
 
     def insert(self, line):
         # make backspaces work
         line = self._consume_backspaces(line)
         # add the remaining text to buffer
         self.get_buffer().insert(self.get_buffer().get_end_iter(), line)
+        # Automatically scroll on insert
+        self.scroll_to_end()
 
     def _consume_backspaces(self, line):
         """removes text from the buffer if line starts with \b*"""
@@ -60,6 +68,39 @@ class TextDisplay(gtk.TextView):
         self.get_buffer().delete(start_iter, self.get_buffer().get_end_iter())
         # return remaining text
         return line[back_count:]
+
+    def scroll_to_end(self):
+        if (self.scroll_lock == True):
+            buffer = self.get_buffer()
+            buffer.move_mark(buffer.get_insert(), buffer.get_end_iter())
+            self.scroll_to_mark(buffer.get_insert(), 0.0)
+            
+    def clear(self):
+        buffer = self.get_buffer()
+        buffer.delete(buffer.get_start_iter(), buffer.get_end_iter())
+
+    # Callback functions to handle the scrolling lock and clear context menus options
+    # Action functions are set by the ActionHandler's init function
+    def clear_cb(self, menu_item, web_view):
+        self.clear_action()
+    def scroll_back_cb(self, menu_item, web_view):
+        # Trigger the toggle action
+        self.scroll_action()
+       
+    # Create a popup menu for the scroll lock and clear functions.
+    def populate_popup(self, view, menu):
+        menu.append(gtk.SeparatorMenuItem())
+        
+        lock = gtk.CheckMenuItem("Scroll Lock")
+        menu.append(lock)
+        lock.set_active(self.scroll_lock)       
+        lock.connect('activate', self.scroll_back_cb, view)        
+    
+        clear = gtk.ImageMenuItem(gtk.STOCK_CLEAR)
+        menu.append(clear)
+        clear.connect('activate', self.clear_cb, view)
+        menu.show_all()
+        return False
 
 def MessageDialogHelper(type, buttons, title=None, markup=None):
     """
