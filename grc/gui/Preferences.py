@@ -95,3 +95,9 @@ def blocks_window_visibility(visible=None):
     else:
         try: return _config_parser.getboolean('main', 'blocks_window_visible')
         except: return True
+
+def scroll_lock(visible=None):
+    if visible is not None: _config_parser.set('main', 'scroll_lock', visible)
+    else:
+        try: return _config_parser.getboolean('main', 'scroll_lock')
+        except: return True
