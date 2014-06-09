@@ -109,6 +109,7 @@ int main(int argc, char *argv[]) {
     VOLK_PROFILE(volk_32f_accumulator_s32f, 1e-4, 0, 204602, 10000, &results, benchmark_mode, kernel_regex);
     VOLK_PROFILE(volk_32f_x2_add_32f, 1e-4, 0, 204602, 10000, &results, benchmark_mode, kernel_regex);
     VOLK_PROFILE(volk_32fc_32f_multiply_32fc, 1e-4, 0, 204602, 1000, &results, benchmark_mode, kernel_regex);
+    VOLK_PROFILE(volk_32f_log2_32f, 1e-3, 0, 204602, 1000, &results, benchmark_mode, kernel_regex);
     VOLK_PROFILE(volk_32fc_s32f_power_32fc, 1e-4, 0, 204602, 50, &results, benchmark_mode, kernel_regex);
     VOLK_PROFILE(volk_32f_s32f_calc_spectral_noise_floor_32f, 1e-4, 20.0, 204602, 1000, &results, benchmark_mode, kernel_regex);
     VOLK_PROFILE(volk_32fc_s32f_atan2_32f, 1e-4, 10.0, 204602, 100, &results, benchmark_mode, kernel_regex);
