@@ -25,6 +25,7 @@ include_directories(
     ${GR_DTV_INCLUDE_DIRS}
     ${GR_FILTER_INCLUDE_DIRS}
     ${GR_ANALOG_INCLUDE_DIRS}
+    ${GR_FEC_INCLUDE_DIRS}
     ${GNURADIO_RUNTIME_INCLUDE_DIRS}
     ${Boost_INCLUDE_DIRS}
 )
@@ -58,9 +59,14 @@ add_custom_command(
 ########################################################################
 list(APPEND dtv_sources
   ${atsc_viterbi_mux_cc}
+  atsc_deinterleaver_impl.cc
+  atsc_depad_impl.cc
+  atsc_derandomizer_impl.cc
   atsc_equalizer_impl.cc
   atsc_fpll_impl.cc
   atsc_fs_checker_impl.cc
+  atsc_randomize.cc
+  atsc_rs_decoder_impl.cc
   atsc_sync_impl.cc
   atsc_fake_single_viterbi.cc
   atsc_single_viterbi.cc
@@ -76,6 +82,7 @@ list(APPEND dtv_libs
     gnuradio-runtime
     gnuradio-analog
     gnuradio-filter
+    gnuradio-fec
 )
 
 #Add Windows DLL resource file if using MSVC

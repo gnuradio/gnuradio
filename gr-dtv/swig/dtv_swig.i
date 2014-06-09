@@ -28,21 +28,33 @@
 %include "dtv_swig_doc.i"
 
 %{
+#include "gnuradio/dtv/atsc_deinterleaver.h"
+#include "gnuradio/dtv/atsc_depad.h"
+#include "gnuradio/dtv/atsc_derandomizer.h"
 #include "gnuradio/dtv/atsc_equalizer.h"
 #include "gnuradio/dtv/atsc_fpll.h"
 #include "gnuradio/dtv/atsc_fs_checker.h"
+#include "gnuradio/dtv/atsc_rs_decoder.h"
 #include "gnuradio/dtv/atsc_sync.h"
 #include "gnuradio/dtv/atsc_viterbi_decoder.h"
 %}
 
+%include "gnuradio/dtv/atsc_deinterleaver.h"
+%include "gnuradio/dtv/atsc_depad.h"
+%include "gnuradio/dtv/atsc_derandomizer.h"
 %include "gnuradio/dtv/atsc_equalizer.h"
 %include "gnuradio/dtv/atsc_fpll.h"
 %include "gnuradio/dtv/atsc_fs_checker.h"
+%include "gnuradio/dtv/atsc_rs_decoder.h"
 %include "gnuradio/dtv/atsc_sync.h"
 %include "gnuradio/dtv/atsc_viterbi_decoder.h"
 
+GR_SWIG_BLOCK_MAGIC2(dtv, atsc_deinterleaver);
+GR_SWIG_BLOCK_MAGIC2(dtv, atsc_depad);
+GR_SWIG_BLOCK_MAGIC2(dtv, atsc_derandomizer);
 GR_SWIG_BLOCK_MAGIC2(dtv, atsc_equalizer)
 GR_SWIG_BLOCK_MAGIC2(dtv, atsc_fpll);
 GR_SWIG_BLOCK_MAGIC2(dtv, atsc_fs_checker);
+GR_SWIG_BLOCK_MAGIC2(dtv, atsc_rs_decoder);
 GR_SWIG_BLOCK_MAGIC2(dtv, atsc_sync);
 GR_SWIG_BLOCK_MAGIC2(dtv, atsc_viterbi_decoder);

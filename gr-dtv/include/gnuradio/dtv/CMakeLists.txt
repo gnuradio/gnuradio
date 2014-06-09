@@ -23,9 +23,13 @@
 install(FILES
     api.h
     atsc_consts.h
+    atsc_deinterleaver.h
+    atsc_depad.h
+    atsc_derandomizer.h
     atsc_equalizer.h
     atsc_fpll.h
     atsc_fs_checker.h
+    atsc_rs_decoder.h
     atsc_sync.h
     atsc_viterbi_decoder.h
     DESTINATION ${GR_INCLUDE_DIR}/gnuradio/dtv

@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<!--
+###################################################
+## ATSC Derandomizer
+###################################################
+ -->
+<block>
+  <name>ATSC Derandomizer</name>
+  <key>dtv_atsc_derandomizer</key>
+  <import>from gnuradio import dtv</import>
+  <make>dtv.atsc_derandomizer()</make>
+
+  <sink>
+    <name>in</name>
+    <type>byte</type>
+    <vlen>256</vlen>
+  </sink>
+
+  <source>
+    <name>out</name>
+    <type>byte</type>
+    <vlen>256</vlen>
+  </source>
+
+</block>

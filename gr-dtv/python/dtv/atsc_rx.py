@@ -26,7 +26,7 @@ class atsc_rx(gr.hier_block2):
     def __init__(self, input_rate, sps):
         gr.hier_block2.__init__(self, "atsc_rx",
                                 gr.io_signature(1, 1, gr.sizeof_gr_complex), # Input signature
-                                gr.io_signature(1, 1, 256))                  # Output signature
+                                gr.io_signature(1, 1, gr.sizeof_char))       # Output signature
 
         # ATSC receiver filter/interpolator
         rx_filt = atsc_rx_filter(input_rate, sps)
@@ -36,7 +36,7 @@ class atsc_rx(gr.hier_block2):
         pll = dtv.atsc_fpll(output_rate)
 
         # Remove pilot tone now at DC
-        dcr = filter.dc_blocker_ff(128)
+        dcr = filter.dc_blocker_ff(1024)
 
         # Normalize signal to proper constellation amplitude
         agc = analog.agc_ff(1e-5, 4.0)
@@ -53,6 +53,18 @@ class atsc_rx(gr.hier_block2):
         # Remove convolutional trellis coding
         vit = dtv.atsc_viterbi_decoder()
 
+	# Remove convolutianal interleave
+	dei = dtv.atsc_deinterleaver()
+
+	# Reed-Solomon decode
+	rsd = dtv.atsc_rs_decoder()
+
+	# Derandomize MPEG2-TS packet
+	der = dtv.atsc_derandomizer()
+
+	# Remove padding from packet
+	dep = dtv.atsc_depad()
+
         # Connect pipeline
         self.connect(self, rx_filt, pll, dcr, agc, btl, fsc, equ)
-        self.connect(equ, vit, self)
+        self.connect(equ, vit, dei, rsd, der, dep, self)

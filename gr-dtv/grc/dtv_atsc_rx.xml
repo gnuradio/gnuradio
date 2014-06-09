@@ -30,7 +30,6 @@
   <source>
     <name>out</name>
     <type>byte</type>
-    <vlen>256</vlen>
   </source>
 
 </block>

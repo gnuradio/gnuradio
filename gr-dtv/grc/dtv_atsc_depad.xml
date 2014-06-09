@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<!--
+###################################################
+## ATSC Depad
+###################################################
+ -->
+<block>
+  <name>ATSC Depad</name>
+  <key>dtv_atsc_depad</key>
+  <import>from gnuradio import dtv</import>
+  <make>dtv.atsc_depad()</make>
+
+  <sink>
+    <name>in</name>
+    <type>byte</type>
+    <vlen>256</vlen>
+  </sink>
+
+  <source>
+    <name>out</name>
+    <type>byte</type>
+  </source>
+
+</block>

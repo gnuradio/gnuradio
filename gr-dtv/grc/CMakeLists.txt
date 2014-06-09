@@ -18,9 +18,13 @@
 # Boston, MA 02110-1301, USA.
 
 install(FILES
+    dtv_atsc_deinterleaver.xml
+    dtv_atsc_depad.xml
+    dtv_atsc_derandomizer.xml
     dtv_atsc_equalizer.xml
     dtv_atsc_fpll.xml
     dtv_atsc_fs_checker.xml
+    dtv_atsc_rs_decoder.xml
     dtv_atsc_rx.xml
     dtv_atsc_rx_filter.xml
     dtv_atsc_sync.xml
