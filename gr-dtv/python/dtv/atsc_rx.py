@@ -53,7 +53,7 @@ class atsc_rx(gr.hier_block2):
         # Remove convolutional trellis coding
         vit = dtv.atsc_viterbi_decoder()
 
-	# Remove convolutianal interleave
+	# Remove convolutional interleaving
 	dei = dtv.atsc_deinterleaver()
 
 	# Reed-Solomon decode

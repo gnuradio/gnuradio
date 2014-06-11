@@ -32,9 +32,13 @@
     <name>Digital Television</name>
     <cat>
       <name>ATSC</name>
+      <block>dtv_atsc_deinterleaver</block>
+      <block>dtv_atsc_depad</block>
+      <block>dtv_atsc_derandomizer</block>
       <block>dtv_atsc_equalizer</block>
       <block>dtv_atsc_fpll</block>
       <block>dtv_atsc_fs_checker</block>
+      <block>dtv_atsc_rs_decoder</block>
       <block>dtv_atsc_rx</block>
       <block>dtv_atsc_rx_filter</block>
       <block>dtv_atsc_sync</block>

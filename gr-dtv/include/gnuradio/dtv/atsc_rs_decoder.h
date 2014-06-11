@@ -30,7 +30,7 @@ namespace gr {
   namespace dtv {
 
     /*!
-     * \brief ATSC Receiver RS_DECODER
+     * \brief ATSC Receiver Reed-Solomon Decoder
      *
      * \ingroup dtv_atsc
      */

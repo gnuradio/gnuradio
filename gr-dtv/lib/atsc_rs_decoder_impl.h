@@ -50,13 +50,11 @@ namespace gr {
        * Decode RS encoded packet.
        * \returns a count of corrected symbols, or -1 if the block was uncorrectible.
        */
-      int decode (atsc_mpeg_packet_no_sync &out, const atsc_mpeg_packet_rs_encoded &in);
+      int decode(atsc_mpeg_packet_no_sync &out, const atsc_mpeg_packet_rs_encoded &in);
 
-      int work (int noutput_items,
-            gr_vector_const_void_star &input_items,
-            gr_vector_void_star &output_items);
-
-      void reset() { /* nop */ }
+      int work(int noutput_items,
+               gr_vector_const_void_star &input_items,
+               gr_vector_void_star &output_items);
     };
 
   } /* namespace dtv */

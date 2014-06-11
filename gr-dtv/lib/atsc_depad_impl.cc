@@ -44,22 +44,20 @@ namespace gr {
                               io_signature::make(1, 1, sizeof(unsigned char)),
                               ATSC_MPEG_PKT_LENGTH)
     {
-      reset();
     }
 
     int
     atsc_depad_impl::work (int noutput_items,
-                    gr_vector_const_void_star &input_items,
-                    gr_vector_void_star &output_items)
+                           gr_vector_const_void_star &input_items,
+                           gr_vector_void_star &output_items)
     {
-      const atsc_mpeg_packet *in = (const atsc_mpeg_packet *) input_items[0];
-      unsigned char *out = (unsigned char *) output_items[0];
+      const atsc_mpeg_packet *in = (const atsc_mpeg_packet *)input_items[0];
+      unsigned char *out = (unsigned char *)output_items[0];
 
       int i;
 
-      for (i = 0; i < noutput_items/ATSC_MPEG_PKT_LENGTH; i++){
+      for (i = 0; i < noutput_items/ATSC_MPEG_PKT_LENGTH; i++)
         memcpy(&out[i * ATSC_MPEG_PKT_LENGTH], in[i].data, ATSC_MPEG_PKT_LENGTH);
-      }
 
       return i * ATSC_MPEG_PKT_LENGTH;
     }

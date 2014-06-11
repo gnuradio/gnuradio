@@ -40,14 +40,8 @@ namespace gr {
 
     atsc_derandomizer_impl::atsc_derandomizer_impl()
       : gr::sync_block("dtv_atsc_derandomizer",
-                  io_signature::make(1, 1, sizeof(atsc_mpeg_packet_no_sync)),
-                  io_signature::make(1, 1, sizeof(atsc_mpeg_packet)))
-    {
-      reset();
-    }
-
-    void
-    atsc_derandomizer_impl::reset()
+                       io_signature::make(1, 1, sizeof(atsc_mpeg_packet_no_sync)),
+                       io_signature::make(1, 1, sizeof(atsc_mpeg_packet)))
     {
       d_rand.reset();
     }

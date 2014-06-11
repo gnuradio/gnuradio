@@ -34,8 +34,8 @@ namespace gr {
     {
     private:
       //! transform a single symbol
-      unsigned char transform (unsigned char input){
-        unsigned char retval = m_fifo[m_commutator]->stuff (input);
+      unsigned char transform(unsigned char input) {
+        unsigned char retval = m_fifo[m_commutator]->stuff(input);
         m_commutator++;
         if (m_commutator >= 52)
           m_commutator = 0;
@@ -58,15 +58,15 @@ namespace gr {
       atsc_deinterleaver_impl();
       ~atsc_deinterleaver_impl();
 
-      int work (int noutput_items,
-            gr_vector_const_void_star &input_items,
-            gr_vector_void_star &output_items);
+      int work(int noutput_items,
+               gr_vector_const_void_star &input_items,
+               gr_vector_void_star &output_items);
 
       //! reset interleaver (flushes contents and resets commutator)
-      void reset ();
+      void reset();
 
       //! sync interleaver (resets commutator, but doesn't flush fifos)
-      void sync () { m_commutator = 0; }
+      void sync() { m_commutator = 0; }
     };
 
   } /* namespace dtv */

@@ -51,16 +51,15 @@ namespace gr {
 
     atsc_rs_decoder_impl::atsc_rs_decoder_impl()
       : gr::sync_block("dtv_atsc_rs_decoder",
-                  io_signature::make(1, 1, sizeof(atsc_mpeg_packet_rs_encoded)),
-                  io_signature::make(1, 1, sizeof(atsc_mpeg_packet_no_sync)))
+                       io_signature::make(1, 1, sizeof(atsc_mpeg_packet_rs_encoded)),
+                       io_signature::make(1, 1, sizeof(atsc_mpeg_packet_no_sync)))
     {
-      d_rs = init_rs_char (rs_init_symsize, rs_init_gfpoly, rs_init_fcr, rs_init_prim, rs_init_nroots);
+      d_rs = init_rs_char(rs_init_symsize, rs_init_gfpoly, rs_init_fcr, rs_init_prim, rs_init_nroots);
       assert (d_rs != 0);
       nerrors_corrrected_count = 0;
       bad_packet_count = 0;
       total_packets = 0;
       reset_counter = 0;
-      reset();
     }
 
     int atsc_rs_decoder_impl::decode (atsc_mpeg_packet_no_sync &out, const atsc_mpeg_packet_rs_encoded &in)
@@ -68,14 +67,14 @@ namespace gr {
       unsigned char tmp[N];
       int ncorrections;
 
-      assert ((int)(amount_of_pad + sizeof (in.data)) == N);
+      assert((int)(amount_of_pad + sizeof(in.data)) == N);
 
       // add missing prefix zero padding to message
-      memset (tmp, 0, amount_of_pad);
-      memcpy (&tmp[amount_of_pad], in.data, sizeof (in.data));
+      memset(tmp, 0, amount_of_pad);
+      memcpy(&tmp[amount_of_pad], in.data, sizeof(in.data));
 
       // correct message...
-      ncorrections = decode_rs_char (d_rs, tmp, 0, 0);
+      ncorrections = decode_rs_char(d_rs, tmp, 0, 0);
 
       // copy corrected message to output, skipping prefix zero padding
       memcpy (out.data, &tmp[amount_of_pad], sizeof (out.data));
@@ -91,20 +90,20 @@ namespace gr {
     }
 
     int
-    atsc_rs_decoder_impl::work (int noutput_items,
-                        gr_vector_const_void_star &input_items,
-                        gr_vector_void_star &output_items)
+    atsc_rs_decoder_impl::work(int noutput_items,
+                               gr_vector_const_void_star &input_items,
+                               gr_vector_void_star &output_items)
     {
-      const atsc_mpeg_packet_rs_encoded *in = (const atsc_mpeg_packet_rs_encoded *) input_items[0];
-      atsc_mpeg_packet_no_sync *out = (atsc_mpeg_packet_no_sync *) output_items[0];
+      const atsc_mpeg_packet_rs_encoded *in = (const atsc_mpeg_packet_rs_encoded *)input_items[0];
+      atsc_mpeg_packet_no_sync *out = (atsc_mpeg_packet_no_sync *)output_items[0];
 
-      for (int i = 0; i < noutput_items; i++){
+      for (int i = 0; i < noutput_items; i++) {
         assert(in[i].pli.regular_seg_p());
         out[i].pli = in[i].pli;			// copy pipeline info...
 
         int nerrors_corrrected = decode(out[i], in[i]);
         out[i].pli.set_transport_error(nerrors_corrrected == -1);
-        if( nerrors_corrrected == -1 )
+        if (nerrors_corrrected == -1)
           bad_packet_count++;
         else
           nerrors_corrrected_count += nerrors_corrrected;
@@ -113,9 +112,14 @@ namespace gr {
       total_packets += noutput_items;
       reset_counter++;
 
-      if( reset_counter > 100 )
-      {
-        std::cout << "Error rate: " << (float)nerrors_corrrected_count/total_packets << "\tPacket error rate: " << (float)bad_packet_count/total_packets << std::endl;
+      if (reset_counter > 100) {
+        // FIXME: convert to logger
+        std::cout << "Error rate: "
+                  << (float)nerrors_corrrected_count/total_packets
+                  << "\tPacket error rate: "
+                  << (float)bad_packet_count/total_packets
+                  << std::endl;
+
         nerrors_corrrected_count = 0;
         bad_packet_count = 0;
         total_packets = 0;
