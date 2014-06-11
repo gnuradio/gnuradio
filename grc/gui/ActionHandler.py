@@ -61,9 +61,6 @@ class ActionHandler:
         self.main_window = MainWindow(platform)
         self.main_window.connect('delete-event', self._quit)
         self.main_window.connect('key-press-event', self._handle_key_press)
-        # Add actions the report/log text_view can call back to from its context menu
-        self.main_window.text_display.clear_action = Actions.CLEAR_REPORTS
-        self.main_window.text_display.scroll_action = Actions.TOGGLE_SCROLL_LOCK
         self.get_page = self.main_window.get_page
         self.get_flow_graph = self.main_window.get_flow_graph
         self.get_focus_flag = self.main_window.get_focus_flag

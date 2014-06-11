@@ -21,6 +21,7 @@ import pygtk
 pygtk.require('2.0')
 import gtk
 import Utils
+import Actions
 
 class TextDisplay(gtk.TextView):
     """A non editable gtk text view."""
@@ -82,10 +83,9 @@ class TextDisplay(gtk.TextView):
     # Callback functions to handle the scrolling lock and clear context menus options
     # Action functions are set by the ActionHandler's init function
     def clear_cb(self, menu_item, web_view):
-        self.clear_action()
+        Actions.CLEAR_REPORTS()        
     def scroll_back_cb(self, menu_item, web_view):
-        # Trigger the toggle action
-        self.scroll_action()
+        Actions.TOGGLE_SCROLL_LOCK()
        
     # Create a popup menu for the scroll lock and clear functions.
     def populate_popup(self, view, menu):
