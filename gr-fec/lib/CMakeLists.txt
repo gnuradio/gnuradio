@@ -34,6 +34,7 @@ include_directories(
     ${VOLK_INCLUDE_DIRS}
     ${LOG4CPP_INCLUDE_DIRS}
     ${Boost_INCLUDE_DIRS}
+    ${GSL_INCLUDE_DIRS}
 )
 
 if(ENABLE_GR_CTRLPORT)
@@ -87,6 +88,8 @@ list(APPEND gnuradio_fec_sources
   polar_decoder_sc_list.cc
   polar_decoder_common.cc
   scl_list.cc
+  ldpc_par_chk_mtrx_impl.cc
+  ldpc_bit_flip_decoder_impl.cc
 )
 
 #Add Windows DLL resource file if using MSVC
@@ -109,6 +112,7 @@ list(APPEND gnuradio_fec_libs
     ${VOLK_LIBRARIES}
     ${Boost_LIBRARIES}
     ${LOG4CPP_LIBRARIES}
+    ${GSL_LIBRARIES}
 )
 
 add_library(gnuradio-fec SHARED ${gnuradio_fec_sources})
