@@ -25,6 +25,26 @@ static inline void volk_32f_binary_slicer_32i_generic(int* cVector, const float*
 }
 #endif /* LV_HAVE_GENERIC */
 
+
+#ifdef LV_HAVE_GENERIC
+/*!
+  \brief Returns integer 1 if float input is greater than or equal to 0, 1 otherwise
+  \param cVector The int output (either 0 or 1)
+  \param aVector The float input
+  \param num_points The number of values in aVector and stored into cVector
+*/
+static inline void volk_32f_binary_slicer_32i_generic_branchless(int* cVector, const float* aVector, unsigned int num_points){
+    int* cPtr = cVector;
+    const float* aPtr = aVector;
+    unsigned int number = 0;
+
+    for(number = 0; number < num_points; number++){
+        *cPtr++ = (*aPtr++ >= 0);
+    }
+}
+#endif /* LV_HAVE_GENERIC */
+
+
 #ifdef LV_HAVE_SSE2
 #include <emmintrin.h>
 /*!
