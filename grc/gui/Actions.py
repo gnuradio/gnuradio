@@ -282,8 +282,8 @@ TOGGLE_BLOCKS_WINDOW = ToggleAction(
     keypresses=(gtk.keysyms.b, gtk.gdk.CONTROL_MASK),
 )
 TOGGLE_SCROLL_LOCK = ToggleAction(
-    label='_Scroll Lock',
-    tooltip='Toggle scrool lock of the logging window',
+    label='_Report Scroll Lock',
+    tooltip='Toggle scroll lock for the report window',
 )
 ABOUT_WINDOW_DISPLAY = Action(
     label='_About',
@@ -350,8 +350,8 @@ FIND_BLOCKS = Action(
                 gtk.keysyms.slash, NO_MODS_MASK),
 )
 CLEAR_REPORTS = Action(
-    label='_Clear Logs',
-    tooltip='Clear Logs',
+    label='_Clear Reports',
+    tooltip='Clear Reports',
     stock_id=gtk.STOCK_CLEAR,
 )
 OPEN_HIER = Action(
