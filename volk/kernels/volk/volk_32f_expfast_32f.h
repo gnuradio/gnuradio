@@ -12,6 +12,45 @@
 #ifndef INCLUDED_volk_32f_expfast_32f_a_H
 #define INCLUDED_volk_32f_expfast_32f_a_H
 
+#ifdef LV_HAVE_AVX
+#include <immintrin.h>
+/*!
+  \brief Computes fast exp (max 7% error) of input vector and stores results in output vector
+  \param bVector The vector where results will be stored
+  \param aVector The input vector of floats
+  \param num_points Number of points for which log is to be computed
+*/
+static inline void volk_32f_expfast_32f_a_avx(float* bVector, const float* aVector, unsigned int num_points){
+
+	float* bPtr = bVector;
+	const float* aPtr = aVector;
+    
+	unsigned int number = 0;
+        const unsigned int eighthPoints = num_points / 8;
+
+	__m256 aVal, bVal, a, b;
+	__m256i exp;
+        a = _mm256_set1_ps(A/Mln2);
+        b = _mm256_set1_ps(B-C);
+
+	for(;number < eighthPoints; number++){    
+	aVal = _mm256_load_ps(aPtr); 
+	exp = _mm256_cvtps_epi32(_mm256_add_ps(_mm256_mul_ps(a,aVal), b));
+	bVal = _mm256_castsi256_ps(exp);
+
+	_mm256_store_ps(bPtr, bVal);
+	aPtr += 8;
+	bPtr += 8;
+	}
+ 
+	number = eighthPoints * 8;
+	for(;number < num_points; number++){
+	   *bPtr++ = expf(*aPtr++);
+	}
+}
+
+#endif /* LV_HAVE_AVX for aligned */
+
 #ifdef LV_HAVE_SSE4_1
 #include <smmintrin.h>
 /*!
@@ -75,6 +114,45 @@ static inline void volk_32f_expfast_32f_a_generic(float* bVector, const float* a
 
 #ifndef INCLUDED_volk_32f_expfast_32f_u_H
 #define INCLUDED_volk_32f_expfast_32f_u_H
+
+#ifdef LV_HAVE_AVX
+#include <immintrin.h>
+/*!
+  \brief Computes fast exp (max 7% error) of input vector and stores results in output vector
+  \param bVector The vector where results will be stored
+  \param aVector The input vector of floats
+  \param num_points Number of points for which log is to be computed
+*/
+static inline void volk_32f_expfast_32f_u_avx(float* bVector, const float* aVector, unsigned int num_points){
+
+	float* bPtr = bVector;
+	const float* aPtr = aVector;
+    
+	unsigned int number = 0;
+        const unsigned int eighthPoints = num_points / 8;
+
+	__m256 aVal, bVal, a, b;
+	__m256i exp;
+        a = _mm256_set1_ps(A/Mln2);
+        b = _mm256_set1_ps(B-C);
+
+	for(;number < eighthPoints; number++){    
+	aVal = _mm256_loadu_ps(aPtr); 
+	exp = _mm256_cvtps_epi32(_mm256_add_ps(_mm256_mul_ps(a,aVal), b));
+	bVal = _mm256_castsi256_ps(exp);
+
+	_mm256_storeu_ps(bPtr, bVal);
+	aPtr += 8;
+	bPtr += 8;
+	}
+ 
+	number = eighthPoints * 8;
+	for(;number < num_points; number++){
+	   *bPtr++ = expf(*aPtr++);
+	}
+}
+
+#endif /* LV_HAVE_AVX for aligned */
 
 #ifdef LV_HAVE_SSE4_1
 #include <smmintrin.h>
