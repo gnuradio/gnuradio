@@ -138,4 +138,10 @@ const std::vector< @TYPE@ >
   return _@TAG@vector(vector)->writable_elements(len);
 }
 
+const std::string
+pmt_@TAG@vector::string_ref(size_t k) const
+{
+  return boost::lexical_cast< std::string, @TYPE@ > (ref(k));
+}
+
 } /* namespace pmt */

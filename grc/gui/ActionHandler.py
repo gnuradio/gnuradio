@@ -117,7 +117,7 @@ class ActionHandler:
                 Actions.FLOW_GRAPH_SCREEN_CAPTURE, Actions.HELP_WINDOW_DISPLAY,
                 Actions.TYPES_WINDOW_DISPLAY, Actions.TOGGLE_BLOCKS_WINDOW,
                 Actions.TOGGLE_REPORTS_WINDOW, Actions.TOGGLE_HIDE_DISABLED_BLOCKS,
-                Actions.TOOLS_RUN_FDESIGN,
+                Actions.TOOLS_RUN_FDESIGN, Actions.TOGGLE_SCROLL_LOCK, Actions.CLEAR_REPORTS,
             ): action.set_sensitive(True)
             if ParseXML.xml_failures:
                 Messages.send_xml_errors_if_any(ParseXML.xml_failures)
@@ -135,6 +135,7 @@ class ActionHandler:
             self.main_window.btwin.search_entry.hide()
             Actions.TOGGLE_REPORTS_WINDOW.set_active(Preferences.reports_window_visibility())
             Actions.TOGGLE_BLOCKS_WINDOW.set_active(Preferences.blocks_window_visibility())
+            Actions.TOGGLE_SCROLL_LOCK.set_active(Preferences.scroll_lock())
         elif action == Actions.APPLICATION_QUIT:
             if self.main_window.close_pages():
                 gtk.main_quit()
@@ -373,6 +374,13 @@ class ActionHandler:
             else:
                 self.main_window.btwin.hide()
             Preferences.blocks_window_visibility(visible)
+        elif action == Actions.TOGGLE_SCROLL_LOCK:
+            visible = action.get_active()
+            self.main_window.text_display.scroll_lock = visible
+            if visible:
+                self.main_window.text_display.scroll_to_end()
+        elif action == Actions.CLEAR_REPORTS:
+            self.main_window.text_display.clear()
         elif action == Actions.TOGGLE_HIDE_DISABLED_BLOCKS:
             Actions.NOTHING_SELECT()
         ##################################################
