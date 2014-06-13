@@ -21,4 +21,5 @@ public:
   @TYPE@ *writable_elements(size_t &len);
   const void *uniform_elements(size_t &len);
   void *uniform_writable_elements(size_t &len);
+  virtual const std::string string_ref(size_t k) const;
 };

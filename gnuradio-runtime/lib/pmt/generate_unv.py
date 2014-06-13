@@ -76,6 +76,7 @@ includes = """
 #endif
 #include <vector>
 #include <pmt/pmt.h>
+#include <boost/lexical_cast.hpp>
 #include "pmt_int.h"
 """
 
