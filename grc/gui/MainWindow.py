@@ -155,7 +155,6 @@ class MainWindow(gtk.Window):
             line: the new text
         """
         self.text_display.insert(line)
-        self.text_display.scroll_mark_onscreen(self.text_display.get_buffer().get_insert())
 
     ############################################################
     # Pages: create and close
