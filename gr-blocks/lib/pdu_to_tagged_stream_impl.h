@@ -34,9 +34,11 @@ namespace gr {
       pdu::vector_type     d_type;
       std::vector<uint8_t> d_remain;
       pmt::pmt_t           d_tag;
+      int                  d_sleep_duration;
+      bool                 d_no_message;
 
     public:
-      pdu_to_tagged_stream_impl(pdu::vector_type type, const std::string& lengthtagname="packet_len");
+      pdu_to_tagged_stream_impl(pdu::vector_type type, const std::string& lengthtagname="packet_len", int sleep_duration=0);
 
       int work(int noutput_items,
 	       gr_vector_const_void_star &input_items,

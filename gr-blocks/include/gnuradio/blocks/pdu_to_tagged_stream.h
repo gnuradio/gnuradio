@@ -45,9 +45,10 @@ namespace gr {
        * \param type PDU type of pdu::vector_type
        * \param lengthtagname The name of the tag that specifies how long the packet is.
        *                      Defaults to 'packet_len'.
+       * \param sleep_duration Time to sleep (ms) haven't not received a packet.
        */
       static sptr make(pdu::vector_type type,
-                       const std::string& lengthtagname="packet_len");
+                       const std::string& lengthtagname="packet_len", int sleep_duration=0);
     };
 
   } /* namespace blocks */
