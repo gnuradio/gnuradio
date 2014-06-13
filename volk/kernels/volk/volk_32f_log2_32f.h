@@ -1,3 +1,32 @@
+/*
+ * This kernel was adapted from Jose Fonseca's Fast SSE2 log implementation
+ * http://jrfonseca.blogspot.in/2008/09/fast-sse2-pow-tables-or-polynomials.htm
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a
+ * copy of this software and associated documentation files (the
+ * "Software"), to deal in the Software without restriction, including
+ * without limitation the rights to use, copy, modify, merge, publish,
+ * distribute, sub license, and/or sell copies of the Software, and to
+ * permit persons to whom the Software is furnished to do so, subject to
+ * the following conditions:
+ * 
+ * The above copyright notice and this permission notice (including the
+ * next paragraph) shall be included in all copies or substantial portions
+ * of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT.
+ * IN NO EVENT SHALL TUNGSTEN GRAPHICS AND/OR ITS SUPPLIERS BE LIABLE FOR
+ * ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+ * TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
+ * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+ * This is the MIT License (MIT)
+
+*/
+
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <inttypes.h>
@@ -66,7 +95,6 @@ static inline void volk_32f_log2_32f_a_sse4_1(float* bVector, const float* aVect
 	// Now to extract mantissa
 	frac = _mm_or_ps(leadingOne, _mm_and_ps(aVal, _mm_castsi128_ps(_mm_set1_epi32(0x7fffff))));
 
-	// This is where MIT Licensed code starts
 	#if LOG_POLY_DEGREE == 6
 	  mantissa = POLY5( frac, 3.1157899f, -3.3241990f, 2.5988452f, -1.2315303f,  3.1821337e-1f, -3.4436006e-2f);
 	#elif LOG_POLY_DEGREE == 5
@@ -75,8 +103,8 @@ static inline void volk_32f_log2_32f_a_sse4_1(float* bVector, const float* aVect
 	  mantissa = POLY3( frac, 2.61761038894603480148f, -1.75647175389045657003f, 0.688243882994381274313f, -0.107254423828329604454f);
 	#elif LOG_POLY_DEGREE == 3
 	  mantissa = POLY2( frac, 2.28330284476918490682f, -1.04913055217340124191f, 0.204446009836232697516f);
-	//#else
-	//#error
+	#else
+	#error
 	#endif
 
 	bVal = _mm_add_ps(bVal, _mm_mul_ps(mantissa, _mm_sub_ps(frac, leadingOne)));
@@ -151,7 +179,6 @@ static inline void volk_32f_log2_32f_u_sse4_1(float* bVector, const float* aVect
 	// Now to extract mantissa
 	frac = _mm_or_ps(leadingOne, _mm_and_ps(aVal, _mm_castsi128_ps(_mm_set1_epi32(0x7fffff))));
 
-	// This is where MIT Licensed code starts
 	#if LOG_POLY_DEGREE == 6
 	  mantissa = POLY5( frac, 3.1157899f, -3.3241990f, 2.5988452f, -1.2315303f,  3.1821337e-1f, -3.4436006e-2f);
 	#elif LOG_POLY_DEGREE == 5
@@ -160,8 +187,8 @@ static inline void volk_32f_log2_32f_u_sse4_1(float* bVector, const float* aVect
 	  mantissa = POLY3( frac, 2.61761038894603480148f, -1.75647175389045657003f, 0.688243882994381274313f, -0.107254423828329604454f);
 	#elif LOG_POLY_DEGREE == 3
 	  mantissa = POLY2( frac, 2.28330284476918490682f, -1.04913055217340124191f, 0.204446009836232697516f);
-	//#else
-	//#error
+	#else
+	#error
 	#endif
 
 	bVal = _mm_add_ps(bVal, _mm_mul_ps(mantissa, _mm_sub_ps(frac, leadingOne)));
