@@ -134,7 +134,7 @@
     </param>
     <param>
       <key>value</key>
-      <value>"/n/harrisville/x/anastas/gnuradio_trunk/"</value>
+      <value>"${CMAKE_INSTALL_PREFIX}"</value>
     </param>
     <param>
       <key>_coordinate</key>
@@ -262,7 +262,7 @@
     </param>
     <param>
       <key>o_fsm_args</key>
-      <value>prefix+"gr-trellis/src/examples/fsm_files/awgn1o2_4.fsm"</value>
+      <value>prefix+"/${GR_PKG_TRELLIS_EXAMPLES_DIR}/fsm_files/awgn1o2_4.fsm"</value>
     </param>
     <param>
       <key>o_init_state</key>
@@ -270,7 +270,7 @@
     </param>
     <param>
       <key>i_fsm_args</key>
-      <value>prefix+"gr-trellis/src/examples/fsm_files/awgn2o3_4.fsm"</value>
+      <value>prefix+"/${GR_PKG_TRELLIS_EXAMPLES_DIR}/fsm_files/awgn2o3_4.fsm"</value>
     </param>
     <param>
       <key>i_init_state</key>
@@ -309,7 +309,7 @@
     </param>
     <param>
       <key>o_fsm_args</key>
-      <value>prefix+"gr-trellis/src/examples/fsm_files/awgn1o2_4.fsm"</value>
+      <value>prefix+"/${GR_PKG_TRELLIS_EXAMPLES_DIR}/fsm_files/awgn1o2_4.fsm"</value>
     </param>
     <param>
       <key>o_init_state</key>
@@ -321,7 +321,7 @@
     </param>
     <param>
       <key>i_fsm_args</key>
-      <value>prefix+"gr-trellis/src/examples/fsm_files/awgn2o3_4.fsm"</value>
+      <value>prefix+"/${GR_PKG_TRELLIS_EXAMPLES_DIR}/fsm_files/awgn2o3_4.fsm"</value>
     </param>
     <param>
       <key>i_init_state</key>

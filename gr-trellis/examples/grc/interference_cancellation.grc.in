@@ -709,7 +709,7 @@
     </param>
     <param>
       <key>fsm_args</key>
-      <value>prefix+"gr-trellis/src/examples/fsm_files/awgn1o2_16.fsm"</value>
+      <value>prefix+"/${GR_PKG_TRELLIS_EXAMPLES_DIR}/fsm_files/awgn1o2_16.fsm"</value>
     </param>
     <param>
       <key>block_size</key>
@@ -764,7 +764,7 @@
     </param>
     <param>
       <key>fsm_args</key>
-      <value>prefix+"gr-trellis/src/examples/fsm_files/awgn1o2_16.fsm"</value>
+      <value>prefix+"/${GR_PKG_TRELLIS_EXAMPLES_DIR}/fsm_files/awgn1o2_16.fsm"</value>
     </param>
     <param>
       <key>block_size</key>
@@ -819,7 +819,7 @@
     </param>
     <param>
       <key>fsm_args</key>
-      <value>prefix+"gr-trellis/src/examples/fsm_files/awgn1o2_16.fsm"</value>
+      <value>prefix+"/${GR_PKG_TRELLIS_EXAMPLES_DIR}/fsm_files/awgn1o2_16.fsm"</value>
     </param>
     <param>
       <key>block_size</key>
@@ -874,7 +874,7 @@
     </param>
     <param>
       <key>fsm_args</key>
-      <value>prefix+"gr-trellis/src/examples/fsm_files/awgn1o2_16.fsm"</value>
+      <value>prefix+"/${GR_PKG_TRELLIS_EXAMPLES_DIR}/fsm_files/awgn1o2_16.fsm"</value>
     </param>
     <param>
       <key>block_size</key>
@@ -996,7 +996,7 @@
     </param>
     <param>
       <key>value</key>
-      <value>"/n/harrisville/x/anastas/gnuradio_trunk/"</value>
+      <value>"${CMAKE_INSTALL_PREFIX}"</value>
     </param>
     <param>
       <key>_coordinate</key>
@@ -1023,7 +1023,7 @@
     </param>
     <param>
       <key>fsm_args</key>
-      <value>prefix+"gr-trellis/src/examples/fsm_files/awgn1o2_16.fsm"</value>
+      <value>prefix+"/${GR_PKG_TRELLIS_EXAMPLES_DIR}/fsm_files/awgn1o2_16.fsm"</value>
     </param>
     <param>
       <key>init_state</key>
@@ -1654,7 +1654,7 @@
     </param>
     <param>
       <key>fsm_args</key>
-      <value>prefix+"gr-trellis/src/examples/fsm_files/awgn1o2_16.fsm"</value>
+      <value>prefix+"/${GR_PKG_TRELLIS_EXAMPLES_DIR}/fsm_files/awgn1o2_16.fsm"</value>
     </param>
     <param>
       <key>init_state</key>
@@ -1794,7 +1794,7 @@
     </param>
     <param>
       <key>fsm_args</key>
-      <value>prefix+"gr-trellis/src/examples/fsm_files/awgn1o2_16.fsm"</value>
+      <value>prefix+"/${GR_PKG_TRELLIS_EXAMPLES_DIR}/fsm_files/awgn1o2_16.fsm"</value>
     </param>
     <param>
       <key>init_state</key>
@@ -1856,7 +1856,7 @@
     </param>
     <param>
       <key>fsm_args</key>
-      <value>prefix+"gr-trellis/src/examples/fsm_files/awgn1o2_16.fsm"</value>
+      <value>prefix+"/${GR_PKG_TRELLIS_EXAMPLES_DIR}/fsm_files/awgn1o2_16.fsm"</value>
     </param>
     <param>
       <key>init_state</key>
