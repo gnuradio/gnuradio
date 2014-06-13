@@ -107,6 +107,23 @@ class FlowGraph(_FlowGraph, _GUIFlowGraph):
         pads = filter(lambda b: b.get_key() == 'pad_sink', self.get_enabled_blocks())
         return sorted(pads, lambda x, y: cmp(x.get_id(), y.get_id()))
 
+    def get_pad_port_global_key(self, port):
+        """
+        Get the key for a port of a pad source/sink to use in connect()
+        This takes into account that pad blocks may have multiple ports
+
+        Returns:
+            the key (str)
+        """
+        key_offset = 0
+        pads = self.get_pad_sources() if port.is_source() else self.get_pad_sinks()
+        for pad in pads:
+            if port.get_parent() == pad:
+                return str(key_offset + int(port.get_key()))
+            # assuming we have either only sources or sinks
+            key_offset += len(pad.get_ports())
+        return -1
+
     def get_msg_pad_sources(self):
         ps = self.get_pad_sources();
         return filter(lambda b: b.get_param('type').get_evaluated() == 'message', ps);
