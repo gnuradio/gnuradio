@@ -52,7 +52,7 @@ list(APPEND GR_TEST_PYTHON_DIRS
 )
 
 list(APPEND GR_TEST_TARGET_DEPS gnuradio-fec)
-
+set(GR_TEST_LIBRARY_DIRS "${CMAKE_BINARY_DIR}/gr-blocks/lib")
 include(GrTest)
 file(GLOB py_qa_test_files "qa_*.py")
 foreach(py_qa_test_file ${py_qa_test_files})
