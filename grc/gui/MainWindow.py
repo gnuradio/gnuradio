@@ -155,7 +155,7 @@ class MainWindow(gtk.Window):
             line: the new text
         """
         self.text_display.insert(line)
-      
+
     ############################################################
     # Pages: create and close
     ############################################################

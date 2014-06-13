@@ -381,7 +381,6 @@ class ActionHandler:
                 self.main_window.text_display.scroll_to_end()
         elif action == Actions.CLEAR_REPORTS:
             self.main_window.text_display.clear()
-                        
         elif action == Actions.TOGGLE_HIDE_DISABLED_BLOCKS:
             Actions.NOTHING_SELECT()
         ##################################################

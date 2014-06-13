@@ -40,10 +40,10 @@ class TextDisplay(gtk.TextView):
         self.set_editable(False)
         self.set_cursor_visible(False)
         self.set_wrap_mode(gtk.WRAP_WORD_CHAR)
-        
+
         # Added for scroll locking
         self.scroll_lock = True
-        
+
         # Add a signal for populating the popup menu
         self.connect("populate-popup", self.populate_popup)
 
@@ -71,11 +71,11 @@ class TextDisplay(gtk.TextView):
         return line[back_count:]
 
     def scroll_to_end(self):
-        if (self.scroll_lock == True):
+        if self.scroll_lock:
             buffer = self.get_buffer()
             buffer.move_mark(buffer.get_insert(), buffer.get_end_iter())
             self.scroll_to_mark(buffer.get_insert(), 0.0)
-            
+
     def clear(self):
         buffer = self.get_buffer()
         buffer.delete(buffer.get_start_iter(), buffer.get_end_iter())
@@ -83,19 +83,20 @@ class TextDisplay(gtk.TextView):
     # Callback functions to handle the scrolling lock and clear context menus options
     # Action functions are set by the ActionHandler's init function
     def clear_cb(self, menu_item, web_view):
-        Actions.CLEAR_REPORTS()        
+        Actions.CLEAR_REPORTS()
+
     def scroll_back_cb(self, menu_item, web_view):
         Actions.TOGGLE_SCROLL_LOCK()
-       
-    # Create a popup menu for the scroll lock and clear functions.
+
     def populate_popup(self, view, menu):
+        """Create a popup menu for the scroll lock and clear functions"""
         menu.append(gtk.SeparatorMenuItem())
-        
+
         lock = gtk.CheckMenuItem("Scroll Lock")
         menu.append(lock)
-        lock.set_active(self.scroll_lock)       
-        lock.connect('activate', self.scroll_back_cb, view)        
-    
+        lock.set_active(self.scroll_lock)
+        lock.connect('activate', self.scroll_back_cb, view)
+
         clear = gtk.ImageMenuItem(gtk.STOCK_CLEAR)
         menu.append(clear)
         clear.connect('activate', self.clear_cb, view)

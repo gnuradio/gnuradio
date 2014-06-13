@@ -282,7 +282,7 @@ TOGGLE_BLOCKS_WINDOW = ToggleAction(
     keypresses=(gtk.keysyms.b, gtk.gdk.CONTROL_MASK),
 )
 TOGGLE_SCROLL_LOCK = ToggleAction(
-    label='_Report Scroll Lock',
+    label='_Reports Scroll Lock',
     tooltip='Toggle scroll lock for the report window',
 )
 ABOUT_WINDOW_DISPLAY = Action(
