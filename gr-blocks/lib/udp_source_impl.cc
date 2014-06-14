@@ -52,12 +52,12 @@ namespace gr {
                       io_signature::make(0, 0, 0),
                       io_signature::make(1, 1, itemsize)),
         d_itemsize(itemsize), d_payload_size(payload_size),
-        d_eof(eof), d_connected(false), d_residual(0), d_sent(0), d_offset(0)
+        d_buf_size(payload_size*50), d_eof(eof),
+        d_eof_detected(false), d_connected(false), d_recv_offs(0),
+        d_send_offs(0), d_wrap_offs(0)
     {
       // Give us some more room to play.
-      d_rxbuf = new char[4*d_payload_size];
-      d_residbuf = new char[50*d_payload_size];
-
+      d_buf = new char[d_buf_size];
       connect(host, port);
     }
 
@@ -66,8 +66,7 @@ namespace gr {
       if(d_connected)
         disconnect();
 
-      delete [] d_rxbuf;
-      delete [] d_residbuf;
+      delete [] d_buf;
     }
 
     void
@@ -135,7 +134,9 @@ namespace gr {
     void
     udp_source_impl::start_receive()
     {
-      d_socket->async_receive_from(boost::asio::buffer((void*)d_rxbuf, d_payload_size), d_endpoint_rcvd,
+      void *buf = d_buf+d_recv_offs;
+      d_socket->async_receive_from(boost::asio::buffer(buf, d_payload_size),
+                                   d_endpoint_rcvd,
                                    boost::bind(&udp_source_impl::handle_read, this,
                                                boost::asio::placeholders::error,
                                                boost::asio::placeholders::bytes_transferred));
@@ -145,34 +146,38 @@ namespace gr {
     udp_source_impl::handle_read(const boost::system::error_code& error,
                                  size_t bytes_transferred)
     {
-      if(!error) {
-        {
-          boost::lock_guard<gr::thread::mutex> lock(d_udp_mutex);
-          if(d_eof && (bytes_transferred == 1) && (d_rxbuf[0] == 0x00)) {
-            // If we are using EOF notification, test for it and don't
-            // add anything to the output.
-            d_residual = -1;
-            d_cond_wait.notify_one();
-            return;
-          }
-          else {
-            // Make sure we never go beyond the boundary of the
-            // residual buffer.  This will just drop the last bit of
-            // data in the buffer if we've run out of room.
-            if((int)(d_residual + bytes_transferred) >= (50*d_payload_size)) {
-              GR_LOG_WARN(d_logger, "Too much data; dropping packet.");
-            }
-            else {
-              // otherwise, copy received data into local buffer for
-              // copying later.
-              memcpy(d_residbuf+d_residual, d_rxbuf, bytes_transferred);
-              d_residual += bytes_transferred;
-            }
-          }
-          d_cond_wait.notify_one();
-        }
+      boost::lock_guard<gr::thread::mutex> lock(d_udp_mutex);
+      if(error) {
+        // should not we throw exception in main thread?
+        GR_LOG_WARN(d_logger, "ASIO error!");
+        d_cond_wait.notify_one();
+        return;
       }
-      start_receive();
+
+      if(bytes_transferred == 1 && d_eof && d_buf[d_recv_offs] == 0x00) {
+        d_eof_detected = true;
+        d_cond_wait.notify_one();
+        return;
+      }
+
+      d_recv_offs += bytes_transferred;
+      if((d_recv_offs+d_payload_size) > d_buf_size) {
+        d_wrap_offs = d_recv_offs;
+        d_recv_offs = 0;
+      }
+
+      if(!is_buf_full()) {
+        start_receive();
+      }
+
+      d_cond_wait.notify_one();
+    }
+
+    bool
+    udp_source_impl::is_buf_full() const
+    {
+      return d_recv_offs < d_send_offs &&
+             (d_recv_offs + d_payload_size) >= d_send_offs;
     }
 
     int
@@ -181,6 +186,8 @@ namespace gr {
                           gr_vector_void_star &output_items)
     {
       gr::thread::scoped_lock l(d_setlock);
+      if(!d_connected)
+        return 0;
 
       char *out = (char*)output_items[0];
 
@@ -193,24 +200,31 @@ namespace gr {
       //use timed_wait to avoid permanent blocking in the work function
       d_cond_wait.timed_wait(lock, boost::posix_time::milliseconds(10));
 
-      if(d_residual < 0)
+      if(d_recv_offs == d_send_offs && d_eof_detected) {
         return -1;
-
-      int to_be_sent = (int)(d_residual - d_sent);
-      int to_send    = std::min(noutput_items, to_be_sent);
-
-      // Copy the received data in the residual buffer to the output stream
-      memcpy(out, d_residbuf+d_sent, to_send);
-      int nitems = to_send/d_itemsize;
-
-      // Keep track of where we are if we don't have enough output
-      // space to send all the data in the residbuf.
-      if(to_send == to_be_sent) {
-        d_residual = 0;
-        d_sent = 0;
       }
-      else {
-        d_sent += to_send;
+
+      const bool buf_full = is_buf_full();
+
+      int nitems = 0;
+      while (d_send_offs != d_recv_offs && noutput_items != nitems) {
+        const size_t end_offs = d_recv_offs > d_send_offs ?
+              d_recv_offs : d_wrap_offs;
+        int dnitems = (end_offs - d_send_offs) / d_itemsize;
+        dnitems = std::min(dnitems, noutput_items - nitems);
+
+        memcpy(out, d_buf+d_send_offs, dnitems*d_itemsize);
+        nitems += dnitems;
+
+        d_send_offs += dnitems*d_itemsize;
+        if(d_send_offs == d_wrap_offs) {
+          d_send_offs = 0;
+        }
+      }
+
+      // start recieveing after (potential) buffer overflow
+      if(buf_full && !is_buf_full()) {
+        start_receive();
       }
 
       return nitems;
