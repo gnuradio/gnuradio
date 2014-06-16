@@ -114,7 +114,7 @@ write(pmt_t obj, std::ostream &port)
     size_t len = length(obj);
     if (len)
     {
-      pmt_uniform_vector *uv = dynamic_cast<pmt_uniform_vector*>(obj.get());
+      pmt_uniform_vector *uv = static_cast<pmt_uniform_vector*>(obj.get());
       port << uv->string_ref(0);
       for (size_t i = 1; i < len; i++)
 	port << " " << uv->string_ref(i);
