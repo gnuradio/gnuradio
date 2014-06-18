@@ -164,6 +164,8 @@ namespace gr {
         volk_free(Branchtab);
         volk_free(d_vp->metrics);
 
+	delete d_vp;
+
 	if(d_mode == CC_TAILBITING) {
 	  volk_free(d_managed_in);
 	}
