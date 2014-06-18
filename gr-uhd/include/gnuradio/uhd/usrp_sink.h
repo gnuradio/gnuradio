@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2010-2013 Free Software Foundation, Inc.
+ * Copyright 2010-2014 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -528,6 +528,8 @@ namespace gr {
 
       /*!
        * Get access to the underlying uhd device object.
+       *
+       * NOTE: This function is only available in C++.
        * \return the multi usrp device object
        */
       virtual ::uhd::usrp::multi_usrp::sptr get_device(void) = 0;
