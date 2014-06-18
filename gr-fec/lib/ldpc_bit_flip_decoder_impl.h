@@ -37,7 +37,7 @@ namespace gr {
 
         // Everything else:
         // LDPC parity check matrix to use for decoding
-        LDPC_parity_check_matrix d_H;
+        LDPC_par_chk_mtrx_impl d_H;
         // Maximum number of iterations to do in decoding algorithm
         unsigned int d_max_iterations;
         // Number of bits in the information word
@@ -45,11 +45,12 @@ namespace gr {
         // Number of bits in the transmitted codeword block
         unsigned int d_n;
         // Function to calculate the syndrome 
-        //bool calc_syndrome(LDPC_parity_check_matrix H, <add the codeword here> );
+        //bool calc_syndrome(LDPC_par_chk_mtrx_impl H, <add the codeword here> );
+        unsigned int d_max_frame_size;
 
       public:
         ldpc_bit_flip_decoder_impl(
-                       LDPC_parity_check_matrix parity_check_matrix, 
+                       LDPC_par_chk_mtrx_impl parity_check_matrix, 
                        unsigned int max_iterations=100, 
                        unsigned int frame_size, 
                        unsigned int n);

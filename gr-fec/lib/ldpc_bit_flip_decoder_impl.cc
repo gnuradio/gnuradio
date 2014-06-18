@@ -18,7 +18,17 @@
  * Boston, MA 02110-1301, USA.
  */
 
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
+
 #include <ldpc_bit_flip_decoder_impl.h>
+#include <math.h>
+#include <boost/assign/list_of.hpp>
+#include <volk/volk.h>
+#include <sstream>
+#include <stdio.h>
+#include <vector>
 
 namespace gr {
   namespace fec {
@@ -26,10 +36,10 @@ namespace gr {
 
       generic_decoder::sptr
       ldpc_bit_flip_decoder::make(
-                        LDPC_parity_check_matrix parity_check_matrix,
+                        LDPC_par_chk_mtrx_impl parity_check_matrix,
                         unsigned int max_iterations,
                         unsigned int frame_size,
-                        unsigned int n)
+                        unsigned int n);
       {
         return generic_decoder::sptr
           (new ldpc_bit_flip_decoder_impl(parity_check_matrix,
@@ -39,7 +49,7 @@ namespace gr {
       }
 
       ldpc_bit_flip_decoder_impl::ldpc_bit_flip_decoder_impl(
-                        LDPC_parity_check_matrix parity_check_matrix,
+                        LDPC_par_chk_mtrx_impl parity_check_matrix,
                         unsigned int max_iterations,
                         unsigned int frame_size,
                         unsigned int n)
@@ -51,6 +61,8 @@ namespace gr {
           throw std::runtime_error("ldpc_bit_flip_decoder: n must be > 0");
 
         // Set frame size to k, the # of bits in the information word
+        // All buffers and settings will be based on this value.
+        d_max_frame_size = frame_size;
         set_frame_size(frame_size);
         // Number of bits in the transmitted codeword
         d_n = n;
@@ -58,6 +70,11 @@ namespace gr {
         d_max_iterations = max_iterations;
         // LDPC parity check matrix to use for decoding
         d_H = parity_check_matrix;
+      }
+
+      ldpc_bit_flip_decoder_impl::~ldpc_bit_flip_decoder_impl()
+      {
+        // free memory here
       }
 
       int
@@ -88,7 +105,7 @@ namespace gr {
       double
       ldpc_bit_flip_decoder_impl::rate()
       {
-        return static_cast<double>(frame_size)/n;
+        return static_cast<double>(d_frame_size)/d_n;
       }
 
       void

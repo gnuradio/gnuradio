@@ -34,12 +34,8 @@ include_directories(
     ${VOLK_INCLUDE_DIRS}
     ${LOG4CPP_INCLUDE_DIRS}
     ${Boost_INCLUDE_DIRS}
+    ${GSL_INCLUDE_DIRS}
 )
-
-if(ENABLE_GR_CTRLPORT)
-  ADD_DEFINITIONS(-DGR_CTRLPORT)
-  include_directories(${ICE_INCLUDE_DIR})
-endif(ENABLE_GR_CTRLPORT)
 
 link_directories(
   ${Boost_LIBRARY_DIRS}
@@ -73,6 +69,8 @@ list(APPEND gnuradio_fec_sources
   puncture_bb_impl.cc
   puncture_ff_impl.cc
   depuncture_bb_impl.cc
+  ldpc_par_chk_mtrx_impl.cc
+  ldpc_bit_flip_decoder_impl.cc
 )
 
 #Add Windows DLL resource file if using MSVC
@@ -95,6 +93,7 @@ list(APPEND gnuradio_fec_libs
     volk
     ${Boost_LIBRARIES}
     ${LOG4CPP_LIBRARIES}
+    ${GSL_LIBRARIES}
 )
 
 add_library(gnuradio-fec SHARED ${gnuradio_fec_sources})
