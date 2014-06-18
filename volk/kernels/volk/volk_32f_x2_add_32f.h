@@ -109,6 +109,49 @@ static inline void volk_32f_x2_add_32f_a_sse(float* cVector, const float* aVecto
 }
 #endif /* LV_HAVE_SSE */
 
+#ifdef LV_HAVE_NEON
+#include <arm_neon.h>
+/*
+  \brief Adds the two input vectors and store their results in the third vector
+  \param cVector The vector where the results will be stored
+  \param aVector One of the vectors to be added
+  \param bVector One of the vectors to be added
+  \param num_points The number of values in aVector and bVector to be added together and stored into cVector
+*/
+static inline void volk_32f_x2_add_32f_u_neon(float* cVector, const float* aVector, const float* bVector, unsigned int num_points) {
+    unsigned int number = 0;
+    const unsigned int quarterPoints = num_points / 4;
+
+    float* cPtr = cVector;
+    const float* aPtr = aVector;
+    const float* bPtr=  bVector;
+    float32x4_t aVal, bVal, cVal;
+    for(number=0; number < quarterPoints; number++){
+      // Load in to NEON registers
+      aVal = vld1q_f32(aPtr);
+      bVal = vld1q_f32(bPtr);
+      __builtin_prefetch(aPtr+4);
+      __builtin_prefetch(bPtr+4);
+
+      // vector add
+      cVal = vaddq_f32(aVal, bVal);
+      // Store the results back into the C container
+      vst1q_f32(cPtr,cVal); 
+
+      aPtr += 4; // q uses quadwords, 4 floats per vadd
+      bPtr += 4;
+      cPtr += 4;
+    }
+
+    number = quarterPoints * 4; // should be = num_points
+    for(;number < num_points; number++){
+      *cPtr++ = (*aPtr++) + (*bPtr++);
+    }
+
+}
+
+#endif /* LV_HAVE_NEON */
+
 #ifdef LV_HAVE_GENERIC
 /*!
   \brief Adds the two input vectors and store their results in the third vector

@@ -382,6 +382,29 @@ include_directories(
 )
 
 ########################################################################
+# Handle ASM (for ARM) support
+#  on by default, but let users turn it off
+########################################################################
+if( NOT DEFINED ENABLE_ARM_ASM OR ENABLE_ARM_ASM )
+    message("---- Adding ARM ASM files")
+    set(ASM-ATT $ENV{ASM})
+    #set(_CMAKE_TOOLCHAIN_PREFIX $ENV{TARGET_PREFIX}) # Gah - wtf, this shouldn't be needed
+    enable_language(ASM-ATT)
+    # what would make this OK, appending?
+    set(ASM-ATT_FLAGS "-mfpu=neon -g") # Horrid horrid hack to assemble for ARM neon
+    set(CMAKE_ASM-ATT_FLAGS ${ASM-ATT_FLAGS})
+    message("DEBUG: looking for ASM files in ${CMAKE_SOURCE_DIR}/kernels/volk/asm/neon")
+    include_directories(${CMAKE_SOURCE_DIR}/kernels/volk/asm/neon)
+    file(GLOB asm_files ${CMAKE_SOURCE_DIR}/kernels/volk/asm/neon/*.s)
+    foreach(asm_file ${asm_files})
+        list(APPEND volk_sources ${asm_file})
+        message(STATUS "Adding source file: ${asm_file}")
+    endforeach(asm_file)
+else()
+    message("---- NOT Adding ARM ASM files")
+endif()
+
+########################################################################
 # Handle orc support
 ########################################################################
 if(ORC_FOUND)
@@ -436,7 +459,8 @@ list(APPEND volk_sources ${CMAKE_CURRENT_BINARY_DIR}/constants.c)
 # Setup the volk sources list and library
 ########################################################################
 if(NOT WIN32)
-    add_definitions(-fvisibility=hidden)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fvisibility=hidden")
+    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fvisibility=hidden")
 endif()
 
 list(APPEND volk_sources

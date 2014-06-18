@@ -233,6 +233,112 @@ static inline void volk_32fc_magnitude_32f_a_generic(float* magnitudeVector, con
 }
 #endif /* LV_HAVE_GENERIC */
 
+#ifdef LV_HAVE_NEON
+  /*!
+    \brief Calculates the magnitude of the complexVector and stores the results in the magnitudeVector
+    \param complexVector The vector containing the complex input values
+    \param magnitudeVector The vector containing the real output values
+    \param num_points The number of complex values in complexVector to be calculated and stored into cVector
+  */
+static inline void volk_32fc_magnitude_32f_neon(float* magnitudeVector, const lv_32fc_t* complexVector, unsigned int num_points){
+    unsigned int number;
+    unsigned int quarter_points = num_points / 4;
+    const float* complexVectorPtr = (float*)complexVector;
+    float* magnitudeVectorPtr = magnitudeVector;
+
+    float32x4x2_t complex_vec;
+    float32x4_t magnitude_vec;
+    for(number = 0; number < quarter_points; number++){
+        complex_vec = vld2q_f32(complexVectorPtr);
+        complex_vec.val[0] = vmulq_f32(complex_vec.val[0], complex_vec.val[0]);
+        magnitude_vec = vmlaq_f32(complex_vec.val[0], complex_vec.val[1], complex_vec.val[1]);
+    magnitude_vec = vrsqrteq_f32(magnitude_vec);
+    magnitude_vec = vrecpeq_f32( magnitude_vec ); // no plain ol' sqrt
+        vst1q_f32(magnitudeVectorPtr, magnitude_vec);
+        
+        complexVectorPtr += 8;
+        magnitudeVectorPtr += 4;
+    }
+
+    for(number = quarter_points*4; number < num_points; number++){
+      const float real = *complexVectorPtr++;
+      const float imag = *complexVectorPtr++;
+      *magnitudeVectorPtr++ = sqrtf((real*real) + (imag*imag));
+    }
+}
+#endif /* LV_HAVE_NEON */
+
+#ifdef LV_HAVE_NEON
+  /*!
+    \brief Calculates the magnitude of the complexVector and stores the results in the magnitudeVector
+    
+    This is an approximation from "Streamlining Digital Signal Processing" by 
+    Richard Lyons. Apparently max error is about 1% and mean error is about 0.6%.
+    The basic idea is to do a weighted sum of the abs. value of imag and real parts
+    where weight A is always assigned to max(imag, real) and B is always min(imag,real).
+    There are two pairs of cofficients chosen based on whether min <= 0.4142 max.
+    This method is called equiripple-error magnitude estimation proposed by Filip in '73
+
+    \param complexVector The vector containing the complex input values
+    \param magnitudeVector The vector containing the real output values
+    \param num_points The number of complex values in complexVector to be calculated and stored into cVector
+  */
+static inline void volk_32fc_magnitude_32f_neon_fancy_sweet(float* magnitudeVector, const lv_32fc_t* complexVector, unsigned int num_points){
+    unsigned int number;
+    unsigned int quarter_points = num_points / 4;
+    const float* complexVectorPtr = (float*)complexVector;
+    float* magnitudeVectorPtr = magnitudeVector;
+
+    const float threshold = 0.4142135;
+
+    float32x4_t a_vec, b_vec, a_high, a_low, b_high, b_low; 
+    a_high = vdupq_n_f32( 0.84 );
+    b_high = vdupq_n_f32( 0.561);
+    a_low  = vdupq_n_f32( 0.99 );
+    b_low  = vdupq_n_f32( 0.197);
+
+    uint32x4_t comp0, comp1;
+
+    float32x4x2_t complex_vec;
+    float32x4_t min_vec, max_vec, magnitude_vec;
+    float32x4_t real_abs, imag_abs;
+    for(number = 0; number < quarter_points; number++){
+        complex_vec = vld2q_f32(complexVectorPtr);
+        
+        real_abs = vabsq_f32(complex_vec.val[0]);
+        imag_abs = vabsq_f32(complex_vec.val[1]);
+
+        min_vec = vminq_f32(real_abs, imag_abs);
+        max_vec = vmaxq_f32(real_abs, imag_abs);
+
+        // effective branch to choose coefficient pair.
+        comp0 = vcgtq_f32(min_vec, vmulq_n_f32(max_vec, threshold));
+        comp1 = vcleq_f32(min_vec, vmulq_n_f32(max_vec, threshold));
+
+        // and 0s or 1s with coefficients from previous effective branch
+        a_vec = (float32x4_t)vaddq_s32(vandq_s32((int32x4_t)comp0, (int32x4_t)a_high), vandq_s32((int32x4_t)comp1, (int32x4_t)a_low));
+        b_vec = (float32x4_t)vaddq_s32(vandq_s32((int32x4_t)comp0, (int32x4_t)b_high), vandq_s32((int32x4_t)comp1, (int32x4_t)b_low));
+        
+        // coefficients chosen, do the weighted sum
+        min_vec = vmulq_f32(min_vec, b_vec);
+        max_vec = vmulq_f32(max_vec, a_vec);
+
+        magnitude_vec = vaddq_f32(min_vec, max_vec);
+        vst1q_f32(magnitudeVectorPtr, magnitude_vec);
+        
+        complexVectorPtr += 8;
+        magnitudeVectorPtr += 4;
+    }
+
+    for(number = quarter_points*4; number < num_points; number++){
+      const float real = *complexVectorPtr++;
+      const float imag = *complexVectorPtr++;
+      *magnitudeVectorPtr++ = sqrtf((real*real) + (imag*imag));
+    }
+}
+#endif /* LV_HAVE_NEON */
+
+
 #ifdef LV_HAVE_ORC
   /*!
     \brief Calculates the magnitude of the complexVector and stores the results in the magnitudeVector

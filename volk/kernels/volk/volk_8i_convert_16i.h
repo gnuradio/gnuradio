@@ -138,6 +138,44 @@ static inline void volk_8i_convert_16i_a_generic(int16_t* outputVector, const in
 }
 #endif /* LV_HAVE_GENERIC */
 
+#ifdef LV_HAVE_NEON
+  /*!
+    \brief Converts the input 8 bit integer data into 16 bit integer data
+    \param inputVector The 8 bit input data buffer
+    \param outputVector The 16 bit output data buffer
+    \param num_points The number of data values to be converted
+    \note Input and output buffers do NOT need to be properly aligned
+  */
+static inline void volk_8i_convert_16i_neon(int16_t* outputVector, const int8_t* inputVector, unsigned int num_points){
+    int16_t* outputVectorPtr = outputVector;
+    const int8_t* inputVectorPtr = inputVector;
+    unsigned int number;
+    const unsigned int eighth_points = num_points / 8;
+    float scale_factor = 256;
+
+    int8x8_t input_vec ;
+    int16x8_t converted_vec;
+
+    // NEON doesn't have a concept of 8 bit registers, so we are really 
+    // dealing with the low half of 16-bit registers. Since this requires
+    // a move instruction we likely do better with ASM here.
+    for(number = 0; number < eighth_points; ++number) {
+        input_vec = vld1_s8(inputVectorPtr);
+        converted_vec = vmovl_s8(input_vec);
+        //converted_vec = vmulq_s16(converted_vec, scale_factor);
+        converted_vec = vshlq_n_s16(converted_vec, 8);
+        vst1q_s16( outputVectorPtr, converted_vec);
+
+        inputVectorPtr += 8;
+        outputVectorPtr += 8;
+    }
+
+    for(number = eighth_points * 8; number < num_points; number++){
+      *outputVectorPtr++ = ((int16_t)(*inputVectorPtr++)) * 256;
+    }
+}
+#endif /* LV_HAVE_NEON */
+
 #ifdef LV_HAVE_ORC
   /*!
     \brief Converts the input 8 bit integer data into 16 bit integer data

@@ -92,6 +92,36 @@ static inline void volk_32fc_x2_square_dist_32f_a_sse3(float* target, lv_32fc_t*
 
 #endif /*LV_HAVE_SSE3*/
 
+#ifdef LV_HAVE_NEON
+#include <arm_neon.h>
+static inline void volk_32fc_x2_square_dist_32f_neon(float* target, lv_32fc_t* src0, lv_32fc_t* points, unsigned int num_points) {
+    const unsigned int quarter_points = num_points / 4;
+    unsigned int number;
+
+    float32x4x2_t a_vec, b_vec;
+    float32x4x2_t diff_vec;
+    float32x4_t tmp, tmp1, dist_sq;
+    a_vec.val[0] = vdupq_n_f32( lv_creal(src0[0]) );
+    a_vec.val[1] = vdupq_n_f32( lv_cimag(src0[0]) );
+    for(number=0; number < quarter_points; ++number) {
+        b_vec = vld2q_f32((float*)points);
+        diff_vec.val[0] = vsubq_f32(a_vec.val[0], b_vec.val[0]);
+        diff_vec.val[1] = vsubq_f32(a_vec.val[1], b_vec.val[1]);
+        tmp = vmulq_f32(diff_vec.val[0], diff_vec.val[0]);
+        tmp1 = vmulq_f32(diff_vec.val[1], diff_vec.val[1]);
+
+        dist_sq = vaddq_f32(tmp, tmp1);
+        vst1q_f32(target, dist_sq);
+        points += 4;
+        target += 4;
+    }
+    for(number=quarter_points*4; number < num_points; ++number) {
+        lv_32fc_t diff = src0[0] - *points++;
+        *target++ = lv_creal(diff) * lv_creal(diff) + lv_cimag(diff) * lv_cimag(diff);
+    }
+}
+#endif /* LV_HAVE_NEON */
+
 #ifdef LV_HAVE_GENERIC
 static inline void volk_32fc_x2_square_dist_32f_generic(float* target, lv_32fc_t* src0, lv_32fc_t* points, unsigned int num_points) {
 

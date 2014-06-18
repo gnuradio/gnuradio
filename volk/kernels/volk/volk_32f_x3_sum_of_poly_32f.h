@@ -293,7 +293,144 @@ static inline void volk_32f_x3_sum_of_poly_32f_u_avx(float* target, float* src0,
 }
 #endif // LV_HAVE_AVX
 
+#ifdef LV_HAVE_NEON
+
+static inline void volk_32f_x3_sum_of_poly_32f_a_neon(float* __restrict target, float* __restrict src0, float* __restrict center_point_array, float* __restrict cutoff, unsigned int num_points) {
 
 
+  int i;
+  float zero[4] = {0.0f, 0.0f, 0.0f, 0.0f };
+
+  float32x2_t x_to_1, x_to_2, x_to_3, x_to_4;
+  float32x2_t cutoff_vector;
+  float32x2x2_t x_low, x_high;
+  float32x4_t x_qvector, c_qvector, cpa_qvector;
+  float accumulator, final_result;
+  float res_accumulators[4];
+  
+  float dbg_cpa[4], dbg_x[4], dbg_c[4];
+  float dbg_max[4];
+  float dbg_x_to_1[2], dbg_x_to_2[2], dbg_x_to_3[2], dbg_x_to_4[2];
+  float dbg_x_high[2], dbg_x_low[2];
+  float dbg_foo;
+
+  c_qvector = vld1q_f32( zero );
+  // load the cutoff in to a vector
+  cutoff_vector = vdup_n_f32( *cutoff );
+  // ... center point array
+  cpa_qvector = vld1q_f32( center_point_array );
+
+  for(i=0; i < num_points; ++i) {
+    // load x  (src0)
+    x_to_1 = vdup_n_f32( *src0++ );
+
+    // Get a vector of max(src0, cutoff)
+    x_to_1 = vmax_f32(x_to_1,  cutoff_vector ); // x^1
+    x_to_2 = vmul_f32(x_to_1, x_to_1); // x^2
+    x_to_3 = vmul_f32(x_to_2, x_to_1); // x^3
+    x_to_4 = vmul_f32(x_to_3, x_to_1); // x^4
+    // zip up doubles to interleave
+    x_low = vzip_f32(x_to_1, x_to_2); // [x^2 | x^1 || x^2 | x^1]
+    x_high = vzip_f32(x_to_3, x_to_4); // [x^4 | x^3 || x^4 | x^3]
+    // float32x4_t vcombine_f32(float32x2_t low, float32x2_t high); // VMOV d0,d0
+    x_qvector = vcombine_f32(x_low.val[0], x_high.val[0]); 
+    // now we finally have [x^4 | x^3 | x^2 | x] !
+    
+    c_qvector = vmlaq_f32(c_qvector, x_qvector, cpa_qvector);
+
+  }
+  // there should be better vector reduction techniques
+  vst1q_f32(res_accumulators, c_qvector );
+  accumulator = res_accumulators[0] + res_accumulators[1] + 
+          res_accumulators[2] + res_accumulators[3];
+  
+  *target = accumulator + center_point_array[4] * (float)num_points;
+}
+
+#endif /* LV_HAVE_NEON */
+
+#ifdef LV_HAVE_NEON
+
+static inline void volk_32f_x3_sum_of_poly_32f_neonvert(float* __restrict target, float* __restrict src0, float* __restrict center_point_array, float* __restrict cutoff, unsigned int num_points) {
+
+
+  int i;
+  float zero[4] = {0.0f, 0.0f, 0.0f, 0.0f };
+
+  float accumulator, final_result;
+  
+
+  float32x4_t accumulator1_vec, accumulator2_vec, accumulator3_vec, accumulator4_vec;
+  accumulator1_vec = vld1q_f32(zero);
+  accumulator2_vec = vld1q_f32(zero);
+  accumulator3_vec = vld1q_f32(zero);
+  accumulator4_vec = vld1q_f32(zero);
+  float32x4_t x_to_1, x_to_2, x_to_3, x_to_4;
+  float32x4_t cutoff_vector, cpa_0, cpa_1, cpa_2, cpa_3;
+
+  // load the cutoff in to a vector
+  cutoff_vector = vdupq_n_f32( *cutoff );
+  // ... center point array
+  cpa_0 = vdupq_n_f32(center_point_array[0]);
+  cpa_1 = vdupq_n_f32(center_point_array[1]);
+  cpa_2 = vdupq_n_f32(center_point_array[2]);
+  cpa_3 = vdupq_n_f32(center_point_array[3]);
+
+
+  // nathan is not sure why this is slower *and* wrong compared to neonvertfma
+  for(i=0; i < num_points/4; ++i) {
+    // load x 
+    x_to_1 = vld1q_f32( src0 );
+
+    // Get a vector of max(src0, cutoff)
+    x_to_1 = vmaxq_f32(x_to_1,  cutoff_vector ); // x^1
+    x_to_2 = vmulq_f32(x_to_1, x_to_1); // x^2
+    x_to_3 = vmulq_f32(x_to_2, x_to_1); // x^3
+    x_to_4 = vmulq_f32(x_to_3, x_to_1); // x^4
+    x_to_1 = vmulq_f32(x_to_1, cpa_0);
+    x_to_2 = vmulq_f32(x_to_2, cpa_1);
+    x_to_3 = vmulq_f32(x_to_3, cpa_2);
+    x_to_4 = vmulq_f32(x_to_4, cpa_3);
+    accumulator1_vec = vaddq_f32(accumulator1_vec, x_to_1);
+    accumulator2_vec = vaddq_f32(accumulator2_vec, x_to_2);
+    accumulator3_vec = vaddq_f32(accumulator3_vec, x_to_3);
+    accumulator4_vec = vaddq_f32(accumulator4_vec, x_to_4);
+
+    src0 += 4;
+  }
+  accumulator1_vec = vaddq_f32(accumulator1_vec, accumulator2_vec);
+  accumulator3_vec = vaddq_f32(accumulator3_vec, accumulator4_vec);
+  accumulator1_vec = vaddq_f32(accumulator1_vec, accumulator3_vec);
+
+  __VOLK_ATTR_ALIGNED(32) float res_accumulators[4];
+  vst1q_f32(res_accumulators, accumulator1_vec );
+  accumulator = res_accumulators[0] + res_accumulators[1] + 
+          res_accumulators[2] + res_accumulators[3];
+
+  float result = 0.0;
+  float fst = 0.0;
+  float sq = 0.0;
+  float thrd = 0.0;
+  float frth = 0.0;
+
+  for(i = 4*num_points/4; i < num_points; ++i) {
+    fst = src0[i];
+    fst = MAX(fst, *cutoff);
+
+    sq = fst * fst;
+    thrd = fst * sq;
+    frth = sq * sq;
+    //fith = sq * thrd;
+
+    accumulator += (center_point_array[0] * fst +
+           center_point_array[1] * sq +
+           center_point_array[2] * thrd +
+           center_point_array[3] * frth); //+
+  }
+
+  *target = accumulator + center_point_array[4] * (float)num_points;
+}
+
+#endif /* LV_HAVE_NEON */
 
 #endif /*INCLUDED_volk_32f_x3_sum_of_poly_32f_a_H*/

@@ -283,6 +283,166 @@ static inline void volk_32fc_32f_dot_prod_32fc_u_avx( lv_32fc_t* result, const l
 }
 #endif /*LV_HAVE_AVX*/
 
+#ifdef LV_HAVE_NEON
+#include <arm_neon.h>
+
+static inline void volk_32fc_32f_dot_prod_32fc_neon_unroll ( lv_32fc_t* __restrict result, const  lv_32fc_t* __restrict input, const  float* __restrict taps, unsigned int num_points) {
+
+   unsigned int number;
+   const unsigned int quarterPoints = num_points / 8;
+
+   float res[2];
+   float *realpt = &res[0], *imagpt = &res[1];
+   const float* inputPtr = (float*)input;
+   const float* tapsPtr = taps;
+   float zero[4] = {0.0f, 0.0f, 0.0f, 0.0f };
+   float* real_accum;
+   float current_accum = 0.0f ;
+   float accVector_real[4]; 
+   float accVector_imag[4];
+
+   float32x4x2_t  inputVector0, inputVector1;
+   float32x4_t  tapsVector0, tapsVector1;
+   float32x4_t  tmp_real0, tmp_imag0;
+   float32x4_t  tmp_real1, tmp_imag1;
+   float32x4_t real_accumulator0, imag_accumulator0;
+   float32x4_t real_accumulator1, imag_accumulator1;
+
+  
+   // zero out accumulators
+   // take a *float, return float32x4_t
+   real_accumulator0 = vld1q_f32( zero );
+   imag_accumulator0 = vld1q_f32( zero );
+   real_accumulator1 = vld1q_f32( zero );
+   imag_accumulator1 = vld1q_f32( zero );
+   float dbgVec[8];
+ 
+   for(number=0 ;number < quarterPoints; number++){
+      // load doublewords and duplicate in to second lane
+      tapsVector0 = vld1q_f32(tapsPtr );
+      tapsVector1 = vld1q_f32(tapsPtr+4 );
+
+      // load quadword of complex numbers in to 2 lanes. 1st lane is real, 2dn imag
+      inputVector0 = vld2q_f32(inputPtr );
+      inputVector1 = vld2q_f32(inputPtr+8 );
+      // inputVector is now a struct of two vectors, 0th is real, 1st is imag
+
+      tmp_real0 = vmulq_f32(tapsVector0, inputVector0.val[0]);
+      tmp_imag0 = vmulq_f32(tapsVector0, inputVector0.val[1]);
+
+      tmp_real1 = vmulq_f32(tapsVector1, inputVector1.val[0]);
+      tmp_imag1 = vmulq_f32(tapsVector1, inputVector1.val[1]);
+
+      real_accumulator0 = vaddq_f32(real_accumulator0, tmp_real0);
+      imag_accumulator0 = vaddq_f32(imag_accumulator0, tmp_imag0);
+
+      real_accumulator1 = vaddq_f32(real_accumulator1, tmp_real1);
+      imag_accumulator1 = vaddq_f32(imag_accumulator1, tmp_imag1);
+
+      tapsPtr += 8;
+      inputPtr += 16;
+   }
+    
+   real_accumulator0 = vaddq_f32( real_accumulator0, real_accumulator1);
+   imag_accumulator0 = vaddq_f32( imag_accumulator0, imag_accumulator1);
+   // void vst1q_f32( float32_t * ptr, float32x4_t val);
+   // store results back to a complex (array of 2 floats)
+   vst1q_f32(accVector_real, real_accumulator0);
+   vst1q_f32(accVector_imag, imag_accumulator0);
+   *realpt = accVector_real[0] + accVector_real[1] +
+             accVector_real[2] + accVector_real[3] ;
+
+   *imagpt = accVector_imag[0] + accVector_imag[1] +
+             accVector_imag[2] + accVector_imag[3] ;
+
+  // clean up the remainder
+  for(number=quarterPoints*8; number < num_points; number++){
+    *realpt += ((*inputPtr++) * (*tapsPtr));
+    *imagpt += ((*inputPtr++) * (*tapsPtr++));
+  }
+
+  *result = *(lv_32fc_t*)(&res[0]);
+}
+
+#endif /*LV_HAVE_NEON*/
+
+#ifdef LV_HAVE_NEON
+#include <arm_neon.h>
+
+static inline void volk_32fc_32f_dot_prod_32fc_a_neon ( lv_32fc_t* __restrict result, const  lv_32fc_t* __restrict input, const  float* __restrict taps, unsigned int num_points) {
+
+   unsigned int number;
+   const unsigned int quarterPoints = num_points / 4;
+
+   float res[2];
+   float *realpt = &res[0], *imagpt = &res[1];
+   const float* inputPtr = (float*)input;
+   const float* tapsPtr = taps;
+   float zero[4] = {0.0f, 0.0f, 0.0f, 0.0f };
+   float* real_accum;
+   float current_accum = 0.0f ;
+   float accVector_real[4];
+   float accVector_imag[4];
+
+   float32x4x2_t  inputVector;
+   float32x4_t  tapsVector;
+   float32x4_t tmp_real, tmp_imag;
+   float32x4_t real_accumulator, imag_accumulator;
+
+
+   // zero out accumulators
+   // take a *float, return float32x4_t
+   real_accumulator = vld1q_f32( zero );
+   imag_accumulator = vld1q_f32( zero );
+
+   for(number=0 ;number < quarterPoints; number++){
+      // load taps ( float32x2x2_t = vld1q_f32( float32_t const * ptr) )
+      // load doublewords and duplicate in to second lane
+      tapsVector = vld1q_f32(tapsPtr );
+
+      // load quadword of complex numbers in to 2 lanes. 1st lane is real, 2dn imag
+      inputVector = vld2q_f32(inputPtr );
+
+      tmp_real = vmulq_f32(tapsVector, inputVector.val[0]);
+      tmp_imag = vmulq_f32(tapsVector, inputVector.val[1]);
+
+      real_accumulator = vaddq_f32(real_accumulator, tmp_real);
+      imag_accumulator = vaddq_f32(imag_accumulator, tmp_imag);
+
+
+      tapsPtr += 4;
+      inputPtr += 8;
+
+   }
+
+   // void vst1q_f32( float32_t * ptr, float32x4_t val);
+   // store results back to a complex (array of 2 floats)
+   vst1q_f32(accVector_real, real_accumulator);
+   vst1q_f32(accVector_imag, imag_accumulator);
+   *realpt = accVector_real[0] + accVector_real[1] +
+             accVector_real[2] + accVector_real[3] ;
+
+   *imagpt = accVector_imag[0] + accVector_imag[1] +
+             accVector_imag[2] + accVector_imag[3] ;
+
+  // clean up the remainder
+  for(number=quarterPoints*4; number < num_points; number++){
+    *realpt += ((*inputPtr++) * (*tapsPtr));
+    *imagpt += ((*inputPtr++) * (*tapsPtr++));
+  }
+
+  *result = *(lv_32fc_t*)(&res[0]);
+}
+
+#endif /*LV_HAVE_NEON*/
+
+#ifdef LV_HAVE_NEON
+extern void volk_32fc_32f_dot_prod_32fc_a_neonasm ( lv_32fc_t* result, const  lv_32fc_t* input, const  float* taps, unsigned int num_points);
+#endif /*LV_HAVE_NEON*/
+
+#ifdef LV_HAVE_NEON
+extern void volk_32fc_32f_dot_prod_32fc_a_neonpipeline ( lv_32fc_t* result, const  lv_32fc_t* input, const  float* taps, unsigned int num_points);
+#endif /*LV_HAVE_NEON*/
 
 #ifdef LV_HAVE_SSE
 
