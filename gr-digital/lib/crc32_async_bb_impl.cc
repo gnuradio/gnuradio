@@ -79,9 +79,10 @@ namespace gr {
       memcpy((void*)bytes_out, (const void*)bytes_in, pkt_len);
       memcpy((void*)(bytes_out + pkt_len), &crc, 4); // FIXME big-endian/little-endian, this might be wrong
 
-      pmt::pmt_t output = pmt::init_u8vector(pkt_len+4, bytes_out);
+      pmt::pmt_t output = pmt::init_u8vector(pkt_len+4, bytes_out); // this copies the values from bytes_out into the u8vector
       pmt::pmt_t msg_pair = pmt::cons(meta, output);
       message_port_pub(d_out_port, msg_pair);
+	  volk_free(bytes_out);
     }
 
     void
