@@ -21,7 +21,8 @@
 #include "config.h"
 #endif
 
-#include <LDPC_par_chk_mtrx_impl.h> 
+#include <gnuradio/fec/ldpc_par_chk_mtrx.h>
+#include <math.h>
 #include <fstream>
 #include <vector>
 #include <sstream>
@@ -32,12 +33,14 @@ namespace gr {
     namespace code {
 
       // Constructor if filename is given, case 1
-      LDPC_par_chk_mtrx_impl::LDPC_par_chk_mtrx_impl(string *file, int flag, unsigned int gap)
+      ldpc_par_chk_mtrx::ldpc_par_chk_mtrx(std::string *file, 
+                                           int flag, 
+                                           unsigned int gap)
       {
         if (flag == 1 && gap == 0) {
-          cout << "Error in LDPC_par_chk_mtrx_impl constructor. If"
-             << " encoding-ready alist file is provided, gap must be"
-             << " specified.\n\n";
+          std::cout << "Error in ldpc_par_chk_mtrx constructor. If"
+                    << " encoding-ready alist file is provided, gap"
+                    << " must be specified.\n\n";
           exit(1);
         }
 
@@ -55,7 +58,7 @@ namespace gr {
             full_rank_to_TABECD_form();
           }
           catch (char const *exceptionString) {
-            cout << exceptionString;
+            std::cout << exceptionString;
           }
 
           preprocess_for_encoding();
@@ -69,7 +72,7 @@ namespace gr {
             full_rank_to_TABECD_form();
           }
           catch (char const *exceptionString) {
-            cout << exceptionString;
+            std::cout << exceptionString;
           }
 
           preprocess_for_encoding();
@@ -83,9 +86,8 @@ namespace gr {
             full_rank_to_TABECD_form();
           }
           catch (char const *exceptionString) {
-            cout << "Error in LDPC_par_chk_mtrx_impl() "
-                 << "constructor: "
-                 << exceptionString;
+            std::cout << "Error in ldpc_par_chk_mtrx() constructor: "
+                      << exceptionString;
           }
 
           preprocess_for_encoding();
@@ -93,8 +95,9 @@ namespace gr {
           // TODO add some try/catch blocks
         }
         else {
-          cout << "Error in LDPC_par_chk_mtrx_impl constructor. "
-               << "Invalid flag set in constructor arguments.\n\n";
+          std::cout << "Error in ldpc_par_chk_mtrx constructor. "
+                    << "Invalid flag set in constructor arguments."
+                    << "\n\n";
           exit(1);
         }
 
@@ -105,7 +108,7 @@ namespace gr {
       } // Constructor if filename is given, case 1
 
       // Constructor if a parity check matrix is given, case 2
-      LDPC_par_chk_mtrx_impl::LDPC_par_chk_mtrx_impl(gsl_matrix *m_ptr)
+      ldpc_par_chk_mtrx::ldpc_par_chk_mtrx(gsl_matrix *m_ptr)
       {
         // Turn off GSL error handler so that program does not abort
         // if an error pops up.
@@ -127,7 +130,9 @@ namespace gr {
       } // Constructor if a parity check matrix is given, case 2
 
       // Constructor if n,p,q values are given, case 3
-      LDPC_par_chk_mtrx_impl::LDPC_par_chk_mtrx_impl(unsigned int n, unsigned int p, unsigned int q)
+      ldpc_par_chk_mtrx::ldpc_par_chk_mtrx(unsigned int n, 
+                                           unsigned int p,
+                                           unsigned int q)
       {
         /* This constructor accepts parameters to construct a
            regular low density parity check (LDPC) parity check
@@ -144,8 +149,8 @@ namespace gr {
            have full rank. (Reference Gallager's Dissertation.) They 
            will have rank = (number of rows - p + 1). To convert it
            to full rank, the function reduce_H_to_full_rank_matrix is
-           called. Then, the function full_rank_to_TABECD_form is called
-           to complete the preprocessing steps.
+           called. Then, the function full_rank_to_TABECD_form is
+           called to complete the preprocessing steps.
         */
 
         // TODO: there should probably be some guidelines for the n, 
@@ -163,12 +168,14 @@ namespace gr {
 
         float test = d_n % q;
         if (test) {
-          cout << "Error in regular LDPC code contructor algorithm: "
-               <<"The ratio of inputs n/q must be a whole number.\n";
+          std::cout << "Error in regular LDPC code contructor "
+                    << "algorithm: The ratio of inputs n/q must be a"
+                    << " whole number.\n";
           exit(1);
         }
 
-        // First, allocate memory for the H matrix (the big final matrix)
+        // First, allocate memory for the H matrix (the big final
+        // matrix)
         d_num_rows = (d_n*p)/q;   // # of rows in the H matrix
         d_H_ptr = gsl_matrix_alloc(d_num_rows,d_n);
         gsl_matrix_set_zero(d_H_ptr);
@@ -186,7 +193,7 @@ namespace gr {
           index  = range1;
 
           while (index < range2) {
-            gsl_matrix_set(submatrix1_ptr,row_number,index,1);
+            gsl_matrix_set(submatrix1_ptr, row_number, index, 1);
             index++;
           }
         }
@@ -234,7 +241,7 @@ namespace gr {
                                      reference_col_index);
 
               unsigned int row_index_in_H = row_index + 
-                     (submatrix_count-1)*sub_row_num;
+                                 (submatrix_count - 1) * sub_row_num;
 
               gsl_matrix_set(d_H_ptr,
                              row_index_in_H,
@@ -256,8 +263,8 @@ namespace gr {
             full_rank_to_TABECD_form();
           }
           catch (char const *exceptionString) {
-            cout << "Error in LDPC_par_chk_mtrx_impl()"
-                 << " constructor:\n" << exceptionString;
+            std::cout << "Error in ldpc_par_chk_mtrx() constructor:"
+                      << "\n" << exceptionString;
           }
 
           // preprocess_for_encoding
@@ -265,8 +272,8 @@ namespace gr {
             preprocess_for_encoding();
           }
           catch (char const *exceptionString) {
-            cout << "Error in preprocess_for_encoding() function:\n"
-                 << exceptionString;
+            std::cout << "Error in preprocess_for_encoding() "
+                      << "function:\n" << exceptionString;
             continue;
           }
 
@@ -279,38 +286,38 @@ namespace gr {
             found_acceptable_H = true;  
           }
           catch (char const *exceptionString) {
-            cout << "Error in preprocess_for_encoding() function:\n"
-                 << exceptionString;
+            std::cout << "Error in preprocess_for_encoding() "
+                      << "function:\n" << exceptionString;
           }
         }
       } // Constructor if n,p,q values are given, case 3
 
       // Default constructor, should not be used
-      LDPC_par_chk_mtrx_impl::LDPC_par_chk_mtrx_impl() {
-        cout << "Error in LDPC_par_chk_mtrx_impl(): Default "
-             << "constructor called.\nMust provide arguments for one"
-             << " of the constructors so that a parity check matrix "
-             << "can be created. (Constructor for this class is "
-             << "overloaded.)\n\n";
+      ldpc_par_chk_mtrx::ldpc_par_chk_mtrx() {
+        std::cout << "Error in ldpc_par_chk_mtrx(): Default "
+                  << "constructor called.\nMust provide arguments "
+                  << "for one of the constructors so that a parity "
+                  << "check matrix can be created. (Constructor for "
+                  << "this class is overloaded.)\n\n";
         exit(1);
       }
 
-      LDPC_par_chk_mtrx_impl::~LDPC_par_chk_mtrx_impl()
+      ldpc_par_chk_mtrx::~ldpc_par_chk_mtrx()
       {
         // Call the gsl_matrix_free function to free the allocated
         // parity check matrix.
         gsl_matrix_free (d_H_ptr);
       }
 
-      unsigned int LDPC_par_chk_mtrx_impl::get_n() {
+      unsigned int ldpc_par_chk_mtrx::get_n() {
         return d_n;
       }
 
-      unsigned int LDPC_par_chk_mtrx_impl::get_k() {
+      unsigned int ldpc_par_chk_mtrx::get_k() {
         return d_k;
       }
 
-      unsigned int LDPC_par_chk_mtrx_impl::get_rank() {
+      unsigned int ldpc_par_chk_mtrx::get_rank() {
         // Returns the value set in reduce_H_to_full_rank_matrix().
         // If that function wasn't ran, then this variable hasn't
         // been set.
@@ -320,37 +327,37 @@ namespace gr {
         return d_rank;
       }
 
-      void LDPC_par_chk_mtrx_impl::write_matrix_to_file(string *file) {
+      void ldpc_par_chk_mtrx::write_matrix_to_file(std::string *file) {
         /*
           This function writes an alist file for the parity check
           matrix. The format of alist files is desribed at: 
           http://www.inference.phy.cam.ac.uk/mackay/codes/alist.html
         */
 
-        string alist_filename(*file);
-        ofstream output_file;
+        std::string alist_filename(*file);
+        std::ofstream output_file;
 
         // Open the file (needs a C-string)
         output_file.open(alist_filename.c_str());
         if (!output_file) {
-          cout << "Error: Could not open file " << alist_filename
-               << " for writing.\n";
+          std::cout << "Error: Could not open file " 
+                    << alist_filename << " for writing.\n";
           exit(1);
         }
 
         // 1st line is number of columns and number of rows
-        output_file << d_n << " " << d_num_rows << endl;
+        output_file << d_n << " " << d_num_rows << "\n";
 
         // Initialize some variables
-        string temp_string_1("");
-        string temp_string_2("");
-        string temp_string_3("");
-        string temp_string_4("");
+        std::string temp_string_1("");
+        std::string temp_string_2("");
+        std::string temp_string_3("");
+        std::string temp_string_4("");
         unsigned int max_row_weight = 0, max_col_weight = 0;
-        unsigned int row_index, col_index, row_weight, col_weight, value;
+        unsigned int row_index,col_index,row_weight,col_weight,value;
 
         // Use stringstream to convert unsigned int to string.
-        stringstream out;
+        std::stringstream out;
 
         for (row_index = 0; row_index < d_num_rows; row_index++) {
           row_weight = 0;
@@ -429,7 +436,8 @@ namespace gr {
         temp_string_3 += "\n";
 
         // Write out the max column and row weights.
-        output_file << max_col_weight << " " << max_row_weight << endl;
+        output_file << max_col_weight << " " << max_row_weight 
+                    << "\n";
         // Write out all of the column weights.
         output_file << temp_string_3;
         // Write out all of the row weights.
@@ -442,20 +450,20 @@ namespace gr {
         output_file.close();
       }
 
-      void LDPC_par_chk_mtrx_impl::read_matrix_from_file(string *file) {
+      void ldpc_par_chk_mtrx::read_matrix_from_file(std::string *file) {
         /* This function reads in an alist file and creates the
           corresponding parity check matrix. The format of alist
           files is desribed at:
           http://www.inference.phy.cam.ac.uk/mackay/codes/alist.html
         */
-        string alist_filename(*file);
-        ifstream inputFile;
+        std::string alist_filename(*file);
+        std::ifstream inputFile;
 
         // Open the alist file (needs a C-string)
         inputFile.open(alist_filename.c_str());
         if (!inputFile) {
-          cout << "There was a problem opening file "
-             << alist_filename << " for reading.\n";
+          std::cout << "There was a problem opening file "
+                    << alist_filename << " for reading.\n";
           exit(1);
         }
 
@@ -471,7 +479,7 @@ namespace gr {
 
         // The next few lines in the file are not neccesary in
         // contructing the matrix.
-        string tempBuffer;
+        std::string tempBuffer;
         unsigned int counter;
         for (counter = 0; counter < 4; counter++) {
           getline(inputFile,tempBuffer);
@@ -480,11 +488,11 @@ namespace gr {
         // These next lines list the indices for where the 1s are in
         // each column.
         unsigned int column_count = 0;
-        string row_number;
+        std::string row_number;
 
         while (column_count < d_n) {
           getline(inputFile,tempBuffer);
-          stringstream ss(tempBuffer);
+          std::stringstream ss(tempBuffer);
 
           while (ss >> row_number) {
             int row_i = atoi(row_number.c_str());
@@ -507,14 +515,15 @@ namespace gr {
         d_k = d_n - d_num_rows;
        }
 
-      void LDPC_par_chk_mtrx_impl::reduce_H_to_full_rank_matrix() {
+      void ldpc_par_chk_mtrx::reduce_H_to_full_rank_matrix() {
         /* This function operates on the parity check matrix H. If H
            is not already full rank, then the function will 
            determine which rows are dependent and remove them. 
 
            This method, as with the other methods in this class, assumes that the matrix is GF(2), 1s and 0s only. 
         */
-        cout << "Original matrix has " << d_num_rows << " rows.\n"; 
+        std::cout << "Original matrix has " << d_num_rows 
+                  << " rows.\n"; 
 
         // Create a copy of the original matrix to refer to later
         gsl_matrix *original_matrix = gsl_matrix_alloc(d_num_rows,
@@ -525,8 +534,8 @@ namespace gr {
         unsigned int col_index, row_index;
 
         // Create vectors to save the column and row permutations
-        vector<int> column_order;
-        vector<int> row_order;
+        std::vector<int> column_order;
+        std::vector<int> row_order;
         while (index < d_n) {
           column_order.push_back(index);
           index++;
@@ -692,11 +701,12 @@ namespace gr {
         // Set this as the new H matrix for this object
         d_H_ptr = temp_matrix;
 
-        cout << "Final full rank matrix has " << (*d_H_ptr).size1
-             << " rows. (This is the rank of the matrix.)\n";
+        std::cout << "Final full rank matrix has " 
+                  << (*d_H_ptr).size1
+                  << " rows. (This is the rank of the matrix.)\n";
       }
 
-      void LDPC_par_chk_mtrx_impl::full_rank_to_TABECD_form(
+      void ldpc_par_chk_mtrx::full_rank_to_TABECD_form(
                               bool extra_shuffle) {
         /*  This function performs row/column permutations to bring
           H into approximate upper triangular form via greedy
@@ -745,7 +755,7 @@ namespace gr {
           }
 
           // Find the weight, or degree, of each column of H_r
-          vector<unsigned int> column_degrees;
+          std::vector<unsigned int> column_degrees;
           unsigned int min_residual_degree = H_r_num_rows;
           for (col_index = 0; col_index < H_r_num_cols;col_index++) {
             unsigned int degree = 0;
@@ -766,7 +776,7 @@ namespace gr {
           // Get indices of all of the columns in H_t that have
           // weight equal to the minimum residual degree, then pick 
           // one of them at random to be column c.
-          vector<int> indices_in_H_t_with_min_degree;
+          std::vector<int> indices_in_H_t_with_min_degree;
           for (index = 0; index < column_degrees.size(); index++) {
             if (column_degrees[index] == min_residual_degree) {
 
@@ -831,7 +841,7 @@ namespace gr {
 
             // Find the rows in column c that contains the non-zero
             // entries.
-            vector <int> rows_that_contain_nonzero_entries;
+            std::vector <int> rows_that_contain_nonzero_entries;
             for (row_index=0; row_index < H_r_num_rows;row_index++) {
               unsigned int H_r_column = column_c - t;
               value = gsl_matrix_get(H_r, row_index, H_r_column);
@@ -852,7 +862,9 @@ namespace gr {
             gsl_matrix_swap_columns(H_t, column_c, t);
 
             // Swap row r1 with row t
-            gsl_matrix_swap_rows(H_t,rows_that_contain_nonzero_entries[0], t);
+            gsl_matrix_swap_rows(H_t,
+                              rows_that_contain_nonzero_entries[0],
+                              t);
 
             unsigned int rows_to_move, row_in_H_t; 
             rows_to_move=rows_that_contain_nonzero_entries.size()-1;
@@ -939,8 +951,8 @@ namespace gr {
           T_inverse = calc_inverse_mod2(&T.matrix);
         }
         catch (char const *exceptionString) {
-          cout << "Initial T inverse not found : "
-               << exceptionString;
+          std::cout << "Initial T inverse not found : "
+                    << exceptionString;
         }
 
         gsl_matrix *temp1 = matrix_mult_mod2(&E.matrix, T_inverse);
@@ -969,19 +981,19 @@ namespace gr {
               d_gap = gap;
             }
             else {
-              cout << "Error. calc_inverse_mod2 is returning "
-                   << "an inverse phi matrix that is all zeros"
-                   << ".\n";
+              std::cout << "Error. calc_inverse_mod2 is returning "
+                        << "an inverse phi matrix that is all zeros"
+                        << ".\n";
               exit(1);
             }
           }
           catch (char const *exceptionString) {
-            // cout << "Initial phi matrix is nonsingular: "
+            // std::cout << "Initial phi matrix is nonsingular: "
             //    << exceptionString;
           }
         }
         else {
-          cout << "Initial phi matrix is all zeros.\n";
+          std::cout << "Initial phi matrix is all zeros.\n";
         }
 
         // If the C and D submatrices are all zeros, then there is no
@@ -1003,7 +1015,7 @@ namespace gr {
         // shuffles. So, just define a maximum number of iterations
         // to evaluate.
         unsigned int max_iterations = 200, iteration_count = 0,
-               num_shuffle_rows = gap, num_shuffle_cols = d_n-t;
+                     num_shuffle_rows = gap, num_shuffle_cols =d_n-t;
 
         // Create an array of the column numbers that can be shuffled
         int columns_to_shuffle[num_shuffle_cols];
@@ -1115,8 +1127,9 @@ namespace gr {
             new_T_inverse = calc_inverse_mod2(&newT.matrix);
           }
           catch (char const *exceptionString) {
-            cout << "On iteration " << iteration_count << ", failed "
-                 << "to find T inverse: " << exceptionString;
+            std::cout << "On iteration " << iteration_count 
+                      << ", failed to find T inverse: " 
+                      << exceptionString;
           }
 
           temp1 = matrix_mult_mod2(&newE.matrix, new_T_inverse);
@@ -1144,15 +1157,15 @@ namespace gr {
                 found_nonsingular_phi = true;
               }
               else {
-                cout << "Error. calc_inverse_mod2 is returning "
-                     << "an inverse phi matrix that is all zeros"
-                     << ".\n";
+                std::cout << "Error. calc_inverse_mod2 is returning "
+                          << "an inverse phi matrix that is all "
+                          << "zeros.\n";
                 exit(1);
               }
 
             }
             catch (char const *exceptionString) {
-              // cout << "Iteration count " << iteration_count
+              // std::cout << "Iteration count " << iteration_count
               //    << ", Error finding phi inverse: " 
               //    << exceptionString;
             }
@@ -1178,7 +1191,7 @@ namespace gr {
         }
       }
 
-      void LDPC_par_chk_mtrx_impl::preprocess_for_encoding() {
+      void ldpc_par_chk_mtrx::preprocess_for_encoding() {
         /*  This function will call the full_rank_to_TABECD_form()
           function for num_iterations times. Due to some of the
           random choices made in the Greedy Upper Triangulation
@@ -1210,17 +1223,18 @@ namespace gr {
         bool extra_shuffle_flag = false;
 
         if (d_gap != d_num_rows) {
-          cout << "First H matrix has a gap of " << d_gap << ".\n";
+          std::cout << "First H matrix has a gap of " 
+                    << d_gap << ".\n";
         }
         else {
-          cout << "\nValid H matrix has not been found. Looking for "
-               << "a candidate.\n";
+          std::cout << "\nValid H matrix has not been found. Looking"
+                    << " for a candidate.\n";
         }
-        cout << endl;
+        std::cout << "\n";
 
         while (index <= num_iterations) {
-          cout << "Iteration: " << index << "/" << num_iterations 
-               << endl;
+          std::cout << "Iteration: " << index << "/" 
+                    << num_iterations << "\n";
 
           try {
             full_rank_to_TABECD_form(extra_shuffle_flag);
@@ -1236,18 +1250,19 @@ namespace gr {
               best_gap = d_gap;
               gsl_matrix_memcpy(best_H, d_H_ptr);        
 
-              cout << "  New smaller gap found: " << d_gap << endl;
+              std::cout << "  New smaller gap found: " << d_gap 
+                        << "\n";
             }
             else {
-              cout << "  Gap found is " << d_gap << ", which is "
-                   << "not smaller than the current best candidate"
-                   << " matrix, which has a gap of " << best_gap
-                   << ".\n";         
+              std::cout << "  Gap found is " << d_gap 
+                        << ", which is not smaller than the current "
+                        << "best candidate matrix, which has a gap "
+                        << "of " << best_gap << ".\n";         
             }
           }
           catch (char const *exceptionString){
 
-            cout << "  " << exceptionString;
+            std::cout << "  " << exceptionString;
 
             // If we're here, then the preprocess_for_encoding()
             // function didn't find an acceptable H candidate matrix.
@@ -1270,12 +1285,12 @@ namespace gr {
           // Declare the winner!
           gsl_matrix_memcpy(d_H_ptr, best_H);
 
-          cout << "\nThe best H matrix was found to have a gap of "
-               << d_gap << ".\n";
+          std::cout << "\nThe best H matrix was found to have a gap "
+                    << "of " << d_gap << ".\n";
         }
       }
 
-      void LDPC_par_chk_mtrx_impl::set_parameters_for_encoding() {
+      void ldpc_par_chk_mtrx::set_parameters_for_encoding() {
 
         // This function defines all of the submatrices that will be
         // needed during encoding. 
@@ -1284,18 +1299,18 @@ namespace gr {
 
         // T submatrix
         gsl_matrix_view T_view = gsl_matrix_submatrix(d_H_ptr,
-                                0,
-                                0,
-                                t,
-                                t);
+                                                      0,
+                                                      0,
+                                                      t,
+                                                      t);
         try {
           d_T_inverse = calc_inverse_mod2(&T_view.matrix);
         }
         catch (char const *exceptionString) {
-          cout << "Error in set_parameters_for_encoding while "
-               << "looking for inverse T: " << exceptionString
-               << "This inverse was already take earlier so there "
-               << "should not be an issue...?\n";
+          std::cout << "Error in set_parameters_for_encoding while "
+                    << "looking for inverse T: " << exceptionString
+                    << "This inverse was already take earlier so "
+                    << "there should not be an issue...?\n";
 
           exit(1);
         }
@@ -1342,10 +1357,10 @@ namespace gr {
           }
           catch (char const *exceptionString) {
 
-            cout << "Error in set_parameters_for_encoding while "
-                 << "finding inverse_phi: " << exceptionString
-                 << "This inverse was already take earlier so there "
-                 << "should not be an issue...?\n";      
+            std::cout << "Error in set_parameters_for_encoding while"
+                      << "finding inverse_phi: " << exceptionString
+                      << "This inverse was already take earlier so "
+                      << "there should not be an issue...?\n";      
             exit(1);
           }
         }
@@ -1367,7 +1382,7 @@ namespace gr {
         d_D = &D_view.matrix;
       }
 
-      gsl_matrix *LDPC_par_chk_mtrx_impl::subtract_matrices_mod2(
+      gsl_matrix *ldpc_par_chk_mtrx::subtract_matrices_mod2(
                                                gsl_matrix *matrix1,
                                                gsl_matrix *matrix2) {
         // This function returns ((matrix1 - matrix2) % 2). 
@@ -1379,13 +1394,13 @@ namespace gr {
         unsigned int matrix2_cols = (*matrix2).size2;
 
         if (matrix1_rows != matrix2_rows) {
-          cout << "Error in subtract_matrices_mod2. Matrices do not "
-               << "have the same number of rows.\n";
+          std::cout << "Error in subtract_matrices_mod2. Matrices do"
+                    << " not have the same number of rows.\n";
           exit(1);
         }
         if (matrix1_cols != matrix2_cols) {
-          cout << "Error in subtract_matrices_mod2. Matrices do not "
-               << "have the same number of columns.\n";
+          std::cout << "Error in subtract_matrices_mod2. Matrices do"
+                    << " not have the same number of columns.\n";
           exit(1);
         }
 
@@ -1412,7 +1427,7 @@ namespace gr {
         return result; 
       }
 
-      gsl_matrix *LDPC_par_chk_mtrx_impl::matrix_mult_mod2(
+      gsl_matrix *ldpc_par_chk_mtrx::matrix_mult_mod2(
                                              gsl_matrix *matrix1,
                                              gsl_matrix *matrix2) {
         // Verify that matrix sizes are appropriate
@@ -1421,10 +1436,10 @@ namespace gr {
         unsigned int c = (*matrix2).size1;  // # of rows
         unsigned int d = (*matrix2).size2;  // # of columns
         if (b != c) {
-          cout << "Error in matrix_mult_mod2. Matrix dimensions do"
-               << "not allow for matrix multiplication operation:\n"
-               << "matrix1 has " << a << " columns and matrix2 has " 
-               << b << " rows.\n";
+          std::cout << "Error in matrix_mult_mod2. Matrix dimensions"
+                    << " do not allow for matrix multiplication "
+                    << "operation:\nmatrix1 has " << a << " columns"
+                    << " and matrix2 has " << b << " rows.\n";
           exit(1);
         }
 
@@ -1432,8 +1447,8 @@ namespace gr {
         gsl_matrix *result = gsl_matrix_alloc(a,d);
 
         // Perform matrix multiplication. This is not mod 2.
-        gsl_blas_dgemm (CblasNoTrans, CblasNoTrans, 1.0, 
-                        matrix1, matrix2, 0.0, result);
+        gsl_blas_dgemm (CblasNoTrans, CblasNoTrans, 1.0, matrix1,
+                        matrix2, 0.0, result);
 
         // Take care of mod 2 manually
         unsigned int row_index, col_index;
@@ -1441,20 +1456,15 @@ namespace gr {
         cols = (*result).size2;
         for (row_index = 0; row_index < rows; row_index++) {
           for (col_index = 0; col_index < cols; col_index++) {
-            int value = gsl_matrix_get(result,
-                                       row_index,
-                                       col_index);
+            int value = gsl_matrix_get(result, row_index,col_index);
             int new_value = value % 2;
-            gsl_matrix_set(result,
-                           row_index,
-                           col_index,
-                           new_value);
+            gsl_matrix_set(result, row_index, col_index, new_value);
           }
         }
         return result;
       }
 
-      gsl_matrix *LDPC_par_chk_mtrx_impl::calc_inverse_mod2(gsl_matrix *original_matrix) {
+      gsl_matrix *ldpc_par_chk_mtrx::calc_inverse_mod2(gsl_matrix *original_matrix) {
 
         // Let n represent the size of the n x n square matrix
         unsigned int n = (*original_matrix).size1;

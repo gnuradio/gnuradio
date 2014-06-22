@@ -23,6 +23,7 @@
 #define INCLUDED_FEC_LDPC_BIT_FLIP_DECODER_IMPL_H
 
 #include <gnuradio/fec/ldpc_bit_flip_decoder.h>
+#include <gnuradio/fec/ldpc_par_chk_mtrx.h>
 
 namespace gr {
   namespace fec {
@@ -37,7 +38,7 @@ namespace gr {
 
         // Everything else:
         // LDPC parity check matrix to use for decoding
-        LDPC_par_chk_mtrx_impl d_H;
+        ldpc_par_chk_mtrx d_H;
         // Maximum number of iterations to do in decoding algorithm
         unsigned int d_max_iterations;
         // Number of bits in the information word
@@ -45,15 +46,15 @@ namespace gr {
         // Number of bits in the transmitted codeword block
         unsigned int d_n;
         // Function to calculate the syndrome 
-        //bool calc_syndrome(LDPC_par_chk_mtrx_impl H, <add the codeword here> );
+        //bool calc_syndrome(ldpc_par_chk_mtrx H, <add the codeword here> );
         unsigned int d_max_frame_size;
 
       public:
         ldpc_bit_flip_decoder_impl(
-                       LDPC_par_chk_mtrx_impl parity_check_matrix, 
-                       unsigned int max_iterations=100, 
+                       ldpc_par_chk_mtrx parity_check_matrix, 
                        unsigned int frame_size, 
-                       unsigned int n);
+                       unsigned int n,
+                       unsigned int max_iterations);
         ~ldpc_bit_flip_decoder_impl();
 
         void generic_work(void *inbuffer, void *outbuffer);

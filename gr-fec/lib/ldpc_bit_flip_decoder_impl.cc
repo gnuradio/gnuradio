@@ -35,24 +35,24 @@ namespace gr {
     namespace code {
 
       generic_decoder::sptr
-      ldpc_bit_flip_decoder::make(
-                        LDPC_par_chk_mtrx_impl parity_check_matrix,
-                        unsigned int max_iterations,
-                        unsigned int frame_size,
-                        unsigned int n);
+      ldpc_bit_flip_decoder::make
+        (ldpc_par_chk_mtrx parity_check_matrix,
+         unsigned int frame_size,
+         unsigned int n,
+         unsigned int max_iterations)
       {
         return generic_decoder::sptr
           (new ldpc_bit_flip_decoder_impl(parity_check_matrix,
-                                          max_iterations,
                                           frame_size,
-                                          n));
+                                          n,
+                                          max_iterations));
       }
 
       ldpc_bit_flip_decoder_impl::ldpc_bit_flip_decoder_impl(
-                        LDPC_par_chk_mtrx_impl parity_check_matrix,
-                        unsigned int max_iterations,
+                        ldpc_par_chk_mtrx parity_check_matrix,
                         unsigned int frame_size,
-                        unsigned int n)
+                        unsigned int n,
+                        unsigned int max_iterations)
         : generic_decoder("LDPC bit flip decoder")
       {
         if(frame_size < 1)
@@ -112,8 +112,8 @@ namespace gr {
       ldpc_bit_flip_decoder_impl::generic_work(void *inbuffer,
                                                void *outbuffer)
       {
-        const float *in = (const float*)inbuffer;
-        unsigned char *out = (unsigned char *) outbuffer;
+        //const float *in = (const float*)inbuffer;
+        //unsigned char *out = (unsigned char *) outbuffer;
 
         // Algorithm: 
 
