@@ -100,7 +100,7 @@ class test_file_source_sink(gr_unittest.TestCase):
         self.tb.run()
 
         source = blocks.file_source(gr.sizeof_float, filename)
-        source.seek(0, os.SEEK_SET)
+        self.assertTrue(source.seek(0, os.SEEK_SET))
 
         os.remove(filename)
 
