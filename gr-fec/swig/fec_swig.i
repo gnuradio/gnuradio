@@ -67,6 +67,7 @@
 #include "gnuradio/fec/polar_common.h"
 #include "gnuradio/fec/polar_decoder_sc_list.h"
 #include "gnuradio/fec/polar_decoder_common.h"
+#include "gnuradio/fec/ldpc_par_chk_mtrx.h"
 %}
 
 %include "gnuradio/fec/generic_decoder.h"
@@ -95,6 +96,7 @@
 %include "gnuradio/fec/ldpc_decoder.h"
 %include "gnuradio/fec/tpc_encoder.h"
 %include "gnuradio/fec/tpc_decoder.h"
+%include "gnuradio/fec/ldpc_par_chk_mtrx.h"
 
 GR_SWIG_BLOCK_MAGIC2(fec, decoder);
 GR_SWIG_BLOCK_MAGIC2(fec, encoder);

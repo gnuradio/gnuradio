@@ -89,6 +89,7 @@ list(APPEND gnuradio_fec_sources
   polar_decoder_common.cc
   scl_list.cc
   ldpc_par_chk_mtrx_impl.cc
+  ldpc_par_chk_mtrx.cc
   ldpc_bit_flip_decoder_impl.cc
 )
 
