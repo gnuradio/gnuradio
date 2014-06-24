@@ -468,6 +468,12 @@ TimeRasterDisplayPlot::getIntensityColorMapType(int which) const
   return d_color_map_type[which];
 }
 
+int
+TimeRasterDisplayPlot::getIntensityColorMapType1() const
+{
+  return getIntensityColorMapType(0);
+}
+
 void
 TimeRasterDisplayPlot::setIntensityColorMapType(const int which,
 						const int newType,
@@ -526,6 +532,12 @@ TimeRasterDisplayPlot::setIntensityColorMapType(const int which,
 
     _updateIntensityRangeDisplay();
   }
+}
+
+void
+TimeRasterDisplayPlot::setIntensityColorMapType1(int newType)
+{
+  setIntensityColorMapType(0, newType, d_low_intensity, d_high_intensity);
 }
 
 const QColor
