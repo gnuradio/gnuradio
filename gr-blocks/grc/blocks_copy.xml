@@ -67,6 +67,11 @@ self.$(id).set_enabled($enabled)</make>
 		<type>$type</type>
 		<vlen>$vlen</vlen>
 	</sink>
+	<sink>
+		<name>en</name>
+		<type>message</type>
+		<optional>1</optional>
+	</sink>
 	<source>
 		<name>out</name>
 		<type>$type</type>
