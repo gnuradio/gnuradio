@@ -204,7 +204,7 @@ class ColorMap_Sunset: public QwtLinearColorMap
 public:
   ColorMap_Sunset():
     QwtLinearColorMap(QColor(0, 0, 0, 0),
-                      QColor(193, 255, 255, 255))
+                      QColor(255, 255, 193, 255))
   {
     addColorStop(0.167, QColor( 86,   0, 153,  45));
     addColorStop(0.333, QColor(147,  51, 119,  91));
