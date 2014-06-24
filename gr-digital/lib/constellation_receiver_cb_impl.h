@@ -35,7 +35,7 @@ namespace gr {
       : public constellation_receiver_cb, blocks::control_loop
     {
     public:
-      constellation_receiver_cb_impl(constellation_sptr constell, 
+      constellation_receiver_cb_impl(constellation_sptr constell,
 				     float loop_bw, float fmin, float fmax);
 
       ~constellation_receiver_cb_impl();
@@ -66,10 +66,10 @@ namespace gr {
 
       //! delay line length.
       static const unsigned int DLLEN = 8;
-  
+
       //! delay line plus some length for overflow protection
       __GR_ATTR_ALIGNED(8) gr_complex d_dl[2*DLLEN];
-  
+
       //! index to delay line
       unsigned int d_dl_idx;
     };

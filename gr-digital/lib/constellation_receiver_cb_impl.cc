@@ -38,7 +38,7 @@ namespace gr {
 #define VERBOSE_MM     0     // Used for debugging symbol timing loop
 #define VERBOSE_COSTAS 0     // Used for debugging phase and frequency tracking
 
-    constellation_receiver_cb::sptr 
+    constellation_receiver_cb::sptr
     constellation_receiver_cb::make(constellation_sptr constell,
 				    float loop_bw, float fmin, float fmax)
     {
@@ -49,7 +49,7 @@ namespace gr {
 
     static int ios[] = {sizeof(char), sizeof(float), sizeof(float), sizeof(float), sizeof(gr_complex)};
     static std::vector<int> iosig(ios, ios+sizeof(ios)/sizeof(int));
-    constellation_receiver_cb_impl::constellation_receiver_cb_impl(constellation_sptr constellation, 
+    constellation_receiver_cb_impl::constellation_receiver_cb_impl(constellation_sptr constellation,
 								   float loop_bw, float fmin, float fmax)
       : block("constellation_receiver_cb",
               io_signature::make(1, 1, sizeof(gr_complex)),
@@ -77,10 +77,10 @@ namespace gr {
       advance_loop(phase_error);
       phase_wrap();
       frequency_limit();
-  
+
 #if VERBOSE_COSTAS
       printf("cl: phase_error: %f  phase: %f  freq: %f  sample: %f+j%f  constellation: %f+j%f\n",
-	     phase_error, d_phase, d_freq, sample.real(), sample.imag(), 
+	     phase_error, d_phase, d_freq, sample.real(), sample.imag(),
 	     d_constellation->points()[d_current_const_point].real(),
 	     d_constellation->points()[d_current_const_point].imag());
 #endif
@@ -102,7 +102,7 @@ namespace gr {
       set_constellation(constellation);
     }
 
-    
+
     void
     constellation_receiver_cb_impl::set_constellation(constellation_sptr constellation)
     {
@@ -145,16 +145,16 @@ namespace gr {
           tag_t tag = tags_now[j];
           dispatch_msg(tag.key, tag.value);
         }
-        
+
         sample = in[i];
         nco = gr_expj(d_phase);   // get the NCO value for derotating the current sample
         sample = nco*sample;      // get the downconverted symbol
-        
+
         sym_value = d_constellation->decision_maker_pe(&sample, &phase_error);
         phase_error_tracking(phase_error);  // corrects phase and frequency offsets
-        
+
         out[i] = sym_value;
-        
+
         if(output_items.size() == 5) {
           out_err[i] = phase_error;
           out_phase[i] = d_phase;
@@ -162,7 +162,7 @@ namespace gr {
           out_symbol[i] = sample;
         }
         i++;
-        
+
       }
 
       consume_each(i);
@@ -197,7 +197,7 @@ namespace gr {
 	      pmt::mp(0.0f), pmt::mp(2.0f), pmt::mp(0.0f),
 	      "", "Loop bandwidth", RPC_PRIVLVL_MIN,
               DISPTIME | DISPOPTSTRIP)));
-    
+
       // Setters
       add_rpc_variable(
           rpcbasic_sptr(new rpcbasic_register_set<control_loop, float>(
@@ -208,8 +208,7 @@ namespace gr {
 	      RPC_PRIVLVL_MIN, DISPNULL)));
 #endif /* GR_CTRLPORT */
     }
-    
+
 
   } /* namespace digital */
 } /* namespace gr */
-
