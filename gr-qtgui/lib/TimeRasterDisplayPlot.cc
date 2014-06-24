@@ -239,7 +239,7 @@ TimeRasterDisplayPlot::TimeRasterDisplayPlot(int nplots,
                             Qt::RightButton, Qt::ControlModifier);
   d_zoomer->setMousePattern(QwtEventPattern::MouseSelect3,
                             Qt::RightButton);
-  
+
   const QColor c(Qt::red);
   d_zoomer->setRubberBandPen(c);
   d_zoomer->setTrackerPen(c);
@@ -301,7 +301,7 @@ TimeRasterDisplayPlot::reset()
     newSize.setWidth(d_cols);
     newSize.setBottom(0);
     newSize.setHeight(d_rows);
-    
+
     d_zoomer->zoom(newSize);
     d_zoomer->setZoomBase(newSize);
     d_zoomer->zoom(0);
@@ -504,6 +504,16 @@ TimeRasterDisplayPlot::setIntensityColorMapType(const int which,
       d_raster[which]->setColorMap(new ColorMap_Incandescent());
       break;
     }
+    case INTENSITY_COLOR_MAP_TYPE_SUNSET: {
+      d_color_map_type[which] = newType;
+      d_raster[which]->setColorMap(new ColorMap_Sunset());
+      break;
+    }
+    case INTENSITY_COLOR_MAP_TYPE_COOL: {
+      d_color_map_type[which] = newType;
+      d_raster[which]->setColorMap(new ColorMap_Cool());
+      break;
+    }
     case INTENSITY_COLOR_MAP_TYPE_USER_DEFINED: {
       d_low_intensity = lowColor;
       d_high_intensity = highColor;
@@ -555,6 +565,10 @@ TimeRasterDisplayPlot::_updateIntensityRangeDisplay()
       rightAxis->setColorMap(intv, new ColorMap_BlackHot()); break;
     case INTENSITY_COLOR_MAP_TYPE_INCANDESCENT:
       rightAxis->setColorMap(intv, new ColorMap_Incandescent()); break;
+    case INTENSITY_COLOR_MAP_TYPE_SUNSET:
+      rightAxis->setColorMap(intv, new ColorMap_Sunset()); break;
+    case INTENSITY_COLOR_MAP_TYPE_COOL:
+      rightAxis->setColorMap(intv, new ColorMap_Cool()); break;
     case INTENSITY_COLOR_MAP_TYPE_USER_DEFINED:
       rightAxis->setColorMap(intv, new ColorMap_UserDefined(d_low_intensity,
 							    d_high_intensity));

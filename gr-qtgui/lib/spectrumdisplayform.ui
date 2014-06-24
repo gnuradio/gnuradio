@@ -448,6 +448,16 @@
          </item>
          <item>
           <property name="text">
+           <string>Sunset</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Cool</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
            <string>User Defined</string>
           </property>
          </item>

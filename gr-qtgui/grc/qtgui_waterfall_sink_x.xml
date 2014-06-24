@@ -168,6 +168,14 @@ $(gui_hint()($win))</make>
       <name>Incandescent</name>
       <key>3</key>
     </option>
+    <option>
+      <name>Sunset</name>
+      <key>5</key>
+    </option>
+    <option>
+      <name>Cool</name>
+      <key>6</key>
+    </option>
     <tab>Config</tab>
   </param>
 
