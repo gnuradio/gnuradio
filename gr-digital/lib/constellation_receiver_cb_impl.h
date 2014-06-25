@@ -58,7 +58,20 @@ namespace gr {
       //! Typically used when we receive a tag with values for these.
       void set_phase_freq(float phase, float freq);
 
+      /*!
+       * Message handler port to receiver a new constellation.
+       * constellation_pmt is a pmt_any; constellation objects have
+       * an as_pmt function that can be used for this purpose.
+       */
       void handle_set_constellation(pmt::pmt_t constellation_pmt);
+
+      /*!
+       * Message handler port to update the phase of the rotator. The
+       * phase should be a real number (float or double) that is added
+       * to the current phase. So we can rotate the constellation by
+       * 90 degress by passing a value of pmt::from_double(M_PI/2).
+       */
+      void handle_rotate_phase(pmt::pmt_t rotation);
 
       //! Set the constellation used.
       //! Typically used when we receive a tag with a value for this.

@@ -60,11 +60,17 @@ namespace gr {
     {
       if(d_constellation->dimensionality() != 1)
         throw std::runtime_error("This receiver only works with constellations of dimension 1.");
+
       message_port_register_in(pmt::mp("set_constellation"));
       set_msg_handler(
         pmt::mp("set_constellation"),
         boost::bind(&constellation_receiver_cb_impl::handle_set_constellation,
                     this, _1));
+
+      message_port_register_in(pmt::mp("rotate_phase"));
+      set_msg_handler(pmt::mp("rotate_phase"),
+                      boost::bind(&constellation_receiver_cb_impl::handle_rotate_phase,
+                                  this, _1));
     }
 
     constellation_receiver_cb_impl::~constellation_receiver_cb_impl()
@@ -96,12 +102,22 @@ namespace gr {
     void
     constellation_receiver_cb_impl::handle_set_constellation(pmt::pmt_t constellation_pmt)
     {
-      boost::any constellation_any = pmt::any_ref(constellation_pmt);
-      constellation_sptr constellation = boost::any_cast<constellation_sptr>(
-        constellation_any);
-      set_constellation(constellation);
+      if(pmt::is_any(constellation_pmt)) {
+        boost::any constellation_any = pmt::any_ref(constellation_pmt);
+        constellation_sptr constellation = boost::any_cast<constellation_sptr>(
+          constellation_any);
+        set_constellation(constellation);
+      }
     }
 
+    void
+    constellation_receiver_cb_impl::handle_rotate_phase(pmt::pmt_t rotation)
+    {
+      if(pmt::is_real(rotation)) {
+        double phase = pmt::to_double(rotation);
+        d_phase += phase;
+      }
+    }
 
     void
     constellation_receiver_cb_impl::set_constellation(constellation_sptr constellation)
