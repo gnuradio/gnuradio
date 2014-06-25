@@ -71,6 +71,7 @@ public slots:
   void closeEvent(QCloseEvent * e);
   void windowTypeChanged(int newItem);
   void useRFFrequenciesCB(bool useRFFlag);
+  void toggleRFFrequencies(bool en);
   void waterfallMaximumIntensityChangedCB(double);
   void waterfallMinimumIntensityChangedCB(double);
   void waterfallIntensityColorTypeChanged(int);

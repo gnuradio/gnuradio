@@ -572,6 +572,12 @@ SpectrumDisplayForm::useRFFrequenciesCB(bool useRFFlag)
   setFrequencyRange(_centerFrequency, _startFrequency, _stopFrequency);
 }
 
+void
+SpectrumDisplayForm::toggleRFFrequencies(bool en)
+{
+  UseRFFrequenciesCheckBox->setChecked(en);
+}
+
 
 void
 SpectrumDisplayForm::waterfallMaximumIntensityChangedCB(double newValue)

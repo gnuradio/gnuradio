@@ -218,6 +218,13 @@ namespace gr {
       d_main_gui->setFrequencyAxis(min, max);
     }
 
+    void
+    sink_c_impl::enable_rf_freq(bool en)
+    {
+      std::cerr << "ENABLE RF: " << en << std::endl;
+      d_main_gui->enableRFFreq(en);
+    }
+
     /*
     void
     sink_c_impl::set_time_domain_axis(double min, double max)

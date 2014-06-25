@@ -91,6 +91,7 @@ namespace gr {
       virtual void set_frequency_range(const double centerfreq,
 				       const double bandwidth) = 0;
       virtual void set_fft_power_db(double min, double max) = 0;
+      virtual void enable_rf_freq(bool en) = 0;
 
       //void set_time_domain_axis(double min, double max);
       //void set_constellation_axis(double xmin, double xmax,

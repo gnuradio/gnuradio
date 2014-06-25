@@ -93,7 +93,7 @@ SpectrumGUIClass::openSpectrumWindow(QWidget* parent,
       _realTimeDomainPoints = new double[_dataPoints];
       _imagTimeDomainPoints = new double[_dataPoints];
       _fftBuffersCreatedFlag = true;
-      
+
       memset(_fftPoints, 0x0, _dataPoints*sizeof(float));
       memset(_realTimeDomainPoints, 0x0, _dataPoints*sizeof(double));
       memset(_imagTimeDomainPoints, 0x0, _dataPoints*sizeof(double));
@@ -468,6 +468,13 @@ SpectrumGUIClass::setUpdateTime(double t)
   gr::thread::scoped_lock lock(d_mutex);
   _updateTime = t;
   _spectrumDisplayForm->setUpdateTime(_updateTime);
+}
+
+void
+SpectrumGUIClass::enableRFFreq(bool en)
+{
+  gr::thread::scoped_lock lock(d_mutex);
+  _spectrumDisplayForm->toggleRFFrequencies(en);
 }
 
 
