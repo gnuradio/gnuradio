@@ -55,6 +55,12 @@ class SpectrumDisplayForm : public QWidget, public Ui::SpectrumDisplayForm
   void resizeBuffers(const uint64_t numFFTDataPoints,
 		     const uint64_t numTimeDomainDataPoints);
 
+  // returns the frequency that was last double-clicked on by the user
+  float getClickedFreq() const;
+
+  // checks if there was a double-click event; reset if there was
+  bool checkClicked();
+
 public slots:
   void resizeEvent(QResizeEvent * e);
   void customEvent(QEvent * e);
@@ -124,6 +130,10 @@ private:
   double _peakFrequency;
   double _peakAmplitude;
   double _stopFrequency;
+
+  double d_units;
+  bool d_clicked;
+  double d_clicked_freq;
 
   //SpectrumUpdateEvent _lastSpectrumEvent;
 

@@ -392,6 +392,13 @@ $(gui_hint()($win))</make>
     <type>$type</type>
     <nports>$nconnections</nports>
   </sink>
+
+  <source>
+    <name>freq</name>
+    <type>message</type>
+    <optional>1</optional>
+  </source>
+
   <doc>
 The GUI hint can be used to position the widget within the application. \
 The hint is of the form [tab_id@tab_index]: [row, col, row_span, col_span]. \

@@ -179,9 +179,17 @@ Qt.QObject.connect(self._$(id)_win, Qt.SIGNAL("plotPointSelected(QPointF, int)")
 		<type>$type</type>
 		<nports>$num_inputs</nports>
 	</sink>
-	<doc>
+
+
+  <source>
+    <name>freq</name>
+    <type>message</type>
+    <optional>1</optional>
+  </source>
+
+  <doc>
 The GUI hint can be used to position the widget within the application. \
 The hint is of the form [tab_id@tab_index]: [row, col, row_span, col_span]. \
 Both the tab specification and the grid position are optional.
-	</doc>
+  </doc>
 </block>

@@ -69,6 +69,10 @@ namespace gr {
       d_argv = new char;
       d_argv[0] = '\0';
 
+      // setup output message port to post frequency when display is
+      // double-clicked
+      message_port_register_out(pmt::mp("freq"));
+
       d_main_gui = NULL;
 
       // Perform fftshift operation;
@@ -444,6 +448,15 @@ namespace gr {
       }
     }
 
+    void
+    freq_sink_c_impl::check_clicked()
+    {
+      if(d_main_gui->checkClicked()) {
+        d_center_freq = d_main_gui->getClickedFreq();
+        message_port_pub(pmt::mp("freq"), pmt::from_double(d_center_freq));
+      }
+    }
+
     int
     freq_sink_c_impl::work(int noutput_items,
 			   gr_vector_const_void_star &input_items,
@@ -455,6 +468,7 @@ namespace gr {
       // Update the FFT size from the application
       fftresize();
       windowreset();
+      check_clicked();
 
       for(int i=0; i < noutput_items; i+=d_fftsize) {
 	unsigned int datasize = noutput_items - i;

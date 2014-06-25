@@ -105,6 +105,9 @@ public:
 
   void enableRFFreq(bool en);
 
+  bool checkClicked();
+  float getClickedFreq();
+
 protected:
 
 private:

@@ -477,5 +477,18 @@ SpectrumGUIClass::enableRFFreq(bool en)
   _spectrumDisplayForm->toggleRFFrequencies(en);
 }
 
+bool
+SpectrumGUIClass::checkClicked()
+{
+  gr::thread::scoped_lock lock(d_mutex);
+  return _spectrumDisplayForm->checkClicked();
+}
+
+float
+SpectrumGUIClass::getClickedFreq()
+{
+  gr::thread::scoped_lock lock(d_mutex);
+  return _spectrumDisplayForm->getClickedFreq();
+}
 
 #endif /* SPECTRUM_GUI_CLASS_CPP */

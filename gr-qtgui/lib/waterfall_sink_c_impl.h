@@ -68,6 +68,7 @@ namespace gr {
       void windowreset();
       void buildwindow();
       void fftresize();
+      void check_clicked();
       void fft(float *data_out, const gr_complex *data_in, int size);
 
     public:
