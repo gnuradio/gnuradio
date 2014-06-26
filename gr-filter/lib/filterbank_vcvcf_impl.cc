@@ -31,13 +31,13 @@
 
 namespace gr {
   namespace filter {
-    
+
     filterbank_vcvcf::sptr
     filterbank_vcvcf::make(const std::vector<std::vector<float> > &taps)
     {
       return gnuradio::get_initial_sptr(new filterbank_vcvcf_impl(taps));
     }
-    
+
     filterbank_vcvcf_impl::filterbank_vcvcf_impl(
       const std::vector< std::vector<float> > &taps)
       : block("filterbank_vcvcf",
@@ -90,10 +90,8 @@ namespace gr {
         return 0;		     // history requirements may have changed.
       }
 
-      size_t noutputs = output_items.size();
-
       gr_complex *working;
-      
+
       working = new gr_complex [noutput_items + d_ntaps];
 
       for (unsigned int i = 0; i < d_nfilts; i++) {
@@ -115,7 +113,7 @@ namespace gr {
           }
         }
       }
-     
+
       delete [] working;
       consume_each(noutput_items);
       return noutput_items;
