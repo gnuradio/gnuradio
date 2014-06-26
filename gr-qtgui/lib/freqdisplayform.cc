@@ -39,6 +39,8 @@ FreqDisplayForm::FreqDisplayForm(int nplots, QWidget* parent)
   d_num_real_data_points = 1024;
   d_fftsize = 1024;
   d_fftavg = 1.0;
+  d_clicked = false;
+  d_clicked_freq = 0;
 
   d_sizemenu = new FFTSizeMenu(this);
   d_avgmenu = new FFTAverageMenu(this);
@@ -89,6 +91,10 @@ FreqDisplayForm::customEvent( QEvent * e)
 {
   if(e->type() == FreqUpdateEvent::Type()) {
     newData(e);
+  }
+  else if(e->type() == SpectrumFrequencyRangeEventType) {
+    SetFreqEvent *fevent = (SetFreqEvent*)e;
+    setFrequencyRange(fevent->getCenterFrequency(), fevent->getBandwidth());
   }
 }
 
@@ -147,14 +153,16 @@ FreqDisplayForm::setFrequencyRange(const double centerfreq,
   std::string strunits[4] = {"Hz", "kHz", "MHz", "GHz"};
   double units10 = floor(log10(bandwidth));
   double units3  = std::max(floor(units10 / 3.0), 0.0);
-  double units = pow(10, (units10-fmod(units10, 3.0)));
+  d_units = pow(10, (units10-fmod(units10, 3.0)));
   int iunit = static_cast<int>(units3);
 
   d_center_freq = centerfreq;
   d_samp_rate = bandwidth;
 
+  std::cerr << "FDISP NEW FREQ: " << centerfreq << std::endl;
+
   getPlot()->setFrequencyRange(centerfreq, bandwidth,
-			       units, strunits[iunit]);
+			       d_units, strunits[iunit]);
 }
 
 void
@@ -176,4 +184,31 @@ FreqDisplayForm::autoScale(bool en)
   d_autoscale_act->setChecked(en);
   getPlot()->setAutoScale(d_autoscale_state);
   getPlot()->replot();
+}
+
+void
+FreqDisplayForm::onPlotPointSelected(const QPointF p)
+{
+  d_clicked = true;
+  d_clicked_freq = d_units*p.x();
+
+  setFrequencyRange(d_clicked_freq, d_samp_rate);
+}
+
+bool
+FreqDisplayForm::checkClicked()
+{
+  if(d_clicked) {
+    d_clicked = false;
+    return true;
+  }
+  else {
+    return false;
+  }
+}
+
+float
+FreqDisplayForm::getClickedFreq() const
+{
+  return d_clicked_freq;
 }

@@ -103,6 +103,11 @@ public:
 
   void setUpdateTime(double t);
 
+  void enableRFFreq(bool en);
+
+  bool checkClicked();
+  float getClickedFreq();
+
 protected:
 
 private:

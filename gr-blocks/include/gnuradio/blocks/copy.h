@@ -36,6 +36,12 @@ namespace gr {
      * \details
      * When enabled (default), this block copies its input to its
      * output. When disabled, this block drops its input on the floor.
+     *
+     * Message Ports:
+     *
+     * - en (input):
+     *      Receives a PMT bool message to either enable to disable
+     *      copy.
      */
     class BLOCKS_API copy : virtual public block
     {

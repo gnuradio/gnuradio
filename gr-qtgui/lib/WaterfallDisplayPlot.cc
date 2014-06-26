@@ -81,7 +81,7 @@ private:
 /***********************************************************************
  * Widget to provide mouse pointer coordinate text
  **********************************************************************/
-class WaterfallZoomer: public QwtPlotZoomer, public TimeScaleData, 
+class WaterfallZoomer: public QwtPlotZoomer, public TimeScaleData,
 		       public FreqOffsetAndPrecisionClass
 {
 public:
@@ -168,7 +168,7 @@ WaterfallDisplayPlot::WaterfallDisplayPlot(int nplots, QWidget* parent)
 
     d_intensity_color_map_type.push_back(INTENSITY_COLOR_MAP_TYPE_MULTI_COLOR);
     setIntensityColorMapType(i, d_intensity_color_map_type[i],
-			     QColor("white"), QColor("white"));    
+			     QColor("white"), QColor("white"));
 
     setAlpha(i, 255/d_nplots);
   }
@@ -456,6 +456,26 @@ WaterfallDisplayPlot::setIntensityColorMapType(const int which,
 #endif
       break;
     }
+    case INTENSITY_COLOR_MAP_TYPE_SUNSET: {
+      d_intensity_color_map_type[which] = newType;
+#if QWT_VERSION < 0x060000
+      ColorMap_Sunset colorMap;
+      d_spectrogram[which]->setColorMap(colorMap);
+#else
+      d_spectrogram[which]->setColorMap(new ColorMap_Sunset());
+#endif
+      break;
+    }
+    case INTENSITY_COLOR_MAP_TYPE_COOL: {
+      d_intensity_color_map_type[which] = newType;
+#if QWT_VERSION < 0x060000
+      ColorMap_Cool colorMap;
+      d_spectrogram[which]->setColorMap(colorMap);
+#else
+      d_spectrogram[which]->setColorMap(new ColorMap_Cool());
+#endif
+      break;
+    }
     case INTENSITY_COLOR_MAP_TYPE_USER_DEFINED:{
       d_user_defined_low_intensity_color = lowColor;
       d_user_defined_high_intensity_color = highColor;
@@ -549,6 +569,10 @@ WaterfallDisplayPlot::_updateIntensityRangeDisplay()
       rightAxis->setColorMap(intv, new ColorMap_BlackHot()); break;
     case INTENSITY_COLOR_MAP_TYPE_INCANDESCENT:
       rightAxis->setColorMap(intv, new ColorMap_Incandescent()); break;
+    case INTENSITY_COLOR_MAP_TYPE_SUNSET:
+      rightAxis->setColorMap(intv, new ColorMap_Sunset()); break;
+    case INTENSITY_COLOR_MAP_TYPE_COOL:
+      rightAxis->setColorMap(intv, new ColorMap_Cool()); break;
     case INTENSITY_COLOR_MAP_TYPE_USER_DEFINED:
       rightAxis->setColorMap(intv, new ColorMap_UserDefined(d_user_defined_low_intensity_color,
 							    d_user_defined_high_intensity_color));

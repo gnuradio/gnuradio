@@ -41,6 +41,18 @@ namespace gr {
      * loop that finds the error of the incoming signal point compared
      * to its nearest constellation point. The frequency and phase of
      * the NCO are updated according to this error.
+     *
+     * Message Ports:
+     *
+     * set_constellation (input):
+     *    Receives a PMT any containing a new gr::digital::constellation object.
+     *    The PMT is cast back to a gr::digital::constellation_sptr
+     *    and passes this to set_constellation.
+     *
+     * rotate_phase (input):
+     *    Receives a PMT double to update the phase.
+     *    The phase value passed in the message is added to the
+     *    current phase of the receiver.
      */
     class DIGITAL_API constellation_receiver_cb
       : virtual public block
@@ -59,7 +71,7 @@ namespace gr {
        * \param fmin          minimum normalized frequency value the loop can achieve
        * \param fmax          maximum normalized frequency value the loop can achieve
        */
-      static sptr make(constellation_sptr constellation, 
+      static sptr make(constellation_sptr constellation,
 		       float loop_bw, float fmin, float fmax);
 
       virtual void phase_error_tracking(float phase_error) = 0;

@@ -86,6 +86,13 @@
 		<name>in</name>
 		<type>$type.input</type>
 	</sink>
+
+	<sink>
+	  <name>freq</name>
+	  <type>message</type>
+          <optional>1</optional>
+	</sink>
+
 	<source>
 		<name>out</name>
 		<type>$type.output</type>

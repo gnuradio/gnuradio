@@ -17,10 +17,10 @@
 # the Free Software Foundation, Inc., 51 Franklin Street,
 # Boston, MA 02110-1301, USA.
 
-if(DEFINED __INCLUDED_GR_BOOST_CMAKE)
+if(DEFINED __INCLUDED_VOLK_BOOST_CMAKE)
     return()
 endif()
-set(__INCLUDED_GR_BOOST_CMAKE TRUE)
+set(__INCLUDED_VOLK_BOOST_CMAKE TRUE)
 
 ########################################################################
 # Setup Boost and handle some system specific things

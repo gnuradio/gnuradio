@@ -45,10 +45,22 @@ namespace gr {
         d_itemsize(itemsize),
         d_enabled(true)
     {
+      message_port_register_in(pmt::mp("en"));
+      set_msg_handler(pmt::mp("en"),
+                      boost::bind(&copy_impl::handle_enable, this, _1));
     }
 
     copy_impl::~copy_impl()
     {
+    }
+
+    void
+    copy_impl::handle_enable(pmt::pmt_t msg)
+    {
+      if(pmt::is_bool(msg)) {
+        bool en = pmt::to_bool(msg);
+        d_enabled = en;
+      }
     }
 
     void

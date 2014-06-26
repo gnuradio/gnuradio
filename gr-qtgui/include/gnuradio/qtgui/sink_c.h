@@ -47,8 +47,22 @@ namespace gr {
      * spectrogram (waterfall), time domain I&Q, and constellation (I
      * vs. Q) plots. The plots may be turned off by setting the
      * appropriate boolean value in the constructor to False.
+     *
+     * Message Ports:
+     *
+     * - freq (input):
+     *        Receives a PMT pair: (intern("freq"), double(frequency).
+     *        This is used to retune the center frequency of the
+     *        display's x-axis.
+     *
+     * - freq (output):
+     *        Produces a PMT pair with (intern("freq"), double(frequency).
+     *        When a user double-clicks on the display, the frequency
+     *        that the cursor is on is used to retune the x-axis scale
+     *        to recenter onto the clicked frequency. A message
+     *        containing the new frequency is also produced and can be
+     *        used by other blocks to update their frequency setting.
      */
-
     class QTGUI_API sink_c : virtual public block
     {
     public:
@@ -91,6 +105,7 @@ namespace gr {
       virtual void set_frequency_range(const double centerfreq,
 				       const double bandwidth) = 0;
       virtual void set_fft_power_db(double min, double max) = 0;
+      virtual void enable_rf_freq(bool en) = 0;
 
       //void set_time_domain_axis(double min, double max);
       //void set_constellation_axis(double xmin, double xmax,

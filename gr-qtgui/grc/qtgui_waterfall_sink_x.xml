@@ -36,12 +36,15 @@ for i in xrange($nconnections):
     self.$(id).set_color_map(i, colors[i])
     self.$(id).set_line_alpha(i, alphas[i])
 
+self.$(id).set_intensity_range($int_min, $int_max)
+
 self._$(id)_win = sip.wrapinstance(self.$(id).pyqwidget(), Qt.QWidget)
 $(gui_hint()($win))</make>
   <callback>set_frequency_range($fc, $bw)</callback>
   <callback>set_update_time($update_time)</callback>
   <callback>set_title($which, $title)</callback>
   <callback>set_color($which, $color)</callback>
+  <callback>set_intensity_range($int_min, $int_max)</callback>
 
   <param_tab_order>
     <tab>General</tab>
@@ -115,6 +118,23 @@ $(gui_hint()($win))</make>
 		<value>samp_rate</value>
 		<type>real</type>
 	</param>
+
+	<param>
+		<name>Intensity Min</name>
+		<key>int_min</key>
+                <value>-140</value>
+		<type>float</type>
+                <hide>part</hide>
+	</param>
+
+	<param>
+		<name>Intensity Max</name>
+		<key>int_max</key>
+                <value>10</value>
+		<type>float</type>
+                <hide>part</hide>
+	</param>
+
 	<param>
 		<name>Number of Inputs</name>
 		<key>nconnections</key>
@@ -167,6 +187,14 @@ $(gui_hint()($win))</make>
     <option>
       <name>Incandescent</name>
       <key>3</key>
+    </option>
+    <option>
+      <name>Sunset</name>
+      <key>5</key>
+    </option>
+    <option>
+      <name>Cool</name>
+      <key>6</key>
     </option>
     <tab>Config</tab>
   </param>
@@ -384,6 +412,19 @@ $(gui_hint()($win))</make>
     <type>$type</type>
     <nports>$nconnections</nports>
   </sink>
+
+  <sink>
+    <name>freq</name>
+    <type>message</type>
+    <optional>1</optional>
+  </sink>
+
+  <source>
+    <name>freq</name>
+    <type>message</type>
+    <optional>1</optional>
+  </source>
+
   <doc>
 The GUI hint can be used to position the widget within the application. \
 The hint is of the form [tab_id@tab_index]: [row, col, row_span, col_span]. \

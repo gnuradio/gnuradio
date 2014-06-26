@@ -33,6 +33,19 @@
 		<name>in</name>
 		<type>complex</type>
 	</sink>
+
+	<sink>
+		<name>set_constellation</name>
+		<type>message</type>
+                <optional>1</optional>
+	</sink>
+
+	<sink>
+		<name>rotate_phase</name>
+		<type>message</type>
+                <optional>1</optional>
+	</sink>
+
 	<source>
 		<name>out</name>
 		<type>byte</type>

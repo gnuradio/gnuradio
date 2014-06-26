@@ -30,14 +30,21 @@ namespace gr {
 
   class tag_checker
   {
+  private:
+    std::vector<tag_t> d_tags;
+    tag_t d_next_tag;
+    bool d_has_next_tag;
+    unsigned int d_next_tag_index;
+
   public:
-    tag_checker(std::vector<tag_t> &tags)
+    tag_checker(std::vector<tag_t> &tags):
+      d_has_next_tag(false),
+      d_next_tag_index(0)
     {
       d_tags = tags;
       std::sort(d_tags.begin(), d_tags.end(), &gr::tag_t::offset_compare);
       if(d_tags.size() > 0) {
         d_has_next_tag = true;
-        d_next_tag_index = 0;
         d_next_tag = tags[0];
       }
     };
@@ -60,11 +67,6 @@ namespace gr {
       }
     };
 
-  private:
-    std::vector<tag_t> d_tags;
-    tag_t d_next_tag;
-    unsigned int d_next_tag_index;
-    bool d_has_next_tag;
   };
 }
 

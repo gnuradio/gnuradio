@@ -58,9 +58,8 @@ static inline void volk_32f_binary_slicer_32i_a_sse2(int* cVector, const float* 
     const float* aPtr = aVector;
     unsigned int number = 0;
 
-    float binary_float_buffer[4];
     unsigned int quarter_points = num_points / 4;
-    __m128 a_val, res_f, binary_f;
+    __m128 a_val, res_f;
     __m128i res_i, binary_i;
     __m128 zero_val;
     zero_val = _mm_set1_ps (0.0f);
@@ -105,10 +104,9 @@ static inline void volk_32f_binary_slicer_32i_a_avx(int* cVector, const float* a
     const float* aPtr = aVector;
     unsigned int number = 0;
 
-    float binary_float_buffer[4];
     unsigned int quarter_points = num_points / 8;
     __m256 a_val, res_f, binary_f;
-    __m256i res_i, binary_i;
+    __m256i binary_i;
     __m256 zero_val, one_val;
     zero_val = _mm256_set1_ps (0.0f);
     one_val = _mm256_set1_ps (1.0f);
@@ -154,9 +152,8 @@ static inline void volk_32f_binary_slicer_32i_u_sse2(int* cVector, const float* 
     const float* aPtr = aVector;
     unsigned int number = 0;
 
-    float binary_float_buffer[4];
     unsigned int quarter_points = num_points / 4;
-    __m128 a_val, res_f, binary_f;
+    __m128 a_val, res_f;
     __m128i res_i, binary_i;
     __m128 zero_val;
     zero_val = _mm_set1_ps (0.0f);
@@ -201,10 +198,9 @@ static inline void volk_32f_binary_slicer_32i_u_avx(int* cVector, const float* a
     const float* aPtr = aVector;
     unsigned int number = 0;
 
-    float binary_float_buffer[4];
     unsigned int quarter_points = num_points / 8;
     __m256 a_val, res_f, binary_f;
-    __m256i res_i, binary_i;
+    __m256i binary_i;
     __m256 zero_val, one_val;
     zero_val = _mm256_set1_ps (0.0f);
     one_val = _mm256_set1_ps (1.0f);

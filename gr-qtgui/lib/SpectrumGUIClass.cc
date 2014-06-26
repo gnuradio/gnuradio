@@ -93,7 +93,7 @@ SpectrumGUIClass::openSpectrumWindow(QWidget* parent,
       _realTimeDomainPoints = new double[_dataPoints];
       _imagTimeDomainPoints = new double[_dataPoints];
       _fftBuffersCreatedFlag = true;
-      
+
       memset(_fftPoints, 0x0, _dataPoints*sizeof(float));
       memset(_realTimeDomainPoints, 0x0, _dataPoints*sizeof(double));
       memset(_imagTimeDomainPoints, 0x0, _dataPoints*sizeof(double));
@@ -192,9 +192,10 @@ SpectrumGUIClass::setFrequencyRange(const double centerFreq,
   _startFrequency = startFreq;
   _stopFrequency = stopFreq;
 
-  _spectrumDisplayForm->setFrequencyRange(_centerFrequency,
-					  _startFrequency,
-					  _stopFrequency);
+  qApp->postEvent(_spectrumDisplayForm,
+                  new SpectrumFrequencyRangeEvent(_centerFrequency,
+                                                  _startFrequency,
+                                                  _stopFrequency));
 }
 
 double
@@ -470,5 +471,25 @@ SpectrumGUIClass::setUpdateTime(double t)
   _spectrumDisplayForm->setUpdateTime(_updateTime);
 }
 
+void
+SpectrumGUIClass::enableRFFreq(bool en)
+{
+  gr::thread::scoped_lock lock(d_mutex);
+  _spectrumDisplayForm->toggleRFFrequencies(en);
+}
+
+bool
+SpectrumGUIClass::checkClicked()
+{
+  gr::thread::scoped_lock lock(d_mutex);
+  return _spectrumDisplayForm->checkClicked();
+}
+
+float
+SpectrumGUIClass::getClickedFreq()
+{
+  gr::thread::scoped_lock lock(d_mutex);
+  return _spectrumDisplayForm->getClickedFreq();
+}
 
 #endif /* SPECTRUM_GUI_CLASS_CPP */

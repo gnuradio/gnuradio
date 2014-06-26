@@ -41,6 +41,8 @@ public:
   LineColorMenu(int which, QWidget *parent)
     : QMenu("Line Color", parent), d_which(which)
   {
+    d_grp = new QActionGroup(this);
+
     d_act.push_back(new QAction("Blue", this));
     d_act.push_back(new QAction("Red", this));
     d_act.push_back(new QAction("Green", this));
@@ -70,6 +72,8 @@ public:
     QListIterator<QAction*> i(d_act);
     while(i.hasNext()) {
       QAction *a = i.next();
+      a->setCheckable(true);
+      a->setActionGroup(d_grp);
       addAction(a);
     }
   }
@@ -108,6 +112,7 @@ public slots:
   void getDarkGray() { emit whichTrigger(d_which, "darkgray"); }
 
 private:
+  QActionGroup *d_grp;
   QList<QAction *> d_act;
   int d_which;
 };
@@ -124,6 +129,8 @@ public:
   LineWidthMenu(int which, QWidget *parent)
     : QMenu("Line Width", parent), d_which(which)
   {
+    d_grp = new QActionGroup(this);
+
     d_act.push_back(new QAction("1", this));
     d_act.push_back(new QAction("2", this));
     d_act.push_back(new QAction("3", this));
@@ -149,6 +156,8 @@ public:
     QListIterator<QAction*> i(d_act);
     while(i.hasNext()) {
       QAction *a = i.next();
+      a->setCheckable(true);
+      a->setActionGroup(d_grp);
       addAction(a);
     }
   }
@@ -185,6 +194,7 @@ public slots:
   void getTen()   { emit whichTrigger(d_which, 10); }
 
 private:
+  QActionGroup *d_grp;
   QList<QAction *> d_act;
   int d_which;
 };
@@ -201,6 +211,8 @@ public:
   LineStyleMenu(int which, QWidget *parent)
     : QMenu("Line Style", parent), d_which(which)
   {
+    d_grp = new QActionGroup(this);
+
     d_act.push_back(new QAction("None", this));
     d_act.push_back(new QAction("Solid", this));
     d_act.push_back(new QAction("Dash", this));
@@ -218,6 +230,8 @@ public:
     QListIterator<QAction*> i(d_act);
     while(i.hasNext()) {
       QAction *a = i.next();
+      a->setCheckable(true);
+      a->setActionGroup(d_grp);
       addAction(a);
     }
   }
@@ -250,6 +264,7 @@ public slots:
   void getDashDotDot() { emit whichTrigger(d_which, Qt::DashDotDotLine); }
 
 private:
+  QActionGroup *d_grp;
   QList<QAction *> d_act;
   int d_which;
 };
@@ -266,6 +281,8 @@ public:
   LineMarkerMenu(int which, QWidget *parent)
     : QMenu("Line Marker", parent), d_which(which)
   {
+    d_grp = new QActionGroup(this);
+
     d_act.push_back(new QAction("None", this));
     d_act.push_back(new QAction("Circle", this));
     d_act.push_back(new QAction("Rectangle", this));
@@ -301,6 +318,8 @@ public:
     QListIterator<QAction*> i(d_act);
     while(i.hasNext()) {
       QAction *a = i.next();
+      a->setCheckable(true);
+      a->setActionGroup(d_grp);
       addAction(a);
     }
   }
@@ -342,6 +361,7 @@ public slots:
   void getHexagon()   { emit whichTrigger(d_which, QwtSymbol::Hexagon); }
 
 private:
+  QActionGroup *d_grp;
   QList<QAction *> d_act;
   int d_which;
 };
@@ -358,6 +378,8 @@ public:
   MarkerAlphaMenu(int which, QWidget *parent)
     : QMenu("Line Transparency", parent), d_which(which)
   {
+    d_grp = new QActionGroup(this);
+
     d_act.push_back(new QAction("None", this));
     d_act.push_back(new QAction("Low", this));
     d_act.push_back(new QAction("Medium", this));
@@ -373,6 +395,8 @@ public:
     QListIterator<QAction*> i(d_act);
     while(i.hasNext()) {
       QAction *a = i.next();
+      a->setCheckable(true);
+      a->setActionGroup(d_grp);
       addAction(a);
     }
   }
@@ -404,6 +428,7 @@ public slots:
   void getOff()    { emit whichTrigger(d_which, 0); }
 
 private:
+  QActionGroup *d_grp;
   QList<QAction *> d_act;
   int d_which;
 };
@@ -607,6 +632,8 @@ public:
   FFTSizeMenu(QWidget *parent)
     : QMenu("FFT Size", parent)
   {
+    d_grp = new QActionGroup(this);
+
     d_act.push_back(new QAction("32", this));
     d_act.push_back(new QAction("64", this));
     d_act.push_back(new QAction("128", this));
@@ -646,6 +673,8 @@ public:
     QListIterator<QAction*> i(d_act);
     while(i.hasNext()) {
       QAction *a = i.next();
+      a->setCheckable(true);
+      a->setActionGroup(d_grp);
       addAction(a);
     }
   }
@@ -723,6 +752,8 @@ public:
   FFTAverageMenu(QWidget *parent)
     : QMenu("FFT Average", parent)
   {
+    d_grp = new QActionGroup(this);
+
     d_off = 1.0;
     d_high = 0.05;
     d_medium = 0.1;
@@ -754,6 +785,8 @@ public:
     QListIterator<QAction*> i(d_act);
     while(i.hasNext()) {
       QAction *a = i.next();
+      a->setCheckable(true);
+      a->setActionGroup(d_grp);
       addAction(a);
     }
   }
@@ -995,10 +1028,14 @@ public:
   ColorMapMenu(int which, QWidget *parent)
     : QMenu("Color Map", parent), d_which(which)
   {
+    d_grp = new QActionGroup(this);
+
     d_act.push_back(new QAction("Multi-Color", this));
     d_act.push_back(new QAction("White Hot", this));
     d_act.push_back(new QAction("Black Hot", this));
     d_act.push_back(new QAction("Incandescent", this));
+    d_act.push_back(new QAction("Sunset", this));
+    d_act.push_back(new QAction("Cool", this));
     d_act.push_back(new QAction("Other", this));
     //d_act.push_back(new OtherDualAction("Min Intensity: ", "Max Intensity: ", this));
 
@@ -1006,11 +1043,15 @@ public:
     connect(d_act[1], SIGNAL(triggered()), this, SLOT(getWhiteHot()));
     connect(d_act[2], SIGNAL(triggered()), this, SLOT(getBlackHot()));
     connect(d_act[3], SIGNAL(triggered()), this, SLOT(getIncandescent()));
-    connect(d_act[4], SIGNAL(triggered()), this, SLOT(getOther()));
+    connect(d_act[4], SIGNAL(triggered()), this, SLOT(getSunset()));
+    connect(d_act[5], SIGNAL(triggered()), this, SLOT(getCool()));
+    connect(d_act[6], SIGNAL(triggered()), this, SLOT(getOther()));
 
      QListIterator<QAction*> i(d_act);
      while(i.hasNext()) {
        QAction *a = i.next();
+       a->setCheckable(true);
+       a->setActionGroup(d_grp);
        addAction(a);
      }
 
@@ -1044,6 +1085,8 @@ public:
   void getWhiteHot() { emit whichTrigger(d_which, INTENSITY_COLOR_MAP_TYPE_WHITE_HOT); }
   void getBlackHot() { emit whichTrigger(d_which, INTENSITY_COLOR_MAP_TYPE_BLACK_HOT); }
   void getIncandescent() { emit whichTrigger(d_which, INTENSITY_COLOR_MAP_TYPE_INCANDESCENT); }
+  void getSunset() { emit whichTrigger(d_which, INTENSITY_COLOR_MAP_TYPE_SUNSET); }
+  void getCool() { emit whichTrigger(d_which, INTENSITY_COLOR_MAP_TYPE_COOL); }
   //void getOther(d_which, const QString &min_str, const QString &max_str)
   void getOther()
   {
@@ -1058,6 +1101,7 @@ public:
   }
 
 private:
+  QActionGroup *d_grp;
   QList<QAction *> d_act;
   OtherDualAction *d_other;
   QColor d_max_value, d_min_value;
@@ -1360,6 +1404,8 @@ public:
   NumberColorMapMenu(int which, QWidget *parent)
     : QMenu("Color Map", parent), d_which(which)
   {
+    d_grp = new QActionGroup(this);
+
     d_act.push_back(new QAction("Black", this));
     d_act.push_back(new QAction("Blue-Red", this));
     d_act.push_back(new QAction("White Hot", this));
@@ -1377,6 +1423,8 @@ public:
      QListIterator<QAction*> i(d_act);
      while(i.hasNext()) {
        QAction *a = i.next();
+       a->setCheckable(true);
+       a->setActionGroup(d_grp);
        addAction(a);
      }
 
@@ -1423,6 +1471,7 @@ public:
   }
 
 private:
+  QActionGroup *d_grp;
   QList<QAction *> d_act;
   QColor d_max_value, d_min_value;
   int d_which;

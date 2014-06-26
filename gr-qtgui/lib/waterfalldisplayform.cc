@@ -46,6 +46,9 @@ WaterfallDisplayForm::WaterfallDisplayForm(int nplots, QWidget* parent)
   d_min_val =  1000;
   d_max_val = -1000;
 
+  d_clicked = false;
+  d_clicked_freq = 0;
+
   // We don't use the normal menus that are part of the displayform.
   // Clear them out to get rid of their resources.
   for(int i = 0; i < nplots; i++) {
@@ -136,6 +139,10 @@ WaterfallDisplayForm::customEvent( QEvent * e)
   if(e->type() == WaterfallUpdateEvent::Type()) {
     newData(e);
   }
+  else if(e->type() == SpectrumFrequencyRangeEventType) {
+    SetFreqEvent *fevent = (SetFreqEvent*)e;
+    setFrequencyRange(fevent->getCenterFrequency(), fevent->getBandwidth());
+  }
 }
 
 int
@@ -217,14 +224,14 @@ WaterfallDisplayForm::setFrequencyRange(const double centerfreq,
   std::string strunits[4] = {"Hz", "kHz", "MHz", "GHz"};
   double units10 = floor(log10(bandwidth));
   double units3  = std::max(floor(units10 / 3.0), 0.0);
-  double units = pow(10, (units10-fmod(units10, 3.0)));
+  d_units = pow(10, (units10-fmod(units10, 3.0)));
   int iunit = static_cast<int>(units3);
 
   d_center_freq = centerfreq;
   d_samp_rate = bandwidth;
 
   getPlot()->setFrequencyRange(centerfreq, bandwidth,
-			       units, strunits[iunit]);
+			       d_units, strunits[iunit]);
   getPlot()->replot();
 }
 
@@ -268,4 +275,31 @@ void
 WaterfallDisplayForm::clearData()
 {
   getPlot()->clearData();
+}
+
+void
+WaterfallDisplayForm::onPlotPointSelected(const QPointF p)
+{
+  d_clicked = true;
+  d_clicked_freq = d_units*p.x();
+
+  setFrequencyRange(d_clicked_freq, d_samp_rate);
+}
+
+bool
+WaterfallDisplayForm::checkClicked()
+{
+  if(d_clicked) {
+    d_clicked = false;
+    return true;
+  }
+  else {
+    return false;
+  }
+}
+
+float
+WaterfallDisplayForm::getClickedFreq() const
+{
+  return d_clicked_freq;
 }
