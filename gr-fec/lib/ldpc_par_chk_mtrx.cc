@@ -32,10 +32,9 @@ namespace gr {
   namespace fec {
     namespace code {
 
-      ldpc_par_chk_mtrx::ldpc_par_chk_mtrx(std::string *file, 
-                                           unsigned int gap) 
+      ldpc_par_chk_mtrx::ldpc_par_chk_mtrx(const std::string &filename, unsigned int gap) 
       {
-        read_matrix_from_file(file);
+        read_matrix_from_file(&filename);
         d_gap = gap;
         set_parameters_for_encoding();
 
@@ -116,21 +115,20 @@ namespace gr {
 
 
       void
-      ldpc_par_chk_mtrx::read_matrix_from_file(std::string *file)
+      ldpc_par_chk_mtrx::read_matrix_from_file(const std::string *alist_file)
       {
         /* This function reads in an alist file and creates the
           corresponding parity check matrix. The format of alist
           files is desribed at:
           http://www.inference.phy.cam.ac.uk/mackay/codes/alist.html
         */
-        std::string alist_filename(*file);
         std::ifstream inputFile;
 
         // Open the alist file (needs a C-string)
-        inputFile.open(alist_filename.c_str());
+        inputFile.open((*alist_file).c_str());
         if (!inputFile) {
           std::cout << "There was a problem opening file "
-                    << alist_filename << " for reading.\n";
+                    << alist_file << " for reading.\n";
           exit(1);
         }
 

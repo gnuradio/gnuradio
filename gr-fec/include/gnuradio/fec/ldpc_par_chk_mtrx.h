@@ -35,6 +35,7 @@ namespace gr {
     namespace code {
       class FEC_API ldpc_par_chk_mtrx
       {
+      private:
         // Codeword length n (also the number of columns in the H
         // matrix)
         unsigned int d_n;
@@ -55,12 +56,15 @@ namespace gr {
         gsl_matrix *d_T_inverse_ptr;
         gsl_matrix *d_phi_inverse_ptr;
 
+        // Read the matrix from a file in alist format
+        void read_matrix_from_file(const std::string *);
+        // Set the submatrix variables needed for encoding
+        void set_parameters_for_encoding();
+        
       public:
-        ldpc_par_chk_mtrx(std::string *, unsigned int gap);
-
+        ldpc_par_chk_mtrx(const std::string &filename, unsigned int gap);
         // Default constructor, should not be used
         ldpc_par_chk_mtrx();
-
         // Get the codeword length n
         unsigned int n();
         // Get the information word length k
@@ -73,10 +77,6 @@ namespace gr {
         const gsl_matrix *E();
         const gsl_matrix *T_inverse();
         const gsl_matrix *phi_inverse();
-        // Read the matrix from a file in alist format
-        void read_matrix_from_file(std::string *);
-        // Set the submatrix variables needed for encoding
-        void set_parameters_for_encoding();
         // Subtract matrices using mod2 operation
         gsl_matrix *subtract_matrices_mod2(gsl_matrix *,
                                            gsl_matrix *);
