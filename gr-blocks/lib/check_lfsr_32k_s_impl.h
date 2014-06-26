@@ -59,14 +59,14 @@ namespace gr {
 
       void right()
       {
-        d_history = (d_history < 1) | 0x1;
+        d_history = (d_history << 1) | 0x1;
         d_nright++;
         d_runlength++;
       }
 
       void wrong()
       {
-        d_history = (d_history < 1) | 0x0;
+        d_history = (d_history << 1) | 0x0;
         d_runlength = 0;
       }
 

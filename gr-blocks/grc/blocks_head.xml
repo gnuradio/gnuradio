@@ -9,6 +9,7 @@
 	<key>blocks_head</key>
 	<import>from gnuradio import blocks</import>
 	<make>blocks.head($type.size*$vlen, $num_items)</make>
+	<callback>set_length($num_items)</callback>
 	<param>
 		<name>Type</name>
 		<key>type</key>
