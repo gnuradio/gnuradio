@@ -73,7 +73,7 @@ if(MSVC)
         unset(BOOST_REQUIRED_COMPONENTS) #empty components list for static link
     endif(BOOST_ALL_DYN_LINK)
 endif(MSVC)
-include(GrBoost)
+include(VolkBoost)
 
 if(NOT Boost_FOUND)
     message(FATAL_ERROR "VOLK Requires boost to build")
