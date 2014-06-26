@@ -88,6 +88,22 @@ class test_file_source_sink(gr_unittest.TestCase):
         result_data = snk2.data()
         self.assertFloatTuplesAlmostEqual(expected_result, result_data)
 
+    def test_file_source_can_seek_after_open(self):
+        src_data = range(1000)
+
+        filename = "tmp.32f"
+        src = blocks.vector_source_f(src_data)
+        snk = blocks.file_sink(gr.sizeof_float, filename)
+        snk.set_unbuffered(True)
+
+        self.tb.connect(src, snk)
+        self.tb.run()
+
+        source = blocks.file_source(gr.sizeof_float, filename)
+        self.assertTrue(source.seek(0, os.SEEK_SET))
+
+        os.remove(filename)
+
 if __name__ == '__main__':
     gr_unittest.run(test_file_source_sink, "test_file_source_sink.xml")
 

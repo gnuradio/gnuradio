@@ -67,6 +67,7 @@ namespace gr {
 	d_updated(false)
     {
       open(filename, repeat);
+      do_update();
     }
 
     file_source_impl::~file_source_impl()

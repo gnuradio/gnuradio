@@ -122,7 +122,12 @@ CHECK_CXX_SOURCE_COMPILES("
 )
 GR_ADD_COND_DEF(HAVE_VALLOC)
 
-ADD_DEFINITIONS(-DALIGNED_MALLOC=0)
+if(APPLE)
+    # Apple's malloc has been 16 byte aligned since at least 10.4
+    ADD_DEFINITIONS(-DALIGNED_MALLOC=16)
+else()
+    ADD_DEFINITIONS(-DALIGNED_MALLOC=0)
+endif()
 
 ########################################################################
 SET(CMAKE_REQUIRED_LIBRARIES -lpthread)
