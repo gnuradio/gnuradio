@@ -146,6 +146,20 @@ class tag_sink(gr.sync_block):
 
         return num_input_items
 
+class tag_sink_win(gr.sync_block):
+    def __init__(self):
+        gr.sync_block.__init__(self, name = "tag sink",
+                               in_sig = [numpy.float32],
+                               out_sig = None)
+        self.key = None
+
+    def work(self, input_items, output_items):
+        num_input_items = len(input_items[0])
+        tags = self.get_tags_in_window(0, 0, num_input_items)
+        for tag in tags:
+            self.key = pmt.symbol_to_string(tag.key)
+        return num_input_items
+
 class fc32_to_f32_2(gr.sync_block):
     def __init__(self):
         gr.sync_block.__init__(
@@ -177,7 +191,7 @@ class vector_to_stream(gr.interp_block):
             for j in xrange(self.block_size):
                 output_items[0][n] = input_items[0][i][j]
                 n += 1
-      
+
         return len(output_items[0])
 
 class test_block_gateway(gr_unittest.TestCase):
@@ -242,6 +256,15 @@ class test_block_gateway(gr_unittest.TestCase):
         tb.run()
         self.assertEqual(sink.key, "example_key")
 
+    def test_tags_win(self):
+        src = tag_source()
+        sink = tag_sink_win()
+        head = blocks.head(gr.sizeof_float, 50000) #should be enough items to get a tag through
+        tb = gr.top_block()
+        tb.connect(src, head, sink)
+        tb.run()
+        self.assertEqual(sink.key, "example_key")
+
     def test_fc32_to_f32_2(self):
         tb = gr.top_block()
         src = blocks.vector_source_c([1+2j, 3+4j, 5+6j, 7+8j, 9+10j], False)
@@ -254,4 +277,3 @@ class test_block_gateway(gr_unittest.TestCase):
 
 if __name__ == '__main__':
     gr_unittest.run(test_block_gateway, "test_block_gateway.xml")
-
