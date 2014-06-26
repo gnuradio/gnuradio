@@ -92,6 +92,10 @@ FreqDisplayForm::customEvent( QEvent * e)
   if(e->type() == FreqUpdateEvent::Type()) {
     newData(e);
   }
+  else if(e->type() == SpectrumFrequencyRangeEventType) {
+    SetFreqEvent *fevent = (SetFreqEvent*)e;
+    setFrequencyRange(fevent->getCenterFrequency(), fevent->getBandwidth());
+  }
 }
 
 int
@@ -154,6 +158,8 @@ FreqDisplayForm::setFrequencyRange(const double centerfreq,
 
   d_center_freq = centerfreq;
   d_samp_rate = bandwidth;
+
+  std::cerr << "FDISP NEW FREQ: " << centerfreq << std::endl;
 
   getPlot()->setFrequencyRange(centerfreq, bandwidth,
 			       d_units, strunits[iunit]);

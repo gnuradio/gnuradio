@@ -31,6 +31,9 @@ SpectrumDisplayForm::SpectrumDisplayForm(QWidget* parent)
 {
   setupUi(this);
 
+  d_clicked = false;
+  d_clicked_freq = 0;
+
   _systemSpecifiedFlag = false;
   _intValidator = new QIntValidator(this);
   _intValidator->setBottom(0);

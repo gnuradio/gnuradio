@@ -192,9 +192,10 @@ SpectrumGUIClass::setFrequencyRange(const double centerFreq,
   _startFrequency = startFreq;
   _stopFrequency = stopFreq;
 
-  _spectrumDisplayForm->setFrequencyRange(_centerFrequency,
-					  _startFrequency,
-					  _stopFrequency);
+  qApp->postEvent(_spectrumDisplayForm,
+                  new SpectrumFrequencyRangeEvent(_centerFrequency,
+                                                  _startFrequency,
+                                                  _stopFrequency));
 }
 
 double

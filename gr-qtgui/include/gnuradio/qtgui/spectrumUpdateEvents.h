@@ -176,6 +176,20 @@ private:
 };
 
 
+class SetFreqEvent:public QEvent
+{
+public:
+  SetFreqEvent(const double, const double);
+  ~SetFreqEvent();
+  double getCenterFrequency() const;
+  double getBandwidth() const;
+
+private:
+  double _centerFrequency;
+  double _bandwidth;
+};
+
+
 /********************************************************************/
 
 

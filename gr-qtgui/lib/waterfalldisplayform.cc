@@ -46,6 +46,9 @@ WaterfallDisplayForm::WaterfallDisplayForm(int nplots, QWidget* parent)
   d_min_val =  1000;
   d_max_val = -1000;
 
+  d_clicked = false;
+  d_clicked_freq = 0;
+
   // We don't use the normal menus that are part of the displayform.
   // Clear them out to get rid of their resources.
   for(int i = 0; i < nplots; i++) {
@@ -135,6 +138,10 @@ WaterfallDisplayForm::customEvent( QEvent * e)
 {
   if(e->type() == WaterfallUpdateEvent::Type()) {
     newData(e);
+  }
+  else if(e->type() == SpectrumFrequencyRangeEventType) {
+    SetFreqEvent *fevent = (SetFreqEvent*)e;
+    setFrequencyRange(fevent->getCenterFrequency(), fevent->getBandwidth());
   }
 }
 

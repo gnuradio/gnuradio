@@ -52,6 +52,21 @@ namespace gr {
      * would love to see them. Otherwise, to display multiple signals
      * here, it's probably best to sum the signals together and
      * connect that here.
+     *
+     * Message Ports:
+     *
+     * - freq (input):
+     *        Receives a PMT pair: (intern("freq"), double(frequency).
+     *        This is used to retune the center frequency of the
+     *        display's x-axis.
+     *
+     * - freq (output):
+     *        Produces a PMT pair with (intern("freq"), double(frequency).
+     *        When a user double-clicks on the display, the frequency
+     *        that the cursor is on is used to retune the x-axis scale
+     *        to recenter onto the clicked frequency. A message
+     *        containing the new frequency is also produced and can be
+     *        used by other blocks to update their frequency setting.
      */
     class QTGUI_API waterfall_sink_f : virtual public sync_block
     {

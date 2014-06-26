@@ -551,6 +551,12 @@ $(gui_hint()($win))</make>
     <nports>$nconnections</nports>
   </sink>
 
+  <sink>
+    <name>freq</name>
+    <type>message</type>
+    <optional>1</optional>
+  </sink>
+
   <source>
     <name>freq</name>
     <type>message</type>

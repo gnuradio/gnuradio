@@ -174,12 +174,18 @@ Qt.QObject.connect(self._$(id)_win, Qt.SIGNAL("plotPointSelected(QPointF, int)")
 		<type>raw</type>
 		<hide>part</hide>
 	</param>
+
 	<sink>
 		<name>in</name>
 		<type>$type</type>
 		<nports>$num_inputs</nports>
 	</sink>
 
+  <sink>
+    <name>freq</name>
+    <type>message</type>
+    <optional>1</optional>
+  </sink>
 
   <source>
     <name>freq</name>

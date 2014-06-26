@@ -296,6 +296,32 @@ FreqUpdateEvent::getNumDataPoints() const
 }
 
 
+
+SetFreqEvent::SetFreqEvent(const double centerFreq,
+                           const double bandwidth)
+  : QEvent(QEvent::Type(SpectrumFrequencyRangeEventType))
+{
+  _centerFrequency = centerFreq;
+  _bandwidth = bandwidth;
+}
+
+SetFreqEvent::~SetFreqEvent()
+{
+}
+
+double
+SetFreqEvent::getCenterFrequency() const
+{
+  return _centerFrequency;
+}
+
+double
+SetFreqEvent::getBandwidth() const
+{
+  return _bandwidth;
+}
+
+
 /***************************************************************************/
 
 

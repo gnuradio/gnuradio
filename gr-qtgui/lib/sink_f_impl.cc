@@ -316,7 +316,22 @@ namespace gr {
     {
       if(d_main_gui->checkClicked()) {
         d_center_freq = d_main_gui->getClickedFreq();
-        message_port_pub(pmt::mp("freq"), pmt::from_double(d_center_freq));
+        double norm_freq = d_center_freq / d_bandwidth;
+        message_port_pub(pmt::mp("freq"),
+                         pmt::cons(pmt::mp("freq"),
+                                   pmt::from_double(norm_freq)));
+      }
+    }
+
+    void
+    sink_f_impl::handle_set_freq(pmt::pmt_t msg)
+    {
+      if(pmt::is_pair(msg)) {
+        pmt::pmt_t x = pmt::cdr(msg);
+        if(pmt::is_real(x)) {
+          double freq = pmt::to_double(x);
+          set_frequency_range(freq*d_bandwidth, d_bandwidth);
+        }
       }
     }
 
