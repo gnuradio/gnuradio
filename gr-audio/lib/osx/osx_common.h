@@ -35,9 +35,9 @@ namespace osx {
 #define check_error_and_throw(err,what,throw_str)			\
   if(err) {                                                             \
     OSStatus error = static_cast<OSStatus>(err);                        \
-    char err_str[5];                                                    \
-    *((UInt32*)err_str) = error;					\
-    err_str[4] = 0;							\
+    char err_str[sizeof(OSStatus)+1];					\
+    memcpy((void*)(&err_str), (void*)(&error), sizeof(OSStatus));	\
+    err_str[sizeof(OSStatus)] = 0;					\
     GR_LOG_FATAL(d_logger, boost::format(what));			\
     GR_LOG_FATAL(d_logger, boost::format("  Error# %u ('%s')")		\
 		 % error % err_str);					\
@@ -49,9 +49,9 @@ namespace osx {
 #define check_error(err,what)                                           \
   if(err) {                                                             \
     OSStatus error = static_cast<OSStatus>(err);                        \
-    char err_str[5];                                                    \
-    *((UInt32*)err_str) = error;					\
-    err_str[4] = 0;							\
+    char err_str[sizeof(OSStatus)+1];					\
+    memcpy((void*)(&err_str), (void*)(&error), sizeof(OSStatus));	\
+    err_str[sizeof(OSStatus)] = 0;					\
     GR_LOG_WARN(d_logger, boost::format(what));				\
     GR_LOG_WARN(d_logger, boost::format("  Error# %u ('%s')")		\
 		   % error % err_str);					\
