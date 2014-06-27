@@ -262,7 +262,7 @@ class FlowGraph(_FlowGraph, _GUIFlowGraph):
             #load variables
             for variable in self.get_variables():
                 try:
-                    e = eval(variable.get_param('value').to_code(), n, n)
+                    e = eval(variable.get_var_value(), n, n)
                     n[variable.get_id()] = e
                 except: pass
             #make namespace public
