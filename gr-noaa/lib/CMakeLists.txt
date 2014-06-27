@@ -67,3 +67,16 @@ list(APPEND noaa_libs
 add_library(gnuradio-noaa SHARED ${noaa_sources})
 target_link_libraries(gnuradio-noaa ${noaa_libs})
 GR_LIBRARY_FOO(gnuradio-noaa RUNTIME_COMPONENT "noaa_runtime" DEVEL_COMPONENT "noaa_devel")
+
+if(ENABLE_STATIC_LIBS)
+  add_library(gnuradio-noaa_static STATIC ${noaa_sources})
+
+  if(NOT WIN32)
+    set_target_properties(gnuradio-noaa_static
+      PROPERTIES OUTPUT_NAME gnuradio-noaa)
+  endif(NOT WIN32)
+
+  install(TARGETS gnuradio-noaa_static
+    ARCHIVE DESTINATION lib${LIB_SUFFIX} COMPONENT "noaa_devel"   # .lib file
+    )
+endif(ENABLE_STATIC_LIBS)

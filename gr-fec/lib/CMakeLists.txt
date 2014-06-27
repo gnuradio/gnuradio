@@ -100,3 +100,16 @@ list(APPEND gnuradio_fec_libs
 add_library(gnuradio-fec SHARED ${gnuradio_fec_sources})
 target_link_libraries(gnuradio-fec ${gnuradio_fec_libs})
 GR_LIBRARY_FOO(gnuradio-fec RUNTIME_COMPONENT "fec_runtime" DEVEL_COMPONENT "fec_devel")
+
+if(ENABLE_STATIC_LIBS)
+  add_library(gnuradio-fec_static STATIC ${gnuradio_fec_sources})
+
+  if(NOT WIN32)
+    set_target_properties(gnuradio-fec_static
+      PROPERTIES OUTPUT_NAME gnuradio-fec)
+  endif(NOT WIN32)
+
+  install(TARGETS gnuradio-fec_static
+    ARCHIVE DESTINATION lib${LIB_SUFFIX} COMPONENT "fec_devel"   # .lib file
+    )
+endif(ENABLE_STATIC_LIBS)

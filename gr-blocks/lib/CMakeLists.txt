@@ -303,6 +303,21 @@ add_dependencies(gnuradio-blocks blocks_generated_includes)
 target_link_libraries(gnuradio-blocks ${blocks_libs})
 GR_LIBRARY_FOO(gnuradio-blocks RUNTIME_COMPONENT "blocks_runtime" DEVEL_COMPONENT "blocks_devel")
 
+if(ENABLE_STATIC_LIBS)
+  add_library(gnuradio-blocks_static STATIC ${gr_blocks_sources})
+
+  add_dependencies(gnuradio-blocks_static blocks_generated_includes)
+
+  if(NOT WIN32)
+    set_target_properties(gnuradio-blocks_static
+      PROPERTIES OUTPUT_NAME gnuradio-blocks)
+  endif(NOT WIN32)
+
+  install(TARGETS gnuradio-blocks_static
+    ARCHIVE DESTINATION lib${LIB_SUFFIX} COMPONENT "blocks_devel"   # .lib file
+    )
+endif(ENABLE_STATIC_LIBS)
+
 ########################################################################
 # QA C++ Code for gr-blocks
 ########################################################################

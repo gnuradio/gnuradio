@@ -67,5 +67,19 @@ ENDIF(MSVC)
 add_library(gnuradio-video-sdl SHARED ${video_sdl_sources})
 target_link_libraries(gnuradio-video-sdl ${video_sdl_libs})
 GR_LIBRARY_FOO(gnuradio-video-sdl RUNTIME_COMPONENT "video_sdl_runtime" DEVEL_COMPONENT "video_sdl_devel")
-add_dependencies(gnuradio-video-sdl 
-  gnuradio-runtime)
+add_dependencies(gnuradio-video-sdl gnuradio-runtime)
+
+if(ENABLE_STATIC_LIBS)
+  add_library(gnuradio-video-sdl_static STATIC ${video_sdl_sources})
+
+  add_dependencies(gnuradio-video-sdl_static gnuradio-runtime_static)
+
+  if(NOT WIN32)
+    set_target_properties(gnuradio-video-sdl_static
+      PROPERTIES OUTPUT_NAME gnuradio-video-sdl)
+  endif(NOT WIN32)
+
+  install(TARGETS gnuradio-video-sdl_static
+    ARCHIVE DESTINATION lib${LIB_SUFFIX} COMPONENT "video_sdl_devel"   # .lib file
+    )
+endif(ENABLE_STATIC_LIBS)

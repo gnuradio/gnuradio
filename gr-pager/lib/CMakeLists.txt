@@ -75,3 +75,16 @@ list(APPEND pager_libs
 add_library(gnuradio-pager SHARED ${pager_sources})
 target_link_libraries(gnuradio-pager ${pager_libs})
 GR_LIBRARY_FOO(gnuradio-pager RUNTIME_COMPONENT "pager_runtime" DEVEL_COMPONENT "pager_devel")
+
+if(ENABLE_STATIC_LIBS)
+  add_library(gnuradio-pager_static STATIC ${pager_sources})
+
+  if(NOT WIN32)
+    set_target_properties(gnuradio-pager_static
+      PROPERTIES OUTPUT_NAME gnuradio-pager)
+  endif(NOT WIN32)
+
+  install(TARGETS gnuradio-pager_static
+    ARCHIVE DESTINATION lib${LIB_SUFFIX} COMPONENT "pager_devel"   # .lib file
+    )
+endif(ENABLE_STATIC_LIBS)
