@@ -21,6 +21,10 @@ try: import pmt_swig as pmt
 except: import pmt
 import numpy
 
+# SWIG isn't taking in the #define PMT_NIL;
+# getting the singleton locally.
+PMT_NIL = pmt.get_PMT_NIL()
+
 #define missing
 def pmt_to_tuple(p):
     elems = list()
@@ -41,7 +45,7 @@ def pmt_to_vector(p):
     return v
 
 def pmt_from_vector(p):
-    v = pmt.make_vector(len(p), pmt.PMT_NIL)
+    v = pmt.make_vector(len(p), PMT_NIL)
     for i, elem in enumerate(p):
         pmt.vector_set(v, i, python_to_pmt(elem))
     return v
@@ -99,7 +103,7 @@ def uvector_to_numpy(uvector):
 		raise ValueError("unsupported uvector data type for conversion to numpy array %s"%(uvector))
 
 type_mappings = ( #python type, check pmt type, to python, from python
-    (None, pmt.is_null, lambda x: None, lambda x: pmt.PMT_NIL),
+    (None, pmt.is_null, lambda x: None, lambda x: PMT_NIL),
     (bool, pmt.is_bool, pmt.to_bool, pmt.from_bool),
     (str, pmt.is_symbol, pmt.symbol_to_string, pmt.string_to_symbol),
     (unicode, lambda x: False, None, lambda x: pmt.string_to_symbol(x.encode('utf-8'))),
@@ -116,7 +120,7 @@ type_mappings = ( #python type, check pmt type, to python, from python
 
 def pmt_to_python(p):
     for python_type, pmt_check, to_python, from_python in type_mappings:
-        if pmt_check(p): 
+        if pmt_check(p):
             try:
                 return to_python(p)
             except:
@@ -129,4 +133,3 @@ def python_to_pmt(p):
             if p == None: return from_python(p)
         elif isinstance(p, python_type): return from_python(p)
     raise ValueError("can't convert %s type to pmt (%s)"%(type(p),p))
-
