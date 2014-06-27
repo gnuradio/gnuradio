@@ -24,7 +24,6 @@ class gr::prefs
 {
 public:
   static gr::prefs *singleton();
-  static void set_singleton(gr::prefs *p);
 
   virtual ~prefs();
 
@@ -60,4 +59,3 @@ public:
                           const std::string &option,
                           double val);
 };
-
