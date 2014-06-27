@@ -50,7 +50,7 @@ namespace gr {
         int n = 0;
         for(int i = 0; i < nbytes; i++) {
           unsigned int t = bytes[i];
-          for(unsigned int j = d_k - 1; j >= 0; j--)
+          for(int j = d_k - 1; j >= 0; j--)
             bits[n++] = (t >> j) & 0x01;
         }
       }
