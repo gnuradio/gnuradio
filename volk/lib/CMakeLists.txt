@@ -205,6 +205,22 @@ if(${HAVE_AVX_CVTPI32_PS})
     add_definitions(-DHAVE_AVX_CVTPI32_PS)
 endif()
 
+########################################################################
+# if the CPU is not x86, eliminate all Intel SIMD
+########################################################################
+
+if(NOT CPU_IS_x86)
+    OVERRULE_ARCH(3dnow "Architecture is not x86 or x86_64")
+    OVERRULE_ARCH(mmx "Architecture is not x86 or x86_64")
+    OVERRULE_ARCH(sse "Architecture is not x86 or x86_64")
+    OVERRULE_ARCH(sse2 "Architecture is not x86 or x86_64")
+    OVERRULE_ARCH(sse3 "Architecture is not x86 or x86_64")
+    OVERRULE_ARCH(ssse3 "Architecture is not x86 or x86_64")
+    OVERRULE_ARCH(sse4_a "Architecture is not x86 or x86_64")
+    OVERRULE_ARCH(sse4_1 "Architecture is not x86 or x86_64")
+    OVERRULE_ARCH(sse4_2 "Architecture is not x86 or x86_64")
+    OVERRULE_ARCH(avx "Architecture is not x86 or x86_64")
+endif(NOT CPU_IS_x86)
 
 ########################################################################
 # implement overruling in the ORC case,
