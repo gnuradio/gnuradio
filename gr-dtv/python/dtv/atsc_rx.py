@@ -36,7 +36,7 @@ class atsc_rx(gr.hier_block2):
         pll = dtv.atsc_fpll(output_rate)
 
         # Remove pilot tone now at DC
-        dcr = filter.dc_blocker_ff(1024)
+        dcr = filter.dc_blocker_ff(4096)
 
         # Normalize signal to proper constellation amplitude
         agc = analog.agc_ff(1e-5, 4.0)

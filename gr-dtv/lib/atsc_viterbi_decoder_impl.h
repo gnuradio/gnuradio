@@ -57,8 +57,7 @@ namespace gr {
       static const int INPUT_SIZE = (ATSC_DATA_SEGMENT_LENGTH * 12);
 
       single_viterbi_t viterbi[NCODERS];
-      fifo_t           *fifo[NCODERS];
-      bool             debug;
+      fifo_t *fifo[NCODERS];
 
     public:
       atsc_viterbi_decoder_impl();

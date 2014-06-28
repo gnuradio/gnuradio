@@ -28,39 +28,31 @@ namespace gr {
 
     /* was_sent is a table of what symbol we get given what bit pair
        was sent and what state we where in [state][pair] */
-    const int atsc_single_viterbi::was_sent[8][4] = {
-      {0,2,0,2},
-      {0,2,0,2},
-      {1,3,1,3},
-      {1,3,1,3},
-      {4,6,4,6},
-      {4,6,4,6},
-      {5,7,5,7},
-      {5,7,5,7}
+    const int atsc_single_viterbi::was_sent[4][4] = {
+      {0,2,4,6},
+      {0,2,4,6},
+      {1,3,5,7},
+      {1,3,5,7},
     };
 
     /* transition_table is a table of what state we were in
        given current state and bit pair sent [state][pair] */
-    const int atsc_single_viterbi::transition_table[8][4] = {
-      {0,2,4,6},
-      {2,0,6,4},
-      {1,3,5,7},
-      {3,1,7,5},
-      {4,6,0,2},
-      {6,4,2,0},
-      {5,7,1,3},
-      {7,5,3,1}
+    const int atsc_single_viterbi::transition_table[4][4] = {
+      {0,2,0,2},
+      {2,0,2,0},
+      {1,3,1,3},
+      {3,1,3,1},
     };
 
     void
     atsc_single_viterbi::reset()
     {
       for (unsigned int i = 0; i<2; i++)
-        for (unsigned int j = 0; j<8; j++) {
+        for (unsigned int j = 0; j<4; j++) {
           path_metrics[i][j] = 0;
           traceback[i][j] = 0;
         }
-
+      post_coder_state = 0;
       phase = 0;
     }
 
@@ -81,8 +73,8 @@ namespace gr {
                              (float)fabs( input - 1 ), (float)fabs( input - 3 ),
                              (float)fabs( input - 5 ), (float)fabs( input - 7 ) };
 
-     /* We start by iterating over all possible states */
-      for (unsigned int state = 0; state < 8; state++) {
+      /* We start by iterating over all possible states */
+      for (unsigned int state = 0; state < 4; state++) {
         /* Next we find the most probable path from the previous
            states to the state we are testing, we only need to look at
            the 4 paths that can be taken given the 2-bit input */
@@ -113,12 +105,16 @@ namespace gr {
       }
 
       if(best_state_metric > 10000) {
-        for(unsigned int state = 0; state < 8; state++)
+        for(unsigned int state = 0; state < 4; state++)
           path_metrics[phase^1][state] -= best_state_metric;
       }
       phase ^= 1;
 
-      return (0x3 & traceback[phase][best_state]);
+      int y2 = (0x2 & traceback[phase][best_state]) >> 1;
+      int x2 = y2 ^ post_coder_state;
+      post_coder_state = y2;
+
+      return ( x2 << 1 ) | (0x1 & traceback[phase][best_state]);
     }
 
   } /* namespace dtv */

@@ -28,6 +28,7 @@
 #include "atsc_viterbi_decoder_impl.h"
 #include "atsc_types.h"
 #include <atsc_viterbi_mux.cc> // machine generated
+#include <emmintrin.h>
 
 namespace gr {
   namespace dtv {
@@ -45,7 +46,6 @@ namespace gr {
                    io_signature::make(1, 1, sizeof(atsc_mpeg_packet_rs_encoded)))
     {
       set_output_multiple(NCODERS);
-      debug = true;
 
       /*
        * These fifo's handle the alignment problem caused by the
@@ -58,7 +58,7 @@ namespace gr {
        */
 
       // the -4 is for the 4 sync symbols
-      int fifo_size = ATSC_DATA_SEGMENT_LENGTH - 4 - viterbi[0].delay ();
+      int fifo_size = ATSC_DATA_SEGMENT_LENGTH - 4 - viterbi[0].delay();
       for (int i = 0; i < NCODERS; i++)
         fifo[i] = new fifo_t(fifo_size);
 
@@ -74,10 +74,8 @@ namespace gr {
     void
     atsc_viterbi_decoder_impl::reset()
     {
-      for (int i = 0; i < NCODERS; i++)	{
-        viterbi[i].reset();
+      for (int i = 0; i < NCODERS; i++)
         fifo[i]->reset();
-      }
     }
 
     int
@@ -93,32 +91,34 @@ namespace gr {
       // 12, so we should always get a mod 12 numbered first packet
       assert(noutput_items % NCODERS == 0);
 
-      int encoder;
       int dbwhere;
       int dbindex;
       int shift;
-      unsigned char dibit;
-      float symbol;
+      float symbols[NCODERS][enco_which_max];
+      unsigned char dibits[NCODERS][enco_which_max];
 
       unsigned char out_copy[OUTPUT_SIZE];
 
       for (int i = 0; i < noutput_items; i += NCODERS) {
+        /* Build a continuous symbol buffer for each encoder */
+        for (unsigned int encoder = 0; encoder < NCODERS; encoder++)
+          for (unsigned int k = 0; k < enco_which_max; k++)
+            symbols[encoder][k] = in[i + (enco_which_syms[encoder][k]/832)].data[enco_which_syms[encoder][k] % 832];
+
         /* Now run each of the 12 Viterbi decoders over their subset of
            the input symbols */
-        for (encoder = 0; encoder < NCODERS; encoder++)	{
-          fifo_t	*dibit_fifo = fifo[encoder];
+        for (unsigned int encoder = 0; encoder < NCODERS; encoder++)
+          for (unsigned int k = 0; k < enco_which_max; k++)
+            dibits[encoder][k] = viterbi[encoder].decode(symbols[encoder][k]);
 
-          /* Feed all the incoming symbols into one decoder;
-             pump them into the relevant dibits. */
+        /* Move dibits into their location in the output buffer */
+        for (unsigned int encoder = 0; encoder < NCODERS; encoder++) {
           for (unsigned int k = 0; k < enco_which_max; k++) {
-            symbol = in[i + (enco_which_syms[encoder][k]/832)].data[enco_which_syms[encoder][k] % 832];
-            dibit = dibit_fifo->stuff(viterbi[encoder].decode(symbol));
-
             /* Store the dibit into the output data segment */
             dbwhere = enco_which_dibits[encoder][k];
             dbindex = dbwhere >> 3;
             shift = dbwhere & 0x7;
-            out_copy[dbindex] = (out_copy[dbindex] & ~(0x03 << shift)) | (dibit << shift);
+            out_copy[dbindex] = (out_copy[dbindex] & ~(0x03 << shift)) | (fifo[encoder]->stuff(dibits[encoder][k]) << shift);
           } /* Symbols fed into one encoder */
         } /* Encoders */
 

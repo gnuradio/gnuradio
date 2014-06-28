@@ -42,15 +42,16 @@ namespace gr {
       void reset ();
 
       //! internal delay of decoder
-      int delay () { return TB_LEN - 1; }
+      static int delay () { return TB_LEN - 1; }
 
     protected:
-      static const int transition_table[8][4];
-      static const int was_sent[8][4];
+      static const int transition_table[4][4];
+      static const int was_sent[4][4];
 
-      float path_metrics [2][8];
-      unsigned long long traceback [2][8];
+      float path_metrics [2][4];
+      unsigned long long traceback [2][4];
       unsigned char phase;
+      int post_coder_state;
     };
 
   } /* namespace dtv */

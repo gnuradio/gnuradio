@@ -59,7 +59,6 @@ namespace gr {
       nerrors_corrrected_count = 0;
       bad_packet_count = 0;
       total_packets = 0;
-      reset_counter = 0;
     }
 
     int atsc_rs_decoder_impl::decode (atsc_mpeg_packet_no_sync &out, const atsc_mpeg_packet_rs_encoded &in)
@@ -107,23 +106,20 @@ namespace gr {
           bad_packet_count++;
         else
           nerrors_corrrected_count += nerrors_corrrected;
-      }
 
-      total_packets += noutput_items;
-      reset_counter++;
+	total_packets++;
+        if (total_packets > 1000) {
+          // FIXME: convert to logger
+          std::cout << "Error rate: "
+                    << (float)nerrors_corrrected_count/total_packets
+                    << "\tPacket error rate: "
+                    << (float)bad_packet_count/total_packets
+                    << std::endl;
 
-      if (reset_counter > 100) {
-        // FIXME: convert to logger
-        std::cout << "Error rate: "
-                  << (float)nerrors_corrrected_count/total_packets
-                  << "\tPacket error rate: "
-                  << (float)bad_packet_count/total_packets
-                  << std::endl;
-
-        nerrors_corrrected_count = 0;
-        bad_packet_count = 0;
-        total_packets = 0;
-        reset_counter = 0;
+          nerrors_corrrected_count = 0;
+          bad_packet_count = 0;
+          total_packets = 0;
+        }
       }
 
       return noutput_items;
