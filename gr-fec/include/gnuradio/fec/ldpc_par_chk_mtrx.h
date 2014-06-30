@@ -49,10 +49,11 @@ namespace gr {
         gsl_matrix *d_H_ptr;
         // These are the submatrices found during preprocessing
         // which are used for encoding. 
-        gsl_matrix *d_A_ptr;
-        gsl_matrix *d_B_ptr;
-        gsl_matrix *d_D_ptr;
-        gsl_matrix *d_E_ptr;
+        gsl_matrix_view d_A_view;
+        gsl_matrix_view d_B_view;
+        gsl_matrix_view d_D_view;
+        gsl_matrix_view d_E_view;
+        gsl_matrix d_inv_phi;
         gsl_matrix *d_T_inverse_ptr;
         gsl_matrix *d_phi_inverse_ptr;
 
@@ -78,13 +79,14 @@ namespace gr {
         const gsl_matrix *T_inverse();
         const gsl_matrix *phi_inverse();
         // Subtract matrices using mod2 operation
-        gsl_matrix *subtract_matrices_mod2(gsl_matrix *,
-                                           gsl_matrix *);
+        gsl_matrix *add_matrices_mod2(const gsl_matrix *,
+                                      const gsl_matrix *);
         // Perform matrix multiplication using mod 2 operations
-        gsl_matrix *mult_matrices_mod2(gsl_matrix *, gsl_matrix *);
+        gsl_matrix *mult_matrices_mod2(const gsl_matrix *,
+                                       const gsl_matrix *);
         // Find the inverse of a square matrix using modulo 2
         // operations
-        gsl_matrix *calc_inverse_mod2(gsl_matrix *);
+        gsl_matrix *calc_inverse_mod2(const gsl_matrix *);
         // Destructor
         ~ldpc_par_chk_mtrx();
       };

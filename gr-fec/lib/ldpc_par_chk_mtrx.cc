@@ -74,28 +74,28 @@ namespace gr {
       const gsl_matrix*
       ldpc_par_chk_mtrx::A()
       {
-        const gsl_matrix *A_ptr = d_A_ptr;
+        const gsl_matrix *A_ptr = &d_A_view.matrix;
         return A_ptr; 
       }
 
       const gsl_matrix*
       ldpc_par_chk_mtrx::B()
       {
-        const gsl_matrix *B_ptr = d_B_ptr;
+        const gsl_matrix *B_ptr = &d_B_view.matrix;
         return B_ptr; 
       }
 
       const gsl_matrix*
       ldpc_par_chk_mtrx::D()
       {
-        const gsl_matrix *D_ptr = d_D_ptr;
+        const gsl_matrix *D_ptr = &d_D_view.matrix;
         return D_ptr; 
       }
 
       const gsl_matrix*
       ldpc_par_chk_mtrx::E()
       {
-        const gsl_matrix *E_ptr = d_E_ptr;
+        const gsl_matrix *E_ptr = &d_E_view.matrix;
         return E_ptr; 
       }
 
@@ -208,36 +208,24 @@ namespace gr {
         }
 
         // E submatrix
-        gsl_matrix_view E_view = gsl_matrix_submatrix(d_H_ptr,
-                                                      t,
-                                                      0,
-                                                      d_gap,
-                                                      d_n-d_k-d_gap);
-        d_E_ptr = &E_view.matrix;
+        d_E_view = gsl_matrix_submatrix(d_H_ptr, t, 0, d_gap,
+                                        d_n-d_k-d_gap);
 
         // A submatrix
-        gsl_matrix_view A_view = gsl_matrix_submatrix(d_H_ptr,
-                                                      0,
-                                                      t,
-                                                      t,
-                                                      d_gap);
-        d_A_ptr = &A_view.matrix;
+        d_A_view = gsl_matrix_submatrix(d_H_ptr, 0, t, t, d_gap);
 
         // C submatrix (used to find phi but not during encoding)
-        gsl_matrix_view C_view = gsl_matrix_submatrix(d_H_ptr,
-                                                      t,
-                                                      t,
-                                                      d_gap,
-                                                      d_gap);
+        gsl_matrix_view C_view = gsl_matrix_submatrix(d_H_ptr, t, t,
+                                                      d_gap, d_gap);
 
         // These are just temporary matrices used to find phi.
-        gsl_matrix *temp1 = mult_matrices_mod2(d_E_ptr,
+        gsl_matrix *temp1 = mult_matrices_mod2(&d_E_view.matrix,
                                                d_T_inverse_ptr);
-        gsl_matrix *temp2 = mult_matrices_mod2(temp1, d_A_ptr);
+        gsl_matrix *temp2 = mult_matrices_mod2(temp1, 
+                                               &d_A_view.matrix);
 
         // Solve for phi.
-        gsl_matrix *phi = subtract_matrices_mod2(&C_view.matrix,
-                                                 temp2);
+        gsl_matrix *phi = add_matrices_mod2(&C_view.matrix, temp2);
 
         // If phi has at least one nonzero entry, try for inverse.
         if (gsl_matrix_max(phi)) {
@@ -245,6 +233,7 @@ namespace gr {
             gsl_matrix *inverse_phi = calc_inverse_mod2(phi);
               
             // At this point, an inverse was found. 
+            d_inv_phi = *inverse_phi;
             d_phi_inverse_ptr = inverse_phi;
 
           }
@@ -259,27 +248,19 @@ namespace gr {
         }
 
         // B submatrix
-        gsl_matrix_view B_view = gsl_matrix_submatrix(d_H_ptr,
-                                                      0,
-                                                      t + d_gap,
-                                                      t,
-                                                      d_n-d_gap-t);
-        d_B_ptr = &B_view.matrix;
+        d_B_view = gsl_matrix_submatrix(d_H_ptr, 0, t + d_gap, t,
+                                        d_n-d_gap-t);
 
         // D submatrix
-        gsl_matrix_view D_view = gsl_matrix_submatrix(d_H_ptr,
-                                                      t,
-                                                      t + d_gap,
-                                                      d_gap,
-                                                      d_n-d_gap-t);
-        d_D_ptr = &D_view.matrix;
+        d_D_view = gsl_matrix_submatrix(d_H_ptr, t, t + d_gap, d_gap,
+                                        d_n-d_gap-t);
       }
 
       gsl_matrix*
-      ldpc_par_chk_mtrx::subtract_matrices_mod2(gsl_matrix *matrix1,
-                                                gsl_matrix *matrix2)
+      ldpc_par_chk_mtrx::add_matrices_mod2(const gsl_matrix *matrix1, const gsl_matrix *matrix2)
       {
-        // This function returns ((matrix1 - matrix2) % 2). 
+        // This function returns ((matrix1 + matrix2) % 2). 
+        // (same thing as ((matrix1 - matrix2) % 2)
 
         // Verify that matrix sizes are appropriate
         unsigned int matrix1_rows = (*matrix1).size1;
@@ -288,12 +269,12 @@ namespace gr {
         unsigned int matrix2_cols = (*matrix2).size2;
 
         if (matrix1_rows != matrix2_rows) {
-          std::cout << "Error in subtract_matrices_mod2. Matrices do"
+          std::cout << "Error in add_matrices_mod2. Matrices do"
                     << " not have the same number of rows.\n";
           exit(1);
         }
         if (matrix1_cols != matrix2_cols) {
-          std::cout << "Error in subtract_matrices_mod2. Matrices do"
+          std::cout << "Error in add_matrices_mod2. Matrices do"
                     << " not have the same number of columns.\n";
           exit(1);
         }
@@ -306,7 +287,7 @@ namespace gr {
         gsl_matrix_memcpy(result, matrix1);
 
         // Do subtraction. This is not mod 2 yet.
-        gsl_matrix_sub(result, matrix2);
+        gsl_matrix_add(result, matrix2);
 
         // Take care of mod 2 manually
         unsigned int row_index, col_index;
@@ -322,8 +303,7 @@ namespace gr {
       }
 
       gsl_matrix*
-      ldpc_par_chk_mtrx::mult_matrices_mod2(gsl_matrix *matrix1,
-                                            gsl_matrix *matrix2) 
+      ldpc_par_chk_mtrx::mult_matrices_mod2(const gsl_matrix *matrix1, const gsl_matrix *matrix2) 
       {
         // Verify that matrix sizes are appropriate
         unsigned int a = (*matrix1).size1;  // # of rows
@@ -331,11 +311,12 @@ namespace gr {
         unsigned int c = (*matrix2).size1;  // # of rows
         unsigned int d = (*matrix2).size2;  // # of columns
         if (b != c) {
-          std::cout << "Error in mult_matrices_mod2. Matrix "
-                    << "dimensions do not allow for matrix "
-                    << "multiplication operation:\nmatrix1 has " 
-                    << a << " columns" << " and matrix2 has " << b
-                    << " rows.\n";
+          std::cout << "Error in "
+                    << "ldpc_par_chk_mtrx::mult_matrices_mod2."
+                    << " Matrix dimensions do not allow for matrix "
+                    <<   "multiplication operation:\nmatrix1 is " 
+                    << a << " x " << b << ", and matrix2 is " << c
+                    << " x " << d << ".\n";
           exit(1);
         }
 
@@ -361,7 +342,7 @@ namespace gr {
       }
 
       gsl_matrix*
-      ldpc_par_chk_mtrx::calc_inverse_mod2(gsl_matrix *original_matrix)
+      ldpc_par_chk_mtrx::calc_inverse_mod2(const gsl_matrix *original_matrix)
       {
 
         // Let n represent the size of the n x n square matrix
@@ -451,9 +432,10 @@ namespace gr {
 
       ldpc_par_chk_mtrx::~ldpc_par_chk_mtrx()
       {
-        // Call the gsl_matrix_free function to free the allocated
-        // parity check matrix.
+        // Call the gsl_matrix_free function to free memory.
         gsl_matrix_free (d_H_ptr);
+        gsl_matrix_free (d_T_inverse_ptr);
+        gsl_matrix_free (d_phi_inverse_ptr);
       }
     } /* namespace code */
   } /* namespace fec */
