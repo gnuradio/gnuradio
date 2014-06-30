@@ -56,3 +56,16 @@ list(APPEND comedi_libs
 add_library(gnuradio-comedi SHARED ${comedi_sources})
 target_link_libraries(gnuradio-comedi ${comedi_libs})
 GR_LIBRARY_FOO(gnuradio-comedi RUNTIME_COMPONENT "comedi_runtime" DEVEL_COMPONENT "comedi_devel")
+
+if(ENABLE_STATIC_LIBS)
+  add_library(gnuradio-comedi_static STATIC ${comedi_sources})
+
+  if(NOT WIN32)
+    set_target_properties(gnuradio-comedi_static
+      PROPERTIES OUTPUT_NAME gnuradio-comedi)
+  endif(NOT WIN32)
+
+  install(TARGETS gnuradio-comedi_static
+    ARCHIVE DESTINATION lib${LIB_SUFFIX} COMPONENT "comedi_devel"   # .lib file
+    )
+endif(ENABLE_STATIC_LIBS)

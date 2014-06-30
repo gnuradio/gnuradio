@@ -185,3 +185,16 @@ target_link_libraries(gnuradio-audio ${gr_audio_libs})
 GR_LIBRARY_FOO(gnuradio-audio RUNTIME_COMPONENT "audio_runtime" DEVEL_COMPONENT "audio_devel")
 
 install(FILES ${gr_audio_confs} DESTINATION ${GR_PREFSDIR} COMPONENT "audio_runtime")
+
+if(ENABLE_STATIC_LIBS)
+  add_library(gnuradio-audio_static STATIC ${gr_audio_sources})
+
+  if(NOT WIN32)
+    set_target_properties(gnuradio-audio_static
+      PROPERTIES OUTPUT_NAME gnuradio-audio)
+  endif(NOT WIN32)
+
+  install(TARGETS gnuradio-audio_static
+    ARCHIVE DESTINATION lib${LIB_SUFFIX} COMPONENT "audio_devel"   # .lib file
+    )
+endif(ENABLE_STATIC_LIBS)

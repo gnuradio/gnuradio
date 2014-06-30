@@ -46,7 +46,6 @@ namespace gr {
   {
   public:
     static prefs *singleton();
-    static void set_singleton(prefs *p);
 
     prefs();
     virtual ~prefs();

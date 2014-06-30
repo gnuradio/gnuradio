@@ -198,6 +198,21 @@ add_dependencies(gnuradio-runtime
   pmt_generated runtime_generated_includes
 )
 
+if(ENABLE_STATIC_LIBS)
+  add_library(gnuradio-runtime_static STATIC ${gnuradio_runtime_sources})
+
+  add_dependencies(gnuradio-runtime_static gnuradio_runtime)
+
+  if(NOT WIN32)
+    set_target_properties(gnuradio-runtime_static
+      PROPERTIES OUTPUT_NAME gnuradio-runtime)
+  endif(NOT WIN32)
+
+  install(TARGETS gnuradio-runtime_static
+    ARCHIVE DESTINATION lib${LIB_SUFFIX} COMPONENT "runtime_devel"   # .lib file
+    )
+endif(ENABLE_STATIC_LIBS)
+
 ########################################################################
 # Setup tests
 ########################################################################
@@ -239,4 +254,3 @@ target_link_libraries(gr_runtime_test test-gnuradio-runtime)
 GR_ADD_TEST(gr-runtime-test gr_runtime_test)
 
 endif(ENABLE_TESTING)
-

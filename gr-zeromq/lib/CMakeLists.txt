@@ -69,3 +69,16 @@ list(APPEND zeromq_libs
 add_library(gnuradio-zeromq SHARED ${zeromq_sources})
 target_link_libraries(gnuradio-zeromq ${zeromq_libs})
 GR_LIBRARY_FOO(gnuradio-zeromq RUNTIME_COMPONENT "zeromq_runtime" DEVEL_COMPONENT "zeromq_devel")
+
+if(ENABLE_STATIC_LIBS)
+  add_library(gnuradio-zeromq_static STATIC ${zeromq_sources})
+
+  if(NOT WIN32)
+    set_target_properties(gnuradio-zeromq_static
+      PROPERTIES OUTPUT_NAME gnuradio-zeromq)
+  endif(NOT WIN32)
+
+  install(TARGETS gnuradio-zeromq_static
+    ARCHIVE DESTINATION lib${LIB_SUFFIX} COMPONENT "zeromq_devel"   # .lib file
+    )
+endif(ENABLE_STATIC_LIBS)

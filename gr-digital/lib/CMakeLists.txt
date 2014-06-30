@@ -217,3 +217,23 @@ add_dependencies(
     gnuradio-analog
     gnuradio-blocks
 )
+
+if(ENABLE_STATIC_LIBS)
+  add_library(gnuradio-digital_static STATIC ${digital_sources})
+
+  add_dependencies(gnuradio-digital_static
+    digital_generated_includes
+    gnuradio-runtime_static
+    gnuradio-filter_static
+    gnuradio-analog_static
+    gnuradio-blocks_static)
+
+  if(NOT WIN32)
+    set_target_properties(gnuradio-digital_static
+      PROPERTIES OUTPUT_NAME gnuradio-digital)
+  endif(NOT WIN32)
+
+  install(TARGETS gnuradio-digital_static
+    ARCHIVE DESTINATION lib${LIB_SUFFIX} COMPONENT "digital_devel"   # .lib file
+    )
+endif(ENABLE_STATIC_LIBS)

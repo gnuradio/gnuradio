@@ -36,7 +36,6 @@ class test_keep_one_in_n(gr_unittest.TestCase):
         src = blocks.vector_source_b(src_data);
         op = blocks.keep_one_in_n(gr.sizeof_char, 5)
         dst = blocks.vector_sink_b()
-        print "HERE"
         self.tb.connect(src, op, dst)
         self.tb.run()
         self.assertEqual(dst.data(), expected_data)
