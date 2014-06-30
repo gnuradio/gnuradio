@@ -91,6 +91,7 @@ list(APPEND gnuradio_fec_sources
   ldpc_par_chk_mtrx_impl.cc
   ldpc_par_chk_mtrx.cc
   ldpc_bit_flip_decoder_impl.cc
+  ldpc_R_U_encoder_impl.cc
 )
 
 #Add Windows DLL resource file if using MSVC
