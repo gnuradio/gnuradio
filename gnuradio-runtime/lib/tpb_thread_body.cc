@@ -36,7 +36,7 @@ namespace gr {
     : d_exec(block, max_noutput_items)
   {
     //std::cerr << "tpb_thread_body: " << block << std::endl;
-    
+
     thread::set_thread_name(pthread_self(), boost::str(boost::format("%s%d") % block->name() % block->unique_id()));
 
     block_detail *d = block->detail().get();
@@ -61,13 +61,13 @@ namespace gr {
     GR_CONFIG_LOGGER(config_file);
     if(log_file.size() > 0) {
       if(log_file == "stdout") {
-        GR_LOG_ADD_CONSOLE_APPENDER(LOG, "cout","gr::log :%p: %c{1} - %m%n");
+        GR_LOG_SET_CONSOLE_APPENDER(LOG, "cout","gr::log :%p: %c{1} - %m%n");
       }
       else if(log_file == "stderr") {
-        GR_LOG_ADD_CONSOLE_APPENDER(LOG, "cerr","gr::log :%p: %c{1} - %m%n");
+        GR_LOG_SET_CONSOLE_APPENDER(LOG, "cerr","gr::log :%p: %c{1} - %m%n");
       }
       else {
-        GR_LOG_ADD_FILE_APPENDER(LOG, log_file , true,"%r :%p: %c{1} - %m%n");
+        GR_LOG_SET_FILE_APPENDER(LOG, log_file , true,"%r :%p: %c{1} - %m%n");
       }
     }
 #endif /* HAVE_LOG4CPP */
@@ -83,7 +83,7 @@ namespace gr {
     if(block->thread_priority() > 0) {
       gr::thread::set_thread_priority(d->thread, block->thread_priority());
     }
-    
+
     // make sure our block isnt finished
     block->clear_finished();
 
@@ -107,7 +107,7 @@ namespace gr {
           if(block->nmsgs(i.first) > max_nmsgs){
             GR_LOG_WARN(LOG,"asynchronous message buffer overflowing, dropping message");
             msg = block->delete_head_nowait(i.first);
-            }
+          }
         }
       }
 
@@ -154,19 +154,19 @@ namespace gr {
           // handle all pending messages
           BOOST_FOREACH(basic_block::msg_queue_map_t::value_type &i, block->msg_queue) {
             if(block->has_msg_handler(i.first)) {
-                while((msg = block->delete_head_nowait(i.first))) {
-                  guard.unlock();			// release lock while processing msg
-                  block->dispatch_msg(i.first, msg);
-                  guard.lock();
-                }
+              while((msg = block->delete_head_nowait(i.first))) {
+                guard.unlock();			// release lock while processing msg
+                block->dispatch_msg(i.first, msg);
+                guard.lock();
+              }
             }
             else {
-                // leave msg in queue if no handler is defined
-                // start dropping if we have too many
-                if(block->nmsgs(i.first) > max_nmsgs){
-                    GR_LOG_WARN(LOG,"asynchronous message buffer overflowing, dropping message");
-                    msg = block->delete_head_nowait(i.first);
-                }
+              // leave msg in queue if no handler is defined
+              // start dropping if we have too many
+              if(block->nmsgs(i.first) > max_nmsgs){
+                GR_LOG_WARN(LOG,"asynchronous message buffer overflowing, dropping message");
+                msg = block->delete_head_nowait(i.first);
+              }
             }
           }
 	  if (d->done()) {
@@ -197,11 +197,11 @@ namespace gr {
                 // leave msg in queue if no handler is defined
                 // start dropping if we have too many
                 if(block->nmsgs(i.first) > max_nmsgs){
-                    GR_LOG_WARN(LOG,"asynchronous message buffer overflowing, dropping message");
-                    msg = block->delete_head_nowait(i.first);
-                    }
+                  GR_LOG_WARN(LOG,"asynchronous message buffer overflowing, dropping message");
+                  msg = block->delete_head_nowait(i.first);
                 }
             }
+          }
         }
       }
       break;
