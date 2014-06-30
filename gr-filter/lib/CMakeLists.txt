@@ -185,6 +185,24 @@ add_dependencies(gnuradio-filter
   filter_generated_includes filter_generated_swigs
   gnuradio-runtime gnuradio-fft)
 
+if(ENABLE_STATIC_LIBS)
+  add_library(gnuradio-filter_static STATIC ${filter_sources})
+
+  add_dependencies(gnuradio-filter_static
+    filter_generated_includes
+    gnuradio-runtime_static gnuradio-fft_static)
+
+  if(NOT WIN32)
+    set_target_properties(gnuradio-filter_static
+      PROPERTIES OUTPUT_NAME gnuradio-filter)
+  endif(NOT WIN32)
+
+  install(TARGETS gnuradio-filter_static
+    ARCHIVE DESTINATION lib${LIB_SUFFIX} COMPONENT "filter_devel"   # .lib file
+    )
+endif(ENABLE_STATIC_LIBS)
+
+
 ########################################################################
 # QA C++ Code for gr-filter
 ########################################################################

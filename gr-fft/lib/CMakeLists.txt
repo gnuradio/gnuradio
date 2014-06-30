@@ -83,3 +83,16 @@ endif()
 add_library(gnuradio-fft SHARED ${fft_sources})
 target_link_libraries(gnuradio-fft ${fft_libs})
 GR_LIBRARY_FOO(gnuradio-fft RUNTIME_COMPONENT "fft_runtime" DEVEL_COMPONENT "fft_devel")
+
+if(ENABLE_STATIC_LIBS)
+  add_library(gnuradio-fft_static STATIC ${fft_sources})
+
+  if(NOT WIN32)
+    set_target_properties(gnuradio-fft_static
+      PROPERTIES OUTPUT_NAME gnuradio-fft)
+  endif(NOT WIN32)
+
+  install(TARGETS gnuradio-fft_static
+    ARCHIVE DESTINATION lib${LIB_SUFFIX} COMPONENT "fft_devel"   # .lib file
+    )
+endif(ENABLE_STATIC_LIBS)

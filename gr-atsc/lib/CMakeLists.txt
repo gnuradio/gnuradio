@@ -127,6 +127,19 @@ add_library(gnuradio-atsc SHARED ${gr_atsc_sources})
 target_link_libraries(gnuradio-atsc ${atsc_libs})
 GR_LIBRARY_FOO(gnuradio-atsc RUNTIME_COMPONENT "atsc_runtime" DEVEL_COMPONENT "atsc_devel")
 
+if(ENABLE_STATIC_LIBS)
+  add_library(gnuradio-atsc_static STATIC ${gr_atsc_sources})
+
+  if(NOT WIN32)
+    set_target_properties(gnuradio-atsc_static
+      PROPERTIES OUTPUT_NAME gnuradio-atsc)
+  endif(NOT WIN32)
+
+  install(TARGETS gnuradio-atsc_static
+    ARCHIVE DESTINATION lib${LIB_SUFFIX} COMPONENT "atsc_devel"   # .lib file
+    )
+endif(ENABLE_STATIC_LIBS)
+
 ########################################################################
 # Build and register unit test
 ########################################################################

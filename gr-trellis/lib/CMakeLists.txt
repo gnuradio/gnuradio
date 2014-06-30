@@ -68,7 +68,7 @@ macro(expand_cc root)
     list(APPEND expanded_files_cc ${CMAKE_CURRENT_BINARY_DIR}/${name}.cc)
     list(APPEND expanded_files_h  ${CMAKE_CURRENT_BINARY_DIR}/${name}.h)
   endforeach(sig)
-  
+
   #create a command to generate the source files
   add_custom_command(
     OUTPUT ${expanded_files_cc}
@@ -86,15 +86,15 @@ macro(expand_cc root)
     ${CMAKE_CURRENT_BINARY_DIR}/generate_helper.py
     ${root} ${root}.h.t ${ARGN}
   )
-  
+
   #make source files depends on headers to force generation
   set_source_files_properties(${expanded_files_cc}
     PROPERTIES OBJECT_DEPENDS "${expanded_files_h}"
   )
-  
+
   #install rules for the generated cc files
-  list(APPEND generated_sources ${expanded_files_cc})  
-  list(APPEND generated_headers ${expanded_files_h})  
+  list(APPEND generated_sources ${expanded_files_cc})
+  list(APPEND generated_headers ${expanded_files_h})
 endmacro(expand_cc)
 
 ########################################################################
@@ -154,3 +154,21 @@ GR_LIBRARY_FOO(gnuradio-trellis RUNTIME_COMPONENT "trellis_runtime" DEVEL_COMPON
 add_dependencies(gnuradio-trellis
   trellis_generated_includes trellis_generated_swigs
   gnuradio-runtime gnuradio-digital)
+
+if(ENABLE_STATIC_LIBS)
+  add_library(gnuradio-trellis_static STATIC ${trellis_sources})
+
+  add_dependencies(gnuradio-trellis_static
+    trellis_generated_includes trellis_generated_swigs
+    gnuradio-runtime_static gnuradio-digital_static
+    )
+
+  if(NOT WIN32)
+    set_target_properties(gnuradio-trellis_static
+      PROPERTIES OUTPUT_NAME gnuradio-trellis)
+  endif(NOT WIN32)
+
+  install(TARGETS gnuradio-trellis_static
+    ARCHIVE DESTINATION lib${LIB_SUFFIX} COMPONENT "trellis_devel"   # .lib file
+    )
+endif(ENABLE_STATIC_LIBS)

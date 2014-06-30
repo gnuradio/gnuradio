@@ -249,7 +249,8 @@ PMT_API std::complex<double> to_complex(pmt_t z);
  * ------------------------------------------------------------------------
  */
 
-extern PMT_API const pmt_t PMT_NIL;	//< the empty list
+#define PMT_NIL get_PMT_NIL()
+PMT_API pmt_t get_PMT_NIL();
 
 //! Return true if \p x is the empty list, otherwise return false.
 PMT_API bool is_null(const pmt_t& x);

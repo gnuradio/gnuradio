@@ -472,6 +472,19 @@ install(TARGETS volk
     RUNTIME DESTINATION bin              COMPONENT "volk_runtime" # .dll file
 )
 
+if(ENABLE_STATIC_LIBS)
+  add_library(volk_static STATIC ${volk_sources})
+
+  if(NOT WIN32)
+    set_target_properties(volk_static
+      PROPERTIES OUTPUT_NAME volk)
+  endif(NOT WIN32)
+
+  install(TARGETS volk_static
+    ARCHIVE DESTINATION lib${LIB_SUFFIX} COMPONENT "volk_devel"   # .lib file
+    )
+endif(ENABLE_STATIC_LIBS)
+
 ########################################################################
 # Build the QA test application
 ########################################################################
@@ -495,4 +508,3 @@ if(Boost_FOUND)
     add_test(qa_volk_test_all test_all)
 
 endif(Boost_FOUND)
-
