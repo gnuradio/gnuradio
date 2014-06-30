@@ -102,6 +102,7 @@ install(FILES
     depuncture_bb.h
     ldpc_par_chk_mtrx.h
     ldpc_bit_flip_decoder.h
+    ldpc_R_U_encoder.h
     DESTINATION ${GR_INCLUDE_DIR}/gnuradio/fec
     COMPONENT "fec_devel"
 )
