@@ -55,6 +55,15 @@ FreqDisplayForm::FreqDisplayForm(int nplots, QWidget* parent)
   connect(d_winmenu, SIGNAL(whichTrigger(gr::filter::firdes::win_type)),
 	  this, SLOT(setFFTWindowType(const gr::filter::firdes::win_type)));
 
+  d_clearmax_act = new QAction("Clear Max", this);
+  d_menu->addAction(d_clearmax_act);
+  connect(d_clearmax_act, SIGNAL(triggered()),
+	  this, SLOT(clearMaxHold()));
+  d_clearmin_act = new QAction("Clear Min", this);
+  d_menu->addAction(d_clearmin_act);
+  connect(d_clearmin_act, SIGNAL(triggered()),
+	  this, SLOT(clearMinHold()));
+
   Reset();
 
   connect(d_display_plot, SIGNAL(plotPointSelected(const QPointF)),
@@ -159,8 +168,6 @@ FreqDisplayForm::setFrequencyRange(const double centerfreq,
   d_center_freq = centerfreq;
   d_samp_rate = bandwidth;
 
-  std::cerr << "FDISP NEW FREQ: " << centerfreq << std::endl;
-
   getPlot()->setFrequencyRange(centerfreq, bandwidth,
 			       d_units, strunits[iunit]);
 }
@@ -184,6 +191,18 @@ FreqDisplayForm::autoScale(bool en)
   d_autoscale_act->setChecked(en);
   getPlot()->setAutoScale(d_autoscale_state);
   getPlot()->replot();
+}
+
+void
+FreqDisplayForm::clearMaxHold()
+{
+  getPlot()->clearMaxData();
+}
+
+void
+FreqDisplayForm::clearMinHold()
+{
+  getPlot()->clearMinData();
 }
 
 void

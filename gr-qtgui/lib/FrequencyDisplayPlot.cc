@@ -133,7 +133,7 @@ FrequencyDisplayPlot::FrequencyDisplayPlot(int nplots, QWidget* parent)
   }
 
   // Create min/max plotter curves
-  d_min_fft_plot_curve = new QwtPlotCurve("Minimum Power");
+  d_min_fft_plot_curve = new QwtPlotCurve("Min Hold");
   d_min_fft_plot_curve->attach(this);
   const QColor default_min_fft_color = Qt::magenta;
   setMinFFTColor(default_min_fft_color);
@@ -145,7 +145,7 @@ FrequencyDisplayPlot::FrequencyDisplayPlot(int nplots, QWidget* parent)
   d_min_fft_plot_curve->setVisible(false);
   d_min_fft_plot_curve->setZ(0);
 
-  d_max_fft_plot_curve = new QwtPlotCurve("Maximum Power");
+  d_max_fft_plot_curve = new QwtPlotCurve("Max Hold");
   d_max_fft_plot_curve->attach(this);
   QColor default_max_fft_color = Qt::darkYellow;
   setMaxFFTColor(default_max_fft_color);

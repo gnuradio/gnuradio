@@ -359,6 +359,18 @@ namespace gr {
     }
 
     void
+    freq_sink_f_impl::clear_max_hold()
+    {
+      d_main_gui->clearMaxHold();
+    }
+
+    void
+    freq_sink_f_impl::clear_min_hold()
+    {
+      d_main_gui->clearMinHold();
+    }
+
+    void
     freq_sink_f_impl::reset()
     {
       d_index = 0;
