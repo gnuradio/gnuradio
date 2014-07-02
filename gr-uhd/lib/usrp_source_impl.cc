@@ -20,6 +20,7 @@
  * Boston, MA 02110-1301, USA.
  */
 
+#include "usrp_common.h"
 #include "usrp_source_impl.h"
 #include "gr_uhd_common.h"
 #include <gnuradio/io_signature.h>
@@ -80,6 +81,12 @@ namespace gr {
       str << name() << unique_id();
       _id = pmt::string_to_symbol(str.str());
       _dev = ::uhd::usrp::multi_usrp::make(device_addr);
+
+      message_port_register_in(pmt::mp("command"));
+      set_msg_handler(
+	  pmt::mp("command"),
+	  boost::bind(&usrp_source_impl::msg_handler_command, this, _1)
+      );
     }
 
     usrp_source_impl::~usrp_source_impl()
@@ -668,6 +675,38 @@ namespace gr {
       }
 
       return num_samps;
+    }
+
+
+    /************** External interfaces (RPC + Message passing) ********************/
+    void usrp_source_impl::msg_handler_command(pmt::pmt_t msg)
+    {
+      std::string command;
+      pmt::pmt_t cmd_value;
+      int chan = -1;
+      if (not _unpack_chan_command(command, cmd_value, chan, msg)) {
+	GR_LOG_ALERT(d_logger, "Error while unpacking command PMT.");
+      }
+      if (command == "freq") {
+	double freq = pmt::to_double(cmd_value);
+	for (size_t i = 0; i < _nchan; i++) {
+	  if (chan == -1 or chan == int(i)) {
+	    set_center_freq(freq, i);
+	  }
+	}
+	// TODO: implement
+      //} else if (command == "lo_offset") {
+	//;
+      } else if (command == "gain") {
+	double gain = pmt::to_double(cmd_value);
+	for (size_t i = 0; i < _nchan; i++) {
+	  if (chan == -1 or chan == int(i)) {
+	    set_gain(gain, i);
+	  }
+	}
+      } else {
+	GR_LOG_ALERT(d_logger, boost::format("Received unknown command: %s") % command);
+      }
     }
 
     void

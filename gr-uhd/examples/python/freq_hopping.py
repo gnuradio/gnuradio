@@ -114,7 +114,7 @@ class FrequencyHopperSrc(gr.hier_block2):
             if i > 0 and post_tuning:
                 tune_tag.offset -= 1 # Move it to last sample of previous burst
             tune_tag.key = pmt.string_to_symbol('tx_freq')
-            tune_tag.value = pmt.to_pmt((0, self.hop_sequence[i]))
+            tune_tag.value = pmt.to_pmt(self.hop_sequence[i])
             tag_list.append(tune_tag)
             length_tag = gr.tag_t()
             length_tag.offset = i * burst_length

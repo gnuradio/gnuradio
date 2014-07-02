@@ -145,6 +145,21 @@ namespace gr {
       double _center_freq;
 
       boost::recursive_mutex d_mutex;
+
+      /****** Command interface related **********/
+      //! Receives commands and handles them
+      void msg_handler_command(pmt::pmt_t msg);
+      //! Stores the last value we told the USRP to tune to for every channel
+      // (this is not necessarily the true value the USRP is currently tuned to!).
+      // We could theoretically ask the device, but during streaming, we want to minimize
+      // communication with the USRP.
+      std::vector<double> _curr_freq;
+      //! Stores the last value we told the USRP to have the LO offset for every channel.
+      std::vector<double> _curr_lo_offset;
+      //! Stores the last gain value we told the USRP to have for every channel.
+      std::vector<double> _curr_gain;
+      boost::dynamic_bitset<> _chans_to_tune;
+      bool _call_tune;
     };
 
   } /* namespace uhd */

@@ -22,6 +22,7 @@
 
 #include <climits>
 #include <stdexcept>
+#include "usrp_common.h"
 #include "usrp_sink_impl.h"
 #include "gr_uhd_common.h"
 #include <gnuradio/io_signature.h>
@@ -29,6 +30,8 @@
 
 namespace gr {
   namespace uhd {
+
+    static const size_t ALL_CHANS = ::uhd::usrp::multi_usrp::ALL_CHANS;
 
     usrp_sink::sptr
     usrp_sink::make(const ::uhd::device_addr_t &device_addr,
@@ -75,8 +78,7 @@ namespace gr {
 	_curr_freq(stream_args.channels.size(), 0.0),
 	_curr_lo_offset(stream_args.channels.size(), 0.0),
 	_curr_gain(stream_args.channels.size(), 0.0),
-	_chans_to_tune(stream_args.channels.size(), false),
-	_call_tune(false)
+	_chans_to_tune(stream_args.channels.size())
     {
       if(stream_args.cpu_format == "fc32")
         _type = boost::make_shared< ::uhd::io_type_t >(::uhd::io_type_t::COMPLEX_FLOAT32);
@@ -89,11 +91,6 @@ namespace gr {
 	  pmt::mp("command"),
 	  boost::bind(&usrp_sink_impl::msg_handler_command, this, _1)
       );
-      //message_port_register_in(pmt::mp("query"));
-      //set_msg_handler(
-	  //pmt::mp("query"),
-	  //boost::bind(&usrp_sink_impl::msg_handler_query, this, _1)
-      //);
     }
 
     usrp_sink_impl::~usrp_sink_impl()
@@ -569,9 +566,8 @@ namespace gr {
       _metadata.time_spec += ::uhd::time_spec_t(0, num_sent, _sample_rate);
 
       // Some post-processing tasks if we actually transmitted the entire burst
-      if (_call_tune and num_sent == size_t(ninput_items)) {
+      if (_chans_to_tune.any() and num_sent == size_t(ninput_items)) {
 	_set_center_freq_from_internals_allchans();
-	_call_tune = false;
       }
 
       return num_sent;
@@ -724,7 +720,6 @@ namespace gr {
           // Otherwise, tune after work()
 	  _curr_freq[freq_cmd_chan] = freq_cmd_freq;
 	  _chans_to_tune[freq_cmd_chan] = true;
-          _call_tune = true;
         }
       }
 
@@ -801,46 +796,38 @@ namespace gr {
 
 
     /************** External interfaces (RPC + Message passing) ********************/
-    // Helper function for msg_handler_command: Extracts chan and command value from
-    // the 2-tuple in cmd_val, updates the value in vector_to_update[chan] and returns
-    // true if it was different from the old value.
-    bool _unpack_chan_command(pmt::pmt_t &cmd_val, int &chan, std::vector<double> &vector_to_update)
-    {
-      chan = pmt::to_long(pmt::tuple_ref(cmd_val, 0));
-      double new_value = pmt::to_double(pmt::tuple_ref(cmd_val, 1));
-      if (new_value == vector_to_update[chan]) {
-	return false;
-      } else {
-	vector_to_update[chan] = new_value;
-	return true;
-      }
-    }
-
     void usrp_sink_impl::msg_handler_command(pmt::pmt_t msg)
     {
-      const std::string command(pmt::symbol_to_string(pmt::car(msg)));
-      pmt::pmt_t value(pmt::cdr(msg));
-      int chan = 0;
+      std::string command;
+      pmt::pmt_t cmd_value;
+      int chan = -1;
+      if (not _unpack_chan_command(command, cmd_value, chan, msg)) {
+	GR_LOG_ALERT(d_logger, "Error while unpacking command PMT.");
+      }
       if (command == "freq") {
-	if (_unpack_chan_command(value, chan, _curr_freq)) {
-	  _set_center_freq_from_internals(chan);
-	}
+	_chans_to_tune = _update_vector_from_cmd_val<double>(
+	    _curr_freq, chan, pmt::to_double(cmd_value), true
+	);
+	_set_center_freq_from_internals_allchans();
       } else if (command == "lo_offset") {
-	if (_unpack_chan_command(value, chan, _curr_lo_offset)) {
-	  _set_center_freq_from_internals(chan);
-	}
+	_chans_to_tune = _update_vector_from_cmd_val<double>(
+	    _curr_lo_offset, chan, pmt::to_double(cmd_value), true
+	);
+	_set_center_freq_from_internals_allchans();
       } else if (command == "gain") {
-	if (_unpack_chan_command(value, chan, _curr_gain)) {
-	  set_gain(_curr_gain[chan], chan);
+	boost::dynamic_bitset<> chans_to_change = _update_vector_from_cmd_val<double>(
+	    _curr_gain, chan, pmt::to_double(cmd_value), true
+	);
+	if (chans_to_change.any()) {
+	  for (size_t i = 0; i < chans_to_change.size(); i++) {
+	    if (chans_to_change[i]) {
+	      set_gain(_curr_gain[i], i);
+	    }
+	  }
 	}
       } else {
 	GR_LOG_ALERT(d_logger, boost::format("Received unknown command: %s") % command);
       }
-    }
-
-    void usrp_sink_impl::msg_handler_query(pmt::pmt_t msg)
-    {
-      //tbi
     }
 
     void
