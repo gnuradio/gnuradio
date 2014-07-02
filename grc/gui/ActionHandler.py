@@ -449,7 +449,8 @@ class ActionHandler:
             #otherwise try to save
             else:
                 try:
-                    ParseXML.to_file(self.get_flow_graph().export_data(), self.get_page().get_file_path())
+                    instructions = {'created': self.platform.get_version_short(), 'compatible': '3.6.1', 'locked': True}
+                    ParseXML.to_file_with_instructions(self.get_flow_graph().export_data(), self.get_page().get_file_path(), instructions)
                     self.get_flow_graph().grc_file_path = self.get_page().get_file_path()
                     self.get_page().set_saved(True)
                 except IOError:

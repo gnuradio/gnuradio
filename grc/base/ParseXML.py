@@ -60,6 +60,32 @@ def validate_dtd(xml_file, dtd_file=None):
     except etree.LxmlError:
         raise XMLSyntaxError(dtd.error_log)
 
+
+# Parse the file and also return any GRC processing instructions
+def from_file_with_instructions(xml_file):
+    """
+    Create nested data from an xml file using the from xml helper.
+    Also get the grc version information. 
+    
+    Args:
+        xml_file: the xml file path
+    
+    Returns:
+        the nested data, grc version information
+    """
+    xml = etree.parse(xml_file)
+
+    # Get the embedded instructions and build a dictionary item
+    instructions = None
+    xml_instructions = xml.xpath('/processing-instruction()')
+    for inst in xml_instructions:
+        if (inst.target == 'grc'):
+            instructions = inst.attrib
+
+    nested_data = _from_file(xml.getroot())
+    return (nested_data, instructions)
+
+
 def from_file(xml_file):
     """
     Create nested data from an xml file using the from xml helper.
@@ -111,6 +137,28 @@ def to_file(nested_data, xml_file):
     open(xml_file, 'w').write(etree.tostring(xml, xml_declaration=True, pretty_print=True))
 
 
+def to_file_with_instructions(nested_data, file_path, instructions):
+    """
+    Write to an xml file and insert processing instructions for versioning
+
+    Args:
+        nested_data: the nested data
+        xml_file: the xml file path
+        instructions: array of instructions to add to the xml
+    """
+    xml = _to_file(nested_data)[0]
+        
+    # Create the processing instruction from the array
+    pi_data = ""
+    for key, value in instructions.iteritems():
+        pi_data += str(key) + "=\'" + str(value) + "\' "
+    pi = etree.ProcessingInstruction('grc', pi_data)
+    
+    xml_data = etree.tostring(pi, xml_declaration=True, pretty_print=True)
+    xml_data += etree.tostring(xml, pretty_print=True)
+    open(file_path, 'w').write(xml_data)
+    
+    
 def _to_file(nested_data):
     """
     Recursivly parse the nested data into xml tree format.
