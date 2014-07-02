@@ -67,6 +67,8 @@ public slots:
 			 const double bandwidth);
   void setYaxis(double min, double max);
   void autoScale(bool en);
+  void clearMaxHold();
+  void clearMinHold();
 
 private slots:
   void newData(const QEvent *updateEvent);
@@ -88,7 +90,7 @@ private:
   FFTSizeMenu *d_sizemenu;
   FFTAverageMenu *d_avgmenu;
   FFTWindowMenu *d_winmenu;
-
+  QAction *d_clearmin_act, *d_clearmax_act;
 };
 
 #endif /* FREQ_DISPLAY_FORM_H */

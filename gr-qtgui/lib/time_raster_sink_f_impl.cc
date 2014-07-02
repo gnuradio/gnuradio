@@ -143,6 +143,9 @@ namespace gr {
 					     d_rows, d_cols,
 					     1, d_parent);
 
+      if(d_name.size() > 0)
+        set_title(d_name);
+
       // initialize update time to 10 times a second
       set_update_time(0.1);
     }

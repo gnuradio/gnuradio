@@ -128,6 +128,8 @@ namespace gr {
       void enable_menu(bool en);
       void enable_grid(bool en);
       void enable_autoscale(bool en);
+      void clear_max_hold();
+      void clear_min_hold();
       void reset();
 
       int work(int noutput_items,

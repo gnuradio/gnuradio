@@ -127,6 +127,8 @@ namespace gr {
       virtual void enable_menu(bool en=true) = 0;
       virtual void enable_grid(bool en=true) = 0;
       virtual void enable_autoscale(bool en=true) = 0;
+      virtual void clear_max_hold() = 0;
+      virtual void clear_min_hold() = 0;
       virtual void reset() = 0;
 
       QApplication *d_qApplication;

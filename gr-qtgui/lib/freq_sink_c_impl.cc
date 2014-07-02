@@ -157,6 +157,9 @@ namespace gr {
       set_fft_size(d_fftsize);
       set_frequency_range(d_center_freq, d_bandwidth);
 
+      if(d_name.size() > 0)
+        set_title(d_name);
+
       // initialize update time to 10 times a second
       set_update_time(0.1);
     }
@@ -356,6 +359,18 @@ namespace gr {
     freq_sink_c_impl::enable_autoscale(bool en)
     {
       d_main_gui->autoScale(en);
+    }
+
+    void
+    freq_sink_c_impl::clear_max_hold()
+    {
+      d_main_gui->clearMaxHold();
+    }
+
+    void
+    freq_sink_c_impl::clear_min_hold()
+    {
+      d_main_gui->clearMinHold();
     }
 
     void
