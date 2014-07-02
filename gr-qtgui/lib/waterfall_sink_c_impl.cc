@@ -156,6 +156,9 @@ namespace gr {
       set_fft_size(d_fftsize);
       set_frequency_range(d_center_freq, d_bandwidth);
 
+      if(d_name.size() > 0)
+        set_title(d_name);
+
       // initialize update time to 10 times a second
       set_update_time(0.1);
     }

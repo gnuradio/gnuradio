@@ -63,11 +63,13 @@ $(gui_hint()($win))</make>
     <option><name>Complex</name><key>complex</key><opt>fcn:freq_sink_c</opt></option>
     <option><name>Float</name><key>float</key><opt>fcn:freq_sink_f</opt></option>
   </param>
+
   <param>
     <name>Name</name>
     <key>name</key>
-    <value>QT GUI Plot</value>
+    <value>""</value>
     <type>string</type>
+    <hide>#if len($name()) > 0 then 'none' else 'part'#</hide>
   </param>
 
 	<param>

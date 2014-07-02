@@ -126,6 +126,9 @@ namespace gr {
       d_main_gui->setNPoints(d_size);
       d_main_gui->setXaxis(d_xmin, d_xmax);
 
+      if(d_name.size() > 0)
+        set_title(d_name);
+
       // initialize update time to 10 times a second
       set_update_time(0.1);
     }
