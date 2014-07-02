@@ -1,24 +1,24 @@
 #!/usr/bin/env python
 #
 # Copyright 2013 Free Software Foundation, Inc.
-# 
+#
 # This file is part of GNU Radio
-# 
+#
 # GNU Radio is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 3, or (at your option)
 # any later version.
-# 
+#
 # GNU Radio is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU General Public License
 # along with GNU Radio; see the file COPYING.  If not, write to
 # the Free Software Foundation, Inc., 51 Franklin Street,
 # Boston, MA 02110-1301, USA.
-# 
+#
 
 import numpy
 from constellation_map_generator import *
@@ -131,7 +131,7 @@ def qam_16_0x1_0_1_2_3():
     '''
     k = 0x1
     pi = [0, 1, 2, 3]
-    return constellation_map_generator(qam_16, k, pi)
+    return constellation_map_generator(qam_16()[0], qam_16()[1], k, pi)
 qam_16_1 = qam_16_0x1_0_1_2_3
 
 def qam_16_0x2_0_1_2_3():
@@ -146,7 +146,7 @@ def qam_16_0x2_0_1_2_3():
     '''
     k = 0x2
     pi = [0, 1, 2, 3]
-    return constellation_map_generator(qam_16, k, pi)
+    return constellation_map_generator(qam_16()[0], qam_16()[1], k, pi)
 qam_16_2 = qam_16_0x2_0_1_2_3
 
 def qam_16_0x3_0_1_2_3():
@@ -161,7 +161,7 @@ def qam_16_0x3_0_1_2_3():
     '''
     k = 0x3
     pi = [0, 1, 2, 3]
-    return constellation_map_generator(qam_16, k, pi)
+    return constellation_map_generator(qam_16()[0], qam_16()[1], k, pi)
 qam_16_3 = qam_16_0x3_0_1_2_3
 
 
@@ -177,7 +177,7 @@ def qam_16_0x0_1_0_2_3():
     '''
     k = 0x0
     pi = [1, 0, 2, 3]
-    return constellation_map_generator(qam_16, k, pi)
+    return constellation_map_generator(qam_16()[0], qam_16()[1], k, pi)
 qam_16_4 = qam_16_0x0_1_0_2_3
 
 def qam_16_0x1_1_0_2_3():
@@ -192,7 +192,7 @@ def qam_16_0x1_1_0_2_3():
     '''
     k = 0x1
     pi = [1, 0, 2, 3]
-    return constellation_map_generator(qam_16, k, pi)
+    return constellation_map_generator(qam_16()[0], qam_16()[1], k, pi)
 qam_16_5 = qam_16_0x1_1_0_2_3
 
 def qam_16_0x2_1_0_2_3():
@@ -207,7 +207,7 @@ def qam_16_0x2_1_0_2_3():
     '''
     k = 0x2
     pi = [1, 0, 2, 3]
-    return constellation_map_generator(qam_16, k, pi)
+    return constellation_map_generator(qam_16()[0], qam_16()[1], k, pi)
 qam_16_6 = qam_16_0x2_1_0_2_3
 
 def qam_16_0x3_1_0_2_3():
@@ -222,7 +222,7 @@ def qam_16_0x3_1_0_2_3():
     '''
     k = 0x3
     pi = [1, 0, 2, 3]
-    return constellation_map_generator(qam_16, k, pi)
+    return constellation_map_generator(qam_16()[0], qam_16()[1], k, pi)
 qam_16_7 = qam_16_0x3_1_0_2_3
 
 
