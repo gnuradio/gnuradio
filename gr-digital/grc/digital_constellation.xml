@@ -7,65 +7,57 @@
 ###################################################
  -->
 <block>
-	<name>Constellation Object</name>
-	<key>variable_constellation</key>
-        <category>Modulators</category>
-	<import>from gnuradio import digital</import>
-        <var_make>self.$(id) = $(id) = digital.constellation_calcdist($const_points, $sym_map, $rot_sym, $dims).base()
+  <name>Constellation Object</name>
+  <key>variable_constellation</key>
+  <category>Modulators</category>
+  <import>from gnuradio import digital</import>
+  <var_make>self.$(id) = $(id) = digital.constellation_calcdist($const_points, $sym_map, $rot_sym, $dims).base()
 #if str($soft_dec_lut).lower() == '"auto"' or str($soft_dec_lut).lower() == "'auto'"
 self.$(id).gen_soft_dec_lut($precision)
 #else if str($soft_dec_lut) != 'None'
 self.$(id).set_soft_dec_lut($soft_dec_lut, $precision)
 #end if
 </var_make>
-        <make></make>
-        <!--<callback></callback>-->
+  <var_value>digital.constellation_calcdist($const_points, $sym_map, $rot_sym, $dims)</var_value>
+  <make></make>
+  <!--<callback></callback>-->
 
-        <!-- Required to 'trick' GRC into using this as a proper variable-->
-        <param>
-          <name>Ignore Me</name>
-          <key>value</key>
-          <value>"ok"</value>
-          <type>raw</type>
-          <hide>all</hide>
-        </param>
-
-	<param>
-          <name>Symbol Map</name>
-          <key>sym_map</key>
-          <value>[0, 1, 3, 2]</value>
-          <type>int_vector</type>
+  <param>
+    <name>Symbol Map</name>
+    <key>sym_map</key>
+    <value>[0, 1, 3, 2]</value>
+    <type>int_vector</type>
+  </param>
+  <param>
+    <name>Constellation Points</name>
+    <key>const_points</key>
+    <value>[-1-1j, -1+1j, 1+1j, 1-1j]</value>
+    <type>complex_vector</type>
 	</param>
 	<param>
-          <name>Constellation Points</name>
-          <key>const_points</key>
-          <value>[-1-1j, -1+1j, 1+1j, 1-1j]</value>
-          <type>complex_vector</type>
+    <name>Rotational Symmetry</name>
+    <key>rot_sym</key>
+    <value>4</value>
+    <type>int</type>
 	</param>
 	<param>
-          <name>Rotational Symmetry</name>
-          <key>rot_sym</key>
-          <value>4</value>
-          <type>int</type>
+    <name>Dimensionality</name>
+    <key>dims</key>
+    <value>1</value>
+    <type>int</type>
 	</param>
-	<param>
-          <name>Dimensionality</name>
-          <key>dims</key>
-          <value>1</value>
-          <type>int</type>
-	</param>
-        <param>
-          <name>Soft Decisions Precision</name>
-          <key>precision</key>
-          <value>8</value>
-          <type>int</type>
-          <hide>part</hide>
-        </param>
-        <param>
-          <name>Soft Decisions LUT</name>
-          <key>soft_dec_lut</key>
-          <value>None</value>
-          <type>raw</type>
-          <hide>#if str($soft_dec_lut) == 'None' then 'part' else 'none'#</hide>
-        </param>
+  <param>
+    <name>Soft Decisions Precision</name>
+    <key>precision</key>
+    <value>8</value>
+    <type>int</type>
+    <hide>part</hide>
+  </param>
+  <param>
+    <name>Soft Decisions LUT</name>
+    <key>soft_dec_lut</key>
+    <value>None</value>
+    <type>raw</type>
+    <hide>#if str($soft_dec_lut) == 'None' then 'part' else 'none'#</hide>
+  </param>
 </block>
