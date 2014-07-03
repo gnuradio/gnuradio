@@ -79,7 +79,12 @@ if(NOT Boost_FOUND)
     message(FATAL_ERROR "VOLK Requires boost to build")
 endif()
 
-find_package(ORC)
+option(ENABLE_ORC "Enable Orc" True)
+if(ENABLE_ORC)
+  find_package(ORC)
+else(ENABLE_ORC)
+  message(STATUS "Disabling use of ORC")
+endif(ENABLE_ORC)
 
 ########################################################################
 # Setup the package config file
