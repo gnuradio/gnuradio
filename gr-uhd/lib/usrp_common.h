@@ -25,6 +25,9 @@
 
 #include <pmt/pmt.h>
 #include <boost/dynamic_bitset.hpp>
+#include <boost/make_shared.hpp>
+#include <uhd/usrp/multi_usrp.hpp>
+#include <uhd/convert.hpp>
 
 namespace gr {
   namespace uhd {
@@ -67,31 +70,69 @@ namespace gr {
     //   vector_to_update are set to 1
     template <typename T>
     static boost::dynamic_bitset<> _update_vector_from_cmd_val(
-	std::vector<T> &vector_to_update,
-	int chan,
-	const T cmd_val,
-	bool minus_one_updates_all = false
+        std::vector<T> &vector_to_update,
+        int chan,
+        const T cmd_val,
+        bool minus_one_updates_all = false
     ) {
       boost::dynamic_bitset<> vals_updated(vector_to_update.size());
       if (chan == -1) {
-	if (minus_one_updates_all) {
-	  for (size_t i = 0; i < vector_to_update.size(); i++) {
-	    if (vector_to_update[i] != cmd_val) {
-	      vals_updated[i] = true;
-	      vector_to_update[i] = cmd_val;
-	    }
-	  }
-	  return vals_updated;
-	}
-	chan = 0;
+        if (minus_one_updates_all) {
+          for (size_t i = 0; i < vector_to_update.size(); i++) {
+            if (vector_to_update[i] != cmd_val) {
+              vals_updated[i] = true;
+              vector_to_update[i] = cmd_val;
+            }
+          }
+          return vals_updated;
+        }
+        chan = 0;
       }
       if (vector_to_update[chan] != cmd_val) {
-	vector_to_update[chan] = cmd_val;
-	vals_updated[chan] = true;
+        vector_to_update[chan] = cmd_val;
+        vals_updated[chan] = true;
       }
 
       return vals_updated;
     }
+
+    /*! \brief Components common to USRP sink and source.
+     *
+     */
+    class usrp_common_impl
+    {
+    public:
+      usrp_common_impl(
+          const ::uhd::device_addr_t &device_addr,
+          const ::uhd::stream_args_t &stream_args,
+          const std::string &ts_tag_name
+      ) :
+        _stream_args(stream_args),
+        _nchan(stream_args.channels.size()),
+        _stream_now(_nchan == 1 and ts_tag_name.empty()),
+        _start_time_set(false)
+      {
+        if(stream_args.cpu_format == "fc32")
+          _type = boost::make_shared< ::uhd::io_type_t >(::uhd::io_type_t::COMPLEX_FLOAT32);
+        if(stream_args.cpu_format == "sc16")
+          _type = boost::make_shared< ::uhd::io_type_t >(::uhd::io_type_t::COMPLEX_INT16);
+        _dev = ::uhd::usrp::multi_usrp::make(device_addr);
+      };
+
+      ~usrp_common_impl() {};
+
+
+    protected:
+      //! Shared pointer to the underlying multi_usrp object
+      ::uhd::usrp::multi_usrp::sptr _dev;
+      const ::uhd::stream_args_t _stream_args;
+      boost::shared_ptr< ::uhd::io_type_t > _type;
+      //! Number of channels (i.e. number of in- or outputs)
+      size_t _nchan;
+      bool _stream_now;
+      ::uhd::time_spec_t _start_time;
+      bool _start_time_set;
+    };
 
   } /* namespace uhd */
 } /* namespace gr */

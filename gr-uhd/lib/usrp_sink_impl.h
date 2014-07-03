@@ -22,6 +22,7 @@
 
 #include <gnuradio/uhd/usrp_sink.h>
 #include <uhd/convert.hpp>
+#include "usrp_common.h"
 
 static const pmt::pmt_t SOB_KEY = pmt::string_to_symbol("tx_sob");
 static const pmt::pmt_t EOB_KEY = pmt::string_to_symbol("tx_eob");
@@ -51,7 +52,7 @@ namespace gr {
     /***********************************************************************
      * UHD Multi USRP Sink Impl
      **********************************************************************/
-    class usrp_sink_impl : public usrp_sink
+    class usrp_sink_impl : public usrp_sink, public usrp_common_impl
     {
     public:
        usrp_sink_impl(const ::uhd::device_addr_t &device_addr,
@@ -127,19 +128,12 @@ namespace gr {
       //! Calls _set_center_freq_from_internals() on all channels
       void _set_center_freq_from_internals_allchans();
 
-      ::uhd::usrp::multi_usrp::sptr _dev;
-      const ::uhd::stream_args_t _stream_args;
-      boost::shared_ptr< ::uhd::io_type_t > _type;
 #ifdef GR_UHD_USE_STREAM_API
       ::uhd::tx_streamer::sptr _tx_stream;
 #endif
-      size_t _nchan;
-      bool _stream_now;
       ::uhd::tx_metadata_t _metadata;
       double _sample_rate;
 
-      ::uhd::time_spec_t _start_time;
-      bool _start_time_set;
 
       //stream tags related stuff
       std::vector<tag_t> _tags;

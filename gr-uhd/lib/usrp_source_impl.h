@@ -23,6 +23,7 @@
 #include <gnuradio/uhd/usrp_source.h>
 #include <uhd/convert.hpp>
 #include <boost/thread/mutex.hpp>
+#include "usrp_common.h"
 
 static const pmt::pmt_t TIME_KEY = pmt::string_to_symbol("rx_time");
 static const pmt::pmt_t RATE_KEY = pmt::string_to_symbol("rx_rate");
@@ -50,7 +51,7 @@ namespace gr {
     /***********************************************************************
      * UHD Multi USRP Source Impl
      **********************************************************************/
-    class usrp_source_impl : public usrp_source
+    class usrp_source_impl : public usrp_source, public usrp_common_impl
     {
     public:
       usrp_source_impl(const ::uhd::device_addr_t &device_addr,
@@ -124,21 +125,13 @@ namespace gr {
                gr_vector_void_star &output_items);
 
     private:
-      ::uhd::usrp::multi_usrp::sptr _dev;
-      const ::uhd::stream_args_t _stream_args;
-      boost::shared_ptr< ::uhd::io_type_t > _type;
-
 #ifdef GR_UHD_USE_STREAM_API
       ::uhd::rx_streamer::sptr _rx_stream;
       size_t _samps_per_packet;
 #endif
-      size_t _nchan;
-      bool _stream_now, _tag_now;
+      bool _tag_now;
       ::uhd::rx_metadata_t _metadata;
       pmt::pmt_t _id;
-
-      ::uhd::time_spec_t _start_time;
-      bool _start_time_set;
 
       //tag shadows
       double _samp_rate;

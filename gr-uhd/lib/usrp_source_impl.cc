@@ -67,25 +67,17 @@ namespace gr {
       sync_block("gr uhd usrp source",
                     io_signature::make(0, 0, 0),
                     args_to_io_sig(stream_args)),
-      _stream_args(stream_args),
-      _nchan(stream_args.channels.size()),
-      _stream_now(_nchan == 1),
-      _tag_now(false),
-      _start_time_set(false)
+      usrp_common_impl(device_addr, stream_args, ""),
+      _tag_now(false)
     {
-      if(stream_args.cpu_format == "fc32")
-        _type = boost::make_shared< ::uhd::io_type_t >(::uhd::io_type_t::COMPLEX_FLOAT32);
-      if(stream_args.cpu_format == "sc16")
-        _type = boost::make_shared< ::uhd::io_type_t >(::uhd::io_type_t::COMPLEX_INT16);
       std::stringstream str;
       str << name() << unique_id();
       _id = pmt::string_to_symbol(str.str());
-      _dev = ::uhd::usrp::multi_usrp::make(device_addr);
 
       message_port_register_in(pmt::mp("command"));
       set_msg_handler(
-	  pmt::mp("command"),
-	  boost::bind(&usrp_source_impl::msg_handler_command, this, _1)
+          pmt::mp("command"),
+          boost::bind(&usrp_source_impl::msg_handler_command, this, _1)
       );
     }
 
