@@ -28,6 +28,8 @@ import pygtk
 pygtk.require('2.0')
 import gtk
 
+PORT_HIDDEN_MARKUP_TMPL="""\
+<span foreground="black" font_desc="Sans 7.5"> </span>"""
 PORT_MARKUP_TMPL="""\
 <span foreground="black" font_desc="Sans 7.5">$encode($port.get_name())</span>"""
 
@@ -40,7 +42,10 @@ class Port(Element):
         Create list of connector coordinates.
         """
         Element.__init__(self)
-        self.connector_coordinates = dict()
+        self.W = self.H = self.w = self.h = 0
+        self._connector_coordinate = (0,0)
+        self._connector_length = 0
+        self._label_hidden = True
 
     def create_shapes(self):
         """Create new areas and labels for the port."""
@@ -52,12 +57,13 @@ class Port(Element):
         elif self.is_sink(): ports = self.get_parent().get_sinks_gui()
         #get the max width
         self.W = max([port.W for port in ports] + [PORT_MIN_WIDTH])
+        W = self.W if not self._label_hidden else 10
         #get a numeric index for this port relative to its sibling ports
         try:
             index = ports.index(self)
         except:
             if hasattr(self, '_connector_length'):
-                del self._connector_length;
+                del self._connector_length
             return
         length = len(ports)
         #reverse the order of ports for these rotations
@@ -65,27 +71,28 @@ class Port(Element):
         offset = (self.get_parent().H - length*self.H - (length-1)*PORT_SEPARATION)/2
         #create areas and connector coordinates
         if (self.is_sink() and rotation == 0) or (self.is_source() and rotation == 180):
-            x = -1*self.W
+            x = -1*W
             y = (PORT_SEPARATION+self.H)*index+offset
-            self.add_area((x, y), (self.W, self.H))
+            self.add_area((x, y), (W, self.H))
             self._connector_coordinate = (x-1, y+self.H/2)
         elif (self.is_source() and rotation == 0) or (self.is_sink() and rotation == 180):
             x = self.get_parent().W
             y = (PORT_SEPARATION+self.H)*index+offset
-            self.add_area((x, y), (self.W, self.H))
-            self._connector_coordinate = (x+1+self.W, y+self.H/2)
+            self.add_area((x, y), (W, self.H))
+            self._connector_coordinate = (x+1+W, y+self.H/2)
         elif (self.is_source() and rotation == 90) or (self.is_sink() and rotation == 270):
-            y = -1*self.W
+            y = -1*W
             x = (PORT_SEPARATION+self.H)*index+offset
-            self.add_area((x, y), (self.H, self.W))
+            self.add_area((x, y), (self.H, W))
             self._connector_coordinate = (x+self.H/2, y-1)
         elif (self.is_sink() and rotation == 90) or (self.is_source() and rotation == 270):
             y = self.get_parent().W
             x = (PORT_SEPARATION+self.H)*index+offset
-            self.add_area((x, y), (self.H, self.W))
-            self._connector_coordinate = (x+self.H/2, y+1+self.W)
+            self.add_area((x, y), (self.H, W))
+            self._connector_coordinate = (x+self.H/2, y+1+W)
         #the connector length
         self._connector_length = CONNECTOR_EXTENSION_MINIMAL + CONNECTOR_EXTENSION_INCREMENT*index
+
     def modify_height(self, start_height):
         type_dict = {'bus':(lambda a: a * 3)};
         
@@ -102,8 +109,8 @@ class Port(Element):
         layout = gtk.DrawingArea().create_pango_layout('')
         layout.set_markup(Utils.parse_template(PORT_MARKUP_TMPL, port=self))
         self.w, self.h = layout.get_pixel_size()
-        self.W, self.H = 2*PORT_LABEL_PADDING+self.w, 2*PORT_LABEL_PADDING+self.h
-        self.H = self.modify_height(self.H);
+        self.W, self.H = 2*PORT_LABEL_PADDING + self.w, 2*PORT_LABEL_PADDING+self.h
+        self.H = self.modify_height(self.H)
         #create the pixmap
         pixmap = self.get_parent().get_parent().new_pixmap(self.w, self.h)
         gc = pixmap.new_gc()
@@ -129,6 +136,8 @@ class Port(Element):
             border_color=self.is_highlighted() and Colors.HIGHLIGHT_COLOR or
                          self.get_parent().is_dummy_block() and Colors.MISSING_BLOCK_BORDER_COLOR or Colors.BORDER_COLOR,
         )
+        if self._label_hidden:
+            return
         X,Y = self.get_coordinate()
         (x,y),(w,h) = self._areas_list[0] #use the first area's sizes to place the labels
         if self.is_horizontal():
@@ -143,9 +152,9 @@ class Port(Element):
         Returns:
             the connector coordinate (x, y) tuple
         """
-        x,y = self._connector_coordinate
-        X,Y = self.get_coordinate()
-        return (x+X, y+Y)
+        x, y = self._connector_coordinate
+        X, Y = self.get_coordinate()
+        return (x + X, y + Y)
 
     def get_connector_direction(self):
         """
@@ -222,3 +231,11 @@ class Port(Element):
             the parent's highlighting status
         """
         return self.get_parent().is_highlighted()
+
+    def mouse_over(self):
+        self._label_hidden = False
+        return True
+
+    def mouse_out(self):
+        self._label_hidden = True
+        return True

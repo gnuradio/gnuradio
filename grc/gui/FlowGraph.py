@@ -51,6 +51,8 @@ class FlowGraph(Element):
         #selected ports
         self._old_selected_port = None
         self._new_selected_port = None
+        # current mouse hover element
+        self.element_under_mouse = None
         #context menu
         self._context_menu = gtk.Menu()
         for action in [
@@ -550,29 +552,48 @@ class FlowGraph(Element):
         """
         #to perform a movement, the mouse must be pressed
         # (no longer checking pending events via gtk.events_pending() - always true in Windows)
-        if not self.mouse_pressed: return
-        #perform autoscrolling
-        width, height = self.get_size()
-        x, y = coordinate
-        h_adj = self.get_scroll_pane().get_hadjustment()
-        v_adj = self.get_scroll_pane().get_vadjustment()
-        for pos, length, adj, adj_val, adj_len in (
-            (x, width, h_adj, h_adj.get_value(), h_adj.page_size),
-            (y, height, v_adj, v_adj.get_value(), v_adj.page_size),
-        ):
-            #scroll if we moved near the border
-            if pos-adj_val > adj_len-SCROLL_PROXIMITY_SENSITIVITY and adj_val+SCROLL_DISTANCE < length-adj_len:
-                adj.set_value(adj_val+SCROLL_DISTANCE)
-                adj.emit('changed')
-            elif pos-adj_val < SCROLL_PROXIMITY_SENSITIVITY:
-                adj.set_value(adj_val-SCROLL_DISTANCE)
-                adj.emit('changed')
-        #remove the connection if selected in drag event
-        if len(self.get_selected_elements()) == 1 and self.get_selected_element().is_connection():
-            Actions.ELEMENT_DELETE()
-        #move the selected elements and record the new coordinate
-        X, Y = self.get_coordinate()
-        if not self.get_ctrl_mask(): self.move_selected((int(x - X), int(y - Y)))
-        self.set_coordinate((x, y))
-        #queue draw for animation
-        self.queue_draw()
+        if not self.mouse_pressed:
+            redraw = False
+            for element in reversed(self.get_elements()):
+                over_element = element.what_is_selected(coordinate)
+                if not over_element: continue
+                if over_element != self.element_under_mouse:  # over sth new
+                    if self.element_under_mouse:
+                        redraw |= self.element_under_mouse.mouse_out() or False
+                    self.element_under_mouse = over_element
+                    redraw |= over_element.mouse_over() or False
+                break
+            else:
+                if self.element_under_mouse:
+                    redraw |= self.element_under_mouse.mouse_out() or False
+                    self.element_under_mouse = None
+            if redraw:
+                #self.create_labels()
+                self.create_shapes()
+                self.queue_draw()
+        else:
+            #perform autoscrolling
+            width, height = self.get_size()
+            x, y = coordinate
+            h_adj = self.get_scroll_pane().get_hadjustment()
+            v_adj = self.get_scroll_pane().get_vadjustment()
+            for pos, length, adj, adj_val, adj_len in (
+                (x, width, h_adj, h_adj.get_value(), h_adj.page_size),
+                (y, height, v_adj, v_adj.get_value(), v_adj.page_size),
+            ):
+                #scroll if we moved near the border
+                if pos-adj_val > adj_len-SCROLL_PROXIMITY_SENSITIVITY and adj_val+SCROLL_DISTANCE < length-adj_len:
+                    adj.set_value(adj_val+SCROLL_DISTANCE)
+                    adj.emit('changed')
+                elif pos-adj_val < SCROLL_PROXIMITY_SENSITIVITY:
+                    adj.set_value(adj_val-SCROLL_DISTANCE)
+                    adj.emit('changed')
+            #remove the connection if selected in drag event
+            if len(self.get_selected_elements()) == 1 and self.get_selected_element().is_connection():
+                Actions.ELEMENT_DELETE()
+            #move the selected elements and record the new coordinate
+            X, Y = self.get_coordinate()
+            if not self.get_ctrl_mask(): self.move_selected((int(x - X), int(y - Y)))
+            self.set_coordinate((x, y))
+            #queue draw for animation
+            self.queue_draw()
