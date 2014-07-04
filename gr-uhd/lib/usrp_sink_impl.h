@@ -141,6 +141,8 @@ namespace gr {
       long _nitems_to_send;
 
       /****** Command interface related **********/
+      //! Stores a list of commands for later execution
+      std::vector<pmt::pmt_t> _pending_cmds;
       //! Receives commands and handles them
       void msg_handler_command(pmt::pmt_t msg);
       //! Stores the last value we told the USRP to tune to for every channel
@@ -153,7 +155,6 @@ namespace gr {
       //! Stores the last gain value we told the USRP to have for every channel.
       std::vector<double> _curr_gain;
       boost::dynamic_bitset<> _chans_to_tune;
-      bool _call_tune;
     };
 
   } /* namespace uhd */

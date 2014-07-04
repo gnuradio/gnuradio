@@ -105,7 +105,9 @@ class FrequencyHopperSrc(gr.hier_block2):
         gain_tag.key = pmt.string_to_symbol('tx_command')
         gain_tag.value = pmt.cons(
                 pmt.intern("gain"),
-                pmt.to_pmt((0, tx_gain))
+                # These are both valid:
+                #pmt.from_double(tx_gain)
+                pmt.cons(pmt.to_pmt(0), pmt.to_pmt(tx_gain))
         )
         tag_list = [gain_tag,]
         for i in xrange(n_bursts):
