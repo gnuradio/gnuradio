@@ -59,7 +59,7 @@ class Port(Element):
             if hasattr(self, '_connector_length'):
                 del self._connector_length;
             return
-        length = len(ports)
+        length = len(filter(lambda p: not p.get_hide(), ports))
         #reverse the order of ports for these rotations
         if rotation in (180, 270): index = length-index-1
         offset = (self.get_parent().H - length*self.H - (length-1)*PORT_SEPARATION)/2
