@@ -29,6 +29,39 @@ cmake_minimum_required(VERSION 2.6)
 project(gnuradio CXX C)
 enable_testing()
 
+########################################################################
+# For GCC and Clang, we can set a build type:
+#
+# -DCMAKE_BUILD_TYPE=NoOptWithASM
+#
+# This type uses no optimization (-O0), outputs debug symbols (-g) and
+# outputs all intermediary files the build system produces, including
+# all assembly (.s) files. Look in the build directory for these
+# files.
+# NOTE: This is not defined on Windows systems.
+########################################################################
+if(NOT WIN32)
+  SET( CMAKE_CXX_FLAGS_NOOPTWITHASM "-Wall -save-temps -g -O0" CACHE STRING
+    "Flags used by the C++ compiler during NoOptWithASM builds."
+    FORCE )
+  SET( CMAKE_C_FLAGS_NOOPTWITHASM "-Wall -save-temps -g -O0" CACHE STRING
+    "Flags used by the C compiler during NoOptWithASM builds."
+    FORCE )
+  SET( CMAKE_EXE_LINKER_FLAGS_NOOPTWITHASM
+    "-Wl,--warn-unresolved-symbols,--warn-once" CACHE STRING
+    "Flags used for linking binaries during NoOptWithASM builds."
+    FORCE )
+  SET( CMAKE_SHARED_LINKER_FLAGS_NOOPTWITHASM
+    "-Wl,--warn-unresolved-symbols,--warn-once" CACHE STRING
+    "Flags used by the shared libraries linker during NoOptWithASM builds."
+    FORCE )
+  MARK_AS_ADVANCED(
+    CMAKE_CXX_FLAGS_NOOPTWITHASM
+    CMAKE_C_FLAGS_NOOPTWITHASM
+    CMAKE_EXE_LINKER_FLAGS_NOOPTWITHASM
+    CMAKE_SHARED_LINKER_FLAGS_NOOPTWITHASM)
+endif(NOT WIN32)
+
 #select the release build type by default to get optimization flags
 if(NOT CMAKE_BUILD_TYPE)
    set(CMAKE_BUILD_TYPE "Release")
