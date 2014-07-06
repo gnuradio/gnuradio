@@ -27,6 +27,7 @@
 #include <vector>
 #include <sstream>
 #include <iostream>
+#include <fstream> ////////////////////////delete this
 
 namespace gr {
   namespace fec {
@@ -37,10 +38,6 @@ namespace gr {
         read_matrix_from_file(&filename);
         d_gap = gap;
         set_parameters_for_encoding();
-
-        // Turn off GSL error handler so that program does not abort
-        // if an error pops up.
-        gsl_set_error_handler_off();
       } // Constructor
 
       // Default constructor, should not be used
@@ -112,7 +109,6 @@ namespace gr {
         const gsl_matrix *phi_inverse_ptr = d_phi_inverse_ptr;
         return phi_inverse_ptr; 
       }
-
 
       void
       ldpc_par_chk_mtrx::read_matrix_from_file(const std::string *alist_file)
@@ -200,9 +196,10 @@ namespace gr {
         }
         catch (char const *exceptionString) {
           std::cout << "Error in set_parameters_for_encoding while "
-                    << "looking for inverse T: " << exceptionString
-                    << "This inverse was already take earlier so "
-                    << "there should not be an issue...?\n";
+                    << "looking for inverse T matrix: " 
+                    << exceptionString
+                    << "Tip: verify that the correct gap is being "
+                    << "specified for this alist file.\n";
 
           exit(1);
         }
@@ -241,8 +238,8 @@ namespace gr {
 
             std::cout << "Error in set_parameters_for_encoding while"
                       << "finding inverse_phi: " << exceptionString
-                      << "This inverse was already take earlier so "
-                      << "there should not be an issue...?\n";      
+                      << "Tip: verify that the correct gap is being "
+                      << "specified for this alist file.\n";      
             exit(1);
           }
         }
