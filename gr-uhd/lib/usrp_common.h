@@ -26,12 +26,17 @@
 #include <pmt/pmt.h>
 #include <boost/dynamic_bitset.hpp>
 #include <boost/make_shared.hpp>
+#include <boost/bind.hpp>
+#include <boost/thread.hpp>
 #include <uhd/usrp/multi_usrp.hpp>
 #include <uhd/convert.hpp>
 #include <iostream>
 
 namespace gr {
   namespace uhd {
+    typedef boost::function< ::uhd::sensor_value_t (const std::string&)> get_sensor_fn_t;
+
+    static const double LOCK_TIMEOUT = 1.5; // s
 
     //! Helper function for msg_handler_command:
     // - Extracts command and the command value from the command PMT
@@ -105,8 +110,12 @@ namespace gr {
       return vals_updated;
     }
 
+
     /*! \brief Components common to USRP sink and source.
      *
+     * \param device_addr Device address + options
+     * \param stream_args Stream args (cpu format, otw format...)
+     * \param ts_tag_name If this block produces or consumes stream tags, enter the corresponding tag name here
      */
     class usrp_common_impl
     {
@@ -130,8 +139,47 @@ namespace gr {
 
       ~usrp_common_impl() {};
 
-
     protected:
+      /*! \brief Wait until a timeout or a sensor returns 'locked'.
+       *
+       * If a given sensor is not found, this still returns 'true', so we don't throw
+       * errors or warnings if a sensor wasn't implemented.
+       */
+      bool _wait_for_locked_sensor(
+          std::vector<std::string> sensor_names,
+          const std::string &sensor_name,
+          get_sensor_fn_t get_sensor_fn
+      ){
+        if (std::find(sensor_names.begin(), sensor_names.end(), sensor_name) == sensor_names.end())
+          return true;
+
+        boost::system_time start = boost::get_system_time();
+        boost::system_time first_lock_time;
+
+        while (true) {
+          if ((not first_lock_time.is_not_a_date_time()) and
+              (boost::get_system_time() > (first_lock_time + boost::posix_time::seconds(LOCK_TIMEOUT)))) {
+            break;
+          }
+
+          if (get_sensor_fn(sensor_name).to_bool()) {
+            if (first_lock_time.is_not_a_date_time())
+              first_lock_time = boost::get_system_time();
+          }
+          else {
+            first_lock_time = boost::system_time(); //reset to 'not a date time'
+
+            if (boost::get_system_time() > (start + boost::posix_time::seconds(LOCK_TIMEOUT))){
+              return false;
+            }
+          }
+
+          boost::this_thread::sleep(boost::posix_time::milliseconds(100));
+        }
+
+        return true;
+      }
+
       //! Shared pointer to the underlying multi_usrp object
       ::uhd::usrp::multi_usrp::sptr _dev;
       const ::uhd::stream_args_t _stream_args;

@@ -79,6 +79,47 @@ namespace gr {
           pmt::mp("command"),
           boost::bind(&usrp_source_impl::msg_handler_command, this, _1)
       );
+
+      _check_sensors_locked();
+    }
+
+    bool usrp_source_impl::_check_sensors_locked()
+    {
+      bool clocks_locked = true;
+
+      // 1) Check ref lock for all mboards
+      for (size_t mboard_index = 0; mboard_index < _dev->get_num_mboards(); mboard_index++) {
+        std::string sensor_name = "ref_locked";
+        if (_dev->get_clock_source(mboard_index) == "internal") {
+          continue;
+        }
+        else if (_dev->get_clock_source(mboard_index) == "mimo") {
+          sensor_name = "mimo_locked";
+        }
+        if (not _wait_for_locked_sensor(
+                get_mboard_sensor_names(mboard_index),
+                sensor_name,
+                boost::bind(&usrp_source_impl::get_mboard_sensor, this, _1, mboard_index)
+            )) {
+          GR_LOG_WARN(d_logger, boost::format("Sensor '%s' failed to lock within timeout on motherboard %d.") % sensor_name % mboard_index);
+          clocks_locked = false;
+        }
+      }
+
+      // 2) Check LO for all channels
+      for (size_t i = 0; i < _nchan; i++) {
+        size_t chan_index = _stream_args.channels[i];
+        if (not _wait_for_locked_sensor(
+                get_sensor_names(chan_index),
+                "lo_locked",
+                boost::bind(&usrp_source_impl::get_sensor, this, _1, chan_index)
+            )) {
+          GR_LOG_WARN(d_logger, boost::format("Sensor 'lo_locked' failed to lock within timeout on channel %d.") % chan_index);
+          clocks_locked = false;
+        }
+      }
+
+      return clocks_locked;
     }
 
     usrp_source_impl::~usrp_source_impl()

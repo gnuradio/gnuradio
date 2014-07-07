@@ -125,6 +125,9 @@ namespace gr {
                gr_vector_void_star &output_items);
 
     private:
+      /*! \brief Run through all 'lock' sensors and make sure they are actually locked.
+       */
+      bool _check_sensors_locked();
 #ifdef GR_UHD_USE_STREAM_API
       ::uhd::rx_streamer::sptr _rx_stream;
       size_t _samps_per_packet;

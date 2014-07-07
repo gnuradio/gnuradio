@@ -123,6 +123,10 @@ namespace gr {
       inline void tag_work(int &ninput_items);
 
     private:
+      /*! \brief Run through all 'lock' sensors and make sure they are actually locked.
+       */
+      bool _check_sensors_locked();
+
       //! Like set_center_freq(), but uses _curr_freq and _curr_lo_offset
       ::uhd::tune_result_t _set_center_freq_from_internals(size_t chan);
       //! Calls _set_center_freq_from_internals() on all channels
