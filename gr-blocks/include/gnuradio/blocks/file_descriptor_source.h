@@ -46,7 +46,8 @@ namespace gr {
       typedef boost::shared_ptr<file_descriptor_source> sptr;
 
       /*!
-       * Build a file descriptor source block.
+       * Build a file descriptor source block. The provided file descriptor will
+       * be closed when the sink is destroyed.
        *
        * \param itemsize item size of the incoming data stream.
        * \param fd file descriptor (as an integer).
