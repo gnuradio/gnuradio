@@ -184,10 +184,10 @@ class waterfall_plotter(grid_plotter_base):
 	def _call_callback(self, x_val, y_val):
 		if self.callback != None:
 			self.callback(x_val,y_val)
-	
+
 	def set_callback(self,callback):
 		self.callback = callback
-		
+
 	def _draw_legend(self):
 		"""
 		Draw the color scale legend.

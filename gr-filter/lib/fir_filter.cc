@@ -29,7 +29,7 @@
 namespace gr {
   namespace filter {
     namespace kernel {
-    
+
       fir_filter_fff::fir_filter_fff(int decimation,
 				     const std::vector<float> &taps)
       {
@@ -42,7 +42,7 @@ namespace gr {
 	// Make sure the output sample is always aligned, too.
 	d_output = (float*)volk_malloc(1*sizeof(float), d_align);
       }
-      
+
       fir_filter_fff::~fir_filter_fff()
       {
 	// Free all aligned taps
@@ -57,7 +57,7 @@ namespace gr {
 	// Free output sample
 	volk_free(d_output);
       }
-      
+
       void
       fir_filter_fff::set_taps(const std::vector<float> &taps)
       {
@@ -69,7 +69,7 @@ namespace gr {
 	  ::free(d_aligned_taps);
 	  d_aligned_taps = NULL;
 	}
-	
+
 	d_ntaps = (int)taps.size();
 	d_taps = taps;
 	std::reverse(d_taps.begin(), d_taps.end());
@@ -118,7 +118,7 @@ namespace gr {
 				   d_ntaps+al);
 	return *d_output;
       }
-      
+
       void
       fir_filter_fff::filterN(float output[],
 			      const float input[],
@@ -128,7 +128,7 @@ namespace gr {
 	  output[i] = filter(&input[i]);
 	}
       }
-      
+
       void
       fir_filter_fff::filterNdec(float output[],
 				 const float input[],
@@ -141,7 +141,7 @@ namespace gr {
 	  j += decimate;
 	}
       }
-      
+
       /**************************************************************/
 
       fir_filter_ccf::fir_filter_ccf(int decimation,
@@ -156,7 +156,7 @@ namespace gr {
 	// Make sure the output sample is always aligned, too.
 	d_output = (gr_complex*)volk_malloc(1*sizeof(gr_complex), d_align);
       }
-      
+
       fir_filter_ccf::~fir_filter_ccf()
       {
 	// Free all aligned taps
@@ -171,7 +171,7 @@ namespace gr {
 	// Free output sample
 	volk_free(d_output);
       }
-      
+
       void
       fir_filter_ccf::set_taps(const std::vector<float> &taps)
       {
@@ -183,7 +183,7 @@ namespace gr {
 	  ::free(d_aligned_taps);
 	  d_aligned_taps = NULL;
 	}
-	
+
 	d_ntaps = (int)taps.size();
 	d_taps = taps;
 	std::reverse(d_taps.begin(), d_taps.end());
@@ -197,7 +197,7 @@ namespace gr {
 	    d_aligned_taps[i][i+j] = d_taps[j];
 	}
       }
-      
+
       void
       fir_filter_ccf::update_tap(float t, unsigned int index)
       {
@@ -220,7 +220,7 @@ namespace gr {
       {
 	return d_ntaps;
       }
-      
+
       gr_complex
       fir_filter_ccf::filter(const gr_complex input[])
       {
@@ -232,7 +232,7 @@ namespace gr {
 				      (d_ntaps+al));
 	return *d_output;
       }
-      
+
       void
       fir_filter_ccf::filterN(gr_complex output[],
 			      const gr_complex input[],
@@ -241,8 +241,8 @@ namespace gr {
 	for(unsigned long i = 0; i < n; i++)
 	  output[i] = filter(&input[i]);
       }
-      
-      
+
+
       void
       fir_filter_ccf::filterNdec(gr_complex output[],
 				 const gr_complex input[],
@@ -255,7 +255,7 @@ namespace gr {
 	  j += decimate;
 	}
       }
-      
+
 
       /**************************************************************/
 
@@ -272,7 +272,7 @@ namespace gr {
 	// Make sure the output sample is always aligned, too.
 	d_output = (gr_complex*)volk_malloc(1*sizeof(gr_complex), d_align);
       }
-      
+
       fir_filter_fcc::~fir_filter_fcc()
       {
 	// Free all aligned taps
@@ -287,7 +287,7 @@ namespace gr {
 	// Free output sample
 	volk_free(d_output);
       }
-      
+
       void
       fir_filter_fcc::set_taps(const std::vector<gr_complex> &taps)
       {
@@ -299,7 +299,7 @@ namespace gr {
 	  ::free(d_aligned_taps);
 	  d_aligned_taps = NULL;
 	}
-	
+
 	d_ntaps = (int)taps.size();
 	d_taps = taps;
 	std::reverse(d_taps.begin(), d_taps.end());
@@ -313,7 +313,7 @@ namespace gr {
 	    d_aligned_taps[i][i+j] = d_taps[j];
 	}
       }
-      
+
       void
       fir_filter_fcc::update_tap(gr_complex t, unsigned int index)
       {
@@ -337,7 +337,7 @@ namespace gr {
       {
 	return d_ntaps;
       }
-      
+
       gr_complex
       fir_filter_fcc::filter(const float input[])
       {
@@ -350,7 +350,7 @@ namespace gr {
 				      (d_ntaps+al));
 	return *d_output;
       }
-      
+
       void
       fir_filter_fcc::filterN(gr_complex output[],
 			      const float input[],
@@ -359,8 +359,8 @@ namespace gr {
 	for(unsigned long i = 0; i < n; i++)
 	  output[i] = filter(&input[i]);
       }
-      
-      
+
+
       void
       fir_filter_fcc::filterNdec(gr_complex output[],
 				 const float input[],
@@ -373,7 +373,7 @@ namespace gr {
 	  j += decimate;
 	}
       }
-      
+
       /**************************************************************/
 
       fir_filter_ccc::fir_filter_ccc(int decimation,
@@ -388,7 +388,7 @@ namespace gr {
 	// Make sure the output sample is always aligned, too.
 	d_output = (gr_complex*)volk_malloc(1*sizeof(gr_complex), d_align);
       }
-      
+
       fir_filter_ccc::~fir_filter_ccc()
       {
 	// Free all aligned taps
@@ -403,7 +403,7 @@ namespace gr {
 	// Free output sample
 	volk_free(d_output);
       }
-      
+
       void
       fir_filter_ccc::set_taps(const std::vector<gr_complex> &taps)
       {
@@ -415,7 +415,7 @@ namespace gr {
 	  ::free(d_aligned_taps);
 	  d_aligned_taps = NULL;
 	}
-	
+
 	d_ntaps = (int)taps.size();
 	d_taps = taps;
 	std::reverse(d_taps.begin(), d_taps.end());
@@ -429,7 +429,7 @@ namespace gr {
 	    d_aligned_taps[i][i+j] = d_taps[j];
 	}
       }
-      
+
       void
       fir_filter_ccc::update_tap(gr_complex t, unsigned int index)
       {
@@ -452,7 +452,7 @@ namespace gr {
       {
 	return d_ntaps;
       }
-      
+
       gr_complex
       fir_filter_ccc::filter(const gr_complex input[])
       {
@@ -464,7 +464,7 @@ namespace gr {
 				     (d_ntaps+al));
 	return *d_output;
       }
-      
+
       void
       fir_filter_ccc::filterN(gr_complex output[],
 			      const gr_complex input[],
@@ -473,8 +473,8 @@ namespace gr {
 	for(unsigned long i = 0; i < n; i++)
 	  output[i] = filter(&input[i]);
       }
-      
-      
+
+
       void
       fir_filter_ccc::filterNdec(gr_complex output[],
 				 const gr_complex input[],
@@ -487,7 +487,7 @@ namespace gr {
 	  j += decimate;
 	}
       }
-      
+
       /**************************************************************/
 
       fir_filter_scc::fir_filter_scc(int decimation,
@@ -502,7 +502,7 @@ namespace gr {
 	// Make sure the output sample is always aligned, too.
 	d_output = (gr_complex*)volk_malloc(1*sizeof(gr_complex), d_align);
       }
-      
+
       fir_filter_scc::~fir_filter_scc()
       {
 	// Free all aligned taps
@@ -517,7 +517,7 @@ namespace gr {
 	// Free output sample
 	volk_free(d_output);
       }
-      
+
       void
       fir_filter_scc::set_taps(const std::vector<gr_complex> &taps)
       {
@@ -529,7 +529,7 @@ namespace gr {
 	  ::free(d_aligned_taps);
 	  d_aligned_taps = NULL;
 	}
-	
+
 	d_ntaps = (int)taps.size();
 	d_taps = taps;
 	std::reverse(d_taps.begin(), d_taps.end());
@@ -543,7 +543,7 @@ namespace gr {
 	    d_aligned_taps[i][i+j] = d_taps[j];
 	}
       }
-      
+
       void
       fir_filter_scc::update_tap(gr_complex t, unsigned int index)
       {
@@ -566,7 +566,7 @@ namespace gr {
       {
 	return d_ntaps;
       }
-      
+
       gr_complex
       fir_filter_scc::filter(const short input[])
       {
@@ -579,7 +579,7 @@ namespace gr {
 
 	return *d_output;
       }
-      
+
       void
       fir_filter_scc::filterN(gr_complex output[],
 			      const short input[],
@@ -588,8 +588,8 @@ namespace gr {
 	for(unsigned long i = 0; i < n; i++)
 	  output[i] = filter(&input[i]);
       }
-      
-      
+
+
       void
       fir_filter_scc::filterNdec(gr_complex output[],
 				 const short input[],
@@ -617,7 +617,7 @@ namespace gr {
 	// Make sure the output sample is always aligned, too.
 	d_output = (short*)volk_malloc(1*sizeof(short), d_align);
       }
-      
+
       fir_filter_fsf::~fir_filter_fsf()
       {
       	// Free all aligned taps
@@ -632,7 +632,7 @@ namespace gr {
 	// Free output sample
 	volk_free(d_output);
       }
-      
+
       void
       fir_filter_fsf::set_taps(const std::vector<float> &taps)
       {
@@ -644,7 +644,7 @@ namespace gr {
 	  ::free(d_aligned_taps);
 	  d_aligned_taps = NULL;
 	}
-	
+
 	d_ntaps = (int)taps.size();
 	d_taps = taps;
 	std::reverse(d_taps.begin(), d_taps.end());
@@ -658,7 +658,7 @@ namespace gr {
 	    d_aligned_taps[i][i+j] = d_taps[j];
 	}
       }
-      
+
       void
       fir_filter_fsf::update_tap(float t, unsigned int index)
       {
@@ -681,7 +681,7 @@ namespace gr {
       {
 	return d_ntaps;
       }
-      
+
       short
       fir_filter_fsf::filter(const float input[])
       {
@@ -694,7 +694,7 @@ namespace gr {
 
 	return *d_output;
       }
-      
+
       void
       fir_filter_fsf::filterN(short output[],
 			      const float input[],

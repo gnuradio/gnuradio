@@ -29,7 +29,7 @@
 
 namespace gr {
   namespace channels {
-    
+
     /*!
      * \brief dynamic channel simulator
      * \ingroup dynamic_channel_models_blk
@@ -37,9 +37,9 @@ namespace gr {
      * \details
      * This block implements a dynamic channel model simulator that can
      * be used to help evaluate, design, and test various signals,
-     * waveforms, and algorithms. 
+     * waveforms, and algorithms.
      *
-     * This model allows the user to set up an AWGN noise cource, a 
+     * This model allows the user to set up an AWGN noise cource, a
      * random walk process to simulate carrier frequency drift, a random
      * walk process to simulate sample rate offset drive, and a frequency
      * selective fading channel response that is either Rayleigh or Ricean
@@ -66,7 +66,7 @@ namespace gr {
        * \param K Rician K-factor, the ratio of specular to diffuse power in the model
        * \param delays  A list of fractional sample delays making up the power delay profile
        * \param mags    A list of magnitudes corresponding to each delay time in the power delay profile
-       * \param ntaps_mpath The length of the filter to interpolate the power delay profile over. 
+       * \param ntaps_mpath The length of the filter to interpolate the power delay profile over.
                             Delays in the PDP must lie between 0 and ntaps_mpath, fractional delays
                             will be sinc-interpolated only to the width of this filter.
        * \param noise_amp Specifies the standard deviation of the AWGN process

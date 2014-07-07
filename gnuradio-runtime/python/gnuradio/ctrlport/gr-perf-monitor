@@ -38,7 +38,7 @@ class MAINWindow(QtGui.QMainWindow):
         return QtGui.QSize(800,600)
 
     def __init__(self, radio, port, interface):
-        
+
         super(MAINWindow, self).__init__()
         self.conns = []
         self.plots = []
@@ -223,7 +223,7 @@ class ConInfoDialog(QtGui.QDialog):
         super(ConInfoDialog, self).__init__(parent)
 
         self.gridLayout = QtGui.QGridLayout(self)
-        
+
 
         self.host = QtGui.QLineEdit(self);
         self.port = QtGui.QLineEdit(self);
@@ -270,13 +270,13 @@ class UpdaterWindow(QtGui.QDialog):
         self.buttonlayout = QtGui.QHBoxLayout()
         self.buttonlayout.addWidget(self.cancelButton)
         self.layout.addLayout(self.buttonlayout)
- 
+
         # set layout and go...
         self.setLayout(self.layout)
-            
+
     def _set_slider_value(self, val):
         self.slider.setValue(self.steps*(val-self.props.min.value)/self.valspan)
-             
+
     def _slide(self):
         val = (self.slider.value()*self.valspan + self.props.min.value)/float(self.steps)
         self.textInput.setText(str(val))
@@ -368,7 +368,7 @@ class MForm(QtGui.QWidget):
             latency = ft-st
             self.parent.statusBar().showMessage("Current GNU Radio Control Port Query Latency: %f ms"%\
                                                     (latency*1000))
-            
+
         except Exception, e:
             sys.stderr.write("ctrlport-monitor: radio.get threw exception ({0}).\n".format(e))
             if(type(self.parent) is MAINWindow):
@@ -383,7 +383,7 @@ class MForm(QtGui.QWidget):
                     for plot in self.parent.plots[self.uid]:
                         if plot.qwidget() == p.widget():
                             remove.append(p)
-                
+
                 # Clean up local references to these
                 self.parent.conns.remove(self.parent.conns[self.uid])
                 self.parent.plots.remove(self.parent.plots[self.uid])
@@ -397,13 +397,13 @@ class MForm(QtGui.QWidget):
             else:
                 sys.exit(1)
             return
-            
+
         #UPDATE TABLE:
         self.updateItems(knobs)
 
         #UPDATE PLOTS
         self.parent.update(knobs, self.uid)
-    
+
     def updateItems(self, knobs):
         for b in self.block_dict:
             if(knobs[b[0]].ice_id.im_class == GNURadio.KnobVecF):
@@ -424,7 +424,7 @@ class MForm(QtGui.QWidget):
             else:
                 self.radio = None
                 return
-        
+
         self.uid = uid
         self.parent = parent
         self.layout = QtGui.QGridLayout(self)
@@ -500,7 +500,7 @@ class MForm(QtGui.QWidget):
             for col, block in enumerate(blockrow):
                 if(block == ''):
                     continue
-                
+
                 bgroup = QtGui.QGroupBox(block)
                 playout = QtGui.QFormLayout()
                 bgroup.setLayout(playout)
@@ -539,7 +539,7 @@ class MForm(QtGui.QWidget):
                     bufflayout = QtGui.QFormLayout()
                     buffgroup.setLayout(bufflayout)
                     self.layout.addWidget(buffgroup, row, 2*col+1)
-                
+
                     i = int(block.split(":")[1])
                     name = output_name(blockname)
                     obuff = knobs[name].value
@@ -550,7 +550,7 @@ class MForm(QtGui.QWidget):
                         self.block_dict.append((name, newobuff, i))
                         bufflayout.addRow("Out Buffer {0}".format(i),
                                           newobuff)
-                
+
                 if blockname in blocks or blockname in sinks:
                     item = self.layout.itemAtPosition(row, 2*col-1)
                     if(item):
@@ -561,7 +561,7 @@ class MForm(QtGui.QWidget):
                         bufflayout = QtGui.QFormLayout()
                         buffgroup.setLayout(bufflayout)
                         self.layout.addWidget(buffgroup, row, 2*col-1)
-                
+
                     i = int(block.split(":")[1])
                     name = input_name(blockname)
                     ibuff = knobs[name].value[i]
@@ -582,7 +582,7 @@ class MForm(QtGui.QWidget):
         item = self.table.treeWidget.itemFromIndex(index[0])
         itemname = str(item.text(0))
         self.parent.propertiesMenu(itemname, self.radio, self.uid)
-        
+
 
 class MyClient(IceRadioClient):
     def __init__(self):

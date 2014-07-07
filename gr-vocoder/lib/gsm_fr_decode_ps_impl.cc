@@ -74,4 +74,4 @@ namespace gr {
     }
 
   } /* namespace vocoder */
-} /* namespace gr */       
+} /* namespace gr */

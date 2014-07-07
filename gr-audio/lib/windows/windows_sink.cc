@@ -101,7 +101,7 @@ namespace gr {
 
         for(int i = 0; i < noutput_items; i += d_chunk_size) {
 	  for(int j = 0; j < d_chunk_size; j++) {
-            d_buffer[2*j + 0] = (short)(sin(2.0 * 3.1415926535897932384626 * 
+            d_buffer[2*j + 0] = (short)(sin(2.0 * 3.1415926535897932384626 *
                                             (float)j * 1000.0 / (float)d_sampling_freq) *
                                         8192 + 0);	//+32767
             d_buffer[2*j + 1] = d_buffer[2*j + 0];
@@ -119,7 +119,7 @@ namespace gr {
         switch(input_items.size ()) {
         case 1:         // mono input
           f0 = (const float*)input_items[0];
-          
+
 	  for(int i = 0; i < noutput_items; i += d_chunk_size) {
             for(int j = 0; j < d_chunk_size; j++) {
               d_buffer[2*j + 0] = (short)(f0[j] * 32767);

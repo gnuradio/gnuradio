@@ -26,7 +26,7 @@
 #include <gnuradio/wavelet/api.h>
 #include <gnuradio/sync_block.h>
 
-namespace gr { 
+namespace gr {
   namespace wavelet {
 
     /*!
@@ -49,7 +49,7 @@ namespace gr {
                        int order = 20,
                        bool forward = true);
     };
-    
+
   } /* namespace wavelet */
 } /* namespace gr */
 

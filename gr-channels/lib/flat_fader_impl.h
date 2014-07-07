@@ -37,7 +37,7 @@
 #define FASTSINCOS  2
 
 namespace gr {
-  namespace channels { 
+  namespace channels {
 
     class flat_fader_impl {
       private:
@@ -45,12 +45,12 @@ namespace gr {
         boost::mt19937 seed_1;
         boost::uniform_real<> dist_1; // U(-pi,pi)
         boost::variate_generator<boost::mt19937&, boost::uniform_real<> > rv_1;
-    
+
         // random walk variate
         boost::mt19937 seed_2;
         boost::uniform_real<> dist_2; // U(-pi,pi)
         boost::variate_generator<boost::mt19937&, boost::uniform_real<> > rv_2;
-      
+
       public:
         int d_N; // number of sinusoids
         float d_fDTs;  // normalized maximum doppler frequency
@@ -58,24 +58,24 @@ namespace gr {
         float d_theta_los;
         float d_step;  // maximum random walk step size
         uint64_t d_m;  // sample counter
-        
+
         float d_K;     // Rician factor (ratio of the specular power to the scattered power)
         bool d_LOS;    // LOS path exists? chooses Rician (LOS) vs Rayleigh (NLOS) model.
-        
+
         std::vector<float> d_psi; // in-phase initial phase
         std::vector<float> d_phi; // quadrature initial phase
-        
+
         std::vector<float>  d_costable;
-        
+
         sincostable d_table;
-        
+
         float scale_sin, scale_los, scale_nlos;
-    
+
         void update_theta();
-    
+
         flat_fader_impl(unsigned int N, float fDTs, bool LOS, float K, int seed);
         gr_complex next_sample();
-    
+
     }; /* class flat_fader_impl */
   } /* namespace channels */
 } /* namespace gr */

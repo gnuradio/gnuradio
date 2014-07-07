@@ -30,7 +30,7 @@ namespace gr {
   namespace blocks {
     namespace pdu {
 
-      size_t 
+      size_t
       itemsize(vector_type type)
       {
 	switch(type) {

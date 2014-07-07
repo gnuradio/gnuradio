@@ -143,7 +143,7 @@ class test_message(gr_unittest.TestCase):
 
         rec_msg = snk.get_message(0)
         self.assertTrue(pmt.eqv(rec_msg, msg))
-        
+
 
 if __name__ == '__main__':
     gr_unittest.run(test_message, "test_message.xml")

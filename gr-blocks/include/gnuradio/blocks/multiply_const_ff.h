@@ -39,17 +39,17 @@ namespace gr {
     {
 
     public:
-      
+
       // gr::blocks::multiply_const_ff::sptr
       typedef boost::shared_ptr<multiply_const_ff> sptr;
-      
+
       /*!
        * \brief Create an instance of multiply_const_ff
        * \param k real multiplicative constant
        * \param vlen Vector length of incoming stream
        */
       static sptr make(float k, size_t vlen=1);
-      
+
       /*!
        * \brief Return real multiplicative constant
        */

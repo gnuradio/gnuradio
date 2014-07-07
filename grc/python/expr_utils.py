@@ -54,10 +54,10 @@ def expr_split(expr):
     Split up an expression by non alphanumeric characters, including underscore.
     Leave strings in-tact.
     #TODO ignore escaped quotes, use raw strings.
-    
+
     Args:
         expr: an expression string
-    
+
     Returns:
         a list of string tokens that form expr
     """
@@ -82,11 +82,11 @@ def expr_split(expr):
 def expr_replace(expr, replace_dict):
     """
     Search for vars in the expression and add the prepend.
-    
+
     Args:
         expr: an expression string
         replace_dict: a dict of find:replace
-    
+
     Returns:
         a new expression with the prepend
     """
@@ -99,11 +99,11 @@ def expr_replace(expr, replace_dict):
 def get_variable_dependencies(expr, vars):
     """
     Return a set of variables used in this expression.
-    
+
     Args:
         expr: an expression string
         vars: a list of variable names
-    
+
     Returns:
         a subset of vars used in the expression
     """
@@ -113,10 +113,10 @@ def get_variable_dependencies(expr, vars):
 def get_graph(exprs):
     """
     Get a graph representing the variable dependencies
-    
+
     Args:
         exprs: a mapping of variable name to expression
-    
+
     Returns:
         a graph of variable deps
     """
@@ -132,10 +132,10 @@ def get_graph(exprs):
 def sort_variables(exprs):
     """
     Get a list of variables in order of dependencies.
-    
+
     Args:
         exprs: a mapping of variable name to expression
-    
+
     Returns:
         a list of variable names
     @throws Exception circular dependencies
@@ -156,12 +156,12 @@ def sort_variables(exprs):
 def sort_objects(objects, get_id, get_expr):
     """
     Sort a list of objects according to their expressions.
-    
+
     Args:
         objects: the list of objects to sort
         get_id: the function to extract an id from the object
         get_expr: the function to extract an expression from the object
-    
+
     Returns:
         a list of sorted objects
     """

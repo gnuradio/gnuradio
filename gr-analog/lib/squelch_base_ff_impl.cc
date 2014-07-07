@@ -51,26 +51,26 @@ namespace gr {
     {
       return d_ramp;
     }
-    
-    void 
+
+    void
     squelch_base_ff_impl::set_ramp(int ramp)
     {
       d_ramp = ramp;
     }
-    
-    bool 
+
+    bool
     squelch_base_ff_impl::gate() const
     {
       return d_gate;
     }
 
-    void 
+    void
     squelch_base_ff_impl::set_gate(bool gate)
     {
       d_gate = gate;
     }
-    
-    bool 
+
+    bool
     squelch_base_ff_impl::unmuted() const
     {
       return (d_state == ST_UNMUTED || d_state == ST_ATTACK);
@@ -109,7 +109,7 @@ namespace gr {
 	  d_envelope = 0.5-std::cos(M_PI*(++d_ramped)/d_ramp)/2.0;
 
 	  // use >= in case d_ramp is set to lower value elsewhere
-	  if(d_ramped >= d_ramp) { 
+	  if(d_ramped >= d_ramp) {
 	    d_state = ST_UNMUTED;
 	    d_envelope = 1.0;
 	  }

@@ -42,7 +42,7 @@ namespace gr {
     public:
       // gr::blocks::@NAME@::sptr
       typedef boost::shared_ptr<@NAME@> sptr;
-      
+
       static sptr make(size_t size);
 
       virtual std::vector<@TYPE@> level() const = 0;

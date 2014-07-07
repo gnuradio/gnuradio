@@ -117,7 +117,7 @@ namespace gr {
 	  out += mm * d_itemsize;
 	  d_msg_offset += mm * d_itemsize;
 	  assert(d_msg_offset <= d_msg->length());
-	  
+
 	  if (d_msg_offset == d_msg->length()){
 	    if (d_msg->type() == 1)	           // type == 1 sets EOF
 	      d_eof = true;
@@ -131,17 +131,17 @@ namespace gr {
 	  if (d_msgq->empty_p() && nn > 0){    // no more messages in the queue, return what we've got
 	    break;
 	  }
-	  
+
 	  if (d_eof)
 	    return -1;
-	  
+
 	  d_msg = d_msgq->delete_head();	   // block, waiting for a message
 	  d_msg_offset = 0;
-	  
+
 	  if ((d_msg->length() % d_itemsize) != 0)
 	    throw std::runtime_error("msg length is not a multiple of d_itemsize");
 	}
-	
+
       }
 
       return nn;

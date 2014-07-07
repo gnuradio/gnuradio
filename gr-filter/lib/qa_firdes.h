@@ -27,9 +27,9 @@
 
 namespace gr {
   namespace filter {
-    
+
     class qa_firdes : public CppUnit::TestCase {
-      
+
       CPPUNIT_TEST_SUITE(qa_firdes);
       CPPUNIT_TEST(t1);
       CPPUNIT_TEST(t2);
@@ -39,7 +39,7 @@ namespace gr {
       CPPUNIT_TEST(t6);
       CPPUNIT_TEST(t7);
       CPPUNIT_TEST_SUITE_END();
-      
+
     private:
       void t1();
       void t2();
@@ -49,7 +49,7 @@ namespace gr {
       void t6();
       void t7();
     };
-    
+
   } /* namespace filter */
 } /* namespace gr */
 

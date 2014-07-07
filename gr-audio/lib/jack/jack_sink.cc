@@ -117,7 +117,7 @@ namespace gr {
       pthread_cond_init(&d_ringbuffer_ready, NULL);;
       pthread_mutex_init(&d_jack_process_lock, NULL);
 #endif
-  
+
       // try to become a client of the JACK server
       jack_options_t options = JackNullOption;
       jack_status_t status;

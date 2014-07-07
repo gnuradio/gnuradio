@@ -38,7 +38,7 @@ namespace gr {
       bool d_repeat;
       bool d_updated;
       boost::mutex fp_mutex;
-      
+
       void do_update();
 
     public:

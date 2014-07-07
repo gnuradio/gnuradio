@@ -34,7 +34,7 @@ namespace gr {
     {
       return gnuradio::get_initial_sptr(new deinterleave_impl(itemsize, blocksize));
     }
-    
+
     deinterleave_impl::deinterleave_impl(size_t itemsize, unsigned int blocksize)
       : block("deinterleave",
               io_signature::make (1, 1, itemsize),
@@ -51,7 +51,7 @@ namespace gr {
       d_noutputs = noutputs;
       return true;
     }
-    
+
     int
     deinterleave_impl::general_work(int noutput_items,
                                     gr_vector_int& ninput_items,
@@ -60,14 +60,14 @@ namespace gr {
     {
       const char *in = (const char*)input_items[0];
       char **out = (char**)&output_items[0];
-      
+
       memcpy(out[d_current_output], in, d_itemsize * d_blocksize);
       consume_each(d_blocksize);
       produce(d_current_output, d_blocksize);
       d_current_output = (d_current_output + 1) % d_noutputs;
       return WORK_CALLED_PRODUCE;
     }
-    
-    
+
+
   } /* namespace blocks */
 } /* namespace gr */

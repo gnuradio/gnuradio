@@ -21,14 +21,14 @@
  */
 
  #define _USE_MATH_DEFINES
- 
+
 #include "channel_model2_impl.h"
 #include <gnuradio/io_signature.h>
 #include <iostream>
 
 namespace gr {
   namespace channels {
-    
+
     channel_model2::sptr
     channel_model2::make(double noise_voltage,
                          double epsilon,
@@ -150,7 +150,7 @@ namespace gr {
 	  pmt::mp(0.0), pmt::mp(2.0), pmt::mp(0.0),
 	  "", "Timing Offset", RPC_PRIVLVL_MIN,
           DISPTIME | DISPOPTSTRIP)));
-	  
+
       add_rpc_variable(
         rpcbasic_sptr(new rpcbasic_register_get<channel_model2, std::vector<gr_complex> >(
 	  alias(), "taps",

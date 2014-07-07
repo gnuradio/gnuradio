@@ -28,7 +28,7 @@
 
 namespace gr {
   namespace fft {
-    
+
     class FFT_API goertzel_fc_impl : public goertzel_fc
     {
     private:
@@ -39,9 +39,9 @@ namespace gr {
 
     public:
       goertzel_fc_impl(int rate, int len, float freq);
-      
+
       ~goertzel_fc_impl();
-      
+
       void  set_freq(float freq);
       void  set_rate(int rate);
 

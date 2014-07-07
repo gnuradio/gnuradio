@@ -32,7 +32,7 @@ except ImportError:
 Callback example
 Function called when "design" button is pressed
 or pole-zero plot is changed
-launch function returns gr_filter_design mainwindow 
+launch function returns gr_filter_design mainwindow
 object when callback is not None
 '''
 def print_params(filtobj):

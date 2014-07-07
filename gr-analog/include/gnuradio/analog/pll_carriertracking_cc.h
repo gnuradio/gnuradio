@@ -29,7 +29,7 @@
 
 namespace gr {
   namespace analog {
-    
+
     /*!
      * \brief Implements a PLL which locks to the input frequency and outputs the
      * input signal mixed with that carrier.

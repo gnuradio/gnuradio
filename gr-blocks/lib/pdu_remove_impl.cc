@@ -48,7 +48,7 @@ namespace gr {
       set_msg_handler(pmt::mp("pdus"), boost::bind(&pdu_remove_impl::handle_msg, this, _1));
     }
 
-    void 
+    void
     pdu_remove_impl::handle_msg(pmt::pmt_t pdu)
     {
       // add the field and publish
@@ -61,6 +61,6 @@ namespace gr {
       meta = pmt::dict_delete(meta, d_k);
       message_port_pub(pmt::mp("pdus"), pmt::cons(meta, pmt::cdr(pdu)));
     }
-      
+
   } /* namespace blocks */
 }/* namespace gr */

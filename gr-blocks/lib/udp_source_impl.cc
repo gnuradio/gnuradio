@@ -212,7 +212,7 @@ namespace gr {
       else {
         d_sent += to_send;
       }
-      
+
       return nitems;
     }
 

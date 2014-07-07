@@ -61,7 +61,7 @@ namespace gr {
     short int
     wav_read_sample(FILE *fp, int bytes_per_sample);
 
-    
+
     /*!
      * \brief Write a valid RIFF file header
      *

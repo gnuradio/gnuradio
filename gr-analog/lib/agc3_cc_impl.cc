@@ -72,12 +72,12 @@ namespace gr {
       gr_complex *out = (gr_complex*)output_items[0];
 
 #ifdef __GNUC__
-    // Compute a linear average on reset (no expected)  
+    // Compute a linear average on reset (no expected)
     if(__builtin_expect(d_reset, false)) {
       float mags[noutput_items]  __attribute__ ((aligned (16)));
       volk_32fc_magnitude_32f(mags, &in[0], noutput_items);
-#else   
-    // Compute a linear average on reset (no expected)  
+#else
+    // Compute a linear average on reset (no expected)
 	if(!d_reset) {
 	  std::vector<float> mags(noutput_items);
       volk_32fc_magnitude_32f(&mags[0], &in[0], noutput_items);
@@ -117,7 +117,7 @@ namespace gr {
             mag_sq[i] = in[idx].real()*in[idx].real() + in[idx].imag()*in[idx].imag();
         }
 
-        // compute inverse square roots 
+        // compute inverse square roots
         volk_32f_invsqrt_32f(&inv_mag[0], &mag_sq[0], noutput_items/d_iir_update_decim);
 
         // apply updates

@@ -28,7 +28,7 @@
 
 namespace gr {
   namespace analog {
-    
+
     /*!
      * \brief compute avg magnitude squared.
      * \ingroup measurement_tools_blk

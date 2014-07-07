@@ -49,14 +49,14 @@ namespace gr {
 				 gr_vector_void_star &output_items)
     {
       size_t itemsize = output_signature()->sizeof_stream_item (0);
-      
+
       const char **inv = (const char **) &input_items[0];
       char *out = (char *) output_items[0];
       int nstreams = input_items.size();
-      
+
       assert (noutput_items % nstreams == 0);
       int ni = noutput_items / nstreams;
-      
+
       for (int i = 0; i < ni; i++){
 	for (int j = 0; j < nstreams; j++){
 	  memcpy(out, inv[j], itemsize);
@@ -64,7 +64,7 @@ namespace gr {
 	  inv[j] += itemsize;
 	}
       }
-      
+
       return noutput_items;
     }
 

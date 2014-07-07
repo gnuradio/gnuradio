@@ -49,7 +49,7 @@ namespace gr {
 
       void set_nthreads(int n);
       int nthreads() const;
-      
+
       int work(int noutput_items,
 	       gr_vector_const_void_star &input_items,
 	       gr_vector_void_star &output_items);

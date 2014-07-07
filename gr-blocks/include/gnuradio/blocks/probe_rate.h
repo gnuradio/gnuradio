@@ -48,7 +48,7 @@ namespace gr {
       static sptr make(size_t itemsize, double update_rate_ms = 500.0, double alpha = 0.0001);
 
       virtual void set_alpha(double alpha) = 0;
-      
+
       virtual double rate() = 0;
 
       virtual bool start() = 0;

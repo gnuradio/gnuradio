@@ -30,7 +30,7 @@
 
 namespace gr {
   namespace analog {
-    
+
     rail_ff::sptr
     rail_ff::make(float lo, float hi)
     {
@@ -57,7 +57,7 @@ namespace gr {
       d_lo = lo;
       set_clipping();
     }
-    
+
     void
     rail_ff_impl::set_hi(float hi)
     {

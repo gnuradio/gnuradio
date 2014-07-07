@@ -51,7 +51,7 @@ class grcc:
     def exec_program(self):
         progname = self.fg.get_option('id')
         os.system("{0}/{1}.py".format(self.out_dir, progname))
-        
+
 if __name__ == "__main__":
     usage="%prog: [options] filename"
     description = "Compiles a GRC file (.grc) into a GNU Radio Python program. The program is stored in ~/.grc_gnuradio by default, but this location can be changed with the -d option."

@@ -58,7 +58,7 @@ namespace gr {
     }
 
     bool
-    random_pdu_impl::start() 
+    random_pdu_impl::start()
     {
       output_random();
       return true;
@@ -75,7 +75,7 @@ namespace gr {
       std::vector<unsigned char> vec(len);
       for (int i=0; i<len; i++)
         vec[i] = ((unsigned char) d_bvar()) & d_mask;
-      
+
       // send the vector
       pmt::pmt_t vecpmt(pmt::make_blob(&vec[0], len));
       pmt::pmt_t pdu(pmt::cons(pmt::PMT_NIL, vecpmt));

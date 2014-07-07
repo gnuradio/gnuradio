@@ -28,7 +28,7 @@
 
 class wavelet_wvps_ff;
 
-namespace gr { 
+namespace gr {
   namespace wavelet {
 
     /*!

@@ -55,7 +55,7 @@ namespace gr {
     {
       if (n < 1)
 	n = 1;
-      
+
       d_n = n;
       d_count = n;
 
@@ -73,7 +73,7 @@ namespace gr {
     {
       const char *in = (const char *) input_items[0];
       char *out = (char *) output_items[0];
-      
+
       size_t item_size = input_signature ()->sizeof_stream_item (0);
       int	    ni = 0;
       int	    no = 0;

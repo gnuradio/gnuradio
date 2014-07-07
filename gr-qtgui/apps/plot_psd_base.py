@@ -107,7 +107,7 @@ class plot_base(gr.top_block):
         self.pyWin = sip.wrapinstance(pyQt, QtGui.QWidget)
 
         self._is_setup = True
-        
+
     def is_setup(self):
         return self._is_setup
 

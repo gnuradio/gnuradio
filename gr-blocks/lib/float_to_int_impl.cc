@@ -61,14 +61,14 @@ namespace gr {
 #if 0
       const float *in = (const float *) input_items[0];
       int32_t *out = (int32_t *) output_items[0];
-      
+
       volk_32f_s32f_convert_32i(out, in, d_scale, d_vlen*noutput_items);
 #else
       const float *in = (const float *) input_items[0];
       int *out = (int *) output_items[0];
-      
+
       float_array_to_int (in, out, d_scale, d_vlen*noutput_items);
-      
+
 #endif
 
       return noutput_items;

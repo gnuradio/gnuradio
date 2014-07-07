@@ -36,7 +36,7 @@ namespace gr {
     class BLOCKS_API float_to_uchar : virtual public sync_block
     {
     public:
-      
+
       // gr::blocks::float_to_uchar_ff::sptr
       typedef boost::shared_ptr<float_to_uchar> sptr;
 

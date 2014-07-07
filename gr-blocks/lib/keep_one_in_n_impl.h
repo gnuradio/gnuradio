@@ -42,12 +42,12 @@ namespace gr {
 		       gr_vector_int &ninput_items,
 		       gr_vector_const_void_star &input_items,
 		       gr_vector_void_star &output_items);
-      
+
       void set_n(int n);
     };
 
   } /* namespace blocks */
 } /* namespace gr */
-   
+
 
 #endif /* INCLUDED_KEEP_ONE_IN_N_IMPL_H */

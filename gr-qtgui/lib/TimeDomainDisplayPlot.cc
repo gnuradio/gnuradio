@@ -147,7 +147,7 @@ TimeDomainDisplayPlot::TimeDomainDisplayPlot(int nplots, QWidget* parent)
   setAxisScaleEngine(QwtPlot::yLeft, new QwtLinearScaleEngine);
   setYaxis(-2.0, 2.0);
   setAxisTitle(QwtPlot::yLeft, "Amplitude");
-  
+
   QList<QColor> colors;
   colors << QColor(Qt::blue) << QColor(Qt::red) << QColor(Qt::green)
 	 << QColor(Qt::black) << QColor(Qt::cyan) << QColor(Qt::magenta)
@@ -167,7 +167,7 @@ TimeDomainDisplayPlot::TimeDomainDisplayPlot(int nplots, QWidget* parent)
 
     QwtSymbol *symbol = new QwtSymbol(QwtSymbol::NoSymbol, QBrush(colors[i]),
 				      QPen(colors[i]), QSize(7,7));
-    
+
 #if QWT_VERSION < 0x060000
     d_plot_curve[i]->setRawData(d_xdata, d_ydata[i], d_numPoints);
     d_plot_curve[i]->setSymbol(*symbol);
@@ -337,7 +337,7 @@ TimeDomainDisplayPlot::plotNewData(const std::vector<double*> dataPoints,
 
               m->setLabel(QwtText(s.str().c_str()));
               m->attach(this);
-          
+
               if(!(show && d_tag_markers_en[which])) {
                 m->hide();
               }
@@ -373,7 +373,7 @@ TimeDomainDisplayPlot::plotNewData(const std::vector<double*> dataPoints,
 	  }
 	}
 	_autoScale(bottom, top);
-      }      
+      }
 
       replot();
     }

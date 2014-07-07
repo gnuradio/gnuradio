@@ -318,7 +318,7 @@ Misc
 ----
 
 .. autosummary::
-   :nosignatures: 
+   :nosignatures:
 
    pmt.is_null
    pmt.cvar

@@ -29,7 +29,7 @@
 
 namespace gr {
   namespace filter {
-    
+
     iir_filter_ccz::sptr
     iir_filter_ccz::make(const std::vector<gr_complexd> &fftaps,
 			 const std::vector<gr_complexd> &fbtaps,

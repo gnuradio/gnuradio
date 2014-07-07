@@ -36,7 +36,7 @@ static inline void BFLY(int i, int s, unsigned char * syms, unsigned char *Y, un
   int METRICSHIFT = 1;
   int PRECISIONSHIFT = 2;
 
-  
+
 
   metric =0;
   for(j=0;j<RATE;j++)
@@ -335,7 +335,7 @@ static inline void volk_8u_x4_conv_k7_r2_8u_spiral(unsigned char* Y, unsigned ch
     for(i=0;i<64/2;i++){
       BFLY(i, (((framebits+excess) >> 1) << 1) + j , syms, Y, X, (decision_t *)dec, Branchtab);
     }
-    
+
 
     renormalize(Y, 210);
 
@@ -344,7 +344,7 @@ static inline void volk_8u_x4_conv_k7_r2_8u_spiral(unsigned char* Y, unsigned ch
       printf("%d,", Y[ch]);
     }
     printf("\n");*/
-    
+
   }
   /*skip*/
   return;
@@ -368,16 +368,16 @@ static inline void volk_8u_x4_conv_k7_r2_8u_generic(unsigned char* Y, unsigned c
 
 
   int s,i;
-  
 
-  
+
+
   for (s=0;s<nbits;s++){
     void *tmp;
     for(i=0;i<NUMSTATES/2;i++){
       BFLY(i, s, syms, Y, X, (decision_t *)dec, Branchtab);
     }
 
-   
+
 
     renormalize(Y, RENORMALIZE_THRESHOLD);
 

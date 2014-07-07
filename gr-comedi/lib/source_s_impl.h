@@ -30,7 +30,7 @@
 
 namespace gr {
   namespace comedi {
-    
+
     class source_s_impl : public source_s
     {
     private:

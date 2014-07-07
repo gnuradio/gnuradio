@@ -49,12 +49,12 @@ namespace gr {
 				gr_vector_void_star &output_items)
     {
       size_t block_size = output_signature()->sizeof_stream_item (0);
-      
+
       const char *in = (const char *) input_items[0];
       char *out = (char *) output_items[0];
-      
+
       memcpy (out, in, noutput_items * block_size);
-      
+
       return noutput_items;
     }
 

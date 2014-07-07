@@ -69,7 +69,7 @@ class Block(Element):
     def get_coordinate(self):
         """
         Get the coordinate from the position param.
-        
+
         Returns:
             the coordinate tuple (x, y) or (0, 0) if failure
         """
@@ -93,7 +93,7 @@ class Block(Element):
     def set_coordinate(self, coor):
         """
         Set the coordinate into the position param.
-        
+
         Args:
             coor: the coordinate tuple (x, y)
         """
@@ -102,7 +102,7 @@ class Block(Element):
     def get_rotation(self):
         """
         Get the rotation from the position param.
-        
+
         Returns:
             the rotation in degrees or 0 if failure
         """
@@ -116,7 +116,7 @@ class Block(Element):
     def set_rotation(self, rot):
         """
         Set the rotation into the position param.
-        
+
         Args:
             rot: the rotation in degrees
         """
@@ -177,7 +177,7 @@ class Block(Element):
         self.H = max(*(
             [self.label_height+2*BLOCK_LABEL_PADDING] + [2*PORT_BORDER_SEPARATION + \
             sum([port.H + PORT_SEPARATION for port in ports]) - PORT_SEPARATION
-            for ports in (self.get_sources_gui(), self.get_sinks_gui())] + 
+            for ports in (self.get_sources_gui(), self.get_sinks_gui())] +
             [4*PORT_BORDER_SEPARATION + \
             sum([(port.H) + PORT_SEPARATION for port in ports]) - PORT_SEPARATION
             for ports in ([i for i in self.get_sources_gui() if i.get_type() == 'bus'], [i for i in self.get_sinks_gui() if i.get_type() == 'bus'])]
@@ -186,7 +186,7 @@ class Block(Element):
     def draw(self, gc, window):
         """
         Draw the signal block with label and inputs/outputs.
-        
+
         Args:
             gc: the graphics context
             window: the gtk window to draw on
@@ -210,11 +210,11 @@ class Block(Element):
     def what_is_selected(self, coor, coor_m=None):
         """
         Get the element that is selected.
-        
+
         Args:
             coor: the (x,y) tuple
             coor_m: the (x_m, y_m) tuple
-        
+
         Returns:
             this block, a port, or None
         """

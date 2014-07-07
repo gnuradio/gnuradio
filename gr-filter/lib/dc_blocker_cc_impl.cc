@@ -30,7 +30,7 @@
 
 namespace gr {
   namespace filter {
-    
+
     moving_averager_c::moving_averager_c(int D)
       : d_length(D), d_out(0), d_out_d1(0), d_out_d2(0)
     {
@@ -48,10 +48,10 @@ namespace gr {
       d_delay_line.push_back(x);
       d_out = d_delay_line[0];
       d_delay_line.pop_front();
-      
+
       gr_complex y = x - d_out_d1 + d_out_d2;
       d_out_d2 = y;
-      
+
       return (y / (float)(d_length));
     }
 
@@ -114,7 +114,7 @@ namespace gr {
     {
       const gr_complex *in = (const gr_complex*)input_items[0];
       gr_complex *out = (gr_complex*)output_items[0];
-      
+
       if(d_long_form) {
 	gr_complex y1, y2, y3, y4, d;
 	for(int i = 0; i < noutput_items; i++) {
@@ -122,11 +122,11 @@ namespace gr {
 	  y2 = d_ma_1->filter(y1);
 	  y3 = d_ma_2->filter(y2);
 	  y4 = d_ma_3->filter(y3);
-	  
+
 	  d_delay_line.push_back(d_ma_0->delayed_sig());
 	  d = d_delay_line[0];
 	  d_delay_line.pop_front();
-	  
+
 	  out[i] = d - y4;
 	}
       }
@@ -138,7 +138,7 @@ namespace gr {
 	  out[i] = d_ma_0->delayed_sig() - y2;
 	}
       }
-      
+
       return noutput_items;
     }
 

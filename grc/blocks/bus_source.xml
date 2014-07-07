@@ -8,13 +8,13 @@
 	<name>Bus Source</name>
 	<key>bus_source</key>
 	<make>$yesno.yesno</make>
-	
+
 	<param>
 		<name>On/Off</name>
 		<key>yesno</key>
 		<type>enum</type>
 		<option>
-			<name>On</name>			
+			<name>On</name>
 			<key>on</key>
 			<opt>yesno:True</opt>
 		</option>
@@ -23,5 +23,5 @@
 			<key>off</key>
 			<opt>yesno:False</opt>
 		</option>
-	</param>	
+	</param>
 </block>

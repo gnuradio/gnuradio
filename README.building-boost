@@ -6,7 +6,7 @@ If running a distribution that requires boost 1.35 (or later) be built
 from scratch, these instructions explain how to do so, and in a way
 that allows it to peacefully coexist with earlier versions of boost.
 
-There are two recommended methods: 
+There are two recommended methods:
 Installing boost using the PyBOMBS utility, or building it from a source
 tarball.
 

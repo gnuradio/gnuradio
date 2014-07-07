@@ -28,12 +28,12 @@ def _get_sock_fd(addr, port, server):
     Get the file descriptor for the socket.
     As a client, block on connect, dup the socket descriptor.
     As a server, block on accept, dup the client descriptor.
-    
+
     Args:
         addr: the ip address string
         port: the tcp port number
         server: true for server mode, false for client mode
-    
+
     Returns:
         the file descriptor number
     """

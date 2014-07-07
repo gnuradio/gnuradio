@@ -53,7 +53,7 @@ class MAINWindow(QtGui.QMainWindow):
         return Qtgui.QSize(800,600)
 
     def __init__(self, radio, port, interface):
-        
+
         super(MAINWindow, self).__init__()
         self.updateRate = 1000;
         self.conns = []
@@ -195,11 +195,11 @@ class MAINWindow(QtGui.QMainWindow):
             else:
                 self.newPlotC(tag, uid, title, pmin, pmax,
                               log, strip, stem)
-            
+
         elif(disp & gr.DISPXY):
             scatter = disp & gr.DISPOPTSCATTER
             self.newPlotConst(tag, uid, title, pmin, pmax, scatter)
-            
+
         elif(disp & gr.DISPPSD):
             if(disp & gr.DISPOPTCPLX == 0):
                 self.newPlotPsdF(tag, uid, title)
@@ -215,7 +215,7 @@ class MAINWindow(QtGui.QMainWindow):
         knobprop = self.knobprops[tree.uid][tag]
         disp = knobprop.display
         iscomplex = (disp & gr.DISPOPTCPLX) or (disp & gr.DISPXY)
-        
+
         if(disp != gr.DISPNULL):
             data = "PlotData:::{0}:::{1}".format(tag, iscomplex)
         else:
@@ -268,8 +268,8 @@ class MAINWindow(QtGui.QMainWindow):
         plot = GrDataPlotterConst(tag, 32e6, pmin, pmax, stripchart)
         plot.scatter(scatter)
         self.createPlot(plot, uid, title)
-    
-    def newPlotF(self, tag, uid, title="", pmin=None, pmax=None, 
+
+    def newPlotF(self, tag, uid, title="", pmin=None, pmax=None,
                  logy=False, stripchart=False, stem=False):
         plot = GrDataPlotterF(tag, 32e6, pmin, pmax, stripchart)
         plot.semilogy(logy)
@@ -461,7 +461,7 @@ class ConInfoDialog(QtGui.QDialog):
         super(ConInfoDialog, self).__init__(parent)
 
         self.gridLayout = QtGui.QGridLayout(self)
-        
+
 
         self.host = QtGui.QLineEdit(self);
         self.port = QtGui.QLineEdit(self);
@@ -515,7 +515,7 @@ class UpdaterWindow(QtGui.QDialog):
             self.buttonlayout = QtGui.QHBoxLayout()
             self.buttonlayout.addWidget(self.cancelButton)
             self.layout.addLayout(self.buttonlayout)
- 
+
         else: # we have a set function
             self.textInput = QtGui.QLineEdit()
             self.layout.addWidget(self.textInput)
@@ -535,7 +535,7 @@ class UpdaterWindow(QtGui.QDialog):
             self.applyButton.connect(self.applyButton, QtCore.SIGNAL('clicked()'), self._apply)
             self.setButton.connect(self.setButton, QtCore.SIGNAL('clicked()'), self._set)
             self.cancelButton.connect(self.cancelButton, QtCore.SIGNAL('clicked()'), self.reject)
- 
+
             self.is_num = ((type(self.sv.value)==float) or (type(self.sv.value)==int))
             if(self.is_num):
                 self.sliderlayout = QtGui.QHBoxLayout()
@@ -548,7 +548,7 @@ class UpdaterWindow(QtGui.QDialog):
 
                 self.steps = 10000
                 self.valspan = self.props.max.value - self.props.min.value
-            
+
                 self.slider.setRange(0, 10000)
                 self._set_slider_value(self.sv.value)
 
@@ -566,10 +566,10 @@ class UpdaterWindow(QtGui.QDialog):
 
         # set layout and go...
         self.setLayout(self.layout)
-            
+
     def _set_slider_value(self, val):
         self.slider.setValue(self.steps*(val-self.props.min.value)/self.valspan)
-             
+
     def _slide(self):
         val = (self.slider.value()*self.valspan + self.props.min.value)/float(self.steps)
         self.textInput.setText(str(val))
@@ -611,7 +611,7 @@ class MForm(QtGui.QWidget):
             ft = time.time();
             latency = ft-st;
             self.parent.statusBar().showMessage("Current GNU Radio Control Port Query Latency: %f ms"%(latency*1000))
-            
+
         except Exception, e:
             sys.stderr.write("ctrlport-monitor: radio.get threw exception ({0}).\n".format(e))
             if(type(self.parent) is MAINWindow):
@@ -626,7 +626,7 @@ class MForm(QtGui.QWidget):
                     for plot in self.parent.plots[self.uid]:
                         if plot.qwidget() == p.widget():
                             remove.append(p)
-                
+
                 # Clean up local references to these
                 self.parent.conns.remove(self.parent.conns[self.uid])
                 self.parent.plots.remove(self.parent.plots[self.uid])
@@ -642,7 +642,7 @@ class MForm(QtGui.QWidget):
             return
 
         tableitems = knobs.keys()
-            
+
         #UPDATE TABLE:
         try:
             self.table.updateItems(knobs, self.knobprops)
@@ -666,7 +666,7 @@ class MForm(QtGui.QWidget):
             else:
                 self.radio = None
                 return
-        
+
         self.uid = uid
         self.parent = parent
         self.horizontalLayout = QtGui.QVBoxLayout(self)
@@ -680,7 +680,7 @@ class MForm(QtGui.QWidget):
         self.constupdatediv = 0
         self.tableupdatediv = 0
         plotsize=250
-            
+
         # make table
         self.table = GrDataPlotterValueTable(uid, self, 0, 0, 400, 200)
         sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Preferred, QtGui.QSizePolicy.Preferred)
@@ -692,12 +692,12 @@ class MForm(QtGui.QWidget):
         # add things to layouts
         self.horizontalLayout.addWidget(self.table.treeWidget)
 
-        # set up timer   
+        # set up timer
         self.connect(self.timer, QtCore.SIGNAL('timeout()'), self.update)
         self.updateRate = updateRate;
         self.timer.start(self.updateRate)
 
-        # set up context menu .. 
+        # set up context menu ..
         self.table.treeWidget.setContextMenuPolicy(QtCore.Qt.CustomContextMenu)
         self.table.treeWidget.customContextMenuRequested.connect(self.openMenu)
 
@@ -710,13 +710,13 @@ class MForm(QtGui.QWidget):
         self.connect(self.table.treeWidget,
                      QtCore.SIGNAL('itemPressed(QTreeWidgetItem*, int)'),
                      self.parent.startDrag)
-        
+
     def openMenu(self, pos):
         index = self.table.treeWidget.selectedIndexes()
         item = self.table.treeWidget.itemFromIndex(index[0])
         itemname = str(item.text(0))
         self.parent.propertiesMenu(itemname, self.radio, self.uid)
-        
+
 
 def get_minmax(p):
     pmin = p.min.value
@@ -733,7 +733,7 @@ def get_minmax(p):
         pmin = struct.unpack('b', pmin)[0]
     if(type(pmax) == str):
         pmax = struct.unpack('b', pmax)[0]
-        
+
     if pmin == []:
         pmin = None
     else:

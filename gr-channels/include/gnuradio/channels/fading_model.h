@@ -29,7 +29,7 @@
 
 namespace gr {
   namespace channels {
-    
+
     /*!
      * \brief fading simulator
      * \ingroup channel_models_blk
@@ -37,7 +37,7 @@ namespace gr {
      * \details
      * This block implements a basic fading model simulator that can
      * be used to help evaluate, design, and test various signals,
-     * waveforms, and algorithms. 
+     * waveforms, and algorithms.
      */
     class CHANNELS_API fading_model : virtual public sync_block
     {
@@ -47,7 +47,7 @@ namespace gr {
 
       /*! \brief Build the channel simulator.
        *
-       * \param N    The number of sinusiods to use in simulating the channel; 8 is a good value 
+       * \param N    The number of sinusiods to use in simulating the channel; 8 is a good value
        * \param fDTs normalized maximum Doppler frequency, fD * Ts
        * \param LOS  include Line-of-Site path? selects between Rayleigh (NLOS) and Rician (LOS) models
        * \param K    Rician factor (ratio of the specular power to the scattered power)

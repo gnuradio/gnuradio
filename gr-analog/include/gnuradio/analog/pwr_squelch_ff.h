@@ -29,7 +29,7 @@
 
 namespace gr {
   namespace analog {
-    
+
     /*!
      * \brief gate or zero output when input power below threshold
      * \ingroup level_controllers_blk
@@ -44,7 +44,7 @@ namespace gr {
     public:
       // gr::analog::pwr_squelch_ff::sptr
       typedef boost::shared_ptr<pwr_squelch_ff> sptr;
-      
+
       /*!
        * \brief Make power-based squelch block.
        *

@@ -38,7 +38,7 @@ namespace gr {
      * \details
 
      * This block takes in a signal stream and calls
-     * gr::filter::kernel::pfb_arb_resampler_ccf to perform 
+     * gr::filter::kernel::pfb_arb_resampler_ccf to perform
      * arbitrary resampling on the stream.
      *
      * Output sampling rate is \p rate * input rate.
@@ -105,12 +105,12 @@ namespace gr {
 
       /*!
        * Gets the decimation rate of the filter.
-       */    
+       */
       virtual unsigned int decimation_rate() const =0;
-      
+
       /*!
        * Gets the fractional rate of the filter.
-       */    
+       */
       virtual float fractional_rate() const = 0;
 
       /*!

@@ -30,7 +30,7 @@
 
 namespace gr {
   namespace filter {
-    
+
     /*!
      * \brief  single pole IIR filter with float input, float output
      * \ingroup filter_blk
@@ -69,7 +69,7 @@ namespace gr {
       typedef boost::shared_ptr<single_pole_iir_filter_ff> sptr;
 
       static sptr make(double alpha, unsigned int vlen=1);
-      
+
       virtual void set_taps (double alpha) = 0;
     };
 

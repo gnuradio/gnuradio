@@ -48,7 +48,7 @@ namespace gr {
        */
       static sptr make(int nsamples, float reference);
     };
-    
+
   } /* namespace analog */
 } /* namespace gr */
 

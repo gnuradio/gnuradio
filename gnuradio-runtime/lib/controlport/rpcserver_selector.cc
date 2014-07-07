@@ -36,5 +36,5 @@ bool rpcmanager::make_aggregator(false);
 #endif
 
 #ifdef RPCSERVER_XMLRPC
-  #error TODO XMLRPC 
+  #error TODO XMLRPC
 #endif

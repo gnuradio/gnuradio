@@ -37,17 +37,17 @@ namespace gr {
     {
     public:
       goertzel(int rate, int len, float freq);
-      
+
       void set_params(int rate, int len, float freq);
-      
+
       // Process a input array
       gr_complex batch(float *in);
-      
+
       // Process sample by sample
       void input(const float &in);
       gr_complex output();
       bool ready() const { return d_processed == d_len; }
-      
+
     private:
       float d_d1;
       float d_d2;
@@ -56,7 +56,7 @@ namespace gr {
       int   d_len;
       int   d_processed;
     };
-    
+
   } /* namespace fft */
 } /* namespace gr */
 

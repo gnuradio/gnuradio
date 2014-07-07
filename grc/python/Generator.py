@@ -147,7 +147,7 @@ Add a Misc->Throttle block to your flow graph to avoid CPU congestion.''')
             'flow_graph': self._flow_graph,
             'variables': variables,
             'parameters': parameters,
-            'monitors': monitors,
+                        'monitors': monitors,
             'blocks': blocks,
             'connections': connections,
             'messages': messages,

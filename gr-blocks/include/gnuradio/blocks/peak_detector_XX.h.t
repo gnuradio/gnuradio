@@ -85,7 +85,7 @@ namespace gr {
        *  \param look new look-ahead factor
        */
       virtual void set_look_ahead(int look) = 0;
-      
+
       /*! \brief Set the running average alpha
        *  \param alpha new alpha for running average
        */

@@ -44,7 +44,7 @@ namespace gr {
     public:
       // gr::analog::ctcss_squelch_ff::sptr
       typedef boost::shared_ptr<ctcss_squelch_ff> sptr;
-      
+
       /*!
        * \brief Make CTCSS tone squelch block.
        *

@@ -30,7 +30,7 @@
 
 namespace gr {
   namespace analog {
-    
+
     class ANALOG_API pwr_squelch_cc_impl :
       public pwr_squelch_cc, squelch_base_cc_impl
     {
@@ -64,7 +64,7 @@ namespace gr {
 		       gr_vector_int &ninput_items,
 		       gr_vector_const_void_star &input_items,
 		       gr_vector_void_star &output_items)
-      { 
+      {
 	return squelch_base_cc_impl::general_work(noutput_items,
 						  ninput_items,
 						  input_items,

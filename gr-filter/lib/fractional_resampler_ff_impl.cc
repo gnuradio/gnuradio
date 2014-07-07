@@ -30,7 +30,7 @@
 
 namespace gr {
   namespace filter {
-    
+
     fractional_resampler_ff::sptr
     fractional_resampler_ff::make(float phase_shift, float resamp_ratio)
     {

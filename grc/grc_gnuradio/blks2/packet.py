@@ -71,7 +71,7 @@ class packet_encoder(gr.hier_block2):
     def __init__(self, samples_per_symbol, bits_per_symbol, preamble='', access_code='', pad_for_usrp=True):
         """
         packet_mod constructor.
-        
+
         Args:
             samples_per_symbol: number of samples per symbol
             bits_per_symbol: number of bits per symbol
@@ -110,7 +110,7 @@ class packet_encoder(gr.hier_block2):
     def send_pkt(self, payload):
         """
         Wrap the payload in a packet and push onto the message queue.
-        
+
         Args:
             payload: string, data to send
         """
@@ -153,7 +153,7 @@ class packet_decoder(gr.hier_block2):
     def __init__(self, access_code='', threshold=-1, callback=None):
         """
         packet_demod constructor.
-        
+
         Args:
             access_code: AKA sync vector
             threshold: detect access_code with up to threshold bits wrong (0 -> use default)

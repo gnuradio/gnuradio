@@ -102,7 +102,7 @@ class test_hier_block2_message_connections(gr_unittest.TestCase):
             receive_port):
         """assert that the given sender block has a subscription for the given
         receiver block on the appropriate send and receive ports
-        
+
         :param sender: a block sptr to the message sender
         :param string send_port: the port messages are being sent on
         :param receiver: a block sptr to the message receiver
@@ -116,7 +116,7 @@ class test_hier_block2_message_connections(gr_unittest.TestCase):
     def assert_has_num_subscriptions(self, block, port, number):
         """assert that the given block has the given number of subscriptions
         on the given port
-        
+
         :param block: a block sptr
         :param string port: the port name
         :param number: the number of subscriptions expected

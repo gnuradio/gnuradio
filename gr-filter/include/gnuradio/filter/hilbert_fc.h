@@ -30,7 +30,7 @@
 
 namespace gr {
   namespace filter {
-    
+
     /*!
      * \brief Hilbert transformer.
      * \ingroup filter_blk

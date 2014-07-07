@@ -20,7 +20,7 @@
 # Boston, MA 02110-1301, USA.
 #
 
-# 
+#
 # This program tests mixed python and c++ GRCP sets in a single app
 #
 

@@ -97,7 +97,7 @@ namespace gr {
     {
       // Block information word is the first data word in frame
       int biw = d_datawords[0];
-      
+
       // Nothing to see here, please move along
       if(biw == 0 || biw == 0x001FFFFF)
 	return;

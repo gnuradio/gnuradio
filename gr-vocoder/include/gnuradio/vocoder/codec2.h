@@ -43,11 +43,11 @@ namespace gr {
 	MODE_1300 = CODEC2_MODE_1300,
 	MODE_1200 = CODEC2_MODE_1200,
       };
-      
+
     private:
 
     };
-    
+
   } /* namespace vocoder */
 } /* namespace gr */
 

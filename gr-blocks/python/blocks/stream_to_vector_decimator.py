@@ -30,7 +30,7 @@ class stream_to_vector_decimator(gr.hier_block2):
     def __init__(self, item_size, sample_rate, vec_rate, vec_len):
         """
         Create the block chain.
-        
+
         Args:
             item_size: the number of bytes per sample
             sample_rate: the rate of incoming samples
@@ -53,7 +53,7 @@ class stream_to_vector_decimator(gr.hier_block2):
     def set_sample_rate(self, sample_rate):
         """
         Set the new sampling rate and update the decimator.
-        
+
         Args:
             sample_rate: the new rate
         """
@@ -63,7 +63,7 @@ class stream_to_vector_decimator(gr.hier_block2):
     def set_vec_rate(self, vec_rate):
         """
         Set the new vector rate and update the decimator.
-        
+
         Args:
             vec_rate: the new rate
         """
@@ -73,7 +73,7 @@ class stream_to_vector_decimator(gr.hier_block2):
     def set_decimation(self, decim):
         """
         Set the decimation parameter directly.
-        
+
         Args:
             decim: the new decimation
         """

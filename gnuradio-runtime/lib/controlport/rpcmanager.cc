@@ -42,7 +42,7 @@ rpcmanager::get()
 {
   if(aggregator_registered) {
     return aggregator.get();
-  } 
+  }
   else if(booter_registered) {
     return boot;
   }

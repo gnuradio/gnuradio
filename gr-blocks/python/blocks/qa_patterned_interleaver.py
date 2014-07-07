@@ -40,14 +40,14 @@ class test_patterned_interleaver (gr_unittest.TestCase):
         itg = blocks.patterned_interleaver(gr.sizeof_float, dst_data)
         dst = blocks.vector_sink_f()
         head = blocks.head(gr.sizeof_float, 8);
-        
+
         self.tb.connect( src0, (itg,0) );
         self.tb.connect( src1, (itg,1) );
         self.tb.connect( src2, (itg,2) );
         self.tb.connect( itg, head, dst );
-    
+
         self.tb.run()
         self.assertEqual(list(dst_data), list(dst.data()))
-    
+
 if __name__ == '__main__':
     gr_unittest.run(test_patterned_interleaver, "test_patterned_interleaver.xml")

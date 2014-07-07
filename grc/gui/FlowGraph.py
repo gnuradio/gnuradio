@@ -87,7 +87,7 @@ class FlowGraph(Element):
     def add_new_block(self, key, coor=None):
         """
         Add a block of the given key to this flow graph.
-        
+
         Args:
             key: the block key
             coor: an optional coordinate or None for random
@@ -114,7 +114,7 @@ class FlowGraph(Element):
     def copy_to_clipboard(self):
         """
         Copy the selected blocks and connections into the clipboard.
-        
+
         Returns:
             the clipboard
         """
@@ -142,7 +142,7 @@ class FlowGraph(Element):
     def paste_from_clipboard(self, clipboard):
         """
         Paste the blocks and connections from the clipboard.
-        
+
         Args:
             clipboard: the nested data of blocks, connections
         """
@@ -192,10 +192,10 @@ class FlowGraph(Element):
     def type_controller_modify_selected(self, direction):
         """
         Change the registered type controller for the selected signal blocks.
-        
+
         Args:
             direction: +1 or -1
-        
+
         Returns:
             true for change
         """
@@ -204,10 +204,10 @@ class FlowGraph(Element):
     def port_controller_modify_selected(self, direction):
         """
         Change port controller for the selected signal blocks.
-        
+
         Args:
             direction: +1 or -1
-        
+
         Returns:
             true for changed
         """
@@ -216,10 +216,10 @@ class FlowGraph(Element):
     def enable_selected(self, enable):
         """
         Enable/disable the selected blocks.
-        
+
         Args:
             enable: true to enable
-        
+
         Returns:
             true if changed
         """
@@ -233,7 +233,7 @@ class FlowGraph(Element):
     def move_selected(self, delta_coordinate):
         """
         Move the element and by the change in coordinates.
-        
+
         Args:
             delta_coordinate: the change in coordinates
         """
@@ -244,10 +244,10 @@ class FlowGraph(Element):
     def rotate_selected(self, rotation):
         """
         Rotate the selected blocks by multiples of 90 degrees.
-        
+
         Args:
             rotation: the rotation in degrees
-        
+
         Returns:
             true if changed, otherwise false.
         """
@@ -274,7 +274,7 @@ class FlowGraph(Element):
     def remove_selected(self):
         """
         Remove selected elements
-        
+
         Returns:
             true if changed.
         """
@@ -362,11 +362,11 @@ class FlowGraph(Element):
         Iterate though the elements backwards since top elements are at the end of the list.
         If an element is selected, place it at the end of the list so that is is drawn last,
         and hence on top. Update the selected port information.
-        
+
         Args:
             coor: the coordinate of the mouse click
             coor_m: the coordinate for multi select
-        
+
         Returns:
             the selected blocks and connections or an empty list
         """
@@ -401,7 +401,7 @@ class FlowGraph(Element):
     def get_selected_connections(self):
         """
         Get a group of selected connections.
-        
+
         Returns:
             sub set of connections in this flow graph
         """
@@ -413,7 +413,7 @@ class FlowGraph(Element):
     def get_selected_blocks(self):
         """
         Get a group of selected blocks.
-        
+
         Returns:
             sub set of blocks in this flow graph
         """
@@ -425,7 +425,7 @@ class FlowGraph(Element):
     def get_selected_block(self):
         """
         Get the selected block when a block or port is selected.
-        
+
         Returns:
             a block or None
         """
@@ -434,7 +434,7 @@ class FlowGraph(Element):
     def get_selected_elements(self):
         """
         Get the group of selected elements.
-        
+
         Returns:
             sub set of elements in this flow graph
         """
@@ -443,7 +443,7 @@ class FlowGraph(Element):
     def get_selected_element(self):
         """
         Get the selected element.
-        
+
         Returns:
             a block, port, or connection or None
         """

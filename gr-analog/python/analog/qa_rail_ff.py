@@ -40,7 +40,7 @@ class test_rail(gr_unittest.TestCase):
 
     def test_rail_001(self):
         # Test set/gets
-        
+
         hi1 = 1
         hi2 = 2
         lo1 = -1

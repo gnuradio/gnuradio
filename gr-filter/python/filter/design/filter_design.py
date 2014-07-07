@@ -49,31 +49,31 @@ except ImportError:
     raise SystemExit, 1
 
 try:
-    from gnuradio.filter.banditems import * 
+    from gnuradio.filter.banditems import *
 except ImportError:
     print "Could not import from banditems. Please check whether banditems.py is in the library path"
     raise SystemExit, 1
 
 try:
-    from gnuradio.filter.polezero_plot import * 
+    from gnuradio.filter.polezero_plot import *
 except ImportError:
     print "Could not import from polezero_plot. Please check whether polezero_plot.py is in the library path"
     raise SystemExit, 1
 
 try:
-    from gnuradio.filter.idealbanditems import * 
+    from gnuradio.filter.idealbanditems import *
 except ImportError:
     print "Could not import from idealbanditems. Please check whether idealbanditems.py is in the library path"
     raise SystemExit, 1
 
 try:
-    from gnuradio.filter.api_object import * 
+    from gnuradio.filter.api_object import *
 except ImportError:
     print "Could not import from api_object. Please check whether api_object.py is in the library path"
     raise SystemExit, 1
 
 try:
-    from gnuradio.filter.fir_design import * 
+    from gnuradio.filter.fir_design import *
 except ImportError:
     print "Could not import from fir_design. Please check whether fir_design.py is in the library path"
     raise SystemExit, 1
@@ -91,8 +91,8 @@ class gr_plot_filter(QtGui.QMainWindow):
         self.gui = Ui_MainWindow()
         self.callback = callback
         self.gui.setupUi(self)
-        
-        #Remove other filter combobox entry if 
+
+        #Remove other filter combobox entry if
         #some restriction is specified
         if restype == "iir":
             ind = self.gui.fselectComboBox.findText("FIR")
@@ -142,7 +142,7 @@ class gr_plot_filter(QtGui.QMainWindow):
         self.connect(self.gui.actionQuick_Access,
 					 Qt.SIGNAL("activated()"),
 					 self.action_quick_access)
-        
+
         self.connect(self.gui.actionSpec_Widget,
 					 Qt.SIGNAL("activated()"),
 					 self.action_spec_widget)
@@ -166,7 +166,7 @@ class gr_plot_filter(QtGui.QMainWindow):
         self.connect(self.gui.actionPhase_Respone,
 					 Qt.SIGNAL("activated()"),
 					 self.set_actphase)
-		
+
         self.connect(self.gui.actionGroup_Delay,
 					 Qt.SIGNAL("activated()"),
 					 self.set_actgdelay)
@@ -186,7 +186,7 @@ class gr_plot_filter(QtGui.QMainWindow):
         self.connect(self.gui.actionPole_Zero_Plot_2,
 					 Qt.SIGNAL("activated()"),
 					 self.set_actpzplot)
-        
+
         self.connect(self.gui.actionGridview,
 					 Qt.SIGNAL("activated()"),
 					 self.set_switchview)
@@ -194,7 +194,7 @@ class gr_plot_filter(QtGui.QMainWindow):
         self.connect(self.gui.actionPlot_select,
 					 Qt.SIGNAL("activated()"),
 					 self.set_plotselect)
-        
+
         self.connect(self.gui.actionPhase_Delay,
 					 Qt.SIGNAL("activated()"),
 					 self.set_actpdelay)
@@ -282,7 +282,7 @@ class gr_plot_filter(QtGui.QMainWindow):
         self.connect(self.gui.checkMagres,
 					 Qt.SIGNAL("stateChanged(int)"),
 					 self.set_magresponse)
-        
+
         self.connect(self.gui.checkGdelay,
 					 Qt.SIGNAL("stateChanged(int)"),
 					 self.set_gdelay)
@@ -298,7 +298,7 @@ class gr_plot_filter(QtGui.QMainWindow):
         self.connect(self.gui.checkBand,
 					 Qt.SIGNAL("stateChanged(int)"),
 					 self.set_band)
-        
+
         self.connect(self.gui.checkPzplot,
 					 Qt.SIGNAL("stateChanged(int)"),
 					 self.set_pzplot)
@@ -314,11 +314,11 @@ class gr_plot_filter(QtGui.QMainWindow):
         self.connect(self.gui.checkStep,
 					 Qt.SIGNAL("stateChanged(int)"),
 					 self.set_stepres)
-		
+
         self.gridenable = False
         self.mfoverlay  = False
         self.mtoverlay  = False
-        self.iir        = False 
+        self.iir        = False
 
         self.gui.designButton.setShortcut(QtCore.Qt.Key_Return)
 
@@ -402,7 +402,7 @@ class gr_plot_filter(QtGui.QMainWindow):
                                        mtxtitle)
         self.gui.mtimePlot.setAxisTitle(self.gui.freqPlot.yLeft,
                                        mtytitle)
-        
+
         phytitle = Qwt.QwtText("Phase Delay")
         phytitle.setFont(Qt.QFont("Helvetica", 11, Qt.QFont.Bold))
         self.gui.pdelayPlot.setAxisTitle(self.gui.groupPlot.xBottom,
@@ -433,7 +433,7 @@ class gr_plot_filter(QtGui.QMainWindow):
 
         self.steprescurve = Qwt.QwtPlotCurve("Step Response")
         self.steprescurve.attach(self.gui.stepresPlot)
-	
+
         self.steprescurve_i = Qwt.QwtPlotCurve("Step Response Imag")
         self.steprescurve_i.attach(self.gui.stepresPlot)
 
@@ -496,14 +496,14 @@ class gr_plot_filter(QtGui.QMainWindow):
                                             Qwt.QwtPicker.PointSelection,
                                             Qwt.QwtPicker.AlwaysOn,
                                             self.gui.freqPlot.canvas())
-        
+
         self.mfreqZoomer = Qwt.QwtPlotZoomer(self.gui.mfreqPlot.xBottom,
                                              self.gui.mfreqPlot.yLeft,
                                              Qwt.QwtPicker.PointSelection,
                                              Qwt.QwtPicker.AlwaysOn,
                                              self.gui.mfreqPlot.canvas())
 
-        
+
         self.mfreqZoomer2 = Qwt.QwtPlotZoomer(self.gui.mfreqPlot.xBottom,
                                               self.gui.mfreqPlot.yRight,
                                               Qwt.QwtPicker.PointSelection,
@@ -546,7 +546,7 @@ class gr_plot_filter(QtGui.QMainWindow):
         self.hpfitems = hpfItems
         self.bpfitems = bpfItems
         self.bnfitems = bnfItems
-        
+
 
         #Connect signals
         self.lpfitems[0].attenChanged.connect(self.set_fatten)
@@ -567,7 +567,7 @@ class gr_plot_filter(QtGui.QMainWindow):
         self.cpicker = CanvasPicker(self.gui.pzPlot)
         self.cpicker.curveChanged.connect(self.set_curvetaps)
         self.cpicker.mouseposChanged.connect(self.set_statusbar)
-		
+
         self.cpicker2 = CanvasPicker(self.gui.mpzPlot)
         self.cpicker2.curveChanged.connect(self.set_mcurvetaps)
         self.cpicker2.mouseposChanged.connect(self.set_mstatusbar)
@@ -579,7 +579,7 @@ class gr_plot_filter(QtGui.QMainWindow):
         self.lpfstartproxy=QtGui.QGraphicsProxyWidget()
         self.lpfstartproxy.setWidget(self.lpfpassEdit)
         self.lpfstartproxy.setPos(400,30)
-        
+
 		self.lpfstopEdit=QtGui.QLineEdit()
         self.lpfstopEdit.setMaximumSize(QtCore.QSize(75,20))
         self.lpfstopEdit.setText(Qt.QString("Not set"))
@@ -876,7 +876,7 @@ class gr_plot_filter(QtGui.QMainWindow):
 
     # Do FIR design
     def design_fir(self, ftype, fs, gain, winstr):
-        self.iir = False 
+        self.iir = False
         self.cpicker.set_iir(False)
         self.cpicker2.set_iir(False)
         if(winstr == "Equiripple"):
@@ -938,7 +938,7 @@ class gr_plot_filter(QtGui.QMainWindow):
         iirft = 	{"Elliptic" : 'ellip',
                      "Butterworth" : 'butter',
                      "Chebyshev-1" : 'cheby1',
-                     "Chebyshev-2" : 'cheby2', 
+                     "Chebyshev-2" : 'cheby2',
                      "Bessel" : 'bessel'  }
 
         sanalog = 	{"Analog (rad/second)" : 1,
@@ -977,8 +977,8 @@ class gr_plot_filter(QtGui.QMainWindow):
                                    self.gui.iirBsfStopBandRippleEdit.text().toDouble()]  }
         #Remove Ideal band-diagrams if IIR
         self.set_drawideal()
-        for i in range(len(iirboxes[iirbtype])): 
-            params.append(iirboxes[iirbtype][i][0]) 
+        for i in range(len(iirboxes[iirbtype])):
+            params.append(iirboxes[iirbtype][i][0])
             ret = iirboxes[iirbtype][i][1] and ret
 
         if len(iirboxes[iirbtype]) == 6:
@@ -1019,7 +1019,7 @@ class gr_plot_filter(QtGui.QMainWindow):
                                                                       e.args[0], "&Ok")
                 (self.z,self.p,self.k) = signal.tf2zpk(self.b,self.a)
                 #Create params
-                iirparams = { "filttype": iirft[iirftype], "bandtype": iirabbr[iirbtype],"paramtype":paramtype[sanalog[atype]], 
+                iirparams = { "filttype": iirft[iirftype], "bandtype": iirabbr[iirbtype],"paramtype":paramtype[sanalog[atype]],
                               "pbedge": params[0], "sbedge": params[1],"gpass": params[2],
                               "gstop": params[3]}
             self.gui.pzPlot.insertZeros(self.z)
@@ -1036,12 +1036,12 @@ class gr_plot_filter(QtGui.QMainWindow):
                 retobj.update_all("iir", self.params, (self.b, self.a), 1)
                 self.callback(retobj)
 
-    # IIR Filter design plot updates 
+    # IIR Filter design plot updates
     def iir_plot_all(self,z,p,k):
         self.b,self.a = signal.zpk2tf(z,p,k)
         w,h = signal.freqz(self.b,self.a)
         self.fftdB = 20 * scipy.log10 (abs(h))
-        self.freq = w/max(w) 
+        self.freq = w/max(w)
         self.fftDeg = scipy.unwrap(scipy.arctan2(imag(h),real(h)))
         self.groupDelay = -scipy.diff(self.fftDeg)
         self.phaseDelay = -self.fftDeg[1:]/self.freq[1:]
@@ -1289,7 +1289,7 @@ class gr_plot_filter(QtGui.QMainWindow):
                                             xmin, xmax)
             self.gui.phasePlot.setAxisScale(self.gui.phasePlot.yLeft,
                                             ymin, ymax)
-        
+
             if self.mfoverlay:
                 self.gui.mfreqPlot.setAxisScale(self.gui.mfreqPlot.xBottom,
                                                 xmin, xmax)
@@ -1304,7 +1304,7 @@ class gr_plot_filter(QtGui.QMainWindow):
                                                 xmin, xmax)
                 self.gui.mfreqPlot.setAxisScale(self.gui.mfreqPlot.yLeft,
                                                 ymin, ymax)
- 
+
             #Set Axis title
             self.gui.mfreqPlot.setAxisTitle(self.phasecurve.yAxis(),
 						                        pytitle)
@@ -1355,7 +1355,7 @@ class gr_plot_filter(QtGui.QMainWindow):
                                                 xmin, xmax)
                 self.gui.mfreqPlot.setAxisScale(self.gui.mfreqPlot.yLeft,
                                                 ymin, ymax)
- 
+
             #Set Axis title
             self.gui.mfreqPlot.setAxisTitle(self.groupcurve.yAxis(),
 						                        gytitle)
@@ -1407,7 +1407,7 @@ class gr_plot_filter(QtGui.QMainWindow):
             #Set Axis title
             self.gui.mfreqPlot.setAxisTitle(self.pdelaycurve.yAxis(),
 						                        phytitle)
- 
+
             # Set the zoomer base to unzoom to the new axis
             self.pdelayZoomer.setZoomBase()
             self.mfreqZoomer.setZoomBase()
@@ -1452,30 +1452,30 @@ class gr_plot_filter(QtGui.QMainWindow):
             self.bufferplots = []
         else:
             self.bufferplots = []
-            #Iterate through tabgroup children and copy curves 
+            #Iterate through tabgroup children and copy curves
             for i in range(self.gui.tabGroup.count()):
                 page = self.gui.tabGroup.widget(i)
                 for item in page.children():
                     if isinstance(item, Qwt.QwtPlot):
-                        #Change colours as both plots overlay 
+                        #Change colours as both plots overlay
                         colours = [QtCore.Qt.darkYellow,QtCore.Qt.black]
                         for c in item.itemList():
                             if isinstance(c, Qwt.QwtPlotCurve):
-                                dup = Qwt.QwtPlotCurve() 
-                                dpen = c.pen() 
-                                dsym = c.symbol() 
-                                dsym.setPen(Qt.QPen(colours[0])) 
-                                dsym.setSize(Qt.QSize(6, 6)) 
-                                dpen.setColor(colours[0]) 
-                                del colours[0] 
-                                dup.setPen(dpen) 
-                                dup.setSymbol(dsym) 
+                                dup = Qwt.QwtPlotCurve()
+                                dpen = c.pen()
+                                dsym = c.symbol()
+                                dsym.setPen(Qt.QPen(colours[0]))
+                                dsym.setSize(Qt.QSize(6, 6))
+                                dpen.setColor(colours[0])
+                                del colours[0]
+                                dup.setPen(dpen)
+                                dup.setSymbol(dsym)
                                 dup.setRenderHint(Qwt.QwtPlotItem.RenderAntialiased)
                                 dup.setData([c.x(i) for i in range(c.dataSize())],
 										    [c.y(i) for i in range(c.dataSize())])
-                                self.bufferplots.append(dup) 
-                                self.bufferplots[-1].attach(item) 
-									   
+                                self.bufferplots.append(dup)
+                                self.bufferplots[-1].attach(item)
+
     def set_grid(self):
         if (self.gui.checkGrid.checkState() == 0 ):
             self.gridenable=False
@@ -1497,7 +1497,7 @@ class gr_plot_filter(QtGui.QMainWindow):
                 self.pdelaygrid.attach(self.gui.pdelayPlot)
                 self.ftapsgrid.attach(self.gui.timePlot)
                 self.replot_all()
-    
+
     def set_actgrid(self):
         if (self.gui.actionGrid_2.isChecked() == 0 ):
             self.gridenable=False
@@ -1528,7 +1528,7 @@ class gr_plot_filter(QtGui.QMainWindow):
             self.magres=True
             self.gui.tabGroup.addTab(self.gui.freqTab, _fromUtf8("Magnitude Response"))
             self.update_freq_curves()
-    
+
     def set_actmagresponse(self):
         if (self.gui.actionMagnitude_Response.isChecked() == 0 ):
             self.gui.tabGroup.removeTab(self.gui.tabGroup.indexOf(self.gui.freqTab))
@@ -1566,7 +1566,7 @@ class gr_plot_filter(QtGui.QMainWindow):
             self.update_freq_curves()
             self.update_time_curves()
         self.set_drawideal()
-	
+
     def set_plotselect(self):
         if (self.gui.actionPlot_select.isChecked() == 0 ):
             self.gui.mfgroupBox.hide()
@@ -1598,7 +1598,7 @@ class gr_plot_filter(QtGui.QMainWindow):
         self.impresgrid.detach()
         self.stepresgrid.detach()
         self.ftapsgrid.detach()
-	
+
     def set_mfmagresponse(self):
         if self.mfoverlay:
             if not(self.ifinlist(self.freqcurve,self.gui.mfreqPlot.itemList())):
@@ -1647,7 +1647,7 @@ class gr_plot_filter(QtGui.QMainWindow):
             self.groupcurve.setYAxis(Qwt.QwtPlot.yLeft)
             self.groupcurve.attach(self.gui.mfreqPlot)
             self.update_group_curves()
-    
+
     def set_mfphasedelay(self):
         if self.mfoverlay:
             if not(self.ifinlist(self.pdelaycurve,self.gui.mfreqPlot.itemList())):
@@ -1689,8 +1689,8 @@ class gr_plot_filter(QtGui.QMainWindow):
             if plot is self.gui.mfreqPlot:
                 items[1].setPen(QtGui.QPen(QtCore.Qt.red, 1, QtCore.Qt.SolidLine))
         self.set_actgrid()
-            
-            
+
+
     def update_fft(self, taps, params):
         self.params = params
         self.taps = scipy.array(taps)
@@ -1775,7 +1775,7 @@ class gr_plot_filter(QtGui.QMainWindow):
         else:
             self.gui.tabGroup.addTab(self.gui.groupTab, _fromUtf8("Group Delay"))
             self.update_freq_curves()
-    
+
     def set_actgdelay(self):
         if (self.gui.actionGroup_Delay.isChecked() == 0 ):
             self.gui.tabGroup.removeTab(self.gui.tabGroup.indexOf(self.gui.groupTab))
@@ -1829,7 +1829,7 @@ class gr_plot_filter(QtGui.QMainWindow):
             plot = self.gui.mfreqPlot
         else:
             plot = self.gui.freqPlot
-		
+
         if (self.gui.actionIdeal_Band.isChecked() == 0 or fsel == "IIR(scipy)"):
             self.idbanditems.detach_allidealcurves(plot)
         elif(self.params):
@@ -1892,7 +1892,7 @@ class gr_plot_filter(QtGui.QMainWindow):
                 self.scene.addWidget(item)
             else:
                 self.scene.addItem(item)
-	
+
     def remove_bandview(self):
         for item in self.scene.items():
             self.scene.removeItem(item)
@@ -1902,7 +1902,7 @@ class gr_plot_filter(QtGui.QMainWindow):
         if (ftype == "Low Pass"):
             boxatten,r = self.gui.lpfStopBandAttenEdit.text().toDouble()
             self.gui.lpfStopBandAttenEdit.setText(Qt.QString(str(atten+boxatten)))
-        
+
         if ftype == "High Pass":
             boxatten,r = self.gui.hpfStopBandAttenEdit.text().toDouble()
             self.gui.hpfStopBandAttenEdit.setText(Qt.QString(str(atten+boxatten)))
@@ -1921,7 +1921,7 @@ class gr_plot_filter(QtGui.QMainWindow):
 #self.design()
 
     def set_curvetaps(self,(zr,pl)):
-        if self.iir: 
+        if self.iir:
             self.z=zr
             self.p=pl
             self.iir_plot_all(self.z,self.p,self.k)
@@ -1932,7 +1932,7 @@ class gr_plot_filter(QtGui.QMainWindow):
                 retobj = ApiObject()
                 retobj.update_all("iir", self.params, (self.b, self.a), 1)
                 self.callback(retobj)
-        else: 
+        else:
             hz = poly1d(zr,r=1)
             #print hz.c
             self.taps=hz.c*self.taps[0]
@@ -1950,7 +1950,7 @@ class gr_plot_filter(QtGui.QMainWindow):
                 self.callback(retobj)
 
     def set_mcurvetaps(self,(zr,pl)):
-        if self.iir: 
+        if self.iir:
             self.z=zr
             self.p=pl
             self.iir_plot_all(self.z,self.p,self.k)
@@ -1961,7 +1961,7 @@ class gr_plot_filter(QtGui.QMainWindow):
                 retobj = ApiObject()
                 retobj.update_all("iir", self.params, (self.b, self.a), 1)
                 self.callback(retobj)
-        else: 
+        else:
             hz = poly1d(zr,r=1)
             #print hz.c
             self.taps=hz.c*self.taps[0]
@@ -1998,7 +1998,7 @@ class gr_plot_filter(QtGui.QMainWindow):
     def get_zeros(self):
         hz = poly1d(self.taps,r=0)
         return hz.r
-    
+
     def get_poles(self):
         if len(self.taps):
             hp = zeros(len(self.taps)-1,complex)
@@ -2047,7 +2047,7 @@ class gr_plot_filter(QtGui.QMainWindow):
             return
 
         csvhandle = csv.writer(handle, delimiter=",")
-        #indicate fir/iir for easy reading 
+        #indicate fir/iir for easy reading
         if self.iir:
             csvhandle.writerow(["restype","iir"])
         else:
@@ -2105,7 +2105,7 @@ class gr_plot_filter(QtGui.QMainWindow):
                         params[row[0]] = row[1]
         handle.close()
         if restype == "fir":
-            self.iir = False 
+            self.iir = False
             self.gui.fselectComboBox.setCurrentIndex(0)
             self.draw_plots(taps, params)
             zeros=self.get_zeros()
@@ -2192,8 +2192,8 @@ class gr_plot_filter(QtGui.QMainWindow):
             self.iir_plot_all(self.z,self.p,self.k)
             self.update_fcoeff()
             self.gui.nTapsEdit.setText("-")
-            self.params = params 
-            
+            self.params = params
+
             #Set GUI for IIR type
             iirft = 	{  "ellip"  : 0,
                            "butter" : 1,
@@ -2204,9 +2204,9 @@ class gr_plot_filter(QtGui.QMainWindow):
             paramtype = { "analog"  : 1,
                           "digital" : 0 }
             bandpos = {
-                         "lpf" : 0, 
+                         "lpf" : 0,
                          "bpf" : 1,
-                         "bnf" : 2, 
+                         "bnf" : 2,
                          "hpf" : 3}
 
             iirboxes = {"lpf" : [self.gui.iirendofLpfPassBandEdit,
@@ -2248,7 +2248,7 @@ class gr_plot_filter(QtGui.QMainWindow):
                 else:
                     pbedge = map(float, params["pbedge"][1:-1].split(','))
                     sbedge = map(float, params["sbedge"][1:-1].split(','))
-                    sdata = [pbedge[0], pbedge[1], sbedge[0], 
+                    sdata = [pbedge[0], pbedge[1], sbedge[0],
                              sbedge[1], params["gpass"], params["gstop"]]
 
                 cboxes = iirboxes[params["bandtype"]]
@@ -2290,14 +2290,14 @@ def launch(args, callback=None, restype=""):
         if gplt.iir:
             retobj = ApiObject()
             retobj.update_all("iir", gplt.params, (gplt.b, gplt.a), 1)
-            return retobj 
+            return retobj
         else:
             retobj = ApiObject()
             retobj.update_all("fir", gplt.params, gplt.taps, 1)
-            return retobj 
+            return retobj
     else:
         gplt = gr_plot_filter(options, callback, restype)
-        return gplt 
+        return gplt
 
 def main(args):
     parser = setup_options()

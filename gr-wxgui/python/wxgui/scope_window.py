@@ -85,7 +85,7 @@ class control_panel(wx.Panel):
 	def __init__(self, parent):
 		"""
 		Create a new control panel.
-                
+
                 Args:
 		    parent: the wx parent window
 		"""

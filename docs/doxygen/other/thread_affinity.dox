@@ -57,7 +57,7 @@ Where \p mask is a vector of core numbers to set the thread's affinity
 to.
 
 The current core affinity can be retrieved using the member function:
- 
+
 - gr::block::processor_affinity()
 
 When set before the flowgraph is started, the scheduler will set the

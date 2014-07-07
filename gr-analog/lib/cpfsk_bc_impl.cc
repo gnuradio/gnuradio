@@ -28,7 +28,7 @@
 
 namespace gr {
   namespace analog {
-    
+
 #define M_TWOPI (2*M_PI)
 
     cpfsk_bc::sptr

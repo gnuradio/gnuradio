@@ -97,7 +97,7 @@ Options for Adding and Removing Kernels:
        Optional: -b
 
   -x, --remove_kernel
-       Remove kernel from module. 
+       Remove kernel from module.
        Required: -n.
        Optional: -b
 
@@ -105,7 +105,7 @@ Options for Listing Kernels:
   -l, --list
        Lists all kernels available in the base VOLK module.
 
-  -k, --kernels 
+  -k, --kernels
        Lists all kernels in this VOLK module.
 
   -r, --remote-list

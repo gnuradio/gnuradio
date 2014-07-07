@@ -29,7 +29,7 @@
 
 namespace gr {
   namespace filter {
-    
+
     /*!
      * \brief Compute intermediate samples between signal samples x(k*Ts)
      * \ingroup filter_primitive

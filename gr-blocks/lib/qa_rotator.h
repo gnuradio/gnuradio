@@ -26,7 +26,7 @@
 #include <cppunit/extensions/HelperMacros.h>
 #include <cppunit/TestCase.h>
 
-class qa_rotator : public CppUnit::TestCase 
+class qa_rotator : public CppUnit::TestCase
 {
   CPPUNIT_TEST_SUITE(qa_rotator);
   CPPUNIT_TEST(t1);

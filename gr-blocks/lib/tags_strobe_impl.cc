@@ -47,7 +47,7 @@ namespace gr {
     }
 
     tags_strobe_impl::tags_strobe_impl(size_t sizeof_stream_item,
-                                       pmt::pmt_t value, uint64_t nsamps, 
+                                       pmt::pmt_t value, uint64_t nsamps,
                                        pmt::pmt_t key)
       : sync_block("tags_strobe",
                    io_signature::make(0, 0, 0),
@@ -77,7 +77,7 @@ namespace gr {
     {
       d_tag.key = key;
     }
-    
+
     void
     tags_strobe_impl::set_nsamps(uint64_t nsamps)
     {
@@ -99,7 +99,7 @@ namespace gr {
         d_tag.offset = d_offset;
         add_item_tag(0, d_tag);
       }
-      
+
       return noutput_items;
     }
 

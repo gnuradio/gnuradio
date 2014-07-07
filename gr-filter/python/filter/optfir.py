@@ -36,7 +36,7 @@ def low_pass (gain, Fs, freq1, freq2, passband_ripple_db, stopband_atten_db,
               nextra_taps=2):
     """
     Builds a low pass filter.
-    
+
     Args:
         gain: Filter gain in the passband (linear)
         Fs: Sampling rate (sps)
@@ -60,7 +60,7 @@ def band_pass (gain, Fs, freq_sb1, freq_pb1, freq_pb2, freq_sb2,
                nextra_taps=2):
     """
     Builds a band pass filter.
-    
+
     Args:
         gain: Filter gain in the passband (linear)
         Fs: Sampling rate (sps)
@@ -89,7 +89,7 @@ def complex_band_pass (gain, Fs, freq_sb1, freq_pb1, freq_pb2, freq_sb2,
     """
     Builds a band pass filter with complex taps by making an LPF and
     spinning it up to the right center frequency
-    
+
     Args:
         gain: Filter gain in the passband (linear)
         Fs: Sampling rate (sps)
@@ -117,7 +117,7 @@ def band_reject (gain, Fs, freq_pb1, freq_sb1, freq_sb2, freq_pb2,
     """
     Builds a band reject filter
     spinning it up to the right center frequency
-    
+
     Args:
         gain: Filter gain in the passband (linear)
         Fs: Sampling rate (sps)
@@ -148,7 +148,7 @@ def high_pass (gain, Fs, freq1, freq2, passband_ripple_db, stopband_atten_db,
                nextra_taps=2):
     """
     Builds a high pass filter.
-    
+
     Args:
         gain: Filter gain in the passband (linear)
         Fs: Sampling rate (sps)

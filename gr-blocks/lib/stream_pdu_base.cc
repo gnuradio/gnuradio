@@ -44,13 +44,13 @@ namespace gr {
 
     stream_pdu_base::stream_pdu_base(int MTU)
       :	d_fd(-1),
-	d_started(false), 
+	d_started(false),
 	d_finished(false)
     {
-      // reserve space for rx buffer 
+      // reserve space for rx buffer
       d_rxbuf.resize(MTU,0);
     }
-    
+
     stream_pdu_base::~stream_pdu_base()
     {
       stop_rxthread();
@@ -87,11 +87,11 @@ namespace gr {
         if (result <= 0)
 	  throw std::runtime_error("stream_pdu_base, bad socket read!");
 
-        pmt::pmt_t vector = pmt::init_u8vector(result, &d_rxbuf[0]);       
+        pmt::pmt_t vector = pmt::init_u8vector(result, &d_rxbuf[0]);
         pmt::pmt_t pdu = pmt::cons(pmt::PMT_NIL, vector);
 
         d_blk->message_port_pub(d_port, pdu);
-      } 
+      }
     }
 
     bool
@@ -101,12 +101,12 @@ namespace gr {
       timeval tv;
       tv.tv_sec = 0;
       tv.tv_usec = timeout_us;
-    
+
       //setup rset for timeout
       fd_set rset;
       FD_ZERO(&rset);
       FD_SET(d_fd, &rset);
-      
+
       //call select with timeout on receive socket
       return ::select(d_fd+1, &rset, NULL, NULL, &tv) > 0;
     }
@@ -118,7 +118,7 @@ namespace gr {
       size_t offset(0);
       size_t itemsize(pdu::itemsize(pdu::type_from_pmt(vector)));
       int len(pmt::length(vector)*itemsize);
-    
+
       const int rv = write(d_fd, pmt::uniform_vector_elements(vector, offset), len);
       if (rv != len) {
         std::cerr << boost::format("WARNING: stream_pdu_base::send(pdu) write failed! (d_fd=%d, len=%d, rv=%d)")

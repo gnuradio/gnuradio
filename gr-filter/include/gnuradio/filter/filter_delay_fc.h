@@ -28,7 +28,7 @@
 
 namespace gr {
   namespace filter {
-    
+
     /*!
      * \brief Filter-Delay Combination Block.
      * \ingroup filter_blk

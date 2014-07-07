@@ -33,7 +33,7 @@
 
 namespace gr {
   namespace filter {
-    
+
     fft_filter_fff::sptr fft_filter_fff::make(int decimation,
 					      const std::vector<float> &taps,
 					      int nthreads)
@@ -41,8 +41,8 @@ namespace gr {
       return gnuradio::get_initial_sptr(new fft_filter_fff_impl
 					(decimation, taps, nthreads));
     }
-    
-    
+
+
     fft_filter_fff_impl::fft_filter_fff_impl(int decimation,
 					     const std::vector<float> &taps,
 					     int nthreads)
@@ -53,7 +53,7 @@ namespace gr {
 	d_updated(false)
     {
       set_history(1);
-      
+
       d_filter = new kernel::fft_filter_fff(decimation, taps, nthreads);
 
       d_new_taps = taps;
@@ -65,27 +65,27 @@ namespace gr {
     {
       delete d_filter;
     }
-    
+
     void
     fft_filter_fff_impl::set_taps(const std::vector<float> &taps)
     {
       d_new_taps = taps;
       d_updated = true;
     }
-    
+
     std::vector<float>
     fft_filter_fff_impl::taps() const
     {
       return d_new_taps;
     }
-    
+
     void
     fft_filter_fff_impl::set_nthreads(int n)
     {
       if(d_filter)
 	d_filter->set_nthreads(n);
     }
-    
+
     int
     fft_filter_fff_impl::nthreads() const
     {
@@ -102,18 +102,18 @@ namespace gr {
     {
       const float *in = (const float *)input_items[0];
       float *out = (float *)output_items[0];
-      
+
       if (d_updated){
 	d_nsamples = d_filter->set_taps(d_new_taps);
 	d_updated = false;
 	set_output_multiple(d_nsamples);
 	return 0;				// output multiple may have changed
       }
-      
+
       d_filter->filter(noutput_items, in, out);
-      
+
       return noutput_items;
     }
-    
+
   } /* namespace filter */
 } /* namespace gr */

@@ -27,7 +27,7 @@
 #include <gnuradio/realtime.h>
 
 namespace gr {
-  
+
   rt_status_t
   enable_realtime_scheduling()
   {

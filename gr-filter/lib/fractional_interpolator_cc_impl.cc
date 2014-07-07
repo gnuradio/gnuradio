@@ -30,7 +30,7 @@
 
 namespace gr {
   namespace filter {
-    
+
     fractional_interpolator_cc::sptr
     fractional_interpolator_cc::make(float phase_shift, float interp_ratio)
     {

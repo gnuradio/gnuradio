@@ -68,7 +68,7 @@ public:
 #endif
 
     virtual int rtti() const;
-  
+
     virtual void draw(QPainter *p,
 		      const QwtScaleMap &xMap,
 		      const QwtScaleMap &yMap,

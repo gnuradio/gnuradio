@@ -45,11 +45,11 @@ namespace gr {
      * This block is designed for continuous data streaming, not packetized data.
      * There is no provision to "flush" the encoder.
      */
-    
+
     class FEC_API encode_ccsds_27_bb : virtual public sync_interpolator
     {
     public:
-      
+
       // gr::fec::encode_ccsds_27_bb::sptr
       typedef boost::shared_ptr<encode_ccsds_27_bb> sptr;
 

@@ -28,7 +28,7 @@
 
 namespace gr {
   namespace filter {
-    
+
     /*!
      * \brief Interpolating MMSE filter with complex input, complex output
      * \ingroup resamplers_blk

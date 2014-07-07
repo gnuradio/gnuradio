@@ -30,7 +30,7 @@
 
 namespace gr {
   namespace filter {
-    
+
     mmse_fir_interpolator_cc::mmse_fir_interpolator_cc()
     {
       filters.resize (NSTEPS + 1);

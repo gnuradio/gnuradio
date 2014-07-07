@@ -8,7 +8,7 @@ Signal Processing Blocks
 
 .. autosummary::
    :nosignatures:
-   
+
     gnuradio.atsc.bit_timing_loop
     gnuradio.atsc.deinterleaver
     gnuradio.atsc.depad
@@ -32,7 +32,7 @@ Constants
 
 .. autosummary::
    :nosignatures:
-   
+
     gnuradio.atsc.ATSC_DATA_SEGMENT_LENGTH
     gnuradio.atsc.ATSC_DATA_SEGMENT_RATE
     gnuradio.atsc.ATSC_DSEGS_PER_FIELD
@@ -58,5 +58,5 @@ Sizes
     gnuradio.atsc.sizeof_atsc_mpeg_packet_rs_encoded
     gnuradio.atsc.sizeof_atsc_mpeg_packet_rs_encoded_pad
     gnuradio.atsc.sizeof_atsc_soft_data_segment
-    gnuradio.atsc.sizeof_atsc_soft_data_segment_pad   
-   
+    gnuradio.atsc.sizeof_atsc_soft_data_segment_pad
+

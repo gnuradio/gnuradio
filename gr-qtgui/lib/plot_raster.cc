@@ -64,7 +64,7 @@ public:
     data = NULL;
     colorMap = new QwtLinearColorMap();
   }
-  
+
   ~PrivateData()
   {
     delete colorMap;

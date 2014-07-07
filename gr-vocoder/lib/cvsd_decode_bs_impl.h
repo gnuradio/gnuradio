@@ -87,6 +87,6 @@ namespace gr {
     };
 
   } /* namespace vocoder */
-} /* namespace gr */       
+} /* namespace gr */
 
 #endif /* INCLUDED_VOCODER_CVSD_DECODE_BS_IMPL_H */

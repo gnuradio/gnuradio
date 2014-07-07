@@ -29,12 +29,12 @@
 
 namespace gr {
   namespace blocks {
-    
+
     interleave::sptr interleave::make(size_t itemsize, unsigned int blocksize)
     {
       return gnuradio::get_initial_sptr(new interleave_impl(itemsize, blocksize));
     }
-    
+
     interleave_impl::interleave_impl(size_t itemsize, unsigned int blocksize)
       : block("interleave",
               io_signature::make (1, io_signature::IO_INFINITE, itemsize),
@@ -53,8 +53,8 @@ namespace gr {
       set_output_multiple(d_blocksize * d_ninputs);
       return true;
     }
-    
-    
+
+
     int
     interleave_impl::fixed_rate_ninput_to_noutput(int ninput)
     {
@@ -66,7 +66,7 @@ namespace gr {
     {
       return (int) ((noutput / d_ninputs) + .5);
     }
-    
+
     void
     interleave_impl::forecast(int noutput_items,
                               gr_vector_int& ninput_items_required)
@@ -85,7 +85,7 @@ namespace gr {
       size_t noutput_blocks = (size_t) ((noutput_items/d_blocksize) + .5);
       const char **in = (const char**)&input_items[0];
       char *out = (char*)output_items[0];
-      
+
       for (unsigned int i = 0; i < noutput_blocks; i += d_ninputs) {
         for (unsigned int n = 0; n < d_ninputs; n++){
           memcpy(out, in[n], d_itemsize * d_blocksize);
@@ -98,7 +98,7 @@ namespace gr {
     }
 
 
-      
-    
+
+
   } /* namespace blocks */
 } /* namespace gr */

@@ -29,7 +29,7 @@
 
 namespace gr {
   namespace filter {
-    
+
     iir_filter_ffd::sptr
     iir_filter_ffd::make(const std::vector<double> &fftaps,
 			 const std::vector<double> &fbtaps,

@@ -20,7 +20,7 @@
 # Boston, MA 02110-1301, USA.
 #
 
-# 
+#
 # This program tests mixed python and c++ ctrlport exports in a single app
 #
 
@@ -126,7 +126,7 @@ class test_cpp_py_binding(gr_unittest.TestCase):
         val = get5()
         rval = v5.get()
         self.assertComplexTuplesAlmostEqual(val, rval, 5)
-        
+
         val = get6()
         rval = v6.get()
         self.assertComplexTuplesAlmostEqual(val, rval, 5)

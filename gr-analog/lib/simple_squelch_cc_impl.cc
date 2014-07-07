@@ -30,7 +30,7 @@
 
 namespace gr {
   namespace analog {
-    
+
     simple_squelch_cc::sptr
     simple_squelch_cc::make(double threshold_db, double alpha)
     {

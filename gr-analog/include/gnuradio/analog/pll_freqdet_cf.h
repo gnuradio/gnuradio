@@ -29,7 +29,7 @@
 
 namespace gr {
   namespace analog {
-    
+
     /*!
      * \brief Implements a PLL which locks to the input frequency and outputs
      * an estimate of that frequency.  Useful for FM Demod.
@@ -53,7 +53,7 @@ namespace gr {
     public:
       // gr::analog::pll_freqdet_cf::sptr
       typedef boost::shared_ptr<pll_freqdet_cf> sptr;
-      
+
       /* \brief Make PLL block that outputs the tracked signal's frequency.
        *
        * \param loop_bw: control loop's bandwidth parameter.

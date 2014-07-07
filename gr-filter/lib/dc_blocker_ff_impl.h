@@ -29,22 +29,22 @@
 
 namespace gr {
   namespace filter {
-    
+
     class moving_averager_f
     {
     public:
       moving_averager_f(int D);
       ~moving_averager_f();
-      
+
       float filter(float x);
       float delayed_sig() { return d_out; }
-      
+
     private:
       int d_length;
       float d_out, d_out_d1, d_out_d2;
       std::deque<float> d_delay_line;
     };
-    
+
     class FILTER_API dc_blocker_ff_impl : public dc_blocker_ff
     {
     private:
@@ -62,9 +62,9 @@ namespace gr {
       ~dc_blocker_ff_impl();
 
       int group_delay();
-      
+
       //int set_length(int D);
-      
+
       int work(int noutput_items,
 	       gr_vector_const_void_star &input_items,
 	       gr_vector_void_star &output_items);

@@ -55,7 +55,7 @@ See these steps fow a quick build guide.
   (1) Ensure that you've satisfied the external dependencies. These
       dependencies are listed in the manual's build page and are not
       presented here to reduce duplication errors.
-  
+
       See the wiki at http://gnuradio.org for details.
 
 

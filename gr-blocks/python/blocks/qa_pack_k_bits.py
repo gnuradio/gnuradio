@@ -62,7 +62,7 @@ class test_pack(gr_unittest.TestCase):
         self.tb.connect(src,unpack,pack,snk);
         self.tb.run()
         self.assertEqual(list(expected_results), list(snk.data()));
-        
+
 if __name__ == '__main__':
    gr_unittest.run(test_pack, "test_pack.xml")
 

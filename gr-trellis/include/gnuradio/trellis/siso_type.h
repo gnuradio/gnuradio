@@ -30,7 +30,7 @@ namespace gr {
       TRELLIS_MIN_SUM = 200,
       TRELLIS_SUM_PRODUCT
     } siso_type_t;
-    
+
   } /* namespace trellis */
 } /* namespace gr */
 

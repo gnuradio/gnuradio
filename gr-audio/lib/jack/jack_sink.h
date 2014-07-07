@@ -55,7 +55,7 @@ namespace gr {
       bool         d_ok_to_block;
 
       jack_client_t     *d_jack_client;
-      static const int MAX_PORTS = 10; 
+      static const int MAX_PORTS = 10;
       int d_portcount;
       jack_port_t       *d_jack_output_port[MAX_PORTS];
       jack_ringbuffer_t *d_ringbuffer[MAX_PORTS];

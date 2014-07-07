@@ -43,7 +43,7 @@ class test_burst_tagger(gr_unittest.TestCase):
         self.tb.connect(trg, (op,1))
         self.tb.connect(op, snk)
         self.tb.run()
-        
+
         x = snk.current_tags()
         self.assertEqual(2, x[0].offset)
         self.assertEqual(4, x[1].offset)

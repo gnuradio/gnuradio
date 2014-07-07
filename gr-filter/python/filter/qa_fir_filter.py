@@ -100,7 +100,7 @@ class test_filter(gr_unittest.TestCase):
         taps = 20*[0.5+1j, 0.5+1j]
         src_data = 40*[1+1j, 2+2j, 3+3j, 4+4j]
         expected_data = fir_filter(src_data, taps, decim)
-        
+
         src = blocks.vector_source_c(src_data)
         op  = filter.fir_filter_ccc(decim, taps)
         dst = blocks.vector_sink_c()
@@ -115,7 +115,7 @@ class test_filter(gr_unittest.TestCase):
         taps = filter.firdes.low_pass(1, 1, 0.1, 0.01)
         src_data = 10*[1+1j, 2+2j, 3+3j, 4+4j]
         expected_data = fir_filter(src_data, taps, decim)
-        
+
         src = blocks.vector_source_c(src_data)
         op  = filter.fir_filter_ccc(decim, taps)
         dst = blocks.vector_sink_c()

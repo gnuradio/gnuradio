@@ -60,7 +60,7 @@ namespace gr {
 	for (int j = 0; j < d_decim; j++)
 	  out[i] += in[i*d_decim+j];
       }
-      
+
       return noutput_items;
     }
 

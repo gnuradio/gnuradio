@@ -49,7 +49,7 @@ namespace gr {
 	int           d_naligned;
 
       public:
-      
+
 	// CONSTRUCTORS
 
 	/*!
@@ -146,7 +146,7 @@ namespace gr {
 	int           d_naligned;
 
       public:
-      
+
 	// CONSTRUCTORS
 
 	/*!
@@ -243,7 +243,7 @@ namespace gr {
 	int           d_naligned;
 
       public:
-      
+
 	// CONSTRUCTORS
 
 	/*!

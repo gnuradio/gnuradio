@@ -79,18 +79,18 @@
 	</source>
     <doc>
     int d_N=8;          // number of sinusoids used to simulate gain on each ray
-    float d_fDTs=0.01   // normalized maximum doppler frequency (f_doppler / f_samprate) 
+    float d_fDTs=0.01   // normalized maximum doppler frequency (f_doppler / f_samprate)
     float d_K=4;        // Rician factor (ratio of the specular power to the scattered power)
     bool d_LOS=true;    // LOS path exists? chooses Rician (LOS) vs Rayleigh (NLOS) model.
     int seed=0;         // noise seed
     int ntaps;          // Number of FIR taps to use in selective fading model
-      
+
       These two vectors comprise the Power Delay Profile of the signal
     float_vector delays   // Time delay in the fir filter (in samples) for each arriving WSSUS Ray
-    float_vector mags     // Magnitude corresponding to each WSSUS Ray 
+    float_vector mags     // Magnitude corresponding to each WSSUS Ray
 
     If using a LOS model, the first delay and mag should correspond with the LOS component
-  
+
   References:
 
   The flat-fading portion of the algorithm implements the following
@@ -98,7 +98,7 @@
    A. Alimohammad S.F. Fard B.F. Cockburn C. Schlegel
    26th November 2008
 
-  The frequency selective extension of the block roughly implements 
+  The frequency selective extension of the block roughly implements
    A Low-Complexity Hardware Implementation of Discrete-Time
    Frequency-Selective Rayleigh Fading Channels
    F. Ren and Y. Zheng

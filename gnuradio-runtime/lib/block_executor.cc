@@ -193,14 +193,14 @@ namespace gr {
     int new_alignment = 0;
     int alignment_state = -1;
     double rrate;
-    
+
     block        *m = d_block.get();
     block_detail *d = m->detail().get();
 
     LOG(*d_log << std::endl << m);
 
     max_noutput_items = round_down(d_max_noutput_items, m->output_multiple());
-    
+
     if(d->done()){
       assert(0);
       return DONE;
@@ -237,7 +237,7 @@ namespace gr {
       d_output_items.resize (0);
       d_start_nitems_read.resize(d->ninputs());
       LOG(*d_log << " sink\n");
-      
+
       max_items_avail = 0;
       for(int i = 0; i < d->ninputs (); i++) {
         {
@@ -432,7 +432,7 @@ namespace gr {
       if(d_use_pc)
         d->start_perf_counters();
 #endif /* GR_PERFORMANCE_COUNTERS */
-    
+
       // Do the actual work of the block
       int n = m->general_work(noutput_items, d_ninput_items,
                               d_input_items, d_output_items);

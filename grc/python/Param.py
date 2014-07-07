@@ -66,7 +66,7 @@ class Param(_Param, _GUIParam):
     def __repr__(self):
         """
         Get the repr (nice string format) for this param.
-        
+
         Returns:
             the string representation
         """
@@ -125,7 +125,7 @@ class Param(_Param, _GUIParam):
     def get_color(self):
         """
         Get the color that represents this param's type.
-        
+
         Returns:
             a hex color code.
         """
@@ -160,7 +160,7 @@ class Param(_Param, _GUIParam):
         If the parameter controls a port type, vlen, or nports, return part.
         If the parameter is an empty grid position, return part.
         These parameters are redundant to display in the flow graph view.
-        
+
         Returns:
             hide the hide property string
         """
@@ -198,7 +198,7 @@ class Param(_Param, _GUIParam):
     def evaluate(self):
         """
         Evaluate the value.
-        
+
         Returns:
             evaluated type
         """
@@ -407,7 +407,7 @@ class Param(_Param, _GUIParam):
         Convert the value to code.
         For string and list types, check the init flag, call evaluate().
         This ensures that evaluate() was called to set the xxxify_flags.
-        
+
         Returns:
             a string representing the code
         """
@@ -426,10 +426,10 @@ class Param(_Param, _GUIParam):
     def get_all_params(self, type):
         """
         Get all the params from the flowgraph that have the given type.
-        
+
         Args:
             type: the specified type
-        
+
         Returns:
             a list of params
         """

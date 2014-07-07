@@ -71,8 +71,8 @@ static inline void volk_32fc_32f_dot_prod_32fc_a_avx( lv_32fc_t* result, const l
     // TODO: it may be possible to rearrange swizzling to better pipeline data
     b0Val = _mm256_permute2f128_ps(x0loVal, x0hiVal, 0x20); // t0|t0|t1|t1|t2|t2|t3|t3
     b1Val = _mm256_permute2f128_ps(x0loVal, x0hiVal, 0x31); // t4|t4|t5|t5|t6|t6|t7|t7
-    b2Val = _mm256_permute2f128_ps(x1loVal, x1hiVal, 0x20); 
-    b3Val = _mm256_permute2f128_ps(x1loVal, x1hiVal, 0x31); 
+    b2Val = _mm256_permute2f128_ps(x1loVal, x1hiVal, 0x20);
+    b3Val = _mm256_permute2f128_ps(x1loVal, x1hiVal, 0x31);
 
     c0Val = _mm256_mul_ps(a0Val, b0Val);
     c1Val = _mm256_mul_ps(a1Val, b1Val);
@@ -239,8 +239,8 @@ static inline void volk_32fc_32f_dot_prod_32fc_u_avx( lv_32fc_t* result, const l
     // TODO: it may be possible to rearrange swizzling to better pipeline data
     b0Val = _mm256_permute2f128_ps(x0loVal, x0hiVal, 0x20); // t0|t0|t1|t1|t2|t2|t3|t3
     b1Val = _mm256_permute2f128_ps(x0loVal, x0hiVal, 0x31); // t4|t4|t5|t5|t6|t6|t7|t7
-    b2Val = _mm256_permute2f128_ps(x1loVal, x1hiVal, 0x20); 
-    b3Val = _mm256_permute2f128_ps(x1loVal, x1hiVal, 0x31); 
+    b2Val = _mm256_permute2f128_ps(x1loVal, x1hiVal, 0x20);
+    b3Val = _mm256_permute2f128_ps(x1loVal, x1hiVal, 0x31);
 
     c0Val = _mm256_mul_ps(a0Val, b0Val);
     c1Val = _mm256_mul_ps(a1Val, b1Val);

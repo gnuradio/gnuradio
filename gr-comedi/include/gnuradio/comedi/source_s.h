@@ -28,7 +28,7 @@
 
 namespace gr {
   namespace comedi {
-    
+
     /*!
      * \brief source using COMEDI
      *

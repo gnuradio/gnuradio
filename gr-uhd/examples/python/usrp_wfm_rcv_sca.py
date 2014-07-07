@@ -132,7 +132,7 @@ class wfm_rx_sca_block (stdgui2.std_top_block):
                                              60)               # stopband attenuation
         rrate = usrp_rate / dev_rate
         self.chan_filt = filter.pfb.arb_resampler_ccf(rrate, chan_coeffs, nfilts)
-        
+
         #Create demodulator block for Main FM Channel
 	max_dev = 75e3
         fm_demod_gain = demod_rate/(2*math.pi*max_dev)

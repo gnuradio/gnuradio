@@ -42,7 +42,7 @@ namespace gr {
       /*!
        * Make an endian swap block.
        *
-       * \param item_size_bytes number of bytes per item, 1=no-op, 
+       * \param item_size_bytes number of bytes per item, 1=no-op,
        *        2=uint16_t, 4=uint32_t, 8=uint64_t
        */
       static sptr make(size_t item_size_bytes=1);
