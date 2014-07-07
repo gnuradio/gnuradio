@@ -720,7 +720,7 @@ namespace gr {
 	throw std::out_of_range("firdes check failed: 0 < fa <= sampling_freq / 2");
 
       if(transition_width <= 0)
-	throw std::out_of_range("gr_dirdes check failed: transition_width > 0");
+	throw std::out_of_range("firdes check failed: transition_width > 0");
     }
 
     void
