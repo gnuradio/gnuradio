@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2008,2009,2011,2012 Free Software Foundation, Inc.
+ * Copyright 2008,2009,2011,2012,2014 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -98,6 +98,7 @@ namespace gr {
       void set_frequency_range(const double centerfreq,
 			       const double bandwidth);
       void set_fft_power_db(double min, double max);
+      void enable_rf_freq(bool en);
 
       //void set_time_domain_axis(double min, double max);
       //void set_constellation_axis(double xmin, double xmax,

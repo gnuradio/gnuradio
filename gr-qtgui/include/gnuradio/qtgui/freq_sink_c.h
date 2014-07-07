@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2012 Free Software Foundation, Inc.
+ * Copyright 2012,2014 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -56,11 +56,15 @@ namespace gr {
      *
      * - freq (output):
      *        Produces a PMT pair with (intern("freq"), double(frequency).
-     *        When a user double-clicks on the display, the frequency
-     *        that the cursor is on is used to retune the x-axis scale
-     *        to recenter onto the clicked frequency. A message
-     *        containing the new frequency is also produced and can be
+     *        When a user double-clicks on the display, the block
+     *        produces and emits a message containing the frequency of
+     *        where on the x-axis the user clicked. This value can be
      *        used by other blocks to update their frequency setting.
+     *
+     *        To perform click-to-tune behavior, this output 'freq'
+     *        port can be redirected to this block's input 'freq' port
+     *        to catch the message and update the center frequency of
+     *        the display.
      */
     class QTGUI_API freq_sink_c : virtual public sync_block
     {

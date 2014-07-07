@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2008-2012 Free Software Foundation, Inc.
+ * Copyright 2008-2012,2014 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -76,6 +76,9 @@ namespace gr {
       // setup output message port to post frequency when display is
       // double-clicked
       message_port_register_out(pmt::mp("freq"));
+      message_port_register_in(pmt::mp("freq"));
+      set_msg_handler(pmt::mp("freq"),
+                      boost::bind(&sink_f_impl::handle_set_freq, this, _1));
 
       d_main_gui = NULL;
 
@@ -214,6 +217,12 @@ namespace gr {
       d_main_gui->setFrequencyAxis(min, max);
     }
 
+    void
+    sink_f_impl::enable_rf_freq(bool en)
+    {
+      d_main_gui->enableRFFreq(en);
+    }
+
     /*
     void
     sink_f_impl::set_time_domain_axis(double min, double max)
@@ -315,11 +324,10 @@ namespace gr {
     sink_f_impl::check_clicked()
     {
       if(d_main_gui->checkClicked()) {
-        d_center_freq = d_main_gui->getClickedFreq();
-        double norm_freq = d_center_freq / d_bandwidth;
+        double freq = d_main_gui->getClickedFreq();
         message_port_pub(pmt::mp("freq"),
                          pmt::cons(pmt::mp("freq"),
-                                   pmt::from_double(norm_freq)));
+                                   pmt::from_double(freq)));
       }
     }
 
@@ -329,8 +337,8 @@ namespace gr {
       if(pmt::is_pair(msg)) {
         pmt::pmt_t x = pmt::cdr(msg);
         if(pmt::is_real(x)) {
-          double freq = pmt::to_double(x);
-          set_frequency_range(freq*d_bandwidth, d_bandwidth);
+          d_center_freq = pmt::to_double(x);
+          set_frequency_range(d_center_freq, d_bandwidth);
         }
       }
     }

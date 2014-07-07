@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2012 Free Software Foundation, Inc.
+ * Copyright 2012,2014 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -210,8 +210,6 @@ FreqDisplayForm::onPlotPointSelected(const QPointF p)
 {
   d_clicked = true;
   d_clicked_freq = d_units*p.x();
-
-  setFrequencyRange(d_clicked_freq, d_samp_rate);
 }
 
 bool
