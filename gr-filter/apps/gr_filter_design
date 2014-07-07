@@ -20,7 +20,7 @@
 # Boston, MA 02110-1301, USA.
 #
 
-from gnuradio.filter import filter_design 
+from gnuradio.filter import filter_design
 import sys
 
 # Call filter desgin main function

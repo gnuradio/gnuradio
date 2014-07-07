@@ -33,7 +33,7 @@ namespace gr {
 
     class FFT_API window {
     public:
-            
+
       enum win_type {
  	WIN_HAMMING = 0,         //!< Hamming window; max attenuation 53 dB
  	WIN_HANN = 1,            //!< Hann window; max attenuation 44 dB
@@ -193,7 +193,7 @@ namespace gr {
        * \param ntaps Number of coefficients in the window.
        */
       static std::vector<float> blackman_nuttal(int ntaps);
-      
+
       /*!
        * \brief Build a Nuttal continuous first derivative window.
        *

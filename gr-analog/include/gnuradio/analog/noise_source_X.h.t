@@ -31,7 +31,7 @@
 
 namespace gr {
   namespace analog {
-    
+
     /*!
      * \brief Random number source
      * \ingroup waveform_generators_blk
@@ -40,7 +40,7 @@ namespace gr {
      * Generate random values from different distributions.
      * Currently, only Gaussian and uniform are enabled.
      */
-    class ANALOG_API @BASE_NAME@ : virtual public sync_block 
+    class ANALOG_API @BASE_NAME@ : virtual public sync_block
     {
     public:
       // gr::analog::@BASE_NAME@::sptr

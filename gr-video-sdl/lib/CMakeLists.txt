@@ -67,5 +67,5 @@ ENDIF(MSVC)
 add_library(gnuradio-video-sdl SHARED ${video_sdl_sources})
 target_link_libraries(gnuradio-video-sdl ${video_sdl_libs})
 GR_LIBRARY_FOO(gnuradio-video-sdl RUNTIME_COMPONENT "video_sdl_runtime" DEVEL_COMPONENT "video_sdl_devel")
-add_dependencies(gnuradio-video-sdl 
+add_dependencies(gnuradio-video-sdl
   gnuradio-runtime)

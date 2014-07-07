@@ -46,6 +46,6 @@ namespace gr {
 
   } /* namespace blocks */
 } /* namespace gr */
-   
+
 
 #endif /* INCLUDED_FLOAT_TO_SHORT_IMPL_H */

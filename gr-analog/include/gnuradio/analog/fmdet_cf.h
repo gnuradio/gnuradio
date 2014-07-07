@@ -31,7 +31,7 @@ namespace gr {
 
     /*!
      * \brief Implements an IQ slope detector
-     * \ingroup modulators_blk 
+     * \ingroup modulators_blk
      *
      * \details
      * input: stream of complex; output: stream of floats

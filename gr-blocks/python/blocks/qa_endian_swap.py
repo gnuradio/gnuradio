@@ -57,7 +57,7 @@ class test_endian_swap(gr_unittest.TestCase):
         self.tb.connect(src, op, dst)
         self.tb.run()
         result_data = list(dst.data())
-    
+
         self.assertEqual(expected_result, result_data)
 
 if __name__ == '__main__':

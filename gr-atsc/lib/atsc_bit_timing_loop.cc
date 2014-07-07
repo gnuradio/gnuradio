@@ -120,6 +120,6 @@ atsc_bit_timing_loop::work (int noutput_items,
     out_tag[k] = tag;
 
   }
-  
+
   return k;
 }

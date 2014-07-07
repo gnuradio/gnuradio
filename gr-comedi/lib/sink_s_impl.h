@@ -30,7 +30,7 @@
 
 namespace gr {
   namespace comedi {
-    
+
     class sink_s_impl : public sink_s
     {
     private:

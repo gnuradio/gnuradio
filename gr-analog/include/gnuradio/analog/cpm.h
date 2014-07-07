@@ -42,7 +42,7 @@ namespace gr {
 	GAUSSIAN,
 	GENERIC = 999
       };
-      
+
       /*! \brief Return the taps for an interpolating FIR filter
        *   (gr::filter::interp_fir_filter_fff).
        *

@@ -30,7 +30,7 @@ namespace gr {
    * Helper routines
    **********************************************************************/
   template <typename OutType, typename InType>
-  void 
+  void
   copy_pointers(OutType &out, const InType &in)
   {
     out.resize(in.size());

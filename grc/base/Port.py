@@ -24,7 +24,7 @@ class Port(Element):
     def __init__(self, block, n, dir):
         """
         Make a new port from nested data.
-        
+
         Args:
             block: the parent element
             n: the nested odict
@@ -66,7 +66,7 @@ class Port(Element):
         number = ''
         if self.get_type() == 'bus':
             busses = filter(lambda a: a._dir == self._dir, self.get_parent().get_ports_gui());
-            
+
             number = str(busses.index(self)) + '#' + str(len(self.get_associated_ports()));
         return self._name + number
 
@@ -78,7 +78,7 @@ class Port(Element):
     def get_connections(self):
         """
         Get all connections that use this port.
-        
+
         Returns:
             a list of connection objects
         """
@@ -89,7 +89,7 @@ class Port(Element):
     def get_enabled_connections(self):
         """
         Get all enabled connections that use this port.
-        
+
         Returns:
             a list of connection objects
         """
@@ -107,7 +107,7 @@ class Port(Element):
                 get_p = self.get_parent().get_sinks;
                 bus_structure = self.get_parent().current_bus_structure['sink'];
                 direc = 'sink'
-            
+
             ports = [i for i in get_p() if not i.get_type() == 'bus'];
             if bus_structure:
                 busses = [i for i in get_p() if i.get_type() == 'bus'];

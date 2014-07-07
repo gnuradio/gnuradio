@@ -29,7 +29,7 @@
 
 namespace gr {
   namespace filter {
-    
+
     filter_delay_fc::sptr filter_delay_fc::make(const std::vector<float> &taps)
     {
       return gnuradio::get_initial_sptr(new filter_delay_fc_impl(taps));
@@ -93,14 +93,14 @@ namespace gr {
 			      d_fir->filter(&in0[i]));
 	}
 	break;
-	
+
       case 2:
 	for(int j = 0; j < noutput_items; j++) {
 	  out[j] = gr_complex(in0[j + d_delay],
 			      d_fir->filter(&in1[j]));
 	}
 	break;
-	
+
       default:
 	assert(0);
       }

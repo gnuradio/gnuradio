@@ -56,9 +56,9 @@ namespace gr {
       gr_complex *in1 = (gr_complex *) input_items[1];
       gr_complex *out = (gr_complex *) output_items[0];
       int noi = d_vlen*noutput_items;
-      
+
       volk_32fc_x2_multiply_conjugate_32fc(out, in0, in1, noi);
-      
+
       return noutput_items;
     }
 

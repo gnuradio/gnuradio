@@ -47,7 +47,7 @@ namespace gr {
 		       siso_type_t d_SISO_TYPE);
 
       virtual fsm FSM() const = 0;
-      virtual int K() const = 0; 
+      virtual int K() const = 0;
       virtual int S0() const = 0;
       virtual int SK() const = 0;
       virtual bool POSTI() const = 0;

@@ -55,7 +55,7 @@ in the Doppler frequency shift as a normalized value, a line-of-sight
 a random seed to the noise generators. These parameters are provided
 in the documentation as:
 
-\li N The number of sinusiods to use in simulating the channel 8 is a good value 
+\li N The number of sinusiods to use in simulating the channel 8 is a good value
 \li fDTs    normalized maximum Doppler frequency, fD * Ts
 \li LOS     include Line-of-Site path? selects between Rayleigh (NLOS) and Rician (LOS) models
 \li K       Rician factor (ratio of the specular power to the scattered power)
@@ -73,7 +73,7 @@ and another vector of the corresponding magnitudes of the PDP. We also
 specify the number of taps in the filter to simulate this. These
 parameters are provided in the documentation as:
 
-\li N The number of sinusiods to use in simulating the channel 8 is a good value 
+\li N The number of sinusiods to use in simulating the channel 8 is a good value
 \li fDTs    normalized maximum Doppler frequency, fD * Ts
 \li LOS     include Line-of-Site path? selects between Rayleigh (NLOS) and Rician (LOS) models
 \li K       Rician factor (ratio of the specular power to the scattered power)

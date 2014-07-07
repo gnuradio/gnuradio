@@ -32,7 +32,7 @@
 
 namespace gr {
   namespace analog {
-    
+
     @BASE_NAME@::sptr
     @BASE_NAME@::make(noise_type_t type, float ampl, long seed)
     {
@@ -49,7 +49,7 @@ namespace gr {
       d_rng(seed)
     {
     }
-    
+
     @IMPL_NAME@::~@IMPL_NAME@()
     {
     }

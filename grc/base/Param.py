@@ -63,7 +63,7 @@ class Param(Element):
     def __init__(self, block, n):
         """
         Make a new param from nested data.
-        
+
         Args:
             block: the parent element
             n: the nested odict
@@ -162,7 +162,7 @@ class Param(Element):
         Get the repr (nice string format) for this param.
         Just return the value (special case enum).
         Derived classes can handle complex formatting.
-        
+
         Returns:
             the string representation
         """
@@ -189,7 +189,7 @@ class Param(Element):
     def export_data(self):
         """
         Export this param's key/value.
-        
+
         Returns:
             a nested data odict
         """

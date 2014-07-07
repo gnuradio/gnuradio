@@ -30,13 +30,13 @@
 
 namespace gr {
   namespace filter {
-    
+
     moving_averager_f::moving_averager_f(int D)
       : d_length(D), d_out(0), d_out_d1(0), d_out_d2(0)
     {
       d_delay_line = std::deque<float>(d_length-1, 0);
     }
-    
+
     moving_averager_f::~moving_averager_f()
     {
     }
@@ -48,13 +48,13 @@ namespace gr {
       d_delay_line.push_back(x);
       d_out = d_delay_line[0];
       d_delay_line.pop_front();
-      
+
       float y = x - d_out_d1 + d_out_d2;
       d_out_d2 = y;
-      
+
       return (y / (float)(d_length));
     }
-    
+
 
     dc_blocker_ff::sptr dc_blocker_ff::make(int D, bool long_form)
     {

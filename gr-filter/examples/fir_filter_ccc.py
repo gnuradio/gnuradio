@@ -106,7 +106,7 @@ def main():
     s2.plot(data_snk.real, 'g')
 
     pylab.show()
-    
+
 if __name__ == "__main__":
     try:
         main()

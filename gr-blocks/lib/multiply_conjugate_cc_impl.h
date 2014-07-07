@@ -42,6 +42,6 @@ namespace gr {
 
   } /* namespace blocks */
 } /* namespace gr */
-   
+
 
 #endif /* INCLUDED_BLOCKS_MULTIPLY_CONJUGATE_CC_IMPL_H */

@@ -52,7 +52,7 @@ namespace gr {
     {
     }
 
-    void 
+    void
     regenerate_bb_impl::set_max_regen(unsigned int regen)
     {
       d_max_regen = regen;

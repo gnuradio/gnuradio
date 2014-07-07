@@ -31,7 +31,7 @@
 
 namespace gr {
   namespace fft {
-    
+
     fft_vcc::sptr fft_vcc::make(int fft_size, bool forward,
 				const std::vector<float> &window,
 				bool shift, int nthreads)
@@ -89,14 +89,14 @@ namespace gr {
     {
       const gr_complex *in = (const gr_complex *) input_items[0];
       gr_complex *out = (gr_complex *) output_items[0];
-      
+
       unsigned int input_data_size = input_signature()->sizeof_stream_item (0);
       unsigned int output_data_size = output_signature()->sizeof_stream_item (0);
-      
+
       int count = 0;
-      
+
       while(count++ < noutput_items) {
-	
+
 	// copy input into optimally aligned buffer
 	if(d_window.size()) {
 	  gr_complex *dst = d_fft->get_inbuf();
@@ -107,7 +107,7 @@ namespace gr {
 	      dst[i+fft_m_offset] = in[i] * d_window[i];
 	    for(unsigned int i = offset; i < d_fft_size; i++)	// apply window
 	      dst[i-offset] = in[i] * d_window[i];
-	  } 
+	  }
 	  else {
 	    for(unsigned int i = 0; i < d_fft_size; i++)		// apply window
 	      dst[i] = in[i] * d_window[i];
@@ -124,10 +124,10 @@ namespace gr {
 	    memcpy(d_fft->get_inbuf(), in, input_data_size);
 	  }
 	}
-	
+
 	// compute the fft
 	d_fft->execute();
-	
+
 	// copy result to our output
 	if(d_forward && d_shift) {  // apply a fft shift on the data
 	  unsigned int len = (unsigned int)(ceil(d_fft_size/2.0));
@@ -137,11 +137,11 @@ namespace gr {
 	else {
 	  memcpy (out, d_fft->get_outbuf (), output_data_size);
 	}
-	
+
 	in  += d_fft_size;
 	out += d_fft_size;
       }
-      
+
       return noutput_items;
     }
 

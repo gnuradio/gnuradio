@@ -90,7 +90,7 @@ init_@TAG@vector(size_t k, const @TYPE@ *data)
 pmt_t
 init_@TAG@vector(size_t k, const std::vector< @TYPE@ > &data)
 {
-  
+
   return pmt_t(new pmt_@TAG@vector(k, &data[0]));
 }
 

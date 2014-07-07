@@ -40,6 +40,6 @@ namespace gr {
 
   } /* namespace blocks */
 } /* namespace gr */
-   
+
 
 #endif /* INCLUDED_UCHAR_TO_FLOAT_IMPL_H */

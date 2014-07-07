@@ -28,7 +28,7 @@
 
 namespace gr {
   namespace filter {
-    
+
     /*!
      * \brief Resampling MMSE filter with float input, float output
      * \ingroup resamplers_blk

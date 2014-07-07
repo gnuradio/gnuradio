@@ -86,7 +86,7 @@ list(APPEND gnuradio_pmt_libs
     ${LOG4CPP_LIBRARIES}
 )
 
-add_custom_target(pmt_generated 
+add_custom_target(pmt_generated
   DEPENDS ${PMT_SERIAL_TAGS_H} ${CMAKE_CURRENT_BINARY_DIR}/pmt_unv_int.h)
 
 
@@ -133,7 +133,7 @@ include_directories(${CPPUNIT_INCLUDE_DIRS})
 link_directories(${CPPUNIT_LIBRARY_DIRS})
 
 add_library(test-gnuradio-pmt SHARED ${test_gnuradio_pmt_sources})
-target_link_libraries(test-gnuradio-pmt gnuradio-runtime gnuradio-pmt 
+target_link_libraries(test-gnuradio-pmt gnuradio-runtime gnuradio-pmt
   ${CPPUNIT_LIBRARIES} ${Boost_LIBRARIES} ${LOG4CPP_LIBRARIES})
 
 ########################################################################

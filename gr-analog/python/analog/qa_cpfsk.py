@@ -34,7 +34,7 @@ class test_cpfsk_bc(gr_unittest.TestCase):
 
     def test_cpfsk_bc_001(self):
         # Test set/gets
-        
+
         op = analog.cpfsk_bc(2, 1, 2)
 
         op.set_amplitude(2)

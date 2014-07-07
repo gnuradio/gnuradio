@@ -37,7 +37,7 @@ namespace gr {
      */
     class BLOCKS_API @NAME@ : virtual public sync_block
     {
-    public: 
+    public:
       // gr::blocks::@NAME@::sptr
       typedef boost::shared_ptr<@NAME@> sptr;
 

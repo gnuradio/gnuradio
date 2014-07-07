@@ -32,7 +32,7 @@ import numpy
 class plot_form(QtGui.QWidget):
     def __init__(self, top_block, title='', scale=1):
         QtGui.QWidget.__init__(self, None)
-        
+
         self._start = 0
         self._end = 0
         self._y_min = 0
@@ -41,7 +41,7 @@ class plot_form(QtGui.QWidget):
 
         self.top_block = top_block
         self.top_block.gui_y_axis = self.gui_y_axis
-        
+
         self.setWindowTitle(title)
 
         self.layout = QtGui.QGridLayout(self)
@@ -350,7 +350,7 @@ class plot_form(QtGui.QWidget):
             if(ret):
                 self._y_min = ret[0]
                 self._y_max = ret[1]
-        
+
                 self.gui_y_axis(self._y_min, self._y_max)
         else:
             self.ybar.setValue(self._y_max*self._pos_scale)

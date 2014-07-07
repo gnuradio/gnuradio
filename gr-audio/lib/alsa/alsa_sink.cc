@@ -104,7 +104,7 @@ namespace gr {
       while((error!=0)&&(attempts-->0)){
         error = snd_pcm_open(&d_pcm_handle, d_device_name.c_str(),
                            SND_PCM_STREAM_PLAYBACK, 0);
-        if(error<0){ 
+        if(error<0){
                 boost::this_thread::sleep( boost::posix_time::milliseconds(10));
             }
         }

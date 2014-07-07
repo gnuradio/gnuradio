@@ -47,7 +47,7 @@ macro(expand_h root)
     string(REGEX REPLACE "X+" ${sig} name ${root})
     list(APPEND expanded_files_h ${CMAKE_CURRENT_BINARY_DIR}/${name}.h)
   endforeach(sig)
-  
+
   #create a command to generate the files
   add_custom_command(
     OUTPUT ${expanded_files_h}
@@ -107,7 +107,7 @@ install(FILES
     quadrature_demod_cf.h
     rail_ff.h
     sig_source_waveform.h
-    simple_squelch_cc.h 
+    simple_squelch_cc.h
     DESTINATION ${GR_INCLUDE_DIR}/gnuradio/analog
     COMPONENT "analog_devel"
 )

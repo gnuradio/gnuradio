@@ -83,7 +83,7 @@ namespace gr {
       int format = AFMT_S16_NE;
       int orig_format = format;
       if(ioctl(d_fd, SNDCTL_DSP_SETFMT, &format) < 0) {
-        std::cerr << "audio_windows_source: " << d_device_name 
+        std::cerr << "audio_windows_source: " << d_device_name
                   << " ioctl failed\n";
         perror(d_device_name.c_str());
         throw std::runtime_error("audio_windows_source");

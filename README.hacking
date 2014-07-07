@@ -91,7 +91,7 @@ All class static data members shall begin with s_<foo>.
 
 ** File names
 
-Each significant class shall be contained in it's own file. 
+Each significant class shall be contained in it's own file.
 
 * Storage management
 
@@ -108,9 +108,9 @@ See http://www.boost.org/libs/smart_ptr/smart_ptr.htm
 * Unit tests
 
 Unit tests are a useful tool for development -- they  are less of a tool
-to prove others that you can write code that works like you defined it but help 
+to prove others that you can write code that works like you defined it but help
 you and later maintainers identify corner cases, regressions and other malfunctions
-of code. 
+of code.
 
 GNU Radio has integrated versatile, easy to use testing facilities. Please refer to
 http://gnuradio.org/redmine/projects/gnuradio/wiki/Coding_guide_impl#Unit-testing
@@ -127,7 +127,7 @@ into the help string using the "... [default=%default]" syntax.
 ** Mandatory options by gr::block
 
 When designing flow graphs with the GNU Radio Companion, appropriate
-option parsing will automatically be set up for you. 
+option parsing will automatically be set up for you.
 
 *** Audio source
 

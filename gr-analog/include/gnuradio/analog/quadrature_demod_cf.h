@@ -28,7 +28,7 @@
 
 namespace gr {
   namespace analog {
-    
+
     /*!
      * \brief quadrature demodulator: complex in, float out
      * \ingroup modulators_blk

@@ -27,7 +27,7 @@
 
 namespace gr {
   namespace analog {
-    
+
     class rail_ff_impl : public rail_ff
     {
     private:

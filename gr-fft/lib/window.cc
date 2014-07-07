@@ -31,12 +31,12 @@ namespace gr {
   namespace fft {
 
 #define IzeroEPSILON 1E-21               /* Max error acceptable in Izero */
-    
+
     static double Izero(double x)
     {
       double sum, u, halfx, temp;
       int n;
-      
+
       sum = u = n = 1;
       halfx = x/2.0;
       do {
@@ -180,7 +180,7 @@ namespace gr {
     {
       return coswindow(ntaps, 0.21747, 0.45325, 0.28256, 0.04672);
     }
-    
+
     std::vector<float>
     window::blackman4(int ntaps)
     {

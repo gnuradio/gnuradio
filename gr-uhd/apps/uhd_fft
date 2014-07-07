@@ -120,7 +120,7 @@ class app_top_block(stdgui2.std_top_block):
                                               fft_rate=options.fft_rate)
             def fftsink_callback(x, y):
                 self.set_freq(x)
-                
+
             self.scope.set_callback(fftsink_callback)
             self.frame.SetMinSize((800, 420))
 

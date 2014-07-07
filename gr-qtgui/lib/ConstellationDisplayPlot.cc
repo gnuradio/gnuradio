@@ -114,7 +114,7 @@ ConstellationDisplayPlot::ConstellationDisplayPlot(int nplots, QWidget* parent)
     d_plot_curve.push_back(new QwtPlotCurve(QString("Data %1").arg(i)));
     d_plot_curve[i]->attach(this);
     d_plot_curve[i]->setPen(QPen(colors[i]));
-    
+
     QwtSymbol *symbol = new QwtSymbol(QwtSymbol::NoSymbol, QBrush(colors[i]),
                                       QPen(colors[i]), QSize(7,7));
 
@@ -191,7 +191,7 @@ ConstellationDisplayPlot::plotNewData(const std::vector<double*> realDataPoints,
     if((numDataPoints > 0)) {
       if(numDataPoints != d_numPoints) {
 	d_numPoints = numDataPoints;
-      
+
 	for(int i = 0; i < d_nplots; i++) {
 	  delete [] d_real_data[i];
 	  delete [] d_imag_data[i];
@@ -226,7 +226,7 @@ ConstellationDisplayPlot::plotNewData(const std::vector<double*> realDataPoints,
 	  }
 	}
 	_autoScale(bottom, top);
-      }      
+      }
 
       replot();
 

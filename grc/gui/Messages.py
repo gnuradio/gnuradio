@@ -26,7 +26,7 @@ MESSENGERS_LIST = list()
 def register_messenger(messenger):
     """
     Append the given messenger to the list of messengers.
-    
+
     Args:
         messenger: a method thats takes a string
     """
@@ -35,7 +35,7 @@ def register_messenger(messenger):
 def send(message):
     """
     Give the message to each of the messengers.
-    
+
     Args:
         message: a message string
     """

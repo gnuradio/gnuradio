@@ -67,7 +67,7 @@ public:
 
   void setPlotDimensions(const double rows, const double cols,
 			 const double units, const std::string &strunits);
-  
+
   void plotNewData(const std::vector<double*> dataPoints,
 		   const int64_t numDataPoints);
 

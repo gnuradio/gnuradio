@@ -66,11 +66,11 @@ namespace gr {
 	for (size_t j = 0; j < noutput_items*d_vlen; j++)
 	  out[j] = gr_complex (r[j], i[j]);
 	break;
-	
+
       default:
 	assert (0);
       }
-      
+
       return noutput_items;
     }
 

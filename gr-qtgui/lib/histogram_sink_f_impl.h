@@ -30,7 +30,7 @@
 
 namespace gr {
   namespace qtgui {
-    
+
     class QTGUI_API histogram_sink_f_impl : public histogram_sink_f
     {
     private:

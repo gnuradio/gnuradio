@@ -31,7 +31,7 @@
 
 namespace gr {
   namespace filter {
-    
+
     // While this is a polyphase_filterbank, we don't use the normal
     // parent class because we have to use the fir_filter_with_buffer
     // objects instead of normal filters.

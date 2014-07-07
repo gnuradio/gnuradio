@@ -38,16 +38,16 @@ namespace gr {
     class BLOCKS_API @NAME@ : virtual public sync_block
     {
     public:
-      
+
       // gr::blocks::@NAME@::sptr
       typedef boost::shared_ptr<@NAME@> sptr;
-      
+
       /*!
        * \brief Create an instance of @NAME@
        * \param k additive constant
        */
       static sptr make(@O_TYPE@ k);
-      
+
       /*!
        * \brief Return additive constant
        */

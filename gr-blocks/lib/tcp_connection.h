@@ -28,7 +28,7 @@
 #include <pmt/pmt.h>
 
 namespace gr {
-  
+
   class basic_block;
 
   namespace blocks {
@@ -42,10 +42,10 @@ namespace gr {
       bool d_no_delay;
 
       tcp_connection(boost::asio::io_service& io_service, int MTU=10000, bool no_delay=false);
-      
+
     public:
       typedef boost::shared_ptr<tcp_connection> sptr;
-      
+
       static sptr make(boost::asio::io_service& io_service, int MTU=10000, bool no_delay=false);
 
       boost::asio::ip::tcp::socket& socket() { return d_socket; };

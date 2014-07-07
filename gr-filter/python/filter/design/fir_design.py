@@ -19,7 +19,7 @@
 #
 
 import scipy
-from gnuradio import filter 
+from gnuradio import filter
 from PyQt4 import QtGui
 
 # Filter design functions using a window

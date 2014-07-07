@@ -40,6 +40,6 @@ namespace gr {
     };
 
   } /* namespace vocoder */
-} /* namespace gr */       
+} /* namespace gr */
 
 #endif /* INCLUDED_VOCODER_ALAW_ENCODE_SB_IMPL_H */

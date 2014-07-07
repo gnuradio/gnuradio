@@ -28,7 +28,7 @@
 
 namespace gr {
   namespace analog {
-    
+
     /*!
      * \brief clips input values to min, max
      * \ingroup level_controllers_blk

@@ -30,7 +30,7 @@
 
 namespace gr {
   namespace channels {
-    
+
     class CHANNELS_API sro_model_impl
       : public sro_model
     {

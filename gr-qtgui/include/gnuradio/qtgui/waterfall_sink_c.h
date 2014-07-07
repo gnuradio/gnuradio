@@ -87,7 +87,7 @@ namespace gr {
 #endif
 
       virtual void clear_data() = 0;
-      
+
       virtual void set_fft_size(const int fftsize) = 0;
       virtual int fft_size() const = 0;
       virtual void set_fft_average(const float fftavg) = 0;

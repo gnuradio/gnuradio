@@ -35,14 +35,14 @@ qa_sincos::t1()
   static const unsigned int N = 1000;
   double c_sin, c_cos;
   double gr_sin, gr_cos;
-  
+
   for(unsigned i = 0; i < N; i++) {
     double x = i/100.0;
     c_sin = sin(x);
     c_cos = cos(x);
-    
+
     gr::sincos(x, &gr_sin, &gr_cos);
-    
+
     CPPUNIT_ASSERT_DOUBLES_EQUAL(c_sin, gr_sin, 0.0001);
     CPPUNIT_ASSERT_DOUBLES_EQUAL(c_cos, gr_cos, 0.0001);
   }
@@ -54,14 +54,14 @@ qa_sincos::t2()
   static const unsigned int N = 1000;
   float c_sin, c_cos;
   float gr_sin, gr_cos;
-  
+
   for(unsigned i = 0; i < N; i++) {
     float x = i/100.0;
     c_sin = sinf(x);
     c_cos = cosf(x);
-    
+
     gr::sincosf(x, &gr_sin, &gr_cos);
-    
+
     CPPUNIT_ASSERT_DOUBLES_EQUAL(c_sin, gr_sin, 0.0001);
     CPPUNIT_ASSERT_DOUBLES_EQUAL(c_cos, gr_cos, 0.0001);
   }

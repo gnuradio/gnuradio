@@ -64,7 +64,7 @@ class IceRadioClient(Ice.Application):
         if self.useglacier:
 	  gstring = ginst + "/router -t:tcp -h " + ghost + " -p " + gport
 	  print "GLACIER: {0}".format(gstring)
-	  
+
 	  setrouter = Glacier2.RouterPrx.checkedCast(self.communicator().stringToProxy(gstring))
 	  self.communicator().setDefaultRouter(setrouter)
           defaultRouter = self.communicator().getDefaultRouter()

@@ -93,7 +93,7 @@ SpectrumGUIClass::openSpectrumWindow(QWidget* parent,
       _realTimeDomainPoints = new double[_dataPoints];
       _imagTimeDomainPoints = new double[_dataPoints];
       _fftBuffersCreatedFlag = true;
-      
+
       memset(_fftPoints, 0x0, _dataPoints*sizeof(float));
       memset(_realTimeDomainPoints, 0x0, _dataPoints*sizeof(double));
       memset(_imagTimeDomainPoints, 0x0, _dataPoints*sizeof(double));

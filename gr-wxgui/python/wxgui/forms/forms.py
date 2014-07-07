@@ -436,7 +436,7 @@ class toggle_button(button):
 	"""
 	Create a dual-state button.
 	This button will alternate between True and False when clicked.
-        
+
         Args:
 	    parent: the parent widget
 	    sizer: add this widget to sizer if provided (optional)

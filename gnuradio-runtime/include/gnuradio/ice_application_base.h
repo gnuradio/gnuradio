@@ -1,9 +1,9 @@
 /* -*- c++ -*- */
-/* 
+/*
  * Copyright 2012 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
- * 
+ *
  * GNU Radio is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3, or (at your option)
@@ -43,14 +43,14 @@ namespace {
   static const unsigned int ICEAPPLICATION_ACTIVATION_TIMEOUT_MS(600);
 };
 
-class GR_RUNTIME_API ice_application_common : public Ice::Application 
+class GR_RUNTIME_API ice_application_common : public Ice::Application
 {
  public:
   template<typename TserverBase, typename TserverClass> friend class ice_application_base;
   static boost::shared_ptr<ice_application_common> Instance();
   ~ice_application_common() {;}
   static int d_reacquire_attributes;
-  
+
  protected:
   static bool d_main_called;
   static bool d_have_ice_config;
@@ -67,34 +67,34 @@ public:
   boost::shared_ptr<ice_application_common> d_application;
   ice_application_base(TserverClass* _this);
   ~ice_application_base() {;}
-    
+
   static TserverBase* i();
   static const std::vector<std::string> endpoints();
-    
+
 protected:
   bool have_ice_config() { return d_application->d_have_ice_config; }
   void set_endpoint(const std::string& endpoint) { d_application->d_endpointStr = endpoint;}
-  
+
   //this one is the key... overwrite in templated/inherited variants
   virtual TserverBase* i_impl() = 0;
 
-  //tools for the i_impl... 
+  //tools for the i_impl...
   //tell it when it has to resync with the communicator
   virtual bool reacquire_sync();
   virtual void sync_reacquire();
 
   static TserverClass* d_this;
-    
+
   int d_reacquire;
   //static int d_reacquire_attributes;
-    
+
 private:
   void starticeexample();
-    
+
   bool application_started();
-    
+
   int run(int, char*[]);
-    
+
   static void kickoff();
 };
 
@@ -106,7 +106,7 @@ TserverClass* ice_application_base<TserverBase, TserverClass>::d_this(0);
 
 template<typename TserverBase, typename TserverClass>
 ice_application_base<TserverBase, TserverClass>::ice_application_base(TserverClass* _this)
-  : d_reacquire(0) 
+  : d_reacquire(0)
 {
   //d_reacquire_attributes = 0;
   d_this = _this;
@@ -123,13 +123,13 @@ void ice_application_base<TserverBase, TserverClass>::starticeexample()
 
   if(conffile.size() > 0) {
     std::stringstream iceconf;
-    ice_application_common::d_have_ice_config = true; 
+    ice_application_common::d_have_ice_config = true;
     ice_application_common::d_main_called = true;
     iceconf << conffile;
     d_application->main(0, argv, iceconf.str().c_str());
   }
   else {
-    ice_application_common::d_have_ice_config = false; 
+    ice_application_common::d_have_ice_config = false;
     ice_application_common::d_main_called = true;
     d_application->main(0, argv);
   }
@@ -139,17 +139,17 @@ template<typename TserverBase, typename TserverClass>
 void ice_application_base<TserverBase, TserverClass>::kickoff()
 {
   static bool run_once = false;
-  
+
   //if(!d_this->application_started()) {
   if(!run_once) {
     ++d_this->d_application->d_reacquire_attributes;
-    
+
     ice_application_common::d_thread = boost::shared_ptr<boost::thread>
       (new boost::thread(boost::bind(&ice_application_base::starticeexample, d_this)));
-  
+
     ::timespec timer_ts, rem_ts;
     timer_ts.tv_sec = 0; timer_ts.tv_nsec = ICEAPPLICATION_ACTIVATION_TIMEOUT_MS*1000;
-  
+
     int iter = 0;
     while(!d_this->application_started()) {
       #if defined(_WIN32) || defined(__WIN32__) || defined(WIN32)
@@ -164,10 +164,10 @@ void ice_application_base<TserverBase, TserverClass>::kickoff()
 	break;
       }
     }
-    
+
     run_once = true;
   }
-  
+
   return;
 }
 
@@ -195,20 +195,20 @@ template<typename TserverBase, typename TserverClass>
 TserverBase* ice_application_base<TserverBase, TserverClass>::i()
 {
   //printf("indacall\n");
-  
+
   assert(d_this != 0);
   if(!d_this->application_started()) {
     //printf("anotherkickoff\n");
     kickoff();
   }
   //printf("donekickedoff\n");
-  
+
   /*else if(!d_proxy) {
     d_proxy = d_this->i_impl();
     assert(d_proxy != 0);
     }*/
 
-  return d_this->i_impl(); 
+  return d_this->i_impl();
 }
 
 /*template<typename TserverBase, typename TserverClass>

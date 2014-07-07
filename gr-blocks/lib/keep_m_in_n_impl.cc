@@ -49,7 +49,7 @@ namespace gr {
       assert(d_n > 0);
       assert(d_m <= d_n);
       assert(d_offset <= (d_n-d_m));
-      
+
       set_output_multiple(m);
     }
 
@@ -67,7 +67,7 @@ namespace gr {
     {
       uint8_t* out = (uint8_t*)output_items[0];
       const uint8_t* in = (const uint8_t*)input_items[0];
-      
+
       // iterate over data blocks of size {n, input : m, output}
       int blks = std::min(noutput_items/d_m, ninput_items[0]/d_n);
 
@@ -78,10 +78,10 @@ namespace gr {
 	// perform copy
 	memcpy( optr, iptr, d_m*d_itemsize );
       }
-      
+
       consume_each(d_n);
       return d_m;
     }
-    
+
   } /* namespace blocks */
 } /* namespace gr */

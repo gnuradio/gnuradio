@@ -44,7 +44,7 @@ TimeRasterData::TimeRasterData(const double rows, const double cols)
   // (helps when d_cols is fractional and we have to slide).
   d_totalitems = static_cast<int>((d_rows+1)*floor(d_cols));
   d_data_size = d_totalitems + static_cast<int>(floor(d_cols));
-  
+
   d_intensityRange = QwtDoubleInterval(0.0, 10.0);
   d_data = new double[d_data_size];
 
@@ -171,7 +171,7 @@ double
 TimeRasterData::value(double x, double y) const
 {
   double returnValue = 0.0;
-  
+
 #if QWT_VERSION < 0x060000
   double top = boundingRect().top();
   double bottom = top - boundingRect().height();

@@ -52,9 +52,9 @@ namespace gr {
     {
       const short *in = (const short *) input_items[0];
       gr_complex *out = (gr_complex *) output_items[0];
-      
+
       interleaved_short_array_to_complex (in, out, 2 * noutput_items);
-      
+
       return noutput_items;
     }
 

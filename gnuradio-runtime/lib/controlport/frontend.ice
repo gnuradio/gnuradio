@@ -28,10 +28,10 @@ module GNURadio {
         // primitive types
 		dictionary<string, string>	StrStrDict;
         dictionary<string, string>  TunerArgs;
-		struct F32Range 
+		struct F32Range
         {
-          float min; 
-          float max; 
+          float min;
+          float max;
         };
 
         // exception types
@@ -111,7 +111,7 @@ module GNURadio {
 
         sequence<Tuner*>   TunerSeq;
         sequence<Channel*> ChannelSeq;
-    
+
         interface Channelizer extends AbstractReceiver {
             idempotent ChannelizerStatus status();
             idempotent Tuner*       getTuner();
@@ -131,7 +131,7 @@ module GNURadio {
         };
 
     };
-    
+
     module Booter {
         dictionary<string, string>      WaveformArgs;
         exception WaveformRunningError {

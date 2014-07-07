@@ -60,7 +60,7 @@ namespace gr {
       size_t itemsize = d_itemsize;
       const char *in = (const char *)input_items[0];
       char **out = (char **)&output_items[0];
-      
+
       for (int i = 0; i < noutput_items; i++){
 	for (unsigned int n = 0; n < nchan; n++){
 	  memcpy(out[n], in, itemsize);
@@ -68,7 +68,7 @@ namespace gr {
 	  in += itemsize;
 	}
       }
-      
+
       return noutput_items;
     }
 

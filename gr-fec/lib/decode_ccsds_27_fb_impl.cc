@@ -44,7 +44,7 @@ namespace gr {
       float RATE = 0.5;
       float ebn0 = 12.0;
       float esn0 = RATE*pow(10.0, ebn0/10.0);
-      
+
       gen_met(d_mettab, 100, esn0, 0.0, 256);
       viterbi_chunks_init(d_state0);
       viterbi_chunks_init(d_state1);
@@ -57,7 +57,7 @@ namespace gr {
     {
       const float *in = (const float *)input_items[0];
       unsigned char *out = (unsigned char *)output_items[0];
-      
+
       for (int i = 0; i < noutput_items*16; i++) {
 	// Translate and clip [-1.0..1.0] to [28..228]
 	float sample = in[i]*100.0+128.0;
@@ -66,12 +66,12 @@ namespace gr {
 	else if (sample < 0.0)
 	  sample = 0.0;
 	unsigned char sym = (unsigned char)(floor(sample));
-	
+
 	d_viterbi_in[d_count % 4] = sym;
 	if ((d_count % 4) == 3) {
 	  // Every fourth symbol, perform butterfly operation
 	  viterbi_butterfly2(d_viterbi_in, d_mettab, d_state0, d_state1);
-	  
+
 	  // Every sixteenth symbol, read out a byte
 	  if (d_count % 16 == 11) {
 	    // long metric =
@@ -79,10 +79,10 @@ namespace gr {
 	    // printf("%li\n", *(out-1), metric);
 	  }
 	}
-	
+
 	d_count++;
       }
-      
+
       return noutput_items;
     }
 

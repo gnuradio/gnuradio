@@ -51,7 +51,7 @@ class test_hilbert(gr_unittest.TestCase):
         tb = self.tb
         ntaps = 51
         sampling_freq = 100
-        
+
         N = int(ntaps + sampling_freq * 0.10)
         data = sig_source_f(sampling_freq, sampling_freq * 0.10, 1.0, N)
         src1 = blocks.vector_source_f(data)

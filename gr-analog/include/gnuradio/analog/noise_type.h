@@ -25,7 +25,7 @@
 
 namespace gr {
   namespace analog {
-    
+
     typedef enum {
       GR_UNIFORM = 200, GR_GAUSSIAN, GR_LAPLACIAN, GR_IMPULSE
     } noise_type_t;

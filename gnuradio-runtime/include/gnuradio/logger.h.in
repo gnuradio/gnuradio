@@ -1,19 +1,19 @@
 /* -*- c++ -*- */
 /*
  * Copyright 2012-2013 Free Software Foundation, Inc.
- * 
+ *
  * This file is part of GNU Radio
- * 
+ *
  * GNU Radio is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3, or (at your option)
  * any later version.
- * 
+ *
  * GNU Radio is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with GNU Radio; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 51 Franklin Street,
@@ -69,9 +69,9 @@ namespace gr {
 #define GR_LOG_ASSIGN_LOGPTR(logger,name)
 #define GR_CONFIG_LOGGER(config)
 #define GR_CONFIG_AND_WATCH_LOGGER(config,period)
-#define GR_LOG_GETLOGGER(logger, name) 
+#define GR_LOG_GETLOGGER(logger, name)
 #define GR_SET_LEVEL(name, level)
-#define GR_LOG_SET_LEVEL(logger, level) 
+#define GR_LOG_SET_LEVEL(logger, level)
 #define GR_GET_LEVEL(name, level)
 #define GR_LOG_GET_LEVEL(logger, level)
 #define GR_ADD_APPENDER(name,appender)
@@ -326,7 +326,7 @@ namespace gr {
 namespace gr {
 
   /*!
-   * \brief Class to control configuration of logger.  
+   * \brief Class to control configuration of logger.
    * This is a singleton that cna launch a thread to wathc a config file for changes
    * \ingroup logging
    */
@@ -340,7 +340,7 @@ namespace gr {
     /*! \brief Pointer to watch thread for config file changes */
     boost::thread *watch_thread;
 
-    /*! \brief Watcher thread method 
+    /*! \brief Watcher thread method
      * /param filename Name of configuration file
      * /param watch_period Seconds between checks for changes in config file
      */
@@ -632,7 +632,7 @@ namespace gr {
    *
    * Add rolling file appender to a given logger
    *
-   * \return vector of string names of loggers 
+   * \return vector of string names of loggers
    */
   GR_RUNTIME_API std::vector<std::string> logger_get_logger_names(void);
 
@@ -651,9 +651,9 @@ namespace gr {
 #define GR_LOG_ASSIGN_LOGPTR(logger,name)
 #define GR_CONFIG_LOGGER(config)
 #define GR_CONFIG_AND_WATCH_LOGGER(config,period)
-#define GR_LOG_GETLOGGER(logger, name) 
+#define GR_LOG_GETLOGGER(logger, name)
 #define GR_SET_LEVEL(name, level)
-#define GR_LOG_SET_LEVEL(logger, level) 
+#define GR_LOG_SET_LEVEL(logger, level)
 #define GR_GET_LEVEL(name, level)
 #define GR_LOG_GET_LEVEL(logger, level)
 #define GR_ADD_APPENDER(name,appender)
@@ -812,7 +812,7 @@ namespace gr {
 
 /**************** Start Configuration Class and Methods for Python ************/
 /*!
- * \brief Function to call configuration macro from python.  
+ * \brief Function to call configuration macro from python.
  *        Note: Configuration is only updated if filename or watch_period has changed.
  * \param config_filename  Name of configuration file
  * \param watch_period Seconds to wait between checking for changes in conf file.
@@ -830,7 +830,7 @@ GR_RUNTIME_API std::vector<std::string> gr_logger_get_logger_names(void);
 
 /*!
  * \brief Function to reset logger configuration from python
- * 
+ *
  */
 GR_RUNTIME_API void gr_logger_reset_config(void);
 

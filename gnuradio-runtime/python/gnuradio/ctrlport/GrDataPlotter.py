@@ -184,7 +184,7 @@ class GrDataPlotParent(gr.top_block, QtGui.QWidget):
                     data[n] = [data[n],]
                 data[n] = self.data_to_complex(data[n])
                 self.src[n].set_data(data[n])
-            
+
 
 
 class GrDataPlotterC(GrDataPlotParent):
@@ -236,7 +236,7 @@ class GrDataPlotterF(GrDataPlotParent):
                                 self._name, self._ncons)
         snk.enable_autoscale(True)
         return snk
-    
+
     def get_vecsource(self):
         return blocks.vector_source_f([])
 
@@ -246,7 +246,7 @@ class GrDataPlotterF(GrDataPlotParent):
 
     def set_line_label(self, n, name):
         self.snk.set_line_label(n, self.knobnames[n])
-            
+
 
 class GrDataPlotterConst(GrDataPlotParent):
     def __init__(self, name, rate, pmin=None, pmax=None, stripchart=False):

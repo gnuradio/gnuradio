@@ -61,7 +61,7 @@
 		<type>complex</type>
 	</source>
     <doc>
-  This algorithm implements the method described in 
+  This algorithm implements the method described in
    Compact Rayleigh and Rician fading simulator based on random walk processes
    A. Alimohammad S.F. Fard B.F. Cockburn C. Schlegel
    26th November 2008

@@ -2060,7 +2060,7 @@
            <item row="2" column="0">
             <widget class="QLabel" name="firhbtrEditLabel2">
              <property name="text">
-              <string>Transition width 
+              <string>Transition width
  (from fs/4)</string>
              </property>
             </widget>

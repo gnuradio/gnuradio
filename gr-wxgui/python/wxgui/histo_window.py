@@ -48,7 +48,7 @@ class control_panel(wx.Panel):
 	def __init__(self, parent):
 		"""
 		Create a new control panel.
-		
+
 		Args:
 		    parent: the wx parent window
 		"""
@@ -137,7 +137,7 @@ class histo_window(wx.Panel, pubsub.pubsub):
 	def handle_msg(self, msg):
 		"""
 		Handle the message from the fft sink message queue.
-		
+
 		Args:
 		    msg: the frame as a character array
 		"""

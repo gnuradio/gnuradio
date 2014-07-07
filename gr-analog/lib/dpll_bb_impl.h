@@ -27,7 +27,7 @@
 
 namespace gr {
   namespace analog {
-    
+
     class dpll_bb_impl : public dpll_bb
     {
     private:
@@ -41,7 +41,7 @@ namespace gr {
 
       void set_gain(float gain) { d_gain = gain; }
       void set_decision_threshold(float thresh) { d_decision_threshold = thresh; }
-      
+
       float gain() const { return d_gain; }
       float freq() const { return d_pulse_frequency; }
       float phase() const { return d_pulse_phase; }

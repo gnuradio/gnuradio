@@ -88,7 +88,7 @@ class Port(Element):
         self._connector_length = CONNECTOR_EXTENSION_MINIMAL + CONNECTOR_EXTENSION_INCREMENT*index
     def modify_height(self, start_height):
         type_dict = {'bus':(lambda a: a * 3)};
-        
+
         if self.get_type() in type_dict:
             return type_dict[self.get_type()](start_height);
         else:
@@ -119,7 +119,7 @@ class Port(Element):
     def draw(self, gc, window):
         """
         Draw the socket with a label.
-        
+
         Args:
             gc: the graphics context
             window: the gtk window to draw on
@@ -139,7 +139,7 @@ class Port(Element):
     def get_connector_coordinate(self):
         """
         Get the coordinate where connections may attach to.
-        
+
         Returns:
             the connector coordinate (x, y) tuple
         """
@@ -152,7 +152,7 @@ class Port(Element):
         Get the direction that the socket points: 0,90,180,270.
         This is the rotation degree if the socket is an output or
         the rotation degree + 180 if the socket is an input.
-        
+
         Returns:
             the direction in degrees
         """
@@ -163,7 +163,7 @@ class Port(Element):
         """
         Get the length of the connector.
         The connector length increases as the port index changes.
-        
+
         Returns:
             the length in pixels
         """
@@ -172,7 +172,7 @@ class Port(Element):
     def get_rotation(self):
         """
         Get the parent's rotation rather than self.
-        
+
         Returns:
             the parent's rotation
         """
@@ -181,7 +181,7 @@ class Port(Element):
     def move(self, delta_coor):
         """
         Move the parent rather than self.
-        
+
         Args:
             delta_corr: the (delta_x, delta_y) tuple
         """
@@ -190,7 +190,7 @@ class Port(Element):
     def rotate(self, direction):
         """
         Rotate the parent rather than self.
-        
+
         Args:
             direction: degrees to rotate
         """
@@ -199,7 +199,7 @@ class Port(Element):
     def get_coordinate(self):
         """
         Get the parent's coordinate rather than self.
-        
+
         Returns:
             the parents coordinate
         """
@@ -208,7 +208,7 @@ class Port(Element):
     def set_highlighted(self, highlight):
         """
         Set the parent highlight rather than self.
-        
+
         Args:
             highlight: true to enable highlighting
         """
@@ -217,7 +217,7 @@ class Port(Element):
     def is_highlighted(self):
         """
         Get the parent's is highlight rather than self.
-        
+
         Returns:
             the parent's highlighting status
         """

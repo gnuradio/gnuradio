@@ -229,7 +229,7 @@ namespace gr {
     float pc_work_time_var();
 
     float pc_work_time_total();
- 
+
     tpb_detail d_tpb;	// used by thread-per-block scheduler
     int d_produce_or;
 
@@ -261,7 +261,7 @@ namespace gr {
     float d_var_work_time;
     float d_total_work_time;
     float d_pc_counter;
-  
+
     block_detail(unsigned int ninputs, unsigned int noutputs);
 
     friend struct tpb_detail;

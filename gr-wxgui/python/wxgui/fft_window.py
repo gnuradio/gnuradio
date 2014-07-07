@@ -61,7 +61,7 @@ class control_panel(wx.Panel):
 	def __init__(self, parent):
 		"""
 		Create a new control panel.
-		
+
 		Args:
 		    parent: the wx parent window
 		"""
@@ -327,7 +327,7 @@ class fft_window(wx.Panel, pubsub.pubsub):
 		If real, keep take only the positive bins.
 		Plot the samples onto the grid as channel 1.
 		If peak hold is enabled, plot peak vals as channel 2.
-		
+
 		Args:
 		    msg: the fft array as a character array
 		"""

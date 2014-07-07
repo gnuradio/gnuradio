@@ -62,7 +62,7 @@ class plot_constellation_form(plot_form):
         self.ybar.setValue(1000*self.top_block._y_value)
 
         self.add_line_control(self.right_col_layout)
-        
+
     def set_auto_scale(self, state):
         if(state):
             self.top_block.auto_scale(True)

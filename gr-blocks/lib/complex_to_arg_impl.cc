@@ -56,13 +56,13 @@ namespace gr {
       const gr_complex *in = (const gr_complex *) input_items[0];
       float *out = (float *) output_items[0];
       int noi = noutput_items * d_vlen;
-      
+
       // The fast_atan2f is faster than Volk
       for (int i = 0; i < noi; i++){
 	//    out[i] = std::arg (in[i]);
 	out[i] = gr::fast_atan2f(in[i]);
       }
-      
+
       return noutput_items;
     }
 

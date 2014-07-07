@@ -47,6 +47,6 @@ namespace gr {
     };
 
   } /* namespace vocoder */
-} /* namespace gr */       
+} /* namespace gr */
 
 #endif /* INCLUDED_VOCODER_G721_DECODE_BS_IMPL_H */

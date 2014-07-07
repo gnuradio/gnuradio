@@ -51,14 +51,14 @@ namespace gr {
 		      gr_vector_void_star &output_items)
     {
       @O_TYPE@ *optr = (@O_TYPE@ *) output_items[0];
-      
+
       int ninputs = input_items.size ();
-      
+
       for (size_t i = 0; i < noutput_items*d_vlen; i++){
 	@I_TYPE@ acc = ((@I_TYPE@ *) input_items[0])[i];
 	for (int j = 1; j < ninputs; j++)
 	  acc /= ((@I_TYPE@ *) input_items[j])[i];
-	
+
 	*optr++ = (@O_TYPE@) acc;
       }
 

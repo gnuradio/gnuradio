@@ -36,7 +36,7 @@ class Element(object):
     def is_valid(self):
         """
         Is this element valid?
-        
+
         Returns:
             true when the element is enabled and has no error messages
         """
@@ -45,7 +45,7 @@ class Element(object):
     def add_error_message(self, msg):
         """
         Add an error message to the list of errors.
-        
+
         Args:
             msg: the error message string
         """
@@ -56,7 +56,7 @@ class Element(object):
         Get the list of error messages from this element and all of its children.
         Do not include the error messages from disabled children.
         Cleverly indent the children error messages for printing purposes.
-        
+
         Returns:
             a list of error message strings
         """

@@ -32,7 +32,7 @@ class DrawingArea(gtk.DrawingArea):
         """
         DrawingArea contructor.
         Connect event handlers.
-        
+
         Args:
             main_window: the main_window containing all flow graphs
         """

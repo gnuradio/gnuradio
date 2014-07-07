@@ -58,7 +58,7 @@ namespace gr {
     {
       // allocate RNGs
       update_dist();
-      
+
       // set up ports
       message_port_register_out(pmt::mp("strobe"));
       d_thread = boost::shared_ptr<boost::thread>
@@ -87,7 +87,7 @@ namespace gr {
         boost::poisson_distribution<> pd(d_mean_ms);
         d_variate_poisson = boost::shared_ptr< boost::variate_generator<boost::mt19937, boost::poisson_distribution<> > > (
                 new boost::variate_generator <boost::mt19937, boost::poisson_distribution<> >(d_rng,pd) );
-        
+
         boost::normal_distribution<> nd(d_mean_ms, d_std_ms);
         d_variate_normal = boost::shared_ptr< boost::variate_generator<boost::mt19937, boost::normal_distribution<> > > (
                 new boost::variate_generator <boost::mt19937, boost::normal_distribution<> >(d_rng,nd) );
@@ -108,7 +108,7 @@ namespace gr {
     void message_strobe_random_impl::run()
     {
       while(!d_finished) {
-        boost::this_thread::sleep(boost::posix_time::milliseconds(std::max(0.0f,next_delay()))); 
+        boost::this_thread::sleep(boost::posix_time::milliseconds(std::max(0.0f,next_delay())));
         if(d_finished) {
           return;
         }

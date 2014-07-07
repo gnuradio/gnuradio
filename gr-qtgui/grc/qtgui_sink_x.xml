@@ -30,7 +30,7 @@ $(gui_hint()($win))
 #if $freqchangevar() is not None
 def $(id)_callback(p, num):
 	if num == 1 or num == 2: self.set_$(freqchangevar)(p.x())
-	
+
 Qt.QObject.connect(self._$(id)_win, Qt.SIGNAL("plotPointSelected(QPointF, int)"), $(id)_callback )
 #end if
 

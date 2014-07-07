@@ -43,8 +43,8 @@ namespace gr {
       return gnuradio::get_initial_sptr(new wavelet_ff_impl(size, order, forward));
     }
 
-    wavelet_ff_impl::wavelet_ff_impl(int size, 
-				     int order, 
+    wavelet_ff_impl::wavelet_ff_impl(int size,
+				     int order,
 				     bool forward)
       : sync_block("wavelet_ff",
 		      io_signature::make(1, 1, size * sizeof(float)),
@@ -78,11 +78,11 @@ namespace gr {
     {
       const float *in  = (const float *) input_items[0];
       float       *out = (float *) output_items[0];
-      
+
       for (int count = 0; count < noutput_items; count++) {
 	for (int i = 0; i < d_size; i++)
 	  d_temp[i] = in[i];
-	
+
 	if (d_forward)
 	  gsl_wavelet_transform_forward(d_wavelet,
 					d_temp,
@@ -95,14 +95,14 @@ namespace gr {
 					1,
 					d_size,
 					d_workspace);
-	
+
 	for (int i = 0; i < d_size; i++)
 	  out[i] = d_temp[i];
-	
+
 	in  += d_size;
 	out += d_size;
       }
-      
+
       return noutput_items;
     }
 

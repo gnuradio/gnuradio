@@ -120,7 +120,7 @@ namespace gr {
 	      d_fbtaps[i] = -fbtaps[i];
 	    }
 	  }
-	  
+
 	  int n = fftaps.size();
 	  int m = fbtaps.size();
 	  d_prev_input.clear();

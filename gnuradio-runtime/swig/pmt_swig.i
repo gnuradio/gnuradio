@@ -219,7 +219,7 @@ namespace pmt{
   void c64vector_set(pmt_t v, size_t k, std::complex<double> x);
 
   %apply size_t & INOUT { size_t &len };
-  const void *uniform_vector_elements(pmt_t v, size_t &len);  
+  const void *uniform_vector_elements(pmt_t v, size_t &len);
 
   const std::vector<uint8_t>  u8vector_elements(pmt_t v);
   const std::vector<int8_t>   s8vector_elements(pmt_t v);

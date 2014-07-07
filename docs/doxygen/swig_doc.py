@@ -1,23 +1,23 @@
 #
 # Copyright 2010-2012 Free Software Foundation, Inc.
-# 
+#
 # This file is part of GNU Radio
-# 
+#
 # GNU Radio is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 3, or (at your option)
 # any later version.
-# 
+#
 # GNU Radio is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU General Public License
 # along with GNU Radio; see the file COPYING.  If not, write to
 # the Free Software Foundation, Inc., 51 Franklin Street,
 # Boston, MA 02110-1301, USA.
-# 
+#
 """
 Creates the swig_doc.i SWIG interface file.
 Execute using: python swig_doc.py xml_path outputfilename
@@ -65,7 +65,7 @@ class Block2(object):
     Checks if doxyxml produced objects correspond to a new style
     gnuradio block.
     """
-    
+
     @classmethod
     def includes(cls, item):
         if not isinstance(item, DoxyClass):
@@ -75,7 +75,7 @@ class Block2(object):
             return False
         is_a_block2 = item.has_member('make', DoxyFunction) and item.has_member('sptr', DoxyOther)
         return is_a_block2
-        
+
 
 def utoascii(text):
     """
@@ -100,7 +100,7 @@ def combine_descriptions(obj):
     if dd:
         description.append(dd)
     return utoascii('\n\n'.join(description)).strip()
-    
+
 def format_params(parameteritems):
     output = ['Args:']
     template = '    {0} : {1}'
@@ -112,7 +112,7 @@ entry_templ = '%feature("docstring") {name} "{docstring}"'
 def make_entry(obj, name=None, templ="{description}", description=None, params=[]):
     """
     Create a docstring entry for a swig interface file.
-    
+
     obj - a doxyxml object from which documentation will be extracted.
     name - the name of the C object (defaults to obj.name())
     templ - an optional template for the docstring containing only one
@@ -235,11 +235,11 @@ def make_block2_entry(di, block):
     return "\n\n".join(output)
 
 def make_swig_interface_file(di, swigdocfilename, custom_output=None):
-    
+
     output = ["""
 /*
  * This file was automatically generated using swig_doc.py.
- * 
+ *
  * Any changes to it will be lost next time it is regenerated.
  */
 """]
@@ -277,7 +277,7 @@ def make_swig_interface_file(di, swigdocfilename, custom_output=None):
 
     # Create docstrings for functions
     # Don't include the make functions since they have already been dealt with.
-    funcs = [f for f in di.in_category(DoxyFunction) 
+    funcs = [f for f in di.in_category(DoxyFunction)
              if f.name() not in make_funcs and not f.name().startswith('std::')]
     for f in funcs:
         try:

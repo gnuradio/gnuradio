@@ -42,7 +42,7 @@ namespace gr {
     class BLOCKS_API char_to_float : virtual public sync_block
     {
     public:
-      
+
       // gr::blocks::char_to_float_ff::sptr
       typedef boost::shared_ptr<char_to_float> sptr;
 

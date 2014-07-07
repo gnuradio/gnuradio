@@ -41,7 +41,7 @@ namespace gr {
      *
      * Output samples will be in the range [-1,1].
      */
-    class jack_source : public source 
+    class jack_source : public source
     {
       friend int jack_source_process(jack_nframes_t nframes, void *arg);
 
@@ -55,8 +55,8 @@ namespace gr {
       bool         d_ok_to_block;
 
       jack_client_t     *d_jack_client;
-      static const int MAX_PORTS = 10; 
-      int d_portcount;      
+      static const int MAX_PORTS = 10;
+      int d_portcount;
       jack_port_t       *d_jack_input_port[MAX_PORTS];
       jack_ringbuffer_t *d_ringbuffer[MAX_PORTS];
       jack_nframes_t     d_jack_buffer_size;

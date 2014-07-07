@@ -53,7 +53,7 @@ namespace gr {
       void start_rxthread(basic_block *blk, pmt::pmt_t rxport);
       void stop_rxthread();
     };
- 
+
   } /* namespace blocks */
 } /* namespace gr */
 

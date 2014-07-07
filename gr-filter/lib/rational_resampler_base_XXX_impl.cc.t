@@ -33,7 +33,7 @@
 
 namespace gr {
   namespace filter {
-    
+
     @BASE_NAME@::sptr
     @BASE_NAME@::make(unsigned interpolation,
 		      unsigned decimation,

@@ -99,7 +99,7 @@ namespace gr {
     /*!
      * \brief send message to msg_accepter
      *
-     * \param accepter is the target of the send. 
+     * \param accepter is the target of the send.
      *        aprecond: pmt::is_msg_accepter(accepter)
      * \param which_port A pmt symbol describing the port by name.
      * \param msg is the message to send.  It's usually a pmt tuple.

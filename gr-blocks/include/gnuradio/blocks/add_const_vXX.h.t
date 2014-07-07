@@ -39,16 +39,16 @@ namespace gr {
     {
 
     public:
-      
+
       // gr::blocks::@NAME@::sptr
       typedef boost::shared_ptr<@NAME@> sptr;
-      
+
       /*!
        * \brief Create an instance of @NAME@
        * \param k additive constant vector
        */
       static sptr make(std::vector<@O_TYPE@> k);
-      
+
       /*!
        * \brief Return additive constant vector
        */

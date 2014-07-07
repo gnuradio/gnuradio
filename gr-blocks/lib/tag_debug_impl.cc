@@ -118,11 +118,11 @@ namespace gr {
           get_tags_in_range(d_tags, i, abs_N, end_N, d_filter);
 
         if(d_display) {
-          sout << "Input Stream: " << std::setw(2) << std::setfill('0') 
+          sout << "Input Stream: " << std::setw(2) << std::setfill('0')
                << i << std::setfill(' ') << std::endl;
           for(d_tags_itr = d_tags.begin(); d_tags_itr != d_tags.end(); d_tags_itr++) {
             sout << std::setw(10) << "Offset: " << d_tags_itr->offset
-                 << std::setw(10) << "Source: " 
+                 << std::setw(10) << "Source: "
                  << (pmt::is_symbol(d_tags_itr->srcid) ? pmt::symbol_to_string(d_tags_itr->srcid) : "n/a")
                  << std::setw(10) << "Key: " << pmt::symbol_to_string(d_tags_itr->key)
                  << std::setw(10) << "Value: ";

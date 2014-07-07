@@ -34,7 +34,7 @@
 
 namespace gr {
   namespace qtgui {
-    
+
     /*!
      * \brief A graphical sink to display multiple signals in frequency.
      * \ingroup instrumentation_blk

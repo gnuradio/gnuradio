@@ -80,7 +80,7 @@ class plot_spectrogram_form(plot_form):
                      self.spectrogram_auto_scale)
 
         self.add_spectrogram_control(self.right_col_layout)
-        
+
     def update_psd_size(self):
         newpsdsize = self.psd_size_edit.text().toInt()[0]
         if(newpsdsize != self.top_block._psd_size):
@@ -155,7 +155,7 @@ class plot_spectrogram_form(plot_form):
         index = self._line_tabs.currentIndex()
         self.top_block.gui_snk.set_color_map(index, c_index)
         self.update_line_alpha()
-    
+
     def spectrogram_auto_scale(self):
         self.top_block.gui_snk.auto_scale()
         _min = self.top_block.gui_snk.min_intensity(0)

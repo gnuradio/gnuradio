@@ -62,7 +62,7 @@ namespace gr {
       for(unsigned i = 0; i < ninputs; i++)
         ninput_items_required[i] = d_len;
     }
-    
+
     //    boost::shared_mutex mutex_buffer;
     //    mutable boost::mutex mutex_notify;
     //    boost::condition_variable condition_buffer_ready;
@@ -84,7 +84,7 @@ namespace gr {
       std::vector<gr_complex> buf_copy;
 
       buf_copy.resize(d_len);
-      
+
       gr_complex* out = d_fft.get_outbuf();
       for(size_t i=0; i<d_len; i++){
         size_t idx = (i + d_len/2)%d_len;
@@ -131,14 +131,14 @@ namespace gr {
         for(int i = 0; i < num_copy; i++) {
           d_buffer.push_back(in[i]);
         }
-    
+
         // notify the waiting get() if we fill up the buffer
         if(d_buffer.size() == d_len) {
           condition_buffer_ready.notify_one();
         }
       }
       mutex_buffer.unlock();
-    
+
       return noutput_items;
     }
 
@@ -152,7 +152,7 @@ namespace gr {
         alias(), d_id.c_str(), &ctrlport_probe_psd::get,
         pmt::make_c32vector(0,-2),
         pmt::make_c32vector(0,2),
-        pmt::make_c32vector(0,0), 
+        pmt::make_c32vector(0,0),
         "dB", d_desc.c_str(), RPC_PRIVLVL_MIN,
         DISPXY | DISPOPTSCATTER)));
 

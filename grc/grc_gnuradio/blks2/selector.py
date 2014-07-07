@@ -27,7 +27,7 @@ class selector(gr.hier_block2):
     def __init__(self, item_size, num_inputs, num_outputs, input_index, output_index):
         """
         Selector constructor.
-        
+
         Args:
             item_size: the size of the gr data stream in bytes
             num_inputs: the number of inputs (integer)
@@ -58,7 +58,7 @@ class selector(gr.hier_block2):
     def _indexes_valid(self):
         """
         Are the input and output indexes within range of the number of inputs and outputs?
-        
+
         Returns:
             true if input index and output index are in range
         """
@@ -90,7 +90,7 @@ class selector(gr.hier_block2):
     def set_input_index(self, input_index):
         """
         Change the block to the new input index if the index changed.
-        
+
         Args:
             input_index: the new input index
         """
@@ -104,7 +104,7 @@ class selector(gr.hier_block2):
     def set_output_index(self, output_index):
         """
         Change the block to the new output index if the index changed.
-        
+
         Args:
             output_index: the new output index
         """
@@ -121,7 +121,7 @@ class valve(selector):
     def __init__(self, item_size, open):
         """
         Constructor for valve.
-        
+
         Args:
             item_size: the size of the gr data stream in bytes
             open: true if initial valve state is open
@@ -133,7 +133,7 @@ class valve(selector):
     def set_open(self, open):
         """
         Callback to set open state.
-        
+
         Args:
             open: true to set valve state to open
         """

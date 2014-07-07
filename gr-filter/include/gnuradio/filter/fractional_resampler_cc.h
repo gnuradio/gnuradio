@@ -28,7 +28,7 @@
 
 namespace gr {
   namespace filter {
-    
+
     /*!
      * \brief resampling MMSE filter with complex input, complex output
      * \ingroup resamplers_blk

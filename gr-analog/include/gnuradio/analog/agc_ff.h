@@ -42,7 +42,7 @@ namespace gr {
     public:
       // gr::analog::agc_ff::sptr
       typedef boost::shared_ptr<agc_ff> sptr;
-            
+
       /*!
        * Build a floating point AGC loop block.
        *
@@ -52,12 +52,12 @@ namespace gr {
        */
       static sptr make(float rate = 1e-4, float reference = 1.0,
 		       float gain = 1.0);
-      
+
       virtual float rate() const = 0;
       virtual float reference() const = 0;
       virtual float gain() const = 0;
       virtual float max_gain() const = 0;
-      
+
       virtual void set_rate(float rate) = 0;
       virtual void set_reference(float reference) = 0;
       virtual void set_gain(float gain) = 0;

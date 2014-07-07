@@ -31,7 +31,7 @@
 
 namespace gr {
   namespace blocks {
-    
+
     message_debug::sptr
     message_debug::make()
     {
@@ -103,7 +103,7 @@ namespace gr {
     {
       message_port_register_in(pmt::mp("print"));
       set_msg_handler(pmt::mp("print"), boost::bind(&message_debug_impl::print, this, _1));
-  
+
       message_port_register_in(pmt::mp("store"));
       set_msg_handler(pmt::mp("store"), boost::bind(&message_debug_impl::store, this, _1));
 

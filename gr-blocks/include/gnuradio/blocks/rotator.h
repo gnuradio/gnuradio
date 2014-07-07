@@ -30,7 +30,7 @@
 namespace gr {
   namespace blocks {
 
-    class rotator 
+    class rotator
     {
     private:
       gr_complex d_phase;

@@ -28,7 +28,7 @@
 
 namespace gr {
   namespace filter {
-    
+
     /*!
      * \brief IIR filter with complex input, complex output, and
      * float taps.

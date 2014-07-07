@@ -207,7 +207,7 @@ namespace gr {
        * \brief Set the control loop's maximum frequency.
        *
        * \details
-       * Set the maximum frequency the control loop can track. 
+       * Set the maximum frequency the control loop can track.
        *
        * \param freq    (float) new max frequency
        */
@@ -217,7 +217,7 @@ namespace gr {
        * \brief Set the control loop's minimum frequency.
        *
        * \details
-       * Set the minimum frequency the control loop can track. 
+       * Set the minimum frequency the control loop can track.
        *
        * \param freq    (float) new min frequency
        */

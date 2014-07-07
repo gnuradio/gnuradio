@@ -119,12 +119,12 @@ class plot_time_raster_form(plot_form):
             self._line_tabs.addTab(self._line_pages[-1], "{0}".format(label))
 
         layout.addWidget(self._line_tabs)
-        
+
     def update_color_map(self, c_index):
         index = self._line_tabs.currentIndex()
         self.top_block.gui_snk.set_color_map(index, c_index)
         self.update_line_alpha()
-    
+
     def set_auto_scale(self, state):
         if(state):
             self.top_block.auto_scale(True)

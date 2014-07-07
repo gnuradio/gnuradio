@@ -333,7 +333,7 @@ set(CMAKE_REQUIRED_LIBRARIES -lpthread)
         } " HAVE_PTHREAD_SETSCHEDPARAM
     )
     GR_ADD_COND_DEF(HAVE_PTHREAD_SETSCHEDPARAM)
-    
+
     CHECK_CXX_SOURCE_COMPILES("
         #include <sched.h>
         int main(){

@@ -45,11 +45,11 @@ class test_phase_modulator(gr_unittest.TestCase):
         src = blocks.vector_source_f(src_data)
         op = analog.phase_modulator_fc(sensitivity)
         dst = blocks.vector_sink_c()
-        
+
         self.tb.connect(src, op)
         self.tb.connect(op, dst)
         self.tb.run()
-        
+
         result_data = dst.data()
         self.assertComplexTuplesAlmostEqual(expected_result, result_data, 5)
 

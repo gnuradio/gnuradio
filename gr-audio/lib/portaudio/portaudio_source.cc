@@ -296,7 +296,7 @@ namespace gr {
     {
       float **out = (float **)&output_items[0];
       const unsigned nchan = d_input_parameters.channelCount; // # of channels == samples/frame
-  
+
       int k;
       for(k = 0; k < noutput_items;) {
         int nframes = d_reader->items_available() / nchan;	// # of frames in ringbuffer

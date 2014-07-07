@@ -184,7 +184,7 @@ namespace gr {
     }
     return buf.c_str();
   }
-  
+
   static bool
   test_a_bunch(vmcircbuf_factory *factory, int n, int size, int *start_ptr, bool verbose)
   {

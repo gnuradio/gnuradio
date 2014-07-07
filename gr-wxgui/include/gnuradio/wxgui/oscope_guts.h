@@ -30,7 +30,7 @@
 
 namespace gr {
   namespace wxgui {
-    
+
     /*!
      * \brief guts of oscilloscope trigger and buffer module
      *
@@ -45,7 +45,7 @@ namespace gr {
      * data and 50% post-trigger data.
      */
 
-    class WXGUI_API oscope_guts 
+    class WXGUI_API oscope_guts
     {
     public:
       static const int MAX_CHANNELS = 8;

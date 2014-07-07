@@ -28,7 +28,7 @@
 
 namespace gr {
   namespace blocks {
-    
+
     /*!
      * \brief adjust y-range of an input vector by mapping to range
      * (max-of-input, stipulated-min). Primarily for spectral
@@ -40,7 +40,7 @@ namespace gr {
     public:
       // gr::blocks::stretch_ff::sptr
       typedef boost::shared_ptr<stretch_ff> sptr;
-      
+
       /*!
        * \brief Make a stretch block.
        *

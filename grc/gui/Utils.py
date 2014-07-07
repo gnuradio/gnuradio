@@ -29,7 +29,7 @@ def rotate_pixmap(gc, src_pixmap, dst_pixmap, angle=gtk.gdk.PIXBUF_ROTATE_COUNTE
     Load the destination pixmap with a rotated version of the source pixmap.
     The source pixmap will be loaded into a pixbuf, rotated, and drawn to the destination pixmap.
     The pixbuf is a client-side drawable, where a pixmap is a server-side drawable.
-    
+
     Args:
         gc: the graphics context
         src_pixmap: the source pixmap
@@ -49,11 +49,11 @@ def rotate_pixmap(gc, src_pixmap, dst_pixmap, angle=gtk.gdk.PIXBUF_ROTATE_COUNTE
 def get_rotated_coordinate(coor, rotation):
     """
     Rotate the coordinate by the given rotation.
-    
+
     Args:
         coor: the coordinate x, y tuple
         rotation: the angle in degrees
-    
+
     Returns:
         the rotated coordinates
     """
@@ -74,11 +74,11 @@ def get_rotated_coordinate(coor, rotation):
 def get_angle_from_coordinates((x1,y1), (x2,y2)):
     """
     Given two points, calculate the vector direction from point1 to point2, directions are multiples of 90 degrees.
-    
+
     Args:
         (x1,y1): the coordinate of point 1
         (x2,y2): the coordinate of point 2
-    
+
     Returns:
         the direction in degrees
     """
@@ -93,10 +93,10 @@ def parse_template(tmpl_str, **kwargs):
     """
     Parse the template string with the given args.
     Pass in the xml encode method for pango escape chars.
-    
+
     Args:
         tmpl_str: the template as a string
-    
+
     Returns:
         a string of the parsed template
     """

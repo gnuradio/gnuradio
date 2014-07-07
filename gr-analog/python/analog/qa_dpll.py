@@ -32,7 +32,7 @@ class test_dpll_bb(gr_unittest.TestCase):
 
     def test_dpll_bb_001(self):
         # Test set/gets
-        
+
         period = 1.0
         gain = 0.1
         op = analog.dpll_bb(period, gain)

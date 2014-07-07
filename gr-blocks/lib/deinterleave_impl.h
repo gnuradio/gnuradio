@@ -44,6 +44,6 @@ namespace gr {
 
   } /* namespace blocks */
 } /* namespace gr */
-   
+
 
 #endif /* INCLUDED_DEINTERLEAVE_IMPL_H */

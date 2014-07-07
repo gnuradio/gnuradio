@@ -81,7 +81,7 @@ private:
 /***********************************************************************
  * Widget to provide mouse pointer coordinate text
  **********************************************************************/
-class WaterfallZoomer: public QwtPlotZoomer, public TimeScaleData, 
+class WaterfallZoomer: public QwtPlotZoomer, public TimeScaleData,
 		       public FreqOffsetAndPrecisionClass
 {
 public:
@@ -168,7 +168,7 @@ WaterfallDisplayPlot::WaterfallDisplayPlot(int nplots, QWidget* parent)
 
     d_intensity_color_map_type.push_back(INTENSITY_COLOR_MAP_TYPE_MULTI_COLOR);
     setIntensityColorMapType(i, d_intensity_color_map_type[i],
-			     QColor("white"), QColor("white"));    
+			     QColor("white"), QColor("white"));
 
     setAlpha(i, 255/d_nplots);
   }

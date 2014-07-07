@@ -28,7 +28,7 @@
 
 namespace gr {
   namespace filter {
-    
+
     /*!
      * \brief a computationally efficient controllable DC blocker
      * \ingroup filter_blk

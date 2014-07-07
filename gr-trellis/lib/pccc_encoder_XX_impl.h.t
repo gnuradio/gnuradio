@@ -41,13 +41,13 @@ namespace gr {
       int d_blocklength;
       std::vector<int> d_buffer;
 
-    public: 
+    public:
       @IMPL_NAME@(const fsm &FSM1, int ST1,
 		  const fsm &FSM2, int ST2,
 		  const interleaver &INTERLEAVER,
 		  int blocklength);
       ~@IMPL_NAME@();
-      
+
       fsm FSM1() const { return d_FSM1; }
       int ST1() const { return d_ST1; }
       fsm FSM2() const { return d_FSM2; }

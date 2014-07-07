@@ -29,7 +29,7 @@
 #include <sstream>
 
 namespace gr {
-  
+
   class tpb_container
   {
     block_sptr d_block;
@@ -56,7 +56,7 @@ namespace gr {
     : scheduler(ffg, max_noutput_items)
   {
     int block_max_noutput_items;
-    
+
     // Get a topologically sorted vector of all the blocks in use.
     // Being topologically sorted probably isn't going to matter, but
     // there's a non-zero chance it might help...
@@ -84,7 +84,7 @@ namespace gr {
       else {
         block_max_noutput_items = max_noutput_items;
       }
-    
+
       d_threads.create_thread(
 	    gr::thread::thread_body_wrapper<tpb_container>
             (tpb_container(blocks[i], block_max_noutput_items),

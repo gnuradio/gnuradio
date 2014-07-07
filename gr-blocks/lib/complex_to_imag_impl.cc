@@ -57,7 +57,7 @@ namespace gr {
       int noi = noutput_items * d_vlen;
 
       volk_32fc_deinterleave_imag_32f(out, in, noi);
-      
+
       return noutput_items;
     }
 

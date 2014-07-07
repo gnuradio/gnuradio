@@ -56,7 +56,7 @@ namespace gr {
     }
 
     ctcss_squelch_ff_impl::ctcss_squelch_ff_impl(int rate, float freq, float level,
-						 int len, int ramp, bool gate) 
+						 int len, int ramp, bool gate)
       :	block("ctcss_squelch_ff",
 		 io_signature::make(1, 1, sizeof(float)),
 		 io_signature::make(1, 1, sizeof(float))),

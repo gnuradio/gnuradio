@@ -52,7 +52,7 @@ namespace gr {
     pdu_to_tagged_stream_impl::work(int noutput_items,
 				    gr_vector_const_void_star &input_items,
 				    gr_vector_void_star &output_items)
-    {   
+    {
       char *out = (char *)output_items[0];
       int nout = 0;
 
@@ -76,7 +76,7 @@ namespace gr {
 	// make sure type is valid
 	if (!pmt::is_pair(msg)) // TODO: implement pdu::is_valid()
 	  throw std::runtime_error("received a malformed pdu message");
-	
+
 	// grab the components of the pdu message
 	pmt::pmt_t meta(pmt::car(msg));
 	pmt::pmt_t vect(pmt::cdr(msg));
@@ -100,20 +100,20 @@ namespace gr {
 	// copy vector output
 	size_t ncopy = std::min((size_t)noutput_items, (size_t)pmt::length(vect));
 	size_t nsave = pmt::length(vect) - ncopy;
- 
+
 	// copy output
 	size_t io(0);
 	nout += ncopy;
 	const uint8_t* ptr = (uint8_t*) uniform_vector_elements(vect, io);
 	memcpy(out, ptr, ncopy*d_itemsize);
-	
+
 	// save leftover items if needed for next work call
 	if (nsave > 0) {
 	  d_remain.resize(nsave*d_itemsize, 0);
 	  memcpy(&d_remain[0], ptr + ncopy*d_itemsize, nsave*d_itemsize);
         }
       }
-      
+
       return nout;
     }
 

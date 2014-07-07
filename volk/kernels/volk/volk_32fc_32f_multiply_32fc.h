@@ -24,14 +24,14 @@ static inline void volk_32fc_32f_multiply_32fc_a_avx(lv_32fc_t* cVector, const l
 
     __m256 aVal1, aVal2, bVal, bVal1, bVal2, cVal1, cVal2;
 
-    __m256i permute_mask = _mm256_set_epi32(3, 3, 2, 2, 1, 1, 0, 0); 
+    __m256i permute_mask = _mm256_set_epi32(3, 3, 2, 2, 1, 1, 0, 0);
 
     for(;number < eighthPoints; number++){
 
       aVal1 = _mm256_load_ps((float *)aPtr);
       aPtr += 4;
 
-      aVal2 = _mm256_load_ps((float *)aPtr); 
+      aVal2 = _mm256_load_ps((float *)aPtr);
       aPtr += 4;
 
       bVal = _mm256_load_ps(bPtr); // b0|b1|b2|b3|b4|b5|b6|b7

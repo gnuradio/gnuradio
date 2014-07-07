@@ -61,7 +61,7 @@ namespace gr {
       for(unsigned i = 0; i < ninputs; i++)
         ninput_items_required[i] = d_len;
     }
-    
+
     //    boost::shared_mutex mutex_buffer;
     //    mutable boost::mutex mutex_notify;
     //    boost::condition_variable condition_buffer_ready;
@@ -120,14 +120,14 @@ namespace gr {
         for(int i = 0; i < num_copy; i++) {
           d_buffer.push_back(in[i]);
         }
-    
+
         // notify the waiting get() if we fill up the buffer
         if(d_buffer.size() == d_len) {
           condition_buffer_ready.notify_one();
         }
       }
       mutex_buffer.unlock();
-    
+
       return noutput_items;
     }
 
@@ -142,7 +142,7 @@ namespace gr {
         pmt::mp(-2.0f), pmt::mp(2.0f), pmt::mp(0.0f),
 //        pmt::make_f32vector(1,-2),
 //        pmt::make_f32vector(1,2),
-//        pmt::make_f32vector(1,0), 
+//        pmt::make_f32vector(1,0),
         "volts", d_desc.c_str(), RPC_PRIVLVL_MIN,
         d_disp_mask)));
 

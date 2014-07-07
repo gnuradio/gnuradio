@@ -48,7 +48,7 @@ namespace gr {
       set_msg_handler(pmt::mp("pdus"), boost::bind(&pdu_filter_impl::handle_msg, this, _1));
     }
 
-    void 
+    void
     pdu_filter_impl::handle_msg(pmt::pmt_t pdu)
     {
       pmt::pmt_t meta = pmt::car(pdu);
@@ -66,6 +66,6 @@ namespace gr {
         message_port_pub(pmt::mp("pdus"), pdu);
         }
     }
-      
+
   } /* namespace blocks */
 }/* namespace gr */

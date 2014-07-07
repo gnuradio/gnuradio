@@ -33,7 +33,7 @@
 
 namespace gr {
   namespace filter {
-    
+
     fft_filter_ccc::sptr fft_filter_ccc::make(int decimation,
 					      const std::vector<gr_complex> &taps,
 					      int nthreads)
@@ -52,7 +52,7 @@ namespace gr {
 	d_updated(false)
     {
       set_history(1);
-      
+
       d_filter = new kernel::fft_filter_ccc(decimation, taps, nthreads);
 
       d_new_taps = taps;
@@ -84,7 +84,7 @@ namespace gr {
       if(d_filter)
 	d_filter->set_nthreads(n);
     }
-    
+
     int
     fft_filter_ccc_impl::nthreads() const
     {
@@ -101,18 +101,18 @@ namespace gr {
     {
       const gr_complex *in = (const gr_complex *) input_items[0];
       gr_complex *out = (gr_complex *) output_items[0];
-      
+
       if (d_updated){
 	d_nsamples = d_filter->set_taps(d_new_taps);
 	d_updated = false;
 	set_output_multiple(d_nsamples);
 	return 0;				// output multiple may have changed
       }
-      
+
       d_filter->filter(noutput_items, in, out);
 
       return noutput_items;
     }
-    
+
   } /* namespace filter */
 } /* namespace gr */

@@ -33,10 +33,10 @@ def handle_key_press(event):
     """
     Call the action associated with the key press event.
     Both the key value and the mask must have a match.
-    
+
     Args:
         event: a gtk key press event
-    
+
     Returns:
         true if handled
     """

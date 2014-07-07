@@ -49,11 +49,11 @@ class test_channel_model(gr_unittest.TestCase):
 
         self.tb.connect(signal, head, op, snk)
         self.tb.connect(op, snk1)
-        self.tb.run() 
-        
+        self.tb.run()
+
         dst_data = snk.data()
         exp_data = snk1.data()
         self.assertComplexTuplesAlmostEqual(exp_data, dst_data, 5)
-        
+
 if __name__ == '__main__':
     gr_unittest.run(test_channel_model, "test_channel_model.xml")

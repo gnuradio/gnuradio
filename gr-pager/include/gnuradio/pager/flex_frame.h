@@ -28,7 +28,7 @@
 
 namespace gr {
   namespace pager {
-    
+
     /*!
      * \brief flex_frame.
      * \ingroup pager_blk

@@ -28,7 +28,7 @@
 
 namespace gr {
   namespace analog {
-    
+
     /*!
      * \brief Detect the peak of a signal
      * \ingroup peak_detectors_blk
@@ -47,7 +47,7 @@ namespace gr {
 
       virtual void set_gain(float gain) = 0;
       virtual void set_decision_threshold(float thresh) = 0;
-            
+
       virtual float gain() const = 0;
       virtual float freq() const = 0;
       virtual float phase() const = 0;

@@ -156,7 +156,7 @@ HistogramDisplayPlot::HistogramDisplayPlot(int nplots, QWidget* parent)
   setAxisScaleEngine(QwtPlot::yLeft, new QwtLinearScaleEngine);
   setYaxis(-2.0, d_bins);
   setAxisTitle(QwtPlot::yLeft, "Count");
-  
+
   QList<QColor> colors;
   colors << QColor(Qt::blue) << QColor(Qt::red) << QColor(Qt::green)
 	 << QColor(Qt::black) << QColor(Qt::cyan) << QColor(Qt::magenta)
@@ -391,7 +391,7 @@ HistogramDisplayPlot::setMarkerAlpha(int which, int alpha)
     QPen pen(d_plot_curve[which]->pen());
     QBrush brush(d_plot_curve[which]->brush());
     QColor color = brush.color();
-    
+
     // Set new alpha and update pen
     color.setAlpha(alpha);
     brush.setColor(color);
@@ -463,7 +463,7 @@ void
 HistogramDisplayPlot::setNumBins(int bins)
 {
   d_bins = bins;
-  
+
   delete [] d_xdata;
   d_xdata = new double[d_bins];
   _resetXAxisPoints(d_left, d_right);

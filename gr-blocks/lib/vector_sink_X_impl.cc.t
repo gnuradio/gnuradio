@@ -40,7 +40,7 @@ namespace gr {
       return gnuradio::get_initial_sptr
         (new @NAME_IMPL@(vlen));
     }
-  
+
     @NAME_IMPL@::@NAME_IMPL@(int vlen)
     : sync_block("@NAME@",
                     io_signature::make(1, 1, sizeof(@TYPE@) * vlen),

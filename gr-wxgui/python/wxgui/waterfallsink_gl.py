@@ -118,7 +118,7 @@ class _waterfall_sink_base(gr.hier_block2, common.wxgui_hb):
 
 	def set_callback(self,callb):
 		self.win.set_callback(callb)
-		
+
 class waterfall_sink_f(_waterfall_sink_base):
 	_fft_chain = logpwrfft.logpwrfft_f
 	_item_size = gr.sizeof_float

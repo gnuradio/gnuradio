@@ -29,7 +29,7 @@
 
 namespace gr {
   namespace filter {
-    
+
     single_pole_iir_filter_ff::sptr
     single_pole_iir_filter_ff::make(double alpha, unsigned int vlen)
     {

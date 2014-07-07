@@ -30,7 +30,7 @@ def fix_signature(app, what, name, obj, options, signature, return_annotation):
     SWIG produces signature at the top of docstrings of the form
     'blah(int arg1, float arg2) -> return_type'
     and if the string is long it breaks it over multiple lines.
-    
+
     Sphinx gets confused if it is broken over multiple lines.
     fix_signature and remove_lines get around this problem.
     """
@@ -107,31 +107,31 @@ common_block_members =[
     'to_basic_block',
     'unique_id',
     'make',
-    'alias', 
-    'is_set_max_noutput_items', 
-    'max_noutput_items', 
-    'max_output_buffer', 
-    'message_ports_in', 
-    'message_ports_out', 
-    'min_output_buffer', 
-    'pc_input_buffers_full', 
-    'pc_input_buffers_full_var', 
-    'pc_noutput_items', 
-    'pc_noutput_items_var', 
-    'pc_nproduced', 
-    'pc_nproduced_var', 
-    'pc_output_buffers_full', 
-    'pc_output_buffers_full_var', 
-    'pc_work_time', 
-    'pc_work_time_var', 
-    'processor_affinity', 
-    'set_block_alias', 
-    'set_max_noutput_items', 
-    'unset_max_noutput_items', 
-    'set_max_output_buffer', 
-    'set_min_output_buffer', 
-    'set_processor_affinity', 
-    'symbol_name', 
+    'alias',
+    'is_set_max_noutput_items',
+    'max_noutput_items',
+    'max_output_buffer',
+    'message_ports_in',
+    'message_ports_out',
+    'min_output_buffer',
+    'pc_input_buffers_full',
+    'pc_input_buffers_full_var',
+    'pc_noutput_items',
+    'pc_noutput_items_var',
+    'pc_nproduced',
+    'pc_nproduced_var',
+    'pc_output_buffers_full',
+    'pc_output_buffers_full_var',
+    'pc_work_time',
+    'pc_work_time_var',
+    'processor_affinity',
+    'set_block_alias',
+    'set_max_noutput_items',
+    'unset_max_noutput_items',
+    'set_max_output_buffer',
+    'set_min_output_buffer',
+    'set_processor_affinity',
+    'symbol_name',
     'unset_processor_affinity',
     'disconnect_all',
     'index',
@@ -159,14 +159,14 @@ class OldBlockDocumenter(FunctionDocumenter):
     objtype = 'oldblock'
     directivetype = 'function'
     # Don't want to use this for generic functions for give low priority.
-    priority = -10 
-    
+    priority = -10
+
     def __init__(self, *args, **kwargs):
         super(OldBlockDocumenter, self).__init__(*args, **kwargs)
         # Get class name
         bits = self.name.split('.')
         if len(bits) != 3 or bits[0] != 'gnuradio':
-            raise ValueError("expected name to be of form gnuradio.x.y but it is {0}".format(self.name)) 
+            raise ValueError("expected name to be of form gnuradio.x.y but it is {0}".format(self.name))
         sptr_name = 'gnuradio.{0}.{0}_{1}_sptr'.format(bits[1], bits[2])
         # Create a Class Documenter to create documentation for the classes members.
         self.classdoccer = ClassDocumenter(self.directive, sptr_name, indent=self.content_indent)
@@ -191,8 +191,8 @@ class BlockDocumenter(FunctionDocumenter):
     objtype = 'block'
     directivetype = 'function'
     # Don't want to use this for generic functions for give low priority.
-    priority = -10 
-    
+    priority = -10
+
     def __init__(self, *args, **kwargs):
         super(BlockDocumenter, self).__init__(*args, **kwargs)
         # Get class name
@@ -215,7 +215,7 @@ class PyBlockDocumenter(ClassDocumenter):
     """
     objtype = 'pyblock'
     directivetype = 'class'
-    
+
     def __init__(self, *args, **kwargs):
         super(PyBlockDocumenter, self).__init__(*args, **kwargs)
         self.options.members = ALL

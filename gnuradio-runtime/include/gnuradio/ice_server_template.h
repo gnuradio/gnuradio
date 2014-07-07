@@ -1,9 +1,9 @@
 /* -*- c++ -*- */
-/* 
+/*
  * Copyright 2012 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
- * 
+ *
  * GNU Radio is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3, or (at your option)
@@ -35,7 +35,7 @@ public:
 		      const std::string& contolPortName,
 		      const std::string& endpointName);
   ~ice_server_template();
-    
+
 protected:
   //virtual bool application_started();
   TserverBase* i_impl();
@@ -50,10 +50,10 @@ private:
 
 template<typename TserverBase, typename TserverClass, typename TImplClass, typename TIceClass>
 ice_server_template<TserverBase, TserverClass, TImplClass, TIceClass>::ice_server_template
-    (TImplClass* _this, const std::string& controlPortName, const std::string& endpointName) 
+    (TImplClass* _this, const std::string& controlPortName, const std::string& endpointName)
   : ice_application_base<TserverBase, TImplClass>(_this),
     d_iceserver(0),
-    d_contolPortName(controlPortName), 
+    d_contolPortName(controlPortName),
     d_endpointName(endpointName)
 {;}
 
@@ -69,7 +69,7 @@ ice_server_template<TserverBase, TserverClass,TImplClass, TIceClass>::~ice_serve
 
 template<typename TserverBase, typename TserverClass, typename TImplClass, typename TIceClass>
 TserverBase* ice_server_template<TserverBase, TserverClass, TImplClass, TIceClass>::i_impl()
-{ 
+{
   if(ice_application_base<TserverBase, TImplClass>::d_this->reacquire_sync()) {
     d_adapter = (ice_application_base<TserverBase, TImplClass>::d_this->have_ice_config()) ?
       ice_application_base<TserverBase, TImplClass>::d_this->d_this->d_application->communicator()->createObjectAdapter(d_contolPortName) :
@@ -77,7 +77,7 @@ TserverBase* ice_server_template<TserverBase, TserverClass, TImplClass, TIceClas
 
     TserverClass* server_ice(new TserverClass());
     TIceClass obj(server_ice);
-  
+
     Ice::Identity id(ice_application_base<TserverBase, TImplClass>::d_this->d_this->d_application->communicator()->stringToIdentity(d_endpointName));
     d_adapter->add(obj, id);
     d_adapter->activate();

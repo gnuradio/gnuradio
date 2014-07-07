@@ -39,7 +39,7 @@ namespace gr {
 
       // gr::fft::fft_vfc::sptr
       typedef boost::shared_ptr<fft_vfc> sptr;
-      
+
       static sptr make(int fft_size, bool forward,
 			       const std::vector<float> &window,
 			       int nthreads=1);

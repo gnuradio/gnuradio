@@ -45,7 +45,7 @@ list(APPEND gnuradio_runtime_sources
 )
 
 # Append generated file in build directory
-list(APPEND gnuradio_runtime_sources 
+list(APPEND gnuradio_runtime_sources
     ${CMAKE_CURRENT_BINARY_DIR}/gnuradio.cpp
 )
 

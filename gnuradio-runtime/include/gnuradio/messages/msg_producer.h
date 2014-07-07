@@ -45,7 +45,7 @@ namespace gr {
     };
 
     typedef boost::shared_ptr<msg_producer> msg_producer_sptr;
-    
+
   } /* namespace messages */
 } /* namespace gr */
 

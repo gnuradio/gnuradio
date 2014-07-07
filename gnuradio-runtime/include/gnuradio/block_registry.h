@@ -46,7 +46,7 @@ namespace gr {
     void register_symbolic_name(basic_block* block, std::string name);
 
     basic_block_sptr block_lookup(pmt::pmt_t symbol);
- 
+
     void register_primitive(std::string blk, gr::block* ref);
     void unregister_primitive(std::string blk);
     void notify_blk(std::string blk);

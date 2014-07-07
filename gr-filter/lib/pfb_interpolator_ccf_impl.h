@@ -32,7 +32,7 @@
 
 namespace gr {
   namespace filter {
-    
+
     class FILTER_API pfb_interpolator_ccf_impl : public pfb_interpolator_ccf, kernel::polyphase_filterbank
     {
     private:

@@ -28,7 +28,7 @@
 
 namespace gr {
   namespace filter {
-    
+
     class qa_mmse_fir_interpolator_ff : public CppUnit::TestCase
     {
       CPPUNIT_TEST_SUITE(qa_mmse_fir_interpolator_ff);

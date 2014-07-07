@@ -34,11 +34,11 @@ class Block(_Block, _GUIBlock):
     def __init__(self, flow_graph, n):
         """
         Make a new block from nested data.
-        
+
         Args:
             flow: graph the parent element
             n: the nested odict
-        
+
         Returns:
             block a new block
         """
@@ -65,14 +65,14 @@ class Block(_Block, _GUIBlock):
             bus_structure = self._bus_structure_source;
         else:
             bus_structure = self._bus_structure_sink;
-        
+
         bus_structure = self.resolve_dependencies(bus_structure);
-        
+
         if not bus_structure: return ''
         try:
             clean_bus_structure = self.get_parent().evaluate(bus_structure)
             return clean_bus_structure
-    
+
         except: return ''
     def throttle(self): return bool(self._throttle)
 
@@ -124,10 +124,10 @@ class Block(_Block, _GUIBlock):
     def port_controller_modify(self, direction):
         """
         Change the port controller.
-        
+
         Args:
             direction: +1 or -1
-        
+
         Returns:
             true for change
         """
@@ -161,7 +161,7 @@ class Block(_Block, _GUIBlock):
         Split each import statement at newlines.
         Combine all import statments into a list.
         Filter empty imports.
-        
+
         Returns:
             a list of import statements
         """
@@ -173,7 +173,7 @@ class Block(_Block, _GUIBlock):
     def get_callbacks(self):
         """
         Get a list of function callbacks for this block.
-        
+
         Returns:
             a list of strings
         """

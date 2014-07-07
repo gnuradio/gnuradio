@@ -61,7 +61,7 @@ namespace gr {
     {
       const unsigned char *in = (const unsigned char *)input_items[0];
       unsigned char *out = (unsigned char *)output_items[0];
-  
+
       int n = 0;
       for(unsigned int i = 0; i < noutput_items/d_k; i++) {
         unsigned int t = in[i];

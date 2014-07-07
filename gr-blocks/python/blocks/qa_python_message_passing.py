@@ -69,7 +69,7 @@ class message_consumer(gr.sync_block):
         self.msg_list.append(pmt.from_long(pmt.to_long(msg)))
 
 class test_python_message_passing(gr_unittest.TestCase):
-    
+
     def setUp(self):
         self.tb = gr.top_block()
 
@@ -90,17 +90,17 @@ class test_python_message_passing(gr_unittest.TestCase):
         src = blocks.vector_source_f(src_data, False)
         msg_gen = message_generator(msg_list, msg_interval)
         msg_cons = message_consumer()
-        
+
         # Connect vector source to message gen
         self.tb.connect(src, msg_gen)
-        
+
         # Connect message generator to message consumer
         self.tb.msg_connect(msg_gen, 'out_port', msg_cons, 'in_port')
 
         # Verify that the messgae port query functions work
         self.assertEqual(pmt.to_python(msg_gen.message_ports_out())[0], 'out_port')
         self.assertEqual('in_port' in pmt.to_python(msg_cons.message_ports_in()), True)
-        
+
         # Run to verify message passing
         self.tb.start()
 
@@ -108,13 +108,13 @@ class test_python_message_passing(gr_unittest.TestCase):
         while msg_gen.msg_ctr < num_msgs:
             time.sleep(0.5)
         self.tb.stop()
-        self.tb.wait()               
-        
+        self.tb.wait()
+
         # Verify that the message consumer got all the messages
         self.assertEqual(num_msgs, len(msg_cons.msg_list))
         for i in range(num_msgs):
             self.assertTrue(pmt.equal(msg_list[i], msg_cons.msg_list[i]))
-        
+
 if __name__ == '__main__':
-    gr_unittest.run(test_python_message_passing, 
+    gr_unittest.run(test_python_message_passing,
                     'test_python_message_passing.xml')

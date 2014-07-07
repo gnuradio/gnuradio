@@ -51,7 +51,7 @@ namespace gr {
       return gnuradio::get_initial_sptr
 	(new hrpt_pll_cf_impl(alpha, beta, max_offset));
     }
-    
+
     hrpt_pll_cf_impl::hrpt_pll_cf_impl(float alpha, float beta, float max_offset)
       : sync_block("noaa_hrpt_pll_cf",
 		      io_signature::make(1, 1, sizeof(gr_complex)),

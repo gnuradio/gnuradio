@@ -28,7 +28,7 @@ class TextDisplay(gtk.TextView):
     def __init__(self, text=''):
         """
         TextDisplay constructor.
-        
+
         Args:
             text: the text to display (string)
         """
@@ -64,16 +64,16 @@ class TextDisplay(gtk.TextView):
 def MessageDialogHelper(type, buttons, title=None, markup=None):
     """
     Create a modal message dialog and run it.
-    
+
     Args:
         type: the type of message: gtk.MESSAGE_INFO, gtk.MESSAGE_WARNING, gtk.MESSAGE_QUESTION or gtk.MESSAGE_ERROR
         buttons: the predefined set of buttons to use:
         gtk.BUTTONS_NONE, gtk.BUTTONS_OK, gtk.BUTTONS_CLOSE, gtk.BUTTONS_CANCEL, gtk.BUTTONS_YES_NO, gtk.BUTTONS_OK_CANCEL
-    
+
     Args:
         tittle: the title of the window (string)
         markup: the message text with pango markup
-    
+
     Returns:
         the gtk response from run()
     """

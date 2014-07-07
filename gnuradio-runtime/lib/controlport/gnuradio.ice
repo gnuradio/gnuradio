@@ -42,23 +42,23 @@ class KnobL extends Knob { long   value; };
 class KnobS extends Knob { string value; };
 class KnobZ extends Knob { complex value; };
 
-sequence<bool>   VectorB; sequence<byte>   VectorC; 
+sequence<bool>   VectorB; sequence<byte>   VectorC;
 sequence<int>    VectorI; sequence<float>  VectorF;
 sequence<double> VectorD; sequence<string> VectorS;
 sequence<long> 	 VectorL; sequence<short>  VectorT;
 
-class KnobVecB extends Knob { VectorB value; }; 
-class KnobVecC extends Knob { VectorC value; }; 
-class KnobVecI extends Knob { VectorI value; }; 
-class KnobVecT extends Knob { VectorT value; }; 
-class KnobVecF extends Knob { VectorF value; }; 
-class KnobVecD extends Knob { VectorD value; }; 
-class KnobVecL extends Knob { VectorL value; }; 
-class KnobVecS extends Knob { VectorS value; }; 
+class KnobVecB extends Knob { VectorB value; };
+class KnobVecC extends Knob { VectorC value; };
+class KnobVecI extends Knob { VectorI value; };
+class KnobVecT extends Knob { VectorT value; };
+class KnobVecF extends Knob { VectorF value; };
+class KnobVecD extends Knob { VectorD value; };
+class KnobVecL extends Knob { VectorL value; };
+class KnobVecS extends Knob { VectorS value; };
 
-enum KnobType { KNOBBOOL, 	KNOBCHAR, 	KNOBINT, 	KNOBFLOAT, 
-		KNOBDOUBLE, 	KNOBSTRING, 	KNOBLONG, 	KNOBVECBOOL, 
-		KNOBVECCHAR, 	KNOBVECINT,	KNOBVECFLOAT, 	KNOBVECDOUBLE, 
+enum KnobType { KNOBBOOL, 	KNOBCHAR, 	KNOBINT, 	KNOBFLOAT,
+		KNOBDOUBLE, 	KNOBSTRING, 	KNOBLONG, 	KNOBVECBOOL,
+		KNOBVECCHAR, 	KNOBVECINT,	KNOBVECFLOAT, 	KNOBVECDOUBLE,
 		KNOBVECSTRING, 	KNOBVECLONG,    KNOBSHORT};
 
 const int DISPNULL = 0x0000;
@@ -69,7 +69,7 @@ const int DISPSPEC = 0x0008;
 const int DISPRAST = 0x0010;
 const int DISPOPTCPLX    = 0x0100;
 const int DISPOPTLOG     = 0x0200;
-const int DISPOPTSTEM    = 0x0400; 
+const int DISPOPTSTEM    = 0x0400;
 const int DISPOPTSTRIP   = 0x0800;
 const int DISPOPTSCATTER = 0x1000;
 
