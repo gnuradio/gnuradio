@@ -37,7 +37,12 @@ namespace gr {
   {
     //std::cerr << "tpb_thread_body: " << block << std::endl;
 
+#ifdef _MSC_VER
+    #include <Windows.h>
+    thread::set_thread_name(GetCurrentThread(), boost::str(boost::format("%s%d") % block->name() % block->unique_id()));
+#else
     thread::set_thread_name(pthread_self(), boost::str(boost::format("%s%d") % block->name() % block->unique_id()));
+#endif
 
     block_detail *d = block->detail().get();
     block_executor::state s;

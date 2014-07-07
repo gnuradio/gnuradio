@@ -30,7 +30,6 @@
 #include <gnuradio/buffer.h>
 #include <gnuradio/prefs.h>
 #include <gnuradio/config.h>
-#include <gnuradio/rpcregisterhelpers.h>
 #include <stdexcept>
 #include <iostream>
 
@@ -796,6 +795,7 @@ namespace gr {
   {
     d_pc_rpc_set = true;
 #if defined(GR_CTRLPORT) && defined(GR_PERFORMANCE_COUNTERS)
+#include <gnuradio/rpcregisterhelpers.h>
     d_rpc_vars.push_back(
       rpcbasic_sptr(new rpcbasic_register_trigger<block>(
         alias(), "reset_perf_counters", &block::reset_perf_counters,
