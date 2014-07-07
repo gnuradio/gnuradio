@@ -44,7 +44,7 @@ namespace gr {
         d_vector_input(vector_input), d_swap(swap)
     {
     }
-    
+
     void interleaved_short_to_complex_impl::set_swap(bool swap)
     {
 		d_swap = swap;
@@ -57,9 +57,9 @@ namespace gr {
     {
       const short *in = (const short *) input_items[0];
       gr_complex *out = (gr_complex *) output_items[0];
-      
+
       interleaved_short_array_to_complex (in, out, 2 * noutput_items);
-      
+
       if (d_swap) {
         float* p = (float*)output_items[0];
         for (int i = 0; i < noutput_items; ++i) {
@@ -68,7 +68,7 @@ namespace gr {
           p[2*i+0] = f;
         }
       }
-      
+
       return noutput_items;
     }
 

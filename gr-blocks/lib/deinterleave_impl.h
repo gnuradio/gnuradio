@@ -30,7 +30,7 @@ namespace gr {
 
     class BLOCKS_API deinterleave_impl : public deinterleave
     {
-      
+
       size_t d_itemsize;
       unsigned int d_blocksize;
       unsigned int d_current_output;
@@ -51,6 +51,6 @@ namespace gr {
 
   } /* namespace blocks */
 } /* namespace gr */
-   
+
 
 #endif /* INCLUDED_DEINTERLEAVE_IMPL_H */

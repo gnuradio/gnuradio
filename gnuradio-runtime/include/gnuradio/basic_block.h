@@ -275,7 +275,7 @@ namespace gr {
       }
       return false;
     }
-    
+
     const msg_queue_map_t& get_msg_map(void) const {
       return msg_queue;
     }

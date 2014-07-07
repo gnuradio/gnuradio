@@ -35,7 +35,7 @@ namespace gr {
       bool d_swap;
     public:
       interleaved_short_to_complex_impl(bool vector_input=false, bool swap=false);
-      
+
       void set_swap(bool swap);
 
       int work(int noutput_items,
@@ -45,6 +45,6 @@ namespace gr {
 
   } /* namespace blocks */
 } /* namespace gr */
-   
+
 
 #endif /* INCLUDED_INTERLEAVED_SHORT_TO_COMPLEX_IMPL_H */
