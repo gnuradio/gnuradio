@@ -69,7 +69,7 @@ namespace gr {
 
       default:
 	abort ();
-     
+
       }
 
       return noutput_items;

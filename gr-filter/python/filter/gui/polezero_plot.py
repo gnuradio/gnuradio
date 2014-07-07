@@ -29,7 +29,7 @@ class PzPlot(Qwt.QwtPlot):
     def __init__(self, *args):
         Qwt.QwtPlot.__init__(self, *args)
 
-       
+
         self.ymax=0
         self.xmax=0
         self.ymin=0
@@ -39,11 +39,11 @@ class PzPlot(Qwt.QwtPlot):
         grid = Qwt.QwtPlotGrid()
         grid.attach(self)
         grid.setMajPen(Qt.QPen(Qt.Qt.white, 0, Qt.Qt.DotLine))
-        
+
         self.setAxisScale(Qwt.QwtPlot.xBottom, -3, 3)
         self.setAxisScale(Qwt.QwtPlot.yLeft, -2, 2)
         self.drawUnitcircle()
-        
+
 
 
     def setCanvasColor(self, color):
@@ -52,7 +52,7 @@ class PzPlot(Qwt.QwtPlot):
 
 
     def drawUnitcircle(self):
-        radius = 1.0 
+        radius = 1.0
         steps = 1024
 
         angleStep = 2 * pi / steps
@@ -97,7 +97,7 @@ class PzPlot(Qwt.QwtPlot):
                 xmax = max(xmax,self.xmax)
                 xmin = min(roots.real)
                 xmin = min(xmin,self.xmin)
-       
+
                 #To make the plot look good
                 if xmax <= 1.3:
                     xmax = 2
@@ -165,23 +165,23 @@ class CanvasPicker(Qt.QObject):
         self.__selectedcPoint = -1
         self.__addedZero = -1
         self.__addedcZero = -1
-        self.changeConjugate = False 
-        self.enableZeroadd= False 
-        self.enablePoleadd= False 
-        self.enablepzDelete= False 
-        self.iir = False 
+        self.changeConjugate = False
+        self.enableZeroadd= False
+        self.enablePoleadd= False
+        self.enablepzDelete= False
+        self.iir = False
         self.__plot = plot
 
         canvas = plot.canvas()
         canvas.installEventFilter(self)
-        
+
         # We want the focus, but no focus rect.
         # The selected point will be highlighted instead.
         canvas.setFocusPolicy(Qt.Qt.StrongFocus)
         canvas.setCursor(Qt.Qt.PointingHandCursor)
         canvas.setFocusIndicator(Qwt.QwtPlotCanvas.ItemFocusIndicator)
         canvas.setFocus()
-        
+
         canvas.setWhatsThis(
             'All points can be moved using the left mouse button '
             'or with these keys:\n\n'
@@ -208,15 +208,15 @@ class CanvasPicker(Qt.QObject):
 
     def set_conjugate(self):
         self.changeConjugate = not(self.changeConjugate)
-    
+
     def set_iir(self,val=True):
-        self.iir = val 
-    
+        self.iir = val
+
     def add_zero(self):
         self.enableZeroadd = not(self.enableZeroadd)
 
     def add_pole(self):
-        #Adding pole support only for iir 
+        #Adding pole support only for iir
         if self.iir:
             self.enablePoleadd = not(self.enablePoleadd)
 
@@ -224,12 +224,12 @@ class CanvasPicker(Qt.QObject):
         self.enablepzDelete = not(self.enablepzDelete)
 
     def eventFilter(self, object, event):
-        
+
         if event.type() == Qt.QEvent.FocusIn:
             self.__showCursor(True)
         if event.type() == Qt.QEvent.FocusOut:
             self.__showCursor(False)
-         
+
         if event.type() == Qt.QEvent.Paint:
             Qt.QApplication.postEvent(
                 self, Qt.QEvent(Qt.QEvent.User))
@@ -286,13 +286,13 @@ class CanvasPicker(Qt.QObject):
                 self.__moveBy(0, -delta)
             elif key == Qt.Qt.Key_9:
                 self.__moveBy(delta, -delta)
-        
+
         return Qwt.QwtPlot.eventFilter(self, object, event)
 
 
     def __select(self, pos):
         found, distance, point = None, 1e100, -1
-        
+
         for curve in self.__plot.itemList():
             if isinstance(curve, Qwt.QwtPlotCurve):
                 if curve.symbol().style() != Qwt.QwtSymbol.NoSymbol:
@@ -310,7 +310,7 @@ class CanvasPicker(Qt.QObject):
         if found and distance < 10:
             self.__selectedCurve = found
             self.__selectedPoint = point
-            #search for conjugate point if enabled 
+            #search for conjugate point if enabled
             if self.changeConjugate:
                 j=self.__searchConjugate(found.x(point),found.y(point))
                 self.__selectedcPoint = j
@@ -334,10 +334,10 @@ class CanvasPicker(Qt.QObject):
             xData=delete(xData, self.__selectedPoint)
             yData=delete(yData, self.__selectedPoint)
         #one less to accomodate previous delete
-        if(self.__selectedcPoint != -1): 
+        if(self.__selectedcPoint != -1):
             xData=delete(xData, self.__selectedcPoint-1)
             yData=delete(yData, self.__selectedcPoint-1)
-        
+
         curve.setData(xData, yData)
         self.__plot.replot()
         px=[]
@@ -382,7 +382,7 @@ class CanvasPicker(Qt.QObject):
                 if i == self.__selectedPoint:
                     xData[i] = self.__plot.invTransform(curve.xAxis(), pos.x())
                     yData[i] = self.__plot.invTransform(curve.yAxis(), pos.y())
-                    if(self.__selectedcPoint != -1): 
+                    if(self.__selectedcPoint != -1):
                         xData[self.__selectedcPoint] = xData[i]
                         yData[self.__selectedcPoint] = -yData[i]
                 elif i != self.__selectedcPoint:
@@ -406,7 +406,7 @@ class CanvasPicker(Qt.QObject):
             if (round(curve.x(i),8) == round(x,8) and round(curve.y(i),8) == -round(y,8)):
                 if (y !=0):
                     return i
-        return -1 
+        return -1
 
     def __drawAddedzero_pole(self, showIt, pos):
         editcurve=''
@@ -436,7 +436,7 @@ class CanvasPicker(Qt.QObject):
         yData[i+1] = self.__plot.invTransform(editcurve.yAxis(), pos.y())
 
         if self.changeConjugate:
-            xData[i+2] = xData[i+1] 
+            xData[i+2] = xData[i+1]
             yData[i+2] = -yData[i+1]
             self.__addedcZero=i+2
 
@@ -489,7 +489,7 @@ class CanvasPicker(Qt.QObject):
 
         curve.setSymbol(symbol)
         self.__plot.setAutoReplot(doReplot)
-    
+
     def __shiftCurveCursor(self, up):
         curves = [curve for curve in self.__plot.itemList()
                   if isinstance(curve, Qwt.QwtPlotCurve)]

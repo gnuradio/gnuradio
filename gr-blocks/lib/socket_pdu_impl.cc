@@ -45,7 +45,7 @@ namespace gr {
       d_tcp_no_delay(tcp_no_delay)
     {
       d_rxbuf.resize(MTU);
-      
+
       message_port_register_in(PDU_PORT_ID);
       message_port_register_out(PDU_PORT_ID);
 
@@ -83,9 +83,9 @@ namespace gr {
       if (type == "TCP_SERVER") {
         d_acceptor_tcp.reset(new boost::asio::ip::tcp::acceptor(d_io_service, d_tcp_endpoint));
         d_acceptor_tcp->set_option(boost::asio::ip::tcp::acceptor::reuse_address(true));
-        
+
         start_tcp_accept();
-        
+
         set_msg_handler(PDU_PORT_ID, boost::bind(&socket_pdu_impl::tcp_server_send, this, _1));
       }
       else if (type =="TCP_CLIENT") {
@@ -99,26 +99,26 @@ namespace gr {
         set_msg_handler(PDU_PORT_ID, boost::bind(&socket_pdu_impl::tcp_client_send, this, _1));
 
         d_tcp_socket->async_read_some(boost::asio::buffer(d_rxbuf),
-          boost::bind(&socket_pdu_impl::handle_tcp_read, this, 
-            boost::asio::placeholders::error, 
+          boost::bind(&socket_pdu_impl::handle_tcp_read, this,
+            boost::asio::placeholders::error,
             boost::asio::placeholders::bytes_transferred));
       }
       else if (type =="UDP_SERVER") {
         d_udp_socket.reset(new boost::asio::ip::udp::socket(d_io_service, d_udp_endpoint));
-        d_udp_socket->async_receive_from(boost::asio::buffer(d_rxbuf), d_udp_endpoint_other, 
+        d_udp_socket->async_receive_from(boost::asio::buffer(d_rxbuf), d_udp_endpoint_other,
           boost::bind(&socket_pdu_impl::handle_udp_read, this,
             boost::asio::placeholders::error,
             boost::asio::placeholders::bytes_transferred));
-        
+
         set_msg_handler(PDU_PORT_ID, boost::bind(&socket_pdu_impl::udp_send, this, _1));
       }
       else if (type =="UDP_CLIENT") {
         d_udp_socket.reset(new boost::asio::ip::udp::socket(d_io_service, d_udp_endpoint));
-        d_udp_socket->async_receive_from(boost::asio::buffer(d_rxbuf), d_udp_endpoint_other, 
+        d_udp_socket->async_receive_from(boost::asio::buffer(d_rxbuf), d_udp_endpoint_other,
           boost::bind(&socket_pdu_impl::handle_udp_read, this,
             boost::asio::placeholders::error,
             boost::asio::placeholders::bytes_transferred));
-        
+
         set_msg_handler(PDU_PORT_ID, boost::bind(&socket_pdu_impl::udp_send, this, _1));
       }
       else
@@ -151,7 +151,7 @@ namespace gr {
       tcp_connection::sptr new_connection = tcp_connection::make(d_acceptor_tcp->get_io_service(), d_rxbuf.size(), d_tcp_no_delay);
 
       d_acceptor_tcp->async_accept(new_connection->socket(),
-        boost::bind(&socket_pdu_impl::handle_tcp_accept, this, 
+        boost::bind(&socket_pdu_impl::handle_tcp_accept, this,
           new_connection, boost::asio::placeholders::error));
     }
 
@@ -195,7 +195,7 @@ namespace gr {
     {
       if (d_udp_endpoint_other.address().to_string() == "0.0.0.0")
         return;
-      
+
       pmt::pmt_t vector = pmt::cdr(msg);
       size_t len = pmt::length(vector);
       size_t offset = 0;
@@ -214,14 +214,14 @@ namespace gr {
       if (!error) {
         pmt::pmt_t vector = pmt::init_u8vector(bytes_transferred, (const uint8_t*)&d_rxbuf[0]);
         pmt::pmt_t pdu = pmt::cons(pmt::PMT_NIL, vector);
-        
+
         message_port_pub(PDU_PORT_ID, pdu);
-    
+
         d_udp_socket->async_receive_from(boost::asio::buffer(d_rxbuf), d_udp_endpoint_other,
           boost::bind(&socket_pdu_impl::handle_udp_read, this,
             boost::asio::placeholders::error,
             boost::asio::placeholders::bytes_transferred));
-      } 
+      }
     }
 
   } /* namespace blocks */

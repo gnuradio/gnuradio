@@ -51,26 +51,26 @@ namespace gr {
     {
       return d_ramp;
     }
-    
-    void 
+
+    void
     squelch_base_cc_impl::set_ramp(int ramp)
     {
       d_ramp = ramp;
     }
-    
-    bool 
+
+    bool
     squelch_base_cc_impl::gate() const
     {
       return d_gate;
     }
 
-    void 
+    void
     squelch_base_cc_impl::set_gate(bool gate)
     {
       d_gate = gate;
     }
-    
-    bool 
+
+    bool
     squelch_base_cc_impl::unmuted() const
     {
       return (d_state == ST_UNMUTED || d_state == ST_ATTACK);

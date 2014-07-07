@@ -20,7 +20,7 @@ static inline float Q_rsqrt( float number )
   u.i = 0x5f3759df - ( u.i >> 1 );               // what the fuck?
   u.f = u.f * ( threehalfs - ( x2 * u.f * u.f ) );   // 1st iteration
   //u.f  = u.f * ( threehalfs - ( x2 * u.f * u.f ) );   // 2nd iteration, this can be removed
- 
+
   return u.f;
 }
 
@@ -47,7 +47,7 @@ static inline void volk_32f_invsqrt_32f_a_avx(float* cVector, const float* aVect
         aPtr += 8;
 	cPtr += 8;
     }
-   
+
     number = eighthPoints * 8;
     for(;number < num_points; number++)
       *cPtr++ = Q_rsqrt(*aPtr++);
@@ -130,7 +130,7 @@ static inline void volk_32f_invsqrt_32f_u_avx(float* cVector, const float* aVect
         aPtr += 8;
 	cPtr += 8;
     }
-   
+
     number = eighthPoints * 8;
     for(;number < num_points; number++)
       *cPtr++ = Q_rsqrt(*aPtr++);

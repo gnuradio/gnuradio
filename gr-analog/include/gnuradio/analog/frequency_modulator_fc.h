@@ -28,7 +28,7 @@
 
 namespace gr {
   namespace analog {
-    
+
     /*!
      * \brief Frequency modulator block
      * \ingroup modulators_blk

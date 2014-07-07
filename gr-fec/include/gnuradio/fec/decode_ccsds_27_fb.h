@@ -48,11 +48,11 @@ namespace gr {
      * The first 32 bits out will be zeroes, with the output delayed four bytes
      * from the corresponding inputs.
      */
-    
+
     class FEC_API decode_ccsds_27_fb : virtual public sync_decimator
     {
     public:
-      
+
       // gr::fec::decode_ccsds_27_fb::sptr
       typedef boost::shared_ptr<decode_ccsds_27_fb> sptr;
 

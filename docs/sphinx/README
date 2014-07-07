@@ -15,7 +15,7 @@ benefits. First, the Sphinx documentation looks nice and is formatted
 in such a way that Python users of GNU Radio can easy see the module
 structure and hierarchy. It also not only takes the Doxygen
 documentation from C++, but it also allows us to take any Python files
-and include their documentation. 
+and include their documentation.
 
 The end result is two manuals: one for Python and one for C++ users
 without having to duplicate comments, markup, or documentation.

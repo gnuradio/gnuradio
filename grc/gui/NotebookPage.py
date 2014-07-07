@@ -36,7 +36,7 @@ class NotebookPage(gtk.HBox):
     def __init__(self, main_window, flow_graph, file_path=''):
         """
         Page constructor.
-        
+
         Args:
             main_window: main window
             file_path: path to a flow graph file
@@ -91,7 +91,7 @@ class NotebookPage(gtk.HBox):
     def get_generator(self):
         """
         Get the generator object for this flow graph.
-        
+
         Returns:
             generator
         """
@@ -104,7 +104,7 @@ class NotebookPage(gtk.HBox):
         """
         The button was clicked.
         Make the current page selected, then close.
-        
+
         Args:
             the: button
         """
@@ -114,7 +114,7 @@ class NotebookPage(gtk.HBox):
     def set_markup(self, markup):
         """
         Set the markup in this label.
-        
+
         Args:
             markup: the new markup text
         """
@@ -123,7 +123,7 @@ class NotebookPage(gtk.HBox):
     def get_tab(self):
         """
         Get the gtk widget for this page's tab.
-        
+
         Returns:
             gtk widget
         """
@@ -132,7 +132,7 @@ class NotebookPage(gtk.HBox):
     def get_proc(self):
         """
         Get the subprocess for the flow graph.
-        
+
         Returns:
             the subprocess object
         """
@@ -141,7 +141,7 @@ class NotebookPage(gtk.HBox):
     def set_proc(self, process):
         """
         Set the subprocess object.
-        
+
         Args:
             process: the new subprocess
         """
@@ -150,7 +150,7 @@ class NotebookPage(gtk.HBox):
     def get_flow_graph(self):
         """
         Get the flow graph.
-        
+
         Returns:
             the flow graph
         """
@@ -160,7 +160,7 @@ class NotebookPage(gtk.HBox):
         """
         Get the read-only state of the file.
         Always false for empty path.
-        
+
         Returns:
             true for read-only
         """
@@ -171,7 +171,7 @@ class NotebookPage(gtk.HBox):
     def get_file_path(self):
         """
         Get the file path for the flow graph.
-        
+
         Returns:
             the file path or ''
         """
@@ -180,7 +180,7 @@ class NotebookPage(gtk.HBox):
     def set_file_path(self, file_path=''):
         """
         Set the file path, '' for no file path.
-        
+
         Args:
             file_path: file path string
         """
@@ -190,7 +190,7 @@ class NotebookPage(gtk.HBox):
     def get_saved(self):
         """
         Get the saved status for the flow graph.
-        
+
         Returns:
             true if saved
         """
@@ -199,7 +199,7 @@ class NotebookPage(gtk.HBox):
     def set_saved(self, saved=True):
         """
         Set the saved status.
-        
+
         Args:
             saved: boolean status
         """
@@ -208,7 +208,7 @@ class NotebookPage(gtk.HBox):
     def get_state_cache(self):
         """
         Get the state cache for the flow graph.
-        
+
         Returns:
             the state cache
         """

@@ -276,14 +276,14 @@ serialize(pmt_t obj, std::streambuf &sb)
   }
 
   if(is_number(obj)) {
-    
+
     if(is_uint64(obj)) {
         uint64_t i = to_uint64(obj);
         ok = serialize_untagged_u8(PST_UINT64, sb);
         ok &= serialize_untagged_u64(i, sb);
         return ok;
     }
-    else { 
+    else {
       if(is_integer(obj)) {
 	long i = to_long(obj);
 	if(sizeof(long) > 4) {
@@ -581,7 +581,7 @@ deserialize(std::streambuf &sb)
       goto error;
     return make_rectangular( r,i );
     }
-    
+
   case PST_TUPLE:
     {
     pmt_t tuple;
@@ -614,7 +614,7 @@ deserialize(std::streambuf &sb)
 
       if(!deserialize_untagged_u32(&nitems, sb))
 	goto error;
-      
+
       deserialize_untagged_u8(&npad, sb);
       for(size_t i = 0; i < npad; i++)
 	deserialize_untagged_u8(&u8, sb);

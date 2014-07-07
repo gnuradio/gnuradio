@@ -61,41 +61,41 @@ namespace gr {
     {
       const float *in  = (const float *) input_items[0];
       float       *out = (float *) output_items[0];
-      
+
       for (int count = 0; count < noutput_items; count++) {
-	
+
 	// any power?
-	
+
 	if (in[0] == 0.0) {
 	  for (int i = 0; i < d_olen; i++)
 	    out[i] = 0.0;
-	  
+
 	} else {
-	  
+
 	  // get power normalization from 0-th wavelet coefficient
-	  
+
 	  float scl = 1.0/(in[0]*in[0]);
 	  int k = 1;
-	  
+
 	  // sum powers over sequences of bins,
 	  // sequence lengths in increasing powers of 2
-	  
+
 	  for (int e = 0; e < d_olen; e++) {
 	    int m = 01<<e;
 	    float sum = 0.0;
-	    
+
 	    for (int l = 0; l < m; l++)
 	      sum += (in[k+l]*in[k+l]);
-	    
+
 	    out[e] = scl*sum;
 	    k += m;
 	  }
 	}
-	
+
 	in  += d_ilen;
 	out += d_olen;
       }
-      
+
       return noutput_items;
     }
 

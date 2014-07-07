@@ -50,11 +50,11 @@ class test_quadrature_demod(gr_unittest.TestCase):
         src = blocks.vector_source_c(src_data)
         op = analog.quadrature_demod_cf(gain)
         dst = blocks.vector_sink_f()
-        
+
         self.tb.connect(src, op)
         self.tb.connect(op, dst)
         self.tb.run()
-        
+
         result_data = dst.data()
         self.assertComplexTuplesAlmostEqual(expected_result, result_data, 5)
 

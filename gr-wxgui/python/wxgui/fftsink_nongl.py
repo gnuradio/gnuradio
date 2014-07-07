@@ -170,7 +170,7 @@ class fft_sink_c(gr.hier_block2, fft_sink_base):
                                sample_rate=sample_rate, fft_size=fft_size,
                                fft_rate=fft_rate,
                                average=average, avg_alpha=avg_alpha, title=title,
-                               peak_hold=peak_hold, use_persistence=use_persistence, 
+                               peak_hold=peak_hold, use_persistence=use_persistence,
                                persist_alpha=persist_alpha)
 
         self.s2p = blocks.stream_to_vector(gr.sizeof_gr_complex, self.fft_size)

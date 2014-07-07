@@ -47,6 +47,6 @@ namespace gr {
     };
 
   } /* namespace vocoder */
-} /* namespace gr */       
+} /* namespace gr */
 
 #endif /* INCLUDED_VOCODER_GSM_FR_DECODE_PS_IMPL_H */

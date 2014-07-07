@@ -52,7 +52,7 @@ namespace gr {
                 double std_dev_hz,
                 double max_dev_hz,
                 double noise_seed=0 );
-      
+
       ~cfo_model_impl();
       void setup_rpc();
       int work(int, gr_vector_const_void_star&, gr_vector_void_star&);

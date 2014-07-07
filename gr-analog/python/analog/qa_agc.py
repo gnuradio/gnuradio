@@ -489,7 +489,7 @@ class test_agc(gr_unittest.TestCase):
 
         length = 8
         gain = 2
-        
+
         input_data = 8*(0.0,) + 24*(1.0,) + 24*(0.0,)
         expected_result = (8+length-1)*(0.0,) + 24*(gain*1.0,) + (0,)
 

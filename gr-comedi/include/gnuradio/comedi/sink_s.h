@@ -28,7 +28,7 @@
 
 namespace gr {
   namespace comedi {
-    
+
     /*!
      * \brief sink using COMEDI
      *

@@ -61,7 +61,7 @@ def main(filename, detached=False):
 
             print "\nExtra Header:"
             extra_info = parse_file_metadata.parse_extra_dict(extra, info, True)
-        
+
         nheaders += 1
         nread += parse_file_metadata.HEADER_LENGTH + info["extra_len"]
         if(not detached):

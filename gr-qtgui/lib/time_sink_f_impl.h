@@ -30,7 +30,7 @@
 
 namespace gr {
   namespace qtgui {
-    
+
     class QTGUI_API time_sink_f_impl : public time_sink_f
     {
     private:

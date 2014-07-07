@@ -36,7 +36,7 @@
 
 namespace gr {
   namespace filter {
-    
+
     static float
     test_fcn_sin(double index)
     {

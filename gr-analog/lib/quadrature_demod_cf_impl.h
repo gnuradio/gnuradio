@@ -27,7 +27,7 @@
 
 namespace gr {
   namespace analog {
-    
+
     class quadrature_demod_cf_impl : public quadrature_demod_cf
     {
     private:

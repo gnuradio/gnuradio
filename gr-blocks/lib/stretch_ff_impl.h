@@ -27,7 +27,7 @@
 
 namespace gr {
   namespace blocks {
-    
+
     class stretch_ff_impl : public stretch_ff
     {
     private:
@@ -37,7 +37,7 @@ namespace gr {
     public:
       stretch_ff_impl(float lo, size_t vlen);
       ~stretch_ff_impl();
-      
+
       float lo() const { return d_lo; }
       void set_lo(float lo) { d_lo = lo; }
       size_t vlen() const { return d_vlen; }

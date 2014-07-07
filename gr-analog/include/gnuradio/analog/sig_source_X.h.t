@@ -41,7 +41,7 @@ namespace gr {
     public:
       // gr::analog::@BASE_NAME@::sptr
       typedef boost::shared_ptr<@BASE_NAME@> sptr;
-      
+
       /*!
        * Build a signal source block.
        *

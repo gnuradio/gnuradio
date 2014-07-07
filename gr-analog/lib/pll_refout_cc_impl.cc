@@ -43,7 +43,7 @@ namespace gr {
       return gnuradio::get_initial_sptr
 	(new pll_refout_cc_impl(loop_bw, max_freq, min_freq));
     }
-    
+
     pll_refout_cc_impl::pll_refout_cc_impl(float loop_bw, float max_freq, float min_freq)
       : sync_block("pll_refout_cc",
 		      io_signature::make(1, 1, sizeof(gr_complex)),

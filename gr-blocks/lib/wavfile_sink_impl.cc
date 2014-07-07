@@ -175,7 +175,7 @@ namespace gr {
       }
 
       close();
-      
+
       return true;
     }
 

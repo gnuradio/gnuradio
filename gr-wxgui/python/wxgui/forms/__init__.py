@@ -48,7 +48,7 @@ import wx
 class static_box_sizer(wx.StaticBoxSizer):
 	"""
 	A box sizer with label and border.
-        
+
         Args:
 	    parent: the parent widget
             sizer: add this widget to sizer if provided (optional)

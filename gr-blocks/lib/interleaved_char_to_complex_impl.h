@@ -42,6 +42,6 @@ namespace gr {
 
   } /* namespace blocks */
 } /* namespace gr */
-   
+
 
 #endif /* INCLUDED_INTERLEAVED_CHAR_TO_COMPLEX_IMPL_H */

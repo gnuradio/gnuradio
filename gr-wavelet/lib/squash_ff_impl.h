@@ -31,7 +31,7 @@
 
 namespace gr {
   namespace wavelet {
-   
+
     class WAVELET_API squash_ff_impl : public squash_ff
     {
       size_t  d_inum;

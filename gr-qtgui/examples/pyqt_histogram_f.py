@@ -150,7 +150,7 @@ class control_box(QtGui.QWidget):
         res = self.hist_bins.text().toInt()
         if(res[1]):
             self.snk.set_bins(res[0])
-        
+
     def autoscalex(self):
         self.snk.autoscalex()
 

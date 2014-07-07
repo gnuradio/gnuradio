@@ -33,7 +33,7 @@
 
 namespace gr {
   namespace qtgui {
-    
+
     /*!
      * \brief A graphical sink to display a histogram.
      * \ingroup instrumentation_blk

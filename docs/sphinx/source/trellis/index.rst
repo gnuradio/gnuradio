@@ -17,7 +17,7 @@ Signal Processing Blocks
 
 .. autosummary::
    :nosignatures:
-   
+
    gnuradio.trellis.constellation_metrics_cf
    gnuradio.trellis.encoder_bb
    gnuradio.trellis.encoder_bi
@@ -87,4 +87,4 @@ Constants
    gnuradio.trellis.TRELLIS_MIN_SUM
    gnuradio.trellis.TRELLIS_SUM_PRODUCT
 
-   
+

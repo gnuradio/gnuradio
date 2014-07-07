@@ -217,7 +217,7 @@ example of this can be found in \b examples/filter/gr_filtdes_api.py.
 
 \code
 filtobj = filter_design.launch(sys.argv)
-print "Filter Count:", filtobj.get_filtercount()  
+print "Filter Count:", filtobj.get_filtercount()
 print "Filter type:", filtobj.get_restype()
 print "Filter params", filtobj.get_params()
 print "Filter Coefficients", filtobj.get_taps()

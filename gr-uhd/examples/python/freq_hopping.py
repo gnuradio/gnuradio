@@ -89,7 +89,7 @@ class FrequencyHopperSrc(gr.hier_block2):
         numpy.random.shuffle(self.hop_sequence)
         self.hop_sequence = [self.hop_sequence[x % n_channels] for x in xrange(n_bursts)]
         if verbose:
-            print "Hop Frequencies  | Hop Pattern" 
+            print "Hop Frequencies  | Hop Pattern"
             print "=================|================================"
             for f in self.hop_sequence:
                 print "{:6.3f} MHz      |  ".format(f/1e6),

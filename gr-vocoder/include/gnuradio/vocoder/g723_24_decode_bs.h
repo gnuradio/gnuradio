@@ -38,7 +38,7 @@ namespace gr {
     public:
       // gr::vocoder::g723_24_decode_bs::sptr
       typedef boost::shared_ptr<g723_24_decode_bs> sptr;
-      
+
       /*!
        * \brief Make G722_24 decoder block.
        */

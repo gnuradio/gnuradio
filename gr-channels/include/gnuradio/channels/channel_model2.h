@@ -29,7 +29,7 @@
 
 namespace gr {
   namespace channels {
-    
+
     /*!
      * \brief Basic channel simulator allowing time-varying frequency
      * and timing inputs.

@@ -35,7 +35,7 @@ namespace gr {
      * \brief output = sum(input[0], input[1], ..., input[M-1])
      * \ingroup math_operators_blk
      *
-     * \details 
+     * \details
      * Add samples across all input streams. For all \f$n\f$ samples
      * on all \f$M\f$ input streams \f$x_m\f$:
      *
@@ -46,7 +46,7 @@ namespace gr {
     class BLOCKS_API @NAME@ : virtual public sync_block
     {
     public:
-      
+
       // gr::blocks::@NAME@::sptr
       typedef boost::shared_ptr<@NAME@> sptr;
 

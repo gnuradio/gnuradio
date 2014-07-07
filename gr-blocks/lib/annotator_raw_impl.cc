@@ -1,19 +1,19 @@
 /* -*- c++ -*- */
 /*
  * Copyright 2010,2013 Free Software Foundation, Inc.
- * 
+ *
  * This file is part of GNU Radio
- * 
+ *
  * GNU Radio is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3, or (at your option)
  * any later version.
- * 
+ *
  * GNU Radio is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with GNU Radio; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 51 Franklin Street,
@@ -91,14 +91,14 @@ namespace gr {
 
       uint64_t start_N = nitems_read(0);
       uint64_t end_N = start_N + (uint64_t)(noutput_items);
-   
+
       // locate queued tags that fall in this range and insert them when appropriate
       std::vector<tag_t>::iterator i = d_queued_tags.begin();
       while( i != d_queued_tags.end() ) {
         if( (*i).offset >= start_N && (*i).offset < end_N) {
           add_item_tag(0, (*i).offset,(*i).key, (*i).value, (*i).srcid);
           i = d_queued_tags.erase(i);
-        } 
+        }
         else {
           break;
         }

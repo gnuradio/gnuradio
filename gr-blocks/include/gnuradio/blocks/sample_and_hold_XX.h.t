@@ -44,7 +44,7 @@ namespace gr {
     public:
       // gr::blocks::@NAME@::sptr
       typedef boost::shared_ptr<@NAME@> sptr;
-      
+
       static sptr make();
     };
 

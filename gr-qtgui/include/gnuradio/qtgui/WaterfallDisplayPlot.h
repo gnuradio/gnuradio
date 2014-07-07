@@ -48,7 +48,7 @@ class WaterfallDisplayPlot: public DisplayPlot
   Q_PROPERTY ( int intensity_color_map_type1 READ getIntensityColorMapType1 WRITE setIntensityColorMapType1 )
   Q_PROPERTY ( QColor low_intensity_color READ getUserDefinedLowIntensityColor WRITE setUserDefinedLowIntensityColor )
   Q_PROPERTY ( QColor high_intensity_color READ getUserDefinedHighIntensityColor WRITE setUserDefinedHighIntensityColor )
-  
+
 
 public:
   WaterfallDisplayPlot(int nplots, QWidget*);

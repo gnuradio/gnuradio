@@ -67,7 +67,7 @@ class test_vector_map(gr_unittest.TestCase):
         for n in range(0, N):
             result_data = list(dsts[n].data())
             self.assertEqual(expected_results[n], result_data)
-        
+
     def test_interleaving(self):
         # Takes 3 streams (a, b and c)
         # Outputs 2 streams.
@@ -90,8 +90,8 @@ class test_vector_map(gr_unittest.TestCase):
         dstD = blocks.vector_sink_f(2)
         dstE = blocks.vector_sink_f(4)
         self.tb.connect(srcA, (vmap, 0))
-        self.tb.connect(srcB, (vmap, 1)) 
-        self.tb.connect(srcC, (vmap, 2)) 
+        self.tb.connect(srcB, (vmap, 1))
+        self.tb.connect(srcC, (vmap, 2))
         self.tb.connect((vmap, 0), dstD)
         self.tb.connect((vmap, 1), dstE)
         self.tb.run()

@@ -42,6 +42,6 @@ namespace gr {
 
   } /* namespace blocks */
 } /* namespace gr */
-   
+
 
 #endif /* INCLUDED_BLOCKS_MULTIPLY_FF_IMPL_H */

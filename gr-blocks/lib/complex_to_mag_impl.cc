@@ -58,7 +58,7 @@ namespace gr {
 
       // turned out to be faster than aligned/unaligned switching
       volk_32fc_magnitude_32f_u(out, in, noi);
-      
+
       return noutput_items;
     }
 

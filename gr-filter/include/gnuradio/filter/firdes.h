@@ -36,7 +36,7 @@ namespace gr {
      * \brief Finite Impulse Response (FIR) filter design functions.
      * \ingroup filter_design
      */
-    
+
     class FILTER_API firdes {
     public:
 
@@ -58,7 +58,7 @@ namespace gr {
       static std::vector<float> window(win_type type, int ntaps, double beta);
 
       // ... class methods ...
-      
+
       /*!
        * \brief use "window method" to design a low-pass FIR filter
        *
@@ -80,7 +80,7 @@ namespace gr {
 		 double transition_width,	// Hz width of transition band
 		 win_type window = WIN_HAMMING,
 		 double beta = 6.76);		// used only with Kaiser
-      
+
       /*!
        * \brief use "window method" to design a low-pass FIR filter
        *
@@ -122,7 +122,7 @@ namespace gr {
        *			maximum attenuation and passband ripple.
        * \p beta:		parameter for Kaiser window
        */
-      
+
       static std::vector<float>
 	high_pass(double gain,
 		  double sampling_freq,
@@ -148,7 +148,7 @@ namespace gr {
        *			maximum attenuation and passband ripple.
        * \p beta:		parameter for Kaiser window
        */
-      
+
       static std::vector<float>
 	high_pass_2(double gain,
 		    double sampling_freq,
@@ -157,7 +157,7 @@ namespace gr {
 		    double attenuation_dB,      // out of band attenuation dB
 		    win_type window = WIN_HAMMING,
 		    double beta = 6.76);	// used only with Kaiser
-      
+
       /*!
        * \brief use "window method" to design a band-pass FIR filter
        *
@@ -181,7 +181,7 @@ namespace gr {
 		  double transition_width,	// Hz width of transition band
 		  win_type window = WIN_HAMMING,
 		  double beta = 6.76);		// used only with Kaiser
-      
+
       /*!
        * \brief use "window method" to design a band-pass FIR filter
        *
@@ -200,7 +200,7 @@ namespace gr {
        *			maximum attenuation and passband ripple.
        * \p beta:		parameter for Kaiser window
        */
-      
+
       static std::vector<float>
 	band_pass_2(double gain,
 		    double sampling_freq,
@@ -210,7 +210,7 @@ namespace gr {
 		    double attenuation_dB,      // out of band attenuation dB
 		    win_type window = WIN_HAMMING,
 		    double beta = 6.76);	// used only with Kaiser
-      
+
       /*!
        * \brief use "window method" to design a complex band-pass FIR filter
        *
@@ -234,7 +234,7 @@ namespace gr {
 			  double transition_width,	// Hz width of transition band
 			  win_type window = WIN_HAMMING,
 			  double beta = 6.76);		// used only with Kaiser
-      
+
       /*!
        * \brief use "window method" to design a complex band-pass FIR filter
        *
@@ -253,7 +253,7 @@ namespace gr {
        *			maximum attenuation and passband ripple.
        * \p beta:		parameter for Kaiser window
        */
-      
+
       static std::vector<gr_complex>
 	complex_band_pass_2(double gain,
 			    double sampling_freq,
@@ -263,7 +263,7 @@ namespace gr {
 			    double attenuation_dB,      // out of band attenuation dB
 			    win_type window = WIN_HAMMING,
 			    double beta = 6.76);	// used only with Kaiser
-      
+
       /*!
        * \brief use "window method" to design a band-reject FIR filter
        *
@@ -279,7 +279,7 @@ namespace gr {
        *			maximum attenuation and passband ripple.
        * \p beta:		parameter for Kaiser window
        */
-      
+
       static std::vector<float>
 	band_reject(double gain,
 		    double sampling_freq,
@@ -288,7 +288,7 @@ namespace gr {
 		    double transition_width,	// Hz width of transition band
 		    win_type window = WIN_HAMMING,
 		    double beta = 6.76);	// used only with Kaiser
-      
+
       /*!
        * \brief use "window method" to design a band-reject FIR filter
        *
@@ -307,7 +307,7 @@ namespace gr {
        *			maximum attenuation and passband ripple.
        * \p beta:		parameter for Kaiser window
        */
-      
+
       static std::vector<float>
 	band_reject_2(double gain,
 		      double sampling_freq,
@@ -317,7 +317,7 @@ namespace gr {
 		      double attenuation_dB,    // out of band attenuation dB
 		      win_type window = WIN_HAMMING,
 		      double beta = 6.76);	// used only with Kaiser
-      
+
       /*!\brief design a Hilbert Transform Filter
        *
        * \p ntaps:              Number of taps, must be odd
@@ -328,7 +328,7 @@ namespace gr {
 	hilbert(unsigned int ntaps = 19,
 		win_type windowtype = WIN_RECTANGULAR,
 		double beta = 6.76);
-      
+
       /*!
        * \brief design a Root Cosine FIR Filter (do we need a window?)
        *
@@ -344,7 +344,7 @@ namespace gr {
 			   double symbol_rate, // Symbol rate, NOT bitrate (unless BPSK)
 			   double alpha,       // Excess Bandwidth Factor
 			   int ntaps);
-      
+
       /*!
        * \brief design a Gaussian filter
        *
@@ -357,7 +357,7 @@ namespace gr {
 		 double spb,
 		 double bt,     // Bandwidth to bitrate ratio
 		 int ntaps);
-      
+
     private:
       static double bessi0(double x);
       static void sanity_check_1f(double sampling_freq, double f1,
@@ -366,16 +366,16 @@ namespace gr {
 				  double transition_width);
       static void sanity_check_2f_c(double sampling_freq, double f1, double f2,
 				    double transition_width);
-      
+
       static int compute_ntaps(double sampling_freq,
 			       double transition_width,
 			       win_type window_type, double beta);
-      
+
       static int compute_ntaps_windes(double sampling_freq,
 				      double transition_width,
 				      double attenuation_dB);
     };
-    
+
   } /* namespace filter */
 } /* namespace gr */
 

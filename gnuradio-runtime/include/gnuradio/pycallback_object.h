@@ -1,9 +1,9 @@
 /* -*- c++ -*- */
-/* 
+/*
  * Copyright 2012 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
- * 
+ *
  * GNU Radio is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3, or (at your option)
@@ -32,7 +32,7 @@ enum pyport_t {
   PYPORT_FLOAT
 };
 
-class Instance 
+class Instance
 {
 public:
   static boost::shared_ptr<ice_application_common> get_application()
@@ -51,8 +51,8 @@ int pycallback_object_count = 500;
 template <class myType> class pmt_assist
 {
 public:
-  static pmt::pmt_t make(myType _val) 
-  { 
+  static pmt::pmt_t make(myType _val)
+  {
     return pmt::mp(_val);
   }
 };
@@ -67,7 +67,7 @@ pmt::pmt_t pmt_assist<std::vector<float> >::make(std::vector<float> _val)
 template<>
 pmt::pmt_t pmt_assist<std::vector<gr_complex> >::make(std::vector<gr_complex> _val)
 {
-  return pmt::init_c32vector(_val.size(), &_val[0]); 
+  return pmt::init_c32vector(_val.size(), &_val[0]);
 }
 
 template <class myType> class pycallback_object
@@ -165,31 +165,31 @@ private:
 
 // template specialization conversion functions
 // get data out of the PyObject and into the real world
-template<> 
+template<>
 std::string pycallback_object<std::string>::pyCast(PyObject* obj)
 {
   return std::string(PyString_AsString(obj));
 }
 
-template<> 
+template<>
 double pycallback_object<double>::pyCast(PyObject* obj)
 {
   return PyFloat_AsDouble(obj);
 }
 
-template<> 
+template<>
 float pycallback_object<float>::pyCast(PyObject* obj)
 {
   return (float)PyFloat_AsDouble(obj);
 }
 
-template<> 
+template<>
 int pycallback_object<int>::pyCast(PyObject* obj)
 {
   return PyInt_AsLong(obj);
 }
 
-template<> 
+template<>
 std::vector<float> pycallback_object<std::vector<float> >::pyCast(PyObject* obj)
 {
   int size = PyObject_Size(obj);
@@ -200,14 +200,14 @@ std::vector<float> pycallback_object<std::vector<float> >::pyCast(PyObject* obj)
   return rval;
 }
 
-template<> 
+template<>
 std::vector<gr_complex> pycallback_object<std::vector<gr_complex> >::pyCast(PyObject* obj)
 {
   int size = PyObject_Size(obj);
   std::vector<gr_complex> rval(size);
   for(int i=0; i<size; i++){ rval[i] = \
       gr_complex((float)PyComplex_RealAsDouble(PyList_GetItem(obj, i)),
-		 (float)PyComplex_ImagAsDouble(PyList_GetItem(obj, i))); 
+		 (float)PyComplex_ImagAsDouble(PyList_GetItem(obj, i)));
   }
   return rval;
 }

@@ -30,7 +30,7 @@
 
 namespace gr {
   namespace channels {
-    
+
     sro_model::sptr
     sro_model::make(
                 double sample_rate_hz,
@@ -95,7 +95,7 @@ namespace gr {
     d_sro = std::min(d_sro, d_max_dev_hz);
     d_sro = std::max(d_sro, -d_max_dev_hz);
     d_mu_inc = 1.0 + d_sro/d_samp_rate;
-    
+
 	out[oo++] = d_interp->interpolate(&in[ii], d_mu);
 
 	double s = d_mu + d_mu_inc;

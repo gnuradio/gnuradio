@@ -478,7 +478,7 @@ qa_pmt_prims::test_any()
 
 // ------------------------------------------------------------------------
 
-class qa_pmt_msg_accepter_nop : public gr::messages::msg_accepter 
+class qa_pmt_msg_accepter_nop : public gr::messages::msg_accepter
 {
 public:
   qa_pmt_msg_accepter_nop(){};
@@ -496,7 +496,7 @@ qa_pmt_prims::test_msg_accepter()
   boost::any a0;
   a0 = std::string("Hello!");
   pmt::pmt_t p0 = pmt::make_any(a0);
-  
+
   gr::messages::msg_accepter_sptr ma0 =                                 \
     gr::messages::msg_accepter_sptr(new qa_pmt_msg_accepter_nop());
   pmt::pmt_t p1 = pmt::make_msg_accepter(ma0);

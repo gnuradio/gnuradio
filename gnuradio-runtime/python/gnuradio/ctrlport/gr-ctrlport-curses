@@ -43,7 +43,7 @@ class modem_monitor(threading.Thread):
     def __del__(self):
         rx.close()
 
-    def run(self):                
+    def run(self):
         while self.running:
             time.sleep(0.5)
 
@@ -80,7 +80,7 @@ class modem_window(threading.Thread):
         self.ssel = 0
         self.start()
         #self.updateGUI()
-        
+
         # input loop
         while(self.running):
             self.getInput()
@@ -239,7 +239,7 @@ class monitor_gui:
                     self.updateGUI()
                 except:
                     pass
-        
+
     def shutdown(self):
         curses.endwin()
         os._exit(0)

@@ -1,9 +1,9 @@
 /* -*- c++ -*- */
-/* 
+/*
  * Copyright 2012 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
- * 
+ *
  * GNU Radio is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3, or (at your option)
@@ -28,7 +28,7 @@
 
 namespace rpcpmtconverter
 {
-  pmt::pmt_t to_pmt(const GNURadio::KnobPtr& knob, const Ice::Current& c);	
+  pmt::pmt_t to_pmt(const GNURadio::KnobPtr& knob, const Ice::Current& c);
   GNURadio::KnobPtr from_pmt(const pmt::pmt_t& knob, const Ice::Current& c);
 }
 

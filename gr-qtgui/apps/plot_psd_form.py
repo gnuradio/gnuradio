@@ -74,7 +74,7 @@ class plot_psd_form(plot_form):
                      self.update_psd_avg)
 
         self.add_line_control(self.right_col_layout)
-        
+
     def update_psd_size(self):
         newpsdsize = self.psd_size_edit.text().toInt()[0]
         if(newpsdsize != self.top_block._psd_size):

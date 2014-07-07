@@ -33,7 +33,7 @@ class Panel(wx.Panel):
 	def Add(self, win):
 		"""
 		Add a window to the wx vbox.
-		
+
 		Args:
 		    win: the wx window
 		"""
@@ -42,7 +42,7 @@ class Panel(wx.Panel):
 	def GridAdd(self, win, row, col, row_span=1, col_span=1):
 		"""
 		Add a window to the wx grid at the given position.
-		
+
 		Args:
 		    win: the wx window
 		    row: the row specification (integer >= 0)

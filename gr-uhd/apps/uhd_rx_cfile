@@ -122,7 +122,7 @@ class rx_cfile_block(gr.top_block):
                     mboard_serial = "no serial"
                 else:
                     mboard_serial = info["mboard_serial"]
-                
+
                 rx_id = info["rx_id"].split(" ")[0]
                 if info["rx_serial"] == "":
                     rx_serial = "no serial"

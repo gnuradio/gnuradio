@@ -28,7 +28,7 @@
 
 namespace gr {
   namespace blocks {
-    
+
     /*!
      * \brief Converts a byte with k relevent bits to k output bytes with 1 bit in the LSB.
      *
@@ -46,7 +46,7 @@ namespace gr {
     public:
       // gr::blocks::unpack_k_bits_bb::sptr
       typedef boost::shared_ptr<unpack_k_bits_bb> sptr;
-      
+
       /*!
        * \brief Make an unpack_k_bits block.
        * \param k number of bits to unpack.

@@ -35,7 +35,7 @@ class XMLSyntaxError(Exception):
 def validate_dtd(xml_file, dtd_file=None):
     """
     Validate an xml file against its dtd.
-    
+
     Args:
         xml_file: the xml file
         dtd_file: the optional dtd file
@@ -63,10 +63,10 @@ def validate_dtd(xml_file, dtd_file=None):
 def from_file(xml_file):
     """
     Create nested data from an xml file using the from xml helper.
-    
+
     Args:
         xml_file: the xml file path
-    
+
     Returns:
         the nested data
     """
@@ -77,10 +77,10 @@ def from_file(xml_file):
 def _from_file(xml):
     """
     Recursivly parse the xml tree into nested data format.
-    
+
     Args:
         xml: the xml tree
-    
+
     Returns:
         the nested data
     """
@@ -102,7 +102,7 @@ def _from_file(xml):
 def to_file(nested_data, xml_file):
     """
     Write an xml file and use the to xml helper method to load it.
-    
+
     Args:
         nested_data: the nested data
         xml_file: the xml file path
@@ -114,10 +114,10 @@ def to_file(nested_data, xml_file):
 def _to_file(nested_data):
     """
     Recursivly parse the nested data into xml tree format.
-    
+
     Args:
         nested_data: the nested data
-    
+
     Returns:
         the xml tree filled with child nodes
     """

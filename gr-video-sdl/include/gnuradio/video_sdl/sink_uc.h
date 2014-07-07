@@ -28,7 +28,7 @@
 
 namespace gr {
   namespace video_sdl {
-    
+
     /*!
      * \brief video sink using SDL
      *

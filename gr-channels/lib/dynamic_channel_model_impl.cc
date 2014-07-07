@@ -26,7 +26,7 @@
 
 namespace gr {
   namespace channels {
-    
+
     dynamic_channel_model::sptr
     dynamic_channel_model::make(
                                             double samp_rate,
@@ -38,7 +38,7 @@ namespace gr {
                                             double doppler_freq,
                                             bool LOS_model,
                                             float K,
-                                            std::vector<float> delays, 
+                                            std::vector<float> delays,
                                             std::vector<float> mags,
                                             int ntaps_mpath,
                                             double noise_amp,
@@ -62,7 +62,7 @@ namespace gr {
                                             double doppler_freq,
                                             bool LOS_model,
                                             float K,
-                                            std::vector<float> delays, 
+                                            std::vector<float> delays,
                                             std::vector<float> mags,
                                             int ntaps_mpath,
                                             double noise_amp,

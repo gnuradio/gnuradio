@@ -51,10 +51,10 @@ namespace gr {
              unsigned int sizeof_input_item,
              int min_outputs, int max_outputs,
              unsigned int sizeof_output_item,
-             unsigned int history, 
+             unsigned int history,
              unsigned int output_multiple,
              double relative_rate,
-             bool fixed_rate, 
+             bool fixed_rate,
              consume_type_t cons_type, produce_type_t prod_type)
   : block (name,
            io_signature::make(min_inputs, max_inputs, sizeof_input_item),

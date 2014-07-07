@@ -42,6 +42,6 @@ namespace gr {
 
   } /* namespace blocks */
 } /* namespace gr */
-   
+
 
 #endif /* INCLUDED_FLOAT_TO_COMPLEX_IMPL_H */

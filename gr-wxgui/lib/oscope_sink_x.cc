@@ -30,7 +30,7 @@
 
 namespace gr {
   namespace wxgui {
-    
+
     oscope_sink_x::oscope_sink_x(const std::string name,
                                  gr::io_signature::sptr input_sig,
                                  double sampling_rate)

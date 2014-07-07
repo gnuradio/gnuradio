@@ -45,7 +45,7 @@ class test_sample_and_hold(gr_unittest.TestCase):
         self.tb.connect(ctrl, (op,1))
         self.tb.connect(op, dst)
         self.tb.run()
-        
+
         result = dst.data()
         self.assertFloatTuplesAlmostEqual(expected_result, result, places=6)
 

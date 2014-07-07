@@ -129,7 +129,7 @@
         - Dynamic Frequency Selective Fading Channel
         - Dynamic Center Frequency Offset Model
         - Dynamic Sample Rate Offset Model
-        - Additive White Gaussian Noise 
+        - Additive White Gaussian Noise
 
     The desired power delay profile and max doppler frequency may be provided to achieve the desired Ricean or Rayleigh fading scenario.   For center frequency and sample rate offset models, a gaussian random walk process is conducted for each.   The single sample step variance and maximum deviation for these two processes is specified and may be modified to simulate various desired stability effects.  Lastly AWGN is added to simulate a typical receiver/thermal noise floor after propagation, and the variance may be modified here as desired.
     </doc>

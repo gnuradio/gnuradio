@@ -43,7 +43,7 @@ namespace gr {
       static sptr make(int fft_size, bool forward,
                        const std::vector<float> &window,
                        bool shift=false, int nthreads=1);
-      
+
       virtual void set_nthreads(int n) = 0;
 
       virtual int nthreads() const = 0;

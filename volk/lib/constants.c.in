@@ -48,16 +48,16 @@ char*
 volk_c_compiler()
 {
   return "@cmake_c_compiler_version@";
-}    
+}
 
 char*
 volk_compiler_flags()
 {
   return "@COMPILER_INFO@";
-}    
+}
 
 char*
 volk_available_machines()
 {
   return "@available_machines@";
-}    
+}

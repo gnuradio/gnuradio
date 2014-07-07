@@ -26,7 +26,7 @@
 
 namespace gr {
   namespace channels {
-    
+
     cfo_model::sptr
     cfo_model::make(
                 double sample_rate_hz,
@@ -83,7 +83,7 @@ namespace gr {
             out[i] = in[i] * gr_complex(d_table.cos(d_angle), d_table.sin(d_angle));
         }
         return noutput_items;
-       
+
     }
 
     void
@@ -95,13 +95,13 @@ namespace gr {
 	  alias(), "cfo", &d_cfo,
 	  pmt::mp(-10.0f), pmt::mp(10.0f), pmt::mp(0.0f),
 	  "", "Current CFO in Hz", RPC_PRIVLVL_MIN,
-          DISPTIME | DISPOPTSTRIP))); 
+          DISPTIME | DISPOPTSTRIP)));
       add_rpc_variable(
         rpcbasic_sptr(new rpcbasic_register_variable<double>(
 	  alias(), "cfo_max", &d_max_dev_hz,
 	  pmt::mp(-10.0f), pmt::mp(10.0f), pmt::mp(0.0f),
 	  "", "Max CFO in Hz", RPC_PRIVLVL_MIN,
-          DISPTIME | DISPOPTSTRIP))); 
+          DISPTIME | DISPOPTSTRIP)));
 #endif /* GR_CTRLPORT */
     }
 

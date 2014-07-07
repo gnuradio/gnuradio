@@ -54,7 +54,7 @@ namespace gr {
 	  volk_free(d_buffer_ptr);
 	  d_buffer_ptr = NULL;
 	}
-	
+
 	// Free aligned taps
 	if(d_aligned_taps != NULL) {
 	  for(int i = 0; i < d_naligned; i++) {
@@ -185,7 +185,7 @@ namespace gr {
 	}
       }
 
-      
+
       /**************************************************************/
 
 
@@ -208,7 +208,7 @@ namespace gr {
 	  volk_free(d_buffer_ptr);
 	  d_buffer_ptr = NULL;
 	}
-	
+
 	// Free aligned taps
 	if(d_aligned_taps != NULL) {
 	  for(int i = 0; i < d_naligned; i++) {
@@ -338,7 +338,7 @@ namespace gr {
 	}
       }
 
-      
+
       /**************************************************************/
 
 
@@ -361,7 +361,7 @@ namespace gr {
 	  volk_free(d_buffer_ptr);
 	  d_buffer_ptr = NULL;
 	}
-	
+
 	// Free aligned taps
 	if(d_aligned_taps != NULL) {
 	  for(int i = 0; i < d_naligned; i++) {

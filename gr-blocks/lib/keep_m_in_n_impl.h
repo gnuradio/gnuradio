@@ -36,7 +36,7 @@ namespace gr {
       int d_itemsize;
 
       void forecast(int noutput_items, gr_vector_int &ninput_items_required);
-      
+
     public:
       keep_m_in_n_impl(size_t itemsize, int m, int n, int offset);
 
@@ -44,7 +44,7 @@ namespace gr {
 		       gr_vector_int &ninput_items,
 		       gr_vector_const_void_star &input_items,
 		       gr_vector_void_star &output_items);
-      
+
       void set_m(int m) { d_m = m; }
       void set_n(int n) { d_n = n; }
       void set_offset(int offset) { d_offset = offset; }
@@ -52,6 +52,6 @@ namespace gr {
 
   } /* namespace blocks */
 } /* namespace gr */
-   
+
 
 #endif /* INCLUDED_KEEP_M_IN_N_IMPL_H */

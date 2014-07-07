@@ -25,13 +25,13 @@ class Connection(Element):
     def __init__(self, flow_graph, porta, portb):
         """
         Make a new connection given the parent and 2 ports.
-        
+
         Args:
             flow_graph: the parent of this element
             porta: a port (any direction)
             portb: a port (any direction)
         @throws Error cannot make connection
-        
+
         Returns:
             a new connection
         """
@@ -55,10 +55,10 @@ class Connection(Element):
         self._source = source
         self._sink = sink
         if source.get_type() == 'bus':
-            
+
             sources = source.get_associated_ports();
             sinks = sink.get_associated_ports();
-            
+
             for i in range(len(sources)):
                 try:
                     flow_graph.connect(sources[i], sinks[i]);
@@ -89,7 +89,7 @@ class Connection(Element):
     def get_enabled(self):
         """
         Get the enabled state of this connection.
-        
+
         Returns:
             true if source and sink blocks are enabled
         """
@@ -108,7 +108,7 @@ class Connection(Element):
     def export_data(self):
         """
         Export this connection's info.
-        
+
         Returns:
             a nested data odict
         """

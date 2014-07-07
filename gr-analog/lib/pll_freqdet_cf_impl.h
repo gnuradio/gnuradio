@@ -27,7 +27,7 @@
 
 namespace gr {
   namespace analog {
-    
+
     class pll_freqdet_cf_impl : public pll_freqdet_cf
     {
     private:

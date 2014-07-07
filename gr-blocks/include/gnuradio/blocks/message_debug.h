@@ -54,14 +54,14 @@ namespace gr {
       // gr::blocks::message_debug::sptr
       typedef boost::shared_ptr<message_debug> sptr;
 
-      /*! 
+      /*!
        * \brief Build the message debug block. It takes no parameters
        * and has three message ports: print, store, and
        * print_pdu.
        */
       static sptr make();
 
-      /*! 
+      /*!
        * \brief Reports the number of messages received by this block.
        */
       virtual int num_messages() = 0;

@@ -141,11 +141,11 @@ namespace gr {
     /*! \brief get current thread priority for a given thread ID
      */
     GR_RUNTIME_API int thread_priority(gr_thread_t thread);
-    
+
     /*! \brief set current thread priority for a given thread ID
      */
     GR_RUNTIME_API int set_thread_priority(gr_thread_t thread, int priority);
-    
+
     GR_RUNTIME_API void set_thread_name(gr_thread_t thread,
                                         std::string name);
 

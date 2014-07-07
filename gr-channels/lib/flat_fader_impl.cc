@@ -29,11 +29,11 @@ namespace gr {
         seed_1((int)seed),
         dist_1(-M_PI, M_PI),
         rv_1( seed_1, dist_1 ), // U(-pi,pi)
-        
+
         seed_2((int)seed+1),
         dist_2(0, 1),
         rv_2( seed_2, dist_2 ), // U(0,1)
-        
+
         d_N(N),
         d_fDTs(fDTs),
         d_theta(rv_1()),
@@ -42,12 +42,12 @@ namespace gr {
         d_m(0),
         d_K(K),
         d_LOS(LOS),
-        
+
         d_psi(d_N+1, 0),
         d_phi(d_N+1, 0),
-        
+
         d_table(8*1024),
-        
+
         scale_sin(sqrtf(2.0/d_N)),
         scale_los(sqrtf(d_K)/sqrtf(d_K+1)),
         scale_nlos(1/sqrtf(d_K+1))
@@ -58,8 +58,8 @@ namespace gr {
           d_phi[i] = rv_1();
         }
     }
-    
-    
+
+
     gr_complex flat_fader_impl::next_sample(){
         gr_complex H(0,0);
 

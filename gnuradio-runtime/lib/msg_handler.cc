@@ -27,7 +27,7 @@
 #include <gnuradio/msg_handler.h>
 
 namespace gr {
-  
+
   msg_handler::~msg_handler()
   {
   }

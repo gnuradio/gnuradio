@@ -62,18 +62,18 @@ namespace gr {
   c_compiler()
   {
     return "@cmake_c_compiler_version@";
-  }    
+  }
 
   const std::string
   cxx_compiler()
   {
     return "@cmake_cxx_compiler_version@";
-  }    
+  }
 
   const std::string
   compiler_flags()
   {
     return "@COMPILER_INFO@";
-  }    
+  }
 
 } /* namespace gr */

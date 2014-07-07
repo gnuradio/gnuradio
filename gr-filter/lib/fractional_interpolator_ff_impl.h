@@ -28,7 +28,7 @@
 
 namespace gr {
   namespace filter {
-    
+
     class FILTER_API fractional_interpolator_ff_impl
       : public fractional_interpolator_ff
     {

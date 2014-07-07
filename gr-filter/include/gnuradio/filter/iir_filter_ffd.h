@@ -28,7 +28,7 @@
 
 namespace gr {
   namespace filter {
-    
+
     /*!
      * \brief  IIR filter with float input, float output and double taps
      * \ingroup filter_blk

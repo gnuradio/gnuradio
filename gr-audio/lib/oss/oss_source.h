@@ -36,7 +36,7 @@ namespace gr {
      * Output signature is one or two streams of floats.
      * Output samples will be in the range [-1,1].
      */
-    class oss_source : public source 
+    class oss_source : public source
     {
       int         d_sampling_rate;
       std::string d_device_name;

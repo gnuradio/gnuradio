@@ -29,12 +29,12 @@
 
 namespace gr {
   namespace fft {
-    
+
     goertzel_fc::sptr goertzel_fc::make(int rate, int len, float freq)
     {
       return gnuradio::get_initial_sptr(new goertzel_fc_impl(rate, len, freq));
     }
-    
+
     goertzel_fc_impl::goertzel_fc_impl(int rate, int len, float freq)
       : sync_decimator("goertzel_fc",
 			  io_signature::make (1, 1, sizeof(float)),
@@ -46,7 +46,7 @@ namespace gr {
       d_rate = rate;
       d_freq = freq;
     }
-    
+
     goertzel_fc_impl::~goertzel_fc_impl()
     {
     }
@@ -64,7 +64,7 @@ namespace gr {
       d_rate = rate;
       d_goertzel.set_params(d_rate, d_len, d_freq);
     }
-    
+
     int
     goertzel_fc_impl::work(int noutput_items,
 			   gr_vector_const_void_star &input_items,
@@ -72,12 +72,12 @@ namespace gr {
     {
       float *in = (float *)input_items[0];
       gr_complex *out = (gr_complex *)output_items[0];
-      
+
       for(int i = 0; i < noutput_items; i++) {
 	*out++ = d_goertzel.batch(in);
 	in += d_len;
       }
-      
+
       return noutput_items;
     }
 

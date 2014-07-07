@@ -65,7 +65,7 @@ namespace gr {
 	     const std::string filter_type = "bandpass",
 	     int grid_density = 16
 	     ) throw (std::runtime_error);
-    
+
   } /* namespace filter */
 } /* namespace gr */
 

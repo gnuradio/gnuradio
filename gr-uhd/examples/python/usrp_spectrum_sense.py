@@ -68,12 +68,12 @@ class tune(gr.feval_dd):
             # message on stderr.  Not exactly helpful ;)
 
             new_freq = self.tb.set_next_freq()
-            
+
             # wait until msgq is empty before continuing
             while(self.tb.msgq.full_p()):
                 #print "msgq full, holding.."
                 time.sleep(0.1)
-            
+
             return new_freq
 
         except Exception, e:
@@ -165,19 +165,19 @@ class my_top_block(gr.top_block):
         # Set the antenna
         if(options.antenna):
             self.u.set_antenna(options.antenna, 0)
-        
+
         self.u.set_samp_rate(options.samp_rate)
         self.usrp_rate = usrp_rate = self.u.get_samp_rate()
-        
+
         self.lo_offset = options.lo_offset
 
         if options.fft_size is None:
             self.fft_size = int(self.usrp_rate/self.channel_bandwidth)
         else:
             self.fft_size = options.fft_size
-        
+
         self.squelch_threshold = options.squelch_threshold
-        
+
         s2v = blocks.stream_to_vector(gr.sizeof_gr_complex, self.fft_size)
 
         mywindow = filter.window.blackmanharris(self.fft_size)
@@ -196,7 +196,7 @@ class my_top_block(gr.top_block):
         # This allows us to discard the bins on both ends of the spectrum.
 
         self.freq_step = self.nearest_freq((0.75 * self.usrp_rate), self.channel_bandwidth)
-        self.min_center_freq = self.min_freq + (self.freq_step/2) 
+        self.min_center_freq = self.min_freq + (self.freq_step/2)
         nsteps = math.ceil((self.max_freq - self.min_freq) / self.freq_step)
         self.max_center_freq = self.min_center_freq + (nsteps * self.freq_step)
 
@@ -244,7 +244,7 @@ class my_top_block(gr.top_block):
             target_freq: frequency in Hz
         @rypte: bool
         """
-        
+
         r = self.u.set_center_freq(uhd.tune_request(target_freq, rf_freq=(target_freq + self.lo_offset),rf_freq_policy=uhd.tune_request.POLICY_MANUAL))
         if r:
             return True
@@ -253,13 +253,13 @@ class my_top_block(gr.top_block):
 
     def set_gain(self, gain):
         self.u.set_gain(gain)
-    
+
     def nearest_freq(self, freq, channel_bandwidth):
         freq = round(freq / channel_bandwidth, 0) * channel_bandwidth
         return freq
 
 def main_loop(tb):
-    
+
     def bin_freq(i_bin, center_freq):
         #hz_per_bin = tb.usrp_rate / tb.fft_size
         freq = center_freq - (tb.usrp_rate / 2) + (tb.channel_bandwidth * i_bin)
@@ -267,7 +267,7 @@ def main_loop(tb):
         #freq = nearest_freq(freq, tb.channel_bandwidth)
         #print "freq rounded:",freq
         return freq
-    
+
     bin_start = int(tb.fft_size * ((1 - 0.75) / 2))
     bin_stop = int(tb.fft_size - bin_start)
 

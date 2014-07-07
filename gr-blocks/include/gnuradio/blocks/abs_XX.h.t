@@ -42,10 +42,10 @@ namespace gr {
     {
 
     public:
-      
+
       // gr::blocks::@NAME@::sptr
       typedef boost::shared_ptr<@NAME@> sptr;
-      
+
       /*!
        * \brief Create an instance of @NAME@
        */

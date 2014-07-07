@@ -36,7 +36,7 @@ namespace gr {
     class BLOCKS_API keep_m_in_n : virtual public block
     {
     public:
-      
+
       // gr::blocks::keep_m_in_n::sptr
       typedef boost::shared_ptr<keep_m_in_n> sptr;
 

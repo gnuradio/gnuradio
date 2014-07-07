@@ -151,17 +151,17 @@ namespace gr {
       d_inbuf = (gr_complex *) fftwf_malloc (sizeof (gr_complex) * inbuf_length ());
       if (d_inbuf == 0)
 	throw std::runtime_error ("fftwf_malloc");
-      
+
       d_outbuf = (gr_complex *) fftwf_malloc (sizeof (gr_complex) * outbuf_length ());
       if (d_outbuf == 0){
 	fftwf_free (d_inbuf);
 	throw std::runtime_error ("fftwf_malloc");
       }
-      
+
       d_nthreads = nthreads;
       config_threading(nthreads);
       import_wisdom();	// load prior wisdom from disk
-      
+
       d_plan = fftwf_plan_dft_1d (fft_size,
 				  reinterpret_cast<fftwf_complex *>(d_inbuf),
 				  reinterpret_cast<fftwf_complex *>(d_outbuf),
@@ -246,7 +246,7 @@ namespace gr {
     {
       // Hold global mutex during plan construction and destruction.
       planner::scoped_lock lock(planner::mutex());
-      
+
       fftwf_destroy_plan ((fftwf_plan) d_plan);
       fftwf_free (d_inbuf);
       fftwf_free (d_outbuf);
@@ -278,7 +278,7 @@ namespace gr {
       planner::scoped_lock lock(planner::mutex());
 
       assert (sizeof (fftwf_complex) == sizeof (gr_complex));
-      
+
       if (fft_size <= 0)
 	throw std::out_of_range ("gr::fft::fft_real_rev: invalid fft_size");
 
@@ -316,7 +316,7 @@ namespace gr {
     {
       // Hold global mutex during plan construction and destruction.
       planner::scoped_lock lock(planner::mutex());
-      
+
       fftwf_destroy_plan ((fftwf_plan) d_plan);
       fftwf_free (d_inbuf);
       fftwf_free (d_outbuf);
@@ -328,7 +328,7 @@ namespace gr {
       if (n <= 0)
 	throw std::out_of_range ("gr::fft::fft_real_rev::set_nthreads: invalid number of threads");
       d_nthreads = n;
-      
+
 #ifdef FFTW3F_THREADS
       fftwf_plan_with_nthreads(d_nthreads);
 #endif

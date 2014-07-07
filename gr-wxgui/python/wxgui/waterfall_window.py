@@ -61,7 +61,7 @@ class control_panel(wx.Panel):
 	def __init__(self, parent):
 		"""
 		Create a new control panel.
-		
+
 		Args:
 		    parent: the wx parent window
 		"""
@@ -243,7 +243,7 @@ class waterfall_window(wx.Panel, pubsub.pubsub):
 
 	def set_callback(self,callb):
 		self.plotter.set_callback(callb)
-		
+
 	def autoscale(self, *args):
 		"""
 		Autoscale the waterfall plot to the last frame.
@@ -262,7 +262,7 @@ class waterfall_window(wx.Panel, pubsub.pubsub):
 		If complex, reorder the fft samples so the negative bins come first.
 		If real, keep take only the positive bins.
 		Send the data to the plotter.
-		
+
 		Args:
 		    msg: the fft array as a character array
 		"""

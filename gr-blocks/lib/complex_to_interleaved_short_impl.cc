@@ -51,13 +51,13 @@ namespace gr {
     {
       const gr_complex *in = (const gr_complex *) input_items[0];
       short *out = (short *) output_items[0];
-      
+
       int npairs = (d_vector?noutput_items:noutput_items/2);
       for (int i = 0; i < npairs; i++){
         *out++ = (short) lrintf(in[i].real());	// FIXME saturate?
         *out++ = (short) lrintf(in[i].imag());
       }
-      
+
       return noutput_items;
     }
 

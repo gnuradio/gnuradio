@@ -43,7 +43,7 @@ namespace gr {
     public:
       // gr::analog::agc2_ff::sptr
       typedef boost::shared_ptr<agc2_ff> sptr;
-            
+
       /*!
        * Build a floating point AGC loop block with attack and decay rates.
        *
@@ -60,7 +60,7 @@ namespace gr {
       virtual float reference() const = 0;
       virtual float gain() const = 0;
       virtual float max_gain() const = 0;
-      
+
       virtual void set_attack_rate(float rate) = 0;
       virtual void set_decay_rate(float rate) = 0;
       virtual void set_reference(float reference) = 0;

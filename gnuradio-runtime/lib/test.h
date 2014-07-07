@@ -129,7 +129,7 @@ namespace gr {
      * returns true.  Generally speaking, you don't need to override
      * this.
      */
-    int fixed_rate_ninput_to_noutput(int ninput) { 
+    int fixed_rate_ninput_to_noutput(int ninput) {
       return (int)((double)ninput/relative_rate());
     }
 

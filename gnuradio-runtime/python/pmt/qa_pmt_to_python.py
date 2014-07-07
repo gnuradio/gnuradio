@@ -30,7 +30,7 @@ class test_pmt_to_python(unittest.TestCase):
         b = pmt.from_double(123765)
         self.assertEqual(pmt.to_python(b), 123765)
         t = pmt.to_pmt(range(5))
-    
+
     def test_numpy_to_uvector_and_reverse(self):
         import numpy as np
         N = 100

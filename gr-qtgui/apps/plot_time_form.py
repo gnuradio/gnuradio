@@ -57,7 +57,7 @@ class plot_time_form(plot_form):
         self.right_col_layout.addWidget(self.stem)
 
         self.add_line_control(self.right_col_layout)
-        
+
     def set_auto_scale(self, state):
         if(state):
             self.top_block.auto_scale(True)

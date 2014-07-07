@@ -29,7 +29,7 @@
 
 namespace gr {
   namespace analog {
-    
+
     /*!
      * \brief Implements a PLL which locks to the input frequency and outputs a carrier
      * \ingroup synchronizers_blk
@@ -47,14 +47,14 @@ namespace gr {
      * and should be set around pi/200 -- 2pi/100.  \sa
      * pll_freqdet_cf, pll_carriertracking_cc
      */
-    class ANALOG_API pll_refout_cc 
+    class ANALOG_API pll_refout_cc
       : virtual public sync_block,
         virtual public blocks::control_loop
     {
     public:
       // gr::analog::pll_refout_cc::sptr
       typedef boost::shared_ptr<pll_refout_cc> sptr;
-      
+
       /* \brief Make PLL block that outputs the tracked carrier signal.
        *
        * \param loop_bw: control loop's bandwidth parameter.

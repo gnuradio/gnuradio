@@ -49,10 +49,10 @@ namespace gr {
     {
       size_t itemsize = input_signature()->sizeof_stream_item(0);
       int nstreams = input_items.size();
-      
+
       const char **inv = (const char **) &input_items[0];
       char *out = (char *) output_items[0];
-      
+
       for (int i = 0; i < noutput_items; i++){
 	for (int j = 0; j < nstreams; j++){
 	  memcpy(out, inv[j], itemsize);

@@ -60,7 +60,7 @@
       <param>5</param>
   </check>
   <flag compiler="gnu">-msse4.2</flag>
-  <flag compiler="clang">-msse4.2</flag>  
+  <flag compiler="clang">-msse4.2</flag>
   <alignment>16</alignment>
 </arch>
 

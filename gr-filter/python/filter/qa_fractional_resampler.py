@@ -59,7 +59,7 @@ class test_fractional_resampler(gr_unittest.TestCase):
         snk = blocks.vector_sink_f()
 
         self.tb.connect(signal, op, snk)
-        self.tb.run() 
+        self.tb.run()
 
         Ntest = 5000
         L = len(snk.data())
@@ -84,7 +84,7 @@ class test_fractional_resampler(gr_unittest.TestCase):
         snk = blocks.vector_sink_c()
 
         self.tb.connect(signal, op, snk)
-        self.tb.run() 
+        self.tb.run()
 
         Ntest = 5000
         L = len(snk.data())
@@ -113,7 +113,7 @@ class test_fractional_resampler(gr_unittest.TestCase):
 
         self.tb.connect(signal, op, snk)
         self.tb.connect(control, (op,1))
-        self.tb.run() 
+        self.tb.run()
 
         Ntest = 5000
         L = len(snk.data())
@@ -141,7 +141,7 @@ class test_fractional_resampler(gr_unittest.TestCase):
 
         self.tb.connect(signal, op, snk)
         self.tb.connect(control, (op,1))
-        self.tb.run() 
+        self.tb.run()
 
         Ntest = 5000
         L = len(snk.data())

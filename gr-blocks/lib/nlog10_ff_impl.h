@@ -44,6 +44,6 @@ namespace gr {
 
   } /* namespace blocks */
 } /* namespace gr */
-   
+
 
 #endif /* INCLUDED_NLOG10_FF_IMPL_H */

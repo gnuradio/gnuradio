@@ -42,6 +42,6 @@ namespace gr {
 
   } /* namespace blocks */
 } /* namespace gr */
-   
+
 
 #endif /* INCLUDED_COMPLEX_TO_IMAG_IMPL_H */

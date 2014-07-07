@@ -172,7 +172,7 @@ namespace gr {
 	float _gain;		// current gain
 	float _max_gain;	// maximum gain
       };
-      
+
     } /* namespace kernel */
   } /* namespace analog */
 } /* namespace gr */

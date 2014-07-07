@@ -52,13 +52,13 @@ namespace gr {
     {
       @I_TYPE@ *iptr = (@I_TYPE@ *)input_items[0];
       @O_TYPE@ *optr = (@O_TYPE@ *)output_items[0];
-      
+
       int nitems_per_block = output_signature()->sizeof_stream_item(0)/sizeof(@I_TYPE@);
-      
+
       for (int i = 0; i < noutput_items; i++)
 	for (int j = 0; j < nitems_per_block; j++)
 	  *optr++ = *iptr++ * d_k[j];
-      
+
       return noutput_items;
     }
 

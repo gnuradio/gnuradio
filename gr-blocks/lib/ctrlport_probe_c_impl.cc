@@ -78,7 +78,7 @@ namespace gr {
       d_ptr = in;
       d_ptrLen = noutput_items;
       ptrlock.unlock();
-    
+
       return noutput_items;
     }
 
@@ -88,10 +88,10 @@ namespace gr {
 #ifdef GR_CTRLPORT
       d_rpc_vars.push_back(
         rpcbasic_sptr(new rpcbasic_register_get<ctrlport_probe_c, std::vector<std::complex<float> > >(
-          alias(), d_id.c_str(), &ctrlport_probe_c::get, 
+          alias(), d_id.c_str(), &ctrlport_probe_c::get,
           pmt::make_c32vector(0,-2),
           pmt::make_c32vector(0,2),
-          pmt::make_c32vector(0,0), 
+          pmt::make_c32vector(0,0),
           "volts", d_desc.c_str(), RPC_PRIVLVL_MIN,
           DISPXY | DISPOPTSCATTER)));
 #endif /* GR_CTRLPORT */

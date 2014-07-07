@@ -30,7 +30,7 @@ namespace gr {
   namespace blocks {
 
     /*!
-     * \brief repeat each input \p repeat times 
+     * \brief repeat each input \p repeat times
      * \ingroup stream_operators_blk
      */
     class BLOCKS_API repeat : virtual public sync_interpolator

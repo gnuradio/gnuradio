@@ -30,7 +30,7 @@
 
 namespace gr {
   namespace qtgui {
-    
+
     class QTGUI_API time_sink_c_impl : public time_sink_c
     {
     private:
@@ -116,7 +116,7 @@ namespace gr {
       double line_alpha(int which);
 
       void set_size(int width, int height);
-      
+
       int nsamps() const;
 
       void enable_menu(bool en);

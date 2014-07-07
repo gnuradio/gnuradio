@@ -29,7 +29,7 @@
 
 namespace gr {
   namespace channels {
-    
+
     /*!
      * \brief Basic channel simulator.
      * \ingroup channel_models_blk

@@ -54,7 +54,7 @@ namespace gr {
     {
       float *out = (float *) output_items[0];
       int noi = d_vlen*noutput_items;
-      
+
       memcpy(out, input_items[0], noi*sizeof(float));
       for(size_t i = 1; i < input_items.size(); i++)
         volk_32f_x2_add_32f(out, out, (const float*)input_items[i], noi);
