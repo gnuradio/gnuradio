@@ -8,7 +8,11 @@ typedef union {
   unsigned int w[64/*NUMSTATES*//32];
   unsigned short s[64/*NUMSTATES*//16];
   unsigned char c[64/*NUMSTATES*//8];
+#ifdef _MSC_VER
+} decision_t;
+#else
 } decision_t __attribute__ ((aligned (16)));
+#endif
 
 static inline void renormalize(unsigned char* X, unsigned char threshold){
   int NUMSTATES = 64;

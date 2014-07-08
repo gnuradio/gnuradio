@@ -120,21 +120,14 @@ namespace gr {
       DWORD dwFlags;    // Reserved for future use, must be zero
     } THREADNAME_INFO;
 #pragma pack(pop)
-    void
-    set_thread_name(gr_thread_t thread, std::string name)
+    static void
+    _set_thread_name(gr_thread_t thread, const char* name, DWORD dwThreadId)
     {
       const DWORD SET_THREAD_NAME_EXCEPTION = 0x406D1388;
 
-      DWORD dwThreadId = GetThreadId(thread);
-      if (dwThreadId == 0)
-        return;
-
-      if (name.empty())
-        name = boost::str(boost::format("thread %lu") % dwThreadId);
-
       THREADNAME_INFO info;
       info.dwType = 0x1000;
-      info.szName = name.c_str();
+      info.szName = name;
       info.dwThreadID = dwThreadId;
       info.dwFlags = 0;
 
@@ -145,6 +138,19 @@ namespace gr {
       __except(EXCEPTION_EXECUTE_HANDLER)
       {
       }
+    }
+
+    void
+    set_thread_name(gr_thread_t thread, std::string name)
+    {
+      DWORD dwThreadId = GetThreadId(thread);
+      if (dwThreadId == 0)
+        return;
+
+      if (name.empty())
+        name = boost::str(boost::format("thread %lu") % dwThreadId);
+
+      _set_thread_name(thread, name.c_str(), dwThreadId);
     }
 
   } /* namespace thread */
