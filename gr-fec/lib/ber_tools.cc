@@ -20,6 +20,12 @@
  * Boston, MA 02110-1301, USA.
  */
 
+#include <cstdlib>
+#ifdef _MSC_VER
+#define _USE_MATH_DEFINES
+#include <cmath>
+#endif
+
 #include "ber_tools.h"
 
 inline int
@@ -35,8 +41,13 @@ gaussnoise(float *inbuffer, int buffsize, float sigma)
   float udrn1=0.0, udrn2=0.0, noise=0.0;
 
   for(i = 0; i < buffsize;i++) {
+    #ifdef _MSC_VER
+    while((udrn1 = (float)(std::rand())) < 0.0000001);
+    udrn2 = (float)(std::rand());
+    #else
     while((udrn1 = (float)drand48()) < 0.0000001);
     udrn2 = (float)drand48();
+    #endif
     noise = sigma*sqrt(-2*log(udrn1))*cos(2*M_PI*udrn2);
     inbuffer[i] += noise;
   }
