@@ -25,6 +25,10 @@
   along with this program; if not, see <http://www.gnu.org/licenses/>.
 */
 
+#ifdef _MSC_VER
+#define round(number) number < 0.0 ? ceil(number - 0.5) : floor(number + 0.5)
+#endif
+
 /*---------------------------------------------------------------------------*\
 
                                INCLUDES
