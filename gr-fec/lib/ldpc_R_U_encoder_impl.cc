@@ -52,7 +52,7 @@ namespace gr {
       int
       ldpc_R_U_encoder_impl::get_output_size()
       {
-        return d_frame_size;
+        return d_H->n();
       }
 
       int
@@ -76,7 +76,7 @@ namespace gr {
       double
       ldpc_R_U_encoder_impl::rate()
       {
-        return static_cast<double>(d_frame_size)/(d_H->n());
+        return (d_H->n())/static_cast<double>(d_frame_size);
       }
 
       void
@@ -118,19 +118,18 @@ namespace gr {
         unsigned int p1_length = (*p1).size1;
         unsigned int p2_length = (*p2).size1;
         unsigned char *out = (unsigned char*)outbuffer;
-        for (index = 0; index < k; index++) {
-          int value = gsl_matrix_get(s, index, 0);
-          out[index] = value;
-        }
         for (index = 0; index < p1_length; index++) {
           int value = gsl_matrix_get(p1, index, 0);
-          out[index+k] = value;
+          out[index] = value;
         }
         for (index = 0; index < p2_length; index++) {
           int value = gsl_matrix_get(p2, index, 0);
-          out[index+k+p1_length] = value;
+          out[p1_length+index] = value;
         }
-
+        for (index = 0; index < k; index++) {
+          int value = gsl_matrix_get(s, index, 0);
+          out[p1_length+p2_length+index] = value;
+        }
       }
     } /* namespace code */
   } /* namespace fec */
