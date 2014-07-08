@@ -18,7 +18,6 @@
  * Boston, MA 02110-1301, USA.
  */
 
-
 #ifndef INCLUDED_FEC_LDPC_BIT_FLIP_DECODER_IMPL_H
 #define INCLUDED_FEC_LDPC_BIT_FLIP_DECODER_IMPL_H
 
@@ -33,28 +32,18 @@ namespace gr {
       {
       private:
         // Plug into the generic FEC API:
-        int get_input_size();   // n, # of bits in the rc'd block.
+        int get_input_size();   // n, # of bits in the received block
         int get_output_size();  // k, # of bits in the info word
+        unsigned int d_frame_size;
 
-        // Everything else:
         // LDPC parity check matrix to use for decoding
-        ldpc_par_chk_mtrx d_H;
+        ldpc_par_chk_mtrx *d_H;
         // Maximum number of iterations to do in decoding algorithm
         unsigned int d_max_iterations;
-        // Number of bits in the information word
-        unsigned int d_frame_size;
-        // Number of bits in the transmitted codeword block
-        unsigned int d_n;
-        // Function to calculate the syndrome 
-        //bool calc_syndrome(ldpc_par_chk_mtrx H, <add the codeword here> );
-        unsigned int d_max_frame_size;
 
       public:
-        ldpc_bit_flip_decoder_impl(
-                       ldpc_par_chk_mtrx parity_check_matrix, 
-                       unsigned int frame_size, 
-                       unsigned int n,
-                       unsigned int max_iterations);
+        ldpc_bit_flip_decoder_impl(ldpc_par_chk_mtrx *H_obj,
+                                   unsigned int max_iter=100);
         ~ldpc_bit_flip_decoder_impl();
 
         void generic_work(void *inbuffer, void *outbuffer);

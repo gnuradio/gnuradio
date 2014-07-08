@@ -35,46 +35,27 @@ namespace gr {
     namespace code {
 
       generic_decoder::sptr
-      ldpc_bit_flip_decoder::make
-        (ldpc_par_chk_mtrx parity_check_matrix,
-         unsigned int frame_size,
-         unsigned int n,
-         unsigned int max_iterations)
+      ldpc_bit_flip_decoder::make(ldpc_par_chk_mtrx *H_obj,
+                                  unsigned int max_iter)
       {
         return generic_decoder::sptr
-          (new ldpc_bit_flip_decoder_impl(parity_check_matrix,
-                                          frame_size,
-                                          n,
-                                          max_iterations));
+          (new ldpc_bit_flip_decoder_impl(H_obj, max_iter));
       }
 
-      ldpc_bit_flip_decoder_impl::ldpc_bit_flip_decoder_impl(
-                        ldpc_par_chk_mtrx parity_check_matrix,
-                        unsigned int frame_size,
-                        unsigned int n,
-                        unsigned int max_iterations)
-        : generic_decoder("LDPC bit flip decoder")
+      ldpc_bit_flip_decoder_impl::ldpc_bit_flip_decoder_impl(ldpc_par_chk_mtrx *H_obj, unsigned int max_iter)
+        : generic_decoder("ldpc_bit_flip_decoder")
       {
-        if(frame_size < 1)
-          throw std::runtime_error("ldpc_bit_flip_decoder: frame_size must be > 0");
-        if(n < 1)
-          throw std::runtime_error("ldpc_bit_flip_decoder: n must be > 0");
-
+        // LDPC parity check matrix to use for decoding
+        d_H = H_obj;
         // Set frame size to k, the # of bits in the information word
         // All buffers and settings will be based on this value.
-        d_max_frame_size = frame_size;
-        set_frame_size(frame_size);
-        // Number of bits in the transmitted codeword
-        d_n = n;
+        set_frame_size(d_H->k());
         // Maximum number of iterations in the decoding algorithm
-        d_max_iterations = max_iterations;
-        // LDPC parity check matrix to use for decoding
-        d_H = parity_check_matrix;
+        d_max_iterations = max_iter;
       }
 
       ldpc_bit_flip_decoder_impl::~ldpc_bit_flip_decoder_impl()
       {
-        // free memory here
       }
 
       int
@@ -86,7 +67,7 @@ namespace gr {
       int
       ldpc_bit_flip_decoder_impl::get_input_size()
       {
-        return d_n;
+        return int(d_H->n());
       }
 
       bool
@@ -105,34 +86,115 @@ namespace gr {
       double
       ldpc_bit_flip_decoder_impl::rate()
       {
-        return static_cast<double>(d_frame_size)/d_n;
+        return static_cast<double>(d_frame_size)/(d_H->n());
       }
+
 
       void
       ldpc_bit_flip_decoder_impl::generic_work(void *inbuffer,
                                                void *outbuffer)
       {
-        //const float *in = (const float*)inbuffer;
-        //unsigned char *out = (unsigned char *) outbuffer;
 
-        // Algorithm: 
+        // Populate the information word
+        const float *in = (const float*)inbuffer;
 
-        // 1. Check syndrome. If codeword is not valid, continue.
-        // 2. While codeword is not valid and iterations < max: 
-        //      For each of the n bits in the codeword, determine how
-        //      many of the unsatisfied parity checks involve that
-        //      bit. To do this, first find the nonzero entries in
-        //      the syndrome. The entry numbers correspond to the
-        //      rows of entry in H. Second, for each bit, determine
-        //      how many of the unsatisfied parity checks involve
-        //      this bit and store this count in an array. Next, 
-        //      determine which bit(s) is  associated with the most
-        //      unsatisfied parity checks, and flip it/them. Check 
-        //      the syndrome.
-        // 3. After finding the valid codeword, extract the info word
-        // 4. Assign the info word to the output.
-      }      
+        unsigned int index, n = d_H->n();
+        gsl_matrix *x = gsl_matrix_alloc(n, 1);
+        for (index = 0; index < n; index++) {
+          double value = static_cast<double>(in[index]);
+          if (value == -1) {
+            value = 0;
+          }
+          gsl_matrix_set(x, index, 0, value);
+        }
 
+        // Parity check matrix to use
+        const gsl_matrix *H = d_H->H();
+
+        // Initialize counter
+        unsigned int count = 0;
+
+        // Calculate syndrome
+        gsl_matrix *syndrome = d_H->mult_matrices_mod2(H, x);
+
+        // Flag for finding a valid codeword
+        bool found_word = false;
+ 
+        // If the syndrome is all 0s, then codeword is valid and we
+        // don't need to loop; we're done.
+        if (gsl_matrix_isnull(syndrome)) {
+          found_word = true;
+        }
+
+        // Loop until valid codeword is found, or max number of
+        // iterations is reached, whichever comes first
+        while ((count < d_max_iterations) && !found_word) {
+          // For each of the n bits in the codeword, determine how
+          // many of the unsatisfied parity checks involve that bit.
+          // To do this, first find the nonzero entries in the
+          // syndrome. The entry numbers correspond to the rows of
+          // interest in H.
+          std::vector<int> rows_of_interest_in_H;
+          for (index = 0; index < (*syndrome).size1; index++) {;
+            if (gsl_matrix_get(x, index, 0)) {
+              rows_of_interest_in_H.push_back(index);
+            }
+          }
+
+          // Second, for each bit, determine how many of the
+          // unsatisfied parity checks involve this bit and store
+          // the count.
+          unsigned int i, col_num, n = d_H->n();
+          std::vector<int> counts(n,0);
+          for (i = 0; i < rows_of_interest_in_H.size(); i++) {
+            unsigned int row_num = rows_of_interest_in_H[i];
+            for (col_num = 0; col_num < n; col_num++) {
+              double value = gsl_matrix_get(H, row_num, col_num);
+              if (value > 0) {
+                counts[col_num] = counts[col_num] + 1;
+              }
+            }
+          }
+
+          // Next, determine which bit(s) is associated with the most
+          // unsatisfied parity checks, and flip it/them.
+          int max = 0;
+          for (index = 0; index < n; index++) {
+            if (counts[index] > max) {
+              max = counts[index];
+            }
+          }
+
+          for (index = 0; index < n; index++) {
+            if (counts[index] == max) {
+              unsigned int value = gsl_matrix_get(x, index, 0);
+              unsigned int new_value = value ^ 1;
+              gsl_matrix_set(x, index, 0, new_value);
+            }
+          }
+
+          // Check the syndrome; see if valid codeword has been found
+          syndrome = d_H->mult_matrices_mod2(H, x);
+          if (gsl_matrix_isnull(syndrome)) {
+            found_word = true;
+            break;
+          }
+          count++;
+        }
+
+        // After finding the valid codeword, extract the info word
+        // and assign to output.
+        unsigned char *out = (unsigned char*) outbuffer;
+        for (index = 0; index < d_frame_size; index++) {
+          unsigned int i = index + n - d_frame_size;
+          int value = gsl_matrix_get(x, i, 0);
+          out[index] = value;
+        }
+
+        if (!found_word) {
+          throw std::runtime_error("ldpc_bit_flip_decoder: valid codeword not found.");
+        }
+      } /* ldpc_bit_flip_decoder_impl::generic_work() */     
     } /* namespace code */
   } /* namespace fec */
 } /* namespace gr */
