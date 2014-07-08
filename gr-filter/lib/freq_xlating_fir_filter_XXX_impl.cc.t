@@ -132,7 +132,7 @@ namespace gr {
         pmt::pmt_t x = pmt::cdr(msg);
         if(pmt::is_real(x)) {
           double freq = pmt::to_double(x);
-          set_center_freq(freq*d_sampling_freq);
+          set_center_freq(freq);
         }
       }
     }
