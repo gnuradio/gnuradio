@@ -63,21 +63,14 @@ namespace gr {
          * \param n Number of bits in each transmitted codeword, 
          *        usually denoted "n" in the literature.
          */
-        static generic_decoder::sptr make
-          (ldpc_par_chk_mtrx parity_check_matrix, 
-           unsigned int frame_size, 
-           unsigned int n,            
-           unsigned int max_iterations = 100);
+        static generic_decoder::sptr make(ldpc_par_chk_mtrx *H_obj,
+                                          unsigned int max_iter=100);
         /*!
          * Sets the uncoded frame size to \p frame_size. If \p
          * frame_size is greater than the value given to the
          * constructor, the frame size will be capped by that initial
          * value and this function will return false. Otherwise, it
          * returns true.
-         *
-         * FIXME update notes depending on how this works for this 
-         *       decoder.
-         *
          */
         virtual bool set_frame_size(unsigned int frame_size) = 0;
 

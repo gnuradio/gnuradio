@@ -27,7 +27,6 @@
 #include <vector>
 #include <sstream>
 #include <iostream>
-#include <fstream> ////////////////////////delete this
 
 namespace gr {
   namespace fec {
@@ -115,7 +114,7 @@ namespace gr {
       {
         /* This function reads in an alist file and creates the
           corresponding parity check matrix. The format of alist
-          files is desribed at:
+          files is described at:
           http://www.inference.phy.cam.ac.uk/mackay/codes/alist.html
         */
         std::ifstream inputFile;
@@ -138,8 +137,8 @@ namespace gr {
         // all 0s
         gsl_matrix_set_zero(d_H_ptr);
 
-        // The next few lines in the file are not neccesary in
-        // contructing the matrix.
+        // The next few lines in the file are not necessary in
+        // constructing the matrix.
         std::string tempBuffer;
         unsigned int counter;
         for (counter = 0; counter < 4; counter++) {
@@ -237,7 +236,7 @@ namespace gr {
           catch (char const *exceptionString) {
 
             std::cout << "Error in set_parameters_for_encoding while"
-                      << "finding inverse_phi: " << exceptionString
+                      << " finding inverse_phi: " << exceptionString
                       << "Tip: verify that the correct gap is being "
                       << "specified for this alist file.\n";      
             exit(1);
