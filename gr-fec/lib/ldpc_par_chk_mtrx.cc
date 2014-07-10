@@ -123,7 +123,7 @@ namespace gr {
         inputFile.open((*alist_file).c_str());
         if (!inputFile) {
           std::cout << "There was a problem opening file "
-                    << alist_file << " for reading.\n";
+                    << *alist_file << " for reading.\n";
           exit(1);
         }
 
