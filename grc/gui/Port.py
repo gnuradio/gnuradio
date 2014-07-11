@@ -23,6 +23,7 @@ from Constants import \
     CONNECTOR_EXTENSION_INCREMENT, \
     PORT_LABEL_PADDING, PORT_MIN_WIDTH
 import Utils
+import Actions
 import Colors
 import pygtk
 pygtk.require('2.0')
@@ -32,6 +33,7 @@ PORT_HIDDEN_MARKUP_TMPL="""\
 <span foreground="black" font_desc="Sans 7.5"> </span>"""
 PORT_MARKUP_TMPL="""\
 <span foreground="black" font_desc="Sans 7.5">$encode($port.get_name())</span>"""
+
 
 class Port(Element):
     """The graphical port."""
@@ -57,7 +59,7 @@ class Port(Element):
         elif self.is_sink(): ports = self.get_parent().get_sinks_gui()
         #get the max width
         self.W = max([port.W for port in ports] + [PORT_MIN_WIDTH])
-        W = self.W if not self._label_hidden else 10
+        W = self.W if not self.label_hidden() else 10
         #get a numeric index for this port relative to its sibling ports
         try:
             index = ports.index(self)
@@ -136,7 +138,7 @@ class Port(Element):
             border_color=self.is_highlighted() and Colors.HIGHLIGHT_COLOR or
                          self.get_parent().is_dummy_block() and Colors.MISSING_BLOCK_BORDER_COLOR or Colors.BORDER_COLOR,
         )
-        if self._label_hidden:
+        if self.label_hidden():
             return
         X,Y = self.get_coordinate()
         (x,y),(w,h) = self._areas_list[0] #use the first area's sizes to place the labels
@@ -232,10 +234,25 @@ class Port(Element):
         """
         return self.get_parent().is_highlighted()
 
+    def label_hidden(self):
+        """
+        Figure out if the label should be shown
+
+        Returns:
+            true if the label should be hidden
+        """
+        return self._label_hidden and Actions.TOGGLE_AUTO_HIDE_PORT_LABELS.get_active()
+
     def mouse_over(self):
+        """
+        Called from flow graph on mouse-over
+        """
         self._label_hidden = False
-        return True
+        return Actions.TOGGLE_AUTO_HIDE_PORT_LABELS.get_active()  # only redraw if necessary
 
     def mouse_out(self):
+        """
+        Called from flow graph on mouse-out
+        """
         self._label_hidden = True
-        return True
+        return Actions.TOGGLE_AUTO_HIDE_PORT_LABELS.get_active()  # only redraw if necessary

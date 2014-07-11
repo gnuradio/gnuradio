@@ -118,6 +118,7 @@ class ActionHandler:
                 Actions.TYPES_WINDOW_DISPLAY, Actions.TOGGLE_BLOCKS_WINDOW,
                 Actions.TOGGLE_REPORTS_WINDOW, Actions.TOGGLE_HIDE_DISABLED_BLOCKS,
                 Actions.TOOLS_RUN_FDESIGN, Actions.TOGGLE_SCROLL_LOCK, Actions.CLEAR_REPORTS,
+                Actions.TOGGLE_AUTO_HIDE_PORT_LABELS
             ): action.set_sensitive(True)
             if ParseXML.xml_failures:
                 Messages.send_xml_errors_if_any(ParseXML.xml_failures)
@@ -136,6 +137,7 @@ class ActionHandler:
             Actions.TOGGLE_REPORTS_WINDOW.set_active(Preferences.reports_window_visibility())
             Actions.TOGGLE_BLOCKS_WINDOW.set_active(Preferences.blocks_window_visibility())
             Actions.TOGGLE_SCROLL_LOCK.set_active(Preferences.scroll_lock())
+            Actions.TOGGLE_AUTO_HIDE_PORT_LABELS.set_active(Preferences.auto_hide_port_labels())
         elif action == Actions.APPLICATION_QUIT:
             if self.main_window.close_pages():
                 gtk.main_quit()
@@ -383,6 +385,9 @@ class ActionHandler:
             self.main_window.text_display.clear()
         elif action == Actions.TOGGLE_HIDE_DISABLED_BLOCKS:
             Actions.NOTHING_SELECT()
+        elif action == Actions.TOGGLE_AUTO_HIDE_PORT_LABELS:
+            Preferences.auto_hide_port_labels(action.get_active())
+            self.main_window.get_flow_graph().create_shapes()
         ##################################################
         # Param Modifications
         ##################################################

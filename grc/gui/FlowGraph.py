@@ -546,13 +546,15 @@ class FlowGraph(Element):
 
     def handle_mouse_motion(self, coordinate):
         """
-        The mouse has moved, respond to mouse dragging.
+        The mouse has moved, respond to mouse dragging or notify elements
         Move a selected element to the new coordinate.
         Auto-scroll the scroll bars at the boundaries.
         """
         #to perform a movement, the mouse must be pressed
         # (no longer checking pending events via gtk.events_pending() - always true in Windows)
         if not self.mouse_pressed:
+            # only continue if mouse-over stuff is enabled (just the auto-hide port label stuff for now)
+            if not Actions.TOGGLE_AUTO_HIDE_PORT_LABELS.get_active(): return
             redraw = False
             for element in reversed(self.get_elements()):
                 over_element = element.what_is_selected(coordinate)
