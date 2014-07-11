@@ -21,6 +21,7 @@ self.$(id).set_y_axis($ymin, $ymax)
 self.$(id).set_x_axis($xmin, $xmax)
 self.$(id).set_trigger_mode($tr_mode, $tr_slope, $tr_level, $tr_chan, $tr_tag)
 self.$(id).enable_autoscale($autoscale)
+self.$(id).enable_grid($grid)
 
 labels = [$label1, $label2, $label3, $label4, $label5,
           $label6, $label7, $label8, $label9, $label10]
@@ -80,6 +81,22 @@ $(gui_hint()($win))</make>
     <key>size</key>
     <value>1024</value>
     <type>int</type>
+  </param>
+
+  <param>
+    <name>Grid</name>
+    <key>grid</key>
+    <value>False</value>
+    <type>enum</type>
+    <hide>part</hide>
+    <option>
+      <name>Yes</name>
+      <key>True</key>
+    </option>
+    <option>
+      <name>No</name>
+      <key>False</key>
+    </option>
   </param>
 
   <param>

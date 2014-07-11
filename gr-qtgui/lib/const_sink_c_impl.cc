@@ -351,6 +351,12 @@ namespace gr {
     }
 
     void
+    const_sink_c_impl::enable_grid(bool en)
+    {
+      d_main_gui->setGrid(en);
+    }
+
+    void
     const_sink_c_impl::reset()
     {
       gr::thread::scoped_lock lock(d_mutex);

@@ -23,6 +23,7 @@ qtgui.$(type.fcn)(
 self.$(id).set_update_time($update_time)
 self.$(id).set_y_axis($ymin, $ymax)
 self.$(id).enable_autoscale($autoscale)
+self.$(id).enable_grid($grid)
 self.$(id).set_fft_average($average)
 
 labels = [$label1, $label2, $label3, $label4, $label5,
@@ -126,6 +127,22 @@ $(gui_hint()($win))</make>
     <key>bw</key>
     <value>samp_rate</value>
     <type>real</type>
+  </param>
+
+  <param>
+    <name>Grid</name>
+    <key>grid</key>
+    <value>False</value>
+    <type>enum</type>
+    <hide>part</hide>
+    <option>
+      <name>Yes</name>
+      <key>True</key>
+    </option>
+    <option>
+      <name>No</name>
+      <key>False</key>
+    </option>
   </param>
 
   <param>

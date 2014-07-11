@@ -21,6 +21,7 @@ qtgui.$(type.fcn)(
         $nconnections \#number of inputs
 )
 self.$(id).set_update_time($update_time)
+self.$(id).enable_grid($grid)
 
 labels = [$label1, $label2, $label3, $label4, $label5,
           $label6, $label7, $label8, $label9, $label10]
@@ -139,6 +140,22 @@ $(gui_hint()($win))</make>
     <value>10</value>
     <type>float</type>
     <hide>part</hide>
+  </param>
+
+  <param>
+    <name>Grid</name>
+    <key>grid</key>
+    <value>False</value>
+    <type>enum</type>
+    <hide>part</hide>
+    <option>
+      <name>Yes</name>
+      <key>True</key>
+    </option>
+    <option>
+      <name>No</name>
+      <key>False</key>
+    </option>
   </param>
 
   <param>
