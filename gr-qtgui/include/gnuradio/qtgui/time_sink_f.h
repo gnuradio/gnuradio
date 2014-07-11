@@ -76,6 +76,8 @@ namespace gr {
 #endif
 
       virtual void set_y_axis(double min, double max) = 0;
+      virtual void set_y_label(const std::string &label,
+                               const std::string &unit="") = 0;
       virtual void set_update_time(double t) = 0;
       virtual void set_title(const std::string &title) = 0;
       virtual void set_line_label(int which, const std::string &line) = 0;

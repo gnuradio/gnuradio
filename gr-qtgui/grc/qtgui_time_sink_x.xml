@@ -20,6 +20,9 @@ qtgui.$(type.fcn)(
 )
 self.$(id).set_update_time($update_time)
 self.$(id).set_y_axis($ymin, $ymax)
+
+self.$(id).set_y_label($ylabel, $yunit)
+
 self.$(id).enable_tags(-1, $entags)
 self.$(id).set_trigger_mode($tr_mode, $tr_slope, $tr_level, $tr_delay, $tr_chan, $tr_tag)
 self.$(id).enable_autoscale($autoscale)
@@ -95,6 +98,22 @@ $(gui_hint()($win))</make>
     <value>""</value>
     <type>string</type>
     <hide>#if len($name()) > 0 then 'none' else 'part'#</hide>
+  </param>
+
+  <param>
+    <name>Y Axis Label</name>
+    <key>ylabel</key>
+    <value>Amplitude</value>
+    <type>string</type>
+    <hide>part</hide>
+  </param>
+
+  <param>
+    <name>Y Axis Unit</name>
+    <key>yunit</key>
+    <value>""</value>
+    <type>string</type>
+    <hide>part</hide>
   </param>
 
   <param>

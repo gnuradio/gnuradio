@@ -63,6 +63,9 @@ public slots:
 
   void enableTagMarker(int which, bool en);
 
+  void setYLabel(const std::string &label,
+                 const std::string &unit="");
+
 private:
   void _resetXAxisPoints();
   void _autoScale(double bottom, double top);

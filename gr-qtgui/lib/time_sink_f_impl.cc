@@ -173,6 +173,13 @@ namespace gr {
     }
 
     void
+    time_sink_f_impl::set_y_label(const std::string &label,
+                                  const std::string &unit)
+    {
+      d_main_gui->setYLabel(label, unit);
+    }
+
+    void
     time_sink_f_impl::set_update_time(double t)
     {
       //convert update time to ticks
