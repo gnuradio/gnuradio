@@ -29,6 +29,23 @@
 		<key>fmax</key>
 		<type>real</type>
 	</param>
+
+        <param>
+          <name>Show Msg Ports</name>
+          <key>showports</key>
+          <value>True</value>
+          <type>enum</type>
+          <hide>part</hide>
+          <option>
+            <name>Yes</name>
+            <key>False</key>
+          </option>
+          <option>
+            <name>No</name>
+            <key>True</key>
+          </option>
+        </param>
+
 	<sink>
 		<name>in</name>
 		<type>complex</type>
@@ -38,12 +55,14 @@
 		<name>set_constellation</name>
 		<type>message</type>
                 <optional>1</optional>
+                <hide>$showports</hide>
 	</sink>
 
 	<sink>
 		<name>rotate_phase</name>
 		<type>message</type>
                 <optional>1</optional>
+                <hide>$showports</hide>
 	</sink>
 
 	<source>

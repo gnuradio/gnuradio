@@ -202,6 +202,21 @@ $(gui_hint()($win))</make>
     <hide>part</hide>
   </param>
 
+  <param>
+    <name>Show Msg Ports</name>
+    <key>showports</key>
+    <value>True</value>
+    <type>enum</type>
+    <hide>part</hide>
+    <option>
+      <name>Yes</name>
+      <key>False</key>
+    </option>
+    <option>
+      <name>No</name>
+      <key>True</key>
+    </option>
+  </param>
 
   <param>
     <name>Line 1 Label</name>
@@ -558,12 +573,14 @@ $(gui_hint()($win))</make>
     <name>freq</name>
     <type>message</type>
     <optional>1</optional>
+    <hide>$showports</hide>
   </sink>
 
   <source>
     <name>freq</name>
     <type>message</type>
     <optional>1</optional>
+    <hide>$showports</hide>
   </source>
 
   <doc>

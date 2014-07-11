@@ -176,22 +176,41 @@ Qt.QObject.connect(self._$(id)_win, Qt.SIGNAL("plotPointSelected(QPointF, int)")
 		<hide>part</hide>
 	</param>
 
-	<sink>
-		<name>in</name>
-		<type>$type</type>
-		<nports>$num_inputs</nports>
-	</sink>
+
+  <param>
+    <name>Show Msg Ports</name>
+    <key>showports</key>
+    <value>True</value>
+    <type>enum</type>
+    <hide>part</hide>
+    <option>
+      <name>Yes</name>
+      <key>False</key>
+    </option>
+    <option>
+      <name>No</name>
+      <key>True</key>
+    </option>
+  </param>
+
+  <sink>
+    <name>in</name>
+    <type>$type</type>
+    <nports>$num_inputs</nports>
+  </sink>
 
   <sink>
     <name>freq</name>
     <type>message</type>
     <optional>1</optional>
+    <hide>$showports</hide>
   </sink>
 
   <source>
     <name>freq</name>
     <type>message</type>
     <optional>1</optional>
+    <hide>$showports</hide>
   </source>
 
   <doc>
