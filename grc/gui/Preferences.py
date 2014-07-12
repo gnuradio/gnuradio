@@ -101,3 +101,9 @@ def scroll_lock(visible=None):
     else:
         try: return _config_parser.getboolean('main', 'scroll_lock')
         except: return True
+
+def auto_hide_port_labels(hide=None):
+    if hide is not None: _config_parser.set('main', 'auto_hide_port_labels', hide)
+    else:
+        try: return _config_parser.getboolean('main', 'auto_hide_port_labels')
+        except: return True

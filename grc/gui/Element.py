@@ -262,3 +262,9 @@ class Element(object):
         if rotation not in POSSIBLE_ROTATIONS:
             raise Exception('"%s" is not one of the possible rotations: (%s)'%(rotation, POSSIBLE_ROTATIONS))
         self.rotation = rotation
+
+    def mouse_over(self):
+        pass
+
+    def mouse_out(self):
+        pass
