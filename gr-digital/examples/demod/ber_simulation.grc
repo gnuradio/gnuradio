@@ -1,19 +1,55 @@
 <?xml version='1.0' encoding='ASCII'?>
 <flow_graph>
-  <timestamp>Wed Jul  9 17:52:56 2014</timestamp>
+  <timestamp>Sat Jul 12 13:50:53 2014</timestamp>
   <block>
-    <key>variable</key>
+    <key>options</key>
     <param>
       <key>id</key>
-      <value>samp_rate</value>
+      <value>ber_simulation</value>
     </param>
     <param>
       <key>_enabled</key>
       <value>True</value>
     </param>
     <param>
-      <key>value</key>
-      <value>100e3</value>
+      <key>title</key>
+      <value>BER Simulation</value>
+    </param>
+    <param>
+      <key>author</key>
+      <value>Example</value>
+    </param>
+    <param>
+      <key>description</key>
+      <value>Adjust the noise and constellation... see what happens!</value>
+    </param>
+    <param>
+      <key>window_size</key>
+      <value>1280, 1024</value>
+    </param>
+    <param>
+      <key>generate_options</key>
+      <value>qt_gui</value>
+    </param>
+    <param>
+      <key>category</key>
+      <value>Custom</value>
+    </param>
+    <param>
+      <key>run_options</key>
+      <value>prompt</value>
+    </param>
+    <param>
+      <key>run</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>max_nouts</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>realtime_scheduling</key>
+      <value></value>
     </param>
     <param>
       <key>alias</key>
@@ -21,7 +57,34 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(16, 308)</value>
+      <value>(16, 10)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>variable</key>
+    <param>
+      <key>id</key>
+      <value>const_type</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>value</key>
+      <value>1</value>
+    </param>
+    <param>
+      <key>alias</key>
+      <value></value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(18, 428)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -59,7 +122,7 @@
     <key>variable</key>
     <param>
       <key>id</key>
-      <value>const_type</value>
+      <value>samp_rate</value>
     </param>
     <param>
       <key>_enabled</key>
@@ -67,7 +130,7 @@
     </param>
     <param>
       <key>value</key>
-      <value>1</value>
+      <value>100e3</value>
     </param>
     <param>
       <key>alias</key>
@@ -75,7 +138,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(18, 428)</value>
+      <value>(16, 308)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -442,6 +505,10 @@
       <value>{0: 'BPSK', 1: 'QPSK', 2: '8-PSK'}[const_type] + " - Change const_type for different constellation types!"</value>
     </param>
     <param>
+      <key>formatter</key>
+      <value>None</value>
+    </param>
+    <param>
       <key>gui_hint</key>
       <value></value>
     </param>
@@ -506,6 +573,53 @@
     </param>
   </block>
   <block>
+    <key>blks2_error_rate</key>
+    <param>
+      <key>id</key>
+      <value>blks2_error_rate</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>type</key>
+      <value>'BER'</value>
+    </param>
+    <param>
+      <key>win_size</key>
+      <value>int(1e7)</value>
+    </param>
+    <param>
+      <key>bits_per_symbol</key>
+      <value>const[const_type].bits_per_symbol()</value>
+    </param>
+    <param>
+      <key>alias</key>
+      <value></value>
+    </param>
+    <param>
+      <key>affinity</key>
+      <value></value>
+    </param>
+    <param>
+      <key>minoutbuf</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>maxoutbuf</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(720, 25)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
     <key>qtgui_const_sink_x</key>
     <param>
       <key>id</key>
@@ -526,6 +640,10 @@
     <param>
       <key>size</key>
       <value>1024</value>
+    </param>
+    <param>
+      <key>grid</key>
+      <value>False</value>
     </param>
     <param>
       <key>autoscale</key>
@@ -601,7 +719,7 @@
     </param>
     <param>
       <key>alpha1</key>
-      <value>1.0</value>
+      <value>0.6</value>
     </param>
     <param>
       <key>label2</key>
@@ -837,116 +955,6 @@
     </param>
   </block>
   <block>
-    <key>blks2_error_rate</key>
-    <param>
-      <key>id</key>
-      <value>blks2_error_rate</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>type</key>
-      <value>'BER'</value>
-    </param>
-    <param>
-      <key>win_size</key>
-      <value>int(1e7)</value>
-    </param>
-    <param>
-      <key>bits_per_symbol</key>
-      <value>const[const_type].bits_per_symbol()</value>
-    </param>
-    <param>
-      <key>alias</key>
-      <value></value>
-    </param>
-    <param>
-      <key>affinity</key>
-      <value></value>
-    </param>
-    <param>
-      <key>minoutbuf</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>maxoutbuf</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(720, 25)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>options</key>
-    <param>
-      <key>id</key>
-      <value>ber_simulation</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>title</key>
-      <value>BER Simulation</value>
-    </param>
-    <param>
-      <key>author</key>
-      <value>Example</value>
-    </param>
-    <param>
-      <key>description</key>
-      <value>Adjust the noise and constellation... see what happens!</value>
-    </param>
-    <param>
-      <key>window_size</key>
-      <value>1280, 1024</value>
-    </param>
-    <param>
-      <key>generate_options</key>
-      <value>qt_gui</value>
-    </param>
-    <param>
-      <key>category</key>
-      <value>Custom</value>
-    </param>
-    <param>
-      <key>run_options</key>
-      <value>prompt</value>
-    </param>
-    <param>
-      <key>run</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>max_nouts</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>realtime_scheduling</key>
-      <value></value>
-    </param>
-    <param>
-      <key>alias</key>
-      <value></value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(16, 10)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
     <key>qtgui_number_sink</key>
     <param>
       <key>id</key>
@@ -957,12 +965,16 @@
       <value>True</value>
     </param>
     <param>
+      <key>name</key>
+      <value>""</value>
+    </param>
+    <param>
       <key>type</key>
       <value>float</value>
     </param>
     <param>
       <key>autoscale</key>
-      <value>False</value>
+      <value>True</value>
     </param>
     <param>
       <key>avg</key>
@@ -997,11 +1009,23 @@
       <value>BER</value>
     </param>
     <param>
+      <key>unit1</key>
+      <value>x10^-6</value>
+    </param>
+    <param>
       <key>color1</key>
       <value>("black", "black")</value>
     </param>
     <param>
+      <key>factor1</key>
+      <value>1e6</value>
+    </param>
+    <param>
       <key>label2</key>
+      <value></value>
+    </param>
+    <param>
+      <key>unit2</key>
       <value></value>
     </param>
     <param>
@@ -1009,7 +1033,15 @@
       <value>("black", "black")</value>
     </param>
     <param>
+      <key>factor2</key>
+      <value>1</value>
+    </param>
+    <param>
       <key>label3</key>
+      <value></value>
+    </param>
+    <param>
+      <key>unit3</key>
       <value></value>
     </param>
     <param>
@@ -1017,7 +1049,15 @@
       <value>("black", "black")</value>
     </param>
     <param>
+      <key>factor3</key>
+      <value>1</value>
+    </param>
+    <param>
       <key>label4</key>
+      <value></value>
+    </param>
+    <param>
+      <key>unit4</key>
       <value></value>
     </param>
     <param>
@@ -1025,7 +1065,15 @@
       <value>("black", "black")</value>
     </param>
     <param>
+      <key>factor4</key>
+      <value>1</value>
+    </param>
+    <param>
       <key>label5</key>
+      <value></value>
+    </param>
+    <param>
+      <key>unit5</key>
       <value></value>
     </param>
     <param>
@@ -1033,7 +1081,15 @@
       <value>("black", "black")</value>
     </param>
     <param>
+      <key>factor5</key>
+      <value>1</value>
+    </param>
+    <param>
       <key>label6</key>
+      <value></value>
+    </param>
+    <param>
+      <key>unit6</key>
       <value></value>
     </param>
     <param>
@@ -1041,7 +1097,15 @@
       <value>("black", "black")</value>
     </param>
     <param>
+      <key>factor6</key>
+      <value>1</value>
+    </param>
+    <param>
       <key>label7</key>
+      <value></value>
+    </param>
+    <param>
+      <key>unit7</key>
       <value></value>
     </param>
     <param>
@@ -1049,7 +1113,15 @@
       <value>("black", "black")</value>
     </param>
     <param>
+      <key>factor7</key>
+      <value>1</value>
+    </param>
+    <param>
       <key>label8</key>
+      <value></value>
+    </param>
+    <param>
+      <key>unit8</key>
       <value></value>
     </param>
     <param>
@@ -1057,7 +1129,15 @@
       <value>("black", "black")</value>
     </param>
     <param>
+      <key>factor8</key>
+      <value>1</value>
+    </param>
+    <param>
       <key>label9</key>
+      <value></value>
+    </param>
+    <param>
+      <key>unit9</key>
       <value></value>
     </param>
     <param>
@@ -1065,12 +1145,24 @@
       <value>("black", "black")</value>
     </param>
     <param>
+      <key>factor9</key>
+      <value>1</value>
+    </param>
+    <param>
       <key>label10</key>
+      <value></value>
+    </param>
+    <param>
+      <key>unit10</key>
       <value></value>
     </param>
     <param>
       <key>color10</key>
       <value>("black", "black")</value>
+    </param>
+    <param>
+      <key>factor10</key>
+      <value>1</value>
     </param>
     <param>
       <key>alias</key>
