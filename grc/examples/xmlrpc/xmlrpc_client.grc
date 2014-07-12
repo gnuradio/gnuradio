@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='ASCII'?>
 <flow_graph>
-  <timestamp>Thu Jul 24 14:27:44 2008</timestamp>
+  <timestamp>Sat Jul 12 17:10:55 2014</timestamp>
   <block>
     <key>options</key>
     <param>
@@ -29,15 +29,35 @@
     </param>
     <param>
       <key>generate_options</key>
-      <value>wx_gui</value>
+      <value>qt_gui</value>
     </param>
     <param>
       <key>category</key>
       <value>Custom</value>
     </param>
     <param>
+      <key>run_options</key>
+      <value>prompt</value>
+    </param>
+    <param>
+      <key>run</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>max_nouts</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>realtime_scheduling</key>
+      <value></value>
+    </param>
+    <param>
+      <key>alias</key>
+      <value></value>
+    </param>
+    <param>
       <key>_coordinate</key>
-      <value>(10, 10)</value>
+      <value>(-2, 0)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -45,34 +65,26 @@
     </param>
   </block>
   <block>
-    <key>xmlrpc_client</key>
+    <key>variable</key>
     <param>
       <key>id</key>
-      <value>xmlrpc_client0</value>
+      <value>samp_rate</value>
     </param>
     <param>
       <key>_enabled</key>
       <value>True</value>
     </param>
     <param>
-      <key>addr</key>
-      <value>localhost</value>
+      <key>value</key>
+      <value>32000</value>
     </param>
     <param>
-      <key>port</key>
-      <value>1234</value>
-    </param>
-    <param>
-      <key>callback</key>
-      <value>set_ampl</value>
-    </param>
-    <param>
-      <key>variable</key>
-      <value>ampl</value>
+      <key>alias</key>
+      <value></value>
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(409, 35)</value>
+      <value>(13, 172)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -106,8 +118,12 @@
       <value>freq</value>
     </param>
     <param>
+      <key>alias</key>
+      <value></value>
+    </param>
+    <param>
       <key>_coordinate</key>
-      <value>(222, 34)</value>
+      <value>(177, 0)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -115,136 +131,38 @@
     </param>
   </block>
   <block>
-    <key>variable_slider</key>
+    <key>xmlrpc_client</key>
     <param>
       <key>id</key>
-      <value>freq</value>
+      <value>xmlrpc_client0</value>
     </param>
     <param>
       <key>_enabled</key>
       <value>True</value>
     </param>
     <param>
-      <key>label</key>
-      <value>Frequency (Hz)</value>
+      <key>addr</key>
+      <value>localhost</value>
     </param>
     <param>
-      <key>value</key>
-      <value>1000</value>
+      <key>port</key>
+      <value>1234</value>
     </param>
     <param>
-      <key>min</key>
-      <value>0</value>
+      <key>callback</key>
+      <value>set_ampl</value>
     </param>
     <param>
-      <key>max</key>
-      <value>5000</value>
-    </param>
-    <param>
-      <key>num_steps</key>
-      <value>100</value>
-    </param>
-    <param>
-      <key>slider_type</key>
-      <value>horizontal</value>
-    </param>
-    <param>
-      <key>grid_pos</key>
-      <value>0, 0, 1, 2</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(207, 162)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>variable_slider</key>
-    <param>
-      <key>id</key>
+      <key>variable</key>
       <value>ampl</value>
     </param>
     <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>label</key>
-      <value>Amplitude</value>
-    </param>
-    <param>
-      <key>value</key>
-      <value>1</value>
-    </param>
-    <param>
-      <key>min</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>max</key>
-      <value>2</value>
-    </param>
-    <param>
-      <key>num_steps</key>
-      <value>100</value>
-    </param>
-    <param>
-      <key>slider_type</key>
-      <value>horizontal</value>
-    </param>
-    <param>
-      <key>grid_pos</key>
-      <value>1, 0, 1, 2</value>
+      <key>alias</key>
+      <value></value>
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(397, 167)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>variable_chooser</key>
-    <param>
-      <key>id</key>
-      <value>offset</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>label</key>
-      <value>Offset</value>
-    </param>
-    <param>
-      <key>value_index</key>
-      <value>1</value>
-    </param>
-    <param>
-      <key>choices</key>
-      <value>[-1, 0, 1]</value>
-    </param>
-    <param>
-      <key>labels</key>
-      <value>["neg", "zero", "pos"]</value>
-    </param>
-    <param>
-      <key>chooser_type</key>
-      <value>radio_buttons_horizontal</value>
-    </param>
-    <param>
-      <key>grid_pos</key>
-      <value>2, 0, 1, 2</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(596, 177)</value>
+      <value>(308, 0)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -278,8 +196,12 @@
       <value>offset*ampl</value>
     </param>
     <param>
+      <key>alias</key>
+      <value></value>
+    </param>
+    <param>
       <key>_coordinate</key>
-      <value>(608, 39)</value>
+      <value>(440, 4)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -287,22 +209,216 @@
     </param>
   </block>
   <block>
-    <key>variable</key>
+    <key>variable_qtgui_range</key>
     <param>
       <key>id</key>
-      <value>samp_rate</value>
+      <value>freq</value>
     </param>
     <param>
       <key>_enabled</key>
       <value>True</value>
     </param>
     <param>
+      <key>label</key>
+      <value>Frequency (Hz)</value>
+    </param>
+    <param>
       <key>value</key>
-      <value>32000</value>
+      <value>1000</value>
+    </param>
+    <param>
+      <key>start</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>stop</key>
+      <value>5e3</value>
+    </param>
+    <param>
+      <key>step</key>
+      <value>1</value>
+    </param>
+    <param>
+      <key>widget</key>
+      <value>counter_slider</value>
+    </param>
+    <param>
+      <key>orient</key>
+      <value>Qt.Horizontal</value>
+    </param>
+    <param>
+      <key>min_len</key>
+      <value>200</value>
+    </param>
+    <param>
+      <key>gui_hint</key>
+      <value>0,0,1,2</value>
+    </param>
+    <param>
+      <key>alias</key>
+      <value></value>
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(13, 172)</value>
+      <value>(209, 165)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>variable_qtgui_range</key>
+    <param>
+      <key>id</key>
+      <value>ampl</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>label</key>
+      <value>Amplitude</value>
+    </param>
+    <param>
+      <key>value</key>
+      <value>1</value>
+    </param>
+    <param>
+      <key>start</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>stop</key>
+      <value>2</value>
+    </param>
+    <param>
+      <key>step</key>
+      <value>.1</value>
+    </param>
+    <param>
+      <key>widget</key>
+      <value>counter_slider</value>
+    </param>
+    <param>
+      <key>orient</key>
+      <value>Qt.Horizontal</value>
+    </param>
+    <param>
+      <key>min_len</key>
+      <value>200</value>
+    </param>
+    <param>
+      <key>gui_hint</key>
+      <value>1,0,1,2</value>
+    </param>
+    <param>
+      <key>alias</key>
+      <value></value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(367, 158)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>variable_qtgui_chooser</key>
+    <param>
+      <key>id</key>
+      <value>offset</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>label</key>
+      <value>Offset</value>
+    </param>
+    <param>
+      <key>type</key>
+      <value>int</value>
+    </param>
+    <param>
+      <key>num_opts</key>
+      <value>3</value>
+    </param>
+    <param>
+      <key>value</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>options</key>
+      <value>[0, 1, 2]</value>
+    </param>
+    <param>
+      <key>labels</key>
+      <value>[]</value>
+    </param>
+    <param>
+      <key>option0</key>
+      <value>-1</value>
+    </param>
+    <param>
+      <key>label0</key>
+      <value>neg</value>
+    </param>
+    <param>
+      <key>option1</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>label1</key>
+      <value>zero</value>
+    </param>
+    <param>
+      <key>option2</key>
+      <value>1</value>
+    </param>
+    <param>
+      <key>label2</key>
+      <value>pos</value>
+    </param>
+    <param>
+      <key>option3</key>
+      <value>3</value>
+    </param>
+    <param>
+      <key>label3</key>
+      <value></value>
+    </param>
+    <param>
+      <key>option4</key>
+      <value>4</value>
+    </param>
+    <param>
+      <key>label4</key>
+      <value></value>
+    </param>
+    <param>
+      <key>widget</key>
+      <value>combo_box</value>
+    </param>
+    <param>
+      <key>orient</key>
+      <value>Qt.QVBoxLayout</value>
+    </param>
+    <param>
+      <key>gui_hint</key>
+      <value>2,0,1,2</value>
+    </param>
+    <param>
+      <key>alias</key>
+      <value></value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(531, 145)</value>
     </param>
     <param>
       <key>_rotation</key>

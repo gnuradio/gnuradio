@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='ASCII'?>
 <flow_graph>
-  <timestamp>Sat Nov 10 15:34:26 2012</timestamp>
+  <timestamp>Sat Jul 12 17:38:15 2014</timestamp>
   <block>
     <key>options</key>
     <param>
@@ -52,8 +52,93 @@
       <value></value>
     </param>
     <param>
+      <key>alias</key>
+      <value></value>
+    </param>
+    <param>
       <key>_coordinate</key>
       <value>(10, 10)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>variable</key>
+    <param>
+      <key>id</key>
+      <value>prefix</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>value</key>
+      <value>"/home/mbant/src/gnuradio/"</value>
+    </param>
+    <param>
+      <key>alias</key>
+      <value></value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(572, 9)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>variable</key>
+    <param>
+      <key>id</key>
+      <value>R</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>value</key>
+      <value>10e3</value>
+    </param>
+    <param>
+      <key>alias</key>
+      <value></value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(482, 17)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>variable</key>
+    <param>
+      <key>id</key>
+      <value>block</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>value</key>
+      <value>1000</value>
+    </param>
+    <param>
+      <key>alias</key>
+      <value></value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(764, 16)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -73,6 +158,10 @@
     <param>
       <key>value</key>
       <value>10**(-snr_db/10)</value>
+    </param>
+    <param>
+      <key>alias</key>
+      <value></value>
     </param>
     <param>
       <key>_coordinate</key>
@@ -114,54 +203,24 @@
       <value>True</value>
     </param>
     <param>
+      <key>alias</key>
+      <value></value>
+    </param>
+    <param>
+      <key>affinity</key>
+      <value></value>
+    </param>
+    <param>
+      <key>minoutbuf</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>maxoutbuf</key>
+      <value>0</value>
+    </param>
+    <param>
       <key>_coordinate</key>
       <value>(21, 170)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>variable</key>
-    <param>
-      <key>id</key>
-      <value>prefix</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>value</key>
-      <value>"/n/harrisville/x/anastas/gnuradio_trunk/"</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(590, 15)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>variable</key>
-    <param>
-      <key>id</key>
-      <value>block</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>value</key>
-      <value>1000</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(764, 16)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -189,6 +248,22 @@
     <param>
       <key>num_inputs</key>
       <value>2</value>
+    </param>
+    <param>
+      <key>alias</key>
+      <value></value>
+    </param>
+    <param>
+      <key>affinity</key>
+      <value></value>
+    </param>
+    <param>
+      <key>minoutbuf</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>maxoutbuf</key>
+      <value>0</value>
     </param>
     <param>
       <key>_coordinate</key>
@@ -222,6 +297,22 @@
       <value>1</value>
     </param>
     <param>
+      <key>alias</key>
+      <value></value>
+    </param>
+    <param>
+      <key>affinity</key>
+      <value></value>
+    </param>
+    <param>
+      <key>minoutbuf</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>maxoutbuf</key>
+      <value>0</value>
+    </param>
+    <param>
       <key>_coordinate</key>
       <value>(228.25, 798.39170361874085)</value>
     </param>
@@ -247,6 +338,22 @@
     <param>
       <key>scale</key>
       <value>1</value>
+    </param>
+    <param>
+      <key>alias</key>
+      <value></value>
+    </param>
+    <param>
+      <key>affinity</key>
+      <value></value>
+    </param>
+    <param>
+      <key>minoutbuf</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>maxoutbuf</key>
+      <value>0</value>
     </param>
     <param>
       <key>_coordinate</key>
@@ -304,31 +411,12 @@
       <value></value>
     </param>
     <param>
+      <key>alias</key>
+      <value></value>
+    </param>
+    <param>
       <key>_coordinate</key>
       <value>(229, 13)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>variable</key>
-    <param>
-      <key>id</key>
-      <value>R</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>value</key>
-      <value>10e3</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(482, 17)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -402,55 +490,16 @@
       <value>Counts</value>
     </param>
     <param>
+      <key>alias</key>
+      <value></value>
+    </param>
+    <param>
+      <key>affinity</key>
+      <value></value>
+    </param>
+    <param>
       <key>_coordinate</key>
       <value>(952, 73)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>trellis_sccc_encoder_xx</key>
-    <param>
-      <key>id</key>
-      <value>trellis_sccc_encoder_xx_0</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>type</key>
-      <value>ss</value>
-    </param>
-    <param>
-      <key>o_fsm_args</key>
-      <value>prefix+"gr-trellis/src/examples/fsm_files/awgn1o2_4.fsm"</value>
-    </param>
-    <param>
-      <key>o_init_state</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>i_fsm_args</key>
-      <value>prefix+"gr-trellis/src/examples/fsm_files/awgn2o3_4.fsm"</value>
-    </param>
-    <param>
-      <key>i_init_state</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>interleaver_args</key>
-      <value>trellis.interleaver(block,666)</value>
-    </param>
-    <param>
-      <key>bl</key>
-      <value>block</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(242, 154)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -536,8 +585,220 @@
       <value></value>
     </param>
     <param>
+      <key>alias</key>
+      <value></value>
+    </param>
+    <param>
+      <key>affinity</key>
+      <value></value>
+    </param>
+    <param>
       <key>_coordinate</key>
       <value>(688, 572)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>blocks_throttle</key>
+    <param>
+      <key>id</key>
+      <value>blocks_throttle_0</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>type</key>
+      <value>short</value>
+    </param>
+    <param>
+      <key>samples_per_second</key>
+      <value>R</value>
+    </param>
+    <param>
+      <key>vlen</key>
+      <value>1</value>
+    </param>
+    <param>
+      <key>ignoretag</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>alias</key>
+      <value></value>
+    </param>
+    <param>
+      <key>affinity</key>
+      <value></value>
+    </param>
+    <param>
+      <key>minoutbuf</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>maxoutbuf</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(514, 105)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>blocks_add_xx</key>
+    <param>
+      <key>id</key>
+      <value>blocks_add_xx_1</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>type</key>
+      <value>complex</value>
+    </param>
+    <param>
+      <key>num_inputs</key>
+      <value>2</value>
+    </param>
+    <param>
+      <key>vlen</key>
+      <value>1</value>
+    </param>
+    <param>
+      <key>alias</key>
+      <value></value>
+    </param>
+    <param>
+      <key>affinity</key>
+      <value></value>
+    </param>
+    <param>
+      <key>minoutbuf</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>maxoutbuf</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(951, 256)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>digital_chunks_to_symbols_xx</key>
+    <param>
+      <key>id</key>
+      <value>digital_chunks_to_symbols_xx_0</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>in_type</key>
+      <value>short</value>
+    </param>
+    <param>
+      <key>out_type</key>
+      <value>complex</value>
+    </param>
+    <param>
+      <key>symbol_table</key>
+      <value>1,0,1j,0,-1j,0,-1,0,0,1,0,1j,0,-1j,0,01</value>
+    </param>
+    <param>
+      <key>dimension</key>
+      <value>2</value>
+    </param>
+    <param>
+      <key>num_ports</key>
+      <value>1</value>
+    </param>
+    <param>
+      <key>alias</key>
+      <value></value>
+    </param>
+    <param>
+      <key>affinity</key>
+      <value></value>
+    </param>
+    <param>
+      <key>minoutbuf</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>maxoutbuf</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(551, 181)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>analog_noise_source_x</key>
+    <param>
+      <key>id</key>
+      <value>analog_noise_source_x_0</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>type</key>
+      <value>complex</value>
+    </param>
+    <param>
+      <key>noise_type</key>
+      <value>analog.GR_GAUSSIAN</value>
+    </param>
+    <param>
+      <key>amp</key>
+      <value>noisevar</value>
+    </param>
+    <param>
+      <key>seed</key>
+      <value>-42</value>
+    </param>
+    <param>
+      <key>alias</key>
+      <value></value>
+    </param>
+    <param>
+      <key>affinity</key>
+      <value></value>
+    </param>
+    <param>
+      <key>minoutbuf</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>maxoutbuf</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(651, 270)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -564,7 +825,7 @@
     </param>
     <param>
       <key>o_fsm_args</key>
-      <value>prefix+"gr-trellis/src/examples/fsm_files/awgn1o2_4.fsm"</value>
+      <value>prefix+"gr-trellis/examples/python/fsm_files/awgn1o2_4.fsm"</value>
     </param>
     <param>
       <key>o_init_state</key>
@@ -576,7 +837,7 @@
     </param>
     <param>
       <key>i_fsm_args</key>
-      <value>prefix+"gr-trellis/src/examples/fsm_files/awgn2o3_4.fsm"</value>
+      <value>prefix+"gr-trellis/examples/python/fsm_files/awgn1o2_4.fsm"</value>
     </param>
     <param>
       <key>i_init_state</key>
@@ -619,19 +880,35 @@
       <value>1.0</value>
     </param>
     <param>
+      <key>alias</key>
+      <value></value>
+    </param>
+    <param>
+      <key>affinity</key>
+      <value></value>
+    </param>
+    <param>
+      <key>minoutbuf</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>maxoutbuf</key>
+      <value>0</value>
+    </param>
+    <param>
       <key>_coordinate</key>
-      <value>(159, 335)</value>
+      <value>(388, 263)</value>
     </param>
     <param>
       <key>_rotation</key>
-      <value>0</value>
+      <value>180</value>
     </param>
   </block>
   <block>
-    <key>blocks_throttle</key>
+    <key>trellis_sccc_encoder_xx</key>
     <param>
       <key>id</key>
-      <value>blocks_throttle_0</value>
+      <value>trellis_sccc_encoder_xx_0</value>
     </param>
     <param>
       <key>_enabled</key>
@@ -639,124 +916,51 @@
     </param>
     <param>
       <key>type</key>
-      <value>short</value>
+      <value>ss</value>
     </param>
     <param>
-      <key>samples_per_second</key>
-      <value>R</value>
+      <key>o_fsm_args</key>
+      <value>prefix+"gr-trellis/examples/python/fsm_files/awgn1o2_4.fsm"</value>
     </param>
     <param>
-      <key>vlen</key>
-      <value>1</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(514, 105)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
+      <key>o_init_state</key>
       <value>0</value>
     </param>
-  </block>
-  <block>
-    <key>blocks_add_xx</key>
     <param>
-      <key>id</key>
-      <value>blocks_add_xx_1</value>
+      <key>i_fsm_args</key>
+      <value>prefix+"gr-trellis/examples/python/fsm_files/awgn1o2_4.fsm"</value>
     </param>
     <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>type</key>
-      <value>complex</value>
-    </param>
-    <param>
-      <key>num_inputs</key>
-      <value>2</value>
-    </param>
-    <param>
-      <key>vlen</key>
-      <value>1</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(951, 256)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
+      <key>i_init_state</key>
       <value>0</value>
     </param>
-  </block>
-  <block>
-    <key>digital_chunks_to_symbols_xx</key>
     <param>
-      <key>id</key>
-      <value>digital_chunks_to_symbols_xx_0</value>
+      <key>interleaver_args</key>
+      <value>trellis.interleaver(block,666)</value>
     </param>
     <param>
-      <key>_enabled</key>
-      <value>True</value>
+      <key>bl</key>
+      <value>block</value>
     </param>
     <param>
-      <key>in_type</key>
-      <value>short</value>
+      <key>alias</key>
+      <value></value>
     </param>
     <param>
-      <key>out_type</key>
-      <value>complex</value>
+      <key>affinity</key>
+      <value></value>
     </param>
     <param>
-      <key>symbol_table</key>
-      <value>1,0,1j,0,-1j,0,-1,0,0,1,0,1j,0,-1j,0,01</value>
-    </param>
-    <param>
-      <key>dimension</key>
-      <value>2</value>
-    </param>
-    <param>
-      <key>num_ports</key>
-      <value>1</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(551, 181)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
+      <key>minoutbuf</key>
       <value>0</value>
     </param>
-  </block>
-  <block>
-    <key>analog_noise_source_x</key>
     <param>
-      <key>id</key>
-      <value>analog_noise_source_x_0</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>type</key>
-      <value>complex</value>
-    </param>
-    <param>
-      <key>noise_type</key>
-      <value>analog.GR_GAUSSIAN</value>
-    </param>
-    <param>
-      <key>amp</key>
-      <value>noisevar</value>
-    </param>
-    <param>
-      <key>seed</key>
-      <value>-42</value>
+      <key>maxoutbuf</key>
+      <value>0</value>
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(651, 270)</value>
+      <value>(207, 175)</value>
     </param>
     <param>
       <key>_rotation</key>
