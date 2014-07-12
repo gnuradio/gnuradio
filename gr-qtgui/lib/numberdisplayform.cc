@@ -457,8 +457,8 @@ NumberDisplayForm::autoScale(bool on)
 
   // Reset the autoscale limits
   for(int i = 0; i < d_nplots; i++) {
-    d_min.push_back(+1e32);
-    d_max.push_back(-1e32);
+    d_min[i] = +1e32;
+    d_max[i] = -1e32;
   }
 }
 
