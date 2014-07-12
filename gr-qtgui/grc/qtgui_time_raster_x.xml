@@ -22,6 +22,7 @@ qtgui.$(type.fcn)(
 	)
 
 self.$(id).set_update_time($update_time)
+self.$(id).set_intensity_range($zmin, $zmax)
 self.$(id).enable_grid($grid)
 
 labels = [$label1, $label2, $label3, $label4, $label5,
@@ -103,6 +104,22 @@ $(gui_hint()($win))</make>
       <name>No</name>
       <key>False</key>
     </option>
+  </param>
+
+  <param>
+    <name>Int. min</name>
+    <key>zmin</key>
+    <value>-1</value>
+    <type>real</type>
+    <hide>part</hide>
+  </param>
+
+  <param>
+    <name>Int. max</name>
+    <key>zmax</key>
+    <value>1</value>
+    <type>real</type>
+    <hide>part</hide>
   </param>
 
   <param>

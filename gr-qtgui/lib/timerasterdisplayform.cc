@@ -91,6 +91,16 @@ TimeRasterDisplayForm::TimeRasterDisplayForm(int nplots,
   connect(rowsmenu, SIGNAL(whichTrigger(QString)),
 	  this, SLOT(setNumRows(QString)));
 
+  PopupMenu *maxintmenu = new PopupMenu("Int. Max", this);
+  d_menu->addAction(maxintmenu);
+  connect(maxintmenu, SIGNAL(whichTrigger(QString)),
+	  this, SLOT(setMaxIntensity(QString)));
+
+  PopupMenu *minintmenu = new PopupMenu("Int. Min", this);
+  d_menu->addAction(minintmenu);
+  connect(minintmenu, SIGNAL(whichTrigger(QString)),
+	  this, SLOT(setMinIntensity(QString)));
+
   getPlot()->setIntensityRange(0, zmax);
 
   Reset();
@@ -155,8 +165,6 @@ TimeRasterDisplayForm::newData(const QEvent *updateEvent)
   const std::vector<double*> dataPoints = event->getPoints();
   const uint64_t numDataPoints = event->getNumDataPoints();
 
-  d_min_val =  10;
-  d_max_val = -10;
   for(size_t i=0; i < dataPoints.size(); i++) {
     double *min_val = std::min_element(&dataPoints[i][0], &dataPoints[i][numDataPoints-1]);
     double *max_val = std::max_element(&dataPoints[i][0], &dataPoints[i][numDataPoints-1]);
@@ -239,18 +247,36 @@ TimeRasterDisplayForm::setAlpha(int which, int alpha)
 
 void
 TimeRasterDisplayForm::setIntensityRange(const double minIntensity,
-					const double maxIntensity)
+                                         const double maxIntensity)
 {
+  // reset max and min values
+  d_min_val =  10;
+  d_max_val = -10;
+
+  d_cur_min_val = minIntensity;
+  d_cur_max_val = maxIntensity;
   getPlot()->setIntensityRange(minIntensity, maxIntensity);
   getPlot()->replot();
 }
 
 void
+TimeRasterDisplayForm::setMaxIntensity(const QString &m)
+{
+  double new_max = m.toDouble();
+  if(new_max > d_cur_min_val)
+    setIntensityRange(d_cur_min_val, new_max);
+}
+
+void
+TimeRasterDisplayForm::setMinIntensity(const QString &m)
+{
+  double new_min = m.toDouble();
+  if(new_min < d_cur_max_val)
+    setIntensityRange(new_min, d_cur_max_val);
+}
+
+void
 TimeRasterDisplayForm::autoScale(bool en)
 {
-  double min_int = d_min_val;
-  double max_int = d_max_val;
-
-  getPlot()->setIntensityRange(min_int, max_int);
-  getPlot()->replot();
+  setIntensityRange(d_min_val, d_max_val);
 }
