@@ -58,12 +58,12 @@ namespace gr {
         gsl_matrix *d_phi_inverse_ptr;
 
         // Read the matrix from a file in alist format
-        void read_matrix_from_file(const std::string *);
+        void read_matrix_from_file(const std::string filename);
         // Set the submatrix variables needed for encoding
         void set_parameters_for_encoding();
         
       public:
-        ldpc_par_chk_mtrx(const std::string &filename, unsigned int gap);
+        ldpc_par_chk_mtrx(const std::string filename, unsigned int gap);
         // Default constructor, should not be used
         ldpc_par_chk_mtrx();
         // Get the codeword length n

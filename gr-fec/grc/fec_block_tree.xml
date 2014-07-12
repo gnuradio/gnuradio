@@ -17,6 +17,7 @@
       <block>variable_dummy_decoder_def</block>
       <block>variable_polar_decoder_sc_def</block>
       <block>variable_polar_decoder_sc_list_def</block>
+      <block>variable_ldpc_bit_flip_decoder_def</block>
     </cat>
     <cat>
       <name>Encoders</name>
@@ -27,6 +28,7 @@
       <block>variable_tpc_encoder_def</block>
       <block>variable_dummy_encoder_def</block>
       <block>variable_polar_encoder_def</block>
+      <block>variable_ldpc_R_U_encoder_def</block>
     </cat>
     <block>fec_extended_encoder</block>
     <block>fec_extended_async_encoder</block>
@@ -46,5 +48,6 @@
     <block>fec_ber_bf</block>
     <block>fec_bercurve_generator</block>
     <block>variable_polar_code_configurator</block>
+    <block>variable_ldpc_par_chk_mtrx_def</block>
   </cat>
 </cat>
