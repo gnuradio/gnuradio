@@ -183,7 +183,8 @@ namespace gr {
         }
 
         // After finding the valid codeword, extract the info word
-        // and assign to output.
+        // and assign to output. This will happen regardless of if a
+        // valid codeword was found.
         unsigned char *out = (unsigned char*) outbuffer;
         for (index = 0; index < d_frame_size; index++) {
           unsigned int i = index + n - d_frame_size;
@@ -191,9 +192,6 @@ namespace gr {
           out[index] = value;
         }
 
-        if (!found_word) {
-          throw std::runtime_error("ldpc_bit_flip_decoder: valid codeword not found.");
-        }
       } /* ldpc_bit_flip_decoder_impl::generic_work() */     
     } /* namespace code */
   } /* namespace fec */
