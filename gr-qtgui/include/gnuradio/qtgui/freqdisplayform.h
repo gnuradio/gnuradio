@@ -66,6 +66,8 @@ public slots:
   void setFrequencyRange(const double centerfreq,
 			 const double bandwidth);
   void setYaxis(double min, double max);
+  void setYMax(const QString &m);
+  void setYMin(const QString &m);
   void autoScale(bool en);
   void clearMaxHold();
   void clearMinHold();

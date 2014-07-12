@@ -55,6 +55,16 @@ FreqDisplayForm::FreqDisplayForm(int nplots, QWidget* parent)
   connect(d_winmenu, SIGNAL(whichTrigger(gr::filter::firdes::win_type)),
 	  this, SLOT(setFFTWindowType(const gr::filter::firdes::win_type)));
 
+  PopupMenu *maxymenu = new PopupMenu("Y Max", this);
+  d_menu->addAction(maxymenu);
+  connect(maxymenu, SIGNAL(whichTrigger(QString)),
+	  this, SLOT(setYMax(QString)));
+
+  PopupMenu *minymenu = new PopupMenu("Y Min", this);
+  d_menu->addAction(minymenu);
+  connect(minymenu, SIGNAL(whichTrigger(QString)),
+	  this, SLOT(setYMin(QString)));
+
   d_clearmax_act = new QAction("Clear Max", this);
   d_menu->addAction(d_clearmax_act);
   connect(d_clearmax_act, SIGNAL(triggered()),
@@ -176,6 +186,24 @@ void
 FreqDisplayForm::setYaxis(double min, double max)
 {
   getPlot()->setYaxis(min, max);
+}
+
+void
+FreqDisplayForm::setYMax(const QString &m)
+{
+  double new_max = m.toDouble();
+  double cur_ymin = getPlot()->getYMin();
+  if(new_max > cur_ymin)
+    setYaxis(cur_ymin, new_max);
+}
+
+void
+FreqDisplayForm::setYMin(const QString &m)
+{
+  double new_min = m.toDouble();
+  double cur_ymax = getPlot()->getYMax();
+  if(new_min < cur_ymax)
+    setYaxis(new_min, cur_ymax);
 }
 
 void
