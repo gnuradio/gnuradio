@@ -196,7 +196,25 @@ namespace gr {
     void
     number_sink_impl::set_max(int which, float max)
     {
-      return d_main_gui->setScaleMax(which, max);
+      d_main_gui->setScaleMax(which, max);
+    }
+
+    void
+    number_sink_impl::set_title(const std::string &title)
+    {
+      d_main_gui->setTitle(title);
+    }
+
+    void
+    number_sink_impl::set_unit(int which, const std::string &unit)
+    {
+      d_main_gui->setUnit(which, unit);
+    }
+
+    void
+    number_sink_impl::set_factor(int which, float factor)
+    {
+      d_main_gui->setFactor(which, factor);
     }
 
     float
@@ -239,6 +257,24 @@ namespace gr {
     number_sink_impl::max(int which) const
     {
       return d_main_gui->scaleMax(which);
+    }
+
+    std::string
+    number_sink_impl::title() const
+    {
+      return d_main_gui->title();
+    }
+
+    std::string
+    number_sink_impl::unit(int which) const
+    {
+      return d_main_gui->unit(which);
+    }
+
+    float
+    number_sink_impl::factor(int which) const
+    {
+      return d_main_gui->factor(which);
     }
 
     void

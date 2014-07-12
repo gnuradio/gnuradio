@@ -32,11 +32,15 @@ NumberDisplayForm::NumberDisplayForm(int nplots, gr::qtgui::graph_t type,
   : QWidget(parent)
 {
   d_nplots = nplots;
+  d_graph_type = type;
+  d_title = new QLabel(QString(""));
   d_layout = new QGridLayout(this);
   for(int i = 0; i < d_nplots; i++) {
     d_min.push_back(+1e32);
     d_max.push_back(-1e32);
     d_label.push_back(new QLabel(QString("Data %1").arg(i)));
+    d_unit.push_back("");
+    d_factor.push_back(1);
     d_text_box.push_back(new QLabel(QString("0")));
 
     d_indicator.push_back(new QwtThermo());
@@ -104,6 +108,11 @@ NumberDisplayForm::NumberDisplayForm(int nplots, gr::qtgui::graph_t type,
     connect(d_color_menu[i], SIGNAL(whichTrigger(int, const QColor&, const QColor&)),
             this, SLOT(setColor(int, const QColor&, const QColor&)));
     d_label_menu[i]->addMenu(d_color_menu[i]);
+
+    d_factor_act.push_back(new ItemFloatAct(i, "Factor", this));
+    connect(d_factor_act[i], SIGNAL(whichTrigger(int, float)),
+            this, SLOT(setFactor(int, float)));
+    d_label_menu[i]->addAction(d_factor_act[i]);
 
     d_menu->addMenu(d_label_menu[i]);
   }
@@ -230,10 +239,12 @@ NumberDisplayForm::newData(const QEvent* updateEvent)
     const std::vector<float> samples = tevent->getSamples();
 
     for(int i = 0; i < d_nplots; i++) {
-      d_text_box[i]->setText(QString("%1").arg(samples[i], 4, ' '));
-      d_indicator[i]->setValue(samples[i]);
-      d_min[i] = std::min(d_min[i], samples[i]);
-      d_max[i] = std::max(d_max[i], samples[i]);
+      float f = d_factor[i]*samples[i];
+      d_text_box[i]->setText(QString("%1 %2").arg(f, 4, ' ').\
+                             arg(QString(d_unit[i].c_str())));
+      d_indicator[i]->setValue(f);
+      d_min[i] = std::min(d_min[i], f);
+      d_max[i] = std::max(d_max[i], f);
 
       if(d_autoscale_state) {
         d_indicator[i]->setScale(d_min[i], d_max[i]);
@@ -254,12 +265,23 @@ NumberDisplayForm::customEvent(QEvent * e)
 void
 NumberDisplayForm::setGraphType(const gr::qtgui::graph_t type)
 {
+  int off = 0;
+
+  // Remove all widgets from the layout
+  QLayoutItem *item;
+  while((item = d_layout->takeAt(0)) != NULL) {
+    d_layout->removeItem(item);
+  }
+
+  // If we have a title, add it at the 0,0 grid point (top left)
+  // set off = 1 to offset the rest of the widgets
+  if(d_title->text().length() > 0) {
+    d_layout->addWidget(d_title, 0, 0);
+    off = 1;
+  }
+
   d_graph_type = type;
   for(int i = 0; i < d_nplots; i++) {
-    d_layout->removeWidget(d_indicator[i]);
-    d_layout->removeWidget(d_label[i]);
-    d_layout->removeWidget(d_text_box[i]);
-
     switch(d_graph_type) {
     case(gr::qtgui::NUM_GRAPH_HORIZ):
 #if QWT_VERSION < 0x060100
@@ -268,9 +290,9 @@ NumberDisplayForm::setGraphType(const gr::qtgui::graph_t type)
       d_indicator[i]->setOrientation(Qt::Horizontal);
 #endif /* if QWT_VERSION < 0x060100 */
       d_indicator[i]->setVisible(true);
-      d_layout->addWidget(d_label[i], 2*i, 0);
-      d_layout->addWidget(d_text_box[i], 2*i, 1);
-      d_layout->addWidget(d_indicator[i], 2*i+1, 1);
+      d_layout->addWidget(d_label[i], 2*i+off, 0);
+      d_layout->addWidget(d_text_box[i], 2*i+off, 1);
+      d_layout->addWidget(d_indicator[i], 2*i+1+off, 1);
       break;
     case(gr::qtgui::NUM_GRAPH_VERT):
 #if QWT_VERSION < 0x060100
@@ -279,15 +301,15 @@ NumberDisplayForm::setGraphType(const gr::qtgui::graph_t type)
       d_indicator[i]->setOrientation(Qt::Vertical);
 #endif /* if QWT_VERSION < 0x060100 */
       d_indicator[i]->setVisible(true);
-      d_layout->addWidget(d_label[i], 0, i);
-      d_layout->addWidget(d_text_box[i], 1, i);
-      d_layout->addWidget(d_indicator[i], 2, i);
+      d_layout->addWidget(d_label[i], 0+off, i);
+      d_layout->addWidget(d_text_box[i], 1+off, i);
+      d_layout->addWidget(d_indicator[i], 2+off, i);
       break;
     case(gr::qtgui::NUM_GRAPH_NONE):
     default:
       d_indicator[i]->setVisible(false);
-      d_layout->addWidget(d_label[i], 0, i);
-      d_layout->addWidget(d_text_box[i], 1, i);
+      d_layout->addWidget(d_label[i], 0+off, i);
+      d_layout->addWidget(d_text_box[i], 1+off, i);
       break;
     }
   }
@@ -438,4 +460,56 @@ NumberDisplayForm::autoScale(bool on)
     d_min.push_back(+1e32);
     d_max.push_back(-1e32);
   }
+}
+
+std::string
+NumberDisplayForm::title() const
+{
+  return d_title->text().toStdString();
+}
+
+void
+NumberDisplayForm::setTitle(const std::string &title)
+{
+  std::string t = title;
+  if(t.length() > 0)
+    t = "<b><FONT SIZE=4>" + title + "</b>";
+  d_title->setText(QString(t.c_str()));
+  setGraphType(d_graph_type);
+}
+
+std::string
+NumberDisplayForm::unit(int which) const
+{
+  if(static_cast<size_t>(which) >= d_unit.size())
+    throw std::runtime_error("NumberDisplayForm::units: invalid 'which'.\n");
+
+  return d_unit[which];
+}
+
+void
+NumberDisplayForm::setUnit(int which, const std::string &unit)
+{
+  if(static_cast<size_t>(which) >= d_unit.size())
+    throw std::runtime_error("NumberDisplayForm::setUnits: invalid 'which'.\n");
+
+  d_unit[which] = unit;
+}
+
+float
+NumberDisplayForm::factor(int which) const
+{
+  if(static_cast<size_t>(which) >= d_factor.size())
+    throw std::runtime_error("NumberDisplayForm::factor: invalid 'which'.\n");
+
+  return d_factor[which];
+}
+
+void
+NumberDisplayForm::setFactor(int which, float factor)
+{
+  if(static_cast<size_t>(which) >= d_factor.size())
+    throw std::runtime_error("NumberDisplayForm::setFactor: invalid 'which'.\n");
+
+  d_factor[which] = factor;
 }
