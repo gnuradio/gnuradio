@@ -105,7 +105,9 @@ class FrequencyHopperSrc(gr.hier_block2):
         gain_tag.key = pmt.string_to_symbol('tx_command')
         gain_tag.value = pmt.cons(
                 pmt.intern("gain"),
-                pmt.to_pmt((0, tx_gain))
+                # These are both valid:
+                #pmt.from_double(tx_gain)
+                pmt.cons(pmt.to_pmt(0), pmt.to_pmt(tx_gain))
         )
         tag_list = [gain_tag,]
         for i in xrange(n_bursts):
@@ -114,7 +116,7 @@ class FrequencyHopperSrc(gr.hier_block2):
             if i > 0 and post_tuning:
                 tune_tag.offset -= 1 # Move it to last sample of previous burst
             tune_tag.key = pmt.string_to_symbol('tx_freq')
-            tune_tag.value = pmt.to_pmt((0, self.hop_sequence[i]))
+            tune_tag.value = pmt.to_pmt(self.hop_sequence[i])
             tag_list.append(tune_tag)
             length_tag = gr.tag_t()
             length_tag.offset = i * burst_length

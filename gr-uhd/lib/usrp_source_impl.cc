@@ -20,6 +20,7 @@
  * Boston, MA 02110-1301, USA.
  */
 
+#include "usrp_common.h"
 #include "usrp_source_impl.h"
 #include "gr_uhd_common.h"
 #include <gnuradio/io_signature.h>
@@ -66,20 +67,59 @@ namespace gr {
       sync_block("gr uhd usrp source",
                     io_signature::make(0, 0, 0),
                     args_to_io_sig(stream_args)),
-      _stream_args(stream_args),
-      _nchan(stream_args.channels.size()),
-      _stream_now(_nchan == 1),
-      _tag_now(false),
-      _start_time_set(false)
+      usrp_common_impl(device_addr, stream_args, ""),
+      _tag_now(false)
     {
-      if(stream_args.cpu_format == "fc32")
-        _type = boost::make_shared< ::uhd::io_type_t >(::uhd::io_type_t::COMPLEX_FLOAT32);
-      if(stream_args.cpu_format == "sc16")
-        _type = boost::make_shared< ::uhd::io_type_t >(::uhd::io_type_t::COMPLEX_INT16);
       std::stringstream str;
       str << name() << unique_id();
       _id = pmt::string_to_symbol(str.str());
-      _dev = ::uhd::usrp::multi_usrp::make(device_addr);
+
+      message_port_register_in(pmt::mp("command"));
+      set_msg_handler(
+          pmt::mp("command"),
+          boost::bind(&usrp_source_impl::msg_handler_command, this, _1)
+      );
+
+      _check_sensors_locked();
+    }
+
+    bool usrp_source_impl::_check_sensors_locked()
+    {
+      bool clocks_locked = true;
+
+      // 1) Check ref lock for all mboards
+      for (size_t mboard_index = 0; mboard_index < _dev->get_num_mboards(); mboard_index++) {
+        std::string sensor_name = "ref_locked";
+        if (_dev->get_clock_source(mboard_index) == "internal") {
+          continue;
+        }
+        else if (_dev->get_clock_source(mboard_index) == "mimo") {
+          sensor_name = "mimo_locked";
+        }
+        if (not _wait_for_locked_sensor(
+                get_mboard_sensor_names(mboard_index),
+                sensor_name,
+                boost::bind(&usrp_source_impl::get_mboard_sensor, this, _1, mboard_index)
+            )) {
+          GR_LOG_WARN(d_logger, boost::format("Sensor '%s' failed to lock within timeout on motherboard %d.") % sensor_name % mboard_index);
+          clocks_locked = false;
+        }
+      }
+
+      // 2) Check LO for all channels
+      for (size_t i = 0; i < _nchan; i++) {
+        size_t chan_index = _stream_args.channels[i];
+        if (not _wait_for_locked_sensor(
+                get_sensor_names(chan_index),
+                "lo_locked",
+                boost::bind(&usrp_source_impl::get_sensor, this, _1, chan_index)
+            )) {
+          GR_LOG_WARN(d_logger, boost::format("Sensor 'lo_locked' failed to lock within timeout on channel %d.") % chan_index);
+          clocks_locked = false;
+        }
+      }
+
+      return clocks_locked;
     }
 
     usrp_source_impl::~usrp_source_impl()
@@ -668,6 +708,38 @@ namespace gr {
       }
 
       return num_samps;
+    }
+
+
+    /************** External interfaces (RPC + Message passing) ********************/
+    void usrp_source_impl::msg_handler_command(pmt::pmt_t msg)
+    {
+      std::string command;
+      pmt::pmt_t cmd_value;
+      int chan = -1;
+      if (not _unpack_chan_command(command, cmd_value, chan, msg)) {
+	GR_LOG_ALERT(d_logger, "Error while unpacking command PMT.");
+      }
+      if (command == "freq") {
+	double freq = pmt::to_double(cmd_value);
+	for (size_t i = 0; i < _nchan; i++) {
+	  if (chan == -1 or chan == int(i)) {
+	    set_center_freq(freq, i);
+	  }
+	}
+	// TODO: implement
+      //} else if (command == "lo_offset") {
+	//;
+      } else if (command == "gain") {
+	double gain = pmt::to_double(cmd_value);
+	for (size_t i = 0; i < _nchan; i++) {
+	  if (chan == -1 or chan == int(i)) {
+	    set_gain(gain, i);
+	  }
+	}
+      } else {
+	GR_LOG_ALERT(d_logger, boost::format("Received unknown command: %s") % command);
+      }
     }
 
     void
