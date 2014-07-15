@@ -72,6 +72,8 @@ public slots:
 
   void setIntensityRange(const double minIntensity,
 			 const double maxIntensity);
+  void setMaxIntensity(const QString &m);
+  void setMinIntensity(const QString &m);
 
   void setColorMap(int which,
 		   const int newType,
@@ -86,8 +88,8 @@ private slots:
   void newData(const QEvent *updateEvent);
 
 private:
-  double d_min_val;
-  double d_max_val;
+  double d_min_val, d_cur_min_val;
+  double d_max_val, d_cur_max_val;
 };
 
 #endif /* TIMERASTER_DISPLAY_FORM_H */

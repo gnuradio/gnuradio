@@ -58,6 +58,8 @@ public slots:
   void setSampleRate(const double samprate);
   void setSampleRate(const QString &samprate);
   void setYaxis(double min, double max);
+  void setYLabel(const std::string &label,
+                 const std::string &unit="");
   void setNPoints(const int);
   void setStem(bool en);
   void autoScale(bool en);

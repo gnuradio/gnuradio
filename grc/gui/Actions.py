@@ -242,6 +242,10 @@ TOGGLE_HIDE_DISABLED_BLOCKS = ToggleAction(
     stock_id=gtk.STOCK_MISSING_IMAGE,
     keypresses=(gtk.keysyms.d, gtk.gdk.CONTROL_MASK),
 )
+TOGGLE_AUTO_HIDE_PORT_LABELS = ToggleAction(
+    label='Auto-hide port _labels',
+    tooltip='Automatically hide port labels',
+)
 BLOCK_CREATE_HIER = Action(
     label='C_reate Hier',
     tooltip='Create hier block from selected blocks',

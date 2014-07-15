@@ -75,6 +75,8 @@ public slots:
 
   void setIntensityRange(const double minIntensity,
 			 const double maxIntensity);
+  void setMaxIntensity(const QString &m);
+  void setMinIntensity(const QString &m);
 
   void setAlpha(int which, int alpha);
 
@@ -101,8 +103,8 @@ private:
   bool d_clicked;
   double d_clicked_freq;
 
-  double d_min_val;
-  double d_max_val;
+  double d_min_val, d_cur_min_val;
+  double d_max_val, d_cur_max_val;
 
   FFTSizeMenu *d_sizemenu;
   FFTAverageMenu *d_avgmenu;

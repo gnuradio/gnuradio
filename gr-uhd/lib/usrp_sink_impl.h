@@ -22,6 +22,7 @@
 
 #include <gnuradio/uhd/usrp_sink.h>
 #include <uhd/convert.hpp>
+#include "usrp_common.h"
 
 static const pmt::pmt_t SOB_KEY = pmt::string_to_symbol("tx_sob");
 static const pmt::pmt_t EOB_KEY = pmt::string_to_symbol("tx_eob");
@@ -51,7 +52,7 @@ namespace gr {
     /***********************************************************************
      * UHD Multi USRP Sink Impl
      **********************************************************************/
-    class usrp_sink_impl : public usrp_sink
+    class usrp_sink_impl : public usrp_sink, public usrp_common_impl
     {
     public:
        usrp_sink_impl(const ::uhd::device_addr_t &device_addr,
@@ -122,34 +123,32 @@ namespace gr {
       inline void tag_work(int &ninput_items);
 
     private:
+      /*! \brief Run through all 'lock' sensors and make sure they are actually locked.
+       */
+      bool _check_sensors_locked();
+
       //! Like set_center_freq(), but uses _curr_freq and _curr_lo_offset
       ::uhd::tune_result_t _set_center_freq_from_internals(size_t chan);
       //! Calls _set_center_freq_from_internals() on all channels
       void _set_center_freq_from_internals_allchans();
-      //! Receives commands and handles them
-      void msg_handler_command(pmt::pmt_t msg);
-      //! Receives queries and posts a response
-      void msg_handler_query(pmt::pmt_t msg);
 
-      ::uhd::usrp::multi_usrp::sptr _dev;
-      const ::uhd::stream_args_t _stream_args;
-      boost::shared_ptr< ::uhd::io_type_t > _type;
 #ifdef GR_UHD_USE_STREAM_API
       ::uhd::tx_streamer::sptr _tx_stream;
 #endif
-      size_t _nchan;
-      bool _stream_now;
       ::uhd::tx_metadata_t _metadata;
       double _sample_rate;
 
-      ::uhd::time_spec_t _start_time;
-      bool _start_time_set;
 
       //stream tags related stuff
       std::vector<tag_t> _tags;
       const pmt::pmt_t _length_tag_key;
       long _nitems_to_send;
 
+      /****** Command interface related **********/
+      //! Stores a list of commands for later execution
+      std::vector<pmt::pmt_t> _pending_cmds;
+      //! Receives commands and handles them
+      void msg_handler_command(pmt::pmt_t msg);
       //! Stores the last value we told the USRP to tune to for every channel
       // (this is not necessarily the true value the USRP is currently tuned to!).
       // We could theoretically ask the device, but during streaming, we want to minimize
@@ -159,8 +158,7 @@ namespace gr {
       std::vector<double> _curr_lo_offset;
       //! Stores the last gain value we told the USRP to have for every channel.
       std::vector<double> _curr_gain;
-      std::vector<bool> _chans_to_tune;
-      bool _call_tune;
+      boost::dynamic_bitset<> _chans_to_tune;
     };
 
   } /* namespace uhd */

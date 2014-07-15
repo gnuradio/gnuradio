@@ -85,6 +85,9 @@ namespace gr {
       virtual void set_label(int which, const std::string &label) = 0;
       virtual void set_min(int which, float min) = 0;
       virtual void set_max(int which, float max) = 0;
+      virtual void set_title(const std::string &title) = 0;
+      virtual void set_unit(int which, const std::string &unit) = 0;
+      virtual void set_factor(int which, float factor) = 0;
 
       virtual float average() const = 0;
       virtual graph_t graph_type() const = 0;
@@ -93,6 +96,9 @@ namespace gr {
       virtual std::string label(int which) const = 0;
       virtual float min(int which) const = 0;
       virtual float max(int which) const = 0;
+      virtual std::string title() const = 0;
+      virtual std::string unit(int which) const = 0;
+      virtual float factor(int which) const = 0;
 
       virtual void enable_menu(bool en=true) = 0;
       virtual void enable_autoscale(bool en=true) = 0;

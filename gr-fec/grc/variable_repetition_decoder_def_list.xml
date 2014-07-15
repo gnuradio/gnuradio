@@ -15,7 +15,9 @@ self.$(id) = $(id) = fec.repetition_decoder.make($framebits, $rep, $prob)
 self.$(id) = $(id) = map( (lambda a: fec.repetition_decoder.make($framebits, $rep, $prob)), range(0,$dim1) ) #slurp
 #else
 self.$(id) = $(id) = map( (lambda b: map( ( lambda a: fec.repetition_decoder.make($framebits, $rep, $prob)), range(0,$dim2) ) ), range(0,$dim1)) #slurp
-#end if</var_make>
+#end if
+    </var_make>
+    <var_value>fec.repetition_decoder.make($framebits, $rep, $prob)</var_value>
     <make></make>
 
     <param>

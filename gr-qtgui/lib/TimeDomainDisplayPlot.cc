@@ -66,7 +66,7 @@ public:
 #else /* QWT_VERSION < 0x060100 */
   TimeDomainDisplayZoomer(QWidget* canvas, const unsigned int timePrecision)
 #endif /* QWT_VERSION < 0x060100 */
-    : QwtPlotZoomer(canvas),TimePrecisionClass(timePrecision)
+  : QwtPlotZoomer(canvas),TimePrecisionClass(timePrecision),d_yUnitType("V")
   {
     setTrackerMode(QwtPicker::AlwaysOn);
   }
@@ -85,23 +85,30 @@ public:
     d_unitType = type;
   }
 
+  void setYUnitType(const std::string &type)
+  {
+    d_yUnitType = type;
+  }
+
 protected:
   using QwtPlotZoomer::trackerText;
   virtual QwtText trackerText( const QPoint& p ) const
   {
     QwtText t;
     QwtDoublePoint dp = QwtPlotZoomer::invTransform(p);
-    if((dp.y() > 0.0001) && (dp.y() < 10000)) {
-      t.setText(QString("%1 %2, %3 V").
+    if((fabs(dp.y()) > 0.0001) && (fabs(dp.y()) < 10000)) {
+      t.setText(QString("%1 %2, %3 %4").
 		arg(dp.x(), 0, 'f', getTimePrecision()).
 		arg(d_unitType.c_str()).
-		arg(dp.y(), 0, 'f', 4));
+		arg(dp.y(), 0, 'f', 4).
+		arg(d_yUnitType.c_str()));
     }
     else {
-      t.setText(QString("%1 %2, %3 V").
+      t.setText(QString("%1 %2, %3 %4").
 		arg(dp.x(), 0, 'f', getTimePrecision()).
 		arg(d_unitType.c_str()).
-		arg(dp.y(), 0, 'e', 4));
+		arg(dp.y(), 0, 'e', 4).
+		arg(d_yUnitType.c_str()));
     }
 
     return t;
@@ -109,6 +116,7 @@ protected:
 
 private:
   std::string d_unitType;
+  std::string d_yUnitType;
 };
 
 
@@ -548,6 +556,17 @@ TimeDomainDisplayPlot::enableTagMarker(int which, bool en)
     d_tag_markers_en[which] = en;
   else
     throw std::runtime_error("TimeDomainDisplayPlot: enabled tag marker does not exist.\n");
+}
+
+void
+TimeDomainDisplayPlot::setYLabel(const std::string &label,
+                                 const std::string &unit)
+{
+  std::string l = label;
+  if(unit.length() > 0)
+    l += " (" + unit + ")";
+  setAxisTitle(QwtPlot::yLeft, QString(l.c_str()));
+  ((TimeDomainDisplayZoomer*)d_zoomer)->setYUnitType(unit);
 }
 
 #endif /* TIME_DOMAIN_DISPLAY_PLOT_C */

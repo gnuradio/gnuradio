@@ -1542,4 +1542,68 @@ private:
 /********************************************************************/
 
 
+class ItemFloatAct: public QAction
+{
+  Q_OBJECT
+
+public:
+  ItemFloatAct(int which, QString title, QWidget *parent)
+    : QAction(title, parent), d_which(which)
+  {
+    d_diag = new QDialog(parent);
+    d_diag->setWindowTitle(title);
+    d_diag->setModal(true);
+
+    d_text = new QLineEdit();
+
+    QGridLayout *layout = new QGridLayout(d_diag);
+    QPushButton *btn_ok = new QPushButton(tr("OK"));
+    QPushButton *btn_cancel = new QPushButton(tr("Cancel"));
+
+    layout->addWidget(d_text, 0, 0, 1, 2);
+    layout->addWidget(btn_ok, 1, 0);
+    layout->addWidget(btn_cancel, 1, 1);
+
+    connect(btn_ok, SIGNAL(clicked()), this, SLOT(getText()));
+    connect(btn_cancel, SIGNAL(clicked()), d_diag, SLOT(close()));
+
+    connect(this, SIGNAL(triggered()), this, SLOT(getTextDiag()));
+  }
+
+  ~ItemFloatAct()
+  {}
+
+  void setText(float f)
+  {
+    d_text->setText(QString("%1").arg(f));
+  }
+
+
+signals:
+  void whichTrigger(int which, float data);
+
+public slots:
+  void getTextDiag()
+  {
+    d_diag->show();
+  }
+
+private slots:
+  void getText()
+  {
+    emit whichTrigger(d_which, d_text->text().toFloat());
+    d_diag->accept();
+  }
+
+private:
+  int d_which;
+  QDialog *d_diag;
+  QLineEdit *d_text;
+};
+
+
+
+/********************************************************************/
+
+
 #endif /* FORM_MENUS_H */

@@ -117,6 +117,7 @@ namespace gr {
       int nsamps() const;
       void enable_menu(bool en);
       void enable_autoscale(bool en);
+      void enable_grid(bool en);
       void reset();
 
       int work(int noutput_items,

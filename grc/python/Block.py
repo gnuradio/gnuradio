@@ -19,6 +19,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 
 from .. base.Block import Block as _Block
 from .. gui.Block import Block as _GUIBlock
+from . FlowGraph import _variable_matcher
 import extract_docs
 
 class Block(_Block, _GUIBlock):
@@ -90,6 +91,14 @@ class Block(_Block, _GUIBlock):
                 if not self.get_parent().evaluate(check_res):
                     self.add_error_message('Check "%s" failed.'%check)
             except: self.add_error_message('Check "%s" did not evaluate.'%check)
+        # for variables check the value (only if var_value is used
+        if _variable_matcher.match(self.get_key()) and self._var_value != '$value':
+            value = self._var_value
+            try:
+                value = self.get_var_value()
+                self.get_parent().evaluate(value)
+            except Exception as err:
+                self.add_error_message('Value "%s" cannot be evaluated:\n%s' % (value, err))
 
     def rewrite(self):
         """
@@ -169,6 +178,7 @@ class Block(_Block, _GUIBlock):
 
     def get_make(self): return self.resolve_dependencies(self._make)
     def get_var_make(self): return self.resolve_dependencies(self._var_make)
+    def get_var_value(self): return self.resolve_dependencies(self._var_value)
 
     def get_callbacks(self):
         """

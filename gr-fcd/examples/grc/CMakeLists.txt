@@ -19,7 +19,7 @@
 
 INSTALL(FILES
   fcd_apt_rx.grc
-  fcd_fft_wx.grc
+  fcd_fft.grc
   fcd_nfm_rx.grc
   DESTINATION ${GR_PKG_FCD_EXAMPLES_DIR}
   COMPONENT "fcd_examples"
