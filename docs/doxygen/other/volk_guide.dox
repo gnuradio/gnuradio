@@ -159,8 +159,12 @@ cmake -DCMAKE_CXX_FLAGS:STRING="-mcpu=cortex-a8 -mfpu=neon -mfloat-abi=softfp -g
 */
 
 
-
 /*! \page volk_guide Instructions for using VOLK in GNU Radio
+
+Note: Many blocks have already been converted to use Volk in their calls, so
+they can also serve as examples. See the
+gr::blocks::complex_to_<type>.h files for examples of various blocks
+that make use of Volk.
 
 \section volk_intro Introduction
 
