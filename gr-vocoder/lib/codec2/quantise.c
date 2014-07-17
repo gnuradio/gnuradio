@@ -153,7 +153,7 @@ void encode_lspds_scalar(
     float dlsp_[LPC_MAX];
     float wt[LPC_MAX];
     const float *cb;
-    float se;
+    float se = 0.0f;
 
     assert(order == LPC_ORD);
 
@@ -245,7 +245,7 @@ void lspvq_quantise(
     int   i,k,m,ncb, nlsp;
     float  wt[LPC_ORD], lsp_hz[LPC_ORD];
     const float *cb;
-    float se;
+    float se = 0.0f;
     int   index;
 
     for(i=0; i<LPC_ORD; i++) {
@@ -301,7 +301,7 @@ void lspjnd_quantise(float lsps[], float lsps_[], int order)
     int   i,k,m;
     float  wt[LPC_ORD], lsps_hz[LPC_ORD];
     const float *cb;
-    float se = 0.0;
+    float se = 0.0f;
     int   index;
 
     for(i=0; i<LPC_ORD; i++) {
@@ -369,7 +369,7 @@ void lspdt_quantise(float lsps[], float lsps_[], float lsps__prev[], int mode)
     int k,m;
     int   index;
     const float *cb;
-    float se = 0.0;
+    float se = 0.0f;
 #endif // TRY_LSPDT_VQ
 
     //compute_weights(lsps, wt, LPC_ORD);
@@ -1225,7 +1225,7 @@ void encode_lsps_scalar(int indexes[], float lsp[], int order)
     float  wt[1];
     float  lsp_hz[LPC_MAX];
     const float * cb;
-    float se;
+    float se = 0.0f;
 
     /* convert from radians to Hz so we can use human readable
        frequencies */
@@ -1298,7 +1298,7 @@ void encode_lsps_diff_freq_vq(int indexes[], float lsp[], int order)
     float dlsp_[LPC_MAX];
     float wt[LPC_MAX];
     const float * cb;
-    float se;
+    float se = 0.0f;
 
     for(i=0; i<LPC_ORD; i++) {
 	wt[i] = 1.0;
@@ -1404,7 +1404,7 @@ void encode_lsps_diff_time(int indexes[],
     float  lsps_dt[LPC_ORD];
     float  wt[LPC_MAX];
     const  float * cb;
-    float  se;
+    float  se = 0.0f;
 
     /* Determine difference in time and convert from radians to Hz so
        we can use human readable frequencies */
