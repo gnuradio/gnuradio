@@ -1,11 +1,11 @@
 <?xml version='1.0' encoding='ASCII'?>
 <flow_graph>
-  <timestamp>Sat Jul 12 16:15:51 2014</timestamp>
+  <timestamp>Mon Jul 14 14:53:06 2014</timestamp>
   <block>
     <key>options</key>
     <param>
       <key>id</key>
-      <value>variable_config_demo</value>
+      <value>fcd_fft</value>
     </param>
     <param>
       <key>_enabled</key>
@@ -13,15 +13,15 @@
     </param>
     <param>
       <key>title</key>
-      <value>Variable Config Block Demonstration</value>
+      <value>Funcube Dongle FFT scope</value>
     </param>
     <param>
       <key>author</key>
-      <value>Example</value>
+      <value>Alexandru Csete OZ9AEC</value>
     </param>
     <param>
       <key>description</key>
-      <value>Save/Load freq from a config file.</value>
+      <value></value>
     </param>
     <param>
       <key>window_size</key>
@@ -57,7 +57,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(-1, 2)</value>
+      <value>(10, 10)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -76,7 +76,7 @@
     </param>
     <param>
       <key>value</key>
-      <value>32000</value>
+      <value>96000</value>
     </param>
     <param>
       <key>alias</key>
@@ -84,7 +84,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(-1, 125)</value>
+      <value>(201, 11)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -92,89 +92,188 @@
     </param>
   </block>
   <block>
-    <key>analog_sig_source_x</key>
+    <key>variable_qtgui_entry</key>
     <param>
       <key>id</key>
-      <value>analog_sig_source_x_0</value>
+      <value>fcd_freq</value>
     </param>
     <param>
       <key>_enabled</key>
       <value>True</value>
     </param>
     <param>
+      <key>label</key>
+      <value>FCD Freq</value>
+    </param>
+    <param>
       <key>type</key>
-      <value>complex</value>
+      <value>real</value>
     </param>
     <param>
-      <key>samp_rate</key>
-      <value>samp_rate</value>
+      <key>value</key>
+      <value>145.5e6</value>
     </param>
     <param>
-      <key>waveform</key>
-      <value>analog.GR_COS_WAVE</value>
+      <key>gui_hint</key>
+      <value>1,0,1,1</value>
+    </param>
+    <param>
+      <key>alias</key>
+      <value></value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(299, 12)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>variable_qtgui_chooser</key>
+    <param>
+      <key>id</key>
+      <value>fcd_lna_gain</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>label</key>
+      <value>LNA Gain (dB)</value>
+    </param>
+    <param>
+      <key>type</key>
+      <value>real</value>
+    </param>
+    <param>
+      <key>num_opts</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>value</key>
+      <value>20</value>
+    </param>
+    <param>
+      <key>options</key>
+      <value>[30.0, 25.0, 20.0, 17.5, 15.0, 12.5, 10.0, 7.5, 5.0, 2.5, 0.0, -2.5, -5.0]</value>
+    </param>
+    <param>
+      <key>labels</key>
+      <value>[]</value>
+    </param>
+    <param>
+      <key>option0</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>label0</key>
+      <value></value>
+    </param>
+    <param>
+      <key>option1</key>
+      <value>1</value>
+    </param>
+    <param>
+      <key>label1</key>
+      <value></value>
+    </param>
+    <param>
+      <key>option2</key>
+      <value>2</value>
+    </param>
+    <param>
+      <key>label2</key>
+      <value></value>
+    </param>
+    <param>
+      <key>option3</key>
+      <value>3</value>
+    </param>
+    <param>
+      <key>label3</key>
+      <value></value>
+    </param>
+    <param>
+      <key>option4</key>
+      <value>4</value>
+    </param>
+    <param>
+      <key>label4</key>
+      <value></value>
+    </param>
+    <param>
+      <key>widget</key>
+      <value>combo_box</value>
+    </param>
+    <param>
+      <key>orient</key>
+      <value>Qt.QVBoxLayout</value>
+    </param>
+    <param>
+      <key>gui_hint</key>
+      <value>2,0,1,1</value>
+    </param>
+    <param>
+      <key>alias</key>
+      <value></value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(439, 11)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>fcd_source_c</key>
+    <param>
+      <key>id</key>
+      <value>fcd_source_c_1</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>device_name</key>
+      <value>hw:0</value>
     </param>
     <param>
       <key>freq</key>
-      <value>freq</value>
+      <value>fcd_freq</value>
     </param>
     <param>
-      <key>amp</key>
-      <value>1</value>
+      <key>lna</key>
+      <value>fcd_lna_gain</value>
     </param>
     <param>
-      <key>offset</key>
-      <value>0</value>
+      <key>mixer</key>
+      <value>+12</value>
     </param>
     <param>
-      <key>alias</key>
-      <value></value>
+      <key>ppm</key>
+      <value>-120</value>
     </param>
     <param>
-      <key>affinity</key>
-      <value></value>
+      <key>dci</key>
+      <value>0.0</value>
     </param>
     <param>
-      <key>minoutbuf</key>
-      <value>0</value>
+      <key>dcq</key>
+      <value>0.0</value>
     </param>
     <param>
-      <key>maxoutbuf</key>
-      <value>0</value>
+      <key>iq_phase</key>
+      <value>0.0</value>
     </param>
     <param>
-      <key>_coordinate</key>
-      <value>(173, 201)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>blocks_throttle</key>
-    <param>
-      <key>id</key>
-      <value>blocks_throttle_0</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>type</key>
-      <value>complex</value>
-    </param>
-    <param>
-      <key>samples_per_second</key>
-      <value>samp_rate</value>
-    </param>
-    <param>
-      <key>vlen</key>
-      <value>1</value>
-    </param>
-    <param>
-      <key>ignoretag</key>
-      <value>True</value>
+      <key>iq_gain</key>
+      <value>1.0</value>
     </param>
     <param>
       <key>alias</key>
@@ -194,7 +293,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(392, 233)</value>
+      <value>(13, 134)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -217,11 +316,11 @@
     </param>
     <param>
       <key>name</key>
-      <value>QT GUI Plot</value>
+      <value>""</value>
     </param>
     <param>
       <key>fftsize</key>
-      <value>1024</value>
+      <value>512</value>
     </param>
     <param>
       <key>wintype</key>
@@ -229,11 +328,15 @@
     </param>
     <param>
       <key>fc</key>
-      <value>0</value>
+      <value>fcd_freq</value>
     </param>
     <param>
       <key>bw</key>
       <value>samp_rate</value>
+    </param>
+    <param>
+      <key>grid</key>
+      <value>False</value>
     </param>
     <param>
       <key>autoscale</key>
@@ -257,11 +360,15 @@
     </param>
     <param>
       <key>update_time</key>
-      <value>0.10</value>
+      <value>0.05</value>
     </param>
     <param>
       <key>gui_hint</key>
-      <value></value>
+      <value>0,0,1,2</value>
+    </param>
+    <param>
+      <key>showports</key>
+      <value>True</value>
     </param>
     <param>
       <key>label1</key>
@@ -432,114 +539,16 @@
       <value></value>
     </param>
     <param>
-      <key>_coordinate</key>
-      <value>(643, 221)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
+      <key>minoutbuf</key>
       <value>0</value>
     </param>
-  </block>
-  <block>
-    <key>variable_qtgui_range</key>
     <param>
-      <key>id</key>
-      <value>freq</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>label</key>
-      <value>Frequency (Hz)</value>
-    </param>
-    <param>
-      <key>value</key>
-      <value>1e3</value>
-    </param>
-    <param>
-      <key>start</key>
-      <value>-samp_rate/2</value>
-    </param>
-    <param>
-      <key>stop</key>
-      <value>samp_rate/2</value>
-    </param>
-    <param>
-      <key>step</key>
-      <value>1</value>
-    </param>
-    <param>
-      <key>widget</key>
-      <value>counter_slider</value>
-    </param>
-    <param>
-      <key>orient</key>
-      <value>Qt.Horizontal</value>
-    </param>
-    <param>
-      <key>min_len</key>
-      <value>200</value>
-    </param>
-    <param>
-      <key>gui_hint</key>
-      <value></value>
-    </param>
-    <param>
-      <key>alias</key>
-      <value></value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(339, 9)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
+      <key>maxoutbuf</key>
       <value>0</value>
     </param>
-  </block>
-  <block>
-    <key>variable_config</key>
-    <param>
-      <key>id</key>
-      <value>freq_init</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>value</key>
-      <value>1000</value>
-    </param>
-    <param>
-      <key>type</key>
-      <value>real</value>
-    </param>
-    <param>
-      <key>config_file</key>
-      <value>/home/mbant/.gnuradio/config.conf</value>
-    </param>
-    <param>
-      <key>section</key>
-      <value>main</value>
-    </param>
-    <param>
-      <key>option</key>
-      <value>freq</value>
-    </param>
-    <param>
-      <key>writeback</key>
-      <value>freq</value>
-    </param>
-    <param>
-      <key>alias</key>
-      <value></value>
-    </param>
     <param>
       <key>_coordinate</key>
-      <value>(168, 0)</value>
+      <value>(282, 182)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -547,13 +556,7 @@
     </param>
   </block>
   <connection>
-    <source_block_id>analog_sig_source_x_0</source_block_id>
-    <sink_block_id>blocks_throttle_0</sink_block_id>
-    <source_key>0</source_key>
-    <sink_key>0</sink_key>
-  </connection>
-  <connection>
-    <source_block_id>blocks_throttle_0</source_block_id>
+    <source_block_id>fcd_source_c_1</source_block_id>
     <sink_block_id>qtgui_freq_sink_x_0</sink_block_id>
     <source_key>0</source_key>
     <sink_key>0</sink_key>

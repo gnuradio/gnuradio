@@ -30,6 +30,11 @@
 #include <gnuradio/rpcmanager.h>
 #include <gnuradio/rpcserver_selector.h>
 #include <gnuradio/rpcserver_base.h>
+
+// Fixes circular dependency issue before including block_registry.h
+class rpcbasic_base;
+typedef boost::shared_ptr<rpcbasic_base> rpcbasic_sptr;
+
 #include <gnuradio/block_registry.h>
 
 
@@ -583,9 +588,6 @@ public:
   rpcbasic_base() {}
   virtual ~rpcbasic_base() {};
 };
-
-
-typedef boost::shared_ptr<rpcbasic_base> rpcbasic_sptr;
 
 
 

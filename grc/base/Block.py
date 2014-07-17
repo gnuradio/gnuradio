@@ -77,6 +77,7 @@ class Block(Element):
         self._block_wrapper_path = n.find('block_wrapper_path')
         self._bussify_sink = n.find('bus_sink')
         self._bussify_source = n.find('bus_source')
+        self._var_value = n.find('var_value') or '$value'
 
         # get list of param tabs
         n_tabs = n.find('param_tab_order') or None
@@ -275,8 +276,10 @@ class Block(Element):
         tmpl = str(tmpl)
         if '$' not in tmpl: return tmpl
         n = dict((p.get_key(), TemplateArg(p)) for p in self.get_params())
-        try: return str(Template(tmpl, n))
-        except Exception, e: return "-------->\n%s: %s\n<--------"%(e, tmpl)
+        try:
+            return str(Template(tmpl, n))
+        except Exception as err:
+            return "Template error: %s\n    %s" % (tmpl, err)
 
     ##############################################
     # Controller Modify

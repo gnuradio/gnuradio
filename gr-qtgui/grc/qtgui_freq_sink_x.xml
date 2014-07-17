@@ -23,6 +23,7 @@ qtgui.$(type.fcn)(
 self.$(id).set_update_time($update_time)
 self.$(id).set_y_axis($ymin, $ymax)
 self.$(id).enable_autoscale($autoscale)
+self.$(id).enable_grid($grid)
 self.$(id).set_fft_average($average)
 
 labels = [$label1, $label2, $label3, $label4, $label5,
@@ -72,59 +73,77 @@ $(gui_hint()($win))</make>
     <hide>#if len($name()) > 0 then 'none' else 'part'#</hide>
   </param>
 
-	<param>
-		<name>FFT Size</name>
-		<key>fftsize</key>
-		<value>1024</value>
-		<type>int</type>
-	</param>
-	<param>
-		<name>Window Type</name>
-		<key>wintype</key>
-		<value>firdes.WIN_BLACKMAN_hARRIS</value>
-		<type>enum</type>
-		<hide>part</hide>
-		<option>
-			<name>Blackman-harris</name>
-			<key>firdes.WIN_BLACKMAN_hARRIS</key>
-		</option>
-		<option>
-			<name>Hamming</name>
-			<key>firdes.WIN_HAMMING</key>
-		</option>
-		<option>
-			<name>Hann</name>
-			<key>firdes.WIN_HANN</key>
-		</option>
-		<option>
-			<name>Blackman</name>
-			<key>firdes.WIN_BLACKMAN</key>
-		</option>
-		<option>
-			<name>Rectangular</name>
-			<key>firdes.WIN_RECTANGULAR</key>
-		</option>
-		<option>
-			<name>Kaiser</name>
-			<key>firdes.WIN_KAISER</key>
-		</option>
-		<option>
-			<name>Flat-top</name>
-			<key>firdes.WIN_FLATTOP</key>
-		</option>
-	</param>
-	<param>
-		<name>Center Frequency (Hz)</name>
-		<key>fc</key>
-		<value>0</value>
-		<type>real</type>
-	</param>
-	<param>
-		<name>Bandwidth (Hz)</name>
-		<key>bw</key>
-		<value>samp_rate</value>
-		<type>real</type>
-	</param>
+  <param>
+    <name>FFT Size</name>
+    <key>fftsize</key>
+    <value>1024</value>
+    <type>int</type>
+  </param>
+
+  <param>
+    <name>Window Type</name>
+    <key>wintype</key>
+    <value>firdes.WIN_BLACKMAN_hARRIS</value>
+    <type>enum</type>
+    <hide>part</hide>
+    <option>
+      <name>Blackman-harris</name>
+      <key>firdes.WIN_BLACKMAN_hARRIS</key>
+    </option>
+    <option>
+      <name>Hamming</name>
+      <key>firdes.WIN_HAMMING</key>
+    </option>
+    <option>
+      <name>Hann</name>
+      <key>firdes.WIN_HANN</key>
+    </option>
+    <option>
+      <name>Blackman</name>
+      <key>firdes.WIN_BLACKMAN</key>
+    </option>
+    <option>
+      <name>Rectangular</name>
+      <key>firdes.WIN_RECTANGULAR</key>
+    </option>
+    <option>
+      <name>Kaiser</name>
+      <key>firdes.WIN_KAISER</key>
+    </option>
+    <option>
+      <name>Flat-top</name>
+      <key>firdes.WIN_FLATTOP</key>
+    </option>
+  </param>
+
+  <param>
+    <name>Center Frequency (Hz)</name>
+    <key>fc</key>
+    <value>0</value>
+    <type>real</type>
+  </param>
+  <param>
+    <name>Bandwidth (Hz)</name>
+    <key>bw</key>
+    <value>samp_rate</value>
+    <type>real</type>
+  </param>
+
+  <param>
+    <name>Grid</name>
+    <key>grid</key>
+    <value>False</value>
+    <type>enum</type>
+    <hide>part</hide>
+    <option>
+      <name>Yes</name>
+      <key>True</key>
+    </option>
+    <option>
+      <name>No</name>
+      <key>False</key>
+    </option>
+  </param>
 
   <param>
     <name>Autoscale</name>
@@ -202,6 +221,21 @@ $(gui_hint()($win))</make>
     <hide>part</hide>
   </param>
 
+  <param>
+    <name>Show Msg Ports</name>
+    <key>showports</key>
+    <value>True</value>
+    <type>enum</type>
+    <hide>part</hide>
+    <option>
+      <name>Yes</name>
+      <key>False</key>
+    </option>
+    <option>
+      <name>No</name>
+      <key>True</key>
+    </option>
+  </param>
 
   <param>
     <name>Line 1 Label</name>
@@ -558,12 +592,14 @@ $(gui_hint()($win))</make>
     <name>freq</name>
     <type>message</type>
     <optional>1</optional>
+    <hide>$showports</hide>
   </sink>
 
   <source>
     <name>freq</name>
     <type>message</type>
     <optional>1</optional>
+    <hide>$showports</hide>
   </source>
 
   <doc>

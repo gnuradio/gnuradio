@@ -51,6 +51,9 @@ class NumberDisplayForm : public QWidget
   float updateTime() const;
   int scaleMin(int which);
   int scaleMax(int which);
+  std::string title() const;
+  std::string unit(int which) const;
+  float factor(int which) const;
 
 public slots:
   void mousePressEvent(QMouseEvent * e);
@@ -71,6 +74,9 @@ public slots:
   void setScaleMin(int which, int min);
   void setScaleMax(int which, int max);
   void autoScale(bool on);
+  void setTitle(const std::string &title);
+  void setUnit(int which, const std::string &unit);
+  void setFactor(int which, float factor);
 
 private slots:
   void newData(const QEvent*);
@@ -93,6 +99,7 @@ private:
   QAction *d_stop_act;
   QList<QMenu*> d_label_menu;
   std::vector<LineTitleAction*> d_label_act;
+  std::vector<ItemFloatAct*> d_factor_act;
   FFTAverageMenu *d_avg_menu;
   NumberLayoutMenu *d_layout_menu;
   std::vector<NumberColorMapMenu*> d_color_menu;
@@ -100,6 +107,10 @@ private:
   QAction *d_autoscale_act;
   PopupMenu *d_update_time_menu;
   QAction *d_save_act;
+
+  QLabel *d_title;
+  std::vector<std::string> d_unit;
+  std::vector<float> d_factor;
 };
 
 #endif /* NUMBER_DISPLAY_FORM_H */

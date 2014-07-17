@@ -262,6 +262,18 @@ FrequencyDisplayPlot::setYaxis(double min, double max)
     d_zoomer->setZoomBase();
 }
 
+double
+FrequencyDisplayPlot::getYMin() const
+{
+  return d_ymin;
+}
+
+double
+FrequencyDisplayPlot::getYMax() const
+{
+  return d_ymax;
+}
+
 void
 FrequencyDisplayPlot::setFrequencyRange(const double centerfreq,
 					const double bandwidth,
@@ -438,7 +450,9 @@ void
 FrequencyDisplayPlot::_autoScale(double bottom, double top)
 {
   // Auto scale the y-axis with a margin of 10 dB on either side.
-  setYaxis(bottom - 10, top + 10);
+  d_ymin = bottom-10;
+  d_ymax = top+10;
+  setYaxis(d_ymin, d_ymax);
 }
 
 void

@@ -18,11 +18,16 @@ qtgui.number_sink(
 	$nconnections
 )
 self.$(id).set_update_time($update_time)
+self.$(id).set_title($name)
 
 labels = [$label1, $label2, $label3, $label4, $label5,
           $label6, $label7, $label8, $label9, $label10]
+units = [$unit1, $unit2, $unit3, $unit4, $unit5,
+          $unit6, $unit7, $unit8, $unit9, $unit10]
 colors = [$color1, $color2, $color3, $color4, $color5,
           $color6, $color7, $color8, $color9, $color10]
+factor = [$factor1, $factor2, $factor3, $factor4, $factor5,
+          $factor6, $factor7, $factor8, $factor9, $factor10]
 for i in xrange($nconnections):
     self.$(id).set_min(i, $min)
     self.$(id).set_max(i, $max)
@@ -31,6 +36,8 @@ for i in xrange($nconnections):
         self.$(id).set_label(i, "Data {0}".format(i))
     else:
         self.$(id).set_label(i, labels[i])
+    self.$(id).set_unit(i, units[i])
+    self.$(id).set_factor(i, factor[i])
 
 self.$(id).enable_autoscale($autoscale)
 self._$(id)_win = sip.wrapinstance(self.$(id).pyqwidget(), Qt.QWidget)
@@ -41,6 +48,14 @@ $(gui_hint()($win))</make>
     <tab>General</tab>
     <tab>Config</tab>
   </param_tab_order>
+
+  <param>
+    <name>Name</name>
+    <key>name</key>
+    <value>""</value>
+    <type>string</type>
+    <hide>#if len($name()) > 0 then 'none' else 'part'#</hide>
+  </param>
 
   <param>
     <name>Input Type</name>
@@ -162,6 +177,14 @@ $(gui_hint()($win))</make>
   </param>
 
   <param>
+    <name>Line 1 Unit</name>
+    <key>unit1</key>
+    <type>string</type>
+    <hide>#if int($nconnections()) >= 1 then 'part' else 'all'#</hide>
+    <tab>Config</tab>
+  </param>
+
+  <param>
     <name>Line 1 Color</name>
     <key>color1</key>
     <type>enum</type>
@@ -189,6 +212,15 @@ $(gui_hint()($win))</make>
     <tab>Config</tab>
   </param>
 
+  <param>
+    <name>Line 1 Factor</name>
+    <key>factor1</key>
+    <value>1</value>
+    <type>float</type>
+    <hide>#if int($nconnections()) >= 1 then 'part' else 'all'#</hide>
+    <tab>Config</tab>
+  </param>
+
 
   <param>
     <base_key>label1</base_key>
@@ -198,9 +230,23 @@ $(gui_hint()($win))</make>
   </param>
 
   <param>
+    <base_key>unit1</base_key>
+    <name>Line 2 Unit</name>
+    <key>unit2</key>
+    <hide>#if int($nconnections()) >= 2 then 'part' else 'all'#</hide>
+  </param>
+
+  <param>
     <base_key>color1</base_key>
     <name>Line 2 Color</name>
     <key>color2</key>
+    <hide>#if int($nconnections()) >= 2 then 'part' else 'all'#</hide>
+  </param>
+
+  <param>
+    <base_key>factor1</base_key>
+    <name>Line 2 Factor</name>
+    <key>factor2</key>
     <hide>#if int($nconnections()) >= 2 then 'part' else 'all'#</hide>
   </param>
 
@@ -213,9 +259,23 @@ $(gui_hint()($win))</make>
   </param>
 
   <param>
+    <base_key>unit1</base_key>
+    <name>Line 3 Unit</name>
+    <key>unit3</key>
+    <hide>#if int($nconnections()) >= 3 then 'part' else 'all'#</hide>
+  </param>
+
+  <param>
     <base_key>color1</base_key>
     <name>Line 3 Color</name>
     <key>color3</key>
+    <hide>#if int($nconnections()) >= 3 then 'part' else 'all'#</hide>
+  </param>
+
+  <param>
+    <base_key>factor1</base_key>
+    <name>Line 3 Factor</name>
+    <key>factor3</key>
     <hide>#if int($nconnections()) >= 3 then 'part' else 'all'#</hide>
   </param>
 
@@ -228,9 +288,23 @@ $(gui_hint()($win))</make>
   </param>
 
   <param>
+    <base_key>unit1</base_key>
+    <name>Line 4 Unit</name>
+    <key>unit4</key>
+    <hide>#if int($nconnections()) >= 4 then 'part' else 'all'#</hide>
+  </param>
+
+  <param>
     <base_key>color1</base_key>
     <name>Line 4 Color</name>
     <key>color4</key>
+    <hide>#if int($nconnections()) >= 4 then 'part' else 'all'#</hide>
+  </param>
+
+  <param>
+    <base_key>factor1</base_key>
+    <name>Line 4 Factor</name>
+    <key>factor4</key>
     <hide>#if int($nconnections()) >= 4 then 'part' else 'all'#</hide>
   </param>
 
@@ -243,9 +317,23 @@ $(gui_hint()($win))</make>
   </param>
 
   <param>
+    <base_key>unit1</base_key>
+    <name>Line 5 Unit</name>
+    <key>unit5</key>
+    <hide>#if int($nconnections()) >= 5 then 'part' else 'all'#</hide>
+  </param>
+
+  <param>
     <base_key>color1</base_key>
     <name>Line 5 Color</name>
     <key>color5</key>
+    <hide>#if int($nconnections()) >= 5 then 'part' else 'all'#</hide>
+  </param>
+
+  <param>
+    <base_key>factor1</base_key>
+    <name>Line 5 Factor</name>
+    <key>factor5</key>
     <hide>#if int($nconnections()) >= 5 then 'part' else 'all'#</hide>
   </param>
 
@@ -258,9 +346,23 @@ $(gui_hint()($win))</make>
   </param>
 
   <param>
+    <base_key>unit1</base_key>
+    <name>Line 6 Unit</name>
+    <key>unit6</key>
+    <hide>#if int($nconnections()) >= 6 then 'part' else 'all'#</hide>
+  </param>
+
+  <param>
     <base_key>color1</base_key>
     <name>Line 6 Color</name>
     <key>color6</key>
+    <hide>#if int($nconnections()) >= 6 then 'part' else 'all'#</hide>
+  </param>
+
+  <param>
+    <base_key>factor1</base_key>
+    <name>Line 6 Factor</name>
+    <key>factor6</key>
     <hide>#if int($nconnections()) >= 6 then 'part' else 'all'#</hide>
   </param>
 
@@ -273,9 +375,23 @@ $(gui_hint()($win))</make>
   </param>
 
   <param>
+    <base_key>unit1</base_key>
+    <name>Line 7 Unit</name>
+    <key>unit7</key>
+    <hide>#if int($nconnections()) >= 7 then 'part' else 'all'#</hide>
+  </param>
+
+  <param>
     <base_key>color1</base_key>
     <name>Line 7 Color</name>
     <key>color7</key>
+    <hide>#if int($nconnections()) >= 7 then 'part' else 'all'#</hide>
+  </param>
+
+  <param>
+    <base_key>factor1</base_key>
+    <name>Line 7 Factor</name>
+    <key>factor7</key>
     <hide>#if int($nconnections()) >= 7 then 'part' else 'all'#</hide>
   </param>
 
@@ -288,9 +404,23 @@ $(gui_hint()($win))</make>
   </param>
 
   <param>
+    <base_key>unit1</base_key>
+    <name>Line 8 Unit</name>
+    <key>unit8</key>
+    <hide>#if int($nconnections()) >= 8 then 'part' else 'all'#</hide>
+  </param>
+
+  <param>
     <base_key>color1</base_key>
     <name>Line 8 Color</name>
     <key>color8</key>
+    <hide>#if int($nconnections()) >= 8 then 'part' else 'all'#</hide>
+  </param>
+
+  <param>
+    <base_key>factor1</base_key>
+    <name>Line 8 Factor</name>
+    <key>factor8</key>
     <hide>#if int($nconnections()) >= 8 then 'part' else 'all'#</hide>
   </param>
 
@@ -303,9 +433,23 @@ $(gui_hint()($win))</make>
   </param>
 
   <param>
+    <base_key>unit1</base_key>
+    <name>Line 9 Unit</name>
+    <key>unit9</key>
+    <hide>#if int($nconnections()) >= 9 then 'part' else 'all'#</hide>
+  </param>
+
+  <param>
     <base_key>color1</base_key>
     <name>Line 9 Color</name>
     <key>color9</key>
+    <hide>#if int($nconnections()) >= 9 then 'part' else 'all'#</hide>
+  </param>
+
+  <param>
+    <base_key>factor1</base_key>
+    <name>Line 9 Factor</name>
+    <key>factor9</key>
     <hide>#if int($nconnections()) >= 9 then 'part' else 'all'#</hide>
   </param>
 
@@ -318,9 +462,23 @@ $(gui_hint()($win))</make>
   </param>
 
   <param>
+    <base_key>unit1</base_key>
+    <name>Line 10 Unit</name>
+    <key>unit10</key>
+    <hide>#if int($nconnections()) >= 10 then 'part' else 'all'#</hide>
+  </param>
+
+  <param>
     <base_key>color1</base_key>
     <name>Line 10 Color</name>
     <key>color10</key>
+    <hide>#if int($nconnections()) >= 10 then 'part' else 'all'#</hide>
+  </param>
+
+  <param>
+    <base_key>factor1</base_key>
+    <name>Line 10 Factor</name>
+    <key>factor10</key>
     <hide>#if int($nconnections()) >= 10 then 'part' else 'all'#</hide>
   </param>
 

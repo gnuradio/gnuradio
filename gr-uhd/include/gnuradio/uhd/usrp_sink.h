@@ -62,18 +62,17 @@ namespace gr {
 
       /*!
        * \brief DEPRECATED Make a new USRP sink block using the deprecated io_type_t.
+       * \ingroup uhd_blk
        *
        * This function will be removed in the future. Please use the other make function,
-       * gr::uhd::make(const ::uhd::device_addr_t, const ::uhd::stream_args_t, const std::string).
-       *
-       * \ingroup uhd_blk
+       * gr::uhd::usrp_sink::make(const ::uhd::device_addr_t, const ::uhd::stream_args_t, const std::string).
        */
       static sptr make(const ::uhd::device_addr_t &device_addr,
 		       const ::uhd::io_type_t &io_type,
 		       size_t num_channels);
 
       /*!
-       * \brief Make a new USRP sink block.
+       * \brief Make a new USRP sink block (usually a radio transmitter).
        *
        * The USRP sink block reads a stream and transmits the samples.
        * The sink block also provides API calls for transmitter settings.
@@ -86,60 +85,55 @@ namespace gr {
        *  - pmt::string_to_symbol("tx_time")
        *  - pmt::string_to_symbol("tx_freq")
        *  - pmt::string_to_symbol("tx_command")
-       *  - pmt::string_to_symbol(length_tag_name)
+       *  - pmt::string_to_symbol(tsb_tag_name)
        *
        * Any other tag will be ignored.
        *
        * The sob and eob (start and end of burst) tag values are pmt booleans.
        * When present, burst tags should be set to true (pmt::PMT_T).
        *
-       * If length_tag_name is not an empty string, all "tx_sob" and "tx_eob"
+       * If `tsb_tag_name` is not an empty string, all "tx_sob" and "tx_eob"
        * tags will be ignored, and the input is assumed to a tagged stream,
        * as described in \ref page_tagged_stream_blocks.
-       * The length tag value should be a PMT long specifying the number
-       * of samples contained in the corresponding tagged stream.
        *
        * If sob/eob tags or length tags are used, this block understands that
        * the data is bursty, and will configure the USRP to make sure there's
-       * no underruns etc.
+       * no underruns after transmitting the final sample of a burst.
        *
        * The timestamp tag value is a PMT tuple of the following:
-       * (uint64 seconds, and double fractional seconds).
+       * (uint64 seconds, double fractional seconds).
        *
-       * The tx_freq tag has to be a double, and will issue a tune command to the USRP
+       * The tx_freq tag has to be a double or a pair of form (channel, frequency),
+       * with frequency being a double and channel being an integer.
+       * This tag will trigger a tune command to the USRP
        * to the given frequency, if possible. Note that oscillators need some time
        * to stabilize after this! Don't expect clean data to be sent immediately after this command.
+       * If channel is omitted, and only a double is given, it will set this frequency to all
+       * channels.
        *
        * The command tag can carry a PMT command. See the following section.
        *
-       * \section uhd_commands Command interface
+       * \section uhd_tx_commands Command interface
        *
        * There are two ways of passing commands to this block:
-       * 1) tx_command tag. The command is attached to a sample, and will executed
+       * 1. tx_command tag. The command is attached to a sample, and will executed
        *    before the sample is transmitted, and after the previous sample.
-       * 2) The 'command' message port. The command is executed asynchronously,
+       * 2. The 'command' message port. The command is executed asynchronously,
        *    as soon as possible.
        *
-       * In both cases, the payload of the command is a PMT pair, with the first
-       * item ('car') being the command name, and second ('cdr') the command value.
+       * In both cases, the payload of the command is a PMT command, as described
+       * in Section \ref uhd_command_syntax.
        *
-       * Command name | Command value
-       * -------------|--------------------------------------------------------------------------
-       * `freq`       | Tuple: (chan, new_freq). Requests a tune to `new_freq` on channel `chan`.
-       * `lo_offset`  | Tuple: (chan, lo_offset). Adds a LO offset on channel `chan`.
-       * `gain`       | Tuple: (chan, gain). Requests a gain change to `gain` on channel `chan`.
-       *
-       * See the UHD manual for more detailed documentation:
-       * http://code.ettus.com/redmine/ettus/projects/uhd/wiki
+       * For a more general description of the gr-uhd components, see \ref page_uhd.
        *
        * \param device_addr the address to identify the hardware
        * \param stream_args the IO format and channel specification
-       * \param length_tag_name the name of the tag identifying tagged stream length
+       * \param tsb_tag_name the name of the tag identifying tagged stream length
        * \return a new USRP sink block object
        */
       static sptr make(const ::uhd::device_addr_t &device_addr,
                        const ::uhd::stream_args_t &stream_args,
-                       const std::string &length_tag_name = "");
+                       const std::string &tsb_tag_name = "");
 
       /*!
        * Set the start time for outgoing samples.

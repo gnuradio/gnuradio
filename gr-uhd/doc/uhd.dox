@@ -1,4 +1,3 @@
-// vim: set ft=doxygen:
 /*! \page page_uhd UHD Interface
 
 \section Introduction
@@ -22,15 +21,61 @@ by using:
 \endcode
 
 
-\section External Documentation
+\section uhd_external_docs External Documentation
 
-Ettus Research keeps the comprehensive documentation to the underlying UHD driver, which can be found:
+Ettus Research maintains the comprehensive documentation to the underlying UHD driver, which can be found at:
 
-    http://files.ettus.com/uhd_docs/manual/html/
+http://files.ettus.com/uhd_docs/manual/html/
 
 The UHD Doxygen page is located at:
 
-    http://files.ettus.com/uhd_docs/doxygen/html/index.html
+http://files.ettus.com/uhd_docs/doxygen/html/index.html
+
+
+\section uhd_command_syntax Command Syntax
+
+The UHD sink and source can be controlled by a message port. These message ports
+take commands, which are PMTs formatted as such:
+
+    (command, value, [channel])
+
+A command PMT is either a pair or a tuple. If it's a tuple, it must have either 2 or 3 elements.
+Any other type of PMT will throw an error.
+
+The `command` part is a string, which defines the command. `value` is a PMT whose format depends
+on the command issued. Finally, `channel` is an integer PMT value that specifies which channel
+this command shall be specified on. If this value is omitted, then it either applies this command
+to all channels or channel zero, depending on which command is used.
+
+Example:
+\code{.cpp}
+pmt::pmt_t command = pmt::cons( // We make a pair, but pmt::make_tuple() is also valid!
+    pmt::mp("freq"), // Use the 'freq' command, which sets the frequency
+    pmt::mp(1.1e9) // Set the frequency to 1.1 GHz
+);
+\endcode
+
+This PMT would set the frequency to 1.1 GHz on all channels. We make use of the pmt::mp() function
+which automatically sets the PMT types. Assume we only want to set the frequency on channel 1
+(i.e. the second channel). In this case, we must construct a tuple:
+\code{.cpp}
+pmt::pmt_t command = pmt::make_tuple(
+    pmt::mp("freq"), // Use the 'freq' command, which sets the frequency
+    pmt::mp(1.1e9) // Set the frequency to 1.1 GHz
+    pmt::mp(1) // Select channel 1
+);
+\endcode
+
+
+\subsection uhd_command_syntax_cmds Common commands
+
+The following commands are understood by both UHD Source and Sink:
+
+Command name | Value Type | Description
+-------------|------------|-------------------------------------------------------------
+`freq`       | double     | Sets the Tx or Rx frequency. Defaults to all channels.
+`lo_offset`  | double     | Sets an LO offset. Defaults to all channels.
+`gain`       | double     | Sets the Tx or Rx gain (in dB). Defaults to all channels.
 
 
 \section Configuring a UHD object
@@ -100,3 +145,4 @@ resampler to take care of the difference.
 \endcode
 
 */
+// vim: set ft=doxygen:
