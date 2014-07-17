@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='ASCII'?>
 <flow_graph>
-  <timestamp>Sat Jul 12 17:37:36 2014</timestamp>
+  <timestamp>Thu Jul 17 14:55:30 2014</timestamp>
   <block>
     <key>options</key>
     <param>
@@ -13,7 +13,7 @@
     </param>
     <param>
       <key>title</key>
-      <value>Serially Concatenated Convolutional Code</value>
+      <value>Parallel Concatenated Convolutional Code</value>
     </param>
     <param>
       <key>author</key>
@@ -29,7 +29,7 @@
     </param>
     <param>
       <key>generate_options</key>
-      <value>wx_gui</value>
+      <value>qt_gui</value>
     </param>
     <param>
       <key>category</key>
@@ -68,7 +68,7 @@
     <key>variable</key>
     <param>
       <key>id</key>
-      <value>prefix</value>
+      <value>GNURADIO_SRC_DIR</value>
     </param>
     <param>
       <key>_enabled</key>
@@ -76,15 +76,11 @@
     </param>
     <param>
       <key>value</key>
-      <value>"/home/mbant/src/gnuradio/"</value>
-    </param>
-    <param>
-      <key>alias</key>
-      <value></value>
+      <value>"/home/jank/src/gnuradio/"</value>
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(590, 15)</value>
+      <value>(656, 10)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -103,42 +99,11 @@
     </param>
     <param>
       <key>value</key>
-      <value>100e3</value>
-    </param>
-    <param>
-      <key>alias</key>
-      <value></value>
+      <value>GNURADIO_SRC_DIR</value>
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(482, 17)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>variable</key>
-    <param>
-      <key>id</key>
-      <value>block</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>value</key>
-      <value>1000</value>
-    </param>
-    <param>
-      <key>alias</key>
-      <value></value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(764, 16)</value>
+      <value>(434, 10)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -165,7 +130,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(389, 15)</value>
+      <value>(279, 10)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -173,231 +138,49 @@
     </param>
   </block>
   <block>
-    <key>variable_slider</key>
+    <key>variable</key>
     <param>
       <key>id</key>
-      <value>snr_db</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>label</key>
-      <value>SNR (dB)</value>
-    </param>
-    <param>
-      <key>value</key>
-      <value>5</value>
-    </param>
-    <param>
-      <key>min</key>
-      <value>-10</value>
-    </param>
-    <param>
-      <key>max</key>
-      <value>10</value>
-    </param>
-    <param>
-      <key>num_steps</key>
-      <value>100</value>
-    </param>
-    <param>
-      <key>style</key>
-      <value>wx.SL_HORIZONTAL</value>
-    </param>
-    <param>
-      <key>converver</key>
-      <value>float_converter</value>
-    </param>
-    <param>
-      <key>grid_pos</key>
-      <value></value>
-    </param>
-    <param>
-      <key>notebook</key>
-      <value></value>
-    </param>
-    <param>
-      <key>alias</key>
-      <value></value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(229, 13)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>blocks_multiply_xx</key>
-    <param>
-      <key>id</key>
-      <value>blocks_multiply_xx_2_0</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>type</key>
-      <value>short</value>
-    </param>
-    <param>
-      <key>num_inputs</key>
-      <value>2</value>
-    </param>
-    <param>
-      <key>vlen</key>
-      <value>1</value>
-    </param>
-    <param>
-      <key>alias</key>
-      <value></value>
-    </param>
-    <param>
-      <key>affinity</key>
-      <value></value>
-    </param>
-    <param>
-      <key>minoutbuf</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>maxoutbuf</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(392, 591)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>blocks_short_to_float</key>
-    <param>
-      <key>id</key>
-      <value>blocks_short_to_float_1_0</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>vlen</key>
-      <value>1</value>
-    </param>
-    <param>
-      <key>scale</key>
-      <value>1</value>
-    </param>
-    <param>
-      <key>alias</key>
-      <value></value>
-    </param>
-    <param>
-      <key>affinity</key>
-      <value></value>
-    </param>
-    <param>
-      <key>minoutbuf</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>maxoutbuf</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(535, 609)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>wxgui_scopesink2</key>
-    <param>
-      <key>id</key>
-      <value>wxgui_scopesink2_0</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>False</value>
-    </param>
-    <param>
-      <key>type</key>
-      <value>float</value>
-    </param>
-    <param>
-      <key>title</key>
-      <value>Scope Plot</value>
-    </param>
-    <param>
-      <key>samp_rate</key>
       <value>R</value>
     </param>
     <param>
-      <key>v_scale</key>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>value</key>
+      <value>100e3</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(358, 10)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
       <value>0</value>
     </param>
+  </block>
+  <block>
+    <key>variable</key>
     <param>
-      <key>v_offset</key>
-      <value>0</value>
+      <key>id</key>
+      <value>block</value>
     </param>
     <param>
-      <key>t_scale</key>
-      <value>0</value>
+      <key>_enabled</key>
+      <value>True</value>
     </param>
     <param>
-      <key>ac_couple</key>
-      <value>False</value>
-    </param>
-    <param>
-      <key>xy_mode</key>
-      <value>False</value>
-    </param>
-    <param>
-      <key>num_inputs</key>
-      <value>1</value>
-    </param>
-    <param>
-      <key>win_size</key>
-      <value></value>
-    </param>
-    <param>
-      <key>grid_pos</key>
-      <value></value>
-    </param>
-    <param>
-      <key>notebook</key>
-      <value></value>
-    </param>
-    <param>
-      <key>trig_mode</key>
-      <value>wxgui.TRIG_MODE_AUTO</value>
-    </param>
-    <param>
-      <key>y_axis_label</key>
-      <value>Counts</value>
+      <key>value</key>
+      <value>1000</value>
     </param>
     <param>
       <key>alias</key>
       <value></value>
     </param>
     <param>
-      <key>affinity</key>
-      <value></value>
-    </param>
-    <param>
       <key>_coordinate</key>
-      <value>(952, 73)</value>
+      <value>(593, 10)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -435,10 +218,6 @@
       <value>True</value>
     </param>
     <param>
-      <key>alias</key>
-      <value></value>
-    </param>
-    <param>
       <key>affinity</key>
       <value></value>
     </param>
@@ -460,112 +239,14 @@
     </param>
   </block>
   <block>
-    <key>blocks_sub_xx</key>
-    <param>
-      <key>id</key>
-      <value>blocks_sub_xx_0</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>type</key>
-      <value>short</value>
-    </param>
-    <param>
-      <key>vlen</key>
-      <value>1</value>
-    </param>
-    <param>
-      <key>num_inputs</key>
-      <value>2</value>
-    </param>
-    <param>
-      <key>alias</key>
-      <value></value>
-    </param>
-    <param>
-      <key>affinity</key>
-      <value></value>
-    </param>
-    <param>
-      <key>minoutbuf</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>maxoutbuf</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(217, 597)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>analog_noise_source_x</key>
-    <param>
-      <key>id</key>
-      <value>analog_noise_source_x_0</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>type</key>
-      <value>float</value>
-    </param>
-    <param>
-      <key>noise_type</key>
-      <value>analog.GR_GAUSSIAN</value>
-    </param>
-    <param>
-      <key>amp</key>
-      <value>noisevar</value>
-    </param>
-    <param>
-      <key>seed</key>
-      <value>-42</value>
-    </param>
-    <param>
-      <key>alias</key>
-      <value></value>
-    </param>
-    <param>
-      <key>affinity</key>
-      <value></value>
-    </param>
-    <param>
-      <key>minoutbuf</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>maxoutbuf</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(584, 259)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
     <key>blocks_throttle</key>
     <param>
       <key>id</key>
       <value>blocks_throttle_0</value>
     </param>
     <param>
-      <key>_enabled</key>
-      <value>True</value>
+      <key>affinity</key>
+      <value></value>
     </param>
     <param>
       <key>type</key>
@@ -584,10 +265,6 @@
       <value>True</value>
     </param>
     <param>
-      <key>alias</key>
-      <value></value>
-    </param>
-    <param>
       <key>affinity</key>
       <value></value>
     </param>
@@ -601,7 +278,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(517, 103)</value>
+      <value>(559, 104)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -609,38 +286,30 @@
     </param>
   </block>
   <block>
-    <key>digital_chunks_to_symbols_xx</key>
+    <key>analog_noise_source_x</key>
     <param>
       <key>id</key>
-      <value>digital_chunks_to_symbols_xx_0</value>
+      <value>analog_noise_source_x_0</value>
     </param>
     <param>
       <key>_enabled</key>
       <value>True</value>
     </param>
     <param>
-      <key>in_type</key>
-      <value>short</value>
-    </param>
-    <param>
-      <key>out_type</key>
-      <value>float</value>
-    </param>
-    <param>
-      <key>symbol_table</key>
-      <value>-7,0,-5,0,-3,0,-1,0,1,0,3,0,5,0,7,0,-7,0,-5,0,-3,0,-1,0,1,0,3,0,5,0,7</value>
-    </param>
-    <param>
-      <key>dimension</key>
-      <value>2</value>
-    </param>
-    <param>
-      <key>num_ports</key>
+      <key>vlen</key>
       <value>1</value>
     </param>
     <param>
-      <key>alias</key>
-      <value></value>
+      <key>noise_type</key>
+      <value>analog.GR_GAUSSIAN</value>
+    </param>
+    <param>
+      <key>amp</key>
+      <value>noisevar</value>
+    </param>
+    <param>
+      <key>seed</key>
+      <value>-42</value>
     </param>
     <param>
       <key>affinity</key>
@@ -656,7 +325,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(559, 180)</value>
+      <value>(559, 260)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -686,10 +355,6 @@
       <value>1</value>
     </param>
     <param>
-      <key>alias</key>
-      <value></value>
-    </param>
-    <param>
       <key>affinity</key>
       <value></value>
     </param>
@@ -703,7 +368,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(951, 256)</value>
+      <value>(816, 192)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -711,10 +376,10 @@
     </param>
   </block>
   <block>
-    <key>trellis_pccc_encoder_xx</key>
+    <key>blocks_sub_xx</key>
     <param>
       <key>id</key>
-      <value>trellis_pccc_encoder_xx_0</value>
+      <value>blocks_sub_xx_0</value>
     </param>
     <param>
       <key>_enabled</key>
@@ -722,31 +387,117 @@
     </param>
     <param>
       <key>type</key>
-      <value>ss</value>
+      <value>short</value>
     </param>
     <param>
-      <key>o_fsm_args</key>
-      <value>prefix+"gr-trellis/examples/python/fsm_files/awgn1o2_4.fsm"</value>
+      <key>vlen</key>
+      <value>1</value>
     </param>
     <param>
-      <key>o_init_state</key>
+      <key>num_inputs</key>
+      <value>2</value>
+    </param>
+    <param>
+      <key>affinity</key>
+      <value></value>
+    </param>
+    <param>
+      <key>minoutbuf</key>
       <value>0</value>
     </param>
     <param>
-      <key>i_fsm_args</key>
-      <value>prefix+"gr-trellis/examples/python/fsm_files/awgn1o2_4.fsm"</value>
-    </param>
-    <param>
-      <key>i_init_state</key>
+      <key>maxoutbuf</key>
       <value>0</value>
     </param>
     <param>
-      <key>interleaver_args</key>
-      <value>trellis.interleaver(block,666)</value>
+      <key>_coordinate</key>
+      <value>(234, 536)</value>
     </param>
     <param>
-      <key>bl</key>
-      <value>block</value>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>blocks_multiply_xx</key>
+    <param>
+      <key>id</key>
+      <value>blocks_multiply_xx_2_0</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>type</key>
+      <value>short</value>
+    </param>
+    <param>
+      <key>num_inputs</key>
+      <value>2</value>
+    </param>
+    <param>
+      <key>vlen</key>
+      <value>1</value>
+    </param>
+    <param>
+      <key>affinity</key>
+      <value></value>
+    </param>
+    <param>
+      <key>minoutbuf</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>maxoutbuf</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>alias</key>
+      <value></value>
+    </param>
+    <param>
+      <key>affinity</key>
+      <value></value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(409, 530)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>blocks_short_to_float</key>
+    <param>
+      <key>id</key>
+      <value>blocks_short_to_float_1_0</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>vlen</key>
+      <value>1</value>
+    </param>
+    <param>
+      <key>scale</key>
+      <value>1</value>
+    </param>
+    <param>
+      <key>affinity</key>
+      <value></value>
+    </param>
+    <param>
+      <key>minoutbuf</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>maxoutbuf</key>
+      <value>0</value>
     </param>
     <param>
       <key>alias</key>
@@ -766,7 +517,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(236, 147)</value>
+      <value>(552, 548)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -774,10 +525,69 @@
     </param>
   </block>
   <block>
-    <key>wxgui_numbersink2</key>
+    <key>blocks_sub_xx</key>
     <param>
       <key>id</key>
-      <value>wxgui_numbersink2_3_0</value>
+      <value>blocks_sub_xx_0</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>type</key>
+      <value>short</value>
+    </param>
+    <param>
+      <key>o_fsm_args</key>
+      <value>prefix+"gr-trellis/examples/python/fsm_files/awgn1o2_4.fsm"</value>
+    </param>
+    <param>
+      <key>num_inputs</key>
+      <value>2</value>
+    </param>
+    <param>
+      <key>i_fsm_args</key>
+      <value>prefix+"gr-trellis/examples/python/fsm_files/awgn1o2_4.fsm"</value>
+    </param>
+    <param>
+      <key>affinity</key>
+      <value></value>
+    </param>
+    <param>
+      <key>minoutbuf</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>maxoutbuf</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>affinity</key>
+      <value></value>
+    </param>
+    <param>
+      <key>minoutbuf</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>maxoutbuf</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(234, 154)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>qtgui_number_sink</key>
+    <param>
+      <key>id</key>
+      <value>qtgui_number_sink_0</value>
     </param>
     <param>
       <key>_enabled</key>
@@ -788,36 +598,186 @@
       <value>float</value>
     </param>
     <param>
-      <key>title</key>
+      <key>autoscale</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>avg</key>
+      <value>0.001</value>
+    </param>
+    <param>
+      <key>graph_type</key>
+      <value>qtgui.NUM_GRAPH_HORIZ</value>
+    </param>
+    <param>
+      <key>nconnections</key>
+      <value>1</value>
+    </param>
+    <param>
+      <key>min</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>digital_chunks_to_symbols_xx</key>
+    <param>
+      <key>max</key>
+      <value>1</value>
+    </param>
+    <param>
+      <key>update_time</key>
+      <value>0.1</value>
+    </param>
+    <param>
+      <key>gui_hint</key>
+      <value>1,0,1,1</value>
+    </param>
+    <param>
+      <key>label1</key>
       <value>BER</value>
     </param>
     <param>
-      <key>units</key>
-      <value>BER</value>
+      <key>color1</key>
+      <value>("black", "black")</value>
     </param>
     <param>
-      <key>samp_rate</key>
-      <value>R</value>
+      <key>label2</key>
+      <value></value>
     </param>
     <param>
-      <key>min_value</key>
+      <key>color2</key>
+      <value>("black", "black")</value>
+    </param>
+    <param>
+      <key>label3</key>
+      <value></value>
+    </param>
+    <param>
+      <key>color3</key>
+      <value>("black", "black")</value>
+    </param>
+    <param>
+      <key>label4</key>
+      <value></value>
+    </param>
+    <param>
+      <key>color4</key>
+      <value>("black", "black")</value>
+    </param>
+    <param>
+      <key>label5</key>
+      <value></value>
+    </param>
+    <param>
+      <key>color5</key>
+      <value>("black", "black")</value>
+    </param>
+    <param>
+      <key>label6</key>
+      <value></value>
+    </param>
+    <param>
+      <key>color6</key>
+      <value>("black", "black")</value>
+    </param>
+    <param>
+      <key>label7</key>
+      <value></value>
+    </param>
+    <param>
+      <key>color7</key>
+      <value>("black", "black")</value>
+    </param>
+    <param>
+      <key>label8</key>
+      <value></value>
+    </param>
+    <param>
+      <key>color8</key>
+      <value>("black", "black")</value>
+    </param>
+    <param>
+      <key>label9</key>
+      <value></value>
+    </param>
+    <param>
+      <key>color9</key>
+      <value>("black", "black")</value>
+    </param>
+    <param>
+      <key>label10</key>
+      <value></value>
+    </param>
+    <param>
+      <key>color10</key>
+      <value>("black", "black")</value>
+    </param>
+    <param>
+      <key>affinity</key>
+      <value></value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(795, 532)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
       <value>0</value>
     </param>
+  </block>
+  <block>
+    <key>variable_qtgui_range</key>
     <param>
-      <key>max_value</key>
-      <value>1.0</value>
+      <key>id</key>
+      <value>snr_db</value>
     </param>
     <param>
-      <key>factor</key>
-      <value>1.0</value>
+      <key>_enabled</key>
+      <value>True</value>
     </param>
     <param>
-      <key>decimal_places</key>
-      <value>6</value>
+      <key>label</key>
+      <value>SNR (dB)</value>
     </param>
     <param>
-      <key>ref_level</key>
-      <value>0</value>
+      <key>value</key>
+      <value>5</value>
+    </param>
+    <param>
+      <key>start</key>
+      <value>-10</value>
+    </param>
+    <param>
+      <key>stop</key>
+      <value>10</value>
+    </param>
+    <param>
+      <key>step</key>
+      <value>0.01</value>
+    </param>
+    <param>
+      <key>widget</key>
+      <value>counter_slider</value>
+    </param>
+    <param>
+      <key>orient</key>
+      <value>Qt.Horizontal</value>
+    </param>
+    <param>
+      <key>min_len</key>
+      <value>200</value>
+    </param>
+    <param>
+      <key>gui_hint</key>
+      <value></value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(177, 10)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>180</value>
     </param>
     <param>
       <key>number_rate</key>
@@ -840,8 +800,8 @@
       <value>True</value>
     </param>
     <param>
-      <key>win_size</key>
-      <value></value>
+      <key>symbol_table</key>
+      <value>-7,0, -5,0, -3,0, -1,0, 1,0, 3,0, 5,0, 7,0,   0,-7,0, -5,0, -3,0, -1,0, 1,0, 3,0, 5,0, 7,0</value>
     </param>
     <param>
       <key>grid_pos</key>
@@ -858,6 +818,18 @@
     <param>
       <key>affinity</key>
       <value></value>
+    </param>
+    <param>
+      <key>affinity</key>
+      <value></value>
+    </param>
+    <param>
+      <key>minoutbuf</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>maxoutbuf</key>
+      <value>0</value>
     </param>
     <param>
       <key>_coordinate</key>
@@ -928,7 +900,7 @@
     </param>
     <param>
       <key>table</key>
-      <value>-7,0, -5,0, -3,0, -1,0, 1,0, 3,0, 5,0, 7,0,   0,-7,0, -5,0, -3,0, -1,0, 1,0, 3,0, 5,0, 7</value>
+      <value>-7,0, -5,0, -3,0, -1,0, 1,0, 3,0, 5,0, 7,0,   0,-7,0, -5,0, -3,0, -1,0, 1,0, 3,0, 5,0, 7,0</value>
     </param>
     <param>
       <key>metric_type</key>
@@ -941,10 +913,6 @@
     <param>
       <key>scaling</key>
       <value>1.0</value>
-    </param>
-    <param>
-      <key>alias</key>
-      <value></value>
     </param>
     <param>
       <key>affinity</key>
@@ -960,7 +928,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(309, 307)</value>
+      <value>(235, 279)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -969,49 +937,7 @@
   </block>
   <connection>
     <source_block_id>analog_random_source_x_0</source_block_id>
-    <sink_block_id>blocks_sub_xx_0</sink_block_id>
-    <source_key>0</source_key>
-    <sink_key>0</sink_key>
-  </connection>
-  <connection>
-    <source_block_id>blocks_add_xx_1</source_block_id>
-    <sink_block_id>wxgui_scopesink2_0</sink_block_id>
-    <source_key>0</source_key>
-    <sink_key>0</sink_key>
-  </connection>
-  <connection>
-    <source_block_id>blocks_multiply_xx_2_0</source_block_id>
-    <sink_block_id>blocks_short_to_float_1_0</sink_block_id>
-    <source_key>0</source_key>
-    <sink_key>0</sink_key>
-  </connection>
-  <connection>
-    <source_block_id>blocks_short_to_float_1_0</source_block_id>
-    <sink_block_id>wxgui_numbersink2_3_0</sink_block_id>
-    <source_key>0</source_key>
-    <sink_key>0</sink_key>
-  </connection>
-  <connection>
-    <source_block_id>blocks_sub_xx_0</source_block_id>
-    <sink_block_id>blocks_multiply_xx_2_0</sink_block_id>
-    <source_key>0</source_key>
-    <sink_key>0</sink_key>
-  </connection>
-  <connection>
-    <source_block_id>blocks_sub_xx_0</source_block_id>
-    <sink_block_id>blocks_multiply_xx_2_0</sink_block_id>
-    <source_key>0</source_key>
-    <sink_key>1</sink_key>
-  </connection>
-  <connection>
-    <source_block_id>analog_random_source_x_0</source_block_id>
     <sink_block_id>trellis_pccc_encoder_xx_0</sink_block_id>
-    <source_key>0</source_key>
-    <sink_key>0</sink_key>
-  </connection>
-  <connection>
-    <source_block_id>trellis_pccc_encoder_xx_0</source_block_id>
-    <sink_block_id>blocks_throttle_0</sink_block_id>
     <source_key>0</source_key>
     <sink_key>0</sink_key>
   </connection>
@@ -1022,16 +948,16 @@
     <sink_key>0</sink_key>
   </connection>
   <connection>
-    <source_block_id>trellis_pccc_decoder_combined_xx_0</source_block_id>
-    <sink_block_id>blocks_sub_xx_0</sink_block_id>
-    <source_key>0</source_key>
-    <sink_key>1</sink_key>
-  </connection>
-  <connection>
     <source_block_id>analog_noise_source_x_0</source_block_id>
     <sink_block_id>blocks_add_xx_1</sink_block_id>
     <source_key>0</source_key>
     <sink_key>1</sink_key>
+  </connection>
+  <connection>
+    <source_block_id>digital_chunks_to_symbols_xx_0</source_block_id>
+    <sink_block_id>blocks_add_xx_1</sink_block_id>
+    <source_key>0</source_key>
+    <sink_key>0</sink_key>
   </connection>
   <connection>
     <source_block_id>blocks_throttle_0</source_block_id>
@@ -1040,8 +966,44 @@
     <sink_key>0</sink_key>
   </connection>
   <connection>
-    <source_block_id>digital_chunks_to_symbols_xx_0</source_block_id>
-    <sink_block_id>blocks_add_xx_1</sink_block_id>
+    <source_block_id>trellis_pccc_encoder_xx_0</source_block_id>
+    <sink_block_id>blocks_throttle_0</sink_block_id>
+    <source_key>0</source_key>
+    <sink_key>0</sink_key>
+  </connection>
+  <connection>
+    <source_block_id>analog_random_source_x_0</source_block_id>
+    <sink_block_id>blocks_sub_xx_0</sink_block_id>
+    <source_key>0</source_key>
+    <sink_key>0</sink_key>
+  </connection>
+  <connection>
+    <source_block_id>blocks_short_to_float_1_0</source_block_id>
+    <sink_block_id>qtgui_number_sink_0</sink_block_id>
+    <source_key>0</source_key>
+    <sink_key>0</sink_key>
+  </connection>
+  <connection>
+    <source_block_id>trellis_pccc_decoder_combined_xx_0</source_block_id>
+    <sink_block_id>blocks_sub_xx_0</sink_block_id>
+    <source_key>0</source_key>
+    <sink_key>1</sink_key>
+  </connection>
+  <connection>
+    <source_block_id>blocks_sub_xx_0</source_block_id>
+    <sink_block_id>blocks_multiply_xx_2_0</sink_block_id>
+    <source_key>0</source_key>
+    <sink_key>1</sink_key>
+  </connection>
+  <connection>
+    <source_block_id>blocks_sub_xx_0</source_block_id>
+    <sink_block_id>blocks_multiply_xx_2_0</sink_block_id>
+    <source_key>0</source_key>
+    <sink_key>0</sink_key>
+  </connection>
+  <connection>
+    <source_block_id>blocks_multiply_xx_2_0</source_block_id>
+    <sink_block_id>blocks_short_to_float_1_0</sink_block_id>
     <source_key>0</source_key>
     <sink_key>0</sink_key>
   </connection>
