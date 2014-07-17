@@ -76,16 +76,3 @@ list(APPEND uhd_libs
 add_library(gnuradio-uhd SHARED ${gr_uhd_sources})
 target_link_libraries(gnuradio-uhd ${uhd_libs})
 GR_LIBRARY_FOO(gnuradio-uhd RUNTIME_COMPONENT "uhd_runtime" DEVEL_COMPONENT "uhd_devel")
-
-if(ENABLE_STATIC_LIBS)
-  add_library(gnuradio-uhd_static STATIC ${uhd_sources})
-
-  if(NOT WIN32)
-    set_target_properties(gnuradio-uhd_static
-      PROPERTIES OUTPUT_NAME gnuradio-uhd)
-  endif(NOT WIN32)
-
-  install(TARGETS gnuradio-uhd_static
-    ARCHIVE DESTINATION lib${LIB_SUFFIX} COMPONENT "uhd_devel"   # .lib file
-    )
-endif(ENABLE_STATIC_LIBS)
