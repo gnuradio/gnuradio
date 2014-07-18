@@ -29,7 +29,6 @@
 #include <gnuradio/block_detail.h>
 #include <gnuradio/buffer.h>
 #include <gnuradio/prefs.h>
-#include <gnuradio/config.h>
 #include <stdexcept>
 #include <iostream>
 
