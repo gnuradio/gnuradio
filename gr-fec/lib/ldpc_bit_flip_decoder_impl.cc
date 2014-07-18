@@ -101,10 +101,7 @@ namespace gr {
         unsigned int index, n = d_H->n();
         gsl_matrix *x = gsl_matrix_alloc(n, 1);
         for (index = 0; index < n; index++) {
-          double value = static_cast<double>(in[index]);
-          if (value == -1) {
-            value = 0;
-          }
+          double value = in[index] > 0 ? 1.0 : 0.0;
           gsl_matrix_set(x, index, 0, value);
         }
 
@@ -182,16 +179,14 @@ namespace gr {
           count++;
         }
 
-        // After finding the valid codeword, extract the info word
-        // and assign to output. This will happen regardless of if a
-        // valid codeword was found.
+        // Extract the info word and assign to output. This will
+        // happen regardless of if a valid codeword was found.
         unsigned char *out = (unsigned char*) outbuffer;
         for (index = 0; index < d_frame_size; index++) {
           unsigned int i = index + n - d_frame_size;
           int value = gsl_matrix_get(x, i, 0);
           out[index] = value;
         }
-
       } /* ldpc_bit_flip_decoder_impl::generic_work() */     
     } /* namespace code */
   } /* namespace fec */
