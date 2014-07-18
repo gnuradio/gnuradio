@@ -64,7 +64,7 @@ namespace gr {
       if(fabsf(srate - rsrate) > 0.00001)
 	throw std::invalid_argument("pfb_channelizer: oversample rate must be N/i for i in [1, N]");
 
-      set_relative_rate(srate);
+      set_relative_rate(oversample_rate);
 
       // Default channel map. The channel map specifies which input
       // goes to which output channel; so out[0] comes from
