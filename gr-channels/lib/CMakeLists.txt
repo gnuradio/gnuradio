@@ -83,6 +83,18 @@ add_dependencies(gnuradio-channels
   gnuradio-runtime gnuradio-filter gnuradio-analog gnuradio-blocks)
 
 if(ENABLE_STATIC_LIBS)
+  if(ENABLE_GR_CTRLPORT)
+    # Remove GR_CTRLPORT set this target's definitions.
+    # Makes sure we don't try to use ControlPort stuff in source files
+    # since Ice will not work with static libs.
+    GET_DIRECTORY_PROPERTY(STATIC_DEFS COMPILE_DEFINITIONS)
+    list(REMOVE_ITEM STATIC_DEFS "GR_CTRLPORT")
+    SET_PROPERTY(DIRECTORY PROPERTY COMPILE_DEFINITIONS "${STATIC_DEFS}")
+
+    # readd it to the target since we removed it from the directory-wide list.
+    SET_PROPERTY(TARGET gnuradio-channels APPEND PROPERTY COMPILE_DEFINITIONS "GR_CTRLPORT")
+  endif(ENABLE_GR_CTRLPORT)
+
   add_library(gnuradio-channels_static STATIC ${channels_sources})
 
   add_dependencies(gnuradio-channels_static

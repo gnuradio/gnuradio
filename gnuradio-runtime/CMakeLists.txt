@@ -60,13 +60,6 @@ GR_SET_GLOBAL(GNURADIO_RUNTIME_PYTHONPATH ${GNURADIO_RUNTIME_PYTHONPATH})
 # Register controlport component
 ########################################################################
 
-if(ENABLE_STATIC_LIBS)
-  set(NOT_STATIC_LIBS False)
-  message(STATUS "ControlPort is incompatible with static library builds. Disabling.")
-else(ENABLE_STATIC_LIBS)
-  set(NOT_STATIC_LIBS True)
-endif(ENABLE_STATIC_LIBS)
-
 FIND_PACKAGE(ICE-3.5)  # check for ICE 3.5
 if(NOT ICE_FOUND)
   message(STATUS "ICE 3.5 not found. Looking for 3.4")
@@ -90,7 +83,6 @@ GR_REGISTER_COMPONENT("gr-ctrlport" ENABLE_GR_CTRLPORT
   SWIG_VERSION_CHECK
   ICE_FOUND
   ENABLE_GNURADIO_RUNTIME
-  NOT_STATIC_LIBS
 )
 
 ########################################################################
