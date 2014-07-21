@@ -42,7 +42,7 @@ endif(ENABLE_GR_CTRLPORT)
 # http://www.vtk.org/Wiki/CMake_Cross_Compiling#Using_executables_in_the_build_created_during_the_build
 ########################################################################
 if(NOT CMAKE_CROSSCOMPILING)
-  add_executable(atsc_viterbi_gen atsc_viterbi_gen.cc)
+  add_executable(atsc_viterbi_gen atsc/atsc_viterbi_gen.cc)
   export(TARGETS atsc_viterbi_gen APPEND FILE ${EXPORT_FILE})
 endif()
 
@@ -59,18 +59,18 @@ add_custom_command(
 ########################################################################
 list(APPEND dtv_sources
   ${atsc_viterbi_mux_cc}
-  atsc_deinterleaver_impl.cc
-  atsc_depad_impl.cc
-  atsc_derandomizer_impl.cc
-  atsc_equalizer_impl.cc
-  atsc_fpll_impl.cc
-  atsc_fs_checker_impl.cc
-  atsc_randomize.cc
-  atsc_rs_decoder_impl.cc
-  atsc_sync_impl.cc
-  atsc_fake_single_viterbi.cc
-  atsc_single_viterbi.cc
-  atsc_viterbi_decoder_impl.cc
+  atsc/atsc_deinterleaver_impl.cc
+  atsc/atsc_depad_impl.cc
+  atsc/atsc_derandomizer_impl.cc
+  atsc/atsc_equalizer_impl.cc
+  atsc/atsc_fpll_impl.cc
+  atsc/atsc_fs_checker_impl.cc
+  atsc/atsc_randomize.cc
+  atsc/atsc_rs_decoder_impl.cc
+  atsc/atsc_sync_impl.cc
+  atsc/atsc_fake_single_viterbi.cc
+  atsc/atsc_single_viterbi.cc
+  atsc/atsc_viterbi_decoder_impl.cc
 )
 
 if(ENABLE_GR_CTRLPORT)
