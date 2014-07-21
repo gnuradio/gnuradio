@@ -58,7 +58,7 @@ first. Most recent systems have these packages available.
 \subsection dep_gr_audio gr-audio: Audio Subsystems (system/OS dependent)
 \li audio-alsa  (>= 0.9)     http://www.alsa-project.org
 \li audio-jack  (>= 0.8)     http://jackaudio.org/
-\li portaduio   (>= 19)      http://www.portaudio.com/
+\li portaudio   (>= 19)      http://www.portaudio.com/
 \li audio-oss   (>= 1.0)     http://www.opensound.com/oss.html
 \li audio-osx
 \li audio-windows
@@ -318,5 +318,3 @@ volk_config file that sets all architectures to 'generic' as a way to
 test the vectorized versus non-vectorized implementations.
 
 */
-
-
