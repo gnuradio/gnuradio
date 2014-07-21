@@ -17,6 +17,28 @@
 # the Free Software Foundation, Inc., 51 Franklin Street,
 # Boston, MA 02110-1301, USA.
 
+## Configure GRC examples to point to the right fsm_files directory
+set(FSM_FILE_INSTALL_DIR "${CMAKE_INSTALL_PREFIX}/${GR_PKG_TRELLIS_EXAMPLES_DIR}/fsm_files/")
+configure_file(
+    "${CMAKE_CURRENT_LIST_DIR}/pccc.grc.in"
+    "${CMAKE_CURRENT_LIST_DIR}/pccc.grc"
+)
+
+configure_file(
+    "${CMAKE_CURRENT_LIST_DIR}/pccc1.grc.in"
+    "${CMAKE_CURRENT_LIST_DIR}/pccc1.grc"
+)
+
+configure_file(
+    "${CMAKE_CURRENT_LIST_DIR}/sccc.grc.in"
+    "${CMAKE_CURRENT_LIST_DIR}/sccc.grc"
+)
+
+configure_file(
+    "${CMAKE_CURRENT_LIST_DIR}/sccc1.grc.in"
+    "${CMAKE_CURRENT_LIST_DIR}/sccc1.grc"
+)
+
 install(
     FILES
     interference_cancellation.grc

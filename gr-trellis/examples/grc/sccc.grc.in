@@ -95,7 +95,7 @@
     </param>
     <param>
       <key>value</key>
-      <value>"/usr/local/share/gnuradio/examples/trellis/fsm_files/"</value>
+      <value>"@FSM_FILE_INSTALL_DIR@"</value>
     </param>
     <param>
       <key>_coordinate</key>
