@@ -1,11 +1,11 @@
 <?xml version='1.0' encoding='ASCII'?>
 <flow_graph>
-  <timestamp>Thu Jul 17 14:55:30 2014</timestamp>
+  <timestamp>Tue Jul 22 09:01:43 2014</timestamp>
   <block>
     <key>options</key>
     <param>
       <key>id</key>
-      <value>sccc1</value>
+      <value>pccc</value>
     </param>
     <param>
       <key>_enabled</key>
@@ -52,10 +52,6 @@
       <value></value>
     </param>
     <param>
-      <key>alias</key>
-      <value></value>
-    </param>
-    <param>
       <key>_coordinate</key>
       <value>(10, 10)</value>
     </param>
@@ -68,7 +64,7 @@
     <key>variable</key>
     <param>
       <key>id</key>
-      <value>GNURADIO_SRC_DIR</value>
+      <value>block</value>
     </param>
     <param>
       <key>_enabled</key>
@@ -76,11 +72,11 @@
     </param>
     <param>
       <key>value</key>
-      <value>"/home/jank/src/gnuradio/"</value>
+      <value>1000</value>
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(656, 10)</value>
+      <value>(621, 10)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -91,7 +87,7 @@
     <key>variable</key>
     <param>
       <key>id</key>
-      <value>R</value>
+      <value>prefix</value>
     </param>
     <param>
       <key>_enabled</key>
@@ -99,38 +95,11 @@
     </param>
     <param>
       <key>value</key>
-      <value>GNURADIO_SRC_DIR</value>
+      <value>"@FSM_FILE_INSTALL_DIR@"</value>
     </param>
     <param>
       <key>_coordinate</key>
       <value>(434, 10)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>variable</key>
-    <param>
-      <key>id</key>
-      <value>noisevar</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>value</key>
-      <value>10**(-snr_db/10)</value>
-    </param>
-    <param>
-      <key>alias</key>
-      <value></value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(279, 10)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -164,7 +133,7 @@
     <key>variable</key>
     <param>
       <key>id</key>
-      <value>block</value>
+      <value>noisevar</value>
     </param>
     <param>
       <key>_enabled</key>
@@ -172,15 +141,11 @@
     </param>
     <param>
       <key>value</key>
-      <value>1000</value>
-    </param>
-    <param>
-      <key>alias</key>
-      <value></value>
+      <value>10**(-snr_db/10)</value>
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(593, 10)</value>
+      <value>(279, 10)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -296,8 +261,8 @@
       <value>True</value>
     </param>
     <param>
-      <key>vlen</key>
-      <value>1</value>
+      <key>type</key>
+      <value>float</value>
     </param>
     <param>
       <key>noise_type</key>
@@ -453,14 +418,6 @@
       <value>0</value>
     </param>
     <param>
-      <key>alias</key>
-      <value></value>
-    </param>
-    <param>
-      <key>affinity</key>
-      <value></value>
-    </param>
-    <param>
       <key>_coordinate</key>
       <value>(409, 530)</value>
     </param>
@@ -500,83 +457,8 @@
       <value>0</value>
     </param>
     <param>
-      <key>alias</key>
-      <value></value>
-    </param>
-    <param>
-      <key>affinity</key>
-      <value></value>
-    </param>
-    <param>
-      <key>minoutbuf</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>maxoutbuf</key>
-      <value>0</value>
-    </param>
-    <param>
       <key>_coordinate</key>
       <value>(552, 548)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>blocks_sub_xx</key>
-    <param>
-      <key>id</key>
-      <value>blocks_sub_xx_0</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>type</key>
-      <value>short</value>
-    </param>
-    <param>
-      <key>o_fsm_args</key>
-      <value>prefix+"gr-trellis/examples/python/fsm_files/awgn1o2_4.fsm"</value>
-    </param>
-    <param>
-      <key>num_inputs</key>
-      <value>2</value>
-    </param>
-    <param>
-      <key>i_fsm_args</key>
-      <value>prefix+"gr-trellis/examples/python/fsm_files/awgn1o2_4.fsm"</value>
-    </param>
-    <param>
-      <key>affinity</key>
-      <value></value>
-    </param>
-    <param>
-      <key>minoutbuf</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>maxoutbuf</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>affinity</key>
-      <value></value>
-    </param>
-    <param>
-      <key>minoutbuf</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>maxoutbuf</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(234, 154)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -779,21 +661,20 @@
       <key>_rotation</key>
       <value>180</value>
     </param>
+  </block>
+  <block>
+    <key>digital_chunks_to_symbols_xx</key>
     <param>
-      <key>number_rate</key>
-      <value>15</value>
-    </param>
-    <param>
-      <key>peak_hold</key>
-      <value>False</value>
+      <key>id</key>
+      <value>digital_chunks_to_symbols_xx_0</value>
     </param>
     <param>
       <key>average</key>
       <value>True</value>
     </param>
     <param>
-      <key>avg_alpha</key>
-      <value>0.001</value>
+      <key>in_type</key>
+      <value>short</value>
     </param>
     <param>
       <key>show_gauge</key>
@@ -804,20 +685,12 @@
       <value>-7,0, -5,0, -3,0, -1,0, 1,0, 3,0, 5,0, 7,0,   0,-7,0, -5,0, -3,0, -1,0, 1,0, 3,0, 5,0, 7,0</value>
     </param>
     <param>
-      <key>grid_pos</key>
-      <value>1,0,1,1</value>
+      <key>dimension</key>
+      <value>2</value>
     </param>
     <param>
-      <key>notebook</key>
-      <value></value>
-    </param>
-    <param>
-      <key>alias</key>
-      <value></value>
-    </param>
-    <param>
-      <key>affinity</key>
-      <value></value>
+      <key>num_ports</key>
+      <value>1</value>
     </param>
     <param>
       <key>affinity</key>
@@ -833,7 +706,66 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(719, 462)</value>
+      <value>(559, 180)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>trellis_pccc_encoder_xx</key>
+    <param>
+      <key>id</key>
+      <value>trellis_pccc_encoder_xx_0</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>type</key>
+      <value>ss</value>
+    </param>
+    <param>
+      <key>o_fsm_args</key>
+      <value>prefix + "awgn1o2_4.fsm"</value>
+    </param>
+    <param>
+      <key>o_init_state</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>i_fsm_args</key>
+      <value>prefix + "awgn1o2_4.fsm"</value>
+    </param>
+    <param>
+      <key>i_init_state</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>interleaver_args</key>
+      <value>trellis.interleaver(block,666)</value>
+    </param>
+    <param>
+      <key>bl</key>
+      <value>block</value>
+    </param>
+    <param>
+      <key>affinity</key>
+      <value></value>
+    </param>
+    <param>
+      <key>minoutbuf</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>maxoutbuf</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(234, 154)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -860,7 +792,7 @@
     </param>
     <param>
       <key>o_fsm_args</key>
-      <value>prefix+"gr-trellis/examples/python/fsm_files/awgn1o2_4.fsm"</value>
+      <value>prefix + "awgn1o2_4.fsm"</value>
     </param>
     <param>
       <key>o_init_state</key>
@@ -872,7 +804,7 @@
     </param>
     <param>
       <key>i_fsm_args</key>
-      <value>prefix+"gr-trellis/examples/python/fsm_files/awgn1o2_4.fsm"</value>
+      <value>prefix + "awgn1o2_4.fsm"</value>
     </param>
     <param>
       <key>i_init_state</key>
