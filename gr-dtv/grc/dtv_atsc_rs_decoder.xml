@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<!--
+###################################################
+## ATSC Reed–Solomon Decoder
+###################################################
+ -->
+<block>
+  <name>ATSC Reed–Solomon Decoder</name>
+  <key>dtv_atsc_rs_decoder</key>
+  <import>from gnuradio import dtv</import>
+  <make>dtv.atsc_rs_decoder()</make>
+
+  <sink>
+    <name>in</name>
+    <type>byte</type>
+    <vlen>256</vlen>
+  </sink>
+
+  <source>
+    <name>out</name>
+    <type>byte</type>
+    <vlen>256</vlen>
+  </source>
+
+</block>

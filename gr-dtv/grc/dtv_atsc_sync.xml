@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<!--
+###################################################
+## ATSC Receiver Sync
+###################################################
+ -->
+<block>
+  <name>ATSC Receiver SYNC</name>
+  <key>dtv_atsc_sync</key>
+  <import>from gnuradio import dtv</import>
+  <make>dtv.atsc_sync($rate)</make>
+
+  <param>
+    <name>Sample Rate</name>
+    <key>rate</key>
+    <type>float</type>
+  </param>
+
+  <sink>
+    <name>in</name>
+    <type>float</type>
+  </sink>
+
+  <source>
+    <name>out</name>
+    <type>byte</type>
+    <vlen>4096</vlen>
+  </source>
+
+</block>
