@@ -82,7 +82,7 @@ namespace gr {
         else if (x < -limit)
           x = -limit;
 
-        static const float alpha = 0.0002;
+        static const float alpha = 0.01;
         static const float beta = alpha*alpha/4.0;
         d_nco.adjust_phase(alpha*x);
         d_nco.adjust_freq(beta*x);
