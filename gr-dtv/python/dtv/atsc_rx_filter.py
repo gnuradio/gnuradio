@@ -35,7 +35,7 @@ class atsc_rx_filter(gr.hier_block2):
 
         # Create matched RX filter with RRC response for fractional
         # interpolator.
-        nfilts = 32
+        nfilts = 16
         output_rate = ATSC_SYMBOL_RATE*sps # Desired oversampled sample rate
         filter_rate = input_rate*nfilts
         symbol_rate = ATSC_SYMBOL_RATE/2.0 # One-sided bandwidth of sideband
