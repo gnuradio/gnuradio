@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<!--
+###################################################
+## ATSC Field Sync Checker
+###################################################
+ -->
+<block>
+  <name>ATSC Field Sync Checker</name>
+  <key>dtv_atsc_fs_checker</key>
+  <import>from gnuradio import dtv</import>
+  <make>dtv.atsc_fs_checker()</make>
+
+  <sink>
+    <name>in</name>
+    <type>byte</type>
+    <vlen>4096</vlen>
+  </sink>
+
+  <source>
+    <name>out</name>
+    <type>byte</type>
+    <vlen>4096</vlen>
+  </source>
+
+</block>

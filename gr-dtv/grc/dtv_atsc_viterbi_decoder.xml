@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<!--
+###################################################
+## ATSC Equalizer
+###################################################
+ -->
+<block>
+  <name>ATSC Viterbi Decoder</name>
+  <key>dtv_atsc_viterbi_decoder</key>
+  <import>from gnuradio import dtv</import>
+  <make>dtv.atsc_viterbi_decoder()</make>
+
+  <sink>
+    <name>in</name>
+    <type>byte</type>
+    <vlen>4096</vlen>
+  </sink>
+
+  <source>
+    <name>out</name>
+    <type>byte</type>
+    <vlen>256</vlen>
+  </source>
+
+</block>

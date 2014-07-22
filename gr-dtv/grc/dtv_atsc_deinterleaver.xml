@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<!--
+###################################################
+## ATSC Deinterleaver
+###################################################
+ -->
+<block>
+  <name>ATSC Deinterleaver</name>
+  <key>dtv_atsc_deinterleaver</key>
+  <import>from gnuradio import dtv</import>
+  <make>dtv.atsc_deinterleaver()</make>
+
+  <sink>
+    <name>in</name>
+    <type>byte</type>
+    <vlen>256</vlen>
+  </sink>
+
+  <source>
+    <name>out</name>
+    <type>byte</type>
+    <vlen>256</vlen>
+  </source>
+
+</block>
