@@ -108,6 +108,7 @@ namespace gr {
           nerrors_corrrected_count += nerrors_corrrected;
 
 	total_packets++;
+        #if 0
         if (total_packets > 1000) {
           // FIXME: convert to logger
           std::cout << "Error rate: "
@@ -120,6 +121,7 @@ namespace gr {
           bad_packet_count = 0;
           total_packets = 0;
         }
+        #endif
       }
 
       return noutput_items;
