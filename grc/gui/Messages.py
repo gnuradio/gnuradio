@@ -19,6 +19,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 
 import traceback
 import sys
+import os
 
 ## A list of functions that can receive a message.
 MESSENGERS_LIST = list()
@@ -49,6 +50,7 @@ register_messenger(sys.stdout.write)
 ###########################################################################
 def send_init(platform):
     p = platform
+    get_paths = lambda x: (os.path.abspath(os.path.expanduser(x)), x)
     send('\n'.join([
         "<<< Welcome to %s %s >>>" % (p.get_name(), p.get_version()),
         "",
@@ -56,7 +58,7 @@ def send_init(platform):
         "Block paths:"
     ] + [
         "\t%s" % path + (" (%s)" % opath if opath != path else "")
-            for path, opath in p.get_block_paths().iteritems()
+            for path, opath in map(get_paths, p.get_block_paths())
     ]) + "\n")
 
 def send_page_switch(file_path):
