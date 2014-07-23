@@ -132,8 +132,8 @@ namespace gr {
           // syndrome. The entry numbers correspond to the rows of
           // interest in H.
           std::vector<int> rows_of_interest_in_H;
-          for (index = 0; index < (*syndrome).size1; index++) {;
-            if (gsl_matrix_get(x, index, 0)) {
+          for (index = 0; index < (*syndrome).size1; index++) {
+            if (gsl_matrix_get(syndrome, index, 0)) {
               rows_of_interest_in_H.push_back(index);
             }
           }
