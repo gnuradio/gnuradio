@@ -23,15 +23,44 @@ endif()
 set(__INCLUDED_GR_BUILD_TYPES_CMAKE TRUE)
 
 # Standard CMake Build Types and their basic CFLAGS:
+#  - None: nothing set
 #  - Debug: -O2 -g
 #  - Release: -O3
 #  - RelWithDebInfo: -O3 -g
+#  - MinSizeRel: -OS
 
 # Addtional Build Types, defined below:
 #  - NoOptWithASM: -O0 -g -save-temps
 #  - O2WithASM: -O2 -g -save-temps
 #  - O3WithASM: -O3 -g -save-temps
 
+# Defines the list of acceptable cmake build types. When adding a new
+# build type below, make sure to add it to this list.
+list(APPEND AVAIL_BUILDTYPES
+  None Debug Release RelWithDebInfo MinSizeRel
+  NoOptWithASM O2WithASM O3WithASM
+)
+
+########################################################################
+# GR_CHECK_BUILD_TYPE(build type)
+#
+# Use this to check that the build type set in CMAKE_BUILD_TYPE on the
+# commandline is one of the valid build types used by this project. It
+# checks the value set in the cmake interface against the list of
+# known build types in AVAIL_BUILDTYPES. If the build type is found,
+# the function exits immediately. If nothing is found by the end of
+# checking all available build types, we exit with an error and list
+# the avialable build types.
+########################################################################
+function(GR_CHECK_BUILD_TYPE settype)
+  foreach(btype ${AVAIL_BUILDTYPES})
+    if(${settype} STREQUAL ${btype})
+      return() # found it; exit cleanly
+    endif(${settype} STREQUAL ${btype})
+  endforeach(btype)
+  # Build type not found; error out
+  message(FATAL_ERROR "Build type '${settype}' not valid, must be one of: ${AVAIL_BUILDTYPES}")
+endfunction(GR_CHECK_BUILD_TYPE)
 
 ########################################################################
 # For GCC and Clang, we can set a build type:
