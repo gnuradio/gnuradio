@@ -39,9 +39,14 @@ configure_file(
     "${CMAKE_CURRENT_BINARY_DIR}/sccc1.grc"
 )
 
+configure_file(
+    "${CMAKE_CURRENT_LIST_DIR}/interference_cancellation.grc"
+    "${CMAKE_CURRENT_BINARY_DIR}/interference_cancellation.grc"
+)
+
 install(
     FILES
-    interference_cancellation.grc
+    ${CMAKE_CURRENT_BINARY_DIR}/interference_cancellation.grc
     ${CMAKE_CURRENT_BINARY_DIR}/pccc.grc
     ${CMAKE_CURRENT_BINARY_DIR}/pccc1.grc
     ${CMAKE_CURRENT_BINARY_DIR}/sccc1.grc
