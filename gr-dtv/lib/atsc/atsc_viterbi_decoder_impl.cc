@@ -28,7 +28,6 @@
 #include "atsc_viterbi_decoder_impl.h"
 #include "atsc_types.h"
 #include <atsc_viterbi_mux.cc> // machine generated
-#include <emmintrin.h>
 
 namespace gr {
   namespace dtv {
