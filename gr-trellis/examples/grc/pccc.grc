@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='ASCII'?>
 <flow_graph>
-  <timestamp>Mon Jul 21 09:55:10 2014</timestamp>
+  <timestamp>Tue Jul 22 09:01:43 2014</timestamp>
   <block>
     <key>options</key>
     <param>
@@ -64,29 +64,6 @@
     <key>variable</key>
     <param>
       <key>id</key>
-      <value>noisevar</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>value</key>
-      <value>10**(-snr_db/10)</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(279, 10)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>variable</key>
-    <param>
-      <key>id</key>
       <value>block</value>
     </param>
     <param>
@@ -99,7 +76,30 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(593, 10)</value>
+      <value>(621, 10)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>variable</key>
+    <param>
+      <key>id</key>
+      <value>prefix</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>value</key>
+      <value>"@FSM_FILE_INSTALL_DIR@"</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(434, 10)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -133,7 +133,7 @@
     <key>variable</key>
     <param>
       <key>id</key>
-      <value>prefix</value>
+      <value>noisevar</value>
     </param>
     <param>
       <key>_enabled</key>
@@ -141,11 +141,11 @@
     </param>
     <param>
       <key>value</key>
-      <value>"/usr/local/share/gnuradio/examples/trellis/fsm_files/"</value>
+      <value>10**(-snr_db/10)</value>
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(434, 10)</value>
+      <value>(279, 10)</value>
     </param>
     <param>
       <key>_rotation</key>

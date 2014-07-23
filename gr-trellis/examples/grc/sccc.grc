@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='ASCII'?>
 <flow_graph>
-  <timestamp>Mon Jul 21 10:09:50 2014</timestamp>
+  <timestamp>Tue Jul 22 09:01:11 2014</timestamp>
   <block>
     <key>options</key>
     <param>
@@ -76,7 +76,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(544, 10)</value>
+      <value>(622, 9)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -95,34 +95,11 @@
     </param>
     <param>
       <key>value</key>
-      <value>"/usr/local/share/gnuradio/examples/trellis/fsm_files/"</value>
+      <value>"@FSM_FILE_INSTALL_DIR@"</value>
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(434, 10)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>variable</key>
-    <param>
-      <key>id</key>
-      <value>R</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>value</key>
-      <value>100e3</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(358, 10)</value>
+      <value>(435, 9)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -146,6 +123,29 @@
     <param>
       <key>_coordinate</key>
       <value>(279, 10)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>variable</key>
+    <param>
+      <key>id</key>
+      <value>R</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>value</key>
+      <value>100e3</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(358, 10)</value>
     </param>
     <param>
       <key>_rotation</key>
