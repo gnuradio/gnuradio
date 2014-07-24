@@ -113,8 +113,7 @@ namespace gr {
 
       d_center_first_symbol = (padding.size() + 0.5) * d_sps;
 
-      //d_filter = new kernel::fft_filter_ccc(1, d_symbols);
-      d_filter = new kernel::fir_filter_ccc(1, d_symbols);
+      d_filter = new kernel::fft_filter_ccc(1, d_symbols);
 
       set_history(d_filter->ntaps());
 
@@ -148,8 +147,7 @@ namespace gr {
       memcpy(out, in, sizeof(gr_complex)*noutput_items);
 
       // Calculate the correlation with the known symbol
-      //d_filter->filter(noutput_items, in, corr);
-      d_filter->filterN(corr, in, noutput_items);
+      d_filter->filter(noutput_items, in, corr);
 
       // Find the magnitude squared of the correlation
       std::vector<float> corr_mag(noutput_items);
@@ -157,7 +155,7 @@ namespace gr {
 
       int i = d_sps;
       while(i < noutput_items) {
-        if((corr_mag[i] - corr_mag[i-d_sps]) > d_thresh) {
+        if((corr_mag[i] - corr_mag[i-int(d_sps)]) > d_thresh) {
           while(corr_mag[i] < corr_mag[i+1])
             i++;
 
@@ -171,9 +169,11 @@ namespace gr {
           else center = nom / den;
           center = (center - 2.0);
 
-          int index = i;
+          int index = i-d_symbols.size()+int(d_sps)+1;
 
           float phase = fast_atan2f(corr[index].imag(), corr[index].real());
+          if(corr[index].real() < 0.0)
+            phase += M_PI;
           add_item_tag(0, nitems_written(0) + index, pmt::intern("phase_est"),
                        pmt::from_double(phase), pmt::intern(alias()));
           add_item_tag(0, nitems_written(0) + index, pmt::intern("time_est"),
