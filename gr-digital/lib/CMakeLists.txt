@@ -176,7 +176,6 @@ list(APPEND digital_sources
     scrambler_bb_impl.cc
     simple_correlator_impl.cc
     simple_framer_impl.cc
-    header_payload_demux_impl.cc
 )
 
 #Add Windows DLL resource file if using MSVC

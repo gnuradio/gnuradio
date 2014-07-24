@@ -34,13 +34,13 @@ mark_as_advanced(PORTAUDIO_INCLUDE_DIRS PORTAUDIO_LIBRARIES)
 # Found PORTAUDIO, but it may be version 18 which is not acceptable.
 if(EXISTS ${PORTAUDIO_INCLUDE_DIRS}/portaudio.h)
   include(CheckCXXSourceCompiles)
-  include(CMakePushCheckState)
-  cmake_push_check_state()
+  set(CMAKE_REQUIRED_INCLUDES_SAVED ${CMAKE_REQUIRED_INCLUDES})
   set(CMAKE_REQUIRED_INCLUDES ${PORTAUDIO_INCLUDE_DIRS})
   CHECK_CXX_SOURCE_COMPILES(
     "#include <portaudio.h>\nPaDeviceIndex pa_find_device_by_name(const char *name); int main () {return 0;}"
     PORTAUDIO2_FOUND)
-  cmake_pop_check_state()
+  set(CMAKE_REQUIRED_INCLUDES ${CMAKE_REQUIRED_INCLUDES_SAVED})
+  unset(CMAKE_REQUIRED_INCLUDES_SAVED)
   if(PORTAUDIO2_FOUND)
     INCLUDE(FindPackageHandleStandardArgs)
     FIND_PACKAGE_HANDLE_STANDARD_ARGS(PORTAUDIO DEFAULT_MSG PORTAUDIO_INCLUDE_DIRS PORTAUDIO_LIBRARIES)
