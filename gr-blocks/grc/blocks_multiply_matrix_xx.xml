@@ -1,0 +1,68 @@
+<?xml version="1.0"?>
+<block>
+  <name>Multiply by Matrix</name>
+  <key>blocks_multiply_matrix_xx</key>
+  <import>from gnuradio import blocks</import>
+  <make>blocks.multiply_matrix_$(type.fcn)($A, $tag_propagation_policy)</make>
+  <callback>set_A($A)</callback>
+  <param>
+	<name>IO Type</name>
+	<key>type</key>
+	<type>enum</type>
+	<option>
+		<name>Float</name>
+		<key>float</key>
+		<opt>fcn:ff</opt>
+	</option>
+	<option>
+		<name>Complex</name>
+		<key>complex</key>
+		<opt>fcn:cc</opt>
+	</option>
+  </param>
+  <param>
+    <name>Matrix A</name>
+    <key>A</key>
+    <value>((1, 0), (0, 1))</value>
+    <type>raw</type>
+  </param>
+  <param>
+    <name>TPP</name>
+    <key>tag_propagation_policy</key>
+    <type>enum</type>
+	<option>
+		<name>All to All</name>
+		<key>gr.TPP_ALL_TO_ALL</key>
+	</option>
+	<option>
+		<name>One to One</name>
+		<key>gr.TPP_ONE_TO_ONE</key>
+	</option>
+	<option>
+		<name>No Propagation</name>
+		<key>gr.TPP_DONT</key>
+	</option>
+	<option>
+		<name>Matrix-Defined</name>
+		<key>999</key>
+	</option>
+  </param>
+  <check>len($A) > 0</check>
+  <check>len(${A}[0]) > 0</check>
+  <check>$tag_propagation_policy != gr.TPP_ONE_TO_ONE or (len($A) == len(${A}[0]))</check>
+  <sink>
+    <name>in</name>
+    <type>$type</type>
+    <nports>len(${A}[0])</nports>
+  </sink>
+  <sink>
+    <name>set_A</name>
+    <type>message</type>
+    <optional>1</optional>
+  </sink>
+  <source>
+    <name>out</name>
+    <type>$type</type>
+    <nports>len($A)</nports>
+  </source>
+</block>
