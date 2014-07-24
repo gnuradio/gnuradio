@@ -53,10 +53,12 @@ list(APPEND AVAIL_BUILDTYPES
 # the avialable build types.
 ########################################################################
 function(GR_CHECK_BUILD_TYPE settype)
+  STRING(TOUPPER ${settype} _settype)
   foreach(btype ${AVAIL_BUILDTYPES})
-    if(${settype} STREQUAL ${btype})
+    STRING(TOUPPER ${btype} _btype)
+    if(${_settype} STREQUAL ${_btype})
       return() # found it; exit cleanly
-    endif(${settype} STREQUAL ${btype})
+    endif(${_settype} STREQUAL ${_btype})
   endforeach(btype)
   # Build type not found; error out
   message(FATAL_ERROR "Build type '${settype}' not valid, must be one of: ${AVAIL_BUILDTYPES}")
