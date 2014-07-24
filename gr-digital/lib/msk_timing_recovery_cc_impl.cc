@@ -142,20 +142,23 @@ namespace gr {
                 if((offset >= iidx) && (offset < (iidx+d_sps))) {
                     float center = (float) pmt::to_double(tags[0].value);
                     if(center != center) { //test for NaN, it happens somehow
+                       tags.erase(tags.begin());
                        goto out;
                     }
-                    float new_mu = (offset-iidx-d_sps/2.0)+(M_PI*center);
+                    d_mu = center;
+                    iidx = offset;
+                    if(d_mu<0) {
+                        d_mu++;
+                        iidx--;
+                    }
+                    d_div = 0;
+                    d_omega = d_sps;
+                    d_dly_conj_2 = d_dly_conj_1;
                     //this keeps the block from outputting an odd number of
                     //samples and throwing off downstream blocks which depend
                     //on proper alignment -- for instance, a decimating FIR
                     //filter.
-                    if(d_div == 0 and d_osps == 2) oidx++;
-                    //d_div = 0;
-                    d_omega = d_sps;
-                    d_mu = new_mu;
-                    iidx += (int)floor(d_mu);
-                    d_mu -= floor(d_mu);
-                    d_dly_conj_2 = d_dly_conj_1;
+//                    if(d_div == 0 and d_osps == 2) oidx++;
                     tags.erase(tags.begin());
                 }
             }
