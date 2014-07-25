@@ -30,6 +30,7 @@
 #include <gnuradio/unittests.h>
 #include <qa_blocks.h>
 #include <iostream>
+#include <fstream>
 
 int
 main(int argc, char **argv)
