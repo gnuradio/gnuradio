@@ -29,6 +29,7 @@
 
 #include <gnuradio/unittests.h>
 #include <qa_runtime.h>
+#include <fstream>
 
 int
 main (int argc, char **argv)
