@@ -91,7 +91,7 @@ static inline void volk_16i_max_star_16i_neon(short* target, short* src0, unsign
     const unsigned int eighth_points = num_points / 8;
     unsigned number;
     int16x8_t input_vec;
-    int16x8_t diff, max_vec, zeros;
+    int16x8_t diff, zeros;
     uint16x8_t comp1, comp2;
     zeros = veorq_s16(zeros, zeros);
     

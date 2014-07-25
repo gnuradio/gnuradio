@@ -826,8 +826,8 @@ static inline void volk_32fc_x2_dot_prod_32fc_neon_opttests(lv_32fc_t* result, c
     lv_32fc_t* b_ptr = (lv_32fc_t*) input;
     // for 2-lane vectors, 1st lane holds the real part,
     // 2nd lane holds the imaginary part
-    float32x4x2_t a_val, b_val, c_val, accumulator;
-    float32x4x2_t tmp_real, tmp_imag;
+    float32x4x2_t a_val, b_val, accumulator;
+    float32x4x2_t tmp_imag;
     accumulator.val[0] = vdupq_n_f32(0);
     accumulator.val[1] = vdupq_n_f32(0);
     
@@ -875,7 +875,6 @@ static inline void volk_32fc_x2_dot_prod_32fc_neon_optfma(lv_32fc_t* result, con
     // for 2-lane vectors, 1st lane holds the real part,
     // 2nd lane holds the imaginary part
     float32x4x2_t a_val, b_val, accumulator1, accumulator2;
-    float32x4x2_t tmp_real, tmp_imag;
     accumulator1.val[0] = vdupq_n_f32(0);
     accumulator1.val[1] = vdupq_n_f32(0);
     accumulator2.val[0] = vdupq_n_f32(0);

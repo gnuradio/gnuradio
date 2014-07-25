@@ -296,8 +296,6 @@ static inline void volk_32fc_32f_dot_prod_32fc_neon_unroll ( lv_32fc_t* __restri
    const float* inputPtr = (float*)input;
    const float* tapsPtr = taps;
    float zero[4] = {0.0f, 0.0f, 0.0f, 0.0f };
-   float* real_accum;
-   float current_accum = 0.0f ;
    float accVector_real[4]; 
    float accVector_imag[4];
 
@@ -307,7 +305,6 @@ static inline void volk_32fc_32f_dot_prod_32fc_neon_unroll ( lv_32fc_t* __restri
    float32x4_t  tmp_real1, tmp_imag1;
    float32x4_t real_accumulator0, imag_accumulator0;
    float32x4_t real_accumulator1, imag_accumulator1;
-
   
    // zero out accumulators
    // take a *float, return float32x4_t
@@ -315,7 +312,6 @@ static inline void volk_32fc_32f_dot_prod_32fc_neon_unroll ( lv_32fc_t* __restri
    imag_accumulator0 = vld1q_f32( zero );
    real_accumulator1 = vld1q_f32( zero );
    imag_accumulator1 = vld1q_f32( zero );
-   float dbgVec[8];
  
    for(number=0 ;number < quarterPoints; number++){
       // load doublewords and duplicate in to second lane
@@ -379,8 +375,6 @@ static inline void volk_32fc_32f_dot_prod_32fc_a_neon ( lv_32fc_t* __restrict re
    const float* inputPtr = (float*)input;
    const float* tapsPtr = taps;
    float zero[4] = {0.0f, 0.0f, 0.0f, 0.0f };
-   float* real_accum;
-   float current_accum = 0.0f ;
    float accVector_real[4];
    float accVector_imag[4];
 
@@ -415,7 +409,6 @@ static inline void volk_32fc_32f_dot_prod_32fc_a_neon ( lv_32fc_t* __restrict re
 
    }
 
-   // void vst1q_f32( float32_t * ptr, float32x4_t val);
    // store results back to a complex (array of 2 floats)
    vst1q_f32(accVector_real, real_accumulator);
    vst1q_f32(accVector_imag, imag_accumulator);

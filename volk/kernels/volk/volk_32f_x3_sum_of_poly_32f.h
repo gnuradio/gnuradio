@@ -305,15 +305,9 @@ static inline void volk_32f_x3_sum_of_poly_32f_a_neon(float* __restrict target, 
   float32x2_t cutoff_vector;
   float32x2x2_t x_low, x_high;
   float32x4_t x_qvector, c_qvector, cpa_qvector;
-  float accumulator, final_result;
+  float accumulator;
   float res_accumulators[4];
   
-  float dbg_cpa[4], dbg_x[4], dbg_c[4];
-  float dbg_max[4];
-  float dbg_x_to_1[2], dbg_x_to_2[2], dbg_x_to_3[2], dbg_x_to_4[2];
-  float dbg_x_high[2], dbg_x_low[2];
-  float dbg_foo;
-
   c_qvector = vld1q_f32( zero );
   // load the cutoff in to a vector
   cutoff_vector = vdup_n_f32( *cutoff );
@@ -357,7 +351,7 @@ static inline void volk_32f_x3_sum_of_poly_32f_neonvert(float* __restrict target
   int i;
   float zero[4] = {0.0f, 0.0f, 0.0f, 0.0f };
 
-  float accumulator, final_result;
+  float accumulator;
   
 
   float32x4_t accumulator1_vec, accumulator2_vec, accumulator3_vec, accumulator4_vec;
@@ -407,7 +401,6 @@ static inline void volk_32f_x3_sum_of_poly_32f_neonvert(float* __restrict target
   accumulator = res_accumulators[0] + res_accumulators[1] + 
           res_accumulators[2] + res_accumulators[3];
 
-  float result = 0.0;
   float fst = 0.0;
   float sq = 0.0;
   float thrd = 0.0;

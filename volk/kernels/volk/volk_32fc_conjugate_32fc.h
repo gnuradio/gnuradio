@@ -122,11 +122,6 @@ static inline void volk_32fc_conjugate_32fc_a_neon(lv_32fc_t* cVector, const lv_
     lv_32fc_t* c = cVector;
     const lv_32fc_t* a = aVector;
 
-    float conj[4] = {-0.f, -0.f, -0.f, -0.f};
-    //uint32x4_t conjugator;
-
-    //conjugator = vld1q_u32( (uint32_t *)conj );
-
     for(number=0; number < quarterPoints; number++){
       __builtin_prefetch(a+4);
       x = vld2q_f32((float*)a); // Load the complex data as ar,br,cr,dr; ai,bi,ci,di

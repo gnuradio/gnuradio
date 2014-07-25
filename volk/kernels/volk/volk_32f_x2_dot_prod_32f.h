@@ -586,7 +586,7 @@ static inline void volk_32f_x2_dot_prod_32f_neonopts(float * result, const float
     const float* bPtr=  taps;
     unsigned int number = 0;
 
-    float32x4x4_t a_val, b_val, accumulator0, accumulator1;
+    float32x4x4_t a_val, b_val, accumulator0;
     accumulator0.val[0] = vdupq_n_f32(0);
     accumulator0.val[1] = vdupq_n_f32(0);
     accumulator0.val[2] = vdupq_n_f32(0);

@@ -214,12 +214,10 @@ static inline void volk_32fc_x2_multiply_32fc_neon_opttests(lv_32fc_t* cVector, 
     lv_32fc_t *a_ptr = (lv_32fc_t*) aVector;
     lv_32fc_t *b_ptr = (lv_32fc_t*) bVector;
     unsigned int quarter_points = num_points / 4;
-    float32x4x2_t a_val, b_val, c_val;
-    float32x4x2_t tmp_real, tmp_imag;
+    float32x4x2_t a_val, b_val;
+    float32x4x2_t tmp_imag;
     unsigned int number = 0;
 
-    // TODO: I suspect the compiler is doing a poor job scheduling this. This seems
-    // highly optimal, but is barely better than generic
     for(number = 0; number < quarter_points; ++number) {
         a_val = vld2q_f32((float*)a_ptr); // a0r|a1r|a2r|a3r || a0i|a1i|a2i|a3i
         b_val = vld2q_f32((float*)b_ptr); // b0r|b1r|b2r|b3r || b0i|b1i|b2i|b3i

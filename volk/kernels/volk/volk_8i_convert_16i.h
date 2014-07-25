@@ -151,7 +151,6 @@ static inline void volk_8i_convert_16i_neon(int16_t* outputVector, const int8_t*
     const int8_t* inputVectorPtr = inputVector;
     unsigned int number;
     const unsigned int eighth_points = num_points / 8;
-    float scale_factor = 256;
 
     int8x8_t input_vec ;
     int16x8_t converted_vec;
