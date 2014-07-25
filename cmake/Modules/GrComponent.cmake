@@ -46,9 +46,8 @@ function(GR_REGISTER_COMPONENT name var)
         message(STATUS "  Dependency ${dep} = ${${dep}}")
     endforeach(dep)
 
-    #if the user set the var to force, we note this
-    if("${${var}}" STREQUAL "FORCE")
-        set(${var} ON)
+    #if the user set the var to force on, we note this
+    if("${${var}}" STREQUAL "ON")
         set(var_force TRUE)
     else()
         set(var_force FALSE)
