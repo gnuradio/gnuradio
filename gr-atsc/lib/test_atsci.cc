@@ -28,6 +28,7 @@
 #include <cppunit/TextTestRunner.h>
 #include <cppunit/XmlOutputter.h>
 #include "qa_atsci.h"
+#include <fstream>
 
 int
 main (int argc, char **argv)
