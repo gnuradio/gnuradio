@@ -2,7 +2,7 @@
 
 How to create blocks in Python
 
-\subsection pyblocks_streaming Streaming Data Blocks
+\section pyblocks_streaming Streaming Data Blocks
 
 We create blocks in Python very much like we would in C++, just with
 more Python. Figure out which type of block you want to create:
@@ -69,7 +69,7 @@ the size of the output_items vector.
 
 
 
-\subsection pyblocks_tags Using Stream Tags
+\section pyblocks_tags Using Stream Tags
 
 Python blocks have access to the stream tag system like their C++
 counterparts. The interface is almost identical except they behave
@@ -108,7 +108,7 @@ def work(self, input_items, output_items):
 
 
 
-\subsection pyblocks_msgs Using Message Passing
+\section pyblocks_msgs Using Message Passing
 
 Again, like their C++ counterparts, Python blocks can use the
 asynchronous message passing interface. We define output message
