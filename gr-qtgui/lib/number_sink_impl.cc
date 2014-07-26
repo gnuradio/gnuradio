@@ -30,6 +30,7 @@
 #include <volk/volk.h>
 #include <gnuradio/fft/fft.h>
 #include <qwt_symbol.h>
+#include <cmath>
 
 namespace gr {
   namespace qtgui {
@@ -265,6 +266,23 @@ namespace gr {
     {
     }
 
+    void
+    number_sink_impl::_gui_update_trigger()
+    {
+      // Only update the time if different than the current interval
+      // add some slop in cpu ticks for double comparison
+      gr::high_res_timer_type tps = gr::high_res_timer_tps();
+      double t = d_main_gui->updateTime();
+      if((d_update_time < (tps*t-10)) || ((tps*t+10) < d_update_time)) {
+        set_update_time(t);
+      }
+
+      float a = d_main_gui->average();
+      if(a != d_average) {
+        set_average(a);
+      }
+    }
+
     int
     number_sink_impl::work(int noutput_items,
 			   gr_vector_const_void_star &input_items,
@@ -272,11 +290,7 @@ namespace gr {
     {
       gr::thread::scoped_lock lock(d_mutex);
 
-      float new_avg = d_main_gui->average();
-      set_update_time(d_main_gui->updateTime());
-      if(new_avg != d_average) {
-        set_average(new_avg);
-      }
+      _gui_update_trigger();
 
       if(d_average > 0) {
         for(int n = 0; n < d_nconnections; n++) {
@@ -288,7 +302,7 @@ namespace gr {
       }
 
       // Plot if we are able to update
-      if(gr::high_res_timer_now() - d_last_time > d_update_time) {
+      if((gr::high_res_timer_now() - d_last_time) > d_update_time) {
         d_last_time = gr::high_res_timer_now();
         std::vector<float> d(d_nconnections);
         if(d_average > 0) {
