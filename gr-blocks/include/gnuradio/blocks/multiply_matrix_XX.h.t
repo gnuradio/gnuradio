@@ -39,21 +39,30 @@ namespace gr {
      * being it can handle several inputs and outputs, and the input-to-output
      * relation can be described by the following mathematical equation:
      * \f[
-     *    y(k) = A x(k) \, , \, y \in \mathbb{R}^N, x \in \mathbb{R}^M, A \in \mathbb{R}^{N \times M}
+     *    \mathbf{y}(k) = \mathbf{A} \mathbf{x}(k) \, , \, y \in \mathbb{R}^N, \mathbf{x} \in \mathbb{R}^M, A \in \mathbb{R}^{N \times M}
      * \f]
-     * \$y(k)\$ and \$x(i)\$ are column-vectors describing the elements on the input port
-     * at time step \$k\$ (this is a sync block with no memory).
+     * \f$\mathbf{y}(k)\f$ and \f$\mathbf{x}(i)\f$ are column-vectors describing the elements on the input port
+     * at time step \f$k\f$ (this is a sync block with no memory).
      *
      * Examples for where to use this block include:
-     * - Switch matrices (i.e. switch which ports go where)
-     * - Simulation of static MIMO-Channels (in that case, \$A\$ is the channel matrix)
+     * - Switch matrices (i.e. switch which ports go where), assuming all ports run on the same rate
+     * - Simulation of static MIMO-Channels (in that case, \f$\mathbf{A}\f$ is the channel matrix)
+     * - Summing up streams with variable coefficients
      *
      * This block features a special tag propagation mode: When setting the tag propagation policy
      * to gr::blocks::@NAME@::TPP_SELECT_BY_MATRIX, a tag is propagated from input k
      * to output l if \f$(A)_{l,k} \neq 0\f$.
      *
-     * A message port (\p set_A) allows to set the matrix. *Note*: It is not possible to change
-     * the dimension of the matrix after initialization, as this affects the I/O signature!
+     * \section blocks_matrixmult_msgports Message Ports
+     *
+     * This block as one input message port (\p set_A). A message sent to this port will
+     * be converted to a std::vector<std::vector<@O_TYPE@> >, and then passed on to set_A().
+     * If no conversion is possible, a warning is issued via the logging interface, and
+     * A remains unchanged.
+     *
+     * *Note*: It is not possible to change the dimension of the matrix after initialization,
+     * as this affects the I/O signature! If a matrix of invalid size is passed to the block,
+     * an alert is raised via the logging interface, and A remains unchanged.
      */
     class BLOCKS_API @NAME@ : virtual public gr::sync_block
     {
