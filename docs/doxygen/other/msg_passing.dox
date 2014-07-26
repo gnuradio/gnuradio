@@ -145,6 +145,11 @@ function. When a new message is pushed onto a port's message queue,
 it is this function that is used to process the message.
 
 
+\section python_msg_passing Message Passing in Python Blocks
+
+ADD STUFF HERE
+
+
 \section examples Code Examples
 
 The following is snippets of code from blocks current in GNU Radio
