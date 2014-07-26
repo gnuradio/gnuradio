@@ -36,10 +36,14 @@ namespace gr {
         int get_output_size();  // k, # of bits in the info word
         unsigned int d_frame_size;
 
-        // LDPC parity check matrix to use for decoding
+        // LDPC parity check matrix object to use for decoding
         ldpc_par_chk_mtrx *d_H;
         // Maximum number of iterations to do in decoding algorithm
         unsigned int d_max_iterations;
+        // Syndrome for each codeword guess
+        gsl_matrix *d_syndrome;
+        // Codeword
+        gsl_matrix *d_x;
 
       public:
         ldpc_bit_flip_decoder_impl(ldpc_par_chk_mtrx *H_obj,

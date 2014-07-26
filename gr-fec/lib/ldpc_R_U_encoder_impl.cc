@@ -92,27 +92,19 @@ namespace gr {
           gsl_matrix_set(s, index, 0, value);
         }
 
-        // Solve for p2 (parity part)
-        const gsl_matrix *A     = d_H->A();
-        const gsl_matrix *B     = d_H->B();
-        const gsl_matrix *D     = d_H->D();
-        const gsl_matrix *E     = d_H->E();
-        const gsl_matrix *inv_T = d_H->T_inverse();
-        const gsl_matrix *inv_p = d_H->phi_inverse();
-        const gsl_matrix *temp1 = d_H->mult_matrices_mod2(B, s);
-        const gsl_matrix *temp2 = d_H->mult_matrices_mod2(inv_T,
-                                                          temp1);
-        const gsl_matrix *temp3 = d_H->mult_matrices_mod2(E, temp2);
-        const gsl_matrix *temp4 = d_H->mult_matrices_mod2(D, s);
-        const gsl_matrix *temp5 = d_H->add_matrices_mod2(temp4,
-                                                         temp3);
-        const gsl_matrix *p2 = d_H->mult_matrices_mod2(inv_p, temp5);
-
-        // Solve for p1 (parity part)
-        const gsl_matrix *temp6 = d_H->mult_matrices_mod2(A, p2);
-        const gsl_matrix *temp7 = d_H->add_matrices_mod2(temp6,
-                                                         temp1);
-        const gsl_matrix *p1 = d_H->mult_matrices_mod2(inv_T, temp7);
+        // Solve for p2 and p1 (parity parts)
+        gsl_matrix *temp1 = d_H->mult_matrices_mod2(d_H->B(), s);
+        gsl_matrix *temp2 = d_H->mult_matrices_mod2(
+                                         d_H->T_inverse(), temp1);
+        gsl_matrix *temp3 = d_H->mult_matrices_mod2(d_H->E(), temp2);
+        gsl_matrix *temp4 = d_H->mult_matrices_mod2(d_H->D(), s);
+        gsl_matrix *temp5 = d_H->add_matrices_mod2(temp4, temp3);
+        gsl_matrix *p2    = d_H->mult_matrices_mod2(
+                                         d_H->phi_inverse(), temp5);
+        gsl_matrix *temp6 = d_H->mult_matrices_mod2(d_H->A(), p2);
+        gsl_matrix *temp7 = d_H->add_matrices_mod2(temp6, temp1);
+        gsl_matrix *p1    = d_H->mult_matrices_mod2(
+                                         d_H->T_inverse(), temp7);
 
         // Populate the codeword to be output
         unsigned int p1_length = (*p1).size1;
@@ -130,6 +122,19 @@ namespace gr {
           int value = gsl_matrix_get(s, index, 0);
           out[p1_length+p2_length+index] = value;
         }
+
+        // Free memory
+        gsl_matrix_free(temp1);
+        gsl_matrix_free(temp2);
+        gsl_matrix_free(temp3);
+        gsl_matrix_free(temp4);
+        gsl_matrix_free(temp5);
+        gsl_matrix_free(temp6);
+        gsl_matrix_free(temp7);
+        gsl_matrix_free(p1);
+        gsl_matrix_free(p2);
+        gsl_matrix_free(s);
+
       }
     } /* namespace code */
   } /* namespace fec */

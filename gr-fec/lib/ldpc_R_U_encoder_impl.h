@@ -38,7 +38,7 @@ namespace gr {
 
         // Number of bits in the information word
         unsigned int d_frame_size;
-        // LDPC parity check matrix to use for encoding
+        // LDPC parity check matrix object to use for encoding
         ldpc_par_chk_mtrx *d_H;
 
       public:
