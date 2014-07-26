@@ -25,10 +25,10 @@ first. Most recent systems have these packages available.
 
 \subsection dep_global Global Dependencies
 \li git                      http://code.google.com/p/msysgit
-\li cmake       (>= 2.6)     http://www.cmake.org/cmake/resources/software.html
+\li cmake       (>= 2.6.3)   http://www.cmake.org/cmake/resources/software.html
 \li boost       (>= 1.35)    http://www.boostpro.com/download
 \li cppunit     (>= 1.9.14)  http://gaiacrtn.free.fr/cppunit/index.html
-\li fftw3f      (>= 3.0)     http://www.fftw.org/install/windows.html
+\li fftw3f      (>= 3.0.1)   http://www.fftw.org/install/windows.html
 
 \subsection dep_python Python Wrappers
 \li python      (>= 2.5)     http://www.python.org/download/
@@ -37,6 +37,7 @@ first. Most recent systems have these packages available.
 
 \subsection dep_docs docs: Building the documentation
 \li doxygen     (>= 1.5)     http://www.stack.nl/~dimitri/doxygen/download.html
+\li latex*      (>= 2.0)     http://www.latex-project.org/
 
 \subsection dep_grc grc: The GNU Radio Companion
 \li Cheetah     (>= 2.0)     http://www.cheetahtemplate.org/
@@ -46,10 +47,10 @@ first. Most recent systems have these packages available.
 \li gsl	        (>= 1.10)    http://gnuwin32.sourceforge.net/packages/gsl.htm
 
 \subsection dep_gr_qtgui gr-qtgui: The QT-based Graphical User Interface
-\li qt	        (>= 4.4)     http://qt.nokia.com/downloads/
-\li qwt         (>= 5.2)     http://sourceforge.net/projects/qwt/
-\li pyqt        (>= 4.4)     http://www.riverbankcomputing.co.uk/software/pyqt/download
-\li pyqwt       (>= 5.2)     http://pyqwt.sourceforge.net/download.html
+\li qt	        (>= 4.4.0)   http://qt.nokia.com/downloads/
+\li qwt         (>= 5.2.0)   http://sourceforge.net/projects/qwt/
+\li pyqt        (>= 4.10.0)  http://www.riverbankcomputing.co.uk/software/pyqt/download
+\li pyqwt*      (>= 5.2.0)   http://pyqwt.sourceforge.net/download.html
 
 \subsection dep_gr_wxgui gr-wxgui: The WX-based Graphical User Interface
 \li wxpython    (>= 2.8)     http://www.wxpython.org/
@@ -63,6 +64,8 @@ first. Most recent systems have these packages available.
 \li audio-osx
 \li audio-windows
 
+* Optional but recommended dependencies.
+
 It is not necessary to satisfy all of these dependencies; just the
 one(s) that are right for your system. On Linux, don't expect
 audio-osx and audio-windows to be either satisfied or built.
@@ -74,10 +77,10 @@ audio-osx and audio-windows to be either satisfied or built.
 \li SDL	        (>= 1.2.0)   http://www.libsdl.org/download-1.2.php
 
 \subsection dep_gr_comedi gr-comedi: Comedi hardware interface
-\li comedilib   (>= 0.8)     http://www.comedi.org/
+\li comedilib   (>= 0.8.1)   http://www.comedi.org/
 
 \subsection dep_gr_log gr-log: Logging Tools (Optional)
-\li log4cpp     (>= 1.0)  http://log4cpp.sourceforge.net/
+\li log4cpp     (>= 1.0)     http://log4cpp.sourceforge.net/
 
 
 \section build_gr_cmake Building GNU Radio
