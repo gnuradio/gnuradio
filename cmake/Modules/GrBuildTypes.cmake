@@ -27,7 +27,7 @@ set(__INCLUDED_GR_BUILD_TYPES_CMAKE TRUE)
 #  - Debug: -O2 -g
 #  - Release: -O3
 #  - RelWithDebInfo: -O3 -g
-#  - MinSizeRel: -OS
+#  - MinSizeRel: -Os
 
 # Addtional Build Types, defined below:
 #  - NoOptWithASM: -O0 -g -save-temps
