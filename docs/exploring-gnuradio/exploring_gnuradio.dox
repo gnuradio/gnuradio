@@ -1,9 +1,9 @@
 /*! \page page_exploring_gnuradio Exploring GNU Radio
 
-In this page, we will go over two examples that are shipped with GNU
-Radio. We start off with a very simple dial tone generating example
-that is done in Python. The second example uses both GNU Radio
-Companion (GRC) and Python for different stages of the example.
+Let's explore over two examples that are shipped with GNU Radio. We
+start off with a very simple dial tone generating example that is done
+in Python. The second example uses both GNU Radio Companion (GRC) and
+Python for different stages of the example.
 
 In either case, we will be actually working with Python code and the
 modules as they exist in Python. However, in the following discussion,
