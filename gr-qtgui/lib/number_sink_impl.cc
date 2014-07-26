@@ -296,7 +296,8 @@ namespace gr {
         for(int n = 0; n < d_nconnections; n++) {
           float *in = (float*)input_items[n];
           for(int i = 0; i < noutput_items; i++) {
-            d_avg_value[n] = d_iir[n].filter(in[i]);
+            if(std::isfinite(in[i]))
+               d_avg_value[n] = d_iir[n].filter(in[i]);
           }
         }
       }
@@ -310,8 +311,11 @@ namespace gr {
             d[n] = d_avg_value[n];
         }
         else {
-          for(int n = 0; n < d_nconnections; n++)
-            d[n] = ((float*)input_items[n])[0];
+          for(int n = 0; n < d_nconnections; n++) {
+            float x = ((float*)input_items[n])[0];
+            if(std::isfinite(x))
+               d[n] = x;
+          }
         }
         d_qApplication->postEvent(d_main_gui,
                                   new NumberUpdateEvent(d));
