@@ -206,6 +206,48 @@ static inline void volk_32fc_magnitude_squared_32f_a_sse(float* magnitudeVector,
 }
 #endif /* LV_HAVE_SSE */
 
+#ifdef LV_HAVE_NEON
+#include <arm_neon.h>
+//
+
+  /*!
+    \brief Calculates the magnitude squared of the complexVector and stores the results in the magnitudeVector
+    \param complexVector The vector containing the complex input values
+    \param magnitudeVector The vector containing the real output values
+    \param num_points The number of complex values in complexVector to be calculated and stored into cVector
+  */
+static inline void volk_32fc_magnitude_squared_32f_neon(float* magnitudeVector, const lv_32fc_t* complexVector, unsigned int num_points){
+    unsigned int number = 0;
+    const unsigned int quarterPoints = num_points / 4;
+
+    const float* complexVectorPtr = (float*)complexVector;
+    float* magnitudeVectorPtr = magnitudeVector;
+
+    float32x4x2_t cmplx_val;
+    float32x4_t result;
+    for(;number < quarterPoints; number++){
+      cmplx_val = vld2q_f32(complexVectorPtr);
+      complexVectorPtr += 8;
+
+      cmplx_val.val[0] = vmulq_f32(cmplx_val.val[0], cmplx_val.val[0]); // Square the values
+      cmplx_val.val[1] = vmulq_f32(cmplx_val.val[1], cmplx_val.val[1]); // Square the values
+
+      result = vaddq_f32(cmplx_val.val[0], cmplx_val.val[1]); // Add the I2 and Q2 values
+
+      vst1q_f32(magnitudeVectorPtr, result);
+      magnitudeVectorPtr += 4;
+    }
+
+    number = quarterPoints * 4;
+    for(; number < num_points; number++){
+      float val1Real = *complexVectorPtr++;
+      float val1Imag = *complexVectorPtr++;
+      *magnitudeVectorPtr++ = (val1Real * val1Real) + (val1Imag * val1Imag);
+    }
+}
+#endif /* LV_HAVE_NEON */
+
+
 #ifdef LV_HAVE_GENERIC
   /*!
     \brief Calculates the magnitude squared of the complexVector and stores the results in the magnitudeVector

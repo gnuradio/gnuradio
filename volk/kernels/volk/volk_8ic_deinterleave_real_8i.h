@@ -61,6 +61,34 @@ static inline void volk_8ic_deinterleave_real_8i_generic(int8_t* iBuffer, const 
 }
 #endif /* LV_HAVE_GENERIC */
 
+#ifdef LV_HAVE_NEON
+#include <arm_neon.h>
+/*!
+  \brief Deinterleaves the complex 8 bit vector into I vector data
+  \param complexVector The complex input vector
+  \param iBuffer The I buffer output data
+  \param num_points The number of complex data values to be deinterleaved
+*/
+static inline void volk_8ic_deinterleave_real_8i_neon(int8_t* iBuffer, const lv_8sc_t* complexVector, unsigned int num_points){
+    unsigned int number;
+    unsigned int sixteenth_points = num_points / 16;
+
+    int8x16x2_t input_vector;
+    for(number=0; number < sixteenth_points; ++number) {
+        input_vector = vld2q_s8((int8_t*) complexVector );
+        vst1q_s8(iBuffer, input_vector.val[0]);
+        iBuffer += 16;
+        complexVector += 16;
+    }
+
+    const int8_t* complexVectorPtr = (int8_t*)complexVector;
+    int8_t* iBufferPtr = iBuffer;
+    for(number = sixteenth_points*16; number < num_points; number++){
+      *iBufferPtr++ = *complexVectorPtr++;
+      complexVectorPtr++;
+    }
+}
+#endif /* LV_HAVE_NEON */
 
 
 

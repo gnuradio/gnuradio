@@ -85,6 +85,44 @@ static inline  void volk_16i_max_star_16i_a_ssse3(short* target, short* src0, un
 
 #endif /*LV_HAVE_SSSE3*/
 
+#ifdef LV_HAVE_NEON
+#include <arm_neon.h>
+static inline void volk_16i_max_star_16i_neon(short* target, short* src0, unsigned int num_points) {
+    const unsigned int eighth_points = num_points / 8;
+    unsigned number;
+    int16x8_t input_vec;
+    int16x8_t diff, zeros;
+    uint16x8_t comp1, comp2;
+    zeros = veorq_s16(zeros, zeros);
+    
+    int16x8x2_t tmpvec;
+
+    int16x8_t candidate_vec = vld1q_dup_s16(src0 );
+    short candidate;
+    ++src0;
+
+    for(number=0; number < eighth_points; ++number) {
+        input_vec = vld1q_s16(src0);
+        __builtin_prefetch(src0+16);
+        diff = vsubq_s16(candidate_vec, input_vec);
+        comp1 = vcgeq_s16(diff, zeros);
+        comp2 = vcltq_s16(diff, zeros);
+
+        tmpvec.val[0] = vandq_s16(candidate_vec, (int16x8_t)comp1);
+        tmpvec.val[1] = vandq_s16(input_vec, (int16x8_t)comp2);
+
+        candidate_vec = vaddq_s16(tmpvec.val[0], tmpvec.val[1]);
+        src0 += 8;
+    }
+        vst1q_s16(&candidate, candidate_vec);
+
+    for(number=0; number < num_points%8; number++) {
+        candidate = ((int16_t)(candidate - src0[number]) > 0) ? candidate : src0[number];
+    }
+    target[0] = candidate;
+}
+#endif /*LV_HAVE_NEON*/
+
 #ifdef LV_HAVE_GENERIC
 
 static inline void volk_16i_max_star_16i_generic(short* target, short* src0, unsigned int num_points) {
