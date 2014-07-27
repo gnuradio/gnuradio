@@ -38,7 +38,7 @@ class test_fecapi_ldpc(gr_unittest.TestCase):
     def test_parallelism0_00(self):
         filename = "LDPC/n_0100_k_0027_gap_04.alist"
         gap = 4
-        LDPC_matrix_object = fec.ldpc_par_chk_mtrx(filename, gap)
+        LDPC_matrix_object = fec.ldpc_R_U_mtrx(filename, gap)
         k = LDPC_matrix_object.k()
         enc = fec.ldpc_R_U_encoder_make(LDPC_matrix_object)
         dec = fec.ldpc_bit_flip_decoder.make(LDPC_matrix_object)
@@ -55,7 +55,7 @@ class test_fecapi_ldpc(gr_unittest.TestCase):
     def test_parallelism0_01(self):
         filename = "LDPC/n_0100_k_0027_gap_04.alist"
         gap = 4
-        LDPC_matrix_object = fec.ldpc_par_chk_mtrx(filename, gap)
+        LDPC_matrix_object = fec.ldpc_R_U_mtrx(filename, gap)
         k = LDPC_matrix_object.k()
         enc = fec.ldpc_R_U_encoder_make(LDPC_matrix_object)
         dec = fec.ldpc_bit_flip_decoder.make(LDPC_matrix_object)
@@ -72,7 +72,7 @@ class test_fecapi_ldpc(gr_unittest.TestCase):
     def test_parallelism0_02(self):
         filename = "LDPC/n_0100_k_0027_gap_04.alist"
         gap = 4
-        LDPC_matrix_object = fec.ldpc_par_chk_mtrx(filename, gap)
+        LDPC_matrix_object = fec.ldpc_R_U_mtrx(filename, gap)
         k = LDPC_matrix_object.k()
         enc = fec.ldpc_R_U_encoder_make(LDPC_matrix_object)
         dec = fec.ldpc_bit_flip_decoder.make(LDPC_matrix_object)
@@ -86,11 +86,10 @@ class test_fecapi_ldpc(gr_unittest.TestCase):
 
         self.assertEqual(data_in, data_out)
 
-
     def test_parallelism1_00(self):
         filename = "LDPC/n_0100_k_0027_gap_04.alist"
         gap = 4
-        LDPC_matrix_object = fec.ldpc_par_chk_mtrx(filename, gap)
+        LDPC_matrix_object = fec.ldpc_R_U_mtrx(filename, gap)
         k = LDPC_matrix_object.k()
         enc = map((lambda a: fec.ldpc_R_U_encoder_make(LDPC_matrix_object)), range(0,1))
         dec = map((lambda a: fec.ldpc_bit_flip_decoder.make(LDPC_matrix_object)), range(0,1))
@@ -107,7 +106,7 @@ class test_fecapi_ldpc(gr_unittest.TestCase):
     def test_parallelism1_01(self):
         filename = "LDPC/n_0100_k_0027_gap_04.alist"
         gap = 4
-        LDPC_matrix_object = fec.ldpc_par_chk_mtrx(filename, gap)
+        LDPC_matrix_object = fec.ldpc_R_U_mtrx(filename, gap)
         k = LDPC_matrix_object.k()
         enc = map((lambda a: fec.ldpc_R_U_encoder_make(LDPC_matrix_object)), range(0,1))
         dec = map((lambda a: fec.ldpc_bit_flip_decoder.make(LDPC_matrix_object)), range(0,1))
@@ -124,7 +123,7 @@ class test_fecapi_ldpc(gr_unittest.TestCase):
     def test_parallelism1_02(self):
         filename = "LDPC/n_0100_k_0027_gap_04.alist"
         gap = 4
-        LDPC_matrix_object = fec.ldpc_par_chk_mtrx(filename, gap)
+        LDPC_matrix_object = fec.ldpc_R_U_mtrx(filename, gap)
         k = LDPC_matrix_object.k()
         enc = map((lambda a: fec.ldpc_R_U_encoder_make(LDPC_matrix_object)), range(0,1))
         dec = map((lambda a: fec.ldpc_bit_flip_decoder.make(LDPC_matrix_object)), range(0,1))
@@ -142,7 +141,7 @@ class test_fecapi_ldpc(gr_unittest.TestCase):
         filename = "LDPC/n_0100_k_0027_gap_04.alist"
         gap = 4
         dims = 10
-        LDPC_matrix_object = fec.ldpc_par_chk_mtrx(filename, gap)
+        LDPC_matrix_object = fec.ldpc_R_U_mtrx(filename, gap)
         k = LDPC_matrix_object.k()
         enc = map((lambda a: fec.ldpc_R_U_encoder_make(LDPC_matrix_object)), range(0,dims))
         dec = map((lambda a: fec.ldpc_bit_flip_decoder.make(LDPC_matrix_object)), range(0,dims))
@@ -160,7 +159,7 @@ class test_fecapi_ldpc(gr_unittest.TestCase):
         filename = "LDPC/n_0100_k_0027_gap_04.alist"
         gap = 4
         dims = 16
-        LDPC_matrix_object = fec.ldpc_par_chk_mtrx(filename, gap)
+        LDPC_matrix_object = fec.ldpc_R_U_mtrx(filename, gap)
         k = LDPC_matrix_object.k()
         enc = map((lambda a: fec.ldpc_R_U_encoder_make(LDPC_matrix_object)), range(0,dims))
         dec = map((lambda a: fec.ldpc_bit_flip_decoder.make(LDPC_matrix_object)), range(0,dims))
@@ -178,7 +177,7 @@ class test_fecapi_ldpc(gr_unittest.TestCase):
         filename = "LDPC/n_0100_k_0027_gap_04.alist"
         gap = 4
         dims = 5
-        LDPC_matrix_object = fec.ldpc_par_chk_mtrx(filename, gap)
+        LDPC_matrix_object = fec.ldpc_R_U_mtrx(filename, gap)
         k = LDPC_matrix_object.k()
         enc = map((lambda a: fec.ldpc_R_U_encoder_make(LDPC_matrix_object)), range(0,dims))
         # dec = map((lambda a: fec.ldpc_bit_flip_decoder.make(LDPC_matrix_object)), range(0,dims))
@@ -189,7 +188,7 @@ class test_fecapi_ldpc(gr_unittest.TestCase):
         filename = "LDPC/n_0100_k_0027_gap_04.alist"
         gap = 4
         dims = 5
-        LDPC_matrix_object = fec.ldpc_par_chk_mtrx(filename, gap)
+        LDPC_matrix_object = fec.ldpc_R_U_mtrx(filename, gap)
         k = LDPC_matrix_object.k()
         # enc = map((lambda a: fec.ldpc_R_U_encoder_make(LDPC_matrix_object)), range(0,dims))
         dec = map((lambda a: fec.ldpc_bit_flip_decoder.make(LDPC_matrix_object)), range(0,dims))
@@ -200,7 +199,7 @@ class test_fecapi_ldpc(gr_unittest.TestCase):
         filename = "LDPC/n_0100_k_0027_gap_04.alist"
         gap = 4
         dims = 5
-        LDPC_matrix_object = fec.ldpc_par_chk_mtrx(filename, gap)
+        LDPC_matrix_object = fec.ldpc_R_U_mtrx(filename, gap)
         k = LDPC_matrix_object.k()        
         dims1 = 16
         dims2 = 16        
@@ -213,7 +212,7 @@ class test_fecapi_ldpc(gr_unittest.TestCase):
         filename = "LDPC/n_0100_k_0027_gap_04.alist"
         gap = 4
         dims = 5
-        LDPC_matrix_object = fec.ldpc_par_chk_mtrx(filename, gap)
+        LDPC_matrix_object = fec.ldpc_R_U_mtrx(filename, gap)
         k = LDPC_matrix_object.k()        
         dims1 = 16
         dims2 = 16        
@@ -226,7 +225,7 @@ class test_fecapi_ldpc(gr_unittest.TestCase):
         filename = "LDPC/n_0100_k_0027_gap_04.alist"
         gap = 4
         dims = 5
-        LDPC_matrix_object = fec.ldpc_par_chk_mtrx(filename, gap)
+        LDPC_matrix_object = fec.ldpc_R_U_mtrx(filename, gap)
         k = LDPC_matrix_object.k()  
         dims1 = 16
         dims2 = 16        

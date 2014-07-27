@@ -24,7 +24,7 @@
 #include <map>
 #include <string>
 #include <gnuradio/fec/ldpc_R_U_encoder.h>
-#include <gnuradio/fec/ldpc_par_chk_mtrx.h>
+#include <gnuradio/fec/ldpc_R_U_mtrx.h>
 
 namespace gr {
   namespace fec {
@@ -39,10 +39,10 @@ namespace gr {
         // Number of bits in the information word
         unsigned int d_frame_size;
         // LDPC parity check matrix object to use for encoding
-        ldpc_par_chk_mtrx *d_H;
+        ldpc_R_U_mtrx *d_H;
 
       public:
-        ldpc_R_U_encoder_impl(ldpc_par_chk_mtrx *H_obj);
+        ldpc_R_U_encoder_impl(ldpc_R_U_mtrx *H_obj);
         ~ldpc_R_U_encoder_impl();
 
         bool set_frame_size(unsigned int frame_size);

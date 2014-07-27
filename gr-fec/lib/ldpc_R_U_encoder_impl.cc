@@ -29,13 +29,13 @@ namespace gr {
   namespace fec {
     namespace code {
       generic_encoder::sptr
-      ldpc_R_U_encoder::make(ldpc_par_chk_mtrx *H_obj)
+      ldpc_R_U_encoder::make(ldpc_R_U_mtrx *H_obj)
       {
         return generic_encoder::sptr
           (new ldpc_R_U_encoder_impl(H_obj));
       }
 
-      ldpc_R_U_encoder_impl::ldpc_R_U_encoder_impl(ldpc_par_chk_mtrx *H_obj) 
+      ldpc_R_U_encoder_impl::ldpc_R_U_encoder_impl(ldpc_R_U_mtrx *H_obj) 
         : generic_encoder("ldpc_R_U_encoder")
       {
         // LDPC parity check matrix to use for encoding

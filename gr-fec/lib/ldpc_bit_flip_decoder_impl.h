@@ -22,7 +22,7 @@
 #define INCLUDED_FEC_LDPC_BIT_FLIP_DECODER_IMPL_H
 
 #include <gnuradio/fec/ldpc_bit_flip_decoder.h>
-#include <gnuradio/fec/ldpc_par_chk_mtrx.h>
+#include <gnuradio/fec/ldpc_R_U_mtrx.h>
 
 namespace gr {
   namespace fec {
@@ -37,16 +37,12 @@ namespace gr {
         unsigned int d_frame_size;
 
         // LDPC parity check matrix object to use for decoding
-        ldpc_par_chk_mtrx *d_H;
+        ldpc_R_U_mtrx *d_H;
         // Maximum number of iterations to do in decoding algorithm
         unsigned int d_max_iterations;
-        // Syndrome for each codeword guess
-        gsl_matrix *d_syndrome;
-        // Codeword
-        gsl_matrix *d_x;
 
       public:
-        ldpc_bit_flip_decoder_impl(ldpc_par_chk_mtrx *H_obj,
+        ldpc_bit_flip_decoder_impl(ldpc_R_U_mtrx *H_obj,
                                    unsigned int max_iter=100);
         ~ldpc_bit_flip_decoder_impl();
 
