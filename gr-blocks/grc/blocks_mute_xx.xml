@@ -54,6 +54,11 @@
 		<name>in</name>
 		<type>$type</type>
 	</sink>
+	<sink>
+		<name>set_mute</name>
+		<type>message</type>
+		<optional>1</optional>
+	</sink>
 	<source>
 		<name>out</name>
 		<type>$type</type>
