@@ -3,6 +3,7 @@
 
 #include <volk/volk.h>
 #include <volk/volk_8u_x4_conv_k7_r2_8u.h>
+#include <string.h>
 
 typedef union {
   //decision_t is a BIT vector
