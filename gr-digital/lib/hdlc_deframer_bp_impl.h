@@ -36,7 +36,6 @@ namespace gr {
         size_t d_ones;
         size_t d_bytectr;
         size_t d_bitctr;
-        bool d_in_frame;
         unsigned char *d_pktbuf;
 
         unsigned int crc_ccitt(unsigned char *data, size_t len);
