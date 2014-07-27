@@ -40,6 +40,6 @@
     <block>fec_depuncture_bb</block>
     <block>fec_ber_bf</block>
     <block>fec_bercurve_generator</block>
-    <block>variable_ldpc_par_chk_mtrx_def</block>
+    <block>variable_ldpc_R_U_mtrx_def</block>
   </cat>
 </cat>

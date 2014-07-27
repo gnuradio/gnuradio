@@ -23,7 +23,7 @@
 
 #include <gnuradio/fec/api.h>
 #include <gnuradio/fec/generic_encoder.h>
-#include <gnuradio/fec/ldpc_par_chk_mtrx.h>
+#include <gnuradio/fec/ldpc_R_U_mtrx.h>
 
 namespace gr {
   namespace fec {
@@ -48,7 +48,7 @@ namespace gr {
          *        for encoding. This is the same matrix used for
          *        decoding. 
         */
-        static generic_encoder::sptr make(ldpc_par_chk_mtrx *H_obj);
+        static generic_encoder::sptr make(ldpc_R_U_mtrx *H_obj);
 
         /*!
          * Sets the uncoded frame size to \p frame_size. If \p

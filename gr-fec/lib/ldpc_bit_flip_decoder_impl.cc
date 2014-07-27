@@ -35,14 +35,14 @@ namespace gr {
     namespace code {
 
       generic_decoder::sptr
-      ldpc_bit_flip_decoder::make(ldpc_par_chk_mtrx *H_obj,
+      ldpc_bit_flip_decoder::make(ldpc_R_U_mtrx *H_obj,
                                   unsigned int max_iter)
       {
         return generic_decoder::sptr
           (new ldpc_bit_flip_decoder_impl(H_obj, max_iter));
       }
 
-      ldpc_bit_flip_decoder_impl::ldpc_bit_flip_decoder_impl(ldpc_par_chk_mtrx *H_obj, unsigned int max_iter)
+      ldpc_bit_flip_decoder_impl::ldpc_bit_flip_decoder_impl(ldpc_R_U_mtrx *H_obj, unsigned int max_iter)
         : generic_decoder("ldpc_bit_flip_decoder")
       {
         // LDPC parity check matrix to use for decoding
@@ -56,9 +56,6 @@ namespace gr {
 
       ldpc_bit_flip_decoder_impl::~ldpc_bit_flip_decoder_impl()
       {
-        // Free memory
-        gsl_matrix_free(d_syndrome);
-        gsl_matrix_free(d_x);
       }
 
       int
@@ -102,24 +99,24 @@ namespace gr {
         const float *in = (const float*)inbuffer;
 
         unsigned int index, n = d_H->n();
-        d_x = gsl_matrix_alloc(n, 1);
+        gsl_matrix *x = gsl_matrix_alloc(n, 1);
         for (index = 0; index < n; index++) {
           double value = in[index] > 0 ? 1.0 : 0.0;
-          gsl_matrix_set(d_x, index, 0, value);
+          gsl_matrix_set(x, index, 0, value);
         }
 
         // Initialize counter
         unsigned int count = 0;
 
         // Calculate syndrome
-        d_syndrome = d_H->mult_matrices_mod2(d_H->H(), d_x);
+        gsl_matrix *syndrome = d_H->mult_matrices_mod2(d_H->H(),x);
 
         // Flag for finding a valid codeword
         bool found_word = false;
  
         // If the syndrome is all 0s, then codeword is valid and we
         // don't need to loop; we're done.
-        if (gsl_matrix_isnull(d_syndrome)) {
+        if (gsl_matrix_isnull(syndrome)) {
           found_word = true;
         }
 
@@ -132,8 +129,8 @@ namespace gr {
           // syndrome. The entry numbers correspond to the rows of
           // interest in H.
           std::vector<int> rows_of_interest_in_H;
-          for (index = 0; index < (*d_syndrome).size1; index++) {
-            if (gsl_matrix_get(d_syndrome, index, 0)) {
+          for (index = 0; index < (*syndrome).size1; index++) {
+            if (gsl_matrix_get(syndrome, index, 0)) {
               rows_of_interest_in_H.push_back(index);
             }
           }
@@ -166,15 +163,15 @@ namespace gr {
 
           for (index = 0; index < n; index++) {
             if (counts[index] == max) {
-              unsigned int value = gsl_matrix_get(d_x, index, 0);
+              unsigned int value = gsl_matrix_get(x, index, 0);
               unsigned int new_value = value ^ 1;
-              gsl_matrix_set(d_x, index, 0, new_value);
+              gsl_matrix_set(x, index, 0, new_value);
             }
           }
 
           // Check the syndrome; see if valid codeword has been found
-          d_syndrome = d_H->mult_matrices_mod2(d_H->H(), d_x);
-          if (gsl_matrix_isnull(d_syndrome)) {
+          syndrome = d_H->mult_matrices_mod2(d_H->H(), x);
+          if (gsl_matrix_isnull(syndrome)) {
             found_word = true;
             break;
           }
@@ -186,10 +183,14 @@ namespace gr {
         unsigned char *out = (unsigned char*) outbuffer;
         for (index = 0; index < d_frame_size; index++) {
           unsigned int i = index + n - d_frame_size;
-          int value = gsl_matrix_get(d_x, i, 0);
+          int value = gsl_matrix_get(x, i, 0);
           out[index] = value;
-
         }
+
+        // Free memory
+        gsl_matrix_free(syndrome);
+        gsl_matrix_free(x);
+
       } /* ldpc_bit_flip_decoder_impl::generic_work() */     
     } /* namespace code */
   } /* namespace fec */

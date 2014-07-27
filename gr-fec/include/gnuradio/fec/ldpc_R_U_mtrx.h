@@ -18,8 +18,8 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef INCLUDED_ldpc_par_chk_mtrx_H
-#define INCLUDED_ldpc_par_chk_mtrx_H
+#ifndef INCLUDED_ldpc_R_U_mtrx_H
+#define INCLUDED_ldpc_R_U_mtrx_H
 
 #include <gnuradio/fec/api.h>
 #include <string>
@@ -33,7 +33,7 @@
 namespace gr {
   namespace fec {
     namespace code {
-      class FEC_API ldpc_par_chk_mtrx
+      class FEC_API ldpc_R_U_mtrx
       {
       private:
         // Codeword length n (also the number of columns in the H
@@ -63,9 +63,9 @@ namespace gr {
         void set_parameters_for_encoding();
         
       public:
-        ldpc_par_chk_mtrx(const std::string filename, unsigned int gap);
+        ldpc_R_U_mtrx(const std::string filename, unsigned int gap);
         // Default constructor, should not be used
-        ldpc_par_chk_mtrx();
+        ldpc_R_U_mtrx();
         // Get the codeword length n
         unsigned int n();
         // Get the information word length k
@@ -88,10 +88,10 @@ namespace gr {
         // operations
         gsl_matrix *calc_inverse_mod2(const gsl_matrix *);
         // Destructor
-        ~ldpc_par_chk_mtrx();
+        ~ldpc_R_U_mtrx();
       };
     }
   }
 }
 
- #endif /* INCLUDED_ldpc_par_chk_mtrx_H */
+ #endif /* INCLUDED_ldpc_R_U_mtrx_H */

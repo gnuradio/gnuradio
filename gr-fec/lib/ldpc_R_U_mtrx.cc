@@ -21,7 +21,7 @@
 #include "config.h"
 #endif
 
-#include <gnuradio/fec/ldpc_par_chk_mtrx.h>
+#include <gnuradio/fec/ldpc_R_U_mtrx.h>
 #include <math.h>
 #include <fstream>
 #include <vector>
@@ -32,7 +32,7 @@ namespace gr {
   namespace fec {
     namespace code {
 
-      ldpc_par_chk_mtrx::ldpc_par_chk_mtrx(const std::string filename, unsigned int gap) 
+      ldpc_R_U_mtrx::ldpc_R_U_mtrx(const std::string filename, unsigned int gap) 
       {
         read_matrix_from_file(filename);
         d_gap = gap;
@@ -40,77 +40,77 @@ namespace gr {
       } // Constructor
 
       // Default constructor, should not be used
-      ldpc_par_chk_mtrx::ldpc_par_chk_mtrx()
+      ldpc_R_U_mtrx::ldpc_R_U_mtrx()
       {
-        std::cout << "Error in ldpc_par_chk_mtrx(): Default "
+        std::cout << "Error in ldpc_R_U_mtrx(): Default "
                   << "constructor called.\nMust provide filename for"
                   << " parity check matrix. \n\n";
         exit(1);
       } // Default constructor
 
       unsigned int
-      ldpc_par_chk_mtrx::n()
+      ldpc_R_U_mtrx::n()
       {
         return d_n;
       }
 
       unsigned int
-      ldpc_par_chk_mtrx::k()
+      ldpc_R_U_mtrx::k()
       {
         return d_k;
       }
 
       const gsl_matrix*
-      ldpc_par_chk_mtrx::H()
+      ldpc_R_U_mtrx::H()
       {
         const gsl_matrix *H_ptr = d_H_ptr;
         return H_ptr; 
       }
 
       const gsl_matrix*
-      ldpc_par_chk_mtrx::A()
+      ldpc_R_U_mtrx::A()
       {
         const gsl_matrix *A_ptr = &d_A_view.matrix;
         return A_ptr; 
       }
 
       const gsl_matrix*
-      ldpc_par_chk_mtrx::B()
+      ldpc_R_U_mtrx::B()
       {
         const gsl_matrix *B_ptr = &d_B_view.matrix;
         return B_ptr; 
       }
 
       const gsl_matrix*
-      ldpc_par_chk_mtrx::D()
+      ldpc_R_U_mtrx::D()
       {
         const gsl_matrix *D_ptr = &d_D_view.matrix;
         return D_ptr; 
       }
 
       const gsl_matrix*
-      ldpc_par_chk_mtrx::E()
+      ldpc_R_U_mtrx::E()
       {
         const gsl_matrix *E_ptr = &d_E_view.matrix;
         return E_ptr; 
       }
 
       const gsl_matrix*
-      ldpc_par_chk_mtrx::T_inverse()
+      ldpc_R_U_mtrx::T_inverse()
       {
         const gsl_matrix *T_inverse_ptr = d_T_inverse_ptr;
         return T_inverse_ptr; 
       }
 
       const gsl_matrix*
-      ldpc_par_chk_mtrx::phi_inverse()
+      ldpc_R_U_mtrx::phi_inverse()
       {
         const gsl_matrix *phi_inverse_ptr = d_phi_inverse_ptr;
         return phi_inverse_ptr; 
       }
 
       void
-      ldpc_par_chk_mtrx::read_matrix_from_file(const std::string filename)
+      ldpc_R_U_mtrx::read_matrix_from_file(const std::string filename)
       {
         /* This function reads in an alist file and creates the
           corresponding parity check matrix. The format of alist
@@ -176,7 +176,7 @@ namespace gr {
        }
 
       void 
-      ldpc_par_chk_mtrx::set_parameters_for_encoding() 
+      ldpc_R_U_mtrx::set_parameters_for_encoding() 
       {
 
         // This function defines all of the submatrices that will be
@@ -253,7 +253,7 @@ namespace gr {
       }
 
       gsl_matrix*
-      ldpc_par_chk_mtrx::add_matrices_mod2(const gsl_matrix *matrix1, const gsl_matrix *matrix2)
+      ldpc_R_U_mtrx::add_matrices_mod2(const gsl_matrix *matrix1, const gsl_matrix *matrix2)
       {
         // This function returns ((matrix1 + matrix2) % 2). 
         // (same thing as ((matrix1 - matrix2) % 2)
@@ -299,7 +299,7 @@ namespace gr {
       }
 
       gsl_matrix*
-      ldpc_par_chk_mtrx::mult_matrices_mod2(const gsl_matrix *matrix1, const gsl_matrix *matrix2) 
+      ldpc_R_U_mtrx::mult_matrices_mod2(const gsl_matrix *matrix1, const gsl_matrix *matrix2) 
       {
         // Verify that matrix sizes are appropriate
         unsigned int a = (*matrix1).size1;  // # of rows
@@ -308,7 +308,7 @@ namespace gr {
         unsigned int d = (*matrix2).size2;  // # of columns
         if (b != c) {
           std::cout << "Error in "
-                    << "ldpc_par_chk_mtrx::mult_matrices_mod2."
+                    << "ldpc_R_U_mtrx::mult_matrices_mod2."
                     << " Matrix dimensions do not allow for matrix "
                     <<   "multiplication operation:\nmatrix1 is " 
                     << a << " x " << b << ", and matrix2 is " << c
@@ -338,7 +338,7 @@ namespace gr {
       }
 
       gsl_matrix*
-      ldpc_par_chk_mtrx::calc_inverse_mod2(const gsl_matrix *original_matrix)
+      ldpc_R_U_mtrx::calc_inverse_mod2(const gsl_matrix *original_matrix)
       {
 
         // Let n represent the size of the n x n square matrix
@@ -426,7 +426,7 @@ namespace gr {
         return matrix_inverse;
       }
 
-      ldpc_par_chk_mtrx::~ldpc_par_chk_mtrx()
+      ldpc_R_U_mtrx::~ldpc_R_U_mtrx()
       {
         // Call the gsl_matrix_free function to free memory.
         gsl_matrix_free (d_H_ptr);
