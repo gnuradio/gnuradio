@@ -48,6 +48,39 @@ static inline void volk_32f_x2_interleave_32fc_a_sse(lv_32fc_t* complexVector, c
 }
 #endif /* LV_HAVE_SSE */
 
+#ifdef LV_HAVE_NEON
+#include <arm_neon.h>
+/*!
+  \brief Interleaves the I & Q vector data into the complex vector.
+  \param iBuffer The I buffer data to be interleaved
+  \param qBuffer The Q buffer data to be interleaved
+  \param complexVector The complex output vector
+  \param num_points The number of complex data values to be interleaved
+*/
+static inline void volk_32f_x2_interleave_32fc_neon(lv_32fc_t* complexVector, const float* iBuffer, const float* qBuffer, unsigned int num_points){
+    unsigned int quarter_points = num_points / 4;
+    unsigned int number;
+    float* complexVectorPtr = (float*) complexVector;
+
+    float32x4x2_t complex_vec;
+    for(number=0; number < quarter_points; ++number) {
+        complex_vec.val[0] = vld1q_f32(iBuffer);
+        complex_vec.val[1] = vld1q_f32(qBuffer);
+        vst2q_f32(complexVectorPtr, complex_vec);
+        iBuffer += 4;
+        qBuffer += 4;
+        complexVectorPtr += 8;
+    } 
+
+    for(number=quarter_points * 4; number < num_points; ++number) {
+        *complexVectorPtr++ = *iBuffer++;
+        *complexVectorPtr++ = *qBuffer++;
+    }
+
+}
+#endif /* LV_HAVE_NEON */
+
+
 #ifdef LV_HAVE_GENERIC
 /*!
   \brief Interleaves the I & Q vector data into the complex vector.

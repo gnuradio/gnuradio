@@ -106,6 +106,36 @@ static inline void volk_16u_byteswap_a_sse2(uint16_t* intsToSwap, unsigned int n
 }
 #endif /* LV_HAVE_SSE2 */
 
+#ifdef LV_HAVE_NEON
+#include <arm_neon.h>
+/*!
+  \brief Byteswaps (in-place) an unaligned vector of int16_t's.
+  \param intsToSwap The vector of data to byte swap
+  \param numDataPoints The number of data points
+*/
+static inline void volk_16u_byteswap_neon(uint16_t* intsToSwap, unsigned int num_points){
+  unsigned int number;
+  unsigned int eighth_points = num_points / 8;
+  uint16x8_t input, output;
+  uint16_t* inputPtr = intsToSwap;
+
+  for(number = 0; number < eighth_points; number++) {
+    input = vld1q_u16(inputPtr);
+    output = vsriq_n_u16(output, input, 8);
+    output = vsliq_n_u16(output, input, 8);
+    vst1q_u16(inputPtr, output);
+    inputPtr += 8;
+  }
+
+  for(number = eighth_points * 8; number < num_points; number++){
+    uint16_t output = *inputPtr;
+    output = (((output >> 8) & 0xff) | ((output << 8) & 0xff00));
+    *inputPtr = output;
+    inputPtr++;
+  }
+}
+#endif /* LV_HAVE_NEON */
+
 #ifdef LV_HAVE_GENERIC
 /*!
   \brief Byteswaps (in-place) an aligned vector of int16_t's.

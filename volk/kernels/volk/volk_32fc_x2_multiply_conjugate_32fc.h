@@ -138,6 +138,59 @@ static inline void volk_32fc_x2_multiply_conjugate_32fc_a_sse3(lv_32fc_t* cVecto
 }
 #endif /* LV_HAVE_SSE */
 
+#ifdef LV_HAVE_NEON
+#include <arm_neon.h>
+  /*!
+    \brief Multiplies vector a by the conjugate of vector b and stores the results in the third vector
+    \param cVector The vector where the results will be stored
+    \param aVector First vector to be multiplied
+    \param bVector Second vector that is conjugated before being multiplied
+    \param num_points The number of complex values in aVector and bVector to be multiplied together and stored into cVector
+  */
+static inline void volk_32fc_x2_multiply_conjugate_32fc_neon(lv_32fc_t* cVector, const lv_32fc_t* aVector, const lv_32fc_t* bVector, unsigned int num_points){
+
+    lv_32fc_t *a_ptr = (lv_32fc_t*) aVector;
+    lv_32fc_t *b_ptr = (lv_32fc_t*) bVector;
+    unsigned int quarter_points = num_points / 4;
+    float32x4x2_t a_val, b_val, c_val;
+    float32x4x2_t tmp_real, tmp_imag;
+    unsigned int number = 0;
+
+    for(number = 0; number < quarter_points; ++number) {
+        a_val = vld2q_f32((float*)a_ptr); // a0r|a1r|a2r|a3r || a0i|a1i|a2i|a3i
+        b_val = vld2q_f32((float*)b_ptr); // b0r|b1r|b2r|b3r || b0i|b1i|b2i|b3i
+        b_val.val[1] = vnegq_f32(b_val.val[1]);
+        __builtin_prefetch(a_ptr+4);
+        __builtin_prefetch(b_ptr+4);
+
+        // multiply the real*real and imag*imag to get real result
+        // a0r*b0r|a1r*b1r|a2r*b2r|a3r*b3r
+        tmp_real.val[0] = vmulq_f32(a_val.val[0], b_val.val[0]);
+        // a0i*b0i|a1i*b1i|a2i*b2i|a3i*b3i
+        tmp_real.val[1] = vmulq_f32(a_val.val[1], b_val.val[1]);
+
+        // Multiply cross terms to get the imaginary result
+        // a0r*b0i|a1r*b1i|a2r*b2i|a3r*b3i
+        tmp_imag.val[0] = vmulq_f32(a_val.val[0], b_val.val[1]);
+        // a0i*b0r|a1i*b1r|a2i*b2r|a3i*b3r
+        tmp_imag.val[1] = vmulq_f32(a_val.val[1], b_val.val[0]);
+
+        // store the results
+        c_val.val[0] = vsubq_f32(tmp_real.val[0], tmp_real.val[1]);
+        c_val.val[1] = vaddq_f32(tmp_imag.val[0], tmp_imag.val[1]);
+        vst2q_f32((float*)cVector, c_val);
+
+        a_ptr += 4;
+        b_ptr += 4;
+        cVector += 4;
+    }
+
+    for(number = quarter_points*4; number < num_points; number++){
+      *cVector++ = (*a_ptr++) * conj(*b_ptr++);
+    }
+}
+#endif /* LV_HAVE_NEON */
+
 #ifdef LV_HAVE_GENERIC
   /*!
     \brief Multiplies vector a by the conjugate of vector b and stores the results in the third vector

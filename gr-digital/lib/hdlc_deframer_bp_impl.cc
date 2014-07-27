@@ -56,7 +56,6 @@ namespace gr {
         d_bitctr=0;
         d_ones=0;
         d_pktbuf = new unsigned char[length_max+2];
-        d_in_frame=false;
     }
 
     /*
@@ -106,28 +105,23 @@ namespace gr {
                         }
                         else {
                         }
-                        d_in_frame=false;
                     } else {
-                        d_in_frame=true;
                     }
                     d_bitctr=0;
                     d_bytectr=0;
                 } else { //unstuff
                 }
             } else { //not 5+ continuous ones
-                if(d_in_frame) {
-                    if(d_bytectr > d_length_max) {
-                        d_bytectr=0;
+                if(d_bytectr > d_length_max) {
+                    d_bytectr=0;
+                    d_bitctr=0;
+                } else {
+                    d_pktbuf[d_bytectr]>>=1;
+                    if (bit) d_pktbuf[d_bytectr] |= 0x80;
+                    d_bitctr++;
+                    if (d_bitctr==8) {
                         d_bitctr=0;
-                        d_in_frame=false;
-                    } else {
-                        d_pktbuf[d_bytectr]>>=1;
-                        if (bit) d_pktbuf[d_bytectr] |= 0x80;
-                        d_bitctr++;
-                        if (d_bitctr==8) {
-                            d_bitctr=0;
-                            d_bytectr++;
-                        }
+                        d_bytectr++;
                     }
                 }
             }

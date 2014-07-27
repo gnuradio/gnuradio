@@ -63,6 +63,40 @@ static inline void volk_32f_x2_subtract_32f_generic(float* cVector, const float*
 }
 #endif /* LV_HAVE_GENERIC */
 
+#ifdef LV_HAVE_NEON
+/*!
+  \brief Subtracts bVector form aVector and store their results in the cVector
+  \param cVector The vector where the results will be stored
+  \param aVector The initial vector
+  \param bVector The vector to be subtracted
+  \param num_points The number of values in aVector and bVector to be subtracted together and stored into cVector
+*/
+static inline void volk_32f_x2_subtract_32f_neon(float* cVector, const float* aVector, const float* bVector, unsigned int num_points){
+    float* cPtr = cVector;
+    const float* aPtr = aVector;
+    const float* bPtr=  bVector;
+    unsigned int number = 0;
+    unsigned int quarter_points = num_points / 4;
+
+    float32x4_t a_vec, b_vec, c_vec;
+
+    for(number = 0; number < quarter_points; number++){
+        a_vec = vld1q_f32(aPtr);
+        b_vec = vld1q_f32(bPtr);
+        c_vec = vsubq_f32(a_vec, b_vec);
+        vst1q_f32(cPtr, c_vec);
+        aPtr += 4;
+        bPtr += 4;
+        cPtr += 4;
+    }
+
+    for(number = quarter_points * 4; number < num_points; number++){
+      *cPtr++ = (*aPtr++) - (*bPtr++);
+    }
+}
+#endif /* LV_HAVE_NEON */
+
+
 #ifdef LV_HAVE_ORC
 /*!
   \brief Subtracts bVector form aVector and store their results in the cVector

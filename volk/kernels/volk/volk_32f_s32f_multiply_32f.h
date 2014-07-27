@@ -180,6 +180,35 @@ static inline void volk_32f_s32f_multiply_32f_a_avx(float* cVector, const float*
 }
 #endif /* LV_HAVE_AVX */
 
+#ifdef LV_HAVE_NEON
+#include <arm_neon.h>
+/*!
+  \brief Scalar float multiply
+  \param cVector The vector where the results will be stored
+  \param aVector One of the vectors to be multiplied
+  \param scalar the scalar value
+  \param num_points The number of values in aVector and bVector to be multiplied together and stored into cVector
+*/
+static inline void volk_32f_s32f_multiply_32f_u_neon(float* cVector, const float* aVector, const float scalar, unsigned int num_points){
+  unsigned int number = 0;
+  const float* inputPtr = aVector;
+  float* outputPtr = cVector;
+  const unsigned int quarterPoints = num_points / 4;
+
+  float32x4_t aVal, cVal;
+
+  for(number = 0; number < quarterPoints; number++){
+    aVal = vld1q_f32(inputPtr); // Load into NEON regs
+    cVal = vmulq_n_f32 (aVal, scalar); // Do the multiply
+    vst1q_f32(outputPtr, cVal); // Store results back to output
+    inputPtr += 4;
+    outputPtr += 4;
+  }
+  for(number = quarterPoints * 4; number < num_points; number++){
+      *outputPtr++ = (*inputPtr++) * scalar;
+  }
+}
+#endif /* LV_HAVE_NEON */
 
 #ifdef LV_HAVE_GENERIC
 /*!
@@ -214,8 +243,6 @@ static inline void volk_32f_s32f_multiply_32f_u_orc(float* cVector, const float*
     volk_32f_s32f_multiply_32f_a_orc_impl(cVector, aVector, scalar, num_points);
 }
 #endif /* LV_HAVE_GENERIC */
-
-
 
 
 #endif /* INCLUDED_volk_32f_s32f_multiply_32f_a_H */

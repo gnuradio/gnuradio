@@ -85,7 +85,6 @@
   <cat>
     <name>OFDM</name>
     <block>digital_ofdm_mod</block>
-    <block>digital_ofdm_mod2</block>
     <block>digital_ofdm_demod</block>
     <block>digital_ofdm_carrier_allocator_cvc</block>
     <block>digital_ofdm_chanest_vcvc</block>

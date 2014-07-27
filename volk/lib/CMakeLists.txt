@@ -101,7 +101,7 @@ macro(check_arch arch_name)
         if (NOT ${have_flag})
             set(have_${arch_name} FALSE)
         endif()
-    endforeach(flag)
+    endforeach()
     if (have_${arch_name})
         list(APPEND available_archs ${arch_name})
     endif()
@@ -382,6 +382,39 @@ include_directories(
 )
 
 ########################################################################
+# Handle ASM support
+#  on by default, but let users turn it off
+########################################################################
+set(ASM_ARCHS_AVAILABLE "armv7")
+if( NOT DEFINED ENABLE_ASM OR ENABLE_ASM )
+    # sort through a list of all architectures we have ASM for
+    # if we find one that matches our current system architecture
+    # set up the assembler flags and include the source files
+    foreach(ARCH ${ASM_ARCHS_AVAILABLE})
+        string(REGEX MATCH "^${ARCH}" ASM_ARCH "${CMAKE_SYSTEM_PROCESSOR}")
+        if( ASM_ARCH STREQUAL "armv7" )
+            set(ASM-ATT $ENV{ASM})
+            message(STATUS "---- Adding ASM files") # we always use ATT syntax
+            message(STATUS "-- Detected armv7 architecture; enabling ASM")
+            # setup architecture specific assembler flags
+            set(ARCH_ASM_FLAGS "-mfpu=neon -g")
+            # then add the files
+            include_directories(${CMAKE_SOURCE_DIR}/kernels/volk/asm/neon)
+            file(GLOB asm_files ${CMAKE_SOURCE_DIR}/kernels/volk/asm/neon/*.s)
+            foreach(asm_file ${asm_files})
+                list(APPEND volk_sources ${asm_file})
+                message(STATUS "Adding source file: ${asm_file}")
+            endforeach(asm_file)
+        endif()
+        set(CMAKE_ASM-ATT_FLAGS_INIT ${ARCH_ASM_FLAGS})
+        enable_language(ASM-ATT) # this must be after flags_init
+        message(STATUS "asm flags are ${CMAKE_ASM-ATT_FLAGS}")
+    endforeach(ARCH)
+else()
+    message("---- NOT Adding ASM files")
+endif()
+
+########################################################################
 # Handle orc support
 ########################################################################
 if(ORC_FOUND)
@@ -436,7 +469,8 @@ list(APPEND volk_sources ${CMAKE_CURRENT_BINARY_DIR}/constants.c)
 # Setup the volk sources list and library
 ########################################################################
 if(NOT WIN32)
-    add_definitions(-fvisibility=hidden)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fvisibility=hidden")
+    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fvisibility=hidden")
 endif()
 
 list(APPEND volk_sources
