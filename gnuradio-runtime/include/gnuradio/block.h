@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2004,2007,2009,2010,2013 Free Software Foundation, Inc.
+ * Copyright 2004,2007,2009,2010,2013,2014 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -501,6 +501,73 @@ namespace gr {
      * \brief Gets total clock cycles spent in work.
      */
     float pc_work_time_total();
+
+#ifdef GR_ENABLE_LINUX_PERF
+    /*!
+     * \brief Gets instantaneous branch miss rate in work
+     */
+    float pc_branch_miss_rate();
+
+    /*!
+     * \brief Gets average branch miss rate in work
+     */
+    float pc_branch_miss_rate_avg();
+
+    /*!
+     * \brief Gets instantaneous cache miss rate in work
+     */
+    float pc_cache_miss_rate();
+
+    /*!
+     * \brief Gets average cache miss rate in work
+     */
+    float pc_cache_miss_rate_avg();
+
+    /*!
+     * \brief Gets instantaneous CPU cycles in work
+     */
+    float pc_hw_cpu_cycles();
+
+    /*!
+     * \brief Gets average CPU cycles in work
+     */
+    float pc_hw_cpu_cycles_avg();
+
+    /*!
+     * \brief Gets total CPU cycles in work
+     */
+    float pc_hw_cpu_cycles_total();
+
+    /*!
+     * \brief Gets instantaneous context switches
+     */
+    float pc_sw_context_switches();
+
+    /*!
+     * \brief Gets average context switches
+     */
+    float pc_sw_context_switches_avg();
+
+    /*!
+     * \brief Gets average context switches
+     */
+    float pc_sw_context_switches_total();
+
+    /*!
+     * \brief Gets instantaneous context switches
+     */
+    float pc_sw_cpu_migrations();
+
+    /*!
+     * \brief Gets average context switches
+     */
+    float pc_sw_cpu_migrations_avg();
+
+    /*!
+     * \brief Gets average context switches
+     */
+    float pc_sw_cpu_migrations_total();
+#endif
 
     /*!
      * \brief Resets the performance counters

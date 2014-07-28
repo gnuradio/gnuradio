@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2004,2009,2010,2013 Free Software Foundation, Inc.
+ * Copyright 2004,2009,2010,2013,2014 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -726,6 +726,151 @@ namespace gr {
     }
   }
 
+#ifdef GR_ENABLE_LINUX_PERF
+  float
+  block::pc_branch_miss_rate()
+  {
+    if(d_detail) {
+        return d_detail->pc_branch_miss_rate();
+    }
+    else {
+        return 0;
+    }
+  }
+
+  float
+  block::pc_branch_miss_rate_avg()
+  {
+    if(d_detail) {
+        return d_detail->pc_branch_miss_rate_avg();
+    }
+    else {
+        return 0;
+    }
+  }
+
+  float
+  block::pc_cache_miss_rate()
+  {
+    if(d_detail) {
+        return d_detail->pc_cache_miss_rate();
+    }
+    else {
+        return 0;
+    }
+  }
+
+  float
+  block::pc_cache_miss_rate_avg()
+  {
+    if(d_detail) {
+        return d_detail->pc_cache_miss_rate_avg();
+    }
+    else {
+        return 0;
+    }
+  }
+
+  float
+  block::pc_hw_cpu_cycles()
+  {
+    if(d_detail) {
+        return d_detail->pc_hw_cpu_cycles();
+    }
+    else {
+        return 0;
+    }
+  }
+
+  float
+  block::pc_hw_cpu_cycles_avg()
+  {
+    if(d_detail) {
+        return d_detail->pc_hw_cpu_cycles();
+    }
+    else {
+        return 0;
+    }
+  }
+
+  float
+  block::pc_hw_cpu_cycles_total()
+  {
+    if(d_detail) {
+        return d_detail->pc_hw_cpu_cycles();
+    }
+    else {
+        return 0;
+    }
+  }
+
+  float
+  block::pc_sw_context_switches()
+  {
+    if(d_detail) {
+        return d_detail->pc_sw_context_switches();
+    }
+    else {
+        return 0;
+    }
+  }
+
+  float
+  block::pc_sw_context_switches_avg()
+  {
+    if(d_detail) {
+        return d_detail->pc_sw_context_switches_avg();
+    }
+    else {
+        return 0;
+    }
+  }
+
+  float
+  block::pc_sw_context_switches_total()
+  {
+    if(d_detail) {
+        return d_detail->pc_sw_context_switches_total();
+    }
+    else {
+        return 0;
+    }
+  }
+
+  float
+  block::pc_sw_cpu_migrations()
+  {
+    if(d_detail) {
+        return d_detail->pc_sw_cpu_migrations();
+    }
+    else {
+        return 0;
+    }
+  }
+
+  float
+  block::pc_sw_cpu_migrations_avg()
+  {
+    if(d_detail) {
+        return d_detail->pc_sw_cpu_migrations_avg();
+    }
+    else {
+        return 0;
+    }
+  }
+
+  float
+  block::pc_sw_cpu_migrations_total()
+  {
+    if(d_detail) {
+        return d_detail->pc_sw_cpu_migrations_total();
+    }
+    else {
+        return 0;
+    }
+  }
+#endif
+
   void
   block::reset_perf_counters()
   {
@@ -911,6 +1056,79 @@ namespace gr {
         pmt::make_c32vector(0,0), pmt::make_c32vector(0,1), pmt::make_c32vector(0,0),
         "", "Var. of how full output buffers are", RPC_PRIVLVL_MIN,
         DISPTIME | DISPOPTSTRIP)));
+
+#ifdef GR_ENABLE_LINUX_PERF
+    d_rpc_vars.push_back(
+      rpcbasic_sptr(new rpcbasic_register_get<block, float >(
+        alias(), "cache miss rate", &block::pc_cache_miss_rate,
+        pmt::mp(0), pmt::mp(1), pmt::mp(0),
+        "", "Instantaneous cache miss rate", RPC_PRIVLVL_MIN,
+        DISPTIME | DISPOPTSTRIP)));
+
+    d_rpc_vars.push_back(
+      rpcbasic_sptr(new rpcbasic_register_get<block, float >(
+        alias(), "avg cache miss rate", &block::pc_cache_miss_rate_avg,
+        pmt::mp(0), pmt::mp(1), pmt::mp(0),
+        "", "Average cache miss rate", RPC_PRIVLVL_MIN,
+        DISPTIME | DISPOPTSTRIP)));
+
+    d_rpc_vars.push_back(
+      rpcbasic_sptr(new rpcbasic_register_get<block, float >(
+        alias(), "branch miss rate", &block::pc_branch_miss_rate,
+        pmt::mp(0), pmt::mp(1), pmt::mp(0),
+        "", "Instantaneous branch miss rate", RPC_PRIVLVL_MIN,
+        DISPTIME | DISPOPTSTRIP)));
+
+    d_rpc_vars.push_back(
+      rpcbasic_sptr(new rpcbasic_register_get<block, float >(
+        alias(), "avg branch miss rate", &block::pc_branch_miss_rate_avg,
+        pmt::mp(0), pmt::mp(1), pmt::mp(0),
+        "", "Average branch miss rate", RPC_PRIVLVL_MIN,
+        DISPTIME | DISPOPTSTRIP)));
+
+    d_rpc_vars.push_back(
+      rpcbasic_sptr(new rpcbasic_register_get<block, float >(
+        alias(), "context switches", &block::pc_sw_context_switches,
+        pmt::mp(0), pmt::mp(1), pmt::mp(0),
+        "", "Instantaneous software context switches", RPC_PRIVLVL_MIN,
+        DISPTIME | DISPOPTSTRIP)));
+
+    d_rpc_vars.push_back(
+      rpcbasic_sptr(new rpcbasic_register_get<block, float >(
+        alias(), "avg context switches", &block::pc_sw_context_switches_avg,
+        pmt::mp(0), pmt::mp(1), pmt::mp(0),
+        "", "Average software context switches", RPC_PRIVLVL_MIN,
+        DISPTIME | DISPOPTSTRIP)));
+
+    d_rpc_vars.push_back(
+      rpcbasic_sptr(new rpcbasic_register_get<block, float >(
+        alias(), "total context switches", &block::pc_sw_context_switches_total,
+        pmt::mp(0), pmt::mp(1), pmt::mp(0),
+        "", "Total software context switches", RPC_PRIVLVL_MIN,
+        DISPTIME | DISPOPTSTRIP)));
+
+    d_rpc_vars.push_back(
+      rpcbasic_sptr(new rpcbasic_register_get<block, float >(
+        alias(), "CPU migrations", &block::pc_sw_cpu_migrations,
+        pmt::mp(0), pmt::mp(1), pmt::mp(0),
+        "", "Instantaneous software CPU migrations", RPC_PRIVLVL_MIN,
+        DISPTIME | DISPOPTSTRIP)));
+
+    d_rpc_vars.push_back(
+      rpcbasic_sptr(new rpcbasic_register_get<block, float >(
+        alias(), "avg CPU migrations", &block::pc_sw_cpu_migrations_avg,
+        pmt::mp(0), pmt::mp(1), pmt::mp(0),
+        "", "Average software CPU migrations", RPC_PRIVLVL_MIN,
+        DISPTIME | DISPOPTSTRIP)));
+
+    d_rpc_vars.push_back(
+      rpcbasic_sptr(new rpcbasic_register_get<block, float >(
+        alias(), "total CPU migrations", &block::pc_sw_cpu_migrations_total,
+        pmt::mp(0), pmt::mp(1), pmt::mp(0),
+        "", "Total software CPU migrations", RPC_PRIVLVL_MIN,
+        DISPTIME | DISPOPTSTRIP)));
+#endif
+
 #endif /* defined(GR_CTRLPORT) && defined(GR_PERFORMANCE_COUNTERS) */
   }
 
