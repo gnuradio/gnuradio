@@ -84,7 +84,7 @@ SpectrumGUIClass::openSpectrumWindow(QWidget* parent,
 				     const bool frequency, const bool waterfall,
 				     const bool time, const bool constellation)
 {
-  d_setlock.lock();
+  d_mutex.lock();
 
   if(!_windowOpennedFlag) {
 
@@ -114,7 +114,7 @@ SpectrumGUIClass::openSpectrumWindow(QWidget* parent,
 
     qApp->processEvents();
   }
-  d_setlock.unlock();
+  d_mutex.unlock();
 
 
   setDisplayTitle(_title);
@@ -168,7 +168,7 @@ SpectrumGUIClass::setDisplayTitle(const std::string newString)
 bool
 SpectrumGUIClass::getWindowOpenFlag()
 {
-  gr::thread::scoped_lock lock(d_setlock);
+  gr::thread::scoped_lock lock(d_mutex);
   bool returnFlag = false;
   returnFlag =  _windowOpennedFlag;
   return returnFlag;
@@ -178,7 +178,7 @@ SpectrumGUIClass::getWindowOpenFlag()
 void
 SpectrumGUIClass::setWindowOpenFlag(const bool newFlag)
 {
-  gr::thread::scoped_lock lock(d_setlock);
+  gr::thread::scoped_lock lock(d_mutex);
   _windowOpennedFlag = newFlag;
 }
 
@@ -187,7 +187,7 @@ SpectrumGUIClass::setFrequencyRange(const double centerFreq,
 				    const double startFreq,
 				    const double stopFreq)
 {
-  gr::thread::scoped_lock lock(d_setlock);
+  gr::thread::scoped_lock lock(d_mutex);
   _centerFrequency = centerFreq;
   _startFrequency = startFreq;
   _stopFrequency = stopFreq;
@@ -201,7 +201,7 @@ SpectrumGUIClass::setFrequencyRange(const double centerFreq,
 double
 SpectrumGUIClass::getStartFrequency()
 {
-  gr::thread::scoped_lock lock(d_setlock);
+  gr::thread::scoped_lock lock(d_mutex);
   double returnValue = 0.0;
   returnValue =  _startFrequency;
   return returnValue;
@@ -210,7 +210,7 @@ SpectrumGUIClass::getStartFrequency()
 double
 SpectrumGUIClass::getStopFrequency()
 {
-  gr::thread::scoped_lock lock(d_setlock);
+  gr::thread::scoped_lock lock(d_mutex);
   double returnValue = 0.0;
   returnValue =  _stopFrequency;
   return returnValue;
@@ -219,7 +219,7 @@ SpectrumGUIClass::getStopFrequency()
 double
 SpectrumGUIClass::getCenterFrequency()
 {
-  gr::thread::scoped_lock lock(d_setlock);
+  gr::thread::scoped_lock lock(d_mutex);
   double returnValue = 0.0;
   returnValue =  _centerFrequency;
   return returnValue;
@@ -237,7 +237,7 @@ SpectrumGUIClass::updateWindow(const bool updateDisplayFlag,
 			       const gr::high_res_timer_type timestamp,
 			       const bool lastOfMultipleFFTUpdateFlag)
 {
-  //gr::thread::scoped_lock lock(d_setlock);
+  //gr::thread::scoped_lock lock(d_mutex);
   int64_t bufferSize = inputBufferSize;
   bool repeatDataFlag = false;
   if(bufferSize > _dataPoints){
@@ -317,7 +317,7 @@ SpectrumGUIClass::updateWindow(const bool updateDisplayFlag,
 float
 SpectrumGUIClass::getPowerValue()
 {
-  gr::thread::scoped_lock lock(d_setlock);
+  gr::thread::scoped_lock lock(d_mutex);
   float returnValue = 0;
   returnValue = _powerValue;
   return returnValue;
@@ -326,14 +326,14 @@ SpectrumGUIClass::getPowerValue()
 void
 SpectrumGUIClass::setPowerValue(const float value)
 {
-  gr::thread::scoped_lock lock(d_setlock);
+  gr::thread::scoped_lock lock(d_mutex);
   _powerValue = value;
 }
 
 int
 SpectrumGUIClass::getWindowType()
 {
-  gr::thread::scoped_lock lock(d_setlock);
+  gr::thread::scoped_lock lock(d_mutex);
   int returnValue = 0;
   returnValue = _windowType;
   return returnValue;
@@ -342,7 +342,7 @@ SpectrumGUIClass::getWindowType()
 void
 SpectrumGUIClass::setWindowType(const int newType)
 {
-  gr::thread::scoped_lock lock(d_setlock);
+  gr::thread::scoped_lock lock(d_mutex);
   _windowType = newType;
 }
 
@@ -357,7 +357,7 @@ SpectrumGUIClass::getFFTSize()
 int
 SpectrumGUIClass::getFFTSizeIndex()
 {
-  gr::thread::scoped_lock lock(d_setlock);
+  gr::thread::scoped_lock lock(d_mutex);
   int fftsize = getFFTSize();
   switch(fftsize) {
   case(1024): return 0; break;
@@ -373,14 +373,14 @@ SpectrumGUIClass::getFFTSizeIndex()
 void
 SpectrumGUIClass::setFFTSize(const int newSize)
 {
-  gr::thread::scoped_lock lock(d_setlock);
+  gr::thread::scoped_lock lock(d_mutex);
   _fftSize = newSize;
 }
 
 gr::high_res_timer_type
 SpectrumGUIClass::getLastGUIUpdateTime()
 {
-  gr::thread::scoped_lock lock(d_setlock);
+  gr::thread::scoped_lock lock(d_mutex);
   gr::high_res_timer_type returnValue;
   returnValue = _lastGUIUpdateTime;
   return returnValue;
@@ -389,14 +389,14 @@ SpectrumGUIClass::getLastGUIUpdateTime()
 void
 SpectrumGUIClass::setLastGUIUpdateTime(const gr::high_res_timer_type newTime)
 {
-  gr::thread::scoped_lock lock(d_setlock);
+  gr::thread::scoped_lock lock(d_mutex);
   _lastGUIUpdateTime = newTime;
 }
 
 unsigned int
 SpectrumGUIClass::getPendingGUIUpdateEvents()
 {
-  gr::thread::scoped_lock lock(d_setlock);
+  gr::thread::scoped_lock lock(d_mutex);
   unsigned int returnValue = 0;
   returnValue = _pendingGUIUpdateEventsCount;
   return returnValue;
@@ -405,14 +405,14 @@ SpectrumGUIClass::getPendingGUIUpdateEvents()
 void
 SpectrumGUIClass::incrementPendingGUIUpdateEvents()
 {
-  gr::thread::scoped_lock lock(d_setlock);
+  gr::thread::scoped_lock lock(d_mutex);
   _pendingGUIUpdateEventsCount++;
 }
 
 void
 SpectrumGUIClass::decrementPendingGUIUpdateEvents()
 {
-  gr::thread::scoped_lock lock(d_setlock);
+  gr::thread::scoped_lock lock(d_mutex);
   if(_pendingGUIUpdateEventsCount > 0){
     _pendingGUIUpdateEventsCount--;
   }
@@ -421,7 +421,7 @@ SpectrumGUIClass::decrementPendingGUIUpdateEvents()
 void
 SpectrumGUIClass::resetPendingGUIUpdateEvents()
 {
-  gr::thread::scoped_lock lock(d_setlock);
+  gr::thread::scoped_lock lock(d_mutex);
   _pendingGUIUpdateEventsCount = 0;
 }
 
@@ -429,14 +429,14 @@ SpectrumGUIClass::resetPendingGUIUpdateEvents()
 QWidget*
 SpectrumGUIClass::qwidget()
 {
-  gr::thread::scoped_lock lock(d_setlock);
+  gr::thread::scoped_lock lock(d_mutex);
   return (QWidget*)_spectrumDisplayForm;
 }
 
 void
 SpectrumGUIClass::setTimeDomainAxis(double min, double max)
 {
-  gr::thread::scoped_lock lock(d_setlock);
+  gr::thread::scoped_lock lock(d_mutex);
   _spectrumDisplayForm->setTimeDomainAxis(min, max);
 }
 
@@ -444,14 +444,14 @@ void
 SpectrumGUIClass::setConstellationAxis(double xmin, double xmax,
 				       double ymin, double ymax)
 {
-  gr::thread::scoped_lock lock(d_setlock);
+  gr::thread::scoped_lock lock(d_mutex);
   _spectrumDisplayForm->setConstellationAxis(xmin, xmax, ymin, ymax);
 }
 
 void
 SpectrumGUIClass::setConstellationPenSize(int size)
 {
-  gr::thread::scoped_lock lock(d_setlock);
+  gr::thread::scoped_lock lock(d_mutex);
   _spectrumDisplayForm->setConstellationPenSize(size);
 }
 
@@ -459,14 +459,14 @@ SpectrumGUIClass::setConstellationPenSize(int size)
 void
 SpectrumGUIClass::setFrequencyAxis(double min, double max)
 {
-  gr::thread::scoped_lock lock(d_setlock);
+  gr::thread::scoped_lock lock(d_mutex);
   _spectrumDisplayForm->setFrequencyAxis(min, max);
 }
 
 void
 SpectrumGUIClass::setUpdateTime(double t)
 {
-  gr::thread::scoped_lock lock(d_setlock);
+  gr::thread::scoped_lock lock(d_mutex);
   _updateTime = t;
   _spectrumDisplayForm->setUpdateTime(_updateTime);
 }
@@ -474,21 +474,21 @@ SpectrumGUIClass::setUpdateTime(double t)
 void
 SpectrumGUIClass::enableRFFreq(bool en)
 {
-  gr::thread::scoped_lock lock(d_setlock);
+  gr::thread::scoped_lock lock(d_mutex);
   _spectrumDisplayForm->toggleRFFrequencies(en);
 }
 
 bool
 SpectrumGUIClass::checkClicked()
 {
-  gr::thread::scoped_lock lock(d_setlock);
+  gr::thread::scoped_lock lock(d_mutex);
   return _spectrumDisplayForm->checkClicked();
 }
 
 float
 SpectrumGUIClass::getClickedFreq()
 {
-  gr::thread::scoped_lock lock(d_setlock);
+  gr::thread::scoped_lock lock(d_mutex);
   return _spectrumDisplayForm->getClickedFreq();
 }
 
