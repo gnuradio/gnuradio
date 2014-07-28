@@ -278,7 +278,7 @@ namespace gr {
     void
     histogram_sink_f_impl::set_nsamps(const int newsize)
     {
-      gr::thread::scoped_lock lock(d_mutex);
+      gr::thread::scoped_lock lock(d_setlock);
 
       if(newsize != d_size) {
 	// Resize residbuf and replace data
@@ -302,7 +302,7 @@ namespace gr {
     void
     histogram_sink_f_impl::set_bins(const int bins)
     {
-      gr::thread::scoped_lock lock(d_mutex);
+      gr::thread::scoped_lock lock(d_setlock);
       d_bins = bins;
       d_main_gui->setNumBins(d_bins);
     }
