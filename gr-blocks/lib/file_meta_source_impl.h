@@ -50,7 +50,6 @@ namespace gr {
       bool d_updated;
       bool d_repeat;
 
-      gr::thread::mutex d_mutex;
       FILE *d_new_fp, *d_new_hdr_fp;
       FILE *d_fp, *d_hdr_fp;
       meta_state_t d_state;
