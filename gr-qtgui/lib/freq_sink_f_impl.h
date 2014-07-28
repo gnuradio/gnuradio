@@ -27,7 +27,6 @@
 #include <gnuradio/filter/firdes.h>
 #include <gnuradio/fft/fft.h>
 #include <gnuradio/high_res_timer.h>
-#include <gnuradio/thread/thread.h>
 #include <gnuradio/qtgui/freqdisplayform.h>
 
 namespace gr {
@@ -39,8 +38,6 @@ namespace gr {
       void forecast(int noutput_items, gr_vector_int &ninput_items_required);
 
       void initialize();
-
-      gr::thread::mutex d_mutex;
 
       int d_fftsize;
       float d_fftavg;

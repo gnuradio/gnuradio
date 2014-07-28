@@ -257,7 +257,7 @@ namespace gr {
     void
     number_sink_impl::reset()
     {
-      gr::thread::scoped_lock lock(d_mutex);
+      gr::thread::scoped_lock lock(d_setlock);
       _reset();
     }
 
@@ -288,7 +288,7 @@ namespace gr {
 			   gr_vector_const_void_star &input_items,
 			   gr_vector_void_star &output_items)
     {
-      gr::thread::scoped_lock lock(d_mutex);
+      gr::thread::scoped_lock lock(d_setlock);
 
       _gui_update_trigger();
 

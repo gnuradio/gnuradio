@@ -233,7 +233,7 @@ namespace gr {
                                        float delay, int channel,
                                        const std::string &tag_key)
     {
-      gr::thread::scoped_lock lock(d_mutex);
+      gr::thread::scoped_lock lock(d_setlock);
 
       d_trigger_mode = mode;
       d_trigger_slope = slope;
@@ -313,7 +313,7 @@ namespace gr {
     time_sink_f_impl::set_nsamps(const int newsize)
     {
       if(newsize != d_size) {
-        gr::thread::scoped_lock lock(d_mutex);
+        gr::thread::scoped_lock lock(d_setlock);
 
 	// Set new size and reset buffer index
 	// (throws away any currently held data, but who cares?)
@@ -344,7 +344,7 @@ namespace gr {
     void
     time_sink_f_impl::set_samp_rate(const double samp_rate)
     {
-      gr::thread::scoped_lock lock(d_mutex);
+      gr::thread::scoped_lock lock(d_setlock);
       d_samp_rate = samp_rate;
       d_main_gui->setSampleRate(d_samp_rate);
     }
@@ -406,7 +406,7 @@ namespace gr {
     void
     time_sink_f_impl::reset()
     {
-      gr::thread::scoped_lock lock(d_mutex);
+      gr::thread::scoped_lock lock(d_setlock);
       _reset();
     }
 
@@ -579,7 +579,7 @@ namespace gr {
       _npoints_resize();
       _gui_update_trigger();
 
-      gr::thread::scoped_lock lock(d_mutex);
+      gr::thread::scoped_lock lock(d_setlock);
 
       int nfill = d_end - d_index;                 // how much room left in buffers
       int nitems = std::min(noutput_items, nfill); // num items we can put in buffers
