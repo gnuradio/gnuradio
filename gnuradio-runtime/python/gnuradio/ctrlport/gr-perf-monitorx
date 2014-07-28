@@ -345,6 +345,10 @@ class DataTable(QtGui.QWidget):
     def checksort_changed(self, state):
         self._sort = state > 0
 
+    def stat_changed(self, index):
+        self._statistic = str(self.stattype.currentText())
+
+
 class DataTableBuffers(DataTable):
     def __init__(self, radio, G):
         DataTable.__init__(self,radio,G)
@@ -397,15 +401,31 @@ class DataTableBuffers(DataTable):
 class DataTableRuntimes(DataTable):
     def __init__(self, radio, G):
         DataTable.__init__(self,radio,G)
-        #self.perfTable.setRowCount(len( self.G.nodes() ))
+        # TODO: can we get the counters automatically?
+        self._counters_table = ["work time", "noutput_items",
+                            "nproduced"]
+        self._counters = "work time"
+        self.counters = QtGui.QComboBox()
+        for counter in self._counters_table:
+            self.counters.addItem(counter)
+        # the percent signs screw up the string formatting
+        #self.counters.addItem('output % full')
+        #self.counters.addItem('input % full')
+        self.counters.setMaximumWidth(300)
+        self.hlayout.addWidget(self.counters)
+        self.counters.currentIndexChanged.connect(self.counter_changed)
+
+    def counter_changed(self, index):
+        self._counters = str(self.counters.currentText())
 
     def update(self):
         nodes = self.G.nodes();
 
-        # get work time for all blocks
-        kl = map(lambda x: "%s::%swork time" % \
-                     (x, self._statistics_table[self._statistic]),
-                 nodes);
+        # get selected stat for all blocks
+        kl = map(lambda x: "{0}::{1}{2}".format(x,
+                    self._statistics_table[self._statistic],
+                    self._counters),
+                    nodes);
         wrk_knobs = self.radio.get(kl)
 
         # strip values out of ctrlport response
@@ -480,9 +500,10 @@ class MForm(QtGui.QWidget):
                         map(lambda x: x.value, buf_knobs.values())))
 
             # get work time for all blocks
-            kl = map(lambda x: "%s::%swork time" % \
-                         (x, self._statistics_table[self._statistic]),
-                     nodes_stream);
+            kl = map(lambda x: "{0}::{1}{2}".format(x,
+                        self._statistics_table[self._statistic],
+                        self._counters),
+                        nodes_stream);
             st = time.time()
             wrk_knobs = self.radio.get(kl)
             td2 = time.time() - st;
@@ -588,6 +609,9 @@ class MForm(QtGui.QWidget):
     def stat_changed(self, index):
         self._statistic = str(self.stattype.currentText())
 
+    def counter_changed(self, index):
+        self._counters = str(self.counters.currentText())
+
     def update_clock(self, clkidx):
         if(self.prevent_clock_change):
             return;
@@ -621,6 +645,7 @@ class MForm(QtGui.QWidget):
         self.layoutTop = QtGui.QVBoxLayout(self)
         self.ctlBox = QtGui.QHBoxLayout();
         self.layout = QtGui.QHBoxLayout()
+        self.tooltip = None
 
         self.layoutTop.addLayout(self.ctlBox);
         self.layoutTop.addLayout(self.layout);
@@ -673,7 +698,21 @@ class MForm(QtGui.QWidget):
         self.ctlBox.addWidget(self.stattype);
         self.stattype.currentIndexChanged.connect(self.stat_changed)
 
-#        self.setLayout(self.layout);
+        # TODO: can we get the counters automatically?
+        self._counters_table = ["work time", "noutput_items",
+                            "nproduced"]
+        self._counters = "work time"
+        self.counters = QtGui.QComboBox()
+        for counter in self._counters_table:
+            self.counters.addItem(counter)
+        # the percent signs screw up the string formatting
+        #self.counters.addItem('output % full')
+        #self.counters.addItem('input % full')
+        self.counters.addItem("branch instructions")
+        self.counters.addItem("cache references")
+        self.counters.setMaximumWidth(300)
+        self.ctlBox.addWidget(self.counters)
+        self.counters.currentIndexChanged.connect(self.counter_changed)
 
         self.radio = radio
         self.knobprops = self.radio.properties([])
@@ -802,12 +841,48 @@ class MForm(QtGui.QWidget):
                 self._grabbed = True
 
     def mouse_move(self, event):
-        if self._grabbed:
-            x, y = event.xdata, event.ydata
-            if(x is not None and y is not None):
+        x, y = event.xdata, event.ydata
+
+        if(x is not None and y is not None):
+            nearby = map(lambda z: math.sqrt( math.pow(x-z[0],2) + math.pow(y-z[1],2)), self.pos.values())
+            i = nearby.index(min(nearby))
+
+            sum_of_weights = sum(self.node_weights)
+            thrsh = self.node_weights[i] / sum_of_weights
+            x_scale = self.sp.get_xlim()
+            y_scale = self.sp.get_ylim()
+            # this is ugly, but the intent is to find when cursor is over a block
+            x_scale = 10. * sum_of_weights / (x_scale[1] - x_scale[0])
+            y_scale = 2. * sum_of_weights / (y_scale[1] - y_scale[0])
+            self.tooltip = None;
+            if self._grabbed:
                 #print "NEW POS: ", (x,y)
                 self.pos[self._current_block] = (x,y)
                 self.updateGraph();
+
+            # the x,y axes are scaled differently, wat?
+            elif(abs(self.pos.values()[i][0] - x) < thrsh * x_scale and
+                   abs(self.pos.values()[i][1]-y) < thrsh * y_scale):
+                print "when the cursor moves we update position and block data"
+                self.tooltip = {'visible':True, 'block':i, 'x':x, 'y':y}
+                self.updateGraph();
+
+    def update_tooltip(self):
+        # this method updates the tooltip without moving the cursor
+        # get a list of strings in format needed for a radio.get call
+        kk = map(lambda counter: "{0}::{1}{2}".format(self.pos.keys()[self.tooltip['block']],
+                        self._statistics_table[self._statistic], counter), self._counters_table)
+
+        # get the values for counters from the radio
+        counter_vals = map(lambda x: self.radio.get([x])[x].value, kk)
+        #tot_work_time = self.radio.get([kk])[kk].value
+
+        #format the tooltip string
+        tip_text = ""
+        for counter in zip(self._counters_table, counter_vals):
+            tip_text += "%s: %1.2f\n" % counter
+        tip_text = tip_text.strip('\n')
+        self.tooltip['text'] = tip_text
 
     def button_release(self, event):
         self._grabbed = False
@@ -838,6 +913,10 @@ class MForm(QtGui.QWidget):
         )
         nx.draw_networkx_labels(self.G, self.pos,
                                 font_size=12)
+        if(self.tooltip is not None and self.tooltip['visible'] ):
+            self.update_tooltip()
+            self.sp.text(self.tooltip['x'], self.tooltip['y'], self.tooltip['text'],
+                    bbox=dict(facecolor='wheat', edgecolor='black'))
 
         self.canvas.draw();
         self.canvas.show();
