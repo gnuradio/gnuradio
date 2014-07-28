@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='ASCII'?>
 <flow_graph>
-  <timestamp>Tue Jul 22 09:01:31 2014</timestamp>
+  <timestamp>Mon Jul 28 14:10:35 2014</timestamp>
   <block>
     <key>options</key>
     <param>
@@ -52,54 +52,12 @@
       <value></value>
     </param>
     <param>
+      <key>alias</key>
+      <value></value>
+    </param>
+    <param>
       <key>_coordinate</key>
       <value>(10, 10)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>variable</key>
-    <param>
-      <key>id</key>
-      <value>block</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>value</key>
-      <value>1000</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(621, 10)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>variable</key>
-    <param>
-      <key>id</key>
-      <value>noisevar</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>value</key>
-      <value>10**(-snr_db/10)</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(279, 10)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -121,8 +79,39 @@
       <value>"@FSM_FILE_INSTALL_DIR@"</value>
     </param>
     <param>
+      <key>alias</key>
+      <value></value>
+    </param>
+    <param>
       <key>_coordinate</key>
-      <value>(434, 10)</value>
+      <value>(513, 10)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>variable</key>
+    <param>
+      <key>id</key>
+      <value>block</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>value</key>
+      <value>1000</value>
+    </param>
+    <param>
+      <key>alias</key>
+      <value></value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(441, 10)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -144,8 +133,39 @@
       <value>100e3</value>
     </param>
     <param>
+      <key>alias</key>
+      <value></value>
+    </param>
+    <param>
       <key>_coordinate</key>
       <value>(358, 10)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>variable</key>
+    <param>
+      <key>id</key>
+      <value>noisevar</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>value</key>
+      <value>10**(-snr_db/10)</value>
+    </param>
+    <param>
+      <key>alias</key>
+      <value></value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(279, 10)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -181,6 +201,10 @@
     <param>
       <key>repeat</key>
       <value>True</value>
+    </param>
+    <param>
+      <key>alias</key>
+      <value></value>
     </param>
     <param>
       <key>affinity</key>
@@ -230,6 +254,10 @@
       <value>True</value>
     </param>
     <param>
+      <key>alias</key>
+      <value></value>
+    </param>
+    <param>
       <key>affinity</key>
       <value></value>
     </param>
@@ -271,6 +299,10 @@
     <param>
       <key>vlen</key>
       <value>1</value>
+    </param>
+    <param>
+      <key>alias</key>
+      <value></value>
     </param>
     <param>
       <key>affinity</key>
@@ -316,6 +348,10 @@
       <value>1</value>
     </param>
     <param>
+      <key>alias</key>
+      <value></value>
+    </param>
+    <param>
       <key>affinity</key>
       <value></value>
     </param>
@@ -359,6 +395,10 @@
       <value>2</value>
     </param>
     <param>
+      <key>alias</key>
+      <value></value>
+    </param>
+    <param>
       <key>affinity</key>
       <value></value>
     </param>
@@ -396,6 +436,10 @@
     <param>
       <key>scale</key>
       <value>1</value>
+    </param>
+    <param>
+      <key>alias</key>
+      <value></value>
     </param>
     <param>
       <key>affinity</key>
@@ -449,6 +493,10 @@
       <value>digital.TRELLIS_EUCLIDEAN</value>
     </param>
     <param>
+      <key>alias</key>
+      <value></value>
+    </param>
+    <param>
       <key>affinity</key>
       <value></value>
     </param>
@@ -500,6 +548,10 @@
       <value>1</value>
     </param>
     <param>
+      <key>alias</key>
+      <value></value>
+    </param>
+    <param>
       <key>affinity</key>
       <value></value>
     </param>
@@ -547,6 +599,10 @@
       <value>-42</value>
     </param>
     <param>
+      <key>alias</key>
+      <value></value>
+    </param>
+    <param>
       <key>affinity</key>
       <value></value>
     </param>
@@ -576,6 +632,10 @@
     <param>
       <key>_enabled</key>
       <value>True</value>
+    </param>
+    <param>
+      <key>name</key>
+      <value>""</value>
     </param>
     <param>
       <key>type</key>
@@ -618,11 +678,23 @@
       <value></value>
     </param>
     <param>
+      <key>unit1</key>
+      <value></value>
+    </param>
+    <param>
       <key>color1</key>
       <value>("black", "black")</value>
     </param>
     <param>
+      <key>factor1</key>
+      <value>1</value>
+    </param>
+    <param>
       <key>label2</key>
+      <value></value>
+    </param>
+    <param>
+      <key>unit2</key>
       <value></value>
     </param>
     <param>
@@ -630,7 +702,15 @@
       <value>("black", "black")</value>
     </param>
     <param>
+      <key>factor2</key>
+      <value>1</value>
+    </param>
+    <param>
       <key>label3</key>
+      <value></value>
+    </param>
+    <param>
+      <key>unit3</key>
       <value></value>
     </param>
     <param>
@@ -638,7 +718,15 @@
       <value>("black", "black")</value>
     </param>
     <param>
+      <key>factor3</key>
+      <value>1</value>
+    </param>
+    <param>
       <key>label4</key>
+      <value></value>
+    </param>
+    <param>
+      <key>unit4</key>
       <value></value>
     </param>
     <param>
@@ -646,7 +734,15 @@
       <value>("black", "black")</value>
     </param>
     <param>
+      <key>factor4</key>
+      <value>1</value>
+    </param>
+    <param>
       <key>label5</key>
+      <value></value>
+    </param>
+    <param>
+      <key>unit5</key>
       <value></value>
     </param>
     <param>
@@ -654,7 +750,15 @@
       <value>("black", "black")</value>
     </param>
     <param>
+      <key>factor5</key>
+      <value>1</value>
+    </param>
+    <param>
       <key>label6</key>
+      <value></value>
+    </param>
+    <param>
+      <key>unit6</key>
       <value></value>
     </param>
     <param>
@@ -662,7 +766,15 @@
       <value>("black", "black")</value>
     </param>
     <param>
+      <key>factor6</key>
+      <value>1</value>
+    </param>
+    <param>
       <key>label7</key>
+      <value></value>
+    </param>
+    <param>
+      <key>unit7</key>
       <value></value>
     </param>
     <param>
@@ -670,7 +782,15 @@
       <value>("black", "black")</value>
     </param>
     <param>
+      <key>factor7</key>
+      <value>1</value>
+    </param>
+    <param>
       <key>label8</key>
+      <value></value>
+    </param>
+    <param>
+      <key>unit8</key>
       <value></value>
     </param>
     <param>
@@ -678,7 +798,15 @@
       <value>("black", "black")</value>
     </param>
     <param>
+      <key>factor8</key>
+      <value>1</value>
+    </param>
+    <param>
       <key>label9</key>
+      <value></value>
+    </param>
+    <param>
+      <key>unit9</key>
       <value></value>
     </param>
     <param>
@@ -686,12 +814,28 @@
       <value>("black", "black")</value>
     </param>
     <param>
+      <key>factor9</key>
+      <value>1</value>
+    </param>
+    <param>
       <key>label10</key>
+      <value></value>
+    </param>
+    <param>
+      <key>unit10</key>
       <value></value>
     </param>
     <param>
       <key>color10</key>
       <value>("black", "black")</value>
+    </param>
+    <param>
+      <key>factor10</key>
+      <value>1</value>
+    </param>
+    <param>
+      <key>alias</key>
+      <value></value>
     </param>
     <param>
       <key>affinity</key>
@@ -753,6 +897,10 @@
       <value></value>
     </param>
     <param>
+      <key>alias</key>
+      <value></value>
+    </param>
+    <param>
       <key>_coordinate</key>
       <value>(177, 10)</value>
     </param>
@@ -777,7 +925,7 @@
     </param>
     <param>
       <key>o_fsm_args</key>
-      <value>prefix+"awgn1o2_4.fsm"</value>
+      <value>prefix+"/awgn1o2_4.fsm"</value>
     </param>
     <param>
       <key>o_init_state</key>
@@ -785,7 +933,7 @@
     </param>
     <param>
       <key>i_fsm_args</key>
-      <value>prefix+"awgn2o3_4.fsm"</value>
+      <value>prefix+"/awgn2o3_4.fsm"</value>
     </param>
     <param>
       <key>i_init_state</key>
@@ -798,6 +946,10 @@
     <param>
       <key>bl</key>
       <value>block</value>
+    </param>
+    <param>
+      <key>alias</key>
+      <value></value>
     </param>
     <param>
       <key>affinity</key>
@@ -836,7 +988,7 @@
     </param>
     <param>
       <key>o_fsm_args</key>
-      <value>prefix+"awgn1o2_4.fsm"</value>
+      <value>prefix+"/awgn1o2_4.fsm"</value>
     </param>
     <param>
       <key>o_init_state</key>
@@ -848,7 +1000,7 @@
     </param>
     <param>
       <key>i_fsm_args</key>
-      <value>prefix+"awgn2o3_4.fsm"</value>
+      <value>prefix+"/awgn2o3_4.fsm"</value>
     </param>
     <param>
       <key>i_init_state</key>
@@ -873,6 +1025,10 @@
     <param>
       <key>siso_type</key>
       <value>trellis.TRELLIS_MIN_SUM</value>
+    </param>
+    <param>
+      <key>alias</key>
+      <value></value>
     </param>
     <param>
       <key>affinity</key>
