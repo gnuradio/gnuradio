@@ -23,6 +23,7 @@
 #ifndef SPECTRUM_GUI_CLASS_HPP
 #define SPECTRUM_GUI_CLASS_HPP
 
+#include <gnuradio/thread/thread.h>
 #include <qwidget.h>
 #include <qapplication.h>
 #include <qlabel.h>
@@ -111,6 +112,7 @@ protected:
 
 private:
 
+  gr::thread::mutex d_mutex;
   int64_t _dataPoints;
   std::string _title;
   double _centerFrequency;
