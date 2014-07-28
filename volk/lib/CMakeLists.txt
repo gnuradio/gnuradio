@@ -385,6 +385,7 @@ include_directories(
 # Handle ASM support
 #  on by default, but let users turn it off
 ########################################################################
+if(${CMAKE_VERSION} VERSION_GREATER "2.8.9")
 set(ASM_ARCHS_AVAILABLE "armv7")
 if( NOT DEFINED ENABLE_ASM OR ENABLE_ASM )
     # sort through a list of all architectures we have ASM for
@@ -408,11 +409,14 @@ if( NOT DEFINED ENABLE_ASM OR ENABLE_ASM )
         endif()
         set(CMAKE_ASM-ATT_FLAGS_INIT ${ARCH_ASM_FLAGS})
         enable_language(ASM-ATT) # this must be after flags_init
-        message(STATUS "asm flags are ${CMAKE_ASM-ATT_FLAGS}")
+        message(STATUS "asm flags: ${CMAKE_ASM-ATT_FLAGS}")
     endforeach(ARCH)
 else()
     message("---- NOT Adding ASM files")
 endif()
+else(${CMAKE_VERSION} VERSION_GREATER "2.8.9")
+    message(STATUS "Not enabling ASM support. CMake >= 2.8.10 required.")
+endif(${CMAKE_VERSION} VERSION_GREATER "2.8.9")
 
 ########################################################################
 # Handle orc support
