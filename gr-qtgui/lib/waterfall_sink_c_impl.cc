@@ -54,8 +54,8 @@ namespace gr {
 						 int nconnections,
 						 QWidget *parent)
       : sync_block("waterfall_sink_c",
-		      io_signature::make(1, nconnections, sizeof(gr_complex)),
-		      io_signature::make(0, 0, 0)),
+                   io_signature::make(1, nconnections, sizeof(gr_complex)),
+                   io_signature::make(0, 0, 0)),
 	d_fftsize(fftsize), d_fftavg(1.0),
 	d_wintype((filter::firdes::win_type)(wintype)),
 	d_center_freq(fc), d_bandwidth(bw), d_name(name),
@@ -372,6 +372,8 @@ namespace gr {
     void
     waterfall_sink_c_impl::windowreset()
     {
+      gr::thread::scoped_lock lock(d_setlock);
+
       filter::firdes::win_type newwintype;
       newwintype = d_main_gui->getFFTWindowType();
       if(d_wintype != newwintype) {
@@ -392,6 +394,8 @@ namespace gr {
     void
     waterfall_sink_c_impl::fftresize()
     {
+      gr::thread::scoped_lock lock(d_setlock);
+
       int newfftsize = d_main_gui->getFFTSize();
       d_fftavg = d_main_gui->getFFTAverage();
 

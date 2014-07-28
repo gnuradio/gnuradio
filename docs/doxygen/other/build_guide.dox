@@ -85,7 +85,7 @@ audio-osx and audio-windows to be either satisfied or built.
 
 \section build_gr_cmake Building GNU Radio
 
-GNU Radio is built using the Cmake build system
+GNU Radio is built using the CMake build system
 (http://www.cmake.org/). The standard build method is as follows:
 
 \code
@@ -101,7 +101,7 @@ The \$(builddir) is the directory in which the code is built. This
 <b>cannot</b> be the same path as where the source code resides. Often,
 \$(builddir) is \$(srcdir)/build.
 
-\subsection cmake_options Cmake Options
+\section cmake_options CMake Options
 
 Options can be used to specify where to find various library or
 include file dependencies that are not automatically being found
@@ -135,25 +135,55 @@ version. Each type sets different flags for different purposes. To set
 the build type, use:
 
 \code
--DCMAKE_BUILD_TYPE="Release"|"Debug"|"RelWithDebInfo"
+-DCMAKE_BUILD_TYPE=<type>
 \endcode
 
-If not specified, the "Release" mode is the defaulted to.
+The available build types and the C/C++ flags they set are:
 
-"Release" mode sets the '-O3' optimization flag.
+\li None: No flags; define them yourself
+\li Release: -O3
+\li Debug: -O2 -g
+\li RelWithDebInfo: -O3 -g
+\li MinSizeRel: -Os
+\li NoOptWithASM: -O0 -g -save-temps
+\li O2WithASM: -O2 -g -save-temps
+\li O3WithASM: -O3 -g -save-temps
 
-"Debug" mode sets '-g -O2' flags to export debug symbols and reduce
-the optimization to make the libraries easier to debug and step
-through.
+If not specified, the "Release" mode is the default.
 
-"RelWithDebInfo" builds with the release mode optimization of "-O3"
-but also exports debug symbols with "-g".
+
+\subsection cmake_other Collection of CMake Flags
+
+\li CMAKE_BUILD_TYPE: Build profile type defined above. Default is "release".
+\li CMAKE_INSTALL_PREFIX: Installation prefix path. Default is "/usr/local".
+\li ENABLE_PYTHON: Turn Python bindings on/off. Default is True.
+\li ENABLE_GR_<component>: Turn any top-level component on/off. Default is True for all.
+\li ENABLE_GR_CTRLPORT: Turn Building ControlPort. Default is True
+\li ENABLE_PERFORMANCE_COUNTERS: Turn performance counters on/off in runtime. Default is True.
+\li ENABLE_ORC: tells VOLK enable/disable use of Orc. Default is True.
+\li ENABLE_ASM: tells VOLK to use assembly files for proto-kernels if defined for the architecture. Default is True.
+\li ENABLE_STATIC_LIBS: build static library files. Default is False.
+\li CMAKE_TOOLCHAIN_FILE: A toolchain file to setup the CMake environment for cross-compiling.
+
+Here are som other potentially helpful CMake flags. These are to help you specifically locate certain dependencies. While the CMake scripts themselves should generally find these for us, we can use these to help direct CMake to specific locations if we have installed a different version elsewhere on the system that CMake doesn't know about.
+
+\li ICE_MANUAL_INSTALL_PATH: prefix of where ZeroC Ice was installed.
+\li QWT_LIBRARIES: shared library to use for Qwt (in the form <path>/libqwt.so).
+\li QWT_INCLUDE_DIRS: path to Qwt include files (e.g., /usr/include/qwt).
+\li PYTHON_EXECUTABLE: Location of the 'python' binary you want to use (e.g., /usr/bin/python2.7).
+\li PYTHON_INCLUDE_PATH: path to Python include files (e.g., /usr/include/python2.7).
+\li PYTHON_LIBRARY: Python's shared library location (e.g., /usr/lib/python2.7.so.1).
+\li Boost_INCLUDE_DIR: location of the 'boost' header file directory (e.g., /usr/include).
+\li Boost_LIBRARY_DIRS: location of the libboost-xxx.so files (e.g., /usr/lib)
+
+
+Other dependencies will have similar settings like these to properly locate them.
 
 
 \subsection build_gr_cmake_e100 Building for the E100
 
 To build GNU Radio on the Ettus Research E100 embedded platforms,
-Cmake has to know that the processors uses the NEON extensions. Use
+CMake has to know that the processors uses the NEON extensions. Use
 the
 
 \code

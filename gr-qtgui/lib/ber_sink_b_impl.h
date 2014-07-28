@@ -25,7 +25,6 @@
 
 #include <gnuradio/qtgui/ber_sink_b.h>
 #include <gnuradio/high_res_timer.h>
-#include <gnuradio/thread/thread.h>
 #include <gnuradio/qtgui/constellationdisplayform.h>
 
 namespace gr {
@@ -35,8 +34,6 @@ namespace gr {
     {
     private:
       void initialize();
-
-      gr::thread::mutex d_mutex;
 
       std::vector<double*> d_esno_buffers;
       std::vector<double*> d_ber_buffers;

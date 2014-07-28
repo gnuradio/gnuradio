@@ -26,7 +26,6 @@
 #include <gnuradio/qtgui/number_sink.h>
 #include <gnuradio/qtgui/numberdisplayform.h>
 #include <gnuradio/filter/single_pole_iir.h>
-#include <gnuradio/thread/thread.h>
 #include <gnuradio/high_res_timer.h>
 
 namespace gr {
@@ -36,8 +35,6 @@ namespace gr {
     {
     private:
       void initialize();
-
-      gr::thread::mutex d_mutex;
 
       size_t d_itemsize;
       float d_average;

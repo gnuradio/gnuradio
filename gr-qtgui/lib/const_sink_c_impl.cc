@@ -238,7 +238,7 @@ namespace gr {
 					int channel,
 					const std::string &tag_key)
     {
-      gr::thread::scoped_lock lock(d_mutex);
+      gr::thread::scoped_lock lock(d_setlock);
 
       d_trigger_mode = mode;
       d_trigger_slope = slope;
@@ -308,7 +308,7 @@ namespace gr {
     void
     const_sink_c_impl::set_nsamps(const int newsize)
     {
-      gr::thread::scoped_lock lock(d_mutex);
+      gr::thread::scoped_lock lock(d_setlock);
 
       if(newsize != d_size) {
 	// Set new size and reset buffer index
@@ -331,6 +331,7 @@ namespace gr {
 	}
 
 	d_main_gui->setNPoints(d_size);
+        _reset();
       }
     }
 
@@ -361,7 +362,7 @@ namespace gr {
     void
     const_sink_c_impl::reset()
     {
-      gr::thread::scoped_lock lock(d_mutex);
+      gr::thread::scoped_lock lock(d_setlock);
       _reset();
     }
 

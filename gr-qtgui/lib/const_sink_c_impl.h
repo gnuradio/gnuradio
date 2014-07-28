@@ -25,7 +25,6 @@
 
 #include <gnuradio/qtgui/const_sink_c.h>
 #include <gnuradio/high_res_timer.h>
-#include <gnuradio/thread/thread.h>
 #include <gnuradio/qtgui/constellationdisplayform.h>
 
 namespace gr {
@@ -35,8 +34,6 @@ namespace gr {
     {
     private:
       void initialize();
-
-      gr::thread::mutex d_mutex;
 
       int d_size, d_buffer_size;
       std::string d_name;

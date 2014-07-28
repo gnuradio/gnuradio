@@ -171,7 +171,7 @@ namespace gr {
     bool
     file_meta_sink_impl::_open(FILE **fp, const char *filename)
     {
-      gr::thread::scoped_lock guard(d_mutex); // hold mutex for duration of this function
+      gr::thread::scoped_lock guard(d_setlock); // hold mutex for duration of this function
 
       bool ret = true;
       int fd;
@@ -201,7 +201,7 @@ namespace gr {
     void
     file_meta_sink_impl::close()
     {
-      gr::thread::scoped_lock guard(d_mutex); // hold mutex for duration of this function
+      gr::thread::scoped_lock guard(d_setlock); // hold mutex for duration of this function
       update_last_header();
 
       if(d_state == STATE_DETACHED) {
@@ -222,7 +222,7 @@ namespace gr {
     file_meta_sink_impl::do_update()
     {
       if(d_updated) {
-	gr::thread::scoped_lock guard(d_mutex); // hold mutex for duration of this block
+	gr::thread::scoped_lock guard(d_setlock); // hold mutex for duration of this block
 	if(d_state == STATE_DETACHED) {
 	  if(d_hdr_fp)
 	    fclose(d_hdr_fp);
