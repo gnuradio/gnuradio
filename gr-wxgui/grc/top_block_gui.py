@@ -31,7 +31,7 @@ class top_block_gui(gr.top_block):
 		"""
 		Initialize the gr top block.
 		Create the wx gui elements.
-		
+
 		Args:
 		    title: the main window title
 		    size: the main window size tuple in pixels

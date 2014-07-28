@@ -8,7 +8,8 @@
 	<name>IShort To Complex</name>
 	<key>blocks_interleaved_short_to_complex</key>
 	<import>from gnuradio import blocks</import>
-	<make>blocks.interleaved_short_to_complex($vector_input)</make>
+	<make>blocks.interleaved_short_to_complex($vector_input, $swap)</make>
+	<callback>set_swap($swap)</callback>
     <param>
         <name>Vector Input</name>
         <key>vector_input</key>
@@ -25,6 +26,21 @@
             <opt>vlen:2</opt>
         </option>
     </param>
+    <param>
+		<name>Swap</name>
+		<key>swap</key>
+		<value>False</value>
+		<type>enum</type>
+		<hide>part</hide>
+		<option>
+			<name>Yes</name>
+			<key>True</key>
+		</option>
+		<option>
+			<name>No</name>
+			<key>False</key>
+		</option>
+	</param>
 	<sink>
 		<name>in</name>
 		<type>short</type>

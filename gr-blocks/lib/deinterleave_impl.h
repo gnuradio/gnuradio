@@ -30,20 +30,27 @@ namespace gr {
 
     class BLOCKS_API deinterleave_impl : public deinterleave
     {
+
       size_t d_itemsize;
+      unsigned int d_blocksize;
+      unsigned int d_current_output;
+      unsigned int d_noutputs;
+
 
     public:
-      deinterleave_impl(size_t itemsize);
+      deinterleave_impl(size_t itemsize, unsigned int blocksize);
 
       bool check_topology(int ninputs, int noutputs);
 
-      int work(int noutput_items,
-	       gr_vector_const_void_star &input_items,
-	       gr_vector_void_star &output_items);
+      int general_work(int noutput_items,
+                       gr_vector_int& ninput_items,
+                       gr_vector_const_void_star &input_items,
+                       gr_vector_void_star &output_items);
+
     };
 
   } /* namespace blocks */
 } /* namespace gr */
-   
+
 
 #endif /* INCLUDED_DEINTERLEAVE_IMPL_H */

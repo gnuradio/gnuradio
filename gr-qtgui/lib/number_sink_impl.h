@@ -92,6 +92,9 @@ namespace gr {
       void set_label(int which, const std::string &label);
       void set_min(int which, float min);
       void set_max(int which, float max);
+      void set_title(const std::string &title);
+      void set_unit(int which, const std::string &unit);
+      void set_factor(int which, float factor);
 
       float average() const;
       graph_t graph_type() const;
@@ -100,6 +103,9 @@ namespace gr {
       std::string label(int which) const;
       float min(int which) const;
       float max(int which) const;
+      std::string title() const;
+      std::string unit(int which) const;
+      float factor(int which) const;
 
       void enable_menu(bool en);
       void enable_autoscale(bool en=true);

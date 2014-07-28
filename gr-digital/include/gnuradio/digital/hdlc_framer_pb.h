@@ -42,7 +42,7 @@ namespace gr {
      * flowgraphs that stream continuously (anything using a USRP) this should
      * not be an issue.
      *
-     * \ingroup digital
+     * \ingroup pkt_operators_blk
      *
      */
     class DIGITAL_API hdlc_framer_pb : virtual public gr::sync_block

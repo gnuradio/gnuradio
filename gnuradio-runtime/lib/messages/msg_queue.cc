@@ -98,6 +98,6 @@ namespace gr {
       while(delete_head_nowait() != pmt::pmt_t())
         ;
     }
-    
+
   } /* namespace messages */
 } /* namespace gr */

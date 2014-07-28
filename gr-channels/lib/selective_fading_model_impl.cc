@@ -37,7 +37,7 @@
 
 namespace gr {
   namespace channels {
-    
+
     selective_fading_model::sptr
     selective_fading_model::make( unsigned int N, float fDTs, bool LOS, float K, int seed, std::vector<float> delays, std::vector<float> mags, int ntaps)
     {
@@ -60,7 +60,7 @@ namespace gr {
         for(size_t i=0; i<mags.size(); i++){
             d_faders.push_back(new gr::channels::flat_fader_impl(N, fDTs, (i==0)&&(LOS), K, seed+i));
         }
-    
+
         // set up tap history
         if(ntaps < 1){ throw std::runtime_error("ntaps must be >= 1"); }
         set_history(1+ntaps);
@@ -74,7 +74,7 @@ namespace gr {
         }
     }
 
-    int 
+    int
     selective_fading_model_impl::work (int noutput_items,
         gr_vector_const_void_star &input_items,
         gr_vector_void_star &output_items)
@@ -89,13 +89,13 @@ namespace gr {
             for(size_t j=0; j<d_taps.size(); j++){
                 d_taps[j] = gr_complex(0,0);
             }
-            
+
             // add each flat fading component to the taps
             for(size_t j=0; j<d_faders.size(); j++){
                 gr_complex ff_H(d_faders[j]->next_sample());
                 for(size_t k=0; k<d_taps.size(); k++){
                     float dist = k-d_delays[j];
-                    float interpmag = d_sintable.sinc(2*M_PI*dist);       
+                    float interpmag = d_sintable.sinc(2*M_PI*dist);
                     d_taps[k] += ff_H * interpmag * d_mags[j];
                 }
             }
@@ -106,7 +106,7 @@ namespace gr {
                 sum += in[i+j] * d_taps[d_taps.size()-j-1];
             }
 
-            // assign output 
+            // assign output
             out[i] = sum;
         }
 

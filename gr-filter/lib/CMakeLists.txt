@@ -1,4 +1,4 @@
-# Copyright 2012-2013 Free Software Foundation, Inc.
+# Copyright 2012-2014 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -18,73 +18,13 @@
 # Boston, MA 02110-1301, USA.
 
 ########################################################################
-# generate helper scripts to expand templated files
+# Invoke macro to generate various sources and headers
 ########################################################################
-include(GrPython)
-
-file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/generate_helper.py "
-#!${PYTHON_EXECUTABLE}
-
-import sys, os, re
-sys.path.append('${GR_RUNTIME_PYTHONPATH}')
-os.environ['srcdir'] = '${CMAKE_CURRENT_SOURCE_DIR}'
-os.chdir('${CMAKE_CURRENT_BINARY_DIR}')
-
-if __name__ == '__main__':
-    import build_utils
-    root, inp = sys.argv[1:3]
-    for sig in sys.argv[3:]:
-        name = re.sub ('X+', sig, root)
-        d = build_utils.standard_impl_dict2(name, sig, 'filter')
-        build_utils.expand_template(d, inp)
-")
-
-macro(expand_cc root)
-  #make a list of all the generated files
-  unset(expanded_files_cc)
-  unset(expanded_files_h)
-  foreach(sig ${ARGN})
-    string(REGEX REPLACE "X+" ${sig} name ${root})
-    list(APPEND expanded_files_cc ${CMAKE_CURRENT_BINARY_DIR}/${name}.cc)
-    list(APPEND expanded_files_h  ${CMAKE_CURRENT_BINARY_DIR}/${name}.h)
-  endforeach(sig)
-
-  #create a command to generate the source files
-  add_custom_command(
-    OUTPUT ${expanded_files_cc}
-    DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/${root}.cc.t
-    COMMAND ${PYTHON_EXECUTABLE} ${PYTHON_DASH_B}
-    ${CMAKE_CURRENT_BINARY_DIR}/generate_helper.py
-    ${root} ${root}.cc.t ${ARGN}
-  )
-
-  #create a command to generate the header file
-  add_custom_command(
-    OUTPUT ${expanded_files_h}
-    DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/${root}.h.t
-    COMMAND ${PYTHON_EXECUTABLE} ${PYTHON_DASH_B}
-    ${CMAKE_CURRENT_BINARY_DIR}/generate_helper.py
-    ${root} ${root}.h.t ${ARGN}
-  )
-
-  #make source files depends on headers to force generation
-  set_source_files_properties(${expanded_files_cc}
-    PROPERTIES OBJECT_DEPENDS "${expanded_files_h}"
-  )
-
-  #install rules for the generated cc files
-  list(APPEND generated_sources ${expanded_files_cc})
-  list(APPEND generated_headers ${expanded_files_h})
-endmacro(expand_cc)
-
-########################################################################
-# Invoke macro to generate various sources
-########################################################################
-expand_cc(fir_filter_XXX_impl              ccc ccf fcc fff fsf scc)
-expand_cc(freq_xlating_fir_filter_XXX_impl ccc ccf fcc fcf scf scc)
-expand_cc(interp_fir_filter_XXX_impl       ccc ccf fcc fff fsf scc)
-expand_cc(rational_resampler_base_XXX_impl ccc ccf fcc fff fsf scc)
-
+include(GrMiscUtils)
+GR_EXPAND_X_CC_H(filter fir_filter_XXX_impl              ccc ccf fcc fff fsf scc)
+GR_EXPAND_X_CC_H(filter freq_xlating_fir_filter_XXX_impl ccc ccf fcc fcf scf scc)
+GR_EXPAND_X_CC_H(filter interp_fir_filter_XXX_impl       ccc ccf fcc fff fsf scc)
+GR_EXPAND_X_CC_H(filter rational_resampler_base_XXX_impl ccc ccf fcc fff fsf scc)
 
 ########################################################################
 # Setup the include and linker paths
@@ -184,6 +124,36 @@ GR_LIBRARY_FOO(gnuradio-filter RUNTIME_COMPONENT "filter_runtime" DEVEL_COMPONEN
 add_dependencies(gnuradio-filter
   filter_generated_includes filter_generated_swigs
   gnuradio-runtime gnuradio-fft)
+
+if(ENABLE_STATIC_LIBS)
+  if(ENABLE_GR_CTRLPORT)
+    # Remove GR_CTRLPORT set this target's definitions.
+    # Makes sure we don't try to use ControlPort stuff in source files
+    # since Ice will not work with static libs.
+    GET_DIRECTORY_PROPERTY(STATIC_DEFS COMPILE_DEFINITIONS)
+    list(REMOVE_ITEM STATIC_DEFS "GR_CTRLPORT")
+    SET_PROPERTY(DIRECTORY PROPERTY COMPILE_DEFINITIONS "${STATIC_DEFS}")
+
+    # readd it to the target since we removed it from the directory-wide list.
+    SET_PROPERTY(TARGET gnuradio-filter APPEND PROPERTY COMPILE_DEFINITIONS "GR_CTRLPORT")
+  endif(ENABLE_GR_CTRLPORT)
+
+  add_library(gnuradio-filter_static STATIC ${filter_sources})
+
+  add_dependencies(gnuradio-filter_static
+    filter_generated_includes
+    gnuradio-runtime_static gnuradio-fft_static)
+
+  if(NOT WIN32)
+    set_target_properties(gnuradio-filter_static
+      PROPERTIES OUTPUT_NAME gnuradio-filter)
+  endif(NOT WIN32)
+
+  install(TARGETS gnuradio-filter_static
+    ARCHIVE DESTINATION lib${LIB_SUFFIX} COMPONENT "filter_devel"   # .lib file
+    )
+endif(ENABLE_STATIC_LIBS)
+
 
 ########################################################################
 # QA C++ Code for gr-filter

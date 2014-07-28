@@ -30,7 +30,7 @@
 namespace gr {
   namespace filter {
     namespace kernel {
-      
+
       /*!
        * \brief A filter bank with generic taps.
        *
@@ -39,7 +39,7 @@ namespace gr {
        * outputs.
        *
        * The only advantage of using this block over N individual
-       * FIR filter blocks is that it places less of a load on the 
+       * FIR filter blocks is that it places less of a load on the
        * scheduler.
        *
        * The number of filters cannot be changed dynamically, however
@@ -59,7 +59,7 @@ namespace gr {
         std::vector< std::vector<float> > d_taps;
         std::vector<bool> d_active;
         unsigned int d_taps_per_filter;
-        
+
       public:
         /*!
          * Build the filterbank.
@@ -68,7 +68,7 @@ namespace gr {
          *             Populates the filters.
          */
         filterbank(const std::vector<std::vector<float> > &taps);
-          
+
         ~filterbank();
 
         /*!
@@ -89,7 +89,7 @@ namespace gr {
          */
         std::vector<std::vector<float> > taps() const;
       };
-      
+
     } /* namespace kernel */
   } /* namespace filter */
 } /* namespace gr */

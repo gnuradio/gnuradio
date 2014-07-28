@@ -184,7 +184,7 @@ namespace gr {
     int buffer_current = d_header[HD_BUFFER_CURRENT];
     int buffer_size = d_header[HD_BUFFER_SIZE];
     int total = 0;
-    
+
     nbytes = std::min(nbytes, buffer_size - d_bytes_read);
 
     while(nbytes > 0) {

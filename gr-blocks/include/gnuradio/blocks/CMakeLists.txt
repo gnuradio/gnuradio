@@ -1,4 +1,4 @@
-# Copyright 2013 Free Software Foundation, Inc.
+# Copyright 2013-2014 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -18,80 +18,39 @@
 # Boston, MA 02110-1301, USA.
 
 ########################################################################
-# generate helper scripts to expand templated files
+# Invoke macro to generate various headers
 ########################################################################
-include(GrPython)
-
-file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/generate_helper.py "
-#!${PYTHON_EXECUTABLE}
-
-import sys, os, re
-sys.path.append('${GR_RUNTIME_PYTHONPATH}')
-os.environ['srcdir'] = '${CMAKE_CURRENT_SOURCE_DIR}'
-os.chdir('${CMAKE_CURRENT_BINARY_DIR}')
-
-if __name__ == '__main__':
-    import build_utils
-    root, inp = sys.argv[1:3]
-    for sig in sys.argv[3:]:
-        name = re.sub ('X+', sig, root)
-        d = build_utils.standard_dict(name, sig, 'blocks')
-        build_utils.expand_template(d, inp)
-
-")
-
-macro(expand_h root)
-  #make a list of all the generated files
-  unset(expanded_files_h)
-  foreach(sig ${ARGN})
-    string(REGEX REPLACE "X+" ${sig} name ${root})
-    list(APPEND expanded_files_h ${CMAKE_CURRENT_BINARY_DIR}/${name}.h)
-  endforeach(sig)
-  
-  #create a command to generate the files
-  add_custom_command(
-    OUTPUT ${expanded_files_h}
-    DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/${root}.h.t
-    COMMAND ${PYTHON_EXECUTABLE} ${PYTHON_DASH_B}
-    ${CMAKE_CURRENT_BINARY_DIR}/generate_helper.py
-    ${root} ${root}.h.t ${ARGN}
-    )
-
-  #install rules for the generated h files
-  list(APPEND generated_includes ${expanded_files_h})
-endmacro(expand_h)
-
-########################################################################
-# Invoke macro to generate various sources
-########################################################################
-expand_h(abs_XX             ss ii ff)
-expand_h(add_XX             ss ii cc)
-expand_h(add_const_XX       bb ss ii ff cc)
-expand_h(add_const_vXX      bb ss ii ff cc)
-expand_h(and_XX             bb ss ii)
-expand_h(and_const_XX       bb ss ii)
-expand_h(argmax_XX          fs is ss)
-expand_h(divide_XX          ss ii ff cc)
-expand_h(integrate_XX       ss ii ff cc)
-expand_h(max_XX             ff ii ss)
-expand_h(moving_average_XX  ss ii ff cc)
-expand_h(multiply_XX        ss ii)
-expand_h(multiply_const_XX  ss ii)
-expand_h(multiply_const_vXX ss ii ff cc)
-expand_h(mute_XX            ss ii ff cc)
-expand_h(not_XX             bb ss ii)
-expand_h(or_XX              bb ss ii)
-expand_h(peak_detector_XX   fb ib sb)
-expand_h(probe_signal_X     b s i f c)
-expand_h(probe_signal_vX    b s i f c)
-expand_h(sample_and_hold_XX bb ss ii ff)
-expand_h(sub_XX             ss ii ff cc)
-expand_h(xor_XX             bb ss ii)
-expand_h(packed_to_unpacked_XX bb ss ii)
-expand_h(unpacked_to_packed_XX bb ss ii)
-expand_h(vector_insert_X    b s i f c)
-expand_h(vector_sink_X      b s i f c)
-expand_h(vector_source_X    b s i f c)
+include(GrMiscUtils)
+GR_EXPAND_X_H(blocks abs_XX             ss ii ff)
+GR_EXPAND_X_H(blocks add_XX             ss ii cc)
+GR_EXPAND_X_H(blocks add_const_XX       bb ss ii ff cc)
+GR_EXPAND_X_H(blocks add_const_vXX      bb ss ii ff cc)
+GR_EXPAND_X_H(blocks and_XX             bb ss ii)
+GR_EXPAND_X_H(blocks and_const_XX       bb ss ii)
+GR_EXPAND_X_H(blocks argmax_XX          fs is ss)
+GR_EXPAND_X_H(blocks divide_XX          ss ii ff cc)
+GR_EXPAND_X_H(blocks integrate_XX       ss ii ff cc)
+GR_EXPAND_X_H(blocks max_XX             ff ii ss)
+GR_EXPAND_X_H(blocks moving_average_XX  ss ii ff cc)
+GR_EXPAND_X_H(blocks multiply_XX        ss ii)
+GR_EXPAND_X_H(blocks multiply_const_XX  ss ii)
+GR_EXPAND_X_H(blocks multiply_const_vXX ss ii ff cc)
+GR_EXPAND_X_H(blocks multiply_matrix_XX ff cc)
+GR_EXPAND_X_H(blocks mute_XX            ss ii ff cc)
+GR_EXPAND_X_H(blocks not_XX             bb ss ii)
+GR_EXPAND_X_H(blocks or_XX              bb ss ii)
+GR_EXPAND_X_H(blocks peak_detector_XX   fb ib sb)
+GR_EXPAND_X_H(blocks probe_signal_X     b s i f c)
+GR_EXPAND_X_H(blocks probe_signal_vX    b s i f c)
+GR_EXPAND_X_H(blocks sample_and_hold_XX bb ss ii ff)
+GR_EXPAND_X_H(blocks sub_XX             ss ii ff cc)
+GR_EXPAND_X_H(blocks tsb_vector_sink_X  b s i f c)
+GR_EXPAND_X_H(blocks xor_XX             bb ss ii)
+GR_EXPAND_X_H(blocks packed_to_unpacked_XX bb ss ii)
+GR_EXPAND_X_H(blocks unpacked_to_packed_XX bb ss ii)
+GR_EXPAND_X_H(blocks vector_insert_X    b s i f c)
+GR_EXPAND_X_H(blocks vector_sink_X      b s i f c)
+GR_EXPAND_X_H(blocks vector_source_X    b s i f c)
 
 add_custom_target(blocks_generated_includes DEPENDS
     ${generated_includes}
@@ -109,7 +68,9 @@ install(FILES
     lfsr_15_1_0.h
     lfsr_32k.h
     log2_const.h
+    pack_k_bits.h
     rotator.h
+    unpack_k_bits.h
     wavfile.h
     add_ff.h
     annotator_1to1.h
@@ -169,6 +130,9 @@ install(FILES
     pack_k_bits_bb.h
     patterned_interleaver.h
     pdu.h
+    pdu_filter.h
+    pdu_set.h
+    pdu_remove.h
     pdu_to_tagged_stream.h
     peak_detector2_fb.h
     random_pdu.h

@@ -53,14 +53,14 @@ namespace gr {
 				gr_vector_void_star &output_items)
     {
       size_t nblks = noutput_items/d_pattern.size();
-      
+
       std::vector<const char*> ii;
       for(size_t i=0; i<input_items.size(); i++){
         ii.push_back((const char*)input_items[i]);
         }
 
       char *oo = (char *) output_items[0];
-      
+
       for(size_t i=0; i<nblks; i++){
         for(size_t j=0; j<d_pattern.size(); j++){
           memcpy(oo, ii[d_pattern[j]], d_itemsize);
@@ -68,7 +68,7 @@ namespace gr {
           ii[d_pattern[j]] += d_itemsize;
           }
         }
-            
+
       for(size_t i=0; i<d_counts.size(); i++){
         consume(i, d_counts[i]*nblks );
       }

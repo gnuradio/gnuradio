@@ -36,7 +36,7 @@ namespace gr {
     class BLOCKS_API nlog10_ff : virtual public sync_block
     {
     public:
-      
+
       // gr::blocks::nlog10_ff::sptr
       typedef boost::shared_ptr<nlog10_ff> sptr;
 

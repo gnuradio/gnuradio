@@ -38,7 +38,7 @@ namespace gr {
     public:
       // gr::vocoder::ulaw_encode_sb::sptr
       typedef boost::shared_ptr<ulaw_encode_sb> sptr;
-      
+
       /*!
        * \brief Make ulaw encoder block.
        */

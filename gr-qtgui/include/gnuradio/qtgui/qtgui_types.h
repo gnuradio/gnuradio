@@ -154,7 +154,9 @@ enum{
   INTENSITY_COLOR_MAP_TYPE_WHITE_HOT = 1,
   INTENSITY_COLOR_MAP_TYPE_BLACK_HOT = 2,
   INTENSITY_COLOR_MAP_TYPE_INCANDESCENT = 3,
-  INTENSITY_COLOR_MAP_TYPE_USER_DEFINED = 4
+  INTENSITY_COLOR_MAP_TYPE_USER_DEFINED = 4,
+  INTENSITY_COLOR_MAP_TYPE_SUNSET = 5,
+  INTENSITY_COLOR_MAP_TYPE_COOL = 6,
 };
 
 class ColorMap_MultiColor: public QwtLinearColorMap
@@ -194,6 +196,36 @@ public:
     QwtLinearColorMap(Qt::black, Qt::white)
   {
     addColorStop(0.5, Qt::darkRed);
+  }
+};
+
+class ColorMap_Sunset: public QwtLinearColorMap
+{
+public:
+  ColorMap_Sunset():
+    QwtLinearColorMap(QColor(0, 0, 0, 0),
+                      QColor(255, 255, 193, 255))
+  {
+    addColorStop(0.167, QColor( 86,   0, 153,  45));
+    addColorStop(0.333, QColor(147,  51, 119,  91));
+    addColorStop(0.500, QColor(226,  51,  71, 140));
+    addColorStop(0.667, QColor(255, 109,   0, 183));
+    addColorStop(0.833, QColor(255, 183,   0, 221));
+  }
+};
+
+class ColorMap_Cool: public QwtLinearColorMap
+{
+public:
+  ColorMap_Cool():
+    QwtLinearColorMap(QColor(0, 0, 0, 0),
+                      QColor(255, 255, 255, 255))
+  {
+    addColorStop(0.167, QColor( 0,    0, 127, 25));
+    addColorStop(0.333, QColor( 0,   63, 153, 86));
+    addColorStop(0.500, QColor(76,  114, 178, 127));
+    addColorStop(0.667, QColor(153, 165, 204, 178));
+    addColorStop(0.833, QColor(204, 216, 229, 211));
   }
 };
 

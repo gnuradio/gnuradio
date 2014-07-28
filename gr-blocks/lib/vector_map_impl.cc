@@ -50,7 +50,7 @@ namespace gr {
         out_sizeofs.push_back(mapping[i].size()*item_size);
       }
       return out_sizeofs;
-    } 
+    }
 
     vector_map::sptr
     vector_map::make(size_t item_size, std::vector<size_t> in_vlens,

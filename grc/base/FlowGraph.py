@@ -26,10 +26,10 @@ class FlowGraph(Element):
     def __init__(self, platform):
         """
         Make a flow graph from the arguments.
-        
+
         Args:
             platform: a platforms with blocks and contrcutors
-        
+
         Returns:
             the flow graph object
         """
@@ -41,10 +41,10 @@ class FlowGraph(Element):
     def _get_unique_id(self, base_id=''):
         """
         Get a unique id starting with the base id.
-        
+
         Args:
             base_id: the id starts with this and appends a count
-        
+
         Returns:
             a unique id
         """
@@ -58,7 +58,7 @@ class FlowGraph(Element):
     def __str__(self): return 'FlowGraph - %s(%s)'%(self.get_option('title'), self.get_option('id'))
     def rewrite(self):
         def refactor_bus_structure():
-            
+
             for block in self.get_blocks():
                 for direc in ['source', 'sink']:
                     if direc == 'source':
@@ -69,11 +69,11 @@ class FlowGraph(Element):
                         get_p = block.get_sinks;
                         get_p_gui = block.get_sinks_gui
                         bus_structure = block.form_bus_structure('sink');
-                
+
                     if 'bus' in map(lambda a: a.get_type(), get_p_gui()):
-                    
-                            
-                        
+
+
+
                         if len(get_p_gui()) > len(bus_structure):
                             times = range(len(bus_structure), len(get_p_gui()));
                             for i in times:
@@ -84,17 +84,17 @@ class FlowGraph(Element):
                             n = {'name':'bus','type':'bus'};
                             if True in map(lambda a: isinstance(a.get_nports(), int), get_p()):
                                 n['nports'] = str(1);
-                            
-                            times = range(len(get_p_gui()), len(bus_structure));    
-                            
+
+                            times = range(len(get_p_gui()), len(bus_structure));
+
                             for i in times:
                                 n['key'] = str(len(get_p()));
                                 n = odict(n);
                                 port = block.get_parent().get_parent().Port(block=block, n=n, dir=direc);
                                 get_p().append(port);
-                                
-                                
-                                
+
+
+
         for child in self.get_children(): child.rewrite()
         refactor_bus_structure();
 
@@ -102,10 +102,10 @@ class FlowGraph(Element):
         """
         Get the option for a given key.
         The option comes from the special options block.
-        
+
         Args:
             key: the param key for the options block
-        
+
         Returns:
             the value held by that param
         """
@@ -132,7 +132,7 @@ class FlowGraph(Element):
         """
         Get a list of all the elements.
         Always ensure that the options block is in the list (only once).
-        
+
         Returns:
             the element list
         """
@@ -146,7 +146,7 @@ class FlowGraph(Element):
     def get_enabled_blocks(self):
         """
         Get a list of all blocks that are enabled.
-        
+
         Returns:
             a list of blocks
         """
@@ -155,7 +155,7 @@ class FlowGraph(Element):
     def get_enabled_connections(self):
         """
         Get a list of all connections that are enabled.
-        
+
         Returns:
             a list of connections
         """
@@ -165,10 +165,10 @@ class FlowGraph(Element):
         """
         Get a new block of the specified key.
         Add the block to the list of elements.
-        
+
         Args:
             key: the block key
-        
+
         Returns:
             the new block or None if not found
         """
@@ -184,12 +184,12 @@ class FlowGraph(Element):
     def connect(self, porta, portb):
         """
         Create a connection between porta and portb.
-        
+
         Args:
             porta: a port
             portb: another port
         @throw Exception bad connection
-        
+
         Returns:
             the new connection
         """
@@ -223,7 +223,7 @@ class FlowGraph(Element):
     def evaluate(self, expr):
         """
         Evaluate the expression.
-        
+
         Args:
             expr: the string expression
         @throw NotImplementedError
@@ -237,7 +237,7 @@ class FlowGraph(Element):
         """
         Export this flow graph to nested data.
         Export all block and connection data.
-        
+
         Returns:
             a nested data odict
         """
@@ -253,7 +253,7 @@ class FlowGraph(Element):
         Import blocks and connections into this flow graph.
         Clear this flowgraph of all previous blocks and connections.
         Any blocks or connections in error will be ignored.
-        
+
         Args:
             n: the nested data odict
         """

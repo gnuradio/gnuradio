@@ -79,7 +79,7 @@ class FileDialogHelper(gtk.FileChooserDialog):
         FileDialogHelper contructor.
         Create a save or open dialog with cancel and ok buttons.
         Use standard settings: no multiple selection, local files only, and the * filter.
-        
+
         Args:
             action: gtk.FILE_CHOOSER_ACTION_OPEN or gtk.FILE_CHOOSER_ACTION_SAVE
             title: the title of the dialog (string)
@@ -96,7 +96,7 @@ class FileDialog(FileDialogHelper):
     def __init__(self, current_file_path=''):
         """
         FileDialog constructor.
-        
+
         Args:
             current_file_path: the current directory or path to the open flow graph
         """
@@ -119,7 +119,7 @@ class FileDialog(FileDialogHelper):
     def add_and_set_filter(self, filter):
         """
         Add the gtk file filter to the list of filters and set it as the default file filter.
-        
+
         Args:
             filter: a gtk file filter.
         """
@@ -132,7 +132,7 @@ class FileDialog(FileDialogHelper):
         If this is a save dialog and the file name is missing the extension, append the file extension.
         If the file name with the extension already exists, show a overwrite dialog.
         If this is an open dialog, return a list of filenames.
-        
+
         Returns:
             the complete file path
         """
@@ -172,7 +172,7 @@ class FileDialog(FileDialogHelper):
     def run(self):
         """
         Get the filename and destroy the dialog.
-        
+
         Returns:
             the filename or None if a close/cancel occured.
         """

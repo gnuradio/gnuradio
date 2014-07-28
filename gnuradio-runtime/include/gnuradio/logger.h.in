@@ -1,19 +1,19 @@
 /* -*- c++ -*- */
 /*
  * Copyright 2012-2013 Free Software Foundation, Inc.
- * 
+ *
  * This file is part of GNU Radio
- * 
+ *
  * GNU Radio is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3, or (at your option)
  * any later version.
- * 
+ *
  * GNU Radio is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with GNU Radio; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 51 Franklin Street,
@@ -69,17 +69,23 @@ namespace gr {
 #define GR_LOG_ASSIGN_LOGPTR(logger,name)
 #define GR_CONFIG_LOGGER(config)
 #define GR_CONFIG_AND_WATCH_LOGGER(config,period)
-#define GR_LOG_GETLOGGER(logger, name) 
+#define GR_LOG_GETLOGGER(logger, name)
 #define GR_SET_LEVEL(name, level)
-#define GR_LOG_SET_LEVEL(logger, level) 
+#define GR_LOG_SET_LEVEL(logger, level)
 #define GR_GET_LEVEL(name, level)
 #define GR_LOG_GET_LEVEL(logger, level)
 #define GR_ADD_APPENDER(name,appender)
 #define GR_LOG_ADD_APPENDER(logger,appender)
+#define GR_SET_APPENDER(name,appender)
+#define GR_LOG_SET_APPENDER(logger,appender)
 #define GR_ADD_CONSOLE_APPENDER(logger,target,pattern)
 #define GR_LOG_ADD_CONSOLE_APPENDER(logger,target,pattern)
+#define GR_SET_CONSOLE_APPENDER(logger,target,pattern)
+#define GR_LOG_SET_CONSOLE_APPENDER(logger,target,pattern)
 #define GR_ADD_FILE_APPENDER(name,filename,append,pattern)
 #define GR_LOG_ADD_FILE_APPENDER(logger,filename,append,pattern)
+#define GR_SET_FILE_APPENDER(name,filename,append,pattern)
+#define GR_LOG_SET_FILE_APPENDER(logger,filename,append,pattern)
 #define GR_ADD_ROLLINGFILE_APPENDER(name,filename,filesize,bkup_index,append,mode,pattern)
 #define GR_LOG_ADD_ROLLINGFILE_APPENDER(logger,filename,filesize,bkup_index,append,mode,pattern)
 #define GR_GET_LOGGER_NAMES(names)
@@ -180,6 +186,13 @@ namespace gr {
 #define GR_LOG_ADD_APPENDER(logger, appender) { \
     gr::logger_add_appender(logger, appender);}
 
+#define GR_SET_APPENDER(name, appender) {                       \
+    gr::logger_ptr logger = gr::logger_get_logger(name);        \
+    gr::logger_set_appender(logger,appender);}
+
+#define GR_LOG_SET_APPENDER(logger, appender) { \
+    gr::logger_set_appender(logger, appender);}
+
 #define GR_ADD_CONSOLE_APPENDER(name, target, pattern) {        \
     gr::logger_ptr logger = gr::logger_get_logger(name);        \
     gr::logger_add_console_appender(logger,target,pattern);}
@@ -187,12 +200,26 @@ namespace gr {
 #define GR_LOG_ADD_CONSOLE_APPENDER(logger, target, pattern) {  \
     gr::logger_add_console_appender(logger,target,pattern);}
 
+#define GR_SET_CONSOLE_APPENDER(name, target, pattern) {        \
+    gr::logger_ptr logger = gr::logger_get_logger(name);        \
+    gr::logger_set_console_appender(logger,target,pattern);}
+
+#define GR_LOG_SET_CONSOLE_APPENDER(logger, target, pattern) {  \
+    gr::logger_set_console_appender(logger,target,pattern);}
+
 #define GR_ADD_FILE_APPENDER(name, filename, append, pattern) {         \
     gr::logger_ptr logger = gr::logger_get_logger(name);                \
     gr::logger_add_file_appender(logger,filename,append,pattern);}
 
 #define GR_LOG_ADD_FILE_APPENDER(logger, filename, append, pattern) {   \
     gr::logger_add_file_appender(logger,filename,append,pattern);}
+
+#define GR_SET_FILE_APPENDER(name, filename, append, pattern) {         \
+    gr::logger_ptr logger = gr::logger_get_logger(name);                \
+    gr::logger_set_file_appender(logger,filename,append,pattern);}
+
+#define GR_LOG_SET_FILE_APPENDER(logger, filename, append, pattern) {   \
+    gr::logger_set_file_appender(logger,filename,append,pattern);}
 
 #define GR_ADD_ROLLINGFILE_APPENDER(name, filename, filesize, bkup_index, append, mode, pattern) { \
     gr::logger_ptr logger = gr::logger_get_logger(name);                    \
@@ -299,11 +326,11 @@ namespace gr {
 namespace gr {
 
   /*!
-   * \brief Class to control configuration of logger.  
+   * \brief Class to control configuration of logger.
    * This is a singleton that cna launch a thread to wathc a config file for changes
    * \ingroup logging
    */
-  class logger_config
+  class GR_RUNTIME_API logger_config
   {
   private:
     /*! \brief filename of logger config file */
@@ -313,7 +340,7 @@ namespace gr {
     /*! \brief Pointer to watch thread for config file changes */
     boost::thread *watch_thread;
 
-    /*! \brief Watcher thread method 
+    /*! \brief Watcher thread method
      * /param filename Name of configuration file
      * /param watch_period Seconds between checks for changes in config file
      */
@@ -520,6 +547,17 @@ namespace gr {
                                           std::string appender);
 
   /*!
+   * \brief Sets a console appender to a given logger. Deletes any
+   * existing appenders and adds a new one. To add an additional
+   * appender, use logger_add_appender.
+   *
+   * \param logger Logger to which appender will be added
+   * \param appender Name of appender to add to logger
+   */
+  GR_RUNTIME_API void logger_set_appender(logger_ptr logger,
+                                          std::string appender);
+
+  /*!
    * \brief Add console appender to a given logger
    *
    * Add console appender to a given logger
@@ -529,6 +567,19 @@ namespace gr {
    * \param pattern Formating pattern for log messages
    */
   GR_RUNTIME_API void logger_add_console_appender(logger_ptr logger,
+                                                  std::string target,
+                                                  std::string pattern);
+
+  /*!
+   * \brief Sets a new console appender to a given logger after
+   * removing all others. Use logger_add_console_appender to add
+   * another.
+   *
+   * \param logger Logger to which appender will be added
+   * \param target Std target to write 'cout' or 'cerr' (default is cout)
+   * \param pattern Formating pattern for log messages
+   */
+  GR_RUNTIME_API void logger_set_console_appender(logger_ptr logger,
                                                   std::string target,
                                                   std::string pattern);
 
@@ -543,6 +594,19 @@ namespace gr {
    * \param pattern Formating pattern for log messages
    */
   GR_RUNTIME_API void logger_add_file_appender(logger_ptr logger,
+                                               std::string filename,
+                                               bool append, std::string pattern);
+
+  /*!
+   * \brief Set a file appender to a given logger. To add another file
+   * appender, use logger_add_file_appender.
+   *
+   * \param logger Logger to which appender will be added
+   * \param filename File to which log will be written
+   * \param append Overwrite or append to log file
+   * \param pattern Formating pattern for log messages
+   */
+  GR_RUNTIME_API void logger_set_file_appender(logger_ptr logger,
                                                std::string filename,
                                                bool append, std::string pattern);
 
@@ -568,7 +632,7 @@ namespace gr {
    *
    * Add rolling file appender to a given logger
    *
-   * \return vector of string names of loggers 
+   * \return vector of string names of loggers
    */
   GR_RUNTIME_API std::vector<std::string> logger_get_logger_names(void);
 
@@ -587,17 +651,23 @@ namespace gr {
 #define GR_LOG_ASSIGN_LOGPTR(logger,name)
 #define GR_CONFIG_LOGGER(config)
 #define GR_CONFIG_AND_WATCH_LOGGER(config,period)
-#define GR_LOG_GETLOGGER(logger, name) 
+#define GR_LOG_GETLOGGER(logger, name)
 #define GR_SET_LEVEL(name, level)
-#define GR_LOG_SET_LEVEL(logger, level) 
+#define GR_LOG_SET_LEVEL(logger, level)
 #define GR_GET_LEVEL(name, level)
 #define GR_LOG_GET_LEVEL(logger, level)
 #define GR_ADD_APPENDER(name,appender)
 #define GR_LOG_ADD_APPENDER(logger,appender)
+#define GR_SET_APPENDER(name,appender)
+#define GR_LOG_SET_APPENDER(logger,appender)
 #define GR_ADD_CONSOLE_APPENDER(logger,target,pattern)
 #define GR_LOG_ADD_CONSOLE_APPENDER(logger,target,pattern)
+#define GR_SET_CONSOLE_APPENDER(logger,target,pattern)
+#define GR_LOG_SET_CONSOLE_APPENDER(logger,target,pattern)
 #define GR_ADD_FILE_APPENDER(name,filename,append,pattern)
 #define GR_LOG_ADD_FILE_APPENDER(logger,filename,append,pattern)
+#define GR_SET_FILE_APPENDER(name,filename,append,pattern)
+#define GR_LOG_SET_FILE_APPENDER(logger,filename,append,pattern)
 #define GR_ADD_ROLLINGFILE_APPENDER(name,filename,filesize,bkup_index,append,mode,pattern)
 #define GR_LOG_ADD_ROLLINGFILE_APPENDER(logger,filename,filesize,bkup_index,append,mode,pattern)
 #define GR_GET_LOGGER_NAMES(names)
@@ -640,7 +710,7 @@ namespace gr {
    * \ingroup logging
    *
    */
-  class logger
+  class GR_RUNTIME_API logger
   {
   private:
     /*! \brief logger pointer to logger associated wiith this wrapper class */
@@ -703,14 +773,30 @@ namespace gr {
       GR_LOG_ADD_APPENDER(d_logger, appender);
     }
 
+    /*! \brief inline function, Method to set an appender to logger by
+        name (define appender in conf file) */
+    void set_appender(std::string appender) {
+      GR_LOG_SET_APPENDER(d_logger, appender);
+    }
+
     /*! \brief inline function, Method to add console appender to logger */
     void add_console_appender(std::string target,std::string pattern) {
       GR_LOG_ADD_CONSOLE_APPENDER(d_logger, target, pattern);
     }
 
+    /*! \brief inline function, Method to set a console appender to logger */
+    void set_console_appender(std::string target,std::string pattern) {
+      GR_LOG_SET_CONSOLE_APPENDER(d_logger, target, pattern);
+    }
+
     /*! \brief inline function, Method to add file appender to logger */
     void add_file_appender(std::string filename, bool append, std::string pattern) {
       GR_LOG_ADD_FILE_APPENDER(d_logger, filename, append, pattern);
+    }
+
+    /*! \brief inline function, Method to set a file appender to logger */
+    void set_file_appender(std::string filename, bool append, std::string pattern) {
+      GR_LOG_SET_FILE_APPENDER(d_logger, filename, append, pattern);
     }
 
     /*! \brief inline function, Method to add rolling file appender to logger */
@@ -726,7 +812,7 @@ namespace gr {
 
 /**************** Start Configuration Class and Methods for Python ************/
 /*!
- * \brief Function to call configuration macro from python.  
+ * \brief Function to call configuration macro from python.
  *        Note: Configuration is only updated if filename or watch_period has changed.
  * \param config_filename  Name of configuration file
  * \param watch_period Seconds to wait between checking for changes in conf file.
@@ -744,7 +830,7 @@ GR_RUNTIME_API std::vector<std::string> gr_logger_get_logger_names(void);
 
 /*!
  * \brief Function to reset logger configuration from python
- * 
+ *
  */
 GR_RUNTIME_API void gr_logger_reset_config(void);
 

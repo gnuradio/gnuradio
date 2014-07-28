@@ -18,7 +18,7 @@ class Block(object):
     Checks if doxyxml produced objects correspond to a new style
     gnuradio block.
     """
-    
+
     @classmethod
     def includes(cls, item):
         if not isinstance(item, DoxyClass):
@@ -33,7 +33,7 @@ class Group(object):
     """
     Checks if doxyxml produced objects correspond to a group.
     """
-    
+
     @classmethod
     def includes(cls, item):
         if not isinstance(item, DoxyGroup):

@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<!--
+###################################################
+## PDU Remove
+###################################################
+ -->
+<block>
+	<name>PDU Remove</name>
+	<key>blocks_pdu_remove</key>
+	<import>from gnuradio import blocks</import>
+	<import>import pmt</import>
+	<make>blocks.pdu_remove($k)</make>
+	<param>
+		<name>Key</name>
+		<key>k</key>
+		<value>pmt.intern("key")</value>
+		<type>raw</type>
+	</param>
+	<sink>
+		<name>pdus</name>
+		<type>message</type>
+        <optional>1</optional>
+	</sink>
+	<source>
+		<name>pdus</name>
+		<type>message</type>
+        <optional>1</optional>
+	</source>
+</block>

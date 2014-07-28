@@ -76,7 +76,7 @@ the messages that are posted to it. After using the
 gr::basic_block::message_port_register_in to declare a subscriber port, we
 must then bind this port to the message handler. For this, we use
 Boost's 'bind' function:
- 
+
 \code
   set_msg_handler(pmt::pmt_t port_id,
     boost::bind(&block_class::message_handler_function, this, _1));
@@ -114,7 +114,7 @@ All messages published by the \b src block on port \a pdus will be
 received by \b dbg on port \a print. Note here how we are just using
 strings to define the ports, not PMT symbols. This is a convenience to
 the user to be able to more easily type in the port names (for
-reference, you can create a PMT symbol in Python using the 
+reference, you can create a PMT symbol in Python using the
 pmt::intern function as pmt.intern("string")).
 
 Users can also query blocks for the names of their input and output
@@ -143,6 +143,11 @@ function to handle messages received on that port. We use a Boost bind
 operator to bind the message port to the message handling
 function. When a new message is pushed onto a port's message queue,
 it is this function that is used to process the message.
+
+
+\section python_msg_passing Message Passing in Python Blocks
+
+ADD STUFF HERE
 
 
 \section examples Code Examples

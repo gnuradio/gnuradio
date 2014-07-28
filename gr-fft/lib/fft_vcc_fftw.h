@@ -28,7 +28,7 @@
 
 namespace gr {
   namespace fft {
-    
+
     class FFT_API fft_vcc_fftw : public fft_vcc
     {
     private:
@@ -42,13 +42,13 @@ namespace gr {
       fft_vcc_fftw(int fft_size, bool forward,
 		   const std::vector<float> &window,
 		   bool shift, int nthreads=1);
-      
+
       ~fft_vcc_fftw();
-      
+
       void set_nthreads(int n);
       int nthreads() const;
       bool set_window(const std::vector<float> &window);
-  
+
       int work(int noutput_items,
 	       gr_vector_const_void_star &input_items,
 	       gr_vector_void_star &output_items);

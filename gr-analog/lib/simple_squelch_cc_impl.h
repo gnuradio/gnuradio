@@ -28,7 +28,7 @@
 
 namespace gr {
   namespace analog {
-    
+
     class simple_squelch_cc_impl : public simple_squelch_cc
     {
     private:

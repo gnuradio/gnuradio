@@ -56,7 +56,7 @@ namespace gr {
       const char *in = (const char *)input_items[0];
       char **outv = (char **)&output_items[0];
       int nstreams = output_items.size();
-      
+
       for (int i = 0; i < noutput_items; i++) {
 	for (int j = 0; j < nstreams; j++) {
 	  memcpy(outv[j], in, item_size);
@@ -64,7 +64,7 @@ namespace gr {
 	  in += item_size;
 	}
       }
-      
+
       return noutput_items;
     }
 

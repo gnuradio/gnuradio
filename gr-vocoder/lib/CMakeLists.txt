@@ -161,3 +161,28 @@ endif(GR_USE_SYSTEM_LIBGSM)
 add_library(gnuradio-vocoder SHARED ${gr_vocoder_sources})
 target_link_libraries(gnuradio-vocoder ${vocoder_libs})
 GR_LIBRARY_FOO(gnuradio-vocoder RUNTIME_COMPONENT "vocoder_runtime" DEVEL_COMPONENT "vocoder_devel")
+
+if(ENABLE_STATIC_LIBS)
+  if(ENABLE_GR_CTRLPORT)
+    # Remove GR_CTRLPORT set this target's definitions.
+    # Makes sure we don't try to use ControlPort stuff in source files
+    # since Ice will not work with static libs.
+    GET_DIRECTORY_PROPERTY(STATIC_DEFS COMPILE_DEFINITIONS)
+    list(REMOVE_ITEM STATIC_DEFS "GR_CTRLPORT")
+    SET_PROPERTY(DIRECTORY PROPERTY COMPILE_DEFINITIONS "${STATIC_DEFS}")
+
+    # readd it to the target since we removed it from the directory-wide list.
+    SET_PROPERTY(TARGET gnuradio-vocoder APPEND PROPERTY COMPILE_DEFINITIONS "GR_CTRLPORT")
+  endif(ENABLE_GR_CTRLPORT)
+
+  add_library(gnuradio-vocoder_static STATIC ${gr_vocoder_sources})
+
+  if(NOT WIN32)
+    set_target_properties(gnuradio-vocoder_static
+      PROPERTIES OUTPUT_NAME gnuradio-vocoder)
+  endif(NOT WIN32)
+
+  install(TARGETS gnuradio-vocoder_static
+    ARCHIVE DESTINATION lib${LIB_SUFFIX} COMPONENT "vocoder_devel"   # .lib file
+    )
+endif(ENABLE_STATIC_LIBS)

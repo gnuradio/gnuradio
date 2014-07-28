@@ -33,10 +33,10 @@ def handle_key_press(event):
     """
     Call the action associated with the key press event.
     Both the key value and the mask must have a match.
-    
+
     Args:
         event: a gtk key press event
-    
+
     Returns:
         true if handled
     """
@@ -242,6 +242,10 @@ TOGGLE_HIDE_DISABLED_BLOCKS = ToggleAction(
     stock_id=gtk.STOCK_MISSING_IMAGE,
     keypresses=(gtk.keysyms.d, gtk.gdk.CONTROL_MASK),
 )
+TOGGLE_AUTO_HIDE_PORT_LABELS = ToggleAction(
+    label='Auto-hide port _labels',
+    tooltip='Automatically hide port labels',
+)
 BLOCK_CREATE_HIER = Action(
     label='C_reate Hier',
     tooltip='Create hier block from selected blocks',
@@ -280,6 +284,10 @@ TOGGLE_BLOCKS_WINDOW = ToggleAction(
     label='Show _Block Tree',
     tooltip='Toggle visibility of the block tree widget',
     keypresses=(gtk.keysyms.b, gtk.gdk.CONTROL_MASK),
+)
+TOGGLE_SCROLL_LOCK = ToggleAction(
+    label='_Reports Scroll Lock',
+    tooltip='Toggle scroll lock for the report window',
 )
 ABOUT_WINDOW_DISPLAY = Action(
     label='_About',
@@ -344,6 +352,11 @@ FIND_BLOCKS = Action(
     stock_id=gtk.STOCK_FIND,
     keypresses=(gtk.keysyms.f, gtk.gdk.CONTROL_MASK,
                 gtk.keysyms.slash, NO_MODS_MASK),
+)
+CLEAR_REPORTS = Action(
+    label='_Clear Reports',
+    tooltip='Clear Reports',
+    stock_id=gtk.STOCK_CLEAR,
 )
 OPEN_HIER = Action(
     label='Open H_ier',

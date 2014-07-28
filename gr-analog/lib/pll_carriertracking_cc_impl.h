@@ -27,7 +27,7 @@
 
 namespace gr {
   namespace analog {
-    
+
     class pll_carriertracking_cc_impl : public pll_carriertracking_cc
     {
     private:

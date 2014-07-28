@@ -69,7 +69,7 @@ class Block(Element):
     def get_coordinate(self):
         """
         Get the coordinate from the position param.
-        
+
         Returns:
             the coordinate tuple (x, y) or (0, 0) if failure
         """
@@ -93,7 +93,7 @@ class Block(Element):
     def set_coordinate(self, coor):
         """
         Set the coordinate into the position param.
-        
+
         Args:
             coor: the coordinate tuple (x, y)
         """
@@ -102,7 +102,7 @@ class Block(Element):
     def get_rotation(self):
         """
         Get the rotation from the position param.
-        
+
         Returns:
             the rotation in degrees or 0 if failure
         """
@@ -116,7 +116,7 @@ class Block(Element):
     def set_rotation(self, rot):
         """
         Set the rotation into the position param.
-        
+
         Args:
             rot: the rotation in degrees
         """
@@ -175,18 +175,25 @@ class Block(Element):
         #calculate width and height needed
         self.W = self.label_width + 2*BLOCK_LABEL_PADDING
         self.H = max(*(
-            [self.label_height+2*BLOCK_LABEL_PADDING] + [2*PORT_BORDER_SEPARATION + \
-            sum([port.H + PORT_SEPARATION for port in ports]) - PORT_SEPARATION
-            for ports in (self.get_sources_gui(), self.get_sinks_gui())] + 
-            [4*PORT_BORDER_SEPARATION + \
-            sum([(port.H) + PORT_SEPARATION for port in ports]) - PORT_SEPARATION
-            for ports in ([i for i in self.get_sources_gui() if i.get_type() == 'bus'], [i for i in self.get_sinks_gui() if i.get_type() == 'bus'])]
+            [  # labels
+                self.label_height + 2 * BLOCK_LABEL_PADDING
+            ] +
+            [  # ports
+                2 * PORT_BORDER_SEPARATION +
+                sum([port.H + PORT_SEPARATION for port in ports if not port.get_hide()]) - PORT_SEPARATION
+                for ports in (self.get_sources_gui(), self.get_sinks_gui())
+            ] +
+            [  # bus ports only
+                4 * PORT_BORDER_SEPARATION +
+                sum([port.H + PORT_SEPARATION for port in ports if port.get_type() == 'bus']) - PORT_SEPARATION
+                for ports in (self.get_sources_gui(), self.get_sinks_gui())
+            ]
         ))
 
     def draw(self, gc, window):
         """
         Draw the signal block with label and inputs/outputs.
-        
+
         Args:
             gc: the graphics context
             window: the gtk window to draw on
@@ -205,16 +212,17 @@ class Block(Element):
             window.draw_drawable(gc, self.vertical_label, 0, 0, x+(self.H-self.label_height)/2, y+BLOCK_LABEL_PADDING, -1, -1)
         #draw ports
         for port in self.get_ports_gui():
-            port.draw(gc, window)
+            if not port.get_hide():
+                port.draw(gc, window)
 
     def what_is_selected(self, coor, coor_m=None):
         """
         Get the element that is selected.
-        
+
         Args:
             coor: the (x,y) tuple
             coor_m: the (x_m, y_m) tuple
-        
+
         Returns:
             this block, a port, or None
         """

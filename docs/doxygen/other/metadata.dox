@@ -20,7 +20,20 @@ about the item size, data type, if it's complex, the sample rate of
 the segment, the time stamp of the first sample of the segment, and
 information regarding the header size and segment size.
 
-Headers have two main tags associated with them:
+The first static portion of the header file contains the following
+information.
+
+- version: (char) version number (usually set to METADATA_VERSION)
+- rx_rate: (double) Stream's sample rate
+- rx_time: (pmt::pmt_t pair - (uint64_t, double)) Time stamp (format from UHD)
+- size: (int) item size in bytes - reflects vector length if any.
+- type: (int) data type (enum below)
+- cplx: (bool) true if data is complex
+- strt: (uint64_t) start of data relative to current header
+- bytes: (uint64_t) size of following data segment in bytes
+
+An optional extra section of the header stores information in any
+received tags. The two main tags associated with tags are:
 
 - rx_rate: the sample rate of the stream.
 - rx_time: the time stamp of the first item in the segment.

@@ -30,7 +30,7 @@
 
 namespace gr {
   namespace filter {
-    
+
     hilbert_fc::sptr
     hilbert_fc::make(unsigned int ntaps,
                      firdes::win_type window,
@@ -48,7 +48,7 @@ namespace gr {
                    io_signature::make(1, 1, sizeof(gr_complex))),
 	d_ntaps(ntaps | 0x1)	// ensure ntaps is odd
     {
-      d_hilb = new kernel::fir_filter_fff(1, 
+      d_hilb = new kernel::fir_filter_fff(1,
                          firdes::hilbert(d_ntaps, window, beta));
       set_history(d_ntaps);
 
@@ -69,12 +69,12 @@ namespace gr {
     {
       float *in = (float *)input_items[0];
       gr_complex *out = (gr_complex *)output_items[0];
-      
+
       for(int i = 0; i < noutput_items; i++) {
 	out[i] = gr_complex(in[i + d_ntaps/2],
 			    d_hilb->filter(&in[i]));
       }
-      
+
       return noutput_items;
     }
 

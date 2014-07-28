@@ -56,7 +56,7 @@ namespace gr {
       int8_t *out = (int8_t *) output_items[0];
 
       volk_32f_s32f_convert_8i(out, in, d_scale, d_vlen*noutput_items);
-      
+
       return noutput_items;
     }
 

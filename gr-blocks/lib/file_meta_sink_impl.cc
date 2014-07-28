@@ -145,7 +145,7 @@ namespace gr {
 	fclose(d_fp);
 	d_fp = 0;
       }
-  
+
       if(d_state == STATE_DETACHED) {
 	if(d_hdr_fp) {
 	  fclose(d_hdr_fp);

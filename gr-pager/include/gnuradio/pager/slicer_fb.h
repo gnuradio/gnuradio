@@ -28,7 +28,7 @@
 
 namespace gr {
   namespace pager {
-    
+
     /*!
      * \brief slicer description
      * \ingroup pager_blk

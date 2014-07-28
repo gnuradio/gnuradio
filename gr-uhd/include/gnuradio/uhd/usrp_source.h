@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2010-2013 Free Software Foundation, Inc.
+ * Copyright 2010-2014 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -27,6 +27,7 @@
 #include <gnuradio/sync_block.h>
 #include <uhd/usrp/multi_usrp.hpp>
 
+// TODO In 3.8, UHD 3.4 will be required and we can remove all these ifdefs
 #ifndef INCLUDED_UHD_STREAM_HPP
 namespace uhd {
   struct GR_UHD_API stream_args_t
@@ -60,41 +61,18 @@ namespace gr {
       typedef boost::shared_ptr<usrp_source> sptr;
 
       /*!
-       * \brief Make a new USRP source block.
+       * \brief DEPRECATED Make a new USRP source block using the deprecated io_type_t.
        * \ingroup uhd_blk
        *
-       * The USRP source block receives samples and writes to a stream.
-       * The source block also provides API calls for receiver settings.
-       *
-       * RX Stream tagging:
-       *
-       * The following tag keys will be produced by the work function:
-       *  - pmt::string_to_symbol("rx_time")
-       *  - pmt::string_to_symbol("rx_rate")
-       *  - pmt::string_to_symbol("rx_freq")
-       *
-       * The timstamp tag value is a pmt tuple of the following:
-       * (uint64 seconds, and double fractional seconds).
-       * A timestamp tag is produced at start() and after overflows.
-       *
-       * The sample rate and center frequency tags are doubles,
-       * representing the sample rate in Sps and frequency in Hz.
-       * These tags are produced upon the user changing parameters.
-       *
-       * See the UHD manual for more detailed documentation:
-       * http://code.ettus.com/redmine/ettus/projects/uhd/wiki
-       *
-       * \param device_addr the address to identify the hardware
-       * \param io_type the desired output data type
-       * \param num_channels number of stream from the device
-       * \return a new USRP source block object
+       * This function will be removed in the future. Please use the other make function,
+       * gr::uhd::make(const ::uhd::device_addr_t, const ::uhd::stream_args_t, const std::string).
        */
       static sptr make(const ::uhd::device_addr_t &device_addr,
                        const ::uhd::io_type_t &io_type,
                        size_t num_channels);
 
       /*!
-       * \brief Make a new USRP source block.
+       * \brief Make a new USRP source block (usually a radio receiver).
        *
        * The USRP source block receives samples and writes to a stream.
        * The source block also provides API calls for receiver settings.
@@ -104,12 +82,16 @@ namespace gr {
        * The following tag keys will be produced by the work function:
        *  - pmt::string_to_symbol("rx_time")
        *
-       * The timstamp tag value is a pmt tuple of the following:
+       * The timestamp tag value is a pmt tuple of the following:
        * (uint64 seconds, and double fractional seconds).
        * A timestamp tag is produced at start() and after overflows.
        *
-       * See the UHD manual for more detailed documentation:
-       * http://code.ettus.com/redmine/ettus/projects/uhd/wiki
+       * \section uhd_rx_command_iface Command interface
+       *
+       * This block has a message port, which consumes UHD PMT commands.
+       * For a description of the command syntax, see Section \ref uhd_command_syntax.
+       *
+       * For a more general description of the gr-uhd components, see \ref page_uhd.
        *
        * \param device_addr the address to identify the hardware
        * \param stream_args the IO format and channel specification
@@ -535,6 +517,8 @@ namespace gr {
 
       /*!
        * Get access to the underlying uhd device object.
+       *
+       * NOTE: This function is only available in C++.
        * \return the multi usrp device object
        */
       virtual ::uhd::usrp::multi_usrp::sptr get_device(void) = 0;

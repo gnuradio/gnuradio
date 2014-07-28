@@ -66,7 +66,7 @@ namespace gr {
     {
       jack_source *self = (jack_source *)arg;
       unsigned int write_size = nframes*sizeof(sample_t);
-      
+
       for(int i = 0; i < self->d_portcount; i++) {
         if(jack_ringbuffer_write_space (self->d_ringbuffer[i]) < write_size) {
           self->d_noverruns++;
@@ -74,7 +74,7 @@ namespace gr {
           fputs ("jO", stderr);
           return 0;
         }
-        
+
         char *buffer = (char *)jack_port_get_buffer(self->d_jack_input_port[i], nframes);
 
         jack_ringbuffer_write (self->d_ringbuffer[i], buffer, write_size);
@@ -109,7 +109,7 @@ namespace gr {
         d_ok_to_block(ok_to_block),
         d_jack_client(0),
         d_portcount(0),
-        d_jack_input_port(),        
+        d_jack_input_port(),
         d_ringbuffer(),
         d_noverruns(0)
     {

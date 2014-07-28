@@ -93,7 +93,7 @@ namespace gr {
 	  }
 	}
 	assert(packet_length != 0);
-	
+
 	// FIXME run this multiple times if input_items >= N * packet_length
 	if (noutput_items >= packet_length ) {
 	  // If the message queue is full we drop the packet.
@@ -110,7 +110,7 @@ namespace gr {
 	} else {
 	  return 0;
 	}
-      } else { 
+      } else {
 	// If the queue if full we drop all the data we got.
 	if (!d_msgq->full_p()) {
 	  // build a message to hold whatever we've got
@@ -119,7 +119,7 @@ namespace gr {
                                             noutput_items, 	// arg2 for other end (redundant)
                                             noutput_items * d_itemsize);   // len of msg
 	  memcpy(msg->msg(), in, noutput_items * d_itemsize);
-	  
+
 	  d_msgq->handle(msg);		// send it
 	}
 
@@ -129,4 +129,4 @@ namespace gr {
 
   } /* namespace blocks */
 } /* namespace gr */
-  
+

@@ -1,0 +1,32 @@
+<block>
+  <name>Async CRC32</name>
+  <key>digital_crc32_async_bb</key>
+  <import>from gnuradio import digital</import>
+  <make>digital.crc32_async_bb($check)</make>
+
+  <param>
+    <name>Mode</name>
+    <key>check</key>
+    <type>enum</type>
+    <option>
+      <name>Generate CRC</name>
+      <key>False</key>
+    </option>
+    <option>
+      <name>Check CRC</name>
+      <key>True</key>
+    </option>
+  </param>
+
+  <sink>
+    <name>in</name>
+    <type>message</type>
+    <optional>1</optional>
+  </sink>
+
+  <source>
+    <name>out</name>
+    <type>message</type>
+    <optional>1</optional>
+  </source>
+</block>

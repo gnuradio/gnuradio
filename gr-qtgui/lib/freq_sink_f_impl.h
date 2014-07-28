@@ -70,7 +70,12 @@ namespace gr {
       void windowreset();
       void buildwindow();
       void fftresize();
+      void check_clicked();
       void fft(float *data_out, const float *data_in, int size);
+
+      // Handles message input port for setting new center frequency.
+      // The message is a PMT pair (intern('freq'), double(frequency)).
+      void handle_set_freq(pmt::pmt_t msg);
 
     public:
       freq_sink_f_impl(int size, int wintype,
@@ -123,6 +128,8 @@ namespace gr {
       void enable_menu(bool en);
       void enable_grid(bool en);
       void enable_autoscale(bool en);
+      void clear_max_hold();
+      void clear_min_hold();
       void reset();
 
       int work(int noutput_items,

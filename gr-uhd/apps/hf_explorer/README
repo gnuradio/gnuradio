@@ -18,7 +18,7 @@ AM now switches in a synchronous PLL detector with the carriers at
 tooltips, etc.  The target AM carrier needs to be closely tuned in, it
 will have a hollow sound until it is locked.  The filter in AM is
 preset to 2500/12500 (7.5kHz +/- 5kHz) and is handy for removing
-adjacent channel interference. 
+adjacent channel interference.
 
 There is code for Web based control of frequency and volume - so
 I can tune the radio with a handheld device.  Disabled by default - it

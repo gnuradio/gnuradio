@@ -28,7 +28,7 @@
 #include <gnuradio/feval.h>
 
 namespace gr {
-  
+
   /*!
    * The work type enum tells the gateway what kind of block to
    * implement.  The choices are familiar gnuradio block overloads
@@ -94,7 +94,7 @@ namespace gr {
   public:
     // gr::block_gateway::sptr
     typedef boost::shared_ptr<block_gateway> sptr;
-    
+
     /*!
      * Make a new gateway block.
      * \param handler the swig director object with callback
@@ -218,6 +218,25 @@ namespace gr {
       return tags;
     }
 
+    std::vector<tag_t> block__get_tags_in_window(unsigned int which_input,
+                                                 uint64_t rel_start,
+                                                 uint64_t rel_end)
+    {
+      std::vector<gr::tag_t> tags;
+      gr::block::get_tags_in_window(tags, which_input, rel_start, rel_end);
+      return tags;
+    }
+
+    std::vector<tag_t> block__get_tags_in_window(unsigned int which_input,
+                                                 uint64_t rel_start,
+                                                 uint64_t rel_end,
+                                                 const pmt::pmt_t &key)
+    {
+      std::vector<gr::tag_t> tags;
+      gr::block::get_tags_in_window(tags, which_input, rel_start, rel_end, key);
+      return tags;
+    }
+
     /* Message passing interface */
     void block__message_port_register_in(pmt::pmt_t port_id) {
       gr::basic_block::message_port_register_in(port_id);
@@ -242,7 +261,7 @@ namespace gr {
     pmt::pmt_t block__message_subscribers(pmt::pmt_t which_port) {
       return gr::basic_block::message_subscribers(which_port);
     }
-    
+
     pmt::pmt_t block__message_ports_in() {
       return gr::basic_block::message_ports_in();
     }
@@ -254,7 +273,7 @@ namespace gr {
     void set_msg_handler_feval(pmt::pmt_t which_port, gr::feval_p *msg_handler)
     {
       if(msg_queue.find(which_port) == msg_queue.end()) {
-        throw std::runtime_error("attempt to set_msg_handler_feval() on bad input message port!"); 
+        throw std::runtime_error("attempt to set_msg_handler_feval() on bad input message port!");
       }
       d_msg_handlers_feval[which_port] = msg_handler;
     }
@@ -267,7 +286,7 @@ namespace gr {
     {
       return (d_msg_handlers_feval.find(which_port) != d_msg_handlers_feval.end());
     }
-    
+
     void dispatch_msg(pmt::pmt_t which_port, pmt::pmt_t msg)
     {
       // Is there a handler?

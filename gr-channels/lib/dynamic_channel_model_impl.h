@@ -63,7 +63,7 @@ namespace gr {
                                             int ntaps_mpath,
                                             double noise_amp,
                                             double noise_seed);
-      
+
       ~dynamic_channel_model_impl();
 
       void setup_rpc();
@@ -77,9 +77,9 @@ namespace gr {
       double doppler_freq() const { return d_fader->fDTs()*samp_rate(); }
       double K() const { return d_fader->K(); }
 
-      void set_samp_rate(double sr) { 
+      void set_samp_rate(double sr) {
             d_fader->set_fDTs( doppler_freq()/samp_rate() );
-            d_sro_model->set_samp_rate(sr); 
+            d_sro_model->set_samp_rate(sr);
             d_cfo_model->set_samp_rate(sr);  }
       void set_sro_dev_std(double dev) { d_sro_model->set_max_dev(dev); }
       void set_sro_dev_max(double dev) { d_sro_model->set_max_dev(dev); }

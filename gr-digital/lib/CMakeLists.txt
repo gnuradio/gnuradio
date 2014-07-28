@@ -1,4 +1,4 @@
-# Copyright 2011-2013 Free Software Foundation, Inc.
+# Copyright 2011-2014 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -42,70 +42,10 @@ if(ENABLE_GR_CTRLPORT)
 endif(ENABLE_GR_CTRLPORT)
 
 ########################################################################
-# generate helper scripts to expand templated files
-########################################################################
-include(GrPython)
-
-file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/generate_helper.py "
-#!${PYTHON_EXECUTABLE}
-
-import sys, os, re
-sys.path.append('${GR_RUNTIME_PYTHONPATH}')
-os.environ['srcdir'] = '${CMAKE_CURRENT_SOURCE_DIR}'
-os.chdir('${CMAKE_CURRENT_BINARY_DIR}')
-
-if __name__ == '__main__':
-    import build_utils
-    root, inp = sys.argv[1:3]
-    for sig in sys.argv[3:]:
-        name = re.sub ('X+', sig, root)
-        d = build_utils.standard_impl_dict2(name, sig, 'digital')
-        build_utils.expand_template(d, inp)
-")
-
-macro(expand_cc root)
-  #make a list of all the generated files
-  unset(expanded_files_cc)
-  unset(expanded_files_h)
-  foreach(sig ${ARGN})
-    string(REGEX REPLACE "X+" ${sig} name ${root})
-    list(APPEND expanded_files_cc ${CMAKE_CURRENT_BINARY_DIR}/${name}.cc)
-    list(APPEND expanded_files_h  ${CMAKE_CURRENT_BINARY_DIR}/${name}.h)
-  endforeach(sig)
-  
-  #create a command to generate the source files
-  add_custom_command(
-    OUTPUT ${expanded_files_cc}
-    DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/${root}.cc.t
-    COMMAND ${PYTHON_EXECUTABLE} ${PYTHON_DASH_B}
-    ${CMAKE_CURRENT_BINARY_DIR}/generate_helper.py
-    ${root} ${root}.cc.t ${ARGN}
-  )
-
-  #create a command to generate the header file
-  add_custom_command(
-    OUTPUT ${expanded_files_h}
-    DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/${root}.h.t
-    COMMAND ${PYTHON_EXECUTABLE} ${PYTHON_DASH_B}
-    ${CMAKE_CURRENT_BINARY_DIR}/generate_helper.py
-    ${root} ${root}.h.t ${ARGN}
-  )
-  
-  #make source files depends on headers to force generation
-  set_source_files_properties(${expanded_files_cc}
-    PROPERTIES OBJECT_DEPENDS "${expanded_files_h}"
-  )
-  
-  #install rules for the generated cc files
-  list(APPEND generated_sources ${expanded_files_cc})  
-  list(APPEND generated_headers ${expanded_files_h})  
-endmacro(expand_cc)
-
-
-########################################################################
 # Invoke macro to generate various sources
 ########################################################################
-expand_cc(chunks_to_symbols_XX_impl     bf bc sf sc if ic)
+include(GrMiscUtils)
+GR_EXPAND_X_CC_H(digital chunks_to_symbols_XX_impl     bf bc sf sc if ic)
 
 ########################################################################
 # Setup library
@@ -123,11 +63,14 @@ list(APPEND digital_sources
     constellation_soft_decoder_cf_impl.cc
     correlate_access_code_bb_impl.cc
     correlate_access_code_tag_bb_impl.cc
+    correlate_access_code_bb_ts_impl.cc
+    correlate_access_code_ff_ts_impl.cc
     correlate_and_sync_cc_impl.cc
     costas_loop_cc_impl.cc
     cpmmod_bc_impl.cc
     crc32.cc
     crc32_bb_impl.cc
+    crc32_async_bb_impl.cc
     descrambler_bb_impl.cc
     diff_decoder_bb_impl.cc
     diff_encoder_bb_impl.cc
@@ -173,7 +116,6 @@ list(APPEND digital_sources
     scrambler_bb_impl.cc
     simple_correlator_impl.cc
     simple_framer_impl.cc
-    header_payload_demux_impl.cc
 )
 
 #Add Windows DLL resource file if using MSVC
@@ -200,7 +142,6 @@ list(APPEND digital_libs
     ${LOG4CPP_LIBRARIES}
 )
 
-
 add_library(gnuradio-digital SHARED ${digital_sources})
 target_link_libraries(gnuradio-digital ${digital_libs})
 GR_LIBRARY_FOO(gnuradio-digital RUNTIME_COMPONENT "digital_runtime" DEVEL_COMPONENT "digital_devel")
@@ -214,3 +155,35 @@ add_dependencies(
     gnuradio-analog
     gnuradio-blocks
 )
+
+if(ENABLE_STATIC_LIBS)
+  if(ENABLE_GR_CTRLPORT)
+    # Remove GR_CTRLPORT set this target's definitions.
+    # Makes sure we don't try to use ControlPort stuff in source files
+    # since Ice will not work with static libs.
+    GET_DIRECTORY_PROPERTY(STATIC_DEFS COMPILE_DEFINITIONS)
+    list(REMOVE_ITEM STATIC_DEFS "GR_CTRLPORT")
+    SET_PROPERTY(DIRECTORY PROPERTY COMPILE_DEFINITIONS "${STATIC_DEFS}")
+
+    # readd it to the target since we removed it from the directory-wide list.
+    SET_PROPERTY(TARGET gnuradio-digital APPEND PROPERTY COMPILE_DEFINITIONS "GR_CTRLPORT")
+  endif(ENABLE_GR_CTRLPORT)
+
+  add_library(gnuradio-digital_static STATIC ${digital_sources})
+
+  add_dependencies(gnuradio-digital_static
+    digital_generated_includes
+    gnuradio-runtime_static
+    gnuradio-filter_static
+    gnuradio-analog_static
+    gnuradio-blocks_static)
+
+  if(NOT WIN32)
+    set_target_properties(gnuradio-digital_static
+      PROPERTIES OUTPUT_NAME gnuradio-digital)
+  endif(NOT WIN32)
+
+  install(TARGETS gnuradio-digital_static
+    ARCHIVE DESTINATION lib${LIB_SUFFIX} COMPONENT "digital_devel"   # .lib file
+    )
+endif(ENABLE_STATIC_LIBS)

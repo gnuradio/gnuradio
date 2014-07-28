@@ -27,7 +27,7 @@
 #include <gnuradio/realtime_impl.h>
 
 namespace gr {
-  
+
   /*!
    * \brief If possible, enable high-priority "real time" scheduling.
    * \ingroup misc

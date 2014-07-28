@@ -79,7 +79,7 @@ namespace gr {
       // set up output message port
       message_port_register_out(PDU_PORT_ID);
       start_rxthread(this, PDU_PORT_ID);
-    
+
       // set up input message port
       message_port_register_in(PDU_PORT_ID);
       set_msg_handler(PDU_PORT_ID, boost::bind(&tuntap_pdu_impl::send, this, _1));
@@ -134,6 +134,6 @@ namespace gr {
       return fd;
     }
 #endif
-	
+
   } /* namespace blocks */
 }/* namespace gr */

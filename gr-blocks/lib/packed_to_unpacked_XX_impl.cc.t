@@ -66,7 +66,7 @@ namespace gr {
     @NAME_IMPL@::forecast(int noutput_items,
                           gr_vector_int &ninput_items_required)
     {
-      int input_required = (int)ceil((d_index + noutput_items * d_bits_per_chunk) 
+      int input_required = (int)ceil((d_index + noutput_items * d_bits_per_chunk)
                                      / (1.0 * BITS_PER_TYPE));
       unsigned ninputs = ninput_items_required.size();
       for(unsigned int i = 0; i < ninputs; i++) {

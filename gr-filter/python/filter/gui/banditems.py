@@ -50,7 +50,7 @@ class filtermovlineItem(QtGui.QGraphicsObject):
     def boundingRect(self):
         return QtCore.QRectF(0,0,400,400)
 
-    #allow only vertical movement and emit signals 
+    #allow only vertical movement and emit signals
     def itemChange(self, change, value):
         if (change == QtGui.QGraphicsItem.ItemPositionChange):
             newpos=value.toPointF()
@@ -182,25 +182,25 @@ bnfItems=[]
 #lpfitems list
 lpfItems.append(filtermovlineItem(200,175,400,175,0,-60))
 #lpfItems.append(filtermovlineItem(200,145,400,145,30,-30))
-lpfItems[0].setFlags(QtGui.QGraphicsItem.ItemIsSelectable | QtGui.QGraphicsItem.ItemIsMovable| 
+lpfItems[0].setFlags(QtGui.QGraphicsItem.ItemIsSelectable | QtGui.QGraphicsItem.ItemIsMovable|
               QtGui.QGraphicsItem.ItemSendsGeometryChanges)
 lpfItems.append(lpfsLines())
 
 #hpfitems list
 hpfItems.append(filtermovlineItem(6,175,150,175,0,-60))
-hpfItems[0].setFlags(QtGui.QGraphicsItem.ItemIsSelectable | QtGui.QGraphicsItem.ItemIsMovable| 
+hpfItems[0].setFlags(QtGui.QGraphicsItem.ItemIsSelectable | QtGui.QGraphicsItem.ItemIsMovable|
              QtGui.QGraphicsItem.ItemSendsGeometryChanges)
 hpfItems.append(hpfsLines())
 
 #bpfitems list
 bpfItems.append(filtermovlineItem(6,175,110,175,0,-60,True,300,175,400,175))
-bpfItems[0].setFlags(QtGui.QGraphicsItem.ItemIsSelectable | QtGui.QGraphicsItem.ItemIsMovable| 
+bpfItems[0].setFlags(QtGui.QGraphicsItem.ItemIsSelectable | QtGui.QGraphicsItem.ItemIsMovable|
             QtGui.QGraphicsItem.ItemSendsGeometryChanges)
 bpfItems.append(bpfsLines())
 
 #bnfitems list
 bnfItems.append(filtermovlineItem(155,175,255,175,0,-60))
-bnfItems[0].setFlags(QtGui.QGraphicsItem.ItemIsSelectable | QtGui.QGraphicsItem.ItemIsMovable| 
+bnfItems[0].setFlags(QtGui.QGraphicsItem.ItemIsSelectable | QtGui.QGraphicsItem.ItemIsMovable|
            QtGui.QGraphicsItem.ItemSendsGeometryChanges)
 bnfItems.append(bnfsLines())
 

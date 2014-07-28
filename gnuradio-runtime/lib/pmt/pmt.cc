@@ -160,8 +160,13 @@ _any(pmt_t x)
 
 const pmt_t PMT_T = pmt_t(new pmt_bool());	// singleton
 const pmt_t PMT_F = pmt_t(new pmt_bool());	// singleton
-const pmt_t PMT_NIL = pmt_t(new pmt_null());	// singleton
 const pmt_t PMT_EOF = cons(PMT_NIL, PMT_NIL);           // singleton
+
+pmt_t get_PMT_NIL()
+{
+  static pmt_t NIL = pmt_t(new pmt_null());
+  return NIL;
+}
 
 ////////////////////////////////////////////////////////////////////////////
 //                           Booleans
@@ -760,6 +765,14 @@ is_uniform_vector(pmt_t x)
   return x->is_uniform_vector();
 }
 
+size_t
+uniform_vector_itemsize(pmt_t vector)
+{
+  if (!vector->is_uniform_vector())
+    throw wrong_type("pmt_uniform_vector_itemsize", vector);
+  return _uniform_vector(vector)->itemsize();
+}
+
 const void *
 uniform_vector_elements(pmt_t vector, size_t &len)
 {
@@ -775,6 +788,8 @@ uniform_vector_writable_elements(pmt_t vector, size_t &len)
     throw wrong_type("pmt_uniform_vector_writable_elements", vector);
   return _uniform_vector(vector)->uniform_writable_elements(len);
 }
+
+
 
 ////////////////////////////////////////////////////////////////////////////
 //                            Dictionaries
@@ -811,6 +826,19 @@ dict_add(const pmt_t &dict, const pmt_t &key, const pmt_t &value)
 
   return acons(key, value, dict);
 }
+
+pmt_t
+dict_update(const pmt_t &dict1, const pmt_t &dict2)
+{
+  pmt_t d(dict1);
+  pmt_t k(dict_keys(dict2));
+  while(is_pair(k)){
+    d = dict_add(d, car(k), dict_ref(dict2, car(k), PMT_NIL));
+    k = cdr(k);
+    }
+  return d;
+}
+
 
 pmt_t
 dict_delete(const pmt_t &dict, const pmt_t &key)
@@ -1365,7 +1393,7 @@ list_has(pmt_t list, const pmt_t& item)
     pmt_t right = cdr(list);
     if(equal(left,item))
         return true;
-    return list_has(right, item);   
+    return list_has(right, item);
   } else {
     if(is_null(list))
         return false;

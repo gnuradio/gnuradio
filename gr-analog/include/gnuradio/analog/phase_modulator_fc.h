@@ -57,7 +57,7 @@ namespace gr {
       virtual void set_sensitivity(double s) = 0;
       virtual void set_phase(double p) = 0;
     };
-  
+
   } /* namespace analog */
 } /* namespace gr */
 

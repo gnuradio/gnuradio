@@ -32,7 +32,7 @@
 
 namespace gr {
   namespace filter {
-    
+
     @BASE_NAME@::sptr
     @BASE_NAME@::make(int decimation, const std::vector<@TAP_TYPE@> &taps)
     {
@@ -68,7 +68,7 @@ namespace gr {
       d_fir->set_taps(taps);
       d_updated = true;
     }
-    
+
     std::vector<@TAP_TYPE@>
     @IMPL_NAME@::taps() const
     {
@@ -84,13 +84,13 @@ namespace gr {
 
       const @I_TYPE@ *in = (const @I_TYPE@*)input_items[0];
       @O_TYPE@ *out = (@O_TYPE@*)output_items[0];
-      
+
       if (d_updated) {
 	set_history(d_fir->ntaps());
 	d_updated = false;
 	return 0;	     // history requirements may have changed.
       }
-      
+
       if (decimation() == 1) {
 	d_fir->filterN(out, in, noutput_items);
       }
@@ -98,7 +98,7 @@ namespace gr {
 	d_fir->filterNdec(out, in, noutput_items,
 			  decimation());
       }
-      
+
       return noutput_items;
     }
 

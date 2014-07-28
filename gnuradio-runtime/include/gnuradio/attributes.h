@@ -37,6 +37,13 @@
 #    define __GR_ATTR_EXPORT
 #    define __GR_ATTR_IMPORT
 #  endif
+#elif defined __clang__
+#  define __GR_ATTR_ALIGNED(x) __attribute__((aligned(x)))
+#  define __GR_ATTR_UNUSED     __attribute__((unused))
+#  define __GR_ATTR_INLINE     __attribute__((always_inline))
+#  define __GR_ATTR_DEPRECATED __attribute__((deprecated))
+#  define __GR_ATTR_EXPORT     __attribute__((visibility("default")))
+#  define __GR_ATTR_IMPORT     __attribute__((visibility("default")))
 #elif _MSC_VER
 #  define __GR_ATTR_ALIGNED(x) __declspec(align(x))
 #  define __GR_ATTR_UNUSED

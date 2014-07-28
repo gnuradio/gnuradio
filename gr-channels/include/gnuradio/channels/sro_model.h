@@ -29,14 +29,14 @@
 
 namespace gr {
   namespace channels {
-    
+
     /*!
      * \brief Sample Rate Offset Model
      * \ingroup channel_models_blk
      *
      * \details
      * This block implements a model that varies sample rate offset
-     * with respect to time by performing a random walk on the 
+     * with respect to time by performing a random walk on the
      * interpolation rate.
      */
     class CHANNELS_API sro_model : virtual public block

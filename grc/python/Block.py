@@ -19,6 +19,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 
 from .. base.Block import Block as _Block
 from .. gui.Block import Block as _GUIBlock
+from . FlowGraph import _variable_matcher
 import extract_docs
 
 class Block(_Block, _GUIBlock):
@@ -34,11 +35,11 @@ class Block(_Block, _GUIBlock):
     def __init__(self, flow_graph, n):
         """
         Make a new block from nested data.
-        
+
         Args:
             flow: graph the parent element
             n: the nested odict
-        
+
         Returns:
             block a new block
         """
@@ -65,14 +66,14 @@ class Block(_Block, _GUIBlock):
             bus_structure = self._bus_structure_source;
         else:
             bus_structure = self._bus_structure_sink;
-        
+
         bus_structure = self.resolve_dependencies(bus_structure);
-        
+
         if not bus_structure: return ''
         try:
             clean_bus_structure = self.get_parent().evaluate(bus_structure)
             return clean_bus_structure
-    
+
         except: return ''
     def throttle(self): return bool(self._throttle)
 
@@ -90,6 +91,14 @@ class Block(_Block, _GUIBlock):
                 if not self.get_parent().evaluate(check_res):
                     self.add_error_message('Check "%s" failed.'%check)
             except: self.add_error_message('Check "%s" did not evaluate.'%check)
+        # for variables check the value (only if var_value is used
+        if _variable_matcher.match(self.get_key()) and self._var_value != '$value':
+            value = self._var_value
+            try:
+                value = self.get_var_value()
+                self.get_parent().evaluate(value)
+            except Exception as err:
+                self.add_error_message('Value "%s" cannot be evaluated:\n%s' % (value, err))
 
     def rewrite(self):
         """
@@ -124,10 +133,10 @@ class Block(_Block, _GUIBlock):
     def port_controller_modify(self, direction):
         """
         Change the port controller.
-        
+
         Args:
             direction: +1 or -1
-        
+
         Returns:
             true for change
         """
@@ -161,7 +170,7 @@ class Block(_Block, _GUIBlock):
         Split each import statement at newlines.
         Combine all import statments into a list.
         Filter empty imports.
-        
+
         Returns:
             a list of import statements
         """
@@ -169,11 +178,12 @@ class Block(_Block, _GUIBlock):
 
     def get_make(self): return self.resolve_dependencies(self._make)
     def get_var_make(self): return self.resolve_dependencies(self._var_make)
+    def get_var_value(self): return self.resolve_dependencies(self._var_value)
 
     def get_callbacks(self):
         """
         Get a list of function callbacks for this block.
-        
+
         Returns:
             a list of strings
         """

@@ -64,6 +64,7 @@ add_subdirectory(pmt)
 GR_INCLUDE_SUBDIRECTORY(messages)
 GR_INCLUDE_SUBDIRECTORY(thread)
 GR_INCLUDE_SUBDIRECTORY(math)
+GR_INCLUDE_SUBDIRECTORY(controlport)
 
 ########################################################################
 # Setup library
@@ -118,6 +119,7 @@ list(APPEND gnuradio_runtime_sources
   vmcircbuf_mmap_tmpfile.cc
   vmcircbuf_prefs.cc
   vmcircbuf_sysv_shm.cc
+  ${gnuradio_ctrlport_sources}
 )
 
 # PowerPC workaround for posix_memalign
@@ -147,8 +149,6 @@ ENDIF(HAVE_WINDOWS_H)
 if(LINUX)
     list(APPEND gnuradio_runtime_libs rt)
 endif()
-
-GR_INCLUDE_SUBDIRECTORY(controlport)
 
 ########################################################################
 # Add DLL resource file when using MSVC
@@ -190,6 +190,10 @@ if(TRY_SHM_VMCIRCBUF)
     add_definitions( -DTRY_SHM_VMCIRCBUF )
 endif(TRY_SHM_VMCIRCBUF)
 
+
+#######################################################
+# SHARED LIB BUILD
+#######################################################
 add_library(gnuradio-runtime SHARED ${gnuradio_runtime_sources})
 target_link_libraries(gnuradio-runtime ${gnuradio_runtime_libs})
 GR_LIBRARY_FOO(gnuradio-runtime RUNTIME_COMPONENT "runtime_runtime" DEVEL_COMPONENT "runtime_devel")
@@ -197,6 +201,40 @@ GR_LIBRARY_FOO(gnuradio-runtime RUNTIME_COMPONENT "runtime_runtime" DEVEL_COMPON
 add_dependencies(gnuradio-runtime
   pmt_generated runtime_generated_includes
 )
+
+
+#######################################################
+# STATIC LIB BUILD
+#######################################################
+if(ENABLE_STATIC_LIBS)
+  # Remove controlport-specific source files from staticlibs build
+  if(ENABLE_GR_CTRLPORT)
+    list(REMOVE_ITEM gnuradio_runtime_sources
+      ${gnuradio_ctrlport_sources}
+      )
+
+    # Remove GR_CTRLPORT set this target's definitions.
+    # Makes sure we don't try to use ControlPort stuff in source files
+    # since Ice will not work with static libs.
+    GET_DIRECTORY_PROPERTY(STATIC_DEFS COMPILE_DEFINITIONS)
+    list(REMOVE_ITEM STATIC_DEFS "GR_CTRLPORT")
+    SET_PROPERTY(DIRECTORY PROPERTY COMPILE_DEFINITIONS "${STATIC_DEFS}")
+
+    # readd it to the target since we removed it from the directory-wide list.
+    SET_PROPERTY(TARGET gnuradio-runtime APPEND PROPERTY COMPILE_DEFINITIONS "GR_CTRLPORT")
+  endif(ENABLE_GR_CTRLPORT)
+
+  add_library(gnuradio-runtime_static STATIC ${gnuradio_runtime_sources})
+
+  if(NOT WIN32)
+    set_target_properties(gnuradio-runtime_static
+      PROPERTIES OUTPUT_NAME gnuradio-runtime)
+  endif(NOT WIN32)
+
+  install(TARGETS gnuradio-runtime_static
+    ARCHIVE DESTINATION lib${LIB_SUFFIX} COMPONENT "runtime_devel"   # .lib file
+    )
+endif(ENABLE_STATIC_LIBS)
 
 ########################################################################
 # Setup tests
@@ -239,4 +277,3 @@ target_link_libraries(gr_runtime_test test-gnuradio-runtime)
 GR_ADD_TEST(gr-runtime-test gr_runtime_test)
 
 endif(ENABLE_TESTING)
-

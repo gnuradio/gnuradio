@@ -1,0 +1,97 @@
+<?xml version="1.0"?>
+<!--
+###################################################
+# FEC MAKING FOR GREAT JUSTICE
+###################################################
+ -->
+<block>
+    <name>CCSDS Encoder Definition</name>
+    <key>variable_ccsds_encoder_def</key>
+    <import>from gnuradio import fec</import>
+    <var_make>
+#if int($ndim())==0 #
+self.$(id) = $(id) = fec.ccsds_encoder_make($framebits, $state_start, $mode)
+#else if int($ndim())==1 #
+self.$(id) = $(id) = map( (lambda a: fec.ccsds_encoder_make($framebits, $state_start, $mode)), range(0,$dim1) ); #slurp
+#else
+self.$(id) = $(id) = map( (lambda b: map( ( lambda a: fec.ccsds_encoder_make($framebits, $state_start, $mode)), range(0,$dim2) ) ), range(0,$dim1)); #slurp
+#end if
+    </var_make>
+    <var_value>fec.ccsds_encoder_make($framebits, $state_start, $mode)</var_value>
+    <make></make>
+
+    <param>
+        <name>Parallelism</name>
+        <key>ndim</key>
+        <value>0</value>
+        <type>enum</type>
+        <option>
+            <name>0</name>
+            <key>0</key>
+        </option>
+        <option>
+            <name>1</name>
+            <key>1</key>
+        </option>
+        <option>
+            <name>2</name>
+            <key>2</key>
+        </option>
+    </param>
+
+    <param>
+        <name>Dimension 1</name>
+        <key>dim1</key>
+        <value>1</value>
+        <type>int</type>
+        <hide>#if (int($ndim()) >= 1) then 'none' else 'all' #</hide>
+    </param>
+
+    <param>
+        <name>Dimension 2</name>
+        <key>dim2</key>
+        <value>1</value>
+        <type>int</type>
+        <hide>#if (int($ndim()) >= 2) then 'none' else 'all' #</hide>
+    </param>
+
+    <param>
+        <name>Frame Bits</name>
+        <key>framebits</key>
+        <value>2048</value>
+        <type>int</type>
+    </param>
+
+    <param>
+        <name>Start State</name>
+        <key>state_start</key>
+        <value>0</value>
+        <type>int</type>
+    </param>
+
+    <param>
+        <name>Streaming Behavior</name>
+        <key>mode</key>
+        <value></value>
+        <type>enum</type>
+        <option>
+            <name>Streaming</name>
+            <key>fec.CC_STREAMING</key>
+        </option>
+        <option>
+            <name>Terminated</name>
+            <key>fec.CC_TERMINATED</key>
+        </option>
+        <option>
+            <name>Tailbiting</name>
+            <key>fec.CC_TAILBITING</key>
+        </option>
+        <option>
+            <name>Truncated</name>
+            <key>fec.CC_TRUNCATED</key>
+        </option>
+    </param>
+
+    <doc>
+    </doc>
+</block>

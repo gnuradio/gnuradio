@@ -51,6 +51,8 @@ class FlowGraph(Element):
         #selected ports
         self._old_selected_port = None
         self._new_selected_port = None
+        # current mouse hover element
+        self.element_under_mouse = None
         #context menu
         self._context_menu = gtk.Menu()
         for action in [
@@ -87,7 +89,7 @@ class FlowGraph(Element):
     def add_new_block(self, key, coor=None):
         """
         Add a block of the given key to this flow graph.
-        
+
         Args:
             key: the block key
             coor: an optional coordinate or None for random
@@ -114,7 +116,7 @@ class FlowGraph(Element):
     def copy_to_clipboard(self):
         """
         Copy the selected blocks and connections into the clipboard.
-        
+
         Returns:
             the clipboard
         """
@@ -142,7 +144,7 @@ class FlowGraph(Element):
     def paste_from_clipboard(self, clipboard):
         """
         Paste the blocks and connections from the clipboard.
-        
+
         Args:
             clipboard: the nested data of blocks, connections
         """
@@ -192,10 +194,10 @@ class FlowGraph(Element):
     def type_controller_modify_selected(self, direction):
         """
         Change the registered type controller for the selected signal blocks.
-        
+
         Args:
             direction: +1 or -1
-        
+
         Returns:
             true for change
         """
@@ -204,10 +206,10 @@ class FlowGraph(Element):
     def port_controller_modify_selected(self, direction):
         """
         Change port controller for the selected signal blocks.
-        
+
         Args:
             direction: +1 or -1
-        
+
         Returns:
             true for changed
         """
@@ -216,10 +218,10 @@ class FlowGraph(Element):
     def enable_selected(self, enable):
         """
         Enable/disable the selected blocks.
-        
+
         Args:
             enable: true to enable
-        
+
         Returns:
             true if changed
         """
@@ -233,7 +235,7 @@ class FlowGraph(Element):
     def move_selected(self, delta_coordinate):
         """
         Move the element and by the change in coordinates.
-        
+
         Args:
             delta_coordinate: the change in coordinates
         """
@@ -244,10 +246,10 @@ class FlowGraph(Element):
     def rotate_selected(self, rotation):
         """
         Rotate the selected blocks by multiples of 90 degrees.
-        
+
         Args:
             rotation: the rotation in degrees
-        
+
         Returns:
             true if changed, otherwise false.
         """
@@ -274,7 +276,7 @@ class FlowGraph(Element):
     def remove_selected(self):
         """
         Remove selected elements
-        
+
         Returns:
             true if changed.
         """
@@ -362,11 +364,11 @@ class FlowGraph(Element):
         Iterate though the elements backwards since top elements are at the end of the list.
         If an element is selected, place it at the end of the list so that is is drawn last,
         and hence on top. Update the selected port information.
-        
+
         Args:
             coor: the coordinate of the mouse click
             coor_m: the coordinate for multi select
-        
+
         Returns:
             the selected blocks and connections or an empty list
         """
@@ -401,7 +403,7 @@ class FlowGraph(Element):
     def get_selected_connections(self):
         """
         Get a group of selected connections.
-        
+
         Returns:
             sub set of connections in this flow graph
         """
@@ -413,7 +415,7 @@ class FlowGraph(Element):
     def get_selected_blocks(self):
         """
         Get a group of selected blocks.
-        
+
         Returns:
             sub set of blocks in this flow graph
         """
@@ -425,7 +427,7 @@ class FlowGraph(Element):
     def get_selected_block(self):
         """
         Get the selected block when a block or port is selected.
-        
+
         Returns:
             a block or None
         """
@@ -434,7 +436,7 @@ class FlowGraph(Element):
     def get_selected_elements(self):
         """
         Get the group of selected elements.
-        
+
         Returns:
             sub set of elements in this flow graph
         """
@@ -443,7 +445,7 @@ class FlowGraph(Element):
     def get_selected_element(self):
         """
         Get the selected element.
-        
+
         Returns:
             a block, port, or connection or None
         """
@@ -544,35 +546,56 @@ class FlowGraph(Element):
 
     def handle_mouse_motion(self, coordinate):
         """
-        The mouse has moved, respond to mouse dragging.
+        The mouse has moved, respond to mouse dragging or notify elements
         Move a selected element to the new coordinate.
         Auto-scroll the scroll bars at the boundaries.
         """
         #to perform a movement, the mouse must be pressed
         # (no longer checking pending events via gtk.events_pending() - always true in Windows)
-        if not self.mouse_pressed: return
-        #perform autoscrolling
-        width, height = self.get_size()
-        x, y = coordinate
-        h_adj = self.get_scroll_pane().get_hadjustment()
-        v_adj = self.get_scroll_pane().get_vadjustment()
-        for pos, length, adj, adj_val, adj_len in (
-            (x, width, h_adj, h_adj.get_value(), h_adj.page_size),
-            (y, height, v_adj, v_adj.get_value(), v_adj.page_size),
-        ):
-            #scroll if we moved near the border
-            if pos-adj_val > adj_len-SCROLL_PROXIMITY_SENSITIVITY and adj_val+SCROLL_DISTANCE < length-adj_len:
-                adj.set_value(adj_val+SCROLL_DISTANCE)
-                adj.emit('changed')
-            elif pos-adj_val < SCROLL_PROXIMITY_SENSITIVITY:
-                adj.set_value(adj_val-SCROLL_DISTANCE)
-                adj.emit('changed')
-        #remove the connection if selected in drag event
-        if len(self.get_selected_elements()) == 1 and self.get_selected_element().is_connection():
-            Actions.ELEMENT_DELETE()
-        #move the selected elements and record the new coordinate
-        X, Y = self.get_coordinate()
-        if not self.get_ctrl_mask(): self.move_selected((int(x - X), int(y - Y)))
-        self.set_coordinate((x, y))
-        #queue draw for animation
-        self.queue_draw()
+        if not self.mouse_pressed:
+            # only continue if mouse-over stuff is enabled (just the auto-hide port label stuff for now)
+            if not Actions.TOGGLE_AUTO_HIDE_PORT_LABELS.get_active(): return
+            redraw = False
+            for element in reversed(self.get_elements()):
+                over_element = element.what_is_selected(coordinate)
+                if not over_element: continue
+                if over_element != self.element_under_mouse:  # over sth new
+                    if self.element_under_mouse:
+                        redraw |= self.element_under_mouse.mouse_out() or False
+                    self.element_under_mouse = over_element
+                    redraw |= over_element.mouse_over() or False
+                break
+            else:
+                if self.element_under_mouse:
+                    redraw |= self.element_under_mouse.mouse_out() or False
+                    self.element_under_mouse = None
+            if redraw:
+                #self.create_labels()
+                self.create_shapes()
+                self.queue_draw()
+        else:
+            #perform autoscrolling
+            width, height = self.get_size()
+            x, y = coordinate
+            h_adj = self.get_scroll_pane().get_hadjustment()
+            v_adj = self.get_scroll_pane().get_vadjustment()
+            for pos, length, adj, adj_val, adj_len in (
+                (x, width, h_adj, h_adj.get_value(), h_adj.page_size),
+                (y, height, v_adj, v_adj.get_value(), v_adj.page_size),
+            ):
+                #scroll if we moved near the border
+                if pos-adj_val > adj_len-SCROLL_PROXIMITY_SENSITIVITY and adj_val+SCROLL_DISTANCE < length-adj_len:
+                    adj.set_value(adj_val+SCROLL_DISTANCE)
+                    adj.emit('changed')
+                elif pos-adj_val < SCROLL_PROXIMITY_SENSITIVITY:
+                    adj.set_value(adj_val-SCROLL_DISTANCE)
+                    adj.emit('changed')
+            #remove the connection if selected in drag event
+            if len(self.get_selected_elements()) == 1 and self.get_selected_element().is_connection():
+                Actions.ELEMENT_DELETE()
+            #move the selected elements and record the new coordinate
+            X, Y = self.get_coordinate()
+            if not self.get_ctrl_mask(): self.move_selected((int(x - X), int(y - Y)))
+            self.set_coordinate((x, y))
+            #queue draw for animation
+            self.queue_draw()

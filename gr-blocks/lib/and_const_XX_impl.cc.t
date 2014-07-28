@@ -52,9 +52,9 @@ namespace gr {
     {
       @I_TYPE@ *iptr = (@I_TYPE@ *) input_items[0];
       @O_TYPE@ *optr = (@O_TYPE@ *) output_items[0];
-      
+
       int size = noutput_items;
-      
+
       while (size >= 8){
 	*optr++ = *iptr++ & d_k;
 	*optr++ = *iptr++ & d_k;
@@ -69,7 +69,7 @@ namespace gr {
 
       while (size-- > 0)
 	*optr++ = *iptr++ & d_k;
-      
+
       return noutput_items;
     }
 

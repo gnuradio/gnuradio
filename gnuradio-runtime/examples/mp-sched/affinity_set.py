@@ -35,7 +35,7 @@ class affinity_set(gr.top_block):
 
 	self.filter_filt_0.set_processor_affinity([0,])
 	self.filter_filt_1.set_processor_affinity([0,1])
-		
+
 	##################################################
 	# Connections
 	##################################################
@@ -55,7 +55,7 @@ if __name__ == '__main__':
     (options, args) = parser.parse_args()
     tb = affinity_set()
     tb.start()
-	
+
     while(1):
         ret = raw_input('Enter a new Core # or Press Enter to quit: ')
 	if(len(ret) == 0):

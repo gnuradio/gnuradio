@@ -35,7 +35,7 @@
 
 namespace gr {
   namespace analog {
-    
+
     @BASE_NAME@::sptr
     @BASE_NAME@::make(double sampling_freq, gr_waveform_t waveform,
 		      double frequency, double ampl, @TYPE@ offset)
@@ -67,7 +67,7 @@ namespace gr {
       @TYPE@ *optr = (@TYPE@*)output_items[0];
       @TYPE@ t;
 
-      switch(d_waveform) { 
+      switch(d_waveform) {
 
 #if @IS_COMPLEX@	// complex?
 

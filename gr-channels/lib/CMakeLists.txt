@@ -81,3 +81,35 @@ GR_LIBRARY_FOO(gnuradio-channels RUNTIME_COMPONENT "channels_runtime" DEVEL_COMP
 add_dependencies(gnuradio-channels
   channels_generated_includes channels_generated_swigs
   gnuradio-runtime gnuradio-filter gnuradio-analog gnuradio-blocks)
+
+if(ENABLE_STATIC_LIBS)
+  if(ENABLE_GR_CTRLPORT)
+    # Remove GR_CTRLPORT set this target's definitions.
+    # Makes sure we don't try to use ControlPort stuff in source files
+    # since Ice will not work with static libs.
+    GET_DIRECTORY_PROPERTY(STATIC_DEFS COMPILE_DEFINITIONS)
+    list(REMOVE_ITEM STATIC_DEFS "GR_CTRLPORT")
+    SET_PROPERTY(DIRECTORY PROPERTY COMPILE_DEFINITIONS "${STATIC_DEFS}")
+
+    # readd it to the target since we removed it from the directory-wide list.
+    SET_PROPERTY(TARGET gnuradio-channels APPEND PROPERTY COMPILE_DEFINITIONS "GR_CTRLPORT")
+  endif(ENABLE_GR_CTRLPORT)
+
+  add_library(gnuradio-channels_static STATIC ${channels_sources})
+
+  add_dependencies(gnuradio-channels_static
+    channels_generated_includes
+    gnuradio-runtime_static
+    gnuradio-filter_static
+    gnuradio-analog_static
+    gnuradio-blocks_static)
+
+  if(NOT WIN32)
+    set_target_properties(gnuradio-channels_static
+      PROPERTIES OUTPUT_NAME gnuradio-channels)
+  endif(NOT WIN32)
+
+  install(TARGETS gnuradio-channels_static
+    ARCHIVE DESTINATION lib${LIB_SUFFIX} COMPONENT "channels_devel"   # .lib file
+    )
+endif(ENABLE_STATIC_LIBS)

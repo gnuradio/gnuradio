@@ -30,7 +30,7 @@
 
 namespace gr {
   namespace filter {
-    
+
     /*!
      * \brief  single pole IIR filter with complex input, complex output
      * \ingroup filter_blk
@@ -57,7 +57,7 @@ namespace gr {
      \xmlonly
      H(z) = \ frac{alpha}{1 - (1-alpha) z^{-1}}
      \endxmlonly
-     
+
      * Note that some texts define the system function with a + in the
      * denominator. If you're using that convention, you'll need to
      * negate the feedback tap.

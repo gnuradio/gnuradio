@@ -30,7 +30,7 @@ class StateCache(object):
     def __init__(self, initial_state):
         """
         StateCache constructor.
-        
+
         Args:
             initial_state: the intial state (nested data)
         """
@@ -45,7 +45,7 @@ class StateCache(object):
         """
         Save a new state.
         Place the new state at the next index and add one to the number of previous states.
-        
+
         Args:
             state: the new state
         """
@@ -59,7 +59,7 @@ class StateCache(object):
     def get_current_state(self):
         """
         Get the state at the current index.
-        
+
         Returns:
             the current state (nested data)
         """
@@ -69,7 +69,7 @@ class StateCache(object):
     def get_prev_state(self):
         """
         Get the previous state and decrement the current index.
-        
+
         Returns:
             the previous state or None
         """
@@ -83,7 +83,7 @@ class StateCache(object):
     def get_next_state(self):
         """
         Get the nest state and increment the current index.
-        
+
         Returns:
             the next state or None
         """

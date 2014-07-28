@@ -27,7 +27,7 @@
 
 namespace gr {
   namespace analog {
-    
+
     class pll_refout_cc_impl : public pll_refout_cc
     {
     private:

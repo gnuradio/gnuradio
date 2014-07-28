@@ -66,7 +66,7 @@ public:
 #else /* QWT_VERSION < 0x060100 */
   TimeDomainDisplayZoomer(QWidget* canvas, const unsigned int timePrecision)
 #endif /* QWT_VERSION < 0x060100 */
-    : QwtPlotZoomer(canvas),TimePrecisionClass(timePrecision)
+  : QwtPlotZoomer(canvas),TimePrecisionClass(timePrecision),d_yUnitType("V")
   {
     setTrackerMode(QwtPicker::AlwaysOn);
   }
@@ -85,23 +85,30 @@ public:
     d_unitType = type;
   }
 
+  void setYUnitType(const std::string &type)
+  {
+    d_yUnitType = type;
+  }
+
 protected:
   using QwtPlotZoomer::trackerText;
   virtual QwtText trackerText( const QPoint& p ) const
   {
     QwtText t;
     QwtDoublePoint dp = QwtPlotZoomer::invTransform(p);
-    if((dp.y() > 0.0001) && (dp.y() < 10000)) {
-      t.setText(QString("%1 %2, %3 V").
+    if((fabs(dp.y()) > 0.0001) && (fabs(dp.y()) < 10000)) {
+      t.setText(QString("%1 %2, %3 %4").
 		arg(dp.x(), 0, 'f', getTimePrecision()).
 		arg(d_unitType.c_str()).
-		arg(dp.y(), 0, 'f', 4));
+		arg(dp.y(), 0, 'f', 4).
+		arg(d_yUnitType.c_str()));
     }
     else {
-      t.setText(QString("%1 %2, %3 V").
+      t.setText(QString("%1 %2, %3 %4").
 		arg(dp.x(), 0, 'f', getTimePrecision()).
 		arg(d_unitType.c_str()).
-		arg(dp.y(), 0, 'e', 4));
+		arg(dp.y(), 0, 'e', 4).
+		arg(d_yUnitType.c_str()));
     }
 
     return t;
@@ -109,6 +116,7 @@ protected:
 
 private:
   std::string d_unitType;
+  std::string d_yUnitType;
 };
 
 
@@ -147,7 +155,7 @@ TimeDomainDisplayPlot::TimeDomainDisplayPlot(int nplots, QWidget* parent)
   setAxisScaleEngine(QwtPlot::yLeft, new QwtLinearScaleEngine);
   setYaxis(-2.0, 2.0);
   setAxisTitle(QwtPlot::yLeft, "Amplitude");
-  
+
   QList<QColor> colors;
   colors << QColor(Qt::blue) << QColor(Qt::red) << QColor(Qt::green)
 	 << QColor(Qt::black) << QColor(Qt::cyan) << QColor(Qt::magenta)
@@ -167,7 +175,7 @@ TimeDomainDisplayPlot::TimeDomainDisplayPlot(int nplots, QWidget* parent)
 
     QwtSymbol *symbol = new QwtSymbol(QwtSymbol::NoSymbol, QBrush(colors[i]),
 				      QPen(colors[i]), QSize(7,7));
-    
+
 #if QWT_VERSION < 0x060000
     d_plot_curve[i]->setRawData(d_xdata, d_ydata[i], d_numPoints);
     d_plot_curve[i]->setSymbol(*symbol);
@@ -337,7 +345,7 @@ TimeDomainDisplayPlot::plotNewData(const std::vector<double*> dataPoints,
 
               m->setLabel(QwtText(s.str().c_str()));
               m->attach(this);
-          
+
               if(!(show && d_tag_markers_en[which])) {
                 m->hide();
               }
@@ -373,7 +381,7 @@ TimeDomainDisplayPlot::plotNewData(const std::vector<double*> dataPoints,
 	  }
 	}
 	_autoScale(bottom, top);
-      }      
+      }
 
       replot();
     }
@@ -548,6 +556,17 @@ TimeDomainDisplayPlot::enableTagMarker(int which, bool en)
     d_tag_markers_en[which] = en;
   else
     throw std::runtime_error("TimeDomainDisplayPlot: enabled tag marker does not exist.\n");
+}
+
+void
+TimeDomainDisplayPlot::setYLabel(const std::string &label,
+                                 const std::string &unit)
+{
+  std::string l = label;
+  if(unit.length() > 0)
+    l += " (" + unit + ")";
+  setAxisTitle(QwtPlot::yLeft, QString(l.c_str()));
+  ((TimeDomainDisplayZoomer*)d_zoomer)->setYUnitType(unit);
 }
 
 #endif /* TIME_DOMAIN_DISPLAY_PLOT_C */

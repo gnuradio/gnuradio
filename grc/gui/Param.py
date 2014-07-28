@@ -227,7 +227,7 @@ class Param(Element):
         An enum requires and combo parameter.
         A non-enum with options gets a combined entry/combo parameter.
         All others get a standard entry parameter.
-        
+
         Returns:
             gtk input class
         """
@@ -245,7 +245,7 @@ class Param(Element):
     def get_markup(self):
         """
         Get the markup for this param.
-        
+
         Returns:
             a pango markup string
         """

@@ -54,7 +54,7 @@ namespace gr {
     {
       const short *in = (const short *) input_items[0];
       float *out = (float *) output_items[0];
-      
+
       volk_16i_s32f_convert_32f(out, in, d_scale, d_vlen*noutput_items);
 
       return noutput_items;

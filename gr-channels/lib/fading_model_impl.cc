@@ -37,7 +37,7 @@
 
 namespace gr {
   namespace channels {
-    
+
     fading_model::sptr
     fading_model::make( unsigned int N, float fDTs, bool LOS, float K, int seed )
     {
@@ -109,7 +109,7 @@ namespace gr {
 #endif /* GR_CTRLPORT */
     }
 
-    int 
+    int
     fading_model_impl::work (int noutput_items,
         gr_vector_const_void_star &input_items,
         gr_vector_void_star &output_items)

@@ -50,9 +50,9 @@ namespace gr {
     {
       const float *in = (const float *)input_items[0];
       unsigned char *out = (unsigned char *)output_items[0];
-      
+
       float_array_to_uchar(in, out, noutput_items);
-      
+
       return noutput_items;
     }
 

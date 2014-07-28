@@ -41,12 +41,12 @@ class FlowGraph(_FlowGraph, _GUIFlowGraph):
     def _eval(self, code, namespace, namespace_hash):
         """
         Evaluate the code with the given namespace.
-        
+
         Args:
             code: a string with python code
             namespace: a dict representing the namespace
             namespace_hash: a unique hash for the namespace
-        
+
         Returns:
             the resultant object
         """
@@ -61,10 +61,10 @@ class FlowGraph(_FlowGraph, _GUIFlowGraph):
     def get_io_signaturev(self, direction):
         """
         Get a list of io signatures for this flow graph.
-        
+
         Args:
             direction: a string of 'in' or 'out'
-        
+
         Returns:
             a list of dicts with: type, label, vlen, size
         """
@@ -90,7 +90,7 @@ class FlowGraph(_FlowGraph, _GUIFlowGraph):
     def get_pad_sources(self):
         """
         Get a list of pad source blocks sorted by id order.
-        
+
         Returns:
             a list of pad source blocks in this flow graph
         """
@@ -100,12 +100,29 @@ class FlowGraph(_FlowGraph, _GUIFlowGraph):
     def get_pad_sinks(self):
         """
         Get a list of pad sink blocks sorted by id order.
-        
+
         Returns:
             a list of pad sink blocks in this flow graph
         """
         pads = filter(lambda b: b.get_key() == 'pad_sink', self.get_enabled_blocks())
         return sorted(pads, lambda x, y: cmp(x.get_id(), y.get_id()))
+
+    def get_pad_port_global_key(self, port):
+        """
+        Get the key for a port of a pad source/sink to use in connect()
+        This takes into account that pad blocks may have multiple ports
+
+        Returns:
+            the key (str)
+        """
+        key_offset = 0
+        pads = self.get_pad_sources() if port.is_source() else self.get_pad_sinks()
+        for pad in pads:
+            if port.get_parent() == pad:
+                return str(key_offset + int(port.get_key()))
+            # assuming we have either only sources or sinks
+            key_offset += len(pad.get_ports())
+        return -1
 
     def get_msg_pad_sources(self):
         ps = self.get_pad_sources();
@@ -118,7 +135,7 @@ class FlowGraph(_FlowGraph, _GUIFlowGraph):
     def get_imports(self):
         """
         Get a set of all import statments in this flow graph namespace.
-        
+
         Returns:
             a set of import statements
         """
@@ -130,7 +147,7 @@ class FlowGraph(_FlowGraph, _GUIFlowGraph):
         """
         Get a list of all variables in this flow graph namespace.
         Exclude paramterized variables.
-        
+
         Returns:
             a sorted list of variable blocks in order of dependency (indep -> dep)
         """
@@ -140,7 +157,7 @@ class FlowGraph(_FlowGraph, _GUIFlowGraph):
     def get_parameters(self):
         """
         Get a list of all paramterized variables in this flow graph namespace.
-        
+
         Returns:
             a list of paramterized variables
         """
@@ -157,15 +174,15 @@ class FlowGraph(_FlowGraph, _GUIFlowGraph):
 
     def get_bussink(self):
         bussink = filter(lambda b: _bussink_searcher.search(b.get_key()), self.get_enabled_blocks())
-		
+
         for i in bussink:
             for j in i.get_params():
                 if j.get_name() == 'On/Off' and j.get_value() == 'on':
                     return True;
-			
+
         return False
-		
-		
+
+
 
     def get_bussrc(self):
         bussrc = filter(lambda b: _bussrc_searcher.search(b.get_key()), self.get_enabled_blocks())
@@ -174,19 +191,19 @@ class FlowGraph(_FlowGraph, _GUIFlowGraph):
             for j in i.get_params():
                 if j.get_name() == 'On/Off' and j.get_value() == 'on':
                     return True;
-			
+
         return False
 
     def get_bus_structure_sink(self):
         bussink = filter(lambda b: _bus_struct_sink_searcher.search(b.get_key()), self.get_enabled_blocks())
-			
+
         return bussink
 
     def get_bus_structure_src(self):
         bussrc = filter(lambda b: _bus_struct_src_searcher.search(b.get_key()), self.get_enabled_blocks())
-		
+
         return bussrc
-		
+
 
     def rewrite(self):
         """
@@ -194,19 +211,19 @@ class FlowGraph(_FlowGraph, _GUIFlowGraph):
         """
         def reconnect_bus_blocks():
             for block in self.get_blocks():
-                
+
                 if 'bus' in map(lambda a: a.get_type(), block.get_sources_gui()):
-                    
-                    
+
+
                     for i in range(len(block.get_sources_gui())):
                         if len(block.get_sources_gui()[i].get_connections()) > 0:
                             source = block.get_sources_gui()[i]
                             sink = []
-                            
+
                             for j in range(len(source.get_connections())):
                                 sink.append(source.get_connections()[j].get_sink());
-                        
-                                        
+
+
                             for elt in source.get_connections():
                                 self.remove_element(elt);
                             for j in sink:
@@ -218,11 +235,11 @@ class FlowGraph(_FlowGraph, _GUIFlowGraph):
     def evaluate(self, expr):
         """
         Evaluate the expression.
-        
+
         Args:
             expr: the string expression
         @throw Exception bad expression
-        
+
         Returns:
             the evaluated data
         """
@@ -245,7 +262,7 @@ class FlowGraph(_FlowGraph, _GUIFlowGraph):
             #load variables
             for variable in self.get_variables():
                 try:
-                    e = eval(variable.get_param('value').to_code(), n, n)
+                    e = eval(variable.get_var_value(), n, n)
                     n[variable.get_id()] = e
                 except: pass
             #make namespace public

@@ -30,7 +30,7 @@ namespace gr {
 
     namespace fff {
 
-      class qa_fir_filter_with_buffer_fff : public CppUnit::TestCase 
+      class qa_fir_filter_with_buffer_fff : public CppUnit::TestCase
       {
 	CPPUNIT_TEST_SUITE(qa_fir_filter_with_buffer_fff);
 	CPPUNIT_TEST(t1);
@@ -50,7 +50,7 @@ namespace gr {
 
     namespace ccc {
 
-      class qa_fir_filter_with_buffer_ccc : public CppUnit::TestCase 
+      class qa_fir_filter_with_buffer_ccc : public CppUnit::TestCase
       {
 	CPPUNIT_TEST_SUITE(qa_fir_filter_with_buffer_ccc);
 	CPPUNIT_TEST(t1);
@@ -70,7 +70,7 @@ namespace gr {
 
     namespace ccf {
 
-      class qa_fir_filter_with_buffer_ccf : public CppUnit::TestCase 
+      class qa_fir_filter_with_buffer_ccf : public CppUnit::TestCase
       {
 	CPPUNIT_TEST_SUITE(qa_fir_filter_with_buffer_ccf);
 	CPPUNIT_TEST(t1);

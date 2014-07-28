@@ -3,12 +3,7 @@
   <name>HDLC Deframer</name>
   <key>digital_hdlc_deframer_bp</key>
   <import>from gnuradio import digital</import>
-  <make>digital.hdlc_deframer_bp($frame_tag_name, $min, $max)</make>
-  <param>
-    <name>Frame tag name</name>
-    <key>frame_tag_name</key>
-    <type>string</type>
-  </param>
+  <make>digital.hdlc_deframer_bp($min, $max)</make>
   <param>
     <name>Min length</name>
     <key>min</key>

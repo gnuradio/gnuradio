@@ -29,11 +29,11 @@ namespace gr {
         seed_1((int)seed),
         dist_1(-M_PI, M_PI),
         rv_1( seed_1, dist_1 ), // U(-pi,pi)
-        
+
         seed_2((int)seed+1),
         dist_2(0, 1),
         rv_2( seed_2, dist_2 ), // U(0,1)
-        
+
         d_N(N),
         d_fDTs(fDTs),
         d_theta(rv_1()),
@@ -42,12 +42,12 @@ namespace gr {
         d_m(0),
         d_K(K),
         d_LOS(LOS),
-        
+
         d_psi(d_N+1, 0),
         d_phi(d_N+1, 0),
-        
+
         d_table(8*1024),
-        
+
         scale_sin(sqrtf(2.0/d_N)),
         scale_los(sqrtf(d_K)/sqrtf(d_K+1)),
         scale_nlos(1/sqrtf(d_K+1))
@@ -58,13 +58,13 @@ namespace gr {
           d_phi[i] = rv_1();
         }
     }
-    
-    
+
+
     gr_complex flat_fader_impl::next_sample(){
         gr_complex H(0,0);
 
         for(int n=1; n<d_N; n++){
-            float alpha_n = (2*M_PI*n - M_PI + d_theta)/4*d_N;
+	  float alpha_n = (2*M_PI*n - M_PI + d_theta)/(4*d_N);
 #if FASTSINCOS == 1
             float s_i = scale_sin*gr::fxpt::cos(gr::fxpt::float_to_fixed(2*M_PI*d_fDTs*d_m*gr::fxpt::cos(gr::fxpt::float_to_fixed(alpha_n))+d_psi[n+1]));
             float s_q = scale_sin*gr::fxpt::cos(gr::fxpt::float_to_fixed(2*M_PI*d_fDTs*d_m*gr::fxpt::sin(gr::fxpt::float_to_fixed(alpha_n))+d_phi[n+1]));

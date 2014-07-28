@@ -27,7 +27,7 @@
 #include <pmt/pmt.h>
 
 namespace gr {
-  
+
   struct GR_RUNTIME_API tag_t
   {
     //! the item \p tag occurred at (as a uint64_t)

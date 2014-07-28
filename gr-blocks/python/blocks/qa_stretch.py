@@ -47,7 +47,7 @@ class test_stretch(gr_unittest.TestCase):
         deinter = blocks.vector_to_streams(gr.sizeof_float, 2)
         dst0 = blocks.vector_sink_f()
         dst1 = blocks.vector_sink_f()
-        
+
         tb.connect(src0, (inter,0))
         tb.connect(src1, (inter,1))
         tb.connect(inter, op)

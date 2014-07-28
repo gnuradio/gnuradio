@@ -42,16 +42,16 @@ namespace gr {
     {
 
     public:
-      
+
       // gr::blocks::@NAME@::sptr
       typedef boost::shared_ptr<@NAME@> sptr;
-      
+
       /*!
        * \brief Create an instance of @NAME@
        * \param k AND constant
        */
       static sptr make(@O_TYPE@ k);
-      
+
       /*!
        * \brief Return AND constant
        */

@@ -38,10 +38,10 @@ namespace gr {
     class BLOCKS_API @NAME@ : virtual public sync_decimator
     {
     public:
-      
+
       // gr::blocks::@NAME@::sptr
       typedef boost::shared_ptr<@NAME@> sptr;
-      
+
       static sptr make(int decim);
     };
 

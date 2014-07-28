@@ -26,7 +26,7 @@
 
 namespace gr {
   namespace channels {
-    
+
     channel_model::sptr
     channel_model::make(double noise_voltage,
 			double frequency_offset,
@@ -168,7 +168,7 @@ namespace gr {
 	  pmt::mp(0.0), pmt::mp(2.0), pmt::mp(0.0),
 	  "", "Timing Offset", RPC_PRIVLVL_MIN,
           DISPTIME | DISPOPTSTRIP)));
-	  
+
       add_rpc_variable(
         rpcbasic_sptr(new rpcbasic_register_get<channel_model, std::vector<gr_complex> >(
 	  alias(), "taps",

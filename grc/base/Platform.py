@@ -35,7 +35,7 @@ class Platform(_Element):
                  license='', website=None, colors=None):
         """
         Make a platform from the arguments.
-        
+
         Args:
             name: the platform name
             version: the version string
@@ -47,7 +47,7 @@ class Platform(_Element):
             colors: a list of title, color_spec tuples
             license: a multi-line license (first line is copyright)
             website: the website url for this platform
-        
+
         Returns:
             a platform object
         """
@@ -125,10 +125,10 @@ class Platform(_Element):
         """
         Parse a saved flow graph file.
         Ensure that the file exists, and passes the dtd check.
-        
+
         Args:
             flow_graph_file: the flow graph file
-        
+
         Returns:
             nested data
         @throws exception if the validation fails
@@ -143,7 +143,7 @@ class Platform(_Element):
         Load a block tree with categories and blocks.
         Step 1: Load all blocks from the xml specification.
         Step 2: Load blocks with builtin category specifications.
-        
+
         Args:
             block_tree: the block tree object
         """

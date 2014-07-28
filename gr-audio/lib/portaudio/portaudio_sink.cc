@@ -306,7 +306,7 @@ namespace gr {
     {
       const float **in = (const float **)&input_items[0];
       const unsigned nchan = d_output_parameters.channelCount; // # of channels == samples/frame
-  
+
       int k;
       for(k = 0; k < noutput_items;) {
         int nframes = d_writer->space_available() / nchan;  // How much space in ringbuffer

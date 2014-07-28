@@ -21,6 +21,7 @@ import pygtk
 pygtk.require('2.0')
 import gtk
 import Utils
+import Actions
 
 class TextDisplay(gtk.TextView):
     """A non editable gtk text view."""
@@ -28,7 +29,7 @@ class TextDisplay(gtk.TextView):
     def __init__(self, text=''):
         """
         TextDisplay constructor.
-        
+
         Args:
             text: the text to display (string)
         """
@@ -40,11 +41,19 @@ class TextDisplay(gtk.TextView):
         self.set_cursor_visible(False)
         self.set_wrap_mode(gtk.WRAP_WORD_CHAR)
 
+        # Added for scroll locking
+        self.scroll_lock = True
+
+        # Add a signal for populating the popup menu
+        self.connect("populate-popup", self.populate_popup)
+
     def insert(self, line):
         # make backspaces work
         line = self._consume_backspaces(line)
         # add the remaining text to buffer
         self.get_buffer().insert(self.get_buffer().get_end_iter(), line)
+        # Automatically scroll on insert
+        self.scroll_to_end()
 
     def _consume_backspaces(self, line):
         """removes text from the buffer if line starts with \b*"""
@@ -61,19 +70,52 @@ class TextDisplay(gtk.TextView):
         # return remaining text
         return line[back_count:]
 
+    def scroll_to_end(self):
+        if self.scroll_lock:
+            buffer = self.get_buffer()
+            buffer.move_mark(buffer.get_insert(), buffer.get_end_iter())
+            self.scroll_to_mark(buffer.get_insert(), 0.0)
+
+    def clear(self):
+        buffer = self.get_buffer()
+        buffer.delete(buffer.get_start_iter(), buffer.get_end_iter())
+
+    # Callback functions to handle the scrolling lock and clear context menus options
+    # Action functions are set by the ActionHandler's init function
+    def clear_cb(self, menu_item, web_view):
+        Actions.CLEAR_REPORTS()
+
+    def scroll_back_cb(self, menu_item, web_view):
+        Actions.TOGGLE_SCROLL_LOCK()
+
+    def populate_popup(self, view, menu):
+        """Create a popup menu for the scroll lock and clear functions"""
+        menu.append(gtk.SeparatorMenuItem())
+
+        lock = gtk.CheckMenuItem("Scroll Lock")
+        menu.append(lock)
+        lock.set_active(self.scroll_lock)
+        lock.connect('activate', self.scroll_back_cb, view)
+
+        clear = gtk.ImageMenuItem(gtk.STOCK_CLEAR)
+        menu.append(clear)
+        clear.connect('activate', self.clear_cb, view)
+        menu.show_all()
+        return False
+
 def MessageDialogHelper(type, buttons, title=None, markup=None):
     """
     Create a modal message dialog and run it.
-    
+
     Args:
         type: the type of message: gtk.MESSAGE_INFO, gtk.MESSAGE_WARNING, gtk.MESSAGE_QUESTION or gtk.MESSAGE_ERROR
         buttons: the predefined set of buttons to use:
         gtk.BUTTONS_NONE, gtk.BUTTONS_OK, gtk.BUTTONS_CLOSE, gtk.BUTTONS_CANCEL, gtk.BUTTONS_YES_NO, gtk.BUTTONS_OK_CANCEL
-    
+
     Args:
         tittle: the title of the window (string)
         markup: the message text with pango markup
-    
+
     Returns:
         the gtk response from run()
     """

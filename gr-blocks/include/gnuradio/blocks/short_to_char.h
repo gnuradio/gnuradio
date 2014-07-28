@@ -33,11 +33,15 @@ namespace gr {
      * \brief Convert stream of shorts to a stream of chars.
      *
      * This block strips off the least significant byte from the
-     * short value. 
-     * 
+     * short value.
+     *
      * [0x00ff, 0x0ff0, 0xff00] => [0x00, 0x0f, 0xff]
      *
      * \ingroup type_converters_blk
+     *
+     * \details
+     * Converts \p vlen length vectors of input short samples to chars,
+     * dividing each element by 256.
      */
     class BLOCKS_API short_to_char : virtual public sync_block
     {

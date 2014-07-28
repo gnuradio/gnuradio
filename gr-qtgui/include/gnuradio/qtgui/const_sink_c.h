@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2012 Free Software Foundation, Inc.
+ * Copyright 2012,2014 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -28,13 +28,14 @@
 #endif
 
 #include <gnuradio/qtgui/api.h>
+#include <gnuradio/qtgui/trigger_mode.h>
 #include <gnuradio/sync_block.h>
 #include <qapplication.h>
 #include <gnuradio/filter/firdes.h>
 
 namespace gr {
   namespace qtgui {
-    
+
     /*!
      * \brief A graphical sink to display the IQ constellation of multiple signals.
      * \ingroup instrumentation_blk
@@ -51,7 +52,7 @@ namespace gr {
       typedef boost::shared_ptr<const_sink_c> sptr;
 
       /*!
-       * \brief Build a complex PSD sink.
+       * \brief Build a constellation plot sink.
        *
        * \param size number of points to plot at once
        * \param name title for the plot
@@ -85,6 +86,40 @@ namespace gr {
       virtual void set_nsamps(const int newsize) = 0;
       virtual void set_line_alpha(int which, double alpha) = 0;
 
+      /*!
+       * Set up a trigger for the sink to know when to start
+       * plotting. Useful to isolate events and avoid noise.
+       *
+       * The trigger modes are Free, Auto, Normal, and Tag (see
+       * gr::qtgui::trigger_mode). The first three are like a normal
+       * oscope trigger function. Free means free running with no
+       * trigger, auto will trigger if the trigger event is seen, but
+       * will still plot otherwise, and normal will hold until the
+       * trigger event is observed. The Tag trigger mode allows us to
+       * trigger off a specific stream tag. The tag trigger is based
+       * only on the name of the tag, so when a tag of the given name
+       * is seen, the trigger is activated.
+       *
+       * In auto and normal mode, we look for the slope of the
+       * magnitude of the signal. As a constellation sink, this only
+       * takes in complex numbers to plot. Given a
+       * gr::qtgui::trigger_slope as either Positive or Negative, if
+       * the magnitude between two samples moves in the given
+       * direction (x[1] > x[0] for Positive or x[1] < x[0] for
+       * Negative), then the trigger is activated.
+       *
+       * \param mode The trigger_mode: free, auto, normal, or tag.
+       * \param slope The trigger_slope: positive or negative. Only
+       *              used for auto and normal modes.
+       * \param level The magnitude of the trigger even for auto or normal modes.
+       * \param channel Which input channel to use for the trigger events.
+       * \param tag_key The name (as a string) of the tag to trigger off
+       *                 of if using the tag mode.
+       */
+      virtual void set_trigger_mode(trigger_mode mode, trigger_slope slope,
+                                    float level, int channel,
+                                    const std::string &tag_key="") = 0;
+
       virtual std::string title() = 0;
       virtual std::string line_label(int which) = 0;
       virtual std::string line_color(int which) = 0;
@@ -97,6 +132,7 @@ namespace gr {
 
       virtual void enable_menu(bool en=true) = 0;
       virtual void enable_autoscale(bool en) = 0;
+      virtual void enable_grid(bool en) = 0;
       virtual int nsamps() const = 0;
       virtual void reset() = 0;
 

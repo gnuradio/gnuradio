@@ -53,7 +53,7 @@
 #define CNLP        0.3	        /* post processor constant              */
 #define NLP_NTAP 48	        /* Decimation LPF order */
 
-#undef DUMP
+//#undef DUMP
 
 /*---------------------------------------------------------------------------*\
 

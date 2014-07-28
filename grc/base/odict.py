@@ -50,7 +50,7 @@ class odict(DictMixin):
         """
         Insert the new key, value entry after the entry given by the position key.
         If the positional key is None, insert at the end.
-        
+
         Args:
             pos_key: the positional key
             key: the key for the new entry
@@ -65,7 +65,7 @@ class odict(DictMixin):
         """
         Insert the new key, value entry before the entry given by the position key.
         If the positional key is None, insert at the begining.
-        
+
         Args:
             pos_key: the positional key
             key: the key for the new entry
@@ -79,10 +79,10 @@ class odict(DictMixin):
     def find(self, key):
         """
         Get the value for this key if exists.
-        
+
         Args:
             key: the key to search for
-        
+
         Returns:
             the value or None
         """
@@ -92,10 +92,10 @@ class odict(DictMixin):
     def findall(self, key):
         """
         Get a list of values for this key.
-        
+
         Args:
             key: the key to search for
-        
+
         Returns:
             a list of values or empty list
         """

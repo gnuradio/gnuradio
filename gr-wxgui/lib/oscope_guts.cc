@@ -34,7 +34,7 @@
 
 namespace gr {
   namespace wxgui {
-    
+
     /*
      * Bad performance if it's large, and flaky triggering if it's too small
      */

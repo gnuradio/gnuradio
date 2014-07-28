@@ -76,6 +76,8 @@ public:
   void replot();
 
   void setYaxis(double min, double max);
+  double getYMin() const;
+  double getYMax() const;
 
   void setTraceColour (QColor);
   void setBGColour (QColor c);

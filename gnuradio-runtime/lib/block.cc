@@ -29,8 +29,6 @@
 #include <gnuradio/block_detail.h>
 #include <gnuradio/buffer.h>
 #include <gnuradio/prefs.h>
-#include <gnuradio/config.h>
-#include <gnuradio/rpcregisterhelpers.h>
 #include <stdexcept>
 #include <iostream>
 
@@ -59,6 +57,8 @@ namespace gr {
       d_min_output_buffer(std::max(output_signature->max_streams(),1), -1)
   {
     global_block_registry.register_primitive(alias(), this);
+    message_port_register_in(pmt::mp("system"));
+    set_msg_handler(pmt::mp("system"), boost::bind(&block::system_handler, this, _1));
 
 #ifdef ENABLE_GR_LOG
 #ifdef HAVE_LOG4CPP
@@ -75,13 +75,13 @@ namespace gr {
     GR_LOG_SET_LEVEL(LOG, log_level);
     if(log_file.size() > 0) {
       if(log_file == "stdout") {
-        GR_LOG_ADD_CONSOLE_APPENDER(LOG, "cout","gr::log :%p: %c{1} - %m%n");
+        GR_LOG_SET_CONSOLE_APPENDER(LOG, "cout","gr::log :%p: %c{1} - %m%n");
       }
       else if(log_file == "stderr") {
-        GR_LOG_ADD_CONSOLE_APPENDER(LOG, "cerr","gr::log :%p: %c{1} - %m%n");
+        GR_LOG_SET_CONSOLE_APPENDER(LOG, "cerr","gr::log :%p: %c{1} - %m%n");
       }
       else {
-        GR_LOG_ADD_FILE_APPENDER(LOG, log_file , true,"%r :%p: %c{1} - %m%n");
+        GR_LOG_SET_FILE_APPENDER(LOG, log_file , true,"%r :%p: %c{1} - %m%n");
       }
     }
     d_logger = LOG;
@@ -90,13 +90,13 @@ namespace gr {
     GR_LOG_SET_LEVEL(DLOG, debug_level);
     if(debug_file.size() > 0) {
       if(debug_file == "stdout") {
-        GR_LOG_ADD_CONSOLE_APPENDER(DLOG, "cout","gr::debug :%p: %c{1} - %m%n");
+        GR_LOG_SET_CONSOLE_APPENDER(DLOG, "cout","gr::debug :%p: %c{1} - %m%n");
       }
       else if(debug_file == "stderr") {
-        GR_LOG_ADD_CONSOLE_APPENDER(DLOG, "cerr", "gr::debug :%p: %c{1} - %m%n");
+        GR_LOG_SET_CONSOLE_APPENDER(DLOG, "cerr", "gr::debug :%p: %c{1} - %m%n");
       }
       else {
-        GR_LOG_ADD_FILE_APPENDER(DLOG, debug_file, true, "%r :%p: %c{1} - %m%n");
+        GR_LOG_SET_FILE_APPENDER(DLOG, debug_file, true, "%r :%p: %c{1} - %m%n");
       }
     }
     d_debug_logger = DLOG;
@@ -109,7 +109,7 @@ namespace gr {
 
   block::~block()
   {
-    global_block_registry.unregister_primitive(alias());
+    global_block_registry.unregister_primitive(symbol_name());
   }
 
   unsigned
@@ -734,11 +734,67 @@ namespace gr {
     }
   }
 
+
+  void
+  block::system_handler(pmt::pmt_t msg)
+  {
+    //std::cout << "system_handler " << msg << "\n";
+    pmt::pmt_t op = pmt::car(msg);
+    if(pmt::eqv(op, pmt::mp("done"))){
+        d_finished = pmt::to_long(pmt::cdr(msg));
+        global_block_registry.notify_blk(alias());
+    } else {
+        std::cout << "WARNING: bad message op on system port!\n";
+        pmt::print(msg);
+    }
+  }
+
+  void
+  block::notify_msg_neighbors()
+  {
+    size_t len = pmt::length(d_message_subscribers);
+    pmt::pmt_t port_names = pmt::make_vector(len, pmt::PMT_NIL);
+    pmt::pmt_t keys = pmt::dict_keys(d_message_subscribers);
+    for(size_t i = 0; i < len; i++) {
+      // for each output port
+      pmt::pmt_t oport = pmt::nth(i,keys);
+
+      // for each subscriber on this port
+      pmt::pmt_t currlist = pmt::dict_ref(d_message_subscribers, oport, pmt::PMT_NIL);
+
+      // iterate through subscribers on port
+      while(pmt::is_pair(currlist)) {
+        pmt::pmt_t target = pmt::car(currlist);
+
+        pmt::pmt_t block = pmt::car(target);
+        pmt::pmt_t port = pmt::mp("system");
+
+        currlist = pmt::cdr(currlist);
+        basic_block_sptr blk = global_block_registry.block_lookup(block);
+        blk->post(port, pmt::cons(pmt::mp("done"), pmt::mp(true)));
+
+        //std::cout << "notify finished --> ";
+        //pmt::print(pmt::cons(block,port));
+        //std::cout << "\n";
+
+        }
+    }
+  }
+
+  bool
+  block::finished()
+  {
+    return d_finished;
+  }
+
+
+
   void
   block::setup_pc_rpc()
   {
     d_pc_rpc_set = true;
 #if defined(GR_CTRLPORT) && defined(GR_PERFORMANCE_COUNTERS)
+#include <gnuradio/rpcregisterhelpers.h>
     d_rpc_vars.push_back(
       rpcbasic_sptr(new rpcbasic_register_trigger<block>(
         alias(), "reset_perf_counters", &block::reset_perf_counters,

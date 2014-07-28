@@ -933,8 +933,7 @@ namespace gr {
       err = AudioHardwareRemovePropertyListener
 	(kAudioHardwarePropertyDevices,
 	 reinterpret_cast<AudioHardwarePropertyListenerProc>
-	   (&osx_source::hardware_listener)
-	 reinterpret_cast<void*>(this));
+	   (&osx_source::hardware_listener));
 #if _OSX_AU_DEBUG_
       check_error(err, "AudioObjectRemovePropertyListener hardware");
 #endif
@@ -943,8 +942,7 @@ namespace gr {
 	err = AudioHardwareRemovePropertyListener
 	  (kAudioHardwarePropertyDefaultInputDevice,
 	   reinterpret_cast<AudioHardwarePropertyListenerProc>
-	     (&osx_source::default_listener),
-	   reinterpret_cast<void*>(this));
+	     (&osx_source::default_listener));
 #if _OSX_AU_DEBUG_
 	check_error(err, "AudioObjectRemovePropertyListener default");
 #endif

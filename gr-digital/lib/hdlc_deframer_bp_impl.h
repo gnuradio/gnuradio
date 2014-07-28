@@ -31,14 +31,17 @@ namespace gr {
     class hdlc_deframer_bp_impl : public hdlc_deframer_bp
     {
      private:
-        std::string d_frame_tag_name;
-        int d_length_min;
-        int d_length_max;
-        unsigned int crc_ccitt(std::vector<unsigned char> &data);
-        std::vector<unsigned char> pack(std::vector<unsigned char> &pkt);
+        size_t d_length_min;
+        size_t d_length_max;
+        size_t d_ones;
+        size_t d_bytectr;
+        size_t d_bitctr;
+        unsigned char *d_pktbuf;
+
+        unsigned int crc_ccitt(unsigned char *data, size_t len);
 
      public:
-      hdlc_deframer_bp_impl(const std::string frame_tag_name, int length_min, int length_max);
+      hdlc_deframer_bp_impl(int length_min, int length_max);
       ~hdlc_deframer_bp_impl();
 
       // Where all the action really happens

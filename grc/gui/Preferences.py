@@ -95,3 +95,15 @@ def blocks_window_visibility(visible=None):
     else:
         try: return _config_parser.getboolean('main', 'blocks_window_visible')
         except: return True
+
+def scroll_lock(visible=None):
+    if visible is not None: _config_parser.set('main', 'scroll_lock', visible)
+    else:
+        try: return _config_parser.getboolean('main', 'scroll_lock')
+        except: return True
+
+def auto_hide_port_labels(hide=None):
+    if hide is not None: _config_parser.set('main', 'auto_hide_port_labels', hide)
+    else:
+        try: return _config_parser.getboolean('main', 'auto_hide_port_labels')
+        except: return True

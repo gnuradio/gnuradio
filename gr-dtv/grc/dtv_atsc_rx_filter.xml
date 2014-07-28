@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<!--
+###################################################
+## ATSC RX Filter
+###################################################
+ -->
+<block>
+  <name>ATSC RX Filter</name>
+  <key>dtv_atsc_rx_filter</key>
+  <import>from gnuradio import dtv</import>
+  <make>dtv.atsc_rx_filter($rate,$sps)</make>
+
+  <param>
+    <name>Input Rate</name>
+    <key>rate</key>
+    <type>float</type>
+  </param>
+
+  <param>
+    <name>Oversampling Ratio</name>
+    <key>sps</key>
+    <type>float</type>
+  </param>
+
+  <sink>
+    <name>in</name>
+    <type>complex</type>
+  </sink>
+
+  <source>
+    <name>out</name>
+    <type>complex</type>
+  </source>
+
+</block>

@@ -54,7 +54,7 @@ namespace gr {
     {
       gr_complex *out = (gr_complex *) output_items[0];
       int noi = d_vlen*noutput_items;
-      
+
       memcpy(out, input_items[0], noi*sizeof(gr_complex));
       for(size_t i = 1; i < input_items.size(); i++)
         volk_32fc_x2_multiply_32fc(out, out, (gr_complex*)input_items[i], noi);

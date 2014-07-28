@@ -56,11 +56,11 @@ class Block(Element):
     def __init__(self, flow_graph, n):
         """
         Make a new block from nested data.
-        
+
         Args:
             flow: graph the parent element
             n: the nested odict
-        
+
         Returns:
             block a new block
         """
@@ -77,6 +77,7 @@ class Block(Element):
         self._block_wrapper_path = n.find('block_wrapper_path')
         self._bussify_sink = n.find('bus_sink')
         self._bussify_source = n.find('bus_source')
+        self._var_value = n.find('var_value') or '$value'
 
         # get list of param tabs
         n_tabs = n.find('param_tab_order') or None
@@ -141,6 +142,17 @@ class Block(Element):
                                      and (self._key != "pad_source") \
                                      and (self._key != "pad_sink"))
 
+        if is_not_virtual_or_pad:
+            self.get_params().append(self.get_parent().get_parent().Param(
+                block=self,
+                n=odict({'name': 'Block Alias',
+                         'key': 'alias',
+                         'type': 'string',
+                         'hide': 'part',
+                         'tab': ADVANCED_PARAM_TAB
+                     })
+            ))
+
         if (len(sources) or len(sinks)) and is_not_virtual_or_pad:
             self.get_params().append(self.get_parent().get_parent().Param(
                     block=self,
@@ -177,7 +189,7 @@ class Block(Element):
     def back_ofthe_bus(self, portlist):
         portlist.sort(key=lambda a: a.get_type() == 'bus');
 
-    def filter_bus_port(self, ports): 
+    def filter_bus_port(self, ports):
         buslist = [i for i in ports if i.get_type() == 'bus'];
         if len(buslist) == 0:
             return ports;
@@ -187,7 +199,7 @@ class Block(Element):
     def get_enabled(self):
         """
         Get the enabled state of the block.
-        
+
         Returns:
             true for enabled
         """
@@ -197,7 +209,7 @@ class Block(Element):
     def set_enabled(self, enabled):
         """
         Set the enabled state of the block.
-        
+
         Args:
             enabled: true for enabled
         """
@@ -225,11 +237,11 @@ class Block(Element):
     def get_param_keys(self): return _get_keys(self._params)
     def get_param(self, key): return _get_elem(self._params, key)
     def get_params(self): return self._params
-    def has_param(self, key):   
-        try: 
-            _get_elem(self._params, key); 
-            return True; 
-        except: 
+    def has_param(self, key):
+        try:
+            _get_elem(self._params, key);
+            return True;
+        except:
             return False;
 
     ##############################################
@@ -246,7 +258,7 @@ class Block(Element):
     def get_source_keys(self): return _get_keys(self._sources)
     def get_source(self, key): return _get_elem(self._sources, key)
     def get_sources(self): return self._sources
-    def get_sources_gui(self): return self.filter_bus_port(self.get_sources()); 
+    def get_sources_gui(self): return self.filter_bus_port(self.get_sources());
 
     def get_connections(self):
         return sum([port.get_connections() for port in self.get_ports()], [])
@@ -254,18 +266,20 @@ class Block(Element):
     def resolve_dependencies(self, tmpl):
         """
         Resolve a paramater dependency with cheetah templates.
-        
+
         Args:
             tmpl: the string with dependencies
-        
+
         Returns:
             the resolved value
         """
         tmpl = str(tmpl)
         if '$' not in tmpl: return tmpl
         n = dict((p.get_key(), TemplateArg(p)) for p in self.get_params())
-        try: return str(Template(tmpl, n))
-        except Exception, e: return "-------->\n%s: %s\n<--------"%(e, tmpl)
+        try:
+            return str(Template(tmpl, n))
+        except Exception as err:
+            return "Template error: %s\n    %s" % (tmpl, err)
 
     ##############################################
     # Controller Modify
@@ -273,10 +287,10 @@ class Block(Element):
     def type_controller_modify(self, direction):
         """
         Change the type controller.
-        
+
         Args:
             direction: +1 or -1
-        
+
         Returns:
             true for change
         """
@@ -302,10 +316,10 @@ class Block(Element):
     def port_controller_modify(self, direction):
         """
         Change the port controller.
-        
+
         Args:
             direction: +1 or -1
-        
+
         Returns:
             true for change
         """
@@ -323,7 +337,7 @@ class Block(Element):
 
         struct = [range(len(get_p()))];
         if True in map(lambda a: isinstance(a.get_nports(), int), get_p()):
-                
+
 
             structlet = [];
             last = 0;
@@ -332,7 +346,7 @@ class Block(Element):
                 last = structlet[-1] + 1;
                 struct = [structlet];
         if bus_structure:
-                
+
             struct = bus_structure
 
         self.current_bus_structure[direc] = struct;
@@ -353,10 +367,10 @@ class Block(Element):
             for connect in elt.get_connections():
                 self.get_parent().remove_element(connect);
 
-        
-        
-        
-        
+
+
+
+
 
         if (not 'bus' in map(lambda a: a.get_type(), get_p())) and len(get_p()) > 0:
 
@@ -364,16 +378,16 @@ class Block(Element):
             self.current_bus_structure[direc] = struct;
             if get_p()[0].get_nports():
                 n['nports'] = str(1);
-        
+
             for i in range(len(struct)):
                 n['key'] = str(len(get_p()));
                 n = odict(n);
                 port = self.get_parent().get_parent().Port(block=self, n=n, dir=direc);
                 get_p().append(port);
-                
 
-            
-                
+
+
+
         elif 'bus' in map(lambda a: a.get_type(), get_p()):
             for elt in get_p_gui():
                 get_p().remove(elt);
@@ -384,7 +398,7 @@ class Block(Element):
     def export_data(self):
         """
         Export this block's params to nested data.
-        
+
         Returns:
             a nested data odict
         """
@@ -405,7 +419,7 @@ class Block(Element):
         call rewrite, and repeat the load until the params stick.
         This call to rewrite will also create any dynamic ports
         that are needed for the connections creation phase.
-        
+
         Args:
             n: the nested data odict
         """
@@ -434,5 +448,3 @@ class Block(Element):
         elif len(bussrcs) > 0:
             self.bussify({'name':'bus','type':'bus'}, 'source')
             self.bussify({'name':'bus','type':'bus'}, 'source')
-
-

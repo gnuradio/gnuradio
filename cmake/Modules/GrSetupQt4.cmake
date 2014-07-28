@@ -152,5 +152,5 @@ FOREACH(module QT3SUPPORT QTOPENGL QTASSISTANT QTDESIGNER QTMOTIF QTNSPLUGIN
       MESSAGE("Qt ${module} library not found.")
     ENDIF (QT_${module}_FOUND)
   ENDIF (QT_USE_${module} OR QT_USE_${module}_DEPENDS)
-  
+
 ENDFOREACH(module)

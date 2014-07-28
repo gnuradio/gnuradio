@@ -127,6 +127,31 @@ add_library(gnuradio-atsc SHARED ${gr_atsc_sources})
 target_link_libraries(gnuradio-atsc ${atsc_libs})
 GR_LIBRARY_FOO(gnuradio-atsc RUNTIME_COMPONENT "atsc_runtime" DEVEL_COMPONENT "atsc_devel")
 
+if(ENABLE_STATIC_LIBS)
+  if(ENABLE_GR_CTRLPORT)
+    # Remove GR_CTRLPORT set this target's definitions.
+    # Makes sure we don't try to use ControlPort stuff in source files
+    # since Ice will not work with static libs.
+    GET_DIRECTORY_PROPERTY(STATIC_DEFS COMPILE_DEFINITIONS)
+    list(REMOVE_ITEM STATIC_DEFS "GR_CTRLPORT")
+    SET_PROPERTY(DIRECTORY PROPERTY COMPILE_DEFINITIONS "${STATIC_DEFS}")
+
+    # readd it to the target since we removed it from the directory-wide list.
+    SET_PROPERTY(TARGET gnuradio-atsc APPEND PROPERTY COMPILE_DEFINITIONS "GR_CTRLPORT")
+  endif(ENABLE_GR_CTRLPORT)
+
+  add_library(gnuradio-atsc_static STATIC ${gr_atsc_sources})
+
+  if(NOT WIN32)
+    set_target_properties(gnuradio-atsc_static
+      PROPERTIES OUTPUT_NAME gnuradio-atsc)
+  endif(NOT WIN32)
+
+  install(TARGETS gnuradio-atsc_static
+    ARCHIVE DESTINATION lib${LIB_SUFFIX} COMPONENT "atsc_devel"   # .lib file
+    )
+endif(ENABLE_STATIC_LIBS)
+
 ########################################################################
 # Build and register unit test
 ########################################################################

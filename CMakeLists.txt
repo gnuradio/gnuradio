@@ -29,19 +29,23 @@ cmake_minimum_required(VERSION 2.6)
 project(gnuradio CXX C)
 enable_testing()
 
+list(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake/Modules)
+
+include(GrBuildTypes)
+
 #select the release build type by default to get optimization flags
 if(NOT CMAKE_BUILD_TYPE)
    set(CMAKE_BUILD_TYPE "Release")
    message(STATUS "Build type not specified: defaulting to release.")
 endif(NOT CMAKE_BUILD_TYPE)
+GR_CHECK_BUILD_TYPE(${CMAKE_BUILD_TYPE})
 set(CMAKE_BUILD_TYPE ${CMAKE_BUILD_TYPE} CACHE STRING "")
-
-list(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake/Modules)
+message(STATUS "Build type set to ${CMAKE_BUILD_TYPE}.")
 
 # Set the version information here
 set(VERSION_INFO_MAJOR_VERSION 3)
 set(VERSION_INFO_API_COMPAT    7)
-set(VERSION_INFO_MINOR_VERSION 4)
+set(VERSION_INFO_MINOR_VERSION 5)
 set(VERSION_INFO_MAINT_VERSION git)
 include(GrVersion) #setup version info
 
@@ -86,7 +90,7 @@ endif(CMAKE_COMPILER_IS_GNUCXX)
 
 if(MSVC)
     include_directories(${CMAKE_SOURCE_DIR}/cmake/msvc) #missing headers
-    add_definitions(-D_WIN32_WINNT=0x0501) #minimum version required is windows xp
+    add_definitions(-D_WIN32_WINNT=0x0502) #Minimum version: "Windows Server 2003 with SP1, Windows XP with SP2"
     add_definitions(-DNOMINMAX) #disables stupidity and enables std::min and std::max
     add_definitions( #stop all kinds of compatibility warnings
         -D_SCL_SECURE_NO_WARNINGS
@@ -171,6 +175,9 @@ else(ENABLE_PERFORMANCE_COUNTERS)
   message(STATUS "NO PERF COUNTERS")
 endif(ENABLE_PERFORMANCE_COUNTERS)
 
+OPTION(ENABLE_STATIC_LIBS "Enable building of static libraries" OFF)
+message(STATUS "Building Static Libraries: ${ENABLE_STATIC_LIBS}")
+
 ########################################################################
 # Variables replaced when configuring the package config files
 ########################################################################
@@ -192,6 +199,11 @@ configure_file(
 add_custom_target(uninstall
     ${CMAKE_COMMAND} -P ${CMAKE_CURRENT_BINARY_DIR}/cmake_uninstall.cmake
 )
+
+########################################################################
+# Setup Boost for global use (within this build)
+########################################################################
+include(GrBoost)
 
 ########################################################################
 # Enable python component
@@ -312,6 +324,7 @@ add_subdirectory(gr-fft)
 add_subdirectory(gr-filter)
 add_subdirectory(gr-analog)
 add_subdirectory(gr-digital)
+add_subdirectory(gr-dtv)
 add_subdirectory(gr-atsc)
 add_subdirectory(gr-audio)
 add_subdirectory(gr-comedi)
@@ -327,6 +340,7 @@ add_subdirectory(gr-vocoder)
 add_subdirectory(gr-fcd)
 add_subdirectory(gr-wavelet)
 add_subdirectory(gr-wxgui)
+add_subdirectory(gr-zeromq)
 
 # Defining GR_CTRLPORT for gnuradio/config.h
 if(ENABLE_GR_CTRLPORT)

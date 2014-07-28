@@ -26,7 +26,7 @@
 #include <gnuradio/wavelet/api.h>
 #include <gnuradio/sync_block.h>
 
-namespace gr { 
+namespace gr {
   namespace wavelet {
 
     /*!
@@ -34,10 +34,10 @@ namespace gr {
      * spectral points, using gsl interpolation
      * \ingroup misc
      */
-    class WAVELET_API squash_ff : virtual public sync_block 
+    class WAVELET_API squash_ff : virtual public sync_block
     {
     public:
-      
+
       // gr::wavelet::squash_ff::sptr
       typedef boost::shared_ptr<squash_ff> sptr;
 

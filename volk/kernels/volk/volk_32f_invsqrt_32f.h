@@ -20,7 +20,7 @@ static inline float Q_rsqrt( float number )
   u.i = 0x5f3759df - ( u.i >> 1 );               // what the fuck?
   u.f = u.f * ( threehalfs - ( x2 * u.f * u.f ) );   // 1st iteration
   //u.f  = u.f * ( threehalfs - ( x2 * u.f * u.f ) );   // 2nd iteration, this can be removed
- 
+
   return u.f;
 }
 
@@ -47,7 +47,7 @@ static inline void volk_32f_invsqrt_32f_a_avx(float* cVector, const float* aVect
         aPtr += 8;
 	cPtr += 8;
     }
-   
+
     number = eighthPoints * 8;
     for(;number < num_points; number++)
       *cPtr++ = Q_rsqrt(*aPtr++);
@@ -90,6 +90,37 @@ static inline void volk_32f_invsqrt_32f_a_sse(float* cVector, const float* aVect
 }
 #endif /* LV_HAVE_SSE */
 
+#ifdef LV_HAVE_NEON
+#include <arm_neon.h>
+/*!
+\brief Sqrts the two input vectors and store their results in the third vector
+\param cVector The vector where the results will be stored
+\param aVector One of the vectors to be invsqrted
+\param num_points The number of values in aVector and bVector to be invsqrted together and stored into cVector
+*/
+static inline void volk_32f_invsqrt_32f_neon(float* cVector, const float* aVector, unsigned int num_points){
+    unsigned int number;
+    const unsigned int quarter_points = num_points / 4;
+
+    float* cPtr = cVector;
+    const float* aPtr = aVector;
+    float32x4_t a_val, c_val;
+    for (number = 0; number < quarter_points; ++number)
+    {
+        a_val = vld1q_f32(aPtr);
+        c_val = vrsqrteq_f32(a_val);
+        vst1q_f32(cPtr, c_val);
+        aPtr += 4;
+        cPtr += 4;
+    }
+   
+    for(number=quarter_points * 4;number < num_points; number++)
+      *cPtr++ = Q_rsqrt(*aPtr++);
+
+}
+#endif /* LV_HAVE_NEON */
+
+
 #ifdef LV_HAVE_GENERIC
 /*!
   \brief Sqrts the two input vectors and store their results in the third vector
@@ -130,7 +161,7 @@ static inline void volk_32f_invsqrt_32f_u_avx(float* cVector, const float* aVect
         aPtr += 8;
 	cPtr += 8;
     }
-   
+
     number = eighthPoints * 8;
     for(;number < num_points; number++)
       *cPtr++ = Q_rsqrt(*aPtr++);

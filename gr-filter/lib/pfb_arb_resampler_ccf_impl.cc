@@ -30,7 +30,7 @@
 
 namespace gr {
   namespace filter {
-    
+
     pfb_arb_resampler_ccf::sptr
     pfb_arb_resampler_ccf::make(float rate,
 				const std::vector<float> &taps,
@@ -53,6 +53,7 @@ namespace gr {
       d_resamp = new kernel::pfb_arb_resampler_ccf(rate, taps, filter_size);
       set_history(d_resamp->taps_per_filter());
       set_relative_rate(rate);
+      enable_update_rate(true);
     }
 
     pfb_arb_resampler_ccf_impl::~pfb_arb_resampler_ccf_impl()
@@ -84,7 +85,7 @@ namespace gr {
       set_history(d_resamp->taps_per_filter());
       d_updated = true;
     }
- 
+
     std::vector<std::vector<float> >
     pfb_arb_resampler_ccf_impl::taps() const
     {
@@ -121,7 +122,7 @@ namespace gr {
 
     unsigned int
     pfb_arb_resampler_ccf_impl::interpolation_rate() const
-    { 
+    {
       return d_resamp->interpolation_rate();
     }
 

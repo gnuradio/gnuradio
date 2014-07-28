@@ -26,17 +26,21 @@
 */
 
 #include "codec2.h"
+#include "dump.h"
 
 #include <assert.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <errno.h>
+#include <getopt.h>
 
 #define NONE          0  /* no bit errors                          */
 #define UNIFORM       1  /* random bit errors                      */
 #define TWO_STATE     2  /* Two state error model                  */
 #define UNIFORM_RANGE 3  /* random bit errors over a certain range */
+
+void print_help(const struct option *long_options, int num_opts, char* argv[]);
 
 int main(int argc, char *argv[])
 {
@@ -52,18 +56,25 @@ int main(int argc, char *argv[])
     int            state, next_state;
     float          ber, r, burst_length, burst_period, burst_timer, ber_est;
     unsigned char  mask;
+    int            natural, dump;
 
-    if ((argc != 4) && (argc != 5) && (argc != 6) && (argc != 7)) {
-	printf("basic usage.................: c2dec 3200|2400|1600|1400|1300|1200 InputBitFile OutputRawSpeechFile\n");
-	printf("uniform errors usage........: c2dec 3200|2400|1600|1400|1300|1200 InputBitFile OutputRawSpeechFile uniformBER startBit endBit\n");
-	printf("uniform error on range usage: c2dec 3200|2400|1600|1400|1300|1200 InputBitFile OutputRawSpeechFile uniformBER\n");
-	printf("demod BER estimate..........: c2dec 3200|2400|1600|1400|1300|1200 InputBitFile OutputRawSpeechFile BERfile\n");
-	printf("two state fading usage......: c2dec 3200|2400|1600|1400|1300|1200 InputBitFile OutputRawSpeechFile burstLength burstPeriod\n");
-	printf("e.g    c2dec 1400 hts1a.c2 hts1a_1400.raw\n");
-	printf("e.g    c2dec 1400 hts1a.c2 hts1a_1400.raw 0.9\n");
-	printf("e.g    c2dec 1400 hts1a.c2 hts1a_1400.raw 0.99 0.9\n");
-	exit(1);
-    }
+    char* opt_string = "h:";
+    struct option long_options[] = {
+        { "ber", required_argument, NULL, 0 },
+        { "startbit", required_argument, NULL, 0 },
+        { "endbit", required_argument, NULL, 0 },
+        { "berfile", required_argument, NULL, 0 },
+        { "natural", no_argument, &natural, 1 },
+        #ifdef DUMP
+        { "dump", required_argument, &dump, 1 },
+        #endif
+        { "help", no_argument, NULL, 'h' },
+        { NULL, no_argument, NULL, 0 }
+    };
+    int num_opts=sizeof(long_options)/sizeof(struct option);
+
+    if (argc < 4)
+        print_help(long_options, num_opts, argv);
 
     if (strcmp(argv[1],"3200") == 0)
 	mode = CODEC2_MODE_3200;
@@ -101,6 +112,7 @@ int main(int argc, char *argv[])
     ber = 0.0;
     burst_length = burst_period = 0.0;
     burst_timer = 0.0;
+    dump = natural = 0;
 
     codec2 = codec2_create(mode);
     nsam = codec2_samples_per_frame(codec2);
@@ -113,34 +125,50 @@ int main(int argc, char *argv[])
     nstart_bit = 0;
     nend_bit = nbit-1;
 
-    if (argc == 5) {
-        /* see if 4th argument is a valid file name */
-        if ( (fber = fopen(argv[4],"rb")) == NULL ) {
-            /* otherwise it must be BER value for uniform errors */
-            ber = atof(argv[4]);
-	    error_mode = UNIFORM;
+    while(1) {
+        int option_index = 0;
+        int opt = getopt_long(argc, argv, opt_string,
+                    long_options, &option_index);
+        if (opt == -1)
+            break;
+
+        switch (opt) {
+        case 0:
+            if(strcmp(long_options[option_index].name, "ber") == 0) {
+                ber = atof(optarg);
+                error_mode = UNIFORM;
+            } else if(strcmp(long_options[option_index].name, "startbit") == 0) {
+	        nstart_bit = atoi(optarg);
+            } else if(strcmp(long_options[option_index].name, "endbit") == 0) {
+	        nend_bit = atoi(optarg);
+             } else if(strcmp(long_options[option_index].name, "berfile") == 0) {
+	        if ((fber = fopen(optarg,"wt")) == NULL) {
+	            fprintf(stderr, "Error opening BER file: %s %s.\n",
+                            optarg, strerror(errno));
+                    exit(1);
+                }
+
+            }
+            #ifdef DUMP
+            else if(strcmp(long_options[option_index].name, "dump") == 0) {
+                if (dump)
+	            dump_on(optarg);
+            }
+            #endif
+            break;
+
+        case 'h':
+            print_help(long_options, num_opts, argv);
+            break;
+
+        default:
+            /* This will never be reached */
+            break;
         }
     }
-
-    if (argc == 6) {
-        error_mode = TWO_STATE;
-	burst_length = atof(argv[4]);
-	burst_period = atof(argv[5]);
-	nstart_bit = 0;
-	nend_bit = 2;
-        state = 0;
-    }
-
-    if (argc == 7) {
-        error_mode = UNIFORM_RANGE;
-	ber = atof(argv[4]);
-	nstart_bit = atoi(argv[5]);
-	nend_bit = atoi(argv[6]);
-        fprintf(stderr, "ber: %f nstart_bit: %d nend_bit: %d\n", ber, nstart_bit, nend_bit);
-        state = 0;
-    }
-
     assert(nend_bit <= nbit);
+    codec2_set_natural_or_gray(codec2, !natural);
+    //printf("%d %d\n", nstart_bit, nend_bit);
 
     while(fread(bits, sizeof(char), nbyte, fin) == (size_t)nbyte) {
 	frames++;
@@ -211,13 +239,7 @@ int main(int argc, char *argv[])
         else
             ber_est = 0.0;
 
-        /* frame repeat logic */
-        if (ber_est > 0.15) {
-            //memcpy(bits, prev_bits, nbyte);
-            // fprintf(stderr, "repeat\n");
-        }
-
-	codec2_decode(codec2, buf, bits, ber_est);
+	codec2_decode_ber(codec2, buf, bits, ber_est);
  	fwrite(buf, sizeof(short), nsam, fout);
 	//if this is in a pipeline, we probably don't want the usual
         //buffering to occur
@@ -238,4 +260,32 @@ int main(int argc, char *argv[])
     fclose(fout);
 
     return 0;
+}
+
+void print_help(const struct option* long_options, int num_opts, char* argv[])
+{
+	int i;
+	char *option_parameters;
+	fprintf(stderr, "\nc2dec - Codec 2 decoder and bit error simulation program\n"
+		"usage: %s 3200|2400|1400}1300|1200 InputFile OutputRawFile [OPTIONS]\n\n"
+                "Options:\n", argv[0]);
+        for(i=0; i<num_opts-1; i++) {
+		if(long_options[i].has_arg == no_argument) {
+			option_parameters="";
+		} else if (strcmp("ber", long_options[i].name) == 0) {
+			option_parameters = " BER";
+		} else if (strcmp("startbit", long_options[i].name) == 0) {
+			option_parameters = " startBit";
+		} else if (strcmp("endbit", long_options[i].name) == 0) {
+			option_parameters = " endBit";
+		} else if (strcmp("berfile", long_options[i].name) == 0) {
+			option_parameters = " berFileName";
+		} else if (strcmp("dump", long_options[i].name) == 0) {
+			option_parameters = " dumpFilePrefix";
+		} else {
+			option_parameters = " <UNDOCUMENTED parameter>";
+		}
+		fprintf(stderr, "\t--%s%s\n", long_options[i].name, option_parameters);
+	}
+	exit(1);
 }

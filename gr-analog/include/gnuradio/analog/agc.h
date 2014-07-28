@@ -97,7 +97,7 @@ namespace gr {
        *
        * Power is approximated by absolute value
        */
-      class ANALOG_API agc_ff 
+      class ANALOG_API agc_ff
       {
       public:
         /*!

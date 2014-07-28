@@ -65,7 +65,7 @@ class my_top_block(gr.top_block):
         self.qapp = QtGui.QApplication(sys.argv)
 
         self.filt_taps = [1,]
-        
+
         src1 = analog.sig_source_c(Rs, analog.GR_SIN_WAVE, f1, 0.1, 0)
         src2 = analog.sig_source_c(Rs, analog.GR_SIN_WAVE, f2, 0.1, 0)
         src  = blocks.add_cc()

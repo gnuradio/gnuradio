@@ -188,6 +188,33 @@ static inline void volk_32f_x2_multiply_32f_a_avx(float* cVector, const float* a
 }
 #endif /* LV_HAVE_AVX */
 
+#ifdef LV_HAVE_NEON
+/*!
+  \brief Multiplys the two input vectors and store their results in the third vector
+  \param cVector The vector where the results will be stored
+  \param aVector One of the vectors to be multiplied
+  \param bVector One of the vectors to be multiplied
+  \param num_points The number of values in aVector and bVector to be multiplied together and stored into cVector
+*/
+static inline void volk_32f_x2_multiply_32f_neon(float* cVector, const float* aVector, const float* bVector, unsigned int num_points){
+    const unsigned int quarter_points = num_points / 4;
+    unsigned int number;
+    float32x4_t avec, bvec, cvec;
+    for(number=0; number < quarter_points; ++number) {
+        avec = vld1q_f32(aVector);
+        bvec = vld1q_f32(bVector);
+        cvec = vmulq_f32(avec, bvec);
+        vst1q_f32(cVector, cvec);
+        aVector += 4;
+        bVector += 4;
+        cVector += 4;
+    }
+    for(number=quarter_points*4; number < num_points; ++number) {
+        *cVector++ = *aVector++ * *bVector++;
+    }
+} 
+#endif /* LV_HAVE_NEON */
+
 #ifdef LV_HAVE_GENERIC
 /*!
   \brief Multiplys the two input vectors and store their results in the third vector

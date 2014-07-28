@@ -1,0 +1,45 @@
+<?xml version="1.0"?>
+<block>
+  <name>Depuncture</name>
+  <key>fec_depuncture_bb</key>
+  <import>from gnuradio import fec</import>
+  <make>fec.depucture_bb($delay, $puncpat, $puncholes, $puncsize, $sym)</make>
+
+  <param>
+    <name>Puncture Size</name>
+    <key>puncsize</key>
+    <type>int</type>
+  </param>
+
+  <param>
+    <name>Puncture Pattern</name>
+    <key>puncpat</key>
+    <type>int</type>
+  </param>
+
+  <param>
+    <name>Delay</name>
+    <key>delay</key>
+    <value>0</value>
+    <type>int</type>
+  </param>
+
+  <param>
+    <name>Symbol</name>
+    <key>sym</key>
+    <value>127</value>
+    <type>int</type>
+    <hide>part</hide>
+  </param>
+
+  <sink>
+    <name>in</name>
+    <type>float</type>
+  </sink>
+
+  <source>
+    <name>out</name>
+    <type>float</type>
+  </source>
+
+</block>

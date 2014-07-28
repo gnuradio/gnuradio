@@ -254,6 +254,13 @@ namespace gr {
   }
 
   void
+  logger_set_console_appender(logger_ptr logger, std::string target, std::string pattern)
+  {
+    logger->removeAllAppenders();
+    logger_add_console_appender(logger, target, pattern);
+  }
+
+  void
   logger_add_file_appender(logger_ptr logger, std::string filename,
                            bool append, std::string pattern)
   {
@@ -264,6 +271,14 @@ namespace gr {
     layout->setConversionPattern(pattern);
     app->setLayout(layout);
     logger->setAppender(app);
+  }
+
+  void
+  logger_set_file_appender(logger_ptr logger, std::string filename,
+                           bool append, std::string pattern)
+  {
+    logger->removeAllAppenders();
+    logger_add_file_appender(logger, filename, append, pattern);
   }
 
   void

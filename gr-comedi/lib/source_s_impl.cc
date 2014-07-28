@@ -70,7 +70,7 @@ namespace gr {
     {
       int aref = AREF_GROUND;
       int range = 0;
-  
+
       d_dev = comedi_open(d_device_name.c_str());
       if(d_dev == 0) {
 	comedi_perror(d_device_name.c_str());
@@ -214,7 +214,7 @@ namespace gr {
 
 	d_buf_back = d_buf_front;
       } while(work_left > 0);
-      
+
       return noutput_items;
     }
 

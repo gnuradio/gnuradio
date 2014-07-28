@@ -32,7 +32,7 @@
 
 namespace gr {
   namespace analog {
-    
+
     @BASE_NAME@::sptr
     @BASE_NAME@::make(noise_type_t type, float ampl, long seed, long samples)
     {
@@ -63,9 +63,9 @@ namespace gr {
       d_type = type;
       generate();
     }
-    
+
     void
-    @IMPL_NAME@::set_amplitude(float ampl) 
+    @IMPL_NAME@::set_amplitude(float ampl)
     {
       gr::thread::scoped_lock l(d_setlock);
       d_ampl = ampl;
@@ -154,7 +154,7 @@ namespace gr {
 
     @TYPE@ @IMPL_NAME@::sample_unbiased()
     {
-#if @IS_COMPLEX@ 
+#if @IS_COMPLEX@
         gr_complex s(sample());
         return gr_complex(FASTNOISE_RANDOM_SIGN * s.real(),
                           FASTNOISE_RANDOM_SIGN * s.imag());

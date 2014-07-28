@@ -24,7 +24,7 @@ class Port(Element):
     def __init__(self, block, n, dir):
         """
         Make a new port from nested data.
-        
+
         Args:
             block: the parent element
             n: the nested odict
@@ -36,6 +36,7 @@ class Port(Element):
         self._name = n['name']
         self._key = n['key']
         self._type = n['type']
+        self._hide = n.find('hide') or ''
         self._dir = dir
 
     def validate(self):
@@ -65,20 +66,22 @@ class Port(Element):
     def get_name(self):
         number = ''
         if self.get_type() == 'bus':
-            busses = filter(lambda a: a._dir == self._dir, self.get_parent().get_ports_gui());
-            
-            number = str(busses.index(self)) + '#' + str(len(self.get_associated_ports()));
+            busses = filter(lambda a: a._dir == self._dir, self.get_parent().get_ports_gui())
+            number = str(busses.index(self)) + '#' + str(len(self.get_associated_ports()))
         return self._name + number
 
     def get_key(self): return self._key
     def is_sink(self): return self._dir == 'sink'
     def is_source(self): return self._dir == 'source'
     def get_type(self): return self.get_parent().resolve_dependencies(self._type)
+    def get_hide(self):
+        value = self.get_parent().resolve_dependencies(self._hide).strip().lower()
+        return False if value in ('false', 'off', '0') else bool(value)
 
     def get_connections(self):
         """
         Get all connections that use this port.
-        
+
         Returns:
             a list of connection objects
         """
@@ -89,7 +92,7 @@ class Port(Element):
     def get_enabled_connections(self):
         """
         Get all enabled connections that use this port.
-        
+
         Returns:
             a list of connection objects
         """
@@ -97,20 +100,18 @@ class Port(Element):
 
     def get_associated_ports(self):
         if not self.get_type() == 'bus':
-            return [self];
+            return [self]
         else:
             if self.is_source():
-                get_p = self.get_parent().get_sources;
-                bus_structure = self.get_parent().current_bus_structure['source'];
-                direc = 'source'
+                get_ports = self.get_parent().get_sources
+                bus_structure = self.get_parent().current_bus_structure['source']
             else:
-                get_p = self.get_parent().get_sinks;
-                bus_structure = self.get_parent().current_bus_structure['sink'];
-                direc = 'sink'
-            
-            ports = [i for i in get_p() if not i.get_type() == 'bus'];
+                get_ports = self.get_parent().get_sinks
+                bus_structure = self.get_parent().current_bus_structure['sink']
+
+            ports = [i for i in get_ports() if not i.get_type() == 'bus']
             if bus_structure:
-                busses = [i for i in get_p() if i.get_type() == 'bus'];
-                bus_index = busses.index(self);
-                ports = filter(lambda a: ports.index(a) in bus_structure[bus_index], ports);
-            return ports;
+                busses = [i for i in get_ports() if i.get_type() == 'bus']
+                bus_index = busses.index(self)
+                ports = filter(lambda a: ports.index(a) in bus_structure[bus_index], ports)
+            return ports

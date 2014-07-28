@@ -74,6 +74,13 @@ int volk_rank_archs(
       prefs_loaded = 1;
   }
 
+  // If we've defined VOLK_GENERIC to be anything, always return the
+  // 'generic' kernel. Used in GR's QA code.
+  char *gen_env = getenv("VOLK_GENERIC");
+  if(gen_env) {
+    return volk_get_index(impl_names, n_impls, "generic");
+  }
+
     //now look for the function name in the prefs list
     for(i = 0; i < n_arch_prefs; i++)
     {

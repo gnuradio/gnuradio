@@ -1,17 +1,17 @@
 # Copyright 2013 Free Software Foundation, Inc.
-# 
+#
 # This file is part of GNU Radio
-# 
+#
 # GNU Radio is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 3, or (at your option)
 # any later version.
-# 
+#
 # GNU Radio is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU General Public License
 # along with GNU Radio; see the file COPYING.  If not, write to
 # the Free Software Foundation, Inc., 51 Franklin Street,
@@ -68,21 +68,21 @@ endif(NOT ICE_FOUND)
 FIND_PACKAGE(SWIG)
 
 if(SWIG_FOUND)
-    set(SWIG_VERSION_CHECK FALSE)
-    if("${SWIG_VERSION}" VERSION_GREATER "2.0.0")
-        set(SWIG_VERSION_CHECK TRUE)
-    else("${SWIG_VERSION}" VERSION_GREATER "2.0.0")
-      message(STATUS "")
-      message(STATUS "Ctrlport requires SWIG version >= 2.0")
-    endif()
+  set(SWIG_VERSION_CHECK FALSE)
+  if("${SWIG_VERSION}" VERSION_GREATER "2.0.0")
+    set(SWIG_VERSION_CHECK TRUE)
+  else("${SWIG_VERSION}" VERSION_GREATER "2.0.0")
+    message(STATUS "")
+    message(STATUS "Ctrlport requires SWIG version >= 2.0")
+  endif()
 endif(SWIG_FOUND)
 
 GR_REGISTER_COMPONENT("gr-ctrlport" ENABLE_GR_CTRLPORT
-    Boost_FOUND
-    SWIG_FOUND
-    SWIG_VERSION_CHECK
-    ICE_FOUND
-    ENABLE_GNURADIO_RUNTIME
+  Boost_FOUND
+  SWIG_FOUND
+  SWIG_VERSION_CHECK
+  ICE_FOUND
+  ENABLE_GNURADIO_RUNTIME
 )
 
 ########################################################################

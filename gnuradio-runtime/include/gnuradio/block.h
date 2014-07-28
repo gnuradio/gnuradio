@@ -565,6 +565,16 @@ namespace gr {
 
     // ----------------------------------------------------------------------------
 
+	/*!
+	 * \brief the system message handler
+     */
+    void system_handler(pmt::pmt_t msg);
+
+	/*!
+     * \brief returns true when execution has completed due to a message connection
+    */
+    bool finished();
+
   private:
     int                   d_output_multiple;
     bool                  d_output_multiple_set;
@@ -583,6 +593,7 @@ namespace gr {
     int                   d_priority;              // thread priority level
     bool                  d_pc_rpc_set;
     bool                  d_update_rate;           // should sched update rel rate?
+    bool d_finished;    // true if msg ports think we are finished
 
   protected:
     block(void) {} // allows pure virtual interface sub-classes
@@ -766,6 +777,15 @@ namespace gr {
   public:
     block_detail_sptr detail() const { return d_detail; }
     void set_detail(block_detail_sptr detail) { d_detail = detail; }
+
+   /*! \brief Tell msg neighbors we are finished
+	*/
+   void notify_msg_neighbors();
+
+   /*! \brief Make sure we dont think we are finished
+	*/
+   void clear_finished(){ d_finished = false; }
+
   };
 
   typedef std::vector<block_sptr> block_vector_t;

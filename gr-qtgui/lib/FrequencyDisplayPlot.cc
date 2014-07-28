@@ -54,7 +54,7 @@ public:
   {
     setTrackerMode(QwtPicker::AlwaysOn);
   }
-  
+
   virtual void updateTrackerText()
   {
     updateDisplay();
@@ -110,6 +110,7 @@ FrequencyDisplayPlot::FrequencyDisplayPlot(int nplots, QWidget* parent)
 	 << QColor(Qt::yellow) << QColor(Qt::gray) << QColor(Qt::darkRed)
 	 << QColor(Qt::darkGreen) << QColor(Qt::darkBlue) << QColor(Qt::darkGray);
 
+  // Create a curve for each input
   // Automatically deleted when parent is deleted
   for(int i = 0; i < d_nplots; i++) {
     d_ydata.push_back(new double[d_numPoints]);
@@ -130,8 +131,9 @@ FrequencyDisplayPlot::FrequencyDisplayPlot(int nplots, QWidget* parent)
 #endif
     setLineColor(i, default_colors[i]);
   }
-  
-  d_min_fft_plot_curve = new QwtPlotCurve("Minimum Power");
+
+  // Create min/max plotter curves
+  d_min_fft_plot_curve = new QwtPlotCurve("Min Hold");
   d_min_fft_plot_curve->attach(this);
   const QColor default_min_fft_color = Qt::magenta;
   setMinFFTColor(default_min_fft_color);
@@ -141,8 +143,9 @@ FrequencyDisplayPlot::FrequencyDisplayPlot(int nplots, QWidget* parent)
   d_min_fft_plot_curve->setRawSamples(d_xdata, d_min_fft_data, d_numPoints);
 #endif
   d_min_fft_plot_curve->setVisible(false);
-  
-  d_max_fft_plot_curve = new QwtPlotCurve("Maximum Power");
+  d_min_fft_plot_curve->setZ(0);
+
+  d_max_fft_plot_curve = new QwtPlotCurve("Max Hold");
   d_max_fft_plot_curve->attach(this);
   QColor default_max_fft_color = Qt::darkYellow;
   setMaxFFTColor(default_max_fft_color);
@@ -152,13 +155,14 @@ FrequencyDisplayPlot::FrequencyDisplayPlot(int nplots, QWidget* parent)
   d_max_fft_plot_curve->setRawSamples(d_xdata, d_max_fft_data, d_numPoints);
 #endif
   d_max_fft_plot_curve->setVisible(false);
-  
+  d_max_fft_plot_curve->setZ(0);
+
   d_lower_intensity_marker= new QwtPlotMarker();
   d_lower_intensity_marker->setLineStyle(QwtPlotMarker::HLine);
   QColor default_marker_lower_intensity_color = Qt::cyan;
   setMarkerLowerIntensityColor(default_marker_lower_intensity_color);
   d_lower_intensity_marker->attach(this);
-  
+
   d_upper_intensity_marker = new QwtPlotMarker();
   d_upper_intensity_marker->setLineStyle(QwtPlotMarker::HLine);
   QColor default_marker_upper_intensity_color = Qt::green;
@@ -258,6 +262,18 @@ FrequencyDisplayPlot::setYaxis(double min, double max)
     d_zoomer->setZoomBase();
 }
 
+double
+FrequencyDisplayPlot::getYMin() const
+{
+  return d_ymin;
+}
+
+double
+FrequencyDisplayPlot::getYMax() const
+{
+  return d_ymax;
+}
+
 void
 FrequencyDisplayPlot::setFrequencyRange(const double centerfreq,
 					const double bandwidth,
@@ -341,11 +357,11 @@ FrequencyDisplayPlot::plotNewData(const std::vector<double*> dataPoints,
         d_xdata = new double[d_numPoints];
         d_min_fft_data = new double[d_numPoints];
         d_max_fft_data = new double[d_numPoints];
-        
+
         for(int i = 0; i < d_nplots; i++) {
           delete[] d_ydata[i];
           d_ydata[i] = new double[d_numPoints];
-          
+
 #if QWT_VERSION < 0x060000
           d_plot_curve[i]->setRawData(d_xdata, d_ydata[i], d_numPoints);
 #else
@@ -363,7 +379,7 @@ FrequencyDisplayPlot::plotNewData(const std::vector<double*> dataPoints,
         clearMaxData();
         clearMinData();
       }
-      
+
       double bottom=1e20, top=-1e20;
       for(int n = 0; n < d_nplots; n++) {
 
@@ -387,14 +403,14 @@ FrequencyDisplayPlot::plotNewData(const std::vector<double*> dataPoints,
 	  }
 	}
       }
-      
+
       if(d_autoscale_state)
 	_autoScale(bottom, top);
-      
+
       d_noise_floor_amplitude = noiseFloorAmplitude;
       d_peak_frequency = peakFrequency;
       d_peak_amplitude = peakAmplitude;
-      
+
       setUpperIntensityLevel(d_peak_amplitude);
 
       replot();
@@ -413,7 +429,7 @@ FrequencyDisplayPlot::plotNewData(const double* dataPoints,
   plotNewData(vecDataPoints, numDataPoints, noiseFloorAmplitude,
 	      peakFrequency, peakAmplitude, timeInterval);
 }
-   
+
 void
 FrequencyDisplayPlot::clearMaxData()
 {
@@ -434,7 +450,9 @@ void
 FrequencyDisplayPlot::_autoScale(double bottom, double top)
 {
   // Auto scale the y-axis with a margin of 10 dB on either side.
-  setYaxis(bottom - 10, top + 10);
+  d_ymin = bottom-10;
+  d_ymax = top+10;
+  setYaxis(d_ymin, d_ymax);
 }
 
 void
@@ -548,7 +566,7 @@ void
 FrequencyDisplayPlot::setMinFFTColor (QColor c)
 {
   d_min_fft_color = c;
-  d_min_fft_plot_curve->setPen(QPen(c));  
+  d_min_fft_plot_curve->setPen(QPen(c));
 }
 const QColor
 FrequencyDisplayPlot::getMinFFTColor() const
@@ -560,7 +578,7 @@ void
 FrequencyDisplayPlot::setMaxFFTColor (QColor c)
 {
   d_max_fft_color = c;
-  d_max_fft_plot_curve->setPen(QPen(c));  
+  d_max_fft_plot_curve->setPen(QPen(c));
 }
 
 const QColor

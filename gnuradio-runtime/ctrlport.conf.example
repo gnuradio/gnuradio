@@ -1,5 +1,5 @@
 ## Use this to create an endpoint used to export ControlPort.
-## 
+##
 ## A typical configuation would be to specify using a particular
 ## interface (determined from the IP address) and port number:
 ##
@@ -14,7 +14,7 @@
 ## ICE to use all available interfaces:
 ##
 ##    ControlPort.Endpoints=tcp -h *
-## 
+##
 ## Using 'default' for the host will use what 'hostname' resolves to.
 ##
 ## For more details:

@@ -64,24 +64,24 @@ namespace gr {
     // Attempt to allocate buffers (handle bad_alloc errors)
     int attempts_remain(MAX_SYSV_SHM_ATTEMPTS);
     while(attempts_remain-- > 0){
-    
+
         int shmid_guard = -1;
         int shmid1 = -1;
         int shmid2 = -1;
-    
+
         // We use this as a guard page.  We'll map it read-only on both ends of the buffer.
         // Ideally we'd map it no access, but I don't think that's possible with SysV
         if((shmid_guard = shmget(IPC_PRIVATE, pagesize, IPC_CREAT | 0400)) == -1) {
           perror("gr::vmcircbuf_sysv_shm: shmget (0)");
           continue;
         }
-    
+
         if((shmid2 = shmget(IPC_PRIVATE, 2 * size + 2 * pagesize, IPC_CREAT | 0700)) == -1) {
           perror("gr::vmcircbuf_sysv_shm: shmget(1)");
           shmctl(shmid_guard, IPC_RMID, 0);
           continue;
         }
-    
+
         if((shmid1 = shmget(IPC_PRIVATE, size, IPC_CREAT | 0700)) == -1) {
           perror("gr::vmcircbuf_sysv_shm: shmget (2)");
           shmctl(shmid_guard, IPC_RMID, 0);
@@ -148,7 +148,7 @@ namespace gr {
 
         shmctl(shmid1, IPC_RMID, 0);
         shmctl(shmid_guard, IPC_RMID, 0);
-    
+
         // Now remember the important stuff
         d_base = (char*)first_copy + pagesize;
         d_size = size;

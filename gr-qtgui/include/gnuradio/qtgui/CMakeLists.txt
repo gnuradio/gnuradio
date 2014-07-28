@@ -22,6 +22,7 @@
 ########################################################################
 install(FILES
   api.h
+  ber_sink_b.h
   CMakeLists.txt
   constellationdisplayform.h
   ConstellationDisplayPlot.h
@@ -38,7 +39,6 @@ install(FILES
   HistogramDisplayPlot.h
   number_sink.h
   numberdisplayform.h
-  NumberDisplayPlot.h
   plot_raster.h
   plot_waterfall.h
   qtgui_types.h

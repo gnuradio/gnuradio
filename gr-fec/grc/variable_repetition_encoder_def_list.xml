@@ -1,0 +1,74 @@
+<?xml version="1.0"?>
+<!--
+###################################################
+# FEC REPETITION ENCODER
+###################################################
+ -->
+<block>
+    <name>Repetition Encoder Definition</name>
+    <key>variable_repetition_encoder_def</key>
+    <import>from gnuradio import fec</import>
+    <var_make>
+#if int($ndim())==0 #
+self.$(id) = $(id) = fec.repetition_encoder_make($framebits, $rep)
+#else if int($ndim())==1 #
+self.$(id) = $(id) = map((lambda a: fec.repetition_encoder_make($framebits, $rep)), range(0,$dim1)) #slurp
+#else
+self.$(id) = $(id) = map((lambda b: map((lambda a: fec.repetition_encoder_make($framebits, $rep)), range(0,$dim2))), range(0,$dim1)) #slurp
+#end if
+    </var_make>
+    <var_value>fec.repetition_encoder_make($framebits, $rep)</var_value>
+    <make></make>
+
+    <param>
+        <name>Parallelism</name>
+        <key>ndim</key>
+        <value></value>
+        <type>enum</type>
+        <option>
+            <name>0</name>
+            <key>0</key>
+        </option>
+        <option>
+            <name>1</name>
+            <key>1</key>
+        </option>
+        <option>
+            <name>2</name>
+            <key>2</key>
+        </option>
+    </param>
+
+    <param>
+        <name>Dimension 1</name>
+        <key>dim1</key>
+        <value>1</value>
+        <type>int</type>
+        <hide>#if (int($ndim()) >= 1) then 'none' else 'all' #</hide>
+    </param>
+
+    <param>
+        <name>Dimension 2</name>
+        <key>dim2</key>
+        <value>1</value>
+        <type>int</type>
+        <hide>#if (int($ndim()) >= 2) then 'none' else 'all' #</hide>
+    </param>
+
+    <param>
+        <name>Frame Bits</name>
+        <key>framebits</key>
+        <value>2048</value>
+        <type>int</type>
+    </param>
+
+    <param>
+        <name>Repetitions</name>
+        <key>rep</key>
+        <value>3</value>
+        <type>int</type>
+    </param>
+
+    <doc>
+    </doc>
+</block>

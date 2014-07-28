@@ -58,6 +58,8 @@ public slots:
   void setSampleRate(const double samprate);
   void setSampleRate(const QString &samprate);
   void setYaxis(double min, double max);
+  void setYLabel(const std::string &label,
+                 const std::string &unit="");
   void setNPoints(const int);
   void setStem(bool en);
   void autoScale(bool en);
@@ -91,7 +93,7 @@ private:
   bool d_stem;
   bool d_semilogx;
   bool d_semilogy;
-  
+
   NPointsMenu *d_nptsmenu;
   QAction *d_stemmenu;
   QAction *d_semilogxmenu;
@@ -105,7 +107,7 @@ private:
   PopupMenu *d_tr_delay_act;
   TriggerChannelMenu *d_tr_channel_menu;
   PopupMenu *d_tr_tag_key_act;
-  
+
   gr::qtgui::trigger_mode d_trig_mode;
   gr::qtgui::trigger_slope d_trig_slope;
   float d_trig_level;

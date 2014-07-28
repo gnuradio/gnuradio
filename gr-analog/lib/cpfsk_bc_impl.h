@@ -25,7 +25,7 @@
 
 namespace gr {
   namespace analog {
-    
+
     class cpfsk_bc_impl : public cpfsk_bc
     {
     private:

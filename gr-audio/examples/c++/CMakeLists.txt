@@ -25,7 +25,7 @@ include_directories(
 )
 
 add_executable(dial_tone dial_tone.cc)
-target_link_libraries(dial_tone 
+target_link_libraries(dial_tone
   gnuradio-runtime gnuradio-audio gnuradio-analog)
 
 INSTALL(TARGETS

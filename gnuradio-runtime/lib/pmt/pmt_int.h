@@ -238,6 +238,8 @@ public:
   virtual const void *uniform_elements(size_t &len) = 0;
   virtual void *uniform_writable_elements(size_t &len) = 0;
   virtual size_t length() const = 0;
+  virtual size_t itemsize() const = 0;
+  virtual const std::string string_ref(size_t k) const { return std::string("not implemented"); }
 };
 
 #include "pmt_unv_int.h"

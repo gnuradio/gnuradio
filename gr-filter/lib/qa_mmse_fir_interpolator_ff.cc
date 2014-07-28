@@ -34,7 +34,7 @@
 
 namespace gr {
   namespace filter {
-    
+
     static float
     test_fcn(double index)
     {

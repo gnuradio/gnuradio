@@ -110,9 +110,16 @@ write(pmt_t obj, std::ostream &port)
     port << "#<dict>";
   }
   else if (is_uniform_vector(obj)){
-    // FIXME
-    // port << "#<uniform-vector " << obj << ">";
-    port << "#<uniform-vector>";
+    port << "#[";
+    size_t len = length(obj);
+    if (len)
+    {
+      pmt_uniform_vector *uv = static_cast<pmt_uniform_vector*>(obj.get());
+      port << uv->string_ref(0);
+      for (size_t i = 1; i < len; i++)
+	port << " " << uv->string_ref(i);
+    }
+    port <<  "]";
   }
   else {
   error:

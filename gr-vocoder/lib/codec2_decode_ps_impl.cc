@@ -85,7 +85,7 @@ namespace gr {
 
       for(int i = 0; i < noutput_items; i += d_samples_per_frame) {
 	pack_frame(in, &d_frame_buf[0]);
-	codec2_decode (d_codec2, out, const_cast<unsigned char*>(&d_frame_buf[0]), 0.0);
+	codec2_decode (d_codec2, out, const_cast<unsigned char*>(&d_frame_buf[0]));
 	in += d_bits_per_frame * sizeof (char);
 	out += d_samples_per_frame;
       }

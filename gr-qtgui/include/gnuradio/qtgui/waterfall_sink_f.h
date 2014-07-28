@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2012 Free Software Foundation, Inc.
+ * Copyright 2012,2014 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -52,6 +52,25 @@ namespace gr {
      * would love to see them. Otherwise, to display multiple signals
      * here, it's probably best to sum the signals together and
      * connect that here.
+     *
+     * Message Ports:
+     *
+     * - freq (input):
+     *        Receives a PMT pair: (intern("freq"), double(frequency).
+     *        This is used to retune the center frequency of the
+     *        display's x-axis.
+     *
+     * - freq (output):
+     *        Produces a PMT pair with (intern("freq"), double(frequency).
+     *        When a user double-clicks on the display, the block
+     *        produces and emits a message containing the frequency of
+     *        where on the x-axis the user clicked. This value can be
+     *        used by other blocks to update their frequency setting.
+     *
+     *        To perform click-to-tune behavior, this output 'freq'
+     *        port can be redirected to this block's input 'freq' port
+     *        to catch the message and update the center frequency of
+     *        the display.
      */
     class QTGUI_API waterfall_sink_f : virtual public sync_block
     {

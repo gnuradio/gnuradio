@@ -45,7 +45,7 @@ namespace gr {
     class BLOCKS_API stream_mux : virtual public block
     {
     public:
-      
+
       // gr::blocks::stream_mux::sptr
       typedef boost::shared_ptr<stream_mux> sptr;
 

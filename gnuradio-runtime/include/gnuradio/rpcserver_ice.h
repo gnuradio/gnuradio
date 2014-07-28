@@ -1,9 +1,9 @@
 /* -*- c++ -*- */
-/* 
+/*
  * Copyright 2012 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
- * 
+ *
  * GNU Radio is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3, or (at your option)
@@ -62,7 +62,7 @@ private:
   QueryCallbackMap_t d_getcallbackmap;
 
   template<typename T, typename TMap> struct set_f
-    : public std::unary_function<T,void> 
+    : public std::unary_function<T,void>
   {
     set_f(const Ice::Current& _c, TMap& _setcallbackmap, const priv_lvl_t& _cur_priv) :
       c(_c), d_setcallbackmap(_setcallbackmap), cur_priv(_cur_priv)
@@ -98,7 +98,7 @@ private:
 	  const priv_lvl_t& _cur_priv, GNURadio::KnobMap& _outknobs) :
       c(_c), d_getcallbackmap(_getcallbackmap), cur_priv(_cur_priv), outknobs(_outknobs)
     {}
-    
+
     void operator()(const T& p)
     {
       QueryCallbackMap_t::const_iterator iter(d_getcallbackmap.find(p));

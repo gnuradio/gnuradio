@@ -31,7 +31,7 @@
 
 namespace gr {
   namespace analog {
-    
+
     quadrature_demod_cf::sptr
     quadrature_demod_cf::make(float gain)
     {

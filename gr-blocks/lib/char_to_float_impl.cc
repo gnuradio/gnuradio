@@ -57,7 +57,7 @@ namespace gr {
 
       // Note: the unaligned benchmarked much faster than the aligned
       volk_8i_s32f_convert_32f_u(out, in, d_scale, d_vlen*noutput_items);
-      
+
       return noutput_items;
     }
 

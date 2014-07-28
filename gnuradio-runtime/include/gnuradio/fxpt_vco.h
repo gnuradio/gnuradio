@@ -50,7 +50,7 @@ namespace gr {
       d_phase += fxpt::float_to_fixed(delta_phase);
     }
 
-    float get_phase() const { 
+    float get_phase() const {
       return fxpt::fixed_to_float(d_phase);
     }
 

@@ -30,7 +30,7 @@
 namespace gr {
   namespace filter {
     namespace kernel {
-    
+
       class FILTER_API fir_filter_fff
       {
       public:
@@ -42,7 +42,7 @@ namespace gr {
 	void update_tap(float t, unsigned int index);
 	std::vector<float> taps() const;
 	unsigned int ntaps() const;
-	
+
 	float filter(const float input[]);
 	void  filterN(float output[],
 		      const float input[],
@@ -62,7 +62,7 @@ namespace gr {
       };
 
       /**************************************************************/
-      
+
       class FILTER_API fir_filter_ccf
       {
       public:
@@ -94,7 +94,7 @@ namespace gr {
       };
 
       /**************************************************************/
-      
+
       class FILTER_API fir_filter_fcc
       {
       public:
@@ -126,7 +126,7 @@ namespace gr {
       };
 
       /**************************************************************/
-      
+
       class FILTER_API fir_filter_ccc
       {
       public:
@@ -158,7 +158,7 @@ namespace gr {
       };
 
       /**************************************************************/
-      
+
       class FILTER_API fir_filter_scc
       {
       public:
@@ -190,7 +190,7 @@ namespace gr {
       };
 
       /**************************************************************/
-      
+
       class FILTER_API fir_filter_fsf
       {
       public:

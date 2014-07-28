@@ -8,11 +8,11 @@
 	<name>Bus Sink Structure</name>
 	<key>bus_structure_sink</key>
 	<make>None</make>
-	
+
 	<param>
 		<name>Structure</name>
 		<key>struct</key>
 		<value></value>
 		<type>raw</type>
-	</param>	
+	</param>
 </block>

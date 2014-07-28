@@ -97,7 +97,7 @@ namespace gr {
      * double D[]        - Desired response on the dense grid [gridsize]
      * double W[]        - Weight function on the dense grid [gridsize]
      *******************/
-    
+
     static void
     create_dense_grid(int r, int numtaps, int numband, const double bands[],
 		      const double des[], const double weight[], int gridsize,
@@ -129,7 +129,7 @@ namespace gr {
 	}
 	Grid[j-1] = highf;
       }
-      
+
       /*
        * Similar to above, if odd symmetry, last grid point can't be .5
        *  - but, if there are even taps, leave the last grid point at .5
@@ -158,12 +158,12 @@ namespace gr {
      * -------
      * int ext[]    - Extremal indexes to dense frequency grid [r+1]
      ********************/
-    
+
     static void
     initial_guess(int r, int Ext[], int gridsize)
     {
       int i;
-      
+
       for(i=0; i<=r; i++)
 	Ext[i] = i * (gridsize-1) / r;
     }
@@ -195,7 +195,7 @@ namespace gr {
     {
       int i, j, k, ld;
       double sign, xi, delta, denom, numer;
-      
+
       /*
        * Find x[]
        */
@@ -262,13 +262,13 @@ namespace gr {
      * -------
      * Returns double value of A[freq]
      *********************/
-    
+
     static double
     compute_A(double freq, int r, double ad[], double x[], double y[])
     {
       int i;
       double xc, c, denom, numer;
-      
+
       denom = numer = 0;
       xc = cos(Pi2 * freq);
       for(i = 0; i <= r; i++) {
@@ -317,7 +317,7 @@ namespace gr {
     {
       int i;
       double A;
-      
+
       for(i = 0; i < gridsize; i++) {
 	A = compute_A(Grid[i], r, ad, x, y);
 	E[i] = W[i] * (D[i] - A);
@@ -355,20 +355,20 @@ namespace gr {
       int i, j, k, l, extra;     /* Counters */
       int up, alt;
       int *foundExt;             /* Array of found extremals */
-      
+
       /*
        * Allocate enough space for found extremals.
        */
       foundExt = (int *)malloc((2*r) * sizeof(int));
       k = 0;
-      
+
       /*
        * Check for extremum at 0.
        */
       if(((E[0] > 0.0) && (E[0] > E[1])) ||
 	 ((E[0] < 0.0) && (E[0] < E[1])))
 	foundExt[k++] = 0;
-      
+
       /*
        * Check for extrema inside dense grid
        */
@@ -396,13 +396,13 @@ namespace gr {
         }
 	foundExt[k++] = j;
       }
-      
+
       // PAK: we sometimes get not enough extremal frequencies
       if(k < r+1) {
         free(foundExt);
 	return -2;
       }
-      
+
       /*
        * Remove extra extremals
        */
@@ -435,7 +435,7 @@ namespace gr {
             break;              /* Ooops, found two non-alternating */
 	  }                     /* extrema.  Delete smallest of them */
 	}  /* if the loop finishes, all extrema are alternating */
-	
+
 	/*
 	 * If there's only one extremal and all are alternating,
 	 * delete the smallest of the first/last extremals.
@@ -450,7 +450,7 @@ namespace gr {
 	    l = 0;
 	  // PAK: changed from l = foundExt[0];
 	}
-	
+
 	for(j = l; j < k-1; j++) {       /* Loop that does the deletion */
 	  foundExt[j] = foundExt[j+1];
 	  assert(foundExt[j]<gridsize);
@@ -458,7 +458,7 @@ namespace gr {
 	k--;
 	extra--;
       }
-      
+
       for(i = 0; i <= r; i++) {
 	assert(foundExt[i]<gridsize);
 	Ext[i] = foundExt[i];       /* Copy found extremals to Ext[] */
@@ -468,7 +468,7 @@ namespace gr {
       return 0;
     }
 
-    
+
     /*********************
      * freq_sample
      *============
@@ -491,7 +491,7 @@ namespace gr {
     {
       int n, k;
       double x, val, M;
-      
+
       M = (N-1.0)/2.0;
       if(symm == POSITIVE) {
 	if(N % 2) {
@@ -558,7 +558,7 @@ namespace gr {
     {
       int i;
       double min, max, current;
-      
+
       min = max = fabs(E[Ext[0]]);
       for(i = 1; i <= r; i++) {
 	current = fabs(E[Ext[i]]);
@@ -604,12 +604,12 @@ namespace gr {
       double *taps, c;
       double *x, *y, *ad;
       int    symmetry;
-      
+
       if(type == BANDPASS)
 	symmetry = POSITIVE;
       else
 	symmetry = NEGATIVE;
-      
+
       r = numtaps/2;                  /* number of extrema */
       if((numtaps % 2) && (symmetry == POSITIVE))
 	r++;
@@ -625,7 +625,7 @@ namespace gr {
       if(symmetry == NEGATIVE) {
 	gridsize--;
       }
-      
+
       /*
        * Dynamically allocate memory for arrays with proper sizes
        */
@@ -638,7 +638,7 @@ namespace gr {
       x = (double *)malloc((r+1) * sizeof(double));
       y = (double *)malloc((r+1) * sizeof(double));
       ad = (double *)malloc((r+1) * sizeof(double));
-      
+
       /*
        * Create dense frequency grid
        */
@@ -686,7 +686,7 @@ namespace gr {
 	  }
 	}
       }
-      
+
       /*
        * Perform the Remez Exchange algorithm
        */
@@ -739,7 +739,7 @@ namespace gr {
        * Frequency sampling design with calculated taps
        */
       freq_sample(numtaps, taps, h, symmetry);
-      
+
       /*
        * Delete allocated memory
        */
@@ -794,7 +794,7 @@ namespace gr {
 
       if(arg_bands[0] < 0 || arg_bands[arg_bands.size() - 1] > 1)
 	punt("gr_remez: band edges must be in the range [0,1]");
-      
+
       // Divide by 2 to fit with the implementation that uses a
       // sample rate of [0, 0.5] instead of [0, 1.0]
       for(int i = 0; i < 2 * numbands; i++)
@@ -806,11 +806,11 @@ namespace gr {
 
       for(int i = 0; i < 2 * numbands; i++)
 	response[i] = arg_response[i];
-      
+
       LOCAL_BUFFER(double, weight, numbands);
       for(int i = 0; i < numbands; i++)
 	weight[i] = 1.0;
-      
+
       if(arg_weight.size() != 0) {
 	if((int) arg_weight.size() != numbands)
 	  punt("gr_remez: need one weight for each band [=length(band)/2]");
@@ -837,13 +837,13 @@ namespace gr {
 
       if(err == -1)
 	punt("gr_remez: failed to converge");
-      
+
       if(err == -2)
 	punt("gr_remez: insufficient extremals -- cannot continue");
 
       if(err == -3)
 	punt("gr_remez: too many extremals -- cannot continue");
-      
+
       return std::vector<double>(&coeff[0], &coeff[numtaps]);
     }
 

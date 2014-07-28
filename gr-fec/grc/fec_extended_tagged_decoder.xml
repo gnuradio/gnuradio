@@ -1,0 +1,58 @@
+<?xml version="1.0"?>
+<block>
+  <name>FEC Extended Tagged Decoder</name>
+  <key>fec_extended_tagged_decoder</key>
+  <import>from gnuradio import fec</import>
+  <make>self.$(id) = $(id) = fec.extended_tagged_decoder(decoder_obj_list=$decoder_list, ann=$ann, puncpat=$puncpat, integration_period=10000, lentagname=$lentagname)</make>
+
+  <param>
+    <name>fake val</name>
+    <key>value</key>
+    <value>fec_extended_decoder</value>
+    <type>string</type>
+    <hide>all</hide>
+  </param>
+
+  <param>
+    <name>Decoder Objects</name>
+    <key>decoder_list</key>
+    <value>decoder_variable</value>
+    <type>raw</type>
+  </param>
+
+  <param>
+    <name>Annihilator</name>
+    <key>ann</key>
+    <value>None</value>
+    <type>raw</type>
+  </param>
+
+  <param>
+    <name>Puncture Pattern</name>
+    <key>puncpat</key>
+    <value>'11'</value>
+    <type>string</type>
+  </param>
+
+  <param>
+    <name>Length Tag Name</name>
+    <key>lentagname</key>
+    <value>None</value>
+    <type>string</type>
+  </param>
+
+  <sink>
+    <name>in</name>
+    <type>float</type>
+  </sink>
+
+  <source>
+    <name>out</name>
+    <type>byte</type>
+  </source>
+
+  <doc>
+
+  </doc>
+
+</block>

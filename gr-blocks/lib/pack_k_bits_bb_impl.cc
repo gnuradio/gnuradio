@@ -1,19 +1,19 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2012-2013 Free Software Foundation, Inc.
- * 
+ * Copyright 2012-2014 Free Software Foundation, Inc.
+ *
  * This file is part of GNU Radio
- * 
+ *
  * GNU Radio is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3, or (at your option)
  * any later version.
- * 
+ *
  * GNU Radio is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with GNU Radio; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 51 Franklin Street,
@@ -43,15 +43,14 @@ namespace gr {
       : sync_decimator("pack_k_bits_bb",
                           io_signature::make(1, 1, sizeof(unsigned char)),
                           io_signature::make(1, 1, sizeof(unsigned char)),
-                          k),
-        d_k(k)
+                          k)
     {
-      if(d_k == 0)
-        throw std::out_of_range("interpolation must be > 0");
+      d_pack = new kernel::pack_k_bits(k);
     }
-    
+
     pack_k_bits_bb_impl::~pack_k_bits_bb_impl()
     {
+      delete d_pack;
     }
 
     int
@@ -62,12 +61,7 @@ namespace gr {
       const unsigned char *in = (const unsigned char *)input_items[0];
       unsigned char *out = (unsigned char *)output_items[0];
 
-      for(int i = 0; i < noutput_items; i++) {
-        out[i] = 0x00;
-        for(unsigned int j = 0; j < d_k; j++) {
-          out[i] |= (0x01 & in[i*d_k+j])<<(d_k-j-1);
-        }
-      }
+      d_pack->pack(out, in, noutput_items);
 
       return noutput_items;
     }

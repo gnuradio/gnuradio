@@ -48,7 +48,7 @@ class test_pdu(gr_unittest.TestCase):
         # Test that the right number of ports exist.
         pi = snk3.message_ports_in()
         po = snk3.message_ports_out()
-        self.assertEqual(pmt.length(pi), 0)
+        self.assertEqual(pmt.length(pi), 1) #system port is defined automatically
         self.assertEqual(pmt.length(po), 1)
 
         self.tb.connect(src, snk)

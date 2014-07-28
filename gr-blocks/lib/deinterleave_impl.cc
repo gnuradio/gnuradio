@@ -30,47 +30,44 @@
 namespace gr {
   namespace blocks {
 
-    deinterleave::sptr deinterleave::make(size_t itemsize)
+    deinterleave::sptr deinterleave::make(size_t itemsize, unsigned int blocksize)
     {
-      return gnuradio::get_initial_sptr(new deinterleave_impl(itemsize));
+      return gnuradio::get_initial_sptr(new deinterleave_impl(itemsize, blocksize));
     }
 
-    deinterleave_impl::deinterleave_impl(size_t itemsize)
-      : sync_decimator("deinterleave",
-			  io_signature::make (1, 1, itemsize),
-			  io_signature::make (1, io_signature::IO_INFINITE, itemsize),
-			  1),
-	d_itemsize(itemsize)
+    deinterleave_impl::deinterleave_impl(size_t itemsize, unsigned int blocksize)
+      : block("deinterleave",
+              io_signature::make (1, 1, itemsize),
+              io_signature::make (1, io_signature::IO_INFINITE, itemsize)),
+        d_itemsize(itemsize), d_blocksize(blocksize), d_current_output(0)
     {
+      set_output_multiple(blocksize);
     }
 
     bool
     deinterleave_impl::check_topology(int ninputs, int noutputs)
     {
-      set_decimation(noutputs);
+      set_relative_rate((double)noutputs);
+      d_noutputs = noutputs;
       return true;
     }
 
     int
-    deinterleave_impl::work(int noutput_items,
-			    gr_vector_const_void_star &input_items,
-			    gr_vector_void_star &output_items)
+    deinterleave_impl::general_work(int noutput_items,
+                                    gr_vector_int& ninput_items,
+                                    gr_vector_const_void_star &input_items,
+                                    gr_vector_void_star &output_items)
     {
-      size_t nchan = output_items.size();
-      size_t itemsize = d_itemsize;
-      const char *in = (const char *)input_items[0];
-      char **out = (char **)&output_items[0];
-      
-      for (int i = 0; i < noutput_items; i++){
-	for (unsigned int n = 0; n < nchan; n++){
-	  memcpy(out[n], in, itemsize);
-	  out[n] += itemsize;
-	  in += itemsize;
-	}
-      }
-      
-      return noutput_items;
+      const char *in = (const char*)input_items[0];
+      char **out = (char**)&output_items[0];
+
+      memcpy(out[d_current_output], in, d_itemsize * d_blocksize);
+      consume_each(d_blocksize);
+      produce(d_current_output, d_blocksize);
+      d_current_output = (d_current_output + 1) % d_noutputs;
+      return WORK_CALLED_PRODUCE;
     }
+
 
   } /* namespace blocks */
 } /* namespace gr */

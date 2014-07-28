@@ -28,7 +28,7 @@
 #                   -s output shorts
 #
 # This python script converts from interleaved shorts to the complex data type,
-# then multiplies the sample rate by 3, from 6.4e6 to 19.2e6 
+# then multiplies the sample rate by 3, from 6.4e6 to 19.2e6
 # complex samples / sec, then lowpass filters with a cutoff of 3.2MHz
 # and a transition band width of .5MHz.  Center of the tv channels is
 # now at 0 with edges at -3.2MHz and 3.2MHz. This puts the pilot at
@@ -38,7 +38,7 @@
 # not stored in the phase with atsc ), this is then feed to the bit lock
 # loop, this looks for the bit sync marker put at the beginning of every segment
 # field, this then adjusts the timing so the amplitude will be sampled at the
-# correct sample ( sub-sample is used in this case ). 
+# correct sample ( sub-sample is used in this case ).
 #
 # Output is float.
 
@@ -82,7 +82,7 @@ def graph (args):
 	# Move the center frequency to 5.75MHz ( this wont be needed soon )
 	duc_coeffs = filter.firdes.low_pass ( 1, 19.2e6, 9e6, 1e6, filter.firdes.WIN_HAMMING )
     	duc = filter.freq_xlating_fir_filter_ccf ( 1, duc_coeffs, -5.75e6, 19.2e6 )
-	
+
 	# fpll input is float
 	c2f = blocks.complex_to_float()
 

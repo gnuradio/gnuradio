@@ -54,7 +54,7 @@ class control_panel(wx.Panel):
 	def __init__(self, parent):
 		"""
 		Create a new control panel.
-		
+
 		Args:
 		    parent: the wx parent window
 		"""
@@ -178,7 +178,7 @@ class number_window(wx.Panel, pubsub.pubsub):
 		"""
 		Show or hide the gauges.
 		If this is real, never show the imaginary gauge.
-		
+
 		Args:
 		    show_gauge: true to show
 		"""
@@ -191,7 +191,7 @@ class number_window(wx.Panel, pubsub.pubsub):
 		Convert the string based message into a float or complex.
 		If more than one number was read, only take the last number.
 		Perform peak hold operations, set the gauges and display.
-		
+
 		Args:
 		    event: event.data is the number sample as a character array
 		"""

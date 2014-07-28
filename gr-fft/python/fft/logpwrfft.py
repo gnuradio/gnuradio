@@ -41,7 +41,7 @@ class _logpwrfft_base(gr.hier_block2):
         """
         Create an log10(abs(fft)) stream chain.
         Provide access to the setting the filter and sample rate.
-        
+
         Args:
             sample_rate: Incoming stream sample rate
             fft_size: Number of FFT bins
@@ -81,7 +81,7 @@ class _logpwrfft_base(gr.hier_block2):
     def set_decimation(self, decim):
         """
         Set the decimation on stream decimator.
-        
+
         Args:
             decim: the new decimation
         """
@@ -90,7 +90,7 @@ class _logpwrfft_base(gr.hier_block2):
     def set_vec_rate(self, vec_rate):
         """
         Set the vector rate on stream decimator.
-        
+
         Args:
             vec_rate: the new vector rate
         """
@@ -99,7 +99,7 @@ class _logpwrfft_base(gr.hier_block2):
     def set_sample_rate(self, sample_rate):
         """
         Set the new sampling rate
-        
+
         Args:
             sample_rate: the new rate
         """
@@ -108,7 +108,7 @@ class _logpwrfft_base(gr.hier_block2):
     def set_average(self, average):
         """
         Set the averaging filter on/off.
-        
+
         Args:
             average: true to set averaging on
         """
@@ -121,7 +121,7 @@ class _logpwrfft_base(gr.hier_block2):
     def set_avg_alpha(self, avg_alpha):
         """
         Set the average alpha and set the taps if average was on.
-        
+
         Args:
             avg_alpha: the new iir filter tap
         """

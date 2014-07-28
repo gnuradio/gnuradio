@@ -39,7 +39,7 @@ class Connection(Element):
         """
         Get the 0,0 coordinate.
         Coordinates are irrelevant in connection.
-        
+
         Returns:
             0, 0
         """
@@ -49,7 +49,7 @@ class Connection(Element):
         """
         Get the 0 degree rotation.
         Rotations are irrelevant in connection.
-        
+
         Returns:
             0
         """
@@ -128,7 +128,7 @@ class Connection(Element):
     def draw(self, gc, window):
         """
         Draw the connection.
-        
+
         Args:
             gc: the graphics context
             window: the gtk window to draw on

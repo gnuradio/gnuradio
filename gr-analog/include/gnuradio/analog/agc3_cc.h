@@ -38,7 +38,7 @@ namespace gr {
      * Unlike the AGC2 loop, this uses an initial linear calculation
      * at the beginning for very fast initial acquisition. Moves to
      * IIR model for tracking purposes.
-     * 
+     *
      * For Power the absolute value of the complex number is used.
      */
     class ANALOG_API agc3_cc : virtual public sync_block
@@ -46,7 +46,7 @@ namespace gr {
     public:
       // gr::analog::agc3_cc::sptr
       typedef boost::shared_ptr<agc3_cc> sptr;
-            
+
       /*!
        * Build a complex value AGC loop block with attack and decay rates.
        *
@@ -54,7 +54,7 @@ namespace gr {
        * \param decay_rate the update rate of the loop when in decay mode.
        * \param reference reference value to adjust signal power to.
        * \param gain initial gain value.
-       * \param iir_update_decim stride by this number of samples before 
+       * \param iir_update_decim stride by this number of samples before
        *                         computing an IIR gain update
        */
       static sptr make(float attack_rate = 1e-1, float decay_rate = 1e-2,
@@ -65,7 +65,7 @@ namespace gr {
       virtual float reference() const = 0;
       virtual float gain() const = 0;
       virtual float max_gain() const = 0;
-      
+
       virtual void set_attack_rate(float rate) = 0;
       virtual void set_decay_rate(float rate) = 0;
       virtual void set_reference(float reference) = 0;

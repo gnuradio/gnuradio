@@ -5,12 +5,12 @@
 ###################################################
  -->
 <block>
-	<name>QT GUI Time Raster Sink</name>
-	<key>qtgui_time_raster_sink_x</key>
-	<import>from PyQt4 import Qt</import>
-	<import>from gnuradio import qtgui</import>
-	<import>import sip</import>
-	<make>#set $win = 'self._%s_win'%$id
+  <name>QT GUI Time Raster Sink</name>
+  <key>qtgui_time_raster_sink_x</key>
+  <import>from PyQt4 import Qt</import>
+  <import>from gnuradio import qtgui</import>
+  <import>import sip</import>
+  <make>#set $win = 'self._%s_win'%$id
 qtgui.$(type.fcn)(
 	$samp_rate,
 	$nrows,
@@ -22,6 +22,8 @@ qtgui.$(type.fcn)(
 	)
 
 self.$(id).set_update_time($update_time)
+self.$(id).set_intensity_range($zmin, $zmax)
+self.$(id).enable_grid($grid)
 
 labels = [$label1, $label2, $label3, $label4, $label5,
           $label6, $label7, $label8, $label9, $label10]
@@ -39,84 +41,126 @@ for i in xrange($nconnections):
 
 self._$(id)_win = sip.wrapinstance(self.$(id).pyqwidget(), Qt.QWidget)
 $(gui_hint()($win))</make>
-        <callback>set_num_rows($nrows)</callback>
-        <callback>set_num_cols($ncols)</callback>
-        <callback>set_multiplier($mult)</callback>
-        <callback>set_offset($offset)</callback>
-	<callback>set_update_time($update_time)</callback>
-	<callback>set_title($which, $title)</callback>
-	<callback>set_color($which, $color)</callback>
+  <callback>set_num_rows($nrows)</callback>
+  <callback>set_num_cols($ncols)</callback>
+  <callback>set_multiplier($mult)</callback>
+  <callback>set_offset($offset)</callback>
+  <callback>set_update_time($update_time)</callback>
+  <callback>set_title($which, $title)</callback>
+  <callback>set_color($which, $color)</callback>
 
-        <param_tab_order>
-          <tab>General</tab>
-          <tab>Config</tab>
-        </param_tab_order>
+  <param_tab_order>
+    <tab>General</tab>
+    <tab>Config</tab>
+  </param_tab_order>
 
-	<param>
-		<name>Type</name>
-		<key>type</key>
-		<value>complex</value>
-		<type>enum</type>
-		<option><name>Byte</name><key>byte</key><opt>fcn:time_raster_sink_b</opt></option>
-		<option><name>Float</name><key>float</key><opt>fcn:time_raster_sink_f</opt></option>
-	</param>
-	<param>
-		<name>Name</name>
-		<key>name</key>
-		<value>QT GUI Plot</value>
-		<type>string</type>
-	</param>
-	<param>
-		<name>Sample Rate</name>
-		<key>samp_rate</key>
-		<value>samp_rate</value>
-		<type>real</type>
-	</param>
-	<param>
-		<name>Num. Rows</name>
-		<key>nrows</key>
-		<type>int</type>
-	</param>
-	<param>
-		<name>Num. Cols</name>
-		<key>ncols</key>
-		<type>int</type>
-	</param>
-	<param>
-		<name>Multiplier</name>
-		<key>mult</key>
-		<value>[]</value>
-		<type>real_vector</type>
-		<hide>part</hide>
-	</param>
-	<param>
-		<name>Offset</name>
-		<key>offset</key>
-		<value>[]</value>
-		<type>real_vector</type>
-		<hide>part</hide>
-	</param>
-	<param>
-		<name>Number of Inputs</name>
-		<key>nconnections</key>
-		<value>1</value>
-		<type>int</type>
-		<hide>part</hide>
-	</param>
-	<param>
-		<name>Update Period</name>
-		<key>update_time</key>
-		<value>0.10</value>
-		<type>real</type>
-		<hide>part</hide>
-	</param>
-	<param>
-		<name>GUI Hint</name>
-		<key>gui_hint</key>
-		<value></value>
-		<type>gui_hint</type>
-		<hide>part</hide>
-	</param>
+  <param>
+    <name>Type</name>
+    <key>type</key>
+    <value>complex</value>
+    <type>enum</type>
+    <option><name>Byte</name><key>byte</key><opt>fcn:time_raster_sink_b</opt></option>
+    <option><name>Float</name><key>float</key><opt>fcn:time_raster_sink_f</opt></option>
+  </param>
+
+  <param>
+    <name>Name</name>
+    <key>name</key>
+    <value>""</value>
+    <type>string</type>
+    <hide>#if len($name()) > 0 then 'none' else 'part'#</hide>
+  </param>
+
+  <param>
+    <name>Sample Rate</name>
+    <key>samp_rate</key>
+    <value>samp_rate</value>
+    <type>real</type>
+  </param>
+
+  <param>
+    <name>Num. Rows</name>
+    <key>nrows</key>
+    <type>int</type>
+  </param>
+
+  <param>
+    <name>Num. Cols</name>
+    <key>ncols</key>
+    <type>int</type>
+  </param>
+
+  <param>
+    <name>Grid</name>
+    <key>grid</key>
+    <value>False</value>
+    <type>enum</type>
+    <hide>part</hide>
+    <option>
+      <name>Yes</name>
+      <key>True</key>
+    </option>
+    <option>
+      <name>No</name>
+      <key>False</key>
+    </option>
+  </param>
+
+  <param>
+    <name>Int. min</name>
+    <key>zmin</key>
+    <value>-1</value>
+    <type>real</type>
+    <hide>part</hide>
+  </param>
+
+  <param>
+    <name>Int. max</name>
+    <key>zmax</key>
+    <value>1</value>
+    <type>real</type>
+    <hide>part</hide>
+  </param>
+
+  <param>
+    <name>Multiplier</name>
+    <key>mult</key>
+    <value>[]</value>
+    <type>real_vector</type>
+    <hide>part</hide>
+  </param>
+
+  <param>
+    <name>Offset</name>
+    <key>offset</key>
+    <value>[]</value>
+    <type>real_vector</type>
+    <hide>part</hide>
+  </param>
+
+  <param>
+    <name>Number of Inputs</name>
+    <key>nconnections</key>
+    <value>1</value>
+    <type>int</type>
+    <hide>part</hide>
+  </param>
+
+  <param>
+    <name>Update Period</name>
+    <key>update_time</key>
+    <value>0.10</value>
+    <type>real</type>
+    <hide>part</hide>
+  </param>
+
+  <param>
+    <name>GUI Hint</name>
+    <key>gui_hint</key>
+    <value></value>
+    <type>gui_hint</type>
+    <hide>part</hide>
+  </param>
 
 
   <param>
@@ -147,6 +191,14 @@ $(gui_hint()($win))</make>
     <option>
       <name>Incandescent</name>
       <key>3</key>
+    </option>
+    <option>
+      <name>Sunset</name>
+      <key>5</key>
+    </option>
+    <option>
+      <name>Cool</name>
+      <key>6</key>
     </option>
     <tab>Config</tab>
   </param>

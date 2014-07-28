@@ -32,7 +32,7 @@ class qa_sincos : public CppUnit::TestCase
   CPPUNIT_TEST(t1);
   CPPUNIT_TEST(t2);
   CPPUNIT_TEST_SUITE_END();
-  
+
 private:
   void t1();
   void t2();

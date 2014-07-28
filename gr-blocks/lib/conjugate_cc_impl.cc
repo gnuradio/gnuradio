@@ -53,9 +53,9 @@ namespace gr {
     {
       gr_complex *iptr = (gr_complex *) input_items[0];
       gr_complex *optr = (gr_complex *) output_items[0];
-      
+
       volk_32fc_conjugate_32fc(optr, iptr, noutput_items);
-      
+
       return noutput_items;
     }
 

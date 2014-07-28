@@ -60,7 +60,7 @@ namespace gr {
 
       /*!
        * Build an FFT filter blocks.
-       * 
+       *
        * \param decimation  >= 1
        * \param taps        complex filter taps
        * \param nthreads    number of threads for the FFT to use

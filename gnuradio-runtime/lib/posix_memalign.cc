@@ -66,7 +66,7 @@ int posix_memalign
 
   /* if 'malloc' is known to be aligned, and the desired 'alignment'
    * matches is <= that provided by 'malloc', then use 'malloc'.  This
-   * works on, e.g., Darwin 8 & 9: for which malloc is 16-byte aligned.
+   * works on, e.g., Darwin for which malloc is 16-byte aligned.
    */
   size_t am = (size_t) ALIGNED_MALLOC;
   if (alignment <= am) {

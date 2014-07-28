@@ -29,7 +29,7 @@
 
 namespace gr {
   namespace filter {
-    
+
     /*!
      * \brief class template for single pole IIR filter
      */

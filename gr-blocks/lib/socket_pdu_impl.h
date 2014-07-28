@@ -59,7 +59,7 @@ namespace gr {
       boost::shared_ptr<boost::asio::ip::udp::socket> d_udp_socket;
       void handle_udp_read(const boost::system::error_code& error, size_t bytes_transferred);
       void udp_send(pmt::pmt_t msg);
-    
+
     public:
       socket_pdu_impl(std::string type, std::string addr, std::string port, int MTU = 10000, bool tcp_no_delay = false);
     };

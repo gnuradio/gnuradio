@@ -43,7 +43,7 @@ class test_pfb_channelizer(gr_unittest.TestCase):
         self.fs = 5000
         # Input samp rate to channelizer.
         self.ifs = self.M*self.fs
-        
+
         self.taps = filter.firdes.low_pass_2(
             1, self.ifs, self.fs/2, self.fs/10,
             attenuation_dB=80,
@@ -62,6 +62,18 @@ class test_pfb_channelizer(gr_unittest.TestCase):
     def test_0001(self):
         self.check_channelizer(filter.pfb.channelizer_hier_ccf(
             self.M, n_filterbanks=1, taps=self.taps))
+
+    def test_0002(self):
+        """Test roundig error handling for oversample rate (ok)."""
+        channels, oversample = 36, 25.
+        filter.pfb.channelizer_ccf(channels, taps=self.taps,
+                                   oversample_rate=channels/oversample)
+
+    def test_0003(self):
+        """Test roundig error handling for oversample rate, (bad)."""
+        self.assertRaises(RuntimeError,
+                          filter.pfb.channelizer_ccf,
+                          36, taps=self.taps, oversample_rate=10.1334)
 
     def get_input_data(self):
         """
@@ -108,7 +120,7 @@ class test_pfb_channelizer(gr_unittest.TestCase):
 
         expected_data = self.get_expected_data(L)
         received_data = [snk.data() for snk in snks]
-        
+
         for expected, received in zip(expected_data, received_data):
             self.compare_data(expected, received)
 
@@ -119,12 +131,12 @@ class test_pfb_channelizer(gr_unittest.TestCase):
         expected = [x/expected[0] for x in expected]
         received = [x/received[0] for x in received]
         self.assertComplexTuplesAlmostEqual(expected, received, 3)
-        
+
 
     def get_freq(self, data):
         freqs = []
         for r1, r2 in zip(data[:-1], data[1:]):
-            diff = cmath.phase(r1) - cmath.phase(r2) 
+            diff = cmath.phase(r1) - cmath.phase(r2)
             if diff > math.pi:
                 diff -= 2*math.pi
             if diff < -math.pi:
@@ -149,6 +161,7 @@ class test_pfb_channelizer(gr_unittest.TestCase):
         expected_data = [map(lambda x: math.cos(2.*math.pi*f*x) +
                              1j*math.sin(2.*math.pi*f*x), t) for f in self.freqs]
         return expected_data
+
 
 if __name__ == '__main__':
     gr_unittest.run(test_pfb_channelizer, "test_pfb_channelizer.xml")

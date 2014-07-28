@@ -32,6 +32,7 @@ if path.endswith(path_ending):
     __path__.append(os.path.join(build_path, 'gr-filter', 'python'))
     __path__.append(os.path.join(build_path, 'gr-fft', 'python'))
     __path__.append(os.path.join(build_path, 'gr-analog', 'python'))
+    __path__.append(os.path.join(build_path, 'gr-dtv', 'python'))
     __path__.append(os.path.join(build_path, 'gr-trellis', 'python'))
     __path__.append(os.path.join(build_path, 'gr-wavelet', 'python'))
     __path__.append(os.path.join(build_path, 'gr-audio', 'python'))
@@ -48,3 +49,4 @@ if path.endswith(path_ending):
     __path__.append(os.path.join(build_path, 'gr-fec', 'python'))
     __path__.append(os.path.join(build_path, 'gr-utils', 'python'))
     __path__.append(os.path.join(build_path, 'gr-uhd', 'python'))
+    __path__.append(os.path.join(build_path, 'gr-zeromq', 'python'))

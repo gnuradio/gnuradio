@@ -73,7 +73,7 @@ def get_si_components(num):
 def sci_format(num):
 	"""
 	Format a floating point number into scientific notation.
-        
+
         Args:
 	    num: the number to format
 
@@ -87,11 +87,11 @@ def sci_format(num):
 def eng_format(num, units=''):
 	"""
 	Format a floating point number into engineering notation.
-	
+
 	Args:
 	    num: the number to format
 	    units: the units to append
-	
+
 	Returns:
 	    a label string
 	"""

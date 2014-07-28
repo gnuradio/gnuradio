@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2008-2011 Free Software Foundation, Inc.
+ * Copyright 2008-2011,2014 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -30,6 +30,9 @@ SpectrumDisplayForm::SpectrumDisplayForm(QWidget* parent)
   : QWidget(parent)
 {
   setupUi(this);
+
+  d_clicked = false;
+  d_clicked_freq = 0;
 
   _systemSpecifiedFlag = false;
   _intValidator = new QIntValidator(this);
@@ -426,7 +429,7 @@ SpectrumDisplayForm::setFrequencyRange(const double newCenterFrequency,
     std::string strtime[4] = {"sec", "ms", "us", "ns"};
     double units10 = floor(log10(fdiff));
     double units3  = std::max(floor(units10 / 3.0), 0.0);
-    double units = pow(10, (units10-fmod(units10, 3.0)));
+    d_units = pow(10, (units10-fmod(units10, 3.0)));
     int iunit = static_cast<int>(units3);
 
     _startFrequency = newStartFrequency;
@@ -434,11 +437,11 @@ SpectrumDisplayForm::setFrequencyRange(const double newCenterFrequency,
     _centerFrequency = newCenterFrequency;
 
     _frequencyDisplayPlot->setFrequencyRange(fcenter, fdiff,
-					     units, strunits[iunit]);
+					     d_units, strunits[iunit]);
     _waterfallDisplayPlot->setFrequencyRange(fcenter, fdiff,
-					     units, strunits[iunit]);
+					     d_units, strunits[iunit]);
     _timeDomainDisplayPlot->setSampleRate((_stopFrequency - _startFrequency)/2.0,
-					  units, strtime[iunit]);
+					  d_units, strtime[iunit]);
   }
 }
 
@@ -570,6 +573,12 @@ void
 SpectrumDisplayForm::useRFFrequenciesCB(bool useRFFlag)
 {
   setFrequencyRange(_centerFrequency, _startFrequency, _stopFrequency);
+}
+
+void
+SpectrumDisplayForm::toggleRFFrequencies(bool en)
+{
+  UseRFFrequenciesCheckBox->setChecked(en);
 }
 
 
@@ -762,23 +771,47 @@ SpectrumDisplayForm::setUpdateTime(double t)
 void
 SpectrumDisplayForm::onFFTPlotPointSelected(const QPointF p)
 {
-  emit plotPointSelected(p, 1);
+  d_clicked = true;
+  d_clicked_freq = d_units*p.x();
+
+  setFrequencyRange(d_clicked_freq, _startFrequency, _stopFrequency);
 }
 
 void
 SpectrumDisplayForm::onWFallPlotPointSelected(const QPointF p)
 {
-  emit plotPointSelected(p, 2);
+  d_clicked = true;
+  d_clicked_freq = d_units*p.x();
+
+  setFrequencyRange(d_clicked_freq, _startFrequency, _stopFrequency);
 }
 
 void
 SpectrumDisplayForm::onTimePlotPointSelected(const QPointF p)
 {
-  emit plotPointSelected(p, 3);
+  //emit plotPointSelected(p, 3);
 }
 
 void
 SpectrumDisplayForm::onConstPlotPointSelected(const QPointF p)
 {
-  emit plotPointSelected(p, 4);
+  //emit plotPointSelected(p, 4);
+}
+
+bool
+SpectrumDisplayForm::checkClicked()
+{
+  if(d_clicked) {
+    d_clicked = false;
+    return true;
+  }
+  else {
+    return false;
+  }
+}
+
+float
+SpectrumDisplayForm::getClickedFreq() const
+{
+  return d_clicked_freq;
 }

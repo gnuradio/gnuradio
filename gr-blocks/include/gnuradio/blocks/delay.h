@@ -32,6 +32,9 @@ namespace gr {
     /*!
      * \brief delay the input by a certain number of samples
      * \ingroup misc_blk
+     *
+     * Positive delays insert zero items at the beginning of the stream.
+     * Negative delays discard items from the stream.
      */
     class BLOCKS_API delay : virtual public block
     {

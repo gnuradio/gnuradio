@@ -28,7 +28,7 @@
 
 namespace gr {
   namespace analog {
-    
+
     /*!
      * \brief simple squelch block based on average signal power and threshold in dB.
      * \ingroup level_controllers_blk

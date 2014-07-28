@@ -29,7 +29,7 @@
 
 namespace gr {
   namespace channels {
-    
+
     /*!
      * \brief channel simulator
      * \ingroup channel_models_blk
@@ -38,7 +38,7 @@ namespace gr {
      * This block implements a carrier frequency offset model that
      * can be used to simulate carrier frequency drift typically from
      * mixer LO drift on either transmit or receive hardware.
-     * 
+     *
      * A clipped gaussian random walk process is used.
      */
     class CHANNELS_API cfo_model : virtual public sync_block

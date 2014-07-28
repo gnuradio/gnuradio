@@ -36,7 +36,7 @@ def run_test (f,Kb,bitspersymbol,K,dimensionality,constellation,N0,seed,P):
     # RX
     metrics = trellis.metrics_f(f.O(),dimensionality,constellation,digital.TRELLIS_EUCLIDEAN) # data preprocessing to generate metrics for Viterbi
     va = trellis.viterbi_s(f,K,0,-1) # Put -1 if the Initial/Final states are not set.
-    p2s = block.streams_to_stream(gr.sizeof_short,P) # parallel to serial
+    p2s = blocks.streams_to_stream(gr.sizeof_short,P) # parallel to serial
     fsmi2s=blocks.unpacked_to_packed_ss(bitspersymbol,gr.GR_MSB_FIRST) # pack FSM input symbols to shorts
     dst = blocks.check_lfsr_32k_s()
 

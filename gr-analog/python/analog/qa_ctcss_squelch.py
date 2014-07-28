@@ -32,7 +32,7 @@ class test_ctcss_squelch(gr_unittest.TestCase):
 
     def test_ctcss_squelch_001(self):
         # Test set/gets
-        
+
         rate = 1
         rate2 = 2
         freq = 100

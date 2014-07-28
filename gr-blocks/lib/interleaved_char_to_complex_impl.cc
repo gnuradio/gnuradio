@@ -55,8 +55,8 @@ namespace gr {
     {
       const int8_t *in = (const int8_t *) input_items[0];
       float *out = (float *) output_items[0];
-      
-      volk_8i_s32f_convert_32f_u(out, in, 1.0, 2*noutput_items);     
+
+      volk_8i_s32f_convert_32f_u(out, in, 1.0, 2*noutput_items);
 
       return noutput_items;
     }

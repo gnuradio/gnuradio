@@ -65,10 +65,10 @@ class wxgui_hb(object):
 		"""
 		Create a function that will cache the visibility flag,
 		and only call the handler when that flag changes.
-		
+
 		Args:
 		    handler: the function to call on a change
-		
+
 		Returns:
 		    a function of 1 argument
 		"""
@@ -89,7 +89,7 @@ class wxgui_hb(object):
 		Bind a handler to a window when its visibility changes.
 		Specifically, call the handler when the window visibility changes.
 		This condition is checked on every update ui event.
-		
+
 		Args:
 		    win: the wx window
 		    handler: a function of 1 param
@@ -133,7 +133,7 @@ def _register_access_method(destination, controller, key):
 def register_access_methods(destination, controller):
 	"""
 	Register setter and getter functions in the destination object for all keys in the controller.
-	
+
 	Args:
 	    destination: the object to get new setter and getter methods
 	    controller: the pubsub controller
@@ -173,10 +173,10 @@ import math
 def get_exp(num):
 	"""
 	Get the exponent of the number in base 10.
-	
+
 	Args:
 	    num: the floating point number
-	
+
 	Returns:
 	    the exponent as an integer
 	"""
@@ -186,10 +186,10 @@ def get_exp(num):
 def get_clean_num(num):
 	"""
 	Get the closest clean number match to num with bases 1, 2, 5.
-	
+
 	Args:
 	    num: the number
-	
+
 	Returns:
 	    the closest number
 	"""
@@ -202,10 +202,10 @@ def get_clean_num(num):
 def get_clean_incr(num):
 	"""
 	Get the next higher clean number with bases 1, 2, 5.
-	
+
 	Args:
 	    num: the number
-	
+
 	Returns:
 	    the next higher number
 	"""
@@ -224,10 +224,10 @@ def get_clean_incr(num):
 def get_clean_decr(num):
 	"""
 	Get the next lower clean number with bases 1, 2, 5.
-	
+
 	Args:
 	    num: the number
-	
+
 	Returns:
 	    the next lower number
 	"""
@@ -246,10 +246,10 @@ def get_clean_decr(num):
 def get_min_max(samples):
 	"""
 	Get the minimum and maximum bounds for an array of samples.
-	
+
 	Args:
 	    samples: the array of real values
-	
+
 	Returns:
 	    a tuple of min, max
 	"""
@@ -264,10 +264,10 @@ def get_min_max(samples):
 def get_min_max_fft(fft_samps):
 	"""
 	Get the minimum and maximum bounds for an array of fft samples.
-	
+
 	Args:
 	    samples: the array of real values
-	
+
 	Returns:
 	    a tuple of min, max
 	"""

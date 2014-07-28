@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<!--
+###################################################
+## ATSC Equalizer
+###################################################
+ -->
+<block>
+  <name>ATSC Equalizer</name>
+  <key>dtv_atsc_equalizer</key>
+  <import>from gnuradio import dtv</import>
+  <make>dtv.atsc_equalizer()</make>
+
+  <sink>
+    <name>in</name>
+    <type>byte</type>
+    <vlen>4096</vlen>
+  </sink>
+
+  <source>
+    <name>out</name>
+    <type>byte</type>
+    <vlen>4096</vlen>
+  </source>
+
+</block>

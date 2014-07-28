@@ -27,10 +27,10 @@ import sys
 
 def tcp_connect_or_die(sock_addr):
     """
-    
+
     Args:
         sock_addr: (host, port) to connect to (tuple)
-    
+
     Returns:
         : socket or exits
     """
@@ -45,10 +45,10 @@ def tcp_connect_or_die(sock_addr):
 
 def udp_connect_or_die(sock_addr):
     """
-    
+
     Args:
         sock_addr: (host, port) to connect to (tuple)
-    
+
     Returns:
         : socket or exits
     """

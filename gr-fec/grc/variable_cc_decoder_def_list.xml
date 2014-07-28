@@ -1,0 +1,148 @@
+<?xml version="1.0"?>
+<!--
+###################################################
+# FEC CC DECODER
+###################################################
+ -->
+<block>
+    <name>CC Decoder Definition</name>
+    <key>variable_cc_decoder_def</key>
+    <import>from gnuradio import fec</import>
+    <var_make>
+#if int($ndim())==0 #
+self.$(id) = $(id) = fec.cc_decoder.make($framebits, $k, $rate, $polys, $state_start, $state_end, $mode, $padding)
+#else if int($ndim())==1 #
+self.$(id) = $(id) = map( (lambda a: fec.cc_decoder.make($framebits, $k, $rate, $polys, $state_start, $state_end, $mode, $padding)), range(0,$dim1) ); #slurp
+#else
+self.$(id) = $(id) = map( (lambda b: map( ( lambda a: fec.cc_decoder.make($framebits, $k, $rate, $polys, $state_start, $state_end, $mode, $padding)), range(0,$dim2) ) ), range(0,$dim1)); #slurp
+#end if
+    </var_make>
+    <var_value>fec.cc_decoder.make($framebits, $k, $rate, $polys, $state_start, $state_end, $mode, $padding)</var_value>
+    <make></make>
+
+    <param>
+        <name>Ignore Me</name>
+        <key>value</key>
+        <value>"ok"</value>
+        <type>raw</type>
+        <hide>all</hide>
+    </param>
+
+    <param>
+        <name>Parallelism</name>
+        <key>ndim</key>
+        <value>0</value>
+        <type>enum</type>
+        <option>
+            <name>0</name>
+            <key>0</key>
+        </option>
+        <option>
+            <name>1</name>
+            <key>1</key>
+        </option>
+        <option>
+            <name>2</name>
+            <key>2</key>
+        </option>
+    </param>
+
+    <param>
+        <name>Dimension 1</name>
+        <key>dim1</key>
+        <value>1</value>
+        <type>int</type>
+        <hide>#if (int($ndim()) >= 1) then 'none' else 'all' #</hide>
+    </param>
+
+    <param>
+        <name>Dimension 2</name>
+        <key>dim2</key>
+        <value>1</value>
+        <type>int</type>
+        <hide>#if (int($ndim()) >= 2) then 'none' else 'all' #</hide>
+    </param>
+
+    <param>
+        <name>Frame Bits</name>
+        <key>framebits</key>
+        <value>2048</value>
+        <type>int</type>
+    </param>
+
+    <param>
+        <name>Constraint Length (K)</name>
+        <key>k</key>
+        <value>7</value>
+        <type>int</type>
+    </param>
+
+    <param>
+        <name>Rate Inverse (1/R) (1/2) --> 2</name>
+        <key>rate</key>
+        <value>2</value>
+        <type>int</type>
+    </param>
+
+    <param>
+        <name>Polynomials</name>
+        <key>polys</key>
+        <value>[79,109]</value>
+        <type>int_vector</type>
+    </param>
+
+    <param>
+        <name>Start State</name>
+        <key>state_start</key>
+        <value>0</value>
+        <type>int</type>
+    </param>
+
+    <param>
+        <name>End State</name>
+        <key>state_end</key>
+        <value>-1</value>
+        <type>int</type>
+    </param>
+
+    <param>
+        <name>Streaming Behavior</name>
+        <key>mode</key>
+        <value></value>
+        <type>enum</type>
+        <option>
+            <name>Streaming</name>
+            <key>fec.CC_STREAMING</key>
+        </option>
+        <option>
+            <name>Terminated</name>
+            <key>fec.CC_TERMINATED</key>
+        </option>
+        <option>
+            <name>Tailbiting</name>
+            <key>fec.CC_TAILBITING</key>
+        </option>
+        <option>
+            <name>Truncated</name>
+            <key>fec.CC_TRUNCATED</key>
+        </option>
+    </param>
+
+    <param>
+        <name>Byte Padding</name>
+        <key>padding</key>
+        <value>False</value>
+        <type>enum</type>
+        <option>
+            <name>No</name>
+            <key>False</key>
+        </option>
+        <option>
+            <name>Yes</name>
+            <key>True</key>
+        </option>
+    </param>
+
+    <doc>
+    </doc>
+</block>

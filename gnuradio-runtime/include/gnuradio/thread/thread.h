@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2009-2013 Free Software Foundation, Inc.
+ * Copyright 2009-2014 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -139,17 +139,13 @@ namespace gr {
     GR_RUNTIME_API void thread_unbind(gr_thread_t thread);
 
     /*! \brief get current thread priority for a given thread ID
-     *
-     * Note: this does not work on OSX
      */
     GR_RUNTIME_API int thread_priority(gr_thread_t thread);
-    
-    /*! \brief get current thread priority for a given thread ID
-     *
-     * Note: this does not work on OSX
+
+    /*! \brief set current thread priority for a given thread ID
      */
     GR_RUNTIME_API int set_thread_priority(gr_thread_t thread, int priority);
-    
+
     GR_RUNTIME_API void set_thread_name(gr_thread_t thread,
                                         std::string name);
 

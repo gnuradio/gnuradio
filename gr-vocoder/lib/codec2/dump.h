@@ -49,6 +49,7 @@ void dump_Rw(float Rw[]);
 void dump_lsp(float lsp[]);
 void dump_weights(float w[], int ndim);
 void dump_lsp_(float lsp_[]);
+void dump_mel(int mel[]);
 void dump_ak(float ak[], int order);
 void dump_ak_(float ak[], int order);
 void dump_E(float E);

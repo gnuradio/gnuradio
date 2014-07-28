@@ -38,7 +38,7 @@ namespace gr {
 #define VERBOSE_MM     0     // Used for debugging symbol timing loop
 #define VERBOSE_COSTAS 0     // Used for debugging phase and frequency tracking
 
-    constellation_receiver_cb::sptr 
+    constellation_receiver_cb::sptr
     constellation_receiver_cb::make(constellation_sptr constell,
 				    float loop_bw, float fmin, float fmax)
     {
@@ -49,7 +49,7 @@ namespace gr {
 
     static int ios[] = {sizeof(char), sizeof(float), sizeof(float), sizeof(float), sizeof(gr_complex)};
     static std::vector<int> iosig(ios, ios+sizeof(ios)/sizeof(int));
-    constellation_receiver_cb_impl::constellation_receiver_cb_impl(constellation_sptr constellation, 
+    constellation_receiver_cb_impl::constellation_receiver_cb_impl(constellation_sptr constellation,
 								   float loop_bw, float fmin, float fmax)
       : block("constellation_receiver_cb",
               io_signature::make(1, 1, sizeof(gr_complex)),
@@ -60,11 +60,17 @@ namespace gr {
     {
       if(d_constellation->dimensionality() != 1)
         throw std::runtime_error("This receiver only works with constellations of dimension 1.");
+
       message_port_register_in(pmt::mp("set_constellation"));
       set_msg_handler(
         pmt::mp("set_constellation"),
         boost::bind(&constellation_receiver_cb_impl::handle_set_constellation,
                     this, _1));
+
+      message_port_register_in(pmt::mp("rotate_phase"));
+      set_msg_handler(pmt::mp("rotate_phase"),
+                      boost::bind(&constellation_receiver_cb_impl::handle_rotate_phase,
+                                  this, _1));
     }
 
     constellation_receiver_cb_impl::~constellation_receiver_cb_impl()
@@ -77,10 +83,10 @@ namespace gr {
       advance_loop(phase_error);
       phase_wrap();
       frequency_limit();
-  
+
 #if VERBOSE_COSTAS
       printf("cl: phase_error: %f  phase: %f  freq: %f  sample: %f+j%f  constellation: %f+j%f\n",
-	     phase_error, d_phase, d_freq, sample.real(), sample.imag(), 
+	     phase_error, d_phase, d_freq, sample.real(), sample.imag(),
 	     d_constellation->points()[d_current_const_point].real(),
 	     d_constellation->points()[d_current_const_point].imag());
 #endif
@@ -96,13 +102,23 @@ namespace gr {
     void
     constellation_receiver_cb_impl::handle_set_constellation(pmt::pmt_t constellation_pmt)
     {
-      boost::any constellation_any = pmt::any_ref(constellation_pmt);
-      constellation_sptr constellation = boost::any_cast<constellation_sptr>(
-        constellation_any);
-      set_constellation(constellation);
+      if(pmt::is_any(constellation_pmt)) {
+        boost::any constellation_any = pmt::any_ref(constellation_pmt);
+        constellation_sptr constellation = boost::any_cast<constellation_sptr>(
+          constellation_any);
+        set_constellation(constellation);
+      }
     }
 
-    
+    void
+    constellation_receiver_cb_impl::handle_rotate_phase(pmt::pmt_t rotation)
+    {
+      if(pmt::is_real(rotation)) {
+        double phase = pmt::to_double(rotation);
+        d_phase += phase;
+      }
+    }
+
     void
     constellation_receiver_cb_impl::set_constellation(constellation_sptr constellation)
     {
@@ -145,16 +161,16 @@ namespace gr {
           tag_t tag = tags_now[j];
           dispatch_msg(tag.key, tag.value);
         }
-        
+
         sample = in[i];
         nco = gr_expj(d_phase);   // get the NCO value for derotating the current sample
         sample = nco*sample;      // get the downconverted symbol
-        
+
         sym_value = d_constellation->decision_maker_pe(&sample, &phase_error);
         phase_error_tracking(phase_error);  // corrects phase and frequency offsets
-        
+
         out[i] = sym_value;
-        
+
         if(output_items.size() == 5) {
           out_err[i] = phase_error;
           out_phase[i] = d_phase;
@@ -162,7 +178,7 @@ namespace gr {
           out_symbol[i] = sample;
         }
         i++;
-        
+
       }
 
       consume_each(i);
@@ -197,7 +213,7 @@ namespace gr {
 	      pmt::mp(0.0f), pmt::mp(2.0f), pmt::mp(0.0f),
 	      "", "Loop bandwidth", RPC_PRIVLVL_MIN,
               DISPTIME | DISPOPTSTRIP)));
-    
+
       // Setters
       add_rpc_variable(
           rpcbasic_sptr(new rpcbasic_register_set<control_loop, float>(
@@ -208,8 +224,7 @@ namespace gr {
 	      RPC_PRIVLVL_MIN, DISPNULL)));
 #endif /* GR_CTRLPORT */
     }
-    
+
 
   } /* namespace digital */
 } /* namespace gr */
-

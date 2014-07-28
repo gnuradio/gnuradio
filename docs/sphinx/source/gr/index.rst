@@ -5,7 +5,7 @@ gnuradio.gr
 
 .. autosummary::
    :nosignatures:
-   
+
    gnuradio.gr.top_block
    gnuradio.gr.hier_block2
    gnuradio.gr.block_detail

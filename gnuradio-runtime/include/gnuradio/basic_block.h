@@ -144,14 +144,41 @@ namespace gr {
     virtual ~basic_block();
     long unique_id() const { return d_unique_id; }
     long symbolic_id() const { return d_symbolic_id; }
+
+    /*! The name of the block */
     std::string name() const { return d_name; }
+
+    /*!
+     * The sybolic name of the block, which is used in the
+     * block_registry. The name is assigned by the block's constructor
+     * and never changes during the life of the block.
+     */
     std::string symbol_name() const { return d_symbol_name; }
+
     gr::io_signature::sptr input_signature() const  { return d_input_signature; }
     gr::io_signature::sptr output_signature() const { return d_output_signature; }
     basic_block_sptr to_basic_block(); // Needed for Python type coercion
+
+    /*!
+     * True if the block has an alias (see set_block_alias).
+     */
     bool alias_set() { return !d_symbol_alias.empty(); }
+
+    /*!
+     * Returns the block's alias as a string.
+     */
     std::string alias(){ return alias_set()?d_symbol_alias:symbol_name(); }
+
+    /*!
+     * Returns the block's alias as PMT.
+     */
     pmt::pmt_t alias_pmt(){ return pmt::intern(alias()); }
+
+    /*!
+     * Set's a new alias for the block; also adds an entry into the
+     * block_registry to get the block using either the alias or the
+     * original symbol name.
+     */
     void set_block_alias(std::string name);
 
     // ** Message passing interface **
@@ -247,6 +274,10 @@ namespace gr {
         return true;
       }
       return false;
+    }
+
+    const msg_queue_map_t& get_msg_map(void) const {
+      return msg_queue;
     }
 
 #ifdef GR_CTRLPORT

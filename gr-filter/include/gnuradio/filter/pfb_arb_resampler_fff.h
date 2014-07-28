@@ -154,12 +154,12 @@ namespace gr {
 
       /*!
        * Gets the decimation rate of the filter.
-       */    
+       */
       virtual unsigned int decimation_rate() const =0;
-      
+
       /*!
        * Gets the fractional rate of the filter.
-       */    
+       */
       virtual float fractional_rate() const = 0;
 
       /*!

@@ -27,7 +27,7 @@ Core Framework
    gnuradio.wxgui
 
 .. toctree::
-   :hidden:   
+   :hidden:
 
    gnuradio.gr <gr/index>
    pmt <pmt/index>
@@ -51,12 +51,12 @@ Hardware Interfaces
 
 .. autosummary::
    :nosignatures:
-   
+
    gnuradio.uhd
    gnuradio.fcd
 
 .. toctree::
-   :hidden:   
+   :hidden:
 
    gnuradio.uhd <uhd>
    gnuradio.fcd <fcd>
@@ -72,7 +72,7 @@ Utilities
    gnuradio.eng_option
 
 .. toctree::
-   :hidden:   
+   :hidden:
 
    gnuradio.plot_data <plot_data>
    gnuradio.eng_notation <eng_notation/index>
@@ -91,7 +91,7 @@ Framework Extensions
    gnuradio.vocoder
 
 .. toctree::
-   :hidden:   
+   :hidden:
 
    gnuradio.atsc <atsc/index>
    gnuradio.noaa <noaa>
@@ -102,10 +102,10 @@ Framework Extensions
 
 .. Use this to add to the toctree but not displayed
 .. It's mostly to get rid of warnings
- 
+
 .. toctree::
-   :hidden:   
-   
+   :hidden:
+
    runtime_contents <gr/contents>
    atsc_blks <atsc/blks>
    digital_blocks <digital/blocks>
@@ -163,4 +163,4 @@ Framework Extensions
    pmt_list <pmt/list>
    pmt_pair <pmt/pair>
    pmt_symbol <pmt/symbol>
-   
+

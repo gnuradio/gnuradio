@@ -23,10 +23,10 @@ def _extract(key):
     """
     Extract the documentation from the python __doc__ strings.
     If multiple modules match, combine the docs.
-    
+
     Args:
         key: the block key
-    
+
     Returns:
         a string with documentation
     """
@@ -58,10 +58,10 @@ _docs_cache = dict()
 def extract(key):
     """
     Call the private extract and cache the result.
-    
+
     Args:
         key: the block key
-    
+
     Returns:
         a string with documentation
     """

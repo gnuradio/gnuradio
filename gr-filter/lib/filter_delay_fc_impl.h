@@ -29,7 +29,7 @@
 
 namespace gr {
   namespace filter {
-    
+
     class FILTER_API filter_delay_fc_impl : public filter_delay_fc
     {
     private:
@@ -44,7 +44,7 @@ namespace gr {
 
       std::vector<float> taps();
       void set_taps(const std::vector<float> &taps);
-      
+
       int work(int noutput_items,
 	       gr_vector_const_void_star &input_items,
 	       gr_vector_void_star &output_items);

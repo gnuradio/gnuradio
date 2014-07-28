@@ -41,7 +41,7 @@ namespace gr {
 #define	ERR_DELTA	(1e-5)
 
     static float
-    uniform() 
+    uniform()
     {
       return 2.0 * ((float)(::random()) / RANDOM_MAX - 0.5); // uniformly (-1, 1)
     }
@@ -310,7 +310,7 @@ namespace gr {
 	  sum += input[i] * taps[i];
 	}
 
-	//return gr_complex(121,9)*sum; 
+	//return gr_complex(121,9)*sum;
 	return sum;
      }
 

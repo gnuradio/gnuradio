@@ -31,7 +31,7 @@
 
 namespace gr {
   namespace fft {
-    
+
     fft_vfc::sptr fft_vfc::make(int fft_size, bool forward,
 				const std::vector<float> &window,
 				int nthreads)
@@ -40,7 +40,7 @@ namespace gr {
 					(fft_size, forward, window,
 					 nthreads));
     }
-    
+
     fft_vfc_fftw::fft_vfc_fftw(int fft_size, bool forward,
 			       const std::vector<float> &window,
 			       int nthreads)
@@ -70,7 +70,7 @@ namespace gr {
     {
       return d_fft->nthreads();
     }
-    
+
     bool
     fft_vfc_fftw::set_window(const std::vector<float> &window)
     {
@@ -81,7 +81,7 @@ namespace gr {
       else
 	return false;
     }
-    
+
     int
     fft_vfc_fftw::work(int noutput_items,
 		       gr_vector_const_void_star &input_items,
@@ -89,13 +89,13 @@ namespace gr {
     {
       const float *in = (const float *)input_items[0];
       gr_complex *out = (gr_complex *)output_items[0];
-      
+
       unsigned int output_data_size = output_signature()->sizeof_stream_item (0);
-      
+
       int count = 0;
-      
+
       while(count++ < noutput_items) {
-	
+
 	// copy input into optimally aligned buffer
 	if(d_window.size()) {
 	  gr_complex *dst = d_fft->get_inbuf();
@@ -107,17 +107,17 @@ namespace gr {
 	  for(unsigned int i = 0; i < d_fft_size; i++)    // float to complex conversion
 	    dst[i] = in[i];
 	}
-	
+
 	// compute the fft
 	d_fft->execute();
-	
+
 	// copy result to output stream
 	memcpy(out, d_fft->get_outbuf(), output_data_size);
-	
+
 	in  += d_fft_size;
 	out += d_fft_size;
       }
-      
+
       return noutput_items;
     }
 

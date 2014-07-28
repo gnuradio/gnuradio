@@ -37,11 +37,11 @@ namespace gr {
     {
       return fft::window::build(static_cast<fft::window::win_type>(type), ntaps, beta);
     }
-    
+
     //
     //	=== Low Pass ===
     //
-    
+
     vector<float>
     firdes::low_pass_2(double gain,
 		       double sampling_freq,    // Hz
@@ -52,11 +52,11 @@ namespace gr {
 		       double beta)             // used only with Kaiser
     {
       sanity_check_1f(sampling_freq, cutoff_freq, transition_width);
-      
+
       int ntaps = compute_ntaps_windes(sampling_freq,
 				       transition_width,
 				       attenuation_dB);
- 
+
       // construct the truncated ideal impulse response
       // [sin(x)/x for the low pass case]
 
@@ -105,7 +105,7 @@ namespace gr {
 
       // construct the truncated ideal impulse response
       // [sin(x)/x for the low pass case]
-      
+
       vector<float> taps(ntaps);
       vector<float> w = window(window_type, ntaps, beta);
 
@@ -123,7 +123,7 @@ namespace gr {
 
       // find the factor to normalize the gain, fmax.
       // For low-pass, gain @ zero freq = 1.0
-      
+
       double fmax = taps[0 + M];
       for(int n = 1; n <= M; n++)
 	fmax += 2 * taps[n + M];
@@ -140,7 +140,7 @@ namespace gr {
     //
     //	=== High Pass ===
     //
-    
+
     vector<float>
     firdes::high_pass_2(double gain,
 			double sampling_freq,
@@ -151,13 +151,13 @@ namespace gr {
 			double beta)              // used only with Kaiser
     {
       sanity_check_1f(sampling_freq, cutoff_freq, transition_width);
-      
+
       int ntaps = compute_ntaps_windes(sampling_freq,
 				       transition_width,
 				       attenuation_dB);
 
       // construct the truncated ideal impulse response times the window function
-      
+
       vector<float> taps(ntaps);
       vector<float> w = window(window_type, ntaps, beta);
 
@@ -175,13 +175,13 @@ namespace gr {
 
       // find the factor to normalize the gain, fmax.
       // For high-pass, gain @ fs/2 freq = 1.0
-      
+
       double fmax = taps[0 + M];
       for(int n = 1; n <= M; n++)
 	fmax += 2 * taps[n + M] * cos(n * M_PI);
-      
+
       gain /= fmax; // normalize
-      
+
       for(int i = 0; i < ntaps; i++)
 	taps[i] *= gain;
 
@@ -202,7 +202,7 @@ namespace gr {
       int ntaps = compute_ntaps(sampling_freq,
 				transition_width,
 				window_type, beta);
-      
+
       // construct the truncated ideal impulse response times the window function
 
       vector<float> taps(ntaps);
@@ -222,7 +222,7 @@ namespace gr {
 
       // find the factor to normalize the gain, fmax.
       // For high-pass, gain @ fs/2 freq = 1.0
-      
+
       double fmax = taps[0 + M];
       for(int n = 1; n <= M; n++)
 	fmax += 2 * taps[n + M] * cos(n * M_PI);
@@ -274,7 +274,7 @@ namespace gr {
 
       // find the factor to normalize the gain, fmax.
       // For band-pass, gain @ center freq = 1.0
-      
+
       double fmax = taps[0 + M];
       for(int n = 1; n <= M; n++)
 	fmax += 2 * taps[n + M] * cos(n * (fwT0 + fwT1) * 0.5);
@@ -314,7 +314,7 @@ namespace gr {
       int M = (ntaps - 1) / 2;
       double fwT0 = 2 * M_PI * low_cutoff_freq / sampling_freq;
       double fwT1 = 2 * M_PI * high_cutoff_freq / sampling_freq;
-      
+
       for(int n = -M; n <= M; n++) {
 	if (n == 0)
 	  taps[n + M] = (fwT1 - fwT0) / M_PI * w[n + M];
@@ -376,8 +376,8 @@ namespace gr {
       float phase = 0;
       if (lptaps.size() & 01) {
 	phase = - freq * ( lptaps.size() >> 1 );
-      } 
-      else 
+      }
+      else
 	phase = - freq/2.0 * ((1 + 2*lptaps.size()) >> 1);
 
       for(unsigned int i = 0; i < lptaps.size(); i++) {
@@ -423,7 +423,7 @@ namespace gr {
       float phase = 0;
       if(lptaps.size() & 01) {
 	phase = - freq * ( lptaps.size() >> 1 );
-      } 
+      }
       else
 	phase = - freq/2.0 * ((1 + 2*lptaps.size()) >> 1);
 
@@ -572,7 +572,7 @@ namespace gr {
 	taps[i] /= gain;
       return taps;
     }
-    
+
     //
     // Gaussian
     //
@@ -647,7 +647,7 @@ namespace gr {
 	taps[i] = 4 * alpha * num / den;
 	scale += taps[i];
       }
-      
+
       for(int i = 0; i < ntaps; i++)
 	taps[i] = taps[i] * gain / scale;
 
@@ -720,7 +720,7 @@ namespace gr {
 	throw std::out_of_range("firdes check failed: 0 < fa <= sampling_freq / 2");
 
       if(transition_width <= 0)
-	throw std::out_of_range("gr_dirdes check failed: transition_width > 0");
+	throw std::out_of_range("firdes check failed: transition_width > 0");
     }
 
     void
@@ -734,13 +734,13 @@ namespace gr {
 
       if (fa <= 0.0 || fa > sampling_freq / 2)
 	throw std::out_of_range("firdes check failed: 0 < fa <= sampling_freq / 2");
-      
+
       if (fb <= 0.0 || fb > sampling_freq / 2)
 	throw std::out_of_range("firdes check failed: 0 < fb <= sampling_freq / 2");
-      
+
       if (fa > fb)
 	throw std::out_of_range("firdes check failed: fa <= fb");
-      
+
       if (transition_width <= 0)
 	throw std::out_of_range("firdes check failed: transition_width > 0");
     }

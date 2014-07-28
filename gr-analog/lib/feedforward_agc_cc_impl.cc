@@ -46,7 +46,7 @@ namespace gr {
     {
       if(nsamples < 1)
 	throw std::invalid_argument("feedforward_agc_cc_impl: nsamples must be >= 1");
-  
+
       set_history(nsamples);
     }
 

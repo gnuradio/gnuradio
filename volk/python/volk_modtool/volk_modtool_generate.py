@@ -1,23 +1,23 @@
 #
 # Copyright 2013 Free Software Foundation, Inc.
-# 
+#
 # This file is part of GNU Radio
-# 
+#
 # GNU Radio is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 3, or (at your option)
 # any later version.
-# 
+#
 # GNU Radio is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU General Public License
 # along with GNU Radio; see the file COPYING.  If not, write to
 # the Free Software Foundation, Inc., 51 Franklin Street,
 # Boston, MA 02110-1301, USA.
-# 
+#
 
 import os
 import glob
@@ -62,13 +62,13 @@ class volk_modtool:
         else:
             hdr_files = glob.glob(os.path.join(base, "kernels/volk_" + name + "/*.h"));
             begins = re.compile("(?<=volk_" + name + "_).*")
-        
+
         datatypes = [];
         functions = [];
-    
-        
+
+
         for line in hdr_files:
-           
+
             subline = re.search(".*\.h.*", os.path.basename(line))
             if subline:
                 subsubline = begins.search(subline.group(0));
@@ -77,8 +77,8 @@ class volk_modtool:
                     subdtype = re.search("[0-9]+[A-z]+", dtype);
                     if subdtype:
                         datatypes.append(subdtype.group(0));
-                
-        
+
+
         datatypes = set(datatypes);
 
         for line in hdr_files:
@@ -88,11 +88,11 @@ class volk_modtool:
                     subline = re.search(begins.pattern[:-2] + dt + ".*(?=\.h)", line);
                     if subline:
                         functions.append(subline.group(0));
-    
+
         return set(functions);
 
     def make_module_skeleton(self):
-    
+
         dest = os.path.join(self.my_dict['destination'], 'volk_' + self.my_dict['name'])
         if os.path.exists(dest):
             raise exceptions.IOError("Destination %s already exits!"%(dest));
@@ -118,7 +118,7 @@ class volk_modtool:
                     if not os.path.exists(os.path.dirname(dest)):
                         os.makedirs(os.path.dirname(dest))
                     open(dest, 'w+').write(outstring);
-                    
+
 
         infile = os.path.join(self.my_dict['destination'], 'volk_' + self.my_dict['name'], 'lib/testqa.cc');
         instring = open(infile, 'r').read();
@@ -140,17 +140,17 @@ class volk_modtool:
         outfile = open(os.path.join(self.my_dict['destination'], 'volk_' + self.my_dict['name'], 'volk_modtool.cfg'), 'wb');
         cfg.write(outfile);
         outfile.close();
-                       
-                           
-    def convert_kernel(self, oldvolk, name, base, inpath, top):    
+
+
+    def convert_kernel(self, oldvolk, name, base, inpath, top):
         infile = os.path.join(inpath, 'kernels/' + top[:-1] + '/' + top + name + '.h');
         instring = open(infile, 'r').read();
         outstring = re.sub(oldvolk, 'volk_' + self.my_dict['name'], instring);
         newname = 'volk_' + self.my_dict['name'] + '_' + name + '.h';
         relpath = os.path.relpath(infile, base);
-        newrelpath = re.sub(oldvolk, 'volk_' + self.my_dict['name'], relpath);    
-        dest = os.path.join(self.my_dict['destination'], 'volk_' + self.my_dict['name'], os.path.dirname(newrelpath), newname);        
-                              
+        newrelpath = re.sub(oldvolk, 'volk_' + self.my_dict['name'], relpath);
+        dest = os.path.join(self.my_dict['destination'], 'volk_' + self.my_dict['name'], os.path.dirname(newrelpath), newname);
+
         if not os.path.exists(os.path.dirname(dest)):
             os.makedirs(os.path.dirname(dest))
         open(dest, 'w+').write(outstring);
@@ -178,23 +178,23 @@ class volk_modtool:
         base = os.path.join(self.my_dict['destination'], top[:-1]) ;
 
         if not name in self.get_current_kernels():
-            
+
             raise exceptions.IOError("Requested kernel %s is not in module %s"%(name,base));
-        
-        
-        
+
+
+
         inpath = os.path.abspath(base);
-            
-                              
+
+
         kernel = re.compile(name)
         search_kernels = Set([kernel])
         profile = re.compile('^\s*VOLK_PROFILE')
         puppet = re.compile('^\s*VOLK_PUPPET')
         src_dest = os.path.join(inpath, 'apps/', top[:-1] + '_profile.cc');
-        infile = open(src_dest);        
+        infile = open(src_dest);
         otherlines = infile.readlines();
         open(src_dest, 'w+').write('');
-        
+
         for otherline in otherlines:
             write_okay = True;
             if kernel.search(otherline):
@@ -207,22 +207,22 @@ class volk_modtool:
             if write_okay:
                 open(src_dest, 'a').write(otherline);
 
-                
+
         src_dest = os.path.join(inpath, 'lib/testqa.cc')
         infile = open(src_dest);
         otherlines = infile.readlines();
         open(src_dest, 'w+').write('');
-        
+
         for otherline in otherlines:
             write_okay = True;
-            
+
             for kernel in search_kernels:
                 if kernel.search(otherline):
                     write_okay = False;
-                            
+
             if write_okay:
                 open(src_dest, 'a').write(otherline);
-        
+
         for kernel in search_kernels:
             infile = os.path.join(inpath, 'kernels/' + top[:-1] + '/' + top + kernel.pattern + '.h');
             print "Removing kernel %s"%(kernel.pattern)
@@ -235,7 +235,7 @@ class volk_modtool:
             print orcfile
             if(os.path.exists(orcfile)):
                 os.remove(orcfile);
-    
+
     def import_kernel(self, name, base):
         if not (base):
             base = self.my_dict['base'];
@@ -244,24 +244,24 @@ class volk_modtool:
             basename = self.get_basename(base);
         if not name in self.get_current_kernels(base):
             raise exceptions.IOError("Requested kernel %s is not in module %s"%(name,base));
-        
+
         inpath = os.path.abspath(base);
         if len(basename) > 0:
             top = 'volk_' + basename + '_';
         else:
             top = 'volk_'
         oldvolk = re.compile(top[:-1]);
-        
+
         self.convert_kernel(oldvolk, name, base, inpath, top);
-            
+
         kernel = re.compile(name)
         search_kernels = Set([kernel])
 
         profile = re.compile('^\s*VOLK_PROFILE')
         puppet = re.compile('^\s*VOLK_PUPPET')
         infile = open(os.path.join(inpath, 'apps/', oldvolk.pattern + '_profile.cc'));
-        otherinfile = open(os.path.join(self.my_dict['destination'], 'volk_' + self.my_dict['name'], 'apps/volk_' + self.my_dict['name'] + '_profile.cc'));        
-        dest = os.path.join(self.my_dict['destination'], 'volk_' + self.my_dict['name'], 'apps/volk_' + self.my_dict['name'] + '_profile.cc');        
+        otherinfile = open(os.path.join(self.my_dict['destination'], 'volk_' + self.my_dict['name'], 'apps/volk_' + self.my_dict['name'] + '_profile.cc'));
+        dest = os.path.join(self.my_dict['destination'], 'volk_' + self.my_dict['name'], 'apps/volk_' + self.my_dict['name'] + '_profile.cc');
         lines = infile.readlines();
         otherlines = otherinfile.readlines();
         open(dest, 'w+').write('');
@@ -295,19 +295,19 @@ class volk_modtool:
 
         for kernel in search_kernels:
             print "Adding kernel %s from module %s"%(kernel.pattern,base)
-        
+
         infile = open(os.path.join(inpath, 'lib/testqa.cc'));
-        otherinfile = open(os.path.join(self.my_dict['destination'], 'volk_' + self.my_dict['name'], 'lib/testqa.cc'));        
-        dest = os.path.join(self.my_dict['destination'], 'volk_' + self.my_dict['name'], 'lib/testqa.cc');        
+        otherinfile = open(os.path.join(self.my_dict['destination'], 'volk_' + self.my_dict['name'], 'lib/testqa.cc'));
+        dest = os.path.join(self.my_dict['destination'], 'volk_' + self.my_dict['name'], 'lib/testqa.cc');
         lines = infile.readlines();
         otherlines = otherinfile.readlines();
         open(dest, 'w+').write('');
         inserted = False;
         insert = False
         for otherline in otherlines:
-            
+
             if (re.match('\s*', otherline) == None or re.match('\s*#.*', otherline) == None):
-                
+
                 insert = True;
             if insert and not inserted:
                 inserted = True;
@@ -323,8 +323,8 @@ class volk_modtool:
                     write_okay = False
             if write_okay:
                 open(dest, 'a').write(otherline);
-                
-        
-                
-                    
+
+
+
+
 

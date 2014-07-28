@@ -186,6 +186,13 @@ TimeDisplayForm::setYaxis(double min, double max)
   getPlot()->setYaxis(min, max);
 }
 
+void
+TimeDisplayForm::setYLabel(const std::string &label,
+                           const std::string &unit)
+{
+  getPlot()->setYLabel(label, unit);
+}
+
 int
 TimeDisplayForm::getNPoints() const
 {
@@ -362,4 +369,3 @@ TimeDisplayForm::getTriggerTagKey() const
 {
   return d_trig_tag_key;
 }
-

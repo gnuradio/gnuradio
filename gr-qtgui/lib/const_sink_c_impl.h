@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2012 Free Software Foundation, Inc.
+ * Copyright 2012,2014 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -30,7 +30,7 @@
 
 namespace gr {
   namespace qtgui {
-    
+
     class QTGUI_API const_sink_c_impl : public const_sink_c
     {
     private:
@@ -38,11 +38,11 @@ namespace gr {
 
       gr::thread::mutex d_mutex;
 
-      int d_size;
+      int d_size, d_buffer_size;
       std::string d_name;
       int d_nconnections;
 
-      int d_index;
+      int d_index, d_start, d_end;
       std::vector<double*> d_residbufs_real;
       std::vector<double*> d_residbufs_imag;
 
@@ -54,7 +54,21 @@ namespace gr {
       gr::high_res_timer_type d_update_time;
       gr::high_res_timer_type d_last_time;
 
-      void npoints_resize();
+      // Members used for triggering scope
+      trigger_mode d_trigger_mode;
+      trigger_slope d_trigger_slope;
+      float d_trigger_level;
+      int d_trigger_channel;
+      pmt::pmt_t d_trigger_tag_key;
+      bool d_triggered;
+      int d_trigger_count;
+
+      void _reset();
+      void _npoints_resize();
+      void _gui_update_trigger();
+      void _test_trigger_tags(int nitems);
+      void _test_trigger_norm(int nitems, gr_vector_const_void_star inputs);
+      bool _test_trigger_slope(const gr_complex *in) const;
 
     public:
       const_sink_c_impl(int size,
@@ -86,6 +100,9 @@ namespace gr {
       void set_line_marker(int which, int marker);
       void set_nsamps(const int size);
       void set_line_alpha(int which, double alpha);
+      void set_trigger_mode(trigger_mode mode, trigger_slope slope,
+                            float level, int channel,
+                            const std::string &tag_key="");
 
       std::string title();
       std::string line_label(int which);
@@ -100,6 +117,7 @@ namespace gr {
       int nsamps() const;
       void enable_menu(bool en);
       void enable_autoscale(bool en);
+      void enable_grid(bool en);
       void reset();
 
       int work(int noutput_items,

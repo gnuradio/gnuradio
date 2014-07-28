@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2012 Free Software Foundation, Inc.
+ * Copyright 2012,2014 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -46,6 +46,9 @@ WaterfallDisplayForm::WaterfallDisplayForm(int nplots, QWidget* parent)
   d_min_val =  1000;
   d_max_val = -1000;
 
+  d_clicked = false;
+  d_clicked_freq = 0;
+
   // We don't use the normal menus that are part of the displayform.
   // Clear them out to get rid of their resources.
   for(int i = 0; i < nplots; i++) {
@@ -88,6 +91,16 @@ WaterfallDisplayForm::WaterfallDisplayForm(int nplots, QWidget* parent)
   connect(d_winmenu, SIGNAL(whichTrigger(gr::filter::firdes::win_type)),
 	  this, SLOT(setFFTWindowType(const gr::filter::firdes::win_type)));
 
+  PopupMenu *maxintmenu = new PopupMenu("Int. Max", this);
+  d_menu->addAction(maxintmenu);
+  connect(maxintmenu, SIGNAL(whichTrigger(QString)),
+	  this, SLOT(setMaxIntensity(QString)));
+
+  PopupMenu *minintmenu = new PopupMenu("Int. Min", this);
+  d_menu->addAction(minintmenu);
+  connect(minintmenu, SIGNAL(whichTrigger(QString)),
+	  this, SLOT(setMinIntensity(QString)));
+
   Reset();
 
   connect(d_display_plot, SIGNAL(plotPointSelected(const QPointF)),
@@ -116,8 +129,6 @@ WaterfallDisplayForm::newData(const QEvent *updateEvent)
   const uint64_t numDataPoints = event->getNumDataPoints();
   const gr::high_res_timer_type dataTimestamp = event->getDataTimestamp();
 
-  d_min_val =  1000;
-  d_max_val = -1000;
   for(size_t i=0; i < dataPoints.size(); i++) {
     double *min_val = std::min_element(&dataPoints[i][0], &dataPoints[i][numDataPoints-1]);
     double *max_val = std::max_element(&dataPoints[i][0], &dataPoints[i][numDataPoints-1]);
@@ -135,6 +146,10 @@ WaterfallDisplayForm::customEvent( QEvent * e)
 {
   if(e->type() == WaterfallUpdateEvent::Type()) {
     newData(e);
+  }
+  else if(e->type() == SpectrumFrequencyRangeEventType) {
+    SetFreqEvent *fevent = (SetFreqEvent*)e;
+    setFrequencyRange(fevent->getCenterFrequency(), fevent->getBandwidth());
   }
 }
 
@@ -217,14 +232,14 @@ WaterfallDisplayForm::setFrequencyRange(const double centerfreq,
   std::string strunits[4] = {"Hz", "kHz", "MHz", "GHz"};
   double units10 = floor(log10(bandwidth));
   double units3  = std::max(floor(units10 / 3.0), 0.0);
-  double units = pow(10, (units10-fmod(units10, 3.0)));
+  d_units = pow(10, (units10-fmod(units10, 3.0)));
   int iunit = static_cast<int>(units3);
 
   d_center_freq = centerfreq;
   d_samp_rate = bandwidth;
 
   getPlot()->setFrequencyRange(centerfreq, bandwidth,
-			       units, strunits[iunit]);
+			       d_units, strunits[iunit]);
   getPlot()->replot();
 }
 
@@ -250,8 +265,30 @@ void
 WaterfallDisplayForm::setIntensityRange(const double minIntensity,
 					const double maxIntensity)
 {
+  // reset max and min values
+  d_min_val =  1000;
+  d_max_val = -1000;
+
+  d_cur_min_val = minIntensity;
+  d_cur_max_val = maxIntensity;
   getPlot()->setIntensityRange(minIntensity, maxIntensity);
   getPlot()->replot();
+}
+
+void
+WaterfallDisplayForm::setMaxIntensity(const QString &m)
+{
+  double new_max = m.toDouble();
+  if(new_max > d_cur_min_val)
+    setIntensityRange(d_cur_min_val, new_max);
+}
+
+void
+WaterfallDisplayForm::setMinIntensity(const QString &m)
+{
+  double new_min = m.toDouble();
+  if(new_min < d_cur_max_val)
+    setIntensityRange(new_min, d_cur_max_val);
 }
 
 void
@@ -260,12 +297,36 @@ WaterfallDisplayForm::autoScale(bool en)
   double min_int = d_min_val - 5;
   double max_int = d_max_val + 10;
 
-  getPlot()->setIntensityRange(min_int, max_int);
-  getPlot()->replot();
+  setIntensityRange(min_int, max_int);
 }
 
 void
 WaterfallDisplayForm::clearData()
 {
   getPlot()->clearData();
+}
+
+void
+WaterfallDisplayForm::onPlotPointSelected(const QPointF p)
+{
+  d_clicked = true;
+  d_clicked_freq = d_units*p.x();
+}
+
+bool
+WaterfallDisplayForm::checkClicked()
+{
+  if(d_clicked) {
+    d_clicked = false;
+    return true;
+  }
+  else {
+    return false;
+  }
+}
+
+float
+WaterfallDisplayForm::getClickedFreq() const
+{
+  return d_clicked_freq;
 }

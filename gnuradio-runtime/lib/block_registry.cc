@@ -90,6 +90,26 @@ namespace gr {
     d_ref_map = pmt::dict_add(d_ref_map, pmt::intern(name), pmt::make_any(block));
   }
 
+  void
+  block_registry::update_symbolic_name(basic_block* block, std::string name)
+  {
+    gr::thread::scoped_lock guard(d_mutex);
+
+    if(pmt::dict_has_key(d_ref_map, pmt::intern(name))) {
+      throw std::runtime_error("symbol already exists, can not re-use!");
+    }
+
+    // If we don't already have an alias, don't try and delete it.
+    if(block->alias_set()) {
+      // And make sure that the registry has the alias key.
+      // We test both in case the block's and registry ever get out of sync.
+      if(pmt::dict_has_key(d_ref_map, block->alias_pmt())) {
+        d_ref_map = pmt::dict_delete(d_ref_map, block->alias_pmt());
+      }
+    }
+    d_ref_map = pmt::dict_add(d_ref_map, pmt::intern(name), pmt::make_any(block));
+  }
+
   basic_block_sptr
   block_registry::block_lookup(pmt::pmt_t symbol)
   {

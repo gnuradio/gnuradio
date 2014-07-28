@@ -41,7 +41,7 @@ class test_alaw_vocoder (gr_unittest.TestCase):
         self.tb.run()
         actual_result = snk.data()
         self.assertEqual(data, actual_result)
-        
+
 
 if __name__ == '__main__':
     gr_unittest.run(test_alaw_vocoder, "test_alaw_vocoder.xml")

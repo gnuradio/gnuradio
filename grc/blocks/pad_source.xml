@@ -62,7 +62,7 @@ None;self.message_port_register_hier_out($label)
 		<value>1</value>
 		<type>int</type>
 	</param>
-	
+
 	<param>
 		<name>Num Streams</name>
 		<key>num_streams</key>

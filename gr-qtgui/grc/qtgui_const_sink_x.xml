@@ -19,7 +19,9 @@ qtgui.$(type.fcn)(
 self.$(id).set_update_time($update_time)
 self.$(id).set_y_axis($ymin, $ymax)
 self.$(id).set_x_axis($xmin, $xmax)
+self.$(id).set_trigger_mode($tr_mode, $tr_slope, $tr_level, $tr_chan, $tr_tag)
 self.$(id).enable_autoscale($autoscale)
+self.$(id).enable_grid($grid)
 
 labels = [$label1, $label2, $label3, $label4, $label5,
           $label6, $label7, $label8, $label9, $label10]
@@ -51,6 +53,12 @@ $(gui_hint()($win))</make>
   <callback>set_title($which, $title)</callback>
   <callback>set_color($which, $color)</callback>
 
+  <param_tab_order>
+    <tab>General</tab>
+    <tab>Trigger</tab>
+    <tab>Config</tab>
+  </param_tab_order>
+
   <param>
     <name>Type</name>
     <key>type</key>
@@ -59,17 +67,36 @@ $(gui_hint()($win))</make>
     <option><name>Complex</name><key>complex</key><opt>fcn:const_sink_c</opt></option>
 <!--<option><name>Float</name><key>float</key><opt>fcn:const_sink_f</opt></option> -->
   </param>
+
   <param>
     <name>Name</name>
     <key>name</key>
-    <value>QT GUI Plot</value>
+    <value>""</value>
     <type>string</type>
+    <hide>#if len($name()) > 0 then 'none' else 'part'#</hide>
   </param>
+
   <param>
     <name>Number of Points</name>
     <key>size</key>
     <value>1024</value>
     <type>int</type>
+  </param>
+
+  <param>
+    <name>Grid</name>
+    <key>grid</key>
+    <value>False</value>
+    <type>enum</type>
+    <hide>part</hide>
+    <option>
+      <name>Yes</name>
+      <key>True</key>
+    </option>
+    <option>
+      <name>No</name>
+      <key>False</key>
+    </option>
   </param>
 
   <param>
@@ -136,6 +163,78 @@ $(gui_hint()($win))</make>
     <type>gui_hint</type>
     <hide>part</hide>
   </param>
+
+
+  <param>
+    <name>Trigger Mode</name>
+    <key>tr_mode</key>
+    <value>qtgui.TRIG_MODE_FREE</value>
+    <type>enum</type>
+    <hide>part</hide>
+    <option>
+      <name>Free</name>
+      <key>qtgui.TRIG_MODE_FREE</key>
+    </option>
+    <option>
+      <name>Auto</name>
+      <key>qtgui.TRIG_MODE_AUTO</key>
+    </option>
+    <option>
+      <name>Normal</name>
+      <key>qtgui.TRIG_MODE_NORM</key>
+    </option>
+    <option>
+      <name>Tag</name>
+      <key>qtgui.TRIG_MODE_TAG</key>
+    </option>
+    <tab>Trigger</tab>
+  </param>
+
+  <param>
+    <name>Trigger Slope</name>
+    <key>tr_slope</key>
+    <value>qtgui.TRIG_MODE_POS</value>
+    <type>enum</type>
+    <hide>part</hide>
+    <option>
+      <name>Positive</name>
+      <key>qtgui.TRIG_SLOPE_POS</key>
+    </option>
+    <option>
+      <name>Negative</name>
+      <key>qtgui.TRIG_SLOPE_NEG</key>
+    </option>
+    <tab>Trigger</tab>
+  </param>
+
+  <param>
+    <name>Trigger Level</name>
+    <key>tr_level</key>
+    <value>0.0</value>
+    <type>float</type>
+    <hide>part</hide>
+    <tab>Trigger</tab>
+  </param>
+
+  <param>
+    <name>Trigger Channel</name>
+    <key>tr_chan</key>
+    <value>0</value>
+    <type>int</type>
+    <hide>part</hide>
+    <tab>Trigger</tab>
+  </param>
+
+  <param>
+    <name>Trigger Tag Key</name>
+    <key>tr_tag</key>
+    <value>""</value>
+    <type>string</type>
+    <hide>part</hide>
+    <tab>Trigger</tab>
+  </param>
+
+
 
   <param>
     <name>Line 1 Label</name>

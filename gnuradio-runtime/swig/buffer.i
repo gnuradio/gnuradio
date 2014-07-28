@@ -26,7 +26,7 @@ typedef boost::shared_ptr<gr::buffer> gr::buffer_sptr;
 %rename(buffer) gr::make_buffer;
 %ignore gr::buffer;
 
-gr::buffer_sptr 
+gr::buffer_sptr
 gr::make_buffer (int nitems, size_t sizeof_item, gr::block_sptr link);
 
 class gr::buffer_reader;

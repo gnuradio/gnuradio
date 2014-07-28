@@ -1,0 +1,57 @@
+<?xml version="1.0"?>
+<block>
+  <name>FEC Extended Encoder</name>
+  <key>fec_extended_encoder</key>
+  <import>from gnuradio import fec</import>
+  <make>fec.extended_encoder(encoder_obj_list=$encoder_list, threading=$threadtype.arg, puncpat=$puncpat)</make>
+
+  <param>
+    <name>Encoder Objects</name>
+    <key>encoder_list</key>
+    <value>encoder_variable</value>
+    <type>raw</type>
+  </param>
+
+  <param>
+    <name>Threading Type</name>
+    <key>threadtype</key>
+    <type>enum</type>
+    <option>
+      <name>Capillary</name>
+      <key>capillary</key>
+      <opt>arg:'capillary'</opt>
+    </option>
+    <option>
+      <name>Ordinary</name>
+      <key>ordinary</key>
+      <opt>arg:'ordinary'</opt>
+    </option>
+    <option>
+      <name>None</name>
+      <key>none</key>
+      <opt>arg: None</opt>
+    </option>
+  </param>
+
+  <param>
+    <name>Puncture Pattern</name>
+    <key>puncpat</key>
+    <value>'11'</value>
+    <type>string</type>
+  </param>
+
+  <sink>
+    <name>in</name>
+    <type>byte</type>
+  </sink>
+
+  <source>
+    <name>out</name>
+    <type>byte</type>
+  </source>
+
+  <doc>
+
+  </doc>
+
+</block>

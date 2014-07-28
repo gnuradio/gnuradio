@@ -33,7 +33,7 @@ EXECUTE_PROCESS(
        "${CMAKE_CURRENT_SOURCE_DIR}/gnuradio.ice"
    )
 
-list(APPEND gnuradio_runtime_sources
+list(APPEND gnuradio_ctrlport_sources
   ${CMAKE_CURRENT_SOURCE_DIR}/ice_application_base.cc
   ${CMAKE_CURRENT_SOURCE_DIR}/rpcmanager.cc
   ${CMAKE_CURRENT_SOURCE_DIR}/rpcpmtconverters_ice.cc
@@ -45,7 +45,7 @@ list(APPEND gnuradio_runtime_sources
 )
 
 # Append generated file in build directory
-list(APPEND gnuradio_runtime_sources 
+list(APPEND gnuradio_runtime_sources
     ${CMAKE_CURRENT_BINARY_DIR}/gnuradio.cpp
 )
 

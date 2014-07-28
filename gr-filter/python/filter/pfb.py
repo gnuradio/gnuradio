@@ -130,6 +130,10 @@ class interpolator_ccf(gr.hier_block2):
     def set_taps(self, taps):
         self.pfb.set_taps(taps)
 
+    def declare_sample_delay(self, delay):
+        self.pfb.declare_sample_delay(delay)
+
+
 class decimator_ccf(gr.hier_block2):
     '''
     Make a Polyphase Filter decimator (complex in, complex out, floating-point taps)
@@ -183,6 +187,9 @@ class decimator_ccf(gr.hier_block2):
 
     def set_channel(self, chan):
         self.pfb.set_channel(chan)
+
+    def declare_sample_delay(self, delay):
+        self.pfb.declare_sample_delay(delay)
 
 
 class arb_resampler_ccf(gr.hier_block2):
@@ -256,6 +263,8 @@ class arb_resampler_ccf(gr.hier_block2):
     def set_rate(self, rate):
         self.pfb.set_rate(rate)
 
+    def declare_sample_delay(self, delay):
+        self.pfb.declare_sample_delay(delay)
 
 class arb_resampler_fff(gr.hier_block2):
     '''
@@ -328,6 +337,8 @@ class arb_resampler_fff(gr.hier_block2):
     def set_rate(self, rate):
         self.pfb.set_rate(rate)
 
+    def declare_sample_delay(self, delay):
+        self.pfb.declare_sample_delay(delay)
 
 class arb_resampler_ccc(gr.hier_block2):
     '''
@@ -380,6 +391,9 @@ class arb_resampler_ccc(gr.hier_block2):
 
     def set_rate(self, rate):
         self.pfb.set_rate(rate)
+
+    def declare_sample_delay(self, delay):
+        self.pfb.declare_sample_delay(delay)
 
 
 class channelizer_hier_ccf(gr.hier_block2):
@@ -457,4 +471,3 @@ class channelizer_hier_ccf(gr.hier_block2):
             self.connect(self.fft, self.v2ss)
         for i in range(0, len(outchans)):
             self.connect((self.v2ss, i), (self, i))
-            

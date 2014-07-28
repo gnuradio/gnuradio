@@ -30,6 +30,7 @@
 #include <volk/volk.h>
 #include <gnuradio/fft/fft.h>
 #include <qwt_symbol.h>
+#include <cmath>
 
 namespace gr {
   namespace qtgui {
@@ -196,7 +197,25 @@ namespace gr {
     void
     number_sink_impl::set_max(int which, float max)
     {
-      return d_main_gui->setScaleMax(which, max);
+      d_main_gui->setScaleMax(which, max);
+    }
+
+    void
+    number_sink_impl::set_title(const std::string &title)
+    {
+      d_main_gui->setTitle(title);
+    }
+
+    void
+    number_sink_impl::set_unit(int which, const std::string &unit)
+    {
+      d_main_gui->setUnit(which, unit);
+    }
+
+    void
+    number_sink_impl::set_factor(int which, float factor)
+    {
+      d_main_gui->setFactor(which, factor);
     }
 
     float
@@ -241,6 +260,24 @@ namespace gr {
       return d_main_gui->scaleMax(which);
     }
 
+    std::string
+    number_sink_impl::title() const
+    {
+      return d_main_gui->title();
+    }
+
+    std::string
+    number_sink_impl::unit(int which) const
+    {
+      return d_main_gui->unit(which);
+    }
+
+    float
+    number_sink_impl::factor(int which) const
+    {
+      return d_main_gui->factor(which);
+    }
+
     void
     number_sink_impl::enable_menu(bool en)
     {
@@ -265,6 +302,23 @@ namespace gr {
     {
     }
 
+    void
+    number_sink_impl::_gui_update_trigger()
+    {
+      // Only update the time if different than the current interval
+      // add some slop in cpu ticks for double comparison
+      gr::high_res_timer_type tps = gr::high_res_timer_tps();
+      double t = d_main_gui->updateTime();
+      if((d_update_time < (tps*t-10)) || ((tps*t+10) < d_update_time)) {
+        set_update_time(t);
+      }
+
+      float a = d_main_gui->average();
+      if(a != d_average) {
+        set_average(a);
+      }
+    }
+
     int
     number_sink_impl::work(int noutput_items,
 			   gr_vector_const_void_star &input_items,
@@ -272,23 +326,20 @@ namespace gr {
     {
       gr::thread::scoped_lock lock(d_mutex);
 
-      float new_avg = d_main_gui->average();
-      set_update_time(d_main_gui->updateTime());
-      if(new_avg != d_average) {
-        set_average(new_avg);
-      }
+      _gui_update_trigger();
 
       if(d_average > 0) {
         for(int n = 0; n < d_nconnections; n++) {
           float *in = (float*)input_items[n];
           for(int i = 0; i < noutput_items; i++) {
-            d_avg_value[n] = d_iir[n].filter(in[i]);
+            if(std::isfinite(in[i]))
+               d_avg_value[n] = d_iir[n].filter(in[i]);
           }
         }
       }
 
       // Plot if we are able to update
-      if(gr::high_res_timer_now() - d_last_time > d_update_time) {
+      if((gr::high_res_timer_now() - d_last_time) > d_update_time) {
         d_last_time = gr::high_res_timer_now();
         std::vector<float> d(d_nconnections);
         if(d_average > 0) {
@@ -296,8 +347,11 @@ namespace gr {
             d[n] = d_avg_value[n];
         }
         else {
-          for(int n = 0; n < d_nconnections; n++)
-            d[n] = ((float*)input_items[n])[0];
+          for(int n = 0; n < d_nconnections; n++) {
+            float x = ((float*)input_items[n])[0];
+            if(std::isfinite(x))
+               d[n] = x;
+          }
         }
         d_qApplication->postEvent(d_main_gui,
                                   new NumberUpdateEvent(d));

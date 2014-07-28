@@ -29,7 +29,7 @@
 
 namespace gr {
   namespace channels {
-    
+
     const float default_delays[] =  {0.0,0.1,0.5};
     const float default_mags[] =    {1.0,0.8,0.3};
 
@@ -40,7 +40,7 @@ namespace gr {
      * \details
      * This block implements a basic fading model simulator that can
      * be used to help evaluate, design, and test various signals,
-     * waveforms, and algorithms. 
+     * waveforms, and algorithms.
      */
     class CHANNELS_API selective_fading_model : virtual public sync_block
     {
@@ -50,7 +50,7 @@ namespace gr {
 
       /*! \brief Build the channel simulator.
        *
-       * \param N      The number of sinusiods to use in simulating the channel; 8 is a good value 
+       * \param N      The number of sinusiods to use in simulating the channel; 8 is a good value
        * \param fDTs   normalized maximum Doppler frequency, fD * Ts
        * \param LOS    include Line-of-Site path? selects between Rayleigh (NLOS) and Rician (LOS) models
        * \param K      Rician factor (ratio of the specular power to the scattered power)
@@ -68,7 +68,7 @@ namespace gr {
                 std::vector<float> mags,
                 int ntaps
                 );
-      
+
       virtual float fDTs() = 0;
       virtual float K() = 0;
       virtual float step() = 0;

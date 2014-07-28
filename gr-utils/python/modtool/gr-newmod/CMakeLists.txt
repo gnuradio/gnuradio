@@ -155,6 +155,6 @@ add_subdirectory(docs)
 ########################################################################
 # Install cmake search helper for this library
 ########################################################################
-install(FILES cmake/Modules/howtoConfig.cmake        
+install(FILES cmake/Modules/howtoConfig.cmake
     DESTINATION lib/cmake/howto
 )

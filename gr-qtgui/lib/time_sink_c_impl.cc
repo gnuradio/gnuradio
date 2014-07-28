@@ -67,7 +67,7 @@ namespace gr {
 
       for(int n = 0; n < d_nconnections; n++) {
 	d_buffers.push_back((double*)volk_malloc(d_buffer_size*sizeof(double),
-                                              volk_get_alignment()));
+						 volk_get_alignment()));
 	memset(d_buffers[n], 0, d_buffer_size*sizeof(double));
       }
 
@@ -113,8 +113,10 @@ namespace gr {
 	d_qApplication = qApp;
       }
       else {
+#if QT_VERSION >= 0x040500
         std::string style = prefs::singleton()->get_string("qtgui", "style", "raster");
         QApplication::setGraphicsSystem(QString(style.c_str()));
+#endif
 	d_qApplication = new QApplication(d_argc, &d_argv);
       }
 
@@ -128,6 +130,9 @@ namespace gr {
       d_main_gui = new TimeDisplayForm(d_nconnections, d_parent);
       d_main_gui->setNPoints(d_size);
       d_main_gui->setSampleRate(d_samp_rate);
+
+      if(d_name.size() > 0)
+        set_title(d_name);
 
       // initialize update time to 10 times a second
       set_update_time(0.1);
@@ -165,6 +170,13 @@ namespace gr {
     time_sink_c_impl::set_y_axis(double min, double max)
     {
       d_main_gui->setYaxis(min, max);
+    }
+
+    void
+    time_sink_c_impl::set_y_label(const std::string &label,
+                                  const std::string &unit)
+    {
+      d_main_gui->setYLabel(label, unit);
     }
 
     void

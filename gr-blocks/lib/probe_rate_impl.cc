@@ -30,14 +30,14 @@
 namespace gr {
   namespace blocks {
 
-    probe_rate::sptr 
+    probe_rate::sptr
     probe_rate::make(size_t itemsize, double update_rate_ms, double alpha)
     {
         return gnuradio::get_initial_sptr
             (new probe_rate_impl(itemsize,update_rate_ms,alpha));
     }
 
-    probe_rate_impl::probe_rate_impl(size_t itemsize, double update_rate_ms, double alpha) : 
+    probe_rate_impl::probe_rate_impl(size_t itemsize, double update_rate_ms, double alpha) :
         sync_block("probe_rate",
             io_signature::make(1,1,itemsize),
             io_signature::make(0,0,itemsize)),
@@ -95,7 +95,7 @@ namespace gr {
 
     double probe_rate_impl::rate(){ return d_avg; }
 
-    double probe_rate_impl::timesincelast(){ 
+    double probe_rate_impl::timesincelast(){
         boost::posix_time::ptime now(boost::posix_time::microsec_clock::local_time());
         boost::posix_time::time_duration diff = now - d_last_update;
         return diff.total_milliseconds();

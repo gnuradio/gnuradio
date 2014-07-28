@@ -47,7 +47,7 @@ namespace gr {
       set_tag_propagation_policy(TPP_DONT);
       set_relative_rate(1);
       message_port_register_in(pmt::intern("set_scalar"));
-      set_msg_handler(pmt::intern("set_scalar"), 
+      set_msg_handler(pmt::intern("set_scalar"),
         boost::bind(&tagged_stream_multiply_length_impl::set_scalar_pmt, this, _1));
     }
 
@@ -60,7 +60,7 @@ namespace gr {
                        gr_vector_int &ninput_items,
                        gr_vector_const_void_star &input_items,
                        gr_vector_void_star &output_items)
-    {   
+    {
       const void* in = input_items[0];
       void* out = output_items[0];
 

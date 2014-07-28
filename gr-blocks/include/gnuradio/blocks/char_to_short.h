@@ -30,18 +30,19 @@ namespace gr {
   namespace blocks {
 
     /*!
-     * \brief Convert stream of chars to a stream of short
+     * \brief Convert stream of chars to a stream of shorts.
      * \ingroup type_converters_blk
      *
      * \details
-     * Converts \p vlen length vectors of input char samples to shorts:
+     * Converts \p vlen length vectors of input char samples to shorts,
+     * multiplying each element by 256:
      *
-     * \li output[0][m:m+vlen] = static_cast<short>(input[0][m:m+vlen])
+     * \li output[0][m:m+vlen] = 256 * static_cast<short>(input[0][m:m+vlen])
      */
     class BLOCKS_API char_to_short : virtual public sync_block
     {
     public:
-      
+
       // gr::blocks::char_to_short_ff::sptr
       typedef boost::shared_ptr<char_to_short> sptr;
 

@@ -20,6 +20,8 @@
 # Boston, MA 02110-1301, USA.
 # 
 
+# DEPRECATED -- Marked for removal in 3.8
+
 from gnuradio import gr
 import pmt
 

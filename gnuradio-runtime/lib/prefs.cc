@@ -36,22 +36,12 @@ namespace fs = boost::filesystem;
 
 namespace gr {
 
-  /*
-   * Stub implementations
-   */
-  static prefs s_default_singleton;
-  static prefs *s_singleton = &s_default_singleton;
-
   prefs *
   prefs::singleton()
   {
-    return s_singleton;
-  }
-
-  void
-  prefs::set_singleton(prefs *p)
-  {
-    s_singleton = p;
+    static prefs instance; // Guaranteed to be destroyed.
+                            // Instantiated on first use.
+    return &instance;
   }
 
   prefs::prefs()

@@ -49,6 +49,12 @@ class FreqDisplayForm : public DisplayForm
   float getFFTAverage() const;
   gr::filter::firdes::win_type getFFTWindowType() const;
 
+  // returns the frequency that was last double-clicked on by the user
+  float getClickedFreq() const;
+
+  // checks if there was a double-click event; reset if there was
+  bool checkClicked();
+
 public slots:
   void customEvent(QEvent *e);
 
@@ -60,10 +66,15 @@ public slots:
   void setFrequencyRange(const double centerfreq,
 			 const double bandwidth);
   void setYaxis(double min, double max);
+  void setYMax(const QString &m);
+  void setYMin(const QString &m);
   void autoScale(bool en);
+  void clearMaxHold();
+  void clearMinHold();
 
 private slots:
   void newData(const QEvent *updateEvent);
+  void onPlotPointSelected(const QPointF p);
 
 private:
   uint64_t d_num_real_data_points;
@@ -73,11 +84,15 @@ private:
   int d_fftsize;
   float d_fftavg;
   gr::filter::firdes::win_type d_fftwintype;
+  double d_units;
+
+  bool d_clicked;
+  double d_clicked_freq;
 
   FFTSizeMenu *d_sizemenu;
   FFTAverageMenu *d_avgmenu;
   FFTWindowMenu *d_winmenu;
-
+  QAction *d_clearmin_act, *d_clearmax_act;
 };
 
 #endif /* FREQ_DISPLAY_FORM_H */

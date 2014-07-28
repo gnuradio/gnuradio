@@ -73,7 +73,7 @@ namespace gr {
       d_block = block;
       d_socket.set_option(boost::asio::ip::tcp::no_delay(d_no_delay));
       d_socket.async_read_some(boost::asio::buffer(d_buf),
-        boost::bind(&tcp_connection::handle_read, this, 
+        boost::bind(&tcp_connection::handle_read, this,
           boost::asio::placeholders::error,
           boost::asio::placeholders::bytes_transferred));
     }

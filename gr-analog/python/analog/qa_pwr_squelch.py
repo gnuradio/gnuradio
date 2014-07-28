@@ -34,7 +34,7 @@ class test_pwr_squelch(gr_unittest.TestCase):
         # Test set/gets
 
         alpha = 0.0001
-        
+
         thr1 = 10
         thr2 = 20
         ramp = 1
@@ -80,7 +80,7 @@ class test_pwr_squelch(gr_unittest.TestCase):
         # Test set/gets
 
         alpha = 0.0001
-        
+
         thr1 = 10
         thr2 = 20
         ramp = 1

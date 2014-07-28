@@ -42,7 +42,9 @@ namespace gr {
       /*!
        * Build an interleaved short to complex block.
        */
-      static sptr make(bool vector_input=false);
+      static sptr make(bool vector_input=false, bool swap=false);
+
+      virtual void set_swap(bool swap)=0;
     };
 
   } /* namespace blocks */

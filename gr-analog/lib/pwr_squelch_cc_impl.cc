@@ -38,7 +38,7 @@ namespace gr {
     }
 
     pwr_squelch_cc_impl::pwr_squelch_cc_impl(double threshold, double alpha,
-					     int ramp, bool gate) 
+					     int ramp, bool gate)
       :	block("pwr_squelch_cc",
 		 io_signature::make(1, 1, sizeof(gr_complex)),
 		 io_signature::make(1, 1, sizeof(gr_complex))),

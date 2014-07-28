@@ -52,16 +52,16 @@ namespace gr {
     {
       const char *in = (const char *) input_items[0];
       char *out = (char *)output_items[0];
-      
+
       for (int i = 0; i < noutput_items/d_interp; i++) {
 	for (int j = 0; j < d_interp; j++) {
 	  memcpy(out, in, d_itemsize);
 	  out += d_itemsize;
 	}
-	
+
 	in += d_itemsize;
       }
-      
+
       return noutput_items;
     }
 

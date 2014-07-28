@@ -41,7 +41,7 @@ class test_tags_strobe(gr_unittest.TestCase):
                                  pmt.intern("TEST"), nsamps)
         hed = blocks.head(gr.sizeof_float, N)
         dst = blocks.vector_sink_f()
-        
+
         self.tb.connect(src, hed, dst)
         self.tb.run()
 
@@ -61,7 +61,7 @@ class test_tags_strobe(gr_unittest.TestCase):
                                  pmt.intern("TEST"), nsamps)
         hed = blocks.head(gr.sizeof_float, N)
         dst = blocks.vector_sink_f()
-        
+
         self.tb.connect(src, hed, dst)
         self.tb.run()
 
@@ -81,7 +81,7 @@ class test_tags_strobe(gr_unittest.TestCase):
                                  pmt.intern("TEST"), nsamps)
         hed = blocks.head(gr.sizeof_float, N)
         dst = blocks.vector_sink_f()
-        
+
         self.tb.connect(src, hed, dst)
         self.tb.run()
 

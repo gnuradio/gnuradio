@@ -29,7 +29,7 @@
 
 namespace gr {
   namespace filter {
-    
+
     iir_filter_ccf::sptr
     iir_filter_ccf::make(const std::vector<float> &fftaps,
 			 const std::vector<float> &fbtaps,

@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2012 Free Software Foundation, Inc.
+ * Copyright 2012,2014 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -34,7 +34,7 @@
 
 namespace gr {
   namespace qtgui {
-    
+
     /*!
      * \brief A graphical sink to display multiple signals in frequency.
      * \ingroup instrumentation_blk
@@ -46,6 +46,25 @@ namespace gr {
      * different color, and the \a set_title and \a set_color
      * functions can be used to change the lable and color for a given
      * input number.
+     *
+     * Message Ports:
+     *
+     * - freq (input):
+     *        Receives a PMT pair: (intern("freq"), double(frequency).
+     *        This is used to retune the center frequency of the
+     *        display's x-axis.
+     *
+     * - freq (output):
+     *        Produces a PMT pair with (intern("freq"), double(frequency).
+     *        When a user double-clicks on the display, the block
+     *        produces and emits a message containing the frequency of
+     *        where on the x-axis the user clicked. This value can be
+     *        used by other blocks to update their frequency setting.
+     *
+     *        To perform click-to-tune behavior, this output 'freq'
+     *        port can be redirected to this block's input 'freq' port
+     *        to catch the message and update the center frequency of
+     *        the display.
      */
     class QTGUI_API freq_sink_f : virtual public sync_block
     {
@@ -111,6 +130,8 @@ namespace gr {
       virtual void enable_menu(bool en=true) = 0;
       virtual void enable_grid(bool en=true) = 0;
       virtual void enable_autoscale(bool en=true) = 0;
+      virtual void clear_max_hold() = 0;
+      virtual void clear_min_hold() = 0;
       virtual void reset() = 0;
 
       QApplication *d_qApplication;
