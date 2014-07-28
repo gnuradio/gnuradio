@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2004,2009,2010,2013 Free Software Foundation, Inc.
+ * Copyright 2004,2009,2010,2013,2014 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -28,7 +28,33 @@
 #include <gnuradio/buffer.h>
 #include <iostream>
 
+// linux specific perf events
+#ifdef GR_ENABLE_LINUX_PERF
+#include <sys/ioctl.h>
+#include <linux/perf_event.h>
+#include <linux/hw_breakpoint.h>
+#include <unistd.h>
+#include <asm/unistd.h>
+#include <errno.h>
+#endif
+
 namespace gr {
+
+#ifdef GR_ENABLE_LINUX_PERF
+  /* linux specific perf events, but this could act as an OS abstraction */
+  long
+  perf_event_open(struct perf_event_attr *hw_event,
+  int pid, int cpu, int group_fd, unsigned long flags)
+  {
+    int ret;
+
+    // os-generic calls
+    // thread::gr_thread_t pid = 0; //thread::get_current_thread_id();
+    // linux specific
+    ret = syscall(__NR_perf_event_open, hw_event, pid, cpu, group_fd, flags);
+    return ret;
+  }
+#endif
 
   static long s_ncurrently_allocated = 0;
 
@@ -61,12 +87,16 @@ namespace gr {
       d_pc_counter(0)
   {
     s_ncurrently_allocated++;
+#ifdef GR_ENABLE_LINUX_PERF
+    memset(&hw_perf_results, 0, sizeof(struct linux_perf_events));
+#endif
   }
 
   block_detail::~block_detail()
   {
     // should take care of itself
     s_ncurrently_allocated--;
+
   }
 
   void
@@ -260,6 +290,40 @@ namespace gr {
   block_detail::start_perf_counters()
   {
     d_start_of_work = gr::high_res_timer_now_perfmon();
+
+#ifdef GR_ENABLE_LINUX_PERF
+    struct perf_event_attr hw_events;
+    memset(&hw_events, 0, sizeof(struct perf_event_attr));
+    hw_events.size = sizeof(struct perf_event_attr);
+    hw_events.disabled = 0;
+    hw_events.exclude_kernel = 1;
+    hw_events.exclude_hv = 1;
+    hw_events.read_format = PERF_FORMAT_GROUP;
+    _perf_fd.clear();
+
+    hw_events.type = PERF_TYPE_HARDWARE;
+    hw_events.config = PERF_COUNT_HW_BRANCH_INSTRUCTIONS;
+    _perf_fd.push_back(perf_event_open(&hw_events, 0, -1, -1, 0));
+    hw_events.config = PERF_COUNT_HW_BRANCH_MISSES;
+    _perf_fd.push_back(perf_event_open(&hw_events, 0, -1, _perf_fd[0], 0));
+    hw_events.config = PERF_COUNT_HW_REF_CPU_CYCLES;
+    _perf_fd.push_back(perf_event_open(&hw_events, 0, -1, _perf_fd[0], 0));
+
+    hw_events.type = PERF_TYPE_HW_CACHE;
+    hw_events.config = PERF_COUNT_HW_CACHE_L1D | (PERF_COUNT_HW_CACHE_OP_READ << 8) | (PERF_COUNT_HW_CACHE_RESULT_ACCESS << 16);
+    _perf_fd.push_back(perf_event_open(&hw_events, 0, -1, _perf_fd[0], 0));
+    hw_events.config = PERF_COUNT_HW_CACHE_L1D | (PERF_COUNT_HW_CACHE_OP_READ << 8) | (PERF_COUNT_HW_CACHE_RESULT_MISS << 16);
+    _perf_fd.push_back(perf_event_open(&hw_events, 0, -1, _perf_fd[0], 0));
+
+    hw_events.type = PERF_TYPE_SOFTWARE;
+    hw_events.config = PERF_COUNT_SW_CONTEXT_SWITCHES;
+    _perf_fd.push_back(perf_event_open(&hw_events, 0, -1, _perf_fd[0], 0));
+    hw_events.config = PERF_COUNT_SW_CPU_MIGRATIONS;
+    _perf_fd.push_back(perf_event_open(&hw_events, 0, -1, _perf_fd[0], 0));
+    for(size_t ii=0; ii < _perf_fd.size(); ++ii) {
+      ioctl(_perf_fd[ii], PERF_EVENT_IOC_RESET, 0);
+    }
+#endif
   }
 
   void
@@ -267,6 +331,29 @@ namespace gr {
   {
     d_end_of_work = gr::high_res_timer_now_perfmon();
     gr::high_res_timer_type diff = d_end_of_work - d_start_of_work;
+    d_pc_last_time = gr::high_res_timer_now();
+
+#ifdef GR_ENABLE_LINUX_PERF
+    // read linux perf events as a group
+    ioctl(_perf_fd[0], PERF_EVENT_IOC_DISABLE, 0);
+    int read_size = read(_perf_fd[0], &hw_perf_results, sizeof(struct linux_perf_events) );
+    if( read_size < sizeof(struct linux_perf_events)  ) {
+        fprintf(stderr, "Could not read all linux perf events (read_size %d is less than %d). Actual number of events is %d\n",
+                      read_size, sizeof(struct linux_perf_events), hw_perf_results.num_events);
+        if(read_size == -1)
+            fprintf(stderr, "Reading perf event errno: %s", strerror(errno));
+    }
+    for(size_t ii=0; ii < _perf_fd.size(); ++ii) {
+      close(_perf_fd[ii]);
+    }
+    d_ins_branch_references   = (float)hw_perf_results.hw_branch_instructions;
+    d_ins_branch_mispredicts  = (float)hw_perf_results.hw_branch_misses;
+    d_ins_cache_misses        = (float)hw_perf_results.hw_cache_misses;
+    d_ins_cache_references    = (float)hw_perf_results.hw_cache_references;
+    d_ins_hw_cpu_cycles       = (float)hw_perf_results.hw_cpu_cycles;
+    d_ins_sw_context_switches = (float)hw_perf_results.sw_context_switches;
+    d_ins_sw_cpu_migrations   = (float)hw_perf_results.sw_cpu_migrations;
+#endif
 
     if(d_pc_counter == 0) {
       d_ins_work_time = diff;
@@ -278,19 +365,30 @@ namespace gr {
       d_var_nproduced = 0;
       d_ins_noutput_items = noutput_items;
       d_avg_noutput_items = noutput_items;
+      d_total_noutput_items = noutput_items;
       d_var_noutput_items = 0;
+      d_pc_start_time = gr::high_res_timer_now();
+#ifdef GR_ENABLE_LINUX_PERF
+      d_total_branch_references  = d_ins_branch_references;
+      d_total_branch_mispredicts = d_ins_branch_mispredicts;
+      d_total_cache_misses       = d_ins_cache_misses;
+      d_total_cache_references   = d_ins_cache_references;
+      d_total_hw_cpu_cycles      = d_ins_hw_cpu_cycles;
+      d_total_sw_context_switches= d_ins_sw_context_switches;
+      d_total_sw_cpu_migrations  = d_ins_sw_cpu_migrations;
+#endif
       for(size_t i=0; i < d_input.size(); i++) {
-	gr::thread::scoped_lock guard(*d_input[i]->mutex());
+        gr::thread::scoped_lock guard(*d_input[i]->mutex());
         float pfull = static_cast<float>(d_input[i]->items_available()) /
-          static_cast<float>(d_input[i]->max_possible_items_available());
+        static_cast<float>(d_input[i]->max_possible_items_available());
         d_ins_input_buffers_full[i] = pfull;
         d_avg_input_buffers_full[i] = pfull;
         d_var_input_buffers_full[i] = 0;
       }
       for(size_t i=0; i < d_output.size(); i++) {
-	gr::thread::scoped_lock guard(*d_output[i]->mutex());
+        gr::thread::scoped_lock guard(*d_output[i]->mutex());
         float pfull = 1.0f - static_cast<float>(d_output[i]->space_available()) /
-          static_cast<float>(d_output[i]->bufsize());
+        static_cast<float>(d_output[i]->bufsize());
         d_ins_output_buffers_full[i] = pfull;
         d_avg_output_buffers_full[i] = pfull;
         d_var_output_buffers_full[i] = 0;
@@ -310,13 +408,14 @@ namespace gr {
 
       d = noutput_items - d_avg_noutput_items;
       d_ins_noutput_items = noutput_items;
+      d_total_noutput_items += noutput_items;
       d_avg_noutput_items = d_avg_noutput_items + d/d_pc_counter;
       d_var_noutput_items = d_var_noutput_items + d*d;
 
       for(size_t i=0; i < d_input.size(); i++) {
-	gr::thread::scoped_lock guard(*d_input[i]->mutex());
+        gr::thread::scoped_lock guard(*d_input[i]->mutex());
         float pfull = static_cast<float>(d_input[i]->items_available()) /
-          static_cast<float>(d_input[i]->max_possible_items_available());
+        static_cast<float>(d_input[i]->max_possible_items_available());
 
         d = pfull - d_avg_input_buffers_full[i];
         d_ins_input_buffers_full[i] = pfull;
@@ -325,7 +424,7 @@ namespace gr {
       }
 
       for(size_t i=0; i < d_output.size(); i++) {
-	gr::thread::scoped_lock guard(*d_output[i]->mutex());
+        gr::thread::scoped_lock guard(*d_output[i]->mutex());
         float pfull = 1.0f - static_cast<float>(d_output[i]->space_available()) /
           static_cast<float>(d_output[i]->bufsize());
 
@@ -334,6 +433,15 @@ namespace gr {
         d_avg_output_buffers_full[i] = d_avg_output_buffers_full[i] + d/d_pc_counter;
         d_var_output_buffers_full[i] = d_var_output_buffers_full[i] + d*d;
       }
+#ifdef GR_ENABLE_LINUX_PERF
+      d_total_branch_mispredicts += d_ins_branch_mispredicts;
+      d_total_branch_references  += d_ins_branch_references;
+      d_total_cache_misses       += d_ins_cache_misses;
+      d_total_cache_references   += d_ins_cache_references;
+      d_total_hw_cpu_cycles      += d_ins_hw_cpu_cycles;
+      d_total_sw_context_switches+= d_ins_sw_context_switches;
+      d_total_sw_cpu_migrations  += d_ins_sw_cpu_migrations;
+#endif
     }
 
     d_pc_counter++;
@@ -343,6 +451,10 @@ namespace gr {
   block_detail::reset_perf_counters()
   {
     d_pc_counter = 0;
+    // don't leave dangling FDs
+    for(size_t ii=0; ii < _perf_fd.size(); ++ii) {
+      close(_perf_fd[ii]);
+    }
   }
 
   float
@@ -442,6 +554,13 @@ namespace gr {
   }
 
   float
+  block_detail::pc_throughput_avg()
+  {
+    float pc_monitor_time = (float)(d_pc_last_time - d_pc_start_time)/(float)gr::high_res_timer_tps();
+    return d_total_noutput_items / pc_monitor_time;
+  }
+
+  float
   block_detail::pc_noutput_items_var()
   {
     return d_var_noutput_items/(d_pc_counter-1);
@@ -500,5 +619,91 @@ namespace gr {
   {
     return d_total_work_time;
   }
+
+  float
+  block_detail::pc_noutput_items_total()
+  {
+    return d_total_noutput_items;
+  }
+
+#ifdef GR_ENABLE_LINUX_PERF
+  float
+  block_detail::pc_branch_miss_rate()
+  {
+    return d_ins_branch_mispredicts / d_ins_branch_references;
+  }
+
+  float
+  block_detail::pc_branch_miss_rate_avg()
+  {
+    return d_total_branch_mispredicts / d_total_branch_references;
+  }
+
+  float
+  block_detail::pc_cache_miss_rate()
+  {
+    return d_ins_cache_misses / d_ins_cache_references;
+  }
+
+  float
+  block_detail::pc_cache_miss_rate_avg()
+  {
+    return d_total_cache_misses / d_total_cache_references;
+  }
+
+  float
+  block_detail::pc_hw_cpu_cycles()
+  {
+    return d_ins_hw_cpu_cycles;
+  }
+
+  float
+  block_detail::pc_hw_cpu_cycles_avg()
+  {
+    return d_total_hw_cpu_cycles / (d_pc_counter-1);
+  }
+
+  float
+  block_detail::pc_hw_cpu_cycles_total()
+  {
+    return d_total_hw_cpu_cycles;
+  }
+
+  float
+  block_detail::pc_sw_context_switches()
+  {
+    return d_ins_sw_context_switches;
+  }
+
+  float
+  block_detail::pc_sw_context_switches_avg()
+  {
+    return d_total_sw_context_switches / (d_pc_counter-1);
+  }
+
+  float
+  block_detail::pc_sw_context_switches_total()
+  {
+    return d_total_sw_context_switches;
+  }
+
+  float
+  block_detail::pc_sw_cpu_migrations()
+  {
+    return d_ins_sw_cpu_migrations;
+  }
+
+  float
+  block_detail::pc_sw_cpu_migrations_avg()
+  {
+    return d_total_sw_cpu_migrations / (d_pc_counter-1);
+  }
+
+  float
+  block_detail::pc_sw_cpu_migrations_total()
+  {
+    return d_total_sw_cpu_migrations;
+  }
+#endif
 
 } /* namespace gr */

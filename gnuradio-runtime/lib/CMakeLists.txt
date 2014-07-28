@@ -1,4 +1,4 @@
-# Copyright 2013 Free Software Foundation, Inc.
+# Copyright 2013-2014 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -42,10 +42,24 @@ configure_file(
 
 list(APPEND gnuradio_runtime_sources ${CMAKE_CURRENT_BINARY_DIR}/constants.cc)
 
-########################################################################
-# Include subdirs rather to populate to the sources lists.
-########################################################################
-#GR_INCLUDE_SUBDIRECTORY(foo)
+# Linux specific perf events are disabled by default.
+if( ENABLE_LINUX_PERF_EVENTS )
+    find_file(LINUX_HW_BREAKPOINT_HEADER
+              NAME hw_breakpoint.h
+              PATHS
+              /usr/include/linux)
+    find_file(LINUX_PERF_EVENT_HEADER
+              NAME perf_event.h
+              PATHS
+              /usr/include/linux)
+    if( NOT LINUX_HW_BREAKPOINT_HEADER STREQUAL "LINUX_HW_BREAKPOINT_HEADER-NOTFOUND" AND
+     NOT LINUX_PERF_EVENT_HEADER STREQUAL "LINUX_PERF_EVENT_HEADER-NOTFOUND" )
+        message(STATUS "-- Enabling Linux only perf events")
+        add_definitions("-DGR_ENABLE_LINUX_PERF")
+    endif()
+else()
+    message(STATUS "Disabled Linux only perf counters")
+endif()
 
 ########################################################################
 # Setup the include and linker paths

@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2004,2009,2010,2013 Free Software Foundation, Inc.
+ * Copyright 2004,2009,2010,2013,2014 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -29,6 +29,7 @@
 #include <gnuradio/tags.h>
 #include <gnuradio/high_res_timer.h>
 #include <stdexcept>
+#include <linux/perf_event.h>
 
 namespace gr {
 
@@ -219,6 +220,7 @@ namespace gr {
     float pc_output_buffers_full_avg(size_t which);
     std::vector<float> pc_output_buffers_full_avg();
     float pc_work_time_avg();
+    float pc_throughput_avg();
 
     float pc_noutput_items_var();
     float pc_nproduced_var();
@@ -227,6 +229,28 @@ namespace gr {
     float pc_output_buffers_full_var(size_t which);
     std::vector<float> pc_output_buffers_full_var();
     float pc_work_time_var();
+
+    float pc_noutput_items_total();
+
+#ifdef GR_ENABLE_LINUX_PERF
+    float pc_branch_miss_rate();
+    float pc_branch_miss_rate_avg();
+
+    float pc_cache_miss_rate();
+    float pc_cache_miss_rate_avg();
+
+    float pc_hw_cpu_cycles();
+    float pc_hw_cpu_cycles_avg();
+    float pc_hw_cpu_cycles_total();
+
+    float pc_sw_context_switches();
+    float pc_sw_context_switches_avg();
+    float pc_sw_context_switches_total();
+
+    float pc_sw_cpu_migrations();
+    float pc_sw_cpu_migrations_avg();
+    float pc_sw_cpu_migrations_total();
+#endif
 
     float pc_work_time_total();
 
@@ -246,6 +270,7 @@ namespace gr {
     float d_ins_noutput_items;
     float d_avg_noutput_items;
     float d_var_noutput_items;
+    float d_total_noutput_items;
     float d_ins_nproduced;
     float d_avg_nproduced;
     float d_var_nproduced;
@@ -259,6 +284,38 @@ namespace gr {
     float d_ins_work_time;
     float d_avg_work_time;
     float d_var_work_time;
+    gr::high_res_timer_type d_pc_start_time, d_pc_last_time;
+    // hw perf events from linux
+#ifdef GR_ENABLE_LINUX_PERF
+    // Container for reading perf events
+    struct linux_perf_events {
+      uint64_t num_events;
+      uint64_t hw_branch_instructions;
+      uint64_t hw_branch_misses;
+      uint64_t hw_cpu_cycles;
+      uint64_t hw_cache_references;
+      uint64_t hw_cache_misses;
+      uint64_t sw_context_switches;
+      uint64_t sw_cpu_migrations;
+    };
+    struct perf_event_attr hw_events;
+    std::vector<int> _perf_fd;
+    struct  linux_perf_events hw_perf_results;
+#endif
+    float d_ins_branch_references;
+    float d_total_branch_references;
+    float d_ins_branch_mispredicts;
+    float d_total_branch_mispredicts;
+    float d_ins_cache_references;
+    float d_total_cache_references;
+    float d_ins_cache_misses;
+    float d_total_cache_misses;
+    float d_ins_hw_cpu_cycles;
+    float d_total_hw_cpu_cycles;
+    float d_ins_sw_context_switches;
+    float d_total_sw_context_switches;
+    float d_ins_sw_cpu_migrations;
+    float d_total_sw_cpu_migrations;
     float d_total_work_time;
     float d_pc_counter;
 
@@ -275,6 +332,7 @@ namespace gr {
 
   GR_RUNTIME_API long
   block_detail_ncurrently_allocated();
+
 
 } /* namespace gr */
 
