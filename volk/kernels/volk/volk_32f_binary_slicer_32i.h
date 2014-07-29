@@ -1,5 +1,5 @@
-#ifndef INCLUDED_volk_32f_binary_slicer_32f_H
-#define INCLUDED_volk_32f_binary_slicer_32f_H
+#ifndef INCLUDED_volk_32f_binary_slicer_32i_H
+#define INCLUDED_volk_32f_binary_slicer_32i_H
 
 
 #ifdef LV_HAVE_GENERIC
@@ -136,7 +136,7 @@ static inline void volk_32f_binary_slicer_32i_a_avx(int* cVector, const float* a
         }
     }
 }
-#endif /* LV_HAVE_SSE2 */
+#endif /* LV_HAVE_AVX */
 
 
 #ifdef LV_HAVE_SSE2
@@ -230,8 +230,8 @@ static inline void volk_32f_binary_slicer_32i_u_avx(int* cVector, const float* a
         }
     }
 }
-#endif /* LV_HAVE_SSE2 */
+#endif /* LV_HAVE_AVX */
 
 
 
-#endif /* INCLUDED_volk_32f_binary_slicer_32f_H */
+#endif /* INCLUDED_volk_32f_binary_slicer_32i_H */
