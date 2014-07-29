@@ -6,9 +6,6 @@
 #include<stdio.h>
 
 
-
-
-
 #ifdef LV_HAVE_SSE2
 #include<xmmintrin.h>
 #include<emmintrin.h>
@@ -117,7 +114,7 @@ static inline  void volk_16i_x5_add_quad_16i_x4_a_sse2(short* target0, short* ta
 static inline void volk_16i_x5_add_quad_16i_x4_neon(short* target0, short* target1, short* target2, short* target3, short* src0, short* src1, short* src2, short* src3, short* src4, unsigned int num_points) {
 
     const unsigned int eighth_points = num_points / 8;
-    int number = 0;
+    unsigned int number = 0;
 
     int16x8_t src0_vec, src1_vec, src2_vec, src3_vec, src4_vec;
     int16x8_t target0_vec, target1_vec, target2_vec, target3_vec;
