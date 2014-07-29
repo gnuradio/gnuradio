@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2004,2009,2012 Free Software Foundation, Inc.
+ * Copyright 2014 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -20,33 +20,38 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef INCLUDED_MULTIPLY_CONST_CC_IMPL_H
-#define INCLUDED_MULTIPLY_CONST_CC_IMPL_H
+// @WARNING@
 
-#include <gnuradio/blocks/multiply_const_cc.h>
+#ifndef @GUARD_NAME@
+#define @GUARD_NAME@
+
+#include <gnuradio/blocks/api.h>
+#include <gnuradio/sync_block.h>
 
 namespace gr {
   namespace blocks {
 
-    class BLOCKS_API multiply_const_cc_impl : public multiply_const_cc
+    /*!
+     * \brief Compares vectors from multiple streams and determines
+     * the minimum value from each vector over all streams.
+     * \ingroup math_operators_blk
+     *
+     * \details
+     * Data is passed in as a vector of length \p vlen from multiple
+     * input sources. It will look through these streams of \p vlen
+     * data items and the output stream will contain the minimum value
+     * in the vector.
+     */
+    class BLOCKS_API @NAME@ : virtual public sync_block
     {
-      gr_complex d_k;
-      size_t d_vlen;
-
     public:
-      multiply_const_cc_impl(gr_complex k, size_t vlen);
+      // gr::blocks::@NAME@::sptr
+      typedef boost::shared_ptr<@NAME@> sptr;
 
-      void setup_rpc();
-
-      gr_complex k() const { return d_k; }
-      void set_k(gr_complex k) { d_k = k; }
-
-      int work(int noutput_items,
-	       gr_vector_const_void_star &input_items,
-	       gr_vector_void_star &output_items);
+      static sptr make(size_t vlen);
     };
 
   } /* namespace blocks */
 } /* namespace gr */
 
-#endif /* INCLUDED_MULTIPLY_CONST_CC_IMPL_H */
+#endif /* @GUARD_NAME@ */

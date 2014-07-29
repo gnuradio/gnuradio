@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2004,2009,2012 Free Software Foundation, Inc.
+ * Copyright 2014 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -20,26 +20,21 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef INCLUDED_MULTIPLY_CONST_CC_IMPL_H
-#define INCLUDED_MULTIPLY_CONST_CC_IMPL_H
+#ifndef INCLUDED_BLOCKS_SUB_FF_IMPL_H
+#define INCLUDED_BLOCKS_SUB_FF_IMPL_H
 
-#include <gnuradio/blocks/multiply_const_cc.h>
+#include <gnuradio/blocks/sub_ff.h>
 
 namespace gr {
   namespace blocks {
 
-    class BLOCKS_API multiply_const_cc_impl : public multiply_const_cc
+    class BLOCKS_API sub_ff_impl : public sub_ff
     {
-      gr_complex d_k;
+    private:
       size_t d_vlen;
 
     public:
-      multiply_const_cc_impl(gr_complex k, size_t vlen);
-
-      void setup_rpc();
-
-      gr_complex k() const { return d_k; }
-      void set_k(gr_complex k) { d_k = k; }
+      sub_ff_impl(size_t vlen);
 
       int work(int noutput_items,
 	       gr_vector_const_void_star &input_items,
@@ -49,4 +44,4 @@ namespace gr {
   } /* namespace blocks */
 } /* namespace gr */
 
-#endif /* INCLUDED_MULTIPLY_CONST_CC_IMPL_H */
+#endif /* INCLUDED_BLOCKS_SUB_FF_IMPL_H */
