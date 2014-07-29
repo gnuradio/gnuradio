@@ -96,10 +96,10 @@ namespace gr {
       }
 
       const gsl_matrix*
-      ldpc_R_U_mtrx::T_inverse()
+      ldpc_R_U_mtrx::T()
       {
-        const gsl_matrix *T_inverse_ptr = d_T_inverse_ptr;
-        return T_inverse_ptr; 
+        const gsl_matrix *T_ptr = &d_T_view.matrix;
+        return T_ptr; 
       }
 
       const gsl_matrix*
@@ -113,9 +113,9 @@ namespace gr {
       ldpc_R_U_mtrx::read_matrix_from_file(const std::string filename)
       {
         /* This function reads in an alist file and creates the
-          corresponding parity check matrix. The format of alist
-          files is described at:
-          http://www.inference.phy.cam.ac.uk/mackay/codes/alist.html
+           corresponding parity check matrix. The format of alist
+           files is described at:
+           http://www.inference.phy.cam.ac.uk/mackay/codes/alist.html
         */
         std::ifstream inputFile;
 
@@ -185,13 +185,11 @@ namespace gr {
         unsigned int t = d_num_rows - d_gap; 
 
         // T submatrix
-        gsl_matrix_view T_view = gsl_matrix_submatrix(d_H_ptr,
-                                                      0,
-                                                      0,
-                                                      t,
-                                                      t);
+        d_T_view = gsl_matrix_submatrix(d_H_ptr, 0, 0, t, t);
+
+        gsl_matrix *d_T_inverse_ptr;
         try {
-          d_T_inverse_ptr = calc_inverse_mod2(&T_view.matrix);
+          d_T_inverse_ptr = calc_inverse_mod2(&d_T_view.matrix);
         }
         catch (char const *exceptionString) {
           std::cout << "Error in set_parameters_for_encoding while "
@@ -229,7 +227,6 @@ namespace gr {
             gsl_matrix *inverse_phi = calc_inverse_mod2(phi);
               
             // At this point, an inverse was found. 
-            d_inv_phi = *inverse_phi;
             d_phi_inverse_ptr = inverse_phi;
 
           }
@@ -250,13 +247,19 @@ namespace gr {
         // D submatrix
         d_D_view = gsl_matrix_submatrix(d_H_ptr, t, t + d_gap, d_gap,
                                         d_n-d_gap-t);
+
+        // Free memory
+        gsl_matrix_free(temp1);
+        gsl_matrix_free(temp2);
+        gsl_matrix_free(phi);
+        gsl_matrix_free(d_T_inverse_ptr);
+
       }
 
       gsl_matrix*
       ldpc_R_U_mtrx::add_matrices_mod2(const gsl_matrix *matrix1, const gsl_matrix *matrix2)
       {
         // This function returns ((matrix1 + matrix2) % 2). 
-        // (same thing as ((matrix1 - matrix2) % 2)
 
         // Verify that matrix sizes are appropriate
         unsigned int matrix1_rows = (*matrix1).size1;
@@ -316,14 +319,14 @@ namespace gr {
           exit(1);
         }
 
-        // Allocate memory for the result
+        // Allocate memory for the result.
         gsl_matrix *result = gsl_matrix_alloc(a,d);
 
         // Perform matrix multiplication. This is not mod 2.
         gsl_blas_dgemm (CblasNoTrans, CblasNoTrans, 1.0, matrix1,
                         matrix2, 0.0, result);
 
-        // Take care of mod 2 manually
+        // Take care of mod 2 manually.
         unsigned int row_index, col_index;
         unsigned int rows = (*result).size1, 
         cols = (*result).size2;
@@ -430,7 +433,6 @@ namespace gr {
       {
         // Call the gsl_matrix_free function to free memory.
         gsl_matrix_free (d_H_ptr);
-        gsl_matrix_free (d_T_inverse_ptr);
         gsl_matrix_free (d_phi_inverse_ptr);
       }
     } /* namespace code */

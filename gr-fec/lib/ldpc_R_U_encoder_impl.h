@@ -35,6 +35,8 @@ namespace gr {
         void generic_work(void *inbuffer, void *outbuffer);
         int get_output_size();
         int get_input_size();
+        gsl_matrix *back_solve_mod2(const gsl_matrix *,
+                                    const gsl_matrix *);
 
         // Number of bits in the information word
         unsigned int d_frame_size;
