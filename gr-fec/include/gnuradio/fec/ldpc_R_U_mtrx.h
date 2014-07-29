@@ -53,8 +53,7 @@ namespace gr {
         gsl_matrix_view d_B_view;
         gsl_matrix_view d_D_view;
         gsl_matrix_view d_E_view;
-        gsl_matrix d_inv_phi;
-        gsl_matrix *d_T_inverse_ptr;
+        gsl_matrix_view d_T_view;
         gsl_matrix *d_phi_inverse_ptr;
 
         // Read the matrix from a file in alist format
@@ -76,7 +75,7 @@ namespace gr {
         const gsl_matrix *B();
         const gsl_matrix *D();
         const gsl_matrix *E();
-        const gsl_matrix *T_inverse();
+        const gsl_matrix *T();
         const gsl_matrix *phi_inverse();
         // Subtract matrices using mod2 operation
         gsl_matrix *add_matrices_mod2(const gsl_matrix *,
