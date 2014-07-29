@@ -5,7 +5,7 @@
 ###################################################
  -->
 <block>
-    <name>LDPC Parity Check Matrix Object</name>
+    <name>LDPC R. U. Parity Check Matrix</name>
     <key>variable_ldpc_R_U_mtrx_def</key>
     <import>from gnuradio import fec</import>
     <var_make>self.$(id) = $(id) = fec.ldpc_R_U_mtrx($filename, $gap)</var_make>
