@@ -161,7 +161,6 @@ If not specified, the "Release" mode is the default.
 \li ENABLE_GR_CTRLPORT: Turn Building ControlPort. Default is True
 \li ENABLE_PERFORMANCE_COUNTERS: Turn performance counters on/off in runtime. Default is True.
 \li ENABLE_ORC: tells VOLK enable/disable use of Orc. Default is True.
-\li ENABLE_ASM: tells VOLK to use assembly files for proto-kernels if defined for the architecture. Default is True.
 \li ENABLE_STATIC_LIBS: build static library files. Default is False.
 \li CMAKE_TOOLCHAIN_FILE: A toolchain file to setup the CMake environment for cross-compiling.
 
