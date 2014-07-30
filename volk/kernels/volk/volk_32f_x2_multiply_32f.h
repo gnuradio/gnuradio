@@ -189,6 +189,8 @@ static inline void volk_32f_x2_multiply_32f_a_avx(float* cVector, const float* a
 #endif /* LV_HAVE_AVX */
 
 #ifdef LV_HAVE_NEON
+#include <arm_neon.h>
+
 /*!
   \brief Multiplys the two input vectors and store their results in the third vector
   \param cVector The vector where the results will be stored
@@ -212,7 +214,7 @@ static inline void volk_32f_x2_multiply_32f_neon(float* cVector, const float* aV
     for(number=quarter_points*4; number < num_points; ++number) {
         *cVector++ = *aVector++ * *bVector++;
     }
-} 
+}
 #endif /* LV_HAVE_NEON */
 
 #ifdef LV_HAVE_GENERIC

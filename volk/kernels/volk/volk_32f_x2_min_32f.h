@@ -46,6 +46,8 @@ static inline void volk_32f_x2_min_32f_a_sse(float* cVector, const float* aVecto
 #endif /* LV_HAVE_SSE */
 
 #ifdef LV_HAVE_NEON
+#include <arm_neon.h>
+
 /*!
   \brief Selects minimum value from each entry between bVector and aVector and store their results in the cVector
   \param cVector The vector where the results will be stored

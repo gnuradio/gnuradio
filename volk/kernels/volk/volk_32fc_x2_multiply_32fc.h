@@ -150,6 +150,8 @@ static inline void volk_32fc_x2_multiply_32fc_a_generic(lv_32fc_t* cVector, cons
 #endif /* LV_HAVE_GENERIC */
 
 #ifdef LV_HAVE_NEON
+#include <arm_neon.h>
+
   /*!
     \brief Multiplies the two input complex vectors and stores their results in the third vector
     \param cVector The vector where the results will be stored
@@ -174,15 +176,15 @@ static inline void volk_32fc_x2_multiply_32fc_neon(lv_32fc_t* cVector, const lv_
 
         // multiply the real*real and imag*imag to get real result
         // a0r*b0r|a1r*b1r|a2r*b2r|a3r*b3r
-        tmp_real.val[0] = vmulq_f32(a_val.val[0], b_val.val[0]); 
+        tmp_real.val[0] = vmulq_f32(a_val.val[0], b_val.val[0]);
         // a0i*b0i|a1i*b1i|a2i*b2i|a3i*b3i
-        tmp_real.val[1] = vmulq_f32(a_val.val[1], b_val.val[1]); 
+        tmp_real.val[1] = vmulq_f32(a_val.val[1], b_val.val[1]);
 
         // Multiply cross terms to get the imaginary result
         // a0r*b0i|a1r*b1i|a2r*b2i|a3r*b3i
-        tmp_imag.val[0] = vmulq_f32(a_val.val[0], b_val.val[1]); 
+        tmp_imag.val[0] = vmulq_f32(a_val.val[0], b_val.val[1]);
         // a0i*b0r|a1i*b1r|a2i*b2r|a3i*b3r
-        tmp_imag.val[1] = vmulq_f32(a_val.val[1], b_val.val[0]); 
+        tmp_imag.val[1] = vmulq_f32(a_val.val[1], b_val.val[0]);
 
         // store the results
         c_val.val[0] = vsubq_f32(tmp_real.val[0], tmp_real.val[1]);
@@ -225,7 +227,7 @@ static inline void volk_32fc_x2_multiply_32fc_neon_opttests(lv_32fc_t* cVector, 
         __builtin_prefetch(b_ptr+4);
 
         // do the first multiply
-        tmp_imag.val[1] = vmulq_f32(a_val.val[1], b_val.val[0]); 
+        tmp_imag.val[1] = vmulq_f32(a_val.val[1], b_val.val[0]);
         tmp_imag.val[0] = vmulq_f32(a_val.val[0], b_val.val[0]);
 
         // use multiply accumulate/subtract to get result

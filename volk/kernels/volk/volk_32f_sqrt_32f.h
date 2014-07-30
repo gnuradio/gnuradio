@@ -41,6 +41,8 @@ static inline void volk_32f_sqrt_32f_a_sse(float* cVector, const float* aVector,
 #endif /* LV_HAVE_SSE */
 
 #ifdef LV_HAVE_NEON
+#include <arm_neon.h>
+
 /*!
   \brief Sqrts the two input vectors and store their results in the third vector
   \param cVector The vector where the results will be stored

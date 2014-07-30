@@ -234,6 +234,8 @@ static inline void volk_32fc_magnitude_32f_a_generic(float* magnitudeVector, con
 #endif /* LV_HAVE_GENERIC */
 
 #ifdef LV_HAVE_NEON
+#include <arm_neon.h>
+
   /*!
     \brief Calculates the magnitude of the complexVector and stores the results in the magnitudeVector
     \param complexVector The vector containing the complex input values
@@ -255,7 +257,7 @@ static inline void volk_32fc_magnitude_32f_neon(float* magnitudeVector, const lv
     magnitude_vec = vrsqrteq_f32(magnitude_vec);
     magnitude_vec = vrecpeq_f32( magnitude_vec ); // no plain ol' sqrt
         vst1q_f32(magnitudeVectorPtr, magnitude_vec);
-        
+
         complexVectorPtr += 8;
         magnitudeVectorPtr += 4;
     }
@@ -271,8 +273,8 @@ static inline void volk_32fc_magnitude_32f_neon(float* magnitudeVector, const lv
 #ifdef LV_HAVE_NEON
   /*!
     \brief Calculates the magnitude of the complexVector and stores the results in the magnitudeVector
-    
-    This is an approximation from "Streamlining Digital Signal Processing" by 
+
+    This is an approximation from "Streamlining Digital Signal Processing" by
     Richard Lyons. Apparently max error is about 1% and mean error is about 0.6%.
     The basic idea is to do a weighted sum of the abs. value of imag and real parts
     where weight A is always assigned to max(imag, real) and B is always min(imag,real).
@@ -291,7 +293,7 @@ static inline void volk_32fc_magnitude_32f_neon_fancy_sweet(float* magnitudeVect
 
     const float threshold = 0.4142135;
 
-    float32x4_t a_vec, b_vec, a_high, a_low, b_high, b_low; 
+    float32x4_t a_vec, b_vec, a_high, a_low, b_high, b_low;
     a_high = vdupq_n_f32( 0.84 );
     b_high = vdupq_n_f32( 0.561);
     a_low  = vdupq_n_f32( 0.99 );
@@ -304,7 +306,7 @@ static inline void volk_32fc_magnitude_32f_neon_fancy_sweet(float* magnitudeVect
     float32x4_t real_abs, imag_abs;
     for(number = 0; number < quarter_points; number++){
         complex_vec = vld2q_f32(complexVectorPtr);
-        
+
         real_abs = vabsq_f32(complex_vec.val[0]);
         imag_abs = vabsq_f32(complex_vec.val[1]);
 
@@ -318,14 +320,14 @@ static inline void volk_32fc_magnitude_32f_neon_fancy_sweet(float* magnitudeVect
         // and 0s or 1s with coefficients from previous effective branch
         a_vec = (float32x4_t)vaddq_s32(vandq_s32((int32x4_t)comp0, (int32x4_t)a_high), vandq_s32((int32x4_t)comp1, (int32x4_t)a_low));
         b_vec = (float32x4_t)vaddq_s32(vandq_s32((int32x4_t)comp0, (int32x4_t)b_high), vandq_s32((int32x4_t)comp1, (int32x4_t)b_low));
-        
+
         // coefficients chosen, do the weighted sum
         min_vec = vmulq_f32(min_vec, b_vec);
         max_vec = vmulq_f32(max_vec, a_vec);
 
         magnitude_vec = vaddq_f32(min_vec, max_vec);
         vst1q_f32(magnitudeVectorPtr, magnitude_vec);
-        
+
         complexVectorPtr += 8;
         magnitudeVectorPtr += 4;
     }

@@ -64,6 +64,8 @@ static inline void volk_32f_x2_subtract_32f_generic(float* cVector, const float*
 #endif /* LV_HAVE_GENERIC */
 
 #ifdef LV_HAVE_NEON
+#include <arm_neon.h>
+
 /*!
   \brief Subtracts bVector form aVector and store their results in the cVector
   \param cVector The vector where the results will be stored

@@ -294,6 +294,7 @@ static inline void volk_32f_x3_sum_of_poly_32f_u_avx(float* target, float* src0,
 #endif // LV_HAVE_AVX
 
 #ifdef LV_HAVE_NEON
+#include <arm_neon.h>
 
 static inline void volk_32f_x3_sum_of_poly_32f_a_neon(float* __restrict target, float* __restrict src0, float* __restrict center_point_array, float* __restrict cutoff, unsigned int num_points) {
 

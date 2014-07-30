@@ -139,6 +139,8 @@ static inline void volk_8i_convert_16i_a_generic(int16_t* outputVector, const in
 #endif /* LV_HAVE_GENERIC */
 
 #ifdef LV_HAVE_NEON
+#include <arm_neon.h>
+
   /*!
     \brief Converts the input 8 bit integer data into 16 bit integer data
     \param inputVector The 8 bit input data buffer
@@ -155,7 +157,7 @@ static inline void volk_8i_convert_16i_neon(int16_t* outputVector, const int8_t*
     int8x8_t input_vec ;
     int16x8_t converted_vec;
 
-    // NEON doesn't have a concept of 8 bit registers, so we are really 
+    // NEON doesn't have a concept of 8 bit registers, so we are really
     // dealing with the low half of 16-bit registers. Since this requires
     // a move instruction we likely do better with ASM here.
     for(number = 0; number < eighth_points; ++number) {
