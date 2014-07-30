@@ -386,36 +386,34 @@ include_directories(
 #  on by default, but let users turn it off
 ########################################################################
 if(${CMAKE_VERSION} VERSION_GREATER "2.8.9")
-set(ASM_ARCHS_AVAILABLE "armv7")
-if( NOT DEFINED ENABLE_ASM OR ENABLE_ASM )
-    # sort through a list of all architectures we have ASM for
-    # if we find one that matches our current system architecture
-    # set up the assembler flags and include the source files
-    foreach(ARCH ${ASM_ARCHS_AVAILABLE})
-        string(REGEX MATCH "^${ARCH}" ASM_ARCH "${CMAKE_SYSTEM_PROCESSOR}")
-        if( ASM_ARCH STREQUAL "armv7" )
-            set(ASM-ATT $ENV{ASM})
-            message(STATUS "---- Adding ASM files") # we always use ATT syntax
-            message(STATUS "-- Detected armv7 architecture; enabling ASM")
-            # setup architecture specific assembler flags
-            set(ARCH_ASM_FLAGS "-mfpu=neon -g")
-            # then add the files
-            include_directories(${CMAKE_SOURCE_DIR}/kernels/volk/asm/neon)
-            file(GLOB asm_files ${CMAKE_SOURCE_DIR}/kernels/volk/asm/neon/*.s)
-            foreach(asm_file ${asm_files})
-                list(APPEND volk_sources ${asm_file})
-                message(STATUS "Adding source file: ${asm_file}")
-            endforeach(asm_file)
-        endif()
-        set(CMAKE_ASM-ATT_FLAGS_INIT ${ARCH_ASM_FLAGS})
-        enable_language(ASM-ATT) # this must be after flags_init
-        message(STATUS "asm flags: ${CMAKE_ASM-ATT_FLAGS}")
-    endforeach(ARCH)
-else()
-    message("---- NOT Adding ASM files")
-endif()
+  set(ASM_ARCHS_AVAILABLE "armv7")
+
+  # sort through a list of all architectures we have ASM for
+  # if we find one that matches our current system architecture
+  # set up the assembler flags and include the source files
+  foreach(ARCH ${ASM_ARCHS_AVAILABLE})
+    string(REGEX MATCH "^${ARCH}" ASM_ARCH "${CMAKE_SYSTEM_PROCESSOR}")
+    if( ASM_ARCH STREQUAL "armv7" )
+      set(ASM-ATT $ENV{ASM})
+      message(STATUS "---- Adding ASM files") # we always use ATT syntax
+      message(STATUS "-- Detected armv7 architecture; enabling ASM")
+      # setup architecture specific assembler flags
+      set(ARCH_ASM_FLAGS "-mfpu=neon -g")
+      # then add the files
+      include_directories(${CMAKE_SOURCE_DIR}/kernels/volk/asm/neon)
+      file(GLOB asm_files ${CMAKE_SOURCE_DIR}/kernels/volk/asm/neon/*.s)
+      foreach(asm_file ${asm_files})
+        list(APPEND volk_sources ${asm_file})
+        message(STATUS "Adding source file: ${asm_file}")
+      endforeach(asm_file)
+    endif()
+    set(CMAKE_ASM-ATT_FLAGS_INIT ${ARCH_ASM_FLAGS})
+    enable_language(ASM-ATT) # this must be after flags_init
+    message(STATUS "asm flags: ${CMAKE_ASM-ATT_FLAGS}")
+  endforeach(ARCH)
+
 else(${CMAKE_VERSION} VERSION_GREATER "2.8.9")
-    message(STATUS "Not enabling ASM support. CMake >= 2.8.10 required.")
+  message(STATUS "Not enabling ASM support. CMake >= 2.8.10 required.")
 endif(${CMAKE_VERSION} VERSION_GREATER "2.8.9")
 
 ########################################################################
