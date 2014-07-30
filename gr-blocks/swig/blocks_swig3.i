@@ -47,6 +47,9 @@
 #include "gnuradio/blocks/max_ff.h"
 #include "gnuradio/blocks/max_ii.h"
 #include "gnuradio/blocks/max_ss.h"
+#include "gnuradio/blocks/min_ff.h"
+#include "gnuradio/blocks/min_ii.h"
+#include "gnuradio/blocks/min_ss.h"
 #include "gnuradio/blocks/moving_average_cc.h"
 #include "gnuradio/blocks/moving_average_ff.h"
 #include "gnuradio/blocks/moving_average_ii.h"
@@ -90,6 +93,9 @@
 %include "gnuradio/blocks/max_ff.h"
 %include "gnuradio/blocks/max_ii.h"
 %include "gnuradio/blocks/max_ss.h"
+%include "gnuradio/blocks/min_ff.h"
+%include "gnuradio/blocks/min_ii.h"
+%include "gnuradio/blocks/min_ss.h"
 %include "gnuradio/blocks/moving_average_cc.h"
 %include "gnuradio/blocks/moving_average_ff.h"
 %include "gnuradio/blocks/moving_average_ii.h"
@@ -132,6 +138,9 @@ GR_SWIG_BLOCK_MAGIC2(blocks, lfsr_32k_source_s);
 GR_SWIG_BLOCK_MAGIC2(blocks, max_ff);
 GR_SWIG_BLOCK_MAGIC2(blocks, max_ii);
 GR_SWIG_BLOCK_MAGIC2(blocks, max_ss);
+GR_SWIG_BLOCK_MAGIC2(blocks, min_ff);
+GR_SWIG_BLOCK_MAGIC2(blocks, min_ii);
+GR_SWIG_BLOCK_MAGIC2(blocks, min_ss);
 GR_SWIG_BLOCK_MAGIC2(blocks, moving_average_cc);
 GR_SWIG_BLOCK_MAGIC2(blocks, moving_average_ff);
 GR_SWIG_BLOCK_MAGIC2(blocks, moving_average_ii);

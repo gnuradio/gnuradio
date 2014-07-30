@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2004,2009,2012 Free Software Foundation, Inc.
+ * Copyright 2014 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -20,33 +20,32 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef INCLUDED_MULTIPLY_CONST_CC_IMPL_H
-#define INCLUDED_MULTIPLY_CONST_CC_IMPL_H
+#ifndef INCLUDED_BLOCKS_SUB_FF_H
+#define INCLUDED_BLOCKS_SUB_FF_H
 
-#include <gnuradio/blocks/multiply_const_cc.h>
+#include <gnuradio/blocks/api.h>
+#include <gnuradio/sync_block.h>
 
 namespace gr {
   namespace blocks {
 
-    class BLOCKS_API multiply_const_cc_impl : public multiply_const_cc
+    /*!
+     * \brief output = input_0 -  input_1 - ...)
+     * \ingroup math_operators_blk
+     *
+     * \details
+     * Subtract across all input streams.
+     */
+    class BLOCKS_API sub_ff : virtual public sync_block
     {
-      gr_complex d_k;
-      size_t d_vlen;
-
     public:
-      multiply_const_cc_impl(gr_complex k, size_t vlen);
+      // gr::blocks::sub_ff::sptr
+      typedef boost::shared_ptr<sub_ff> sptr;
 
-      void setup_rpc();
-
-      gr_complex k() const { return d_k; }
-      void set_k(gr_complex k) { d_k = k; }
-
-      int work(int noutput_items,
-	       gr_vector_const_void_star &input_items,
-	       gr_vector_void_star &output_items);
+      static sptr make(size_t vlen=1);
     };
 
   } /* namespace blocks */
 } /* namespace gr */
 
-#endif /* INCLUDED_MULTIPLY_CONST_CC_IMPL_H */
+#endif /* INCLUDED_BLOCKS_SUB_FF_H */

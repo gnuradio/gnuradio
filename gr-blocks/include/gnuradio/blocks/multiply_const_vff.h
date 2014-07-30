@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2012 Free Software Foundation, Inc.
+ * Copyright 2014 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -20,8 +20,8 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef INCLUDED_MULTIPLY_CONST_CC_H
-#define INCLUDED_MULTIPLY_CONST_CC_H
+#ifndef INCLUDED_MULTIPLY_CONST_VFF_H
+#define INCLUDED_MULTIPLY_CONST_VFF_H
 
 #include <gnuradio/blocks/api.h>
 #include <gnuradio/sync_block.h>
@@ -30,36 +30,33 @@ namespace gr {
   namespace blocks {
 
     /*!
-     * \brief output = input * complex constant
+     * \brief output = input * constant vector (element-wise)
      * \ingroup math_operators_blk
      */
-    class BLOCKS_API multiply_const_cc : virtual public sync_block
+    class BLOCKS_API multiply_const_vff : virtual public sync_block
     {
-
     public:
-
-      // gr::blocks::multiply_const_cc::sptr
-      typedef boost::shared_ptr<multiply_const_cc> sptr;
-
-      /*!
-       * \brief Create an instance of multiply_const_cc
-       * \param k complex multiplicative constant
-       * \param vlen Vector length of incoming stream
-       */
-      static sptr make(gr_complex k, size_t vlen=1);
+      // gr::blocks::multiply_const_vff::sptr
+      typedef boost::shared_ptr<multiply_const_vff> sptr;
 
       /*!
-       * \brief Return complex multiplicative constant
+       * \brief Create an instance of multiply_const_vff
+       * \param k multiplicative constant vector
        */
-      virtual gr_complex k() const = 0;
+      static sptr make(std::vector<float> k);
 
       /*!
-       * \brief Set complex multiplicative constant
+       * \brief Return multiplicative constant vector
        */
-      virtual void set_k(gr_complex k) = 0;
+      virtual std::vector<float> k() const = 0;
+
+      /*!
+       * \brief Set multiplicative constant vector
+       */
+      virtual void set_k(std::vector<float> k) = 0;
     };
 
   } /* namespace blocks */
 } /* namespace gr */
 
-#endif /* INCLUDED_MULTIPLY_CONST_CC_H */
+#endif /* INCLUDED_MULTIPLY_CONST_VFF_H */

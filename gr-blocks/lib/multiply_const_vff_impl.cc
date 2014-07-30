@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2012 Free Software Foundation, Inc.
+ * Copyright 2014 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -24,25 +24,25 @@
 #include "config.h"
 #endif
 
-#include "float_to_complex_impl.h"
+#include <multiply_const_vff_impl.h>
 #include <gnuradio/io_signature.h>
 #include <volk/volk.h>
 
 namespace gr {
   namespace blocks {
 
-    float_to_complex::sptr
-    float_to_complex::make(size_t vlen)
+    multiply_const_vff::sptr
+    multiply_const_vff::make(std::vector<float> k)
     {
       return gnuradio::get_initial_sptr
-        (new float_to_complex_impl(vlen));
+        (new multiply_const_vff_impl(k));
     }
 
-    float_to_complex_impl::float_to_complex_impl(size_t vlen)
-      : sync_block("float_to_complex",
-                   io_signature::make(1, 2, sizeof(float)*vlen),
-                   io_signature::make(1, 1, sizeof(gr_complex)*vlen)),
-	d_vlen(vlen)
+    multiply_const_vff_impl::multiply_const_vff_impl(std::vector<float> k)
+      : sync_block("multiply_const_vff",
+                   io_signature::make(1, 1, sizeof(float)*k.size()),
+                   io_signature::make(1, 1, sizeof(float)*k.size())),
+        d_k(k)
     {
       const int alignment_multiple =
 	volk_get_alignment() / sizeof(float);
@@ -50,32 +50,23 @@ namespace gr {
     }
 
     int
-    float_to_complex_impl::work(int noutput_items,
-				gr_vector_const_void_star &input_items,
-				gr_vector_void_star &output_items)
+    multiply_const_vff_impl::work(int noutput_items,
+                                  gr_vector_const_void_star &input_items,
+                                  gr_vector_void_star &output_items)
     {
-      float        *r = (float *)input_items[0];
-      float        *i = (float *)input_items[1];
-      gr_complex *out = (gr_complex *) output_items[0];
+      float *iptr = (float*)input_items[0];
+      float *optr = (float*)output_items[0];
 
-      switch (input_items.size ()){
-      case 1:
-	for (size_t j = 0; j < noutput_items*d_vlen; j++)
-	  out[j] = gr_complex (r[j], 0);
-	break;
+      int nitems_per_block = output_signature()->sizeof_stream_item(0)/sizeof(float);
 
-      case 2:
-	//for (size_t j = 0; j < noutput_items*d_vlen; j++)
-	//  out[j] = gr_complex (r[j], i[j]);
-        volk_32f_x2_interleave_32fc(out, r, i, noutput_items*d_vlen);
-	break;
-
-      default:
-	assert (0);
+      for(int i = 0; i < noutput_items; i++) {
+	for(int j = 0; j < nitems_per_block; j++) {
+	  *optr++ = *iptr++ * d_k[j];
+        }
       }
 
       return noutput_items;
     }
 
   } /* namespace blocks */
-}/* namespace gr */
+} /* namespace gr */

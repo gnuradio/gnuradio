@@ -298,7 +298,7 @@ static inline void volk_32f_x3_sum_of_poly_32f_u_avx(float* target, float* src0,
 static inline void volk_32f_x3_sum_of_poly_32f_a_neon(float* __restrict target, float* __restrict src0, float* __restrict center_point_array, float* __restrict cutoff, unsigned int num_points) {
 
 
-  int i;
+  unsigned int i;
   float zero[4] = {0.0f, 0.0f, 0.0f, 0.0f };
 
   float32x2_t x_to_1, x_to_2, x_to_3, x_to_4;
@@ -307,7 +307,7 @@ static inline void volk_32f_x3_sum_of_poly_32f_a_neon(float* __restrict target, 
   float32x4_t x_qvector, c_qvector, cpa_qvector;
   float accumulator;
   float res_accumulators[4];
-  
+
   c_qvector = vld1q_f32( zero );
   // load the cutoff in to a vector
   cutoff_vector = vdup_n_f32( *cutoff );
@@ -327,17 +327,17 @@ static inline void volk_32f_x3_sum_of_poly_32f_a_neon(float* __restrict target, 
     x_low = vzip_f32(x_to_1, x_to_2); // [x^2 | x^1 || x^2 | x^1]
     x_high = vzip_f32(x_to_3, x_to_4); // [x^4 | x^3 || x^4 | x^3]
     // float32x4_t vcombine_f32(float32x2_t low, float32x2_t high); // VMOV d0,d0
-    x_qvector = vcombine_f32(x_low.val[0], x_high.val[0]); 
+    x_qvector = vcombine_f32(x_low.val[0], x_high.val[0]);
     // now we finally have [x^4 | x^3 | x^2 | x] !
-    
+
     c_qvector = vmlaq_f32(c_qvector, x_qvector, cpa_qvector);
 
   }
   // there should be better vector reduction techniques
   vst1q_f32(res_accumulators, c_qvector );
-  accumulator = res_accumulators[0] + res_accumulators[1] + 
+  accumulator = res_accumulators[0] + res_accumulators[1] +
           res_accumulators[2] + res_accumulators[3];
-  
+
   *target = accumulator + center_point_array[4] * (float)num_points;
 }
 
@@ -348,11 +348,11 @@ static inline void volk_32f_x3_sum_of_poly_32f_a_neon(float* __restrict target, 
 static inline void volk_32f_x3_sum_of_poly_32f_neonvert(float* __restrict target, float* __restrict src0, float* __restrict center_point_array, float* __restrict cutoff, unsigned int num_points) {
 
 
-  int i;
+  unsigned int i;
   float zero[4] = {0.0f, 0.0f, 0.0f, 0.0f };
 
   float accumulator;
-  
+
 
   float32x4_t accumulator1_vec, accumulator2_vec, accumulator3_vec, accumulator4_vec;
   accumulator1_vec = vld1q_f32(zero);
@@ -373,7 +373,7 @@ static inline void volk_32f_x3_sum_of_poly_32f_neonvert(float* __restrict target
 
   // nathan is not sure why this is slower *and* wrong compared to neonvertfma
   for(i=0; i < num_points/4; ++i) {
-    // load x 
+    // load x
     x_to_1 = vld1q_f32( src0 );
 
     // Get a vector of max(src0, cutoff)
@@ -398,7 +398,7 @@ static inline void volk_32f_x3_sum_of_poly_32f_neonvert(float* __restrict target
 
   __VOLK_ATTR_ALIGNED(32) float res_accumulators[4];
   vst1q_f32(res_accumulators, accumulator1_vec );
-  accumulator = res_accumulators[0] + res_accumulators[1] + 
+  accumulator = res_accumulators[0] + res_accumulators[1] +
           res_accumulators[2] + res_accumulators[3];
 
   float fst = 0.0;

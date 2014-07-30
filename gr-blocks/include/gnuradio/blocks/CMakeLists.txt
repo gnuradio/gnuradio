@@ -30,11 +30,12 @@ GR_EXPAND_X_H(blocks and_const_XX       bb ss ii)
 GR_EXPAND_X_H(blocks argmax_XX          fs is ss)
 GR_EXPAND_X_H(blocks divide_XX          ss ii ff cc)
 GR_EXPAND_X_H(blocks integrate_XX       ss ii ff cc)
-GR_EXPAND_X_H(blocks max_XX             ff ii ss)
+GR_EXPAND_X_H(blocks max_XX             ss ii ff)
+GR_EXPAND_X_H(blocks min_XX             ss ii ff)
 GR_EXPAND_X_H(blocks moving_average_XX  ss ii ff cc)
 GR_EXPAND_X_H(blocks multiply_XX        ss ii)
 GR_EXPAND_X_H(blocks multiply_const_XX  ss ii)
-GR_EXPAND_X_H(blocks multiply_const_vXX ss ii ff cc)
+GR_EXPAND_X_H(blocks multiply_const_vXX ss ii)
 GR_EXPAND_X_H(blocks multiply_matrix_XX ff cc)
 GR_EXPAND_X_H(blocks mute_XX            ss ii ff cc)
 GR_EXPAND_X_H(blocks not_XX             bb ss ii)
@@ -43,7 +44,7 @@ GR_EXPAND_X_H(blocks peak_detector_XX   fb ib sb)
 GR_EXPAND_X_H(blocks probe_signal_X     b s i f c)
 GR_EXPAND_X_H(blocks probe_signal_vX    b s i f c)
 GR_EXPAND_X_H(blocks sample_and_hold_XX bb ss ii ff)
-GR_EXPAND_X_H(blocks sub_XX             ss ii ff cc)
+GR_EXPAND_X_H(blocks sub_XX             ss ii cc)
 GR_EXPAND_X_H(blocks tsb_vector_sink_X  b s i f c)
 GR_EXPAND_X_H(blocks xor_XX             bb ss ii)
 GR_EXPAND_X_H(blocks packed_to_unpacked_XX bb ss ii)
@@ -122,7 +123,9 @@ install(FILES
     multiply_ff.h
     multiply_conjugate_cc.h
     multiply_const_cc.h
+    multiply_const_vcc.h
     multiply_const_ff.h
+    multiply_const_vff.h
     nlog10_ff.h
     nop.h
     null_sink.h
@@ -155,6 +158,7 @@ install(FILES
     streams_to_stream.h
     streams_to_vector.h
     stretch_ff.h
+    sub_ff.h
     tag_debug.h
     tag_gate.h
     tagged_file_sink.h
