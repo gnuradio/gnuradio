@@ -388,11 +388,14 @@ include_directories(
 if(${CMAKE_VERSION} VERSION_GREATER "2.8.9")
   set(ASM_ARCHS_AVAILABLE "armv7")
 
+  set(FULL_C_FLAGS "${CMAKE_C_FLAGS}" "${CMAKE_CXX_COMPILER_ARG1}")
+
   # sort through a list of all architectures we have ASM for
   # if we find one that matches our current system architecture
   # set up the assembler flags and include the source files
   foreach(ARCH ${ASM_ARCHS_AVAILABLE})
-    string(REGEX MATCH "^${ARCH}" ASM_ARCH "${CMAKE_SYSTEM_PROCESSOR}")
+    message(STATUS "--==>> -CFLAGS1: ${FULL_C_FLAGS}")
+    string(REGEX MATCH "${ARCH}" ASM_ARCH "${FULL_C_FLAGS}")
     if( ASM_ARCH STREQUAL "armv7" )
       set(ASM-ATT $ENV{ASM})
       message(STATUS "---- Adding ASM files") # we always use ATT syntax
