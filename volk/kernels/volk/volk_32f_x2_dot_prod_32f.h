@@ -578,6 +578,8 @@ static inline void volk_32f_x2_dot_prod_32f_a_avx( float* result, const  float* 
 #endif /*LV_HAVE_AVX*/
 
 #ifdef LV_HAVE_NEON
+#include <arm_neon.h>
+
 static inline void volk_32f_x2_dot_prod_32f_neonopts(float * result, const float * input, const float * taps, unsigned int num_points) {
 
     unsigned int quarter_points = num_points / 16;

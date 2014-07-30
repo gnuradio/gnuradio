@@ -761,12 +761,13 @@ static inline void volk_32fc_x2_dot_prod_32fc_a_sse4_1(lv_32fc_t* result, const 
 #endif /*LV_HAVE_SSE4_1*/
 
 #ifdef LV_HAVE_NEON
+#include <arm_neon.h>
 
 static inline void volk_32fc_x2_dot_prod_32fc_neon(lv_32fc_t* result, const lv_32fc_t* input, const lv_32fc_t* taps, unsigned int num_points) {
 
     unsigned int quarter_points = num_points / 4;
     unsigned int number;
-    
+
     lv_32fc_t* a_ptr = (lv_32fc_t*) taps;
     lv_32fc_t* b_ptr = (lv_32fc_t*) input;
     // for 2-lane vectors, 1st lane holds the real part,
@@ -775,7 +776,7 @@ static inline void volk_32fc_x2_dot_prod_32fc_neon(lv_32fc_t* result, const lv_3
     float32x4x2_t tmp_real, tmp_imag;
     accumulator.val[0] = vdupq_n_f32(0);
     accumulator.val[1] = vdupq_n_f32(0);
-    
+
     for(number = 0; number < quarter_points; ++number) {
         a_val = vld2q_f32((float*)a_ptr); // a0r|a1r|a2r|a3r || a0i|a1i|a2i|a3i
         b_val = vld2q_f32((float*)b_ptr); // b0r|b1r|b2r|b3r || b0i|b1i|b2i|b3i
@@ -796,7 +797,7 @@ static inline void volk_32fc_x2_dot_prod_32fc_neon(lv_32fc_t* result, const lv_3
 
         c_val.val[0] = vsubq_f32(tmp_real.val[0], tmp_real.val[1]);
         c_val.val[1] = vaddq_f32(tmp_imag.val[0], tmp_imag.val[1]);
-        
+
         accumulator.val[0] = vaddq_f32(accumulator.val[0], c_val.val[0]);
         accumulator.val[1] = vaddq_f32(accumulator.val[1], c_val.val[1]);
 
@@ -821,7 +822,7 @@ static inline void volk_32fc_x2_dot_prod_32fc_neon_opttests(lv_32fc_t* result, c
 
     unsigned int quarter_points = num_points / 4;
     unsigned int number;
-    
+
     lv_32fc_t* a_ptr = (lv_32fc_t*) taps;
     lv_32fc_t* b_ptr = (lv_32fc_t*) input;
     // for 2-lane vectors, 1st lane holds the real part,
@@ -830,7 +831,7 @@ static inline void volk_32fc_x2_dot_prod_32fc_neon_opttests(lv_32fc_t* result, c
     float32x4x2_t tmp_imag;
     accumulator.val[0] = vdupq_n_f32(0);
     accumulator.val[1] = vdupq_n_f32(0);
-    
+
     for(number = 0; number < quarter_points; ++number) {
         a_val = vld2q_f32((float*)a_ptr); // a0r|a1r|a2r|a3r || a0i|a1i|a2i|a3i
         b_val = vld2q_f32((float*)b_ptr); // b0r|b1r|b2r|b3r || b0i|b1i|b2i|b3i
@@ -869,7 +870,7 @@ static inline void volk_32fc_x2_dot_prod_32fc_neon_optfma(lv_32fc_t* result, con
 
     unsigned int quarter_points = num_points / 4;
     unsigned int number;
-    
+
     lv_32fc_t* a_ptr = (lv_32fc_t*) taps;
     lv_32fc_t* b_ptr = (lv_32fc_t*) input;
     // for 2-lane vectors, 1st lane holds the real part,
@@ -879,7 +880,7 @@ static inline void volk_32fc_x2_dot_prod_32fc_neon_optfma(lv_32fc_t* result, con
     accumulator1.val[1] = vdupq_n_f32(0);
     accumulator2.val[0] = vdupq_n_f32(0);
     accumulator2.val[1] = vdupq_n_f32(0);
-    
+
     for(number = 0; number < quarter_points; ++number) {
         a_val = vld2q_f32((float*)a_ptr); // a0r|a1r|a2r|a3r || a0i|a1i|a2i|a3i
         b_val = vld2q_f32((float*)b_ptr); // b0r|b1r|b2r|b3r || b0i|b1i|b2i|b3i
@@ -915,7 +916,7 @@ static inline void volk_32fc_x2_dot_prod_32fc_neon_optfmaunroll(lv_32fc_t* resul
 
     unsigned int quarter_points = num_points / 8;
     unsigned int number;
-    
+
     lv_32fc_t* a_ptr = (lv_32fc_t*) taps;
     lv_32fc_t* b_ptr = (lv_32fc_t*) input;
     // for 2-lane vectors, 1st lane holds the real part,
@@ -930,7 +931,7 @@ static inline void volk_32fc_x2_dot_prod_32fc_neon_optfmaunroll(lv_32fc_t* resul
     accumulator2.val[1] = vdupq_n_f32(0);
     accumulator2.val[2] = vdupq_n_f32(0);
     accumulator2.val[3] = vdupq_n_f32(0);
-    
+
     // 8 input regs, 8 accumulators -> 16/16 neon regs are used
     for(number = 0; number < quarter_points; ++number) {
         a_val = vld4q_f32((float*)a_ptr); // a0r|a1r|a2r|a3r || a0i|a1i|a2i|a3i
