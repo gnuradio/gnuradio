@@ -635,9 +635,6 @@ namespace gr {
         if (my_tag_count >= max_count) {
           break;
         }
-        else if (not pmt::is_null(_length_tag_key) and my_tag_count > samp0_count + _nitems_to_send) {
-          break;
-        }
 
         /* I. Tags that can only be on the first sample of a burst
          *
