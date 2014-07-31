@@ -56,7 +56,7 @@ namespace gr {
 	d_threshold(threshold), d_len(0)
     {
       if(!set_access_code(access_code)) {
-	throw std::out_of_range ("access_code is > 64 bits");
+        throw std::out_of_range ("access_code is > 64 bits");
       }
 
       std::stringstream str;
@@ -81,8 +81,10 @@ namespace gr {
       d_mask = ((~0ULL) >> (64 - d_len)) << (64 - d_len);
 
       d_access_code = 0;
-      for(unsigned i=0; i < d_len; i++){
-        d_access_code = (d_access_code << 1) | (access_code[i] & 1);
+      for(unsigned i=0; i < 64; i++){
+        d_access_code <<= 1;
+        if(i < d_len)
+          d_access_code |= access_code[i] & 1;	// look at LSB only
       }
       if(VERBOSE) {
           std::cerr << "Access code: " << std::hex << d_access_code << std::dec << std::endl;
@@ -107,7 +109,7 @@ namespace gr {
 
 	// compute hamming distance between desired access code and current data
 	uint64_t wrong_bits = 0;
-	uint64_t nwrong = d_threshold+1;
+	uint64_t nwrong = 0;
 
 	wrong_bits  = (d_data_reg ^ d_access_code) & d_mask;
 	volk_64u_popcnt(&nwrong, wrong_bits);
