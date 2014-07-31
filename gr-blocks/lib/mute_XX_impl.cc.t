@@ -46,6 +46,9 @@ namespace gr {
                     io_signature::make(1, 1, sizeof(@O_TYPE@))),
       d_mute(mute)
     {
+      message_port_register_in(pmt::intern("set_mute"));
+      set_msg_handler(pmt::intern("set_mute"),
+        boost::bind(&@NAME_IMPL@::set_mute_pmt, this, _1));
     }
 
     @NAME_IMPL@::~@NAME_IMPL@()
