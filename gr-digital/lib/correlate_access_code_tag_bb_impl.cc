@@ -120,7 +120,7 @@ namespace gr {
 	  if(VERBOSE)
 	    std::cerr << "writing tag at sample " << abs_out_sample_cnt + i << std::endl;
 	  add_item_tag(0, //stream ID
-		       abs_out_sample_cnt + i, //sample
+		       abs_out_sample_cnt + i-d_len, //sample
 		       d_key,      //frame info
 		       pmt::from_long(nwrong), //data (number wrong)
 		       d_me        //block src id
