@@ -68,8 +68,7 @@ namespace gr {
       //}
 
       const float *in = (const float*)input_items[0];
-      for(int i = 0; i < noi; i++)
-        out[i] = -in[i];
+      memcpy(out, in, noi*sizeof(float));
       for(int i = 1; i < ninputs; i++) {
         in = (const float*)input_items[i];
         volk_32f_x2_subtract_32f(out, out, in, noi);
