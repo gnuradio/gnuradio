@@ -200,6 +200,78 @@ class test_add_mult_div_sub(gr_unittest.TestCase):
         self.help_ii((src1_data, src2_data),
                       expected_result, op)
 
+    def test_sub_ii1(self):
+        src1_data = (1, 2, 3, 4, 5)
+        expected_result = (1, 2, 3, 4, 5)
+
+        src = blocks.vector_source_i(src1_data)
+        op = blocks.sub_ii()
+        dst = blocks.vector_sink_i()
+        self.tb.connect(src, op, dst)
+        self.tb.run()
+        result_data = dst.data()
+        self.assertEqual(expected_result, result_data)
+
+    def test_sub_ss(self):
+        src1_data = (1,  2, 3, 4, 5)
+        src2_data = (8, -3, 4, 8, 2)
+        expected_result = (-7, 5, -1, -4, 3)
+        op = blocks.sub_ss()
+        self.help_ss((src1_data, src2_data),
+                      expected_result, op)
+
+    def test_sub_ss1(self):
+        src1_data = (1, 2, 3, 4, 5)
+        expected_result = (1, 2, 3, 4, 5)
+
+        src = blocks.vector_source_s(src1_data)
+        op = blocks.sub_ss()
+        dst = blocks.vector_sink_s()
+        self.tb.connect(src, op, dst)
+        self.tb.run()
+        result_data = dst.data()
+        self.assertEqual(expected_result, result_data)
+
+    def test_sub_ff(self):
+        src1_data = (1,  2, 3, 4, 5)
+        src2_data = (8, -3, 4, 8, 2)
+        expected_result = (-7, 5, -1, -4, 3)
+        op = blocks.sub_ff()
+        self.help_ff((src1_data, src2_data),
+                      expected_result, op)
+
+    def test_sub_ff1(self):
+        src1_data = (1, 2, 3, 4, 5)
+        expected_result = (1, 2, 3, 4, 5)
+
+        src = blocks.vector_source_f(src1_data)
+        op = blocks.sub_ff()
+        dst = blocks.vector_sink_f()
+        self.tb.connect(src, op, dst)
+        self.tb.run()
+        result_data = dst.data()
+        self.assertEqual(expected_result, result_data)
+
+    def test_sub_cc(self):
+        src1_data = (1,  2, 3, 4, 5)
+        src2_data = (8, -3, 4, 8, 2)
+        expected_result = (-7, 5, -1, -4, 3)
+        op = blocks.sub_cc()
+        self.help_cc((src1_data, src2_data),
+                      expected_result, op)
+
+    def test_sub_cc1(self):
+        src1_data = (1, 2, 3, 4, 5)
+        expected_result = (1, 2, 3, 4, 5)
+
+        src = blocks.vector_source_c(src1_data)
+        op = blocks.sub_cc()
+        dst = blocks.vector_sink_c()
+        self.tb.connect(src, op, dst)
+        self.tb.run()
+        result_data = dst.data()
+        self.assertEqual(expected_result, result_data)
+
     def test_div_ff(self):
         src1_data       = ( 5,  9, -15, 1024)
         src2_data       = (10,  3,  -5,   64)
