@@ -32,6 +32,15 @@
 #include <qwt_symbol.h>
 #include <cmath>
 
+#ifdef _MSC_VER
+#define isfinite _finite
+
+#include <float.h>
+namespace std {
+    using ::_finite;
+}
+#endif
+
 namespace gr {
   namespace qtgui {
 
