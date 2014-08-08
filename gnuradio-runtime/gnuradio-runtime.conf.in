@@ -30,11 +30,10 @@ debug_file = stderr
 
 [PerfCounters]
 on = False
-export = True
+export = False
 clock = thread
 #clock = monotonic
 
 [ControlPort]
 on = False
 edges_list = False
-config = # @CMAKE_INSTALL_PREFIX@/etc/gnuradio/ctrlport.conf

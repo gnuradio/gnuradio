@@ -60,11 +60,6 @@ GR_SET_GLOBAL(GNURADIO_RUNTIME_PYTHONPATH ${GNURADIO_RUNTIME_PYTHONPATH})
 # Register controlport component
 ########################################################################
 
-FIND_PACKAGE(ICE-3.5)  # check for ICE 3.5
-if(NOT ICE_FOUND)
-  message(STATUS "ICE 3.5 not found. Looking for 3.4")
-  FIND_PACKAGE(ICE) # checks for version 3.4
-endif(NOT ICE_FOUND)
 FIND_PACKAGE(SWIG)
 
 if(SWIG_FOUND)
@@ -81,7 +76,6 @@ GR_REGISTER_COMPONENT("gr-ctrlport" ENABLE_GR_CTRLPORT
   Boost_FOUND
   SWIG_FOUND
   SWIG_VERSION_CHECK
-  ICE_FOUND
   ENABLE_GNURADIO_RUNTIME
 )
 
@@ -174,23 +168,5 @@ install(
     DESTINATION ${GR_LIBRARY_DIR}/pkgconfig
     COMPONENT "runtime_devel"
 )
-
-########################################################################
-# Setup ControlPort preferences file and installation information
-########################################################################
-if(ENABLE_GR_CTRLPORT)
-
-SET(GR_PKG_CTRL_EXAMPLES_DIR ${GR_PKG_DATA_DIR}/examples/ctrlport)
-
-SET(GR_PKG_CTRL_SLICE_DIR ${GR_PKG_DATA_DIR}/ctrlport)
-file(TO_NATIVE_PATH ${CMAKE_INSTALL_PREFIX}/${GR_PKG_CTRL_SLICE_DIR} slicedir)
-
-install(
-    FILES ctrlport.conf.example
-    DESTINATION ${SYSCONFDIR}/${CMAKE_PROJECT_NAME}
-    COMPONENT "gnuradio_runtime"
-)
-
-endif(ENABLE_GR_CTRLPORT)
 
 endif(ENABLE_GNURADIO_RUNTIME)

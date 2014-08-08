@@ -85,14 +85,4 @@ The options for the [PerfCounters] section are:
 \li clock: sets the type of clock used when calculating work_time
 ('thread' or 'monotonic').
 
-
-\section pc_perfmonitor Performance Monitor
-
-See \ref perfmonitor for some details of using a ControlPort-based
-monitor application, gr-perf-monitorx, for visualizing the
-counters. This application is particularly useful in learning which
-blocks are the computationally complex blocks that could use extra
-optimization or work to improve their performance. It can also be used
-to understand the current 'health' of the application.
-
 */

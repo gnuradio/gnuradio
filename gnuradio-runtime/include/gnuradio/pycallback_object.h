@@ -22,27 +22,12 @@
 
 #include <iostream>
 #include <gnuradio/rpcregisterhelpers.h>
-#include <gnuradio/ice_application_base.h>
-#include <gnuradio/IcePy_Communicator.h>
 #include <pythread.h>
 #include <boost/format.hpp>
 
 enum pyport_t {
   PYPORT_STRING,
   PYPORT_FLOAT
-};
-
-class Instance
-{
-public:
-  static boost::shared_ptr<ice_application_common> get_application()
-  {
-    return ice_application_common::Instance();
-  }
-  static Ice::CommunicatorPtr get_swig_communicator()
-  {
-    return get_application()->communicator();
-  }
 };
 
 int pycallback_object_count = 500;
