@@ -19,34 +19,14 @@
 
 if(ENABLE_GR_CTRLPORT)
 
-include_directories(${ICE_INCLUDE_DIR})
-
 # Add definition so we can compile in ControlPort to the blocks.
 ADD_DEFINITIONS(-DGR_CTRLPORT)
 
-########################################################################
-# Run ICE To compile Slice files
-########################################################################
-EXECUTE_PROCESS(
-   COMMAND "${ICE_SLICE2CPP}" "-I${CMAKE_CURRENT_SOURCE_DIR}"
-       "--output-dir=${CMAKE_CURRENT_BINARY_DIR}/"
-       "${CMAKE_CURRENT_SOURCE_DIR}/gnuradio.ice"
-   )
-
 list(APPEND gnuradio_runtime_sources
-  ${CMAKE_CURRENT_SOURCE_DIR}/ice_application_base.cc
   ${CMAKE_CURRENT_SOURCE_DIR}/rpcmanager.cc
-  ${CMAKE_CURRENT_SOURCE_DIR}/rpcpmtconverters_ice.cc
   ${CMAKE_CURRENT_SOURCE_DIR}/rpcserver_aggregator.cc
   ${CMAKE_CURRENT_SOURCE_DIR}/rpcserver_booter_aggregator.cc
-  ${CMAKE_CURRENT_SOURCE_DIR}/rpcserver_booter_ice.cc
-  ${CMAKE_CURRENT_SOURCE_DIR}/rpcserver_ice.cc
   ${CMAKE_CURRENT_SOURCE_DIR}/rpcserver_selector.cc
-)
-
-# Append generated file in build directory
-list(APPEND gnuradio_runtime_sources
-    ${CMAKE_CURRENT_BINARY_DIR}/gnuradio.cpp
 )
 
 ########################################################################
@@ -55,8 +35,8 @@ list(APPEND gnuradio_runtime_sources
 
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
 
-list(APPEND gnuradio_runtime_libs
-  ${ICE_LIBRARIES}
-)
+# Add any required libraries here
+#list(APPEND gnuradio_runtime_libs
+#)
 
 endif(ENABLE_GR_CTRLPORT)

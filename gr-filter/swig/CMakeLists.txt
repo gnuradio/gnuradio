@@ -33,7 +33,6 @@ set(GR_SWIG_INCLUDE_DIRS
 
 if(ENABLE_GR_CTRLPORT)
   list(APPEND GR_SWIG_FLAGS "-DGR_CTRLPORT")
-  list(APPEND GR_SWIG_INCLUDE_DIRS ${ICE_INCLUDE_DIR})
 endif(ENABLE_GR_CTRLPORT)
 
 # FIXME: rename to filter_swig_doc.i when gnuradio-runtime is updated

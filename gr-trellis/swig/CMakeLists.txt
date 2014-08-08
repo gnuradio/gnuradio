@@ -34,7 +34,6 @@ set(GR_SWIG_LIBRARIES gnuradio-trellis gnuradio-digital)
 
 if(ENABLE_GR_CTRLPORT)
   list(APPEND GR_SWIG_FLAGS "-DGR_CTRLPORT")
-  list(APPEND GR_SWIG_INCLUDE_DIRS ${ICE_INCLUDE_DIR})
 endif(ENABLE_GR_CTRLPORT)
 
 # Setup swig docs to depend on includes and pull in from build directory

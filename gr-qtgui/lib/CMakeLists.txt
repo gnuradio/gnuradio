@@ -134,7 +134,6 @@ include_directories(${PYTHON_INCLUDE_PATH}) #deprecated for dirs (cmake 2.6)
 
 if(ENABLE_GR_CTRLPORT)
   ADD_DEFINITIONS(-DGR_CTRLPORT)
-  include_directories(${ICE_INCLUDE_DIR})
 endif(ENABLE_GR_CTRLPORT)
 
 ########################################################################
