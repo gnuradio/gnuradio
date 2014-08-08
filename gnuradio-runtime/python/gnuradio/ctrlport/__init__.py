@@ -20,8 +20,6 @@
 
 # The presence of this file turns this directory into a Python package
 
-import Ice, IcePy
-
 # import swig generated symbols into the ctrlport namespace
 #from ctrlport_swig import *
 from monitor import *

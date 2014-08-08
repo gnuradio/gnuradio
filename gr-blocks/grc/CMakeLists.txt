@@ -23,8 +23,6 @@ file(GLOB xml_files "*.xml")
 # Force out the controlport GRC blocks if we've disabled it.
 if(NOT ENABLE_GR_CTRLPORT)
   list(REMOVE_ITEM xml_files
-    ${CMAKE_CURRENT_SOURCE_DIR}/ctrlport_viewer.xml
-    ${CMAKE_CURRENT_SOURCE_DIR}/blocks_ctrlport_performance.xml
     ${CMAKE_CURRENT_SOURCE_DIR}/ctrlport_probe_c.xml
     ${CMAKE_CURRENT_SOURCE_DIR}/ctrlport_probe2_c.xml
     )

@@ -27,8 +27,7 @@
 bool rpcmanager::make_aggregator(false);
 
 #ifdef RPCSERVER_ICE
-  #include <gnuradio/rpcserver_booter_ice.h>
-  rpcmanager::rpcserver_booter_register_helper<rpcserver_booter_ice> boot_ice;
+  #error TODO ICE
 #endif
 
 #ifdef RPCSERVER_ERLANG
