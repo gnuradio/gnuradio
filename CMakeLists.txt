@@ -139,6 +139,11 @@ string(REPLACE "\n" " \\n" COMPILER_INFO ${COMPILER_INFO})
 ########################################################################
 include(GrPlatform) #define LIB_SUFFIX
 set(GR_RUNTIME_DIR      bin)
+if(CMAKE_SYSTEM_NAME STREQUAL "FreeBSD")
+  set(GR_PKGCONFIG_DIR      libdata${LIB_SUFFIX})
+else(CMAKE_SYSTEM_NAME STREQUAL "FreeBSD")
+  set(GR_PKGCONFIG_DIR      lib${LIB_SUFFIX})
+endif(CMAKE_SYSTEM_NAME STREQUAL "FreeBSD")
 set(GR_LIBRARY_DIR      lib${LIB_SUFFIX})
 set(GR_INCLUDE_DIR      include)
 set(GR_DATA_DIR         share)
