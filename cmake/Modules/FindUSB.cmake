@@ -8,12 +8,45 @@ if(NOT LIBUSB_FOUND)
     /usr/local/include
   )
 
-  find_library(LIBUSB_LIBRARIES NAMES usb-1.0
-    PATHS
-    ${LIBUSB_PKG_LIBRARY_DIRS}
-    /usr/lib
-    /usr/local/lib
-  )
+  # FreeBSD LibUSB implementation fixes and quirks.
+  if(CMAKE_SYSTEM_NAME STREQUAL "FreeBSD")
+    # Search for LibUSB
+    find_library(LIBUSB_LIBRARIES NAMES usb
+      PATHS
+      ${LIBUSB_PKG_LIBRARY_DIRS}
+      /usr/lib
+    )
+    # Check if LibUSB has libusb_get_string_descriptor() 
+    check_library_exists(
+      ${LIBUSB_LIBRARIES}
+      "libusb_get_string_descriptor"
+      "/usr/lib"
+      FREEBSD_HAVE_LIBUSB_GET_STRING_DESCRIPTOR
+    )
+    if(NOT FREEBSD_HAVE_LIBUSB_GET_STRING_DESCRIPTOR)
+      set(FREEBSD_HAVE_NO_LIBUSB_GET_STRING_DESCRIPTOR TRUE CACHE INTERNAL "")
+      add_definitions(-DFREEBSD_HAVE_NO_LIBUSB_GET_STRING_DESCRIPTOR)
+    endif(NOT FREEBSD_HAVE_LIBUSB_GET_STRING_DESCRIPTOR)
+    # Check if LibUSB has libusb_handle_events_completed()
+    check_library_exists(
+      ${LIBUSB_LIBRARIES}
+      "libusb_handle_events_completed"
+      "/usr/lib"
+      FREEBSD_HAVE_LIBUSB_HANDLE_EVENTS_COMPLETED
+    )
+    if(NOT FREEBSD_HAVE_LIBUSB_HANDLE_EVENTS_COMPLETED)
+      set(FREEBSD_HAVE_NO_LIBUSB_HANDLE_EVENTS_COMPLETED TRUE CACHE INTERNAL "")
+      add_definitions(-DFREEBSD_HAVE_NO_LIBUSB_HANDLE_EVENTS_COMPLETED)
+    endif(NOT FREEBSD_HAVE_LIBUSB_HANDLE_EVENTS_COMPLETED)
+
+  else(CMAKE_SYSTEM_NAME STREQUAL "FreeBSD")
+    find_library(LIBUSB_LIBRARIES NAMES usb
+      PATHS
+      ${LIBUSB_PKG_LIBRARY_DIRS}
+      /usr/lib
+      /usr/local/lib
+    )
+  endif(CMAKE_SYSTEM_NAME STREQUAL "FreeBSD")
 
 if(LIBUSB_INCLUDE_DIR AND LIBUSB_LIBRARIES)
   set(LIBUSB_FOUND TRUE CACHE INTERNAL "libusb-1.0 found")
