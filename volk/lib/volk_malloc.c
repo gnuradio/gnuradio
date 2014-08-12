@@ -54,7 +54,7 @@
 
 // Otherwise, test if we are a POSIX or X/Open system
 // This only has a restriction that alignment be a power of 2.
-#if _POSIX_C_SOURCE >= 200112L || _XOPEN_SOURCE >= 600
+#if _POSIX_C_SOURCE >= 200112L || _XOPEN_SOURCE >= 600 || HAVE_POSIX_MEMALIGN
 
 void *volk_malloc(size_t size, size_t alignment)
 {
@@ -75,7 +75,7 @@ void volk_free(void *ptr)
 }
 
 // No standard handlers; we'll do it ourselves.
-#else // _POSIX_C_SOURCE >= 200112L || _XOPEN_SOURCE >= 600
+#else // _POSIX_C_SOURCE >= 200112L || _XOPEN_SOURCE >= 600 || HAVE_POSIX_MEMALIGN
 
 typedef struct mbuf_t {
   void *orig;
@@ -171,6 +171,6 @@ void volk_free(void *ptr)
   fprintf(stderr, "VOLK: tried to free a non-VOLK pointer\n");
 }
 
-#endif // _POSIX_C_SOURCE >= 200112L || _XOPEN_SOURCE >= 600
+#endif // _POSIX_C_SOURCE >= 200112L || _XOPEN_SOURCE >= 600 || HAVE_POSIX_MEMALIGN
 
 //#endif // _ISOC11_SOURCE
