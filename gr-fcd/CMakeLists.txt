@@ -21,6 +21,7 @@
 # Setup dependencies
 ########################################################################
 include(GrBoost)
+include(FindICONV)
 if(NOT WIN32 AND NOT ${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
   include(FindUSB)
 endif()

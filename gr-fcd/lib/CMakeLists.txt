@@ -32,6 +32,7 @@ include_directories(
     ${GNURADIO_RUNTIME_INCLUDE_DIRS}
     ${Boost_INCLUDE_DIRS}
     ${LIBUSB_INCLUDE_DIR}
+    ${ICONV_INCLUDE_DIR}
 )
 
 link_directories(
@@ -90,6 +91,9 @@ endif()
 add_library(gnuradio-fcd SHARED ${gr_fcd_sources})
 if (LINUX)
   list(APPEND fcd_libs rt)
+endif()
+if(CMAKE_SYSTEM_NAME STREQUAL "FreeBSD")
+  list(APPEND fcd_libs ${ICONV_LIBRARY})
 endif()
 target_link_libraries(gnuradio-fcd ${fcd_libs} ${LOG4CPP_LIBRARIES})
 
