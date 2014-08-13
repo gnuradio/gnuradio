@@ -90,6 +90,12 @@ function(GR_REGISTER_COMPONENT name var)
     set(_gr_disabled_components ${_gr_disabled_components} CACHE INTERNAL "" FORCE)
 endfunction(GR_REGISTER_COMPONENT)
 
+
+function(GR_APPEND_SUBCOMPONENT name)
+  list(APPEND _gr_enabled_components "* ${name}")
+  set(_gr_enabled_components ${_gr_enabled_components} CACHE INTERNAL "" FORCE)
+endfunction(GR_APPEND_SUBCOMPONENT name)
+
 ########################################################################
 # Print the registered component summary
 ########################################################################
