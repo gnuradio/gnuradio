@@ -36,15 +36,16 @@
 namespace gr {
   namespace audio {
 
-    AUDIO_REGISTER_SINK(REG_PRIO_HIGH, alsa)(int sampling_rate,
-                                             const std::string &device_name,
-                                             bool ok_to_block)
+    sink::sptr
+    alsa_sink_fcn(int sampling_rate,
+                  const std::string &device_name,
+                  bool ok_to_block)
     {
       return sink::sptr
         (new alsa_sink(sampling_rate, device_name, ok_to_block));
     }
 
-    static bool CHATTY_DEBUG = false;
+    static bool CHATTY_DEBUG = true;
 
     static snd_pcm_format_t acceptable_formats[] = {
       // these are in our preferred order...
@@ -111,8 +112,8 @@ namespace gr {
       if(ok_to_block == false)
         snd_pcm_nonblock(d_pcm_handle, !ok_to_block);
       if(error < 0){
-        fprintf(stderr, "audio_alsa_sink[%s]: %s\n",
-                d_device_name.c_str(), snd_strerror(error));
+        GR_LOG_ERROR(d_logger, boost::format("[%1%]: %2%") \
+                     % (d_device_name) % (snd_strerror(error)));
         throw std::runtime_error("audio_alsa_sink");
       }
 
@@ -171,9 +172,9 @@ namespace gr {
         bail("failed to set rate near", error);
 
       if(orig_sampling_rate != d_sampling_rate) {
-        fprintf(stderr, "audio_alsa_sink[%s]: unable to support sampling rate %d\n",
-                snd_pcm_name(d_pcm_handle), orig_sampling_rate);
-        fprintf(stderr, "  card requested %d instead.\n", d_sampling_rate);
+        GR_LOG_INFO(d_logger, boost::format("[%1%]: unable to support sampling rate %2%\n\tCard requested %3% instead.") \
+                     % snd_pcm_name(d_pcm_handle) % orig_sampling_rate \
+                     % d_sampling_rate);
       }
 
       /*
@@ -185,8 +186,6 @@ namespace gr {
       unsigned int min_nperiods, max_nperiods;
       snd_pcm_hw_params_get_periods_min(d_hw_params, &min_nperiods, &dir);
       snd_pcm_hw_params_get_periods_max(d_hw_params, &max_nperiods, &dir);
-      //fprintf(stderr, "alsa_sink: min_nperiods = %d, max_nperiods = %d\n",
-      // min_nperiods, max_nperiods);
 
       unsigned int orig_nperiods = d_nperiods;
       d_nperiods = std::min (std::max (min_nperiods, d_nperiods), max_nperiods);
@@ -274,10 +273,11 @@ namespace gr {
 
       d_buffer = new char[d_buffer_size_bytes];
 
-      if(CHATTY_DEBUG)
-        fprintf(stdout, "audio_alsa_sink[%s]: sample resolution = %d bits\n",
-                snd_pcm_name(d_pcm_handle),
-                snd_pcm_hw_params_get_sbits(d_hw_params));
+      if(CHATTY_DEBUG) {
+        GR_LOG_DEBUG(d_logger, boost::format("[%1%]: sample resolution = %d bits") \
+                     % snd_pcm_name(d_pcm_handle)                       \
+                     % snd_pcm_hw_params_get_sbits(d_hw_params));
+      }
 
       switch(d_format) {
       case SND_PCM_FORMAT_S16:
@@ -533,8 +533,8 @@ namespace gr {
     void
     alsa_sink::output_error_msg (const char *msg, int err)
     {
-      fprintf(stderr, "audio_alsa_sink[%s]: %s: %s\n",
-              snd_pcm_name(d_pcm_handle), msg,  snd_strerror(err));
+      GR_LOG_ERROR(d_logger, boost::format("[%1%]: %2%: %3%") \
+                   % snd_pcm_name(d_pcm_handle) % msg % snd_strerror(err));
     }
 
     void

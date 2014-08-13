@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2006-2011,2013 Free Software Foundation, Inc.
+ * Copyright 2006-2011,2013-2014 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -38,9 +38,10 @@
 namespace gr {
   namespace audio {
 
-    AUDIO_REGISTER_SINK(REG_PRIO_MED, portaudio)(int sampling_rate,
-                                                 const std::string &device_name,
-                                                 bool ok_to_block)
+    sink::sptr
+    portaudio_sink_fcn(int sampling_rate,
+                       const std::string &device_name,
+                       bool ok_to_block)
     {
       return sink::sptr
         (new portaudio_sink(sampling_rate, device_name, ok_to_block));

@@ -41,9 +41,10 @@
 namespace gr {
   namespace audio {
 
-    AUDIO_REGISTER_SINK(REG_PRIO_LOW, oss)(int sampling_rate,
-                                           const std::string &device_name,
-                                           bool ok_to_block)
+    sink::sptr
+    oss_sink_fcn(int sampling_rate,
+                 const std::string &device_name,
+                 bool ok_to_block)
     {
       return sink::sptr
         (new oss_sink(sampling_rate, device_name, ok_to_block));
