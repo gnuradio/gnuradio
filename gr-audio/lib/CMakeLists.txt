@@ -17,6 +17,8 @@
 # the Free Software Foundation, Inc., 51 Franklin Street,
 # Boston, MA 02110-1301, USA.
 
+include(GrComponent)
+
 ########################################################################
 # Setup the include and linker paths
 ########################################################################
@@ -47,6 +49,9 @@ find_package(ALSA)
 
 if(ALSA_FOUND)
 
+    add_definitions(-DALSA_FOUND)
+    GR_APPEND_SUBCOMPONENT("alsa")
+
     include_directories(BEFORE ${CMAKE_CURRENT_SOURCE_DIR}/alsa)
     include_directories(${ALSA_INCLUDE_DIRS})
     list(APPEND gr_audio_libs ${ALSA_LIBRARIES})
@@ -66,6 +71,9 @@ find_package(OSS)
 
 if(OSS_FOUND)
 
+    add_definitions(-DOSS_FOUND)
+    GR_APPEND_SUBCOMPONENT("oss")
+
     include_directories(BEFORE ${CMAKE_CURRENT_SOURCE_DIR}/oss)
     include_directories(${OSS_INCLUDE_DIRS})
     list(APPEND gr_audio_sources
@@ -83,6 +91,9 @@ endif(OSS_FOUND)
 find_package(Jack)
 
 if(JACK_FOUND)
+
+    add_definitions(-DJACK_FOUND)
+    GR_APPEND_SUBCOMPONENT("jack")
 
     include_directories(BEFORE ${CMAKE_CURRENT_SOURCE_DIR}/jack)
     include_directories(${JACK_INCLUDE_DIRS})
@@ -105,6 +116,9 @@ CHECK_INCLUDE_FILE_CXX(AudioUnit/AudioUnit.h AUDIO_UNIT_H)
 CHECK_INCLUDE_FILE_CXX(AudioToolbox/AudioToolbox.h AUDIO_TOOLBOX_H)
 
 if(AUDIO_UNIT_H AND AUDIO_TOOLBOX_H)
+
+    add_definitions(-DOSX_FOUND)
+    GR_APPEND_SUBCOMPONENT("osx")
 
     set(OSX_AUDIO_VALID 1 CACHE INTERNAL "OSX Audio is valid")
 
@@ -134,7 +148,10 @@ endif(AUDIO_UNIT_H AND AUDIO_TOOLBOX_H)
 ########################################################################
 find_package(Portaudio)
 
-if(PORTAUDIO_FOUND)
+if(PORTAUDIO2_FOUND)
+
+    add_definitions(-DPORTAUDIO_FOUND)
+    GR_APPEND_SUBCOMPONENT("portaudio")
 
     include_directories(BEFORE ${CMAKE_CURRENT_SOURCE_DIR}/portaudio)
     include_directories(${PORTAUDIO_INCLUDE_DIRS})
@@ -147,12 +164,15 @@ if(PORTAUDIO_FOUND)
     )
     list(APPEND gr_audio_confs ${CMAKE_CURRENT_SOURCE_DIR}/portaudio/gr-audio-portaudio.conf)
 
-endif(PORTAUDIO_FOUND)
+endif(PORTAUDIO2_FOUND)
 
 ########################################################################
 ## Windows Support
 ########################################################################
 if(WIN32)
+
+    add_definitions(-DWIN32_FOUND)
+    GR_APPEND_SUBCOMPONENT("windows")
 
     include_directories(BEFORE ${CMAKE_CURRENT_SOURCE_DIR}/windows)
     list(APPEND gr_audio_libs winmm.lib)

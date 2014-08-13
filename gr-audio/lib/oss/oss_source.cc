@@ -41,9 +41,10 @@
 namespace gr {
   namespace audio {
 
-    AUDIO_REGISTER_SOURCE(REG_PRIO_LOW, oss)(int sampling_rate,
-                                             const std::string &device_name,
-                                             bool ok_to_block)
+    source::sptr
+    oss_source_fcn(int sampling_rate,
+                   const std::string &device_name,
+                   bool ok_to_block)
     {
       return source::sptr
         (new oss_source(sampling_rate, device_name, ok_to_block));

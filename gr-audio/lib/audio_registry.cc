@@ -1,5 +1,5 @@
 /*
- * Copyright 2011,2013 Free Software Foundation, Inc.
+ * Copyright 2011,2013-2014 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -22,6 +22,7 @@
 #include "audio_registry.h"
 #include <boost/foreach.hpp>
 #include <gnuradio/prefs.h>
+#include <gnuradio/logger.h>
 #include <stdexcept>
 #include <vector>
 #include <iostream>
@@ -33,35 +34,84 @@ namespace gr {
      * Create registries
      **********************************************************************/
 
-    struct source_entry_t {
-      reg_prio_type prio;
-      std::string arch;
-      source_factory_t source;
-    };
-
-    static std::vector<source_entry_t> &get_source_registry(void)
+    static std::vector<source_entry_t> &
+    get_source_registry(void)
     {
+      static bool src_reg = false;
       static std::vector<source_entry_t> d_registry;
+
+      if(!src_reg) {
+#ifdef ALSA_FOUND
+        d_registry.push_back(register_source(REG_PRIO_HIGH, "alsa", alsa_source_fcn));
+#endif /* ALSA_FOUND */
+
+#ifdef OSS_FOUND
+        d_registry.push_back(register_source(REG_PRIO_LOW, "oss", oss_source_fcn));
+#endif /* OSS_FOUND */
+
+#ifdef PORTAUDIO_FOUND
+        d_registry.push_back(register_source(REG_PRIO_MED, "portaudio", portaudio_source_fcn));
+#endif /* PORTAUDIO_FOUND */
+
+#ifdef JACK_FOUND
+        d_registry.push_back(register_source(REG_PRIO_MED, "jack", jack_source_fcn));
+#endif /* JACK_FOUND */
+
+#ifdef OSX_FOUND
+        d_registry.push_back(register_source(REG_PRIO_HIGH, "osx", osx_source_fcn));
+#endif /* OSX_FOUND */
+
+#ifdef WIN32_FOUND
+        d_registry.push_back(register_source(REG_PRIO_HIGH, "windows", windows_source_fcn));
+#endif /* WIN32_FOUND */
+
+        src_reg = true;
+      }
+
       return d_registry;
     }
 
-    struct sink_entry_t
+    static std::vector<sink_entry_t> &
+    get_sink_registry(void)
     {
-      reg_prio_type prio;
-      std::string arch;
-      sink_factory_t sink;
-    };
-
-    static std::vector<sink_entry_t> &get_sink_registry(void)
-    {
+      static bool snk_reg = false;
       static std::vector<sink_entry_t> d_registry;
+
+      if(!snk_reg) {
+#if ALSA_FOUND
+        d_registry.push_back(register_sink(REG_PRIO_HIGH, "alsa", alsa_sink_fcn));
+#endif /* ALSA_FOUND */
+
+#if OSS_FOUND
+        d_registry.push_back(register_sink(REG_PRIO_LOW, "oss", oss_sink_fcn));
+#endif /* OSS_FOUND */
+
+#if PORTAUDIO_FOUND
+        d_registry.push_back(register_sink(REG_PRIO_MED, "portaudio", portaudio_sink_fcn));
+#endif /* PORTAUDIO_FOUND */
+
+#if JACK_FOUND
+        d_registry.push_back(register_sink(REG_PRIO_MED, "jack", jack_sink_fcn));
+#endif /* JACK_FOUND */
+
+#ifdef OSX_FOUND
+        d_registry.push_back(register_sink(REG_PRIO_HIGH, "osx", osx_sink_fcn));
+#endif /* OSX_FOUND */
+
+#ifdef WIN32_FOUND
+        d_registry.push_back(register_sink(REG_PRIO_HIGH, "windows", windows_sink_fcn));
+#endif /* WIN32_FOUND */
+
+        snk_reg = true;
+      }
+
       return d_registry;
     }
 
     /***********************************************************************
      * Register functions
      **********************************************************************/
-    void
+    source_entry_t
     register_source(reg_prio_type prio,
                     const std::string &arch,
                     source_factory_t source)
@@ -70,18 +120,19 @@ namespace gr {
       entry.prio = prio;
       entry.arch = arch;
       entry.source = source;
-      get_source_registry().push_back(entry);
+      return entry;
     }
 
-    void register_sink(reg_prio_type prio,
-                       const std::string &arch,
-                       sink_factory_t sink)
+    sink_entry_t
+    register_sink(reg_prio_type prio,
+                  const std::string &arch,
+                  sink_factory_t sink)
     {
       sink_entry_t entry;
       entry.prio = prio;
       entry.arch = arch;
       entry.sink = sink;
-      get_sink_registry().push_back(entry);
+      return entry;
     }
 
     /***********************************************************************
@@ -106,6 +157,9 @@ namespace gr {
                  const std::string device_name,
                  bool ok_to_block)
     {
+      gr::logger_ptr logger, debug_logger;
+      configure_default_loggers(logger, debug_logger, "audio source");
+
       if(get_source_registry().empty()) {
         throw std::runtime_error("no available audio source factories");
       }
@@ -121,7 +175,7 @@ namespace gr {
         return e.source(sampling_rate, device_name, ok_to_block);
       }
 
-      //std::cout << "Audio source arch: " << entry.name << std::endl;
+      GR_LOG_INFO(logger, boost::format("Audio source arch: %1%") % (entry.arch));
       return entry.source(sampling_rate, device_name, ok_to_block);
     }
 
@@ -130,6 +184,9 @@ namespace gr {
                const std::string device_name,
                bool ok_to_block)
     {
+      gr::logger_ptr logger, debug_logger;
+      configure_default_loggers(logger, debug_logger, "audio source");
+
       if(get_sink_registry().empty()) {
         throw std::runtime_error("no available audio sink factories");
       }
@@ -146,7 +203,7 @@ namespace gr {
       }
 
       do_arch_warning(arch);
-      //std::cout << "Audio sink arch: " << entry.name << std::endl;
+      GR_LOG_INFO(logger, boost::format("Audio sink arch: %1%") % (entry.arch));
       return entry.sink(sampling_rate, device_name, ok_to_block);
     }
 

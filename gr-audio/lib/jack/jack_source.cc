@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2005,2006,2010,2013 Free Software Foundation, Inc.
+ * Copyright 2005,2006,2010,2013-2014 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -40,9 +40,10 @@
 namespace gr {
   namespace audio {
 
-    AUDIO_REGISTER_SOURCE(REG_PRIO_MED, jack)(int sampling_rate,
-                                              const std::string &device_name,
-                                              bool ok_to_block)
+    source::sptr
+    jack_source_fcn(int sampling_rate,
+                    const std::string &device_name,
+                    bool ok_to_block)
     {
       return source::sptr
         (new jack_source(sampling_rate, device_name, ok_to_block));
@@ -125,8 +126,8 @@ namespace gr {
       if((d_jack_client = jack_client_open(d_device_name.c_str(),
                                            options, &status,
                                            server_name)) == NULL) {
-        fprintf(stderr, "audio_jack_source[%s]: jack server not running?\n",
-                d_device_name.c_str());
+        GR_LOG_ERROR(d_logger, boost::format("[%1%]: jack server not running?") \
+                     % d_device_name);
         throw std::runtime_error("audio_jack_source");
       }
 
@@ -150,9 +151,8 @@ namespace gr {
       jack_nframes_t sample_rate = jack_get_sample_rate(d_jack_client);
 
       if((jack_nframes_t)sampling_rate != sample_rate) {
-        fprintf(stderr, "audio_jack_source[%s]: unable to support sampling rate %d\n",
-                d_device_name.c_str(), sampling_rate);
-        fprintf(stderr, "  card requested %d instead.\n", sample_rate);
+        GR_LOG_INFO(d_logger, boost::format("[%1%]: unable to support sampling rate %2%\n\tCard requested %3% instead.") \
+                     % d_device_name % sampling_rate % d_sampling_rate);
       }
     }
 
@@ -251,8 +251,8 @@ namespace gr {
     void
     jack_source::output_error_msg(const char *msg, int err)
     {
-      fprintf(stderr, "audio_jack_source[%s]: %s: %d\n",
-              d_device_name.c_str(), msg,  err);
+      GR_LOG_ERROR(d_logger, boost::format("[%1%]: %2%: %3%") \
+                   % d_device_name % msg % err);
     }
 
     void
