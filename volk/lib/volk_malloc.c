@@ -20,6 +20,7 @@
  * Boston, MA 02110-1301, USA.
  */
 
+#include <pthread.h>
 #include <volk/volk_malloc.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -77,98 +78,45 @@ void volk_free(void *ptr)
 // No standard handlers; we'll do it ourselves.
 #else // _POSIX_C_SOURCE >= 200112L || _XOPEN_SOURCE >= 600 || HAVE_POSIX_MEMALIGN
 
-typedef struct mbuf_t {
-  void *orig;
-  void *align;
-  struct mbuf_t *next;
-} mbuf;
+struct block_info
+{
+  void *real;
+};
 
-/*
-  Keep track of the pointers we've allocated. We hold a linked list
-  from volk_first_ptr to volk_last_ptr and the number of allocated
-  pointers. When allocating a new pointer, we create the pointer with
-  malloc, find how it is misaligned, and create a new pointer at the
-  alignment boundary. Both of these are stored in the linked list data
-  structure. When free, we are passed the aligned pointer and use that
-  to look up the original pointer, which we use to actually free the
-  entire allocated memory.
-*/
-unsigned int volk_nptrs = 0;
-mbuf* volk_first_ptr = NULL;
-mbuf* volk_last_ptr = NULL;
-
-void*
+void *
 volk_malloc(size_t size, size_t alignment)
 {
-  // Allocate memory plus enough extra to adjust alignment
-  void *ptr = malloc(size + (alignment - 1));
-  if(ptr == NULL) {
-    free(ptr);
-    fprintf(stderr, "VOLK: Error allocating memory (malloc)\n");
-    return NULL;
-  }
+  void *real, *user;
+  struct block_info *info;
 
-  // Find and return the first aligned boundary of the pointer
-  void *aptr = ptr;
-  if((unsigned long)ptr % alignment != 0)
-    aptr = (void*)((unsigned long)ptr + (alignment - ((unsigned long)ptr % alignment)));
+  /* At least align to sizeof our struct */
+  if (alignment < sizeof(struct block_info))
+    alignment = sizeof(struct block_info);
 
-  // Store original pointer and aligned pointers
-  mbuf *n = (mbuf*)malloc(sizeof(mbuf));
-  n->orig = ptr;
-  n->align = aptr;
-  n->next = NULL;
-  if(volk_first_ptr == NULL) {
-    volk_first_ptr = n;
-  }
-  else {
-    volk_last_ptr->next = n;
-  }
-  volk_last_ptr = n;
-  volk_nptrs++;
+  /* Alloc */
+  real = malloc(size + (2 * alignment - 1));
 
-  return aptr;
+  /* Get pointer to the various zones */
+  user = (void *)((((uintptr_t) real) + sizeof(struct block_info) + alignment - 1) & ~(alignment - 1));
+  info = (struct block_info *)(((uintptr_t)user) - sizeof(struct block_info));
+
+  /* Store the info for the free */
+  info->real = real;
+
+  /* Return pointer to user */
+  return user;
 }
 
-void volk_free(void *ptr)
+void
+volk_free(void *ptr)
 {
-  unsigned long aptr = (unsigned long)ptr;
-  mbuf *prev = volk_first_ptr;
-  mbuf *p = volk_first_ptr;
+  struct block_info *info;
 
-  // Look for the aligned pointer until we either find it or have
-  // walked the entire list of allocated pointers
-  while(p != NULL) {
-    if((unsigned long)(p->align) == aptr) {
-      // If the memory is found at the first pointer, move this
-      // pointer to the next in the list
-      if(p == volk_first_ptr) {
-        if(volk_first_ptr == volk_last_ptr)
-          volk_last_ptr = NULL;
-        volk_first_ptr = p->next;
-      }
-      // Otherwise, link the previous to the following to skip the
-      // struct we're deleting.
-      else {
-        if(p == volk_last_ptr)
-          volk_last_ptr = prev;
-        prev->next = p->next;
-      }
+  /* Get the real pointer */
+  info = (struct block_info *)(((uintptr_t)ptr) - sizeof(struct block_info));
 
-      // Free the original pointer to remove all memory allocated
-      free((void*)p->orig);
-      volk_nptrs--;
-
-      // Free the struct to clean up all memory and exit
-      free(p);
-
-      return;
-    }
-    // Not found, update our pointers to look at the next in the list
-    prev = p;
-    p = p->next;
-  }
-  fprintf(stderr, "VOLK: tried to free a non-VOLK pointer\n");
+  /* Release real pointer */
+  free(info->real);
 }
 
 #endif // _POSIX_C_SOURCE >= 200112L || _XOPEN_SOURCE >= 600 || HAVE_POSIX_MEMALIGN
