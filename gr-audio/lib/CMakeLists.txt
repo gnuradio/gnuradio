@@ -136,8 +136,8 @@ find_package(Portaudio)
 
 if(PORTAUDIO_FOUND)
 
-    include_directories(BEFORE ${CMAKE_CURRENT_SOURCE_DIR}/portaudio)
-    include_directories(${PORTAUDIO_INCLUDE_DIRS})
+    include_directories(${CMAKE_CURRENT_SOURCE_DIR}/portaudio)
+    include_directories(BEFORE ${PORTAUDIO_INCLUDE_DIRS})
     list(APPEND gr_audio_libs ${PORTAUDIO_LIBRARIES})
     add_definitions(${PORTAUDIO_DEFINITIONS})
     list(APPEND gr_audio_sources
