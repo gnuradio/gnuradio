@@ -44,6 +44,9 @@ namespace gr {
                  io_signature::make(1, -1, itemsize)),
         d_itemsize(itemsize)
     {
+      if(delay < 0) {
+        throw std::runtime_error("delay: Cannot initialize block with a delay < 0.");
+      }
       set_dly(delay);
       d_delta = 0;
     }
