@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
-* Copyright 2004-2011,2013 Free Software Foundation, Inc.
+* Copyright 2004-2011,2013-2014 Free Software Foundation, Inc.
 *
 * This file is part of GNU Radio
 *
@@ -40,9 +40,10 @@
 namespace gr {
   namespace audio {
 
-    AUDIO_REGISTER_SINK(REG_PRIO_HIGH, windows)(int sampling_rate,
-                                                const std::string &device_name,
-                                                bool)
+    sink::sptr
+    windows_sink_fcn(int sampling_rate,
+                     const std::string &device_name,
+                     bool)
     {
       return sink::sptr
         (new windows_sink(sampling_rate, device_name));

@@ -34,10 +34,10 @@
 namespace gr {
   namespace audio {
 
-    AUDIO_REGISTER_SOURCE(REG_PRIO_HIGH, osx)
-      (int sampling_rate,
-       const std::string& device_name,
-       bool ok_to_block)
+    source::sptr
+    osx_source_fcn(int sampling_rate,
+                   const std::string& device_name,
+                   bool ok_to_block)
     {
       return source::sptr
         (new osx_source(sampling_rate, device_name, ok_to_block));

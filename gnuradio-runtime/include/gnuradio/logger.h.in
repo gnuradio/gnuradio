@@ -834,4 +834,19 @@ GR_RUNTIME_API std::vector<std::string> gr_logger_get_logger_names(void);
  */
 GR_RUNTIME_API void gr_logger_reset_config(void);
 
+
+namespace gr {
+  /*!
+   * Function to use the GR prefs files to get and setup the two
+   * default loggers defined there. The loggers are unique to the
+   * class in which they are called, and we pass it the \p name to
+   * identify where the log message originates from. For a GNU Radio
+   * block, we use 'alias()' for this value, and this is set up for us
+   * automatically in gr::block.
+   */
+  GR_RUNTIME_API  bool configure_default_loggers(gr::logger_ptr &l, gr::logger_ptr &d,
+                                                 const std::string name);
+} /* namespace gr */
+
+
 #endif /* INCLUDED_GR_LOGGER_H */

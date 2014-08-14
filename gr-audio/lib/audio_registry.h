@@ -1,5 +1,5 @@
 /*
- * Copyright 2011 Free Software Foundation, Inc.
+ * Copyright 2011-2014 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -38,24 +38,77 @@ namespace gr {
       REG_PRIO_HIGH = 300
     };
 
-    void register_source(reg_prio_type prio, const std::string &arch,
-                         source_factory_t source);
-    void register_sink(reg_prio_type prio, const std::string &arch,
+    struct source_entry_t {
+      reg_prio_type prio;
+      std::string arch;
+      source_factory_t source;
+    };
+
+    struct sink_entry_t
+    {
+      reg_prio_type prio;
+      std::string arch;
+      sink_factory_t sink;
+    };
+
+    source_entry_t register_source(reg_prio_type prio, const std::string &arch,
+                                  source_factory_t source);
+    sink_entry_t register_sink(reg_prio_type prio, const std::string &arch,
                        sink_factory_t sink);
 
-#define AUDIO_REGISTER_FIXTURE(x) static struct x{x();}x;x::x()
+#ifdef ALSA_FOUND
+    source::sptr alsa_source_fcn(int sampling_rate,
+                                 const std::string &device_name,
+                                 bool ok_to_block);
+    sink::sptr alsa_sink_fcn(int sampling_rate,
+                             const std::string &device_name,
+                             bool ok_to_block);
+#endif /* ALSA_FOUND */
 
-#define AUDIO_REGISTER_SOURCE(prio, arch) \
-    static source::sptr arch##_source_fcn(int, const std::string &, bool); \
-    AUDIO_REGISTER_FIXTURE(arch##_source_reg) {                   \
-      register_source(prio, #arch, &arch##_source_fcn);           \
-    } static source::sptr arch##_source_fcn
+#ifdef OSS_FOUND
+    source::sptr oss_source_fcn(int sampling_rate,
+                                const std::string &device_name,
+                                bool ok_to_block);
+    sink::sptr oss_sink_fcn(int sampling_rate,
+                            const std::string &device_name,
+                            bool ok_to_block);
+#endif /* OSS_FOUND */
 
-#define AUDIO_REGISTER_SINK(prio, arch)                            \
-    static sink::sptr arch##_sink_fcn(int, const std::string &, bool); \
-    AUDIO_REGISTER_FIXTURE(arch##_sink_reg) {                     \
-      register_sink(prio, #arch, &arch##_sink_fcn);               \
-    } static sink::sptr arch##_sink_fcn
+#ifdef PORTAUDIO_FOUND
+    source::sptr portaudio_source_fcn(int sampling_rate,
+                                      const std::string &device_name,
+                                      bool ok_to_block);
+    sink::sptr portaudio_sink_fcn(int sampling_rate,
+                                  const std::string &device_name,
+                                  bool ok_to_block);
+#endif /* PORTAUDIO_FOUND */
+
+#ifdef JACK_FOUND
+    source::sptr jack_source_fcn(int sampling_rate,
+                                 const std::string &device_name,
+                                 bool ok_to_block);
+    sink::sptr jack_sink_fcn(int sampling_rate,
+                             const std::string &device_name,
+                             bool ok_to_block);
+#endif /* JACK_FOUND */
+
+#ifdef OSX_FOUND
+    source::sptr osx_source_fcn(int sampling_rate,
+                                const std::string &device_name,
+                                bool ok_to_block);
+    sink::sptr osx_sink_fcn(int sampling_rate,
+                            const std::string &device_name,
+                            bool ok_to_block);
+#endif /* OSX_FOUND */
+
+#ifdef WIN32_FOUND
+    source::sptr windows_source_fcn(int sampling_rate,
+                                    const std::string &device_name,
+                                    bool ok_to_block);
+    sink::sptr windows_sink_fcn(int sampling_rate,
+                                const std::string &device_name,
+                                bool ok_to_block);
+#endif /* WIN32_FOUND */
 
   } /* namespace audio */
 } /* namespace gr */
