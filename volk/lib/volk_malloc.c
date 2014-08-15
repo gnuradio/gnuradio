@@ -75,6 +75,24 @@ void volk_free(void *ptr)
   free(ptr);
 }
 
+// _aligned_malloc has no restriction on size,
+// available on Windows since Visual C++ 2005
+#elif _MSC_VER >= 1400
+
+void *volk_malloc(size_t size, size_t alignment)
+{
+  void *ptr = _aligned_malloc(size, alignment);
+  if(ptr == NULL) {
+    fprintf(stderr, "VOLK: Error allocating memory (_aligned_malloc)\n");
+  }
+  return ptr;
+}
+
+void volk_free(void *ptr)
+{
+  _aligned_free(ptr);
+}
+
 // No standard handlers; we'll do it ourselves.
 #else // _POSIX_C_SOURCE >= 200112L || _XOPEN_SOURCE >= 600 || HAVE_POSIX_MEMALIGN
 
