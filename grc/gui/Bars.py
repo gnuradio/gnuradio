@@ -103,7 +103,7 @@ MENU_BAR_LIST = (
         Actions.ERRORS_WINDOW_DISPLAY,
         Actions.FIND_BLOCKS,
     ]),
-    (gtk.Action('Build', '_Build', None, None), [
+    (gtk.Action('Run', '_Run', None, None), [
         Actions.FLOW_GRAPH_GEN,
         Actions.FLOW_GRAPH_EXEC,
         Actions.FLOW_GRAPH_KILL,
