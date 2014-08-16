@@ -515,13 +515,13 @@ class notebook(_chooser_base):
 		_chooser_base.__init__(self, **kwargs)
 		assert len(pages) == len(self._choices)
 		self._notebook = notebook
-		self._notebook.Bind(wx.EVT_NOTEBOOK_PAGE_CHANGED, self._handle)
+		self._notebook.Bind(wx.EVT_NOTEBOOK_PAGE_CHANGING, self._handle)
 		#add pages, setting the label on each tab
 		for i, page in enumerate(pages):
 			self._notebook.AddPage(page, self._labels[i])
 		self._add_widget(self._notebook)
 
-	def _handle(self, event): self[INT_KEY] = self._notebook.GetSelection()
+	def _handle(self, event): self[INT_KEY] = event.GetSelection()
 	# SetSelection triggers a page change event (deprecated, breaks on Windows) and ChangeSelection does not
 	def _update(self, i): self._notebook.ChangeSelection(i)
 
