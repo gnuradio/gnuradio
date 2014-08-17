@@ -215,7 +215,7 @@ print(re.sub('\\W', '_', '${name} ${reldir} ' + unique))"
   set(${outfiles} "${swig_generated_file_fullname}" ${swig_extra_generated_files})
 
   foreach(swig_gen_file ${${outfiles}})
-    message(STATUS "UseSWIG::SWIG_ADD_SOURCE_TO_MODULE: name adding dep from '${_target}' to '${swig_gen_file}'")
+    #message(STATUS "UseSWIG::SWIG_ADD_SOURCE_TO_MODULE: name adding dep from '${_target}' to '${swig_gen_file}'")
     add_custom_command(
       OUTPUT ${swig_gen_file}
       COMMAND ""
@@ -228,14 +228,14 @@ print(re.sub('\\W', '_', '${name} ${reldir} ' + unique))"
     ${outfiles} PROPERTIES GENERATED 1
   )
 
-  message(STATUS "UseSWIG::SWIG_ADD_SOURCE_TO_MODULE: name is '${name}'")
-  message(STATUS "UseSWIG::SWIG_ADD_SOURCE_TO_MODULE: ${name} swig_generated_file_fullname is '${swig_generated_file_fullname}'")
-  message(STATUS "UseSWIG::SWIG_ADD_SOURCE_TO_MODULE: ${name} swig_extra_generated_files is '${swig_extra_generated_files}'")
-  message(STATUS "UseSWIG::SWIG_ADD_SOURCE_TO_MODULE: ${name} outfiles is '${outfiles}'")
-  message(STATUS "UseSWIG::SWIG_ADD_SOURCE_TO_MODULE: ${name} {outfiles} is '${${outfiles}}'")
-  message(STATUS "UseSWIG::SWIG_ADD_SOURCE_TO_MODULE: SWIG_MODULE_${name}_EXTRA_DEPS is '${SWIG_MODULE_${name}_EXTRA_DEPS}'")
-  message(STATUS "UseSWIG::SWIG_ADD_SOURCE_TO_MODULE: SWIG_MODULE_${name}_EXTRA_FLAGS is '${SWIG_MODULE_${name}_EXTRA_FLAGS}'")
-  message(STATUS "UseSWIG::SWIG_ADD_SOURCE_TO_MODULE: SWIG_MODULE_${name}_SWIG_LANGUAGE_FLAG is '${SWIG_MODULE_${name}_SWIG_LANGUAGE_FLAG}'")
+  #message(STATUS "UseSWIG::SWIG_ADD_SOURCE_TO_MODULE: name is '${name}'")
+  #message(STATUS "UseSWIG::SWIG_ADD_SOURCE_TO_MODULE: ${name} swig_generated_file_fullname is '${swig_generated_file_fullname}'")
+  #message(STATUS "UseSWIG::SWIG_ADD_SOURCE_TO_MODULE: ${name} swig_extra_generated_files is '${swig_extra_generated_files}'")
+  #message(STATUS "UseSWIG::SWIG_ADD_SOURCE_TO_MODULE: ${name} outfiles is '${outfiles}'")
+  #message(STATUS "UseSWIG::SWIG_ADD_SOURCE_TO_MODULE: ${name} {outfiles} is '${${outfiles}}'")
+  #message(STATUS "UseSWIG::SWIG_ADD_SOURCE_TO_MODULE: SWIG_MODULE_${name}_EXTRA_DEPS is '${SWIG_MODULE_${name}_EXTRA_DEPS}'")
+  #message(STATUS "UseSWIG::SWIG_ADD_SOURCE_TO_MODULE: SWIG_MODULE_${name}_EXTRA_FLAGS is '${SWIG_MODULE_${name}_EXTRA_FLAGS}'")
+  #message(STATUS "UseSWIG::SWIG_ADD_SOURCE_TO_MODULE: SWIG_MODULE_${name}_SWIG_LANGUAGE_FLAG is '${SWIG_MODULE_${name}_SWIG_LANGUAGE_FLAG}'")
 
 endmacro()
 
@@ -294,9 +294,9 @@ macro(SWIG_ADD_MODULE name language)
     endif()
   endif ()
 
-  message(STATUS "UseSWIG::SWIG_ADD_MODULE: name is '${name}'")
-  message(STATUS "UseSWIG::SWIG_ADD_MODULE: ${name} swig_generated_sources is '${swig_generated_sources}'")
-  message(STATUS "UseSWIG::SWIG_ADD_MODULE: ${name} swig_other_sources is '${swig_other_sources}'")
+  #message(STATUS "UseSWIG::SWIG_ADD_MODULE: name is '${name}'")
+  #message(STATUS "UseSWIG::SWIG_ADD_MODULE: ${name} swig_generated_sources is '${swig_generated_sources}'")
+  #message(STATUS "UseSWIG::SWIG_ADD_MODULE: ${name} swig_other_sources is '${swig_other_sources}'")
 
 endmacro()
 
@@ -310,4 +310,3 @@ macro(SWIG_LINK_LIBRARIES name)
     message(SEND_ERROR "Cannot find Swig library \"${name}\".")
   endif()
 endmacro()
-
