@@ -314,7 +314,7 @@ FLOW_GRAPH_GEN = Action(
 FLOW_GRAPH_EXEC = Action(
     label='_Execute',
     tooltip='Execute the flow graph',
-    stock_id=gtk.STOCK_EXECUTE,
+    stock_id=gtk.STOCK_MEDIA_PLAY,
     keypresses=(gtk.keysyms.F6, NO_MODS_MASK),
 )
 FLOW_GRAPH_KILL = Action(

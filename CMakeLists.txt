@@ -29,7 +29,8 @@ cmake_minimum_required(VERSION 2.6)
 project(gnuradio CXX C)
 enable_testing()
 
-list(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake/Modules)
+#make sure our local CMake Modules path comes first
+list(INSERT CMAKE_MODULE_PATH 0 ${CMAKE_SOURCE_DIR}/cmake/Modules)
 
 include(GrBuildTypes)
 
