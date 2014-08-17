@@ -137,7 +137,7 @@ class ModToolMakeXML(ModTool):
                               'std::vector<float>': 'real_vector',
                               'std::vector<gr_complex>': 'complex_vector',
                               }
-            if p_type in ('int',) and default_v[:2].lower() == '0x':
+            if p_type in ('int',) and default_v is not None and len(default_v) > 1 and default_v[:2].lower() == '0x':
                 return 'hex'
             try:
                 return translate_dict[p_type]
