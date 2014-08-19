@@ -378,6 +378,11 @@ CLEAR_REPORTS = Action(
     tooltip='Clear Reports',
     stock_id=gtk.STOCK_CLEAR,
 )
+SAVE_REPORTS = Action(
+    label='_Save Reports',
+    tooltip='Save Reports',
+    stock_id=gtk.STOCK_SAVE,
+)
 OPEN_HIER = Action(
     label='Open H_ier',
     tooltip='Open the source of the selected hierarchical block',

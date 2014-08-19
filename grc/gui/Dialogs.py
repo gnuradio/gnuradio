@@ -80,6 +80,12 @@ class TextDisplay(gtk.TextView):
         buffer = self.get_buffer()
         buffer.delete(buffer.get_start_iter(), buffer.get_end_iter())
 
+    def save(self, file_path):
+        report_file = open(file_path, 'w')
+        buffer = self.get_buffer()
+        report_file.write(buffer.get_text(buffer.get_start_iter(), buffer.get_end_iter(), True))
+        report_file.close()
+
     # Callback functions to handle the scrolling lock and clear context menus options
     # Action functions are set by the ActionHandler's init function
     def clear_cb(self, menu_item, web_view):
@@ -87,6 +93,9 @@ class TextDisplay(gtk.TextView):
 
     def scroll_back_cb(self, menu_item, web_view):
         Actions.TOGGLE_SCROLL_LOCK()
+
+    def save_cb(self, menu_item, web_view):
+        Actions.SAVE_REPORTS()
 
     def populate_popup(self, view, menu):
         """Create a popup menu for the scroll lock and clear functions"""
@@ -96,6 +105,10 @@ class TextDisplay(gtk.TextView):
         menu.append(lock)
         lock.set_active(self.scroll_lock)
         lock.connect('activate', self.scroll_back_cb, view)
+
+        save = gtk.ImageMenuItem(gtk.STOCK_SAVE)
+        menu.append(save)
+        save.connect('activate', self.save_cb, view)
 
         clear = gtk.ImageMenuItem(gtk.STOCK_CLEAR)
         menu.append(clear)

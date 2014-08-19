@@ -55,6 +55,7 @@ TOOLBAR_LIST = (
     Actions.RELOAD_BLOCKS,
     Actions.OPEN_HIER,
     Actions.BUSSIFY_SOURCES,
+    Actions.SAVE_REPORTS,
     Actions.CLEAR_REPORTS,
 )
 
@@ -95,6 +96,7 @@ MENU_BAR_LIST = (
         None,
         Actions.TOGGLE_REPORTS_WINDOW,
         Actions.TOGGLE_SCROLL_LOCK,
+        Actions.SAVE_REPORTS,
         Actions.CLEAR_REPORTS,
         None,
         Actions.TOGGLE_HIDE_DISABLED_BLOCKS,
