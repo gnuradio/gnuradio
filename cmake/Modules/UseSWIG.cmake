@@ -145,6 +145,11 @@ macro(SWIG_ADD_SOURCE_TO_MODULE name outfiles infile)
       "${swig_generated_file_fullname}.c")
   endif()
 
+  # Shut up some warnings from poor SWIG code generation that we
+  # can do nothing about.
+  set_source_files_properties( ${swig_generated_file_fullname}
+        PROPERTIES COMPILE_FLAGS "-Wno-unused-but-set-variable")
+
   #message("Full path to source file: ${swig_source_file_fullname}")
   #message("Full path to the output file: ${swig_generated_file_fullname}")
   get_directory_property(cmake_include_directories INCLUDE_DIRECTORIES)
