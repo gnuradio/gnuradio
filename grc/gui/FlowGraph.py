@@ -574,7 +574,7 @@ class FlowGraph(Element):
                 self.create_shapes()
                 self.queue_draw()
         else:
-            #perform autoscrolling
+            #perform auto-scrolling
             width, height = self.get_size()
             x, y = coordinate
             h_adj = self.get_scroll_pane().get_hadjustment()
@@ -594,8 +594,11 @@ class FlowGraph(Element):
             if len(self.get_selected_elements()) == 1 and self.get_selected_element().is_connection():
                 Actions.ELEMENT_DELETE()
             #move the selected elements and record the new coordinate
-            X, Y = self.get_coordinate()
-            if not self.get_ctrl_mask(): self.move_selected((int(x - X), int(y - Y)))
-            self.set_coordinate((x, y))
+            if not self.get_ctrl_mask():
+                X, Y = self.get_coordinate()
+                dX, dY = int(x - X), int(y - Y)
+                if abs(dX) >= Utils.CANVAS_GRID_SIZE or abs(dY) >= Utils.CANVAS_GRID_SIZE:
+                    self.move_selected((dX, dY))
+                    self.set_coordinate((x, y))
             #queue draw for animation
             self.queue_draw()

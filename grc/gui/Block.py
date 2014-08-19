@@ -43,6 +43,8 @@ class Block(Element):
         Block contructor.
         Add graphics related params to the block.
         """
+        self.W = 0
+        self.H = 0
         #add the position param
         self.get_params().append(self.get_parent().get_parent().Param(
             block=self,
@@ -85,6 +87,9 @@ class Block(Element):
                 y = 0
             elif y >= fgH - BORDER_PROXIMITY_SENSITIVITY:
                 y = fgH - BORDER_PROXIMITY_SENSITIVITY
+            offset_x, offset_y = (0, self.H/2) if self.is_horizontal() else (self.H/2, 0)
+            x = Utils.align_to_grid(x + offset_x) - offset_x
+            y = Utils.align_to_grid(y + offset_y) - offset_y
             return (x, y)
         except:
             self.set_coordinate((0, 0))
@@ -179,8 +184,7 @@ class Block(Element):
                 self.label_height + 2 * BLOCK_LABEL_PADDING
             ] +
             [  # ports
-                2 * PORT_BORDER_SEPARATION +
-                sum([port.H + PORT_SEPARATION for port in ports if not port.get_hide()]) - PORT_SEPARATION
+                PORT_SEPARATION * len(filter(lambda p: not p.get_hide(), ports))
                 for ports in (self.get_sources_gui(), self.get_sinks_gui())
             ] +
             [  # bus ports only
