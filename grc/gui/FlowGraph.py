@@ -84,6 +84,7 @@ class FlowGraph(Element):
     def set_size(self, *args): self.get_drawing_area().set_size_request(*args)
     def get_scroll_pane(self): return self.drawing_area.get_parent()
     def get_ctrl_mask(self): return self.drawing_area.ctrl_mask
+    def get_mod1_mask(self): return self.drawing_area.mod1_mask
     def new_pixmap(self, *args): return self.get_drawing_area().new_pixmap(*args)
 
     def add_new_block(self, key, coor=None):
@@ -597,7 +598,8 @@ class FlowGraph(Element):
             if not self.get_ctrl_mask():
                 X, Y = self.get_coordinate()
                 dX, dY = int(x - X), int(y - Y)
-                if abs(dX) >= Utils.CANVAS_GRID_SIZE or abs(dY) >= Utils.CANVAS_GRID_SIZE:
+                active = Actions.TOGGLE_SNAP_TO_GRID.get_active() or self.get_mod1_mask()
+                if not active or abs(dX) >= Utils.CANVAS_GRID_SIZE or abs(dY) >= Utils.CANVAS_GRID_SIZE:
                     self.move_selected((dX, dY))
                     self.set_coordinate((x, y))
             #queue draw for animation

@@ -118,7 +118,7 @@ class ActionHandler:
                 Actions.TYPES_WINDOW_DISPLAY, Actions.TOGGLE_BLOCKS_WINDOW,
                 Actions.TOGGLE_REPORTS_WINDOW, Actions.TOGGLE_HIDE_DISABLED_BLOCKS,
                 Actions.TOOLS_RUN_FDESIGN, Actions.TOGGLE_SCROLL_LOCK, Actions.CLEAR_REPORTS,
-                Actions.TOGGLE_AUTO_HIDE_PORT_LABELS
+                Actions.TOGGLE_AUTO_HIDE_PORT_LABELS, Actions.TOGGLE_SNAP_TO_GRID
             ): action.set_sensitive(True)
             if ParseXML.xml_failures:
                 Messages.send_xml_errors_if_any(ParseXML.xml_failures)
@@ -139,6 +139,7 @@ class ActionHandler:
                 Actions.TOGGLE_BLOCKS_WINDOW,
                 Actions.TOGGLE_AUTO_HIDE_PORT_LABELS,
                 Actions.TOGGLE_SCROLL_LOCK,
+                Actions.TOGGLE_SNAP_TO_GRID
             ): action.load_from_preferences()
         elif action == Actions.APPLICATION_QUIT:
             if self.main_window.close_pages():
@@ -389,6 +390,8 @@ class ActionHandler:
         elif action == Actions.TOGGLE_AUTO_HIDE_PORT_LABELS:
             action.save_to_preferences()
             self.main_window.get_flow_graph().create_shapes()
+        elif action == Actions.TOGGLE_SNAP_TO_GRID:
+            action.save_to_preferences()
         ##################################################
         # Param Modifications
         ##################################################

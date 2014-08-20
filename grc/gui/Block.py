@@ -26,6 +26,7 @@ from Constants import \
     BLOCK_LABEL_PADDING, \
     PORT_SEPARATION, LABEL_SEPARATION, \
     PORT_BORDER_SEPARATION, POSSIBLE_ROTATIONS
+import Actions
 import pygtk
 pygtk.require('2.0')
 import gtk
@@ -87,9 +88,6 @@ class Block(Element):
                 y = 0
             elif y >= fgH - BORDER_PROXIMITY_SENSITIVITY:
                 y = fgH - BORDER_PROXIMITY_SENSITIVITY
-            offset_x, offset_y = (0, self.H/2) if self.is_horizontal() else (self.H/2, 0)
-            x = Utils.align_to_grid(x + offset_x) - offset_x
-            y = Utils.align_to_grid(y + offset_y) - offset_y
             return (x, y)
         except:
             self.set_coordinate((0, 0))
@@ -102,6 +100,12 @@ class Block(Element):
         Args:
             coor: the coordinate tuple (x, y)
         """
+        if Actions.TOGGLE_SNAP_TO_GRID.get_active():
+            offset_x, offset_y = (0, self.H/2) if self.is_horizontal() else (self.H/2, 0)
+            coor = (
+                Utils.align_to_grid(coor[0] + offset_x) - offset_x,
+                Utils.align_to_grid(coor[1] + offset_y) - offset_y
+            )
         self.get_param('_coordinate').set_value(str(coor))
 
     def get_rotation(self):

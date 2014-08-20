@@ -247,6 +247,11 @@ BLOCK_DISABLE = Action(
     stock_id=gtk.STOCK_DISCONNECT,
     keypresses=(gtk.keysyms.d, NO_MODS_MASK),
 )
+TOGGLE_SNAP_TO_GRID = ToggleAction(
+    label='_Snap to grid',
+    tooltip='Snap blocks to a grid for an easier connection alignment',
+    preference_name='snap_to_grid'
+)
 TOGGLE_HIDE_DISABLED_BLOCKS = ToggleAction(
     label='Hide _disabled blocks',
     tooltip='Toggle visibility of disabled blocks and connections',
