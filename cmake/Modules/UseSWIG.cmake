@@ -154,8 +154,6 @@ macro(SWIG_ADD_SOURCE_TO_MODULE name outfiles infile)
       PROPERTIES COMPILE_FLAGS "-Wno-unused-but-set-variable")
   endif(HAVE_WNO_UNUSED_BUT_SET_VARIABLE)
 
-  #message("Full path to source file: ${swig_source_file_fullname}")
-  #message("Full path to the output file: ${swig_generated_file_fullname}")
   get_directory_property(cmake_include_directories INCLUDE_DIRECTORIES)
   set(swig_include_dirs)
   foreach(it ${cmake_include_directories})
@@ -224,7 +222,6 @@ print(re.sub('\\W', '_', '${name} ${reldir} ' + unique))"
   set(${outfiles} "${swig_generated_file_fullname}" ${swig_extra_generated_files})
 
   foreach(swig_gen_file ${${outfiles}})
-    #message(STATUS "UseSWIG::SWIG_ADD_SOURCE_TO_MODULE: name adding dep from '${_target}' to '${swig_gen_file}'")
     add_custom_command(
       OUTPUT ${swig_gen_file}
       COMMAND ""
@@ -236,15 +233,6 @@ print(re.sub('\\W', '_', '${name} ${reldir} ' + unique))"
   set_source_files_properties(
     ${outfiles} PROPERTIES GENERATED 1
   )
-
-  #message(STATUS "UseSWIG::SWIG_ADD_SOURCE_TO_MODULE: name is '${name}'")
-  #message(STATUS "UseSWIG::SWIG_ADD_SOURCE_TO_MODULE: ${name} swig_generated_file_fullname is '${swig_generated_file_fullname}'")
-  #message(STATUS "UseSWIG::SWIG_ADD_SOURCE_TO_MODULE: ${name} swig_extra_generated_files is '${swig_extra_generated_files}'")
-  #message(STATUS "UseSWIG::SWIG_ADD_SOURCE_TO_MODULE: ${name} outfiles is '${outfiles}'")
-  #message(STATUS "UseSWIG::SWIG_ADD_SOURCE_TO_MODULE: ${name} {outfiles} is '${${outfiles}}'")
-  #message(STATUS "UseSWIG::SWIG_ADD_SOURCE_TO_MODULE: SWIG_MODULE_${name}_EXTRA_DEPS is '${SWIG_MODULE_${name}_EXTRA_DEPS}'")
-  #message(STATUS "UseSWIG::SWIG_ADD_SOURCE_TO_MODULE: SWIG_MODULE_${name}_EXTRA_FLAGS is '${SWIG_MODULE_${name}_EXTRA_FLAGS}'")
-  #message(STATUS "UseSWIG::SWIG_ADD_SOURCE_TO_MODULE: SWIG_MODULE_${name}_SWIG_LANGUAGE_FLAG is '${SWIG_MODULE_${name}_SWIG_LANGUAGE_FLAG}'")
 
 endmacro()
 
@@ -302,11 +290,6 @@ macro(SWIG_ADD_MODULE name language)
       set_target_properties(${SWIG_MODULE_${name}_REAL_NAME} PROPERTIES SUFFIX ".pyd")
     endif()
   endif ()
-
-  #message(STATUS "UseSWIG::SWIG_ADD_MODULE: name is '${name}'")
-  #message(STATUS "UseSWIG::SWIG_ADD_MODULE: ${name} swig_generated_sources is '${swig_generated_sources}'")
-  #message(STATUS "UseSWIG::SWIG_ADD_MODULE: ${name} swig_other_sources is '${swig_other_sources}'")
-
 endmacro()
 
 #
