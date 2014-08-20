@@ -183,13 +183,17 @@ class Block(Element):
             Utils.rotate_pixmap(gc, self.horizontal_label, self.vertical_label)
         #calculate width and height needed
         self.W = self.label_width + 2*BLOCK_LABEL_PADDING
+        def get_min_height_for_ports():
+            visible_ports = filter(lambda p: not p.get_hide(), ports)
+            H = 2*PORT_BORDER_SEPARATION + len(visible_ports) * PORT_SEPARATION
+            if visible_ports: H -= ports[0].H
+            return H
         self.H = max(*(
             [  # labels
                 self.label_height + 2 * BLOCK_LABEL_PADDING
             ] +
             [  # ports
-                PORT_SEPARATION * len(filter(lambda p: not p.get_hide(), ports))
-                for ports in (self.get_sources_gui(), self.get_sinks_gui())
+                get_min_height_for_ports() for ports in (self.get_sources_gui(), self.get_sinks_gui())
             ] +
             [  # bus ports only
                 4 * PORT_BORDER_SEPARATION +
