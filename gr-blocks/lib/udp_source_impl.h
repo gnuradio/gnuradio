@@ -36,13 +36,14 @@ namespace gr {
     private:
       size_t  d_itemsize;
       int     d_payload_size; // maximum transmission unit (packet length)
+      size_t  d_buf_size;     // recieve buffer size
       bool    d_eof;          // look for an EOF signal
+      bool    d_eof_detected; // EOF signal detected
       bool    d_connected;    // are we connected?
-      char   *d_rxbuf;        // get UDP buffer items
-      char   *d_residbuf;     // hold buffer between calls
-      ssize_t d_residual;     // hold information about number of bytes stored in residbuf
-      ssize_t d_sent;         // track how much of d_residbuf we've outputted
-      size_t  d_offset;       // point to residbuf location offset
+      char   *d_buf;          // hold buffer between calls
+      size_t  d_recv_offs;    // track how much of d_residbuf we've outputted
+      size_t  d_send_offs;    // point to residbuf location offset
+      size_t  d_wrap_offs;
 
       std::string d_host;
       unsigned short d_port;
@@ -60,6 +61,7 @@ namespace gr {
       void handle_read(const boost::system::error_code& error,
                        size_t bytes_transferred);
       void run_io_service() { d_io_service.run(); }
+      bool is_buf_full() const;
 
     public:
       udp_source_impl(size_t itemsize,
