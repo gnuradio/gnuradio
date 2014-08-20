@@ -134,10 +134,12 @@ class ActionHandler:
             if not self.get_page(): self.main_window.new_page() #ensure that at least a blank page exists
 
             self.main_window.btwin.search_entry.hide()
-            Actions.TOGGLE_REPORTS_WINDOW.set_active(Preferences.reports_window_visibility())
-            Actions.TOGGLE_BLOCKS_WINDOW.set_active(Preferences.blocks_window_visibility())
-            Actions.TOGGLE_SCROLL_LOCK.set_active(Preferences.scroll_lock())
-            Actions.TOGGLE_AUTO_HIDE_PORT_LABELS.set_active(Preferences.auto_hide_port_labels())
+            for action in (
+                Actions.TOGGLE_REPORTS_WINDOW,
+                Actions.TOGGLE_BLOCKS_WINDOW,
+                Actions.TOGGLE_AUTO_HIDE_PORT_LABELS,
+                Actions.TOGGLE_SCROLL_LOCK,
+            ): action.load_from_preferences()
         elif action == Actions.APPLICATION_QUIT:
             if self.main_window.close_pages():
                 gtk.main_quit()
@@ -363,30 +365,29 @@ class ActionHandler:
         elif action == Actions.ERRORS_WINDOW_DISPLAY:
             Dialogs.ErrorsDialog(self.get_flow_graph())
         elif action == Actions.TOGGLE_REPORTS_WINDOW:
-            visible = action.get_active()
-            if visible:
+            if action.get_active():
                 self.main_window.reports_scrolled_window.show()
             else:
                 self.main_window.reports_scrolled_window.hide()
-            Preferences.reports_window_visibility(visible)
+            action.save_to_preferences()
         elif action == Actions.TOGGLE_BLOCKS_WINDOW:
-            visible = action.get_active()
-            if visible:
+            if action.get_active():
                 self.main_window.btwin.show()
             else:
                 self.main_window.btwin.hide()
-            Preferences.blocks_window_visibility(visible)
+            action.save_to_preferences()
         elif action == Actions.TOGGLE_SCROLL_LOCK:
-            visible = action.get_active()
-            self.main_window.text_display.scroll_lock = visible
-            if visible:
+            active = action.get_active()
+            self.main_window.text_display.scroll_lock = active
+            if active:
                 self.main_window.text_display.scroll_to_end()
+            action.save_to_preferences()
         elif action == Actions.CLEAR_REPORTS:
             self.main_window.text_display.clear()
         elif action == Actions.TOGGLE_HIDE_DISABLED_BLOCKS:
             Actions.NOTHING_SELECT()
         elif action == Actions.TOGGLE_AUTO_HIDE_PORT_LABELS:
-            Preferences.auto_hide_port_labels(action.get_active())
+            action.save_to_preferences()
             self.main_window.get_flow_graph().create_shapes()
         ##################################################
         # Param Modifications
@@ -497,7 +498,6 @@ class ActionHandler:
             self.main_window.btwin.search_entry.show()
             self.main_window.btwin.search_entry.grab_focus()
         elif action == Actions.OPEN_HIER:
-            bn = [];
             for b in self.get_flow_graph().get_selected_blocks():
                 if b._grc_source:
                     self.main_window.new_page(b._grc_source, show=True)

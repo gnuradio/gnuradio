@@ -21,6 +21,8 @@ import pygtk
 pygtk.require('2.0')
 import gtk
 
+import Preferences
+
 NO_MODS_MASK = 0
 
 ########################################################################
@@ -127,7 +129,7 @@ class ToggleAction(gtk.ToggleAction, _ActionBase):
     Pass additional arguments such as keypresses.
     """
 
-    def __init__(self, keypresses=(), name=None, label=None, tooltip=None, stock_id=None):
+    def __init__(self, keypresses=(), name=None, label=None, tooltip=None, stock_id=None, preference_name=None):
         """
         Create a new ToggleAction instance.
 
@@ -142,6 +144,15 @@ class ToggleAction(gtk.ToggleAction, _ActionBase):
         )
         #register this action
         _ActionBase.__init__(self, label, keypresses)
+        self.preference_name = preference_name
+
+    def load_from_preferences(self):
+        if self.preference_name is not None:
+            self.set_active(Preferences.bool_entry(self.preference_name))
+
+    def save_to_preferences(self):
+        if self.preference_name is not None:
+            Preferences.bool_entry(self.preference_name, self.get_active())
 
 ########################################################################
 # Actions
@@ -245,6 +256,7 @@ TOGGLE_HIDE_DISABLED_BLOCKS = ToggleAction(
 TOGGLE_AUTO_HIDE_PORT_LABELS = ToggleAction(
     label='Auto-hide port _labels',
     tooltip='Automatically hide port labels',
+    preference_name='auto_hide_port_labels'
 )
 BLOCK_CREATE_HIER = Action(
     label='C_reate Hier',
@@ -279,15 +291,18 @@ TOGGLE_REPORTS_WINDOW = ToggleAction(
     label='Show _Reports',
     tooltip='Toggle visibility of the Report widget',
     keypresses=(gtk.keysyms.r, gtk.gdk.CONTROL_MASK),
+    preference_name='reports_window_visible'
 )
 TOGGLE_BLOCKS_WINDOW = ToggleAction(
     label='Show _Block Tree',
     tooltip='Toggle visibility of the block tree widget',
     keypresses=(gtk.keysyms.b, gtk.gdk.CONTROL_MASK),
+    preference_name='blocks_window_visible'
 )
 TOGGLE_SCROLL_LOCK = ToggleAction(
     label='_Reports Scroll Lock',
     tooltip='Toggle scroll lock for the report window',
+    preference_name='scroll_lock'
 )
 ABOUT_WINDOW_DISPLAY = Action(
     label='_About',
