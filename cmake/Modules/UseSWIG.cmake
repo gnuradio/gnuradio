@@ -146,9 +146,13 @@ macro(SWIG_ADD_SOURCE_TO_MODULE name outfiles infile)
   endif()
 
   # Shut up some warnings from poor SWIG code generation that we
-  # can do nothing about.
-  set_source_files_properties( ${swig_generated_file_fullname}
-        PROPERTIES COMPILE_FLAGS "-Wno-unused-but-set-variable")
+  # can do nothing about, when this flag is available
+  include(CheckCXXCompilerFlag)
+  check_cxx_compiler_flag("-Wno-unused-but-set-variable" HAVE_WNO_UNUSED_BUT_SET_VARIABLE)
+  if(HAVE_WNO_UNUSED_BUT_SET_VARIABLE)
+    set_source_files_properties(${swig_generated_file_fullname}
+      PROPERTIES COMPILE_FLAGS "-Wno-unused-but-set-variable")
+  endif(HAVE_WNO_UNUSED_BUT_SET_VARIABLE)
 
   #message("Full path to source file: ${swig_source_file_fullname}")
   #message("Full path to the output file: ${swig_generated_file_fullname}")
