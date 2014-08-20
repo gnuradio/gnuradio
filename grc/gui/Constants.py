@@ -53,7 +53,7 @@ BLOCK_LABEL_PADDING = 7
 PORT_LABEL_PADDING = 2
 
 #port constraint dimensions
-PORT_SEPARATION = 17
+PORT_SEPARATION = 32
 PORT_BORDER_SEPARATION = 9
 PORT_MIN_WIDTH = 20
 
@@ -81,3 +81,6 @@ SCROLL_DISTANCE = 15
 
 #How close the mouse click can be to a line and register a connection select.
 LINE_SELECT_SENSITIVITY = 5
+
+# canvas grid size
+CANVAS_GRID_SIZE = 8

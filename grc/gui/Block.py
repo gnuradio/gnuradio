@@ -26,6 +26,7 @@ from Constants import \
     BLOCK_LABEL_PADDING, \
     PORT_SEPARATION, LABEL_SEPARATION, \
     PORT_BORDER_SEPARATION, POSSIBLE_ROTATIONS
+import Actions
 import pygtk
 pygtk.require('2.0')
 import gtk
@@ -43,6 +44,8 @@ class Block(Element):
         Block contructor.
         Add graphics related params to the block.
         """
+        self.W = 0
+        self.H = 0
         #add the position param
         self.get_params().append(self.get_parent().get_parent().Param(
             block=self,
@@ -97,6 +100,12 @@ class Block(Element):
         Args:
             coor: the coordinate tuple (x, y)
         """
+        if Actions.TOGGLE_SNAP_TO_GRID.get_active():
+            offset_x, offset_y = (0, self.H/2) if self.is_horizontal() else (self.H/2, 0)
+            coor = (
+                Utils.align_to_grid(coor[0] + offset_x) - offset_x,
+                Utils.align_to_grid(coor[1] + offset_y) - offset_y
+            )
         self.get_param('_coordinate').set_value(str(coor))
 
     def get_rotation(self):
@@ -174,14 +183,17 @@ class Block(Element):
             Utils.rotate_pixmap(gc, self.horizontal_label, self.vertical_label)
         #calculate width and height needed
         self.W = self.label_width + 2*BLOCK_LABEL_PADDING
+        def get_min_height_for_ports():
+            visible_ports = filter(lambda p: not p.get_hide(), ports)
+            H = 2*PORT_BORDER_SEPARATION + len(visible_ports) * PORT_SEPARATION
+            if visible_ports: H -= ports[0].H
+            return H
         self.H = max(*(
             [  # labels
                 self.label_height + 2 * BLOCK_LABEL_PADDING
             ] +
             [  # ports
-                2 * PORT_BORDER_SEPARATION +
-                sum([port.H + PORT_SEPARATION for port in ports if not port.get_hide()]) - PORT_SEPARATION
-                for ports in (self.get_sources_gui(), self.get_sinks_gui())
+                get_min_height_for_ports() for ports in (self.get_sources_gui(), self.get_sinks_gui())
             ] +
             [  # bus ports only
                 4 * PORT_BORDER_SEPARATION +
