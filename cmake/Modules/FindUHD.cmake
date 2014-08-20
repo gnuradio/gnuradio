@@ -37,7 +37,7 @@ if(LOCAL_FINDUHD_DIR)
   # prepend the found directory to the MODULE path
   list(INSERT CMAKE_MODULE_PATH 0 ${LOCAL_FINDUHD_DIR})
 
-  # "QUITE" works on CMake 2.8+ only
+  # "QUIET" works on CMake 2.8+ only
   unset(LOCAL_UHD_QUIET)
   if(NOT ${CMAKE_VERSION} VERSION_LESS "2.8.0")
       set(LOCAL_UHD_QUIET "QUIET")
