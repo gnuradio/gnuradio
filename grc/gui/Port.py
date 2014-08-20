@@ -70,26 +70,26 @@ class Port(Element):
         length = len(filter(lambda p: not p.get_hide(), ports))
         #reverse the order of ports for these rotations
         if rotation in (180, 270): index = length-index-1
-        offset = (self.get_parent().H - length*self.H - (length-1)*PORT_SEPARATION)/2
+        offset = (self.get_parent().H - (length-1)*PORT_SEPARATION - self.H)/2
         #create areas and connector coordinates
         if (self.is_sink() and rotation == 0) or (self.is_source() and rotation == 180):
             x = -1*W
-            y = (PORT_SEPARATION+self.H)*index+offset
+            y = PORT_SEPARATION*index+offset
             self.add_area((x, y), (W, self.H))
             self._connector_coordinate = (x-1, y+self.H/2)
         elif (self.is_source() and rotation == 0) or (self.is_sink() and rotation == 180):
             x = self.get_parent().W
-            y = (PORT_SEPARATION+self.H)*index+offset
+            y = PORT_SEPARATION*index+offset
             self.add_area((x, y), (W, self.H))
             self._connector_coordinate = (x+1+W, y+self.H/2)
         elif (self.is_source() and rotation == 90) or (self.is_sink() and rotation == 270):
             y = -1*W
-            x = (PORT_SEPARATION+self.H)*index+offset
+            x = PORT_SEPARATION*index+offset
             self.add_area((x, y), (self.H, W))
             self._connector_coordinate = (x+self.H/2, y-1)
         elif (self.is_sink() and rotation == 90) or (self.is_source() and rotation == 270):
             y = self.get_parent().W
-            x = (PORT_SEPARATION+self.H)*index+offset
+            x = PORT_SEPARATION*index+offset
             self.add_area((x, y), (self.H, W))
             self._connector_coordinate = (x+self.H/2, y+1+W)
         #the connector length

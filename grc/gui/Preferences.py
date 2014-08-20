@@ -84,26 +84,11 @@ def blocks_window_position(pos=None):
         try: return _config_parser.getint('main', 'blocks_window_position') or 1 #greater than 0
         except: return -1
 
-def reports_window_visibility(visible=None):
-    if visible is not None: _config_parser.set('main', 'reports_window_visible', visible)
+def bool_entry(key, active=None, default=True):
+    if active is not None:
+        _config_parser.set('main', key, active)
     else:
-        try: return _config_parser.getboolean('main', 'reports_window_visible')
-        except: return True
-
-def blocks_window_visibility(visible=None):
-    if visible is not None: _config_parser.set('main', 'blocks_window_visible', visible)
-    else:
-        try: return _config_parser.getboolean('main', 'blocks_window_visible')
-        except: return True
-
-def scroll_lock(visible=None):
-    if visible is not None: _config_parser.set('main', 'scroll_lock', visible)
-    else:
-        try: return _config_parser.getboolean('main', 'scroll_lock')
-        except: return True
-
-def auto_hide_port_labels(hide=None):
-    if hide is not None: _config_parser.set('main', 'auto_hide_port_labels', hide)
-    else:
-        try: return _config_parser.getboolean('main', 'auto_hide_port_labels')
-        except: return True
+        try:
+            return _config_parser.getboolean('main', key)
+        except:
+            return default
