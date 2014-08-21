@@ -92,7 +92,8 @@ class Platform(_Element):
 
     def iter_xml_files(self):
         """Iterator for block descriptions and category trees"""
-        for block_path in self._block_paths:
+        get_path = lambda x: os.path.abspath(os.path.expanduser(x))
+        for block_path in map(get_path, self._block_paths):
             if os.path.isfile(block_path):
                 yield block_path
             elif os.path.isdir(block_path):
