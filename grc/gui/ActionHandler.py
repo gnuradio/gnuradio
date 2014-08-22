@@ -496,6 +496,9 @@ class ActionHandler:
             self.platform.load_block_tree(self.main_window.btwin)
             Actions.XML_PARSER_ERRORS_DISPLAY.set_sensitive(bool(ParseXML.xml_failures))
             Messages.send_xml_errors_if_any(ParseXML.xml_failures)
+            # Force a redraw of the graph, by getting the current state and re-importing it
+            self.main_window.update_pages()
+            
         elif action == Actions.FIND_BLOCKS:
             self.main_window.btwin.show()
             self.main_window.btwin.search_entry.show()
