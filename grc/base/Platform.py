@@ -53,7 +53,7 @@ class Platform(_Element):
         """
         _Element.__init__(self)
         self._name = name
-        # Save the verion string to the first 
+        # Save the verion string to the first
         self._version = version[0]
         self._version_major = version[1]
         self._version_api = version[2]
@@ -143,8 +143,7 @@ class Platform(_Element):
         flow_graph_file = flow_graph_file or self._default_flow_graph
         open(flow_graph_file, 'r')  # test open
         ParseXML.validate_dtd(flow_graph_file, FLOW_GRAPH_DTD)
-        (xml, instructions) = ParseXML.from_file_with_instructions(flow_graph_file)
-        return xml
+        return ParseXML.from_file(flow_graph_file)
 
     def load_block_tree(self, block_tree):
         """
@@ -190,7 +189,6 @@ class Platform(_Element):
 
     def get_generator(self): return self._generator
 
-
     ##############################################
     # Access Blocks
     ##############################################
@@ -205,7 +203,7 @@ class Platform(_Element):
     def get_version_api(self): return self._version_api
     def get_version_minor(self): return self._version_minor
     def get_version_short(self): return self._version_short
-    
+
     def get_key(self): return self._key
     def get_license(self): return self._license
     def get_website(self): return self._website

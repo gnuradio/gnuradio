@@ -20,6 +20,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 from . import odict
 from Element import Element
 from .. gui import Messages
+from . Constants import FLOW_GRAPH_FILE_FORMAT_VERSION
 
 class FlowGraph(Element):
 
@@ -246,7 +247,11 @@ class FlowGraph(Element):
         n['timestamp'] = time.ctime()
         n['block'] = [block.export_data() for block in self.get_blocks()]
         n['connection'] = [connection.export_data() for connection in self.get_connections()]
-        return odict({'flow_graph': n})
+        instructions = odict({
+            'created': self.get_parent().get_version_short(),
+            'format': FLOW_GRAPH_FILE_FORMAT_VERSION,
+        })
+        return odict({'flow_graph': n, '_instructions': instructions})
 
     def import_data(self, n=None):
         """
@@ -318,7 +323,7 @@ class FlowGraph(Element):
                 sink = sink_block.get_sink(sink_key)
                 #build the connection
                 self.connect(source, sink)
-            except LookupError, e: 
+            except LookupError, e:
                 Messages.send_error_load(
                     'Connection between %s(%s) and %s(%s) could not be made.\n\t%s'%(
                     source_block_id, source_key, sink_block_id, sink_key, e))
