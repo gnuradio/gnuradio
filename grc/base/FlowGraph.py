@@ -257,6 +257,7 @@ class FlowGraph(Element):
         Args:
             n: the nested data odict
         """
+        errors = False
         #remove previous elements
         self._elements = list()
         #use blank data if none provided
@@ -317,13 +318,13 @@ class FlowGraph(Element):
                 sink = sink_block.get_sink(sink_key)
                 #build the connection
                 self.connect(source, sink)
-            except LookupError, e: Messages.send_error_load(
-                'Connection between %s(%s) and %s(%s) could not be made.\n\t%s'%(
-                    source_block_id, source_key, sink_block_id, sink_key, e
-                )
-            )
+            except LookupError, e: 
+                Messages.send_error_load(
+                    'Connection between %s(%s) and %s(%s) could not be made.\n\t%s'%(
+                    source_block_id, source_key, sink_block_id, sink_key, e))
+                errors = True
         self.rewrite() #global rewrite
-
+        return errors
 
     def update_message_port_key(self, key, ports):
         """Backward compatibility for message port keys
