@@ -54,9 +54,6 @@ TOOLBAR_LIST = (
     Actions.FIND_BLOCKS,
     Actions.RELOAD_BLOCKS,
     Actions.OPEN_HIER,
-    Actions.BUSSIFY_SOURCES,
-    Actions.SAVE_REPORTS,
-    Actions.CLEAR_REPORTS,
 )
 
 ##The list of actions and categories for the menu bar.
