@@ -31,6 +31,7 @@ set(qtgui_moc_hdrs
     ${qtgui_mod_includedir}/waterfalldisplayform.h
     ${qtgui_mod_includedir}/histogramdisplayform.h
     ${qtgui_mod_includedir}/numberdisplayform.h
+    ${qtgui_mod_includedir}/vectordisplayform.h
     ${qtgui_mod_includedir}/form_menus.h
     ${qtgui_mod_includedir}/DisplayPlot.h
     ${qtgui_mod_includedir}/FrequencyDisplayPlot.h
@@ -39,6 +40,7 @@ set(qtgui_moc_hdrs
     ${qtgui_mod_includedir}/WaterfallDisplayPlot.h
     ${qtgui_mod_includedir}/ConstellationDisplayPlot.h
     ${qtgui_mod_includedir}/HistogramDisplayPlot.h
+    ${qtgui_mod_includedir}/VectorDisplayPlot.h
 )
 QT4_WRAP_CPP(qtgui_moc_sources ${qtgui_moc_hdrs})
 QT4_WRAP_UI(qtgui_ui_hdrs spectrumdisplayform.ui)
@@ -62,6 +64,7 @@ set(qtgui_sources
     waterfallGlobalData.cc
     ConstellationDisplayPlot.cc
     HistogramDisplayPlot.cc
+    VectorDisplayPlot.cc
     spectrumdisplayform.cc
     displayform.cc
     timedisplayform.cc
@@ -90,6 +93,8 @@ set(qtgui_sources
     number_sink_impl.cc
     qtgui_util.cc
     ber_sink_b_impl.cc
+    vectordisplayform.cc
+    vector_sink_f_impl.cc
 )
 
 #Add Windows DLL resource file if using MSVC

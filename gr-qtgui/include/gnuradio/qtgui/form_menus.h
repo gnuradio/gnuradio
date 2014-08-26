@@ -740,17 +740,15 @@ private:
   QActionGroup *d_grp;
 };
 
-
 /********************************************************************/
 
-
-class FFTAverageMenu: public QMenu
+class AverageMenu: public QMenu
 {
   Q_OBJECT
 
 public:
-  FFTAverageMenu(QWidget *parent)
-    : QMenu("FFT Average", parent)
+  AverageMenu(const std::string &menuTitle, QWidget *parent)
+    : QMenu(menuTitle.c_str(), parent)
   {
     d_grp = new QActionGroup(this);
 
@@ -791,7 +789,7 @@ public:
     }
   }
 
-  ~FFTAverageMenu()
+  ~AverageMenu()
   {}
 
   int getNumActions() const
@@ -861,6 +859,18 @@ private:
   float d_off, d_high, d_medium, d_low;
 };
 
+/********************************************************************/
+
+class FFTAverageMenu : public AverageMenu
+{
+public:
+  FFTAverageMenu(QWidget *parent) : AverageMenu("FFT Average", parent)
+  {
+    // nop
+  }
+
+  ~FFTAverageMenu() {}
+};
 
 /********************************************************************/
 

@@ -38,6 +38,17 @@ FrequencyDisplayPlot {
     qproperty-marker_noise_floor_amplitude_visible: false;
 }
 
+VectorDisplayPlot {
+    qproperty-max_vec_color: palegreen;
+    qproperty-min_vec_color: palegreen;
+    qproperty-marker_lower_intensity_color: white;
+    qproperty-marker_upper_intensity_color: red;
+    qproperty-marker_lower_intensity_visible: false;
+    qproperty-marker_upper_intensity_visible: false;
+    qproperty-marker_ref_level_amplitude_color: red;
+    qproperty-marker_ref_level_amplitude_visible: false;
+}
+
 QwtPlotCanvas
 {
     border: 1px solid White;

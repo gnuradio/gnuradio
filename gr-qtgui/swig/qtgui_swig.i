@@ -74,6 +74,7 @@ enum{
 #include "gnuradio/qtgui/histogram_sink_f.h"
 #include "gnuradio/qtgui/number_sink.h"
 #include "gnuradio/qtgui/ber_sink_b.h"
+#include "gnuradio/qtgui/vector_sink_f.h"
 %}
 
 %include "gnuradio/qtgui/sink_c.h"
@@ -90,6 +91,7 @@ enum{
 %include "gnuradio/qtgui/histogram_sink_f.h"
 %include "gnuradio/qtgui/number_sink.h"
 %include "gnuradio/qtgui/ber_sink_b.h"
+%include "gnuradio/qtgui/vector_sink_f.h"
 
 GR_SWIG_BLOCK_MAGIC2(qtgui, sink_c);
 GR_SWIG_BLOCK_MAGIC2(qtgui, sink_f);
@@ -105,3 +107,4 @@ GR_SWIG_BLOCK_MAGIC2(qtgui, waterfall_sink_f);
 GR_SWIG_BLOCK_MAGIC2(qtgui, histogram_sink_f);
 GR_SWIG_BLOCK_MAGIC2(qtgui, number_sink);
 GR_SWIG_BLOCK_MAGIC2(qtgui, ber_sink_b);
+GR_SWIG_BLOCK_MAGIC2(qtgui, vector_sink_f);

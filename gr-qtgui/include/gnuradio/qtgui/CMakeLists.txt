@@ -63,6 +63,9 @@ install(FILES
   waterfallGlobalData.h
   waterfall_sink_c.h
   waterfall_sink_f.h
+  vectordisplayform.h
+  VectorDisplayPlot.h
+  vector_sink_f.h
   DESTINATION ${GR_INCLUDE_DIR}/gnuradio/qtgui
   COMPONENT "qtgui_devel"
 )
