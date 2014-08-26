@@ -135,9 +135,14 @@ install(FILES
 ########################################################################
 # Install cmake search routine for external use
 ########################################################################
+
+if(NOT CMAKE_MODULES_DIR)
+    set(CMAKE_MODULES_DIR lib${LIB_SUFFIX}/cmake)
+endif(NOT CMAKE_MODULES_DIR)
+
 install(
     FILES ${CMAKE_CURRENT_SOURCE_DIR}/cmake/VolkConfig.cmake
-    DESTINATION lib${LIB_SUFFIX}/cmake/volk/
+    DESTINATION ${CMAKE_MODULES_DIR}/volk
     COMPONENT "volk_devel"
 )
 

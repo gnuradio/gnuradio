@@ -364,7 +364,7 @@ SET(cmake_configs
 )
 
 if(NOT CMAKE_MODULES_DIR)
-   set(CMAKE_MODULES_DIR lib${LIB_SUFFIX}/cmake/gnuradio)
+  set(CMAKE_MODULES_DIR lib${LIB_SUFFIX}/cmake)
 endif(NOT CMAKE_MODULES_DIR)
 
 # Install all other cmake files into same directory
@@ -375,7 +375,7 @@ list(REMOVE_ITEM cmake_others
 
 install(
   FILES ${cmake_configs} ${cmake_others}
-  DESTINATION ${CMAKE_MODULES_DIR}
+  DESTINATION ${CMAKE_MODULES_DIR}/gnuradio
   COMPONENT "runtime_devel"
 )
 
