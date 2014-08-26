@@ -253,13 +253,13 @@ TOGGLE_SNAP_TO_GRID = ToggleAction(
     preference_name='snap_to_grid'
 )
 TOGGLE_HIDE_DISABLED_BLOCKS = ToggleAction(
-    label='Hide _disabled blocks',
+    label='Hide _Disabled Blocks',
     tooltip='Toggle visibility of disabled blocks and connections',
     stock_id=gtk.STOCK_MISSING_IMAGE,
     keypresses=(gtk.keysyms.d, gtk.gdk.CONTROL_MASK),
 )
 TOGGLE_AUTO_HIDE_PORT_LABELS = ToggleAction(
-    label='Auto-hide port _labels',
+    label='Auto-Hide _Port Labels',
     tooltip='Automatically hide port labels',
     preference_name='auto_hide_port_labels'
 )
@@ -305,7 +305,7 @@ TOGGLE_BLOCKS_WINDOW = ToggleAction(
     preference_name='blocks_window_visible'
 )
 TOGGLE_SCROLL_LOCK = ToggleAction(
-    label='_Reports Scroll Lock',
+    label='Reports Scroll _Lock',
     tooltip='Toggle scroll lock for the report window',
     preference_name='scroll_lock'
 )
@@ -344,7 +344,7 @@ FLOW_GRAPH_KILL = Action(
     keypresses=(gtk.keysyms.F7, NO_MODS_MASK),
 )
 FLOW_GRAPH_SCREEN_CAPTURE = Action(
-    label='S_creen Capture',
+    label='Sc_reen Capture',
     tooltip='Create a screen capture of the flow graph',
     stock_id=gtk.STOCK_PRINT,
     keypresses=(gtk.keysyms.Print, NO_MODS_MASK),
@@ -404,7 +404,7 @@ XML_PARSER_ERRORS_DISPLAY = Action(
     stock_id=gtk.STOCK_DIALOG_ERROR,
 )
 TOOLS_RUN_FDESIGN = Action(
-    label='Filter design tool',
+    label='Filter Design Tool',
     tooltip='Execute gr_filter_design',
     stock_id=gtk.STOCK_EXECUTE,
 )
