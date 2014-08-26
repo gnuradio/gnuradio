@@ -34,7 +34,7 @@ from MainWindow import MainWindow
 from PropsDialog import PropsDialog
 from ParserErrorsDialog import ParserErrorsDialog
 import Dialogs
-from FileDialogs import OpenFlowGraphFileDialog, SaveFlowGraphFileDialog, SaveImageFileDialog
+from FileDialogs import OpenFlowGraphFileDialog, SaveFlowGraphFileDialog, SaveReportsFileDialog, SaveImageFileDialog
 
 gobject.threads_init()
 
@@ -117,7 +117,8 @@ class ActionHandler:
                 Actions.FLOW_GRAPH_SCREEN_CAPTURE, Actions.HELP_WINDOW_DISPLAY,
                 Actions.TYPES_WINDOW_DISPLAY, Actions.TOGGLE_BLOCKS_WINDOW,
                 Actions.TOGGLE_REPORTS_WINDOW, Actions.TOGGLE_HIDE_DISABLED_BLOCKS,
-                Actions.TOOLS_RUN_FDESIGN, Actions.TOGGLE_SCROLL_LOCK, Actions.CLEAR_REPORTS,
+                Actions.TOOLS_RUN_FDESIGN, Actions.TOGGLE_SCROLL_LOCK,
+                Actions.CLEAR_REPORTS, Actions.SAVE_REPORTS,
                 Actions.TOGGLE_AUTO_HIDE_PORT_LABELS, Actions.TOGGLE_SNAP_TO_GRID
             ): action.set_sensitive(True)
             if ParseXML.xml_failures:
@@ -385,6 +386,10 @@ class ActionHandler:
             action.save_to_preferences()
         elif action == Actions.CLEAR_REPORTS:
             self.main_window.text_display.clear()
+        elif action == Actions.SAVE_REPORTS:
+            file_path = SaveReportsFileDialog(self.get_page().get_file_path()).run()
+            if file_path is not None:
+                self.main_window.text_display.save(file_path)
         elif action == Actions.TOGGLE_HIDE_DISABLED_BLOCKS:
             Actions.NOTHING_SELECT()
         elif action == Actions.TOGGLE_AUTO_HIDE_PORT_LABELS:
@@ -496,6 +501,9 @@ class ActionHandler:
             self.platform.load_block_tree(self.main_window.btwin)
             Actions.XML_PARSER_ERRORS_DISPLAY.set_sensitive(bool(ParseXML.xml_failures))
             Messages.send_xml_errors_if_any(ParseXML.xml_failures)
+            # Force a redraw of the graph, by getting the current state and re-importing it
+            self.main_window.update_pages()
+
         elif action == Actions.FIND_BLOCKS:
             self.main_window.btwin.show()
             self.main_window.btwin.search_entry.show()

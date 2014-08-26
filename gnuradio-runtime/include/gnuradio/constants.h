@@ -54,6 +54,21 @@ namespace gr {
   GR_RUNTIME_API const std::string version();
 
   /*!
+   * \brief return just the major version defined by cmake
+   */
+  GR_RUNTIME_API const std::string major_version();
+
+  /*!
+   * \brief return just the api version defined by cmake
+   */
+  GR_RUNTIME_API const std::string api_version();
+
+  /*!
+   * \brief returnjust the minor version defined by cmake
+   */
+  GR_RUNTIME_API const std::string minor_version();
+
+  /*!
    * \brief return C compiler used to build this version of GNU Radio
    */
   GR_RUNTIME_API const std::string c_compiler();
