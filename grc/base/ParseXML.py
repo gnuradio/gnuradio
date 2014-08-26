@@ -79,7 +79,7 @@ def from_file(xml_file):
     nested_data['_instructions'] = {}
     xml_instructions = xml.xpath('/processing-instruction()')
     for inst in filter(lambda i: i.target == 'grc', xml_instructions):
-        nested_data['_instructions'] = inst.attrib
+        nested_data['_instructions'] = odict(inst.attrib)
     return nested_data
 
 
