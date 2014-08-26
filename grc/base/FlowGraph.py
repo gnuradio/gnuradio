@@ -265,6 +265,12 @@ class FlowGraph(Element):
         errors = False
         #remove previous elements
         self._elements = list()
+        # set file format
+        try:
+            instructions = n.find('_instructions') or {}
+            file_format = int(instructions.get('format', '0')) or self._guess_file_format_1(n)
+        except:
+            file_format = 0
         #use blank data if none provided
         fg_n = n and n.find('flow_graph') or odict()
         blocks_n = fg_n.findall('block')
@@ -303,9 +309,10 @@ class FlowGraph(Element):
                 source_block = self.get_block(source_block_id)
                 sink_block = self.get_block(sink_block_id)
                 # fix old, numeric message ports keys
-                source_key, sink_key = self.update_old_message_port_keys(
-                    source_key, sink_key, source_block, sink_block
-                )
+                if file_format < 1:
+                    source_key, sink_key = self._update_old_message_port_keys(
+                        source_key, sink_key, source_block, sink_block
+                    )
                 #verify the ports
                 if source_key not in source_block.get_source_keys():
                     # dummy blocks learn their ports here
@@ -333,7 +340,7 @@ class FlowGraph(Element):
         return errors
 
     @staticmethod
-    def update_old_message_port_keys(source_key, sink_key, source_block, sink_block):
+    def _update_old_message_port_keys(source_key, sink_key, source_block, sink_block):
         """Backward compatibility for message port keys
 
         Message ports use their names as key (like in the 'connect' method).
@@ -354,6 +361,20 @@ class FlowGraph(Element):
         except (ValueError, IndexError):
             pass
         return source_key, sink_key  # do nothing
+
+    @staticmethod
+    def _guess_file_format_1(n):
+        """Try to guess the file format for flow-graph files without version tag"""
+        try:
+            has_non_numeric_message_keys = any(not (
+                connection_n.find('source_key').isdigit() and
+                connection_n.find('sink_key').isdigit()
+            ) for connection_n in n.find('flow_graph').findall('connection'))
+            if has_non_numeric_message_keys:
+                return 1
+        except:
+            pass
+        return 0
 
 
 def _initialize_dummy_block(block, block_n):
