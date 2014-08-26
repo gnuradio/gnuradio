@@ -31,7 +31,6 @@
 
 namespace gr {
   namespace blocks {
-
 #define VALID_COMPRESSION_TYPE 0x0001
 
     // Basically, this is the opposite of htonx() and ntohx()

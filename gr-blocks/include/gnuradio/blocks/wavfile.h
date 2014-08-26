@@ -23,6 +23,9 @@
 // This file stores all the RIFF file type knowledge for the wavfile_*
 // gnuradio/blocks.
 
+#ifndef _GR_WAVFILE_H_
+#define _GR_WAVFILE_H_
+
 #include <gnuradio/blocks/api.h>
 #include <cstdio>
 
@@ -44,8 +47,7 @@ namespace gr {
      * \return True on a successful read, false if the file could not be read or is
      *         not a valid WAV file.
      */
-    bool
-    wavheader_parse(FILE *fp,
+    BLOCKS_API bool wavheader_parse(FILE *fp,
 		    unsigned int &sample_rate,
 		    int &nchans,
 		    int &bytes_per_sample,
@@ -58,8 +60,7 @@ namespace gr {
      * \details
      * Takes care of endianness.
      */
-    short int
-    wav_read_sample(FILE *fp, int bytes_per_sample);
+    BLOCKS_API short int wav_read_sample(FILE *fp, int bytes_per_sample);
 
 
     /*!
@@ -69,8 +70,7 @@ namespace gr {
      * not known a-priori (file and chunk lengths). Use
      * gri_wavheader_complete() to fill these in.
      */
-    bool
-    wavheader_write(FILE *fp,
+    BLOCKS_API bool wavheader_write(FILE *fp,
 		    unsigned int sample_rate,
 		    int nchans,
 		    int bytes_per_sample);
@@ -81,8 +81,7 @@ namespace gr {
      * \details
      * Takes care of endianness.
      */
-    void
-    wav_write_sample(FILE *fp, short int sample, int bytes_per_sample);
+    BLOCKS_API void wav_write_sample(FILE *fp, short int sample, int bytes_per_sample);
 
 
     /*!
@@ -97,8 +96,10 @@ namespace gr {
      * \param[in] fp         File pointer to an open WAV file with a blank header
      * \param[in] byte_count Length of all samples written to the file in bytes.
      */
-    bool
-    wavheader_complete(FILE *fp, unsigned int byte_count);
+    BLOCKS_API bool wavheader_complete(FILE *fp, unsigned int byte_count);
 
   } /* namespace blocks */
 } /* namespace gr */
+
+#endif /* _GR_WAVFILE_H_ */
+
