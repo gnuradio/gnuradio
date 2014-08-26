@@ -39,7 +39,7 @@ function(GR_SWIG_MAKE_DOCS output_file)
         set(input_files)
         unset(INPUT_PATHS)
         foreach(input_path ${ARGN})
-            if (IS_DIRECTORY ${input_path}) #when input path is a directory
+            if(IS_DIRECTORY ${input_path}) #when input path is a directory
                 file(GLOB input_path_h_files ${input_path}/*.h)
             else() #otherwise its just a file, no glob
                 set(input_path_h_files ${input_path})
@@ -110,7 +110,7 @@ macro(GR_SWIG_MAKE name)
     # vector<long unsigned int> (on 64-bit machines). Use this to test
     # the size of size_t, then set SIZE_T_32 if it's a 32-bit machine
     # or not if it's 64-bit. The logic in gr_type.i handles the rest.
-    INCLUDE (CheckTypeSize)
+    INCLUDE(CheckTypeSize)
     CHECK_TYPE_SIZE("size_t" SIZEOF_SIZE_T)
     CHECK_TYPE_SIZE("unsigned int" SIZEOF_UINT)
     if(${SIZEOF_SIZE_T} EQUAL ${SIZEOF_UINT})
@@ -118,7 +118,7 @@ macro(GR_SWIG_MAKE name)
     endif(${SIZEOF_SIZE_T} EQUAL ${SIZEOF_UINT})
 
     #do swig doc generation if specified
-    if (GR_SWIG_DOC_FILE)
+    if(GR_SWIG_DOC_FILE)
         set(GR_SWIG_DOCS_SOURCE_DEPS ${GR_SWIG_SOURCE_DEPS})
         list(APPEND GR_SWIG_DOCS_TARGET_DEPS ${GR_SWIG_TARGET_DEPS})
         GR_SWIG_MAKE_DOCS(${GR_SWIG_DOC_FILE} ${GR_SWIG_DOC_DIRS})
