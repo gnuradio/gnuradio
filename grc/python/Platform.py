@@ -45,7 +45,7 @@ class Platform(_Platform, _GUIPlatform):
         _Platform.__init__(
             self,
             name='GNU Radio Companion',
-            version=gr.version(),
+            version=(gr.version(), gr.major_version(), gr.api_version(), gr.minor_version()),
             key='grc',
             license=__doc__.strip(),
             website='http://gnuradio.org/redmine/wiki/gnuradio/GNURadioCompanion',

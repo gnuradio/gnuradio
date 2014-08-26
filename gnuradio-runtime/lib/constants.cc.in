@@ -58,6 +58,25 @@ namespace gr {
     return "@VERSION@";
   }
 
+  // Return individual parts of the version
+  const std::string
+  major_version()
+  {
+    return "@MAJOR_VERSION@";
+  }
+
+  const std::string
+  api_version()
+  {
+    return "@API_COMPAT@";
+  }
+
+  const std::string
+  minor_version()
+  {
+    return "@MINOR_VERSION@";
+  }
+
   const std::string
   c_compiler()
   {

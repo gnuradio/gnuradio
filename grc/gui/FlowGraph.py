@@ -348,6 +348,23 @@ class FlowGraph(Element):
         self.create_labels()
         self.create_shapes()
 
+    def reload(self):
+        """
+        Reload flow-graph (with updated blocks)
+
+        Args:
+            page: the page to reload (None means current)
+        Returns:
+            False if some error occurred during import
+        """
+        success = False
+        data = self.export_data()
+        if data:
+            self.unselect()
+            success = self.import_data(data)
+            self.update()
+        return success
+
     ##########################################################################
     ## Get Selected
     ##########################################################################

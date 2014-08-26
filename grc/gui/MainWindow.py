@@ -282,6 +282,15 @@ class MainWindow(gtk.Window):
         #show/hide notebook tabs
         self.notebook.set_show_tabs(len(self._get_pages()) > 1)
 
+    def update_pages(self):
+        """
+        Forces a reload of all the pages in this notebook.
+        """
+        for page in self._get_pages():
+            success = page.get_flow_graph().reload()
+            if success:  # Only set saved if errors occurred during import
+                page.set_saved(False)
+
     def get_page(self):
         """
         Get the selected page.
