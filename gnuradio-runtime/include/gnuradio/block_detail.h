@@ -236,6 +236,7 @@ namespace gr {
     float pc_output_buffers_full_avg(size_t which);
     std::vector<float> pc_output_buffers_full_avg();
     float pc_work_time_avg();
+    float pc_throughput_avg();
 
     float pc_noutput_items_var();
     float pc_nproduced_var();
@@ -244,6 +245,8 @@ namespace gr {
     float pc_output_buffers_full_var(size_t which);
     std::vector<float> pc_output_buffers_full_var();
     float pc_work_time_var();
+
+    float pc_noutput_items_total();
 
 #ifdef GR_ENABLE_LINUX_PERF
     float pc_branch_miss_rate();
@@ -283,6 +286,7 @@ namespace gr {
     float d_ins_noutput_items;
     float d_avg_noutput_items;
     float d_var_noutput_items;
+    float d_total_noutput_items;
     float d_ins_nproduced;
     float d_avg_nproduced;
     float d_var_nproduced;
@@ -296,6 +300,7 @@ namespace gr {
     float d_ins_work_time;
     float d_avg_work_time;
     float d_var_work_time;
+    gr::high_res_timer_type d_pc_start_time, d_pc_last_time;
     // hw perf events from linux (set in ctor so don't ifdef out)
 #ifdef GR_ENABLE_LINUX_PERF
     struct perf_event_attr hw_events;

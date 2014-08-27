@@ -84,16 +84,6 @@ namespace gr {
       d_ins_work_time(0),
       d_avg_work_time(0),
       d_var_work_time(0),
-      d_ins_branch_mispredicts(0),
-      d_total_branch_mispredicts(0),
-      d_ins_branch_references(0),
-      d_total_branch_references(0),
-      d_ins_cache_misses(0),
-      d_total_cache_misses(0),
-      d_ins_cache_references(0),
-      d_total_cache_references(0),
-      d_ins_hw_cpu_cycles(0),
-      d_total_hw_cpu_cycles(0),
       d_pc_counter(0)
   {
     s_ncurrently_allocated++;
@@ -301,6 +291,7 @@ namespace gr {
   {
     d_start_of_work = gr::high_res_timer_now_perfmon();
 
+#ifdef GR_ENABLE_LINUX_PERF
     struct perf_event_attr hw_events;
     memset(&hw_events, 0, sizeof(struct perf_event_attr));
     hw_events.size = sizeof(struct perf_event_attr);
@@ -332,6 +323,7 @@ namespace gr {
     for(size_t ii=0; ii < _perf_fd.size(); ++ii) {
       ioctl(_perf_fd[ii], PERF_EVENT_IOC_RESET, 0);
     }
+#endif
   }
 
   void
@@ -339,6 +331,7 @@ namespace gr {
   {
     d_end_of_work = gr::high_res_timer_now_perfmon();
     gr::high_res_timer_type diff = d_end_of_work - d_start_of_work;
+    d_pc_last_time = gr::high_res_timer_now();
 
 #ifdef GR_ENABLE_LINUX_PERF
     // read linux perf events as a group
@@ -347,7 +340,7 @@ namespace gr {
     if( read_size < sizeof(struct linux_perf_events)  ) {
         fprintf(stderr, "Could not read all linux perf events (read_size %d is less than %d). Actual number of events is %d\n",
                       read_size, sizeof(struct linux_perf_events), hw_perf_results.num_events);
-        if(read_size == -1) 
+        if(read_size == -1)
             fprintf(stderr, "Reading perf event errno: %s", strerror(errno));
     }
     for(size_t ii=0; ii < _perf_fd.size(); ++ii) {
@@ -372,7 +365,9 @@ namespace gr {
       d_var_nproduced = 0;
       d_ins_noutput_items = noutput_items;
       d_avg_noutput_items = noutput_items;
+      d_total_noutput_items = noutput_items;
       d_var_noutput_items = 0;
+      d_pc_start_time = gr::high_res_timer_now();
 #ifdef GR_ENABLE_LINUX_PERF
       d_total_branch_references  = d_ins_branch_references;
       d_total_branch_mispredicts = d_ins_branch_mispredicts;
@@ -413,6 +408,7 @@ namespace gr {
 
       d = noutput_items - d_avg_noutput_items;
       d_ins_noutput_items = noutput_items;
+      d_total_noutput_items += noutput_items;
       d_avg_noutput_items = d_avg_noutput_items + d/d_pc_counter;
       d_var_noutput_items = d_var_noutput_items + d*d;
 
@@ -554,6 +550,13 @@ namespace gr {
   }
 
   float
+  block_detail::pc_throughput_avg()
+  {
+    float pc_monitor_time = (float)(d_pc_last_time - d_pc_start_time)/(float)gr::high_res_timer_tps();
+    return d_total_noutput_items / pc_monitor_time;
+  }
+
+  float
   block_detail::pc_noutput_items_var()
   {
     return d_var_noutput_items/(d_pc_counter-1);
@@ -611,6 +614,12 @@ namespace gr {
   block_detail::pc_work_time_total()
   {
     return d_total_work_time;
+  }
+
+  float
+  block_detail::pc_noutput_items_total()
+  {
+    return d_total_noutput_items;
   }
 
 #ifdef GR_ENABLE_LINUX_PERF

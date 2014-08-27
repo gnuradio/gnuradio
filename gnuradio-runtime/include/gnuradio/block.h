@@ -418,7 +418,7 @@ namespace gr {
     float pc_nproduced_avg();
 
     /*!
-     * \brief Gets variance of  num items produced performance counter.
+     * \brief Gets variance of num items produced performance counter.
      */
     float pc_nproduced_var();
 
@@ -501,6 +501,16 @@ namespace gr {
      * \brief Gets total clock cycles spent in work.
      */
     float pc_work_time_total();
+
+    /*!
+     * \brief Gets throughput (items produced per wall-clock time) of work.
+     */
+    float pc_throughput_avg();
+
+    /*!
+     * \brief Gets total number of output items
+     */
+    float pc_noutput_items_total();
 
 #ifdef GR_ENABLE_LINUX_PERF
     /*!

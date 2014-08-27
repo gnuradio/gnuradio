@@ -726,6 +726,28 @@ namespace gr {
     }
   }
 
+  float
+  block::pc_throughput_avg()
+  {
+    if(d_detail) {
+      return d_detail->pc_throughput_avg();
+    }
+    else {
+      return 0;
+    }
+  }
+
+  float
+  block::pc_noutput_items_total()
+  {
+    if(d_detail) {
+      return d_detail->pc_noutput_items_total();
+    }
+    else {
+      return 0;
+    }
+  }
+
 #ifdef GR_ENABLE_LINUX_PERF
   float
   block::pc_branch_miss_rate()
@@ -1055,6 +1077,20 @@ namespace gr {
         alias(), "var output \% full", &block::pc_output_buffers_full_var,
         pmt::make_c32vector(0,0), pmt::make_c32vector(0,1), pmt::make_c32vector(0,0),
         "", "Var. of how full output buffers are", RPC_PRIVLVL_MIN,
+        DISPTIME | DISPOPTSTRIP)));
+
+    d_rpc_vars.push_back(
+      rpcbasic_sptr(new rpcbasic_register_get<block, float>(
+        alias(), "avg throughput", &block::pc_throughput_avg,
+        pmt::mp(0), pmt::mp(1000), pmt::mp(0),
+        "items/sec", "Average throughput", RPC_PRIVLVL_MIN,
+        DISPTIME | DISPOPTSTRIP)));
+
+    d_rpc_vars.push_back(
+      rpcbasic_sptr(new rpcbasic_register_get<block, float>(
+        alias(), "total noutput_items", &block::pc_noutput_items_total,
+        pmt::mp(0), pmt::mp(1e16), pmt::mp(0),
+        "items", "Total noutput items", RPC_PRIVLVL_MIN,
         DISPTIME | DISPOPTSTRIP)));
 
 #ifdef GR_ENABLE_LINUX_PERF

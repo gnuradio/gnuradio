@@ -51,7 +51,7 @@ find_file(LINUX_PERF_EVENT_HEADER
           NAME perf_event.h
           PATHS
           /usr/include/linux)
-     if( NOT LINUX_HW_BREAKPOINT_HEADER STREQUAL "LINUX_HW_BREAKPOINT_HEADER-NOTFOUND" AND 
+     if( NOT LINUX_HW_BREAKPOINT_HEADER STREQUAL "LINUX_HW_BREAKPOINT_HEADER-NOTFOUND" AND
       NOT LINUX_PERF_EVENT_HEADER STREQUAL "LINUX_PERF_EVENT_HEADER-NOTFOUND" )
          message(STATUS "-- Enabling Linux only perf events for gr-ctrlport")
          add_definitions("-DGR_ENABLE_LINUX_PERF")
