@@ -414,8 +414,9 @@ class FlowGraph(Element):
             #single select mode, break
             if not coor_m: break
         #update selected ports
-        self._old_selected_port = self._new_selected_port
-        self._new_selected_port = selected_port
+        if selected_port is not self._new_selected_port:
+            self._old_selected_port = self._new_selected_port
+            self._new_selected_port = selected_port
         return list(selected)
 
     def get_selected_connections(self):
@@ -488,12 +489,17 @@ class FlowGraph(Element):
             if self.get_ctrl_mask() or not (
                 new_selections and new_selections[0] in self.get_selected_elements()
             ): selected_elements = new_selections
-        else: #called from a mouse release
+            if self._old_selected_port:
+                self._old_selected_port.force_label_unhidden(False)
+                self.create_shapes()
+                self.queue_draw()
+            elif self._new_selected_port:
+                self._new_selected_port.force_label_unhidden()
+        else:  # called from a mouse release
             if not self.element_moved and (not self.get_selected_elements() or self.get_ctrl_mask()):
                 selected_elements = self.what_is_selected(self.get_coordinate(), self.press_coor)
         #this selection and the last were ports, try to connect them
-        if self._old_selected_port and self._new_selected_port and \
-            self._old_selected_port is not self._new_selected_port:
+        if self._old_selected_port and self._new_selected_port:
             try:
                 self.connect(self._old_selected_port, self._new_selected_port)
                 Actions.ELEMENT_CREATE()
