@@ -1,19 +1,19 @@
 /* -*- c++ -*- */
 /*
  * Copyright 2011,2012 Free Software Foundation, Inc.
- * 
+ *
  * This file is part of GNU Radio
- * 
+ *
  * GNU Radio is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3, or (at your option)
  * any later version.
- * 
+ *
  * GNU Radio is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with GNU Radio; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 51 Franklin Street,
@@ -31,10 +31,10 @@ namespace gr {
   namespace digital {
 
     /*!
-     * \brief A probe for computing SNR of a signal.
+     * \brief A probe for computing SNR of a PSK signal.
      * \ingroup measurement_tools_blk
      *
-     * \details 
+     * \details
      * This is a probe block (a sink) that can be used to monitor and
      * retrieve estimations of the signal SNR. This probe is designed
      * for use with M-PSK signals especially. The type of estimator is
@@ -45,6 +45,16 @@ namespace gr {
      * estimators are designed and proven theoretically under AWGN
      * conditions; some amount of error should be assumed and/or
      * estimated for real channel conditions.
+     *
+     * The block has three output message ports that will emit a
+     * message every msg_samples number of samples. These message
+     * ports are:
+     * \li snr: the current SNR estimate (in dB)
+     * \li signal: the current signal power estimate (in dBx)
+     * \li noise: the current noise power estimate (in dBx)
+     *
+     * Some calibration is required to convert dBx of the signal and
+     * noise power estimates to real measurements, such as dBm.
      */
     class DIGITAL_API probe_mpsk_snr_est_c : virtual public sync_block
     {
@@ -69,6 +79,12 @@ namespace gr {
 
       //! Return the estimated signal-to-noise ratio in decibels
       virtual double snr() = 0;
+
+      //! Return the estimated signal power in decibels
+      virtual double signal() = 0;
+
+      //! Return the estimated noise power in decibels
+      virtual double noise() = 0;
 
       //! Return the type of estimator in use
       virtual snr_est_type_t type() const = 0;

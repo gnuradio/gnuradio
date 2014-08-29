@@ -1,19 +1,19 @@
 /* -*- c++ -*- */
 /*
  * Copyright 2011,2012 Free Software Foundation, Inc.
- * 
+ *
  * This file is part of GNU Radio
- * 
+ *
  * GNU Radio is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3, or (at your option)
  * any later version.
- * 
+ *
  * GNU Radio is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with GNU Radio; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 51 Franklin Street,
@@ -36,8 +36,10 @@ namespace gr {
       double d_alpha;
       mpsk_snr_est *d_snr_est;
 
-      //d_key is the message name, 'snr'
-      pmt::pmt_t d_key;
+      // Message port names
+      pmt::pmt_t d_snr_port;
+      pmt::pmt_t d_signal_port;
+      pmt::pmt_t d_noise_port;
 
     public:
       probe_mpsk_snr_est_c_impl(snr_est_type_t type,
@@ -52,6 +54,12 @@ namespace gr {
 
       //! Return the estimated signal-to-noise ratio in decibels
       double snr();
+
+      //! Return the estimated signal power in decibels
+      double signal();
+
+      //! Return the estimated noise power in decibels
+      double noise();
 
       //! Return the type of estimator in use
       snr_est_type_t type() const;

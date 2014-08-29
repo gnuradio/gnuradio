@@ -1,19 +1,19 @@
 /* -*- c++ -*- */
 /*
  * Copyright 2011,2012 Free Software Foundation, Inc.
- * 
+ *
  * This file is part of GNU Radio
- * 
+ *
  * GNU Radio is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3, or (at your option)
  * any later version.
- * 
+ *
  * GNU Radio is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with GNU Radio; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 51 Franklin Street,
@@ -59,7 +59,13 @@ namespace gr {
       // at least 1 estimator has to look back
       set_history(2);
 
-      d_key = pmt::string_to_symbol("snr");
+      d_snr_port = pmt::string_to_symbol("snr");
+      d_signal_port = pmt::string_to_symbol("signal");
+      d_noise_port = pmt::string_to_symbol("noise");
+
+      message_port_register_out(d_snr_port);
+      message_port_register_out(d_signal_port);
+      message_port_register_out(d_noise_port);
     }
 
     probe_mpsk_snr_est_c_impl::~probe_mpsk_snr_est_c_impl()
@@ -74,7 +80,18 @@ namespace gr {
 				    gr_vector_void_star &output_items)
     {
       const gr_complex *in = (const gr_complex*)input_items[0];
-      return d_snr_est->update(noutput_items, in);
+      int n = d_snr_est->update(noutput_items, in);
+
+      d_count += noutput_items;
+      while(d_count > d_nsamples) {
+	// Post a message with the latest SNR data
+	message_port_pub(d_snr_port, pmt::from_double(snr()));
+	message_port_pub(d_signal_port, pmt::from_double(signal()));
+	message_port_pub(d_noise_port, pmt::from_double(noise()));
+	d_count -= d_nsamples;
+      }
+
+      return n;
     }
 
     double
@@ -82,6 +99,25 @@ namespace gr {
     {
       if(d_snr_est)
 	return d_snr_est->snr();
+      else
+	throw std::runtime_error("probe_mpsk_snr_est_c_impl:: No SNR estimator defined.\n");
+    }
+
+    double
+    probe_mpsk_snr_est_c_impl::signal()
+    {
+      if(d_snr_est)
+	return d_snr_est->signal();
+      else
+	throw std::runtime_error("probe_mpsk_snr_est_c_impl:: No SNR estimator defined.\n");
+    }
+
+
+    double
+    probe_mpsk_snr_est_c_impl::noise()
+    {
+      if(d_snr_est)
+	return d_snr_est->noise();
       else
 	throw std::runtime_error("probe_mpsk_snr_est_c_impl:: No SNR estimator defined.\n");
     }
@@ -150,7 +186,7 @@ namespace gr {
 	  d_snr_est->set_alpha(d_alpha);
       }
       else
-	throw std::invalid_argument("probe_mpsk_snr_est_c_impl: alpha must be in [0,1]\n");    
+	throw std::invalid_argument("probe_mpsk_snr_est_c_impl: alpha must be in [0,1]\n");
     }
 
   } /* namespace digital */
