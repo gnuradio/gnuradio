@@ -1,19 +1,19 @@
 /* -*- c++ -*- */
 /*
  * Copyright 2011,2012 Free Software Foundation, Inc.
- * 
+ *
  * This file is part of GNU Radio
- * 
+ *
  * GNU Radio is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3, or (at your option)
  * any later version.
- * 
+ *
  * GNU Radio is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with GNU Radio; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 51 Franklin Street,
@@ -58,6 +58,7 @@ namespace gr {
     {
     protected:
       double d_alpha, d_beta;
+      double d_signal, d_noise;
 
     public:
       /*! Constructor
@@ -81,6 +82,12 @@ namespace gr {
 
       //! Use the register values to compute a new estimate
       virtual double snr();
+
+      //! Returns the signal power estimate
+      virtual double signal();
+
+      //! Returns the noise power estimate
+      virtual double noise();
     };
 
 
@@ -97,7 +104,8 @@ namespace gr {
     {
     private:
       double d_y1, d_y2;
-  
+      double d_counter;
+
     public:
       /*! Constructor
        *
@@ -123,13 +131,16 @@ namespace gr {
      *  affected because of fold-over around the decision boundaries,
      *  which results in a skewness to the samples. We estimate the
      *  skewness and use this as a correcting term.
+     *
+     *  This algorithm only appears to work well for BPSK signals.
      */
     class DIGITAL_API mpsk_snr_est_skew :
       public mpsk_snr_est
     {
     private:
       double d_y1, d_y2, d_y3;
-  
+      double d_counter;
+
     public:
       /*! Constructor
        *
@@ -167,7 +178,7 @@ namespace gr {
     {
     private:
       double d_y1, d_y2;
-  
+
     public:
       /*! Constructor
        *
@@ -205,7 +216,7 @@ namespace gr {
      *  estimator unless you have a way to guess or estimate these
      *  values here.
      *
-     *  Original paper: 
+     *  Original paper:
      *  R. Matzner, "An SNR estimation algorithm for complex baseband
      *  signal using higher order statistics," Facta Universitatis
      *  (Nis), no. 6, pp. 41-52, 1993.
@@ -221,7 +232,7 @@ namespace gr {
     private:
       double d_y1, d_y2;
       double d_ka, d_kw;
-  
+
     public:
       /*! Constructor
        *
@@ -266,7 +277,7 @@ namespace gr {
     {
     private:
       double d_y1, d_y2;
-  
+
     public:
       /*! Constructor
        *
