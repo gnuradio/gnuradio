@@ -2,22 +2,23 @@
 # Find the library for the USRP Hardware Driver
 ########################################################################
 
+# make this file non-reentrant
+if(__INCLUDED_FIND_UHD_CMAKE)
+    return()
+endif()
+set(__INCLUDED_FIND_UHD_CMAKE TRUE)
+
 # First check to see if UHD installed its own CMake files
 
 # save the current MODULE path
 set(SAVED_CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH})
 
-# remove the current directory from the MODULE path
-list(REMOVE_ITEM CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR})
+# clear the current MODULE path; uses system paths only
+unset(CMAKE_MODULE_PATH)
 
 # try to find UHD via the provided parameters,
 # handle REQUIRED internally later
 unset(UHD_FOUND)
-
-# try quietly when possible (CMake 2.8+).
-if(NOT ${CMAKE_VERSION} VERSION_LESS "2.8.0")
-  set(UHD_QUIET "QUIET")
-endif()
 
 # was the version specified?
 unset(LOCAL_UHD_FIND_VERSION)
@@ -35,7 +36,7 @@ endif(UHD_FIND_VERSION_EXACT)
 # UHDConfigVersion will catch a pass-through version bug ...
 find_package(
   UHD ${LOCAL_UHD_FIND_VERSION}
-  ${LOCAL_UHD_FIND_VERSION_EXACT} ${UHD_QUIET}
+  ${LOCAL_UHD_FIND_VERSION_EXACT} QUIET
 )
 
 # restore CMAKE_MODULE_PATH
