@@ -18,10 +18,15 @@
 # Boston, MA 02110-1301, USA.
 
 ########################################################################
-# Check for system libgsm....
+# Check for system libgsm via CMake variable GR_USE_SYSTEM_LIBGSM ....
+#  if undefined, try to find system libgsm library,
+#    but if there is no system library use a local copy.
+#  if defined True, use system libgsm if found, otherwise do not
+#     use a local copy.
+#  if defined False, use the local copy
 ########################################################################
-if(NOT GR_USE_SYSTEM_LIBGSM)
-  find_path(LIBGSM_INCLUDE_DIR NAMES gsm.h
+if (NOT DEFINED GR_USE_SYSTEM_LIBGSM)
+   find_path(LIBGSM_INCLUDE_DIR NAMES gsm.h
     PATHS
     ${LIBGSM_PKG_INCLUDE_DIRS}
     /usr/include/gsm
@@ -34,22 +39,58 @@ if(NOT GR_USE_SYSTEM_LIBGSM)
     /usr/lib
   )
 
-if(LIBGSM_INCLUDE_DIR AND LIBGSM_LIBRARIES)
-  set(GR_USE_SYSTEM_LIBGSM TRUE CACHE INTERNAL "system libgsm found")
-  message(STATUS "Found libgsm: ${LIBGSM_INCLUDE_DIR}, ${LIBGSM_LIBRARIES}")
-else(LIBGSM_INCLUDE_DIR AND LIBGSM_LIBRARIES)
-  set(GR_USE_SYSTEM_LIBGSM FALSE CACHE INTERNAL "system libgsm found")
-  message(STATUS "system libgsm not found.")
-endif(LIBGSM_INCLUDE_DIR AND LIBGSM_LIBRARIES)
+ if(LIBGSM_INCLUDE_DIR AND LIBGSM_LIBRARIES)
+   set(GR_USE_SYSTEM_LIBGSM TRUE CACHE INTERNAL "System libgsm found")
+   message(STATUS "Found libgsm: ${LIBGSM_INCLUDE_DIR}, ${LIBGSM_LIBRARIES}")
+   set(GR_USE_LOCAL_LIBGSM FALSE)
+   set(GR_USE_SYSTEM_LIBGSM TRUE)
+ else(LIBGSM_INCLUDE_DIR AND LIBGSM_LIBRARIES)
+   set(GR_USE_SYSTEM_LIBGSM FALSE CACHE INTERNAL "System libgsm found")
+   message(STATUS "System libgsm not found.")
+   set(GR_USE_LOCAL_LIBGSM TRUE)
+ endif(LIBGSM_INCLUDE_DIR AND LIBGSM_LIBRARIES)
+else (NOT DEFINED GR_USE_SYSTEM_LIBGSM)
+ if (GR_USE_SYSTEM_LIBGSM)
+    find_path(LIBGSM_INCLUDE_DIR NAMES gsm.h
+    PATHS
+    ${LIBGSM_PKG_INCLUDE_DIRS}
+    /usr/include/gsm
+    /usr/include
+  )
+
+  find_library(LIBGSM_LIBRARIES NAMES gsm
+    PATHS
+    ${LIBGSM_PKG_LIBRARY_DIRS}
+    /usr/lib
+  )
+
+  if(LIBGSM_INCLUDE_DIR AND LIBGSM_LIBRARIES)
+    set(GR_USE_SYSTEM_LIBGSM TRUE CACHE INTERNAL "System libgsm found")
+    message(STATUS "Found libgsm: ${LIBGSM_INCLUDE_DIR}, ${LIBGSM_LIBRARIES}")
+    set(GR_USE_LOCAL_LIBGSM FALSE)
+  else(LIBGSM_INCLUDE_DIR AND LIBGSM_LIBRARIES)
+    set(GR_USE_SYSTEM_LIBGSM FALSE CACHE INTERNAL "System libgsm found")
+    message(STATUS "System libgsm not found.")
+    set(GR_USE_LOCAL_LIBGSM FALSE)
+   endif(LIBGSM_INCLUDE_DIR AND LIBGSM_LIBRARIES)
+ else (GR_USE_SYSTEM_LIBGSM)
+    set(GR_USE_LOCAL_LIBGSM TRUE)
+    message(STATUS "Using gnuradio local copy of libgsm.")
+ endif (GR_USE_SYSTEM_LIBGSM)
+endif (NOT DEFINED GR_USE_SYSTEM_LIBGSM)
 
 mark_as_advanced(LIBGSM_INCLUDE_DIR LIBGSM_LIBRARIES)
-endif(NOT GR_USE_SYSTEM_LIBGSM)
 
 ########################################################################
-# Check for system libcodec2....
+# Check for system libcodec2 via CMake variable GR_USE_SYSTEM_LIBCODEC2
+#  if undefined, try to find system libgsm library,
+#    but if there is no system library use a local copy.
+#  if defined True, use system libcodec2 if found, otherwise do not
+#     use a local copy.
+#  if defined False, use the local copy
 ########################################################################
-if(NOT GR_USE_SYSTEM_LIBCODEC2)
-  find_path(LIBCODEC2_INCLUDE_DIR NAMES codec2.h
+if (NOT DEFINED GR_USE_SYSTEM_LIBCODEC2)
+   find_path(LIBCODEC2_INCLUDE_DIR NAMES codec2.h
     PATHS
     ${LIBCODEC2_PKG_INCLUDE_DIRS}
     /usr/include/codec2
@@ -62,16 +103,48 @@ if(NOT GR_USE_SYSTEM_LIBCODEC2)
     /usr/lib
   )
 
-if(LIBCODEC2_INCLUDE_DIR AND LIBCODEC2_LIBRARIES)
-  set(GR_USE_SYSTEM_LIBCODEC2 TRUE CACHE INTERNAL "system libcodec2 found")
-  message(STATUS "Found libcodec2: ${LIBCODEC2_INCLUDE_DIR}, ${LIBCODEC2_LIBRARIES}")
-else(LIBCODEC2_INCLUDE_DIR AND LIBCODEC2_LIBRARIES)
-  set(GR_USE_SYSTEM_LIBCODEC2 FALSE CACHE INTERNAL "system libcodec2 found")
-  message(STATUS "system libcodec2 not found.")
-endif(LIBCODEC2_INCLUDE_DIR AND LIBCODEC2_LIBRARIES)
+ if(LIBCODEC2_INCLUDE_DIR AND LIBCODEC2_LIBRARIES)
+   set(GR_USE_SYSTEM_LIBCODEC2 TRUE CACHE INTERNAL "System libcodec2 found")
+   message(STATUS "Found libcodec2: ${LIBCODEC2_INCLUDE_DIR}, ${LIBCODEC2_LIBRARIES}")
+   set(GR_USE_LOCAL_LIBCODEC2 FALSE)
+   set(GR_USE_SYSTEM_LIBCODEC2 TRUE)
+ else(LIBCODEC2_INCLUDE_DIR AND LIBCODEC2_LIBRARIES)
+   set(GR_USE_SYSTEM_LIBCODEC2 FALSE CACHE INTERNAL "System libcodec2 found")
+   message(STATUS "System libcodec2 not found.")
+   set(GR_USE_LOCAL_LIBCODEC2 TRUE)
+ endif(LIBCODEC2_INCLUDE_DIR AND LIBCODEC2_LIBRARIES)
+else (NOT DEFINED GR_USE_SYSTEM_LIBCODEC2)
+ if (GR_USE_SYSTEM_LIBCODEC2)
+    find_path(LIBCODEC2_INCLUDE_DIR NAMES codec2.h
+    PATHS
+    ${LIBCODEC2_PKG_INCLUDE_DIRS}
+    /usr/include/codec2
+    /usr/include
+  )
+
+  find_library(LIBCODEC2_LIBRARIES NAMES codec2
+    PATHS
+    ${LIBGSM_PKG_LIBRARY_DIRS}
+    /usr/lib
+  )
+
+  if(LIBCODEC2_INCLUDE_DIR AND LIBCODEC2_LIBRARIES)
+    set(GR_USE_SYSTEM_LIBCODEC2 TRUE CACHE INTERNAL "System libcodec2 found")
+    message(STATUS "Found libgsm: ${LIBCODEC2_INCLUDE_DIR}, ${LIBCODEC2_LIBRARIES}")
+    set(GR_USE_LOCAL_LIBCODEC2 FALSE)
+  else(LIBGCODEC2_INCLUDE_DIR AND LIBCODEC2_LIBRARIES)
+    set(GR_USE_SYSTEM_LIBCODEC2 FALSE CACHE INTERNAL "System libcodec2 found")
+    message(STATUS "System libcodec2 not found.")
+    set(GR_USE_LOCAL_LIBCODEC2 FALSE)
+   endif(LIBCODEC2_INCLUDE_DIR AND LIBCODEC2_LIBRARIES)
+ else (GR_USE_SYSTEM_LIBCODEC2)
+    set(GR_USE_LOCAL_LIBCODEC2 TRUE)
+    message(STATUS "Using gnuradio local copy of libcodec2.")
+ endif (GR_USE_SYSTEM_LIBCODEC2)
+endif (NOT DEFINED GR_USE_SYSTEM_LIBCODEC2)
 
 mark_as_advanced(LIBCODEC2_INCLUDE_DIR LIBCODEC2_LIBRARIES)
-endif(NOT GR_USE_SYSTEM_LIBCODEC2)
+
 
 ########################################################################
 # Setup the include and linker paths
@@ -135,13 +208,13 @@ endif(MSVC)
 ########################################################################
 GR_INCLUDE_SUBDIRECTORY(g7xx)
 
-if(NOT GR_USE_SYSTEM_LIBCODEC2)
+if(GR_USE_LOCAL_LIBCODEC2)
  GR_INCLUDE_SUBDIRECTORY(codec2)
-endif(NOT GR_USE_SYSTEM_LIBCODEC2)
+endif(GR_USE_LOCAL_LIBCODEC2)
 
-if(NOT GR_USE_SYSTEM_LIBGSM)
+if(GR_USE_LOCAL_LIBGSM)
  GR_INCLUDE_SUBDIRECTORY(gsm)
-endif(NOT GR_USE_SYSTEM_LIBGSM)
+endif(GR_USE_LOCAL_LIBGSM)
 
 list(APPEND vocoder_libs
     gnuradio-runtime
