@@ -30,7 +30,6 @@ PKG_CHECK_MODULES(COMEDI comedilib)
 include(GrComponent)
 GR_REGISTER_COMPONENT("gr-comedi" ENABLE_GR_COMEDI
     COMEDI_FOUND
-    LINUX #comedi uses linux specific device noces
     Boost_FOUND
     ENABLE_GNURADIO_RUNTIME
 )
