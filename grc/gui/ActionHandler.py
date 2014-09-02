@@ -397,7 +397,8 @@ class ActionHandler:
             Actions.NOTHING_SELECT()
         elif action == Actions.TOGGLE_AUTO_HIDE_PORT_LABELS:
             action.save_to_preferences()
-            self.main_window.get_flow_graph().create_shapes()
+            for page in self.main_window.get_pages():
+                page.get_flow_graph().create_shapes()
         elif action == Actions.TOGGLE_SNAP_TO_GRID:
             action.save_to_preferences()
         ##################################################
