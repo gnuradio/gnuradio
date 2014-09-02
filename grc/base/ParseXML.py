@@ -121,7 +121,7 @@ def to_file(nested_data, xml_file):
     instructions = nested_data.pop('_instructions', None)
     if instructions:
         xml_data += etree.tostring(etree.ProcessingInstruction(
-            'grc', ' '.join("{}='{}'".format(*item) for item in instructions.iteritems())
+            'grc', ' '.join("{0}='{1}'".format(*item) for item in instructions.iteritems())
         ), xml_declaration=True, pretty_print=True)
     xml_data += etree.tostring(_to_file(nested_data)[0], pretty_print=True)
     open(xml_file, 'w').write(xml_data)
