@@ -178,6 +178,7 @@ int main(int argc, char *argv[]) {
     VOLK_PROFILE(volk_32f_s32f_multiply_32f, 1e-4, 1.0, 204602, 10000, &results, benchmark_mode, kernel_regex);
     VOLK_PROFILE(volk_32f_binary_slicer_32i, 0, 1.0, 204602, 10000, &results, benchmark_mode, kernel_regex);
     VOLK_PROFILE(volk_32f_binary_slicer_8i, 0, 1.0, 204602, 10000, &results, benchmark_mode, kernel_regex);
+    VOLK_PROFILE(volk_32f_tanh_32f, 1e-6, 0, 204602, 1000, &results, benchmark_mode, kernel_regex);
 
     // Until we can update the config on a kernel by kernel basis
     // do not overwrite volk_config when using a regex.
