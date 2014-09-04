@@ -36,7 +36,9 @@ class test_pmt(unittest.TestCase):
         const = 123765
         x_pmt = pmt.from_double(const)
         x_int = pmt.to_double(x_pmt)
+        x_float = pmt.to_float(x_pmt)
         self.assertEqual(x_int, const)
+        self.assertEqual(x_float, const)
 
     def test03(self):
         v = pmt.init_f32vector(3, [11, -22, 33])
