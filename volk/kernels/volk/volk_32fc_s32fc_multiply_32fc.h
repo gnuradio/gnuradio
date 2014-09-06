@@ -29,7 +29,6 @@ static inline void volk_32fc_s32fc_multiply_32fc_u_avx(lv_32fc_t* cVector, const
     yh = _mm256_set1_ps(lv_cimag(scalar));
 
     for(;number < quarterPoints; number++){
-
       x = _mm256_loadu_ps((float*)a); // Load the ar + ai, br + bi as ar,ai,br,bi
 
       tmp1 = _mm256_mul_ps(x,yl); // tmp1 = ar*cr,ai*cr,br*dr,bi*dr
@@ -47,8 +46,8 @@ static inline void volk_32fc_s32fc_multiply_32fc_u_avx(lv_32fc_t* cVector, const
     }
 
     for(i = num_points-isodd; i < num_points; i++) {
-    *c++ = (*a++) * scalar;
-  }
+        *c++ = (*a++) * scalar;
+    }
 
 }
 #endif /* LV_HAVE_AVX */
@@ -163,7 +162,6 @@ static inline void volk_32fc_s32fc_multiply_32fc_a_avx(lv_32fc_t* cVector, const
     yh = _mm256_set1_ps(lv_cimag(scalar));
 
     for(;number < quarterPoints; number++){
-
       x = _mm256_load_ps((float*)a); // Load the ar + ai, br + bi as ar,ai,br,bi
 
       tmp1 = _mm256_mul_ps(x,yl); // tmp1 = ar*cr,ai*cr,br*dr,bi*dr
@@ -181,8 +179,8 @@ static inline void volk_32fc_s32fc_multiply_32fc_a_avx(lv_32fc_t* cVector, const
     }
 
     for(i = num_points-isodd; i < num_points; i++) {
-    *c++ = (*a++) * scalar;
-  }
+        *c++ = (*a++) * scalar;
+    }
 
 }
 #endif /* LV_HAVE_AVX */

@@ -338,7 +338,6 @@ static inline void volk_32fc_x2_dot_prod_32fc_u_avx(lv_32fc_t* result, const lv_
   dotProdVal = _mm256_setzero_ps();
 
   for(;number < quarterPoints; number++){
-
     x = _mm256_loadu_ps((float*)a); // Load a,b,e,f as ar,ai,br,bi,er,ei,fr,fi
     y = _mm256_loadu_ps((float*)b); // Load c,d,g,h as cr,ci,dr,di,gr,gi,hr,hi
 

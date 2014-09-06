@@ -21,31 +21,31 @@
 */
 static inline void volk_32f_expfast_32f_a_avx(float* bVector, const float* aVector, unsigned int num_points){
 
-	float* bPtr = bVector;
-	const float* aPtr = aVector;
-    
-	unsigned int number = 0;
-        const unsigned int eighthPoints = num_points / 8;
+    float* bPtr = bVector;
+    const float* aPtr = aVector;
 
-	__m256 aVal, bVal, a, b;
-	__m256i exp;
-        a = _mm256_set1_ps(A/Mln2);
-        b = _mm256_set1_ps(B-C);
+    unsigned int number = 0;
+    const unsigned int eighthPoints = num_points / 8;
 
-	for(;number < eighthPoints; number++){    
-	aVal = _mm256_load_ps(aPtr); 
-	exp = _mm256_cvtps_epi32(_mm256_add_ps(_mm256_mul_ps(a,aVal), b));
-	bVal = _mm256_castsi256_ps(exp);
+    __m256 aVal, bVal, a, b;
+    __m256i exp;
+    a = _mm256_set1_ps(A/Mln2);
+    b = _mm256_set1_ps(B-C);
 
-	_mm256_store_ps(bPtr, bVal);
-	aPtr += 8;
-	bPtr += 8;
-	}
- 
-	number = eighthPoints * 8;
-	for(;number < num_points; number++){
-	   *bPtr++ = expf(*aPtr++);
-	}
+    for(;number < eighthPoints; number++){
+        aVal = _mm256_load_ps(aPtr);
+        exp = _mm256_cvtps_epi32(_mm256_add_ps(_mm256_mul_ps(a,aVal), b));
+        bVal = _mm256_castsi256_ps(exp);
+
+        _mm256_store_ps(bPtr, bVal);
+        aPtr += 8;
+        bPtr += 8;
+    }
+
+    number = eighthPoints * 8;
+    for(;number < num_points; number++){
+        *bPtr++ = expf(*aPtr++);
+    }
 }
 
 #endif /* LV_HAVE_AVX for aligned */
@@ -60,54 +60,34 @@ static inline void volk_32f_expfast_32f_a_avx(float* bVector, const float* aVect
 */
 static inline void volk_32f_expfast_32f_a_sse4_1(float* bVector, const float* aVector, unsigned int num_points){
 
-	float* bPtr = bVector;
-	const float* aPtr = aVector;
-    
-	unsigned int number = 0;
-        const unsigned int quarterPoints = num_points / 4;
+    float* bPtr = bVector;
+    const float* aPtr = aVector;
 
-	__m128 aVal, bVal, a, b;
-	__m128i exp;
-        a = _mm_set1_ps(A/Mln2);
-        b = _mm_set1_ps(B-C);
+    unsigned int number = 0;
+    const unsigned int quarterPoints = num_points / 4;
 
-	for(;number < quarterPoints; number++){    
-	aVal = _mm_load_ps(aPtr); 
-	exp = _mm_cvtps_epi32(_mm_add_ps(_mm_mul_ps(a,aVal), b));
-	bVal = _mm_castsi128_ps(exp);
+    __m128 aVal, bVal, a, b;
+    __m128i exp;
+    a = _mm_set1_ps(A/Mln2);
+    b = _mm_set1_ps(B-C);
 
-	_mm_store_ps(bPtr, bVal);
-	aPtr += 4;
-	bPtr += 4;
-	}
- 
-	number = quarterPoints * 4;
-	for(;number < num_points; number++){
-	   *bPtr++ = expf(*aPtr++);
-	}
+    for(;number < quarterPoints; number++){
+        aVal = _mm_load_ps(aPtr);
+        exp = _mm_cvtps_epi32(_mm_add_ps(_mm_mul_ps(a,aVal), b));
+        bVal = _mm_castsi128_ps(exp);
+
+        _mm_store_ps(bPtr, bVal);
+        aPtr += 4;
+        bPtr += 4;
+    }
+
+    number = quarterPoints * 4;
+    for(;number < num_points; number++){
+        *bPtr++ = expf(*aPtr++);
+    }
 }
 
 #endif /* LV_HAVE_SSE4_1 for aligned */
-
-
-#ifdef LV_HAVE_GENERIC
-/*!
-  \brief Computes fast exp (max 7% error) of input vector and stores results in output vector
-  \param bVector The vector where results will be stored
-  \param aVector The input vector of floats
-  \param num_points Number of points for which exp is to be computed
-*/
-static inline void volk_32f_expfast_32f_a_generic(float* bVector, const float* aVector, unsigned int num_points){    
-    float* bPtr = bVector;
-    const float* aPtr = aVector;
-    unsigned int number = 0;
-
-    for(number = 0; number < num_points; number++){
-      *bPtr++ = expf(*aPtr++);
-    }
- 
-}
-#endif /* LV_HAVE_GENERIC */
 
 #endif /* INCLUDED_volk_32f_expfast_32f_a_H */
 
@@ -124,31 +104,31 @@ static inline void volk_32f_expfast_32f_a_generic(float* bVector, const float* a
 */
 static inline void volk_32f_expfast_32f_u_avx(float* bVector, const float* aVector, unsigned int num_points){
 
-	float* bPtr = bVector;
-	const float* aPtr = aVector;
-    
-	unsigned int number = 0;
-        const unsigned int eighthPoints = num_points / 8;
+    float* bPtr = bVector;
+    const float* aPtr = aVector;
 
-	__m256 aVal, bVal, a, b;
-	__m256i exp;
-        a = _mm256_set1_ps(A/Mln2);
-        b = _mm256_set1_ps(B-C);
+    unsigned int number = 0;
+    const unsigned int eighthPoints = num_points / 8;
 
-	for(;number < eighthPoints; number++){    
-	aVal = _mm256_loadu_ps(aPtr); 
-	exp = _mm256_cvtps_epi32(_mm256_add_ps(_mm256_mul_ps(a,aVal), b));
-	bVal = _mm256_castsi256_ps(exp);
+    __m256 aVal, bVal, a, b;
+    __m256i exp;
+    a = _mm256_set1_ps(A/Mln2);
+    b = _mm256_set1_ps(B-C);
 
-	_mm256_storeu_ps(bPtr, bVal);
-	aPtr += 8;
-	bPtr += 8;
-	}
- 
-	number = eighthPoints * 8;
-	for(;number < num_points; number++){
-	   *bPtr++ = expf(*aPtr++);
-	}
+    for(;number < eighthPoints; number++){
+        aVal = _mm256_loadu_ps(aPtr);
+        exp = _mm256_cvtps_epi32(_mm256_add_ps(_mm256_mul_ps(a,aVal), b));
+        bVal = _mm256_castsi256_ps(exp);
+
+        _mm256_storeu_ps(bPtr, bVal);
+        aPtr += 8;
+        bPtr += 8;
+    }
+
+    number = eighthPoints * 8;
+    for(;number < num_points; number++){
+        *bPtr++ = expf(*aPtr++);
+    }
 }
 
 #endif /* LV_HAVE_AVX for aligned */
@@ -163,35 +143,34 @@ static inline void volk_32f_expfast_32f_u_avx(float* bVector, const float* aVect
 */
 static inline void volk_32f_expfast_32f_u_sse4_1(float* bVector, const float* aVector, unsigned int num_points){
 
-	float* bPtr = bVector;
-	const float* aPtr = aVector;
-    
-	unsigned int number = 0;
-        const unsigned int quarterPoints = num_points / 4;
+    float* bPtr = bVector;
+    const float* aPtr = aVector;
 
-	__m128 aVal, bVal, a, b;
-	__m128i exp;
-        a = _mm_set1_ps(A/Mln2);
-        b = _mm_set1_ps(B-C);
+    unsigned int number = 0;
+    const unsigned int quarterPoints = num_points / 4;
 
-	for(;number < quarterPoints; number++){    
-	aVal = _mm_loadu_ps(aPtr); 
-	exp = _mm_cvtps_epi32(_mm_add_ps(_mm_mul_ps(a,aVal), b));
-	bVal = _mm_castsi128_ps(exp);
+    __m128 aVal, bVal, a, b;
+    __m128i exp;
+    a = _mm_set1_ps(A/Mln2);
+    b = _mm_set1_ps(B-C);
 
-	_mm_storeu_ps(bPtr, bVal);
-	aPtr += 4;
-	bPtr += 4;
-	}
- 
-	number = quarterPoints * 4;
-	for(;number < num_points; number++){
-	   *bPtr++ = expf(*aPtr++);
-	}
+    for(;number < quarterPoints; number++){
+        aVal = _mm_loadu_ps(aPtr);
+        exp = _mm_cvtps_epi32(_mm_add_ps(_mm_mul_ps(a,aVal), b));
+        bVal = _mm_castsi128_ps(exp);
+
+        _mm_storeu_ps(bPtr, bVal);
+        aPtr += 4;
+        bPtr += 4;
+    }
+
+    number = quarterPoints * 4;
+    for(;number < num_points; number++){
+        *bPtr++ = expf(*aPtr++);
+    }
 }
 
 #endif /* LV_HAVE_SSE4_1 for unaligned */
-
 
 #ifdef LV_HAVE_GENERIC
 /*!
@@ -200,15 +179,15 @@ static inline void volk_32f_expfast_32f_u_sse4_1(float* bVector, const float* aV
   \param aVector The input vector of floats
   \param num_points Number of points for which log is to be computed
 */
-static inline void volk_32f_expfast_32f_u_generic(float* bVector, const float* aVector, unsigned int num_points){    
+static inline void volk_32f_expfast_32f_generic(float* bVector, const float* aVector, unsigned int num_points){
     float* bPtr = bVector;
     const float* aPtr = aVector;
     unsigned int number = 0;
 
     for(number = 0; number < num_points; number++){
-      *bPtr++ = expf(*aPtr++);
+        *bPtr++ = expf(*aPtr++);
     }
- 
+
 }
 #endif /* LV_HAVE_GENERIC */
 
