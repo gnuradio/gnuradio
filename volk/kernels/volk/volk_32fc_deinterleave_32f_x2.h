@@ -4,6 +4,57 @@
 #include <inttypes.h>
 #include <stdio.h>
 
+#ifdef LV_HAVE_AVX
+#include <immintrin.h>
+/*!
+  \brief Deinterleaves the complex vector into I & Q vector data
+  \param complexVector The complex input vector
+  \param iBuffer The I buffer output data
+  \param qBuffer The Q buffer output data
+  \param num_points The number of complex data values to be deinterleaved
+*/
+static inline void volk_32fc_deinterleave_32f_x2_a_avx(float* iBuffer, float* qBuffer, const lv_32fc_t* complexVector, unsigned int num_points){
+  const float* complexVectorPtr = (float*)complexVector;
+  float* iBufferPtr = iBuffer;
+  float* qBufferPtr = qBuffer;
+
+  unsigned int number = 0;
+  // Mask for real and imaginary parts
+  int realMask = 0x88;
+  int imagMask = 0xdd;
+  const unsigned int eighthPoints = num_points / 8;
+  __m256 cplxValue1, cplxValue2, complex1, complex2, iValue, qValue;
+  for(;number < eighthPoints; number++){
+
+    cplxValue1 = _mm256_load_ps(complexVectorPtr);
+    complexVectorPtr += 8;
+
+    cplxValue2 = _mm256_load_ps(complexVectorPtr);
+    complexVectorPtr += 8;
+
+    complex1 = _mm256_permute2f128_ps(cplxValue1, cplxValue2, 0x20);
+    complex2 = _mm256_permute2f128_ps(cplxValue1, cplxValue2, 0x31);
+   
+    // Arrange in i1i2i3i4 format
+    iValue = _mm256_shuffle_ps(complex1, complex2, realMask);
+    // Arrange in q1q2q3q4 format
+    qValue = _mm256_shuffle_ps(complex1, complex2, imagMask);
+
+    _mm256_store_ps(iBufferPtr, iValue);
+    _mm256_store_ps(qBufferPtr, qValue);
+
+    iBufferPtr += 8;
+    qBufferPtr += 8;
+  }
+
+  number = eighthPoints * 8;
+  for(; number < num_points; number++){
+    *iBufferPtr++ = *complexVectorPtr++;
+    *qBufferPtr++ = *complexVectorPtr++;
+  }
+}
+#endif /* LV_HAVE_AVX */
+
 #ifdef LV_HAVE_SSE
 #include <xmmintrin.h>
 /*!
