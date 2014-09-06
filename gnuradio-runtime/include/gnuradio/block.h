@@ -512,7 +512,6 @@ namespace gr {
      */
     float pc_noutput_items_total();
 
-#ifdef GR_ENABLE_LINUX_PERF
     /*!
      * \brief Gets instantaneous branch miss rate in work
      */
@@ -577,7 +576,6 @@ namespace gr {
      * \brief Gets average context switches
      */
     float pc_sw_cpu_migrations_total();
-#endif
 
     /*!
      * \brief Resets the performance counters

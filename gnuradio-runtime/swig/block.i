@@ -96,6 +96,21 @@ class gr::block : public gr::basic_block
   float pc_work_time_avg();
   float pc_work_time_var();
   float pc_work_time_total();
+  float pc_throughput_avg();
+  float pc_noutput_items_total();
+  float pc_branch_miss_rate();
+  float pc_branch_miss_rate_avg();
+  float pc_cache_miss_rate();
+  float pc_cache_miss_rate_avg();
+  float pc_hw_cpu_cycles();
+  float pc_hw_cpu_cycles_avg();
+  float pc_hw_cpu_cycles_total();
+  float pc_sw_context_switches();
+  float pc_sw_context_switches_avg();
+  float pc_sw_context_switches_total();
+  float pc_sw_cpu_migrations();
+  float pc_sw_cpu_migrations_avg();
+  float pc_sw_cpu_migrations_total();
 
   // Methods to manage processor affinity.
   void set_processor_affinity(const std::vector<int> &mask);

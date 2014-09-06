@@ -891,6 +891,84 @@ namespace gr {
         return 0;
     }
   }
+#else
+  float
+  block::pc_branch_miss_rate()
+  {
+    return 0;
+  }
+
+  float
+  block::pc_branch_miss_rate_avg()
+  {
+    return 0;
+  }
+
+  float
+  block::pc_cache_miss_rate()
+  {
+    return 0;
+  }
+
+  float
+  block::pc_cache_miss_rate_avg()
+  {
+    return 0;
+  }
+
+  float
+  block::pc_hw_cpu_cycles()
+  {
+    return 0;
+  }
+
+  float
+  block::pc_hw_cpu_cycles_avg()
+  {
+    return 0;
+  }
+
+  float
+  block::pc_hw_cpu_cycles_total()
+  {
+    return 0;
+  }
+
+  float
+  block::pc_sw_context_switches()
+  {
+    return 0;
+  }
+
+  float
+  block::pc_sw_context_switches_avg()
+  {
+    return 0;
+  }
+
+  float
+  block::pc_sw_context_switches_total()
+  {
+    return 0;
+  }
+
+  float
+  block::pc_sw_cpu_migrations()
+  {
+    return 0;
+  }
+
+  float
+  block::pc_sw_cpu_migrations_avg()
+  {
+    return 0;
+  }
+
+  float
+  block::pc_sw_cpu_migrations_total()
+  {
+    return 0;
+  }
 #endif
 
   void
