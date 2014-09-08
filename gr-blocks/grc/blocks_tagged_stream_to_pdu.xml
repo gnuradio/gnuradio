@@ -42,5 +42,6 @@
     <source>
         <name>pdus</name>
         <type>message</type>
+        <optional>1</optional>
     </source>
 </block>
