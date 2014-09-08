@@ -986,6 +986,13 @@ blob_data(pmt_t blob)
   return uniform_vector_elements(blob, len);
 }
 
+void *
+blob_writable_data(pmt_t blob)
+{
+  size_t len;
+  return uniform_vector_writable_elements(blob, len);
+}
+
 size_t
 blob_length(pmt_t blob)
 {
