@@ -104,7 +104,7 @@ namespace gr {
 	d_last_sample = out[oo];
 
 	d_omega = d_omega + d_gain_omega * mm_val;
-	d_omega = d_omega_mid + gr::branchless_clip(d_omega-d_omega_mid, d_omega_relative_limit);
+	d_omega = d_omega_mid + gr::branchless_clip(d_omega-d_omega_mid, d_omega_mid * d_omega_relative_limit);
 	d_mu = d_mu + d_omega + d_gain_mu * mm_val;
 
 	ii += (int)floor(d_mu);
