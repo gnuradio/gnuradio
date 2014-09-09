@@ -54,9 +54,7 @@ namespace gr {
       void set_mu (float mu) { d_mu = mu; }
       void set_omega (float omega){
 	d_omega = omega;
-	d_min_omega = omega*(1.0 - d_omega_relative_limit);
-	d_max_omega = omega*(1.0 + d_omega_relative_limit);
-	d_omega_mid = 0.5*(d_min_omega+d_max_omega);
+	d_omega_mid = omega;
       }
 
     private:
@@ -64,8 +62,6 @@ namespace gr {
       float d_gain_mu;              // gain for adjusting mu
       float d_omega;                // nominal frequency
       float d_gain_omega;           // gain for adjusting omega
-      float d_min_omega;	    // minimum allowed omega
-      float d_max_omega;	    // maximum allowed omeg
       float d_omega_relative_limit; // used to compute min and max omega
       float d_omega_mid;            // average omega
 
