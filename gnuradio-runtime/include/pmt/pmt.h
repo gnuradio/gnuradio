@@ -366,6 +366,9 @@ PMT_API pmt_t make_blob(const void *buf, size_t len);
 //! Return a pointer to the blob's data
 PMT_API const void *blob_data(pmt_t blob);
 
+//! Return a writeable pointer to the blob's data
+PMT_API void *blob_writable_data(pmt_t blob);
+
 //! Return the blob's length in bytes
 PMT_API size_t blob_length(pmt_t blob);
 

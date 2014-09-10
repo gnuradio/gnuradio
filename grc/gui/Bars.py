@@ -119,6 +119,7 @@ MENU_BAR_LIST = (
         Actions.XML_PARSER_ERRORS_DISPLAY,
         None,
         Actions.ABOUT_WINDOW_DISPLAY,
+        Actions.DOGE_WINDOW_DISPLAY,
     ]),
 )
 class Toolbar(gtk.Toolbar):

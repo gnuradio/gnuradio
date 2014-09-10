@@ -113,7 +113,7 @@ class ActionHandler:
             for action in (
                 Actions.APPLICATION_QUIT, Actions.FLOW_GRAPH_NEW,
                 Actions.FLOW_GRAPH_OPEN, Actions.FLOW_GRAPH_SAVE_AS,
-                Actions.FLOW_GRAPH_CLOSE, Actions.ABOUT_WINDOW_DISPLAY,
+                Actions.FLOW_GRAPH_CLOSE, Actions.ABOUT_WINDOW_DISPLAY, Actions.DOGE_WINDOW_DISPLAY,
                 Actions.FLOW_GRAPH_SCREEN_CAPTURE, Actions.HELP_WINDOW_DISPLAY,
                 Actions.TYPES_WINDOW_DISPLAY, Actions.TOGGLE_BLOCKS_WINDOW,
                 Actions.TOGGLE_REPORTS_WINDOW, Actions.TOGGLE_HIDE_DISABLED_BLOCKS,
@@ -360,6 +360,8 @@ class ActionHandler:
         ##################################################
         elif action == Actions.ABOUT_WINDOW_DISPLAY:
             Dialogs.AboutDialog(self.get_flow_graph().get_parent())
+        elif action == Actions.DOGE_WINDOW_DISPLAY:
+            Dialogs.DogeDialog(self.get_flow_graph().get_parent())
         elif action == Actions.HELP_WINDOW_DISPLAY:
             Dialogs.HelpDialog()
         elif action == Actions.TYPES_WINDOW_DISPLAY:
