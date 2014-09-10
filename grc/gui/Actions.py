@@ -314,6 +314,11 @@ ABOUT_WINDOW_DISPLAY = Action(
     tooltip='About this program',
     stock_id=gtk.STOCK_ABOUT,
 )
+DOGE_WINDOW_DISPLAY = Action(
+    label='_Doge',
+    tooltip='Doge\'s Home',
+    stock_id=gtk.STOCK_HOME,
+)
 HELP_WINDOW_DISPLAY = Action(
     label='_Help',
     tooltip='Usage tips',
