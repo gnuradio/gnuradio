@@ -17,7 +17,7 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 """
 
-from Constants import POSSIBLE_ROTATIONS
+from Constants import POSSIBLE_ROTATIONS, CANVAS_GRID_SIZE
 from Cheetah.Template import Template
 import pygtk
 pygtk.require('2.0')
@@ -108,3 +108,11 @@ def parse_template(tmpl_str, **kwargs):
     #   print tmpl_str
     #   print str(kwargs['param'].get_error_messages())
     return str(Template(tmpl_str, kwargs))
+
+def align_to_grid(coor):
+    _align = lambda: int(round(x / (1.0 * CANVAS_GRID_SIZE)) * CANVAS_GRID_SIZE)
+    try:
+        return [_align() for x in coor]
+    except TypeError:
+        x = coor
+        return _align()

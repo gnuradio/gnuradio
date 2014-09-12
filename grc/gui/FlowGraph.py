@@ -84,6 +84,7 @@ class FlowGraph(Element):
     def set_size(self, *args): self.get_drawing_area().set_size_request(*args)
     def get_scroll_pane(self): return self.drawing_area.get_parent()
     def get_ctrl_mask(self): return self.drawing_area.ctrl_mask
+    def get_mod1_mask(self): return self.drawing_area.mod1_mask
     def new_pixmap(self, *args): return self.get_drawing_area().new_pixmap(*args)
 
     def add_new_block(self, key, coor=None):
@@ -347,6 +348,23 @@ class FlowGraph(Element):
         self.create_labels()
         self.create_shapes()
 
+    def reload(self):
+        """
+        Reload flow-graph (with updated blocks)
+
+        Args:
+            page: the page to reload (None means current)
+        Returns:
+            False if some error occurred during import
+        """
+        success = False
+        data = self.export_data()
+        if data:
+            self.unselect()
+            success = self.import_data(data)
+            self.update()
+        return success
+
     ##########################################################################
     ## Get Selected
     ##########################################################################
@@ -396,8 +414,9 @@ class FlowGraph(Element):
             #single select mode, break
             if not coor_m: break
         #update selected ports
-        self._old_selected_port = self._new_selected_port
-        self._new_selected_port = selected_port
+        if selected_port is not self._new_selected_port:
+            self._old_selected_port = self._new_selected_port
+            self._new_selected_port = selected_port
         return list(selected)
 
     def get_selected_connections(self):
@@ -470,12 +489,17 @@ class FlowGraph(Element):
             if self.get_ctrl_mask() or not (
                 new_selections and new_selections[0] in self.get_selected_elements()
             ): selected_elements = new_selections
-        else: #called from a mouse release
+            if self._old_selected_port:
+                self._old_selected_port.force_label_unhidden(False)
+                self.create_shapes()
+                self.queue_draw()
+            elif self._new_selected_port:
+                self._new_selected_port.force_label_unhidden()
+        else:  # called from a mouse release
             if not self.element_moved and (not self.get_selected_elements() or self.get_ctrl_mask()):
                 selected_elements = self.what_is_selected(self.get_coordinate(), self.press_coor)
         #this selection and the last were ports, try to connect them
-        if self._old_selected_port and self._new_selected_port and \
-            self._old_selected_port is not self._new_selected_port:
+        if self._old_selected_port and self._new_selected_port:
             try:
                 self.connect(self._old_selected_port, self._new_selected_port)
                 Actions.ELEMENT_CREATE()
@@ -574,7 +598,7 @@ class FlowGraph(Element):
                 self.create_shapes()
                 self.queue_draw()
         else:
-            #perform autoscrolling
+            #perform auto-scrolling
             width, height = self.get_size()
             x, y = coordinate
             h_adj = self.get_scroll_pane().get_hadjustment()
@@ -594,8 +618,12 @@ class FlowGraph(Element):
             if len(self.get_selected_elements()) == 1 and self.get_selected_element().is_connection():
                 Actions.ELEMENT_DELETE()
             #move the selected elements and record the new coordinate
-            X, Y = self.get_coordinate()
-            if not self.get_ctrl_mask(): self.move_selected((int(x - X), int(y - Y)))
-            self.set_coordinate((x, y))
+            if not self.get_ctrl_mask():
+                X, Y = self.get_coordinate()
+                dX, dY = int(x - X), int(y - Y)
+                active = Actions.TOGGLE_SNAP_TO_GRID.get_active() or self.get_mod1_mask()
+                if not active or abs(dX) >= Utils.CANVAS_GRID_SIZE or abs(dY) >= Utils.CANVAS_GRID_SIZE:
+                    self.move_selected((dX, dY))
+                    self.set_coordinate((x, y))
             #queue draw for animation
             self.queue_draw()

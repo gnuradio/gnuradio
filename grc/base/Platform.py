@@ -53,7 +53,13 @@ class Platform(_Element):
         """
         _Element.__init__(self)
         self._name = name
-        self._version = version
+        # Save the verion string to the first
+        self._version = version[0]
+        self._version_major = version[1]
+        self._version_api = version[2]
+        self._version_minor = version[3]
+        self._version_short = version[1] + "." + version[2] + "." + version[3]
+
         self._key = key
         self._license = license
         self._website = website
@@ -92,7 +98,8 @@ class Platform(_Element):
 
     def iter_xml_files(self):
         """Iterator for block descriptions and category trees"""
-        for block_path in self._block_paths:
+        get_path = lambda x: os.path.abspath(os.path.expanduser(x))
+        for block_path in map(get_path, self._block_paths):
             if os.path.isfile(block_path):
                 yield block_path
             elif os.path.isdir(block_path):
@@ -192,6 +199,11 @@ class Platform(_Element):
 
     def get_name(self): return self._name
     def get_version(self): return self._version
+    def get_version_major(self): return self._version_major
+    def get_version_api(self): return self._version_api
+    def get_version_minor(self): return self._version_minor
+    def get_version_short(self): return self._version_short
+
     def get_key(self): return self._key
     def get_license(self): return self._license
     def get_website(self): return self._website

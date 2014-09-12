@@ -18,7 +18,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 """
 
 import os
-from collections import OrderedDict
 from gnuradio import gr
 from .. base.Platform import Platform as _Platform
 from .. gui.Platform import Platform as _GUIPlatform
@@ -36,26 +35,21 @@ import Constants
 COLORS = [(name, color) for name, key, sizeof, color in Constants.CORE_TYPES]
 
 class Platform(_Platform, _GUIPlatform):
-
     def __init__(self):
         """
         Make a platform for gnuradio.
         """
         #ensure hier dir
         if not os.path.exists(HIER_BLOCKS_LIB_DIR): os.mkdir(HIER_BLOCKS_LIB_DIR)
-        # Convert block paths to absolute paths:
-        # - Create a mapping from the absolute path to what was passed in
-        # - Keep each unique absolute path and maintain order
-        block_paths = OrderedDict(map(lambda x: (os.path.abspath(x), x), BLOCKS_DIRS))
         #init
         _Platform.__init__(
             self,
             name='GNU Radio Companion',
-            version=gr.version(),
+            version=(gr.version(), gr.major_version(), gr.api_version(), gr.minor_version()),
             key='grc',
             license=__doc__.strip(),
             website='http://gnuradio.org/redmine/wiki/gnuradio/GNURadioCompanion',
-            block_paths=block_paths,
+            block_paths=BLOCKS_DIRS,
             block_dtd=BLOCK_DTD,
             default_flow_graph=DEFAULT_FLOW_GRAPH,
             generator=Generator,

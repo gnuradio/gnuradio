@@ -27,6 +27,7 @@ DEFAULT_FILE_PATH = os.getcwd()
 
 ##file extensions
 IMAGE_FILE_EXTENSION = '.png'
+TEXT_FILE_EXTENSION = '.txt'
 
 ##name for new/unsaved flow graphs
 NEW_FLOGRAPH_TITLE = 'untitled'
@@ -53,9 +54,10 @@ BLOCK_LABEL_PADDING = 7
 PORT_LABEL_PADDING = 2
 
 #port constraint dimensions
-PORT_SEPARATION = 17
+PORT_SEPARATION = 32
 PORT_BORDER_SEPARATION = 9
 PORT_MIN_WIDTH = 20
+PORT_LABEL_HIDDEN_WIDTH = 10
 
 #minimal length of connector
 CONNECTOR_EXTENSION_MINIMAL = 11
@@ -81,3 +83,6 @@ SCROLL_DISTANCE = 15
 
 #How close the mouse click can be to a line and register a connection select.
 LINE_SELECT_SENSITIVITY = 5
+
+# canvas grid size
+CANVAS_GRID_SIZE = 8

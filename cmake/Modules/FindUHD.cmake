@@ -2,84 +2,45 @@
 # Find the library for the USRP Hardware Driver
 ########################################################################
 
-# First check to see if UHD installed its own version
-# of FindUHD, and if so use it.
+# make this file non-reentrant
+if(__INCLUDED_FIND_UHD_CMAKE)
+    return()
+endif()
+set(__INCLUDED_FIND_UHD_CMAKE TRUE)
 
+# First check to see if UHD installed its own CMake files
+
+# save the current MODULE path
+set(SAVED_CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH})
+
+# clear the current MODULE path; uses system paths only
+unset(CMAKE_MODULE_PATH)
+
+# try to find UHD via the provided parameters,
+# handle REQUIRED internally later
 unset(UHD_FOUND)
 
-# obvious locations for FindUHD.cmake to already be installed are:
-#   ${prefix}/share/cmake-X.Y/Modules  (${CMAKE_ROOT})
-#   ${prefix}/share/cmake/Modules
-#   ${prefix}/lib/cmake
-#   ${prefix}/lib64/cmake
+# was the version specified?
+unset(LOCAL_UHD_FIND_VERSION)
+if(UHD_FIND_VERSION)
+  set(LOCAL_UHD_FIND_VERSION ${UHD_FIND_VERSION})
+endif(UHD_FIND_VERSION)
 
-get_filename_component(CMAKE_ROOT_PARENT "${CMAKE_ROOT}" PATH)
+# was EXACT specified?
+unset(LOCAL_UHD_FIND_VERSION_EXACT)
+if(UHD_FIND_VERSION_EXACT)
+  set(LOCAL_UHD_FIND_VERSION_EXACT "EXACT")
+endif(UHD_FIND_VERSION_EXACT)
 
-find_path(
-  LOCAL_FINDUHD_DIR
-  NAMES FindUHD.cmake
-  PATH_SUFFIXES cmake cmake/Modules Modules
-  HINTS ${CMAKE_MODULES_DIR}
-  PATHS ${CMAKE_ROOT}
-    ${CMAKE_ROOT_PARENT}
-    ${CMAKE_INSTALL_PREFIX}/lib
-    ${CMAKE_INSTALL_PREFIX}/lib64
+# try to find UHDConfig using the desired parameters;
+# UHDConfigVersion will catch a pass-through version bug ...
+find_package(
+  UHD ${LOCAL_UHD_FIND_VERSION}
+  ${LOCAL_UHD_FIND_VERSION_EXACT} QUIET
 )
 
-if(LOCAL_FINDUHD_DIR)
-
-  # save the current MODULE path
-  set(SAVED_CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH})
-
-  # remove the current directory from the MODULE path
-  list(REMOVE_ITEM CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR})
-
-  # prepend the found directory to the MODULE path
-  list(INSERT CMAKE_MODULE_PATH 0 ${LOCAL_FINDUHD_DIR})
-
-  # "QUITE" works on CMake 2.8+ only
-  unset(LOCAL_UHD_QUIET)
-  if(NOT ${CMAKE_VERSION} VERSION_LESS "2.8.0")
-      set(LOCAL_UHD_QUIET "QUIET")
-  endif()
-
-  # set REQUIRED, as directed
-  unset(LOCAL_UHD_REQUIRED)
-  if(UHD_FIND_REQUIRED)
-    set(LOCAL_UHD_REQUIRED "REQUIRED")
-  endif(UHD_FIND_REQUIRED)
-
-  # set VERSION to be checking, as directed
-  unset(LOCAL_UHD_VERSION)
-  if(UHD_FIND_VERSION)
-    set(LOCAL_UHD_VERSION "${UHD_FIND_VERSION}")
-  endif(UHD_FIND_VERSION)
-
-  # set EXACT, as directed, but only if VERSION was specified
-  unset(LOCAL_UHD_VERSION_EXACT)
-  if(UHD_FIND_VERSION_EXACT)
-    if(LOCAL_UHD_VERSION)
-      set(LOCAL_UHD_VERSION_EXACT "EXACT")
-    endif(LOCAL_UHD_VERSION)
-  endif(UHD_FIND_VERSION_EXACT)
-
-  # try to find UHD using the already-installed FindUHD, as directed
-  find_package(
-    UHD ${LOCAL_UHD_VERSION} ${LOCAL_UHD_VERSION_EXACT}
-    ${LOCAL_UHD_REQUIRED} ${LOCAL_UHD_QUIET}
-  )
-
-  # restore CMAKE_MODULE_PATH
-
-  set(CMAKE_MODULE_PATH ${SAVED_CMAKE_MODULE_PATH})
-
-  # print the standard message iff UHD was found
-  if(UHD_FOUND)
-    include(FindPackageHandleStandardArgs)
-    find_package_handle_standard_args(UHD DEFAULT_MSG UHD_LIBRARIES UHD_INCLUDE_DIRS)
-  endif(UHD_FOUND)
-
-endif(LOCAL_FINDUHD_DIR)
+# restore CMAKE_MODULE_PATH
+set(CMAKE_MODULE_PATH ${SAVED_CMAKE_MODULE_PATH})
 
 # check if UHD was found above
 if(NOT UHD_FOUND)
@@ -106,9 +67,19 @@ if(NOT UHD_FOUND)
     PATHS /usr/local/lib
           /usr/lib
   )
+endif(NOT UHD_FOUND)
+
+if(UHD_LIBRARIES AND UHD_INCLUDE_DIRS)
+
+  # if UHDConfig set UHD_FOUND==TRUE, then these have already been
+  # done, but done quietly.  It does not hurt to redo them here.
 
   include(FindPackageHandleStandardArgs)
   find_package_handle_standard_args(UHD DEFAULT_MSG UHD_LIBRARIES UHD_INCLUDE_DIRS)
   mark_as_advanced(UHD_LIBRARIES UHD_INCLUDE_DIRS)
 
-endif(NOT UHD_FOUND)
+elseif(UHD_FIND_REQUIRED)
+
+  message(FATAL_ERROR "UHD is required, but was not found.")
+
+endif()

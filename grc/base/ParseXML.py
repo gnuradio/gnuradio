@@ -60,23 +60,32 @@ def validate_dtd(xml_file, dtd_file=None):
     except etree.LxmlError:
         raise XMLSyntaxError(dtd.error_log)
 
+
 def from_file(xml_file):
     """
     Create nested data from an xml file using the from xml helper.
+    Also get the grc version information.
 
     Args:
         xml_file: the xml file path
 
     Returns:
-        the nested data
+        the nested data with grc version information
     """
-    xml = etree.parse(xml_file).getroot()
-    return _from_file(xml)
+    xml = etree.parse(xml_file)
+    nested_data = _from_file(xml.getroot())
+
+    # Get the embedded instructions and build a dictionary item
+    nested_data['_instructions'] = {}
+    xml_instructions = xml.xpath('/processing-instruction()')
+    for inst in filter(lambda i: i.target == 'grc', xml_instructions):
+        nested_data['_instructions'] = odict(inst.attrib)
+    return nested_data
 
 
 def _from_file(xml):
     """
-    Recursivly parse the xml tree into nested data format.
+    Recursively parse the xml tree into nested data format.
 
     Args:
         xml: the xml tree
@@ -86,7 +95,7 @@ def _from_file(xml):
     """
     tag = xml.tag
     if not len(xml):
-        return odict({tag: xml.text or ''}) #store empty tags (text is None) as empty string
+        return odict({tag: xml.text or ''})  # store empty tags (text is None) as empty string
     nested_data = odict()
     for elem in xml:
         key, value = _from_file(elem).items()[0]
@@ -101,19 +110,26 @@ def _from_file(xml):
 
 def to_file(nested_data, xml_file):
     """
-    Write an xml file and use the to xml helper method to load it.
+    Write to an xml file and insert processing instructions for versioning
 
     Args:
         nested_data: the nested data
         xml_file: the xml file path
     """
-    xml = _to_file(nested_data)[0]
-    open(xml_file, 'w').write(etree.tostring(xml, xml_declaration=True, pretty_print=True))
+    # Create the processing instruction from the array
+    xml_data = ""
+    instructions = nested_data.pop('_instructions', None)
+    if instructions:
+        xml_data += etree.tostring(etree.ProcessingInstruction(
+            'grc', ' '.join("{}='{}'".format(*item) for item in instructions.iteritems())
+        ), xml_declaration=True, pretty_print=True)
+    xml_data += etree.tostring(_to_file(nested_data)[0], pretty_print=True)
+    open(xml_file, 'w').write(xml_data)
 
 
 def _to_file(nested_data):
     """
-    Recursivly parse the nested data into xml tree format.
+    Recursively parse the nested data into xml tree format.
 
     Args:
         nested_data: the nested data
@@ -132,7 +148,3 @@ def _to_file(nested_data):
             else: node.extend(_to_file(value))
             nodes.append(node)
     return nodes
-
-if __name__ == '__main__':
-    """Use the main method to test parse xml's functions."""
-    pass

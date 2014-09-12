@@ -1,0 +1,603 @@
+<?xml version="1.0"?>
+<!--
+###################################################
+##QT GUI Sink
+###################################################
+ -->
+<block>
+  <name>QT GUI Vector Sink</name>
+  <key>qtgui_vector_sink_f</key>
+  <import>from PyQt4 import Qt</import>
+  <import>from gnuradio import qtgui</import>
+  <import>import sip</import>
+  <make>#set $win = 'self._%s_win'%$id
+qtgui.vector_sink_f(
+    $vlen,
+    $x_start,
+    $x_step,
+    $x_axis_label,
+    $y_axis_label,
+    $name,
+    $nconnections \# Number of inputs
+)
+self.$(id).set_update_time($update_time)
+self.$(id).set_y_axis($ymin, $ymax)
+self.$(id).enable_autoscale($autoscale)
+self.$(id).enable_grid($grid)
+self.$(id).set_x_axis_units($x_units)
+self.$(id).set_y_axis_units($y_units)
+self.$(id).set_ref_level($ref_level)
+
+labels = [$label1, $label2, $label3, $label4, $label5,
+          $label6, $label7, $label8, $label9, $label10]
+widths = [$width1, $width2, $width3, $width4, $width5,
+          $width6, $width7, $width8, $width9, $width10]
+colors = [$color1, $color2, $color3, $color4, $color5,
+          $color6, $color7, $color8, $color9, $color10]
+alphas = [$alpha1, $alpha2, $alpha3, $alpha4, $alpha5,
+          $alpha6, $alpha7, $alpha8, $alpha9, $alpha10]
+for i in xrange($nconnections):
+    if len(labels[i]) == 0:
+        self.$(id).set_line_label(i, "Data {0}".format(i))
+    else:
+        self.$(id).set_line_label(i, labels[i])
+    self.$(id).set_line_width(i, widths[i])
+    self.$(id).set_line_color(i, colors[i])
+    self.$(id).set_line_alpha(i, alphas[i])
+
+self._$(id)_win = sip.wrapinstance(self.$(id).pyqwidget(), Qt.QWidget)
+$(gui_hint()($win))</make>
+  <callback>set_update_time($update_time)</callback>
+  <callback>set_title($title)</callback>
+  <callback>set_color($which, $color)</callback>
+  <callback>set_x_axis($x_start, $x_step)</callback>
+  <callback>set_y_axis($ymin, $ymax)</callback>
+  <callback>set_ref_level($ref_level)</callback>
+  <callback>set_x_axis_units($x_units)</callback>
+  <callback>set_y_axis_units($y_units)</callback>
+
+  <param_tab_order>
+    <tab>General</tab>
+    <tab>Config</tab>
+  </param_tab_order>
+
+  <param>
+    <name>Name</name>
+    <key>name</key>
+    <value>""</value>
+    <type>string</type>
+    <hide>#if len($name()) > 0 then 'none' else 'part'#</hide>
+  </param>
+
+  <param>
+    <name>Vector Size</name>
+    <key>vlen</key>
+    <value>1024</value>
+    <type>int</type>
+  </param>
+
+  <param>
+    <name>X-Axis Start Value</name>
+    <key>x_start</key>
+    <value>0</value>
+    <type>real</type>
+  </param>
+
+  <param>
+    <name>X-Axis Step Value</name>
+    <key>x_step</key>
+    <value>1.0</value>
+    <type>real</type>
+  </param>
+
+  <param>
+    <name>X-Axis Label</name>
+    <key>x_axis_label</key>
+    <value>"x-Axis"</value>
+    <type>string</type>
+    <hide>#if (len($x_axis_label()) > 0 and $x_axis_label != "x-Axis") then 'none' else 'part'#</hide>
+  </param>
+
+  <param>
+    <name>Y-Axis Label</name>
+    <key>y_axis_label</key>
+    <value>"y-Axis"</value>
+    <type>string</type>
+    <hide>#if (len($y_axis_label()) > 0 and $y_axis_label != "y-Axis") then 'none' else 'part'#</hide>
+  </param>
+
+  <param>
+    <name>X-Axis Units</name>
+    <key>x_units</key>
+    <value>""</value>
+    <type>string</type>
+    <hide>'part'</hide>
+  </param>
+
+  <param>
+    <name>Y-Axis Units</name>
+    <key>y_units</key>
+    <value>""</value>
+    <type>string</type>
+    <hide>'part'</hide>
+  </param>
+
+  <param>
+    <name>Ref Level</name>
+    <key>ref_level</key>
+    <value>0</value>
+    <type>real</type>
+  </param>
+
+  <param>
+    <name>Grid</name>
+    <key>grid</key>
+    <value>False</value>
+    <type>enum</type>
+    <hide>part</hide>
+    <option>
+      <name>Yes</name>
+      <key>True</key>
+    </option>
+    <option>
+      <name>No</name>
+      <key>False</key>
+    </option>
+  </param>
+
+  <param>
+    <name>Autoscale</name>
+    <key>autoscale</key>
+    <value>False</value>
+    <type>enum</type>
+    <hide>part</hide>
+    <option>
+      <name>Yes</name>
+      <key>True</key>
+    </option>
+    <option>
+      <name>No</name>
+      <key>False</key>
+    </option>
+  </param>
+
+  <param>
+    <name>Average</name>
+    <key>average</key>
+    <value>False</value>
+    <type>enum</type>
+    <hide>part</hide>
+    <option>
+      <name>None</name>
+      <key>1.0</key>
+    </option>
+    <option>
+      <name>Low</name>
+      <key>0.2</key>
+    </option>
+    <option>
+      <name>Medium</name>
+      <key>0.1</key>
+    </option>
+    <option>
+      <name>High</name>
+      <key>0.05</key>
+    </option>
+  </param>
+
+  <param>
+    <name>Y min</name>
+    <key>ymin</key>
+    <value>-140</value>
+    <type>real</type>
+    <hide>part</hide>
+  </param>
+  <param>
+    <name>Y max</name>
+    <key>ymax</key>
+    <value>10</value>
+    <type>real</type>
+    <hide>part</hide>
+  </param>
+  <param>
+    <name>Number of Inputs</name>
+    <key>nconnections</key>
+    <value>1</value>
+    <type>int</type>
+    <hide>part</hide>
+  </param>
+  <param>
+    <name>Update Period</name>
+    <key>update_time</key>
+    <value>0.10</value>
+    <type>real</type>
+    <hide>part</hide>
+  </param>
+  <param>
+    <name>GUI Hint</name>
+    <key>gui_hint</key>
+    <value></value>
+    <type>gui_hint</type>
+    <hide>part</hide>
+  </param>
+
+  <param>
+    <name>Show Msg Ports</name>
+    <key>showports</key>
+    <value>True</value>
+    <type>enum</type>
+    <hide>part</hide>
+    <option>
+      <name>Yes</name>
+      <key>False</key>
+    </option>
+    <option>
+      <name>No</name>
+      <key>True</key>
+    </option>
+  </param>
+
+  <param>
+    <name>Line 1 Label</name>
+    <key>label1</key>
+    <type>string</type>
+    <hide>#if int($nconnections()) >= 1 then 'part' else 'all'#</hide>
+    <tab>Config</tab>
+  </param>
+
+  <param>
+    <name>Line 1 Width</name>
+    <key>width1</key>
+    <value>1</value>
+    <type>int</type>
+    <hide>#if int($nconnections()) >= 1 then 'part' else 'all'#</hide>
+    <tab>Config</tab>
+  </param>
+
+  <param>
+    <name>Line 1 Color</name>
+    <key>color1</key>
+    <type>enum</type>
+    <hide>#if int($nconnections()) >= 1 then 'part' else 'all'#</hide>
+    <option>
+      <name>Blue</name>
+      <key>"blue"</key>
+    </option>
+    <option>
+      <name>Red</name>
+      <key>"red"</key>
+    </option>
+    <option>
+      <name>Green</name>
+      <key>"green"</key>
+    </option>
+    <option>
+      <name>Black</name>
+      <key>"black"</key>
+    </option>
+    <option>
+      <name>Cyan</name>
+      <key>"cyan"</key>
+    </option>
+    <option>
+      <name>Magenta</name>
+      <key>"magenta"</key>
+    </option>
+    <option>
+      <name>Yellow</name>
+      <key>"yellow"</key>
+    </option>
+    <option>
+      <name>Dark Red</name>
+      <key>"dark red"</key>
+    </option>
+    <option>
+      <name>Dark Green</name>
+      <key>"dark green"</key>
+    </option>
+    <option>
+      <name>Dark Blue</name>
+      <key>"dark blue"</key>
+    </option>
+    <tab>Config</tab>
+  </param>
+
+  <param>
+    <name>Line 1 Alpha</name>
+    <key>alpha1</key>
+    <value>1.0</value>
+    <type>float</type>
+    <hide>#if int($nconnections()) >= 1 then 'part' else 'all'#</hide>
+    <tab>Config</tab>
+  </param>
+
+
+  <param>
+    <base_key>label1</base_key>
+    <name>Line 2 Label</name>
+    <key>label2</key>
+    <hide>#if int($nconnections()) >= 2 then 'part' else 'all'#</hide>
+  </param>
+
+  <param>
+    <base_key>width1</base_key>
+    <name>Line 2 Width</name>
+    <key>width2</key>
+    <hide>#if int($nconnections()) >= 2 then 'part' else 'all'#</hide>
+  </param>
+
+  <param>
+    <base_key>color1</base_key>
+    <name>Line 2 Color</name>
+    <key>color2</key>
+    <value>"red"</value>
+    <hide>#if int($nconnections()) >= 2 then 'part' else 'all'#</hide>
+  </param>
+
+  <param>
+    <base_key>alpha1</base_key>
+    <name>Line 2 Alpha</name>
+    <key>alpha2</key>
+    <hide>#if int($nconnections()) >= 2 then 'part' else 'all'#</hide>
+  </param>
+
+
+  <param>
+    <base_key>label1</base_key>
+    <name>Line 3 Label</name>
+    <key>label3</key>
+    <hide>#if int($nconnections()) >= 3 then 'part' else 'all'#</hide>
+  </param>
+
+  <param>
+    <base_key>width1</base_key>
+    <name>Line 3 Width</name>
+    <key>width3</key>
+    <hide>#if int($nconnections()) >= 3 then 'part' else 'all'#</hide>
+  </param>
+
+  <param>
+    <base_key>color1</base_key>
+    <name>Line 3 Color</name>
+    <key>color3</key>
+    <value>"green"</value>
+    <hide>#if int($nconnections()) >= 3 then 'part' else 'all'#</hide>
+  </param>
+
+  <param>
+    <base_key>alpha1</base_key>
+    <name>Line 3 Alpha</name>
+    <key>alpha3</key>
+    <hide>#if int($nconnections()) >= 3 then 'part' else 'all'#</hide>
+  </param>
+
+
+  <param>
+    <base_key>label1</base_key>
+    <name>Line 4 Label</name>
+    <key>label4</key>
+    <hide>#if int($nconnections()) >= 4 then 'part' else 'all'#</hide>
+  </param>
+
+  <param>
+    <base_key>width1</base_key>
+    <name>Line 4 Width</name>
+    <key>width4</key>
+    <hide>#if int($nconnections()) >= 4 then 'part' else 'all'#</hide>
+  </param>
+
+  <param>
+    <base_key>color1</base_key>
+    <name>Line 4 Color</name>
+    <key>color4</key>
+    <value>"black"</value>
+    <hide>#if int($nconnections()) >= 4 then 'part' else 'all'#</hide>
+  </param>
+
+  <param>
+    <base_key>alpha1</base_key>
+    <name>Line 4 Alpha</name>
+    <key>alpha4</key>
+    <hide>#if int($nconnections()) >= 4 then 'part' else 'all'#</hide>
+  </param>
+
+
+  <param>
+    <base_key>label1</base_key>
+    <name>Line 5 Label</name>
+    <key>label5</key>
+    <hide>#if int($nconnections()) >= 5 then 'part' else 'all'#</hide>
+  </param>
+
+  <param>
+    <base_key>width1</base_key>
+    <name>Line 5 Width</name>
+    <key>width5</key>
+    <hide>#if int($nconnections()) >= 5 then 'part' else 'all'#</hide>
+  </param>
+
+  <param>
+    <base_key>color1</base_key>
+    <name>Line 5 Color</name>
+    <key>color5</key>
+    <value>"cyan"</value>
+    <hide>#if int($nconnections()) >= 5 then 'part' else 'all'#</hide>
+  </param>
+
+  <param>
+    <base_key>alpha1</base_key>
+    <name>Line 5 Alpha</name>
+    <key>alpha5</key>
+    <hide>#if int($nconnections()) >= 5 then 'part' else 'all'#</hide>
+  </param>
+
+
+  <param>
+    <base_key>label1</base_key>
+    <name>Line 6 Label</name>
+    <key>label6</key>
+    <hide>#if int($nconnections()) >= 6 then 'part' else 'all'#</hide>
+  </param>
+
+  <param>
+    <base_key>width1</base_key>
+    <name>Line 6 Width</name>
+    <key>width6</key>
+    <hide>#if int($nconnections()) >= 6 then 'part' else 'all'#</hide>
+  </param>
+
+  <param>
+    <base_key>color1</base_key>
+    <name>Line 6 Color</name>
+    <key>color6</key>
+    <value>"magenta"</value>
+    <hide>#if int($nconnections()) >= 6 then 'part' else 'all'#</hide>
+  </param>
+
+  <param>
+    <base_key>alpha1</base_key>
+    <name>Line 6 Alpha</name>
+    <key>alpha6</key>
+    <hide>#if int($nconnections()) >= 6 then 'part' else 'all'#</hide>
+  </param>
+
+
+  <param>
+    <base_key>label1</base_key>
+    <name>Line 7 Label</name>
+    <key>label7</key>
+    <hide>#if int($nconnections()) >= 7 then 'part' else 'all'#</hide>
+  </param>
+
+  <param>
+    <base_key>width1</base_key>
+    <name>Line 7 Width</name>
+    <key>width7</key>
+    <hide>#if int($nconnections()) >= 7 then 'part' else 'all'#</hide>
+  </param>
+
+  <param>
+    <base_key>color1</base_key>
+    <name>Line 7 Color</name>
+    <key>color7</key>
+    <value>"yellow"</value>
+    <hide>#if int($nconnections()) >= 7 then 'part' else 'all'#</hide>
+  </param>
+
+  <param>
+    <base_key>alpha1</base_key>
+    <name>Line 7 Alpha</name>
+    <key>alpha7</key>
+    <hide>#if int($nconnections()) >= 7 then 'part' else 'all'#</hide>
+  </param>
+
+
+  <param>
+    <base_key>label1</base_key>
+    <name>Line 8 Label</name>
+    <key>label8</key>
+    <hide>#if int($nconnections()) >= 8 then 'part' else 'all'#</hide>
+  </param>
+
+  <param>
+    <base_key>width1</base_key>
+    <name>Line 8 Width</name>
+    <key>width8</key>
+    <hide>#if int($nconnections()) >= 8 then 'part' else 'all'#</hide>
+  </param>
+
+  <param>
+    <base_key>color1</base_key>
+    <name>Line 8 Color</name>
+    <key>color8</key>
+    <value>"dark red"</value>
+    <hide>#if int($nconnections()) >= 8 then 'part' else 'all'#</hide>
+  </param>
+
+  <param>
+    <base_key>alpha1</base_key>
+    <name>Line 8 Alpha</name>
+    <key>alpha8</key>
+    <hide>#if int($nconnections()) >= 8 then 'part' else 'all'#</hide>
+  </param>
+
+
+  <param>
+    <base_key>label1</base_key>
+    <name>Line 9 Label</name>
+    <key>label9</key>
+    <hide>#if int($nconnections()) >= 9 then 'part' else 'all'#</hide>
+  </param>
+
+  <param>
+    <base_key>width1</base_key>
+    <name>Line 9 Width</name>
+    <key>width9</key>
+    <hide>#if int($nconnections()) >= 9 then 'part' else 'all'#</hide>
+  </param>
+
+  <param>
+    <base_key>color1</base_key>
+    <name>Line 9 Color</name>
+    <key>color9</key>
+    <value>"dark green"</value>
+    <hide>#if int($nconnections()) >= 9 then 'part' else 'all'#</hide>
+  </param>
+
+  <param>
+    <base_key>alpha1</base_key>
+    <name>Line 9 Alpha</name>
+    <key>alpha9</key>
+    <hide>#if int($nconnections()) >= 9 then 'part' else 'all'#</hide>
+  </param>
+
+
+  <param>
+    <base_key>label1</base_key>
+    <name>Line 10 Label</name>
+    <key>label10</key>
+    <hide>#if int($nconnections()) >= 10 then 'part' else 'all'#</hide>
+  </param>
+
+  <param>
+    <base_key>width1</base_key>
+    <name>Line 10 Width</name>
+    <key>width10</key>
+    <hide>#if int($nconnections()) >= 10 then 'part' else 'all'#</hide>
+  </param>
+
+  <param>
+    <base_key>color1</base_key>
+    <name>Line 10 Color</name>
+    <key>color10</key>
+    <value>"dark blue"</value>
+    <hide>#if int($nconnections()) >= 10 then 'part' else 'all'#</hide>
+  </param>
+
+  <param>
+    <base_key>alpha1</base_key>
+    <name>Line 10 Alpha</name>
+    <key>alpha10</key>
+    <hide>#if int($nconnections()) >= 10 then 'part' else 'all'#</hide>
+  </param>
+
+  <sink>
+    <name>in</name>
+    <type>float</type>
+    <vlen>$vlen</vlen>
+    <nports>$nconnections</nports>
+  </sink>
+
+  <source>
+    <name>xval</name>
+    <type>message</type>
+    <optional>1</optional>
+    <hide>$showports</hide>
+  </source>
+
+  <doc>
+The GUI hint can be used to position the widget within the application. \
+The hint is of the form [tab_id@tab_index]: [row, col, row_span, col_span]. \
+Both the tab specification and the grid position are optional.
+  </doc>
+</block>

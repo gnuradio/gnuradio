@@ -37,6 +37,7 @@ class DrawingArea(gtk.DrawingArea):
             main_window: the main_window containing all flow graphs
         """
         self.ctrl_mask = False
+        self.mod1_mask = False
         self._flow_graph = flow_graph
         gtk.DrawingArea.__init__(self)
         self.set_size_request(MIN_WINDOW_WIDTH, MIN_WINDOW_HEIGHT)
@@ -88,6 +89,7 @@ class DrawingArea(gtk.DrawingArea):
         """
         self.grab_focus()
         self.ctrl_mask = event.state & gtk.gdk.CONTROL_MASK
+        self.mod1_mask = event.state & gtk.gdk.MOD1_MASK
         if event.button == 1: self._flow_graph.handle_mouse_selector_press(
             double_click=(event.type == gtk.gdk._2BUTTON_PRESS),
             coordinate=(event.x, event.y),
@@ -102,6 +104,7 @@ class DrawingArea(gtk.DrawingArea):
         Forward button release information to the flow graph.
         """
         self.ctrl_mask = event.state & gtk.gdk.CONTROL_MASK
+        self.mod1_mask = event.state & gtk.gdk.MOD1_MASK
         if event.button == 1: self._flow_graph.handle_mouse_selector_release(
             coordinate=(event.x, event.y),
         )
@@ -111,6 +114,7 @@ class DrawingArea(gtk.DrawingArea):
         Forward mouse motion information to the flow graph.
         """
         self.ctrl_mask = event.state & gtk.gdk.CONTROL_MASK
+        self.mod1_mask = event.state & gtk.gdk.MOD1_MASK
         self._flow_graph.handle_mouse_motion(
             coordinate=(event.x, event.y),
         )

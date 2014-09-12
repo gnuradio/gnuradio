@@ -20,27 +20,27 @@
 ## Configure GRC examples to point to the right fsm_files directory
 set(FSM_FILE_INSTALL_DIR "${CMAKE_INSTALL_PREFIX}/${GR_PKG_TRELLIS_EXAMPLES_DIR}/fsm_files/")
 configure_file(
-    "${CMAKE_CURRENT_LIST_DIR}/pccc.grc"
+    "${CMAKE_CURRENT_SOURCE_DIR}/pccc.grc"
     "${CMAKE_CURRENT_BINARY_DIR}/pccc.grc"
 )
 
 configure_file(
-    "${CMAKE_CURRENT_LIST_DIR}/pccc1.grc"
+    "${CMAKE_CURRENT_SOURCE_DIR}/pccc1.grc"
     "${CMAKE_CURRENT_BINARY_DIR}/pccc1.grc"
 )
 
 configure_file(
-    "${CMAKE_CURRENT_LIST_DIR}/sccc.grc"
+    "${CMAKE_CURRENT_SOURCE_DIR}/sccc.grc"
     "${CMAKE_CURRENT_BINARY_DIR}/sccc.grc"
 )
 
 configure_file(
-    "${CMAKE_CURRENT_LIST_DIR}/sccc1.grc"
+    "${CMAKE_CURRENT_SOURCE_DIR}/sccc1.grc"
     "${CMAKE_CURRENT_BINARY_DIR}/sccc1.grc"
 )
 
 configure_file(
-    "${CMAKE_CURRENT_LIST_DIR}/interference_cancellation.grc"
+    "${CMAKE_CURRENT_SOURCE_DIR}/interference_cancellation.grc"
     "${CMAKE_CURRENT_BINARY_DIR}/interference_cancellation.grc"
 )
 

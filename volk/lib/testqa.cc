@@ -114,3 +114,4 @@ VOLK_RUN_TESTS(volk_8u_conv_k7_r2puppet_8u, 0, 0, 2060, 1);
 VOLK_RUN_TESTS(volk_32f_invsqrt_32f, 1e-2, 0, 20462, 1);
 VOLK_RUN_TESTS(volk_32f_binary_slicer_32i, 0, 0, 20462, 1);
 VOLK_RUN_TESTS(volk_32f_binary_slicer_8i, 0, 0, 20462, 1);
+VOLK_RUN_TESTS(volk_32f_tanh_32f, 1e-6, 0, 20462, 1);

@@ -54,8 +54,6 @@ TOOLBAR_LIST = (
     Actions.FIND_BLOCKS,
     Actions.RELOAD_BLOCKS,
     Actions.OPEN_HIER,
-    Actions.BUSSIFY_SOURCES,
-    Actions.CLEAR_REPORTS,
 )
 
 ##The list of actions and categories for the menu bar.
@@ -95,10 +93,12 @@ MENU_BAR_LIST = (
         None,
         Actions.TOGGLE_REPORTS_WINDOW,
         Actions.TOGGLE_SCROLL_LOCK,
+        Actions.SAVE_REPORTS,
         Actions.CLEAR_REPORTS,
         None,
         Actions.TOGGLE_HIDE_DISABLED_BLOCKS,
         Actions.TOGGLE_AUTO_HIDE_PORT_LABELS,
+        Actions.TOGGLE_SNAP_TO_GRID,
         None,
         Actions.ERRORS_WINDOW_DISPLAY,
         Actions.FIND_BLOCKS,

@@ -34,7 +34,7 @@ from MainWindow import MainWindow
 from PropsDialog import PropsDialog
 from ParserErrorsDialog import ParserErrorsDialog
 import Dialogs
-from FileDialogs import OpenFlowGraphFileDialog, SaveFlowGraphFileDialog, SaveImageFileDialog
+from FileDialogs import OpenFlowGraphFileDialog, SaveFlowGraphFileDialog, SaveReportsFileDialog, SaveImageFileDialog
 
 gobject.threads_init()
 
@@ -117,8 +117,9 @@ class ActionHandler:
                 Actions.FLOW_GRAPH_SCREEN_CAPTURE, Actions.HELP_WINDOW_DISPLAY,
                 Actions.TYPES_WINDOW_DISPLAY, Actions.TOGGLE_BLOCKS_WINDOW,
                 Actions.TOGGLE_REPORTS_WINDOW, Actions.TOGGLE_HIDE_DISABLED_BLOCKS,
-                Actions.TOOLS_RUN_FDESIGN, Actions.TOGGLE_SCROLL_LOCK, Actions.CLEAR_REPORTS,
-                Actions.TOGGLE_AUTO_HIDE_PORT_LABELS
+                Actions.TOOLS_RUN_FDESIGN, Actions.TOGGLE_SCROLL_LOCK,
+                Actions.CLEAR_REPORTS, Actions.SAVE_REPORTS,
+                Actions.TOGGLE_AUTO_HIDE_PORT_LABELS, Actions.TOGGLE_SNAP_TO_GRID
             ): action.set_sensitive(True)
             if ParseXML.xml_failures:
                 Messages.send_xml_errors_if_any(ParseXML.xml_failures)
@@ -134,10 +135,13 @@ class ActionHandler:
             if not self.get_page(): self.main_window.new_page() #ensure that at least a blank page exists
 
             self.main_window.btwin.search_entry.hide()
-            Actions.TOGGLE_REPORTS_WINDOW.set_active(Preferences.reports_window_visibility())
-            Actions.TOGGLE_BLOCKS_WINDOW.set_active(Preferences.blocks_window_visibility())
-            Actions.TOGGLE_SCROLL_LOCK.set_active(Preferences.scroll_lock())
-            Actions.TOGGLE_AUTO_HIDE_PORT_LABELS.set_active(Preferences.auto_hide_port_labels())
+            for action in (
+                Actions.TOGGLE_REPORTS_WINDOW,
+                Actions.TOGGLE_BLOCKS_WINDOW,
+                Actions.TOGGLE_AUTO_HIDE_PORT_LABELS,
+                Actions.TOGGLE_SCROLL_LOCK,
+                Actions.TOGGLE_SNAP_TO_GRID
+            ): action.load_from_preferences()
         elif action == Actions.APPLICATION_QUIT:
             if self.main_window.close_pages():
                 gtk.main_quit()
@@ -363,31 +367,36 @@ class ActionHandler:
         elif action == Actions.ERRORS_WINDOW_DISPLAY:
             Dialogs.ErrorsDialog(self.get_flow_graph())
         elif action == Actions.TOGGLE_REPORTS_WINDOW:
-            visible = action.get_active()
-            if visible:
+            if action.get_active():
                 self.main_window.reports_scrolled_window.show()
             else:
                 self.main_window.reports_scrolled_window.hide()
-            Preferences.reports_window_visibility(visible)
+            action.save_to_preferences()
         elif action == Actions.TOGGLE_BLOCKS_WINDOW:
-            visible = action.get_active()
-            if visible:
+            if action.get_active():
                 self.main_window.btwin.show()
             else:
                 self.main_window.btwin.hide()
-            Preferences.blocks_window_visibility(visible)
+            action.save_to_preferences()
         elif action == Actions.TOGGLE_SCROLL_LOCK:
-            visible = action.get_active()
-            self.main_window.text_display.scroll_lock = visible
-            if visible:
+            active = action.get_active()
+            self.main_window.text_display.scroll_lock = active
+            if active:
                 self.main_window.text_display.scroll_to_end()
+            action.save_to_preferences()
         elif action == Actions.CLEAR_REPORTS:
             self.main_window.text_display.clear()
+        elif action == Actions.SAVE_REPORTS:
+            file_path = SaveReportsFileDialog(self.get_page().get_file_path()).run()
+            if file_path is not None:
+                self.main_window.text_display.save(file_path)
         elif action == Actions.TOGGLE_HIDE_DISABLED_BLOCKS:
             Actions.NOTHING_SELECT()
         elif action == Actions.TOGGLE_AUTO_HIDE_PORT_LABELS:
-            Preferences.auto_hide_port_labels(action.get_active())
+            action.save_to_preferences()
             self.main_window.get_flow_graph().create_shapes()
+        elif action == Actions.TOGGLE_SNAP_TO_GRID:
+            action.save_to_preferences()
         ##################################################
         # Param Modifications
         ##################################################
@@ -492,12 +501,14 @@ class ActionHandler:
             self.platform.load_block_tree(self.main_window.btwin)
             Actions.XML_PARSER_ERRORS_DISPLAY.set_sensitive(bool(ParseXML.xml_failures))
             Messages.send_xml_errors_if_any(ParseXML.xml_failures)
+            # Force a redraw of the graph, by getting the current state and re-importing it
+            self.main_window.update_pages()
+
         elif action == Actions.FIND_BLOCKS:
             self.main_window.btwin.show()
             self.main_window.btwin.search_entry.show()
             self.main_window.btwin.search_entry.grab_focus()
         elif action == Actions.OPEN_HIER:
-            bn = [];
             for b in self.get_flow_graph().get_selected_blocks():
                 if b._grc_source:
                     self.main_window.new_page(b._grc_source, show=True)
