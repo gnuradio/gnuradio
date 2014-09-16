@@ -9,6 +9,7 @@
 	<key>blocks_vector_source_x</key>
 	<import>from gnuradio import blocks</import>
 	<make>blocks.vector_source_$(type.fcn)($vector, $repeat, $vlen, $tags)</make>
+	<callback>set_data($vector)</callback>
 	<param>
 		<name>Output Type</name>
 		<key>type</key>
