@@ -45,7 +45,7 @@ class Port(Element):
         """
         Element.__init__(self)
         self.W = self.H = self.w = self.h = 0
-        self._connector_coordinate = (0,0)
+        self._connector_coordinate = (0, 0)
         self._connector_length = 0
         self._hovering = True
         self._force_label_unhidden = False
@@ -53,11 +53,15 @@ class Port(Element):
     def create_shapes(self):
         """Create new areas and labels for the port."""
         Element.create_shapes(self)
+        if self.get_hide():
+            return  # this port is hidden, no need to create shapes
         #get current rotation
         rotation = self.get_rotation()
         #get all sibling ports
-        if self.is_source(): ports = self.get_parent().get_sources_gui()
-        elif self.is_sink(): ports = self.get_parent().get_sinks_gui()
+        if self.is_source():
+            ports = self.get_parent().get_sources_gui()
+        elif self.is_sink():
+            ports = self.get_parent().get_sinks_gui()
         #get the max width
         self.W = max([port.W for port in ports] + [PORT_MIN_WIDTH])
         W = self.W if not self._label_hidden() else PORT_LABEL_HIDDEN_WIDTH
@@ -70,7 +74,8 @@ class Port(Element):
             return
         length = len(filter(lambda p: not p.get_hide(), ports))
         #reverse the order of ports for these rotations
-        if rotation in (180, 270): index = length-index-1
+        if rotation in (180, 270):
+            index = length-index-1
         offset = (self.get_parent().H - (length-1)*PORT_SEPARATION - self.H)/2
         #create areas and connector coordinates
         if (self.is_sink() and rotation == 0) or (self.is_source() and rotation == 180):
@@ -137,12 +142,13 @@ class Port(Element):
         Element.draw(
             self, gc, window, bg_color=self._bg_color,
             border_color=self.is_highlighted() and Colors.HIGHLIGHT_COLOR or
-                         self.get_parent().is_dummy_block() and Colors.MISSING_BLOCK_BORDER_COLOR or Colors.BORDER_COLOR,
+                         self.get_parent().is_dummy_block() and Colors.MISSING_BLOCK_BORDER_COLOR or
+                         Colors.BORDER_COLOR,
         )
-        if self._label_hidden():
-            return
-        X,Y = self.get_coordinate()
-        (x,y),(w,h) = self._areas_list[0] #use the first area's sizes to place the labels
+        if not self._areas_list or self._label_hidden():
+            return  # this port is either hidden (no areas) or folded (no label)
+        X, Y = self.get_coordinate()
+        (x, y), (w, h) = self._areas_list[0]  # use the first area's sizes to place the labels
         if self.is_horizontal():
             window.draw_drawable(gc, self.horizontal_label, 0, 0, x+X+(self.W-self.w)/2, y+Y+(self.H-self.h)/2, -1, -1)
         elif self.is_vertical():

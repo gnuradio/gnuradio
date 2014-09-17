@@ -224,8 +224,7 @@ class Block(Element):
             window.draw_drawable(gc, self.vertical_label, 0, 0, x+(self.H-self.label_height)/2, y+BLOCK_LABEL_PADDING, -1, -1)
         #draw ports
         for port in self.get_ports_gui():
-            if not port.get_hide():
-                port.draw(gc, window)
+            port.draw(gc, window)
 
     def what_is_selected(self, coor, coor_m=None):
         """
