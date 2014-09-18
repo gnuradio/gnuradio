@@ -93,10 +93,10 @@ This is usually undesired. Consider removing the throttle block.''')
         #   python_exe = 'pythonw'
 
         #setup the command args to run
-        cmds = [python_exe, '-u', self.get_file_path()] #-u is unbuffered stdio
+        cmds = [python_exe, '-u', self.get_file_path()]  # -u is unbuffered stdio
 
-        #when in no gui mode on linux, use an xterm (looks nice)
-        if self._generate_options == 'no_gui' and 'linux' in sys.platform.lower():
+        # when in no gui mode on linux, use a graphical terminal (looks nice)
+        if self._generate_options == 'no_gui' and os.path.exists(XTERM_EXECUTABLE):
             cmds = [XTERM_EXECUTABLE, '-e'] + cmds
 
         p = subprocess.Popen(args=cmds, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, shell=False, universal_newlines=True)
