@@ -17,10 +17,12 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 """
 
+import time
 from . import odict
 from Element import Element
 from .. gui import Messages
 from . Constants import FLOW_GRAPH_FILE_FORMAT_VERSION
+
 
 class FlowGraph(Element):
 
@@ -36,6 +38,8 @@ class FlowGraph(Element):
         """
         #initialize
         Element.__init__(self, platform)
+        self._elements = []
+        self._timestamp = time.ctime()
         #inital blank import
         self.import_data()
 
@@ -51,12 +55,14 @@ class FlowGraph(Element):
         """
         index = 0
         while True:
-            id = '%s_%d'%(base_id, index)
-            index = index + 1
+            id = '%s_%d' % (base_id, index)
+            index += 1
             #make sure that the id is not used by another block
             if not filter(lambda b: b.get_id() == id, self.get_blocks()): return id
 
-    def __str__(self): return 'FlowGraph - %s(%s)'%(self.get_option('title'), self.get_option('id'))
+    def __str__(self):
+        return 'FlowGraph - %s(%s)' % (self.get_option('title'), self.get_option('id'))
+
     def rewrite(self):
         def refactor_bus_structure():
 
@@ -242,9 +248,8 @@ class FlowGraph(Element):
         Returns:
             a nested data odict
         """
-        import time
         n = odict()
-        n['timestamp'] = time.ctime()
+        n['timestamp'] = self._timestamp
         n['block'] = [block.export_data() for block in self.get_blocks()]
         n['connection'] = [connection.export_data() for connection in self.get_connections()]
         instructions = odict({
@@ -273,6 +278,7 @@ class FlowGraph(Element):
             file_format = 0
         #use blank data if none provided
         fg_n = n and n.find('flow_graph') or odict()
+        self._timestamp = fg_n.find('timestamp') or time.ctime()
         blocks_n = fg_n.findall('block')
         connections_n = fg_n.findall('connection')
         #create option block
@@ -384,7 +390,7 @@ def _initialize_dummy_block(block, block_n):
     """
     block._key = block_n.find('key')
     block.is_dummy_block = lambda: True
-    block.is_valid =  lambda: False
+    block.is_valid = lambda: False
     block.get_enabled = lambda: False
     for param_n in block_n.findall('param'):
         if param_n['key'] not in block.get_param_keys():
@@ -393,7 +399,7 @@ def _initialize_dummy_block(block, block_n):
 
 
 def _dummy_block_add_port(block, key, dir):
-    """This is so ugly... Add a port to a dummy-fied block"""
+    """This is so ugly... Add a port to a dummy-field block"""
     port_n = odict({'name': '?', 'key': key, 'type': ''})
     port = block.get_parent().get_parent().Port(block=block, n=port_n, dir=dir)
     if port.is_source():
