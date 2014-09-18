@@ -409,7 +409,6 @@ if(${CMAKE_VERSION} VERSION_GREATER "2.8.9")
     message(STATUS "--==>> -CFLAGS1: ${FULL_C_FLAGS}")
     string(REGEX MATCH "${ARCH}" ASM_ARCH "${FULL_C_FLAGS}")
     if( ASM_ARCH STREQUAL "armv7" )
-      set(ASM-ATT $ENV{ASM})
       message(STATUS "---- Adding ASM files") # we always use ATT syntax
       message(STATUS "-- Detected armv7 architecture; enabling ASM")
       # setup architecture specific assembler flags
@@ -422,9 +421,9 @@ if(${CMAKE_VERSION} VERSION_GREATER "2.8.9")
         message(STATUS "Adding source file: ${asm_file}")
       endforeach(asm_file)
     endif()
-    set(CMAKE_ASM-ATT_FLAGS_INIT ${ARCH_ASM_FLAGS})
-    enable_language(ASM-ATT) # this must be after flags_init
-    message(STATUS "asm flags: ${CMAKE_ASM-ATT_FLAGS}")
+    set(CMAKE_ASM_FLAGS ${ARCH_ASM_FLAGS})
+    enable_language(ASM) # this must be after flags_init
+    message(STATUS "asm flags: ${CMAKE_ASM_FLAGS}")
   endforeach(ARCH)
 
 else(${CMAKE_VERSION} VERSION_GREATER "2.8.9")
