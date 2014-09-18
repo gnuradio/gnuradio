@@ -491,9 +491,11 @@ class ActionHandler:
                     ExecFlowGraphThread(self)
         elif action == Actions.FLOW_GRAPH_KILL:
             if self.get_page().get_proc():
-                try: self.get_page().get_proc().kill()
-                except: print "could not kill process: %d"%self.get_page().get_proc().pid
-        elif action == Actions.PAGE_CHANGE: #pass and run the global actions
+                try:
+                    self.get_page().get_proc().kill()
+                except:
+                    print "could not kill process: %d" % self.get_page().get_proc().pid
+        elif action == Actions.PAGE_CHANGE:  # pass and run the global actions
             pass
         elif action == Actions.RELOAD_BLOCKS:
             self.platform.load_blocks()
@@ -579,7 +581,7 @@ class ActionHandler:
         sensitive = self.get_flow_graph().is_valid() and not self.get_page().get_proc()
         Actions.FLOW_GRAPH_GEN.set_sensitive(sensitive)
         Actions.FLOW_GRAPH_EXEC.set_sensitive(sensitive)
-        Actions.FLOW_GRAPH_KILL.set_sensitive(self.get_page().get_proc() != None)
+        Actions.FLOW_GRAPH_KILL.set_sensitive(self.get_page().get_proc() is not None)
 
 class ExecFlowGraphThread(Thread):
     """Execute the flow graph as a new process and wait on it to finish."""
@@ -615,13 +617,14 @@ class ExecFlowGraphThread(Thread):
         """
         #handle completion
         r = "\n"
-        while(r):
+        while r:
             gobject.idle_add(Messages.send_verbose_exec, r)
             r = os.read(self.p.stdout.fileno(), 1024)
+        self.p.poll()
         gobject.idle_add(self.done)
 
     def done(self):
         """Perform end of execution tasks."""
-        Messages.send_end_exec()
+        Messages.send_end_exec(self.p.returncode)
         self.page.set_proc(None)
         self.update_exec_stop()
