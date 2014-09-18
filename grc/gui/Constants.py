@@ -41,6 +41,13 @@ MIN_DIALOG_HEIGHT = 500
 ##default sizes
 DEFAULT_BLOCKS_WINDOW_WIDTH = 100
 DEFAULT_REPORTS_WINDOW_WIDTH = 100
+## flow-graph canvas fonts
+FONT_FAMILY = "Sans"
+FONT_SIZE = 8
+BLOCK_FONT = "%s %f" % (FONT_FAMILY, FONT_SIZE)
+PORT_FONT = BLOCK_FONT
+PARAM_FONT = "%s %f" % (FONT_FAMILY, FONT_SIZE - 0.5)
+
 
 ##The size of the state saving cache in the flow graph (for undo/redo functionality)
 STATE_CACHE_SIZE = 42

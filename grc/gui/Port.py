@@ -21,7 +21,7 @@ from Element import Element
 from Constants import \
     PORT_SEPARATION, CONNECTOR_EXTENSION_MINIMAL, \
     CONNECTOR_EXTENSION_INCREMENT, \
-    PORT_LABEL_PADDING, PORT_MIN_WIDTH, PORT_LABEL_HIDDEN_WIDTH
+    PORT_LABEL_PADDING, PORT_MIN_WIDTH, PORT_LABEL_HIDDEN_WIDTH, PORT_FONT
 import Utils
 import Actions
 import Colors
@@ -29,10 +29,8 @@ import pygtk
 pygtk.require('2.0')
 import gtk
 
-PORT_HIDDEN_MARKUP_TMPL="""\
-<span foreground="black" font_desc="Sans 7.5"> </span>"""
 PORT_MARKUP_TMPL="""\
-<span foreground="black" font_desc="Sans 7.5">$encode($port.get_name())</span>"""
+<span foreground="black" font_desc="$font">$encode($port.get_name())</span>"""
 
 
 class Port(Element):
@@ -110,7 +108,7 @@ class Port(Element):
         self._bg_color = Colors.get_color(self.get_color())
         #create the layout
         layout = gtk.DrawingArea().create_pango_layout('')
-        layout.set_markup(Utils.parse_template(PORT_MARKUP_TMPL, port=self))
+        layout.set_markup(Utils.parse_template(PORT_MARKUP_TMPL, port=self, font=PORT_FONT))
         self.w, self.h = layout.get_pixel_size()
         self.W, self.H = 2*PORT_LABEL_PADDING + self.w, 2*PORT_LABEL_PADDING+self.h
         self.H = self.modify_height(self.H)
