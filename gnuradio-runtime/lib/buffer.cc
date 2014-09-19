@@ -251,10 +251,11 @@ namespace gr {
        If this function is used elsewhere, remember to lock the
        buffer's mutex al la the scoped_lock line below.
     */
-    std::multimap<uint64_t, tag_t>::iterator itr = d_item_tags.lower_bound(max_time);
-    while (itr != d_item_tags.end()) {
-      d_item_tags.erase(itr);
-      itr++;
+    std::multimap<uint64_t, tag_t>::iterator end_itr = d_item_tags.lower_bound(max_time);
+    std::multimap<uint64_t, tag_t>::iterator begin_itr = d_item_tags.begin();
+    while (begin_itr != end_itr) {
+      d_item_tags.erase(begin_itr);
+      begin_itr++;
     }
   }
 
