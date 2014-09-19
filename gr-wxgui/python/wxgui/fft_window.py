@@ -407,6 +407,6 @@ class fft_window(wx.Panel, pubsub.pubsub):
 		#update y grid
 		self.plotter.set_y_grid(ref_level-y_per_div*y_divs, ref_level, y_per_div)
 		#update y units
-		self.plotter.set_y_label('Amplitude', 'dB')
+		self.plotter.set_y_label('Power', 'dB')
 		#update plotter
 		self.plotter.update()
