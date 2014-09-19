@@ -232,8 +232,7 @@ namespace gr {
   buffer::remove_item_tag(const tag_t &tag, long id)
   {
     gr::thread::scoped_lock guard(*mutex());
-// TODO: we can probably do this more efficiently now ...
-    for(std::multimap<uint64_t,tag_t>::iterator it = d_item_tags.begin(); it != d_item_tags.end(); ++it) {
+    for(std::multimap<uint64_t,tag_t>::iterator it = d_item_tags.lower_bound(tag.offset); it != d_item_tags.upper_bound(tag.offset); ++it) {
       if((*it).second == tag) {
 	    (*it).second.marked_deleted.push_back(id);
       }
@@ -326,10 +325,11 @@ namespace gr {
     gr::thread::scoped_lock guard(*mutex());
 
     v.resize(0);
-    std::multimap<uint64_t,tag_t>::iterator itr = d_buffer->get_tags_begin();
+    std::multimap<uint64_t,tag_t>::iterator itr = d_buffer->get_tags_lower_bound(abs_start);
+    std::multimap<uint64_t,tag_t>::iterator itr_end   = d_buffer->get_tags_upper_bound(abs_end);
 
     uint64_t item_time;
-    while(itr != d_buffer->get_tags_end()) {
+    while(itr != itr_end) {
       item_time = (*itr).second.offset + d_attr_delay;
       //item_time = (*itr).offset + d_attr_delay;
 
