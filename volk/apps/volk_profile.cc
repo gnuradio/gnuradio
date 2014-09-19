@@ -37,6 +37,49 @@
 
 namespace fs = boost::filesystem;
 
+void write_json(std::ofstream &json_file, std::vector<volk_test_results_t> results) {
+    json_file << "{" << std::endl;
+    json_file << " \"volk_tests\": [" << std::endl;
+    size_t len = results.size();
+    size_t i = 0;
+    BOOST_FOREACH(volk_test_results_t &result, results) {
+        json_file << "  {" << std::endl;
+        json_file << "   \"name\": \"" << result.name << "\"," << std::endl;
+        json_file << "   \"vlen\": " << result.vlen << "," << std::endl;
+        json_file << "   \"iter\": " << result.iter << "," << std::endl;
+        json_file << "   \"best_arch_a\": \"" << result.best_arch_a
+            << "\"," << std::endl;
+        json_file << "   \"best_arch_u\": \"" << result.best_arch_u
+            << "\"," << std::endl;
+        json_file << "   \"results\": {" << std::endl;
+        size_t results_len = result.results.size();
+        size_t ri = 0;
+        typedef std::pair<std::string, volk_test_time_t> tpair;
+        BOOST_FOREACH(tpair pair, result.results) {
+            volk_test_time_t time = pair.second;
+            json_file << "    \"" << time.name << "\": {" << std::endl;
+            json_file << "     \"name\": \"" << time.name << "\"," << std::endl;
+            json_file << "     \"time\": " << time.time << "," << std::endl;
+            json_file << "     \"units\": \"" << time.units << "\"" << std::endl;
+            json_file << "    }" ;
+            if(ri+1 != results_len) {
+                json_file << ",";
+            }
+            json_file << std::endl;
+            ri++;
+        }
+        json_file << "   }" << std::endl;
+        json_file << "  }";
+        if(i+1 != len) {
+            json_file << ",";
+        }
+        json_file << std::endl;
+        i++;
+    }
+    json_file << " ]" << std::endl;
+    json_file << "}" << std::endl;
+}
+
 int main(int argc, char *argv[]) {
     // Adding program options
     boost::program_options::options_description desc("Options");
@@ -49,6 +92,9 @@ int main(int argc, char *argv[]) {
       ("tests-regex,R",
             boost::program_options::value<std::string>(),
             "Run tests matching regular expression.")
+      ("json,j",
+            boost::program_options::value<std::string>(),
+            "JSON output file")
       ;
 
     // Handle the options that were given
@@ -56,6 +102,8 @@ int main(int argc, char *argv[]) {
     bool benchmark_mode;
     std::string kernel_regex;
     bool store_results = true;
+    std::ofstream json_file;
+
     try {
         boost::program_options::store(boost::program_options::parse_command_line(argc, argv, desc), vm);
         boost::program_options::notify(vm);
@@ -83,9 +131,14 @@ int main(int argc, char *argv[]) {
       return 0;
     }
 
+    if ( vm.count("json") )
+    {
+        json_file.open( vm["json"].as<std::string>().c_str() );
+    }
+
 
     // Run tests
-    std::vector<std::string> results;
+    std::vector<volk_test_results_t> results;
 
     //VOLK_PROFILE(volk_16i_x5_add_quad_16i_x4, 1e-4, 2046, 10000, &results, benchmark_mode, kernel_regex);
     //VOLK_PROFILE(volk_16i_branch_4_state_8, 1e-4, 2046, 10000, &results, benchmark_mode, kernel_regex);
@@ -205,8 +258,10 @@ int main(int argc, char *argv[]) {
 #the function name is followed by the preferred architecture.\n\
 ";
 
-        BOOST_FOREACH(std::string result, results) {
-            config << result << std::endl;
+        BOOST_FOREACH(volk_test_results_t result, results) {
+            config << result.config_name << " "
+                << result.best_arch_a << " "
+                << result.best_arch_u << std::endl;
         }
         config.close();
     }
