@@ -127,6 +127,8 @@ namespace gr {
 
     std::multimap<uint64_t,tag_t>::iterator get_tags_begin() { return d_item_tags.begin(); }
     std::multimap<uint64_t,tag_t>::iterator get_tags_end() { return d_item_tags.end(); }
+    std::multimap<uint64_t,tag_t>::iterator get_tags_lower_bound(uint64_t x) { return d_item_tags.lower_bound(x); }
+    std::multimap<uint64_t,tag_t>::iterator get_tags_upper_bound(uint64_t x) { return d_item_tags.upper_bound(x); }
 
     // -------------------------------------------------------------------------
 
