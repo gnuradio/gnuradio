@@ -234,7 +234,7 @@ namespace gr {
     gr::thread::scoped_lock guard(*mutex());
     for(std::multimap<uint64_t,tag_t>::iterator it = d_item_tags.lower_bound(tag.offset); it != d_item_tags.upper_bound(tag.offset); ++it) {
       if((*it).second == tag) {
-	    (*it).second.marked_deleted.push_back(id);
+        (*it).second.marked_deleted.push_back(id);
       }
     }
   }
@@ -320,7 +320,7 @@ namespace gr {
   buffer_reader::get_tags_in_range(std::vector<tag_t> &v,
                                    uint64_t abs_start,
                                    uint64_t abs_end,
-				   long id)
+                                   long id)
   {
     gr::thread::scoped_lock guard(*mutex());
 
@@ -331,21 +331,17 @@ namespace gr {
     uint64_t item_time;
     while(itr != itr_end) {
       item_time = (*itr).second.offset + d_attr_delay;
-      //item_time = (*itr).offset + d_attr_delay;
-
       if((item_time >= abs_start) && (item_time < abs_end)) {
-	std::vector<long>::iterator id_itr;
-	id_itr = std::find(itr->second.marked_deleted.begin(), itr->second.marked_deleted.end(), id);
-
+        std::vector<long>::iterator id_itr;
+        id_itr = std::find(itr->second.marked_deleted.begin(), itr->second.marked_deleted.end(), id);
         // If id is not in the vector of marked blocks
-	if(id_itr == itr->second.marked_deleted.end()) {
+        if(id_itr == itr->second.marked_deleted.end()) {
           tag_t t = (*itr).second;
           t.offset += d_attr_delay;
-	  v.push_back(t);
-	  v.back().marked_deleted.clear();
-	}
+          v.push_back(t);
+          v.back().marked_deleted.clear();
+        }
       }
-
       itr++;
     }
   }
