@@ -28,7 +28,7 @@
 #include <gnuradio/tags.h>
 #include <boost/weak_ptr.hpp>
 #include <gnuradio/thread/thread.h>
-#include <deque>
+#include <map>
 
 namespace gr {
 
@@ -158,7 +158,6 @@ namespace gr {
     uint64_t                            d_abs_write_offset; // num items written since the start
     bool				d_done;
     std::multimap<uint64_t,tag_t>                   d_item_tags;
-    //std::deque<tag_t>                   d_item_tags;
     uint64_t                            d_last_min_items_read;
 
     unsigned index_add(unsigned a, unsigned b)

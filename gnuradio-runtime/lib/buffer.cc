@@ -23,7 +23,7 @@
 #ifdef HAVE_CONFIG_H
 #include "config.h"
 #endif
-
+#include <algorithm>
 #include <gnuradio/buffer.h>
 #include <gnuradio/math.h>
 #include "vmcircbuf.h"
@@ -226,7 +226,6 @@ namespace gr {
   {
     gr::thread::scoped_lock guard(*mutex());
     d_item_tags.insert(std::pair<uint64_t,tag_t>(tag.offset,tag));
-    //d_item_tags.push_back(tag);
   }
 
   void
@@ -234,10 +233,9 @@ namespace gr {
   {
     gr::thread::scoped_lock guard(*mutex());
 // TODO: we can probably do this more efficiently now ...
-//    for(std::deque<tag_t>::iterator it = d_item_tags.begin(); it != d_item_tags.end(); ++it) {
     for(std::multimap<uint64_t,tag_t>::iterator it = d_item_tags.begin(); it != d_item_tags.end(); ++it) {
       if((*it).second == tag) {
-	(*it).second.marked_deleted.push_back(id);
+	    (*it).second.marked_deleted.push_back(id);
       }
     }
   }
@@ -253,38 +251,11 @@ namespace gr {
        If this function is used elsewhere, remember to lock the
        buffer's mutex al la the scoped_lock line below.
     */
-    //gr::thread::scoped_lock guard(*mutex());
-#if 0
-    for(size_t i=0; i<d_item_tags.size(); ){
-        const tag_t &tag = d_item_tags.at(i);
-        uint64_t item_time = tag.offset;
-        if(item_time+d_max_reader_delay + bufsize() < max_time) {
-            d_item_tags.erase(d_item_tags.begin()+i);
-            continue;
-        }  
-        i++;
+    std::multimap<uint64_t, tag_t>::iterator itr = d_item_tags.lower_bound(max_time);
+    while (itr != d_item_tags.end()) {
+      d_item_tags.erase(itr);
+      itr++;
     }
-#endif
-#if 1
-    std::multimap<uint64_t,tag_t>::iterator itr(d_item_tags.begin());
-
-    uint64_t item_time;
-    // Since tags are not guarenteed to be in any particular order, we
-    // need to erase here instead of pop_front. An erase in the middle
-    // invalidates all iterators; so this resets the iterator to find
-    // more. Mostly, we will be erasing from the front and
-    // therefore lose little time this way.
-    while(itr != d_item_tags.end()) {
-      item_time = (*itr).second.offset;
-      if(item_time+d_max_reader_delay + bufsize() < max_time) {
-        //d_item_tags.erase(itr);
-        //itr = d_item_tags.begin();
-        itr++;
-      }
-      else
-        itr++;
-    }
-#endif
   }
 
   long
