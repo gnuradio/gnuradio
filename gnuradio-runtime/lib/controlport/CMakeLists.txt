@@ -20,13 +20,19 @@
 if(ENABLE_GR_CTRLPORT)
 
 # Add definition so we can compile in ControlPort to the blocks.
-ADD_DEFINITIONS(-DGR_CTRLPORT)
+add_definitions(-DGR_CTRLPORT)
+
+include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
 list(APPEND gnuradio_ctrlport_sources
   ${CMAKE_CURRENT_SOURCE_DIR}/rpcmanager.cc
   ${CMAKE_CURRENT_SOURCE_DIR}/rpcserver_aggregator.cc
   ${CMAKE_CURRENT_SOURCE_DIR}/rpcserver_booter_aggregator.cc
   ${CMAKE_CURRENT_SOURCE_DIR}/rpcserver_selector.cc
+  ${CMAKE_CURRENT_SOURCE_DIR}/rpcserver_thrift.cc
+  ${CMAKE_CURRENT_SOURCE_DIR}/rpcpmtconverters_thrift.cc
+  ${CMAKE_CURRENT_SOURCE_DIR}/gnuradio_types.cpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/gnuradio_constants.cpp
 )
 
 ########################################################################
