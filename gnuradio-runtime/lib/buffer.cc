@@ -225,16 +225,19 @@ namespace gr {
   buffer::add_item_tag(const tag_t &tag)
   {
     gr::thread::scoped_lock guard(*mutex());
-    d_item_tags.push_back(tag);
+    d_item_tags.insert(std::pair<uint64_t,tag_t>(tag.offset,tag));
+    //d_item_tags.push_back(tag);
   }
 
   void
   buffer::remove_item_tag(const tag_t &tag, long id)
   {
     gr::thread::scoped_lock guard(*mutex());
-    for(std::deque<tag_t>::iterator it = d_item_tags.begin(); it != d_item_tags.end(); ++it) {
-      if(*it == tag) {
-	(*it).marked_deleted.push_back(id);
+// TODO: we can probably do this more efficiently now ...
+//    for(std::deque<tag_t>::iterator it = d_item_tags.begin(); it != d_item_tags.end(); ++it) {
+    for(std::multimap<uint64_t,tag_t>::iterator it = d_item_tags.begin(); it != d_item_tags.end(); ++it) {
+      if((*it).second == tag) {
+	(*it).second.marked_deleted.push_back(id);
       }
     }
   }
@@ -251,24 +254,37 @@ namespace gr {
        buffer's mutex al la the scoped_lock line below.
     */
     //gr::thread::scoped_lock guard(*mutex());
-    std::deque<tag_t>::iterator itr = d_item_tags.begin();
+#if 0
+    for(size_t i=0; i<d_item_tags.size(); ){
+        const tag_t &tag = d_item_tags.at(i);
+        uint64_t item_time = tag.offset;
+        if(item_time+d_max_reader_delay + bufsize() < max_time) {
+            d_item_tags.erase(d_item_tags.begin()+i);
+            continue;
+        }  
+        i++;
+    }
+#endif
+#if 1
+    std::multimap<uint64_t,tag_t>::iterator itr(d_item_tags.begin());
 
     uint64_t item_time;
-
     // Since tags are not guarenteed to be in any particular order, we
     // need to erase here instead of pop_front. An erase in the middle
     // invalidates all iterators; so this resets the iterator to find
-    // more. Mostly, we wil be erasing from the front and
+    // more. Mostly, we will be erasing from the front and
     // therefore lose little time this way.
     while(itr != d_item_tags.end()) {
-      item_time = (*itr).offset;
+      item_time = (*itr).second.offset;
       if(item_time+d_max_reader_delay + bufsize() < max_time) {
-        d_item_tags.erase(itr);
-        itr = d_item_tags.begin();
+        //d_item_tags.erase(itr);
+        //itr = d_item_tags.begin();
+        itr++;
       }
       else
         itr++;
     }
+#endif
   }
 
   long
@@ -338,19 +354,20 @@ namespace gr {
     gr::thread::scoped_lock guard(*mutex());
 
     v.resize(0);
-    std::deque<tag_t>::iterator itr = d_buffer->get_tags_begin();
+    std::multimap<uint64_t,tag_t>::iterator itr = d_buffer->get_tags_begin();
 
     uint64_t item_time;
     while(itr != d_buffer->get_tags_end()) {
-      item_time = (*itr).offset + d_attr_delay;
+      item_time = (*itr).second.offset + d_attr_delay;
+      //item_time = (*itr).offset + d_attr_delay;
 
       if((item_time >= abs_start) && (item_time < abs_end)) {
 	std::vector<long>::iterator id_itr;
-	id_itr = std::find(itr->marked_deleted.begin(), itr->marked_deleted.end(), id);
+	id_itr = std::find(itr->second.marked_deleted.begin(), itr->second.marked_deleted.end(), id);
 
         // If id is not in the vector of marked blocks
-	if(id_itr == itr->marked_deleted.end()) {
-          tag_t t = *itr;
+	if(id_itr == itr->second.marked_deleted.end()) {
+          tag_t t = (*itr).second;
           t.offset += d_attr_delay;
 	  v.push_back(t);
 	  v.back().marked_deleted.clear();
