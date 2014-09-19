@@ -113,6 +113,86 @@ class qa_header_payload_demux (gr_unittest.TestCase):
         ]
         self.assertEqual(expected_tags_payload, ptags_payload)
 
+    def test_001_t_tags (self):
+        """ Like the previous test, but use a trigger tag instead of
+        a trigger signal.
+        """
+        n_zeros = 1
+        header = (1, 2, 3)
+        payload = tuple(range(5, 20))
+        data_signal = (0,) * n_zeros + header + payload
+        # Trigger tag
+        trigger_tag = gr.tag_t()
+        trigger_tag.offset = n_zeros
+        trigger_tag.key = pmt.string_to_symbol('detect')
+        trigger_tag.value = pmt.PMT_T
+        # This is dropped:
+        testtag1 = gr.tag_t()
+        testtag1.offset = 0
+        testtag1.key = pmt.string_to_symbol('tag1')
+        testtag1.value = pmt.from_long(0)
+        # This goes on output 0, item 0:
+        testtag2 = gr.tag_t()
+        testtag2.offset = n_zeros
+        testtag2.key = pmt.string_to_symbol('tag2')
+        testtag2.value = pmt.from_long(23)
+        # This goes on output 0, item 2:
+        testtag3 = gr.tag_t()
+        testtag3.offset = n_zeros + len(header) - 1
+        testtag3.key = pmt.string_to_symbol('tag3')
+        testtag3.value = pmt.from_long(42)
+        # This goes on output 1, item 3:
+        testtag4 = gr.tag_t()
+        testtag4.offset = n_zeros + len(header) + 3
+        testtag4.key = pmt.string_to_symbol('tag4')
+        testtag4.value = pmt.from_long(314)
+        data_src = blocks.vector_source_f(
+                data_signal,
+                False,
+                tags=(trigger_tag, testtag1, testtag2, testtag3, testtag4)
+        )
+        hpd = digital.header_payload_demux(
+            len(header), 1, 0, "frame_len", "detect", False, gr.sizeof_float
+        )
+        self.assertEqual(pmt.length(hpd.message_ports_in()), 2) #extra system port defined for you
+        header_sink = blocks.vector_sink_f()
+        payload_sink = blocks.vector_sink_f()
+
+        self.tb.connect(data_src,    (hpd, 0))
+        self.tb.connect((hpd, 0), header_sink)
+        self.tb.connect((hpd, 1), payload_sink)
+        self.tb.start()
+        time.sleep(.2) # Need this, otherwise, the next message is ignored
+        hpd.to_basic_block()._post(
+                pmt.intern('header_data'),
+                pmt.from_long(len(payload))
+        )
+        while len(payload_sink.data()) < len(payload):
+            time.sleep(.2)
+        self.tb.stop()
+        self.tb.wait()
+
+        self.assertEqual(header_sink.data(),  header)
+        self.assertEqual(payload_sink.data(), payload)
+        ptags_header = []
+        for tag in header_sink.tags():
+            ptag = gr.tag_to_python(tag)
+            ptags_header.append({'key': ptag.key, 'offset': ptag.offset})
+        expected_tags_header = [
+                {'key': 'tag2', 'offset': 0},
+                {'key': 'tag3', 'offset': 2},
+        ]
+        self.assertEqual(expected_tags_header, ptags_header)
+        ptags_payload = []
+        for tag in payload_sink.tags():
+            ptag = gr.tag_to_python(tag)
+            ptags_payload.append({'key': ptag.key, 'offset': ptag.offset})
+        expected_tags_payload = [
+                {'key': 'frame_len', 'offset': 0},
+                {'key': 'tag4', 'offset': 3},
+        ]
+        self.assertEqual(expected_tags_payload, ptags_payload)
+
     def test_002_symbols (self):
         """ 
         Same as before, but operate on symbols
