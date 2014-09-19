@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<block>
+  <name>CPM Phase Recovery</name>
+  <key>digital_cpm_phase_recovery_cc</key>
+  <import>from gnuradio import digital</import>
+  <make>digital.cpm_phase_recovery_cc($p, $len, $sps)</make>
+  <param>
+    <name>P</name>
+    <key>p</key>
+    <type>int</type>
+  </param>
+  <param>
+    <name>Observation length</name>
+    <key>len</key>
+    <type>int</type>
+  </param>
+  <param>
+    <name>Samples per symbol</name>
+    <key>sps</key>
+    <type>int</type>
+  </param>
+  <sink>
+    <name>in</name>
+    <type>complex</type>
+  </sink>
+  <source>
+    <name>out</name>
+    <type>complex</type>
+  </source>
+</block>

@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+<block>
+  <name>MSK Correlate and Sync</name>
+  <key>digital_msk_correlate_cc</key>
+  <import>from gnuradio import digital</import>
+  <make>digital.msk_correlate_cc($symbols, $bt, $sps)</make>
+  <param>
+    <name>Data symbols</name>
+    <key>symbols</key>
+    <type>raw</type>
+  </param>
+  <param>
+    <name>BT</name>
+    <key>bt</key>
+    <type>float</type>
+  </param>
+  <param>
+    <name>Samples per symbol</name>
+    <key>sps</key>
+    <type>float</type>
+  </param>
+  <sink>
+    <name>in</name>
+    <type>complex</type>
+  </sink>
+  <source>
+    <name>out</name>
+    <type>complex</type>
+  </source>
+  <source>
+    <name>corr</name>
+    <type>complex</type>
+  </source>
+</block>

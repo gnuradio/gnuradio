@@ -121,6 +121,9 @@
     <block>digital_pfb_clock_sync_xxx</block>
     <block>digital_pn_correlator_cc</block>
     <block>digital_correlate_and_sync_cc</block>
+    <block>digital_msk_correlate_cc</block>
+    <block>digital_cpm_phase_recovery_cc</block>
+    <block>digital_msk_timing_recovery_cc</block>
   </cat>
   <cat>
     <name>Waveform Generators</name>
