@@ -58,7 +58,7 @@ By default, GNU Radio runs a scheduler that attempts to optimize
 throughput. Using a dynamic scheduler, blocks in a flowgraph pass
 chunks of items from sources to sinks. The sizes of these chunks will
 vary depending on the speed of processing. For each block, the number
-of items is can process is dependent on how much space it has in its
+of items it can process is dependent on how much space it has in its
 output buffer(s) and how many items are available on the input
 buffer(s).
 
