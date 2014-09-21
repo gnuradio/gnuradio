@@ -451,10 +451,12 @@ namespace gr {
   block_detail::reset_perf_counters()
   {
     d_pc_counter = 0;
+#ifdef GR_ENABLE_LINUX_PERF
     // don't leave dangling FDs
     for(size_t ii=0; ii < _perf_fd.size(); ++ii) {
       close(_perf_fd[ii]);
     }
+#endif
   }
 
   float
