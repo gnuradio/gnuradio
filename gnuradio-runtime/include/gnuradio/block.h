@@ -636,7 +636,7 @@ namespace gr {
     void add_item_tag(unsigned int which_output, const tag_t &tag);
 
     /*!
-     * \brief  Removes a tag from the given input buffer.
+     * \brief DEPRECATED. Will be removed in 3.8.
      *
      * \param which_input an integer of which input stream to remove the tag from
      * \param abs_offset   a uint64 number of the absolute item number
@@ -662,9 +662,7 @@ namespace gr {
     }
 
     /*!
-     * \brief Removes a tag from the given input buffer.
-     *
-     * If no such tag is found, does nothing.
+     * \brief DEPRECATED. Will be removed in 3.8.
      *
      * \param which_input an integer of which input stream to remove the tag from
      * \param tag the tag object to remove
