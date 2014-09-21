@@ -82,6 +82,8 @@ namespace gr {
       // this is usually desired when plotting
       d_shift = true;
 
+      d_outputsize = 2 * (d_fftsize / 2) + 1;
+
       d_fft = new fft::fft_complex(d_fftsize, true);
       d_fbuf = (float*)volk_malloc(d_fftsize*sizeof(float),
                                    volk_get_alignment());
@@ -91,11 +93,11 @@ namespace gr {
       for(int i = 0; i < d_nconnections; i++) {
 	d_residbufs.push_back((gr_complex*)volk_malloc(d_fftsize*sizeof(gr_complex),
                                                        volk_get_alignment()));
-	d_magbufs.push_back((double*)volk_malloc(d_fftsize*sizeof(double),
+	d_magbufs.push_back((double*)volk_malloc(d_outputsize*sizeof(double),
                                                  volk_get_alignment()));
 
 	memset(d_residbufs[i], 0, d_fftsize*sizeof(gr_complex));
-	memset(d_magbufs[i], 0, d_fftsize*sizeof(double));
+	memset(d_magbufs[i], 0, d_outputsize*sizeof(double));
       }
 
       buildwindow();
@@ -399,10 +401,10 @@ namespace gr {
 
       // Perform shift operation
       unsigned int len = (unsigned int)(floor(size/2.0));
-      float *tmp = (float*)malloc(sizeof(float)*len);
-      memcpy(tmp, &data_out[0], sizeof(float)*len);
-      memcpy(&data_out[0], &data_out[len], sizeof(float)*(size - len));
-      memcpy(&data_out[size - len], tmp, sizeof(float)*len);
+      float *tmp = (float*)malloc(sizeof(float)*(len + 1));
+      memcpy(tmp, &data_out[0], sizeof(float)*(len + 1));
+      memcpy(&data_out[0], &data_out[size - len], sizeof(float)*(len));
+      memcpy(&data_out[len], tmp, sizeof(float)*(len + 1));
       free(tmp);
     }
 
@@ -434,6 +436,7 @@ namespace gr {
       gr::thread::scoped_lock lock(d_setlock);
 
       int newfftsize = d_main_gui->getFFTSize();
+	  int newoutputsize = (2 * (newfftsize / 2)) + 1;
       d_fftavg = d_main_gui->getFFTAverage();
 
       if(newfftsize != d_fftsize) {
@@ -444,16 +447,17 @@ namespace gr {
 
 	  d_residbufs[i] = (gr_complex*)volk_malloc(newfftsize*sizeof(gr_complex),
                                                     volk_get_alignment());
-	  d_magbufs[i] = (double*)volk_malloc(newfftsize*sizeof(double),
+	  d_magbufs[i] = (double*)volk_malloc(newoutputsize*sizeof(double),
                                               volk_get_alignment());
 
 	  memset(d_residbufs[i], 0, newfftsize*sizeof(gr_complex));
-	  memset(d_magbufs[i], 0, newfftsize*sizeof(double));
+	  memset(d_magbufs[i], 0, newoutputsize*sizeof(double));
 	}
 
 	// Set new fft size and reset buffer index
 	// (throws away any currently held data, but who cares?)
 	d_fftsize = newfftsize;
+	d_outputsize = newoutputsize;
 	d_index = 0;
 
 	// Reset window to reflect new size
@@ -464,9 +468,9 @@ namespace gr {
 	d_fft = new fft::fft_complex(d_fftsize, true);
 
 	volk_free(d_fbuf);
-	d_fbuf = (float*)volk_malloc(d_fftsize*sizeof(float),
+	d_fbuf = (float*)volk_malloc(d_outputsize*sizeof(float),
                                      volk_get_alignment());
-	memset(d_fbuf, 0, d_fftsize*sizeof(float));
+	memset(d_fbuf, 0, d_outputsize*sizeof(float));
       }
     }
 
@@ -521,7 +525,7 @@ namespace gr {
               memcpy(d_residbufs[n]+d_index, &in[j], sizeof(gr_complex)*resid);
 
               fft(d_fbuf, d_residbufs[n], d_fftsize);
-              for(int x = 0; x < d_fftsize; x++) {
+              for(int x = 0; x < d_outputsize; x++) {
                 d_magbufs[n][x] = (double)((1.0-d_fftavg)*d_magbufs[n][x] + (d_fftavg)*d_fbuf[x]);
               }
               //volk_32f_convert_64f_a(d_magbufs[n], d_fbuf, d_fftsize);
@@ -529,7 +533,7 @@ namespace gr {
 
 	    d_last_time = gr::high_res_timer_now();
 	    d_qApplication->postEvent(d_main_gui,
-				      new FreqUpdateEvent(d_magbufs, d_fftsize));
+				      new FreqUpdateEvent(d_magbufs, d_outputsize);
 	  }
 
 	  d_index = 0;
