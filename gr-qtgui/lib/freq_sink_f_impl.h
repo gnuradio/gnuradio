@@ -40,6 +40,7 @@ namespace gr {
       void initialize();
 
       int d_fftsize;
+      int d_outputsize;
       float d_fftavg;
       filter::firdes::win_type d_wintype;
       std::vector<float> d_window;
