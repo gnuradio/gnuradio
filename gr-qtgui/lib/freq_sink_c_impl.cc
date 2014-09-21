@@ -82,12 +82,12 @@ namespace gr {
       // this is usually desired when plotting
       d_shift = true;
 
-      d_outputsize = 2 * (d_fftsize / 2) + 1;
+      d_outputsize = (2 * (d_fftsize / 2)) + 1;
 
       d_fft = new fft::fft_complex(d_fftsize, true);
-      d_fbuf = (float*)volk_malloc(d_fftsize*sizeof(float),
+      d_fbuf = (float*)volk_malloc(d_outputsize*sizeof(float),
                                    volk_get_alignment());
-      memset(d_fbuf, 0, d_fftsize*sizeof(float));
+      memset(d_fbuf, 0, d_outputsize*sizeof(float));
 
       d_index = 0;
       for(int i = 0; i < d_nconnections; i++) {
@@ -158,7 +158,7 @@ namespace gr {
 
       d_main_gui = new FreqDisplayForm(d_nconnections, d_parent);
       set_fft_window(d_wintype);
-      set_fft_size(d_fftsize);
+      set_fft_size(d_outputsize);
       set_frequency_range(d_center_freq, d_bandwidth);
 
       if(d_name.size() > 0)
@@ -533,7 +533,7 @@ namespace gr {
 
 	    d_last_time = gr::high_res_timer_now();
 	    d_qApplication->postEvent(d_main_gui,
-				      new FreqUpdateEvent(d_magbufs, d_outputsize);
+				      new FreqUpdateEvent(d_magbufs, d_outputsize));
 	  }
 
 	  d_index = 0;
