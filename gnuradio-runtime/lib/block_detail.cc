@@ -706,6 +706,85 @@ namespace gr {
   {
     return d_total_sw_cpu_migrations;
   }
+#else
+  // We need stubs to help export via swig when counters are disabled
+  float
+  block_detail::pc_branch_miss_rate()
+  {
+    return 0;
+  }
+
+  float
+  block_detail::pc_branch_miss_rate_avg()
+  {
+    return 0;
+  }
+
+  float
+  block_detail::pc_cache_miss_rate()
+  {
+    return 0;
+  }
+
+  float
+  block_detail::pc_cache_miss_rate_avg()
+  {
+    return 0;
+  }
+
+  float
+  block_detail::pc_hw_cpu_cycles()
+  {
+    return 0;
+  }
+
+  float
+  block_detail::pc_hw_cpu_cycles_avg()
+  {
+    return 0;
+  }
+
+  float
+  block_detail::pc_hw_cpu_cycles_total()
+  {
+    return 0;
+  }
+
+  float
+  block_detail::pc_sw_context_switches()
+  {
+    return 0;
+  }
+
+  float
+  block_detail::pc_sw_context_switches_avg()
+  {
+    return 0;
+  }
+
+  float
+  block_detail::pc_sw_context_switches_total()
+  {
+    return 0;
+  }
+
+  float
+  block_detail::pc_sw_cpu_migrations()
+  {
+    return 0;
+  }
+
+  float
+  block_detail::pc_sw_cpu_migrations_avg()
+  {
+    return 0;
+  }
+
+  float
+  block_detail::pc_sw_cpu_migrations_total()
+  {
+    return 0;
+  }
 #endif
 
 } /* namespace gr */

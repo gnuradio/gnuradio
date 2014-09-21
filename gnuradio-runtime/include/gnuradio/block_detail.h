@@ -232,7 +232,7 @@ namespace gr {
 
     float pc_noutput_items_total();
 
-#ifdef GR_ENABLE_LINUX_PERF
+    // These are only meaningful with linux perf events enabled
     float pc_branch_miss_rate();
     float pc_branch_miss_rate_avg();
 
@@ -250,7 +250,6 @@ namespace gr {
     float pc_sw_cpu_migrations();
     float pc_sw_cpu_migrations_avg();
     float pc_sw_cpu_migrations_total();
-#endif
 
     float pc_work_time_total();
 
