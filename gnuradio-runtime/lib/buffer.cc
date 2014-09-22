@@ -35,11 +35,11 @@
 
 namespace gr {
 
-  static long s_buffer_count = 0;		// counts for debugging storage mgmt
+  static long s_buffer_count = 0;   // counts for debugging storage mgmt
   static long s_buffer_reader_count = 0;
 
   /* ----------------------------------------------------------------------------
-  			Notes on storage management
+              Notes on storage management
 
    Pretty much all the fundamental classes are now using the
    shared_ptr stuff for automatic reference counting. To ensure that
@@ -149,7 +149,7 @@ namespace gr {
   buffer::space_available()
   {
     if(d_readers.empty())
-      return d_bufsize - 1;	// See comment below
+      return d_bufsize - 1; // See comment below
 
     else {
       // Find out the maximum amount of data available to our readers
@@ -254,7 +254,7 @@ namespace gr {
     std::multimap<uint64_t, tag_t>::iterator begin_itr = d_item_tags.begin();
     while (begin_itr != end_itr) {
       d_item_tags.erase(begin_itr);
-      begin_itr++;
+      begin_itr = d_item_tags.begin();
     }
   }
 
