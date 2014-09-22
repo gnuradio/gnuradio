@@ -252,10 +252,7 @@ namespace gr {
     */
     std::multimap<uint64_t, tag_t>::iterator end_itr = d_item_tags.lower_bound(max_time);
     std::multimap<uint64_t, tag_t>::iterator begin_itr = d_item_tags.begin();
-    while (begin_itr != end_itr) {
-      d_item_tags.erase(begin_itr);
-      begin_itr++;
-    }
+    d_item_tags.erase(begin_itr, end_itr);
   }
 
   long
