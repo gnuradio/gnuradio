@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2004,2007 Free Software Foundation, Inc.
+ * Copyright 2004,2007,2014 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -25,6 +25,7 @@
 
 #include <gnuradio/api.h>
 #include <gnuradio/runtime_types.h>
+#include <stdint.h>
 
 namespace gr {
 
@@ -34,15 +35,24 @@ namespace gr {
    */
   class GR_RUNTIME_API io_signature
   {
-    int			d_min_streams;
-    int			d_max_streams;
-    std::vector<int>	d_sizeof_stream_item;
+    int			  d_min_streams;
+    int			  d_max_streams;
+    std::vector<int>	  d_sizeof_stream_item;
+    std::vector<uint32_t> d_stream_flags;
 
     io_signature(int min_streams, int max_streams,
-                 const std::vector<int> &sizeof_stream_items);
+                 const std::vector<int> &sizeof_stream_items,
+		 const std::vector<uint32_t> &stream_flags);
 
   public:
     typedef boost::shared_ptr<io_signature> sptr;
+
+    typedef enum io_flags {
+      DEFAULT_FLAGS  = 0,
+      MEM_BLOCK_ALLOC = 1 << 0,
+      MEM_BLOCK_SINGLE = 1 << 1,
+      MEM_BLOCK_ODD = 1 << 2
+    } io_flags_t;
 
     static const int IO_INFINITE = -1;
 
@@ -55,9 +65,11 @@ namespace gr {
      * \param min_streams  specify minimum number of streams (>= 0)
      * \param max_streams  specify maximum number of streams (>= min_streams or -1 -> infinite)
      * \param sizeof_stream_item  specify the size of the items in each stream
+     * \param flags  specify the io flags for the stream
      */
     static sptr make(int min_streams, int max_streams,
-                     int sizeof_stream_item);
+                     int sizeof_stream_item, 
+		     uint32_t flags = DEFAULT_FLAGS);
 
     /*!
      * \brief Create an i/o signature
@@ -66,10 +78,14 @@ namespace gr {
      * \param max_streams  specify maximum number of streams (>= min_streams or -1 -> infinite)
      * \param sizeof_stream_item1 specify the size of the items in the first stream
      * \param sizeof_stream_item2 specify the size of the items in the second and subsequent streams
+     * \param flags1  specify the io flags for the first stream
+     * \param flags2  specify the io flags for the second and subsequent streams
      */
     static sptr make2(int min_streams, int max_streams,
                       int sizeof_stream_item1,
-                      int sizeof_stream_item2);
+                      int sizeof_stream_item2, 
+		      uint32_t flags1 = DEFAULT_FLAGS,
+		      uint32_t flags2 = DEFAULT_FLAGS);
 
     /*!
      * \brief Create an i/o signature
@@ -79,11 +95,17 @@ namespace gr {
      * \param sizeof_stream_item1 specify the size of the items in the first stream
      * \param sizeof_stream_item2 specify the size of the items in the second stream
      * \param sizeof_stream_item3 specify the size of the items in the third and subsequent streams
+     * \param flags1  specify the io flags for the first stream
+     * \param flags2  specify the io flags for the second stream
+     * \param flags3  specify the io flags for the third and subsequent streams
      */
     static sptr make3(int min_streams, int max_streams,
                       int sizeof_stream_item1,
                       int sizeof_stream_item2,
-                      int sizeof_stream_item3);
+                      int sizeof_stream_item3,
+		      uint32_t flags1 = DEFAULT_FLAGS,
+		      uint32_t flags2 = DEFAULT_FLAGS,
+		      uint32_t flags3 = DEFAULT_FLAGS);
 
     /*!
      * \brief Create an i/o signature
@@ -91,6 +113,7 @@ namespace gr {
      * \param min_streams  specify minimum number of streams (>= 0)
      * \param max_streams  specify maximum number of streams (>= min_streams or -1 -> infinite)
      * \param sizeof_stream_items specify the size of the items in the streams
+     * \param stream_flags  specify the io flags for the streams
      *
      * If there are more streams than there are entries in
      * sizeof_stream_items, the value of the last entry in
@@ -98,12 +121,15 @@ namespace gr {
      * sizeof_stream_items must contain at least 1 entry.
      */
     static sptr makev(int min_streams, int max_streams,
-                      const std::vector<int> &sizeof_stream_items);
+                      const std::vector<int> &sizeof_stream_items,
+		      const std::vector<uint32_t> &stream_flags = std::vector<uint32_t>(0));
 
     int min_streams() const { return d_min_streams; }
     int max_streams() const { return d_max_streams; }
     int sizeof_stream_item(int index) const;
+    uint32_t stream_flags(int index) const;
     std::vector<int> sizeof_stream_items() const;
+    std::vector<uint32_t> stream_flags() const;
   };
 
 } /* namespace gr */
