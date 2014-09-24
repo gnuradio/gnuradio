@@ -23,6 +23,7 @@ def run_test (f,Kb,bitspersymbol,K,dimensionality,constellation,N0,seed):
     # TX
     numpy.random.seed(-seed)
     packet = numpy.random.randint(0,2,Kb) # create Kb random bits
+    packet[Kb-10:Kb]=0;
     src = blocks.vector_source_s(packet.tolist(),False)
     b2s = blocks.unpacked_to_packed_ss(1,gr.GR_MSB_FIRST) # pack bits in shorts
     s2fsmi = blocks.packed_to_unpacked_ss(bitspersymbol,gr.GR_MSB_FIRST) # unpack shorts to symbols compatible with the FSM input cardinality
@@ -35,7 +36,7 @@ def run_test (f,Kb,bitspersymbol,K,dimensionality,constellation,N0,seed):
 
     # RX
     metrics = trellis.metrics_f(f.O(),dimensionality,constellation,digital.TRELLIS_EUCLIDEAN) # data preprocessing to generate metrics for Viterbi
-    va = trellis.viterbi_s(f,K,0,-1) # Put -1 if the Initial/Final states are not set.
+    va = trellis.viterbi_s(f,K,0,0) # Put -1 if the Initial/Final states are not set.
     fsmi2s = blocks.unpacked_to_packed_ss(bitspersymbol,gr.GR_MSB_FIRST) # pack FSM input symbols to shorts
     s2b = blocks.packed_to_unpacked_ss(1,gr.GR_MSB_FIRST) # unpack shorts to bits
     dst = blocks.vector_sink_s();
@@ -82,13 +83,14 @@ def main():
     f=trellis.fsm(fname) # get the FSM specification from a file
     # alternatively you can specify the fsm from its generator matrix
     #f=trellis.fsm(1,2,[5,7])
-    Kb=1024*16  # packet size in bits (make it multiple of 16 so it can be packed in a short)
+    Kb=500*16  # packet size in bits (make it multiple of 16 so it can be packed in a short)
     bitspersymbol = int(round(math.log(f.I())/math.log(2))) # bits per FSM input symbol
     K=Kb/bitspersymbol # packet size in trellis steps
-    modulation = fsm_utils.psk4 # see fsm_utlis.py for available predefined modulations
+    modulation = fsm_utils.psk8 # see fsm_utlis.py for available predefined modulations
     dimensionality = modulation[0]
     constellation = modulation[1]
     if len(constellation)/dimensionality != f.O():
+        print  len(constellation)/dimensionality, f.O()
         sys.stderr.write ('Incompatible FSM output cardinality and modulation size.\n')
         sys.exit (1)
     # calculate average symbol energy

@@ -23,6 +23,8 @@ def run_test (f,Kb,bitspersymbol,K,dimensionality,constellation,N0,seed):
     # TX
     numpy.random.seed(-seed)
     packet = numpy.random.randint(0,2,Kb) # create Kb random bits
+    packet[Kb-10:Kb]=0
+    packet[0:Kb]=0
     src = blocks.vector_source_s(packet.tolist(),False)
     b2s = blocks.unpacked_to_packed_ss(1,gr.GR_MSB_FIRST) # pack bits in shorts
     s2fsmi = blocks.packed_to_unpacked_ss(bitspersymbol,gr.GR_MSB_FIRST) # unpack shorts to symbols compatible with the FSM input cardinality
@@ -34,7 +36,7 @@ def run_test (f,Kb,bitspersymbol,K,dimensionality,constellation,N0,seed):
     noise = analog.noise_source_f(analog.GR_GAUSSIAN,math.sqrt(N0/2),long(seed))
 
     # RX
-    va = trellis.viterbi_combined_fs(f,K,0,-1,dimensionality,constellation,digital.TRELLIS_EUCLIDEAN) # Put -1 if the Initial/Final states are not set.
+    va = trellis.viterbi_combined_fs(f,K,0,0,dimensionality,constellation,digital.TRELLIS_EUCLIDEAN) # Put -1 if the Initial/Final states are not set.
     fsmi2s = blocks.unpacked_to_packed_ss(bitspersymbol,gr.GR_MSB_FIRST) # pack FSM input symbols to shorts
     s2b = blocks.packed_to_unpacked_ss(1,gr.GR_MSB_FIRST) # unpack shorts to bits
     dst = blocks.vector_sink_s();
@@ -57,7 +59,7 @@ def run_test (f,Kb,bitspersymbol,K,dimensionality,constellation,N0,seed):
         print "Error: not enough data:", len(dst.data()), len(packet)
     ntotal=len(packet)
     nwrong = sum(abs(packet-numpy.array(dst.data())));
-    return (ntotal,nwrong)
+    return (ntotal,nwrong,abs(packet-numpy.array(dst.data())))
 
 
 
@@ -84,7 +86,7 @@ def main():
     Kb=1024*16  # packet size in bits (make it multiple of 16 so it can be packed in a short)
     bitspersymbol = int(round(math.log(f.I())/math.log(2))) # bits per FSM input symbol
     K=Kb/bitspersymbol # packet size in trellis steps
-    modulation = fsm_utils.psk4 # see fsm_utlis.py for available predefined modulations
+    modulation = fsm_utils.psk8 # see fsm_utlis.py for available predefined modulations
     dimensionality = modulation[0]
     constellation = modulation[1]
     if len(constellation)/dimensionality != f.O():
@@ -101,12 +103,17 @@ def main():
     terr_b=0 # total number of bits in error
     terr_p=0 # total number of packets in error
     for i in range(rep):
-        (b,e)=run_test(f,Kb,bitspersymbol,K,dimensionality,constellation,N0,-(666+i)) # run experiment with different seed to get different noise realizations
+        (b,e,pattern)=run_test(f,Kb,bitspersymbol,K,dimensionality,constellation,N0,-(666+i)) # run experiment with different seed to get different noise realizations
         tot_b=tot_b+b
         terr_b=terr_b+e
         terr_p=terr_p+(e!=0)
         if ((i+1)%100==0) : # display progress
             print i+1,terr_p, '%.2e' % ((1.0*terr_p)/(i+1)),tot_b,terr_b, '%.2e' % ((1.0*terr_b)/tot_b)
+	if e!=0:
+            print "rep=",i, e
+            for k in range(Kb):
+                if pattern[k]!=0:
+                    print k
     # estimate of the bit error rate
     print rep,terr_p, '%.2e' % ((1.0*terr_p)/(i+1)),tot_b,terr_b, '%.2e' % ((1.0*terr_b)/tot_b)
 

@@ -7,6 +7,10 @@ import math
 import sys
 import random
 import fsm_utils
+from gnuradio.eng_option import eng_option
+from optparse import OptionParser
+import numpy
+
 
 try:
     from gnuradio import analog
@@ -18,8 +22,10 @@ def run_test (fo,fi,interleaver,Kb,bitspersymbol,K,dimensionality,constellation,
     tb = gr.top_block ()
 
     # TX
-    src = blocks.lfsr_32k_source_s()
-    src_head = blocks.head(gr.sizeof_short,Kb/16) # packet size in shorts
+    numpy.random.seed(-seed)
+    packet = numpy.random.randint(0,2,Kb) # create Kb random bits
+    src = blocks.vector_source_s(packet.tolist(),False)
+    b2s = blocks.unpacked_to_packed_ss(1,gr.GR_MSB_FIRST) # pack bits in shorts
     s2fsmi = blocks.packed_to_unpacked_ss(bitspersymbol,gr.GR_MSB_FIRST) # unpack shorts to symbols compatible with the outer FSM input cardinality
     enc = trellis.sccc_encoder_ss(fo,0,fi,0,interleaver,K)
     mod = digital.chunks_to_symbols_sf(constellation,dimensionality)
@@ -31,49 +37,57 @@ def run_test (fo,fi,interleaver,Kb,bitspersymbol,K,dimensionality,constellation,
     # RX
     dec = trellis.sccc_decoder_combined_fs(fo,0,-1,fi,0,-1,interleaver,K,IT,trellis.TRELLIS_MIN_SUM,dimensionality,constellation,digital.TRELLIS_EUCLIDEAN,1.0)
     fsmi2s = blocks.unpacked_to_packed_ss(bitspersymbol,gr.GR_MSB_FIRST) # pack FSM input symbols to shorts
-    dst = blocks.check_lfsr_32k_s()
+    s2b = blocks.packed_to_unpacked_ss(1,gr.GR_MSB_FIRST) # unpack shorts to bits
+    dst = blocks.vector_sink_s();
 
-    #tb.connect (src,src_head,s2fsmi,enc_out,inter,enc_in,mod)
-    tb.connect (src,src_head,s2fsmi,enc,mod)
+    tb.connect (src,b2s,s2fsmi,enc,mod)
     tb.connect (mod,(add,0))
     tb.connect (noise,(add,1))
-    #tb.connect (add,head)
-    #tb.connect (tail,fsmi2s,dst)
-    tb.connect (add,dec,fsmi2s,dst)
+    tb.connect (add,dec,fsmi2s,s2b,dst)
 
     tb.run()
 
     #print enc_out.ST(), enc_in.ST()
 
-    ntotal = dst.ntotal ()
-    nright = dst.nright ()
-    runlength = dst.runlength ()
-    return (ntotal,ntotal-nright)
+    if len(dst.data()) != len(packet):
+        print "Error: not enough data:", len(dst.data()), len(packet)
+    ntotal=len(packet)
+    nwrong = sum(abs(packet-numpy.array(dst.data())));
+    return (ntotal,nwrong)
 
 
-def main(args):
-    nargs = len (args)
-    if nargs == 5:
-        fname_out=args[0]
-        fname_in=args[1]
-        esn0_db=float(args[2]) # Es/No in dB
-        IT=int(args[3])
-        rep=int(args[4]) # number of times the experiment is run to collect enough errors
-    else:
-        sys.stderr.write ('usage: test_tcm.py fsm_name_out fsm_fname_in Es/No_db iterations repetitions\n')
-        sys.exit (1)
+
+def main():
+    parser = OptionParser(option_class=eng_option)
+    parser.add_option("-o", "--fsm_file_o", type="string", default="fsm_files/awgn1o2_4.fsm", help="Filename containing the outer fsm specification, e.g. -f fsm_files/awgn1o2_4.fsm (default=fsm_files/awgn1o2_4.fsm)")
+    parser.add_option("-i", "--fsm_file_i", type="string", default="fsm_files/awgn2o3_4.fsm", help="Filename containing the inner fsm specification, e.g. -f fsm_files/awgn2o3_4.fsm (default=fsm_files/awgn2o3_4.fsm)")
+    parser.add_option("-e", "--esn0", type="eng_float", default=10.0, help="Symbol energy to noise PSD level ratio in dB, e.g., -e 10.0 (default=10.0)")
+    parser.add_option("-t", "--iterations", type="int", default=10, help="Number of turbo iterations, e.g., -i 10 (default=10)")
+    parser.add_option("-r", "--repetitions", type="int", default=100, help="Number of packets to be generated for the simulation, e.g., -r 100 (default=100)")
+
+    (options, args) = parser.parse_args ()
+    if len(args) != 0:
+        parser.print_help()
+        raise SystemExit, 1
+
+    fname_out=options.fsm_file_o
+    fname_in=options.fsm_file_i
+    esn0_db=float(options.esn0)
+    IT=int(options.iterations)
+    rep=int(options.repetitions)
+
 
     # system parameters
-    Kb=1024*16  # packet size in bits (make it multiple of 16 so it can be packed in a short)
     fo=trellis.fsm(fname_out) # get the outer FSM specification from a file
     fi=trellis.fsm(fname_in) # get the innner FSM specification from a file
-    bitspersymbol = int(round(math.log(fo.I())/math.log(2))) # bits per FSM input symbol
     if fo.O() != fi.I():
         sys.stderr.write ('Incompatible cardinality between outer and inner FSM.\n')
         sys.exit (1)
+    Kb=10000  # packet size in bits (make it multiple of 16 so it can be packed in a short)
+    bitspersymbol = int(round(math.log(fo.I())/math.log(2))) # bits per FSM input symbol
     K=Kb/bitspersymbol # packet size in trellis steps
     interleaver=trellis.interleaver(K,666) # construct a random interleaver
-    modulation = fsm_utils.psk8 # see fsm_utlis.py for available predefined modulations
+    modulation = fsm_utils.psk2x3 # see fsm_utlis.py for available predefined modulations
     dimensionality = modulation[0]
     constellation = modulation[1]
     if len(constellation)/dimensionality != fi.O():
@@ -86,19 +100,19 @@ def main(args):
     Es = Es / (len(constellation)/dimensionality)
     N0=Es/pow(10.0,esn0_db/10.0); # calculate noise variance
 
-    tot_s=0 # total number of transmitted shorts
-    terr_s=0 # total number of shorts in error
+    tot_b=0 # total number of transmitted bits
+    terr_b=0 # total number of bits in error
     terr_p=0 # total number of packets in error
     for i in range(rep):
-        (s,e)=run_test(fo,fi,interleaver,Kb,bitspersymbol,K,dimensionality,constellation,Es,N0,IT,-long(666+i)) # run experiment with different seed to get different noise realizations
-        tot_s=tot_s+s
-        terr_s=terr_s+e
-        terr_p=terr_p+(terr_s!=0)
+        (b,e)=run_test(fo,fi,interleaver,Kb,bitspersymbol,K,dimensionality,constellation,Es,N0,IT,-(666+i)) # run experiment with different seed to get different noise realizations
+        tot_b=tot_b+b
+        terr_b=terr_b+e
+        terr_p=terr_p+(e!=0)
         if ((i+1)%10==0): # display progress
-            print i+1,terr_p, '%.2e' % ((1.0*terr_p)/(i+1)),tot_s,terr_s, '%.2e' % ((1.0*terr_s)/tot_s)
+            print i+1,terr_p, '%.2e' % ((1.0*terr_p)/(i+1)),tot_b,terr_b, '%.2e' % ((1.0*terr_b)/tot_b)
     # estimate of the (short or bit) error rate
-    print rep,terr_p, '%.2e' % ((1.0*terr_p)/(i+1)),tot_s,terr_s, '%.2e' % ((1.0*terr_s)/tot_s)
+    print rep,terr_p, '%.2e' % ((1.0*terr_p)/(i+1)),tot_b,terr_b, '%.2e' % ((1.0*terr_b)/tot_b)
 
 
 if __name__ == '__main__':
-    main (sys.argv[1:])
+    main ()
