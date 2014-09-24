@@ -72,7 +72,7 @@ class qa_ofdm_frame_equalizer_vcvc (gr_unittest.TestCase):
             ptag = gr.tag_to_python(tag)
             tag_dict[ptag.key] = ptag.value
         expected_dict = {
-                'foo': 42
+            'foo': 42
         }
         self.assertEqual(tag_dict, expected_dict)
 
