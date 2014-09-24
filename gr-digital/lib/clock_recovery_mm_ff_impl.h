@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2004,2011,2012 Free Software Foundation, Inc.
+ * Copyright 2004,2011,2012,2014 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -52,10 +52,7 @@ namespace gr {
       void set_gain_mu (float gain_mu) { d_gain_mu = gain_mu; }
       void set_gain_omega (float gain_omega) { d_gain_omega = gain_omega; }
       void set_mu (float mu) { d_mu = mu; }
-      void set_omega (float omega){
-	d_omega = omega;
-	d_omega_mid = omega;
-      }
+      void set_omega (float omega);
 
     private:
       float d_mu;                   // fractional sample position [0.0, 1.0]
@@ -64,6 +61,7 @@ namespace gr {
       float d_gain_omega;           // gain for adjusting omega
       float d_omega_relative_limit; // used to compute min and max omega
       float d_omega_mid;            // average omega
+      float d_omega_lim;            // actual omega clipping limit
 
       float d_last_sample;
       filter::mmse_fir_interpolator_ff *d_interp;
