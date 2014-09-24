@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2004,2011,2012 Free Software Foundation, Inc.
+ * Copyright 2004,2011,2012,2014 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -52,21 +52,15 @@ namespace gr {
       void set_gain_mu (float gain_mu) { d_gain_mu = gain_mu; }
       void set_gain_omega (float gain_omega) { d_gain_omega = gain_omega; }
       void set_mu (float mu) { d_mu = mu; }
-      void set_omega (float omega) { 
-	d_omega = omega;
-	d_min_omega = omega*(1.0 - d_omega_relative_limit);
-	d_max_omega = omega*(1.0 + d_omega_relative_limit);
-	d_omega_mid = 0.5*(d_min_omega+d_max_omega);
-      }
+      void set_omega (float omega);
 
     private:
       float d_mu;                   // fractional sample position [0.0, 1.0]
       float d_omega;                // nominal frequency
       float d_gain_omega;           // gain for adjusting omega
-      float d_min_omega;            // minimum allowed omega
-      float d_max_omega;            // maximum allowed omeg
       float d_omega_relative_limit; // used to compute min and max omega
       float d_omega_mid;            // average omega
+      float d_omega_lim;            // actual omega clipping limit
       float d_gain_mu;              // gain for adjusting mu
 
       gr_complex d_last_sample;
