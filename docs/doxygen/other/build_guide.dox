@@ -44,10 +44,10 @@ first. Most recent systems have these packages available.
 \li pygtk       (>= 2.10)    http://www.pygtk.org/downloads.html
 
 \subsection dep_wavelet gr-wavelet: Collection of wavelet blocks
-\li gsl	        (>= 1.10)    http://gnuwin32.sourceforge.net/packages/gsl.htm
+\li gsl         (>= 1.10)    http://gnuwin32.sourceforge.net/packages/gsl.htm
 
 \subsection dep_gr_qtgui gr-qtgui: The QT-based Graphical User Interface
-\li qt	        (>= 4.4.0)   http://qt.nokia.com/downloads/
+\li qt4         (>= 4.4.0)   http://qt.nokia.com/downloads/
 \li qwt         (>= 5.2.0)   http://sourceforge.net/projects/qwt/
 \li pyqt        (>= 4.10.0)  http://www.riverbankcomputing.co.uk/software/pyqt/download
 \li pyqwt*      (>= 5.2.0)   http://pyqwt.sourceforge.net/download.html
