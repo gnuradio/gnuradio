@@ -704,7 +704,6 @@ namespace gr {
     }
   }
 
-#ifdef GR_ENABLE_LINUX_PERF
   float
   block::pc_branch_miss_rate()
   {
@@ -847,7 +846,6 @@ namespace gr {
         return 0;
     }
   }
-#endif
 
   void
   block::reset_perf_counters()
