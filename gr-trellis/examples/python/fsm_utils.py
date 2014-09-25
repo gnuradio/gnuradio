@@ -182,6 +182,7 @@ psk4=(2,[1, 0, \
          0, 1, \
          0, -1,\
         -1, 0])				# includes Gray mapping
+
 psk8=(2,[math.cos(2*math.pi*0/8), math.sin(2*math.pi*0/8),  \
          math.cos(2*math.pi*1/8), math.sin(2*math.pi*1/8),  \
          math.cos(2*math.pi*2/8), math.sin(2*math.pi*2/8),  \
@@ -190,6 +191,16 @@ psk8=(2,[math.cos(2*math.pi*0/8), math.sin(2*math.pi*0/8),  \
          math.cos(2*math.pi*5/8), math.sin(2*math.pi*5/8),  \
          math.cos(2*math.pi*6/8), math.sin(2*math.pi*6/8),  \
          math.cos(2*math.pi*7/8), math.sin(2*math.pi*7/8)])
+
+psk2x3 = (3,[-1,-1,-1, \
+             -1,-1,1, \
+             -1,1,-1, \
+             -1,1,1, \
+             1,-1,-1, \
+             1,-1,1, \
+             1,1,-1, \
+             1,1,1])
+
 
 orth2 = (2,[1, 0, \
             0, 1])

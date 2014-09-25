@@ -313,6 +313,54 @@ namespace gr {
       generate_TM();
     }
 
+
+    //######################################################################
+    //# Automatically generate an FSM specification describing the
+    //# the joint trellis of two serially concatenated fsms.
+    //######################################################################
+    fsm::fsm(const fsm &FSMo, const fsm &FSMi, bool serial)
+    {
+      if(serial==false || FSMo.O()!=FSMi.I()) {
+        d_I=0;
+        d_S=0;
+        d_O=0;
+        d_NS.resize(0);
+        d_OS.resize(0);
+        d_PS.resize(0);
+        d_PI.resize(0);
+        d_TMi.resize(0);
+        d_TMl.resize(0);
+        return;
+      }
+ 
+      d_I=FSMo.I();
+      d_S=FSMo.S()*FSMi.S();
+      d_O=FSMi.O();
+
+      d_NS.resize(d_I*d_S);
+      d_OS.resize(d_I*d_S);
+
+      for(int s=0;s<d_S;s++) {
+        for(int i=0;i<d_I;i++) {
+          int so=s/FSMi.S();
+          int si=s%FSMi.S();
+          int oo=FSMo.OS()[so * FSMo.I() + i];
+          int oi=FSMi.OS()[si * FSMi.I() + oo];
+          d_NS[s*d_I+i] = FSMo.NS()[so * FSMo.I() + i] * FSMo.S() + FSMi.NS()[si * FSMi.I() + oo];
+          d_OS[s*d_I+i] = oi;
+        }
+      }
+
+      generate_PS_PI();
+      generate_TM();
+    }
+
+
+
+
+
+
+
     //######################################################################
     //# Generate a new FSM representing n stages through the original FSM
     //# AKA radix-n FSM

@@ -176,8 +176,8 @@ private:
   int d_O;
   std::vector&lt;int&gt; d_NS;
   std::vector&lt;int&gt; d_OS;
-  std::vector&lt;int&gt; d_PS;
-  std::vector&lt;int&gt; d_PI;
+  std::vector&lt; std::vector&lt; int&gt; &gt; d_PS;
+  std::vector&lt; std::vector&lt; int&gt; &gt; d_PI;
   std::vector&lt;int&gt; d_TMi;
   std::vector&lt;int&gt; d_TMl;
   void generate_PS_PI ();
@@ -195,8 +195,8 @@ public:
   int O () const { return d_O; }
   const std::vector&lt;int&gt; &amp; NS () const { return d_NS; }
   const std::vector&lt;int&gt; &amp; OS () const { return d_OS; }
-  const std::vector&lt;int&gt; &amp; PS () const { return d_PS; }
-  const std::vector&lt;int&gt; &amp; PI () const { return d_PI; }
+  const std::vector&lt; std::vector&lt; int&gt; &gt; &amp; PS () const { return d_PS; }
+  const std::vector&lt; std::vector&lt; int&gt; &gt; &amp; PI () const { return d_PI; }
   const std::vector&lt;int&gt; &amp; TMi () const { return d_TMi; }
   const std::vector&lt;int&gt; &amp; TMl () const { return d_TMl; }
 };
