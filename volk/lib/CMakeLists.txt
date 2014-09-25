@@ -428,6 +428,12 @@ if(${CMAKE_VERSION} VERSION_GREATER "2.8.9")
 
 else(${CMAKE_VERSION} VERSION_GREATER "2.8.9")
   message(STATUS "Not enabling ASM support. CMake >= 2.8.10 required.")
+  foreach(machine_name ${available_machines})
+    string(REGEX MATCH "neon" NEON_MACHINE ${machine_name})
+    if( NEON_MACHINE STREQUAL "neon")
+      message(FATAL_ERROR "CMake >= 2.8.10 is required for ARM NEON support")
+    endif()
+  endforeach()
 endif(${CMAKE_VERSION} VERSION_GREATER "2.8.9")
 
 ########################################################################
