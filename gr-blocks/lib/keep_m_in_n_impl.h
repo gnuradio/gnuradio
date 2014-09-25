@@ -45,9 +45,9 @@ namespace gr {
 		       gr_vector_const_void_star &input_items,
 		       gr_vector_void_star &output_items);
 
-      void set_m(int m) { d_m = m; }
-      void set_n(int n) { d_n = n; }
-      void set_offset(int offset) { d_offset = offset; }
+      void set_m(int m);
+      void set_n(int n);
+      void set_offset(int offset);
     };
 
   } /* namespace blocks */
