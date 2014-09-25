@@ -59,19 +59,41 @@ namespace gr {
         std::string s = boost::str(boost::format("keep_m_in_n: m (%1%) <= n %2%") % d_m % d_n);
         throw std::runtime_error(s);
       }
-      if(d_offset < (d_n - d_m)) {
+      if(d_offset > (d_n - d_m)) {
         std::string s = boost::str(boost::format("keep_m_in_n: offset (%1%) <= n (%2%) - m (%3%)") \
                                    % d_offset % d_n % d_m);
         throw std::runtime_error(s);
       }
 
       set_output_multiple(m);
+      set_relative_rate(static_cast<double>(d_n)/static_cast<double>(d_m));
     }
 
     void
     keep_m_in_n_impl::forecast(int noutput_items, gr_vector_int &ninput_items_required)
     {
       ninput_items_required[0] = d_n*(noutput_items/d_m);
+    }
+
+    void
+    keep_m_in_n_impl::set_m(int m)
+    {
+      d_m = m;
+      set_output_multiple(m);
+      set_relative_rate(static_cast<double>(d_n)/static_cast<double>(d_m));
+    }
+
+    void
+    keep_m_in_n_impl::set_n(int n)
+    {
+      d_n = n;
+      set_relative_rate(static_cast<double>(d_n)/static_cast<double>(d_m));
+    }
+
+    void
+    keep_m_in_n_impl::set_offset(int offset)
+    {
+      d_offset = offset;
     }
 
     int
@@ -94,8 +116,8 @@ namespace gr {
 	memcpy( optr, iptr, d_m*d_itemsize );
       }
 
-      consume_each(d_n);
-      return d_m;
+      consume_each(blks*d_n);
+      return blks*d_m;
     }
 
   } /* namespace blocks */
