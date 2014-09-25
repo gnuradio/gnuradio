@@ -20,13 +20,14 @@ Serially Concatenated Convolutional Codes
 -----------------------------------------
 An SCCC can be defined by an outer and an inner FSM together with an interleaver
 and a modulation type. You can change the SNR and observe the estimated BER.
-In sccc.grc the decoding and metric calculation are combined; in sccc1.grc they are separate.
+In sccc.grc the decoding and metric calculation are combined. 
 
 Parallel Concatenated Convolutional Codes
 -----------------------------------------
 A PCCC can be defined by two FSMs together with an interleaver
 and a modulation type. You can change the SNR and observe the estimated BER.
-In pccc1.grc the decoding and metric calculation are separate.
+In pccc.grc the decoding and metric calculation are combined.
+
 
 
 Enjoy.
