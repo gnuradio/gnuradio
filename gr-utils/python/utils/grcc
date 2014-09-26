@@ -42,8 +42,17 @@ class grcc:
         self.fg.grc_file_path = os.path.abspath(grcfile)
         self.fg.validate()
 
-        if not self.fg.is_valid():
-            raise StandardError("Compilation error")
+        errors = self.fg.get_error_messages()
+        if errors:
+                print "WARNING: Errors present during compilation"
+                # Ugly block indent.
+                print ''.join(["\t%s\n" % line for line in ''.join(errors).split('\n')])
+
+        enabled = self.fg.get_enabled()
+        if not enabled:
+                print "ERROR: fg.get_enabled() reported False"
+                sys.exit(1)
+
 
         self.gen = self.platform.get_generator()(self.fg, out_dir)
         self.gen.write()
@@ -67,11 +76,7 @@ if __name__ == "__main__":
         sys.stderr.write("Please specify a GRC file name to compile.\n")
         sys.exit(1)
 
-    try:
-        g = grcc(args[0], options.directory+"/")
-    except:
-        sys.stderr.write("Error during file compilation.\n");
-        sys.exit(1)
+    g = grcc(args[0], options.directory+"/")
 
     if(options.execute):
         g.exec_program()
