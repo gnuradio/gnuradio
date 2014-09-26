@@ -160,6 +160,7 @@ namespace gr {
        *
        * \param FSMo  outer FSMS
        * \param FSMi  inner FSMS
+       * \param serial set it to true to distinguish from the previous constructor
        */
       fsm(const fsm &FSMo, const fsm &FSMi, bool serial);
 

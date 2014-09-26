@@ -20,9 +20,7 @@
 install(
     FILES
     interference_cancellation.grc
-    pccc1.grc
     pccc.grc
-    sccc1.grc
     sccc.grc
     readme.txt
     DESTINATION ${GR_PKG_TRELLIS_EXAMPLES_DIR}

@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='ASCII'?>
 <?grc format='1' created='3.7.6'?>
 <flow_graph>
-  <timestamp>Thu Sep 25 16:41:26 2014</timestamp>
+  <timestamp>Fri Sep 26 12:26:16 2014</timestamp>
   <block>
     <key>options</key>
     <param>
@@ -69,6 +69,33 @@
     <key>variable</key>
     <param>
       <key>id</key>
+      <value>constellation</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>value</key>
+      <value>-3,-3,-1,-3,1,-3,3,-3,   -3,-1,-1,-1,1,-1,3,-1,     -3,1,-1,1,1,1,3,1,     -3,3,-1,3,1,3,3,3        </value>
+    </param>
+    <param>
+      <key>alias</key>
+      <value></value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(592, 93)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>variable</key>
+    <param>
+      <key>id</key>
       <value>interleaver</value>
     </param>
     <param>
@@ -113,33 +140,6 @@
     <param>
       <key>_coordinate</key>
       <value>(760, 93)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>variable</key>
-    <param>
-      <key>id</key>
-      <value>constellation</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>value</key>
-      <value>-7,0,-5,0,-3,0,-1,0,1,0,3,0,5,0,7,0, 0,-7,0,-5,0,-3,0,-1,0,1,0,3,0,5,0,7</value>
-    </param>
-    <param>
-      <key>alias</key>
-      <value></value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(608, 93)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -239,7 +239,7 @@
     </param>
     <param>
       <key>value</key>
-      <value>10**(-EsN0_dB/10)  * Es   /2</value>
+      <value>10**(-EsN0_dB/10.0)  * Es   /2.0</value>
     </param>
     <param>
       <key>alias</key>
@@ -429,65 +429,6 @@
     <param>
       <key>_coordinate</key>
       <value>(951, 256)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>variable_slider</key>
-    <param>
-      <key>id</key>
-      <value>EsN0_dB</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>label</key>
-      <value>EsN0 (dB)</value>
-    </param>
-    <param>
-      <key>value</key>
-      <value>5</value>
-    </param>
-    <param>
-      <key>min</key>
-      <value>-10</value>
-    </param>
-    <param>
-      <key>max</key>
-      <value>10</value>
-    </param>
-    <param>
-      <key>num_steps</key>
-      <value>100</value>
-    </param>
-    <param>
-      <key>style</key>
-      <value>wx.SL_HORIZONTAL</value>
-    </param>
-    <param>
-      <key>converver</key>
-      <value>float_converter</value>
-    </param>
-    <param>
-      <key>grid_pos</key>
-      <value></value>
-    </param>
-    <param>
-      <key>notebook</key>
-      <value></value>
-    </param>
-    <param>
-      <key>alias</key>
-      <value></value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(248, 17)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -953,6 +894,65 @@
     <param>
       <key>_coordinate</key>
       <value>(512, 709)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>variable_slider</key>
+    <param>
+      <key>id</key>
+      <value>EsN0_dB</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>label</key>
+      <value>EsN0 (dB)</value>
+    </param>
+    <param>
+      <key>value</key>
+      <value>8</value>
+    </param>
+    <param>
+      <key>min</key>
+      <value>-10</value>
+    </param>
+    <param>
+      <key>max</key>
+      <value>10</value>
+    </param>
+    <param>
+      <key>num_steps</key>
+      <value>100</value>
+    </param>
+    <param>
+      <key>style</key>
+      <value>wx.SL_HORIZONTAL</value>
+    </param>
+    <param>
+      <key>converver</key>
+      <value>float_converter</value>
+    </param>
+    <param>
+      <key>grid_pos</key>
+      <value></value>
+    </param>
+    <param>
+      <key>notebook</key>
+      <value></value>
+    </param>
+    <param>
+      <key>alias</key>
+      <value></value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(248, 17)</value>
     </param>
     <param>
       <key>_rotation</key>

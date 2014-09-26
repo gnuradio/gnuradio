@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='ASCII'?>
 <?grc format='1' created='3.7.6'?>
 <flow_graph>
-  <timestamp>Thu Sep 25 16:37:20 2014</timestamp>
+  <timestamp>Fri Sep 26 12:23:34 2014</timestamp>
   <block>
     <key>options</key>
     <param>
@@ -77,7 +77,7 @@
     </param>
     <param>
       <key>value</key>
-      <value>10**(-EsN0_dB/10)  * Es   /2.0</value>
+      <value>10**(-EsN0_dB/10.0)  * Es   /2.0</value>
     </param>
     <param>
       <key>alias</key>
@@ -734,6 +734,101 @@
     </param>
   </block>
   <block>
+    <key>wxgui_numbersink2</key>
+    <param>
+      <key>id</key>
+      <value>wxgui_numbersink2_3_0_0</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>type</key>
+      <value>float</value>
+    </param>
+    <param>
+      <key>title</key>
+      <value>BER</value>
+    </param>
+    <param>
+      <key>units</key>
+      <value>BER</value>
+    </param>
+    <param>
+      <key>samp_rate</key>
+      <value>R</value>
+    </param>
+    <param>
+      <key>min_value</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>max_value</key>
+      <value>1.0</value>
+    </param>
+    <param>
+      <key>factor</key>
+      <value>1.0</value>
+    </param>
+    <param>
+      <key>decimal_places</key>
+      <value>6</value>
+    </param>
+    <param>
+      <key>ref_level</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>number_rate</key>
+      <value>15</value>
+    </param>
+    <param>
+      <key>peak_hold</key>
+      <value>False</value>
+    </param>
+    <param>
+      <key>average</key>
+      <value>False</value>
+    </param>
+    <param>
+      <key>avg_alpha</key>
+      <value>0.001</value>
+    </param>
+    <param>
+      <key>show_gauge</key>
+      <value>False</value>
+    </param>
+    <param>
+      <key>win_size</key>
+      <value></value>
+    </param>
+    <param>
+      <key>grid_pos</key>
+      <value></value>
+    </param>
+    <param>
+      <key>notebook</key>
+      <value></value>
+    </param>
+    <param>
+      <key>alias</key>
+      <value></value>
+    </param>
+    <param>
+      <key>affinity</key>
+      <value></value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(448, 685)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
     <key>trellis_sccc_decoder_combined_xx</key>
     <param>
       <key>id</key>
@@ -848,7 +943,7 @@
     </param>
     <param>
       <key>value</key>
-      <value>4</value>
+      <value>8</value>
     </param>
     <param>
       <key>min</key>
@@ -860,7 +955,7 @@
     </param>
     <param>
       <key>num_steps</key>
-      <value>100</value>
+      <value>1000</value>
     </param>
     <param>
       <key>style</key>
@@ -885,101 +980,6 @@
     <param>
       <key>_coordinate</key>
       <value>(229, 13)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>wxgui_numbersink2</key>
-    <param>
-      <key>id</key>
-      <value>wxgui_numbersink2_3_0_0</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>type</key>
-      <value>float</value>
-    </param>
-    <param>
-      <key>title</key>
-      <value>BER</value>
-    </param>
-    <param>
-      <key>units</key>
-      <value>BER</value>
-    </param>
-    <param>
-      <key>samp_rate</key>
-      <value>R</value>
-    </param>
-    <param>
-      <key>min_value</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>max_value</key>
-      <value>1.0</value>
-    </param>
-    <param>
-      <key>factor</key>
-      <value>1.0</value>
-    </param>
-    <param>
-      <key>decimal_places</key>
-      <value>6</value>
-    </param>
-    <param>
-      <key>ref_level</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>number_rate</key>
-      <value>15</value>
-    </param>
-    <param>
-      <key>peak_hold</key>
-      <value>False</value>
-    </param>
-    <param>
-      <key>average</key>
-      <value>False</value>
-    </param>
-    <param>
-      <key>avg_alpha</key>
-      <value>0.001</value>
-    </param>
-    <param>
-      <key>show_gauge</key>
-      <value>False</value>
-    </param>
-    <param>
-      <key>win_size</key>
-      <value></value>
-    </param>
-    <param>
-      <key>grid_pos</key>
-      <value></value>
-    </param>
-    <param>
-      <key>notebook</key>
-      <value></value>
-    </param>
-    <param>
-      <key>alias</key>
-      <value></value>
-    </param>
-    <param>
-      <key>affinity</key>
-      <value></value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(448, 685)</value>
     </param>
     <param>
       <key>_rotation</key>
