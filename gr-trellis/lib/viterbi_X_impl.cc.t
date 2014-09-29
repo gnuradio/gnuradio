@@ -55,6 +55,18 @@ namespace gr {
       set_output_multiple(d_K);
     }
 
+    void @IMPL_NAME@::set_FSM(fsm &FSM) 
+    { 
+      d_FSM = FSM; 
+      set_relative_rate(1.0 / ((double)d_FSM.O()));
+    }
+
+    void @IMPL_NAME@::set_K(int K) 
+    { 
+      d_K = K; 
+      set_output_multiple(d_K);
+    }
+
     @IMPL_NAME@::~@IMPL_NAME@()
     {
     }

@@ -60,8 +60,18 @@ namespace gr {
       set_output_multiple(d_K);
     }
 
-    @IMPL_NAME@::~@IMPL_NAME@()
+    void
+    @IMPL_NAME@::set_K(int K)
     {
+      d_K = K;
+      set_output_multiple(d_K);
+    }
+
+    void
+    @IMPL_NAME@::set_D(int D)
+    {
+      d_D = D;
+      set_relative_rate(1.0 / ((double)d_D));
     }
 
     void
@@ -69,6 +79,11 @@ namespace gr {
     {
       d_TABLE = table;
     }
+
+    @IMPL_NAME@::~@IMPL_NAME@()
+    {
+    }
+
 
     void
     @IMPL_NAME@::forecast(int noutput_items,

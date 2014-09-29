@@ -57,11 +57,12 @@ namespace gr {
       std::vector<@I_TYPE@> TABLE() const { return d_TABLE; }
       digital::trellis_metric_type_t TYPE() const { return d_TYPE; }
       //std::vector<int> trace() const { return d_trace; }
+
       void set_FSM(const fsm &FSM){ d_FSM = FSM; }
-      void set_K(int K){ d_K = K; }
+      void set_K(int K);
       void set_S0(int S0){ d_S0 = S0; }
       void set_SK(int SK){ d_SK = SK; }
-      void set_D(int D){ d_D = D; }
+      void set_D(int D);
       void set_TABLE(const std::vector<@I_TYPE@> &table);
 
       void forecast(int noutput_items,
