@@ -49,7 +49,7 @@ namespace gr {
 	d_SYMS_PER_BLOCK(SYMS_PER_BLOCK),
 	d_BYTES_PER_SYMBOL(BYTES_PER_SYMBOL)
     {
-      set_output_multiple(d_K*SYMS_PER_BLOCK);
+      set_output_multiple(d_K*d_SYMS_PER_BLOCK);
       //std::cout << d_K << "\n";
     }
 

@@ -86,7 +86,7 @@ def main():
     Kb=500*16  # packet size in bits (make it multiple of 16 so it can be packed in a short)
     bitspersymbol = int(round(math.log(f.I())/math.log(2))) # bits per FSM input symbol
     K=Kb/bitspersymbol # packet size in trellis steps
-    modulation = fsm_utils.psk8 # see fsm_utlis.py for available predefined modulations
+    modulation = fsm_utils.psk4 # see fsm_utlis.py for available predefined modulations
     dimensionality = modulation[0]
     constellation = modulation[1]
     if len(constellation)/dimensionality != f.O():
