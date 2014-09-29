@@ -44,11 +44,14 @@ namespace gr {
 		  int S0, int SK);
       ~@IMPL_NAME@();
 
-      fsm FSM() const { return d_FSM; }
-      int K() const { return d_K; }
-      int S0() const { return d_S0; }
-      int SK() const { return d_SK; }
-
+      fsm FSM()  { return d_FSM; }
+      int K()  { return d_K; }
+      int S0()  { return d_S0; }
+      int SK()  { return d_SK; }
+      void set_FSM(fsm &FSM) { d_FSM = FSM; }
+      void set_K(int K) { d_K = K; }
+      void set_S0(int S0) { d_S0 = S0; }
+      void set_SK(int SK) { d_SK = SK; }
       //std::vector<int> trace () const { return d_trace; }
 
       void forecast(int noutput_items,
