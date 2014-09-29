@@ -50,7 +50,7 @@ namespace gr {
       digital::trellis_metric_type_t TYPE() const { return d_TYPE; }
       std::vector<@I_TYPE@> TABLE() const { return d_TABLE; }
       void set_TABLE(const std::vector<@I_TYPE@> &table);
-      void set_TYPE(digital::trellis_metric_type_t TYPE);
+      void set_TYPE(const digital::trellis_metric_type_t type);
 
       void forecast(int noutput_items,
 		    gr_vector_int &ninput_items_required);

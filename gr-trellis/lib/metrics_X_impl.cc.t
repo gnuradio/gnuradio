@@ -65,6 +65,12 @@ namespace gr {
     }
 
     void
+    @IMPL_NAME@::set_TYPE(const digital::trellis_metric_type_t type)
+    {
+      d_TYPE = type;
+    }
+
+    void
     @IMPL_NAME@::forecast(int noutput_items, gr_vector_int &ninput_items_required)
     {
       int input_required = d_D * noutput_items / d_O;
