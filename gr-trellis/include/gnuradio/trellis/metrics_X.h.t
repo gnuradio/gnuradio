@@ -52,6 +52,7 @@ namespace gr {
       virtual void set_TABLE(const std::vector<@I_TYPE@> &table) = 0;
       virtual void set_O(int O) =0;
       virtual void set_D(int D) =0;
+      virtual void set_TYPE(digital::trellis_metric_type_t TYPE) = 0;
     };
 
 
