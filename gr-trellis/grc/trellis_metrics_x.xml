@@ -13,6 +13,8 @@
 	<import>from gnuradio import trellis, digital</import>
 	<make>trellis.metrics_$(type)($card, $dim, $table, $metric_type)</make>
 	<callback>set_TABLE($table)</callback>
+	<callback>set_O($card)</callback>
+	<callback>set_D($dim)</callback>
 	<param>
 		<name>Type</name>
 		<key>type</key>
