@@ -80,10 +80,15 @@ namespace gr {
       d_TABLE = table;
     }
 
+    void
+    @IMPL_NAME@::set_TYPE(digital::trellis_metric_type_t type)
+    {
+      d_TYPE = type;
+    }
+
     @IMPL_NAME@::~@IMPL_NAME@()
     {
     }
-
 
     void
     @IMPL_NAME@::forecast(int noutput_items,

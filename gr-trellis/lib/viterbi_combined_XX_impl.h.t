@@ -64,6 +64,7 @@ namespace gr {
       void set_SK(int SK){ d_SK = SK; }
       void set_D(int D);
       void set_TABLE(const std::vector<@I_TYPE@> &table);
+      void set_TYPE(digital::trellis_metric_type_t type);
 
       void forecast(int noutput_items,
 		    gr_vector_int &ninput_items_required);

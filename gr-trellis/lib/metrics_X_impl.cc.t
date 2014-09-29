@@ -68,6 +68,12 @@ namespace gr {
     }
 
     void
+    @IMPL_NAME@::set_TYPE(digital::trellis_metric_type_t type)
+    {
+      d_TYPE = type;
+    }
+
+    void
     @IMPL_NAME@::set_TABLE(const std::vector<@I_TYPE@> &table)
     {
       d_TABLE = table;
@@ -76,6 +82,7 @@ namespace gr {
     @IMPL_NAME@::~@IMPL_NAME@()
     {
     }
+
 
     void
     @IMPL_NAME@::forecast(int noutput_items, gr_vector_int &ninput_items_required)

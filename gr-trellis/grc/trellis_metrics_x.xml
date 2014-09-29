@@ -15,6 +15,7 @@
 	<callback>set_TABLE($table)</callback>
 	<callback>set_O($card)</callback>
 	<callback>set_D($dim)</callback>
+	<callback>set_TYPE($metric_type)</callback>
 	<param>
 		<name>Type</name>
 		<key>type</key>
