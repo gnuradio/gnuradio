@@ -40,8 +40,10 @@ namespace gr {
       @IMPL_NAME@(const fsm &FSM, int ST);
       ~@IMPL_NAME@();
 
-      fsm FSM() const { return d_FSM; }
-      int ST() const { return d_ST; }
+      fsm FSM() { return d_FSM;; }
+      int ST() {  return d_ST; }
+      void set_FSM(fsm &FSM) { d_FSM = FSM; }
+      void set_ST(int ST) { d_ST = ST; }
 
       int work(int noutput_items,
 	       gr_vector_const_void_star &input_items,
