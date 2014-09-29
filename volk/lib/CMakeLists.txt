@@ -70,13 +70,17 @@ endif()
 # _XOPEN_SOURCE or _POSIX_C_SOURCE; they leave this to the user.
 ########################################################################
 
-include(CheckFunctionExists)
-CHECK_FUNCTION_EXISTS(posix_memalign HAVE_POSIX_MEMALIGN)
-
-if(HAVE_POSIX_MEMALIGN)
-      add_definitions(-DHAVE_POSIX_MEMALIGN)
-endif(HAVE_POSIX_MEMALIGN)
-
+if (NOT DISABLE_POSIX_MEMALIGN)
+  include(CheckFunctionExists)
+  CHECK_FUNCTION_EXISTS(posix_memalign HAVE_POSIX_MEMALIGN)
+  
+  if(HAVE_POSIX_MEMALIGN)
+    add_definitions(-DHAVE_POSIX_MEMALIGN)
+  endif(HAVE_POSIX_MEMALIGN)
+else (NOT DISABLE_POSIX_MEMALIGN)
+  message(STATUS "Forced disable of posix_memalign")
+  add_definitions(-DDISABLE_POSIX_MEMALIGN)
+endif(NOT DISABLE_POSIX_MEMALIGN)
 ########################################################################
 # detect x86 flavor of CPU
 ########################################################################

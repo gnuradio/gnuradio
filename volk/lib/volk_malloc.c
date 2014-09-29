@@ -55,7 +55,9 @@
 
 // Otherwise, test if we are a POSIX or X/Open system
 // This only has a restriction that alignment be a power of 2.
-#if _POSIX_C_SOURCE >= 200112L || _XOPEN_SOURCE >= 600 || HAVE_POSIX_MEMALIGN
+// We allow the user to shut of the use of posix_memalign if needed
+#if !DISABLE_POSIX_MEMALIGN && \
+  (_POSIX_C_SOURCE >= 200112L || _XOPEN_SOURCE >= 600 || HAVE_POSIX_MEMALIGN)
 
 void *volk_malloc(size_t size, size_t alignment)
 {
