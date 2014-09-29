@@ -42,6 +42,7 @@ namespace gr {
 
       fsm FSM() { return d_FSM;; }
       int ST() {  return d_ST; }
+
       void set_FSM(fsm &FSM) { d_FSM = FSM; }
       void set_ST(int ST) { d_ST = ST; }
 

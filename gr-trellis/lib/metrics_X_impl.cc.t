@@ -54,14 +54,27 @@ namespace gr {
       set_output_multiple ((int)d_O);
     }
 
-    @IMPL_NAME@::~@IMPL_NAME@()
-    {
+    void @IMPL_NAME@::set_O(int O)
+    { 
+      d_O = O; 
+      set_relative_rate (1.0 * d_O / ((double) d_D));
+      set_output_multiple ((int)d_O);
+    }
+
+    void @IMPL_NAME@::set_D(int D)
+    { 
+      d_D = D; 
+      set_relative_rate (1.0 * d_O / ((double) d_D));
     }
 
     void
     @IMPL_NAME@::set_TABLE(const std::vector<@I_TYPE@> &table)
     {
       d_TABLE = table;
+    }
+
+    @IMPL_NAME@::~@IMPL_NAME@()
+    {
     }
 
     void

@@ -46,6 +46,7 @@ namespace gr {
 
       virtual fsm FSM() = 0;
       virtual int ST() = 0;
+
       virtual void set_FSM(fsm &FSM) =0;
       virtual void set_ST(int ST) =0;
     };
