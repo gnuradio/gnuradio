@@ -1,4 +1,6 @@
 *~
 *.pyc
 *.pyo
-build/
+build/*
+!build/deb
+!build/build.sh
