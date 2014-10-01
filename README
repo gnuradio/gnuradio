@@ -40,15 +40,19 @@ http://gnuradio.org/redmine/projects/gnuradio/wiki/BuildGuide
 For information about using Git, please see:
 http://gnuradio.org/redmine/projects/gnuradio/wiki/DevelopingWithGit
 
+## How to install
 
-## How to Build GNU Radio:
+Spire has modified the build process for GNU Radio to generate a custom debian package.
+This should be present in the Spire apt repository, if not or if you've made modifications, 
+you may need to build from source.
 
-Spire has modified the build process to generate a debian package customized
-for internal use.  To build:
+## How to Build GNU Radio from source:
 
 ```
 cd build
 ./build.sh
+sudo apt-get install gdebi-core
+sudo gdebi gnuradi-XXX.deb
 ```
 The original directions for compilation can be found in the README.md at 
 https://github.com/gnuradio/gnuradio.
