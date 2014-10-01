@@ -49,8 +49,20 @@ namespace gr {
 	d_SYMS_PER_BLOCK(SYMS_PER_BLOCK),
 	d_BYTES_PER_SYMBOL(BYTES_PER_SYMBOL)
     {
-      set_output_multiple(d_K*SYMS_PER_BLOCK);
+      set_output_multiple(d_K*d_SYMS_PER_BLOCK);
       //std::cout << d_K << "\n";
+    }
+
+    void permutation_impl::set_K(int K)
+    {
+      d_K=K;
+      set_output_multiple(d_K*d_SYMS_PER_BLOCK);
+    }
+
+    void permutation_impl::set_SYMS_PER_BLOCK(int spb)
+    {
+      d_SYMS_PER_BLOCK=spb;
+      set_output_multiple(d_K*d_SYMS_PER_BLOCK);
     }
 
     permutation_impl::~permutation_impl()

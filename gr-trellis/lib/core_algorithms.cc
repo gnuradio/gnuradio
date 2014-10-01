@@ -215,6 +215,19 @@ namespace gr {
     //---------------
 
     template void
+    viterbi_algorithm_combined<char,unsigned char>(int I, int S, int O,
+						    const std::vector<int> &NS,
+						    const std::vector<int> &OS,
+						    const std::vector< std::vector<int> > &PS,
+						    const std::vector< std::vector<int> > &PI,
+						    int K,
+						    int S0,int SK,
+						    int D,
+						    const std::vector<char> &TABLE,
+						    digital::trellis_metric_type_t TYPE,
+						    const char *in, unsigned char *out);
+
+    template void
     viterbi_algorithm_combined<short,unsigned char>(int I, int S, int O,
 						    const std::vector<int> &NS,
 						    const std::vector<int> &OS,
@@ -269,6 +282,19 @@ namespace gr {
     //---------------
 
     template void
+    viterbi_algorithm_combined<char,short>(int I, int S, int O,
+					    const std::vector<int> &NS,
+					    const std::vector<int> &OS,
+					    const std::vector< std::vector<int> > &PS,
+					    const std::vector< std::vector<int> > &PI,
+					    int K,
+					    int S0,int SK,
+					    int D,
+					    const std::vector<char> &TABLE,
+					    digital::trellis_metric_type_t TYPE,
+					    const char *in, short *out);
+
+    template void
     viterbi_algorithm_combined<short,short>(int I, int S, int O,
 					    const std::vector<int> &NS,
 					    const std::vector<int> &OS,
@@ -321,6 +347,19 @@ namespace gr {
 						 const gr_complex *in, short *out);
 
     //--------------
+
+    template void
+    viterbi_algorithm_combined<char,int>(int I, int S, int O,
+					  const std::vector<int> &NS,
+					  const std::vector<int> &OS,
+					  const std::vector< std::vector<int> > &PS,
+					  const std::vector< std::vector<int> > &PI,
+					  int K,
+					  int S0,int SK,
+					  int D,
+					  const std::vector<char> &TABLE,
+					  digital::trellis_metric_type_t TYPE,
+					  const char *in, int *out);
 
     template void
     viterbi_algorithm_combined<short,int>(int I, int S, int O,

@@ -31,3 +31,6 @@ except ImportError:
     dirname, filename = os.path.split(os.path.abspath(__file__))
     __path__.append(os.path.join(dirname, "..", "..", "swig"))
     from trellis_swig import *
+
+# import any pure python here
+import fsm_utils
