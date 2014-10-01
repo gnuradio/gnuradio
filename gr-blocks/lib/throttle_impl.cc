@@ -57,6 +57,14 @@ namespace gr {
     {
     }
 
+    bool
+    throttle_impl::start()
+    {
+      d_start = boost::get_system_time();
+      d_total_samples = 0;
+      return block::start();
+    }
+
     void
     throttle_impl::set_sample_rate(double rate)
     {
