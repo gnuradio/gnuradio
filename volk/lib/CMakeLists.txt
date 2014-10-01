@@ -421,8 +421,8 @@ if(${CMAKE_VERSION} VERSION_GREATER "2.8.9")
         message(STATUS "Adding source file: ${asm_file}")
       endforeach(asm_file)
     endif()
+    enable_language(ASM)
     set(CMAKE_ASM_FLAGS ${ARCH_ASM_FLAGS})
-    enable_language(ASM) # this must be after flags_init
     message(STATUS "asm flags: ${CMAKE_ASM_FLAGS}")
   endforeach(ARCH)
 
