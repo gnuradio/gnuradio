@@ -406,7 +406,6 @@ if(${CMAKE_VERSION} VERSION_GREATER "2.8.9")
   # if we find one that matches our current system architecture
   # set up the assembler flags and include the source files
   foreach(ARCH ${ASM_ARCHS_AVAILABLE})
-    message(STATUS "--==>> -CFLAGS1: ${FULL_C_FLAGS}")
     string(REGEX MATCH "${ARCH}" ASM_ARCH "${FULL_C_FLAGS}")
     if( ASM_ARCH STREQUAL "armv7" )
       message(STATUS "---- Adding ASM files") # we always use ATT syntax
@@ -423,6 +422,7 @@ if(${CMAKE_VERSION} VERSION_GREATER "2.8.9")
     endif()
     enable_language(ASM)
     set(CMAKE_ASM_FLAGS ${ARCH_ASM_FLAGS})
+    message(STATUS "c flags: ${FULL_C_FLAGS}")
     message(STATUS "asm flags: ${CMAKE_ASM_FLAGS}")
   endforeach(ARCH)
 
