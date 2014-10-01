@@ -84,6 +84,10 @@ class channelizer_ccf(gr.hier_block2):
     def taps(self):
         return self.pfb.taps()
 
+    def declare_sample_delay(self, delay):
+        self.pfb.declare_sample_delay(delay)
+
+
 class interpolator_ccf(gr.hier_block2):
     '''
     Make a Polyphase Filter interpolator (complex in, complex out, floating-point taps)
