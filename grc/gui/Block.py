@@ -25,7 +25,7 @@ from Constants import BORDER_PROXIMITY_SENSITIVITY
 from Constants import \
     BLOCK_LABEL_PADDING, \
     PORT_SEPARATION, LABEL_SEPARATION, \
-    PORT_BORDER_SEPARATION, POSSIBLE_ROTATIONS
+    PORT_BORDER_SEPARATION, POSSIBLE_ROTATIONS, BLOCK_FONT, PARAM_FONT
 import Actions
 import pygtk
 pygtk.require('2.0')
@@ -34,7 +34,7 @@ import pango
 
 BLOCK_MARKUP_TMPL="""\
 #set $foreground = $block.is_valid() and 'black' or 'red'
-<span foreground="$foreground" font_desc="Sans 8"><b>$encode($block.get_name())</b></span>"""
+<span foreground="$foreground" font_desc="$font"><b>$encode($block.get_name())</b></span>"""
 
 class Block(Element):
     """The graphical signal block."""
@@ -146,11 +146,13 @@ class Block(Element):
         #create the main layout
         layout = gtk.DrawingArea().create_pango_layout('')
         layouts.append(layout)
-        layout.set_markup(Utils.parse_template(BLOCK_MARKUP_TMPL, block=self))
+        layout.set_markup(Utils.parse_template(BLOCK_MARKUP_TMPL, block=self, font=BLOCK_FONT))
         self.label_width, self.label_height = layout.get_pixel_size()
         #display the params
         if self.is_dummy_block():
-            markups = ['<span foreground="black" font_desc="Sans 7.5"><b>key: </b>{}</span>'.format(self._key)]
+            markups = [
+                '<span foreground="black" font_desc="$font"><b>key: </b>{key}</span>'.format(font=PARAM_FONT, key=self._key)
+            ]
         else:
             markups = [param.get_markup() for param in self.get_params() if param.get_hide() not in ('all', 'part')]
         if markups:
@@ -224,8 +226,7 @@ class Block(Element):
             window.draw_drawable(gc, self.vertical_label, 0, 0, x+(self.H-self.label_height)/2, y+BLOCK_LABEL_PADDING, -1, -1)
         #draw ports
         for port in self.get_ports_gui():
-            if not port.get_hide():
-                port.draw(gc, window)
+            port.draw(gc, window)
 
     def what_is_selected(self, coor, coor_m=None):
         """

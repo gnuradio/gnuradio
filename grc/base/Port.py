@@ -38,6 +38,8 @@ class Port(Element):
         self._type = n['type']
         self._hide = n.find('hide') or ''
         self._dir = dir
+        self._type_evaluated = ''  # updated on rewrite()
+        self._hide_evaluated = False  # updated on rewrite()
 
     def validate(self):
         """
@@ -47,6 +49,13 @@ class Port(Element):
         Element.validate(self)
         if self.get_type() not in self.get_types():
             self.add_error_message('Type "%s" is not a possible type.'%self.get_type())
+
+    def rewrite(self):
+        """resolve dependencies in for type and hide"""
+        Element.rewrite(self)
+        self._type_evaluated = self.get_parent().resolve_dependencies(self._type)
+        hide = self.get_parent().resolve_dependencies(self._hide).strip().lower()
+        self._hide_evaluated = False if hide in ('false', 'off', '0') else bool(hide)
 
     def __str__(self):
         if self.is_source():
@@ -73,10 +82,8 @@ class Port(Element):
     def get_key(self): return self._key
     def is_sink(self): return self._dir == 'sink'
     def is_source(self): return self._dir == 'source'
-    def get_type(self): return self.get_parent().resolve_dependencies(self._type)
-    def get_hide(self):
-        value = self.get_parent().resolve_dependencies(self._hide).strip().lower()
-        return False if value in ('false', 'off', '0') else bool(value)
+    def get_type(self): return self._type_evaluated
+    def get_hide(self): return self._hide_evaluated
 
     def get_connections(self):
         """

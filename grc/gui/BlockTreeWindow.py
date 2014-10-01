@@ -58,10 +58,13 @@ class BlockTreeWindow(gtk.VBox):
 
         # search entry
         self.search_entry = gtk.Entry()
-        self.search_entry.set_icon_from_stock(gtk.ENTRY_ICON_PRIMARY, gtk.STOCK_FIND)
-        self.search_entry.set_icon_activatable(gtk.ENTRY_ICON_PRIMARY, False)
-        self.search_entry.set_icon_from_stock(gtk.ENTRY_ICON_SECONDARY, gtk.STOCK_CLOSE)
-        self.search_entry.connect('icon-release', self._handle_icon_event)
+        try:
+            self.search_entry.set_icon_from_stock(gtk.ENTRY_ICON_PRIMARY, gtk.STOCK_FIND)
+            self.search_entry.set_icon_activatable(gtk.ENTRY_ICON_PRIMARY, False)
+            self.search_entry.set_icon_from_stock(gtk.ENTRY_ICON_SECONDARY, gtk.STOCK_CLOSE)
+            self.search_entry.connect('icon-release', self._handle_icon_event)
+        except AttributeError:
+            pass  # no icon for old pygtk
         self.search_entry.connect('changed', self._update_search_tree)
         self.search_entry.connect('key-press-event', self._handle_search_key_press)
         self.pack_start(self.search_entry, False)
