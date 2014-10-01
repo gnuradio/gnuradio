@@ -101,7 +101,11 @@
 		</option>
 	</param>
 	<sink>
-		<name>in</name>
+		<name>in_i</name>
+		<type>float</type>
+	</sink>
+	<sink>
+		<name>in_o</name>
 		<type>float</type>
 	</sink>
 	<source>
