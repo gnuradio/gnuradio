@@ -28,12 +28,12 @@ import operator
 import numpy
 
 #from gnuradio import trellis
-#
-#try:
-    #import scipy.linalg
-#except ImportError:
-    #print "Error: Program requires scipy (see: www.scipy.org)."
-    #sys.exit(1)
+
+try:
+    import scipy.linalg
+except ImportError:
+    print "Error: Program requires scipy (see: www.scipy.org)."
+    sys.exit(1)
 
 
 

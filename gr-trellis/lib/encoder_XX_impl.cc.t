@@ -37,15 +37,24 @@ namespace gr {
     @BASE_NAME@::make(const fsm &FSM, int ST)
     {
       return gnuradio::get_initial_sptr
-	(new @IMPL_NAME@(FSM,ST));
+	(new @IMPL_NAME@(FSM,ST,0,false));
     }
 
-    @IMPL_NAME@::@IMPL_NAME@(const fsm &FSM, int ST)
+    @BASE_NAME@::sptr
+    @BASE_NAME@::make(const fsm &FSM, int ST, int K)
+    {
+      return gnuradio::get_initial_sptr
+	(new @IMPL_NAME@(FSM,ST,K,true));
+    }
+
+    @IMPL_NAME@::@IMPL_NAME@(const fsm &FSM, int ST, int K, bool B)
     : sync_block("@BASE_NAME@",
-		    io_signature::make(1, -1, sizeof(@I_TYPE@)),
-		    io_signature::make(1, -1, sizeof(@O_TYPE@))),
+		    io_signature::make(1, 1, sizeof(@I_TYPE@)),
+		    io_signature::make(1, 1, sizeof(@O_TYPE@))),
       d_FSM(FSM),
-      d_ST(ST)
+      d_ST(ST),
+      d_K(K),
+      d_B(B)      
     {
     }
 
@@ -59,24 +68,32 @@ namespace gr {
 		      gr_vector_void_star &output_items)
     {
       int ST_tmp = 0;
-      int nstreams = input_items.size();
 
-      for(int m=0;m<nstreams;m++) {
-	const @I_TYPE@ *in = (const @I_TYPE@*)input_items[m];
-	@O_TYPE@ *out = (@O_TYPE@ *) output_items[m];
-	ST_tmp = d_ST;
-
-	// per stream processing
-	for(int i = 0; i < noutput_items; i++) {
-	  out[i] = (@O_TYPE@)d_FSM.OS()[ST_tmp*d_FSM.I()+in[i]]; // direction of time?
-	  ST_tmp = (int)d_FSM.NS()[ST_tmp*d_FSM.I()+in[i]];
-	}
-	// end per stream processing
-      }
-      d_ST = ST_tmp;
-
-      return noutput_items;
-    }
+      if (d_B){ // blockwise operation
+        int nblocks = noutput_items /d_K;
+	const @I_TYPE@ *in = (const @I_TYPE@*)input_items[0];
+	@O_TYPE@ *out = (@O_TYPE@ *) output_items[0];
+        for(int n = 0; n < nblocks; n++) {
+          ST_tmp = d_ST;
+          for(int i = 0; i < d_K; i++) {
+            out[n*d_K+i] = (@O_TYPE@)d_FSM.OS()[ST_tmp*d_FSM.I()+in[n*d_K+i]];
+            ST_tmp = (int)d_FSM.NS()[ST_tmp*d_FSM.I()+in[n*d_K+i]];
+          }
+        }
+        return nblocks*d_K;
+      } // end blockwise operation
+      else{ // streaming operation
+        const @I_TYPE@ *in = (const @I_TYPE@*)input_items[0];
+        @O_TYPE@ *out = (@O_TYPE@ *) output_items[0];
+        ST_tmp = d_ST;
+        for(int i = 0; i < noutput_items; i++) {
+          out[i] = (@O_TYPE@)d_FSM.OS()[ST_tmp*d_FSM.I()+in[i]]; 
+          ST_tmp = (int)d_FSM.NS()[ST_tmp*d_FSM.I()+in[i]];
+        }
+        d_ST = ST_tmp;
+        return noutput_items;
+      } // end streaming operation  
+   }
 
   } /* namespace trellis */
 } /* namespace gr */

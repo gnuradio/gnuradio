@@ -44,11 +44,14 @@ namespace gr {
 
       static sptr make(const fsm &FSM, int ST);
 
+      static sptr make(const fsm &FSM, int ST, int K);
+
       virtual fsm FSM() = 0;
       virtual int ST() = 0;
-
+      virtual int K() = 0;
       virtual void set_FSM(fsm &FSM) =0;
       virtual void set_ST(int ST) =0;
+      virtual void set_K(int K) =0;
     };
 
   } /* namespace trellis */

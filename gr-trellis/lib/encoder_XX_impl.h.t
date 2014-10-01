@@ -35,17 +35,20 @@ namespace gr {
     private:
       fsm d_FSM;
       int d_ST;
+      int d_K;
+      bool d_B;
+ 
 
     public:
-      @IMPL_NAME@(const fsm &FSM, int ST);
+      @IMPL_NAME@(const fsm &FSM, int ST, int K, bool B);
       ~@IMPL_NAME@();
 
       fsm FSM() { return d_FSM;; }
       int ST() {  return d_ST; }
-
+      int K() {  return d_K; }
       void set_FSM(fsm &FSM) { d_FSM = FSM; }
       void set_ST(int ST) { d_ST = ST; }
-
+      void set_K(int K) { d_K = K; }
       int work(int noutput_items,
 	       gr_vector_const_void_star &input_items,
 	       gr_vector_void_star &output_items);
