@@ -1,5 +1,5 @@
 #set the debian package dependencies (parsed by our deb component maker)
-SET(PACKAGE_DEPENDS_CORE_RUNTIME "libfftw3-3")
+SET(PACKAGE_DEPENDS_RUNTIME_RUNTIME "libfftw3-3")
 SET(PACKAGE_DEPENDS_QTGUI_RUNTIME "libqtcore4" "libqwt5-qt4")
 SET(PACKAGE_DEPENDS_QTGUI_PYTHON "python-qt4" "python-qwt5-qt4")
 SET(PACKAGE_DEPENDS_GRC "python" "python-numpy" "python-gtk2" "python-lxml" "python-cheetah")
