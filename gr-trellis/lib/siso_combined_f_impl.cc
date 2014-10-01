@@ -48,6 +48,33 @@ namespace gr {
 				  SISO_TYPE, D, TABLE, TYPE));
     }
 
+    void siso_combined_f_impl::recalculate()
+    {
+      int multiple; 
+      if(d_POSTI && d_POSTO)
+        multiple = d_FSM.I()+d_FSM.O();
+      else if(d_POSTI)
+        multiple = d_FSM.I();
+      else if(d_POSTO)
+        multiple = d_FSM.O();
+      else
+        throw std::runtime_error ("Not both POSTI and POSTO can be false.");
+
+      set_output_multiple(d_K*multiple);
+
+      //what is the meaning of relative rate for a block with 2 inputs?
+      //set_relative_rate ( multiple / ((double) d_FSM.I()) );
+      // it turns out that the above gives problems in the scheduler, so
+      // let's try (assumption O>I)
+      //set_relative_rate ( multiple / ((double) d_FSM.O()) );
+      // I am tempted to automate like this
+      if(d_FSM.I() <= d_D)
+        set_relative_rate(multiple / ((double)d_D));
+      else
+        set_relative_rate(multiple / ((double)d_FSM.I()));
+    }
+    
+
     siso_combined_f_impl::siso_combined_f_impl(const fsm &FSM, int K,
 					       int S0, int SK,
 					       bool POSTI, bool POSTO,
@@ -64,30 +91,40 @@ namespace gr {
 	//d_alpha(FSM.S()*(K+1)),
 	//d_beta(FSM.S()*(K+1))
     {
-      int multiple;
-      if(d_POSTI && d_POSTO)
-        multiple = d_FSM.I()+d_FSM.O();
-      else if(d_POSTI)
-        multiple = d_FSM.I();
-      else if(d_POSTO)
-        multiple = d_FSM.O();
-      else
-        throw std::runtime_error ("Not both POSTI and POSTO can be false.");
-
-      //printf("constructor: Multiple = %d\n",multiple);
-      set_output_multiple(d_K*multiple);
-
-      //what is the meaning of relative rate for a block with 2 inputs?
-      //set_relative_rate ( multiple / ((double) d_FSM.I()) );
-      // it turns out that the above gives problems in the scheduler, so
-      // let's try (assumption O>I)
-      //set_relative_rate ( multiple / ((double) d_FSM.O()) );
-      // I am tempted to automate like this
-      if(d_FSM.I() <= d_D)
-	set_relative_rate(multiple / ((double)d_D));
-      else
-	set_relative_rate(multiple / ((double)d_FSM.I()));
+      recalculate();
     }
+
+    void siso_combined_f_impl::set_FSM(const fsm &FSM)
+    {
+      d_FSM=FSM;
+      recalculate();
+    }
+
+    void siso_combined_f_impl::set_K(int K)
+    {
+      d_K=K;
+      recalculate();
+    }
+
+    void siso_combined_f_impl::set_POSTI(bool POSTI)
+    {
+      d_POSTI = POSTI;
+      recalculate();
+    }
+
+    void siso_combined_f_impl::set_POSTO(bool POSTO)
+    {
+      d_POSTO = POSTO;
+      recalculate();
+    }
+
+    void siso_combined_f_impl::set_D(int D)
+    {
+      d_D=D;
+      recalculate();
+    }
+
+    
 
     siso_combined_f_impl::~siso_combined_f_impl()
     {

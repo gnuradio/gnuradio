@@ -74,18 +74,6 @@ namespace gr {
       set_relative_rate(1.0 / ((double)d_D));
     }
 
-    void
-    @IMPL_NAME@::set_TABLE(const std::vector<@I_TYPE@> &table)
-    {
-      d_TABLE = table;
-    }
-
-    void
-    @IMPL_NAME@::set_TYPE(digital::trellis_metric_type_t type)
-    {
-      d_TYPE = type;
-    }
-
     @IMPL_NAME@::~@IMPL_NAME@()
     {
     }

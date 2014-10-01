@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='ASCII'?>
 <flow_graph>
-  <timestamp>Fri Sep 26 18:40:25 2014</timestamp>
+  <timestamp>Wed Oct  1 11:04:18 2014</timestamp>
   <block>
     <key>options</key>
     <param>
@@ -64,7 +64,7 @@
     <key>variable</key>
     <param>
       <key>id</key>
-      <value>block</value>
+      <value>R</value>
     </param>
     <param>
       <key>_enabled</key>
@@ -72,11 +72,11 @@
     </param>
     <param>
       <key>value</key>
-      <value>1000</value>
+      <value>10e3</value>
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(764, 16)</value>
+      <value>(482, 17)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -87,7 +87,7 @@
     <key>variable</key>
     <param>
       <key>id</key>
-      <value>Es</value>
+      <value>prefix</value>
     </param>
     <param>
       <key>_enabled</key>
@@ -95,11 +95,11 @@
     </param>
     <param>
       <key>value</key>
-      <value>sum(numpy.square(constellation))/(len(constellation)/(1.0*dim))</value>
+      <value>"/home/anastas/gnuradio_trunk/"</value>
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(847, 134)</value>
+      <value>(590, 15)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -110,7 +110,7 @@
     <key>variable</key>
     <param>
       <key>id</key>
-      <value>noisevar</value>
+      <value>interleaver</value>
     </param>
     <param>
       <key>_enabled</key>
@@ -118,34 +118,11 @@
     </param>
     <param>
       <key>value</key>
-      <value>10**(-EsN0_dB/10.0)  * Es   /2.0</value>
+      <value>trellis.interleaver(block,666)</value>
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(368, 21)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>variable</key>
-    <param>
-      <key>id</key>
-      <value>dim</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>value</key>
-      <value>3</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(735, 181)</value>
+      <value>(360, 93)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -160,15 +137,15 @@
     </param>
     <param>
       <key>_enabled</key>
-      <value>True</value>
+      <value>False</value>
     </param>
     <param>
       <key>value</key>
-      <value>-1, -1, -1,    -1, -1, 1,     -1, 1, -1,    -1, 1, 1,            1, -1, -1,    1, -1, 1,     1, 1, -1,    1, 1, 1,</value>
+      <value>-7, -5, -3, -1, 1, 3, 5, 7</value>
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(585, 183)</value>
+      <value>(584, 93)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -206,15 +183,15 @@
     </param>
     <param>
       <key>_enabled</key>
-      <value>False</value>
+      <value>True</value>
     </param>
     <param>
       <key>value</key>
-      <value>-7, -5, -3, -1, 1, 3, 5, 7</value>
+      <value>-1, -1, -1,    -1, -1, 1,     -1, 1, -1,    -1, 1, 1,            1, -1, -1,    1, -1, 1,     1, 1, -1,    1, 1, 1,</value>
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(584, 93)</value>
+      <value>(585, 183)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -225,7 +202,7 @@
     <key>variable</key>
     <param>
       <key>id</key>
-      <value>interleaver</value>
+      <value>dim</value>
     </param>
     <param>
       <key>_enabled</key>
@@ -233,11 +210,11 @@
     </param>
     <param>
       <key>value</key>
-      <value>trellis.interleaver(block,666)</value>
+      <value>3</value>
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(360, 93)</value>
+      <value>(735, 181)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -248,7 +225,7 @@
     <key>variable</key>
     <param>
       <key>id</key>
-      <value>prefix</value>
+      <value>noisevar</value>
     </param>
     <param>
       <key>_enabled</key>
@@ -256,11 +233,11 @@
     </param>
     <param>
       <key>value</key>
-      <value>"/home/anastas/gnuradio_trunk/"</value>
+      <value>10**(-EsN0_dB/10.0)  * Es   /2.0</value>
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(590, 15)</value>
+      <value>(368, 21)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -271,7 +248,7 @@
     <key>variable</key>
     <param>
       <key>id</key>
-      <value>R</value>
+      <value>Es</value>
     </param>
     <param>
       <key>_enabled</key>
@@ -279,11 +256,34 @@
     </param>
     <param>
       <key>value</key>
-      <value>10e3</value>
+      <value>sum(numpy.square(constellation))/(len(constellation)/(1.0*dim))</value>
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(482, 17)</value>
+      <value>(847, 134)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>variable</key>
+    <param>
+      <key>id</key>
+      <value>block</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>value</key>
+      <value>1000</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(764, 16)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -754,97 +754,6 @@
     </param>
   </block>
   <block>
-    <key>trellis_sccc_decoder_combined_xx</key>
-    <param>
-      <key>id</key>
-      <value>trellis_sccc_decoder_combined_xx_0</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>type</key>
-      <value>f</value>
-    </param>
-    <param>
-      <key>out_type</key>
-      <value>b</value>
-    </param>
-    <param>
-      <key>o_fsm_args</key>
-      <value>prefix+"gr-trellis/examples/python/fsm_files/awgn1o2_4.fsm"</value>
-    </param>
-    <param>
-      <key>o_init_state</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>o_final_state</key>
-      <value>-1</value>
-    </param>
-    <param>
-      <key>i_fsm_args</key>
-      <value>prefix+"gr-trellis/examples/python/fsm_files/awgn2o3_4.fsm"</value>
-    </param>
-    <param>
-      <key>i_init_state</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>i_final_state</key>
-      <value>-1</value>
-    </param>
-    <param>
-      <key>interleaver</key>
-      <value>interleaver</value>
-    </param>
-    <param>
-      <key>block_size</key>
-      <value>block</value>
-    </param>
-    <param>
-      <key>iterations</key>
-      <value>5</value>
-    </param>
-    <param>
-      <key>dim</key>
-      <value>dim</value>
-    </param>
-    <param>
-      <key>table</key>
-      <value>constellation</value>
-    </param>
-    <param>
-      <key>metric_type</key>
-      <value>digital.TRELLIS_EUCLIDEAN</value>
-    </param>
-    <param>
-      <key>siso_type</key>
-      <value>trellis.TRELLIS_SUM_PRODUCT</value>
-    </param>
-    <param>
-      <key>scaling</key>
-      <value>1.0/noisevar</value>
-    </param>
-    <param>
-      <key>affinity</key>
-      <value></value>
-    </param>
-    <param>
-      <key>minoutbuf</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(317, 554)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
     <key>blks2_error_rate</key>
     <param>
       <key>id</key>
@@ -932,6 +841,97 @@
     <param>
       <key>_coordinate</key>
       <value>(229, 13)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>trellis_sccc_decoder_combined_xx</key>
+    <param>
+      <key>id</key>
+      <value>trellis_sccc_decoder_combined_xx_0</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>type</key>
+      <value>f</value>
+    </param>
+    <param>
+      <key>out_type</key>
+      <value>b</value>
+    </param>
+    <param>
+      <key>o_fsm_args</key>
+      <value>prefix+"gr-trellis/examples/python/fsm_files/awgn1o2_4.fsm"</value>
+    </param>
+    <param>
+      <key>o_init_state</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>o_final_state</key>
+      <value>-1</value>
+    </param>
+    <param>
+      <key>i_fsm_args</key>
+      <value>prefix+"gr-trellis/examples/python/fsm_files/awgn2o3_4.fsm"</value>
+    </param>
+    <param>
+      <key>i_init_state</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>i_final_state</key>
+      <value>-1</value>
+    </param>
+    <param>
+      <key>interleaver</key>
+      <value>interleaver</value>
+    </param>
+    <param>
+      <key>block_size</key>
+      <value>block</value>
+    </param>
+    <param>
+      <key>iterations</key>
+      <value>5</value>
+    </param>
+    <param>
+      <key>dim</key>
+      <value>dim</value>
+    </param>
+    <param>
+      <key>table</key>
+      <value>constellation</value>
+    </param>
+    <param>
+      <key>metric_type</key>
+      <value>digital.TRELLIS_EUCLIDEAN</value>
+    </param>
+    <param>
+      <key>siso_type</key>
+      <value>trellis.TRELLIS_SUM_PRODUCT</value>
+    </param>
+    <param>
+      <key>scaling</key>
+      <value>1.0/noisevar</value>
+    </param>
+    <param>
+      <key>affinity</key>
+      <value></value>
+    </param>
+    <param>
+      <key>minoutbuf</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(317, 554)</value>
     </param>
     <param>
       <key>_rotation</key>
