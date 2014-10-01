@@ -11,7 +11,7 @@
 	<category>Trellis Coding</category>
 	<import>from gnuradio import trellis</import>
 	<make>trellis.encoder_$(type)(trellis.fsm($fsm_args), $init_state)</make>
-	<callback>set_FSM($fsm_args)</callback>
+	<callback>set_FSM(trellis.fsm($fsm_args))</callback>
 	<callback>set_ST($init_state)</callback>
 	<param>
 		<name>Type</name>
