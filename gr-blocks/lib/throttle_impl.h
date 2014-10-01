@@ -41,6 +41,9 @@ namespace gr {
       throttle_impl(size_t itemsize, double samples_per_sec, bool ignore_tags=true);
       ~throttle_impl();
 
+      // Overloading gr::block::start to reset timer
+      bool start();
+
       void setup_rpc();
 
       void set_sample_rate(double rate);

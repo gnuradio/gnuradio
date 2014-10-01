@@ -36,7 +36,7 @@ namespace gr {
     class BLOCKS_API message_strobe_random_impl : public message_strobe_random
     {
     private:
-      boost::shared_ptr<boost::thread> d_thread;
+      boost::shared_ptr<gr::thread::thread> d_thread;
       bool d_finished;
       float d_mean_ms;
       float d_std_ms;
