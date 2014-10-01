@@ -86,7 +86,10 @@ class ActionHandler:
             false to let gtk handle the key action
         """
         # prevent key event stealing while the search box is active
-        if self.main_window.btwin.search_entry.has_focus(): return False
+        # .has_focus() only in newer versions 2.17+?
+        # .is_focus() seems to work, but exactly the same
+        if self.main_window.btwin.search_entry.flags() & gtk.HAS_FOCUS:
+            return False
         if not self.get_focus_flag(): return False
         return Actions.handle_key_press(event)
 
@@ -394,7 +397,8 @@ class ActionHandler:
             Actions.NOTHING_SELECT()
         elif action == Actions.TOGGLE_AUTO_HIDE_PORT_LABELS:
             action.save_to_preferences()
-            self.main_window.get_flow_graph().create_shapes()
+            for page in self.main_window.get_pages():
+                page.get_flow_graph().create_shapes()
         elif action == Actions.TOGGLE_SNAP_TO_GRID:
             action.save_to_preferences()
         ##################################################
