@@ -79,7 +79,7 @@ if (NOT DISABLE_POSIX_MEMALIGN)
   endif(HAVE_POSIX_MEMALIGN)
 else (NOT DISABLE_POSIX_MEMALIGN)
   message(STATUS "Forced disable of posix_memalign")
-  add_definitions(-DDISABLE_POSIX_MEMALIGN)
+  add_definitions(-DDISABLE_POSIX_MEMALIGN=1)
 endif(NOT DISABLE_POSIX_MEMALIGN)
 ########################################################################
 # detect x86 flavor of CPU
