@@ -89,9 +89,22 @@ def python_to_tag(tag_struct):
                 tag.srcid = tag_struct[3]
                 good = True
 
+        elif(len(tag_struct) == 3):
+            if(isinstance(tag_struct[0], (int,long))):
+                tag.offset = tag_struct[0]
+                good = True
+
+            if(isinstance(tag_struct[1], pmt.pmt_swig.swig_int_ptr)):
+                tag.key = tag_struct[1]
+                good = True
+
+            if(isinstance(tag_struct[2], pmt.pmt_swig.swig_int_ptr)):
+                tag.value = tag_struct[2]
+                good = True
+
+            tag.srcid = pmt.PMT_F
+
     if(good):
         return tag
     else:
         return None
-
-
