@@ -53,20 +53,20 @@
 namespace gr {
   namespace blocks {
 
-    file_source::sptr file_source::make(size_t itemsize, const char *filename, bool repeat)
+    file_source::sptr file_source::make(size_t itemsize, const char *filename, bool repeat, int offset, int readlen)
     {
       return gnuradio::get_initial_sptr
-	(new file_source_impl(itemsize, filename, repeat));
+	(new file_source_impl(itemsize, filename, repeat, offset, readlen));
     }
 
-    file_source_impl::file_source_impl(size_t itemsize, const char *filename, bool repeat)
+    file_source_impl::file_source_impl(size_t itemsize, const char *filename, bool repeat, int offset, int readlen)
       : sync_block("file_source",
 		      io_signature::make(0, 0, 0),
 		      io_signature::make(1, 1, itemsize)),
 	d_itemsize(itemsize), d_fp(0), d_new_fp(0), d_repeat(repeat),
-	d_updated(false)
+	d_updated(false), d_offset(offset), d_readlen(readlen)
     {
-      open(filename, repeat);
+      open(filename, repeat, offset, readlen);
       do_update();
     }
 
@@ -86,7 +86,7 @@ namespace gr {
 
 
     void
-    file_source_impl::open(const char *filename, bool repeat)
+    file_source_impl::open(const char *filename, bool repeat, int offset, int readlen)
     {
       // obtain exclusive access for duration of this function
       gr::thread::scoped_lock lock(fp_mutex);
@@ -110,8 +110,19 @@ namespace gr {
 	throw std::runtime_error("can't open file");
       }
 
-      d_updated = true;
       d_repeat = repeat;
+      d_updated = true;
+      d_bytectr = 0;
+      d_offset = offset;
+      d_readlen = readlen;
+      fprintf(stderr, "filename %s d_offset %zu d_readlen %zu itemsize %zu\n", filename, d_offset, d_readlen, d_itemsize);
+      if(d_offset) {
+	if (-1 == fseek((FILE*)d_new_fp, d_offset *d_itemsize, SEEK_SET)) {
+	  perror(filename);
+	  ::close(fd);	// don't leak file descriptor if fdopen fails
+	  throw std::runtime_error("can't seek to offset");
+	}
+      }
     }
 
     void
@@ -157,10 +168,25 @@ namespace gr {
 
       gr::thread::scoped_lock lock(fp_mutex); // hold for the rest of this function
       while(size) {
+	// FIXME figure out how many more bytes to read, so we don't overflow
 	i = fread(o, d_itemsize, size, (FILE*)d_fp);
 
 	size -= i;
 	o += i * d_itemsize;
+
+	d_bytectr += i;
+	if (d_readlen && (d_bytectr >= d_readlen)) {
+	  d_bytectr = 0;
+	  if(!d_repeat) {
+	    fclose ((FILE *) d_fp);
+	    break;
+	  }
+	  if(fseek ((FILE *) d_fp, d_offset, SEEK_SET) == -1) {
+	    fprintf(stderr, "[%s] fseek failed\n", __func__);
+	    exit(-1);
+	  }
+	  continue;
+	}
 
 	if(size == 0)		// done
 	  break;
@@ -174,7 +200,7 @@ namespace gr {
 	if(!d_repeat)
 	  break;
 
-	if(fseek ((FILE *) d_fp, 0, SEEK_SET) == -1) {
+	if(fseek ((FILE *) d_fp, d_offset, SEEK_SET) == -1) {
 	  fprintf(stderr, "[%s] fseek failed\n", __FILE__);
 	  exit(-1);
 	}
