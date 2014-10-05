@@ -81,6 +81,8 @@ namespace gr {
     bool
     file_source_impl::seek(long seek_point, int whence)
     {
+      if(d_fp == NULL)
+	throw std::runtime_error("seek with file not open");
       return fseek((FILE*)d_fp, seek_point *d_itemsize, whence) == 0;
     }
 
@@ -115,7 +117,7 @@ namespace gr {
       d_bytectr = 0;
       d_offset = offset;
       d_readlen = readlen;
-      if (-1 == file_source_impl::seek(d_offset, SEEK_SET)) {
+      if (-1 == fseek(d_new_fp, d_offset * d_itemsize, SEEK_SET)) {
 	perror(filename);
 	::close(fd);	// don't leak file descriptor if fdopen fails
 	throw std::runtime_error("can't seek to offset");
@@ -165,7 +167,9 @@ namespace gr {
 
       gr::thread::scoped_lock lock(fp_mutex); // hold for the rest of this function
       while(size) {
-	// FIXME figure out how many more bytes to read, so we don't overflow
+	if (d_readlen && (d_readlen - d_bytectr < size)) {
+	  size = d_readlen - d_bytectr;
+	}
 	i = fread(o, d_itemsize, size, (FILE*)d_fp);
 
 	size -= i;
