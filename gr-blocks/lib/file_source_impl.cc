@@ -179,8 +179,9 @@ namespace gr {
 	    break;
 	  }
 	  if(fseek ((FILE *) d_fp, d_offset, SEEK_SET) == -1) {
-	    fprintf(stderr, "[%s] fseek failed\n", __func__);
-	    exit(-1);
+	    perror("::work:seek()");
+	    fclose ((FILE *) d_fp);
+	    throw std::runtime_error("can't seek to offset");
 	  }
 	  continue;
 	}
@@ -198,8 +199,9 @@ namespace gr {
 	  break;
 
 	if(fseek ((FILE *) d_fp, d_offset, SEEK_SET) == -1) {
-	  fprintf(stderr, "[%s] fseek failed\n", __FILE__);
-	  exit(-1);
+	  perror("::work:seek()");
+	  fclose ((FILE *) d_fp);
+	  throw std::runtime_error("can't seek to offset");
 	}
       }
 
