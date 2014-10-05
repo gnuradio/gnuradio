@@ -115,13 +115,10 @@ namespace gr {
       d_bytectr = 0;
       d_offset = offset;
       d_readlen = readlen;
-      fprintf(stderr, "filename %s d_offset %zu d_readlen %zu itemsize %zu\n", filename, d_offset, d_readlen, d_itemsize);
-      if(d_offset) {
-	if (-1 == fseek((FILE*)d_new_fp, d_offset *d_itemsize, SEEK_SET)) {
-	  perror(filename);
-	  ::close(fd);	// don't leak file descriptor if fdopen fails
-	  throw std::runtime_error("can't seek to offset");
-	}
+      if (-1 == fseek((FILE*)d_new_fp, d_offset *d_itemsize, SEEK_SET)) {
+	perror(filename);
+	::close(fd);	// don't leak file descriptor if fdopen fails
+	throw std::runtime_error("can't seek to offset");
       }
     }
 
