@@ -115,7 +115,7 @@ namespace gr {
       d_bytectr = 0;
       d_offset = offset;
       d_readlen = readlen;
-      if (-1 == fseek((FILE*)d_new_fp, d_offset *d_itemsize, SEEK_SET)) {
+      if (-1 == file_source_impl::seek(d_offset, SEEK_SET)) {
 	perror(filename);
 	::close(fd);	// don't leak file descriptor if fdopen fails
 	throw std::runtime_error("can't seek to offset");
@@ -178,8 +178,8 @@ namespace gr {
 	    fclose ((FILE *) d_fp);
 	    break;
 	  }
-	  if(fseek ((FILE *) d_fp, d_offset, SEEK_SET) == -1) {
-	    perror("::work:seek()");
+	  if(-1 == file_source_impl::seek (d_offset, SEEK_SET)) {
+	    perror("file_source_impl::seek()");
 	    fclose ((FILE *) d_fp);
 	    throw std::runtime_error("can't seek to offset");
 	  }
@@ -198,8 +198,8 @@ namespace gr {
 	if(!d_repeat)
 	  break;
 
-	if(fseek ((FILE *) d_fp, d_offset, SEEK_SET) == -1) {
-	  perror("::work:seek()");
+	if(-1 == file_source_impl::seek (d_offset, SEEK_SET)) {
+	  perror("file_source_impl::seek()");
 	  fclose ((FILE *) d_fp);
 	  throw std::runtime_error("can't seek to offset");
 	}
