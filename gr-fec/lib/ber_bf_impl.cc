@@ -25,7 +25,6 @@
 #endif
 
 #include "ber_bf_impl.h"
-#include "ber_tools.h"
 #include <gnuradio/io_signature.h>
 #include <volk/volk.h>
 #include <math.h>
@@ -79,18 +78,11 @@ namespace gr {
           int items = ninput_items[0] <= ninput_items[1] ? ninput_items[0] : ninput_items[1];
 
           if(items > 0) {
-            /*
-            for(int i = 0; i < items; ++i) {
-              if(inbuffer0[i] != inbuffer1[i]) {
-                GR_LOG_INFO(d_logger, boost::format("%1%/%2%:   %3% versus %4%") \
-                            % i % items % inbuffer0[i] % inbuffer1[i]);
-              }
+            uint32_t ret;
+            for(int i = 0; i < items; i++) {
+              volk_32u_popcnt(&ret, static_cast<uint32_t>(inbuffer0[i]^inbuffer1[i]));
+              d_total_errors += ret;
             }
-            GR_LOG_INFO(d_logger, boost::format("%1% errors")           \
-                        % (compber(inbuffer0, inbuffer1, items)));
-            */
-
-            d_total_errors += compber(inbuffer0, inbuffer1, items);
             d_total += items;
           }
           consume_each(items);
