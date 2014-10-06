@@ -32,7 +32,7 @@ if(NOT CMAKE_BUILD_TYPE)
 endif(NOT CMAKE_BUILD_TYPE)
 set(CMAKE_BUILD_TYPE ${CMAKE_BUILD_TYPE} CACHE STRING "")
 
-list(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake/Modules)
+list(INSERT CMAKE_MODULE_PATH 0 ${CMAKE_SOURCE_DIR}/cmake/Modules)
 
 ########################################################################
 # Compiler specific setup
@@ -96,6 +96,26 @@ find_package(Gnuradio "3.7.2" REQUIRED)
 if(NOT CPPUNIT_FOUND)
     message(FATAL_ERROR "CppUnit required to compile howto")
 endif()
+
+########################################################################
+# On Apple only, set install name and use rpath correctly, if not already set
+########################################################################
+if(APPLE)
+	if(NOT CMAKE_INSTALL_NAME_DIR)
+		set(CMAKE_INSTALL_NAME_DIR
+			${CMAKE_INSTALL_PREFIX}/${GR_LIBRARY_DIR} CACHE
+			PATH "Library Install Name Destination Directory" FORCE)
+	endif(NOT CMAKE_INSTALL_NAME_DIR)
+	if(NOT CMAKE_INSTALL_RPATH)
+		set(cmakE_INSTALL_RPATH
+			${CMAKE_INSTALL_PREFIX}/${GR_LIBRARY_DIR} CACHE
+			PATH "Library Install RPath" FORCE)
+	endif(NOT CMAKE_INSTALL_RPATH)
+	if(NOT CMAKE_BUILD_WITH_INSTALL_RPATH)
+		set(CMAKE_BUILD_WITH_INSTALL_RPATH ON CACHE
+			BOOL "Do Build Using Library Install RPath" FORCE)
+	endif(NOT CMAKE_BUILD_WITH_INSTALL_RPATH)
+endif(APPLE)
 
 ########################################################################
 # Setup doxygen option
