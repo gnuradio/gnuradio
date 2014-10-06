@@ -37,19 +37,19 @@ namespace gr {
       FILE *d_new_fp;
       bool d_repeat;
       bool d_updated;
-      off_t d_offset;
-      off_t d_readlen;
-      off_t d_bytectr;
+      off_t d_item_offset;
+      off_t d_items_to_read;
+      off_t d_item_counter;
       boost::mutex fp_mutex;
 
       void do_update();
 
     public:
-      file_source_impl(size_t itemsize, const char *filename, bool repeat, int offset, int readlen);
+      file_source_impl(size_t itemsize, const char *filename, bool repeat, int item_offset, int items_to_read);
       ~file_source_impl();
 
       bool seek(long seek_point, int whence);
-      void open(const char *filename, bool repeat, int offset, int readlen);
+      void open(const char *filename, bool repeat, int item_offset, int items_to_read);
       void close();
 
       int work(int noutput_items,

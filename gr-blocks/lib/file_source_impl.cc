@@ -53,20 +53,20 @@
 namespace gr {
   namespace blocks {
 
-    file_source::sptr file_source::make(size_t itemsize, const char *filename, bool repeat, int offset, int readlen)
+    file_source::sptr file_source::make(size_t itemsize, const char *filename, bool repeat, int item_offset, int items_to_read)
     {
       return gnuradio::get_initial_sptr
-	(new file_source_impl(itemsize, filename, repeat, offset, readlen));
+	(new file_source_impl(itemsize, filename, repeat, item_offset, items_to_read));
     }
 
-    file_source_impl::file_source_impl(size_t itemsize, const char *filename, bool repeat, int offset, int readlen)
+    file_source_impl::file_source_impl(size_t itemsize, const char *filename, bool repeat, int item_offset, int items_to_read)
       : sync_block("file_source",
 		      io_signature::make(0, 0, 0),
 		      io_signature::make(1, 1, itemsize)),
 	d_itemsize(itemsize), d_fp(0), d_new_fp(0), d_repeat(repeat),
-	d_updated(false), d_offset(offset), d_readlen(readlen)
+	d_updated(false), d_item_offset(item_offset), d_items_to_read(items_to_read)
     {
-      open(filename, repeat, offset, readlen);
+      open(filename, repeat, item_offset, items_to_read);
       do_update();
     }
 
@@ -88,7 +88,7 @@ namespace gr {
 
 
     void
-    file_source_impl::open(const char *filename, bool repeat, int offset, int readlen)
+    file_source_impl::open(const char *filename, bool repeat, int item_offset, int items_to_read)
     {
       // obtain exclusive access for duration of this function
       gr::thread::scoped_lock lock(fp_mutex);
@@ -114,10 +114,10 @@ namespace gr {
 
       d_repeat = repeat;
       d_updated = true;
-      d_bytectr = 0;
-      d_offset = offset;
-      d_readlen = readlen;
-      if (-1 == fseek(d_new_fp, d_offset * d_itemsize, SEEK_SET)) {
+      d_item_counter = 0;
+      d_item_offset = item_offset;
+      d_items_to_read = items_to_read;
+      if (-1 == fseek(d_new_fp, d_item_offset * d_itemsize, SEEK_SET)) {
 	perror(filename);
 	::close(fd);	// don't leak file descriptor if fdopen fails
 	throw std::runtime_error("can't seek to offset");
@@ -167,22 +167,22 @@ namespace gr {
 
       gr::thread::scoped_lock lock(fp_mutex); // hold for the rest of this function
       while(size) {
-	if (d_readlen && (d_readlen - d_bytectr < size)) {
-	  size = d_readlen - d_bytectr;
+	if (d_items_to_read && (d_items_to_read - d_item_counter < size)) {
+	  size = d_items_to_read - d_item_counter;
 	}
 	i = fread(o, d_itemsize, size, (FILE*)d_fp);
 
 	size -= i;
 	o += i * d_itemsize;
 
-	d_bytectr += i;
-	if (d_readlen && (d_bytectr >= d_readlen)) {
-	  d_bytectr = 0;
+	d_item_counter += i;
+	if (d_items_to_read && (d_item_counter >= d_items_to_read)) {
+	  d_item_counter = 0;
 	  if(!d_repeat) {
 	    fclose ((FILE *) d_fp);
 	    break;
 	  }
-	  if(-1 == file_source_impl::seek (d_offset, SEEK_SET)) {
+	  if(-1 == file_source_impl::seek (d_item_offset, SEEK_SET)) {
 	    perror("file_source_impl::seek()");
 	    fclose ((FILE *) d_fp);
 	    throw std::runtime_error("can't seek to offset");
@@ -202,7 +202,7 @@ namespace gr {
 	if(!d_repeat)
 	  break;
 
-	if(-1 == file_source_impl::seek (d_offset, SEEK_SET)) {
+	if(-1 == file_source_impl::seek (d_item_offset, SEEK_SET)) {
 	  perror("file_source_impl::seek()");
 	  fclose ((FILE *) d_fp);
 	  throw std::runtime_error("can't seek to offset");
