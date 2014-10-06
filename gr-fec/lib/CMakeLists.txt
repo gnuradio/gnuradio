@@ -66,7 +66,6 @@ list(APPEND gnuradio_fec_sources
   repetition_encoder_impl.cc
   decode_ccsds_27_fb_impl.cc
   encode_ccsds_27_bb_impl.cc
-  ber_tools.cc
   ber_bf_impl.cc
   conv_bit_corr_bb_impl.cc
   puncture_bb_impl.cc
