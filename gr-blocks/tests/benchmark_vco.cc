@@ -33,8 +33,8 @@
 #endif
 
 #include <unistd.h>
-#include <gnuradio/blocks/vco.h>
-#include <gnuradio/blocks/fxpt_vco.h>
+#include <gnuradio/vco.h>
+#include <gnuradio/fxpt_vco.h>
 #include <string.h>
 
 #define ITERATIONS 5000000
