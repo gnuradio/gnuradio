@@ -221,7 +221,8 @@ namespace gr {
 
     /*!
      * \brief Tell the scheduler \p how_many_items of input stream \p
-     * which_input were consumed.
+     * which_input were consumed. 
+     * After this call, the input buffer must be considered invalid.
      */
     void consume(int which_input, int how_many_items);
 
