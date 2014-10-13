@@ -477,4 +477,21 @@ pmt::pmt_t a pmt::from_double(1.0);
 std::cout << "The PMT a contains " << a << std::endl;
 \endcode
 
+
+\section pmt_python Conversion between Python Objects and PMTs
+
+Although PMTs can be manipulated in Python using the Python versions
+of the C++ interfaces, there are some additional goodies that make it
+easier to work with PMTs in python. There are functions to automate
+the conversion between PMTs and Python types for booleans, strings,
+integers, longs, floats, complex numbers, dictionaries, lists, tuples
+and combinations thereof.
+
+Two functions capture most of this functionality:
+
+\code
+pmt.to_pmt    # Converts a python object to a PMT.
+pmt.to_python # Converts a PMT into a python object.
+\endcode
+
 */
