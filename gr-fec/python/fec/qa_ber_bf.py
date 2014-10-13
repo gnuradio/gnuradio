@@ -37,7 +37,7 @@ class test_ber_bf(gr_unittest.TestCase):
         # Cause a single bit error out of 8*N bits
         # using streaming mode
 
-        mode = 0
+        mode = False
         N = 10000
         data0 = numpy.random.randint(0, 256, N).tolist()
         data1 = copy.deepcopy(data0)
@@ -62,7 +62,7 @@ class test_ber_bf(gr_unittest.TestCase):
         # Cause a single bit error out of 8*N bits
         # using test mode
 
-        mode = 1
+        mode = True
         N = 1000
         data0 = numpy.random.randint(0, 256, N).tolist()
         data1 = copy.deepcopy(data0)
@@ -87,7 +87,7 @@ class test_ber_bf(gr_unittest.TestCase):
         # Cause 8 bit errors out of 8*N bits
         # using test mode
 
-        mode = 1
+        mode = True
         N = 1000
         data0 = numpy.random.randint(0, 256, N).tolist()
         data1 = copy.deepcopy(data0)
@@ -113,7 +113,7 @@ class test_ber_bf(gr_unittest.TestCase):
         # using test mode
         # Exit if BER < -2.0
 
-        mode = 1
+        mode = True
         N = 1000
         data0 = numpy.random.randint(0, 256, N).tolist()
         data1 = copy.deepcopy(data0)
