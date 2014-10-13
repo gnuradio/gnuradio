@@ -4,6 +4,11 @@
 #  OSS_INCLUDE_DIR  -  where to find soundcard.h, etc.
 #  OSS_FOUND        - True if Oss found.
 
+# OSS is not for APPLE or WINDOWS
+
+IF(APPLE OR WIN32)
+  RETURN()
+ENDIF()
 
 FIND_PATH(LINUX_OSS_INCLUDE_DIR "linux/soundcard.h"
   "/usr/include" "/usr/local/include"
