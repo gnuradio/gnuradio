@@ -56,6 +56,7 @@ namespace gr {
 
     void @IMPL_NAME@::set_O(int O)
     { 
+      gr::thread::scoped_lock guard(d_setlock);
       d_O = O; 
       set_relative_rate (1.0 * d_O / ((double) d_D));
       set_output_multiple ((int)d_O);
@@ -63,6 +64,7 @@ namespace gr {
 
     void @IMPL_NAME@::set_D(int D)
     { 
+      gr::thread::scoped_lock guard(d_setlock);
       d_D = D; 
       set_relative_rate (1.0 * d_O / ((double) d_D));
     }
@@ -70,12 +72,14 @@ namespace gr {
     void
     @IMPL_NAME@::set_TYPE(digital::trellis_metric_type_t type)
     {
+      gr::thread::scoped_lock guard(d_setlock);
       d_TYPE = type;
     }
 
     void
     @IMPL_NAME@::set_TABLE(const std::vector<@I_TYPE@> &table)
     {
+      gr::thread::scoped_lock guard(d_setlock);
       d_TABLE = table;
     }
 
@@ -99,6 +103,7 @@ namespace gr {
 			      gr_vector_const_void_star &input_items,
 			      gr_vector_void_star &output_items)
     {
+      gr::thread::scoped_lock guard(d_setlock);
       int nstreams = input_items.size();
 
       for(int m = 0; m < nstreams; m++) {

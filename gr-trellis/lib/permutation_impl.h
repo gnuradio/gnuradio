@@ -48,7 +48,7 @@ namespace gr {
       size_t BYTES_PER_SYMBOL() const { return d_BYTES_PER_SYMBOL; }
 
       void set_K(int K) ;
-      void set_TABLE (const std::vector<int> &table) {d_TABLE = table; }
+      void set_TABLE (const std::vector<int> &table);
       void set_SYMS_PER_BLOCK(int spb) ;
 
       int work(int noutput_items,

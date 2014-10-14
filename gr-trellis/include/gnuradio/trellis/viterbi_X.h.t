@@ -50,7 +50,7 @@ namespace gr {
       virtual int S0()  const = 0;
       virtual int SK()  const = 0;
 
-      virtual void set_FSM(fsm &FSM) =0;
+      virtual void set_FSM(const fsm &FSM) =0;
       virtual void set_K(int K) =0;
       virtual void set_S0(int S0) =0;
       virtual void set_SK(int SK) =0;

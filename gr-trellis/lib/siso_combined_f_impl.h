@@ -67,14 +67,14 @@ namespace gr {
 
       void set_FSM(const fsm &FSM);
       void set_K(int K);
-      void set_S0(int S0){ d_S0 = S0; }
-      void set_SK(int SK){ d_SK = SK; }
+      void set_S0(int S0);
+      void set_SK(int SK);
       void set_POSTI(bool POSTI);
       void set_POSTO(bool POSTO);
-      void set_SISO_TYPE(trellis::siso_type_t type) { d_SISO_TYPE = type; }
+      void set_SISO_TYPE(trellis::siso_type_t type);
       void set_D(int D);
-      void set_TABLE(const std::vector<float> &table){ d_TABLE = table; }
-      void set_TYPE(digital::trellis_metric_type_t type){ d_TYPE = type; }
+      void set_TABLE(const std::vector<float> &table);
+      void set_TYPE(digital::trellis_metric_type_t type);
 
       void forecast(int noutput_items,
 		    gr_vector_int &ninput_items_required);

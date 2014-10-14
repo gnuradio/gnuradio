@@ -69,33 +69,6 @@
     <key>variable</key>
     <param>
       <key>id</key>
-      <value>mod</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>value</key>
-      <value>fu.psk2x3</value>
-    </param>
-    <param>
-      <key>alias</key>
-      <value></value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(632, 101)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>variable</key>
-    <param>
-      <key>id</key>
       <value>prefix</value>
     </param>
     <param>
@@ -123,7 +96,7 @@
     <key>variable</key>
     <param>
       <key>id</key>
-      <value>R</value>
+      <value>mod</value>
     </param>
     <param>
       <key>_enabled</key>
@@ -131,7 +104,7 @@
     </param>
     <param>
       <key>value</key>
-      <value>10e3</value>
+      <value>fu.psk2x3</value>
     </param>
     <param>
       <key>alias</key>
@@ -139,7 +112,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(224, 93)</value>
+      <value>(632, 101)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -356,6 +329,33 @@
     <param>
       <key>_coordinate</key>
       <value>(720, 173)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>variable</key>
+    <param>
+      <key>id</key>
+      <value>R</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>value</key>
+      <value>100e3</value>
+    </param>
+    <param>
+      <key>alias</key>
+      <value></value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(224, 93)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -855,105 +855,6 @@
     </param>
   </block>
   <block>
-    <key>trellis_sccc_decoder_combined_xx</key>
-    <param>
-      <key>id</key>
-      <value>trellis_sccc_decoder_combined_xx_0</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>type</key>
-      <value>f</value>
-    </param>
-    <param>
-      <key>out_type</key>
-      <value>b</value>
-    </param>
-    <param>
-      <key>o_fsm_args</key>
-      <value>fsm_o</value>
-    </param>
-    <param>
-      <key>o_init_state</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>o_final_state</key>
-      <value>-1</value>
-    </param>
-    <param>
-      <key>i_fsm_args</key>
-      <value>fsm_i</value>
-    </param>
-    <param>
-      <key>i_init_state</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>i_final_state</key>
-      <value>-1</value>
-    </param>
-    <param>
-      <key>interleaver</key>
-      <value>interleaver</value>
-    </param>
-    <param>
-      <key>block_size</key>
-      <value>block</value>
-    </param>
-    <param>
-      <key>iterations</key>
-      <value>5</value>
-    </param>
-    <param>
-      <key>dim</key>
-      <value>dim</value>
-    </param>
-    <param>
-      <key>table</key>
-      <value>constellation</value>
-    </param>
-    <param>
-      <key>metric_type</key>
-      <value>digital.TRELLIS_EUCLIDEAN</value>
-    </param>
-    <param>
-      <key>siso_type</key>
-      <value>trellis.TRELLIS_SUM_PRODUCT</value>
-    </param>
-    <param>
-      <key>scaling</key>
-      <value>1.0/noisevar</value>
-    </param>
-    <param>
-      <key>alias</key>
-      <value></value>
-    </param>
-    <param>
-      <key>affinity</key>
-      <value></value>
-    </param>
-    <param>
-      <key>minoutbuf</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>maxoutbuf</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(400, 745)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
     <key>analog_noise_source_x</key>
     <param>
       <key>id</key>
@@ -1170,6 +1071,105 @@
     <param>
       <key>_coordinate</key>
       <value>(40, 204)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>trellis_sccc_decoder_combined_xx</key>
+    <param>
+      <key>id</key>
+      <value>trellis_sccc_decoder_combined_xx_0</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>type</key>
+      <value>f</value>
+    </param>
+    <param>
+      <key>out_type</key>
+      <value>b</value>
+    </param>
+    <param>
+      <key>o_fsm_args</key>
+      <value>fsm_o</value>
+    </param>
+    <param>
+      <key>o_init_state</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>o_final_state</key>
+      <value>-1</value>
+    </param>
+    <param>
+      <key>i_fsm_args</key>
+      <value>fsm_i</value>
+    </param>
+    <param>
+      <key>i_init_state</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>i_final_state</key>
+      <value>-1</value>
+    </param>
+    <param>
+      <key>interleaver</key>
+      <value>interleaver</value>
+    </param>
+    <param>
+      <key>block_size</key>
+      <value>block</value>
+    </param>
+    <param>
+      <key>iterations</key>
+      <value>5</value>
+    </param>
+    <param>
+      <key>dim</key>
+      <value>dim</value>
+    </param>
+    <param>
+      <key>table</key>
+      <value>constellation</value>
+    </param>
+    <param>
+      <key>metric_type</key>
+      <value>digital.TRELLIS_EUCLIDEAN</value>
+    </param>
+    <param>
+      <key>siso_type</key>
+      <value>trellis.TRELLIS_MIN_SUM</value>
+    </param>
+    <param>
+      <key>scaling</key>
+      <value>1.0/noisevar</value>
+    </param>
+    <param>
+      <key>alias</key>
+      <value></value>
+    </param>
+    <param>
+      <key>affinity</key>
+      <value></value>
+    </param>
+    <param>
+      <key>minoutbuf</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>maxoutbuf</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(400, 745)</value>
     </param>
     <param>
       <key>_rotation</key>

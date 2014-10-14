@@ -3,18 +3,54 @@
 <flow_graph>
   <timestamp>Wed Oct  1 11:04:18 2014</timestamp>
   <block>
-    <key>variable</key>
+    <key>options</key>
     <param>
       <key>id</key>
-      <value>fsm_i</value>
+      <value>turbo_equalization</value>
     </param>
     <param>
       <key>_enabled</key>
       <value>True</value>
     </param>
     <param>
-      <key>value</key>
-      <value>trellis.fsm(len(modulation[1]),len(channel))</value>
+      <key>title</key>
+      <value>Hard/Soft/Turbo Equalization</value>
+    </param>
+    <param>
+      <key>author</key>
+      <value>AA</value>
+    </param>
+    <param>
+      <key>description</key>
+      <value>gnuradio flow graph</value>
+    </param>
+    <param>
+      <key>window_size</key>
+      <value>2048, 3048</value>
+    </param>
+    <param>
+      <key>generate_options</key>
+      <value>wx_gui</value>
+    </param>
+    <param>
+      <key>category</key>
+      <value>Custom</value>
+    </param>
+    <param>
+      <key>run_options</key>
+      <value>prompt</value>
+    </param>
+    <param>
+      <key>run</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>max_nouts</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>realtime_scheduling</key>
+      <value></value>
     </param>
     <param>
       <key>alias</key>
@@ -22,7 +58,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(320, 293)</value>
+      <value>(10, 10)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -33,7 +69,7 @@
     <key>variable</key>
     <param>
       <key>id</key>
-      <value>prefix</value>
+      <value>fsm_o</value>
     </param>
     <param>
       <key>_enabled</key>
@@ -41,7 +77,7 @@
     </param>
     <param>
       <key>value</key>
-      <value>"@FSM_FILE_INSTALL_DIR@"</value>
+      <value>trellis.fsm(prefix+"/awgn1o2_4.fsm")</value>
     </param>
     <param>
       <key>alias</key>
@@ -49,7 +85,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(768, 21)</value>
+      <value>(344, 21)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -60,7 +96,7 @@
     <key>variable</key>
     <param>
       <key>id</key>
-      <value>tot_mod</value>
+      <value>block_b</value>
     </param>
     <param>
       <key>_enabled</key>
@@ -68,7 +104,7 @@
     </param>
     <param>
       <key>value</key>
-      <value>fu.make_isi_lookup(modulation,channel,False)</value>
+      <value>bpsym*1000</value>
     </param>
     <param>
       <key>alias</key>
@@ -76,169 +112,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(320, 381)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>variable</key>
-    <param>
-      <key>id</key>
-      <value>R</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>value</key>
-      <value>100e3</value>
-    </param>
-    <param>
-      <key>alias</key>
-      <value></value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(216, 109)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>variable</key>
-    <param>
-      <key>id</key>
-      <value>modulation</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>value</key>
-      <value>fu.pam4</value>
-    </param>
-    <param>
-      <key>alias</key>
-      <value></value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(320, 117)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>variable</key>
-    <param>
-      <key>id</key>
-      <value>channel</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>value</key>
-      <value>fu.c_channel</value>
-    </param>
-    <param>
-      <key>alias</key>
-      <value></value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(320, 205)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>variable</key>
-    <param>
-      <key>id</key>
-      <value>bpsym</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>value</key>
-      <value>int(round(math.log(fsm_o.I())/math.log(2)))</value>
-    </param>
-    <param>
-      <key>alias</key>
-      <value></value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(528, 29)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>variable</key>
-    <param>
-      <key>id</key>
-      <value>noisevar</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>value</key>
-      <value>10**(-EsN0_dB/10.0)  * Es   /2.0</value>
-    </param>
-    <param>
-      <key>alias</key>
-      <value></value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(1080, 181)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>variable</key>
-    <param>
-      <key>id</key>
-      <value>Es</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>value</key>
-      <value>numpy.mean((numpy.square(numpy.abs(tot_mod[1]))))</value>
-    </param>
-    <param>
-      <key>alias</key>
-      <value></value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(776, 181)</value>
+      <value>(216, 21)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -276,7 +150,7 @@
     <key>variable</key>
     <param>
       <key>id</key>
-      <value>fsm_o</value>
+      <value>Es</value>
     </param>
     <param>
       <key>_enabled</key>
@@ -284,7 +158,7 @@
     </param>
     <param>
       <key>value</key>
-      <value>trellis.fsm(prefix+"/awgn1o2_4.fsm")</value>
+      <value>numpy.mean((numpy.square(numpy.abs(tot_mod[1]))))</value>
     </param>
     <param>
       <key>alias</key>
@@ -292,7 +166,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(328, 29)</value>
+      <value>(776, 181)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -303,7 +177,7 @@
     <key>variable</key>
     <param>
       <key>id</key>
-      <value>block_b</value>
+      <value>noisevar</value>
     </param>
     <param>
       <key>_enabled</key>
@@ -311,7 +185,7 @@
     </param>
     <param>
       <key>value</key>
-      <value>bpsym*1000</value>
+      <value>10**(-EsN0_dB/10.0)  * Es   /2.0</value>
     </param>
     <param>
       <key>alias</key>
@@ -319,7 +193,196 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(216, 21)</value>
+      <value>(1080, 181)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>variable</key>
+    <param>
+      <key>id</key>
+      <value>bpsym</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>value</key>
+      <value>int(round(math.log(fsm_o.I())/math.log(2)))</value>
+    </param>
+    <param>
+      <key>alias</key>
+      <value></value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(528, 29)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>variable</key>
+    <param>
+      <key>id</key>
+      <value>channel</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>value</key>
+      <value>fu.c_channel</value>
+    </param>
+    <param>
+      <key>alias</key>
+      <value></value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(320, 205)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>variable</key>
+    <param>
+      <key>id</key>
+      <value>modulation</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>value</key>
+      <value>fu.pam4</value>
+    </param>
+    <param>
+      <key>alias</key>
+      <value></value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(320, 117)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>variable</key>
+    <param>
+      <key>id</key>
+      <value>R</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>value</key>
+      <value>100e3</value>
+    </param>
+    <param>
+      <key>alias</key>
+      <value></value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(216, 109)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>variable</key>
+    <param>
+      <key>id</key>
+      <value>tot_mod</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>value</key>
+      <value>fu.make_isi_lookup(modulation,channel,False)</value>
+    </param>
+    <param>
+      <key>alias</key>
+      <value></value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(320, 381)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>variable</key>
+    <param>
+      <key>id</key>
+      <value>prefix</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>value</key>
+      <value>"@FSM_FILE_INSTALL_DIR@"</value>
+    </param>
+    <param>
+      <key>alias</key>
+      <value></value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(768, 21)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>variable</key>
+    <param>
+      <key>id</key>
+      <value>fsm_i</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>value</key>
+      <value>trellis.fsm(len(modulation[1]),len(channel))</value>
+    </param>
+    <param>
+      <key>alias</key>
+      <value></value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(320, 293)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -877,6 +940,14 @@
     </param>
     <param>
       <key>init_state</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>blockwise</key>
+      <value>False</value>
+    </param>
+    <param>
+      <key>blocklength</key>
       <value>0</value>
     </param>
     <param>
@@ -2327,69 +2398,6 @@
     <param>
       <key>_coordinate</key>
       <value>(936, 129)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>options</key>
-    <param>
-      <key>id</key>
-      <value>turbo_equalization</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>title</key>
-      <value>Hard/Soft/Turbo Equalization</value>
-    </param>
-    <param>
-      <key>author</key>
-      <value>AA</value>
-    </param>
-    <param>
-      <key>description</key>
-      <value>gnuradio flow graph</value>
-    </param>
-    <param>
-      <key>window_size</key>
-      <value>2048, 3048</value>
-    </param>
-    <param>
-      <key>generate_options</key>
-      <value>wx_gui</value>
-    </param>
-    <param>
-      <key>category</key>
-      <value>Custom</value>
-    </param>
-    <param>
-      <key>run_options</key>
-      <value>prompt</value>
-    </param>
-    <param>
-      <key>run</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>max_nouts</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>realtime_scheduling</key>
-      <value></value>
-    </param>
-    <param>
-      <key>alias</key>
-      <value></value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(10, 10)</value>
     </param>
     <param>
       <key>_rotation</key>

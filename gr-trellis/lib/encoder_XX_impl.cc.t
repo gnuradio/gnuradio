@@ -58,6 +58,24 @@ namespace gr {
     {
     }
 
+    void @IMPL_NAME@::set_FSM(const fsm &FSM) 
+    { 
+      gr::thread::scoped_lock guard(d_setlock);
+      d_FSM = FSM; 
+    }
+
+    void @IMPL_NAME@::set_ST(int ST) 
+    { 
+      gr::thread::scoped_lock guard(d_setlock);
+      d_ST = ST; 
+    }
+
+    void @IMPL_NAME@::set_K(int K) 
+    { 
+      gr::thread::scoped_lock guard(d_setlock);
+      d_K = K; 
+    }
+
     @IMPL_NAME@::~@IMPL_NAME@()
     {
     }
@@ -67,6 +85,7 @@ namespace gr {
 		      gr_vector_const_void_star &input_items,
 		      gr_vector_void_star &output_items)
     {
+      gr::thread::scoped_lock guard(d_setlock);
       int ST_tmp = 0;
 
       if (d_B){ // blockwise operation

@@ -49,10 +49,10 @@ namespace gr {
       int S0()  const { return d_S0; }
       int SK()  const { return d_SK; }
 
-      void set_FSM(fsm &FSM);
+      void set_FSM(const fsm &FSM);
       void set_K(int K);
-      void set_S0(int S0) { d_S0 = S0; }
-      void set_SK(int SK) { d_SK = SK; }
+      void set_S0(int S0);
+      void set_SK(int SK);
       //std::vector<int> trace () const { return d_trace; }
 
       void forecast(int noutput_items,

@@ -55,12 +55,20 @@ namespace gr {
 
     void permutation_impl::set_K(int K)
     {
+      gr::thread::scoped_lock guard(d_setlock);
       d_K=K;
       set_output_multiple(d_K*d_SYMS_PER_BLOCK);
     }
 
+    void permutation_impl::set_TABLE (const std::vector<int> &table) 
+    {
+      gr::thread::scoped_lock guard(d_setlock);
+      d_TABLE = table; 
+    }
+
     void permutation_impl::set_SYMS_PER_BLOCK(int spb)
     {
+      gr::thread::scoped_lock guard(d_setlock);
       d_SYMS_PER_BLOCK=spb;
       set_output_multiple(d_K*d_SYMS_PER_BLOCK);
     }
@@ -74,6 +82,7 @@ namespace gr {
 			   gr_vector_const_void_star &input_items,
 			   gr_vector_void_star &output_items)
     {
+      gr::thread::scoped_lock guard(d_setlock);
       int nstreams = input_items.size();
 
       for(int m=0;m<nstreams;m++) {

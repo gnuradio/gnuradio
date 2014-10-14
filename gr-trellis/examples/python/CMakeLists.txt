@@ -35,9 +35,13 @@ install(
 
 install(
     FILES
+    fsm_files/awgn1o1_16rsc.fsm
+    fsm_files/awgn1o1_4rsc.fsm
     fsm_files/awgn1o2_128.fsm
     fsm_files/awgn1o2_16.fsm
+    fsm_files/awgn1o2_16rsc.fsm
     fsm_files/awgn1o2_4.fsm
+    fsm_files/awgn1o2_4rsc.fsm
     fsm_files/awgn1o2_8.fsm
     fsm_files/awgn2o3_16.fsm
     fsm_files/awgn2o3_16ungerboecka.fsm
