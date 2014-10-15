@@ -164,4 +164,4 @@ static inline void volk_32f_asin_32f_u_generic(float* bVector, const float* aVec
 }
 #endif /* LV_HAVE_GENERIC */
 
-#endif /* INCLUDED_volk_32f_asin_32f_a_H */
+#endif /* INCLUDED_volk_32f_asin_32f_u_H */
