@@ -1,12 +1,12 @@
 <?xml version='1.0' encoding='ASCII'?>
 <?grc format='1' created='3.7.6'?>
 <flow_graph>
-  <timestamp>Fri Sep 26 12:26:16 2014</timestamp>
+  <timestamp>Wed Oct  1 11:04:18 2014</timestamp>
   <block>
     <key>options</key>
     <param>
       <key>id</key>
-      <value>pccc</value>
+      <value>viterbi_equalization</value>
     </param>
     <param>
       <key>_enabled</key>
@@ -14,7 +14,7 @@
     </param>
     <param>
       <key>title</key>
-      <value>Parallel Concatenated Convolutional Code</value>
+      <value>Viterbi Equalization</value>
     </param>
     <param>
       <key>author</key>
@@ -69,7 +69,7 @@
     <key>variable</key>
     <param>
       <key>id</key>
-      <value>prefix</value>
+      <value>noisevar</value>
     </param>
     <param>
       <key>_enabled</key>
@@ -77,7 +77,7 @@
     </param>
     <param>
       <key>value</key>
-      <value>"@FSM_FILE_INSTALL_DIR@"</value>
+      <value>10**(-EsN0_dB/10.0)  * Es   /2.0</value>
     </param>
     <param>
       <key>alias</key>
@@ -85,7 +85,61 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(320, 21)</value>
+      <value>(872, 157)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>variable</key>
+    <param>
+      <key>id</key>
+      <value>bpsym</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>value</key>
+      <value>int(round(math.log(fsm.I())/math.log(2)))</value>
+    </param>
+    <param>
+      <key>alias</key>
+      <value></value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(528, 13)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>variable</key>
+    <param>
+      <key>id</key>
+      <value>channel</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>value</key>
+      <value>fu.c_channel</value>
+    </param>
+    <param>
+      <key>alias</key>
+      <value></value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(320, 85)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -112,7 +166,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(200, 101)</value>
+      <value>(216, 109)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -131,7 +185,7 @@
     </param>
     <param>
       <key>value</key>
-      <value>1000</value>
+      <value>bpsym*1000</value>
     </param>
     <param>
       <key>alias</key>
@@ -139,7 +193,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(200, 37)</value>
+      <value>(216, 21)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -150,7 +204,7 @@
     <key>variable</key>
     <param>
       <key>id</key>
-      <value>dim</value>
+      <value>fsm</value>
     </param>
     <param>
       <key>_enabled</key>
@@ -158,7 +212,7 @@
     </param>
     <param>
       <key>value</key>
-      <value>mod[0]</value>
+      <value>trellis.fsm(len(modulation[1]),len(channel))</value>
     </param>
     <param>
       <key>alias</key>
@@ -166,7 +220,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(688, 317)</value>
+      <value>(320, 157)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -177,7 +231,7 @@
     <key>variable</key>
     <param>
       <key>id</key>
-      <value>constellation</value>
+      <value>tot_mod</value>
     </param>
     <param>
       <key>_enabled</key>
@@ -185,7 +239,7 @@
     </param>
     <param>
       <key>value</key>
-      <value>mod[1]</value>
+      <value>fu.make_isi_lookup(modulation,channel,False)</value>
     </param>
     <param>
       <key>alias</key>
@@ -193,7 +247,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(528, 317)</value>
+      <value>(320, 229)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -204,15 +258,15 @@
     <key>variable</key>
     <param>
       <key>id</key>
-      <value>dim</value>
+      <value>modulation</value>
     </param>
     <param>
       <key>_enabled</key>
-      <value>False</value>
+      <value>True</value>
     </param>
     <param>
       <key>value</key>
-      <value>2</value>
+      <value>fu.pam4</value>
     </param>
     <param>
       <key>alias</key>
@@ -220,34 +274,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(688, 189)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>variable</key>
-    <param>
-      <key>id</key>
-      <value>constellation</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>False</value>
-    </param>
-    <param>
-      <key>value</key>
-      <value>-3,-3,-1,-3,1,-3,3,-3,   -3,-1,-1,-1,1,-1,3,-1,     -3,1,-1,1,1,1,3,1,     -3,3,-1,3,1,3,3,3        </value>
-    </param>
-    <param>
-      <key>alias</key>
-      <value></value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(528, 189)</value>
+      <value>(320, 21)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -266,7 +293,7 @@
     </param>
     <param>
       <key>value</key>
-      <value>sum(numpy.square(constellation))/(len(constellation)/(1.0*dim))</value>
+      <value>numpy.mean((numpy.square(numpy.abs(tot_mod[1]))))</value>
     </param>
     <param>
       <key>alias</key>
@@ -274,7 +301,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(776, 141)</value>
+      <value>(568, 157)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -282,18 +309,18 @@
     </param>
   </block>
   <block>
-    <key>variable</key>
+    <key>import</key>
     <param>
       <key>id</key>
-      <value>noisevar</value>
+      <value>import_0_0</value>
     </param>
     <param>
       <key>_enabled</key>
       <value>True</value>
     </param>
     <param>
-      <key>value</key>
-      <value>10**(-EsN0_dB/10.0)  * Es   /2.0</value>
+      <key>import</key>
+      <value>import gnuradio.trellis.fsm_utils as fu</value>
     </param>
     <param>
       <key>alias</key>
@@ -301,7 +328,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(1032, 149)</value>
+      <value>(24, 252)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -309,18 +336,18 @@
     </param>
   </block>
   <block>
-    <key>variable</key>
+    <key>import</key>
     <param>
       <key>id</key>
-      <value>interleaver</value>
+      <value>import_0</value>
     </param>
     <param>
       <key>_enabled</key>
       <value>True</value>
     </param>
     <param>
-      <key>value</key>
-      <value>trellis.interleaver(block,666)</value>
+      <key>import</key>
+      <value>import numpy</value>
     </param>
     <param>
       <key>alias</key>
@@ -328,7 +355,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(320, 213)</value>
+      <value>(16, 140)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -336,18 +363,18 @@
     </param>
   </block>
   <block>
-    <key>variable</key>
+    <key>import</key>
     <param>
       <key>id</key>
-      <value>fsm1</value>
+      <value>import_0_1</value>
     </param>
     <param>
       <key>_enabled</key>
       <value>True</value>
     </param>
     <param>
-      <key>value</key>
-      <value>trellis.fsm(prefix+"awgn1o2_4rsc.fsm")</value>
+      <key>import</key>
+      <value>import math</value>
     </param>
     <param>
       <key>alias</key>
@@ -355,7 +382,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(320, 85)</value>
+      <value>(24, 188)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -363,53 +390,46 @@
     </param>
   </block>
   <block>
-    <key>variable</key>
+    <key>blks2_error_rate</key>
     <param>
       <key>id</key>
-      <value>fsm2</value>
+      <value>blks2_error_rate_0</value>
     </param>
     <param>
       <key>_enabled</key>
       <value>True</value>
     </param>
     <param>
-      <key>value</key>
-      <value>trellis.fsm(prefix+"awgn1o1_4rsc.fsm")</value>
+      <key>type</key>
+      <value>'BER'</value>
+    </param>
+    <param>
+      <key>win_size</key>
+      <value>block*100</value>
+    </param>
+    <param>
+      <key>bits_per_symbol</key>
+      <value>1</value>
     </param>
     <param>
       <key>alias</key>
       <value></value>
     </param>
     <param>
-      <key>_coordinate</key>
-      <value>(320, 149)</value>
+      <key>affinity</key>
+      <value></value>
     </param>
     <param>
-      <key>_rotation</key>
+      <key>minoutbuf</key>
       <value>0</value>
     </param>
-  </block>
-  <block>
-    <key>variable</key>
     <param>
-      <key>id</key>
-      <value>mod</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>value</key>
-      <value>fu.psk2x3</value>
-    </param>
-    <param>
-      <key>alias</key>
-      <value></value>
+      <key>maxoutbuf</key>
+      <value>0</value>
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(576, 253)</value>
+      <value>(312, 1766)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -432,7 +452,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(104, 1220)</value>
+      <value>(80, 1724)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -455,7 +475,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(88, 1292)</value>
+      <value>(72, 1820)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -550,7 +570,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(680, 1205)</value>
+      <value>(728, 1709)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -558,69 +578,26 @@
     </param>
   </block>
   <block>
-    <key>blks2_error_rate</key>
+    <key>note</key>
     <param>
       <key>id</key>
-      <value>blks2_error_rate_0</value>
+      <value>note_0</value>
     </param>
     <param>
       <key>_enabled</key>
       <value>True</value>
     </param>
     <param>
-      <key>type</key>
-      <value>'SER'</value>
-    </param>
-    <param>
-      <key>win_size</key>
-      <value>block*100</value>
-    </param>
-    <param>
-      <key>bits_per_symbol</key>
-      <value>1</value>
+      <key>note</key>
+      <value>Substititue the metrics/Viterbi block with Viterbi_combo</value>
     </param>
     <param>
       <key>alias</key>
       <value></value>
     </param>
     <param>
-      <key>affinity</key>
-      <value></value>
-    </param>
-    <param>
-      <key>minoutbuf</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>maxoutbuf</key>
-      <value>0</value>
-    </param>
-    <param>
       <key>_coordinate</key>
-      <value>(304, 1256)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>virtual_sink</key>
-    <param>
-      <key>id</key>
-      <value>virtual_sink_0_1</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>stream_id</key>
-      <value>estimate</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(768, 940)</value>
+      <value>(704, 1468)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -643,7 +620,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(104, 940)</value>
+      <value>(40, 1236)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -666,7 +643,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(224, 412)</value>
+      <value>(232, 524)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -674,10 +651,10 @@
     </param>
   </block>
   <block>
-    <key>blocks_throttle</key>
+    <key>analog_random_source_x</key>
     <param>
       <key>id</key>
-      <value>blocks_throttle_0_0</value>
+      <value>analog_random_source_x_0</value>
     </param>
     <param>
       <key>_enabled</key>
@@ -688,15 +665,19 @@
       <value>byte</value>
     </param>
     <param>
-      <key>samples_per_second</key>
-      <value>R</value>
+      <key>min</key>
+      <value>0</value>
     </param>
     <param>
-      <key>vlen</key>
-      <value>1</value>
+      <key>max</key>
+      <value>2</value>
     </param>
     <param>
-      <key>ignoretag</key>
+      <key>num_samps</key>
+      <value>1007</value>
+    </param>
+    <param>
+      <key>repeat</key>
       <value>True</value>
     </param>
     <param>
@@ -717,7 +698,226 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(208, 492)</value>
+      <value>(16, 559)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>blocks_null_sink</key>
+    <param>
+      <key>id</key>
+      <value>blocks_null_sink_1</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>type</key>
+      <value>float</value>
+    </param>
+    <param>
+      <key>vlen</key>
+      <value>1</value>
+    </param>
+    <param>
+      <key>num_inputs</key>
+      <value>1</value>
+    </param>
+    <param>
+      <key>bus_conns</key>
+      <value>[[0,],]</value>
+    </param>
+    <param>
+      <key>alias</key>
+      <value></value>
+    </param>
+    <param>
+      <key>affinity</key>
+      <value></value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(800, 1008)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>virtual_sink</key>
+    <param>
+      <key>id</key>
+      <value>virtual_sink_0</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>stream_id</key>
+      <value>observation</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(608, 1076)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>fir_filter_xxx</key>
+    <param>
+      <key>id</key>
+      <value>fir_filter_xxx_0</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>type</key>
+      <value>fff</value>
+    </param>
+    <param>
+      <key>decim</key>
+      <value>1</value>
+    </param>
+    <param>
+      <key>taps</key>
+      <value>fu.c_channel</value>
+    </param>
+    <param>
+      <key>samp_delay</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>alias</key>
+      <value></value>
+    </param>
+    <param>
+      <key>affinity</key>
+      <value></value>
+    </param>
+    <param>
+      <key>minoutbuf</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>maxoutbuf</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(904, 613)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>blocks_add_xx</key>
+    <param>
+      <key>id</key>
+      <value>blocks_add_xx_1</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>type</key>
+      <value>float</value>
+    </param>
+    <param>
+      <key>num_inputs</key>
+      <value>2</value>
+    </param>
+    <param>
+      <key>vlen</key>
+      <value>1</value>
+    </param>
+    <param>
+      <key>alias</key>
+      <value></value>
+    </param>
+    <param>
+      <key>affinity</key>
+      <value></value>
+    </param>
+    <param>
+      <key>minoutbuf</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>maxoutbuf</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(688, 944)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>digital_chunks_to_symbols_xx</key>
+    <param>
+      <key>id</key>
+      <value>digital_chunks_to_symbols_xx_0</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>False</value>
+    </param>
+    <param>
+      <key>in_type</key>
+      <value>short</value>
+    </param>
+    <param>
+      <key>out_type</key>
+      <value>float</value>
+    </param>
+    <param>
+      <key>symbol_table</key>
+      <value>tot_mod[1]</value>
+    </param>
+    <param>
+      <key>dimension</key>
+      <value>tot_mod[0]</value>
+    </param>
+    <param>
+      <key>num_ports</key>
+      <value>1</value>
+    </param>
+    <param>
+      <key>alias</key>
+      <value></value>
+    </param>
+    <param>
+      <key>affinity</key>
+      <value></value>
+    </param>
+    <param>
+      <key>minoutbuf</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>maxoutbuf</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(944, 461)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -768,7 +968,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(656, 646)</value>
+      <value>(288, 958)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -776,139 +976,34 @@
     </param>
   </block>
   <block>
-    <key>blocks_add_xx</key>
+    <key>trellis_metrics_x</key>
     <param>
       <key>id</key>
-      <value>blocks_add_xx_1</value>
+      <value>trellis_metrics_x_0</value>
     </param>
     <param>
       <key>_enabled</key>
-      <value>True</value>
+      <value>False</value>
     </param>
     <param>
       <key>type</key>
-      <value>float</value>
+      <value>f</value>
     </param>
     <param>
-      <key>num_inputs</key>
-      <value>2</value>
+      <key>card</key>
+      <value>fsm.O()</value>
     </param>
     <param>
-      <key>vlen</key>
-      <value>1</value>
+      <key>dim</key>
+      <value>tot_mod[0]</value>
     </param>
     <param>
-      <key>alias</key>
-      <value></value>
+      <key>table</key>
+      <value>tot_mod[1]</value>
     </param>
     <param>
-      <key>affinity</key>
-      <value></value>
-    </param>
-    <param>
-      <key>minoutbuf</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>maxoutbuf</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(880, 552)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>virtual_sink</key>
-    <param>
-      <key>id</key>
-      <value>virtual_sink_0</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>stream_id</key>
-      <value>observation</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(896, 676)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>import</key>
-    <param>
-      <key>id</key>
-      <value>import_0_0</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>import</key>
-      <value>import gnuradio.trellis.fsm_utils as fu</value>
-    </param>
-    <param>
-      <key>alias</key>
-      <value></value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(48, 132)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>trellis_pccc_encoder_xx</key>
-    <param>
-      <key>id</key>
-      <value>trellis_pccc_encoder_xx_0</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>type</key>
-      <value>bb</value>
-    </param>
-    <param>
-      <key>o_fsm_args</key>
-      <value>fsm1</value>
-    </param>
-    <param>
-      <key>o_init_state</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>i_fsm_args</key>
-      <value>fsm2</value>
-    </param>
-    <param>
-      <key>i_init_state</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>interleaver_args</key>
-      <value>interleaver</value>
-    </param>
-    <param>
-      <key>bl</key>
-      <value>block</value>
+      <key>metric_type</key>
+      <value>digital.TRELLIS_EUCLIDEAN</value>
     </param>
     <param>
       <key>alias</key>
@@ -928,117 +1023,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(400, 457)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>digital_chunks_to_symbols_xx</key>
-    <param>
-      <key>id</key>
-      <value>digital_chunks_to_symbols_xx_0</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>in_type</key>
-      <value>byte</value>
-    </param>
-    <param>
-      <key>out_type</key>
-      <value>float</value>
-    </param>
-    <param>
-      <key>symbol_table</key>
-      <value>constellation</value>
-    </param>
-    <param>
-      <key>dimension</key>
-      <value>dim</value>
-    </param>
-    <param>
-      <key>num_ports</key>
-      <value>1</value>
-    </param>
-    <param>
-      <key>alias</key>
-      <value></value>
-    </param>
-    <param>
-      <key>affinity</key>
-      <value></value>
-    </param>
-    <param>
-      <key>minoutbuf</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>maxoutbuf</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(632, 485)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>analog_random_source_x</key>
-    <param>
-      <key>id</key>
-      <value>analog_random_source_x_0_0</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>type</key>
-      <value>byte</value>
-    </param>
-    <param>
-      <key>min</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>max</key>
-      <value>2</value>
-    </param>
-    <param>
-      <key>num_samps</key>
-      <value>block</value>
-    </param>
-    <param>
-      <key>repeat</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>alias</key>
-      <value></value>
-    </param>
-    <param>
-      <key>affinity</key>
-      <value></value>
-    </param>
-    <param>
-      <key>minoutbuf</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>maxoutbuf</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(8, 471)</value>
+      <value>(272, 1271)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -1057,11 +1042,11 @@
     </param>
     <param>
       <key>label</key>
-      <value>EsN0 (dB)</value>
+      <value>Es/N0 (dB)</value>
     </param>
     <param>
       <key>value</key>
-      <value>2</value>
+      <value>20.0</value>
     </param>
     <param>
       <key>min</key>
@@ -1069,7 +1054,7 @@
     </param>
     <param>
       <key>max</key>
-      <value>20</value>
+      <value>30</value>
     </param>
     <param>
       <key>num_steps</key>
@@ -1097,7 +1082,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(896, 129)</value>
+      <value>(728, 105)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -1105,10 +1090,10 @@
     </param>
   </block>
   <block>
-    <key>trellis_pccc_decoder_combined_xx</key>
+    <key>blocks_throttle</key>
     <param>
       <key>id</key>
-      <value>trellis_pccc_decoder_combined_xx_0</value>
+      <value>blocks_throttle_0</value>
     </param>
     <param>
       <key>_enabled</key>
@@ -1116,67 +1101,19 @@
     </param>
     <param>
       <key>type</key>
-      <value>f</value>
+      <value>byte</value>
     </param>
     <param>
-      <key>out_type</key>
-      <value>b</value>
+      <key>samples_per_second</key>
+      <value>R</value>
     </param>
     <param>
-      <key>o_fsm_args</key>
-      <value>fsm1</value>
+      <key>vlen</key>
+      <value>1</value>
     </param>
     <param>
-      <key>o_init_state</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>o_final_state</key>
-      <value>-1</value>
-    </param>
-    <param>
-      <key>i_fsm_args</key>
-      <value>fsm2</value>
-    </param>
-    <param>
-      <key>i_init_state</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>i_final_state</key>
-      <value>-1</value>
-    </param>
-    <param>
-      <key>interleaver</key>
-      <value>interleaver</value>
-    </param>
-    <param>
-      <key>block_size</key>
-      <value>block</value>
-    </param>
-    <param>
-      <key>iterations</key>
-      <value>10</value>
-    </param>
-    <param>
-      <key>dim</key>
-      <value>dim</value>
-    </param>
-    <param>
-      <key>table</key>
-      <value>constellation</value>
-    </param>
-    <param>
-      <key>metric_type</key>
-      <value>digital.TRELLIS_EUCLIDEAN</value>
-    </param>
-    <param>
-      <key>siso_type</key>
-      <value>trellis.TRELLIS_MIN_SUM</value>
-    </param>
-    <param>
-      <key>scaling</key>
-      <value>0.5/noisevar</value>
+      <key>ignoretag</key>
+      <value>True</value>
     </param>
     <param>
       <key>alias</key>
@@ -1196,19 +1133,342 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(400, 849)</value>
+      <value>(240, 580)</value>
     </param>
     <param>
       <key>_rotation</key>
       <value>0</value>
     </param>
   </block>
-  <connection>
-    <source_block_id>digital_chunks_to_symbols_xx_0</source_block_id>
-    <sink_block_id>blocks_add_xx_1</sink_block_id>
-    <source_key>0</source_key>
-    <sink_key>0</sink_key>
-  </connection>
+  <block>
+    <key>digital_chunks_to_symbols_xx</key>
+    <param>
+      <key>id</key>
+      <value>digital_chunks_to_symbols_xx_0_0</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>in_type</key>
+      <value>byte</value>
+    </param>
+    <param>
+      <key>out_type</key>
+      <value>float</value>
+    </param>
+    <param>
+      <key>symbol_table</key>
+      <value>modulation[1]</value>
+    </param>
+    <param>
+      <key>dimension</key>
+      <value>modulation[0]</value>
+    </param>
+    <param>
+      <key>num_ports</key>
+      <value>1</value>
+    </param>
+    <param>
+      <key>alias</key>
+      <value></value>
+    </param>
+    <param>
+      <key>affinity</key>
+      <value></value>
+    </param>
+    <param>
+      <key>minoutbuf</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>maxoutbuf</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(672, 613)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>virtual_sink</key>
+    <param>
+      <key>id</key>
+      <value>virtual_sink_0_1</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>stream_id</key>
+      <value>estimate</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(944, 1436)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>trellis_viterbi_x</key>
+    <param>
+      <key>id</key>
+      <value>trellis_viterbi_x_0</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>False</value>
+    </param>
+    <param>
+      <key>type</key>
+      <value>b</value>
+    </param>
+    <param>
+      <key>fsm_args</key>
+      <value>fsm</value>
+    </param>
+    <param>
+      <key>block_size</key>
+      <value>block/bpsym</value>
+    </param>
+    <param>
+      <key>init_state</key>
+      <value>-1</value>
+    </param>
+    <param>
+      <key>final_state</key>
+      <value>-1</value>
+    </param>
+    <param>
+      <key>alias</key>
+      <value></value>
+    </param>
+    <param>
+      <key>affinity</key>
+      <value></value>
+    </param>
+    <param>
+      <key>minoutbuf</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>maxoutbuf</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(480, 1271)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>trellis_viterbi_combined_xx</key>
+    <param>
+      <key>id</key>
+      <value>trellis_viterbi_combined_xx_0</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>type</key>
+      <value>f</value>
+    </param>
+    <param>
+      <key>out_type</key>
+      <value>b</value>
+    </param>
+    <param>
+      <key>fsm_args</key>
+      <value>fsm</value>
+    </param>
+    <param>
+      <key>block_size</key>
+      <value>block/bpsym</value>
+    </param>
+    <param>
+      <key>init_state</key>
+      <value>-1</value>
+    </param>
+    <param>
+      <key>final_state</key>
+      <value>-1</value>
+    </param>
+    <param>
+      <key>dim</key>
+      <value>tot_mod[0]</value>
+    </param>
+    <param>
+      <key>table</key>
+      <value>tot_mod[1]</value>
+    </param>
+    <param>
+      <key>metric_type</key>
+      <value>digital.TRELLIS_EUCLIDEAN</value>
+    </param>
+    <param>
+      <key>alias</key>
+      <value></value>
+    </param>
+    <param>
+      <key>affinity</key>
+      <value></value>
+    </param>
+    <param>
+      <key>minoutbuf</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>maxoutbuf</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(352, 1410)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>blocks_unpack_k_bits_bb</key>
+    <param>
+      <key>id</key>
+      <value>blocks_unpack_k_bits_bb_0</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>k</key>
+      <value>bpsym</value>
+    </param>
+    <param>
+      <key>alias</key>
+      <value></value>
+    </param>
+    <param>
+      <key>affinity</key>
+      <value></value>
+    </param>
+    <param>
+      <key>minoutbuf</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>maxoutbuf</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(728, 1364)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>blocks_pack_k_bits_bb</key>
+    <param>
+      <key>id</key>
+      <value>blocks_pack_k_bits_bb_0</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>k</key>
+      <value>bpsym</value>
+    </param>
+    <param>
+      <key>alias</key>
+      <value></value>
+    </param>
+    <param>
+      <key>affinity</key>
+      <value></value>
+    </param>
+    <param>
+      <key>minoutbuf</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>maxoutbuf</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(456, 572)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>trellis_encoder_xx</key>
+    <param>
+      <key>id</key>
+      <value>trellis_encoder_xx_0</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>False</value>
+    </param>
+    <param>
+      <key>type</key>
+      <value>bs</value>
+    </param>
+    <param>
+      <key>fsm_args</key>
+      <value>fsm</value>
+    </param>
+    <param>
+      <key>init_state</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>alias</key>
+      <value></value>
+    </param>
+    <param>
+      <key>affinity</key>
+      <value></value>
+    </param>
+    <param>
+      <key>minoutbuf</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>maxoutbuf</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(672, 461)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
   <connection>
     <source_block_id>blks2_error_rate_0</source_block_id>
     <sink_block_id>wxgui_numbersink2_3_0_0</sink_block_id>
@@ -1228,44 +1488,32 @@
     <sink_key>1</sink_key>
   </connection>
   <connection>
-    <source_block_id>blocks_add_xx_1</source_block_id>
-    <sink_block_id>virtual_sink_0</sink_block_id>
+    <source_block_id>virtual_source_0</source_block_id>
+    <sink_block_id>trellis_metrics_x_0</sink_block_id>
     <source_key>0</source_key>
     <sink_key>0</sink_key>
   </connection>
   <connection>
-    <source_block_id>trellis_pccc_decoder_combined_xx_0</source_block_id>
-    <sink_block_id>virtual_sink_0_1</sink_block_id>
+    <source_block_id>trellis_metrics_x_0</source_block_id>
+    <sink_block_id>trellis_viterbi_x_0</sink_block_id>
     <source_key>0</source_key>
     <sink_key>0</sink_key>
   </connection>
   <connection>
     <source_block_id>virtual_source_0</source_block_id>
-    <sink_block_id>trellis_pccc_decoder_combined_xx_0</sink_block_id>
+    <sink_block_id>trellis_viterbi_combined_xx_0</sink_block_id>
     <source_key>0</source_key>
     <sink_key>0</sink_key>
   </connection>
   <connection>
-    <source_block_id>trellis_pccc_encoder_xx_0</source_block_id>
-    <sink_block_id>digital_chunks_to_symbols_xx_0</sink_block_id>
-    <source_key>0</source_key>
-    <sink_key>0</sink_key>
-  </connection>
-  <connection>
-    <source_block_id>blocks_throttle_0_0</source_block_id>
-    <sink_block_id>trellis_pccc_encoder_xx_0</sink_block_id>
-    <source_key>0</source_key>
-    <sink_key>0</sink_key>
-  </connection>
-  <connection>
-    <source_block_id>analog_random_source_x_0_0</source_block_id>
-    <sink_block_id>blocks_throttle_0_0</sink_block_id>
-    <source_key>0</source_key>
-    <sink_key>0</sink_key>
-  </connection>
-  <connection>
-    <source_block_id>analog_random_source_x_0_0</source_block_id>
+    <source_block_id>analog_random_source_x_0</source_block_id>
     <sink_block_id>virtual_sink_0_0</sink_block_id>
+    <source_key>0</source_key>
+    <sink_key>0</sink_key>
+  </connection>
+  <connection>
+    <source_block_id>analog_random_source_x_0</source_block_id>
+    <sink_block_id>blocks_throttle_0</sink_block_id>
     <source_key>0</source_key>
     <sink_key>0</sink_key>
   </connection>
@@ -1274,5 +1522,77 @@
     <sink_block_id>blocks_add_xx_1</sink_block_id>
     <source_key>0</source_key>
     <sink_key>1</sink_key>
+  </connection>
+  <connection>
+    <source_block_id>blocks_add_xx_1</source_block_id>
+    <sink_block_id>blocks_null_sink_1</sink_block_id>
+    <source_key>0</source_key>
+    <sink_key>0</sink_key>
+  </connection>
+  <connection>
+    <source_block_id>blocks_add_xx_1</source_block_id>
+    <sink_block_id>virtual_sink_0</sink_block_id>
+    <source_key>0</source_key>
+    <sink_key>0</sink_key>
+  </connection>
+  <connection>
+    <source_block_id>digital_chunks_to_symbols_xx_0_0</source_block_id>
+    <sink_block_id>fir_filter_xxx_0</sink_block_id>
+    <source_key>0</source_key>
+    <sink_key>0</sink_key>
+  </connection>
+  <connection>
+    <source_block_id>fir_filter_xxx_0</source_block_id>
+    <sink_block_id>blocks_add_xx_1</sink_block_id>
+    <source_key>0</source_key>
+    <sink_key>0</sink_key>
+  </connection>
+  <connection>
+    <source_block_id>digital_chunks_to_symbols_xx_0</source_block_id>
+    <sink_block_id>blocks_add_xx_1</sink_block_id>
+    <source_key>0</source_key>
+    <sink_key>0</sink_key>
+  </connection>
+  <connection>
+    <source_block_id>trellis_encoder_xx_0</source_block_id>
+    <sink_block_id>digital_chunks_to_symbols_xx_0</sink_block_id>
+    <source_key>0</source_key>
+    <sink_key>0</sink_key>
+  </connection>
+  <connection>
+    <source_block_id>blocks_throttle_0</source_block_id>
+    <sink_block_id>blocks_pack_k_bits_bb_0</sink_block_id>
+    <source_key>0</source_key>
+    <sink_key>0</sink_key>
+  </connection>
+  <connection>
+    <source_block_id>blocks_pack_k_bits_bb_0</source_block_id>
+    <sink_block_id>digital_chunks_to_symbols_xx_0_0</sink_block_id>
+    <source_key>0</source_key>
+    <sink_key>0</sink_key>
+  </connection>
+  <connection>
+    <source_block_id>blocks_unpack_k_bits_bb_0</source_block_id>
+    <sink_block_id>virtual_sink_0_1</sink_block_id>
+    <source_key>0</source_key>
+    <sink_key>0</sink_key>
+  </connection>
+  <connection>
+    <source_block_id>trellis_viterbi_x_0</source_block_id>
+    <sink_block_id>blocks_unpack_k_bits_bb_0</sink_block_id>
+    <source_key>0</source_key>
+    <sink_key>0</sink_key>
+  </connection>
+  <connection>
+    <source_block_id>trellis_viterbi_combined_xx_0</source_block_id>
+    <sink_block_id>blocks_unpack_k_bits_bb_0</sink_block_id>
+    <source_key>0</source_key>
+    <sink_key>0</sink_key>
+  </connection>
+  <connection>
+    <source_block_id>blocks_pack_k_bits_bb_0</source_block_id>
+    <sink_block_id>trellis_encoder_xx_0</sink_block_id>
+    <source_key>0</source_key>
+    <sink_key>0</sink_key>
   </connection>
 </flow_graph>
