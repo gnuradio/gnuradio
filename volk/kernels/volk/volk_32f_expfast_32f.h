@@ -1,7 +1,6 @@
 #include <stdio.h>
 #include <math.h>
 #include <inttypes.h>
-#include <immintrin.h>
 
 #define Mln2 0.6931471805f
 #define A 8388608.0f
@@ -18,7 +17,7 @@
   \brief Computes fast exp (max 7% error) of input vector and stores results in output vector
   \param bVector The vector where results will be stored
   \param aVector The input vector of floats
-  \param num_points Number of points for which log is to be computed
+  \param num_points Number of points for which exp is to be computed
 */
 static inline void volk_32f_expfast_32f_a_avx(float* bVector, const float* aVector, unsigned int num_points){
 
@@ -57,7 +56,7 @@ static inline void volk_32f_expfast_32f_a_avx(float* bVector, const float* aVect
   \brief Computes fast exp (max 7% error) of input vector and stores results in output vector
   \param bVector The vector where results will be stored
   \param aVector The input vector of floats
-  \param num_points Number of points for which log is to be computed
+  \param num_points Number of points for which exp is to be computed
 */
 static inline void volk_32f_expfast_32f_a_sse4_1(float* bVector, const float* aVector, unsigned int num_points){
 
@@ -96,7 +95,7 @@ static inline void volk_32f_expfast_32f_a_sse4_1(float* bVector, const float* aV
   \brief Computes fast exp (max 7% error) of input vector and stores results in output vector
   \param bVector The vector where results will be stored
   \param aVector The input vector of floats
-  \param num_points Number of points for which log is to be computed
+  \param num_points Number of points for which exp is to be computed
 */
 static inline void volk_32f_expfast_32f_a_generic(float* bVector, const float* aVector, unsigned int num_points){    
     float* bPtr = bVector;
@@ -121,7 +120,7 @@ static inline void volk_32f_expfast_32f_a_generic(float* bVector, const float* a
   \brief Computes fast exp (max 7% error) of input vector and stores results in output vector
   \param bVector The vector where results will be stored
   \param aVector The input vector of floats
-  \param num_points Number of points for which log is to be computed
+  \param num_points Number of points for which exp is to be computed
 */
 static inline void volk_32f_expfast_32f_u_avx(float* bVector, const float* aVector, unsigned int num_points){
 
