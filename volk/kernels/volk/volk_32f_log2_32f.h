@@ -1,3 +1,25 @@
+/* -*- c++ -*- */
+/*
+ * Copyright 2014 Free Software Foundation, Inc.
+ *
+ * This file is part of GNU Radio
+ *
+ * GNU Radio is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3, or (at your option)
+ * any later version.
+ *
+ * GNU Radio is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with GNU Radio; see the file COPYING.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street,
+ * Boston, MA 02110-1301, USA.
+ */
+
 /*
  * This kernel was adapted from Jose Fonseca's Fast SSE2 log implementation
  * http://jrfonseca.blogspot.in/2008/09/fast-sse2-pow-tables-or-polynomials.htm
@@ -9,11 +31,11 @@
  * distribute, sub license, and/or sell copies of the Software, and to
  * permit persons to whom the Software is furnished to do so, subject to
  * the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice (including the
  * next paragraph) shall be included in all copies or substantial portions
  * of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT.
@@ -52,7 +74,7 @@
   \param aVector The input vector of floats
   \param num_points Number of points for which log is to be computed
 */
-static inline void volk_32f_log2_32f_generic(float* bVector, const float* aVector, unsigned int num_points){    
+static inline void volk_32f_log2_32f_generic(float* bVector, const float* aVector, unsigned int num_points){
     float* bPtr = bVector;
     const float* aPtr = aVector;
     unsigned int number = 0;
@@ -60,7 +82,7 @@ static inline void volk_32f_log2_32f_generic(float* bVector, const float* aVecto
     for(number = 0; number < num_points; number++){
       *bPtr++ = log2(*aPtr++);
     }
- 
+
 }
 #endif /* LV_HAVE_GENERIC */
 
@@ -77,16 +99,16 @@ static inline void volk_32f_log2_32f_a_sse4_1(float* bVector, const float* aVect
 
 	float* bPtr = bVector;
 	const float* aPtr = aVector;
-    
+
 	unsigned int number = 0;
         const unsigned int quarterPoints = num_points / 4;
 
 	__m128 aVal, bVal, mantissa, frac, leadingOne;
 	__m128i bias, exp;
 
-	for(;number < quarterPoints; number++){    
+	for(;number < quarterPoints; number++){
 
-	aVal = _mm_load_ps(aPtr); 
+	aVal = _mm_load_ps(aPtr);
 	bias = _mm_set1_epi32(127);
 	leadingOne = _mm_set1_ps(1.0f);
 	exp = _mm_sub_epi32(_mm_srli_epi32(_mm_and_si128(_mm_castps_si128(aVal), _mm_set1_epi32(0x7f800000)), 23), bias);
@@ -109,12 +131,12 @@ static inline void volk_32f_log2_32f_a_sse4_1(float* bVector, const float* aVect
 
 	bVal = _mm_add_ps(bVal, _mm_mul_ps(mantissa, _mm_sub_ps(frac, leadingOne)));
 	_mm_store_ps(bPtr, bVal);
- 
+
 
 	aPtr += 4;
 	bPtr += 4;
 	}
- 
+
 	number = quarterPoints * 4;
 	for(;number < num_points; number++){
 	   *bPtr++ = log2(*aPtr++);
@@ -136,7 +158,7 @@ static inline void volk_32f_log2_32f_a_sse4_1(float* bVector, const float* aVect
   \param aVector The input vector of floats
   \param num_points Number of points for which log is to be computed
 */
-static inline void volk_32f_log2_32f_u_generic(float* bVector, const float* aVector, unsigned int num_points){    
+static inline void volk_32f_log2_32f_u_generic(float* bVector, const float* aVector, unsigned int num_points){
     float* bPtr = bVector;
     const float* aPtr = aVector;
     unsigned int number = 0;
@@ -144,7 +166,7 @@ static inline void volk_32f_log2_32f_u_generic(float* bVector, const float* aVec
     for(number = 0; number < num_points; number++){
       *bPtr++ = log2(*aPtr++);
     }
- 
+
 }
 #endif /* LV_HAVE_GENERIC */
 
@@ -161,16 +183,16 @@ static inline void volk_32f_log2_32f_u_sse4_1(float* bVector, const float* aVect
 
 	float* bPtr = bVector;
 	const float* aPtr = aVector;
-    
+
 	unsigned int number = 0;
         const unsigned int quarterPoints = num_points / 4;
 
 	__m128 aVal, bVal, mantissa, frac, leadingOne;
 	__m128i bias, exp;
 
-	for(;number < quarterPoints; number++){    
+	for(;number < quarterPoints; number++){
 
-	aVal = _mm_loadu_ps(aPtr); 
+	aVal = _mm_loadu_ps(aPtr);
 	bias = _mm_set1_epi32(127);
 	leadingOne = _mm_set1_ps(1.0f);
 	exp = _mm_sub_epi32(_mm_srli_epi32(_mm_and_si128(_mm_castps_si128(aVal), _mm_set1_epi32(0x7f800000)), 23), bias);
@@ -193,12 +215,12 @@ static inline void volk_32f_log2_32f_u_sse4_1(float* bVector, const float* aVect
 
 	bVal = _mm_add_ps(bVal, _mm_mul_ps(mantissa, _mm_sub_ps(frac, leadingOne)));
 	_mm_storeu_ps(bPtr, bVal);
- 
+
 
 	aPtr += 4;
 	bPtr += 4;
 	}
- 
+
 	number = quarterPoints * 4;
 	for(;number < num_points; number++){
 	   *bPtr++ = log2(*aPtr++);

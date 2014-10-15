@@ -1,3 +1,25 @@
+/* -*- c++ -*- */
+/*
+ * Copyright 2014 Free Software Foundation, Inc.
+ *
+ * This file is part of GNU Radio
+ *
+ * GNU Radio is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3, or (at your option)
+ * any later version.
+ *
+ * GNU Radio is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with GNU Radio; see the file COPYING.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street,
+ * Boston, MA 02110-1301, USA.
+ */
+
 #ifndef INCLUDED_VOLK_8sc_DEINTERLEAVE_REAL_8s_ALIGNED8_H
 #define INCLUDED_VOLK_8sc_DEINTERLEAVE_REAL_8s_ALIGNED8_H
 
@@ -64,7 +86,7 @@ static inline void volk_8ic_deinterleave_real_8i_a_avx(int8_t* iBuffer, const lv
   unsigned int thirtysecondPoints = num_points / 32;
 
   for(number = 0; number < thirtysecondPoints; number++){
-    
+
     complexVal1 = _mm256_load_si256((__m256i*)complexVectorPtr);
     complexVectorPtr += 32;
     complexVal2 = _mm256_load_si256((__m256i*)complexVectorPtr);
@@ -79,7 +101,7 @@ static inline void volk_8ic_deinterleave_real_8i_a_avx(int8_t* iBuffer, const lv
     complexVal1L = _mm_shuffle_epi8(complexVal1L, moveMaskL);
     outputVal1 = _mm_or_si128(complexVal1H, complexVal1L);
 
-    
+
     complexVal2H = _mm_shuffle_epi8(complexVal2H, moveMaskH);
     complexVal2L = _mm_shuffle_epi8(complexVal2L, moveMaskL);
     outputVal2 = _mm_or_si128(complexVal2H, complexVal2L);

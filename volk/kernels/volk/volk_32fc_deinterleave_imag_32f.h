@@ -1,3 +1,25 @@
+/* -*- c++ -*- */
+/*
+ * Copyright 2014 Free Software Foundation, Inc.
+ *
+ * This file is part of GNU Radio
+ *
+ * GNU Radio is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3, or (at your option)
+ * any later version.
+ *
+ * GNU Radio is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with GNU Radio; see the file COPYING.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street,
+ * Boston, MA 02110-1301, USA.
+ */
+
 #ifndef INCLUDED_volk_32fc_deinterleave_imag_32f_a_H
 #define INCLUDED_volk_32fc_deinterleave_imag_32f_a_H
 
@@ -30,9 +52,9 @@ static inline void volk_32fc_deinterleave_imag_32f_a_avx(float* qBuffer, const l
 
     complex1 = _mm256_permute2f128_ps(cplxValue1, cplxValue2, 0x20);
     complex2 = _mm256_permute2f128_ps(cplxValue1, cplxValue2, 0x31);
-    
+
     // Arrange in q1q2q3q4 format
-    qValue = _mm256_shuffle_ps(complex1, complex2, imagMask);  
+    qValue = _mm256_shuffle_ps(complex1, complex2, imagMask);
     //iValue = _mm_shuffle_ps(cplxValue1, cplxValue2, _MM_SHUFFLE(3,1,3,1));
 
     _mm256_store_ps(qBufferPtr, qValue);
