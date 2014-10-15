@@ -3,7 +3,7 @@
 #include <inttypes.h>
 
 /* This is the number of terms of Taylor series to evaluate, increase this for more accuracy*/
-#define TERMS 2
+#define ASIN_TERMS 2
 
 #ifndef INCLUDED_volk_32f_asin_32f_a_H
 #define INCLUDED_volk_32f_asin_32f_a_H
@@ -49,7 +49,7 @@ static inline void volk_32f_asin_32f_a_sse4_1(float* bVector, const float* aVect
         }
         x = _mm_div_ps(fones, x);
         y = fzeroes;
-        for(j = TERMS - 1; j >=0 ; j--){
+        for(j = ASIN_TERMS - 1; j >=0 ; j--){
             y = _mm_add_ps(_mm_mul_ps(y, _mm_mul_ps(x, x)), _mm_set1_ps(pow(-1,j)/(2*j+1)));
         }
 
@@ -120,7 +120,7 @@ static inline void volk_32f_asin_32f_u_sse4_1(float* bVector, const float* aVect
         }
         x = _mm_div_ps(fones, x);
         y = fzeroes;
-        for(j = TERMS - 1; j >=0 ; j--){
+        for(j = ASIN_TERMS - 1; j >=0 ; j--){
             y = _mm_add_ps(_mm_mul_ps(y, _mm_mul_ps(x, x)), _mm_set1_ps(pow(-1,j)/(2*j+1)));
         }
 

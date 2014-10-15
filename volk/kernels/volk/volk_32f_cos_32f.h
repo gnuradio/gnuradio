@@ -23,7 +23,7 @@ static inline void volk_32f_cos_32f_a_sse4_1(float* bVector, const float* aVecto
     unsigned int i = 0;
 
     __m128 aVal, s, m4pi, pio4A, pio4B, cp1, cp2, cp3, cp4, cp5, ffours, ftwos, fones, fzeroes;
-    __m128 sine, cosine, condition1, condition2, condition3;
+    __m128 sine, cosine, condition1, condition3;
     __m128i q, r, ones, twos, fours;
 
     m4pi = _mm_set1_ps(1.273239545);
@@ -66,8 +66,6 @@ static inline void volk_32f_cos_32f_a_sse4_1(float* bVector, const float* aVecto
 
     condition1 = _mm_cmpneq_ps(_mm_cvtepi32_ps(_mm_and_si128(_mm_add_epi32(q, ones), twos)), fzeroes);
 
-    // Need this condition only for sin
-    //condition2 = _mm_cmpneq_ps(_mm_cmpneq_ps(_mm_cvtepi32_ps(_mm_and_si128(q, fours)), fzeroes), _mm_cmplt_ps(aVal, fzeroes));
     condition3 = _mm_cmpneq_ps(_mm_cvtepi32_ps(_mm_and_si128(_mm_add_epi32(q, twos), fours)), fzeroes);
 
     cosine = _mm_add_ps(cosine, _mm_and_ps(_mm_sub_ps(sine, cosine), condition1));
@@ -108,7 +106,7 @@ static inline void volk_32f_cos_32f_u_sse4_1(float* bVector, const float* aVecto
     unsigned int i = 0;
 
     __m128 aVal, s, m4pi, pio4A, pio4B, cp1, cp2, cp3, cp4, cp5, ffours, ftwos, fones, fzeroes;
-    __m128 sine, cosine, condition1, condition2, condition3;
+    __m128 sine, cosine, condition1, condition3;
     __m128i q, r, ones, twos, fours;
 
     m4pi = _mm_set1_ps(1.273239545);
@@ -152,8 +150,6 @@ static inline void volk_32f_cos_32f_u_sse4_1(float* bVector, const float* aVecto
 
         condition1 = _mm_cmpneq_ps(_mm_cvtepi32_ps(_mm_and_si128(_mm_add_epi32(q, ones), twos)), fzeroes);
 
-        // Need this condition only for sin
-        //condition2 = _mm_cmpneq_ps(_mm_cmpneq_ps(_mm_cvtepi32_ps(_mm_and_si128(q, fours)), fzeroes), _mm_cmplt_ps(aVal, fzeroes));
         condition3 = _mm_cmpneq_ps(_mm_cvtepi32_ps(_mm_and_si128(_mm_add_epi32(q, twos), fours)), fzeroes);
 
         cosine = _mm_add_ps(cosine, _mm_and_ps(_mm_sub_ps(sine, cosine), condition1));
