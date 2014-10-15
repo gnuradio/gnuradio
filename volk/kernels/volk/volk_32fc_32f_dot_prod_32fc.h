@@ -1,3 +1,25 @@
+/* -*- c++ -*- */
+/*
+ * Copyright 2014 Free Software Foundation, Inc.
+ *
+ * This file is part of GNU Radio
+ *
+ * GNU Radio is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3, or (at your option)
+ * any later version.
+ *
+ * GNU Radio is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with GNU Radio; see the file COPYING.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street,
+ * Boston, MA 02110-1301, USA.
+ */
+
 #ifndef INCLUDED_volk_32fc_32f_dot_prod_32fc_a_H
 #define INCLUDED_volk_32fc_32f_dot_prod_32fc_a_H
 
@@ -296,7 +318,7 @@ static inline void volk_32fc_32f_dot_prod_32fc_neon_unroll ( lv_32fc_t* __restri
    const float* inputPtr = (float*)input;
    const float* tapsPtr = taps;
    float zero[4] = {0.0f, 0.0f, 0.0f, 0.0f };
-   float accVector_real[4]; 
+   float accVector_real[4];
    float accVector_imag[4];
 
    float32x4x2_t  inputVector0, inputVector1;
@@ -305,14 +327,14 @@ static inline void volk_32fc_32f_dot_prod_32fc_neon_unroll ( lv_32fc_t* __restri
    float32x4_t  tmp_real1, tmp_imag1;
    float32x4_t real_accumulator0, imag_accumulator0;
    float32x4_t real_accumulator1, imag_accumulator1;
-  
+
    // zero out accumulators
    // take a *float, return float32x4_t
    real_accumulator0 = vld1q_f32( zero );
    imag_accumulator0 = vld1q_f32( zero );
    real_accumulator1 = vld1q_f32( zero );
    imag_accumulator1 = vld1q_f32( zero );
- 
+
    for(number=0 ;number < quarterPoints; number++){
       // load doublewords and duplicate in to second lane
       tapsVector0 = vld1q_f32(tapsPtr );
@@ -338,7 +360,7 @@ static inline void volk_32fc_32f_dot_prod_32fc_neon_unroll ( lv_32fc_t* __restri
       tapsPtr += 8;
       inputPtr += 16;
    }
-    
+
    real_accumulator0 = vaddq_f32( real_accumulator0, real_accumulator1);
    imag_accumulator0 = vaddq_f32( imag_accumulator0, imag_accumulator1);
    // void vst1q_f32( float32_t * ptr, float32x4_t val);

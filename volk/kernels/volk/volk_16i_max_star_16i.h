@@ -1,3 +1,25 @@
+/* -*- c++ -*- */
+/*
+ * Copyright 2014 Free Software Foundation, Inc.
+ *
+ * This file is part of GNU Radio
+ *
+ * GNU Radio is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3, or (at your option)
+ * any later version.
+ *
+ * GNU Radio is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with GNU Radio; see the file COPYING.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street,
+ * Boston, MA 02110-1301, USA.
+ */
+
 #ifndef INCLUDED_volk_16i_max_star_16i_a_H
 #define INCLUDED_volk_16i_max_star_16i_a_H
 
@@ -94,7 +116,7 @@ static inline void volk_16i_max_star_16i_neon(short* target, short* src0, unsign
     int16x8_t diff, zeros;
     uint16x8_t comp1, comp2;
     zeros = veorq_s16(zeros, zeros);
-    
+
     int16x8x2_t tmpvec;
 
     int16x8_t candidate_vec = vld1q_dup_s16(src0 );

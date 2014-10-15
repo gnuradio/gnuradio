@@ -1,8 +1,87 @@
+/* -*- c++ -*- */
+/*
+ * Copyright 2014 Free Software Foundation, Inc.
+ *
+ * This file is part of GNU Radio
+ *
+ * GNU Radio is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3, or (at your option)
+ * any later version.
+ *
+ * GNU Radio is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with GNU Radio; see the file COPYING.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street,
+ * Boston, MA 02110-1301, USA.
+ */
+
 #ifndef INCLUDED_volk_16i_s32f_convert_32f_u_H
 #define INCLUDED_volk_16i_s32f_convert_32f_u_H
 
 #include <inttypes.h>
 #include <stdio.h>
+
+#ifdef LV_HAVE_AVX
+#include <immintrin.h>
+
+  /*!
+    \brief Converts the input 16 bit integer data into floating point data, and divides the each floating point output data point by the scalar value
+    \param inputVector The 16 bit input data buffer
+    \param outputVector The floating point output data buffer
+    \param scalar The value divided against each point in the output buffer
+    \param num_points The number of data values to be converted
+  */
+static inline void volk_16i_s32f_convert_32f_u_avx(float* outputVector, const int16_t* inputVector, const float scalar, unsigned int num_points){
+    unsigned int number = 0;
+    const unsigned int eighthPoints = num_points / 8;
+
+     float* outputVectorPtr = outputVector;
+    __m128 invScalar = _mm_set_ps1(1.0/scalar);
+    int16_t* inputPtr = (int16_t*)inputVector;
+    __m128i inputVal, inputVal2;
+    __m128 ret;
+    __m256 output;
+    __m256 dummy = _mm256_setzero_ps();
+
+    for(;number < eighthPoints; number++){
+
+      // Load the 8 values
+      //inputVal = _mm_loadu_si128((__m128i*)inputPtr);
+      inputVal = _mm_loadu_si128((__m128i*)inputPtr);
+
+      // Shift the input data to the right by 64 bits ( 8 bytes )
+      inputVal2 = _mm_srli_si128(inputVal, 8);
+
+      // Convert the lower 4 values into 32 bit words
+      inputVal = _mm_cvtepi16_epi32(inputVal);
+      inputVal2 = _mm_cvtepi16_epi32(inputVal2);
+
+      ret = _mm_cvtepi32_ps(inputVal);
+      ret = _mm_mul_ps(ret, invScalar);
+      output = _mm256_insertf128_ps(dummy, ret, 0);
+
+      ret = _mm_cvtepi32_ps(inputVal2);
+      ret = _mm_mul_ps(ret, invScalar);
+      output = _mm256_insertf128_ps(output, ret, 1);
+
+      _mm256_storeu_ps(outputVectorPtr, output);
+
+      outputVectorPtr += 8;
+
+      inputPtr += 8;
+    }
+
+    number = eighthPoints * 8;
+    for(; number < num_points; number++){
+      outputVector[number] =((float)(inputVector[number])) / scalar;
+    }
+}
+#endif /* LV_HAVE_AVX */
 
 #ifdef LV_HAVE_SSE4_1
 #include <smmintrin.h>
@@ -125,6 +204,63 @@ static inline void volk_16i_s32f_convert_32f_generic(float* outputVector, const 
 
 #include <inttypes.h>
 #include <stdio.h>
+
+#ifdef LV_HAVE_AVX
+#include <immintrin.h>
+
+  /*!
+    \brief Converts the input 16 bit integer data into floating point data, and divides the each floating point output data point by the scalar value
+    \param inputVector The 16 bit input data buffer
+    \param outputVector The floating point output data buffer
+    \param scalar The value divided against each point in the output buffer
+    \param num_points The number of data values to be converted
+  */
+static inline void volk_16i_s32f_convert_32f_a_avx(float* outputVector, const int16_t* inputVector, const float scalar, unsigned int num_points){
+    unsigned int number = 0;
+    const unsigned int eighthPoints = num_points / 8;
+
+     float* outputVectorPtr = outputVector;
+    __m128 invScalar = _mm_set_ps1(1.0/scalar);
+    int16_t* inputPtr = (int16_t*)inputVector;
+    __m128i inputVal, inputVal2;
+    __m128 ret;
+    __m256 output;
+    __m256 dummy = _mm256_setzero_ps();
+
+    for(;number < eighthPoints; number++){
+
+      // Load the 8 values
+      //inputVal = _mm_loadu_si128((__m128i*)inputPtr);
+      inputVal = _mm_load_si128((__m128i*)inputPtr);
+
+      // Shift the input data to the right by 64 bits ( 8 bytes )
+      inputVal2 = _mm_srli_si128(inputVal, 8);
+
+      // Convert the lower 4 values into 32 bit words
+      inputVal = _mm_cvtepi16_epi32(inputVal);
+      inputVal2 = _mm_cvtepi16_epi32(inputVal2);
+
+      ret = _mm_cvtepi32_ps(inputVal);
+      ret = _mm_mul_ps(ret, invScalar);
+      output = _mm256_insertf128_ps(dummy, ret, 0);
+
+      ret = _mm_cvtepi32_ps(inputVal2);
+      ret = _mm_mul_ps(ret, invScalar);
+      output = _mm256_insertf128_ps(output, ret, 1);
+
+      _mm256_store_ps(outputVectorPtr, output);
+
+      outputVectorPtr += 8;
+
+      inputPtr += 8;
+    }
+
+    number = eighthPoints * 8;
+    for(; number < num_points; number++){
+      outputVector[number] =((float)(inputVector[number])) / scalar;
+    }
+}
+#endif /* LV_HAVE_AVX */
 
 #ifdef LV_HAVE_SSE4_1
 #include <smmintrin.h>

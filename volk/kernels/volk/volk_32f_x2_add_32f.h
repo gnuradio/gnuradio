@@ -1,3 +1,25 @@
+/* -*- c++ -*- */
+/*
+ * Copyright 2014 Free Software Foundation, Inc.
+ *
+ * This file is part of GNU Radio
+ *
+ * GNU Radio is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3, or (at your option)
+ * any later version.
+ *
+ * GNU Radio is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with GNU Radio; see the file COPYING.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street,
+ * Boston, MA 02110-1301, USA.
+ */
+
 #ifndef INCLUDED_volk_32f_x2_add_32f_u_H
 #define INCLUDED_volk_32f_x2_add_32f_u_H
 
@@ -136,7 +158,7 @@ static inline void volk_32f_x2_add_32f_u_neon(float* cVector, const float* aVect
       // vector add
       cVal = vaddq_f32(aVal, bVal);
       // Store the results back into the C container
-      vst1q_f32(cPtr,cVal); 
+      vst1q_f32(cPtr,cVal);
 
       aPtr += 4; // q uses quadwords, 4 floats per vadd
       bPtr += 4;
