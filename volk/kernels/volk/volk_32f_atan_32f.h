@@ -18,75 +18,60 @@
 */
 static inline void volk_32f_atan_32f_a_sse4_1(float* bVector, const float* aVector, unsigned int num_points){
 
-	float* bPtr = bVector;
-	const float* aPtr = aVector;
-    
-	unsigned int number = 0;
-        unsigned int quarterPoints = num_points / 4;
-	int i, j;
+    float* bPtr = bVector;
+    const float* aPtr = aVector;
 
-	__m128 aVal, pio2, x, y, z, arctangent;
-	__m128 fzeroes, fones, ftwos, ffours, condition;
+    unsigned int number = 0;
+    unsigned int quarterPoints = num_points / 4;
+    int i, j;
 
-	pio2 = _mm_set1_ps(3.14159265358979323846/2);
-	fzeroes = _mm_setzero_ps();
-	fones = _mm_set1_ps(1.0);
-	ftwos = _mm_set1_ps(2.0);
-	ffours = _mm_set1_ps(4.0);
+    __m128 aVal, pio2, x, y, z, arctangent;
+    __m128 fzeroes, fones, ftwos, ffours, condition;
 
-	for(;number < quarterPoints; number++){    
-		aVal = _mm_load_ps(aPtr);
-		z = aVal;
-		condition = _mm_cmplt_ps(z, fzeroes);
-		z = _mm_sub_ps(z, _mm_and_ps(_mm_mul_ps(z, ftwos), condition));
-		x = z;
-		condition = _mm_cmplt_ps(z, fones);
-		x = _mm_add_ps(x, _mm_and_ps(_mm_sub_ps(_mm_div_ps(fones, z), z), condition));
+    pio2 = _mm_set1_ps(3.14159265358979323846/2);
+    fzeroes = _mm_setzero_ps();
+    fones = _mm_set1_ps(1.0);
+    ftwos = _mm_set1_ps(2.0);
+    ffours = _mm_set1_ps(4.0);
 
-		for(i = 0; i < 2; i++)	x = _mm_add_ps(x, _mm_sqrt_ps(_mm_add_ps(fones, _mm_mul_ps(x, x))));
-		x = _mm_div_ps(fones, x);
-		y = fzeroes;
-		for(j = TERMS - 1; j >=0 ; j--)	y = _mm_add_ps(_mm_mul_ps(y, _mm_mul_ps(x, x)), _mm_set1_ps(pow(-1,j)/(2*j+1)));
-		
-		y = _mm_mul_ps(y, _mm_mul_ps(x, ffours));
-		condition = _mm_cmpgt_ps(z, fones);
-		
-		y = _mm_add_ps(y, _mm_and_ps(_mm_sub_ps(pio2, _mm_mul_ps(y, ftwos)), condition));
-		arctangent = y;
-		condition = _mm_cmplt_ps(aVal, fzeroes);
-		arctangent = _mm_sub_ps(arctangent, _mm_and_ps(_mm_mul_ps(arctangent, ftwos), condition));
+    for(;number < quarterPoints; number++){
+        aVal = _mm_load_ps(aPtr);
+        z = aVal;
+        condition = _mm_cmplt_ps(z, fzeroes);
+        z = _mm_sub_ps(z, _mm_and_ps(_mm_mul_ps(z, ftwos), condition));
+        x = z;
+        condition = _mm_cmplt_ps(z, fones);
+        x = _mm_add_ps(x, _mm_and_ps(_mm_sub_ps(_mm_div_ps(fones, z), z), condition));
 
-		_mm_store_ps(bPtr, arctangent);
-		aPtr += 4;
-		bPtr += 4;
-	}
- 
-	number = quarterPoints * 4;
-	for(;number < num_points; number++){
-	   *bPtr++ = atan(*aPtr++);
-	}
+        for(i = 0; i < 2; i++){
+            x = _mm_add_ps(x, _mm_sqrt_ps(_mm_add_ps(fones, _mm_mul_ps(x, x))));
+        }
+        x = _mm_div_ps(fones, x);
+        y = fzeroes;
+        for(j = TERMS - 1; j >=0 ; j--){
+            y = _mm_add_ps(_mm_mul_ps(y, _mm_mul_ps(x, x)), _mm_set1_ps(pow(-1,j)/(2*j+1)));
+        }
+
+        y = _mm_mul_ps(y, _mm_mul_ps(x, ffours));
+        condition = _mm_cmpgt_ps(z, fones);
+
+        y = _mm_add_ps(y, _mm_and_ps(_mm_sub_ps(pio2, _mm_mul_ps(y, ftwos)), condition));
+        arctangent = y;
+        condition = _mm_cmplt_ps(aVal, fzeroes);
+        arctangent = _mm_sub_ps(arctangent, _mm_and_ps(_mm_mul_ps(arctangent, ftwos), condition));
+
+        _mm_store_ps(bPtr, arctangent);
+        aPtr += 4;
+        bPtr += 4;
+    }
+
+    number = quarterPoints * 4;
+    for(;number < num_points; number++){
+        *bPtr++ = atan(*aPtr++);
+    }
 }
 
 #endif /* LV_HAVE_SSE4_1 for aligned */
-
-#ifdef LV_HAVE_GENERIC
-/*!
-  \brief Computes arctangent of input vector and stores results in output vector
-  \param bVector The vector where results will be stored
-  \param aVector The input vector of floats
-  \param num_points Number of points for which arctangent is to be computed
-*/
-static inline void volk_32f_atan_32f_a_generic(float* bVector, const float* aVector, unsigned int num_points){    
-    float* bPtr = bVector;
-    const float* aPtr = aVector;
-    unsigned int number = 0;
-
-    for(number = 0; number < num_points; number++){
-      *bPtr++ = atan(*aPtr++);
-    }
- 
-}
-#endif /* LV_HAVE_GENERIC */
 
 #endif /* INCLUDED_volk_32f_atan_32f_a_H */
 
@@ -103,53 +88,53 @@ static inline void volk_32f_atan_32f_a_generic(float* bVector, const float* aVec
 */
 static inline void volk_32f_atan_32f_u_sse4_1(float* bVector, const float* aVector, unsigned int num_points){
 
-	float* bPtr = bVector;
-	const float* aPtr = aVector;
-    
-	unsigned int number = 0;
-        unsigned int quarterPoints = num_points / 4;
-	int i, j;
-	
-	__m128 aVal, pio2, x, y, z, arctangent;
-	__m128 fzeroes, fones, ftwos, ffours, condition;
+    float* bPtr = bVector;
+    const float* aPtr = aVector;
 
-	pio2 = _mm_set1_ps(3.14159265358979323846/2);
-	fzeroes = _mm_setzero_ps();
-	fones = _mm_set1_ps(1.0);
-	ftwos = _mm_set1_ps(2.0);
-	ffours = _mm_set1_ps(4.0);
+    unsigned int number = 0;
+    unsigned int quarterPoints = num_points / 4;
+    int i, j;
 
-	for(;number < quarterPoints; number++){    
-		aVal = _mm_loadu_ps(aPtr);
-		z = aVal;
-		condition = _mm_cmplt_ps(z, fzeroes);
-		z = _mm_sub_ps(z, _mm_and_ps(_mm_mul_ps(z, ftwos), condition));
-		x = z;
-		condition = _mm_cmplt_ps(z, fones);
-		x = _mm_add_ps(x, _mm_and_ps(_mm_sub_ps(_mm_div_ps(fones, z), z), condition));
+    __m128 aVal, pio2, x, y, z, arctangent;
+    __m128 fzeroes, fones, ftwos, ffours, condition;
 
-		for(i = 0; i < 2; i++)	x = _mm_add_ps(x, _mm_sqrt_ps(_mm_add_ps(fones, _mm_mul_ps(x, x))));
-		x = _mm_div_ps(fones, x);
-		y = fzeroes;
-		for(j = TERMS - 1; j >= 0; j--)	y = _mm_add_ps(_mm_mul_ps(y, _mm_mul_ps(x, x)), _mm_set1_ps(pow(-1,j)/(2*j+1)));
-		
-		y = _mm_mul_ps(y, _mm_mul_ps(x, ffours));
-		condition = _mm_cmpgt_ps(z, fones);
-		
-		y = _mm_add_ps(y, _mm_and_ps(_mm_sub_ps(pio2, _mm_mul_ps(y, ftwos)), condition));
-		arctangent = y;
-		condition = _mm_cmplt_ps(aVal, fzeroes);
-		arctangent = _mm_sub_ps(arctangent, _mm_and_ps(_mm_mul_ps(arctangent, ftwos), condition));
+    pio2 = _mm_set1_ps(3.14159265358979323846/2);
+    fzeroes = _mm_setzero_ps();
+    fones = _mm_set1_ps(1.0);
+    ftwos = _mm_set1_ps(2.0);
+    ffours = _mm_set1_ps(4.0);
 
-		_mm_storeu_ps(bPtr, arctangent);
-		aPtr += 4;
-		bPtr += 4;
-	}
- 
-	number = quarterPoints * 4;
-	for(;number < num_points; number++){
-	   *bPtr++ = atan(*aPtr++);
-	}
+    for(;number < quarterPoints; number++){
+        aVal = _mm_loadu_ps(aPtr);
+        z = aVal;
+        condition = _mm_cmplt_ps(z, fzeroes);
+        z = _mm_sub_ps(z, _mm_and_ps(_mm_mul_ps(z, ftwos), condition));
+        x = z;
+        condition = _mm_cmplt_ps(z, fones);
+        x = _mm_add_ps(x, _mm_and_ps(_mm_sub_ps(_mm_div_ps(fones, z), z), condition));
+
+        for(i = 0; i < 2; i++)  x = _mm_add_ps(x, _mm_sqrt_ps(_mm_add_ps(fones, _mm_mul_ps(x, x))));
+        x = _mm_div_ps(fones, x);
+        y = fzeroes;
+        for(j = TERMS - 1; j >= 0; j--) y = _mm_add_ps(_mm_mul_ps(y, _mm_mul_ps(x, x)), _mm_set1_ps(pow(-1,j)/(2*j+1)));
+
+        y = _mm_mul_ps(y, _mm_mul_ps(x, ffours));
+        condition = _mm_cmpgt_ps(z, fones);
+
+        y = _mm_add_ps(y, _mm_and_ps(_mm_sub_ps(pio2, _mm_mul_ps(y, ftwos)), condition));
+        arctangent = y;
+        condition = _mm_cmplt_ps(aVal, fzeroes);
+        arctangent = _mm_sub_ps(arctangent, _mm_and_ps(_mm_mul_ps(arctangent, ftwos), condition));
+
+        _mm_storeu_ps(bPtr, arctangent);
+        aPtr += 4;
+        bPtr += 4;
+    }
+
+    number = quarterPoints * 4;
+    for(;number < num_points; number++){
+        *bPtr++ = atan(*aPtr++);
+    }
 }
 
 #endif /* LV_HAVE_SSE4_1 for unaligned */
@@ -161,15 +146,15 @@ static inline void volk_32f_atan_32f_u_sse4_1(float* bVector, const float* aVect
   \param aVector The input vector of floats
   \param num_points Number of points for which arctangent is to be computed
 */
-static inline void volk_32f_atan_32f_u_generic(float* bVector, const float* aVector, unsigned int num_points){    
+static inline void volk_32f_atan_32f_generic(float* bVector, const float* aVector, unsigned int num_points){
     float* bPtr = bVector;
     const float* aPtr = aVector;
     unsigned int number = 0;
 
     for(number = 0; number < num_points; number++){
-      *bPtr++ = atan(*aPtr++);
+        *bPtr++ = atan(*aPtr++);
     }
- 
+
 }
 #endif /* LV_HAVE_GENERIC */
 
