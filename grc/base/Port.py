@@ -38,7 +38,7 @@ class Port(Element):
         self._type = n['type']
         self._hide = n.find('hide') or ''
         self._dir = dir
-        self._type_evaluated = ''  # updated on rewrite()
+        self._type_evaluated = None  # updated on rewrite()
         self._hide_evaluated = False  # updated on rewrite()
 
     def validate(self):
@@ -82,7 +82,9 @@ class Port(Element):
     def get_key(self): return self._key
     def is_sink(self): return self._dir == 'sink'
     def is_source(self): return self._dir == 'source'
-    def get_type(self): return self._type_evaluated
+    def get_type(self):
+        return self.get_parent().resolve_dependencies(self._type) \
+                if self._type_evaluated is None else self._type_evaluated
     def get_hide(self): return self._hide_evaluated
 
     def get_connections(self):

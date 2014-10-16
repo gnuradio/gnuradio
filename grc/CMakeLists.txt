@@ -67,6 +67,10 @@ CPACK_COMPONENT("grc"
 # Create and install the grc conf file
 ########################################################################
 file(TO_NATIVE_PATH ${CMAKE_INSTALL_PREFIX}/${GRC_BLOCKS_DIR} blocksdir)
+if(CMAKE_INSTALL_PREFIX STREQUAL "/usr")
+    # linux binary installs: append blocks dir with prefix /usr/local
+    set(blocksdir ${blocksdir}:/usr/local/${GRC_BLOCKS_DIR})
+endif(CMAKE_INSTALL_PREFIX STREQUAL "/usr")
 
 configure_file(
     ${CMAKE_CURRENT_SOURCE_DIR}/grc.conf.in

@@ -1,0 +1,32 @@
+4 8 8
+
+0	4	1	5
+0	4	1	5
+0	4	1	5
+0	4	1	5
+2	6	3	7
+2	6	3	7
+2	6	3	7
+2	6	3	7
+
+0	4	2	6
+4	0	6	2
+2	6	0	4
+6	2	4	0
+1	5	3	7
+5	1	7	3
+3	7	1	5
+7	3	5	1
+
+This is the rate 2/3 Ungerboeck code with 8-states for 8-PSK (natural mapping).
+The states are defined in typical way. 
+
+d_free^2 = 4.585 Es --> 6.6 dB (so gain of 3.6 dB over uncoded QPSK)
+
+Parity check matrix in octal: [04 02 11] 
+
+Generator Matrix:
+
+[ 1	D	0
+  D^2	1	D]
+

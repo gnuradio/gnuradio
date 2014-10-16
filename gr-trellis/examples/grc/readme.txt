@@ -1,6 +1,6 @@
 These are examples of using gr-trellis in grc.
 
-INTERFERENCE CANCELLATION
+Interference Cancellation
 -------------------------
 Two users are transmitting simultaneously using convolutionally encoded QPSK, each with power P1=alpha*P and P2=(1-alpha)*P.
 The combined signal is observed in noise and four different receivers are considered:
@@ -20,13 +20,13 @@ Serially Concatenated Convolutional Codes
 -----------------------------------------
 An SCCC can be defined by an outer and an inner FSM together with an interleaver
 and a modulation type. You can change the SNR and observe the estimated BER.
-In sccc.grc the decoding and metric calculation are combined; in sccc1.grc they are separate.
 
 Parallel Concatenated Convolutional Codes
 -----------------------------------------
 A PCCC can be defined by two FSMs together with an interleaver
 and a modulation type. You can change the SNR and observe the estimated BER.
-In pccc1.grc the decoding and metric calculation are separate.
+
+...and a few other examples including turbo equalization, etc
 
 
 Enjoy.

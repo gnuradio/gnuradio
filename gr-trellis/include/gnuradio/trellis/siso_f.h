@@ -53,6 +53,14 @@ namespace gr {
       virtual bool POSTI() const = 0;
       virtual bool POSTO() const = 0;
       virtual siso_type_t SISO_TYPE() const = 0;
+
+      virtual void set_FSM(const fsm &FSM) =0;
+      virtual void set_K(int K) =0;
+      virtual void set_S0(int S0) =0;
+      virtual void set_SK(int SK) =0;
+      virtual void set_POSTI(bool posti) =0;
+      virtual void set_POSTO(bool posto) =0;
+      virtual void set_SISO_TYPE(trellis::siso_type_t type) = 0;
     };
 
   } /* namespace trellis */
