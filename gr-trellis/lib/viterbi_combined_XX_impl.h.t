@@ -49,15 +49,22 @@ namespace gr {
 		  digital::trellis_metric_type_t TYPE);
       ~@IMPL_NAME@();
 
-      fsm FSM() const { return d_FSM; }
-      int K() const { return d_K; }
-      int S0() const { return d_S0; }
-      int SK() const { return d_SK; }
-      int D() const { return d_D; }
+      fsm FSM() const  { return d_FSM; }
+      int K()  const { return d_K; }
+      int S0()  const { return d_S0; }
+      int SK()  const { return d_SK; }
+      int D()  const { return d_D; }
       std::vector<@I_TYPE@> TABLE() const { return d_TABLE; }
       digital::trellis_metric_type_t TYPE() const { return d_TYPE; }
       //std::vector<int> trace() const { return d_trace; }
+
+      void set_FSM(const fsm &FSM);
+      void set_K(int K);
+      void set_S0(int S0);
+      void set_SK(int SK);
+      void set_D(int D);
       void set_TABLE(const std::vector<@I_TYPE@> &table);
+      void set_TYPE(digital::trellis_metric_type_t type);
 
       void forecast(int noutput_items,
 		    gr_vector_int &ninput_items_required);

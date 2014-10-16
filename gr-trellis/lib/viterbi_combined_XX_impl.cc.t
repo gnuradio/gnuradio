@@ -60,14 +60,56 @@ namespace gr {
       set_output_multiple(d_K);
     }
 
-    @IMPL_NAME@::~@IMPL_NAME@()
+    void
+    @IMPL_NAME@::set_K(int K)
     {
+      gr::thread::scoped_lock guard(d_setlock);
+      d_K = K;
+      set_output_multiple(d_K);
+    }
+
+    void
+    @IMPL_NAME@::set_D(int D)
+    {
+      gr::thread::scoped_lock guard(d_setlock);
+      d_D = D;
+      set_relative_rate(1.0 / ((double)d_D));
+    }
+   
+    void @IMPL_NAME@::set_FSM(const fsm &FSM)
+    {
+      gr::thread::scoped_lock guard(d_setlock);
+      d_FSM = FSM;
+    }
+
+    void @IMPL_NAME@::set_S0(int S0)
+    {
+      gr::thread::scoped_lock guard(d_setlock);
+      d_S0 = S0;
+    }
+
+    void @IMPL_NAME@::set_SK(int SK)
+    {
+      gr::thread::scoped_lock guard(d_setlock);
+      d_SK = SK;
+    }
+
+    void
+    @IMPL_NAME@::set_TYPE(digital::trellis_metric_type_t type)
+    {
+      gr::thread::scoped_lock guard(d_setlock);
+      d_TYPE = type;
     }
 
     void
     @IMPL_NAME@::set_TABLE(const std::vector<@I_TYPE@> &table)
     {
+      gr::thread::scoped_lock guard(d_setlock);
       d_TABLE = table;
+    }
+
+    @IMPL_NAME@::~@IMPL_NAME@()
+    {
     }
 
     void
@@ -87,6 +129,7 @@ namespace gr {
 			      gr_vector_const_void_star &input_items,
 			      gr_vector_void_star &output_items)
     {
+      gr::thread::scoped_lock guard(d_setlock);
       int nstreams = input_items.size();
       int nblocks = noutput_items / d_K;
 

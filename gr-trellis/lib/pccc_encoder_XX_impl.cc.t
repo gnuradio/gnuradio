@@ -81,7 +81,7 @@ namespace gr {
 	  ST1_tmp = (int) d_FSM1.NS()[ST1_tmp*d_FSM1.I()+in[i]];
 	  int o2 = d_FSM2.OS()[ST2_tmp*d_FSM2.I()+in[k]];
 	  ST2_tmp = (int) d_FSM2.NS()[ST2_tmp*d_FSM2.I()+in[k]];
-	  out[i] = (@O_TYPE@) (o1*d_FSM1.O() + o2);
+	  out[i] = (@O_TYPE@) (o1*d_FSM2.O() + o2);
 	}
       }
       return noutput_items;
