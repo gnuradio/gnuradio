@@ -30,7 +30,8 @@
 static inline void volk_64u_popcntpuppet_64u_generic(uint64_t* outVector, const uint64_t* inVector, unsigned int num_points){
     unsigned int ii;
     for(ii=0; ii < num_points; ++ii) {
-        volk_64u_popcnt_generic(outVector+ii, *(inVector+ii) );
+        volk_64u_popcnt_generic(outVector+ii, num_points );
+        
     }
 }
 #endif /* LV_HAVE_GENERIC */
@@ -39,7 +40,7 @@ static inline void volk_64u_popcntpuppet_64u_generic(uint64_t* outVector, const 
 static inline void volk_64u_popcntpuppet_64u_neon(uint64_t* outVector, const uint64_t* inVector, unsigned int num_points){
     unsigned int ii;
     for(ii=0; ii < num_points; ++ii) {
-        volk_64u_popcnt_neon(outVector+ii, *(inVector+ii) );
+        volk_64u_popcnt_neon(outVector+ii, num_points );
     }
 }
 #endif /* LV_HAVE_NEON */
