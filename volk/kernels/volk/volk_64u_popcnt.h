@@ -71,4 +71,60 @@ static inline void volk_64u_popcnt_a_sse4_2(uint64_t* ret, const uint64_t value)
 
 #endif /*LV_HAVE_SSE4_2*/
 
+#if LV_HAVE_NEON
+#include <arm_neon.h>
+static inline void volk_64u_popcnt_neon(uint64_t* ret, const uint64_t value) {
+    /* TABLE LUP
+    unsigned char table[] =   {0, 1, 1, 2, 1, 2, 2, 3,
+                               1, 2, 2, 3, 2, 3, 3, 4,
+                               1, 2, 2, 3, 2, 3, 3, 4,
+                               2, 3, 3, 4, 3, 4, 4, 5,
+                               1, 2, 2, 3, 2, 3, 3, 4,
+                               2, 3, 2, 4, 3, 4, 4, 5,
+                               2, 3, 3, 4, 3, 4, 4, 5,
+                               3, 4, 4, 5, 4, 5, 5, 6};
+
+    // we're stuck with a 64-element table, so treat the MSBs
+    // of each byte as 0 and sum them individually.
+    uint64_t input_7bit = values & 0x7F7F7F7F7F7F7F7F;
+    uint64_t input_msbs = value & 0x8080808080808080;
+    uint64_t sum =  (input_msbs >> 8) ;
+    sum += (input_msbs >> 16);
+    sum += (input_msbs >> 24);
+    sum += (input_msbs >> 32);
+    sum += (input_msbs >> 40);
+    sum += (input_msbs >> 48);
+    sum += (input_msbs >> 56);
+    sum += (input_msbs >> 64);
+
+    uint8x8x4_t table_val;
+    uint8x8_t input_val;
+    uint16x8x2_t intermediate_sum;
+    uint32x8_t intermediate_sum;
+
+    // load the table and input value
+    table_val = vld4q_u8(table);
+    input_val = vld1_u8((unsigned char *) &value);
+
+    // perform the lookup, output is uint8x8_t
+    input_val = vtbl4_u8(table_val, input_val);
+    */
+
+    uint8x8_t input_val, count8x8_val;
+    uint16x4_t count16x4_val;
+    uint32x2_t count32x2_val;
+    uint64x1_t count64x1_val;
+
+    input_val = vld1_u8((unsigned char *) &value);
+    count8x8_val = vcnt_u8(input_val);
+    count16x4_val = vpaddl_u8(count8x8_val);
+    count32x2_val = vpaddl_u16(count16x4_val);
+    count64x1_val = vpaddl_u32(count32x2_val);
+    vst1_u64(ret, count64x1_val);
+
+    //*ret = _mm_popcnt_u64(value);
+
+}
+#endif /*LV_HAVE_NEON*/
+
 #endif /*INCLUDED_volk_64u_popcnt_a_H*/

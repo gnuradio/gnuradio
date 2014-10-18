@@ -220,12 +220,12 @@ int main(int argc, char *argv[]) {
     VOLK_PROFILE(volk_32i_s32f_convert_32f, 1e-4, 100, 204602, 10000, &results, benchmark_mode, kernel_regex);
     VOLK_PROFILE(volk_32i_x2_or_32i, 0, 0, 204602, 10000, &results, benchmark_mode, kernel_regex);
     VOLK_PROFILE(volk_32u_byteswap, 0, 0, 204602, 2000, &results, benchmark_mode, kernel_regex);
-    //VOLK_PROFILE(volk_32u_popcnt, 0, 0, 2046, 10000, &results, benchmark_mode, kernel_regex);
+    VOLK_PUPPET_PROFILE(volk_32u_popcntpuppet_32u, volk32u_popcnt_32u,  0, 0, 2046, 10000, &results, benchmark_mode, kernel_regex);
     VOLK_PROFILE(volk_64f_convert_32f, 1e-4, 0, 204602, 10000, &results, benchmark_mode, kernel_regex);
     VOLK_PROFILE(volk_64f_x2_max_64f, 1e-4, 0, 204602, 1000, &results, benchmark_mode, kernel_regex);
     VOLK_PROFILE(volk_64f_x2_min_64f, 1e-4, 0, 204602, 1000, &results, benchmark_mode, kernel_regex);
     VOLK_PROFILE(volk_64u_byteswap, 0, 0, 204602, 1000, &results, benchmark_mode, kernel_regex);
-    //VOLK_PROFILE(volk_64u_popcnt, 0, 0, 2046, 10000, &results, benchmark_mode, kernel_regex);
+    VOLK_PUPPET_PROFILE(volk_64u_popcntpuppet_64u, volk_64u_popcnt, 0, 0, 2046, 10000, &results, benchmark_mode, kernel_regex);
     VOLK_PROFILE(volk_8ic_deinterleave_16i_x2, 0, 0, 204602, 3000, &results, benchmark_mode, kernel_regex);
     VOLK_PROFILE(volk_8ic_s32f_deinterleave_32f_x2, 1e-4, 100, 204602, 3000, &results, benchmark_mode, kernel_regex);
     VOLK_PROFILE(volk_8ic_deinterleave_real_16i, 0, 256, 204602, 3000, &results, benchmark_mode, kernel_regex);
