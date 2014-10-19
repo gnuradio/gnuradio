@@ -56,6 +56,8 @@ namespace gr {
       d_K(K),
       d_B(B)      
     {
+      if(d_B)
+        set_output_multiple(d_K);
     }
 
     void @IMPL_NAME@::set_FSM(const fsm &FSM) 
@@ -74,6 +76,8 @@ namespace gr {
     { 
       gr::thread::scoped_lock guard(d_setlock);
       d_K = K; 
+      if(d_B)
+      set_output_multiple(d_K);
     }
 
     @IMPL_NAME@::~@IMPL_NAME@()
@@ -90,6 +94,8 @@ namespace gr {
 
       if (d_B){ // blockwise operation
         int nblocks = noutput_items /d_K;
+        //if (nblocks>0)        
+          //printf("Number of blocks = %d\n",nblocks);
 	const @I_TYPE@ *in = (const @I_TYPE@*)input_items[0];
 	@O_TYPE@ *out = (@O_TYPE@ *) output_items[0];
         for(int n = 0; n < nblocks; n++) {
