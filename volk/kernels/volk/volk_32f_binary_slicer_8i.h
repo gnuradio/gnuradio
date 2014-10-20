@@ -229,7 +229,7 @@ volk_32f_binary_slicer_8i_neon(int8_t* cVector, const float* aVector,
   uint16x4x2_t res0_u16x4, res1_u16x4;
   uint16x8x2_t res_u16x8;
   uint8x8x2_t res_u8;
-  uint8x8_t zero_u8, one;
+  uint8x8_t one;
 
   zero_val = vdupq_n_f32(0.0);
   one = vdup_n_u8(0x01);
