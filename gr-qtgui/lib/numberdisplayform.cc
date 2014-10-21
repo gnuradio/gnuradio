@@ -377,6 +377,9 @@ NumberDisplayForm::setScale(int which, int min, int max)
   d_min[which] = min;
   d_max[which] = max;
   d_indicator[which]->setScale(min, max);
+#if QWT_VERSION < 0x060100
+  d_indicator[which]->setRange(min, max);
+#endif
 }
 
 void
