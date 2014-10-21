@@ -1,9 +1,88 @@
+/* -*- c++ -*- */
+/*
+ * Copyright 2014 Free Software Foundation, Inc.
+ *
+ * This file is part of GNU Radio
+ *
+ * GNU Radio is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3, or (at your option)
+ * any later version.
+ *
+ * GNU Radio is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with GNU Radio; see the file COPYING.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street,
+ * Boston, MA 02110-1301, USA.
+ */
+
 #ifndef INCLUDED_volk_32f_s32f_convert_16i_u_H
 #define INCLUDED_volk_32f_s32f_convert_16i_u_H
 
 #include <inttypes.h>
 #include <stdio.h>
 #include <math.h>
+
+#ifdef LV_HAVE_AVX
+#include <immintrin.h>
+  /*!
+    \brief Multiplies each point in the input buffer by the scalar value, then converts the result into a 16 bit integer value
+    \param inputVector The floating point input data buffer
+    \param outputVector The 16 bit output data buffer
+    \param scalar The value multiplied against each point in the input buffer
+    \param num_points The number of data values to be converted
+  */
+static inline void volk_32f_s32f_convert_16i_u_avx(int16_t* outputVector, const float* inputVector, const float scalar, unsigned int num_points){
+  unsigned int number = 0;
+
+  const unsigned int eighthPoints = num_points / 8;
+
+  const float* inputVectorPtr = (const float*)inputVector;
+  int16_t* outputVectorPtr = outputVector;
+
+  float min_val = -32768;
+  float max_val = 32767;
+  float r;
+
+  __m256 vScalar = _mm256_set1_ps(scalar);
+  __m256 inputVal, ret;
+  __m256i intInputVal;
+  __m128i intInputVal1, intInputVal2;
+  __m256 vmin_val = _mm256_set1_ps(min_val);
+  __m256 vmax_val = _mm256_set1_ps(max_val);
+
+  for(;number < eighthPoints; number++){
+    inputVal = _mm256_loadu_ps(inputVectorPtr); inputVectorPtr += 8;
+
+    // Scale and clip
+    ret = _mm256_max_ps(_mm256_min_ps(_mm256_mul_ps(inputVal, vScalar), vmax_val), vmin_val);
+
+    intInputVal = _mm256_cvtps_epi32(ret);
+
+    intInputVal1 = _mm256_extractf128_si256(intInputVal, 0);
+    intInputVal2 = _mm256_extractf128_si256(intInputVal, 1);
+
+    intInputVal1 = _mm_packs_epi32(intInputVal1, intInputVal2);
+
+    _mm_storeu_si128((__m128i*)outputVectorPtr, intInputVal1);
+    outputVectorPtr += 8;
+  }
+
+  number = eighthPoints * 8;
+  for(; number < num_points; number++){
+    r = inputVector[number] * scalar;
+    if(r > max_val)
+      r = max_val;
+    else if(r < min_val)
+      r = min_val;
+    outputVector[number] = (int16_t)rintf(r);
+  }
+}
+#endif /* LV_HAVE_AVX */
 
 #ifdef LV_HAVE_SSE2
 #include <emmintrin.h>
@@ -157,6 +236,63 @@ static inline void volk_32f_s32f_convert_16i_generic(int16_t* outputVector, cons
 #include <inttypes.h>
 #include <stdio.h>
 #include <math.h>
+
+#ifdef LV_HAVE_AVX
+#include <immintrin.h>
+  /*!
+    \brief Multiplies each point in the input buffer by the scalar value, then converts the result into a 16 bit integer value
+    \param inputVector The floating point input data buffer
+    \param outputVector The 16 bit output data buffer
+    \param scalar The value multiplied against each point in the input buffer
+    \param num_points The number of data values to be converted
+  */
+static inline void volk_32f_s32f_convert_16i_a_avx(int16_t* outputVector, const float* inputVector, const float scalar, unsigned int num_points){
+  unsigned int number = 0;
+
+  const unsigned int eighthPoints = num_points / 8;
+
+  const float* inputVectorPtr = (const float*)inputVector;
+  int16_t* outputVectorPtr = outputVector;
+
+  float min_val = -32768;
+  float max_val = 32767;
+  float r;
+
+  __m256 vScalar = _mm256_set1_ps(scalar);
+  __m256 inputVal, ret;
+  __m256i intInputVal;
+  __m128i intInputVal1, intInputVal2;
+  __m256 vmin_val = _mm256_set1_ps(min_val);
+  __m256 vmax_val = _mm256_set1_ps(max_val);
+
+  for(;number < eighthPoints; number++){
+    inputVal = _mm256_load_ps(inputVectorPtr); inputVectorPtr += 8;
+
+    // Scale and clip
+    ret = _mm256_max_ps(_mm256_min_ps(_mm256_mul_ps(inputVal, vScalar), vmax_val), vmin_val);
+
+    intInputVal = _mm256_cvtps_epi32(ret);
+
+    intInputVal1 = _mm256_extractf128_si256(intInputVal, 0);
+    intInputVal2 = _mm256_extractf128_si256(intInputVal, 1);
+
+    intInputVal1 = _mm_packs_epi32(intInputVal1, intInputVal2);
+
+    _mm_store_si128((__m128i*)outputVectorPtr, intInputVal1);
+    outputVectorPtr += 8;
+  }
+
+  number = eighthPoints * 8;
+  for(; number < num_points; number++){
+    r = inputVector[number] * scalar;
+    if(r > max_val)
+      r = max_val;
+    else if(r < min_val)
+      r = min_val;
+    outputVector[number] = (int16_t)rintf(r);
+  }
+}
+#endif /* LV_HAVE_AVX */
 
 #ifdef LV_HAVE_SSE2
 #include <emmintrin.h>
