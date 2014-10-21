@@ -38,17 +38,28 @@ namespace gr {
     throttle::make(size_t itemsize, double samples_per_sec, bool ignore_tags)
     {
       return gnuradio::get_initial_sptr
-        (new throttle_impl(itemsize, samples_per_sec, ignore_tags));
+        (new throttle_impl(itemsize, samples_per_sec, 0, ignore_tags, false));
+    }
+
+    throttle::sptr
+    throttle::make(size_t itemsize, double samples_per_sec, int max_noutput_items, bool ignore_tags)
+    {
+      return gnuradio::get_initial_sptr
+        (new throttle_impl(itemsize, samples_per_sec, max_noutput_items, ignore_tags, true));
     }
 
     throttle_impl::throttle_impl(size_t itemsize,
                                  double samples_per_second,
-                                 bool ignore_tags)
+				 int max_noutput_items,
+                                 bool ignore_tags,
+				 bool S)
       : sync_block("throttle",
                       io_signature::make(1, 1, itemsize),
                       io_signature::make(1, 1, itemsize)),
         d_itemsize(itemsize),
-        d_ignore_tags(ignore_tags)
+        d_max_noutput_items(max_noutput_items),
+        d_ignore_tags(ignore_tags),
+	d_S(S)
     {
       set_sample_rate(samples_per_second);
     }
@@ -86,11 +97,20 @@ namespace gr {
                         gr_vector_const_void_star &input_items,
                         gr_vector_void_star &output_items)
     {
+
+      // Achilleas addition: for smoother processing
+      int nout = noutput_items; 
+      if(d_S)
+        if(noutput_items>d_max_noutput_items)
+          nout = d_max_noutput_items;
+
+
+
       // check for updated rx_rate tag
       if(!d_ignore_tags){
         uint64_t abs_N = nitems_read(0);
         std::vector<tag_t> all_tags;
-        get_tags_in_range(all_tags, 0, abs_N, abs_N + noutput_items);
+        get_tags_in_range(all_tags, 0, abs_N, abs_N + nout);
         std::vector<tag_t>::iterator itr;
         for(itr = all_tags.begin(); itr != all_tags.end(); itr++) {
           if(pmt::eq( (*itr).key, throttle_rx_rate_pmt)){
@@ -114,9 +134,9 @@ namespace gr {
       //copy all samples output[i] <= input[i]
       const char *in = (const char *)input_items[0];
       char *out = (char *)output_items[0];
-      std::memcpy(out, in, noutput_items * d_itemsize);
-      d_total_samples += noutput_items;
-      return noutput_items;
+      std::memcpy(out, in, nout * d_itemsize);
+      d_total_samples += nout;
+      return nout;
     }
 
     void
