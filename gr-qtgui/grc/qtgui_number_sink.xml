@@ -143,7 +143,7 @@ $(gui_hint()($win))</make>
     <hide>part</hide>
   </param>
   <param>
-    <name>max</name>
+    <name>Max</name>
     <key>max</key>
     <value>1</value>
     <type>float</type>
