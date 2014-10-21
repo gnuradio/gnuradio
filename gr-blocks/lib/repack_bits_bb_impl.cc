@@ -53,6 +53,21 @@ namespace gr {
       set_relative_rate((double) d_k / d_l);
     }
 
+      void 
+      repack_bits_bb_impl::set_ink(int k)
+      { 
+	gr::thread::scoped_lock guard(d_setlock);
+        d_k = k;
+        set_relative_rate((double) d_k / d_l);
+      }
+      void 
+      repack_bits_bb_impl::set_outl(int l)
+      { 
+	gr::thread::scoped_lock guard(d_setlock);
+        d_l = l;
+        set_relative_rate((double) d_k / d_l);
+      }
+
     repack_bits_bb_impl::~repack_bits_bb_impl()
     {
     }

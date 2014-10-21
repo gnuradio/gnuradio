@@ -31,8 +31,8 @@ namespace gr {
     class repack_bits_bb_impl : public repack_bits_bb
     {
      private:
-      const int d_k; //! Bits on input stream
-      const int d_l; //! Bits on output stream
+      int d_k; //! Bits on input stream
+      int d_l; //! Bits on output stream
       const bool d_packet_mode;
       int d_in_index; // Current bit of input byte
       int d_out_index; // Current bit of output byte
@@ -44,6 +44,10 @@ namespace gr {
      public:
       repack_bits_bb_impl(int k, int l, const std::string &len_tag_key, bool align_output);
       ~repack_bits_bb_impl();
+      void set_ink(int k);//callback function for bits per input byte k
+
+
+      void set_outl(int l);//callback function for bits per output byte l
 
       int work(int noutput_items,
 	       gr_vector_int &ninput_items,
@@ -55,4 +59,6 @@ namespace gr {
 } // namespace gr
 
 #endif /* INCLUDED_BLOCKS_REPACK_BITS_BB_IMPL_H */
+
+
 

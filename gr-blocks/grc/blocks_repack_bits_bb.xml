@@ -3,6 +3,8 @@
   <key>blocks_repack_bits_bb</key>
   <import>from gnuradio import blocks</import>
   <make>blocks.repack_bits_bb($k, $l, $len_tag_key, $align_output)</make>
+  <callback>set_ink($k)</callback>
+  <callback>set_outl($l)</callback>
   <param>
     <name>Bits per input byte</name>
     <key>k</key>
