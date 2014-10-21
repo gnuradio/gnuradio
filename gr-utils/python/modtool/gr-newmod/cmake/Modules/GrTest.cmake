@@ -30,10 +30,10 @@ set(__INCLUDED_GR_TEST_CMAKE TRUE)
 # GR_TEST_TARGET_DEPS  - built targets for the library path
 # GR_TEST_LIBRARY_DIRS - directories for the library path
 # GR_TEST_PYTHON_DIRS  - directories for the python path
-# GR_TEST_ENVIRONS  - other environment key/value pairs
 ########################################################################
 function(GR_ADD_TEST test_name)
 
+    if(WIN32)
         #Ensure that the build exe also appears in the PATH.
         list(APPEND GR_TEST_TARGET_DEPS ${ARGN})
 
@@ -50,7 +50,6 @@ function(GR_ADD_TEST test_name)
             endif(location)
         endforeach(target)
 
-    if(WIN32)
         #SWIG generates the python library files into a subdirectory.
         #Therefore, we must append this subdirectory into PYTHONPATH.
         #Only do this for the python directories matching the following:
@@ -66,8 +65,7 @@ function(GR_ADD_TEST test_name)
     file(TO_NATIVE_PATH "${GR_TEST_LIBRARY_DIRS}" libpath) #ok to use on dir list?
     file(TO_NATIVE_PATH "${GR_TEST_PYTHON_DIRS}" pypath) #ok to use on dir list?
 
-    set(environs "VOLK_GENERIC=1" "GR_DONT_LOAD_PREFS=1" "srcdir=${srcdir}")
-    list(APPEND environs ${GR_TEST_ENVIRONS})
+    set(environs "GR_DONT_LOAD_PREFS=1" "srcdir=${srcdir}")
 
     #http://www.cmake.org/pipermail/cmake/2009-May/029464.html
     #Replaced this add test + set environs code with the shell script generation.
@@ -76,26 +74,18 @@ function(GR_ADD_TEST test_name)
     #SET_TESTS_PROPERTIES(${test_name} PROPERTIES ENVIRONMENT "${environs}")
 
     if(UNIX)
-        set(LD_PATH_VAR "LD_LIBRARY_PATH")
-        if(APPLE)
-            set(LD_PATH_VAR "DYLD_LIBRARY_PATH")
-        endif()
-
         set(binpath "${CMAKE_CURRENT_BINARY_DIR}:$PATH")
-        list(APPEND libpath "$${LD_PATH_VAR}")
+        #set both LD and DYLD paths to cover multiple UNIX OS library paths
+        list(APPEND libpath "$LD_LIBRARY_PATH" "$DYLD_LIBRARY_PATH")
         list(APPEND pypath "$PYTHONPATH")
 
         #replace list separator with the path separator
         string(REPLACE ";" ":" libpath "${libpath}")
         string(REPLACE ";" ":" pypath "${pypath}")
-        list(APPEND environs "PATH=${binpath}" "${LD_PATH_VAR}=${libpath}" "PYTHONPATH=${pypath}")
+        list(APPEND environs "PATH=${binpath}" "LD_LIBRARY_PATH=${libpath}" "DYLD_LIBRARY_PATH=${libpath}" "PYTHONPATH=${pypath}")
 
         #generate a bat file that sets the environment and runs the test
-	if (CMAKE_CROSSCOMPILING)
-                set(SHELL "/bin/sh")
-        else(CMAKE_CROSSCOMPILING)
-                find_program(SHELL sh)
-        endif(CMAKE_CROSSCOMPILING)
+        find_program(SHELL sh)
         set(sh_file ${CMAKE_CURRENT_BINARY_DIR}/${test_name}_test.sh)
         file(WRITE ${sh_file} "#!${SHELL}\n")
         #each line sets an environment variable

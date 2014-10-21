@@ -32,11 +32,8 @@ namespace gr {
 
     class BLOCKS_API @NAME_IMPL@ : public @NAME@
     {
-    private:
-      size_t d_vlen;
-
     public:
-      @NAME_IMPL@(size_t vlen);
+      @NAME_IMPL@();
 
       int work(int noutput_items,
 	       gr_vector_const_void_star &input_items,

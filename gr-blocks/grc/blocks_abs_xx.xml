@@ -8,13 +8,7 @@
 	<name>Abs</name>
 	<key>blocks_abs_xx</key>
 	<import>from gnuradio import blocks</import>
-	<make>blocks.abs_$(type.fcn)($vlen)</make>
-	<param>
-		<name>Vec Length</name>
-		<key>vlen</key>
-		<value>1</value>
-		<type>int</type>
-	</param>
+	<make>blocks.abs_$(type.fcn)()</make>
 	<param>
 		<name>IO Type</name>
 		<key>type</key>
@@ -35,14 +29,21 @@
 			<opt>fcn:ff</opt>
 		</option>
 	</param>
+	<param>
+		<name>Num Inputs</name>
+		<key>num_inputs</key>
+		<value>1</value>
+		<type>int</type>
+	</param>
+	<check>$num_inputs &gt;= 1</check>
 	<sink>
 		<name>in</name>
 		<type>$type</type>
-		<vlen>$vlen</vlen>
+		<nports>$num_inputs</nports>
 	</sink>
 	<source>
 		<name>out</name>
 		<type>$type</type>
-		<vlen>$vlen</vlen>
+		<nports>$num_inputs</nports>
 	</source>
 </block>

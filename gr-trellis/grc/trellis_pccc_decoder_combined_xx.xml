@@ -21,7 +21,7 @@
     $dim, $table, $metric_type,
     $scaling)
   </make>
-        <callback>set_scaling($scaling)</callback>
+        <callback>set_TABLE($table)</callback>
   <param>
     <name>Input Type</name>
     <key>type</key>

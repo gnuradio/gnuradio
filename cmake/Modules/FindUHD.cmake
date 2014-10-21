@@ -2,7 +2,7 @@
 # Find the library for the USRP Hardware Driver
 ########################################################################
 
-# make this file non-reentrant within the current context
+# make this file non-reentrant
 if(__INCLUDED_FIND_UHD_CMAKE)
     return()
 endif()
@@ -19,12 +19,6 @@ unset(CMAKE_MODULE_PATH)
 # try to find UHD via the provided parameters,
 # handle REQUIRED internally later
 unset(UHD_FOUND)
-
-# set that UHDConfig.cmake was not used. Have to use the ENV, since
-# UHDConfigVersion does not allow CACHE changes and UHDConfig might
-# not allow CACHE changes.
-set(ENV{UHD_CONFIG_USED} FALSE)
-set(ENV{UHD_CONFIG_VERSION_USED} FALSE)
 
 # was the version specified?
 unset(LOCAL_UHD_FIND_VERSION)
@@ -48,10 +42,10 @@ find_package(
 # restore CMAKE_MODULE_PATH
 set(CMAKE_MODULE_PATH ${SAVED_CMAKE_MODULE_PATH})
 
-# check if UHDConfig was used above
-if(NOT $ENV{UHD_CONFIG_VERSION_USED})
+# check if UHD was found above
+if(NOT UHD_FOUND)
 
-  # Not used; try the "old" method (not as robust)
+  # Not found; try the "old" method (not as robust)
 
   include(FindPkgConfig)
   pkg_check_modules(PC_UHD uhd)
@@ -73,7 +67,7 @@ if(NOT $ENV{UHD_CONFIG_VERSION_USED})
     PATHS /usr/local/lib
           /usr/lib
   )
-endif(NOT $ENV{UHD_CONFIG_VERSION_USED})
+endif(NOT UHD_FOUND)
 
 if(UHD_LIBRARIES AND UHD_INCLUDE_DIRS)
 
@@ -85,9 +79,7 @@ if(UHD_LIBRARIES AND UHD_INCLUDE_DIRS)
   mark_as_advanced(UHD_LIBRARIES UHD_INCLUDE_DIRS)
 
 elseif(UHD_FIND_REQUIRED)
-  if($ENV{UHD_CONFIG_VERSION_USED} AND NOT $ENV{UHD_CONFIG_USED})
-    message(FATAL_ERROR "The found UHD version ($ENV{UHD_PACKAGE_VERSION}) is not compatible with the version required (${UHD_FIND_VERSION}).")
-  else()
-    message(FATAL_ERROR "UHD is required, but was not found.")
-  endif()
+
+  message(FATAL_ERROR "UHD is required, but was not found.")
+
 endif()

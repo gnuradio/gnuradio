@@ -49,13 +49,8 @@ namespace gr {
       virtual int D() const = 0;
       virtual digital::trellis_metric_type_t TYPE() const = 0;
       virtual std::vector<@I_TYPE@> TABLE() const = 0;
-
-      virtual void set_O(int O) = 0;
-      virtual void set_D(int D) = 0;
-      virtual void set_TYPE(digital::trellis_metric_type_t type) = 0;
       virtual void set_TABLE(const std::vector<@I_TYPE@> &table) = 0;
     };
-
 
   } /* namespace trellis */
 } /* namespace gr */

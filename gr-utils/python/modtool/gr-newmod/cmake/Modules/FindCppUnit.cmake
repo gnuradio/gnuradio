@@ -15,7 +15,6 @@ PKG_CHECK_MODULES(PC_CPPUNIT "cppunit")
 FIND_PATH(CPPUNIT_INCLUDE_DIRS
     NAMES cppunit/TestCase.h
     HINTS ${PC_CPPUNIT_INCLUDE_DIR}
-    ${CMAKE_INSTALL_PREFIX}/include
     PATHS
     /usr/local/include
     /usr/include
@@ -24,8 +23,6 @@ FIND_PATH(CPPUNIT_INCLUDE_DIRS
 FIND_LIBRARY(CPPUNIT_LIBRARIES
     NAMES cppunit
     HINTS ${PC_CPPUNIT_LIBDIR}
-    ${CMAKE_INSTALL_PREFIX}/lib
-    ${CMAKE_INSTALL_PREFIX}/lib64
     PATHS
     ${CPPUNIT_INCLUDE_DIRS}/../lib
     /usr/local/lib

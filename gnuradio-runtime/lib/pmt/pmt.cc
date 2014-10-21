@@ -368,12 +368,6 @@ from_double(double x)
   return pmt_t(new pmt_real(x));
 }
 
-pmt_t
-from_float(float x)
-{
-  return pmt_t(new pmt_real(x));
-}
-
 double
 to_double(pmt_t x)
 {
@@ -383,12 +377,6 @@ to_double(pmt_t x)
     return _integer(x)->value();
 
   throw wrong_type("pmt_to_double", x);
-}
-
-float
-to_float(pmt_t x)
-{
-  return float(to_double(x));
 }
 
 ////////////////////////////////////////////////////////////////////////////

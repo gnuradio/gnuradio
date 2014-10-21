@@ -49,7 +49,7 @@ namespace gr {
       /*!
        * \brief Create an instance of @NAME@
        */
-      static sptr make(size_t vlen=1);
+      static sptr make();
     };
 
   } /* namespace blocks */
