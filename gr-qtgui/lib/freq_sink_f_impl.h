@@ -112,6 +112,7 @@ namespace gr {
       void set_line_style(int which, int style);
       void set_line_marker(int which, int marker);
       void set_line_alpha(int which, double alpha);
+      void set_plot_pos_half(bool half);
 
       std::string title();
       std::string line_label(int which);

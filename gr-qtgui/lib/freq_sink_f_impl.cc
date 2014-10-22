@@ -54,8 +54,8 @@ namespace gr {
 				       int nconnections,
 				       QWidget *parent)
       : sync_block("freq_sink_f",
-		      io_signature::make(1, -1, sizeof(float)),
-		      io_signature::make(0, 0, 0)),
+                   io_signature::make(1, -1, sizeof(float)),
+                   io_signature::make(0, 0, 0)),
 	d_fftsize(fftsize), d_fftavg(1.0),
 	d_wintype((filter::firdes::win_type)(wintype)),
 	d_center_freq(fc), d_bandwidth(bw), d_name(name),
@@ -303,6 +303,12 @@ namespace gr {
     freq_sink_f_impl::set_size(int width, int height)
     {
       d_main_gui->resize(QSize(width, height));
+    }
+
+    void
+    freq_sink_f_impl::set_plot_pos_half(bool half)
+    {
+      d_main_gui->setPlotPosHalf(half);
     }
 
     std::string

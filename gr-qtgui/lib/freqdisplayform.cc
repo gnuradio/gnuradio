@@ -222,6 +222,13 @@ FreqDisplayForm::autoScale(bool en)
 }
 
 void
+FreqDisplayForm::setPlotPosHalf(bool half)
+{
+  getPlot()->setPlotPosHalf(half);
+  getPlot()->replot();
+}
+
+void
 FreqDisplayForm::clearMaxHold()
 {
   getPlot()->clearMaxData();

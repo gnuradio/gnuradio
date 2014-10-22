@@ -69,6 +69,7 @@ public slots:
   void setYMax(const QString &m);
   void setYMin(const QString &m);
   void autoScale(bool en);
+  void setPlotPosHalf(bool half);
   void clearMaxHold();
   void clearMinHold();
 
