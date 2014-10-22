@@ -398,7 +398,8 @@ namespace gr {
     {
       gr::thread::scoped_lock lock(d_setlock);
 
-      int newfftsize = d_fftsize;
+      int newfftsize = d_main_gui->getFFTSize();
+      d_fftavg = d_main_gui->getFFTAverage();
 
       if(newfftsize != d_fftsize) {
 
