@@ -4,6 +4,8 @@
 	<key>blocks_stream_to_tagged_stream</key>
 	<import>from gnuradio import blocks</import>
 	<make>blocks.stream_to_tagged_stream($type.size, $vlen, $packet_len, $len_tag_key)</make>
+	<callback>set_packet_len($packet_len)</callback>
+	<callback>set_packet_len_pmt($packet_len)</callback>
 	<param>
 		<name>Type</name>
 		<key>type</key>

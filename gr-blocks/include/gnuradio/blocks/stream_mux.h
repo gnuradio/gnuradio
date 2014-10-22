@@ -45,7 +45,7 @@ namespace gr {
     class BLOCKS_API stream_mux : virtual public block
     {
     public:
-
+      
       // gr::blocks::stream_mux::sptr
       typedef boost::shared_ptr<stream_mux> sptr;
 
@@ -62,6 +62,7 @@ namespace gr {
        *
        */
       static sptr make(size_t itemsize, const std::vector<int> &lengths);
+      virtual void set_lengths (const std::vector<int> &lengths) = 0;
     };
 
   } /* namespace blocks */
