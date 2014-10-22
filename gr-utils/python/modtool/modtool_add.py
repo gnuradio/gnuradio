@@ -1,5 +1,5 @@
 #
-# Copyright 2013 Free Software Foundation, Inc.
+# Copyright 2013-2014 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -28,9 +28,7 @@ from util_functions import append_re_line_sequence, ask_yes_no
 from cmakefile_editor import CMakeFileEditor
 from modtool_base import ModTool, ModToolException
 from templates import Templates
-from code_generator import get_template
-import Cheetah.Template
-
+from code_generator import render_template
 
 class ModToolAdd(ModTool):
     """ Add block to the out-of-tree module. """
@@ -146,7 +144,7 @@ class ModToolAdd(ModTool):
         """ Shorthand for writing a substituted template to a file"""
         path_to_file = os.path.join(path, fname)
         print "Adding file '%s'..." % path_to_file
-        open(path_to_file, 'w').write(get_template(tpl, **self._info))
+        open(path_to_file, 'w').write(render_template(tpl, **self._info))
         self.scm.add_files((path_to_file,))
 
     def run(self):
@@ -199,26 +197,6 @@ class ModToolAdd(ModTool):
                     self.scm.mark_files_updated((self._file['qalib'],))
                 except IOError:
                     print "Can't add C++ QA files."
-        def _add_qa36():
-            " Add C++ QA files for pre-3.7 API (not autotools) "
-            fname_qa_cc = 'qa_%s.cc' % self._info['fullblockname']
-            self._write_tpl('qa_cpp36', 'lib', fname_qa_cc)
-            if not self._skip_cmakefiles:
-                open(self._file['cmlib'], 'a').write(
-                    str(
-                        Cheetah.Template.Template(
-                            Templates['qa_cmakeentry36'],
-                            searchList={'basename': os.path.splitext(fname_qa_cc)[0],
-                                        'upperbasename': os.path.splitext(fname_qa_cc)[0].upper(),
-                                        'filename': fname_qa_cc,
-                                        'modname': self._info['modname']
-                                       }
-                        )
-                     )
-                )
-                ed = CMakeFileEditor(self._file['cmlib'])
-                ed.remove_double_newlines()
-                ed.write()
         fname_cc = None
         fname_h  = None
         if self._info['version']  == '37':
@@ -239,7 +217,7 @@ class ModToolAdd(ModTool):
             if self._info['version'] == '37':
                 _add_qa()
             elif self._info['version'] == '36':
-                _add_qa36()
+                print "Warning: C++ QA files not supported for 3.6-style OOTs."
             elif self._info['version'] == 'autofoo':
                 print "Warning: C++ QA files not supported for autotools."
         if not self._skip_cmakefiles:
@@ -264,7 +242,7 @@ class ModToolAdd(ModTool):
         mod_block_sep = '/'
         if self._info['version'] == '36':
             mod_block_sep = '_'
-        swig_block_magic_str = get_template('swig_block_magic', **self._info)
+        swig_block_magic_str = render_template('swig_block_magic', **self._info)
         open(self._file['swig'], 'a').write(swig_block_magic_str)
         include_str = '#include "%s%s%s.h"' % (
                 {True: 'gnuradio/' + self._info['modname'], False: self._info['modname']}[self._info['is_component']],
