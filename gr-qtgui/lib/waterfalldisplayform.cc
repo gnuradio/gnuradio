@@ -330,3 +330,10 @@ WaterfallDisplayForm::getClickedFreq() const
 {
   return d_clicked_freq;
 }
+
+void
+WaterfallDisplayForm::setPlotPosHalf(bool half)
+{
+  getPlot()->setPlotPosHalf(half);
+  getPlot()->replot();
+}

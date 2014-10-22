@@ -26,7 +26,6 @@ self.$(id).enable_autoscale($autoscale)
 self.$(id).enable_grid($grid)
 self.$(id).set_fft_average($average)
 
-print $type, type(float())
 if $type == type(float()):
   self.$(id).set_plot_pos_half(not $freqhalf)
 
