@@ -511,6 +511,12 @@ if(MSVC)
     set_source_files_properties(${volk_sources} PROPERTIES LANGUAGE CXX)
 endif()
 
+#link libmath
+find_library(LIBM NAMES m)
+if(LIBM)
+    list(APPEND volk_libraries ${LIBM})
+endif()
+
 #create the volk runtime library
 add_library(volk SHARED ${volk_sources})
 target_link_libraries(volk ${volk_libraries})
