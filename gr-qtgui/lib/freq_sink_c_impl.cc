@@ -82,22 +82,20 @@ namespace gr {
       // this is usually desired when plotting
       d_shift = true;
 
-      d_outputsize = (2 * (d_fftsize / 2)) + 1;
-
       d_fft = new fft::fft_complex(d_fftsize, true);
-      d_fbuf = (float*)volk_malloc(d_outputsize*sizeof(float),
+      d_fbuf = (float*)volk_malloc(d_fftsize*sizeof(float),
                                    volk_get_alignment());
-      memset(d_fbuf, 0, d_outputsize*sizeof(float));
+      memset(d_fbuf, 0, d_fftsize*sizeof(float));
 
       d_index = 0;
       for(int i = 0; i < d_nconnections; i++) {
 	d_residbufs.push_back((gr_complex*)volk_malloc(d_fftsize*sizeof(gr_complex),
                                                        volk_get_alignment()));
-	d_magbufs.push_back((double*)volk_malloc(d_outputsize*sizeof(double),
+	d_magbufs.push_back((double*)volk_malloc(d_fftsize*sizeof(double),
                                                  volk_get_alignment()));
 
 	memset(d_residbufs[i], 0, d_fftsize*sizeof(gr_complex));
-	memset(d_magbufs[i], 0, d_outputsize*sizeof(double));
+	memset(d_magbufs[i], 0, d_fftsize*sizeof(double));
       }
 
       buildwindow();
@@ -151,7 +149,7 @@ namespace gr {
 
       d_main_gui = new FreqDisplayForm(d_nconnections, d_parent);
       set_fft_window(d_wintype);
-      set_fft_size(d_outputsize);
+      set_fft_size(d_fftsize);
       set_frequency_range(d_center_freq, d_bandwidth);
 
       if(d_name.size() > 0)
@@ -472,7 +470,6 @@ namespace gr {
       gr::thread::scoped_lock lock(d_setlock);
 
       int newfftsize = d_main_gui->getFFTSize();
-      int newoutputsize = (2 * (newfftsize / 2)) + 1;
       d_fftavg = d_main_gui->getFFTAverage();
 
       if(newfftsize != d_fftsize) {
@@ -483,17 +480,16 @@ namespace gr {
 
 	  d_residbufs[i] = (gr_complex*)volk_malloc(newfftsize*sizeof(gr_complex),
                                                     volk_get_alignment());
-	  d_magbufs[i] = (double*)volk_malloc(newoutputsize*sizeof(double),
+	  d_magbufs[i] = (double*)volk_malloc(newfftsize*sizeof(double),
                                               volk_get_alignment());
 
 	  memset(d_residbufs[i], 0, newfftsize*sizeof(gr_complex));
-	  memset(d_magbufs[i], 0, newoutputsize*sizeof(double));
+	  memset(d_magbufs[i], 0, newfftsize*sizeof(double));
 	}
 
 	// Set new fft size and reset buffer index
 	// (throws away any currently held data, but who cares?)
 	d_fftsize = newfftsize;
-	d_outputsize = newoutputsize;
 	d_index = 0;
 
 	// Reset window to reflect new size
@@ -504,9 +500,9 @@ namespace gr {
 	d_fft = new fft::fft_complex(d_fftsize, true);
 
 	volk_free(d_fbuf);
-	d_fbuf = (float*)volk_malloc(d_outputsize*sizeof(float),
+	d_fbuf = (float*)volk_malloc(d_fftsize*sizeof(float),
                                      volk_get_alignment());
-	memset(d_fbuf, 0, d_outputsize*sizeof(float));
+	memset(d_fbuf, 0, d_fftsize*sizeof(float));
 
         d_last_time = 0;
 
@@ -590,7 +586,7 @@ namespace gr {
 
       // If using auto trigger mode, trigger periodically even
       // without a trigger event.
-      if((d_trigger_mode == TRIG_MODE_AUTO) && (d_trigger_count > d_outputsize)) {
+      if((d_trigger_mode == TRIG_MODE_AUTO) && (d_trigger_count > d_fftsize)) {
         d_triggered = true;
         d_trigger_count = 0;
       }
@@ -614,16 +610,16 @@ namespace gr {
       _gui_update_trigger();
 
       gr::thread::scoped_lock lock(d_setlock);
-      for(d_index = 0; d_index < noutput_items; d_index+=d_outputsize) {
+      for(d_index = 0; d_index < noutput_items; d_index+=d_fftsize) {
 
         if((gr::high_res_timer_now() - d_last_time) > d_update_time) {
 
           // Trigger off tag, if active
           if((d_trigger_mode == TRIG_MODE_TAG) && !d_triggered) {
-            _test_trigger_tags(d_index, d_outputsize);
+            _test_trigger_tags(d_index, d_fftsize);
             if(d_triggered) {
               // If not enough from tag position, early exit
-              if((d_index + d_outputsize) >= noutput_items)
+              if((d_index + d_fftsize) >= noutput_items)
                 return d_index;
             }
           }
@@ -634,7 +630,7 @@ namespace gr {
             memcpy(d_residbufs[n], &in[d_index], sizeof(gr_complex)*d_fftsize);
 
             fft(d_fbuf, d_residbufs[n], d_fftsize);
-            for(int x = 0; x < d_outputsize; x++) {
+            for(int x = 0; x < d_fftsize; x++) {
               d_magbufs[n][x] = (double)((1.0-d_fftavg)*d_magbufs[n][x] + (d_fftavg)*d_fbuf[x]);
             }
             //volk_32f_convert_64f_a(d_magbufs[n], d_fbuf, d_fftsize);
@@ -642,14 +638,14 @@ namespace gr {
 
           // Test trigger off signal power in d_magbufs
           if((d_trigger_mode == TRIG_MODE_NORM) || (d_trigger_mode == TRIG_MODE_AUTO)) {
-            _test_trigger_norm(d_outputsize, d_magbufs);
+            _test_trigger_norm(d_fftsize, d_magbufs);
           }
 
           // If a trigger (FREE always triggers), plot and reset state
           if(d_triggered) {
             d_last_time = gr::high_res_timer_now();
             d_qApplication->postEvent(d_main_gui,
-                                      new FreqUpdateEvent(d_magbufs, d_outputsize));
+                                      new FreqUpdateEvent(d_magbufs, d_fftsize));
             _reset();
           }
         }

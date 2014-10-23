@@ -509,7 +509,7 @@ void
 FrequencyDisplayPlot::_resetXAxisPoints()
 {
   double fft_bin_size = (d_stop_frequency - d_start_frequency)
-    / static_cast<double>(d_numPoints - (d_half_freq ? 0 : 1));
+    / static_cast<double>(d_numPoints);
   double freqValue = d_start_frequency;
   for(int64_t loc = 0; loc < d_numPoints; loc++) {
     d_xdata[loc] = freqValue;
