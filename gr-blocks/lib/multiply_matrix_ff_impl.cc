@@ -170,7 +170,7 @@ namespace gr {
         }
       }
 
-      if (not set_A(new_A)) {
+      if (!set_A(new_A)) {
           GR_LOG_ALERT(d_logger, "Invalid message to set A.");
       }
     }
