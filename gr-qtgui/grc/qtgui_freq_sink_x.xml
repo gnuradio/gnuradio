@@ -22,6 +22,7 @@ qtgui.$(type.fcn)(
 )
 self.$(id).set_update_time($update_time)
 self.$(id).set_y_axis($ymin, $ymax)
+self.$(id).set_trigger_mode($tr_mode, $tr_level, $tr_chan, $tr_tag)
 self.$(id).enable_autoscale($autoscale)
 self.$(id).enable_grid($grid)
 self.$(id).set_fft_average($average)
@@ -56,6 +57,7 @@ $(gui_hint()($win))</make>
 
   <param_tab_order>
     <tab>General</tab>
+    <tab>Trigger</tab>
     <tab>Config</tab>
   </param_tab_order>
 
@@ -259,6 +261,63 @@ $(gui_hint()($win))</make>
     </option>
   </param>
 
+
+  <!-- Begin Trigger Tab items -->
+  <param>
+    <name>Trigger Mode</name>
+    <key>tr_mode</key>
+    <value>qtgui.TRIG_MODE_FREE</value>
+    <type>enum</type>
+    <hide>part</hide>
+    <option>
+      <name>Free</name>
+      <key>qtgui.TRIG_MODE_FREE</key>
+    </option>
+    <option>
+      <name>Auto</name>
+      <key>qtgui.TRIG_MODE_AUTO</key>
+    </option>
+    <option>
+      <name>Normal</name>
+      <key>qtgui.TRIG_MODE_NORM</key>
+    </option>
+    <option>
+      <name>Tag</name>
+      <key>qtgui.TRIG_MODE_TAG</key>
+    </option>
+    <tab>Trigger</tab>
+  </param>
+
+  <param>
+    <name>Trigger Level</name>
+    <key>tr_level</key>
+    <value>0.0</value>
+    <type>float</type>
+    <hide>part</hide>
+    <tab>Trigger</tab>
+  </param>
+
+  <param>
+    <name>Trigger Channel</name>
+    <key>tr_chan</key>
+    <value>0</value>
+    <type>int</type>
+    <hide>part</hide>
+    <tab>Trigger</tab>
+  </param>
+
+  <param>
+    <name>Trigger Tag Key</name>
+    <key>tr_tag</key>
+    <value>""</value>
+    <type>string</type>
+    <hide>part</hide>
+    <tab>Trigger</tab>
+  </param>
+
+
+
+  <!-- Begin Config Tab items -->
   <param>
     <name>Line 1 Label</name>
     <key>label1</key>
