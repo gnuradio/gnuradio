@@ -87,6 +87,11 @@ namespace gr {
                                    volk_get_alignment());
       memset(d_fbuf, 0, d_fftsize*sizeof(float));
 
+      d_tmpbuflen = (unsigned int)(floor(d_fftsize/2.0));
+      d_tmpbuf = (float*)volk_malloc(sizeof(float)*(d_tmpbuflen + 1),
+                                     volk_get_alignment());
+
+
       d_index = 0;
       for(int i = 0; i < d_nconnections; i++) {
 	d_residbufs.push_back((gr_complex*)volk_malloc(d_fftsize*sizeof(gr_complex),
@@ -116,6 +121,7 @@ namespace gr {
       }
       delete d_fft;
       volk_free(d_fbuf);
+      volk_free(d_tmpbuf);
 
       delete d_argv;
     }
@@ -432,12 +438,9 @@ namespace gr {
                                                    size, 1.0, size);
 
       // Perform shift operation
-      unsigned int len = (unsigned int)(floor(size/2.0));
-      float *tmp = (float*)malloc(sizeof(float)*(len + 1));
-      memcpy(tmp, &data_out[0], sizeof(float)*(len + 1));
-      memcpy(&data_out[0], &data_out[size - len], sizeof(float)*(len));
-      memcpy(&data_out[len], tmp, sizeof(float)*(len + 1));
-      free(tmp);
+      memcpy(d_tmpbuf, &data_out[0], sizeof(float)*(d_tmpbuflen + 1));
+      memcpy(&data_out[0], &data_out[size - d_tmpbuflen], sizeof(float)*(d_tmpbuflen));
+      memcpy(&data_out[d_tmpbuflen], d_tmpbuf, sizeof(float)*(d_tmpbuflen + 1));
     }
 
     bool
@@ -503,6 +506,11 @@ namespace gr {
 	d_fbuf = (float*)volk_malloc(d_fftsize*sizeof(float),
                                      volk_get_alignment());
 	memset(d_fbuf, 0, d_fftsize*sizeof(float));
+
+	volk_free(d_tmpbuf);
+        d_tmpbuflen = (unsigned int)(floor(d_fftsize/2.0));
+        d_tmpbuf = (float*)volk_malloc(sizeof(float)*(d_tmpbuflen + 1),
+                                       volk_get_alignment());
 
         d_last_time = 0;
 

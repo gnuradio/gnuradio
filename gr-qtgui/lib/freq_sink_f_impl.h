@@ -38,7 +38,7 @@ namespace gr {
       void initialize();
 
       int d_fftsize;
-      int d_outputsize;
+      int d_tmpbuflen;
       float d_fftavg;
       filter::firdes::win_type d_wintype;
       std::vector<float> d_window;
@@ -54,6 +54,7 @@ namespace gr {
       std::vector<float*> d_residbufs;
       std::vector<double*> d_magbufs;
       float *d_fbuf;
+      float *d_tmpbuf;
 
       int d_argc;
       char *d_argv;
