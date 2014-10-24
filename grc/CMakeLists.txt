@@ -68,6 +68,16 @@ CPACK_COMPONENT("grc"
 ########################################################################
 file(TO_NATIVE_PATH ${CMAKE_INSTALL_PREFIX}/${GRC_BLOCKS_DIR} blocksdir)
 
+if (APPLE)
+    set(GRC_XTERM_EXE "xterm")
+elseif(CYGWIN)
+    set(GRC_XTERM_EXE "xterm")
+elseif(UNIX)
+    set(GRC_XTERM_EXE "x-terminal-emulator")
+else()
+    set(GRC_XTERM_EXE "xterm")
+endif()
+
 configure_file(
     ${CMAKE_CURRENT_SOURCE_DIR}/grc.conf.in
     ${CMAKE_CURRENT_BINARY_DIR}/grc.conf
