@@ -34,7 +34,7 @@ static inline void volk_16u_byteswappuppet_16u_neon_table(uint16_t*output, uint1
 #endif
 
 #ifdef LV_HAVE_SSE2
-static inline void volk_16u_byteswappuppet_16u_u_sse2(uint16_t* intsToSwap, unsigned int num_points){
+static inline void volk_16u_byteswappuppet_16u_u_sse2(uint16_t *output, uint16_t* intsToSwap, unsigned int num_points){
 
     volk_16u_byteswap_u_sse2((uint16_t*)intsToSwap, num_points);
     memcpy((void*)output, (void*)intsToSwap, num_points * sizeof(uint16_t));
@@ -43,7 +43,7 @@ static inline void volk_16u_byteswappuppet_16u_u_sse2(uint16_t* intsToSwap, unsi
 #endif
 
 #ifdef LV_HAVE_SSE2
-static inline void volk_16u_byteswappuppet_16u_a_sse2(uint16_t* intsToSwap, unsigned int num_points){
+static inline void volk_16u_byteswappuppet_16u_a_sse2(uint16_t *output, uint16_t* intsToSwap, unsigned int num_points){
 
     volk_16u_byteswap_a_sse2((uint16_t*)intsToSwap, num_points);
     memcpy((void*)output, (void*)intsToSwap, num_points * sizeof(uint16_t));
