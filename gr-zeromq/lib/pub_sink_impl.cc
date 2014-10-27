@@ -84,6 +84,7 @@ namespace gr {
         sb.str("");
         pmt::serialize( tags[i].key, sb );                                           // key
         pmt::serialize( tags[i].value, sb );                                         // value
+        pmt::serialize( tags[i].srcid, sb );                                         // srcid
         ss.write( sb.str().c_str() , sb.str().length() );   // offset
         }
       size_t headlen( ss.gcount() );
