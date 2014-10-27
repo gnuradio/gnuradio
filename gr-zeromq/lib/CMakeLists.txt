@@ -43,6 +43,7 @@ list(APPEND zeromq_sources
   push_sink_impl.cc
   rep_sink_impl.cc
   req_source_impl.cc
+  tag_headers.cc
 )
 
 #Add Windows DLL resource file if using MSVC

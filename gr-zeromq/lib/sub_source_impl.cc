@@ -26,6 +26,7 @@
 
 #include <gnuradio/io_signature.h>
 #include "sub_source_impl.h"
+#include "tag_headers.h"
 
 namespace gr {
   namespace zeromq {
@@ -83,38 +84,26 @@ namespace gr {
         d_socket->recv(&msg);
 
         // Deserialize header data / tags
-        std::istringstream iss( std::string(static_cast<char*>(msg.data()), msg.size()));
+        std::string buf(static_cast<char*>(msg.data()), msg.size());
 
         if(d_pass_tags){
-        uint64_t rcv_offset;
-        size_t   rcv_ntags;
-        iss.read( (char*)&rcv_offset, sizeof(uint64_t ) );
-        iss.read( (char*)&rcv_ntags,  sizeof(size_t   ) );
-        for(size_t i=0; i<rcv_ntags; i++){
-            uint64_t tag_offset;
-            iss.read( (char*)&tag_offset, sizeof(uint64_t ) );
-            std::stringbuf sb( iss.str() );
-            pmt::pmt_t key = pmt::deserialize( sb );
-            pmt::pmt_t val = pmt::deserialize( sb );
-            pmt::pmt_t src = pmt::deserialize( sb );
-            uint64_t new_tag_offset = tag_offset + nitems_read(0) - rcv_offset;
-            add_item_tag(0, new_tag_offset, key, val, src);
-            iss.str(sb.str());
+            uint64_t rcv_offset;
+            std::vector<gr::tag_t> tags;
+            buf = parse_tag_header(buf, rcv_offset, tags);
+            for(size_t i=0; i<tags.size(); i++){
+                tags[i].offset -= rcv_offset - nitems_read(0);
+                add_item_tag(0, tags[i]);
+                }
             }
-        }
-
-        // Pass sample data along
-        std::vector<char> samp(iss.gcount());
-        iss.read( &samp[0], iss.gcount() );
 
         // Copy to ouput buffer and return
-        if (samp.size() >= d_itemsize*d_vlen*noutput_items) {
-          memcpy(out, (void *)&samp[0], d_itemsize*d_vlen*noutput_items);
+        if (buf.size() >= d_itemsize*d_vlen*noutput_items) {
+          memcpy(out, (void *)&buf[0], d_itemsize*d_vlen*noutput_items);
           return noutput_items;
         }
         else {
-          memcpy(out, (void *)&samp[0], samp.size());
-          return samp.size()/(d_itemsize*d_vlen);
+          memcpy(out, (void *)&buf[0], buf.size());
+          return buf.size()/(d_itemsize*d_vlen);
         }
       }
       else {
