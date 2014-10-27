@@ -31,17 +31,17 @@ namespace gr {
   namespace zeromq {
 
     sub_source::sptr
-    sub_source::make(size_t itemsize, size_t vlen, char *address, int timeout)
+    sub_source::make(size_t itemsize, size_t vlen, char *address, int timeout, bool pass_tags)
     {
       return gnuradio::get_initial_sptr
         (new sub_source_impl(itemsize, vlen, address, timeout));
     }
 
-    sub_source_impl::sub_source_impl(size_t itemsize, size_t vlen, char *address, int timeout)
+    sub_source_impl::sub_source_impl(size_t itemsize, size_t vlen, char *address, int timeout, bool pass_tags)
       : gr::sync_block("sub_source",
                        gr::io_signature::make(0, 0, 0),
                        gr::io_signature::make(1, 1, itemsize * vlen)),
-        d_itemsize(itemsize), d_vlen(vlen), d_timeout(timeout)
+        d_itemsize(itemsize), d_vlen(vlen), d_timeout(timeout), d_pass_tags(pass_tags)
     {
       int major, minor, patch;
       zmq::version (&major, &minor, &patch);
@@ -84,6 +84,8 @@ namespace gr {
 
         // Deserialize header data / tags
         std::istringstream iss( std::string(static_cast<char*>(msg.data()), msg.size()));
+
+        if(d_pass_tags){
         uint64_t rcv_offset;
         size_t   rcv_ntags;
         iss.read( (char*)&rcv_offset, sizeof(uint64_t ) );
@@ -99,6 +101,7 @@ namespace gr {
             add_item_tag(0, new_tag_offset, key, val, src);
             iss.str(sb.str());
             }
+        }
 
         // Pass sample data along
         std::vector<char> samp(iss.gcount());

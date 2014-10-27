@@ -33,17 +33,17 @@ namespace gr {
   namespace zeromq {
 
     pub_sink::sptr
-    pub_sink::make(size_t itemsize, size_t vlen, char *address, int timeout)
+    pub_sink::make(size_t itemsize, size_t vlen, char *address, int timeout, bool pass_tags)
     {
       return gnuradio::get_initial_sptr
         (new pub_sink_impl(itemsize, vlen, address, timeout));
     }
 
-    pub_sink_impl::pub_sink_impl(size_t itemsize, size_t vlen, char *address, int timeout)
+    pub_sink_impl::pub_sink_impl(size_t itemsize, size_t vlen, char *address, int timeout, bool pass_tags)
       : gr::sync_block("pub_sink",
                        gr::io_signature::make(1, 1, itemsize * vlen),
                        gr::io_signature::make(0, 0, 0)),
-        d_itemsize(itemsize), d_vlen(vlen), d_timeout(timeout)
+        d_itemsize(itemsize), d_vlen(vlen), d_timeout(timeout), d_pass_tags(pass_tags)
     {
       int major, minor, patch;
       zmq::version (&major, &minor, &patch);
@@ -72,9 +72,11 @@ namespace gr {
       const char *in = (const char *)input_items[0];
 
       // encode the current offset, # tags, and tags into header
+    size_t headlen(0);
+    std::stringstream ss;
+    if(d_pass_tags){
       std::vector<gr::tag_t> tags;
       get_tags_in_range(tags, 0, nitems_read(0), nitems_read(0)+noutput_items);
-      std::stringstream ss;
       size_t ntags = tags.size();
       ss.write( reinterpret_cast< const char* >( nitems_read(0) ), sizeof(uint64_t) );  // offset
       ss.write( reinterpret_cast< const char* >( &ntags ), sizeof(size_t) );      // num tags
@@ -87,11 +89,13 @@ namespace gr {
         pmt::serialize( tags[i].srcid, sb );                                         // srcid
         ss.write( sb.str().c_str() , sb.str().length() );   // offset
         }
-      size_t headlen( ss.gcount() );
+      headlen = ss.gcount();
+      }
 
       // create message copy and send
       zmq::message_t msg(headlen + d_itemsize*d_vlen*noutput_items);
-      memcpy((void*) msg.data(), ss.str().c_str(), ss.str().length() );
+      if(d_pass_tags)
+        memcpy((void*) msg.data(), ss.str().c_str(), ss.str().length() );
       memcpy((uint8_t *)msg.data() + headlen, in, d_itemsize*d_vlen*noutput_items);
       d_socket->send(msg);
 
