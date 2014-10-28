@@ -27,8 +27,6 @@
 #include <gnuradio/io_signature.h>
 #include "pub_sink_impl.h"
 #include "tag_headers.h"
-#include <sstream>
-#include <cstring>
 
 namespace gr {
   namespace zeromq {
