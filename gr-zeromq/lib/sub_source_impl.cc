@@ -35,7 +35,7 @@ namespace gr {
     sub_source::make(size_t itemsize, size_t vlen, char *address, int timeout, bool pass_tags)
     {
       return gnuradio::get_initial_sptr
-        (new sub_source_impl(itemsize, vlen, address, timeout));
+        (new sub_source_impl(itemsize, vlen, address, timeout, pass_tags));
     }
 
     sub_source_impl::sub_source_impl(size_t itemsize, size_t vlen, char *address, int timeout, bool pass_tags)
