@@ -221,7 +221,7 @@ volk_32f_binary_slicer_8i_neon(int8_t* cVector, const float* aVector,
   int8_t* cPtr = cVector;
   const float* aPtr = aVector;
   unsigned int number = 0;
-  unsigned int n8points = num_points / 8;
+  unsigned int n16points = num_points / 16;
 
   float32x4x2_t input_val0, input_val1;
   float32x4_t zero_val;
@@ -237,7 +237,7 @@ volk_32f_binary_slicer_8i_neon(int8_t* cVector, const float* aVector,
   // TODO: this is a good candidate for asm because the vcombines
   // can be eliminated simply by picking dst registers that are
   // adjacent.
-  for(number = 0; number < n8points; number++) {
+  for(number = 0; number < n16points; number++) {
     input_val0 = vld2q_f32(aPtr);
     input_val1 = vld2q_f32(aPtr+8);
 
@@ -269,12 +269,12 @@ volk_32f_binary_slicer_8i_neon(int8_t* cVector, const float* aVector,
     res_u8.val[1] = vand_u8(one, res_u8.val[1]);
 
     vst2_u8((unsigned char*)cPtr, res_u8);
-    cPtr += 8;
-    aPtr += 8;
+    cPtr += 16;
+    aPtr += 16;
 
   }
 
-  for(number = n8points * 8; number < num_points; number++) {
+  for(number = n16points * 16; number < num_points; number++) {
     if(*aPtr++ >= 0) {
       *cPtr++ = 1;
     }
