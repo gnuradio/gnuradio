@@ -138,6 +138,46 @@ static inline void volk_16i_convert_8i_a_sse2(int8_t* outputVector, const int16_
 }
 #endif /* LV_HAVE_SSE2 */
 
+#ifdef LV_HAVE_NEON
+#include <arm_neon.h>
+/*!
+  \brief Converts the input 16 bit integer data into 8 bit integer data
+  \param inputVector The 16 bit input data buffer
+  \param outputVector The 8 bit output data buffer
+  \param num_points The number of data values to be converted
+*/
+static inline void volk_16i_convert_8i_neon(int8_t* outputVector, const int16_t* inputVector, unsigned int num_points){
+  int8_t* outputVectorPtr = outputVector;
+  const int16_t* inputVectorPtr = inputVector;
+  unsigned int number = 0;
+  unsigned int sixteenth_points = num_points / 16;
+
+  int16x8_t inputVal0;
+  int16x8_t inputVal1;
+  int8x8_t outputVal0;
+  int8x8_t outputVal1;
+  int8x16_t outputVal;
+  
+  for(number = 0; number < sixteenth_points; number++){
+    // load two input vectors
+    inputVal0 = vld1q_s16(inputVectorPtr);
+    inputVal1 = vld1q_s16(inputVectorPtr+8);
+    // shift right
+    outputVal0 = vshrn_n_s16(inputVal0, 8);
+    outputVal1 = vshrn_n_s16(inputVal1, 8);
+    // squash two vectors and write output
+    outputVal = vcombine_s8(outputVal0, outputVal1);
+    vst1q_s8(outputVectorPtr, outputVal);
+    inputVectorPtr += 16;
+    outputVectorPtr += 16;
+  }
+
+  for(number = sixteenth_points * 16; number < num_points; number++){
+    *outputVectorPtr++ = ((int8_t)(*inputVectorPtr++ >> 8));
+  }
+}
+#endif /* LV_HAVE_NEON */
+
 #ifdef LV_HAVE_GENERIC
 /*!
   \brief Converts the input 16 bit integer data into 8 bit integer data
@@ -155,8 +195,5 @@ static inline void volk_16i_convert_8i_a_generic(int8_t* outputVector, const int
   }
 }
 #endif /* LV_HAVE_GENERIC */
-
-
-
 
 #endif /* INCLUDED_volk_16i_convert_8i_a_H */

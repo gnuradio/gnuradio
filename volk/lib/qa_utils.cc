@@ -247,7 +247,7 @@ bool fcompare(t *in1, t *in2, unsigned int vlen, float tol) {
             }
         }
         // the primary test is the percent different greater than given tol
-        else if(fabs(((t *)(in1))[i] - ((t *)(in2))[i])/(((t *)in1)[i]) > tol) {
+        else if(fabs(((t *)(in1))[i] - ((t *)(in2))[i])/fabs(((t *)in1)[i]) > tol) {
             fail=true;
             if(print_max_errs-- > 0) {
                 std::cout << "offset " << i << " in1: " << t(((t *)(in1))[i]) << " in2: " << t(((t *)(in2))[i]) << std::endl;

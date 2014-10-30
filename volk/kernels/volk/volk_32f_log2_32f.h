@@ -61,7 +61,7 @@
 #define POLY4(x, c0, c1, c2, c3, c4) _mm_add_ps(_mm_mul_ps(POLY3(x, c1, c2, c3, c4), x), _mm_set1_ps(c0))
 #define POLY5(x, c0, c1, c2, c3, c4, c5) _mm_add_ps(_mm_mul_ps(POLY4(x, c1, c2, c3, c4, c5), x), _mm_set1_ps(c0))
 
-#define LOG_POLY_DEGREE 3
+#define LOG_POLY_DEGREE 6
 
 
 #ifndef INCLUDED_volk_32f_log2_32f_a_H
@@ -144,6 +144,106 @@ static inline void volk_32f_log2_32f_a_sse4_1(float* bVector, const float* aVect
 }
 
 #endif /* LV_HAVE_SSE4_1 for aligned */
+
+
+#ifdef LV_HAVE_NEON
+#include <arm_neon.h>
+
+/* these macros allow us to embed logs in other kernels */
+#define VLOG2Q_NEON_PREAMBLE()                                  \
+    int32x4_t one = vdupq_n_s32(0x000800000);                   \
+    /* minimax polynomial */                                    \
+    float32x4_t p0 = vdupq_n_f32(-3.0400402727048585);          \
+    float32x4_t p1 = vdupq_n_f32(6.1129631282966113);           \
+    float32x4_t p2 = vdupq_n_f32(-5.3419892024633207);          \
+    float32x4_t p3 = vdupq_n_f32(3.2865287703753912);           \
+    float32x4_t p4 = vdupq_n_f32(-1.2669182593441635);          \
+    float32x4_t p5 = vdupq_n_f32(0.2751487703421256);           \
+    float32x4_t p6 = vdupq_n_f32(-0.0256910888150985);          \
+    int32x4_t exp_mask = vdupq_n_s32(0x7f800000);               \
+    int32x4_t sig_mask = vdupq_n_s32(0x007fffff);               \
+    int32x4_t exp_bias = vdupq_n_s32(127);
+
+
+#define VLOG2Q_NEON_F32(log2_approx, aval)                              \
+        int32x4_t exponent_i = vandq_s32(aval, exp_mask);               \
+        int32x4_t significand_i = vandq_s32(aval, sig_mask);            \
+        exponent_i = vshrq_n_s32(exponent_i, 23);                       \
+                                                                        \
+        /* extract the exponent and significand                         \
+         we can treat this as fixed point to save ~9% on the            \
+         conversion + float add */                                      \
+        significand_i = vorrq_s32(one, significand_i);                  \
+        float32x4_t significand_f = vcvtq_n_f32_s32(significand_i,23);  \
+        /* debias the exponent and convert to float */                  \
+        exponent_i = vsubq_s32(exponent_i, exp_bias);                   \
+        float32x4_t exponent_f = vcvtq_f32_s32(exponent_i);             \
+                                                                        \
+        /* put the significand through a polynomial fit of log2(x) [1,2]\
+         add the result to the exponent */                              \
+        log2_approx = vaddq_f32(exponent_f, p0); /* p0 */               \
+        float32x4_t tmp1 = vmulq_f32(significand_f, p1); /* p1 * x */   \
+        log2_approx = vaddq_f32(log2_approx, tmp1);                     \
+        float32x4_t sig_2 = vmulq_f32(significand_f, significand_f); /* x^2 */ \
+        tmp1 = vmulq_f32(sig_2, p2); /* p2 * x^2 */                     \
+        log2_approx = vaddq_f32(log2_approx, tmp1);                     \
+                                                                        \
+        float32x4_t sig_3 = vmulq_f32(sig_2, significand_f); /* x^3 */  \
+        tmp1 = vmulq_f32(sig_3, p3); /* p3 * x^3 */                     \
+        log2_approx = vaddq_f32(log2_approx, tmp1);                     \
+        float32x4_t sig_4 = vmulq_f32(sig_2, sig_2); /* x^4 */          \
+        tmp1 = vmulq_f32(sig_4, p4); /* p4 * x^4 */                     \
+        log2_approx = vaddq_f32(log2_approx, tmp1);                     \
+        float32x4_t sig_5 = vmulq_f32(sig_3, sig_2); /* x^5 */          \
+        tmp1 = vmulq_f32(sig_5, p5); /* p5 * x^5 */                     \
+        log2_approx = vaddq_f32(log2_approx, tmp1);                     \
+        float32x4_t sig_6 = vmulq_f32(sig_3, sig_3); /* x^6 */          \
+        tmp1 = vmulq_f32(sig_6, p6); /* p6 * x^6 */                     \
+        log2_approx = vaddq_f32(log2_approx, tmp1);
+
+/*!
+  \brief Computes base 2 log of input vector and stores results in output vector
+  \param bVector The vector where results will be stored
+  \param aVector The input vector of floats
+  \param num_points Number of points for which log is to be computed
+*/
+static inline void volk_32f_log2_32f_neon(float* bVector, const float* aVector, unsigned int num_points){
+    float* bPtr = bVector;
+    const float* aPtr = aVector;
+    unsigned int number;
+    const unsigned int quarterPoints = num_points / 4;
+
+    int32x4_t aval;
+    float32x4_t log2_approx;
+
+    VLOG2Q_NEON_PREAMBLE()
+    // lms
+    //p0 = vdupq_n_f32(-1.649132280361871);
+    //p1 = vdupq_n_f32(1.995047138579499);
+    //p2 = vdupq_n_f32(-0.336914839219728);
+
+    // keep in mind a single precision float is represented as
+    //   (-1)^sign * 2^exp * 1.significand, so the log2 is
+    // log2(2^exp * sig) = exponent + log2(1 + significand/(1<<23)
+    for(number = 0; number < quarterPoints; ++number){
+        // load float in to an int register without conversion
+        aval = vld1q_s32((int*)aPtr);
+
+        VLOG2Q_NEON_F32(log2_approx, aval)
+
+        vst1q_f32(bPtr, log2_approx);
+
+        aPtr += 4;
+        bPtr += 4;
+    }
+
+    for(number = quarterPoints * 4; number < num_points; number++){
+       *bPtr++ = log2(*aPtr++);
+    }
+}
+
+#endif /* LV_HAVE_NEON */
+
 
 #endif /* INCLUDED_volk_32f_log2_32f_a_H */
 

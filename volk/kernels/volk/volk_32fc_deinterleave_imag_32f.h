@@ -37,7 +37,6 @@
 static inline void volk_32fc_deinterleave_imag_32f_a_avx(float* qBuffer, const lv_32fc_t* complexVector, unsigned int num_points){
   unsigned int number = 0;
   const unsigned int eighthPoints = num_points / 8;
-  int imagMask = 0xdd;
   const float* complexVectorPtr = (const float*)complexVector;
   float* qBufferPtr = qBuffer;
 
@@ -54,8 +53,7 @@ static inline void volk_32fc_deinterleave_imag_32f_a_avx(float* qBuffer, const l
     complex2 = _mm256_permute2f128_ps(cplxValue1, cplxValue2, 0x31);
 
     // Arrange in q1q2q3q4 format
-    qValue = _mm256_shuffle_ps(complex1, complex2, imagMask);
-    //iValue = _mm_shuffle_ps(cplxValue1, cplxValue2, _MM_SHUFFLE(3,1,3,1));
+    qValue = _mm256_shuffle_ps(complex1, complex2, 0xdd);
 
     _mm256_store_ps(qBufferPtr, qValue);
 
@@ -109,6 +107,35 @@ static inline void volk_32fc_deinterleave_imag_32f_a_sse(float* qBuffer, const l
   }
 }
 #endif /* LV_HAVE_SSE */
+
+#ifdef LV_HAVE_NEON
+#include <arm_neon.h>
+/*!
+  \brief Deinterleaves the complex vector into Q vector data
+  \param complexVector The complex input vector
+  \param qBuffer The Q buffer output data
+  \param num_points The number of complex data values to be deinterleaved
+*/
+static inline void volk_32fc_deinterleave_imag_32f_neon(float* qBuffer, const lv_32fc_t* complexVector, unsigned int num_points){
+  unsigned int number = 0;
+  unsigned int quarter_points = num_points / 4;
+  const float* complexVectorPtr = (float*)complexVector;
+  float* qBufferPtr = qBuffer;
+  float32x4x2_t complexInput;
+
+  for(number = 0; number < quarter_points; number++){
+    complexInput = vld2q_f32(complexVectorPtr);
+    vst1q_f32( qBufferPtr, complexInput.val[1] );
+    complexVectorPtr += 8;
+    qBufferPtr += 4;
+  }
+
+  for(number = quarter_points*4; number < num_points; number++){
+    complexVectorPtr++;
+    *qBufferPtr++ = *complexVectorPtr++;
+  }
+}
+#endif /* LV_HAVE_NEON */
 
 #ifdef LV_HAVE_GENERIC
 /*!

@@ -84,7 +84,33 @@ static inline void volk_32fc_deinterleave_real_32f_generic(float* iBuffer, const
 }
 #endif /* LV_HAVE_GENERIC */
 
+#ifdef LV_HAVE_NEON
+#include <arm_neon.h>
+/*!
+  \brief Deinterleaves the complex vector into I vector data
+  \param complexVector The complex input vector
+  \param iBuffer The I buffer output data
+  \param num_points The number of complex data values to be deinterleaved
+*/
+static inline void volk_32fc_deinterleave_real_32f_neon(float* iBuffer, const lv_32fc_t* complexVector, unsigned int num_points){
+  unsigned int number = 0;
+  unsigned int quarter_points = num_points / 4;
+  const float* complexVectorPtr = (float*)complexVector;
+  float* iBufferPtr = iBuffer;
+  float32x4x2_t complexInput;
 
+  for(number = 0; number < quarter_points; number++){
+    complexInput = vld2q_f32(complexVectorPtr);
+    vst1q_f32( iBufferPtr, complexInput.val[0] );
+    complexVectorPtr += 8;
+    iBufferPtr += 4;
+  }
 
+  for(number = quarter_points*4; number < num_points; number++){
+    *iBufferPtr++ = *complexVectorPtr++;
+    complexVectorPtr++;
+  }
+}
+#endif /* LV_HAVE_NEON */
 
 #endif /* INCLUDED_volk_32fc_deinterleave_real_32f_a_H */
