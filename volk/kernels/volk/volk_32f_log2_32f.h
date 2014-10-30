@@ -61,7 +61,7 @@
 #define POLY4(x, c0, c1, c2, c3, c4) _mm_add_ps(_mm_mul_ps(POLY3(x, c1, c2, c3, c4), x), _mm_set1_ps(c0))
 #define POLY5(x, c0, c1, c2, c3, c4, c5) _mm_add_ps(_mm_mul_ps(POLY4(x, c1, c2, c3, c4, c5), x), _mm_set1_ps(c0))
 
-#define LOG_POLY_DEGREE 3
+#define LOG_POLY_DEGREE 6
 
 
 #ifndef INCLUDED_volk_32f_log2_32f_a_H
@@ -251,24 +251,24 @@ static inline void volk_32f_log2_32f_neon(float* bVector, const float* aVector, 
 #define INCLUDED_volk_32f_log2_32f_u_H
 
 
-//#ifdef LV_HAVE_GENERIC
-///*!
-//  \brief Computes base 2 log of input vector and stores results in output vector
-//  \param bVector The vector where results will be stored
-//  \param aVector The input vector of floats
-//  \param num_points Number of points for which log is to be computed
-//*/
-//static inline void volk_32f_log2_32f_u_generic(float* bVector, const float* aVector, unsigned int num_points){
-//    float* bPtr = bVector;
-//    const float* aPtr = aVector;
-//    unsigned int number = 0;
-//
-//    for(number = 0; number < num_points; number++){
-//      *bPtr++ = log2(*aPtr++);
-//    }
-//
-//}
-//#endif /* LV_HAVE_GENERIC */
+#ifdef LV_HAVE_GENERIC
+/*!
+  \brief Computes base 2 log of input vector and stores results in output vector
+  \param bVector The vector where results will be stored
+  \param aVector The input vector of floats
+  \param num_points Number of points for which log is to be computed
+*/
+static inline void volk_32f_log2_32f_u_generic(float* bVector, const float* aVector, unsigned int num_points){
+    float* bPtr = bVector;
+    const float* aPtr = aVector;
+    unsigned int number = 0;
+
+    for(number = 0; number < num_points; number++){
+      *bPtr++ = log2(*aPtr++);
+    }
+
+}
+#endif /* LV_HAVE_GENERIC */
 
 
 #ifdef LV_HAVE_SSE4_1

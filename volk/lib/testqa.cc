@@ -44,7 +44,7 @@ VOLK_RUN_TESTS(volk_16u_byteswap, 0, 0, 20462, 1);
 VOLK_RUN_TESTS(volk_32f_accumulator_s32f, 1e-4, 0, 20462, 1);
 VOLK_RUN_TESTS(volk_32f_x2_add_32f, 1e-4, 0, 20462, 1);
 VOLK_RUN_TESTS(volk_32fc_32f_multiply_32fc, 1e-4, 0, 20462, 1);
-VOLK_RUN_TESTS(volk_32f_log2_32f, 1e-3, 0, 20462, 1);
+VOLK_RUN_TESTS(volk_32f_log2_32f, 1.5e-1, 0, 20462, 1);
 VOLK_RUN_TESTS(volk_32f_expfast_32f, 1e-1, 0, 20462, 1);
 VOLK_RUN_TESTS(volk_32f_x2_pow_32f, 1e-2, 0, 20462, 1);
 VOLK_RUN_TESTS(volk_32f_sin_32f, 1e-6, 0, 20462, 1);
