@@ -91,7 +91,7 @@ All class static data members shall begin with s_<foo>.
 
 ** File names
 
-Each significant class shall be contained in it's own file.
+Each significant class shall be contained in its own file.
 
 * Storage management
 
@@ -225,7 +225,7 @@ If your application has a verbose option, use:
 If your application allows the user to specify the "fast USB" options, use:
 
   add_option("", "--fusb-block-size", type="intx", default=0,
-             help="specify fast usb block size [default=%default]")
+             help="specify fast USB block size [default=%default]")
 
   add_option("", "--fusb-nblocks", type="intx", default=0,
-             help="specify number of fast usb blocks [default=%default]")
+             help="specify number of fast USB blocks [default=%default]")
