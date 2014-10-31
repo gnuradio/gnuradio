@@ -896,7 +896,7 @@ static inline void volk_32fc_x2_dot_prod_32fc_neon(lv_32fc_t* result, const lv_3
 #endif /*LV_HAVE_NEON*/
 
 #ifdef LV_HAVE_NEON
-
+#include <arm_neon.h>
 static inline void volk_32fc_x2_dot_prod_32fc_neon_opttests(lv_32fc_t* result, const lv_32fc_t* input, const lv_32fc_t* taps, unsigned int num_points) {
 
     unsigned int quarter_points = num_points / 4;

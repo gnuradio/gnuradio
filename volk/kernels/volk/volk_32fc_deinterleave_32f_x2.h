@@ -122,6 +122,39 @@ static inline void volk_32fc_deinterleave_32f_x2_a_sse(float* iBuffer, float* qB
 }
 #endif /* LV_HAVE_SSE */
 
+#ifdef LV_HAVE_NEON
+#include <arm_neon.h>
+/*!
+  \brief Deinterleaves the complex vector into I & Q vector data
+  \param complexVector The complex input vector
+  \param iBuffer The I buffer output data
+  \param qBuffer The Q buffer output data
+  \param num_points The number of complex data values to be deinterleaved
+*/
+static inline void volk_32fc_deinterleave_32f_x2_neon(float* iBuffer, float* qBuffer, const lv_32fc_t* complexVector, unsigned int num_points){
+  unsigned int number = 0;
+  unsigned int quarter_points = num_points / 4;
+  const float* complexVectorPtr = (float*)complexVector;
+  float* iBufferPtr = iBuffer;
+  float* qBufferPtr = qBuffer;
+  float32x4x2_t complexInput;
+
+  for(number = 0; number < quarter_points; number++){
+    complexInput = vld2q_f32(complexVectorPtr);
+    vst1q_f32( iBufferPtr, complexInput.val[0] );
+    vst1q_f32( qBufferPtr, complexInput.val[1] );
+    complexVectorPtr += 8;
+    iBufferPtr += 4;
+    qBufferPtr += 4;
+  }
+
+  for(number = quarter_points*4; number < num_points; number++){
+    *iBufferPtr++ = *complexVectorPtr++;
+    *qBufferPtr++ = *complexVectorPtr++;
+  }
+}
+#endif /* LV_HAVE_NEON */
+
 #ifdef LV_HAVE_GENERIC
 /*!
   \brief Deinterleaves the complex vector into I & Q vector data

@@ -29,7 +29,6 @@
 
 #ifdef LV_HAVE_GENERIC
 
-
 static inline void volk_16i_32fc_dot_prod_32fc_generic(lv_32fc_t* result, const short* input, const lv_32fc_t * taps, unsigned int num_points) {
 
   static const int N_UNROLL = 4;
@@ -58,7 +57,54 @@ static inline void volk_16i_32fc_dot_prod_32fc_generic(lv_32fc_t* result, const 
 
 #endif /*LV_HAVE_GENERIC*/
 
+#ifdef LV_HAVE_NEON
+#include <arm_neon.h>
+static inline void volk_16i_32fc_dot_prod_32fc_neon(lv_32fc_t* result, const short* input, const lv_32fc_t * taps, unsigned int num_points) {
 
+  unsigned ii;
+  unsigned quarter_points = num_points / 4;
+  lv_32fc_t* tapsPtr = (lv_32fc_t*) taps;
+  short* inputPtr = (short*) input;
+  lv_32fc_t accumulator_vec[4];
+
+  float32x4x2_t tapsVal, accumulator_val;
+  int16x4_t input16;
+  int32x4_t input32;
+  float32x4_t input_float, prod_re, prod_im;
+
+  accumulator_val.val[0] = vdupq_n_f32(0.0);
+  accumulator_val.val[1] = vdupq_n_f32(0.0);
+
+  for(ii = 0; ii < quarter_points; ++ii) {
+    tapsVal = vld2q_f32((float*)tapsPtr);
+    input16 = vld1_s16(inputPtr);
+    // widen 16-bit int to 32-bit int
+    input32 = vmovl_s16(input16);
+    // convert 32-bit int to float with scale
+    input_float = vcvtq_f32_s32(input32);
+
+    prod_re = vmulq_f32(input_float, tapsVal.val[0]);
+    prod_im = vmulq_f32(input_float, tapsVal.val[1]);
+
+    accumulator_val.val[0] = vaddq_f32(prod_re, accumulator_val.val[0]);
+    accumulator_val.val[1] = vaddq_f32(prod_im, accumulator_val.val[1]);
+
+    tapsPtr += 4;
+    inputPtr += 4;
+  }
+  vst2q_f32((float*)accumulator_vec, accumulator_val);
+  accumulator_vec[0] += accumulator_vec[1];
+  accumulator_vec[2] += accumulator_vec[3];
+  accumulator_vec[0] += accumulator_vec[2];
+
+  for(ii = quarter_points * 4; ii < num_points; ++ii) {
+    accumulator_vec[0] += *(tapsPtr++) * (float)(*(inputPtr++));
+  }
+
+  *result = accumulator_vec[0];
+}
+
+#endif /*LV_HAVE_NEON*/
 
 #if LV_HAVE_SSE && LV_HAVE_MMX
 
