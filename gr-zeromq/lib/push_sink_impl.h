@@ -40,7 +40,7 @@ namespace gr {
       bool            d_pass_tags;
 
     public:
-      push_sink_impl(size_t itemsize, size_t vlen, char *address, int timeout, bool pass_tags=false);
+      push_sink_impl(size_t itemsize, size_t vlen, char *address, int timeout, bool pass_tags);
       ~push_sink_impl();
 
       int work(int noutput_items,

@@ -35,7 +35,7 @@ namespace gr {
     pub_sink::make(size_t itemsize, size_t vlen, char *address, int timeout, bool pass_tags)
     {
       return gnuradio::get_initial_sptr
-        (new pub_sink_impl(itemsize, vlen, address, timeout));
+        (new pub_sink_impl(itemsize, vlen, address, timeout, pass_tags));
     }
 
     pub_sink_impl::pub_sink_impl(size_t itemsize, size_t vlen, char *address, int timeout, bool pass_tags)

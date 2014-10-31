@@ -40,7 +40,7 @@ namespace gr {
       bool            d_pass_tags;
 
      public:
-      sub_source_impl(size_t itemsize, size_t vlen, char *address, int timeout, bool pass_tags=false);
+      sub_source_impl(size_t itemsize, size_t vlen, char *address, int timeout, bool pass_tags);
       ~sub_source_impl();
 
       int work(int noutput_items,
