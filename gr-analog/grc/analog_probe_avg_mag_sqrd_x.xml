@@ -11,6 +11,7 @@
 	<make>analog.probe_avg_mag_sqrd_$(type)($threshold, $alpha)</make>
 	<callback>set_alpha($alpha)</callback>
 	<callback>set_threshold($threshold)</callback>
+	<callback>reset()</callback>
 	<param>
 		<name>Type</name>
 		<key>type</key>
