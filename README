@@ -48,9 +48,9 @@ How to Build GNU Radio:
 
 For more complete instructions, see the "Building GNU Radio" page in
 the GNU Radio manual (can be built or found online at
-http://gnuradio.org/doc/doxygen/page_build.html).
+http://gnuradio.org/doc/doxygen/build_guide.html).
 
-See these steps fow a quick build guide.
+See these steps for a quick build guide.
 
   (1) Ensure that you've satisfied the external dependencies. These
       dependencies are listed in the manual's build page and are not
