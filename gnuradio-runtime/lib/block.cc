@@ -682,6 +682,16 @@ namespace gr {
     }
   }
 
+  float
+  block::pc_throughput_avg() {
+    if(d_detail) {
+      return d_detail->pc_throughput_avg();
+    }
+    else {
+      return 0;
+    }
+  }
+
   void
   block::reset_perf_counters()
   {
