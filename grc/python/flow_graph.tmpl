@@ -354,7 +354,10 @@ if __name__ == '__main__':
         #for $m in $monitors
     (tb.$m.get_id()).start()
         #end for
-    raw_input('Press Enter to quit: ')
+    try:
+        raw_input('Press Enter to quit: ')
+    except EOFError:
+        pass
     tb.stop()
         #elif $run_options == 'run'
             #if $flow_graph.get_option('max_nouts')
