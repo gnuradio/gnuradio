@@ -77,13 +77,14 @@ namespace gr {
       if(d_len > 64)
         return false;
 
-      // set len top bits to 1.
-      d_mask = ((~0ULL) >> (64 - d_len)) << (64 - d_len);
+      // set len bottom bits to 1.
+      d_mask = ((~0ULL) >> (64 - d_len));
 
       d_access_code = 0;
       for(unsigned i=0; i < d_len; i++){
         d_access_code = (d_access_code << 1) | (access_code[i] & 1);
       }
+
       if(VERBOSE) {
           std::cerr << "Access code: " << std::hex << d_access_code << std::dec << std::endl;
           std::cerr << "Mask: " << std::hex << d_mask << std::dec << std::endl;

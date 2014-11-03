@@ -96,6 +96,7 @@ class gr::block : public gr::basic_block
   float pc_work_time_avg();
   float pc_work_time_var();
   float pc_work_time_total();
+  float pc_throughput_avg();
 
   // Methods to manage processor affinity.
   void set_processor_affinity(const std::vector<int> &mask);

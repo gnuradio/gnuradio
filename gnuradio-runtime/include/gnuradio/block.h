@@ -504,6 +504,11 @@ namespace gr {
     float pc_work_time_total();
 
     /*!
+     * \brief Gets average throughput.
+     */
+    float pc_throughput_avg();
+
+    /*!
      * \brief Resets the performance counters
      */
     void reset_perf_counters();
