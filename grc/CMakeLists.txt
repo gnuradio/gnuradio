@@ -72,6 +72,16 @@ if(CMAKE_INSTALL_PREFIX STREQUAL "/usr")
     set(blocksdir ${blocksdir}:/usr/local/${GRC_BLOCKS_DIR})
 endif(CMAKE_INSTALL_PREFIX STREQUAL "/usr")
 
+if (APPLE)
+    set(GRC_XTERM_EXE "xterm")
+elseif(CYGWIN)
+    set(GRC_XTERM_EXE "xterm")
+elseif(UNIX)
+    set(GRC_XTERM_EXE "x-terminal-emulator")
+else()
+    set(GRC_XTERM_EXE "xterm")
+endif()
+
 configure_file(
     ${CMAKE_CURRENT_SOURCE_DIR}/grc.conf.in
     ${CMAKE_CURRENT_BINARY_DIR}/grc.conf
