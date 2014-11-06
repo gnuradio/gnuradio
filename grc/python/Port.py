@@ -133,8 +133,8 @@ class Port(_Port, _GUIPort):
         """
         Handle the port cloning for virtual blocks.
         """
-        _Port.rewrite(self)
         if self.is_type_empty():
+            self._type_evaluated = None
             try: #clone type and vlen
                 source = self.resolve_empty_type()
                 self._type = str(source.get_type())
@@ -142,6 +142,7 @@ class Port(_Port, _GUIPort):
             except: #reset type and vlen
                 self._type = ''
                 self._vlen = ''
+        _Port.rewrite(self)
 
     def resolve_virtual_source(self):
         if self.get_parent().is_virtual_sink(): return _get_source_from_virtual_sink_port(self)
