@@ -47,6 +47,7 @@ namespace gr {
       double d_bandwidth;
       std::string d_name;
       int d_nconnections;
+      int d_numffts;
 
       bool d_shift;
       fft::fft_complex *d_fft;
@@ -78,7 +79,7 @@ namespace gr {
       waterfall_sink_c_impl(int size, int wintype,
 			    double fc, double bw,
 			    const std::string &name,
-			    int nconnections,
+			    int nconnections,int numffts,
 			    QWidget *parent=NULL);
       ~waterfall_sink_c_impl();
 

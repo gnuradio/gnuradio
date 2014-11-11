@@ -51,7 +51,7 @@ class WaterfallDisplayPlot: public DisplayPlot
 
 
 public:
-  WaterfallDisplayPlot(int nplots, QWidget*);
+  WaterfallDisplayPlot(int nplots,QWidget*,int num_ffts);
   virtual ~WaterfallDisplayPlot();
 
   void resetAxis();

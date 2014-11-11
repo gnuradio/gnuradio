@@ -58,7 +58,7 @@ class spectrogram_plot_c(plot_base.plot_base):
         self.src_type = blocks.vector_source_c
         self.gui_snk = qtgui.waterfall_sink_c(self._psd_size, filter.firdes.WIN_BLACKMAN_hARRIS,
                                               self._center_freq, self._samp_rate,
-                                              "GNU Radio Spectrogram Plot (CPX Float)", self._nsigs)
+                                              "GNU Radio Spectrogram Plot (CPX Float)", self._nsigs,nsamples/psdsize)
         self.setup()
 
 class spectrogram_plot_f(plot_base.plot_base):
