@@ -457,6 +457,11 @@ namespace gr {
         }
       }
     }
+    void
+    waterfall_sink_c_impl::set_time_per_fft(double t)
+    {
+      d_main_gui->setTimePerFFT(t);
+    }
 
     int
     waterfall_sink_c_impl::work(int noutput_items,

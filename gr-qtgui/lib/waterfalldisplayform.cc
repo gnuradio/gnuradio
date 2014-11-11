@@ -48,6 +48,7 @@ WaterfallDisplayForm::WaterfallDisplayForm(int nplots, QWidget* parent)
 
   d_clicked = false;
   d_clicked_freq = 0;
+  d_timePerFFT = 0;
 
   // We don't use the normal menus that are part of the displayform.
   // Clear them out to get rid of their resources.
@@ -138,7 +139,7 @@ WaterfallDisplayForm::newData(const QEvent *updateEvent)
       d_max_val = *max_val;
   }
 
-  getPlot()->plotNewData(dataPoints, numDataPoints, d_update_time, dataTimestamp, 0);
+  getPlot()->plotNewData(dataPoints, numDataPoints, d_timePerFFT, dataTimestamp, 0);
 }
 
 void
@@ -336,4 +337,22 @@ WaterfallDisplayForm::setPlotPosHalf(bool half)
 {
   getPlot()->setPlotPosHalf(half);
   getPlot()->replot();
+}
+void
+WaterfallDisplayForm::setTimePerFFT(double t)
+{
+  d_timePerFFT = t;
+}
+double
+WaterfallDisplayForm::getTimePerFFT()
+{
+  return d_timePerFFT;
+}
+// Override displayform SetUpdateTime() to set timePerFFT
+void 
+WaterfallDisplayForm::setUpdateTime(double t)
+{
+  d_update_time = t;
+  // Assume these are equal until explicitly told by setTimePerFFT()
+  d_timePerFFT = t;
 }
