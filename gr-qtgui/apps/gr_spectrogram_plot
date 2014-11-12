@@ -1,9 +1,4 @@
 #!/usr/bin/env python
-
-# Read sample rate and file type from header and call appropriate plotter
-# Not all file types have been tested!
-# PWG 10.20.14
-
 #
 # Copyright 2012,2013 Free Software Foundation, Inc.
 #
@@ -56,9 +51,9 @@ class spectrogram_plot_c(plot_base.plot_base):
         self.read_samples = plot_base.read_samples_c
         self.dsize = gr.sizeof_gr_complex
         self.src_type = blocks.vector_source_c
-        self.gui_snk = qtgui.waterfall_sink_c(self._psd_size, filter.firdes.WIN_BLACKMAN_hARRIS,
-                                              self._center_freq, self._samp_rate,
-                                              "GNU Radio Spectrogram Plot (CPX Float)", self._nsigs,nsamples/psdsize)
+        self.gui_snk = qtgui.waterfall_sink_c(self._psd_size,
+                       filter.firdes.WIN_BLACKMAN_hARRIS,self._center_freq, self._samp_rate,
+                       "GNU Radio Spectrogram Plot (CPX Float)", self._nsigs,nsamples/psdsize)
         self.setup()
 
 class spectrogram_plot_f(plot_base.plot_base):
@@ -71,9 +66,9 @@ class spectrogram_plot_f(plot_base.plot_base):
         self.read_samples = plot_base.read_samples_f
         self.dsize = gr.sizeof_float
         self.src_type = blocks.vector_source_f
-        self.gui_snk = qtgui.waterfall_sink_f(self._psd_size, filter.firdes.WIN_BLACKMAN_hARRIS,
-                                              self._center_freq, self._samp_rate,
-                                              "GNU Radio Spectrogram Plot (float)", self._nsigs)
+        self.gui_snk = qtgui.waterfall_sink_f(self._psd_size, 
+                       filter.firdes.WIN_BLACKMAN_hARRIS,self._center_freq, self._samp_rate,
+                       "GNU Radio Spectrogram Plot (float)", self._nsigs,nsamples/psdsize)
         self.setup()
 
 class spectrogram_plot_b(plot_base.plot_base):
@@ -86,9 +81,9 @@ class spectrogram_plot_b(plot_base.plot_base):
         self.read_samples = plot_base.read_samples_b
         self.dsize = gr.sizeof_float
         self.src_type = plot_base.source_chars_to_float
-        self.gui_snk = qtgui.waterfall_sink_f(self._psd_size, filter.firdes.WIN_BLACKMAN_hARRIS,
-                                              self._center_freq, self._samp_rate,
-                                              "GNU Radio Spectrogram Plot (bin)", self._nsigs)
+        self.gui_snk = qtgui.waterfall_sink_f(self._psd_size, 
+                       filter.firdes.WIN_BLACKMAN_hARRIS,self._center_freq, self._samp_rate,
+                       "GNU Radio Spectrogram Plot (bin)", self._nsigs,nsamples/psdsize)
         self.setup()
 
 class spectrogram_plot_i(plot_base.plot_base):
@@ -101,9 +96,9 @@ class spectrogram_plot_i(plot_base.plot_base):
         self.read_samples = plot_base.read_samples_i
         self.dsize = gr.sizeof_float
         self.src_type = plot_base.source_ints_to_float
-        self.gui_snk = qtgui.waterfall_sink_f(self._psd_size, filter.firdes.WIN_BLACKMAN_hARRIS,
-                                              self._center_freq, self._samp_rate,
-                                              "GNU Radio Spectrogram Plot (int)", self._nsigs)
+        self.gui_snk = qtgui.waterfall_sink_f(self._psd_size, 
+                       filter.firdes.WIN_BLACKMAN_hARRIS,self._center_freq, self._samp_rate,
+                       "GNU Radio Spectrogram Plot (int)", self._nsigs,nsamples/psdsize)
         self.setup()
 
 def read_header(filelist):
@@ -123,19 +118,27 @@ def read_header(filelist):
    return info
    
 def main():
-   description = "Plots the spectrogram (waterfall) of a file.  Reads header information for sample rate and data type"
+   description = 'Plots the spectrogram (waterfall) of a file.'  
+   description += 'Reads header information for sample rate and data type'
    (options, args) = plot_base.setup_options(description)
    filelist = list(args)
    # Read the header information
    info = read_header(filelist)
    max_nsamples = plot_base.find_max_nsamples(filelist)
 
+   # Don't insert the sample rate if specified on the command line
+   # May be useful to have y axis as sample index instead of time
+   # TODO - Modify the the base class for no default so we can check
+   # if sample_rate was actually present on the command line
+   # command line sample rate arg is currently ignored since we can't tell
+   srate = info["rx_rate"]
+
    # Dispatch the proper function
    # Complex Types
    if(info["cplx"] == True):
       if( info["type"] == "float" ):
          tb = spectrogram_plot_c(filelist,
-                            options.center_frequency,info["rx_rate"],
+                            options.center_frequency,srate,
                             options.psd_size,
                             options.start, options.nsamples, max_nsamples,
                             options.average);
@@ -145,25 +148,25 @@ def main():
    else:
       if( info["type"] == "bytes" ):
          tb = spectrogram_plot_b(filelist,
-                            options.center_frequency,info["rx_rate"],
+                            options.center_frequency,srate,
                             options.psd_size,
                             options.start, options.nsamples, max_nsamples,
                             options.average);
       elif( info["type"] == "int" ):
          tb = spectrogram_plot_i(filelist,
-                            options.center_frequency,info["rx_rate"],
+                            options.center_frequency,srate,
                             options.psd_size,
                             options.start, options.nsamples, max_nsamples,
                             options.average);
       elif( info["type"] == "float" ):
          tb = spectrogram_plot_f(filelist,
-                            options.center_frequency,info["rx_rate"],
+                            options.center_frequency,srate,
                             options.psd_size,
                             options.start, options.nsamples, max_nsamples,
                             options.average);
       elif( info["type"] == "short" ):
          tb = spectrogram_plot_s(filelist,
-                            options.center_frequency,info["rx_rate"],
+                            options.center_frequency,srate,
                             options.psd_size,
                             options.start, options.nsamples, max_nsamples,
                             options.average);

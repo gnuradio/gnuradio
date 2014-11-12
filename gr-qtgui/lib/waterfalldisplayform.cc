@@ -36,76 +36,7 @@ WaterfallDisplayForm::WaterfallDisplayForm(int nplots, int numffts,QWidget* pare
   d_display_plot = new WaterfallDisplayPlot(nplots,this,numffts);
   d_layout->addWidget(d_display_plot, 0, 0);
   setLayout(d_layout);
-
-  d_center_freq = 0;
-  d_samp_rate = 0;
-
-  d_fftsize = 1024;
-  d_fftavg = 1.0;
-
-  d_min_val =  1000;
-  d_max_val = -1000;
-
-  d_clicked = false;
-  d_clicked_freq = 0;
-  d_timePerFFT = 0;
-
-  // We don't use the normal menus that are part of the displayform.
-  // Clear them out to get rid of their resources.
-  for(int i = 0; i < nplots; i++) {
-    d_lines_menu[i]->clear();
-  }
-  d_line_title_act.clear();
-  d_line_color_menu.clear();
-  d_line_width_menu.clear();
-  d_line_style_menu.clear();
-  d_line_marker_menu.clear();
-  d_marker_alpha_menu.clear();
-
-  // Now create our own menus
-  for(int i = 0; i < nplots; i++) {
-    ColorMapMenu *colormap = new ColorMapMenu(i, this);
-    connect(colormap, SIGNAL(whichTrigger(int, const int, const QColor&, const QColor&)),
-	    this, SLOT(setColorMap(int, const int, const QColor&, const QColor&)));
-    d_lines_menu[i]->addMenu(colormap);
-
-    d_marker_alpha_menu.push_back(new MarkerAlphaMenu(i, this));
-    connect(d_marker_alpha_menu[i], SIGNAL(whichTrigger(int, int)),
-	    this, SLOT(setAlpha(int, int)));
-    d_lines_menu[i]->addMenu(d_marker_alpha_menu[i]);
-  }
-
-  // One scales once when clicked, so no on/off toggling
-  d_autoscale_act->setText(tr("Auto Scale"));
-  d_autoscale_act->setCheckable(false);
-
-  d_sizemenu = new FFTSizeMenu(this);
-  d_avgmenu = new FFTAverageMenu(this);
-  d_winmenu = new FFTWindowMenu(this);
-  d_menu->addMenu(d_sizemenu);
-  d_menu->addMenu(d_avgmenu);
-  d_menu->addMenu(d_winmenu);
-  connect(d_sizemenu, SIGNAL(whichTrigger(int)),
-	  this, SLOT(setFFTSize(const int)));
-  connect(d_avgmenu, SIGNAL(whichTrigger(float)),
-	  this, SLOT(setFFTAverage(const float)));
-  connect(d_winmenu, SIGNAL(whichTrigger(gr::filter::firdes::win_type)),
-	  this, SLOT(setFFTWindowType(const gr::filter::firdes::win_type)));
-
-  PopupMenu *maxintmenu = new PopupMenu("Int. Max", this);
-  d_menu->addAction(maxintmenu);
-  connect(maxintmenu, SIGNAL(whichTrigger(QString)),
-	  this, SLOT(setMaxIntensity(QString)));
-
-  PopupMenu *minintmenu = new PopupMenu("Int. Min", this);
-  d_menu->addAction(minintmenu);
-  connect(minintmenu, SIGNAL(whichTrigger(QString)),
-	  this, SLOT(setMinIntensity(QString)));
-
-  Reset();
-
-  connect(d_display_plot, SIGNAL(plotPointSelected(const QPointF)),
-	  this, SLOT(onPlotPointSelected(const QPointF)));
+  initialize(nplots,parent);
 }
 
 WaterfallDisplayForm::WaterfallDisplayForm(int nplots,QWidget* parent)
@@ -118,7 +49,11 @@ WaterfallDisplayForm::WaterfallDisplayForm(int nplots,QWidget* parent)
   d_display_plot = new WaterfallDisplayPlot(nplots,this,200);
   d_layout->addWidget(d_display_plot, 0, 0);
   setLayout(d_layout);
+  initialize(nplots,parent);
+}
 
+void WaterfallDisplayForm::initialize(int nplots, QWidget* parent)
+{
   d_center_freq = 0;
   d_samp_rate = 0;
 

@@ -91,7 +91,7 @@ public slots:
   void setPlotPosHalf(bool half);
   void setTimePerFFT(double t);
   void setUpdateTime(double t);
-
+  void initialize(int nplots, QWidget* parent);
 private slots:
   void newData(const QEvent *updateEvent);
   void onPlotPointSelected(const QPointF p);
