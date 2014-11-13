@@ -12,6 +12,16 @@
 	<category>Trellis Coding</category>
 	<import>from gnuradio import trellis</import>
 	<make>trellis.siso_combined_f(trellis.fsm($fsm_args), $block_size, $init_state, $final_state, $a_post_in, $a_post_out, $siso_type, $dim, $table, $metric_type)</make>
+        <callback>set_FSM(trellis.fsm($fsm_args))</callback>
+        <callback>set_K($block_size)</callback>
+        <callback>set_S0($init_state)</callback>
+        <callback>set_SK($final_state)</callback>
+        <callback>set_POSTI($a_post_in)</callback>
+        <callback>set_POSTO($a_post_out)</callback>
+        <callback>set_SISO_TYPE($siso_type)</callback>
+        <callback>set_D($dim)</callback>
+        <callback>set_TABLE($table)</callback>
+        <callback>set_TYPE($metric_type)</callback>
 	<param>
 		<name>FSM Args</name>
 		<key>fsm_args</key>
@@ -101,7 +111,11 @@
 		</option>
 	</param>
 	<sink>
-		<name>in</name>
+		<name>in_i</name>
+		<type>float</type>
+	</sink>
+	<sink>
+		<name>in_o</name>
 		<type>float</type>
 	</sink>
 	<source>

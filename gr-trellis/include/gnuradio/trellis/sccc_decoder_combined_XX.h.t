@@ -70,6 +70,7 @@ namespace gr {
       virtual digital::trellis_metric_type_t METRIC_TYPE() const = 0;
       virtual siso_type_t SISO_TYPE() const = 0;
       virtual float scaling() const  = 0;
+
       virtual void set_scaling(float scaling) = 0;
     };
 

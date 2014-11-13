@@ -24,14 +24,16 @@ import os
 ## A list of functions that can receive a message.
 MESSENGERS_LIST = list()
 
+
 def register_messenger(messenger):
     """
     Append the given messenger to the list of messengers.
 
     Args:
-        messenger: a method thats takes a string
+        messenger: a method that takes a string
     """
     MESSENGERS_LIST.append(messenger)
+
 
 def send(message):
     """
@@ -102,8 +104,8 @@ def send_start_exec(file_path):
 def send_verbose_exec(verbose):
     send(verbose)
 
-def send_end_exec():
-    send('\n>>> Done\n')
+def send_end_exec(returncode=0):
+    send('\n>>> Done%s\n' % (" (return code %s)" % returncode if returncode else ""))
 
 ################# functions for saving flow graphs  ########################################
 def send_fail_save(file_path):

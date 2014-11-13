@@ -4,7 +4,7 @@ libdir=@libdir@
 includedir=@includedir@
 
 Name: gnuradio-trellis
-Description: GNU Radio blocks for trellis coded modulation
+Description: GNU Radio blocks for trellis-based processing
 Requires: gnuradio-runtime
 Version: @LIBVER@
 Libs: -L${libdir} -lgnuradio-trellis

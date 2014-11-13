@@ -23,6 +23,9 @@ qtgui.$(type.fcn)(
 self.$(id).set_update_time($update_time)
 self.$(id).enable_grid($grid)
 
+if $type == type(float()):
+  self.$(id).set_plot_pos_half(not $freqhalf)
+
 labels = [$label1, $label2, $label3, $label4, $label5,
           $label6, $label7, $label8, $label9, $label10]
 colors = [$color1, $color2, $color3, $color4, $color5,
@@ -74,6 +77,22 @@ $(gui_hint()($win))</make>
     <key>fftsize</key>
     <value>1024</value>
     <type>int</type>
+  </param>
+
+  <param>
+    <name>Spectrum Width</name>
+    <key>freqhalf</key>
+    <value>True</value>
+    <type>enum</type>
+    <hide>#if $type() == "float" then 'part' else 'all'#</hide>
+    <option>
+      <name>Full</name>
+      <key>True</key>
+    </option>
+    <option>
+      <name>Half</name>
+      <key>False</key>
+    </option>
   </param>
 
   <param>

@@ -53,8 +53,8 @@ namespace gr {
 						 int nconnections,
 						 QWidget *parent)
       : sync_block("waterfall_sink_f",
-		      io_signature::make(1, -1, sizeof(float)),
-		      io_signature::make(0, 0, 0)),
+                   io_signature::make(1, -1, sizeof(float)),
+                   io_signature::make(0, 0, 0)),
 	d_fftsize(fftsize), d_fftavg(1.0),
 	d_wintype((filter::firdes::win_type)(wintype)),
 	d_center_freq(fc), d_bandwidth(bw), d_name(name),
@@ -107,8 +107,8 @@ namespace gr {
         d_main_gui->close();
 
       for(int i = 0; i < d_nconnections; i++) {
-	volk_free(d_residbufs[i]);
-	volk_free(d_magbufs[i]);
+ 	volk_free(d_residbufs[i]);
+ 	volk_free(d_magbufs[i]);
       }
       delete d_fft;
       volk_free(d_fbuf);
@@ -127,7 +127,7 @@ namespace gr {
     {
       unsigned int ninputs = ninput_items_required.size();
       for (unsigned int i = 0; i < ninputs; i++) {
-	ninput_items_required[i] = std::min(d_fftsize, 8191);
+ 	ninput_items_required[i] = std::min(d_fftsize, 8191);
       }
     }
 
@@ -135,14 +135,14 @@ namespace gr {
     waterfall_sink_f_impl::initialize()
     {
       if(qApp != NULL) {
-	d_qApplication = qApp;
+ 	d_qApplication = qApp;
       }
       else {
 #if QT_VERSION >= 0x040500
         std::string style = prefs::singleton()->get_string("qtgui", "style", "raster");
         QApplication::setGraphicsSystem(QString(style.c_str()));
 #endif
-	d_qApplication = new QApplication(d_argc, &d_argv);
+ 	d_qApplication = new QApplication(d_argc, &d_argv);
       }
 
       // If a style sheet is set in the prefs file, enable it here.
@@ -290,6 +290,12 @@ namespace gr {
       d_main_gui->resize(QSize(width, height));
     }
 
+    void
+    waterfall_sink_f_impl::set_plot_pos_half(bool half)
+    {
+      d_main_gui->setPlotPosHalf(half);
+    }
+
     std::string
     waterfall_sink_f_impl::title()
     {
@@ -398,7 +404,8 @@ namespace gr {
     {
       gr::thread::scoped_lock lock(d_setlock);
 
-      int newfftsize = d_fftsize;
+      int newfftsize = d_main_gui->getFFTSize();
+      d_fftavg = d_main_gui->getFFTAverage();
 
       if(newfftsize != d_fftsize) {
 

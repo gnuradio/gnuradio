@@ -91,8 +91,8 @@ namespace gr {
       char *inbuffer  = (char*)input_items[0];
       char *outbuffer = (char*)output_items[0];
 
-      GR_LOG_DEBUG(d_debug_logger, boost::format("%1%, %2%, %3%")      \
-                   % noutput_items % ninput_items[0] % (noutput_items/output_multiple()));
+      //GR_LOG_DEBUG(d_debug_logger, boost::format("%1%, %2%, %3%")       \
+      //             % noutput_items % ninput_items[0] % (noutput_items/output_multiple()));
 
 
       for(int i = 0; i < noutput_items/output_multiple(); i++) {
@@ -100,10 +100,10 @@ namespace gr {
                                 (void*)(outbuffer+(i*d_output_size)));
       }
 
-      GR_LOG_DEBUG(d_debug_logger, boost::format("consuming: %1%") \
-                   % (fixed_rate_noutput_to_ninput(noutput_items)));
-      GR_LOG_DEBUG(d_debug_logger, boost::format("returning: %1%") \
-                   % (noutput_items));
+      //GR_LOG_DEBUG(d_debug_logger, boost::format("consuming: %1%")      \
+      //             % (fixed_rate_noutput_to_ninput(noutput_items)));
+      //GR_LOG_DEBUG(d_debug_logger, boost::format("returning: %1%") \
+      //             % (noutput_items));
 
       consume_each(fixed_rate_noutput_to_ninput(noutput_items));
       return noutput_items;

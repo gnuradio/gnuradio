@@ -2,8 +2,6 @@ Here we have several test programs for use with the gr-trellis implementation.
 Documentation can be found in
 http://gnuradio.org/doc/doxygen/group__trellis__coding__blk.html
 
-fsm_utils.py contains several useful functions.
-
 fsm_files is a directory with some FSM definitions
 
 If you just want to see what these programs do run them;
@@ -26,10 +24,12 @@ which gives you information about the:
 number of transmitted packets
 number of packets in error
 estimated packet error rate
-number of transmitted shorts (or symbols, or bits, depending on the specific program)
-number of shorts (or symbols, or bits) in error
-estimated short (or symbol, or bit) error rate
+number of transmitted symbols, or bits, depending on the specific program
+number of symbols, or bits in error
+estimated symbol, or bit error rate
 
 for instance, the final number 1.10e-03 is the error rate estimate by sending 1000
 packets of 1024 shorts each, using an 1/2 4-state convolutional code
 and QPSK modulation through an AWGN with Es/N0 = 6.0 dB
+
+There is a similar example in the ../grc/ directory

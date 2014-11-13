@@ -6,9 +6,10 @@ from gnuradio import eng_notation
 import math
 import sys
 import random
-import fsm_utils
+from gnuradio.trellis import fsm_utils
 from gnuradio.eng_option import eng_option
 from optparse import OptionParser
+import numpy
 
 try:
     from gnuradio import analog
@@ -19,39 +20,32 @@ except ImportError:
 def run_test (f,Kb,bitspersymbol,K,dimensionality,constellation,N0,seed):
     tb = gr.top_block ()
 
-
     # TX
-    #packet = [0]*Kb
-    #for i in range(Kb-1*16): # last 16 bits = 0 to drive the final state to 0
-        #packet[i] = random.randint(0, 1) # random 0s and 1s
-    #src = blocks.vector_source_s(packet,False)
-    src = blocks.lfsr_32k_source_s()
-    src_head = blocks.head(gr.sizeof_short,Kb/16) # packet size in shorts
-    #b2s = blocks.unpacked_to_packed_ss(1,gr.GR_MSB_FIRST) # pack bits in shorts
+    numpy.random.seed(-seed)
+    packet = numpy.random.randint(0,2,Kb) # create Kb random bits
+    packet[Kb-10:Kb]=0
+    packet[0:Kb]=0
+    src = blocks.vector_source_s(packet.tolist(),False)
+    b2s = blocks.unpacked_to_packed_ss(1,gr.GR_MSB_FIRST) # pack bits in shorts
     s2fsmi = blocks.packed_to_unpacked_ss(bitspersymbol,gr.GR_MSB_FIRST) # unpack shorts to symbols compatible with the FSM input cardinality
     enc = trellis.encoder_ss(f,0) # initial state = 0
     mod = digital.chunks_to_symbols_sf(constellation,dimensionality)
 
     # CHANNEL
     add = blocks.add_ff()
-    noise = analog.noise_source_f(analog.GR_GAUSSIAN,math.sqrt(N0/2),seed)
+    noise = analog.noise_source_f(analog.GR_GAUSSIAN,math.sqrt(N0/2),long(seed))
 
     # RX
-    metrics = trellis.metrics_f(f.O(),dimensionality,constellation,digital.TRELLIS_EUCLIDEAN) # data preprocessing to generate metrics for Viterbi
-    va = trellis.viterbi_s(f,K,0,-1) # Put -1 if the Initial/Final states are not set.
+    va = trellis.viterbi_combined_fs(f,K,0,0,dimensionality,constellation,digital.TRELLIS_EUCLIDEAN) # Put -1 if the Initial/Final states are not set.
     fsmi2s = blocks.unpacked_to_packed_ss(bitspersymbol,gr.GR_MSB_FIRST) # pack FSM input symbols to shorts
-    #s2b = blocks.packed_to_unpacked_ss(1,gr.GR_MSB_FIRST) # unpack shorts to bits
-    #dst = blocks.vector_sink_s();
-    dst = blocks.check_lfsr_32k_s()
+    s2b = blocks.packed_to_unpacked_ss(1,gr.GR_MSB_FIRST) # unpack shorts to bits
+    dst = blocks.vector_sink_s();
 
 
-    tb.connect (src,src_head,s2fsmi,enc,mod)
-    #tb.connect (src,b2s,s2fsmi,enc,mod)
+    tb.connect (src,b2s,s2fsmi,enc,mod)
     tb.connect (mod,(add,0))
     tb.connect (noise,(add,1))
-    tb.connect (add,metrics)
-    tb.connect (metrics,va,fsmi2s,dst)
-    #tb.connect (metrics,va,fsmi2s,s2b,dst)
+    tb.connect (add,va,fsmi2s,s2b,dst)
 
 
     tb.run()
@@ -61,19 +55,11 @@ def run_test (f,Kb,bitspersymbol,K,dimensionality,constellation,N0,seed):
     # Then put it as the last argument in the viterbi block
     #print "final state = " , enc.ST()
 
-    ntotal = dst.ntotal ()
-    nright = dst.nright ()
-    runlength = dst.runlength ()
-    #ntotal = len(packet)
-    #if len(dst.data()) != ntotal:
-        #print "Error: not enough data\n"
-    #nright = 0;
-    #for i in range(ntotal):
-        #if packet[i]==dst.data()[i]:
-            #nright=nright+1
-        #else:
-            #print "Error in ", i
-    return (ntotal,ntotal-nright)
+    if len(dst.data()) != len(packet):
+        print "Error: not enough data:", len(dst.data()), len(packet)
+    ntotal=len(packet)
+    nwrong = sum(abs(packet-numpy.array(dst.data())));
+    return (ntotal,nwrong,abs(packet-numpy.array(dst.data())))
 
 
 
@@ -113,20 +99,26 @@ def main():
     Es = Es / (len(constellation)/dimensionality)
     N0=Es/pow(10.0,esn0_db/10.0); # calculate noise variance
 
-    tot_s=0 # total number of transmitted shorts
-    terr_s=0 # total number of shorts in error
+    tot_b=0 # total number of transmitted bits
+    terr_b=0 # total number of bits in error
     terr_p=0 # total number of packets in error
     for i in range(rep):
-        (s,e)=run_test(f,Kb,bitspersymbol,K,dimensionality,constellation,N0,-long(666+i)) # run experiment with different seed to get different noise realizations
-        tot_s=tot_s+s
-        terr_s=terr_s+e
-        terr_p=terr_p+(terr_s!=0)
+        (b,e,pattern)=run_test(f,Kb,bitspersymbol,K,dimensionality,constellation,N0,-(666+i)) # run experiment with different seed to get different noise realizations
+        tot_b=tot_b+b
+        terr_b=terr_b+e
+        terr_p=terr_p+(e!=0)
         if ((i+1)%100==0) : # display progress
-            print i+1,terr_p, '%.2e' % ((1.0*terr_p)/(i+1)),tot_s,terr_s, '%.2e' % ((1.0*terr_s)/tot_s)
-    # estimate of the (short or bit) error rate
-    print rep,terr_p, '%.2e' % ((1.0*terr_p)/(i+1)),tot_s,terr_s, '%.2e' % ((1.0*terr_s)/tot_s)
+            print i+1,terr_p, '%.2e' % ((1.0*terr_p)/(i+1)),tot_b,terr_b, '%.2e' % ((1.0*terr_b)/tot_b)
+	if e!=0:
+            print "rep=",i, e
+            for k in range(Kb):
+                if pattern[k]!=0:
+                    print k
+    # estimate of the bit error rate
+    print rep,terr_p, '%.2e' % ((1.0*terr_p)/(i+1)),tot_b,terr_b, '%.2e' % ((1.0*terr_b)/tot_b)
 
 
 
 if __name__ == '__main__':
     main()
+

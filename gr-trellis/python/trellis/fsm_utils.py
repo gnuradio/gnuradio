@@ -27,7 +27,7 @@ import sys
 import operator
 import numpy
 
-from gnuradio import trellis
+#from gnuradio import trellis
 
 try:
     import scipy.linalg
@@ -182,6 +182,7 @@ psk4=(2,[1, 0, \
          0, 1, \
          0, -1,\
         -1, 0])				# includes Gray mapping
+
 psk8=(2,[math.cos(2*math.pi*0/8), math.sin(2*math.pi*0/8),  \
          math.cos(2*math.pi*1/8), math.sin(2*math.pi*1/8),  \
          math.cos(2*math.pi*2/8), math.sin(2*math.pi*2/8),  \
@@ -190,6 +191,32 @@ psk8=(2,[math.cos(2*math.pi*0/8), math.sin(2*math.pi*0/8),  \
          math.cos(2*math.pi*5/8), math.sin(2*math.pi*5/8),  \
          math.cos(2*math.pi*6/8), math.sin(2*math.pi*6/8),  \
          math.cos(2*math.pi*7/8), math.sin(2*math.pi*7/8)])
+
+psk2x3 = (3,[-1,-1,-1, \
+             -1,-1,1, \
+             -1,1,-1, \
+             -1,1,1, \
+             1,-1,-1, \
+             1,-1,1, \
+             1,1,-1, \
+             1,1,1])
+
+psk2x4 = (4,[-1,-1,-1,-1, \
+             -1,-1,-1,1,  \
+             -1,-1,1,-1,  \
+             -1,-1,1,1,   \
+             -1,1,-1,-1,  \
+             -1,1,-1,1,   \
+             -1,1,1,-1,   \
+             -1,1,1,1,    \
+             1,-1,-1,-1,  \
+             1,-1,-1,1,   \
+             1,-1,1,-1,   \
+             1,-1,1,1,    \
+             1,1,-1,-1,   \
+             1,1,-1,1,    \
+             1,1,1,-1,    \
+             1,1,1,1])
 
 orth2 = (2,[1, 0, \
             0, 1])
@@ -204,36 +231,4 @@ orth4=(4,[1, 0, 0, 0, \
 
 # C test channel (J. Proakis, Digital Communications, McGraw-Hill Inc., 2001)
 c_channel = [0.227, 0.460, 0.688, 0.460, 0.227]
-
-
-
-
-
-
-
-
-
-
-if __name__ == '__main__':
-    f1=trellis.fsm('fsm_files/awgn1o2_4.fsm')
-    #f2=trellis.fsm('fsm_files/awgn2o3_4.fsm')
-    #print f1.I(), f1.S(), f1.O()
-    #print f1.NS()
-    #print f1.OS()
-    #print f2.I(), f2.S(), f2.O()
-    #print f2.NS()
-    #print f2.OS()
-    ##f1.write_trellis_svg('f1.svg',4)
-    #f2.write_trellis_svg('f2.svg',4)
-    #f=fsm_concatenate(f1,f2)
-    #f=fsm_radix(f1,2)
-
-    #print "----------\n"
-    #print f.I(), f.S(), f.O()
-    #print f.NS()
-    #print f.OS()
-    #f.write_trellis_svg('f.svg',4)
-
-    q=numpy.arange(0,8)/(2.0*8)
-    (f0,SS,S,F,Sf,Ff,N) = make_cpm_signals(1,2,2,1,q,0.99)
 

@@ -35,11 +35,12 @@ namespace gr {
       unsigned int d_blocksize;
       unsigned int d_current_output;
       unsigned int d_noutputs;
-
+      unsigned int d_size_bytes; // block size in bytes
 
     public:
       deinterleave_impl(size_t itemsize, unsigned int blocksize);
 
+      void forecast(int noutput_items, gr_vector_int &ninput_items_required);
       bool check_topology(int ninputs, int noutputs);
 
       int general_work(int noutput_items,

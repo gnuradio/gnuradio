@@ -89,6 +89,7 @@ namespace gr {
     void
     @IMPL_NAME@::set_scaling(float scaling)
     {
+      gr::thread::scoped_lock guard(d_setlock);
       d_scaling = scaling;
     }
 
@@ -108,6 +109,7 @@ namespace gr {
 			      gr_vector_const_void_star &input_items,
 			      gr_vector_void_star &output_items)
     {
+      gr::thread::scoped_lock guard(d_setlock);
       int nblocks = noutput_items / d_blocklength;
       float (*p2min)(float, float) = NULL;
 
