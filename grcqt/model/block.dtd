@@ -1,0 +1,65 @@
+<!--
+Copyright 2008 Free Software Foundation, Inc.
+This file is part of GNU Radio
+
+GNU Radio Companion is free software; you can redistribute it and/or
+modify it under the terms of the GNU General Public License
+as published by the Free Software Foundation; either version 2
+of the License, or (at your option) any later version.
+
+GNU Radio Companion is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, write to the Free Software
+Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
+-->
+<!--
+    gnuradio_python.blocks.dtd
+    Josh Blum
+    The document type definition for blocks.
+ -->
+<!--
+    Top level element.
+    A block contains a name, ...parameters list, and list of IO ports.
+ -->
+<!ELEMENT block (name, key, category?, throttle?, import*, var_make?, var_value?, make, callback*, param_tab_order?, param*, bus_sink?, bus_source?, check*, sink*, source*, bus_structure_sink?, bus_structure_source?, doc?,  grc_source?)>
+<!--
+    Sub level elements.
+ -->
+<!ELEMENT param_tab_order (tab+)>
+<!ELEMENT param (base_key?, name, key, value?, type?, hide?, option*, tab?)>
+<!ELEMENT option (name, key, opt*)>
+<!ELEMENT sink (name, type, vlen?, nports?, optional?, hide?)>
+<!ELEMENT source (name, type, vlen?, nports?, optional?, hide?)>
+<!--
+    Bottom level elements.
+    Character data only.
+ -->
+<!ELEMENT category (#PCDATA)>
+<!ELEMENT import (#PCDATA)>
+<!ELEMENT doc (#PCDATA)>
+<!ELEMENT grc_source (#PCDATA)>
+<!ELEMENT tab (#PCDATA)>
+<!ELEMENT name (#PCDATA)>
+<!ELEMENT base_key (#PCDATA)>
+<!ELEMENT key (#PCDATA)>
+<!ELEMENT check (#PCDATA)>
+<!ELEMENT bus_sink (#PCDATA)>
+<!ELEMENT bus_source (#PCDATA)>
+<!ELEMENT opt (#PCDATA)>
+<!ELEMENT type (#PCDATA)>
+<!ELEMENT hide (#PCDATA)>
+<!ELEMENT vlen (#PCDATA)>
+<!ELEMENT nports (#PCDATA)>
+<!ELEMENT bus_structure_sink (#PCDATA)>
+<!ELEMENT bus_structure_source (#PCDATA)>
+<!ELEMENT var_make (#PCDATA)>
+<!ELEMENT var_value (#PCDATA)>
+<!ELEMENT make (#PCDATA)>
+<!ELEMENT value (#PCDATA)>
+<!ELEMENT callback (#PCDATA)>
+<!ELEMENT optional (#PCDATA)>
+<!ELEMENT throttle (#PCDATA)>
