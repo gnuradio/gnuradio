@@ -1,0 +1,75 @@
+#!/usr/bin/env python
+"""
+Copyright 2009-2012 Free Software Foundation, Inc.
+This file is part of GNU Radio
+
+GNU Radio Companion is free software; you can redistribute it and/or
+modify it under the terms of the GNU General Public License
+as published by the Free Software Foundation; either version 2
+of the License, or (at your option) any later version.
+
+GNU Radio Companion is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, write to the Free Software
+Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
+"""
+
+import pygtk
+pygtk.require('2.0')
+import gtk
+
+import sys
+import os.path
+sys.path.append(os.path.dirname(__file__))
+
+try: from gnuradio import gr
+except ImportError, e:
+    d = gtk.MessageDialog(type=gtk.MESSAGE_ERROR, buttons=gtk.BUTTONS_CLOSE, message_format="""
+Cannot import gnuradio.
+
+Is the python path environment variable set correctly?
+    All OS: PYTHONPATH
+
+Is the library path environment variable set correctly?
+    Linux: LD_LIBRARY_PATH
+    Windows: PATH
+    MacOSX: DYLD_LIBRARY_PATH
+""")
+    d.set_title(str(e))
+    d.run()
+    exit(-1)
+
+from optparse import OptionParser
+import os
+
+if __name__ == "__main__":
+    if ('GR_DONT_LOAD_PREFS' in os.environ.keys() and
+        (not 'GRC_BLOCKS_PATH' in os.environ.keys() or len(os.environ['GRC_BLOCKS_PATH']) == 0)):
+        d = gtk.MessageDialog(
+            type=gtk.MESSAGE_ERROR,
+            buttons=gtk.BUTTONS_CLOSE,
+            message_format="""Can't find block definitions. Use config.conf or GRC_BLOCKS_PATH. """)
+        d.set_title("No block definitions available.")
+        d.run()
+        exit(-1)
+    usage = 'usage: %prog [options] [saved flow graphs]'
+    version = """
+GNU Radio Companion %s
+
+This program is part of GNU Radio
+GRC comes with ABSOLUTELY NO WARRANTY.
+This is free software,
+and you are welcome to redistribute it.
+"""%gr.version()
+    parser = OptionParser(usage=usage, version=version)
+    (options, args) = parser.parse_args()
+    from grcqt.gtkgui.Platform import Platform
+    from grcqt.gtkgui.ActionHandler import ActionHandler
+    #setup icon using icon theme
+    try: gtk.window_set_default_icon(gtk.IconTheme().load_icon('gnuradio-grc', 256, 0))
+    except: pass
+    ActionHandler(args, Platform())

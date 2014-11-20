@@ -1,0 +1,7 @@
+Logging:
+
+  ☐ Better support for multi-line messages
+  ☐ Print more concise messages unless the specific level is given
+  ☐ Only show file location in debug mode?
+
+  

@@ -1,0 +1,16 @@
+# Adding a Translation
+
+1. Add new locale directory - <locale>/LC_MESSAGES
+2. Copy grc.pot to <locale>/LC_MESSAGES/grc.po
+3. Update fields
+4. Convert to compiled version:
+    cd <locale>/LC_MESSAGES/; msgfmt -o grc.mo grc.po
+
+# Updating Translatable Strings
+
+1. Go to grcqt directory
+2. Mark translatable strings with _():
+    print ("example") --> print(_("example"))
+3. Run xgettext:
+    xgettext -L Python --keyword=_ -d grc -o companion/resources/language/grc.pot `find . -name "*.py"`
+4. Update .po files
