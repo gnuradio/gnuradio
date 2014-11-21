@@ -47,11 +47,11 @@ qa_fast_atan2f::t1()
     for(float j =-N/2; i < N/2; i++) {
       float x = i/10.0;
       float y = j/10.0;
-      c_atan2 = atan2(x, y);
+      c_atan2 = atan2(y, x);
 
-      gr_atan2f = gr::fast_atan2f(x, y);
+      gr_atan2f = gr::fast_atan2f(y, x);
 
-      CPPUNIT_ASSERT_DOUBLES_EQUAL(c_atan2, gr_atan2f, 0.0001);
+      CPPUNIT_ASSERT_DOUBLES_EQUAL(c_atan2, gr_atan2f,0.000083);
     }
   }
 }
@@ -69,71 +69,75 @@ qa_fast_atan2f::t2()
   /* Test x as INF */
   x = inf;
   y = 0;
-  c_atan2 = atan2(x, y);
-  gr_atan2f = gr::fast_atan2f(x, y);
-  CPPUNIT_ASSERT_DOUBLES_EQUAL(c_atan2, gr_atan2f, 0.0001);
+  c_atan2 = atan2(y, x);
+  gr_atan2f = gr::fast_atan2f(y, x);
+  CPPUNIT_ASSERT_DOUBLES_EQUAL(c_atan2, gr_atan2f, 0.00083);
 
   x = -inf;
   y = 0;
-  c_atan2 = atan2(x, y);
-  gr_atan2f = gr::fast_atan2f(x, y);
-  CPPUNIT_ASSERT_DOUBLES_EQUAL(c_atan2, gr_atan2f, 0.0001);
+  c_atan2 = atan2(y, x);
+  gr_atan2f = gr::fast_atan2f(y, x);
+  CPPUNIT_ASSERT_DOUBLES_EQUAL(c_atan2, gr_atan2f, 0.00083);
 
 
   /* Test y as INF */
   x = 0;
   y = inf;
-  c_atan2 = atan2(x, y);
-  gr_atan2f = gr::fast_atan2f(x, y);
-  CPPUNIT_ASSERT_DOUBLES_EQUAL(c_atan2, gr_atan2f, 0.0001);
+  c_atan2 = atan2(y, x);
+  gr_atan2f = gr::fast_atan2f(y, x);
+  CPPUNIT_ASSERT_DOUBLES_EQUAL(c_atan2, gr_atan2f, 0.00083);
 
   x = 0;
   y = -inf;
-  c_atan2 = atan2(x, y);
-  gr_atan2f = gr::fast_atan2f(x, y);
-  CPPUNIT_ASSERT_DOUBLES_EQUAL(c_atan2, gr_atan2f, 0.0001);
+  c_atan2 = atan2(y, x);
+  gr_atan2f = gr::fast_atan2f(y, x);
+  CPPUNIT_ASSERT_DOUBLES_EQUAL(c_atan2, gr_atan2f, 0.00083);
 
 
   /* Test x and y as INF */
   x = inf;
   y = inf;
-  gr_atan2f = gr::fast_atan2f(x, y);
+  gr_atan2f = gr::fast_atan2f(y, x);
   CPPUNIT_ASSERT(isnan(gr_atan2f));
 
 
   /* Test x as NAN */
   x = nan;
   y = 0;
-  gr_atan2f = gr::fast_atan2f(x, y);
-  CPPUNIT_ASSERT_DOUBLES_EQUAL(0.0f, gr_atan2f, 0.0001);
+  c_atan2 = atan2(y, x);
+  gr_atan2f = gr::fast_atan2f(y, x);
+  CPPUNIT_ASSERT(isnan(gr_atan2f));
 
   x = -nan;
   y = 0;
-  gr_atan2f = gr::fast_atan2f(x, y);
-  CPPUNIT_ASSERT_DOUBLES_EQUAL(0.0f, gr_atan2f, 0.0001);
+  c_atan2 = atan2(y, x);
+  gr_atan2f = gr::fast_atan2f(y, x);
+  CPPUNIT_ASSERT(isnan(gr_atan2f));
 
 
   /* Test y as NAN */
   x = 0;
   y = nan;
-  gr_atan2f = gr::fast_atan2f(x, y);
-  CPPUNIT_ASSERT_DOUBLES_EQUAL(0.0f, gr_atan2f, 0.0001);
+  c_atan2 = atan2(y, x);
+  gr_atan2f = gr::fast_atan2f(y, x);
+  CPPUNIT_ASSERT(isnan(gr_atan2f));
 
   x = 0;
   y = -nan;
-  gr_atan2f = gr::fast_atan2f(x, y);
-  CPPUNIT_ASSERT_DOUBLES_EQUAL(0.0f, gr_atan2f, 0.0001);
+  c_atan2 = atan2(y, x);
+  gr_atan2f = gr::fast_atan2f(y, x);
+  CPPUNIT_ASSERT(isnan(gr_atan2f));
 
 
   /* Test mixed NAN and INF */
   x = inf;
   y = nan;
-  gr_atan2f = gr::fast_atan2f(x, y);
+  gr_atan2f = gr::fast_atan2f(y, x);
   CPPUNIT_ASSERT(isnan(gr_atan2f));
 
   x = nan;
   y = inf;
-  gr_atan2f = gr::fast_atan2f(x, y);
+  gr_atan2f = gr::fast_atan2f(y, x);
   CPPUNIT_ASSERT(isnan(gr_atan2f));
 }
 

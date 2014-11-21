@@ -132,14 +132,24 @@ namespace gr {
     y_abs = fabsf(y);
     x_abs = fabsf(x);
     /* don't divide by zero! */
-    if(!((y_abs > 0.0f) || (x_abs > 0.0f)))
-      return 0.0;
+	if ((x_abs == 0.0) && (y_abs == 0.0))
+		return 0.0;
 
-    //z = (y_abs < x_abs ? y_abs / x_abs : x_abs / y_abs);
+	/* check if one of the both is NaN */
+	if (isnan(y_abs))
+		return y;
+	
+	if (isnan(x_abs))
+		return x;
+
     if(y_abs < x_abs)
       z = y_abs / x_abs;
     else
       z = x_abs / y_abs;
+
+	/* check if z is NaN */
+	if (isnan(z))
+		return z;
 
     /* when ratio approaches the table resolution, the angle is */
     /* best approximated with the argument itself... */
