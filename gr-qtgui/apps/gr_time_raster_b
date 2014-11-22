@@ -51,7 +51,7 @@ class plot_time_raster_b(plot_base.plot_base):
         self.dsize = gr.sizeof_char
         self.src_type = blocks.vector_source_b
         self.gui_snk = qtgui.time_raster_sink_b(self._samp_rate, self._nrows, self._ncols,
-                                                [], [], "GNU Radio Time Plot", self._nsigs)
+                                                [], [], "", self._nsigs)
         self.setup()
 
 def main():
