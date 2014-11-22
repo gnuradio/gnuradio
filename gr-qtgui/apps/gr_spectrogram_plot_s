@@ -49,7 +49,7 @@ class spectrogram_plot_s(plot_base.plot_base):
         self.src_type = plot_base.source_shorts_to_float
         self.gui_snk = qtgui.waterfall_sink_f(self._psd_size, filter.firdes.WIN_BLACKMAN_hARRIS,
                                               self._center_freq, self._samp_rate,
-                                              "GNU Radio Spectrogram Plot", self._nsigs)
+                                              "", self._nsigs)
         self.setup()
 
 def main():
@@ -76,4 +76,3 @@ if __name__ == "__main__":
         main()
     except KeyboardInterrupt:
         pass
-
