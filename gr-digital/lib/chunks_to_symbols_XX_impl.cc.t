@@ -87,12 +87,15 @@ namespace gr {
 
     
     void
-    @IMPL_NAME@::set_symbol_table(std::vector<@O_TYPE@> &symbol_table)
+    @IMPL_NAME@::set_symbol_table(const std::vector<@O_TYPE@> &symbol_table)
     {
+      /*
       d_symbol_table.resize(0);
       for (unsigned int i=0; i<symbol_table.size(); i++) {
         d_symbol_table.push_back(symbol_table[i]);
       }
+      */
+      d_symbol_table = symbol_table;
     }
 
     int

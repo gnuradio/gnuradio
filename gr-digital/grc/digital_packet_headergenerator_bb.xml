@@ -3,6 +3,7 @@
   <key>digital_packet_headergenerator_bb</key>
   <import>from gnuradio import digital</import>
   <make>digital.packet_headergenerator_bb($header_formatter, $len_tag_key)</make>
+  <callback>set_header_formatter($header_formatter)</callback>
   <param>
     <name>Formatter Object</name>
     <key>header_formatter</key>

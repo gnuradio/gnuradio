@@ -36,9 +36,11 @@ namespace gr {
       uint64_t d_total_samples;
       double d_samps_per_tick, d_samps_per_us;
       bool d_ignore_tags;
+      int d_max_noutput_items;
+      bool d_S;
 
     public:
-      throttle_impl(size_t itemsize, double samples_per_sec, bool ignore_tags=true);
+      throttle_impl(size_t itemsize, double samples_per_sec, int max_noutput_items=100, bool ignore_tags=true, bool S=false);
       ~throttle_impl();
 
       // Overloading gr::block::start to reset timer

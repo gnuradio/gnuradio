@@ -10,6 +10,7 @@
 	<key>blocks_stream_mux</key>
 	<import>from gnuradio import blocks</import>
 	<make>blocks.stream_mux($type.size*$vlen, $lengths)</make>
+        <callback>set_lengths($lengths)</callback>
 	<param>
 		<name>Type</name>
 		<key>type</key>
