@@ -105,31 +105,30 @@ qa_fast_atan2f::t2()
   x = nan;
   y = 0;
   gr_atan2f = gr::fast_atan2f(y, x);
-  CPPUNIT_ASSERT(isnan(gr_atan2f));
+  CPPUNIT_ASSERT_DOUBLES_EQUAL(0.0f, gr_atan2f, 0.0001);
 
   x = -nan;
   y = 0;
   gr_atan2f = gr::fast_atan2f(y, x);
-  CPPUNIT_ASSERT(isnan(gr_atan2f));
+  CPPUNIT_ASSERT_DOUBLES_EQUAL(0.0f, gr_atan2f, 0.0001);
 
 
   /* Test y as NAN */
   x = 0;
   y = nan;
   gr_atan2f = gr::fast_atan2f(y, x);
-  CPPUNIT_ASSERT(isnan(gr_atan2f));
+  CPPUNIT_ASSERT_DOUBLES_EQUAL(0.0f, gr_atan2f, 0.0001);
 
   x = 0;
   y = -nan;
   gr_atan2f = gr::fast_atan2f(y, x);
-  CPPUNIT_ASSERT(isnan(gr_atan2f));
-
+  CPPUNIT_ASSERT_DOUBLES_EQUAL(0.0f, gr_atan2f, 0.0001);
 
   /* Test mixed NAN and INF */
   x = inf;
   y = nan;
   gr_atan2f = gr::fast_atan2f(y, x);
-  CPPUNIT_ASSERT(isnan(gr_atan2f));
+  CPPUNIT_ASSERT_DOUBLES_EQUAL(0.0f, gr_atan2f, 0.0001);
 
   x = nan;
   y = inf;
