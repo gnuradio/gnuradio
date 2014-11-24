@@ -59,6 +59,8 @@ namespace gr {
 	  unsigned packet_len,
 	  const std::string &len_tag_key
       );
+      virtual void set_packet_len(unsigned packet_len) =0;
+      virtual void set_packet_len_pmt(unsigned packet_len) =0;
     };
 
   } // namespace blocks
