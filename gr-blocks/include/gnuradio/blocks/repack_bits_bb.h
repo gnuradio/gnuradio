@@ -57,6 +57,7 @@ namespace gr {
        *                     or the output is aligned.
        */
       static sptr make(int k, int l=8, const std::string &len_tag_key="", bool align_output=false);
+      virtual void set_k_and_l(int k, int l) =0;//callback function for bits per input byte k and bits per output byte l.
     };
 
   } // namespace blocks
