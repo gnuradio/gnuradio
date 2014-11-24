@@ -33,15 +33,22 @@ namespace gr {
   class tpb_container
   {
     block_sptr d_block;
+    boost::shared_ptr<boost::barrier> d_loop_barrier;
     int d_max_noutput_items;
 
   public:
-    tpb_container(block_sptr block, int max_noutput_items)
-      : d_block(block), d_max_noutput_items(max_noutput_items) {}
+    tpb_container(
+        block_sptr block,
+        boost::shared_ptr<boost::barrier> loop_barrier,
+        int max_noutput_items
+    ) : d_block(block),
+        d_loop_barrier(loop_barrier),
+        d_max_noutput_items(max_noutput_items)
+    {}
 
     void operator()()
     {
-      tpb_thread_body body(d_block, d_max_noutput_items);
+      tpb_thread_body body(d_block, d_loop_barrier, d_max_noutput_items);
     }
   };
 
@@ -71,7 +78,11 @@ namespace gr {
       blocks[i]->detail()->set_done(false);
     }
 
-    // Fire off a thead for each block
+    // Create the loop barrier so all threads start in sync
+
+    boost::shared_ptr<boost::barrier> loop_barrier(new boost::barrier(blocks.size()));
+
+    // Fire off a thread for each block
 
     for(size_t i = 0; i < blocks.size(); i++) {
       std::stringstream name;
@@ -86,9 +97,16 @@ namespace gr {
       }
 
       d_threads.create_thread(
-	    gr::thread::thread_body_wrapper<tpb_container>
-            (tpb_container(blocks[i], block_max_noutput_items),
-             name.str()));
+          gr::thread::thread_body_wrapper<tpb_container>
+          (
+            tpb_container(
+              blocks[i],
+              loop_barrier,
+              block_max_noutput_items
+            ),
+            name.str()
+          )
+      );
     }
   }
 

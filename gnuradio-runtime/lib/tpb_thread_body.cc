@@ -32,8 +32,11 @@
 
 namespace gr {
 
-  tpb_thread_body::tpb_thread_body(block_sptr block, int max_noutput_items)
-    : d_exec(block, max_noutput_items)
+  tpb_thread_body::tpb_thread_body(
+      block_sptr block,
+      boost::shared_ptr<boost::barrier> loop_barrier,
+      int max_noutput_items
+  ) : d_exec(block, max_noutput_items)
   {
     //std::cerr << "tpb_thread_body: " << block << std::endl;
 
@@ -92,6 +95,10 @@ namespace gr {
     // make sure our block isnt finished
     block->clear_finished();
 
+    // Wait until all blocks have initialized
+    loop_barrier->wait();
+
+    // Start the processing (messages, work calls etc.)
     while(1) {
       tpb_loop_top:
       boost::this_thread::interruption_point();
@@ -153,8 +160,8 @@ namespace gr {
             boost::system_time const timeout=boost::get_system_time()+ boost::posix_time::milliseconds(250);
             if(!d->d_tpb.input_cond.timed_wait(guard, timeout)){
                 goto tpb_loop_top; // timeout occured (perform sanity checks up top)
-                }
             }
+          }
 
           // handle all pending messages
           BOOST_FOREACH(basic_block::msg_queue_map_t::value_type &i, block->msg_queue) {
