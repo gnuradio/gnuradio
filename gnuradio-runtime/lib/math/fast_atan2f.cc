@@ -118,7 +118,7 @@ namespace gr {
    determine the final angle value in the range of -180 to 180
    degrees. Note that this function uses the small angle approximation
    for values close to zero. This routine calculates the arc tangent
-   with an average error of +/- 0.045 degrees.
+   with an average error of +/- 3.56e-5 degrees (6.21e-7 radians).
   *****************************************************************************/
 
   float
@@ -131,11 +131,14 @@ namespace gr {
     /* normalize to +/- 45 degree range */
     y_abs = fabsf(y);
     x_abs = fabsf(x);
+    /* don't divide by zero! */
+    if(!((y_abs > 0.0f) || (x_abs > 0.0f)))
+      return 0.0;
 
-	if (y_abs < x_abs)
-      if (x_abs > 0.0) z = y_abs / x_abs; else return 0.0;
+    if(y_abs < x_abs)
+      z = y_abs / x_abs;
     else
-      if (y_abs > 0.0) z = x_abs / y_abs; else return 0.0;
+      z = x_abs / y_abs;
 
     /* when ratio approaches the table resolution, the angle is */
     /* best approximated with the argument itself... */
