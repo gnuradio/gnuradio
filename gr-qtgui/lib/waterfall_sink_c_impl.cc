@@ -38,13 +38,13 @@ namespace gr {
     waterfall_sink_c::make(int fftsize, int wintype,
 			   double fc, double bw,
 			   const std::string &name,
-			   int nconnections,
+			   int nconnections,int numffts,
 			   QWidget *parent)
     {
       return gnuradio::get_initial_sptr
 	(new waterfall_sink_c_impl(fftsize, wintype,
 				   fc, bw, name,
-				   nconnections,
+				   nconnections,numffts,
 				   parent));
     }
 
@@ -52,6 +52,7 @@ namespace gr {
 						 double fc, double bw,
 						 const std::string &name,
 						 int nconnections,
+                                                 int numffts,
 						 QWidget *parent)
       : sync_block("waterfall_sink_c",
                    io_signature::make(1, nconnections, sizeof(gr_complex)),
@@ -59,7 +60,7 @@ namespace gr {
 	d_fftsize(fftsize), d_fftavg(1.0),
 	d_wintype((filter::firdes::win_type)(wintype)),
 	d_center_freq(fc), d_bandwidth(bw), d_name(name),
-	d_nconnections(nconnections), d_parent(parent)
+	d_nconnections(nconnections), d_numffts(numffts),d_parent(parent)
     {
       // Required now for Qt; argc must be greater than 0 and argv
       // must have at least one valid character. Must be valid through
@@ -153,7 +154,7 @@ namespace gr {
         d_qApplication->setStyleSheet(sstext);
       }
 
-      d_main_gui = new WaterfallDisplayForm(d_nconnections, d_parent);
+      d_main_gui = new WaterfallDisplayForm(d_nconnections,d_numffts,d_parent);
       set_fft_window(d_wintype);
       set_fft_size(d_fftsize);
       set_frequency_range(d_center_freq, d_bandwidth);
@@ -456,6 +457,11 @@ namespace gr {
                                     new SetFreqEvent(d_center_freq, d_bandwidth));
         }
       }
+    }
+    void
+    waterfall_sink_c_impl::set_time_per_fft(double t)
+    {
+      d_main_gui->setTimePerFFT(t);
     }
 
     int

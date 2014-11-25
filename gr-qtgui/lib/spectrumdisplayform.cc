@@ -38,7 +38,7 @@ SpectrumDisplayForm::SpectrumDisplayForm(QWidget* parent)
   _intValidator = new QIntValidator(this);
   _intValidator->setBottom(0);
   _frequencyDisplayPlot = new FrequencyDisplayPlot(1, FrequencyPlotDisplayFrame);
-  _waterfallDisplayPlot = new WaterfallDisplayPlot(1, WaterfallPlotDisplayFrame);
+  _waterfallDisplayPlot = new WaterfallDisplayPlot(1, WaterfallPlotDisplayFrame,200);
   _timeDomainDisplayPlot = new TimeDomainDisplayPlot(2, TimeDomainDisplayFrame);
   _constellationDisplayPlot = new ConstellationDisplayPlot(1, ConstellationDisplayFrame);
   _numRealDataPoints = 1024;

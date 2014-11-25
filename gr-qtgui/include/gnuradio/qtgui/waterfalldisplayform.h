@@ -40,12 +40,14 @@ class WaterfallDisplayForm : public DisplayForm
   Q_OBJECT
 
   public:
-  WaterfallDisplayForm(int nplots=1, QWidget* parent = 0);
+  WaterfallDisplayForm(int nplots=1, int numffts=200,QWidget* parent = 0);
+  WaterfallDisplayForm(int nplots=1,QWidget* parent = 0);
   ~WaterfallDisplayForm();
 
   WaterfallDisplayPlot* getPlot();
 
   int getFFTSize() const;
+  double getTimePerFFT();
   float getFFTAverage() const;
   gr::filter::firdes::win_type getFFTWindowType() const;
 
@@ -87,7 +89,9 @@ public slots:
 
   void autoScale(bool en=false);
   void setPlotPosHalf(bool half);
-
+  void setTimePerFFT(double t);
+  void setUpdateTime(double t);
+  void initialize(int nplots, QWidget* parent);
 private slots:
   void newData(const QEvent *updateEvent);
   void onPlotPointSelected(const QPointF p);
@@ -97,6 +101,7 @@ private:
 
   double d_samp_rate, d_center_freq;
   int d_fftsize;
+  double d_timePerFFT;
   float d_fftavg;
   gr::filter::firdes::win_type d_fftwintype;
   double d_units;

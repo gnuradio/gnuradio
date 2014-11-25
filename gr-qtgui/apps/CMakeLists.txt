@@ -55,6 +55,7 @@ GR_PYTHON_INSTALL(
     gr_spectrogram_plot_i
     gr_spectrogram_plot_s
     gr_spectrogram_plot_b
+    gr_spectrogram_plot
     gr_constellation_plot
     DESTINATION ${GR_RUNTIME_DIR}
     COMPONENT "qtgui_python"

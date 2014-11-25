@@ -99,7 +99,8 @@ class plot_base(gr.top_block):
         for i,s in enumerate(self.srcs[1:]):
             self.connect(s, (self.gui_snk, i+1))
 
-        self.gui_snk.set_update_time(0);
+        self.gui_snk.set_update_time(0)
+        self.gui_snk.set_time_per_fft(self._psd_size/self._samp_rate)
         self.gui_snk.enable_menu(False)
         self.gui_snk.set_fft_average(self._avg)
 

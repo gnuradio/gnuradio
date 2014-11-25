@@ -62,7 +62,7 @@ public:
   virtual QwtText label(double value) const
   {
     double secs = double(value * getSecondsPerLine());
-    return QwtText(QString("").sprintf("%.1f", secs));
+    return QwtText(QString("").sprintf("%.2e", secs));
   }
 
   virtual void initiateUpdate()
@@ -119,7 +119,7 @@ protected:
     QwtText t(QString("%1 %2, %3 s")
               .arg(dp.x(), 0, 'f', getFrequencyPrecision())
               .arg(d_unitType.c_str())
-              .arg(secs, 0, 'f', 2));
+              .arg(secs, 0, 'e', 2));
     return t;
   }
 
@@ -130,7 +130,8 @@ private:
 /*********************************************************************
 * Main waterfall plot widget
 *********************************************************************/
-WaterfallDisplayPlot::WaterfallDisplayPlot(int nplots, QWidget* parent)
+WaterfallDisplayPlot::WaterfallDisplayPlot(int nplots, QWidget* parent,
+                                           int num_ffts)
   : DisplayPlot(nplots, parent)
 {
   d_zoomer = NULL;  // need this for proper init
@@ -149,7 +150,7 @@ WaterfallDisplayPlot::WaterfallDisplayPlot(int nplots, QWidget* parent)
 
   for(int i = 0; i < d_nplots; i++) {
     d_data.push_back(new WaterfallData(d_start_frequency, d_stop_frequency,
-				       d_numPoints, 200));
+				       d_numPoints, num_ffts));
 
 #if QWT_VERSION < 0x060000
     d_spectrogram.push_back(new PlotWaterfall(d_data[i], "Spectrogram"));

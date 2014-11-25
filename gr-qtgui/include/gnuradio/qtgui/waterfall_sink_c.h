@@ -88,12 +88,13 @@ namespace gr {
        * \param bw bandwidth of signal (used to set x-axis labels)
        * \param name title for the plot
        * \param nconnections number of signals to be connected to the sink
+       * \param numffts number of ffts to display in the spectrogram
        * \param parent a QWidget parent object, if any
        */
       static sptr make(int size, int wintype,
 		       double fc, double bw,
 		       const std::string &name,
-		       int nconnections=1,
+		       int nconnections=1,int numffts=200,
 		       QWidget *parent=NULL);
 
       virtual void exec_() = 0;
@@ -108,6 +109,7 @@ namespace gr {
       virtual void clear_data() = 0;
 
       virtual void set_fft_size(const int fftsize) = 0;
+      virtual void set_time_per_fft(double t) = 0;
       virtual int fft_size() const = 0;
       virtual void set_fft_average(const float fftavg) = 0;
       virtual float fft_average() const = 0;
