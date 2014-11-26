@@ -21,7 +21,7 @@ Boston, MA 02110-1301, USA.
 
 
 ## Welcome to GNU Radio!
-
+<img src="http://gnuradio.org/redmine/images/gnuradio-logo.png" alt="GNU radio Logo" height="70" />
 
 Please see http://gnuradio.org for the wiki, bug tracking, and source code viewer.
 
