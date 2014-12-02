@@ -18,6 +18,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 """
 
 from Element import Element
+from . Constants import DEFAULT_DOMAIN
 
 class Port(Element):
 
@@ -36,6 +37,7 @@ class Port(Element):
         self._name = n['name']
         self._key = n['key']
         self._type = n['type']
+        self._domain = n.find('domain') or DEFAULT_DOMAIN
         self._hide = n.find('hide') or ''
         self._dir = dir
         self._type_evaluated = None  # updated on rewrite()
@@ -48,7 +50,10 @@ class Port(Element):
         """
         Element.validate(self)
         if self.get_type() not in self.get_types():
-            self.add_error_message('Type "%s" is not a possible type.'%self.get_type())
+            self.add_error_message('Type "%s" is not a possible type.' % self.get_type())
+        platform = self.get_parent().get_parent().get_parent()
+        if self.get_domain() not in platform.get_domains():
+            self.add_error_message('Domain key "%s" is not registered.' % self.get_domain())
 
     def rewrite(self):
         """resolve dependencies in for type and hide"""
@@ -85,6 +90,7 @@ class Port(Element):
     def get_type(self):
         return self.get_parent().resolve_dependencies(self._type) \
                 if self._type_evaluated is None else self._type_evaluated
+    def get_domain(self): return self._domain
     def get_hide(self): return self._hide_evaluated
 
     def get_connections(self):

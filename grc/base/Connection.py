@@ -81,10 +81,15 @@ class Connection(Element):
         The ports must match in type.
         """
         Element.validate(self)
-        source_type = self.get_source().get_type()
-        sink_type = self.get_sink().get_type()
-        if source_type != sink_type:
-            self.add_error_message('Source type "%s" does not match sink type "%s".'%(source_type, sink_type))
+        platform = self.get_parent().get_parent()
+        source_domain = self.get_source().get_domain()
+        sink_domain = self.get_sink().get_domain()
+        if (source_domain, sink_domain) not in platform.get_connection_templates():
+            self.add_error_message('No connection known for domains "%s", "%s"' % (source_domain, sink_domain))
+        multiple_sinks = platform.get_domain(key=self.get_source().get_domain())['multiple_sinks']
+        if not multiple_sinks and len(self.get_source().get_connections()) > 1:
+            self.add_error_message('Source domain "%s" can have only one downstream block' % source_domain)
+
 
     def get_enabled(self):
         """
