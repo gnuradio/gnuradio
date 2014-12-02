@@ -40,16 +40,25 @@ def design_filter(interpolation, decimation, fractional_bw):
     if fractional_bw >= 0.5 or fractional_bw <= 0:
         raise ValueError, "Invalid fractional_bandwidth, must be in (0, 0.5)"
 
-    beta = 5.0
-    trans_width = 0.5 - fractional_bw
-    mid_transition_band = 0.5 - trans_width/2
+    beta = 7.0
+    halfband = 0.5
+    rate = float(interpolation)/float(decimation)
+    if(rate >= 1.0):
+        trans_width = halfband - fractional_bw
+        mid_transition_band = halfband - trans_width/2.0
+    else:
+        trans_width = rate*(halfband - fractional_bw)
+        mid_transition_band = rate*halfband - trans_width/2.0
 
+    print trans_width, mid_transition_band
     taps = filter.firdes.low_pass(interpolation,                     # gain
-                                  1,                                 # Fs
-                                  mid_transition_band/interpolation, # trans mid point
-                                  trans_width/interpolation,         # transition width
+                                  interpolation,                     # Fs
+                                  mid_transition_band,               # trans mid point
+                                  trans_width,                       # transition width
                                   filter.firdes.WIN_KAISER,
                                   beta)                              # beta
+
+    print len(taps)
     return taps
 
 
@@ -90,13 +99,15 @@ class _rational_resampler_base(gr.hier_block2):
         if taps is None:
             taps = design_filter(interpolation, decimation, fractional_bw)
 
-        resampler = resampler_base(interpolation, decimation, taps)
+        self.resampler = resampler_base(interpolation, decimation, taps)
 	gr.hier_block2.__init__(self, "rational_resampler",
-				gr.io_signature(1, 1, resampler.input_signature().sizeof_stream_item(0)),
-				gr.io_signature(1, 1, resampler.output_signature().sizeof_stream_item(0)))
+				gr.io_signature(1, 1, self.resampler.input_signature().sizeof_stream_item(0)),
+				gr.io_signature(1, 1, self.resampler.output_signature().sizeof_stream_item(0)))
 
-	self.connect(self, resampler, self)
+	self.connect(self, self.resampler, self)
 
+    def taps(self):
+        return self.resampler.taps()
 
 class rational_resampler_fff(_rational_resampler_base):
     def __init__(self, interpolation, decimation, taps=None, fractional_bw=None):
