@@ -270,7 +270,7 @@ def sd_qam_16_0x0_0_1_2_3(x, Es=1):
     b2 = -abs(x_re) + boundary
     b0 = -abs(x_im) + boundary
 
-    return [(Es/2)*b3, (Es/2)*b2, (Es/2)*b1, (Es/2)*b0]
+    return [(Es/2.0)*b3, (Es/2.0)*b2, (Es/2.0)*b1, (Es/2.0)*b0]
 sd_qam_16 = sd_qam_16_0x0_0_1_2_3
 sd_qam_16_0 = sd_qam_16
 
