@@ -26,7 +26,7 @@ from Connection import Connection as _Connection
 from Block import Block as _Block
 from Port import Port as _Port
 from Param import Param as _Param
-from Constants import BLOCK_TREE_DTD, FLOW_GRAPH_DTD
+from Constants import BLOCK_TREE_DTD, FLOW_GRAPH_DTD, DOMAIN_DTD, DEFAULT_DOMAIN
 
 
 class Platform(_Element):
@@ -74,6 +74,8 @@ class Platform(_Element):
         self._blocks = None
         self._blocks_n = None
         self._category_trees_n = None
+        self._domains = dict()
+        self._connection_templates = dict()
         self.load_blocks()
 
     def load_blocks(self):
@@ -82,12 +84,16 @@ class Platform(_Element):
         self._blocks = odict()
         self._blocks_n = odict()
         self._category_trees_n = list()
+        self._domains.clear()
+        self._connection_templates.clear()
         ParseXML.xml_failures.clear()
         # try to parse and load blocks
         for xml_file in self.iter_xml_files():
             try:
                 if xml_file.endswith("block_tree.xml"):
                     self.load_category_tree_xml(xml_file)
+                elif xml_file.endswith('domain.xml'):
+                    self.load_domain_xml(xml_file)
                 else:
                     self.load_block_xml(xml_file)
             except ParseXML.XMLSyntaxError as e:
@@ -127,6 +133,25 @@ class Platform(_Element):
         ParseXML.validate_dtd(xml_file, BLOCK_TREE_DTD)
         n = ParseXML.from_file(xml_file).find('cat')
         self._category_trees_n.append(n)
+
+    def load_domain_xml(self, xml_file):
+        ParseXML.validate_dtd(xml_file, DOMAIN_DTD)
+        n = ParseXML.from_file(xml_file).find('domain')
+
+        key = n.find('key')
+        if key in self.get_domains():  # test against repeated keys
+            print >> sys.stderr, 'Warning: Domain with key "%s" already exists.\n\tIgnoring: %s' % (key, xml_file)
+            return
+
+        self._domains[key] = dict(
+            name=n.find('name') or key,
+            multiple_sinks=n.find('multiple_sinks') or True
+        )
+        for connection_n in n.findall('connection'):
+            source_domain = connection_n.find('source_domain') or DEFAULT_DOMAIN
+            sink_domain = connection_n.find('sink_domain') or DEFAULT_DOMAIN
+            make = connection_n.find('make') or ''
+            self._connection_templates[(source_domain, sink_domain)] = make
 
     def parse_flow_graph(self, flow_graph_file):
         """
@@ -196,6 +221,10 @@ class Platform(_Element):
     def get_block(self, key): return self._blocks[key]
     def get_blocks(self): return self._blocks.values()
     def get_new_block(self, flow_graph, key): return self.Block(flow_graph, n=self._blocks_n[key])
+
+    def get_domains(self): return self._domains
+    def get_domain(self, key): return self._domains[key]
+    def get_connection_templates(self): return self._connection_templates
 
     def get_name(self): return self._name
     def get_version(self): return self._version
