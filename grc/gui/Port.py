@@ -22,6 +22,7 @@ from Constants import \
     PORT_SEPARATION, CONNECTOR_EXTENSION_MINIMAL, \
     CONNECTOR_EXTENSION_INCREMENT, \
     PORT_LABEL_PADDING, PORT_MIN_WIDTH, PORT_LABEL_HIDDEN_WIDTH, PORT_FONT
+from .. base.Constants import DEFAULT_DOMAIN
 import Utils
 import Actions
 import Colors
@@ -137,12 +138,15 @@ class Port(Element):
             gc: the graphics context
             window: the gtk window to draw on
         """
+        normal_line_width = gc.line_width  # todo: move line properties to Element
+        if self.get_domain() != DEFAULT_DOMAIN: gc.line_width = 2
         Element.draw(
             self, gc, window, bg_color=self._bg_color,
             border_color=self.is_highlighted() and Colors.HIGHLIGHT_COLOR or
                          self.get_parent().is_dummy_block() and Colors.MISSING_BLOCK_BORDER_COLOR or
                          Colors.BORDER_COLOR,
         )
+        gc.line_width = normal_line_width  # restore line style
         if not self._areas_list or self._label_hidden():
             return  # this port is either hidden (no areas) or folded (no label)
         X, Y = self.get_coordinate()
