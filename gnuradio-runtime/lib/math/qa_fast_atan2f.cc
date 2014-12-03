@@ -128,11 +128,10 @@ qa_fast_atan2f::t2()
   x = inf;
   y = nan;
   gr_atan2f = gr::fast_atan2f(y, x);
-  CPPUNIT_ASSERT_DOUBLES_EQUAL(0.0f, gr_atan2f, 0.0001);
+  CPPUNIT_ASSERT(isnan(gr_atan2f));
 
   x = nan;
   y = inf;
   gr_atan2f = gr::fast_atan2f(y, x);
   CPPUNIT_ASSERT(isnan(gr_atan2f));
 }
-
