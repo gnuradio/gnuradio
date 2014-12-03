@@ -50,7 +50,6 @@ def design_filter(interpolation, decimation, fractional_bw):
         trans_width = rate*(halfband - fractional_bw)
         mid_transition_band = rate*halfband - trans_width/2.0
 
-    print trans_width, mid_transition_band
     taps = filter.firdes.low_pass(interpolation,                     # gain
                                   interpolation,                     # Fs
                                   mid_transition_band,               # trans mid point
@@ -58,7 +57,6 @@ def design_filter(interpolation, decimation, fractional_bw):
                                   filter.firdes.WIN_KAISER,
                                   beta)                              # beta
 
-    print len(taps)
     return taps
 
 
@@ -93,10 +91,20 @@ class _rational_resampler_base(gr.hier_block2):
             fractional_bw = 0.4
 
         d = gru.gcd(interpolation, decimation)
-        interpolation = interpolation // d
-        decimation = decimation // d
 
+        # If we have user-provided taps and the interp and decim
+        # values have a common divisor, we don't reduce these values
+        # by the GCD but issue a warning to the user that this might
+        # increase the complexity of the filter.
+        if taps and (d > 1):
+            gr.log.info("Rational resampler has user-provided taps but interpolation ({0}) and decimation ({1}) have a GCD of {2}, which increases the complexity of the filterbank. Consider reducing these values by the GCD.".format(interpolation, decimation, d))
+
+        # If we don't have user-provided taps, reduce the interp and
+        # decim values by the GCD (if there is one) and then define
+        # the taps from these new values.
         if taps is None:
+            interpolation = interpolation // d
+            decimation = decimation // d
             taps = design_filter(interpolation, decimation, fractional_bw)
 
         self.resampler = resampler_base(interpolation, decimation, taps)
