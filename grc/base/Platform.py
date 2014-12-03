@@ -223,7 +223,7 @@ class Platform(_Element):
     def get_new_block(self, flow_graph, key): return self.Block(flow_graph, n=self._blocks_n[key])
 
     def get_domains(self): return self._domains
-    def get_domain(self, key): return self._domains[key]
+    def get_domain(self, key): return self._domains.get(key)
     def get_connection_templates(self): return self._connection_templates
 
     def get_name(self): return self._name

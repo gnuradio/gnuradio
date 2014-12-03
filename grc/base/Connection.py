@@ -86,8 +86,11 @@ class Connection(Element):
         sink_domain = self.get_sink().get_domain()
         if (source_domain, sink_domain) not in platform.get_connection_templates():
             self.add_error_message('No connection known for domains "%s", "%s"' % (source_domain, sink_domain))
-        multiple_sinks = platform.get_domain(key=self.get_source().get_domain())['multiple_sinks']
-        if not multiple_sinks and len(self.get_source().get_connections()) > 1:
+
+        if (source_domain in platform.get_domains() and
+            not platform.get_domain(key=source_domain)['multiple_sinks'] and
+            len(self.get_source().get_connections()) > 1
+        ):
             self.add_error_message('Source domain "%s" can have only one downstream block' % source_domain)
 
 
