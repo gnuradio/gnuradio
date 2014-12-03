@@ -77,15 +77,20 @@ class Connection(Element):
             Utils.get_rotated_coordinate((-CONNECTOR_ARROW_HEIGHT, CONNECTOR_ARROW_BASE/2), self.get_sink().get_rotation()),
         ]
         self._update_after_move()
-        if not self.get_enabled(): self._arrow_color = Colors.CONNECTION_DISABLED_COLOR
-        elif not self.is_valid(): self._arrow_color = Colors.CONNECTION_ERROR_COLOR
-        else: self._arrow_color = Colors.CONNECTION_ENABLED_COLOR
+        if not self.get_enabled():
+            self._arrow_color = Colors.CONNECTION_DISABLED_COLOR
+        elif not self.is_valid():
+            self._arrow_color = Colors.CONNECTION_ERROR_COLOR
+        else:
+            self._arrow_color = Colors.CONNECTION_ENABLED_COLOR
 
     def _update_after_move(self):
         """Calculate coordinates."""
         self.clear() #FIXME do i want this here?
         #source connector
         source = self.get_source()
+        if source.get_type() == "message":
+            self.line_attributes[1] = gtk.gdk.LINE_ON_OFF_DASH
         X, Y = source.get_connector_coordinate()
         x1, y1 = self.x1 + X, self.y1 + Y
         self.add_line((x1, y1), (X, Y))
@@ -152,13 +157,11 @@ class Connection(Element):
         elif self.get_enabled(): border_color = Colors.CONNECTION_ENABLED_COLOR
         else: border_color = Colors.CONNECTION_DISABLED_COLOR
         # make message connections dashed (no areas here)
-        normal_line_style = gc.line_style
-        if source.get_type() == "message": gc.line_style = gtk.gdk.LINE_ON_OFF_DASH
         Element.draw(self, gc, window, bg_color=None, border_color=border_color)
-        gc.line_style = normal_line_style  # restore line style
         #draw arrow on sink port
         try:
             gc.set_foreground(self._arrow_color)
+            gc.set_line_attributes(0, gtk.gdk.LINE_SOLID, gtk.gdk.CAP_BUTT, gtk.gdk.JOIN_MITER)
             window.draw_polygon(gc, True, self._arrow)
         except:
-            return
+            pass
