@@ -10,6 +10,6 @@
   <connection>
     <source_domain>gr_stream</source_domain>
     <sink_domain>gr_stream</sink_domain>
-    <make></make>
+    <make>        self.connect($make_port_sig($source), $make_port_sig($sink))</make>
   </connection>
 </domain>

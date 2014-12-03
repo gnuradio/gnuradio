@@ -201,15 +201,16 @@ gr.io_signaturev($(len($io_sigs)), $(len($io_sigs)), [$(', '.join($size_strs))])
         $DIVIDER
 #end if
 #for $con in $connections
-    #set $source = $con.get_source()
-    #set $sink = $con.get_sink()
+    #set global $source = $con.get_source()
+    #set global $sink = $con.get_sink()
     ##resolve virtual sources to the actual sources
     #if $source.get_parent().is_virtual_source()
         #set $source = $source.resolve_virtual_source()
     #end if
     ##do not generate connections with virtual sinks
     #if not $sink.get_parent().is_virtual_sink()
-        self.connect($make_port_sig($source), $make_port_sig($sink))
+        #include source=$connection_templates[($source.get_domain(), $sink.get_domain())]
+
     #end if
 #end for
 
