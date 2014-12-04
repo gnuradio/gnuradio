@@ -417,4 +417,35 @@ namespace gr {
     return false;
   }
 
+  bool
+  update_logger_alias(const std::string &name, const std::string &alias)
+  {
+#ifdef ENABLE_GR_LOG
+#ifdef HAVE_LOG4CPP
+    prefs *p = prefs::singleton();
+    std::string log_file = p->get_string("LOG", "log_file", "");
+    std::string debug_file = p->get_string("LOG", "debug_file", "");
+
+    GR_LOG_GETLOGGER(LOG, "gr_log." + name);
+    if(log_file.size() > 0) {
+      if(log_file == "stdout") {
+        boost::format str("gr::log :%%p: %1% - %%m%%n");
+        GR_LOG_SET_CONSOLE_APPENDER(LOG, "cout", boost::str(str % alias));
+      }
+      else if(log_file == "stderr") {
+        boost::format str("gr::log :%%p: %1% - %%m%%n");
+        GR_LOG_SET_CONSOLE_APPENDER(LOG, "cerr", boost::str(str % alias));
+      }
+      else {
+        boost::format str("%%r :%%p: %1% - %%m%%n");
+        GR_LOG_SET_FILE_APPENDER(LOG, log_file, true, boost::str(str % alias));
+      }
+    }
+    return true;
+#endif /* HAVE_LOG4CPP */
+#endif /* ENABLE_GR_LOG */
+
+    return false;
+  }
+
 } /* namespace gr */

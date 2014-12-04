@@ -60,7 +60,7 @@ namespace gr {
     message_port_register_in(pmt::mp("system"));
     set_msg_handler(pmt::mp("system"), boost::bind(&block::system_handler, this, _1));
 
-    configure_default_loggers(d_logger, d_debug_logger, alias());
+    configure_default_loggers(d_logger, d_debug_logger, symbol_name());
   }
 
   block::~block()
