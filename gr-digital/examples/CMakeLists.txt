@@ -73,12 +73,13 @@ install(
 # DEMOD
 install(
     FILES
+    demod/constellation_soft_decoder.grc
     demod/digital_freq_lock.grc
     demod/mpsk_demod.grc
     demod/pam_sync.grc
     demod/pam_timing.grc
     demod/ber_simulation.grc
-    demod/dpsk_loopback.grc   
+    demod/dpsk_loopback.grc
     demod/gfsk_loopback.grc
     demod/test_corr_and_sync.grc
     demod/uhd_corr_and_sync_tx.grc

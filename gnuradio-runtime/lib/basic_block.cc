@@ -26,6 +26,7 @@
 
 #include <gnuradio/basic_block.h>
 #include <gnuradio/block_registry.h>
+#include <gnuradio/logger.h>
 #include <stdexcept>
 #include <sstream>
 #include <iostream>
@@ -82,6 +83,7 @@ namespace gr {
 
     // set the block's alias
     d_symbol_alias = name;
+    update_logger_alias(symbol_name(), d_symbol_alias);
   }
 
   // ** Message passing interface **

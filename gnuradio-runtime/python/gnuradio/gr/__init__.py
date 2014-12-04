@@ -50,9 +50,17 @@ from gateway import basic_block, sync_block, decim_block, interp_block
 prefs = prefs.singleton
 
 log = gr.logger("log")
-log.add_console_appender(prefs().get_string("LOG", "log_level", "off"), 'gr::log %d :%p: %m%n')
 log.set_level(prefs().get_string("LOG", "log_level", "notset"))
+log_file = gr.prefs().get_string("LOG", "log_file", "");
+if(log_file == "stderr" or log_file == "stdout"):
+    log.add_console_appender(log_file, "gr::log %d :%p: %m%n")
+else:
+    log.add_file_appender(log_file, True, "%r :%p: %c{1} - %m%n")
 
 log_debug = gr.logger("log_debug")
-log_debug.add_console_appender(prefs().get_string("LOG", "debug_level", "off"), 'gr::debug %d :%p: %m%n')
 log_debug.set_level(prefs().get_string("LOG", "debug_level", "notset"))
+log_debug_file = gr.prefs().get_string("LOG", "debug_file", "");
+if(log_debug_file == "stderr" or log_file == "stdout"):
+    log_debug.add_console_appender(log_debug_file, "gr::log %d :%p: %m%n")
+else:
+    log_debug.add_file_appender(log_debug_file, True, "%r :%p: %c{1} - %m%n")
