@@ -32,18 +32,23 @@ namespace gr {
     {
       size_t               d_itemsize;
       pdu::vector_type     d_type;
-      std::vector<uint8_t> d_remain;
-      pmt::pmt_t           d_tag;
+      pmt::pmt_t           d_curr_meta;
+      pmt::pmt_t           d_curr_vect;
+      size_t               d_curr_len;
 
     public:
       pdu_to_tagged_stream_impl(pdu::vector_type type, const std::string& lengthtagname="packet_len");
 
+      int calculate_output_stream_length(const gr_vector_int &ninput_items);
+
       int work(int noutput_items,
-	       gr_vector_const_void_star &input_items,
-	       gr_vector_void_star &output_items);
+          gr_vector_int &ninput_items,
+          gr_vector_const_void_star &input_items,
+          gr_vector_void_star &output_items
+      );
     };
 
   } /* namespace blocks */
 } /* namespace gr */
 
-#endif
+#endif /* INCLUDED_PDU_TO_TAGGED_STREAM_IMPL_H */
