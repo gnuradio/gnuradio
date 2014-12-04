@@ -174,6 +174,7 @@ install(FILES
     tagged_stream_multiply_length.h
     tagged_stream_to_pdu.h
     tags_strobe.h
+    tcp_server_sink.h
     test_tag_variable_rate_ff.h
     threshold_ff.h
     throttle.h
