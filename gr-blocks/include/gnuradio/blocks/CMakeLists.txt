@@ -113,6 +113,7 @@ install(FILES
     keep_m_in_n.h
     keep_one_in_n.h
     lfsr_32k_source_s.h
+    local_stream_server_sink.h
     message_debug.h
     message_sink.h
     message_source.h
