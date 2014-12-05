@@ -854,6 +854,7 @@ Networking Tools Blocks
    :nosignatures:
 
    gnuradio.blocks.socket_pdu
+   gnuradio.blocks.tcp_server_sink
    gnuradio.blocks.udp_sink
    gnuradio.blocks.udp_source
 
