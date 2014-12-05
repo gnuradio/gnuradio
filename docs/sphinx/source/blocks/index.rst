@@ -248,6 +248,7 @@ Networking Tools
 .. autosummary::
    :nosignatures:
 
+   gnuradio.blocks.local_stream_server_sink
    gnuradio.blocks.socket_pdu
    gnuradio.blocks.tuntap_pdu
    gnuradio.blocks.udp_sink
