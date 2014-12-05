@@ -23,6 +23,8 @@ import Colors
 from Constants import CONNECTOR_ARROW_BASE, CONNECTOR_ARROW_HEIGHT
 import gtk
 
+from .. base.Constants import GR_MESSAGE_DOMAIN
+
 class Connection(Element):
     """
     A graphical connection for ports.
@@ -89,7 +91,7 @@ class Connection(Element):
         self.clear() #FIXME do i want this here?
         #source connector
         source = self.get_source()
-        if source.get_type() == "message":
+        if source.get_domain() == GR_MESSAGE_DOMAIN:
             self.line_attributes[1] = gtk.gdk.LINE_ON_OFF_DASH
         X, Y = source.get_connector_coordinate()
         x1, y1 = self.x1 + X, self.y1 + Y

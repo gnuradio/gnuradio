@@ -18,7 +18,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 """
 
 from Element import Element
-from . Constants import DEFAULT_DOMAIN
+from . Constants import GR_STREAM_DOMAIN, GR_MESSAGE_DOMAIN
 
 class Port(Element):
 
@@ -37,7 +37,7 @@ class Port(Element):
         self._name = n['name']
         self._key = n['key']
         self._type = n['type']
-        self._domain = n.find('domain') or DEFAULT_DOMAIN
+        self._domain = n['domain']
         self._hide = n.find('hide') or ''
         self._dir = dir
         self._type_evaluated = None  # updated on rewrite()
@@ -61,6 +61,11 @@ class Port(Element):
         self._type_evaluated = self.get_parent().resolve_dependencies(self._type)
         hide = self.get_parent().resolve_dependencies(self._hide).strip().lower()
         self._hide_evaluated = False if hide in ('false', 'off', '0') else bool(hide)
+        # update domain if was deduced from (dynamic) port type
+        if self._domain == GR_STREAM_DOMAIN and self._type_evaluated == "message":
+            self._domain = GR_MESSAGE_DOMAIN
+        if self._domain == GR_MESSAGE_DOMAIN and self._type_evaluated != "message":
+            self._domain = GR_STREAM_DOMAIN
 
     def __str__(self):
         if self.is_source():

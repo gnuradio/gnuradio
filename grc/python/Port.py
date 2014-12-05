@@ -18,8 +18,10 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 """
 
 from .. base.Port import Port as _Port
+from .. base.Constants import DEFAULT_DOMAIN, GR_MESSAGE_DOMAIN
 from .. gui.Port import Port as _GUIPort
 import Constants
+
 
 def _get_source_from_virtual_sink_port(vsp):
     """
@@ -91,8 +93,14 @@ class Port(_Port, _GUIPort):
             dir: the direction
         """
         self._n = n
+        if n['type'] == 'message':
+            n['domain'] = GR_MESSAGE_DOMAIN
+        if 'domain' not in n:
+            n['domain'] = DEFAULT_DOMAIN
+        elif n['domain'] == GR_MESSAGE_DOMAIN:
+            n['key'] = n['name']
+            n['type'] = 'message'  # for port color
         if n['type'] == 'msg': n['key'] = 'msg'
-        if n['type'] == 'message': n['key'] = n['name']
         if dir == 'source' and not n.find('key'):
             n['key'] = str(block._source_count)
             block._source_count += 1

@@ -22,7 +22,7 @@ from Constants import \
     PORT_SEPARATION, CONNECTOR_EXTENSION_MINIMAL, \
     CONNECTOR_EXTENSION_INCREMENT, \
     PORT_LABEL_PADDING, PORT_MIN_WIDTH, PORT_LABEL_HIDDEN_WIDTH, PORT_FONT
-from .. base.Constants import DEFAULT_DOMAIN
+from .. base.Constants import DEFAULT_DOMAIN, GR_MESSAGE_DOMAIN
 import Utils
 import Actions
 import Colors
@@ -54,7 +54,9 @@ class Port(Element):
         Element.create_shapes(self)
         if self.get_hide():
             return  # this port is hidden, no need to create shapes
-        if self.get_domain() != DEFAULT_DOMAIN:
+        if self.get_domain() == GR_MESSAGE_DOMAIN:
+            pass
+        elif self.get_domain() != DEFAULT_DOMAIN:
             self.line_attributes[0] = 2
         #get current rotation
         rotation = self.get_rotation()

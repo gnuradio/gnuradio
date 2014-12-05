@@ -34,5 +34,7 @@ DEFAULT_PARAM_TAB = "General"
 ADVANCED_PARAM_TAB = "Advanced"
 
 # Port domains
-DEFAULT_DOMAIN ="gr_stream"
 DOMAIN_DTD = os.path.join(DATA_DIR, 'domain.dtd')
+GR_STREAM_DOMAIN = "gr_stream"
+GR_MESSAGE_DOMAIN = "gr_message"
+DEFAULT_DOMAIN = GR_STREAM_DOMAIN

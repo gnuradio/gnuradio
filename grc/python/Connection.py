@@ -18,7 +18,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 """
 
 import Constants
-from .. base.Element import Element
+from .. base.Constants import GR_MESSAGE_DOMAIN
 from .. base.Connection import Connection as _Connection
 from .. gui.Connection import Connection as _GUIConnection
 
@@ -32,7 +32,7 @@ class Connection(_Connection, _GUIConnection):
         return self.get_source().get_type() == self.get_sink().get_type() == 'msg'
 
     def is_message(self):
-        return self.get_source().get_type() == self.get_sink().get_type() == 'message'
+        return self.get_source().get_domain() == self.get_sink().get_domain() == GR_MESSAGE_DOMAIN
 
     def is_bus(self):
         return self.get_source().get_type() == self.get_sink().get_type() == 'bus'
