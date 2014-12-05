@@ -143,9 +143,12 @@ class Platform(_Element):
             print >> sys.stderr, 'Warning: Domain with key "%s" already exists.\n\tIgnoring: %s' % (key, xml_file)
             return
 
+        to_bool = lambda s, d: d if s is None else \
+            s.lower() not in ('false', 'off', '0', '')
         self._domains[key] = dict(
             name=n.find('name') or key,
-            multiple_sinks=n.find('multiple_sinks') or True
+            multiple_sinks=to_bool(n.find('multiple_sinks'), True),
+            multiple_sources=to_bool(n.find('multiple_sources'), False),
         )
         for connection_n in n.findall('connection'):
             source_domain = connection_n.find('source_domain') or DEFAULT_DOMAIN

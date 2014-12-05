@@ -16,7 +16,7 @@ You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 -->
-<!ELEMENT domain (name, key, multiple_sinks?, connection*)>
+<!ELEMENT domain (name, key, multiple_sinks?, multiple_sources?, connection*)>
 <!--
     Sub level elements.
  -->
@@ -28,6 +28,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 <!ELEMENT name (#PCDATA)>
 <!ELEMENT key (#PCDATA)>
 <!ELEMENT multiple_sinks (#PCDATA)>
+<!ELEMENT multiple_sources (#PCDATA)>
 <!ELEMENT make (#PCDATA)>
 <!ELEMENT source_domain (#PCDATA)>
 <!ELEMENT sink_domain (#PCDATA)>
