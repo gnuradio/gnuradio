@@ -40,7 +40,11 @@ namespace gr {
     block_executor d_exec;
 
   public:
-    tpb_thread_body(block_sptr block, int max_noutput_items=100000);
+    tpb_thread_body(
+        block_sptr block,
+        boost::shared_ptr<boost::barrier> loop_barrier,
+        int max_noutput_items=100000
+    );
     ~tpb_thread_body();
   };
 
