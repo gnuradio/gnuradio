@@ -164,10 +164,9 @@ class TopBlockGenerator(object):
         #list of regular blocks (all blocks minus the special ones)
         blocks = filter(lambda b: b not in (imports + parameters), blocks)
         #list of connections where each endpoint is enabled
-        connections = filter(lambda c: not (c.is_bus() or c.is_msg() or c.is_message()), self._flow_graph.get_enabled_connections())
+        connections = filter(lambda c: not (c.is_bus() or c.is_msg()), self._flow_graph.get_enabled_connections())
         connection_templates = self._flow_graph.get_parent().get_connection_templates()
-        messages = filter(lambda c: c.is_msg(), self._flow_graph.get_enabled_connections())
-        messages2 = filter(lambda c: c.is_message(), self._flow_graph.get_enabled_connections())
+        msgs = filter(lambda c: c.is_msg(), self._flow_graph.get_enabled_connections())
         #list of variable names
         var_ids = [var.get_id() for var in parameters + variables]
         #prepend self.
@@ -193,8 +192,7 @@ class TopBlockGenerator(object):
             'blocks': blocks,
             'connections': connections,
             'connection_templates': connection_templates,
-            'messages': messages,
-            'messages2': messages2,
+            'msgs': msgs,
             'generate_options': self._generate_options,
             'var_id2cbs': var_id2cbs,
         }

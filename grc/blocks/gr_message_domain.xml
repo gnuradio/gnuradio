@@ -10,6 +10,10 @@
   <connection>
     <source_domain>gr_message</source_domain>
     <sink_domain>gr_message</sink_domain>
-    <make>        self.connect($make_port_sig($source), $make_port_sig($sink))</make>
+    <make>#slurp
+        #set endpoint_a = $make_port_sig($source)[1:-1]
+        #set endpoint_b = $make_port_sig($sink)[1:-1]
+        self.msg_connect($endpoint_a, $endpoint_b)#slurp
+    </make>
   </connection>
 </domain>
