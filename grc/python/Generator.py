@@ -164,8 +164,12 @@ class TopBlockGenerator(object):
         )
         # list of regular blocks (all blocks minus the special ones)
         blocks = filter(lambda b: b not in (imports + parameters), blocks)
-        # list of connections where each endpoint is enabled
+        # list of connections where each endpoint is enabled (sorted by domains, block names)
         connections = filter(lambda c: not (c.is_bus() or c.is_msg()), self._flow_graph.get_enabled_connections())
+        connections.sort(key=lambda c: (
+            c.get_source().get_domain(), c.get_sink().get_domain(),
+            c.get_source().get_parent().get_id(), c.get_sink().get_parent().get_id()
+        ))
         connection_templates = self._flow_graph.get_parent().get_connection_templates()
         msgs = filter(lambda c: c.is_msg(), self._flow_graph.get_enabled_connections())
         # list of variable names
