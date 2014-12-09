@@ -1,4 +1,5 @@
 <?xml version='1.0' encoding='ASCII'?>
+<?grc format='1' created='3.7.6'?>
 <flow_graph>
   <timestamp>Sun Mar 17 20:42:59 2013</timestamp>
   <block>
@@ -52,50 +53,12 @@
       <value></value>
     </param>
     <param>
-      <key>_coordinate</key>
-      <value>(10, 10)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>variable</key>
-    <param>
-      <key>id</key>
-      <value>samp_rate</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>value</key>
-      <value>32000</value>
+      <key>alias</key>
+      <value></value>
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(10, 170)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>blocks_message_debug</key>
-    <param>
-      <key>id</key>
-      <value>blocks_message_debug_0</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(1049, 176)</value>
+      <value>(-8, -12)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -117,8 +80,28 @@
       <value>byte</value>
     </param>
     <param>
+      <key>tag</key>
+      <value>packet_len</value>
+    </param>
+    <param>
+      <key>alias</key>
+      <value></value>
+    </param>
+    <param>
+      <key>affinity</key>
+      <value></value>
+    </param>
+    <param>
+      <key>minoutbuf</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>maxoutbuf</key>
+      <value>0</value>
+    </param>
+    <param>
       <key>_coordinate</key>
-      <value>(388, 85)</value>
+      <value>(264, 179)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -144,8 +127,67 @@
       <value>750</value>
     </param>
     <param>
+      <key>alias</key>
+      <value></value>
+    </param>
+    <param>
+      <key>affinity</key>
+      <value></value>
+    </param>
+    <param>
+      <key>minoutbuf</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>maxoutbuf</key>
+      <value>0</value>
+    </param>
+    <param>
       <key>_coordinate</key>
-      <value>(95, 95)</value>
+      <value>(48, 172)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>blocks_message_strobe</key>
+    <param>
+      <key>id</key>
+      <value>blocks_message_strobe_0</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>msg</key>
+      <value>pmt.intern("TEST")</value>
+    </param>
+    <param>
+      <key>period</key>
+      <value>1000</value>
+    </param>
+    <param>
+      <key>alias</key>
+      <value></value>
+    </param>
+    <param>
+      <key>affinity</key>
+      <value></value>
+    </param>
+    <param>
+      <key>minoutbuf</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>maxoutbuf</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(56, 108)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -175,8 +217,28 @@
       <value>1</value>
     </param>
     <param>
+      <key>showports</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>alias</key>
+      <value></value>
+    </param>
+    <param>
+      <key>affinity</key>
+      <value></value>
+    </param>
+    <param>
+      <key>minoutbuf</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>maxoutbuf</key>
+      <value>0</value>
+    </param>
+    <param>
       <key>_coordinate</key>
-      <value>(629, 81)</value>
+      <value>(496, 179)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -198,8 +260,28 @@
       <value>byte</value>
     </param>
     <param>
+      <key>tag</key>
+      <value>packet_len</value>
+    </param>
+    <param>
+      <key>alias</key>
+      <value></value>
+    </param>
+    <param>
+      <key>affinity</key>
+      <value></value>
+    </param>
+    <param>
+      <key>minoutbuf</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>maxoutbuf</key>
+      <value>0</value>
+    </param>
+    <param>
       <key>_coordinate</key>
-      <value>(837, 47)</value>
+      <value>(664, 179)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -207,26 +289,26 @@
     </param>
   </block>
   <block>
-    <key>blocks_message_strobe</key>
+    <key>blocks_message_debug</key>
     <param>
       <key>id</key>
-      <value>blocks_message_strobe_0</value>
+      <value>blocks_message_debug_0</value>
     </param>
     <param>
       <key>_enabled</key>
       <value>True</value>
     </param>
     <param>
-      <key>msg</key>
-      <value>pmt.intern("TEST")</value>
+      <key>alias</key>
+      <value></value>
     </param>
     <param>
-      <key>period</key>
-      <value>1000</value>
+      <key>affinity</key>
+      <value></value>
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(423, 164)</value>
+      <value>(944, 120)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -234,22 +316,16 @@
     </param>
   </block>
   <connection>
-    <source_block_id>blocks_message_strobe_0</source_block_id>
-    <sink_block_id>blocks_message_debug_0</sink_block_id>
-    <source_key>0</source_key>
-    <sink_key>0</sink_key>
-  </connection>
-  <connection>
     <source_block_id>blocks_message_strobe_0_0</source_block_id>
     <sink_block_id>blocks_pdu_to_tagged_stream_0</sink_block_id>
-    <source_key>0</source_key>
-    <sink_key>0</sink_key>
+    <source_key>strobe</source_key>
+    <sink_key>pdus</sink_key>
   </connection>
   <connection>
-    <source_block_id>blocks_tagged_stream_to_pdu_0</source_block_id>
-    <sink_block_id>blocks_message_debug_0</sink_block_id>
+    <source_block_id>blocks_pdu_to_tagged_stream_0</source_block_id>
+    <sink_block_id>blocks_copy_0</sink_block_id>
     <source_key>0</source_key>
-    <sink_key>2</sink_key>
+    <sink_key>0</sink_key>
   </connection>
   <connection>
     <source_block_id>blocks_copy_0</source_block_id>
@@ -258,9 +334,15 @@
     <sink_key>0</sink_key>
   </connection>
   <connection>
-    <source_block_id>blocks_pdu_to_tagged_stream_0</source_block_id>
-    <sink_block_id>blocks_copy_0</sink_block_id>
-    <source_key>0</source_key>
-    <sink_key>0</sink_key>
+    <source_block_id>blocks_message_strobe_0</source_block_id>
+    <sink_block_id>blocks_message_debug_0</sink_block_id>
+    <source_key>strobe</source_key>
+    <sink_key>print</sink_key>
+  </connection>
+  <connection>
+    <source_block_id>blocks_tagged_stream_to_pdu_0</source_block_id>
+    <sink_block_id>blocks_message_debug_0</sink_block_id>
+    <source_key>pdus</source_key>
+    <sink_key>print_pdu</sink_key>
   </connection>
 </flow_graph>

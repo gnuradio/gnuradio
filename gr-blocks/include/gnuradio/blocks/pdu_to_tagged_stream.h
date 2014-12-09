@@ -25,7 +25,7 @@
 
 #include <gnuradio/blocks/api.h>
 #include <gnuradio/blocks/pdu.h>
-#include <gnuradio/sync_block.h>
+#include <gnuradio/tagged_stream_block.h>
 
 namespace gr {
   namespace blocks {
@@ -34,7 +34,7 @@ namespace gr {
      * \brief Turns received PDUs into a tagged stream of items
      * \ingroup message_tools_blk
      */
-    class BLOCKS_API pdu_to_tagged_stream : virtual public sync_block
+    class BLOCKS_API pdu_to_tagged_stream : virtual public tagged_stream_block
     {
     public:
       // gr::blocks::pdu_to_tagged_stream::sptr
