@@ -100,7 +100,11 @@ class EntryParam(InputParam):
     def set_color(self, color):
         self._input.modify_base(gtk.STATE_NORMAL, gtk.gdk.color_parse(color))
         self._input.modify_text(gtk.STATE_NORMAL, Colors.PARAM_ENTRY_TEXT_COLOR)
-    def set_tooltip_text(self, text): self._input.set_tooltip_text(text)
+    def set_tooltip_text(self, text):
+        try:
+            self._input.set_tooltip_text(text)
+        except AttributeError:
+            pass  # no tooltips for old GTK
 
 class EnumParam(InputParam):
     """Provide an entry box for Enum types with a drop down menu."""
@@ -113,7 +117,11 @@ class EnumParam(InputParam):
         self._input.connect('changed', self._apply_change)
         self.pack_start(self._input, False)
     def get_text(self): return self.param.get_option_keys()[self._input.get_active()]
-    def set_tooltip_text(self, text): self._input.set_tooltip_text(text)
+    def set_tooltip_text(self, text):
+        try:
+            self._input.set_tooltip_text(text)
+        except AttributeError:
+            pass  # no tooltips for old GTK
 
 class EnumEntryParam(InputParam):
     """Provide an entry box and drop down menu for Raw Enum types."""
@@ -134,9 +142,13 @@ class EnumEntryParam(InputParam):
         if self._input.get_active() == -1: return self._input.get_child().get_text()
         return self.param.get_option_keys()[self._input.get_active()]
     def set_tooltip_text(self, text):
-        if self._input.get_active() == -1: #custom entry
-            self._input.get_child().set_tooltip_text(text)
-        else: self._input.set_tooltip_text(text)
+        try:
+            if self._input.get_active() == -1: #custom entry
+                self._input.get_child().set_tooltip_text(text)
+            else:
+                self._input.set_tooltip_text(text)
+        except AttributeError:
+            pass  # no tooltips for old GTK
     def set_color(self, color):
         if self._input.get_active() == -1: #custom entry, use color
             self._input.get_child().modify_base(gtk.STATE_NORMAL, gtk.gdk.color_parse(color))

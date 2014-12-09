@@ -25,11 +25,11 @@ by using:
 
 Ettus Research maintains the comprehensive documentation to the underlying UHD driver, which can be found at:
 
-http://files.ettus.com/uhd_docs/manual/html/
+http://files.ettus.com/manual/
 
-The UHD Doxygen page is located at:
+The list of classes in the UHD Doxygen is located at:
 
-http://files.ettus.com/uhd_docs/doxygen/html/index.html
+http://files.ettus.com/manual/annotated.html
 
 
 \section uhd_command_syntax Command Syntax
