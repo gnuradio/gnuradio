@@ -62,6 +62,7 @@ namespace gr {
        *
        */
       static sptr make(size_t itemsize, const std::vector<int> &lengths);
+      virtual void set_lengths (const std::vector<int> &lengths) = 0;
     };
 
   } /* namespace blocks */

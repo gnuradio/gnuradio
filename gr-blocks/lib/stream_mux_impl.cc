@@ -64,6 +64,12 @@ namespace gr {
 	ninput_items_required[i] = (d_stream == i ? 1 : 0);
       }
     }
+    void 
+    stream_mux_impl::set_lengths(const std::vector<int> &lengths)
+    { 
+      gr::thread::scoped_lock guard(d_setlock);
+      d_lengths = lengths;
+    }
 
 
     int
@@ -72,6 +78,7 @@ namespace gr {
           gr_vector_const_void_star &input_items,
           gr_vector_void_star &output_items
     ){
+      gr::thread::scoped_lock guard(d_setlock);
       char *out = (char *) output_items[0];
       const char *in;
       int out_index = 0; // Items written

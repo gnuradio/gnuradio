@@ -40,6 +40,7 @@ namespace gr {
 
     public:
       stream_mux_impl(size_t itemsize, const std::vector<int> &lengths);
+      void set_lengths(const std::vector<int> &lengths);
 
       int general_work(int noutput_items,
 		       gr_vector_int &ninput_items,

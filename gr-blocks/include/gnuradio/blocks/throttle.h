@@ -48,8 +48,7 @@ namespace gr {
     public:
       typedef boost::shared_ptr<throttle> sptr;
 
-      static sptr make(size_t itemsize, double samples_per_sec, bool ignore_tags=true);
-
+      static sptr make(size_t itemsize, double samples_per_sec, bool ignore_tags=true, int max_noutput_items=-1);
       //! Sets the sample rate in samples per second.
       virtual void set_sample_rate(double rate) = 0;
 
