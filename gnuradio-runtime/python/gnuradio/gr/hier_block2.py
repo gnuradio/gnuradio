@@ -1,23 +1,21 @@
-#
-# Copyright 2006,2007 Free Software Foundation, Inc.
-#
-# This file is part of GNU Radio
-#
-# GNU Radio is free software; you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation; either version 3, or (at your option)
-# any later version.
-#
-# GNU Radio is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with GNU Radio; see the file COPYING.  If not, write to
-# the Free Software Foundation, Inc., 51 Franklin Street,
-# Boston, MA 02110-1301, USA.
-#
+"""
+Copyright 2006, 2007 Free Software Foundation, Inc.
+This file is part of GNU Radio
+
+GNU Radio Companion is free software; you can redistribute it and/or
+modify it under the terms of the GNU General Public License
+as published by the Free Software Foundation; either version 2
+of the License, or (at your option) any later version.
+
+GNU Radio Companion is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, write to the Free Software
+Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
+"""
 
 from runtime_swig import hier_block2_swig, dot_graph
 import pmt
@@ -42,7 +40,7 @@ class hier_block2(object):
         """
         Create a hierarchical block with a given name and I/O signatures.
         """
-	self._hb = hier_block2_swig(name, input_signature, output_signature)
+        self._hb = hier_block2_swig(name, input_signature, output_signature)
 
     def __getattr__(self, name):
         """
@@ -50,7 +48,7 @@ class hier_block2(object):
         """
         if not hasattr(self, "_hb"):
             raise RuntimeError("hier_block2: invalid state--did you forget to call gr.hier_block2.__init__ in a derived class?")
-	return getattr(self._hb, name)
+        return getattr(self._hb, name)
 
     def connect(self, *points):
         """
@@ -67,12 +65,12 @@ class hier_block2(object):
 
         if len (points) < 1:
             raise ValueError, ("connect requires at least one endpoint; %d provided." % (len (points),))
-	else:
-	    if len(points) == 1:
-		self._hb.primitive_connect(points[0].to_basic_block())
-	    else:
-		for i in range (1, len (points)):
-        	    self._connect(points[i-1], points[i])
+        else:
+            if len(points) == 1:
+                self._hb.primitive_connect(points[0].to_basic_block())
+            else:
+                for i in range (1, len (points)):
+                    self._connect(points[i-1], points[i])
 
     def _connect(self, src, dst):
         (src_block, src_port) = self._coerce_endpoint(src)
@@ -121,10 +119,10 @@ class hier_block2(object):
         self.primitive_msg_disconnect(src.to_basic_block(), srcport, dst.to_basic_block(), dstport);
 
     def message_port_register_hier_in(self, portname):
-        self.primitive_message_port_register_hier_in(pmt.intern(portname));
+        self.primitive_message_port_register_hier_in(pmt.intern(portname))
 
     def message_port_register_hier_out(self, portname):
-        self.primitive_message_port_register_hier_out(pmt.intern(portname));
+        self.primitive_message_port_register_hier_out(pmt.intern(portname))
 
     def dot_graph(self):
         '''Return graph representation in dot language'''
