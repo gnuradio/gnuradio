@@ -1,46 +1,51 @@
-"""
-Copyright 2006, 2007, 2014 Free Software Foundation, Inc.
-This file is part of GNU Radio
-
-GNU Radio Companion is free software; you can redistribute it and/or
-modify it under the terms of the GNU General Public License
-as published by the Free Software Foundation; either version 2
-of the License, or (at your option) any later version.
-
-GNU Radio Companion is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program; if not, write to the Free Software
-Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
-"""
+#
+# Copyright 2006,2007,2014 Free Software Foundation, Inc.
+#
+# This file is part of GNU Radio
+#
+# GNU Radio is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 3, or (at your option)
+# any later version.
+#
+# GNU Radio is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with GNU Radio; see the file COPYING.  If not, write to
+# the Free Software Foundation, Inc., 51 Franklin Street,
+# Boston, MA 02110-1301, USA.
+#
 
 from functools import wraps
+from itertools import imap
 
 from runtime_swig import hier_block2_swig, dot_graph
 import pmt
 
 
 def _multiple_endpoints(func):
-    def coerce_endpoint(endp, default_port=0):
-        if hasattr(endp, 'to_basic_block'):
-            return endp.to_basic_block(), default_port
-        try:
-            block, port = endp
-            return block.to_basic_block(), port
-        except ValueError:
-            raise ValueError("unable to coerce endpoint")
     @wraps(func)
     def wrapped(self, *points):
         if not points:
-            raise ValueError("At least one endpoint required for " + func.__name__)
+            raise ValueError("At least one block required for " + func.__name__)
         elif len(points) == 1:
-            func(points[0].to_basic_block())
+            try:
+                block = points[0].to_basic_block()
+            except AttributeError:
+                raise ValueError("At least two endpoints required for " + func.__name__)
+            func(self, block)
         else:
-            for src, dst in map(lambda i: points[i:i + 2], range(len(points) - 1)):
-                func(self, *(coerce_endpoint(src) + coerce_endpoint(dst)))
+            try:
+                endp = [(p, 0) if hasattr(p, 'to_basic_block') else p for p in points]
+                endp_pairs = imap(lambda i: endp[i:i+2], range(len(endp)-1))
+                for (src, src_port), (dst, dst_port) in endp_pairs:
+                    func(self, src.to_basic_block(), src_port,
+                         dst.to_basic_block(), dst_port)
+            except (ValueError, TypeError):
+                raise ValueError("Unable to coerce endpoint")
     return wrapped
 
 
@@ -48,10 +53,11 @@ def _optional_endpoints(func):
     @wraps(func)
     def wrapped(self, src, srcport, dst=None, dstport=None):
         if dst is None and dstport is None:
-            (src, srcport), (dst, dstport) = src, srcport
-        return func(self,
-                    src.to_basic_block(), srcport,
-                    dst.to_basic_block(), dstport)
+            try:
+                (src, srcport), (dst, dstport) = src, srcport
+            except (ValueError, TypeError):
+                raise ValueError("Unable to coerce endpoint")
+        func(self, src.to_basic_block(), srcport, dst.to_basic_block(), dstport)
     return wrapped
 
 
