@@ -25,7 +25,7 @@ try:
     def get_color(color_code): return _COLORMAP.alloc_color(color_code, True, True)
 
     HIGHLIGHT_COLOR = get_color('#00FFFF')
-    BORDER_COLOR = get_color('black')
+    BORDER_COLOR = get_color('#444444')
     # missing blocks stuff
     MISSING_BLOCK_BACKGROUND_COLOR = get_color('#FFF2F2')
     MISSING_BLOCK_BORDER_COLOR = get_color('red')
@@ -41,5 +41,7 @@ try:
     CONNECTION_ENABLED_COLOR = get_color('black')
     CONNECTION_DISABLED_COLOR = get_color('#999999')
     CONNECTION_ERROR_COLOR = get_color('red')
+
+    DEFAULT_DOMAIN_COLOR = get_color('#666666')
 except:
     print 'Unable to import Colors'

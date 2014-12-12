@@ -35,7 +35,10 @@ class Connection(Element):
     The arrow coloring exposes the enabled and valid states.
     """
 
-    def __init__(self): Element.__init__(self)
+    def __init__(self):
+        Element.__init__(self)
+        self._color = Colors.CONNECTION_ENABLED_COLOR
+        self._bg_color = Colors.CONNECTION_ENABLED_COLOR
 
     def get_coordinate(self):
         """
@@ -78,21 +81,25 @@ class Connection(Element):
             Utils.get_rotated_coordinate((-CONNECTOR_ARROW_HEIGHT, -CONNECTOR_ARROW_BASE/2), self.get_sink().get_rotation()),
             Utils.get_rotated_coordinate((-CONNECTOR_ARROW_HEIGHT, CONNECTOR_ARROW_BASE/2), self.get_sink().get_rotation()),
         ]
-        self._update_after_move()
-        if not self.get_enabled():
-            self._arrow_color = Colors.CONNECTION_DISABLED_COLOR
-        elif not self.is_valid():
-            self._arrow_color = Colors.CONNECTION_ERROR_COLOR
+        source_domain = self.get_source().get_domain()
+        sink_domain = self.get_sink().get_domain()
+        if source_domain == GR_MESSAGE_DOMAIN:
+            self.line_attributes[1] = gtk.gdk.LINE_ON_OFF_DASH
         else:
-            self._arrow_color = Colors.CONNECTION_ENABLED_COLOR
+            self.line_attributes[1] = gtk.gdk.LINE_DOUBLE_DASH
+            get_domain_color = lambda d: (
+                self.get_parent().get_parent().get_domain(d) or {}
+            ).get('color') or Colors.DEFAULT_DOMAIN_COLOR
+            self._color = get_domain_color(source_domain)
+            self._bg_color = get_domain_color(sink_domain)
+
+        self._update_after_move()
 
     def _update_after_move(self):
         """Calculate coordinates."""
         self.clear() #FIXME do i want this here?
         #source connector
         source = self.get_source()
-        if source.get_domain() == GR_MESSAGE_DOMAIN:
-            self.line_attributes[1] = gtk.gdk.LINE_ON_OFF_DASH
         X, Y = source.get_connector_coordinate()
         x1, y1 = self.x1 + X, self.y1 + Y
         self.add_line((x1, y1), (X, Y))
@@ -155,14 +162,21 @@ class Connection(Element):
         self._sink_coor = sink.get_coordinate()
         self._source_coor = source.get_coordinate()
         #draw
-        if self.is_highlighted(): border_color = Colors.HIGHLIGHT_COLOR
-        elif self.get_enabled(): border_color = Colors.CONNECTION_ENABLED_COLOR
-        else: border_color = Colors.CONNECTION_DISABLED_COLOR
+        border_color = (
+            Colors.HIGHLIGHT_COLOR if self.is_highlighted() else
+            Colors.CONNECTION_DISABLED_COLOR if not self.get_enabled() else
+            self._color
+        )
+        bg_color = (
+            Colors.HIGHLIGHT_COLOR if self.is_highlighted() else
+            Colors.CONNECTION_DISABLED_COLOR if not self.get_enabled() else
+            self._bg_color
+        )
         # make message connections dashed (no areas here)
-        Element.draw(self, gc, window, bg_color=None, border_color=border_color)
+        Element.draw(self, gc, window, border_color, bg_color)
         #draw arrow on sink port
         try:
-            gc.set_foreground(self._arrow_color)
+            gc.set_foreground(bg_color)
             gc.set_line_attributes(0, gtk.gdk.LINE_SOLID, gtk.gdk.CAP_BUTT, gtk.gdk.JOIN_MITER)
             window.draw_polygon(gc, True, self._arrow)
         except:

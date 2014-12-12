@@ -106,6 +106,7 @@ class Element(object):
             window.draw_rectangle(gc, False, aX, aY, W, H)
         for (x1, y1), (x2, y2) in self._lines_list:
             gc.set_foreground(border_color)
+            gc.set_background(bg_color)
             window.draw_line(gc, X+x1, Y+y1, X+x2, Y+y2)
 
     def rotate(self, rotation):
