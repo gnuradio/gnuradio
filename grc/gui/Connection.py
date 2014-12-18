@@ -87,9 +87,11 @@ class Connection(Element):
             self.line_attributes[1] = gtk.gdk.LINE_ON_OFF_DASH
         else:
             self.line_attributes[1] = gtk.gdk.LINE_DOUBLE_DASH
-            get_domain_color = lambda d: (
+            if source_domain != sink_domain:
+                self.line_attributes[0] = 2
+            get_domain_color = lambda d: Colors.get_color((
                 self.get_parent().get_parent().get_domain(d) or {}
-            ).get('color') or Colors.DEFAULT_DOMAIN_COLOR
+            ).get('color') or Colors.DEFAULT_DOMAIN_COLOR_CODE)
             self._color = get_domain_color(source_domain)
             self._bg_color = get_domain_color(sink_domain)
 
@@ -172,9 +174,8 @@ class Connection(Element):
             Colors.CONNECTION_DISABLED_COLOR if not self.get_enabled() else
             self._bg_color
         )
-        # make message connections dashed (no areas here)
         Element.draw(self, gc, window, border_color, bg_color)
-        #draw arrow on sink port
+        # draw arrow on sink port
         try:
             gc.set_foreground(bg_color)
             gc.set_line_attributes(0, gtk.gdk.LINE_SOLID, gtk.gdk.CAP_BUTT, gtk.gdk.JOIN_MITER)

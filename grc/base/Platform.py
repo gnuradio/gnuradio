@@ -149,15 +149,14 @@ class Platform(_Element):
         to_bool = lambda s, d: d if s is None else \
             s.lower() not in ('false', 'off', '0', '')
 
-        color_code = n.find('color') or ''
+        color = n.find('color') or ''
         try:
             import gtk  # ugly, but handy
-            color = gtk.gdk.color_parse(color_code)
+            gtk.gdk.color_parse(color)
         except (ValueError, ImportError):
-            if color_code:  # no color is okay
-                print >> sys.stderr, 'Warning: Can\'t parse color code "%s" ' \
-                                     'for domain "%s" ' % (key, str(color_code))
-            color = None  # default color set in gui
+            if color:  # no color is okay
+                print >> sys.stderr, 'Warning: Can\'t parse color code "%s" for domain "%s" ' % (color, key)
+                color = None
 
         self._domains[key] = dict(
             name=n.find('name') or key,

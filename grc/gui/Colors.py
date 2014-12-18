@@ -39,9 +39,9 @@ try:
     BLOCK_DISABLED_COLOR = get_color('#CCCCCC')
     #connection color constants
     CONNECTION_ENABLED_COLOR = get_color('black')
-    CONNECTION_DISABLED_COLOR = get_color('#999999')
+    CONNECTION_DISABLED_COLOR = get_color('#BBBBBB')
     CONNECTION_ERROR_COLOR = get_color('red')
-
-    DEFAULT_DOMAIN_COLOR = get_color('#666666')
 except:
     print 'Unable to import Colors'
+
+DEFAULT_DOMAIN_COLOR_CODE = '#777777'
