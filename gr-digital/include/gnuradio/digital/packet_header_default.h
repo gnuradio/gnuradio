@@ -1,18 +1,18 @@
 /* -*- c++ -*- */
 /* Copyright 2012 Free Software Foundation, Inc.
- * 
+ *
  * This file is part of GNU Radio
- * 
+ *
  * GNU Radio is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3, or (at your option)
  * any later version.
- * 
+ *
  * GNU Radio is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with GNU Radio; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 51 Franklin Street,
@@ -46,16 +46,16 @@ namespace gr {
      * gr::digital::packet_headergenerator_bb uses header generators derived from
      * this class to create packet headers from data streams.
      */
-    class DIGITAL_API packet_header_default : public boost::enable_shared_from_this<gr::digital::packet_header_default>
+    class DIGITAL_API packet_header_default
+      : public boost::enable_shared_from_this<gr::digital::packet_header_default>
     {
      public:
       typedef boost::shared_ptr<packet_header_default> sptr;
 
-      packet_header_default(
-		      long header_len,
-		      const std::string &len_tag_key="packet_len",
-		      const std::string &num_tag_key="packet_num",
-		      int bits_per_byte=1);
+      packet_header_default(long header_len,
+                            const std::string &len_tag_key="packet_len",
+                            const std::string &num_tag_key="packet_num",
+                            int bits_per_byte=1);
       virtual ~packet_header_default();
 
       sptr base() { return shared_from_this(); };
@@ -80,11 +80,9 @@ namespace gr {
        * However, it is recommended to stay above 32 Bits, in order to have a working
        * CRC.
        */
-      virtual bool header_formatter(
-	  long packet_len,
-	  unsigned char *out,
-	  const std::vector<tag_t> &tags=std::vector<tag_t>()
-      );
+      virtual bool header_formatter(long packet_len,
+                                    unsigned char *out,
+                                    const std::vector<tag_t> &tags=std::vector<tag_t>());
 
       /*!
        * \brief Inverse function to header_formatter().
@@ -95,11 +93,10 @@ namespace gr {
 	const unsigned char *header,
 	std::vector<tag_t> &tags);
 
-      static sptr make(
-	      long header_len,
-	      const std::string &len_tag_key="packet_len",
-	      const std::string &num_tag_key="packet_num",
-	      int bits_per_byte=1);
+      static sptr make(long header_len,
+                       const std::string &len_tag_key="packet_len",
+                       const std::string &num_tag_key="packet_num",
+                       int bits_per_byte=1);
 
     protected:
       long d_header_len;
@@ -115,4 +112,3 @@ namespace gr {
 } // namespace gr
 
 #endif /* INCLUDED_DIGITAL_PACKET_HEADER_DEFAULT_H */
-
