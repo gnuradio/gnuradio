@@ -21,6 +21,7 @@ class Element(object):
 
     def __init__(self, parent=None):
         self._parent = parent
+        self._error_messages = list()
 
     ##################################################
     # Element Validation API
@@ -30,7 +31,7 @@ class Element(object):
         Validate this element and call validate on all children.
         Call this base method before adding error messages in the subclass.
         """
-        self._error_messages = list()
+        del self._error_messages[:]
         for child in self.get_children(): child.validate()
 
     def is_valid(self):

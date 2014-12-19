@@ -146,12 +146,19 @@ class FlowGraph(_FlowGraph, _GUIFlowGraph):
         key_offset = 0
         pads = self.get_pad_sources() if port.is_source() else self.get_pad_sinks()
         for pad in pads:
-            if pad.get_param('type').get_evaluated() == "message":
-                continue
+            # using the block param 'type' instead of the port domain here
+            # to emphasize that hier block generation is domain agnostic
+            is_message_pad = pad.get_param('type').get_evaluated() == "message"
             if port.get_parent() == pad:
-                return str(key_offset + int(port.get_key()))
-            # assuming we have either only sources or sinks
-            key_offset += len(pad.get_ports())
+                if is_message_pad:
+                    key = pad.get_param('label').get_value()
+                else:
+                    key = str(key_offset + int(port.get_key()))
+                return key
+            else:
+                # assuming we have either only sources or sinks
+                if not is_message_pad:
+                    key_offset += len(pad.get_ports())
         return -1
 
     def get_imports(self):

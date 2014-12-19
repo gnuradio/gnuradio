@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<!--
+###################################################
+##GNU Radio default domain 'gr_stream'
+###################################################
+ -->
+ <domain>
+  <name>GR Stream</name>
+  <key>gr_stream</key>
+  <color>#000</color>
+  <connection>
+    <source_domain>gr_stream</source_domain>
+    <sink_domain>gr_stream</sink_domain>
+    <make>#slurp
+        self.connect($make_port_sig($source), $make_port_sig($sink))#slurp
+    </make>
+  </connection>
+</domain>

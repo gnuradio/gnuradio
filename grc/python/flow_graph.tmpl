@@ -8,7 +8,7 @@
 ##@param parameters the paramater blocks
 ##@param blocks the signal blocks
 ##@param connections the connections
-##@param messages the msg type connections
+##@param msgs the msg type connections
 ##@param generate_options the type of flow graph
 ##@param var_id2cbs variable id map to callback strings
 ########################################################
@@ -145,13 +145,13 @@ gr.io_signaturev($(len($io_sigs)), $(len($io_sigs)), [$(', '.join($size_strs))])
 ########################################################
 ##Create Message Queues
 ########################################################
-#if $messages
+#if $msgs
 
         $DIVIDER
         # Message Queues
         $DIVIDER
 #end if
-#for $msg in $messages
+#for $msg in $msgs
         $(msg.get_source().get_parent().get_id())_msgq_out = $(msg.get_sink().get_parent().get_id())_msgq_in = gr.msg_queue(2)
 #end for
 ########################################################
@@ -189,10 +189,16 @@ gr.io_signaturev($(len($io_sigs)), $(len($io_sigs)), [$(', '.join($size_strs))])
 ########################################################
 #def make_port_sig($port)
     #if $port.get_parent().get_key() in ('pad_source', 'pad_sink')
-(self, $flow_graph.get_pad_port_global_key($port))#slurp
+        #set block = 'self'
+        #set key = $flow_graph.get_pad_port_global_key($port)
     #else
-(self.$port.get_parent().get_id(), $port.get_key())#slurp
+        #set block = 'self.' + $port.get_parent().get_id()
+        #set key = $port.get_key()
     #end if
+    #if not $key.isdigit()
+        #set key = repr($key)
+    #end if
+($block, $key)#slurp
 #end def
 #if $connections
 
@@ -201,42 +207,17 @@ gr.io_signaturev($(len($io_sigs)), $(len($io_sigs)), [$(', '.join($size_strs))])
         $DIVIDER
 #end if
 #for $con in $connections
-    #set $source = $con.get_source()
-    #set $sink = $con.get_sink()
+    #set global $source = $con.get_source()
+    #set global $sink = $con.get_sink()
     ##resolve virtual sources to the actual sources
     #if $source.get_parent().is_virtual_source()
         #set $source = $source.resolve_virtual_source()
     #end if
     ##do not generate connections with virtual sinks
     #if not $sink.get_parent().is_virtual_sink()
-        self.connect($make_port_sig($source), $make_port_sig($sink))
-    #end if
-#end for
+        #include source=$connection_templates[($source.get_domain(), $sink.get_domain())]
 
-########################################################
-##Create Message Connections
-########################################################
-#if $messages2
-        $DIVIDER
-        # Message Connections
-        $DIVIDER
-#end if
-#for $msg in $messages2
-        #set $sr = $msg.get_source()
-        #set $source = "self.%s"%($sr.get_parent().get_id())
-        #set $source_port = $sr.get_key();
-        #if $sr.get_parent().get_key() == "pad_source"
-            #set $source = "self"
-            #set $source_port = $sr.get_parent().get_param("label").get_value();
-        #end if
-        #set $sk = $msg.get_sink()
-        #set $sink = "self.%s"%($sk.get_parent().get_id())
-        #set $sink_port = $sk.get_name();
-        #if $sk.get_parent().get_key() == "pad_sink"
-            #set $sink = "self"
-            #set $sink_port = $sk.get_parent().get_param("label").get_value();
-        #end if
-        self.msg_connect($source, "$source_port", $sink, "$sink_port")
+    #end if
 #end for
 
 ########################################################
