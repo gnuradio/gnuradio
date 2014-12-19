@@ -26,7 +26,7 @@ from Connection import Connection as _Connection
 from Block import Block as _Block
 from Port import Port as _Port
 from Param import Param as _Param
-from Constants import BLOCK_TREE_DTD, FLOW_GRAPH_DTD, DOMAIN_DTD, DEFAULT_DOMAIN
+from Constants import BLOCK_TREE_DTD, FLOW_GRAPH_DTD, DOMAIN_DTD
 
 
 class Platform(_Element):
@@ -135,6 +135,7 @@ class Platform(_Element):
         self._category_trees_n.append(n)
 
     def load_domain_xml(self, xml_file):
+        """Load a domain properties and connection templates from XML"""
         ParseXML.validate_dtd(xml_file, DOMAIN_DTD)
         n = ParseXML.from_file(xml_file).find('domain')
 
@@ -151,10 +152,10 @@ class Platform(_Element):
 
         color = n.find('color') or ''
         try:
-            import gtk  # ugly, but handy
+            import gtk  # ugly but handy
             gtk.gdk.color_parse(color)
         except (ValueError, ImportError):
-            if color:  # no color is okay
+            if color:  # no color is okay, default set in GUI
                 print >> sys.stderr, 'Warning: Can\'t parse color code "%s" for domain "%s" ' % (color, key)
                 color = None
 
@@ -165,10 +166,13 @@ class Platform(_Element):
             color=color
         )
         for connection_n in n.findall('connection'):
-            source_domain = connection_n.find('source_domain') or DEFAULT_DOMAIN
-            sink_domain = connection_n.find('sink_domain') or DEFAULT_DOMAIN
-            make = connection_n.find('make') or ''
-            self._connection_templates[(source_domain, sink_domain)] = make
+            key = (connection_n.find('source_domain'), connection_n.find('sink_domain'))
+            if not all(key):
+                print >> sys.stderr, 'Warning: Empty domain key(s) in connection template.\n\t%s' % xml_file
+            elif key in self._connection_templates:
+                print >> sys.stderr, 'Warning: Connection template "%s" already exists.\n\t%s' % (key, xml_file)
+            else:
+                self._connection_templates[key] = connection_n.find('make') or ''
 
     def parse_flow_graph(self, flow_graph_file):
         """
