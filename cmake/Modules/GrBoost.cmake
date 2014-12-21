@@ -27,11 +27,13 @@ set(__INCLUDED_GR_BOOST_CMAKE TRUE)
 ########################################################################
 
 set(BOOST_REQUIRED_COMPONENTS
+    exception
     date_time
     program_options
     filesystem
     system
     thread
+    atomic
 )
 
 if(UNIX AND NOT BOOST_ROOT AND EXISTS "/usr/lib64")
