@@ -159,20 +159,21 @@ namespace gr {
       }
 
       d_nthreads = nthreads;
-      config_threading(nthreads);
-      import_wisdom();	// load prior wisdom from disk
+      //config_threading(nthreads);
+      //import_wisdom();	// load prior wisdom from disk
 
       d_plan = fftwf_plan_dft_1d (fft_size,
 				  reinterpret_cast<fftwf_complex *>(d_inbuf),
 				  reinterpret_cast<fftwf_complex *>(d_outbuf),
 				  forward ? FFTW_FORWARD : FFTW_BACKWARD,
-				  FFTW_MEASURE);
+                                  FFTW_ESTIMATE);
+				  //FFTW_MEASURE);
 
       if (d_plan == NULL) {
 	fprintf(stderr, "gr::fft: error creating plan\n");
 	throw std::runtime_error ("fftwf_plan_dft_1d failed");
       }
-      export_wisdom();	// store new wisdom to disk
+      //export_wisdom();	// store new wisdom to disk
     }
 
     fft_complex::~fft_complex()
@@ -233,7 +234,8 @@ namespace gr {
       d_plan = fftwf_plan_dft_r2c_1d (fft_size,
 				      d_inbuf,
 				      reinterpret_cast<fftwf_complex *>(d_outbuf),
-				      FFTW_MEASURE);
+				      FFTW_ESTIMATE);
+                                      //FFTW_MEASURE);
 
       if (d_plan == NULL) {
 	fprintf(stderr, "gr::fft::fft_real_fwd: error creating plan\n");
@@ -303,7 +305,8 @@ namespace gr {
       d_plan = fftwf_plan_dft_c2r_1d (fft_size,
 				      reinterpret_cast<fftwf_complex *>(d_inbuf),
 				      d_outbuf,
-				      FFTW_MEASURE);
+                                      FFTW_ESTIMATE);
+                                      //FFTW_MEASURE);
 
       if (d_plan == NULL) {
 	fprintf(stderr, "gr::fft::fft_real_rev: error creating plan\n");
