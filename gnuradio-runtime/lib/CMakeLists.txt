@@ -138,6 +138,14 @@ list(APPEND gnuradio_runtime_libs
     ${LOG4CPP_LIBRARIES}
 )
 
+
+if(ANDROID)
+  list(APPEND gnuradio_runtime_libs
+    log
+  )
+endif(ANDROID)
+
+
 #Add libraries for winsock2.h on Windows
 CHECK_INCLUDE_FILE_CXX(windows.h HAVE_WINDOWS_H)
 IF(HAVE_WINDOWS_H)
