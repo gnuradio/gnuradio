@@ -241,6 +241,7 @@ namespace gr {
 
 #include <sstream>
 #include <stdexcept>
+#include <string>
 #include <pthread.h>
 #include <sys/prctl.h>
 
@@ -285,7 +286,12 @@ namespace gr {
       for(itr = _mask.begin(); itr != _mask.end(); itr++)
         CPU_SET(*itr, &set);
 
+#if !ANDROID
       int ret = pthread_setaffinity_np(thread, len, &set);
+#else
+      int ret = 0;
+#endif
+
       if(ret != 0) {
         std::stringstream s;
         s << "thread_bind_to_processor failed with error: " << ret << std::endl;
