@@ -35,13 +35,13 @@ static inline void volk_32u_popcntpuppet_32u_generic(uint32_t* outVector, const 
 }
 #endif /* LV_HAVE_GENERIC */
 
-#ifdef LV_HAVE_SSE_4_2
+#ifdef LV_HAVE_SSE4_2
 static inline void volk_32u_popcntpuppet_32u_a_sse4_2(uint32_t* outVector, const uint32_t* inVector, unsigned int num_points){
     unsigned int ii;
     for(ii=0; ii < num_points; ++ii) {
         volk_32u_popcnt_a_sse4_2(outVector+ii, *(inVector+ii) );
     }
 }
-#endif /* LV_HAVE_GENERIC */
+#endif /* LV_HAVE_SSE4_2 */
 
 #endif /* INCLUDED_volk_32fc_s32fc_rotatorpuppet_32fc_a_H */
