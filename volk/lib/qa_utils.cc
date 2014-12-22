@@ -401,7 +401,9 @@ bool run_volk_tests(volk_func_desc_t desc,
             arch_buffs.push_back(mem_pool.get_new(vlen*outputsig[j].size*(outputsig[j].is_complex ? 2 : 1)));
         }
         for(size_t j=0; j<inputsig.size(); j++) {
-            arch_buffs.push_back(inbuffs[j]);
+            void *arch_inbuff = mem_pool.get_new(vlen*inputsig[j].size*(inputsig[j].is_complex ? 2 : 1));
+            memcpy(arch_inbuff, inbuffs[j], vlen * inputsig[j].size * (inputsig[j].is_complex ? 2 : 1));
+            arch_buffs.push_back(arch_inbuff);
         }
         test_data.push_back(arch_buffs);
     }
