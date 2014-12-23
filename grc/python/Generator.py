@@ -73,8 +73,8 @@ class TopBlockGenerator(object):
         self._generate_options = self._flow_graph.get_option('generate_options')
         self._mode = TOP_BLOCK_FILE_MODE
         dirname = os.path.dirname(file_path)
-        #handle the case where the directory is read-only
-        #in this case, use the system's temp directory
+        # handle the case where the directory is read-only
+        # in this case, use the system's temp directory
         if not os.access(dirname, os.W_OK):
             dirname = tempfile.gettempdir()
         filename = self._flow_graph.get_option('id') + '.py'
@@ -85,7 +85,7 @@ class TopBlockGenerator(object):
 
     def write(self):
         """generate output and write it to files"""
-        #do throttle warning
+        # do throttle warning
         throttling_blocks = filter(lambda b: b.throttle(), self._flow_graph.get_enabled_blocks())
         if not throttling_blocks and self._generate_options != 'hb':
             Messages.send_warning("This flow graph may not have flow control: "
@@ -100,7 +100,7 @@ class TopBlockGenerator(object):
                                       "e.g. a hardware source or sink. "
                                       "This is usually undesired. Consider "
                                       "removing the throttle block.")
-        #generate
+        # generate
         open(self.get_file_path(), 'w').write(
             self._build_python_code_from_template()
         )
@@ -112,15 +112,15 @@ class TopBlockGenerator(object):
         Returns:
             a popen object
         """
-        #extract the path to the python executable
+        # extract the path to the python executable
         python_exe = sys.executable
 
-        #when using wx gui on mac os, execute with pythonw
-        #using pythonw is not necessary anymore, disabled below
-        #if self._generate_options == 'wx_gui' and 'darwin' in sys.platform.lower():
+        # when using wx gui on mac os, execute with pythonw
+        # using pythonw is not necessary anymore, disabled below
+        # if self._generate_options == 'wx_gui' and 'darwin' in sys.platform.lower():
         #   python_exe = 'pythonw'
 
-        #setup the command args to run
+        # setup the command args to run
         cmds = [python_exe, '-u', self.get_file_path()]  # -u is unbuffered stdio
 
         # when in no gui mode on linux, use a graphical terminal (looks nice)
@@ -145,15 +145,16 @@ class TopBlockGenerator(object):
         variables = self._flow_graph.get_variables()
         parameters = self._flow_graph.get_parameters()
         monitors = self._flow_graph.get_monitors()
-        #list of blocks not including variables and imports and parameters and disabled
+
+        # list of blocks not including variables and imports and parameters and disabled
         def _get_block_sort_text(block):
             code = block.get_make().replace(block.get_id(), ' ')
             try:
-                code += block.get_param('notebook').get_value() #older gui markup w/ wxgui
+                code += block.get_param('notebook').get_value() # older gui markup w/ wxgui
             except:
                 pass
             try:
-                code += block.get_param('gui_hint').get_value() #newer gui markup w/ qtgui
+                code += block.get_param('gui_hint').get_value() # newer gui markup w/ qtgui
             except:
                 pass
             return code
@@ -161,27 +162,31 @@ class TopBlockGenerator(object):
             self._flow_graph.get_enabled_blocks(),
             lambda b: b.get_id(), _get_block_sort_text
         )
-        #list of regular blocks (all blocks minus the special ones)
+        # list of regular blocks (all blocks minus the special ones)
         blocks = filter(lambda b: b not in (imports + parameters), blocks)
-        #list of connections where each endpoint is enabled
-        connections = filter(lambda c: not (c.is_bus() or c.is_msg() or c.is_message()), self._flow_graph.get_enabled_connections())
-        messages = filter(lambda c: c.is_msg(), self._flow_graph.get_enabled_connections())
-        messages2 = filter(lambda c: c.is_message(), self._flow_graph.get_enabled_connections())
-        #list of variable names
+        # list of connections where each endpoint is enabled (sorted by domains, block names)
+        connections = filter(lambda c: not (c.is_bus() or c.is_msg()), self._flow_graph.get_enabled_connections())
+        connections.sort(key=lambda c: (
+            c.get_source().get_domain(), c.get_sink().get_domain(),
+            c.get_source().get_parent().get_id(), c.get_sink().get_parent().get_id()
+        ))
+        connection_templates = self._flow_graph.get_parent().get_connection_templates()
+        msgs = filter(lambda c: c.is_msg(), self._flow_graph.get_enabled_connections())
+        # list of variable names
         var_ids = [var.get_id() for var in parameters + variables]
-        #prepend self.
+        # prepend self.
         replace_dict = dict([(var_id, 'self.%s' % var_id) for var_id in var_ids])
-        #list of callbacks
+        # list of callbacks
         callbacks = [
             expr_utils.expr_replace(cb, replace_dict)
             for cb in sum([block.get_callbacks() for block in self._flow_graph.get_enabled_blocks()], [])
         ]
-        #map var id to callbacks
-        var_id2cbs = dict(
-            [(var_id, filter(lambda c: expr_utils.get_variable_dependencies(c, [var_id]), callbacks))
-            for var_id in var_ids]
-        )
-        #load the namespace
+        # map var id to callbacks
+        var_id2cbs = dict([
+            (var_id, filter(lambda c: expr_utils.get_variable_dependencies(c, [var_id]), callbacks))
+            for var_id in var_ids
+        ])
+        # load the namespace
         namespace = {
             'title': title,
             'imports': imports,
@@ -191,12 +196,12 @@ class TopBlockGenerator(object):
             'monitors': monitors,
             'blocks': blocks,
             'connections': connections,
-            'messages': messages,
-            'messages2': messages2,
+            'connection_templates': connection_templates,
+            'msgs': msgs,
             'generate_options': self._generate_options,
             'var_id2cbs': var_id2cbs,
         }
-        #build the template
+        # build the template
         t = Template(open(FLOW_GRAPH_TEMPLATE, 'r').read(), namespace)
         return str(t)
 
@@ -234,7 +239,7 @@ class HierBlockGenerator(TopBlockGenerator):
         Returns:
             a xml node tree
         """
-        #extract info from the flow graph
+        # extract info from the flow graph
         block_key = self._flow_graph.get_option('id')
         parameters = self._flow_graph.get_parameters()
 
@@ -243,14 +248,14 @@ class HierBlockGenerator(TopBlockGenerator):
                 return "$"+name
             return name
 
-        #build the nested data
+        # build the nested data
         block_n = odict()
         block_n['name'] = self._flow_graph.get_option('title') or \
             self._flow_graph.get_option('id').replace('_', ' ').title()
         block_n['key'] = block_key
         block_n['category'] = self._flow_graph.get_option('category')
         block_n['import'] = 'execfile("{0}")'.format(self.get_file_path())
-        #make data
+        # make data
         if parameters:
             block_n['make'] = '{cls}(\n    {kwargs},\n)'.format(
                 cls=block_key,
@@ -260,7 +265,7 @@ class HierBlockGenerator(TopBlockGenerator):
             )
         else:
             block_n['make'] = '{cls}()'.format(cls=block_key)
-        #callback data
+        # callback data
         block_n['callback'] = [
             'set_{key}(${key})'.format(key=param.get_id()) for param in parameters
         ]
