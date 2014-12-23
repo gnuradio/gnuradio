@@ -4,6 +4,7 @@
 
 #include <stdint.h>
 #include <volk/volk_64u_byteswap.h>
+#include <string.h>
 
 #ifdef LV_HAVE_GENERIC
 static inline void volk_64u_byteswappuppet_64u_generic(uint64_t*output, uint64_t* intsToSwap, unsigned int num_points){
