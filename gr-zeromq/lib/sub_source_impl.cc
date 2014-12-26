@@ -89,9 +89,12 @@ namespace gr {
         if(d_pass_tags){
             uint64_t rcv_offset;
             std::vector<gr::tag_t> tags;
+            //int olen = buf.size();
             buf = parse_tag_header(buf, rcv_offset, tags);
+            //std::cout << "SUB: Header Len = " << olen - buf.size() << ", data len = " << buf.size() << "\n";
             for(size_t i=0; i<tags.size(); i++){
-                tags[i].offset -= rcv_offset - nitems_read(0);
+                //std::cout << "add item tag ... (offset = " << tags[i].offset << " rcv_offset = " << rcv_offset << " nitems_read(0) = " << nitems_written(0) << "\n";
+                tags[i].offset -= rcv_offset - nitems_written(0);
                 add_item_tag(0, tags[i]);
                 }
             }
