@@ -54,8 +54,8 @@ namespace gr {
 				       int nconnections,
 				       QWidget *parent)
       : sync_block("freq_sink_f",
-		      io_signature::make(1, -1, sizeof(float)),
-		      io_signature::make(0, 0, 0)),
+                   io_signature::make(nconnections, nconnections, sizeof(float)),
+                   io_signature::make(0, 0, 0)),
 	d_fftsize(fftsize), d_fftavg(1.0),
 	d_wintype((filter::firdes::win_type)(wintype)),
 	d_center_freq(fc), d_bandwidth(bw), d_name(name),
@@ -87,6 +87,10 @@ namespace gr {
                                    volk_get_alignment());
       memset(d_fbuf, 0, d_fftsize*sizeof(float));
 
+      d_tmpbuflen = (unsigned int)(floor(d_fftsize/2.0));
+      d_tmpbuf = (float*)volk_malloc(sizeof(float)*(d_tmpbuflen + 1),
+                                     volk_get_alignment());
+
       d_index = 0;
       for(int i = 0; i < d_nconnections; i++) {
 	d_residbufs.push_back((float*)volk_malloc(d_fftsize*sizeof(float),
@@ -101,6 +105,8 @@ namespace gr {
       buildwindow();
 
       initialize();
+
+      set_trigger_mode(TRIG_MODE_FREE, 0, 0);
     }
 
     freq_sink_f_impl::~freq_sink_f_impl()
@@ -114,6 +120,7 @@ namespace gr {
       }
       delete d_fft;
       volk_free(d_fbuf);
+      volk_free(d_tmpbuf);
 
       delete d_argv;
     }
@@ -122,15 +129,6 @@ namespace gr {
     freq_sink_f_impl::check_topology(int ninputs, int noutputs)
     {
       return ninputs == d_nconnections;
-    }
-
-    void
-    freq_sink_f_impl::forecast(int noutput_items, gr_vector_int &ninput_items_required)
-    {
-      unsigned int ninputs = ninput_items_required.size();
-      for (unsigned int i = 0; i < ninputs; i++) {
-	ninput_items_required[i] = std::min(d_fftsize, 8191);
-      }
     }
 
     void
@@ -161,6 +159,8 @@ namespace gr {
 
       if(d_name.size() > 0)
         set_title(d_name);
+
+      set_output_multiple(d_fftsize);
 
       // initialize update time to 10 times a second
       set_update_time(0.1);
@@ -303,6 +303,35 @@ namespace gr {
       d_main_gui->resize(QSize(width, height));
     }
 
+    void
+    freq_sink_f_impl::set_plot_pos_half(bool half)
+    {
+      d_main_gui->setPlotPosHalf(half);
+    }
+
+    void
+    freq_sink_f_impl::set_trigger_mode(trigger_mode mode,
+                                       float level,
+                                       int channel,
+                                       const std::string &tag_key)
+    {
+      gr::thread::scoped_lock lock(d_setlock);
+
+      d_trigger_mode = mode;
+      d_trigger_level = level;
+      d_trigger_channel = channel;
+      d_trigger_tag_key = pmt::intern(tag_key);
+      d_triggered = false;
+      d_trigger_count = 0;
+
+      d_main_gui->setTriggerMode(d_trigger_mode);
+      d_main_gui->setTriggerLevel(d_trigger_level);
+      d_main_gui->setTriggerChannel(d_trigger_channel);
+      d_main_gui->setTriggerTagKey(tag_key);
+
+      _reset();
+    }
+
     std::string
     freq_sink_f_impl::title()
     {
@@ -378,8 +407,23 @@ namespace gr {
     void
     freq_sink_f_impl::reset()
     {
-      d_index = 0;
+      gr::thread::scoped_lock lock(d_setlock);
+      _reset();
     }
+
+    void
+    freq_sink_f_impl::_reset()
+    {
+      d_trigger_count = 0;
+
+      // Reset the trigger.
+      if(d_trigger_mode == TRIG_MODE_FREE) {
+        d_triggered = true;
+      }
+      else {
+        d_triggered = false;
+      }
+     }
 
     void
     freq_sink_f_impl::fft(float *data_out, const float *data_in, int size)
@@ -399,15 +443,12 @@ namespace gr {
                                                    size, 1.0, size);
 
       // Perform shift operation
-      unsigned int len = (unsigned int)(floor(size/2.0));
-      float *tmp = (float*)malloc(sizeof(float)*len);
-      memcpy(tmp, &data_out[0], sizeof(float)*len);
-      memcpy(&data_out[0], &data_out[len], sizeof(float)*(size - len));
-      memcpy(&data_out[size - len], tmp, sizeof(float)*len);
-      free(tmp);
+      memcpy(d_tmpbuf, &data_out[0], sizeof(float)*(d_tmpbuflen + 1));
+      memcpy(&data_out[0], &data_out[size - d_tmpbuflen], sizeof(float)*d_tmpbuflen);
+      memcpy(&data_out[d_tmpbuflen], d_tmpbuf, sizeof(float)*(d_tmpbuflen + 1));
     }
 
-    void
+    bool
     freq_sink_f_impl::windowreset()
     {
       gr::thread::scoped_lock lock(d_setlock);
@@ -417,7 +458,9 @@ namespace gr {
       if(d_wintype != newwintype) {
         d_wintype = newwintype;
         buildwindow();
+        return true;
       }
+      return false;
     }
 
     void
@@ -429,7 +472,7 @@ namespace gr {
       }
     }
 
-    void
+    bool
     freq_sink_f_impl::fftresize()
     {
       gr::thread::scoped_lock lock(d_setlock);
@@ -468,7 +511,19 @@ namespace gr {
 	d_fbuf = (float*)volk_malloc(d_fftsize*sizeof(float),
                                      volk_get_alignment());
 	memset(d_fbuf, 0, d_fftsize*sizeof(float));
+
+	volk_free(d_tmpbuf);
+        d_tmpbuflen = (unsigned int)(floor(d_fftsize/2.0));
+        d_tmpbuf = (float*)volk_malloc(sizeof(float)*(d_tmpbuflen + 1),
+                                       volk_get_alignment());
+
+        d_last_time = 0;
+
+        set_output_multiple(d_fftsize);
+
+        return true;
       }
+      return false;
     }
 
     void
@@ -495,59 +550,121 @@ namespace gr {
       }
     }
 
+    void
+    freq_sink_f_impl::_gui_update_trigger()
+    {
+      trigger_mode new_trigger_mode = d_main_gui->getTriggerMode();
+      d_trigger_level = d_main_gui->getTriggerLevel();
+      d_trigger_channel = d_main_gui->getTriggerChannel();
+
+      std::string tagkey = d_main_gui->getTriggerTagKey();
+      d_trigger_tag_key = pmt::intern(tagkey);
+
+      if(new_trigger_mode != d_trigger_mode) {
+        d_trigger_mode = new_trigger_mode;
+        _reset();
+      }
+    }
+
+    void
+    freq_sink_f_impl::_test_trigger_tags(int start, int nitems)
+    {
+      uint64_t nr = nitems_read(d_trigger_channel);
+      std::vector<gr::tag_t> tags;
+      get_tags_in_range(tags, d_trigger_channel,
+                        nr+start, nr+start+nitems,
+                        d_trigger_tag_key);
+      if(tags.size() > 0) {
+        d_triggered = true;
+        d_index = tags[0].offset - nr;
+        d_trigger_count = 0;
+      }
+    }
+
+    void
+    freq_sink_f_impl::_test_trigger_norm(int nitems, std::vector<double*> inputs)
+    {
+      const double *in = (const double*)inputs[d_trigger_channel];
+      for(int i = 0; i < nitems; i++) {
+        d_trigger_count++;
+
+        // Test if trigger has occurred based on the FFT magnitude and
+        // channel number. Test if any value is > the level (in dBx).
+        if(in[i] > d_trigger_level) {
+          d_triggered = true;
+          d_trigger_count = 0;
+          break;
+        }
+      }
+
+      // If using auto trigger mode, trigger periodically even
+      // without a trigger event.
+      if((d_trigger_mode == TRIG_MODE_AUTO) && (d_trigger_count > d_fftsize)) {
+        d_triggered = true;
+        d_trigger_count = 0;
+      }
+    }
+
     int
     freq_sink_f_impl::work(int noutput_items,
 			   gr_vector_const_void_star &input_items,
 			   gr_vector_void_star &output_items)
     {
-      int j=0;
       const float *in = (const float*)input_items[0];
 
       // Update the FFT size from the application
-      fftresize();
-      windowreset();
+      bool updated = false;
+      updated |= fftresize();
+      updated |= windowreset();
+      if(updated)
+        return 0;
+
       check_clicked();
+      _gui_update_trigger();
 
-      for(int i=0; i < noutput_items; i+=d_fftsize) {
-	unsigned int datasize = noutput_items - i;
-	unsigned int resid = d_fftsize-d_index;
+      gr::thread::scoped_lock lock(d_setlock);
+      for(d_index = 0; d_index < noutput_items; d_index+=d_fftsize) {
 
-	// If we have enough input for one full FFT, do it
-	if(datasize >= resid) {
+        if((gr::high_res_timer_now() - d_last_time) > d_update_time) {
 
-	  if(gr::high_res_timer_now() - d_last_time > d_update_time) {
-            for(int n = 0; n < d_nconnections; n++) {
-              // Fill up residbuf with d_fftsize number of items
-              in = (const float*)input_items[n];
-              memcpy(d_residbufs[n]+d_index, &in[j], sizeof(float)*resid);
-
-              fft(d_fbuf, d_residbufs[n], d_fftsize);
-              for(int x = 0; x < d_fftsize; x++) {
-                d_magbufs[n][x] = (double)((1.0-d_fftavg)*d_magbufs[n][x] + (d_fftavg)*d_fbuf[x]);
-              }
-              //volk_32f_convert_64f_a(d_magbufs[n], d_fbuf, d_fftsize);
+          // Trigger off tag, if active
+          if((d_trigger_mode == TRIG_MODE_TAG) && !d_triggered) {
+            _test_trigger_tags(d_index, d_fftsize);
+            if(d_triggered) {
+              // If not enough from tag position, early exit
+              if((d_index + d_fftsize) >= noutput_items)
+                return d_index;
             }
+          }
 
+          for(int n = 0; n < d_nconnections; n++) {
+            // Fill up residbuf with d_fftsize number of items
+            in = (const float*)input_items[n];
+            memcpy(d_residbufs[n], &in[d_index], sizeof(float)*d_fftsize);
+
+            fft(d_fbuf, d_residbufs[n], d_fftsize);
+            for(int x = 0; x < d_fftsize; x++) {
+              d_magbufs[n][x] = (double)((1.0-d_fftavg)*d_magbufs[n][x] + (d_fftavg)*d_fbuf[x]);
+            }
+            //volk_32f_convert_64f_a(d_magbufs[n], d_fbuf, d_fftsize);
+          }
+
+          // Test trigger off signal power in d_magbufs
+          if((d_trigger_mode == TRIG_MODE_NORM) || (d_trigger_mode == TRIG_MODE_AUTO)) {
+            _test_trigger_norm(d_fftsize, d_magbufs);
+          }
+
+          // If a trigger (FREE always triggers), plot and reset state
+          if(d_triggered) {
 	    d_last_time = gr::high_res_timer_now();
 	    d_qApplication->postEvent(d_main_gui,
 				      new FreqUpdateEvent(d_magbufs, d_fftsize));
+            _reset();
 	  }
-
-	  d_index = 0;
-	  j += resid;
-	}
-	// Otherwise, copy what we received into the residbuf for next time
-	else {
-	  for(int n = 0; n < d_nconnections; n++) {
-	    in = (const float*)input_items[n];
-	    memcpy(d_residbufs[n]+d_index, &in[j], sizeof(float)*datasize);
-	  }
-	  d_index += datasize;
-	  j += datasize;
 	}
       }
 
-      return j;
+      return noutput_items;
     }
 
   } /* namespace qtgui */

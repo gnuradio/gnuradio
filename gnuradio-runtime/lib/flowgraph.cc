@@ -71,7 +71,7 @@ namespace gr {
     check_dst_not_used(dst);
     check_type_match(src, dst);
 
-    // All ist klar, Herr Kommisar
+    // Alles klar, Herr Kommissar
     d_edges.push_back(edge(src,dst));
   }
 

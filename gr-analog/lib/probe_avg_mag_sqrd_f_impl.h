@@ -48,6 +48,7 @@ namespace gr {
 
       void set_alpha(double alpha);
       void set_threshold(double decibels);
+      void reset();
 
       int work(int noutput_items,
 	       gr_vector_const_void_star &input_items,

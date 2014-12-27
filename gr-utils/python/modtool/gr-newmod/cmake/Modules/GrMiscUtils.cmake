@@ -1,4 +1,4 @@
-# Copyright 2010-2011 Free Software Foundation, Inc.
+# Copyright 2010-2011,2014 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -94,7 +94,13 @@ macro(GR_ADD_CXX_COMPILER_FLAG_IF_AVAILABLE flag have)
     include(CheckCXXCompilerFlag)
     CHECK_CXX_COMPILER_FLAG(${flag} ${have})
     if(${have})
-        add_definitions(${flag})
+      if(${CMAKE_VERSION} VERSION_GREATER "2.8.4")
+        STRING(FIND "${CMAKE_CXX_FLAGS}" "${flag}" flag_dup)
+        if(${flag_dup} EQUAL -1)
+          set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${flag}")
+          set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${flag}")
+        endif(${flag_dup} EQUAL -1)
+      endif(${CMAKE_VERSION} VERSION_GREATER "2.8.4")
     endif(${have})
 endmacro(GR_ADD_CXX_COMPILER_FLAG_IF_AVAILABLE)
 
@@ -155,7 +161,7 @@ function(GR_LIBRARY_FOO target)
         GR_LIBTOOL(TARGET ${target} DESTINATION ${GR_LIBRARY_DIR})
 
         #give the library a special name with ultra-zero soversion
-        set_target_properties(${target} PROPERTIES LIBRARY_OUTPUT_NAME ${target}-${LIBVER} SOVERSION "0.0.0")
+        set_target_properties(${target} PROPERTIES OUTPUT_NAME ${target}-${LIBVER} SOVERSION "0.0.0")
         set(target_name lib${target}-${LIBVER}.so.0.0.0)
 
         #custom command to generate symlinks
@@ -208,3 +214,312 @@ function(GR_GEN_TARGET_DEPS name var)
         set(${var} "DEPENDS;${name};COMMAND;${name}" PARENT_SCOPE)
     endif()
 endfunction(GR_GEN_TARGET_DEPS)
+
+########################################################################
+# Control use of gr_logger
+# Usage:
+#   GR_LOGGING()
+#
+# Will set ENABLE_GR_LOG to 1 by default.
+# Can manually set with -DENABLE_GR_LOG=0|1
+########################################################################
+function(GR_LOGGING)
+  find_package(Log4cpp)
+
+  OPTION(ENABLE_GR_LOG "Use gr_logger" ON)
+  if(ENABLE_GR_LOG)
+    # If gr_logger is enabled, make it usable
+    add_definitions( -DENABLE_GR_LOG )
+
+    # also test LOG4CPP; if we have it, use this version of the logger
+    # otherwise, default to the stdout/stderr model.
+    if(LOG4CPP_FOUND)
+      SET(HAVE_LOG4CPP True CACHE INTERNAL "" FORCE)
+      add_definitions( -DHAVE_LOG4CPP )
+    else(not LOG4CPP_FOUND)
+      SET(HAVE_LOG4CPP False CACHE INTERNAL "" FORCE)
+      SET(LOG4CPP_INCLUDE_DIRS "" CACHE INTERNAL "" FORCE)
+      SET(LOG4CPP_LIBRARY_DIRS "" CACHE INTERNAL "" FORCE)
+      SET(LOG4CPP_LIBRARIES "" CACHE INTERNAL "" FORCE)
+    endif(LOG4CPP_FOUND)
+
+    SET(ENABLE_GR_LOG ${ENABLE_GR_LOG} CACHE INTERNAL "" FORCE)
+
+  else(ENABLE_GR_LOG)
+    SET(HAVE_LOG4CPP False CACHE INTERNAL "" FORCE)
+    SET(LOG4CPP_INCLUDE_DIRS "" CACHE INTERNAL "" FORCE)
+    SET(LOG4CPP_LIBRARY_DIRS "" CACHE INTERNAL "" FORCE)
+    SET(LOG4CPP_LIBRARIES "" CACHE INTERNAL "" FORCE)
+  endif(ENABLE_GR_LOG)
+
+  message(STATUS "ENABLE_GR_LOG set to ${ENABLE_GR_LOG}.")
+  message(STATUS "HAVE_LOG4CPP set to ${HAVE_LOG4CPP}.")
+  message(STATUS "LOG4CPP_LIBRARIES set to ${LOG4CPP_LIBRARIES}.")
+
+endfunction(GR_LOGGING)
+
+########################################################################
+# Run GRCC to compile .grc files into .py files.
+#
+# Usage: GRCC(filename, directory)
+#    - filenames: List of file name of .grc file
+#    - directory: directory of built .py file - usually in
+#                 ${CMAKE_CURRENT_BINARY_DIR}
+#    - Sets PYFILES: output converted GRC file names to Python files.
+########################################################################
+function(GRCC)
+  # Extract directory from list of args, remove it for the list of filenames.
+  list(GET ARGV -1 directory)
+  list(REMOVE_AT ARGV -1)
+  set(filenames ${ARGV})
+  file(MAKE_DIRECTORY ${directory})
+
+  SET(GRCC_COMMAND ${CMAKE_SOURCE_DIR}/gr-utils/python/grcc)
+
+  # GRCC uses some stuff in grc and gnuradio-runtime, so we force
+  # the known paths here
+  list(APPEND PYTHONPATHS
+    ${CMAKE_SOURCE_DIR}
+    ${CMAKE_SOURCE_DIR}/gnuradio-runtime/python
+    ${CMAKE_SOURCE_DIR}/gnuradio-runtime/lib/swig
+    ${CMAKE_BINARY_DIR}/gnuradio-runtime/lib/swig
+    )
+
+  if(WIN32)
+    #SWIG generates the python library files into a subdirectory.
+    #Therefore, we must append this subdirectory into PYTHONPATH.
+    #Only do this for the python directories matching the following:
+    foreach(pydir ${PYTHONPATHS})
+      get_filename_component(name ${pydir} NAME)
+      if(name MATCHES "^(swig|lib|src)$")
+        list(APPEND PYTHONPATHS ${pydir}/${CMAKE_BUILD_TYPE})
+      endif()
+    endforeach(pydir)
+  endif(WIN32)
+
+  file(TO_NATIVE_PATH "${PYTHONPATHS}" pypath)
+
+  if(UNIX)
+    list(APPEND pypath "$PYTHONPATH")
+    string(REPLACE ";" ":" pypath "${pypath}")
+    set(ENV{PYTHONPATH} ${pypath})
+  endif(UNIX)
+
+  if(WIN32)
+    list(APPEND pypath "%PYTHONPATH%")
+    string(REPLACE ";" "\\;" pypath "${pypath}")
+    #list(APPEND environs "PYTHONPATH=${pypath}")
+    set(ENV{PYTHONPATH} ${pypath})
+  endif(WIN32)
+
+  foreach(f ${filenames})
+    execute_process(
+      COMMAND ${GRCC_COMMAND} -d ${directory} ${f}
+      )
+    string(REPLACE ".grc" ".py" pyfile "${f}")
+    string(REPLACE "${CMAKE_CURRENT_SOURCE_DIR}" "${CMAKE_CURRENT_BINARY_DIR}" pyfile "${pyfile}")
+    list(APPEND pyfiles ${pyfile})
+  endforeach(f)
+
+  set(PYFILES ${pyfiles} PARENT_SCOPE)
+endfunction(GRCC)
+
+########################################################################
+# Check if HAVE_PTHREAD_SETSCHEDPARAM and HAVE_SCHED_SETSCHEDULER
+#  should be defined
+########################################################################
+macro(GR_CHECK_LINUX_SCHED_AVAIL)
+set(CMAKE_REQUIRED_LIBRARIES -lpthread)
+    CHECK_CXX_SOURCE_COMPILES("
+        #include <pthread.h>
+        int main(){
+            pthread_t pthread;
+            pthread_setschedparam(pthread,  0, 0);
+            return 0;
+        } " HAVE_PTHREAD_SETSCHEDPARAM
+    )
+    GR_ADD_COND_DEF(HAVE_PTHREAD_SETSCHEDPARAM)
+
+    CHECK_CXX_SOURCE_COMPILES("
+        #include <sched.h>
+        int main(){
+            pid_t pid;
+            sched_setscheduler(pid, 0, 0);
+            return 0;
+        } " HAVE_SCHED_SETSCHEDULER
+    )
+    GR_ADD_COND_DEF(HAVE_SCHED_SETSCHEDULER)
+endmacro(GR_CHECK_LINUX_SCHED_AVAIL)
+
+########################################################################
+# Macros to generate source and header files from template
+########################################################################
+macro(GR_EXPAND_X_H component root)
+
+  include(GrPython)
+
+  file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/generate_helper.py
+"#!${PYTHON_EXECUTABLE}
+
+import sys, os, re
+sys.path.append('${GR_RUNTIME_PYTHONPATH}')
+os.environ['srcdir'] = '${CMAKE_CURRENT_SOURCE_DIR}'
+os.chdir('${CMAKE_CURRENT_BINARY_DIR}')
+
+if __name__ == '__main__':
+    import build_utils
+    root, inp = sys.argv[1:3]
+    for sig in sys.argv[3:]:
+        name = re.sub ('X+', sig, root)
+        d = build_utils.standard_dict2(name, sig, '${component}')
+        build_utils.expand_template(d, inp)
+")
+
+  #make a list of all the generated headers
+  unset(expanded_files_h)
+  foreach(sig ${ARGN})
+    string(REGEX REPLACE "X+" ${sig} name ${root})
+    list(APPEND expanded_files_h ${CMAKE_CURRENT_BINARY_DIR}/${name}.h)
+  endforeach(sig)
+  unset(name)
+
+  #create a command to generate the headers
+  add_custom_command(
+    OUTPUT ${expanded_files_h}
+    DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/${root}.h.t
+    COMMAND ${PYTHON_EXECUTABLE} ${PYTHON_DASH_B}
+    ${CMAKE_CURRENT_BINARY_DIR}/generate_helper.py
+    ${root} ${root}.h.t ${ARGN}
+  )
+
+  #install rules for the generated headers
+  list(APPEND generated_includes ${expanded_files_h})
+
+endmacro(GR_EXPAND_X_H)
+
+macro(GR_EXPAND_X_CC_H component root)
+
+  include(GrPython)
+
+  file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/generate_helper.py
+"#!${PYTHON_EXECUTABLE}
+
+import sys, os, re
+sys.path.append('${GR_RUNTIME_PYTHONPATH}')
+os.environ['srcdir'] = '${CMAKE_CURRENT_SOURCE_DIR}'
+os.chdir('${CMAKE_CURRENT_BINARY_DIR}')
+
+if __name__ == '__main__':
+    import build_utils
+    root, inp = sys.argv[1:3]
+    for sig in sys.argv[3:]:
+        name = re.sub ('X+', sig, root)
+        d = build_utils.standard_impl_dict2(name, sig, '${component}')
+        build_utils.expand_template(d, inp)
+")
+
+  #make a list of all the generated files
+  unset(expanded_files_cc)
+  unset(expanded_files_h)
+  foreach(sig ${ARGN})
+    string(REGEX REPLACE "X+" ${sig} name ${root})
+    list(APPEND expanded_files_cc ${CMAKE_CURRENT_BINARY_DIR}/${name}.cc)
+    list(APPEND expanded_files_h  ${CMAKE_CURRENT_BINARY_DIR}/${name}.h)
+  endforeach(sig)
+  unset(name)
+
+  #create a command to generate the source files
+  add_custom_command(
+    OUTPUT ${expanded_files_cc}
+    DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/${root}.cc.t
+    COMMAND ${PYTHON_EXECUTABLE} ${PYTHON_DASH_B}
+    ${CMAKE_CURRENT_BINARY_DIR}/generate_helper.py
+    ${root} ${root}.cc.t ${ARGN}
+  )
+
+  #create a command to generate the header files
+  add_custom_command(
+    OUTPUT ${expanded_files_h}
+    DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/${root}.h.t
+    COMMAND ${PYTHON_EXECUTABLE} ${PYTHON_DASH_B}
+    ${CMAKE_CURRENT_BINARY_DIR}/generate_helper.py
+    ${root} ${root}.h.t ${ARGN}
+  )
+
+  #make source files depends on headers to force generation
+  set_source_files_properties(${expanded_files_cc}
+    PROPERTIES OBJECT_DEPENDS "${expanded_files_h}"
+  )
+
+  #install rules for the generated files
+  list(APPEND generated_sources ${expanded_files_cc})
+  list(APPEND generated_headers ${expanded_files_h})
+
+endmacro(GR_EXPAND_X_CC_H)
+
+macro(GR_EXPAND_X_CC_H_IMPL component root)
+
+  include(GrPython)
+
+  file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/generate_helper.py
+"#!${PYTHON_EXECUTABLE}
+
+import sys, os, re
+sys.path.append('${GR_RUNTIME_PYTHONPATH}')
+os.environ['srcdir'] = '${CMAKE_CURRENT_SOURCE_DIR}'
+os.chdir('${CMAKE_CURRENT_BINARY_DIR}')
+
+if __name__ == '__main__':
+    import build_utils
+    root, inp = sys.argv[1:3]
+    for sig in sys.argv[3:]:
+        name = re.sub ('X+', sig, root)
+        d = build_utils.standard_dict(name, sig, '${component}')
+        build_utils.expand_template(d, inp, '_impl')
+")
+
+  #make a list of all the generated files
+  unset(expanded_files_cc_impl)
+  unset(expanded_files_h_impl)
+  unset(expanded_files_h)
+  foreach(sig ${ARGN})
+    string(REGEX REPLACE "X+" ${sig} name ${root})
+    list(APPEND expanded_files_cc_impl ${CMAKE_CURRENT_BINARY_DIR}/${name}_impl.cc)
+    list(APPEND expanded_files_h_impl ${CMAKE_CURRENT_BINARY_DIR}/${name}_impl.h)
+    list(APPEND expanded_files_h ${CMAKE_CURRENT_BINARY_DIR}/../include/gnuradio/${component}/${name}.h)
+  endforeach(sig)
+  unset(name)
+
+  #create a command to generate the _impl.cc files
+  add_custom_command(
+    OUTPUT ${expanded_files_cc_impl}
+    DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/${root}_impl.cc.t
+    COMMAND ${PYTHON_EXECUTABLE} ${PYTHON_DASH_B}
+    ${CMAKE_CURRENT_BINARY_DIR}/generate_helper.py
+    ${root} ${root}_impl.cc.t ${ARGN}
+  )
+
+  #create a command to generate the _impl.h files
+  add_custom_command(
+    OUTPUT ${expanded_files_h_impl}
+    DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/${root}_impl.h.t
+    COMMAND ${PYTHON_EXECUTABLE} ${PYTHON_DASH_B}
+    ${CMAKE_CURRENT_BINARY_DIR}/generate_helper.py
+    ${root} ${root}_impl.h.t ${ARGN}
+  )
+
+  #make _impl.cc source files depend on _impl.h to force generation
+  set_source_files_properties(${expanded_files_cc_impl}
+    PROPERTIES OBJECT_DEPENDS "${expanded_files_h_impl}"
+  )
+
+  #make _impl.h source files depend on headers to force generation
+  set_source_files_properties(${expanded_files_h_impl}
+    PROPERTIES OBJECT_DEPENDS "${expanded_files_h}"
+  )
+
+  #install rules for the generated files
+  list(APPEND generated_sources ${expanded_files_cc_impl})
+  list(APPEND generated_headers ${expanded_files_h_impl})
+
+endmacro(GR_EXPAND_X_CC_H_IMPL)

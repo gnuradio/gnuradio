@@ -73,19 +73,17 @@ namespace gr {
     }
 
     template
-    void calc_metric<short>(int O, int D, const std::vector<short> &TABLE, const short *input,
-			    float *metric, digital::trellis_metric_type_t type);
+    void calc_metric<char>(int O, int D, const std::vector<char> &TABLE, const char *input, float *metric, digital::trellis_metric_type_t type);
 
     template
-    void calc_metric<int>(int O, int D, const std::vector<int> &TABLE, const int *input,
-			  float *metric, digital::trellis_metric_type_t type);
+    void calc_metric<short>(int O, int D, const std::vector<short> &TABLE, const short *input, float *metric, digital::trellis_metric_type_t type);
 
-    template
-    void calc_metric<float>(int O, int D, const std::vector<float> &TABLE, const float *input,
-			    float *metric, digital::trellis_metric_type_t type);
+    template void calc_metric<int>(int O, int D, const std::vector<int> &TABLE, const int *input, float *metric, digital::trellis_metric_type_t type);
 
-    void calc_metric(int O, int D, const std::vector<short> &TABLE, const short *input,
-		     float *metric, digital::trellis_metric_type_t type)
+    template void calc_metric<float>(int O, int D, const std::vector<float> &TABLE, const float *input, float *metric, digital::trellis_metric_type_t type);
+
+    /*
+    void calc_metric(int O, int D, const std::vector<short> &TABLE, const short *input, float *metric, digital::trellis_metric_type_t type)
     {
       float minm = FLT_MAX;
       int minmi = 0;
@@ -124,7 +122,6 @@ namespace gr {
       }
     }
 
-    /*
     void calc_metric(int O, int D, const std::vector<int> &TABLE, const int *input,
 		     float *metric, digital::trellis_metric_type_t type)
     {

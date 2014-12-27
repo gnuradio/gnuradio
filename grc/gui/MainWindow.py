@@ -209,7 +209,7 @@ class MainWindow(gtk.Window):
         open_files = filter(lambda file: file, self._get_files()) #filter blank files
         open_file = self.get_page().get_file_path()
         #close each page
-        for page in self._get_pages():
+        for page in self.get_pages():
             self.page_to_be_closed = page
             self.close_page(False)
         if self.notebook.get_n_pages(): return False
@@ -271,7 +271,7 @@ class MainWindow(gtk.Window):
             )
         )
         #set tab titles
-        for page in self._get_pages(): page.set_markup(
+        for page in self.get_pages(): page.set_markup(
             Utils.parse_template(PAGE_TITLE_MARKUP_TMPL,
                 #get filename and strip out file extension
                 title=os.path.splitext(os.path.basename(page.get_file_path()))[0],
@@ -280,13 +280,13 @@ class MainWindow(gtk.Window):
             )
         )
         #show/hide notebook tabs
-        self.notebook.set_show_tabs(len(self._get_pages()) > 1)
+        self.notebook.set_show_tabs(len(self.get_pages()) > 1)
 
     def update_pages(self):
         """
         Forces a reload of all the pages in this notebook.
         """
-        for page in self._get_pages():
+        for page in self.get_pages():
             success = page.get_flow_graph().reload()
             if success:  # Only set saved if errors occurred during import
                 page.set_saved(False)
@@ -351,9 +351,9 @@ class MainWindow(gtk.Window):
         Returns:
             list of file paths
         """
-        return map(lambda page: page.get_file_path(), self._get_pages())
+        return map(lambda page: page.get_file_path(), self.get_pages())
 
-    def _get_pages(self):
+    def get_pages(self):
         """
         Get a list of all pages in the notebook.
 

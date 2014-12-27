@@ -60,7 +60,7 @@ namespace gr {
     message_port_register_in(pmt::mp("system"));
     set_msg_handler(pmt::mp("system"), boost::bind(&block::system_handler, this, _1));
 
-    configure_default_loggers(d_logger, d_debug_logger, alias());
+    configure_default_loggers(d_logger, d_debug_logger, symbol_name());
   }
 
   block::~block()
@@ -676,6 +676,16 @@ namespace gr {
   {
     if(d_detail) {
       return d_detail->pc_work_time_total();
+    }
+    else {
+      return 0;
+    }
+  }
+
+  float
+  block::pc_throughput_avg() {
+    if(d_detail) {
+      return d_detail->pc_throughput_avg();
     }
     else {
       return 0;

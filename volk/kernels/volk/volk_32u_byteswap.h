@@ -1,3 +1,25 @@
+/* -*- c++ -*- */
+/*
+ * Copyright 2014 Free Software Foundation, Inc.
+ *
+ * This file is part of GNU Radio
+ *
+ * GNU Radio is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3, or (at your option)
+ * any later version.
+ *
+ * GNU Radio is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with GNU Radio; see the file COPYING.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street,
+ * Boston, MA 02110-1301, USA.
+ */
+
 #ifndef INCLUDED_volk_32u_byteswap_u_H
 #define INCLUDED_volk_32u_byteswap_u_H
 
@@ -51,6 +73,59 @@ static inline void volk_32u_byteswap_u_sse2(uint32_t* intsToSwap, unsigned int n
 }
 #endif /* LV_HAVE_SSE2 */
 
+#ifdef LV_HAVE_NEON
+#include <arm_neon.h>
+/*!
+  \brief Byteswaps (in-place) an aligned vector of int32_t's.
+  \param intsToSwap The vector of data to byte swap
+  \param numDataPoints The number of data points
+*/
+static inline void volk_32u_byteswap_neon(uint32_t* intsToSwap, unsigned int num_points){
+  uint32_t* inputPtr = intsToSwap;
+  unsigned int number = 0;
+  unsigned int n8points = num_points / 8;
+
+  uint8x8x4_t input_table;
+  uint8x8_t int_lookup01, int_lookup23, int_lookup45, int_lookup67;
+  uint8x8_t swapped_int01, swapped_int23, swapped_int45, swapped_int67;
+
+  /* these magic numbers are used as byte-indeces in the LUT.
+     they are pre-computed to save time. A simple C program
+     can calculate them; for example for lookup01:
+    uint8_t chars[8] = {24, 16, 8, 0, 25, 17, 9, 1};
+    for(ii=0; ii < 8; ++ii) {
+        index += ((uint64_t)(*(chars+ii))) << (ii*8);
+    }
+  */
+  int_lookup01 = vcreate_u8(74609667900706840);
+  int_lookup23 = vcreate_u8(219290013576860186);
+  int_lookup45 = vcreate_u8(363970359253013532);
+  int_lookup67 = vcreate_u8(508650704929166878);
+  
+  for(number = 0; number < n8points; ++number){
+    input_table = vld4_u8((uint8_t*) inputPtr);
+    swapped_int01 = vtbl4_u8(input_table, int_lookup01);
+    swapped_int23 = vtbl4_u8(input_table, int_lookup23);
+    swapped_int45 = vtbl4_u8(input_table, int_lookup45);
+    swapped_int67 = vtbl4_u8(input_table, int_lookup67);
+    vst1_u8((uint8_t*) inputPtr, swapped_int01);
+    vst1_u8((uint8_t*) (inputPtr+2), swapped_int23);
+    vst1_u8((uint8_t*) (inputPtr+4), swapped_int45);
+    vst1_u8((uint8_t*) (inputPtr+6), swapped_int67);
+
+    inputPtr += 8;
+  }
+
+  for(number = n8points * 8; number < num_points; ++number){
+    uint32_t output = *inputPtr;
+    output = (((output >> 24) & 0xff) | ((output >> 8) & 0x0000ff00) | ((output << 8) & 0x00ff0000) | ((output << 24) & 0xff000000));
+
+    *inputPtr = output;
+    inputPtr++;
+  }
+}
+#endif /* LV_HAVE_NEON */
+
 #ifdef LV_HAVE_GENERIC
 /*!
   \brief Byteswaps (in-place) an aligned vector of int32_t's.
@@ -70,8 +145,6 @@ static inline void volk_32u_byteswap_generic(uint32_t* intsToSwap, unsigned int 
   }
 }
 #endif /* LV_HAVE_GENERIC */
-
-
 
 
 #endif /* INCLUDED_volk_32u_byteswap_u_H */

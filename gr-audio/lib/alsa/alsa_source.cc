@@ -252,7 +252,7 @@ namespace gr {
       d_buffer = new char[d_buffer_size_bytes];
 
       if(CHATTY_DEBUG) {
-        GR_LOG_DEBUG(d_logger, boost::format("[%1%]: sample resolution = %d bits") \
+        GR_LOG_DEBUG(d_logger, boost::format("[%1%]: sample resolution = %2% bits") \
                      % snd_pcm_name(d_pcm_handle)                       \
                      % snd_pcm_hw_params_get_sbits(d_hw_params));
       }

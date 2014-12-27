@@ -153,6 +153,16 @@ namespace gr {
        * \param FSM2  second FSMS
        */
       fsm(const fsm &FSM1, const fsm &FSM2);
+     
+       
+      /*!
+       * \brief Creates an FSMS describing the trellis of two serially concatenated FSMs.
+       *
+       * \param FSMo  outer FSMS
+       * \param FSMi  inner FSMS
+       * \param serial set it to true to distinguish from the previous constructor
+       */
+      fsm(const fsm &FSMo, const fsm &FSMi, bool serial);
 
       /*!
        * \brief Creates an FSMS representing n stages through the originial FSM (AKA radix-n FSM).

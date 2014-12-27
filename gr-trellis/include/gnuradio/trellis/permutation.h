@@ -44,9 +44,14 @@ namespace gr {
 		       int SYMS_PER_BLOCK, size_t NBYTES);
 
       virtual int K() const = 0;
-      virtual const std::vector<int> & TABLE() const = 0;
+      virtual std::vector<int> TABLE() const = 0;
       virtual int SYMS_PER_BLOCK() const = 0;
       virtual size_t BYTES_PER_SYMBOL() const = 0;
+
+      virtual void set_K(int K) =0;
+      virtual void set_TABLE (const std::vector<int> &table) = 0;
+      virtual void set_SYMS_PER_BLOCK(int spb) =0;
+      
     };
 
   } /* namespace trellis */

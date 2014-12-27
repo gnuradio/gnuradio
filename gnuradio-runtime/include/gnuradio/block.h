@@ -221,7 +221,8 @@ namespace gr {
 
     /*!
      * \brief Tell the scheduler \p how_many_items of input stream \p
-     * which_input were consumed.
+     * which_input were consumed. 
+     * This function should be called at the end of work() or general_work(), after all processing is finished.
      */
     void consume(int which_input, int how_many_items);
 
@@ -501,6 +502,11 @@ namespace gr {
      * \brief Gets total clock cycles spent in work.
      */
     float pc_work_time_total();
+
+    /*!
+     * \brief Gets average throughput.
+     */
+    float pc_throughput_avg();
 
     /*!
      * \brief Resets the performance counters

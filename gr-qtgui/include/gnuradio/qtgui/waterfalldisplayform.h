@@ -86,6 +86,7 @@ public slots:
 		   const QColor highColor=QColor("white"));
 
   void autoScale(bool en=false);
+  void setPlotPosHalf(bool half);
 
 private slots:
   void newData(const QEvent *updateEvent);

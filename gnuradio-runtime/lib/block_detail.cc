@@ -46,6 +46,7 @@ namespace gr {
       d_ins_noutput_items(0),
       d_avg_noutput_items(0),
       d_var_noutput_items(0),
+      d_total_noutput_items(0),
       d_ins_nproduced(0),
       d_avg_nproduced(0),
       d_var_nproduced(0),
@@ -58,9 +59,11 @@ namespace gr {
       d_ins_work_time(0),
       d_avg_work_time(0),
       d_var_work_time(0),
+      d_avg_throughput(0),
       d_pc_counter(0)
   {
     s_ncurrently_allocated++;
+    d_pc_start_time = gr::high_res_timer_now();
   }
 
   block_detail::~block_detail()
@@ -279,6 +282,8 @@ namespace gr {
       d_ins_noutput_items = noutput_items;
       d_avg_noutput_items = noutput_items;
       d_var_noutput_items = 0;
+      d_total_noutput_items = noutput_items;
+      d_pc_start_time = (float)gr::high_res_timer_now();
       for(size_t i=0; i < d_input.size(); i++) {
 	gr::thread::scoped_lock guard(*d_input[i]->mutex());
         float pfull = static_cast<float>(d_input[i]->items_available()) /
@@ -312,6 +317,10 @@ namespace gr {
       d_ins_noutput_items = noutput_items;
       d_avg_noutput_items = d_avg_noutput_items + d/d_pc_counter;
       d_var_noutput_items = d_var_noutput_items + d*d;
+      d_total_noutput_items += noutput_items;
+      d_pc_last_work_time = gr::high_res_timer_now();
+      float monitor_time = (float)(d_pc_last_work_time - d_pc_start_time) / (float)gr::high_res_timer_tps();
+      d_avg_throughput = d_total_noutput_items / monitor_time;
 
       for(size_t i=0; i < d_input.size(); i++) {
 	gr::thread::scoped_lock guard(*d_input[i]->mutex());
@@ -501,4 +510,8 @@ namespace gr {
     return d_total_work_time;
   }
 
+  float
+  block_detail::pc_throughput_avg() {
+    return d_avg_throughput;
+  }
 } /* namespace gr */

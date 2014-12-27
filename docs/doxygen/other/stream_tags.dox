@@ -61,7 +61,10 @@ at <em>nitems_written(0)+i</em> for the 0th output port.
 \section stream_tags_api Stream Tags API
 
 The stream tags API consists of four functions, two to add and two to
-get the stream tags. These functions are:
+get the stream tags. These functions are only meant to be accessed
+within a call to general_work/work. While they can be called elsewhere
+in time by a block, the behavior outside of work is undefined without
+exact knowledge of the item counts in the buffers.
 
 \li gr::block::add_item_tag: Adds an item tag to a particular output port using a
 gr::tag_t data type.

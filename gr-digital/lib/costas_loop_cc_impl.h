@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2006,2011,2012 Free Software Foundation, Inc.
+ * Copyright 2006,2011,2012,2014 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -34,32 +34,67 @@ namespace gr {
     private:
       int d_order;
       float d_error;
+      float d_noise;
 
-      /*! \brief the phase detector circuit for 8th-order PSK loops
+       /*! \brief the phase detector circuit for 8th-order PSK loops.
+       *
        *  \param sample complex sample
        *  \return the phase error
        */
       float phase_detector_8(gr_complex sample) const;    // for 8PSK
 
-      /*! \brief the phase detector circuit for fourth-order loops
+      /*! \brief the phase detector circuit for fourth-order loops.
+       *
        *  \param sample complex sample
        *  \return the phase error
        */
       float phase_detector_4(gr_complex sample) const;    // for QPSK
 
-      /*! \brief the phase detector circuit for second-order loops
+      /*! \brief the phase detector circuit for second-order loops.
+       *
        *  \param sample a complex sample
        *  \return the phase error
        */
       float phase_detector_2(gr_complex sample) const;    // for BPSK
 
+
+      /*! \brief the phase detector circuit for 8th-order PSK
+       *  loops. Uses tanh instead of slicing and the noise estimate
+       *  from the message port to estimated SNR of the samples.
+       *
+       *  \param sample complex sample
+       *  \return the phase error
+       */
+      float phase_detector_snr_8(gr_complex sample) const;    // for 8PSK
+
+      /*! \brief the phase detector circuit for fourth-order
+       *  loops. Uses tanh instead of slicing and the noise estimate
+       *  from the message port to estimated SNR of the samples.
+       *
+       *  \param sample complex sample
+       *  \return the phase error
+       */
+      float phase_detector_snr_4(gr_complex sample) const;    // for QPSK
+
+      /*! \brief the phase detector circuit for second-order
+       *  loops. Uses tanh instead of slicing and the noise estimate
+       *  from the message port to estimated SNR of the samples.
+       *
+       *  \param sample a complex sample
+       *  \return the phase error
+       */
+      float phase_detector_snr_2(gr_complex sample) const;    // for BPSK
+
+
       float (costas_loop_cc_impl::*d_phase_detector)(gr_complex sample) const;
 
     public:
-      costas_loop_cc_impl(float loop_bw, int order);
+      costas_loop_cc_impl(float loop_bw, int order, bool use_snr=false);
       ~costas_loop_cc_impl();
 
       float error() const;
+
+      void handle_set_noise(pmt::pmt_t msg);
 
       void setup_rpc();
 

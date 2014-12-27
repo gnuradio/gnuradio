@@ -50,7 +50,7 @@ class psd_plot_c(plot_base.plot_base):
         self.src_type = blocks.vector_source_c
         self.gui_snk = qtgui.freq_sink_c(self._psd_size, filter.firdes.WIN_BLACKMAN_hARRIS,
                                          self._center_freq, self._samp_rate,
-                                         "GNU Radio PSD Plot", self._nsigs)
+                                         "", self._nsigs)
         self.setup()
 
 def main():
@@ -77,4 +77,3 @@ if __name__ == "__main__":
         main()
     except KeyboardInterrupt:
         pass
-

@@ -124,6 +124,13 @@ namespace gr {
       virtual void set_line_alpha(int which, double alpha) = 0;
       virtual void set_color_map(int which, const int color) = 0;
 
+      /*!
+       *  Pass "true" to this function to only show the positive half
+       *  of the spectrum. By default, this plotter shows the full
+       *  spectrum (positive and negative halves).
+       */
+      virtual void set_plot_pos_half(bool half) = 0;
+
       virtual std::string title() = 0;
       virtual std::string line_label(int which) = 0;
       virtual double line_alpha(int which) = 0;
