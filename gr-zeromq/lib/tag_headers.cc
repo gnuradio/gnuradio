@@ -25,14 +25,23 @@
 #include <sstream>
 #include <cstring>
 
+#define GR_HEADER_MAGIC 0x5FF0
+#define GR_HEADER_VERSION 0x01
+
 namespace gr {
   namespace zeromq {
 
     std::string 
     gen_tag_header(uint64_t &offset, std::vector<gr::tag_t> &tags) {
 
+      uint16_t header_magic = GR_HEADER_MAGIC;
+      uint8_t  header_version = GR_HEADER_VERSION;
+
       std::stringstream ss;
       size_t ntags = tags.size();
+      ss.write( reinterpret_cast< const char* >( &header_magic ), sizeof(uint16_t) );
+      ss.write( reinterpret_cast< const char* >( &header_version ), sizeof(uint8_t) );
+    
       ss.write( reinterpret_cast< const char* >( &offset ), sizeof(uint64_t) );  // offset
       ss.write( reinterpret_cast< const char* >( &ntags ), sizeof(size_t) );      // num tags
       std::stringbuf sb("");
@@ -55,10 +64,23 @@ namespace gr {
 
       std::istringstream iss( buf_in );
       size_t   rcv_ntags;
+
+      uint16_t header_magic;
+      uint8_t header_version;
+
+      iss.read( (char*)&header_magic, sizeof(uint16_t ) );
+      iss.read( (char*)&header_version, sizeof(uint8_t ) );
+      if(header_magic != GR_HEADER_MAGIC){
+        throw std::runtime_error("gr header magic does not match!");
+        }
+      if(header_version != 1){
+        throw std::runtime_error("gr header version too high!");
+        }
+
       iss.read( (char*)&offset_out, sizeof(uint64_t ) );
       iss.read( (char*)&rcv_ntags,  sizeof(size_t   ) );
       //std::cout << "RX TAGS: (offset="<<offset_out<<" ntags="<<rcv_ntags<<")\n";
-      int rd_offset = sizeof(uint64_t) + sizeof(size_t);
+      int rd_offset = sizeof(uint16_t) + sizeof(uint8_t) + sizeof(uint64_t) + sizeof(size_t);
       std::stringbuf sb( iss.str().substr(rd_offset) );
 
       for(size_t i=0; i<rcv_ntags; i++){
