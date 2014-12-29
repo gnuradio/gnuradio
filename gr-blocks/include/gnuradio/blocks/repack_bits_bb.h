@@ -25,6 +25,7 @@
 
 #include <gnuradio/blocks/api.h>
 #include <gnuradio/tagged_stream_block.h>
+#include <gnuradio/endianness.h>
 
 namespace gr {
   namespace blocks {
@@ -75,12 +76,13 @@ namespace gr {
        * \param tsb_tag_key If not empty, this is the key for the length tag.
        * \param align_output If tsb_tag_key is given, this controls if the input
        *                     or the output is aligned.
+       * \param endianness The endianness of the output data stream (LSB or MSB).
        */
-      static sptr make(int k, int l=8, const std::string &tsb_tag_key="", bool align_output=false);
+      static sptr make(int k, int l=8, const std::string &tsb_tag_key="",
+                       bool align_output=false, endianness_t endianness=GR_LSB_FIRST);
     };
 
   } // namespace blocks
 } // namespace gr
 
 #endif /* INCLUDED_BLOCKS_REPACK_BITS_BB_H */
-
