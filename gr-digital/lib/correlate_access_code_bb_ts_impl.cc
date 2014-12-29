@@ -38,8 +38,8 @@ namespace gr {
 
     correlate_access_code_bb_ts::sptr
     correlate_access_code_bb_ts::make(const std::string &access_code,
-				       int threshold,
-				       const std::string &tag_name)
+                                      int threshold,
+                                      const std::string &tag_name)
     {
       return gnuradio::get_initial_sptr
 	(new correlate_access_code_bb_ts_impl(access_code,
@@ -66,10 +66,11 @@ namespace gr {
       d_me = pmt::string_to_symbol(str.str());
       d_key = pmt::string_to_symbol(tag_name);
 
-      // READ IN AS ARGS; MAKE SETTERS/GETTERS
-      d_pkt_key = pmt::string_to_symbol("pkt_len");
-      d_pkt_len = 120*8;
+      d_state = STATE_SYNC_SEARCH;
+      d_pkt_len = 0;
       d_pkt_count = 0;
+      d_hdr_reg = 0;
+      d_hdr_count = 0;
     }
 
     correlate_access_code_bb_ts_impl::~correlate_access_code_bb_ts_impl()
@@ -77,8 +78,7 @@ namespace gr {
     }
 
     bool
-    correlate_access_code_bb_ts_impl::set_access_code(
-        const std::string &access_code)
+    correlate_access_code_bb_ts_impl::set_access_code(const std::string &access_code)
     {
       d_len = access_code.length();	// # of bytes in string
       if(d_len > 64)
@@ -99,6 +99,47 @@ namespace gr {
       return true;
     }
 
+    unsigned long long
+    correlate_access_code_bb_ts_impl::access_code() const
+    {
+      return d_access_code;
+    }
+
+    inline void
+    correlate_access_code_bb_ts_impl::enter_search()
+    {
+      d_state = STATE_SYNC_SEARCH;
+    }
+
+    inline void
+    correlate_access_code_bb_ts_impl::enter_have_sync()
+    {
+      d_state = STATE_HAVE_SYNC;
+      d_hdr_reg = 0;
+      d_hdr_count = 0;
+    }
+
+    inline void
+    correlate_access_code_bb_ts_impl::enter_have_header(int payload_len)
+    {
+      d_state = STATE_HAVE_HEADER;
+      d_pkt_len = 8*payload_len;
+      d_pkt_count = 0;
+    }
+
+    bool
+    correlate_access_code_bb_ts_impl::header_ok()
+    {
+      // confirm that two copies of header info are identical
+      return ((d_hdr_reg >> 16) ^ (d_hdr_reg & 0xffff)) == 0;
+    }
+
+    int
+    correlate_access_code_bb_ts_impl::header_payload()
+    {
+      return (d_hdr_reg >> 16) & 0x0fff;
+    }
+
     int
     correlate_access_code_bb_ts_impl::general_work(int noutput_items,
                                                    gr_vector_int &ninput_items,
@@ -112,57 +153,75 @@ namespace gr {
 
       int nprod = 0;
 
-      for(int i = 0; i < noutput_items; i++) {
-        if(d_pkt_count > 0) {
-          out[nprod] = in[i];
-          d_pkt_count--;
-          nprod++;
+      int count = 0;
+      while(count < noutput_items) {
+        switch(d_state) {
+	case STATE_SYNC_SEARCH:    // Look for the access code correlation
 
+	  while(count < noutput_items) {
+            // shift in new data
+            d_data_reg = (d_data_reg << 1) | ((in[count++]) & 0x1);
+
+            // compute hamming distance between desired access code and current data
+            uint64_t wrong_bits = 0;
+            uint64_t nwrong = d_threshold+1;
+
+            wrong_bits = (d_data_reg ^ d_access_code) & d_mask;
+            volk_64u_popcnt(&nwrong, wrong_bits);
+
+            if(nwrong <= d_threshold) {
+              enter_have_sync();
+              break;
+            }
+          }
+          break;
+
+	case STATE_HAVE_SYNC:
+	  while(count < noutput_items) {    // Shift bits one at a time into header
+            d_hdr_reg = (d_hdr_reg << 1) | (in[count++] & 0x1);
+            d_hdr_count++;
+
+            if(d_hdr_count == 32) {
+	      // we have a full header, check to see if it has been received properly
+	      if(header_ok()) {
+		int payload_len = header_payload();
+		enter_have_header(payload_len);
+              }
+	      else {
+		enter_search();    // bad header
+              }
+              break;
+            }
+          }
+          break;
+
+	case STATE_HAVE_HEADER:
           if(d_pkt_count == 0) {
-            add_item_tag(0,
-                         abs_out_sample_cnt + i,
-                         pmt::intern("STOP"),
-                         pmt::from_long(abs_out_sample_cnt + nprod),
-                         d_me);
-          }
-        }
-        else {
-
-          // compute hamming distance between desired access code and current data
-          uint64_t wrong_bits = 0;
-          uint64_t nwrong = d_threshold+1;
-
-          wrong_bits  = (d_data_reg ^ d_access_code) & d_mask;
-          volk_64u_popcnt(&nwrong, wrong_bits);
-
-          // shift in new data
-          d_data_reg = (d_data_reg << 1) | (in[i] & 0x1);
-          if(nwrong <= d_threshold) {
-            if(VERBOSE)
-              std::cerr << "writing tag at sample " << abs_out_sample_cnt + i << std::endl;
-            add_item_tag(0,                      // stream ID
-                         abs_out_sample_cnt + nprod, // sample
-                         d_key,                  // frame info
-                         pmt::from_long(nwrong), // data (number wrong)
-                         d_me);                  // block src id
-
             // MAKE A TAG OUT OF THIS AND UPDATE OFFSET
-            add_item_tag(0,                         // stream ID
+            add_item_tag(0,                             // stream ID
                          abs_out_sample_cnt + nprod,    // sample
-                         d_pkt_key,                 // length key
-                         pmt::from_long(d_pkt_len), // length data
-                         d_me);                     // block src id
-            d_pkt_count = d_pkt_len;
-            d_data_reg = 0;
+                         d_key,                         // length key
+                         pmt::from_long(d_pkt_len),     // length data
+                         d_me);                         // block src id
           }
+
+	  while(count < noutput_items) {
+            if(d_pkt_count < d_pkt_len) {
+              out[nprod++] = in[count++];
+              d_pkt_count++;
+            }
+            else {
+              enter_search();
+              break;
+            }
+          }
+          break;
         }
       }
 
-      //std::cerr << "Producing data: " << nprod << std::endl;
       consume_each(noutput_items);
       return nprod;
     }
 
   } /* namespace digital */
 } /* namespace gr */
-
