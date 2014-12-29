@@ -67,6 +67,7 @@ namespace gr {
          * Returns the coding rate of this encoder (it will always be 1).
          */
         virtual double rate() = 0;
+
       };
 
     } /* namespace code */
