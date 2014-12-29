@@ -39,7 +39,6 @@ namespace gr {
         int get_output_size();
         int get_input_size();
         int get_input_item_size();
-        float get_shift();
         const char* get_input_conversion();
         //const char* get_output_conversion();
 
