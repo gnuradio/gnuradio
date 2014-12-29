@@ -36,13 +36,15 @@ namespace gr {
      *
      * \details
      * input:  stream of floats (generally, soft decisions)
-     * output: unaltered stream of floats in a tagged stream
+     * output: a tagged stream set of samples from the payload following
+     * the access code and header.
      *
      * This block searches for the given access code by slicing the
      * soft decision symbol inputs. Once found, it expects the
      * following 32 samples to contain a header that includes the
-     * frame length. It decodes the header to get the frame length in
-     * order to set up the the tagged stream key information.
+     * frame length (16 bits for the length, repeated). It decodes the
+     * header to get the frame length in order to set up the the
+     * tagged stream key information.
      *
      * The output of this block is appropriate for use with tagged
      * stream blocks.
