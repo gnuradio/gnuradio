@@ -38,7 +38,9 @@ endif(ENABLE_GR_CTRLPORT)
 ########################################################################
 list(APPEND zeromq_sources
   pub_sink_impl.cc
+  pub_msg_sink_impl.cc
   sub_source_impl.cc
+  sub_msg_source_impl.cc
   pull_source_impl.cc
   push_sink_impl.cc
   rep_sink_impl.cc
