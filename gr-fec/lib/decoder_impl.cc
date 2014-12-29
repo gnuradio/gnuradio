@@ -95,8 +95,10 @@ namespace gr {
 	noutput_items/(output_multiple() - d_decoder->get_history()) :
 	innum;
 
-      GR_LOG_DEBUG(d_debug_logger, boost::format("%1%, %2%, %3%")      \
+      /*
+      GR_LOG_DEBUG(d_debug_logger, boost::format("%1%, %2%, %3%")     \
                    % outnum % ninput_items[0] % items);
+      */
 
       for(int i = 0; i < items; ++i) {
         d_decoder->generic_work((void*)(in+(i*d_decoder->get_input_size()*d_input_item_size)),
