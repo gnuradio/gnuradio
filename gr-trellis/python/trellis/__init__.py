@@ -33,4 +33,3 @@ except ImportError:
     from trellis_swig import *
 
 # import any pure python here
-import fsm_utils
