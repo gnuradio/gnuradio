@@ -49,7 +49,7 @@ class wxgui_hb(object):
         """
         try:
             assert points[0] == self or points[0][0] == self
-            copy = blocks.copy(self._hb.input_signature().sizeof_stream_item(0))
+            copy = blocks.copy(self.input_signature().sizeof_stream_item(0))
             handler = self._handler_factory(copy.set_enabled)
             if not RUN_ALWAYS:
                 handler(False)  # initially disable the copy block
