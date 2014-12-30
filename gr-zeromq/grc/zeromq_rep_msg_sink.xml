@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <block>
-  <name>ZMQ REP Sink</name>
+  <name>ZMQ REP Message Sink</name>
   <key>zeromq_rep_msg_sink</key>
   <category>ZeroMQ Interfaces</category>
   <import>from gnuradio import zeromq</import>

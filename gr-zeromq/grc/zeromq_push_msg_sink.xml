@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <block>
-  <name>ZMQ PUSH Sink</name>
+  <name>ZMQ PUSH Message Sink</name>
   <key>zeromq_push_msg_sink</key>
   <category>ZeroMQ Interfaces</category>
   <import>from gnuradio import zeromq</import>

@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <block>
-  <name>ZMQ PULL Source</name>
+  <name>ZMQ PULL Message Source</name>
   <key>zeromq_pull_msg_source</key>
   <category>ZeroMQ Interfaces</category>
   <import>from gnuradio import zeromq</import>
