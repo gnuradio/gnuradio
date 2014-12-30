@@ -317,7 +317,12 @@ namespace gr {
         CPU_SET(n, &set);
       }
 
+#if !ANDROID
       int ret = pthread_setaffinity_np(thread, len, &set);
+#else
+      int ret = 0;
+#endif
+
       if(ret != 0) {
         std::stringstream s;
         s << "thread_unbind failed with error: " << ret << std::endl;
