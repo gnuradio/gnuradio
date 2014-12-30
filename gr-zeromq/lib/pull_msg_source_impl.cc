@@ -65,55 +65,53 @@ namespace gr {
       delete d_context;
     }
 
+    bool pull_msg_source_impl::start(){
+      d_finished = false;
+      d_thread = new boost::thread( boost::bind( &pull_msg_source_impl::readloop , this ) );
+      return true;
+    }
+
+    bool pull_msg_source_impl::stop(){
+      d_finished = true;
+      d_thread->join(); 
+      return true;
+    }
+
+    void pull_msg_source_impl::readloop(){
+      while(!d_finished){
+        //std::cout << "readloop\n";
+      
+        zmq::pollitem_t items[] = { { *d_socket, 0, ZMQ_POLLIN, 0 } };
+        zmq::poll (&items[0], 1, d_timeout);
+
+        //  If we got a reply, process
+        if (items[0].revents & ZMQ_POLLIN) {
+
+            // Receive data
+            zmq::message_t msg;
+            d_socket->recv(&msg);
+        
+            //std::cout << "got msg...\n";
+
+            std::string buf(static_cast<char*>(msg.data()), msg.size());
+            std::stringbuf sb(buf);
+            pmt::pmt_t m = pmt::deserialize(sb);
+            //std::cout << m << "\n";
+            message_port_pub(pmt::mp("out"), m);
+
+          } else {
+            usleep(100);
+          }
+        } 
+    }
+
+
     int
     pull_msg_source_impl::work(int noutput_items,
                            gr_vector_const_void_star &input_items,
                            gr_vector_void_star &output_items)
     {
     return noutput_items;
-    /*
-      char *out = (char*)output_items[0];
-
-      zmq::pollitem_t items[] = { { *d_socket, 0, ZMQ_POLLIN, 0 } };
-      zmq::poll (&items[0], 1, d_timeout);
-
-      //  If we got a reply, process
-      if (items[0].revents & ZMQ_POLLIN) {
-
-        // Receive data
-        zmq::message_t msg;
-        d_socket->recv(&msg);
-
-        // check header for tags...
-        std::string buf(static_cast<char*>(msg.data()), msg.size());
-        if(d_pass_tags){
-            uint64_t rcv_offset;
-            std::vector<gr::tag_t> tags;
-            buf = parse_tag_header(buf, rcv_offset, tags);
-            for(size_t i=0; i<tags.size(); i++){
-                tags[i].offset -= rcv_offset - nitems_written(0);
-                add_item_tag(0, tags[i]);
-                }
-            }
-
-
-        // Copy to ouput buffer and return
-        if (buf.size() >= d_itemsize*d_vlen*noutput_items) {
-          memcpy(out, (void *)&buf[0], d_itemsize*d_vlen*noutput_items);
-
-          return noutput_items;
-        }
-        else {
-          memcpy(out, (void *)&buf[0], buf.size());
-
-          return buf.size()/(d_itemsize*d_vlen);
-        }
-      }
-      else {
-        return 0; // FIXME: someday when the scheduler does all the poll/selects
-      }
-
-    */
     }
 
   } /* namespace zeromq */
