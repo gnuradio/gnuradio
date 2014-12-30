@@ -35,6 +35,9 @@ namespace gr {
       int             d_timeout;
       zmq::context_t  *d_context;
       zmq::socket_t   *d_socket;
+      boost::thread   *d_thread;
+      bool            d_finished;
+      void            readloop();
 
     public:
       rep_msg_sink_impl(char *address, int timeout);
@@ -43,7 +46,8 @@ namespace gr {
       int work(int noutput_items,
                gr_vector_const_void_star &input_items,
                gr_vector_void_star &output_items);
-      void handler(pmt::pmt_t msg);
+      bool start();
+      bool stop();
     };
 
   } // namespace zeromq
