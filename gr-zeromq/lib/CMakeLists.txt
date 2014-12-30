@@ -42,9 +42,13 @@ list(APPEND zeromq_sources
   sub_source_impl.cc
   sub_msg_source_impl.cc
   pull_source_impl.cc
+  pull_msg_source_impl.cc
   push_sink_impl.cc
+  push_msg_sink_impl.cc
   rep_sink_impl.cc
+  rep_msg_sink_impl.cc
   req_source_impl.cc
+  req_msg_source_impl.cc
   tag_headers.cc
 )
 

@@ -20,37 +20,32 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef INCLUDED_ZEROMQ_SUB_MSG_SOURCE_IMPL_H
-#define INCLUDED_ZEROMQ_SUB_MSG_SOURCE_IMPL_H
+#ifndef INCLUDED_ZEROMQ_REQ_MSG_SOURCE_IMPL_H
+#define INCLUDED_ZEROMQ_REQ_MSG_SOURCE_IMPL_H
 
-#include <gnuradio/zeromq/sub_msg_source.h>
-#include "zmq.hpp"
+#include <gnuradio/zeromq/req_msg_source.h>
+#include <zmq.hpp>
 
 namespace gr {
   namespace zeromq {
 
-    class sub_msg_source_impl : public sub_msg_source
+    class req_msg_source_impl : public req_msg_source
     {
-     private:
-      int             d_timeout; // microseconds, -1 is blocking
+    private:
+      int             d_timeout;
       zmq::context_t  *d_context;
       zmq::socket_t   *d_socket;
-      void readloop();
-      boost::thread     *d_thread;
 
-     public:
-      sub_msg_source_impl(char *address, int timeout);
-      ~sub_msg_source_impl();
+    public:
+      req_msg_source_impl(char *address, int timeout);
+      ~req_msg_source_impl();
 
-      bool start();
-      bool stop();
-      bool d_finished;
       int work(int noutput_items,
-	           gr_vector_const_void_star &input_items,
-	           gr_vector_void_star &output_items);
+               gr_vector_const_void_star &input_items,
+               gr_vector_void_star &output_items);
     };
 
   } // namespace zeromq
 } // namespace gr
 
-#endif /* INCLUDED_ZEROMQ_SUB_MSG_SOURCE_IMPL_H */
+#endif /* INCLUDED_ZEROMQ_REQ_MSG_SOURCE_IMPL_H */

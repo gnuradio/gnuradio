@@ -68,11 +68,13 @@ namespace gr {
     bool sub_msg_source_impl::start(){
       d_finished = false;
       d_thread = new boost::thread( boost::bind( &sub_msg_source_impl::readloop , this ) );
+      return true;
     }
 
     bool sub_msg_source_impl::stop(){
       d_finished = true;
       d_thread->join(); 
+      return true;
     }
 
     void sub_msg_source_impl::readloop(){
