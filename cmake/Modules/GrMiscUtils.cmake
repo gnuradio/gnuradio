@@ -47,8 +47,8 @@ endfunction(GR_ADD_COND_DEF)
 #  - def the pre-processor definition to set
 ########################################################################
 function(GR_CHECK_HDR_N_DEF hdr def)
-    include(CheckIncludeFileCXX)
-    CHECK_INCLUDE_FILE_CXX(${hdr} ${def})
+    include(CheckIncludeFile)
+    CHECK_INCLUDE_FILE(${hdr} ${def})
     GR_ADD_COND_DEF(${def})
 endfunction(GR_CHECK_HDR_N_DEF)
 

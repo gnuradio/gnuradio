@@ -20,6 +20,7 @@
 ########################################################################
 INCLUDE(GrMiscUtils)
 INCLUDE(CheckCXXSourceCompiles)
+INCLUDE(CheckIncludeFileCXX)
 
 IF(MSVC) #add this directory for our provided headers
 LIST(APPEND CMAKE_REQUIRED_INCLUDES ${CMAKE_SOURCE_DIR}/msvc)

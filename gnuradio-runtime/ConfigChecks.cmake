@@ -20,6 +20,7 @@
 ########################################################################
 INCLUDE(GrMiscUtils)
 INCLUDE(CheckCXXSourceCompiles)
+INCLUDE(CheckCSourceCompiles)
 
 IF(MSVC) #add this directory for our provided headers
 LIST(APPEND CMAKE_REQUIRED_INCLUDES ${CMAKE_SOURCE_DIR}/msvc)
@@ -45,7 +46,7 @@ GR_CHECK_HDR_N_DEF(malloc.h HAVE_MALLOC_H)
 
 
 ########################################################################
-CHECK_CXX_SOURCE_COMPILES("
+CHECK_C_SOURCE_COMPILES("
     #include <stdio.h>
     int main(){snprintf(0, 0, 0); return 0;}
     " HAVE_SNPRINTF
@@ -53,7 +54,7 @@ CHECK_CXX_SOURCE_COMPILES("
 GR_ADD_COND_DEF(HAVE_SNPRINTF)
 
 ########################################################################
-CHECK_CXX_SOURCE_COMPILES("
+CHECK_C_SOURCE_COMPILES("
     #include <signal.h>
     int main(){sigaction(0, 0, 0); return 0;}
     " HAVE_SIGACTION
@@ -61,7 +62,7 @@ CHECK_CXX_SOURCE_COMPILES("
 GR_ADD_COND_DEF(HAVE_SIGACTION)
 
 ########################################################################
-CHECK_CXX_SOURCE_COMPILES("
+CHECK_C_SOURCE_COMPILES("
     #include <sys/select.h>
     int main(){select(0, 0, 0, 0, 0); return 0;}
     " HAVE_SELECT
@@ -70,14 +71,14 @@ GR_ADD_COND_DEF(HAVE_SELECT)
 
 
 ########################################################################
-CHECK_CXX_SOURCE_COMPILES("
+CHECK_C_SOURCE_COMPILES("
     #include <unistd.h>
     int main(){sysconf(0); return 0;}
     " HAVE_SYSCONF
 )
 GR_ADD_COND_DEF(HAVE_SYSCONF)
 
-CHECK_CXX_SOURCE_COMPILES("
+CHECK_C_SOURCE_COMPILES("
     #include <unistd.h>
     int main(){getpagesize(); return 0;}
     " HAVE_GETPAGESIZE
@@ -86,21 +87,21 @@ GR_ADD_COND_DEF(HAVE_GETPAGESIZE)
 
 
 ########################################################################
-CHECK_CXX_SOURCE_COMPILES("
+CHECK_C_SOURCE_COMPILES("
     #include <Winbase.h>
     int main(){Sleep(0); return 0;}
     " HAVE_SSLEEP
 )
 GR_ADD_COND_DEF(HAVE_SSLEEP)
 
-CHECK_CXX_SOURCE_COMPILES("
+CHECK_C_SOURCE_COMPILES("
     #include <time.h>
     int main(){nanosleep(0, 0); return 0;}
     " HAVE_NANOSLEEP
 )
 GR_ADD_COND_DEF(HAVE_NANOSLEEP)
 
-CHECK_CXX_SOURCE_COMPILES("
+CHECK_C_SOURCE_COMPILES("
     #include <sys/time.h>
     int main(){gettimeofday(0, 0); return 0;}
     " HAVE_GETTIMEOFDAY
@@ -108,14 +109,14 @@ CHECK_CXX_SOURCE_COMPILES("
 GR_ADD_COND_DEF(HAVE_GETTIMEOFDAY)
 
 ########################################################################
-CHECK_CXX_SOURCE_COMPILES("
+CHECK_C_SOURCE_COMPILES("
     #include <stdlib.h>
     int main(){posix_memalign(0, 0, 0); return 0;}
     " HAVE_POSIX_MEMALIGN
 )
 GR_ADD_COND_DEF(HAVE_POSIX_MEMALIGN)
 
-CHECK_CXX_SOURCE_COMPILES("
+CHECK_C_SOURCE_COMPILES("
     #include <malloc.h>
     int main(){valloc(0); return 0;}
     " HAVE_VALLOC
@@ -131,7 +132,7 @@ endif()
 
 ########################################################################
 SET(CMAKE_REQUIRED_LIBRARIES -lpthread)
-CHECK_CXX_SOURCE_COMPILES("
+CHECK_C_SOURCE_COMPILES("
     #include <signal.h>
     int main(){pthread_sigmask(0, 0, 0); return 0;}
     " HAVE_PTHREAD_SIGMASK
@@ -140,7 +141,7 @@ GR_ADD_COND_DEF(HAVE_PTHREAD_SIGMASK)
 SET(CMAKE_REQUIRED_LIBRARIES)
 
 ########################################################################
-CHECK_CXX_SOURCE_COMPILES("
+CHECK_C_SOURCE_COMPILES("
     #include <windows.h>
     int main(){
         HANDLE handle;
@@ -160,7 +161,7 @@ GR_ADD_COND_DEF(HAVE_CREATEFILEMAPPING)
 
 ########################################################################
 SET(CMAKE_REQUIRED_LIBRARIES -lrt)
-CHECK_CXX_SOURCE_COMPILES("
+CHECK_C_SOURCE_COMPILES("
     #include <sys/types.h>
     #include <sys/mman.h>
     int main(){shm_open(0, 0, 0); return 0;}
@@ -170,7 +171,7 @@ GR_ADD_COND_DEF(HAVE_SHM_OPEN)
 SET(CMAKE_REQUIRED_LIBRARIES)
 
 ########################################################################
-CHECK_CXX_SOURCE_COMPILES("
+CHECK_C_SOURCE_COMPILES("
     #define _GNU_SOURCE
     #include <math.h>
     int main(){double x, sin, cos; sincos(x, &sin, &cos); return 0;}
@@ -178,7 +179,7 @@ CHECK_CXX_SOURCE_COMPILES("
 )
 GR_ADD_COND_DEF(HAVE_SINCOS)
 
-CHECK_CXX_SOURCE_COMPILES("
+CHECK_C_SOURCE_COMPILES("
     #define _GNU_SOURCE
     #include <math.h>
     int main(){float x, sin, cos; sincosf(x, &sin, &cos); return 0;}
@@ -186,14 +187,14 @@ CHECK_CXX_SOURCE_COMPILES("
 )
 GR_ADD_COND_DEF(HAVE_SINCOSF)
 
-CHECK_CXX_SOURCE_COMPILES("
+CHECK_C_SOURCE_COMPILES("
     #include <math.h>
     int main(){sinf(0); return 0;}
     " HAVE_SINF
 )
 GR_ADD_COND_DEF(HAVE_SINF)
 
-CHECK_CXX_SOURCE_COMPILES("
+CHECK_C_SOURCE_COMPILES("
     #include <math.h>
     int main(){cosf(0); return 0;}
     " HAVE_COSF
@@ -201,7 +202,7 @@ CHECK_CXX_SOURCE_COMPILES("
 GR_ADD_COND_DEF(HAVE_COSF)
 
 ########################################################################
-CHECK_CXX_SOURCE_COMPILES("
+CHECK_C_SOURCE_COMPILES("
     #include <sys/mman.h>
     int main(){mmap(0, 0, 0, 0, 0, 0); return 0;}
     " HAVE_MMAP
