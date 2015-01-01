@@ -63,6 +63,7 @@
     <block>digital_constellation_receiver_cb</block>
     <block>variable_constellation</block>
     <block>variable_constellation_rect</block>
+    <block>variable_modulate_vector</block>
   </cat>
   <cat>
     <name>Packet Operators</name>
