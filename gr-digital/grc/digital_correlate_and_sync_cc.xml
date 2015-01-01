@@ -3,7 +3,7 @@
   <name>Correlate and Sync</name>
   <key>digital_correlate_and_sync_cc</key>
   <import>from gnuradio import digital</import>
-  <make>digital.correlate_and_sync_cc($symbols, $filter, $sps)</make>
+  <make>digital.correlate_and_sync_cc($symbols, $sps, $threshold)</make>
   <param>
     <name>Symbols</name>
     <key>symbols</key>
@@ -11,15 +11,16 @@
     <type>complex_vector</type>
   </param>
   <param>
-    <name>Filter</name>
-    <key>filter</key>
-    <type>complex_vector</type>
-  </param>
-  <param>
     <name>Samples per Symbol</name>
     <key>sps</key>
     <value>4</value>
-    <type>int</type>
+    <type>float</type>
+  </param>
+  <param>
+    <name>Threshold</name>
+    <key>threshold</key>
+    <value>0.9</value>
+    <type>float</type>
   </param>
   <sink>
     <name>in</name>
@@ -32,5 +33,6 @@
   <source>
     <name>corr</name>
     <type>complex</type>
+    <optional>1</optional>
   </source>
 </block>

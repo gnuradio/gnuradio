@@ -70,15 +70,14 @@ namespace gr {
        * Make a block that correlates against the \p symbols vector
        * and outputs a phase and symbol timing estimate.
        *
-       * \param symbols Set of symbols to correlate against (e.g., a
-       *                preamble).
-       * \param filter  Baseband matched filter (e.g., RRC)
-       * \param sps     Samples per symbol
-       * \param nfilts  Number of filters in the internal PFB
+       * \param symbols   Set of symbols to correlate against (e.g., a
+       *                  preamble).
+       * \param sps       Samples per symbol
+       * \param threshold Threshold of correlator, relative to a 100%
+       *                  correlation (1.0). Default is 0.9.
        */
       static sptr make(const std::vector<gr_complex> &symbols,
-                       const std::vector<float> &filter,
-                       unsigned int sps, unsigned int nfilts=32);
+                       unsigned int sps, float threshold=0.9);
 
       virtual std::vector<gr_complex> symbols() const = 0;
       virtual void set_symbols(const std::vector<gr_complex> &symbols) = 0;

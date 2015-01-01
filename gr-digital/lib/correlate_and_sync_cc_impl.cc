@@ -37,42 +37,33 @@ namespace gr {
   namespace digital {
 
     correlate_and_sync_cc::sptr
-    correlate_and_sync_cc::make(const std::vector<gr_complex> &symbols,
-                                const std::vector<float> &filter,
-                                unsigned int sps, unsigned int nfilts)
+    correlate_and_sync_cc::make(const std::vector<gr_complex> &symbols, unsigned int sps, float threshold)
     {
       return gnuradio::get_initial_sptr
-        (new correlate_and_sync_cc_impl(symbols, filter, sps, nfilts));
+        (new correlate_and_sync_cc_impl(symbols, sps, threshold));
     }
 
-    correlate_and_sync_cc_impl::correlate_and_sync_cc_impl(const std::vector<gr_complex> &symbols,
-                                                           const std::vector<float> &filter,
-                                                           unsigned int sps, unsigned int nfilts)
+    correlate_and_sync_cc_impl::correlate_and_sync_cc_impl(const std::vector<gr_complex> &symbols, unsigned int sps, float threshold)
       : sync_block("correlate_and_sync_cc",
                    io_signature::make(1, 1, sizeof(gr_complex)),
                    io_signature::make(2, 2, sizeof(gr_complex)))
     {
       d_last_index = 0;
+
       d_sps = sps;
 
-      // We want to add padding to the beginning of the symbols so we
-      // can do the convolution of the symbols with the pulse shape.
-      std::vector<gr_complex> padding((1+filter.size()/nfilts)/2, 0);
-      std::vector<gr_complex> padded_symbols = symbols;
-      padded_symbols.insert(padded_symbols.begin(), padding.begin(), padding.end());
-
-      d_symbols.resize(d_sps*symbols.size(), 0);
-      filter::kernel::pfb_arb_resampler_ccf resamp(d_sps, filter, nfilts);
-      int nread;
-      resamp.filter(&d_symbols[0], &padded_symbols[0], symbols.size(), nread);
+      d_symbols = symbols;
+      for(size_t i=0; i<d_symbols.size(); i++) {
+          d_symbols[i] = conj(d_symbols[i]);
+      }
       std::reverse(d_symbols.begin(), d_symbols.end());
 
       float corr = 0;
       for(size_t i=0; i < d_symbols.size(); i++)
         corr += abs(d_symbols[i]*conj(d_symbols[i]));
-      d_thresh = 0.9*corr*corr;
+      d_thresh = threshold*corr*corr;
 
-      d_center_first_symbol = (padding.size() + 0.5) * d_sps;
+      d_center_first_symbol = (0/*padding.size()*/ + 0.5) * d_sps;
 
       d_filter = new kernel::fft_filter_ccc(1, d_symbols);
 
