@@ -1,0 +1,62 @@
+<?xml version="1.0"?>
+<!--
+###################################################
+##Local Stream Socket Source: Custom blks2 block
+###################################################
+ -->
+<block>
+	<name>Local Stream Socket Source</name>
+	<key>blks2_local_stream_source</key>
+	<import>from grc_gnuradio import blks2 as grc_blks2</import>
+	<make>grc_blks2.local_stream_source(itemsize=$type.size*$vlen, addr=$addr)</make>
+	<param>
+		<name>Output Type</name>
+		<key>type</key>
+		<type>enum</type>
+		<option>
+			<name>Complex</name>
+			<key>complex</key>
+			<opt>size:gr.sizeof_gr_complex</opt>
+		</option>
+		<option>
+			<name>Float</name>
+			<key>float</key>
+			<opt>size:gr.sizeof_float</opt>
+		</option>
+		<option>
+			<name>Int</name>
+			<key>int</key>
+			<opt>size:gr.sizeof_int</opt>
+		</option>
+		<option>
+			<name>Short</name>
+			<key>short</key>
+			<opt>size:gr.sizeof_short</opt>
+		</option>
+		<option>
+			<name>Byte</name>
+			<key>byte</key>
+			<opt>size:gr.sizeof_char</opt>
+		</option>
+	</param>
+	<param>
+		<name>Address</name>
+		<key>addr</key>
+		<value></value>
+		<type>string</type>
+	</param>
+	<param>
+		<name>Vec Length</name>
+		<key>vlen</key>
+		<value>1</value>
+		<type>int</type>
+	</param>
+	<check>$vlen &gt; 0</check>
+	<source>
+		<name>out</name>
+		<type>$type</type>
+		<vlen>$vlen</vlen>
+	</source>
+	<doc>
+	</doc>
+</block>

@@ -1,4 +1,5 @@
-# Copyright 2011 Free Software Foundation, Inc.
+#
+# Copyright 2015 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -16,21 +17,20 @@
 # along with GNU Radio; see the file COPYING.  If not, write to
 # the Free Software Foundation, Inc., 51 Franklin Street,
 # Boston, MA 02110-1301, USA.
+#
 
-########################################################################
-GR_PYTHON_INSTALL(
-    FILES __init__.py
-    DESTINATION ${GR_PYTHON_DIR}/grc_gnuradio
-    COMPONENT "grc"
-)
+from gnuradio import gr, blocks
+import socket
+import os
 
-GR_PYTHON_INSTALL(FILES
-    blks2/__init__.py
-    blks2/error_rate.py
-    blks2/local_stream.py
-    blks2/packet.py
-    blks2/selector.py
-    blks2/tcp.py
-    DESTINATION ${GR_PYTHON_DIR}/grc_gnuradio/blks2
-    COMPONENT "grc"
-)
+class local_stream_source(gr.hier_block2):
+    def __init__(self, itemsize, addr):
+        gr.hier_block2.__init__(
+            self, 'local_stream_source',
+            gr.io_signature(0, 0, 0),
+            gr.io_signature(1, 1, itemsize),
+        )
+        sock = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
+        sock.connect(addr)
+        fd = os.dup(sock.fileno())
+        self.connect(blocks.file_descriptor_source(itemsize, fd), self)
