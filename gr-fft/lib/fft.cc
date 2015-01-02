@@ -47,6 +47,13 @@ static int my_fftw_read_char(void *f) { return fgetc((FILE *) f); }
 #include <boost/filesystem/path.hpp>
 namespace fs = boost::filesystem;
 
+
+#ifdef ANDROID
+#define FFTW_PLAN_OPTS FFTW_ESTIMATE
+#else
+#define FFTW_PLAN_OPTS FFTW_MEASURE
+#endif
+
 namespace gr {
   namespace fft {
 
@@ -166,8 +173,7 @@ namespace gr {
 				  reinterpret_cast<fftwf_complex *>(d_inbuf),
 				  reinterpret_cast<fftwf_complex *>(d_outbuf),
 				  forward ? FFTW_FORWARD : FFTW_BACKWARD,
-                                  FFTW_ESTIMATE);
-				  //FFTW_MEASURE);
+                                  FFTW_PLAN_OPTS);
 
       if (d_plan == NULL) {
 	fprintf(stderr, "gr::fft: error creating plan\n");
@@ -234,8 +240,7 @@ namespace gr {
       d_plan = fftwf_plan_dft_r2c_1d (fft_size,
 				      d_inbuf,
 				      reinterpret_cast<fftwf_complex *>(d_outbuf),
-				      FFTW_ESTIMATE);
-                                      //FFTW_MEASURE);
+				      FFTW_PLAN_OPTS);
 
       if (d_plan == NULL) {
 	fprintf(stderr, "gr::fft::fft_real_fwd: error creating plan\n");
@@ -305,8 +310,7 @@ namespace gr {
       d_plan = fftwf_plan_dft_c2r_1d (fft_size,
 				      reinterpret_cast<fftwf_complex *>(d_inbuf),
 				      d_outbuf,
-                                      FFTW_ESTIMATE);
-                                      //FFTW_MEASURE);
+                                      FFTW_PLAN_OPTS);
 
       if (d_plan == NULL) {
 	fprintf(stderr, "gr::fft::fft_real_rev: error creating plan\n");
