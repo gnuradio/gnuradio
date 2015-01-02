@@ -36,7 +36,6 @@ namespace gr {
     private:
       std::vector<gr_complex> d_symbols;
       unsigned int d_sps;
-      float d_center_first_symbol;
       float d_thresh;
       kernel::fft_filter_ccc  *d_filter;
 
