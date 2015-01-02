@@ -63,8 +63,6 @@ namespace gr {
         corr += abs(d_symbols[i]*conj(d_symbols[i]));
       d_thresh = threshold*corr*corr;
 
-      d_center_first_symbol = (0/*padding.size()*/ + 0.5) * d_sps;
-
       d_filter = new kernel::fft_filter_ccc(1, d_symbols);
 
       set_history(d_filter->ntaps());
@@ -116,7 +114,7 @@ namespace gr {
 
       int i = d_sps;
       while(i < noutput_items) {
-        if((corr_mag[i] - corr_mag[i-d_sps]) > d_thresh) {
+        if((corr_mag[i]) > d_thresh) {
           while(corr_mag[i] < corr_mag[i+1])
             i++;
 
@@ -130,7 +128,7 @@ namespace gr {
 
           // Adjust the results of the fft filter by moving back the
           // length of the filter offset by the number of sps.
-          int index = i - d_symbols.size() + d_sps + 1;
+          int index = i + d_sps + 1;
 
           // Calculate the phase offset of the incoming signal; always
           // adjust it based on the proper rotation of the expected
