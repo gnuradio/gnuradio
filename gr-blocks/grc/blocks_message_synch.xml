@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<!--
+###################################################
+##Message Synchronizer
+###################################################
+ -->
+<block>
+	<name>Message Synchronizer</name>
+	<key>blocks_message_synch</key>
+	<import>from gnuradio import blocks</import>
+	<make>blocks.message_synch($n)</make>
+    <param>
+        <name>Num Inputs</name>
+        <key>n</key>
+        <value>2</value>
+        <type>int</type>
+    </param>
+	<sink>
+		<name>in</name>
+		<type>message</type>
+        <nports>$n</nports>
+		<optional>1</optional>
+	</sink>
+	<source>
+		<name>out</name>
+		<type>message</type>
+        <optional>1</optional>
+	</source>
+</block>

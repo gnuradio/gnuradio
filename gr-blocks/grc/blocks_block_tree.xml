@@ -62,6 +62,7 @@
 		<block>blocks_vector_sink_x</block>
 		<block>blocks_tag_debug</block>
 		<block>blocks_message_debug</block>
+		<block>blocks_message_synch</block>
                 <block>blocks_random_pdu</block>
                 <block>blocks_message_strobe</block>
                 <block>blocks_tags_strobe</block>

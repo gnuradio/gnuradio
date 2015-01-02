@@ -155,6 +155,7 @@ install(FILES
     keep_one_in_n.h
     lfsr_32k_source_s.h
     message_debug.h
+    message_synch.h
     message_sink.h
     message_source.h
     message_strobe.h
