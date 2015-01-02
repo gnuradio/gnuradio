@@ -47,7 +47,7 @@ namespace gr {
   vmcircbuf_sysv_shm::vmcircbuf_sysv_shm(int size)
     : gr::vmcircbuf(size)
   {
-#if !defined(HAVE_SYS_SHM_H)
+#if !defined(HAVE_SHM_OPEN)
     fprintf(stderr, "gr::vmcircbuf_sysv_shm: sysv shared memory is not available\n");
     throw std::runtime_error("gr::vmcircbuf_sysv_shm");
 #else
@@ -162,7 +162,7 @@ namespace gr {
 
   vmcircbuf_sysv_shm::~vmcircbuf_sysv_shm()
   {
-#if defined(HAVE_SYS_SHM_H)
+#if defined(HAVE_SHM_OPEN)
     gr::thread::scoped_lock guard(s_vm_mutex);
 
     if(shmdt(d_base - gr::pagesize()) == -1

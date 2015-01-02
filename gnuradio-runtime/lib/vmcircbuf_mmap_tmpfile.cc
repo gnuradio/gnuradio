@@ -41,6 +41,7 @@
 #include <string.h>
 #include "pagesize.h"
 #include <gnuradio/sys_paths.h>
+#include <gnuradio/logger.h>
 
 namespace gr {
 
@@ -48,13 +49,13 @@ namespace gr {
     : gr::vmcircbuf (size)
   {
 #if !defined(HAVE_MMAP)
-    fprintf(stderr, "gr::vmcircbuf_mmap_tmpfile: mmap or mkstemp is not available\n");
+    GR_ERROR("gr_log", "gr::vmcircbuf_mmap_tmpfile: mmap or mkstemp is not available");
     throw std::runtime_error("gr::vmcircbuf_mmap_tmpfile");
 #else
     gr::thread::scoped_lock guard(s_vm_mutex);
 
     if(size <= 0 || (size % gr::pagesize ()) != 0) {
-      fprintf(stderr, "gr::vmcircbuf_mmap_tmpfile: invalid size = %d\n", size);
+      GR_ERROR("gr_log", boost::format("gr::vmcircbuf_mmap_tmpfile:  invalid size = %1%") % size);
       throw std::runtime_error("gr::vmcircbuf_mmap_tmpfile");
     }
 
@@ -69,7 +70,14 @@ namespace gr {
                "%s/gnuradio-%d-%d-XXXXXX", gr::tmp_path(), getpid(), s_seg_counter);
       s_seg_counter++;
 
+#ifndef ANDROID
       seg_fd = open(seg_name, O_RDWR | O_CREAT | O_EXCL, 0600);
+#else
+      seg_fd = open(seg_name, O_RDWR | O_CREAT, 0600);
+#endif /* ANDROID */
+
+      GR_INFO("gr_log", boost::format("gr::mvcircbuf_mmap_tmpfile: opened: %1%") % seg_fd);
+
       if(seg_fd == -1) {
         if(errno == EEXIST) // File already exists (shouldn't happen).  Try again
           continue;
@@ -77,14 +85,15 @@ namespace gr {
         char msg[1024];
         snprintf(msg, sizeof (msg),
                  "gr::vmcircbuf_mmap_tmpfile: open [%s]", seg_name);
-        perror(msg);
+        GR_ERROR("gr_log", boost::format("gr::vmcircbuf_mmap_tmpfile: open failed [%1%], errno: %1%") \
+                 % seg_name % (strerror(errno)));
         throw std::runtime_error("gr::vmcircbuf_mmap_tmpfile");
       }
       break;
     }
 
     if(unlink (seg_name) == -1) {
-      perror("gr::vmcircbuf_mmap_tmpfile: unlink");
+      GR_ERROR("gr_log", boost::format("gr::vmcircbuf_mmap_tmpfile: unlink, errno: %1%") % (strerror(errno)));
       throw std::runtime_error ("gr::vmcircbuf_mmap_tmpfile");
     }
 
@@ -92,7 +101,8 @@ namespace gr {
     // Now set it's length to 2x what we really want and mmap it in.
     if(ftruncate (seg_fd, (off_t) 2 * size) == -1) {
       close(seg_fd);						// cleanup
-      perror("gr::vmcircbuf_mmap_tmpfile: ftruncate (1)");
+      GR_ERROR("gr_log", boost::format("gr::vmcircbuf_mmap_tmpfile: ftruncate (1), errno: %1%") \
+               % (strerror(errno)));
       throw std::runtime_error("gr::vmcircbuf_mmap_tmpfile");
     }
 
@@ -102,14 +112,14 @@ namespace gr {
 
     if(first_copy == MAP_FAILED) {
       close(seg_fd);						// cleanup
-      perror("gr::vmcircbuf_mmap_tmpfile: mmap (1)");
+      GR_ERROR("gr_log", boost::format("gr::vmcircbuf_mmap_tmpfile: mmap (1), errno: %1%") % (strerror(errno)));
       throw std::runtime_error ("gr::vmcircbuf_mmap_tmpfile");
     }
 
     // unmap the 2nd half
     if(munmap ((char *) first_copy + size, size) == -1) {
       close(seg_fd);						// cleanup
-      perror("gr::vmcircbuf_mmap_tmpfile: munmap (1)");
+      GR_ERROR("gr_log", boost::format("gr::vmcircbuf_mmap_tmpfile: munmap (1), errno: %1%") % (strerror(errno)));
       throw std::runtime_error("gr::vmcircbuf_mmap_tmpfile");
     }
 
@@ -122,7 +132,7 @@ namespace gr {
     if(second_copy == MAP_FAILED) {
       munmap(first_copy, size);					// cleanup
       close(seg_fd);
-      perror("gr::vmcircbuf_mmap_tmpfile: mmap(2)");
+      GR_ERROR("gr_log", boost::format("gr::vmcircbuf_mmap_tmpfile: mmap (2), errno: %1%") % (strerror(errno)));
       throw std::runtime_error("gr::vmcircbuf_mmap_tmpfile");
     }
 
@@ -131,7 +141,7 @@ namespace gr {
       munmap(first_copy, size);					// cleanup
       munmap(second_copy, size);
       close(seg_fd);
-      perror("gr::vmcircbuf_mmap_tmpfile: non-contiguous second copy");
+      GR_ERROR("gr_log", boost::format("gr::vmcircbuf_mmap_tmpfile: non-contiguous second copy, errno: %1%")  % (strerror(errno)));
       throw std::runtime_error("gr::vmcircbuf_mmap_tmpfile");
     }
 
@@ -140,7 +150,7 @@ namespace gr {
       munmap(first_copy, size);					// cleanup
       munmap(second_copy, size);
       close(seg_fd);
-      perror("gr::vmcircbuf_mmap_tmpfile: ftruncate (2)");
+      GR_ERROR("gr_log", boost::format("gr::vmcircbuf_mmap_tmpfile: ftruncate (2), errno: %1%") % (strerror(errno)));
       throw std::runtime_error("gr::vmcircbuf_mmap_tmpfile");
     }
 
@@ -159,7 +169,7 @@ namespace gr {
     gr::thread::scoped_lock guard(s_vm_mutex);
 
     if(munmap(d_base, 2 * d_size) == -1) {
-      perror("gr::vmcircbuf_mmap_tmpfile: munmap(2)");
+      GR_ERROR("gr_log", boost::format("gr::vmcircbuf_mmap_tmpfile: munmap (2), errno: %1%") % (strerror(errno)));
     }
 #endif
   }
