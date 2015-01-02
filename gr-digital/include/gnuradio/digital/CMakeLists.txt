@@ -74,7 +74,6 @@ install(FILES
     mpsk_receiver_cc.h
     mpsk_snr_est.h
     mpsk_snr_est_cc.h
-    msk_correlate_cc.h
     msk_timing_recovery_cc.h
     ofdm_carrier_allocator_cvc.h
     ofdm_chanest_vcvc.h
