@@ -62,6 +62,7 @@
 		<block>blocks_message_debug</block>
                 <block>blocks_random_pdu</block>
                 <block>blocks_message_strobe</block>
+					 <block>blocks_message_strobe_random</block>
                 <block>blocks_tags_strobe</block>
 	</cat>
 	<cat>
@@ -102,6 +103,7 @@
                 <block>blocks_transcendental</block>
                 <block>blocks_argmax_xx</block>
                 <block>blocks_max_xx</block>
+					 <block>blocks_min_xx</block>
 	</cat>
         <cat>
                 <name>Measurement Tools</name>
@@ -119,8 +121,11 @@
 		<block>blocks_message_sink</block>
 		<block>blocks_message_burst_source</block>
                 <block>blocks_message_strobe</block>
+		<block>blocks_message_strobe_random</block>
 		<block>blocks_message_debug</block>
 		<block>blocks_pdu_filter</block>
+		<block>blocks_pdu_remove</block>
+		<block>blocks_pdu_set</block>
 		<block>blocks_pdu_to_tagged_stream</block>
 		<block>blocks_tagged_stream_multiply_length</block>
 		<block>blocks_tagged_stream_to_pdu</block>
@@ -141,6 +146,7 @@
 	<cat>
 		<name>Modulators</name>
                 <block>blocks_vco_f</block>
+					 <block>blocks_vco_c</block>
 	</cat>
 	<cat>
 	        <name>Networking Tools</name>
@@ -204,6 +210,7 @@
 		<block>blocks_float_to_uchar</block>
 		<block>blocks_int_to_float</block>
 		<block>blocks_interleaved_short_to_complex</block>
+		<block>blocks_interleaved_char_to_complex</block>
 		<block>blocks_short_to_char</block>
 		<block>blocks_short_to_float</block>
 		<block>blocks_uchar_to_float</block>
@@ -211,5 +218,6 @@
 	<cat>
 		<name>Waveform Generators</name>
                 <block>blocks_vco_f</block>
+					 <block>blocks_vco_c</block>
 	</cat>
 </cat>
