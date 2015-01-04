@@ -1,0 +1,206 @@
+#!/usr/bin/env python
+#
+# Copyright 2012,2013 Free Software Foundation, Inc.
+#
+# This file is part of GNU Radio
+#
+# GNU Radio is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 3, or (at your option)
+# any later version.
+#
+# GNU Radio is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with GNU Radio; see the file COPYING.  If not, write to
+# the Free Software Foundation, Inc., 51 Franklin Street,
+# Boston, MA 02110-1301, USA.
+#
+
+from gnuradio import gr
+from gnuradio import blocks
+from gnuradio import filter
+import pmt
+from gnuradio.blocks import parse_file_metadata
+import scipy
+import sys
+import os
+
+try:
+    import gnuradio.qtgui.plot_spectrogram_base as plot_base
+except ImportError:
+    import plot_spectrogram_base as plot_base
+
+try:
+    from gnuradio import qtgui
+    from PyQt4 import QtGui, QtCore
+    import sip
+except ImportError:
+    print "Error: Program requires PyQt4 and gr-qtgui."
+    sys.exit(1)
+
+class spectrogram_plot_c(plot_base.plot_base):
+    def __init__(self, filelist, fc, samp_rate, psdsize, start,
+                 nsamples, max_nsamples, avg=1.0):
+        plot_base.plot_base.__init__(self, filelist, fc, samp_rate,
+                                     psdsize, start, nsamples,
+                                     max_nsamples, avg)
+        self.read_samples = plot_base.read_samples_c
+        self.dsize = gr.sizeof_gr_complex
+        self.src_type = blocks.vector_source_c
+        self.gui_snk = qtgui.waterfall_sink_c(self._psd_size,
+                       filter.firdes.WIN_BLACKMAN_hARRIS,self._center_freq,
+                       self._samp_rate,"Complex Float",
+                       self._nsigs)
+        self.setup()
+
+class spectrogram_plot_f(plot_base.plot_base):
+    def __init__(self, filelist, fc, samp_rate, psdsize, start,
+                 nsamples, max_nsamples, avg=1.0):
+        plot_base.plot_base.__init__(self, filelist, fc, samp_rate,
+                                     psdsize, start, nsamples,
+                                     max_nsamples, avg)
+        self.read_samples = plot_base.read_samples_f
+        self.dsize = gr.sizeof_float
+        self.src_type = blocks.vector_source_f
+        self.gui_snk = qtgui.waterfall_sink_f(self._psd_size,
+                       filter.firdes.WIN_BLACKMAN_hARRIS,self._center_freq,
+                       self._samp_rate,
+                       "Float",
+                       self._nsigs)
+        self.setup()
+
+class spectrogram_plot_b(plot_base.plot_base):
+    def __init__(self, filelist, fc, samp_rate, psdsize, start,
+                 nsamples, max_nsamples, avg=1.0):
+        plot_base.plot_base.__init__(self, filelist, fc, samp_rate,
+                                     psdsize, start, nsamples,
+                                     max_nsamples, avg)
+        self.read_samples = plot_base.read_samples_b
+        self.dsize = gr.sizeof_float
+        self.src_type = plot_base.source_chars_to_float
+        self.gui_snk = qtgui.waterfall_sink_f(self._psd_size,
+                       filter.firdes.WIN_BLACKMAN_hARRIS,self._center_freq,
+                       self._samp_rate, "Bytes",
+                       self._nsigs)
+        self.setup()
+
+class spectrogram_plot_i(plot_base.plot_base):
+    def __init__(self, filelist, fc, samp_rate, psdsize, start,
+                 nsamples, max_nsamples, avg=1.0):
+        plot_base.plot_base.__init__(self, filelist, fc, samp_rate,
+                                     psdsize, start, nsamples,
+                                     max_nsamples, avg)
+        self.read_samples = plot_base.read_samples_i
+        self.dsize = gr.sizeof_float
+        self.src_type = plot_base.source_ints_to_float
+        self.gui_snk = qtgui.waterfall_sink_f(self._psd_size,
+                       filter.firdes.WIN_BLACKMAN_hARRIS,
+                       self._center_freq, self._samp_rate,
+                       "Integers",
+                       self._nsigs)
+        self.setup()
+
+class spectrogram_plot_s(plot_base.plot_base):
+    def __init__(self, filelist, fc, samp_rate, psdsize, start,
+                 nsamples, max_nsamples, avg=1.0):
+        plot_base.plot_base.__init__(self, filelist, fc, samp_rate,
+                                     psdsize, start, nsamples,
+                                     max_nsamples, avg)
+        self.read_samples = plot_base.read_samples_s
+        self.dsize = gr.sizeof_float
+        self.src_type = plot_base.source_shorts_to_float
+        self.gui_snk = qtgui.waterfall_sink_f(self._psd_size,
+                       filter.firdes.WIN_BLACKMAN_hARRIS,
+                       self._center_freq, self._samp_rate,
+                       "Shorts",
+                       self._nsigs)
+        self.setup()
+
+def read_header(filelist):
+   filename = filelist[0] + '.hdr'
+   try:
+      handle = open(filename,"rb")
+   except IOError:
+      return
+   hdr_start = handle.tell()
+   header_str = handle.read(parse_file_metadata.HEADER_LENGTH)
+   if( len(header_str) == 0 ):
+      return
+   # String to PMT Conversion
+   try:
+      header = pmt.deserialize_str(header_str)
+   except RuntimeError:
+      sys.stderr.write("Can't deserialize header: invalid/corrupt data\n")
+      sys.exit(1)
+   info = parse_file_metadata.parse_header(header,False)
+   return info
+
+def main():
+   description = 'Plots the spectrogram (waterfall) of a file with detached header.'
+   description += ' Assumes header is <input_filename>.hdr'
+   (options, args) = plot_base.setup_options(description)
+   filelist = list(args)
+   # Attempt to read the header information
+   info = read_header(filelist)
+   # If no header, quit
+   if not info:
+      sys.stderr.write('Header not found\n')
+      sys.exit(1)
+
+   max_nsamples = plot_base.find_max_nsamples(filelist)
+   srate = info["rx_rate"]
+
+   # Dispatch the proper function
+   # Complex Types
+   if(info["cplx"] == True):
+      if( info["type"] == "float" ):
+         tb = spectrogram_plot_c(filelist,
+                            options.center_frequency,srate,
+                            options.psd_size,
+                            options.start, options.nsamples, max_nsamples,
+                            options.average);
+      else:
+         sys.stderr.write("Complex File Type " + info["type"]+ " not supported.\n")
+   # Real Types
+   else:
+      if( info["type"] == "bytes" ):
+         tb = spectrogram_plot_b(filelist,
+                            options.center_frequency,srate,
+                            options.psd_size,
+                            options.start, options.nsamples, max_nsamples,
+                            options.average);
+      elif( info["type"] == "int" ):
+         tb = spectrogram_plot_i(filelist,
+                            options.center_frequency,srate,
+                            options.psd_size,
+                            options.start, options.nsamples, max_nsamples,
+                            options.average);
+      elif( info["type"] == "float" ):
+         tb = spectrogram_plot_f(filelist,
+                            options.center_frequency,srate,
+                            options.psd_size,
+                            options.start, options.nsamples, max_nsamples,
+                            options.average);
+      elif( info["type"] == "short" ):
+         tb = spectrogram_plot_s(filelist,
+                            options.center_frequency,srate,
+                            options.psd_size,
+                            options.start, options.nsamples, max_nsamples,
+                            options.average);
+      else:
+        sys.stderr.write("Real File Type " + info["type"] + " not supported\n")
+   main_box = plot_base.plot_spectrogram_form(tb, 'GNU Radio Spectrogram Plot')
+   main_box.show()
+
+   tb.run()
+   tb.qapp.exec_()
+
+if __name__ == "__main__":
+    try:
+        main()
+    except KeyboardInterrupt:
+        pass

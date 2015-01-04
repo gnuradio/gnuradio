@@ -62,7 +62,7 @@ public:
   virtual QwtText label(double value) const
   {
     double secs = double(value * getSecondsPerLine());
-    return QwtText(QString("").sprintf("%.1f", secs));
+    return QwtText(QString("").sprintf("%.2e", secs));
   }
 
   virtual void initiateUpdate()
@@ -119,7 +119,7 @@ protected:
     QwtText t(QString("%1 %2, %3 s")
               .arg(dp.x(), 0, 'f', getFrequencyPrecision())
               .arg(d_unitType.c_str())
-              .arg(secs, 0, 'f', 2));
+              .arg(secs, 0, 'e', 2));
     return t;
   }
 
