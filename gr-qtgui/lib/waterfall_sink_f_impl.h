@@ -106,6 +106,7 @@ namespace gr {
       void set_intensity_range(const double min, const double max);
 
       void set_update_time(double t);
+      void set_time_per_fft(double t);
       void set_title(const std::string &title);
       void set_line_label(int which, const std::string &label);
       void set_line_alpha(int which, double alpha);
