@@ -52,8 +52,8 @@ class spectrogram_plot_c(plot_base.plot_base):
         self.dsize = gr.sizeof_gr_complex
         self.src_type = blocks.vector_source_c
         self.gui_snk = qtgui.waterfall_sink_c(self._psd_size,
-                       filter.firdes.WIN_BLACKMAN_hARRIS,self._center_freq, 
-                       self._samp_rate,"GNU Radio Spectrogram Plot (CPX Float)", 
+                       filter.firdes.WIN_BLACKMAN_hARRIS,self._center_freq,
+                       self._samp_rate,"Complex Float",
                        self._nsigs)
         self.setup()
 
@@ -66,10 +66,10 @@ class spectrogram_plot_f(plot_base.plot_base):
         self.read_samples = plot_base.read_samples_f
         self.dsize = gr.sizeof_float
         self.src_type = blocks.vector_source_f
-        self.gui_snk = qtgui.waterfall_sink_f(self._psd_size, 
-                       filter.firdes.WIN_BLACKMAN_hARRIS,self._center_freq, 
+        self.gui_snk = qtgui.waterfall_sink_f(self._psd_size,
+                       filter.firdes.WIN_BLACKMAN_hARRIS,self._center_freq,
                        self._samp_rate,
-                       "GNU Radio Spectrogram Plot (float)", 
+                       "Float",
                        self._nsigs)
         self.setup()
 
@@ -82,9 +82,9 @@ class spectrogram_plot_b(plot_base.plot_base):
         self.read_samples = plot_base.read_samples_b
         self.dsize = gr.sizeof_float
         self.src_type = plot_base.source_chars_to_float
-        self.gui_snk = qtgui.waterfall_sink_f(self._psd_size, 
-                       filter.firdes.WIN_BLACKMAN_hARRIS,self._center_freq, 
-                       self._samp_rate, "GNU Radio Spectrogram Plot (bin)", 
+        self.gui_snk = qtgui.waterfall_sink_f(self._psd_size,
+                       filter.firdes.WIN_BLACKMAN_hARRIS,self._center_freq,
+                       self._samp_rate, "Bytes",
                        self._nsigs)
         self.setup()
 
@@ -94,12 +94,29 @@ class spectrogram_plot_i(plot_base.plot_base):
         plot_base.plot_base.__init__(self, filelist, fc, samp_rate,
                                      psdsize, start, nsamples,
                                      max_nsamples, avg)
+        self.read_samples = plot_base.read_samples_i
         self.dsize = gr.sizeof_float
         self.src_type = plot_base.source_ints_to_float
-        self.gui_snk = qtgui.waterfall_sink_f(self._psd_size, 
+        self.gui_snk = qtgui.waterfall_sink_f(self._psd_size,
                        filter.firdes.WIN_BLACKMAN_hARRIS,
                        self._center_freq, self._samp_rate,
-                       "GNU Radio Spectrogram Plot (int)", 
+                       "Integers",
+                       self._nsigs)
+        self.setup()
+
+class spectrogram_plot_s(plot_base.plot_base):
+    def __init__(self, filelist, fc, samp_rate, psdsize, start,
+                 nsamples, max_nsamples, avg=1.0):
+        plot_base.plot_base.__init__(self, filelist, fc, samp_rate,
+                                     psdsize, start, nsamples,
+                                     max_nsamples, avg)
+        self.read_samples = plot_base.read_samples_s
+        self.dsize = gr.sizeof_float
+        self.src_type = plot_base.source_shorts_to_float
+        self.gui_snk = qtgui.waterfall_sink_f(self._psd_size,
+                       filter.firdes.WIN_BLACKMAN_hARRIS,
+                       self._center_freq, self._samp_rate,
+                       "Shorts",
                        self._nsigs)
         self.setup()
 
@@ -108,7 +125,7 @@ def read_header(filelist):
    try:
       handle = open(filename,"rb")
    except IOError:
-      return 
+      return
    hdr_start = handle.tell()
    header_str = handle.read(parse_file_metadata.HEADER_LENGTH)
    if( len(header_str) == 0 ):
@@ -121,9 +138,9 @@ def read_header(filelist):
       sys.exit(1)
    info = parse_file_metadata.parse_header(header,False)
    return info
-   
+
 def main():
-   description = 'Plots the spectrogram (waterfall) of a file with detached header.'  
+   description = 'Plots the spectrogram (waterfall) of a file with detached header.'
    description += ' Assumes header is <input_filename>.hdr'
    (options, args) = plot_base.setup_options(description)
    filelist = list(args)
@@ -133,7 +150,7 @@ def main():
    if not info:
       sys.stderr.write('Header not found\n')
       sys.exit(1)
-      
+
    max_nsamples = plot_base.find_max_nsamples(filelist)
    srate = info["rx_rate"]
 
@@ -187,4 +204,3 @@ if __name__ == "__main__":
         main()
     except KeyboardInterrupt:
         pass
-
