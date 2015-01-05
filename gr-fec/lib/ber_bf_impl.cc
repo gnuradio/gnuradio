@@ -52,14 +52,6 @@ namespace gr {
     {
     }
 
-    void
-    ber_bf_impl::forecast(int noutput_items,
-                          gr_vector_int& ninput_items_required)
-    {
-      ninput_items_required[0] = 1<<10 * noutput_items;
-      ninput_items_required[1] = 1<<10 * noutput_items;
-    }
-
     int
     ber_bf_impl::general_work(int noutput_items,
                               gr_vector_int& ninput_items,
