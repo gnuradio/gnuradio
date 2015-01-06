@@ -24,3 +24,5 @@ from packet import options, packet_encoder, packet_decoder, \
     packet_demod_b, packet_demod_s, packet_demod_i, packet_demod_f, packet_demod_c
 from error_rate import error_rate
 from tcp import tcp_source, tcp_sink
+from local_stream import local_stream_source
+

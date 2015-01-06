@@ -144,6 +144,7 @@
 	</cat>
 	<cat>
 	        <name>Networking Tools</name>
+		<block>blocks_local_stream_server_sink</block>
 		<block>blocks_tuntap_pdu</block>
 		<block>blocks_socket_pdu</block>
 		<block>blocks_udp_source</block>

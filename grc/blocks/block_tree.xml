@@ -25,6 +25,7 @@
 	</cat>
 	<cat>
 		<name>Networking Tools</name>
+		<block>blks2_local_stream_source</block>
 		<block>blks2_tcp_source</block>
 		<block>blks2_tcp_sink</block>
 	</cat>
