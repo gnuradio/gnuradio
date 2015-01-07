@@ -63,7 +63,7 @@ class Platform(_Element):
         self._key = key
         self._license = license
         self._website = website
-        self._block_paths = block_paths
+        self._block_paths = list(set(block_paths))
         self._block_dtd = block_dtd
         self._default_flow_graph = default_flow_graph
         self._generator = generator
