@@ -158,6 +158,22 @@ part#slurp
 			<key>1</key>
 		</option>
 	</param>
+	<param>
+		<name>Thread-safe setters</name>
+		<key>thread_safe_setters</key>
+		<value></value>
+		<type>enum</type>
+		<hide>part</hide>
+		<option>
+			<name>Off</name>
+			<key></key>
+		</option>
+		<option>
+			<name>On</name>
+			<key>1</key>
+		</option>
+		<tab>Advanced</tab>
+	</param>
 	<check>len($window_size) == 2</check>
 	<check>300 &lt;= $(window_size)[0] &lt;= 4096</check>
 	<check>300 &lt;= $(window_size)[1] &lt;= 4096</check>
