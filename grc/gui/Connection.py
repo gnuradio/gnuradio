@@ -83,18 +83,15 @@ class Connection(Element):
         ]
         source_domain = self.get_source().get_domain()
         sink_domain = self.get_sink().get_domain()
-        if source_domain == GR_MESSAGE_DOMAIN:
-            self.line_attributes[1] = gtk.gdk.LINE_ON_OFF_DASH
-        else:
-            self.line_attributes[1] = gtk.gdk.LINE_DOUBLE_DASH
-            if source_domain != sink_domain:
-                self.line_attributes[0] = 2
-            get_domain_color = lambda d: Colors.get_color((
-                self.get_parent().get_parent().get_domain(d) or {}
-            ).get('color') or Colors.DEFAULT_DOMAIN_COLOR_CODE)
-            self._color = get_domain_color(source_domain)
-            self._bg_color = get_domain_color(sink_domain)
-
+        self.line_attributes[0] = 2 if source_domain != sink_domain else 0
+        self.line_attributes[1] = gtk.gdk.LINE_DOUBLE_DASH \
+            if not source_domain == sink_domain == GR_MESSAGE_DOMAIN \
+            else gtk.gdk.LINE_ON_OFF_DASH
+        get_domain_color = lambda d: Colors.get_color((
+            self.get_parent().get_parent().get_domain(d) or {}
+        ).get('color') or Colors.DEFAULT_DOMAIN_COLOR_CODE)
+        self._color = get_domain_color(source_domain)
+        self._bg_color = get_domain_color(sink_domain)
         self._update_after_move()
 
     def _update_after_move(self):
