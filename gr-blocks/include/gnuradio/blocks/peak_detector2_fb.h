@@ -54,9 +54,16 @@ namespace gr {
        * \param look_ahead The look-ahead value is used when the
        *        threshold is found to locate the peak within this range.
        * \param alpha The gain value of a single-pole moving average filter.
+       * \param cont_avg The type of EWMA average. The average is only calculated 
+       *        when the value of signal is below thresold_factor_rise*average when
+       *        cont_avg is false. Otherwise, the average is also calculated when 
+       *	the value of signal is above the threshold_factor_rise*average. 
+       * \param fixed_window The type of look_ahead window. The look_ahead range 
+       *        is fixed if fixed_window is true. Otherwise, the look_ahead range 
+       *        is reset whenever a new peak is located.        
        */
       static sptr make(float threshold_factor_rise=7,
-                       int look_ahead=1000, float alpha=0.001);
+                       int look_ahead=1000, float alpha=0.001, bool cont_avg =true, bool fixed_window = true);
 
       /*! \brief Set the threshold factor value for the rise time
        *  \param thr new threshold factor

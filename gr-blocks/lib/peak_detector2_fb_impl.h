@@ -33,6 +33,8 @@ namespace gr {
     private:
       float d_threshold_factor_rise;
       int d_look_ahead;
+      bool d_cont_avg;
+      bool d_fixed_window;
       int d_look_ahead_remaining;
       int d_peak_ind;
       float d_peak_val;
@@ -42,7 +44,7 @@ namespace gr {
 
     public:
       peak_detector2_fb_impl(float threshold_factor_rise,
-                             int look_ahead, float alpha);
+                             int look_ahead, float alpha, bool cont_avg=true, bool fixed_window=true);
       ~peak_detector2_fb_impl();
 
       void set_threshold_factor_rise(float thr) { d_threshold_factor_rise = thr; }

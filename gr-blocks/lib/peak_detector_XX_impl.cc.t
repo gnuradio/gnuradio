@@ -91,8 +91,10 @@ namespace gr {
           if(iptr[i] > peak_val) {
             peak_val = iptr[i];
             peak_ind = i;
+            //printf("Entered State 1: %f >d_avg %f  i: %d  noutput_items: %d\n", iptr[i], d_avg, i, noutput_items);
             d_avg = (d_avg_alpha)*iptr[i] + (1-d_avg_alpha)*d_avg;
             i++;
+
           }
           else if(iptr[i] > d_avg*d_threshold_factor_fall) {
             d_avg = (d_avg_alpha)*iptr[i] + (1-d_avg_alpha)*d_avg;
