@@ -46,6 +46,7 @@ class WaterfallDisplayForm : public DisplayForm
   WaterfallDisplayPlot* getPlot();
 
   int getFFTSize() const;
+  double getTimePerFFT();
   float getFFTAverage() const;
   gr::filter::firdes::win_type getFFTWindowType() const;
 
@@ -86,6 +87,9 @@ public slots:
 		   const QColor highColor=QColor("white"));
 
   void autoScale(bool en=false);
+  void setPlotPosHalf(bool half);
+  void setTimePerFFT(double t);
+  void setUpdateTime(double t);
 
 private slots:
   void newData(const QEvent *updateEvent);
@@ -96,6 +100,7 @@ private:
 
   double d_samp_rate, d_center_freq;
   int d_fftsize;
+  double d_time_per_fft;
   float d_fftavg;
   gr::filter::firdes::win_type d_fftwintype;
   double d_units;

@@ -42,7 +42,25 @@ namespace gr {
      * \ingroup qtgui_blk
      *
      * \details
-     * Number sink
+     *
+     * Displays the data stream in as a number in a simple text box
+     * GUI along with an optional bar graph. The bar graph can be set
+     * to horizontal (NUM_GRAPH_HORIZ), vertical (NUM_GRAPH_VERT), or
+     * no graph (NUM_GRAPH_NONE).
+     *
+     * The displayed value can be the average of the input stream, in
+     * which case all items received are averaged. If not averaging,
+     * the display simply samples a value in the data stream based on
+     * the update time of this block.
+     *
+     * Note that due to a flaw in the implementation, this block
+     * cannot receive integer value inputs. It will take chars,
+     * shorts, and floats and properly convert them by setting
+     * itemsize of the constructor to one of these three values
+     * (sizeof_char, sizeof_short, and sizeof_float, respectively). If
+     * using integers, the block treats these as floats. Instead, put
+     * the integer input stream through an gr::blocks::int_to_float
+     * converter block.
      */
     class QTGUI_API number_sink : virtual public sync_block
     {

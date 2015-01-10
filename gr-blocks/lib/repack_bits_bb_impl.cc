@@ -31,20 +31,25 @@ namespace gr {
   namespace blocks {
 
     repack_bits_bb::sptr
-    repack_bits_bb::make(int k, int l, const std::string &len_tag_key, bool align_output)
+    repack_bits_bb::make(int k, int l, const std::string &len_tag_key,
+                         bool align_output, endianness_t endianness)
     {
-      return gnuradio::get_initial_sptr (new repack_bits_bb_impl(k, l, len_tag_key, align_output));
+      return gnuradio::get_initial_sptr
+        (new repack_bits_bb_impl(k, l, len_tag_key,
+                                 align_output, endianness));
     }
 
-    repack_bits_bb_impl::repack_bits_bb_impl(int k, int l, const std::string &len_tag_key, bool align_output)
+    repack_bits_bb_impl::repack_bits_bb_impl(int k, int l, const std::string &len_tag_key,
+                                             bool align_output, endianness_t endianness)
       : tagged_stream_block("repack_bits_bb",
-		      io_signature::make(1, 1, sizeof (char)),
-		      io_signature::make(1, 1, sizeof (char)),
-		      len_tag_key),
-      d_k(k), d_l(l),
-      d_packet_mode(!len_tag_key.empty()),
-      d_in_index(0), d_out_index(0),
-      d_align_output(align_output)
+                            io_signature::make(1, 1, sizeof(char)),
+                            io_signature::make(1, 1, sizeof(char)),
+                            len_tag_key),
+        d_k(k), d_l(l),
+        d_packet_mode(!len_tag_key.empty()),
+        d_in_index(0), d_out_index(0),
+        d_align_output(align_output),
+        d_endianness(endianness)
     {
       if (d_k > 8 || d_k < 1 || d_l > 8 || d_l < 1) {
 	throw std::invalid_argument("k and l must be in [1, 8]");
@@ -88,31 +93,70 @@ namespace gr {
 
       int n_read = 0;
       int n_written = 0;
-      while(n_written < bytes_to_write && n_read < ninput_items[0]) {
-	if (d_out_index == 0) { // Starting a fresh byte
-	  out[n_written] = 0;
-	}
-	out[n_written] |= ((in[n_read] >> d_in_index) & 0x01) << d_out_index;
+      switch(d_endianness) {
+      case GR_LSB_FIRST:
+        while(n_written < bytes_to_write && n_read < ninput_items[0]) {
+          if(d_out_index == 0) { // Starting a fresh byte
+            out[n_written] = 0;
+          }
+          out[n_written] |= ((in[n_read] >> d_in_index) & 0x01) << d_out_index;
 
-	d_in_index = (d_in_index + 1) % d_k;
-	d_out_index = (d_out_index + 1) % d_l;
-	if (d_in_index == 0) {
-	  n_read++;
-	  d_in_index = 0;
-	}
-	if (d_out_index == 0) {
-	  n_written++;
-	  d_out_index = 0;
-	}
-      }
+          d_in_index = (d_in_index + 1) % d_k;
+          d_out_index = (d_out_index + 1) % d_l;
+          if(d_in_index == 0) {
+            n_read++;
+            d_in_index = 0;
+          }
+          if(d_out_index == 0) {
+            n_written++;
+            d_out_index = 0;
+          }
+        }
 
-      if (d_packet_mode) {
-	if (d_out_index) {
-	  n_written++;
-	  d_out_index = 0;
-	}
-      } else {
-	consume_each(n_read);
+        if(d_packet_mode) {
+          if(d_out_index) {
+            n_written++;
+            d_out_index = 0;
+          }
+        }
+        else {
+          consume_each(n_read);
+        }
+        break;
+
+
+      case GR_MSB_FIRST:
+        while(n_written < bytes_to_write && n_read < ninput_items[0]) {
+          if(d_out_index == 0) { // Starting a fresh byte
+            out[n_written] = 0;
+          }
+          out[n_written] |= ((in[n_read] >> (d_k - 1 - d_in_index)) & 0x01) << (d_l - 1 - d_out_index);
+
+          d_in_index = (d_in_index + 1) % d_k;
+          d_out_index = (d_out_index + 1) % d_l;
+          if(d_in_index == 0) {
+            n_read++;
+            d_in_index = 0;
+          }
+          if(d_out_index == 0) {
+            n_written++;
+            d_out_index = 0;
+          }
+        }
+
+        if(d_packet_mode) {
+          if(d_out_index) {
+            n_written++;
+            d_out_index = 0;
+          }
+        }
+        else {
+          consume_each(n_read);
+        }
+        break;
+
+      default:
+        throw std::runtime_error("repack_bits_bb: unrecognized endianness value.");
       }
 
       return n_written;
@@ -120,4 +164,3 @@ namespace gr {
 
   } /* namespace blocks */
 } /* namespace gr */
-

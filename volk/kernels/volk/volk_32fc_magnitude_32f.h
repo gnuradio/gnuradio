@@ -1,9 +1,77 @@
+/* -*- c++ -*- */
+/*
+ * Copyright 2014 Free Software Foundation, Inc.
+ *
+ * This file is part of GNU Radio
+ *
+ * GNU Radio is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3, or (at your option)
+ * any later version.
+ *
+ * GNU Radio is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with GNU Radio; see the file COPYING.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street,
+ * Boston, MA 02110-1301, USA.
+ */
+
 #ifndef INCLUDED_volk_32fc_magnitude_32f_u_H
 #define INCLUDED_volk_32fc_magnitude_32f_u_H
 
 #include <inttypes.h>
 #include <stdio.h>
 #include <math.h>
+
+#ifdef LV_HAVE_AVX
+#include <immintrin.h>
+  /*!
+    \brief Calculates the magnitude of the complexVector and stores the results in the magnitudeVector
+    \param complexVector The vector containing the complex input values
+    \param magnitudeVector The vector containing the real output values
+    \param num_points The number of complex values in complexVector to be calculated and stored into cVector
+  */
+static inline void volk_32fc_magnitude_32f_u_avx(float* magnitudeVector, const lv_32fc_t* complexVector, unsigned int num_points){
+    unsigned int number = 0;
+    const unsigned int eighthPoints = num_points / 8;
+
+    const float* complexVectorPtr = (float*)complexVector;
+    float* magnitudeVectorPtr = magnitudeVector;
+
+    __m256 cplxValue1, cplxValue2, complex1, complex2, result;
+    for(;number < eighthPoints; number++){
+      cplxValue1 = _mm256_loadu_ps(complexVectorPtr);
+      complexVectorPtr += 8;
+
+      cplxValue2 = _mm256_loadu_ps(complexVectorPtr);
+      complexVectorPtr += 8;
+
+      cplxValue1 = _mm256_mul_ps(cplxValue1, cplxValue1); // Square the values
+      cplxValue2 = _mm256_mul_ps(cplxValue2, cplxValue2); // Square the Values
+
+      complex1 = _mm256_permute2f128_ps(cplxValue1, cplxValue2, 0x20);
+      complex2 = _mm256_permute2f128_ps(cplxValue1, cplxValue2, 0x31);
+
+      result = _mm256_hadd_ps(complex1, complex2); // Add the I2 and Q2 values
+
+      result = _mm256_sqrt_ps(result);
+
+      _mm256_storeu_ps(magnitudeVectorPtr, result);
+      magnitudeVectorPtr += 8;
+    }
+
+    number = eighthPoints * 8;
+    for(; number < num_points; number++){
+      float val1Real = *complexVectorPtr++;
+      float val1Imag = *complexVectorPtr++;
+      *magnitudeVectorPtr++ = sqrtf((val1Real * val1Real) + (val1Imag * val1Imag));
+    }
+}
+#endif /* LV_HAVE_AVX */
 
 #ifdef LV_HAVE_SSE3
 #include <pmmintrin.h>
@@ -122,6 +190,52 @@ static inline void volk_32fc_magnitude_32f_generic(float* magnitudeVector, const
 #include <inttypes.h>
 #include <stdio.h>
 #include <math.h>
+
+#ifdef LV_HAVE_AVX
+#include <immintrin.h>
+  /*!
+    \brief Calculates the magnitude of the complexVector and stores the results in the magnitudeVector
+    \param complexVector The vector containing the complex input values
+    \param magnitudeVector The vector containing the real output values
+    \param num_points The number of complex values in complexVector to be calculated and stored into cVector
+  */
+static inline void volk_32fc_magnitude_32f_a_avx(float* magnitudeVector, const lv_32fc_t* complexVector, unsigned int num_points){
+    unsigned int number = 0;
+    const unsigned int eighthPoints = num_points / 8;
+
+    const float* complexVectorPtr = (float*)complexVector;
+    float* magnitudeVectorPtr = magnitudeVector;
+
+    __m256 cplxValue1, cplxValue2, complex1, complex2, result;
+    for(;number < eighthPoints; number++){
+      cplxValue1 = _mm256_load_ps(complexVectorPtr);
+      complexVectorPtr += 8;
+
+      cplxValue2 = _mm256_load_ps(complexVectorPtr);
+      complexVectorPtr += 8;
+
+      cplxValue1 = _mm256_mul_ps(cplxValue1, cplxValue1); // Square the values
+      cplxValue2 = _mm256_mul_ps(cplxValue2, cplxValue2); // Square the Values
+
+      complex1 = _mm256_permute2f128_ps(cplxValue1, cplxValue2, 0x20);
+      complex2 = _mm256_permute2f128_ps(cplxValue1, cplxValue2, 0x31);
+
+      result = _mm256_hadd_ps(complex1, complex2); // Add the I2 and Q2 values
+
+      result = _mm256_sqrt_ps(result);
+
+      _mm256_store_ps(magnitudeVectorPtr, result);
+      magnitudeVectorPtr += 8;
+    }
+
+    number = eighthPoints * 8;
+    for(; number < num_points; number++){
+      float val1Real = *complexVectorPtr++;
+      float val1Imag = *complexVectorPtr++;
+      *magnitudeVectorPtr++ = sqrtf((val1Real * val1Real) + (val1Imag * val1Imag));
+    }
+}
+#endif /* LV_HAVE_AVX */
 
 #ifdef LV_HAVE_SSE3
 #include <pmmintrin.h>

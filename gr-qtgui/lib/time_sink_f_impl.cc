@@ -607,13 +607,13 @@ namespace gr {
       for(n = 0; n < d_nconnections; n++) {
         in = (const float*)input_items[idx];
         volk_32f_convert_64f(&d_buffers[n][d_index],
-                             &in[0], nitems);
+                             &in[1], nitems);
 
         uint64_t nr = nitems_read(idx);
         std::vector<gr::tag_t> tags;
         get_tags_in_range(tags, idx, nr, nr + nitems);
         for(size_t t = 0; t < tags.size(); t++) {
-          tags[t].offset = tags[t].offset - nr + (d_index-d_start);
+          tags[t].offset = tags[t].offset - nr + (d_index-d_start-1);
         }
         d_tags[idx].insert(d_tags[idx].end(), tags.begin(), tags.end());
         idx++;

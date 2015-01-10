@@ -12,6 +12,10 @@
 	<category>Trellis Coding</category>
 	<import>from gnuradio import trellis</import>
 	<make>trellis.permutation($interleaver_size, $table, $syms_per_block, $type.size*$vlen)</make>
+        <callback>set_K($interleaver_size)</callback>
+        <callback>set_TABLE($table)</callback>
+        <callback>set_SYMS_PER_BLOCK($syms_per_block)</callback>
+        
 	<param>
 		<name>Type</name>
 		<key>type</key>

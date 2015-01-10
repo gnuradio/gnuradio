@@ -47,6 +47,10 @@ namespace gr {
       int D() const { return d_D; }
       digital::trellis_metric_type_t TYPE() const { return d_TYPE; }
       std::vector<@I_TYPE@> TABLE() const { return d_TABLE; }
+
+      void set_O(int O);
+      void set_D(int D);
+      void set_TYPE(digital::trellis_metric_type_t type);
       void set_TABLE(const std::vector<@I_TYPE@> &table);
 
       void forecast(int noutput_items,

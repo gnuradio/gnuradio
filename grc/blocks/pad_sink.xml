@@ -7,9 +7,7 @@
 <block>
 	<name>Pad Sink</name>
 	<key>pad_sink</key>
-    <make>#if str($type) == "message"
-None;self.message_port_register_hier_in($label)
-#end if</make>
+	<make></make>
 	<param>
 		<name>Label</name>
 		<key>label</key>

@@ -25,12 +25,13 @@
 
 #include <gnuradio/blocks/api.h>
 #include <gnuradio/tagged_stream_block.h>
+#include <gnuradio/endianness.h>
 
 namespace gr {
   namespace blocks {
 
     /*!
-     * \brief Pack \p k bits from the input stream onto \p l bits of the output stream.
+     * \brief Repack \p k bits from the input stream onto \p l bits of the output stream.
      * \ingroup byte_operators_blk
      *
      * \details
@@ -38,11 +39,31 @@ namespace gr {
      * On every fresh input byte, it starts reading on the LSB, and starts copying
      * to the LSB as well.
      *
-     * If a packet length tag is given, this block assumes a tagged stream.
-     * In this case, the tag with the packet length is updated accordingly.
-     * Also, the number of input bits is padded with zeros if the number of input
-     * bits is not an integer multiple of \p l, or bits are truncated from the input
-     * if \p align_output is set to true.
+     * When supplying a tag name, this block operates on tagged streams.
+     * In this case, it can happen that the input data or the output data
+     * becomes unaligned when k * input length is not equal to l * output length.
+     * In this case, the \p align_output parameter is used to decide which
+     * data packet to align.
+     *
+     * Usually, \p align_output is false for unpacking (k=8, l < 8) and false for
+     * reversing that.
+     *
+     * \section gr_blocks_repack_example Example
+     *
+     * Say you're tx'ing 8-PSK and therefore set k=8, l=3 on the transmit side
+     * before the modulator. Now assume you're transmitting a single byte of data.
+     * Your incoming tagged stream has length 1, the outgoing has length 3. However,
+     * the third item is actually only carrying 2 bits of relevant data, the bits
+     * do not align with the boundaries. So you set \p align_output = false,
+     * because the output can be unaligned.
+     *
+     * Now say you're doing the inverse: packing those three items into full
+     * bytes. How do you interpret those three bytes? Without this flag,
+     * you'd have to assume there's 9 relevant bits in there, so you'd end up
+     * with 2 bytes of output data. But in the packing case, you want the
+     * \b output to be aligned; all output bits must be useful. By asserting this flag,
+     * the packing algorithm tries to do this and in this case assumes that
+     * since we have alignment after 8 bits, the 9th can be discarded.
      */
     class BLOCKS_API repack_bits_bb : virtual public tagged_stream_block
     {
@@ -52,15 +73,16 @@ namespace gr {
       /*!
        * \param k Number of relevant bits on the input stream
        * \param l Number of relevant bits on the output stream
-       * \param len_tag_key If not empty, this is the key for the length tag.
-       * \param align_output If len_tag_key is given, this controls if the input
+       * \param tsb_tag_key If not empty, this is the key for the length tag.
+       * \param align_output If tsb_tag_key is given, this controls if the input
        *                     or the output is aligned.
+       * \param endianness The endianness of the output data stream (LSB or MSB).
        */
-      static sptr make(int k, int l=8, const std::string &len_tag_key="", bool align_output=false);
+      static sptr make(int k, int l=8, const std::string &tsb_tag_key="",
+                       bool align_output=false, endianness_t endianness=GR_LSB_FIRST);
     };
 
   } // namespace blocks
 } // namespace gr
 
 #endif /* INCLUDED_BLOCKS_REPACK_BITS_BB_H */
-

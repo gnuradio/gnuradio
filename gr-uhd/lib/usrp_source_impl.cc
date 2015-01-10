@@ -710,7 +710,7 @@ namespace gr {
       if (command == "freq") {
 	double freq = pmt::to_double(cmd_value);
 	for (size_t i = 0; i < _nchan; i++) {
-	  if (chan == -1 or chan == int(i)) {
+	  if (chan == -1 || chan == int(i)) {
 	    set_center_freq(freq, i);
 	  }
 	}
@@ -720,7 +720,7 @@ namespace gr {
       } else if (command == "gain") {
 	double gain = pmt::to_double(cmd_value);
 	for (size_t i = 0; i < _nchan; i++) {
-	  if (chan == -1 or chan == int(i)) {
+	  if (chan == -1 || chan == int(i)) {
 	    set_gain(gain, i);
 	  }
 	}

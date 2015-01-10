@@ -39,7 +39,7 @@ namespace gr {
     /*                                                          */
     /* Base class defining interface.                           */
     /************************************************************/
-    
+
     class constellation;
     typedef boost::shared_ptr<constellation> constellation_sptr;
 
@@ -82,13 +82,13 @@ namespace gr {
       unsigned int decision_maker_pe(const gr_complex *sample, float *phase_error);
       //! Calculates distance.
       //unsigned int decision_maker_e(const gr_complex *sample, float *error);
-  
+
       //! Calculates metrics for all points in the constellation.
       //! For use with the viterbi algorithm.
       virtual void calc_metric(const gr_complex *sample, float *metric, gr::digital::trellis_metric_type_t type);
       virtual void calc_euclidean_metric(const gr_complex *sample, float *metric);
       virtual void calc_hard_symbol_metric(const gr_complex *sample, float *metric);
-  
+
       //! Returns the set of points in this constellation.
       std::vector<gr_complex> points() { return d_constellation;}
       //! Returns the vector of points in this constellation.
@@ -111,7 +111,7 @@ namespace gr {
       {
         return floor(log(double(d_constellation.size()))/d_dimensionality/log(2.0));
       }
-  
+
       unsigned int arity()
       {
         return d_arity;
@@ -120,7 +120,7 @@ namespace gr {
       constellation_sptr base()
       {
         return shared_from_this();
-      }  
+      }
 
       pmt::pmt_t as_pmt()
       {
@@ -185,7 +185,12 @@ namespace gr {
 
       //! Returns True if the soft decision LUT has been defined, False otherwise.
       bool has_soft_dec_lut();
-      
+
+
+      std::vector< std::vector<float> > soft_dec_lut();
+
+
+
       /*! \brief Returns the soft decisions for the given \p sample.
        *
        * \details Returns the soft decisions for the given \p
@@ -200,7 +205,7 @@ namespace gr {
 
     protected:
       std::vector<gr_complex> d_constellation;
-      std::vector<int> d_pre_diff_code; 
+      std::vector<int> d_pre_diff_code;
       bool d_apply_pre_diff_code;
       unsigned int d_rotational_symmetry;
       unsigned int d_dimensionality;
@@ -244,7 +249,7 @@ namespace gr {
        * Make a general constellation object that calculates the Euclidean distance for hard decisions.
        *
        * \param constell List of constellation points (order of list matches pre_diff_code)
-       * \param pre_diff_code List of alphabet symbols (before applying any differential 
+       * \param pre_diff_code List of alphabet symbols (before applying any differential
        *                      coding) (order of list matches constell)
        * \param rotational_symmetry Number of rotations around unit circle that have the same representation.
        * \param dimensionality Number of dimensions to the constellation.
@@ -287,7 +292,7 @@ namespace gr {
        * Make a sectorized constellation object.
        *
        * \param constell List of constellation points (order of list matches pre_diff_code)
-       * \param pre_diff_code List of alphabet symbols (before applying any differential 
+       * \param pre_diff_code List of alphabet symbols (before applying any differential
        *                      coding) (order of list matches constell)
        * \param rotational_symmetry Number of rotations around unit circle that have the same representation.
        * \param dimensionality Number of z-axis dimensions to the constellation
@@ -342,13 +347,13 @@ namespace gr {
        * Make a rectangular constellation object.
        *
        * \param constell List of constellation points (order of list matches pre_diff_code)
-       * \param pre_diff_code List of alphabet symbols (before applying any differential 
+       * \param pre_diff_code List of alphabet symbols (before applying any differential
        *                      coding) (order of list matches constell)
        * \param rotational_symmetry Number of rotations around unit circle that have the same representation.
        * \param real_sectors Number of sectors the real axis is split in to.
        * \param imag_sectors Number of sectors the imag axis is split in to.
        * \param width_real_sectors width of each real sector to calculate decision boundaries.
-       * \param width_imag_sectors width of each imag sector to calculate decision boundaries. 
+       * \param width_imag_sectors width of each imag sector to calculate decision boundaries.
        */
       static constellation_rect::sptr make(std::vector<gr_complex> constell,
 					   std::vector<int> pre_diff_code,
@@ -402,7 +407,7 @@ namespace gr {
      * the closest constellation point, however sometimes it's nice to
      * have the flexibility.
      */
-    class DIGITAL_API constellation_expl_rect 
+    class DIGITAL_API constellation_expl_rect
       : public constellation_rect
     {
     public:
@@ -440,17 +445,17 @@ namespace gr {
     /* constellation_psk                                        */
     /************************************************************/
 
-    /*! 
+    /*!
      * \brief constellation_psk
      * \ingroup digital
      *
      * Constellation space is divided into pie slices sectors.
      *
-     * Each slice is associated with the nearest constellation point. 
+     * Each slice is associated with the nearest constellation point.
      *
-     * Works well for PSK but nothing else.  
+     * Works well for PSK but nothing else.
      *
-     * Assumes that there is a constellation point at 1.x 
+     * Assumes that there is a constellation point at 1.x
      */
     class DIGITAL_API constellation_psk : public constellation_sector
     {
@@ -466,7 +471,7 @@ namespace gr {
 
     protected:
       unsigned int get_sector(const gr_complex *sample);
-  
+
       unsigned int calc_sector_value(unsigned int sector);
 
       constellation_psk(std::vector<gr_complex> constell,
@@ -482,7 +487,7 @@ namespace gr {
     /*                                                          */
     /************************************************************/
 
-    /*! 
+    /*!
      * \brief Digital constellation for BPSK .
      * \ingroup digital
      *
@@ -515,7 +520,7 @@ namespace gr {
     /*                                                          */
     /************************************************************/
 
-    /*! 
+    /*!
      * \brief Digital constellation for QPSK
      * \ingroup digital
      *
@@ -585,7 +590,7 @@ namespace gr {
     /*                                                          */
     /************************************************************/
 
-    /*! 
+    /*!
      * \brief Digital constellation for 8PSK.
      * \ingroup digital
      *

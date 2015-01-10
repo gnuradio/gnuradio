@@ -60,6 +60,17 @@ namespace gr {
       virtual int D() const = 0;
       virtual std::vector<float> TABLE() const = 0;
       virtual digital::trellis_metric_type_t TYPE() const = 0;
+
+      virtual void set_FSM(const fsm &FSM) =0;
+      virtual void set_K(int K) =0;
+      virtual void set_S0(int S0) =0;
+      virtual void set_SK(int SK) =0;
+      virtual void set_POSTI(bool POSTI) =0;
+      virtual void set_POSTO(bool POSTO) =0;
+      virtual void set_SISO_TYPE(trellis::siso_type_t type) =0;
+      virtual void set_D(int D) =0;
+      virtual void set_TABLE(const std::vector<float> &table) =0;
+      virtual void set_TYPE(digital::trellis_metric_type_t type) =0;
     };
 
   } /* namespace trellis */

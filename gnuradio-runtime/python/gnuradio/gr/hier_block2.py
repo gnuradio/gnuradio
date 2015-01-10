@@ -1,5 +1,5 @@
 #
-# Copyright 2006,2007 Free Software Foundation, Inc.
+# Copyright 2006,2007,2014 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -19,11 +19,49 @@
 # Boston, MA 02110-1301, USA.
 #
 
+from functools import wraps
+from itertools import imap
+
 from runtime_swig import hier_block2_swig, dot_graph
 import pmt
 
-#
-# This hack forces a 'has-a' relationship to look like an 'is-a' one.
+
+def _multiple_endpoints(func):
+    @wraps(func)
+    def wrapped(self, *points):
+        if not points:
+            raise ValueError("At least one block required for " + func.__name__)
+        elif len(points) == 1:
+            try:
+                block = points[0].to_basic_block()
+            except AttributeError:
+                raise ValueError("At least two endpoints required for " + func.__name__)
+            func(self, block)
+        else:
+            try:
+                endp = [(p, 0) if hasattr(p, 'to_basic_block') else p for p in points]
+                endp_pairs = imap(lambda i: endp[i:i+2], range(len(endp)-1))
+                for (src, src_port), (dst, dst_port) in endp_pairs:
+                    func(self, src.to_basic_block(), src_port,
+                         dst.to_basic_block(), dst_port)
+            except (ValueError, TypeError):
+                raise ValueError("Unable to coerce endpoint")
+    return wrapped
+
+
+def _optional_endpoints(func):
+    @wraps(func)
+    def wrapped(self, src, srcport, dst=None, dstport=None):
+        if dst is None and dstport is None:
+            try:
+                (src, srcport), (dst, dstport) = src, srcport
+            except (ValueError, TypeError):
+                raise ValueError("Unable to coerce endpoint")
+        func(self, src.to_basic_block(), srcport, dst.to_basic_block(), dstport)
+    return wrapped
+
+
+# This makes a 'has-a' relationship to look like an 'is-a' one.
 #
 # It allows Python classes to subclass this one, while passing through
 # method calls to the C++ class shared pointer from SWIG.
@@ -42,17 +80,23 @@ class hier_block2(object):
         """
         Create a hierarchical block with a given name and I/O signatures.
         """
-	self._hb = hier_block2_swig(name, input_signature, output_signature)
+        self._impl = hier_block2_swig(name, input_signature, output_signature)
 
     def __getattr__(self, name):
         """
         Pass-through member requests to the C++ object.
         """
-        if not hasattr(self, "_hb"):
-            raise RuntimeError("hier_block2: invalid state--did you forget to call gr.hier_block2.__init__ in a derived class?")
-	return getattr(self._hb, name)
+        if not hasattr(self, "_impl"):
+            raise RuntimeError(
+                "{0}: invalid state -- did you forget to call {0}.__init__ in "
+                "a derived class?".format(self.__class__.__name__))
+        return getattr(self._impl, name)
 
-    def connect(self, *points):
+    # FIXME: these should really be implemented
+    # in the original C++ class (gr_hier_block2), then they would all be inherited here
+
+    @_multiple_endpoints
+    def connect(self, *args):
         """
         Connect two or more block endpoints.  An endpoint is either a (block, port)
         tuple or a block instance.  In the latter case, the port number is assumed
@@ -64,69 +108,52 @@ class hier_block2(object):
         If multiple arguments are provided, connect will attempt to wire them in series,
         interpreting the endpoints as inputs or outputs as appropriate.
         """
+        self.primitive_connect(*args)
 
-        if len (points) < 1:
-            raise ValueError, ("connect requires at least one endpoint; %d provided." % (len (points),))
-	else:
-	    if len(points) == 1:
-		self._hb.primitive_connect(points[0].to_basic_block())
-	    else:
-		for i in range (1, len (points)):
-        	    self._connect(points[i-1], points[i])
-
-    def _connect(self, src, dst):
-        (src_block, src_port) = self._coerce_endpoint(src)
-        (dst_block, dst_port) = self._coerce_endpoint(dst)
-        self._hb.primitive_connect(src_block.to_basic_block(), src_port,
-                                   dst_block.to_basic_block(), dst_port)
-
-    def _coerce_endpoint(self, endp):
-        if hasattr(endp, 'to_basic_block'):
-            return (endp, 0)
-        else:
-            if hasattr(endp, "__getitem__") and len(endp) == 2:
-                return endp # Assume user put (block, port)
-            else:
-                raise ValueError("unable to coerce endpoint")
-
-    def disconnect(self, *points):
+    @_multiple_endpoints
+    def disconnect(self, *args):
         """
-        Disconnect two endpoints in the flowgraph.
+        Disconnect two or more endpoints in the flowgraph.
 
         To disconnect the hierarchical block external inputs or outputs to internal block
         inputs or outputs, use 'self' in the connect call.
 
         If more than two arguments are provided, they are disconnected successively.
         """
+        self.primitive_disconnect(*args)
 
-        if len (points) < 1:
-            raise ValueError, ("disconnect requires at least one endpoint; %d provided." % (len (points),))
-        else:
-            if len (points) == 1:
-                self._hb.primitive_disconnect(points[0].to_basic_block())
-            else:
-                for i in range (1, len (points)):
-                    self._disconnect(points[i-1], points[i])
+    @_optional_endpoints
+    def msg_connect(self, *args):
+        """
+        Connect two message ports in the flowgraph.
 
-    def _disconnect(self, src, dst):
-        (src_block, src_port) = self._coerce_endpoint(src)
-        (dst_block, dst_port) = self._coerce_endpoint(dst)
-        self._hb.primitive_disconnect(src_block.to_basic_block(), src_port,
-                                      dst_block.to_basic_block(), dst_port)
+        If only two arguments are provided, they must be endpoints (block, port)
+        """
+        self.primitive_msg_connect(*args)
 
-    def msg_connect(self, src, srcport, dst, dstport):
-        self.primitive_msg_connect(src.to_basic_block(), srcport, dst.to_basic_block(), dstport);
+    @_optional_endpoints
+    def msg_disconnect(self, *args):
+        """
+        Disconnect two message ports in the flowgraph.
 
-    def msg_disconnect(self, src, srcport, dst, dstport):
-        self.primitive_msg_disconnect(src.to_basic_block(), srcport, dst.to_basic_block(), dstport);
+        If only two arguments are provided, they must be endpoints (block, port)
+        """
+        self.primitive_msg_disconnect(*args)
 
     def message_port_register_hier_in(self, portname):
-        self.primitive_message_port_register_hier_in(pmt.intern(portname));
+        """
+        Register a message port for this hier block
+        """
+        self.primitive_message_port_register_hier_in(pmt.intern(portname))
 
     def message_port_register_hier_out(self, portname):
-        self.primitive_message_port_register_hier_out(pmt.intern(portname));
+        """
+        Register a message port for this hier block
+        """
+        self.primitive_message_port_register_hier_out(pmt.intern(portname))
 
     def dot_graph(self):
-        '''Return graph representation in dot language'''
-        return dot_graph(self._hb)
-
+        """
+        Return graph representation in dot language
+        """
+        return dot_graph(self._impl)

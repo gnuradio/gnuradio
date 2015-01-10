@@ -42,6 +42,7 @@ namespace gr {
       bool d_POSTI;
       bool d_POSTO;
       siso_type_t d_SISO_TYPE;
+      void recalculate();
       //std::vector<float> d_alpha;
       //std::vector<float> d_beta;
 
@@ -59,6 +60,14 @@ namespace gr {
       bool POSTI() const { return d_POSTI; }
       bool POSTO() const { return d_POSTO; }
       siso_type_t SISO_TYPE() const { return d_SISO_TYPE; }
+
+      void set_FSM(const fsm &FSM);
+      void set_K(int K);
+      void set_S0(int S0);
+      void set_SK(int SK);
+      void set_POSTI(bool POSTI);
+      void set_POSTO(bool POSTO);
+      void set_SISO_TYPE(trellis::siso_type_t type);
 
       void forecast(int noutput_items,
 		    gr_vector_int &ninput_items_required);

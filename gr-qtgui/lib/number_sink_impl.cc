@@ -328,6 +328,32 @@ namespace gr {
       }
     }
 
+    float
+    number_sink_impl::get_item(const void *input_items, int n)
+    {
+      char *inc;
+      short *ins;
+      float *inf;
+
+      switch(d_itemsize) {
+      case(1):
+        inc = (char*)input_items;
+        return static_cast<float>(inc[n]);
+        break;
+      case(2):
+        ins = (short*)input_items;
+        return static_cast<float>(ins[n]);
+        break;
+      case(4):
+        inf = (float*)input_items;
+        return static_cast<float>(inf[n]);
+        break;
+      default:
+        throw std::runtime_error("item size not supported");
+      }
+      return 0;
+    }
+
     int
     number_sink_impl::work(int noutput_items,
 			   gr_vector_const_void_star &input_items,
@@ -339,10 +365,10 @@ namespace gr {
 
       if(d_average > 0) {
         for(int n = 0; n < d_nconnections; n++) {
-          float *in = (float*)input_items[n];
           for(int i = 0; i < noutput_items; i++) {
-            if(std::isfinite(in[i]))
-               d_avg_value[n] = d_iir[n].filter(in[i]);
+            float x = get_item(input_items[n], i);
+            if(std::isfinite(x))
+               d_avg_value[n] = d_iir[n].filter(x);
           }
         }
       }
@@ -357,7 +383,7 @@ namespace gr {
         }
         else {
           for(int n = 0; n < d_nconnections; n++) {
-            float x = ((float*)input_items[n])[0];
+            float x = get_item(input_items[n], 0);
             if(std::isfinite(x))
                d[n] = x;
           }

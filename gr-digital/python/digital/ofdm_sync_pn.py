@@ -42,9 +42,9 @@ class ofdm_sync_pn(gr.hier_block2):
         Synchonization for OFDM," IEEE Trans. Communications, vol. 45,
         no. 12, 1997.
         """
-        
-	gr.hier_block2.__init__(self, "ofdm_sync_pn",
-				gr.io_signature(1, 1, gr.sizeof_gr_complex), # Input signature
+
+        gr.hier_block2.__init__(self, "ofdm_sync_pn",
+                                gr.io_signature(1, 1, gr.sizeof_gr_complex), # Input signature
                                 gr.io_signature2(2, 2, gr.sizeof_float, gr.sizeof_char)) # Output signature
 
         self.input = blocks.add_const_cc(0)
@@ -59,25 +59,15 @@ class ofdm_sync_pn(gr.hier_block2):
         self.corr = blocks.multiply_cc();
 
         # Create a moving sum filter for the corr output
-        if 1:
-            moving_sum_taps = [1.0 for i in range(fft_length//2)]
-            self.moving_sum_filter = filter.fir_filter_ccf(1,moving_sum_taps)
-        else:
-            moving_sum_taps = [complex(1.0,0.0) for i in range(fft_length//2)]
-            self.moving_sum_filter = filter.fft_filter_ccc(1,moving_sum_taps)
+        self.moving_sum_filter = filter.fir_filter_ccf(1, [1.0] * (fft_length//2))
 
         # Create a moving sum filter for the input
         self.inputmag2 = blocks.complex_to_mag_squared()
-        movingsum2_taps = [1.0 for i in range(fft_length//2)]
-
-        if 1:
-            self.inputmovingsum = filter.fir_filter_fff(1,movingsum2_taps)
-        else:
-            self.inputmovingsum = filter.fft_filter_fff(1,movingsum2_taps)
+        self.inputmovingsum = filter.fir_filter_fff(1, [1.0] * (fft_length//2))
 
         self.square = blocks.multiply_ff()
         self.normalize = blocks.divide_ff()
-     
+
         # Get magnitude (peaks) and angle (phase/freq error)
         self.c2mag = blocks.complex_to_mag_squared()
         self.angle = blocks.complex_to_arg()
@@ -87,10 +77,9 @@ class ofdm_sync_pn(gr.hier_block2):
         #ML measurements input to sampler block and detect
         self.sub1 = blocks.add_const_ff(-1)
         self.pk_detect = blocks.peak_detector_fb(0.20, 0.20, 30, 0.001)
-        #self.pk_detect = blocks.peak_detector2_fb(9)
 
         self.connect(self, self.input)
-        
+
         # Calculate the frequency offset from the correlation of the preamble
         self.connect(self.input, self.delay)
         self.connect(self.input, (self.corr,0))
@@ -130,4 +119,3 @@ class ofdm_sync_pn(gr.hier_block2):
             self.connect(self.pk_detect, blocks.file_sink(gr.sizeof_char, "ofdm_sync_pn-peaks_b.dat"))
             self.connect(self.sample_and_hold, blocks.file_sink(gr.sizeof_float, "ofdm_sync_pn-sample_and_hold_f.dat"))
             self.connect(self.input, blocks.file_sink(gr.sizeof_gr_complex, "ofdm_sync_pn-input_c.dat"))
-

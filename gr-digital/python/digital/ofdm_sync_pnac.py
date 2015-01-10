@@ -43,23 +43,22 @@ class ofdm_sync_pnac(gr.hier_block2):
 
         This implementation is meant to be a more robust version of the Schmidl and Cox receiver design.
         By correlating against the preamble and using that as the input to the time-delayed correlation,
-        this circuit produces a very clean timing signal at the end of the preamble. The timing is 
+        this circuit produces a very clean timing signal at the end of the preamble. The timing is
         more accurate and does not have the problem associated with determining the timing from the
         plateau structure in the Schmidl and Cox.
 
         This implementation appears to require that the signal is received with a normalized power or signal
-        scalling factor to reduce ambiguities intorduced from partial correlation of the cyclic prefix and
+        scaling factor to reduce ambiguities introduced from partial correlation of the cyclic prefix and
         the peak detection. A better peak detection block might fix this.
 
         Also, the cross-correlation falls apart as the frequency offset gets larger and completely fails
         when an integer offset is introduced. Another thing to look at.
         """
 
-	gr.hier_block2.__init__(self, "ofdm_sync_pnac",
-				gr.io_signature(1, 1, gr.sizeof_gr_complex), # Input signature
+        gr.hier_block2.__init__(self, "ofdm_sync_pnac",
+                                gr.io_signature(1, 1, gr.sizeof_gr_complex), # Input signature
                                 gr.io_signature2(2, 2, gr.sizeof_float, gr.sizeof_char)) # Output signature
 
-            
         self.input = blocks.add_const_cc(0)
 
         symbol_length = fft_length + cp_length
@@ -80,19 +79,18 @@ class ofdm_sync_pnac(gr.hier_block2):
 
         # Create a moving sum filter for the input
         self.mag = blocks.complex_to_mag_squared()
-        movingsum_taps = (fft_length//1)*[1.0,]
-        self.power = filter.fir_filter_fff(1,movingsum_taps)
-     
+        self.power = filter.fir_filter_fff(1, [1.0] * int(fft_length))
+
         # Get magnitude (peaks) and angle (phase/freq error)
         self.c2mag = blocks.complex_to_mag_squared()
         self.angle = blocks.complex_to_arg()
         self.compare = blocks.sub_ff()
-        
+
         self.sample_and_hold = blocks.sample_and_hold_ff()
 
         #ML measurements input to sampler block and detect
         self.threshold = blocks.threshold_ff(0,0,0)      # threshold detection might need to be tweaked
-        self.peaks = blocksx.float_to_char()
+        self.peaks = blocks.float_to_char()
 
         self.connect(self, self.input)
 
