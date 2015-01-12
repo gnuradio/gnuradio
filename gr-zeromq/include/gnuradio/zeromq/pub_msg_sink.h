@@ -24,7 +24,7 @@
 #define INCLUDED_ZEROMQ_PUB_MSG_SINK_H
 
 #include <gnuradio/zeromq/api.h>
-#include <gnuradio/sync_block.h>
+#include <gnuradio/block.h>
 
 namespace gr {
   namespace zeromq {

@@ -40,9 +40,6 @@ namespace gr {
       push_msg_sink_impl(char *address, int timeout);
       ~push_msg_sink_impl();
 
-      int work(int noutput_items,
-               gr_vector_const_void_star &input_items,
-               gr_vector_void_star &output_items);
       void handler(pmt::pmt_t msg);
     };
 
