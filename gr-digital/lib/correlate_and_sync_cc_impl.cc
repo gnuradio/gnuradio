@@ -183,6 +183,16 @@ namespace gr {
                (d_corr_mag[i] < d_corr_mag[i+1]))
           i++;
 
+        // Delaying the primary signal output by the matched filter
+        // length using history(), means that the the peak output of the
+        // matched filter aligns with the start of the desired preamble in
+        // the primary signal output.
+        // This corr_start tag is not offset to another sample, so that
+        // downstream data-aided blocks (like adaptive equalizers) know
+        // exactly where the start of the correlated symbols are.
+        add_item_tag(0, nitems_written(0) + i, pmt::intern("corr_start"),
+                     pmt::from_double(d_corr_mag[i]), d_src_id);
+
         // Peak detector using a "center of mass" approach
         // center holds the +/- fraction of a sample index
         // from the found peak index to the estimated actual peak index.
@@ -195,11 +205,6 @@ namespace gr {
           }
           center = nom / den - 2.0;
         }
-
-        // Delaying the primary signal output by the matched filter
-        // length using history(), means that the the peak output of the
-        // matched filter aligns with the start of the desired preamble in
-        // the primary signal output.
 
         // In the old implementation of this block, a single padding symbol
         // in the matched filter caused the matched filter to have
@@ -225,13 +230,28 @@ namespace gr {
                      pmt::from_double(phase), d_src_id);
         add_item_tag(0, nitems_written(0) + index, pmt::intern("time_est"),
                      pmt::from_double(center), d_src_id);
+        // N.B. the appropriate d_corr_mag[] index is "i", not "index".
         add_item_tag(0, nitems_written(0) + index, pmt::intern("corr_est"),
-                     pmt::from_double(d_corr_mag[index]), d_src_id);
+                     pmt::from_double(d_corr_mag[i]), d_src_id);
+
+        if (output_items.size() > 1) {
+          // N.B. these tags are not offset by half a symbol
+          add_item_tag(1, nitems_written(0) + i, pmt::intern("phase_est"),
+                       pmt::from_double(phase), d_src_id);
+          add_item_tag(1, nitems_written(0) + i, pmt::intern("time_est"),
+                       pmt::from_double(center), d_src_id);
+          add_item_tag(1, nitems_written(0) + i, pmt::intern("corr_est"),
+                       pmt::from_double(d_corr_mag[i]), d_src_id);
+        }
 
         // Skip ahead to the next potential symbol peak
         // (for non-offset/interleaved symbols)
         i += isps;
       }
+      if (output_items.size() > 1)
+        add_item_tag(1, nitems_written(0) + noutput_items - 1,
+                     pmt::intern("cas_eow"), pmt::from_uint64(noutput_items),
+                     d_src_id);
 
       return noutput_items;
     }
