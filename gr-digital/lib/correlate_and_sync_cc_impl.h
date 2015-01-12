@@ -34,6 +34,7 @@ namespace gr {
     class correlate_and_sync_cc_impl : public correlate_and_sync_cc
     {
     private:
+      pmt::pmt_t d_src_id;
       std::vector<gr_complex> d_symbols;
       float d_sps;
       float d_thresh;

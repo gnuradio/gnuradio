@@ -46,7 +46,8 @@ namespace gr {
     correlate_and_sync_cc_impl::correlate_and_sync_cc_impl(const std::vector<gr_complex> &symbols, float sps, float threshold)
       : sync_block("correlate_and_sync_cc",
                    io_signature::make(1, 1, sizeof(gr_complex)),
-                   io_signature::make(1, 2, sizeof(gr_complex)))
+                   io_signature::make(1, 2, sizeof(gr_complex))),
+        d_src_id(pmt::intern(alias()))
     {
       d_sps = sps;
 
@@ -221,11 +222,11 @@ namespace gr {
           phase += M_PI;
 
         add_item_tag(0, nitems_written(0) + index, pmt::intern("phase_est"),
-                     pmt::from_double(phase), pmt::intern(alias()));
+                     pmt::from_double(phase), d_src_id);
         add_item_tag(0, nitems_written(0) + index, pmt::intern("time_est"),
-                     pmt::from_double(center), pmt::intern(alias()));
+                     pmt::from_double(center), d_src_id);
         add_item_tag(0, nitems_written(0) + index, pmt::intern("corr_est"),
-                     pmt::from_double(d_corr_mag[index]), pmt::intern(alias()));
+                     pmt::from_double(d_corr_mag[index]), d_src_id);
 
         // Skip ahead to the next potential symbol peak
         // (for non-offset/interleaved symbols)
