@@ -39,8 +39,6 @@ namespace gr {
       float d_thresh;
       kernel::fft_filter_ccc  *d_filter;
 
-      int d_last_index;
-
     public:
       correlate_and_sync_cc_impl(const std::vector<gr_complex> &symbols,
                                  unsigned int sps, float threshold=0.9);
