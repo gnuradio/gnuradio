@@ -63,11 +63,33 @@ namespace gr {
 
       d_filter = new kernel::fft_filter_ccc(1, d_symbols);
 
-      set_history(d_filter->ntaps());
+      // Per comments in gr-filter/include/gnuradio/filter/fft_filter.h,
+      // set the block output multiple to the FFT filter kernel's internal,
+      // assumed "nsamples", to ensure the scheduler always passes a
+      // proper number of samples.
+      int nsamples;
+      nsamples = d_filter->set_taps(d_symbols);
+      set_output_multiple(nsamples);
 
-      const int alignment_multiple =
-        volk_get_alignment() / sizeof(gr_complex);
-      set_alignment(std::max(1,alignment_multiple));
+      // It looks like the kernel::fft_filter_ccc stashes a tail between
+      // calls, so that contains our filtering history (I think).  The
+      // fft_filter_ccc block (which calls the kernel::fft_filter_ccc) sets
+      // the history to 1 (0 history items), so let's follow its lead.
+      //set_history(1);
+
+      // We'll (ab)use the history for our own purposes of tagging back in time.
+      // Keep a history of the length of the preamble to delay for tagging.
+      set_history(d_symbols.size()+1);
+
+      declare_sample_delay(1, 0);
+      declare_sample_delay(0, d_symbols_size());
+
+      // Setting the alignment multiple for volk causes problems with the
+      // expected behavior of setting the output multiple for the FFT filter.
+      // Don't set the alignment multiple.
+      //const int alignment_multiple =
+      //  volk_get_alignment() / sizeof(gr_complex);
+      //set_alignment(std::max(1,alignment_multiple));
 
       // In order to easily support the optional second output,
       // don't deal with an unbounded max number of output items
@@ -91,9 +113,29 @@ namespace gr {
     correlate_and_sync_cc_impl::set_symbols(const std::vector<gr_complex> &symbols)
     {
       gr::thread::scoped_lock lock(d_setlock);
+
       d_symbols = symbols;
-      d_filter->set_taps(symbols);
-      set_history(d_filter->ntaps());
+
+      // Per comments in gr-filter/include/gnuradio/filter/fft_filter.h,
+      // set the block output multiple to the FFT filter kernel's internal,
+      // assumed "nsamples", to ensure the scheduler always passes a
+      // proper number of samples.
+      int nsamples;
+      nsamples = d_filter->set_taps(d_symbols);
+      set_output_multiple(nsamples);
+
+      // It looks like the kernel::fft_filter_ccc stashes a tail between
+      // calls, so that contains our filtering history (I think).  The
+      // fft_filter_ccc block (which calls the kernel::fft_filter_ccc) sets
+      // the history to 1 (0 history items), so let's follow its lead.
+      //set_history(1);
+
+      // We'll (ab)use the history for our own purposes of tagging back in time.
+      // Keep a history of the length of the preamble to delay for tagging.
+      set_history(d_symbols.size()+1);
+
+      declare_sample_delay(1, 0);
+      declare_sample_delay(0, d_symbols_size());
     }
 
     int
@@ -111,36 +153,63 @@ namespace gr {
       else
           corr = d_corr;
 
-      memcpy(out, in, sizeof(gr_complex)*noutput_items);
+      // Our correlation filter length
+      unsigned int hist_len = history() - 1;
 
-      // Calculate the correlation with the known symbol
-      d_filter->filter(noutput_items, in, corr);
+      // Delay the output by our correlation filter length so
+      // we can tag backwards in time
+      memcpy(out, &in[0], sizeof(gr_complex)*noutput_items);
+
+      // Calculate the correlation of the non-delayed input with the known
+      // symbols.
+      d_filter->filter(noutput_items, &in[hist_len], corr);
 
       // Find the magnitude squared of the correlation
       std::vector<float> corr_mag(noutput_items);
       volk_32fc_magnitude_squared_32f(&corr_mag[0], corr, noutput_items);
 
       int isps = (int) (d_sps + 0.5f);
-      int i = isps;
+      int i = 0;
       while(i < noutput_items) {
+        // Look for the correlator output to cross the threshold
         if (corr_mag[i] <= d_thresh) {
           i++;
           continue;
         }
-        while (corr_mag[i] < corr_mag[i+1])
-            i++;
+        // Go to (just past) the current correlator output peak
+        while ((i < (noutput_items-1)) and
+               (corr_mag[i] < corr_mag[i+1]))
+          i++;
 
-        double nom = 0, den = 0;
-        for(int s = 0; s < 3; s++) {
-          nom += (s+1)*corr_mag[i+s-1];
-          den += corr_mag[i+s-1];
+        // Peak detector using a "center of mass" approach
+        // center holds the +/- fraction of a sample index
+        // from the found peak index to the estimated actual peak index.
+        double center = 0.0;
+        if (i > 0 and i < (noutput_items - 1)) {
+          double nom = 0, den = 0;
+          for(int s = 0; s < 3; s++) {
+            nom += (s+1)*corr_mag[i+s-1];
+            den += corr_mag[i+s-1];
+          }
+          center = nom / den - 2.0;
         }
-        double center = nom / den;
-        center = (center - 2.0);
 
-        // Adjust the results of the fft filter by moving back the
-        // length of the filter offset by the number of sps.
-        int index = i + isps + 1;
+        // Delaying the primary signal output by the matched filter
+        // length using history(), means that the the peak output of the
+        // matched filter aligns with the start of the desired preamble in
+        // the primary signal output.
+
+        // In the old implementation of this block, a single padding symbol
+        // in the matched filter caused the matched filter to have
+        // ~d_sps/2.0 samples added at the begining and end of the matched
+        // filter.  The old implementation implemented an index into the center
+        // of the first correlated symbol by adding d_sps from the beginning
+        // of the correlated sequence.
+        //
+        // Since we don't know if we have any padding at the start of the
+        // user provided symbols, assume we don't and index in by d_sps/2.0
+        // to get to the center of the first correlated symbol.
+        int index = i + (int) (d_sps/2.0 + 0.5f) + 1;
 
         // Calculate the phase offset of the incoming signal; always
         // adjust it based on the proper rotation of the expected
@@ -157,6 +226,8 @@ namespace gr {
         add_item_tag(0, nitems_written(0) + index, pmt::intern("corr_est"),
                      pmt::from_double(corr_mag[index]), pmt::intern(alias()));
 
+        // Skip ahead to the next potential symbol peak
+        // (for non-offset/interleaved symbols)
         i += isps;
       }
 
