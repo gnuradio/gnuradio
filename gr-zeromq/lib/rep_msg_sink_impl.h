@@ -37,15 +37,13 @@ namespace gr {
       zmq::socket_t   *d_socket;
       boost::thread   *d_thread;
       bool            d_finished;
+
       void            readloop();
 
     public:
       rep_msg_sink_impl(char *address, int timeout);
       ~rep_msg_sink_impl();
 
-      int work(int noutput_items,
-               gr_vector_const_void_star &input_items,
-               gr_vector_void_star &output_items);
       bool start();
       bool stop();
     };

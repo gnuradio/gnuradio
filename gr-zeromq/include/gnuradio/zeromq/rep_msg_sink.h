@@ -24,22 +24,22 @@
 #define INCLUDED_ZEROMQ_REP_MSG_SINK_H
 
 #include <gnuradio/zeromq/api.h>
-#include <gnuradio/sync_block.h>
+#include <gnuradio/block.h>
 
 namespace gr {
   namespace zeromq {
 
     /*!
-     * \brief Sink the contents of a stream to a ZMQ REP socket
+     * \brief Sink the contents of a msg port to a ZMQ REP socket
      * \ingroup zeromq
      *
      * \details
-     * This block acts a a streaming sink for a GNU Radio flowgraph
-     * and writes its contents to a ZMQ REP socket.  A REP socket will
-     * only send its contents to an attached REQ socket when it
-     * requests items.
+     * This block acts a message port receiver and writes individual
+     * messages to a ZMQ REP socket.  The corresponding receiving ZMQ
+     * REQ socket can be either another gr-zeromq source block or a
+     * non-GNU Radio ZMQ socket.
      */
-    class ZEROMQ_API rep_msg_sink : virtual public gr::sync_block
+    class ZEROMQ_API rep_msg_sink : virtual public gr::block
     {
     public:
       typedef boost::shared_ptr<rep_msg_sink> sptr;

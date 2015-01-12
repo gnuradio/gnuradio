@@ -39,25 +39,26 @@ namespace gr {
     }
 
     rep_msg_sink_impl::rep_msg_sink_impl(char *address, int timeout)
-      : gr::sync_block("rep_msg_sink",
-                       gr::io_signature::make(0, 0, 0),
-                       gr::io_signature::make(0, 0, 0)),
-       d_timeout(timeout)
+      : gr::block("rep_msg_sink",
+                  gr::io_signature::make(0, 0, 0),
+                  gr::io_signature::make(0, 0, 0)),
+        d_timeout(timeout)
     {
       int major, minor, patch;
-      zmq::version (&major, &minor, &patch);
+      zmq::version(&major, &minor, &patch);
+
       if (major < 3) {
         d_timeout = timeout*1000;
       }
+
       d_context = new zmq::context_t(1);
       d_socket = new zmq::socket_t(*d_context, ZMQ_REP);
+
       int time = 0;
       d_socket->setsockopt(ZMQ_LINGER, &time, sizeof(time));
       d_socket->bind (address);
 
       message_port_register_in(pmt::mp("in"));
-//      set_msg_handler( pmt::mp("in"), 
-//        boost::bind(&rep_msg_sink_impl::handler, this, _1));
     }
 
     rep_msg_sink_impl::~rep_msg_sink_impl()
@@ -67,75 +68,55 @@ namespace gr {
       delete d_context;
     }
 
-    bool rep_msg_sink_impl::start(){
+    bool rep_msg_sink_impl::start()
+    {
       d_finished = false;
-      d_thread = new boost::thread( boost::bind( &rep_msg_sink_impl::readloop , this ) );
+      d_thread = new boost::thread(boost::bind(&rep_msg_sink_impl::readloop, this));
       return true;
     }
 
-    bool rep_msg_sink_impl::stop(){
+    bool rep_msg_sink_impl::stop()
+    {
       d_finished = true;
       d_thread->join();
       return true;
     }
 
-/*
-    void rep_msg_sink_impl::handler(pmt::pmt_t msg){
-      std::stringbuf sb("");
-      pmt::serialize( msg, sb );
-      std::string s = sb.str();
-      zmq::message_t zmsg(s.size());
-      memcpy( zmsg.data(), s.c_str(), s.size() );
-      d_socket->send(zmsg);
-    }
-*/
-
-    int
-    rep_msg_sink_impl::work(int noutput_items,
-                        gr_vector_const_void_star &input_items,
-                        gr_vector_void_star &output_items)
+    void rep_msg_sink_impl::readloop()
     {
-        return noutput_items;
+      while(!d_finished) {
+
+        // while we have data, wait for query...
+        while(!empty_p(pmt::mp("in"))) {
+
+          // wait for query...
+          zmq::pollitem_t items[] = { { *d_socket, 0, ZMQ_POLLIN, 0 } };
+          zmq::poll (&items[0], 1, d_timeout);
+
+          //  If we got a reply, process
+          if (items[0].revents & ZMQ_POLLIN) {
+
+            // receive data request
+            zmq::message_t request;
+            d_socket->recv(&request);
+
+            int req_output_items = *(static_cast<int*>(request.data()));
+            if(req_output_items != 1)
+              throw std::runtime_error("Request was not 1 msg for rep/req request!!");
+
+            // create message copy and send
+            pmt::pmt_t msg = delete_head_nowait(pmt::mp("in"));
+            std::stringbuf sb("");
+            pmt::serialize( msg, sb );
+            std::string s = sb.str();
+            zmq::message_t zmsg(s.size());
+            memcpy( zmsg.data(), s.c_str(), s.size() );
+            d_socket->send(zmsg);
+          } // if req
+        } // while !empty
+
+      } // while !d_finished
     }
 
-    void rep_msg_sink_impl::readloop(){
-
-     while(!d_finished){
-
-      // while we have data, wait for query...
-      while(!empty_p(pmt::mp("in"))){
-
-      //std::cout << "wait for req ...\n";
-      // wait for query...
-      zmq::pollitem_t items[] = { { *d_socket, 0, ZMQ_POLLIN, 0 } };
-      zmq::poll (&items[0], 1, d_timeout);
-
-      //  If we got a reply, process
-      if (items[0].revents & ZMQ_POLLIN) {
-        //std::cout << "wait for req ... got req\n";
-        // receive data request
-        zmq::message_t request;
-        d_socket->recv(&request);
-        int req_output_items = *(static_cast<int*>(request.data()));
-        if(req_output_items != 1)
-            throw std::runtime_error("Request was not 1 msg for rep/req request!!");
-        
-        // create message copy and send
-        //std::cout << "get pmt in\n";
-        pmt::pmt_t msg = delete_head_nowait(pmt::mp("in"));
-        std::stringbuf sb("");
-        pmt::serialize( msg, sb );
-        std::string s = sb.str();
-        zmq::message_t zmsg(s.size());
-        memcpy( zmsg.data(), s.c_str(), s.size() );
-        //std::cout << "send pmt zmq\n";
-        d_socket->send(zmsg);
-      } // if req
-
-     } // while !empty
-
-     } // while !d_finished
-
-    }
   } /* namespace zeromq */
 } /* namespace gr */
