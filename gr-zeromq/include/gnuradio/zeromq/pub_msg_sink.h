@@ -30,17 +30,17 @@ namespace gr {
   namespace zeromq {
 
     /*!
-     * \brief Sink the contents of a stream to a ZMQ PUB socket
+     * \brief Sink the contents of a msg port to a ZMQ PUB socket
      * \ingroup zeromq
      *
      * \details
-     * This block acts a a streaming sink for a GNU Radio flowgraph
-     * and writes its contents to a ZMQ PUB socket.  A PUB socket may
-     * have subscribers and will pass all incoming stream data to each
+     * This block acts a message port receiver and writes individual
+     * messages to a ZMQ PUB socket.  A PUB socket may have
+     * subscribers and will pass all incoming messages to each
      * subscriber.  Subscribers can be either another gr-zeromq source
      * block or a non-GNU Radio ZMQ socket.
      */
-    class ZEROMQ_API pub_msg_sink : virtual public gr::sync_block
+    class ZEROMQ_API pub_msg_sink : virtual public gr::block
     {
     public:
       typedef boost::shared_ptr<pub_msg_sink> sptr;

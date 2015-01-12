@@ -39,9 +39,9 @@ namespace gr {
     }
 
     pub_msg_sink_impl::pub_msg_sink_impl(char *address, int timeout)
-      : gr::sync_block("pub_msg_sink",
-                       gr::io_signature::make(0, 0, 0),
-                       gr::io_signature::make(0, 0, 0)),
+      : gr::block("pub_msg_sink",
+                  gr::io_signature::make(0, 0, 0),
+                  gr::io_signature::make(0, 0, 0)),
         d_timeout(timeout)
     {
       int major, minor, patch;
@@ -49,6 +49,7 @@ namespace gr {
       if (major < 3) {
         d_timeout = timeout*1000;
       }
+
       d_context = new zmq::context_t(1);
       d_socket = new zmq::socket_t(*d_context, ZMQ_PUB);
       int time = 0;
@@ -56,7 +57,7 @@ namespace gr {
       d_socket->bind(address);
 
       message_port_register_in(pmt::mp("in"));
-      set_msg_handler( pmt::mp("in"), 
+      set_msg_handler( pmt::mp("in"),
         boost::bind(&pub_msg_sink_impl::handler, this, _1));
     }
 
@@ -67,21 +68,15 @@ namespace gr {
       delete d_context;
     }
 
-    void pub_msg_sink_impl::handler(pmt::pmt_t msg){
+    void pub_msg_sink_impl::handler(pmt::pmt_t msg)
+    {
       std::stringbuf sb("");
-      pmt::serialize( msg, sb );
+      pmt::serialize(msg, sb);
       std::string s = sb.str();
       zmq::message_t zmsg(s.size());
-      memcpy( zmsg.data(), s.c_str(), s.size() );
-      d_socket->send(zmsg);
-    }
 
-    int
-    pub_msg_sink_impl::work(int noutput_items,
-                        gr_vector_const_void_star &input_items,
-                        gr_vector_void_star &output_items)
-    {
-      return noutput_items;
+      memcpy(zmsg.data(), s.c_str(), s.size());
+      d_socket->send(zmsg);
     }
 
   } /* namespace zeromq */
