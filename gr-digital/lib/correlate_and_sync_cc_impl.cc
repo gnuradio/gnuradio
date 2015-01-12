@@ -97,17 +97,21 @@ namespace gr {
       //set_alignment(std::max(1,alignment_multiple));
 
       // In order to easily support the optional second output,
-      // don't deal with an unbounded max number of output items
+      // don't deal with an unbounded max number of output items.
+      // For the common case of not using the optional second output,
+      // this ensures we optimally call the volk routines.
       set_max_noutput_items(24*1024);
-      d_corr = (gr_complex *) malloc(sizeof(gr_complex)*24*1024);
-      d_corr_mag = (float *) malloc(sizeof(float)*24*1024);
+      d_corr = (gr_complex *)
+               volk_malloc(sizeof(gr_complex)*24*1024, volk_get_alignment());
+      d_corr_mag = (float *)
+                   volk_malloc(sizeof(float)*24*1024, volk_get_alignment());
     }
 
     correlate_and_sync_cc_impl::~correlate_and_sync_cc_impl()
     {
       delete d_filter;
-      free(d_corr);
-      free(d_corr_mag);
+      volk_free(d_corr);
+      volk_free(d_corr_mag);
     }
 
     std::vector<gr_complex>
