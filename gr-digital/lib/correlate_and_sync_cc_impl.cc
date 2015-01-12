@@ -46,7 +46,7 @@ namespace gr {
     correlate_and_sync_cc_impl::correlate_and_sync_cc_impl(const std::vector<gr_complex> &symbols, unsigned int sps, float threshold)
       : sync_block("correlate_and_sync_cc",
                    io_signature::make(1, 1, sizeof(gr_complex)),
-                   io_signature::make(2, 2, sizeof(gr_complex)))
+                   io_signature::make(1, 2, sizeof(gr_complex)))
     {
       d_sps = sps;
 
@@ -68,11 +68,17 @@ namespace gr {
       const int alignment_multiple =
         volk_get_alignment() / sizeof(gr_complex);
       set_alignment(std::max(1,alignment_multiple));
+
+      // In order to easily support the optional second output,
+      // don't deal with an unbounded max number of output items
+      set_max_noutput_items(24*1024);
+      d_corr = (gr_complex *) malloc(sizeof(gr_complex)*24*1024);
     }
 
     correlate_and_sync_cc_impl::~correlate_and_sync_cc_impl()
     {
       delete d_filter;
+      free(d_corr);
     }
 
     std::vector<gr_complex>
@@ -99,7 +105,11 @@ namespace gr {
 
       const gr_complex *in = (gr_complex *)input_items[0];
       gr_complex *out = (gr_complex*)output_items[0];
-      gr_complex *corr = (gr_complex*)output_items[1];
+      gr_complex *corr;
+      if (output_items.size() > 1)
+          corr = (gr_complex *) output_items[1];
+      else
+          corr = d_corr;
 
       memcpy(out, in, sizeof(gr_complex)*noutput_items);
 
