@@ -95,12 +95,14 @@ namespace gr {
       // don't deal with an unbounded max number of output items
       set_max_noutput_items(24*1024);
       d_corr = (gr_complex *) malloc(sizeof(gr_complex)*24*1024);
+      d_corr_mag = (float *) malloc(sizeof(float)*24*1024);
     }
 
     correlate_and_sync_cc_impl::~correlate_and_sync_cc_impl()
     {
       delete d_filter;
       free(d_corr);
+      free(d_corr_mag);
     }
 
     std::vector<gr_complex>
@@ -165,20 +167,19 @@ namespace gr {
       d_filter->filter(noutput_items, &in[hist_len], corr);
 
       // Find the magnitude squared of the correlation
-      std::vector<float> corr_mag(noutput_items);
-      volk_32fc_magnitude_squared_32f(&corr_mag[0], corr, noutput_items);
+      volk_32fc_magnitude_squared_32f(&d_corr_mag[0], corr, noutput_items);
 
       int isps = (int) (d_sps + 0.5f);
       int i = 0;
       while(i < noutput_items) {
         // Look for the correlator output to cross the threshold
-        if (corr_mag[i] <= d_thresh) {
+        if (d_corr_mag[i] <= d_thresh) {
           i++;
           continue;
         }
         // Go to (just past) the current correlator output peak
         while ((i < (noutput_items-1)) and
-               (corr_mag[i] < corr_mag[i+1]))
+               (d_corr_mag[i] < d_corr_mag[i+1]))
           i++;
 
         // Peak detector using a "center of mass" approach
@@ -188,8 +189,8 @@ namespace gr {
         if (i > 0 and i < (noutput_items - 1)) {
           double nom = 0, den = 0;
           for(int s = 0; s < 3; s++) {
-            nom += (s+1)*corr_mag[i+s-1];
-            den += corr_mag[i+s-1];
+            nom += (s+1)*d_corr_mag[i+s-1];
+            den += d_corr_mag[i+s-1];
           }
           center = nom / den - 2.0;
         }
@@ -224,7 +225,7 @@ namespace gr {
         add_item_tag(0, nitems_written(0) + index, pmt::intern("time_est"),
                      pmt::from_double(center), pmt::intern(alias()));
         add_item_tag(0, nitems_written(0) + index, pmt::intern("corr_est"),
-                     pmt::from_double(corr_mag[index]), pmt::intern(alias()));
+                     pmt::from_double(d_corr_mag[index]), pmt::intern(alias()));
 
         // Skip ahead to the next potential symbol peak
         // (for non-offset/interleaved symbols)

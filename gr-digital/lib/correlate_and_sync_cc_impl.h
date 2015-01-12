@@ -40,6 +40,7 @@ namespace gr {
       kernel::fft_filter_ccc  *d_filter;
 
       gr_complex *d_corr;
+      float *d_corr_mag;
 
     public:
       correlate_and_sync_cc_impl(const std::vector<gr_complex> &symbols,
