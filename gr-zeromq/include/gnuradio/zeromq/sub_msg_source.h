@@ -30,14 +30,14 @@ namespace gr {
   namespace zeromq {
 
     /*!
-     * \brief Receive messages on ZMQ SUB socket and source stream
+     * \brief Receive messages on ZMQ SUB socket and output async messages
      * \ingroup zeromq
      *
      * \details
-     * This block will connect to a ZMQ PUB socket, then produce all
-     * incoming messages as streaming output.
+     * This block will connect to a ZMQ PUB socket, then convert them
+     * to outgoing async messages
      */
-    class ZEROMQ_API sub_msg_source : virtual public gr::sync_block
+    class ZEROMQ_API sub_msg_source : virtual public gr::block
     {
     public:
       typedef boost::shared_ptr<sub_msg_source> sptr;
