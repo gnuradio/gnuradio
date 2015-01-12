@@ -48,8 +48,6 @@ namespace gr {
                    io_signature::make(1, 1, sizeof(gr_complex)),
                    io_signature::make(2, 2, sizeof(gr_complex)))
     {
-      d_last_index = 0;
-
       d_sps = sps;
 
       d_symbols = symbols;
