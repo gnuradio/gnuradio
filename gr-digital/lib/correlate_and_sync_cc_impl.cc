@@ -37,13 +37,13 @@ namespace gr {
   namespace digital {
 
     correlate_and_sync_cc::sptr
-    correlate_and_sync_cc::make(const std::vector<gr_complex> &symbols, unsigned int sps, float threshold)
+    correlate_and_sync_cc::make(const std::vector<gr_complex> &symbols, float sps, float threshold)
     {
       return gnuradio::get_initial_sptr
         (new correlate_and_sync_cc_impl(symbols, sps, threshold));
     }
 
-    correlate_and_sync_cc_impl::correlate_and_sync_cc_impl(const std::vector<gr_complex> &symbols, unsigned int sps, float threshold)
+    correlate_and_sync_cc_impl::correlate_and_sync_cc_impl(const std::vector<gr_complex> &symbols, float sps, float threshold)
       : sync_block("correlate_and_sync_cc",
                    io_signature::make(1, 1, sizeof(gr_complex)),
                    io_signature::make(1, 2, sizeof(gr_complex)))
@@ -120,7 +120,8 @@ namespace gr {
       std::vector<float> corr_mag(noutput_items);
       volk_32fc_magnitude_squared_32f(&corr_mag[0], corr, noutput_items);
 
-      int i = d_sps;
+      int isps = (int) (d_sps + 0.5f);
+      int i = isps;
       while(i < noutput_items) {
         if((corr_mag[i]) > d_thresh) {
           while(corr_mag[i] < corr_mag[i+1])
@@ -136,7 +137,7 @@ namespace gr {
 
           // Adjust the results of the fft filter by moving back the
           // length of the filter offset by the number of sps.
-          int index = i + d_sps + 1;
+          int index = i + isps + 1;
 
           // Calculate the phase offset of the incoming signal; always
           // adjust it based on the proper rotation of the expected
@@ -153,7 +154,7 @@ namespace gr {
           add_item_tag(0, nitems_written(0) + index, pmt::intern("corr_est"),
                        pmt::from_double(corr_mag[index]), pmt::intern(alias()));
 
-          i += d_sps;
+          i += isps;
         }
         else
           i++;
