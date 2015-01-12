@@ -25,24 +25,24 @@
 #endif
 
 #include <gnuradio/io_signature.h>
-#include "push_sink_impl.h"
+#include "push_msg_sink_impl.h"
 #include "tag_headers.h"
 
 namespace gr {
   namespace zeromq {
 
-    push_sink::sptr
-    push_sink::make(size_t itemsize, size_t vlen, char *address, int timeout, bool pass_tags)
+    push_msg_sink::sptr
+    push_msg_sink::make(char *address, int timeout)
     {
       return gnuradio::get_initial_sptr
-        (new push_sink_impl(itemsize, vlen, address, timeout, pass_tags));
+        (new push_msg_sink_impl(address, timeout));
     }
 
-    push_sink_impl::push_sink_impl(size_t itemsize, size_t vlen, char *address, int timeout, bool pass_tags)
-      : gr::sync_block("push_sink",
-                       gr::io_signature::make(1, 1, itemsize * vlen),
+    push_msg_sink_impl::push_msg_sink_impl(char *address, int timeout)
+      : gr::sync_block("push_msg_sink",
+                       gr::io_signature::make(0, 0, 0),
                        gr::io_signature::make(0, 0, 0)),
-        d_itemsize(itemsize), d_vlen(vlen), d_timeout(timeout), d_pass_tags(pass_tags)
+        d_timeout(timeout)
     {
       int major, minor, patch;
       zmq::version (&major, &minor, &patch);
@@ -54,21 +54,36 @@ namespace gr {
       int time = 0;
       d_socket->setsockopt(ZMQ_LINGER, &time, sizeof(time));
       d_socket->bind (address);
+
+      message_port_register_in(pmt::mp("in"));
+      set_msg_handler( pmt::mp("in"), 
+        boost::bind(&push_msg_sink_impl::handler, this, _1));
     }
 
-    push_sink_impl::~push_sink_impl()
+    push_msg_sink_impl::~push_msg_sink_impl()
     {
       d_socket->close();
       delete d_socket;
       delete d_context;
     }
 
+    void push_msg_sink_impl::handler(pmt::pmt_t msg){
+      std::stringbuf sb("");
+      pmt::serialize( msg, sb );
+      std::string s = sb.str();
+      zmq::message_t zmsg(s.size());
+      memcpy( zmsg.data(), s.c_str(), s.size() );
+      d_socket->send(zmsg);
+    }
+
     int
-    push_sink_impl::work(int noutput_items,
+    push_msg_sink_impl::work(int noutput_items,
                          gr_vector_const_void_star &input_items,
                          gr_vector_void_star &output_items)
     {
-      const char *in = (const char *) input_items[0];
+      return noutput_items;
+
+/*      const char *in = (const char *) input_items[0];
 
       zmq::pollitem_t itemsout[] = { { *d_socket, 0, ZMQ_POLLOUT, 0 } };
       zmq::poll (&itemsout[0], 1, d_timeout);
@@ -97,7 +112,7 @@ namespace gr {
       }
       else {
         return 0;
-      }
+      }*/
     }
 
   } /* namespace zeromq */

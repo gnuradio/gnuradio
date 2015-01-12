@@ -25,24 +25,24 @@
 #endif
 
 #include <gnuradio/io_signature.h>
-#include "pub_sink_impl.h"
+#include "pub_msg_sink_impl.h"
 #include "tag_headers.h"
 
 namespace gr {
   namespace zeromq {
 
-    pub_sink::sptr
-    pub_sink::make(size_t itemsize, size_t vlen, char *address, int timeout, bool pass_tags)
+    pub_msg_sink::sptr
+    pub_msg_sink::make(char *address, int timeout)
     {
       return gnuradio::get_initial_sptr
-        (new pub_sink_impl(itemsize, vlen, address, timeout, pass_tags));
+        (new pub_msg_sink_impl(address, timeout));
     }
 
-    pub_sink_impl::pub_sink_impl(size_t itemsize, size_t vlen, char *address, int timeout, bool pass_tags)
-      : gr::sync_block("pub_sink",
-                       gr::io_signature::make(1, 1, itemsize * vlen),
+    pub_msg_sink_impl::pub_msg_sink_impl(char *address, int timeout)
+      : gr::sync_block("pub_msg_sink",
+                       gr::io_signature::make(0, 0, 0),
                        gr::io_signature::make(0, 0, 0)),
-        d_itemsize(itemsize), d_vlen(vlen), d_timeout(timeout), d_pass_tags(pass_tags)
+        d_timeout(timeout)
     {
       int major, minor, patch;
       zmq::version (&major, &minor, &patch);
@@ -54,39 +54,33 @@ namespace gr {
       int time = 0;
       d_socket->setsockopt(ZMQ_LINGER, &time, sizeof(time));
       d_socket->bind(address);
+
+      message_port_register_in(pmt::mp("in"));
+      set_msg_handler( pmt::mp("in"), 
+        boost::bind(&pub_msg_sink_impl::handler, this, _1));
     }
 
-    pub_sink_impl::~pub_sink_impl()
+    pub_msg_sink_impl::~pub_msg_sink_impl()
     {
       d_socket->close();
       delete d_socket;
       delete d_context;
     }
 
+    void pub_msg_sink_impl::handler(pmt::pmt_t msg){
+      std::stringbuf sb("");
+      pmt::serialize( msg, sb );
+      std::string s = sb.str();
+      zmq::message_t zmsg(s.size());
+      memcpy( zmsg.data(), s.c_str(), s.size() );
+      d_socket->send(zmsg);
+    }
+
     int
-    pub_sink_impl::work(int noutput_items,
+    pub_msg_sink_impl::work(int noutput_items,
                         gr_vector_const_void_star &input_items,
                         gr_vector_void_star &output_items)
     {
-      const char *in = (const char *)input_items[0];
-
-      // encode the current offset, # tags, and tags into header
-    std::string header("");
-    if(d_pass_tags){
-      uint64_t offset = nitems_read(0);
-      std::vector<gr::tag_t> tags;
-      get_tags_in_range(tags, 0, nitems_read(0), nitems_read(0)+noutput_items);
-      header = gen_tag_header( offset, tags );  
-      }
-
-      // create message copy and send
-      zmq::message_t msg(header.length() + d_itemsize*d_vlen*noutput_items);
-      //std::cout << "PUB: Header Len: " << header.length() << ", Data Length: " << d_itemsize*d_vlen*noutput_items << "\n";
-      if(d_pass_tags)
-        memcpy((void*) msg.data(), header.c_str(), header.length() );
-      memcpy((uint8_t *)msg.data() + header.length(), in, d_itemsize*d_vlen*noutput_items);
-      d_socket->send(msg);
-
       return noutput_items;
     }
 

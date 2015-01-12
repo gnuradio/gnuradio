@@ -20,36 +20,39 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef INCLUDED_ZEROMQ_SUB_SOURCE_IMPL_H
-#define INCLUDED_ZEROMQ_SUB_SOURCE_IMPL_H
+#ifndef INCLUDED_ZEROMQ_SUB_MSG_SOURCE_H
+#define INCLUDED_ZEROMQ_SUB_MSG_SOURCE_H
 
-#include <gnuradio/zeromq/sub_source.h>
-#include "zmq.hpp"
+#include <gnuradio/zeromq/api.h>
+#include <gnuradio/sync_block.h>
 
 namespace gr {
   namespace zeromq {
 
-    class sub_source_impl : public sub_source
+    /*!
+     * \brief Receive messages on ZMQ SUB socket and source stream
+     * \ingroup zeromq
+     *
+     * \details
+     * This block will connect to a ZMQ PUB socket, then produce all
+     * incoming messages as streaming output.
+     */
+    class ZEROMQ_API sub_msg_source : virtual public gr::sync_block
     {
-     private:
-      size_t          d_itemsize;
-      size_t          d_vlen;
-      int             d_timeout; // microseconds, -1 is blocking
-      zmq::context_t  *d_context;
-      zmq::socket_t   *d_socket;
-      bool            d_pass_tags;
+    public:
+      typedef boost::shared_ptr<sub_msg_source> sptr;
 
-     public:
-      sub_source_impl(size_t itemsize, size_t vlen, char *address, int timeout, bool pass_tags);
-      ~sub_source_impl();
-
-      int work(int noutput_items,
-	           gr_vector_const_void_star &input_items,
-	           gr_vector_void_star &output_items);
+      /*!
+       * \brief Return a shared_ptr to a new instance of gr::zeromq::sub_msg_source.
+       *
+       * \param address  ZMQ socket address specifier
+       * \param timeout  Receive timeout in seconds, default is 100ms, 1us increments
+       *
+       */
+      static sptr make(char *address, int timeout=100);
     };
 
   } // namespace zeromq
 } // namespace gr
 
-#endif /* INCLUDED_ZEROMQ_SUB_SOURCE_IMPL_H */
-
+#endif /* INCLUDED_ZEROMQ_SUB_MSG_SOURCE_H */
