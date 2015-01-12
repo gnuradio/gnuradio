@@ -35,19 +35,18 @@ namespace gr {
       int             d_timeout; // microseconds, -1 is blocking
       zmq::context_t  *d_context;
       zmq::socket_t   *d_socket;
+      boost::thread   *d_thread;
+
       void readloop();
-      boost::thread     *d_thread;
 
     public:
+      bool d_finished;
+
       pull_msg_source_impl(char *address, int timeout);
       ~pull_msg_source_impl();
 
       bool start();
       bool stop();
-      bool d_finished;
-      int work(int noutput_items,
-               gr_vector_const_void_star &input_items,
-               gr_vector_void_star &output_items);
     };
 
   } // namespace zeromq

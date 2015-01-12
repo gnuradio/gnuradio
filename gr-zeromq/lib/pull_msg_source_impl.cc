@@ -39,18 +39,21 @@ namespace gr {
     }
 
     pull_msg_source_impl::pull_msg_source_impl(char *address, int timeout)
-      : gr::sync_block("pull_msg_source",
-                       gr::io_signature::make(0, 0, 0),
-                       gr::io_signature::make(0, 0, 0)),
+      : gr::block("pull_msg_source",
+                  gr::io_signature::make(0, 0, 0),
+                  gr::io_signature::make(0, 0, 0)),
         d_timeout(timeout)
     {
       int major, minor, patch;
       zmq::version (&major, &minor, &patch);
+
       if (major < 3) {
         d_timeout = timeout*1000;
       }
+
       d_context = new zmq::context_t(1);
       d_socket = new zmq::socket_t(*d_context, ZMQ_PULL);
+
       int time = 0;
       d_socket->setsockopt(ZMQ_LINGER, &time, sizeof(time));
       d_socket->connect (address);
@@ -65,53 +68,43 @@ namespace gr {
       delete d_context;
     }
 
-    bool pull_msg_source_impl::start(){
+    bool pull_msg_source_impl::start()
+    {
       d_finished = false;
-      d_thread = new boost::thread( boost::bind( &pull_msg_source_impl::readloop , this ) );
+      d_thread = new boost::thread(boost::bind(&pull_msg_source_impl::readloop, this));
       return true;
     }
 
-    bool pull_msg_source_impl::stop(){
+    bool pull_msg_source_impl::stop()
+    {
       d_finished = true;
-      d_thread->join(); 
+      d_thread->join();
       return true;
     }
 
-    void pull_msg_source_impl::readloop(){
+    void pull_msg_source_impl::readloop()
+    {
       while(!d_finished){
-        //std::cout << "readloop\n";
-      
+
         zmq::pollitem_t items[] = { { *d_socket, 0, ZMQ_POLLIN, 0 } };
         zmq::poll (&items[0], 1, d_timeout);
 
         //  If we got a reply, process
         if (items[0].revents & ZMQ_POLLIN) {
 
-            // Receive data
-            zmq::message_t msg;
-            d_socket->recv(&msg);
-        
-            //std::cout << "got msg...\n";
+          // Receive data
+          zmq::message_t msg;
+          d_socket->recv(&msg);
 
-            std::string buf(static_cast<char*>(msg.data()), msg.size());
-            std::stringbuf sb(buf);
-            pmt::pmt_t m = pmt::deserialize(sb);
-            //std::cout << m << "\n";
-            message_port_pub(pmt::mp("out"), m);
+          std::string buf(static_cast<char*>(msg.data()), msg.size());
+          std::stringbuf sb(buf);
+          pmt::pmt_t m = pmt::deserialize(sb);
+          message_port_pub(pmt::mp("out"), m);
 
-          } else {
-            usleep(100);
-          }
-        } 
-    }
-
-
-    int
-    pull_msg_source_impl::work(int noutput_items,
-                           gr_vector_const_void_star &input_items,
-                           gr_vector_void_star &output_items)
-    {
-    return noutput_items;
+        } else {
+          usleep(100);
+        }
+      }
     }
 
   } /* namespace zeromq */

@@ -24,20 +24,20 @@
 #define INCLUDED_ZEROMQ_PULL_MSG_SOURCE_H
 
 #include <gnuradio/zeromq/api.h>
-#include <gnuradio/sync_block.h>
+#include <gnuradio/block.h>
 
 namespace gr {
   namespace zeromq {
 
     /*!
-     * \brief Receive messages on ZMQ PULL socket and source stream
+     * \brief Receive messages on ZMQ PULL socket and output async messages
      * \ingroup zeromq
      *
      * \details
-     * This block will connect to a ZMQ PUSH socket, then produce all
-     * incoming messages as streaming output.
+     * This block will connect to a ZMQ PUSH socket, then convert
+     * received messages to outgoing async messages.
      */
-    class ZEROMQ_API pull_msg_source : virtual public gr::sync_block
+    class ZEROMQ_API pull_msg_source : virtual public gr::block
     {
     public:
       typedef boost::shared_ptr<pull_msg_source> sptr;
