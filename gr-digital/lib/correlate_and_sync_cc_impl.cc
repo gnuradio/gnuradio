@@ -123,41 +123,41 @@ namespace gr {
       int isps = (int) (d_sps + 0.5f);
       int i = isps;
       while(i < noutput_items) {
-        if((corr_mag[i]) > d_thresh) {
-          while(corr_mag[i] < corr_mag[i+1])
+        if (corr_mag[i] <= d_thresh) {
+          i++;
+          continue;
+        }
+        while (corr_mag[i] < corr_mag[i+1])
             i++;
 
-          double nom = 0, den = 0;
-          for(int s = 0; s < 3; s++) {
-            nom += (s+1)*corr_mag[i+s-1];
-            den += corr_mag[i+s-1];
-          }
-          double center = nom / den;
-          center = (center - 2.0);
-
-          // Adjust the results of the fft filter by moving back the
-          // length of the filter offset by the number of sps.
-          int index = i + isps + 1;
-
-          // Calculate the phase offset of the incoming signal; always
-          // adjust it based on the proper rotation of the expected
-          // known word; rotate by pi is the real part is < 0 since
-          // the atan doesn't understand the ambiguity.
-          float phase = fast_atan2f(corr[index].imag(), corr[index].real());
-          if(corr[index].real() < 0.0)
-            phase += M_PI;
-
-          add_item_tag(0, nitems_written(0) + index, pmt::intern("phase_est"),
-                       pmt::from_double(phase), pmt::intern(alias()));
-          add_item_tag(0, nitems_written(0) + index, pmt::intern("time_est"),
-                       pmt::from_double(center), pmt::intern(alias()));
-          add_item_tag(0, nitems_written(0) + index, pmt::intern("corr_est"),
-                       pmt::from_double(corr_mag[index]), pmt::intern(alias()));
-
-          i += isps;
+        double nom = 0, den = 0;
+        for(int s = 0; s < 3; s++) {
+          nom += (s+1)*corr_mag[i+s-1];
+          den += corr_mag[i+s-1];
         }
-        else
-          i++;
+        double center = nom / den;
+        center = (center - 2.0);
+
+        // Adjust the results of the fft filter by moving back the
+        // length of the filter offset by the number of sps.
+        int index = i + isps + 1;
+
+        // Calculate the phase offset of the incoming signal; always
+        // adjust it based on the proper rotation of the expected
+        // known word; rotate by pi is the real part is < 0 since
+        // the atan doesn't understand the ambiguity.
+        float phase = fast_atan2f(corr[index].imag(), corr[index].real());
+        if(corr[index].real() < 0.0)
+          phase += M_PI;
+
+        add_item_tag(0, nitems_written(0) + index, pmt::intern("phase_est"),
+                     pmt::from_double(phase), pmt::intern(alias()));
+        add_item_tag(0, nitems_written(0) + index, pmt::intern("time_est"),
+                     pmt::from_double(center), pmt::intern(alias()));
+        add_item_tag(0, nitems_written(0) + index, pmt::intern("corr_est"),
+                     pmt::from_double(corr_mag[index]), pmt::intern(alias()));
+
+        i += isps;
       }
 
       return noutput_items;
