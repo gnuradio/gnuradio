@@ -1,4 +1,4 @@
-########################################################################
+#######################################################################
 # Find the library for the USRP Hardware Driver
 ########################################################################
 
@@ -49,7 +49,7 @@ find_package(
 set(CMAKE_MODULE_PATH ${SAVED_CMAKE_MODULE_PATH})
 
 # check if UHDConfig was used above
-if(NOT $ENV{UHD_CONFIG_VERSION_USED})
+if(NOT "$ENV{UHD_CONFIG_VERSION_USED}" STREQUAL "TRUE")
 
   # Not used; try the "old" method (not as robust)
 
@@ -73,7 +73,7 @@ if(NOT $ENV{UHD_CONFIG_VERSION_USED})
     PATHS /usr/local/lib
           /usr/lib
   )
-endif(NOT $ENV{UHD_CONFIG_VERSION_USED})
+endif(NOT "$ENV{UHD_CONFIG_VERSION_USED}" STREQUAL "TRUE")
 
 if(UHD_LIBRARIES AND UHD_INCLUDE_DIRS)
 
