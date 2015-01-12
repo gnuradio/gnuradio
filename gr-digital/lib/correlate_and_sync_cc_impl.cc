@@ -57,11 +57,15 @@ namespace gr {
       }
       std::reverse(d_symbols.begin(), d_symbols.end());
 
+      // Compute a correlation threshold.
+      // Compute the value of the discrete autocorrelation of the matched
+      // filter with offset 0 (aka the autocorrelation peak).
       float corr = 0;
       for(size_t i=0; i < d_symbols.size(); i++)
         corr += abs(d_symbols[i]*conj(d_symbols[i]));
       d_thresh = threshold*corr*corr;
 
+      // Correlation filter
       d_filter = new kernel::fft_filter_ccc(1, d_symbols);
 
       // Per comments in gr-filter/include/gnuradio/filter/fft_filter.h,
