@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2013 Free Software Foundation, Inc.
+ * Copyright 2013-2015 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio.
  *
@@ -24,27 +24,26 @@
 #define INCLUDED_ZEROMQ_REQ_MSG_SOURCE_H
 
 #include <gnuradio/zeromq/api.h>
-#include <gnuradio/sync_block.h>
+#include <gnuradio/block.h>
 
 namespace gr {
   namespace zeromq {
 
     /*!
-     * \brief Receive messages on ZMQ REQ socket and source stream
+     * \brief Receive messages on ZMQ REQ socket output async messages
      * \ingroup zeromq
      *
      * \details
-     * This block will connect to a ZMQ REP socket, then produce all
-     * incoming messages as streaming output.
+     * This block will connect to a ZMQ REP socket, then resend all
+     * incoming messages as asynchronous messages.
      */
-    class ZEROMQ_API req_msg_source : virtual public gr::sync_block
+    class ZEROMQ_API req_msg_source : virtual public gr::block
     {
     public:
       typedef boost::shared_ptr<req_msg_source> sptr;
 
       /*!
        * \brief Return a shared_ptr to a new instance of zeromq::req_msg_source.
-       *
        *
        * \param address  ZMQ socket address specifier
        * \param timeout  Receive timeout in seconds, default is 100ms, 1us increments
