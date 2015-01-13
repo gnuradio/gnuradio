@@ -40,7 +40,6 @@ class Port(Element):
         self._domain = n['domain']
         self._hide = n.find('hide') or ''
         self._dir = dir
-        self._type_evaluated = None  # updated on rewrite()
         self._hide_evaluated = False  # updated on rewrite()
 
     def validate(self):
@@ -58,13 +57,13 @@ class Port(Element):
     def rewrite(self):
         """resolve dependencies in for type and hide"""
         Element.rewrite(self)
-        self._type_evaluated = self.get_parent().resolve_dependencies(self._type)
         hide = self.get_parent().resolve_dependencies(self._hide).strip().lower()
         self._hide_evaluated = False if hide in ('false', 'off', '0') else bool(hide)
         # update domain if was deduced from (dynamic) port type
-        if self._domain == GR_STREAM_DOMAIN and self._type_evaluated == "message":
+        type_ = self.get_type()
+        if self._domain == GR_STREAM_DOMAIN and type_ == "message":
             self._domain = GR_MESSAGE_DOMAIN
-        if self._domain == GR_MESSAGE_DOMAIN and self._type_evaluated != "message":
+        if self._domain == GR_MESSAGE_DOMAIN and type_ != "message":
             self._domain = GR_STREAM_DOMAIN
 
     def __str__(self):
@@ -92,9 +91,7 @@ class Port(Element):
     def get_key(self): return self._key
     def is_sink(self): return self._dir == 'sink'
     def is_source(self): return self._dir == 'source'
-    def get_type(self):
-        return self.get_parent().resolve_dependencies(self._type) \
-                if self._type_evaluated is None else self._type_evaluated
+    def get_type(self): return self.get_parent().resolve_dependencies(self._type)
     def get_domain(self): return self._domain
     def get_hide(self): return self._hide_evaluated
 
