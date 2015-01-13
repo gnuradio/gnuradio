@@ -38,7 +38,7 @@ class Connection(Element):
     def __init__(self):
         Element.__init__(self)
         self._color = Colors.CONNECTION_ENABLED_COLOR
-        self._bg_color = Colors.CONNECTION_ENABLED_COLOR
+        self._bg_color = self._arrow_color = self._color
 
     def get_coordinate(self):
         """
@@ -92,6 +92,7 @@ class Connection(Element):
         ).get('color') or Colors.DEFAULT_DOMAIN_COLOR_CODE)
         self._color = get_domain_color(source_domain)
         self._bg_color = get_domain_color(sink_domain)
+        self._arrow_color = self._bg_color if self.is_valid() else Colors.CONNECTION_ERROR_COLOR
         self._update_after_move()
 
     def _update_after_move(self):
@@ -161,20 +162,15 @@ class Connection(Element):
         self._sink_coor = sink.get_coordinate()
         self._source_coor = source.get_coordinate()
         #draw
-        border_color = (
+        mod_color = lambda color: (
             Colors.HIGHLIGHT_COLOR if self.is_highlighted() else
             Colors.CONNECTION_DISABLED_COLOR if not self.get_enabled() else
-            self._color
+            color
         )
-        bg_color = (
-            Colors.HIGHLIGHT_COLOR if self.is_highlighted() else
-            Colors.CONNECTION_DISABLED_COLOR if not self.get_enabled() else
-            self._bg_color
-        )
-        Element.draw(self, gc, window, border_color, bg_color)
+        Element.draw(self, gc, window, mod_color(self._color), mod_color(self._bg_color))
         # draw arrow on sink port
         try:
-            gc.set_foreground(bg_color)
+            gc.set_foreground(mod_color(self._arrow_color))
             gc.set_line_attributes(0, gtk.gdk.LINE_SOLID, gtk.gdk.CAP_BUTT, gtk.gdk.JOIN_MITER)
             window.draw_polygon(gc, True, self._arrow)
         except:
