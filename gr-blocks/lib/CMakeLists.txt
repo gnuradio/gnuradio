@@ -131,6 +131,7 @@ list(APPEND gr_blocks_sources
     keep_one_in_n_impl.cc
     lfsr_32k_source_s_impl.cc
     message_debug_impl.cc
+    message_synch_impl.cc
     message_sink_impl.cc
     message_source_impl.cc
     message_strobe_impl.cc

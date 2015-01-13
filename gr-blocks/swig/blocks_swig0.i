@@ -43,6 +43,7 @@
 #include "gnuradio/blocks/file_meta_source.h"
 #include "gnuradio/blocks/head.h"
 #include "gnuradio/blocks/message_debug.h"
+#include "gnuradio/blocks/message_synch.h"
 #include "gnuradio/blocks/message_sink.h"
 #include "gnuradio/blocks/message_source.h"
 #include "gnuradio/blocks/message_strobe.h"
@@ -69,6 +70,7 @@
 %include "gnuradio/blocks/file_meta_source.h"
 %include "gnuradio/blocks/head.h"
 %include "gnuradio/blocks/message_debug.h"
+%include "gnuradio/blocks/message_synch.h"
 %include "gnuradio/blocks/message_sink.h"
 %include "gnuradio/blocks/message_source.h"
 %include "gnuradio/blocks/message_strobe.h"
@@ -92,6 +94,7 @@ GR_SWIG_BLOCK_MAGIC2(blocks, file_meta_sink);
 GR_SWIG_BLOCK_MAGIC2(blocks, file_meta_source);
 GR_SWIG_BLOCK_MAGIC2(blocks, head);
 GR_SWIG_BLOCK_MAGIC2(blocks, message_debug);
+GR_SWIG_BLOCK_MAGIC2(blocks, message_synch);
 GR_SWIG_BLOCK_MAGIC2(blocks, message_sink);
 GR_SWIG_BLOCK_MAGIC2(blocks, message_source);
 GR_SWIG_BLOCK_MAGIC2(blocks, message_strobe);
