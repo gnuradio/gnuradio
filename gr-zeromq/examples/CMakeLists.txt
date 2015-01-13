@@ -24,6 +24,7 @@ INSTALL(FILES
     zeromq_pubsub.grc
     zeromq_pushpull.grc
     zeromq_reqrep.grc
+    zmq_msg.grc
     DESTINATION ${GR_PKG_ZEROMQ_EXAMPLES_DIR}
     COMPONENT "zeromq_python"
 )
