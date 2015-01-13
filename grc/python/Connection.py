@@ -38,8 +38,8 @@ class Connection(_Connection, _GUIConnection):
         Validate the connections.
         The ports must match in io size.
         """
+        _Connection.validate(self)
         source_size = Constants.TYPE_TO_SIZEOF[self.get_source().get_type()] * self.get_source().get_vlen()
         sink_size = Constants.TYPE_TO_SIZEOF[self.get_sink().get_type()] * self.get_sink().get_vlen()
         if source_size != sink_size:
             self.add_error_message('Source IO size "%s" does not match sink IO size "%s".'%(source_size, sink_size))
-        _Connection.validate(self)
