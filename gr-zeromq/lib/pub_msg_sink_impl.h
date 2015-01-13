@@ -20,36 +20,30 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef INCLUDED_ZEROMQ_SUB_SOURCE_IMPL_H
-#define INCLUDED_ZEROMQ_SUB_SOURCE_IMPL_H
+#ifndef INCLUDED_ZEROMQ_PUB_MSG_SINK_IMPL_H
+#define INCLUDED_ZEROMQ_PUB_MSG_SINK_IMPL_H
 
-#include <gnuradio/zeromq/sub_source.h>
-#include "zmq.hpp"
+#include <gnuradio/zeromq/pub_msg_sink.h>
+#include <zmq.hpp>
 
 namespace gr {
   namespace zeromq {
 
-    class sub_source_impl : public sub_source
+    class pub_msg_sink_impl : public pub_msg_sink
     {
-     private:
-      size_t          d_itemsize;
-      size_t          d_vlen;
-      int             d_timeout; // microseconds, -1 is blocking
+    private:
+      float           d_timeout;
       zmq::context_t  *d_context;
       zmq::socket_t   *d_socket;
-      bool            d_pass_tags;
 
-     public:
-      sub_source_impl(size_t itemsize, size_t vlen, char *address, int timeout, bool pass_tags);
-      ~sub_source_impl();
+    public:
+      pub_msg_sink_impl(char *address, int timeout);
+      ~pub_msg_sink_impl();
 
-      int work(int noutput_items,
-	           gr_vector_const_void_star &input_items,
-	           gr_vector_void_star &output_items);
+      void handler(pmt::pmt_t msg);
     };
 
   } // namespace zeromq
 } // namespace gr
 
-#endif /* INCLUDED_ZEROMQ_SUB_SOURCE_IMPL_H */
-
+#endif /* INCLUDED_ZEROMQ_PUB_MSG_SINK_IMPL_H */

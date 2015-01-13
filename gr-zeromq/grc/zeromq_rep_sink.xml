@@ -4,7 +4,7 @@
   <key>zeromq_rep_sink</key>
   <category>ZeroMQ Interfaces</category>
   <import>from gnuradio import zeromq</import>
-  <make>zeromq.rep_sink($type.itemsize, $vlen, $address, $timeout)</make>
+  <make>zeromq.rep_sink($type.itemsize, $vlen, $address, $timeout, $pass_tags)</make>
 
   <param>
     <name>IO Type</name>
@@ -55,6 +55,13 @@
     <key>timeout</key>
     <value>100</value>
     <type>float</type>
+  </param>
+
+  <param>
+    <name>Pass Tags</name>
+    <key>pass_tags</key>
+    <value>False</value>
+    <type>bool</type>
   </param>
 
   <sink>

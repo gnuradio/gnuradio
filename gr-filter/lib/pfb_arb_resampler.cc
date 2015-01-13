@@ -69,7 +69,7 @@ namespace gr {
 
         // Delay is based on number of taps per filter arm. Round to
         // the nearest integer.
-        float delay = -rate * (taps_per_filter() - 1.0) / 2.0;
+        float delay = rate * (taps_per_filter() - 1.0) / 2.0;
         d_delay = static_cast<int>(boost::math::iround(delay));
 
         // This calculation finds the phase offset induced by the
@@ -77,11 +77,11 @@ namespace gr {
         // at the filter's group delay plus the fractional offset
         // between the samples. Calculated here based on the rotation
         // around nfilts starting at start_filter.
-        float accum = -d_delay * d_flt_rate;
+        float accum = d_delay * d_flt_rate;
         int   accum_int = static_cast<int>(accum);
         float accum_frac = accum - accum_int;
         int end_filter = static_cast<int>
-          (boost::math::iround(fmodf(d_last_filter - d_delay * d_dec_rate + accum_int, \
+          (boost::math::iround(fmodf(d_last_filter + d_delay * d_dec_rate + accum_int, \
                                      static_cast<float>(d_int_rate))));
 
         d_est_phase_change = d_last_filter - (end_filter + accum_frac);
@@ -280,7 +280,7 @@ namespace gr {
 
         // Delay is based on number of taps per filter arm. Round to
         // the nearest integer.
-        float delay = -rate * (taps_per_filter() - 1.0) / 2.0;
+        float delay = rate * (taps_per_filter() - 1.0) / 2.0;
         d_delay = static_cast<int>(boost::math::iround(delay));
 
         // This calculation finds the phase offset induced by the
@@ -288,11 +288,11 @@ namespace gr {
         // at the filter's group delay plus the fractional offset
         // between the samples. Calculated here based on the rotation
         // around nfilts starting at start_filter.
-        float accum = -d_delay * d_flt_rate;
+        float accum = d_delay * d_flt_rate;
         int   accum_int = static_cast<int>(accum);
         float accum_frac = accum - accum_int;
         int end_filter = static_cast<int>
-          (boost::math::iround(fmodf(d_last_filter - d_delay * d_dec_rate + accum_int, \
+          (boost::math::iround(fmodf(d_last_filter + d_delay * d_dec_rate + accum_int, \
                                      static_cast<float>(d_int_rate))));
 
         d_est_phase_change = d_last_filter - (end_filter + accum_frac);
@@ -491,7 +491,7 @@ namespace gr {
 
         // Delay is based on number of taps per filter arm. Round to
         // the nearest integer.
-        float delay = -rate * (taps_per_filter() - 1.0) / 2.0;
+        float delay = rate * (taps_per_filter() - 1.0) / 2.0;
         d_delay = static_cast<int>(boost::math::iround(delay));
 
         // This calculation finds the phase offset induced by the
@@ -499,11 +499,11 @@ namespace gr {
         // at the filter's group delay plus the fractional offset
         // between the samples. Calculated here based on the rotation
         // around nfilts starting at start_filter.
-        float accum = -d_delay * d_flt_rate;
+        float accum = d_delay * d_flt_rate;
         int   accum_int = static_cast<int>(accum);
         float accum_frac = accum - accum_int;
         int end_filter = static_cast<int>
-          (boost::math::iround(fmodf(d_last_filter - d_delay * d_dec_rate + accum_int, \
+          (boost::math::iround(fmodf(d_last_filter + d_delay * d_dec_rate + accum_int, \
                                      static_cast<float>(d_int_rate))));
 
         d_est_phase_change = d_last_filter - (end_filter + accum_frac);

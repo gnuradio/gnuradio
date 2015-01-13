@@ -20,43 +20,41 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef INCLUDED_ZEROMQ_PUB_SINK_H
-#define INCLUDED_ZEROMQ_PUB_SINK_H
+#ifndef INCLUDED_ZEROMQ_PUSH_MSG_SINK_H
+#define INCLUDED_ZEROMQ_PUSH_MSG_SINK_H
 
 #include <gnuradio/zeromq/api.h>
-#include <gnuradio/sync_block.h>
+#include <gnuradio/block.h>
 
 namespace gr {
   namespace zeromq {
 
     /*!
-     * \brief Sink the contents of a stream to a ZMQ PUB socket
+     * \brief Sink the contents of a msg port to a ZMQ PUSH socket
      * \ingroup zeromq
      *
      * \details
-     * This block acts a a streaming sink for a GNU Radio flowgraph
-     * and writes its contents to a ZMQ PUB socket.  A PUB socket may
-     * have subscribers and will pass all incoming stream data to each
-     * subscriber.  Subscribers can be either another gr-zeromq source
-     * block or a non-GNU Radio ZMQ socket.
+     * This block acts a message port receiver and writes individual
+     * messages to a ZMQ PUSH socket.  The corresponding receiving ZMQ
+     * PULL socket can be either another gr-zeromq source block or a
+     * non-GNU Radio ZMQ socket.
      */
-    class ZEROMQ_API pub_sink : virtual public gr::sync_block
+    class ZEROMQ_API push_msg_sink : virtual public gr::block
     {
     public:
-      typedef boost::shared_ptr<pub_sink> sptr;
+      typedef boost::shared_ptr<push_msg_sink> sptr;
 
       /*!
-       * \brief Return a shared_ptr to a new instance of zeromq::pub_sink.
+       * \brief Return a shared_ptr to a new instance of gr::zeromq::push_msg_sink
        *
-       * \param itemsize Size of a stream item in bytes
-       * \param vlen Vector length of the input items. Note that one vector is one item.
        * \param address  ZMQ socket address specifier
        * \param timeout  Receive timeout in seconds, default is 100ms, 1us increments
+       *
        */
-      static sptr make(size_t itemsize, size_t vlen, char *address, int timeout=100, bool pass_tags=false);
+      static sptr make(char *address, int timeout=100);
     };
 
   } // namespace zeromq
 } // namespace gr
 
-#endif /* INCLUDED_ZEROMQ_PUB_SINK_H */
+#endif /* INCLUDED_ZEROMQ_PUSH_MSG_SINK_H */
