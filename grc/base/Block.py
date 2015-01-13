@@ -187,14 +187,11 @@ class Block(Element):
 
 
     def back_ofthe_bus(self, portlist):
-        portlist.sort(key=lambda a: a.get_type() == 'bus');
+        portlist.sort(key=lambda p: p._type == 'bus')
 
     def filter_bus_port(self, ports):
-        buslist = [i for i in ports if i.get_type() == 'bus'];
-        if len(buslist) == 0:
-            return ports;
-        else:
-            return buslist;
+        buslist = [p for p in ports if p._type == 'bus']
+        return buslist or ports
 
     def get_enabled(self):
         """
