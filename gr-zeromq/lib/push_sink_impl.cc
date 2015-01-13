@@ -46,11 +46,14 @@ namespace gr {
     {
       int major, minor, patch;
       zmq::version (&major, &minor, &patch);
+
       if (major < 3) {
         d_timeout = timeout*1000;
       }
+
       d_context = new zmq::context_t(1);
       d_socket = new zmq::socket_t(*d_context, ZMQ_PUSH);
+
       int time = 0;
       d_socket->setsockopt(ZMQ_LINGER, &time, sizeof(time));
       d_socket->bind (address);
@@ -71,32 +74,33 @@ namespace gr {
       const char *in = (const char *) input_items[0];
 
       zmq::pollitem_t itemsout[] = { { *d_socket, 0, ZMQ_POLLOUT, 0 } };
-      zmq::poll (&itemsout[0], 1, d_timeout);
+      zmq::poll(&itemsout[0], 1, d_timeout);
 
       //  If we got a reply, process
       if (itemsout[0].revents & ZMQ_POLLOUT) {
 
-      // encode the current offset, # tags, and tags into header
-      std::string header("");
-    
-      if(d_pass_tags){
-        uint64_t offset = nitems_read(0);
-        std::vector<gr::tag_t> tags;
-        get_tags_in_range(tags, 0, nitems_read(0), nitems_read(0)+noutput_items);
-        header = gen_tag_header( offset, tags );
+        // encode the current offset, # tags, and tags into header
+        std::string header("");
+
+        if(d_pass_tags){
+          uint64_t offset = nitems_read(0);
+          std::vector<gr::tag_t> tags;
+          get_tags_in_range(tags, 0, nitems_read(0), nitems_read(0)+noutput_items);
+          header = gen_tag_header(offset, tags);
         }
 
-      // create message copy and send
-      zmq::message_t msg(header.length() + d_itemsize*d_vlen*noutput_items);
-      if(d_pass_tags)
-        memcpy((void*) msg.data(), header.c_str(), header.length() );
-      memcpy((uint8_t *)msg.data() + header.length(), in, d_itemsize*d_vlen*noutput_items);
-      d_socket->send(msg);
+        // create message copy and send
+        zmq::message_t msg(header.length() + d_itemsize*d_vlen*noutput_items);
 
+        if(d_pass_tags)
+          memcpy((void*) msg.data(), header.c_str(), header.length());
+        memcpy((uint8_t *)msg.data() + header.length(), in, d_itemsize*d_vlen*noutput_items);
+
+        d_socket->send(msg);
         return noutput_items;
       }
       else {
-        return 0;
+        return 0; // FIXME: when scheduler supports return blocking
       }
     }
 
