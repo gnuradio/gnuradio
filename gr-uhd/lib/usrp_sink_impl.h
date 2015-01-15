@@ -69,6 +69,7 @@ namespace gr {
       ::uhd::freq_range_t get_freq_range(size_t chan);
       double get_gain(size_t chan);
       double get_gain(const std::string &name, size_t chan);
+      double get_normalized_gain(size_t chan);
       std::vector<std::string> get_gain_names(size_t chan);
       ::uhd::gain_range_t get_gain_range(size_t chan);
       ::uhd::gain_range_t get_gain_range(const std::string &name, size_t chan);
@@ -95,6 +96,7 @@ namespace gr {
                                          size_t chan);
       void set_gain(double gain, size_t chan);
       void set_gain(double gain, const std::string &name, size_t chan);
+      void set_normalized_gain(double gain, size_t chan);
       void set_antenna(const std::string &ant, size_t chan);
       void set_bandwidth(double bandwidth, size_t chan);
       double get_bandwidth(size_t chan);
