@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<block>
+  <name>ATSC Field Sync Mux</name>
+  <key>atsc_field_sync_mux</key>
+  <category>ATSC</category>
+  <import>from gnuradio import atsc</import>
+  <make>atsc.field_sync_mux()</make>
+  <sink>
+    <name>in</name>
+    <type>byte</type>
+    <vlen>256</vlen>
+  </sink>
+  <source>
+    <name>out</name>
+    <type>byte</type>
+    <vlen>1024</vlen>
+  </source>
+</block>

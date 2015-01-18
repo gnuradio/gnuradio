@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<block>
+  <name>ATSC RS Encoder</name>
+  <key>atsc_rs_encoder</key>
+  <category>ATSC</category>
+  <import>from gnuradio import atsc</import>
+  <make>atsc.rs_encoder()</make>
+  <sink>
+    <name>in</name>
+    <type>byte</type>
+    <vlen>256</vlen>
+  </sink>
+  <source>
+    <name>out</name>
+    <type>byte</type>
+    <vlen>256</vlen>
+  </source>
+</block>

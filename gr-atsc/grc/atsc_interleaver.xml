@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<block>
+  <name>ATSC Interleaver</name>
+  <key>atsc_interleaver</key>
+  <category>ATSC</category>
+  <import>from gnuradio import atsc</import>
+  <make>atsc.interleaver()</make>
+  <sink>
+    <name>in</name>
+    <type>byte</type>
+    <vlen>256</vlen>
+  </sink>
+  <source>
+    <name>out</name>
+    <type>byte</type>
+    <vlen>256</vlen>
+  </source>
+</block>
