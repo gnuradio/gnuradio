@@ -62,7 +62,12 @@ namespace gr {
   {
     std::vector<std::string> fnames;
 
+#if ANDROID
+    fs::path dir = fs::path(gr::tmp_path());
+#else
     fs::path dir = prefsdir();
+#endif
+
     if(!fs::is_directory(dir))
       return fnames;
 
@@ -77,7 +82,12 @@ namespace gr {
     // Find if there is a ~/.gnuradio/config.conf file and add this to
     // the end of the file list to override any preferences in the
     // installed path config files.
+#if ANDROID
+    fs::path homedir = fs::path(gr::tmp_path());
+#else
     fs::path homedir = fs::path(gr::appdata_path());
+#endif
+
     homedir = homedir/".gnuradio/config.conf";
     if(fs::exists(homedir)) {
       fnames.push_back(homedir.string());
