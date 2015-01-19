@@ -87,7 +87,7 @@ namespace gr {
       set_history(d_symbols.size()+1);
 
       declare_sample_delay(1, 0);
-      declare_sample_delay(0, d_symbols_size());
+      declare_sample_delay(0, d_symbols.size());
 
       // Setting the alignment multiple for volk causes problems with the
       // expected behavior of setting the output multiple for the FFT filter.
@@ -146,7 +146,7 @@ namespace gr {
       set_history(d_symbols.size()+1);
 
       declare_sample_delay(1, 0);
-      declare_sample_delay(0, d_symbols_size());
+      declare_sample_delay(0, d_symbols.size());
     }
 
     int
