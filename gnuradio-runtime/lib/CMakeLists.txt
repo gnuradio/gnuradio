@@ -38,6 +38,7 @@ string(REPLACE "\\" "\\\\" GR_PREFSDIR ${GR_PREFSDIR})
 configure_file(
     ${CMAKE_CURRENT_SOURCE_DIR}/constants.cc.in
     ${CMAKE_CURRENT_BINARY_DIR}/constants.cc
+    ESCAPE_QUOTES
 @ONLY)
 
 list(APPEND gnuradio_runtime_sources ${CMAKE_CURRENT_BINARY_DIR}/constants.cc)
