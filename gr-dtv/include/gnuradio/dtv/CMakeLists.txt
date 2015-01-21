@@ -32,7 +32,7 @@ install(FILES
     atsc_rs_decoder.h
     atsc_sync.h
     atsc_viterbi_decoder.h
-    atsc_depad.h
+    atsc_pad.h
     atsc_randomizer.h
     atsc_rs_encoder.h
     atsc_interleaver.h

@@ -1,17 +1,17 @@
 /* -*- c++ -*- */
-/* 
+/*
  * Copyright 2015 Free Software Foundation, Inc.
- * 
+ *
  * This is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3, or (at your option)
  * any later version.
- * 
+ *
  * This software is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 51 Franklin Street,
@@ -34,11 +34,11 @@ namespace gr {
 
     class atsc_rs_encoder_impl : public atsc_rs_encoder
     {
-     private:
+    private:
       void *d_rs;
       void encode(atsc_mpeg_packet_rs_encoded &out, const atsc_mpeg_packet_no_sync &in);
 
-     public:
+    public:
       atsc_rs_encoder_impl();
       ~atsc_rs_encoder_impl();
 
@@ -51,4 +51,3 @@ namespace gr {
 } // namespace gr
 
 #endif /* INCLUDED_DTV_ATSC_RS_ENCODER_IMPL_H */
-
