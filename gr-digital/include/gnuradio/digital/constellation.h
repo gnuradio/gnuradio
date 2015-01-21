@@ -619,6 +619,80 @@ namespace gr {
       constellation_8psk();
     };
 
+    /************************************************************/
+    /* constellation_8psk_natural                                       */
+    /*                                                          */
+    /* Only works for natural 8psk                                     */
+    /*                                                          */
+    /************************************************************/
+
+    /*! 
+     * \brief Digital constellation for natually mapped 8PSK.
+     * \ingroup digital
+     *
+     * \details
+     * \verbatim
+           011 | 010
+       100     |     001
+       -----------------
+       101     |     000
+           110 | 111
+       \endverbatim
+     */
+    class DIGITAL_API constellation_8psk_natural : public constellation
+    {
+    public:
+      typedef boost::shared_ptr<constellation_8psk_natural> sptr;
+
+      // public constructor
+      static sptr make();
+
+      ~constellation_8psk_natural();
+
+      unsigned int decision_maker(const gr_complex *sample);
+
+    protected:
+      constellation_8psk_natural();
+    };
+
+    /************************************************************/
+    /* constellation_16qam                                       */
+    /*                                                          */
+    /* the 16qam mapping used in set partition of tcm           */
+    /*                                                          */
+    /************************************************************/
+
+    /*! 
+     * \brief Digital constellation for 16qam.
+     * \ingroup digital
+     *
+     * \details
+     * \verbatim
+   1000   1101 | 1100   1001
+               |     
+   1111   1010 | 1011   1110
+       -----------------
+   0100   0001 | 0000   0101
+               | 
+   0011   0110 | 0111   0010
+       \endverbatim
+     */
+    class DIGITAL_API constellation_16qam : public constellation
+    {
+    public:
+      typedef boost::shared_ptr<constellation_16qam> sptr;
+
+      // public constructor
+      static sptr make();
+
+      ~constellation_16qam();
+
+      unsigned int decision_maker(const gr_complex *sample);
+
+    protected:
+      constellation_16qam();
+    };
+
   } /* namespace digital */
 } /* namespace gr */
 
