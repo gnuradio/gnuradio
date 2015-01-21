@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<!--
+###################################################
+## ATSC Pad
+###################################################
+ -->
+<block>
+  <name>ATSC Pad</name>
+  <key>dtv_atsc_pad</key>
+  <import>from gnuradio import dtv</import>
+  <make>dtv.atsc_pad()</make>
+  <sink>
+    <name>in</name>
+    <type>byte</type>
+  </sink>
+  <source>
+    <name>out</name>
+    <type>byte</type>
+    <vlen>256</vlen>
+  </source>
+</block>

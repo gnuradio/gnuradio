@@ -1,4 +1,4 @@
-# Copyright 2014 Free Software Foundation, Inc.
+# Copyright 2014,2015 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -30,6 +30,12 @@ install(FILES
     dtv_atsc_sync.xml
     dtv_atsc_viterbi_decoder.xml
     dtv_block_tree.xml
+    dtv_atsc_pad.xml
+    dtv_atsc_randomizer.xml
+    dtv_atsc_rs_encoder.xml
+    dtv_atsc_interleaver.xml
+    dtv_atsc_trellis_encoder.xml
+    dtv_atsc_field_sync_mux.xml
     DESTINATION ${GRC_BLOCKS_DIR}
     COMPONENT "dtv_python"
 )

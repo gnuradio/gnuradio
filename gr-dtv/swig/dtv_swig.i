@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2014 Free Software Foundation, Inc.
+ * Copyright 2014,2015 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -37,6 +37,12 @@
 #include "gnuradio/dtv/atsc_rs_decoder.h"
 #include "gnuradio/dtv/atsc_sync.h"
 #include "gnuradio/dtv/atsc_viterbi_decoder.h"
+#include "gnuradio/dtv/atsc_pad.h"
+#include "gnuradio/dtv/atsc_randomizer.h"
+#include "gnuradio/dtv/atsc_rs_encoder.h"
+#include "gnuradio/dtv/atsc_interleaver.h"
+#include "gnuradio/dtv/atsc_trellis_encoder.h"
+#include "gnuradio/dtv/atsc_field_sync_mux.h"
 %}
 
 %include "gnuradio/dtv/atsc_deinterleaver.h"
@@ -48,6 +54,12 @@
 %include "gnuradio/dtv/atsc_rs_decoder.h"
 %include "gnuradio/dtv/atsc_sync.h"
 %include "gnuradio/dtv/atsc_viterbi_decoder.h"
+%include "gnuradio/dtv/atsc_pad.h"
+%include "gnuradio/dtv/atsc_randomizer.h"
+%include "gnuradio/dtv/atsc_rs_encoder.h"
+%include "gnuradio/dtv/atsc_interleaver.h"
+%include "gnuradio/dtv/atsc_trellis_encoder.h"
+%include "gnuradio/dtv/atsc_field_sync_mux.h"
 
 GR_SWIG_BLOCK_MAGIC2(dtv, atsc_deinterleaver);
 GR_SWIG_BLOCK_MAGIC2(dtv, atsc_depad);
@@ -58,3 +70,9 @@ GR_SWIG_BLOCK_MAGIC2(dtv, atsc_fs_checker);
 GR_SWIG_BLOCK_MAGIC2(dtv, atsc_rs_decoder);
 GR_SWIG_BLOCK_MAGIC2(dtv, atsc_sync);
 GR_SWIG_BLOCK_MAGIC2(dtv, atsc_viterbi_decoder);
+GR_SWIG_BLOCK_MAGIC2(dtv, atsc_pad);
+GR_SWIG_BLOCK_MAGIC2(dtv, atsc_randomizer);
+GR_SWIG_BLOCK_MAGIC2(dtv, atsc_rs_encoder);
+GR_SWIG_BLOCK_MAGIC2(dtv, atsc_interleaver);
+GR_SWIG_BLOCK_MAGIC2(dtv, atsc_trellis_encoder);
+GR_SWIG_BLOCK_MAGIC2(dtv, atsc_field_sync_mux);

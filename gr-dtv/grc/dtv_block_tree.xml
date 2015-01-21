@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 
 <!--
- Copyright 2014 Free Software Foundation, Inc.
+ Copyright 2014,2015 Free Software Foundation, Inc.
 
  This file is part of GNU Radio
 
@@ -43,6 +43,12 @@
       <block>dtv_atsc_rx_filter</block>
       <block>dtv_atsc_sync</block>
       <block>dtv_atsc_viterbi_decoder</block>
+      <block>dtv_atsc_pad</block>
+      <block>dtv_atsc_randomizer</block>
+      <block>dtv_atsc_rs_encoder</block>
+      <block>dtv_atsc_interleaver</block>
+      <block>dtv_atsc_trellis_encoder</block>
+      <block>dtv_atsc_field_sync_mux</block>
     </cat>
   </cat>
 </cat>
