@@ -1,4 +1,4 @@
-# Copyright 2014 Free Software Foundation, Inc.
+# Copyright 2014,2015 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -70,6 +70,13 @@ list(APPEND dtv_sources
   atsc/atsc_fake_single_viterbi.cc
   atsc/atsc_single_viterbi.cc
   atsc/atsc_viterbi_decoder_impl.cc
+  atsc/atsc_pad_impl.cc
+  atsc/atsc_randomizer_impl.cc
+  atsc/atsc_rs_encoder_impl.cc
+  atsc/atsc_interleaver_impl.cc
+  atsc/atsc_basic_trellis_encoder.cc
+  atsc/atsc_trellis_encoder_impl.cc
+  atsc/atsc_field_sync_mux_impl.cc
 )
 
 if(ENABLE_GR_CTRLPORT)
