@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<!--
+###################################################
+## ATSC Field Sync Mux
+###################################################
+ -->
+<block>
+  <name>ATSC Field Sync Mux</name>
+  <key>dtv_atsc_field_sync_mux</key>
+  <import>from gnuradio import dtv</import>
+  <make>dtv.atsc_field_sync_mux()</make>
+  <sink>
+    <name>in</name>
+    <type>byte</type>
+    <vlen>256</vlen>
+  </sink>
+  <source>
+    <name>out</name>
+    <type>byte</type>
+    <vlen>1024</vlen>
+  </source>
+</block>

@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<!--
+###################################################
+## ATSC Trellis Encoder
+###################################################
+ -->
+<block>
+  <name>ATSC Trellis Encoder</name>
+  <key>dtv_atsc_trellis_encoder</key>
+  <import>from gnuradio import dtv</import>
+  <make>dtv.atsc_trellis_encoder()</make>
+  <sink>
+    <name>in</name>
+    <type>byte</type>
+    <vlen>256</vlen>
+  </sink>
+  <source>
+    <name>out</name>
+    <type>byte</type>
+    <vlen>256</vlen>
+  </source>
+</block>
