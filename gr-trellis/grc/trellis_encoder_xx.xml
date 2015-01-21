@@ -13,6 +13,7 @@
   <make> trellis.encoder_$(type)(trellis.fsm($fsm_args), $init_state, $blocklength) if $blockwise else trellis.encoder_$(type)(trellis.fsm($fsm_args), $init_state) </make>
   <callback>set_FSM(trellis.fsm($fsm_args))</callback>
   <callback>set_ST($init_state)</callback>
+  <callback>set_K($blocklength)</callback>
   <param>
     <name>Type</name>
     <key>type</key>
