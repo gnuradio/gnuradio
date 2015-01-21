@@ -947,37 +947,37 @@ namespace gr {
       float re = sample->real();
       float im = sample->imag();
 
-      if(im < 0 && im > -2*level && re > 0 && re < 2*level)
+      if(im <= 0 && im >= -2*level && re >= 0 && re <= 2*level)
 	ret = 0;
-      if(im < 0 && im > -2*level && re < 0 && re > -2*level)
+      else if(im <= 0 && im >= -2*level && re <= 0 && re >= -2*level)
 	ret = 1;
-      if(im < -2*level && re > 2*level)
+      else if(im <= -2*level && re >= 2*level)
 	ret = 2;
-      if(im < -2*level && re < -2*level)
+      else if(im <= -2*level && re <= -2*level)
 	ret = 3;
-      if(im < 0 && im > -2*level && re < -2*level)
+      else if(im <= 0 && im >= -2*level && re <= -2*level)
 	ret = 4;
-      if(im < 0 && im > -2*level && re > 2*level)
+      else if(im <= 0 && im >= -2*level && re >= 2*level)
 	ret = 5;
-      if(im < -2*level && re < 0 && re > -2*level)
+      else if(im <= -2*level && re <= 0 && re >= -2*level)
 	ret = 6;
-      if(im < -2*level && re > 0 && re < 2*level)
+      else if(im <= -2*level && re >= 0 && re <= 2*level)
 	ret = 7;
-      if(im > 2*level && re < -2*level)
+      else if(im >= 2*level && re <= -2*level)
 	ret = 8;
-      if(im > 2*level && re > 2*level)
+      else if(im >= 2*level && re >= 2*level)
 	ret = 9;
-      if(im > 0 && im < 2*level && re < 0 && re < -2*level)
+      else if(im >= 0 && im <= 2*level && re <= 0 && re <= -2*level)
 	ret = 10;
-      if(im > 0 && im < 2*level && re > 0 && re < 2*level)
+      else if(im >= 0 && im <= 2*level && re >= 0 && re <= 2*level)
 	ret = 11;
-      if(im > 2*level && re > 0 && re < 2*level)
+      else if(im >= 2*level && re >= 0 && re <= 2*level)
 	ret = 12;
-      if(im > 2*level && re < 0 && re > -2*level)
+      else if(im >= 2*level && re <= 0 && re >= -2*level)
 	ret = 13;
-      if(im > 0 && im < 2*level && re > 2*level)
+      else if(im >= 0 && im <= 2*level && re >= 2*level)
 	ret = 14;
-      if(im > 0 && im < 2*level && re < -2*level)
+      else if(im >= 0 && im <= 2*level && re <= -2*level)
 	ret = 15;
 
       return ret;
