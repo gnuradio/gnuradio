@@ -68,7 +68,12 @@ namespace gr {
       set_relative_rate(d_formatter->header_len());
       set_tag_propagation_policy(TPP_DONT);
     }
-
+void 
+    packet_headergenerator_bb_impl::set_header_formatter(packet_header_default::sptr header_formatter)
+    {
+      gr::thread::scoped_lock guard(d_setlock);
+      d_formatter=header_formatter;
+    }
     packet_headergenerator_bb_impl::~packet_headergenerator_bb_impl()
     {
     }
@@ -79,6 +84,7 @@ namespace gr {
                        gr_vector_const_void_star &input_items,
                        gr_vector_void_star &output_items)
     {
+      gr::thread::scoped_lock guard(d_setlock);
       unsigned char *out = (unsigned char *) output_items[0];
 
       std::vector<tag_t> tags;
