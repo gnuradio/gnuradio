@@ -35,22 +35,26 @@ namespace gr {
   namespace blocks {
 
     throttle::sptr
-    throttle::make(size_t itemsize, double samples_per_sec, bool ignore_tags)
+    throttle::make(size_t itemsize, double samples_per_sec, bool ignore_tags, int max_noutput_items)
     {
-      return gnuradio::get_initial_sptr
-        (new throttle_impl(itemsize, samples_per_sec, ignore_tags));
+        return gnuradio::get_initial_sptr
+          (new throttle_impl(itemsize, samples_per_sec, ignore_tags, max_noutput_items));
     }
 
     throttle_impl::throttle_impl(size_t itemsize,
                                  double samples_per_second,
-                                 bool ignore_tags)
+                                 bool ignore_tags,
+				 int max_noutput_items)
       : sync_block("throttle",
                       io_signature::make(1, 1, itemsize),
                       io_signature::make(1, 1, itemsize)),
         d_itemsize(itemsize),
-        d_ignore_tags(ignore_tags)
+        d_ignore_tags(ignore_tags),
+        d_max_noutput_items(max_noutput_items)
     {
       set_sample_rate(samples_per_second);
+      if (d_max_noutput_items>0)
+        set_max_noutput_items(d_max_noutput_items);
     }
 
     throttle_impl::~throttle_impl()
@@ -86,6 +90,8 @@ namespace gr {
                         gr_vector_const_void_star &input_items,
                         gr_vector_void_star &output_items)
     {
+
+
       // check for updated rx_rate tag
       if(!d_ignore_tags){
         uint64_t abs_N = nitems_read(0);
