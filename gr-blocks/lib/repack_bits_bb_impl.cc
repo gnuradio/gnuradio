@@ -58,6 +58,15 @@ namespace gr {
       set_relative_rate((double) d_k / d_l);
     }
 
+    void 
+    repack_bits_bb_impl::set_k_and_l(int k, int l)
+    { 
+      gr::thread::scoped_lock guard(d_setlock);
+      d_k = k;
+      d_l = l;
+      set_relative_rate((double) d_k / d_l);
+      }
+
     repack_bits_bb_impl::~repack_bits_bb_impl()
     {
     }
@@ -79,6 +88,7 @@ namespace gr {
                        gr_vector_const_void_star &input_items,
                        gr_vector_void_star &output_items)
     {
+      gr::thread::scoped_lock guard(d_setlock);
       const unsigned char *in = (const unsigned char *) input_items[0];
       unsigned char *out = (unsigned char *) output_items[0];
       int bytes_to_write = noutput_items;
