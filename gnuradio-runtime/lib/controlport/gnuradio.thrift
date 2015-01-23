@@ -20,7 +20,7 @@
  */
 
 namespace cpp GNURadio
-namespace python GNURadio
+namespace py GNURadio
 
 struct complex {
   1: double re;
