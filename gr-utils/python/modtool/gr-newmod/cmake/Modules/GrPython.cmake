@@ -48,8 +48,15 @@ else(PYTHON_EXECUTABLE)
 
 endif(PYTHON_EXECUTABLE)
 
+if (CMAKE_CROSSCOMPILING)
+    set(QA_PYTHON_EXECUTABLE "/usr/bin/python")
+else (CMAKE_CROSSCOMPILING)
+    set(QA_PYTHON_EXECUTABLE ${PYTHON_EXECUTABLE})
+endif(CMAKE_CROSSCOMPILING)
+
 #make the path to the executable appear in the cmake gui
 set(PYTHON_EXECUTABLE ${PYTHON_EXECUTABLE} CACHE FILEPATH "python interpreter")
+set(QA_PYTHON_EXECUTABLE ${QA_PYTHON_EXECUTABLE} CACHE FILEPATH "python interpreter for QA tests")
 
 #make sure we can use -B with python (introduced in 2.6)
 if(PYTHON_EXECUTABLE)
@@ -76,10 +83,11 @@ macro(GR_PYTHON_CHECK_MODULE desc mod cmd have)
     execute_process(
         COMMAND ${PYTHON_EXECUTABLE} -c "
 #########################################
-try: import ${mod}
-except: exit(-1)
-try: assert ${cmd}
-except: exit(-1)
+try:
+    import ${mod}
+    assert ${cmd}
+except ImportError, AssertionError: exit(-1)
+except: pass
 #########################################"
         RESULT_VARIABLE ${have}
     )
@@ -95,11 +103,13 @@ endmacro(GR_PYTHON_CHECK_MODULE)
 ########################################################################
 # Sets the python installation directory GR_PYTHON_DIR
 ########################################################################
+if(NOT DEFINED GR_PYTHON_DIR)
 execute_process(COMMAND ${PYTHON_EXECUTABLE} -c "
 from distutils import sysconfig
 print sysconfig.get_python_lib(plat_specific=True, prefix='')
 " OUTPUT_VARIABLE GR_PYTHON_DIR OUTPUT_STRIP_TRAILING_WHITESPACE
 )
+endif()
 file(TO_CMAKE_PATH ${GR_PYTHON_DIR} GR_PYTHON_DIR)
 
 ########################################################################
@@ -181,6 +191,10 @@ function(GR_PYTHON_INSTALL)
     ####################################################################
         file(TO_NATIVE_PATH ${PYTHON_EXECUTABLE} pyexe_native)
 
+        if (CMAKE_CROSSCOMPILING)
+           set(pyexe_native "/usr/bin/env python")
+        endif()
+
         foreach(pyfile ${GR_PYTHON_INSTALL_PROGRAMS})
             get_filename_component(pyfile_name ${pyfile} NAME)
             get_filename_component(pyfile ${pyfile} ABSOLUTE)
@@ -193,8 +207,9 @@ function(GR_PYTHON_INSTALL)
             add_custom_command(
                 OUTPUT ${pyexefile} DEPENDS ${pyfile}
                 COMMAND ${PYTHON_EXECUTABLE} -c
-                \"open('${pyexefile}', 'w').write('\#!${pyexe_native}\\n'+open('${pyfile}').read())\"
+                "open('${pyexefile}','w').write('\#!${pyexe_native}\\n'+open('${pyfile}').read())"
                 COMMENT "Shebangin ${pyfile_name}"
+                VERBATIM
             )
 
             #on windows, python files need an extension to execute

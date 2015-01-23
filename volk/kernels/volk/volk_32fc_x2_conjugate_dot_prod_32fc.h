@@ -1,3 +1,25 @@
+/* -*- c++ -*- */
+/*
+ * Copyright 2014 Free Software Foundation, Inc.
+ *
+ * This file is part of GNU Radio
+ *
+ * GNU Radio is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3, or (at your option)
+ * any later version.
+ *
+ * GNU Radio is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with GNU Radio; see the file COPYING.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street,
+ * Boston, MA 02110-1301, USA.
+ */
+
 #ifndef INCLUDED_volk_32fc_x2_conjugate_dot_prod_32fc_u_H
 #define INCLUDED_volk_32fc_x2_conjugate_dot_prod_32fc_u_H
 
@@ -142,10 +164,57 @@ static inline void volk_32fc_x2_conjugate_dot_prod_32fc_u_sse3(lv_32fc_t* result
 
 #endif /*LV_HAVE_SSE3*/
 
+#ifdef LV_HAVE_NEON
+#include <arm_neon.h>
+static inline void volk_32fc_x2_conjugate_dot_prod_32fc_neon(lv_32fc_t* result, const lv_32fc_t* input, const lv_32fc_t* taps, unsigned int num_points) {
+
+    unsigned int quarter_points = num_points / 4;
+    unsigned int number;
+
+    lv_32fc_t* a_ptr = (lv_32fc_t*) taps;
+    lv_32fc_t* b_ptr = (lv_32fc_t*) input;
+    // for 2-lane vectors, 1st lane holds the real part,
+    // 2nd lane holds the imaginary part
+    float32x4x2_t a_val, b_val, accumulator;
+    float32x4x2_t tmp_imag;
+    accumulator.val[0] = vdupq_n_f32(0);
+    accumulator.val[1] = vdupq_n_f32(0);
+
+    for(number = 0; number < quarter_points; ++number) {
+        a_val = vld2q_f32((float*)a_ptr); // a0r|a1r|a2r|a3r || a0i|a1i|a2i|a3i
+        b_val = vld2q_f32((float*)b_ptr); // b0r|b1r|b2r|b3r || b0i|b1i|b2i|b3i
+        __builtin_prefetch(a_ptr+8);
+        __builtin_prefetch(b_ptr+8);
+
+        // do the first multiply
+        tmp_imag.val[1] = vmulq_f32(a_val.val[1], b_val.val[0]);
+        tmp_imag.val[0] = vmulq_f32(a_val.val[0], b_val.val[0]);
+
+        // use multiply accumulate/subtract to get result
+        tmp_imag.val[1] = vmlsq_f32(tmp_imag.val[1], a_val.val[0], b_val.val[1]);
+        tmp_imag.val[0] = vmlaq_f32(tmp_imag.val[0], a_val.val[1], b_val.val[1]);
+
+        accumulator.val[0] = vaddq_f32(accumulator.val[0], tmp_imag.val[0]);
+        accumulator.val[1] = vaddq_f32(accumulator.val[1], tmp_imag.val[1]);
+
+        // increment pointers
+        a_ptr += 4;
+        b_ptr += 4;
+    }
+    lv_32fc_t accum_result[4];
+    vst2q_f32((float*)accum_result, accumulator);
+    *result = accum_result[0] + accum_result[1] + accum_result[2] + accum_result[3];
+
+    // tail case
+    for(number = quarter_points*4; number < num_points; ++number) {
+      *result += (*a_ptr++) * lv_conj(*b_ptr++);
+    }
+    *result = lv_conj(*result);
+
+}
+#endif /*LV_HAVE_NEON*/
 
 #endif /*INCLUDED_volk_32fc_x2_conjugate_dot_prod_32fc_u_H*/
-
-
 
 #ifndef INCLUDED_volk_32fc_x2_conjugate_dot_prod_32fc_a_H
 #define INCLUDED_volk_32fc_x2_conjugate_dot_prod_32fc_a_H

@@ -26,6 +26,7 @@
 
 #include <gnuradio/basic_block.h>
 #include <gnuradio/block_registry.h>
+#include <gnuradio/logger.h>
 #include <stdexcept>
 #include <sstream>
 #include <iostream>
@@ -82,6 +83,7 @@ namespace gr {
 
     // set the block's alias
     d_symbol_alias = name;
+    update_logger_alias(symbol_name(), d_symbol_alias);
   }
 
   // ** Message passing interface **
@@ -226,12 +228,21 @@ namespace gr {
   }
 
   pmt::pmt_t
-  basic_block::delete_head_blocking(pmt::pmt_t which_port)
+  basic_block::delete_head_blocking(pmt::pmt_t which_port, unsigned int millisec)
   {
     gr::thread::scoped_lock guard(mutex);
 
-    while(empty_p(which_port)) {
-      msg_queue_ready[which_port]->wait(guard);
+    if (millisec) {
+       boost::system_time const timeout = boost::get_system_time() + boost::posix_time::milliseconds(millisec);
+       while (empty_p(which_port)) {
+         if (!msg_queue_ready[which_port]->timed_wait(guard, timeout)) {
+           return pmt::pmt_t();
+	 }
+       }
+    } else {
+      while(empty_p(which_port)) {
+        msg_queue_ready[which_port]->wait(guard);
+      }
     }
 
     pmt::pmt_t m(msg_queue[which_port].front());

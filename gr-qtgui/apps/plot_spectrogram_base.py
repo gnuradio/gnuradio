@@ -100,6 +100,7 @@ class plot_base(gr.top_block):
             self.connect(s, (self.gui_snk, i+1))
 
         self.gui_snk.set_update_time(0);
+        self.gui_snk.set_time_per_fft(self._psd_size/self._samp_rate)
         self.gui_snk.enable_menu(False)
         self.gui_snk.set_fft_average(self._avg)
 
@@ -126,6 +127,7 @@ class plot_base(gr.top_block):
         self.stop()
         self.wait()
         self.gui_snk.clear_data()
+        self.gui_snk.set_time_per_fft(self._psd_size/self._samp_rate)
 
         self._start = newstart
         self._nsamps = newnsamps

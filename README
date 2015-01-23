@@ -42,9 +42,10 @@ http://gnuradio.org/redmine/projects/gnuradio/wiki/DevelopingWithGit
 
 ## How to install
 
-Spire has modified the build process for GNU Radio to generate a custom debian package.
-This should be present in the Spire apt repository, if not or if you've made modifications, 
-you may need to build from source.
+Spire has modified the build process for GNU Radio to generate a
+custom debian package.  This should be present in the Spire apt
+repository, if not or if you've made modifications, you may need to
+build from source.
 
 ## How to Build GNU Radio from source:
 

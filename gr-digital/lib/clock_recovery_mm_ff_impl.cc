@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2004,2010-2012 Free Software Foundation, Inc.
+ * Copyright 2004,2010-2012,2014 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -32,13 +32,13 @@
 namespace gr {
   namespace digital {
 
-    clock_recovery_mm_ff::sptr 
+    clock_recovery_mm_ff::sptr
     clock_recovery_mm_ff::make(float omega, float gain_omega,
 			       float mu, float gain_mu,
 			       float omega_relative_limit)
     {
       return gnuradio::get_initial_sptr
-	(new clock_recovery_mm_ff_impl(omega, gain_omega, 
+	(new clock_recovery_mm_ff_impl(omega, gain_omega,
 				       mu, gain_mu,
 				       omega_relative_limit));
     }
@@ -47,8 +47,8 @@ namespace gr {
 							 float mu, float gain_mu,
 							 float omega_relative_limit)
       : block("clock_recovery_mm_ff",
-		 io_signature::make(1, 1, sizeof(float)),
-		 io_signature::make(1, 1, sizeof(float))),
+              io_signature::make(1, 1, sizeof(float)),
+              io_signature::make(1, 1, sizeof(float))),
 	d_mu(mu), d_gain_mu(gain_mu), d_gain_omega(gain_omega),
 	d_omega_relative_limit(omega_relative_limit),
 	d_last_sample(0), d_interp(new filter::mmse_fir_interpolator_ff())
@@ -83,6 +83,14 @@ namespace gr {
       return x < 0 ? -1.0F : 1.0F;
     }
 
+    void
+    clock_recovery_mm_ff_impl::set_omega (float omega)
+    {
+      d_omega = omega;
+      d_omega_mid = omega;
+      d_omega_lim = d_omega_mid * d_omega_relative_limit;
+  }
+
     int
     clock_recovery_mm_ff_impl::general_work(int noutput_items,
 					    gr_vector_int &ninput_items,
@@ -104,7 +112,7 @@ namespace gr {
 	d_last_sample = out[oo];
 
 	d_omega = d_omega + d_gain_omega * mm_val;
-	d_omega = d_omega_mid + gr::branchless_clip(d_omega-d_omega_mid, d_omega_relative_limit);
+	d_omega = d_omega_mid + gr::branchless_clip(d_omega-d_omega_mid, d_omega_lim);
 	d_mu = d_mu + d_omega + d_gain_mu * mm_val;
 
 	ii += (int)floor(d_mu);

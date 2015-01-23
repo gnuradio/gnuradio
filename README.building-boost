@@ -10,11 +10,11 @@ There are two recommended methods:
 Installing boost using the PyBOMBS utility, or building it from a source
 tarball.
 
-1. Installing Boost using ByBOMBS
+1. Installing Boost using PyBOMBS
 ---------------------------------
 
 Following http://gnuradio.org/redmine/projects/pybombs/wiki/Using you can
-install a recent boost by downloading and executing the PyBombs utility:
+install a recent boost by downloading and executing the PyBOMBS utility:
 
 # go to a directory you have write access to
 $ git clone git://github.com/pybombs/pybombs

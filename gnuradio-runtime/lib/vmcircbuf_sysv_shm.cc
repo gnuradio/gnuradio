@@ -77,7 +77,7 @@ namespace gr {
         }
 
         if((shmid2 = shmget(IPC_PRIVATE, 2 * size + 2 * pagesize, IPC_CREAT | 0700)) == -1) {
-          perror("gr::vmcircbuf_sysv_shm: shmget(1)");
+          perror("gr::vmcircbuf_sysv_shm: shmget (1)");
           shmctl(shmid_guard, IPC_RMID, 0);
           continue;
         }
@@ -91,7 +91,7 @@ namespace gr {
 
         void *first_copy = shmat (shmid2, 0, 0);
         if(first_copy == (void *) -1) {
-          perror("gr::vmcircbuf_sysv_shm: shmat(1)");
+          perror("gr::vmcircbuf_sysv_shm: shmat (1)");
           shmctl(shmid_guard, IPC_RMID, 0);
           shmctl(shmid2, IPC_RMID, 0);
           shmctl(shmid1, IPC_RMID, 0);
@@ -111,7 +111,7 @@ namespace gr {
 
         // first read-only guard page
         if(shmat(shmid_guard, first_copy, SHM_RDONLY) == (void *) -1) {
-          perror("gr::vmcircbuf_sysv_shm: shmat(2)");
+          perror("gr::vmcircbuf_sysv_shm: shmat (2)");
           shmctl(shmid_guard, IPC_RMID, 0);
           shmctl(shmid1, IPC_RMID, 0);
           continue;
@@ -137,7 +137,7 @@ namespace gr {
 
         // second read-only guard page
         if(shmat(shmid_guard, (char*)first_copy + pagesize + 2 * size, SHM_RDONLY) == (void *) -1) {
-          perror("gr::vmcircbuf_sysv_shm: shmat(5)");
+          perror("gr::vmcircbuf_sysv_shm: shmat (5)");
           shmctl(shmid_guard, IPC_RMID, 0);
           shmctl(shmid1, IPC_RMID, 0);
           shmdt(first_copy);
@@ -155,7 +155,7 @@ namespace gr {
         break;
     }
     if(attempts_remain<0){
-        throw std::runtime_error("gr_vmcircbuf_sysv_shm");
+        throw std::runtime_error("gr::vmcircbuf_sysv_shm");
     }
 #endif
   }
@@ -169,7 +169,7 @@ namespace gr {
        || shmdt(d_base) == -1
        || shmdt(d_base + d_size) == -1
        || shmdt(d_base + 2 * d_size) == -1){
-      perror("gr::vmcircbuf_sysv_shm: shmdt(2)");
+      perror("gr::vmcircbuf_sysv_shm: shmdt (2)");
     }
 #endif
   }

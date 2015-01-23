@@ -27,41 +27,42 @@
 ###################################################
  -->
 <cat>
-	<name></name> <!-- Blank for Root Name -->
-	<cat>
-		<name>Filters</name>
-		<!-- FIR convenience filters -->
-		<block>low_pass_filter</block>
-		<block>high_pass_filter</block>
-		<block>band_pass_filter</block>
-		<block>band_reject_filter</block>
-		<block>root_raised_cosine_filter</block>
-		<!-- Regular Filter Blocks -->
-		<block>dc_blocker_xx</block>
-		<block>fft_filter_xxx</block>
-		<block>fir_filter_xxx</block>
-		<block>filterbank_vcvcf</block>
-		<block>filter_delay_fc</block>
-		<block>hilbert_fc</block>
-		<block>iir_filter_xxx</block>
-		<block>interp_fir_filter_xxx</block>
-		<block>single_pole_iir_filter_xx</block>
-	</cat>
-	<cat>
-		<name>Resamplers</name>
-		<block>fractional_resampler_xx</block>
-		<block>pfb_arb_resampler_xxx</block>
-		<block>rational_resampler_xxx</block>
-		<block>rational_resampler_base_xxx</block>
-	</cat>
-	<cat>
-		<name>Channelizers</name>
-		<block>freq_xlating_fft_filter_ccc</block>
-		<block>freq_xlating_fir_filter_xxx</block>
-		<block>pfb_channelizer_ccf</block>
-		<block>pfb_channelizer_hier_ccf</block>
-		<block>pfb_decimator_ccf</block>
-		<block>pfb_interpolator_ccf</block>
-		<block>pfb_synthesizer_ccf</block>
-	</cat>
+   <name></name> <!-- Blank for Root Name -->
+   <cat>
+      <name>Filters</name>
+      <!-- FIR convenience filters -->
+      <block>low_pass_filter</block>
+      <block>high_pass_filter</block>
+      <block>band_pass_filter</block>
+      <block>band_reject_filter</block>
+      <block>root_raised_cosine_filter</block>
+      <!-- Regular Filter Blocks -->
+      <block>dc_blocker_xx</block>
+      <block>fft_filter_xxx</block>
+      <block>fir_filter_xxx</block>
+      <block>filterbank_vcvcf</block>
+      <block>filter_delay_fc</block>
+      <block>hilbert_fc</block>
+      <block>iir_filter_xxx</block>
+      <block>interp_fir_filter_xxx</block>
+      <block>single_pole_iir_filter_xx</block>
+   </cat>
+   <cat>
+      <name>Resamplers</name>
+      <block>fractional_resampler_xx</block>
+      <block>fractional_interpolator_xx</block>
+      <block>pfb_arb_resampler_xxx</block>
+      <block>rational_resampler_xxx</block>
+      <block>rational_resampler_base_xxx</block>
+   </cat>
+   <cat>
+      <name>Channelizers</name>
+      <block>freq_xlating_fft_filter_ccc</block>
+      <block>freq_xlating_fir_filter_xxx</block>
+      <block>pfb_channelizer_ccf</block>
+      <block>pfb_channelizer_hier_ccf</block>
+      <block>pfb_decimator_ccf</block>
+      <block>pfb_interpolator_ccf</block>
+      <block>pfb_synthesizer_ccf</block>
+   </cat>
 </cat>

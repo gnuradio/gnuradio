@@ -97,6 +97,8 @@ namespace gr {
      */
     void /* final */ forecast (int noutput_items, gr_vector_int &ninput_items_required);
 
+    bool check_topology(int ninputs, int /* noutputs */);
+
     /*!
      * - Reads the number of input items from the tags using parse_length_tags()
      * - Checks there's enough data on the input and output buffers

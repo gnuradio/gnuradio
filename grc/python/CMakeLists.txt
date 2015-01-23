@@ -19,7 +19,6 @@
 
 ########################################################################
 GR_PYTHON_INSTALL(FILES
-    convert_hier.py
     expr_utils.py
     extract_docs.py
     Block.py

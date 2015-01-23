@@ -95,6 +95,7 @@ public slots:
   void setIntensityColorMapType1(int);
   void setUserDefinedLowIntensityColor(QColor);
   void setUserDefinedHighIntensityColor(QColor);
+  void setPlotPosHalf(bool half);
 
 signals:
   void updatedLowerIntensityLevel(const double);
@@ -106,6 +107,7 @@ private:
   double d_start_frequency;
   double d_stop_frequency;
   int    d_xaxis_multiplier;
+  bool   d_half_freq;
 
   std::vector<WaterfallData*> d_data;
 

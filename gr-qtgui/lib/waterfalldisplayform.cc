@@ -48,7 +48,7 @@ WaterfallDisplayForm::WaterfallDisplayForm(int nplots, QWidget* parent)
 
   d_clicked = false;
   d_clicked_freq = 0;
-
+  d_time_per_fft = 0;
   // We don't use the normal menus that are part of the displayform.
   // Clear them out to get rid of their resources.
   for(int i = 0; i < nplots; i++) {
@@ -138,7 +138,7 @@ WaterfallDisplayForm::newData(const QEvent *updateEvent)
       d_max_val = *max_val;
   }
 
-  getPlot()->plotNewData(dataPoints, numDataPoints, d_update_time, dataTimestamp, 0);
+  getPlot()->plotNewData(dataPoints, numDataPoints, d_time_per_fft, dataTimestamp, 0);
 }
 
 void
@@ -330,3 +330,31 @@ WaterfallDisplayForm::getClickedFreq() const
 {
   return d_clicked_freq;
 }
+
+void
+WaterfallDisplayForm::setPlotPosHalf(bool half)
+{
+  getPlot()->setPlotPosHalf(half);
+  getPlot()->replot();
+}
+
+void
+WaterfallDisplayForm::setTimePerFFT(double t)
+{
+   d_time_per_fft = t;
+}
+
+double WaterfallDisplayForm::getTimePerFFT()
+{
+   return d_time_per_fft;
+}
+// Override displayform SetUpdateTime() to set FFT time
+void
+WaterfallDisplayForm::setUpdateTime(double t)
+{
+   d_update_time = t;
+   // Assume times are equal unless explictly told by setTimePerFFT()
+   // This is the case when plotting using gr_spectrogram_plot
+   d_time_per_fft = t;
+}
+

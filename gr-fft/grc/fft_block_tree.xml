@@ -27,11 +27,15 @@
 ###################################################
  -->
 <cat>
-	<name></name> <!-- Blank for Root Name -->
-	<cat>
-		<name>Fourier Analysis</name>
-		<block>fft_vxx</block>
-		<block>goertzel_fc</block>
-		<block>logpwrfft_x</block>
-	</cat>
+   <name></name> <!-- Blank for Root Name -->
+   <cat>
+      <name>Fourier Analysis</name>
+      <block>fft_vxx</block>
+      <block>goertzel_fc</block>
+      <block>logpwrfft_x</block>
+   </cat>
+   <cat>
+      <name>Control Port</name>
+      <block>fft_ctrlport_probe_psd</block>
+   </cat>
 </cat>

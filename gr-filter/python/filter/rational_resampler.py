@@ -40,16 +40,23 @@ def design_filter(interpolation, decimation, fractional_bw):
     if fractional_bw >= 0.5 or fractional_bw <= 0:
         raise ValueError, "Invalid fractional_bandwidth, must be in (0, 0.5)"
 
-    beta = 5.0
-    trans_width = 0.5 - fractional_bw
-    mid_transition_band = 0.5 - trans_width/2
+    beta = 7.0
+    halfband = 0.5
+    rate = float(interpolation)/float(decimation)
+    if(rate >= 1.0):
+        trans_width = halfband - fractional_bw
+        mid_transition_band = halfband - trans_width/2.0
+    else:
+        trans_width = rate*(halfband - fractional_bw)
+        mid_transition_band = rate*halfband - trans_width/2.0
 
     taps = filter.firdes.low_pass(interpolation,                     # gain
-                                  1,                                 # Fs
-                                  mid_transition_band/interpolation, # trans mid point
-                                  trans_width/interpolation,         # transition width
+                                  interpolation,                     # Fs
+                                  mid_transition_band,               # trans mid point
+                                  trans_width,                       # transition width
                                   filter.firdes.WIN_KAISER,
                                   beta)                              # beta
+
     return taps
 
 
@@ -84,19 +91,31 @@ class _rational_resampler_base(gr.hier_block2):
             fractional_bw = 0.4
 
         d = gru.gcd(interpolation, decimation)
-        interpolation = interpolation // d
-        decimation = decimation // d
 
+        # If we have user-provided taps and the interp and decim
+        # values have a common divisor, we don't reduce these values
+        # by the GCD but issue a warning to the user that this might
+        # increase the complexity of the filter.
+        if taps and (d > 1):
+            gr.log.info("Rational resampler has user-provided taps but interpolation ({0}) and decimation ({1}) have a GCD of {2}, which increases the complexity of the filterbank. Consider reducing these values by the GCD.".format(interpolation, decimation, d))
+
+        # If we don't have user-provided taps, reduce the interp and
+        # decim values by the GCD (if there is one) and then define
+        # the taps from these new values.
         if taps is None:
+            interpolation = interpolation // d
+            decimation = decimation // d
             taps = design_filter(interpolation, decimation, fractional_bw)
 
-        resampler = resampler_base(interpolation, decimation, taps)
+        self.resampler = resampler_base(interpolation, decimation, taps)
 	gr.hier_block2.__init__(self, "rational_resampler",
-				gr.io_signature(1, 1, resampler.input_signature().sizeof_stream_item(0)),
-				gr.io_signature(1, 1, resampler.output_signature().sizeof_stream_item(0)))
+				gr.io_signature(1, 1, self.resampler.input_signature().sizeof_stream_item(0)),
+				gr.io_signature(1, 1, self.resampler.output_signature().sizeof_stream_item(0)))
 
-	self.connect(self, resampler, self)
+	self.connect(self, self.resampler, self)
 
+    def taps(self):
+        return self.resampler.taps()
 
 class rational_resampler_fff(_rational_resampler_base):
     def __init__(self, interpolation, decimation, taps=None, fractional_bw=None):

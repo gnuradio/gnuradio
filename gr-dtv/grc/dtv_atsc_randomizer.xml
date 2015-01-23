@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<!--
+###################################################
+## ATSC Randomizer
+###################################################
+ -->
+<block>
+  <name>ATSC Randomizer</name>
+  <key>dtv_atsc_randomizer</key>
+  <import>from gnuradio import dtv</import>
+  <make>dtv.atsc_randomizer()</make>
+  <sink>
+    <name>in</name>
+    <type>byte</type>
+    <vlen>256</vlen>
+  </sink>
+  <source>
+    <name>out</name>
+    <type>byte</type>
+    <vlen>256</vlen>
+  </source>
+</block>

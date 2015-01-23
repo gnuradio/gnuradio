@@ -12,6 +12,7 @@
 	<make>filter.pfb_synthesizer_ccf(
 	  $numchans, $taps, $twox)
 self.$(id).set_channel_map($ch_map)
+self.$(id).declare_sample_delay($samp_delay)
 	</make>
         <callback>set_taps($taps)</callback>
         <callback>set_channel_map($ch_map)</callback>
@@ -38,6 +39,13 @@ self.$(id).set_channel_map($ch_map)
 		<key>twox</key>
 		<value>False</value>
 		<type>bool</type>
+	</param>
+	<param>
+		<name>Sample Delay</name>
+		<key>samp_delay</key>
+		<value>0</value>
+		<type>int</type>
+		<hide>part</hide>
 	</param>
 	<param>
 		<name>Channel Map</name>

@@ -20,6 +20,9 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 from Constants import LINE_SELECT_SENSITIVITY
 from Constants import POSSIBLE_ROTATIONS
 
+import gtk
+
+
 class Element(object):
     """
     GraphicalElement is the base class for all graphical elements.
@@ -35,6 +38,9 @@ class Element(object):
         self.set_coordinate((0, 0))
         self.clear()
         self.set_highlighted(False)
+        self.line_attributes = [
+            0, gtk.gdk.LINE_SOLID, gtk.gdk.CAP_BUTT, gtk.gdk.JOIN_MITER
+        ]
 
     def is_horizontal(self, rotation=None):
         """
@@ -89,16 +95,18 @@ class Element(object):
             border_color: the color for lines and rectangle borders
             bg_color: the color for the inside of the rectangle
         """
-        X,Y = self.get_coordinate()
-        for (rX,rY),(W,H) in self._areas_list:
+        X, Y = self.get_coordinate()
+        gc.set_line_attributes(*self.line_attributes)
+        for (rX, rY), (W, H) in self._areas_list:
             aX = X + rX
             aY = Y + rY
             gc.set_foreground(bg_color)
             window.draw_rectangle(gc, True, aX, aY, W, H)
             gc.set_foreground(border_color)
             window.draw_rectangle(gc, False, aX, aY, W, H)
-        for (x1, y1),(x2, y2) in self._lines_list:
+        for (x1, y1), (x2, y2) in self._lines_list:
             gc.set_foreground(border_color)
+            gc.set_background(bg_color)
             window.draw_line(gc, X+x1, Y+y1, X+x2, Y+y2)
 
     def rotate(self, rotation):

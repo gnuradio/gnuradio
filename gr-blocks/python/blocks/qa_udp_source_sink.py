@@ -89,7 +89,7 @@ class test_udp_sink_source(gr_unittest.TestCase):
         rcv_port = udp_rcv.get_port()
 
         udp_snd = blocks.udp_sink(gr.sizeof_float, '127.0.0.1', port)
-        udp_snd.connect('localhost', rcv_port)
+        udp_snd.connect('127.0.0.1', rcv_port)
 
         n_data = 16
         src_data = [float(x) for x in range(n_data)]

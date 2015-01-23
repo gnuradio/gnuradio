@@ -142,26 +142,51 @@ STRIP_FROM_PATH        =
 # are normally passed to the compiler using the -I flag.
 
 STRIP_FROM_INC_PATH    = @CMAKE_SOURCE_DIR@/gnuradio-runtime/include \
+                         @CMAKE_BINARY_DIR@/gnuradio-runtime/include \
                          @CMAKE_SOURCE_DIR@/gr-analog/include \
+                         @CMAKE_BINARY_DIR@/gr-analog/include \
                          @CMAKE_SOURCE_DIR@/gr-atsc/include \
+                         @CMAKE_BINARY_DIR@/gr-atsc/include \
                          @CMAKE_SOURCE_DIR@/gr-audio/include \
+                         @CMAKE_BINARY_DIR@/gr-audio/include \
                          @CMAKE_SOURCE_DIR@/gr-blocks/include \
+                         @CMAKE_BINARY_DIR@/gr-blocks/include \
                          @CMAKE_SOURCE_DIR@/gr-channels/include \
+                         @CMAKE_BINARY_DIR@/gr-channels/include \
                          @CMAKE_SOURCE_DIR@/gr-comedi/include \
+                         @CMAKE_BINARY_DIR@/gr-comedi/include \
                          @CMAKE_SOURCE_DIR@/gr-digital/include \
+                         @CMAKE_BINARY_DIR@/gr-digital/include \
+                         @CMAKE_SOURCE_DIR@/gr-dtv/include \
+                         @CMAKE_BINARY_DIR@/gr-dtv/include \
                          @CMAKE_SOURCE_DIR@/gr-fcd/include \
+                         @CMAKE_BINARY_DIR@/gr-fcd/include \
                          @CMAKE_SOURCE_DIR@/gr-fec/include \
+                         @CMAKE_BINARY_DIR@/gr-fec/include \
                          @CMAKE_SOURCE_DIR@/gr-fft/include \
+                         @CMAKE_BINARY_DIR@/gr-fft/include \
                          @CMAKE_SOURCE_DIR@/gr-filter/include \
+                         @CMAKE_BINARY_DIR@/gr-filter/include \
                          @CMAKE_SOURCE_DIR@/gr-noaa/include \
+                         @CMAKE_BINARY_DIR@/gr-noaa/include \
                          @CMAKE_SOURCE_DIR@/gr-pager/include \
+                         @CMAKE_BINARY_DIR@/gr-pager/include \
                          @CMAKE_SOURCE_DIR@/gr-qtgui/include \
+                         @CMAKE_BINARY_DIR@/gr-qtgui/include \
                          @CMAKE_SOURCE_DIR@/gr-trellis/include \
+                         @CMAKE_BINARY_DIR@/gr-trellis/include \
                          @CMAKE_SOURCE_DIR@/gr-uhd/include \
+                         @CMAKE_BINARY_DIR@/gr-uhd/include \
                          @CMAKE_SOURCE_DIR@/gr-video-sdl/include \
+                         @CMAKE_BINARY_DIR@/gr-video-sdl/include \
                          @CMAKE_SOURCE_DIR@/gr-vocoder/include \
+                         @CMAKE_BINARY_DIR@/gr-vocoder/include \
+                         @CMAKE_SOURCE_DIR@/gr-wavelet/include \
+                         @CMAKE_BINARY_DIR@/gr-wavelet/include \
                          @CMAKE_SOURCE_DIR@/gr-wxgui/include \
-                         @CMAKE_SOURCE_DIR@/volk/include
+                         @CMAKE_BINARY_DIR@/gr-wxgui/include \
+                         @CMAKE_SOURCE_DIR@/volk/include \
+                         @CMAKE_BINARY_DIR@/volk/include
 
 # If the SHORT_NAMES tag is set to YES, doxygen will generate much shorter
 # (but less readable) file names. This can be useful if your file system

@@ -47,7 +47,7 @@ class plot_time_i(plot_base.plot_base):
         self.dsize = gr.sizeof_float # already converted
         self.src_type = plot_base.source_ints_to_float
         self.gui_snk = qtgui.time_sink_f(self._nsamps, self._samp_rate,
-                                         "GNU Radio Time Plot", self._nsigs)
+                                         "", self._nsigs)
         self.setup()
 
 def main():

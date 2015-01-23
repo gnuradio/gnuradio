@@ -32,6 +32,7 @@ GR_PYTHON_INSTALL(FILES
     modtool_makexml.py
     modtool_newmod.py
     modtool_rm.py
+    modtool_rename.py
     parser_cc_block.py
     scm.py
     templates.py

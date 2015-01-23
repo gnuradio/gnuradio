@@ -87,7 +87,7 @@ namespace gr {
     {
       bool clocks_locked = true;
 
-      // 1) Check ref lock for all mboards
+      // Check ref lock for all mboards
       for (size_t mboard_index = 0; mboard_index < _dev->get_num_mboards(); mboard_index++) {
         std::string sensor_name = "ref_locked";
         if (_dev->get_clock_source(mboard_index) == "internal") {
@@ -102,19 +102,6 @@ namespace gr {
                 boost::bind(&usrp_source_impl::get_mboard_sensor, this, _1, mboard_index)
             )) {
           GR_LOG_WARN(d_logger, boost::format("Sensor '%s' failed to lock within timeout on motherboard %d.") % sensor_name % mboard_index);
-          clocks_locked = false;
-        }
-      }
-
-      // 2) Check LO for all channels
-      for (size_t i = 0; i < _nchan; i++) {
-        size_t chan_index = _stream_args.channels[i];
-        if (not _wait_for_locked_sensor(
-                get_sensor_names(chan_index),
-                "lo_locked",
-                boost::bind(&usrp_source_impl::get_sensor, this, _1, chan_index)
-            )) {
-          GR_LOG_WARN(d_logger, boost::format("Sensor 'lo_locked' failed to lock within timeout on channel %d.") % chan_index);
           clocks_locked = false;
         }
       }
@@ -723,7 +710,7 @@ namespace gr {
       if (command == "freq") {
 	double freq = pmt::to_double(cmd_value);
 	for (size_t i = 0; i < _nchan; i++) {
-	  if (chan == -1 or chan == int(i)) {
+	  if (chan == -1 || chan == int(i)) {
 	    set_center_freq(freq, i);
 	  }
 	}
@@ -733,7 +720,7 @@ namespace gr {
       } else if (command == "gain") {
 	double gain = pmt::to_double(cmd_value);
 	for (size_t i = 0; i < _nchan; i++) {
-	  if (chan == -1 or chan == int(i)) {
+	  if (chan == -1 || chan == int(i)) {
 	    set_gain(gain, i);
 	  }
 	}

@@ -60,6 +60,8 @@ namespace gr {
       void _npoints_resize();
       void _gui_update_trigger();
 
+      float get_item(const void *input_items, int n);
+
     public:
       number_sink_impl(size_t itemsize,
                        float average=0,

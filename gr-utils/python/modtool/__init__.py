@@ -29,6 +29,7 @@ from modtool_info import ModToolInfo
 from modtool_makexml import ModToolMakeXML
 from modtool_newmod import ModToolNewModule
 from modtool_rm import ModToolRemove
+from modtool_rename import ModToolRename
 from templates import Templates
 # Leave this at the end
 from modtool_help import ModToolHelp

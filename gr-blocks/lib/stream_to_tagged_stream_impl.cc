@@ -53,11 +53,24 @@ namespace gr {
     {
     }
 
+    void
+    stream_to_tagged_stream_impl::set_packet_len(unsigned packet_len)
+    {
+	gr::thread::scoped_lock guard(d_setlock);
+	d_packet_len = packet_len;
+    }      
+    void
+    stream_to_tagged_stream_impl::set_packet_len_pmt(unsigned packet_len)
+    {
+	gr::thread::scoped_lock guard(d_setlock);
+	d_packet_len_pmt=pmt::from_long(packet_len);
+    }      
     int
     stream_to_tagged_stream_impl::work(int noutput_items,
 			  gr_vector_const_void_star &input_items,
 			  gr_vector_void_star &output_items)
     {
+	gr::thread::scoped_lock guard(d_setlock);
         const unsigned char *in = (const unsigned char *) input_items[0];
         unsigned char *out = (unsigned char *) output_items[0];
 	// Copy data

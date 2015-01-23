@@ -83,6 +83,11 @@ namespace gr {
    */
   GR_RUNTIME_API const std::string  compiler_flags();
 
+  /*!
+   * \brief return build-time enabled components
+   */
+  GR_RUNTIME_API const std::string  build_time_enabled_components();
+
 } /* namespace gr */
 
 #endif /* INCLUDED_GR_CONSTANTS_H */

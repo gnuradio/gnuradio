@@ -844,8 +844,11 @@ namespace gr {
    * block, we use 'alias()' for this value, and this is set up for us
    * automatically in gr::block.
    */
-  GR_RUNTIME_API  bool configure_default_loggers(gr::logger_ptr &l, gr::logger_ptr &d,
-                                                 const std::string name);
+  GR_RUNTIME_API bool configure_default_loggers(gr::logger_ptr &l, gr::logger_ptr &d,
+                                                const std::string name);
+
+  GR_RUNTIME_API bool update_logger_alias(const std::string &name, const std::string &alias);
+
 } /* namespace gr */
 
 

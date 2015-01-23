@@ -106,10 +106,12 @@ namespace gr {
       void set_intensity_range(const double min, const double max);
 
       void set_update_time(double t);
+      void set_time_per_fft(double t);
       void set_title(const std::string &title);
       void set_line_label(int which, const std::string &label);
       void set_line_alpha(int which, double alpha);
       void set_color_map(int which, const int color);
+      void set_plot_pos_half(bool half);
 
       std::string title();
       std::string line_label(int which);

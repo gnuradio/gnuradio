@@ -89,5 +89,11 @@ namespace gr {
       d_iir.set_taps(alpha);
     }
 
+    void
+    probe_avg_mag_sqrd_cf_impl::reset()
+    {
+      d_iir.reset();
+    }
+
   } /* namespace analog */
 } /* namespace gr */

@@ -239,7 +239,7 @@ shown below.
 
 \code
 void
-tagged_stream_to_pdu_impl::send_meassage()
+tagged_stream_to_pdu_impl::send_message()
 {
   if(pmt::length(d_pdu_vector) != d_pdu_length) {
     throw std::runtime_error("msg length not correct");

@@ -55,6 +55,32 @@ namespace gr {
       set_output_multiple(d_K);
     }
 
+    void @IMPL_NAME@::set_FSM(const fsm &FSM) 
+    { 
+      gr::thread::scoped_lock guard(d_setlock); 
+      d_FSM = FSM; 
+      set_relative_rate(1.0 / ((double)d_FSM.O()));
+    }
+
+    void @IMPL_NAME@::set_K(int K) 
+    { 
+      gr::thread::scoped_lock guard(d_setlock); 
+      d_K = K; 
+      set_output_multiple(d_K);
+    }
+
+    void @IMPL_NAME@::set_S0(int S0) 
+    { 
+      gr::thread::scoped_lock guard(d_setlock); 
+      d_S0 = S0; 
+    }
+
+    void @IMPL_NAME@::set_SK(int SK) 
+    { 
+      gr::thread::scoped_lock guard(d_setlock); 
+      d_SK = SK; 
+    }
+
     @IMPL_NAME@::~@IMPL_NAME@()
     {
     }
@@ -76,6 +102,7 @@ namespace gr {
 			      gr_vector_const_void_star &input_items,
 			      gr_vector_void_star &output_items)
     {
+      gr::thread::scoped_lock guard(d_setlock);
       int nstreams = input_items.size();
       int nblocks = noutput_items / d_K;
 

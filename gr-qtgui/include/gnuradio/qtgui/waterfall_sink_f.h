@@ -108,6 +108,7 @@ namespace gr {
 
       virtual void set_fft_size(const int fftsize) = 0;
       virtual int fft_size() const = 0;
+      virtual void set_time_per_fft(const double t) = 0;
       virtual void set_fft_average(const float fftavg) = 0;
       virtual float fft_average() const = 0;
       virtual void set_fft_window(const gr::filter::firdes::win_type win) = 0;
@@ -123,6 +124,13 @@ namespace gr {
       virtual void set_line_label(int which, const std::string &line) = 0;
       virtual void set_line_alpha(int which, double alpha) = 0;
       virtual void set_color_map(int which, const int color) = 0;
+
+      /*!
+       *  Pass "true" to this function to only show the positive half
+       *  of the spectrum. By default, this plotter shows the full
+       *  spectrum (positive and negative halves).
+       */
+      virtual void set_plot_pos_half(bool half) = 0;
 
       virtual std::string title() = 0;
       virtual std::string line_label(int which) = 0;
