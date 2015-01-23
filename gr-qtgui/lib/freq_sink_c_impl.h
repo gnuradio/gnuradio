@@ -35,11 +35,10 @@ namespace gr {
     class QTGUI_API freq_sink_c_impl : public freq_sink_c
     {
     private:
-      void forecast(int noutput_items, gr_vector_int &ninput_items_required);
-
       void initialize();
 
       int d_fftsize;
+      int d_tmpbuflen;
       float d_fftavg;
       filter::firdes::win_type d_wintype;
       std::vector<float> d_window;
@@ -55,6 +54,7 @@ namespace gr {
       std::vector<gr_complex*> d_residbufs;
       std::vector<double*> d_magbufs;
       float *d_fbuf;
+      float *d_tmpbuf;
 
       int d_argc;
       char *d_argv;
@@ -64,15 +64,28 @@ namespace gr {
       gr::high_res_timer_type d_update_time;
       gr::high_res_timer_type d_last_time;
 
-      void windowreset();
+      bool windowreset();
       void buildwindow();
-      void fftresize();
+      bool fftresize();
       void check_clicked();
       void fft(float *data_out, const gr_complex *data_in, int size);
 
       // Handles message input port for setting new center frequency.
       // The message is a PMT pair (intern('freq'), double(frequency)).
       void handle_set_freq(pmt::pmt_t msg);
+
+      // Members used for triggering scope
+      trigger_mode d_trigger_mode;
+      float d_trigger_level;
+      int d_trigger_channel;
+      pmt::pmt_t d_trigger_tag_key;
+      bool d_triggered;
+      int d_trigger_count;
+
+      void _reset();
+      void _gui_update_trigger();
+      void _test_trigger_tags(int start, int nitems);
+      void _test_trigger_norm(int nitems, std::vector<double*> inputs);
 
     public:
       freq_sink_c_impl(int size, int wintype,
@@ -112,6 +125,9 @@ namespace gr {
       void set_line_style(int which, int style);
       void set_line_marker(int which, int marker);
       void set_line_alpha(int which, double alpha);
+      void set_trigger_mode(trigger_mode mode,
+                            float level, int channel,
+                            const std::string &tag_key="");
 
       std::string title();
       std::string line_label(int which);

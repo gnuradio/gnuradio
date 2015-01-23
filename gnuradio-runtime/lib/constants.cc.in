@@ -95,4 +95,9 @@ namespace gr {
     return "@COMPILER_INFO@";
   }
 
+  const std::string
+  build_time_enabled_components()
+  {
+    return "@_gr_enabled_components@";
+  }
 } /* namespace gr */

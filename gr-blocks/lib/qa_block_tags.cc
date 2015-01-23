@@ -33,20 +33,32 @@
 #include <gnuradio/blocks/annotator_alltoall.h>
 #include <gnuradio/blocks/annotator_1to1.h>
 #include <gnuradio/blocks/keep_one_in_n.h>
-#include <gnuradio/tags.h>
 
 
 // ----------------------------------------------------------------
 
 // set to 1 to turn on debug output
 // The debug output fully checks that the tags seen are what are expected. While
-// this behavior currently works with our implementation, there is no guarentee
+// this behavior currently works with our implementation, there is no guarantee
 // that the tags will be coming in this specific order, so it's dangerous to
 // rely on this as a test of the tag system working. We would really want to
 // tags we know we should see and then test that they all occur once, but in no
 // particular order.
 #define QA_TAGS_DEBUG 0
 
+gr::tag_t make_tag(uint64_t offset, pmt::pmt_t key, pmt::pmt_t value, pmt::pmt_t srcid) {
+  gr::tag_t result;
+  result.offset = offset;
+  result.key = key;
+  result.value = value;
+  result.srcid = srcid;
+  return result;
+}
+
+std::ostream&
+operator << (std::ostream& os, const gr::tag_t &t) {
+  return os;
+}
 void
 qa_block_tags::t0()
 {
@@ -59,8 +71,6 @@ qa_block_tags::t0()
   tb->connect(src, 0, head, 0);
   tb->connect(head, 0, snk, 0);
 
-  //CPPUNIT_ASSERT_THROW(src->nitems_read(0), std::runtime_error);
-  //CPPUNIT_ASSERT_THROW(src->nitems_written(0), std::runtime_error);
   CPPUNIT_ASSERT_EQUAL(src->nitems_read(0), (uint64_t)0);
   CPPUNIT_ASSERT_EQUAL(src->nitems_written(0), (uint64_t)0);
 
@@ -117,39 +127,39 @@ qa_block_tags::t1()
   str1 << ann1->name() << ann1->unique_id();
   str2 << ann2->name() << ann2->unique_id();
 
-  pmt::pmt_t expected_tags3[8];
-  expected_tags3[0] = mp(pmt::from_uint64(0),     mp(str1.str()), mp("seq"), mp(0));
-  expected_tags3[1] = mp(pmt::from_uint64(0),     mp(str0.str()), mp("seq"), mp(0));
-  expected_tags3[2] = mp(pmt::from_uint64(10000), mp(str1.str()), mp("seq"), mp(1));
-  expected_tags3[3] = mp(pmt::from_uint64(10000), mp(str0.str()), mp("seq"), mp(2));
-  expected_tags3[4] = mp(pmt::from_uint64(20000), mp(str1.str()), mp("seq"), mp(2));
-  expected_tags3[5] = mp(pmt::from_uint64(20000), mp(str0.str()), mp("seq"), mp(4));
-  expected_tags3[6] = mp(pmt::from_uint64(30000), mp(str1.str()), mp("seq"), mp(3));
-  expected_tags3[7] = mp(pmt::from_uint64(30000), mp(str0.str()), mp("seq"), mp(6));
+  gr::tag_t expected_tags3[8];
+  expected_tags3[0] = make_tag(0,     pmt::mp(str1.str()), pmt::mp("seq"), pmt::mp(0));
+  expected_tags3[1] = make_tag(0,     pmt::mp(str0.str()), pmt::mp("seq"), pmt::mp(0));
+  expected_tags3[2] = make_tag(10000, pmt::mp(str1.str()), pmt::mp("seq"), pmt::mp(1));
+  expected_tags3[3] = make_tag(10000, pmt::mp(str0.str()), pmt::mp("seq"), pmt::mp(2));
+  expected_tags3[4] = make_tag(20000, pmt::mp(str1.str()), pmt::mp("seq"), pmt::mp(2));
+  expected_tags3[5] = make_tag(20000, pmt::mp(str0.str()), pmt::mp("seq"), pmt::mp(4));
+  expected_tags3[6] = make_tag(30000, pmt::mp(str1.str()), pmt::mp("seq"), pmt::mp(3));
+  expected_tags3[7] = make_tag(30000, pmt::mp(str0.str()), pmt::mp("seq"), pmt::mp(6));
 
-  pmt::pmt_t expected_tags4[8];
-  expected_tags4[0] = mp(pmt::from_uint64(0),     mp(str2.str()), mp("seq"), mp(0));
-  expected_tags4[1] = mp(pmt::from_uint64(0),     mp(str0.str()), mp("seq"), mp(1));
-  expected_tags4[2] = mp(pmt::from_uint64(10000), mp(str2.str()), mp("seq"), mp(1));
-  expected_tags4[3] = mp(pmt::from_uint64(10000), mp(str0.str()), mp("seq"), mp(3));
-  expected_tags4[4] = mp(pmt::from_uint64(20000), mp(str2.str()), mp("seq"), mp(2));
-  expected_tags4[5] = mp(pmt::from_uint64(20000), mp(str0.str()), mp("seq"), mp(5));
-  expected_tags4[6] = mp(pmt::from_uint64(30000), mp(str2.str()), mp("seq"), mp(3));
-  expected_tags4[7] = mp(pmt::from_uint64(30000), mp(str0.str()), mp("seq"), mp(7));
+  gr::tag_t expected_tags4[8];
+  expected_tags4[0] = make_tag(0,     pmt::mp(str2.str()), pmt::mp("seq"), pmt::mp(0));
+  expected_tags4[1] = make_tag(0,     pmt::mp(str0.str()), pmt::mp("seq"), pmt::mp(1));
+  expected_tags4[2] = make_tag(10000, pmt::mp(str2.str()), pmt::mp("seq"), pmt::mp(1));
+  expected_tags4[3] = make_tag(10000, pmt::mp(str0.str()), pmt::mp("seq"), pmt::mp(3));
+  expected_tags4[4] = make_tag(20000, pmt::mp(str2.str()), pmt::mp("seq"), pmt::mp(2));
+  expected_tags4[5] = make_tag(20000, pmt::mp(str0.str()), pmt::mp("seq"), pmt::mp(5));
+  expected_tags4[6] = make_tag(30000, pmt::mp(str2.str()), pmt::mp("seq"), pmt::mp(3));
+  expected_tags4[7] = make_tag(30000, pmt::mp(str0.str()), pmt::mp("seq"), pmt::mp(7));
 
   std::cout << std::endl << "qa_block_tags::t1" << std::endl;
 
   // For annotator 3, we know it gets tags from ann0 and ann1, test this
   for(size_t i = 0; i < tags3.size(); i++) {
     std::cout << "tags3[" << i << "] = " << tags3[i] << "\t\t" << expected_tags3[i] << std::endl;
-    CPPUNIT_ASSERT_EQUAL(pmt::write_string(tags3[i]), pmt::write_string(expected_tags3[i]));
+    CPPUNIT_ASSERT_EQUAL(tags3[i], expected_tags3[i]);
   }
 
   // For annotator 4, we know it gets tags from ann0 and ann2, test this
   std::cout << std::endl;
   for(size_t i = 0; i < tags4.size(); i++) {
     std::cout << "tags4[" << i << "] = " << tags4[i] << "\t\t" << expected_tags4[i] << std::endl;
-    CPPUNIT_ASSERT_EQUAL(pmt::write_string(tags4[i]), pmt::write_string(expected_tags4[i]));
+    CPPUNIT_ASSERT_EQUAL(tags4[i], expected_tags4[i]);
   }
 #endif
 }
@@ -207,33 +217,33 @@ qa_block_tags::t2 ()
   str0 << ann0->name() << ann0->unique_id();
   str1 << ann1->name() << ann1->unique_id();
 
-  pmt::pmt_t expected_tags2[12];
-  expected_tags2[0] = mp(pmt::from_uint64(0),     mp(str1.str()), mp("seq"), mp(0));
-  expected_tags2[1] = mp(pmt::from_uint64(0),     mp(str0.str()), mp("seq"), mp(0));
-  expected_tags2[2] = mp(pmt::from_uint64(0),     mp(str0.str()), mp("seq"), mp(1));
-  expected_tags2[3] = mp(pmt::from_uint64(10000), mp(str1.str()), mp("seq"), mp(3));
-  expected_tags2[4] = mp(pmt::from_uint64(10000), mp(str0.str()), mp("seq"), mp(2));
-  expected_tags2[5] = mp(pmt::from_uint64(10000), mp(str0.str()), mp("seq"), mp(3));
-  expected_tags2[6] = mp(pmt::from_uint64(20000), mp(str1.str()), mp("seq"), mp(6));
-  expected_tags2[7] = mp(pmt::from_uint64(20000), mp(str0.str()), mp("seq"), mp(4));
-  expected_tags2[8] = mp(pmt::from_uint64(20000), mp(str0.str()), mp("seq"), mp(5));
-  expected_tags2[9] = mp(pmt::from_uint64(30000), mp(str1.str()), mp("seq"), mp(9));
-  expected_tags2[10] = mp(pmt::from_uint64(30000), mp(str0.str()), mp("seq"), mp(6));
-  expected_tags2[11] = mp(pmt::from_uint64(30000), mp(str0.str()), mp("seq"), mp(7));
+  gr::tag_t expected_tags2[12];
+  expected_tags2[0] = make_tag(0,     pmt::mp(str1.str()), pmt::mp("seq"), pmt::mp(0));
+  expected_tags2[1] = make_tag(0,     pmt::mp(str0.str()), pmt::mp("seq"), pmt::mp(0));
+  expected_tags2[2] = make_tag(0,     pmt::mp(str0.str()), pmt::mp("seq"), pmt::mp(1));
+  expected_tags2[3] = make_tag(10000, pmt::mp(str1.str()), pmt::mp("seq"), pmt::mp(3));
+  expected_tags2[4] = make_tag(10000, pmt::mp(str0.str()), pmt::mp("seq"), pmt::mp(2));
+  expected_tags2[5] = make_tag(10000, pmt::mp(str0.str()), pmt::mp("seq"), pmt::mp(3));
+  expected_tags2[6] = make_tag(20000, pmt::mp(str1.str()), pmt::mp("seq"), pmt::mp(6));
+  expected_tags2[7] = make_tag(20000, pmt::mp(str0.str()), pmt::mp("seq"), pmt::mp(4));
+  expected_tags2[8] = make_tag(20000, pmt::mp(str0.str()), pmt::mp("seq"), pmt::mp(5));
+  expected_tags2[9] = make_tag(30000, pmt::mp(str1.str()), pmt::mp("seq"), pmt::mp(9));
+  expected_tags2[10] = make_tag(30000, pmt::mp(str0.str()), pmt::mp("seq"), pmt::mp(6));
+  expected_tags2[11] = make_tag(30000, pmt::mp(str0.str()), pmt::mp("seq"), pmt::mp(7));
 
-  pmt::pmt_t expected_tags4[12];
-  expected_tags4[0] = mp(pmt::from_uint64(0),     mp(str1.str()), mp("seq"), mp(2));
-  expected_tags4[1] = mp(pmt::from_uint64(0),     mp(str0.str()), mp("seq"), mp(0));
-  expected_tags4[2] = mp(pmt::from_uint64(0),     mp(str0.str()), mp("seq"), mp(1));
-  expected_tags4[3] = mp(pmt::from_uint64(10000), mp(str1.str()), mp("seq"), mp(5));
-  expected_tags4[4] = mp(pmt::from_uint64(10000), mp(str0.str()), mp("seq"), mp(2));
-  expected_tags4[5] = mp(pmt::from_uint64(10000), mp(str0.str()), mp("seq"), mp(3));
-  expected_tags4[6] = mp(pmt::from_uint64(20000), mp(str1.str()), mp("seq"), mp(8));
-  expected_tags4[7] = mp(pmt::from_uint64(20000), mp(str0.str()), mp("seq"), mp(4));
-  expected_tags4[8] = mp(pmt::from_uint64(20000), mp(str0.str()), mp("seq"), mp(5));
-  expected_tags4[9] = mp(pmt::from_uint64(30000), mp(str1.str()), mp("seq"), mp(11));
-  expected_tags4[10] = mp(pmt::from_uint64(30000), mp(str0.str()), mp("seq"), mp(6));
-  expected_tags4[11] = mp(pmt::from_uint64(30000), mp(str0.str()), mp("seq"), mp(7));
+  gr::tag_t expected_tags4[12];
+  expected_tags4[0] = make_tag(0,     pmt::mp(str1.str()), pmt::mp("seq"), pmt::mp(2));
+  expected_tags4[1] = make_tag(0,     pmt::mp(str0.str()), pmt::mp("seq"), pmt::mp(0));
+  expected_tags4[2] = make_tag(0,     pmt::mp(str0.str()), pmt::mp("seq"), pmt::mp(1));
+  expected_tags4[3] = make_tag(10000, pmt::mp(str1.str()), pmt::mp("seq"), pmt::mp(5));
+  expected_tags4[4] = make_tag(10000, pmt::mp(str0.str()), pmt::mp("seq"), pmt::mp(2));
+  expected_tags4[5] = make_tag(10000, pmt::mp(str0.str()), pmt::mp("seq"), pmt::mp(3));
+  expected_tags4[6] = make_tag(20000, pmt::mp(str1.str()), pmt::mp("seq"), pmt::mp(8));
+  expected_tags4[7] = make_tag(20000, pmt::mp(str0.str()), pmt::mp("seq"), pmt::mp(4));
+  expected_tags4[8] = make_tag(20000, pmt::mp(str0.str()), pmt::mp("seq"), pmt::mp(5));
+  expected_tags4[9] = make_tag(30000, pmt::mp(str1.str()), pmt::mp("seq"), pmt::mp(11));
+  expected_tags4[10] = make_tag(30000, pmt::mp(str0.str()), pmt::mp("seq"), pmt::mp(6));
+  expected_tags4[11] = make_tag(30000, pmt::mp(str0.str()), pmt::mp("seq"), pmt::mp(7));
 
   std::cout << std::endl << "qa_block_tags::t2" << std::endl;
 
@@ -243,13 +253,13 @@ qa_block_tags::t2 ()
   // inconceivable for ann3 to have it wrong.
   for(size_t i = 0; i < tags2.size(); i++) {
     std::cout << "tags2[" << i << "] = " << tags2[i] << "\t\t" << expected_tags2[i] << std::endl;
-    CPPUNIT_ASSERT_EQUAL(pmt::write_string(tags2[i]), pmt::write_string(expected_tags2[i]));
+    CPPUNIT_ASSERT_EQUAL(tags2[i], expected_tags2[i]);
   }
 
   std::cout << std::endl;
   for(size_t i = 0; i < tags4.size(); i++) {
     std::cout << "tags2[" << i << "] = " << tags4[i] << "\t\t" << expected_tags4[i] << std::endl;
-    CPPUNIT_ASSERT_EQUAL(pmt::write_string(tags4[i]), pmt::write_string(expected_tags4[i]));
+    CPPUNIT_ASSERT_EQUAL(tags4[i], expected_tags4[i]);
   }
 #endif
 }
@@ -301,39 +311,39 @@ qa_block_tags::t3()
   str1 << ann1->name() << ann1->unique_id();
   str2 << ann2->name() << ann2->unique_id();
 
-  pmt::pmt_t expected_tags3[8];
-  expected_tags3[0] = mp(pmt::from_uint64(0),     mp(str1.str()), mp("seq"), mp(0));
-  expected_tags3[1] = mp(pmt::from_uint64(0),     mp(str0.str()), mp("seq"), mp(0));
-  expected_tags3[2] = mp(pmt::from_uint64(10000), mp(str1.str()), mp("seq"), mp(1));
-  expected_tags3[3] = mp(pmt::from_uint64(10000), mp(str0.str()), mp("seq"), mp(2));
-  expected_tags3[4] = mp(pmt::from_uint64(20000), mp(str1.str()), mp("seq"), mp(2));
-  expected_tags3[5] = mp(pmt::from_uint64(20000), mp(str0.str()), mp("seq"), mp(4));
-  expected_tags3[6] = mp(pmt::from_uint64(30000), mp(str1.str()), mp("seq"), mp(3));
-  expected_tags3[7] = mp(pmt::from_uint64(30000), mp(str0.str()), mp("seq"), mp(6));
+  gr::tag_t expected_tags3[8];
+  expected_tags3[0] = make_tag(0,     pmt::mp(str1.str()), pmt::mp("seq"), pmt::mp(0));
+  expected_tags3[1] = make_tag(0,     pmt::mp(str0.str()), pmt::mp("seq"), pmt::mp(0));
+  expected_tags3[2] = make_tag(10000, pmt::mp(str1.str()), pmt::mp("seq"), pmt::mp(1));
+  expected_tags3[3] = make_tag(10000, pmt::mp(str0.str()), pmt::mp("seq"), pmt::mp(2));
+  expected_tags3[4] = make_tag(20000, pmt::mp(str1.str()), pmt::mp("seq"), pmt::mp(2));
+  expected_tags3[5] = make_tag(20000, pmt::mp(str0.str()), pmt::mp("seq"), pmt::mp(4));
+  expected_tags3[6] = make_tag(30000, pmt::mp(str1.str()), pmt::mp("seq"), pmt::mp(3));
+  expected_tags3[7] = make_tag(30000, pmt::mp(str0.str()), pmt::mp("seq"), pmt::mp(6));
 
-  pmt::pmt_t expected_tags4[8];
-  expected_tags4[0] = mp(pmt::from_uint64(0),     mp(str2.str()), mp("seq"), mp(0));
-  expected_tags4[1] = mp(pmt::from_uint64(0),     mp(str0.str()), mp("seq"), mp(1));
-  expected_tags4[2] = mp(pmt::from_uint64(10000), mp(str2.str()), mp("seq"), mp(1));
-  expected_tags4[3] = mp(pmt::from_uint64(10000), mp(str0.str()), mp("seq"), mp(3));
-  expected_tags4[4] = mp(pmt::from_uint64(20000), mp(str2.str()), mp("seq"), mp(2));
-  expected_tags4[5] = mp(pmt::from_uint64(20000), mp(str0.str()), mp("seq"), mp(5));
-  expected_tags4[6] = mp(pmt::from_uint64(30000), mp(str2.str()), mp("seq"), mp(3));
-  expected_tags4[7] = mp(pmt::from_uint64(30000), mp(str0.str()), mp("seq"), mp(7));
+  gr::tag_t expected_tags4[8];
+  expected_tags4[0] = make_tag(0,     pmt::mp(str2.str()), pmt::mp("seq"), pmt::mp(0));
+  expected_tags4[1] = make_tag(0,     pmt::mp(str0.str()), pmt::mp("seq"), pmt::mp(1));
+  expected_tags4[2] = make_tag(10000, pmt::mp(str2.str()), pmt::mp("seq"), pmt::mp(1));
+  expected_tags4[3] = make_tag(10000, pmt::mp(str0.str()), pmt::mp("seq"), pmt::mp(3));
+  expected_tags4[4] = make_tag(20000, pmt::mp(str2.str()), pmt::mp("seq"), pmt::mp(2));
+  expected_tags4[5] = make_tag(20000, pmt::mp(str0.str()), pmt::mp("seq"), pmt::mp(5));
+  expected_tags4[6] = make_tag(30000, pmt::mp(str2.str()), pmt::mp("seq"), pmt::mp(3));
+  expected_tags4[7] = make_tag(30000, pmt::mp(str0.str()), pmt::mp("seq"), pmt::mp(7));
 
   std::cout << std::endl << "qa_block_tags::t3" << std::endl;
 
   // For annotator 3, we know it gets tags from ann0 and ann1, test this
   for(size_t i = 0; i < tags3.size(); i++) {
     std::cout << "tags3[" << i << "] = " << tags3[i] << "\t\t" << expected_tags3[i] << std::endl;
-    CPPUNIT_ASSERT_EQUAL(pmt::write_string(tags3[i]), pmt::write_string(expected_tags3[i]));
+    CPPUNIT_ASSERT_EQUAL(tags3[i], expected_tags3[i]);
   }
 
   // For annotator 4, we know it gets tags from ann0 and ann2, test this
   std::cout << std::endl;
   for(size_t i = 0; i < tags4.size(); i++) {
     std::cout << "tags4[" << i << "] = " << tags4[i] << "\t\t" << expected_tags4[i] << std::endl;
-    CPPUNIT_ASSERT_EQUAL(pmt::write_string(tags4[i]), pmt::write_string(expected_tags4[i]));
+    CPPUNIT_ASSERT_EQUAL(tags4[i], expected_tags4[i]);
   }
 #endif
 }
@@ -409,23 +419,23 @@ qa_block_tags::t5()
   str1 << ann1->name() << ann1->unique_id();
   str2 << ann2->name() << ann2->unique_id();
 
-  pmt_t expected_tags1[5];
-  expected_tags1[0] = mp(pmt::from_uint64(0),     mp(str0.str()), mp("seq"), mp(0));
-  expected_tags1[1] = mp(pmt::from_uint64(10000), mp(str0.str()), mp("seq"), mp(1));
-  expected_tags1[2] = mp(pmt::from_uint64(20000), mp(str0.str()), mp("seq"), mp(2));
-  expected_tags1[3] = mp(pmt::from_uint64(30000), mp(str0.str()), mp("seq"), mp(3));
+  gr::tag_t expected_tags1[5];
+  expected_tags1[0] = make_tag(0,     pmt::mp(str0.str()), pmt::mp("seq"), pmt::mp(0));
+  expected_tags1[1] = make_tag(10000, pmt::mp(str0.str()), pmt::mp("seq"), pmt::mp(1));
+  expected_tags1[2] = make_tag(20000, pmt::mp(str0.str()), pmt::mp("seq"), pmt::mp(2));
+  expected_tags1[3] = make_tag(30000, pmt::mp(str0.str()), pmt::mp("seq"), pmt::mp(3));
 
-  pmt_t expected_tags2[10];
-  expected_tags2[0] = mp(pmt::from_uint64(0),    mp(str1.str()), mp("seq"), mp(0));
-  expected_tags2[1] = mp(pmt::from_uint64(0),    mp(str0.str()), mp("seq"), mp(0));
-  expected_tags2[2] = mp(pmt::from_uint64(1000), mp(str1.str()), mp("seq"), mp(1));
-  expected_tags2[3] = mp(pmt::from_uint64(1000), mp(str0.str()), mp("seq"), mp(1));
-  expected_tags2[4] = mp(pmt::from_uint64(2000), mp(str1.str()), mp("seq"), mp(2));
-  expected_tags2[5] = mp(pmt::from_uint64(2000), mp(str0.str()), mp("seq"), mp(2));
-  expected_tags2[6] = mp(pmt::from_uint64(3000), mp(str1.str()), mp("seq"), mp(3));
-  expected_tags2[7] = mp(pmt::from_uint64(3000), mp(str0.str()), mp("seq"), mp(3));
-  expected_tags2[8] = mp(pmt::from_uint64(4000), mp(str1.str()), mp("seq"), mp(4));
-  expected_tags2[9] = mp(pmt::from_uint64(4000), mp(str0.str()), mp("seq"), mp(4));
+  gr::tag_t expected_tags2[10];
+  expected_tags2[0] = make_tag(0,    pmt::mp(str1.str()), pmt::mp("seq"), pmt::mp(0));
+  expected_tags2[1] = make_tag(0,    pmt::mp(str0.str()), pmt::mp("seq"), pmt::mp(0));
+  expected_tags2[2] = make_tag(1000, pmt::mp(str1.str()), pmt::mp("seq"), pmt::mp(1));
+  expected_tags2[3] = make_tag(1000, pmt::mp(str0.str()), pmt::mp("seq"), pmt::mp(1));
+  expected_tags2[4] = make_tag(2000, pmt::mp(str1.str()), pmt::mp("seq"), pmt::mp(2));
+  expected_tags2[5] = make_tag(2000, pmt::mp(str0.str()), pmt::mp("seq"), pmt::mp(2));
+  expected_tags2[6] = make_tag(3000, pmt::mp(str1.str()), pmt::mp("seq"), pmt::mp(3));
+  expected_tags2[7] = make_tag(3000, pmt::mp(str0.str()), pmt::mp("seq"), pmt::mp(3));
+  expected_tags2[8] = make_tag(4000, pmt::mp(str1.str()), pmt::mp("seq"), pmt::mp(4));
+  expected_tags2[9] = make_tag(4000, pmt::mp(str0.str()), pmt::mp("seq"), pmt::mp(4));
 
   std::cout << std::endl << "qa_block_tags::t5" << std::endl;
 
@@ -433,7 +443,7 @@ qa_block_tags::t5()
   std::cout << "tags1.size(): " << tags1.size() << std::endl;
   for(size_t i = 0; i < tags1.size(); i++) {
     std::cout << "tags1[" << i << "] = " << tags1[i] << "\t\t" << expected_tags1[i] << std::endl;
-    CPPUNIT_ASSERT_EQUAL(pmt::write_string(tags1[i]), pmt::write_string(expected_tags1[i]));
+    CPPUNIT_ASSERT_EQUAL(tags1[i], expected_tags1[i]);
   }
 
   // annotator 2 gets tags from annotators 0 and 1
@@ -441,7 +451,7 @@ qa_block_tags::t5()
   std::cout << "tags2.size(): " << tags2.size() << std::endl;
   for(size_t i = 0; i < tags2.size(); i++) {
     std::cout << "tags2[" << i << "] = " << tags2[i] << "\t\t" << expected_tags2[i] << std::endl;
-    CPPUNIT_ASSERT_EQUAL(pmt::write_string(tags2[i]), pmt::write_string(expected_tags2[i]));
+    CPPUNIT_ASSERT_EQUAL(tags2[i], expected_tags2[i]);
   }
 #endif
 }

@@ -359,6 +359,7 @@ class plot_form(QtGui.QWidget):
         sr = self.samp_rate_edit.text().toDouble()[0]
         fr = self.freq_edit.text().toDouble()[0]
         self.top_block.gui_snk.set_frequency_range(fr, sr)
+        self.top_block._samp_rate = sr
         self.top_block.reset(self.top_block._start,
                              self.top_block._nsamps)
 

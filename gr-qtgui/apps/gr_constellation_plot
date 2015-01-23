@@ -69,9 +69,7 @@ class my_top_block(gr.top_block):
         self.qapp = QtGui.QApplication(sys.argv)
 
         self.skip = blocks.skiphead(gr.sizeof_gr_complex, self._start)
-        self.gui_snk = qtgui.const_sink_c(self._nsamps,
-                                          "GNU Radio Constellation Plot",
-                                          self._nsigs)
+        self.gui_snk = qtgui.const_sink_c(self._nsamps, "", self._nsigs)
         n = 0
         self.srcs = list()
         self._data_min = sys.maxint
@@ -185,4 +183,3 @@ if __name__ == "__main__":
         main()
     except KeyboardInterrupt:
         pass
-

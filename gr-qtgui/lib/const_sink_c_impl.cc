@@ -498,7 +498,7 @@ namespace gr {
       d_index += nitems;
 
 
-      // If we've have a trigger and a full d_size of items in the buffers, plot.
+      // If we have a trigger and a full d_size of items in the buffers, plot.
       if((d_triggered) && (d_index == d_end)) {
         // Copy data to be plotted to start of buffers.
         for(n = 0; n < d_nconnections; n++) {

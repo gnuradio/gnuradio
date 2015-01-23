@@ -88,7 +88,7 @@ namespace gr {
     {
       bool clocks_locked = true;
 
-      // 1) Check ref lock for all mboards
+      // Check ref lock for all mboards
       for (size_t mboard_index = 0; mboard_index < _dev->get_num_mboards(); mboard_index++) {
         std::string sensor_name = "ref_locked";
         if (_dev->get_clock_source(mboard_index) == "internal") {
@@ -103,19 +103,6 @@ namespace gr {
                 boost::bind(&usrp_sink_impl::get_mboard_sensor, this, _1, mboard_index)
             )) {
           GR_LOG_WARN(d_logger, boost::format("Sensor '%s' failed to lock within timeout on motherboard %d.") % sensor_name % mboard_index);
-          clocks_locked = false;
-        }
-      }
-
-      // 2) Check LO for all channels
-      for (size_t i = 0; i < _nchan; i++) {
-        size_t chan_index = _stream_args.channels[i];
-        if (not _wait_for_locked_sensor(
-                get_sensor_names(chan_index),
-                "lo_locked",
-                boost::bind(&usrp_sink_impl::get_sensor, this, _1, chan_index)
-            )) {
-          GR_LOG_WARN(d_logger, boost::format("Sensor 'lo_locked' failed to lock within timeout on channel %d.") % chan_index);
           clocks_locked = false;
         }
       }
@@ -589,7 +576,7 @@ namespace gr {
 #endif
 
       //if using length_tags, decrement items left to send by the number of samples sent
-      if(not pmt::is_null(_length_tag_key) and _nitems_to_send > 0) {
+      if(not pmt::is_null(_length_tag_key) && _nitems_to_send > 0) {
         _nitems_to_send -= long(num_sent);
       }
 
@@ -597,7 +584,7 @@ namespace gr {
       _metadata.time_spec += ::uhd::time_spec_t(0, num_sent, _sample_rate);
 
       // Some post-processing tasks if we actually transmitted the entire burst
-      if (not _pending_cmds.empty() and num_sent == size_t(ninput_items)) {
+      if (not _pending_cmds.empty() && num_sent == size_t(ninput_items)) {
         GR_LOG_DEBUG(d_debug_logger, boost::format("Executing %d pending commands.") % _pending_cmds.size());
         BOOST_FOREACH(const pmt::pmt_t &cmd_pmt, _pending_cmds) {
           msg_handler_command(cmd_pmt);
@@ -669,7 +656,7 @@ namespace gr {
         }
 
         //set the start of burst flag in the metadata; ignore if length_tag_key is not null
-        else if(pmt::is_null(_length_tag_key) and pmt::equal(key, SOB_KEY)) {
+        else if(pmt::is_null(_length_tag_key) && pmt::equal(key, SOB_KEY)) {
           if (my_tag.offset != samp0_count) {
             max_count = my_tag_count;
             break;
@@ -680,7 +667,7 @@ namespace gr {
         }
 
         //length_tag found; set the start of burst flag in the metadata
-        else if(not pmt::is_null(_length_tag_key) and pmt::equal(key, _length_tag_key)) {
+        else if(not pmt::is_null(_length_tag_key) && pmt::equal(key, _length_tag_key)) {
           if (my_tag_count != samp0_count) {
             max_count = my_tag_count;
             break;
@@ -704,7 +691,7 @@ namespace gr {
          * the appropriate action. Otherwise, make sure the corresponding sample
          * is the last one.
          */
-        else if (pmt::equal(key, FREQ_KEY) and my_tag_count == samp0_count) {
+        else if (pmt::equal(key, FREQ_KEY) && my_tag_count == samp0_count) {
           // If it's on the first sample, immediately do the tune:
           GR_LOG_DEBUG(d_debug_logger, boost::format("Received tx_freq on start of burst."));
           msg_handler_command(pmt::cons(pmt::mp("freq"), value));
@@ -724,14 +711,14 @@ namespace gr {
          *
          * Make sure that no more samples are allowed through.
          */
-        else if(pmt::is_null(_length_tag_key) and pmt::equal(key, EOB_KEY)) {
+        else if(pmt::is_null(_length_tag_key) && pmt::equal(key, EOB_KEY)) {
           found_eob = true;
           max_count = my_tag_count + 1;
           _metadata.end_of_burst = pmt::to_bool(value);
         }
       } // end foreach
 
-      if(not pmt::is_null(_length_tag_key) and long(max_count - samp0_count) == _nitems_to_send) {
+      if(not pmt::is_null(_length_tag_key) && long(max_count - samp0_count) == _nitems_to_send) {
         found_eob = true;
       }
 
@@ -782,7 +769,7 @@ namespace gr {
       _metadata.start_of_burst = true;
       _metadata.end_of_burst = false;
       // Bursty tx will need to send a tx_time to activate time spec
-      _metadata.has_time_spec = not _stream_now and pmt::is_null(_length_tag_key);
+      _metadata.has_time_spec = !_stream_now && pmt::is_null(_length_tag_key);
       _nitems_to_send = 0;
       if(_start_time_set) {
         _start_time_set = false; //cleared for next run

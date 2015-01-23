@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2010-2012 Free Software Foundation, Inc.
+ * Copyright 2010-2012,2014 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -32,6 +32,7 @@
 #include <cfloat>
 #include <stdexcept>
 #include <boost/format.hpp>
+#include <iostream>
 
 namespace gr {
   namespace digital {
@@ -129,7 +130,7 @@ namespace gr {
       unsigned int min_index = 0;
       float min_euclid_dist;
       float euclid_dist;
-    
+
       min_euclid_dist = get_distance(0, sample);
       min_index = 0;
       for(unsigned int j = 1; j < d_arity; j++){
@@ -244,21 +245,22 @@ namespace gr {
     void
     constellation::gen_soft_dec_lut(int precision, float npwr)
     {
-      max_min_axes();
-      d_lut_scale = powf(2.0, static_cast<float>(precision));
-      float xstep = (d_re_max - d_re_min) / (d_lut_scale-1);
-      float ystep = (d_im_max - d_im_min) / (d_lut_scale-1);
       d_soft_dec_lut.clear();
+      d_lut_scale = powf(2.0f, static_cast<float>(precision));
 
-      float y = d_im_min;
-      while(y < d_im_max) {
-        float x = d_re_min;
-        while(x < d_re_max) {
+      // We know we've normalized the constellation, so the min/max
+      // dimensions in either direction are scaled to +/-1.
+      float maxd = 1.0f;
+      float step = (2.0f*maxd) / (d_lut_scale-1);
+      float y = -maxd;
+      while(y < maxd+step) {
+        float x = -maxd;
+        while(x < maxd+step) {
           gr_complex pt = gr_complex(x, y);
           d_soft_dec_lut.push_back(calc_soft_dec(pt, npwr));
-          x += xstep;
+          x += step;
         }
-        y += ystep;
+        y += step;
       }
 
       d_lut_precision = precision;
@@ -267,22 +269,19 @@ namespace gr {
     std::vector<float>
     constellation::calc_soft_dec(gr_complex sample, float npwr)
     {
+      int v;
       int M = static_cast<int>(d_constellation.size());
       int k = static_cast<int>(log(static_cast<double>(M))/log(2.0));
       std::vector<float> tmp(2*k, 0);
       std::vector<float> s(k, 0);
 
-      float scale = d_scalefactor*d_scalefactor;
-      int v;
-      
       for(int i = 0; i < M; i++) {
         // Calculate the distance between the sample and the current
         // constellation point.
-        float dist = powf(std::abs(sample - d_constellation[i]), 2.0f);
-
+        float dist = std::abs(sample - d_constellation[i]);
         // Calculate the probability factor from the distance and
         // the scaled noise power.
-        float d = expf(-dist / (2.0*npwr*scale));
+        float d = expf(-dist/npwr);
 
         if(d_apply_pre_diff_code)
           v = d_pre_diff_code[i];
@@ -307,7 +306,7 @@ namespace gr {
       // probability of ones (tmp[2*i+1]) over the probability of a zero
       // (tmp[2*i+0]).
       for(int i = 0; i < k; i++) {
-        s[k-1-i] = (logf(tmp[2*i+1]) - logf(tmp[2*i+0])) * scale;
+        s[k-1-i] = (logf(tmp[2*i+1]) - logf(tmp[2*i+0]));
       }
 
       return s;
@@ -330,30 +329,40 @@ namespace gr {
       return d_soft_dec_lut.size() > 0;
     }
 
+    std::vector< std::vector<float> >
+    constellation::soft_dec_lut()
+    {
+      return d_soft_dec_lut;
+    }
+
     std::vector<float>
     constellation::soft_decision_maker(gr_complex sample)
     {
       if(has_soft_dec_lut()) {
-        float xre = sample.real();
-        float xim = sample.imag();
+        // Clip to just below 1 --> at 1, we can overflow the index
+        // that will put us in the next row of the 2D LUT.
+        float xre = branchless_clip(sample.real(), 0.99);
+        float xim = branchless_clip(sample.imag(), 0.99);
 
-        float xstep = (d_re_max-d_re_min) / d_lut_scale;
-        float ystep = (d_im_max-d_im_min) / d_lut_scale;
+        // We normalize the constellation in the ctor, so we know that
+        // the maximum dimenions go from -1 to +1. We can infer the x
+        // and y scale directly.
+        float scale = d_lut_scale / (2.0f);
 
-        float xscale = (d_lut_scale / (d_re_max-d_re_min)) - xstep;
-        float yscale = (d_lut_scale / (d_im_max-d_im_min)) - ystep;
-
-        xre = floorf((-d_re_min + std::min(d_re_max, std::max(d_re_min, xre))) * xscale);
-        xim = floorf((-d_im_min + std::min(d_im_max, std::max(d_im_min, xim))) * yscale);
+        // Convert the clipped x and y samples to nearest index offset
+        xre = floorf((1.0f + xre) * scale);
+        xim = floorf((1.0f + xim) * scale);
         int index = static_cast<int>(d_lut_scale*xim + xre);
 
         int max_index = d_lut_scale*d_lut_scale;
-        if(index > max_index) {
-          return d_soft_dec_lut[max_index-1];
-        }
 
-        if(index < 0)
-          throw std::runtime_error("constellation::soft_decision_maker: input sample out of range.");
+        // Make sure we are in bounds of the index
+        while(index >= max_index) {
+          index -= d_lut_scale;
+        }
+        while(index < 0) {
+          index += d_lut_scale;
+        }
 
         return d_soft_dec_lut[index];
       }
@@ -412,7 +421,7 @@ namespace gr {
       unsigned int dimensionality)
       : constellation(constell, pre_diff_code, rotational_symmetry, dimensionality)
     {}
-    
+
     // Chooses points base on shortest distance.
     // Inefficient.
     unsigned int
@@ -435,11 +444,11 @@ namespace gr {
       n_sectors(n_sectors)
     {
     }
-    
+
     constellation_sector::~constellation_sector()
     {
     }
-    
+
     unsigned int
     constellation_sector::decision_maker(const gr_complex *sample)
     {
@@ -447,7 +456,7 @@ namespace gr {
       sector = get_sector(sample);
       return sector_values[sector];
     }
-    
+
     void
     constellation_sector::find_sector_values()
     {
@@ -457,11 +466,11 @@ namespace gr {
         sector_values.push_back(calc_sector_value(i));
       }
     }
-    
-    
+
+
     /********************************************************************/
-    
-    
+
+
     constellation_rect::sptr
     constellation_rect::make(std::vector<gr_complex> constell,
                              std::vector<int> pre_diff_code,
@@ -495,31 +504,31 @@ namespace gr {
       d_width_imag_sectors *= d_scalefactor;
       find_sector_values();
     }
-    
+
     constellation_rect::~constellation_rect()
     {
     }
-    
+
     unsigned int
     constellation_rect::get_sector(const gr_complex *sample)
     {
       int real_sector, imag_sector;
       unsigned int sector;
-      
+
       real_sector = int(real(*sample)/d_width_real_sectors
                         + n_real_sectors/2.0);
       if(real_sector < 0)
         real_sector = 0;
       if(real_sector >= (int)n_real_sectors)
         real_sector = n_real_sectors-1;
-      
+
       imag_sector = int(imag(*sample)/d_width_imag_sectors
                         + n_imag_sectors/2.0);
       if(imag_sector < 0)
         imag_sector = 0;
       if(imag_sector >= (int)n_imag_sectors)
         imag_sector = n_imag_sectors-1;
-      
+
       sector = real_sector * n_imag_sectors + imag_sector;
       return sector;
     }
@@ -536,7 +545,7 @@ namespace gr {
         (imag_sector + 0.5 - n_imag_sectors/2.0) * d_width_imag_sectors);
       return sector_center;
     }
-    
+
     unsigned int
     constellation_rect::calc_sector_value(unsigned int sector)
     {
@@ -547,8 +556,8 @@ namespace gr {
     }
 
     /********************************************************************/
-    
-    constellation_expl_rect::sptr 
+
+    constellation_expl_rect::sptr
     constellation_expl_rect::make(std::vector<gr_complex> constellation,
                                   std::vector<int> pre_diff_code,
                                   unsigned int rotational_symmetry,
@@ -565,7 +574,7 @@ namespace gr {
                                      width_real_sectors, width_imag_sectors,
                                      sector_values));
     }
-    
+
     constellation_expl_rect::constellation_expl_rect(
       std::vector<gr_complex> constellation,
       std::vector<int> pre_diff_code,
@@ -580,16 +589,16 @@ namespace gr {
         d_sector_values(sector_values)
     {
     }
-    
+
     constellation_expl_rect::~constellation_expl_rect()
     {
     }
-    
+
     /********************************************************************/
-    
-    
-    constellation_psk::sptr 
-    constellation_psk::make(std::vector<gr_complex> constell, 
+
+
+    constellation_psk::sptr
+    constellation_psk::make(std::vector<gr_complex> constell,
                             std::vector<int> pre_diff_code,
                             unsigned int n_sectors)
     {
@@ -597,7 +606,7 @@ namespace gr {
                                      (constell, pre_diff_code,
                                       n_sectors));
     }
-    
+
     constellation_psk::constellation_psk(std::vector<gr_complex> constell,
                                          std::vector<int> pre_diff_code,
                                          unsigned int n_sectors) :
@@ -606,11 +615,11 @@ namespace gr {
     {
       find_sector_values();
     }
-    
+
     constellation_psk::~constellation_psk()
     {
     }
-    
+
     unsigned int
     constellation_psk::get_sector(const gr_complex *sample)
     {
@@ -621,7 +630,7 @@ namespace gr {
         sector += n_sectors;
       return sector;
     }
-  
+
     unsigned int
     constellation_psk::calc_sector_value(unsigned int sector)
     {
@@ -635,7 +644,7 @@ namespace gr {
     /********************************************************************/
 
 
-    constellation_bpsk::sptr 
+    constellation_bpsk::sptr
     constellation_bpsk::make()
     {
       return constellation_bpsk::sptr(new constellation_bpsk());
@@ -665,7 +674,7 @@ namespace gr {
     /********************************************************************/
 
 
-    constellation_qpsk::sptr 
+    constellation_qpsk::sptr
     constellation_qpsk::make()
     {
       return constellation_qpsk::sptr(new constellation_qpsk());
@@ -679,7 +688,7 @@ namespace gr {
       d_constellation[1] = gr_complex(SQRT_TWO, -SQRT_TWO);
       d_constellation[2] = gr_complex(-SQRT_TWO, SQRT_TWO);
       d_constellation[3] = gr_complex(SQRT_TWO, SQRT_TWO);
-  
+
       /*
         d_constellation[0] = gr_complex(SQRT_TWO, SQRT_TWO);
         d_constellation[1] = gr_complex(-SQRT_TWO, SQRT_TWO);
@@ -701,7 +710,7 @@ namespace gr {
     constellation_qpsk::~constellation_qpsk()
     {
     }
-    
+
     unsigned int
     constellation_qpsk::decision_maker(const gr_complex *sample)
     {
@@ -731,7 +740,7 @@ namespace gr {
     /********************************************************************/
 
 
-    constellation_dqpsk::sptr 
+    constellation_dqpsk::sptr
     constellation_dqpsk::make()
     {
       return constellation_dqpsk::sptr(new constellation_dqpsk());
@@ -791,7 +800,7 @@ namespace gr {
     /********************************************************************/
 
 
-    constellation_8psk::sptr 
+    constellation_8psk::sptr
     constellation_8psk::make()
     {
       return constellation_8psk::sptr(new constellation_8psk());
@@ -836,6 +845,144 @@ namespace gr {
 
       return ret;
     }
+
+
+    /********************************************************************/
+
+
+    constellation_8psk_natural::sptr 
+    constellation_8psk_natural::make()
+    {
+      return constellation_8psk_natural::sptr(new constellation_8psk_natural());
+    }
+
+    constellation_8psk_natural::constellation_8psk_natural()
+    {
+      float angle = M_PI/8.0;
+      d_constellation.resize(8);
+      // Natural-mapping
+      d_constellation[0] = gr_complex(cos( 15*angle), sin( 15*angle));
+      d_constellation[1] = gr_complex(cos( 1*angle), sin( 1*angle));
+      d_constellation[2] = gr_complex(cos(3*angle), sin(3*angle));
+      d_constellation[3] = gr_complex(cos( 5*angle), sin( 5*angle));
+      d_constellation[4] = gr_complex(cos( 7*angle), sin( 7*angle));
+      d_constellation[5] = gr_complex(cos( 9*angle), sin( 9*angle));
+      d_constellation[6] = gr_complex(cos(11*angle), sin(11*angle));
+      d_constellation[7] = gr_complex(cos(13*angle), sin(13*angle));
+      d_rotational_symmetry = 8;
+      d_dimensionality = 1;
+      calc_arity();
+    }
+
+    constellation_8psk_natural::~constellation_8psk_natural()
+    {
+    }
+
+    unsigned int
+    constellation_8psk_natural::decision_maker(const gr_complex *sample)
+    {
+      unsigned int ret = 0;
+
+      float re = sample->real();
+      float im = sample->imag();
+
+      if((re+im) < 0)
+        ret  = 4;
+      if(fabsf(im) > fabsf(re)){
+        ret |= 2;
+	if(re*im < 0)
+          ret |= 1;
+	}
+      if(fabsf(im) < fabsf(re) && re*im > 0)
+        ret |= 1;
+
+      return ret;
+    }
+
+
+    /********************************************************************/
+
+
+    constellation_16qam::sptr 
+    constellation_16qam::make()
+    {
+      return constellation_16qam::sptr(new constellation_16qam());
+    }
+
+    constellation_16qam::constellation_16qam()
+    {
+      const float level = sqrt(float(0.1));
+      d_constellation.resize(16);
+      // The mapping used in 16qam set partition
+      d_constellation[0] = gr_complex(1*level,-1*level);
+      d_constellation[1] = gr_complex(-1*level,-1*level);
+      d_constellation[2] = gr_complex(3*level,-3*level);
+      d_constellation[3] = gr_complex(-3*level,-3*level);
+      d_constellation[4] = gr_complex(-3*level,-1*level);
+      d_constellation[5] = gr_complex(3*level,-1*level);
+      d_constellation[6] = gr_complex(-1*level,-3*level);
+      d_constellation[7] = gr_complex(1*level,-3*level);
+      d_constellation[8] = gr_complex(-3*level,3*level);
+      d_constellation[9] = gr_complex(3*level,3*level);
+      d_constellation[10] = gr_complex(-1*level,1*level);
+      d_constellation[11] = gr_complex(1*level,1*level);
+      d_constellation[12] = gr_complex(1*level,3*level);
+      d_constellation[13] = gr_complex(-1*level,3*level);
+      d_constellation[14] = gr_complex(3*level,1*level);
+      d_constellation[15] = gr_complex(-3*level,1*level);
+      d_rotational_symmetry = 4;
+      d_dimensionality = 1;
+      calc_arity();
+    }
+
+    constellation_16qam::~constellation_16qam()
+    {
+    }
+
+    unsigned int
+    constellation_16qam::decision_maker(const gr_complex *sample)
+    {
+      unsigned int ret = 0;
+      const float level = sqrt(float(0.1));
+      float re = sample->real();
+      float im = sample->imag();
+
+      if(im <= 0 && im >= -2*level && re >= 0 && re <= 2*level)
+	ret = 0;
+      else if(im <= 0 && im >= -2*level && re <= 0 && re >= -2*level)
+	ret = 1;
+      else if(im <= -2*level && re >= 2*level)
+	ret = 2;
+      else if(im <= -2*level && re <= -2*level)
+	ret = 3;
+      else if(im <= 0 && im >= -2*level && re <= -2*level)
+	ret = 4;
+      else if(im <= 0 && im >= -2*level && re >= 2*level)
+	ret = 5;
+      else if(im <= -2*level && re <= 0 && re >= -2*level)
+	ret = 6;
+      else if(im <= -2*level && re >= 0 && re <= 2*level)
+	ret = 7;
+      else if(im >= 2*level && re <= -2*level)
+	ret = 8;
+      else if(im >= 2*level && re >= 2*level)
+	ret = 9;
+      else if(im >= 0 && im <= 2*level && re <= 0 && re <= -2*level)
+	ret = 10;
+      else if(im >= 0 && im <= 2*level && re >= 0 && re <= 2*level)
+	ret = 11;
+      else if(im >= 2*level && re >= 0 && re <= 2*level)
+	ret = 12;
+      else if(im >= 2*level && re <= 0 && re >= -2*level)
+	ret = 13;
+      else if(im >= 0 && im <= 2*level && re >= 2*level)
+	ret = 14;
+      else if(im >= 0 && im <= 2*level && re <= -2*level)
+	ret = 15;
+
+      return ret;
+    }
+
 
   } /* namespace digital */
 } /* namespace gr */

@@ -69,7 +69,7 @@ namespace gr {
 
       // move and update tags
       std::vector<tag_t> tags;
-      get_tags_in_range(tags, 0, nitems_read(0), nitems_read(0)+ninput_items[0]);
+      get_tags_in_range(tags, 0, nitems_read(0), nitems_read(0)+noutput_items);
       for(size_t i=0; i<tags.size(); i++){
             if(pmt::eqv( tags[i].key , d_lengthtag)){
                 // propagate with value update (scaled)

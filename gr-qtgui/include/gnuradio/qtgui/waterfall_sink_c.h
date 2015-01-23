@@ -109,6 +109,7 @@ namespace gr {
 
       virtual void set_fft_size(const int fftsize) = 0;
       virtual int fft_size() const = 0;
+      virtual void set_time_per_fft(const double t) = 0;
       virtual void set_fft_average(const float fftavg) = 0;
       virtual float fft_average() const = 0;
       virtual void set_fft_window(const gr::filter::firdes::win_type win) = 0;

@@ -54,7 +54,7 @@ namespace gr {
        * \param gain_omega Gain setting for omega update loop
        * \param mu Initial estimate of phase of sample
        * \param gain_mu Gain setting for mu update loop
-       * \param omega_relative_limit limit on omega
+       * \param omega_relative_limit maximum relative deviation from omega
        */
       static sptr make(float omega, float gain_omega,
 		       float mu, float gain_mu,

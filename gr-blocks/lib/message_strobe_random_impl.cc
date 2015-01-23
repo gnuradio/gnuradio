@@ -61,8 +61,8 @@ namespace gr {
 
       // set up ports
       message_port_register_out(pmt::mp("strobe"));
-      d_thread = boost::shared_ptr<boost::thread>
-        (new boost::thread(boost::bind(&message_strobe_random_impl::run, this)));
+      d_thread = boost::shared_ptr<gr::thread::thread>
+        (new gr::thread::thread(boost::bind(&message_strobe_random_impl::run, this)));
 
       message_port_register_in(pmt::mp("set_msg"));
       set_msg_handler(pmt::mp("set_msg"),

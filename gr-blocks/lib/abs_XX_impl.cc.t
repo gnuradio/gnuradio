@@ -32,15 +32,16 @@
 namespace gr {
   namespace blocks {
 
-    @NAME@::sptr @NAME@::make()
+    @NAME@::sptr @NAME@::make(size_t vlen)
     {
-      return gnuradio::get_initial_sptr(new @NAME_IMPL@());
+      return gnuradio::get_initial_sptr(new @NAME_IMPL@(vlen));
     }
 
-    @NAME_IMPL@::@NAME_IMPL@()
+    @NAME_IMPL@::@NAME_IMPL@(size_t vlen)
       : sync_block ("@NAME@",
-		       io_signature::make (1, 1, sizeof (@I_TYPE@)),
-		       io_signature::make (1, 1, sizeof (@O_TYPE@)))
+                      io_signature::make (1, 1, sizeof (@I_TYPE@)*vlen),
+                      io_signature::make (1, 1, sizeof (@O_TYPE@)*vlen)),
+        d_vlen(vlen)
     {
     }
 
@@ -52,7 +53,7 @@ namespace gr {
       @I_TYPE@ *iptr = (@I_TYPE@ *) input_items[0];
       @O_TYPE@ *optr = (@O_TYPE@ *) output_items[0];
 
-      for(int i=0; i<noutput_items; i++) {
+      for(size_t i=0; i<noutput_items*d_vlen; i++) {
         @I_TYPE@ val = iptr[i];
         optr[i] = ((val < ((@I_TYPE@)0)) ? -val : val);
       }

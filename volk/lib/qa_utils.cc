@@ -5,7 +5,9 @@
 #include <boost/tokenizer.hpp>
 #include <boost/xpressive/xpressive.hpp>
 #include <iostream>
+#include <fstream>
 #include <vector>
+#include <map>
 #include <list>
 #include <ctime>
 #include <cmath>
@@ -245,7 +247,7 @@ bool fcompare(t *in1, t *in2, unsigned int vlen, float tol) {
             }
         }
         // the primary test is the percent different greater than given tol
-        else if(fabs(((t *)(in1))[i] - ((t *)(in2))[i])/(((t *)in1)[i]) > tol) {
+        else if(fabs(((t *)(in1))[i] - ((t *)(in2))[i])/fabs(((t *)in1)[i]) > tol) {
             fail=true;
             if(print_max_errs-- > 0) {
                 std::cout << "offset " << i << " in1: " << t(((t *)(in1))[i]) << " in2: " << t(((t *)(in2))[i]) << std::endl;
@@ -328,15 +330,21 @@ bool run_volk_tests(volk_func_desc_t desc,
                     lv_32fc_t scalar,
                     int vlen,
                     int iter,
-                    std::vector<std::string> *best_arch_vector = 0,
-                    std::string puppet_master_name = "NULL",
-                    bool benchmark_mode,
+                    std::vector<volk_test_results_t> *results,
+                    std::string puppet_master_name,
+                    bool benchmark_mode, 
                     std::string kernel_regex
                    ) {
     boost::xpressive::sregex kernel_expression = boost::xpressive::sregex::compile(kernel_regex);
     if( !boost::xpressive::regex_search(name, kernel_expression) ) {
         // in this case we have a regex and are only looking to test one kernel
         return false;
+    }
+    if(results) {
+        results->push_back(volk_test_results_t()); 
+        results->back().name = name;
+        results->back().vlen = vlen;
+        results->back().iter = iter;
     }
     std::cout << "RUN_VOLK_TESTS: " << name << "(" << vlen << "," << iter << ")" << std::endl;
 
@@ -453,6 +461,13 @@ bool run_volk_tests(volk_func_desc_t desc,
         end = clock();
         double arch_time = 1000.0 * (double)(end-start)/(double)CLOCKS_PER_SEC;
         std::cout << arch_list[i] << " completed in " << arch_time << "ms" << std::endl;
+        if(results) {
+            volk_test_time_t result;
+            result.name = arch_list[i];
+            result.time = arch_time;
+            result.units = "ms";
+            results->back().results[result.name] = result;
+        }
 
         profile_times.push_back(arch_time);
     }
@@ -553,13 +568,14 @@ bool run_volk_tests(volk_func_desc_t desc,
 
     std::cout << "Best aligned arch: " << best_arch_a << std::endl;
     std::cout << "Best unaligned arch: " << best_arch_u << std::endl;
-    if(best_arch_vector) {
+    if(results) {
         if(puppet_master_name == "NULL") {
-            best_arch_vector->push_back(name + " " + best_arch_a + " " + best_arch_u);
+            results->back().config_name = name;
+        } else {
+            results->back().config_name = puppet_master_name;
         }
-        else {
-            best_arch_vector->push_back(puppet_master_name + " " + best_arch_a + " " + best_arch_u);
-        }
+        results->back().best_arch_a = best_arch_a;
+        results->back().best_arch_u = best_arch_u;
     }
 
     return fail_global;

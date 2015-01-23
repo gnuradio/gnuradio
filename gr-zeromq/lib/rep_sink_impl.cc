@@ -26,30 +26,34 @@
 
 #include <gnuradio/io_signature.h>
 #include "rep_sink_impl.h"
+#include "tag_headers.h"
 
 namespace gr {
   namespace zeromq {
 
     rep_sink::sptr
-    rep_sink::make(size_t itemsize, size_t vlen, char *address, int timeout)
+    rep_sink::make(size_t itemsize, size_t vlen, char *address, int timeout, bool pass_tags)
     {
       return gnuradio::get_initial_sptr
-        (new rep_sink_impl(itemsize, vlen, address, timeout));
+        (new rep_sink_impl(itemsize, vlen, address, timeout, pass_tags));
     }
 
-    rep_sink_impl::rep_sink_impl(size_t itemsize, size_t vlen, char *address, int timeout)
+    rep_sink_impl::rep_sink_impl(size_t itemsize, size_t vlen, char *address, int timeout, bool pass_tags)
       : gr::sync_block("rep_sink",
                        gr::io_signature::make(1, 1, itemsize * vlen),
                        gr::io_signature::make(0, 0, 0)),
-        d_itemsize(itemsize), d_vlen(vlen), d_timeout(timeout)
+        d_itemsize(itemsize), d_vlen(vlen), d_timeout(timeout), d_pass_tags(pass_tags)
     {
       int major, minor, patch;
       zmq::version (&major, &minor, &patch);
+
       if (major < 3) {
         d_timeout = timeout*1000;
       }
+
       d_context = new zmq::context_t(1);
       d_socket = new zmq::socket_t(*d_context, ZMQ_REP);
+
       int time = 0;
       d_socket->setsockopt(ZMQ_LINGER, &time, sizeof(time));
       d_socket->bind (address);
@@ -70,7 +74,7 @@ namespace gr {
       const char *in = (const char *) input_items[0];
 
       zmq::pollitem_t items[] = { { *d_socket, 0, ZMQ_POLLIN, 0 } };
-      zmq::poll (&items[0], 1, d_timeout);
+      zmq::poll(&items[0], 1, d_timeout);
 
       //  If we got a reply, process
       if (items[0].revents & ZMQ_POLLIN) {
@@ -78,22 +82,25 @@ namespace gr {
         zmq::message_t request;
         d_socket->recv(&request);
         int req_output_items = *(static_cast<int*>(request.data()));
+        int nitems_send = std::min(noutput_items, req_output_items);
+
+        // encode the current offset, # tags, and tags into header
+        std::string header("");
+        if(d_pass_tags){
+          uint64_t offset = nitems_read(0);
+          std::vector<gr::tag_t> tags;
+          get_tags_in_range(tags, 0, nitems_read(0), nitems_read(0)+noutput_items);
+          header = gen_tag_header( offset, tags );
+        }
 
         // create message copy and send
-        if (noutput_items < req_output_items) {
-          zmq::message_t msg(d_itemsize*d_vlen*noutput_items);
-          memcpy((void *)msg.data(), in, d_itemsize*d_vlen*noutput_items);
-          d_socket->send(msg);
+        zmq::message_t msg(header.length() + d_itemsize*d_vlen*nitems_send);
+        if(d_pass_tags)
+          memcpy((void*) msg.data(), header.c_str(), header.length() );
+        memcpy((uint8_t *)msg.data() + header.length(), in, d_itemsize*d_vlen*nitems_send);
+        d_socket->send(msg);
 
-          return noutput_items;
-        }
-        else {
-          zmq::message_t msg(d_itemsize*d_vlen*req_output_items);
-          memcpy((void *)msg.data(), in, d_itemsize*d_vlen*req_output_items);
-          d_socket->send(msg);
-
-          return req_output_items;
-        }
+        return nitems_send;
       }
 
       return 0;

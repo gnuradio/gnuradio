@@ -35,12 +35,19 @@ namespace gr {
      * \ingroup packet_operators_blk
      *
      * \details
-     * input:  stream of bits, 1 bit per input byte (data in LSB)
-     * output: unaltered stream of bits (plus tags)
+     * input:  stream of bits (unpacked bytes)
+     * output: a tagged stream set of bits from the payload following
+     * the access code and header.
      *
-     * This block annotates the input stream with tags. The tags have
-     * key name [tag_name], specified in the constructor. Used for
-     * searching an input data stream for preambles, etc.
+     * This block searches for the given access code by reading in the
+     * input bits. Once found, it expects the following 32 samples to
+     * contain a header that includes the frame length (16 bits for
+     * the length, repeated). It decodes the header to get the frame
+     * length in order to set up the the tagged stream key
+     * information.
+     *
+     * The output of this block is appropriate for use with tagged
+     * stream blocks.
      */
     class DIGITAL_API correlate_access_code_bb_ts : virtual public block
     {
@@ -63,6 +70,7 @@ namespace gr {
        *                    e.g., "010101010111000100"
        */
       virtual bool set_access_code(const std::string &access_code) = 0;
+      virtual unsigned long long access_code() const = 0;
     };
 
   } /* namespace digital */

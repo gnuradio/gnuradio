@@ -50,12 +50,19 @@ namespace gr {
 
       virtual fsm FSM() const = 0;
       virtual int K() const = 0;
-      virtual int S0() const = 0;
+      virtual int S0() const  = 0;
       virtual int SK() const = 0;
       virtual int D() const = 0;
       virtual std::vector<@I_TYPE@> TABLE() const = 0;
       virtual digital::trellis_metric_type_t TYPE() const = 0;
+
+      virtual void set_FSM(const fsm &FSM) =0;
+      virtual void set_K(int K) =0;
+      virtual void set_S0(int S0) =0;
+      virtual void set_SK(int SK) =0;
+      virtual void set_D(int D) =0;
       virtual void set_TABLE (const std::vector<@I_TYPE@> &table) = 0;
+      virtual void set_TYPE(digital::trellis_metric_type_t type) = 0;
     };
 
   } /* namespace trellis */

@@ -406,10 +406,8 @@ if(${CMAKE_VERSION} VERSION_GREATER "2.8.9")
   # if we find one that matches our current system architecture
   # set up the assembler flags and include the source files
   foreach(ARCH ${ASM_ARCHS_AVAILABLE})
-    message(STATUS "--==>> -CFLAGS1: ${FULL_C_FLAGS}")
     string(REGEX MATCH "${ARCH}" ASM_ARCH "${FULL_C_FLAGS}")
     if( ASM_ARCH STREQUAL "armv7" )
-      set(ASM-ATT $ENV{ASM})
       message(STATUS "---- Adding ASM files") # we always use ATT syntax
       message(STATUS "-- Detected armv7 architecture; enabling ASM")
       # setup architecture specific assembler flags
@@ -422,13 +420,20 @@ if(${CMAKE_VERSION} VERSION_GREATER "2.8.9")
         message(STATUS "Adding source file: ${asm_file}")
       endforeach(asm_file)
     endif()
-    set(CMAKE_ASM-ATT_FLAGS_INIT ${ARCH_ASM_FLAGS})
-    enable_language(ASM-ATT) # this must be after flags_init
-    message(STATUS "asm flags: ${CMAKE_ASM-ATT_FLAGS}")
+    enable_language(ASM)
+    set(CMAKE_ASM_FLAGS ${ARCH_ASM_FLAGS})
+    message(STATUS "c flags: ${FULL_C_FLAGS}")
+    message(STATUS "asm flags: ${CMAKE_ASM_FLAGS}")
   endforeach(ARCH)
 
 else(${CMAKE_VERSION} VERSION_GREATER "2.8.9")
   message(STATUS "Not enabling ASM support. CMake >= 2.8.10 required.")
+  foreach(machine_name ${available_machines})
+    string(REGEX MATCH "neon" NEON_MACHINE ${machine_name})
+    if( NEON_MACHINE STREQUAL "neon")
+      message(FATAL_ERROR "CMake >= 2.8.10 is required for ARM NEON support")
+    endif()
+  endforeach()
 endif(${CMAKE_VERSION} VERSION_GREATER "2.8.9")
 
 ########################################################################

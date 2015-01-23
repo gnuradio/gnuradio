@@ -18,6 +18,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 """
 
 from Element import Element
+from . Constants import GR_STREAM_DOMAIN, GR_MESSAGE_DOMAIN
 
 class Port(Element):
 
@@ -36,8 +37,10 @@ class Port(Element):
         self._name = n['name']
         self._key = n['key']
         self._type = n['type']
+        self._domain = n['domain']
         self._hide = n.find('hide') or ''
         self._dir = dir
+        self._hide_evaluated = False  # updated on rewrite()
 
     def validate(self):
         """
@@ -46,7 +49,22 @@ class Port(Element):
         """
         Element.validate(self)
         if self.get_type() not in self.get_types():
-            self.add_error_message('Type "%s" is not a possible type.'%self.get_type())
+            self.add_error_message('Type "%s" is not a possible type.' % self.get_type())
+        platform = self.get_parent().get_parent().get_parent()
+        if self.get_domain() not in platform.get_domains():
+            self.add_error_message('Domain key "%s" is not registered.' % self.get_domain())
+
+    def rewrite(self):
+        """resolve dependencies in for type and hide"""
+        Element.rewrite(self)
+        hide = self.get_parent().resolve_dependencies(self._hide).strip().lower()
+        self._hide_evaluated = False if hide in ('false', 'off', '0') else bool(hide)
+        # update domain if was deduced from (dynamic) port type
+        type_ = self.get_type()
+        if self._domain == GR_STREAM_DOMAIN and type_ == "message":
+            self._domain = GR_MESSAGE_DOMAIN
+        if self._domain == GR_MESSAGE_DOMAIN and type_ != "message":
+            self._domain = GR_STREAM_DOMAIN
 
     def __str__(self):
         if self.is_source():
@@ -74,9 +92,8 @@ class Port(Element):
     def is_sink(self): return self._dir == 'sink'
     def is_source(self): return self._dir == 'source'
     def get_type(self): return self.get_parent().resolve_dependencies(self._type)
-    def get_hide(self):
-        value = self.get_parent().resolve_dependencies(self._hide).strip().lower()
-        return False if value in ('false', 'off', '0') else bool(value)
+    def get_domain(self): return self._domain
+    def get_hide(self): return self._hide_evaluated
 
     def get_connections(self):
         """

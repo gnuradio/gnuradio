@@ -62,7 +62,7 @@ class ModToolAdd(ModTool):
         ogroup.add_option("--skip-cmakefiles", action="store_true", default=False,
                 help="If given, only source files are written, but CMakeLists.txt files are left unchanged.")
         ogroup.add_option("-l", "--lang", type="choice", choices=('cpp', 'c++', 'python'),
-                default='cpp', help="Language (cpp or python)")
+                default=None, help="Language (cpp or python)")
         parser.add_option_group(ogroup)
         return parser
 
@@ -71,13 +71,22 @@ class ModToolAdd(ModTool):
 
         self._info['blocktype'] = options.block_type
         if self._info['blocktype'] is None:
+            # Print list out of blocktypes to user for reference
+            print str(self._block_types)
             while self._info['blocktype'] not in self._block_types:
-                self._info['blocktype'] = raw_input("Enter code type: ")
+                self._info['blocktype'] = raw_input("Enter block type: ")
                 if self._info['blocktype'] not in self._block_types:
                     print 'Must be one of ' + str(self._block_types)
+
+        # Allow user to specify language interactively if not set
         self._info['lang'] = options.lang
-        if self._info['lang'] == 'c++':
-            self._info['lang'] = 'cpp'
+        if self._info['lang'] is None:
+            while self._info['lang'] not in ['cpp', 'python']:
+                self._info['lang'] = raw_input("Language (python/cpp): ")
+
+                if self._info['lang'] == 'c++':
+                    self._info['lang'] = 'cpp'
+
         print "Language: %s" % {'cpp': 'C++', 'python': 'Python'}[self._info['lang']]
 
         if ((self._skip_subdirs['lib'] and self._info['lang'] == 'cpp')

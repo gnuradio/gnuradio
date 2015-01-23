@@ -31,7 +31,7 @@ namespace gr {
 
   #define TAN_MAP_RES 0.003921569 /* (smallest non-zero value in table) */
   #define RAD_PER_DEG 0.017453293
-  #define TAN_MAP_SIZE 256
+  #define TAN_MAP_SIZE 255
 
   /* arctangents from 0 to pi/4 radians */
   static float
@@ -99,8 +99,8 @@ namespace gr {
     7.551044e-01, 7.571798e-01, 7.592472e-01, 7.613064e-01,
     7.633576e-01, 7.654008e-01, 7.674360e-01, 7.694633e-01,
     7.714826e-01, 7.734940e-01, 7.754975e-01, 7.774932e-01,
-    7.794811e-01, 7.814612e-01, 7.834335e-01, 7.853983e-01,
-    7.853983e-01
+    7.794811e-01, 7.814612e-01, 7.834335e-01, 7.853982e-01,
+    7.853982e-01
   };
 
 
@@ -118,7 +118,7 @@ namespace gr {
    determine the final angle value in the range of -180 to 180
    degrees. Note that this function uses the small angle approximation
    for values close to zero. This routine calculates the arc tangent
-   with an average error of +/- 0.045 degrees.
+   with an average error of +/- 3.56e-5 degrees (6.21e-7 radians).
   *****************************************************************************/
 
   float
@@ -135,7 +135,6 @@ namespace gr {
     if(!((y_abs > 0.0f) || (x_abs > 0.0f)))
       return 0.0;
 
-    //z = (y_abs < x_abs ? y_abs / x_abs : x_abs / y_abs);
     if(y_abs < x_abs)
       z = y_abs / x_abs;
     else
@@ -147,14 +146,13 @@ namespace gr {
       base_angle = z;
     else {
       /* find index and interpolation value */
-      alpha = z * (float)TAN_MAP_SIZE - .5;
-      index = (int)alpha & 0xff;
+      alpha = z * (float)TAN_MAP_SIZE;
+      index = ((int)alpha) & 0xff;
       alpha -= (float)index;
       /* determine base angle based on quadrant and */
       /* add or subtract table value from base angle based on quadrant */
-      base_angle = fast_atan_table[index];
-      base_angle +=
-        (fast_atan_table[index + 1] - fast_atan_table[index]) * alpha;
+      base_angle  =  fast_atan_table[index];
+      base_angle += (fast_atan_table[index + 1] - fast_atan_table[index]) * alpha;
     }
 
     if(x_abs > y_abs) { /* -45 -> 45 or 135 -> 225 */
