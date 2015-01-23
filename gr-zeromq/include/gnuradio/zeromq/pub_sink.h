@@ -53,7 +53,7 @@ namespace gr {
        * \param address  ZMQ socket address specifier
        * \param timeout  Receive timeout in seconds, default is 100ms, 1us increments
        */
-      static sptr make(size_t itemsize, size_t vlen, char *address, int timeout=100);
+      static sptr make(size_t itemsize, size_t vlen, char *address, int timeout=100, bool pass_tags=false);
     };
 
   } // namespace zeromq

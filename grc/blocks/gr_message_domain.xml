@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<!--
+###################################################
+##GNU Radio default domain 'gr_message'
+###################################################
+ -->
+ <domain>
+  <name>GR Message</name>
+  <key>gr_message</key>
+  <color>#000</color>
+  <multiple_sources>True</multiple_sources>
+  <connection>
+    <source_domain>gr_message</source_domain>
+    <sink_domain>gr_message</sink_domain>
+    <make>#slurp
+        self.msg_connect($make_port_sig($source), $make_port_sig($sink))#slurp
+    </make>
+  </connection>
+</domain>

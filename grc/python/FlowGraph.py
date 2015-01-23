@@ -58,34 +58,62 @@ class FlowGraph(_FlowGraph, _GUIFlowGraph):
         #return from cache
         return self._eval_cache[my_hash]
 
-    def get_io_signaturev(self, direction):
+    def get_hier_block_stream_io(self, direction):
         """
-        Get a list of io signatures for this flow graph.
+        Get a list of stream io signatures for this flow graph.
 
         Args:
             direction: a string of 'in' or 'out'
 
         Returns:
-            a list of dicts with: type, label, vlen, size
+            a list of dicts with: type, label, vlen, size, optional
         """
-        sorted_pads = {
-            'in': self.get_pad_sources(),
-            'out': self.get_pad_sinks(),
-        }[direction]
-        # we only want stream ports
-        sorted_pads = filter(lambda b: b.get_param('type').get_evaluated() != 'message', sorted_pads);
-        expanded_pads = [];
-        for i in sorted_pads:
-            for j in range(i.get_param('num_streams').get_evaluated()):
-                expanded_pads.append(i);
-        #load io signature
-        return [{
-            'label': str(pad.get_param('label').get_evaluated()),
-            'type': str(pad.get_param('type').get_evaluated()),
-            'vlen': str(pad.get_param('vlen').get_value()),
-            'size': pad.get_param('type').get_opt('size'),
-            'optional': bool(pad.get_param('optional').get_evaluated()),
-        } for pad in expanded_pads]
+        return filter(lambda p: p['type'] != "message",
+                      self.get_hier_block_io(direction))
+
+    def get_hier_block_message_io(self, direction):
+        """
+        Get a list of message io signatures for this flow graph.
+
+        Args:
+            direction: a string of 'in' or 'out'
+
+        Returns:
+            a list of dicts with: type, label, vlen, size, optional
+        """
+        return filter(lambda p: p['type'] == "message",
+                      self.get_hier_block_io(direction))
+
+    def get_hier_block_io(self, direction):
+        """
+        Get a list of io ports for this flow graph.
+
+        Args:
+            direction: a string of 'in' or 'out'
+
+        Returns:
+            a list of dicts with: type, label, vlen, size, optional
+        """
+        pads = self.get_pad_sources() if direction in ('sink', 'in') else \
+            self.get_pad_sinks() if direction in ('source', 'out') else []
+        ports = []
+        for pad in pads:
+            master = {
+                'label': str(pad.get_param('label').get_evaluated()),
+                'type': str(pad.get_param('type').get_evaluated()),
+                'vlen': str(pad.get_param('vlen').get_value()),
+                'size': pad.get_param('type').get_opt('size'),
+                'optional': bool(pad.get_param('optional').get_evaluated()),
+            }
+            num_ports = pad.get_param('num_streams').get_evaluated()
+            if num_ports > 1:
+                for i in xrange(num_ports):
+                    clone = master.copy()
+                    clone['label'] += str(i)
+                    ports.append(clone)
+            else:
+                ports.append(master)
+        return ports
 
     def get_pad_sources(self):
         """
@@ -118,19 +146,20 @@ class FlowGraph(_FlowGraph, _GUIFlowGraph):
         key_offset = 0
         pads = self.get_pad_sources() if port.is_source() else self.get_pad_sinks()
         for pad in pads:
+            # using the block param 'type' instead of the port domain here
+            # to emphasize that hier block generation is domain agnostic
+            is_message_pad = pad.get_param('type').get_evaluated() == "message"
             if port.get_parent() == pad:
-                return str(key_offset + int(port.get_key()))
-            # assuming we have either only sources or sinks
-            key_offset += len(pad.get_ports())
+                if is_message_pad:
+                    key = pad.get_param('label').get_value()
+                else:
+                    key = str(key_offset + int(port.get_key()))
+                return key
+            else:
+                # assuming we have either only sources or sinks
+                if not is_message_pad:
+                    key_offset += len(pad.get_ports())
         return -1
-
-    def get_msg_pad_sources(self):
-        ps = self.get_pad_sources();
-        return filter(lambda b: b.get_param('type').get_evaluated() == 'message', ps);
-
-    def get_msg_pad_sinks(self):
-        ps = self.get_pad_sinks();
-        return filter(lambda b: b.get_param('type').get_evaluated() == 'message', ps);
 
     def get_imports(self):
         """

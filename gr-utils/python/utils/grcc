@@ -20,6 +20,9 @@
 # Boston, MA 02110-1301, USA.
 #
 
+import os
+import sys
+from optparse import OptionParser
 import warnings
 warnings.simplefilter('ignore')
 
@@ -28,10 +31,8 @@ try:
 except ImportError:
     from gnuradio.grc.python.Platform import Platform
 
-from optparse import OptionParser
-import os, sys
 
-class grcc:
+class GRCC:
     def __init__(self, grcfile, out_dir):
         self.out_dir = out_dir
         self.platform = Platform()
@@ -42,17 +43,10 @@ class grcc:
         self.fg.grc_file_path = os.path.abspath(grcfile)
         self.fg.validate()
 
-        errors = self.fg.get_error_messages()
-        if errors:
-                print "WARNING: Errors present during compilation"
-                # Ugly block indent.
-                print ''.join(["\t%s\n" % line for line in ''.join(errors).split('\n')])
-
-        enabled = self.fg.get_enabled()
-        if not enabled:
-                print "ERROR: fg.get_enabled() reported False"
-                sys.exit(1)
-
+        if not self.fg.is_valid():
+            raise StandardError("\n\n".join(
+                ["Validation failed:"] + self.fg.get_error_messages()
+            ))
 
         self.gen = self.platform.get_generator()(self.fg, out_dir)
         self.gen.write()
@@ -61,7 +55,8 @@ class grcc:
         progname = self.fg.get_option('id')
         os.system("{0}/{1}.py".format(self.out_dir, progname))
 
-if __name__ == "__main__":
+
+def main():
     usage="%prog: [options] filename"
     description = "Compiles a GRC file (.grc) into a GNU Radio Python program. The program is stored in ~/.grc_gnuradio by default, but this location can be changed with the -d option."
 
@@ -72,11 +67,20 @@ if __name__ == "__main__":
                       help="Run the program after compiling [default=%default]")
     (options, args) = parser.parse_args ()
 
-    if(len(args) != 1):
+    if len(args) != 1:
         sys.stderr.write("Please specify a GRC file name to compile.\n")
         sys.exit(1)
 
-    g = grcc(args[0], options.directory+"/")
+    try:
+        g = GRCC(args[0], options.directory + "/")
+    except Exception as e:
+        sys.stderr.write(str(e) + "\n")
+        sys.stderr.write("Error during file compilation.\n")
+        sys.exit(1)
 
-    if(options.execute):
+    if options.execute:
         g.exec_program()
+
+
+if __name__ == "__main__":
+    main()

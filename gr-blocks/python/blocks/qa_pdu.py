@@ -99,8 +99,6 @@ class test_pdu(gr_unittest.TestCase):
         msg = pmt.cons( pmt.PMT_NIL, pmt.init_f32vector(10, src_data))
         src.to_basic_block()._post(port, msg)
 
-        src.set_max_noutput_items(5)
-
         self.tb.start()
         #ideally, would wait until we get ten samples
         time.sleep(0.2)

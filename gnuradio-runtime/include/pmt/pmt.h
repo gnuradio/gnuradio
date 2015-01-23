@@ -201,6 +201,7 @@ PMT_API bool is_real(pmt_t obj);
 
 //! Return the pmt value that represents double \p x.
 PMT_API pmt_t from_double(double x);
+PMT_API pmt_t from_float(float x);
 
 /*!
  * \brief Convert pmt to double if possible.
@@ -210,6 +211,15 @@ PMT_API pmt_t from_double(double x);
  * a wrong_type exception is raised.
  */
 PMT_API double to_double(pmt_t x);
+
+/*!
+ * \brief Convert pmt to float if possible.
+ *
+ * This basically is to_double() with a type-cast; the PMT stores
+ * the value as a double in any case. Use this when strict typing
+ * is required.
+ */
+PMT_API float to_float(pmt_t x);
 
 /*
  * ------------------------------------------------------------------------

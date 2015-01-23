@@ -111,6 +111,8 @@ namespace pmt{
   bool is_real(pmt_t obj);
   pmt_t from_double(double x);
   double to_double(pmt_t x);
+  pmt_t from_float(double x);
+  double to_float(pmt_t x);
 
   bool is_complex(pmt_t obj);
   pmt_t make_rectangular(double re, double im);

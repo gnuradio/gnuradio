@@ -106,7 +106,7 @@ namespace gr {
             optr += size;
             for(unsigned t = 0; t < d_tags.size(); t++) {
               add_item_tag(0, nitems_written(0)+i+d_tags[t].offset,
-                           d_tags[t].key, d_tags[t].value);
+                           d_tags[t].key, d_tags[t].value, d_tags[t].srcid);
             }
           }
         }

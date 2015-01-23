@@ -69,7 +69,7 @@ class test_pfb_arb_resampler(gr_unittest.TestCase):
         phase = pfb.phase_offset(freq, fs)
 
         # Create a timeline offset by the filter's group delay
-        t = map(lambda x: float(x)/(fs*rrate), xrange(delay, L+delay))
+        t = map(lambda x: float(x)/(fs*rrate), xrange(-delay, L-delay))
 
         # Data of the sinusoid at frequency freq with the delay and phase offset.
         expected_data = map(lambda x: math.sin(2.*math.pi*freq*x+phase), t)
@@ -105,7 +105,7 @@ class test_pfb_arb_resampler(gr_unittest.TestCase):
         phase = pfb.phase_offset(freq, fs)
 
         # Create a timeline offset by the filter's group delay
-        t = map(lambda x: float(x)/(fs*rrate), xrange(delay, L+delay))
+        t = map(lambda x: float(x)/(fs*rrate), xrange(-delay, L-delay))
 
         # Data of the sinusoid at frequency freq with the delay and phase offset.
         expected_data = map(lambda x: math.cos(2.*math.pi*freq*x+phase) + \
@@ -142,7 +142,7 @@ class test_pfb_arb_resampler(gr_unittest.TestCase):
         phase = pfb.phase_offset(freq, fs)
 
         # Create a timeline offset by the filter's group delay
-        t = map(lambda x: float(x)/(fs*rrate), xrange(delay, L+delay))
+        t = map(lambda x: float(x)/(fs*rrate), xrange(-delay, L-delay))
 
         # Data of the sinusoid at frequency freq with the delay and phase offset.
         expected_data = map(lambda x: math.cos(2.*math.pi*freq*x+phase) + \
@@ -179,7 +179,7 @@ class test_pfb_arb_resampler(gr_unittest.TestCase):
         phase = pfb.phase_offset(freq, fs)
 
         # Create a timeline offset by the filter's group delay
-        t = map(lambda x: float(x)/(fs*rrate), xrange(delay, L+delay))
+        t = map(lambda x: float(x)/(fs*rrate), xrange(-delay, L-delay))
 
         # Data of the sinusoid at frequency freq with the delay and phase offset.
         expected_data = map(lambda x: math.cos(2.*math.pi*freq*x+phase) + \
@@ -216,7 +216,7 @@ class test_pfb_arb_resampler(gr_unittest.TestCase):
         phase = pfb.phase_offset(freq, fs)
 
         # Create a timeline offset by the filter's group delay
-        t = map(lambda x: float(x)/(fs*rrate), xrange(delay, L+delay))
+        t = map(lambda x: float(x)/(fs*rrate), xrange(-delay, L-delay))
 
         # Data of the sinusoid at frequency freq with the delay and phase offset.
         expected_data = map(lambda x: math.cos(2.*math.pi*freq*x+phase) + \

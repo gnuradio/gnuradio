@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2006,2011,2012 Free Software Foundation, Inc.
+ * Copyright 2006,2011,2012,2014 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -58,6 +58,9 @@ namespace gr {
      * The Costas loop can have two output streams:
      * \li stream 1 (required) is the baseband I and Q;
      * \li stream 2 (optional) is the normalized frequency of the loop
+     *
+     * There is a single optional message input:
+     * \li noise: A noise floor estimate used to calculate the SNR of a sample.
      */
     class DIGITAL_API costas_loop_cc
       : virtual public sync_block,
@@ -72,8 +75,10 @@ namespace gr {
        *
        * \param loop_bw  internal 2nd order loop bandwidth (~ 2pi/100)
        * \param order the loop order, either 2, 4, or 8
+       * \param use_snr Use or ignore SNR estimates (from noise message port)
+       *        in measurements; also uses tanh instead of slicing.
        */
-      static sptr make(float loop_bw, int order);
+      static sptr make(float loop_bw, int order, bool use_snr=false);
 
       /*!
        * Returns the current value of the loop error.

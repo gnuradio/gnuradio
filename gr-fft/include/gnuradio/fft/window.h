@@ -179,32 +179,47 @@ namespace gr {
       static std::vector<float> blackmanharris(int ntaps, int atten=92);
 
       /*!
-       * \brief Build a Nuttal (or Blackman-Nuttal) window.
+       * \brief Build a Nuttall (or Blackman-Nuttall) window.
        *
        * See: http://en.wikipedia.org/wiki/Window_function#Blackman.E2.80.93Nuttall_window
        *
        * \param ntaps Number of coefficients in the window.
        */
+      static std::vector<float> nuttall(int ntaps);
+
+      /*!
+       * Deprecated: use nuttall window instead.
+       */
       static std::vector<float> nuttal(int ntaps);
 
       /*!
-       * \brief Alias to the Nuttal window.
+       * \brief Alias to the Nuttall window.
        *
        * \param ntaps Number of coefficients in the window.
+       */
+      static std::vector<float> blackman_nuttall(int ntaps);
+
+      /*!
+       * Deprecated: use blackman_nuttall window instead.
        */
       static std::vector<float> blackman_nuttal(int ntaps);
 
       /*!
-       * \brief Build a Nuttal continuous first derivative window.
+       * \brief Build a Nuttall continuous first derivative window.
        *
        * See: http://en.wikipedia.org/wiki/Window_function#Nuttall_window.2C_continuous_first_derivative
        *
        * \param ntaps Number of coefficients in the window.
        */
+      static std::vector<float> nuttall_cfd(int ntaps);
+
+      /*!
+       * Deprecated: use nuttall_cfd window instead.
+       */
       static std::vector<float> nuttal_cfd(int ntaps);
 
       /*!
-       * \brief Build a Nuttal continuous first derivative window.
+       * \brief Build a flat top window.
        *
        * See: http://en.wikipedia.org/wiki/Window_function#Flat_top_window
        *

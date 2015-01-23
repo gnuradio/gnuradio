@@ -37,6 +37,49 @@
 
 namespace fs = boost::filesystem;
 
+void write_json(std::ofstream &json_file, std::vector<volk_test_results_t> results) {
+    json_file << "{" << std::endl;
+    json_file << " \"volk_tests\": [" << std::endl;
+    size_t len = results.size();
+    size_t i = 0;
+    BOOST_FOREACH(volk_test_results_t &result, results) {
+        json_file << "  {" << std::endl;
+        json_file << "   \"name\": \"" << result.name << "\"," << std::endl;
+        json_file << "   \"vlen\": " << result.vlen << "," << std::endl;
+        json_file << "   \"iter\": " << result.iter << "," << std::endl;
+        json_file << "   \"best_arch_a\": \"" << result.best_arch_a
+            << "\"," << std::endl;
+        json_file << "   \"best_arch_u\": \"" << result.best_arch_u
+            << "\"," << std::endl;
+        json_file << "   \"results\": {" << std::endl;
+        size_t results_len = result.results.size();
+        size_t ri = 0;
+        typedef std::pair<std::string, volk_test_time_t> tpair;
+        BOOST_FOREACH(tpair pair, result.results) {
+            volk_test_time_t time = pair.second;
+            json_file << "    \"" << time.name << "\": {" << std::endl;
+            json_file << "     \"name\": \"" << time.name << "\"," << std::endl;
+            json_file << "     \"time\": " << time.time << "," << std::endl;
+            json_file << "     \"units\": \"" << time.units << "\"" << std::endl;
+            json_file << "    }" ;
+            if(ri+1 != results_len) {
+                json_file << ",";
+            }
+            json_file << std::endl;
+            ri++;
+        }
+        json_file << "   }" << std::endl;
+        json_file << "  }";
+        if(i+1 != len) {
+            json_file << ",";
+        }
+        json_file << std::endl;
+        i++;
+    }
+    json_file << " ]" << std::endl;
+    json_file << "}" << std::endl;
+}
+
 int main(int argc, char *argv[]) {
     // Adding program options
     boost::program_options::options_description desc("Options");
@@ -49,6 +92,9 @@ int main(int argc, char *argv[]) {
       ("tests-regex,R",
             boost::program_options::value<std::string>(),
             "Run tests matching regular expression.")
+      ("json,j",
+            boost::program_options::value<std::string>(),
+            "JSON output file")
       ;
 
     // Handle the options that were given
@@ -56,6 +102,8 @@ int main(int argc, char *argv[]) {
     bool benchmark_mode;
     std::string kernel_regex;
     bool store_results = true;
+    std::ofstream json_file;
+
     try {
         boost::program_options::store(boost::program_options::parse_command_line(argc, argv, desc), vm);
         boost::program_options::notify(vm);
@@ -83,9 +131,14 @@ int main(int argc, char *argv[]) {
       return 0;
     }
 
+    if ( vm.count("json") )
+    {
+        json_file.open( vm["json"].as<std::string>().c_str() );
+    }
+
 
     // Run tests
-    std::vector<std::string> results;
+    std::vector<volk_test_results_t> results;
 
     //VOLK_PROFILE(volk_16i_x5_add_quad_16i_x4, 1e-4, 2046, 10000, &results, benchmark_mode, kernel_regex);
     //VOLK_PROFILE(volk_16i_branch_4_state_8, 1e-4, 2046, 10000, &results, benchmark_mode, kernel_regex);
@@ -104,16 +157,25 @@ int main(int argc, char *argv[]) {
     //VOLK_PROFILE(volk_16i_max_star_horizontal_16i, 0, 0, 204602, 10000, &results, benchmark_mode, kernel_regex);
     //VOLK_PROFILE(volk_16i_permute_and_scalar_add, 1e-4, 0, 2046, 10000, &results, benchmark_mode, kernel_regex);
     //VOLK_PROFILE(volk_16i_x4_quad_max_star_16i, 1e-4, 0, 2046, 10000, &results, benchmark_mode, kernel_regex);
-    VOLK_PROFILE(volk_16u_byteswap, 0, 0, 204602, 10000, &results, benchmark_mode, kernel_regex);
+    VOLK_PUPPET_PROFILE(volk_16u_byteswappuppet_16u, volk_16u_byteswap, 0, 0, 204602, 10000, &results, benchmark_mode, kernel_regex);
     VOLK_PROFILE(volk_16i_32fc_dot_prod_32fc, 1e-4, 0, 204602, 10000, &results, benchmark_mode, kernel_regex);
     VOLK_PROFILE(volk_32f_accumulator_s32f, 1e-4, 0, 204602, 10000, &results, benchmark_mode, kernel_regex);
     VOLK_PROFILE(volk_32f_x2_add_32f, 1e-4, 0, 204602, 10000, &results, benchmark_mode, kernel_regex);
     VOLK_PROFILE(volk_32fc_32f_multiply_32fc, 1e-4, 0, 204602, 1000, &results, benchmark_mode, kernel_regex);
+    VOLK_PROFILE(volk_32f_log2_32f, 1.5e-1, 0, 204602, 1000, &results, benchmark_mode, kernel_regex);
+    VOLK_PROFILE(volk_32f_expfast_32f, 1e-1, 0, 204602, 1000, &results, benchmark_mode, kernel_regex);
+    VOLK_PROFILE(volk_32f_x2_pow_32f, 1e-2, 0, 204602, 1000, &results, benchmark_mode, kernel_regex);
+    VOLK_PROFILE(volk_32f_sin_32f, 1e-6, 0, 204602, 1000, &results, benchmark_mode, kernel_regex);
+    VOLK_PROFILE(volk_32f_cos_32f, 1e-6, 0, 204602, 1000, &results, benchmark_mode, kernel_regex);
+    VOLK_PROFILE(volk_32f_tan_32f, 1e-6, 0, 204602, 1000, &results, benchmark_mode, kernel_regex);
+    VOLK_PROFILE(volk_32f_atan_32f, 1e-3, 0, 204602, 1000, &results, benchmark_mode, kernel_regex);
+    VOLK_PROFILE(volk_32f_asin_32f, 1e-3, 0, 204602, 1000, &results, benchmark_mode, kernel_regex);
+    VOLK_PROFILE(volk_32f_acos_32f, 1e-3, 0, 204602, 1000, &results, benchmark_mode, kernel_regex);
     VOLK_PROFILE(volk_32fc_s32f_power_32fc, 1e-4, 0, 204602, 50, &results, benchmark_mode, kernel_regex);
     VOLK_PROFILE(volk_32f_s32f_calc_spectral_noise_floor_32f, 1e-4, 20.0, 204602, 1000, &results, benchmark_mode, kernel_regex);
     VOLK_PROFILE(volk_32fc_s32f_atan2_32f, 1e-4, 10.0, 204602, 100, &results, benchmark_mode, kernel_regex);
     //VOLK_PROFILE(volk_32fc_x2_conjugate_dot_prod_32fc, 1e-4, 0, 2046, 10000, &results, benchmark_mode, kernel_regex);
-    VOLK_PROFILE(volk_32fc_x2_conjugate_dot_prod_32fc, 1e-4, 0, 204602, 10000, &results, benchmark_mode, kernel_regex);
+    VOLK_PROFILE(volk_32fc_x2_conjugate_dot_prod_32fc, 1e-4, 0, 204602, 100, &results, benchmark_mode, kernel_regex);
     VOLK_PROFILE(volk_32fc_deinterleave_32f_x2, 1e-4, 0, 204602, 1000, &results, benchmark_mode, kernel_regex);
     VOLK_PROFILE(volk_32fc_deinterleave_64f_x2, 1e-4, 0, 204602, 1000, &results, benchmark_mode, kernel_regex);
     VOLK_PROFILE(volk_32fc_s32f_deinterleave_real_16i, 0, 32768, 204602, 10000, &results, benchmark_mode, kernel_regex);
@@ -157,13 +219,13 @@ int main(int argc, char *argv[]) {
     VOLK_PROFILE(volk_32i_x2_and_32i, 0, 0, 204602, 10000, &results, benchmark_mode, kernel_regex);
     VOLK_PROFILE(volk_32i_s32f_convert_32f, 1e-4, 100, 204602, 10000, &results, benchmark_mode, kernel_regex);
     VOLK_PROFILE(volk_32i_x2_or_32i, 0, 0, 204602, 10000, &results, benchmark_mode, kernel_regex);
-    VOLK_PROFILE(volk_32u_byteswap, 0, 0, 204602, 2000, &results, benchmark_mode, kernel_regex);
-    //VOLK_PROFILE(volk_32u_popcnt, 0, 0, 2046, 10000, &results, benchmark_mode, kernel_regex);
+    VOLK_PUPPET_PROFILE(volk_32u_byteswappuppet_32u, volk_32u_byteswap, 0, 0, 204602, 2000, &results, benchmark_mode, kernel_regex);
+    VOLK_PUPPET_PROFILE(volk_32u_popcntpuppet_32u, volk32u_popcnt_32u,  0, 0, 2046, 10000, &results, benchmark_mode, kernel_regex);
     VOLK_PROFILE(volk_64f_convert_32f, 1e-4, 0, 204602, 10000, &results, benchmark_mode, kernel_regex);
     VOLK_PROFILE(volk_64f_x2_max_64f, 1e-4, 0, 204602, 1000, &results, benchmark_mode, kernel_regex);
     VOLK_PROFILE(volk_64f_x2_min_64f, 1e-4, 0, 204602, 1000, &results, benchmark_mode, kernel_regex);
-    VOLK_PROFILE(volk_64u_byteswap, 0, 0, 204602, 1000, &results, benchmark_mode, kernel_regex);
-    //VOLK_PROFILE(volk_64u_popcnt, 0, 0, 2046, 10000, &results, benchmark_mode, kernel_regex);
+    VOLK_PUPPET_PROFILE(volk_64u_byteswappuppet_64u, volk_64u_byteswap, 0, 0, 204602, 1000, &results, benchmark_mode, kernel_regex);
+    VOLK_PUPPET_PROFILE(volk_64u_popcntpuppet_64u, volk_64u_popcnt, 0, 0, 2046, 10000, &results, benchmark_mode, kernel_regex);
     VOLK_PROFILE(volk_8ic_deinterleave_16i_x2, 0, 0, 204602, 3000, &results, benchmark_mode, kernel_regex);
     VOLK_PROFILE(volk_8ic_s32f_deinterleave_32f_x2, 1e-4, 100, 204602, 3000, &results, benchmark_mode, kernel_regex);
     VOLK_PROFILE(volk_8ic_deinterleave_real_16i, 0, 256, 204602, 3000, &results, benchmark_mode, kernel_regex);
@@ -205,8 +267,10 @@ int main(int argc, char *argv[]) {
 #the function name is followed by the preferred architecture.\n\
 ";
 
-        BOOST_FOREACH(std::string result, results) {
-            config << result << std::endl;
+        BOOST_FOREACH(volk_test_results_t result, results) {
+            config << result.config_name << " "
+                << result.best_arch_a << " "
+                << result.best_arch_u << std::endl;
         }
         config.close();
     }

@@ -26,31 +26,34 @@
 
 #include <gnuradio/io_signature.h>
 #include "sub_source_impl.h"
+#include "tag_headers.h"
 
 namespace gr {
   namespace zeromq {
 
     sub_source::sptr
-    sub_source::make(size_t itemsize, size_t vlen, char *address, int timeout)
+    sub_source::make(size_t itemsize, size_t vlen, char *address, int timeout, bool pass_tags)
     {
       return gnuradio::get_initial_sptr
-        (new sub_source_impl(itemsize, vlen, address, timeout));
+        (new sub_source_impl(itemsize, vlen, address, timeout, pass_tags));
     }
 
-    sub_source_impl::sub_source_impl(size_t itemsize, size_t vlen, char *address, int timeout)
+    sub_source_impl::sub_source_impl(size_t itemsize, size_t vlen, char *address, int timeout, bool pass_tags)
       : gr::sync_block("sub_source",
                        gr::io_signature::make(0, 0, 0),
                        gr::io_signature::make(1, 1, itemsize * vlen)),
-        d_itemsize(itemsize), d_vlen(vlen), d_timeout(timeout)
+        d_itemsize(itemsize), d_vlen(vlen), d_timeout(timeout), d_pass_tags(pass_tags)
     {
       int major, minor, patch;
       zmq::version (&major, &minor, &patch);
+
       if (major < 3) {
         d_timeout = timeout*1000;
       }
+
       d_context = new zmq::context_t(1);
       d_socket = new zmq::socket_t(*d_context, ZMQ_SUB);
-      //int time = 0;
+
       d_socket->setsockopt(ZMQ_SUBSCRIBE, "", 0);
       d_socket->connect (address);
     }
@@ -81,16 +84,30 @@ namespace gr {
         // Receive data
         zmq::message_t msg;
         d_socket->recv(&msg);
-        // Copy to ouput buffer and return
-        if (msg.size() >= d_itemsize*d_vlen*noutput_items) {
-          memcpy(out, (void *)msg.data(), d_itemsize*d_vlen*noutput_items);
 
+        // Deserialize header data / tags
+        std::string buf(static_cast<char*>(msg.data()), msg.size());
+
+        if(d_pass_tags){
+          uint64_t rcv_offset;
+          std::vector<gr::tag_t> tags;
+
+          buf = parse_tag_header(buf, rcv_offset, tags);
+
+          for(size_t i=0; i<tags.size(); i++) {
+            tags[i].offset -= rcv_offset - nitems_written(0);
+            add_item_tag(0, tags[i]);
+          }
+        }
+
+        // Copy to ouput buffer and return
+        if (buf.size() >= d_itemsize*d_vlen*noutput_items) {
+          memcpy(out, (void *)&buf[0], d_itemsize*d_vlen*noutput_items);
           return noutput_items;
         }
         else {
-          memcpy(out, (void *)msg.data(), msg.size());
-
-          return msg.size()/(d_itemsize*d_vlen);
+          memcpy(out, (void *)&buf[0], buf.size());
+          return buf.size()/(d_itemsize*d_vlen);
         }
       }
       else {

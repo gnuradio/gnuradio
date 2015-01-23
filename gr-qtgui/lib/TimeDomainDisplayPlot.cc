@@ -85,6 +85,11 @@ public:
     d_unitType = type;
   }
 
+  std::string unitType()
+  {
+    return d_unitType;
+  }
+
   void setYUnitType(const std::string &type)
   {
     d_yUnitType = type;
@@ -474,7 +479,8 @@ TimeDomainDisplayPlot::setSampleRate(double sr, double units,
 				     const std::string &strunits)
 {
   double newsr = sr/units;
-  if(newsr != d_sample_rate) {
+  if((newsr != d_sample_rate) ||
+     (((TimeDomainDisplayZoomer*)d_zoomer)->unitType() != strunits)) {
     d_sample_rate = sr/units;
     _resetXAxisPoints();
 

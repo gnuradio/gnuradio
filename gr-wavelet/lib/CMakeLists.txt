@@ -1,4 +1,4 @@
-# Copyright 2012 Free Software Foundation, Inc.
+# Copyright 2012,2014 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -45,7 +45,6 @@ endif(ENABLE_GR_CTRLPORT)
 include_directories(${LOG4CPP_INCLUDE_DIRS})
 link_directories(${LOG4CPP_LIBRARY_DIRS})
 
-
 ########################################################################
 # Setup library
 ########################################################################
@@ -82,7 +81,7 @@ add_library(gnuradio-wavelet SHARED ${gr_wavelet_sources})
 target_link_libraries(gnuradio-wavelet ${wavelet_libs})
 
 # we need -no-as-needed or else -lgslcblas gets stripped out on newer version of gcc
-if(CMAKE_COMPILER_IS_GNUCC AND NOT ${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+if(CMAKE_COMPILER_IS_GNUCC AND NOT APPLE)
     SET_TARGET_PROPERTIES(gnuradio-wavelet PROPERTIES LINK_FLAGS "-Wl,--no-as-needed")
 endif()
 

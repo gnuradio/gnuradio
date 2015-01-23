@@ -221,7 +221,8 @@ namespace gr {
 
     /*!
      * \brief Tell the scheduler \p how_many_items of input stream \p
-     * which_input were consumed.
+     * which_input were consumed. 
+     * This function should be called at the end of work() or general_work(), after all processing is finished.
      */
     void consume(int which_input, int how_many_items);
 
@@ -503,6 +504,11 @@ namespace gr {
     float pc_work_time_total();
 
     /*!
+     * \brief Gets average throughput.
+     */
+    float pc_throughput_avg();
+
+    /*!
      * \brief Resets the performance counters
      */
     void reset_perf_counters();
@@ -636,7 +642,7 @@ namespace gr {
     void add_item_tag(unsigned int which_output, const tag_t &tag);
 
     /*!
-     * \brief  Removes a tag from the given input buffer.
+     * \brief DEPRECATED. Will be removed in 3.8.
      *
      * \param which_input an integer of which input stream to remove the tag from
      * \param abs_offset   a uint64 number of the absolute item number
@@ -662,9 +668,7 @@ namespace gr {
     }
 
     /*!
-     * \brief Removes a tag from the given input buffer.
-     *
-     * If no such tag is found, does nothing.
+     * \brief DEPRECATED. Will be removed in 3.8.
      *
      * \param which_input an integer of which input stream to remove the tag from
      * \param tag the tag object to remove

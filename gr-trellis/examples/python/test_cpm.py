@@ -12,8 +12,8 @@ from gnuradio import trellis, digital, filter, blocks
 from grc_gnuradio import blks2 as grc_blks2
 import math
 import numpy
-import fsm_utils
 from gnuradio import trellis
+from gnuradio.trellis import fsm_utils
 
 try:
     from gnuradio import analog
@@ -43,8 +43,9 @@ def run_test(seed,blocksize):
         f = trellis.fsm(P,M,L)
 
         # CPFSK signals
-        #p = numpy.ones(Q)/(2.0)
-        #q = numpy.cumsum(p)/(1.0*Q)
+        #p = numpy.ones(L*Q)
+        #q = numpy.cumsum(p)
+        #q = q/q[-1]/2.0;
 
         # GMSK signals
         BT=0.3;

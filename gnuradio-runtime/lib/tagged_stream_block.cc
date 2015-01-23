@@ -89,6 +89,14 @@ namespace gr {
     return;
   }
 
+  bool
+  tagged_stream_block::check_topology(int ninputs, int /* noutputs */)
+  {
+    d_n_input_items_reqd.resize(ninputs, 0);
+    return true;
+  }
+
+
   int
   tagged_stream_block::general_work(int noutput_items,
                                     gr_vector_int &ninput_items,
@@ -99,7 +107,9 @@ namespace gr {
       return work(noutput_items, ninput_items, input_items, output_items);
     }
 
-    if(d_n_input_items_reqd[0] == 0) { // Otherwise, it's already set from a previous call
+    // Read TSB tags, unless we...
+    // ...don't have inputs or ...     ... we already set it in a previous run.
+    if(!d_n_input_items_reqd.empty() && d_n_input_items_reqd[0] == 0) {
       std::vector<std::vector<tag_t> > tags(input_items.size(), std::vector<tag_t>());
       for(unsigned i = 0; i < input_items.size(); i++) {
         get_tags_in_range(tags[i], i, nitems_read(i), nitems_read(i)+1);

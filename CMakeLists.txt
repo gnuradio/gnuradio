@@ -46,7 +46,7 @@ message(STATUS "Build type set to ${CMAKE_BUILD_TYPE}.")
 # Set the version information here
 set(VERSION_INFO_MAJOR_VERSION 3)
 set(VERSION_INFO_API_COMPAT    7)
-set(VERSION_INFO_MINOR_VERSION 6)
+set(VERSION_INFO_MINOR_VERSION 7)
 set(VERSION_INFO_MAINT_VERSION git)
 include(GrVersion) #setup version info
 
@@ -415,6 +415,13 @@ CONFIGURE_FILE(
   ${CMAKE_CURRENT_SOURCE_DIR}/config.h.in
   ${CMAKE_CURRENT_BINARY_DIR}/gnuradio-runtime/include/gnuradio/config.h
 )
+
+#Re-generate the constants file, now that we actually know which components will be enabled.
+configure_file(
+    ${CMAKE_CURRENT_SOURCE_DIR}/gnuradio-runtime/lib/constants.cc.in
+    ${CMAKE_CURRENT_BINARY_DIR}/gnuradio-runtime/lib/constants.cc
+    ESCAPE_QUOTES
+@ONLY)
 
 # Install config.h in include/gnuradio
 install(

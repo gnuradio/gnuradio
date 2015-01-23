@@ -1,19 +1,19 @@
 /* -*- c++ -*- */
-/* 
+/*
  * Copyright 2014 Free Software Foundation, Inc.
- * 
+ *
  * This file is part of GNU Radio
- * 
+ *
  * GNU Radio is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3, or (at your option)
  * any later version.
- * 
+ *
  * GNU Radio is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with GNU Radio; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 51 Franklin Street,
@@ -34,7 +34,7 @@ namespace gr {
     multiply_matrix_cc::sptr
     multiply_matrix_cc::make(std::vector<std::vector<gr_complex> > A, gr::block::tag_propagation_policy_t tag_propagation_policy)
     {
-      if (A.empty() or A[0].size() == 0) {
+      if (A.empty() || A[0].size() == 0) {
         throw std::invalid_argument("matrix A has invalid dimensions.");
       }
       return gnuradio::get_initial_sptr
@@ -134,11 +134,11 @@ namespace gr {
     void
     multiply_matrix_cc_impl::msg_handler_A(pmt::pmt_t A)
     {
-      if (not pmt::is_vector(A) and not pmt::is_tuple(A)) {
+      if (!pmt::is_vector(A) && !pmt::is_tuple(A)) {
           GR_LOG_ALERT(d_logger, "Invalid message to set A (wrong type).");
           return;
       }
-      if (not pmt::length(A) == d_A.size()) {
+      if (!pmt::length(A) == d_A.size()) {
           GR_LOG_ALERT(d_logger, "Invalid message to set A (wrong size).");
           return;
       }
@@ -151,7 +151,7 @@ namespace gr {
         } else if (pmt::is_tuple(A)) {
           row = pmt::tuple_ref(A, i);
         }
-        if (pmt::is_vector(row) or pmt::is_tuple(row)) {
+        if (pmt::is_vector(row) || pmt::is_tuple(row)) {
           if (pmt::length(row) != d_A[0].size()) {
             GR_LOG_ALERT(d_logger, "Invalid message to set A (wrong number of columns).");
             return;
@@ -170,7 +170,7 @@ namespace gr {
         }
       }
 
-      if (not set_A(new_A)) {
+      if (!set_A(new_A)) {
           GR_LOG_ALERT(d_logger, "Invalid message to set A.");
       }
     }
@@ -189,4 +189,3 @@ namespace gr {
 
   } /* namespace blocks */
 } /* namespace gr */
-

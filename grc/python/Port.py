@@ -18,8 +18,10 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 """
 
 from .. base.Port import Port as _Port
+from .. base.Constants import DEFAULT_DOMAIN, GR_MESSAGE_DOMAIN
 from .. gui.Port import Port as _GUIPort
 import Constants
+
 
 def _get_source_from_virtual_sink_port(vsp):
     """
@@ -91,8 +93,14 @@ class Port(_Port, _GUIPort):
             dir: the direction
         """
         self._n = n
+        if n['type'] == 'message':
+            n['domain'] = GR_MESSAGE_DOMAIN
+        if 'domain' not in n:
+            n['domain'] = DEFAULT_DOMAIN
+        elif n['domain'] == GR_MESSAGE_DOMAIN:
+            n['key'] = n['name']
+            n['type'] = 'message'  # for port color
         if n['type'] == 'msg': n['key'] = 'msg'
-        if n['type'] == 'message': n['key'] = n['name']
         if dir == 'source' and not n.find('key'):
             n['key'] = str(block._source_count)
             block._source_count += 1
@@ -120,8 +128,6 @@ class Port(_Port, _GUIPort):
         _Port.validate(self)
         if not self.get_enabled_connections() and not self.get_optional():
             self.add_error_message('Port is not connected.')
-        if not self.is_source() and (not self.get_type() == "message") and len(self.get_enabled_connections()) > 1:
-            self.add_error_message('Port has too many connections.')
         #message port logic
         if self.get_type() == 'msg':
             if self.get_nports():
@@ -133,7 +139,6 @@ class Port(_Port, _GUIPort):
         """
         Handle the port cloning for virtual blocks.
         """
-        _Port.rewrite(self)
         if self.is_type_empty():
             try: #clone type and vlen
                 source = self.resolve_empty_type()
@@ -142,6 +147,7 @@ class Port(_Port, _GUIPort):
             except: #reset type and vlen
                 self._type = ''
                 self._vlen = ''
+        _Port.rewrite(self)
 
     def resolve_virtual_source(self):
         if self.get_parent().is_virtual_sink(): return _get_source_from_virtual_sink_port(self)

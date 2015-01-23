@@ -74,6 +74,37 @@ FreqDisplayForm::FreqDisplayForm(int nplots, QWidget* parent)
   connect(d_clearmin_act, SIGNAL(triggered()),
 	  this, SLOT(clearMinHold()));
 
+  // Set up the trigger menu
+  d_triggermenu = new QMenu("Trigger", this);
+  d_tr_mode_menu = new TriggerModeMenu(this);
+  d_tr_level_act = new PopupMenu("Level", this);
+  d_tr_channel_menu = new TriggerChannelMenu(nplots, this);
+  d_tr_tag_key_act = new PopupMenu("Tag Key", this);
+  d_triggermenu->addMenu(d_tr_mode_menu);
+  d_triggermenu->addAction(d_tr_level_act);
+  d_triggermenu->addMenu(d_tr_channel_menu);
+  d_triggermenu->addAction(d_tr_tag_key_act);
+  d_menu->addMenu(d_triggermenu);
+
+  setTriggerMode(gr::qtgui::TRIG_MODE_FREE);
+  connect(d_tr_mode_menu, SIGNAL(whichTrigger(gr::qtgui::trigger_mode)),
+	  this, SLOT(setTriggerMode(gr::qtgui::trigger_mode)));
+  // updates trigger state by calling set level or set tag key.
+  connect(d_tr_mode_menu, SIGNAL(whichTrigger(gr::qtgui::trigger_mode)),
+	  this, SLOT(updateTrigger(gr::qtgui::trigger_mode)));
+
+  setTriggerLevel(0);
+  connect(d_tr_level_act, SIGNAL(whichTrigger(QString)),
+	  this, SLOT(setTriggerLevel(QString)));
+
+  setTriggerChannel(0);
+  connect(d_tr_channel_menu, SIGNAL(whichTrigger(int)),
+	  this, SLOT(setTriggerChannel(int)));
+
+  setTriggerTagKey(std::string(""));
+  connect(d_tr_tag_key_act, SIGNAL(whichTrigger(QString)),
+	  this, SLOT(setTriggerTagKey(QString)));
+
   Reset();
 
   connect(d_display_plot, SIGNAL(plotPointSelected(const QPointF)),
@@ -222,6 +253,13 @@ FreqDisplayForm::autoScale(bool en)
 }
 
 void
+FreqDisplayForm::setPlotPosHalf(bool half)
+{
+  getPlot()->setPlotPosHalf(half);
+  getPlot()->replot();
+}
+
+void
 FreqDisplayForm::clearMaxHold()
 {
   getPlot()->clearMaxData();
@@ -256,4 +294,85 @@ float
 FreqDisplayForm::getClickedFreq() const
 {
   return d_clicked_freq;
+}
+
+
+/********************************************************************
+ * TRIGGER METHODS
+ *******************************************************************/
+
+void
+FreqDisplayForm::setTriggerMode(gr::qtgui::trigger_mode mode)
+{
+  d_trig_mode = mode;
+  d_tr_mode_menu->getAction(mode)->setChecked(true);
+}
+
+void
+FreqDisplayForm::updateTrigger(gr::qtgui::trigger_mode mode)
+{
+  // If auto or normal mode, popup trigger level box to set
+  if((d_trig_mode == gr::qtgui::TRIG_MODE_AUTO) || (d_trig_mode == gr::qtgui::TRIG_MODE_NORM))
+    d_tr_level_act->activate(QAction::Trigger);
+
+  // if tag mode, popup tag key box to set
+  if(d_trig_mode == gr::qtgui::TRIG_MODE_TAG)
+    d_tr_tag_key_act->activate(QAction::Trigger);
+}
+
+gr::qtgui::trigger_mode
+FreqDisplayForm::getTriggerMode() const
+{
+  return d_trig_mode;
+}
+
+void
+FreqDisplayForm::setTriggerLevel(QString s)
+{
+  d_trig_level = s.toFloat();
+}
+
+void
+FreqDisplayForm::setTriggerLevel(float level)
+{
+  d_trig_level = level;
+  d_tr_level_act->setText(QString().setNum(d_trig_level));
+}
+
+float
+FreqDisplayForm::getTriggerLevel() const
+{
+  return d_trig_level;
+}
+
+void
+FreqDisplayForm::setTriggerChannel(int channel)
+{
+  d_trig_channel = channel;
+  d_tr_channel_menu->getAction(d_trig_channel)->setChecked(true);
+}
+
+int
+FreqDisplayForm::getTriggerChannel() const
+{
+  return d_trig_channel;
+}
+
+void
+FreqDisplayForm::setTriggerTagKey(QString s)
+{
+  d_trig_tag_key = s.toStdString();
+}
+
+void
+FreqDisplayForm::setTriggerTagKey(const std::string &key)
+{
+  d_trig_tag_key = key;
+  d_tr_tag_key_act->setText(QString().fromStdString(d_trig_tag_key));
+}
+
+std::string
+FreqDisplayForm::getTriggerTagKey() const
+{
+  return d_trig_tag_key;
 }

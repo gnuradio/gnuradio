@@ -81,12 +81,6 @@ namespace gr {
         return "none";
       }
 
-      float
-      dummy_decoder_impl::get_shift()
-      {
-        return 1;
-      }
-
       bool
       dummy_decoder_impl::set_frame_size(unsigned int frame_size)
       {
@@ -116,8 +110,8 @@ namespace gr {
         int8_t *out = (int8_t*)outbuffer;
 
         //memcpy(out, in, d_frame_size*sizeof(char));
-        //volk_32f_binary_slicer_8i(out, in, d_frame_size);
-        volk_32f_s32f_convert_8i(out, in, 1.0/2.0, d_frame_size);
+        volk_32f_binary_slicer_8i(out, in, d_frame_size);
+        //volk_32f_s32f_convert_8i(out, in, 1.0/2.0, d_frame_size);
       }
 
     } /* namespace code */

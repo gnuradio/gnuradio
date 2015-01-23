@@ -202,7 +202,7 @@ class packet_mod_base(gr.hier_block2):
             self,
             "ofdm_mod",
             gr.io_signature(1, 1, self._item_size_in), # Input signature
-            gr.io_signature(1, 1, packet_source._hb.output_signature().sizeof_stream_item(0)) # Output signature
+            gr.io_signature(1, 1, packet_source.output_signature().sizeof_stream_item(0)) # Output signature
         )
         #create blocks
         msgq = gr.msg_queue(DEFAULT_MSGQ_LIMIT)
@@ -232,7 +232,7 @@ class packet_demod_base(gr.hier_block2):
         gr.hier_block2.__init__(
             self,
             "ofdm_mod",
-            gr.io_signature(1, 1, packet_sink._hb.input_signature().sizeof_stream_item(0)), # Input signature
+            gr.io_signature(1, 1, packet_sink.input_signature().sizeof_stream_item(0)), # Input signature
             gr.io_signature(1, 1, self._item_size_out) # Output signature
         )
         #create blocks
@@ -241,9 +241,9 @@ class packet_demod_base(gr.hier_block2):
         #connect
         self.connect(self, packet_sink)
         self.connect(msg_source, self)
-        if packet_sink._hb.output_signature().sizeof_stream_item(0):
+        if packet_sink.output_signature().sizeof_stream_item(0):
             self.connect(packet_sink,
-                         blocks.null_sink(packet_sink._hb.output_signature().sizeof_stream_item(0)))
+                         blocks.null_sink(packet_sink.output_signature().sizeof_stream_item(0)))
 
     def recv_pkt(self, ok, payload):
         msg = gr.message_from_string(payload, 0, self._item_size_out,
