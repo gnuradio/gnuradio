@@ -43,17 +43,6 @@ class GRCC:
         self.fg.grc_file_path = os.path.abspath(grcfile)
         self.fg.validate()
 
-        errors = self.fg.get_error_messages()
-        if errors:
-                print "WARNING: Errors present during compilation"
-                # Ugly block indent.
-                print ''.join(["\t%s\n" % line for line in ''.join(errors).split('\n')])
-
-        enabled = self.fg.get_enabled()
-        if not enabled:
-                print "ERROR: fg.get_enabled() reported False"
-                sys.exit(1)
-
         if not self.fg.is_valid():
             raise StandardError("\n\n".join(
                 ["Validation failed:"] + self.fg.get_error_messages()
