@@ -82,8 +82,6 @@ def main():
         sys.stderr.write("Please specify a GRC file name to compile.\n")
         sys.exit(1)
 
-    g = grcc(args[0], options.directory+"/")
-
     try:
         g = GRCC(args[0], options.directory + "/")
     except Exception as e:
