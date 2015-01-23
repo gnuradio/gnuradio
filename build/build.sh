@@ -39,7 +39,7 @@ else
 fi
 
 # setup version identifier
-tag=$(git describe --abbrev=0 --tags)
+tag=$(git describe --abbrev=0 --tags | cut -b 2-) # ignore the leading 'v'
 sha=$(git rev-parse HEAD)
 
 if [ -z $tag -o -z $sha -o -z $timestamp ]; then 
