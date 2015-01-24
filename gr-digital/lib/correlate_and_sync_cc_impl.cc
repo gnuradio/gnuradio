@@ -226,8 +226,6 @@ namespace gr {
         }
 
         // Calculate the phase offset of the incoming signal.
-        // Rotate by pi if the real part is < 0 since the atan doesn't
-        // understand the ambiguity.
         //
         // The analytic cross-correlation is:
         //
@@ -245,8 +243,6 @@ namespace gr {
         // cross-correlation, which I don't believe maps simply to expected
         // symbol phase differences.
         float phase = fast_atan2f(corr[i].imag(), corr[i].real());
-        if(corr[i].real() < 0.0)
-          phase += M_PI;
 
         int index = i + d_mark_delay;
 
