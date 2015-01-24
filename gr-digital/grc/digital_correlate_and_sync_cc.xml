@@ -3,7 +3,7 @@
   <name>Correlate and Sync</name>
   <key>digital_correlate_and_sync_cc</key>
   <import>from gnuradio import digital</import>
-  <make>digital.correlate_and_sync_cc($symbols, $sps, $threshold)</make>
+  <make>digital.correlate_and_sync_cc($symbols, $sps, $mark_delay, $threshold)</make>
   <param>
     <name>Symbols</name>
     <key>symbols</key>
@@ -15,6 +15,12 @@
     <key>sps</key>
     <value>4</value>
     <type>float</type>
+  </param>
+  <param>
+    <name>Tag marking delay</name>
+    <key>mark_delay</key>
+    <value>2</value>
+    <type>int</type>
   </param>
   <param>
     <name>Threshold</name>
