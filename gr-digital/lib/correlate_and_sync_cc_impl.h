@@ -37,6 +37,7 @@ namespace gr {
       pmt::pmt_t d_src_id;
       std::vector<gr_complex> d_symbols;
       float d_sps;
+      unsigned int d_mark_delay;
       float d_thresh;
       kernel::fft_filter_ccc  *d_filter;
 
@@ -45,7 +46,8 @@ namespace gr {
 
     public:
       correlate_and_sync_cc_impl(const std::vector<gr_complex> &symbols,
-                                 float sps, float threshold=0.9);
+                                 float sps, unsigned int mark_delay,
+                                 float threshold=0.9);
       ~correlate_and_sync_cc_impl();
 
       std::vector<gr_complex> symbols() const;

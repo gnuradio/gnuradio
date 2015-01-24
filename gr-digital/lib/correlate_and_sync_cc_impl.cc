@@ -37,13 +37,18 @@ namespace gr {
   namespace digital {
 
     correlate_and_sync_cc::sptr
-    correlate_and_sync_cc::make(const std::vector<gr_complex> &symbols, float sps, float threshold)
+    correlate_and_sync_cc::make(const std::vector<gr_complex> &symbols,
+                                float sps, unsigned int mark_delay,
+                                float threshold)
     {
       return gnuradio::get_initial_sptr
-        (new correlate_and_sync_cc_impl(symbols, sps, threshold));
+        (new correlate_and_sync_cc_impl(symbols, sps, mark_delay, threshold));
     }
 
-    correlate_and_sync_cc_impl::correlate_and_sync_cc_impl(const std::vector<gr_complex> &symbols, float sps, float threshold)
+    correlate_and_sync_cc_impl::correlate_and_sync_cc_impl(
+                                const std::vector<gr_complex> &symbols,
+                                float sps, unsigned int mark_delay,
+                                float threshold)
       : sync_block("correlate_and_sync_cc",
                    io_signature::make(1, 1, sizeof(gr_complex)),
                    io_signature::make(1, 2, sizeof(gr_complex))),
@@ -56,6 +61,9 @@ namespace gr {
           d_symbols[i] = conj(d_symbols[i]);
       }
       std::reverse(d_symbols.begin(), d_symbols.end());
+
+      d_mark_delay = mark_delay >= d_symbols.size() ? d_symbols.size()-1
+                                                    : mark_delay;
 
       // Compute a correlation threshold.
       // Compute the value of the discrete autocorrelation of the matched
@@ -147,6 +155,9 @@ namespace gr {
 
       declare_sample_delay(1, 0);
       declare_sample_delay(0, d_symbols.size());
+
+      d_mark_delay = d_mark_delay >= d_symbols.size() ? d_symbols.size()-1
+                                                      : d_mark_delay;
     }
 
     int
@@ -214,25 +225,30 @@ namespace gr {
           center = nom / den - 2.0;
         }
 
-        // In the old implementation of this block, a single padding symbol
-        // in the matched filter caused the matched filter to have
-        // ~d_sps/2.0 samples added at the begining and end of the matched
-        // filter.  The old implementation implemented an index into the center
-        // of the first correlated symbol by adding d_sps from the beginning
-        // of the correlated sequence.
+        // Calculate the phase offset of the incoming signal.
+        // Rotate by pi if the real part is < 0 since the atan doesn't
+        // understand the ambiguity.
         //
-        // Since we don't know if we have any padding at the start of the
-        // user provided symbols, assume we don't and index in by d_sps/2.0
-        // to get to the center of the first correlated symbol.
-        int index = i + (int) (d_sps/2.0 + 0.5f) + 1;
-
-        // Calculate the phase offset of the incoming signal; always
-        // adjust it based on the proper rotation of the expected
-        // known word; rotate by pi is the real part is < 0 since
-        // the atan doesn't understand the ambiguity.
-        float phase = fast_atan2f(corr[index].imag(), corr[index].real());
-        if(corr[index].real() < 0.0)
+        // The analytic cross-correlation is:
+        //
+        // 2A*e_bb(t-t_d)*exp(-j*2*pi*f*(t-t_d) - j*phi_bb(t-t_d) - j*theta_c)
+        //
+        // The analytic auto-correlation's envelope, e_bb(), has its peak
+        // at the "group delay" time, t = t_d.  The analytic
+        // cross-correlation's center frequency phase shift, theta_c, is
+        // determined from the argument of the analytic cross-correlation
+        // at the "group delay" time, t = t_d.
+        //
+        // Taking the argument of the analytic cross-correlation at any
+        // other time will include the baseband auto-correlation's phase term,
+        // phi_bb(t-t_d), and a frequency dependent term of the
+        // cross-correlation, which I don't believe maps simply to expected
+        // symbol phase differences.
+        float phase = fast_atan2f(corr[i].imag(), corr[i].real());
+        if(corr[i].real() < 0.0)
           phase += M_PI;
+
+        int index = i + d_mark_delay;
 
         add_item_tag(0, nitems_written(0) + index, pmt::intern("phase_est"),
                      pmt::from_double(phase), d_src_id);
@@ -243,7 +259,7 @@ namespace gr {
                      pmt::from_double(d_corr_mag[i]), d_src_id);
 
         if (output_items.size() > 1) {
-          // N.B. these tags are not offset by half a symbol
+          // N.B. these debug tags are not offset to avoid walking off out buf
           add_item_tag(1, nitems_written(0) + i, pmt::intern("phase_est"),
                        pmt::from_double(phase), d_src_id);
           add_item_tag(1, nitems_written(0) + i, pmt::intern("time_est"),
