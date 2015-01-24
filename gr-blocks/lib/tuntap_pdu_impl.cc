@@ -43,29 +43,36 @@ namespace gr {
   namespace blocks {
 
     tuntap_pdu::sptr
-    tuntap_pdu::make(std::string dev, int MTU)
+    tuntap_pdu::make(std::string dev, int MTU, bool istunflag)
     {
 #if (defined(linux) || defined(__linux) || defined(__linux__))
-      return gnuradio::get_initial_sptr(new tuntap_pdu_impl(dev, MTU));
+      return gnuradio::get_initial_sptr(new tuntap_pdu_impl(dev, MTU, istunflag));
 #else
       throw std::runtime_error("tuntap_pdu not implemented on this platform");
 #endif
     }
 
 #if (defined(linux) || defined(__linux) || defined(__linux__))
-    tuntap_pdu_impl::tuntap_pdu_impl(std::string dev, int MTU)
+    tuntap_pdu_impl::tuntap_pdu_impl(std::string dev, int MTU, bool istunflag)
       :	block("tuntap_pdu",
 		 io_signature::make (0, 0, 0),
 		 io_signature::make (0, 0, 0)),
 	stream_pdu_base(MTU),
-	d_dev(dev)
+	d_dev(dev),
+	d_istunflag(istunflag)
     {
       // make the tuntap
       char dev_cstr[1024];
       memset(dev_cstr, 0x00, 1024);
       strncpy(dev_cstr, dev.c_str(), std::min(sizeof(dev_cstr), dev.size()));
 
-      d_fd = tun_alloc(dev_cstr);
+      bool istun = d_istunflag;
+      if(istun){
+	d_fd = tun_alloc(dev_cstr, (IFF_TUN | IFF_NO_PI));
+      } else {
+	d_fd = tun_alloc(dev_cstr, (IFF_TAP | IFF_NO_PI));
+      }
+
       if (d_fd <= 0)
         throw std::runtime_error("gr::tuntap_pdu::make: tun_alloc failed (are you running as root?)");
 

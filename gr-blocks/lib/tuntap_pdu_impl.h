@@ -38,10 +38,11 @@ namespace gr {
 #if (defined(linux) || defined(__linux) || defined(__linux__))
     private:
       std::string d_dev;
-      int tun_alloc(char *dev, int flags = IFF_TAP | IFF_NO_PI);
+      bool d_istunflag;
+      int tun_alloc(char *dev, int flags);
 
     public:
-      tuntap_pdu_impl(std::string dev, int MTU);
+      tuntap_pdu_impl(std::string dev, int MTU, bool istunflag);
 #endif
     };
 
