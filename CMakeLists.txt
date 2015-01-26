@@ -233,7 +233,7 @@ find_package(PythonLibs 2)
 find_package(SWIG)
 
 if(SWIG_FOUND)
-    message(STATUS "Minimum SWIG version required is 1.3.31")
+    # Minimum SWIG version required is 1.3.31
     set(SWIG_VERSION_CHECK FALSE)
     if("${SWIG_VERSION}" VERSION_GREATER "1.3.30")
         set(SWIG_VERSION_CHECK TRUE)
