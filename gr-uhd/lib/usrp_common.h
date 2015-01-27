@@ -180,9 +180,22 @@ namespace gr {
         return true;
       }
 
+      void _update_stream_args(const ::uhd::stream_args_t &stream_args_)
+      {
+        ::uhd::stream_args_t stream_args(stream_args_);
+        if (stream_args.channels.empty()) {
+          stream_args.channels = _stream_args.channels;
+        }
+        if (stream_args.cpu_format != _stream_args.cpu_format ||
+            stream_args.channels.size() != _stream_args.channels.size()) {
+          throw std::runtime_error("Cannot change I/O signatures while updating stream args!");
+        }
+        _stream_args = stream_args;
+      }
+
       //! Shared pointer to the underlying multi_usrp object
       ::uhd::usrp::multi_usrp::sptr _dev;
-      const ::uhd::stream_args_t _stream_args;
+      ::uhd::stream_args_t _stream_args;
       boost::shared_ptr< ::uhd::io_type_t > _type;
       //! Number of channels (i.e. number of in- or outputs)
       size_t _nchan;

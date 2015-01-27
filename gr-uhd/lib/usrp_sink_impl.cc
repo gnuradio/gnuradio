@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2010-2013 Free Software Foundation, Inc.
+ * Copyright 2010-2015 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -546,6 +546,16 @@ namespace gr {
 #endif
     }
 
+    void
+    usrp_sink_impl::set_stream_args(const ::uhd::stream_args_t &stream_args)
+    {
+      _update_stream_args(stream_args);
+#ifdef GR_UHD_USE_STREAM_API
+      _tx_stream.reset();
+#else
+      throw std::runtime_error("not implemented in this version");
+#endif
+    }
 
     /***********************************************************************
      * Work
