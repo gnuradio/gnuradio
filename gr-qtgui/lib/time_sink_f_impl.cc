@@ -522,7 +522,7 @@ namespace gr {
       uint64_t nr = nitems_read(d_trigger_channel);
       std::vector<gr::tag_t> tags;
       get_tags_in_range(tags, d_trigger_channel,
-                        nr, nr + nitems,
+                        nr, nr + nitems + 1,
                         d_trigger_tag_key);
       if(tags.size() > 0) {
         d_triggered = true;
@@ -611,7 +611,7 @@ namespace gr {
 
         uint64_t nr = nitems_read(idx);
         std::vector<gr::tag_t> tags;
-        get_tags_in_range(tags, idx, nr, nr + nitems);
+        get_tags_in_range(tags, idx, nr, nr + nitems + 1);
         for(size_t t = 0; t < tags.size(); t++) {
           tags[t].offset = tags[t].offset - nr + (d_index-d_start-1);
         }
