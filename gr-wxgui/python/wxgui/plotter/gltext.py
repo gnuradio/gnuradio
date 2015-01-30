@@ -149,6 +149,10 @@ class TextElement(object):
         # get a memory dc
         dc = wx.MemoryDC()
 
+        # Select an empty bitmap into the MemoryDC - otherwise the call to
+        # GetMultiLineTextExtent() may fail below
+        dc.SelectObject(wx.EmptyBitmap(1,1))
+
         # set our font
         dc.SetFont(self._font)
 
