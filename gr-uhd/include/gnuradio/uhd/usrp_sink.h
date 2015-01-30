@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2010-2014 Free Software Foundation, Inc.
+ * Copyright 2010-2015 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -244,6 +244,24 @@ namespace gr {
                             size_t chan = 0) = 0;
 
       /*!
+       * Set the normalized gain.
+       *
+       * The normalized gain is always in [0, 1], regardless of the device.
+       * 0 corresponds to minimum gain (usually 0 dB, but make sure to read the device
+       * notes in the UHD manual) and 1 corresponds to maximum gain.
+       * This will work for any UHD device. Use get_gain() to see which dB value
+       * the normalized gain value corresponds to.
+       *
+       * Note that it is not possible to specify a gain name for this function.
+       *
+       * \throws A runtime_error if \p norm_gain is not within the valid range.
+       *
+       * \param norm_gain the gain in fractions of the gain range (must be 0 <= norm_gain <= 1)
+       * \param chan the channel index 0 to N-1
+       */
+      virtual void set_normalized_gain(double norm_gain, size_t chan = 0) = 0;
+
+      /*!
        * Get the actual dboard gain setting.
        * \param chan the channel index 0 to N-1
        * \return the actual gain in dB
@@ -258,6 +276,19 @@ namespace gr {
        */
       virtual double get_gain(const std::string &name,
                               size_t chan = 0) = 0;
+
+      /*!
+       * Returns the normalized gain.
+       *
+       * The normalized gain is always in [0, 1], regardless of the device.
+       * See also set_normalized_gain().
+       *
+       * Note that it is not possible to specify a gain name for this function,
+       * the result is over the entire gain chain.
+       *
+       * \param chan the channel index 0 to N-1
+       */
+      virtual double get_normalized_gain(size_t chan = 0) = 0;
 
       /*!
        * Get the actual dboard gain setting of named stage.

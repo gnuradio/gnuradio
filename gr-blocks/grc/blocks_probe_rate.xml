@@ -63,4 +63,9 @@
 		<type>$type</type>
 		<vlen>$vlen</vlen>
 	</sink>
+    <source>
+        <name>rate</name>
+        <type>message</type>
+        <optional>1</optional>
+    </source>
 </block>

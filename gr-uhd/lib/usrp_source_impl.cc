@@ -203,6 +203,16 @@ namespace gr {
       return _dev->set_rx_gain(gain, name, chan);
     }
 
+    void usrp_source_impl::set_normalized_gain(double norm_gain, size_t chan)
+    {
+      if (norm_gain > 1.0 || norm_gain < 0.0) {
+        throw std::runtime_error("Normalized gain out of range, must be in [0, 1].");
+      }
+      ::uhd::gain_range_t gain_range = get_gain_range(chan);
+      double abs_gain = (norm_gain * (gain_range.stop() - gain_range.start())) + gain_range.start();
+      set_gain(abs_gain, chan);
+    }
+
     double
     usrp_source_impl::get_gain(size_t chan)
     {
@@ -215,6 +225,19 @@ namespace gr {
     {
       chan = _stream_args.channels[chan];
       return _dev->get_rx_gain(name, chan);
+    }
+
+    double
+    usrp_source_impl::get_normalized_gain(size_t chan)
+    {
+      ::uhd::gain_range_t gain_range = get_gain_range(chan);
+      double norm_gain =
+        (get_gain(chan) - gain_range.start()) /
+        (gain_range.stop() - gain_range.start());
+      // Avoid rounding errors:
+      if (norm_gain > 1.0) return 1.0;
+      if (norm_gain < 0.0) return 0.0;
+      return norm_gain;
     }
 
     std::vector<std::string>
