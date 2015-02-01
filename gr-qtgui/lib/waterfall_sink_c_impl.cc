@@ -494,7 +494,7 @@ namespace gr {
               for(int x = 0; x < d_fftsize; x++) {
                 d_magbufs[n][x] = (double)((1.0-d_fftavg)*d_magbufs[n][x] + (d_fftavg)*d_fbuf[x]);
               }
-              //volk_32f_convert_64f_a(d_magbufs[n], d_fbuf, d_fftsize);
+              //volk_32f_convert_64f(d_magbufs[n], d_fbuf, d_fftsize);
             }
 
 	    d_last_time = gr::high_res_timer_now();
