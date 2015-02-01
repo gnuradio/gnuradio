@@ -266,10 +266,10 @@ SpectrumGUIClass::updateWindow(const bool updateDisplayFlag,
     }
 
     if((complexTimeDomainData != NULL) && (complexTimeDomainDataSize > 0)) {
-      volk_32fc_deinterleave_64f_x2_a(_realTimeDomainPoints,
-                                      _imagTimeDomainPoints,
-				      (const lv_32fc_t *)complexTimeDomainData,
-				      complexTimeDomainDataSize);
+      volk_32fc_deinterleave_64f_x2(_realTimeDomainPoints,
+                                    _imagTimeDomainPoints,
+                                    (const lv_32fc_t *)complexTimeDomainData,
+                                    complexTimeDomainDataSize);
       timeDomainBufferSize = complexTimeDomainDataSize;
     }
   }
