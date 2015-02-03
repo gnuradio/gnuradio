@@ -43,6 +43,7 @@ namespace gr {
       fft::goertzel *d_goertzel_r;
 
       static int find_tone(float freq);
+      static void compute_freqs(const float &freq, float &f_l, float &f_r);
 
     protected:
       virtual void update_state(const float &in);

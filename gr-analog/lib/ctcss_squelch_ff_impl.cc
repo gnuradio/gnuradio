@@ -55,6 +55,25 @@ namespace gr {
       return -1;
     }
 
+    void
+    ctcss_squelch_ff_impl::compute_freqs(const float &freq,
+                                         float &f_l, float &f_r)
+    {
+      int i = find_tone(freq);
+
+      // Non-standard tones or edge tones get 2% guard band, otherwise
+      // guards are set at adjacent ctcss tone frequencies
+      if(i == -1 || i == 0)
+	f_l = freq*0.98;
+      else
+	f_l = ctcss_tones[i-1];
+
+      if(i == -1 || i == max_tone_index)
+	f_r = freq*1.02;
+      else
+	f_r = ctcss_tones[i+1];
+    }
+
     ctcss_squelch_ff_impl::ctcss_squelch_ff_impl(int rate, float freq, float level,
 						 int len, int ramp, bool gate)
       :	block("ctcss_squelch_ff",
@@ -71,20 +90,8 @@ namespace gr {
       else
 	d_len = len;
 
-      int i = find_tone(freq);
-
-      // Non-standard tones or edge tones get 2% guard band, otherwise
-      // guards are set at adjacent ctcss tone frequencies
       float f_l, f_r;
-      if(i == -1 || i == 0)
-	f_l = freq*0.98;
-      else
-	f_l = ctcss_tones[i-1];
-
-      if(i == -1 || i == max_tone_index)
-	f_r = freq*1.02;
-      else
-	f_r = ctcss_tones[i+1];
+      compute_freqs(d_freq, f_l, f_r);
 
       d_goertzel_l = new fft::goertzel(rate, d_len, f_l);
       d_goertzel_c = new fft::goertzel(rate, d_len, freq);
