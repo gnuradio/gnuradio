@@ -327,6 +327,18 @@ namespace gr {
     }
 
     void
+    usrp_source_impl::set_auto_iq_balance(const bool enable, size_t chan)
+    {
+      chan = _stream_args.channels[chan];
+#ifdef UHD_USRP_MULTI_USRP_FRONTEND_IQ_AUTO_API
+      return _dev->set_rx_iq_balance(enable, chan);
+#else
+      throw std::runtime_error("not implemented in this version");
+#endif
+    }
+
+
+    void
     usrp_source_impl::set_iq_balance(const std::complex<double> &correction,
                                      size_t chan)
     {
