@@ -36,6 +36,7 @@ namespace gr {
       float d_freq;
       float d_level;
       int   d_len;
+      int   d_rate;
       bool  d_mute;
 
       fft::goertzel *d_goertzel_l;
@@ -44,6 +45,8 @@ namespace gr {
 
       static int find_tone(float freq);
       static void compute_freqs(const float &freq, float &f_l, float &f_r);
+
+      void update_fft_params();
 
     protected:
       virtual void update_state(const float &in);
@@ -58,6 +61,13 @@ namespace gr {
       float level() const { return d_level; }
       void set_level(float level) { d_level = level; }
       int len() const { return d_len; }
+      float frequency() const { return d_freq; }
+
+      void set_frequency(float frequency)
+      {
+          d_freq = frequency;
+          update_fft_params();
+      }
 
       int ramp() const { return squelch_base_ff_impl::ramp(); }
       void set_ramp(int ramp) { squelch_base_ff_impl::set_ramp(ramp); }

@@ -74,6 +74,17 @@ namespace gr {
 	f_r = ctcss_tones[i+1];
     }
 
+    void
+    ctcss_squelch_ff_impl::update_fft_params()
+    {
+        float f_l, f_r;
+        compute_freqs(d_freq, f_l, f_r);
+
+        d_goertzel_l->set_params(d_rate, d_len, f_l);
+        d_goertzel_c->set_params(d_rate, d_len, d_freq);
+        d_goertzel_r->set_params(d_rate, d_len, f_r);
+    }
+
     ctcss_squelch_ff_impl::ctcss_squelch_ff_impl(int rate, float freq, float level,
 						 int len, int ramp, bool gate)
       :	block("ctcss_squelch_ff",
@@ -83,19 +94,20 @@ namespace gr {
     {
       d_freq = freq;
       d_level = level;
+      d_rate = rate;
 
       // Default is 100 ms detection time
       if(len == 0)
-	d_len = (int)(rate/10.0);
+        d_len = (int)(d_rate/10.0);
       else
-	d_len = len;
+        d_len = len;
 
       float f_l, f_r;
       compute_freqs(d_freq, f_l, f_r);
 
-      d_goertzel_l = new fft::goertzel(rate, d_len, f_l);
-      d_goertzel_c = new fft::goertzel(rate, d_len, freq);
-      d_goertzel_r = new fft::goertzel(rate, d_len, f_r);
+      d_goertzel_l = new fft::goertzel(d_rate, d_len, f_l);
+      d_goertzel_c = new fft::goertzel(d_rate, d_len, freq);
+      d_goertzel_r = new fft::goertzel(d_rate, d_len, f_r);
 
       d_mute = true;
     }
