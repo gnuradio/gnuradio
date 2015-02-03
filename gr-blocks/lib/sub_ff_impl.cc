@@ -39,7 +39,7 @@ namespace gr {
     }
 
     sub_ff_impl::sub_ff_impl(size_t vlen)
-      : sync_block("@sub_ff",
+      : sync_block("sub_ff",
                    io_signature::make(1, -1, sizeof(float)*vlen),
                    io_signature::make(1,  1, sizeof(float)*vlen)),
       d_vlen(vlen)
