@@ -750,7 +750,10 @@ namespace gr {
   bool
   block::finished()
   {
-    return d_finished;
+    if((detail()->ninputs() != 0) || (detail()->noutputs() != 0))
+      return false;
+    else
+      return d_finished;
   }
 
 
