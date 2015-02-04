@@ -49,7 +49,7 @@ namespace gr {
       void set_threshold_factor_rise(float thr) { d_threshold_factor_rise = thr; }
       void set_threshold_factor_fall(float thr) { d_threshold_factor_fall = thr; }
       void set_look_ahead(int look) { d_look_ahead = look; }
-      void set_alpha(int alpha) { d_avg_alpha = alpha; }
+      void set_alpha(float alpha) { d_avg_alpha = alpha; }
       float threshold_factor_rise() { return d_threshold_factor_rise; }
       float threshold_factor_fall() { return d_threshold_factor_fall; }
       int look_ahead() { return d_look_ahead; }
