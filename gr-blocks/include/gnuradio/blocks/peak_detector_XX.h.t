@@ -89,7 +89,7 @@ namespace gr {
       /*! \brief Set the running average alpha
        *  \param alpha new alpha for running average
        */
-      virtual void set_alpha(int alpha) = 0;
+      virtual void set_alpha(float alpha) = 0;
 
       /*! \brief Get the threshold factor value for the rise time
        *  \return threshold factor
