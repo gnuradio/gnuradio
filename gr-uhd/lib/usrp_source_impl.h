@@ -113,6 +113,7 @@ namespace gr {
       void set_time_unknown_pps(const ::uhd::time_spec_t &time_spec);
       void set_command_time(const ::uhd::time_spec_t &time_spec, size_t mboard);
       void set_user_register(const uint8_t addr, const uint32_t data, size_t mboard);
+      void set_stream_args(const ::uhd::stream_args_t &stream_args);
       void set_start_time(const ::uhd::time_spec_t &time);
 
       void issue_stream_cmd(const ::uhd::stream_cmd_t &cmd);

@@ -567,6 +567,23 @@ namespace gr {
                                      size_t mboard = 0) = 0;
 
       /*!
+       * Update the stream args for this device.
+       *
+       * This update will only take effect after a restart of the
+       * streaming, or before streaming and after construction.
+       * This will also delete the current streamer.
+       * Note you cannot change the I/O signature of this block using
+       * this function, or it will throw.
+       *
+       * It is possible to leave the 'channels' fields of \p stream_args
+       * unset. In this case, the previous channels field is used.
+       *
+       * \param stream_args New stream args.
+       * \throws std::runtime_error if new settings are invalid.
+       */
+      virtual void set_stream_args(const ::uhd::stream_args_t &stream_args) = 0;
+
+      /*!
        * Convenience function for finite data acquisition.
        * This is not to be used with the scheduler; rather,
        * one can request samples from the USRP in python.
