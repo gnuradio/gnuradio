@@ -101,6 +101,8 @@ namespace gr {
 	throw std::out_of_range("fll_band_edge_cc: invalid number of sps. Must be > 0.");
       }
       d_sps = sps;
+      set_max_freq(M_TWOPI*(2.0/sps));
+      set_min_freq(-M_TWOPI*(2.0/sps));
       design_filter(d_sps, d_rolloff, d_filter_size);
     }
 
