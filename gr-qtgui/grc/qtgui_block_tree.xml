@@ -52,6 +52,7 @@
       <block>variable_qtgui_range</block>
       <block>variable_qtgui_chooser</block>
       <block>variable_qtgui_check_box</block>
+      <block>variable_qtgui_push_button</block>
       <block>variable_qtgui_entry</block>
       <block>variable_qtgui_label</block>
     </cat>
