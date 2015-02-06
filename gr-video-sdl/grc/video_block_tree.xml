@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<!--
+###################################################
+##Block Tree for video blocks.
+###################################################
+ -->
+<cat>
+	<name></name> <!-- Blank for Root Name -->
+	<cat>
+		<name>Video</name>
+		<block>video_sdl_sink</block>
+	</cat>
+</cat>

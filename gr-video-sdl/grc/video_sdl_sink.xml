@@ -1,0 +1,42 @@
+<?xml version='1.0'?>
+<block>
+    <name>Video SDL Sink</name>
+    <key>video_sdl_sink</key>
+    <import>from gnuradio import video_sdl</import>
+    <make>video_sdl.sink_uc($fps, $width, $height, 0, $display_width, $display_height)</make>
+    <param>
+        <name>Framerate</name>
+        <key>fps</key>
+        <value>0</value>
+        <type>float</type>
+    </param>
+    <param>
+        <name>Width</name>
+        <key>width</key>
+        <value>640</value>
+        <type>int</type>
+    </param>
+    <param>
+        <name>Height</name>
+        <key>height</key>
+        <value>480</value>
+        <type>int</type>
+    </param>
+    <param>
+        <name>Display Width</name>
+        <key>display_width</key>
+        <value>640</value>
+        <type>int</type>
+    </param>
+    <param>
+        <name>Display Height</name>
+        <key>display_height</key>
+        <value>480</value>
+        <type>int</type>
+    </param>
+    <sink>
+        <name>in</name>
+        <type>byte</type>
+        <vlen>1</vlen>
+    </sink>
+</block>
