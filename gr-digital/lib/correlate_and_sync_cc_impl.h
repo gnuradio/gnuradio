@@ -34,18 +34,20 @@ namespace gr {
     class correlate_and_sync_cc_impl : public correlate_and_sync_cc
     {
     private:
+      pmt::pmt_t d_src_id;
       std::vector<gr_complex> d_symbols;
-      unsigned int d_sps;
-      float d_center_first_symbol;
+      float d_sps;
+      unsigned int d_mark_delay;
       float d_thresh;
       kernel::fft_filter_ccc  *d_filter;
 
-      int d_last_index;
+      gr_complex *d_corr;
+      float *d_corr_mag;
 
     public:
       correlate_and_sync_cc_impl(const std::vector<gr_complex> &symbols,
-                                 const std::vector<float> &filter,
-                                 unsigned int sps, unsigned int nfilts=32);
+                                 float sps, unsigned int mark_delay,
+                                 float threshold=0.9);
       ~correlate_and_sync_cc_impl();
 
       std::vector<gr_complex> symbols() const;
