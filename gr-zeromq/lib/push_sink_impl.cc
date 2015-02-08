@@ -90,11 +90,16 @@ namespace gr {
         }
 
         // create message copy and send
-        zmq::message_t msg(header.length() + d_itemsize*d_vlen*noutput_items);
+        int payloadlen = d_itemsize * d_vlen * noutput_items;
+        int msglen = d_pass_tags ? payloadlen + header.length() : payloadlen;
+        zmq::message_t msg(msglen);
 
-        if(d_pass_tags)
-          memcpy((void*) msg.data(), header.c_str(), header.length());
-        memcpy((uint8_t *)msg.data() + header.length(), in, d_itemsize*d_vlen*noutput_items);
+        if(d_pass_tags){
+          memcpy((void*) msg.data(), header.c_str(), header.length() );
+          memcpy((uint8_t *)msg.data() + header.length(), in, d_itemsize*d_vlen*noutput_items);
+          } else {
+          memcpy((uint8_t *)msg.data(), in, d_itemsize*d_vlen*noutput_items);
+          }
 
         d_socket->send(msg);
         return noutput_items;
