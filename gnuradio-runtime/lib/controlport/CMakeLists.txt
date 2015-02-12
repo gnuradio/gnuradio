@@ -29,14 +29,28 @@ list(APPEND gnuradio_ctrlport_sources
   ${CMAKE_CURRENT_SOURCE_DIR}/rpcserver_aggregator.cc
   ${CMAKE_CURRENT_SOURCE_DIR}/rpcserver_booter_aggregator.cc
   ${CMAKE_CURRENT_SOURCE_DIR}/rpcserver_selector.cc
-  ${CMAKE_CURRENT_SOURCE_DIR}/rpcserver_thrift.cc
-  ${CMAKE_CURRENT_SOURCE_DIR}/rpcpmtconverters_thrift.cc
-  ${CMAKE_CURRENT_SOURCE_DIR}/thrift_application_base.cc
-  ${CMAKE_CURRENT_SOURCE_DIR}/rpcserver_booter_thrift.cc
-  ${CMAKE_CURRENT_SOURCE_DIR}/gnuradio_types.cpp
-  ${CMAKE_CURRENT_SOURCE_DIR}/gnuradio_constants.cpp
-  ${CMAKE_CURRENT_SOURCE_DIR}/ControlPort.cpp
 )
+
+# FIXME: create actual cmake test to find and enable Thrift
+set(ENABLE_THRIFT "True")
+
+if(ENABLE_THRIFT)
+list(APPEND gnuradio_ctrlport_sources
+  ${CMAKE_CURRENT_SOURCE_DIR}/thrift/rpcserver_thrift.cc
+  ${CMAKE_CURRENT_SOURCE_DIR}/thrift/rpcpmtconverters_thrift.cc
+  ${CMAKE_CURRENT_SOURCE_DIR}/thrift/rpcserver_booter_thrift.cc
+  ${CMAKE_CURRENT_SOURCE_DIR}/thrift/thrift_application_base.cc
+)
+
+# add files built by compiling gnuradio.thrift
+# FIXME: Add cmake execute_process to do this for cpp and py
+list(APPEND gnuradio_ctrlport_sources
+  ${CMAKE_CURRENT_BINARY_DIR}/gnuradio_types.cpp
+  ${CMAKE_CURRENT_BINARY_DIR}/gnuradio_constants.cpp
+  ${CMAKE_CURRENT_BINARY_DIR}/ControlPort.cpp
+)
+
+endif(ENABLE_THRIFT)
 
 ########################################################################
 # Add controlport stuff to gnuradio-runtime
