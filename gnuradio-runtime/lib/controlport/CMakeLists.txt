@@ -31,8 +31,11 @@ list(APPEND gnuradio_ctrlport_sources
   ${CMAKE_CURRENT_SOURCE_DIR}/rpcserver_selector.cc
   ${CMAKE_CURRENT_SOURCE_DIR}/rpcserver_thrift.cc
   ${CMAKE_CURRENT_SOURCE_DIR}/rpcpmtconverters_thrift.cc
+  ${CMAKE_CURRENT_SOURCE_DIR}/thrift_application_base.cc
+  ${CMAKE_CURRENT_SOURCE_DIR}/rpcserver_booter_thrift.cc
   ${CMAKE_CURRENT_SOURCE_DIR}/gnuradio_types.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/gnuradio_constants.cpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/ControlPort.cpp
 )
 
 ########################################################################
@@ -42,7 +45,8 @@ list(APPEND gnuradio_ctrlport_sources
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
 
 # Add any required libraries here
-#list(APPEND gnuradio_runtime_libs
-#)
+list(APPEND gnuradio_runtime_libs
+  thrift
+)
 
 endif(ENABLE_GR_CTRLPORT)

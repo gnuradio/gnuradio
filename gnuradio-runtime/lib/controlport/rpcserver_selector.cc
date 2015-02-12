@@ -30,6 +30,11 @@ bool rpcmanager::make_aggregator(false);
   #error TODO ICE
 #endif
 
+#ifdef RPCSERVER_THRIFT
+#include <gnuradio/rpcserver_booter_thrift.h>
+rpcmanager::rpcserver_booter_register_helper<rpcserver_booter_thrift> boot_thrift;
+#endif
+
 #ifdef RPCSERVER_ERLANG
   #error TODO ERLANG
 #endif
