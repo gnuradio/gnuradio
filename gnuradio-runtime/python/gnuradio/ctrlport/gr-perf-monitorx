@@ -457,7 +457,7 @@ class MForm(QtGui.QWidget):
                     kl1 = self.radio.getKnobs([self.clockKey])
                 self.clockKey = kl1.keys()[0]
                 self.currClock = kl1[self.clockKey].value.a_long
-                self.clockSelIdx = self.clocks.values()[self.currClock]
+                self.clockSelIdx = self.clocks.values().index(self.currClock)
                 self.clockSel.setCurrentIndex(self.clockSelIdx)
                 self.prevent_clock_change = False
             except:
