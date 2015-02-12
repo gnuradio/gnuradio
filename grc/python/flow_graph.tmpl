@@ -19,7 +19,7 @@ $code#slurp
 #import time
 #set $DIVIDER = '#'*50
 $DIVIDER
-# Gnuradio Python Flow Graph
+# GNU Radio Python Flow Graph
 # Title: $title
 #if $flow_graph.get_option('author')
 # Author: $flow_graph.get_option('author')
@@ -48,6 +48,11 @@ if __name__ == '__main__':
 ########################################################
 ##Create Imports
 ########################################################
+#if any("GRC_HIER_PATH" in imp for imp in $imports)
+import os
+GRC_HIER_PATH = os.environ.get('GRC_HIER_PATH', os.path.expanduser('~/.grc_gnuradio'))
+
+#end if
 #for $imp in $imports
 $imp
 #end for
