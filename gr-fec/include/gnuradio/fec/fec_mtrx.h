@@ -1,0 +1,77 @@
+/* -*- c++ -*- */
+/* 
+ * Copyright 2013-2014 Free Software Foundation, Inc.
+ * 
+ * This is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published 
+ * by the Free Software Foundation; either version 3, or (at your 
+ * option) any later version.
+ * 
+ * This software is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this software; see the file COPYING.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street,
+ * Boston, MA 02110-1301, USA.
+ */
+
+#ifndef INCLUDED_fec_mtrx_H
+#define INCLUDED_fec_mtrx_H
+
+#include <gnuradio/fec/api.h>
+#include <string>
+ 
+#include <gsl/gsl_matrix.h>
+#include <gsl/gsl_randist.h>
+#include <gsl/gsl_permutation.h>
+#include <gsl/gsl_linalg.h>
+#include <gsl/gsl_blas.h>
+
+namespace gr {
+  namespace fec {
+    namespace code {
+      class FEC_API fec_mtrx
+      {
+      protected:
+        // Codeword length n (also the number of columns in the H
+        // matrix)
+        unsigned int d_n;
+        // Information word length k
+        unsigned int d_k;
+        // Number of rows in the matrix read in from alist file
+        unsigned int d_num_rows;
+        // GSL matrix structure for the parity check matrix
+        gsl_matrix *d_H_ptr;
+        // Read the matrix from a file in alist format
+        void read_matrix_from_file(const std::string filename);
+
+        
+      public:
+        // Returns the parity check matrix H (needed by decoder)
+        virtual const gsl_matrix *H();
+
+        ///////////////////////////////////
+        // TODO add a boolean for whether or not parity part comes first
+        ///////////////////////////////////
+
+
+        // Subtract matrices using mod2 operation
+        gsl_matrix *add_matrices_mod2(const gsl_matrix *,
+                                      const gsl_matrix *);
+        // Perform matrix multiplication using mod 2 operations
+        gsl_matrix *mult_matrices_mod2(const gsl_matrix *,
+                                       const gsl_matrix *);
+        // Find the inverse of a square matrix using modulo 2
+        // operations
+        gsl_matrix *calc_inverse_mod2(const gsl_matrix *);
+
+        virtual ~fec_mtrx(); 
+      };
+    }
+  }
+}
+
+#endif /* INCLUDED_fec_mtrx_H */

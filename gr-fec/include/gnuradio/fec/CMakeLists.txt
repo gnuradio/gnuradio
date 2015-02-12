@@ -56,6 +56,9 @@ install(FILES
     ldpc_R_U_mtrx.h
     ldpc_bit_flip_decoder.h
     ldpc_R_U_encoder.h
+    generator_mtrx.h
+    generator_encoder.h
+    fec_mtrx.h
     DESTINATION ${GR_INCLUDE_DIR}/gnuradio/fec
     COMPONENT "fec_devel"
 )
