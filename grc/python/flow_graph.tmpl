@@ -48,13 +48,15 @@ if __name__ == '__main__':
 ########################################################
 ##Create Imports
 ########################################################
-#if any("GRC_HIER_PATH" in imp for imp in $imports)
+#if any(imp.endswith("# grc-generated hier_block") for imp in $imports)
 import os
-GRC_HIER_PATH = os.environ.get('GRC_HIER_PATH', os.path.expanduser('~/.grc_gnuradio'))
+import sys
+#set imports = $filter(lambda i: i not in ("import os", "import sys"), $imports)
+sys.path.append(os.environ.get('GRC_HIER_PATH', os.path.expanduser('~/.grc_gnuradio')))
 
 #end if
 #for $imp in $imports
-$imp
+$(imp.replace("  # grc-generated hier_block", ""))
 #end for
 
 ########################################################

@@ -219,8 +219,8 @@ class HierBlockGenerator(TopBlockGenerator):
         """
         TopBlockGenerator.__init__(self, flow_graph, file_path)
         self._mode = HIER_BLOCK_FILE_MODE
-        self._file_name = self._flow_graph.get_option('id') + '.py'
-        self._file_path = os.path.join(HIER_BLOCKS_LIB_DIR, self._file_name)
+        self._file_path = os.path.join(HIER_BLOCKS_LIB_DIR,
+                                       self._flow_graph.get_option('id') + '.py')
         self._file_path_xml = self._file_path + '.xml'
 
     def get_file_path_xml(self):
@@ -254,7 +254,8 @@ class HierBlockGenerator(TopBlockGenerator):
             self._flow_graph.get_option('id').replace('_', ' ').title()
         block_n['key'] = block_key
         block_n['category'] = self._flow_graph.get_option('category')
-        block_n['import'] = 'execfile(os.path.join(GRC_HIER_PATH, ' + repr(self._file_name) + '))'
+        block_n['import'] = "from {0} import {0}  # grc-generated hier_block".format(
+            self._flow_graph.get_option('id'))
         # make data
         if parameters:
             block_n['make'] = '{cls}(\n    {kwargs},\n)'.format(
