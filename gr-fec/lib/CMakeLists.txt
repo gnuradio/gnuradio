@@ -37,13 +37,10 @@ include_directories(
     ${GSL_INCLUDE_DIRS}
 )
 
-<<<<<<< HEAD
 if(ENABLE_GR_CTRLPORT)
   ADD_DEFINITIONS(-DGR_CTRLPORT)
 endif(ENABLE_GR_CTRLPORT)
 
-=======
->>>>>>> fec_ldpc_tracie
 link_directories(
   ${Boost_LIBRARY_DIRS}
   ${LOG4CPP_LIBRARY_DIRS}
@@ -78,6 +75,9 @@ list(APPEND gnuradio_fec_sources
   ldpc_R_U_mtrx.cc
   ldpc_bit_flip_decoder_impl.cc
   ldpc_R_U_encoder_impl.cc
+  generator_mtrx.cc
+  generator_encoder_impl.cc
+  fec_mtrx.cc
 )
 
 #Add Windows DLL resource file if using MSVC

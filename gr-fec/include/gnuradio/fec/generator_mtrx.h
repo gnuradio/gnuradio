@@ -18,57 +18,43 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef INCLUDED_ldpc_R_U_mtrx_H
-#define INCLUDED_ldpc_R_U_mtrx_H
-
-// #include <gsl/gsl_randist.h>
-// #include <gsl/gsl_permutation.h>
-// #include <gsl/gsl_linalg.h>
-// #include <gsl/gsl_blas.h>
+#ifndef INCLUDED_generator_mtrx_H
+#define INCLUDED_generator_mtrx_H
+ 
+#include <gsl/gsl_randist.h>
+#include <gsl/gsl_permutation.h>
+#include <gsl/gsl_linalg.h>
+#include <gsl/gsl_blas.h>
 
 #include <gnuradio/fec/fec_mtrx.h>
 
 namespace gr {
   namespace fec {
     namespace code {
-      class FEC_API ldpc_R_U_mtrx : public fec_mtrx
+      class FEC_API generator_mtrx : public fec_mtrx
       {
       private:
-        // Gap (assumes matrix is in TABECD form)
-        unsigned int d_gap;
-        // These are the submatrices found during preprocessing
-        // which are used for encoding. 
-        gsl_matrix_view d_A_view;
-        gsl_matrix_view d_B_view;
-        gsl_matrix_view d_D_view;
-        gsl_matrix_view d_E_view;
-        gsl_matrix_view d_T_view;
-        gsl_matrix *d_phi_inverse_ptr;
-
-        // Set the submatrix variables needed for encoding
-        void set_parameters_for_encoding();
+        // GSL matrix structure for the generator matrix (encode)
+        gsl_matrix *d_G_ptr;
         
       public:
-        ldpc_R_U_mtrx(const std::string filename, unsigned int gap);
+        generator_mtrx(const std::string filename);
         // Default constructor, should not be used
-        ldpc_R_U_mtrx();
+        generator_mtrx();
         // Get the codeword length n
         unsigned int n();
         // Get the information word length k
         unsigned int k();
-        // Access the matrices needed during encoding
+        // Generator matrix used during encoding
+        const gsl_matrix *G();
+        // Parity check matrix used during decoding
         const gsl_matrix *H();
-        const gsl_matrix *A();
-        const gsl_matrix *B();
-        const gsl_matrix *D();
-        const gsl_matrix *E();
-        const gsl_matrix *T();
-        const gsl_matrix *phi_inverse();
+
         // Destructor
-        ~ldpc_R_U_mtrx();
+        ~generator_mtrx();
       };
     }
   }
 }
 
-#endif /* INCLUDED_ldpc_R_U_mtrx_H */
+#endif /* INCLUDED_generator_mtrx_H */
