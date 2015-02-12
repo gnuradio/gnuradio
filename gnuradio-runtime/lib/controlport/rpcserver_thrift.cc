@@ -1,3 +1,4 @@
+/* -*- c++ -*- */
 /*
  * Copyright 2014 Free Software Foundation, Inc.
  *
@@ -18,6 +19,7 @@
  * the Free Software Foundation, Inc., 51 Franklin Street,
  * Boston, MA 02110-1301, USA.
  */
+
 #include <gnuradio/rpcserver_thrift.h>
 #include <iostream>
 #include <sstream>
@@ -34,15 +36,20 @@
 using namespace rpcpmtconverter;
 
 rpcserver_thrift::rpcserver_thrift()
-{}
+{
+  std::cout << "rpcserver_thrift::ctor" << std::endl;
+}
 
 rpcserver_thrift::~rpcserver_thrift()
-{}
+{
+  std::cout << "rpcserver_thrift::dtor" << std::endl;
+}
 
 void
 rpcserver_thrift::registerConfigureCallback(const std::string &id, const configureCallback_t callback)
 {
   {
+    std::cout << "thrift::registerConfigureCallback: " << id << std::endl;
     ConfigureCallbackMap_t::const_iterator iter(d_setcallbackmap.find(id));
     if(iter != d_setcallbackmap.end()) {
       std::stringstream s;
@@ -61,6 +68,7 @@ rpcserver_thrift::registerConfigureCallback(const std::string &id, const configu
 void
 rpcserver_thrift::unregisterConfigureCallback(const std::string &id)
 {
+  std::cout << "thrift::unregisterConfigureCallback: " << id << std::endl;
   ConfigureCallbackMap_t::iterator iter(d_setcallbackmap.find(id));
   if(iter == d_setcallbackmap.end()) {
     std::stringstream s;
@@ -77,9 +85,10 @@ rpcserver_thrift::unregisterConfigureCallback(const std::string &id)
 
 void
 rpcserver_thrift::registerQueryCallback(const std::string &id,
-        const queryCallback_t callback)
+                                        const queryCallback_t callback)
 {
   {
+    std::cout << "thrift::registerQueryCallback: " << id << std::endl;
     QueryCallbackMap_t::const_iterator iter(d_getcallbackmap.find(id));
     if(iter != d_getcallbackmap.end()) {
       std::stringstream s;
@@ -98,6 +107,7 @@ rpcserver_thrift::registerQueryCallback(const std::string &id,
 void
 rpcserver_thrift::unregisterQueryCallback(const std::string &id)
 {
+    std::cout << "thrift::unregisterQueryCallback: " << id << std::endl;
   QueryCallbackMap_t::iterator iter(d_getcallbackmap.find(id));
   if(iter == d_getcallbackmap.end()) {
     std::stringstream s;
@@ -114,41 +124,16 @@ rpcserver_thrift::unregisterQueryCallback(const std::string &id)
 }
 
 void
-rpcserver_thrift::set(const GNURadio::KnobMap& knobs)
+rpcserver_thrift::setKnobs(const GNURadio::KnobMap& knobs)
 {
   std::for_each(knobs.begin(), knobs.end(),
-          set_f<GNURadio::KnobMap::value_type,ConfigureCallbackMap_t>
-                  (d_setcallbackmap, cur_priv));
+                set_f<GNURadio::KnobMap::value_type,ConfigureCallbackMap_t>
+                (d_setcallbackmap, cur_priv));
 }
 
-GNURadio::KnobMap
-rpcserver_thrift::getRe(const GNURadio::KnobIDList& knobs)
-{
-  GNURadio::KnobMap outknobs;
 
-  if(knobs.size() == 0) {
-    std::for_each(d_getcallbackmap.begin(), d_getcallbackmap.end(),
-            get_all_f<QueryCallbackMap_t::value_type, QueryCallbackMap_t, GNURadio::KnobMap>
-                    (d_getcallbackmap, cur_priv, outknobs));
-  }
-  else {
-    QueryCallbackMap_t::iterator it;
-    for(it = d_getcallbackmap.begin(); it != d_getcallbackmap.end(); it++){
-      for(size_t j=0; j<knobs.size(); j++){
-        const boost::xpressive::sregex re(boost::xpressive::sregex::compile(knobs[j]));
-        if(boost::xpressive::regex_match(it->first, re)){
-          get_f<GNURadio::KnobIDList::value_type, QueryCallbackMap_t>
-                  (d_getcallbackmap, cur_priv, outknobs)(it->first);
-          break;
-        }
-      }
-    }
-  }
-  return outknobs;
-}
-
-GNURadio::KnobMap
-rpcserver_thrift::get(const GNURadio::KnobIDList& knobs)
+void
+rpcserver_thrift::getKnobs(GNURadio::KnobMap& _return, const GNURadio::KnobIDList& knobs)
 {
   GNURadio::KnobMap outknobs;
 
@@ -162,11 +147,37 @@ rpcserver_thrift::get(const GNURadio::KnobIDList& knobs)
             get_f<GNURadio::KnobIDList::value_type, QueryCallbackMap_t>
                     (d_getcallbackmap, cur_priv, outknobs));
   }
-  return outknobs;
+  _return = outknobs;
 }
 
-GNURadio::KnobPropMap
-rpcserver_thrift::properties(const GNURadio::KnobIDList& knobs)
+void
+rpcserver_thrift::getRe(GNURadio::KnobMap& _return, const GNURadio::KnobIDList& knobs)
+{
+  GNURadio::KnobMap outknobs;
+
+  if(knobs.size() == 0) {
+    std::for_each(d_getcallbackmap.begin(), d_getcallbackmap.end(),
+                  get_all_f<QueryCallbackMap_t::value_type, QueryCallbackMap_t, GNURadio::KnobMap>
+                  (d_getcallbackmap, cur_priv, outknobs));
+  }
+  else {
+    QueryCallbackMap_t::iterator it;
+    for(it = d_getcallbackmap.begin(); it != d_getcallbackmap.end(); it++){
+      for(size_t j=0; j<knobs.size(); j++){
+        const boost::xpressive::sregex re(boost::xpressive::sregex::compile(knobs[j]));
+        if(boost::xpressive::regex_match(it->first, re)){
+          get_f<GNURadio::KnobIDList::value_type, QueryCallbackMap_t>
+            (d_getcallbackmap, cur_priv, outknobs)(it->first);
+          break;
+        }
+      }
+    }
+  }
+  _return = outknobs;
+}
+
+void
+rpcserver_thrift::properties(GNURadio::KnobPropMap& _return, const GNURadio::KnobIDList& knobs)
 {
   GNURadio::KnobPropMap outknobs;
 
@@ -180,7 +191,7 @@ rpcserver_thrift::properties(const GNURadio::KnobIDList& knobs)
             properties_f<GNURadio::KnobIDList::value_type,
                     QueryCallbackMap_t, GNURadio::KnobPropMap>(d_getcallbackmap, cur_priv, outknobs));
   }
-  return outknobs;
+  _return = outknobs;
 }
 
 void

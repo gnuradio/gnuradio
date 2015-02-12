@@ -1,3 +1,4 @@
+/* -*- c++ -*- */
 /*
  * Copyright 2014 Free Software Foundation, Inc.
  *
@@ -18,6 +19,7 @@
  * the Free Software Foundation, Inc., 51 Franklin Street,
  * Boston, MA 02110-1301, USA.
  */
+
 #ifndef RPCSERVER_THRIFT_H
 #define RPCSERVER_THRIFT_H
 
@@ -47,17 +49,13 @@ public:
   void registerQueryCallback(const std::string &id, const queryCallback_t callback);
   void unregisterQueryCallback(const std::string &id);
 
-  virtual void set(const GNURadio::KnobMap&);
-
-  GNURadio::KnobMap get(const GNURadio::KnobIDList&);
-
-  GNURadio::KnobMap getRe(const GNURadio::KnobIDList&);
-
-  GNURadio::KnobPropMap properties(const GNURadio::KnobIDList&);
-
+  void setKnobs(const GNURadio::KnobMap&);
+  void getKnobs(GNURadio::KnobMap&, const GNURadio::KnobIDList&);
+  void getRe(GNURadio::KnobMap&, const GNURadio::KnobIDList&);
+  void properties(GNURadio::KnobPropMap&, const GNURadio::KnobIDList& knobs);
   virtual void shutdown();
 
-private:
+ private:
   typedef std::map<std::string, configureCallback_t> ConfigureCallbackMap_t;
   ConfigureCallbackMap_t d_setcallbackmap;
 
@@ -65,9 +63,11 @@ private:
   QueryCallbackMap_t d_getcallbackmap;
 
   template<typename T, typename TMap> struct set_f
-          : public std::unary_function<T,void> {
-    set_f(TMap &_setcallbackmap, const priv_lvl_t &_cur_priv) :
-            d_setcallbackmap(_setcallbackmap), cur_priv(_cur_priv) {
+    : public std::unary_function<T,void>
+  {
+    set_f(TMap &_setcallbackmap, const priv_lvl_t &_cur_priv)
+      : d_setcallbackmap(_setcallbackmap), cur_priv(_cur_priv)
+    {
       ;
     }
 
@@ -80,8 +80,8 @@ private:
         }
         else {
           std::cout << "Key " << p.first << " requires PRIVLVL <= "
-                  << iter->second.priv << " to set, currently at: "
-                  << cur_priv << std::endl;
+                    << iter->second.priv << " to set, currently at: "
+                    << cur_priv << std::endl;
         }
       }
       else {
@@ -94,10 +94,10 @@ private:
   };
 
   template<typename T, typename TMap>
-  struct get_f : public std::unary_function<T,void>
+    struct get_f : public std::unary_function<T,void>
   {
     get_f(TMap &_getcallbackmap, const priv_lvl_t &_cur_priv, GNURadio::KnobMap &_outknobs) :
-            d_getcallbackmap(_getcallbackmap), cur_priv(_cur_priv), outknobs(_outknobs)
+      d_getcallbackmap(_getcallbackmap), cur_priv(_cur_priv), outknobs(_outknobs)
     {}
 
     void operator()(const T& p)
@@ -109,8 +109,8 @@ private:
         }
         else {
           std::cout << "Key " << iter->first << " requires PRIVLVL: <= "
-                  << iter->second.priv << " to get, currently at: "
-                  << cur_priv << std::endl;
+                    << iter->second.priv << " to get, currently at: "
+                    << cur_priv << std::endl;
         }
       }
       else {
@@ -127,10 +127,10 @@ private:
   };
 
   template<typename T, typename TMap, typename TKnobMap>
-  struct get_all_f : public std::unary_function<T,void>
+    struct get_all_f : public std::unary_function<T,void>
   {
-    get_all_f(TMap &_getcallbackmap, const priv_lvl_t &_cur_priv, TKnobMap &_outknobs) :
-            d_getcallbackmap(_getcallbackmap), cur_priv(_cur_priv), outknobs(_outknobs)
+  get_all_f(TMap &_getcallbackmap, const priv_lvl_t &_cur_priv, TKnobMap &_outknobs) :
+    d_getcallbackmap(_getcallbackmap), cur_priv(_cur_priv), outknobs(_outknobs)
     {;}
 
     void operator()(const T& p)
@@ -140,8 +140,8 @@ private:
       }
       else {
         std::cout << "Key " << p.first << " requires PRIVLVL <= "
-                << p.second.priv << " to get, currently at: "
-                << cur_priv << std::endl;
+                  << p.second.priv << " to get, currently at: "
+                  << cur_priv << std::endl;
       }
     }
 
@@ -151,11 +151,11 @@ private:
   };
 
   template<typename T, typename TMap, typename TKnobMap>
-  struct properties_all_f : public std::unary_function<T,void>
+    struct properties_all_f : public std::unary_function<T,void>
   {
-    properties_all_f(QueryCallbackMap_t &_getcallbackmap, const priv_lvl_t &_cur_priv, GNURadio::KnobPropMap &_outknobs)
-            :
-            d_getcallbackmap(_getcallbackmap), cur_priv(_cur_priv), outknobs(_outknobs)
+  properties_all_f(QueryCallbackMap_t &_getcallbackmap, const priv_lvl_t &_cur_priv, GNURadio::KnobPropMap &_outknobs)
+    :
+    d_getcallbackmap(_getcallbackmap), cur_priv(_cur_priv), outknobs(_outknobs)
     {;}
 
     void operator()(const T& p)
@@ -172,8 +172,8 @@ private:
       }
       else {
         std::cout << "Key " << p.first << " requires PRIVLVL <= "
-                << p.second.priv << " to get, currently at: "
-                << cur_priv << std::endl;
+                  << p.second.priv << " to get, currently at: "
+                  << cur_priv << std::endl;
       }
     }
 
@@ -185,8 +185,8 @@ private:
   template<class T, typename TMap, typename TKnobMap>
   struct properties_f : public std::unary_function<T,void>
   {
-    properties_f(TMap &_getcallbackmap, const priv_lvl_t &_cur_priv, TKnobMap &_outknobs) :
-            d_getcallbackmap(_getcallbackmap), cur_priv(_cur_priv), outknobs(_outknobs)
+  properties_f(TMap &_getcallbackmap, const priv_lvl_t &_cur_priv, TKnobMap &_outknobs) :
+    d_getcallbackmap(_getcallbackmap), cur_priv(_cur_priv), outknobs(_outknobs)
     {;}
 
     void operator()(const T& p)
@@ -204,8 +204,8 @@ private:
           outknobs[p] = prop;
         }
         else {
-          std::cout << "Key " << iter->first << " requires PRIVLVL: <= " <<
-                  iter->second.priv << " to get, currently at: " << cur_priv << std::endl;
+          std::cout << "Key " << iter->first << " requires PRIVLVL: <= "
+                    << iter->second.priv << " to get, currently at: " << cur_priv << std::endl;
         }
       }
       else {
