@@ -30,19 +30,21 @@ $DIVIDER
 # Generated: $time.ctime()
 $DIVIDER
 
-# Call XInitThreads as the _very_ first thing.
-# After some Qt import, it's too late
+## Call XInitThreads as the _very_ first thing.
+## After some Qt import, it's too late
 #if $generate_options in ('wx_gui', 'qt_gui')
-import ctypes
-import sys
-if sys.platform.startswith('linux'):
-    try:
-        x11 = ctypes.cdll.LoadLibrary('libX11.so')
-        x11.XInitThreads()
-    except:
-        print "Warning: failed to XInitThreads()"
-#end if
+if __name__ == '__main__':
+    import ctypes
+    import sys
+    if sys.platform.startswith('linux'):
+        try:
+            x11 = ctypes.cdll.LoadLibrary('libX11.so')
+            x11.XInitThreads()
+        except:
+            print "Warning: failed to XInitThreads()"
 
+#end if
+#
 ########################################################
 ##Create Imports
 ########################################################
@@ -279,6 +281,7 @@ $param.get_make()#slurp
 $short_id#slurp
 #end def
 #if $generate_options != 'hb'
+
 if __name__ == '__main__':
     parser = OptionParser(option_class=eng_option, usage="%prog: [options]")
     #set $params_eq_list = list()
