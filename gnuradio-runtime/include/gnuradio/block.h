@@ -132,7 +132,7 @@ namespace gr {
     bool fixed_rate() const { return d_fixed_rate; }
 
     // ----------------------------------------------------------------
-    //		override these to define your behavior
+    //  override these to define your behavior
     // ----------------------------------------------------------------
 
     /*!
@@ -628,12 +628,12 @@ namespace gr {
 
     // ----------------------------------------------------------------------------
 
-	/*!
-	 * \brief the system message handler
+    /*!
+     * \brief the system message handler
      */
     void system_handler(pmt::pmt_t msg);
 
-	/*!
+    /*!
      * \brief returns true when execution has completed due to a message connection
     */
     bool finished();
@@ -840,11 +840,11 @@ namespace gr {
     void set_detail(block_detail_sptr detail) { d_detail = detail; }
 
    /*! \brief Tell msg neighbors we are finished
-	*/
+    */
    void notify_msg_neighbors();
 
    /*! \brief Make sure we dont think we are finished
-	*/
+    */
    void clear_finished(){ d_finished = false; }
 
   };

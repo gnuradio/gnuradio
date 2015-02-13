@@ -31,12 +31,6 @@
 #include <gnuradio/top_block.h>
 #include <gnuradio/prefs.h>
 
-#include <stdexcept>
-#include <iostream>
-#include <string.h>
-#include <unistd.h>
-#include <stdlib.h>
-
 namespace gr {
 
 #define GR_TOP_BLOCK_IMPL_DEBUG 0

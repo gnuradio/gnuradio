@@ -35,14 +35,13 @@ namespace gr {
    */
   class GR_RUNTIME_API io_signature
   {
-    int			  d_min_streams;
-    int			  d_max_streams;
-    std::vector<int>	  d_sizeof_stream_item;
+    int d_min_streams;
+    int  d_max_streams;
+    std::vector<int> d_sizeof_stream_item;
     std::vector<uint32_t> d_stream_flags;
 
-    io_signature(int min_streams, int max_streams,
-                 const std::vector<int> &sizeof_stream_items,
-		 const std::vector<uint32_t> &stream_flags);
+    io_signature(int min_streams, int max_streams, const std::vector<int> &sizeof_stream_items,
+            const std::vector<uint32_t> &stream_flags);
 
   public:
     typedef boost::shared_ptr<io_signature> sptr;
@@ -67,9 +66,7 @@ namespace gr {
      * \param sizeof_stream_item  specify the size of the items in each stream
      * \param flags  specify the io flags for the stream
      */
-    static sptr make(int min_streams, int max_streams,
-                     int sizeof_stream_item, 
-		     uint32_t flags = DEFAULT_FLAGS);
+    static sptr make(int min_streams, int max_streams, int sizeof_stream_item, uint32_t flags = DEFAULT_FLAGS);
 
     /*!
      * \brief Create an i/o signature
@@ -81,11 +78,8 @@ namespace gr {
      * \param flags1  specify the io flags for the first stream
      * \param flags2  specify the io flags for the second and subsequent streams
      */
-    static sptr make2(int min_streams, int max_streams,
-                      int sizeof_stream_item1,
-                      int sizeof_stream_item2, 
-		      uint32_t flags1 = DEFAULT_FLAGS,
-		      uint32_t flags2 = DEFAULT_FLAGS);
+    static sptr make2(int min_streams, int max_streams, int sizeof_stream_item1, int sizeof_stream_item2,
+                      uint32_t flags1 = DEFAULT_FLAGS, uint32_t flags2 = DEFAULT_FLAGS);
 
     /*!
      * \brief Create an i/o signature
@@ -99,13 +93,9 @@ namespace gr {
      * \param flags2  specify the io flags for the second stream
      * \param flags3  specify the io flags for the third and subsequent streams
      */
-    static sptr make3(int min_streams, int max_streams,
-                      int sizeof_stream_item1,
-                      int sizeof_stream_item2,
-                      int sizeof_stream_item3,
-		      uint32_t flags1 = DEFAULT_FLAGS,
-		      uint32_t flags2 = DEFAULT_FLAGS,
-		      uint32_t flags3 = DEFAULT_FLAGS);
+    static sptr make3(int min_streams, int max_streams, int sizeof_stream_item1, int sizeof_stream_item2,
+                      int sizeof_stream_item3, uint32_t flags1 = DEFAULT_FLAGS, uint32_t flags2 = DEFAULT_FLAGS,
+                      uint32_t flags3 = DEFAULT_FLAGS);
 
     /*!
      * \brief Create an i/o signature
@@ -120,9 +110,8 @@ namespace gr {
      * sizeof_stream_items is used for the missing values.
      * sizeof_stream_items must contain at least 1 entry.
      */
-    static sptr makev(int min_streams, int max_streams,
-                      const std::vector<int> &sizeof_stream_items,
-		      const std::vector<uint32_t> &stream_flags = std::vector<uint32_t>(0));
+    static sptr makev(int min_streams, int max_streams, const std::vector<int> &sizeof_stream_items,
+                      const std::vector<uint32_t> &stream_flags = std::vector<uint32_t>(0));
 
     int min_streams() const { return d_min_streams; }
     int max_streams() const { return d_max_streams; }
