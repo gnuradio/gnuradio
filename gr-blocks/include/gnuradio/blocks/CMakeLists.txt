@@ -162,6 +162,7 @@ install(FILES
     tag_debug.h
     tag_gate.h
     tagged_file_sink.h
+    tagged_stream_align.h
     tagged_stream_mux.h
     tagged_stream_multiply_length.h
     tagged_stream_to_pdu.h

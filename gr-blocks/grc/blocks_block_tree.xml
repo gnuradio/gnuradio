@@ -190,6 +190,7 @@
       <block>blocks_tag_gate</block>
       <block>blocks_tagged_file_sink</block>
       <block>blocks_tagged_stream_mux</block>
+      <block>blocks_tagged_stream_align</block>
       <block>blocks_stream_to_tagged_stream</block>
    </cat>
    <cat>
