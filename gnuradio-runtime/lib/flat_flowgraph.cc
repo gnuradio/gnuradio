@@ -247,6 +247,7 @@ namespace gr {
           std::cout << "merge: reusing original detail for block " << (*p) << std::endl;
         }
       }
+      block->init();
     }
 
     // Calculate the old edges that will be going away, and clear the

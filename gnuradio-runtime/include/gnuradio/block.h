@@ -182,6 +182,16 @@ namespace gr {
      */
     virtual bool stop();
 
+    /*!
+     * \brief Called to perform any post-constructor initialization.
+     *
+     * This allows a block to perform any setup that may need to happen
+     * which cannot be performed in the constructor. For example, if
+     * the block uses a custom memory allocator, it can be done in
+     * this function.
+     */
+    virtual bool init();
+
     // ----------------------------------------------------------------
 
     /*!
