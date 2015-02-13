@@ -94,9 +94,9 @@ qa_gr_block::t2 ()
   tb->connect(nop, 0, dst1, 0);
   tb->start();
 
-  char *obuf = nop->detail()->output(0)->base();
+  const char *obuf = nop->detail()->output(0)->base();
   int obsize = nop->detail()->output(0)->bufsize();
-  char *ibuf = nop->detail()->input(0)->buffer()->base();
+  const char *ibuf = nop->detail()->input(0)->buffer()->base();
   int ibsize = nop->detail()->input(0)->buffer()->bufsize();
 
   CPPUNIT_ASSERT(obuf != NULL);

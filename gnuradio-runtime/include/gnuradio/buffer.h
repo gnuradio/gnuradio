@@ -70,7 +70,7 @@ namespace gr {
     /*!
      * \brief return the base address of the buffer
      */
-    char* base() const { return d_base; }
+    const char* base() const { return static_cast<const char*>(d_base); }
 
     /*!
      * \brief return pointer to write buffer.
