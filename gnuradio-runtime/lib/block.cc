@@ -131,6 +131,12 @@ namespace gr {
     return true;
   }
 
+  bool
+  block::init()
+  {
+      return true;
+  }
+
   void
   block::set_output_multiple(int multiple)
   {
