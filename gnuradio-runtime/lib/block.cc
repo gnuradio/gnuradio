@@ -213,7 +213,6 @@ namespace gr {
       return d_detail->nitems_read(which_input);
     }
     else {
-      //throw std::runtime_error("No block_detail associated with block yet");
       return 0;
     }
   }
@@ -225,7 +224,6 @@ namespace gr {
       return d_detail->nitems_written(which_output);
     }
     else {
-      //throw std::runtime_error("No block_detail associated with block yet");
       return 0;
     }
   }
@@ -305,9 +303,9 @@ namespace gr {
   void
   block::set_max_noutput_items(int m)
   {
-    if(m <= 0)
+    if(m <= 0) {
       throw std::runtime_error("block::set_max_noutput_items: value for max_noutput_items must be greater than 0.\n");
-
+    }
     d_max_noutput_items = m;
     d_max_noutput_items_set = true;
   }
@@ -379,8 +377,9 @@ namespace gr {
   long
   block::max_output_buffer(size_t i)
   {
-    if(i >= d_max_output_buffer.size())
+    if(i >= d_max_output_buffer.size()) {
       throw std::invalid_argument("basic_block::max_output_buffer: port out of range.");
+    }
     return d_max_output_buffer[i];
   }
 
@@ -395,17 +394,19 @@ namespace gr {
   void
   block::set_max_output_buffer(int port, long max_output_buffer)
   {
-    if((size_t)port >= d_max_output_buffer.size())
+    if((size_t)port >= d_max_output_buffer.size()) {
       d_max_output_buffer.push_back(max_output_buffer);
-    else
+    } else {
       d_max_output_buffer[port] = max_output_buffer;
+    }
   }
 
   long
   block::min_output_buffer(size_t i)
   {
-    if(i >= d_min_output_buffer.size())
+    if(i >= d_min_output_buffer.size()) {
       throw std::invalid_argument("basic_block::min_output_buffer: port out of range.");
+    }
     return d_min_output_buffer[i];
   }
 
@@ -421,10 +422,11 @@ namespace gr {
   void
   block::set_min_output_buffer(int port, long min_output_buffer)
   {
-    if((size_t)port >= d_min_output_buffer.size())
+    if((size_t)port >= d_min_output_buffer.size()) {
       d_min_output_buffer.push_back(min_output_buffer);
-    else
+    } else {
       d_min_output_buffer[port] = min_output_buffer;
+    }
   }
 
 
@@ -686,8 +688,7 @@ namespace gr {
   block::pc_throughput_avg() {
     if(d_detail) {
       return d_detail->pc_throughput_avg();
-    }
-    else {
+    } else {
       return 0;
     }
   }
@@ -704,7 +705,6 @@ namespace gr {
   void
   block::system_handler(pmt::pmt_t msg)
   {
-    //std::cout << "system_handler " << msg << "\n";
     pmt::pmt_t op = pmt::car(msg);
     if(pmt::eqv(op, pmt::mp("done"))){
         d_finished = pmt::to_long(pmt::cdr(msg));
@@ -739,10 +739,6 @@ namespace gr {
         basic_block_sptr blk = global_block_registry.block_lookup(block);
         blk->post(port, pmt::cons(pmt::mp("done"), pmt::mp(true)));
 
-        //std::cout << "notify finished --> ";
-        //pmt::print(pmt::cons(block,port));
-        //std::cout << "\n";
-
         }
     }
   }
@@ -750,10 +746,11 @@ namespace gr {
   bool
   block::finished()
   {
-    if((detail()->ninputs() != 0) || (detail()->noutputs() != 0))
+    if((detail()->ninputs() != 0) || (detail()->noutputs() != 0)) {
       return false;
-    else
+    } else {
       return d_finished;
+    }
   }
 
 

@@ -25,17 +25,12 @@
 
 #include "tpb_thread_body.h"
 #include <gnuradio/prefs.h>
-#include <boost/thread.hpp>
-#include <boost/foreach.hpp>
-#include <pmt/pmt.h>
-#include <iostream>
 
 namespace gr {
 
   tpb_thread_body::tpb_thread_body(block_sptr block, int max_noutput_items)
     : d_exec(block, max_noutput_items)
   {
-    //std::cerr << "tpb_thread_body: " << block << std::endl;
 
 #ifdef _MSC_VER
     #include <Windows.h>

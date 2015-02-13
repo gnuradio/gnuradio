@@ -24,9 +24,8 @@ namespace gr {
 
   class GR_RUNTIME_API io_signature
   {
-    io_signature(int min_streams, int max_streams,
-                 const std::vector<int> &sizeof_stream_items,
-		 const std::vector<uint32_t> &stream_flags);
+    io_signature(int min_streams, int max_streams, const std::vector<int> &sizeof_stream_items,
+                   const std::vector<uint32_t> &stream_flags);
 
   public:
     typedef boost::shared_ptr<io_signature> sptr;
@@ -46,24 +45,14 @@ namespace gr {
     ~io_signature();
 
 
-    static sptr make(int min_streams, int max_streams,
-                     int sizeof_stream_item,
-		     uint32_t flags = DEFAULT_FLAGS);
-    static sptr make2(int min_streams, int max_streams,
-                      int sizeof_stream_item1,
-                      int sizeof_stream_item2,
-		      uint32_t flags1 = DEFAULT_FLAGS,
-		      uint32_t flags2 = DEFAULT_FLAGS);
-    static sptr make3(int min_streams, int max_streams,
-                      int sizeof_stream_item1,
-                      int sizeof_stream_item2,
-                      int sizeof_stream_item3,
-		      uint32_t flags1 = DEFAULT_FLAGS,
-		      uint32_t flags2 = DEFAULT_FLAGS,
-		      uint32_t flags3 = DEFAULT_FLAGS);
-    static sptr makev(int min_streams, int max_streams,
-                      const std::vector<int> &sizeof_stream_items,
-		      const std::vector<uint32_t> &stream_flags = std::vector<uint32_t>(0));
+    static sptr make(int min_streams, int max_streams, int sizeof_stream_item, uint32_t flags = DEFAULT_FLAGS);
+    static sptr make2(int min_streams, int max_streams, int sizeof_stream_item1, int sizeof_stream_item2,
+                          uint32_t flags1 = DEFAULT_FLAGS, uint32_t flags2 = DEFAULT_FLAGS);
+    static sptr make3(int min_streams, int max_streams, int sizeof_stream_item1, int sizeof_stream_item2,
+                          int sizeof_stream_item3, uint32_t flags1 = DEFAULT_FLAGS, uint32_t flags2 = DEFAULT_FLAGS,
+                          uint32_t flags3 = DEFAULT_FLAGS);
+    static sptr makev(int min_streams, int max_streams, const std::vector<int> &sizeof_stream_items,
+                          const std::vector<uint32_t> &stream_flags = std::vector<uint32_t>(0));
 
     int min_streams() const { return d_min_streams; }
     int max_streams() const { return d_max_streams; }
