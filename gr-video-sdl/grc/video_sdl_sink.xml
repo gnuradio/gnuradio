@@ -3,21 +3,30 @@
     <name>Video SDL Sink</name>
     <key>video_sdl_sink</key>
     <import>from gnuradio import video_sdl</import>
-    <make>video_sdl.sink_uc($fps, $width, $height, 0, $display_width, $display_height)</make>
+    <make>video_sdl.sink_$(type.fcn)($fps, $width, $height, 0, $display_width, $display_height)</make>
+	<param>
+		<name>Input Type</name>
+		<key>type</key>
+		<type>enum</type>
+		<option>
+			<name>Byte</name>
+			<key>byte</key>
+			<opt>fcn:uc</opt>
+		</option>
+		<option>
+			<name>Short</name>
+			<key>short</key>
+			<opt>fcn:s</opt>
+		</option>
+	</param>
     <param>
-        <name>Framerate</name>
-        <key>fps</key>
-        <value>0</value>
-        <type>float</type>
-    </param>
-    <param>
-        <name>Width</name>
+        <name>Input Width</name>
         <key>width</key>
         <value>640</value>
         <type>int</type>
     </param>
     <param>
-        <name>Height</name>
+        <name>Input Height</name>
         <key>height</key>
         <value>480</value>
         <type>int</type>
@@ -34,9 +43,33 @@
         <value>480</value>
         <type>int</type>
     </param>
+    <param>
+        <name>Framerate</name>
+        <key>fps</key>
+        <value>0</value>
+        <type>float</type>
+    </param>
+	<param>
+		<name>Channels</name>
+		<key>num_channels</key>
+		<type>enum</type>
+		<option>
+			<name>1 (Grayscale)</name>
+			<key>1</key>
+		</option>
+		<option>
+			<name>2 (Y, alternating pixels U and V)</name>
+			<key>2</key>
+		</option>
+		<option>
+			<name>3 (YUV)</name>
+			<key>3</key>
+		</option>
+	</param>
     <sink>
         <name>in</name>
-        <type>byte</type>
+        <type>$type</type>
         <vlen>1</vlen>
+        <nports>$num_channels</nports>
     </sink>
 </block>
