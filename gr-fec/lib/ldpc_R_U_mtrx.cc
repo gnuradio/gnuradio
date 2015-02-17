@@ -34,9 +34,15 @@ namespace gr {
 
       ldpc_R_U_mtrx::ldpc_R_U_mtrx(const std::string filename, unsigned int gap) 
       {
-        read_matrix_from_file(filename);
+        read_matrix_from_file(filename, d_H_ptr);
         d_gap = gap;
+
+        // Length of codeword = # of columns
+        d_n = d_num_cols;
+        // Length of information word = (# of columns) - (# of rows)
+        d_k = d_num_cols - d_num_rows;
         set_parameters_for_encoding();
+
       } // Constructor
 
       // Default constructor, should not be used
@@ -58,13 +64,6 @@ namespace gr {
       ldpc_R_U_mtrx::k()
       {
         return d_k;
-      }
-
-      const gsl_matrix*
-      ldpc_R_U_mtrx::H()
-      {
-        const gsl_matrix *H_ptr = d_H_ptr;
-        return H_ptr; 
       }
 
       const gsl_matrix*

@@ -47,8 +47,6 @@ namespace gr {
         unsigned int k();
         // Generator matrix used during encoding
         const gsl_matrix *G();
-        // Parity check matrix used during decoding
-        const gsl_matrix *H();
 
         // Destructor
         ~generator_mtrx();
