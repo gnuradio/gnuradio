@@ -21,11 +21,6 @@
 #ifndef INCLUDED_ldpc_R_U_mtrx_H
 #define INCLUDED_ldpc_R_U_mtrx_H
 
-// #include <gsl/gsl_randist.h>
-// #include <gsl/gsl_permutation.h>
-// #include <gsl/gsl_linalg.h>
-// #include <gsl/gsl_blas.h>
-
 #include <gnuradio/fec/fec_mtrx.h>
 
 namespace gr {
@@ -57,7 +52,6 @@ namespace gr {
         // Get the information word length k
         unsigned int k();
         // Access the matrices needed during encoding
-        const gsl_matrix *H();
         const gsl_matrix *A();
         const gsl_matrix *B();
         const gsl_matrix *D();

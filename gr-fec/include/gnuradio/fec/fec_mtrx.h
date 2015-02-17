@@ -36,18 +36,19 @@ namespace gr {
       class FEC_API fec_mtrx
       {
       protected:
-        // Codeword length n (also the number of columns in the H
-        // matrix)
+        // Codeword length n
         unsigned int d_n;
         // Information word length k
         unsigned int d_k;
         // Number of rows in the matrix read in from alist file
         unsigned int d_num_rows;
+        // Number of columns in the matrix read in from alist file
+        unsigned int d_num_cols;
         // GSL matrix structure for the parity check matrix
         gsl_matrix *d_H_ptr;
         // Read the matrix from a file in alist format
-        void read_matrix_from_file(const std::string filename);
-
+        void read_matrix_from_file(const std::string filename,
+                                   gsl_matrix *);
         
       public:
         // Returns the parity check matrix H (needed by decoder)

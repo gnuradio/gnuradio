@@ -33,11 +33,12 @@ namespace gr {
     namespace code {
 
       void
-      fec_mtrx::read_matrix_from_file(const std::string filename)
+      fec_mtrx::read_matrix_from_file(const std::string filename,
+                                      gsl_matrix *given_matrix)
       {
         /* This function reads in an alist file and creates the
-           corresponding parity check matrix. The format of alist
-           files is described at:
+           corresponding matrix. The format of alist files is 
+           described at:
            http://www.inference.phy.cam.ac.uk/mackay/codes/alist.html
         */
         std::ifstream inputFile;
@@ -51,14 +52,11 @@ namespace gr {
         }
 
         // First line of file is matrix size: # columns, # rows
-        inputFile >> d_n >> d_num_rows; 
+        inputFile >> d_num_cols >> d_num_rows; 
 
         // Now we can allocate memory for the GSL matrix
-        d_H_ptr = gsl_matrix_alloc(d_num_rows, d_n);
-
-        // Since the matrix will be sparse, start by filling it with
-        // all 0s
-        gsl_matrix_set_zero(d_H_ptr);
+        given_matrix = gsl_matrix_alloc(d_num_rows, d_num_cols);
+        gsl_matrix_set_zero(given_matrix);
 
         // The next few lines in the file are not necessary in
         // constructing the matrix.
@@ -73,7 +71,7 @@ namespace gr {
         unsigned int column_count = 0;
         std::string row_number;
 
-        while (column_count < d_n) {
+        while (column_count < d_num_cols) {
           getline(inputFile,tempBuffer);
           std::stringstream ss(tempBuffer);
 
@@ -82,7 +80,7 @@ namespace gr {
             // alist files index starting from 1, not 0, so decrement
             row_i--;
             // set the corresponding matrix element to 1
-            gsl_matrix_set(d_H_ptr,row_i,column_count,1);
+            gsl_matrix_set(given_matrix,row_i,column_count,1);
           }
           column_count++;
         }
@@ -94,16 +92,13 @@ namespace gr {
         // Close the alist file
         inputFile.close();
 
-        // Length of information word = (# of columns) - (# of rows)
-        d_k = d_n - d_num_rows;
       }
 
       const gsl_matrix*
       fec_mtrx::H()
       {
-
-        ////// Compiler will throw warning as long as nothing is returned here
- 
+        const gsl_matrix *H_ptr = d_H_ptr;
+        return H_ptr; 
       }
 
       gsl_matrix*
@@ -278,7 +273,6 @@ namespace gr {
 
         return matrix_inverse;
       }
-
 
       fec_mtrx::~fec_mtrx()
       {
