@@ -24,7 +24,7 @@
 
 #include <gnuradio/fec/api.h>
 #include <gnuradio/fec/generic_decoder.h>
-#include <gnuradio/fec/ldpc_R_U_mtrx.h>
+#include <gnuradio/fec/fec_mtrx.h>
 
 namespace gr {
   namespace fec {
@@ -63,8 +63,10 @@ namespace gr {
          * \param n Number of bits in each transmitted codeword, 
          *        usually denoted "n" in the literature.
          */
-        static generic_decoder::sptr make(ldpc_R_U_mtrx *H_obj,
+
+        static generic_decoder::sptr make(fec_mtrx *mtrx_obj,
                                           unsigned int max_iter=100);
+
         /*!
          * Sets the uncoded frame size to \p frame_size. If \p
          * frame_size is greater than the value given to the

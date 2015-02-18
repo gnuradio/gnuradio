@@ -47,10 +47,6 @@ namespace gr {
         ldpc_R_U_mtrx(const std::string filename, unsigned int gap);
         // Default constructor, should not be used
         ldpc_R_U_mtrx();
-        // Get the codeword length n
-        unsigned int n();
-        // Get the information word length k
-        unsigned int k();
         // Access the matrices needed during encoding
         const gsl_matrix *A();
         const gsl_matrix *B();
@@ -59,7 +55,7 @@ namespace gr {
         const gsl_matrix *T();
         const gsl_matrix *phi_inverse();
         // Destructor
-        ~ldpc_R_U_mtrx();
+        virtual ~ldpc_R_U_mtrx();
       };
     }
   }

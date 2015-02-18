@@ -35,7 +35,7 @@ namespace gr {
       generator_mtrx::generator_mtrx(const std::string filename) 
       {
         // Read the matrix from a file in alist format
-        read_matrix_from_file(filename, d_G_ptr);
+        d_G_ptr = read_matrix_from_file(filename);
 
         // The alist file should have provided a generator matrix G
         // in systematic form, G = [I P], where I is a k x k identity
@@ -110,19 +110,7 @@ namespace gr {
                   << " generator matrix. \n\n";
         exit(1);
       } // Default constructor
-
-      unsigned int
-      generator_mtrx::n()
-      {
-        return d_n;
-      }
-
-      unsigned int
-      generator_mtrx::k()
-      {
-        return d_k;
-      }
-      
+    
       const gsl_matrix*
       generator_mtrx::G()
       {

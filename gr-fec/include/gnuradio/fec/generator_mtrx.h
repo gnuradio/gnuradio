@@ -41,15 +41,11 @@ namespace gr {
         generator_mtrx(const std::string filename);
         // Default constructor, should not be used
         generator_mtrx();
-        // Get the codeword length n
-        unsigned int n();
-        // Get the information word length k
-        unsigned int k();
-        // Generator matrix used during encoding
+        // Get the generator matrix (used during encoding)
         const gsl_matrix *G();
 
         // Destructor
-        ~generator_mtrx();
+        virtual ~generator_mtrx();
       };
     }
   }

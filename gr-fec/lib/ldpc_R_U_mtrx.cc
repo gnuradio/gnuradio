@@ -34,13 +34,15 @@ namespace gr {
 
       ldpc_R_U_mtrx::ldpc_R_U_mtrx(const std::string filename, unsigned int gap) 
       {
-        read_matrix_from_file(filename, d_H_ptr);
+        d_H_ptr = read_matrix_from_file(filename);
         d_gap = gap;
 
         // Length of codeword = # of columns
         d_n = d_num_cols;
+
         // Length of information word = (# of columns) - (# of rows)
         d_k = d_num_cols - d_num_rows;
+
         set_parameters_for_encoding();
 
       } // Constructor
@@ -53,18 +55,6 @@ namespace gr {
                   << " parity check matrix. \n\n";
         exit(1);
       } // Default constructor
-
-      unsigned int
-      ldpc_R_U_mtrx::n()
-      {
-        return d_n;
-      }
-
-      unsigned int
-      ldpc_R_U_mtrx::k()
-      {
-        return d_k;
-      }
 
       const gsl_matrix*
       ldpc_R_U_mtrx::A()
@@ -114,9 +104,9 @@ namespace gr {
 
         // This function defines all of the submatrices that will be
         // needed during encoding. 
-        
-        unsigned int t = d_num_rows - d_gap; 
 
+        unsigned int t = d_num_rows - d_gap; 
+        
         // T submatrix
         d_T_view = gsl_matrix_submatrix(d_H_ptr, 0, 0, t, t);
 
