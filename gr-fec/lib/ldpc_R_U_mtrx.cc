@@ -54,18 +54,6 @@ namespace gr {
         exit(1);
       } // Default constructor
 
-      unsigned int
-      ldpc_R_U_mtrx::n()
-      {
-        return d_n;
-      }
-
-      unsigned int
-      ldpc_R_U_mtrx::k()
-      {
-        return d_k;
-      }
-
       const gsl_matrix*
       ldpc_R_U_mtrx::A()
       {

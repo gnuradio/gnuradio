@@ -110,19 +110,7 @@ namespace gr {
                   << " generator matrix. \n\n";
         exit(1);
       } // Default constructor
-
-      unsigned int
-      generator_mtrx::n()
-      {
-        return d_n;
-      }
-
-      unsigned int
-      generator_mtrx::k()
-      {
-        return d_k;
-      }
-      
+    
       const gsl_matrix*
       generator_mtrx::G()
       {

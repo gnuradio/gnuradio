@@ -59,6 +59,8 @@
 #include "gnuradio/fec/puncture_ff.h"
 #include "gnuradio/fec/depuncture_bb.h"
 #include "gnuradio/fec/ldpc_R_U_mtrx.h"
+#include "gnuradio/fec/fec_mtrx.h"
+#include "gnuradio/fec/generator_mtrx.h"
 #include "gnuradio/fec/ldpc_bit_flip_decoder.h"
 #include "gnuradio/fec/ldpc_R_U_encoder.h"
 %}
@@ -86,6 +88,8 @@
 %include "gnuradio/fec/puncture_ff.h"
 %include "gnuradio/fec/depuncture_bb.h"
 %include "gnuradio/fec/ldpc_R_U_mtrx.h"
+%include "gnuradio/fec/generator_mtrx.h"
+%include "gnuradio/fec/fec_mtrx.h"
 %include "gnuradio/fec/ldpc_bit_flip_decoder.h"
 %include "gnuradio/fec/ldpc_R_U_encoder.h"
 

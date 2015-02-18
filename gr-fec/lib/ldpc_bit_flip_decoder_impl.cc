@@ -35,21 +35,22 @@ namespace gr {
     namespace code {
 
       generic_decoder::sptr
-      ldpc_bit_flip_decoder::make(ldpc_R_U_mtrx *H_obj,
+      ldpc_bit_flip_decoder::make(fec_mtrx *mtrx_obj,
                                   unsigned int max_iter)
       {
         return generic_decoder::sptr
-          (new ldpc_bit_flip_decoder_impl(H_obj, max_iter));
+          (new ldpc_bit_flip_decoder_impl(mtrx_obj, max_iter));
       }
 
-      ldpc_bit_flip_decoder_impl::ldpc_bit_flip_decoder_impl(ldpc_R_U_mtrx *H_obj, unsigned int max_iter)
+      ldpc_bit_flip_decoder_impl::ldpc_bit_flip_decoder_impl(fec_mtrx *mtrx_obj, unsigned int max_iter)
         : generic_decoder("ldpc_bit_flip_decoder")
       {
-        // LDPC parity check matrix to use for decoding
-        d_H = H_obj;
+        // FEC matrix object to use for decoding
+        d_mtrx = mtrx_obj;
+
         // Set frame size to k, the # of bits in the information word
         // All buffers and settings will be based on this value.
-        set_frame_size(d_H->k());
+        set_frame_size(d_mtrx->k());
         // Maximum number of iterations in the decoding algorithm
         d_max_iterations = max_iter;
       }
@@ -67,7 +68,7 @@ namespace gr {
       int
       ldpc_bit_flip_decoder_impl::get_input_size()
       {
-        return int(d_H->n());
+        return int(d_mtrx->n());
       }
 
       bool
@@ -86,7 +87,7 @@ namespace gr {
       double
       ldpc_bit_flip_decoder_impl::rate()
       {
-        return static_cast<double>(d_frame_size)/(d_H->n());
+        return static_cast<double>(d_frame_size)/(d_mtrx->n());
       }
 
 
@@ -98,7 +99,7 @@ namespace gr {
         // Populate the information word
         const float *in = (const float*)inbuffer;
 
-        unsigned int index, n = d_H->n();
+        unsigned int index, n = d_mtrx->n();
         gsl_matrix *x = gsl_matrix_alloc(n, 1);
         for (index = 0; index < n; index++) {
           double value = in[index] > 0 ? 1.0 : 0.0;
@@ -109,7 +110,7 @@ namespace gr {
         unsigned int count = 0;
 
         // Calculate syndrome
-        gsl_matrix *syndrome = d_H->mult_matrices_mod2(d_H->H(),x);
+        gsl_matrix *syndrome = d_mtrx->mult_matrices_mod2(d_mtrx->H(),x);
 
         // Flag for finding a valid codeword
         bool found_word = false;
@@ -138,12 +139,12 @@ namespace gr {
           // Second, for each bit, determine how many of the
           // unsatisfied parity checks involve this bit and store
           // the count.
-          unsigned int i, col_num, n = d_H->n();
+          unsigned int i, col_num, n = d_mtrx->n();
           std::vector<int> counts(n,0);
           for (i = 0; i < rows_of_interest_in_H.size(); i++) {
             unsigned int row_num = rows_of_interest_in_H[i];
             for (col_num = 0; col_num < n; col_num++) {
-              double value = gsl_matrix_get(d_H->H(),
+              double value = gsl_matrix_get(d_mtrx->H(),
                                             row_num,
                                             col_num);
               if (value > 0) {
@@ -170,7 +171,7 @@ namespace gr {
           }
 
           // Check the syndrome; see if valid codeword has been found
-          syndrome = d_H->mult_matrices_mod2(d_H->H(), x);
+          syndrome = d_mtrx->mult_matrices_mod2(d_mtrx->H(), x);
           if (gsl_matrix_isnull(syndrome)) {
             found_word = true;
             break;

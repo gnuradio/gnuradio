@@ -49,10 +49,16 @@ namespace gr {
         // Read the matrix from a file in alist format
         void read_matrix_from_file(const std::string filename,
                                    gsl_matrix *);
+        // Constructor
+        fec_mtrx();
         
       public:
         // Returns the parity check matrix H (needed by decoder)
-        virtual const gsl_matrix *H();
+        const gsl_matrix *H();
+        // Get the codeword length n
+        unsigned int n();
+        // Get the information word length k
+        unsigned int k();
 
         ///////////////////////////////////
         // TODO add a boolean for whether or not parity part comes first

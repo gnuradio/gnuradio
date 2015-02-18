@@ -32,6 +32,11 @@ namespace gr {
   namespace fec {
     namespace code {
 
+      fec_mtrx::fec_mtrx()
+      {
+        // nothing for the default constructor to do
+      }
+
       void
       fec_mtrx::read_matrix_from_file(const std::string filename,
                                       gsl_matrix *given_matrix)
@@ -91,7 +96,6 @@ namespace gr {
 
         // Close the alist file
         inputFile.close();
-
       }
 
       const gsl_matrix*
@@ -99,6 +103,18 @@ namespace gr {
       {
         const gsl_matrix *H_ptr = d_H_ptr;
         return H_ptr; 
+      }
+
+      unsigned int
+      fec_mtrx::n()
+      {
+        return d_n;
+      }
+
+      unsigned int
+      fec_mtrx::k()
+      {
+        return d_k;
       }
 
       gsl_matrix*

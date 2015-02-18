@@ -22,7 +22,6 @@
 #define INCLUDED_FEC_LDPC_BIT_FLIP_DECODER_IMPL_H
 
 #include <gnuradio/fec/ldpc_bit_flip_decoder.h>
-#include <gnuradio/fec/ldpc_R_U_mtrx.h>
 
 namespace gr {
   namespace fec {
@@ -35,14 +34,15 @@ namespace gr {
         int get_input_size();   // n, # of bits in the received block
         int get_output_size();  // k, # of bits in the info word
         unsigned int d_frame_size;
+           
+        // FEC matrix object to use for decoding
+        fec_mtrx *d_mtrx;
 
-        // LDPC parity check matrix object to use for decoding
-        ldpc_R_U_mtrx *d_H;
         // Maximum number of iterations to do in decoding algorithm
         unsigned int d_max_iterations;
 
       public:
-        ldpc_bit_flip_decoder_impl(ldpc_R_U_mtrx *H_obj,
+        ldpc_bit_flip_decoder_impl(fec_mtrx *mtrx_obj,
                                    unsigned int max_iter=100);
         ~ldpc_bit_flip_decoder_impl();
 
