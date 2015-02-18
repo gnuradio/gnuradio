@@ -351,7 +351,7 @@ class MainWindow(gtk.Window):
         )
         return MessageDialogHelper(
             gtk.MESSAGE_QUESTION, gtk.BUTTONS_NONE, 'Unsaved Changes!',
-            'Would you like to save changes before closing?', buttons
+            'Would you like to save changes before closing?', gtk.RESPONSE_OK, buttons
         )
 
     def _get_files(self):
