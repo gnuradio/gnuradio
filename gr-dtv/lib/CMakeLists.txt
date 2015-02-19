@@ -77,6 +77,10 @@ list(APPEND dtv_sources
   atsc/atsc_basic_trellis_encoder.cc
   atsc/atsc_trellis_encoder_impl.cc
   atsc/atsc_field_sync_mux_impl.cc
+  common/dvb_bbheader_bb_impl.cc
+  common/dvb_bbscrambler_bb_impl.cc
+  common/dvb_bch_bb_impl.cc
+  common/dvb_ldpc_bb_impl.cc
 )
 
 if(ENABLE_GR_CTRLPORT)
