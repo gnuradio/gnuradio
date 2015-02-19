@@ -199,7 +199,7 @@ function(VOLK_PYTHON_INSTALL)
             add_custom_command(
                 OUTPUT ${pyexefile} DEPENDS ${pyfile}
                 COMMAND ${PYTHON_EXECUTABLE} -c
-                "open('${pyexefile}','w').write('\#!${pyexe_native}\\n'+open('${pyfile}').read())"
+                "import re; R=re.compile('^\#!.*$\\n',flags=re.MULTILINE); open('${pyexefile}','w').write('\#!${pyexe_native}\\n'+R.sub('',open('${pyfile}','r').read()))"
                 COMMENT "Shebangin ${pyfile_name}"
                 VERBATIM
             )
