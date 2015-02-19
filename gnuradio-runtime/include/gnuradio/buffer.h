@@ -68,6 +68,11 @@ namespace gr {
     int bufsize() const { return d_bufsize; }
 
     /*!
+     * \brief return the base address of the buffer
+     */
+    const char* base() const { return static_cast<const char*>(d_base); }
+
+    /*!
      * \brief return pointer to write buffer.
      *
      * The return value points at space that can hold at least

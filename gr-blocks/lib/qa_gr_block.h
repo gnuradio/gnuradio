@@ -27,9 +27,9 @@
 #include <cppunit/TestCase.h>
 #include <stdexcept>
 
-class qa_block : public CppUnit::TestCase {
+class qa_gr_block : public CppUnit::TestCase {
 
-  CPPUNIT_TEST_SUITE (qa_block);
+  CPPUNIT_TEST_SUITE (qa_gr_block);
   CPPUNIT_TEST (t0);
   CPPUNIT_TEST (t1);
   CPPUNIT_TEST (t2);
