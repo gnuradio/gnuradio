@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2012 Free Software Foundation, Inc.
+# Copyright 2015 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -25,7 +25,7 @@ from thrift.transport import TSocket
 from thrift.transport import TTransport
 from thrift.protocol import TBinaryProtocol
 #from ControlPort.GNURadio import ControlPort
-from gnuradio.ControlPort.GNURadio import ControlPort
+from gnuradio.ctrlport.GNURadio import ControlPort
 import sys
 
 class ThriftRadioClient:

@@ -20,6 +20,16 @@
 ########################################################################
 include(GrPython)
 
+if(THRIFT_FOUND)
+
+EXECUTE_PROCESS(
+   COMMAND ${THRIFT_BIN} --gen py -out ${CMAKE_CURRENT_BINARY_DIR}/ ${CMAKE_SOURCE_DIR}/gnuradio-runtime/lib/controlport/thrift/gnuradio.thrift
+   OUTPUT_VARIABLE THRIFT_PY_OUTPUT
+   ERROR_VARIABLE THRIFT_PY_ERROR
+   )
+
+endif(THRIFT_FOUND)
+
 install(
     FILES
     ${CMAKE_CURRENT_SOURCE_DIR}/icon.png
@@ -42,5 +52,19 @@ GR_PYTHON_INSTALL(
     ${CMAKE_CURRENT_SOURCE_DIR}/gr-perf-monitorx
     DESTINATION ${GR_RUNTIME_DIR}
     PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE
+    COMPONENT "runtime_python"
+)
+
+# Install the files compiled from gnuradio.thrift
+GR_PYTHON_INSTALL(
+    FILES
+    ${CMAKE_CURRENT_BINARY_DIR}/GNURadio/__init__.py
+    ${CMAKE_CURRENT_BINARY_DIR}/GNURadio/constants.py
+    ${CMAKE_CURRENT_BINARY_DIR}/GNURadio/ControlPort.py
+    ${CMAKE_CURRENT_BINARY_DIR}/GNURadio/ControlPort-remote
+    ${CMAKE_CURRENT_BINARY_DIR}/GNURadio/StreamReceiver.py
+    ${CMAKE_CURRENT_BINARY_DIR}/GNURadio/StreamReceiver-remote
+    ${CMAKE_CURRENT_BINARY_DIR}/GNURadio/ttypes.py
+    DESTINATION ${GR_PYTHON_DIR}/gnuradio/ctrlport/GNURadio
     COMPONENT "runtime_python"
 )
