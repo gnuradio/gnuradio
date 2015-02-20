@@ -407,6 +407,11 @@ add_subdirectory(gr-zeromq)
 if(ENABLE_GR_CTRLPORT)
   set(GR_CTRLPORT True)
   add_definitions(-DGR_CTRLPORT)
+
+  if(THRIFT_FOUND)
+    set(GR_RPCSERVER_ENABLED True)
+    set(GR_RPCSERVER_THRIFT True)
+  endif(THRIFT_FOUND)
 endif(ENABLE_GR_CTRLPORT)
 
 # Install our Cmake modules into $prefix/lib/cmake/gnuradio

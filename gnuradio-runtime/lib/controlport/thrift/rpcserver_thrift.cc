@@ -49,7 +49,6 @@ void
 rpcserver_thrift::registerConfigureCallback(const std::string &id, const configureCallback_t callback)
 {
   {
-    std::cerr << "thrift::registerConfigureCallback: " << id << std::endl;
     ConfigureCallbackMap_t::const_iterator iter(d_setcallbackmap.find(id));
     if(iter != d_setcallbackmap.end()) {
       std::stringstream s;
@@ -68,7 +67,6 @@ rpcserver_thrift::registerConfigureCallback(const std::string &id, const configu
 void
 rpcserver_thrift::unregisterConfigureCallback(const std::string &id)
 {
-  //std::cerr << "thrift::unregisterConfigureCallback: " << id << std::endl;
   ConfigureCallbackMap_t::iterator iter(d_setcallbackmap.find(id));
   if(iter == d_setcallbackmap.end()) {
     std::stringstream s;
@@ -88,7 +86,6 @@ rpcserver_thrift::registerQueryCallback(const std::string &id,
                                         const queryCallback_t callback)
 {
   {
-    std::cerr << "thrift::registerQueryCallback: " << id << std::endl;
     QueryCallbackMap_t::const_iterator iter(d_getcallbackmap.find(id));
     if(iter != d_getcallbackmap.end()) {
       std::stringstream s;
@@ -107,7 +104,6 @@ rpcserver_thrift::registerQueryCallback(const std::string &id,
 void
 rpcserver_thrift::unregisterQueryCallback(const std::string &id)
 {
-  //std::cerr << "thrift::unregisterQueryCallback: " << id << std::endl;
   QueryCallbackMap_t::iterator iter(d_getcallbackmap.find(id));
   if(iter == d_getcallbackmap.end()) {
     std::stringstream s;

@@ -23,11 +23,12 @@
 #ifndef RPCSERVER_SELECTOR
 #define RPCSERVER_SELECTOR
 
-#define RPCSERVER_ENABLED
+#include <gnuradio/config.h>
 
-//#define RPCSERVER_ICE
-#define RPCSERVER_THRIFT
-//#define RPCSERVER_ERLANG
-//#define RPCSERVER_XMLRPC
+//#define GR_RPCSERVER_ENABLED
+//#define GR_RPCSERVER_ICE
+//#define GR_RPCSERVER_THRIFT
+//#define GR_RPCSERVER_ERLANG
+//#define GR_RPCSERVER_XMLRPC
 
 #endif

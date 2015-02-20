@@ -80,14 +80,21 @@ install(FILES
   rpcserver_base.h
   rpcserver_booter_aggregator.h
   rpcserver_booter_base.h
-  rpcserver_booter_thrift.h
   rpcserver_selector.h
-  thrift_application_base.h
-  thrift_server_template.h
   ${CMAKE_CURRENT_BINARY_DIR}/logger.h
   DESTINATION ${GR_INCLUDE_DIR}/gnuradio
   COMPONENT "runtime_devel"
 )
+
+if(THRIFT_FOUND)
+install(FILES
+  rpcserver_booter_thrift.h
+  thrift_application_base.h
+  thrift_server_template.h
+  DESTINATION ${GR_INCLUDE_DIR}/gnuradio
+  COMPONENT "runtime_devel"
+)
+endif(THRIFT_FOUND)
 
 ##########################################################################
 # Configure logger

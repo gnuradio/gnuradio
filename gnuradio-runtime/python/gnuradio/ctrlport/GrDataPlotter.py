@@ -23,8 +23,7 @@
 from gnuradio import gr
 from gnuradio import blocks
 from gnuradio import filter
-#from gnuradio.ctrlport import GNURadio
-from gnuradio.ControlPort import GNURadio
+from gnuradio.ctrlport import GNURadio
 import sys, time, struct
 
 try:
