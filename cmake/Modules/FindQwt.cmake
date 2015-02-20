@@ -22,7 +22,7 @@ find_path(QWT_INCLUDE_DIRS
 )
 
 find_library (QWT_LIBRARIES
-  NAMES qwt6 qwt qwt-qt4
+  NAMES qwt6 qwt6-qt4 qwt qwt-qt4
   HINTS
   ${CMAKE_INSTALL_PREFIX}/lib
   ${CMAKE_INSTALL_PREFIX}/lib64
