@@ -29,9 +29,11 @@ namespace gr {
   namespace dtv {
 
     /*!
-     * \brief <+description of block+>
+     * \brief Encodes a LDPC (Low-Density Parity-Check) FEC.
      * \ingroup dtv
      *
+     * Input: Variable length FEC baseband frames with appended BCH (BCHFEC).
+     * Output: Normal or short FEC baseband frames with appended LPDC (LDPCFEC).
      */
     class DTV_API dvb_ldpc_bb : virtual public gr::block
     {
@@ -39,7 +41,12 @@ namespace gr {
       typedef boost::shared_ptr<dvb_ldpc_bb> sptr;
 
       /*!
-       * \brief Return a shared_ptr to a new instance of dtv::dvb_ldpc_bb.
+       * \brief Create a baseband frame LDPC encoder.
+       *
+       * \param standard DVB standard (DVB-S2 or DVB-T2).
+       * \param framesize FEC frame size (normal or short).
+       * \param rate FEC code rate.
+       * \param constellation DVB-S2 constellation.
        */
       static sptr make(dvb_standard_t standard, dvb_framesize_t framesize, dvb_code_rate_t rate, dvb_constellation_t constellation);
     };

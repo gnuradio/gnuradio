@@ -18,32 +18,42 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef INCLUDED_DTV_DVB_BBSCRAMBLER_BB_IMPL_H
-#define INCLUDED_DTV_DVB_BBSCRAMBLER_BB_IMPL_H
+#ifndef INCLUDED_DTV_DVB_DEFINES_H
+#define INCLUDED_DTV_DVB_DEFINES_H
 
-#include <gnuradio/dtv/dvb_bbscrambler_bb.h>
+#define TRUE 1
+#define FALSE 0
 
-namespace gr {
-  namespace dtv {
+#define BB_HEADER_LENGTH_BITS 72
 
-    class dvb_bbscrambler_bb_impl : public dvb_bbscrambler_bb
-    {
-     private:
-      unsigned int kbch;
-      unsigned char bb_randomise[FRAME_SIZE_NORMAL];
-      void init_bb_randomiser(void);
+// BB HEADER fields
+#define TS_GS_TRANSPORT 3
+#define TS_GS_GENERIC_PACKETIZED 0
+#define TS_GS_GENERIC_CONTINUOUS 1
+#define TS_GS_RESERVED 2
 
-     public:
-      dvb_bbscrambler_bb_impl(dvb_standard_t standard, dvb_framesize_t framesize, dvb_code_rate_t rate);
-      ~dvb_bbscrambler_bb_impl();
+#define SIS_MIS_SINGLE 1
+#define SIS_MIS_MULTIPLE 0
 
-      int work(int noutput_items,
-               gr_vector_const_void_star &input_items,
-               gr_vector_void_star &output_items);
-    };
+#define CCM 1
+#define ACM 0
 
-  } // namespace dtv
-} // namespace gr
+#define ISSYI_ACTIVE 1
+#define ISSYI_NOT_ACTIVE 0
 
-#endif /* INCLUDED_DTV_DVB_BBSCRAMBLER_BB_IMPL_H */
+#define NPD_ACTIVE 1
+#define NPD_NOT_ACTIVE 0
+
+#define FRAME_SIZE_NORMAL 64800
+#define FRAME_SIZE_SHORT  16200
+
+// BCH Code
+#define BCH_CODE_N8  0
+#define BCH_CODE_N10 1
+#define BCH_CODE_N12 2
+#define BCH_CODE_S12 3
+
+#define LDPC_ENCODE_TABLE_LENGTH (FRAME_SIZE_NORMAL * 10)
+
+#endif /* INCLUDED_DTV_DVB_DEFINES_H */
 

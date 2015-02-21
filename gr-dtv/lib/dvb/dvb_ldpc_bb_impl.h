@@ -22,6 +22,7 @@
 #define INCLUDED_DTV_DVB_LDPC_BB_IMPL_H
 
 #include <gnuradio/dtv/dvb_ldpc_bb.h>
+#include "dvb_defines.h"
 
 typedef struct{
     int table_length;

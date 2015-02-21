@@ -18,56 +18,36 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef INCLUDED_DTV_DVB_BBHEADER_BB_IMPL_H
-#define INCLUDED_DTV_DVB_BBHEADER_BB_IMPL_H
+#ifndef INCLUDED_DTV_DVB_BCH_BB_IMPL_H
+#define INCLUDED_DTV_DVB_BCH_BB_IMPL_H
 
-#include <gnuradio/dtv/dvb_bbheader_bb.h>
-
-typedef struct{
-    int ts_gs;
-    int sis_mis;
-    int ccm_acm;
-    int issyi;
-    int npd;
-    int ro;
-    int isi;
-    int upl;
-    int dfl;
-    int sync;
-    int syncd;
-}BBHeader;
-
-typedef struct{
-   BBHeader bb_header;
-}FrameFormat;
+#include <gnuradio/dtv/dvb_bch_bb.h>
+#include "dvb_defines.h"
 
 namespace gr {
   namespace dtv {
 
-    class dvb_bbheader_bb_impl : public dvb_bbheader_bb
+    class dvb_bch_bb_impl : public dvb_bch_bb
     {
      private:
       unsigned int kbch;
-      unsigned int count;
-      unsigned char crc;
-      unsigned int input_mode;
-      unsigned int extra;
-      int inband_type_b;
-      int fec_blocks;
-      int fec_block;
-      int ts_rate;
-      bool dvbs2x;
-      bool alternate;
-      FrameFormat m_format[1];
-      unsigned char crc_tab[256];
-      void add_bbheader(unsigned char *, int, int);
-      void build_crc8_table(void);
-      int add_crc8_bits(unsigned char *, int);
-      void add_inband_type_b(unsigned char *, int);
+      unsigned int nbch;
+      unsigned int bch_code;
+      unsigned int m_poly_n_8[4];
+      unsigned int m_poly_n_10[5];
+      unsigned int m_poly_n_12[6];
+      unsigned int m_poly_s_12[6];
+      int poly_mult(const int*, int, const int*, int, int*);
+      void poly_pack(const int*, unsigned int*, int);
+      void poly_reverse(int*, int*, int);
+      inline void reg_4_shift(unsigned int*);
+      inline void reg_5_shift(unsigned int*);
+      inline void reg_6_shift(unsigned int*);
+      void bch_poly_build_tables(void);
 
      public:
-      dvb_bbheader_bb_impl(dvb_standard_t standard, dvb_framesize_t framesize, dvb_code_rate_t rate, dvbs2_rolloff_factor_t rolloff, dvbt2_inputmode_t mode, dvbt2_inband_t inband, int fecblocks, int tsrate);
-      ~dvb_bbheader_bb_impl();
+      dvb_bch_bb_impl(dvb_standard_t standard, dvb_framesize_t framesize, dvb_code_rate_t rate);
+      ~dvb_bch_bb_impl();
 
       void forecast (int noutput_items, gr_vector_int &ninput_items_required);
 
@@ -80,5 +60,5 @@ namespace gr {
   } // namespace dtv
 } // namespace gr
 
-#endif /* INCLUDED_DTV_DVB_BBHEADER_BB_IMPL_H */
+#endif /* INCLUDED_DTV_DVB_BCH_BB_IMPL_H */
 

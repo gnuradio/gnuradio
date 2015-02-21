@@ -29,9 +29,12 @@ namespace gr {
   namespace dtv {
 
     /*!
-     * \brief <+description of block+>
+     * \brief Scrambles FEC baseband frames with a PRBS encoder.
      * \ingroup dtv
      *
+     * \details
+     * Input: Variable length FEC baseband frames (BBFRAME).
+     * Output: Scrambled variable length FEC baseband frames (BBFRAME).
      */
     class DTV_API dvb_bbscrambler_bb : virtual public gr::sync_block
     {
@@ -39,7 +42,11 @@ namespace gr {
       typedef boost::shared_ptr<dvb_bbscrambler_bb> sptr;
 
       /*!
-       * \brief Return a shared_ptr to a new instance of dtv::dvb_bbscrambler_bb.
+       * \brief Create a baseband frame scrambler.
+       *
+       * \param standard DVB standard (DVB-S2 or DVB-T2).
+       * \param framesize FEC frame size (normal or short).
+       * \param rate FEC code rate.
        */
       static sptr make(dvb_standard_t standard, dvb_framesize_t framesize, dvb_code_rate_t rate);
     };

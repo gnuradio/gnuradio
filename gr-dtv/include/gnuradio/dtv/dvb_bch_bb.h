@@ -30,9 +30,12 @@ namespace gr {
   namespace dtv {
 
     /*!
-     * \brief <+description of block+>
+     * \brief Encodes a BCH ((Bose, Chaudhuri, Hocquenghem) FEC.
      * \ingroup dtv
      *
+     * \details
+     * Input: Variable length FEC baseband frames (BBFRAME).
+     * Output: Variable length FEC baseband frames with appended BCH (BCHFEC).
      */
     class DTV_API dvb_bch_bb : virtual public gr::block
     {
@@ -40,7 +43,11 @@ namespace gr {
       typedef boost::shared_ptr<dvb_bch_bb> sptr;
 
       /*!
-       * \brief Return a shared_ptr to a new instance of dtv::dvb_bch_bb.
+       * \brief Create a baseband frame BCH encoder.
+       *
+       * \param standard DVB standard (DVB-S2 or DVB-T2).
+       * \param framesize FEC frame size (normal or short).
+       * \param rate FEC code rate.
        */
       static sptr make(dvb_standard_t standard, dvb_framesize_t framesize, dvb_code_rate_t rate);
     };
