@@ -442,7 +442,8 @@ class GrDataPlotterValueTable:
                 units = str(knobprops[itemKey].units)
                 descr = str(knobprops[itemKey].description)
 
-                if(type(v) == GNURadio.complex):
+                # TODO: FIX COMPLEX
+                if False: #if(type(v) == GNURadio.complex):
                     v = v.re + v.im*1j
                 # If it's a byte stream, Python thinks it's a string.
                 # Unpack and convert to floats for plotting.
@@ -468,7 +469,8 @@ class GrDataPlotterValueTable:
         for k in knobs.keys():
             if k not in foundKeys:
                 v = knobs[k].value
-                if(type(v) == GNURadio.complex):
+                # TODO: Fix Handle of Complex
+                if False: #if(type(v) == GNURadio.complex):
                     v = v.re + v.im*1j
                 # If it's a byte stream, Python thinks it's a string.
                 # Unpack and convert to floats for plotting.
