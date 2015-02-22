@@ -51,7 +51,7 @@
       <block>dtv_atsc_field_sync_mux</block>
     </cat>
     <cat>
-      <name>Common</name>
+      <name>DVB</name>
       <block>dtv_dvb_bbheader_bb</block>
       <block>dtv_dvb_bbscrambler_bb</block>
       <block>dtv_dvb_bch_bb</block>
