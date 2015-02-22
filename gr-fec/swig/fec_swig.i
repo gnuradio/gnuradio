@@ -60,9 +60,10 @@
 #include "gnuradio/fec/depuncture_bb.h"
 #include "gnuradio/fec/ldpc_R_U_mtrx.h"
 #include "gnuradio/fec/fec_mtrx.h"
-#include "gnuradio/fec/generator_mtrx.h"
+#include "gnuradio/fec/ldpc_gen_mtrx.h"
 #include "gnuradio/fec/ldpc_bit_flip_decoder.h"
 #include "gnuradio/fec/ldpc_R_U_encoder.h"
+#include "gnuradio/fec/ldpc_gen_mtrx_encoder.h"
 %}
 
 %include "gnuradio/fec/generic_decoder.h"
@@ -88,10 +89,11 @@
 %include "gnuradio/fec/puncture_ff.h"
 %include "gnuradio/fec/depuncture_bb.h"
 %include "gnuradio/fec/ldpc_R_U_mtrx.h"
-%include "gnuradio/fec/generator_mtrx.h"
+%include "gnuradio/fec/ldpc_gen_mtrx.h"
 %include "gnuradio/fec/fec_mtrx.h"
 %include "gnuradio/fec/ldpc_bit_flip_decoder.h"
 %include "gnuradio/fec/ldpc_R_U_encoder.h"
+%include "gnuradio/fec/ldpc_gen_mtrx_encoder.h"
 
 GR_SWIG_BLOCK_MAGIC2(fec, decoder);
 GR_SWIG_BLOCK_MAGIC2(fec, encoder);

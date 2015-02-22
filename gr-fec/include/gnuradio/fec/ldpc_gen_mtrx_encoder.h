@@ -18,12 +18,12 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef INCLUDED_FEC_GENERATOR_ENCODER_H
-#define INCLUDED_FEC_GENERATOR_ENCODER_H
+#ifndef INCLUDED_FEC_LDPC_GEN_MTRX_ENCODER_H
+#define INCLUDED_FEC_LDPC_GEN_MTRX_ENCODER_H
 
 #include <gnuradio/fec/api.h>
 #include <gnuradio/fec/generic_encoder.h>
-#include <gnuradio/fec/generator_mtrx.h>
+#include <gnuradio/fec/ldpc_gen_mtrx.h>
 
 namespace gr {
   namespace fec {
@@ -41,7 +41,7 @@ namespace gr {
          G = [I P], where I is an identity matrix and P is the
          parity submatrix.
        */
-      class FEC_API generator_encoder : virtual public generic_encoder
+      class FEC_API ldpc_gen_mtrx_encoder : virtual public generic_encoder
       {
       public:
         /*!
@@ -50,7 +50,7 @@ namespace gr {
          * \param G_obj The generator matrix object to use
          *        for encoding.
         */
-        static generic_encoder::sptr make(generator_mtrx *G_obj);
+        static generic_encoder::sptr make(ldpc_gen_mtrx *G_obj);
 
         /*!
          * Sets the uncoded frame size to \p frame_size. If \p
@@ -70,4 +70,4 @@ namespace gr {
   } /* namespace fec */
 } /* namespace gr */
 
-#endif /* INCLUDED_FEC_GENERATOR_ENCODER_H */
+#endif /* INCLUDED_FEC_LDPC_GEN_MTRX_ENCODER_H */
