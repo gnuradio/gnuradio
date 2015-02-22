@@ -18,8 +18,8 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef INCLUDED_generator_mtrx_H
-#define INCLUDED_generator_mtrx_H
+#ifndef INCLUDED_ldpc_gen_mtrx_H
+#define INCLUDED_ldpc_gen_mtrx_H
  
 #include <gsl/gsl_randist.h>
 #include <gsl/gsl_permutation.h>
@@ -31,24 +31,24 @@
 namespace gr {
   namespace fec {
     namespace code {
-      class FEC_API generator_mtrx : public fec_mtrx
+      class FEC_API ldpc_gen_mtrx : public fec_mtrx
       {
       private:
         // GSL matrix structure for the generator matrix (encode)
         gsl_matrix *d_G_ptr;
         
       public:
-        generator_mtrx(const std::string filename);
+        ldpc_gen_mtrx(const std::string filename);
         // Default constructor, should not be used
-        generator_mtrx();
+        ldpc_gen_mtrx();
         // Get the generator matrix (used during encoding)
         const gsl_matrix *G();
 
         // Destructor
-        virtual ~generator_mtrx();
+        virtual ~ldpc_gen_mtrx();
       };
     }
   }
 }
 
-#endif /* INCLUDED_generator_mtrx_H */
+#endif /* INCLUDED_ldpc_gen_mtrx_H */

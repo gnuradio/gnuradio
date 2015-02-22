@@ -18,18 +18,18 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef INCLUDED_FEC_GENERATOR_ENCODER_IMPL_H
-#define INCLUDED_FEC_GENERATOR_ENCODER_IMPL_H
+#ifndef INCLUDED_FEC_LDPC_GEN_MTRX_ENCODER_IMPL_H
+#define INCLUDED_FEC_LDPC_GEN_MTRX_ENCODER_IMPL_H
 
 #include <map>
 #include <string>
-#include <gnuradio/fec/generator_encoder.h>
-#include <gnuradio/fec/generator_mtrx.h>
+#include <gnuradio/fec/ldpc_gen_mtrx_encoder.h>
+#include <gnuradio/fec/ldpc_gen_mtrx.h>
 
 namespace gr {
   namespace fec {
     namespace code {
-      class FEC_API generator_encoder_impl : public generator_encoder
+      class FEC_API ldpc_gen_mtrx_encoder_impl : public ldpc_gen_mtrx_encoder
       {
       private:
         void generic_work(void *inbuffer, void *outbuffer);
@@ -39,11 +39,11 @@ namespace gr {
         // Number of bits in the information word
         unsigned int d_frame_size;
         // Generator matrix object to use for encoding
-        generator_mtrx *d_G;
+        ldpc_gen_mtrx *d_G;
 
       public:
-        generator_encoder_impl(generator_mtrx *G_obj);
-        ~generator_encoder_impl();
+        ldpc_gen_mtrx_encoder_impl(ldpc_gen_mtrx *G_obj);
+        ~ldpc_gen_mtrx_encoder_impl();
 
         bool set_frame_size(unsigned int frame_size);
         double rate();
@@ -52,4 +52,4 @@ namespace gr {
   } /* namespace fec */
 } /* namespace gr */
 
-#endif /* INCLUDED_FEC_GENERATOR_ENCODER_IMPL_H */
+#endif /* INCLUDED_FEC_LDPC_GEN_MTRX_ENCODER_IMPL_H */

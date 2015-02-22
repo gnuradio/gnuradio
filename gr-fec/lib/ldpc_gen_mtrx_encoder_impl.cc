@@ -22,21 +22,21 @@
 #include "config.h"
 #endif
 
-#include <generator_encoder_impl.h>
+#include <ldpc_gen_mtrx_encoder_impl.h>
 #include <sstream>
 
 namespace gr {
   namespace fec {
     namespace code {
       generic_encoder::sptr
-      generator_encoder::make(generator_mtrx *G_obj)
+      ldpc_gen_mtrx_encoder::make(ldpc_gen_mtrx *G_obj)
       {
         return generic_encoder::sptr
-          (new generator_encoder_impl(G_obj));
+          (new ldpc_gen_mtrx_encoder_impl(G_obj));
       }
 
-      generator_encoder_impl::generator_encoder_impl(generator_mtrx *G_obj) 
-        : generic_encoder("generator_encoder")
+      ldpc_gen_mtrx_encoder_impl::ldpc_gen_mtrx_encoder_impl(ldpc_gen_mtrx *G_obj) 
+        : generic_encoder("ldpc_gen_mtrx_encoder")
       {
         // Generator matrix to use for encoding
         d_G = G_obj;
@@ -45,24 +45,24 @@ namespace gr {
         set_frame_size(d_G->k());
       }
 
-      generator_encoder_impl::~generator_encoder_impl()
+      ldpc_gen_mtrx_encoder_impl::~ldpc_gen_mtrx_encoder_impl()
       {
       }
 
       int
-      generator_encoder_impl::get_output_size()
+      ldpc_gen_mtrx_encoder_impl::get_output_size()
       {
         return d_G->n();
       }
 
       int
-      generator_encoder_impl::get_input_size()
+      ldpc_gen_mtrx_encoder_impl::get_input_size()
       {
         return d_frame_size;
       }
 
       bool
-      generator_encoder_impl::set_frame_size(unsigned int frame_size)
+      ldpc_gen_mtrx_encoder_impl::set_frame_size(unsigned int frame_size)
       {
         bool ret = true;
         // TODO add some bounds check here? The frame size is
@@ -74,14 +74,14 @@ namespace gr {
       }
 
       double
-      generator_encoder_impl::rate()
+      ldpc_gen_mtrx_encoder_impl::rate()
       {
         return (d_G->n())/static_cast<double>(d_frame_size);
       }
 
       void
-      generator_encoder_impl::generic_work(void *inbuffer,
-                                           void *outbuffer)
+      ldpc_gen_mtrx_encoder_impl::generic_work(void *inbuffer,
+                                               void *outbuffer)
       {
 
 

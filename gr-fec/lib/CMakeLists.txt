@@ -93,8 +93,8 @@ list(APPEND gnuradio_fec_sources
   ldpc_R_U_mtrx.cc
   ldpc_bit_flip_decoder_impl.cc
   ldpc_R_U_encoder_impl.cc
-  generator_mtrx.cc
-  generator_encoder_impl.cc
+  ldpc_gen_mtrx.cc
+  ldpc_gen_mtrx_encoder_impl.cc
   fec_mtrx.cc
 )
 

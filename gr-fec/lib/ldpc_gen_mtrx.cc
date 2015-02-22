@@ -21,7 +21,7 @@
 #include "config.h"
 #endif
 
-#include <gnuradio/fec/generator_mtrx.h>
+#include <gnuradio/fec/ldpc_gen_mtrx.h>
 #include <math.h>
 #include <fstream>
 #include <vector>
@@ -32,7 +32,7 @@ namespace gr {
   namespace fec {
     namespace code {
 
-      generator_mtrx::generator_mtrx(const std::string filename) 
+      ldpc_gen_mtrx::ldpc_gen_mtrx(const std::string filename) 
       {
         // Read the matrix from a file in alist format
         d_G_ptr = read_matrix_from_file(filename);
@@ -56,7 +56,7 @@ namespace gr {
 
         int test_if_equal = gsl_matrix_equal(identity,I_test);
         if (!test_if_equal) {
-          throw "Error in generator_mtrx constructor. It appears that the given alist file did not contain a valid generator matrix of the form G = [I P].\n";
+          throw "Error in ldpc_gen_mtrx constructor. It appears that the given alist file did not contain a valid generator matrix of the form G = [I P].\n";
         }
 
         // Length of codeword = # of columns of generator matrix
@@ -103,22 +103,22 @@ namespace gr {
       } // Constructor
 
       // Default constructor, should not be used
-      generator_mtrx::generator_mtrx()
+      ldpc_gen_mtrx::ldpc_gen_mtrx()
       {
-        std::cout << "Error in generator_mtrx(): Default "
+        std::cout << "Error in ldpc_gen_mtrx(): Default "
                   << "constructor called.\nMust provide filename for"
                   << " generator matrix. \n\n";
         exit(1);
       } // Default constructor
     
       const gsl_matrix*
-      generator_mtrx::G()
+      ldpc_gen_mtrx::G()
       {
         const gsl_matrix *G_ptr = d_G_ptr;
         return G_ptr; 
       }
 
-      generator_mtrx::~generator_mtrx()
+      ldpc_gen_mtrx::~ldpc_gen_mtrx()
       {
         // Call the gsl_matrix_free function to free memory.
         gsl_matrix_free(d_H_ptr);
