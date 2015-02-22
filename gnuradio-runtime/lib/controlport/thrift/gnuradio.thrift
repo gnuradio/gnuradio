@@ -37,7 +37,9 @@ typedef list<double>  VectorD
 typedef list<string>  VectorS
 typedef list<complex> VectorZ
 
-enum BaseTypes { BOOL, BYTE, SHORT, INT, LONG, DOUBLE, STRING, COMPLEX }
+enum BaseTypes { BOOL, BYTE, SHORT, INT, LONG, DOUBLE, STRING, COMPLEX,
+                 F32VECTOR, F64VECTOR, S64VECTOR, S32VECTOR, S16VECTOR,
+                 S8VECTOR, C32VECTOR }
 
 union KnobBase {
   1: bool a_bool;

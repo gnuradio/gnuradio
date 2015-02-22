@@ -21,7 +21,7 @@
 #
 
 import random,math,operator
-import networkx as nx;
+import networkx as nx
 import matplotlib
 matplotlib.use("Qt4Agg");
 import matplotlib.pyplot as plt
@@ -39,19 +39,19 @@ import itertools
 
 from gnuradio.ctrlport.GrDataPlotter import *
 #from gnuradio.ctrlport import GNURadio
-from gnuradio.ctrlport.ThriftRadioClient import ThriftRadioClient
+
 
 class MAINWindow(QtGui.QMainWindow):
     def minimumSizeHint(self):
         return QtGui.QSize(800,600)
 
-    def __init__(self, radio, port, interface):
+    def __init__(self, radioclient):
 
         super(MAINWindow, self).__init__()
+        self.radioclient = radioclient
         self.conns = []
         self.plots = []
         self.knobprops = []
-        self.interface = interface
 
         self.mdiArea = QtGui.QMdiArea()
         self.mdiArea.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarAsNeeded)
@@ -71,7 +71,8 @@ class MAINWindow(QtGui.QMainWindow):
         self.setWindowTitle("GNU Radio Performance Monitor")
         self.setUnifiedTitleAndToolBarOnMac(True)
 
-        self.newCon(radio, port)
+        self.newCon(radioclient)
+
         icon = QtGui.QIcon(ctrlport.__path__[0] + "/icon.png" )
         self.setWindowIcon(icon)
 
@@ -83,16 +84,10 @@ class MAINWindow(QtGui.QMainWindow):
         child.show();
         self.mdiArea.currentSubWindow().showMaximized()
 
-
-    def newCon(self, radio=None, port=None):
-        child = MForm(radio, port, len(self.conns), self)
-        if(child.radio is not None):
-            child.setWindowTitle(str(child.radio))
-#            horizbar = QtGui.QScrollArea()
-#            horizbar.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarAsNeeded)
-#            horizbar.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAsNeeded)
-#            horizbar.setWidget(child)
-#            self.mdiArea.addSubWindow(horizbar)
+    def newCon(self, csomeBool):
+        child = MForm(self.radioclient, len(self.conns), self, prompt= not csomeBool)
+        if(child.radioclient is not None):
+            child.setWindowTitle(str(child.radioclient))
             self.mdiArea.addSubWindow(child)
             self.mdiArea.currentSubWindow().showMaximized()
 
@@ -226,7 +221,7 @@ GNU Radio is free software; you can redistribute it and/or modify it under the t
 GNU Radio is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.\n
 You should have received a copy of the GNU General Public License along with GNU Radio; see the file COPYING. If not, write to the Free Software Foundation, Inc., 51 Franklin Street, Boston, MA 02110-1301, USA.'''
 
-        QtGui.QMessageBox.about(None, "gr-ctrlport-monitor", about_info)
+        QtGui.QMessageBox.about(None, "gr-perf-monitorx", about_info)
 
 
 class ConInfoDialog(QtGui.QDialog):
@@ -263,7 +258,7 @@ class DataTable(QtGui.QWidget):
     def update(self):
         print "update"
 
-    def __init__(self, radio, G):
+    def __init__(self, radioclient, G):
         QtGui.QWidget.__init__( self)
 
         self.layout = QtGui.QVBoxLayout(self);
@@ -271,7 +266,7 @@ class DataTable(QtGui.QWidget):
         self.layout.addLayout(self.hlayout);
 
         self.G = G;
-        self.radio = radio;
+        self.radioclient = radioclient;
 
         self._keymap = None
 
@@ -346,8 +341,8 @@ class DataTable(QtGui.QWidget):
         self._sort = state > 0
 
 class DataTableBuffers(DataTable):
-    def __init__(self, radio, G):
-        DataTable.__init__(self,radio,G)
+    def __init__(self, radioclient, G):
+        DataTable.__init__(self,radioclient,G)
         self.perfTable.setHorizontalHeaderLabels( ["Block Name", "Percent Buffer Full"] );
 
     def update(self):
@@ -357,7 +352,7 @@ class DataTableBuffers(DataTable):
         kl = map(lambda x: "%s::%soutput %% full" % \
                      (x, self._statistics_table[self._statistic]),
                  nodes);
-        buf_knobs = self.radio.getKnobs(kl)
+        buf_knobs = self.radioclient.getKnobs(kl)
 
         # strip values out of ctrlport response
         buffer_fullness = dict(zip(
@@ -366,7 +361,7 @@ class DataTableBuffers(DataTable):
 
         blockport_fullness = {}
         for blk in buffer_fullness:
-            bdata = buffer_fullness[blk].a_f32vector
+            bdata = buffer_fullness[blk]
             for port in range(0,len(bdata)):
                 blockport_fullness["%s:%d"%(blk,port)] =  bdata[port];
 
@@ -396,8 +391,8 @@ class DataTableBuffers(DataTable):
         self.canvas.show();
 
 class DataTableRuntimes(DataTable):
-    def __init__(self, radio, G):
-        DataTable.__init__(self,radio,G)
+    def __init__(self, radioclient, G):
+        DataTable.__init__(self,radioclient,G)
         #self.perfTable.setRowCount(len( self.G.nodes() ))
 
     def update(self):
@@ -407,15 +402,15 @@ class DataTableRuntimes(DataTable):
         kl = map(lambda x: "%s::%swork time" % \
                      (x, self._statistics_table[self._statistic]),
                  nodes);
-        wrk_knobs = self.radio.getKnobs(kl)
+        wrk_knobs = self.radioclient.getKnobs(kl)
 
         # strip values out of ctrlport response
-        total_work = sum(map(lambda x: x.value.a_double, wrk_knobs.values()))
+        total_work = sum(map(lambda x: x.value, wrk_knobs.values()))
         if(total_work == 0):
             total_work = 1
         work_times = dict(zip(
             map(lambda x: x.split("::")[0], wrk_knobs.keys()),
-            map(lambda x: x.value.a_double/total_work, wrk_knobs.values())))
+            map(lambda x: x.value/total_work, wrk_knobs.values())))
 
         # update table view
         self.table_update(work_times)
@@ -452,11 +447,11 @@ class MForm(QtGui.QWidget):
                 self.prevent_clock_change = True;
                 kl1 = None;
                 if(self.clockKey == None):
-                    kl1 = self.radio.getRe([".*perfcounter_clock"])
+                    kl1 = self.radioclient.getRe([".*perfcounter_clock"])
                 else:
-                    kl1 = self.radio.getKnobs([self.clockKey])
+                    kl1 = self.radioclient.getKnobs([self.clockKey])
                 self.clockKey = kl1.keys()[0]
-                self.currClock = kl1[self.clockKey].value.a_long
+                self.currClock = kl1[self.clockKey].value
                 self.clockSelIdx = self.clocks.values().index(self.currClock)
                 self.clockSel.setCurrentIndex(self.clockSelIdx)
                 self.prevent_clock_change = False
@@ -472,29 +467,29 @@ class MForm(QtGui.QWidget):
                      nodes_stream);
 
             st = time.time()
-            buf_knobs = self.radio.getKnobs(kl)
+            buf_knobs = self.radioclient.getKnobs(kl)
             td1 = time.time() - st;
 
             # strip values out of ctrlport response
             buf_vals = dict(zip(
                 map(lambda x: x.split("::")[0], buf_knobs.keys()),
-                map(lambda x: x.value, buf_knobs.values())))
+                map(lambda x: x, buf_knobs.values())))
 
             # get work time for all blocks
             kl = map(lambda x: "%s::%swork time" % \
                          (x, self._statistics_table[self._statistic]),
                      nodes_stream);
             st = time.time()
-            wrk_knobs = self.radio.getKnobs(kl)
+            wrk_knobs = self.radioclient.getKnobs(kl)
             td2 = time.time() - st;
 
             # strip values out of ctrlport response
-            total_work = sum(map(lambda x: x.value.a_double, wrk_knobs.values()))
+            total_work = sum(map(lambda x: x.value, wrk_knobs.values()))
             if(total_work == 0):
                 total_work = 1
             work_times = dict(zip(
                         map(lambda x: x.split("::")[0], wrk_knobs.keys()),
-                        map(lambda x: x.value.a_double/total_work, wrk_knobs.values())))
+                        map(lambda x: x.value/total_work, wrk_knobs.values())))
             work_times_padded = dict(zip(
                         self.G.nodes(),
                         [0.1]*len(self.G.nodes())))
@@ -508,8 +503,7 @@ class MForm(QtGui.QWidget):
                     # get the right output buffer/port weight for each edge
                     sourceport = e[2]["sourceport"];
                     if(e[2]["type"] == "stream"):
-                        #newweight = buf_vals[n][sourceport]
-                        newweight = buf_vals[n].a_f32vector[0]
+                        newweight = buf_vals[n].value[sourceport]
                         e[2]["weight"] = newweight;
 
             for n in nodes_msg:
@@ -534,7 +528,7 @@ class MForm(QtGui.QWidget):
                                                     (latency*1000))
 
         except Exception, e:
-            sys.stderr.write("ctrlport-monitor: radio.getKnobs threw exception ({0}).\n".format(e))
+            sys.stderr.write("gr-perf-monitorx: radio.getKnobs threw exception ({0}).\n".format(e))
             if(type(self.parent) is MAINWindow):
                 # Find window of connection
                 remove = []
@@ -553,10 +547,10 @@ class MForm(QtGui.QWidget):
             return
 
     def rtt(self):
-        self.parent.newSubWindow(  DataTableRuntimes(self.radio, self.G_stream),  "Runtime Table" );
+        self.parent.newSubWindow(  DataTableRuntimes(self.radioclient, self.G_stream),  "Runtime Table" );
 
     def bpt(self):
-        self.parent.newSubWindow(  DataTableBuffers(self.radio, self.G_stream),  "Buffers Table" );
+        self.parent.newSubWindow(  DataTableBuffers(self.radioclient, self.G_stream),  "Buffers Table" );
 
     def resetPCs(self):
         knob = GNURadio.ttypes.KnobBase()
@@ -564,7 +558,7 @@ class MForm(QtGui.QWidget):
         km = {}
         for b in self.blocks_list:
             km[b + "::reset_perf_counters"] = knob
-        k = self.radio.setKnobs(km)
+        k = self.radioclient.setKnobs(km)
 
     def toggleFlowgraph(self):
         if self.pauseFGAct.isChecked():
@@ -578,14 +572,14 @@ class MForm(QtGui.QWidget):
         km = {}
         km[self.top_block + "::lock"] = knob
         km[self.top_block + "::stop"] = knob
-        k = self.radio.setKnobs(km)
+        k = self.radioclient.setKnobs(km)
 
     def unpauseFlowgraph(self):
         knob = GNURadio.ttypes.KnobBase()
         knob.a_bool = False
         km = {}
         km[self.top_block + "::unlock"] = knob
-        k = self.radio.setKnobs(km)
+        k = self.radioclient.setKnobs(km)
 
     def stat_changed(self, index):
         self._statistic = str(self.stattype.currentText())
@@ -596,26 +590,33 @@ class MForm(QtGui.QWidget):
         idx = self.clockSel.currentIndex();
         clk = self.clocks.values()[idx]
 #        print "UPDATE CLOCK!!! %d -> %d"%(idx,clk);
-        k = self.radio.getKnobs([self.clockKey]);
+        k = self.radioclient.getKnobs([self.clockKey]);
         k[self.clockKey].value = clk;
         km = {};
         km[self.clockKey] = k[self.clockKey];
-        self.radio.setKnobs(km);
+        self.radioclient.setKnobs(km);
 
-    def __init__(self, radio=None, port=None, uid=0, parent=None):
+    def __init__(self, radioclient, uid=0, parent=None, prompt = False):
 
         super(MForm, self).__init__()
-
-        if(radio == None or port == None):
+        self.radioclient = radioclient
+#         print("before radioclient.getHost()", radioclient.getHost(), radioclient.getPort(), "prompt", prompt)
+        if(prompt or radioclient.getHost() is None or radioclient.getPort() is None):
+#             print("before ConInfoDialog")
             askinfo = ConInfoDialog(self);
             if askinfo.exec_():
                 host = str(askinfo.host.text());
                 port = str(askinfo.port.text());
-                radio = parent.interface.getRadio(host, port)
-            else:
-                self.radio = None
-                return
+#                 print("before radioclient.newConnection host: %s port: %s"%(host,port))
+                newradio = self.radioclient.newConnection(host, port)
+                if newradio is None:
+                    print("Error making a %s connection to %s:%s from %s" % (radioclient.getName(), host, port, radioclient))
+                else:
+                    self.radioclient = newradio
 
+            else:
+                self.radioclient = None
+                return
 
         self.uid = uid
         self.parent = parent
@@ -677,7 +678,7 @@ class MForm(QtGui.QWidget):
 
 #        self.setLayout(self.layout);
 
-        self.radio = radio.radio
+        self.radio = radioclient
         self.knobprops = self.radio.properties([])
         self.parent.knobprops.append(self.knobprops)
 
@@ -720,8 +721,8 @@ class MForm(QtGui.QWidget):
             sys.exit(1)
 
         self.blocks_list = tmplist
-        edges = edgelist.a_string.split("\n")[0:-1]
-        msgedges = msgedgelist.a_string.split("\n")[0:-1]
+        edges = edgelist.split("\n")[0:-1]
+        msgedges = msgedgelist.split("\n")[0:-1]
 
         edgepairs_stream = [];
         edgepairs_msg = [];
@@ -819,7 +820,7 @@ class MForm(QtGui.QWidget):
         index = self.table.treeWidget.selectedIndexes()
         item = self.table.treeWidget.itemFromIndex(index[0])
         itemname = str(item.text(0))
-        self.parent.propertiesMenu(itemname, self.radio, self.uid)
+        self.parent.propertiesMenu(itemname, self.radioclient, self.uid)
 
     def updateGraph(self):
 
@@ -844,18 +845,13 @@ class MForm(QtGui.QWidget):
         self.canvas.draw();
         self.canvas.show();
 
-#class MyClient(ThriftRadioClient):
-#    def __init__(self):
-#        ThriftRadioClient.__init__(self, MAINWindow)
-#
-#sys.exit(MyClient().main(sys.argv))
 
-app = QtGui.QApplication(sys.argv)
+class MyApp(object):
+    def __init__(self, args):
+        from gnuradio.ctrlport.GNURadioControlPortClient import GNURadioControlPortClient
+        GNURadioControlPortClient(args, 'thrift', self.run, QtGui.QApplication(sys.argv).exec_)
 
-host = "127.0.0.1"
-port = 9090
-iface = "lo"
-radio = ThriftRadioClient(host, port)
-mainwin = MAINWindow(radio, port, iface)
-mainwin.show()
-app.exec_()
+    def run(self, client):
+        MAINWindow(client).show()
+
+MyApp(sys.argv)

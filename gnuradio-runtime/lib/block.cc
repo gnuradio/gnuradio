@@ -842,42 +842,42 @@ namespace gr {
     d_rpc_vars.push_back(
       rpcbasic_sptr(new rpcbasic_register_get<block, std::vector<float> >(
         alias(), "input \% full", &block::pc_input_buffers_full,
-        pmt::make_c32vector(0,0), pmt::make_c32vector(0,1), pmt::make_c32vector(0,0),
+        pmt::make_f32vector(0,0), pmt::make_f32vector(0,1), pmt::make_f32vector(0,0),
         "", "how full input buffers are", RPC_PRIVLVL_MIN,
         DISPTIME | DISPOPTSTRIP)));
 
     d_rpc_vars.push_back(
       rpcbasic_sptr(new rpcbasic_register_get<block, std::vector<float> >(
         alias(), "avg input \% full", &block::pc_input_buffers_full_avg,
-        pmt::make_c32vector(0,0), pmt::make_c32vector(0,1), pmt::make_c32vector(0,0),
+        pmt::make_f32vector(0,0), pmt::make_f32vector(0,1), pmt::make_f32vector(0,0),
         "", "Average of how full input buffers are", RPC_PRIVLVL_MIN,
         DISPTIME | DISPOPTSTRIP)));
 
     d_rpc_vars.push_back(
       rpcbasic_sptr(new rpcbasic_register_get<block, std::vector<float> >(
         alias(), "var input \% full", &block::pc_input_buffers_full_var,
-        pmt::make_c32vector(0,0), pmt::make_c32vector(0,1), pmt::make_c32vector(0,0),
+        pmt::make_f32vector(0,0), pmt::make_f32vector(0,1), pmt::make_f32vector(0,0),
         "", "Var. of how full input buffers are", RPC_PRIVLVL_MIN,
         DISPTIME | DISPOPTSTRIP)));
 
     d_rpc_vars.push_back(
       rpcbasic_sptr(new rpcbasic_register_get<block, std::vector<float> >(
         alias(), "output \% full", &block::pc_output_buffers_full,
-        pmt::make_c32vector(0,0), pmt::make_c32vector(0,1), pmt::make_c32vector(0,0),
+        pmt::make_f32vector(0,0), pmt::make_f32vector(0,1), pmt::make_f32vector(0,0),
         "", "how full output buffers are", RPC_PRIVLVL_MIN,
         DISPTIME | DISPOPTSTRIP)));
 
     d_rpc_vars.push_back(
       rpcbasic_sptr(new rpcbasic_register_get<block, std::vector<float> >(
         alias(), "avg output \% full", &block::pc_output_buffers_full_avg,
-        pmt::make_c32vector(0,0), pmt::make_c32vector(0,1), pmt::make_c32vector(0,0),
+        pmt::make_f32vector(0,0), pmt::make_f32vector(0,1), pmt::make_f32vector(0,0),
         "", "Average of how full output buffers are", RPC_PRIVLVL_MIN,
         DISPTIME | DISPOPTSTRIP)));
 
     d_rpc_vars.push_back(
       rpcbasic_sptr(new rpcbasic_register_get<block, std::vector<float> >(
         alias(), "var output \% full", &block::pc_output_buffers_full_var,
-        pmt::make_c32vector(0,0), pmt::make_c32vector(0,1), pmt::make_c32vector(0,0),
+        pmt::make_f32vector(0,0), pmt::make_f32vector(0,1), pmt::make_f32vector(0,0),
         "", "Var. of how full output buffers are", RPC_PRIVLVL_MIN,
         DISPTIME | DISPOPTSTRIP)));
 #endif /* defined(GR_CTRLPORT) && defined(GR_PERFORMANCE_COUNTERS) */

@@ -28,7 +28,6 @@ GNURadio::Knob
 rpcpmtconverter::from_pmt(const pmt::pmt_t& knob)
 {
   if(pmt::is_real(knob)) {
-
     GNURadio::Knob result;
     result.type = GNURadio::BaseTypes::DOUBLE;
     result.value.__set_a_double(pmt::to_double(knob));
@@ -71,6 +70,7 @@ rpcpmtconverter::from_pmt(const pmt::pmt_t& knob)
   }
   else if(pmt::is_f32vector(knob)) {
     GNURadio::Knob result;
+    result.type = GNURadio::BaseTypes::F32VECTOR;
     size_t size(pmt::length(knob));
     const float* start((const float*)pmt::f32vector_elements(knob,size));
     result.value.__set_a_f32vector(std::vector<double>(start,start+size));
@@ -78,6 +78,7 @@ rpcpmtconverter::from_pmt(const pmt::pmt_t& knob)
   }
   else if(pmt::is_f64vector(knob)) {
     GNURadio::Knob result;
+    result.type = GNURadio::BaseTypes::F64VECTOR;
     size_t size(pmt::length(knob));
     const double* start((const double*)pmt::f64vector_elements(knob,size));
     result.value.__set_a_f64vector(std::vector<double>(start,start+size));
@@ -85,6 +86,7 @@ rpcpmtconverter::from_pmt(const pmt::pmt_t& knob)
   }
   else if(pmt::is_s64vector(knob)) {
     GNURadio::Knob result;
+    result.type = GNURadio::BaseTypes::S64VECTOR;
     size_t size(pmt::length(knob));
     const int64_t* start((const int64_t*)pmt::s64vector_elements(knob,size));
     result.value.__set_a_s64vector(std::vector<int64_t>(start,start+size));
@@ -92,6 +94,7 @@ rpcpmtconverter::from_pmt(const pmt::pmt_t& knob)
   }
   else if(pmt::is_s32vector(knob)) {
     GNURadio::Knob result;
+    result.type = GNURadio::BaseTypes::S32VECTOR;
     size_t size(pmt::length(knob));
     const int32_t* start((const int32_t*)pmt::s32vector_elements(knob,size));
     result.value.__set_a_s32vector(std::vector<int32_t>(start,start+size));
@@ -99,6 +102,7 @@ rpcpmtconverter::from_pmt(const pmt::pmt_t& knob)
   }
   else if(pmt::is_s16vector(knob)) {
     GNURadio::Knob result;
+    result.type = GNURadio::BaseTypes::S16VECTOR;
     size_t size(pmt::length(knob));
     const int16_t* start((const int16_t*)pmt::s16vector_elements(knob,size));
     result.value.__set_a_s16vector(std::vector<int16_t>(start,start+size));
@@ -106,6 +110,7 @@ rpcpmtconverter::from_pmt(const pmt::pmt_t& knob)
   }
   else if(pmt::is_s8vector(knob)) {
     GNURadio::Knob result;
+    result.type = GNURadio::BaseTypes::S8VECTOR;
     size_t size(pmt::length(knob));
     const int8_t* start((const int8_t*)pmt::s8vector_elements(knob,size));
     result.value.__set_a_s8vector(std::vector<int8_t>(start,start+size));
@@ -115,6 +120,7 @@ rpcpmtconverter::from_pmt(const pmt::pmt_t& knob)
     std::vector< GNURadio::complex > z;
 
     GNURadio::Knob result;
+    result.type = GNURadio::BaseTypes::C32VECTOR;
     size_t size(pmt::length(knob));
     const gr_complex* start((const gr_complex*)pmt::c32vector_elements(knob,size));
     for(size_t s = 0; s < size; s++) {
@@ -137,7 +143,6 @@ rpcpmtconverter::from_pmt(const pmt::pmt_t& knob)
 pmt::pmt_t
 rpcpmtconverter::to_pmt(const GNURadio::Knob& knob)
 {
-
   if(knob.type == GNURadio::BaseTypes::BYTE) {
     return pmt::mp(knob.value.a_byte);
   }
@@ -165,6 +170,12 @@ rpcpmtconverter::to_pmt(const GNURadio::Knob& knob)
   else if(knob.type == GNURadio::BaseTypes::COMPLEX) {
     gr_complexd cpx(knob.value.a_complex.re, knob.value.a_complex.im);
     return pmt::from_complex(cpx);
+  }
+  else if(knob.type == GNURadio::BaseTypes::F32VECTOR) {
+    if (knob.value.a_bool)
+      return pmt::PMT_T;
+    else
+      return pmt::PMT_F;
   }
   else {
     std::cerr << "Error: Don't know how to handle Knob Type: " << knob.type << std::endl; assert(0);

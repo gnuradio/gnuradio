@@ -20,6 +20,33 @@
 ########################################################################
 include(GrPython)
 
+install(
+    FILES
+    ${CMAKE_CURRENT_SOURCE_DIR}/icon.png
+    DESTINATION ${GR_PYTHON_DIR}/gnuradio/ctrlport
+    COMPONENT "runtime_python"
+)
+
+
+GR_PYTHON_INSTALL(
+    FILES
+    ${CMAKE_CURRENT_SOURCE_DIR}/__init__.py
+    ${CMAKE_CURRENT_SOURCE_DIR}/GrDataPlotter.py
+    ${CMAKE_CURRENT_SOURCE_DIR}/monitor.py
+    ${CMAKE_CURRENT_SOURCE_DIR}/GNURadioControlPortClient.py
+    DESTINATION ${GR_PYTHON_DIR}/gnuradio/ctrlport/
+    COMPONENT "runtime_python"
+)
+
+GR_PYTHON_INSTALL(
+    FILES
+    ${CMAKE_CURRENT_SOURCE_DIR}/gr-perf-monitorx
+    ${CMAKE_CURRENT_SOURCE_DIR}/gr-ctrlport-monitor
+    DESTINATION ${GR_RUNTIME_DIR}
+    PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE
+    COMPONENT "runtime_python"
+)
+
 if(THRIFT_FOUND)
 
 EXECUTE_PROCESS(
@@ -28,36 +55,9 @@ EXECUTE_PROCESS(
    ERROR_VARIABLE THRIFT_PY_ERROR
    )
 
-endif(THRIFT_FOUND)
-
-install(
-    FILES
-    ${CMAKE_CURRENT_SOURCE_DIR}/icon.png
-    DESTINATION ${GR_PYTHON_DIR}/gnuradio/ctrlport
-    COMPONENT "runtime_python"
-)
-
 GR_PYTHON_INSTALL(
     FILES
-    ${CMAKE_CURRENT_SOURCE_DIR}/__init__.py
-    ${CMAKE_CURRENT_SOURCE_DIR}/GrDataPlotter.py
-    ${CMAKE_CURRENT_SOURCE_DIR}/monitor.py
     ${CMAKE_CURRENT_SOURCE_DIR}/ThriftRadioClient.py
-    DESTINATION ${GR_PYTHON_DIR}/gnuradio/ctrlport/
-    COMPONENT "runtime_python"
-)
-
-GR_PYTHON_INSTALL(
-    FILES
-    ${CMAKE_CURRENT_SOURCE_DIR}/gr-perf-monitorx
-    DESTINATION ${GR_RUNTIME_DIR}
-    PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE
-    COMPONENT "runtime_python"
-)
-
-# Install the files compiled from gnuradio.thrift
-GR_PYTHON_INSTALL(
-    FILES
     ${CMAKE_CURRENT_BINARY_DIR}/GNURadio/__init__.py
     ${CMAKE_CURRENT_BINARY_DIR}/GNURadio/constants.py
     ${CMAKE_CURRENT_BINARY_DIR}/GNURadio/ControlPort.py
@@ -68,3 +68,5 @@ GR_PYTHON_INSTALL(
     DESTINATION ${GR_PYTHON_DIR}/gnuradio/ctrlport/GNURadio
     COMPONENT "runtime_python"
 )
+
+endif(THRIFT_FOUND)
