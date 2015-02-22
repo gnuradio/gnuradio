@@ -37,9 +37,8 @@ namespace gr {
         // nothing for the default constructor to do
       }
 
-      void
-      fec_mtrx::read_matrix_from_file(const std::string filename,
-                                      gsl_matrix *given_matrix)
+      gsl_matrix*
+      fec_mtrx::read_matrix_from_file(const std::string filename)
       {
         /* This function reads in an alist file and creates the
            corresponding matrix. The format of alist files is 
@@ -60,8 +59,9 @@ namespace gr {
         inputFile >> d_num_cols >> d_num_rows; 
 
         // Now we can allocate memory for the GSL matrix
-        given_matrix = gsl_matrix_alloc(d_num_rows, d_num_cols);
-        gsl_matrix_set_zero(given_matrix);
+        gsl_matrix *temp_matrix = gsl_matrix_alloc(d_num_rows,
+                                                   d_num_cols);
+        gsl_matrix_set_zero(temp_matrix);
 
         // The next few lines in the file are not necessary in
         // constructing the matrix.
@@ -85,7 +85,7 @@ namespace gr {
             // alist files index starting from 1, not 0, so decrement
             row_i--;
             // set the corresponding matrix element to 1
-            gsl_matrix_set(given_matrix,row_i,column_count,1);
+            gsl_matrix_set(temp_matrix,row_i,column_count,1);
           }
           column_count++;
         }
@@ -96,6 +96,8 @@ namespace gr {
 
         // Close the alist file
         inputFile.close();
+
+        return temp_matrix;
       }
 
       const gsl_matrix*

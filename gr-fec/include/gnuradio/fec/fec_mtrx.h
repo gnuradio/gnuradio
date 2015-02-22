@@ -47,8 +47,7 @@ namespace gr {
         // GSL matrix structure for the parity check matrix
         gsl_matrix *d_H_ptr;
         // Read the matrix from a file in alist format
-        void read_matrix_from_file(const std::string filename,
-                                   gsl_matrix *);
+        gsl_matrix *read_matrix_from_file(const std::string filename);
         // Constructor
         fec_mtrx();
         
