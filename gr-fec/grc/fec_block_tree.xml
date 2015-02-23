@@ -21,6 +21,7 @@
       <block>variable_ccsds_encoder_def</block>
       <block>variable_repetition_encoder_def</block>
       <block>variable_dummy_encoder_def</block>
+      <block>variable_ldpc_gen_mtrx_encoder_def</block>
       <block>variable_ldpc_R_U_encoder_def</block>
     </cat>
     <block>fec_extended_encoder</block>
@@ -41,5 +42,6 @@
     <block>fec_ber_bf</block>
     <block>fec_bercurve_generator</block>
     <block>variable_ldpc_R_U_mtrx_def</block>
+    <block>variable_ldpc_gen_mtrx_def</block>
   </cat>
 </cat>
