@@ -34,5 +34,15 @@
         <type>int</type>
     </param>
     <doc>
+This block creates a FEC LDPC R. U. Parity Check Matrix variable.
+
+This variable can be used by:
+  1) LDPC R. U. Encoder Definition block
+  2) LDPC Bit Flip Decoder Definition block
+
+The format of alist files is described at:
+http://www.inference.phy.cam.ac.uk/mackay/codes/alist.html
+
+The specific format of this parity check matrix is described by Richardson and Urbanke in Appendix A of their book: Modern Coding Theory (ISBN 978-0-521-85229-6).
     </doc>
 </block>
