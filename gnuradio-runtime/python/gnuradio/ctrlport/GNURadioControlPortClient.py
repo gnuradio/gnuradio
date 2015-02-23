@@ -128,72 +128,63 @@ Args:
     host: hostname of the connection
 """
 
-from gnuradio.ctrlport.GNURadio.ttypes import BaseTypes
-
 class RPCConnectionThrift(RPCConnection):
     def __init__(self, host=None, port=None):
-        if port is None: port = 9090
+        from gnuradio.ctrlport.GNURadio.ttypes import BaseTypes
+        self.BaseTypes = BaseTypes
+
+        if port is None:
+            port = 9090
         super(RPCConnectionThrift, self).__init__(method='thrift', port=port, host=host)
         self.newConnection(host, port)
+
+        class Knob():
+            def __init__(self, key, value):
+                (self.key, self.value) = (key, value)
+
+        self.types_dict = {
+            self.BaseTypes.BOOL:      lambda k,b: Knob(k, b.value.a_bool),
+            self.BaseTypes.BYTE:      lambda k,b: Knob(k, b.value.a_byte),
+            self.BaseTypes.SHORT:     lambda k,b: Knob(k, b.value.a_short),
+            self.BaseTypes.INT:       lambda k,b: Knob(k, b.value.a_int),
+            self.BaseTypes.LONG:      lambda k,b: Knob(k, b.value.a_long),
+            self.BaseTypes.DOUBLE:    lambda k,b: Knob(k, b.value.a_double),
+            self.BaseTypes.STRING:    lambda k,b: Knob(k, b.value.a_string),
+            self.BaseTypes.COMPLEX:   lambda k,b: Knob(k, b.value.a_complex),
+            self.BaseTypes.F32VECTOR: lambda k,b: Knob(k, b.value.a_f32vector),
+            self.BaseTypes.F64VECTOR: lambda k,b: Knob(k, b.value.a_f64vector),
+            self.BaseTypes.S64VECTOR: lambda k,b: Knob(k, b.value.a_s64vector),
+            self.BaseTypes.S32VECTOR: lambda k,b: Knob(k, b.value.a_s32vector),
+            self.BaseTypes.S16VECTOR: lambda k,b: Knob(k, b.value.a_s16vector),
+            self.BaseTypes.S8VECTOR:  lambda k,b: Knob(k, b.value.a_s8vector),
+            self.BaseTypes.C32VECTOR: lambda k,b: Knob(k, b.value.a_c32vector),
+        }
 
     def newConnection(self, host=None, port=None):
         from gnuradio.ctrlport.ThriftRadioClient import ThriftRadioClient
         self.thriftclient = ThriftRadioClient(self.getHost(), self.getPort())
 
     def properties(self, *args):
-        return self.thriftclient.radio.properties(*args)
+        knobprops = self.thriftclient.radio.properties(*args)
+        for key, knobprop in knobprops.iteritems():
+#             print("key:", key, "value:", knobprop, "type:", knobprop.type)
+            knobprops[key].min = self.types_dict[knobprop.type](key, knobprop.min)
+            knobprops[key].max = self.types_dict[knobprop.type](key, knobprop.max)
+            knobprops[key].defaultvalue = self.types_dict[knobprop.type](key, knobprop.defaultvalue)
+
+        return knobprops
 
     def getKnobs(self, *args):
-        class Knob():
-            def __init__(self, key, value):
-                (self.key, self.value) = (key, value)
-
         result = {}
         for key, knob in self.thriftclient.radio.getKnobs(*args).iteritems():
-            if knob.type ==   BaseTypes.BOOL:      result[key] = Knob(key, knob.value.a_bool)
-            elif knob.type == BaseTypes.BYTE:      result[key] = Knob(key, knob.value.a_byte)
-            elif knob.type == BaseTypes.SHORT:     result[key] = Knob(key, knob.value.a_short)
-            elif knob.type == BaseTypes.INT:       result[key] = Knob(key, knob.value.a_int)
-            elif knob.type == BaseTypes.LONG:      result[key] = Knob(key, knob.value.a_long)
-            elif knob.type == BaseTypes.DOUBLE:    result[key] = Knob(key, knob.value.a_double)
-            elif knob.type == BaseTypes.STRING:    result[key] = Knob(key, knob.value.a_string)
-            elif knob.type == BaseTypes.COMPLEX:   result[key] = Knob(key, knob.value.a_complex)
-            elif knob.type == BaseTypes.F32VECTOR: result[key] = Knob(key, knob.value.a_f32vector)
-            elif knob.type == BaseTypes.F64VECTOR: result[key] = Knob(key, knob.value.a_f64vector)
-            elif knob.type == BaseTypes.S64VECTOR: result[key] = Knob(key, knob.value.a_s64vector)
-            elif knob.type == BaseTypes.S32VECTOR: result[key] = Knob(key, knob.value.a_s32vector)
-            elif knob.type == BaseTypes.S16VECTOR: result[key] = Knob(key, knob.value.a_s16vector)
-            elif knob.type == BaseTypes.S8VECTOR:  result[key] = Knob(key, knob.value.a_s8vector)
-            elif knob.type == BaseTypes.C32VECTOR: result[key] = Knob(key, knob.value.a_c32vector)
-            else:
-                raise exceptions.ValueError
-
+#             print("key:", key, "value:", knob, "type:", knob.type)
+            result[key] = self.types_dict[knob.type](key, knob)
         return result
 
     def getRe(self,*args):
-        class Knob():
-            def __init__(self, key, value):
-                (self.key, self.value) = (key, value)
-
         result = {}
         for key, knob in self.thriftclient.radio.getRe(*args).iteritems():
-            if knob.type ==   BaseTypes.BOOL:      result[key] = Knob(key, knob.value.a_bool)
-            elif knob.type == BaseTypes.BYTE:      result[key] = Knob(key, knob.value.a_byte)
-            elif knob.type == BaseTypes.SHORT:     result[key] = Knob(key, knob.value.a_short)
-            elif knob.type == BaseTypes.INT:       result[key] = Knob(key, knob.value.a_int)
-            elif knob.type == BaseTypes.LONG:      result[key] = Knob(key, knob.value.a_long)
-            elif knob.type == BaseTypes.DOUBLE:    result[key] = Knob(key, knob.value.a_double)
-            elif knob.type == BaseTypes.STRING:    result[key] = Knob(key, knob.value.a_string)
-            elif knob.type == BaseTypes.COMPLEX:   result[key] = Knob(key, knob.value.a_complex)
-            elif knob.type == BaseTypes.F32VECTOR: result[key] = Knob(key, knob.value.a_f32vector)
-            elif knob.type == BaseTypes.F64VECTOR: result[key] = Knob(key, knob.value.a_f64vector)
-            elif knob.type == BaseTypes.S64VECTOR: result[key] = Knob(key, knob.value.a_s64vector)
-            elif knob.type == BaseTypes.S32VECTOR: result[key] = Knob(key, knob.value.a_s32vector)
-            elif knob.type == BaseTypes.S16VECTOR: result[key] = Knob(key, knob.value.a_s16vector)
-            elif knob.type == BaseTypes.S8VECTOR:  result[key] = Knob(key, knob.value.a_s8vector)
-            elif knob.type == BaseTypes.C32VECTOR: result[key] = Knob(key, knob.value.a_c32vector)
-            else:
-                raise exceptions.ValueError
+            result[key] = self.types_dict[knob.type](key, knob)
         return result
 
     def setKnobs(self,*args):

@@ -1,4 +1,4 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python
 #
 # Copyright 2012-2013 Free Software Foundation, Inc.
 #
@@ -29,17 +29,13 @@ from matplotlib.backends.backend_qt4agg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.backends.backend_qt4agg import NavigationToolbar2QTAgg as NavigationToolbar
 from matplotlib.figure import Figure
 
-from gnuradio import gr, ctrlport
-
 from PyQt4 import QtCore,Qt,Qwt5
 import PyQt4.QtGui as QtGui
 import sys, time, re, pprint
 import itertools
 
-
+from gnuradio import gr, ctrlport
 from gnuradio.ctrlport.GrDataPlotter import *
-#from gnuradio.ctrlport import GNURadio
-
 
 class MAINWindow(QtGui.QMainWindow):
     def minimumSizeHint(self):
@@ -85,7 +81,7 @@ class MAINWindow(QtGui.QMainWindow):
         self.mdiArea.currentSubWindow().showMaximized()
 
     def newCon(self, csomeBool):
-        child = MForm(self.radioclient, len(self.conns), self, prompt= not csomeBool)
+        child = MForm(self.radioclient, len(self.conns), self, dialogprompt = not csomeBool)
         if(child.radioclient is not None):
             child.setWindowTitle(str(child.radioclient))
             self.mdiArea.addSubWindow(child)
@@ -362,8 +358,9 @@ class DataTableBuffers(DataTable):
         blockport_fullness = {}
         for blk in buffer_fullness:
             bdata = buffer_fullness[blk]
-            for port in range(0,len(bdata)):
-                blockport_fullness["%s:%d"%(blk,port)] =  bdata[port];
+            if bdata:
+                for port in range(0,len(bdata)):
+                    blockport_fullness["%s:%d"%(blk,port)] =  bdata[port];
 
         self.table_update(blockport_fullness);
 
@@ -473,7 +470,7 @@ class MForm(QtGui.QWidget):
             # strip values out of ctrlport response
             buf_vals = dict(zip(
                 map(lambda x: x.split("::")[0], buf_knobs.keys()),
-                map(lambda x: x, buf_knobs.values())))
+                map(lambda x: x.value, buf_knobs.values())))
 
             # get work time for all blocks
             kl = map(lambda x: "%s::%swork time" % \
@@ -503,7 +500,7 @@ class MForm(QtGui.QWidget):
                     # get the right output buffer/port weight for each edge
                     sourceport = e[2]["sourceport"];
                     if(e[2]["type"] == "stream"):
-                        newweight = buf_vals[n].value[sourceport]
+                        newweight = buf_vals[n][sourceport]
                         e[2]["weight"] = newweight;
 
             for n in nodes_msg:
@@ -511,7 +508,6 @@ class MForm(QtGui.QWidget):
                 for e in ne: # iterate over edges from this block
                     sourceport = e[2]["sourceport"];
                     if(e[2]["type"] == "msg"):
-                        #newweight = buf_vals[n][sourceport]
                         newweight = 0.01;
                         e[2]["weight"] = newweight;
 
@@ -596,12 +592,12 @@ class MForm(QtGui.QWidget):
         km[self.clockKey] = k[self.clockKey];
         self.radioclient.setKnobs(km);
 
-    def __init__(self, radioclient, uid=0, parent=None, prompt = False):
+    def __init__(self, radioclient, uid=0, parent=None, dialogprompt = False):
 
         super(MForm, self).__init__()
         self.radioclient = radioclient
 #         print("before radioclient.getHost()", radioclient.getHost(), radioclient.getPort(), "prompt", prompt)
-        if(prompt or radioclient.getHost() is None or radioclient.getPort() is None):
+        if(dialogprompt or radioclient.getHost() is None or radioclient.getPort() is None):
 #             print("before ConInfoDialog")
             askinfo = ConInfoDialog(self);
             if askinfo.exec_():
