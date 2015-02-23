@@ -38,7 +38,7 @@ namespace gr {
 
     tagged_stream_align_impl::tagged_stream_align_impl(size_t itemsize, const std::string &lengthtagname)
       : block("tagged_stream_align",
-                 io_signature::make(1, -1, itemsize),
+                 io_signature::make(1,  1, itemsize),
                  io_signature::make(1,  1, itemsize)),
         d_itemsize(itemsize),
         d_lengthtag(pmt::mp(lengthtagname)),
