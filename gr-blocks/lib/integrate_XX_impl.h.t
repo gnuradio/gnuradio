@@ -33,10 +33,10 @@ namespace gr {
     class BLOCKS_API @NAME_IMPL@ : public @NAME@
     {
       int d_decim;
-      int d_count;
+      int d_vlen;
 
     public:
-      @NAME_IMPL@(int decim);
+      @NAME_IMPL@(int decim, int vlen);
 
       int work(int noutput_items,
 	       gr_vector_const_void_star &input_items,
