@@ -32,18 +32,18 @@
 namespace gr {
   namespace blocks {
 
-    @NAME@::sptr @NAME@::make(int decim)
+    @NAME@::sptr @NAME@::make(int decim, int vlen)
     {
-      return gnuradio::get_initial_sptr(new @NAME_IMPL@(decim));
+      return gnuradio::get_initial_sptr(new @NAME_IMPL@(decim, vlen));
     }
 
-    @NAME_IMPL@::@NAME_IMPL@(int decim)
+    @NAME_IMPL@::@NAME_IMPL@(int decim, int vlen)
       : sync_decimator("@NAME@",
-			  io_signature::make(1, 1, sizeof (@I_TYPE@)),
-			  io_signature::make(1, 1, sizeof (@O_TYPE@)),
+			  io_signature::make(1, 1, sizeof (@I_TYPE@) * vlen),
+			  io_signature::make(1, 1, sizeof (@O_TYPE@) * vlen),
 			  decim),
       d_decim(decim),
-      d_count(0)
+      d_vlen(vlen)
     {
     }
 
@@ -56,9 +56,14 @@ namespace gr {
       @O_TYPE@ *out = (@O_TYPE@ *)output_items[0];
 
       for (int i = 0; i < noutput_items; i++) {
-	out[i] = (@O_TYPE@)0;
-	for (int j = 0; j < d_decim; j++)
-	  out[i] += in[i*d_decim+j];
+        for (int j = 0; j < d_vlen; ++j) {
+          out[i*d_vlen + j] = (@O_TYPE@)0;
+        }
+        for (int j = 0; j < d_decim; j++) {
+          for (int k = 0; k < d_vlen; ++k) {
+            out[i*d_vlen + k] += in[i*d_decim*d_vlen + j*d_vlen + k];
+          }
+        }
       }
 
       return noutput_items;
