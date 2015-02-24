@@ -36,13 +36,13 @@ namespace gr {
         unsigned int d_frame_size;
            
         // FEC matrix object to use for decoding
-        fec_mtrx *d_mtrx;
+        const fec_mtrx *d_mtrx;
 
         // Maximum number of iterations to do in decoding algorithm
         unsigned int d_max_iterations;
 
       public:
-        ldpc_bit_flip_decoder_impl(fec_mtrx *mtrx_obj,
+        ldpc_bit_flip_decoder_impl(const fec_mtrx *mtrx_obj,
                                    unsigned int max_iter=100);
         ~ldpc_bit_flip_decoder_impl();
 

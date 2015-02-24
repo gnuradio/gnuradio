@@ -41,10 +41,10 @@ namespace gr {
         // Number of bits in the information word
         unsigned int d_frame_size;
         // LDPC parity check matrix object to use for encoding
-        ldpc_R_U_mtrx *d_H;
+        const ldpc_R_U_mtrx *d_H;
 
       public:
-        ldpc_R_U_encoder_impl(ldpc_R_U_mtrx *H_obj);
+        ldpc_R_U_encoder_impl(const ldpc_R_U_mtrx *H_obj);
         ~ldpc_R_U_encoder_impl();
 
         bool set_frame_size(unsigned int frame_size);

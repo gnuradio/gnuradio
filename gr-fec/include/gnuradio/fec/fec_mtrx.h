@@ -36,6 +36,8 @@ namespace gr {
       class FEC_API fec_mtrx
       {
       protected:
+        // Constructor
+        fec_mtrx();
         // Codeword length n
         unsigned int d_n;
         // Information word length k
@@ -48,16 +50,14 @@ namespace gr {
         gsl_matrix *d_H_ptr;
         // Read the matrix from a file in alist format
         gsl_matrix *read_matrix_from_file(const std::string filename);
-        // Constructor
-        fec_mtrx();
         
       public:
         // Returns the parity check matrix H (needed by decoder)
-        const gsl_matrix *H();
+        const gsl_matrix *H() const;
         // Get the codeword length n
-        unsigned int n();
+        unsigned int n() const;
         // Get the information word length k
-        unsigned int k();
+        unsigned int k() const;
 
         ///////////////////////////////////
         // TODO add a boolean for whether or not parity part comes first
@@ -66,13 +66,13 @@ namespace gr {
 
         // Subtract matrices using mod2 operation
         gsl_matrix *add_matrices_mod2(const gsl_matrix *,
-                                      const gsl_matrix *);
+                                      const gsl_matrix *) const;
         // Perform matrix multiplication using mod 2 operations
         gsl_matrix *mult_matrices_mod2(const gsl_matrix *,
-                                       const gsl_matrix *);
+                                       const gsl_matrix *) const;
         // Find the inverse of a square matrix using modulo 2
         // operations
-        gsl_matrix *calc_inverse_mod2(const gsl_matrix *);
+        gsl_matrix *calc_inverse_mod2(const gsl_matrix *) const;
 
         virtual ~fec_mtrx(); 
       };

@@ -43,5 +43,6 @@ install(
     n_1100_k_0442_gap_24.alist
     n_1300_k_0522_gap_30.alist
     n_1800_k_0902_gap_28.alist
+    PNB2_512_23C1.alist
     DESTINATION ${GR_PYTHON_DIR}/gnuradio/fec/LDPC
 )

@@ -50,7 +50,7 @@ namespace gr {
          * \param G_obj The generator matrix object to use
          *        for encoding.
         */
-        static generic_encoder::sptr make(ldpc_gen_mtrx *G_obj);
+        static generic_encoder::sptr make(const ldpc_gen_mtrx *G_obj);
 
         /*!
          * Sets the uncoded frame size to \p frame_size. If \p

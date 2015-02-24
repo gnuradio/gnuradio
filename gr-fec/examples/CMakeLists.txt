@@ -24,6 +24,7 @@ install(
     271.127.3.112
     ber_test.grc
     ber_curve_gen.grc
+    ber_curve_gen_ldpc.grc
     fecapi_decoders.grc
     fecapi_encoders.grc
     fecapi_async_decoders.grc
@@ -39,6 +40,8 @@ install(
     polar_ber_curve_gen.grc
     polar_code_example.grc
     tpc_ber_curve_gen.grc
+    n_1800_k_0902_gap_28.alist
+    PNB2_512_23C1.alist
     DESTINATION ${GR_PKG_FEC_EXAMPLES_DIR}
     COMPONENT "fec_python"
 )
