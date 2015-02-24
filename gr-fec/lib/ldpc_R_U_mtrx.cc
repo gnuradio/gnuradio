@@ -45,6 +45,9 @@ namespace gr {
 
         set_parameters_for_encoding();
 
+        // For info about this see get_base_ptr() function
+        d_base_ptr = this;
+
       } // Constructor
 
       // Default constructor, should not be used
@@ -57,42 +60,42 @@ namespace gr {
       } // Default constructor
 
       const gsl_matrix*
-      ldpc_R_U_mtrx::A()
+      ldpc_R_U_mtrx::A() const
       {
         const gsl_matrix *A_ptr = &d_A_view.matrix;
         return A_ptr; 
       }
 
       const gsl_matrix*
-      ldpc_R_U_mtrx::B()
+      ldpc_R_U_mtrx::B() const
       {
         const gsl_matrix *B_ptr = &d_B_view.matrix;
         return B_ptr; 
       }
 
       const gsl_matrix*
-      ldpc_R_U_mtrx::D()
+      ldpc_R_U_mtrx::D() const
       {
         const gsl_matrix *D_ptr = &d_D_view.matrix;
         return D_ptr; 
       }
 
       const gsl_matrix*
-      ldpc_R_U_mtrx::E()
+      ldpc_R_U_mtrx::E() const
       {
         const gsl_matrix *E_ptr = &d_E_view.matrix;
         return E_ptr; 
       }
 
       const gsl_matrix*
-      ldpc_R_U_mtrx::T()
+      ldpc_R_U_mtrx::T() const
       {
         const gsl_matrix *T_ptr = &d_T_view.matrix;
         return T_ptr; 
       }
 
       const gsl_matrix*
-      ldpc_R_U_mtrx::phi_inverse()
+      ldpc_R_U_mtrx::phi_inverse() const
       {
         const gsl_matrix *phi_inverse_ptr = d_phi_inverse_ptr;
         return phi_inverse_ptr; 
@@ -176,7 +179,17 @@ namespace gr {
         gsl_matrix_free(temp2);
         gsl_matrix_free(phi);
         gsl_matrix_free(d_T_inverse_ptr);
+      }
 
+      gr::fec::code::fec_mtrx*
+      ldpc_R_U_mtrx::get_base_ptr()
+      {
+        /* For some reason, swig isn't accepting a pointer to this
+           child class for the make function of the
+           ldpc_bit_flip_decoder; it's expecting a pointer to the
+           base class. So this is just a workaround for swig/GRC.
+        */
+        return d_base_ptr;
       }
 
       ldpc_R_U_mtrx::~ldpc_R_U_mtrx()

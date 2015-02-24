@@ -23,6 +23,7 @@ install(
     FILES
     ber_test.grc
     ber_curve_gen.grc
+    ber_curve_gen_ldpc.grc
     fecapi_decoders.grc
     fecapi_encoders.grc
     fecapi_async_decoders.grc
@@ -31,6 +32,8 @@ install(
     fecapi_async_packed_decoders.grc
     fecapi_tagged_decoders.grc
     fecapi_tagged_encoders.grc
+    n_1800_k_0902_gap_28.alist
+    PNB2_512_23C1.alist
     DESTINATION ${GR_PKG_FEC_EXAMPLES_DIR}
     COMPONENT "fec_python"
 )

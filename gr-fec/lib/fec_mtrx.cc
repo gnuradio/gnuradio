@@ -101,26 +101,26 @@ namespace gr {
       }
 
       const gsl_matrix*
-      fec_mtrx::H()
+      fec_mtrx::H() const
       {
         const gsl_matrix *H_ptr = d_H_ptr;
         return H_ptr; 
       }
 
       unsigned int
-      fec_mtrx::n()
+      fec_mtrx::n() const
       {
         return d_n;
       }
 
       unsigned int
-      fec_mtrx::k()
+      fec_mtrx::k() const
       {
         return d_k;
       }
 
       gsl_matrix*
-      fec_mtrx::add_matrices_mod2(const gsl_matrix *matrix1, const gsl_matrix *matrix2)
+      fec_mtrx::add_matrices_mod2(const gsl_matrix *matrix1, const gsl_matrix *matrix2) const
       {
         // This function returns ((matrix1 + matrix2) % 2). 
 
@@ -165,7 +165,7 @@ namespace gr {
       }
 
       gsl_matrix*
-      fec_mtrx::mult_matrices_mod2(const gsl_matrix *matrix1, const gsl_matrix *matrix2) 
+      fec_mtrx::mult_matrices_mod2(const gsl_matrix *matrix1, const gsl_matrix *matrix2) const
       {
         // Verify that matrix sizes are appropriate
         unsigned int a = (*matrix1).size1;  // # of rows
@@ -204,7 +204,7 @@ namespace gr {
       }
 
       gsl_matrix*
-      fec_mtrx::calc_inverse_mod2(const gsl_matrix *original_matrix)
+      fec_mtrx::calc_inverse_mod2(const gsl_matrix *original_matrix) const
       {
 
         // Let n represent the size of the n x n square matrix

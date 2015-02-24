@@ -29,13 +29,13 @@ namespace gr {
   namespace fec {
     namespace code {
       generic_encoder::sptr
-      ldpc_gen_mtrx_encoder::make(ldpc_gen_mtrx *G_obj)
+      ldpc_gen_mtrx_encoder::make(const ldpc_gen_mtrx *G_obj)
       {
         return generic_encoder::sptr
           (new ldpc_gen_mtrx_encoder_impl(G_obj));
       }
 
-      ldpc_gen_mtrx_encoder_impl::ldpc_gen_mtrx_encoder_impl(ldpc_gen_mtrx *G_obj) 
+      ldpc_gen_mtrx_encoder_impl::ldpc_gen_mtrx_encoder_impl(const ldpc_gen_mtrx *G_obj) 
         : generic_encoder("ldpc_gen_mtrx_encoder")
       {
         // Generator matrix to use for encoding

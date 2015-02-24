@@ -36,6 +36,8 @@ namespace gr {
       private:
         // GSL matrix structure for the generator matrix (encode)
         gsl_matrix *d_G_ptr;
+        // Swig needs the scope resolution operator here
+        gr::fec::code::fec_mtrx *d_base_ptr;
         
       public:
         ldpc_gen_mtrx(const std::string filename);
@@ -43,6 +45,9 @@ namespace gr {
         ldpc_gen_mtrx();
         // Get the generator matrix (used during encoding)
         const gsl_matrix *G();
+        // A pointer to make swig work for the ldpc_bit_flip_decoder
+        // GRC block
+        gr::fec::code::fec_mtrx *get_base_ptr();
 
         // Destructor
         virtual ~ldpc_gen_mtrx();

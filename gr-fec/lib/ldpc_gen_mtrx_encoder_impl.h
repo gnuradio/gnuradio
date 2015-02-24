@@ -39,10 +39,10 @@ namespace gr {
         // Number of bits in the information word
         unsigned int d_frame_size;
         // Generator matrix object to use for encoding
-        ldpc_gen_mtrx *d_G;
+        const ldpc_gen_mtrx *d_G;
 
       public:
-        ldpc_gen_mtrx_encoder_impl(ldpc_gen_mtrx *G_obj);
+        ldpc_gen_mtrx_encoder_impl(const ldpc_gen_mtrx *G_obj);
         ~ldpc_gen_mtrx_encoder_impl();
 
         bool set_frame_size(unsigned int frame_size);

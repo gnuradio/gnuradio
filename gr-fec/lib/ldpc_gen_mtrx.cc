@@ -100,6 +100,9 @@ namespace gr {
         gsl_matrix_free(identity);
         gsl_matrix_free(I_test);
 
+        // For info about this see get_base_ptr() function
+        d_base_ptr = this;
+
       } // Constructor
 
       // Default constructor, should not be used
@@ -116,6 +119,17 @@ namespace gr {
       {
         const gsl_matrix *G_ptr = d_G_ptr;
         return G_ptr; 
+      }
+
+      gr::fec::code::fec_mtrx*
+      ldpc_gen_mtrx::get_base_ptr()
+      {
+        /* For some reason, swig isn't accepting a pointer to this
+           child class for the make function of the
+           ldpc_bit_flip_decoder; it's expecting a pointer to the
+           base class. So this is just a workaround for swig/GRC.
+        */
+        return d_base_ptr;
       }
 
       ldpc_gen_mtrx::~ldpc_gen_mtrx()

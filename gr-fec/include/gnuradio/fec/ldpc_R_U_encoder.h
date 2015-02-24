@@ -48,7 +48,7 @@ namespace gr {
          *        for encoding. This is the same matrix used for
          *        decoding. 
         */
-        static generic_encoder::sptr make(ldpc_R_U_mtrx *H_obj);
+        static generic_encoder::sptr make(const ldpc_R_U_mtrx *H_obj);
 
         /*!
          * Sets the uncoded frame size to \p frame_size. If \p

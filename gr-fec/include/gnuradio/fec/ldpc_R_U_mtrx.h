@@ -40,20 +40,27 @@ namespace gr {
         gsl_matrix_view d_T_view;
         gsl_matrix *d_phi_inverse_ptr;
 
+        // Swig needs the scope resolution operator here
+        gr::fec::code::fec_mtrx *d_base_ptr;
+
         // Set the submatrix variables needed for encoding
         void set_parameters_for_encoding();
+
         
       public:
         ldpc_R_U_mtrx(const std::string filename, unsigned int gap);
         // Default constructor, should not be used
         ldpc_R_U_mtrx();
         // Access the matrices needed during encoding
-        const gsl_matrix *A();
-        const gsl_matrix *B();
-        const gsl_matrix *D();
-        const gsl_matrix *E();
-        const gsl_matrix *T();
-        const gsl_matrix *phi_inverse();
+        const gsl_matrix *A() const;
+        const gsl_matrix *B() const;
+        const gsl_matrix *D() const;
+        const gsl_matrix *E() const;
+        const gsl_matrix *T() const;
+        const gsl_matrix *phi_inverse() const;
+        // A pointer to make swig work for the ldpc_bit_flip_decoder
+        // GRC block
+        gr::fec::code::fec_mtrx *get_base_ptr();
         // Destructor
         virtual ~ldpc_R_U_mtrx();
       };

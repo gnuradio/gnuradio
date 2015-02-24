@@ -64,7 +64,7 @@ namespace gr {
          *        usually denoted "n" in the literature.
          */
 
-        static generic_decoder::sptr make(fec_mtrx *mtrx_obj,
+        static generic_decoder::sptr make(const fec_mtrx *mtrx_obj,
                                           unsigned int max_iter=100);
 
         /*!

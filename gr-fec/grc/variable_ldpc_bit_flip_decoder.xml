@@ -10,13 +10,12 @@
     <import>from gnuradio import fec</import>
     <var_make>
 #if int($ndim())==0 #
-self.$(id) = $(id) = fec.ldpc_bit_flip_decoder.make($matrix_object, $max_iterations)
+self.$(id) = $(id) = fec.ldpc_bit_flip_decoder.make(${matrix_object}.get_base_ptr(), $max_iterations)
 #else if int($ndim())==1 #
-self.$(id) = $(id) = map((lambda a: fec.ldpc_bit_flip_decoder.make($matrix_object, $max_iterations)), range(0,$dim1)) #slurp
+self.$(id) = $(id) = map((lambda a: fec.ldpc_bit_flip_decoder.make(${matrix_object}.get_base_ptr(), $max_iterations)), range(0,$dim1)) #slurp
 #else
-self.$(id) = $(id) = map((lambda b: map((lambda a: fec.ldpc_bit_flip_decoder.make($matrix_object, $max_iterations)), range(0,$dim2))), range(0,$dim1)) #slurp
-#end if
-</var_make>
+self.$(id) = $(id) = map((lambda b: map((lambda a: fec.ldpc_bit_flip_decoder.make(${matrix_object}.get_base_ptr(), $max_iterations)), range(0,$dim2))), range(0,$dim1)) #slurp
+#end if</var_make>
     <make></make>
 
     <param>
