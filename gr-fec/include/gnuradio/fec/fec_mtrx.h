@@ -50,6 +50,8 @@ namespace gr {
         gsl_matrix *d_H_ptr;
         // Read the matrix from a file in alist format
         gsl_matrix *read_matrix_from_file(const std::string filename);
+        // Flag for whether or not the parity bits come first or last
+        bool d_par_bits_last;
         
       public:
         // Returns the parity check matrix H (needed by decoder)
@@ -73,6 +75,8 @@ namespace gr {
         // Find the inverse of a square matrix using modulo 2
         // operations
         gsl_matrix *calc_inverse_mod2(const gsl_matrix *) const;
+        // The decoder will need to know this
+        bool parity_bits_come_last() const;
 
         virtual ~fec_mtrx(); 
       };
