@@ -48,6 +48,11 @@ namespace gr {
         // For info about this see get_base_ptr() function
         d_base_ptr = this;
 
+        // The parity bits come first in this particular matrix
+        // format (specifically required for the Richardson Urbanke
+        // encoder)
+        d_par_bits_last = false;
+
       } // Constructor
 
       // Default constructor, should not be used

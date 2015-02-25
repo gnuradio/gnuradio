@@ -182,10 +182,17 @@ namespace gr {
         // Extract the info word and assign to output. This will
         // happen regardless of if a valid codeword was found.
         unsigned char *out = (unsigned char*) outbuffer;
-        for (index = 0; index < d_frame_size; index++) {
-          unsigned int i = index + n - d_frame_size;
-          int value = gsl_matrix_get(x, i, 0);
-          out[index] = value;
+        if (d_mtrx->parity_bits_come_last()) {
+          for (index = 0; index < d_frame_size; index++) {
+            out[index] = gsl_matrix_get(x, index, 0);
+          }
+        }
+        else {
+          for (index = 0; index < d_frame_size; index++) {
+            unsigned int i = index + n - d_frame_size;
+            int value = gsl_matrix_get(x, i, 0);
+            out[index] = value;
+          }
         }
 
         // Free memory

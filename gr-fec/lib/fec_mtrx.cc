@@ -34,7 +34,9 @@ namespace gr {
 
       fec_mtrx::fec_mtrx()
       {
-        // nothing for the default constructor to do
+        // Assume the convention that parity bits come last in the
+        // codeword
+        d_par_bits_last = true;
       }
 
       gsl_matrix*
@@ -290,6 +292,11 @@ namespace gr {
         }
 
         return matrix_inverse;
+      }
+      bool
+      fec_mtrx::parity_bits_come_last() const
+      {
+        return d_par_bits_last;
       }
 
       fec_mtrx::~fec_mtrx()
