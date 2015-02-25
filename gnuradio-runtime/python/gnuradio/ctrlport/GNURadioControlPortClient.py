@@ -42,7 +42,7 @@ RPCMethods = {'thrift': 'Apache Thrift',
              #'ice': 'Zeroc ICE'
              }
 
-import exceptions
+import sys, exceptions
 
 """
 Base class for RPC transport clients
@@ -120,6 +120,9 @@ class RPCConnection(object):
     def shutdown(self):
         raise exceptions.NotImplementedError()
 
+    def printProperties(self, props):
+        raise exceptions.NotImplementedError()
+
 """
 RPC Client interface for the Apache Thrift middle-ware RPC transport.
 
@@ -129,69 +132,142 @@ Args:
 """
 
 class RPCConnectionThrift(RPCConnection):
+    class Knob():
+        def __init__(self, key, value=None, ktype=0):
+            (self.key, self.value, self.ktype) = (key, value, ktype)
+
+        def __repr__(self):
+            return "({0} = {1})".format(self.key, self.value)
+
     def __init__(self, host=None, port=None):
-        from gnuradio.ctrlport.GNURadio.ttypes import BaseTypes
-        self.BaseTypes = BaseTypes
+        from gnuradio.ctrlport.GNURadio import ttypes
+        self.BaseTypes = ttypes.BaseTypes
+        self.KnobBase = ttypes.KnobBase
 
         if port is None:
             port = 9090
         super(RPCConnectionThrift, self).__init__(method='thrift', port=port, host=host)
         self.newConnection(host, port)
 
-        class Knob():
-            def __init__(self, key, value):
-                (self.key, self.value) = (key, value)
-
-        self.types_dict = {
-            self.BaseTypes.BOOL:      lambda k,b: Knob(k, b.value.a_bool),
-            self.BaseTypes.BYTE:      lambda k,b: Knob(k, b.value.a_byte),
-            self.BaseTypes.SHORT:     lambda k,b: Knob(k, b.value.a_short),
-            self.BaseTypes.INT:       lambda k,b: Knob(k, b.value.a_int),
-            self.BaseTypes.LONG:      lambda k,b: Knob(k, b.value.a_long),
-            self.BaseTypes.DOUBLE:    lambda k,b: Knob(k, b.value.a_double),
-            self.BaseTypes.STRING:    lambda k,b: Knob(k, b.value.a_string),
-            self.BaseTypes.COMPLEX:   lambda k,b: Knob(k, b.value.a_complex),
-            self.BaseTypes.F32VECTOR: lambda k,b: Knob(k, b.value.a_f32vector),
-            self.BaseTypes.F64VECTOR: lambda k,b: Knob(k, b.value.a_f64vector),
-            self.BaseTypes.S64VECTOR: lambda k,b: Knob(k, b.value.a_s64vector),
-            self.BaseTypes.S32VECTOR: lambda k,b: Knob(k, b.value.a_s32vector),
-            self.BaseTypes.S16VECTOR: lambda k,b: Knob(k, b.value.a_s16vector),
-            self.BaseTypes.S8VECTOR:  lambda k,b: Knob(k, b.value.a_s8vector),
-            self.BaseTypes.C32VECTOR: lambda k,b: Knob(k, b.value.a_c32vector),
+        self.unpack_dict = {
+            self.BaseTypes.BOOL:      lambda k,b: self.Knob(k, b.value.a_bool, self.BaseTypes.BOOL),
+            self.BaseTypes.BYTE:      lambda k,b: self.Knob(k, b.value.a_byte, self.BaseTypes.BYTE),
+            self.BaseTypes.SHORT:     lambda k,b: self.Knob(k, b.value.a_short, self.BaseTypes.SHORT),
+            self.BaseTypes.INT:       lambda k,b: self.Knob(k, b.value.a_int, self.BaseTypes.INT),
+            self.BaseTypes.LONG:      lambda k,b: self.Knob(k, b.value.a_long, self.BaseTypes.LONG),
+            self.BaseTypes.DOUBLE:    lambda k,b: self.Knob(k, b.value.a_double, self.BaseTypes.DOUBLE),
+            self.BaseTypes.STRING:    lambda k,b: self.Knob(k, b.value.a_string, self.BaseTypes.STRING),
+            self.BaseTypes.COMPLEX:   lambda k,b: self.Knob(k, b.value.a_complex, self.BaseTypes.COMPLEX),
+            self.BaseTypes.F32VECTOR: lambda k,b: self.Knob(k, b.value.a_f32vector, self.BaseTypes.F32VECTOR),
+            self.BaseTypes.F64VECTOR: lambda k,b: self.Knob(k, b.value.a_f64vector, self.BaseTypes.F64VECTOR),
+            self.BaseTypes.S64VECTOR: lambda k,b: self.Knob(k, b.value.a_s64vector, self.BaseTypes.S64VECTOR),
+            self.BaseTypes.S32VECTOR: lambda k,b: self.Knob(k, b.value.a_s32vector, self.BaseTypes.S32VECTOR),
+            self.BaseTypes.S16VECTOR: lambda k,b: self.Knob(k, b.value.a_s16vector, self.BaseTypes.S16VECTOR),
+            self.BaseTypes.S8VECTOR:  lambda k,b: self.Knob(k, b.value.a_s8vector, self.BaseTypes.S8VECTOR),
+            self.BaseTypes.C32VECTOR: lambda k,b: self.Knob(k, b.value.a_c32vector, self.BaseTypes.C32VECTOR),
         }
+
+        self.pack_dict = {
+            self.BaseTypes.BOOL:      lambda k: ttypes.Knob(type=k.ktype, value=ttypes.KnobBase(a_bool = k.value)),
+            self.BaseTypes.BYTE:      lambda k: ttypes.Knob(type=k.ktype, value=ttypes.KnobBase(a_byte = k.value)),
+            self.BaseTypes.SHORT:     lambda k: ttypes.Knob(type=k.ktype, value=ttypes.KnobBase(a_short = k.value)),
+            self.BaseTypes.INT:       lambda k: ttypes.Knob(type=k.ktype, value=ttypes.KnobBase(a_int = k.value)),
+            self.BaseTypes.LONG:      lambda k: ttypes.Knob(type=k.ktype, value=ttypes.KnobBase(a_long = k.value)),
+            self.BaseTypes.DOUBLE:    lambda k: ttypes.Knob(type=k.ktype, value=ttypes.KnobBase(a_double = k.value)),
+            self.BaseTypes.STRING:    lambda k: ttypes.Knob(type=k.ktype, value=ttypes.KnobBase(a_string = k.value)),
+            self.BaseTypes.COMPLEX:   lambda k: ttypes.Knob(type=k.ktype, value=ttypes.KnobBase(a_complex = k.value)),
+            self.BaseTypes.F32VECTOR: lambda k: ttypes.Knob(type=k.ktype, value=ttypes.KnobBase(a_f32vector = k.value)),
+            self.BaseTypes.F64VECTOR: lambda k: ttypes.Knob(type=k.ktype, value=ttypes.KnobBase(a_f64vector = k.value)),
+            self.BaseTypes.S64VECTOR: lambda k: ttypes.Knob(type=k.ktype, value=ttypes.KnobBase(a_s64vector = k.value)),
+            self.BaseTypes.S32VECTOR: lambda k: ttypes.Knob(type=k.ktype, value=ttypes.KnobBase(a_s32vector = k.value)),
+            self.BaseTypes.S16VECTOR: lambda k: ttypes.Knob(type=k.ktype, value=ttypes.KnobBase(a_s16vector = k.value)),
+            self.BaseTypes.S8VECTOR:  lambda k: ttypes.Knob(type=k.ktype, value=ttypes.KnobBase(a_s8vector = k.value)),
+            self.BaseTypes.C32VECTOR: lambda k: ttypes.Knob(type=k.ktype, value=ttypes.KnobBase(a_c32vector = k.value)),
+        }
+
+    def unpackKnob(self, key, knob):
+        f = self.unpack_dict.get(knob.type, None)
+        if(f):
+            return f(key, knob)
+        else:
+            sys.stderr.write("unpackKnobs: Incorrect Knob type: {0}\n".format(knob.type))
+            raise exceptions.ValueError
+
+    def packKnob(self, knob):
+        f = self.pack_dict.get(knob.ktype, None)
+        if(f):
+            return f(knob)
+        else:
+            sys.stderr.write("packKnobs: Incorrect Knob type: {0}\n".format(knob.type))
+            raise exceptions.ValueError
 
     def newConnection(self, host=None, port=None):
         from gnuradio.ctrlport.ThriftRadioClient import ThriftRadioClient
-        self.thriftclient = ThriftRadioClient(self.getHost(), self.getPort())
+        import thrift
+        try:
+            self.thriftclient = ThriftRadioClient(self.getHost(), self.getPort())
+        except thrift.transport.TTransport.TTransportException:
+            sys.stderr.write("Could not connect to ControlPort endpoint at {0}:{1}.\n\n".format(host, port))
+            sys.exit(1)
 
     def properties(self, *args):
         knobprops = self.thriftclient.radio.properties(*args)
         for key, knobprop in knobprops.iteritems():
-#             print("key:", key, "value:", knobprop, "type:", knobprop.type)
-            knobprops[key].min = self.types_dict[knobprop.type](key, knobprop.min)
-            knobprops[key].max = self.types_dict[knobprop.type](key, knobprop.max)
-            knobprops[key].defaultvalue = self.types_dict[knobprop.type](key, knobprop.defaultvalue)
-
+            #print("key:", key, "value:", knobprop, "type:", knobprop.type)
+            knobprops[key].min = self.unpackKnob(key, knobprop.min)
+            knobprops[key].max = self.unpackKnob(key, knobprop.max)
+            knobprops[key].defaultvalue = self.unpackKnob(key, knobprop.defaultvalue)
         return knobprops
 
     def getKnobs(self, *args):
         result = {}
         for key, knob in self.thriftclient.radio.getKnobs(*args).iteritems():
-#             print("key:", key, "value:", knob, "type:", knob.type)
-            result[key] = self.types_dict[knob.type](key, knob)
+            #print("key:", key, "value:", knob, "type:", knob.type)
+            result[key] = self.unpackKnob(key, knob)
+        return result
+
+    def getKnobsRaw(self, *args):
+        result = {}
+        for key, knob in self.thriftclient.radio.getKnobs(*args).iteritems():
+            #print("key:", key, "value:", knob, "type:", knob.type)
+            result[key] = knob
         return result
 
     def getRe(self,*args):
         result = {}
         for key, knob in self.thriftclient.radio.getRe(*args).iteritems():
-            result[key] = self.types_dict[knob.type](key, knob)
+            result[key] = self.unpackKnob(key, knob)
         return result
 
-    def setKnobs(self,*args):
-        self.thriftclient.radio.setKnobs(*args)
+    def setKnobs(self, *args):
+        if(type(*args) == dict):
+            a = dict(*args)
+            result = {}
+            for key, knob in a.iteritems():
+                result[key] = self.packKnob(knob)
+            self.thriftclient.radio.setKnobs(result)
+        elif(type(*args) == list or type(*args) == tuple):
+            a = list(*args)
+            result = {}
+            for k in a:
+                result[k.key] = self.packKnob(k)
+            self.thriftclient.radio.setKnobs(result)
+        else:
+            sys.stderr.write("setKnobs: Invalid type; must be dict, list, or tuple\n")
 
     def shutdown(self):
         self.thriftclient.radio.shutdown()
+
+    def printProperties(self, props):
+        info = ""
+        info += "Item:\t\t{0}\n".format(props.description)
+        info += "units:\t\t{0}\n".format(props.units)
+        info += "min:\t\t{0}\n".format(props.min.value)
+        info += "max:\t\t{0}\n".format(props.max.value)
+        info += "default:\t\t{0}\n".format(props.defaultvalue.value)
+        info += "Type Code:\t0x{0:x}\n".format(props.type)
+        info += "Disp Code:\t0x{0:x}\n".format(props.display)
+        return info
 
 """
 GNURadioControlPortClient is the main class for creating a GNU Radio
