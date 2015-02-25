@@ -101,8 +101,7 @@ class MAINWindow(QtGui.QMainWindow):
         self.plots.append([])
 
     def propertiesMenu(self, key, radio, uid):
-        r = str(radio).split(" ")
-        title = "{0}:{1}".format(r[3], r[5])
+        title = str(radio)
 
         props = radio.properties([key])
 
@@ -495,17 +494,18 @@ class UpdaterWindow(QtGui.QDialog):
         self.layout = QtGui.QVBoxLayout()
 
         self.props = radio.properties([key])[key]
-        info = str(self.props)
+        info = radio.printProperties(self.props)
 
         self.infoLabel = QtGui.QLabel(info)
         self.layout.addWidget(self.infoLabel)
 
         # Test here to make sure that a 'set' function exists
         try:
-            a = radio.set(radio.get([key]))
+            radio.setKnobs(radio.getKnobs([key]))
             has_set = True
-        except Ice.UnknownException:
+        except:
             has_set = False
+
 
         if(has_set is False):
             self.cancelButton = QtGui.QPushButton("Ok")
@@ -523,9 +523,9 @@ class UpdaterWindow(QtGui.QDialog):
             self.setButton = QtGui.QPushButton("OK")
             self.cancelButton = QtGui.QPushButton("Cancel")
 
-            rv = radio.get([key])
+            rv = radio.getKnobs([key])
             val = rv[key].value
-            if(type(val) == GNURadio.complex):
+            if(type(val) == ControlPort.complex):
                 val = val.re + val.im*1j
 
             self.textInput.setText(str(val))
@@ -580,10 +580,10 @@ class UpdaterWindow(QtGui.QDialog):
             val = int(round(float(self.textInput.text())))
         elif(type(self.sv.value) == float):
             val = float(self.textInput.text())
-        elif(type(self.sv.value) == GNURadio.complex):
+        elif(type(self.sv.value) == ControlPort.complex):
             t = str(self.textInput.text())
             t = complex(t.strip("(").strip(")").replace(" ", ""))
-            val = GNURadio.complex()
+            val = ControlPort.complex()
             val.re = t.real
             val.im = t.imag
         else:
@@ -593,7 +593,7 @@ class UpdaterWindow(QtGui.QDialog):
         self.sv.value = val
         km = {}
         km[self.key] = self.sv
-        self.radioclient.setKnobs(km)
+        self.radio.setKnobs(km)
         if self._set_slider_value:
             self._set_slider_value(self.sv.value)
 
@@ -725,7 +725,7 @@ class MForm(QtGui.QWidget):
         index = self.table.treeWidget.selectedIndexes()
         item = self.table.treeWidget.itemFromIndex(index[0])
         itemname = str(item.text(0))
-        self.parent.propertiesMenu(itemname, self.radio, self.uid)
+        self.parent.propertiesMenu(itemname, self.radioclient, self.uid)
 
 
 def get_minmax(p):
@@ -734,16 +734,20 @@ def get_minmax(p):
 
     # Find min/max or real or imag for GNURadio::complex
     # TODO: fix complex
-#     if(type(pmin) == GNURadio.complex):
-#         pmin = min(pmin.re, pmin.im)
-#     if(type(pmax) == GNURadio.complex):
-#         pmax = max(pmax.re, pmax.im)
+    if(type(pmin) == ControlPort.complex):
+        pmin = min(pmin.re, pmin.im)
+    if(type(pmax) == ControlPort.complex):
+        pmax = max(pmax.re, pmax.im)
 
     # If it's a byte stream, Python thinks it's a string.
-    if(type(pmin) == str):
-        pmin = struct.unpack('b', pmin)[0]
-    if(type(pmax) == str):
-        pmax = struct.unpack('b', pmax)[0]
+    try:
+        if(type(pmin) == str):
+            pmin = struct.unpack('b', pmin)[0]
+        if(type(pmax) == str):
+            pmax = struct.unpack('b', pmax)[0]
+    except struct.error:
+        pmin = []
+        pmax = []
 
     if pmin == []:
         pmin = None
@@ -756,15 +760,9 @@ def get_minmax(p):
 
     return pmin, pmax
 
-# class MyClient(IceRadioClient):
-#     def __init__(self):
-#         IceRadioClient.__init__(self, MAINWindow)
-#
-# sys.exit(MyClient().main(sys.argv))
-
 class MyApp(object):
     def __init__(self, args):
-        from GNURadioControlPortClient import GNURadioControlPortClient
+        from gnuradio.ctrlport.GNURadioControlPortClient import GNURadioControlPortClient
         GNURadioControlPortClient(args, 'thrift', self.run, QtGui.QApplication(sys.argv).exec_)
 
     def run(self, client):

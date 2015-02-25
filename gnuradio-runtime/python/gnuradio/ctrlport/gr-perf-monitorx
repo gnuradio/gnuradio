@@ -23,7 +23,7 @@
 import random,math,operator
 import networkx as nx
 import matplotlib
-matplotlib.use("Qt4Agg");
+matplotlib.use("QT4Agg")
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_qt4agg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.backends.backend_qt4agg import NavigationToolbar2QTAgg as NavigationToolbar
@@ -338,7 +338,7 @@ class DataTable(QtGui.QWidget):
 
 class DataTableBuffers(DataTable):
     def __init__(self, radioclient, G):
-        DataTable.__init__(self,radioclient,G)
+        super(DataTableBuffers, self).__init__(radioclient, G)
         self.perfTable.setHorizontalHeaderLabels( ["Block Name", "Percent Buffer Full"] );
 
     def update(self):
@@ -376,20 +376,18 @@ class DataTableBuffers(DataTable):
                 sorted_fullness = blockport_fullness.items()
 
         self.sp.clear();
-        plt.figure(self.f.number)
-        plt.subplot(111);
         self.sp.bar(range(0,len(sorted_fullness)), map(lambda x: x[1], sorted_fullness),
                     alpha=0.5)
         self.sp.set_ylabel("% Buffers Full");
         self.sp.set_xticks( map(lambda x: x+0.5, range(0,len(sorted_fullness))))
         self.sp.set_xticklabels( map(lambda x: "  " + x, map(lambda x: x[0], sorted_fullness)),
                                  rotation="vertical", verticalalignment="bottom" )
-        self.canvas.draw();
-        self.canvas.show();
+        self.canvas.draw()
+        self.canvas.show()
 
 class DataTableRuntimes(DataTable):
     def __init__(self, radioclient, G):
-        DataTable.__init__(self,radioclient,G)
+        super(DataTableRuntimes, self).__init__( radioclient, G)
         #self.perfTable.setRowCount(len( self.G.nodes() ))
 
     def update(self):
@@ -549,12 +547,10 @@ class MForm(QtGui.QWidget):
         self.parent.newSubWindow(  DataTableBuffers(self.radioclient, self.G_stream),  "Buffers Table" );
 
     def resetPCs(self):
-        knob = GNURadio.ttypes.KnobBase()
-        knob.a_bool = False
-        km = {}
+        knobs = []
         for b in self.blocks_list:
-            km[b + "::reset_perf_counters"] = knob
-        k = self.radioclient.setKnobs(km)
+            knobs += [self.radioclient.Knob(b + "::reset_perf_counters"),]
+        k = self.radioclient.setKnobs(knobs)
 
     def toggleFlowgraph(self):
         if self.pauseFGAct.isChecked():
@@ -563,19 +559,13 @@ class MForm(QtGui.QWidget):
             self.unpauseFlowgraph()
 
     def pauseFlowgraph(self):
-        knob = GNURadio.ttypes.KnobBase()
-        knob.a_bool = False
-        km = {}
-        km[self.top_block + "::lock"] = knob
-        km[self.top_block + "::stop"] = knob
-        k = self.radioclient.setKnobs(km)
+        knobs = [self.radioclient.Knob(self.top_block + "::lock"),
+                self.radioclient.Knob(self.top_block + "::stop")]
+        k = self.radioclient.setKnobs(knobs)
 
     def unpauseFlowgraph(self):
-        knob = GNURadio.ttypes.KnobBase()
-        knob.a_bool = False
-        km = {}
-        km[self.top_block + "::unlock"] = knob
-        k = self.radioclient.setKnobs(km)
+        knobs = [self.radioclient.Knob(self.top_block + "::unlock")]
+        k = self.radioclient.setKnobs(knobs)
 
     def stat_changed(self, index):
         self._statistic = str(self.stattype.currentText())
@@ -844,6 +834,19 @@ class MForm(QtGui.QWidget):
 
 class MyApp(object):
     def __init__(self, args):
+        p = gr.prefs()
+        cp_on = p.get_bool("ControlPort", "on", None)
+        cp_edges = p.get_bool("ControlPort", "edges_list", None)
+        pcs_on = p.get_bool("PerfCounters", "on", None)
+        pcs_exported = p.get_bool("PerfCounters", "export", None)
+        if(not (pcs_on and cp_on and pcs_exported and cp_edges)):
+            print("Configuration has not turned on all of the appropriate ControlPort features:")
+            print("\t[ControlPort] on = {0}".format(cp_on))
+            print("\t[ControlPort] edges_list = {0}".format(cp_edges))
+            print("\t[PerfCounters] on = {0}".format(pcs_on))
+            print("\t[PerfCounters] export = {0}".format(pcs_exported))
+            exit(1)
+
         from gnuradio.ctrlport.GNURadioControlPortClient import GNURadioControlPortClient
         GNURadioControlPortClient(args, 'thrift', self.run, QtGui.QApplication(sys.argv).exec_)
 
