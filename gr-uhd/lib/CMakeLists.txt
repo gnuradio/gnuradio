@@ -75,3 +75,34 @@ list(APPEND uhd_libs
 add_library(gnuradio-uhd SHARED ${gr_uhd_sources})
 target_link_libraries(gnuradio-uhd ${uhd_libs})
 GR_LIBRARY_FOO(gnuradio-uhd RUNTIME_COMPONENT "uhd_runtime" DEVEL_COMPONENT "uhd_devel")
+
+########################################################################
+# Build static libraries if enabled
+########################################################################
+if(ENABLE_STATIC_LIBS)
+  if(UHD_VERSION VERSION_GREATER "3.8.1")
+    if(ENABLE_GR_CTRLPORT)
+      # Remove GR_CTRLPORT set this target's definitions.
+      # Makes sure we don't try to use ControlPort stuff in source files
+      GET_DIRECTORY_PROPERTY(STATIC_DEFS COMPILE_DEFINITIONS)
+      list(REMOVE_ITEM STATIC_DEFS "GR_CTRLPORT")
+      SET_PROPERTY(DIRECTORY PROPERTY COMPILE_DEFINITIONS "${STATIC_DEFS}")
+
+      # readd it to the target since we removed it from the directory-wide list.
+      SET_PROPERTY(TARGET gnuradio-uhd APPEND PROPERTY COMPILE_DEFINITIONS "GR_CTRLPORT")
+    endif(ENABLE_GR_CTRLPORT)
+
+    add_library(gnuradio-uhd_static STATIC ${gr_uhd_sources})
+
+    if(NOT WIN32)
+      set_target_properties(gnuradio-uhd_static
+        PROPERTIES OUTPUT_NAME gnuradio-uhd)
+    endif(NOT WIN32)
+
+    install(TARGETS gnuradio-uhd_static
+      ARCHIVE DESTINATION lib${LIB_SUFFIX} COMPONENT "uhd_devel"   # .lib file
+    )
+  else(UHD_VERSION VERSION_GREATER "3.8.1")
+    message(STATUS "Not building gr-uhd static library; requires UHD >= 3.8.2")
+  endif(UHD_VERSION VERSION_GREATER "3.8.1")
+endif(ENABLE_STATIC_LIBS)
