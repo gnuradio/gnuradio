@@ -34,6 +34,7 @@ GR_PYTHON_INSTALL(
     ${CMAKE_CURRENT_SOURCE_DIR}/GrDataPlotter.py
     ${CMAKE_CURRENT_SOURCE_DIR}/monitor.py
     ${CMAKE_CURRENT_SOURCE_DIR}/GNURadioControlPortClient.py
+    ${CMAKE_CURRENT_SOURCE_DIR}/RPCConnection.py
     DESTINATION ${GR_PYTHON_DIR}/gnuradio/ctrlport/
     COMPONENT "runtime_python"
 )
@@ -57,7 +58,13 @@ EXECUTE_PROCESS(
 
 GR_PYTHON_INSTALL(
     FILES
-    ${CMAKE_CURRENT_SOURCE_DIR}/ThriftRadioClient.py
+    ${CMAKE_CURRENT_SOURCE_DIR}/RPCConnectionThrift.py
+    DESTINATION ${GR_PYTHON_DIR}/gnuradio/ctrlport/
+    COMPONENT "runtime_python"
+)
+
+GR_PYTHON_INSTALL(
+    FILES
     ${CMAKE_CURRENT_BINARY_DIR}/GNURadio/__init__.py
     ${CMAKE_CURRENT_BINARY_DIR}/GNURadio/constants.py
     ${CMAKE_CURRENT_BINARY_DIR}/GNURadio/ControlPort.py
