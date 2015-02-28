@@ -56,3 +56,32 @@ rpcserver_booter_thrift::endpoints()
                                 rpcserver_booter_thrift,
                                 GNURadio::ControlPortIf>::endpoints();
 }
+
+template<typename TserverBase, typename TserverClass>
+const unsigned int thrift_application_base<TserverBase, TserverClass>::d_default_num_thrift_threads(10U);
+
+template<typename TserverBase, typename TserverClass>
+void thrift_application_base<TserverBase, TserverClass>::start_thrift()
+{
+  //char* argv[2];
+  //argv[0] = (char*)"";
+  //
+  //std::string conffile = gr::prefs::singleton()->get_string("ControlPort", "config", "");
+  //
+  //if(conffile.size() > 0) {
+  //  std::stringstream thriftconf;
+  //  d_have_thrift_config = true;
+  //  d_main_called = true;
+  //  thriftconf << conffile;
+  //  main(0, argv, thriftconf.str().c_str());
+  //}
+  //else {
+  //  d_have_thrift_config = false;
+  //  d_main_called = true;
+  //  main(0, argv);
+  //}
+
+  //std::cerr << "thrift_application_base: start_thrift" << std::endl;
+  d_thriftserver->serve();
+  d_is_running = true;
+}

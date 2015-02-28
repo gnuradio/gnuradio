@@ -23,34 +23,14 @@
 #ifndef THRIFT_APPLICATION_BASE_H
 #define THRIFT_APPLICATION_BASE_H
 
-#ifdef HAVE_WINDOWS_H
-#include <winsock2.h>
-#include <sys/time.h>
-#endif
-
 #include <gnuradio/api.h>
-#include <gnuradio/prefs.h>
-#include <thrift/Thrift.h>
 #include <boost/thread.hpp>
-#include <boost/thread/mutex.hpp>
-#include <stdio.h>
-#include <iostream>
-#include <set>
-#include <string>
-#include <stdio.h>
-
-#include <thrift/Thrift.h>
-#include <thrift/transport/TServerSocket.h>
-#include <thrift/transport/TBufferTransports.h>
-#include <thrift/server/TSimpleServer.h>
-#include <gnuradio/rpcserver_thrift.h>
-#include <ControlPort.h>
-
-using namespace apache;
 
 namespace {
   static const unsigned int THRIFTAPPLICATION_ACTIVATION_TIMEOUT_MS(600);
 };
+
+namespace apache { namespace thrift { namespace server { class TServer; } } }
 
 class GR_RUNTIME_API thrift_application_common
 {
@@ -66,7 +46,7 @@ class GR_RUNTIME_API thrift_application_common
   static std::string d_endpointStr;
   static boost::shared_ptr<boost::thread> d_thread;
 
-  thrift::server::TSimpleServer* d_thriftserver;
+  apache::thrift::server::TServer* d_thriftserver;
 
   thrift_application_common() {;}
   int run(int, char*[]);
@@ -92,7 +72,9 @@ protected:
 
   static TserverClass* d_this;
 
-  thrift::server::TSimpleServer* d_thriftserver;
+  apache::thrift::server::TServer* d_thriftserver;
+
+  static const unsigned int d_default_num_thrift_threads;
 
 private:
   bool d_is_running;
@@ -120,31 +102,6 @@ thrift_application_base<TserverBase, TserverClass>::thrift_application_base(Tser
   //d_application->d_thriftserver = d_this->d_thriftserver;
 }
 
-template<typename TserverBase, typename TserverClass>
-void thrift_application_base<TserverBase, TserverClass>::start_thrift()
-{
-  //char* argv[2];
-  //argv[0] = (char*)"";
-  //
-  //std::string conffile = gr::prefs::singleton()->get_string("ControlPort", "config", "");
-  //
-  //if(conffile.size() > 0) {
-  //  std::stringstream thriftconf;
-  //  d_have_thrift_config = true;
-  //  d_main_called = true;
-  //  thriftconf << conffile;
-  //  main(0, argv, thriftconf.str().c_str());
-  //}
-  //else {
-  //  d_have_thrift_config = false;
-  //  d_main_called = true;
-  //  main(0, argv);
-  //}
-
-  //std::cerr << "thrift_application_base: start_thrift" << std::endl;
-  d_thriftserver->serve();
-  d_is_running = true;
-}
 
 template<typename TserverBase, typename TserverClass>
 void thrift_application_base<TserverBase, TserverClass>::kickoff()

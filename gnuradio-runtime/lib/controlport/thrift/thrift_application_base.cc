@@ -21,6 +21,7 @@
  */
 
 #include <gnuradio/thrift_application_base.h>
+#include <thrift/server/TServer.h>
 
 int thrift_application_common::d_reacquire_attributes(0);
 bool thrift_application_common::d_main_called(false);
