@@ -27,7 +27,10 @@
 #include <gnuradio/thrift_application_base.h>
 #include <iostream>
 
-#include <thrift/Thrift.h>
+#include <thrift/server/TSimpleServer.h>
+#include <thrift/server/TThreadPoolServer.h>
+#include <thrift/concurrency/ThreadManager.h>
+#include <thrift/concurrency/PlatformThreadFactory.h>
 #include <thrift/transport/TServerSocket.h>
 #include <thrift/transport/TBufferTransports.h>
 #include <ControlPort.h>
@@ -74,10 +77,27 @@ thrift_server_template<TserverBase, TserverClass, TImplClass, TThriftClass>::thr
   boost::shared_ptr<thrift::protocol::TProtocolFactory>
     protocolFactory(new thrift::protocol::TBinaryProtocolFactory());
 
-  thrift_application_base<TserverBase, TImplClass>::d_thriftserver =
-    new thrift::server::TSimpleServer(processor, serverTransport, transportFactory, protocolFactory);
+  if(thrift_application_base<TserverBase, TImplClass>::d_default_num_thrift_threads <= 1)
+  {	// "Thrift: Single-threaded server"
+      thrift_application_base<TserverBase, TImplClass>::d_thriftserver =
+      new thrift::server::TSimpleServer(processor, serverTransport, transportFactory, protocolFactory);
+    } else {	// std::cout << "Thrift Multi-threaded server : " << d_default_num_thrift_threads << std::endl;
+      boost::shared_ptr<thrift::concurrency::ThreadManager> threadManager(
+        thrift::concurrency::ThreadManager::newSimpleThreadManager(
+          thrift_application_base<TserverBase, TImplClass>::d_default_num_thrift_threads));
 
-  d_server = (TserverBase*)handler.get();
+      boost::shared_ptr<thrift::concurrency::PlatformThreadFactory> threadFactory(
+        boost::shared_ptr<thrift::concurrency::PlatformThreadFactory>(new thrift::concurrency::PlatformThreadFactory()));
+
+      threadManager->threadFactory(threadFactory);
+
+      threadManager->start();
+
+      thrift_application_base<TserverBase, TImplClass>::d_thriftserver =
+        new thrift::server::TThreadPoolServer(processor, serverTransport, transportFactory, protocolFactory, threadManager);
+  }
+
+  d_server = handler.get();
 }
 
 template<typename TserverBase, typename TserverClass, typename TImplClass, typename TThriftClass>
