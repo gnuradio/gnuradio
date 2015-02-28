@@ -34,8 +34,8 @@ namespace gr {
       class FEC_API ldpc_gen_mtrx : public fec_mtrx
       {
       private:
-        // GSL matrix structure for the generator matrix (encode)
-        gsl_matrix *d_G_ptr;
+        // GSL matrix structure for transpose of G
+        gsl_matrix *d_G_transp_ptr;
         // Swig needs the scope resolution operator here
         gr::fec::code::fec_mtrx *d_base_ptr;
         
@@ -44,7 +44,7 @@ namespace gr {
         // Default constructor, should not be used
         ldpc_gen_mtrx();
         // Get the generator matrix (used during encoding)
-        const gsl_matrix *G();
+        const gsl_matrix *G_transpose() const;
         // A pointer to make swig work for the ldpc_bit_flip_decoder
         // GRC block
         gr::fec::code::fec_mtrx *get_base_ptr();

@@ -83,9 +83,27 @@ namespace gr {
       ldpc_gen_mtrx_encoder_impl::generic_work(void *inbuffer,
                                                void *outbuffer)
       {
+        // Populate the information word
+        const unsigned char *in = (const unsigned char *)inbuffer;
+        unsigned int index, k = d_G->k(), n = d_G->n();
+        gsl_matrix *s = gsl_matrix_alloc(k, 1);
+        for (index = 0; index < k; index++) {
+          double value = static_cast<double>(in[index]);
+          gsl_matrix_set(s, index, 0, value);
+        }
 
+        // Simple matrix multiplication to get codeword
+        gsl_matrix *codeword;
+        codeword = d_G->mult_matrices_mod2(d_G->G_transpose(), s);
+
+        // Output
+        unsigned char *out = (unsigned char*)outbuffer;
+        for (index = 0; index < n; index++) {
+          out[index] = gsl_matrix_get(codeword, index, 0);
+        }
 
         // Free memory
+        gsl_matrix_free(codeword);
 
 
       }
