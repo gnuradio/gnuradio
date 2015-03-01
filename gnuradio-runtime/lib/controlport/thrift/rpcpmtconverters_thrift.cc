@@ -19,6 +19,7 @@
  * Boston, MA 02110-1301, USA.
  */
 
+#include <boost/assign/ptr_map_inserter.hpp>
 #include <gnuradio/rpcpmtconverters_thrift.h>
 #include "gnuradio_types.h"
 #include <gnuradio/gr_complex.h>
@@ -140,73 +141,119 @@ rpcpmtconverter::from_pmt(const pmt::pmt_t& knob)
   return GNURadio::Knob();
 }
 
+pmt::pmt_t rpcpmtconverter::to_pmt_byte_f::operator()(const GNURadio::Knob& knob) {
+  return pmt::mp(knob.value.a_byte);
+}
+
+pmt::pmt_t rpcpmtconverter::to_pmt_short_f::operator()(const GNURadio::Knob& knob) {
+  return pmt::mp(knob.value.a_short);
+}
+
+pmt::pmt_t rpcpmtconverter::to_pmt_int_f::operator()(const GNURadio::Knob& knob) {
+  return pmt::mp(knob.value.a_int);
+}
+
+pmt::pmt_t rpcpmtconverter::to_pmt_long_f::operator()(const GNURadio::Knob& knob) {
+  return pmt::mp(knob.value.a_long);
+}
+
+pmt::pmt_t rpcpmtconverter::to_pmt_double_f::operator()(const GNURadio::Knob& knob) {
+  return pmt::mp(knob.value.a_double);
+}
+
+pmt::pmt_t rpcpmtconverter::to_pmt_string_f::operator()(const GNURadio::Knob& knob) {
+  return pmt::string_to_symbol(knob.value.a_string);
+}
+
+pmt::pmt_t rpcpmtconverter::to_pmt_bool_f::operator()(const GNURadio::Knob& knob) {
+  if (knob.value.a_bool)
+    return pmt::PMT_T;
+  else
+    return pmt::PMT_F;
+}
+
+pmt::pmt_t rpcpmtconverter::to_pmt_complex_f::operator()(const GNURadio::Knob& knob) {
+  gr_complexd cpx(knob.value.a_complex.re, knob.value.a_complex.im);
+  return pmt::from_complex(cpx);
+}
+
+pmt::pmt_t rpcpmtconverter::to_pmt_f32vect_f::operator()(const GNURadio::Knob& knob) {
+  std::vector<double> v_double = knob.value.a_f32vector;
+  std::vector<float> v(v_double.begin(), v_double.end());
+  return pmt::init_f32vector(v.size(), v);
+}
+
+pmt::pmt_t rpcpmtconverter::to_pmt_f64vect_f::operator()(const GNURadio::Knob& knob) {
+  std::vector<double> v = knob.value.a_f64vector;
+  return pmt::init_f64vector(v.size(), v);
+}
+
+pmt::pmt_t rpcpmtconverter::to_pmt_s64vect_f::operator()(const GNURadio::Knob& knob) {
+  std::vector<int64_t> v = knob.value.a_s64vector;
+  return pmt::init_s64vector(v.size(), v);
+}
+
+pmt::pmt_t rpcpmtconverter::to_pmt_s32vect_f::operator()(const GNURadio::Knob& knob) {
+  std::vector<int32_t> v = knob.value.a_s32vector;
+  return pmt::init_s32vector(v.size(), v);
+}
+
+pmt::pmt_t rpcpmtconverter::to_pmt_s16vect_f::operator()(const GNURadio::Knob& knob) {
+  std::vector<int16_t> v = knob.value.a_s16vector;
+  return pmt::init_s16vector(v.size(), v);
+}
+
+pmt::pmt_t rpcpmtconverter::to_pmt_s8vect_f::operator()(const GNURadio::Knob& knob) {
+  std::basic_string<char> v = knob.value.a_s8vector;
+  return pmt::init_s8vector(v.size(), reinterpret_cast<const int8_t*>(v.data()));
+}
+
+pmt::pmt_t rpcpmtconverter::to_pmt_c32vect_f::operator()(const GNURadio::Knob& knob) {
+  std::vector<GNURadio::complex> v0 = knob.value.a_c32vector;
+  std::vector<GNURadio::complex>::iterator vitr;
+  std::vector<gr_complex> v;
+  for(vitr = v0.begin(); vitr != v0.end(); vitr++) {
+    v.push_back(gr_complex(vitr->re, vitr->im));
+  }
+  return pmt::init_c32vector(v.size(), v);
+}
+
+rpcpmtconverter::To_PMT rpcpmtconverter::To_PMT::instance;
+
+rpcpmtconverter::To_PMT::To_PMT()
+{
+	boost::assign::ptr_map_insert<to_pmt_bool_f>(to_pmt_map)(GNURadio::BaseTypes::BOOL);
+	boost::assign::ptr_map_insert<to_pmt_byte_f>(to_pmt_map)(GNURadio::BaseTypes::BYTE);
+	boost::assign::ptr_map_insert<to_pmt_short_f>(to_pmt_map)(GNURadio::BaseTypes::SHORT);
+	boost::assign::ptr_map_insert<to_pmt_int_f>(to_pmt_map)(GNURadio::BaseTypes::INT);
+	boost::assign::ptr_map_insert<to_pmt_long_f>(to_pmt_map)(GNURadio::BaseTypes::LONG);
+	boost::assign::ptr_map_insert<to_pmt_double_f>(to_pmt_map)(GNURadio::BaseTypes::DOUBLE);
+	boost::assign::ptr_map_insert<to_pmt_string_f>(to_pmt_map)(GNURadio::BaseTypes::STRING);
+	boost::assign::ptr_map_insert<to_pmt_complex_f>(to_pmt_map)(GNURadio::BaseTypes::COMPLEX);
+	boost::assign::ptr_map_insert<to_pmt_f32vect_f>(to_pmt_map)(GNURadio::BaseTypes::F32VECTOR);
+	boost::assign::ptr_map_insert<to_pmt_f64vect_f>(to_pmt_map)(GNURadio::BaseTypes::F64VECTOR);
+	boost::assign::ptr_map_insert<to_pmt_s64vect_f>(to_pmt_map)(GNURadio::BaseTypes::S64VECTOR);
+	boost::assign::ptr_map_insert<to_pmt_s32vect_f>(to_pmt_map)(GNURadio::BaseTypes::S32VECTOR);
+	boost::assign::ptr_map_insert<to_pmt_s16vect_f>(to_pmt_map)(GNURadio::BaseTypes::S16VECTOR);
+	boost::assign::ptr_map_insert<to_pmt_s8vect_f>(to_pmt_map)(GNURadio::BaseTypes::S8VECTOR);
+	boost::assign::ptr_map_insert<to_pmt_c32vect_f>(to_pmt_map)(GNURadio::BaseTypes::C32VECTOR);
+}
+
+pmt::pmt_t
+rpcpmtconverter::to_pmt_f::operator()(const GNURadio::Knob& knob)
+{
+  std::cerr << "Error: Don't know how to handle Knob Type: " << knob.type << std::endl; assert(0);
+  return pmt::pmt_t();
+}
+
+pmt::pmt_t
+rpcpmtconverter::To_PMT::operator()(const GNURadio::Knob& knob)
+{
+	return to_pmt_map[knob.type](knob);
+}
+
 pmt::pmt_t
 rpcpmtconverter::to_pmt(const GNURadio::Knob& knob)
 {
-  if(knob.type == GNURadio::BaseTypes::BYTE) {
-    return pmt::mp(knob.value.a_byte);
-  }
-  else if(knob.type == GNURadio::BaseTypes::SHORT) {
-    return pmt::mp(knob.value.a_short);
-  }
-  else if(knob.type == GNURadio::BaseTypes::INT) {
-    return pmt::mp(knob.value.a_int);
-  }
-  else if(knob.type == GNURadio::BaseTypes::LONG) {
-    return pmt::mp(knob.value.a_long);
-  }
-  else if(knob.type == GNURadio::BaseTypes::DOUBLE) {
-    return pmt::mp(knob.value.a_double);
-  }
-  else if(knob.type == GNURadio::BaseTypes::STRING) {
-    return pmt::string_to_symbol(knob.value.a_string);
-  }
-  else if(knob.type == GNURadio::BaseTypes::BOOL) {
-    if (knob.value.a_bool)
-      return pmt::PMT_T;
-    else
-      return pmt::PMT_F;
-  }
-  else if(knob.type == GNURadio::BaseTypes::COMPLEX) {
-    gr_complexd cpx(knob.value.a_complex.re, knob.value.a_complex.im);
-    return pmt::from_complex(cpx);
-  }
-  else if(knob.type == GNURadio::BaseTypes::F32VECTOR) {
-    std::vector<double> v_double = knob.value.a_f32vector;
-    std::vector<float> v(v_double.begin(), v_double.end());
-    return pmt::init_f32vector(v.size(), v);
-  }
-  else if(knob.type == GNURadio::BaseTypes::F64VECTOR) {
-    std::vector<double> v = knob.value.a_f64vector;
-    return pmt::init_f64vector(v.size(), v);
-  }
-  else if(knob.type == GNURadio::BaseTypes::S64VECTOR) {
-    std::vector<int64_t> v = knob.value.a_s64vector;
-    return pmt::init_s64vector(v.size(), v);
-  }
-  else if(knob.type == GNURadio::BaseTypes::S32VECTOR) {
-    std::vector<int32_t> v = knob.value.a_s32vector;
-    return pmt::init_s32vector(v.size(), v);
-  }
-  else if(knob.type == GNURadio::BaseTypes::S16VECTOR) {
-    std::vector<int16_t> v = knob.value.a_s16vector;
-    return pmt::init_s16vector(v.size(), v);
-  }
-  else if(knob.type == GNURadio::BaseTypes::S8VECTOR) {
-	  std::basic_string<char> v = knob.value.a_s8vector;
-	return pmt::init_s8vector(v.size(), reinterpret_cast<const int8_t*>(v.data()));
-  }
-  else if(knob.type == GNURadio::BaseTypes::C32VECTOR) {
-    std::vector<GNURadio::complex> v0 = knob.value.a_c32vector;
-    std::vector<GNURadio::complex>::iterator vitr;
-    std::vector<gr_complex> v;
-    for(vitr = v0.begin(); vitr != v0.end(); vitr++) {
-      v.push_back(gr_complex(vitr->re, vitr->im));
-    }
-    return pmt::init_c32vector(v.size(), v);
-  }
-  else {
-    std::cerr << "Error: Don't know how to handle Knob Type: " << knob.type << std::endl; assert(0);
-  }
-  return pmt::pmt_t();
+	return rpcpmtconverter::To_PMT::instance(knob);
 }

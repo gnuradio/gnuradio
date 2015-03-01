@@ -23,16 +23,50 @@
 #define RPCPMTCONVERTERS_THRIFT_H
 
 #include <pmt/pmt.h>
+#include <boost/noncopyable.hpp>
+#include <boost/ptr_container/ptr_map.hpp>
 #include "gnuradio_types.h"
 
-namespace GNURadio {
-  typedef boost::shared_ptr<Knob> KnobPtr;
-}
 
 namespace rpcpmtconverter
 {
   pmt::pmt_t to_pmt(const GNURadio::Knob& knob);
   GNURadio::Knob from_pmt(const pmt::pmt_t& knob);
+
+  struct to_pmt_f {
+	  to_pmt_f() {;}
+
+	  virtual pmt::pmt_t operator()(const GNURadio::Knob& knob);
+  };
+
+  struct to_pmt_byte_f   : public to_pmt_f { pmt::pmt_t operator()(const GNURadio::Knob& knob); };
+  struct to_pmt_short_f  : public to_pmt_f { pmt::pmt_t operator()(const GNURadio::Knob& knob); };
+  struct to_pmt_int_f    : public to_pmt_f { pmt::pmt_t operator()(const GNURadio::Knob& knob); };
+  struct to_pmt_long_f   : public to_pmt_f { pmt::pmt_t operator()(const GNURadio::Knob& knob); };
+  struct to_pmt_double_f : public to_pmt_f { pmt::pmt_t operator()(const GNURadio::Knob& knob); };
+  struct to_pmt_string_f : public to_pmt_f { pmt::pmt_t operator()(const GNURadio::Knob& knob); };
+  struct to_pmt_bool_f   : public to_pmt_f { pmt::pmt_t operator()(const GNURadio::Knob& knob); };
+  struct to_pmt_complex_f: public to_pmt_f { pmt::pmt_t operator()(const GNURadio::Knob& knob); };
+  struct to_pmt_f32vect_f: public to_pmt_f { pmt::pmt_t operator()(const GNURadio::Knob& knob); };
+  struct to_pmt_f64vect_f: public to_pmt_f { pmt::pmt_t operator()(const GNURadio::Knob& knob); };
+  struct to_pmt_s64vect_f: public to_pmt_f { pmt::pmt_t operator()(const GNURadio::Knob& knob); };
+  struct to_pmt_s32vect_f: public to_pmt_f { pmt::pmt_t operator()(const GNURadio::Knob& knob); };
+  struct to_pmt_s16vect_f: public to_pmt_f { pmt::pmt_t operator()(const GNURadio::Knob& knob); };
+  struct to_pmt_s8vect_f : public to_pmt_f { pmt::pmt_t operator()(const GNURadio::Knob& knob); };
+  struct to_pmt_c32vect_f: public to_pmt_f { pmt::pmt_t operator()(const GNURadio::Knob& knob); };
+
+  class To_PMT : private boost::noncopyable {
+
+   public:
+     static To_PMT instance;
+
+     pmt::pmt_t operator()(const GNURadio::Knob& knob);
+
+   private:
+     To_PMT();
+
+     boost::ptr_map<GNURadio::BaseTypes::type, to_pmt_f> to_pmt_map;
+  };
 }
 
 #endif /* RPCPMTCONVERTERS_THRIFT_H */
