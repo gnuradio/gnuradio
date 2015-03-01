@@ -30,7 +30,6 @@
 
 namespace rpcpmtconverter
 {
-  pmt::pmt_t to_pmt(const GNURadio::Knob& knob);
   GNURadio::Knob from_pmt(const pmt::pmt_t& knob);
 
   struct to_pmt_f {

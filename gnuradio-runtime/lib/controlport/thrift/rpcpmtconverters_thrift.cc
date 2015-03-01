@@ -251,9 +251,3 @@ rpcpmtconverter::To_PMT::operator()(const GNURadio::Knob& knob)
 {
 	return to_pmt_map[knob.type](knob);
 }
-
-pmt::pmt_t
-rpcpmtconverter::to_pmt(const GNURadio::Knob& knob)
-{
-	return rpcpmtconverter::To_PMT::instance(knob);
-}

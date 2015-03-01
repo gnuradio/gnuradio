@@ -76,7 +76,7 @@ public:
       ConfigureCallbackMap_t::const_iterator iter(d_setcallbackmap.find(p.first));
       if(iter != d_setcallbackmap.end()) {
         if(cur_priv <= iter->second.priv) {
-          (*iter->second.callback).post(pmt::PMT_NIL, rpcpmtconverter::to_pmt(p.second));
+          (*iter->second.callback).post(pmt::PMT_NIL, rpcpmtconverter::To_PMT::instance(p.second));
         }
         else {
           std::cout << "Key " << p.first << " requires PRIVLVL <= "
