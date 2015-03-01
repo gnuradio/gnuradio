@@ -28,7 +28,7 @@ struct complex {
 }
 
 typedef list<bool>    VectorB
-typedef list<byte>    VectorC
+typedef binary        VectorC
 typedef list<i16>     VectorT
 typedef list<i32>     VectorI
 typedef list<i64>     VectorL

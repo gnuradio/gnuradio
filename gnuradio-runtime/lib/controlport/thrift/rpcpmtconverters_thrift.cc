@@ -113,7 +113,7 @@ rpcpmtconverter::from_pmt(const pmt::pmt_t& knob)
     result.type = GNURadio::BaseTypes::S8VECTOR;
     size_t size(pmt::length(knob));
     const int8_t* start((const int8_t*)pmt::s8vector_elements(knob,size));
-    result.value.__set_a_s8vector(std::vector<int8_t>(start,start+size));
+    result.value.__set_a_s8vector(std::basic_string<char>(start,start+size));
     return result;
   }
   else if(pmt::is_c32vector(knob)) {
@@ -193,8 +193,8 @@ rpcpmtconverter::to_pmt(const GNURadio::Knob& knob)
     return pmt::init_s16vector(v.size(), v);
   }
   else if(knob.type == GNURadio::BaseTypes::S8VECTOR) {
-    std::vector<int8_t> v = knob.value.a_s8vector;
-    return pmt::init_s8vector(v.size(), v);
+	  std::basic_string<char> v = knob.value.a_s8vector;
+	return pmt::init_s8vector(v.size(), reinterpret_cast<const int8_t*>(v.data()));
   }
   else if(knob.type == GNURadio::BaseTypes::C32VECTOR) {
     std::vector<GNURadio::complex> v0 = knob.value.a_c32vector;
