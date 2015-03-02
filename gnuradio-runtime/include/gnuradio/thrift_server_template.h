@@ -37,6 +37,15 @@
 
 using namespace apache;
 
+namespace {
+  static const unsigned int ETHERNET_HEADER_SIZE(14);
+  static const unsigned int IP_HEADER_SIZE(20);
+  static const unsigned int TCP_HEADER_SIZE(32);
+  static const unsigned int ETHERNET_TYPICAL_MTU(1500);
+  static const unsigned int ALRIGHT_DEFAULT_BUFFER_SIZE(
+    ETHERNET_TYPICAL_MTU - ETHERNET_HEADER_SIZE - IP_HEADER_SIZE - TCP_HEADER_SIZE);
+}
+
 template<typename TserverBase, typename TserverClass, typename TImplClass, typename TThriftClass>
 class thrift_server_template : public thrift_application_base<TserverBase, TImplClass>
 {
@@ -52,6 +61,29 @@ protected:
 
   TserverBase* d_server;
   const std::string d_contolPortName, d_endpointName;
+
+private:
+
+  /**
+   * Custom TransportFactory that allows you to override the default Thrift buffer size
+   * of 512 bytes.
+   *
+   */
+  class TBufferedTransportFactory : public thrift::transport::TTransportFactory {
+    public:
+      TBufferedTransportFactory() : bufferSize(ALRIGHT_DEFAULT_BUFFER_SIZE) {;}
+      TBufferedTransportFactory(const unsigned int _bufferSize) : bufferSize(_bufferSize) {;}
+
+      virtual ~TBufferedTransportFactory() {}
+
+      virtual boost::shared_ptr<thrift::transport::TTransport> getTransport(
+        boost::shared_ptr<thrift::transport::TTransport> trans) {
+          return boost::shared_ptr<thrift::transport::TTransport>(
+            new thrift::transport::TBufferedTransport(trans, bufferSize));
+      }
+    private:
+      unsigned int bufferSize;
+  };
 };
 
 template<typename TserverBase, typename TserverClass, typename TImplClass, typename TThriftClass>
@@ -72,7 +104,7 @@ thrift_server_template<TserverBase, TserverClass, TImplClass, TThriftClass>::thr
     serverTransport(new thrift::transport::TServerSocket(9090));
 
   boost::shared_ptr<thrift::transport::TTransportFactory>
-    transportFactory(new thrift::transport::TBufferedTransportFactory());
+    transportFactory(new thrift_server_template::TBufferedTransportFactory());
 
   boost::shared_ptr<thrift::protocol::TProtocolFactory>
     protocolFactory(new thrift::protocol::TBinaryProtocolFactory());
