@@ -220,29 +220,33 @@ pmt::pmt_t rpcpmtconverter::to_pmt_c32vect_f::operator()(const GNURadio::Knob& k
 
 rpcpmtconverter::To_PMT rpcpmtconverter::To_PMT::instance;
 
-rpcpmtconverter::To_PMT::To_PMT()
+rpcpmtconverter::to_pmt_reg<rpcpmtconverter::to_pmt_bool_f>    reg_bool(rpcpmtconverter::To_PMT::instance, GNURadio::BaseTypes::BOOL);
+rpcpmtconverter::to_pmt_reg<rpcpmtconverter::to_pmt_byte_f>    reg_byte(rpcpmtconverter::To_PMT::instance, GNURadio::BaseTypes::BYTE);
+rpcpmtconverter::to_pmt_reg<rpcpmtconverter::to_pmt_short_f>   reg_short(rpcpmtconverter::To_PMT::instance, GNURadio::BaseTypes::SHORT);
+rpcpmtconverter::to_pmt_reg<rpcpmtconverter::to_pmt_int_f>     reg_int(rpcpmtconverter::To_PMT::instance, GNURadio::BaseTypes::INT);
+rpcpmtconverter::to_pmt_reg<rpcpmtconverter::to_pmt_long_f>    reg_long(rpcpmtconverter::To_PMT::instance, GNURadio::BaseTypes::LONG);
+rpcpmtconverter::to_pmt_reg<rpcpmtconverter::to_pmt_double_f>  reg_double(rpcpmtconverter::To_PMT::instance, GNURadio::BaseTypes::DOUBLE);
+rpcpmtconverter::to_pmt_reg<rpcpmtconverter::to_pmt_string_f>  reg_string(rpcpmtconverter::To_PMT::instance, GNURadio::BaseTypes::STRING);
+rpcpmtconverter::to_pmt_reg<rpcpmtconverter::to_pmt_complex_f> reg_complex(rpcpmtconverter::To_PMT::instance, GNURadio::BaseTypes::COMPLEX);
+rpcpmtconverter::to_pmt_reg<rpcpmtconverter::to_pmt_f32vect_f> reg_f32v(rpcpmtconverter::To_PMT::instance, GNURadio::BaseTypes::F32VECTOR);
+rpcpmtconverter::to_pmt_reg<rpcpmtconverter::to_pmt_f64vect_f> reg_f64v(rpcpmtconverter::To_PMT::instance, GNURadio::BaseTypes::F64VECTOR);
+rpcpmtconverter::to_pmt_reg<rpcpmtconverter::to_pmt_s64vect_f> reg_s64v(rpcpmtconverter::To_PMT::instance, GNURadio::BaseTypes::S64VECTOR);
+rpcpmtconverter::to_pmt_reg<rpcpmtconverter::to_pmt_s32vect_f> reg_s32v(rpcpmtconverter::To_PMT::instance, GNURadio::BaseTypes::S32VECTOR);
+rpcpmtconverter::to_pmt_reg<rpcpmtconverter::to_pmt_s16vect_f> reg_s16v(rpcpmtconverter::To_PMT::instance, GNURadio::BaseTypes::S16VECTOR);
+rpcpmtconverter::to_pmt_reg<rpcpmtconverter::to_pmt_s8vect_f>  reg_s8v(rpcpmtconverter::To_PMT::instance, GNURadio::BaseTypes::S8VECTOR);
+rpcpmtconverter::to_pmt_reg<rpcpmtconverter::to_pmt_c32vect_f> reg_c32v(rpcpmtconverter::To_PMT::instance, GNURadio::BaseTypes::C32VECTOR);
+
+template<typename TO_PMT_F>
+rpcpmtconverter::to_pmt_reg<TO_PMT_F>::to_pmt_reg(To_PMT& instance, const GNURadio::BaseTypes::type type)
 {
-	boost::assign::ptr_map_insert<to_pmt_bool_f>(to_pmt_map)(GNURadio::BaseTypes::BOOL);
-	boost::assign::ptr_map_insert<to_pmt_byte_f>(to_pmt_map)(GNURadio::BaseTypes::BYTE);
-	boost::assign::ptr_map_insert<to_pmt_short_f>(to_pmt_map)(GNURadio::BaseTypes::SHORT);
-	boost::assign::ptr_map_insert<to_pmt_int_f>(to_pmt_map)(GNURadio::BaseTypes::INT);
-	boost::assign::ptr_map_insert<to_pmt_long_f>(to_pmt_map)(GNURadio::BaseTypes::LONG);
-	boost::assign::ptr_map_insert<to_pmt_double_f>(to_pmt_map)(GNURadio::BaseTypes::DOUBLE);
-	boost::assign::ptr_map_insert<to_pmt_string_f>(to_pmt_map)(GNURadio::BaseTypes::STRING);
-	boost::assign::ptr_map_insert<to_pmt_complex_f>(to_pmt_map)(GNURadio::BaseTypes::COMPLEX);
-	boost::assign::ptr_map_insert<to_pmt_f32vect_f>(to_pmt_map)(GNURadio::BaseTypes::F32VECTOR);
-	boost::assign::ptr_map_insert<to_pmt_f64vect_f>(to_pmt_map)(GNURadio::BaseTypes::F64VECTOR);
-	boost::assign::ptr_map_insert<to_pmt_s64vect_f>(to_pmt_map)(GNURadio::BaseTypes::S64VECTOR);
-	boost::assign::ptr_map_insert<to_pmt_s32vect_f>(to_pmt_map)(GNURadio::BaseTypes::S32VECTOR);
-	boost::assign::ptr_map_insert<to_pmt_s16vect_f>(to_pmt_map)(GNURadio::BaseTypes::S16VECTOR);
-	boost::assign::ptr_map_insert<to_pmt_s8vect_f>(to_pmt_map)(GNURadio::BaseTypes::S8VECTOR);
-	boost::assign::ptr_map_insert<to_pmt_c32vect_f>(to_pmt_map)(GNURadio::BaseTypes::C32VECTOR);
+	boost::assign::ptr_map_insert<TO_PMT_F>(instance.to_pmt_map)(type);
 }
 
 pmt::pmt_t
 rpcpmtconverter::to_pmt_f::operator()(const GNURadio::Knob& knob)
 {
-  std::cerr << "Error: Don't know how to handle Knob Type: " << knob.type << std::endl; assert(0);
+  std::cerr << "Error: Don't know how to handle Knob Type: " << knob.type << std::endl;
+  assert(0);
   return pmt::pmt_t();
 }
 
