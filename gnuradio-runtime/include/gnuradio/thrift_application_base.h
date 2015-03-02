@@ -74,6 +74,7 @@ protected:
 
   apache::thrift::server::TServer* d_thriftserver;
 
+  static const unsigned int d_default_thrift_port;
   static const unsigned int d_default_num_thrift_threads;
 
 private:

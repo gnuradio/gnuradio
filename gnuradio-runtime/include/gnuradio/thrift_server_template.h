@@ -23,6 +23,7 @@
 #ifndef THRIFT_SERVER_TEMPLATE_H
 #define THRIFT_SERVER_TEMPLATE_H
 
+#include <gnuradio/prefs.h>
 #include <gnuradio/rpcserver_thrift.h>
 #include <gnuradio/thrift_application_base.h>
 #include <iostream>
@@ -97,31 +98,49 @@ thrift_server_template<TserverBase, TserverClass, TImplClass, TThriftClass>::thr
 {
   //std::cerr << "thrift_server_template: ctor" << std::endl;
 
+  unsigned int port, nthreads, buffersize;
+  std::string thrift_config_file = gr::prefs::singleton()->get_string("ControlPort", "config", "");
+
+  if(thrift_config_file.length() > 0) {
+    gr::prefs::singleton()->add_config_file(thrift_config_file);
+    port = static_cast<unsigned int>(gr::prefs::singleton()->get_long("thrift", "port",
+      thrift_application_base<TserverBase, TImplClass>::d_default_thrift_port));
+    nthreads = static_cast<unsigned int>(gr::prefs::singleton()->get_long("thrift", "nthreads",
+      thrift_application_base<TserverBase, TImplClass>::d_default_num_thrift_threads));
+    buffersize = static_cast<unsigned int>(gr::prefs::singleton()->get_long("thrift", "buffersize",
+      ALRIGHT_DEFAULT_BUFFER_SIZE));
+  }
+  else {
+    port = thrift_application_base<TserverBase, TImplClass>::d_default_thrift_port;
+    nthreads = thrift_application_base<TserverBase, TImplClass>::d_default_num_thrift_threads;
+    buffersize = ALRIGHT_DEFAULT_BUFFER_SIZE;
+  }
+
   boost::shared_ptr<TserverClass> handler(new TserverClass());
 
   boost::shared_ptr<thrift::TProcessor>
     processor(new GNURadio::ControlPortProcessor(handler));
 
   boost::shared_ptr<thrift::transport::TServerTransport>
-    serverTransport(new thrift::transport::TServerSocket(9090));
+    serverTransport(new thrift::transport::TServerSocket(port));
 
   boost::shared_ptr<thrift::transport::TTransportFactory>
-    transportFactory(new thrift_server_template::TBufferedTransportFactory());
+    transportFactory(new thrift_server_template::TBufferedTransportFactory(buffersize));
 
   boost::shared_ptr<thrift::protocol::TProtocolFactory>
     protocolFactory(new thrift::protocol::TBinaryProtocolFactory());
 
-  if(thrift_application_base<TserverBase, TImplClass>::d_default_num_thrift_threads <= 1) {
+
+  if(nthreads <= 1) {
     // "Thrift: Single-threaded server"
     thrift_application_base<TserverBase, TImplClass>::d_thriftserver =
       new thrift::server::TSimpleServer(processor, serverTransport,
                                         transportFactory, protocolFactory);
   }
   else {
-    // std::cout << "Thrift Multi-threaded server : " << d_default_num_thrift_threads << std::endl;
+    // std::cout << "Thrift Multi-threaded server : " << nthreads << std::endl;
     boost::shared_ptr<thrift::concurrency::ThreadManager> threadManager
-      (thrift::concurrency::ThreadManager::newSimpleThreadManager
-       (thrift_application_base<TserverBase, TImplClass>::d_default_num_thrift_threads));
+      (thrift::concurrency::ThreadManager::newSimpleThreadManager(nthreads));
 
     boost::shared_ptr<thrift::concurrency::PlatformThreadFactory> threadFactory
       (boost::shared_ptr<thrift::concurrency::PlatformThreadFactory>
