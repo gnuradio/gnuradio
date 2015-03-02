@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2014 Free Software Foundation, Inc.
+ * Copyright 2014,2015 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -46,14 +46,15 @@ rpcserver_thrift::~rpcserver_thrift()
 }
 
 void
-rpcserver_thrift::registerConfigureCallback(const std::string &id, const configureCallback_t callback)
+rpcserver_thrift::registerConfigureCallback(const std::string &id,
+                                            const configureCallback_t callback)
 {
   {
     ConfigureCallbackMap_t::const_iterator iter(d_setcallbackmap.find(id));
     if(iter != d_setcallbackmap.end()) {
       std::stringstream s;
       s << "rpcserver_thrift:: rpcserver_thrift ERROR registering set, already registered: "
-              << id << std::endl;
+        << id << std::endl;
       throw std::runtime_error(s.str().c_str());
     }
   }
@@ -71,7 +72,7 @@ rpcserver_thrift::unregisterConfigureCallback(const std::string &id)
   if(iter == d_setcallbackmap.end()) {
     std::stringstream s;
     s << "rpcserver_thrift:: rpcserver_thrift ERROR unregistering set, not registered: "
-            << id << std::endl;
+      << id << std::endl;
     throw std::runtime_error(s.str().c_str());
   }
 
@@ -90,7 +91,7 @@ rpcserver_thrift::registerQueryCallback(const std::string &id,
     if(iter != d_getcallbackmap.end()) {
       std::stringstream s;
       s << "rpcserver_thrift:: rpcserver_thrift ERROR registering get, already registered: "
-              << id << std::endl;
+        << id << std::endl;
       throw std::runtime_error(s.str().c_str());
     }
   }
@@ -108,7 +109,7 @@ rpcserver_thrift::unregisterQueryCallback(const std::string &id)
   if(iter == d_getcallbackmap.end()) {
     std::stringstream s;
     s << "rpcserver_thrift:: rpcserver_thrift ERROR unregistering get,  registered: "
-            << id << std::endl;
+      << id << std::endl;
     throw std::runtime_error(s.str().c_str());
   }
 
@@ -129,19 +130,20 @@ rpcserver_thrift::setKnobs(const GNURadio::KnobMap& knobs)
 
 
 void
-rpcserver_thrift::getKnobs(GNURadio::KnobMap& _return, const GNURadio::KnobIDList& knobs)
+rpcserver_thrift::getKnobs(GNURadio::KnobMap& _return,
+                           const GNURadio::KnobIDList& knobs)
 {
   GNURadio::KnobMap outknobs;
 
   if(knobs.size() == 0) {
     std::for_each(d_getcallbackmap.begin(), d_getcallbackmap.end(),
-            get_all_f<QueryCallbackMap_t::value_type, QueryCallbackMap_t, GNURadio::KnobMap>
-                    (d_getcallbackmap, cur_priv, outknobs));
+                  get_all_f<QueryCallbackMap_t::value_type, QueryCallbackMap_t, GNURadio::KnobMap>
+                  (d_getcallbackmap, cur_priv, outknobs));
   }
   else {
     std::for_each(knobs.begin(), knobs.end(),
-            get_f<GNURadio::KnobIDList::value_type, QueryCallbackMap_t>
-                    (d_getcallbackmap, cur_priv, outknobs));
+                  get_f<GNURadio::KnobIDList::value_type, QueryCallbackMap_t>
+                  (d_getcallbackmap, cur_priv, outknobs));
   }
   _return = outknobs;
 }
@@ -159,9 +161,9 @@ rpcserver_thrift::getRe(GNURadio::KnobMap& _return, const GNURadio::KnobIDList& 
   else {
     QueryCallbackMap_t::iterator it;
     for(it = d_getcallbackmap.begin(); it != d_getcallbackmap.end(); it++){
-      for(size_t j=0; j<knobs.size(); j++){
+      for(size_t j=0; j<knobs.size(); j++) {
         const boost::xpressive::sregex re(boost::xpressive::sregex::compile(knobs[j]));
-        if(boost::xpressive::regex_match(it->first, re)){
+        if(boost::xpressive::regex_match(it->first, re)) {
           get_f<GNURadio::KnobIDList::value_type, QueryCallbackMap_t>
             (d_getcallbackmap, cur_priv, outknobs)(it->first);
           break;
@@ -173,19 +175,22 @@ rpcserver_thrift::getRe(GNURadio::KnobMap& _return, const GNURadio::KnobIDList& 
 }
 
 void
-rpcserver_thrift::properties(GNURadio::KnobPropMap& _return, const GNURadio::KnobIDList& knobs)
+rpcserver_thrift::properties(GNURadio::KnobPropMap& _return,
+                             const GNURadio::KnobIDList& knobs)
 {
   GNURadio::KnobPropMap outknobs;
 
   if(knobs.size() == 0) {
     std::for_each(d_getcallbackmap.begin(), d_getcallbackmap.end(),
-            properties_all_f<QueryCallbackMap_t::value_type,
-                    QueryCallbackMap_t, GNURadio::KnobPropMap>(d_getcallbackmap, cur_priv, outknobs));
+                  properties_all_f<QueryCallbackMap_t::value_type,
+                  QueryCallbackMap_t, GNURadio::KnobPropMap>(d_getcallbackmap,
+                                                             cur_priv, outknobs));
   }
   else {
     std::for_each(knobs.begin(), knobs.end(),
-            properties_f<GNURadio::KnobIDList::value_type,
-                    QueryCallbackMap_t, GNURadio::KnobPropMap>(d_getcallbackmap, cur_priv, outknobs));
+                  properties_f<GNURadio::KnobIDList::value_type,
+                  QueryCallbackMap_t, GNURadio::KnobPropMap>(d_getcallbackmap,
+                                                             cur_priv, outknobs));
   }
   _return = outknobs;
 }

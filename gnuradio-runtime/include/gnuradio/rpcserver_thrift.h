@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2014 Free Software Foundation, Inc.
+ * Copyright 2014,2015 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -43,16 +43,21 @@ public:
   rpcserver_thrift();
   virtual ~rpcserver_thrift();
 
-  void registerConfigureCallback(const std::string &id, const configureCallback_t callback);
+  void registerConfigureCallback(const std::string &id,
+                                 const configureCallback_t callback);
   void unregisterConfigureCallback(const std::string &id);
 
-  void registerQueryCallback(const std::string &id, const queryCallback_t callback);
+  void registerQueryCallback(const std::string &id,
+                             const queryCallback_t callback);
   void unregisterQueryCallback(const std::string &id);
 
   void setKnobs(const GNURadio::KnobMap&);
-  void getKnobs(GNURadio::KnobMap&, const GNURadio::KnobIDList&);
-  void getRe(GNURadio::KnobMap&, const GNURadio::KnobIDList&);
-  void properties(GNURadio::KnobPropMap&, const GNURadio::KnobIDList& knobs);
+  void getKnobs(GNURadio::KnobMap&,
+                const GNURadio::KnobIDList&);
+  void getRe(GNURadio::KnobMap&,
+             const GNURadio::KnobIDList&);
+  void properties(GNURadio::KnobPropMap&,
+                  const GNURadio::KnobIDList& knobs);
   virtual void shutdown();
 
  private:
@@ -94,7 +99,7 @@ public:
   };
 
   template<typename T, typename TMap>
-    struct get_f : public std::unary_function<T,void>
+  struct get_f : public std::unary_function<T,void>
   {
     get_f(TMap &_getcallbackmap, const priv_lvl_t &_cur_priv, GNURadio::KnobMap &_outknobs) :
       d_getcallbackmap(_getcallbackmap), cur_priv(_cur_priv), outknobs(_outknobs)
@@ -127,10 +132,10 @@ public:
   };
 
   template<typename T, typename TMap, typename TKnobMap>
-    struct get_all_f : public std::unary_function<T,void>
+  struct get_all_f : public std::unary_function<T,void>
   {
-  get_all_f(TMap &_getcallbackmap, const priv_lvl_t &_cur_priv, TKnobMap &_outknobs) :
-    d_getcallbackmap(_getcallbackmap), cur_priv(_cur_priv), outknobs(_outknobs)
+    get_all_f(TMap &_getcallbackmap, const priv_lvl_t &_cur_priv, TKnobMap &_outknobs) :
+      d_getcallbackmap(_getcallbackmap), cur_priv(_cur_priv), outknobs(_outknobs)
     {;}
 
     void operator()(const T& p)
@@ -151,11 +156,14 @@ public:
   };
 
   template<typename T, typename TMap, typename TKnobMap>
-    struct properties_all_f : public std::unary_function<T,void>
+  struct properties_all_f : public std::unary_function<T,void>
   {
-  properties_all_f(QueryCallbackMap_t &_getcallbackmap, const priv_lvl_t &_cur_priv, GNURadio::KnobPropMap &_outknobs)
-    :
-    d_getcallbackmap(_getcallbackmap), cur_priv(_cur_priv), outknobs(_outknobs)
+    properties_all_f(QueryCallbackMap_t &_getcallbackmap,
+                     const priv_lvl_t &_cur_priv,
+                     GNURadio::KnobPropMap &_outknobs)
+      : d_getcallbackmap(_getcallbackmap),
+        cur_priv(_cur_priv),
+        outknobs(_outknobs)
     {;}
 
     void operator()(const T& p)
@@ -185,8 +193,8 @@ public:
   template<class T, typename TMap, typename TKnobMap>
   struct properties_f : public std::unary_function<T,void>
   {
-  properties_f(TMap &_getcallbackmap, const priv_lvl_t &_cur_priv, TKnobMap &_outknobs) :
-    d_getcallbackmap(_getcallbackmap), cur_priv(_cur_priv), outknobs(_outknobs)
+    properties_f(TMap &_getcallbackmap, const priv_lvl_t &_cur_priv, TKnobMap &_outknobs) :
+      d_getcallbackmap(_getcallbackmap), cur_priv(_cur_priv), outknobs(_outknobs)
     {;}
 
     void operator()(const T& p)
