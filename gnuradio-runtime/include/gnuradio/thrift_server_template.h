@@ -24,6 +24,7 @@
 #define THRIFT_SERVER_TEMPLATE_H
 
 #include <gnuradio/prefs.h>
+#include <gnuradio/logger.h>
 #include <gnuradio/rpcserver_thrift.h>
 #include <gnuradio/thrift_application_base.h>
 #include <iostream>
@@ -96,25 +97,24 @@ thrift_server_template<TserverBase, TserverClass, TImplClass, TThriftClass>::thr
     d_contolPortName(controlPortName),
     d_endpointName(endpointName)
 {
-  //std::cerr << "thrift_server_template: ctor" << std::endl;
+  gr::logger_ptr logger, debug_logger;
+  gr::configure_default_loggers(logger, debug_logger, "controlport");
+
+  //GR_LOG_DEBUG(debug_logger, "thrift_server_template: ctor");
 
   unsigned int port, nthreads, buffersize;
   std::string thrift_config_file = gr::prefs::singleton()->get_string("ControlPort", "config", "");
 
   if(thrift_config_file.length() > 0) {
     gr::prefs::singleton()->add_config_file(thrift_config_file);
-    port = static_cast<unsigned int>(gr::prefs::singleton()->get_long("thrift", "port",
-      thrift_application_base<TserverBase, TImplClass>::d_default_thrift_port));
-    nthreads = static_cast<unsigned int>(gr::prefs::singleton()->get_long("thrift", "nthreads",
-      thrift_application_base<TserverBase, TImplClass>::d_default_num_thrift_threads));
-    buffersize = static_cast<unsigned int>(gr::prefs::singleton()->get_long("thrift", "buffersize",
-      ALRIGHT_DEFAULT_BUFFER_SIZE));
   }
-  else {
-    port = thrift_application_base<TserverBase, TImplClass>::d_default_thrift_port;
-    nthreads = thrift_application_base<TserverBase, TImplClass>::d_default_num_thrift_threads;
-    buffersize = ALRIGHT_DEFAULT_BUFFER_SIZE;
-  }
+
+  port = static_cast<unsigned int>(gr::prefs::singleton()->get_long("thrift", "port",
+           thrift_application_base<TserverBase, TImplClass>::d_default_thrift_port));
+  nthreads = static_cast<unsigned int>(gr::prefs::singleton()->get_long("thrift", "nthreads",
+               thrift_application_base<TserverBase, TImplClass>::d_default_num_thrift_threads));
+  buffersize = static_cast<unsigned int>(gr::prefs::singleton()->get_long("thrift", "buffersize",
+                 ALRIGHT_DEFAULT_BUFFER_SIZE));
 
   boost::shared_ptr<TserverClass> handler(new TserverClass());
 
@@ -155,6 +155,10 @@ thrift_server_template<TserverBase, TserverClass, TImplClass, TThriftClass>::thr
                                             transportFactory, protocolFactory,
                                             threadManager);
   }
+
+  // Define the endpoint
+  int used_port = ((thrift::transport::TServerSocket*)serverTransport.get())->getPort();
+  GR_LOG_INFO(logger, boost::format("Apache Thrift Endpoint on port %1%") % used_port);
 
   d_server = handler.get();
 }
