@@ -33,9 +33,8 @@ namespace rpcpmtconverter
   GNURadio::Knob from_pmt(const pmt::pmt_t& knob);
 
   struct to_pmt_f {
-	  to_pmt_f() {;}
-
-	  virtual pmt::pmt_t operator()(const GNURadio::Knob& knob);
+    to_pmt_f() {;}
+    virtual pmt::pmt_t operator()(const GNURadio::Knob& knob);
   };
 
   struct to_pmt_byte_f   : public to_pmt_f { pmt::pmt_t operator()(const GNURadio::Knob& knob); };
@@ -55,16 +54,20 @@ namespace rpcpmtconverter
   struct to_pmt_c32vect_f: public to_pmt_f { pmt::pmt_t operator()(const GNURadio::Knob& knob); };
 
   class To_PMT : private boost::noncopyable {
-
    public:
      static To_PMT instance;
-
+     template<typename TO_PMT_F> friend struct to_pmt_reg;
      pmt::pmt_t operator()(const GNURadio::Knob& knob);
 
-   private:
-     To_PMT();
-
+   protected:
      boost::ptr_map<GNURadio::BaseTypes::type, to_pmt_f> to_pmt_map;
+
+  private:
+    To_PMT() {;}
+  };
+
+  template<typename TO_PMT_F> struct to_pmt_reg {
+    to_pmt_reg(To_PMT& instance, const GNURadio::BaseTypes::type type);
   };
 }
 
