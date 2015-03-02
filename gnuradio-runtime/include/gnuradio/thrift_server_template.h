@@ -69,20 +69,22 @@ private:
    * of 512 bytes.
    *
    */
-  class TBufferedTransportFactory : public thrift::transport::TTransportFactory {
-    public:
-      TBufferedTransportFactory() : bufferSize(ALRIGHT_DEFAULT_BUFFER_SIZE) {;}
-      TBufferedTransportFactory(const unsigned int _bufferSize) : bufferSize(_bufferSize) {;}
+  class TBufferedTransportFactory : public thrift::transport::TTransportFactory
+  {
+  public:
+    TBufferedTransportFactory() : bufferSize(ALRIGHT_DEFAULT_BUFFER_SIZE) {;}
+    TBufferedTransportFactory(const unsigned int _bufferSize) : bufferSize(_bufferSize) {;}
 
-      virtual ~TBufferedTransportFactory() {}
+    virtual ~TBufferedTransportFactory() {}
 
-      virtual boost::shared_ptr<thrift::transport::TTransport> getTransport(
-        boost::shared_ptr<thrift::transport::TTransport> trans) {
-          return boost::shared_ptr<thrift::transport::TTransport>(
-            new thrift::transport::TBufferedTransport(trans, bufferSize));
-      }
-    private:
-      unsigned int bufferSize;
+    virtual boost::shared_ptr<thrift::transport::TTransport> getTransport(
+        boost::shared_ptr<thrift::transport::TTransport> trans)
+    {
+      return boost::shared_ptr<thrift::transport::TTransport>
+        (new thrift::transport::TBufferedTransport(trans, bufferSize));
+    }
+  private:
+    unsigned int bufferSize;
   };
 };
 
@@ -109,24 +111,30 @@ thrift_server_template<TserverBase, TserverClass, TImplClass, TThriftClass>::thr
   boost::shared_ptr<thrift::protocol::TProtocolFactory>
     protocolFactory(new thrift::protocol::TBinaryProtocolFactory());
 
-  if(thrift_application_base<TserverBase, TImplClass>::d_default_num_thrift_threads <= 1)
-  {	// "Thrift: Single-threaded server"
-      thrift_application_base<TserverBase, TImplClass>::d_thriftserver =
-      new thrift::server::TSimpleServer(processor, serverTransport, transportFactory, protocolFactory);
-    } else {	// std::cout << "Thrift Multi-threaded server : " << d_default_num_thrift_threads << std::endl;
-      boost::shared_ptr<thrift::concurrency::ThreadManager> threadManager(
-        thrift::concurrency::ThreadManager::newSimpleThreadManager(
-          thrift_application_base<TserverBase, TImplClass>::d_default_num_thrift_threads));
+  if(thrift_application_base<TserverBase, TImplClass>::d_default_num_thrift_threads <= 1) {
+    // "Thrift: Single-threaded server"
+    thrift_application_base<TserverBase, TImplClass>::d_thriftserver =
+      new thrift::server::TSimpleServer(processor, serverTransport,
+                                        transportFactory, protocolFactory);
+  }
+  else {
+    // std::cout << "Thrift Multi-threaded server : " << d_default_num_thrift_threads << std::endl;
+    boost::shared_ptr<thrift::concurrency::ThreadManager> threadManager
+      (thrift::concurrency::ThreadManager::newSimpleThreadManager
+       (thrift_application_base<TserverBase, TImplClass>::d_default_num_thrift_threads));
 
-      boost::shared_ptr<thrift::concurrency::PlatformThreadFactory> threadFactory(
-        boost::shared_ptr<thrift::concurrency::PlatformThreadFactory>(new thrift::concurrency::PlatformThreadFactory()));
+    boost::shared_ptr<thrift::concurrency::PlatformThreadFactory> threadFactory
+      (boost::shared_ptr<thrift::concurrency::PlatformThreadFactory>
+       (new thrift::concurrency::PlatformThreadFactory()));
 
-      threadManager->threadFactory(threadFactory);
+    threadManager->threadFactory(threadFactory);
 
-      threadManager->start();
+    threadManager->start();
 
-      thrift_application_base<TserverBase, TImplClass>::d_thriftserver =
-        new thrift::server::TThreadPoolServer(processor, serverTransport, transportFactory, protocolFactory, threadManager);
+    thrift_application_base<TserverBase, TImplClass>::d_thriftserver =
+      new thrift::server::TThreadPoolServer(processor, serverTransport,
+                                            transportFactory, protocolFactory,
+                                            threadManager);
   }
 
   d_server = handler.get();

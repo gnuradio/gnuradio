@@ -141,74 +141,104 @@ rpcpmtconverter::from_pmt(const pmt::pmt_t& knob)
   return GNURadio::Knob();
 }
 
-pmt::pmt_t rpcpmtconverter::to_pmt_byte_f::operator()(const GNURadio::Knob& knob) {
+pmt::pmt_t
+rpcpmtconverter::to_pmt_byte_f::operator()(const GNURadio::Knob& knob)
+{
   return pmt::mp(knob.value.a_byte);
 }
 
-pmt::pmt_t rpcpmtconverter::to_pmt_short_f::operator()(const GNURadio::Knob& knob) {
+pmt::pmt_t
+rpcpmtconverter::to_pmt_short_f::operator()(const GNURadio::Knob& knob)
+{
   return pmt::mp(knob.value.a_short);
 }
 
-pmt::pmt_t rpcpmtconverter::to_pmt_int_f::operator()(const GNURadio::Knob& knob) {
+pmt::pmt_t
+rpcpmtconverter::to_pmt_int_f::operator()(const GNURadio::Knob& knob)
+{
   return pmt::mp(knob.value.a_int);
 }
 
-pmt::pmt_t rpcpmtconverter::to_pmt_long_f::operator()(const GNURadio::Knob& knob) {
+pmt::pmt_t
+rpcpmtconverter::to_pmt_long_f::operator()(const GNURadio::Knob& knob)
+{
   return pmt::mp(knob.value.a_long);
 }
 
-pmt::pmt_t rpcpmtconverter::to_pmt_double_f::operator()(const GNURadio::Knob& knob) {
+pmt::pmt_t
+rpcpmtconverter::to_pmt_double_f::operator()(const GNURadio::Knob& knob)
+{
   return pmt::mp(knob.value.a_double);
 }
 
-pmt::pmt_t rpcpmtconverter::to_pmt_string_f::operator()(const GNURadio::Knob& knob) {
+pmt::pmt_t
+rpcpmtconverter::to_pmt_string_f::operator()(const GNURadio::Knob& knob)
+{
   return pmt::string_to_symbol(knob.value.a_string);
 }
 
-pmt::pmt_t rpcpmtconverter::to_pmt_bool_f::operator()(const GNURadio::Knob& knob) {
-  if (knob.value.a_bool)
+pmt::pmt_t
+rpcpmtconverter::to_pmt_bool_f::operator()(const GNURadio::Knob& knob)
+{
+  if(knob.value.a_bool)
     return pmt::PMT_T;
   else
     return pmt::PMT_F;
 }
 
-pmt::pmt_t rpcpmtconverter::to_pmt_complex_f::operator()(const GNURadio::Knob& knob) {
+pmt::pmt_t
+rpcpmtconverter::to_pmt_complex_f::operator()(const GNURadio::Knob& knob)
+{
   gr_complexd cpx(knob.value.a_complex.re, knob.value.a_complex.im);
   return pmt::from_complex(cpx);
 }
 
-pmt::pmt_t rpcpmtconverter::to_pmt_f32vect_f::operator()(const GNURadio::Knob& knob) {
+pmt::pmt_t
+rpcpmtconverter::to_pmt_f32vect_f::operator()(const GNURadio::Knob& knob)
+{
   std::vector<double> v_double = knob.value.a_f32vector;
   std::vector<float> v(v_double.begin(), v_double.end());
   return pmt::init_f32vector(v.size(), v);
 }
 
-pmt::pmt_t rpcpmtconverter::to_pmt_f64vect_f::operator()(const GNURadio::Knob& knob) {
+pmt::pmt_t
+rpcpmtconverter::to_pmt_f64vect_f::operator()(const GNURadio::Knob& knob)
+{
   std::vector<double> v = knob.value.a_f64vector;
   return pmt::init_f64vector(v.size(), v);
 }
 
-pmt::pmt_t rpcpmtconverter::to_pmt_s64vect_f::operator()(const GNURadio::Knob& knob) {
+pmt::pmt_t
+rpcpmtconverter::to_pmt_s64vect_f::operator()(const GNURadio::Knob& knob)
+{
   std::vector<int64_t> v = knob.value.a_s64vector;
   return pmt::init_s64vector(v.size(), v);
 }
 
-pmt::pmt_t rpcpmtconverter::to_pmt_s32vect_f::operator()(const GNURadio::Knob& knob) {
+pmt::pmt_t
+rpcpmtconverter::to_pmt_s32vect_f::operator()(const GNURadio::Knob& knob)
+{
   std::vector<int32_t> v = knob.value.a_s32vector;
   return pmt::init_s32vector(v.size(), v);
 }
 
-pmt::pmt_t rpcpmtconverter::to_pmt_s16vect_f::operator()(const GNURadio::Knob& knob) {
+pmt::pmt_t
+rpcpmtconverter::to_pmt_s16vect_f::operator()(const GNURadio::Knob& knob)
+{
   std::vector<int16_t> v = knob.value.a_s16vector;
   return pmt::init_s16vector(v.size(), v);
 }
 
-pmt::pmt_t rpcpmtconverter::to_pmt_s8vect_f::operator()(const GNURadio::Knob& knob) {
+pmt::pmt_t
+rpcpmtconverter::to_pmt_s8vect_f::operator()(const GNURadio::Knob& knob)
+{
   std::basic_string<char> v = knob.value.a_s8vector;
   return pmt::init_s8vector(v.size(), reinterpret_cast<const int8_t*>(v.data()));
 }
 
-pmt::pmt_t rpcpmtconverter::to_pmt_c32vect_f::operator()(const GNURadio::Knob& knob) {
+pmt::pmt_t
+rpcpmtconverter::to_pmt_c32vect_f::operator()(const GNURadio::Knob& knob)
+{
   std::vector<GNURadio::complex> v0 = knob.value.a_c32vector;
   std::vector<GNURadio::complex>::iterator vitr;
   std::vector<gr_complex> v;
@@ -220,26 +250,42 @@ pmt::pmt_t rpcpmtconverter::to_pmt_c32vect_f::operator()(const GNURadio::Knob& k
 
 rpcpmtconverter::To_PMT rpcpmtconverter::To_PMT::instance;
 
-rpcpmtconverter::to_pmt_reg<rpcpmtconverter::to_pmt_bool_f>    reg_bool(rpcpmtconverter::To_PMT::instance, GNURadio::BaseTypes::BOOL);
-rpcpmtconverter::to_pmt_reg<rpcpmtconverter::to_pmt_byte_f>    reg_byte(rpcpmtconverter::To_PMT::instance, GNURadio::BaseTypes::BYTE);
-rpcpmtconverter::to_pmt_reg<rpcpmtconverter::to_pmt_short_f>   reg_short(rpcpmtconverter::To_PMT::instance, GNURadio::BaseTypes::SHORT);
-rpcpmtconverter::to_pmt_reg<rpcpmtconverter::to_pmt_int_f>     reg_int(rpcpmtconverter::To_PMT::instance, GNURadio::BaseTypes::INT);
-rpcpmtconverter::to_pmt_reg<rpcpmtconverter::to_pmt_long_f>    reg_long(rpcpmtconverter::To_PMT::instance, GNURadio::BaseTypes::LONG);
-rpcpmtconverter::to_pmt_reg<rpcpmtconverter::to_pmt_double_f>  reg_double(rpcpmtconverter::To_PMT::instance, GNURadio::BaseTypes::DOUBLE);
-rpcpmtconverter::to_pmt_reg<rpcpmtconverter::to_pmt_string_f>  reg_string(rpcpmtconverter::To_PMT::instance, GNURadio::BaseTypes::STRING);
-rpcpmtconverter::to_pmt_reg<rpcpmtconverter::to_pmt_complex_f> reg_complex(rpcpmtconverter::To_PMT::instance, GNURadio::BaseTypes::COMPLEX);
-rpcpmtconverter::to_pmt_reg<rpcpmtconverter::to_pmt_f32vect_f> reg_f32v(rpcpmtconverter::To_PMT::instance, GNURadio::BaseTypes::F32VECTOR);
-rpcpmtconverter::to_pmt_reg<rpcpmtconverter::to_pmt_f64vect_f> reg_f64v(rpcpmtconverter::To_PMT::instance, GNURadio::BaseTypes::F64VECTOR);
-rpcpmtconverter::to_pmt_reg<rpcpmtconverter::to_pmt_s64vect_f> reg_s64v(rpcpmtconverter::To_PMT::instance, GNURadio::BaseTypes::S64VECTOR);
-rpcpmtconverter::to_pmt_reg<rpcpmtconverter::to_pmt_s32vect_f> reg_s32v(rpcpmtconverter::To_PMT::instance, GNURadio::BaseTypes::S32VECTOR);
-rpcpmtconverter::to_pmt_reg<rpcpmtconverter::to_pmt_s16vect_f> reg_s16v(rpcpmtconverter::To_PMT::instance, GNURadio::BaseTypes::S16VECTOR);
-rpcpmtconverter::to_pmt_reg<rpcpmtconverter::to_pmt_s8vect_f>  reg_s8v(rpcpmtconverter::To_PMT::instance, GNURadio::BaseTypes::S8VECTOR);
-rpcpmtconverter::to_pmt_reg<rpcpmtconverter::to_pmt_c32vect_f> reg_c32v(rpcpmtconverter::To_PMT::instance, GNURadio::BaseTypes::C32VECTOR);
+rpcpmtconverter::to_pmt_reg<rpcpmtconverter::to_pmt_bool_f>    reg_bool(rpcpmtconverter::To_PMT::instance,
+                                                                        GNURadio::BaseTypes::BOOL);
+rpcpmtconverter::to_pmt_reg<rpcpmtconverter::to_pmt_byte_f>    reg_byte(rpcpmtconverter::To_PMT::instance,
+                                                                        GNURadio::BaseTypes::BYTE);
+rpcpmtconverter::to_pmt_reg<rpcpmtconverter::to_pmt_short_f>   reg_short(rpcpmtconverter::To_PMT::instance,
+                                                                         GNURadio::BaseTypes::SHORT);
+rpcpmtconverter::to_pmt_reg<rpcpmtconverter::to_pmt_int_f>     reg_int(rpcpmtconverter::To_PMT::instance,
+                                                                       GNURadio::BaseTypes::INT);
+rpcpmtconverter::to_pmt_reg<rpcpmtconverter::to_pmt_long_f>    reg_long(rpcpmtconverter::To_PMT::instance,
+                                                                        GNURadio::BaseTypes::LONG);
+rpcpmtconverter::to_pmt_reg<rpcpmtconverter::to_pmt_double_f>  reg_double(rpcpmtconverter::To_PMT::instance,
+                                                                          GNURadio::BaseTypes::DOUBLE);
+rpcpmtconverter::to_pmt_reg<rpcpmtconverter::to_pmt_string_f>  reg_string(rpcpmtconverter::To_PMT::instance,
+                                                                          GNURadio::BaseTypes::STRING);
+rpcpmtconverter::to_pmt_reg<rpcpmtconverter::to_pmt_complex_f> reg_complex(rpcpmtconverter::To_PMT::instance,
+                                                                           GNURadio::BaseTypes::COMPLEX);
+rpcpmtconverter::to_pmt_reg<rpcpmtconverter::to_pmt_f32vect_f> reg_f32v(rpcpmtconverter::To_PMT::instance,
+                                                                        GNURadio::BaseTypes::F32VECTOR);
+rpcpmtconverter::to_pmt_reg<rpcpmtconverter::to_pmt_f64vect_f> reg_f64v(rpcpmtconverter::To_PMT::instance,
+                                                                        GNURadio::BaseTypes::F64VECTOR);
+rpcpmtconverter::to_pmt_reg<rpcpmtconverter::to_pmt_s64vect_f> reg_s64v(rpcpmtconverter::To_PMT::instance,
+                                                                        GNURadio::BaseTypes::S64VECTOR);
+rpcpmtconverter::to_pmt_reg<rpcpmtconverter::to_pmt_s32vect_f> reg_s32v(rpcpmtconverter::To_PMT::instance,
+                                                                        GNURadio::BaseTypes::S32VECTOR);
+rpcpmtconverter::to_pmt_reg<rpcpmtconverter::to_pmt_s16vect_f> reg_s16v(rpcpmtconverter::To_PMT::instance,
+                                                                        GNURadio::BaseTypes::S16VECTOR);
+rpcpmtconverter::to_pmt_reg<rpcpmtconverter::to_pmt_s8vect_f>  reg_s8v(rpcpmtconverter::To_PMT::instance,
+                                                                       GNURadio::BaseTypes::S8VECTOR);
+rpcpmtconverter::to_pmt_reg<rpcpmtconverter::to_pmt_c32vect_f> reg_c32v(rpcpmtconverter::To_PMT::instance,
+                                                                        GNURadio::BaseTypes::C32VECTOR);
 
 template<typename TO_PMT_F>
-rpcpmtconverter::to_pmt_reg<TO_PMT_F>::to_pmt_reg(To_PMT& instance, const GNURadio::BaseTypes::type type)
+rpcpmtconverter::to_pmt_reg<TO_PMT_F>::to_pmt_reg(To_PMT& instance,
+                                                  const GNURadio::BaseTypes::type type)
 {
-	boost::assign::ptr_map_insert<TO_PMT_F>(instance.to_pmt_map)(type);
+  boost::assign::ptr_map_insert<TO_PMT_F>(instance.to_pmt_map)(type);
 }
 
 pmt::pmt_t
@@ -253,5 +299,5 @@ rpcpmtconverter::to_pmt_f::operator()(const GNURadio::Knob& knob)
 pmt::pmt_t
 rpcpmtconverter::To_PMT::operator()(const GNURadio::Knob& knob)
 {
-	return to_pmt_map[knob.type](knob);
+  return to_pmt_map[knob.type](knob);
 }
