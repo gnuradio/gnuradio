@@ -25,7 +25,7 @@
 
 #include <gnuradio/api.h>
 #include <gnuradio/logger.h>
-#include <boost/thread.hpp>
+#include <gnuradio/thread/thread.h>
 
 namespace {
   static const unsigned int THRIFTAPPLICATION_ACTIVATION_TIMEOUT_MS(600);
@@ -45,7 +45,7 @@ class GR_RUNTIME_API thrift_application_common
   static bool d_main_called;
   static bool d_have_thrift_config;
   static std::string d_endpointStr;
-  static boost::shared_ptr<boost::thread> d_thread;
+  static boost::shared_ptr<gr::thread::thread> d_thread;
 
   apache::thrift::server::TServer* d_thriftserver;
 
@@ -67,7 +67,7 @@ public:
 
 protected:
   bool have_thrift_config() { return d_application->d_have_thrift_config; }
-  void set_endpoint(const std::string& endpoint) { d_application->d_endpointStr = endpoint;}
+  void set_endpoint(const std::string& endpoint);
 
   //this one is the key... overwrite in templated/inherited variants
   virtual TserverBase* i_impl() = 0;
@@ -82,6 +82,8 @@ protected:
   gr::logger_ptr d_logger, d_debug_logger;
 
 private:
+  gr::thread::mutex d_lock;
+
   bool d_is_running;
 
   void start_thrift();
@@ -118,8 +120,8 @@ void thrift_application_base<TserverBase, TserverClass>::kickoff()
   static bool run_once = false;
 
   if(!run_once) {
-    thrift_application_common::d_thread = boost::shared_ptr<boost::thread>
-      (new boost::thread(boost::bind(&thrift_application_base::start_thrift, d_this)));
+    thrift_application_common::d_thread = boost::shared_ptr<gr::thread::thread>
+      (new gr::thread::thread(boost::bind(&thrift_application_base::start_thrift, d_this)));
 
     run_once = true;
   }
@@ -136,6 +138,12 @@ const std::vector<std::string> thrift_application_base<TserverBase, TserverClass
   return ep;
 }
 
+template<typename TserverBase, typename TserverClass>
+void thrift_application_base<TserverBase, TserverClass>::set_endpoint(const std::string& endpoint)
+{
+  gr::thread::scoped_lock guard(d_lock);
+  d_application->d_endpointStr = endpoint;
+}
 
 template<typename TserverBase, typename TserverClass>
 TserverBase* thrift_application_base<TserverBase, TserverClass>::i()

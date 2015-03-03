@@ -131,12 +131,13 @@ thrift_server_template<TserverBase, TserverClass, TImplClass, TThriftClass>::thr
 
   if(nthreads <= 1) {
     // "Thrift: Single-threaded server"
+    //std::cout << "Thrift Single-threaded server" << std::endl;
     thrift_application_base<TserverBase, TImplClass>::d_thriftserver =
       new thrift::server::TSimpleServer(processor, serverTransport,
                                         transportFactory, protocolFactory);
   }
   else {
-    // std::cout << "Thrift Multi-threaded server : " << nthreads << std::endl;
+    //std::cout << "Thrift Multi-threaded server : " << nthreads << std::endl;
     boost::shared_ptr<thrift::concurrency::ThreadManager> threadManager
       (thrift::concurrency::ThreadManager::newSimpleThreadManager(nthreads));
 
