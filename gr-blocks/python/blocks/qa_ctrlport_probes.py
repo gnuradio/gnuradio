@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2013 Free Software Foundation, Inc.
+# Copyright 2013,2015 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -24,14 +24,13 @@ import sys, time, random, numpy
 from gnuradio import gr, gr_unittest, blocks
 import os, struct
 
-#from gnuradio import ctrlport
 from gnuradio.ctrlport.GNURadioControlPortClient import GNURadioControlPortClient
 
 class test_ctrlport_probes(gr_unittest.TestCase):
 
     def setUp(self):
-        self.tb = gr.top_block()
         os.environ['GR_CONF_CONTROLPORT_ON'] = 'True'
+        self.tb = gr.top_block()
 
     def tearDown(self):
         self.tb = None
