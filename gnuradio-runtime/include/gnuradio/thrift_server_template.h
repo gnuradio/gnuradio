@@ -100,8 +100,6 @@ thrift_server_template<TserverBase, TserverClass, TImplClass, TThriftClass>::thr
   gr::logger_ptr logger, debug_logger;
   gr::configure_default_loggers(logger, debug_logger, "controlport");
 
-  //GR_LOG_DEBUG(debug_logger, "thrift_server_template: ctor");
-
   unsigned int port, nthreads, buffersize;
   std::string thrift_config_file = gr::prefs::singleton()->get_string("ControlPort", "config", "");
 
@@ -156,9 +154,9 @@ thrift_server_template<TserverBase, TserverClass, TImplClass, TThriftClass>::thr
                                             threadManager);
   }
 
-  // Define the endpoint
   int used_port = ((thrift::transport::TServerSocket*)serverTransport.get())->getPort();
-  GR_LOG_INFO(logger, boost::format("Apache Thrift Endpoint on port %1%") % used_port);
+  std::string endpoint = boost::str(boost::format("%1% -p %2%") % "127.0.0.1" % used_port);
+  GR_LOG_INFO(logger, "Apache Thrift: " + endpoint);
 
   d_server = handler.get();
 }
@@ -172,6 +170,14 @@ template<typename TserverBase, typename TserverClass, typename TImplClass, typen
 TserverBase* thrift_server_template<TserverBase, TserverClass, TImplClass, TThriftClass>::i_impl()
 {
   //std::cerr << "thrift_server_template: i_impl" << std::endl;
+
+  // Define the endpoint
+  thrift::transport::TServerTransport *thetransport =
+    thrift_application_base<TserverBase, TImplClass>::d_thriftserver->getServerTransport().get();
+  int used_port = ((thrift::transport::TServerSocket*)thetransport)->getPort();
+  std::string endpoint = boost::str(boost::format("%1% -p %2%") % "127.0.0.1" % used_port);
+  thrift_application_base<TserverBase, TImplClass>::d_this->set_endpoint(endpoint);
+
   return d_server;
 }
 
