@@ -40,7 +40,6 @@ thrift_application_common::Instance()
 int
 thrift_application_common::run(int, char**)
 {
-  std::cerr << "thrift_application_common: run" << std::endl;
   d_thriftserver->serve();
   return EXIT_SUCCESS;
 }

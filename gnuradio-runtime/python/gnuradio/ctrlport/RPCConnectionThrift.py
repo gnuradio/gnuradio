@@ -39,6 +39,7 @@ class ThriftRadioClient:
         self.transport.open()
 
     def __del__(self):
+        self.radio.shutdown()
         self.transport.close()
 
     def getRadio(self, host, port):
@@ -154,6 +155,13 @@ class RPCConnectionThrift(RPCConnection.RPCConnection):
         for key, knob in self.thriftclient.radio.getKnobs(*args).iteritems():
             #print("key:", key, "value:", knob, "type:", knob.type)
             result[key] = self.unpackKnob(key, knob)
+
+            # If complex, convert to Python complex
+            # FIXME: better list iterator way to handle this?
+            if(knob.type == self.BaseTypes.C32VECTOR):
+                for i in xrange(len(result[key].value)):
+                    result[key].value[i] = complex(result[key].value[i].re,
+                                                   result[key].value[i].im)
         return result
 
     def getKnobsRaw(self, *args):

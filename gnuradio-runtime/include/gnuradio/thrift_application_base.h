@@ -24,6 +24,7 @@
 #define THRIFT_APPLICATION_BASE_H
 
 #include <gnuradio/api.h>
+#include <gnuradio/logger.h>
 #include <boost/thread.hpp>
 
 namespace {
@@ -49,6 +50,7 @@ class GR_RUNTIME_API thrift_application_common
   apache::thrift::server::TServer* d_thriftserver;
 
   thrift_application_common() {;}
+
   int run(int, char*[]);
 };
 
@@ -58,7 +60,7 @@ class thrift_application_base
 public:
   boost::shared_ptr<thrift_application_common> d_application;
   thrift_application_base(TserverClass* _this);
-  ~thrift_application_base() {;}
+  ~thrift_application_base();
 
   static TserverBase* i();
   static const std::vector<std::string> endpoints();
@@ -76,6 +78,8 @@ protected:
 
   static const unsigned int d_default_thrift_port;
   static const unsigned int d_default_num_thrift_threads;
+
+  gr::logger_ptr d_logger, d_debug_logger;
 
 private:
   bool d_is_running;
@@ -96,13 +100,15 @@ TserverClass* thrift_application_base<TserverBase, TserverClass>::d_this(0);
 template<typename TserverBase, typename TserverClass>
 thrift_application_base<TserverBase, TserverClass>::thrift_application_base(TserverClass* _this)
 {
+  gr::configure_default_loggers(d_logger, d_debug_logger, "controlport");
+  GR_LOG_DEBUG(d_debug_logger, "thrift_application_base: ctor");
+
   //std::cerr << "thrift_application_base: ctor" << std::endl;
   d_is_running = false;
   d_this = _this;
 
   //d_application->d_thriftserver = d_this->d_thriftserver;
 }
-
 
 template<typename TserverBase, typename TserverClass>
 void thrift_application_base<TserverBase, TserverClass>::kickoff()
