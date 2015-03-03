@@ -25,7 +25,7 @@
 #include <pmt/pmt.h>
 #include <boost/noncopyable.hpp>
 #include <boost/ptr_container/ptr_map.hpp>
-#include "gnuradio_types.h"
+#include "thrift/gnuradio_types.h"
 
 
 namespace rpcpmtconverter
