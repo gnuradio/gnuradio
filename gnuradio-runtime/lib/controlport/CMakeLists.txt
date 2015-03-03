@@ -47,12 +47,12 @@ GR_APPEND_SUBCOMPONENT("thrift")
 
 # Run Thrrift To compile C++ and Python files
 message(STATUS "Running thrift to build C++ bindings")
+file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/thrift/)
 EXECUTE_PROCESS(
-   COMMAND ${THRIFT_BIN} --gen cpp -out ${CMAKE_CURRENT_BINARY_DIR}/ ${CMAKE_CURRENT_SOURCE_DIR}/thrift/gnuradio.thrift
+   COMMAND ${THRIFT_BIN} --gen cpp -out ${CMAKE_CURRENT_BINARY_DIR}/thrift/ ${CMAKE_CURRENT_SOURCE_DIR}/thrift/gnuradio.thrift
    OUTPUT_VARIABLE THRIFT_CPP_OUTPUT
    ERROR_VARIABLE THRIFT_CPP_ERROR
    )
-
 
 list(APPEND gnuradio_ctrlport_sources
   ${CMAKE_CURRENT_SOURCE_DIR}/thrift/rpcserver_thrift.cc
@@ -63,9 +63,9 @@ list(APPEND gnuradio_ctrlport_sources
 
 # add files built by compiling gnuradio.thrift
 list(APPEND gnuradio_ctrlport_sources
-  ${CMAKE_CURRENT_BINARY_DIR}/gnuradio_types.cpp
-  ${CMAKE_CURRENT_BINARY_DIR}/gnuradio_constants.cpp
-  ${CMAKE_CURRENT_BINARY_DIR}/ControlPort.cpp
+  ${CMAKE_CURRENT_BINARY_DIR}/thrift/gnuradio_types.cpp
+  ${CMAKE_CURRENT_BINARY_DIR}/thrift/gnuradio_constants.cpp
+  ${CMAKE_CURRENT_BINARY_DIR}/thrift/ControlPort.cpp
 )
 
 # Add  required libraries here

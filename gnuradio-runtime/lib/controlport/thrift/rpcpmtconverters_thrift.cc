@@ -21,8 +21,8 @@
 
 #include <boost/assign/ptr_map_inserter.hpp>
 #include <gnuradio/rpcpmtconverters_thrift.h>
-#include "gnuradio_types.h"
 #include <gnuradio/gr_complex.h>
+#include "thrift/gnuradio_types.h"
 #include <iostream>
 
 GNURadio::Knob

@@ -29,8 +29,8 @@
 #include <iostream>
 #include <sstream>
 #include <map>
-#include "ControlPort.h"
-#include "gnuradio_types.h"
+#include "thrift/ControlPort.h"
+#include "thrift/gnuradio_types.h"
 #include <boost/format.hpp>
 
 #define S(x) #x

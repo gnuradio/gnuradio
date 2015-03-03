@@ -29,7 +29,7 @@
 #include <thrift/transport/TSocket.h>
 #include <thrift/transport/TTransportUtils.h>
 #include <boost/xpressive/xpressive.hpp>
-#include "ControlPort.h"
+#include "thrift/ControlPort.h"
 
 #define DEBUG 0
 

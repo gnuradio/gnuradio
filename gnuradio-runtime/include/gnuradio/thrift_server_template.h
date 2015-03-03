@@ -35,7 +35,7 @@
 #include <thrift/concurrency/PlatformThreadFactory.h>
 #include <thrift/transport/TServerSocket.h>
 #include <thrift/transport/TBufferTransports.h>
-#include <ControlPort.h>
+#include "thrift/ControlPort.h"
 
 using namespace apache;
 
