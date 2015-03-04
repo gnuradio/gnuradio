@@ -37,6 +37,9 @@
 #include <thrift/transport/TBufferTransports.h>
 #include "thrift/ControlPort.h"
 
+//#include <netdb.h>
+#include <boost/asio/ip/host_name.hpp>
+
 using namespace apache;
 
 namespace {
@@ -170,13 +173,25 @@ thrift_server_template<TserverBase, TserverClass,TImplClass, TThriftClass>::~thr
 template<typename TserverBase, typename TserverClass, typename TImplClass, typename TThriftClass>
 TserverBase* thrift_server_template<TserverBase, TserverClass, TImplClass, TThriftClass>::i_impl()
 {
-  //std::cerr << "thrift_server_template: i_impl" << std::endl;
+  std::cerr << "thrift_server_template: i_impl" << std::endl;
+
+//	char hostname[1024];
+//	hostname[1023] = '\0';
+//	::gethostname(hostname, 1023);
+//	::printf("Hostname: %s\n", hostname);
+//	struct hostent* h;
+//	h = ::gethostbyname(hostname);
+//	::printf("h_name: %s\n", h->h_name);
+
+	const std::string boost_hostname(boost::asio::ip::host_name());
+	//std::cout << "boost hostname: " << boost_hostname << std::endl;
 
   // Define the endpoint
   thrift::transport::TServerTransport *thetransport =
     thrift_application_base<TserverBase, TImplClass>::d_thriftserver->getServerTransport().get();
   int used_port = ((thrift::transport::TServerSocket*)thetransport)->getPort();
-  std::string endpoint = boost::str(boost::format("%1% -p %2%") % "127.0.0.1" % used_port);
+  std::string endpoint = boost::str(boost::format("%1% -p %2%") % boost_hostname % used_port);
+  std::cout << "Thrift endpoint: " << endpoint << " boost hostname: " << boost_hostname << std::endl;
   thrift_application_base<TserverBase, TImplClass>::d_this->set_endpoint(endpoint);
 
   return d_server;
