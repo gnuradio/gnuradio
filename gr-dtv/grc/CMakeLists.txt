@@ -36,6 +36,10 @@ install(FILES
     dtv_atsc_interleaver.xml
     dtv_atsc_trellis_encoder.xml
     dtv_atsc_field_sync_mux.xml
+    dtv_dvb_bbheader_bb.xml
+    dtv_dvb_bbscrambler_bb.xml
+    dtv_dvb_bch_bb.xml
+    dtv_dvb_ldpc_bb.xml
     DESTINATION ${GRC_BLOCKS_DIR}
     COMPONENT "dtv_python"
 )
