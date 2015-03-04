@@ -28,6 +28,7 @@
 #include <gnuradio/io_signature.h>
 #include <cstring>
 #include <boost/thread/thread.hpp>
+#include <limits>
 
 pmt::pmt_t throttle_rx_rate_pmt(pmt::intern("rx_rate"));
 
@@ -107,8 +108,13 @@ namespace gr {
 
       //if the expected samples was less, we need to throttle back
       if(d_total_samples > expected_samps) {
+        double sleep_time = (d_total_samples - expected_samps)/d_samps_per_us;
+        if (std::numeric_limits<long>::max() < sleep_time) {
+            GR_LOG_ALERT(d_logger, "WARNING: Throttle sleep time overflow! You "
+                    "are probably using a very low sample rate.");
+        }
         boost::this_thread::sleep(boost::posix_time::microseconds
-                                  (long((d_total_samples - expected_samps)/d_samps_per_us)));
+                                  (long(sleep_time)));
       }
 
       //copy all samples output[i] <= input[i]
