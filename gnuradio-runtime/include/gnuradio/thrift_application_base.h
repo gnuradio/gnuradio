@@ -106,10 +106,7 @@ thrift_application_base<TserverBase, TserverClass>::thrift_application_base(Tser
   GR_LOG_DEBUG(d_debug_logger, "thrift_application_base: ctor");
 
   //std::cerr << "thrift_application_base: ctor" << std::endl;
-  d_is_running = false;
   d_this = _this;
-
-  //d_application->d_thriftserver = d_this->d_thriftserver;
 }
 
 template<typename TserverBase, typename TserverClass>
@@ -123,10 +120,26 @@ void thrift_application_base<TserverBase, TserverClass>::kickoff()
     thrift_application_common::d_thread = boost::shared_ptr<gr::thread::thread>
       (new gr::thread::thread(boost::bind(&thrift_application_base::start_thrift, d_this)));
 
+    ::timespec timer_ts, rem_ts;
+    timer_ts.tv_sec = 0; timer_ts.tv_nsec = THRIFTAPPLICATION_ACTIVATION_TIMEOUT_MS*1000;
+
+    int iter = 0;
+    while(!d_this->application_started()) {
+#if defined(_WIN32) || defined(__WIN32__) || defined(WIN32)
+      ::Sleep(timer_ts.tv_nsec / 1000000);
+#else
+      ::nanosleep(&timer_ts, &rem_ts);
+#endif
+      if(!d_this->application_started())
+        std::cout << "@";
+      if(iter++ > 100) {
+        std::cout << "thrift_application_base::kickoff(), timeout waiting to port number might have failed?!" << std::endl;;
+        break;
+      }
+    }
+
     run_once = true;
   }
-
-  return;
 }
 
 
@@ -152,12 +165,6 @@ TserverBase* thrift_application_base<TserverBase, TserverClass>::i()
     kickoff();
   }
   return d_this->i_impl();
-}
-
-template<typename TserverBase, typename TImplClass>
-bool thrift_application_base<TserverBase, TImplClass>::application_started()
-{
-  return d_is_running;
 }
 
 #endif

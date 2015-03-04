@@ -23,6 +23,8 @@
 #include <gnuradio/rpcserver_thrift.h>
 #include <gnuradio/rpcserver_booter_thrift.h>
 
+#include <boost/asio/ip/host_name.hpp>
+
 namespace {
   static const char* const CONTROL_PORT_CLASS("thrift");
   static const char* const CONTROL_PORT_NAME("ControlPort");
@@ -96,7 +98,37 @@ void thrift_application_base<TserverBase, TserverClass>::start_thrift()
 
   //std::cerr << "thrift_application_base: start_thrift" << std::endl;
   GR_LOG_DEBUG(d_debug_logger, "thrift_application_base: start server");
-  d_is_running = true;
   d_thriftserver->serve();
   GR_LOG_DEBUG(d_debug_logger, "thrift_application_base: server started");
+}
+
+
+template<typename TserverBase, typename TserverClass>
+bool thrift_application_base<TserverBase, TserverClass>::application_started()
+{
+  if (d_is_running) return true;
+
+  bool result(false);
+  // Define the endpoint
+  apache::thrift::transport::TServerTransport *thetransport =
+    d_thriftserver->getServerTransport().get();
+
+  // Determine the specified endpoint port number, or the port number selected by bind() if
+  // ControlPort is configured to listen on port 0 (the default)
+  int used_port = ((apache::thrift::transport::TServerSocket*)thetransport)->getPort();
+
+  if (used_port > 0) {
+    // Determine the hostname of this host
+    const std::string boost_hostname(boost::asio::ip::host_name());
+
+    std::string endpoint = boost::str(boost::format("-h %1% -p %2%") % boost_hostname % used_port);
+    //std::cout << "Thrift endpoint: " << endpoint << " boost hostname: " << boost_hostname << std::endl;
+    set_endpoint(endpoint);
+
+    GR_LOG_INFO(logger, "Apache Thrift: " + endpoint);
+    d_is_running = true;
+    result = true;
+  }
+
+  return result;
 }
