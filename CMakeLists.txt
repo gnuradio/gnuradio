@@ -278,6 +278,15 @@ endif()
 ########################################################################
 find_package(Volk)
 if(NOT VOLK_FOUND)
+    find_file(INTREE_VOLK_FOUND
+    volk/volk_common.h
+    PATHS ${CMAKE_CURRENT_SOURCE_DIR}/volk/include
+    )
+
+    if(NOT INTREE_VOLK_FOUND)
+        message(FATAL_ERROR "VOLK submodule is not checked out")
+    endif()
+
     include(GrComponent)
     GR_REGISTER_COMPONENT("volk" ENABLE_VOLK)
 
