@@ -63,6 +63,7 @@
     <block>digital_constellation_receiver_cb</block>
     <block>variable_constellation</block>
     <block>variable_constellation_rect</block>
+    <block>variable_modulate_vector</block>
   </cat>
   <cat>
     <name>Packet Operators</name>
@@ -121,6 +122,8 @@
     <block>digital_pfb_clock_sync_xxx</block>
     <block>digital_pn_correlator_cc</block>
     <block>digital_correlate_and_sync_cc</block>
+    <block>digital_cpm_phase_recovery_cc</block>
+    <block>digital_msk_timing_recovery_cc</block>
   </cat>
   <cat>
     <name>Waveform Generators</name>

@@ -36,7 +36,6 @@ namespace gr {
     private:
       std::vector<gr_complex> d_symbols;
       unsigned int d_sps;
-      float d_center_first_symbol;
       float d_thresh;
       kernel::fft_filter_ccc  *d_filter;
 
@@ -44,8 +43,7 @@ namespace gr {
 
     public:
       correlate_and_sync_cc_impl(const std::vector<gr_complex> &symbols,
-                                 const std::vector<float> &filter,
-                                 unsigned int sps, unsigned int nfilts=32);
+                                 unsigned int sps, float threshold=0.9);
       ~correlate_and_sync_cc_impl();
 
       std::vector<gr_complex> symbols() const;
