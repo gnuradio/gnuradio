@@ -158,10 +158,6 @@ thrift_server_template<TserverBase, TserverClass, TImplClass, TThriftClass>::thr
                                             threadManager);
   }
 
-  int used_port = ((thrift::transport::TServerSocket*)serverTransport.get())->getPort();
-  std::string endpoint = boost::str(boost::format("%1% -p %2%") % "127.0.0.1" % used_port);
-  GR_LOG_INFO(logger, "Apache Thrift: " + endpoint);
-
   d_server = handler.get();
 }
 
@@ -173,26 +169,23 @@ thrift_server_template<TserverBase, TserverClass,TImplClass, TThriftClass>::~thr
 template<typename TserverBase, typename TserverClass, typename TImplClass, typename TThriftClass>
 TserverBase* thrift_server_template<TserverBase, TserverClass, TImplClass, TThriftClass>::i_impl()
 {
-  std::cerr << "thrift_server_template: i_impl" << std::endl;
+  //std::cerr << "thrift_server_template: i_impl" << std::endl;
 
-//	char hostname[1024];
-//	hostname[1023] = '\0';
-//	::gethostname(hostname, 1023);
-//	::printf("Hostname: %s\n", hostname);
-//	struct hostent* h;
-//	h = ::gethostbyname(hostname);
-//	::printf("h_name: %s\n", h->h_name);
-
-	const std::string boost_hostname(boost::asio::ip::host_name());
-	//std::cout << "boost hostname: " << boost_hostname << std::endl;
+  // Determine the hostname of this host
+  const std::string boost_hostname(boost::asio::ip::host_name());
 
   // Define the endpoint
   thrift::transport::TServerTransport *thetransport =
     thrift_application_base<TserverBase, TImplClass>::d_thriftserver->getServerTransport().get();
+
+  // Determine the specified endpoint port number, or the port number selected by bind() if
+  // ControlPort is configured to listen on port 0 (the default)
   int used_port = ((thrift::transport::TServerSocket*)thetransport)->getPort();
-  std::string endpoint = boost::str(boost::format("%1% -p %2%") % boost_hostname % used_port);
-  std::cout << "Thrift endpoint: " << endpoint << " boost hostname: " << boost_hostname << std::endl;
+  std::string endpoint = boost::str(boost::format("-h %1% -p %2%") % boost_hostname % used_port);
+  //std::cout << "Thrift endpoint: " << endpoint << " boost hostname: " << boost_hostname << std::endl;
   thrift_application_base<TserverBase, TImplClass>::d_this->set_endpoint(endpoint);
+
+  GR_LOG_INFO(logger, "Apache Thrift: " + endpoint);
 
   return d_server;
 }
