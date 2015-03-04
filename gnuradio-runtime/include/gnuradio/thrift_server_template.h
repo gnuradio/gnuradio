@@ -37,9 +37,6 @@
 #include <thrift/transport/TBufferTransports.h>
 #include "thrift/ControlPort.h"
 
-//#include <netdb.h>
-#include <boost/asio/ip/host_name.hpp>
-
 using namespace apache;
 
 namespace {
@@ -170,22 +167,6 @@ template<typename TserverBase, typename TserverClass, typename TImplClass, typen
 TserverBase* thrift_server_template<TserverBase, TserverClass, TImplClass, TThriftClass>::i_impl()
 {
   //std::cerr << "thrift_server_template: i_impl" << std::endl;
-
-  // Determine the hostname of this host
-  const std::string boost_hostname(boost::asio::ip::host_name());
-
-  // Define the endpoint
-  thrift::transport::TServerTransport *thetransport =
-    thrift_application_base<TserverBase, TImplClass>::d_thriftserver->getServerTransport().get();
-
-  // Determine the specified endpoint port number, or the port number selected by bind() if
-  // ControlPort is configured to listen on port 0 (the default)
-  int used_port = ((thrift::transport::TServerSocket*)thetransport)->getPort();
-  std::string endpoint = boost::str(boost::format("-h %1% -p %2%") % boost_hostname % used_port);
-  //std::cout << "Thrift endpoint: " << endpoint << " boost hostname: " << boost_hostname << std::endl;
-  thrift_application_base<TserverBase, TImplClass>::d_this->set_endpoint(endpoint);
-
-  GR_LOG_INFO(logger, "Apache Thrift: " + endpoint);
 
   return d_server;
 }
