@@ -43,6 +43,13 @@
 #include "gnuradio/dtv/atsc_sync.h"
 #include "gnuradio/dtv/atsc_trellis_encoder.h"
 #include "gnuradio/dtv/atsc_viterbi_decoder.h"
+#include "gnuradio/dtv/dvb_config.h"
+#include "gnuradio/dtv/dvbt2_config.h"
+#include "gnuradio/dtv/dvbs2_config.h"
+#include "gnuradio/dtv/dvb_bbheader_bb.h"
+#include "gnuradio/dtv/dvb_bbscrambler_bb.h"
+#include "gnuradio/dtv/dvb_bch_bb.h"
+#include "gnuradio/dtv/dvb_ldpc_bb.h"
 %}
 
 %include "gnuradio/dtv/atsc_deinterleaver.h"
@@ -60,6 +67,13 @@
 %include "gnuradio/dtv/atsc_sync.h"
 %include "gnuradio/dtv/atsc_trellis_encoder.h"
 %include "gnuradio/dtv/atsc_viterbi_decoder.h"
+%include "gnuradio/dtv/dvb_config.h"
+%include "gnuradio/dtv/dvbt2_config.h"
+%include "gnuradio/dtv/dvbs2_config.h"
+%include "gnuradio/dtv/dvb_bbheader_bb.h"
+%include "gnuradio/dtv/dvb_bbscrambler_bb.h"
+%include "gnuradio/dtv/dvb_bch_bb.h"
+%include "gnuradio/dtv/dvb_ldpc_bb.h"
 
 GR_SWIG_BLOCK_MAGIC2(dtv, atsc_deinterleaver);
 GR_SWIG_BLOCK_MAGIC2(dtv, atsc_depad);
@@ -76,3 +90,7 @@ GR_SWIG_BLOCK_MAGIC2(dtv, atsc_rs_encoder);
 GR_SWIG_BLOCK_MAGIC2(dtv, atsc_sync);
 GR_SWIG_BLOCK_MAGIC2(dtv, atsc_trellis_encoder);
 GR_SWIG_BLOCK_MAGIC2(dtv, atsc_viterbi_decoder);
+GR_SWIG_BLOCK_MAGIC2(dtv, dvb_bbheader_bb);
+GR_SWIG_BLOCK_MAGIC2(dtv, dvb_bbscrambler_bb);
+GR_SWIG_BLOCK_MAGIC2(dtv, dvb_bch_bb);
+GR_SWIG_BLOCK_MAGIC2(dtv, dvb_ldpc_bb);
