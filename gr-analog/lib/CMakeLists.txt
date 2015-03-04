@@ -137,7 +137,7 @@ if(ENABLE_STATIC_LIBS)
 endif(ENABLE_STATIC_LIBS)
 
 ########################################################################
-# QA C++ Code for gr-filter
+# QA C++ Code for gr-analog
 ########################################################################
 if(ENABLE_TESTING)
   include(GrTest)

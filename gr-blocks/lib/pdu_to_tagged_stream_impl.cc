@@ -90,7 +90,7 @@ namespace gr {
       // Copy vector output
       size_t nout = d_curr_len;
       size_t io(0);
-      const uint8_t* ptr = (uint8_t*) uniform_vector_elements(d_curr_vect, io);
+      const uint8_t* ptr = (const uint8_t*) uniform_vector_elements(d_curr_vect, io);
       memcpy(out, ptr, d_curr_len*d_itemsize);
 
       // Copy tags
@@ -99,7 +99,7 @@ namespace gr {
         for (size_t i = 0; i < pmt::length(klist); i++) {
           pmt::pmt_t k(pmt::nth(i, klist));
           pmt::pmt_t v(pmt::dict_ref(d_curr_meta, k, pmt::PMT_NIL));
-          add_item_tag(0, nitems_written(0), k, v, pmt::mp(alias()));
+          add_item_tag(0, nitems_written(0), k, v, alias_pmt());
         }
       }
 
