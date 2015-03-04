@@ -80,13 +80,15 @@ namespace pmt{
     swig_int_ptr.__repr__ = lambda self: write_string(self)
   %}
 
-
-  extern const pmt_t PMT_T;
-  extern const pmt_t PMT_F;
-  extern const pmt_t PMT_EOF;
-
   pmt_t get_PMT_NIL();
+  pmt_t get_PMT_T();
+  pmt_t get_PMT_F();
+  pmt_t get_PMT_EOF();
+
   #define PMT_NIL get_PMT_NIL()
+  #define PMT_T get_PMT_T()
+  #define PMT_F get_PMT_F()
+  #define PMT_EOF get_PMT_EOF()
 
   bool is_bool(pmt_t obj);
   bool is_true(pmt_t obj);
