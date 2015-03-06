@@ -96,10 +96,7 @@ void thrift_application_base<TserverBase, TserverClass>::start_thrift()
   //  main(0, argv);
   //}
 
-  //std::cerr << "thrift_application_base: start_thrift" << std::endl;
-  GR_LOG_DEBUG(d_debug_logger, "thrift_application_base: start server");
   d_thriftserver->serve();
-  GR_LOG_DEBUG(d_debug_logger, "thrift_application_base: server started");
 }
 
 
@@ -125,7 +122,7 @@ bool thrift_application_base<TserverBase, TserverClass>::application_started()
     //std::cout << "Thrift endpoint: " << endpoint << " boost hostname: " << boost_hostname << std::endl;
     set_endpoint(endpoint);
 
-    GR_LOG_INFO(logger, "Apache Thrift: " + endpoint);
+    GR_LOG_INFO(d_logger, "Apache Thrift: " + endpoint);
     d_is_running = true;
     result = true;
   }

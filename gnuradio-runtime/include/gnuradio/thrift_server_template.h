@@ -107,6 +107,9 @@ thrift_server_template<TserverBase, TserverClass, TImplClass, TThriftClass>::thr
     gr::prefs::singleton()->add_config_file(thrift_config_file);
   }
 
+  // Collect configuration options from the Thrift config file;
+  // defaults if the config file doesn't exist or list the specific
+  // options.
   port = static_cast<unsigned int>(gr::prefs::singleton()->get_long("thrift", "port",
            thrift_application_base<TserverBase, TImplClass>::d_default_thrift_port));
   nthreads = static_cast<unsigned int>(gr::prefs::singleton()->get_long("thrift", "nthreads",
