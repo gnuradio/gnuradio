@@ -103,10 +103,8 @@ template<typename TserverBase, typename TserverClass>
 thrift_application_base<TserverBase, TserverClass>::thrift_application_base(TserverClass* _this)
 {
   gr::configure_default_loggers(d_logger, d_debug_logger, "controlport");
-  GR_LOG_DEBUG(d_debug_logger, "thrift_application_base: ctor");
-
-  //std::cerr << "thrift_application_base: ctor" << std::endl;
   d_this = _this;
+  //GR_LOG_DEBUG(d_debug_logger, "thrift_application_base: ctor");
 }
 
 template<typename TserverBase, typename TserverClass>
@@ -131,9 +129,9 @@ void thrift_application_base<TserverBase, TserverClass>::kickoff()
       ::nanosleep(&timer_ts, &rem_ts);
 #endif
       if(!d_this->application_started())
-        std::cout << "@";
+        std::cerr << "@";
       if(iter++ > 100) {
-        std::cout << "thrift_application_base::kickoff(), timeout waiting to port number might have failed?!" << std::endl;;
+        std::cerr << "thrift_application_base::kickoff(), timeout waiting to port number might have failed?" << std::endl;
         break;
       }
     }
