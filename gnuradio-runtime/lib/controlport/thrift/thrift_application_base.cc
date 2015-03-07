@@ -21,25 +21,4 @@
  */
 
 #include <gnuradio/thrift_application_base.h>
-#include <thrift/server/TServer.h>
 
-int thrift_application_common::d_reacquire_attributes(0);
-bool thrift_application_common::d_main_called(false);
-bool thrift_application_common::d_have_thrift_config(false);
-boost::shared_ptr<boost::thread> thrift_application_common::d_thread;
-std::string thrift_application_common::d_endpointStr("");
-
-boost::shared_ptr<thrift_application_common>
-thrift_application_common::Instance()
-{
-  static boost::shared_ptr<thrift_application_common>
-    instance(new thrift_application_common());
-  return instance;
-}
-
-int
-thrift_application_common::run(int, char**)
-{
-  d_thriftserver->serve();
-  return EXIT_SUCCESS;
-}
