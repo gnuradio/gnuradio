@@ -59,51 +59,40 @@ rpcserver_booter_thrift::endpoints()
                                 GNURadio::ControlPortIf>::endpoints();
 }
 
-template<typename TserverBase, typename TserverClass>
-const unsigned int thrift_application_base<TserverBase, TserverClass>::d_default_thrift_port(0U);
+<class rpcserver_base, class  rpcserver_booter_thrift>
+const unsigned int thrift_application_base<rpcserver_base, rpcserver_booter_thrift>::d_default_max_init_attempts(100U);
 
-template<typename TserverBase, typename TserverClass>
-const unsigned int thrift_application_base<TserverBase, TserverClass>::d_default_num_thrift_threads(10U);
+template<class rpcserver_base, class rpcserver_booter_thrift>
+const unsigned int thrift_application_base<rpcserver_base, rpcserver_booter_thrift>::d_default_thrift_port(0U);
 
-template<typename TserverBase, typename TserverClass>
-thrift_application_base<TserverBase, TserverClass>::~thrift_application_base()
+template<class rpcserver_base, class rpcserver_booter_thrift>
+const unsigned int thrift_application_base<rpcserver_base, rpcserver_booter_thrift>::d_default_num_thrift_threads(10U);
+
+template<class rpcserver_base, class rpcserver_booter_thrift>
+thrift_application_base<rpcserver_base, rpcserver_booter_thrift>::~thrift_application_base()
 {
   GR_LOG_DEBUG(d_debug_logger, "thrift_application_base: shutdown");
-  if(d_is_running) {
+  if(d_thirft_is_running) {
     d_thriftserver->stop();
-    d_is_running = false;
+    d_thirft_is_running = false;
   }
 }
 
-template<typename TserverBase, typename TserverClass>
-void thrift_application_base<TserverBase, TserverClass>::start_thrift()
+template<class  rpcserver_base, class  rpcserver_booter_thrift>
+void thrift_application_base<rpcserver_base, rpcserver_booter_thrift>::start_thrift()
 {
-  //char* argv[2];
-  //argv[0] = (char*)"";
-  //
-  //std::string conffile = gr::prefs::singleton()->get_string("ControlPort", "config", "");
-  //
-  //if(conffile.size() > 0) {
-  //  std::stringstream thriftconf;
-  //  d_have_thrift_config = true;
-  //  d_main_called = true;
-  //  thriftconf << conffile;
-  //  main(0, argv, thriftconf.str().c_str());
-  //}
-  //else {
-  //  d_have_thrift_config = false;
-  //  d_main_called = true;
-  //  main(0, argv);
-  //}
-
   d_thriftserver->serve();
 }
 
+template<class rpcserver_base,  class rpcserver_booter_thrift>
+std::auto_ptr<thrift_application_base_impl<rpcserver_booter_thrift> >
+  thrift_application_base<rpcserver_base,  rpcserver_booter_thrift>::p_impl(
+      new thrift_application_base_impl<rpcserver_booter_thrift>());
 
-template<typename TserverBase, typename TserverClass>
-bool thrift_application_base<TserverBase, TserverClass>::application_started()
+template<class  rpcserver_base, typename rpcserver_booter_thrift>
+bool thrift_application_base<rpcserver_base, rpcserver_booter_thrift>::application_started()
 {
-  if (d_is_running) return true;
+  if (d_thirft_is_running) return true;
 
   bool result(false);
   // Define the endpoint
@@ -123,7 +112,7 @@ bool thrift_application_base<TserverBase, TserverClass>::application_started()
     set_endpoint(endpoint);
 
     GR_LOG_INFO(d_logger, "Apache Thrift: " + endpoint);
-    d_is_running = true;
+    d_thirft_is_running = true;
     result = true;
   }
 

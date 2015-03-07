@@ -29,37 +29,27 @@
 #include <boost/date_time/posix_time/posix_time.hpp>
 
 namespace {
-  static const unsigned int THRIFTAPPLICATION_ACTIVATION_TIMEOUT_MS(600);
+  static const unsigned int THRIFTAPPLICATION_ACTIVATION_TIMEOUT_MS(200);
 };
 
 namespace apache { namespace thrift { namespace server { class TServer; } } }
 
-class GR_RUNTIME_API thrift_application_common
+template<typename TserverClass>
+class thrift_application_base_impl
 {
- public:
-  template<typename TserverBase, typename TserverClass> friend class thrift_application_base;
-  static boost::shared_ptr<thrift_application_common> Instance();
-  ~thrift_application_common() {;}
-  static int d_reacquire_attributes;
+public:
+  thrift_application_base_impl() :
+    d_application_initilized(false)
+  {
 
- protected:
-  static bool d_main_called;
-  static bool d_have_thrift_config;
-  static std::string d_endpointStr;
-  static boost::shared_ptr<gr::thread::thread> d_thread;
-
-  apache::thrift::server::TServer* d_thriftserver;
-
-  thrift_application_common() {;}
-
-  int run(int, char*[]);
+  }
+  bool d_application_initilized;
 };
 
 template<typename TserverBase, typename TserverClass>
 class thrift_application_base
 {
 public:
-  boost::shared_ptr<thrift_application_common> d_application;
   thrift_application_base(TserverClass* _this);
   ~thrift_application_base();
 
@@ -67,41 +57,51 @@ public:
   static const std::vector<std::string> endpoints();
 
 protected:
-  bool have_thrift_config() { return d_application->d_have_thrift_config; }
   void set_endpoint(const std::string& endpoint);
 
-  //this one is the key... overwrite in templated/inherited variants
   virtual TserverBase* i_impl() = 0;
 
   static TserverClass* d_this;
 
   apache::thrift::server::TServer* d_thriftserver;
 
+  static const unsigned int d_default_max_init_attempts;
   static const unsigned int d_default_thrift_port;
   static const unsigned int d_default_num_thrift_threads;
 
   gr::logger_ptr d_logger, d_debug_logger;
 
 private:
+  static std::auto_ptr<thrift_application_base_impl<TserverClass> > p_impl;
   gr::thread::mutex d_lock;
 
-  bool d_is_running;
+  bool d_thirft_is_running;
+
+  static std::string d_endpointStr;
+  static boost::shared_ptr<gr::thread::thread> d_start_thrift_thread;
 
   void start_thrift();
 
   bool application_started();
 
-  int run(int, char*[]);
-
-  static void kickoff();
+  static void start_application();
 };
 
 template<typename TserverBase, typename TserverClass>
 TserverClass* thrift_application_base<TserverBase, TserverClass>::d_this(0);
 
+template<typename TserverBase, typename TserverClass>
+boost::shared_ptr<gr::thread::thread>
+  thrift_application_base<TserverBase, TserverClass>::d_start_thrift_thread;
+
+template<typename TserverBase, typename TserverClass>
+std::string
+  thrift_application_base<TserverBase, TserverClass>::d_endpointStr("");
 
 template<typename TserverBase, typename TserverClass>
 thrift_application_base<TserverBase, TserverClass>::thrift_application_base(TserverClass* _this)
+  : d_lock(),
+    d_thirft_is_running(false)
 {
   gr::configure_default_loggers(d_logger, d_debug_logger, "controlport");
   d_this = _this;
@@ -109,37 +109,38 @@ thrift_application_base<TserverBase, TserverClass>::thrift_application_base(Tser
 }
 
 template<typename TserverBase, typename TserverClass>
-void thrift_application_base<TserverBase, TserverClass>::kickoff()
+void thrift_application_base<TserverBase, TserverClass>::start_application()
 {
-  //std::cerr << "thrift_application_base: kickoff" << std::endl;
+  //std::cerr << "thrift_application_base: start_application" << std::endl;
 
-  static bool run_once = false;
-
-  if(!run_once) {
-    thrift_application_common::d_thread = boost::shared_ptr<gr::thread::thread>
+  if(!p_impl->d_application_initilized) {
+    d_start_thrift_thread = boost::shared_ptr<gr::thread::thread>
       (new gr::thread::thread(boost::bind(&thrift_application_base::start_thrift, d_this)));
 
-    int iter = 0;
-    while(!d_this->application_started()) {
+    bool app_started(false);
+    for(unsigned int attempts(0); (!app_started && attempts < d_default_max_init_attempts); ++attempts) {
       boost::this_thread::sleep(boost::posix_time::milliseconds(THRIFTAPPLICATION_ACTIVATION_TIMEOUT_MS));
-      if(!d_this->application_started())
+
+      app_started = d_this->application_started();
+
+      if(app_started) {
         std::cerr << "@";
-      if(iter++ > 100) {
-        std::cerr << "thrift_application_base::c(), timeout waiting to port number might have failed?" << std::endl;
-        break;
       }
     }
 
-    run_once = true;
+    if(!app_started) {
+      std::cerr << "thrift_application_base::c(), timeout waiting to port number might have failed?" << std::endl;
+    }
+
+    p_impl->d_application_initilized = true;
   }
 }
-
 
 template<typename TserverBase, typename TserverClass>
 const std::vector<std::string> thrift_application_base<TserverBase, TserverClass>::endpoints()
 {
   std::vector<std::string> ep;
-  ep.push_back(d_this->d_application->d_endpointStr);
+  ep.push_back(d_this->d_endpointStr);
   return ep;
 }
 
@@ -147,14 +148,14 @@ template<typename TserverBase, typename TserverClass>
 void thrift_application_base<TserverBase, TserverClass>::set_endpoint(const std::string& endpoint)
 {
   gr::thread::scoped_lock guard(d_lock);
-  d_application->d_endpointStr = endpoint;
+  d_endpointStr = endpoint;
 }
 
 template<typename TserverBase, typename TserverClass>
 TserverBase* thrift_application_base<TserverBase, TserverClass>::i()
 {
-  if(!d_this->application_started()) {
-    kickoff();
+  if(!p_impl->d_application_initilized) {
+    start_application();
   }
   return d_this->i_impl();
 }
