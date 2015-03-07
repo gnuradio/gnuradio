@@ -26,6 +26,7 @@
 #include <gnuradio/api.h>
 #include <gnuradio/logger.h>
 #include <gnuradio/thread/thread.h>
+#include <boost/date_time/posix_time/posix_time.hpp>
 
 namespace {
   static const unsigned int THRIFTAPPLICATION_ACTIVATION_TIMEOUT_MS(600);
@@ -118,20 +119,13 @@ void thrift_application_base<TserverBase, TserverClass>::kickoff()
     thrift_application_common::d_thread = boost::shared_ptr<gr::thread::thread>
       (new gr::thread::thread(boost::bind(&thrift_application_base::start_thrift, d_this)));
 
-    ::timespec timer_ts, rem_ts;
-    timer_ts.tv_sec = 0; timer_ts.tv_nsec = THRIFTAPPLICATION_ACTIVATION_TIMEOUT_MS*1000;
-
     int iter = 0;
     while(!d_this->application_started()) {
-#if defined(_WIN32) || defined(__WIN32__) || defined(WIN32)
-      ::Sleep(timer_ts.tv_nsec / 1000000);
-#else
-      ::nanosleep(&timer_ts, &rem_ts);
-#endif
+      boost::this_thread::sleep(boost::posix_time::milliseconds(THRIFTAPPLICATION_ACTIVATION_TIMEOUT_MS));
       if(!d_this->application_started())
         std::cerr << "@";
       if(iter++ > 100) {
-        std::cerr << "thrift_application_base::kickoff(), timeout waiting to port number might have failed?" << std::endl;
+        std::cerr << "thrift_application_base::c(), timeout waiting to port number might have failed?" << std::endl;
         break;
       }
     }
