@@ -31,6 +31,10 @@ namespace {
   static const char* const ENDPOINT_NAME("gnuradio");
 };
 
+/*!
+ * \brief A booter implementation for a Thrift application class.
+ */
+
 rpcserver_booter_thrift::rpcserver_booter_thrift() :
   thrift_server_template<rpcserver_base,
                          rpcserver_thrift,
@@ -43,6 +47,10 @@ rpcserver_booter_thrift::rpcserver_booter_thrift() :
 rpcserver_booter_thrift::~rpcserver_booter_thrift()
 {;}
 
+/*!
+ * \brief TBD
+ */
+
 rpcserver_base*
 rpcserver_booter_thrift::i()
 {
@@ -50,6 +58,10 @@ rpcserver_booter_thrift::i()
                                 rpcserver_booter_thrift,
                                 GNURadio::ControlPortIf>::i();
 }
+
+/*!
+ * \brief Returns the endpoint string for the application
+ */
 
 const std::vector<std::string>
 rpcserver_booter_thrift::endpoints()
@@ -59,7 +71,10 @@ rpcserver_booter_thrift::endpoints()
                                 GNURadio::ControlPortIf>::endpoints();
 }
 
-<class rpcserver_base, class  rpcserver_booter_thrift>
+// Specalized thrift_application_base attributes and functions
+// for this rpcserver_booter instance
+
+template<class rpcserver_base, class  rpcserver_booter_thrift>
 const unsigned int thrift_application_base<rpcserver_base, rpcserver_booter_thrift>::d_default_max_init_attempts(100U);
 
 template<class rpcserver_base, class rpcserver_booter_thrift>

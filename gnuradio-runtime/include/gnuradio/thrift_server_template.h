@@ -111,11 +111,11 @@ thrift_server_template<TserverBase, TserverClass, TImplClass, TThriftClass>::thr
   // defaults if the config file doesn't exist or list the specific
   // options.
   port = static_cast<unsigned int>(gr::prefs::singleton()->get_long("thrift", "port",
-           thrift_application_base<TserverBase, TImplClass>::d_default_thrift_port));
+    thrift_application_base<TserverBase, TImplClass>::d_default_thrift_port));
   nthreads = static_cast<unsigned int>(gr::prefs::singleton()->get_long("thrift", "nthreads",
-               thrift_application_base<TserverBase, TImplClass>::d_default_num_thrift_threads));
+    thrift_application_base<TserverBase, TImplClass>::d_default_num_thrift_threads));
   buffersize = static_cast<unsigned int>(gr::prefs::singleton()->get_long("thrift", "buffersize",
-                 ALRIGHT_DEFAULT_BUFFER_SIZE));
+    ALRIGHT_DEFAULT_BUFFER_SIZE));
 
   boost::shared_ptr<TserverClass> handler(new TserverClass());
 
@@ -135,9 +135,9 @@ thrift_server_template<TserverBase, TserverClass, TImplClass, TThriftClass>::thr
   if(nthreads <= 1) {
     // "Thrift: Single-threaded server"
     //std::cout << "Thrift Single-threaded server" << std::endl;
-    thrift_application_base<TserverBase, TImplClass>::d_thriftserver =
+    thrift_application_base<TserverBase, TImplClass>::d_thriftserver.reset(
       new thrift::server::TSimpleServer(processor, serverTransport,
-                                        transportFactory, protocolFactory);
+                                        transportFactory, protocolFactory));
   }
   else {
     //std::cout << "Thrift Multi-threaded server : " << nthreads << std::endl;
@@ -152,10 +152,10 @@ thrift_server_template<TserverBase, TserverClass, TImplClass, TThriftClass>::thr
 
     threadManager->start();
 
-    thrift_application_base<TserverBase, TImplClass>::d_thriftserver =
+    thrift_application_base<TserverBase, TImplClass>::d_thriftserver.reset(
       new thrift::server::TThreadPoolServer(processor, serverTransport,
                                             transportFactory, protocolFactory,
-                                            threadManager);
+                                            threadManager));
   }
 
   d_server = handler.get();

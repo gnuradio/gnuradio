@@ -29,10 +29,17 @@
 #include <boost/date_time/posix_time/posix_time.hpp>
 
 namespace {
+  // Time, in milliseconds, to wait between checks to the Thrift runtime to see if
+  // it has fully initialized.
   static const unsigned int THRIFTAPPLICATION_ACTIVATION_TIMEOUT_MS(200);
 };
 
 namespace apache { namespace thrift { namespace server { class TServer; } } }
+
+/*!
+ * \brief  Class to statically initialized by thrift_application_base. To be used
+ *                to store state for thrift_application_base's static functions.
+ */
 
 class thrift_application_base_impl
 {
@@ -42,60 +49,126 @@ public:
     d_endpointStr(""),
     d_start_thrift_thread() {;}
 
+  // Used to ensure the Thrift runtime is initialized on the first call to ::i()
   bool d_application_initilized;
+  // Stores the generated endpoint string after the Thrift runtime has initilized
   std::string d_endpointStr;
+  // Thread to execute the Thrift runtime's blocking serve() function
   boost::shared_ptr<gr::thread::thread> d_start_thrift_thread;
 };
+
+/*!
+ * \brief Base class for a Thrift application with a singleton with instance
+ * function ::i(). Lazy initialization is used to start the Thrift runtime,
+ * therefore the Thrift runtime is not started unless ::i() is called at least once.
+ * This typically means that at least one rpc variable must be registered by
+ * a block before the runtime will start.
+ *
+ * \param TserverBase Template parameter naming the type of the server base,
+ *                  which is typically rpcserverbase.
+ * \param TserverClass Template parameter naming the eventual type of the
+ *                   the fully derived application
+ * \param _app Reference to the fully derived application instance to be returned
+ *                  by ::i().
+ */
 
 template<typename TserverBase, typename TserverClass>
 class thrift_application_base
 {
 public:
-  thrift_application_base(TserverClass* _this);
+  thrift_application_base(TserverClass* _app);
+
+  // Destructor for the application. Since shutdown and cleanup
+  // of the runtime is typically custom to a particular booter
+  // implementation, this must be implemented as a specalized
+  // function for a particular booter. Thus a template implementation
+  // is not provided here.
   ~thrift_application_base();
 
+  /*!
+   * \brief The application singleton instance function
+   */
   static TserverBase* i();
+  // Returns the endpoint string of this application
   static const std::vector<std::string> endpoints();
 
 protected:
+  /*!
+   * \brief Allows this application's booter to set the
+   *endpoint string after the Thrift runtime has initialized
+   *
+   * \param[in] endpoint The endpoint string to set
+   */
   void set_endpoint(const std::string& endpoint);
 
+  /*!
+   * \brief TBD
+   */
   virtual TserverBase* i_impl() = 0;
 
-  static TserverClass* d_booter;
+  // Reference to the fully derived application instance
+  static TserverClass* d_application;
 
-  apache::thrift::server::TServer* d_thriftserver;
+  // Reference to the Thrift runtime
+  std::auto_ptr<apache::thrift::server::TServer> d_thriftserver;
 
+  // Max number of attempts when checking the Thrift runtime for
+  // Initialization before giving up
   static const unsigned int d_default_max_init_attempts;
+  // Default port for the runtime to listen on, if a static port
+  // is not specified
   static const unsigned int d_default_thrift_port;
+  // Maximum number of threads to create when serving
+  // multiple rpc clients
   static const unsigned int d_default_num_thrift_threads;
 
+  // logger instances
   gr::logger_ptr d_logger, d_debug_logger;
 
 private:
+
+  // Function to be called in a seperate thread to invoke the blocking
+  // ThriftServer::serve() function. Must be specialized for a particular
+  // booter implementation, therefore a template implementation is
+  // not provided here.
   void start_thrift();
 
+  // Non-blocking function that returns true when the Thrift
+  // runtime has finished initialization. Must be implemented
+  // as a specalized template function  for a particular booter
+  // implementation, therefore template implementation is not
+  // provided here.
   bool application_started();
 
+  // Internal function to start the initialization of the runtime.
+  // Since this singleton uses lazy instantiation, this function
+  // will be called on the first call to the instance function ::i(),
+  // and since ::i() is static, this function must be static as well.
   static void start_application();
 
+  // Pointer to the structure containing staticly allocated
+  // state information for the applicaiton_base singleton.
   static std::auto_ptr<thrift_application_base_impl > p_impl;
+
+  // Mutex to protect the endpoint string
   gr::thread::mutex d_lock;
 
+  // Will be set to true by a the application_started() function,
+  // spealized for a particular booter implementation, once the
+  // thrift runtime has successfully initialized.
   bool d_thirft_is_running;
-
 };
 
 template<typename TserverBase, typename TserverClass>
-TserverClass* thrift_application_base<TserverBase, TserverClass>::d_booter(0);
+TserverClass* thrift_application_base<TserverBase, TserverClass>::d_application(0);
 
 template<typename TserverBase, typename TserverClass>
-thrift_application_base<TserverBase, TserverClass>::thrift_application_base(TserverClass* _this)
+thrift_application_base<TserverBase, TserverClass>::thrift_application_base(TserverClass* _app)
   : d_lock(),
     d_thirft_is_running(false)
 {
   gr::configure_default_loggers(d_logger, d_debug_logger, "controlport");
-  d_booter = _this;
+  d_application = _app;
   //GR_LOG_DEBUG(d_debug_logger, "thrift_application_base: ctor");
 }
 
@@ -106,13 +179,13 @@ void thrift_application_base<TserverBase, TserverClass>::start_application()
 
   if(!p_impl->d_application_initilized) {
       p_impl->d_start_thrift_thread.reset(
-      (new gr::thread::thread(boost::bind(&thrift_application_base::start_thrift, d_booter))));
+      (new gr::thread::thread(boost::bind(&thrift_application_base::start_thrift, d_application))));
 
     bool app_started(false);
     for(unsigned int attempts(0); (!app_started && attempts < d_default_max_init_attempts); ++attempts) {
       boost::this_thread::sleep(boost::posix_time::milliseconds(THRIFTAPPLICATION_ACTIVATION_TIMEOUT_MS));
 
-      app_started = d_booter->application_started();
+      app_started = d_application->application_started();
 
       if(app_started) {
         std::cerr << "@";
@@ -120,7 +193,7 @@ void thrift_application_base<TserverBase, TserverClass>::start_application()
     }
 
     if(!app_started) {
-      std::cerr << "thrift_application_base::c(), timeout waiting to port number might have failed?" << std::endl;
+      std::cerr << "thrift_application_base::start_application(), timeout waiting to port number might have failed?" << std::endl;
     }
 
     p_impl->d_application_initilized = true;
@@ -148,7 +221,7 @@ TserverBase* thrift_application_base<TserverBase, TserverClass>::i()
   if(!p_impl->d_application_initilized) {
     start_application();
   }
-  return d_booter->i_impl();
+  return d_application->i_impl();
 }
 
 #endif
