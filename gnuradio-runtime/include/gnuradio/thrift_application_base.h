@@ -34,16 +34,17 @@ namespace {
 
 namespace apache { namespace thrift { namespace server { class TServer; } } }
 
-template<typename TserverClass>
 class thrift_application_base_impl
 {
 public:
   thrift_application_base_impl() :
-    d_application_initilized(false)
-  {
+    d_application_initilized(false),
+    d_endpointStr(""),
+    d_start_thrift_thread() {;}
 
-  }
   bool d_application_initilized;
+  std::string d_endpointStr;
+  boost::shared_ptr<gr::thread::thread> d_start_thrift_thread;
 };
 
 template<typename TserverBase, typename TserverClass>
@@ -61,7 +62,7 @@ protected:
 
   virtual TserverBase* i_impl() = 0;
 
-  static TserverClass* d_this;
+  static TserverClass* d_booter;
 
   apache::thrift::server::TServer* d_thriftserver;
 
@@ -72,31 +73,21 @@ protected:
   gr::logger_ptr d_logger, d_debug_logger;
 
 private:
-  static std::auto_ptr<thrift_application_base_impl<TserverClass> > p_impl;
-  gr::thread::mutex d_lock;
-
-  bool d_thirft_is_running;
-
-  static std::string d_endpointStr;
-  static boost::shared_ptr<gr::thread::thread> d_start_thrift_thread;
-
   void start_thrift();
 
   bool application_started();
 
   static void start_application();
+
+  static std::auto_ptr<thrift_application_base_impl > p_impl;
+  gr::thread::mutex d_lock;
+
+  bool d_thirft_is_running;
+
 };
 
 template<typename TserverBase, typename TserverClass>
-TserverClass* thrift_application_base<TserverBase, TserverClass>::d_this(0);
-
-template<typename TserverBase, typename TserverClass>
-boost::shared_ptr<gr::thread::thread>
-  thrift_application_base<TserverBase, TserverClass>::d_start_thrift_thread;
-
-template<typename TserverBase, typename TserverClass>
-std::string
-  thrift_application_base<TserverBase, TserverClass>::d_endpointStr("");
+TserverClass* thrift_application_base<TserverBase, TserverClass>::d_booter(0);
 
 template<typename TserverBase, typename TserverClass>
 thrift_application_base<TserverBase, TserverClass>::thrift_application_base(TserverClass* _this)
@@ -104,7 +95,7 @@ thrift_application_base<TserverBase, TserverClass>::thrift_application_base(Tser
     d_thirft_is_running(false)
 {
   gr::configure_default_loggers(d_logger, d_debug_logger, "controlport");
-  d_this = _this;
+  d_booter = _this;
   //GR_LOG_DEBUG(d_debug_logger, "thrift_application_base: ctor");
 }
 
@@ -114,14 +105,14 @@ void thrift_application_base<TserverBase, TserverClass>::start_application()
   //std::cerr << "thrift_application_base: start_application" << std::endl;
 
   if(!p_impl->d_application_initilized) {
-    d_start_thrift_thread = boost::shared_ptr<gr::thread::thread>
-      (new gr::thread::thread(boost::bind(&thrift_application_base::start_thrift, d_this)));
+      p_impl->d_start_thrift_thread.reset(
+      (new gr::thread::thread(boost::bind(&thrift_application_base::start_thrift, d_booter))));
 
     bool app_started(false);
     for(unsigned int attempts(0); (!app_started && attempts < d_default_max_init_attempts); ++attempts) {
       boost::this_thread::sleep(boost::posix_time::milliseconds(THRIFTAPPLICATION_ACTIVATION_TIMEOUT_MS));
 
-      app_started = d_this->application_started();
+      app_started = d_booter->application_started();
 
       if(app_started) {
         std::cerr << "@";
@@ -140,7 +131,7 @@ template<typename TserverBase, typename TserverClass>
 const std::vector<std::string> thrift_application_base<TserverBase, TserverClass>::endpoints()
 {
   std::vector<std::string> ep;
-  ep.push_back(d_this->d_endpointStr);
+  ep.push_back(p_impl->d_endpointStr);
   return ep;
 }
 
@@ -148,7 +139,7 @@ template<typename TserverBase, typename TserverClass>
 void thrift_application_base<TserverBase, TserverClass>::set_endpoint(const std::string& endpoint)
 {
   gr::thread::scoped_lock guard(d_lock);
-  d_endpointStr = endpoint;
+  p_impl->d_endpointStr = endpoint;
 }
 
 template<typename TserverBase, typename TserverClass>
@@ -157,7 +148,7 @@ TserverBase* thrift_application_base<TserverBase, TserverClass>::i()
   if(!p_impl->d_application_initilized) {
     start_application();
   }
-  return d_this->i_impl();
+  return d_booter->i_impl();
 }
 
 #endif

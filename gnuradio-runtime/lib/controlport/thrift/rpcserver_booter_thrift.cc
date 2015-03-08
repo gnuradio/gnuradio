@@ -68,6 +68,11 @@ const unsigned int thrift_application_base<rpcserver_base, rpcserver_booter_thri
 template<class rpcserver_base, class rpcserver_booter_thrift>
 const unsigned int thrift_application_base<rpcserver_base, rpcserver_booter_thrift>::d_default_num_thrift_threads(10U);
 
+template<class rpcserver_base,  class rpcserver_booter_thrift>
+std::auto_ptr<thrift_application_base_impl>
+  thrift_application_base<rpcserver_base,  rpcserver_booter_thrift>::p_impl(
+      new thrift_application_base_impl());
+
 template<class rpcserver_base, class rpcserver_booter_thrift>
 thrift_application_base<rpcserver_base, rpcserver_booter_thrift>::~thrift_application_base()
 {
@@ -83,11 +88,6 @@ void thrift_application_base<rpcserver_base, rpcserver_booter_thrift>::start_thr
 {
   d_thriftserver->serve();
 }
-
-template<class rpcserver_base,  class rpcserver_booter_thrift>
-std::auto_ptr<thrift_application_base_impl<rpcserver_booter_thrift> >
-  thrift_application_base<rpcserver_base,  rpcserver_booter_thrift>::p_impl(
-      new thrift_application_base_impl<rpcserver_booter_thrift>());
 
 template<class  rpcserver_base, typename rpcserver_booter_thrift>
 bool thrift_application_base<rpcserver_base, rpcserver_booter_thrift>::application_started()
