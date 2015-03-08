@@ -59,17 +59,17 @@ public:
 
 /*!
  * \brief Base class for a Thrift application with a singleton with instance
- * function ::i(). Lazy initialization is used to start the Thrift runtime,
- * therefore the Thrift runtime is not started unless ::i() is called at least once.
- * This typically means that at least one rpc variable must be registered by
- * a block before the runtime will start.
+ *   function ::i(). Lazy initialization is used to start the Thrift runtime,
+ *   therefore the Thrift runtime is not started unless ::i() is called at least once.
+ *   This typically means that at least one rpc variable must be registered by
+ *   a block before the runtime will start.
  *
  * \param TserverBase Template parameter naming the type of the server base,
- * which is typically rpcserverbase.
+ *   which is typically rpcserverbase.
  * \param TserverClass Template parameter naming the eventual type of the
- * the fully derived application.
+ *   the fully derived application.
  * \param _app Reference to the fully derived application instance to be returned
- *  by ::i().
+ *    by ::i().
  */
 
 template<typename TserverBase, typename TserverClass>
@@ -95,7 +95,7 @@ public:
 protected:
   /*!
    * \brief Allows this application's booter to set the
-   *endpoint string after the Thrift runtime has initialized.
+   *  endpoint string after the Thrift runtime has initialized.
    *
    * \param[in] endpoint The endpoint string reported by this class.
    */
@@ -106,7 +106,7 @@ protected:
   // Reference to the fully derived application instance.
   static TserverClass* d_application;
 
-  // Reference to the Thrift runtime
+  // Reference to the Thrift runtime;
   std::auto_ptr<apache::thrift::server::TServer> d_thriftserver;
 
   // Max number of attempts when checking the Thrift runtime for
@@ -126,7 +126,7 @@ protected:
 
 private:
 
-  // Function to be called in a seperate thread to invoke the blocking
+  // Function to be called in a separate thread to invoke the blocking
   // ThriftServer::serve() function. Must be specialized for a particular
   // booter implementation, therefore a template implementation is
   // not provided here.
@@ -134,7 +134,7 @@ private:
 
   // Non-blocking function that returns true when the Thrift
   // runtime has finished initialization. Must be implemented
-  // as a specalized template function  for a particular booter
+  // as a specialized template function for a particular booter
   // implementation, therefore template implementation is not
   // provided here.
   bool application_started();
@@ -153,7 +153,7 @@ private:
   gr::thread::mutex d_lock;
 
   // Will be set to true by a the application_started() function,
-  // spealized for a particular booter implementation, once the
+  // specialized for a particular booter implementation, once the
   // thrift runtime has successfully initialized.
   bool d_thirft_is_running;
 };
