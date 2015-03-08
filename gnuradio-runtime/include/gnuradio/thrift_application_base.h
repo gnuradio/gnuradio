@@ -37,8 +37,8 @@ namespace {
 namespace apache { namespace thrift { namespace server { class TServer; } } }
 
 /*!
- * \brief  Class to statically initialized by thrift_application_base. To be used
- *                to store state for thrift_application_base's static functions.
+ * \brief  Class to be statically initialized by thrift_application_base. Used
+ * to store state for thrift_application_base's static functions.
  */
 
 class thrift_application_base_impl
@@ -49,11 +49,11 @@ public:
     d_endpointStr(""),
     d_start_thrift_thread() {;}
 
-  // Used to ensure the Thrift runtime is initialized on the first call to ::i()
+  // Used to ensure the Thrift runtime is initialized on the first call to ::i().
   bool d_application_initilized;
-  // Stores the generated endpoint string after the Thrift runtime has initilized
+  // Stores the generated endpoint string after the Thrift runtime has initialized.
   std::string d_endpointStr;
-  // Thread to execute the Thrift runtime's blocking serve() function
+  // Thread to execute the Thrift runtime's blocking serve() function.
   boost::shared_ptr<gr::thread::thread> d_start_thrift_thread;
 };
 
@@ -65,11 +65,11 @@ public:
  * a block before the runtime will start.
  *
  * \param TserverBase Template parameter naming the type of the server base,
- *                  which is typically rpcserverbase.
+ * which is typically rpcserverbase.
  * \param TserverClass Template parameter naming the eventual type of the
- *                   the fully derived application
+ * the fully derived application.
  * \param _app Reference to the fully derived application instance to be returned
- *                  by ::i().
+ *  by ::i().
  */
 
 template<typename TserverBase, typename TserverClass>
@@ -86,45 +86,42 @@ public:
   ~thrift_application_base();
 
   /*!
-   * \brief The application singleton instance function
+   * \brief The application singleton instance function.
    */
   static TserverBase* i();
-  // Returns the endpoint string of this application
+  // Returns the endpoint string of this application.
   static const std::vector<std::string> endpoints();
 
 protected:
   /*!
    * \brief Allows this application's booter to set the
-   *endpoint string after the Thrift runtime has initialized
+   *endpoint string after the Thrift runtime has initialized.
    *
-   * \param[in] endpoint The endpoint string to set
+   * \param[in] endpoint The endpoint string reported by this class.
    */
   void set_endpoint(const std::string& endpoint);
 
-  /*!
-   * \brief TBD
-   */
   virtual TserverBase* i_impl() = 0;
 
-  // Reference to the fully derived application instance
+  // Reference to the fully derived application instance.
   static TserverClass* d_application;
 
   // Reference to the Thrift runtime
   std::auto_ptr<apache::thrift::server::TServer> d_thriftserver;
 
   // Max number of attempts when checking the Thrift runtime for
-  // Initialization before giving up
+  // Initialization before giving up.
   static const unsigned int d_default_max_init_attempts;
   // Default port for the runtime to listen on, if a static port
-  // is not specified
+  // is not specified.
   static const unsigned int d_default_thrift_port;
   // Maximum number of threads to create when serving
-  // multiple rpc clients
+  // multiple rpc clients.
   static const unsigned int d_default_num_thrift_threads;
-  // Default packet size for the IP payload of thrift packets
+  // Default packet size for the IP payload of thrift packets.
   static const unsigned int d_default_thrift_buffer_size;
 
-  // logger instances
+  // logger instances.
   gr::logger_ptr d_logger, d_debug_logger;
 
 private:
@@ -152,7 +149,7 @@ private:
   // state information for the applicaiton_base singleton.
   static std::auto_ptr<thrift_application_base_impl > p_impl;
 
-  // Mutex to protect the endpoint string
+  // Mutex to protect the endpoint string.
   gr::thread::mutex d_lock;
 
   // Will be set to true by a the application_started() function,

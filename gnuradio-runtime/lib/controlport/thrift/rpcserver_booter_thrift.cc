@@ -50,10 +50,6 @@ rpcserver_booter_thrift::rpcserver_booter_thrift() :
 rpcserver_booter_thrift::~rpcserver_booter_thrift()
 {;}
 
-/*!
- * \brief TBD
- */
-
 rpcserver_base*
 rpcserver_booter_thrift::i()
 {
@@ -74,8 +70,8 @@ rpcserver_booter_thrift::endpoints()
                                 GNURadio::ControlPortIf>::endpoints();
 }
 
-// Specalized thrift_application_base attributes and functions
-// for this rpcserver_booter instance
+// Specialized thrift_application_base attributes and functions
+// for this rpcserver_booter instance.
 
 template<class rpcserver_base, class  rpcserver_booter_thrift>
 const unsigned int thrift_application_base<rpcserver_base, rpcserver_booter_thrift>::d_default_max_init_attempts(100U);
@@ -117,12 +113,11 @@ bool thrift_application_base<rpcserver_base, rpcserver_booter_thrift>::applicati
   if (d_thirft_is_running) return true;
 
   bool result(false);
-  // Define the endpoint
+  // Define the endpoint.
   apache::thrift::transport::TServerTransport *thetransport =
     d_thriftserver->getServerTransport().get();
 
   // Determine the specified endpoint port number, or the port number selected by bind() if
-  // ControlPort is configured to listen on port 0 (the default)
   int used_port = ((apache::thrift::transport::TServerSocket*)thetransport)->getPort();
 
   if (used_port > 0) {
