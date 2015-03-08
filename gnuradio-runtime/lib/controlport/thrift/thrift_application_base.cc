@@ -21,4 +21,3 @@
  */
 
 #include <gnuradio/thrift_application_base.h>
-
