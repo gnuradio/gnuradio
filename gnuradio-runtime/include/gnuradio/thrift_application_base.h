@@ -121,6 +121,8 @@ protected:
   // Maximum number of threads to create when serving
   // multiple rpc clients
   static const unsigned int d_default_num_thrift_threads;
+  // Default packet size for the IP payload of thrift packets
+  static const unsigned int d_default_thrift_buffer_size;
 
   // logger instances
   gr::logger_ptr d_logger, d_debug_logger;

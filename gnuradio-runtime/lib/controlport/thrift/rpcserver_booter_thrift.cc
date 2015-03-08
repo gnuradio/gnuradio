@@ -27,8 +27,12 @@
 
 namespace {
   static const char* const CONTROL_PORT_CLASS("thrift");
-  static const char* const CONTROL_PORT_NAME("ControlPort");
-  static const char* const ENDPOINT_NAME("gnuradio");
+  static const unsigned int ETHERNET_HEADER_SIZE(14);
+  static const unsigned int IP_HEADER_SIZE(20);
+  static const unsigned int TCP_HEADER_SIZE(32);
+  static const unsigned int ETHERNET_TYPICAL_MTU(1500);
+  static const unsigned int ALRIGHT_DEFAULT_BUFFER_SIZE(
+    ETHERNET_TYPICAL_MTU - ETHERNET_HEADER_SIZE - IP_HEADER_SIZE - TCP_HEADER_SIZE);
 };
 
 /*!
@@ -39,8 +43,7 @@ rpcserver_booter_thrift::rpcserver_booter_thrift() :
   thrift_server_template<rpcserver_base,
                          rpcserver_thrift,
                          rpcserver_booter_thrift,
-                         boost::shared_ptr<GNURadio::ControlPortIf> >
-  (this, std::string(CONTROL_PORT_NAME), std::string(ENDPOINT_NAME)),
+                         boost::shared_ptr<GNURadio::ControlPortIf> >(this),
   d_type(std::string(CONTROL_PORT_CLASS))
 {;}
 
@@ -82,6 +85,10 @@ const unsigned int thrift_application_base<rpcserver_base, rpcserver_booter_thri
 
 template<class rpcserver_base, class rpcserver_booter_thrift>
 const unsigned int thrift_application_base<rpcserver_base, rpcserver_booter_thrift>::d_default_num_thrift_threads(10U);
+
+template<class rpcserver_base, class rpcserver_booter_thrift>
+const unsigned int thrift_application_base<rpcserver_base, rpcserver_booter_thrift>::d_default_thrift_buffer_size(
+    ALRIGHT_DEFAULT_BUFFER_SIZE);
 
 template<class rpcserver_base,  class rpcserver_booter_thrift>
 std::auto_ptr<thrift_application_base_impl>

@@ -39,22 +39,11 @@
 
 using namespace apache;
 
-namespace {
-  static const unsigned int ETHERNET_HEADER_SIZE(14);
-  static const unsigned int IP_HEADER_SIZE(20);
-  static const unsigned int TCP_HEADER_SIZE(32);
-  static const unsigned int ETHERNET_TYPICAL_MTU(1500);
-  static const unsigned int ALRIGHT_DEFAULT_BUFFER_SIZE(
-    ETHERNET_TYPICAL_MTU - ETHERNET_HEADER_SIZE - IP_HEADER_SIZE - TCP_HEADER_SIZE);
-}
-
 template<typename TserverBase, typename TserverClass, typename TImplClass, typename TThriftClass>
 class thrift_server_template : public thrift_application_base<TserverBase, TImplClass>
 {
 public:
-  thrift_server_template(TImplClass* _this,
-                         const std::string& contolPortName,
-                         const std::string& endpointName);
+  thrift_server_template(TImplClass* _this);
   ~thrift_server_template();
 
 protected:
@@ -62,10 +51,8 @@ protected:
   friend class thrift_application_base<TserverBase, TImplClass>;
 
   TserverBase* d_server;
-  const std::string d_contolPortName, d_endpointName;
 
 private:
-
   /**
    * Custom TransportFactory that allows you to override the default Thrift buffer size
    * of 512 bytes.
@@ -74,7 +61,6 @@ private:
   class TBufferedTransportFactory : public thrift::transport::TTransportFactory
   {
   public:
-    TBufferedTransportFactory() : bufferSize(ALRIGHT_DEFAULT_BUFFER_SIZE) {;}
     TBufferedTransportFactory(const unsigned int _bufferSize) : bufferSize(_bufferSize) {;}
 
     virtual ~TBufferedTransportFactory() {}
@@ -92,10 +78,7 @@ private:
 
 template<typename TserverBase, typename TserverClass, typename TImplClass, typename TThriftClass>
 thrift_server_template<TserverBase, TserverClass, TImplClass, TThriftClass>::thrift_server_template
-(TImplClass* _this, const std::string& controlPortName, const std::string& endpointName)
-  : thrift_application_base<TserverBase, TImplClass>(_this),
-    d_contolPortName(controlPortName),
-    d_endpointName(endpointName)
+(TImplClass* _this) : thrift_application_base<TserverBase, TImplClass>(_this)
 {
   gr::logger_ptr logger, debug_logger;
   gr::configure_default_loggers(logger, debug_logger, "controlport");
@@ -115,7 +98,7 @@ thrift_server_template<TserverBase, TserverClass, TImplClass, TThriftClass>::thr
   nthreads = static_cast<unsigned int>(gr::prefs::singleton()->get_long("thrift", "nthreads",
     thrift_application_base<TserverBase, TImplClass>::d_default_num_thrift_threads));
   buffersize = static_cast<unsigned int>(gr::prefs::singleton()->get_long("thrift", "buffersize",
-    ALRIGHT_DEFAULT_BUFFER_SIZE));
+    thrift_application_base<TserverBase, TImplClass>::d_default_thrift_buffer_size));
 
   boost::shared_ptr<TserverClass> handler(new TserverClass());
 
