@@ -22,7 +22,7 @@
 
 import sys, time, random, numpy
 from gnuradio import gr, gr_unittest, blocks
-import os, struct
+import os, struct, re
 
 from gnuradio.ctrlport.GNURadioControlPortClient import GNURadioControlPortClient
 
@@ -46,6 +46,7 @@ class test_ctrlport_probes(gr_unittest.TestCase):
         self.tb.connect(self.src, self.probe)
         self.tb.start()
 
+
         # Probes return complex values as list of floats with re, im
         # Imaginary parts of this data set are 0.
         expected_result = [1, 2, 3, 4,
@@ -56,10 +57,13 @@ class test_ctrlport_probes(gr_unittest.TestCase):
 
         # Get available endpoint
         ep = gr.rpcmanager_get().endpoints()[0]
+        hostname = re.search("-h (\S+|\d+\.\d+\.\d+\.\d+)", ep).group(1)
+        portnum = re.search("-p (\d+)", ep).group(1)
+        argv = [None, hostname, portnum]
 
         # Initialize a simple ControlPort client from endpoint
         from gnuradio.ctrlport.GNURadioControlPortClient import GNURadioControlPortClient
-        radiosys = GNURadioControlPortClient(rpcmethod='thrift')
+        radiosys = GNURadioControlPortClient(argv=argv, rpcmethod='thrift')
         radio = radiosys.client
 
         # Get all exported knobs
@@ -94,10 +98,13 @@ class test_ctrlport_probes(gr_unittest.TestCase):
 
         # Get available endpoint
         ep = gr.rpcmanager_get().endpoints()[0]
+        hostname = re.search("-h (\S+|\d+\.\d+\.\d+\.\d+)", ep).group(1)
+        portnum = re.search("-p (\d+)", ep).group(1)
+        argv = [None, hostname, portnum]
 
         # Initialize a simple ControlPort client from endpoint
         from gnuradio.ctrlport.GNURadioControlPortClient import GNURadioControlPortClient
-        radiosys = GNURadioControlPortClient(rpcmethod='thrift')
+        radiosys = GNURadioControlPortClient(argv=argv, rpcmethod='thrift')
         radio = radiosys.client
 
         # Get all exported knobs
@@ -131,10 +138,13 @@ class test_ctrlport_probes(gr_unittest.TestCase):
 
         # Get available endpoint
         ep = gr.rpcmanager_get().endpoints()[0]
+        hostname = re.search("-h (\S+|\d+\.\d+\.\d+\.\d+)", ep).group(1)
+        portnum = re.search("-p (\d+)", ep).group(1)
+        argv = [None, hostname, portnum]
 
         # Initialize a simple ControlPort client from endpoint
         from gnuradio.ctrlport.GNURadioControlPortClient import GNURadioControlPortClient
-        radiosys = GNURadioControlPortClient(rpcmethod='thrift')
+        radiosys = GNURadioControlPortClient(argv=argv, rpcmethod='thrift')
         radio = radiosys.client
 
         # Get all exported knobs
@@ -169,10 +179,13 @@ class test_ctrlport_probes(gr_unittest.TestCase):
 
         # Get available endpoint
         ep = gr.rpcmanager_get().endpoints()[0]
+        hostname = re.search("-h (\S+|\d+\.\d+\.\d+\.\d+)", ep).group(1)
+        portnum = re.search("-p (\d+)", ep).group(1)
+        argv = [None, hostname, portnum]
 
         # Initialize a simple ControlPort client from endpoint
         from gnuradio.ctrlport.GNURadioControlPortClient import GNURadioControlPortClient
-        radiosys = GNURadioControlPortClient(rpcmethod='thrift')
+        radiosys = GNURadioControlPortClient(argv=argv, rpcmethod='thrift')
         radio = radiosys.client
 
         # Get all exported knobs
@@ -206,10 +219,13 @@ class test_ctrlport_probes(gr_unittest.TestCase):
 
         # Get available endpoint
         ep = gr.rpcmanager_get().endpoints()[0]
+        hostname = re.search("-h (\S+|\d+\.\d+\.\d+\.\d+)", ep).group(1)
+        portnum = re.search("-p (\d+)", ep).group(1)
+        argv = [None, hostname, portnum]
 
         # Initialize a simple ControlPort client from endpoint
         from gnuradio.ctrlport.GNURadioControlPortClient import GNURadioControlPortClient
-        radiosys = GNURadioControlPortClient(rpcmethod='thrift')
+        radiosys = GNURadioControlPortClient(argv=argv, rpcmethod='thrift')
         radio = radiosys.client
 
         # Get all exported knobs

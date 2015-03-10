@@ -24,7 +24,7 @@
 # This program tests mixed python and c++ GRCP sets in a single app
 #
 
-import sys, time, random, numpy
+import sys, time, random, numpy, re
 from gnuradio import gr, gr_unittest, blocks
 
 from gnuradio.ctrlport import GNURadio
@@ -119,10 +119,13 @@ class test_cpp_py_binding_set(gr_unittest.TestCase):
 
         # Get available endpoint
         ep = gr.rpcmanager_get().endpoints()[0]
+        hostname = re.search("-h (\S+|\d+\.\d+\.\d+\.\d+)", ep).group(1)
+        portnum = re.search("-p (\d+)", ep).group(1)
+        argv = [None, hostname, portnum]
 
         # Initialize a simple ControlPort client from endpoint
         from gnuradio.ctrlport.GNURadioControlPortClient import GNURadioControlPortClient
-        radiosys = GNURadioControlPortClient(rpcmethod='thrift')
+        radiosys = GNURadioControlPortClient(argv=argv, rpcmethod='thrift')
         radio = radiosys.client
 
         self.tb.start()
