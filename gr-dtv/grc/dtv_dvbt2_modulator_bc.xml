@@ -1,0 +1,75 @@
+<?xml version="1.0"?>
+<!--
+###################################################
+## DVB-T2 QPSK/QAM Modulator
+###################################################
+ -->
+<block>
+  <name>DVB-T2 Modulator</name>
+  <key>dtv_dvbt2_modulator_bc</key>
+  <import>from gnuradio import dtv</import>
+  <make>dtv.dvbt2_modulator_bc($framesize.val, $constellation.val, $rotation.val)</make>
+  <param>
+    <name>FECFRAME size</name>
+    <key>framesize</key>
+    <type>enum</type>
+    <option>
+      <name>Normal</name>
+      <key>FECFRAME_NORMAL</key>
+      <opt>val:dtv.FECFRAME_NORMAL</opt>
+    </option>
+    <option>
+      <name>Short</name>
+      <key>FECFRAME_SHORT</key>
+      <opt>val:dtv.FECFRAME_SHORT</opt>
+    </option>
+  </param>
+  <param>
+    <name>Constellation</name>
+    <key>constellation</key>
+    <type>enum</type>
+    <option>
+      <name>QPSK</name>
+      <key>MOD_QPSK</key>
+      <opt>val:dtv.MOD_QPSK</opt>
+    </option>
+    <option>
+      <name>16QAM</name>
+      <key>MOD_16QAM</key>
+      <opt>val:dtv.MOD_16QAM</opt>
+    </option>
+    <option>
+      <name>64QAM</name>
+      <key>MOD_64QAM</key>
+      <opt>val:dtv.MOD_64QAM</opt>
+    </option>
+    <option>
+      <name>256QAM</name>
+      <key>MOD_256QAM</key>
+      <opt>val:dtv.MOD_256QAM</opt>
+    </option>
+  </param>
+  <param>
+    <name>Constellation rotation</name>
+    <key>rotation</key>
+    <type>enum</type>
+    <option>
+      <name>Off</name>
+      <key>ROTATION_OFF</key>
+      <opt>val:dtv.ROTATION_OFF</opt>
+    </option>
+    <option>
+      <name>On</name>
+      <key>ROTATION_ON</key>
+      <opt>val:dtv.ROTATION_ON</opt>
+    </option>
+  </param>
+  <sink>
+    <name>in</name>
+    <type>byte</type>
+  </sink>
+  <source>
+    <name>out</name>
+    <type>complex</type>
+  </source>
+</block>
