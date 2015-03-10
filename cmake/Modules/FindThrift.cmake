@@ -1,7 +1,7 @@
 INCLUDE(FindPkgConfig)
 PKG_CHECK_MODULES(PC_THRIFT thrift)
 
-set(THRIFT_REQ_VERSION "0.9.0")
+set(THRIFT_REQ_VERSION "0.9.2")
 
 # If pkg-config found Thrift and it doesn't meet our version
 # requirement, warn and exit -- does not cause an error; just doesn't
@@ -43,8 +43,14 @@ EXECUTE_PROCESS(
    OUTPUT_VARIABLE THRIFT_VERSION
    ERROR_VARIABLE THRIFT_VERSION_ERROR
    )
+
+if(NOT THRIFT_BIN)
+  message(STATUS "Binary 'thrift' not found.")
+  return()
+endif(NOT THRIFT_BIN)
+
 STRING(REGEX MATCH "[0-9]+.[0-9]+.[0-9]+"
-  THRIFT_VERSION ${THRIFT_VERSION})
+  THRIFT_VERSION "${THRIFT_VERSION}")
 
 if(THRIFT_VERSION VERSION_LESS THRIFT_REQ_VERSION)
   message(STATUS "Could not find appropriate version of Thrift: ${THRIFT_VERSION} < ${THRIFT_REQ_VERSION}")
