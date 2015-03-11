@@ -25,6 +25,7 @@
 
 #include <gnuradio/api.h>
 #include <gnuradio/logger.h>
+#include <gnuradio/prefs.h>
 #include <gnuradio/thread/thread.h>
 #include <boost/date_time/posix_time/posix_time.hpp>
 
@@ -58,18 +59,19 @@ public:
 };
 
 /*!
- * \brief Base class for a Thrift application with a singleton with instance
- *   function ::i(). Lazy initialization is used to start the Thrift runtime,
- *   therefore the Thrift runtime is not started unless ::i() is called at least once.
- *   This typically means that at least one rpc variable must be registered by
- *   a block before the runtime will start.
+ * \brief Base class for a Thrift application with a singleton with
+ * instance function thrift_application_base::i(). Lazy initialization
+ * is used to start the Thrift runtime, therefore the Thrift runtime
+ * is not started unless thrift_application_base::i() is called at
+ * least once. This typically means that at least one rpc variable
+ * must be registered by a block before the runtime will start.
  *
- * \param TserverBase Template parameter naming the type of the server base,
- *   which is typically rpcserverbase.
- * \param TserverClass Template parameter naming the eventual type of the
- *   the fully derived application.
- * \param _app Reference to the fully derived application instance to be returned
- *    by ::i().
+ * \param TserverBase Template parameter naming the type of the server
+ *   base, which is typically rpcserverbase.
+ * \param TserverClass Template parameter naming the eventual type of
+ *   the the fully derived application.
+ * \param _app Reference to the fully derived application instance to
+ *   be returned by thrift_application_base::i().
  */
 
 template<typename TserverBase, typename TserverClass>
@@ -78,24 +80,29 @@ class thrift_application_base
 public:
   thrift_application_base(TserverClass* _app);
 
-  // Destructor for the application. Since shutdown and cleanup
-  // of the runtime is typically custom to a particular booter
-  // implementation, this must be implemented as a specalized
-  // function for a particular booter. Thus a template implementation
-  // is not provided here.
+  /*!
+   * Destructor for the application. Since shutdown and cleanup of the
+   * runtime is typically custom to a particular booter
+   * implementation, this must be implemented as a specalized function
+   * for a particular booter. Thus a template implementation is not
+   * provided here.
+   */
   ~thrift_application_base();
 
   /*!
-   * \brief The application singleton instance function.
+   * The application singleton instance function.
    */
   static TserverBase* i();
-  // Returns the endpoint string of this application.
+
+  /*!
+   * Returns the endpoint string of this application.
+   */
   static const std::vector<std::string> endpoints();
 
 protected:
   /*!
-   * \brief Allows this application's booter to set the
-   *  endpoint string after the Thrift runtime has initialized.
+   * Allows this application's booter to set the endpoint string after
+   * the Thrift runtime has initialized.
    *
    * \param[in] endpoint The endpoint string reported by this class.
    */
@@ -103,25 +110,46 @@ protected:
 
   virtual TserverBase* i_impl() = 0;
 
-  // Reference to the fully derived application instance.
+  /*!
+   * Reference to the fully derived application instance.
+   */
   static TserverClass* d_application;
 
-  // Reference to the Thrift runtime;
+  /*!
+   * Reference to the Thrift runtime.
+   */
   std::auto_ptr<apache::thrift::server::TServer> d_thriftserver;
 
-  // Max number of attempts when checking the Thrift runtime for
-  // Initialization before giving up.
+  /*!
+   * Max number of attempts when checking the Thrift runtime for
+   * Initialization before giving up. Set in the Thrift config file
+   * (see \ref ctrlport_thrift_prefs).
+   */
   static const unsigned int d_default_max_init_attempts;
-  // Default port for the runtime to listen on, if a static port
-  // is not specified.
+
+  /*!
+   * Default port for the runtime to listen on, if a static port is
+   * not specified. Set in the Thrift config file (see \ref
+   * ctrlport_thrift_prefs).
+   */
   static const unsigned int d_default_thrift_port;
-  // Maximum number of threads to create when serving
-  // multiple rpc clients.
+
+  /*!
+   * Maximum number of threads to create when serving multiple rpc
+   * clients. Set in the Thrift config file (see \ref
+   * ctrlport_thrift_prefs).
+   */
   static const unsigned int d_default_num_thrift_threads;
-  // Default packet size for the IP payload of thrift packets.
+
+  /*!
+   * Default packet size for the IP payload of thrift packets. Set in
+   * the Thrift config file (see \ref ctrlport_thrift_prefs).
+   */
   static const unsigned int d_default_thrift_buffer_size;
 
-  // logger instances.
+  /*!
+   * \ref page_logger instances.
+   */
   gr::logger_ptr d_logger, d_debug_logger;
 
 private:
@@ -176,12 +204,17 @@ void thrift_application_base<TserverBase, TserverClass>::start_application()
 {
   //std::cerr << "thrift_application_base: start_application" << std::endl;
 
+  unsigned int max_init_attempts = \
+    static_cast<unsigned int>(gr::prefs::singleton()->get_long("thrift", "init_attempts",
+                                                               d_default_max_init_attempts));
+
+
   if(!p_impl->d_application_initilized) {
       p_impl->d_start_thrift_thread.reset(
       (new gr::thread::thread(boost::bind(&thrift_application_base::start_thrift, d_application))));
 
     bool app_started(false);
-    for(unsigned int attempts(0); (!app_started && attempts < d_default_max_init_attempts); ++attempts) {
+    for(unsigned int attempts(0); (!app_started && attempts < max_init_attempts); ++attempts) {
       boost::this_thread::sleep(boost::posix_time::milliseconds(THRIFTAPPLICATION_ACTIVATION_TIMEOUT_MS));
 
       app_started = d_application->application_started();

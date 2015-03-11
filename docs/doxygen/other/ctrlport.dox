@@ -112,6 +112,7 @@ are:
 port = 9090
 nthreads = 2
 buffersize = 1434
+init_attempts = 100
 \endcode
 
 
