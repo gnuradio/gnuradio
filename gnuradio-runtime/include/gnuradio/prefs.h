@@ -50,14 +50,16 @@ namespace gr {
     /*!
      * \brief Creates an object to read preference files.
      *
-     * \detail
+     * \details
      *
      * If no file name is given (empty arg list or ""), this opens up
      * the standard GNU Radio configuration files in
      * prefix/etc/gnuradio/conf.d as well as ~/.gnuradio/config.conf.
      *
      * Only access this through the singleton defined here:
+     * \code
      * prefs *p = prefs::singleton();
+     * \endcode
      */
     prefs();
 
@@ -68,9 +70,11 @@ namespace gr {
      * configuration file of the standard form containing sections and
      * key-value pairs:
      *
+     * \code
      * [SectionName]
      * key0 = value0
      * key1 = value1
+     * \endcode
      */
     void add_config_file(const std::string &configfile);
 
