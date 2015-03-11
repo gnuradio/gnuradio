@@ -63,7 +63,7 @@ first. Most recent systems have these packages available.
 \li audio-osx
 \li audio-windows
 
-* Optional but recommended dependencies.
+<b>Optional but recommended dependencies.</b>
 
 It is not necessary to satisfy all of these dependencies; just the
 one(s) that are right for your system. On Linux, don't expect
@@ -80,6 +80,17 @@ audio-osx and audio-windows to be either satisfied or built.
 
 \subsection dep_gr_log gr-log: Logging Tools (Optional)
 \li log4cpp     (>= 1.0)     http://log4cpp.sourceforge.net/
+
+
+<b>Optional</b>
+
+\ref page_ctrlport may use various backends to perform the RPC
+process, and each is its own dependency.
+
+Currently, ControlPort only supports the Apache Thrift backend.
+
+\li thrift       (>= 0.9.2)   https://thrift.apache.org/
+
 
 
 \section build_gr_cmake Building GNU Radio
