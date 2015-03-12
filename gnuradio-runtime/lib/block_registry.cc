@@ -27,7 +27,12 @@
 #include <gnuradio/tpb_detail.h>
 #include <stdio.h>
 
-gr::block_registry global_block_registry;
+
+gr::block_registry* global_block_registry()
+{
+  static gr::block_registry _global_block_registry;
+  return &_global_block_registry;
+}
 
 namespace gr {
 

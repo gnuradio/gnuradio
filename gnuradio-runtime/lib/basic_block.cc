@@ -49,8 +49,8 @@ namespace gr {
       d_input_signature(input_signature),
       d_output_signature(output_signature),
       d_unique_id(s_next_id++),
-      d_symbolic_id(global_block_registry.block_register(this)),
-      d_symbol_name(global_block_registry.register_symbolic_name(this)),
+      d_symbolic_id(global_block_registry()->block_register(this)),
+      d_symbol_name(global_block_registry()->register_symbolic_name(this)),
       d_color(WHITE),
       d_rpc_set(false),
       d_message_subscribers(pmt::make_dict())
@@ -61,7 +61,7 @@ namespace gr {
   basic_block::~basic_block()
   {
     s_ncurrently_allocated--;
-    global_block_registry.block_unregister(this);
+    global_block_registry()->block_unregister(this);
   }
 
   basic_block_sptr
@@ -77,9 +77,9 @@ namespace gr {
     // have an alias, add it; if we do, update the entry in the
     // registry.
     if(alias_set())
-      global_block_registry.update_symbolic_name(this, name);
+      global_block_registry()->update_symbolic_name(this, name);
     else
-      global_block_registry.register_symbolic_name(this, name);
+      global_block_registry()->register_symbolic_name(this, name);
 
     // set the block's alias
     d_symbol_alias = name;
@@ -152,7 +152,7 @@ namespace gr {
       pmt::pmt_t port = pmt::cdr(target);
 
       currlist = pmt::cdr(currlist);
-      basic_block_sptr blk = global_block_registry.block_lookup(block);
+      basic_block_sptr blk = global_block_registry()->block_lookup(block);
       //blk->post(msg);
       blk->post(port, msg);
     }
@@ -209,7 +209,7 @@ namespace gr {
     msg_queue_ready[which_port]->notify_one();
 
     // wake up thread if BLKD_IN or BLKD_OUT
-    global_block_registry.notify_blk(alias());
+    global_block_registry()->notify_blk(alias());
   }
 
   pmt::pmt_t

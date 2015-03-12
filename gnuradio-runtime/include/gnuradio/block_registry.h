@@ -65,6 +65,7 @@ namespace gr {
 
 } /* namespace gr */
 
-GR_RUNTIME_API extern gr::block_registry global_block_registry;
+//GR_RUNTIME_API extern gr::block_registry global_block_registry;
+GR_RUNTIME_API extern gr::block_registry* global_block_registry();
 
 #endif /* GR_RUNTIME_BLOCK_REGISTRY_H */

@@ -56,7 +56,7 @@ namespace gr {
       d_max_output_buffer(std::max(output_signature->max_streams(),1), -1),
       d_min_output_buffer(std::max(output_signature->max_streams(),1), -1)
   {
-    global_block_registry.register_primitive(alias(), this);
+    global_block_registry()->register_primitive(alias(), this);
     message_port_register_in(pmt::mp("system"));
     set_msg_handler(pmt::mp("system"), boost::bind(&block::system_handler, this, _1));
 
@@ -65,7 +65,7 @@ namespace gr {
 
   block::~block()
   {
-    global_block_registry.unregister_primitive(symbol_name());
+    global_block_registry()->unregister_primitive(symbol_name());
   }
 
   unsigned
@@ -708,7 +708,7 @@ namespace gr {
     pmt::pmt_t op = pmt::car(msg);
     if(pmt::eqv(op, pmt::mp("done"))){
         d_finished = pmt::to_long(pmt::cdr(msg));
-        global_block_registry.notify_blk(alias());
+        global_block_registry()->notify_blk(alias());
     } else {
         std::cout << "WARNING: bad message op on system port!\n";
         pmt::print(msg);
@@ -736,7 +736,7 @@ namespace gr {
         pmt::pmt_t port = pmt::mp("system");
 
         currlist = pmt::cdr(currlist);
-        basic_block_sptr blk = global_block_registry.block_lookup(block);
+        basic_block_sptr blk = global_block_registry()->block_lookup(block);
         blk->post(port, pmt::cons(pmt::mp("done"), pmt::mp(true)));
 
         //std::cout << "notify finished --> ";
