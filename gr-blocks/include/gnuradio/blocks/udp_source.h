@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2007-2010,2013 Free Software Foundation, Inc.
+ * Copyright 2007-2010,2013,2015 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -43,7 +43,7 @@ namespace gr {
        * \brief UDP Source Constructor
        *
        * \param itemsize     The size (in bytes) of the item datatype
-       * \param host         The name or IP address of the receiving host; can be
+       * \param host         The name or IP address of the transmitting host; can be
        *                     NULL, None, or "0.0.0.0" to allow reading from any
        *                     interface on the host
        * \param port         The port number on which to receive data; use 0 to

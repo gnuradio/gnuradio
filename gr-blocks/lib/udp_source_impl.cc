@@ -35,6 +35,8 @@
 namespace gr {
   namespace blocks {
 
+    const int udp_source_impl::BUF_SIZE_PAYLOADS = 50;
+
     udp_source::sptr
     udp_source::make(size_t itemsize,
                      const std::string &ipaddr, int port,
@@ -56,7 +58,7 @@ namespace gr {
     {
       // Give us some more room to play.
       d_rxbuf = new char[4*d_payload_size];
-      d_residbuf = new char[50*d_payload_size];
+      d_residbuf = new char[BUF_SIZE_PAYLOADS*d_payload_size];
 
       connect(host, port);
     }
@@ -150,7 +152,7 @@ namespace gr {
           if(d_eof && (bytes_transferred == 1) && (d_rxbuf[0] == 0x00)) {
             // If we are using EOF notification, test for it and don't
             // add anything to the output.
-            d_residual = -1;
+            d_residual = WORK_DONE;
             d_cond_wait.notify_one();
             return;
           }
@@ -158,7 +160,7 @@ namespace gr {
             // Make sure we never go beyond the boundary of the
             // residual buffer.  This will just drop the last bit of
             // data in the buffer if we've run out of room.
-            if((int)(d_residual + bytes_transferred) >= (50*d_payload_size)) {
+            if((int)(d_residual + bytes_transferred) >= (BUF_SIZE_PAYLOADS*d_payload_size)) {
               GR_LOG_WARN(d_logger, "Too much data; dropping packet.");
             }
             else {
@@ -192,24 +194,25 @@ namespace gr {
       //use timed_wait to avoid permanent blocking in the work function
       d_cond_wait.timed_wait(lock, boost::posix_time::milliseconds(10));
 
-      if(d_residual < 0)
-        return -1;
+      if (d_residual < 0) {
+        return d_residual;
+      }
 
-      int to_be_sent = (int)(d_residual - d_sent);
-      int to_send    = std::min(noutput_items, to_be_sent);
+      int bytes_left_in_buffer = (int)(d_residual - d_sent);
+      int bytes_to_send        = std::min<int>(d_itemsize * noutput_items, bytes_left_in_buffer);
 
       // Copy the received data in the residual buffer to the output stream
-      memcpy(out, d_residbuf+d_sent, to_send);
-      int nitems = to_send/d_itemsize;
+      memcpy(out, d_residbuf+d_sent, bytes_to_send);
+      int nitems = bytes_to_send/d_itemsize;
 
       // Keep track of where we are if we don't have enough output
       // space to send all the data in the residbuf.
-      if(to_send == to_be_sent) {
+      if (bytes_to_send == bytes_left_in_buffer) {
         d_residual = 0;
         d_sent = 0;
       }
       else {
-        d_sent += to_send;
+        d_sent += bytes_to_send;
       }
 
       return nitems;

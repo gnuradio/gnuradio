@@ -31,6 +31,9 @@
 namespace gr {
   namespace blocks {
 
+    const int multiply_matrix_ff::TPP_SELECT_BY_MATRIX = 999;
+    const std::string multiply_matrix_ff::MSG_PORT_NAME_SET_A = "set_A";
+
     multiply_matrix_ff::sptr
     multiply_matrix_ff::make(std::vector<std::vector<float> > A, gr::block::tag_propagation_policy_t tag_propagation_policy)
     {
