@@ -91,10 +91,9 @@ namespace gr {
        */
       virtual void set_tag_propagation_policy(gr::block::tag_propagation_policy_t p) = 0;
 
-      static const int TPP_SELECT_BY_MATRIX = 999;
+      static const int TPP_SELECT_BY_MATRIX;
       static const std::string MSG_PORT_NAME_SET_A;
     };
-    const std::string @NAME@::MSG_PORT_NAME_SET_A = "set_A";
 
   } // namespace blocks
 } // namespace gr
