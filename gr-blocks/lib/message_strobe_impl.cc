@@ -54,8 +54,6 @@ namespace gr {
         d_msg(msg)
     {
       message_port_register_out(pmt::mp("strobe"));
-      d_thread = boost::shared_ptr<gr::thread::thread>
-        (new gr::thread::thread(boost::bind(&message_strobe_impl::run, this)));
 
       message_port_register_in(pmt::mp("set_msg"));
       set_msg_handler(pmt::mp("set_msg"),
@@ -64,9 +62,26 @@ namespace gr {
 
     message_strobe_impl::~message_strobe_impl()
     {
+    }
+
+    bool
+    message_strobe_impl::start()
+    {
+      d_thread = boost::shared_ptr<gr::thread::thread>
+        (new gr::thread::thread(boost::bind(&message_strobe_impl::run, this)));
+
+      return block::start();
+    }
+
+    bool
+    message_strobe_impl::stop()
+    {
+      // Shut down the thread
       d_finished = true;
       d_thread->interrupt();
       d_thread->join();
+
+      return block::stop();
     }
 
     void message_strobe_impl::run()
