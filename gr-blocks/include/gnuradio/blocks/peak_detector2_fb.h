@@ -36,7 +36,7 @@ namespace gr {
      * \details
      * If a peak is detected, this block outputs a 1, or it outputs
      * 0's. A separate debug output may be connected, to view the
-     * internal EWMA described below.
+     * internal estimated mean described below.
      */
     class BLOCKS_API peak_detector2_fb : virtual public sync_block
     {
@@ -45,18 +45,26 @@ namespace gr {
       typedef boost::shared_ptr<peak_detector2_fb> sptr;
 
       /*!
-       * Build a peak detector block with float in, byte out.
+       * Build a peak detector block with float in, byte out, (and optional float out).
        *
-       * \param threshold_factor_rise The threshold factor determins
-       *        when a peak is present. An EWMA average of the signal is
+       * \param threshold_factor_rise The threshold factor determines
+       *        when a peak is present. An autoregressive average of the input signal is
        *        calculated and when the value of the signal goes over
-       *        threshold_factor_rise*average, we call the peak.
+       *        threshold_factor_rise*average, we assume we are in the neighborhood of a peak.
        * \param look_ahead The look-ahead value is used when the
-       *        threshold is found to locate the peak within this range.
-       * \param alpha The gain value of a single-pole moving average filter.
+       *        threshold is crossed to locate the peak within this range (when fixed_window is true).
+       *        Alternatively (when fixed_window is false) when a peak is detected, the search is repeated for the next window of size look_ahead and the process repeats itself.
+       * \param alpha One minus the pole of a single-pole autoregressive filter that evaluates the average of the input signal.
+       * \param cont_avg The type of averaging. The average is only calculated 
+       *        when the value of signal is below threshold_factor_rise*average when
+       *        cont_avg is false. Otherwise, the average is also calculated when 
+       *	the value of signal is above the threshold_factor_rise*average. 
+       * \param fixed_window The type of look_ahead window. The look_ahead range 
+       *        is fixed if fixed_window is true. Otherwise, the look_ahead range 
+       *        is reset whenever a new peak is located.        
        */
       static sptr make(float threshold_factor_rise=7,
-                       int look_ahead=1000, float alpha=0.001);
+                       int look_ahead=1000, float alpha=0.001, bool cont_avg =true, bool fixed_window = true);
 
       /*! \brief Set the threshold factor value for the rise time
        *  \param thr new threshold factor
