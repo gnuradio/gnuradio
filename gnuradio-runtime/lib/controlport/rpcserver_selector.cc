@@ -26,6 +26,10 @@
 
 bool rpcmanager::make_aggregator(false);
 
+#ifdef GR_RPCSERVER_ENABLED
+rpcmanager manager_instance;;
+#endif
+
 #ifdef GR_RPCSERVER_ICE
   #error TODO ICE
 #endif

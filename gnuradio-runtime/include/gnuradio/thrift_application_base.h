@@ -39,7 +39,7 @@ namespace apache { namespace thrift { namespace server { class TServer; } } }
 
 /*!
  * \brief  Class to be statically initialized by thrift_application_base. Used
- * to store state for thrift_application_base's static functions.
+ * to store state for thrift_application_base's singleton functions.
  */
 
 class thrift_application_base_impl
@@ -69,7 +69,7 @@ public:
  * \param TserverBase Template parameter naming the type of the server
  *   base, which is typically rpcserverbase.
  * \param TserverClass Template parameter naming the eventual type of
- *   the the fully derived application.
+ *   the fully derived application.
  * \param _app Reference to the fully derived application instance to
  *   be returned by thrift_application_base::i().
  */
@@ -208,20 +208,14 @@ void thrift_application_base<TserverBase, TserverClass>::start_application()
     static_cast<unsigned int>(gr::prefs::singleton()->get_long("thrift", "init_attempts",
                                                                d_default_max_init_attempts));
 
-
   if(!p_impl->d_application_initilized) {
-      p_impl->d_start_thrift_thread.reset(
-      (new gr::thread::thread(boost::bind(&thrift_application_base::start_thrift, d_application))));
+    p_impl->d_start_thrift_thread.reset(
+    (new gr::thread::thread(boost::bind(&thrift_application_base::start_thrift, d_application))));
 
     bool app_started(false);
     for(unsigned int attempts(0); (!app_started && attempts < max_init_attempts); ++attempts) {
       boost::this_thread::sleep(boost::posix_time::milliseconds(THRIFTAPPLICATION_ACTIVATION_TIMEOUT_MS));
-
       app_started = d_application->application_started();
-
-      if(app_started) {
-        std::cerr << "@";
-      }
     }
 
     if(!app_started) {
