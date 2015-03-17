@@ -14,7 +14,8 @@ typedef struct volk_arch_pref
 } volk_arch_pref_t;
 
 ////////////////////////////////////////////////////////////////////////
-// get path to volk_config profiling info
+// get path to volk_config profiling info;
+// returns \0 in the argument on failure.
 ////////////////////////////////////////////////////////////////////////
 VOLK_API void volk_get_config_path(char *);
 
