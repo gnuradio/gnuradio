@@ -181,7 +181,7 @@ namespace gr {
     void
     multiply_matrix_ff_impl::set_tag_propagation_policy(gr::block::tag_propagation_policy_t tpp)
     {
-      if (tpp == TPP_SELECT_BY_MATRIX) {
+      if (((int) tpp) == TPP_SELECT_BY_MATRIX) {
         set_tag_propagation_policy(TPP_DONT);
         d_tag_prop_select = true;
       } else {
