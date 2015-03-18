@@ -295,7 +295,7 @@ bool icompare(t *in1, t *in2, unsigned int vlen, unsigned int tol) {
     bool fail = false;
     int print_max_errs = 10;
     for(unsigned int i=0; i<vlen; i++) {
-        if(abs(int(((t *)(in1))[i]) - int(((t *)(in2))[i])) > tol) {
+      if(((unsigned int)abs(int(((t *)(in1))[i]) - int(((t *)(in2))[i]))) > tol) {
             fail=true;
             if(print_max_errs-- > 0) {
                 std::cout << "offset " << i << " in1: " << static_cast<int>(t(((t *)(in1))[i])) << " in2: " << static_cast<int>(t(((t *)(in2))[i])) << std::endl;
