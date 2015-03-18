@@ -29,20 +29,20 @@ namespace gr {
   namespace fec {
     namespace code {
       generic_encoder::sptr
-      ldpc_gen_mtrx_encoder::make(const ldpc_gen_mtrx *G_obj)
+      ldpc_gen_mtrx_encoder::make(const ldpc_HorG_mtrx *M_obj)
       {
         return generic_encoder::sptr
-          (new ldpc_gen_mtrx_encoder_impl(G_obj));
+          (new ldpc_gen_mtrx_encoder_impl(M_obj));
       }
 
-      ldpc_gen_mtrx_encoder_impl::ldpc_gen_mtrx_encoder_impl(const ldpc_gen_mtrx *G_obj) 
+      ldpc_gen_mtrx_encoder_impl::ldpc_gen_mtrx_encoder_impl(const ldpc_HorG_mtrx *M_obj) 
         : generic_encoder("ldpc_gen_mtrx_encoder")
       {
         // Generator matrix to use for encoding
-        d_G = G_obj;
+        d_M = M_obj;
         // Set frame size to k, the # of bits in the information word
         // All buffers and settings will be based on this value.
-        set_frame_size(d_G->k());
+        set_frame_size(d_M->k());
       }
 
       ldpc_gen_mtrx_encoder_impl::~ldpc_gen_mtrx_encoder_impl()
@@ -52,7 +52,7 @@ namespace gr {
       int
       ldpc_gen_mtrx_encoder_impl::get_output_size()
       {
-        return d_G->n();
+        return d_M->n();
       }
 
       int
@@ -76,7 +76,7 @@ namespace gr {
       double
       ldpc_gen_mtrx_encoder_impl::rate()
       {
-        return (d_G->n())/static_cast<double>(d_frame_size);
+        return (d_M->n())/static_cast<double>(d_frame_size);
       }
 
       void
@@ -85,7 +85,7 @@ namespace gr {
       {
         // Populate the information word
         const unsigned char *in = (const unsigned char *)inbuffer;
-        unsigned int index, k = d_G->k(), n = d_G->n();
+        unsigned int index, k = d_M->k(), n = d_M->n();
         gsl_matrix *s = gsl_matrix_alloc(k, 1);
         for (index = 0; index < k; index++) {
           double value = static_cast<double>(in[index]);
@@ -94,7 +94,7 @@ namespace gr {
 
         // Simple matrix multiplication to get codeword
         gsl_matrix *codeword;
-        codeword = d_G->mult_matrices_mod2(d_G->G_transpose(), s);
+        codeword = d_M->mult_matrices_mod2(d_M->G_transpose(), s);
 
         // Output
         unsigned char *out = (unsigned char*)outbuffer;

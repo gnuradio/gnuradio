@@ -72,7 +72,7 @@ self.$(id) = $(id) = map((lambda b: map((lambda a: fec.ldpc_R_U_encoder_make($pa
 This block creates a LDPC R. U. Encoder Definition variable.
 
 R.U. Matrix ID: Provide the ID of a LDPC R. U. Parity Check Matrix
-                   variable block.
+                                 variable block.
 
 Richardson and Urbanke describe their encoding method in Appendix A of their book: Modern Coding Theory (ISBN 978-0-521-85229-6).
     </doc>

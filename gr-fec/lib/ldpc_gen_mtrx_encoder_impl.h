@@ -24,7 +24,7 @@
 #include <map>
 #include <string>
 #include <gnuradio/fec/ldpc_gen_mtrx_encoder.h>
-#include <gnuradio/fec/ldpc_gen_mtrx.h>
+#include <gnuradio/fec/ldpc_HorG_mtrx.h>
 
 namespace gr {
   namespace fec {
@@ -38,11 +38,11 @@ namespace gr {
 
         // Number of bits in the information word
         unsigned int d_frame_size;
-        // Generator matrix object to use for encoding
-        const ldpc_gen_mtrx *d_G;
+        // Matrix object to use for encoding
+        const ldpc_HorG_mtrx *d_M;
 
       public:
-        ldpc_gen_mtrx_encoder_impl(const ldpc_gen_mtrx *G_obj);
+        ldpc_gen_mtrx_encoder_impl(const ldpc_HorG_mtrx *M_obj);
         ~ldpc_gen_mtrx_encoder_impl();
 
         bool set_frame_size(unsigned int frame_size);

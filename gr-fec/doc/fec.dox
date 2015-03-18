@@ -234,6 +234,8 @@ Coders:
 \li gr::fec::code::cc_encoder
 \li gr::fec::code::ccsds_encoder
 \li gr::fec::code::polar_encoder
+\li gr::fec::code::ldpc_R_U_encoder
+\li gr::fec::code::ldpc_gen_mtrx_encoder
 
 Decoders:
 \li gr::fec::code::dummy_decoder
@@ -241,7 +243,7 @@ Decoders:
 \li gr::fec::code::cc_decoder
 \li gr::fec::code::polar_decoder_sc
 \li gr::fec::code::polar_decoder_sc_list
-
+\li gr::fec::code::ldpc_bit_flip_decoder
 
 When building a new FECAPI encoder or decoder variable, the dummy
 encoder/decoder block would be a good place to start. This coding set
@@ -363,6 +365,7 @@ going into an encoder and the number of bits coming out of a decoder.
 \section fec_examples FEC Examples
 
 \li ber_curve_gen.grc
+\li ber_curve_gen_ldpc
 \li ber_test.grc
 \li fecapi_decoders.grc
 \li fecapi_encoders.grc

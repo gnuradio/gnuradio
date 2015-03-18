@@ -23,7 +23,7 @@
 
 #include <gnuradio/fec/api.h>
 #include <gnuradio/fec/generic_encoder.h>
-#include <gnuradio/fec/ldpc_gen_mtrx.h>
+#include <gnuradio/fec/ldpc_HorG_mtrx.h>
 
 namespace gr {
   namespace fec {
@@ -50,7 +50,7 @@ namespace gr {
          * \param G_obj The generator matrix object to use
          *        for encoding.
         */
-        static generic_encoder::sptr make(const ldpc_gen_mtrx *G_obj);
+        static generic_encoder::sptr make(const ldpc_HorG_mtrx *M_obj);
 
         /*!
          * Sets the uncoded frame size to \p frame_size. If \p

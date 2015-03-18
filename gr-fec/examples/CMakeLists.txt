@@ -41,7 +41,7 @@ install(
     polar_code_example.grc
     tpc_ber_curve_gen.grc
     n_1800_k_0902_gap_28.alist
-    PNB2_512_23C1.alist
+    simple_g_matrix.alist
     DESTINATION ${GR_PKG_FEC_EXAMPLES_DIR}
     COMPONENT "fec_python"
 )

@@ -51,6 +51,6 @@
     <block>variable_polar_code_configurator</block>
     <block>variable_ldpc_par_chk_mtrx_def</block>
     <block>variable_ldpc_R_U_mtrx_def</block>
-    <block>variable_ldpc_gen_mtrx_def</block>
+    <block>variable_ldpc_HorG_mtrx_def</block>
   </cat>
 </cat>
