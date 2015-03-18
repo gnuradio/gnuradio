@@ -199,9 +199,9 @@ public:
       n_now_I = bufLen_I;
     else if (n_now_I < bufLen_I)
       n_start_I = bufLen_I - n_now_I;
-    bcopy (buf, &(d_buffer[d_writeNdx_I]), n_now_I * sizeof (T));
+    memcpy (&(d_buffer[d_writeNdx_I]), buf, n_now_I * sizeof (T));
     if (n_start_I) {
-      bcopy (&(buf[n_now_I]), d_buffer, n_start_I * sizeof (T));
+      memcpy (d_buffer, &(buf[n_now_I]), n_start_I * sizeof (T));
       d_writeNdx_I = n_start_I;
     } else
       d_writeNdx_I += n_now_I;
@@ -295,9 +295,9 @@ public:
       n_now_I = l_bufLen_I;
     else if (n_now_I < l_bufLen_I)
       n_start_I = l_bufLen_I - n_now_I;
-    bcopy (&(d_buffer[d_readNdx_I]), buf, n_now_I * sizeof (T));
+    memcpy (buf, &(d_buffer[d_readNdx_I]), n_now_I * sizeof (T));
     if (n_start_I) {
-      bcopy (d_buffer, &(buf[n_now_I]), n_start_I * sizeof (T));
+      memcpy (&(buf[n_now_I]), d_buffer, n_start_I * sizeof (T));
       d_readNdx_I = n_start_I;
     } else
       d_readNdx_I += n_now_I;
