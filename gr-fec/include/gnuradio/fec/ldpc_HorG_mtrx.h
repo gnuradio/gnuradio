@@ -18,8 +18,8 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef INCLUDED_ldpc_gen_mtrx_H
-#define INCLUDED_ldpc_gen_mtrx_H
+#ifndef INCLUDED_ldpc_HorG_mtrx_H
+#define INCLUDED_ldpc_HorG_mtrx_H
  
 #include <gsl/gsl_randist.h>
 #include <gsl/gsl_permutation.h>
@@ -31,7 +31,7 @@
 namespace gr {
   namespace fec {
     namespace code {
-      class FEC_API ldpc_gen_mtrx : public fec_mtrx
+      class FEC_API ldpc_HorG_mtrx : public fec_mtrx
       {
       private:
         // GSL matrix structure for transpose of G
@@ -40,9 +40,9 @@ namespace gr {
         gr::fec::code::fec_mtrx *d_base_ptr;
         
       public:
-        ldpc_gen_mtrx(const std::string filename);
+        ldpc_HorG_mtrx(const std::string filename);
         // Default constructor, should not be used
-        ldpc_gen_mtrx();
+        ldpc_HorG_mtrx();
         // Get the generator matrix (used during encoding)
         const gsl_matrix *G_transpose() const;
         // A pointer to make swig work for the ldpc_bit_flip_decoder
@@ -50,10 +50,10 @@ namespace gr {
         gr::fec::code::fec_mtrx *get_base_ptr();
 
         // Destructor
-        virtual ~ldpc_gen_mtrx();
+        virtual ~ldpc_HorG_mtrx();
       };
     }
   }
 }
 
-#endif /* INCLUDED_ldpc_gen_mtrx_H */
+#endif /* INCLUDED_ldpc_HorG_mtrx_H */

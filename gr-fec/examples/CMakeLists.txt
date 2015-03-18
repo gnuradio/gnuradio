@@ -33,7 +33,7 @@ install(
     fecapi_tagged_decoders.grc
     fecapi_tagged_encoders.grc
     n_1800_k_0902_gap_28.alist
-    PNB2_512_23C1.alist
+    simple_g_matrix.alist
     DESTINATION ${GR_PKG_FEC_EXAMPLES_DIR}
     COMPONENT "fec_python"
 )

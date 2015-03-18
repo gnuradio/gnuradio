@@ -26,7 +26,7 @@ from numpy.random import shuffle, randint
 from numpy.linalg import inv, det
 
 # 0 gives no debug output, 1 gives a little, 2 gives a lot
-verbose = 0
+verbose = 1 #######################################################
 
 class LDPC_matrix:
   """ Class for a LDPC parity check matrix """
@@ -420,7 +420,6 @@ def greedy_upper_triangulation(H):
   # version of H that has a nonsingular phi.
   if verbose: print '--- Error: nonsingular phi matrix not found.'
 
-
 def inv_mod2(squareMatrix):
   """
   Calculates the mod 2 inverse of a matrix.
@@ -617,3 +616,49 @@ def get_best_matrix(H,numIterations=100):
       print 'Error: Could not find appropriate H form',
       print 'for encoding.'
     return
+
+def getSystematicGmatrix(H):
+  """
+  This function finds the systematic form of the generator
+  matrix G. The form is G = [I P] where I is an identity matrix
+  and P is the parity submatrix. If the H matrix provided
+  is not full rank, then dependent rows will be deleted.
+  """
+  tempArray = H.copy()
+  numRows = tempArray.shape[0]
+  numColumns = tempArray.shape[1]
+  limit = numRows
+  rank = 0
+  i = 0
+  while i < limit:
+    # Flag indicating that the row contains a non-zero entry
+    found = False
+    for j in arange(i, numColumns):
+      if tempArray[i, j] == 1:
+        # Encountered a non-zero entry at (i, j)
+        found = True
+        # Increment rank by 1
+        rank = rank + 1
+        # make the entry at (i,i) be 1
+        tempArray = swap_columns(j,i,tempArray)
+        break
+    if found == True:
+      for k in arange(0,numRows):
+        if k == i: continue
+        # Checking for 1's
+        if tempArray[k, i] == 1:
+          # add row i to row k
+          tempArray[k,:] = tempArray[k,:] + tempArray[i,:]
+          # Addition is mod2
+          tempArray = tempArray.copy() % 2
+          # All the entries above & below (i, i) are now 0
+      i = i + 1
+    if found == False:
+      # push the row of 0s to the bottom, and move the bottom
+      # rows up (sort of a rotation thing)
+      tempArray = moveRowToBottom(i,tempArray)
+      # decrease limit since we just found a row of 0s
+      limit -= 1
+  # the rows below i are the dependent rows, which we discard
+  G = tempArray[0:i,:]
+  return G

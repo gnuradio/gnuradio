@@ -44,5 +44,7 @@ The format of alist files is described at:
 http://www.inference.phy.cam.ac.uk/mackay/codes/alist.html
 
 The specific format of this parity check matrix is described by Richardson and Urbanke in Appendix A of their book: Modern Coding Theory (ISBN 978-0-521-85229-6). There is one file in examples/fec called n_1800_k_0902_gap_28.alist which is used by the example flowgraph ber_curve_gen_ldpc.grc. There are more at target/lib/python2.7/dist-packages/gnuradio/fec/LDPC/.
+
+To convert a parity matrix file to the appropriate format required for this encoder, use the python functions in target/lib/python2.7/dist-packages/gnuradio/fec/LDPC/Generate_LDPC_matrix.py.
     </doc>
 </block>
