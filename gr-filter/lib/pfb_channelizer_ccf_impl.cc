@@ -61,7 +61,7 @@ namespace gr {
       // requirement within a few significant figures.
       const double srate = nfilts / oversample_rate;
       const double rsrate = round(srate);
-      if(fabsf(srate - rsrate) > 0.00001)
+      if(fabs(srate - rsrate) > 0.00001)
 	throw std::invalid_argument("pfb_channelizer: oversample rate must be N/i for i in [1, N]");
 
       set_relative_rate(oversample_rate);
