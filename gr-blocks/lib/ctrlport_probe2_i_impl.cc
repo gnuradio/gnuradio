@@ -64,26 +64,9 @@ namespace gr {
         ninput_items_required[i] = d_len;
     }
 
-    //    boost::shared_mutex mutex_buffer;
-    //    mutable boost::mutex mutex_notify;
-    //    boost::condition_variable condition_buffer_ready;
     std::vector<int>
-    ctrlport_probe2_i_impl::get()
-    {
-      mutex_buffer.lock();
-      d_buffer.clear();
-      mutex_buffer.unlock();
-
-      // wait for condition
-      boost::mutex::scoped_lock lock(mutex_notify);
-      condition_buffer_ready.wait(lock);
-
-      mutex_buffer.lock();
-      std::vector<int> buf_copy = d_buffer;
-      assert(buf_copy.size() == d_len);
-      mutex_buffer.unlock();
-
-      return buf_copy;
+    ctrlport_probe2_i_impl::get() {
+      return buffered_get.get();
     }
 
     void
@@ -111,9 +94,7 @@ namespace gr {
                                  gr_vector_void_star &output_items)
     {
       const int *in = (const int*)input_items[0];
-
       // copy samples to get buffer if we need samples
-      mutex_buffer.lock();
       if(d_buffer.size() < d_len) {
         // copy smaller of remaining buffer space and num inputs to work()
         int num_copy = std::min( (int)(d_len - d_buffer.size()), noutput_items );
@@ -122,13 +103,12 @@ namespace gr {
         for(int i = 0; i < num_copy; i++) {
           d_buffer.push_back(in[i]);
         }
-
-        // notify the waiting get() if we fill up the buffer
-        if(d_buffer.size() == d_len) {
-          condition_buffer_ready.notify_one();
-        }
       }
-      mutex_buffer.unlock();
+
+      // notify the waiting get() if we fill up the buffer
+      if(d_buffer.size() == d_len) {
+          buffered_get.offer_data(d_buffer);
+      }
 
       return noutput_items;
     }

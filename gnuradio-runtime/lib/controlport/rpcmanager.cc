@@ -26,16 +26,12 @@
 
 bool rpcmanager::booter_registered(false);
 bool rpcmanager::aggregator_registered(false);
-rpcserver_booter_base* rpcmanager::boot(0);
+std::auto_ptr<rpcserver_booter_base> rpcmanager::boot(0);
 std::auto_ptr<rpcserver_booter_aggregator> rpcmanager::aggregator(0);
 
 rpcmanager::rpcmanager() {;}
 
-rpcmanager::~rpcmanager()
-{
-  if(boot)
-    delete boot;
-}
+rpcmanager::~rpcmanager() {;}
 
 rpcserver_booter_base*
 rpcmanager::get()
@@ -44,10 +40,10 @@ rpcmanager::get()
     return aggregator.get();
   }
   else if(booter_registered) {
-    return boot;
+    return boot.get();
   }
   assert(booter_registered || aggregator_registered);
-  return boot;
+  return boot.get();
 }
 
 void
@@ -63,7 +59,7 @@ rpcmanager::register_booter(rpcserver_booter_base* booter)
     aggregator->agg()->registerServer(bootreg);
   }
   else if(!booter_registered) {
-    boot = booter;
+    boot.reset(booter);
     booter_registered = true;
   }
   else {
