@@ -25,34 +25,41 @@
 
 #include <boost/thread/condition_variable.hpp>
 #include <boost/thread/mutex.hpp>
+#include <stdio.h>
 
 template<typename TdataType>
 class rpcbufferedget {
 public:
   rpcbufferedget(const unsigned int init_buffer_size = 4096) :
-    data_needed(false), data_ready(), buffer_lock(), buffer(init_buffer_size) {;}
+    d_data_needed(false), d_data_ready(), d_buffer_lock(), d_buffer(init_buffer_size) {;}
 
-  ~rpcbufferedget() {;}
+  ~rpcbufferedget() {
+    d_data_ready.notify_all();
+  }
 
   void offer_data(const TdataType& data) {
-    if (!data_needed) return;
-    buffer = data;
-    data_ready.notify_one();
-    data_needed = false;
+    if (!d_data_needed)
+      return;
+    {
+      boost::mutex::scoped_lock lock(d_buffer_lock);
+      d_buffer = data;
+      d_data_needed = false;
+    }
+    d_data_ready.notify_one();
   }
 
   TdataType get() {
-    boost::mutex::scoped_lock lock(buffer_lock);
-    data_needed = true;
-    data_ready.wait(lock);
-    return buffer;
+    d_data_needed = true;
+    boost::mutex::scoped_lock lock(d_buffer_lock);
+    d_data_ready.wait(lock);
+    return d_buffer;
   }
 
 private:
-  bool data_needed;
-  boost::condition_variable data_ready;
-  boost::mutex buffer_lock;
-  TdataType buffer;
+  bool d_data_needed;
+  boost::condition_variable d_data_ready;
+  boost::mutex d_buffer_lock;
+  TdataType d_buffer;
 };
 
 #endif
