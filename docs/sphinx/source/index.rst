@@ -84,7 +84,6 @@ Framework Extensions
 .. autosummary::
    :nosignatures:
 
-   gnuradio.atsc
    gnuradio.noaa
    gnuradio.pager
    gnuradio.video_sdl
@@ -93,7 +92,6 @@ Framework Extensions
 .. toctree::
    :hidden:
 
-   gnuradio.atsc <atsc/index>
    gnuradio.noaa <noaa>
    gnuradio.pager <pager/index>
    gnuradio.video_sdl <video_sdl>
@@ -107,7 +105,6 @@ Framework Extensions
    :hidden:
 
    runtime_contents <gr/contents>
-   atsc_blks <atsc/blks>
    digital_blocks <digital/blocks>
    constellations <digital/constellations>
    ofdm <digital/ofdm>
@@ -163,4 +160,3 @@ Framework Extensions
    pmt_list <pmt/list>
    pmt_pair <pmt/pair>
    pmt_symbol <pmt/symbol>
-
