@@ -35,7 +35,7 @@ namespace gr {
       /*!
        * \brief base class template for Infinite Impulse Response filter (IIR)
        */
-      template<class i_type, class o_type, class tap_type>
+      template<class i_type, class o_type, class tap_type, class acc_type>
       class iir_filter
       {
       public:
@@ -135,18 +135,18 @@ namespace gr {
 	std::vector<tap_type>	d_fbtaps;
 	int 			d_latest_n;
 	int 			d_latest_m;
-	std::vector<o_type>	d_prev_output;
+	std::vector<acc_type>	d_prev_output;
 	std::vector<i_type>	d_prev_input;
       };
 
       //
       // general case.  We may want to specialize this
       //
-      template<class i_type, class o_type, class tap_type>
+      template<class i_type, class o_type, class tap_type, class acc_type>
       o_type
-      iir_filter<i_type, o_type, tap_type>::filter(const i_type input)
+      iir_filter<i_type, o_type, tap_type, acc_type>::filter(const i_type input)
       {
-	o_type acc;
+	acc_type acc;
 	unsigned i = 0;
 	unsigned n = ntaps_ff();
 	unsigned m = ntaps_fb();
@@ -181,9 +181,9 @@ namespace gr {
 	return (o_type)acc;
       }
 
-      template<class i_type, class o_type, class tap_type>
+      template<class i_type, class o_type, class tap_type, class acc_type>
       void
-      iir_filter<i_type, o_type, tap_type>::filter_n(o_type output[],
+      iir_filter<i_type, o_type, tap_type, acc_type>::filter_n(o_type output[],
 						     const i_type input[],
 						     long n)
       {
@@ -193,15 +193,15 @@ namespace gr {
 
       template<>
       gr_complex
-      iir_filter<gr_complex, gr_complex, float>::filter(const gr_complex input);
+      iir_filter<gr_complex, gr_complex, float, gr_complex>::filter(const gr_complex input);
 
       template<>
       gr_complex
-      iir_filter<gr_complex, gr_complex, double>::filter(const gr_complex input);
+      iir_filter<gr_complex, gr_complex, double, gr_complexd>::filter(const gr_complex input);
 
       template<>
       gr_complex
-      iir_filter<gr_complex, gr_complex, gr_complexd>::filter(const gr_complex input);
+      iir_filter<gr_complex, gr_complex, gr_complexd, gr_complexd>::filter(const gr_complex input);
 
     } /* namespace kernel */
   } /* namespace filter */
