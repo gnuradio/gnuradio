@@ -42,9 +42,9 @@ operator<<
 (std::ostream& s,
  const AudioStreamBasicDescription& asbd)
 {
-  char format_id[5];
-  *((UInt32*)format_id) = asbd.mFormatID;
-  format_id[4] = 0;
+  char format_id[sizeof(asbd.mFormatID)+1];
+  memcpy((void*)(&asbd.mFormatID), format_id, sizeof(asbd.mFormatID));
+  format_id[sizeof(asbd.mFormatID)] = 0;
   s << "  Sample Rate      : " << asbd.mSampleRate << std::endl;
   s << "  Format ID        : " << format_id << std::endl;
   s << "  Format Flags     : " << asbd.mFormatFlags << std::endl;
@@ -165,10 +165,6 @@ find_audio_devices
   }
 
   OSStatus err = noErr;
-
-  // set the default audio device id to "unknown"
-
-  AudioDeviceID d_ad_id = kAudioDeviceUnknown;
 
   // retrieve the size of the array of known audio device IDs
 

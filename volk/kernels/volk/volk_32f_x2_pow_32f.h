@@ -296,3 +296,5 @@ static inline void volk_32f_x2_pow_32f_u_sse4_1(float* cVector, const float* bVe
 #endif /* LV_HAVE_SSE4_1 for unaligned */
 
 #endif /* INCLUDED_volk_32f_x2_log2_32f_u_H */
+
+#undef LOG_POLY_DEGREE

@@ -9,12 +9,13 @@
 
 void volk_get_config_path(char *path)
 {
+    if (!path) return;
     const char *suffix = "/.volk/volk_config";
     char *home = NULL;
     if (home == NULL) home = getenv("HOME");
     if (home == NULL) home = getenv("APPDATA");
     if (home == NULL){
-        path = NULL;
+        path[0] = 0;
         return;
     }
     strcpy(path, home);
@@ -30,7 +31,7 @@ size_t volk_load_preferences(volk_arch_pref_t **prefs_res)
 
     //get the config path
     volk_get_config_path(path);
-    if (path == NULL) return n_arch_prefs; //no prefs found
+    if (!path[0]) return n_arch_prefs; //no prefs found
     config_file = fopen(path, "r");
     if(!config_file) return n_arch_prefs; //no prefs found
 
