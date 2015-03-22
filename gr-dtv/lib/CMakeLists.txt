@@ -27,6 +27,7 @@ include_directories(
     ${GR_ANALOG_INCLUDE_DIRS}
     ${GR_FEC_INCLUDE_DIRS}
     ${GNURADIO_RUNTIME_INCLUDE_DIRS}
+    ${VOLK_INCLUDE_DIRS}
     ${Boost_INCLUDE_DIRS}
 )
 
@@ -81,6 +82,15 @@ list(APPEND dtv_sources
   dvb/dvb_bbscrambler_bb_impl.cc
   dvb/dvb_bch_bb_impl.cc
   dvb/dvb_ldpc_bb_impl.cc
+  dvbt2/dvbt2_interleaver_bb_impl.cc
+  dvbt2/dvbt2_modulator_bc_impl.cc
+  dvbt2/dvbt2_cellinterleaver_cc_impl.cc
+  dvbt2/dvbt2_framemapper_cc_impl.cc
+  dvbt2/dvbt2_freqinterleaver_cc_impl.cc
+  dvbt2/dvbt2_pilotgenerator_cc_impl.cc
+  dvbt2/dvbt2_paprtr_cc_impl.cc
+  dvbt2/dvbt2_p1insertion_cc_impl.cc
+  dvbt2/dvbt2_miso_cc_impl.cc
 )
 
 if(ENABLE_GR_CTRLPORT)
@@ -89,6 +99,7 @@ list(APPEND dtv_sources
 endif(ENABLE_GR_CTRLPORT)
 
 list(APPEND dtv_libs
+    volk
     gnuradio-runtime
     gnuradio-analog
     gnuradio-filter

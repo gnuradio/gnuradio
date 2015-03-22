@@ -57,5 +57,17 @@
       <block>dtv_dvb_bch_bb</block>
       <block>dtv_dvb_ldpc_bb</block>
     </cat>
+    <cat>
+      <name>DVB-T2</name>
+      <block>dtv_dvbt2_interleaver_bb</block>
+      <block>dtv_dvbt2_modulator_bc</block>
+      <block>dtv_dvbt2_cellinterleaver_cc</block>
+      <block>dtv_dvbt2_framemapper_cc</block>
+      <block>dtv_dvbt2_freqinterleaver_cc</block>
+      <block>dtv_dvbt2_pilotgenerator_cc</block>
+      <block>dtv_dvbt2_paprtr_cc</block>
+      <block>dtv_dvbt2_p1insertion_cc</block>
+      <block>dtv_dvbt2_miso_cc</block>
+    </cat>
   </cat>
 </cat>

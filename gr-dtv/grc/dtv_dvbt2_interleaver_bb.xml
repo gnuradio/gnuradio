@@ -1,0 +1,105 @@
+<?xml version="1.0"?>
+<!--
+###################################################
+## DVB-T2 Bit Interleaver
+###################################################
+ -->
+<block>
+  <name>Bit Interleaver</name>
+  <key>dtv_dvbt2_interleaver_bb</key>
+  <import>from gnuradio import dtv</import>
+  <make>dtv.dvbt2_interleaver_bb($framesize.val, $rate.val, $constellation.val)</make>
+  <param>
+    <name>FECFRAME size</name>
+    <key>framesize</key>
+    <type>enum</type>
+    <option>
+      <name>Normal</name>
+      <key>FECFRAME_NORMAL</key>
+      <opt>val:dtv.FECFRAME_NORMAL</opt>
+    </option>
+    <option>
+      <name>Short</name>
+      <key>FECFRAME_SHORT</key>
+      <opt>val:dtv.FECFRAME_SHORT</opt>
+    </option>
+  </param>
+  <param>
+    <name>Code rate</name>
+    <key>rate</key>
+    <type>enum</type>
+    <option>
+      <name>1/3</name>
+      <key>C1_3</key>
+      <opt>val:dtv.C1_3</opt>
+    </option>
+    <option>
+      <name>2/5</name>
+      <key>C2_5</key>
+      <opt>val:dtv.C2_5</opt>
+    </option>
+    <option>
+      <name>1/2</name>
+      <key>C1_2</key>
+      <opt>val:dtv.C1_2</opt>
+    </option>
+    <option>
+      <name>3/5</name>
+      <key>C3_5</key>
+      <opt>val:dtv.C3_5</opt>
+    </option>
+    <option>
+      <name>2/3</name>
+      <key>C2_3</key>
+      <opt>val:dtv.C2_3</opt>
+    </option>
+    <option>
+      <name>3/4</name>
+      <key>C3_4</key>
+      <opt>val:dtv.C3_4</opt>
+    </option>
+    <option>
+      <name>4/5</name>
+      <key>C4_5</key>
+      <opt>val:dtv.C4_5</opt>
+    </option>
+    <option>
+      <name>5/6</name>
+      <key>C5_6</key>
+      <opt>val:dtv.C5_6</opt>
+    </option>
+  </param>
+  <param>
+    <name>Constellation</name>
+    <key>constellation</key>
+    <type>enum</type>
+    <option>
+      <name>QPSK</name>
+      <key>MOD_QPSK</key>
+      <opt>val:dtv.MOD_QPSK</opt>
+    </option>
+    <option>
+      <name>16QAM</name>
+      <key>MOD_16QAM</key>
+      <opt>val:dtv.MOD_16QAM</opt>
+    </option>
+    <option>
+      <name>64QAM</name>
+      <key>MOD_64QAM</key>
+      <opt>val:dtv.MOD_64QAM</opt>
+    </option>
+    <option>
+      <name>256QAM</name>
+      <key>MOD_256QAM</key>
+      <opt>val:dtv.MOD_256QAM</opt>
+    </option>
+  </param>
+  <sink>
+    <name>in</name>
+    <type>byte</type>
+  </sink>
+  <source>
+    <name>out</name>
+    <type>byte</type>
+  </source>
+</block>
