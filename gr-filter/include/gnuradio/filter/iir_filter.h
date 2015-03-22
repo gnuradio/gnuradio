@@ -79,7 +79,7 @@ namespace gr {
        * \endcode
        */
       template<class i_type, class o_type, class tap_type, class acc_type>
-      class iir_filter
+      class FILTER_API iir_filter
       {
       public:
 	/*!
