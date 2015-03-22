@@ -174,6 +174,9 @@ namespace gr {
     // ignored by the user.
     flat_flowgraph_sptr flatten() const;
 
+    // duplicate flatten method that produces a dot-graph string
+    void dot_flatten(flat_flowgraph_sptr new_ffg, std::stringstream &out) const;
+
     hier_block2_sptr to_hier_block2(); // Needed for Python type coercion
 
     bool has_msg_port(pmt::pmt_t which_port) {
