@@ -40,6 +40,15 @@ install(FILES
     dtv_dvb_bbscrambler_bb.xml
     dtv_dvb_bch_bb.xml
     dtv_dvb_ldpc_bb.xml
+    dtv_dvbt2_interleaver_bb.xml
+    dtv_dvbt2_modulator_bc.xml
+    dtv_dvbt2_cellinterleaver_cc.xml
+    dtv_dvbt2_framemapper_cc.xml
+    dtv_dvbt2_freqinterleaver_cc.xml
+    dtv_dvbt2_pilotgenerator_cc.xml
+    dtv_dvbt2_paprtr_cc.xml
+    dtv_dvbt2_p1insertion_cc.xml
+    dtv_dvbt2_miso_cc.xml
     DESTINATION ${GRC_BLOCKS_DIR}
     COMPONENT "dtv_python"
 )

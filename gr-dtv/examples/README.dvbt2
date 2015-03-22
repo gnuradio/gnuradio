@@ -1,0 +1,11 @@
+IMPORTANT: Because some of the blocks have to process entire
+T2 frames, the shared memory requirement will be greater than
+the Linux default. The size of shared memory can be increased
+with the following shell command:
+
+sudo sysctl kernel.shmmax=1073741824
+
+Additional information and links to test streams for the three
+DVB-T2 flow graphs can be found here:
+
+https://github.com/drmpeg/gr-dvbt2
