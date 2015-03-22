@@ -72,7 +72,7 @@ class ModToolInfo(ModTool):
                 ):
             self._info['version'] = '37'
         mod_info['version'] = self._info['version']
-        if 'is_component' in self._info.keys():
+        if 'is_component' in self._info.keys() and self._info['is_component']:
             mod_info['is_component'] = True
         mod_info['incdirs'] = []
         mod_incl_dir = os.path.join(mod_info['base_dir'], 'include')
