@@ -22,7 +22,10 @@ import sys
 from PyQt4 import Qt, QtCore
 from math import sin, cos, pi
 import PyQt4.Qwt5 as Qwt
-from PyQt4.Qwt5.anynumpy import *
+from numpy import zeros
+from numpy import float as Float
+from numpy import vectorize
+from numpy import delete
 
 class PzPlot(Qwt.QwtPlot):
 
@@ -531,4 +534,3 @@ class CanvasPicker(Qt.QObject):
             self.__showCursor(False)
             self.__selectedPoint = index
             self.__showCursor(True)
-

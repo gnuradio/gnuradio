@@ -1042,7 +1042,7 @@ class gr_plot_filter(QtGui.QMainWindow):
         w,h = signal.freqz(self.b,self.a)
         self.fftdB = 20 * scipy.log10 (abs(h))
         self.freq = w/max(w)
-        self.fftDeg = scipy.unwrap(scipy.arctan2(imag(h),real(h)))
+        self.fftDeg = scipy.unwrap(scipy.arctan2(scipy.imag(h),scipy.real(h)))
         self.groupDelay = -scipy.diff(self.fftDeg)
         self.phaseDelay = -self.fftDeg[1:]/self.freq[1:]
         if self.gridview:
