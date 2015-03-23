@@ -523,33 +523,4 @@ namespace gr {
     throw std::runtime_error("disconnect called on non-connected edge!");
   }
 
-  std::string
-  dot_graph_fg(flowgraph_sptr fg)
-  {
-    basic_block_vector_t blocks = fg->calc_used_blocks();
-    edge_vector_t edges = fg->edges();
-
-    std::stringstream out;
-
-    out << "digraph flowgraph {" << std::endl;
-
-    // Define nodes and set labels
-    for(basic_block_viter_t block = blocks.begin(); block != blocks.end(); ++block) {
-      out << (*block)->unique_id()
-          << " [ label=\"" << (*block)->name() << "\" ]"
-          << std::endl;
-    }
-
-    // Define edges
-    for(edge_viter_t edge = edges.begin(); edge != edges.end(); ++edge) {
-      out << edge->src().block()->unique_id()
-          << " -> "
-          << edge->dst().block()->unique_id() << std::endl;
-    }
-
-    out << "}" << std::endl;
-
-    return out.str();
-  }
-
 } /* namespace gr */

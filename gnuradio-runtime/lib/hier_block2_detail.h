@@ -52,8 +52,7 @@ namespace gr {
     void disconnect_all();
     void lock();
     void unlock();
-    void flatten_aux(flat_flowgraph_sptr sfg) const;
-
+    void flatten_aux(flat_flowgraph_sptr sfg, std::stringstream *dot_out = NULL) const;
     void set_processor_affinity(const std::vector<int> &mask);
     void unset_processor_affinity();
     std::vector<int> processor_affinity();
