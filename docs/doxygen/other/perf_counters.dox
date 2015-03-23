@@ -1,6 +1,6 @@
 /*! \page page_perf_counters Performance Counters
 
-\section Introduction
+\section pc_introduction Introduction
 
 Each block can have a set of Performance Counters that the schedule
 keeps track of. These counters measure and store information about

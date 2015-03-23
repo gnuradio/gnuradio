@@ -1,6 +1,6 @@
 /*! \page page_stream_tags Stream Tags
 
-\section Introduction
+\section stream_tags_introduction Introduction
 
 GNU Radio was originally a streaming system with no other mechanism to
 pass data between blocks. Streams of data are a model that work well
@@ -29,7 +29,7 @@ symbol and is used to identify the block that created the tag (which
 is usually the block's alias()).
 
 
-\section block_api_extensions API Extensions to the gr::block
+\section stream_tags_block_api_extensions API Extensions to the gr::block
 
 To enable the stream tags, we have extended the API of gr::block to
 understand \a absolute item numbers. In the data stream model, each
@@ -88,7 +88,7 @@ key from a particular input port between a certain range of items (in
 relative item time within the work function).
 
 
-\subsection add_item_tag Adding a Tag to a Stream
+\subsection stream_tags_add_item_tag Adding a Tag to a Stream
 
 The two function calls to add items tags are defined here. We add a
 tag to a particular output stream of the block. We can output them to
@@ -125,7 +125,7 @@ of the tag information in the function call:
 \endcode
 
 
-\subsection get_item_tags Getting tags from a Stream
+\subsection stream_tags_get_item_tags Getting tags from a Stream
 
 To get tags from a particular input stream, we again have two
 functions we can use. Both of these pass back vectors of
@@ -155,7 +155,7 @@ key \a key.
 \endcode
 
 
-\section tag_propagation Tag Propagation
+\section stream_tags_propagation Tag Propagation
 
 Tags are propagated downstream from block to block like the normal
 data streams. How blocks are actually moved depends on a specific
@@ -181,7 +181,7 @@ See the gr::block::tag_propagation_policy_t documentation for details
 on this enum type.
 
 
-\subsection tags_rate_changes Tag Propagation through Rate Changes
+\subsection stream_tags_rate_changes Tag Propagation through Rate Changes
 
 When a tag is propagated through a block that has a rate change, the
 item's offset in the data stream will change. The scheduler uses the
@@ -203,7 +203,7 @@ propagation internally.
 In no case is the value of the tag modified when propagating through a
 block. This becomes relevent when using \ref page_tagged_stream_blocks.
 
-\section tags_issues Notes on How to Use Tags
+\section stream_tags_issues Notes on How to Use Tags
 
 Tags can be very useful to an application, and their use is
 spreading. USRP sources generate tag information on the time, sample

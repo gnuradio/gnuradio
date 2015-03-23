@@ -1,6 +1,7 @@
 /*! \page page_uhd UHD Interface
 
-\section Introduction
+\section uhd_introduction Introduction
+
 This is the GNU Radio UHD package. It is the interface to the UHD
 library to connect to and send and receive data between the Ettus
 Research, LLC product line. To use the UHD blocks, the Python
@@ -78,7 +79,7 @@ Command name | Value Type | Description
 `gain`       | double     | Sets the Tx or Rx gain (in dB). Defaults to all channels.
 
 
-\section Configuring a UHD object
+\section uhd_configuring Configuring a UHD object
 
 A typical option parser setup for a UHD device looks like
 

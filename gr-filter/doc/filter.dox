@@ -1,6 +1,6 @@
 /*! \page page_filter Filter Signal Processing Blocks
 
-\section Introduction
+\section filter_introduction Introduction
 
 This is the gr-filter package. It contains signal processing blocks to
 perform filtering operations.
@@ -20,12 +20,12 @@ after importing by using:
     help(filter)
 \endcode
 
-\section Dependencies
+\section filter_dependencies Dependencies
 
 The filter blocks depend on \ref page_fft.
 
 
-\section Usage
+\section filter_usage Usage
 
 There are many filter blocks and kernels in GNU Radio. Filter blocks
 are standard GNU Radio blocks that fit into a flowgraph. Filter
@@ -56,7 +56,7 @@ filter).
 
 \li PFB arbitrary resampler (see pfb_arb_resampler.h): performs
 arbitrary resampling (i.e., using any real number) using the polyphase
-filterbank method. \sa \ref pfb_arb_resampl
+filterbank method. \sa \ref pfb_arb_resampler
 
 \li Polyphase filterbank (see polyphase_filterbank.h): a set of base
 classes with standard functions for building many polyphase filterbank

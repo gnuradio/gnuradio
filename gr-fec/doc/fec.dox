@@ -1,6 +1,6 @@
 /*! \page page_fec Forward Error Correction
 
-\section Introduction
+\section fec_introductionIntroduction
 
 This is the gr-fec package. It contains all of the forward error
 correction (FEC) blocks, utilities, and examples. To use the FEC
