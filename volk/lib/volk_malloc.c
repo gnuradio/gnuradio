@@ -1,6 +1,6 @@
 /* -*- c -*- */
 /*
- * Copyright 2014 Free Software Foundation, Inc.
+ * Copyright 2014-2015 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -20,7 +20,6 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include <pthread.h>
 #include <volk/volk_malloc.h>
 #include <stdio.h>
 #include <stdlib.h>
