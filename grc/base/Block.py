@@ -189,7 +189,7 @@ class Block(Element):
                 block=self,
                 n=odict({'name': 'Comment',
                          'key': 'comment',
-                         'type': 'string',
+                         'type': 'multiline',
                          'hide': 'part',
                          'value': '',
                          'tab': ADVANCED_PARAM_TAB

@@ -26,8 +26,10 @@ import gtk
 import Colors
 import os
 
+
 class InputParam(gtk.HBox):
     """The base class for an input parameter inside the input parameters dialog."""
+    expand = False
 
     def __init__(self, param, changed_callback=None, editing_callback=None):
         gtk.HBox.__init__(self)
@@ -122,6 +124,42 @@ class EntryParam(InputParam):
             self._input.set_tooltip_text(text)
         except AttributeError:
             pass  # no tooltips for old GTK
+
+
+class MultiLineEntryParam(InputParam):
+    """Provide an multi-line box for strings."""
+    expand = True
+
+    def __init__(self, *args, **kwargs):
+        InputParam.__init__(self, *args, **kwargs)
+        self._buffer = gtk.TextBuffer()
+        self._buffer.set_text(self.param.get_value())
+        self._buffer.connect('changed', self._mark_changed)
+
+        self._view = gtk.TextView(self._buffer)
+        self._view.connect('focus-out-event', self._apply_change)
+        self._view.connect('key-press-event', self._handle_key_press)
+
+        self._sw = gtk.ScrolledWindow()
+        self._sw.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
+        self._sw.add_with_viewport(self._view)
+
+        self.pack_start(self._sw, True)
+
+    def get_text(self):
+        return self._buffer.get_text(self._buffer.get_start_iter(),
+                                     self._buffer.get_end_iter()).strip()
+
+    def set_color(self, color):
+        self._view.modify_base(gtk.STATE_NORMAL, gtk.gdk.color_parse(color))
+        self._view.modify_text(gtk.STATE_NORMAL, Colors.PARAM_ENTRY_TEXT_COLOR)
+
+    def set_tooltip_text(self, text):
+        try:
+            self._view.set_tooltip_text(text)
+        except AttributeError:
+            pass  # no tooltips for old GTK
+
 
 class EnumParam(InputParam):
     """Provide an entry box for Enum types with a drop down menu."""
@@ -248,6 +286,7 @@ Error:
     #end for
 #end if"""
 
+
 class Param(Element):
     """The graphical parameter."""
 
@@ -264,15 +303,21 @@ class Param(Element):
             gtk input class
         """
         if self.get_type() in ('file_open', 'file_save'):
-            return FileParam(self, *args, **kwargs)
+            input_widget = FileParam(self, *args, **kwargs)
 
         elif self.is_enum():
-            return EnumParam(self, *args, **kwargs)
+            input_widget = EnumParam(self, *args, **kwargs)
 
         elif self.get_options():
-            return EnumEntryParam(self, *args, **kwargs)
+            input_widget = EnumEntryParam(self, *args, **kwargs)
 
-        return EntryParam(self, *args, **kwargs)
+        elif self.get_type() == 'multiline':
+            input_widget = MultiLineEntryParam(self, *args, **kwargs)
+
+        else:
+            input_widget = EntryParam(self, *args, **kwargs)
+
+        return input_widget
 
     def get_markup(self):
         """
