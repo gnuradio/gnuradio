@@ -149,5 +149,20 @@ namespace gr {
       }
     }
 
+    void
+    ctcss_squelch_ff_impl::set_level(float level)
+    {
+      gr::thread::scoped_lock l(d_setlock);
+      d_level = level;
+    }
+
+    void
+    ctcss_squelch_ff_impl::set_frequency(float frequency)
+    {
+      gr::thread::scoped_lock l(d_setlock);
+      d_freq = frequency;
+      update_fft_params();
+    }
+
   } /* namespace analog */
 } /* namespace gr */

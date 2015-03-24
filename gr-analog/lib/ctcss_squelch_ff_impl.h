@@ -59,15 +59,10 @@ namespace gr {
 
       std::vector<float> squelch_range() const;
       float level() const { return d_level; }
-      void set_level(float level) { d_level = level; }
+      void set_level(float level);
       int len() const { return d_len; }
       float frequency() const { return d_freq; }
-
-      void set_frequency(float frequency)
-      {
-          d_freq = frequency;
-          update_fft_params();
-      }
+      void set_frequency(float frequency);
 
       int ramp() const { return squelch_base_ff_impl::ramp(); }
       void set_ramp(int ramp) { squelch_base_ff_impl::set_ramp(ramp); }

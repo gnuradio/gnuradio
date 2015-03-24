@@ -69,5 +69,19 @@ namespace gr {
       d_pwr = d_iir.filter(in.real()*in.real()+in.imag()*in.imag());
     }
 
+    void
+    pwr_squelch_cc_impl::set_threshold(double db)
+    {
+        gr::thread::scoped_lock l(d_setlock);
+        d_threshold = std::pow(10.0, db/10);
+    }
+
+    void
+    pwr_squelch_cc_impl::set_alpha(double alpha)
+    {
+        gr::thread::scoped_lock l(d_setlock);
+        d_iir.set_taps(alpha);
+    }
+
   } /* namespace analog */
 } /* namespace gr */
