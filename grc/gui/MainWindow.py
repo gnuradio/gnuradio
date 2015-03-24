@@ -209,9 +209,11 @@ class MainWindow(gtk.Window):
         open_files = filter(lambda file: file, self._get_files()) #filter blank files
         open_file = self.get_page().get_file_path()
         #close each page
-        for page in self.get_pages():
+        for page in sorted(self.get_pages(), key=lambda p: p.get_saved()):
             self.page_to_be_closed = page
-            self.close_page(False)
+            closed = self.close_page(False)
+            if not closed:
+                break
         if self.notebook.get_n_pages(): return False
         #save state before closing
         Preferences.files_open(open_files)
@@ -242,16 +244,17 @@ class MainWindow(gtk.Window):
                 Actions.FLOW_GRAPH_SAVE() #try to save
                 if not self.page_to_be_closed.get_saved(): #still unsaved?
                     self.page_to_be_closed = None #set the page to be closed back to None
-                    return
+                    return False
             elif response == gtk.RESPONSE_CANCEL:
                 self.page_to_be_closed = None
-                return
+                return False
         #stop the flow graph if executing
         if self.page_to_be_closed.get_proc(): Actions.FLOW_GRAPH_KILL()
         #remove the page
         self.notebook.remove_page(self.notebook.page_num(self.page_to_be_closed))
         if ensure and self.notebook.get_n_pages() == 0: self.new_page() #no pages, make a new one
         self.page_to_be_closed = None #set the page to be closed back to None
+        return True
 
     ############################################################
     # Misc
