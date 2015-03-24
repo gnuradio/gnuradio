@@ -24,7 +24,6 @@
 
 #include <gnuradio/io_signature.h>
 #include "dvbt2_paprtr_cc_impl.h"
-#include <complex.h>
 #include <volk/volk.h>
 #include <stdio.h>
 
@@ -670,21 +669,16 @@ namespace gr {
     {
       const gr_complex *in = (const gr_complex *) input_items[0];
       gr_complex *out = (gr_complex *) output_items[0];
-      gr_complex zero, one;
-      int index, valid;
-      int L_FC = 0;
       gr_complex *dst;
+      int m = 0, L_FC = 0, index, valid;
       float normalization = 1.0 / N_TR;
-      int m = 0;
-      float y, a, alpha, center = (C_PS - 1) / 2;
+      float y, a, alpha, center = (C_PS - 1) / 2.0;
       float aMax = 5.0 * N_TR * sqrt(10.0 / (27.0 * C_PS));
+      const gr_complex zero (0.0, 0.0);
+      const gr_complex one (1.0, 0.0);
       gr_complex u, result, temp;
-      double _Complex vtemp;
+      double vtemp;
 
-      one.real() = 1.0;
-      one.imag() = 0.0;
-      zero.real() = 0.0;
-      zero.imag() = 0.0;
       if (N_FC != 0) {
         L_FC = 1;
       }
@@ -767,10 +761,8 @@ namespace gr {
                 u.imag() = (in[m].imag() + c[m].imag()) / y;
                 alpha = y - v_clip;
                 for (int n = 0; n < N_TR; n++) {
-                  vtemp = 0.0 + ((2 * M_PI * m * ((papr_map[n] + shift) - center)) / papr_fft_size * _Complex_I);
-                  vtemp = cexp(vtemp);
-                  ctemp[n].real() = creal(vtemp);
-                  ctemp[n].imag() = -cimag(vtemp);
+                  vtemp = (-2.0 * M_PI * m * ((papr_map[n] + shift) - center)) / papr_fft_size;
+                  ctemp[n] = std::exp (gr_complexd (0.0, vtemp));
                 }
                 volk_32fc_s32fc_multiply_32fc(v, ctemp, u, N_TR);
                 temp.real() = alpha;
