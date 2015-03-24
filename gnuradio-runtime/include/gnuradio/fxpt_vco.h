@@ -34,7 +34,7 @@ namespace gr {
    * \ingroup misc
    */
   class /*GR_RUNTIME_API*/ fxpt_vco {
-    gr_int32 d_phase;
+    int32_t d_phase;
 
   public:
     fxpt_vco () : d_phase(0) {}

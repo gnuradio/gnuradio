@@ -25,6 +25,7 @@
 
 #include <gnuradio/api.h>
 #include <gnuradio/types.h>
+#include <stdint.h>
 
 namespace gr {
 
@@ -47,18 +48,18 @@ namespace gr {
     static const float TWO_TO_THE_31;
 
   public:
-    static gr_int32
+    static int32_t
       float_to_fixed(float x)
     {
       // Fold x into -PI to PI.
       int d = (int)floor(x/2/PI+0.5);
       x -= d*2*PI;
       // And convert to an integer.
-      return (gr_int32) ((float) x * TWO_TO_THE_31 / PI);
+      return (int32_t) ((float) x * TWO_TO_THE_31 / PI);
     }
 
     static float
-      fixed_to_float (gr_int32 x)
+      fixed_to_float (int32_t x)
     {
       return x * (PI / TWO_TO_THE_31);
     }
@@ -67,9 +68,9 @@ namespace gr {
      * \brief Given a fixed point angle x, return float sine (x)
      */
     static float
-      sin(gr_int32 x)
+      sin(int32_t x)
     {
-      gr_uint32 ux = x;
+      uint32_t ux = x;
       int index = ux >> (WORDBITS - NBITS);
       return s_sine_table[index][0] * (ux >> 1) + s_sine_table[index][1];
     }
@@ -78,9 +79,9 @@ namespace gr {
      * \brief Given a fixed point angle x, return float cosine (x)
      */
     static float
-      cos (gr_int32 x)
+      cos (int32_t x)
     {
-      gr_uint32 ux = x + 0x40000000;
+      uint32_t ux = x + 0x40000000;
       int index = ux >> (WORDBITS - NBITS);
       return s_sine_table[index][0] * (ux >> 1) + s_sine_table[index][1];
     }
@@ -88,9 +89,9 @@ namespace gr {
     /*
      * \brief Given a fixedpoint angle x, return float cos(x) and sin (x)
      */
-    static void sincos(gr_int32 x, float *s, float *c)
+    static void sincos(int32_t x, float *s, float *c)
     {
-      gr_uint32 ux = x;
+      uint32_t ux = x;
       int sin_index = ux >> (WORDBITS - NBITS);
       *s = s_sine_table[sin_index][0] * (ux >> 1) + s_sine_table[sin_index][1];
 

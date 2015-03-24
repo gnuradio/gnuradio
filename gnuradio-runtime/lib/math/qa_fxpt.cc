@@ -51,9 +51,9 @@ qa_fxpt::t0()
      * sometimes the answer is off by a few bits at the bottom.
      * Hence, the disabled check.
      */
-    CPPUNIT_ASSERT_EQUAL((gr_int32)0x40000000, gr::fxpt::float_to_fixed(M_PI/2));
-    CPPUNIT_ASSERT_EQUAL((gr_int32)0,          gr::fxpt::float_to_fixed(0));
-    CPPUNIT_ASSERT_EQUAL((gr_int32)0x80000000, gr::fxpt::float_to_fixed(-M_PI));
+    CPPUNIT_ASSERT_EQUAL((int32_t)0x40000000, gr::fxpt::float_to_fixed(M_PI/2));
+    CPPUNIT_ASSERT_EQUAL((int32_t)0,          gr::fxpt::float_to_fixed(0));
+    CPPUNIT_ASSERT_EQUAL((int32_t)0x80000000, gr::fxpt::float_to_fixed(-M_PI));
   }
 }
 
