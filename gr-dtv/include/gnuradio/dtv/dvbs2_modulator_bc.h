@@ -43,9 +43,9 @@ namespace gr {
       /*!
        * \brief Create a DVB-S2 constellation modulator.
        *
-       * \param constellation DVB-S2 constellation.
-       * \param rate FEC code rate.
        * \param framesize FEC frame size (normal or short).
+       * \param rate FEC code rate.
+       * \param constellation DVB-S2 constellation.
        */
       static sptr make(dvb_framesize_t framesize, dvb_code_rate_t rate, dvb_constellation_t constellation);
     };
