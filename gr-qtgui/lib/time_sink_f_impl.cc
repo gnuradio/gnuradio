@@ -399,6 +399,15 @@ namespace gr {
     }
 
     void
+    time_sink_f_impl::enable_control_panel(bool en)
+    {
+      if(en)
+        d_main_gui->setupControlPanel();
+      else
+        d_main_gui->teardownControlPanel();
+    }
+
+    void
     time_sink_f_impl::enable_tags(int which, bool en)
     {
       if(which == -1) {

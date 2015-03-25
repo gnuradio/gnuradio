@@ -48,6 +48,7 @@ install(FILES
   SpectrumGUIClass.h
   spectrumUpdateEvents.h
   timedisplayform.h
+  timecontrolpanel.h
   TimeDomainDisplayPlot.h
   timerasterdisplayform.h
   TimeRasterDisplayPlot.h

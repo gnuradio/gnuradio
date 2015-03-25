@@ -135,8 +135,8 @@ DisplayForm::~DisplayForm()
 void
 DisplayForm::resizeEvent( QResizeEvent *e )
 {
-  QSize s = size();
-  emit d_display_plot->resizeSlot(&s);
+  //QSize s = size();
+  //emit d_display_plot->resizeSlot(&s);
 }
 
 void
@@ -331,6 +331,7 @@ DisplayForm::setGrid(bool on)
     d_grid->detach();
     d_grid_state = false;
   }
+  d_grid_act->setChecked(on);
   d_display_plot->replot();
 }
 

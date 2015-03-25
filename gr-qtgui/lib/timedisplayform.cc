@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2011,2012 Free Software Foundation, Inc.
+ * Copyright 2011,2012,2015 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -22,8 +22,12 @@
 
 #include <cmath>
 #include <QMessageBox>
+#include <QSpacerItem>
+#include <QGroupBox>
 #include <gnuradio/qtgui/timedisplayform.h>
+#include <gnuradio/qtgui/timecontrolpanel.h>
 #include <iostream>
+
 
 TimeDisplayForm::TimeDisplayForm(int nplots, QWidget* parent)
   : DisplayForm(nplots, parent)
@@ -31,13 +35,20 @@ TimeDisplayForm::TimeDisplayForm(int nplots, QWidget* parent)
   d_stem = false;
   d_semilogx = false;
   d_semilogy = false;
+  d_current_units = 1;
 
   d_int_validator = new QIntValidator(this);
   d_int_validator->setBottom(0);
 
   d_layout = new QGridLayout(this);
   d_display_plot = new TimeDomainDisplayPlot(nplots, this);
+
+  d_controlpanel = NULL;
+
+  // Setup the layout of the display
   d_layout->addWidget(d_display_plot, 0, 0);
+
+  d_layout->setColumnStretch(0, 1);
   setLayout(d_layout);
 
   d_nptsmenu = new NPointsMenu(this);
@@ -89,13 +100,14 @@ TimeDisplayForm::TimeDisplayForm(int nplots, QWidget* parent)
   d_menu->addMenu(d_triggermenu);
 
   setTriggerMode(gr::qtgui::TRIG_MODE_FREE);
+  setTriggerSlope(gr::qtgui::TRIG_SLOPE_POS);
+
   connect(d_tr_mode_menu, SIGNAL(whichTrigger(gr::qtgui::trigger_mode)),
 	  this, SLOT(setTriggerMode(gr::qtgui::trigger_mode)));
   // updates trigger state by calling set level or set tag key.
   connect(d_tr_mode_menu, SIGNAL(whichTrigger(gr::qtgui::trigger_mode)),
 	  this, SLOT(updateTrigger(gr::qtgui::trigger_mode)));
 
-  setTriggerSlope(gr::qtgui::TRIG_SLOPE_POS);
   connect(d_tr_slope_menu, SIGNAL(whichTrigger(gr::qtgui::trigger_slope)),
 	  this, SLOT(setTriggerSlope(gr::qtgui::trigger_slope)));
 
@@ -127,6 +139,46 @@ TimeDisplayForm::~TimeDisplayForm()
 
   // Don't worry about deleting Display Plots - they are deleted when parents are deleted
   delete d_int_validator;
+
+  teardownControlPanel();
+}
+
+
+void
+TimeDisplayForm::setupControlPanel()
+{
+  // Create the control panel layout
+  d_controlpanel = new TimeControlPanel(this);
+
+  // Connect action items in menu to controlpanel widgets
+  connect(d_autoscale_act, SIGNAL(triggered(bool)),
+          d_controlpanel, SLOT(toggleAutoScale(bool)));
+  connect(d_grid_act, SIGNAL(triggered(bool)),
+          d_controlpanel, SLOT(toggleGrid(bool)));
+  connect(d_tr_mode_menu, SIGNAL(whichTrigger(gr::qtgui::trigger_mode)),
+	  d_controlpanel, SLOT(toggleTriggerMode(gr::qtgui::trigger_mode)));
+  connect(this, SIGNAL(signalTriggerMode(gr::qtgui::trigger_mode)),
+	  d_controlpanel, SLOT(toggleTriggerMode(gr::qtgui::trigger_mode)));
+  connect(d_tr_slope_menu, SIGNAL(whichTrigger(gr::qtgui::trigger_slope)),
+	  d_controlpanel, SLOT(toggleTriggerSlope(gr::qtgui::trigger_slope)));
+  connect(this, SIGNAL(signalTriggerSlope(gr::qtgui::trigger_slope)),
+	  d_controlpanel, SLOT(toggleTriggerSlope(gr::qtgui::trigger_slope)));
+  d_layout->addLayout(d_controlpanel, 0, 1);
+
+  d_controlpanel->toggleAutoScale(d_autoscale_act->isChecked());
+  d_controlpanel->toggleGrid(d_grid_act->isChecked());
+  d_controlpanel->toggleTriggerMode(getTriggerMode());
+  d_controlpanel->toggleTriggerSlope(getTriggerSlope());
+}
+
+void
+TimeDisplayForm::teardownControlPanel()
+{
+  if(d_controlpanel) {
+    d_layout->removeItem(d_controlpanel);
+    delete d_controlpanel;
+    d_controlpanel = NULL;
+  }
 }
 
 TimeDomainDisplayPlot*
@@ -172,6 +224,8 @@ TimeDisplayForm::setSampleRate(const double samprate)
     double units3  = std::max(floor(units10 / 3.0), 0.0);
     double units = pow(10, (units10-fmod(units10, 3.0)));
     int iunit = static_cast<int>(units3);
+
+    d_current_units = units;
 
     getPlot()->setSampleRate(samprate, units, strtime[iunit]);
   }
@@ -267,18 +321,34 @@ TimeDisplayForm::setTriggerMode(gr::qtgui::trigger_mode mode)
 {
   d_trig_mode = mode;
   d_tr_mode_menu->getAction(mode)->setChecked(true);
+
+  if((d_trig_mode == gr::qtgui::TRIG_MODE_AUTO) || (d_trig_mode == gr::qtgui::TRIG_MODE_NORM)) {
+    getPlot()->attachTriggerLines(true);
+  }
+  else {
+    getPlot()->attachTriggerLines(false);
+  }
+
+  emit signalTriggerMode(mode);
 }
 
 void
 TimeDisplayForm::updateTrigger(gr::qtgui::trigger_mode mode)
 {
   // If auto or normal mode, popup trigger level box to set
-  if((d_trig_mode == gr::qtgui::TRIG_MODE_AUTO) || (d_trig_mode == gr::qtgui::TRIG_MODE_NORM))
+  if((d_trig_mode == gr::qtgui::TRIG_MODE_AUTO) || (d_trig_mode == gr::qtgui::TRIG_MODE_NORM)) {
     d_tr_level_act->activate(QAction::Trigger);
+    getPlot()->attachTriggerLines(true);
+  }
+  else {
+    getPlot()->attachTriggerLines(false);
+  }
 
   // if tag mode, popup tag key box to set
   if(d_trig_mode == gr::qtgui::TRIG_MODE_TAG)
     d_tr_tag_key_act->activate(QAction::Trigger);
+
+  emit signalTriggerMode(mode);
 }
 
 gr::qtgui::trigger_mode
@@ -292,6 +362,8 @@ TimeDisplayForm::setTriggerSlope(gr::qtgui::trigger_slope slope)
 {
   d_trig_slope = slope;
   d_tr_slope_menu->getAction(slope)->setChecked(true);
+
+  emit signalTriggerSlope(slope);
 }
 
 gr::qtgui::trigger_slope
@@ -304,6 +376,10 @@ void
 TimeDisplayForm::setTriggerLevel(QString s)
 {
   d_trig_level = s.toFloat();
+
+  if((d_trig_mode == gr::qtgui::TRIG_MODE_AUTO) || (d_trig_mode == gr::qtgui::TRIG_MODE_NORM)) {
+    getPlot()->setTriggerLines(d_trig_delay*d_current_units, d_trig_level);
+  }
 }
 
 void
@@ -311,6 +387,10 @@ TimeDisplayForm::setTriggerLevel(float level)
 {
   d_trig_level = level;
   d_tr_level_act->setText(QString().setNum(d_trig_level));
+
+  if((d_trig_mode == gr::qtgui::TRIG_MODE_AUTO) || (d_trig_mode == gr::qtgui::TRIG_MODE_NORM)) {
+    getPlot()->setTriggerLines(d_trig_delay*d_current_units, d_trig_level);
+  }
 }
 
 float
@@ -323,6 +403,10 @@ void
 TimeDisplayForm::setTriggerDelay(QString s)
 {
   d_trig_delay = s.toFloat();
+
+  if((d_trig_mode == gr::qtgui::TRIG_MODE_AUTO) || (d_trig_mode == gr::qtgui::TRIG_MODE_NORM)) {
+    getPlot()->setTriggerLines(d_trig_delay*d_current_units, d_trig_level);
+  }
 }
 
 void
@@ -330,6 +414,10 @@ TimeDisplayForm::setTriggerDelay(float delay)
 {
   d_trig_delay = delay;
   d_tr_delay_act->setText(QString().setNum(d_trig_delay));
+
+  if((d_trig_mode == gr::qtgui::TRIG_MODE_AUTO) || (d_trig_mode == gr::qtgui::TRIG_MODE_NORM)) {
+    getPlot()->setTriggerLines(d_trig_delay*d_current_units, d_trig_level);
+  }
 }
 
 float
@@ -368,4 +456,132 @@ std::string
 TimeDisplayForm::getTriggerTagKey() const
 {
   return d_trig_tag_key;
+}
+
+
+
+/********************************************************************
+ * Notifcation messages from the control panel
+ *******************************************************************/
+
+void
+TimeDisplayForm::notifyYAxisPlus()
+{
+  QwtScaleDiv *ax = getPlot()->axisScaleDiv(QwtPlot::yLeft);
+  double range = ax->upperBound() - ax->lowerBound();
+  double step = range/20.0;
+  getPlot()->setYaxis(ax->lowerBound()+step, ax->upperBound()+step);
+}
+
+void
+TimeDisplayForm::notifyYAxisMinus()
+{
+  QwtScaleDiv *ax = getPlot()->axisScaleDiv(QwtPlot::yLeft);
+  double range = ax->upperBound() - ax->lowerBound();
+  double step = range/20.0;
+  getPlot()->setYaxis(ax->lowerBound()-step, ax->upperBound()-step);
+}
+
+void
+TimeDisplayForm::notifyYRangePlus()
+{
+  QwtScaleDiv *ax = getPlot()->axisScaleDiv(QwtPlot::yLeft);
+  double range = ax->upperBound() - ax->lowerBound();
+  double step = range/20.0;
+  getPlot()->setYaxis(ax->lowerBound()-step, ax->upperBound()+step);
+}
+
+void
+TimeDisplayForm::notifyYRangeMinus()
+{
+  QwtScaleDiv *ax = getPlot()->axisScaleDiv(QwtPlot::yLeft);
+  double range = ax->upperBound() - ax->lowerBound();
+  double step = range/20.0;
+  getPlot()->setYaxis(ax->lowerBound()+step, ax->upperBound()-step);
+}
+
+
+void
+TimeDisplayForm::notifyXAxisPlus()
+{
+  // increase by 10%
+  setNPoints(static_cast<int>(1.1*getNPoints()));
+}
+
+void
+TimeDisplayForm::notifyXAxisMinus()
+{
+  // decrease by 10%
+  setNPoints(static_cast<int>(0.9*getNPoints()));
+}
+
+
+
+void
+TimeDisplayForm::notifyTriggerMode(const QString &mode)
+{
+  if(mode == "Free") {
+    setTriggerMode(gr::qtgui::TRIG_MODE_FREE);
+  }
+  else if(mode == "Auto") {
+    setTriggerMode(gr::qtgui::TRIG_MODE_AUTO);
+  }
+  else if(mode == "Normal") {
+    setTriggerMode(gr::qtgui::TRIG_MODE_NORM);
+  }
+  else if(mode == "Tag") {
+    setTriggerMode(gr::qtgui::TRIG_MODE_TAG);
+    updateTrigger(gr::qtgui::TRIG_MODE_TAG);
+  }
+}
+
+void
+TimeDisplayForm::notifyTriggerSlope(const QString &slope)
+{
+  if(slope == "Positive") {
+    setTriggerSlope(gr::qtgui::TRIG_SLOPE_POS);
+  }
+  else if(slope == "Negative") {
+    setTriggerSlope(gr::qtgui::TRIG_SLOPE_NEG);
+  }
+}
+
+void
+TimeDisplayForm::notifyTriggerLevelPlus()
+{
+  QwtScaleDiv *ax = getPlot()->axisScaleDiv(QwtPlot::yLeft);
+  double range = ax->upperBound() - ax->lowerBound();
+  double step = range/20.0;
+  setTriggerLevel(getTriggerLevel() + step);
+}
+
+void
+TimeDisplayForm::notifyTriggerLevelMinus()
+{
+  QwtScaleDiv *ax = getPlot()->axisScaleDiv(QwtPlot::yLeft);
+  double range = ax->upperBound() - ax->lowerBound();
+  double step = range/20.0;
+  setTriggerLevel(getTriggerLevel() - step);
+}
+
+void
+TimeDisplayForm::notifyTriggerDelayPlus()
+{
+  QwtScaleDiv *ax = getPlot()->axisScaleDiv(QwtPlot::xBottom);
+  double range = ax->upperBound() - ax->lowerBound();
+  double step = range/20.0;
+  double trig = getTriggerDelay() + step / d_current_units;
+  setTriggerDelay(trig);
+}
+
+void
+TimeDisplayForm::notifyTriggerDelayMinus()
+{
+  QwtScaleDiv *ax = getPlot()->axisScaleDiv(QwtPlot::xBottom);
+  double range = ax->upperBound() - ax->lowerBound();
+  double step = range/20.0;
+  double trig = getTriggerDelay() - step / d_current_units;
+  if(trig < 0)
+    trig = 0;
+  setTriggerDelay(trig);
 }

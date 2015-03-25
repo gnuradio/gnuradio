@@ -95,6 +95,7 @@ private slots:
 
 signals:
   void plotPointSelected(const QPointF p, int type);
+  void toggleGrid(bool en);
 
 protected:
   bool d_isclosed;
