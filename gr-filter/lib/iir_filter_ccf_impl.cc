@@ -48,7 +48,7 @@ namespace gr {
 		   io_signature::make(1, 1, sizeof(gr_complex))),
 	d_updated(false)
     {
-      d_iir = new kernel::iir_filter<gr_complex, gr_complex, float>(fftaps, fbtaps, oldstyle);
+      d_iir = new kernel::iir_filter<gr_complex, gr_complex, float, gr_complex>(fftaps, fbtaps, oldstyle);
     }
 
     iir_filter_ccf_impl::~iir_filter_ccf_impl()
