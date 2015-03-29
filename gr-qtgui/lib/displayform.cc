@@ -35,7 +35,10 @@ DisplayForm::DisplayForm(int nplots, QWidget* parent)
 
   // Set up a grid that can be turned on/off
   d_grid = new QwtPlotGrid();
-  d_grid->setPen(QPen(QColor(Qt::gray)));
+  QPen *gridpen = new QPen(Qt::DashLine);
+  gridpen->setWidth(0.25);
+  gridpen->setColor(Qt::gray);
+  d_grid->setPen(*gridpen);
 
   // Create a set of actions for the menu
   d_stop_act = new QAction("Stop", this);
