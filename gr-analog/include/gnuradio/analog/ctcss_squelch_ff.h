@@ -63,6 +63,8 @@ namespace gr {
       virtual float level() const = 0;
       virtual void set_level(float level) = 0;
       virtual int len() const = 0;
+      virtual float frequency() const = 0;
+      virtual void set_frequency(float frequency) = 0;
 
       virtual int ramp() const = 0;
       virtual void set_ramp(int ramp) = 0;

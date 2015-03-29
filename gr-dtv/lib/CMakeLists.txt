@@ -91,6 +91,9 @@ list(APPEND dtv_sources
   dvbt2/dvbt2_paprtr_cc_impl.cc
   dvbt2/dvbt2_p1insertion_cc_impl.cc
   dvbt2/dvbt2_miso_cc_impl.cc
+  dvbs2/dvbs2_interleaver_bb_impl.cc
+  dvbs2/dvbs2_modulator_bc_impl.cc
+  dvbs2/dvbs2_physical_cc_impl.cc
 )
 
 if(ENABLE_GR_CTRLPORT)

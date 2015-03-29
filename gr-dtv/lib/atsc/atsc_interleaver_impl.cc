@@ -24,6 +24,7 @@
 
 #include "atsc_interleaver_impl.h"
 #include "gnuradio/dtv/atsc_consts.h"
+#include <stdio.h>
 
 namespace gr {
   namespace dtv {

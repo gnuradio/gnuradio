@@ -103,6 +103,7 @@ namespace gr {
       ::uhd::freq_range_t get_bandwidth_range(size_t chan);
       void set_auto_dc_offset(const bool enable, size_t chan);
       void set_dc_offset(const std::complex<double> &offset, size_t chan);
+      void set_auto_iq_balance(const bool enable, size_t chan);
       void set_iq_balance(const std::complex<double> &correction, size_t chan);
       void set_clock_config(const ::uhd::clock_config_t &clock_config, size_t mboard);
       void set_time_source(const std::string &source, const size_t mboard);

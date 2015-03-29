@@ -55,6 +55,7 @@ namespace gr {
     void
     squelch_base_cc_impl::set_ramp(int ramp)
     {
+      gr::thread::scoped_lock l(d_setlock);
       d_ramp = ramp;
     }
 
@@ -67,6 +68,7 @@ namespace gr {
     void
     squelch_base_cc_impl::set_gate(bool gate)
     {
+      gr::thread::scoped_lock l(d_setlock);
       d_gate = gate;
     }
 
@@ -86,6 +88,8 @@ namespace gr {
       gr_complex *out = (gr_complex *) output_items[0];
 
       int j = 0;
+
+      gr::thread::scoped_lock l(d_setlock);
 
       for(int i = 0; i < noutput_items; i++) {
 	update_state(in[i]);
