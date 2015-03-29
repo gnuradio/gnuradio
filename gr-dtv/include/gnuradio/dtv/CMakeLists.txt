@@ -54,6 +54,9 @@ install(FILES
     dvbt2_paprtr_cc.h
     dvbt2_p1insertion_cc.h
     dvbt2_miso_cc.h
+    dvbs2_interleaver_bb.h
+    dvbs2_modulator_bc.h
+    dvbs2_physical_cc.h
     DESTINATION ${GR_INCLUDE_DIR}/gnuradio/dtv
     COMPONENT "dtv_devel"
 )

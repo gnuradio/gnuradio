@@ -69,5 +69,11 @@
       <block>dtv_dvbt2_p1insertion_cc</block>
       <block>dtv_dvbt2_miso_cc</block>
     </cat>
+    <cat>
+      <name>DVB-S2</name>
+      <block>dtv_dvbs2_interleaver_bb</block>
+      <block>dtv_dvbs2_modulator_bc</block>
+      <block>dtv_dvbs2_physical_cc</block>
+    </cat>
   </cat>
 </cat>
