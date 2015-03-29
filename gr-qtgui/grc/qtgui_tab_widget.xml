@@ -10,7 +10,10 @@
 	<import>from PyQt4 import Qt</import>
 	<make>#set $win = 'self.%s'%$id
 Qt.QTabWidget()
-#set $all_labels = [$label0, $label1, $label2, $label3, $label4][:int($num_tabs())]
+#set $all_labels = [$label0, $label1, $label2, $label3, $label4,
+                    $label5, $label6, $label7, $label8, $label9,
+                    $label10, $label11, $label12, $label13, $label14,
+                    $label15, $label16, $label17, $label18, $label19][:int($num_tabs())]
 #for i, label in enumerate($all_labels)
 self.$(id)_widget_$(i) = Qt.QWidget()
 self.$(id)_layout_$(i) = Qt.QBoxLayout(Qt.QBoxLayout.TopToBottom, self.$(id)_widget_$(i))
