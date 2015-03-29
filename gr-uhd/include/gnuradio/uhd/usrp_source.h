@@ -359,6 +359,14 @@ namespace gr {
       virtual void set_dc_offset(const std::complex<double> &offset, size_t chan = 0) = 0;
 
       /*!
+       * Enable/Disable the RX frontend IQ imbalance correction.
+       *
+       * \param enb true to enable automatic IQ imbalance correction
+       * \param chan the channel index 0 to N-1
+       */
+      virtual void set_auto_iq_balance(const bool enb, size_t chan = 0) = 0;
+
+      /*!
        * Set the RX frontend IQ imbalance correction.
        * Use this to adjust the magnitude and phase of I and Q.
        *
