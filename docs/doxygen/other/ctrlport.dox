@@ -1,6 +1,6 @@
 /*! \page page_ctrlport ControlPort
 
-\section Introduction
+\section ctrlport_introduction Introduction
 
 This is the ControlPort package. It is a tool to create distributed
 control applications for GNU Radio. It provides blocks that can be

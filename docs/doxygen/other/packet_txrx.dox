@@ -1,6 +1,6 @@
 /*! \page page_packet_data Packet Data Transmission
 
-\section intro Introduction
+\section packet_data_introduction Introduction
 
 In many cases, the PHY layer of a digital transceiver uses <em>packets</em>to break
 down the transmission (as opposed to continuously broadcasting data), and GNU Radio
@@ -11,7 +11,7 @@ With the tools provided in GNU Radio, simple digital packet transmission schemes
 are easily implemented, allowing the creation of packet-based communication links
 and even -networks.
 
-\section packetstructure Structure of a packet
+\section packet_data_structure Structure of a packet
 
 Typically, a packet consists of the following elements:
 
@@ -26,7 +26,7 @@ The receiver has to perform a multitude of things to obtain the packet again.
 Most importantly, it has to convert an infinite stream (coming from the receiver
 device, e.g. a UHD source block) into a packetized, tagged stream.
 
-\section hpdemuxer The Header/Payload Demuxer and header parser
+\section packet_data_hpdemuxer The Header/Payload Demuxer and header parser
 
 The key element to return back to packetized state is the gr::digital::header_payload_demux.
 At its first input, it receives a continuous stream of sample data, coming from
@@ -48,7 +48,7 @@ The knowledge of the header structure (i.e. how to turn a sequence of bits into
 a payload length etc.) is stored in an object of type gr::digital::packet_header_default.
 This must be passed to the header parser block.
 
-\section ofdm Packet receiver example: OFDM
+\section packet_data_ofdm Packet receiver example: OFDM
 
 \image html example_ofdm_packet_rx.png "Example: OFDM Packet Receiver"
 

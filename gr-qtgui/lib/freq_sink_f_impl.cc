@@ -197,7 +197,10 @@ namespace gr {
     void
     freq_sink_f_impl::set_fft_size(const int fftsize)
     {
-      d_main_gui->setFFTSize(fftsize);
+      if((fftsize > 16) && (fftsize < 16384))
+        d_main_gui->setFFTSize(fftsize);
+      else
+        throw std::runtime_error("freq_sink: FFT size must be > 16 and < 16384.");
     }
 
     int

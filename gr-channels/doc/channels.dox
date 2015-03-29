@@ -1,6 +1,6 @@
 /*! \page page_channels Channel Model Blocks
 
-\section Introduction
+\section channels_introduction Introduction
 
 This is the gr-channels package. It contains signal processing blocks to
 simulate channel models.

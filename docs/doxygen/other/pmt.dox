@@ -1,6 +1,6 @@
 /*! \page page_pmt Polymorphic Types
 
-\section intro Introduction
+\section pmt_introduction Introduction
 
 Polymorphic Types are opaque data types that are designed as generic
 containers of data that can be safely passed around between blocks and
@@ -138,7 +138,7 @@ data types with the PMT library.
 
 
 
-\section datatype PMT Data Type
+\section pmt_datatype PMT Data Type
 
 All PMTs are of the type pmt::pmt_t. This is an opaque container and
 PMT functions must be used to manipulate and even do things like
@@ -185,7 +185,7 @@ The constants in the PMT library are:
 - pmt::PMT_F - a PMT False
 - pmt::PMT_NIL - an empty PMT (think Python's 'None')
 
-\section insert Inserting and Extracting Data
+\section pmt_insert Inserting and Extracting Data
 
 Use pmt.h for a complete guide to the list of functions used to create
 PMTs and get the data from a PMT. When using these functions, remember
@@ -219,7 +219,7 @@ Pairs, dictionaries, and vectors have different constructors and ways
 to manipulate them, and these are explained in their own sections.
 
 
-\section strings Strings
+\section pmt_strings Strings
 
 PMTs have a way of representing short strings. These strings are
 actually stored as interned symbols in a hash table, so in other
@@ -242,7 +242,7 @@ std::string s = pmt::symbol_to_string(str0);
 \endcode
 
 
-\section tests Tests and Comparisons
+\section pmt_tests Tests and Comparisons
 
 The PMT library comes with a number of functions to test and compare
 PMT objects. In general, for any PMT data type, there is an equivalent
@@ -272,7 +272,7 @@ if(pmt::is_double(pmt_a))
 \endcode
 
 
-\section dict Dictionaries
+\section pmt_dict Dictionaries
 
 PMT dictionaries and lists of key:value pairs. They have a
 well-defined interface for creating, adding, removing, and accessing
@@ -339,7 +339,7 @@ if(pmt.dict_has_key(a, key0) and pmt.eq(ref, pmt.PMT_NIL)):
     print "Trouble! We have key0, but it returned PMT_NIL"
 \endcode
 
-\section vectors Vectors
+\section pmt_vectors Vectors
 
 PMT vectors come in two forms: vectors of PMTs and vectors of uniform
 data. The standard PMT vector is a vector of PMTs, and each PMT can be
@@ -393,12 +393,12 @@ deal of harm. But it's only unlikely, not impossible. Best to use
 mutexes whenever manipulating data in a vector.
 
 
-\subsection blob BLOB
+\subsection pmt_blob BLOB
 
 A BLOB is a 'binary large object' type. In PMT's, this is actually
 just a thin wrapper around a u8vector.
 
-\section pairs Pairs
+\section pmt_pairs Pairs
 
 Pairs are inspired by LISP 'cons' data types, so you will find the
 language here comes from LISP. A pair is just a pair of PMT
@@ -412,7 +412,7 @@ objects. They are manipulated using the following functions:
 - void pmt::set_cdr(pmt_t pair, pmt_t value): Stores value in the cdr field
 
 
-\section serdes Serializing and Deserializing
+\section pmt_serdes Serializing and Deserializing
 
 It is often important to hide the fact that we are working with PMTs
 to make them easier to transmit, store, write to file, etc. The PMT
@@ -461,7 +461,7 @@ readable, but the point of serializing is not to make a human-readable
 string. This is only done here as a test.
 
 
-\section printing Printing
+\section pmt_printing Printing
 
 In Python, the __repr__ function of a PMT object is overloaded to call
 'pmt::write_string'. This means that any time we call a formatted
