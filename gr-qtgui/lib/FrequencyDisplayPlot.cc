@@ -90,7 +90,7 @@ FrequencyDisplayPlot::FrequencyDisplayPlot(int nplots, QWidget* parent)
   d_start_frequency = -1;
   d_stop_frequency = 1;
 
-  d_numPoints = 1024;
+  d_numPoints = 0;
   d_min_fft_data = new double[d_numPoints];
   d_max_fft_data = new double[d_numPoints];
   d_xdata = new double[d_numPoints];
@@ -286,7 +286,6 @@ FrequencyDisplayPlot::setFrequencyRange(const double centerfreq,
     startFreq = 0;
   else
     startFreq = (centerfreq - bandwidth/2.0f) / units;
-
 
   d_xdata_multiplier = units;
 

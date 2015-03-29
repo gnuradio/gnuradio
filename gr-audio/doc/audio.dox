@@ -1,6 +1,6 @@
 /*! \page page_audio Audio Interface
 
-\section Introduction
+\section audio_introduction Introduction
 
 The gnuradio audio component provides gr::audio::source and
 gr::audio::sink blocks. The audio blocks stream floating point samples
@@ -40,7 +40,7 @@ after importing by using:
 \endcode
 
 
-\section Usage
+\section audio_usage Usage
 For an audio source, a typical OptionParser option and it's use looks
 like:
 

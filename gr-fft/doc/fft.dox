@@ -1,6 +1,6 @@
 /*! \page page_fft FFT Signal Processing Blocks
 
-\section Introduction
+\section fft_introduction Introduction
 
 This is the gr-fft package. It contains signal processing blocks to
 perform FFTs and FFT-related functionality.
@@ -20,7 +20,7 @@ after importing by using:
     help(fft)
 \endcode
 
-\section Dependencies
+\section fft_dependencies Dependencies
 
 The FFT blocks require the following dependencies.
 

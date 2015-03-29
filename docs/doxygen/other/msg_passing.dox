@@ -1,6 +1,6 @@
 /*! \page page_msg_passing Message Passing
 
-\section intro Introduction
+\section msg_passing_introduction Introduction
 
 GNU Radio was originally a streaming system with no other mechanism to
 pass data between blocks. Streams of data are a model that work well
@@ -30,7 +30,7 @@ The message passing interface heavily relies on Polymorphic Types
 (PMTs) in GNU Radio. For further information about these data
 structures, see the page \ref page_pmt.
 
-\section api Message Passing API
+\section msg_passing_api Message Passing API
 
 The message passing interface is designed into the gr::basic_block,
 which is the parent class for all blocks in GNU Radio. Each block has
@@ -69,7 +69,7 @@ have subscribed and uses the gr::basic_block::_post method to send the
 message to that block's message queue.
 
 
-\subsection msg_handler Message Handler Functions
+\subsection msg_passing_msg_handler Message Handler Functions
 
 A subscriber block must declare a message handler function to process
 the messages that are posted to it. After using the
@@ -98,7 +98,7 @@ is:
 We give an example of using this below.
 
 
-\subsection msg_fg_connect Connecting Messages through the Flowgraph
+\subsection msg_passing_fg_connect Connecting Messages through the Flowgraph
 
 From the flowgraph level, we have instrumented a gr::hier_block2::msg_connect
 method to make it easy to subscribe blocks to other blocks'
@@ -145,12 +145,12 @@ function. When a new message is pushed onto a port's message queue,
 it is this function that is used to process the message.
 
 
-\section python_msg_passing Message Passing in Python Blocks
+\section msg_passing_python Message Passing in Python Blocks
 
 ADD STUFF HERE
 
 
-\section examples Code Examples
+\section msg_passing_examples Code Examples
 
 The following is snippets of code from blocks current in GNU Radio
 that take advantage of message passing. We will be using
@@ -272,7 +272,7 @@ them. The data is then converted into an output stream of items and
 passed along. The next section describes how PDUs can be passed into a
 flowgraph using the gr::blocks::pdu_to_tagged_stream block.
 
-\section posting Posting from External Sources
+\section msg_passing_posting Posting from External Sources
 
 The last feature of the message passing architecture to discuss here
 is how it can be used to take in messages from an external source. We

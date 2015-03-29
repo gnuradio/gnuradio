@@ -1,6 +1,6 @@
 /*! \page page_zeromq ZeroMQ
 
-\section Introduction
+\section zmq_introduction Introduction
 
 This is the gr-zeromq package. It contains bindings for ZeroMQ.
 
