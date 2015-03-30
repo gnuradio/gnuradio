@@ -276,34 +276,48 @@ endif()
 ########################################################################
 # Setup volk as a subproject
 ########################################################################
-include(GrComponent)
-GR_REGISTER_COMPONENT("volk" ENABLE_VOLK)
+find_package(Volk)
+if(NOT VOLK_FOUND)
+    find_file(INTREE_VOLK_FOUND
+    volk/volk_common.h
+    PATHS ${CMAKE_CURRENT_SOURCE_DIR}/volk/include
+    )
 
-set(VOLK_INCLUDE_DIRS
-    ${CMAKE_CURRENT_SOURCE_DIR}/volk/include
-    ${CMAKE_CURRENT_BINARY_DIR}/volk/include
-)
+    if(NOT INTREE_VOLK_FOUND)
+        message(FATAL_ERROR "VOLK submodule is not checked out")
+    endif()
 
-if(ENABLE_VOLK)
+    include(GrComponent)
+    GR_REGISTER_COMPONENT("volk" ENABLE_VOLK)
 
-include(GrPackage)
-CPACK_SET(CPACK_COMPONENT_GROUP_VOLK_DESCRIPTION "Vector optimized library of kernels")
+    set(VOLK_INCLUDE_DIRS
+        ${CMAKE_CURRENT_SOURCE_DIR}/volk/include
+        ${CMAKE_CURRENT_BINARY_DIR}/volk/include
+    )
 
-CPACK_COMPONENT("volk_runtime"
-    GROUP        "Volk"
-    DISPLAY_NAME "Runtime"
-    DESCRIPTION  "Dynamic link libraries"
-)
+    if(ENABLE_VOLK)
 
-CPACK_COMPONENT("volk_devel"
-    GROUP        "Volk"
-    DISPLAY_NAME "Development"
-    DESCRIPTION  "C++ headers, package config, import libraries"
-)
+    include(GrPackage)
+    CPACK_SET(CPACK_COMPONENT_GROUP_VOLK_DESCRIPTION "Vector optimized library of kernels")
 
+    CPACK_COMPONENT("volk_runtime"
+        GROUP        "Volk"
+        DISPLAY_NAME "Runtime"
+        DESCRIPTION  "Dynamic link libraries"
+    )
 
-add_subdirectory(volk)
-endif(ENABLE_VOLK)
+    CPACK_COMPONENT("volk_devel"
+        GROUP        "Volk"
+        DISPLAY_NAME "Development"
+        DESCRIPTION  "C++ headers, package config, import libraries"
+    )
+
+    add_subdirectory(volk)
+    endif(ENABLE_VOLK)
+else()
+    message(STATUS "An external VOLK has been found and will be used for build.")
+    set(ENABLE_VOLK TRUE)
+endif(NOT VOLK_FOUND)
 
 # Handle gr_log enable/disable
 GR_LOGGING()
