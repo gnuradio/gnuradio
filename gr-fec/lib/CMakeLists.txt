@@ -90,7 +90,7 @@ endif(MSVC)
 list(APPEND gnuradio_fec_libs
     gnuradio-blocks
     gnuradio-runtime
-    volk
+    ${VOLK_LIBRARIES}
     ${Boost_LIBRARIES}
     ${LOG4CPP_LIBRARIES}
 )

@@ -295,6 +295,8 @@ if(NOT VOLK_FOUND)
         ${CMAKE_CURRENT_BINARY_DIR}/volk/include
     )
 
+    set(VOLK_LIBRARIES volk)
+
     if(ENABLE_VOLK)
 
     include(GrPackage)

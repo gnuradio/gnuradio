@@ -132,7 +132,7 @@ if(CMAKE_SYSTEM_PROCESSOR MATCHES "^(powerpc|ppc)")
 endif(CMAKE_SYSTEM_PROCESSOR MATCHES "^(powerpc|ppc)")
 
 list(APPEND gnuradio_runtime_libs
-    volk
+    ${VOLK_LIBRARIES}
     gnuradio-pmt
     ${Boost_LIBRARIES}
     ${LOG4CPP_LIBRARIES}
