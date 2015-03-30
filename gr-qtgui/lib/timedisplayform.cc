@@ -99,6 +99,12 @@ TimeDisplayForm::TimeDisplayForm(int nplots, QWidget* parent)
   d_triggermenu->addAction(d_tr_tag_key_act);
   d_menu->addMenu(d_triggermenu);
 
+  d_controlpanelmenu = new QAction("Control Panel", this);
+  d_controlpanelmenu->setCheckable(true);
+  d_menu->addAction(d_controlpanelmenu);
+  connect(d_controlpanelmenu, SIGNAL(triggered(bool)),
+	  this, SLOT(setupControlPanel(bool)));
+
   setTriggerMode(gr::qtgui::TRIG_MODE_FREE);
   setTriggerSlope(gr::qtgui::TRIG_SLOPE_POS);
 
@@ -143,10 +149,23 @@ TimeDisplayForm::~TimeDisplayForm()
   teardownControlPanel();
 }
 
+void
+TimeDisplayForm::setupControlPanel(bool en)
+{
+  if(en) {
+    setupControlPanel();
+  }
+  else {
+    teardownControlPanel();
+  }
+}
 
 void
 TimeDisplayForm::setupControlPanel()
 {
+  if(d_controlpanel)
+    delete d_controlpanel;
+
   // Create the control panel layout
   d_controlpanel = new TimeControlPanel(this);
 
@@ -169,6 +188,8 @@ TimeDisplayForm::setupControlPanel()
   d_controlpanel->toggleGrid(d_grid_act->isChecked());
   d_controlpanel->toggleTriggerMode(getTriggerMode());
   d_controlpanel->toggleTriggerSlope(getTriggerSlope());
+
+  d_controlpanelmenu->setChecked(true);
 }
 
 void
@@ -179,6 +200,7 @@ TimeDisplayForm::teardownControlPanel()
     delete d_controlpanel;
     d_controlpanel = NULL;
   }
+  d_controlpanelmenu->setChecked(false);
 }
 
 TimeDomainDisplayPlot*

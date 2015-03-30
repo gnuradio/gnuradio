@@ -80,8 +80,9 @@ public slots:
   void setTriggerTagKey(QString s);
   void setTriggerTagKey(const std::string &s);
 
-  void teardownControlPanel();
+  void setupControlPanel(bool en);
   void setupControlPanel();
+  void teardownControlPanel();
 
 private slots:
   void newData(const QEvent*);
@@ -119,6 +120,7 @@ private:
   QAction *d_stemmenu;
   QAction *d_semilogxmenu;
   QAction *d_semilogymenu;
+  QAction *d_controlpanelmenu;
   std::vector<QAction*> d_tagsmenu;
 
   QMenu *d_triggermenu;
