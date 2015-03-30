@@ -96,7 +96,7 @@ IF(MSVC)
 ENDIF(MSVC)
 
 list(APPEND analog_libs
-    volk
+    ${VOLK_LIBRARIES}
     gnuradio-runtime
     gnuradio-blocks
     gnuradio-filter

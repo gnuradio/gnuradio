@@ -148,7 +148,7 @@ list(APPEND qtgui_libs
     gnuradio-runtime
     gnuradio-fft
     gnuradio-filter
-    volk
+    ${VOLK_LIBRARIES}
     ${QWT_LIBRARIES}
     ${QT_LIBRARIES}
     ${FFTW3F_LIBRARIES}

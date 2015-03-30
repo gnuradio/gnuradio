@@ -112,7 +112,7 @@ list(APPEND filter_libs
     gnuradio-runtime
     gnuradio-fft
     gnuradio-blocks
-    volk
+    ${VOLK_LIBRARIES}
     ${Boost_LIBRARIES}
 )
 

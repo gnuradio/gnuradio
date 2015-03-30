@@ -102,7 +102,7 @@ list(APPEND dtv_sources
 endif(ENABLE_GR_CTRLPORT)
 
 list(APPEND dtv_libs
-    volk
+    ${VOLK_LIBRARIES}
     gnuradio-runtime
     gnuradio-analog
     gnuradio-filter
