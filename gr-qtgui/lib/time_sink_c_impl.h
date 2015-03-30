@@ -41,6 +41,7 @@ namespace gr {
       int d_nconnections;
 
       int d_index, d_start, d_end;
+      std::vector<gr_complex*> d_cbuffers;
       std::vector<double*> d_buffers;
       std::vector< std::vector<gr::tag_t> > d_tags;
 
