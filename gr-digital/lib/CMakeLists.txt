@@ -132,11 +132,11 @@ IF(MSVC)
 ENDIF(MSVC)
 
 list(APPEND digital_libs
-    ${VOLK_LIBRARIES}
     gnuradio-runtime
     gnuradio-filter
     gnuradio-blocks
     gnuradio-analog
+    ${VOLK_LIBRARIES}
     ${Boost_LIBRARIES}
     ${LOG4CPP_LIBRARIES}
 )

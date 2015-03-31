@@ -102,11 +102,11 @@ list(APPEND dtv_sources
 endif(ENABLE_GR_CTRLPORT)
 
 list(APPEND dtv_libs
-    ${VOLK_LIBRARIES}
     gnuradio-runtime
     gnuradio-analog
     gnuradio-filter
     gnuradio-fec
+    ${VOLK_LIBRARIES}
 )
 
 #Add Windows DLL resource file if using MSVC
