@@ -28,11 +28,11 @@ namespace gr {
     const flex_mode_t
     flex_modes[] =
       {
-	{ 0x870C78F3, 1600, 2 },
-	{ 0xB0684F97, 1600, 4 },
-	{ 0x7B1884E7, 3200, 2 },
-	{ 0xDEA0215F, 3200, 4 },
-	{ 0x4C7CB383, 3200, 4 }
+	{ (int32_t) 0x870C78F3, 1600, 2 },
+	{ (int32_t) 0xB0684F97, 1600, 4 },
+	{ (int32_t) 0x7B1884E7, 3200, 2 },
+	{ (int32_t) 0xDEA0215F, 3200, 4 },
+	{ (int32_t) 0x4C7CB383, 3200, 4 }
       };
 
     const int num_flex_modes = sizeof(flex_modes)/sizeof(flex_modes[0]);
