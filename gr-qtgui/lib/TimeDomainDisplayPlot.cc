@@ -195,7 +195,22 @@ TimeDomainDisplayPlot::TimeDomainDisplayPlot(int nplots, QWidget* parent)
 
   d_tag_markers.resize(d_nplots);
   d_tag_markers_en = std::vector<bool>(d_nplots, true);
+
+  d_trigger_lines[0] = new QwtPlotMarker();
+  d_trigger_lines[0]->setLineStyle(QwtPlotMarker::HLine);
+  d_trigger_lines[0]->setLinePen(QPen(Qt::red, 0.6, Qt::DashLine));
+  d_trigger_lines[0]->setRenderHint(QwtPlotItem::RenderAntialiased);
+  d_trigger_lines[0]->setXValue(0.0);
+  d_trigger_lines[0]->setYValue(0.0);
+
+  d_trigger_lines[1] = new QwtPlotMarker();
+  d_trigger_lines[1]->setLineStyle(QwtPlotMarker::VLine);
+  d_trigger_lines[1]->setLinePen(QPen(Qt::red, 0.6, Qt::DashLine));
+  d_trigger_lines[1]->setRenderHint(QwtPlotItem::RenderAntialiased);
+  d_trigger_lines[1]->setXValue(0.0);
+  d_trigger_lines[1]->setYValue(0.0);
 }
+
 
 TimeDomainDisplayPlot::~TimeDomainDisplayPlot()
 {
@@ -494,6 +509,12 @@ TimeDomainDisplayPlot::setSampleRate(double sr, double units,
   }
 }
 
+double
+TimeDomainDisplayPlot::sampleRate() const
+{
+  return d_sample_rate;
+}
+
 void
 TimeDomainDisplayPlot::stemPlot(bool en)
 {
@@ -573,6 +594,28 @@ TimeDomainDisplayPlot::setYLabel(const std::string &label,
     l += " (" + unit + ")";
   setAxisTitle(QwtPlot::yLeft, QString(l.c_str()));
   ((TimeDomainDisplayZoomer*)d_zoomer)->setYUnitType(unit);
+}
+
+void
+TimeDomainDisplayPlot::attachTriggerLines(bool en)
+{
+  if(en) {
+    d_trigger_lines[0]->attach(this);
+    d_trigger_lines[1]->attach(this);
+  }
+  else {
+    d_trigger_lines[0]->detach();
+    d_trigger_lines[1]->detach();
+  }
+}
+
+void
+TimeDomainDisplayPlot::setTriggerLines(double x, double y)
+{
+  d_trigger_lines[0]->setXValue(x);
+  d_trigger_lines[0]->setYValue(y);
+  d_trigger_lines[1]->setXValue(x);
+  d_trigger_lines[1]->setYValue(y);
 }
 
 #endif /* TIME_DOMAIN_DISPLAY_PLOT_C */
