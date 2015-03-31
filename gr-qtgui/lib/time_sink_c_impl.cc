@@ -71,6 +71,12 @@ namespace gr {
 	memset(d_buffers[n], 0, d_buffer_size*sizeof(double));
       }
 
+      for(int n = 0; n < d_nconnections/2; n++) {
+	d_cbuffers.push_back((gr_complex*)volk_malloc(d_buffer_size*sizeof(gr_complex),
+                                                      volk_get_alignment()));
+	memset(d_cbuffers[n], 0, d_buffer_size*sizeof(gr_complex));
+      }
+
       // Set alignment properties for VOLK
       const int alignment_multiple =
 	volk_get_alignment() / sizeof(gr_complex);
@@ -95,6 +101,9 @@ namespace gr {
       // d_main_gui is a qwidget destroyed with its parent
       for(int n = 0; n < d_nconnections; n++) {
 	volk_free(d_buffers[n]);
+      }
+      for(int n = 0; n < d_nconnections/2; n++) {
+        volk_free(d_cbuffers[n]);
       }
 
       delete d_argv;
@@ -333,6 +342,13 @@ namespace gr {
 	  memset(d_buffers[n], 0, d_buffer_size*sizeof(double));
 	}
 
+	for(int n = 0; n < d_nconnections/2; n++) {
+	  volk_free(d_cbuffers[n]);
+	  d_cbuffers[n] = (gr_complex*)volk_malloc(d_buffer_size*sizeof(gr_complex),
+                                                   volk_get_alignment());
+	  memset(d_cbuffers[n], 0, d_buffer_size*sizeof(gr_complex));
+	}
+
         // If delay was set beyond the new boundary, pull it back.
         if(d_trigger_delay >= d_size) {
           GR_LOG_WARN(d_logger, boost::format("Trigger delay (%1%) outside of display range (0:%2%). Moving to 50%% point.") \
@@ -397,6 +413,15 @@ namespace gr {
     }
 
     void
+    time_sink_c_impl::enable_control_panel(bool en)
+    {
+      if(en)
+        d_main_gui->setupControlPanel();
+      else
+        d_main_gui->teardownControlPanel();
+    }
+
+    void
     time_sink_c_impl::enable_tags(int which, bool en)
     {
       if(which == -1) {
@@ -418,19 +443,18 @@ namespace gr {
     void
     time_sink_c_impl::_reset()
     {
-      // Move the tail of the buffers to the front. This section
-      // represents data that might have to be plotted again if a
-      // trigger occurs and we have a trigger delay set.  The tail
-      // section is between (d_end-d_trigger_delay) and d_end.
       int n;
       if(d_trigger_delay) {
-        for(n = 0; n < d_nconnections; n++) {
-          memmove(d_buffers[n], &d_buffers[n][d_size-d_trigger_delay], d_trigger_delay*sizeof(double));
-        }
-
-        // Also move the offsets of any tags that occur in the tail
-        // section so they would be plotted again, too.
         for(n = 0; n < d_nconnections/2; n++) {
+          // Move the tail of the buffers to the front. This section
+          // represents data that might have to be plotted again if a
+          // trigger occurs and we have a trigger delay set.  The tail
+          // section is between (d_end-d_trigger_delay) and d_end.
+          memmove(d_cbuffers[n], &d_cbuffers[n][d_end-d_trigger_delay],
+                  d_trigger_delay*sizeof(gr_complex));
+
+          // Also move the offsets of any tags that occur in the tail
+          // section so they would be plotted again, too.
           std::vector<gr::tag_t> tmp_tags;
           for(size_t t = 0; t < d_tags[n].size(); t++) {
             if(d_tags[n][t].offset > (uint64_t)(d_size - d_trigger_delay)) {
@@ -584,7 +608,7 @@ namespace gr {
 			   gr_vector_const_void_star &input_items,
 			   gr_vector_void_star &output_items)
     {
-      int n=0, idx=0;
+      int n=0;
       const gr_complex *in;
 
       _npoints_resize();
@@ -608,28 +632,26 @@ namespace gr {
       }
 
       // Copy data into the buffers.
-      for(n = 0; n < d_nconnections; n+=2) {
-        in = (const gr_complex*)input_items[idx];
-        volk_32fc_deinterleave_64f_x2(&d_buffers[n][d_index],
-                                      &d_buffers[n+1][d_index],
-                                      &in[1], nitems);
+      for(n = 0; n < d_nconnections/2; n++) {
+        in = (const gr_complex*)input_items[n];
+        memcpy(&d_cbuffers[n][d_index], &in[1], nitems*sizeof(gr_complex));
 
-        uint64_t nr = nitems_read(idx);
+        uint64_t nr = nitems_read(n);
         std::vector<gr::tag_t> tags;
-        get_tags_in_range(tags, idx, nr, nr + nitems + 1);
+        get_tags_in_range(tags, n, nr, nr + nitems + 1);
         for(size_t t = 0; t < tags.size(); t++) {
           tags[t].offset = tags[t].offset - nr + (d_index-d_start-1);
         }
-        d_tags[idx].insert(d_tags[idx].end(), tags.begin(), tags.end());
-        idx++;
+        d_tags[n].insert(d_tags[n].end(), tags.begin(), tags.end());
       }
       d_index += nitems;
 
       // If we've have a trigger and a full d_size of items in the buffers, plot.
       if((d_triggered) && (d_index == d_end)) {
         // Copy data to be plotted to start of buffers.
-        for(n = 0; n < d_nconnections; n++) {
-          memmove(d_buffers[n], &d_buffers[n][d_start], d_size*sizeof(double));
+        for(n = 0; n < d_nconnections/2; n++) {
+          volk_32fc_deinterleave_64f_x2(d_buffers[2*n+0], d_buffers[2*n+1],
+                                        &d_cbuffers[n][d_start], d_size);
         }
 
         // Plot if we are able to update

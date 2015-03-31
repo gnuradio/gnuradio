@@ -41,6 +41,7 @@ namespace gr {
       int d_nconnections;
 
       int d_index, d_start, d_end;
+      std::vector<gr_complex*> d_cbuffers;
       std::vector<double*> d_buffers;
       std::vector< std::vector<gr::tag_t> > d_tags;
 
@@ -124,6 +125,7 @@ namespace gr {
       void enable_stem_plot(bool en);
       void enable_semilogx(bool en);
       void enable_semilogy(bool en);
+      void enable_control_panel(bool en);
       void enable_tags(int which, bool en);
 
       void reset();

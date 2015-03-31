@@ -50,6 +50,8 @@ public:
 
   void stemPlot(bool en);
 
+  double sampleRate() const;
+
 public slots:
   void setSampleRate(double sr, double units,
 		     const std::string &strunits);
@@ -66,6 +68,9 @@ public slots:
   void setYLabel(const std::string &label,
                  const std::string &unit="");
 
+  void attachTriggerLines(bool en);
+  void setTriggerLines(double x, double y);
+
 private:
   void _resetXAxisPoints();
   void _autoScale(double bottom, double top);
@@ -80,6 +85,8 @@ private:
 
   std::vector< std::vector<QwtPlotMarker*> > d_tag_markers;
   std::vector<bool> d_tag_markers_en;
+
+  QwtPlotMarker *d_trigger_lines[2];
 };
 
 #endif /* TIME_DOMAIN_DISPLAY_PLOT_H */
