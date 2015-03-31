@@ -359,15 +359,17 @@ SpectrumGUIClass::getFFTSizeIndex()
 {
   gr::thread::scoped_lock lock(d_mutex);
   int fftsize = getFFTSize();
+  int rv = 0;
   switch(fftsize) {
-  case(1024): return 0; break;
-  case(2048): return 1; break;
-  case(4096): return 2; break;
-  case(8192): return 3; break;
-  case(16384): return 3; break;
-  case(32768): return 3; break;
-  default: return 0;
+  case(1024): rv = 0; break;
+  case(2048): rv = 1; break;
+  case(4096): rv = 2; break;
+  case(8192): rv = 3; break;
+  case(16384): rv = 3; break;
+  case(32768): rv = 3; break;
+  default: rv = 0; break;
   }
+  return rv;
 }
 
 void
