@@ -49,7 +49,9 @@ namespace gr {
     : basic_block(name, input_signature, output_signature),
       d_detail(new hier_block2_detail(this)),
       hier_message_ports_in(pmt::PMT_NIL),
-      hier_message_ports_out(pmt::PMT_NIL)
+      hier_message_ports_out(pmt::PMT_NIL),
+      d_max_output_buffer(std::max(output_signature->max_streams(),1), -1),
+      d_min_output_buffer(std::max(output_signature->max_streams(),1), -1)
   {
     // This bit of magic ensures that self() works in the constructors of derived classes.
     gnuradio::detail::sptr_magic::create_and_stash_initial_sptr(this);
@@ -180,6 +182,67 @@ namespace gr {
   dot_graph(hier_block2_sptr hierblock2)
   {
     return dot_graph_fg(hierblock2->flatten());
+  }
+
+  long
+  hier_block2::max_output_buffer(size_t i)
+  {
+    /*if(i >= d_max_output_buffer.size())
+      throw std::invalid_argument("basic_block::max_output_buffer: port out of range.");
+    return d_max_output_buffer[i];*/
+    if(d_max_output_buffer.size() == 0)
+      throw std::invalid_argument("hier_block2::max_output_buffer: port out of range.");
+    return d_max_output_buffer[0];
+  }
+  
+  void
+  hier_block2::set_max_output_buffer(long max_output_buffer)
+  {
+    /*for(int i = 0; i < output_signature()->max_streams(); i++) {
+      set_max_output_buffer(i, max_output_buffer);
+    }*/
+    if(output_signature()->max_streams()>0)
+      set_max_output_buffer(0,max_output_buffer);
+  }
+
+  void
+  hier_block2::set_max_output_buffer(int port, long max_output_buffer)
+  {
+    if((size_t)port >= d_max_output_buffer.size())
+      d_max_output_buffer.push_back(max_output_buffer);
+    else
+      d_max_output_buffer[port] = max_output_buffer;
+  }
+
+  long
+  hier_block2::min_output_buffer(size_t i)
+  {
+    /*if(i >= d_min_output_buffer.size())
+      throw std::invalid_argument("basic_block::min_output_buffer: port out of range.");
+    return d_min_output_buffer[i];*/
+    if(d_min_output_buffer.size() == 0)
+      throw std::invalid_argument("hier_block2::min_output_buffer: port out of range.");
+    return d_min_output_buffer[0];
+  }
+
+  void
+  hier_block2::set_min_output_buffer(long min_output_buffer)
+  {
+    /*std::cout << "set_min_output_buffer on block " << unique_id() << " to " << min_output_buffer << std::endl;
+    for(int i=0; i<output_signature()->max_streams(); i++) {
+      set_min_output_buffer(i, min_output_buffer);
+    }*/
+    if(output_signature()->max_streams()>0)
+      set_min_output_buffer(0,min_output_buffer);
+  }
+
+  void
+  hier_block2::set_min_output_buffer(int port, long min_output_buffer)
+  {
+    if((size_t)port >= d_min_output_buffer.size())
+      d_min_output_buffer.push_back(min_output_buffer);
+    else
+      d_min_output_buffer[port] = min_output_buffer;
   }
 
 } /* namespace gr */

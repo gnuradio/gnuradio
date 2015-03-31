@@ -513,6 +513,9 @@ namespace gr {
 
     // Only run setup_rpc if ControlPort config param is enabled.
     bool ctrlport_on = prefs::singleton()->get_bool("ControlPort", "on", false);
+    
+    long min_buff = d_owner->min_output_buffer(0);
+    long max_buff = d_owner->max_output_buffer(0);
 
     // For every block (gr::block and gr::hier_block2), set up the RPC
     // interface.
@@ -524,6 +527,16 @@ namespace gr {
         if(!b->is_rpc_set()) {
           b->setup_rpc();
           b->rpc_set();
+        }
+      }
+      if(min_buff != -1){
+        if((boost::static_pointer_cast<block>(b) != nullptr) || (boost::static_pointer_cast<hier_block2>(b) != nullptr)){
+          b->set_min_output_buffer(min_buff);
+        }
+      }
+      if(max_buff != -1){
+        if((boost::static_pointer_cast<block>(b) != nullptr) || (boost::static_pointer_cast<hier_block2>(b) != nullptr)){
+          b->set_max_output_buffer(max_buff);
         }
       }
 

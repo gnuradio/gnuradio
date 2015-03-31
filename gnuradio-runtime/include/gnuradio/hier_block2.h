@@ -56,6 +56,9 @@ namespace gr {
      * \brief Private implementation details of gr::hier_block2
      */
     hier_block2_detail *d_detail;
+    
+    std::vector<long> d_max_output_buffer;
+    std::vector<long> d_min_output_buffer;
 
   protected:
     hier_block2(void) {} // allows pure virtual interface sub-classes
@@ -169,6 +172,36 @@ namespace gr {
      * when reconfiguration happens.
      */
     virtual void unlock();
+
+    /*!
+     * \brief Returns max buffer size on output port \p i.
+     */
+    long max_output_buffer(size_t i);
+
+    /*!
+     * \brief Sets max buffer size on all output ports.
+     */
+    void set_max_output_buffer(long max_output_buffer);
+
+    /*!
+     * \brief Sets max buffer size on output port \p port.
+     */
+    void set_max_output_buffer(int port, long max_output_buffer);
+
+    /*!
+     * \brief Returns min buffer size on output port \p i.
+     */
+    long min_output_buffer(size_t i);
+
+    /*!
+     * \brief Sets min buffer size on all output ports.
+     */
+    void set_min_output_buffer(long min_output_buffer);
+
+    /*!
+     * \brief Sets min buffer size on output port \p port.
+     */
+    void set_min_output_buffer(int port, long min_output_buffer);
 
     // This is a public method for ease of code organization, but should be
     // ignored by the user.
