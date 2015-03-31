@@ -530,13 +530,27 @@ namespace gr {
         }
       }
       if(min_buff != -1){
-        if((boost::static_pointer_cast<block>(b) != nullptr) || (boost::static_pointer_cast<hier_block2>(b) != nullptr)){
-          b->set_min_output_buffer(min_buff);
+        block_sptr bb = boost::dynamic_pointer_cast<block>(b);
+        if(bb != 0){
+          bb->set_min_output_buffer(min_buff);
+        }
+        else{
+          hier_block2_sptr hh = boost::dynamic_pointer_cast<hier_block2>(b);
+          if(hh != 0){
+            hh->set_min_output_buffer(min_buff);
+          }
         }
       }
       if(max_buff != -1){
-        if((boost::static_pointer_cast<block>(b) != nullptr) || (boost::static_pointer_cast<hier_block2>(b) != nullptr)){
-          b->set_max_output_buffer(max_buff);
+        block_sptr bb = boost::dynamic_pointer_cast<block>(b);
+        if(bb != 0){
+          bb->set_max_output_buffer(max_buff);
+        }
+        else{
+          hier_block2_sptr hh = boost::dynamic_pointer_cast<hier_block2>(b);
+          if(hh != 0){
+            hh->set_max_output_buffer(max_buff);
+          }
         }
       }
 
