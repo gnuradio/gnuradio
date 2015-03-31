@@ -89,6 +89,14 @@ void top_block_stop_unlocked(gr::top_block_sptr r) throw (std::runtime_error)
     )
 }
 
+void top_block_unlock_unlocked(gr::top_block_sptr r) throw (std::runtime_error)
+{
+    GR_PYTHON_BLOCKING_CODE
+    (
+        r->unlock();
+    )
+}
+
 std::string
 dot_graph_tb(gr::top_block_sptr r)
 {
