@@ -66,11 +66,11 @@ if(MSVC)
 endif(MSVC)
 
 list(APPEND channels_libs
-    ${VOLK_LIBRARIES}
     gnuradio-runtime
     gnuradio-filter
     gnuradio-analog
     gnuradio-blocks
+    ${VOLK_LIBRARIES}
     ${Boost_LIBRARIES}
 )
 
