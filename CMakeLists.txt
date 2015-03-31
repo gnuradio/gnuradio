@@ -276,16 +276,39 @@ endif()
 ########################################################################
 # Setup volk as a subproject
 ########################################################################
-find_package(Volk)
+message(STATUS "")
+message(STATUS "Configuring VOLK support...")
+
+OPTION(ENABLE_INTERNAL_VOLK "Enable internal VOLK only" ON)
+unset(VOLK_FOUND)
+if(NOT ENABLE_INTERNAL_VOLK)
+    find_package(Volk)
+    if(NOT VOLK_FOUND)
+        message(STATUS "  External VOLK not found; checking internal.")
+    endif()
+endif()
 if(NOT VOLK_FOUND)
     find_file(INTREE_VOLK_FOUND
-    volk/volk_common.h
-    PATHS ${CMAKE_CURRENT_SOURCE_DIR}/volk/include
+        volk/volk_common.h
+        PATHS ${CMAKE_CURRENT_SOURCE_DIR}/volk/include
+        NO_DEFAULT_PATH
     )
 
     if(NOT INTREE_VOLK_FOUND)
-        message(FATAL_ERROR "VOLK submodule is not checked out")
+        message(STATUS "  VOLK submodule is not checked out.")
+        message(STATUS "  To check out the VOLK submodule, use:")
+        message(STATUS "    git pull --recurse-submodules=on")
+        message(STATUS "    git submodule update")
+        if(ENABLE_INTERNAL_VOLK)
+            message(STATUS "  External VOLK disabled.")
+        endif()
+        message(STATUS "  Override with -DENABLE_INTERNAL_VOLK=ON/OFF")
+        message(STATUS "")
+        message(FATAL_ERROR "VOLK required but not found.")
     endif()
+
+    add_subdirectory(volk)
+    # if the above command returns, then VOLK is enabled
 
     include(GrComponent)
     GR_REGISTER_COMPONENT("volk" ENABLE_VOLK)
@@ -299,27 +322,28 @@ if(NOT VOLK_FOUND)
 
     if(ENABLE_VOLK)
 
-    include(GrPackage)
-    CPACK_SET(CPACK_COMPONENT_GROUP_VOLK_DESCRIPTION "Vector optimized library of kernels")
+        include(GrPackage)
+        CPACK_SET(CPACK_COMPONENT_GROUP_VOLK_DESCRIPTION "Vector optimized library of kernels")
 
-    CPACK_COMPONENT("volk_runtime"
-        GROUP        "Volk"
-        DISPLAY_NAME "Runtime"
-        DESCRIPTION  "Dynamic link libraries"
-    )
+        CPACK_COMPONENT("volk_runtime"
+            GROUP        "Volk"
+            DISPLAY_NAME "Runtime"
+            DESCRIPTION  "Dynamic link libraries"
+        )
 
-    CPACK_COMPONENT("volk_devel"
-        GROUP        "Volk"
-        DISPLAY_NAME "Development"
-        DESCRIPTION  "C++ headers, package config, import libraries"
-    )
+        CPACK_COMPONENT("volk_devel"
+            GROUP        "Volk"
+            DISPLAY_NAME "Development"
+            DESCRIPTION  "C++ headers, package config, import libraries"
+        )
 
-    add_subdirectory(volk)
     endif(ENABLE_VOLK)
 else()
-    message(STATUS "An external VOLK has been found and will be used for build.")
+    message(STATUS "  An external VOLK has been found and will be used for build.")
     set(ENABLE_VOLK TRUE)
 endif(NOT VOLK_FOUND)
+
+message(STATUS "  Override with -DENABLE_INTERNAL_VOLK=ON/OFF")
 
 # Handle gr_log enable/disable
 GR_LOGGING()
