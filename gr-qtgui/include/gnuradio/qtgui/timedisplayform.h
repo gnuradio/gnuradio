@@ -102,6 +102,9 @@ private slots:
 signals:
   void signalTriggerMode(gr::qtgui::trigger_mode mode);
   void signalTriggerSlope(gr::qtgui::trigger_slope slope);
+  void signalTriggerLevel(float level);
+  void signalTriggerDelay(float delay);
+  void signalReplot();
 
 private:
   QIntValidator* d_int_validator;

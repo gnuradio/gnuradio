@@ -120,10 +120,14 @@ TimeDisplayForm::TimeDisplayForm(int nplots, QWidget* parent)
   setTriggerLevel(0);
   connect(d_tr_level_act, SIGNAL(whichTrigger(QString)),
 	  this, SLOT(setTriggerLevel(QString)));
+  connect(this, SIGNAL(signalTriggerLevel(float)),
+	  this, SLOT(setTriggerLevel(float)));
 
   setTriggerDelay(0);
   connect(d_tr_delay_act, SIGNAL(whichTrigger(QString)),
 	  this, SLOT(setTriggerDelay(QString)));
+  connect(this, SIGNAL(signalTriggerDelay(float)),
+	  this, SLOT(setTriggerDelay(float)));
 
   setTriggerChannel(0);
   connect(d_tr_channel_menu, SIGNAL(whichTrigger(int)),
@@ -137,6 +141,9 @@ TimeDisplayForm::TimeDisplayForm(int nplots, QWidget* parent)
 
   connect(d_display_plot, SIGNAL(plotPointSelected(const QPointF)),
 	  this, SLOT(onPlotPointSelected(const QPointF)));
+
+  connect(this, SIGNAL(signalReplot()),
+          getPlot(), SLOT(replot()));
 }
 
 TimeDisplayForm::~TimeDisplayForm()
@@ -288,7 +295,7 @@ TimeDisplayForm::setStem(bool en)
   d_stem = en;
   d_stemmenu->setChecked(en);
   getPlot()->stemPlot(d_stem);
-  getPlot()->replot();
+  emit signalReplot();
 }
 
 void
@@ -297,7 +304,7 @@ TimeDisplayForm::autoScale(bool en)
   d_autoscale_state = en;
   d_autoscale_act->setChecked(en);
   getPlot()->setAutoScale(d_autoscale_state);
-  getPlot()->replot();
+  emit signalReplot();
 }
 
 void
@@ -306,7 +313,7 @@ TimeDisplayForm::setSemilogx(bool en)
   d_semilogx = en;
   d_semilogxmenu->setChecked(en);
   getPlot()->setSemilogx(d_semilogx);
-  getPlot()->replot();
+
 }
 
 void
@@ -315,7 +322,7 @@ TimeDisplayForm::setSemilogy(bool en)
   d_semilogy = en;
   d_semilogymenu->setChecked(en);
   getPlot()->setSemilogy(d_semilogy);
-  getPlot()->replot();
+  emit signalReplot();
 }
 
 void
@@ -351,6 +358,7 @@ TimeDisplayForm::setTriggerMode(gr::qtgui::trigger_mode mode)
     getPlot()->attachTriggerLines(false);
   }
 
+  emit signalReplot();
   emit signalTriggerMode(mode);
 }
 
@@ -370,6 +378,7 @@ TimeDisplayForm::updateTrigger(gr::qtgui::trigger_mode mode)
   if(d_trig_mode == gr::qtgui::TRIG_MODE_TAG)
     d_tr_tag_key_act->activate(QAction::Trigger);
 
+  emit signalReplot();
   emit signalTriggerMode(mode);
 }
 
@@ -385,6 +394,7 @@ TimeDisplayForm::setTriggerSlope(gr::qtgui::trigger_slope slope)
   d_trig_slope = slope;
   d_tr_slope_menu->getAction(slope)->setChecked(true);
 
+  emit signalReplot();
   emit signalTriggerSlope(slope);
 }
 
@@ -402,6 +412,8 @@ TimeDisplayForm::setTriggerLevel(QString s)
   if((d_trig_mode == gr::qtgui::TRIG_MODE_AUTO) || (d_trig_mode == gr::qtgui::TRIG_MODE_NORM)) {
     getPlot()->setTriggerLines(d_trig_delay*d_current_units, d_trig_level);
   }
+
+  emit signalReplot();
 }
 
 void
@@ -413,6 +425,8 @@ TimeDisplayForm::setTriggerLevel(float level)
   if((d_trig_mode == gr::qtgui::TRIG_MODE_AUTO) || (d_trig_mode == gr::qtgui::TRIG_MODE_NORM)) {
     getPlot()->setTriggerLines(d_trig_delay*d_current_units, d_trig_level);
   }
+
+  emit signalReplot();
 }
 
 float
@@ -429,6 +443,8 @@ TimeDisplayForm::setTriggerDelay(QString s)
   if((d_trig_mode == gr::qtgui::TRIG_MODE_AUTO) || (d_trig_mode == gr::qtgui::TRIG_MODE_NORM)) {
     getPlot()->setTriggerLines(d_trig_delay*d_current_units, d_trig_level);
   }
+
+  emit signalReplot();
 }
 
 void
@@ -440,6 +456,8 @@ TimeDisplayForm::setTriggerDelay(float delay)
   if((d_trig_mode == gr::qtgui::TRIG_MODE_AUTO) || (d_trig_mode == gr::qtgui::TRIG_MODE_NORM)) {
     getPlot()->setTriggerLines(d_trig_delay*d_current_units, d_trig_level);
   }
+
+  emit signalReplot();
 }
 
 float
@@ -453,6 +471,8 @@ TimeDisplayForm::setTriggerChannel(int channel)
 {
   d_trig_channel = channel;
   d_tr_channel_menu->getAction(d_trig_channel)->setChecked(true);
+
+  emit signalReplot();
 }
 
 int
@@ -465,6 +485,8 @@ void
 TimeDisplayForm::setTriggerTagKey(QString s)
 {
   d_trig_tag_key = s.toStdString();
+
+  emit signalReplot();
 }
 
 void
@@ -472,6 +494,8 @@ TimeDisplayForm::setTriggerTagKey(const std::string &key)
 {
   d_trig_tag_key = key;
   d_tr_tag_key_act->setText(QString().fromStdString(d_trig_tag_key));
+
+  emit signalReplot();
 }
 
 std::string
@@ -574,7 +598,7 @@ TimeDisplayForm::notifyTriggerLevelPlus()
   QwtScaleDiv *ax = getPlot()->axisScaleDiv(QwtPlot::yLeft);
   double range = ax->upperBound() - ax->lowerBound();
   double step = range/20.0;
-  setTriggerLevel(getTriggerLevel() + step);
+  emit signalTriggerLevel(getTriggerLevel() + step);
 }
 
 void
@@ -583,7 +607,7 @@ TimeDisplayForm::notifyTriggerLevelMinus()
   QwtScaleDiv *ax = getPlot()->axisScaleDiv(QwtPlot::yLeft);
   double range = ax->upperBound() - ax->lowerBound();
   double step = range/20.0;
-  setTriggerLevel(getTriggerLevel() - step);
+  emit signalTriggerLevel(getTriggerLevel() - step);
 }
 
 void
@@ -593,7 +617,7 @@ TimeDisplayForm::notifyTriggerDelayPlus()
   double range = ax->upperBound() - ax->lowerBound();
   double step = range/20.0;
   double trig = getTriggerDelay() + step / d_current_units;
-  setTriggerDelay(trig);
+  emit signalTriggerDelay(trig);
 }
 
 void
@@ -605,5 +629,5 @@ TimeDisplayForm::notifyTriggerDelayMinus()
   double trig = getTriggerDelay() - step / d_current_units;
   if(trig < 0)
     trig = 0;
-  setTriggerDelay(trig);
+  emit signalTriggerDelay(trig);
 }
