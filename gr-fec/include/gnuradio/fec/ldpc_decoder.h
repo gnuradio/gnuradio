@@ -60,7 +60,7 @@ class FEC_API ldpc_decoder : public generic_decoder {
  public:
     ~ldpc_decoder ();
 
-    double rate() { return (1.0*get_output_item_size() / get_input_item_size()); }
+    double rate() { return (1.0*get_output_size() / get_input_size()); }
     bool set_frame_size(unsigned int frame_size) { return false; }
 
     static generic_decoder::sptr
