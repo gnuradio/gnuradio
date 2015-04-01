@@ -185,6 +185,11 @@ namespace gr {
     void set_max_output_buffer(long max_output_buffer);
 
     /*!
+     * \brief Sets max buffer size on output port \p port.
+     */
+    void set_max_output_buffer(int port, long max_output_buffer);
+
+    /*!
      * \brief Returns min buffer size on output port \p i.
      */
     long min_output_buffer(size_t i=0);
@@ -193,6 +198,11 @@ namespace gr {
      * \brief Sets min buffer size on all output ports.
      */
     void set_min_output_buffer(long min_output_buffer);
+
+    /*!
+     * \brief Sets min buffer size on output port \p port.
+     */
+    void set_min_output_buffer(int port, long min_output_buffer);
 
 
     // This is a public method for ease of code organization, but should be

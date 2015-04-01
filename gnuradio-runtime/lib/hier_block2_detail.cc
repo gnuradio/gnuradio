@@ -685,6 +685,41 @@ namespace gr {
             << " is not connected internally";
         throw std::runtime_error(msg.str());
       }
+      // TODO: Update buffers of just these output blocks
+      if(!set_all_min_buff){
+        min_buff = d_owner->min_output_buffer(i);
+        if(min_buff != -1){
+          block_sptr bb = boost::dynamic_pointer_cast<block>(blk);
+          if(bb != 0){
+            int bb_src_port = d_outputs[i].port();
+            bb->set_min_output_buffer(bb_src_port, min_buff);
+          }
+          else{
+            hier_block2_sptr hh = boost::dynamic_pointer_cast<hier_block2>(blk);
+            if(hh != 0){
+              int hh_src_port = d_outputs[i].port();
+              hh->set_min_output_buffer(hh_src_port, min_buff);
+            }
+          }
+        }
+      }
+      if(!set_all_max_buff){
+        max_buff = d_owner->max_output_buffer(i);
+        if(max_buff != -1){
+          block_sptr bb = boost::dynamic_pointer_cast<block>(blk);
+          if(bb != 0){
+            int bb_src_port = d_outputs[i].port();
+            bb->set_max_output_buffer(bb_src_port, max_buff);
+          }
+          else{
+            hier_block2_sptr hh = boost::dynamic_pointer_cast<hier_block2>(blk);
+            if(hh != 0){
+              int hh_src_port = d_outputs[i].port();
+              hh->set_max_output_buffer(hh_src_port, max_buff);
+            }
+          }
+        }
+      }
       tmp.push_back(blk);
     }
     sort(tmp.begin(), tmp.end());

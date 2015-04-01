@@ -203,6 +203,15 @@ namespace gr {
         d_max_output_buffer[idx] = max_output_buffer;
     }
   }
+  
+  void
+  hier_block2::set_max_output_buffer(int port, long max_output_buffer)
+  {
+    if((size_t)port >= d_max_output_buffer.size())
+      throw std::invalid_argument("hier_block2::max_output_buffer: port out of range.");
+    else
+      d_max_output_buffer[port] = max_output_buffer;
+  }
 
   long
   hier_block2::min_output_buffer(size_t i=0)
@@ -222,6 +231,15 @@ namespace gr {
       for(int idx = 0; idx < output_signature()->max_streams(); idx++)
         d_min_output_buffer[idx] = min_output_buffer;
     }
+  }
+
+  void
+  hier_block2::set_min_output_buffer(int port, long min_output_buffer)
+  {
+    if((size_t)port >= d_min_output_buffer.size())
+      throw std::invalid_argument("hier_block2::min_output_buffer: port out of range.");
+    else
+      d_min_output_buffer[port] = min_output_buffer;
   }
   
   bool

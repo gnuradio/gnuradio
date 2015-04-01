@@ -94,8 +94,10 @@ namespace gr {
     // Methods to manage block's min/max buffer sizes.
     long max_output_buffer(int i);
     void set_max_output_buffer(long max_output_buffer);
+    void set_max_output_buffer(int port, long max_output_buffer);
     long min_output_buffer(int i);
     void set_min_output_buffer(long min_output_buffer);
+    void set_min_output_buffer(int port, long min_output_buffer);
 
     gr::hier_block2_sptr to_hier_block2(); // Needed for Python type coercion
   };
