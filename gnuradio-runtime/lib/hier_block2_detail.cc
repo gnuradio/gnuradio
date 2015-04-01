@@ -30,6 +30,8 @@
 #include <stdexcept>
 #include <sstream>
 #include <boost/format.hpp>
+#include <stdio.h>
+#include <typeinfo>
 
 namespace gr {
 
@@ -56,6 +58,9 @@ namespace gr {
 
     d_inputs = std::vector<endpoint_vector_t>(max_inputs);
     d_outputs = endpoint_vector_t(max_outputs);
+    
+    d_max_output_buffer = std::vector<size_t>(std::max(max_outputs,1), 0);
+    d_min_output_buffer = std::vector<size_t>(std::max(max_outputs,1), 0);
   }
 
   hier_block2_detail::~hier_block2_detail()
@@ -514,14 +519,21 @@ namespace gr {
     // Only run setup_rpc if ControlPort config param is enabled.
     bool ctrlport_on = prefs::singleton()->get_bool("ControlPort", "on", false);
     
+    size_t min_buff(0), max_buff(0);
+    // Determine how the buffers should be set
+    bool set_all_min_buff = d_owner->all_min_output_buffer_p();
+    bool set_all_max_buff = d_owner->all_max_output_buffer_p();
     // Get the min and max buffer length
-    long min_buff(-1), max_buff(-1);
-    bool set_all_min_buff = d_owner->set_all_min_output_buffer();
-    bool set_all_max_buff = d_owner->set_all_max_output_buffer();
-    if(set_all_min_buff)
+    if(set_all_min_buff){
+      if(HIER_BLOCK2_DETAIL_DEBUG)
+        printf("Getting (%s) min buffer\n",(d_owner->alias()).c_str());
       min_buff = d_owner->min_output_buffer();
-    if(set_all_max_buff)
+    }
+    if(set_all_max_buff){
+      if(HIER_BLOCK2_DETAIL_DEBUG)
+        printf("Getting (%s) max buffer\n",(d_owner->alias()).c_str());
       max_buff = d_owner->max_output_buffer();
+    }
 
     // For every block (gr::block and gr::hier_block2), set up the RPC
     // interface.
@@ -537,10 +549,12 @@ namespace gr {
       }
       if(set_all_min_buff){
         //sets the min buff for every block within hier_block2
-        if(min_buff != -1){
+        if(min_buff != 0){
           block_sptr bb = boost::dynamic_pointer_cast<block>(b);
           if(bb != 0){
             if(bb->min_output_buffer(0) != min_buff){
+              if(HIER_BLOCK2_DETAIL_DEBUG)
+                printf("Block (%s) min_buff (%ld)\n",(bb->alias()).c_str(),min_buff);
               bb->set_min_output_buffer(min_buff);
             }
           }
@@ -548,6 +562,8 @@ namespace gr {
             hier_block2_sptr hh = boost::dynamic_pointer_cast<hier_block2>(b);
             if(hh != 0){
               if(hh->min_output_buffer(0) != min_buff){
+                if(HIER_BLOCK2_DETAIL_DEBUG)
+                  printf("HBlock (%s) min_buff (%ld)\n",(hh->alias()).c_str(),min_buff);
                 hh->set_min_output_buffer(min_buff);
               }
             }
@@ -556,10 +572,12 @@ namespace gr {
       }
       if(set_all_max_buff){
         //sets the max buff for every block within hier_block2
-        if(max_buff != -1){
+        if(max_buff != 0){
           block_sptr bb = boost::dynamic_pointer_cast<block>(b);
           if(bb != 0){
             if(bb->max_output_buffer(0) != max_buff){
+              if(HIER_BLOCK2_DETAIL_DEBUG)
+                printf("Block (%s) max_buff (%ld)\n",(bb->alias()).c_str(),max_buff);
               bb->set_max_output_buffer(max_buff);
             }
           }
@@ -567,6 +585,8 @@ namespace gr {
             hier_block2_sptr hh = boost::dynamic_pointer_cast<hier_block2>(b);
             if(hh != 0){
               if(hh->max_output_buffer(0) != max_buff){
+                if(HIER_BLOCK2_DETAIL_DEBUG)
+                  printf("HBlock (%s) max_buff (%ld)\n",(hh->alias()).c_str(),max_buff);
                 hh->set_max_output_buffer(max_buff);
               }
             }
@@ -583,10 +603,12 @@ namespace gr {
       }
       if(set_all_min_buff){
         //sets the min buff for every block within hier_block2
-        if(min_buff != -1){
+        if(min_buff != 0){
           block_sptr bb = boost::dynamic_pointer_cast<block>(b);
           if(bb != 0){
             if(bb->min_output_buffer(0) != min_buff){
+              if(HIER_BLOCK2_DETAIL_DEBUG)
+                printf("Block (%s) min_buff (%ld)\n",(bb->alias()).c_str(),min_buff);
               bb->set_min_output_buffer(min_buff);
             }
           }
@@ -594,6 +616,8 @@ namespace gr {
             hier_block2_sptr hh = boost::dynamic_pointer_cast<hier_block2>(b);
             if(hh != 0){
               if(hh->min_output_buffer(0) != min_buff){
+                if(HIER_BLOCK2_DETAIL_DEBUG)
+                  printf("HBlock (%s) min_buff (%ld)\n",(hh->alias()).c_str(),min_buff);
                 hh->set_min_output_buffer(min_buff);
               }
             }
@@ -602,10 +626,12 @@ namespace gr {
       }
       if(set_all_max_buff){
         //sets the max buff for every block within hier_block2
-        if(max_buff != -1){
+        if(max_buff != 0){
           block_sptr bb = boost::dynamic_pointer_cast<block>(b);
           if(bb != 0){
             if(bb->max_output_buffer(0) != max_buff){
+              if(HIER_BLOCK2_DETAIL_DEBUG)
+                printf("Block (%s) max_buff (%ld)\n",(bb->alias()).c_str(),max_buff);
               bb->set_max_output_buffer(max_buff);
             }
           }
@@ -613,6 +639,8 @@ namespace gr {
             hier_block2_sptr hh = boost::dynamic_pointer_cast<hier_block2>(b);
             if(hh != 0){
               if(hh->max_output_buffer(0) != max_buff){
+                if(HIER_BLOCK2_DETAIL_DEBUG)
+                  printf("HBlock (%s) max_buff (%ld)\n",(hh->alias()).c_str(),max_buff);
                 hh->set_max_output_buffer(max_buff);
               }
             }
@@ -729,16 +757,20 @@ namespace gr {
       // Set the buffers of only the blocks connected to the hier output
       if(!set_all_min_buff){
         min_buff = d_owner->min_output_buffer(i);
-        if(min_buff != -1){
+        if(min_buff != 0){
           block_sptr bb = boost::dynamic_pointer_cast<block>(blk);
           if(bb != 0){
             int bb_src_port = d_outputs[i].port();
+            if(HIER_BLOCK2_DETAIL_DEBUG)
+              printf("Block (%s) Port (%d) min_buff (%ld)\n",(bb->alias()).c_str(),bb_src_port,min_buff);
             bb->set_min_output_buffer(bb_src_port, min_buff);
           }
           else{
             hier_block2_sptr hh = boost::dynamic_pointer_cast<hier_block2>(blk);
             if(hh != 0){
               int hh_src_port = d_outputs[i].port();
+              if(HIER_BLOCK2_DETAIL_DEBUG)
+                printf("HBlock (%s) Port (%d) min_buff (%ld)\n",(hh->alias()).c_str(),hh_src_port,min_buff);
               hh->set_min_output_buffer(hh_src_port, min_buff);
             }
           }
@@ -746,16 +778,20 @@ namespace gr {
       }
       if(!set_all_max_buff){
         max_buff = d_owner->max_output_buffer(i);
-        if(max_buff != -1){
+        if(max_buff != 0){
           block_sptr bb = boost::dynamic_pointer_cast<block>(blk);
           if(bb != 0){
             int bb_src_port = d_outputs[i].port();
+            if(HIER_BLOCK2_DETAIL_DEBUG)
+              printf("Block (%s) Port (%d) max_buff (%ld)\n",(bb->alias()).c_str(),bb_src_port,max_buff);
             bb->set_max_output_buffer(bb_src_port, max_buff);
           }
           else{
             hier_block2_sptr hh = boost::dynamic_pointer_cast<hier_block2>(blk);
             if(hh != 0){
               int hh_src_port = d_outputs[i].port();
+              if(HIER_BLOCK2_DETAIL_DEBUG)
+                printf("HBlock (%s) Port (%d) max_buff (%ld)\n",(hh->alias()).c_str(),hh_src_port,max_buff);
               hh->set_max_output_buffer(hh_src_port, max_buff);
             }
           }

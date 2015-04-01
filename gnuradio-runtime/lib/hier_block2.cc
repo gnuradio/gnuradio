@@ -29,6 +29,7 @@
 #include <gnuradio/flowgraph.h>
 #include "hier_block2_detail.h"
 #include <iostream>
+#include <stdio.h>
 
 namespace gr {
 
@@ -49,9 +50,7 @@ namespace gr {
     : basic_block(name, input_signature, output_signature),
       d_detail(new hier_block2_detail(this)),
       hier_message_ports_in(pmt::PMT_NIL),
-      hier_message_ports_out(pmt::PMT_NIL),
-      d_max_output_buffer(std::max(output_signature->max_streams(),1), -1),
-      d_min_output_buffer(std::max(output_signature->max_streams(),1), -1)
+      hier_message_ports_out(pmt::PMT_NIL)
   {
     // This bit of magic ensures that self() works in the constructors of derived classes.
     gnuradio::detail::sptr_magic::create_and_stash_initial_sptr(this);
@@ -184,75 +183,76 @@ namespace gr {
     return dot_graph_fg(hierblock2->flatten());
   }
 
-  long
-  hier_block2::max_output_buffer(size_t i=0)
+  size_t
+  hier_block2::max_output_buffer(size_t i)
   {
-    if(d_max_output_buffer.size() <= i)
+    if(i >= d_detail->d_max_output_buffer.size())
       throw std::invalid_argument("hier_block2::max_output_buffer: port out of range.");
-    return d_max_output_buffer[i];
+    return d_detail->d_max_output_buffer[i];
   }
   
   void
-  hier_block2::set_max_output_buffer(long max_output_buffer)
+  hier_block2::set_max_output_buffer(size_t max_output_buffer)
   {
+    
     if(output_signature()->max_streams()>0)
     {
-      if(d_max_output_buffer.size() == 0)
+      if(d_detail->d_max_output_buffer.size() == 0)
         throw std::length_error("hier_block2::max_output_buffer: out_sig greater than zero, buff_vect isn't");
-      for(int idx = 0; idx < output_signature()->max_streams(); idx++){
-        d_max_output_buffer[idx] = max_output_buffer;
+      for(size_t idx = 0; idx < output_signature()->max_streams(); idx++){
+        d_detail->d_max_output_buffer[idx] = max_output_buffer;
       }
     }
   }
   
   void
-  hier_block2::set_max_output_buffer(int port, long max_output_buffer)
+  hier_block2::set_max_output_buffer(int port, size_t max_output_buffer)
   {
-    if((size_t)port >= d_max_output_buffer.size())
+    if((size_t)port >= d_detail->d_max_output_buffer.size())
       throw std::invalid_argument("hier_block2::max_output_buffer: port out of range.");
     else{
-      d_max_output_buffer[port] = max_output_buffer;
+      d_detail->d_max_output_buffer[port] = max_output_buffer;
     }
   }
 
-  long
-  hier_block2::min_output_buffer(size_t i=0)
+  size_t
+  hier_block2::min_output_buffer(size_t i)
   {
-    if(d_min_output_buffer.size() <= i)
+    if(i >= d_detail->d_min_output_buffer.size())
       throw std::invalid_argument("hier_block2::min_output_buffer: port out of range.");
-    return d_min_output_buffer[i];
+    return d_detail->d_min_output_buffer[i];
   }
 
   void
-  hier_block2::set_min_output_buffer(long min_output_buffer)
+  hier_block2::set_min_output_buffer(size_t min_output_buffer)
   {
     if(output_signature()->max_streams()>0)
     {
-      if(d_min_output_buffer.size() == 0)
+      if(d_detail->d_min_output_buffer.size() == 0)
         throw std::length_error("hier_block2::min_output_buffer: out_sig greater than zero, buff_vect isn't");
-      for(int idx = 0; idx < output_signature()->max_streams(); idx++){
-        d_min_output_buffer[idx] = min_output_buffer;
+      for(size_t idx = 0; idx < output_signature()->max_streams(); idx++){
+        d_detail->d_min_output_buffer[idx] = min_output_buffer;
       }
     }
   }
 
   void
-  hier_block2::set_min_output_buffer(int port, long min_output_buffer)
+  hier_block2::set_min_output_buffer(int port, size_t min_output_buffer)
   {
-    if((size_t)port >= d_min_output_buffer.size())
+    if((size_t)port >= d_detail->d_min_output_buffer.size())
       throw std::invalid_argument("hier_block2::min_output_buffer: port out of range.");
     else{
-      d_min_output_buffer[port] = min_output_buffer;
+      d_detail->d_min_output_buffer[port] = min_output_buffer;
     }
   }
   
   bool
-  hier_block2::set_all_min_output_buffer(void)
+  hier_block2::all_min_output_buffer_p(void)
   {
-    if(d_min_output_buffer.size() > 0){
+    if(d_detail->d_min_output_buffer.size() > 0){
       bool all_equal = true;
-      for(int idx = 1; (idx < d_min_output_buffer.size()) && all_equal; idx++){
-        if(d_min_output_buffer[0] != d_min_output_buffer[idx])
+      for(int idx = 1; (idx < d_detail->d_min_output_buffer.size()) && all_equal; idx++){
+        if(d_detail->d_min_output_buffer[0] != d_detail->d_min_output_buffer[idx])
           all_equal = false;
       }
       return all_equal;
@@ -262,12 +262,12 @@ namespace gr {
     }
   }
   bool
-  hier_block2::set_all_max_output_buffer(void)
+  hier_block2::all_max_output_buffer_p(void)
   {
-    if(d_max_output_buffer.size() > 0){
+    if(d_detail->d_max_output_buffer.size() > 0){
       bool all_equal = true;
-      for(int idx = 1; (idx < d_max_output_buffer.size()) && all_equal; idx++){
-        if(d_max_output_buffer[0] != d_max_output_buffer[idx])
+      for(int idx = 1; (idx < d_detail->d_max_output_buffer.size()) && all_equal; idx++){
+        if(d_detail->d_max_output_buffer[0] != d_detail->d_max_output_buffer[idx])
           all_equal = false;
       }
       return all_equal;
