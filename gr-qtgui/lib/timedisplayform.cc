@@ -216,6 +216,12 @@ TimeDisplayForm::getPlot()
   return ((TimeDomainDisplayPlot*)d_display_plot);
 }
 
+const TimeDomainDisplayPlot*
+TimeDisplayForm::getPlot() const
+{
+  return ((const TimeDomainDisplayPlot*)d_display_plot);
+}
+
 void
 TimeDisplayForm::newData(const QEvent* updateEvent)
 {
@@ -510,40 +516,50 @@ TimeDisplayForm::getTriggerTagKey() const
  * Notifcation messages from the control panel
  *******************************************************************/
 
+const QwtScaleDiv &
+TimeDisplayForm::axisScaleDiv(int axisId) const
+{
+#if QWT_VERSION >= 0x060000
+    return getPlot()->axisScaleDiv(axisId);
+#else
+    return *getPlot()->axisScaleDiv(axisId);
+#endif
+}
+
 void
 TimeDisplayForm::notifyYAxisPlus()
 {
-  QwtScaleDiv *ax = getPlot()->axisScaleDiv(QwtPlot::yLeft);
-  double range = ax->upperBound() - ax->lowerBound();
+  const QwtScaleDiv &ax = axisScaleDiv(QwtPlot::yLeft);
+  double range = ax.upperBound() - ax.lowerBound();
   double step = range/20.0;
-  getPlot()->setYaxis(ax->lowerBound()+step, ax->upperBound()+step);
+  getPlot()->setYaxis(ax.lowerBound()+step, ax.upperBound()+step);
 }
 
 void
 TimeDisplayForm::notifyYAxisMinus()
 {
-  QwtScaleDiv *ax = getPlot()->axisScaleDiv(QwtPlot::yLeft);
-  double range = ax->upperBound() - ax->lowerBound();
+  const QwtScaleDiv &ax = axisScaleDiv(QwtPlot::yLeft);
+  double range = ax.upperBound() - ax.lowerBound();
   double step = range/20.0;
-  getPlot()->setYaxis(ax->lowerBound()-step, ax->upperBound()-step);
+  getPlot()->setYaxis(ax.lowerBound()-step, ax.upperBound()-step);
 }
 
 void
 TimeDisplayForm::notifyYRangePlus()
 {
-  QwtScaleDiv *ax = getPlot()->axisScaleDiv(QwtPlot::yLeft);
-  double range = ax->upperBound() - ax->lowerBound();
+  const QwtScaleDiv &ax = axisScaleDiv(QwtPlot::yLeft);
+  double range = ax.upperBound() - ax.lowerBound();
   double step = range/20.0;
-  getPlot()->setYaxis(ax->lowerBound()-step, ax->upperBound()+step);
+  getPlot()->setYaxis(ax.lowerBound()-step, ax.upperBound()+step);
 }
 
 void
 TimeDisplayForm::notifyYRangeMinus()
 {
-  QwtScaleDiv *ax = getPlot()->axisScaleDiv(QwtPlot::yLeft);
-  double range = ax->upperBound() - ax->lowerBound();
+  const QwtScaleDiv &ax = axisScaleDiv(QwtPlot::yLeft);
+  double range = ax.upperBound() - ax.lowerBound();
   double step = range/20.0;
-  getPlot()->setYaxis(ax->lowerBound()+step, ax->upperBound()-step);
+  getPlot()->setYaxis(ax.lowerBound()+step, ax.upperBound()-step);
 }
 
 
@@ -595,8 +611,8 @@ TimeDisplayForm::notifyTriggerSlope(const QString &slope)
 void
 TimeDisplayForm::notifyTriggerLevelPlus()
 {
-  QwtScaleDiv *ax = getPlot()->axisScaleDiv(QwtPlot::yLeft);
-  double range = ax->upperBound() - ax->lowerBound();
+  const QwtScaleDiv &ax = axisScaleDiv(QwtPlot::yLeft);
+  double range = ax.upperBound() - ax.lowerBound();
   double step = range/20.0;
   emit signalTriggerLevel(getTriggerLevel() + step);
 }
@@ -604,8 +620,8 @@ TimeDisplayForm::notifyTriggerLevelPlus()
 void
 TimeDisplayForm::notifyTriggerLevelMinus()
 {
-  QwtScaleDiv *ax = getPlot()->axisScaleDiv(QwtPlot::yLeft);
-  double range = ax->upperBound() - ax->lowerBound();
+  const QwtScaleDiv &ax = axisScaleDiv(QwtPlot::yLeft);
+  double range = ax.upperBound() - ax.lowerBound();
   double step = range/20.0;
   emit signalTriggerLevel(getTriggerLevel() - step);
 }
@@ -613,8 +629,8 @@ TimeDisplayForm::notifyTriggerLevelMinus()
 void
 TimeDisplayForm::notifyTriggerDelayPlus()
 {
-  QwtScaleDiv *ax = getPlot()->axisScaleDiv(QwtPlot::xBottom);
-  double range = ax->upperBound() - ax->lowerBound();
+  const QwtScaleDiv &ax = axisScaleDiv(QwtPlot::xBottom);
+  double range = ax.upperBound() - ax.lowerBound();
   double step = range/20.0;
   double trig = getTriggerDelay() + step / d_current_units;
   emit signalTriggerDelay(trig);
@@ -623,8 +639,8 @@ TimeDisplayForm::notifyTriggerDelayPlus()
 void
 TimeDisplayForm::notifyTriggerDelayMinus()
 {
-  QwtScaleDiv *ax = getPlot()->axisScaleDiv(QwtPlot::xBottom);
-  double range = ax->upperBound() - ax->lowerBound();
+  const QwtScaleDiv &ax = axisScaleDiv(QwtPlot::xBottom);
+  double range = ax.upperBound() - ax.lowerBound();
   double step = range/20.0;
   double trig = getTriggerDelay() - step / d_current_units;
   if(trig < 0)
