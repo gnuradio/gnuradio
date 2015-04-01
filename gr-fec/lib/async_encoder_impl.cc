@@ -110,9 +110,21 @@ namespace gr {
       int nbits_in = pmt::length(bits);
       const uint8_t* bits_in = pmt::u8vector_elements(bits, o0);
 
-      d_encoder->set_frame_size(nbits_in);
+      bool variable_framesize = d_encoder->set_frame_size(nbits_in);
+      size_t nbits_out = 0;
+      size_t nblocks = 1;
+      if( variable_framesize ){
+        nbits_out = d_encoder->get_output_size();
+        } else {
+        nblocks = nbits_in / d_encoder->get_input_size();
+        if( nblocks * d_encoder->get_input_size() != nbits_in ){
+            printf("nblocks: %d, in_block_size: %d, got_input_size: %d\n",
+                nblocks, d_encoder->get_input_size(), nbits_in);
+            throw std::runtime_error("input does not divide into code block size!");
+            }
+        nbits_out = nblocks * d_encoder->get_output_size();
+        }
 
-      int nbits_out = d_encoder->get_output_size();
 
       // buffers for output bits to go to
       pmt::pmt_t outvec = pmt::make_u8vector(nbits_out, 0x00);
@@ -123,7 +135,9 @@ namespace gr {
         d_encoder->generic_work((void*)d_bits_in, (void*)bits_out);
       }
       else {
-        d_encoder->generic_work((void*)bits_in, (void*)bits_out);
+        for(size_t i=0; i<nblocks; i++){
+            d_encoder->generic_work((void*) &bits_in[i*d_encoder->get_input_size()], (void*)&bits_out[i*d_encoder->get_output_size()]);
+            }
       }
 
       pmt::pmt_t msg_pair = pmt::cons(meta, outvec);
