@@ -30,8 +30,6 @@
 #include <stdexcept>
 #include <sstream>
 #include <boost/format.hpp>
-#include <stdio.h>
-#include <typeinfo>
 
 namespace gr {
 
@@ -526,12 +524,14 @@ namespace gr {
     // Get the min and max buffer length
     if(set_all_min_buff){
       if(HIER_BLOCK2_DETAIL_DEBUG)
-        printf("Getting (%s) min buffer\n",(d_owner->alias()).c_str());
+        std::cout << "Getting (" << (d_owner->alias()).c_str()
+                  << ") min buffer" << std::endl;
       min_buff = d_owner->min_output_buffer();
     }
     if(set_all_max_buff){
       if(HIER_BLOCK2_DETAIL_DEBUG)
-        printf("Getting (%s) max buffer\n",(d_owner->alias()).c_str());
+        std::cout << "Getting (" << (d_owner->alias()).c_str()
+                  << ") max buffer" << std::endl;
       max_buff = d_owner->max_output_buffer();
     }
 
@@ -554,7 +554,9 @@ namespace gr {
           if(bb != 0){
             if(bb->min_output_buffer(0) != min_buff){
               if(HIER_BLOCK2_DETAIL_DEBUG)
-                printf("Block (%s) min_buff (%ld)\n",(bb->alias()).c_str(),min_buff);
+                std::cout << "Block (" << (bb->alias()).c_str()
+                          << ") min_buff (" << min_buff
+                          << ")" << std::endl;
               bb->set_min_output_buffer(min_buff);
             }
           }
@@ -563,7 +565,9 @@ namespace gr {
             if(hh != 0){
               if(hh->min_output_buffer(0) != min_buff){
                 if(HIER_BLOCK2_DETAIL_DEBUG)
-                  printf("HBlock (%s) min_buff (%ld)\n",(hh->alias()).c_str(),min_buff);
+                  std::cout << "HBlock (" << (hh->alias()).c_str()
+                            << ") min_buff (" << min_buff
+                            << ")" << std::endl;
                 hh->set_min_output_buffer(min_buff);
               }
             }
@@ -577,7 +581,9 @@ namespace gr {
           if(bb != 0){
             if(bb->max_output_buffer(0) != max_buff){
               if(HIER_BLOCK2_DETAIL_DEBUG)
-                printf("Block (%s) max_buff (%ld)\n",(bb->alias()).c_str(),max_buff);
+                std::cout << "Block (" << (bb->alias()).c_str()
+                          << ") max_buff (" << max_buff
+                          << ")" << std::endl;
               bb->set_max_output_buffer(max_buff);
             }
           }
@@ -586,7 +592,9 @@ namespace gr {
             if(hh != 0){
               if(hh->max_output_buffer(0) != max_buff){
                 if(HIER_BLOCK2_DETAIL_DEBUG)
-                  printf("HBlock (%s) max_buff (%ld)\n",(hh->alias()).c_str(),max_buff);
+                  std::cout << "HBlock (" << (hh->alias()).c_str()
+                            << ") max_buff (" << max_buff
+                            << ")" << std::endl;
                 hh->set_max_output_buffer(max_buff);
               }
             }
@@ -608,7 +616,9 @@ namespace gr {
           if(bb != 0){
             if(bb->min_output_buffer(0) != min_buff){
               if(HIER_BLOCK2_DETAIL_DEBUG)
-                printf("Block (%s) min_buff (%ld)\n",(bb->alias()).c_str(),min_buff);
+                std::cout << "Block (" << (bb->alias()).c_str()
+                          << ") min_buff (" << min_buff
+                          << ")" << std::endl;
               bb->set_min_output_buffer(min_buff);
             }
           }
@@ -617,7 +627,9 @@ namespace gr {
             if(hh != 0){
               if(hh->min_output_buffer(0) != min_buff){
                 if(HIER_BLOCK2_DETAIL_DEBUG)
-                  printf("HBlock (%s) min_buff (%ld)\n",(hh->alias()).c_str(),min_buff);
+                  std::cout << "HBlock (" << (hh->alias()).c_str()
+                            << ") min_buff (" << min_buff
+                            << ")" << std::endl;
                 hh->set_min_output_buffer(min_buff);
               }
             }
@@ -631,7 +643,9 @@ namespace gr {
           if(bb != 0){
             if(bb->max_output_buffer(0) != max_buff){
               if(HIER_BLOCK2_DETAIL_DEBUG)
-                printf("Block (%s) max_buff (%ld)\n",(bb->alias()).c_str(),max_buff);
+                std::cout << "Block (" << (bb->alias()).c_str()
+                          << ") max_buff (" << max_buff
+                          << ")" << std::endl;
               bb->set_max_output_buffer(max_buff);
             }
           }
@@ -640,7 +654,9 @@ namespace gr {
             if(hh != 0){
               if(hh->max_output_buffer(0) != max_buff){
                 if(HIER_BLOCK2_DETAIL_DEBUG)
-                  printf("HBlock (%s) max_buff (%ld)\n",(hh->alias()).c_str(),max_buff);
+                  std::cout << "HBlock (" << (hh->alias()).c_str()
+                            << ") max_buff (" << max_buff
+                            << ")" << std::endl;
                 hh->set_max_output_buffer(max_buff);
               }
             }
@@ -762,7 +778,10 @@ namespace gr {
           if(bb != 0){
             int bb_src_port = d_outputs[i].port();
             if(HIER_BLOCK2_DETAIL_DEBUG)
-              printf("Block (%s) Port (%d) min_buff (%ld)\n",(bb->alias()).c_str(),bb_src_port,min_buff);
+              std::cout << "Block (" << (bb->alias()).c_str()
+                        << ") Port (" << bb_src_port
+                        << ") min_buff (" << min_buff
+                        << ")" << std::endl;
             bb->set_min_output_buffer(bb_src_port, min_buff);
           }
           else{
@@ -770,7 +789,10 @@ namespace gr {
             if(hh != 0){
               int hh_src_port = d_outputs[i].port();
               if(HIER_BLOCK2_DETAIL_DEBUG)
-                printf("HBlock (%s) Port (%d) min_buff (%ld)\n",(hh->alias()).c_str(),hh_src_port,min_buff);
+                std::cout << "HBlock (" << (hh->alias()).c_str()
+                          << ") Port (" << hh_src_port
+                          << ") min_buff ("<< min_buff
+                          << ")" << std::endl;
               hh->set_min_output_buffer(hh_src_port, min_buff);
             }
           }
@@ -783,7 +805,10 @@ namespace gr {
           if(bb != 0){
             int bb_src_port = d_outputs[i].port();
             if(HIER_BLOCK2_DETAIL_DEBUG)
-              printf("Block (%s) Port (%d) max_buff (%ld)\n",(bb->alias()).c_str(),bb_src_port,max_buff);
+              std::cout << "Block (" << (bb->alias()).c_str()
+                        << ") Port (" << bb_src_port
+                        << ") max_buff (" << max_buff
+                        << ")" << std::endl;
             bb->set_max_output_buffer(bb_src_port, max_buff);
           }
           else{
@@ -791,7 +816,10 @@ namespace gr {
             if(hh != 0){
               int hh_src_port = d_outputs[i].port();
               if(HIER_BLOCK2_DETAIL_DEBUG)
-                printf("HBlock (%s) Port (%d) max_buff (%ld)\n",(hh->alias()).c_str(),hh_src_port,max_buff);
+                std::cout << "HBlock (" << (hh->alias()).c_str()
+                          << ") Port (" << hh_src_port
+                          << ") max_buff (" << max_buff
+                          << ")" << std::endl;
               hh->set_max_output_buffer(hh_src_port, max_buff);
             }
           }

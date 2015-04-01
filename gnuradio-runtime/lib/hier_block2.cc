@@ -29,7 +29,6 @@
 #include <gnuradio/flowgraph.h>
 #include "hier_block2_detail.h"
 #include <iostream>
-#include <stdio.h>
 
 namespace gr {
 
@@ -194,7 +193,6 @@ namespace gr {
   void
   hier_block2::set_max_output_buffer(size_t max_output_buffer)
   {
-    
     if(output_signature()->max_streams()>0)
     {
       if(d_detail->d_max_output_buffer.size() == 0)

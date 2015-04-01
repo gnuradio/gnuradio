@@ -172,32 +172,32 @@ namespace gr {
     virtual void unlock();
 
     /*!
-     * \brief Returns max buffer size on output port \p i.
+     * \brief Returns max buffer size (itemcount) on output port \p i.
      */
     size_t max_output_buffer(size_t i=0);
 
     /*!
-     * \brief Sets max buffer size on all output ports.
+     * \brief Sets max buffer size (itemcount) on all output ports.
      */
     void set_max_output_buffer(size_t max_output_buffer);
 
     /*!
-     * \brief Sets max buffer size on output port \p port.
+     * \brief Sets max buffer size (itemcount) on output port \p port.
      */
     void set_max_output_buffer(int port, size_t max_output_buffer);
 
     /*!
-     * \brief Returns min buffer size on output port \p i.
+     * \brief Returns min buffer size (itemcount) on output port \p i.
      */
     size_t min_output_buffer(size_t i=0);
 
     /*!
-     * \brief Sets min buffer size on all output ports.
+     * \brief Sets min buffer size (itemcount) on all output ports.
      */
     void set_min_output_buffer(size_t min_output_buffer);
 
     /*!
-     * \brief Sets min buffer size on output port \p port.
+     * \brief Sets min buffer size (itemcount) on output port \p port.
      */
     void set_min_output_buffer(int port, size_t min_output_buffer);
 
