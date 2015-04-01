@@ -113,9 +113,13 @@ macro(GR_SWIG_MAKE name)
     INCLUDE(CheckTypeSize)
     CHECK_TYPE_SIZE("size_t" SIZEOF_SIZE_T)
     CHECK_TYPE_SIZE("unsigned int" SIZEOF_UINT)
+    CHECK_TYPE_SIZE("unsigned long int" SIZEOF_ULONG)
     if(${SIZEOF_SIZE_T} EQUAL ${SIZEOF_UINT})
       list(APPEND GR_SWIG_FLAGS -DSIZE_T_32)
     endif(${SIZEOF_SIZE_T} EQUAL ${SIZEOF_UINT})
+    if(${SIZEOF_SIZE_T} EQUAL ${SIZEOF_ULONG})
+      list(APPEND GR_SWIG_FLAGS -DSIZE_T_LONG)
+    endif(${SIZEOF_SIZE_T} EQUAL ${SIZEOF_ULONG})
 
     #do swig doc generation if specified
     if(GR_SWIG_DOC_FILE)

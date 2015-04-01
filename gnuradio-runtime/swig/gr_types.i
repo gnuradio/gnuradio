@@ -85,7 +85,7 @@ namespace std {
   // On 32-bit systems, whenever we see std::vector<size_t>, replace it
   // with vector<unsigned int>
   %apply std::vector<unsigned int> { std::vector<size_t> };
-#else
+#elif defined(SIZE_T_LONG)
   // On 64-bit systems, whenever we see std::vector<size_t>, replace it
   // with vector<long unsigned int>
   %apply std::vector<long unsigned int> { std::vector<size_t> };
