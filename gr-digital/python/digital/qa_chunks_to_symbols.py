@@ -136,6 +136,39 @@ class test_chunks_to_symbols(gr_unittest.TestCase):
         actual_result = dst.data()
         self.assertEqual(expected_result, actual_result)
 
+
+    def test_sf_callback(self):
+	constA = [-3, -1, 1, 3]
+        constB = [12, -12, 6, -6]
+        src_data = (0, 1, 2, 3, 3, 2, 1, 0)
+        expected_result=(12, -12, 6, -6, -6, 6, -12, 12)
+
+	src = blocks.vector_source_s(src_data, False, 1, "")
+        op = digital.chunks_to_symbols_sf(constA)
+        op.set_symbol_table(constB)
+        dst = blocks.vector_sink_f()
+        self.tb.connect(src, op)
+        self.tb.connect(op, dst)
+        self.tb.run()
+        actual_result = dst.data()
+        self.assertEqual(expected_result, actual_result)
+
+    def test_sc_callback(self):
+        constA = [-3.0+1j, -1.0-1j, 1.0+1j, 3-1j]
+        constB = [12.0+1j, -12.0-1j, 6.0+1j, -6-1j]
+        src_data = (0, 1, 2, 3, 3, 2, 1, 0)
+        expected_result=(12.0+1j, -12.0-1j, 6.0+1j, -6-1j, -6-1j, 6+1j, -12-1j, 12+1j)
+
+	src = blocks.vector_source_s(src_data, False, 1, "")
+        op = digital.chunks_to_symbols_sc(constA)
+        op.set_symbol_table(constB)
+        dst = blocks.vector_sink_c()
+        self.tb.connect(src, op)
+        self.tb.connect(op, dst)
+        self.tb.run()
+        actual_result = dst.data()
+        self.assertEqual(expected_result, actual_result)
+
     def test_sf_tag(self):
         constA = [-3.0, -1.0, 1.0, 3]
         constB = [12.0, -12.0, 6.0, -6]
