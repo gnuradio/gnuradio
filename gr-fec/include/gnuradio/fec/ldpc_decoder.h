@@ -48,12 +48,8 @@ class FEC_API ldpc_decoder : public generic_decoder {
     //plug into the generic fec api
     int get_history();
 	float get_shift();
-	int get_input_item_size();
-	int get_output_item_size();
 	const char* get_conversion();
     void generic_work(void *inBuffer, void *outbuffer);
-    int get_output_size();
-    int get_input_size();
 
     int inputSize, outputSize;
 
@@ -69,6 +65,10 @@ class FEC_API ldpc_decoder : public generic_decoder {
 
     static generic_decoder::sptr
         make (std::string alist_file, float sigma=0.5, int max_iterations=50);
+    int get_output_size();
+    int get_input_size();
+	int get_input_item_size();
+	int get_output_item_size();
 };
 
 }
