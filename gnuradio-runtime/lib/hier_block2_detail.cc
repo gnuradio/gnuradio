@@ -30,7 +30,6 @@
 #include <stdexcept>
 #include <sstream>
 #include <boost/format.hpp>
-#include <stdio.h>
 
 namespace gr {
 
