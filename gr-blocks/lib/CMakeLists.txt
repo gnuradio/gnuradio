@@ -188,6 +188,7 @@ list(APPEND gr_blocks_sources
     tcp_connection.cc
     tuntap_pdu_impl.cc
     tag_gate_impl.cc
+    tagged_stream_align_impl.cc
     tagged_stream_mux_impl.cc
     uchar_array_to_float.cc
     uchar_to_float_impl.cc
