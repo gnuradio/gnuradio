@@ -34,7 +34,7 @@ namespace gr {
   namespace fec {
 
 generic_encoder::sptr
-ldpc_make_encoder(std::string alist_file)
+ldpc_encoder::make(std::string alist_file)
 {
     return generic_encoder::sptr(new ldpc_encoder(alist_file));
 }

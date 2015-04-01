@@ -34,15 +34,9 @@
 namespace gr {
  namespace fec {
 
-FEC_API generic_encoder::sptr
-ldpc_make_encoder (std::string alist_file);
 
 
 class FEC_API ldpc_encoder : public generic_encoder {
-    //befriend the global, swigged make function
-    friend generic_encoder::sptr
-    ldpc_make_encoder (std::string alist_file);
-
     //private constructor
     ldpc_encoder (std::string alist_file);
 
@@ -57,11 +51,12 @@ class FEC_API ldpc_encoder : public generic_encoder {
     alist d_list;
     cldpc d_code;   
 
-    double rate() { return 1.0; }
-    bool set_frame_size(unsigned int frame_size) { throw std::runtime_error("Not supported!!!"); }
+    double rate() { return (1.0*get_input_size() / get_output_size()); }
+    bool set_frame_size(unsigned int frame_size) { return false; }
 
  public:
     ~ldpc_encoder ();
+    static generic_encoder::sptr make (std::string alist_file);
 
 };
 

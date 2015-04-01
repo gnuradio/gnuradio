@@ -37,7 +37,7 @@ namespace gr {
  namespace fec {
 
 generic_decoder::sptr
-ldpc_make_decoder(std::string alist_file, float sigma, int max_iterations)
+ldpc_decoder::make(std::string alist_file, float sigma, int max_iterations)
 {
     return generic_decoder::sptr(new ldpc_decoder(alist_file, sigma, max_iterations));
 }

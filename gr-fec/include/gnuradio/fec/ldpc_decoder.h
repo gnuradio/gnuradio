@@ -38,16 +38,10 @@ typedef unsigned char OUTPUT_DATATYPE;
 namespace gr {
  namespace fec {
 
-FEC_API generic_decoder::sptr
-ldpc_make_decoder (std::string alist_file, float sigma=0.5, int max_iterations=50);
 
 #define MAXLOG 1e7
 
 class FEC_API ldpc_decoder : public generic_decoder {
-    //befriend the global, swigged make function
-    friend generic_decoder::sptr
-    ldpc_make_decoder (std::string alist_file, float sigma, int max_iterations);
-
     //private constructor
     ldpc_decoder (std::string alist_file, float sigma, int max_iterations);
 
@@ -70,9 +64,11 @@ class FEC_API ldpc_decoder : public generic_decoder {
  public:
     ~ldpc_decoder ();
 
+    double rate() { return (1.0*get_output_item_size() / get_input_item_size()); }
+    bool set_frame_size(unsigned int frame_size) { return false; }
 
-    double rate() { return 1; }
-    bool set_frame_size(unsigned int frame_size) { throw std::runtime_error("Nope"); }
+    static generic_decoder::sptr
+        make (std::string alist_file, float sigma=0.5, int max_iterations=50);
 };
 
 }

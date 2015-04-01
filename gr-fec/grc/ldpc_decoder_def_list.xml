@@ -10,9 +10,9 @@
     <import>from gnuradio import fec</import>
     <var_make>
 #if int($ndim())==1 #
-self.$(id) = $(id) = map( (lambda a: fec.ldpc_make_decoder($file, $sigma, $max_iter)), range(0,$dim1) ); #slurp
+self.$(id) = $(id) = map( (lambda a: fec.ldpc_decoder.make($file, $sigma, $max_iter)), range(0,$dim1) ); #slurp
 #else
-self.$(id) = $(id) = map( (lambda b: map( ( lambda a: fec.ldpc_make_decoder($file, $sigma, $max_iter)), range(0,$dim2) ) ), range(0,$dim1)); #slurp
+self.$(id) = $(id) = map( (lambda b: map( ( lambda a: fec.ldpc_decoder.make($file, $sigma, $max_iter)), range(0,$dim2) ) ), range(0,$dim1)); #slurp
 #end if</var_make>
     <make></make>
 
