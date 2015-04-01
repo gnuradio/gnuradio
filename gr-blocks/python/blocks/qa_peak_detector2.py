@@ -31,26 +31,28 @@ class test_peak_detector2(gr_unittest.TestCase):
         self.tb = None
 
     def test_regen1(self):
+        # test that the new peak_detector2 works and the previous peak_detector2 fails
         tb = self.tb
-
-        data = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10,
-                9, 8, 7, 6, 5, 4, 3, 2, 1, 0]
-
-        expected_result = (0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
-                           0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
-
+        l=8100
+        n=20
+        m = 100
+        data = l*(0,)+ (10,)+ m*(1,)+(100,)+ n*(1,)
+        expected_result = (l+1+m)*(0L,)+(1L,) +n*(0L,)
 
         src = blocks.vector_source_f(data, False)
-        regen = blocks.peak_detector2_fb()
+        regen = blocks.peak_detector2_fb(5, (m+10), 0.1)
+        nulls = blocks.null_sink(gr.sizeof_float)
         dst = blocks.vector_sink_b()
-
         tb.connect(src, regen)
-        tb.connect(regen, dst)
+        tb.connect((regen,1), nulls)
+        tb.connect((regen,0), dst)
+        
         tb.run()
-
         dst_data = dst.data()
-
+        
+        self.assertEqual(len(expected_result), len(dst_data))
         self.assertEqual(expected_result, dst_data)
+
 
 if __name__ == '__main__':
     gr_unittest.run(test_peak_detector2, "test_peak_detector2.xml")

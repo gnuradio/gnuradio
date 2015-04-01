@@ -52,19 +52,15 @@ namespace gr {
        *        calculated and when the value of the signal goes over
        *        threshold_factor_rise*average, we assume we are in the neighborhood of a peak.
        * \param look_ahead The look-ahead value is used when the
-       *        threshold is crossed to locate the peak within this range (when fixed_window is true).
-       *        Alternatively (when fixed_window is false) when a peak is detected, the search is repeated for the next window of size look_ahead and the process repeats itself.
+       *        threshold is crossed to locate the peak within this range
        * \param alpha One minus the pole of a single-pole autoregressive filter that evaluates the average of the input signal.
        * \param cont_avg The type of averaging. The average is only calculated 
        *        when the value of signal is below threshold_factor_rise*average when
        *        cont_avg is false. Otherwise, the average is also calculated when 
        *	the value of signal is above the threshold_factor_rise*average. 
-       * \param fixed_window The type of look_ahead window. The look_ahead range 
-       *        is fixed if fixed_window is true. Otherwise, the look_ahead range 
-       *        is reset whenever a new peak is located.        
        */
       static sptr make(float threshold_factor_rise=7,
-                       int look_ahead=1000, float alpha=0.001, bool cont_avg =true, bool fixed_window = true);
+                       int look_ahead=1000, float alpha=0.001, bool cont_avg =true);
 
       /*! \brief Set the threshold factor value for the rise time
        *  \param thr new threshold factor
