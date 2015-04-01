@@ -155,7 +155,7 @@ namespace gr {
 	  out[oo++] = d_p_0T;
 
 	  // limit mm_val
-	  mm_val = gr::branchless_clip(mm_val,4.0);
+	  mm_val = gr::branchless_clip(mm_val,1.0);
 	  d_omega = d_omega + d_gain_omega * mm_val;
 	  d_omega = d_omega_mid + gr::branchless_clip(d_omega-d_omega_mid, d_omega_lim);
 
