@@ -29,6 +29,7 @@
 #include <gnuradio/flowgraph.h>
 #include "hier_block2_detail.h"
 #include <iostream>
+#include <stdio.h>
 
 namespace gr {
 
@@ -199,8 +200,10 @@ namespace gr {
     {
       if(d_max_output_buffer.size() == 0)
         throw std::length_error("hier_block2::max_output_buffer: out_sig greater than zero, buff_vect isn't");
-      for(int idx = 0; idx < output_signature()->max_streams(); idx++)
+      for(int idx = 0; idx < output_signature()->max_streams(); idx++){
         d_max_output_buffer[idx] = max_output_buffer;
+        printf("Port %d is being set to max(%ld)\t%s\n",idx,max_output_buffer,(alias()).c_str());
+      }
     }
   }
   
@@ -209,8 +212,10 @@ namespace gr {
   {
     if((size_t)port >= d_max_output_buffer.size())
       throw std::invalid_argument("hier_block2::max_output_buffer: port out of range.");
-    else
+    else{
       d_max_output_buffer[port] = max_output_buffer;
+      printf("Port %d is being set to max(%ld)\t%s\n",port,max_output_buffer,(alias()).c_str());
+    }
   }
 
   long
@@ -228,8 +233,10 @@ namespace gr {
     {
       if(d_min_output_buffer.size() == 0)
         throw std::length_error("hier_block2::min_output_buffer: out_sig greater than zero, buff_vect isn't");
-      for(int idx = 0; idx < output_signature()->max_streams(); idx++)
+      for(int idx = 0; idx < output_signature()->max_streams(); idx++){
         d_min_output_buffer[idx] = min_output_buffer;
+        printf("Port %d is being set to min(%ld)\t%s\n",idx,min_output_buffer,(alias()).c_str());
+      }
     }
   }
 
@@ -238,8 +245,10 @@ namespace gr {
   {
     if((size_t)port >= d_min_output_buffer.size())
       throw std::invalid_argument("hier_block2::min_output_buffer: port out of range.");
-    else
+    else{
       d_min_output_buffer[port] = min_output_buffer;
+      printf("Port %d is being set to min(%ld)\t%s\n",port,min_output_buffer,(alias()).c_str());
+    }
   }
   
   bool
@@ -251,9 +260,11 @@ namespace gr {
         if(d_min_output_buffer[0] != d_min_output_buffer[idx])
           all_equal = false;
       }
+      printf("Set all min (%d)\n",int(all_equal),(alias()).c_str());
       return all_equal;
     }
     else{
+      printf("Set all min (%d)\n",int(false),(alias()).c_str());
       return false;
     }
   }
@@ -266,9 +277,11 @@ namespace gr {
         if(d_max_output_buffer[0] != d_max_output_buffer[idx])
           all_equal = false;
       }
+      printf("Set all max (%d)\t%s\n",int(all_equal),(alias()).c_str());
       return all_equal;
     }
     else{
+      printf("Set all max (%d)\t%s\n",int(false),(alias()).c_str());
       return false;
     }
   }

@@ -30,6 +30,7 @@
 #include <stdexcept>
 #include <sstream>
 #include <boost/format.hpp>
+#include <stdio.h>
 
 namespace gr {
 
@@ -515,11 +516,6 @@ namespace gr {
     bool ctrlport_on = prefs::singleton()->get_bool("ControlPort", "on", false);
     
     // Get the min and max buffer length
-    // TODO: Currently assuming all blocks within hier
-    //        are set to the first port value. (latency case)
-    //        Address the condition where only the block connected
-    //        to a specific hier port is modified by the hier port assignment
-    // TODO: handle the connect port only case
     long min_buff(-1), max_buff(-1);
     bool set_all_min_buff = d_owner->set_all_min_output_buffer();
     bool set_all_max_buff = d_owner->set_all_max_output_buffer();
@@ -545,12 +541,16 @@ namespace gr {
         if(min_buff != -1){
           block_sptr bb = boost::dynamic_pointer_cast<block>(b);
           if(bb != 0){
-            bb->set_min_output_buffer(min_buff);
+            if(bb->min_output_buffer(0) != min_buff){
+              bb->set_min_output_buffer(min_buff);
+            }
           }
           else{
             hier_block2_sptr hh = boost::dynamic_pointer_cast<hier_block2>(b);
             if(hh != 0){
-              hh->set_min_output_buffer(min_buff);
+              if(hh->min_output_buffer(0) != min_buff){
+                hh->set_min_output_buffer(min_buff);
+              }
             }
           }
         }
@@ -560,12 +560,16 @@ namespace gr {
         if(max_buff != -1){
           block_sptr bb = boost::dynamic_pointer_cast<block>(b);
           if(bb != 0){
-            bb->set_max_output_buffer(max_buff);
+            if(bb->max_output_buffer(0) != max_buff){
+              bb->set_max_output_buffer(max_buff);
+            }
           }
           else{
             hier_block2_sptr hh = boost::dynamic_pointer_cast<hier_block2>(b);
             if(hh != 0){
-              hh->set_max_output_buffer(max_buff);
+              if(hh->max_output_buffer(0) != max_buff){
+                hh->set_max_output_buffer(max_buff);
+              }
             }
           }
         }
@@ -576,6 +580,44 @@ namespace gr {
         if(!b->is_rpc_set()) {
           b->setup_rpc();
           b->rpc_set();
+        }
+      }
+      if(set_all_min_buff){
+        //sets the min buff for every block within hier_block2
+        if(min_buff != -1){
+          block_sptr bb = boost::dynamic_pointer_cast<block>(b);
+          if(bb != 0){
+            if(bb->min_output_buffer(0) != min_buff){
+              bb->set_min_output_buffer(min_buff);
+            }
+          }
+          else{
+            hier_block2_sptr hh = boost::dynamic_pointer_cast<hier_block2>(b);
+            if(hh != 0){
+              if(hh->min_output_buffer(0) != min_buff){
+                hh->set_min_output_buffer(min_buff);
+              }
+            }
+          }
+        }
+      }
+      if(set_all_max_buff){
+        //sets the max buff for every block within hier_block2
+        if(max_buff != -1){
+          block_sptr bb = boost::dynamic_pointer_cast<block>(b);
+          if(bb != 0){
+            if(bb->max_output_buffer(0) != max_buff){
+              bb->set_max_output_buffer(max_buff);
+            }
+          }
+          else{
+            hier_block2_sptr hh = boost::dynamic_pointer_cast<hier_block2>(b);
+            if(hh != 0){
+              if(hh->max_output_buffer(0) != max_buff){
+                hh->set_max_output_buffer(max_buff);
+              }
+            }
+          }
         }
       }
     }
@@ -685,7 +727,7 @@ namespace gr {
             << " is not connected internally";
         throw std::runtime_error(msg.str());
       }
-      // TODO: Update buffers of just these output blocks
+      // Set the buffers of only the blocks connected to the hier output
       if(!set_all_min_buff){
         min_buff = d_owner->min_output_buffer(i);
         if(min_buff != -1){
