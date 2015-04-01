@@ -185,64 +185,74 @@ namespace gr {
   }
 
   long
-  hier_block2::max_output_buffer(size_t i)
+  hier_block2::max_output_buffer(size_t i=0)
   {
-    /*if(i >= d_max_output_buffer.size())
-      throw std::invalid_argument("basic_block::max_output_buffer: port out of range.");
-    return d_max_output_buffer[i];*/
-    if(d_max_output_buffer.size() == 0)
+    if(d_max_output_buffer.size() <= i)
       throw std::invalid_argument("hier_block2::max_output_buffer: port out of range.");
-    return d_max_output_buffer[0];
+    return d_max_output_buffer[i];
   }
   
   void
   hier_block2::set_max_output_buffer(long max_output_buffer)
   {
-    /*for(int i = 0; i < output_signature()->max_streams(); i++) {
-      set_max_output_buffer(i, max_output_buffer);
-    }*/
     if(output_signature()->max_streams()>0)
-      set_max_output_buffer(0,max_output_buffer);
-  }
-
-  void
-  hier_block2::set_max_output_buffer(int port, long max_output_buffer)
-  {
-    if((size_t)port >= d_max_output_buffer.size())
-      d_max_output_buffer.push_back(max_output_buffer);
-    else
-      d_max_output_buffer[port] = max_output_buffer;
+    {
+      if(d_max_output_buffer.size() == 0)
+        throw std::length_error("hier_block2::max_output_buffer: out_sig greater than zero, buff_vect isn't");
+      for(int idx = 0; idx < output_signature()->max_streams(); idx++)
+        d_max_output_buffer[idx] = max_output_buffer;
+    }
   }
 
   long
-  hier_block2::min_output_buffer(size_t i)
+  hier_block2::min_output_buffer(size_t i=0)
   {
-    /*if(i >= d_min_output_buffer.size())
-      throw std::invalid_argument("basic_block::min_output_buffer: port out of range.");
-    return d_min_output_buffer[i];*/
-    if(d_min_output_buffer.size() == 0)
+    if(d_min_output_buffer.size() <= i)
       throw std::invalid_argument("hier_block2::min_output_buffer: port out of range.");
-    return d_min_output_buffer[0];
+    return d_min_output_buffer[i];
   }
 
   void
   hier_block2::set_min_output_buffer(long min_output_buffer)
   {
-    /*std::cout << "set_min_output_buffer on block " << unique_id() << " to " << min_output_buffer << std::endl;
-    for(int i=0; i<output_signature()->max_streams(); i++) {
-      set_min_output_buffer(i, min_output_buffer);
-    }*/
     if(output_signature()->max_streams()>0)
-      set_min_output_buffer(0,min_output_buffer);
+    {
+      if(d_min_output_buffer.size() == 0)
+        throw std::length_error("hier_block2::min_output_buffer: out_sig greater than zero, buff_vect isn't");
+      for(int idx = 0; idx < output_signature()->max_streams(); idx++)
+        d_min_output_buffer[idx] = min_output_buffer;
+    }
   }
-
-  void
-  hier_block2::set_min_output_buffer(int port, long min_output_buffer)
+  
+  bool
+  hier_block2::set_all_min_output_buffer(void)
   {
-    if((size_t)port >= d_min_output_buffer.size())
-      d_min_output_buffer.push_back(min_output_buffer);
-    else
-      d_min_output_buffer[port] = min_output_buffer;
+    if(d_min_output_buffer.size() > 0){
+      bool all_equal = true;
+      for(int idx = 1; (idx < d_min_output_buffer.size()) && all_equal; idx++){
+        if(d_min_output_buffer[0] != d_min_output_buffer[idx])
+          all_equal = false;
+      }
+      return all_equal;
+    }
+    else{
+      return false;
+    }
+  }
+  bool
+  hier_block2::set_all_max_output_buffer(void)
+  {
+    if(d_max_output_buffer.size() > 0){
+      bool all_equal = true;
+      for(int idx = 1; (idx < d_max_output_buffer.size()) && all_equal; idx++){
+        if(d_max_output_buffer[0] != d_max_output_buffer[idx])
+          all_equal = false;
+      }
+      return all_equal;
+    }
+    else{
+      return false;
+    }
   }
 
 } /* namespace gr */

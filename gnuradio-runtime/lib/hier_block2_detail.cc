@@ -514,8 +514,19 @@ namespace gr {
     // Only run setup_rpc if ControlPort config param is enabled.
     bool ctrlport_on = prefs::singleton()->get_bool("ControlPort", "on", false);
     
-    long min_buff = d_owner->min_output_buffer(0);
-    long max_buff = d_owner->max_output_buffer(0);
+    // Get the min and max buffer length
+    // TODO: Currently assuming all blocks within hier
+    //        are set to the first port value. (latency case)
+    //        Address the condition where only the block connected
+    //        to a specific hier port is modified by the hier port assignment
+    // TODO: handle the connect port only case
+    long min_buff(-1), max_buff(-1);
+    bool set_all_min_buff = d_owner->set_all_min_output_buffer();
+    bool set_all_max_buff = d_owner->set_all_max_output_buffer();
+    if(set_all_min_buff)
+      min_buff = d_owner->min_output_buffer();
+    if(set_all_max_buff)
+      max_buff = d_owner->max_output_buffer();
 
     // For every block (gr::block and gr::hier_block2), set up the RPC
     // interface.
@@ -529,27 +540,33 @@ namespace gr {
           b->rpc_set();
         }
       }
-      if(min_buff != -1){
-        block_sptr bb = boost::dynamic_pointer_cast<block>(b);
-        if(bb != 0){
-          bb->set_min_output_buffer(min_buff);
-        }
-        else{
-          hier_block2_sptr hh = boost::dynamic_pointer_cast<hier_block2>(b);
-          if(hh != 0){
-            hh->set_min_output_buffer(min_buff);
+      if(set_all_min_buff){
+        //sets the min buff for every block within hier_block2
+        if(min_buff != -1){
+          block_sptr bb = boost::dynamic_pointer_cast<block>(b);
+          if(bb != 0){
+            bb->set_min_output_buffer(min_buff);
+          }
+          else{
+            hier_block2_sptr hh = boost::dynamic_pointer_cast<hier_block2>(b);
+            if(hh != 0){
+              hh->set_min_output_buffer(min_buff);
+            }
           }
         }
       }
-      if(max_buff != -1){
-        block_sptr bb = boost::dynamic_pointer_cast<block>(b);
-        if(bb != 0){
-          bb->set_max_output_buffer(max_buff);
-        }
-        else{
-          hier_block2_sptr hh = boost::dynamic_pointer_cast<hier_block2>(b);
-          if(hh != 0){
-            hh->set_max_output_buffer(max_buff);
+      if(set_all_max_buff){
+        //sets the max buff for every block within hier_block2
+        if(max_buff != -1){
+          block_sptr bb = boost::dynamic_pointer_cast<block>(b);
+          if(bb != 0){
+            bb->set_max_output_buffer(max_buff);
+          }
+          else{
+            hier_block2_sptr hh = boost::dynamic_pointer_cast<hier_block2>(b);
+            if(hh != 0){
+              hh->set_max_output_buffer(max_buff);
+            }
           }
         }
       }
