@@ -1,3 +1,25 @@
+/* -*- c++ -*- */
+/*
+ * Copyright 2015 Free Software Foundation, Inc.
+ *
+ * This file is part of GNU Radio
+ *
+ * GNU Radio is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3, or (at your option)
+ * any later version.
+ *
+ * GNU Radio is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with GNU Radio; see the file COPYING.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street,
+ * Boston, MA 02110-1301, USA.
+ */
+
 /* File maxstar.h
 
    Description: Performs the max* operations (Jacobian logarithm) defined as:
@@ -19,8 +41,6 @@
    	  delta1 = T] he first argument (i.e. x) of max*(x,y)
 	  delta2 = The second argument (i.e. y) of max*(x,y)
 
-   Copyright (C) 2005, Matthew C. Valenti
-
    Functions max_star0, max_star1, max_star2, max_star3, and max_star4
    are part of the Iterative Solutions Coded Modulation Library
    The Iterative Solutions Coded Modulation Library is free software;
@@ -28,15 +48,6 @@
    the GNU Lesser General Public License as published by the 
    Free Software Foundation; either version 2.1 of the License, 
    or (at your option) any later version.
-
-   This library is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   Lesser General Public License for more details.
-  
-   You should have received a copy of the GNU Lesser General Public
-   License along with this library; if not, write to the Free Software
-   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 */
 
