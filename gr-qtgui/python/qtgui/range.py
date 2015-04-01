@@ -23,83 +23,101 @@
 
 from PyQt4 import Qt, QtCore, QtGui
 
-
-class Range(QtGui.QWidget):
-
-    def __init__(self, min, max, step, default, style):
-        QtGui.QWidget.__init__(self)
-
+class Range(object):
+    def __init__(self, min, max, step, default):
         self.min = min
         self.max = max
         self.step = step
         self.default = default
 
+class RangeWidget(QtGui.QWidget):
+    def __init__(self, range, slot, label, style):
+        """ Creates the QT Range widget """
+        QtGui.QWidget.__init__(self)
+
+        self.range = range
+
+        layout = Qt.QHBoxLayout()
+        label = Qt.QLabel(label)
+        layout.addWidget(label)
+
         if style == "dial":
-            self.setupDial()
+            layout.addWidget(self.Dial(self, range, slot))
         elif style == "slider":
-            self.setupSlider()
+            layout.addWidget(self.Slider(self, range, slot))
         elif style == "counter":
-            self.setupCounter()
+            layout.addWidget(self.Counter(self, range, slot))
         elif style == "counter_slider":
-            self.setupCounterSlider()
-
-
-    def setupCounterSlider(self):
-        """ Creates the range using a counter and slider """
-
-        layout = Qt.QHBoxLayout()
-        slider = QtGui.QSlider(QtCore.Qt.Horizontal, self)
-        slider.setFocusPolicy(QtCore.Qt.NoFocus)
-        slider.setRange(self.min, self.max)
-        slider.setPageStep(self.step)
-        slider.setSingleStep(self.step)
-        slider.setTracking(False)
-        slider.setInvertedControls(True)
-        layout.addWidget(slider)
-
-        counter = QtGui.QDoubleSpinBox(self)
-        counter.setRange(self.min, self.max)
-        counter.setSingleStep(self.step)
-        counter.setDecimals(0)
-        layout.addWidget(counter)
-
-        # Wire the events to each other
-        counter.valueChanged.connect(slider.setValue)
-        slider.valueChanged.connect(counter.setValue)
+            layout.addWidget(self.CounterSlider(self, range, slot))
+        else:
+            layout.addWidget(self.CounterSlider(self, range, slot))
 
         self.setLayout(layout)
 
-    def setupCounter(self):
-        """ Creates the range using a counter """
+    class Dial(QtGui.QDial):
+        """ Creates the range using a dial """
+        def __init__(self, parent, range, slot):
+            QtGui.QDial.__init__(self, parent)
+            self.setRange(range.min, range.max)
+            self.setSingleStep(range.step)
+            self.setNotchesVisible(True)
+            self.setValue(range.default)
+            self.valueChanged.connect(slot)
 
-        layout = Qt.QHBoxLayout()
-        counter = QtGui.QDoubleSpinBox(self)
-        counter.setRange(self.min, self.max)
-        counter.setSingleStep(self.step)
-        counter.setDecimals(0)
-        layout.addWidget(counter)
-        self.setLayout(layout)
-
-    def setupSlider(self):
+    class Slider(QtGui.QSlider):
         """ Creates the range using a slider """
+        def __init__(self, parent, range, slot):
+            QtGui.QSlider.__init__(self, QtCore.Qt.Horizontal, parent)
+            self.setFocusPolicy(QtCore.Qt.NoFocus)
+            self.setRange(range.min, range.max)
+            self.setValue(range.default)
+            self.setPageStep(range.step)
+            self.setSingleStep(range.step)
+            self.setTracking(False)
+            self.setInvertedControls(True)
+            self.valueChanged.connect(slot)
 
-        layout = Qt.QHBoxLayout()
-        slider = QtGui.QSlider(QtCore.Qt.Horizontal, self)
-        slider.setFocusPolicy(QtCore.Qt.NoFocus)
-        slider.setRange(self.min, self.max)
-        slider.setPageStep(self.step)
-        slider.setSingleStep(self.step)
-        slider.setTracking(False)
-        slider.setInvertedControls(True)
-        layout.addWidget(slider)
-        self.setLayout(layout)
+    class Counter(QtGui.QDoubleSpinBox):
+        """ Creates the range using a counter """
+        def __init__(self, parent, range, slot):
+            QtGui.QDoubleSpinBox.__init__(self, parent)
+            self.setRange(range.min, range.max)
+            self.setValue(range.default)
+            self.setSingleStep(range.step)
+            self.setDecimals(0)
+            self.valueChanged.connect(slot)
 
-    def init_dial(self):
-        layout = Qt.QHBoxLayout()
-        dial = QtGui.QDial(self)
-        dial.setRange(min, max)
-        dial.setSingleStep(step)
-        dial.setNotchesVisible(True)
-        dial.setValue(init_value)
-        layout.addWidget(dial)
-        self.setLayout(layout)
+    class CounterSlider(QtGui.QWidget):
+        """ Creates the range using a counter and slider """
+        def __init__(self, parent, range, slot):
+            QtGui.QWidget.__init__(self, parent)
+
+            # Need another horizontal layout
+            layout = Qt.QHBoxLayout()
+
+            # Create a slider with the top-level widget as the parent
+            slider = QtGui.QSlider(QtCore.Qt.Horizontal, self)
+            slider.setFocusPolicy(QtCore.Qt.NoFocus)
+            slider.setRange(range.min, range.max)
+            slider.setValue(range.default)
+            slider.setPageStep(range.step)
+            slider.setSingleStep(range.step)
+            slider.setTracking(False)
+            slider.setInvertedControls(True)
+            layout.addWidget(slider)
+
+            # Setup the counter
+            counter = QtGui.QDoubleSpinBox(self)
+            counter.setRange(range.min, range.max)
+            counter.setValue(range.default)
+            counter.setSingleStep(range.step)
+            counter.setDecimals(0)
+            layout.addWidget(counter)
+
+            # Wire the events to each other
+            counter.valueChanged.connect(slider.setValue)
+            slider.valueChanged.connect(counter.setValue)
+            counter.valueChanged.connect(slot)
+            slider.valueChanged.connect(slot)
+
+            self.setLayout(layout)

@@ -34,4 +34,4 @@ except ImportError:
     __path__.append(os.path.join(dirname, "..", "..", "swig"))
     from qtgui_swig import *
 
-from range import Range
+from range import Range, RangeWidget
