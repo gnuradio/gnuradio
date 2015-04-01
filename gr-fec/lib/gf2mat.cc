@@ -53,7 +53,6 @@ GF2Mat::GF2Mat(std::vector <std::vector<char> > X) {
 }
 
 GF2Mat::GF2Mat(alist _list) {
-    int m, n;
     M = _list.get_M();
     N = _list.get_N();
     H.resize(M);

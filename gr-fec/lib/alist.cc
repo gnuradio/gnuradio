@@ -149,12 +149,12 @@ void alist::write(const char * fname) const
     file << N << " " << M << std::endl;
     file << max_num_nlist << " " << max_num_mlist << std::endl;
     // Write column weights
-    for (int i = 0; i < num_nlist.size() - 1; i++) {
+    for (size_t i = 0; i < num_nlist.size() - 1; i++) {
         file << num_nlist[i] << " ";
     }
     file << num_nlist[num_nlist.size() - 1] << std::endl;
     // Write row weights
-    for (int i = 0; i < num_mlist.size() - 1; i++) {
+    for (size_t i = 0; i < num_mlist.size() - 1; i++) {
         file << num_mlist[i] << " ";
     }
     file << num_mlist[num_mlist.size() - 1] << std::endl;

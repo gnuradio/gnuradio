@@ -26,6 +26,7 @@
  */
 
 #include <gnuradio/fec/cldpc.h>
+#include <stdexcept>
 
 cldpc::cldpc(const GF2Mat  X) {
     H = X;
@@ -55,7 +56,7 @@ std::vector<char> cldpc::get_systematic_bits(std::vector<char> in) {
     std::vector<char> data;
     data.resize(K);
     int index;
-    for ( int i = 0; i < K; i++ ) {
+    for (size_t i = 0; i < K; i++ ) {
         index = permute[i + rank_H];
         data[i] = in[index];
     }
@@ -63,7 +64,7 @@ std::vector<char> cldpc::get_systematic_bits(std::vector<char> in) {
 }
 
 void cldpc::print_permute() {
-    for ( int i = 0; i < permute.size(); i++ ) {
+    for (size_t i = 0; i < permute.size(); i++ ) {
         std::cout << permute[i] << ", ";
     }
     std::cout << "\n";
@@ -109,6 +110,9 @@ std::vector<char> cldpc::encode(std::vector<char> dataword) {
             y[permute[i]] = x[i];
         }
         return y.get_vec();
+    } else {
+        throw std::runtime_error("bad vector length!");
+        return std::vector<char>();
     }
 }
 

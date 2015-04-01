@@ -159,7 +159,7 @@ std::vector<char> awgn_bp::get_estimate() {
 }
 
 void awgn_bp::compute_init_estimate(std::vector<float> rx_word) {
-    for ( int i = 0; i < rx_word.size(); i++ ) {
+    for (size_t i = 0; i < rx_word.size(); i++ ) {
         if (rx_word[i] < 0)
             estimate[i] = char(1);
         else

@@ -118,7 +118,7 @@ class FEC_API cldpc
     int N;
 
     //! The dimension of the code
-    int K;
+    size_t K;
 };
 
 #endif // ifndef LDPC_H

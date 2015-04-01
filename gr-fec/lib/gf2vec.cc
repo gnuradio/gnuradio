@@ -37,7 +37,7 @@ GF2Vec::GF2Vec(int size) {
 
 void GF2Vec::set_vec(const std::vector<char> in) {
     resize(in.size());
-    for ( int i = 0; i < vec.size(); i++ ) {
+    for (size_t i = 0; i < vec.size(); i++ ) {
         vec[i] = in[i];
     }
 }
