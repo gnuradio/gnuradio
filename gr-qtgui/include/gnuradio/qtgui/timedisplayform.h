@@ -44,6 +44,7 @@ public:
   ~TimeDisplayForm();
 
   TimeDomainDisplayPlot* getPlot();
+  const TimeDomainDisplayPlot* getPlot() const;
 
   int getNPoints() const;
   gr::qtgui::trigger_mode getTriggerMode() const;
@@ -142,6 +143,8 @@ private:
   std::string d_trig_tag_key;
 
   TimeControlPanel *d_controlpanel;
+
+  const QwtScaleDiv &axisScaleDiv(int axisId) const;
 };
 
 #endif /* TIME_DISPLAY_FORM_H */
