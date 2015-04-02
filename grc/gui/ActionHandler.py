@@ -108,7 +108,7 @@ class ActionHandler:
     def _handle_action(self, action):
         #print action
         ##################################################
-        # Initalize/Quit
+        # Initialize/Quit
         ##################################################
         if action == Actions.APPLICATION_INITIALIZE:
             for action in Actions.get_all_actions(): action.set_sensitive(False) #set all actions disabled
