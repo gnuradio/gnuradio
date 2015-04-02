@@ -45,6 +45,8 @@ ldpc_decoder::make(std::string alist_file, float sigma, int max_iterations)
 ldpc_decoder::ldpc_decoder (std::string alist_file, float sigma, int max_iterations)
     : generic_decoder("ldpc_decoder")
 {
+        if(!boost::filesystem::exists( alist_file ))
+            throw std::runtime_error("Bad AList file name!");
         d_list.read(alist_file.c_str());
         d_code.set_alist(d_list);
         d_spa.set_alist_sigma(d_list, sigma);
@@ -73,6 +75,7 @@ void ldpc_decoder::generic_work(void *inBuffer, void *outBuffer) {
     std::vector<char> estimate( d_spa.decode(rx, &n_iterations) );   
     std::vector<char> data( d_code.get_systematic_bits(estimate) );
     memcpy(out, &data[0], outputSize);
+    d_iterations = n_iterations;
 }
 
 int ldpc_decoder::get_input_item_size() {

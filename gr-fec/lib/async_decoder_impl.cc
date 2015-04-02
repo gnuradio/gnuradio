@@ -145,6 +145,8 @@ namespace gr {
         volk_32f_s32f_multiply_32f(d_tmp_f32, f32in, 48.0f, nbits_in);
       }
       else {
+
+        // grow d_tmp_f32 if needed
         if(nbits_in > d_max_bits_in){
             d_max_bits_in = nbits_in;
             volk_free(d_tmp_f32);
@@ -168,10 +170,11 @@ namespace gr {
       }
       else {
         for(size_t i=0; i<nblocks; i++){
-          d_decoder->generic_work((void*)d_tmp_f32, (void*)u8out);
+          d_decoder->generic_work((void*)&d_tmp_f32[i*d_decoder->get_input_size()], (void*)&u8out[i*d_decoder->get_output_size()]);
           }
       }
 
+      meta = pmt::dict_add(meta, pmt::mp("iterations"), pmt::mp(d_decoder->get_iterations()) );
       message_port_pub(d_out_port, pmt::cons(meta, outvec));
     }
 

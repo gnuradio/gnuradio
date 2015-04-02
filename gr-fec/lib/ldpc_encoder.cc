@@ -41,6 +41,8 @@ ldpc_encoder::make(std::string alist_file)
 
 ldpc_encoder::ldpc_encoder (std::string alist_file)
 {
+    if(!boost::filesystem::exists( alist_file ))
+        throw std::runtime_error("Bad AList file name!");
     d_list.read(alist_file.c_str());
     d_code.set_alist(d_list);
     inputSize = d_code.dimension();

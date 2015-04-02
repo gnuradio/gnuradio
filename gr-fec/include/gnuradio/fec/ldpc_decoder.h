@@ -50,7 +50,7 @@ class FEC_API ldpc_decoder : public generic_decoder {
 	float get_shift();
 	const char* get_conversion();
     void generic_work(void *inBuffer, void *outbuffer);
-
+    float d_iterations;
     int inputSize, outputSize;
 
       alist d_list;
@@ -69,6 +69,8 @@ class FEC_API ldpc_decoder : public generic_decoder {
     int get_input_size();
 	int get_input_item_size();
 	int get_output_item_size();
+    float get_iterations(){ return d_iterations; }
+
 };
 
 }
