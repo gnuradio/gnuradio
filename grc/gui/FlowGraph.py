@@ -27,6 +27,7 @@ pygtk.require('2.0')
 import gtk
 import random
 import Messages
+import Bars
 
 class FlowGraph(Element):
     """
@@ -54,25 +55,7 @@ class FlowGraph(Element):
         # current mouse hover element
         self.element_under_mouse = None
         #context menu
-        self._context_menu = gtk.Menu()
-        for action in [
-            Actions.BLOCK_CUT,
-            Actions.BLOCK_COPY,
-            Actions.BLOCK_PASTE,
-            Actions.ELEMENT_DELETE,
-            None,
-            Actions.BLOCK_ROTATE_CCW,
-            Actions.BLOCK_ROTATE_CW,
-            Actions.BLOCK_ENABLE,
-            Actions.BLOCK_DISABLE,
-            None,
-            Actions.BLOCK_CREATE_HIER,
-            Actions.OPEN_HIER,
-            Actions.BUSSIFY_SOURCES,
-            Actions.BUSSIFY_SINKS,
-            None,
-            Actions.BLOCK_PARAM_MODIFY
-        ]: self._context_menu.append(action.create_menu_item() if action else gtk.SeparatorMenuItem())
+        self._context_menu = Bars.ContextMenu()
         self.get_context_menu = lambda: self._context_menu
 
     ###########################################################################
