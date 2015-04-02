@@ -24,7 +24,6 @@
 
 #include <gnuradio/io_signature.h>
 #include "dvbt2_paprtr_cc_impl.h"
-#include <complex.h>
 #include <volk/volk.h>
 #include <stdio.h>
 
@@ -670,24 +669,18 @@ namespace gr {
     {
       const gr_complex *in = (const gr_complex *) input_items[0];
       gr_complex *out = (gr_complex *) output_items[0];
-      gr_complex zero, one;
-      int index, valid;
-      int L_FC = 0;
+      const gr_complex one (1.0, 0.0);
+      const gr_complex zero (0.0, 0.0);
+      const float normalization = 1.0 / N_TR;
+      const int L_FC = (N_FC != 0);
+      const float center = (C_PS - 1) / 2;
+      const float aMax = 5.0 * N_TR * std::sqrt(10.0 / (27.0 * C_PS));
       gr_complex *dst;
-      float normalization = 1.0 / N_TR;
-      int m = 0;
-      float y, a, alpha, center = (C_PS - 1) / 2;
-      float aMax = 5.0 * N_TR * sqrt(10.0 / (27.0 * C_PS));
-      gr_complex u, result, temp;
-      double _Complex vtemp;
+      int m = 0, index, valid;
+      float y, a, alpha;
+      gr_complex u, result;
+      double vtemp;
 
-      one.real() = 1.0;
-      one.imag() = 0.0;
-      zero.real() = 0.0;
-      zero.imag() = 0.0;
-      if (N_FC != 0) {
-        L_FC = 1;
-      }
       for (int i = 0; i < noutput_items; i += num_symbols) {
         if (papr_mode == PAPR_TR || papr_mode == PAPR_BOTH || (version_num == VERSION_131 && papr_mode == PAPR_OFF)) {
           for (int j = 0; j < num_symbols; j++) {
@@ -763,23 +756,18 @@ namespace gr {
                 if (y < v_clip + 0.01) {
                   break;
                 }
-                u.real() = (in[m].real() + c[m].real()) / y;
-                u.imag() = (in[m].imag() + c[m].imag()) / y;
+                u = (in[m] + c[m]) / y;
                 alpha = y - v_clip;
                 for (int n = 0; n < N_TR; n++) {
-                  vtemp = 0.0 + ((2 * M_PI * m * ((papr_map[n] + shift) - center)) / papr_fft_size * _Complex_I);
-                  vtemp = cexp(vtemp);
-                  ctemp[n].real() = creal(vtemp);
-                  ctemp[n].imag() = -cimag(vtemp);
+                  vtemp = (-2.0 * M_PI * m * ((papr_map[n] + shift) - center)) / papr_fft_size;
+                  ctemp[n] = std::exp(gr_complexd(0.0, vtemp));
                 }
                 volk_32fc_s32fc_multiply_32fc(v, ctemp, u, N_TR);
-                temp.real() = alpha;
-                temp.imag() = 0.0;
-                volk_32fc_s32fc_multiply_32fc(rNew, v, temp, N_TR);
+                volk_32f_s32f_multiply_32f((float*)rNew, (float*)v, alpha, N_TR * 2);
                 volk_32f_x2_subtract_32f((float*)rNew, (float*)r, (float*)rNew, N_TR * 2);
                 volk_32fc_x2_multiply_conjugate_32fc(ctemp, r, v, N_TR);
                 for (int n = 0; n < N_TR; n++) {
-                  alphaLimit[n] = sqrt((aMax * aMax) - (ctemp[n].imag() * ctemp[n].imag())) + ctemp[n].real();
+                  alphaLimit[n] = std::sqrt((aMax * aMax) - (ctemp[n].imag() * ctemp[n].imag())) + ctemp[n].real();
                 }
                 index = 0;
                 volk_32fc_magnitude_32f(magnitude, rNew, N_TR);
@@ -796,18 +784,13 @@ namespace gr {
                     }
                   }
                   alpha = a;
-                  temp.real() = alpha;
-                  temp.imag() = 0.0;
-                  volk_32fc_s32fc_multiply_32fc(rNew, v, temp, N_TR);
+                  volk_32f_s32f_multiply_32f((float*)rNew, (float*)v, alpha, N_TR * 2);
                   volk_32f_x2_subtract_32f((float*)rNew, (float*)r, (float*)rNew, N_TR * 2);
                 }
                 for (int n = 0; n < papr_fft_size; n++) {
                   ones_freq[(n + m) % papr_fft_size] = ones_time[n];
                 }
-                temp.real() = alpha;
-                temp.imag() = 0.0;
-                result.real() = (u.real() * temp.real()) - (u.imag() * temp.imag());
-                result.imag() = (u.imag() * temp.real()) + (u.real() * temp.imag());
+                result = u * alpha;
                 volk_32fc_s32fc_multiply_32fc(ctemp, ones_freq, result, papr_fft_size);
                 volk_32f_x2_subtract_32f((float*)c, (float*)c, (float*)ctemp, papr_fft_size * 2);
                 memcpy(r, rNew, sizeof(gr_complex) * N_TR);
