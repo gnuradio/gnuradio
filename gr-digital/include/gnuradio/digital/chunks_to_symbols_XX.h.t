@@ -68,6 +68,7 @@ namespace gr {
 
       virtual int D() const = 0;
       virtual std::vector<@O_TYPE@> symbol_table() const = 0;
+      virtual void set_symbol_table(const std::vector<@O_TYPE@> &symbol_table) =0;
     };
 
   } /* namespace digital */
