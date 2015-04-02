@@ -56,6 +56,9 @@ namespace gr {
 
     d_inputs = std::vector<endpoint_vector_t>(max_inputs);
     d_outputs = endpoint_vector_t(max_outputs);
+    
+    d_max_output_buffer = std::vector<size_t>(std::max(max_outputs,1), 0);
+    d_min_output_buffer = std::vector<size_t>(std::max(max_outputs,1), 0);
   }
 
   hier_block2_detail::~hier_block2_detail()
@@ -513,6 +516,24 @@ namespace gr {
 
     // Only run setup_rpc if ControlPort config param is enabled.
     bool ctrlport_on = prefs::singleton()->get_bool("ControlPort", "on", false);
+    
+    size_t min_buff(0), max_buff(0);
+    // Determine how the buffers should be set
+    bool set_all_min_buff = d_owner->all_min_output_buffer_p();
+    bool set_all_max_buff = d_owner->all_max_output_buffer_p();
+    // Get the min and max buffer length
+    if(set_all_min_buff){
+      if(HIER_BLOCK2_DETAIL_DEBUG)
+        std::cout << "Getting (" << (d_owner->alias()).c_str()
+                  << ") min buffer" << std::endl;
+      min_buff = d_owner->min_output_buffer();
+    }
+    if(set_all_max_buff){
+      if(HIER_BLOCK2_DETAIL_DEBUG)
+        std::cout << "Getting (" << (d_owner->alias()).c_str()
+                  << ") max buffer" << std::endl;
+      max_buff = d_owner->max_output_buffer();
+    }
 
     // For every block (gr::block and gr::hier_block2), set up the RPC
     // interface.
@@ -526,12 +547,120 @@ namespace gr {
           b->rpc_set();
         }
       }
+      if(set_all_min_buff){
+        //sets the min buff for every block within hier_block2
+        if(min_buff != 0){
+          block_sptr bb = boost::dynamic_pointer_cast<block>(b);
+          if(bb != 0){
+            if(bb->min_output_buffer(0) != min_buff){
+              if(HIER_BLOCK2_DETAIL_DEBUG)
+                std::cout << "Block (" << (bb->alias()).c_str()
+                          << ") min_buff (" << min_buff
+                          << ")" << std::endl;
+              bb->set_min_output_buffer(min_buff);
+            }
+          }
+          else{
+            hier_block2_sptr hh = boost::dynamic_pointer_cast<hier_block2>(b);
+            if(hh != 0){
+              if(hh->min_output_buffer(0) != min_buff){
+                if(HIER_BLOCK2_DETAIL_DEBUG)
+                  std::cout << "HBlock (" << (hh->alias()).c_str()
+                            << ") min_buff (" << min_buff
+                            << ")" << std::endl;
+                hh->set_min_output_buffer(min_buff);
+              }
+            }
+          }
+        }
+      }
+      if(set_all_max_buff){
+        //sets the max buff for every block within hier_block2
+        if(max_buff != 0){
+          block_sptr bb = boost::dynamic_pointer_cast<block>(b);
+          if(bb != 0){
+            if(bb->max_output_buffer(0) != max_buff){
+              if(HIER_BLOCK2_DETAIL_DEBUG)
+                std::cout << "Block (" << (bb->alias()).c_str()
+                          << ") max_buff (" << max_buff
+                          << ")" << std::endl;
+              bb->set_max_output_buffer(max_buff);
+            }
+          }
+          else{
+            hier_block2_sptr hh = boost::dynamic_pointer_cast<hier_block2>(b);
+            if(hh != 0){
+              if(hh->max_output_buffer(0) != max_buff){
+                if(HIER_BLOCK2_DETAIL_DEBUG)
+                  std::cout << "HBlock (" << (hh->alias()).c_str()
+                            << ") max_buff (" << max_buff
+                            << ")" << std::endl;
+                hh->set_max_output_buffer(max_buff);
+              }
+            }
+          }
+        }
+      }
 
       b = p->dst().block();
       if(ctrlport_on) {
         if(!b->is_rpc_set()) {
           b->setup_rpc();
           b->rpc_set();
+        }
+      }
+      if(set_all_min_buff){
+        //sets the min buff for every block within hier_block2
+        if(min_buff != 0){
+          block_sptr bb = boost::dynamic_pointer_cast<block>(b);
+          if(bb != 0){
+            if(bb->min_output_buffer(0) != min_buff){
+              if(HIER_BLOCK2_DETAIL_DEBUG)
+                std::cout << "Block (" << (bb->alias()).c_str()
+                          << ") min_buff (" << min_buff
+                          << ")" << std::endl;
+              bb->set_min_output_buffer(min_buff);
+            }
+          }
+          else{
+            hier_block2_sptr hh = boost::dynamic_pointer_cast<hier_block2>(b);
+            if(hh != 0){
+              if(hh->min_output_buffer(0) != min_buff){
+                if(HIER_BLOCK2_DETAIL_DEBUG)
+                  std::cout << "HBlock (" << (hh->alias()).c_str()
+                            << ") min_buff (" << min_buff
+                            << ")" << std::endl;
+                hh->set_min_output_buffer(min_buff);
+              }
+            }
+          }
+        }
+      }
+      if(set_all_max_buff){
+        //sets the max buff for every block within hier_block2
+        if(max_buff != 0){
+          block_sptr bb = boost::dynamic_pointer_cast<block>(b);
+          if(bb != 0){
+            if(bb->max_output_buffer(0) != max_buff){
+              if(HIER_BLOCK2_DETAIL_DEBUG)
+                std::cout << "Block (" << (bb->alias()).c_str()
+                          << ") max_buff (" << max_buff
+                          << ")" << std::endl;
+              bb->set_max_output_buffer(max_buff);
+            }
+          }
+          else{
+            hier_block2_sptr hh = boost::dynamic_pointer_cast<hier_block2>(b);
+            if(hh != 0){
+              if(hh->max_output_buffer(0) != max_buff){
+                if(HIER_BLOCK2_DETAIL_DEBUG)
+                  std::cout << "HBlock (" << (hh->alias()).c_str()
+                            << ") max_buff (" << max_buff
+                            << ")" << std::endl;
+                hh->set_max_output_buffer(max_buff);
+              }
+            }
+          }
         }
       }
     }
@@ -640,6 +769,61 @@ namespace gr {
         msg << "In hierarchical block " << d_owner->name() << ", output " << i
             << " is not connected internally";
         throw std::runtime_error(msg.str());
+      }
+      // Set the buffers of only the blocks connected to the hier output
+      if(!set_all_min_buff){
+        min_buff = d_owner->min_output_buffer(i);
+        if(min_buff != 0){
+          block_sptr bb = boost::dynamic_pointer_cast<block>(blk);
+          if(bb != 0){
+            int bb_src_port = d_outputs[i].port();
+            if(HIER_BLOCK2_DETAIL_DEBUG)
+              std::cout << "Block (" << (bb->alias()).c_str()
+                        << ") Port (" << bb_src_port
+                        << ") min_buff (" << min_buff
+                        << ")" << std::endl;
+            bb->set_min_output_buffer(bb_src_port, min_buff);
+          }
+          else{
+            hier_block2_sptr hh = boost::dynamic_pointer_cast<hier_block2>(blk);
+            if(hh != 0){
+              int hh_src_port = d_outputs[i].port();
+              if(HIER_BLOCK2_DETAIL_DEBUG)
+                std::cout << "HBlock (" << (hh->alias()).c_str()
+                          << ") Port (" << hh_src_port
+                          << ") min_buff ("<< min_buff
+                          << ")" << std::endl;
+              hh->set_min_output_buffer(hh_src_port, min_buff);
+            }
+          }
+        }
+      }
+      if(!set_all_max_buff){
+        max_buff = d_owner->max_output_buffer(i);
+        if(max_buff != 0){
+          block_sptr bb = boost::dynamic_pointer_cast<block>(blk);
+          if(bb != 0){
+            int bb_src_port = d_outputs[i].port();
+            if(HIER_BLOCK2_DETAIL_DEBUG)
+              std::cout << "Block (" << (bb->alias()).c_str()
+                        << ") Port (" << bb_src_port
+                        << ") max_buff (" << max_buff
+                        << ")" << std::endl;
+            bb->set_max_output_buffer(bb_src_port, max_buff);
+          }
+          else{
+            hier_block2_sptr hh = boost::dynamic_pointer_cast<hier_block2>(blk);
+            if(hh != 0){
+              int hh_src_port = d_outputs[i].port();
+              if(HIER_BLOCK2_DETAIL_DEBUG)
+                std::cout << "HBlock (" << (hh->alias()).c_str()
+                          << ") Port (" << hh_src_port
+                          << ") max_buff (" << max_buff
+                          << ")" << std::endl;
+              hh->set_max_output_buffer(hh_src_port, max_buff);
+            }
+          }
+        }
       }
       tmp.push_back(blk);
     }
