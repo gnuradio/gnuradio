@@ -68,9 +68,11 @@ def files_open(files=None):
         files = list()
         i = 0
         while True:
-            try: files.append(_config_parser.get('files_open', 'file_open_%d'%i))
-            except: return files
-            i = i + 1
+            try:
+                files.append(_config_parser.get('files_open', 'file_open_%d'%i))
+            except:
+                return files
+            i += 1
 
 def reports_window_position(pos=None):
     if pos is not None: _config_parser.set('main', 'reports_window_position', pos)

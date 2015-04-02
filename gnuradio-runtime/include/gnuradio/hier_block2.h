@@ -56,6 +56,7 @@ namespace gr {
      * \brief Private implementation details of gr::hier_block2
      */
     hier_block2_detail *d_detail;
+    
 
   protected:
     hier_block2(void) {} // allows pure virtual interface sub-classes
@@ -170,6 +171,37 @@ namespace gr {
      */
     virtual void unlock();
 
+    /*!
+     * \brief Returns max buffer size (itemcount) on output port \p i.
+     */
+    size_t max_output_buffer(size_t i=0);
+
+    /*!
+     * \brief Sets max buffer size (itemcount) on all output ports.
+     */
+    void set_max_output_buffer(size_t max_output_buffer);
+
+    /*!
+     * \brief Sets max buffer size (itemcount) on output port \p port.
+     */
+    void set_max_output_buffer(int port, size_t max_output_buffer);
+
+    /*!
+     * \brief Returns min buffer size (itemcount) on output port \p i.
+     */
+    size_t min_output_buffer(size_t i=0);
+
+    /*!
+     * \brief Sets min buffer size (itemcount) on all output ports.
+     */
+    void set_min_output_buffer(size_t min_output_buffer);
+
+    /*!
+     * \brief Sets min buffer size (itemcount) on output port \p port.
+     */
+    void set_min_output_buffer(int port, size_t min_output_buffer);
+
+
     // This is a public method for ease of code organization, but should be
     // ignored by the user.
     flat_flowgraph_sptr flatten() const;
@@ -233,6 +265,22 @@ namespace gr {
      * call could be misleading.
      */
     std::vector<int> processor_affinity();
+    
+    /*!
+     * \brief Get if all block min buffers should be set.
+     *
+     * \details this returns whether all the block min output buffers
+     * should be set or just the block ports connected to the hier ports.
+     */
+    bool all_min_output_buffer_p(void);
+    
+    /*!
+     * \brief Get if all block max buffers should be set.
+     *
+     * \details this returns whether all the block max output buffers
+     * should be set or just the block ports connected to the hier ports.
+     */
+    bool all_max_output_buffer_p(void);
   };
 
   /*!

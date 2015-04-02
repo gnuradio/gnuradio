@@ -37,8 +37,8 @@ class Connection(Element):
 
     def __init__(self):
         Element.__init__(self)
-        self._color = Colors.CONNECTION_ENABLED_COLOR
-        self._bg_color = self._arrow_color = self._color
+        # can't use Colors.CONNECTION_ENABLED_COLOR here, might not be defined (grcc)
+        self._bg_color = self._arrow_color = self._color = None
 
     def get_coordinate(self):
         """
@@ -48,7 +48,7 @@ class Connection(Element):
         Returns:
             0, 0
         """
-        return (0, 0)
+        return 0, 0
 
     def get_rotation(self):
         """

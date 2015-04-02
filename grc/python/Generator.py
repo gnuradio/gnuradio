@@ -101,9 +101,12 @@ class TopBlockGenerator(object):
                                       "This is usually undesired. Consider "
                                       "removing the throttle block.")
         # generate
-        open(self.get_file_path(), 'w').write(
-            self._build_python_code_from_template()
-        )
+        with open(self.get_file_path(), 'w') as fp:
+            fp.write(self._build_python_code_from_template())
+        try:
+            os.chmod(self.get_file_path(), self._mode)
+        except:
+            pass
 
     def get_popen(self):
         """
@@ -231,6 +234,10 @@ class HierBlockGenerator(TopBlockGenerator):
         TopBlockGenerator.write(self)
         ParseXML.to_file(self._build_block_n_from_flow_graph_io(), self.get_file_path_xml())
         ParseXML.validate_dtd(self.get_file_path_xml(), BLOCK_DTD)
+        try:
+            os.chmod(self.get_file_path_xml(), self._mode)
+        except:
+            pass
 
     def _build_block_n_from_flow_graph_io(self):
         """
@@ -254,7 +261,8 @@ class HierBlockGenerator(TopBlockGenerator):
             self._flow_graph.get_option('id').replace('_', ' ').title()
         block_n['key'] = block_key
         block_n['category'] = self._flow_graph.get_option('category')
-        block_n['import'] = 'execfile("{0}")'.format(self.get_file_path())
+        block_n['import'] = "from {0} import {0}  # grc-generated hier_block".format(
+            self._flow_graph.get_option('id'))
         # make data
         if parameters:
             block_n['make'] = '{cls}(\n    {kwargs},\n)'.format(

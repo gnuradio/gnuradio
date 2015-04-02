@@ -114,15 +114,27 @@ namespace gr {
       int diff = d_decoder->rate()*d_decoder->get_input_size() - d_decoder->get_output_size();
 
       int nbits_in = pmt::length(bits);
-      int nbits_out = nbits_in*d_decoder->rate() - diff;
+      size_t nbits_out = 0;        
+      size_t nblocks = 1;
+      bool variable_frame_size = d_decoder->set_frame_size(nbits_out);
 
       // Check here if the frame size is larger than what we've
       // allocated for in the constructor.
-      if(nbits_in > d_max_bits_in) {
+      if(variable_frame_size && (nbits_in > d_max_bits_in)) {
         throw std::runtime_error("async_decoder: Received frame larger than max frame size.");
       }
 
-      d_decoder->set_frame_size(nbits_out);
+      // set up nbits_out
+      if(variable_frame_size){
+        nbits_out = nbits_in*d_decoder->rate() - diff;
+        } else {
+            nblocks = nbits_in / d_decoder->get_input_size();
+            nbits_out = nblocks * d_decoder->get_output_size();
+            if(nblocks * d_decoder->get_input_size() != nbits_in){
+                throw std::runtime_error("bad block multiple in!");
+            }
+        }
+
 
       size_t o0(0);
       const float* f32in = pmt::f32vector_elements(bits, o0);
@@ -133,6 +145,14 @@ namespace gr {
         volk_32f_s32f_multiply_32f(d_tmp_f32, f32in, 48.0f, nbits_in);
       }
       else {
+
+        // grow d_tmp_f32 if needed
+        if(nbits_in > d_max_bits_in){
+            d_max_bits_in = nbits_in;
+            volk_free(d_tmp_f32);
+            d_tmp_f32 = (float*)volk_malloc(d_max_bits_in*sizeof(float),
+                        volk_get_alignment());
+            }
         memcpy(d_tmp_f32, f32in, nbits_in*sizeof(float));
       }
 
@@ -149,9 +169,12 @@ namespace gr {
         d_decoder->generic_work((void*)d_tmp_u8, (void*)u8out);
       }
       else {
-        d_decoder->generic_work((void*)d_tmp_f32, (void*)u8out);
+        for(size_t i=0; i<nblocks; i++){
+          d_decoder->generic_work((void*)&d_tmp_f32[i*d_decoder->get_input_size()], (void*)&u8out[i*d_decoder->get_output_size()]);
+          }
       }
 
+      meta = pmt::dict_add(meta, pmt::mp("iterations"), pmt::mp(d_decoder->get_iterations()) );
       message_port_pub(d_out_port, pmt::cons(meta, outvec));
     }
 

@@ -210,6 +210,15 @@ namespace gr {
        * behavior. It should also provide bounds checks.
        */
       virtual bool set_frame_size(unsigned int frame_size) = 0;
+      
+
+      /*!
+       * Get repetitions to decode.
+       *
+       * The child class should implement this function and return the
+       * number of iterations required to decode.
+       */
+      virtual float get_iterations(){ return -1; }
     };
 
     /*! see generic_decoder::get_output_size() */
