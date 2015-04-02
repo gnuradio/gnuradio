@@ -209,9 +209,11 @@ class MainWindow(gtk.Window):
         open_files = filter(lambda file: file, self._get_files()) #filter blank files
         open_file = self.get_page().get_file_path()
         #close each page
-        for page in self.get_pages():
+        for page in sorted(self.get_pages(), key=lambda p: p.get_saved()):
             self.page_to_be_closed = page
-            self.close_page(False)
+            closed = self.close_page(False)
+            if not closed:
+                break
         if self.notebook.get_n_pages(): return False
         #save state before closing
         Preferences.files_open(open_files)
@@ -236,17 +238,23 @@ class MainWindow(gtk.Window):
         if self.page_to_be_closed.get_proc() or not self.page_to_be_closed.get_saved():
             self._set_page(self.page_to_be_closed)
         #unsaved? ask the user
-        if not self.page_to_be_closed.get_saved() and self._save_changes():
-            Actions.FLOW_GRAPH_SAVE() #try to save
-            if not self.page_to_be_closed.get_saved(): #still unsaved?
-                self.page_to_be_closed = None #set the page to be closed back to None
-                return
+        if not self.page_to_be_closed.get_saved():
+            response = self._save_changes() # return value is either OK, CLOSE, or CANCEL
+            if response == gtk.RESPONSE_OK:
+                Actions.FLOW_GRAPH_SAVE() #try to save
+                if not self.page_to_be_closed.get_saved(): #still unsaved?
+                    self.page_to_be_closed = None #set the page to be closed back to None
+                    return False
+            elif response == gtk.RESPONSE_CANCEL:
+                self.page_to_be_closed = None
+                return False
         #stop the flow graph if executing
         if self.page_to_be_closed.get_proc(): Actions.FLOW_GRAPH_KILL()
         #remove the page
         self.notebook.remove_page(self.notebook.page_num(self.page_to_be_closed))
         if ensure and self.notebook.get_n_pages() == 0: self.new_page() #no pages, make a new one
         self.page_to_be_closed = None #set the page to be closed back to None
+        return True
 
     ############################################################
     # Misc
@@ -337,12 +345,17 @@ class MainWindow(gtk.Window):
         Save changes to flow graph?
 
         Returns:
-            true if yes
+            the response_id (see buttons variable below)
         """
+        buttons = (
+            'Close without saving', gtk.RESPONSE_CLOSE,
+            gtk.STOCK_CANCEL, gtk.RESPONSE_CANCEL,
+            gtk.STOCK_SAVE, gtk.RESPONSE_OK
+        )
         return MessageDialogHelper(
-            gtk.MESSAGE_QUESTION, gtk.BUTTONS_YES_NO, 'Unsaved Changes!',
-            'Would you like to save changes before closing?'
-        ) == gtk.RESPONSE_YES
+            gtk.MESSAGE_QUESTION, gtk.BUTTONS_NONE, 'Unsaved Changes!',
+            'Would you like to save changes before closing?', gtk.RESPONSE_OK, buttons
+        )
 
     def _get_files(self):
         """

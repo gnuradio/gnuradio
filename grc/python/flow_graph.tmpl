@@ -1,4 +1,6 @@
-#!/usr/bin/env python
+#if $generate_options != 'hb'
+#!/usr/bin/env python2
+#end if
 ########################################################
 ##Cheetah template - gnuradio_python
 ##
@@ -19,7 +21,7 @@ $code#slurp
 #import time
 #set $DIVIDER = '#'*50
 $DIVIDER
-# Gnuradio Python Flow Graph
+# GNU Radio Python Flow Graph
 # Title: $title
 #if $flow_graph.get_option('author')
 # Author: $flow_graph.get_option('author')
@@ -29,6 +31,9 @@ $DIVIDER
 #end if
 # Generated: $time.ctime()
 $DIVIDER
+#if $flow_graph.get_option('thread_safe_setters')
+import threading
+#end if
 
 ## Call XInitThreads as the _very_ first thing.
 ## After some Qt import, it's too late
@@ -48,8 +53,15 @@ if __name__ == '__main__':
 ########################################################
 ##Create Imports
 ########################################################
+#if any(imp.endswith("# grc-generated hier_block") for imp in $imports)
+import os
+import sys
+#set imports = $filter(lambda i: i not in ("import os", "import sys"), $imports)
+sys.path.append(os.environ.get('GRC_HIER_PATH', os.path.expanduser('~/.grc_gnuradio')))
+
+#end if
 #for $imp in $imports
-$imp
+$(imp.replace("  # grc-generated hier_block", ""))
 #end for
 
 ########################################################
@@ -131,6 +143,10 @@ gr.io_signaturev($(len($io_sigs)), $(len($io_sigs)), [$(', '.join($size_strs))])
     #for $pad in $flow_graph.get_hier_block_message_io('out')
         self.message_port_register_hier_in("$pad['label']")
     #end for
+#end if
+#if $flow_graph.get_option('thread_safe_setters')
+
+        self._lock = threading.RLock()
 #end if
 ########################################################
 ##Create Parameters
@@ -255,10 +271,18 @@ gr.io_signaturev($(len($io_sigs)), $(len($io_sigs)), [$(', '.join($size_strs))])
         return self.$id
 
     def set_$(id)(self, $id):
+    #if $flow_graph.get_option('thread_safe_setters')
+        with self._lock:
+            self.$id = $id
+        #for $callback in $var_id2cbs[$id]
+            $indent($callback)
+        #end for
+    #else
         self.$id = $id
-    #for $callback in $var_id2cbs[$id]
+        #for $callback in $var_id2cbs[$id]
         $indent($callback)
-    #end for
+        #end for
+    #end if
 
 #end for
 ########################################################

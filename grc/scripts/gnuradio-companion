@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 """
-Copyright 2009-2012 Free Software Foundation, Inc.
+Copyright 2009-2015 Free Software Foundation, Inc.
 This file is part of GNU Radio
 
 GNU Radio Companion is free software; you can redistribute it and/or
@@ -18,13 +18,16 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 """
 
+import os
+import sys
+import optparse
+
 import pygtk
 pygtk.require('2.0')
 import gtk
 
-try: from gnuradio import gr
-except ImportError, e:
-    d = gtk.MessageDialog(type=gtk.MESSAGE_ERROR, buttons=gtk.BUTTONS_CLOSE, message_format="""
+
+GR_IMPORT_ERROR_MESSAGE = """\
 Cannot import gnuradio.
 
 Is the python path environment variable set correctly?
@@ -34,39 +37,77 @@ Is the library path environment variable set correctly?
     Linux: LD_LIBRARY_PATH
     Windows: PATH
     MacOSX: DYLD_LIBRARY_PATH
-""")
-    d.set_title(str(e))
-    d.run()
-    exit(-1)
+"""
 
-from optparse import OptionParser
-import os
-
-if __name__ == "__main__":
-    if ('GR_DONT_LOAD_PREFS' in os.environ.keys() and
-        (not 'GRC_BLOCKS_PATH' in os.environ.keys() or len(os.environ['GRC_BLOCKS_PATH']) == 0)):
-        d = gtk.MessageDialog(
-            type=gtk.MESSAGE_ERROR,
-            buttons=gtk.BUTTONS_CLOSE,
-            message_format="""Can't find block definitions. Use config.conf or GRC_BLOCKS_PATH. """)
-        d.set_title("No block definitions available.")
-        d.run()
-        exit(-1)
-    usage = 'usage: %prog [options] [saved flow graphs]'
-    version = """
+VERSION_AND_DISCLAIMER_TEMPLATE = """\
 GNU Radio Companion %s
 
 This program is part of GNU Radio
 GRC comes with ABSOLUTELY NO WARRANTY.
-This is free software,
-and you are welcome to redistribute it.
-"""%gr.version()
-    parser = OptionParser(usage=usage, version=version)
-    (options, args) = parser.parse_args()
-    from gnuradio.grc.python.Platform import Platform
-    from gnuradio.grc.gui.ActionHandler import ActionHandler
-    #setup icon using icon theme
-    try: gtk.window_set_default_icon(gtk.IconTheme().load_icon('gnuradio-grc', 256, 0))
-    except: pass
+This is free software, and you are welcome to redistribute it.
+"""
+
+
+def show_gtk_error_dialog(title, message):
+    d = gtk.MessageDialog(type=gtk.MESSAGE_ERROR, buttons=gtk.BUTTONS_CLOSE,
+                          message_format=message)
+    d.set_title(title)
+    d.run()
+
+
+def check_gnuradio_import():
+    try:
+        from gnuradio import gr
+    except ImportError as e:
+        show_gtk_error_dialog(str(e), GR_IMPORT_ERROR_MESSAGE)
+        exit(-1)
+
+
+def ensure_blocks_path():
+    if 'GR_DONT_LOAD_PREFS' in os.environ and not os.environ.get('GRC_BLOCKS_PATH', ''):
+        show_gtk_error_dialog(
+            title="No block definitions available.",
+            message="Can't find block definitions. Use config.conf or GRC_BLOCKS_PATH."
+        )
+        exit(-1)
+
+
+def get_source_tree_root():
+    source_tree_subpath = "/grc/scripts"
+    script_path = os.path.dirname(__file__)
+    if script_path.endswith(source_tree_subpath):
+        return script_path[:-len(source_tree_subpath)]
+
+
+def main():
+    from gnuradio import gr
+
+    parser = optparse.OptionParser(
+        usage='usage: %prog [options] [saved flow graphs]',
+        version=VERSION_AND_DISCLAIMER_TEMPLATE % gr.version())
+    options, args = parser.parse_args()
+
+    source_tree_root = get_source_tree_root()
+    if not source_tree_root:
+        # run the installed version
+        from gnuradio.grc.python.Platform import Platform
+        from gnuradio.grc.gui.ActionHandler import ActionHandler
+
+    else:
+        print("Running from source tree")
+        sys.path.insert(1, source_tree_root)
+        from grc.python.Platform import Platform
+        from grc.gui.ActionHandler import ActionHandler
+
+    try:
+        gtk.window_set_default_icon(gtk.IconTheme().load_icon('gnuradio-grc', 256, 0))
+    except:
+        pass
+
     ActionHandler(args, Platform())
 
+
+if __name__ == '__main__':
+    check_gnuradio_import()
+    ensure_blocks_path()
+    main()

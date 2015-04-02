@@ -72,19 +72,30 @@ class InputParam(gtk.HBox):
         self._changed_but_unchecked = True
         self._update_gui()
 
-    def _apply_change(self, *args):
+    def apply_change(self, *args):
         """
         Handle a gui change by setting the new param value,
         calling the callback (if applicable), and updating.
         """
+        if not self._changed_but_unchecked:
+            return
         #set the new value
         self.param.set_value(self.get_text())
         #call the callback
-        if self._callback: self._callback(*args)
-        else: self.param.validate()
+        if self._callback:
+            self._callback(*args)
+        else:
+            self.param.validate()
         #gui update
         self._changed_but_unchecked = False
         self._update_gui()
+
+    def _handle_key_press(self, widget, event):
+        if event.keyval == gtk.keysyms.Return and event.state & gtk.gdk.CONTROL_MASK:
+            self.apply_change()
+            return True
+        return False
+
 
 class EntryParam(InputParam):
     """Provide an entry box for strings and numbers."""
@@ -94,7 +105,8 @@ class EntryParam(InputParam):
         self._input = gtk.Entry()
         self._input.set_text(self.param.get_value())
         self._input.connect('changed', self._mark_changed)
-        self._input.connect('focus-out-event', self._apply_change)
+        self._input.connect('focus-out-event', self.apply_change)
+        self._input.connect('key-press-event', self._handle_key_press)
         self.pack_start(self._input, True)
     def get_text(self): return self._input.get_text()
     def set_color(self, color):
@@ -114,7 +126,7 @@ class EnumParam(InputParam):
         self._input = gtk.combo_box_new_text()
         for option in self.param.get_options(): self._input.append_text(option.get_name())
         self._input.set_active(self.param.get_option_keys().index(self.param.get_value()))
-        self._input.connect('changed', self._apply_change)
+        self._input.connect('changed', self.apply_change)
         self.pack_start(self._input, False)
     def get_text(self): return self.param.get_option_keys()[self._input.get_active()]
     def set_tooltip_text(self, text):
@@ -122,6 +134,7 @@ class EnumParam(InputParam):
             self._input.set_tooltip_text(text)
         except AttributeError:
             pass  # no tooltips for old GTK
+
 
 class EnumEntryParam(InputParam):
     """Provide an entry box and drop down menu for Raw Enum types."""
@@ -134,9 +147,10 @@ class EnumEntryParam(InputParam):
         except:
             self._input.set_active(-1)
             self._input.get_child().set_text(self.param.get_value())
-        self._input.connect('changed', self._apply_change)
+        self._input.connect('changed', self.apply_change)
         self._input.get_child().connect('changed', self._mark_changed)
-        self._input.get_child().connect('focus-out-event', self._apply_change)
+        self._input.get_child().connect('focus-out-event', self.apply_change)
+        self._input.get_child().connect('key-press-event', self._handle_key_press)
         self.pack_start(self._input, False)
     def get_text(self):
         if self._input.get_active() == -1: return self._input.get_child().get_text()
@@ -191,7 +205,7 @@ class FileParam(EntryParam):
         if gtk.RESPONSE_OK == file_dialog.run(): #run the dialog
             file_path = file_dialog.get_filename() #get the file path
             self._input.set_text(file_path)
-            self._apply_change()
+            self.apply_change()
         file_dialog.destroy() #destroy the dialog
 
 
