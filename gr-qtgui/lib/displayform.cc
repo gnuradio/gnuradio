@@ -36,7 +36,7 @@ DisplayForm::DisplayForm(int nplots, QWidget* parent)
   // Set up a grid that can be turned on/off
   d_grid = new QwtPlotGrid();
   QPen *gridpen = new QPen(Qt::DashLine);
-  gridpen->setWidth(0.25);
+  gridpen->setWidthF(0.25);
   gridpen->setColor(Qt::gray);
   d_grid->setPen(*gridpen);
 
