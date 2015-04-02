@@ -22,21 +22,29 @@
 #
 
 from PyQt4 import Qt, QtCore, QtGui
+import numpy
 
 class Range(object):
-    def __init__(self, minv, maxv, step, default):
+    def __init__(self, minv, maxv, step, default, min_length):
         self.min = float(minv)
         self.max = float(maxv)
         self.step = float(step)
         self.default = float(default)
+        self.min_length = min_length
         self.find_precision()
+        self.find_nsteps()
 
     def find_precision(self):
         temp = str(float(self.step)-int(self.step))[2:]
-        if len(temp) > 15:
+        if len(temp) > 13:
           self.precision = 15
         else:
-          self.precision = len(temp)
+          self.precision = len(temp)+2
+
+    def find_nsteps(self):
+        temp = numpy.arange(self.min,self.max+self.step,self.step)
+        self.ds_steps = len(temp)
+        self.ds_vals  = (numpy.linspace(self.min,self.max,num=self.ds_steps)).tolist()
 
 class RangeWidget(QtGui.QWidget):
     def __init__(self, ranges, slot, label, style):
@@ -44,29 +52,43 @@ class RangeWidget(QtGui.QWidget):
         QtGui.QWidget.__init__(self)
 
         self.range = ranges
+        self.slot = slot
+        self.style = style
 
         layout = Qt.QHBoxLayout()
         label = Qt.QLabel(label)
         layout.addWidget(label)
 
         if style == "dial":
-            layout.addWidget(self.Dial(self, self.range, slot))
+            self.d_widget = self.Dial(self, self.range, self.ds_modified_slot)
         elif style == "slider":
-            layout.addWidget(self.Slider(self, self.range, slot))
+            self.d_widget = self.Slider(self, self.range, self.ds_modified_slot)
         elif style == "counter":
-            layout.addWidget(self.Counter(self, self.range, slot))
+            self.d_widget = self.Counter(self, self.range, self.c_modified_slot)
         elif style == "counter_slider":
-            layout.addWidget(self.CounterSlider(self, self.range, slot))
+            self.d_widget = self.CounterSlider(self, self.range, self.ds_modified_slot, self.c_modified_slot)
         else:
-            layout.addWidget(self.CounterSlider(self, self.range, slot))
+            self.d_widget = self.CounterSlider(self, self.range, self.ds_modified_slot, self.c_modified_slot)
 
+        layout.addWidget(self.d_widget)
         self.setLayout(layout)
+
+    def ds_modified_slot(self,val):
+        self.slot(self.range.ds_vals[val])
+        if self.style == "counter_slider":
+          self.d_widget.set_counter(self.range.ds_vals[val])
+
+    def c_modified_slot(self,val):
+        self.slot(val)
+        if self.style == "counter_slider":
+          temp = [abs(x-val) for x in self.range.ds_vals]
+          self.d_widget.set_slider(temp.index(min(temp)))
 
     class Dial(QtGui.QDial):
         """ Creates the range using a dial """
         def __init__(self, parent, ranges, slot):
             QtGui.QDial.__init__(self, parent)
-            self.setRange(ranges.min, ranges.max)
+            self.setRange(0, ranges.ds_steps-1)
             self.setSingleStep(ranges.step)
             self.setNotchesVisible(True)
             self.setNotchTarget(ranges.step)
@@ -78,11 +100,12 @@ class RangeWidget(QtGui.QWidget):
         def __init__(self, parent, ranges, slot):
             QtGui.QSlider.__init__(self, QtCore.Qt.Horizontal, parent)
             self.setFocusPolicy(QtCore.Qt.NoFocus)
-            self.setRange(ranges.min, ranges.max)
+            self.setRange(0, ranges.ds_steps-1)
             self.setValue(ranges.default)
             self.setPageStep(ranges.step)
             self.setSingleStep(ranges.step)
-            self.setTickInterval(ranges.step)
+            self.setTickPosition(1)
+            self.setTickInterval(ranges.ds_steps)
             self.setTracking(False)
             self.setInvertedControls(True)
             self.valueChanged.connect(slot)
@@ -99,26 +122,36 @@ class RangeWidget(QtGui.QWidget):
 
     class CounterSlider(QtGui.QWidget):
         """ Creates the range using a counter and slider """
-        def __init__(self, parent, ranges, slot):
+        def __init__(self, parent, ranges, s_slot, c_slot):
             QtGui.QWidget.__init__(self, parent)
 
             # Need another horizontal layout
             layout = Qt.QHBoxLayout()
 
             # Create a slider with the top-level widget as the parent
-            slider = RangeWidget.Slider(parent,ranges,slot)
-            layout.addWidget(slider)
+            self.slider = RangeWidget.Slider(parent,ranges,s_slot)
+            layout.addWidget(self.slider)
 
             # Setup the counter
-            counter = RangeWidget.Counter(parent,ranges,slot)
-            layout.addWidget(counter)
+            self.counter = RangeWidget.Counter(parent,ranges,c_slot)
+            layout.addWidget(self.counter)
 
             # Wire the events to each other
-            counter.valueChanged.connect(slider.setValue)
-            slider.valueChanged.connect(counter.setValue)
-            counter.valueChanged.connect(slot)
-            slider.valueChanged.connect(slot)
+            #counter.valueChanged.connect(slider.setValue)
+            #slider.valueChanged.connect(counter.setValue)
+            self.counter.valueChanged.connect(c_slot)
+            self.slider.valueChanged.connect(s_slot)
 
             self.setLayout(layout)
+
+        def set_slider(self,val):
+            self.slider.setValue(val)
+        def set_counter(self,val):
+            self.counter.setValue(val)
+
+
+
+
+
 
 

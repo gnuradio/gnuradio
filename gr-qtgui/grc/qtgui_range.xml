@@ -14,7 +14,7 @@
 #if not $label()
 	#set $label = '"%s"'%$id
 #end if
-range = Range($start, $stop, $step, $value)
+range = Range($start, $stop, $step, $value, $min_len)
 $(win) = RangeWidget(range, self.set_$(id), $label, "$widget")
 $(gui_hint()($win))</make>
 	<callback>self.set_$(id)($value)</callback>
@@ -84,8 +84,9 @@ $(gui_hint()($win))</make>
 		<key>min_len</key>
 		<value>200</value>
 		<type>int</type>
-		<hide>#if $widget().split('_')[0] in ("slider", "counter") then 'part' else 'all'#</hide>
+		<hide>part</hide>
 	</param>
+<!--	from min_len	<hide>#if $widget().split('_')[0] in ("slider", "counter") then 'part' else 'all'#</hide>-->
 	<param>
 		<name>GUI Hint</name>
 		<key>gui_hint</key>
