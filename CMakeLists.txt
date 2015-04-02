@@ -292,6 +292,7 @@ if(NOT VOLK_FOUND)
         volk/volk_common.h
         PATHS ${CMAKE_CURRENT_SOURCE_DIR}/volk/include
         NO_DEFAULT_PATH
+        NO_CMAKE_FIND_ROOT_PATH
     )
 
     if(NOT INTREE_VOLK_FOUND)
