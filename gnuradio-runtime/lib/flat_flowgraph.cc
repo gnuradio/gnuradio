@@ -50,6 +50,7 @@ namespace gr {
 
   flat_flowgraph::flat_flowgraph()
   {
+    configure_default_loggers(d_logger, d_debug_logger, "flat_flowgraph");
   }
 
   flat_flowgraph::~flat_flowgraph()
@@ -107,6 +108,13 @@ namespace gr {
       detail->set_output(i, buffer);
 
       // Update the block's max_output_buffer based on what was actually allocated.
+      if((grblock->max_output_buffer(i) != buffer->bufsize()) && (grblock->max_output_buffer(i) != -1))
+        GR_LOG_WARN(d_logger, boost::format("Block (%1%) max output buffer set to %2% instead of requested %3%") \
+                      % grblock->alias() % buffer->bufsize() % grblock->max_output_buffer(i));
+        //std::cout << ">>> Warning: Block (" << grblock->alias()
+        //          << ") max output buffer set to " << buffer->bufsize()
+        //          << " instead of requested " << grblock->max_output_buffer(i)
+        //          << std::endl;
       grblock->set_max_output_buffer(i, buffer->bufsize());
     }
 
