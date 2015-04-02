@@ -65,9 +65,7 @@ class PropsDialog(gtk.Dialog):
         gtk.Dialog.__init__(
             self,
             title='Properties: %s' % block.get_name(),
-            buttons=(gtk.STOCK_OK, gtk.RESPONSE_ACCEPT,
-                     gtk.STOCK_CANCEL, gtk.RESPONSE_REJECT,
-                     gtk.STOCK_APPLY, gtk.RESPONSE_APPLY)
+            buttons=(gtk.STOCK_CANCEL, gtk.RESPONSE_REJECT, gtk.STOCK_OK, gtk.RESPONSE_ACCEPT),
         )
         self._block = block
         self.set_size_request(MIN_DIALOG_WIDTH, MIN_DIALOG_HEIGHT)
@@ -111,7 +109,6 @@ class PropsDialog(gtk.Dialog):
         # Connect events
         self.connect('key-press-event', self._handle_key_press)
         self.connect('show', self._update_gui)
-        self.connect('response', self._handle_response)
         self.show_all()  # show all (performs initial gui update)
 
     def _params_changed(self):
@@ -186,17 +183,10 @@ class PropsDialog(gtk.Dialog):
         Returns:
             false to forward the keypress
         """
-        if event.keyval == gtk.keysyms.Return and event.state & gtk.gdk.CONTROL_MASK == 0:
+        if event.keyval == gtk.keysyms.Return:
             self.response(gtk.RESPONSE_ACCEPT)
             return True  # handled here
         return False  # forward the keypress
-
-    def _handle_response(self, widget, response):
-        if response == gtk.RESPONSE_APPLY:
-            for tab, label, vbox in self._params_boxes:
-                vbox.forall(lambda c: c.apply_change())
-            return True
-        return False
 
     def run(self):
         """
@@ -205,9 +195,6 @@ class PropsDialog(gtk.Dialog):
         Returns:
             true if the response was accept
         """
-        response = gtk.RESPONSE_APPLY
-        # don't close dialog on apply click
-        while response == gtk.RESPONSE_APPLY:
-            response = gtk.Dialog.run(self)
+        response = gtk.Dialog.run(self)
         self.destroy()
         return response == gtk.RESPONSE_ACCEPT
