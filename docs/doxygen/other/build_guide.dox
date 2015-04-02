@@ -50,7 +50,6 @@ first. Most recent systems have these packages available.
 \li qt4         (>= 4.4.0)   http://qt.nokia.com/downloads/
 \li qwt         (>= 5.2.0)   http://sourceforge.net/projects/qwt/
 \li pyqt        (>= 4.10.0)  http://www.riverbankcomputing.co.uk/software/pyqt/download
-\li pyqwt*      (>= 5.2.0)   http://pyqwt.sourceforge.net/download.html
 
 \subsection dep_gr_wxgui gr-wxgui: The WX-based Graphical User Interface
 \li wxpython    (>= 2.8)     http://www.wxpython.org/

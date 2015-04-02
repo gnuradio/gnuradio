@@ -38,7 +38,6 @@ include(GrComponent)
 if(NOT CMAKE_CROSSCOMPILING)
     set(qt_gui_python_deps
         PYQT4_FOUND
-        #we could check for pyqwt, but its not strictly required
     )
 endif(NOT CMAKE_CROSSCOMPILING)
 
