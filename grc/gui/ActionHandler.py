@@ -129,7 +129,7 @@ class ActionHandler:
                 Actions.XML_PARSER_ERRORS_DISPLAY.set_sensitive(True)
 
             if not self.init_file_paths:
-                self.init_file_paths = Preferences.files_open()
+                self.init_file_paths = filter(os.path.exists, Preferences.files_open())
             if not self.init_file_paths: self.init_file_paths = ['']
             for file_path in self.init_file_paths:
                 if file_path: self.main_window.new_page(file_path) #load pages from file paths
