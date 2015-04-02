@@ -217,13 +217,12 @@ class Block(Element):
             width, height = layout.get_pixel_size()
             pixmap = self.get_parent().new_pixmap(width, height)
             gc = pixmap.new_gc()
-            gc.set_foreground(Colors.FLOWGRAPH_BACKGROUND_COLOR)
+            gc.set_foreground(Colors.COMMENT_BACKGROUND_COLOR)
             pixmap.draw_rectangle(gc, True, 0, 0, width, height)
             pixmap.draw_layout(gc, 0, 0, layout)
             self._comment_pixmap = pixmap
         else:
             self._comment_pixmap = None
-
 
     def draw(self, gc, window):
         """

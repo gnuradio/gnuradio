@@ -281,12 +281,10 @@ class FlowGraph(Element):
         gc.set_foreground(Colors.FLOWGRAPH_BACKGROUND_COLOR)
         window.draw_rectangle(gc, True, 0, 0, W, H)
         # draw comments first
-        hide_disabled_blocks = Actions.TOGGLE_HIDE_DISABLED_BLOCKS.get_active()
         if Actions.TOGGLE_SHOW_BLOCK_COMMENTS.get_active():
             for block in self.get_blocks():
-                if hide_disabled_blocks and not block.get_enabled():
-                    continue  # skip hidden disabled block comments
-                block.draw_comment(gc, window)
+                if block.get_enabled():
+                    block.draw_comment(gc, window)
         #draw multi select rectangle
         if self.mouse_pressed and (not self.get_selected_elements() or self.get_ctrl_mask()):
             #coordinates
@@ -301,6 +299,7 @@ class FlowGraph(Element):
             gc.set_foreground(Colors.BORDER_COLOR)
             window.draw_rectangle(gc, False, x, y, w, h)
         #draw blocks on top of connections
+        hide_disabled_blocks = Actions.TOGGLE_HIDE_DISABLED_BLOCKS.get_active()
         for element in self.get_connections() + self.get_blocks():
             if hide_disabled_blocks and not element.get_enabled():
                 continue  # skip hidden disabled blocks and connections
