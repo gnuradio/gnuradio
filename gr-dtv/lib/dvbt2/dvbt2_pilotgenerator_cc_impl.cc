@@ -740,14 +740,10 @@ namespace gr {
               }
             }
           }
-          cp_bpsk[0].real() = 4.0 / 3.0;
-          cp_bpsk[0].imag() = 0.0;
-          cp_bpsk[1].real() = -4.0 / 3.0;
-          cp_bpsk[1].imag() = 0.0;
-          cp_bpsk_inverted[0].real() = -4.0 / 3.0;
-          cp_bpsk_inverted[0].imag() = 0.0;
-          cp_bpsk_inverted[1].real() = 4.0 / 3.0;
-          cp_bpsk_inverted[1].imag() = 0.0;
+          cp_bpsk[0] = gr_complex(4.0 / 3.0, 0.0);
+          cp_bpsk[1] = gr_complex(-4.0 / 3.0, 0.0);
+          cp_bpsk_inverted[0] = gr_complex(-4.0 / 3.0, 0.0);
+          cp_bpsk_inverted[1] = gr_complex(4.0 / 3.0, 0.0);
           break;
         case FFTSIZE_2K:
           for (int i = 0; i < 18; i++) {
@@ -778,14 +774,10 @@ namespace gr {
               }
             }
           }
-          cp_bpsk[0].real() = 4.0 / 3.0;
-          cp_bpsk[0].imag() = 0.0;
-          cp_bpsk[1].real() = -4.0 / 3.0;
-          cp_bpsk[1].imag() = 0.0;
-          cp_bpsk_inverted[0].real() = -4.0 / 3.0;
-          cp_bpsk_inverted[0].imag() = 0.0;
-          cp_bpsk_inverted[1].real() = 4.0 / 3.0;
-          cp_bpsk_inverted[1].imag() = 0.0;
+          cp_bpsk[0] = gr_complex(4.0 / 3.0, 0.0);
+          cp_bpsk[1] = gr_complex(-4.0 / 3.0, 0.0);
+          cp_bpsk_inverted[0] = gr_complex(-4.0 / 3.0, 0.0);
+          cp_bpsk_inverted[1] = gr_complex(4.0 / 3.0, 0.0);
           break;
         case FFTSIZE_4K:
           for (int i = 0; i < 36; i++) {
@@ -816,14 +808,10 @@ namespace gr {
               }
             }
           }
-          cp_bpsk[0].real() = (4.0 * sqrt(2)) / 3.0;
-          cp_bpsk[0].imag() = 0.0;
-          cp_bpsk[1].real() = -(4.0 * sqrt(2)) / 3.0;
-          cp_bpsk[1].imag() = 0.0;
-          cp_bpsk_inverted[0].real() = -(4.0 * sqrt(2)) / 3.0;
-          cp_bpsk_inverted[0].imag() = 0.0;
-          cp_bpsk_inverted[1].real() = (4.0 * sqrt(2)) / 3.0;
-          cp_bpsk_inverted[1].imag() = 0.0;
+          cp_bpsk[0] = gr_complex((4.0 * std::sqrt(2.0)) / 3.0, 0.0);
+          cp_bpsk[1] = gr_complex(-(4.0 * std::sqrt(2.0)) / 3.0, 0.0);
+          cp_bpsk_inverted[0] = gr_complex(-(4.0 * std::sqrt(2.0)) / 3.0, 0.0);
+          cp_bpsk_inverted[1] = gr_complex((4.0 * std::sqrt(2.0)) / 3.0, 0.0);
           break;
         case FFTSIZE_8K:
         case FFTSIZE_8K_T2GI:
@@ -855,14 +843,10 @@ namespace gr {
               }
             }
           }
-          cp_bpsk[0].real() = 8.0 / 3.0;
-          cp_bpsk[0].imag() = 0.0;
-          cp_bpsk[1].real() = -8.0 / 3.0;
-          cp_bpsk[1].imag() = 0.0;
-          cp_bpsk_inverted[0].real() = -8.0 / 3.0;
-          cp_bpsk_inverted[0].imag() = 0.0;
-          cp_bpsk_inverted[1].real() = 8.0 / 3.0;
-          cp_bpsk_inverted[1].imag() = 0.0;
+          cp_bpsk[0] = gr_complex(8.0 / 3.0, 0.0);
+          cp_bpsk[1] = gr_complex(-8.0 / 3.0, 0.0);
+          cp_bpsk_inverted[0] = gr_complex(-8.0 / 3.0, 0.0);
+          cp_bpsk_inverted[1] = gr_complex(8.0 / 3.0, 0.0);
           break;
         case FFTSIZE_16K:
         case FFTSIZE_16K_T2GI:
@@ -894,14 +878,10 @@ namespace gr {
               }
             }
           }
-          cp_bpsk[0].real() = 8.0 / 3.0;
-          cp_bpsk[0].imag() = 0.0;
-          cp_bpsk[1].real() = -8.0 / 3.0;
-          cp_bpsk[1].imag() = 0.0;
-          cp_bpsk_inverted[0].real() = -8.0 / 3.0;
-          cp_bpsk_inverted[0].imag() = 0.0;
-          cp_bpsk_inverted[1].real() = 8.0 / 3.0;
-          cp_bpsk_inverted[1].imag() = 0.0;
+          cp_bpsk[0] = gr_complex(8.0 / 3.0, 0.0);
+          cp_bpsk[1] = gr_complex(-8.0 / 3.0, 0.0);
+          cp_bpsk_inverted[0] = gr_complex(-8.0 / 3.0, 0.0);
+          cp_bpsk_inverted[1] = gr_complex(8.0 / 3.0, 0.0);
           break;
         case FFTSIZE_32K:
         case FFTSIZE_32K_T2GI:
@@ -933,110 +913,74 @@ namespace gr {
               }
             }
           }
-          cp_bpsk[0].real() = 8.0 / 3.0;
-          cp_bpsk[0].imag() = 0.0;
-          cp_bpsk[1].real() = -8.0 / 3.0;
-          cp_bpsk[1].imag() = 0.0;
-          cp_bpsk_inverted[0].real() = -8.0 / 3.0;
-          cp_bpsk_inverted[0].imag() = 0.0;
-          cp_bpsk_inverted[1].real() = 8.0 / 3.0;
-          cp_bpsk_inverted[1].imag() = 0.0;
+          cp_bpsk[0] = gr_complex(8.0 / 3.0, 0.0);
+          cp_bpsk[1] = gr_complex(-8.0 / 3.0, 0.0);
+          cp_bpsk_inverted[0] = gr_complex(-8.0 / 3.0, 0.0);
+          cp_bpsk_inverted[1] = gr_complex(8.0 / 3.0, 0.0);
           break;
       }
       switch (pilotpattern) {
         case PILOT_PP1:
-          sp_bpsk[0].real() = 4.0 / 3.0;
-          sp_bpsk[0].imag() = 0.0;
-          sp_bpsk[1].real() = -4.0 / 3.0;
-          sp_bpsk[1].imag() = 0.0;
-          sp_bpsk_inverted[0].real() = -4.0 / 3.0;
-          sp_bpsk_inverted[0].imag() = 0.0;
-          sp_bpsk_inverted[1].real() = 4.0 / 3.0;
-          sp_bpsk_inverted[1].imag() = 0.0;
+          sp_bpsk[0] = gr_complex(4.0 / 3.0, 0.0);
+          sp_bpsk[1] = gr_complex(-4.0 / 3.0, 0.0);
+          sp_bpsk_inverted[0] = gr_complex(-4.0 / 3.0, 0.0);
+          sp_bpsk_inverted[1] = gr_complex(4.0 / 3.0, 0.0);
           dx = 3;
           dy = 4;
           break;
         case PILOT_PP2:
-          sp_bpsk[0].real() = 4.0 / 3.0;
-          sp_bpsk[0].imag() = 0.0;
-          sp_bpsk[1].real() = -4.0 / 3.0;
-          sp_bpsk[1].imag() = 0.0;
-          sp_bpsk_inverted[0].real() = -4.0 / 3.0;
-          sp_bpsk_inverted[0].imag() = 0.0;
-          sp_bpsk_inverted[1].real() = 4.0 / 3.0;
-          sp_bpsk_inverted[1].imag() = 0.0;
+          sp_bpsk[0] = gr_complex(4.0 / 3.0, 0.0);
+          sp_bpsk[1] = gr_complex(-4.0 / 3.0, 0.0);
+          sp_bpsk_inverted[0] = gr_complex(-4.0 / 3.0, 0.0);
+          sp_bpsk_inverted[1] = gr_complex(4.0 / 3.0, 0.0);
           dx = 6;
           dy = 2;
           break;
         case PILOT_PP3:
-          sp_bpsk[0].real() = 7.0 / 4.0;
-          sp_bpsk[0].imag() = 0.0;
-          sp_bpsk[1].real() = -7.0 / 4.0;
-          sp_bpsk[1].imag() = 0.0;
-          sp_bpsk_inverted[0].real() = -7.0 / 4.0;
-          sp_bpsk_inverted[0].imag() = 0.0;
-          sp_bpsk_inverted[1].real() = 7.0 / 4.0;
-          sp_bpsk_inverted[1].imag() = 0.0;
+          sp_bpsk[0] = gr_complex(7.0 / 4.0, 0.0);
+          sp_bpsk[1] = gr_complex(-7.0 / 4.0, 0.0);
+          sp_bpsk_inverted[0] = gr_complex(-7.0 / 4.0, 0.0);
+          sp_bpsk_inverted[1] = gr_complex(7.0 / 4.0, 0.0);
           dx = 6;
           dy = 4;
           break;
         case PILOT_PP4:
-          sp_bpsk[0].real() = 7.0 / 4.0;
-          sp_bpsk[0].imag() = 0.0;
-          sp_bpsk[1].real() = -7.0 / 4.0;
-          sp_bpsk[1].imag() = 0.0;
-          sp_bpsk_inverted[0].real() = -7.0 / 4.0;
-          sp_bpsk_inverted[0].imag() = 0.0;
-          sp_bpsk_inverted[1].real() = 7.0 / 4.0;
-          sp_bpsk_inverted[1].imag() = 0.0;
+          sp_bpsk[0] = gr_complex(7.0 / 4.0, 0.0);
+          sp_bpsk[1] = gr_complex(-7.0 / 4.0, 0.0);
+          sp_bpsk_inverted[0] = gr_complex(-7.0 / 4.0, 0.0);
+          sp_bpsk_inverted[1] = gr_complex(7.0 / 4.0, 0.0);
           dx = 12;
           dy = 2;
           break;
         case PILOT_PP5:
-          sp_bpsk[0].real() = 7.0 / 3.0;
-          sp_bpsk[0].imag() = 0.0;
-          sp_bpsk[1].real() = -7.0 / 3.0;
-          sp_bpsk[1].imag() = 0.0;
-          sp_bpsk_inverted[0].real() = -7.0 / 3.0;
-          sp_bpsk_inverted[0].imag() = 0.0;
-          sp_bpsk_inverted[1].real() = 7.0 / 3.0;
-          sp_bpsk_inverted[1].imag() = 0.0;
+          sp_bpsk[0] = gr_complex(7.0 / 3.0, 0.0);
+          sp_bpsk[1] = gr_complex(-7.0 / 3.0, 0.0);
+          sp_bpsk_inverted[0] = gr_complex(-7.0 / 3.0, 0.0);
+          sp_bpsk_inverted[1] = gr_complex(7.0 / 3.0, 0.0);
           dx = 12;
           dy = 4;
           break;
         case PILOT_PP6:
-          sp_bpsk[0].real() = 7.0 / 3.0;
-          sp_bpsk[0].imag() = 0.0;
-          sp_bpsk[1].real() = -7.0 / 3.0;
-          sp_bpsk[1].imag() = 0.0;
-          sp_bpsk_inverted[0].real() = -7.0 / 3.0;
-          sp_bpsk_inverted[0].imag() = 0.0;
-          sp_bpsk_inverted[1].real() = 7.0 / 3.0;
-          sp_bpsk_inverted[1].imag() = 0.0;
+          sp_bpsk[0] = gr_complex(7.0 / 3.0, 0.0);
+          sp_bpsk[1] = gr_complex(-7.0 / 3.0, 0.0);
+          sp_bpsk_inverted[0] = gr_complex(-7.0 / 3.0, 0.0);
+          sp_bpsk_inverted[1] = gr_complex(7.0 / 3.0, 0.0);
           dx = 24;
           dy = 2;
           break;
         case PILOT_PP7:
-          sp_bpsk[0].real() = 7.0 / 3.0;
-          sp_bpsk[0].imag() = 0.0;
-          sp_bpsk[1].real() = -7.0 / 3.0;
-          sp_bpsk[1].imag() = 0.0;
-          sp_bpsk_inverted[0].real() = -7.0 / 3.0;
-          sp_bpsk_inverted[0].imag() = 0.0;
-          sp_bpsk_inverted[1].real() = 7.0 / 3.0;
-          sp_bpsk_inverted[1].imag() = 0.0;
+          sp_bpsk[0] = gr_complex(7.0 / 3.0, 0.0);
+          sp_bpsk[1] = gr_complex(-7.0 / 3.0, 0.0);
+          sp_bpsk_inverted[0] = gr_complex(-7.0 / 3.0, 0.0);
+          sp_bpsk_inverted[1] = gr_complex(7.0 / 3.0, 0.0);
           dx = 24;
           dy = 4;
           break;
         case PILOT_PP8:
-          sp_bpsk[0].real() = 7.0 / 3.0;
-          sp_bpsk[0].imag() = 0.0;
-          sp_bpsk[1].real() = -7.0 / 3.0;
-          sp_bpsk[1].imag() = 0.0;
-          sp_bpsk_inverted[0].real() = -7.0 / 3.0;
-          sp_bpsk_inverted[0].imag() = 0.0;
-          sp_bpsk_inverted[1].real() = 7.0 / 3.0;
-          sp_bpsk_inverted[1].imag() = 0.0;
+          sp_bpsk[0] = gr_complex(7.0 / 3.0, 0.0);
+          sp_bpsk[1] = gr_complex(-7.0 / 3.0, 0.0);
+          sp_bpsk_inverted[0] = gr_complex(-7.0 / 3.0, 0.0);
+          sp_bpsk_inverted[1] = gr_complex(7.0 / 3.0, 0.0);
           dx = 6;
           dy = 16;
           break;
@@ -1132,26 +1076,18 @@ namespace gr {
       left_nulls = ((vlength - C_PS) / 2) + 1;
       right_nulls = (vlength - C_PS) / 2;
       if ((fftsize == FFTSIZE_32K || fftsize == FFTSIZE_32K_T2GI) && (miso == FALSE)) {
-        p2_bpsk[0].real() = sqrt(37.0) / 5.0;
-        p2_bpsk[0].imag() = 0.0;
-        p2_bpsk[1].real() = -(sqrt(37.0) / 5.0);
-        p2_bpsk[1].imag() = 0.0;
-        p2_bpsk_inverted[0].real() = -(sqrt(37.0) / 5.0);
-        p2_bpsk_inverted[0].imag() = 0.0;
-        p2_bpsk_inverted[1].real() = sqrt(37.0) / 5.0;
-        p2_bpsk_inverted[1].imag() = 0.0;
+        p2_bpsk[0] = gr_complex(std::sqrt(37.0) / 5.0, 0.0);
+        p2_bpsk[1] = gr_complex(-(std::sqrt(37.0) / 5.0), 0.0);
+        p2_bpsk_inverted[0] = gr_complex(-(std::sqrt(37.0) / 5.0), 0.0);
+        p2_bpsk_inverted[1] = gr_complex(std::sqrt(37.0) / 5.0, 0.0);
       }
       else {
-        p2_bpsk[0].real() = sqrt(31.0) / 5.0;
-        p2_bpsk[0].imag() = 0.0;
-        p2_bpsk[1].real() = -(sqrt(31.0) / 5.0);
-        p2_bpsk[1].imag() = 0.0;
-        p2_bpsk_inverted[0].real() = -(sqrt(31.0) / 5.0);
-        p2_bpsk_inverted[0].imag() = 0.0;
-        p2_bpsk_inverted[1].real() = sqrt(31.0) / 5.0;
-        p2_bpsk_inverted[1].imag() = 0.0;
+        p2_bpsk[0] = gr_complex(std::sqrt(31.0) / 5.0, 0.0);
+        p2_bpsk[1] = gr_complex(-(std::sqrt(31.0) / 5.0), 0.0);
+        p2_bpsk_inverted[0] = gr_complex(-(std::sqrt(31.0) / 5.0), 0.0);
+        p2_bpsk_inverted[1] = gr_complex(std::sqrt(31.0) / 5.0, 0.0);
       }
-      normalization = 5.0 / sqrt(27.0 * C_PS);
+      normalization = 5.0 / std::sqrt(27.0 * C_PS);
       switch (bandwidth) {
         case BANDWIDTH_1_7_MHZ:
           fs = 131.0 * 1000000.0 / 71.0;
@@ -1185,15 +1121,13 @@ namespace gr {
           sinc = sin(x) / x;
         }
         sincrms += sinc * sinc;
-        inverse_sinc[i + (vlength / 2)].real() = 1.0 / sinc;
-        inverse_sinc[i + (vlength / 2)].imag() = 0.0;
-        inverse_sinc[(vlength / 2) - i - 1].real() = 1.0 / sinc;
-        inverse_sinc[(vlength / 2) - i - 1].imag() = 0.0;
+        inverse_sinc[i + (vlength / 2)] = gr_complex(1.0 / sinc, 0.0);
+        inverse_sinc[(vlength / 2) - i - 1] = gr_complex(1.0 / sinc, 0.0);
         f = f + fstep;
       }
-      sincrms = sqrt(sincrms / (vlength / 2));
+      sincrms = std::sqrt(sincrms / (vlength / 2));
       for (int i = 0; i < vlength; i++) {
-        inverse_sinc[i].real() *= sincrms;
+        inverse_sinc[i] *= sincrms;
       }
       equalization_enable = equalization;
       ofdm_fft_size = vlength;
@@ -2750,8 +2684,7 @@ namespace gr {
       gr_complex *dst;
       int L_FC = 0;
 
-      zero.real() = 0.0;
-      zero.imag() = 0.0;
+      zero = gr_complex(0.0, 0.0);
       if (N_FC != 0) {
         L_FC = 1;
       }
@@ -3372,4 +3305,3 @@ namespace gr {
 
   } /* namespace dtv */
 } /* namespace gr */
-

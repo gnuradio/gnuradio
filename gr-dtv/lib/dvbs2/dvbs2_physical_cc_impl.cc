@@ -68,25 +68,16 @@ namespace gr {
       }
       gold_code = goldcode;
 
-      m_bpsk[0][0].real() = (r0 * cos(M_PI / 4.0));
-      m_bpsk[0][0].imag() = (r0 * sin(M_PI / 4.0));
-      m_bpsk[0][1].real() = (r0 * cos(5.0 * M_PI / 4.0));
-      m_bpsk[0][1].imag() = (r0 * sin(5.0 * M_PI / 4.0));
-      m_bpsk[1][0].real() = (r0 * cos(5.0 * M_PI / 4.0));
-      m_bpsk[1][0].imag() = (r0 * sin(M_PI / 4.0));
-      m_bpsk[1][1].real() = (r0 * cos(M_PI / 4.0));
-      m_bpsk[1][1].imag() = (r0 * sin(5.0 * M_PI /4.0));
-      m_bpsk[2][0].real() = (r0 * cos(5.0 * M_PI / 4.0));
-      m_bpsk[2][0].imag() = (r0 * sin(M_PI / 4.0));
-      m_bpsk[2][1].real() = (r0 * cos(M_PI / 4.0));
-      m_bpsk[2][1].imag() = (r0 * sin(5.0 * M_PI /4.0));
-      m_bpsk[3][0].real() = (r0 * cos(5.0 * M_PI / 4.0));
-      m_bpsk[3][0].imag() = (r0 * sin(5.0 * M_PI / 4.0));
-      m_bpsk[3][1].real() = (r0 * cos(M_PI / 4.0));
-      m_bpsk[3][1].imag() = (r0 * sin(M_PI / 4.0));
+      m_bpsk[0][0] = gr_complex((r0 * cos(M_PI / 4.0)), (r0 * sin(M_PI / 4.0)));
+      m_bpsk[0][1] = gr_complex((r0 * cos(5.0 * M_PI / 4.0)), (r0 * sin(5.0 * M_PI / 4.0)));
+      m_bpsk[1][0] = gr_complex((r0 * cos(5.0 * M_PI / 4.0)), (r0 * sin(M_PI / 4.0)));
+      m_bpsk[1][1] = gr_complex((r0 * cos(M_PI / 4.0)), (r0 * sin(5.0 * M_PI /4.0)));
+      m_bpsk[2][0] = gr_complex((r0 * cos(5.0 * M_PI / 4.0)), (r0 * sin(M_PI / 4.0)));
+      m_bpsk[2][1] = gr_complex((r0 * cos(M_PI / 4.0)), (r0 * sin(5.0 * M_PI /4.0)));
+      m_bpsk[3][0] = gr_complex((r0 * cos(5.0 * M_PI / 4.0)), (r0 * sin(5.0 * M_PI / 4.0)));
+      m_bpsk[3][1] = gr_complex((r0 * cos(M_PI / 4.0)), (r0 * sin(M_PI / 4.0)));
 
-      m_zero[0].real() = 0.0;    /* used for zero stuffing interpolation */
-      m_zero[0].imag() = 0.0;
+      m_zero = gr_complex(0.0, 0.0);
 
       // Mode and code rate
       if (constellation == MOD_QPSK) {
@@ -692,31 +683,27 @@ namespace gr {
         n = 0;
         for (int plh = 0; plh < 90; plh++) {
           out[produced++] = m_pl[plh];
-          out[produced++] = m_zero[0];
+          out[produced++] = m_zero;
         }
         for (int j = 0; j < slots; j++) {
           for (int k = 0; k < 90; k++) {
             tempin = in[consumed++];
             switch (m_cscram[n++]) {
               case 0:
-                tempout.real() =  tempin.real();
-                tempout.imag() =  tempin.imag();
+                tempout = tempin;
                 break;
               case 1:
-                tempout.real() = -tempin.imag();
-                tempout.imag() =  tempin.real();
+                tempout = gr_complex(-tempin.imag(),  tempin.real());
                 break;
               case 2:
-                tempout.real() = -tempin.real();
-                tempout.imag() = -tempin.imag();
+                tempout = -tempin;
                 break;
               case 3:
-                tempout.real() =  tempin.imag();
-                tempout.imag() = -tempin.real();
+                tempout = gr_complex( tempin.imag(), -tempin.real());
                 break;
             }
             out[produced++] = tempout;
-            out[produced++] = m_zero[0];
+            out[produced++] = m_zero;
           }
           slot_count = (slot_count + 1) % 16;
           if ((slot_count == 0) && (j < slots - 1)) {
@@ -726,24 +713,20 @@ namespace gr {
                 tempin = m_bpsk[0][0];
                 switch (m_cscram[n++]) {
                   case 0:
-                    tempout.real() =  tempin.real();
-                    tempout.imag() =  tempin.imag();
+                    tempout = tempin;
                     break;
                   case 1:
-                    tempout.real() = -tempin.imag();
-                    tempout.imag() =  tempin.real();
+                    tempout = gr_complex(-tempin.imag(),  tempin.real());
                     break;
                   case 2:
-                    tempout.real() = -tempin.real();
-                    tempout.imag() = -tempin.imag();
+                    tempout = -tempin;
                     break;
                   case 03:
-                    tempout.real() =  tempin.imag();
-                    tempout.imag() = -tempin.real();
+                    tempout = gr_complex( tempin.imag(), -tempin.real());
                     break;
                 }
                 out[produced++] = tempout;
-                out[produced++] = m_zero[0];
+                out[produced++] = m_zero;
               }
             }
           }

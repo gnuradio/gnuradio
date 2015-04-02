@@ -37,7 +37,7 @@ namespace gr {
       int gold_code;
       gr_complex m_bpsk[4][2];
       gr_complex m_pl[90];
-      gr_complex m_zero[1];
+      gr_complex m_zero;
       int m_cscram[FRAME_SIZE_NORMAL];
       void b_64_8_code(unsigned char, int *);
       void pl_header_encode(unsigned char, unsigned char, int *);

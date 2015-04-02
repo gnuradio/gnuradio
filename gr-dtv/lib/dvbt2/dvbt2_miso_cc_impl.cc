@@ -576,14 +576,10 @@ namespace gr {
         memcpy(out1, in, sizeof(gr_complex) * miso_items);
         out1 += miso_items;
         for (int j = 0; j < miso_items; j += 2) {
-          temp1 = *in++;
-          temp2 = *in++;
-          out2->real() = -temp2.real();
-          out2->imag() = temp2.imag();
-          out2++;
-          out2->real() = temp1.real();
-          out2->imag() = -temp1.imag();
-          out2++;
+          temp1 = std::conj(*in++);
+          temp2 = std::conj(*in++);
+          *out2++ = -temp2;
+          *out2++ =  temp1;
         }
       }
 

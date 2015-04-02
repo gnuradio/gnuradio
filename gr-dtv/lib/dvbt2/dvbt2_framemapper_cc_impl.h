@@ -172,7 +172,7 @@ namespace gr {
       gr_complex *zigzag_interleave;
       gr_complex *dummy_randomize;
       gr_complex l1pre_cache[1840];
-      gr_complex unmodulated[1];
+      gr_complex unmodulated;
       gr_complex m_bpsk[2];
       gr_complex m_qpsk[4];
       gr_complex m_16qam[16];

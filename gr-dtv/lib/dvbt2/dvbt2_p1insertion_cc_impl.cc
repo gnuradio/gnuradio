@@ -136,12 +136,9 @@ namespace gr {
       for (int i = 0; i < 384; i++) {
         dbpsk_modulation_sequence[i] = dbpsk_modulation_sequence[i + 1] * p1_randomize[i];
       }
-      for (int i = 0; i < 1024; i++) {
-        p1_freq[i].real() = 0.0;
-        p1_freq[i].imag() = 0.0;
-      }
+      memset(&p1_freq[0], 0, sizeof(gr_complex) * 1024);
       for (int i = 0; i < 384; i++) {
-        p1_freq[p1_active_carriers[i] + 86].real() = float(dbpsk_modulation_sequence[i]);
+        p1_freq[p1_active_carriers[i] + 86] = float(dbpsk_modulation_sequence[i]);
       }
       p1_fft_size = 1024;
       p1_fft = new fft::fft_complex(p1_fft_size, false, 1);
@@ -151,8 +148,7 @@ namespace gr {
       p1_fft->execute();
       memcpy(out, p1_fft->get_outbuf(), sizeof(gr_complex) * p1_fft_size);
       for (int i = 0; i < 1024; i++) {
-        p1_time[i].real() *= 1 / sqrt(384);
-        p1_time[i].imag() *= 1 / sqrt(384);
+        p1_time[i] /= std::sqrt(384.0);
       }
       for (int i = 0; i < 1023; i++) {
         p1_freqshft[i + 1] = p1_freq[i];
@@ -166,8 +162,7 @@ namespace gr {
       p1_fft->execute();
       memcpy(out, p1_fft->get_outbuf(), sizeof(gr_complex) * p1_fft_size);
       for (int i = 0; i < 1024; i++) {
-        p1_timeshft[i].real() *= 1 / sqrt(384);
-        p1_timeshft[i].imag() *= 1 / sqrt(384);
+        p1_timeshft[i] /= std::sqrt(384.0);
       }
       frame_items = ((numdatasyms + N_P2) * fft_size) + ((numdatasyms + N_P2) * guard_interval);
       insertion_items = frame_items + 2048;
