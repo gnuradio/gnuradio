@@ -71,6 +71,13 @@ list(APPEND gnuradio_fec_sources
   puncture_bb_impl.cc
   puncture_ff_impl.cc
   depuncture_bb_impl.cc
+  ldpc_encoder.cc
+  ldpc_decoder.cc
+  cldpc.cc
+  awgn_bp.cc
+  gf2vec.cc
+  gf2mat.cc
+  alist.cc
 )
 
 #Add Windows DLL resource file if using MSVC
