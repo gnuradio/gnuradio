@@ -64,7 +64,7 @@ namespace gr {
     usrp_sink_impl::usrp_sink_impl(const ::uhd::device_addr_t &device_addr,
                                    const ::uhd::stream_args_t &stream_args,
                                    const std::string &length_tag_name)
-      : sync_block("gr uhd usrp sink",
+      : sync_block("usrp_sink",
                       args_to_io_sig(stream_args),
                       io_signature::make(0, 0, 0)),
         usrp_common_impl(device_addr, stream_args, length_tag_name),

@@ -103,7 +103,6 @@ endfunction()
 
 GR_MODULE(RUNTIME gnuradio-runtime gnuradio/top_block.h gnuradio-runtime)
 GR_MODULE(ANALOG gnuradio-analog gnuradio/analog/api.h gnuradio-analog)
-GR_MODULE(ATSC gnuradio-atsc gnuradio/atsc/api.h gnuradio-atsc)
 GR_MODULE(AUDIO gnuradio-audio gnuradio/audio/api.h gnuradio-audio)
 GR_MODULE(BLOCKS gnuradio-blocks gnuradio/blocks/api.h gnuradio-blocks)
 GR_MODULE(CHANNELS gnuradio-channels gnuradio/channels/api.h gnuradio-channels)
