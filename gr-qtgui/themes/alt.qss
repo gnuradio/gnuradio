@@ -18,9 +18,12 @@ DisplayPlot {
     qproperty-line_style1: SolidLine;
     qproperty-line_style2: DashLine;
     qproperty-line_style3: DotLine;
-    qproperty-line_width1: 2;
-    qproperty-line_width2: 2;
-    qproperty-line_width3: 2;
+    qproperty-line_width1: 1;
+    qproperty-line_width2: 1;
+    qproperty-line_width3: 1;
+    qproperty-marker_alpha1: 150;
+    qproperty-marker_alpha2: 150;
+    qproperty-marker_alpha3: 150;
     qproperty-axes_label_font_size: 18;
 }
 
