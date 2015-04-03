@@ -70,7 +70,7 @@ namespace gr {
 
 	float oi, oq;
 
-	gr_int32 angle = gr::fxpt::float_to_fixed (d_phase);
+	int32_t angle = gr::fxpt::float_to_fixed (d_phase);
 	gr::fxpt::sincos(angle, &oq, &oi);
 	out[i] = gr_complex(oi, oq);
       }

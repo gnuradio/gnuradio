@@ -63,8 +63,8 @@ protected:
   bool            d_locked;
   bool            d_in_field2;
   int             d_segment_number;
-  gr_uint64       d_next_input;
-  gr_uint64       d_lost_index;         // diagnostic fluff
+  uint64_t        d_next_input;
+  uint64_t        d_lost_index;         // diagnostic fluff
 
   unsigned long long d_inputs0_index;	// for inputs[0].index
   unsigned long	  d_inputs0_size;		// for inputs[0].size
