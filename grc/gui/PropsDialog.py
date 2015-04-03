@@ -65,10 +65,13 @@ class PropsDialog(gtk.Dialog):
         gtk.Dialog.__init__(
             self,
             title='Properties: %s' % block.get_name(),
-            buttons=(gtk.STOCK_CANCEL, gtk.RESPONSE_REJECT, gtk.STOCK_OK, gtk.RESPONSE_ACCEPT),
+            buttons=(gtk.STOCK_OK, gtk.RESPONSE_ACCEPT,
+                     gtk.STOCK_CANCEL, gtk.RESPONSE_REJECT,
+                     gtk.STOCK_APPLY, gtk.RESPONSE_APPLY)
         )
-        self._block = block
+        self.set_response_sensitive(gtk.RESPONSE_APPLY, False)
         self.set_size_request(MIN_DIALOG_WIDTH, MIN_DIALOG_HEIGHT)
+        self._block = block
 
         vpaned = gtk.VPaned()
         self.vbox.pack_start(vpaned)
@@ -109,6 +112,7 @@ class PropsDialog(gtk.Dialog):
         # Connect events
         self.connect('key-press-event', self._handle_key_press)
         self.connect('show', self._update_gui)
+        self.connect('response', self._handle_response)
         self.show_all()  # show all (performs initial gui update)
 
     def _params_changed(self):
@@ -138,6 +142,10 @@ class PropsDialog(gtk.Dialog):
         self._block.rewrite()
         self._block.validate()
         self._update_gui()
+        self._activate_apply()
+
+    def _activate_apply(self):
+        self.set_response_sensitive(gtk.RESPONSE_APPLY, True)
 
     def _update_gui(self, *args):
         """
@@ -161,7 +169,7 @@ class PropsDialog(gtk.Dialog):
                     if param.get_hide() == 'all':
                         continue
                     box_all_valid = box_all_valid and param.is_valid()
-                    vbox.pack_start(param.get_input(self._handle_changed), False)
+                    vbox.pack_start(param.get_input(self._handle_changed, self._activate_apply), False)
                 label.set_markup(Utils.parse_template(TAB_LABEL_MARKUP_TMPL, valid=box_all_valid, tab=tab))
                 #show params box with new params
                 vbox.show_all()
@@ -183,18 +191,15 @@ class PropsDialog(gtk.Dialog):
         Returns:
             false to forward the keypress
         """
-        if event.keyval == gtk.keysyms.Return:
+        if event.keyval == gtk.keysyms.Return and event.state & gtk.gdk.CONTROL_MASK == 0:
             self.response(gtk.RESPONSE_ACCEPT)
             return True  # handled here
         return False  # forward the keypress
 
-    def run(self):
-        """
-        Run the dialog and get its response.
-
-        Returns:
-            true if the response was accept
-        """
-        response = gtk.Dialog.run(self)
-        self.destroy()
-        return response == gtk.RESPONSE_ACCEPT
+    def _handle_response(self, widget, response):
+        if response == gtk.RESPONSE_APPLY:
+            for tab, label, vbox in self._params_boxes:
+                vbox.forall(lambda c: c.apply_pending_changes())
+            self.set_response_sensitive(gtk.RESPONSE_APPLY, False)
+            return True
+        return False
