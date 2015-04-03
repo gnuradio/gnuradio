@@ -29,16 +29,17 @@ import os
 class InputParam(gtk.HBox):
     """The base class for an input parameter inside the input parameters dialog."""
 
-    def __init__(self, param, callback=None):
+    def __init__(self, param, changed_callback=None, editing_callback=None):
         gtk.HBox.__init__(self)
         self.param = param
-        self._callback = callback
+        self._changed_callback = changed_callback
+        self._editing_callback = editing_callback
         self.label = gtk.Label() #no label, markup is added by set_markup
         self.label.set_size_request(150, -1)
         self.pack_start(self.label, False)
         self.set_markup = lambda m: self.label.set_markup(m)
         self.tp = None
-        self._changed_but_unchecked = False
+        self._have_pending_changes = False
         #connect events
         self.connect('show', self._update_gui)
     def set_color(self, color): pass
@@ -54,7 +55,7 @@ class InputParam(gtk.HBox):
             filter(lambda c: self.param.get_key() in c, self.param.get_parent()._callbacks)
         self.set_markup(Utils.parse_template(PARAM_LABEL_MARKUP_TMPL,
             param=self.param, has_cb=has_cb,
-            modified=self._changed_but_unchecked))
+            modified=self._have_pending_changes))
         #set the color
         self.set_color(self.param.get_color())
         #set the tooltip
@@ -69,8 +70,10 @@ class InputParam(gtk.HBox):
         """
         Mark this param as modified on change, but validate only on focus-lost
         """
-        self._changed_but_unchecked = True
+        self._have_pending_changes = True
         self._update_gui()
+        if self._editing_callback:
+            self._editing_callback()
 
     def _apply_change(self, *args):
         """
@@ -80,11 +83,24 @@ class InputParam(gtk.HBox):
         #set the new value
         self.param.set_value(self.get_text())
         #call the callback
-        if self._callback: self._callback(*args)
-        else: self.param.validate()
+        if self._changed_callback:
+            self._changed_callback(*args)
+        else:
+            self.param.validate()
         #gui update
-        self._changed_but_unchecked = False
+        self._have_pending_changes = False
         self._update_gui()
+
+    def _handle_key_press(self, widget, event):
+        if event.keyval == gtk.keysyms.Return and event.state & gtk.gdk.CONTROL_MASK:
+            self._apply_change(widget, event)
+            return True
+        return False
+
+    def apply_pending_changes(self):
+        if self._have_pending_changes:
+            self._apply_change()
+
 
 class EntryParam(InputParam):
     """Provide an entry box for strings and numbers."""
@@ -95,6 +111,7 @@ class EntryParam(InputParam):
         self._input.set_text(self.param.get_value())
         self._input.connect('changed', self._mark_changed)
         self._input.connect('focus-out-event', self._apply_change)
+        self._input.connect('key-press-event', self._handle_key_press)
         self.pack_start(self._input, True)
     def get_text(self): return self._input.get_text()
     def set_color(self, color):
@@ -123,6 +140,7 @@ class EnumParam(InputParam):
         except AttributeError:
             pass  # no tooltips for old GTK
 
+
 class EnumEntryParam(InputParam):
     """Provide an entry box and drop down menu for Raw Enum types."""
 
@@ -137,6 +155,7 @@ class EnumEntryParam(InputParam):
         self._input.connect('changed', self._apply_change)
         self._input.get_child().connect('changed', self._mark_changed)
         self._input.get_child().connect('focus-out-event', self._apply_change)
+        self._input.get_child().connect('key-press-event', self._handle_key_press)
         self.pack_start(self._input, False)
     def get_text(self):
         if self._input.get_active() == -1: return self._input.get_child().get_text()
