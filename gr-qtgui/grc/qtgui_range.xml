@@ -11,12 +11,12 @@
 	<import>from gnuradio.qtgui import Range, RangeWidget</import>
 	<var_make>self.$(id) = $(id) = $value</var_make>
 	<make>#set $win = 'self._%s_win'%$id
-		#set $range = 'self._range_%s'%$id
+		#set $range = 'self._%s_range'%$id
 #if not $label()
 	#set $label = '"%s"'%$id
 #end if
 $(range) = Range($start, $stop, $step, $value, $min_len)
-$(win) = RangeWidget($range), self.set_$(id), $label, "$widget")
+$(win) = RangeWidget($range, self.set_$(id), $label, "$widget")
 $(gui_hint()($win))</make>
 	<callback>self.set_$(id)($value)</callback>
 	<param>
