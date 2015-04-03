@@ -140,4 +140,16 @@ install(
     COMPONENT "qtgui"
 )
 
+
+########################################################################
+# Install the themes (QSS) files
+########################################################################
+install(
+    FILES
+    themes/dark.qss
+    themes/alt.qss
+    DESTINATION ${GR_THEMES_DIR}
+    COMPONENT "qtgui"
+)
+
 endif(ENABLE_GR_QTGUI)
