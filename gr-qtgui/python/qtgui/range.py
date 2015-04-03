@@ -108,14 +108,8 @@ class RangeWidget(QtGui.QWidget):
             self.valueChanged.connect(slot)
 
         def mousePressEvent(self, event):
-            #opt_style = QtGui.QStyleOption.init(None)
-            #self.initStyleOption(opt_style)
-            #sr = (self.style()).subControlRect(QtGui.QStyle.CC_Slider,opt_style,QtGui.QStyle.SC_SliderHandle,parent)
-            if((event.button() == QtCore.Qt.LeftButton)):# and (sr.contains(event.pos()) == False)):
+            if((event.button() == QtCore.Qt.LeftButton)):
                 newVal = self.minimum() + ((self.maximum()-self.minimum()) * event.x()) / self.width()
-                #if self.invertedAppearance():
-                #    self.setValue(self.maximum() - newVal)
-                #else:
                 self.setValue(newVal)
                 event.accept()
             QtGui.QSlider.mousePressEvent(self, event)
