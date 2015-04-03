@@ -92,7 +92,8 @@ class RangeWidget(QtGui.QWidget):
             self.setSingleStep(ranges.step)
             self.setNotchesVisible(True)
             self.setNotchTarget(ranges.step)
-            self.setValue(ranges.default)
+            temp = [abs(x-ranges.default) for x in ranges.ds_vals]
+            self.setValue(temp.index(min(temp)))
             self.valueChanged.connect(slot)
 
     class Slider(QtGui.QSlider):
@@ -101,7 +102,8 @@ class RangeWidget(QtGui.QWidget):
             QtGui.QSlider.__init__(self, QtCore.Qt.Horizontal, parent)
             self.setFocusPolicy(QtCore.Qt.NoFocus)
             self.setRange(0, ranges.ds_steps-1)
-            self.setValue(ranges.default)
+            temp = [abs(x-ranges.default) for x in ranges.ds_vals]
+            self.setValue(temp.index(min(temp)))
             self.setPageStep(1)
             self.setSingleStep(1)
             self.setTickPosition(2)
